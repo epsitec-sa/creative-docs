@@ -3,20 +3,24 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
+	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	// sous peine de plantée lors de la désérialisation.
 	public enum LayerType
 	{
-		None,		// aucun
-		Show,		// affiché normalement
-		Dimmed,		// affiché estompé
-		Hide,		// caché complètement
+		None   = 0,		// aucun
+		Show   = 1,		// affiché normalement
+		Dimmed = 2,		// affiché estompé
+		Hide   = 3,		// caché complètement
 	}
 
+	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	// sous peine de plantée lors de la désérialisation.
 	public enum LayerPrint
 	{
-		None,		// aucun
-		Show,		// imprimé normalement
-		Dimmed,		// imprimé estompé
-		Hide,		// caché complètement
+		None   = 0,		// aucun
+		Show   = 1,		// imprimé normalement
+		Dimmed = 2,		// imprimé estompé
+		Hide   = 3,		// caché complètement
 	}
 
 	/// <summary>

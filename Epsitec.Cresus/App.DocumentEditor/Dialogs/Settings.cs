@@ -147,11 +147,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				bookGuides.TabTitle = "Repères";
 				bookDoc.Items.Add(bookGuides);
 
-				TabPage bookPrint = new TabPage();
-				bookPrint.Name = "Print";
-				bookPrint.TabTitle = "Impression";
-				bookDoc.Items.Add(bookPrint);
-
 				TabPage bookMisc = new TabPage();
 				bookMisc.Name = "Misc";
 				bookMisc.TabTitle = "Divers";
@@ -172,12 +167,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				ToolTip.Default.SetToolTip(buttonClose, "Fermer les réglages");
 			}
 
-			this.window.Show();
-
 			if ( this.editor.IsCurrentDocument )
 			{
 				this.editor.CurrentDocument.Dialogs.BuildSettings(this.window);
 			}
+
+			this.window.Show();
 		}
 
 		// Enregistre la position de la fenêtre du dialogue.
@@ -335,12 +330,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			this.editor.Window.MakeActive();
 			this.window.Hide();
+			this.OnClosed();
 		}
 
 		private void HandleSettingsButtonCloseClicked(object sender, MessageEventArgs e)
 		{
 			this.editor.Window.MakeActive();
 			this.window.Hide();
+			this.OnClosed();
 		}
 
 

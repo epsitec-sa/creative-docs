@@ -17,6 +17,7 @@ namespace Epsitec.Common.Document.Settings
 			this.settings = new System.Collections.ArrayList();
 			this.CreateDefault();
 
+			this.globalGuides = true;
 			this.guides = new UndoableList(this.document, UndoableListType.Guides);
 
 			this.printInfo = new PrintInfo(document);
@@ -27,52 +28,63 @@ namespace Epsitec.Common.Document.Settings
 		// avec les anciens fichiers sérialisés.
 		protected void CreateDefault()
 		{
-			this.CreateDefaultPoint("PageSize");
-			this.CreateDefaultDouble("OutsideArea");
+			this.owners = new System.Collections.Hashtable();
 
-			this.CreateDefaultBool("GridActive");
-			this.CreateDefaultBool("GridShow");
-			this.CreateDefaultPoint("GridStep");
-			this.CreateDefaultPoint("GridSubdiv");
-			this.CreateDefaultPoint("GridOffset");
+			this.CreateDefaultPoint("Settings", "PageSize");
+			this.CreateDefaultDouble("Settings", "OutsideArea");
 
-			this.CreateDefaultBool("GuidesActive");
-			this.CreateDefaultBool("GuidesShow");
-			this.CreateDefaultBool("GuidesMouse");
+			this.CreateDefaultBool("Settings", "GridActive");
+			this.CreateDefaultBool("Settings", "GridShow");
+			this.CreateDefaultPoint("Settings", "GridStep");
+			this.CreateDefaultPoint("Settings", "GridSubdiv");
+			this.CreateDefaultPoint("Settings", "GridOffset");
 
-			this.CreateDefaultBool("PreviewActive");
-			this.CreateDefaultBool("RulersShow");
-			this.CreateDefaultBool("LabelsShow");
+			this.CreateDefaultBool("Settings", "GuidesActive");
+			this.CreateDefaultBool("Settings", "GuidesShow");
+			this.CreateDefaultBool("Settings", "GuidesMouse");
 
-			this.CreateDefaultPoint("DuplicateMove");
-			this.CreateDefaultBool("RepeatDuplicateMove");
-			this.CreateDefaultPoint("ArrowMove");
-			this.CreateDefaultDouble("ArrowMoveMul");
-			this.CreateDefaultDouble("ArrowMoveDiv");
-			this.CreateDefaultDouble("ToLinePrecision");
-			this.CreateDefaultInteger("DefaultUnit");
+			this.CreateDefaultBool("", "PreviewActive");
+			this.CreateDefaultBool("", "RulersShow");
+			this.CreateDefaultBool("", "LabelsShow");
 
-			this.CreateDefaultBool("PrintAutoLandscape");
-			this.CreateDefaultBool("PrintAutoZoom");
-			this.CreateDefaultBool("PrintDraft");
-			this.CreateDefaultBool("PrintAA");
-			this.CreateDefaultBool("PrintPerfectJoin");
-			this.CreateDefaultBool("PrintDebugArea");
-			this.CreateDefaultDouble("PrintDpi");
-			this.CreateDefaultInteger("PrintCentring");
-			this.CreateDefaultDouble("PrintMargins");
-			this.CreateDefaultDouble("PrintDebord");
-			this.CreateDefaultBool("PrintTarget");
+			this.CreateDefaultPoint("Settings", "DuplicateMove");
+			this.CreateDefaultBool("Settings", "RepeatDuplicateMove");
+			this.CreateDefaultPoint("Settings", "ArrowMove");
+			this.CreateDefaultDouble("Settings", "ArrowMoveMul");
+			this.CreateDefaultDouble("Settings", "ArrowMoveDiv");
+			this.CreateDefaultDouble("Settings", "ToLinePrecision");
+			this.CreateDefaultInteger("Settings", "DefaultUnit");
 
-			this.CreateDefaultDouble("ImageDpi");
-			this.CreateDefaultInteger("ImageDepth");
-			this.CreateDefaultInteger("ImageCompression");
-			this.CreateDefaultDouble("ImageQuality");
-			this.CreateDefaultDouble("ImageAA");
+			this.CreateDefaultString("Print", "PrintName");
+			this.CreateDefaultRange("Print", "PrintRange");
+			this.CreateDefaultInteger("Print", "PrintArea");
+			this.CreateDefaultDouble("Print", "PrintCopies");
+			this.CreateDefaultBool("Print", "PrintCollate");
+			this.CreateDefaultBool("Print", "PrintReverse");
+			this.CreateDefaultBool("Print", "PrintToFile");
+			this.CreateDefaultString("Print", "PrintFilename");
+			this.CreateDefaultBool("Print", "PrintAutoLandscape");
+			this.CreateDefaultBool("Print", "PrintAutoZoom");
+			this.CreateDefaultBool("Print", "PrintDraft");
+			this.CreateDefaultBool("Print", "PrintAA");
+			this.CreateDefaultBool("Print", "PrintPerfectJoin");
+			this.CreateDefaultBool("Print", "PrintDebugArea");
+			this.CreateDefaultDouble("Print", "PrintDpi");
+			this.CreateDefaultInteger("Print", "PrintCentring");
+			this.CreateDefaultDouble("Print", "PrintMargins");
+			this.CreateDefaultDouble("Print", "PrintDebord");
+			this.CreateDefaultBool("Print", "PrintTarget");
+
+			this.CreateDefaultDouble("Export", "ImageDpi");
+			this.CreateDefaultInteger("Export", "ImageDepth");
+			this.CreateDefaultInteger("Export", "ImageCompression");
+			this.CreateDefaultDouble("Export", "ImageQuality");
+			this.CreateDefaultDouble("Export", "ImageAA");
 		}
 
-		protected void CreateDefaultBool(string name)
+		protected void CreateDefaultBool(string dialog, string name)
 		{
+			this.SetOwnerDialog(dialog, name);
 			Bool sBool = this.Get(name) as Bool;
 			if ( sBool == null )
 			{
@@ -81,8 +93,9 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		protected void CreateDefaultInteger(string name)
+		protected void CreateDefaultInteger(string dialog, string name)
 		{
+			this.SetOwnerDialog(dialog, name);
 			Integer sInteger = this.Get(name) as Integer;
 			if ( sInteger == null )
 			{
@@ -91,8 +104,9 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		protected void CreateDefaultDouble(string name)
+		protected void CreateDefaultDouble(string dialog, string name)
 		{
+			this.SetOwnerDialog(dialog, name);
 			Double sDouble = this.Get(name) as Double;
 			if ( sDouble == null )
 			{
@@ -101,14 +115,52 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		protected void CreateDefaultPoint(string name)
+		protected void CreateDefaultString(string dialog, string name)
 		{
+			this.SetOwnerDialog(dialog, name);
+			String sString = this.Get(name) as String;
+			if ( sString == null )
+			{
+				sString = new String(this.document, name);
+				this.settings.Add(sString);
+			}
+		}
+
+		protected void CreateDefaultPoint(string dialog, string name)
+		{
+			this.SetOwnerDialog(dialog, name);
 			Point sPoint = this.Get(name) as Point;
 			if ( sPoint == null )
 			{
 				sPoint = new Point(this.document, name);
 				this.settings.Add(sPoint);
 			}
+		}
+
+		protected void CreateDefaultRange(string dialog, string name)
+		{
+			this.SetOwnerDialog(dialog, name);
+			Range sRange = this.Get(name) as Range;
+			if ( sRange == null )
+			{
+				sRange = new Range(this.document, name);
+				this.settings.Add(sRange);
+			}
+		}
+
+		// Spécifie quel est le dialogue propriétaire d'un réglage.
+		protected void SetOwnerDialog(string dialog, string name)
+		{
+			if ( dialog == "" )  return;
+			this.owners.Add(name, dialog);
+		}
+
+		// Indique à quel dialogue appartient un réglage.
+		public string GetOwnerDialog(string name)
+		{
+			string dialog = this.owners[name] as string;
+			if ( dialog == null )  return "";
+			return dialog;
 		}
 
 
@@ -150,12 +202,32 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
+		#region Guides
+		// Utilise le guides globaux ou locaux à la page courante.
+		public bool GlobalGuides
+		{
+			get
+			{
+				return this.globalGuides;
+			}
+
+			set
+			{
+				if ( this.globalGuides != value )
+				{
+					this.globalGuides = value;
+					this.document.Notifier.NotifyGuidesChanged();
+					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+				}
+			}
+		}
+
 		// Nombre total de guides.
 		public int GuidesCount
 		{
 			get
 			{
-				return this.guides.Count;
+				return this.GuidesList.Count;
 			}
 		}
 
@@ -164,18 +236,19 @@ namespace Epsitec.Common.Document.Settings
 		{
 			get
 			{
-				return this.guides.Selected;
+				return this.GuidesList.Selected;
 			}
 
 			set
 			{
-				this.guides.Selected = value;
+				this.GuidesList.Selected = value;
 			}
 		}
 
 		// Supprime tous les guides.
 		public void GuidesReset()
 		{
+			this.globalGuides = true;
 			this.guides.Clear();
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
@@ -185,13 +258,13 @@ namespace Epsitec.Common.Document.Settings
 		// Donne un guide.
 		public Guide GuidesGet(int index)
 		{
-			return this.guides[index] as Guide;
+			return this.GuidesList[index] as Guide;
 		}
 
 		// Ajoute un nouveau guide.
 		public int GuidesAdd(Guide guide)
 		{
-			int index = this.guides.Add(guide);
+			int index = this.GuidesList.Add(guide);
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 			this.document.IsDirtySerialize = true;
@@ -201,7 +274,7 @@ namespace Epsitec.Common.Document.Settings
 		// Ajoute un nouveau guide.
 		public void GuidesInsert(int index, Guide guide)
 		{
-			this.guides.Insert(index, guide);
+			this.GuidesList.Insert(index, guide);
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 			this.document.IsDirtySerialize = true;
@@ -210,11 +283,39 @@ namespace Epsitec.Common.Document.Settings
 		// Supprime un guide.
 		public void GuidesRemoveAt(int index)
 		{
-			this.guides.RemoveAt(index);
+			this.GuidesList.RemoveAt(index);
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 			this.document.IsDirtySerialize = true;
 		}
+
+		// Retourne la liste des repères.
+		protected UndoableList GuidesList
+		{
+			get
+			{
+				if ( this.globalGuides )
+				{
+					return this.guides;
+				}
+				else
+				{
+					int cp = this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage;
+					Objects.Page page = this.document.GetObjects[cp] as Objects.Page;
+					return page.Guides;
+				}
+			}
+		}
+
+		// Retourne la liste des repères globaux.
+		public UndoableList GuidesListGlobal
+		{
+			get
+			{
+				return this.guides;
+			}
+		}
+		#endregion
 
 
 		#region Serialization
@@ -222,6 +323,7 @@ namespace Epsitec.Common.Document.Settings
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			info.AddValue("Settings", this.settings);
+			info.AddValue("GlobalGuides", this.globalGuides);
 			info.AddValue("GuidesList", this.guides);
 			info.AddValue("PrintInfo", this.printInfo);
 		}
@@ -233,6 +335,15 @@ namespace Epsitec.Common.Document.Settings
 			this.settings = (System.Collections.ArrayList) info.GetValue("Settings", typeof(System.Collections.ArrayList));
 			this.guides = (UndoableList) info.GetValue("GuidesList", typeof(UndoableList));
 			this.printInfo = (PrintInfo) info.GetValue("PrintInfo", typeof(PrintInfo));
+
+			if ( this.document.IsRevisionGreaterOrEqual(1,0,10) )
+			{
+				this.globalGuides = info.GetBoolean("GlobalGuides");
+			}
+			else
+			{
+				this.globalGuides = true;
+			}
 		}
 
 		// Adapte l'objet après une désérialisation.
@@ -245,6 +356,8 @@ namespace Epsitec.Common.Document.Settings
 
 		protected Document						document;
 		protected System.Collections.ArrayList	settings;
+		protected System.Collections.Hashtable	owners;
+		protected bool							globalGuides;
 		protected UndoableList					guides;
 		protected PrintInfo						printInfo;
 	}

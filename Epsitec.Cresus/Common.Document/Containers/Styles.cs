@@ -49,6 +49,7 @@ namespace Epsitec.Common.Document.Containers
 			this.table.Dock = DockStyle.Fill;
 			this.table.SelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
 			this.table.FlyOverChanged += new EventHandler(this.HandleTableFlyOverChanged);
+			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
 			this.table.StyleH  = CellArrayStyle.ScrollNorm;
 			this.table.StyleH |= CellArrayStyle.Header;
 			this.table.StyleH |= CellArrayStyle.Separator;
@@ -315,12 +316,21 @@ namespace Epsitec.Common.Document.Containers
 		// Liste cliquée.
 		private void HandleTableSelectionChanged(object sender)
 		{
-			this.document.Modifier.OpletQueueEnable = false;
-			this.document.PropertiesStyle.Selected = this.table.SelectedRow;
-			this.document.Modifier.OpletQueueEnable = true;
+			if ( this.document.PropertiesStyle.Selected != this.table.SelectedRow )
+			{
+				this.document.Modifier.OpletQueueEnable = false;
+				this.document.PropertiesStyle.Selected = this.table.SelectedRow;
+				this.document.Modifier.OpletQueueEnable = true;
 
-			this.UpdatePanel();
-			this.UpdateToolBar();
+				this.UpdatePanel();
+				this.UpdateToolBar();
+			}
+		}
+
+		// Liste double-cliquée.
+		private void HandleTableDoubleClicked(object sender, MessageEventArgs e)
+		{
+			this.panelStyleName.SetDefaultFocus();
 		}
 
 		// La cellule survolée a changé.

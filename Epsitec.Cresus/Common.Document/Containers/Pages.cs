@@ -49,6 +49,7 @@ namespace Epsitec.Common.Document.Containers
 			this.table = new CellTable(this);
 			this.table.Dock = DockStyle.Fill;
 			this.table.SelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
+			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
 			this.table.StyleH  = CellArrayStyle.ScrollNorm;
 			this.table.StyleH |= CellArrayStyle.Header;
 			this.table.StyleH |= CellArrayStyle.Separator;
@@ -58,6 +59,119 @@ namespace Epsitec.Common.Document.Containers
 			this.table.StyleV |= CellArrayStyle.SelectLine;
 			this.table.DefHeight = 16;
 
+			// --- Début panelMisc
+			this.panelMisc = new Widget(this);
+			this.panelMisc.Dock = DockStyle.Bottom;
+			this.panelMisc.DockMargins = new Margins(0, 0, 5, 0);
+			this.panelMisc.Height = 120;
+
+			this.radioMasterGroup = new GroupBox(this.panelMisc);
+			this.radioMasterGroup.Dock = DockStyle.Bottom;
+			this.radioMasterGroup.DockMargins = new Margins(0, 0, 0, 4);
+			this.radioMasterGroup.Height = 90;
+			this.radioMasterGroup.Text = "Destination :";
+
+			this.radioAll = new RadioButton(this.radioMasterGroup);
+			this.radioAll.Dock = DockStyle.Top;
+			this.radioAll.DockMargins = new Margins(10, 10, 5, 0);
+			this.radioAll.Text = "Appliquer à toutes les pages";
+			this.radioAll.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+			this.radioOdd = new RadioButton(this.radioMasterGroup);
+			this.radioOdd.Dock = DockStyle.Top;
+			this.radioOdd.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioOdd.Text = "Appliquer aux pages impaires";
+			this.radioOdd.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+			this.radioEven = new RadioButton(this.radioMasterGroup);
+			this.radioEven.Dock = DockStyle.Top;
+			this.radioEven.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioEven.Text = "Appliquer aux pages paires";
+			this.radioEven.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+			this.radioNone = new RadioButton(this.radioMasterGroup);
+			this.radioNone.Dock = DockStyle.Top;
+			this.radioNone.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioNone.Text = "Appliquer à la demande";
+			this.radioNone.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+
+			this.radioSlaveGroup = new GroupBox(this.panelMisc);
+			this.radioSlaveGroup.Dock = DockStyle.Bottom;
+			this.radioSlaveGroup.DockMargins = new Margins(0, 0, 0, 4);
+			this.radioSlaveGroup.Height = 90;
+			this.radioSlaveGroup.Text = "Inclure les pages modèles ?";
+
+			this.radioGroupLeft = new Widget(this.radioSlaveGroup);
+			this.radioGroupLeft.Dock = DockStyle.Left;
+			this.radioGroupLeft.DockMargins = new Margins(0, 0, 5, 0);
+			this.radioGroupLeft.Width = 170;
+
+			this.radioNever = new RadioButton(this.radioGroupLeft);
+			this.radioNever.Dock = DockStyle.Top;
+			this.radioNever.DockMargins = new Margins(10, 0, 0, 0);
+			this.radioNever.Text = "Non";
+			this.radioNever.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+			this.radioDefault = new RadioButton(this.radioGroupLeft);
+			this.radioDefault.Dock = DockStyle.Top;
+			this.radioDefault.DockMargins = new Margins(10, 0, 0, 0);
+			this.radioDefault.Text = "Oui";
+			this.radioDefault.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+			this.radioSpecific = new RadioButton(this.radioGroupLeft);
+			this.radioSpecific.Dock = DockStyle.Top;
+			this.radioSpecific.DockMargins = new Margins(10, 0, 0, 0);
+			this.radioSpecific.Text = "Inclure cette page modèle";
+			this.radioSpecific.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+			this.checkGuides = new CheckButton(this.radioGroupLeft);
+			this.checkGuides.Dock = DockStyle.Top;
+			this.checkGuides.DockMargins = new Margins(10, 0, 4, 0);
+			this.checkGuides.Text = "Inclure les repères";
+			this.checkGuides.Clicked += new MessageEventHandler(this.HandleCheckClicked);
+
+			this.radioGroupRight = new Widget(this.radioSlaveGroup);
+			this.radioGroupRight.Dock = DockStyle.Left;
+			this.radioGroupRight.DockMargins = new Margins(0, 0, 5, 0);
+			this.radioGroupRight.Width = 50;
+
+			this.specificPage = new TextFieldCombo(this.radioGroupRight);
+			this.specificPage.IsReadOnly = true;
+			this.specificPage.Dock = DockStyle.Bottom;
+			this.specificPage.DockMargins = new Margins(0, 0, 0, 21);
+			this.specificPage.OpeningCombo += new CancelEventHandler(this.HandleOpeningCombo);
+			this.specificPage.ClosedCombo += new EventHandler(this.HandleClosedCombo);
+
+
+			this.radioGroup = new Widget(this.panelMisc);
+			this.radioGroup.Dock = DockStyle.Bottom;
+			this.radioGroup.DockMargins = new Margins(0, 0, 0, 4);
+			this.radioGroup.Height = 20;
+
+			this.radioSlave = new RadioButton(this.radioGroup);
+			this.radioSlave.Width = 100;
+			this.radioSlave.Dock = DockStyle.Left;
+			this.radioSlave.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioSlave.Text = "Page normale";
+			this.radioSlave.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+			this.radioMaster = new RadioButton(this.radioGroup);
+			this.radioMaster.Width = 100;
+			this.radioMaster.Dock = DockStyle.Left;
+			this.radioMaster.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioMaster.Text = "Page modèle";
+			this.radioMaster.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			// --- Fin panelMisc
+			
+			this.extendedButton = new GlyphButton(this);
+			this.extendedButton.Dock = DockStyle.Bottom;
+			this.extendedButton.DockMargins = new Margins(0, 0, 5, 0);
+			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
+			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
+			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.extendedButton, "Etend ou réduit le panneau");
+			
 			this.panelPageName = new Panels.PageName(this.document);
 			this.panelPageName.IsExtendedSize = false;
 			this.panelPageName.IsLayoutDirect = true;
@@ -66,6 +180,8 @@ namespace Epsitec.Common.Document.Containers
 			this.panelPageName.Dock = DockStyle.Bottom;
 			this.panelPageName.DockMargins = new Margins(0, 0, 5, 0);
 			this.panelPageName.Parent = this;
+
+			this.UpdateExtended();
 		}
 		
 		// Synchronise avec l'état de la commande.
@@ -143,7 +259,7 @@ namespace Epsitec.Common.Document.Containers
 			StaticText st;
 
 			st = this.table[0, row].Children[0] as StaticText;
-			st.Text = (row+1).ToString();
+			st.Text = page.ShortName;
 
 			st = this.table[1, row].Children[0] as StaticText;
 			st.Text = page.Name;
@@ -155,6 +271,37 @@ namespace Epsitec.Common.Document.Containers
 		protected void UpdatePanel()
 		{
 			this.panelPageName.UpdateValues();
+
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			Objects.Page page = context.RootObject(1) as Objects.Page;
+
+			this.radioSlave.ActiveState  = (page.MasterType == Objects.MasterType.Slave) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioMaster.ActiveState = (page.MasterType != Objects.MasterType.Slave) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
+			this.radioSlaveGroup.SetVisible (page.MasterType == Objects.MasterType.Slave);
+			this.radioMasterGroup.SetVisible(page.MasterType != Objects.MasterType.Slave);
+
+			this.radioAll.ActiveState =  (page.MasterType == Objects.MasterType.All ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioEven.ActiveState = (page.MasterType == Objects.MasterType.Even) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioOdd.ActiveState =  (page.MasterType == Objects.MasterType.Odd ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioNone.ActiveState = (page.MasterType == Objects.MasterType.None) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
+			this.radioNever.ActiveState    = (page.MasterUse == Objects.MasterUse.Never   ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioDefault.ActiveState  = (page.MasterUse == Objects.MasterUse.Default ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioSpecific.ActiveState = (page.MasterUse == Objects.MasterUse.Specific) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
+			this.checkGuides.ActiveState = page.MasterGuides ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
+			this.specificPage.SetEnabled(page.MasterUse == Objects.MasterUse.Specific);
+			if ( page.MasterPageToUse == null ||
+				 page.MasterPageToUse.MasterType == Objects.MasterType.Slave )
+			{
+				this.specificPage.Text = "";
+			}
+			else
+			{
+				this.specificPage.Text = page.MasterPageToUse.ShortName;
+			}
 		}
 
 
@@ -163,6 +310,137 @@ namespace Epsitec.Common.Document.Containers
 		{
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			context.CurrentPage = this.table.SelectedRow;
+		}
+
+		// Liste double-cliquée.
+		private void HandleTableDoubleClicked(object sender, MessageEventArgs e)
+		{
+			this.panelPageName.SetDefaultFocus();
+		}
+
+		// Le bouton pour étendre/réduire le panneau a été cliqué.
+		private void ExtendedButtonClicked(object sender, MessageEventArgs e)
+		{
+			this.isExtended = !this.isExtended;
+			this.UpdateExtended();
+		}
+
+		// Met à jour l'état réduit/étendu du panneau.
+		protected void UpdateExtended()
+		{
+			this.extendedButton.GlyphShape = this.isExtended ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
+
+			this.panelMisc.SetVisible(this.isExtended);
+		}
+
+		// Un bouton radio a été cliqué.
+		private void HandleRadioClicked(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.OpletQueueBeginAction();
+
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			Objects.Page page = context.RootObject(1) as Objects.Page;
+
+			if ( sender == this.radioSlave )
+			{
+				page.MasterType = Objects.MasterType.Slave;
+				this.document.Notifier.NotifyPagesChanged();
+			}
+			if ( sender == this.radioMaster )
+			{
+				page.MasterType = Objects.MasterType.All;
+				this.document.Notifier.NotifyPagesChanged();
+			}
+
+			if ( sender == this.radioAll )
+			{
+				page.MasterType = Objects.MasterType.All;
+			}
+			if ( sender == this.radioEven )
+			{
+				page.MasterType = Objects.MasterType.Even;
+			}
+			if ( sender == this.radioOdd )
+			{
+				page.MasterType = Objects.MasterType.Odd;
+			}
+			if ( sender == this.radioNone )
+			{
+				page.MasterType = Objects.MasterType.None;
+			}
+
+			if ( sender == this.radioNever )
+			{
+				page.MasterUse = Objects.MasterUse.Never;
+			}
+			if ( sender == this.radioDefault )
+			{
+				page.MasterUse = Objects.MasterUse.Default;
+			}
+			if ( sender == this.radioSpecific )
+			{
+				page.MasterUse = Objects.MasterUse.Specific;
+			}
+
+			this.UpdatePanel();
+			this.document.Modifier.OpletQueueValidateAction();
+		}
+
+		// Un bouton à cocher a été cliqué.
+		private void HandleCheckClicked(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.OpletQueueBeginAction();
+
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			Objects.Page page = context.RootObject(1) as Objects.Page;
+
+			if ( sender == this.checkGuides )
+			{
+				page.MasterGuides = !page.MasterGuides;
+				this.document.Notifier.NotifyPagesChanged();
+			}
+
+			this.UpdatePanel();
+			this.document.Modifier.OpletQueueValidateAction();
+		}
+
+		// Combo ouvert.
+		private void HandleOpeningCombo(object sender, CancelEventArgs e)
+		{
+			this.specificPage.Items.Clear();
+
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			UndoableList doc = this.document.GetObjects;
+			int total = context.TotalPages();
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Objects.Page page = doc[i] as Objects.Page;
+				if ( page.MasterType != Objects.MasterType.Slave )
+				{
+					this.specificPage.Items.Add(page.ShortName);
+				}
+			}
+		}
+
+		// Combo fermé.
+		private void HandleClosedCombo(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			UndoableList doc = this.document.GetObjects;
+			int total = context.TotalPages();
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Objects.Page page = doc[i] as Objects.Page;
+				if ( page.ShortName == this.specificPage.Text )
+				{
+					this.document.Modifier.OpletQueueBeginAction();
+					Objects.Page currentPage = context.RootObject(1) as Objects.Page;
+					currentPage.MasterPageToUse = page;
+					this.document.Modifier.OpletQueueValidateAction();
+					return;
+				}
+			}
 		}
 
 
@@ -174,6 +452,29 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton			buttonDelete;
 		protected CellTable				table;
 		protected Panels.PageName		panelPageName;
+		protected GlyphButton			extendedButton;
+		protected Widget				panelMisc;
+
+		protected Widget				radioGroup;
+		protected RadioButton			radioSlave;
+		protected RadioButton			radioMaster;
+
+		protected GroupBox				radioMasterGroup;
+		protected RadioButton			radioAll;
+		protected RadioButton			radioEven;
+		protected RadioButton			radioOdd;
+		protected RadioButton			radioNone;
+
+		protected GroupBox				radioSlaveGroup;
+		protected Widget				radioGroupLeft;
+		protected Widget				radioGroupRight;
+		protected RadioButton			radioNever;
+		protected RadioButton			radioDefault;
+		protected RadioButton			radioSpecific;
+		protected CheckButton			checkGuides;
+		protected TextFieldCombo		specificPage;
+
+		protected bool					isExtended = false;
 		protected bool					ignoreChanged = false;
 	}
 }

@@ -181,11 +181,13 @@ namespace Epsitec.Common.Document
 		public Objects.Memory ObjectMemory
 		{
 			get { return this.objectMemory; }
+			set { this.objectMemory = value; }
 		}
 
 		public Objects.Memory ObjectMemoryText
 		{
 			get { return this.objectMemoryText; }
+			set { this.objectMemoryText = value; }
 		}
 
 		public Objects.Memory ObjectMemoryTool
@@ -588,6 +590,7 @@ namespace Epsitec.Common.Document
 				context.ZoomPageAndCenter();
 			}
 
+			this.UpdatePageShortNames();
 			this.document.Settings.Reset();
 			this.zoomHistory.Clear();
 			this.document.HotSpot = new Point(0, 0);
@@ -1552,15 +1555,45 @@ namespace Epsitec.Common.Document
 
 
 		#region Order
-		// Met au premier plan tous les objets sélectionnés.
-		public void OrderUpSelection()
+		// Met dessus tous les objets sélectionnés.
+		public void OrderUpOneSelection()
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
 			using ( this.OpletQueueBeginAction() )
 			{
-				this.OrderSelection(1);
+				this.OrderOneSelection(1);
+				this.document.Notifier.NotifySelectionChanged();
+
+				this.OpletQueueValidateAction();
+			}
+		}
+
+		// Met dessous tous les objets sélectionnés.
+		public void OrderDownOneSelection()
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			using ( this.OpletQueueBeginAction() )
+			{
+				this.OrderOneSelection(-1);
+				this.document.Notifier.NotifySelectionChanged();
+
+				this.OpletQueueValidateAction();
+			}
+		}
+
+		// Met au premier plan tous les objets sélectionnés.
+		public void OrderUpAllSelection()
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			using ( this.OpletQueueBeginAction() )
+			{
+				this.OrderAllSelection(1);
 				this.document.Notifier.NotifySelectionChanged();
 
 				this.OpletQueueValidateAction();
@@ -1568,35 +1601,100 @@ namespace Epsitec.Common.Document
 		}
 
 		// Met à l'arrière plan tous les objets sélectionnés.
-		public void OrderDownSelection()
+		public void OrderDownAllSelection()
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
 			using ( this.OpletQueueBeginAction() )
 			{
-				this.OrderSelection(-1);
+				this.OrderAllSelection(-1);
 				this.document.Notifier.NotifySelectionChanged();
 
 				this.OpletQueueValidateAction();
 			}
 		}
 
-		protected void OrderSelection(int dir)
+		protected void OrderOneSelection(int dir)
+		{
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			int total = layer.Objects.Count;
+
+			int iDst = 0;
+			if ( dir < 0 )
+			{
+				iDst = this.OrderFirstSelected()-1;
+				if ( iDst < 0 )  iDst = 0;
+			}
+			else
+			{
+				iDst = this.OrderLastSelected()+1;
+				if ( iDst > total )  iDst = total;
+				total = iDst;
+			}
+			this.OrderSelection(dir, iDst, total);
+		}
+
+		// Retourne l'index du premier objet sélectionné.
+		protected int OrderFirstSelected()
 		{
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 
 			int total = layer.Objects.Count;
-			int iSrc = 0;
+			int i = 0;
+			do
+			{
+				Objects.Abstract obj = layer.Objects[i] as Objects.Abstract;
+				if ( obj.IsSelected )  return i;
+				i ++;
+			}
+			while ( i < total );
+			return -1;
+		}
+
+		// Retourne l'index du dernier objet sélectionné.
+		protected int OrderLastSelected()
+		{
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+
+			int total = layer.Objects.Count;
+			int i = total-1;
+			do
+			{
+				Objects.Abstract obj = layer.Objects[i] as Objects.Abstract;
+				if ( obj.IsSelected )  return i;
+				i --;
+			}
+			while ( i >= 0 );
+			return -1;
+		}
+
+		protected void OrderAllSelection(int dir)
+		{
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+
+			int total = layer.Objects.Count;
 			int iDst = (dir < 0) ? 0 : total-1;
+			this.OrderSelection(dir, iDst, total);
+		}
+
+		protected void OrderSelection(int dir, int iDst, int total)
+		{
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+
+			int iSrc = 0;
 			do
 			{
 				Objects.Abstract obj = layer.Objects[iSrc] as Objects.Abstract;
 				if ( obj.IsSelected )
 				{
 					layer.Objects.RemoveAt(iSrc);
-					layer.Objects.Insert(iDst, obj);
+					layer.Objects.Insert(System.Math.Min(iDst, layer.Objects.Count), obj);
 					this.document.Notifier.NotifyArea(obj.BoundingBox);
 					if ( dir < 0 )
 					{
@@ -1953,6 +2051,40 @@ namespace Epsitec.Common.Document
 			protected Objects.Abstract		obj;
 			protected double				position;
 		}
+
+		// Ajuste tous les objets sélectionnés.
+		public void AdjustSelection(bool horizontal)
+		{
+			this.OpletQueueBeginAction();
+			Rectangle globalBox = this.SelectedBbox;
+			Selector selector = new Selector(this.document);
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
+			{
+				for ( int i=0 ; i<10 ; i++ )
+				{
+					Rectangle objBox = obj.BoundingBoxGeom;
+					Rectangle finalBox = objBox;
+
+					if ( horizontal )
+					{
+						finalBox.Left  = globalBox.Left;
+						finalBox.Right = globalBox.Right;
+					}
+					else
+					{
+						finalBox.Bottom = globalBox.Bottom;
+						finalBox.Top    = globalBox.Top;
+					}
+					selector.QuickStretch(objBox, finalBox);
+
+					obj.MoveGlobalStarting();
+					obj.MoveGlobalProcess(selector);
+				}
+			}
+			this.OpletQueueValidateAction();
+		}
 		#endregion
 
 
@@ -1967,6 +2099,21 @@ namespace Epsitec.Common.Document
 			{
 				this.Ungroup();
 				this.Group();
+				this.document.Notifier.NotifySelectionChanged();
+
+				this.OpletQueueValidateAction();
+			}
+		}
+
+		// Extrait tous les objets sélectionnés du groupe.
+		public void ExtractSelection()
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			using ( this.OpletQueueBeginAction() )
+			{
+				this.Extract();
 				this.document.Notifier.NotifySelectionChanged();
 
 				this.OpletQueueValidateAction();
@@ -2080,6 +2227,25 @@ namespace Epsitec.Common.Document
 				index ++;
 			}
 			while ( index < total );
+		}
+
+		protected void Extract()
+		{
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			if ( context.RootStackIsBase )  return;
+			Objects.Abstract layer = context.RootObject();
+			Objects.Abstract parent = context.RootObject(context.RootStackDeep-1);
+			UndoableList src = layer.Objects;
+			UndoableList dst = parent.Objects;
+
+			Modifier.Duplicate(this.document, this.document, src, dst, false, new Point(0,0), true);
+			this.DeleteSelection();
+
+			this.GroupUpdateParents();
+			context.RootStackPop();
+			this.DirtyCounters();
+			this.ActiveViewer.UpdateSelector();
+			this.document.Notifier.NotifyArea(this.ActiveViewer);
 		}
 
 		// Entre dans tous les objets sélectionnés.
@@ -2902,6 +3068,7 @@ namespace Epsitec.Common.Document
 				Objects.Layer layer = new Objects.Layer(this.document, null);
 				page.Objects.Add(layer);
 
+				this.UpdatePageShortNames();
 				this.TerminateChangingPage(rank);
 
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
@@ -2943,6 +3110,7 @@ namespace Epsitec.Common.Document
 				UndoableList dst = page.Objects;
 				Modifier.Duplicate(this.document, this.document, src, dst, false, new Point(0,0), false);
 
+				this.UpdatePageShortNames();
 				this.TerminateChangingPage(rank+1);
 
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
@@ -2970,12 +3138,14 @@ namespace Epsitec.Common.Document
 
 				UndoableList pages = this.document.GetObjects;
 				Objects.Page page = pages[rank] as Objects.Page;
+				this.UpdatePageDelete(page);
 				page.Dispose();
 				list.RemoveAt(rank);
 
 				rank = System.Math.Min(rank, list.Count-1);
 				this.ActiveViewer.DrawingContext.CurrentPage = rank;
 
+				this.UpdatePageShortNames();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
 				this.document.Notifier.NotifyPagesChanged();
@@ -3005,10 +3175,19 @@ namespace Epsitec.Common.Document
 
 				this.ActiveViewer.DrawingContext.CurrentPage = rank2;
 
+				this.UpdatePageShortNames();
 				this.document.Notifier.NotifyArea();
 				this.document.Notifier.NotifyPagesChanged();
 				this.OpletQueueValidateAction();
 			}
+		}
+
+		// Retourne le nom court d'une page ("n" ou "Mn").
+		public string PageShortName(int rank)
+		{
+			UndoableList pages = this.document.GetObjects;
+			Objects.Page page = pages[rank] as Objects.Page;
+			return page.ShortName;
 		}
 
 		// Retourne le nom d'une page.
@@ -3032,6 +3211,134 @@ namespace Epsitec.Common.Document
 				this.document.Notifier.NotifySelectionChanged();
 				this.document.Notifier.NotifyPageChanged(page);
 				this.OpletQueueValidateAction();
+			}
+		}
+
+		// Retourne le nombre total de pages imprimables.
+		public int PrintableTotalPages()
+		{
+			UndoableList pages = this.document.GetObjects;
+			int total = pages.Count;
+			int printable = 0;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Objects.Page page = pages[i] as Objects.Page;
+
+				if ( page.MasterType == Objects.MasterType.Slave )
+				{
+					printable ++;
+				}
+			}
+			return printable;
+		}
+
+		// Retourne le rang d'une page imprimable.
+		public int PrintablePageRank(int index)
+		{
+			UndoableList pages = this.document.GetObjects;
+			int total = pages.Count;
+			int rank = 0;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Objects.Page page = pages[i] as Objects.Page;
+
+				if ( page.MasterType == Objects.MasterType.Slave )
+				{
+					if ( rank == index )  return i;
+					rank ++;
+				}
+			}
+			return -1;
+		}
+
+		// Met à jour après une suppression de page.
+		protected void UpdatePageDelete(Objects.Page deletedPage)
+		{
+			UndoableList pages = this.document.GetObjects;
+			int total = pages.Count;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Objects.Page page = pages[i] as Objects.Page;
+
+				if ( page.MasterPageToUse == deletedPage )
+				{
+					page.MasterPageToUse = null;
+					page.MasterUse = Objects.MasterUse.Never;
+				}
+			}
+		}
+
+		// Met à jour tous les noms courts des pages ("n" ou "Mn").
+		public void UpdatePageShortNames()
+		{
+			UndoableList pages = this.document.GetObjects;
+			int total = pages.Count;
+			int slaveNumber = 0;
+			int masterNumber = 0;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Objects.Page page = pages[i] as Objects.Page;
+
+				if ( page.MasterType == Objects.MasterType.Slave )
+				{
+					page.Rank = slaveNumber;
+					slaveNumber ++;
+					page.ShortName = string.Format("{0}", slaveNumber.ToString());
+				}
+				else
+				{
+					page.Rank = masterNumber;
+					masterNumber ++;
+					page.ShortName = string.Format("M{0}", masterNumber.ToString());
+				}
+			}
+		}
+
+		// Génère la liste des pages maîtres à utiliser pour une page donnée.
+		public void ComputeMasterPageList(System.Collections.ArrayList masterPageList, int pageNumber)
+		{
+			masterPageList.Clear();
+			Objects.Page currentPage = this.document.GetObjects[pageNumber] as Objects.Page;
+
+			if ( currentPage.MasterType != Objects.MasterType.Slave )  return;
+
+			if ( currentPage.MasterUse == Objects.MasterUse.Specific )
+			{
+				if ( currentPage.MasterPageToUse != null &&
+					 currentPage.MasterPageToUse.MasterType != Objects.MasterType.Slave )
+				{
+					masterPageList.Add(currentPage.MasterPageToUse);
+				}
+			}
+
+			if ( currentPage.MasterUse == Objects.MasterUse.Default )
+			{
+				int total = this.document.GetObjects.Count;
+				for ( int i=0 ; i<total ; i++ )
+				{
+					Objects.Page page = this.document.GetObjects[i] as Objects.Page;
+
+					if ( page.MasterType == Objects.MasterType.All )
+					{
+						masterPageList.Add(page);
+					}
+
+					if ( page.MasterType == Objects.MasterType.Even )
+					{
+						if ( currentPage.Rank%2 != 0 )
+						{
+							masterPageList.Add(page);
+						}
+					}
+
+					if ( page.MasterType == Objects.MasterType.Odd )
+					{
+						if ( currentPage.Rank%2 == 0 )
+						{
+							masterPageList.Add(page);
+						}
+					}
+				}
 			}
 		}
 		#endregion
@@ -3096,7 +3403,14 @@ namespace Epsitec.Common.Document
 				Objects.Layer srcLayer = list[rank] as Objects.Layer;
 
 				Objects.Layer layer = new Objects.Layer(this.document, null);
-				layer.Name = name;
+				if ( name == "" )
+				{
+					layer.Name = Misc.CopyName(srcLayer.Name, "Extrait", "de");
+				}
+				else
+				{
+					layer.Name = name;
+				}
 				list.Insert(rank+1, layer);
 
 				UndoableList src = srcLayer.Objects;
@@ -3207,6 +3521,15 @@ namespace Epsitec.Common.Document
 
 				Objects.Layer srcLayer = list[rankSrc] as Objects.Layer;
 				Objects.Layer dstLayer = list[rankDst] as Objects.Layer;
+
+				if ( srcLayer.Name != "" && dstLayer.Name != "" )
+				{
+					dstLayer.Name = dstLayer.Name + " + " + srcLayer.Name;
+				}
+				else if ( srcLayer.Name != "" && dstLayer.Name == "" )
+				{
+					dstLayer.Name = srcLayer.Name;
+				}
 
 				UndoableList src = srcLayer.Objects;
 				UndoableList dst = dstLayer.Objects;
@@ -3693,7 +4016,9 @@ namespace Epsitec.Common.Document
 						property.CopyTo(style);
 						style.IsStyle = true;
 						style.StyleName = this.GetNextStyleName();
-						this.PropertyList(style).Add(style);
+						this.StyleAdd(style);
+						this.document.PropertiesStyle.Add(style);
+						this.document.PropertiesStyle.Selected = this.document.PropertiesStyle.Count-1;
 
 						DrawingContext context = this.ActiveViewer.DrawingContext;
 						Objects.Abstract layer = context.RootObject();
@@ -3707,7 +4032,7 @@ namespace Epsitec.Common.Document
 						this.PropertyList(property).Remove(property);
 						property.IsStyle = true;
 						property.StyleName = this.GetNextStyleName();
-						this.PropertyList(property).Add(property);
+						this.StyleAdd(property);
 					}
 
 					this.document.Notifier.NotifyStyleChanged();
@@ -3724,7 +4049,7 @@ namespace Epsitec.Common.Document
 					property.CopyTo(style);
 					style.IsStyle = true;
 					style.StyleName = this.GetNextStyleName();
-					this.PropertyList(true, style.IsSelected).Add(style);
+					this.StyleAdd(style);
 					this.ObjectMemoryTool.ChangeProperty(style);
 
 					this.document.Notifier.NotifyStyleChanged();
@@ -3732,6 +4057,13 @@ namespace Epsitec.Common.Document
 					this.OpletQueueValidateAction();
 				}
 			}
+		}
+
+		// Ajoute un nouveau style.
+		protected void StyleAdd(Properties.Abstract style)
+		{
+			this.document.PropertiesStyle.Add(style);
+			this.document.PropertiesStyle.Selected = this.document.PropertiesStyle.Count-1;
 		}
 
 		// Libère un style.

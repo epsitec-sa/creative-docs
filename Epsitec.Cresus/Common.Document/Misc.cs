@@ -56,36 +56,50 @@ namespace Epsitec.Common.Document
 			return System.IO.Path.GetFileNameWithoutExtension(filename);
 		}
 
+		// Indique si un fichier utilise une extension donnée.
+		static public bool IsExtension(string filename, string ext)
+		{
+			return filename.ToLower().EndsWith(ext);
+		}
+
 		// Retourne la copie d'un nom.
 		// "Bidon"              ->  "Copie de Bidon"
 		// "Copie de Bidon"     ->  "Copie (2) de Bidon"
 		// "Copie (2) de Bidon" ->  "Copie (3) de Bidon"
 		static public string CopyName(string name)
 		{
+			return Misc.CopyName(name, "Copie", "de");
+		}
+
+		// Retourne la copie d'un nom.
+		// copy = "Copie" ou "Copy"
+		// of = "de" ou "of"
+		static public string CopyName(string name, string copy, string of)
+		{
 			if ( name == "" )
 			{
-				return "Copie";
+				return copy;
 			}
 
-			if ( name.StartsWith("Copie de ") )
+			if ( name.StartsWith(string.Concat(copy, " ", of, " ")) )
 			{
-				return "Copie (2) de " + name.Substring(9);
+				return string.Concat(copy, " (2) ", of, " ", name.Substring(copy.Length+of.Length+2));
 			}
 
-			if ( name.StartsWith("Copie (") )
+			if ( name.StartsWith(string.Concat(copy, " (")) )
 			{
 				int num = 0;
-				int i = 7;
+				int i = copy.Length+2;
 				while ( name[i] >= '0' && name[i] <= '9' )
 				{
 					num *= 10;
 					num += name[i++]-'0';
 				}
 				num ++;
-				return "Copie (" + num.ToString() + name.Substring(i);
+				return string.Concat(copy, " (", num.ToString(), name.Substring(i));
 			}
 
-			return "Copie de " + name;
+			return string.Concat(copy, " ", of, " ", name);
 		}
 
 		// Permute deux variables.

@@ -175,6 +175,26 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
+		// Initialise le sélectionneur pour effectuer un stretch rapide
+		// (c'est-à-dire non interactif).
+		public void QuickStretch(Rectangle rInitial, Rectangle rFinal)
+		{
+			this.initialData.P1 = rInitial.BottomLeft;
+			this.initialData.P2 = rInitial.TopRight;
+			this.initialData.P3 = rInitial.TopLeft;
+			this.initialData.P4 = rInitial.BottomRight;
+			this.initialData.Center = rInitial.Center;
+			this.initialData.Angle = 0.0;
+
+			this.finalData.TypeInUse = SelectorType.Zoomer;
+			this.finalData.P1 = rFinal.BottomLeft;
+			this.finalData.P2 = rFinal.TopRight;
+			this.finalData.P3 = rFinal.TopLeft;
+			this.finalData.P4 = rFinal.BottomRight;
+			this.finalData.Center = rFinal.Center;
+			this.finalData.Angle = 0.0;
+		}
+
 		// Retourne une position d'une poignée.
 		public Point Position(int rank)
 		{

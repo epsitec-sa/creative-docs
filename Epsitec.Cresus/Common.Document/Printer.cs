@@ -21,28 +21,6 @@ namespace Epsitec.Common.Document
 			this.imageAA = 1.0;
 		}
 
-		// Sauvegarde les réglages d'impression.
-		public void SaveSettings(PrinterSettings settings)
-		{
-			if ( this.settingsMemory == null )
-			{
-				this.settingsMemory = new SettingsMemory(this.document);
-			}
-
-			this.settingsMemory.Save(settings);
-		}
-
-		// Restitue les réglages d'impression.
-		public void RestoreSettings(PrinterSettings settings)
-		{
-			if ( this.settingsMemory == null )
-			{
-				this.settingsMemory = new SettingsMemory(this.document);
-			}
-
-			this.settingsMemory.Restore(settings);
-		}
-
 		// Imprime le document selon les choix faits dans le dialogue Window (dp)
 		// ainsi que dans le dialogue des réglages (PrintInfo).
 		public void Print(Epsitec.Common.Dialogs.Print dp)
@@ -128,10 +106,58 @@ namespace Epsitec.Common.Document
 				this.printer = printer;
 				this.document = printer.document;
 
+				this.pageList = new System.Collections.ArrayList();
+				this.pageCounter = 0;
+
 				// Crée le DrawingContext utilisé pour l'impression.
 				this.drawingContext = new DrawingContext(this.document, null);
 				this.drawingContext.ContainerSize = this.document.Size;
 				this.drawingContext.PreviewActive = true;
+
+				Settings.PrintInfo pi = this.document.Settings.PrintInfo;
+
+				dp.Document.SelectPrinter(pi.PrintName);
+				dp.Document.PrinterSettings.Collate = pi.Collate;
+				dp.Document.PrinterSettings.PrintToFile = pi.PrintToFile;
+				dp.Document.PrinterSettings.OutputFileName = pi.PrintFilename;
+
+				Settings.PrintRange range = pi.PrintRange;
+				int copies = pi.Copies;
+
+				int fromPage = 1;
+				int toPage   = this.document.Modifier.PrintableTotalPages();
+				bool justeOneMaster = false;
+
+				if ( range == Settings.PrintRange.FromTo )
+				{
+					fromPage = pi.PrintFrom;
+					toPage   = pi.PrintTo;
+				}
+				else if ( range == Settings.PrintRange.Current )
+				{
+					int cp = this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage;
+					Objects.Page page = this.document.GetObjects[cp] as Objects.Page;
+					if ( page.MasterType == Objects.MasterType.Slave )
+					{
+						fromPage = page.Rank+1;
+						toPage   = fromPage;
+					}
+					else
+					{
+						fromPage = cp;
+						toPage   = cp;
+						justeOneMaster = true;
+					}
+				}
+
+				bool reverse = false;
+				if ( fromPage > toPage )
+				{
+					Misc.Swap(ref fromPage, ref toPage);
+					reverse = true;
+				}
+
+				int totalPages = toPage-fromPage+1;
 
 				// Reprend ici tous les choix effectués dans le dialogue Window
 				// de l'impression. Même s'il semble possible de les atteindre
@@ -139,29 +165,77 @@ namespace Epsitec.Common.Document
 				// fonctionne mal.
 				this.paperSize = dp.Document.PrinterSettings.DefaultPageSettings.PaperSize.Size;
 				this.landscape = dp.Document.PrinterSettings.DefaultPageSettings.Landscape;
-				this.fromPage  = dp.Document.PrinterSettings.FromPage;
-				this.toPage    = dp.Document.PrinterSettings.ToPage;
-				this.copies    = dp.Document.PrinterSettings.Copies;
-				this.collate   = dp.Document.PrinterSettings.Collate;
-				this.duplex    = dp.Document.PrinterSettings.Duplex;
-				this.totalPages = this.toPage-this.fromPage+1;
-				this.pageCounter = 0;
-				this.multicopyByPrinter = false;
 
-				if ( this.collate == false &&
-					 this.duplex == DuplexMode.Simplex &&
-					 this.copies > 1 )
+				bool multicopyByPrinter = false;
+
+				if ( pi.Collate == false &&
+					 dp.Document.PrinterSettings.Duplex == DuplexMode.Simplex &&
+					 pi.Copies > 1 )
 				{
-					this.multicopyByPrinter = true;
+					multicopyByPrinter = true;
 				}
 
-				if ( this.multicopyByPrinter )
+				if ( multicopyByPrinter )
 				{
-					this.copies = 1;
+					dp.Document.PrinterSettings.Copies = pi.Copies;
+					copies = 1;
 				}
 				else
 				{
 					dp.Document.PrinterSettings.Copies = 1;
+				}
+
+				// Calcule la liste des pages à imprimer.
+				if ( justeOneMaster )
+				{
+					for ( int i=0 ; i<copies ; i++ )
+					{
+						this.pageList.Add(fromPage);
+					}
+				}
+				else
+				{
+					for ( int i=0 ; i<totalPages*copies ; i++ )
+					{
+						int page = i;
+
+						if ( pi.Collate )  // 1,2,3,4 - 1,2,3,4 ?
+						{
+							page %= totalPages;
+						}
+						else
+						{
+							if ( dp.Document.PrinterSettings.Duplex != DuplexMode.Simplex )  // 1,2 - 1,2 - 3,4 - 3,4 ?
+							{
+								if      ( (page&0x3) == 0x1 )  page = (page&~0x3)|0x2;
+								else if ( (page&0x3) == 0x2 )  page = (page&~0x3)|0x1;
+								page /= copies;
+							}
+							else	// 1,1 - 2,2 - 3,3 - 4,4 ?
+							{
+								page /= copies;
+							}
+						}
+						page += fromPage-1;
+						page = this.document.Modifier.PrintablePageRank(page);
+						if ( page == -1 )  break;
+
+						if ( pi.PrintArea == Settings.PrintArea.Even )
+						{
+							if ( page%2 == 0 )  continue;
+						}
+						if ( pi.PrintArea == Settings.PrintArea.Odd )
+						{
+							if ( page%2 != 0 )  continue;
+						}
+
+						this.pageList.Add(page);
+					}
+				}
+
+				if ( pi.Reverse ^ reverse )
+				{
+					this.pageList.Reverse();
 				}
 			}
 
@@ -200,31 +274,16 @@ namespace Epsitec.Common.Document
 			
 			public Printing.PrintEngineStatus PrintPage(Printing.PrintPort port)
 			{
-				int page = this.pageCounter;
+				if ( this.pageCounter >= this.pageList.Count )
+				{
+					return Printing.PrintEngineStatus.FinishJob;
+				}
 
-				if ( this.collate )  // 1,2,3,4 - 1,2,3,4 ?
-				{
-					page %= this.totalPages;
-				}
-				else
-				{
-					if ( this.duplex != DuplexMode.Simplex )  // 1,2 - 1,2 - 3,4 - 3,4 ?
-					{
-						     if ( (page&0x3) == 0x1 )  page = (page&~0x3)|0x2;
-						else if ( (page&0x3) == 0x2 )  page = (page&~0x3)|0x1;
-						page /= this.copies;
-					}
-					else	// 1,1 - 2,2 - 3,3 - 4,4 ?
-					{
-						page /= this.copies;
-					}
-				}
-				page += this.fromPage-1;
+				int page = (int) this.pageList[this.pageCounter++];
 				//?System.Diagnostics.Debug.WriteLine("PrintPage "+page.ToString());
 				this.printer.PrintGeometry(port, this, this.drawingContext, page);
-				this.pageCounter ++;
 
-				if ( this.pageCounter < this.totalPages*this.copies )
+				if ( this.pageCounter < this.pageList.Count )
 				{
 					return Printing.PrintEngineStatus.MorePages;
 				}
@@ -232,19 +291,13 @@ namespace Epsitec.Common.Document
 			}
 			#endregion
 
-			protected Document				document;
-			protected Printer				printer;
-			protected DrawingContext		drawingContext;
-			protected Size					paperSize;
-			protected bool					landscape;
-			protected int					pageCounter;
-			protected int					fromPage;
-			protected int					toPage;
-			protected int					totalPages;
-			protected int					copies;
-			protected bool					collate;
-			protected DuplexMode			duplex;
-			protected bool					multicopyByPrinter;
+			protected Document						document;
+			protected Printer						printer;
+			protected DrawingContext				drawingContext;
+			protected Size							paperSize;
+			protected bool							landscape;
+			protected System.Collections.ArrayList	pageList;
+			protected int							pageCounter;
 		}
 
 
@@ -347,17 +400,59 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Calcule la liste des calques, y compris ceux des pages maîtres.
+		// Les calques cachés à l'impression ne sont pas mis dans la liste.
+		protected System.Collections.ArrayList ComputeLayers(int pageNumber)
+		{
+			System.Collections.ArrayList layers = new System.Collections.ArrayList();
+			System.Collections.ArrayList masterList = new System.Collections.ArrayList();
+			this.document.Modifier.ComputeMasterPageList(masterList, pageNumber);
+
+			// Mets d'abord les premiers calques de toutes les pages maîtres.
+			foreach ( Objects.Page master in masterList )
+			{
+				int frontier = master.MasterFirstFrontLayer;
+				for ( int i=0 ; i<frontier ; i++ )
+				{
+					Objects.Layer layer = master.Objects[i] as Objects.Layer;
+					if ( layer.Print == Objects.LayerPrint.Hide )  continue;
+					layers.Add(layer);
+				}
+			}
+
+			// Mets ensuite tous les calques de la page.
+			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
+			foreach ( Objects.Layer layer in this.document.Flat(page) )
+			{
+				if ( layer.Print == Objects.LayerPrint.Hide )  continue;
+				layers.Add(layer);
+			}
+
+			// Mets finalement les derniers calques de toutes les pages maîtres.
+			foreach ( Objects.Page master in masterList )
+			{
+				int frontier = master.MasterFirstFrontLayer;
+				int total = master.Objects.Count;
+				for ( int i=frontier ; i<total ; i++ )
+				{
+					Objects.Layer layer = master.Objects[i] as Objects.Layer;
+					if ( layer.Print == Objects.LayerPrint.Hide )  continue;
+					layers.Add(layer);
+				}
+			}
+
+			return layers;
+		}
+
 		// Calcule les zones d'impression.
 		// Les différentes zones n'ont aucune intersection entre elles.
 		protected System.Collections.ArrayList ComputeAreas(int pageNumber)
 		{
 			System.Collections.ArrayList areas = new System.Collections.ArrayList();
+			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
 			int rank = 0;
-			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
-			foreach ( Objects.Layer layer in this.document.Flat(page) )
+			foreach ( Objects.Layer layer in layers )
 			{
-				if ( layer.Print == Objects.LayerPrint.Hide )  continue;
-
 				Properties.ModColor modColor = layer.PropertyModColor;
 				bool isLayerComplexPrinting = modColor.IsComplexPrinting;
 
@@ -502,11 +597,9 @@ namespace Epsitec.Common.Document
 		// Indique si une impression complexe est nécessaire.
 		protected bool IsComplexPrinting(int pageNumber)
 		{
-			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
-			foreach ( Objects.Layer layer in this.document.Flat(page) )
+			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
+			foreach ( Objects.Layer layer in layers )
 			{
-				if ( layer.Print == Objects.LayerPrint.Hide )  continue;
-
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
 					if ( obj.IsHide )  continue;  // objet caché ?
@@ -527,11 +620,9 @@ namespace Epsitec.Common.Document
 			Transform initialTransform = port.Transform;
 			this.InitSimplyPort(port, printEngine, offset);
 
-			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
-			foreach ( Objects.Layer layer in this.document.Flat(page) )
+			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
+			foreach ( Objects.Layer layer in layers )
 			{
-				if ( layer.Print == Objects.LayerPrint.Hide )  continue;
-
 				Properties.ModColor modColor = layer.PropertyModColor;
 				drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
@@ -557,11 +648,9 @@ namespace Epsitec.Common.Document
 			Transform initialTransform = port.Transform;
 			this.InitSimplyPort(port, printEngine, offset);
 
-			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
-			foreach ( Objects.Layer layer in this.document.Flat(page) )
+			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
+			foreach ( Objects.Layer layer in layers )
 			{
-				if ( layer.Print == Objects.LayerPrint.Hide )  continue;
-
 				Properties.ModColor modColor = layer.PropertyModColor;
 				drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
@@ -653,11 +742,9 @@ namespace Epsitec.Common.Document
 			gfx.ScaleTransform(zoomX, -zoomY, 0, 0);
 			gfx.TranslateTransform(-clipRect.Left, -clipRect.Bottom);
 
-			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
-			foreach ( Objects.Layer layer in this.document.Flat(page) )
+			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
+			foreach ( Objects.Layer layer in layers )
 			{
-				if ( layer.Print == Objects.LayerPrint.Hide )  continue;
-
 				Properties.ModColor modColor = layer.PropertyModColor;
 				drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
@@ -971,19 +1058,12 @@ namespace Epsitec.Common.Document
 			gfx.ScaleTransform(zoom, -zoom, 0, 0);
 
 			DrawingContext cView = this.document.Modifier.ActiveViewer.DrawingContext;
-			Objects.Abstract activLayer = cView.RootObject(2);
-			Objects.Abstract page = cView.RootObject(1);
-			foreach ( Objects.Layer layer in this.document.Flat(page) )
+			System.Collections.ArrayList layers = this.ComputeLayers(cView.CurrentPage);
+			foreach ( Objects.Layer layer in layers )
 			{
-				drawingContext.IsDimmed = false;
-				if ( layer != activLayer )  // calque passif ?
-				{
-					if ( layer.Type == Objects.LayerType.Hide )  continue;
-					drawingContext.IsDimmed = (layer.Type == Objects.LayerType.Dimmed);
-				}
-
 				Properties.ModColor modColor = layer.PropertyModColor;
 				drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
+				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
 
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
@@ -1038,80 +1118,6 @@ namespace Epsitec.Common.Document
 		}
 
 
-		#region SettingsMemory
-		protected class SettingsMemory
-		{
-			public SettingsMemory(Document document)
-			{
-				this.document = document;
-
-				this.duplex = DuplexMode.Simplex;
-				this.collate = false;
-				this.copies = 1;
-				this.fromPage = 1;
-				this.toPage = this.document.Modifier.StatisticTotalPages();
-				this.printRange = PrintRange.AllPages;
-				this.outputFileName = "";
-				this.printToFile = false;
-			}
-
-			public void Save(PrinterSettings settings)
-			{
-				if ( settings.PrintRange == PrintRange.AllPages )
-				{
-					settings.FromPage = 1;
-					settings.ToPage = this.document.Modifier.StatisticTotalPages();
-				}
-
-				if ( settings.PrintRange == PrintRange.SelectedPages )
-				{
-					settings.FromPage = this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage+1;
-					settings.ToPage = settings.FromPage;
-				}
-
-				this.duplex = settings.Duplex;
-				this.collate = settings.Collate;
-				this.copies = settings.Copies;
-				this.fromPage = settings.FromPage;
-				this.toPage = settings.ToPage;
-				this.printRange = settings.PrintRange;
-				this.outputFileName = settings.OutputFileName;
-				this.printToFile = settings.PrintToFile;
-			}
-
-			public void Restore(PrinterSettings settings)
-			{
-				settings.Duplex = this.duplex;
-				settings.Collate = this.collate;
-				settings.Copies = this.copies;
-				settings.FromPage = this.fromPage;
-				settings.ToPage = this.toPage;
-				settings.PrintRange = this.printRange;
-				settings.OutputFileName = this.outputFileName;
-				settings.PrintToFile = this.printToFile;
-
-				settings.MinimumPage = 1;
-				settings.MaximumPage = this.document.Modifier.StatisticTotalPages();
-
-				if ( settings.ToPage > settings.MaximumPage )
-				{
-					settings.ToPage = settings.MaximumPage;
-				}
-			}
-
-			protected Document					document;
-			protected DuplexMode				duplex;
-			protected bool						collate;
-			protected int						copies;
-			protected int						fromPage;
-			protected int						toPage;
-			protected PrintRange				printRange;
-			protected string					outputFileName;
-			protected bool						printToFile;
-		}
-		#endregion
-
-
 		protected Document					document;
 		protected ImageFormat				imageFormat;
 		protected double					imageDpi;
@@ -1119,6 +1125,5 @@ namespace Epsitec.Common.Document
 		protected int						imageDepth;
 		protected double					imageQuality;
 		protected double					imageAA;
-		protected SettingsMemory			settingsMemory;
 	}
 }

@@ -129,7 +129,8 @@ namespace Epsitec.App.DocumentEditor
 				foreach ( string file in files )
 				{
 					if ( !file.ToLower().EndsWith(this.DefaultExtension) &&
-						 !file.ToLower().EndsWith(this.ColorsExtension) )
+						 !file.ToLower().EndsWith(this.ModelExtension)   &&
+						 !file.ToLower().EndsWith(this.ColorsExtension)  )
 					{
 						return;
 					}
@@ -150,7 +151,8 @@ namespace Epsitec.App.DocumentEditor
 				foreach ( string file in files )
 				{
 					if ( !file.ToLower().EndsWith(this.DefaultExtension) &&
-						 !file.ToLower().EndsWith(this.ColorsExtension) )
+						 !file.ToLower().EndsWith(this.ModelExtension)   &&
+						 !file.ToLower().EndsWith(this.ColorsExtension)  )
 					{
 						return;
 					}
@@ -177,6 +179,14 @@ namespace Epsitec.App.DocumentEditor
 				{
 					return ".crdoc";
 				}
+			}
+		}
+
+		protected string ModelExtension
+		{
+			get
+			{
+				return ".crmod";
 			}
 		}
 

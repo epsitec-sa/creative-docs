@@ -104,6 +104,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		protected virtual void OnClosed()
+		{
+			if ( this.Closed != null )
+			{
+				this.Closed(this);
+			}
+		}
+
+		public event Epsitec.Common.Support.EventHandler		Closed;
+
+		
 		protected DocumentEditor				editor;
 		protected GlobalSettings				globalSettings;
 		protected Window						window;

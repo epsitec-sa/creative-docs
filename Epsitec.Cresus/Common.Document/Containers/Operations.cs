@@ -41,8 +41,8 @@ namespace Epsitec.Common.Document.Containers
 
 			// Zoom.
 			this.CreateHeader(ref this.boxZoom, ref this.toolBarZoom, "Réductions et agrandissements");
-			this.CreateButton(this.toolBarZoom, ref this.buttonZoomDiv2, "OperZoomDiv2", "Réduction /2",      new MessageEventHandler(this.HandleButtonZoomDiv2));
-			this.CreateButton(this.toolBarZoom, ref this.buttonZoomMul2, "OperZoomMul2", "Agrandissement x2", new MessageEventHandler(this.HandleButtonZoomMul2));
+			this.CreateButton(this.toolBarZoom, ref this.buttonZoomDiv2, "OperZoomDiv2", "Réduction \u00F72",      new MessageEventHandler(this.HandleButtonZoomDiv2));
+			this.CreateButton(this.toolBarZoom, ref this.buttonZoomMul2, "OperZoomMul2", "Agrandissement \u00D72", new MessageEventHandler(this.HandleButtonZoomMul2));
 			this.CreateSeparator(this.toolBarZoom);
 			this.CreateFieldZoom(this.toolBarZoom, ref this.fieldZoom, "Facteur d'agrandissement/réduction");
 			this.CreateButton(this.toolBarZoom, ref this.buttonZoomi, "OperZoomi", "Réduction",     new MessageEventHandler(this.HandleButtonZoomi));
@@ -71,6 +71,11 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateButton(this.toolBarShare, ref this.buttonShareTop,     "ShareTop",     "Distribution sur le haut",             new MessageEventHandler(this.HandleButtonShareTop));
 			this.CreateButton(this.toolBarShare, ref this.buttonShareCenterY, "ShareCenterX", "Distribution centrée verticalement",   new MessageEventHandler(this.HandleButtonShareCenterY));
 			this.CreateButton(this.toolBarShare, ref this.buttonShareBottom,  "ShareBottom",  "Distribution sur le bas",              new MessageEventHandler(this.HandleButtonShareBottom));
+
+			// Ajustements.
+			this.CreateHeader(ref this.boxAdjust, ref this.toolBarAdjust, "Ajustements");
+			this.CreateButton(this.toolBarAdjust, ref this.buttonAdjustWidth,  "AdjustWidth",  "Largeurs identiques",  new MessageEventHandler(this.HandleButtonAdjustWidth));
+			this.CreateButton(this.toolBarAdjust, ref this.buttonAdjustHeight, "AdjustHeight", "Hauteurs identiques",  new MessageEventHandler(this.HandleButtonAdjustHeight));
 		}
 
 		// Crée l'en-tête d'un groupe.
@@ -207,6 +212,9 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonShareCenterY.SetEnabled(enabled3);
 			this.buttonShareSpaceY.SetEnabled(enabled3);
 			this.buttonShareBottom.SetEnabled(enabled3);
+
+			this.buttonAdjustWidth.SetEnabled(enabled2);
+			this.buttonAdjustHeight.SetEnabled(enabled2);
 		}
 
 
@@ -368,6 +376,16 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.ShareSelection(-1, false);
 		}
 
+		private void HandleButtonAdjustWidth(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.AdjustSelection(true);
+		}
+
+		private void HandleButtonAdjustHeight(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.AdjustSelection(false);
+		}
+
 
 		protected GroupBox				boxMove;
 		protected HToolBar				toolBarMove;
@@ -420,6 +438,11 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton			buttonShareCenterY;
 		protected IconButton			buttonShareSpaceY;
 		protected IconButton			buttonShareBottom;
+		
+		protected GroupBox				boxAdjust;
+		protected HToolBar				toolBarAdjust;
+		protected IconButton			buttonAdjustWidth;
+		protected IconButton			buttonAdjustHeight;
 
 		protected int					tabIndex;
 	}

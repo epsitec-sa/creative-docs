@@ -86,6 +86,13 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
+		// Met le focus par défaut.
+		public void SetDefaultFocus()
+		{
+			this.field.SelectAll();
+			this.field.Focus();
+		}
+
 
 		protected StaticText				label;
 		protected TextField					field;

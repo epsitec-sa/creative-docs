@@ -66,6 +66,7 @@ namespace Epsitec.Common.Document.Containers
 			this.table = new CellTable(this);
 			this.table.Dock = DockStyle.Fill;
 			this.table.SelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
+			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
 			this.table.StyleH  = CellArrayStyle.ScrollNorm;
 			this.table.StyleH |= CellArrayStyle.Header;
 			this.table.StyleH |= CellArrayStyle.Separator;
@@ -309,6 +310,12 @@ namespace Epsitec.Common.Document.Containers
 			context.CurrentLayer = context.TotalLayers()-this.table.SelectedRow-1;
 		}
 
+		// Liste double-cliquée.
+		private void HandleTableDoubleClicked(object sender, MessageEventArgs e)
+		{
+			this.panelLayerName.SetDefaultFocus();
+		}
+
 		// Bouton "check" à 3 états dans la liste cliqué.
 		private void HandleCheckActiveStateChanged(object sender)
 		{
@@ -343,7 +350,7 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdateExtended();
 		}
 
-		// 
+		// Met à jour l'état réduit/étendu du panneau.
 		protected void UpdateExtended()
 		{
 			this.extendedButton.GlyphShape = this.isExtended ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;

@@ -32,6 +32,7 @@ namespace Epsitec.Common.Document
 			this.document = document;
 			this.viewer = viewer;
 			this.rootStack = new System.Collections.ArrayList();
+			this.masterPageList = new System.Collections.ArrayList();
 
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
@@ -798,12 +799,31 @@ namespace Epsitec.Common.Document
 			snapY = false;
 			if ( !this.guidesActive ^ this.isAlt )  return;
 
-			int total = this.document.Settings.GuidesCount;
+			Objects.Page page = this.document.GetObjects[this.CurrentPage] as Objects.Page;
+
+			if ( page.MasterGuides && this.MasterPageList.Count > 0 )
+			{
+				foreach ( Objects.Page masterPage in this.MasterPageList )
+				{
+					this.SnapGuides(masterPage.Guides, ref pos, ref snapX, ref snapY);
+				}
+			}
+
+			this.SnapGuides(page.Guides, ref pos, ref snapX, ref snapY);
+			this.SnapGuides(this.document.Settings.GuidesListGlobal, ref pos, ref snapX, ref snapY);
+		}
+
+		// Force un point sur un repère magnétique d'une liste.
+		protected void SnapGuides(UndoableList guides, ref Point pos, ref bool snapX, ref bool snapY)
+		{
+			if ( snapX && snapY )  return;
+
+			int total = guides.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{
-				Settings.Guide guide = this.document.Settings.GuidesGet(i);
+				Settings.Guide guide = guides[i] as Settings.Guide;
 
-				if ( guide.IsHorizontal )  // repère horizontal ?
+				if ( !snapY && guide.IsHorizontal )  // repère horizontal ?
 				{
 					double len = System.Math.Abs(pos.Y - guide.AbsolutePosition);
 					if ( len <= this.GuideMargin )
@@ -812,7 +832,8 @@ namespace Epsitec.Common.Document
 						snapY = true;
 					}
 				}
-				else	// repère vertical ?
+
+				if ( !snapX && !guide.IsHorizontal )  // repère vertical ?
 				{
 					double len = System.Math.Abs(pos.X - guide.AbsolutePosition);
 					if ( len <= this.GuideMargin )
@@ -1345,6 +1366,13 @@ namespace Epsitec.Common.Document
 
 
 		#region RootStack
+		// Donne toute la pile.
+		public System.Collections.ArrayList RootStack
+		{
+			get { return this.rootStack; }
+			set { this.rootStack = value; }
+		}
+
 		// Vide toute la pile.
 		public void RootStackClear()
 		{
@@ -1426,6 +1454,7 @@ namespace Epsitec.Common.Document
 			this.RootStackClear();
 			this.RootStackPush(page);
 			this.RootStackPush(layer);
+			this.UpdateAfterPageChanged();
 			this.document.Modifier.OpletQueueEnable = true;
 		}
 
@@ -1521,6 +1550,18 @@ namespace Epsitec.Common.Document
 					}
 				}
 			}
+		}
+
+		// Donne la liste des pages maître à utiliser.
+		public System.Collections.ArrayList MasterPageList
+		{
+			get { return this.masterPageList; }
+		}
+
+		// Met à jour masterPageList après un changement de page.
+		public void UpdateAfterPageChanged()
+		{
+			this.document.Modifier.ComputeMasterPageList(this.masterPageList, this.CurrentPage);
 		}
 		#endregion
 
@@ -1644,5 +1685,6 @@ namespace Epsitec.Common.Document
 		protected Point							constrainOrigin;
 		protected ConstrainType					constrainType;
 		protected System.Collections.ArrayList	rootStack;
+		protected System.Collections.ArrayList	masterPageList;
 	}
 }

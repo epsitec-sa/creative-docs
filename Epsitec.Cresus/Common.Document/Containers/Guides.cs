@@ -12,6 +12,25 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Guides(Document document) : base(document)
 		{
+			this.radioGroup = new Widget(this);
+			this.radioGroup.Height = 20;
+			this.radioGroup.Dock = DockStyle.Top;
+			this.radioGroup.DockMargins = new Margins(0, 0, 0, 0);
+
+			this.radioGlobal = new RadioButton(this.radioGroup);
+			this.radioGlobal.Width = 80;
+			this.radioGlobal.Text = "Globaux";
+			this.radioGlobal.Dock = DockStyle.Left;
+			this.radioGlobal.DockMargins = new Margins(0, 10, 0, 0);
+			this.radioGlobal.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+			this.radioPage = new RadioButton(this.radioGroup);
+			this.radioPage.Width = 100;
+			this.radioPage.Text = "Page courante";
+			this.radioPage.Dock = DockStyle.Left;
+			this.radioPage.DockMargins = new Margins(0, 0, 0, 0);
+			this.radioPage.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
 			this.toolBar = new HToolBar(this);
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
@@ -147,6 +166,9 @@ namespace Epsitec.Common.Document.Containers
 		// Met à jour le contenu de la table.
 		protected void UpdateTable()
 		{
+			this.radioGlobal.ActiveState =  this.document.Settings.GlobalGuides ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioPage.ActiveState   = !this.document.Settings.GlobalGuides ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
 			int rows = this.document.Settings.GuidesCount;
 			int initialColumns = this.table.Columns;
 			this.table.SetArraySize(2, rows);
@@ -233,6 +255,16 @@ namespace Epsitec.Common.Document.Containers
 
 			this.ignoreChanged = false;
 			this.UpdateToolBar();
+		}
+
+
+		// Un bouton radio a été cliqué.
+		private void HandleRadioClicked(object sender, MessageEventArgs e)
+		{
+			this.document.Settings.GlobalGuides = (sender == this.radioGlobal);
+
+			this.radioGlobal.ActiveState =  this.document.Settings.GlobalGuides ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioPage.ActiveState   = !this.document.Settings.GlobalGuides ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 		}
 
 
@@ -382,6 +414,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
+		protected Widget				radioGroup;
+		protected RadioButton			radioGlobal;
+		protected RadioButton			radioPage;
 		protected HToolBar				toolBar;
 		protected IconButton			buttonNewH;
 		protected IconButton			buttonNewV;

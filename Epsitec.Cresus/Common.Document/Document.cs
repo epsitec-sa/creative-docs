@@ -67,7 +67,8 @@ namespace Epsitec.Common.Document
 			this.exportDirectory = "";
 			this.exportFilename = "";
 			this.exportFilter = 0;
-			this.printerName = "";
+
+			this.printDialog = new Common.Dialogs.Print();
 
 			if ( this.mode == DocumentMode.Modify    ||
 				 this.mode == DocumentMode.Clipboard )
@@ -196,17 +197,7 @@ namespace Epsitec.Common.Document
 		// Dialogue d'impression pour ce document.
 		public Common.Dialogs.Print PrintDialog
 		{
-			get
-			{
-				if ( this.printDialog == null )
-				{
-					this.printDialog = new Common.Dialogs.Print();
-					this.printDialog.Document.SelectPrinter(this.PrinterName);
-					this.printDialog.AllowFromPageToPage = true;
-					this.printDialog.AllowSelectedPages  = true;
-				}
-				return this.printDialog;
-			}
+			get { return this.printDialog; }
 		}
 
 
@@ -331,28 +322,6 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Nom de l'imprimante utilisée.
-		public string PrinterName
-		{
-			get
-			{
-				return this.printerName;
-			}
-
-			set
-			{
-				if ( this.printerName != value )
-				{
-					this.printerName = value;
-					
-					if ( this.printDialog != null )
-					{
-						this.printDialog.Document.SelectPrinter(this.PrinterName);
-					}
-				}
-			}
-		}
-
 		// Indique si la sérialisation est nécessaire.
 		public bool IsDirtySerialize
 		{
@@ -390,9 +359,13 @@ namespace Epsitec.Common.Document
 					string err = this.Read(stream, System.IO.Path.GetDirectoryName(filename));
 					if ( err == "" )
 					{
-						this.Filename = filename;
-						this.globalSettings.LastFilenameAdd(filename);
-						this.IsDirtySerialize = false;
+						if ( Misc.IsExtension(filename, ".crdoc") ||
+							 Misc.IsExtension(filename, ".icon")  )
+						{
+							this.Filename = filename;
+							this.globalSettings.LastFilenameAdd(filename);
+							this.IsDirtySerialize = false;
+						}
 					}
 					else
 					{
@@ -499,7 +472,17 @@ namespace Epsitec.Common.Document
 				this.exportDirectory = doc.exportDirectory;
 				this.exportFilename = doc.exportFilename;
 				this.exportFilter = doc.exportFilter;
-				this.printerName = doc.printerName;
+
+				if ( this.Modifier != null && doc.readObjectMemory != null )
+				{
+					this.Modifier.ObjectMemory = doc.readObjectMemory;
+					this.Modifier.ObjectMemoryText = doc.readObjectMemoryText;
+				}
+
+				if ( this.Modifier != null && doc.readRootStack != null )
+				{
+					this.Modifier.ActiveViewer.DrawingContext.RootStack = doc.readRootStack;
+				}
 			}
 
 			this.ReadFinalize();
@@ -553,7 +536,7 @@ namespace Epsitec.Common.Document
 						v = assemblyName.Substring(i, j-i);
 						long r3 = System.Int64.Parse(v);
 
-						Document.ReadDocument.readRevision = (r1<<32) + (r2<<16) + r3;
+						Document.ReadRevision = (r1<<32) + (r2<<16) + r3;
 					}
 				}
 
@@ -566,6 +549,7 @@ namespace Epsitec.Common.Document
 		// Utilisé par les constructeurs de désérialisation du genre:
 		// protected Toto(SerializationInfo info, StreamingContext context)
 		public static Document ReadDocument = null;
+		public static long ReadRevision = 0;
 		protected static string AssemblyFullName = "";
 
 		// Adapte tous les objets après une désérialisation.
@@ -590,6 +574,8 @@ namespace Epsitec.Common.Document
 
 			if ( this.Modifier != null )
 			{
+				this.Modifier.UpdatePageShortNames();
+				this.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 				this.Modifier.OpletQueueEnable = true;
 				this.Modifier.OpletQueuePurge();
 			}
@@ -634,8 +620,12 @@ namespace Epsitec.Common.Document
 				return e.Message;
 			}
 
-			this.Filename = filename;
-			this.IsDirtySerialize = false;
+			if ( Misc.IsExtension(filename, ".crdoc") ||
+				 Misc.IsExtension(filename, ".icon")  )
+			{
+				this.Filename = filename;
+				this.IsDirtySerialize = false;
+			}
 			return "";
 		}
 
@@ -695,7 +685,11 @@ namespace Epsitec.Common.Document
 				info.AddValue("Settings", this.settings);
 				info.AddValue("ExportFilename", this.exportFilename);
 				info.AddValue("ExportFilter", this.exportFilter);
-				info.AddValue("PrinterName", this.printerName);
+
+				info.AddValue("ObjectMemory", this.modifier.ObjectMemory);
+				info.AddValue("ObjectMemoryText", this.modifier.ObjectMemoryText);
+
+				info.AddValue("RootStack", this.modifier.ActiveViewer.DrawingContext.RootStack);
 			}
 
 			info.AddValue("UniqueObjectId", this.modifier.UniqueObjectId);
@@ -708,7 +702,6 @@ namespace Epsitec.Common.Document
 		// Constructeur qui désérialise le document.
 		protected Document(SerializationInfo info, StreamingContext context)
 		{
-			this.readRevision = 0;
 			this.type = (DocumentType) info.GetValue("Type", typeof(DocumentType));
 			this.name = info.GetString("Name");
 
@@ -726,14 +719,32 @@ namespace Epsitec.Common.Document
 					this.exportDirectory = "";
 					this.exportFilename = info.GetString("ExportFilename");
 					this.exportFilter = info.GetInt32("ExportFilter");
-					this.printerName = info.GetString("PrinterName");
 				}
 				else
 				{
 					this.exportDirectory = "";
 					this.exportFilename = "";
 					this.exportFilter = 0;
-					this.printerName = "";
+				}
+
+				if ( this.IsRevisionGreaterOrEqual(1,0,7) )
+				{
+					this.readObjectMemory = (Objects.Memory) info.GetValue("ObjectMemory", typeof(Objects.Memory));
+					this.readObjectMemoryText = (Objects.Memory) info.GetValue("ObjectMemoryText", typeof(Objects.Memory));
+				}
+				else
+				{
+					this.readObjectMemory = null;
+					this.readObjectMemoryText = null;
+				}
+
+				if ( this.IsRevisionGreaterOrEqual(1,0,8) )
+				{
+					this.readRootStack = (System.Collections.ArrayList) info.GetValue("RootStack", typeof(System.Collections.ArrayList));
+				}
+				else
+				{
+					this.readRootStack = null;
 				}
 			}
 
@@ -757,7 +768,7 @@ namespace Epsitec.Common.Document
 		public bool IsRevisionGreaterOrEqual(int revision, int version, int subversion)
 		{
 			long r = ((long)revision<<32) + ((long)version<<16) + (long)subversion;
-			return ( this.readRevision >= r );
+			return ( Document.ReadRevision >= r );
 		}
 		#endregion
 
@@ -772,8 +783,31 @@ namespace Epsitec.Common.Document
 				clipRect = drawingContext.Viewer.ScreenToInternal(clipRect);
 			}
 
-			Objects.Abstract page = drawingContext.RootObject(1);
+			if ( drawingContext.MasterPageList.Count > 0 )
+			{
+				foreach ( Objects.Page masterPage in drawingContext.MasterPageList )
+				{
+					int frontier = masterPage.MasterFirstFrontLayer;
+					this.PaintPage(graphics, drawingContext, clipRect, masterPage, 0, frontier-1);
+				}
+			}
 
+			Objects.Abstract page = drawingContext.RootObject(1);
+			this.PaintPage(graphics, drawingContext, clipRect, page, 0, 10000);
+
+			if ( drawingContext.MasterPageList.Count > 0 )
+			{
+				foreach ( Objects.Page masterPage in drawingContext.MasterPageList )
+				{
+					int frontier = masterPage.MasterFirstFrontLayer;
+					this.PaintPage(graphics, drawingContext, clipRect, masterPage, frontier, 10000);
+				}
+			}
+		}
+
+		protected void PaintPage(Graphics graphics, DrawingContext drawingContext, Rectangle clipRect,
+								 Objects.Abstract page, int firstLayer, int lastLayer)
+		{
 			if ( drawingContext.PreviewActive )
 			{
 				Rectangle initialClip = Rectangle.Empty;
@@ -786,8 +820,11 @@ namespace Epsitec.Common.Document
 					graphics.SetClippingRectangle(clip);
 				}
 
+				int rankLayer = -1;
 				foreach ( Objects.Layer layer in this.Flat(page) )
 				{
+					rankLayer ++;
+					if ( rankLayer < firstLayer || rankLayer > lastLayer )  continue;
 					if ( layer.Print == Objects.LayerPrint.Hide )  continue;
 
 					Properties.ModColor modColor = layer.PropertyModColor;
@@ -814,8 +851,11 @@ namespace Epsitec.Common.Document
 				Objects.Abstract branch = drawingContext.RootObject();
 				Objects.Abstract activLayer = drawingContext.RootObject(2);
 
+				int rankLayer = -1;
 				foreach ( Objects.Layer layer in this.Flat(page) )
 				{
+					rankLayer ++;
+					if ( rankLayer < firstLayer || rankLayer > lastLayer )  continue;
 					bool dimmedLayer = false;
 					if ( layer != activLayer )  // calque passif ?
 					{
@@ -868,7 +908,6 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
-			this.printerName = dp.Document.PrinterSettings.PrinterName;
 			this.printer.Print(dp);
 		}
 
@@ -1373,7 +1412,6 @@ namespace Epsitec.Common.Document
 		protected string						exportDirectory;
 		protected string						exportFilename;
 		protected int							exportFilter;
-		protected string						printerName;
 		protected bool							isDirtySerialize;
 		protected UndoableList					objects;
 		protected UndoableList					propertiesAuto;
@@ -1386,8 +1424,10 @@ namespace Epsitec.Common.Document
 		protected Common.Dialogs.Print			printDialog;
 		protected Dialogs						dialogs;
 		protected string						ioDirectory;
-		protected long							readRevision;
 		protected System.Collections.ArrayList	readWarnings;
 		protected IOType						ioType;
+		protected Objects.Memory				readObjectMemory;
+		protected Objects.Memory				readObjectMemoryText;
+		protected System.Collections.ArrayList	readRootStack;
 	}
 }

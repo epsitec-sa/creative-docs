@@ -30,6 +30,13 @@ namespace Epsitec.Common.Document.Settings
 					this.step = 1;
 					break;
 
+				case "PrintArea":
+					this.text = "Imprimer";
+					this.minValue = 0;
+					this.maxValue = 100;
+					this.step = 1;
+					break;
+
 				case "PrintCentring":
 					this.text = "Position dans la page";
 					this.conditionName = "PrintAutoZoom";
@@ -64,6 +71,9 @@ namespace Epsitec.Common.Document.Settings
 					case "DefaultUnit":
 						return (int) this.document.Modifier.RealUnitDimension;
 
+					case "PrintArea":
+						return (int) this.document.Settings.PrintInfo.PrintArea;
+
 					case "PrintCentring":
 						return (int) this.document.Settings.PrintInfo.Centring;
 
@@ -83,6 +93,10 @@ namespace Epsitec.Common.Document.Settings
 				{
 					case "DefaultUnit":
 						this.document.Modifier.RealUnitDimension = (RealUnitType) value;
+						break;
+
+					case "PrintArea":
+						this.document.Settings.PrintInfo.PrintArea = (PrintArea) value;
 						break;
 
 					case "PrintCentring":
@@ -165,6 +179,13 @@ namespace Epsitec.Common.Document.Settings
 					if ( unit == RealUnitType.DimensionInch       )  return "Pouces";
 					break;
 
+				case "PrintArea":
+					PrintArea pa = (PrintArea) type;
+					if ( pa == PrintArea.All  )  return "Toutes les pages";
+					if ( pa == PrintArea.Even )  return "Les pages paires";
+					if ( pa == PrintArea.Odd  )  return "Les pages impaires";
+					break;
+
 				case "PrintCentring":
 					PrintCentring pc = (PrintCentring) type;
 					if ( pc == PrintCentring.BottomLeft   )  return "Calé en bas à gauche";
@@ -215,6 +236,12 @@ namespace Epsitec.Common.Document.Settings
 					if ( rank == 0 )  return (int) RealUnitType.DimensionMillimeter;
 					if ( rank == 1 )  return (int) RealUnitType.DimensionCentimeter;
 					if ( rank == 2 )  return (int) RealUnitType.DimensionInch;
+					return -1;
+
+				case "PrintArea":
+					if ( rank == 0 )  return (int) PrintArea.All;
+					if ( rank == 1 )  return (int) PrintArea.Odd;
+					if ( rank == 2 )  return (int) PrintArea.Even;
 					return -1;
 
 				case "PrintCentring":

@@ -198,6 +198,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Dialogs\Print.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Dialogs\Settings.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -226,6 +231,14 @@
                 />
                 <File
                     RelPath = "Images\Add.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\AdjustHeight.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\AdjustWidth.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -394,6 +407,10 @@
                 />
                 <File
                     RelPath = "Images\Export.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Extract.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -665,11 +682,19 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\OrderDown.icon"
+                    RelPath = "Images\OrderDownAll.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\OrderUp.icon"
+                    RelPath = "Images\OrderDownOne.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\OrderUpAll.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\OrderUpOne.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

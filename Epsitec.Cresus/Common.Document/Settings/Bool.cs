@@ -55,6 +55,18 @@ namespace Epsitec.Common.Document.Settings
 					this.text = "Affiche le nom des objets";
 					break;
 
+				case "PrintCollate":
+					this.text = "Copies assemblées (1,2,3 - 1,2,3)";
+					break;
+
+				case "PrintReverse":
+					this.text = "Ordre inversé";
+					break;
+
+				case "PrintToFile":
+					this.text = "Imprimer dans un fichier";
+					break;
+
 				case "PrintDraft":
 					this.text = "Brouillon (pas de dégradé ni de transparence)";
 					break;
@@ -125,6 +137,15 @@ namespace Epsitec.Common.Document.Settings
 					case "LabelsShow":
 						return this.document.Modifier.ActiveViewer.DrawingContext.LabelsShow;
 
+					case "PrintCollate":
+						return this.document.Settings.PrintInfo.Collate;
+
+					case "PrintReverse":
+						return this.document.Settings.PrintInfo.Reverse;
+
+					case "PrintToFile":
+						return this.document.Settings.PrintInfo.PrintToFile;
+
 					case "PrintDraft":
 						return this.document.Settings.PrintInfo.ForceSimply;
 
@@ -187,6 +208,18 @@ namespace Epsitec.Common.Document.Settings
 
 					case "LabelsShow":
 						this.document.Modifier.ActiveViewer.DrawingContext.LabelsShow = value;
+						break;
+
+					case "PrintCollate":
+						this.document.Settings.PrintInfo.Collate = value;
+						break;
+
+					case "PrintReverse":
+						this.document.Settings.PrintInfo.Reverse = value;
+						break;
+
+					case "PrintToFile":
+						this.document.Settings.PrintInfo.PrintToFile = value;
 						break;
 
 					case "PrintDraft":

@@ -364,6 +364,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
+			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -1478,8 +1479,16 @@ namespace Epsitec.Common.Document.Objects
 			{
 				foreach ( Handle handle in this.handles )
 				{
-					if ( handle.Type != HandleType.Primary )  continue;
-					if ( rect.Contains(handle.Position) )  return true;
+					if ( handle.Type != HandleType.Primary  &&
+						 handle.Type != HandleType.Starting )
+					{
+						continue;
+					}
+
+					if ( rect.Contains(handle.Position) )
+					{
+						return true;
+					}
 				}
 				return false;
 			}

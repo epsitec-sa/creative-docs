@@ -293,12 +293,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			this.editor.Window.MakeActive();
 			this.window.Hide();
+			this.OnClosed();
 		}
 
 		private void HandleKeyButtonOKClicked(object sender, MessageEventArgs e)
 		{
 			this.editor.Window.MakeActive();
 			this.window.Hide();
+			this.OnClosed();
 
 			if ( this.validKey && !this.demo )
 			{
@@ -327,6 +329,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			this.editor.Window.MakeActive();
 			this.window.Hide();
+			this.OnClosed();
 		}
 
 

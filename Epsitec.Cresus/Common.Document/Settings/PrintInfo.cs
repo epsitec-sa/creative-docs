@@ -19,6 +19,24 @@ namespace Epsitec.Common.Document.Settings
 		TopRight     = 32,
 	}
 
+	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	// sous peine de plantée lors de la désérialisation.
+	public enum PrintRange
+	{
+		All     = 0,
+		FromTo  = 1,
+		Current = 2,
+	}
+
+	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	// sous peine de plantée lors de la désérialisation.
+	public enum PrintArea
+	{
+		All  = 0,
+		Even = 1,
+		Odd  = 2,
+	}
+
 	/// <summary>
 	/// La classe PrintInfo comtient tous les réglages secondaires pour l'impression.
 	/// </summary>
@@ -33,6 +51,16 @@ namespace Epsitec.Common.Document.Settings
 
 		protected void Initialise()
 		{
+			this.printName = "";
+			this.printRange = PrintRange.All;
+			this.printArea = PrintArea.All;
+			this.printFrom = 1;
+			this.printTo = 10000;
+			this.copies = 1;
+			this.collate = false;
+			this.reverse = false;
+			this.printToFile = false;
+			this.printFilename = "";
 			this.dpi = 300.0;
 			this.zoom = 1.0;  // 100%
 			this.gamma = 0.0;  // pas d'AA
@@ -46,6 +74,77 @@ namespace Epsitec.Common.Document.Settings
 			this.debord = 50.0;
 			this.target = false;
 			this.debugArea = false;
+		}
+
+		public string PrintName
+		{
+			get
+			{
+				if ( this.printName == "" )
+				{
+					return this.document.PrintDialog.Document.PrinterSettings.PrinterName;
+				}
+				return this.printName;
+			}
+			
+			set
+			{
+				this.printName = value;
+			}
+		}
+
+		public PrintRange PrintRange
+		{
+			get { return this.printRange; }
+			set { this.printRange = value; }
+		}
+
+		public PrintArea PrintArea
+		{
+			get { return this.printArea; }
+			set { this.printArea = value; }
+		}
+
+		public int PrintFrom
+		{
+			get { return this.printFrom; }
+			set { this.printFrom = value; }
+		}
+
+		public int PrintTo
+		{
+			get { return this.printTo; }
+			set { this.printTo = value; }
+		}
+
+		public int Copies
+		{
+			get { return this.copies; }
+			set { this.copies = value; }
+		}
+
+		public bool Collate
+		{
+			get { return this.collate; }
+			set { this.collate = value; }
+		}
+
+		public bool Reverse
+		{
+			get { return this.reverse; }
+			set { this.reverse = value; }
+		}
+
+		public bool PrintToFile
+		{
+			get { return this.printToFile; }
+			set { this.printToFile = value; }
+		}
+
+		public string PrintFilename
+		{
+			get { return this.printFilename; }
+			set { this.printFilename = value; }
 		}
 
 		public double Zoom
@@ -164,7 +263,17 @@ namespace Epsitec.Common.Document.Settings
 		// Sérialise les réglages.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			info.AddValue("Rev", 1);
+			info.AddValue("Rev", 3);
+			info.AddValue("PrintName", this.printName);
+			info.AddValue("PrintRange", this.printRange);
+			info.AddValue("PrintArea", this.printArea);
+			info.AddValue("PrintFrom", this.printFrom);
+			info.AddValue("PrintTo", this.printTo);
+			info.AddValue("Copies", this.copies);
+			info.AddValue("Collate", this.collate);
+			info.AddValue("Reverse", this.reverse);
+			info.AddValue("PrintToFile", this.printToFile);
+			info.AddValue("PrintFilename", this.printFilename);
 			info.AddValue("Dpi", this.dpi);
 			info.AddValue("Gamma", this.gamma);
 			info.AddValue("Zoom", this.zoom);
@@ -190,6 +299,24 @@ namespace Epsitec.Common.Document.Settings
 				rev = info.GetInt32("Rev");
 			}
 
+			if ( rev >= 2 )
+			{
+				this.printName = info.GetString("PrintName");
+				this.printRange = (PrintRange) info.GetValue("PrintRange", typeof(PrintRange));
+				this.printArea = (PrintArea) info.GetValue("PrintArea", typeof(PrintArea));
+				this.printFrom = info.GetInt32("PrintFrom");
+				this.printTo = info.GetInt32("PrintTo");
+				this.copies = info.GetInt32("Copies");
+				this.collate = info.GetBoolean("Collate");
+				this.reverse = info.GetBoolean("Reverse");
+			}
+
+			if ( rev >= 3 )
+			{
+				this.printToFile = info.GetBoolean("PrintToFile");
+				this.printFilename = info.GetString("PrintFilename");
+			}
+
 			this.dpi = info.GetDouble("Dpi");
 			this.gamma = info.GetDouble("Gamma");
 			this.zoom = info.GetDouble("Zoom");
@@ -210,6 +337,16 @@ namespace Epsitec.Common.Document.Settings
 
 		
 		protected Document				document;
+		protected string				printName;
+		protected PrintRange			printRange;
+		protected PrintArea				printArea;
+		protected int					printFrom;
+		protected int					printTo;
+		protected int					copies;
+		protected bool					collate;
+		protected bool					reverse;
+		protected bool					printToFile;
+		protected string				printFilename;
 		protected double				dpi;
 		protected double				gamma;
 		protected double				zoom;

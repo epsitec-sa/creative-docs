@@ -76,6 +76,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.window.Hide();
 			this.window.Dispose();
 			this.window = null;
+			this.OnClosed();
 		}
 
 		protected void DeleteWindowSplash()

@@ -410,7 +410,7 @@ namespace Epsitec.Common.Document
 
 			if ( this.guideInteractive != -1 )
 			{
-				this.GuideInteractiveMove(pos);
+				this.GuideInteractiveMove(pos, message.IsAltPressed);
 				return;
 			}
 
@@ -714,18 +714,21 @@ namespace Epsitec.Common.Document
 					this.drawingContext.ConstrainFixStarting(obj.GetHandlePosition(rank));
 					this.document.Modifier.FlushMoveAfterDuplicate();
 				}
-				else if ( this.GuideDetect(mouse, out rank) )
-				{
-					this.guideInteractive = rank;
-					this.document.Dialogs.SelectGuide(this.guideInteractive);
-				}
 				else
 				{
 					obj = this.Detect(mouse, !this.drawingContext.IsShift);
 					if ( obj == null )
 					{
-						this.selector.FixStarting(mouse);
-						this.document.Modifier.FlushMoveAfterDuplicate();
+						if ( this.GuideDetect(mouse, out rank) )
+						{
+							this.guideInteractive = rank;
+							this.document.Dialogs.SelectGuide(this.guideInteractive);
+						}
+						else
+						{
+							this.selector.FixStarting(mouse);
+							this.document.Modifier.FlushMoveAfterDuplicate();
+						}
 					}
 					else
 					{
@@ -871,7 +874,7 @@ namespace Epsitec.Common.Document
 					this.HiliteHandle(obj, rank);
 					this.ChangeMouseCursor(MouseCursorType.Finger);
 				}
-				else if ( !global && this.GuideDetect(mouse, out guideRank) )
+				else if ( !global && hiliteObj == null && this.GuideDetect(mouse, out guideRank) )
 				{
 					this.ChangeMouseCursor(this.GuideIsHorizontal(guideRank) ? MouseCursorType.HSplit : MouseCursorType.VSplit);
 				}
@@ -1631,6 +1634,34 @@ namespace Epsitec.Common.Document
 			int nbSel = this.document.Modifier.TotalSelected;
 			bool exist;
 
+			// Construit le sous-menu "ordre".
+			if ( globalMenu || nbSel == 0 )
+			{
+				this.contextMenuOrder = null;
+			}
+			else
+			{
+				System.Collections.ArrayList listOrder = new System.Collections.ArrayList();
+
+				exist = false;
+				exist |= ContextMenuItem.MenuAddItem(listOrder, this.CommandDispatcher, "OrderUpAll",   "manifest:Epsitec.App.DocumentEditor.Images.OrderUpAll.icon",   "Premier plan");
+				exist |= ContextMenuItem.MenuAddItem(listOrder, this.CommandDispatcher, "OrderUpOne",   "manifest:Epsitec.App.DocumentEditor.Images.OrderUpOne.icon",   "En avant");
+				exist |= ContextMenuItem.MenuAddItem(listOrder, this.CommandDispatcher, "OrderDownOne", "manifest:Epsitec.App.DocumentEditor.Images.OrderDownOne.icon", "En arrière");
+				exist |= ContextMenuItem.MenuAddItem(listOrder, this.CommandDispatcher, "OrderDownAll", "manifest:Epsitec.App.DocumentEditor.Images.OrderDownAll.icon", "Arrière-plan");
+
+				if ( ContextMenuItem.IsMenuActive(listOrder) )
+				{
+					this.contextMenuOrder = new VMenu();
+					this.contextMenuOrder.Host = this;
+					ContextMenuItem.MenuCreate(this.contextMenuOrder, listOrder);
+					this.contextMenuOrder.AdjustSize();
+				}
+				else
+				{
+					this.contextMenuOrder = null;
+				}
+			}
+
 			// Construit le sous-menu "opérations".
 			if ( globalMenu || nbSel == 0 )
 			{
@@ -1652,8 +1683,8 @@ namespace Epsitec.Common.Document
 				if ( exist )  ContextMenuItem.MenuAddSep(listOper);
 
 				exist = false;
-				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ZoomDiv2",  "manifest:Epsitec.App.DocumentEditor.Images.OperZoomDiv2.icon", "Réduction /2");
-				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ZoomMul2",  "manifest:Epsitec.App.DocumentEditor.Images.OperZoomMul2.icon", "Agrandissement x2");
+				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ZoomDiv2",  "manifest:Epsitec.App.DocumentEditor.Images.OperZoomDiv2.icon", "Réduction \u00F72");
+				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ZoomMul2",  "manifest:Epsitec.App.DocumentEditor.Images.OperZoomMul2.icon", "Agrandissement \u00D72");
 
 				if ( ContextMenuItem.IsMenuActive(listOper) )
 				{
@@ -1777,10 +1808,9 @@ namespace Epsitec.Common.Document
 				exist = false;
 				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Delete",    "manifest:Epsitec.App.DocumentEditor.Images.Delete.icon",    "Supprimer");
 				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Duplicate", "manifest:Epsitec.App.DocumentEditor.Images.Duplicate.icon", "Dupliquer");
-				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "OrderUp",   "manifest:Epsitec.App.DocumentEditor.Images.OrderUp.icon",   "Dessus");
-				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "OrderDown", "manifest:Epsitec.App.DocumentEditor.Images.OrderDown.icon", "Dessous");
-				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Merge",     "manifest:Epsitec.App.DocumentEditor.Images.Merge.icon",     "Fusionner");
 				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Group",     "manifest:Epsitec.App.DocumentEditor.Images.Group.icon",     "Associer");
+				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Merge",     "manifest:Epsitec.App.DocumentEditor.Images.Merge.icon",     "Fusionner");
+				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Extract",   "manifest:Epsitec.App.DocumentEditor.Images.Extract.icon",   "Extraire");
 				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Ungroup",   "manifest:Epsitec.App.DocumentEditor.Images.Ungroup.icon",   "Dissocier");
 				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Inside",    "manifest:Epsitec.App.DocumentEditor.Images.Inside.icon",    "Entrer dans groupe");
 				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Outside",   "manifest:Epsitec.App.DocumentEditor.Images.Outside.icon",   "Sortir du groupe");
@@ -1801,9 +1831,10 @@ namespace Epsitec.Common.Document
 				if ( exist )  ContextMenuItem.MenuAddSep(list);
 
 				exist = false;
-				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuOper, "manifest:Epsitec.App.DocumentEditor.Images.OperMoveH.icon", "Opérations");
-				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuGeom, "manifest:Epsitec.App.DocumentEditor.Images.Combine.icon",   "Géométrie");
-				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuBool, "manifest:Epsitec.App.DocumentEditor.Images.BooleanOr.icon", "Booléen");
+				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuOrder, "manifest:Epsitec.App.DocumentEditor.Images.OrderUpAll.icon", "Ordre");
+				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuOper,  "manifest:Epsitec.App.DocumentEditor.Images.OperMoveH.icon",  "Opérations");
+				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuGeom,  "manifest:Epsitec.App.DocumentEditor.Images.Combine.icon",    "Géométrie");
+				exist |= ContextMenuItem.MenuAddSubmenu(list, this.contextMenuBool,  "manifest:Epsitec.App.DocumentEditor.Images.BooleanOr.icon",  "Booléen");
 
 				if ( nbSel == 1 && this.contextMenuObject != null )
 				{
@@ -2203,12 +2234,12 @@ namespace Epsitec.Common.Document
 		}
 
 		// Positionne un guide interactif.
-		public void GuideInteractiveMove(Point pos)
+		public void GuideInteractiveMove(Point pos, bool isAlt)
 		{
 			if ( this.guideInteractive == -1 )  return;
 
 			// Ne pas utiliser SnapGrid pour ignorer les repères !
-			if ( this.drawingContext.GridActive )
+			if ( this.drawingContext.GridActive ^ isAlt )
 			{
 				this.drawingContext.SnapGridForce(ref pos);
 			}
@@ -2327,16 +2358,7 @@ namespace Epsitec.Common.Document
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.BackColor);
 					}
-					
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(Color.FromARGB(0.4, 0.5,0.5,0.5));
 				}
-
-				Rectangle area = this.document.Modifier.RectangleArea;
-				graphics.Align(ref area);
-				area.Offset(ix, iy);
-				graphics.AddRectangle(area);
-				graphics.RenderSolid(Color.FromARGB(0.4, 0.5,0.5,0.5));
 			}
 
 			graphics.LineWidth = initialWidth;
@@ -2351,8 +2373,29 @@ namespace Epsitec.Common.Document
 			double ix = 0.5/this.drawingContext.ScaleX;
 			double iy = 0.5/this.drawingContext.ScaleY;
 
+			clipRect.Inflate(1);
 			clipRect = ScreenToInternal(clipRect);
 			clipRect = Rectangle.Intersection(clipRect, this.document.Modifier.RectangleArea);
+
+			if ( this.IsActiveViewer )
+			{
+				if ( this.document.Type == DocumentType.Graphic )
+				{
+					// Dessine la "page".
+					Rectangle rect = this.document.Modifier.PageArea;
+					graphics.Align(ref rect);
+					rect.Offset(ix, iy);
+
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(Color.FromARGB(0.4, 0.5,0.5,0.5));
+				}
+
+				Rectangle area = this.document.Modifier.RectangleArea;
+				graphics.Align(ref area);
+				area.Offset(ix, iy);
+				graphics.AddRectangle(area);
+				graphics.RenderSolid(Color.FromARGB(0.4, 0.5,0.5,0.5));
+			}
 
 			if ( this.drawingContext.PreviewActive )
 			{
@@ -2441,40 +2484,18 @@ namespace Epsitec.Common.Document
 				// Dessine les repères.
 				if ( this.drawingContext.GuidesShow )
 				{
-					Rectangle rd = this.RectangleDisplayed;
-					int total = this.document.Settings.GuidesCount;
-					for ( int i=0 ; i<total ; i++ )
+					Objects.Page page = this.document.GetObjects[this.drawingContext.CurrentPage] as Objects.Page;
+
+					if ( page.MasterGuides && this.drawingContext.MasterPageList.Count > 0 )
 					{
-						Settings.Guide guide = this.document.Settings.GuidesGet(i);
-
-						if ( guide.IsHorizontal )  // repère horizontal ?
+						foreach ( Objects.Page masterPage in this.drawingContext.MasterPageList )
 						{
-							double x = rd.Left;
-							double y = guide.AbsolutePosition;
-							graphics.Align(ref x, ref y);
-							x += ix;
-							y += iy;
-							graphics.AddLine(x, y, rd.Right, y);
-						}
-						else	// repère vertical ?
-						{
-							double x = guide.AbsolutePosition;
-							double y = rd.Bottom;
-							graphics.Align(ref x, ref y);
-							x += ix;
-							y += iy;
-							graphics.AddLine(x, y, x, rd.Top);
-						}
-
-						if ( guide.Hilite )
-						{
-							graphics.RenderSolid(Color.FromARGB(0.5, 0.8,0.0,0.0));  // rouge
-						}
-						else
-						{
-							graphics.RenderSolid(Color.FromARGB(0.5, 0.0,0.0,0.8));  // bleuté
+							this.DrawGuides(graphics, masterPage.Guides, false);
 						}
 					}
+
+					this.DrawGuides(graphics, page.Guides, !this.document.Settings.GlobalGuides);
+					this.DrawGuides(graphics, this.document.Settings.GuidesListGlobal, this.document.Settings.GlobalGuides);
 				}
 
 				// Dessine la cible.
@@ -2506,6 +2527,55 @@ namespace Epsitec.Common.Document
 			}
 
 			graphics.LineWidth = initialWidth;
+		}
+
+		// Dessine tous les repères d'une liste.
+		protected void DrawGuides(Graphics graphics, UndoableList guides, bool editable)
+		{
+			double ix = 0.5/this.drawingContext.ScaleX;
+			double iy = 0.5/this.drawingContext.ScaleY;
+			Rectangle rd = this.RectangleDisplayed;
+
+			int total = guides.Count;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Settings.Guide guide = guides[i] as Settings.Guide;
+
+				if ( guide.IsHorizontal )  // repère horizontal ?
+				{
+					double x = rd.Left;
+					double y = guide.AbsolutePosition;
+					graphics.Align(ref x, ref y);
+					x += ix;
+					y += iy;
+					graphics.AddLine(x, y, rd.Right, y);
+				}
+				else	// repère vertical ?
+				{
+					double x = guide.AbsolutePosition;
+					double y = rd.Bottom;
+					graphics.Align(ref x, ref y);
+					x += ix;
+					y += iy;
+					graphics.AddLine(x, y, x, rd.Top);
+				}
+
+				if ( editable )
+				{
+					if ( guide.Hilite )
+					{
+						graphics.RenderSolid(Color.FromARGB(0.5, 0.0,0.8,0.0));  // vert
+					}
+					else
+					{
+						graphics.RenderSolid(Color.FromARGB(0.5, 0.0,0.0,0.8));  // bleuté
+					}
+				}
+				else
+				{
+					graphics.RenderSolid(Color.FromARGB(0.5, 0.8,0.0,0.0));  // rouge
+				}
+			}
 		}
 
 		// Dessine le hotspot.
@@ -2806,6 +2876,7 @@ namespace Epsitec.Common.Document
 		protected ZoomType						zoomType = ZoomType.None;
 
 		protected VMenu							contextMenu;
+		protected VMenu							contextMenuOrder;
 		protected VMenu							contextMenuOper;
 		protected VMenu							contextMenuGeom;
 		protected VMenu							contextMenuBool;

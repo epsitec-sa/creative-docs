@@ -167,7 +167,8 @@ namespace Epsitec.Common.Document.Properties
 			// Si le dossier d'accès à l'image est le même que le dossier dans
 			// lequel est sérialisé le fichier, sérialise juste le nom (relatif).
 			string filename = this.filename;
-			if ( this.document.IoDirectory != "" &&
+			if ( filename != "" &&
+				 this.document.IoDirectory != "" &&
 				 this.document.IoDirectory == System.IO.Path.GetDirectoryName(filename) )
 			{
 				filename = System.IO.Path.GetFileName(filename);
@@ -190,7 +191,8 @@ namespace Epsitec.Common.Document.Properties
 			// Si le nom de l'image ne contient pas de nom de dossier (nom relatif),
 			// ajoute le nom du dossier dans lequel est désérialisé le fichier
 			// (pour le rendre absolu).
-			if ( this.document.IoDirectory != "" &&
+			if ( this.filename != "" &&
+				 this.document.IoDirectory != "" &&
 				 System.IO.Path.GetDirectoryName(this.filename) == "" )
 			{
 				this.filename = this.document.IoDirectory + "\\" + this.filename;

@@ -77,7 +77,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			string version = About.GetVersion();
 			StaticText sv = new StaticText(parent);
-			sv.Text = string.Format("<b>Version {0}</b>    Langue: français", version);
+			sv.Text = string.Format("<font size=\"140%\"><b>Version {0}</b></font>    Langue: français", version);
 			sv.Location = new Point(22, y+5+12*2);
 			sv.Size = new Size(270, 14);
 			sv.SetClientZoom(0.8);
@@ -157,12 +157,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			this.editor.Window.MakeActive();
 			this.window.Hide();
+			this.OnClosed();
 		}
 
 		private void HandleAboutButtonCloseClicked(object sender, MessageEventArgs e)
 		{
 			this.editor.Window.MakeActive();
 			this.window.Hide();
+			this.OnClosed();
 		}
 	}
 }

@@ -57,13 +57,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				ToolTip.Default.SetToolTip(buttonCancel, "Annuler l'exportation");
 			}
 
-			this.window.Text = string.Format("Exportation de {0}", System.IO.Path.GetFileName(filename));
-			this.window.Show();
-
 			if ( this.editor.IsCurrentDocument )
 			{
 				this.editor.CurrentDocument.Dialogs.BuildExport(this.window);
 			}
+
+			this.window.Text = string.Format("Exportation de {0}", System.IO.Path.GetFileName(filename));
+			this.window.Show();
 		}
 
 		// Enregistre la position de la fenêtre du dialogue.
@@ -85,18 +85,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			this.editor.Window.MakeActive();
 			this.window.Hide();
+			this.OnClosed();
 		}
 
 		private void HandleExportButtonCancelClicked(object sender, MessageEventArgs e)
 		{
 			this.editor.Window.MakeActive();
 			this.window.Hide();
+			this.OnClosed();
 		}
 
 		private void HandleExportButtonOkClicked(object sender, MessageEventArgs e)
 		{
 			this.editor.Window.MakeActive();
 			this.window.Hide();
+			this.OnClosed();
+
 			string filename = string.Format("{0}\\{1}", this.editor.CurrentDocument.ExportDirectory, this.editor.CurrentDocument.ExportFilename);
 			string err = this.editor.CurrentDocument.Export(filename);
 			this.editor.DialogError(this.editor.CommandDispatcher, err);

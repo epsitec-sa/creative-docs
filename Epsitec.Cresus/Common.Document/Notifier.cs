@@ -150,6 +150,12 @@ namespace Epsitec.Common.Document
 		{
 			if ( !this.enable )  return;
 			this.pagesChanged = true;
+
+			if ( !this.document.Settings.GlobalGuides )
+			{
+				this.NotifyGuidesChanged();
+			}
+
 			this.NotifyAsync();
 		}
 
@@ -209,7 +215,7 @@ namespace Epsitec.Common.Document
 			this.NotifyAsync();
 		}
 
-		// Indique que les réglages ont changé.
+		// Indique que les repères ont changé.
 		public void NotifyGuidesChanged()
 		{
 			if ( !this.enable )  return;

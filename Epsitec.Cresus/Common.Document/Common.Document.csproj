@@ -589,7 +589,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Settings\Range.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Settings\Settings.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Settings\String.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

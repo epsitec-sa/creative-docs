@@ -32,6 +32,14 @@ namespace Epsitec.Common.Document.Settings
 					this.factorStep = 1.0;
 					break;
 
+				case "PrintCopies":
+					this.text = "Nombre de copies";
+					this.integer = true;
+					this.factorMinValue = 1.0;
+					this.factorMaxValue = 100.0;
+					this.factorStep = 1.0;
+					break;
+
 				case "PrintDpi":
 					this.text = "Résolution (dpi)";
 					this.conditionName = "PrintDraft";
@@ -130,6 +138,9 @@ namespace Epsitec.Common.Document.Settings
 					case "OutsideArea":
 						return this.document.Modifier.OutsideArea;
 
+					case "PrintCopies":
+						return this.document.Settings.PrintInfo.Copies;
+
 					case "PrintDpi":
 						return this.document.Settings.PrintInfo.Dpi;
 
@@ -167,6 +178,10 @@ namespace Epsitec.Common.Document.Settings
 				{
 					case "OutsideArea":
 						this.document.Modifier.OutsideArea = value;
+						break;
+
+					case "PrintCopies":
+						this.document.Settings.PrintInfo.Copies = (int) value;
 						break;
 
 					case "PrintDpi":

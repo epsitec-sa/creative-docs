@@ -16,6 +16,15 @@ namespace Epsitec.Common.Document
 		}
 
 
+		// Met à jour tous les réglages dans les différents dialogues.
+		public void UpdateAllSettings()
+		{
+			this.UpdateSettings(false);
+			this.UpdatePrint(false);
+			this.UpdateExport(false);
+		}
+
+
 		#region Infos
 		// Peuple le dialogue des informations.
 		public void BuildInfos(Window window)
@@ -73,6 +82,7 @@ namespace Epsitec.Common.Document
 					Dialogs.CreateSeparator(container);
 					this.CreateCombo(container, "DefaultUnit");
 				}
+				Dialogs.CreateSeparator(container);
 
 				// Onglet Grid:
 				parent = book.FindChild("Grid");
@@ -88,6 +98,7 @@ namespace Epsitec.Common.Document
 				this.CreatePoint(container, "GridStep");
 				this.CreatePoint(container, "GridSubdiv");
 				this.CreatePoint(container, "GridOffset");
+				Dialogs.CreateSeparator(container);
 
 				// Onglet Guides:
 				parent = book.FindChild("Guides");
@@ -107,30 +118,6 @@ namespace Epsitec.Common.Document
 				this.containerGuides.DockMargins = new Margins(10, 10, 4, 10);
 				this.containerGuides.Parent = container;
 
-				// Onglet Print:
-				parent = book.FindChild("Print");
-				container = new Widget(parent);
-				container.Name = "Container";
-				container.Dock = DockStyle.Fill;
-
-				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, "Paramètres pour l'impression");
-				this.CreateBool(container, "PrintAutoLandscape");
-				this.CreateBool(container, "PrintDraft");
-				this.CreateBool(container, "PrintPerfectJoin");
-#if DEBUG
-				this.CreateBool(container, "PrintDebugArea");
-#endif
-				this.CreateDouble(container, "PrintDpi");
-				this.CreateBool(container, "PrintAA");
-
-				Dialogs.CreateTitle(container, "Pré-presse");
-				this.CreateBool(container, "PrintAutoZoom");
-				this.CreateCombo(container, "PrintCentring");
-				this.CreateDouble(container, "PrintMargins");
-				this.CreateDouble(container, "PrintDebord");
-				this.CreateBool(container, "PrintTarget");
-
 				// Onglet Misc:
 				parent = book.FindChild("Misc");
 				container = new Widget(parent);
@@ -149,92 +136,21 @@ namespace Epsitec.Common.Document
 
 				Dialogs.CreateTitle(container, "Convertir en droites et opérations booléennes");
 				this.CreateDouble(container, "ToLinePrecision");
+				Dialogs.CreateSeparator(container);
 			}
 
-			this.UpdateSettings();
+			this.UpdateSettings(true);
 		}
 
 		// Appelé lorsque les réglages ont changé.
-		public void UpdateSettings()
+		protected void UpdateSettings(bool force)
 		{
-			if ( this.windowSettings == null || !this.windowSettings.IsVisible )  return;
-
-			int total = this.document.Settings.Count;
-			for ( int i=0 ; i<total ; i++ )
+			if ( !force )
 			{
-				Settings.Abstract setting = this.document.Settings.Get(i);
-
-				if ( setting is Settings.Bool )
-				{
-					Settings.Bool sBool = setting as Settings.Bool;
-
-					CheckButton check = this.WidgetsTableSearch(setting.Name, "") as CheckButton;
-					if ( check != null )
-					{
-						check.ActiveState = sBool.Value ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-					}
-				}
-
-				if ( setting is Settings.Integer )
-				{
-					Settings.Integer sInteger = setting as Settings.Integer;
-
-					TextFieldReal field = this.WidgetsTableSearch(setting.Name, "") as TextFieldReal;
-					if ( field != null )
-					{
-						field.InternalValue = (decimal) sInteger.Value;
-					}
-				}
-
-				if ( setting is Settings.Double )
-				{
-					Settings.Double sDouble = setting as Settings.Double;
-
-					TextFieldReal field = this.WidgetsTableSearch(setting.Name, "") as TextFieldReal;
-					if ( field != null )
-					{
-						field.InternalValue = (decimal) sDouble.Value;
-					}
-				}
-
-				if ( setting is Settings.Point )
-				{
-					Settings.Point sPoint = setting as Settings.Point;
-					TextFieldReal field;
-
-					field = this.WidgetsTableSearch(setting.Name, ".X") as TextFieldReal;
-					if ( field != null )
-					{
-						field.InternalValue = (decimal) sPoint.Value.X;
-					}
-
-					field = this.WidgetsTableSearch(setting.Name, ".Y") as TextFieldReal;
-					if ( field != null )
-					{
-						field.InternalValue = (decimal) sPoint.Value.Y;
-					}
-
-					CheckButton check = this.WidgetsTableSearch(setting.Name, ".Link") as CheckButton;
-					if ( check != null )
-					{
-						check.ActiveState = sPoint.Link ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-					}
-
-					if ( setting.Name == "PageSize" )
-					{
-						this.UpdatePaper();
-					}
-				}
+				if ( this.windowSettings == null || !this.windowSettings.IsVisible )  return;
 			}
 
-			for ( int i=0 ; i<total ; i++ )
-			{
-				Settings.Abstract setting = this.document.Settings.Get(i);
-				if ( setting.ConditionName == "" )  continue;
-				Settings.Bool sBool = this.document.Settings.Get(setting.ConditionName) as Settings.Bool;
-				if ( sBool == null )  continue;
-				this.EnableWidget(setting.Name, sBool.Value^setting.ConditionState);
-			}
+			this.UpdateDialogSettings("Settings");
 		}
 
 		// Appelé lorsque les repères ont changé.
@@ -249,6 +165,100 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.containerGuides == null )  return;
 			this.containerGuides.SelectGuide = rank;
+		}
+		#endregion
+
+		#region Print
+		// Peuple le dialogue d'impression.
+		public void BuildPrint(Window window)
+		{
+			if ( this.windowPrint == null )
+			{
+				this.windowPrint = window;
+
+				Widget parent, container;
+				Widget book = this.windowPrint.Root.FindChild("Book");
+
+				// Onglet Imprimante:
+				parent = book.FindChild("Printer");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+				
+				this.tabIndex = 0;
+				Dialogs.CreateTitle(container, "Choix de l'imprimante");
+				this.CreatePrinter(container, "PrintName");
+
+				Dialogs.CreateTitle(container, "Etendue");
+				this.CreateRange(container, "PrintRange");
+				this.CreateCombo(container, "PrintArea");
+
+				Dialogs.CreateTitle(container, "Tirage");
+				this.CreateDouble(container, "PrintCopies");
+				this.CreateBool(container, "PrintCollate");
+				this.CreateBool(container, "PrintReverse");
+				Dialogs.CreateSeparator(container);
+
+				// Onglet Paramètres:
+				parent = book.FindChild("Param");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+				
+				this.tabIndex = 0;
+				Dialogs.CreateTitle(container, "Paramètres pour l'impression");
+				this.CreateBool(container, "PrintAutoLandscape");
+				this.CreateBool(container, "PrintDraft");
+				this.CreateBool(container, "PrintPerfectJoin");
+#if DEBUG
+				this.CreateBool(container, "PrintDebugArea");
+#endif
+				this.CreateDouble(container, "PrintDpi");
+				this.CreateBool(container, "PrintAA");
+
+				Dialogs.CreateTitle(container, "Fichier");
+				this.CreateBool(container, "PrintToFile");
+				this.CreateFilename(container, "PrintFilename");
+				Dialogs.CreateSeparator(container);
+
+				// Onglet Pré-presse:
+				parent = book.FindChild("Publisher");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+				
+				this.tabIndex = 0;
+				Dialogs.CreateTitle(container, "Réglages pré-presse");
+				this.CreateBool(container, "PrintAutoZoom");
+				this.CreateCombo(container, "PrintCentring");
+				this.CreateDouble(container, "PrintMargins");
+				this.CreateDouble(container, "PrintDebord");
+				this.CreateBool(container, "PrintTarget");
+				Dialogs.CreateSeparator(container);
+			}
+
+			this.UpdatePrint(true);
+		}
+
+		// Appelé lorsque les réglages ont changé.
+		protected void UpdatePrint(bool force)
+		{
+			if ( !force )
+			{
+				if ( this.windowPrint == null || !this.windowPrint.IsVisible )  return;
+			}
+
+			this.UpdatePrinter("PrintName");
+			this.UpdateRangeField("PrintRange");
+			this.UpdateDialogSettings("Print");
+		}
+
+		// Appelé lorsque les pages ont changé.
+		public void UpdatePrintPages()
+		{
+			if ( this.windowPrint == null || !this.windowPrint.IsVisible )  return;
+
+			this.UpdateRangeField("PrintRange");
 		}
 		#endregion
 
@@ -276,14 +286,18 @@ namespace Epsitec.Common.Document
 				Dialogs.CreateSeparator(container);
 			}
 
-			this.UpdateExport();
+			this.UpdateExport(true);
 		}
 
 		// Appelé lorsque les réglages ont changé.
-		public void UpdateExport()
+		protected void UpdateExport(bool force)
 		{
-			if ( this.windowExport == null || !this.windowExport.IsVisible )  return;
+			if ( !force )
+			{
+				if ( this.windowExport == null || !this.windowExport.IsVisible )  return;
+			}
 
+			this.UpdateDialogSettings("Export");
 			this.UpdateCombo("ImageDepth");
 			this.UpdateCombo("ImageCompression");
 			this.UpdateDouble("ImageQuality");
@@ -295,6 +309,7 @@ namespace Epsitec.Common.Document
 		// Crée un widget de titre pour un onglet.
 		public static void CreateTitle(Widget parent, string labelText)
 		{
+#if false
 			StaticText text = new StaticText(parent);
 			text.Text = string.Format("<b>{0}</b>", labelText);
 			text.Dock = DockStyle.Top;
@@ -305,6 +320,18 @@ namespace Epsitec.Common.Document
 			sep.Height = 1;
 			sep.Dock = DockStyle.Top;
 			sep.DockMargins = new Margins(0, 0, 3, 6);
+#else
+			Separator sep = new Separator(parent);
+			sep.Width = parent.Width;
+			sep.Height = 1;
+			sep.Dock = DockStyle.Top;
+			sep.DockMargins = new Margins(0, 0, 6, 3);
+
+			StaticText text = new StaticText(parent);
+			text.Text = string.Format("<b>{0}</b>", labelText);
+			text.Dock = DockStyle.Top;
+			text.DockMargins = new Margins(10, 10, 2, 8);
+#endif
 		}
 
 		// Crée un séparateur pour un onglet.
@@ -859,6 +886,71 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
+		#region WidgetFilename
+		// Crée des widgets pour choisir un nom de fichier.
+		protected void CreateFilename(Widget parent, string name)
+		{
+			Settings.Abstract settings = this.document.Settings.Get(name);
+			if ( settings == null )  return;
+			Settings.String sString = settings as Settings.String;
+			if ( sString == null )  return;
+
+			Panel container = new Panel(parent);
+			container.Height = 22;
+			container.TabIndex = this.tabIndex++;
+			container.Dock = DockStyle.Top;
+			container.DockMargins = new Margins(10, 10, 0, 5);
+
+			TextField field = new TextField(container);
+			field.Name = sString.Name;
+			field.Text = sString.Value;
+			field.Width = 177;
+			field.Dock = DockStyle.Left;
+			field.DockMargins = new Margins(0, 0, 0, 0);
+			field.TextChanged += new EventHandler(this.HandleFilenameTextChanged);
+			this.WidgetsTableAdd(field, "");
+
+			Button button = new Button(container);
+			button.Name = sString.Name;
+			button.Text = "Parcourir...";
+			button.Width = 80;
+			button.Dock = DockStyle.Left;
+			button.DockMargins = new Margins(3, 0, 0, 0);
+			button.Clicked += new MessageEventHandler(HandleFilenameButtonClicked);
+			this.WidgetsTableAdd(button, ".Button");
+		}
+
+		private void HandleFilenameTextChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			TextField field = sender as TextField;
+			if ( field == null )  return;
+
+			Settings.Abstract settings = this.document.Settings.Get(field.Name);
+			if ( settings == null )  return;
+			Settings.String sString = settings as Settings.String;
+			if ( sString == null )  return;
+
+			sString.Value = field.Text;
+		}
+
+		private void HandleFilenameButtonClicked(object sender, MessageEventArgs e)
+		{
+			Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
+			dialog.FileName = this.document.Settings.PrintInfo.PrintFilename;
+			dialog.Title = "Impression dans un fichier";
+			dialog.Filters.Add("prn", "Fichier d'impression", "*.prn");
+			dialog.PromptForOverwriting = true;
+			dialog.Owner = this.windowPrint;
+			dialog.OpenDialog();
+			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return;
+
+			this.document.Settings.PrintInfo.PrintFilename = dialog.FileName;
+			this.document.Settings.PrintInfo.PrintToFile = true;
+			this.UpdatePrint(false);
+		}
+		#endregion
+
 		#region WidgetPaper
 		// Crée un widget combo pour éditer le format d'une page.
 		protected void CreatePaper(Widget parent)
@@ -1084,6 +1176,318 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
+		#region WidgetPrinter
+		// Crée des widgets pour choisir un nom d'imprimante.
+		protected void CreatePrinter(Widget parent, string name)
+		{
+			Settings.Abstract settings = this.document.Settings.Get(name);
+			if ( settings == null )  return;
+			Settings.String sString = settings as Settings.String;
+			if ( sString == null )  return;
+
+			Panel container = new Panel(parent);
+			container.Height = 22;
+			container.TabIndex = this.tabIndex++;
+			container.Dock = DockStyle.Top;
+			container.DockMargins = new Margins(10, 10, 0, 5);
+
+			TextFieldCombo field = new TextFieldCombo(container);
+			field.Name = sString.Name;
+			field.IsReadOnly = true;
+			field.Text = this.document.Settings.PrintInfo.PrintName;
+			field.Width = 177;
+			field.Dock = DockStyle.Left;
+			field.DockMargins = new Margins(0, 0, 0, 0);
+			field.OpeningCombo += new CancelEventHandler(this.HandlePrinterOpeningCombo);
+			field.ClosedCombo += new EventHandler(this.HandlePrinterClosedCombo);
+			this.WidgetsTableAdd(field, "");
+
+			Button button = new Button(container);
+			button.Name = sString.Name;
+			button.Text = "Imprimante...";
+			button.Width = 80;
+			button.Dock = DockStyle.Left;
+			button.DockMargins = new Margins(3, 0, 0, 0);
+			button.Clicked += new MessageEventHandler(HandlePrinterButtonClicked);
+			this.WidgetsTableAdd(button, ".Button");
+		}
+
+		private void HandlePrinterOpeningCombo(object sender, CancelEventArgs e)
+		{
+			TextFieldCombo field = sender as TextFieldCombo;
+			field.Items.Clear();
+
+			string[] installed = Common.Printing.PrinterSettings.InstalledPrinters;
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			foreach ( string name in installed )
+			{
+				list.Add(name);
+			}
+			list.Sort();
+
+			foreach ( string name in list )
+			{
+				field.Items.Add(name);
+			}
+		}
+
+		private void HandlePrinterClosedCombo(object sender)
+		{
+			TextFieldCombo field = sender as TextFieldCombo;
+			this.document.Settings.PrintInfo.PrintName = field.Text;
+		}
+
+		private void HandlePrinterButtonClicked(object sender, MessageEventArgs e)
+		{
+			Common.Dialogs.Print dialog = this.document.PrintDialog;
+			Settings.PrintInfo pi = this.document.Settings.PrintInfo;
+
+			dialog.AllowFromPageToPage = false;
+			dialog.AllowSelectedPages  = false;
+			dialog.Document.SelectPrinter(pi.PrintName);
+			dialog.Document.PrinterSettings.Copies = pi.Copies;
+			dialog.Document.PrinterSettings.Collate = pi.Collate;
+			dialog.Document.PrinterSettings.PrintToFile = pi.PrintToFile;
+			//?dialog.Document.PrinterSettings.OutputFileName = pi.PrintFilename;
+
+			dialog.OpenDialog();
+
+			if ( dialog.Result == Common.Dialogs.DialogResult.Accept )
+			{
+				pi.PrintName = dialog.Document.PrinterSettings.PrinterName;
+				pi.Copies = dialog.Document.PrinterSettings.Copies;
+				pi.Collate = dialog.Document.PrinterSettings.Collate;
+				pi.PrintToFile = dialog.Document.PrinterSettings.PrintToFile;
+				//?pi.PrintFilename = dialog.Document.PrinterSettings.OutputFileName;
+				this.UpdatePrint(false);
+			}
+		}
+
+		protected void UpdatePrinter(string name)
+		{
+			Settings.Abstract settings = this.document.Settings.Get(name);
+			if ( settings == null )  return;
+			Settings.String sString = settings as Settings.String;
+			if ( sString == null )  return;
+
+			Common.Dialogs.Print dialog = this.document.PrintDialog;
+			TextFieldCombo field = this.WidgetsTableSearch(name, "") as TextFieldCombo;
+			field.Text = this.document.Settings.PrintInfo.PrintName;
+		}
+		#endregion
+
+		#region WidgetRange
+		// Crée des widgets pour choisir les pages à imprimer.
+		protected void CreateRange(Widget parent, string name)
+		{
+			Settings.Abstract settings = this.document.Settings.Get(name);
+			if ( settings == null )  return;
+			Settings.Range sRange = settings as Settings.Range;
+			if ( sRange == null )  return;
+
+			RadioButton radio;
+			TextFieldReal field;
+
+			radio = new RadioButton(parent);
+			radio.Text = "Toutes les pages";
+			radio.Height = 20;
+			radio.Width = 100;
+			radio.Name = sRange.Name;
+			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.All) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			radio.TabIndex = this.tabIndex++;
+			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			radio.Dock = DockStyle.Top;
+			radio.DockMargins = new Margins(10, 10, 0, 0);
+			radio.Clicked += new MessageEventHandler(this.HandleRangeRadioClicked);
+			this.WidgetsTableAdd(radio, ".All");
+			
+			// début from-to
+			Panel container = new Panel(parent);
+			container.Height = 20;
+			container.TabIndex = this.tabIndex++;
+			container.Dock = DockStyle.Top;
+			container.DockMargins = new Margins(10, 10, 0, 0);
+
+			radio = new RadioButton(container);
+			radio.Text = "Pages de";
+			radio.Height = 20;
+			radio.Width = 75;
+			radio.Name = sRange.Name;
+			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.FromTo) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			radio.TabIndex = this.tabIndex++;
+			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			radio.Dock = DockStyle.Left;
+			radio.DockMargins = new Margins(0, 0, 0, 0);
+			radio.Clicked += new MessageEventHandler(this.HandleRangeRadioClicked);
+			this.WidgetsTableAdd(radio, ".FromTo");
+			
+			field = new TextFieldReal(container);
+			field.Height = 20;
+			field.Width = 50;
+			field.Name = sRange.Name;
+			this.document.Modifier.AdaptTextFieldRealScalar(field);
+			field.MinValue = (decimal) sRange.Min;
+			field.MaxValue = (decimal) sRange.Max;
+			field.Step = 1M;
+			field.InternalValue = (decimal) sRange.From;
+			field.ValueChanged += new EventHandler(this.HandleRangeFieldChanged);
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			field.Dock = DockStyle.Left;
+			field.DockMargins = new Margins(0, 0, 0, 0);
+			this.WidgetsTableAdd(field, ".From");
+
+			StaticText text = new StaticText(container);
+			text.Text = "à";
+			text.Alignment = ContentAlignment.MiddleCenter;
+			text.Height = 20;
+			text.Width = 30;
+			text.Dock = DockStyle.Left;
+			text.DockMargins = new Margins(0, 0, 0, 0);
+
+			field = new TextFieldReal(container);
+			field.Height = 20;
+			field.Width = 50;
+			field.Name = sRange.Name;
+			this.document.Modifier.AdaptTextFieldRealScalar(field);
+			field.MinValue = (decimal) sRange.Min;
+			field.MaxValue = (decimal) sRange.Max;
+			field.Step = 1M;
+			field.InternalValue = (decimal) sRange.To;
+			field.ValueChanged += new EventHandler(this.HandleRangeFieldChanged);
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			field.Dock = DockStyle.Left;
+			field.DockMargins = new Margins(0, 0, 0, 0);
+			this.WidgetsTableAdd(field, ".To");
+			// fin from-to
+
+			radio = new RadioButton(parent);
+			radio.Text = "Page courante";
+			radio.Height = 20;
+			radio.Width = 100;
+			radio.Name = sRange.Name;
+			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.Current) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			radio.TabIndex = this.tabIndex++;
+			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			radio.Dock = DockStyle.Top;
+			radio.DockMargins = new Margins(10, 10, 0, 5);
+			radio.Clicked += new MessageEventHandler(this.HandleRangeRadioClicked);
+			this.WidgetsTableAdd(radio, ".Current");
+
+			this.UpdateRangeRadio(name);
+		}
+
+		private void HandleRangeRadioClicked(object sender, MessageEventArgs e)
+		{
+			RadioButton radio = sender as RadioButton;
+			if ( radio == null )  return;
+
+			Settings.Abstract settings = this.document.Settings.Get(radio.Name);
+			if ( settings == null )  return;
+			Settings.Range sRange = settings as Settings.Range;
+			if ( sRange == null )  return;
+
+			if ( radio == this.WidgetsTableSearch(radio.Name, ".All") )
+			{
+				sRange.PrintRange = Settings.PrintRange.All;
+			}
+			if ( radio == this.WidgetsTableSearch(radio.Name, ".FromTo") )
+			{
+				sRange.PrintRange = Settings.PrintRange.FromTo;
+			}
+			if ( radio == this.WidgetsTableSearch(radio.Name, ".Current") )
+			{
+				sRange.PrintRange = Settings.PrintRange.Current;
+			}
+
+			this.UpdateRangeRadio(radio.Name);
+		}
+
+		private void HandleRangeFieldChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			TextFieldReal field = sender as TextFieldReal;
+			if ( field == null )  return;
+
+			Settings.Abstract settings = this.document.Settings.Get(field.Name);
+			if ( settings == null )  return;
+			Settings.Range sRange = settings as Settings.Range;
+			if ( sRange == null )  return;
+
+			if ( field == this.WidgetsTableSearch(field.Name, ".From") )
+			{
+				sRange.From = (int) field.InternalValue;
+			}
+			if ( field == this.WidgetsTableSearch(field.Name, ".To") )
+			{
+				sRange.To = (int) field.InternalValue;
+			}
+
+			sRange.PrintRange = Settings.PrintRange.FromTo;
+			this.UpdateRangeRadio(field.Name);
+		}
+
+		protected void UpdateRangeRadio(string name)
+		{
+			Settings.Abstract settings = this.document.Settings.Get(name);
+			if ( settings == null )  return;
+			Settings.Range sRange = settings as Settings.Range;
+			if ( sRange == null )  return;
+
+			RadioButton radio;
+
+			radio = this.WidgetsTableSearch(name, ".All") as RadioButton;
+			if ( radio != null )
+			{
+				radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.All) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			}
+
+			radio = this.WidgetsTableSearch(name, ".FromTo") as RadioButton;
+			if ( radio != null )
+			{
+				radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.FromTo) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			}
+
+			radio = this.WidgetsTableSearch(name, ".Current") as RadioButton;
+			if ( radio != null )
+			{
+				radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.Current) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			}
+		}
+
+		protected void UpdateRangeField(string name)
+		{
+			Settings.Abstract settings = this.document.Settings.Get(name);
+			if ( settings == null )  return;
+			Settings.Range sRange = settings as Settings.Range;
+			if ( sRange == null )  return;
+
+			TextFieldReal field;
+
+			field = this.WidgetsTableSearch(name, ".From") as TextFieldReal;
+			if ( field != null )
+			{
+				this.UpdateRangeField(field, sRange, sRange.From);
+			}
+
+			field = this.WidgetsTableSearch(name, ".To") as TextFieldReal;
+			if ( field != null )
+			{
+				this.UpdateRangeField(field, sRange, sRange.To);
+			}
+		}
+
+		protected void UpdateRangeField(TextFieldReal field, Settings.Range sRange, int value)
+		{
+			field.MinValue = (decimal) sRange.Min;
+			field.MaxValue = (decimal) sRange.Max;
+
+			value = System.Math.Max(value, sRange.Min);
+			value = System.Math.Min(value, sRange.Max);
+			field.InternalValue = (decimal) value;
+		}
+		#endregion
 
 		// Supprime tous les widgets de tous les dialogues.
 		public void FlushAll()
@@ -1100,34 +1504,35 @@ namespace Epsitec.Common.Document
 
 			if ( this.windowSettings != null )
 			{
-				this.DeleteContainer("Format");
-				this.DeleteContainer("Grid");
-				this.DeleteContainer("Guides");
-				this.DeleteContainer("Print");
-				this.DeleteContainer("Misc");
+				Widget parent = this.windowSettings.Root.FindChild("BookDocument");
+				this.DeleteContainer(parent, "Format");
+				this.DeleteContainer(parent, "Grid");
+				this.DeleteContainer(parent, "Guides");
+				this.DeleteContainer(parent, "Misc");
 				this.windowSettings = null;
+			}
+
+			if ( this.windowPrint != null )
+			{
+				Widget parent = this.windowPrint.Root.FindChild("Book");
+				this.DeleteContainer(parent, "Printer");
+				this.DeleteContainer(parent, "Param");
+				this.DeleteContainer(parent, "Publisher");
+				this.windowPrint = null;
 			}
 
 			if ( this.windowExport != null )
 			{
-				Panel panel = this.windowExport.Root.FindChild("Panel") as Panel;
-				if ( panel != null )
-				{
-					Panel container = panel.FindChild("Container") as Panel;
-					if ( container != null )
-					{
-						container.Dispose();
-					}
-				}
+				Widget parent = this.windowExport.Root.FindChild("Panel");
+				this.DeleteContainer(parent, "Container");
 				this.windowExport = null;
 			}
 
 			this.widgetsTable.Clear();
 		}
 
-		protected void DeleteContainer(string name)
+		protected void DeleteContainer(Widget parent, string name)
 		{
-			Widget parent = this.windowSettings.Root.FindChild("BookDocument");
 			Widget container = parent.FindChild(name);
 			if ( container != null )
 			{
@@ -1136,6 +1541,109 @@ namespace Epsitec.Common.Document
 				{
 					page.Dispose();
 				}
+			}
+		}
+
+		// Met à jour tous les widgets d'un dialogue.
+		protected void UpdateDialogSettings(string dialog)
+		{
+			int total = this.document.Settings.Count;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Settings.Abstract setting = this.document.Settings.Get(i);
+				if ( dialog != this.document.Settings.GetOwnerDialog(setting.Name) )  continue;
+
+				if ( setting is Settings.Bool )
+				{
+					Settings.Bool sBool = setting as Settings.Bool;
+
+					CheckButton check = this.WidgetsTableSearch(setting.Name, "") as CheckButton;
+					if ( check != null )
+					{
+						check.ActiveState = sBool.Value ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+					}
+				}
+
+				if ( setting is Settings.Integer )
+				{
+					Settings.Integer sInteger = setting as Settings.Integer;
+
+					TextFieldReal field = this.WidgetsTableSearch(setting.Name, "") as TextFieldReal;
+					if ( field != null )
+					{
+						field.InternalValue = (decimal) sInteger.Value;
+					}
+				}
+
+				if ( setting is Settings.Double )
+				{
+					Settings.Double sDouble = setting as Settings.Double;
+
+					TextFieldReal field = this.WidgetsTableSearch(setting.Name, "") as TextFieldReal;
+					if ( field != null )
+					{
+						field.InternalValue = (decimal) sDouble.Value;
+					}
+				}
+
+				if ( setting is Settings.Point )
+				{
+					Settings.Point sPoint = setting as Settings.Point;
+					TextFieldReal field;
+
+					field = this.WidgetsTableSearch(setting.Name, ".X") as TextFieldReal;
+					if ( field != null )
+					{
+						field.InternalValue = (decimal) sPoint.Value.X;
+					}
+
+					field = this.WidgetsTableSearch(setting.Name, ".Y") as TextFieldReal;
+					if ( field != null )
+					{
+						field.InternalValue = (decimal) sPoint.Value.Y;
+					}
+
+					CheckButton check = this.WidgetsTableSearch(setting.Name, ".Link") as CheckButton;
+					if ( check != null )
+					{
+						check.ActiveState = sPoint.Link ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+					}
+
+					if ( setting.Name == "PageSize" )
+					{
+						this.UpdatePaper();
+					}
+				}
+
+				if ( setting is Settings.String )
+				{
+					Settings.String sString = setting as Settings.String;
+
+					TextField field = this.WidgetsTableSearch(setting.Name, "") as TextField;
+					if ( field != null )
+					{
+						field.Text = sString.Value;
+					}
+				}
+
+				if ( setting is Settings.Range )
+				{
+					Settings.Range sRange = setting as Settings.Range;
+
+					this.UpdateRangeRadio(sRange.Name);
+					this.UpdateRangeField(sRange.Name);
+				}
+			}
+
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Settings.Abstract setting = this.document.Settings.Get(i);
+				if ( setting.ConditionName == "" )  continue;
+				if ( dialog != this.document.Settings.GetOwnerDialog(setting.Name) )  continue;
+
+				Settings.Bool sBool = this.document.Settings.Get(setting.ConditionName) as Settings.Bool;
+				if ( sBool == null )  continue;
+				this.EnableWidget(setting.Name, sBool.Value^setting.ConditionState);
 			}
 		}
 
@@ -1163,6 +1671,7 @@ namespace Epsitec.Common.Document
 		protected Document						document;
 		protected Window						windowInfos;
 		protected Window						windowSettings;
+		protected Window						windowPrint;
 		protected Window						windowExport;
 		protected Containers.Guides				containerGuides;
 		protected System.Collections.Hashtable	widgetsTable;
