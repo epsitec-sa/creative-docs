@@ -9,10 +9,6 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ObjectPoly()
 		{
-		}
-
-		public override void CreateProperties()
-		{
 			PropertyLine lineMode = new PropertyLine();
 			lineMode.Type = PropertyType.LineMode;
 			this.AddProperty(lineMode);
@@ -43,25 +39,27 @@ namespace Epsitec.Common.Pictogram.Data
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"file:images/poly1.icon"; }
+			get { return @"file:images/poly.icon"; }
 		}
 
 
 		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
+			if ( this.isHide )  return false;
+
 			Drawing.Rectangle bbox = this.BoundingBox;
 			if ( !bbox.Contains(pos) )  return false;
 
 			Drawing.Path path = this.PathBuild();
 
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
-			if ( base.DetectOutline(path, width, pos) )  return true;
+			if ( AbstractObject.DetectOutline(path, width, pos) )  return true;
 
 			if ( this.PropertyGradient(2).IsVisible() )
 			{
 				path.Close();
-				if ( base.DetectFill(path, pos) )  return true;
+				if ( AbstractObject.DetectFill(path, pos) )  return true;
 			}
 			return false;
 		}
@@ -124,7 +122,7 @@ namespace Epsitec.Common.Pictogram.Data
 				item = new ContextMenuItem();
 				item.Command = "Object";
 				item.Name = "HandleAdd";
-				item.Icon = @"file:images/add1.icon";
+				item.Icon = @"file:images/add.icon";
 				item.Text = "Ajouter un point";
 				list.Add(item);
 			}
@@ -140,8 +138,8 @@ namespace Epsitec.Common.Pictogram.Data
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "HandleSym";
-					item.IconActiveNo = @"file:images/activeno1.icon";
-					item.IconActiveYes = @"file:images/activeyes1.icon";
+					item.IconActiveNo = @"file:images/activeno.icon";
+					item.IconActiveYes = @"file:images/activeyes.icon";
 					item.Active = ( type == HandleConstrainType.Symmetric );
 					item.Text = "Coin quelconque";
 					list.Add(item);
@@ -149,8 +147,8 @@ namespace Epsitec.Common.Pictogram.Data
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "HandleSimply";
-					item.IconActiveNo = @"file:images/activeno1.icon";
-					item.IconActiveYes = @"file:images/activeyes1.icon";
+					item.IconActiveNo = @"file:images/activeno.icon";
+					item.IconActiveYes = @"file:images/activeyes.icon";
 					item.Active = ( type == HandleConstrainType.Simply );
 					item.Text = "Coin toujours droit";
 					list.Add(item);
@@ -161,7 +159,7 @@ namespace Epsitec.Common.Pictogram.Data
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "HandleDelete";
-					item.Icon = @"file:images/sub1.icon";
+					item.Icon = @"file:images/sub.icon";
 					item.Text = "Enlever le point";
 					list.Add(item);
 				}
@@ -248,8 +246,8 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( this.mouseDown )
 			{
 				this.Handle(rank).Position = pos;
-				this.dirtyBbox = true;
 			}
+			this.dirtyBbox = true;
 		}
 
 		// Fin de la création d'un objet.
@@ -309,7 +307,6 @@ namespace Epsitec.Common.Pictogram.Data
 			this.TempDelete();
 
 			this.tempLine = new ObjectLine();
-			this.tempLine.CreateProperties();
 			this.tempLine.CloneProperties(this);
 
 			AbstractProperty ap = this.tempLine.GetProperty(PropertyType.LineColor);
@@ -342,12 +339,23 @@ namespace Epsitec.Common.Pictogram.Data
 
 		
 		// Met à jour le rectangle englobant l'objet.
-		public override void UpdateBoundingBox()
+		protected override void UpdateBoundingBox()
 		{
 			Drawing.Path path = this.PathBuild();
-			this.bbox = path.ComputeBounds();
-			double width = this.PropertyLine(0).Width/2.0;
-			this.bbox.Inflate(width, width);
+			this.bboxThin = path.ComputeBounds();
+
+			this.bboxGeom = this.bboxThin;
+			this.PropertyLine(0).InflateBoundingBox(ref this.bboxGeom);
+
+			this.bboxFull = this.bboxGeom;
+			this.bboxGeom.MergeWith(this.PropertyGradient(2).BoundingBoxGeom(this.bboxThin));
+			this.bboxFull.MergeWith(this.PropertyGradient(2).BoundingBoxFull(this.bboxThin));
+			this.bboxFull.MergeWith(this.bboxGeom);
+
+			if ( this.tempLine != null )
+			{
+				this.bboxFull.MergeWith(this.tempLine.BoundingBox);
+			}
 		}
 
 		// Crée le chemin de l'objet.
@@ -416,14 +424,15 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
 		{
+			if ( this.isHide )  return;
 			base.DrawGeometry(graphics, iconContext);
 
 			if ( this.TotalHandle < 1 )  return;
 
 			Drawing.Path path = this.PathBuild();
-			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBox);
+			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBoxThin);
 
-			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
+			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
 
 			if ( this.IsHilite && iconContext.IsEditable )
@@ -434,7 +443,7 @@ namespace Epsitec.Common.Pictogram.Data
 					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 				}
 
-				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
+				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 

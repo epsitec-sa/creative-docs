@@ -9,10 +9,6 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ObjectText()
 		{
-		}
-
-		public override void CreateProperties()
-		{
 			PropertyColor lineColor = new PropertyColor();
 			lineColor.Type = PropertyType.LineColor;
 			this.AddProperty(lineColor);
@@ -39,16 +35,22 @@ namespace Epsitec.Common.Pictogram.Data
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"file:images/text1.icon"; }
+			get { return @"file:images/text.icon"; }
 		}
 
 
 		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
-			Drawing.Point p1 = this.Handle(0).Position;
-			Drawing.Point p2 = this.Handle(1).Position;
-			return Drawing.Point.Detect(p1,p2, pos, this.lineWidth/this.scaleX);
+			if ( this.isHide )  return false;
+			Drawing.Rectangle bbox = this.BoundingBoxGeom;  // màj p1..p4
+			if ( !bbox.Contains(pos) )  return false;
+			InsideSurface inside = new InsideSurface(pos, 4);
+			inside.AddLine(this.p1, this.p2);
+			inside.AddLine(this.p2, this.p3);
+			inside.AddLine(this.p3, this.p4);
+			inside.AddLine(this.p4, this.p1);
+			return inside.IsInside();
 		}
 
 
@@ -89,17 +91,69 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Met à jour le rectangle englobant l'objet.
-		public override void UpdateBoundingBox()
+		protected override void UpdateBoundingBox()
 		{
+			this.bboxThin = Drawing.Rectangle.Empty;
+			this.bboxGeom = Drawing.Rectangle.Empty;
+			this.bboxFull = Drawing.Rectangle.Empty;
+
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
-			this.bbox = new Epsitec.Common.Drawing.Rectangle(p1.X, p1.Y, p2.X-p1.X, p2.Y-p1.Y);
-			this.bbox.Normalise();
+
+			Drawing.Font font = this.GetFont();
+			double width = font.GetTextAdvance(this.PropertyString(1).String);
+			if ( width == 0 )  return;
+			double len = Drawing.Point.Distance(p1, p2)/width;
+
+			Drawing.Rectangle rect = font.GetTextBounds(this.PropertyString(1).String);
+			rect.Scale(len);
+			rect.Offset(p1);
+
+			double angle = Drawing.Point.ComputeAngle(p1, p2);
+			this.p1 = Drawing.Transform.RotatePoint(p1, angle, rect.BottomLeft);
+			this.p2 = Drawing.Transform.RotatePoint(p1, angle, rect.TopLeft);
+			this.p3 = Drawing.Transform.RotatePoint(p1, angle, rect.TopRight);
+			this.p4 = Drawing.Transform.RotatePoint(p1, angle, rect.BottomRight);
+
+			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
+			bbox.MergeWith(this.p1);
+			bbox.MergeWith(this.p2);
+			bbox.MergeWith(this.p3);
+			bbox.MergeWith(this.p4);
+
+			this.bboxThin = bbox;
+			this.bboxGeom = bbox;
+			this.bboxFull = bbox;
+		}
+
+		// Retourne la fonte à utiliser.
+		protected Drawing.Font GetFont()
+		{
+			string fn = "";  // font name
+			switch ( this.PropertyCombo(2).Choice )
+			{
+				case 0:  fn="Tahoma";           break;
+				case 1:  fn="Arial";            break;
+				case 2:  fn="Courier New";      break;
+				case 3:  fn="Times New Roman";  break;
+			}
+
+			string fo = "";  // font optical
+			switch ( this.PropertyCombo(3).Choice )
+			{
+				case 0:  fo="Regular";       break;
+				case 1:  fo="Bold";          break;
+				case 2:  fo="Italic";        break;
+				case 3:  fo="Bold Italic";   break;
+			}
+
+			return Drawing.Font.GetFont(fn, fo);
 		}
 
 		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
 		{
+			if ( this.isHide )  return;
 			base.DrawGeometry(graphics, iconContext);
 
 			if ( this.TotalHandle != 2 )  return;
@@ -113,23 +167,7 @@ namespace Epsitec.Common.Pictogram.Data
 			angle *= 180.0/System.Math.PI;  // radians -> degrés
 			graphics.RotateTransform(angle, p1.X, p1.Y);
 
-			string fn = "";  // font name
-			switch ( this.PropertyCombo(2).Choice )
-			{
-				case 0:  fn="Tahoma";           break;
-				case 1:  fn="Arial";            break;
-				case 2:  fn="Courier New";      break;
-				case 3:  fn="Times New Roman";  break;
-			}
-			string fo = "";  // font optical
-			switch ( this.PropertyCombo(3).Choice )
-			{
-				case 0:  fo="Regular";       break;
-				case 1:  fo="Bold";          break;
-				case 2:  fo="Italic";        break;
-				case 3:  fo="Bold Italic";   break;
-			}
-			Drawing.Font font = Drawing.Font.GetFont(fn, fo);
+			Drawing.Font font = this.GetFont();
 			double width = font.GetTextAdvance(this.PropertyString(1).String);
 			if ( width != 0 )
 			{
@@ -153,16 +191,22 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
-				Drawing.Path path = new Drawing.Path();
-				path.MoveTo(p1);
-				path.LineTo(p2);
-
-				graphics.Rasterizer.AddOutline(path, this.lineWidth/this.scaleX);
+				Drawing.Rectangle bbox = this.BoundingBoxGeom;  // màj p1..p4
+				Drawing.Path path = new Epsitec.Common.Drawing.Path();
+				path.MoveTo(this.p1);
+				path.LineTo(this.p2);
+				path.LineTo(this.p3);
+				path.LineTo(this.p4);
+				path.Close();
+				graphics.Rasterizer.AddSurface(path);
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}
 
 
-		protected double		lineWidth = 10;
+		protected Drawing.Point		p1;
+		protected Drawing.Point		p2;
+		protected Drawing.Point		p3;
+		protected Drawing.Point		p4;
 	}
 }

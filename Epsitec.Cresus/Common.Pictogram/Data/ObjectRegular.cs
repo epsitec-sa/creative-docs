@@ -10,10 +10,6 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ObjectRegular()
 		{
-		}
-
-		public override void CreateProperties()
-		{
 			PropertyLine lineMode = new PropertyLine();
 			lineMode.Type = PropertyType.LineMode;
 			this.AddProperty(lineMode);
@@ -51,25 +47,27 @@ namespace Epsitec.Common.Pictogram.Data
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"file:images/regular1.icon"; }
+			get { return @"file:images/regular.icon"; }
 		}
 
 
 		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
+			if ( this.isHide )  return false;
+
 			Drawing.Rectangle bbox = this.BoundingBox;
 			if ( !bbox.Contains(pos) )  return false;
 
 			Drawing.Path path = this.PathBuild();
 
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
-			if ( base.DetectOutline(path, width, pos) )  return true;
+			if ( AbstractObject.DetectOutline(path, width, pos) )  return true;
 			
 			if ( this.PropertyGradient(2).IsVisible() )
 			{
 				path.Close();
-				if ( base.DetectFill(path, pos) )  return true;
+				if ( AbstractObject.DetectFill(path, pos) )  return true;
 			}
 			return false;
 		}
@@ -77,6 +75,8 @@ namespace Epsitec.Common.Pictogram.Data
 		// Détecte si l'objet est dans un rectangle.
 		public override bool Detect(Drawing.Rectangle rect, bool all)
 		{
+			if ( this.isHide )  return false;
+
 			Drawing.Rectangle fullBbox = this.BoundingBox;
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
 			fullBbox.Inflate(width, width);
@@ -123,6 +123,17 @@ namespace Epsitec.Common.Pictogram.Data
 				return base.IsMoveHandlePropertyChanged(rank);
 			}
 			return ( rank >= 2 );
+		}
+
+		// Retourne la propriété modifiée en déplaçant une poignée.
+		public override AbstractProperty MoveHandleProperty(int rank)
+		{
+			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
+			{
+				return base.MoveHandleProperty(rank);
+			}
+			if ( rank >= 2 )  return this.PropertyRegular(3);
+			return null;
 		}
 
 
@@ -195,12 +206,19 @@ namespace Epsitec.Common.Pictogram.Data
 
 		
 		// Met à jour le rectangle englobant l'objet.
-		public override void UpdateBoundingBox()
+		protected override void UpdateBoundingBox()
 		{
 			Drawing.Path path = this.PathBuild();
-			this.bbox = path.ComputeBounds();
-			double width = this.PropertyLine(0).Width/2.0;
-			this.bbox.Inflate(width, width);
+			this.bboxThin = path.ComputeBounds();
+
+			this.bboxGeom = this.bboxThin;
+			this.bboxGeom.MergeWith(this.Handle(1).Position);
+			this.PropertyLine(0).InflateBoundingBox(ref this.bboxGeom);
+
+			this.bboxFull = this.bboxGeom;
+			this.bboxGeom.MergeWith(this.PropertyGradient(2).BoundingBoxGeom(this.bboxThin));
+			this.bboxFull.MergeWith(this.PropertyGradient(2).BoundingBoxFull(this.bboxThin));
+			this.bboxFull.MergeWith(this.bboxGeom);
 		}
 
 		// Calcule une droite de l'objet.
@@ -291,14 +309,15 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
 		{
+			if ( this.isHide )  return;
 			base.DrawGeometry(graphics, iconContext);
 
 			if ( this.TotalHandle < 2 )  return;
 
 			Drawing.Path path = this.PathBuild();
-			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBox);
+			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBoxThin);
 
-			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
+			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
 
 			if ( this.IsHilite && iconContext.IsEditable )
@@ -309,7 +328,7 @@ namespace Epsitec.Common.Pictogram.Data
 					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 				}
 
-				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
+				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}
