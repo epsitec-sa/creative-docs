@@ -10,7 +10,6 @@ namespace Epsitec.Common.Dialogs
 	{
 		public AbstractOkCancel(string dialog_title, string command_template, CommandDispatcher command_dispatcher)
 		{
-			this.dialog_values      = new System.Collections.ArrayList ();
 			this.dialog_title       = dialog_title;
 			this.command_template   = command_template;
 			this.command_dispatcher = command_dispatcher;
@@ -18,20 +17,9 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
-		public virtual string[]					CommandArgs
+		public abstract string[]					CommandArgs
 		{
-			get
-			{
-				string[] values = new string[this.dialog_values.Count];
-				
-				for (int i = 0; i < this.dialog_values.Count; i++)
-				{
-					Widget widget = this.dialog_values[i] as Widget;
-					values[i] = widget.Text;
-				}
-				
-				return values;
-			}
+			get;
 		}
 		
 		public CommandDispatcher				CommandDispatcher
@@ -40,13 +28,6 @@ namespace Epsitec.Common.Dialogs
 			{
 				return this.private_dispatcher;
 			}
-		}
-		
-		protected void AddValueWidget(string name, Widget widget)
-		{
-			widget.SetProperty ("$dialog_prop_name", name);
-			
-			this.dialog_values.Add (widget);
 		}
 		
 		protected abstract Widget CreateBodyWidget();
@@ -109,7 +90,6 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		protected string						dialog_title;
-		protected System.Collections.ArrayList	dialog_values;
 		protected string						command_template;
 		protected Support.CommandDispatcher		command_dispatcher;
 		protected Support.CommandDispatcher		private_dispatcher;

@@ -279,7 +279,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.ignoreListTextChanged = false;
 			}
 			
-			this.table.Update();
 			this.UpdateToolBar();
 		}
 
@@ -298,6 +297,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( exist )
 			{
 				if ( showSelect )  this.table.ShowSelect();
+				this.table.Update();
 
 				Cell cell = this.table[1, sel];
 				TextField edit = cell.Children[0] as TextField;

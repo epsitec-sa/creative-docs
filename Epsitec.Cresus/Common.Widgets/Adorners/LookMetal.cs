@@ -37,9 +37,10 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			this.colorCaption   = Drawing.Color.FromRGB(170.0/255.0, 195.0/255.0, 249.0/255.0);
 			this.colorCaptionNF = Drawing.Color.FromRGB(210.0/255.0, 210.0/255.0, 210.0/255.0);
-			this.colorHilite    = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorHilite    = Drawing.Color.FromRGB(147.0/255.0, 172.0/255.0, 245.0/255.0);
 			this.colorBorder    = Drawing.Color.FromRGB(102.0/255.0, 102.0/255.0, 126.0/255.0);
-			this.colorWindow    = Drawing.Color.FromRGB(212.0/255.0, 212.0/255.0, 218.0/255.0);
+			this.colorDisabled  = Drawing.Color.FromRGB(176.0/255.0, 176.0/255.0, 188.0/255.0);
+			this.colorWindow    = Drawing.Color.FromRGB(210.0/255.0, 213.0/255.0, 223.0/255.0);
 		}
 		
 
@@ -146,7 +147,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				graphics.RenderSolid(this.colorControlLightLight);
+				graphics.RenderSolid(this.colorDisabled);
 			}
 		}
 
@@ -158,23 +159,31 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.Align(ref rect);
 			Drawing.Rectangle rInside;
 
-			graphics.AddFilledRectangle(rect);
-			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				graphics.RenderSolid(this.colorControl);
+				graphics.AddFilledRectangle(rect);
+				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				{
+					graphics.RenderSolid(this.colorControl);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControlLightLight);
+				}
+
+				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+				{
+					rInside = rect;
+					rInside.Deflate(1.5);
+					graphics.LineWidth = 2;
+					graphics.AddRectangle(rInside);
+					graphics.RenderSolid(this.colorHilite);
+				}
 			}
 			else
 			{
-				graphics.RenderSolid(this.colorControlLightLight);
-			}
-
-			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
-			{
-				rInside = rect;
-				rInside.Deflate(1.5);
-				graphics.LineWidth = 2;
-				graphics.AddRectangle(rInside);
-				graphics.RenderSolid(this.colorHilite);
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(Drawing.Color.FromRGB(221.0/255.0, 224.0/255.0, 227.0/255.0));
 			}
 
 			graphics.LineWidth = 1;
@@ -183,7 +192,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			rInside = rect;
 			rInside.Deflate(0.5);
 			graphics.AddRectangle(rInside);
-			graphics.RenderSolid(this.colorBorder);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBorder);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorDisabled);
+			}
 
 			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
 			{
@@ -203,7 +219,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 				else
 				{
-					graphics.RenderSolid(this.colorControlDark);
+					graphics.RenderSolid(this.colorDisabled);
 				}
 			}
 		}
@@ -216,7 +232,15 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.Align(ref rect);
 			Drawing.Rectangle rInside;
 
-			this.PaintCircle(graphics, rect, this.colorBorder);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				this.PaintCircle(graphics, rect, this.colorBorder);
+				graphics.RenderSolid(this.colorBorder);
+			}
+			else
+			{
+				this.PaintCircle(graphics, rect, this.colorDisabled);
+			}
 
 			rInside = rect;
 			rInside.Deflate(1);
@@ -229,13 +253,20 @@ namespace Epsitec.Common.Widgets.Adorner
 				rInside.Deflate(1);
 			}
 
-			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				this.PaintCircle(graphics, rInside, this.colorControl);
+				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				{
+					this.PaintCircle(graphics, rInside, this.colorControl);
+				}
+				else
+				{
+					this.PaintCircle(graphics, rInside, this.colorControlLightLight);
+				}
 			}
 			else
 			{
-				this.PaintCircle(graphics, rInside, this.colorControlLightLight);
+				this.PaintCircle(graphics, rInside, Drawing.Color.FromRGB(221.0/255.0, 224.0/255.0, 227.0/255.0));
 			}
 
 			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
@@ -248,7 +279,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 				else
 				{
-					this.PaintCircle(graphics, rInside, this.colorControlDark);
+					this.PaintCircle(graphics, rInside, this.colorDisabled);
 				}
 			}
 		}
@@ -317,6 +348,11 @@ namespace Epsitec.Common.Widgets.Adorner
 				else
 				{
 					this.PaintImageButton(graphics, rect, 3);
+
+					double radius = this.RetRadius(rect);
+					Drawing.Path pTitle = this.PathRoundRectangle(rect, radius);
+					graphics.Rasterizer.AddOutline(pTitle, 1);
+					graphics.RenderSolid(this.colorDisabled);
 				}
 			}
 			else if ( style == ButtonStyle.Scroller     ||
@@ -339,15 +375,19 @@ namespace Epsitec.Common.Widgets.Adorner
 					{
 						this.PaintImageButton(graphics, rInside, 8);
 					}
+
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorBorder);
 				}
 				else
 				{
 					this.PaintImageButton(graphics, rInside, 11);
-				}
 
-				rect.Deflate(0.5);
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.colorBorder);
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorDisabled);
+				}
 
 				if ( style == ButtonStyle.Icon )  rFocus.Inflate(1.0);
 			}
@@ -439,14 +479,19 @@ namespace Epsitec.Common.Widgets.Adorner
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
 					this.PaintImageButton(graphics, rect, readOnly?20:16);
+
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorBorder);
 				}
 				else
 				{
 					this.PaintImageButton(graphics, rect, 19);
+
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorDisabled);
 				}
-				rect.Deflate(0.5);
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.colorBorder);
 			}
 			else if ( style == TextFieldStyle.Simple )
 			{
@@ -454,11 +499,18 @@ namespace Epsitec.Common.Widgets.Adorner
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
 					graphics.RenderSolid(this.colorControlLightLight);
-				}
 
-				rect.Deflate(0.5);
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.colorBorder);
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorBorder);
+				}
+				else
+				{
+
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorDisabled);
+				}
 			}
 			else
 			{
@@ -585,7 +637,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			rect.Deflate(0.5);
 			graphics.LineWidth = 1;
 			this.RectangleGroupBox(graphics, rect, titleRect.Left, titleRect.Right);
-			graphics.RenderSolid(this.colorBorder);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBorder);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorDisabled);
+			}
 		}
 
 		public void PaintSepLine(Drawing.Graphics graphics,
@@ -646,7 +705,14 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorBorder);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBorder);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorDisabled);
+			}
 		}
 
 		// Dessine l'onglet devant les autres.
@@ -675,7 +741,14 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			Drawing.Path pTitle = this.PathTopCornerRectangle(titleRect);
 			graphics.Rasterizer.AddOutline(pTitle, 1);
-			graphics.RenderSolid(this.colorBorder);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBorder);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorDisabled);
+			}
 		}
 
 		public void PaintTabAboveForeground(Drawing.Graphics graphics,
@@ -713,7 +786,14 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			Drawing.Path pTitle = this.PathTopCornerRectangle(titleRect);
 			graphics.Rasterizer.AddOutline(pTitle, 1);
-			graphics.RenderSolid(this.colorBorder);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBorder);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorDisabled);
+			}
 		}
 
 		public void PaintTabSunkenForeground(Drawing.Graphics graphics,
@@ -740,7 +820,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorBorder);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBorder);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorDisabled);
+			}
 		}
 
 		public void PaintArrayForeground(Drawing.Graphics graphics,
@@ -803,13 +890,27 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				Drawing.Path pTitle = this.PathTopRectangle(rect);
 				graphics.Rasterizer.AddOutline(pTitle, 1);
-				graphics.RenderSolid(this.colorBorder);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.RenderSolid(this.colorBorder);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorDisabled);
+				}
 			}
 			if ( dir == Direction.Left )
 			{
 				Drawing.Path pTitle = this.PathLeftRectangle(rect);
 				graphics.Rasterizer.AddOutline(pTitle, 1);
-				graphics.RenderSolid(this.colorBorder);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.RenderSolid(this.colorBorder);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorDisabled);
+				}
 			}
 		}
 
@@ -858,7 +959,14 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorBorder);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBorder);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorDisabled);
+			}
 		}
 
 		public void PaintMenuForeground(Drawing.Graphics graphics,
@@ -969,7 +1077,14 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.AddLine(p1, p2);
 			}
 
-			graphics.RenderSolid(this.colorBorder);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBorder);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorDisabled);
+			}
 		}
 
 		public void PaintSeparatorForeground(Drawing.Graphics graphics,
@@ -1038,7 +1153,14 @@ namespace Epsitec.Common.Widgets.Adorner
 										  WidgetState state)
 		{
 			graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
-			graphics.RenderSolid(this.colorBorder);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBorder);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorDisabled);
+			}
 		}
 
 		public void PaintStatusForeground(Drawing.Graphics graphics,
@@ -1055,7 +1177,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			rect.Width -= 1;
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorBorder);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBorder);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorDisabled);
+			}
 		}
 
 		public void PaintStatusItemForeground(Drawing.Graphics graphics,
@@ -1077,19 +1206,19 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.Rasterizer.AddSurface(path);
 			if ( (state&WidgetState.Enabled) == 0 )
 			{
-				Drawing.Color topColor = Drawing.Color.FromRGB(155.0/255.0, 172.0/255.0, 189.0/255.0);
-				Drawing.Color bottomColor = Drawing.Color.FromRGB(93.0/255.0, 102.0/255.0, 133.0/255.0);
+				Drawing.Color topColor    = Drawing.Color.FromRGB(221.0/255.0, 224.0/255.0, 227.0/255.0);
+				Drawing.Color bottomColor = Drawing.Color.FromRGB(214.0/255.0, 216.0/255.0, 219.0/255.0);
 				this.Gradient(graphics, rect, bottomColor, topColor);
 			}
 			else if ( color.IsEmpty )
 			{
-				Drawing.Color topColor = Drawing.Color.FromRGB(253.0/255.0, 253.0/255.0, 253.0/255.0);
+				Drawing.Color topColor    = Drawing.Color.FromRGB(253.0/255.0, 253.0/255.0, 253.0/255.0);
 				Drawing.Color bottomColor = Drawing.Color.FromRGB(205.0/255.0, 204.0/255.0, 223.0/255.0);
 				this.Gradient(graphics, rect, bottomColor, topColor);
 			}
 			else
 			{
-				Drawing.Color topColor = Drawing.Color.FromColor(color, 0.0);
+				Drawing.Color topColor    = Drawing.Color.FromColor(color, 0.0);
 				Drawing.Color bottomColor = Drawing.Color.FromColor(color, 0.5);
 				this.Gradient(graphics, rect, bottomColor, topColor);
 			}
@@ -1111,7 +1240,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			path = new Drawing.Path();
 			path.AppendCircle(rInside.Center, rInside.Width/2, rInside.Height/2);
 			graphics.Rasterizer.AddOutline(path, 1);
-			graphics.RenderSolid(this.colorBorder);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBorder);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorDisabled);
+			}
 
 			this.PaintGlyph(graphics, rect, state, GlyphType.Menu, PaintTextStyle.Button);
 		}
@@ -1212,22 +1348,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				if ( style == PaintTextStyle.StaticText  ||
-					 style == PaintTextStyle.Group       ||
-					 style == PaintTextStyle.CheckButton ||
-					 style == PaintTextStyle.RadioButton ||
-					 style == PaintTextStyle.HMenu       )
-				{
-					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlDarkDark, Drawing.GlyphPaintStyle.Disabled);
-				}
-				else if ( style == PaintTextStyle.VMenu )
-				{
-					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlDark, Drawing.GlyphPaintStyle.Disabled);
-				}
-				else
-				{
-					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlLightLight, Drawing.GlyphPaintStyle.Disabled);
-				}
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorDisabled, Drawing.GlyphPaintStyle.Disabled);
 			}
 
 			if ( (state&WidgetState.Focused) != 0 )
@@ -1511,6 +1632,9 @@ namespace Epsitec.Common.Widgets.Adorner
 				intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
 				intensity = System.Math.Min(intensity+0.3, 1.0);  // augmente l'intensité
 				color = Drawing.Color.FromBrightness(intensity);
+				color.G *= 1.02;
+				color.B *= 1.05;  // bleuté
+				color = color.ClipToRange();
 				color.A = alpha;
 			}
 		}
@@ -1542,12 +1666,12 @@ namespace Epsitec.Common.Widgets.Adorner
 
 		public Drawing.Color ColorTextSliderBorder(bool enabled)
 		{
-			return this.colorBorder;
+			return (enabled ? this.colorBorder : this.colorDisabled);
 		}
 
 		public Drawing.Color ColorTextFieldBorder(bool enabled)
 		{
-			return this.colorBorder;
+			return (enabled ? this.colorBorder : this.colorDisabled);
 		}
 
 		public double AlphaVMenu { get { return 1.0; } }
@@ -1592,6 +1716,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;
 		protected Drawing.Color		colorBorder;
+		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorWindow;
 	}
 }

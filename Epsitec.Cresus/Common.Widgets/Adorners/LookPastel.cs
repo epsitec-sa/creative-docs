@@ -1613,12 +1613,12 @@ namespace Epsitec.Common.Widgets.Adorner
 
 		public Drawing.Color ColorTextSliderBorder(bool enabled)
 		{
-			return this.colorBorder;
+			return this.ColorOutline(enabled ? WidgetState.Enabled : WidgetState.None);
 		}
 
 		public Drawing.Color ColorTextFieldBorder(bool enabled)
 		{
-			return this.colorBorder;
+			return this.ColorOutline(enabled ? WidgetState.Enabled : WidgetState.None);
 		}
 
 		public double AlphaVMenu { get { return 1.0; } }

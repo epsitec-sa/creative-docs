@@ -34,6 +34,18 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
+		public override string[]				CommandArgs
+		{
+			get
+			{
+				string[] values = new string[1];
+				
+				values[0] = this.list.Items[this.list.SelectedIndex];
+				
+				return values;
+			}
+		}
+		
 		
 		protected virtual double				ExtraHeight
 		{
@@ -66,7 +78,6 @@ namespace Epsitec.Common.Dialogs
 			this.list.TabNavigation  = Widget.TabNavigationMode.ActivateOnTab;
 			this.list.DoubleClicked += new MessageEventHandler (this.HandleListDoubleClicked);
 			
-			this.AddValueWidget ("elem", this.list);
 			this.AddExtraWidgets (body);
 			
 			return body;

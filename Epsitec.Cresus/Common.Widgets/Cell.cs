@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public int RankColumn
+		public int						RankColumn
 		{
 			get
 			{
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int RankRow
+		public int						RankRow
 		{
 			get
 			{

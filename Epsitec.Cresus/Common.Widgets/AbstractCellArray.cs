@@ -1066,18 +1066,24 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Rend la cellule sélectionnée visible.
 		public void ShowSelect()
+		{
+			//	Rend la cellule sélectionnée visible.
+			
+			this.ShowCell(this.selectedRow, this.selectedColumn);
+		}
+		
+		public void ShowCell(int showRow, int showColumn)
 		{
 			Drawing.Rectangle rect = this.InnerBounds;
 
 			if ( (this.styleV & CellArrayStyle.Stretch) == 0 &&
 				 (this.styleH & CellArrayStyle.SelectLine) == 0 &&
-				 this.selectedRow != -1 )
+				 showRow != -1 )
 			{
 				double start, end;
 				start = end = 0;
-				for ( int row=0 ; row<=this.selectedRow ; row++ )
+				for ( int row=0 ; row<=showRow ; row++ )
 				{
 					start = end;
 					end = start+this.heightRows[row];
@@ -1095,11 +1101,11 @@ namespace Epsitec.Common.Widgets
 
 			if ( (this.styleH & CellArrayStyle.Stretch) == 0 &&
 				 (this.styleV & CellArrayStyle.SelectLine) == 0 &&
-				 this.selectedColumn != -1 )
+				 showColumn != -1 )
 			{
 				double start, end;
 				start = end = 0;
-				for ( int column=0 ; column<=this.selectedColumn ; column++ )
+				for ( int column=0 ; column<=showColumn ; column++ )
 				{
 					start = end;
 					end = start+this.widthColumns[column];
@@ -1404,7 +1410,8 @@ namespace Epsitec.Common.Widgets
 		// Met à jour la géométrie de toutes les cellules du tableau.
 		protected void UpdateArrayGeometry()
 		{
-			this.container.Children.Clear();
+			Cell focusedCell = null;
+			
 			Drawing.Rectangle rect = this.container.Bounds;
 			double py = rect.Height+this.offsetV;
 			for ( int y=0 ; y<this.maxRows ; y++ )
@@ -1416,6 +1423,7 @@ namespace Epsitec.Common.Widgets
 				{
 					double dx = this.RetWidthColumn(x);
 					Drawing.Rectangle cRect = new Drawing.Rectangle(px, py, dx, dy);
+					
 					if ( cRect.Right > 0 && cRect.Left   < rect.Width  &&
 						 cRect.Top   > 0 && cRect.Bottom < rect.Height )
 					{
@@ -1423,17 +1431,73 @@ namespace Epsitec.Common.Widgets
 						cRect.Top  -= 1;  // laisse la place pour la grille
 						this.array[x,y].Bounds = cRect;
 						this.array[x,y].Parent = this.container;
+						this.array[x,y].SetVisible(true);
 					}
-					else
+					else if ( this.array[x,y].Parent != null )
 					{
-						System.Diagnostics.Debug.Assert(this.array[x,y].Parent == null);
+						if ( this.array[x,y].ContainsFocus )
+						{
+							//	La cellule qui contient le focus n'est plus visible; il faudrait donc
+							//	supprimer son parent, mais ce faisant, on perdrait le focus. Dilemme !
+							
+							focusedCell = this.array[x,y];
+							focusedCell.SetVisible(false);
+						}
+						else
+						{
+							this.array[x,y].Parent = null;
+						}
 					}
 					px += dx;
 				}
 			}
+			
+			this.SetFocusedCell (focusedCell);
+		}
+		
+		protected void SetFocusedCell(Cell cell)
+		{
+			if ( this.focusedCell != cell )
+			{
+				if ( this.focusedWidget != null )
+				{
+					this.focusedWidget.Defocused -= new Support.EventHandler(this.HandleFocusedWidgetDefocused);
+					this.focusedWidget.PreProcessing -= new MessageEventHandler(this.HandleFocusedWidgetPreProcessing);
+					this.focusedWidget = null;
+				}
+				
+				this.focusedCell = cell;
+				
+				if ( this.focusedCell != null )
+				{
+					this.focusedWidget = this.focusedCell.FindFocusedChild();
+					
+					System.Diagnostics.Debug.Assert( this.focusedWidget != null );
+					
+					this.focusedWidget.Defocused += new Support.EventHandler(this.HandleFocusedWidgetDefocused);
+					this.focusedWidget.PreProcessing += new MessageEventHandler(this.HandleFocusedWidgetPreProcessing);
+				}
+			}
 		}
 
-
+		
+		private void HandleFocusedWidgetDefocused(object sender)
+		{
+			if ( ! this.focusedWidget.IsFocusedOrPassive )
+			{
+				this.SetFocusedCell (null);
+			}
+		}
+		
+		private void HandleFocusedWidgetPreProcessing(object sender, MessageEventArgs e)
+		{
+			if ( e.Message.IsKeyType )
+			{
+				this.ShowCell(this.focusedCell.RankRow, this.focusedCell.RankColumn);
+			}
+		}
+		
+		
 		// Choix des dimensions du tableau.
 		public virtual void SetArraySize(int maxColumns, int maxRows)
 		{
@@ -1762,5 +1826,8 @@ namespace Epsitec.Common.Widgets
 		protected int							dragRank;
 		protected double						dragPos;
 		protected double						dragDim;
+		
+		protected Cell							focusedCell;
+		protected Widget						focusedWidget;
 	}
 }

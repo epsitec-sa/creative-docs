@@ -47,8 +47,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.text.TabIndex = 1;
 			this.text.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
-//			this.AddValueWidget ("name", this.text);
-			
 			this.bundle_spec.AddExtraWidgets (body);
 			
 			Support.ValidationRule rule = new ValidationRule ("name");
