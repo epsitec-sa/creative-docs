@@ -10,11 +10,11 @@ namespace Epsitec.Common.Types
 			
 			Assert.AreEqual (5, et.Values.Length);
 			
-			Assert.AreEqual ("Extra",  et.Values[0].Name);
+			Assert.AreEqual ("None",   et.Values[0].Name);
 			Assert.AreEqual ("First",  et.Values[1].Name);
-			Assert.AreEqual ("None",   et.Values[2].Name);
-			Assert.AreEqual ("Second", et.Values[3].Name);
-			Assert.AreEqual ("Third",  et.Values[4].Name);
+			Assert.AreEqual ("Second", et.Values[2].Name);
+			Assert.AreEqual ("Third",  et.Values[3].Name);
+			Assert.AreEqual ("Extra",  et.Values[4].Name);
 			
 			Assert.AreEqual (-1, et["None"]  .Rank);
 			Assert.AreEqual ( 1, et["First"] .Rank);

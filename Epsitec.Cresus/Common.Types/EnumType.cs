@@ -3,6 +3,8 @@
 
 namespace Epsitec.Common.Types
 {
+	using IComparer = System.Collections.IComparer;
+	
 	/// <summary>
 	/// La classe EnumType décrit divers types numériques natifs.
 	/// </summary>
@@ -24,8 +26,19 @@ namespace Epsitec.Common.Types
 				
 				this.enum_values[i] = new EnumValue (rank, name);
 			}
+			
+			System.Array.Sort (this.enum_values, EnumType.RankComparer);
 		}
 		
+		
+		
+		public static IComparer					RankComparer
+		{
+			get
+			{
+				return new RankComparerClass ();
+			}
+		}
 		
 		
 		#region INamedType Members
@@ -165,6 +178,37 @@ namespace Epsitec.Common.Types
 			private string						name;
 			private string						caption;
 			private string						description;
+		}
+		
+		
+		private class RankComparerClass : System.Collections.IComparer
+		{
+			#region IComparer Members
+			public int Compare(object x, object y)
+			{
+				IEnumValue val_x = x as IEnumValue;
+				IEnumValue val_y = y as IEnumValue;
+
+				if (val_x == val_y)
+				{
+					return 0;
+				}
+				
+				if (val_x == null)
+				{
+					return -1;
+				}
+				if (val_y == null)
+				{
+					return 1;
+				}
+				
+				int rx = val_x.Rank;
+				int ry = val_y.Rank;
+				
+				return rx - ry;
+			}
+			#endregion
 		}
 
 		
