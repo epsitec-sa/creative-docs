@@ -560,7 +560,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				if (!this.ValidateName (field.Alias))
 				{
-					this.ThrowError (string.Format ("Invalid field {0} in table {1}.", field.Alias, table_name));
+					this.ThrowError (string.Format ("Invalid field '{0}' in table {1}.", field.Alias, table_name));
 				}
 				
 				if (first_field)

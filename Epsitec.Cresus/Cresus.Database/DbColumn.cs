@@ -306,6 +306,29 @@ namespace Epsitec.Cresus.Database
 			return column;
 		}
 		
+		public SqlField CreateSqlField(ITypeConverter type_converter, int value)
+		{
+			//	TODO: implémenter pour de vrai
+			SqlField field = SqlField.CreateConstant (value, DbRawType.Int32);
+			field.Alias = this.Name;
+			return field;
+		}
+		
+		public SqlField CreateSqlField(ITypeConverter type_converter, long value)
+		{
+			//	TODO: implémenter pour de vrai
+			SqlField field = SqlField.CreateConstant (value, DbRawType.Int64);
+			field.Alias = this.Name;
+			return field;
+		}
+		
+		public SqlField CreateSqlField(ITypeConverter type_converter, string value)
+		{
+			//	TODO: implémenter pour de vrai
+			SqlField field = SqlField.CreateConstant (value, DbRawType.String);
+			field.Alias = this.Name;
+			return field;
+		}
 		
 		internal void SetType(DbSimpleType type)
 		{
@@ -422,11 +445,16 @@ namespace Epsitec.Cresus.Database
 		internal const string			TagName				= "NAME";
 		internal const string			TagCaption			= "CAPTION";
 		internal const string			TagDescription		= "DESCRIPTION";
-		internal const string			TagInformation		= "INFO";
+		internal const string			TagInfoXml			= "INFO";
+		internal const string			TagSource			= "SOURCE";
+		internal const string			TagTarget			= "TARGET";
+		
+		internal const string			TagRefTable			= "REF_TABLE";
+		internal const string			TagRefType			= "REF_TYPE";
 		
 		internal const int				MaxNameLength		= 40;
 		internal const int				MaxCaptionLength	= 100;
 		internal const int				MaxDescriptionLength= 500;
-		internal const int				MaxInformationLength= 500;
+		internal const int				MaxInfoXmlLength	= 500;
 	}
 }
