@@ -472,6 +472,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool								IsFullScreen
+		{
+			get
+			{
+				return (this.window != null) && (this.window.WindowState == System.Windows.Forms.FormWindowState.Maximized);
+			}
+			set
+			{
+				if (this.window != null)
+				{
+					this.window.WindowState = value ? System.Windows.Forms.FormWindowState.Maximized : System.Windows.Forms.FormWindowState.Normal;
+				}
+			}
+		}
+		
 		public bool								IsToolWindow
 		{
 			get

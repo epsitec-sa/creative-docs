@@ -53,12 +53,7 @@ namespace Epsitec.Common.Document
 		// "c:\rep\abc.txt" devient "abc".
 		static public string ExtractName(string filename)
 		{
-			int i = filename.LastIndexOf("\\")+1;
-			if ( i < 0 )  i = 0;
-			int j = filename.IndexOf(".", i);
-			if ( j < 0 )  j = filename.Length;
-			if ( j <= i )  return "";
-			return filename.Substring(i, j-i);
+			return System.IO.Path.GetFileNameWithoutExtension(filename);
 		}
 
 		// Retourne la copie d'un nom.

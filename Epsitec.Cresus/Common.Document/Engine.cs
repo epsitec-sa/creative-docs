@@ -48,7 +48,7 @@ namespace Epsitec.Common.Document
 			{
 				Document doc = new Document(DocumentType.Pictogram, DocumentMode.ReadOnly);
 				
-				if ( doc.Read(stream) == "" )
+				if ( doc.Read(stream, "") == "" )
 				{
 					size   = doc.Size;
 					origin = doc.HotSpot;
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Document
 				
 				Epsitec.Common.Widgets.IAdorner adorner = adornerObject as Epsitec.Common.Widgets.IAdorner;
 				
-				if ( doc.Read(stream) == "" )
+				if ( doc.Read(stream, "") == "" )
 				{
 					context.Adorner = adorner;
 					context.GlyphPaintStyle = style;

@@ -27,7 +27,9 @@ namespace Epsitec.App.DocumentEditor
 		public Application(DocumentType type)
 		{
 			//?System.Threading.Thread.Sleep(60000);
-			Epsitec.Common.Widgets.Adorner.Factory.SetActive("LookMetal");
+			this.editor = new DocumentEditor(type);
+
+			Epsitec.Common.Widgets.Adorner.Factory.SetActive(this.editor.Memory.Adorner);
 
 			this.mainWindow = new Window();
 			this.mainWindow.Root.WindowStyles = WindowStyles.CanResize |
@@ -44,14 +46,14 @@ namespace Epsitec.App.DocumentEditor
 			
 			if ( type == DocumentType.Graphic )
 			{
-				this.mainWindow.Root.MinSize = new Size(300, 200);
-				this.mainWindow.ClientSize = new Size(830, 580);
+				this.mainWindow.Root.MinSize = new Size(400, 250);
 			}
 			else
 			{
-				this.mainWindow.Root.MinSize = new Size(300, 200);
-				this.mainWindow.ClientSize = new Size(830, 580);
+				this.mainWindow.Root.MinSize = new Size(400, 250);
 			}
+			this.mainWindow.WindowLocation = this.editor.Memory.WindowLocation;
+			this.mainWindow.WindowSize = this.editor.Memory.WindowSize;
 
 			switch ( type )
 			{
@@ -72,7 +74,6 @@ namespace Epsitec.App.DocumentEditor
 					break;
 			}
 			
-			this.editor = new DocumentEditor(type);
 			this.menu = this.editor.GetMenu();
 
 			this.menu.Dock     = DockStyle.Top;
@@ -107,12 +108,6 @@ namespace Epsitec.App.DocumentEditor
 			get { return Application.application; }
 		}
 
-		
-		private static Application		application;
-		
-		private Window					mainWindow;
-		private HMenu					menu;
-		private DocumentEditor			editor;
 
 		private void HandleMainWindowWindowDragEntered(object sender, WindowDragEventArgs e)
 		{
@@ -124,7 +119,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				foreach ( string file in files )
 				{
-					if ( ! file.ToLower().EndsWith(".crdoc") )
+					if ( !file.ToLower().EndsWith(this.DefaultExtension) )
 					{
 						return;
 					}
@@ -144,7 +139,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				foreach ( string file in files )
 				{
-					if ( ! file.ToLower().EndsWith(".crdoc") )
+					if ( !file.ToLower().EndsWith(this.DefaultExtension) )
 					{
 						return;
 					}
@@ -154,10 +149,31 @@ namespace Epsitec.App.DocumentEditor
 				
 				foreach ( string file in files )
 				{
-					this.editor.CreateDocument();
-					this.editor.CurrentDocument.Read(file);
+					this.editor.Open(file);
 				}
 			}
 		}
+
+		protected string DefaultExtension
+		{
+			get
+			{
+				if ( this.editor.Type == DocumentType.Pictogram )
+				{
+					return ".icon";
+				}
+				else
+				{
+					return ".crdoc";
+				}
+			}
+		}
+
+		
+		private static Application		application;
+		
+		private Window					mainWindow;
+		private HMenu					menu;
+		private DocumentEditor			editor;
 	}
 }

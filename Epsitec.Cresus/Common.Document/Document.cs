@@ -263,7 +263,7 @@ namespace Epsitec.Common.Document
 			{
 				using ( Stream stream = File.OpenRead(filename) )
 				{
-					string err = this.Read(stream);
+					string err = this.Read(stream, System.IO.Path.GetDirectoryName(filename));
 					if ( err == "" )
 					{
 						this.Filename = filename;
@@ -285,8 +285,10 @@ namespace Epsitec.Common.Document
 
 		// Ouvre un document sérialisé, soit parce que l'utilisateur veut ouvrir
 		// explicitement un fichier, soit par Engine.
-		public string Read(Stream stream)
+		public string Read(Stream stream, string directory)
 		{
+			this.ioDirectory = directory;
+
 			IOType type = Document.ReadIdentifier(stream);
 			if ( type == IOType.Unknow )
 			{
@@ -429,6 +431,8 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
+			this.ioDirectory = System.IO.Path.GetDirectoryName(filename);
+
 			if ( File.Exists(filename) )
 			{
 				File.Delete(filename);
@@ -550,6 +554,12 @@ namespace Epsitec.Common.Document
 			this.objects = (UndoableList) info.GetValue("Objects", typeof(UndoableList));
 			this.propertiesAuto = (UndoableList) info.GetValue("Properties", typeof(UndoableList));
 			this.propertiesStyle = (UndoableList) info.GetValue("Styles", typeof(UndoableList));
+		}
+
+		// Retourne le nom du dossier en cours de lecture/écriture.
+		public string IoDirectory
+		{
+			get { return this.ioDirectory; }
 		}
 
 		// Retourne le numéro de révision du fichier en cours de lecture.
@@ -1127,6 +1137,7 @@ namespace Epsitec.Common.Document
 		protected Notifier						notifier;
 		protected Printer						printer;
 		protected Dialogs						dialogs;
+		protected string						ioDirectory;
 		protected int							readRevision;
 		protected int							readVersion;
 		protected IOType						ioType;

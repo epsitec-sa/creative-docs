@@ -45,7 +45,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "PrintAutoZoom":
-					this.text = "Toujours forcer une impression pleine page";
+					this.text = "Adapter l'impression à la taille de la page";
 					break;
 
 				case "PrintAA":

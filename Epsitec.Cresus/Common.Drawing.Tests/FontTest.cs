@@ -125,6 +125,53 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		[Test] public void CheckRegularFacesMissing()
+		{
+			Font.FaceInfo[] faces = Font.Faces;
+			System.Console.Out.WriteLine ("{0} font faces found.", faces.Length);
+			
+			for (int i = 0; i < faces.Length; i++)
+			{
+				string   face   = faces[i].Name;
+				string[] styles = faces[i].StyleNames;
+				
+				Font font_regular = faces[i].GetFont (false, false, 12.0);
+				
+				if (font_regular == null)
+				{
+					System.Console.WriteLine ("{0}: {1}", face, string.Join (", ", styles));
+					
+					Font[] fonts = faces[i].GetFonts ();
+					
+					foreach (Font font in fonts)
+					{
+						Assert.IsFalse (font.IsStyleRegular);
+					}
+				}
+			}
+		}
+		
+		[Test] public void CheckRegularFacesFound()
+		{
+			Font.FaceInfo[] faces = Font.Faces;
+			System.Console.Out.WriteLine ("{0} font faces found.", faces.Length);
+			
+			for (int i = 0; i < faces.Length; i++)
+			{
+				string   face   = faces[i].Name;
+				string[] styles = faces[i].StyleNames;
+				
+				Font font_regular = faces[i].GetFont (false, false, 12.0);
+				
+				if (font_regular != null)
+				{
+					System.Console.WriteLine ("{0}: {1}", face, string.Join (", ", styles));
+					
+					Assert.IsTrue (font_regular.IsStyleRegular);
+				}
+			}
+		}
+		
 		[Test] public void CheckSyntheticFont()
 		{
 			Font font = Font.GetFont ("Tahoma", "Italic");

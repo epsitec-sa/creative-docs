@@ -160,6 +160,7 @@ namespace Epsitec.Common.Document.Objects
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 1
 			this.document.Notifier.NotifyArea(this.BoundingBox);
+			this.isCreating = true;
 		}
 
 		// Déplacement pendant la création d'un objet.
@@ -177,6 +178,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
+			this.isCreating = false;
 
 			drawingContext.SnapGrid(ref pos);
 			drawingContext.ConstrainSnapPos(ref pos);
@@ -466,6 +468,16 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else
 			{
+				if ( this.IsSelected || this.isCreating )
+				{
+					if ( this.PropertyLineMode.Width == 0.0 ||
+						 this.PropertyLineColor.Color1.A == 0.0 )
+					{
+						this.PropertyLineMode.AddOutline(graphics, path, 1.0/drawingContext.ScaleX);
+						graphics.RenderSolid(drawingContext.HiliteOutlineColor);
+					}
+				}
+
 				if ( this.IsHilite && drawingContext.IsActive )
 				{
 					if ( !this.edited )
@@ -473,7 +485,7 @@ namespace Epsitec.Common.Document.Objects
 						graphics.Rasterizer.AddSurface(path);
 						graphics.RenderSolid(drawingContext.HiliteSurfaceColor);
 					}
-					this.PropertyLineMode.AddOutline(graphics, path, 0.0);
+					this.PropertyLineMode.AddOutline(graphics, path, drawingContext.HiliteSize);
 					graphics.RenderSolid(drawingContext.HiliteOutlineColor);
 				}
 			}

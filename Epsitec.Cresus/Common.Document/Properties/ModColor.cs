@@ -179,6 +179,15 @@ namespace Epsitec.Common.Document.Properties
 			this.document.Notifier.NotifyArea();
 		}
 
+		// Indique si une impression complexe est nécessaire.
+		public override bool IsComplexPrinting
+		{
+			get
+			{
+				if ( this.a != 0.0 )  return true;
+				return false;
+			}
+		}
 
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox

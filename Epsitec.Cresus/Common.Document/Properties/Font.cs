@@ -93,7 +93,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 			get
 			{
-				if ( this.fontColor.A < 1.0 )  return true;
+				if ( this.fontColor.A > 0.0 && this.fontColor.A < 1.0 )  return true;
 				return false;
 			}
 		}

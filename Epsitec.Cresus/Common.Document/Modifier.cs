@@ -17,7 +17,7 @@ namespace Epsitec.Common.Document
 			this.tool = "Select";
 			this.zoomHistory = new ZoomHistory();
 			this.opletQueue = new OpletQueue();
-			this.objectMemory = new Objects.Memory(this.document, null);
+			this.CreateObjectMemory();
 
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
@@ -148,6 +148,17 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Indique si l'outil sélectionné est un objet de type "texte".
+		protected bool IsToolText
+		{
+			get
+			{
+				if ( this.tool == "ObjectTextLine"  )  return true;
+				if ( this.tool == "ObjectTextBox"   )  return true;
+				return false;
+			}
+		}
+
 
 		public OpletQueue OpletQueue
 		{
@@ -157,6 +168,16 @@ namespace Epsitec.Common.Document
 		public Objects.Memory ObjectMemory
 		{
 			get { return this.objectMemory; }
+		}
+
+		public Objects.Memory ObjectMemoryText
+		{
+			get { return this.objectMemoryText; }
+		}
+
+		public Objects.Memory ObjectMemoryTool
+		{
+			get { return this.IsToolText ? this.objectMemoryText : this.objectMemory; }
 		}
 
 		// Taille de la zone de travail.
@@ -420,7 +441,7 @@ namespace Epsitec.Common.Document
 			this.document.PropertiesAuto.Clear();
 			this.document.PropertiesSel.Clear();
 			this.document.PropertiesStyle.Clear();
-			this.objectMemory = new Objects.Memory(this.document, null);
+			this.CreateObjectMemory();
 
 			Objects.Page page = new Objects.Page(this.document, null);  // crée la page initiale
 			this.document.GetObjects.Add(page);
@@ -454,6 +475,15 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyUndoRedoChanged();
 			this.document.Notifier.NotifyPagesChanged();
 			this.document.Notifier.NotifyLayersChanged();
+		}
+
+		protected void CreateObjectMemory()
+		{
+			this.objectMemory = new Objects.Memory(this.document, null);
+
+			this.objectMemoryText = new Objects.Memory(this.document, null);
+			this.objectMemoryText.PropertyLineMode.Width = 0.0;
+			this.objectMemoryText.PropertyFillGradient.Color1 = Color.FromARGB(0, 1,1,1);
 		}
 
 
@@ -1967,7 +1997,7 @@ namespace Epsitec.Common.Document
 				// Crée un objet factice (document = null), c'est-à-dire sans
 				// propriétés, qui servira juste de filtre pour objectMemory.
 				Objects.Abstract dummy = Objects.Abstract.CreateObject(null, this.tool, null);
-				this.objectMemory.PropertiesList(list, dummy);
+				this.ObjectMemoryTool.PropertiesList(list, dummy);
 				dummy.Dispose();
 			}
 
@@ -2213,7 +2243,7 @@ namespace Epsitec.Common.Document
 		// Fabrique un nouveau style.
 		public void StyleMake(Properties.Abstract property)
 		{
-			if ( this.IsTool )  // // propriétés des objets sélectionnés ?
+			if ( this.IsTool )  // propriétés des objets sélectionnés ?
 			{
 				using ( this.OpletQueueBeginAction() )
 				{
@@ -2255,7 +2285,7 @@ namespace Epsitec.Common.Document
 					style.IsStyle = true;
 					style.StyleName = Modifier.GetNextStyleName();
 					this.PropertyList(true, style.IsSelected).Add(style);
-					this.objectMemory.ChangeProperty(style);
+					this.ObjectMemoryTool.ChangeProperty(style);
 
 					this.document.Notifier.NotifyStyleChanged();
 
@@ -2293,7 +2323,7 @@ namespace Epsitec.Common.Document
 					free.IsOnlyForCreation = true;
 					free.IsStyle = false;
 					free.StyleName = "";
-					this.objectMemory.ChangeProperty(free);
+					this.ObjectMemoryTool.ChangeProperty(free);
 
 					this.document.Notifier.NotifyStyleChanged();
 
@@ -2335,7 +2365,7 @@ namespace Epsitec.Common.Document
 			else	// propriété de objectMemory ?
 			{
 				this.OpletQueueEnable = false;
-				this.objectMemory.ChangeProperty(style);
+				this.ObjectMemoryTool.ChangeProperty(style);
 				this.OpletQueueEnable = true;
 
 				this.document.Notifier.NotifySelectionChanged();
@@ -2655,6 +2685,7 @@ namespace Epsitec.Common.Document
 		protected string						opletLastCmd;
 		protected int							opletLastId;
 		protected Objects.Memory				objectMemory;
+		protected Objects.Memory				objectMemoryText;
 		protected Properties.Abstract			menuProperty;
 		protected bool							operInitialSelector;
 		protected Containers.Abstract			activeContainer;

@@ -288,7 +288,7 @@ namespace Epsitec.Common.Document
 				}
 
 				this.document.Modifier.OpletQueueBeginAction("Create");
-				Objects.Abstract obj = Objects.Abstract.CreateObject(this.document, this.document.Modifier.Tool, this.document.Modifier.ObjectMemory);
+				Objects.Abstract obj = Objects.Abstract.CreateObject(this.document, this.document.Modifier.Tool, this.document.Modifier.ObjectMemoryTool);
 
 				this.document.Modifier.OpletQueueEnable = false;
 				Objects.Abstract layer = this.drawingContext.RootObject();
@@ -813,6 +813,7 @@ namespace Epsitec.Common.Document
 				else if ( this.document.Modifier.TotalSelected == 0 )
 				{
 					this.document.Modifier.ObjectMemory.PickerProperties(model);
+					this.document.Modifier.ObjectMemoryText.PickerProperties(model);
 				}
 				else
 				{

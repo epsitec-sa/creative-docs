@@ -3,6 +3,8 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Document;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Soap;
 
 namespace Epsitec.App.DocumentEditor
 {
@@ -25,6 +27,11 @@ namespace Epsitec.App.DocumentEditor
 			this.type = type;
 			this.useArray = false;
 
+			if ( !this.ReadMemory() )
+			{
+				this.memory = new Memory();
+			}
+
 			this.CreateLayout();
 			this.InitCommands();
 
@@ -39,6 +46,7 @@ namespace Epsitec.App.DocumentEditor
 			if ( args.Length >= 2 )
 			{
 				string err = this.CurrentDocument.Read(args[1]);
+				if ( err == "" )  this.LastFilenameAdd(args[1]);
 				this.DialogError(this.commandDispatcher, err);
 			}
 
@@ -54,6 +62,11 @@ namespace Epsitec.App.DocumentEditor
 		public DocumentType Type
 		{
 			get { return this.type; }
+		}
+		
+		public Memory Memory
+		{
+			get { return this.memory; }
 		}
 		
 		public override CommandDispatcher CommandDispatcher
@@ -112,9 +125,14 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(fileMenu, @"", "", "", "");
 			this.MenuAdd(fileMenu, @"file:images/print.icon", "Print", "Imprimer...", "Ctrl+P");
 			this.MenuAdd(fileMenu, @"", "", "", "");
+			this.MenuAdd(fileMenu, @"", "", "Derniers fichiers", "");
+			this.MenuAdd(fileMenu, @"", "", "", "");
 			this.MenuAdd(fileMenu, @"", "QuitApplication", "Quitter", "");
 			fileMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = fileMenu;
+
+			this.fileMenu = fileMenu;
+			this.BuildLastFilenamesMenu();
 
 			VMenu editMenu = new VMenu();
 			editMenu.Name = "Edit";
@@ -611,6 +629,40 @@ namespace Epsitec.App.DocumentEditor
 			this.bookDocuments.ActivePage = di.tabPage;
 		}
 
+		#region LastFilenames
+		// Ajoute le fichier ouvert à la liste des derniers fichiers ouverts.
+		protected void LastFilenameAdd(string filename)
+		{
+			this.memory.LastFilenameAdd(filename);
+			this.BuildLastFilenamesMenu();
+		}
+
+		// Construit le sous-menu des derniers fichiers ouverts.
+		protected void BuildLastFilenamesMenu()
+		{
+			VMenu lastMenu = new VMenu();
+			lastMenu.Name = "LastFilenames";
+			lastMenu.Host = this;
+
+			int total = this.memory.LastFilenameCount;
+			if ( total == 0 )
+			{
+				this.MenuAdd(lastMenu, @"", "", "<i>Aucun</i>", "");
+			}
+			else
+			{
+				for ( int i=0 ; i<total ; i++ )
+				{
+					string command = string.Format("LastFilename{0}", i);
+					string filename = string.Format("{0} {1}", i+1, this.memory.LastFilenameGetShort(i));
+					this.MenuAdd(lastMenu, @"", "LastFilename(this.Name)", filename, "", this.memory.LastFilenameGet(i));
+				}
+			}
+
+			lastMenu.AdjustSize();
+			this.fileMenu.Items[9].Submenu = lastMenu;
+		}
+		#endregion
 
 		public HMenu GetMenu()
 		{
@@ -866,7 +918,24 @@ namespace Epsitec.App.DocumentEditor
 
 			this.CreateDocument();
 			string err = this.CurrentDocument.Read(dialog.FileName);
+			if ( err == "" )  this.LastFilenameAdd(dialog.FileName);
 			this.DialogError(dispatcher, err);
+			return (err == "");
+		}
+
+		// Ouvre un ficher.
+		// Affiche l'erreur éventuelle.
+		// Retourne false si le fichier n'a pas été ouvert.
+		public bool Open(string filename)
+		{
+			this.CreateDocument();
+			string err = this.CurrentDocument.Read(filename);
+			if ( err == "" )
+			{
+				this.UpdateBookDocuments();
+				this.LastFilenameAdd(filename);
+			}
+			this.DialogError(this.commandDispatcher, err);
 			return (err == "");
 		}
 
@@ -990,6 +1059,13 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.CloseDocument();
 			}
+		}
+
+		[Command ("LastFilename")]
+		void CommandLastFilename(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			string filename = e.CommandArgs[0];
+			this.Open(filename);
 		}
 
 		[Command ("QuitApplication")]
@@ -1489,6 +1565,7 @@ namespace Epsitec.App.DocumentEditor
 		// Quitte l'application.
 		public void QuitApplication()
 		{
+			this.WritedMemory();
 			Window.Quit();
 		}
 
@@ -2367,8 +2444,8 @@ namespace Epsitec.App.DocumentEditor
 				ToolTip.Default.SetToolTip(buttonClose, "Fermer les réglages");
 			}
 
-			this.CurrentDocument.Dialogs.BuildSettings(this.windowSettings);
 			this.windowSettings.Show();
+			this.CurrentDocument.Dialogs.BuildSettings(this.windowSettings);
 		}
 
 		private void HandleWindowSettingsCloseClicked(object sender)
@@ -2539,7 +2616,7 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		// Retourne le Document courant.
-		public Document CurrentDocument
+		protected Document CurrentDocument
 		{
 			get
 			{
@@ -2549,7 +2626,7 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		// Crée un nouveau document.
-		public void CreateDocument()
+		protected void CreateDocument()
 		{
 			this.PrepareCloseDocument();
 
@@ -2683,15 +2760,110 @@ namespace Epsitec.App.DocumentEditor
 		#endregion
 
 
+		#region Memory
+		// Lit le fichier des réglages de l'application.
+		protected bool ReadMemory()
+		{
+			try
+			{
+				using ( Stream stream = File.OpenRead(this.FilenameMemory) )
+				{
+					// Initialise la variable statique utilisée par VersionDeserializationBinder.
+					// Exemple de contenu:
+					// "Common.Document, Version=1.0.1777.18519, Culture=neutral, PublicKeyToken=7344997cc606b490"
+					System.Reflection.Assembly ass = System.Reflection.Assembly.GetAssembly(this.GetType());
+					DocumentEditor.AssemblyFullName = ass.FullName;
+
+					SoapFormatter formatter = new SoapFormatter();
+					formatter.Binder = new VersionDeserializationBinder();
+
+					try
+					{
+						this.memory = (Memory) formatter.Deserialize(stream);
+					}
+					catch
+					{
+						return false;
+					}
+				}
+			}
+			catch
+			{
+				return false;
+			}
+			return true;
+		}
+
+		sealed class VersionDeserializationBinder : SerializationBinder 
+		{
+			// Retourne un type correspondant à l'application courante, afin
+			// d'accepter de désérialiser un fichier généré par une application
+			// ayant un autre numéro de révision.
+			// Application courante: Version=1.0.1777.18519
+			// Version dans le fichier: Version=1.0.1777.11504
+			public override System.Type BindToType(string assemblyName, string typeName) 
+			{
+				System.Type typeToDeserialize;
+				typeToDeserialize = System.Type.GetType(string.Format("{0}, {1}", typeName, DocumentEditor.AssemblyFullName));
+				return typeToDeserialize;
+			}
+		}
+
+		protected static string AssemblyFullName = "";
+
+		// Ecrit le fichier des réglages de l'application.
+		protected bool WritedMemory()
+		{
+			this.memory.WindowLocation = this.Window.WindowLocation;
+			this.memory.WindowSize = this.Window.WindowSize;
+			this.memory.Adorner = Epsitec.Common.Widgets.Adorner.Factory.ActiveName;
+
+			try
+			{
+				using ( Stream stream = File.OpenWrite(this.FilenameMemory) )
+				{
+					SoapFormatter formatter = new SoapFormatter();
+					formatter.Serialize(stream, this.memory);
+				}
+			}
+			catch
+			{
+				return false;
+			}
+			return true;
+		}
+
+		// Retourne le nom du fichier des réglages de l'application.
+		// Le dossier est qq chose du genre:
+		// C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\DocumentEditor\1.0.0.0
+		protected string FilenameMemory
+		{
+			get
+			{
+				if ( this.type == DocumentType.Pictogram )
+				{
+					return string.Format("{0}\\{1}", Common.Support.Globals.Directories.UserAppData, "CresusPicto.data");
+				}
+				else
+				{
+					return string.Format("{0}\\{1}", Common.Support.Globals.Directories.UserAppData, "CresusDoc.data");
+				}
+			}
+		}
+		#endregion
+
+
 		protected DocumentType					type;
 		protected bool							useArray;
 		protected Document						clipboard;
 		protected int							currentDocument;
 		protected System.Collections.ArrayList	documents;
+		protected Memory						memory;
 
 		protected CommandDispatcher				commandDispatcher;
 
 		protected HMenu							menu;
+		protected VMenu							fileMenu;
 		protected HToolBar						hToolBar;
 		protected VToolBar						vToolBar;
 		protected StatusBar						info;

@@ -38,6 +38,16 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		// Indique si une impression complexe est nécessaire.
+		public override bool IsComplexPrinting
+		{
+			get
+			{
+				if ( this.color.A > 0.0 && this.color.A < 1.0 )  return true;
+				return false;
+			}
+		}
+
 		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{

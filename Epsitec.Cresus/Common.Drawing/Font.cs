@@ -102,6 +102,31 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public bool						IsStyleRegular
+		{
+			get
+			{
+				switch (this.StyleName)
+				{
+					case "Roman":
+					case "Normal":
+					case "Regular":
+						return true;
+				}
+				return false;
+			}
+		}
+		
+		public bool						IsSingleFontInFace
+		{
+			get
+			{
+				FaceInfo info = this.GetFaceInfo ();
+				
+				return info.Count == 1;
+			}
+		}
+		
 		public string					LocalStyleName
 		{
 			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.StyleUserLocale); }
@@ -190,6 +215,13 @@ namespace Epsitec.Common.Drawing
 				
 				return AntiGrain.Font.Face.GetCaretSlope (this.handle);
 			}
+		}
+		
+		
+		public Font.FaceInfo GetFaceInfo()
+		{
+			Font.SetupFonts ();
+			return this.face_info;
 		}
 		
 		
@@ -723,6 +755,8 @@ namespace Epsitec.Common.Drawing
 				//	fontes natives trouvées.
 				
 				Font.face_array = new Font.FaceInfo[n];
+				Font.face_hash  = new System.Collections.Hashtable ();
+				
 				string[] faces = new string[n];
 				
 				hash.Keys.CopyTo (faces, 0);
@@ -736,7 +770,8 @@ namespace Epsitec.Common.Drawing
 					Font[] fonts = new Font[list.Count];
 					list.CopyTo (fonts, 0);
 					
-					Font.face_array[i] = new Font.FaceInfo (face, fonts);
+					Font.face_array[i]   = new Font.FaceInfo (face, fonts);
+					Font.face_hash[face] = Font.face_array[i];
 				}
 			}
 		}
@@ -825,7 +860,7 @@ namespace Epsitec.Common.Drawing
 				buffer.Append (" ");
 				buffer.Append (optical);
 			}
-				
+			
 			string key = buffer.ToString ();
 			
 			Font font = Font.font_hash[key] as Font;
@@ -838,7 +873,14 @@ namespace Epsitec.Common.Drawing
 				
 				if (pos >= 0)
 				{
-					return Font.GetFont (face, style.Replace ("Regular", "Normal"), optical);
+					font = Font.GetFont (face, style.Replace ("Regular", "Normal"), optical);
+					
+					if (font == null)
+					{
+						font = Font.GetFont (face, style.Replace ("Regular", "Roman"), optical);
+					}
+					
+					return font;
 				}
 				
 				pos = style.IndexOf ("Italic");
@@ -888,6 +930,23 @@ namespace Epsitec.Common.Drawing
 						Font.font_hash[syn_name] = syn_font;
 						
 						font = syn_font;
+					}
+				}
+			}
+			
+			if (font == null)
+			{
+				//	Cherche encore directement à partir des familles de fontes...
+				
+				FaceInfo info = Font.face_hash[face] as FaceInfo;
+				
+				if (info != null)
+				{
+					Font[] fonts = info.GetFonts ();
+					
+					if (fonts.Length == 1)
+					{
+						font = fonts[0];
 					}
 				}
 			}
@@ -987,6 +1046,9 @@ namespace Epsitec.Common.Drawing
 				for (int i = 0; i < this.fonts.Length; i++)
 				{
 					System.Diagnostics.Debug.Assert (this.fonts[i].FaceName == this.name);
+					System.Diagnostics.Debug.Assert (this.fonts[i].face_info == null);
+					
+					this.fonts[i].face_info = this;
 				}
 			}
 			
@@ -1024,11 +1086,20 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 			
+			public int							Count
+			{
+				get
+				{
+					return this.fonts.Length;
+				}
+			}
+			
 			
 			public Font GetFont(bool bold, bool italic, double size)
 			{
 				string style_1 = null;
 				string style_2 = null;
+				string style_3 = null;
 				
 				if (bold)
 				{
@@ -1053,13 +1124,15 @@ namespace Epsitec.Common.Drawing
 					{
 						style_1 = "Regular";
 						style_2 = "Normal";
+						style_3 = "Roman";
 					}
 				}
 				
 				foreach (Font font in this.fonts)
 				{
 					if ((font.StyleName == style_1) ||
-						(font.StyleName == style_2))
+						(font.StyleName == style_2) ||
+						(font.StyleName == style_3))
 					{
 						return font;
 					}
@@ -1078,6 +1151,13 @@ namespace Epsitec.Common.Drawing
 				return synthetic;
 			}
 			
+			public Font[] GetFonts()
+			{
+				Font[] copy = new Font[this.fonts.Length];
+				this.fonts.CopyTo (copy, 0);
+				return copy;
+			}
+			
 			
 			private string						name;
 			private Font[]						fonts;
@@ -1090,10 +1170,12 @@ namespace Epsitec.Common.Drawing
 		SyntheticFontMode						synthetic_mode;
 		System.Drawing.Font						os_font;
 		System.Collections.Hashtable			os_font_cache;
+		FaceInfo								face_info;
 		
 		static Font[]							font_array = null;
 		static FaceInfo[]						face_array = null;
 		static System.Collections.Hashtable		font_hash  = null;
+		static System.Collections.Hashtable		face_hash  = null;
 		static Font								default_font;
 		static bool								initialised = false;
 		

@@ -232,6 +232,7 @@ namespace Epsitec.Common.Document.Panels
 
 		protected static void AddFontList(TextFieldCombo combo)
 		{
+#if false
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			int total = Drawing.Font.Count;
 			for ( int i=0 ; i<total ; i++ )
@@ -250,6 +251,13 @@ namespace Epsitec.Common.Document.Panels
 			{
 				combo.Items.Add(s);
 			}
+#else
+			Drawing.Font.FaceInfo[] list = Drawing.Font.Faces;
+			foreach ( Drawing.Font.FaceInfo info in list )
+			{
+				combo.Items.Add(info.Name);
+			}
+#endif
 		}
 
 

@@ -20,8 +20,10 @@ namespace Epsitec.Common.Document
 		// Peuple le dialogue des informations.
 		public void BuildInfos(Window window)
 		{
-			if ( this.windowInfos != null )  return;
-			this.windowInfos = window;
+			if ( this.windowInfos == null )
+			{
+				this.windowInfos = window;
+			}
 
 			this.UpdateInfos();
 		}
@@ -29,13 +31,12 @@ namespace Epsitec.Common.Document
 		// Met à jour le dialogue des informations.
 		public void UpdateInfos()
 		{
-			if ( this.windowInfos != null && this.windowInfos.IsVisible )
+			if ( this.windowInfos == null || !this.windowInfos.IsVisible )  return;
+
+			TextFieldMulti multi = this.windowInfos.Root.FindChild("Infos") as TextFieldMulti;
+			if ( multi != null )
 			{
-				TextFieldMulti multi = this.windowInfos.Root.FindChild("Infos") as TextFieldMulti;
-				if ( multi != null )
-				{
-					multi.Text = this.document.Modifier.Statistic(true, true);
-				}
+				multi.Text = this.document.Modifier.Statistic(true, true);
 			}
 		}
 		#endregion
@@ -44,93 +45,97 @@ namespace Epsitec.Common.Document
 		// Peuple le dialogue des réglages.
 		public void BuildSettings(Window window)
 		{
-			if ( this.windowSettings != null )  return;
-			this.windowSettings = window;
-
-			Widget parent, container;
-
-			// Onglet Format:
-			parent = this.windowSettings.Root.FindChild("Format");
-			container = new Widget(parent);
-			container.Name = "Container";
-			container.Dock = DockStyle.Fill;
-
-			this.tabIndex = 0;
-			if ( this.document.Type == DocumentType.Pictogram )
+			if ( this.windowSettings == null )
 			{
-				Dialogs.CreateTitle(container, "Dimensions d'un pictogramme");
-				this.CreatePoint(container, "PageSize");
-			}
-			else
-			{
-				Dialogs.CreateTitle(container, "Dimensions d'une page");
-				this.CreatePaper(container);
-				this.CreatePoint(container, "PageSize");
+				this.windowSettings = window;
+
+				Widget parent, container;
+
+				// Onglet Format:
+				parent = this.windowSettings.Root.FindChild("Format");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+
+				this.tabIndex = 0;
+				if ( this.document.Type == DocumentType.Pictogram )
+				{
+					Dialogs.CreateTitle(container, "Dimensions d'un pictogramme");
+					this.CreatePoint(container, "PageSize");
+				}
+				else
+				{
+					Dialogs.CreateTitle(container, "Dimensions d'une page");
+					this.CreatePaper(container);
+					this.CreatePoint(container, "PageSize");
+					Dialogs.CreateSeparator(container);
+					this.CreateCombo(container, "DefaultUnit");
+				}
+
+				// Onglet Grid:
+				parent = this.windowSettings.Root.FindChild("Grid");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+
+				this.tabIndex = 0;
+				Dialogs.CreateTitle(container, "Grille magnétique");
+				this.CreateBool(container, "GridActive");
+				this.CreateBool(container, "GridShow");
 				Dialogs.CreateSeparator(container);
-				this.CreateCombo(container, "DefaultUnit");
+				this.CreatePoint(container, "GridStep");
+				this.CreatePoint(container, "GridSubdiv");
+				this.CreatePoint(container, "GridOffset");
+
+				// Onglet Guides:
+				parent = this.windowSettings.Root.FindChild("Guides");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+
+				this.tabIndex = 0;
+				Dialogs.CreateTitle(container, "Repères magnétiques");
+				this.CreateBool(container, "GuidesActive");
+				this.CreateBool(container, "GuidesShow");
+				Dialogs.CreateSeparator(container);
+
+				this.containerGuides = new Containers.Guides(this.document);
+				this.containerGuides.Dock = DockStyle.Fill;
+				this.containerGuides.DockMargins = new Margins(10, 10, 4, 10);
+				this.containerGuides.Parent = container;
+
+				// Onglet Print:
+				parent = this.windowSettings.Root.FindChild("Print");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+
+				this.tabIndex = 0;
+				Dialogs.CreateTitle(container, "Paramètres pour l'impression");
+				this.CreateBool(container, "PrintAutoLandscape");
+				this.CreateBool(container, "PrintAutoZoom");
+				this.CreateBool(container, "PrintDraft");
+				this.CreateBool(container, "PrintAA");
+				this.CreateDouble(container, "PrintDpi");
+
+				// Onglet Misc:
+				parent = this.windowSettings.Root.FindChild("Misc");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+
+				this.tabIndex = 0;
+				Dialogs.CreateTitle(container, "Déplacement lorsqu'un objet est dupliqué");
+				this.CreatePoint(container, "DuplicateMove");
 			}
 
-			// Onglet Grid:
-			parent = this.windowSettings.Root.FindChild("Grid");
-			container = new Widget(parent);
-			container.Name = "Container";
-			container.Dock = DockStyle.Fill;
-
-			this.tabIndex = 0;
-			Dialogs.CreateTitle(container, "Grille magnétique");
-			this.CreateBool(container, "GridActive");
-			this.CreateBool(container, "GridShow");
-			Dialogs.CreateSeparator(container);
-			this.CreatePoint(container, "GridStep");
-			this.CreatePoint(container, "GridSubdiv");
-			this.CreatePoint(container, "GridOffset");
-
-			// Onglet Guides:
-			parent = this.windowSettings.Root.FindChild("Guides");
-			container = new Widget(parent);
-			container.Name = "Container";
-			container.Dock = DockStyle.Fill;
-
-			this.tabIndex = 0;
-			Dialogs.CreateTitle(container, "Repères magnétiques");
-			this.CreateBool(container, "GuidesActive");
-			this.CreateBool(container, "GuidesShow");
-			Dialogs.CreateSeparator(container);
-
-			this.containerGuides = new Containers.Guides(this.document);
-			this.containerGuides.Dock = DockStyle.Fill;
-			this.containerGuides.DockMargins = new Margins(10, 10, 4, 10);
-			this.containerGuides.Parent = container;
-
-			// Onglet Print:
-			parent = this.windowSettings.Root.FindChild("Print");
-			container = new Widget(parent);
-			container.Name = "Container";
-			container.Dock = DockStyle.Fill;
-
-			this.tabIndex = 0;
-			Dialogs.CreateTitle(container, "Paramètres pour l'impression");
-			this.CreateBool(container, "PrintAutoLandscape");
-			this.CreateBool(container, "PrintAutoZoom");
-			this.CreateBool(container, "PrintDraft");
-			this.CreateBool(container, "PrintAA");
-			this.CreateDouble(container, "PrintDpi");
-
-			// Onglet Misc:
-			parent = this.windowSettings.Root.FindChild("Misc");
-			container = new Widget(parent);
-			container.Name = "Container";
-			container.Dock = DockStyle.Fill;
-
-			this.tabIndex = 0;
-			Dialogs.CreateTitle(container, "Déplacement lorsqu'un objet est dupliqué");
-			this.CreatePoint(container, "DuplicateMove");
+			this.UpdateSettings();
 		}
 
 		// Appelé lorsque les réglages ont changé.
 		public void UpdateSettings()
 		{
-			if ( this.windowSettings == null )  return;
+			if ( this.windowSettings == null || !this.windowSettings.IsVisible )  return;
 
 			int total = this.document.Settings.Count;
 			for ( int i=0 ; i<total ; i++ )

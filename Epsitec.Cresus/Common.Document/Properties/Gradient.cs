@@ -275,7 +275,7 @@ namespace Epsitec.Common.Document.Properties
 			get
 			{
 				if ( this.fillType != GradientFillType.None )  return true;
-				if ( this.color1.A < 1.0 )  return true;
+				if ( this.color1.A > 0.0 && this.color1.A < 1.0 )  return true;
 				return false;
 			}
 		}
