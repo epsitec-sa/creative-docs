@@ -93,6 +93,11 @@
                     AssemblyName = "System.Xml"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
+                <Reference
+                    Name = "Common.Support"
+                    Project = "{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
@@ -104,6 +109,11 @@
                 />
                 <File
                     RelPath = "DuplexMode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IPrintEngine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -133,12 +143,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "PrintDocument.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "PrinterResolution.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "PrinterSettings.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PrintRange.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

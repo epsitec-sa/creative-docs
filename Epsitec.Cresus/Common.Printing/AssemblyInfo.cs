@@ -6,14 +6,14 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("")]
+[assembly: AssemblyTitle("Epsitec Common Printing Library")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCompany("EPSITEC SA")]
+[assembly: AssemblyProduct("Crésus")]
+[assembly: AssemblyCopyright("Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]		
+[assembly: AssemblyCulture("")]
 
 //
 // Version information for an assembly consists of the following four values:
@@ -54,5 +54,5 @@ using System.Runtime.CompilerServices;
 //       documentation for more information on this.
 //
 [assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("")]
+[assembly: AssemblyKeyFile(@"..\..\..\Epsitec.Cresus.snk")]
 [assembly: AssemblyKeyName("")]
