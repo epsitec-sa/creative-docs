@@ -7,7 +7,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldMulti()
 		{
-			this.textStyle = TextFieldStyle.Multi;
+			this.TextLayout.BreakMode &= ~ Drawing.TextBreakMode.SingleLine;
+			this.textFieldStyle = TextFieldStyle.Multi;
 
 			this.scroller = new VScroller(this);
 			this.scroller.SetEnabled(false);
@@ -109,41 +110,6 @@ namespace Epsitec.Common.Widgets
 			base.ProcessMessage(message, pos);
 		}
 
-		protected override bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
-		{
-			switch ( key )
-			{
-				case KeyCode.Return:
-					this.InsertCharacter('\n');
-					break;
-
-				case KeyCode.Home:
-					this.MoveExtremity(-1, isShiftPressed, isCtrlPressed);
-					break;
-
-				case KeyCode.End:
-					this.MoveExtremity(1, isShiftPressed, isCtrlPressed);
-					break;
-
-				case KeyCode.ArrowUp:
-					this.MoveLine(-1, isShiftPressed, isCtrlPressed);
-					break;
-
-				case KeyCode.ArrowDown:
-					this.MoveLine(1, isShiftPressed, isCtrlPressed);
-					break;
-				
-				case KeyCode.PageUp:
-				case KeyCode.PageDown:
-					//	TODO: gérer PageUp et PageDown...
-				
-				default:
-					return base.ProcessKeyDown(key, isShiftPressed, isCtrlPressed);
-			}
-			
-			return true;
-		}
-		
 		protected override Drawing.Size GetTextLayoutSize()
 		{
 			return new Drawing.Size(this.realSize.Width, AbstractTextField.Infinity);
