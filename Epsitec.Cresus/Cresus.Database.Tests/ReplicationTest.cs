@@ -271,7 +271,7 @@ namespace Epsitec.Cresus.Database
 				{
 					System.Console.WriteLine ("Table {0} contains {1} changed rows:", packed_table.Name, packed_table.RowCount);
 					
-					object[][] values = packed_table.GetValuesArray ();
+					object[][] values = packed_table.GetAllValues ();
 					
 					foreach (object[] row in values)
 					{

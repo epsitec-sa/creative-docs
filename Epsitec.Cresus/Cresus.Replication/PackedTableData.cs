@@ -11,11 +11,10 @@ namespace Epsitec.Cresus.Replication
 	/// </summary>
 	
 	[System.Serializable]
-	public class PackedTableData : System.Runtime.Serialization.ISerializable
+	public sealed class PackedTableData : System.Runtime.Serialization.ISerializable
 	{
 		public PackedTableData()
 		{
-			
 		}
 		
 		
@@ -43,9 +42,19 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
+		public int								ColumnCount
+		{
+			get
+			{
+				return this.column_data_rows.Count;
+			}
+		}
+		
 		
 		public bool HasNullValues(int column)
 		{
+			//	Return 'true' si la colonne contient au moins 1 valeur DBNull.
+			
 			this.UnpackNullFlags ();
 			
 			if (this.column_data_rows[column] == null)	//	pas de données => colonne DBNull
@@ -62,6 +71,9 @@ namespace Epsitec.Cresus.Replication
 		
 		public bool HasNonNullValues(int column)
 		{
+			//	Return 'true' si la colonne contient au moins 1 valeur qui ne soit
+			//	pas DBNull.
+			
 			this.UnpackNullFlags ();
 			
 			if (this.column_data_rows[column] == null)	//	pas de données => colonne DBNull
@@ -75,23 +87,29 @@ namespace Epsitec.Cresus.Replication
 		
 		public void FillTable(System.Data.DataTable table)
 		{
-			object[][] values = this.GetValuesArray ();
+			//	Ajoute les lignes stockées dans notre objet à la table passée en entrée.
+			//	Le schéma de la table doit être correct, mais aucune vérification n'est
+			//	faite ici.
 			
-			for (int i = 0; i < this.row_count; i++)
+			object[][] values = this.GetAllValues ();
+			
+			for (int i = 0; i < this.RowCount; i++)
 			{
 				table.Rows.Add (values[i]);
 			}
 		}
 		
-		public object[][] GetValuesArray()
+		
+		public object[][] GetAllValues()
 		{
-			//	Retourne un tableau de valeurs : n lignes de m colonnes.
+			//	Retourne un tableau de valeurs correspondant à la table stockée dans
+			//	notre objet; le tableau a n lignes de m colonnes.
 			
 			this.UnpackNullFlags ();
 			
-			object[][] values = new object[this.row_count][];
+			object[][] values = new object[this.RowCount][];
 			
-			int n = this.column_data_rows.Count;
+			int n = this.ColumnCount;
 			
 			for (int i = 0; i < n; i++)
 			{
@@ -104,14 +122,13 @@ namespace Epsitec.Cresus.Replication
 			return values;
 		}
 		
-		
-		public object[] GetRowValues(int row)
+		public object[]   GetRowValues(int row)
 		{
-			//	Retourne un tableau de valeurs : 1 ligne de m colonnes.
+			//	Retourne un tableau de valeurs pour la ligne spécifiée : 1 ligne de m colonnes.
 			
 			this.UnpackNullFlags ();
 			
-			int n = this.column_data_rows.Count;
+			int n = this.ColumnCount;
 			
 			object[] values = new object[n];
 			
@@ -129,21 +146,31 @@ namespace Epsitec.Cresus.Replication
 		
 		public static PackedTableData CreateFromTable(DbTable table, System.Data.DataTable data_table)
 		{
+			//	Crée une représentation compacte de la table passée en entrée. Les
+			//	données sont stockées colonne par colonne, ce qui simplifie la
+			//	compression. Les valeurs DBNull sont stockées sous la forme d'un
+			//	tableau de bool (ou bitmap).
+			
 			PackedTableData data = new PackedTableData ();
 			
-			int r = data_table.Rows.Count;
-			int n = data_table.Columns.Count;
+			int row_count = data_table.Rows.Count;
+			int col_count = data_table.Columns.Count;
 			
-			data.row_count  = r;
+			data.row_count  = row_count;
 			data.table_name = table.Name;
 			data.table_key  = table.InternalKey.Id;
 			
-			for (int i = 0; i < n; i++)
+			for (int i = 0; i < col_count; i++)
 			{
 				System.Array array;
 				
 				bool[] null_flags;
 				int    null_count;
+				
+				//	Chaque colonne est stockée dans un tableau de son type respectif.
+				//	Ainsi, si la colonne contient des 'int', les données seront stockées
+				//	dans un 'int[]', ce qui est nettement plus compact qu'un tableau
+				//	générique 'object[]' (pas de boxing) :
 				
 				DataCruncher.PackColumnToNativeArray (data_table, i, out array, out null_flags, out null_count);
 				
@@ -151,7 +178,7 @@ namespace Epsitec.Cresus.Replication
 				{
 					null_flags = null;
 				}
-				else if (null_count == r)
+				else if (null_count == row_count)
 				{
 					array      = null;
 					null_flags = null;
@@ -159,7 +186,7 @@ namespace Epsitec.Cresus.Replication
 				else
 				{
 					System.Diagnostics.Debug.Assert (null_count > 0);
-					System.Diagnostics.Debug.Assert (null_count < r);
+					System.Diagnostics.Debug.Assert (null_count < row_count);
 				}
 				
 				data.column_data_rows.Add (array);
@@ -173,18 +200,18 @@ namespace Epsitec.Cresus.Replication
 		#region ISerializable Members
 		public PackedTableData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-			int n = info.GetInt32 ("Col#");
-			int r = info.GetInt32 ("Row#");
+			int col_count = info.GetInt32 ("Col#");
+			int row_count = info.GetInt32 ("Row#");
 			
-			for (int i = 0; i < n; i++)
+			for (int i = 0; i < col_count; i++)
 			{
-				this.column_data_rows.Add (info.GetValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, "Data.{0}", i), typeof (System.Array)));
-				this.column_null_flags.Add (info.GetValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, "IsNull.{0}", i), typeof (byte[])));
+				this.column_data_rows.Add (info.GetValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, "D.{0}", i), typeof (System.Array)));
+				this.column_null_flags.Add (info.GetValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, "N.{0}", i), typeof (byte[])));
 			}
 			
 			this.table_name = info.GetString ("Name");
 			this.table_key  = info.GetInt64 ("Id");
-			this.row_count = r;
+			this.row_count  = row_count;
 			this.is_null_flags_array_packed = true;
 		}
 		
@@ -192,34 +219,36 @@ namespace Epsitec.Cresus.Replication
 		{
 			System.Diagnostics.Debug.Assert (this.column_data_rows.Count == this.column_null_flags.Count);
 			
-			int n = this.column_data_rows.Count;
-			int r = this.row_count;
+			int col_count = this.ColumnCount;
+			int row_count = this.RowCount;
 			
-			info.AddValue ("Col#", n);
-			info.AddValue ("Row#", r);
+			info.AddValue ("Col#", col_count);
+			info.AddValue ("Row#", row_count);
 			
-			for (int i = 0; i < n; i++)
+			for (int i = 0; i < col_count; i++)
 			{
-				System.Array data_rows  = this.column_data_rows[i] as System.Array;
-				System.Array null_flags = this.column_null_flags[i] as System.Array;
-				byte[]       packed     = null;
+				System.Array data_rows   = this.column_data_rows[i] as System.Array;
+				System.Array null_flags  = this.column_null_flags[i] as System.Array;
+				byte[]       null_packed = null;
 				
-				info.AddValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, "Data.{0}", i), data_rows);
+				//	S'il y a un tableau de bool pour représenter les valeurs DBNull dans la
+				//	colonne, on le comprime au préalable (si ça n'a pas encore été fait) :
 				
 				if (null_flags != null)
 				{
 					if (this.is_null_flags_array_packed)
 					{
-						packed = (byte[]) null_flags;
+						null_packed = (byte[]) null_flags;
 					}
 					else
 					{
 						bool[] values = (bool[]) null_flags;
-						DataCruncher.PackBooleanArray (values, out packed);
+						DataCruncher.PackBooleanArray (values, out null_packed);
 					}
 				}
 				
-				info.AddValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, "IsNull.{0}", i), packed);
+				info.AddValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, "D.{0}", i), data_rows);
+				info.AddValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, "N.{0}", i), null_packed);
 			}
 			
 			info.AddValue ("Name", this.table_name);
@@ -227,9 +256,11 @@ namespace Epsitec.Cresus.Replication
 		}
 		#endregion
 		
-		
-		protected void UnpackNullFlags()
+		private void UnpackNullFlags()
 		{
+			//	A partir des bitmaps, génère les bool[] correspondant aux informations
+			//	de null-ité des diverses lignes dans les colonnes de la table.
+			
 			if (this.is_null_flags_array_packed)
 			{
 				int n = this.column_null_flags.Count;

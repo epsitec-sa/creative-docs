@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Replication
 			
 			if (def_table != null)
 			{
-				object[][] def_table_rows = def_table.GetValuesArray ();
+				object[][] def_table_rows = def_table.GetAllValues ();
 				
 				//	Passe en revue toutes les lignes qui ont changé dans CR_TABLE :
 				
