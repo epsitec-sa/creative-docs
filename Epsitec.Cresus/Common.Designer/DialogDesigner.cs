@@ -117,6 +117,10 @@ namespace Epsitec.Common.Designer
 		
 		protected virtual void Dispose(bool disposing)
 		{
+			if (disposing)
+			{
+				this.OnDisposed ();
+			}
 		}
 		
 		
@@ -153,9 +157,17 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		protected virtual void OnDisposed()
+		{
+			if (this.Disposed != null)
+			{
+				this.Disposed (this);
+			}
+		}
 		
 		public event Support.EventHandler		DialogDataChanged;
 		public event Support.EventHandler		DialogCommandsChanged;
+		public event Support.EventHandler		Disposed;
 		
 		private Application						application;
 		private Types.IDataGraph				dialog_data;

@@ -90,6 +90,13 @@ namespace Epsitec.Common.Widgets
 		// Utilisé par un widget pour spécifier son texte.
 		public void SetToolTip(Widget widget, string text)
 		{
+			if ( this.hash == null )
+			{
+				return;
+			}
+			
+			System.Diagnostics.Debug.Assert(widget != null);
+			
 			if ( this.hash.Contains(widget) )
 			{
 				if ( text == null )
@@ -103,6 +110,11 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
+				if ( text == null )
+				{
+					return;
+				}
+				
 				widget.Entered   += new MessageEventHandler(this.HandleWidgetEntered);
 				widget.Exited    += new MessageEventHandler(this.HandleWidgetExited);
 				widget.Disposing += new EventHandler(this.HandleWidgetDisposing);

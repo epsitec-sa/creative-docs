@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Editors
 	/// La classe AbstractPropEdit définit les méthodes communes à toutes les
 	/// classes permettant d'éditer des propriétés.
 	/// </summary>
-	public abstract class AbstractPropEdit
+	public abstract class AbstractPropEdit : System.IDisposable
 	{
 		public AbstractPropEdit(Application application)
 		{
@@ -86,6 +86,46 @@ namespace Epsitec.Common.Designer.Editors
 			return types;
 		}
 		
+		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		#endregion
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.prop_panes != null)
+				{
+					Widget[] panes = new Widget[this.prop_panes.Count];
+					this.prop_panes.CopyTo (panes, 0);
+					
+					for (int i = 0; i < panes.Length; i++)
+					{
+						panes[i].Dispose ();
+					}
+					
+					this.prop_panes = null;
+				}
+				
+				if (this.binders != null)
+				{
+					Common.UI.Binders.PropertyBinder[] binders = new Common.UI.Binders.PropertyBinder[this.binders.Count];
+					this.binders.Values.CopyTo (binders, 0);
+					
+					for (int i = 0; i < binders.Length; i++)
+					{
+						binders[i].Source = null;
+					}
+					
+					this.binders = null;
+				}
+			}
+		}
 		
 		protected void CreateTabPage()
 		{

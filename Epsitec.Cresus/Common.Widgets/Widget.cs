@@ -387,6 +387,8 @@ namespace Epsitec.Common.Widgets
 					System.Diagnostics.Debug.Assert (this.children.Count == 0);
 				}
 				
+				ToolTip.Default.SetToolTip (this, null);
+				
 				if (this.Disposing != null)
 				{
 					this.Disposing (this);

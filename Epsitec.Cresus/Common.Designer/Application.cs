@@ -147,6 +147,9 @@ namespace Epsitec.Common.Designer
 			this.string_edit_controller.Dispose ();
 			this.interf_edit_controller.Dispose ();
 			
+//			this.main_window.Dispose ();
+			this.dispatcher.Dispose ();
+			
 			this.main_window            = null;
 			this.string_edit_controller = null;
 			this.interf_edit_controller = null;
@@ -159,8 +162,6 @@ namespace Epsitec.Common.Designer
 			
 			this.is_initialised  = false;
 			this.is_initialising = false;
-			
-			System.Diagnostics.Debug.WriteLine ("Killed designer application object.");
 		}
 		
 		

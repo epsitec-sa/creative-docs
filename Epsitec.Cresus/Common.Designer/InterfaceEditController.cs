@@ -115,14 +115,49 @@ namespace Epsitec.Common.Designer
 			this.attribute_palette.NotifyActiveEditionWidgetChanged (widget, restart_edition);
 		}
 		
+		class SavedWindowParams
+		{
+			public SavedWindowParams(Window window)
+			{
+				this.is_edition_enabled = window.Root.IsEditionEnabled;
+				this.prevent_auto_close = window.PreventAutoClose;
+				this.prevent_auto_quit  = window.PreventAutoQuit;
+				this.owner              = window.Owner;
+			}
+			
+			
+			public static void Restore(Window window)
+			{
+				SavedWindowParams saved = window.GetProperty (InterfaceEditController.PropertySavedWindowParams) as SavedWindowParams;
+				
+				if (saved != null)
+				{
+					window.Root.IsEditionEnabled = saved.is_edition_enabled;
+					window.PreventAutoClose      = saved.prevent_auto_close;
+					window.PreventAutoQuit       = saved.prevent_auto_quit;
+					window.Owner                 = saved.owner;
+					
+					window.ClearProperty (InterfaceEditController.PropertySavedWindowParams);
+				}
+			}
+			
+			
+			bool				is_edition_enabled;
+			bool				prevent_auto_close;
+			bool				prevent_auto_quit;
+			Window				owner;
+		}
+		
 		internal void CreateEditorForWindow(Window window, string resource_name)
 		{
+			window.SetProperty (InterfaceEditController.PropertySavedWindowParams, new SavedWindowParams (window));
+			
 			window.Root.IsEditionEnabled = true;
 			window.PreventAutoClose      = true;
 			window.PreventAutoQuit       = true;
 			window.Owner                 = this.application.MainWindow;
 			
-			window.MakeFloatingWindow ();
+//-			window.MakeFloatingWindow ();
 			
 			this.edit_window_list.Add (window);
 			this.editors = null;
@@ -161,6 +196,11 @@ namespace Epsitec.Common.Designer
 			if (disposing)
 			{
 				this.DeselectAllWidgets ();
+				this.DisposeAllEditors ();
+				
+				this.attribute_palette.Dispose ();	this.attribute_palette = null;
+				this.widget_palette.Dispose ();		this.widget_palette    = null;
+				this.data_palette.Dispose ();		this.data_palette      = null;
 				
 				this.active_editor = null;
 				this.active_widget = null;
@@ -173,15 +213,32 @@ namespace Epsitec.Common.Designer
 				this.attribute_panel   = null;
 				this.main_panel        = null;
 				this.creation_panel    = null;
-				
-				this.attribute_palette = null;
-				this.widget_palette    = null;
-				this.data_palette      = null;
 			}
 			
 			base.Dispose (disposing);
 		}
 		
+		protected void DisposeAllEditors()
+		{
+			foreach (Editors.WidgetEditor editor in this.WidgetEditors)
+			{
+				Widget root   = editor.Root;
+				Window window = root.Window;
+				
+				editor.Selected   -= new SelectionEventHandler (this.HandleEditorSelected);
+				editor.Deselected -= new SelectionEventHandler (this.HandleEditorDeselected);
+			
+				editor.DragSelectionBegin -= new EventHandler (this.HandleEditorDragSelectionBegin);
+				editor.DragSelectionEnd   -= new EventHandler (this.HandleEditorDragSelectionEnd);
+			
+				window.WindowActivated -= new Support.EventHandler (this.HandleEditWindowWindowActivated);
+				
+				SavedWindowParams.Restore (window);
+				
+				editor.Root = null;
+				editor.Dispose ();
+			}
+		}
 		
 		protected void CreateMainPanel()
 		{
@@ -865,6 +922,7 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
+		private const string					PropertySavedWindowParams = "$designer$saved window params$";
 		
 		private bool							is_initialised;
 		private Widget							main_panel;

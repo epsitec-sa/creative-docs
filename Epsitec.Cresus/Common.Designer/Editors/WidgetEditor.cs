@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Editors
 	/// <summary>
 	/// La classe WidgetEditor...
 	/// </summary>
-	public class WidgetEditor : Support.ICommandDispatcherHost
+	public class WidgetEditor : Support.ICommandDispatcherHost, System.IDisposable
 	{
 		public WidgetEditor(InterfaceEditController interf_edit_controller)
 		{
@@ -41,6 +41,8 @@ namespace Epsitec.Common.Designer.Editors
 			{
 				if (this.root != value)
 				{
+					this.IsActiveEditor = false;
+					
 					this.DetachRoot (this.root);
 					this.DetachWindow (this.window);
 					
@@ -119,6 +121,14 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
+		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		#endregion
 		
 		#region ICommandDispatcherHost Members
 		public Support.CommandDispatcher		CommandDispatcher
@@ -223,6 +233,28 @@ namespace Epsitec.Common.Designer.Editors
 			return window == null ? null : window.GetProperty (WidgetEditor.prop_widget_editor) as Editors.WidgetEditor;
 		}
 		
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.dialog_designer != null)
+				{
+					this.dialog_designer.Dispose ();
+					this.dialog_designer = null;
+				}
+				if (this.grips_overlay != null)
+				{
+					this.grips_overlay.Dispose ();
+					this.grips_overlay = null;
+				}
+				if (this.tab_o_overlay != null)
+				{
+					this.tab_o_overlay.Dispose ();
+					this.tab_o_overlay = null;
+				}
+			}
+		}
 		
 		protected virtual void AttachRoot(Widget root)
 		{
