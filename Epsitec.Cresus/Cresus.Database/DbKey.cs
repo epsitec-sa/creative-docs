@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 		
-		protected void SerialiseXmlAttributes(System.Text.StringBuilder buffer)
+		protected void SerializeXmlAttributes(System.Text.StringBuilder buffer)
 		{
 			buffer.Append (@" key.id=""");
 			buffer.Append (this.id.ToString (System.Globalization.CultureInfo.InvariantCulture));
@@ -132,15 +132,15 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public static void SerialiseToXmlAttributes(System.Text.StringBuilder buffer, DbKey key)
+		public static void SerializeToXmlAttributes(System.Text.StringBuilder buffer, DbKey key)
 		{
 			if (key != null)
 			{
-				key.SerialiseXmlAttributes (buffer);
+				key.SerializeXmlAttributes (buffer);
 			}
 		}
 		
-		public static DbKey DeserialiseFromXmlAttributes(System.Xml.XmlElement xml)
+		public static DbKey DeserializeFromXmlAttributes(System.Xml.XmlElement xml)
 		{
 			//	Utilise les attributs de l'élément passé en entrée pour reconstruire
 			//	une instance de DbKey. Retourne null si aucun attribut ne correspond.

@@ -105,14 +105,14 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public static string SerialiseToXml(DbColumnCollection columns, string id)
+		public static string SerializeToXml(DbColumnCollection columns, string id)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			DbColumnCollection.SerialiseToXml (buffer, columns, id);
+			DbColumnCollection.SerializeToXml (buffer, columns, id);
 			return buffer.ToString ();
 		}
 		
-		public static void SerialiseToXml(System.Text.StringBuilder buffer, DbColumnCollection columns, string id)
+		public static void SerializeToXml(System.Text.StringBuilder buffer, DbColumnCollection columns, string id)
 		{
 			if (columns == null)
 			{
@@ -122,12 +122,12 @@ namespace Epsitec.Cresus.Database
 			}
 			else
 			{
-				columns.SerialiseXmlDefinition (buffer, id);
+				columns.SerializeXmlDefinition (buffer, id);
 			}
 		}
 		
 		
-		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer, string id)
+		protected void SerializeXmlDefinition(System.Text.StringBuilder buffer, string id)
 		{
 			buffer.Append (@"<cols id=""");
 			buffer.Append (System.Utilities.TextToXml (id));
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Database
 			
 			for (int i = 0; i < this.list.Count; i++)
 			{
-				DbColumn.SerialiseToXml (buffer, this[i], true);
+				DbColumn.SerializeToXml (buffer, this[i], true);
 			}
 			
 			buffer.Append (@"</cols>");

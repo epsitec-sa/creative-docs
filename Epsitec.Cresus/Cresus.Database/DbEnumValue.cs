@@ -94,14 +94,14 @@ namespace Epsitec.Cresus.Database
 		}
 
 		
-		public static string SerialiseToXml(DbEnumValue value, bool full)
+		public static string SerializeToXml(DbEnumValue value, bool full)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			DbEnumValue.SerialiseToXml (buffer, value, full);
+			DbEnumValue.SerializeToXml (buffer, value, full);
 			return buffer.ToString ();
 		}
 		
-		public static void SerialiseToXml(System.Text.StringBuilder buffer, DbEnumValue value, bool full)
+		public static void SerializeToXml(System.Text.StringBuilder buffer, DbEnumValue value, bool full)
 		{
 			if (value == null)
 			{
@@ -109,12 +109,12 @@ namespace Epsitec.Cresus.Database
 			}
 			else
 			{
-				value.SerialiseXmlDefinition (buffer, full);
+				value.SerializeXmlDefinition (buffer, full);
 			}
 		}
 		
 		
-		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer, bool full)
+		protected void SerializeXmlDefinition(System.Text.StringBuilder buffer, bool full)
 		{
 			buffer.Append (@"<enumval");
 			
@@ -127,8 +127,8 @@ namespace Epsitec.Cresus.Database
 			
 			if (full)
 			{
-				DbKey.SerialiseToXmlAttributes (buffer, this.internal_key);
-				this.Attributes.SerialiseXmlAttributes (buffer);
+				DbKey.SerializeToXmlAttributes (buffer, this.internal_key);
+				this.Attributes.SerializeXmlAttributes (buffer);
 			}
 			
 			buffer.Append (@"/>");
@@ -143,8 +143,8 @@ namespace Epsitec.Cresus.Database
 			
 			Converter.Convert (xml.GetAttribute ("rank"), out this.rank);
 			
-			this.internal_key = DbKey.DeserialiseFromXmlAttributes (xml);
-			this.Attributes.DeserialiseXmlAttributes (xml);
+			this.internal_key = DbKey.DeserializeFromXmlAttributes (xml);
+			this.Attributes.DeserializeXmlAttributes (xml);
 		}
 		
 		

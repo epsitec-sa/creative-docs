@@ -27,26 +27,26 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		internal virtual void SerialiseXmlAttributes(System.Text.StringBuilder buffer, bool full)
+		internal virtual void SerializeXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{
 			if (full)
 			{
-				DbKey.SerialiseToXmlAttributes (buffer, this.internal_type_key);
-				this.Attributes.SerialiseXmlAttributes (buffer);
+				DbKey.SerializeToXmlAttributes (buffer, this.internal_type_key);
+				this.Attributes.SerializeXmlAttributes (buffer);
 			}
 		}
 		
-		internal virtual void SerialiseXmlElements(System.Text.StringBuilder buffer, bool full)
+		internal virtual void SerializeXmlElements(System.Text.StringBuilder buffer, bool full)
 		{
 		}
 		
-		internal virtual void DeserialiseXmlAttributes(System.Xml.XmlElement xml)
+		internal virtual void DeserializeXmlAttributes(System.Xml.XmlElement xml)
 		{
-			this.internal_type_key = DbKey.DeserialiseFromXmlAttributes (xml);
-			this.Attributes.DeserialiseXmlAttributes (xml);
+			this.internal_type_key = DbKey.DeserializeFromXmlAttributes (xml);
+			this.Attributes.DeserializeXmlAttributes (xml);
 		}
 		
-		internal virtual void DeserialiseXmlElements(System.Xml.XmlNodeList nodes, ref int index)
+		internal virtual void DeserializeXmlElements(System.Xml.XmlNodeList nodes, ref int index)
 		{
 		}
 		

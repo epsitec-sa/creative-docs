@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer, bool full)
+		protected void SerializeXmlDefinition(System.Text.StringBuilder buffer, bool full)
 		{
 			this.UpdatePrimaryKeyInfo ();
 			
@@ -59,12 +59,12 @@ namespace Epsitec.Cresus.Database
 			
 			if (full)
 			{
-				DbKey.SerialiseToXmlAttributes (buffer, this.internal_table_key);
-				this.Attributes.SerialiseXmlAttributes (buffer);
+				DbKey.SerializeToXmlAttributes (buffer, this.internal_table_key);
+				this.Attributes.SerializeXmlAttributes (buffer);
 				buffer.Append (@">");
 				
-				DbColumnCollection.SerialiseToXml (buffer, this.primary_keys, "keys");
-				DbColumnCollection.SerialiseToXml (buffer, this.columns, "cols");
+				DbColumnCollection.SerializeToXml (buffer, this.primary_keys, "keys");
+				DbColumnCollection.SerializeToXml (buffer, this.columns, "cols");
 				
 				buffer.Append (@"</table>");
 			}
@@ -84,8 +84,8 @@ namespace Epsitec.Cresus.Database
 			string arg_cat = xml.GetAttribute ("cat");
 			this.category  = DbTools.ParseElementCategory (arg_cat);
 			
-			this.internal_table_key = DbKey.DeserialiseFromXmlAttributes (xml);
-			this.Attributes.DeserialiseXmlAttributes (xml);
+			this.internal_table_key = DbKey.DeserializeFromXmlAttributes (xml);
+			this.Attributes.DeserializeXmlAttributes (xml);
 			
 			for (int i = 0; i < xml.ChildNodes.Count; i++)
 			{
@@ -117,14 +117,14 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public static string SerialiseToXml(DbTable table, bool full)
+		public static string SerializeToXml(DbTable table, bool full)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			DbTable.SerialiseToXml (buffer, table, full);
+			DbTable.SerializeToXml (buffer, table, full);
 			return buffer.ToString ();
 		}
 		
-		public static void SerialiseToXml(System.Text.StringBuilder buffer, DbTable table, bool full)
+		public static void SerializeToXml(System.Text.StringBuilder buffer, DbTable table, bool full)
 		{
 			if (table == null)
 			{
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Database
 			}
 			else
 			{
-				table.SerialiseXmlDefinition (buffer, full);
+				table.SerializeXmlDefinition (buffer, full);
 			}
 		}
 		
