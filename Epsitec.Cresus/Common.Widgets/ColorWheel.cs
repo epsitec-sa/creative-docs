@@ -186,6 +186,8 @@ namespace Epsitec.Common.Widgets
 		// Détecte la teinte dans le cercle des couleurs.
 		protected bool DetectH(Drawing.Point pos, bool restricted, ref double h)
 		{
+			if ( this.IsGrey )  return false;
+
 			if ( restricted )
 			{
 				double dist = Drawing.Point.Distance(this.centerCircle, pos);
@@ -248,6 +250,15 @@ namespace Epsitec.Common.Widgets
 			path.Close();
 		}
 
+		// Indique si la couleur représente un niveau de gris.
+		protected bool IsGrey
+		{
+			get
+			{
+				return ( this.s == 0.0 || this.v == 0.0 );
+			}
+		}
+
 		// Dessine un cercle dégradé pour la teinte (H).
 		protected void PaintGradientCircle(Drawing.Graphics graphics,
 										   Drawing.Rectangle rect,
@@ -259,32 +270,37 @@ namespace Epsitec.Common.Widgets
 				double cx = rect.Left+rect.Width/2;
 				double cy = rect.Bottom+rect.Height/2;
 			
-				Drawing.Path path = new Drawing.Path();
-				this.PathAddCircle(path, rect);
-			
-				double[] r = new double[256];
-				double[] g = new double[256];
-				double[] b = new double[256];
-				double[] a = new double[256];
-			
-				for ( int i=0 ; i<256 ; i++ )
+				Drawing.Path path;
+
+				if ( !this.IsGrey )
 				{
-					Drawing.Color.ConvertHSVtoRGB(i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
-					a[i] = 1.0;
+					path = new Drawing.Path();
+					this.PathAddCircle(path, rect);
+			
+					double[] r = new double[256];
+					double[] g = new double[256];
+					double[] b = new double[256];
+					double[] a = new double[256];
+			
+					for ( int i=0 ; i<256 ; i++ )
+					{
+						Drawing.Color.ConvertHSVtoRGB(i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
+						a[i] = 1.0;
+					}
+			
+					graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
+					graphics.Rasterizer.AddSurface(path);
+					graphics.GradientRenderer.Fill = Drawing.GradientFill.Conic;
+					graphics.GradientRenderer.SetParameters(0, 250);
+					graphics.GradientRenderer.SetColors(r, g, b, a);
+			
+					Drawing.Transform t = new Drawing.Transform();
+					t.Translate(cx, cy);
+					t.RotateDeg(-90, cx, cy);  // rouge en haut
+					graphics.GradientRenderer.Transform = t;
+			
+					graphics.RenderGradient();
 				}
-			
-				graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
-				graphics.Rasterizer.AddSurface(path);
-				graphics.GradientRenderer.Fill = Drawing.GradientFill.Conic;
-				graphics.GradientRenderer.SetParameters(0, 250);
-				graphics.GradientRenderer.SetColors(r, g, b, a);
-			
-				Drawing.Transform t = new Drawing.Transform();
-				t.Translate(cx, cy);
-				t.RotateDeg(-90, cx, cy);  // rouge en haut
-				graphics.GradientRenderer.Transform = t;
-			
-				graphics.RenderGradient();
 
 				// Dessine l'échantillon au milieu.
 				Drawing.Rectangle rInside = rect;
@@ -351,15 +367,15 @@ namespace Epsitec.Common.Widgets
 				
 				Drawing.Transform transform = graphics.Transform;
 				
-				transform.TransformDirect (ref x1, ref y1);
-				transform.TransformDirect (ref x2, ref y2);
+				transform.TransformDirect(ref x1, ref y1);
+				transform.TransformDirect(ref x2, ref y2);
 				
 				int x  = (int) x1;
 				int y  = (int) y1;
 				int dx = (int) (x2-x1);
 				int dy = (int) (y2-y1);
 				
-				graphics.SolidRenderer.Clear4Colors (x, y, dx, dy, c1, c2, c3, c4);
+				graphics.SolidRenderer.Clear4Colors(x, y, dx, dy, c1, c2, c3, c4);
 #else
 				for ( double posy=rect.Bottom ; posy<=rect.Top ; posy++ )
 				{
@@ -438,7 +454,10 @@ namespace Epsitec.Common.Widgets
 			rect.Deflate(0.5);
 			this.PaintGradientSquare(graphics, rect, colorBorder);
 
-			this.PaintHandler(graphics, this.posHandlerH,  this.radiusHandler);
+			if ( !this.IsGrey )
+			{
+				this.PaintHandler(graphics, this.posHandlerH,  this.radiusHandler);
+			}
 			this.PaintHandler(graphics, this.posHandlerSV, this.radiusHandler);
 		}
 

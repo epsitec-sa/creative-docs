@@ -22,21 +22,21 @@ namespace Epsitec.Common.Widgets
 				this.fields[i].TabIndex = i+100;
 				this.fields[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.fields[i].Value = 0;
-				if ( i < 4 )
+				if ( i < 4 )  // r,g,b,a ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 255;
 					this.fields[i].Step = 10;
 					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextRGBChanged);
 				}
-				else if ( i == 4 )
+				else if ( i == 4 )  // t ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 360;
 					this.fields[i].Step = 10;
 					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextHSVChanged);
 				}
-				else
+				else	// s,i ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 100;
@@ -104,8 +104,8 @@ namespace Epsitec.Common.Widgets
 			this.palette[14].Color = Drawing.Color.FromARGB(1.0, 0.4, 0.4, 0.4);
 			this.palette[15].Color = Drawing.Color.FromARGB(1.0, 0.0, 0.0, 0.0);
 			
-			this.picker = new Tools.Magnifier.DragSource (this);
-			this.picker.HotColorChanged += new Support.EventHandler (this.HandlePickerHotColorChanged);
+			this.picker = new Tools.Magnifier.DragSource(this);
+			this.picker.HotColorChanged += new Support.EventHandler(this.HandlePickerHotColorChanged);
 			ToolTip.Default.SetToolTip(this.picker, "Pipette-loupe");
 		}
 		
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Widgets
 				
 				if ( this.picker != null )
 				{
-					this.picker.HotColorChanged -= new Support.EventHandler (this.HandlePickerHotColorChanged);
+					this.picker.HotColorChanged -= new Support.EventHandler(this.HandlePickerHotColorChanged);
 				}
 			}
 			
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return 240;
+				return 221;
 			}
 		}
 
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Widgets
 					
 					this.suspendColorEvents = true;
 					this.circle.Color = value;
-					this.UpdateColors ();
+					this.UpdateColors();
 					this.suspendColorEvents = false;
 				}
 			}
@@ -187,10 +187,10 @@ namespace Epsitec.Common.Widgets
 		
 		protected void UpdateColors()
 		{
-			this.ColorToFieldsRGB ();
-			this.ColorToFieldsHSV ();
-			this.OnChanged ();
-			this.Invalidate ();
+			this.ColorToFieldsRGB();
+			this.ColorToFieldsHSV();
+			this.OnChanged();
+			this.Invalidate();
 		}
 
 		// Couleur -> textes éditables.
@@ -239,8 +239,8 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
 			
 			this.suspendColorEvents = true;
-			this.circle.SetHSV (h,s,v);
-			this.UpdateColors ();
+			this.circle.SetHSV(h,s,v);
+			this.UpdateColors();
 			this.suspendColorEvents = false;
 		}
 
@@ -267,12 +267,12 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Deflate(1);
-			double hCircle = rect.Height-5-20*4;
+			double hCircle = rect.Height-5-20*3;
 			hCircle = System.Math.Min(hCircle, rect.Width);
 			Drawing.Rectangle r = new Drawing.Rectangle();
 
 			bool visibleCircle = ( rect.Height > 160 );
-			bool visibleFields = ( rect.Height >  80 );
+			bool visibleFields = ( rect.Height > 3*20 );
 
 			r.Left   = rect.Left;
 			r.Right  = rect.Left + hCircle;
@@ -314,9 +314,9 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			r.Top    = rect.Bottom+4*19;
+			r.Top    = rect.Bottom+3*19;
 			r.Bottom = r.Top-20;
-			for ( int i=0 ; i<4 ; i++ )
+			for ( int i=0 ; i<=2 ; i++ )  // r,g,b
 			{
 				r.Left  = 10;
 				r.Width = 12;
@@ -331,11 +331,11 @@ namespace Epsitec.Common.Widgets
 				r.Offset(0, -19);
 			}
 
-			r.Top    = rect.Bottom+4*19;
+			r.Top    = rect.Bottom+3*19;
 			r.Bottom = r.Top-20;
-			for ( int i=4 ; i<7 ; i++ )
+			for ( int i=4 ; i<=6 ; i++ )  // t,s,i
 			{
-				r.Left  = 80;
+				r.Left  = 10+70;
 				r.Width = 12;
 				this.labels[i].Bounds = r;
 				this.labels[i].SetVisible(visibleFields);
@@ -348,11 +348,29 @@ namespace Epsitec.Common.Widgets
 				r.Offset(0, -19);
 			}
 			
-			r.Top    = r.Top - 2;
-			r.Bottom = r.Bottom + 1;
-			r.Right = this.fields[6].Right;
+			r.Top    = rect.Bottom+3*19;
+			r.Bottom = r.Top-20;
+			for ( int i=3 ; i<=3 ; i++ )  // a
+			{
+				r.Left  = 10+70+70;
+				r.Width = 12;
+				this.labels[i].Bounds = r;
+				this.labels[i].SetVisible(visibleFields);
+
+				r.Left  = r.Right;
+				r.Width = 50;
+				this.fields[i].Bounds = r;
+				this.fields[i].SetVisible(visibleFields);
+
+				r.Offset(0, -19);
+			}
+			
+			r.Top    = r.Top-2;
+			r.Bottom = r.Bottom+1;
+			r.Right = this.fields[3].Right;
 			r.Left  = r.Right - r.Height;
 			this.picker.Bounds = r;
+			this.picker.SetVisible(visibleFields);
 		}
 		
 		
