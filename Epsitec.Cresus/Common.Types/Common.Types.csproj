@@ -128,11 +128,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "CustomEnumType.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "DataGraph.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -229,6 +224,11 @@
                 />
                 <File
                     RelPath = "IString.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "OpenEnumType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
