@@ -444,6 +444,21 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public double GetAscender(double size)
+		{
+			double scale = size / this.ot_head.UnitsPerEm;
+			
+			return this.ot_hhea.MacAscender * scale;
+		}
+		
+		public double GetDescender(double size)
+		{
+			double scale = size / this.ot_head.UnitsPerEm;
+			
+			return this.ot_hhea.MacDescender * scale;
+		}
+		
+		
 		private void MapToGlyphs(string text, out ushort[] glyphs, out int[] gl_map)
 		{
 			int length = text.Length;

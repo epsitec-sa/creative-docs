@@ -448,6 +448,18 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			double w1b = font_1.GetTotalWidth (glyphs_1b, 10.0);
 			double w2b = font_2.GetTotalWidth (glyphs_2b, 10.0);
+			
+			double asc1 = font_1.GetAscender (10.0);
+			double dsc1 = font_1.GetDescender (10.0);
+			
+			Debug.Assert.IsTrue (asc1 > 0);
+			Debug.Assert.IsTrue (dsc1 < 0);
+			
+			double asc2 = font_2.GetAscender (10.0);
+			double dsc2 = font_2.GetDescender (10.0);
+			
+			Debug.Assert.IsTrue (asc2 > 0);
+			Debug.Assert.IsTrue (dsc2 < 0);
 		}
 		
 		
