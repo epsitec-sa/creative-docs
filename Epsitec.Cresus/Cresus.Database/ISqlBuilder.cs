@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Database
 		System.Data.IDbCommand  CreateCommand(System.Data.IDbTransaction transaction, string text);
 		
 		void Clear();
+		void AppendMore();
 		
 		//	Manipulation de tables :
 		

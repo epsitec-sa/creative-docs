@@ -8,31 +8,30 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public class DbRichCommand
 	{
-		public DbRichCommand(ISqlBuilder sql_builder, System.Data.IDbTransaction transaction)
+		public DbRichCommand()
 		{
-			this.command_object = sql_builder.Command;
-			this.command_count  = sql_builder.CommandCount;
-			this.command_object.Transaction = transaction;
-			
-			this.tables = new DbTableCollection ();
+			this.commands = new DbCommandCollection ();
+			this.tables   = new DbTableCollection ();
 		}
 		
-		public void FillDataSet(DbAccess db_access, System.Data.IDataAdapter adapter)
+		public void FillDataSet(DbAccess db_access, System.Data.IDbDataAdapter[] adapters)
 		{
 			//	Définit et remplit le DataSet en se basant sur les données fournies
 			//	par l'objet 'adapter' (ADO.NET).
 			
 			this.data_set = new System.Data.DataSet ();
-			this.data_adapter = adapter;
+			this.adapters = adapters;
+			
+			this.SetCommandTransaction ();
 			
 			for (int i = 0; i < this.tables.Count; i++)
 			{
 				DbTable db_table = this.tables[i];
 				
-				string  ado_name_table = (i == 0) ? "Table" : string.Format (System.Globalization.CultureInfo.InvariantCulture, "Table{0}", i);
+				string  ado_name_table = "Table";
 				string  db_name_table  = db_table.Name;
 				
-				System.Data.ITableMapping mapping = adapter.TableMappings.Add (ado_name_table, db_name_table);
+				System.Data.ITableMapping mapping = this.adapters[i].TableMappings.Add (ado_name_table, db_name_table);
 				
 				for (int c = 0; c < db_table.Columns.Count; c++)
 				{
@@ -43,9 +42,9 @@ namespace Epsitec.Cresus.Database
 					
 					mapping.ColumnMappings.Add (ado_name_column, db_name_column);
 				}
+				
+				this.adapters[i].Fill (this.data_set);
 			}
-			
-			adapter.Fill (this.data_set);
 		}
 		
 		public void CreateEmptyDataSet(ITypeConverter type_converter)
@@ -73,39 +72,58 @@ namespace Epsitec.Cresus.Database
 		
 		public void UpdateTables()
 		{
-			if (this.data_adapter != null)
+			if (this.adapters != null)
 			{
-				this.data_adapter.Update (this.data_set);
+				for (int i = 0; i < this.adapters.Length; i++)
+				{
+					this.adapters[i].Update (this.data_set);
+				}
 			}
 		}
 		
-		public System.Data.IDbCommand		Command
+		public DbCommandCollection				Commands
 		{
-			get { return this.command_object; }
+			get { return this.commands; }
 		}
 		
-		public int							CommandCount
-		{
-			get { return this.command_count; }
-		}
-		
-		public DbTableCollection			Tables
+		public DbTableCollection				Tables
 		{
 			get { return this.tables; }
 		}
 		
-		public System.Data.DataSet			DataSet
+		public System.Data.IDbTransaction		Transaction
+		{
+			get { return this.transaction; }
+			set 
+			{
+				if (this.transaction != value)
+				{
+					this.transaction = value;
+					this.SetCommandTransaction ();
+				}
+			}
+		}
+		
+		public System.Data.DataSet				DataSet
 		{
 			get { return this.data_set; }
 		}
 		
 		
-		protected DbCommandCollection		commands;
-		protected DbTableCollection			tables;
-		protected System.Data.DataSet		data_set;
-		protected System.Data.IDataAdapter	data_adapter;
 		
-		protected System.Data.IDbCommand	command_object;
-		protected int						command_count;
+		protected void SetCommandTransaction()
+		{
+			for  (int i = 0; i < this.commands.Count; i++)
+			{
+				this.commands[i].Transaction = this.transaction;
+			}
+		}
+		
+		
+		protected DbCommandCollection			commands;
+		protected System.Data.IDbTransaction	transaction;
+		protected DbTableCollection				tables;
+		protected System.Data.DataSet			data_set;
+		protected System.Data.IDataAdapter[]	adapters;
 	}
 }

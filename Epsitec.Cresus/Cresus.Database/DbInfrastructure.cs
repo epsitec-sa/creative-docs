@@ -101,11 +101,26 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		
-		public CallbackDisplayDataSet	DisplayDataSet
+		public CallbackDisplayDataSet		DisplayDataSet
 		{
 			get { return this.display_data_set; }
 			set { this.display_data_set = value; }
+		}
+		
+		public ISqlBuilder					SqlBuilder
+		{
+			get { return this.sql_builder; }
+		}
+		
+		public ISqlEngine					SqlEngine
+		{
+			get { return this.sql_engine; }
+		}
+		
+		
+		public System.Data.IDbTransaction BeginTransaction()
+		{
+			return this.db_abstraction.BeginTransaction ();
 		}
 		
 		
@@ -127,6 +142,80 @@ namespace Epsitec.Cresus.Database
 					throw new DbException (this.db_access, string.Format ("Unsupported category {0} specified. Table '{1}'.", category, name));
 			}
 		}
+		
+		public void RegisterNewDbTable(System.Data.IDbTransaction transaction, DbTable table)
+		{
+			//	Enregistre une nouvelle table dans la base de données. Ceci va attribuer à
+			//	la table une clef DbKey et vérifier qu'il n'y a pas de collision avec une
+			//	éventuelle table déjà existante. Cela va aussi attribuer des colonnes pour
+			//	la nouvelle table.
+			
+			if (transaction == null)
+			{
+				using (transaction = this.db_abstraction.BeginTransaction ())
+				{
+					this.RegisterNewDbTable (transaction, table);
+					transaction.Commit ();
+					return;
+				}
+			}
+			
+			this.CheckForRegisteredTypes (transaction, table);
+			this.CheckForUnknownTable (transaction, table);
+			
+			long table_id  = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagTableDef].InternalKey, 1);
+			long column_id = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagColumnDef].InternalKey, table.Columns.Count);
+			
+			//	Crée la ligne de description de la table :
+			
+			table.DefineInternalKey (new DbKey (table_id));
+			table.UpdatePrimaryKeyInfo ();
+			
+			this.BootInsertTableDefRow (transaction, table);
+			
+			//	Crée les lignes de description des colonnes :
+			
+			for (int i = 0; i < table.Columns.Count; i++)
+			{
+				table.Columns[i].DefineInternalKey (new DbKey (column_id + i));
+				this.BootInsertColumnDefRow (transaction, table, table.Columns[i]);
+			}
+			
+			//	Finalement, il faut créer la table elle-même :
+			
+			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
+			
+			this.sql_builder.InsertTable (sql_table);
+			this.ExecuteSilent (transaction);
+		}
+		
+		public void UnregisterDbTable(System.Data.IDbTransaction transaction, DbTable table)
+		{
+			//	Supprime la description de la table de la base. Pour des raisons de sécurité,
+			//	la table SQL n'est pas réellement supprimée.
+			
+			if (transaction == null)
+			{
+				using (transaction = this.db_abstraction.BeginTransaction ())
+				{
+					this.UnregisterDbTable (transaction, table);
+					transaction.Commit ();
+					return;
+				}
+			}
+			
+			this.CheckForKnownTable (transaction, table);
+			
+			int revision = this.FindHighestRowRevision (transaction, DbTable.TagTableDef, table.InternalKey.Id) + 1;
+			
+			System.Diagnostics.Debug.Assert (revision > 0);
+			
+			DbKey old_key = table.InternalKey;
+			DbKey new_key = new DbKey (old_key.Id, revision, revision);
+			
+			this.UpdateKeyInRow (transaction, DbTable.TagTableDef, old_key, new_key);
+		}
+		
 		
 		internal DbTable CreateUserTable(string name)
 		{
@@ -155,77 +244,65 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public void RegisterNewDbTable(DbTable table)
+		protected void CheckForRegisteredTypes(System.Data.IDbTransaction transaction, DbTable table)
 		{
-			//	Enregistre une nouvelle table dans la base de données. Ceci va attribuer à
-			//	la table une clef DbKey et vérifier qu'il n'y a pas de collision avec une
-			//	éventuelle table déjà existante. Cela va aussi attribuer des colonnes pour
-			//	la nouvelle table.
+			//	Vérifie que tous les types utilisés dans la définition des colonnes sont bien
+			//	connus (on vérifie qu'ils ont une clef valide).
 			
-			//	Tous les types utilisés dans la définition des colonnes doivent être
-			//	connus (donc avoir une clef valide). On vérifie cela maintenant, avant
-			//	d'avoir touché à la base.
-				
-			for (int i = 0; i < table.Columns.Count; i++)
+			DbColumnCollection columns = table.Columns;
+			
+			for (int i = 0; i < columns.Count; i++)
 			{
-				DbType type = table.Columns[i].Type;
+				DbType type = columns[i].Type;
 				
 				System.Diagnostics.Debug.Assert (type != null);
 				
 				if (type.InternalKey == null)
 				{
 					string message = string.Format ("Unregistered type '{0}' used in table '{1}', column '{2}'.",
-						type.Name, table.Name, table.Columns[i].Name);
+						type.Name, table.Name, columns[i].Name);
 					
 					throw new DbException (this.db_access, message);
 				}
-			}
-			
-			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
-			{
-				//	Cherche si une table avec ce nom existe dans la base. Si c'est le cas,
-				//	génère une exception.
-				
-				if (this.CountMatchingRows (transaction, DbTable.TagTableDef, DbColumn.TagName, table.Name) > 0)
-				{
-					string message = string.Format ("Table {0} already exists in database.", table.Name);
-					
-					throw new DbException (this.db_access, message);
-				}
-				
-				long table_id  = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagTableDef].InternalKey, 1);
-				long column_id = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagColumnDef].InternalKey, table.Columns.Count);
-				
-				//	Crée la ligne de description de la table :
-				
-				table.DefineInternalKey (new DbKey (table_id));
-				table.UpdatePrimaryKeyInfo ();
-				
-				this.BootInsertTableDefRow (transaction, table);
-				
-				//	Crée les lignes de description des colonnes :
-				
-				for (int i = 0; i < table.Columns.Count; i++)
-				{
-					table.Columns[i].DefineInternalKey (new DbKey (column_id + i));
-					this.BootInsertColumnDefRow (transaction, table, table.Columns[i]);
-				}
-				
-				//	Finalement, il faut créer la table elle-même :
-				
-				SqlTable sql_table = table.CreateSqlTable (this.type_converter);
-				
-				this.sql_builder.InsertTable (sql_table);
-				this.ExecuteSilent (transaction);
-				
-				transaction.Commit ();
 			}
 		}
 		
-		public void UnregisterDbTable(DbTable table)
+		protected void CheckForUnknownTable(System.Data.IDbTransaction transaction, DbTable table)
 		{
-			//	Supprime la description de la table de la base. Pour des raisons de sécurité,
-			//	la table n'est pas réellement supprimée.
+			//	Cherche si une table avec ce nom existe dans la base. Si c'est le cas,
+			//	génère une exception.
+			//
+			//	NOTE:
+			//
+			//	On cherche les lignes dans CR_TABLE_DEF dont la colonne CR_NAME contient le nom
+			//	spécifié et dont CR_REV = 0. Cette seconde condition est nécessaire, car une table
+			//	détruite figure encore dans CR_TABLE_DEF avec CR_REV > 0, et elle ne doit pas être
+			//	comptée.
+			
+			if (this.CountMatchingRows (transaction, DbTable.TagTableDef, DbColumn.TagName, table.Name) > 0)
+			{
+				string message = string.Format ("Table {0} already exists in database.", table.Name);
+				throw new DbException (this.db_access, message);
+			}
+		}
+		
+		protected void CheckForKnownTable(System.Data.IDbTransaction transaction, DbTable table)
+		{
+			//	Cherche si une table avec ce nom existe dans la base. Si ce n'est pas le cas,
+			//	génère une exception.
+			//
+			//	NOTE:
+			//
+			//	On cherche les lignes dans CR_TABLE_DEF dont la colonne CR_NAME contient le nom
+			//	spécifié et dont CR_REV = 0. Cette seconde condition est nécessaire, car une table
+			//	détruite figure encore dans CR_TABLE_DEF avec CR_REV > 0, et elle ne doit pas être
+			//	comptée.
+			
+			if (this.CountMatchingRows (transaction, DbTable.TagTableDef, DbColumn.TagName, table.Name) == 0)
+			{
+				string message = string.Format ("Table {0} does not exist in database.", table.Name);
+				throw new DbException (this.db_access, message);
+			}
 		}
 		
 		
@@ -283,6 +360,36 @@ namespace Epsitec.Cresus.Database
 				
 				System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 				this.sql_engine.Execute (command, DbCommandType.ReturningData, count, out data);
+				
+				return data;
+			}
+		}
+		
+		public object				ExecuteNonQuery(System.Data.IDbTransaction transaction)
+		{
+			int count = this.sql_builder.CommandCount;
+			
+			if (count < 1)
+			{
+				return null;
+			}
+			
+			if (transaction == null)
+			{
+				using (transaction = this.db_abstraction.BeginTransaction ())
+				{
+					object value = this.ExecuteNonQuery (transaction);
+					transaction.Commit ();
+					return value;
+				}
+			}
+			
+			using (System.Data.IDbCommand command = this.sql_builder.CreateCommand (transaction))
+			{
+				object data;
+				
+				System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+				this.sql_engine.Execute (command, DbCommandType.NonQuery, count, out data);
 				
 				return data;
 			}
@@ -414,6 +521,7 @@ namespace Epsitec.Cresus.Database
 		public int CountMatchingRows(System.Data.IDbTransaction transaction, string table, string name_column, string value)
 		{
 			//	Compte combien de lignes dans la table ont le texte spécifié dans la colonne spécifiée.
+			//	Ne considère que les lignes dont la révision est zéro.
 			
 			SqlSelect query = new SqlSelect ();
 			
@@ -421,6 +529,7 @@ namespace Epsitec.Cresus.Database
 			query.Tables.Add ("T", SqlField.CreateName (table));
 			
 			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (name_column), SqlField.CreateConstant (value, DbRawType.String)));
+			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (DbColumn.TagRevision), SqlField.CreateConstant (0, DbRawType.Int32)));
 			
 			this.sql_builder.SelectData (query);
 			
@@ -429,6 +538,57 @@ namespace Epsitec.Cresus.Database
 			Converter.Convert (this.ExecuteScalar (transaction), out count);
 			
 			return count;
+		}
+		
+		
+		public int FindHighestRowRevision(System.Data.IDbTransaction transaction, string table, long id)
+		{
+			//	Trouve la révision la plus élevée (-1 si aucune n'est trouvée) pour une clef
+			//	donnée.
+			
+			SqlSelect query = new SqlSelect ();
+			
+			query.Fields.Add ("R", new SqlAggregate (SqlAggregateType.Max, SqlField.CreateName (DbColumn.TagRevision)));
+			query.Tables.Add ("T", SqlField.CreateName (table));
+			
+			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (DbColumn.TagId), SqlField.CreateConstant (id, DbRawType.Int64)));
+			
+			this.sql_builder.SelectData (query);
+			
+			object result  = this.ExecuteScalar (transaction);
+			int    max_rev = -1;
+			
+			if (Converter.IsNotNull (result))
+			{
+				Converter.Convert (result, out max_rev);
+			}
+			
+			return max_rev;
+		}
+		
+		public void UpdateKeyInRow(System.Data.IDbTransaction transaction, string table, DbKey old_key, DbKey new_key)
+		{
+			//	Met à jour la clef de la ligne spécifiée.
+			
+			SqlFieldCollection fields = new SqlFieldCollection ();
+			SqlFieldCollection conds  = new SqlFieldCollection ();
+			
+			fields.Add (DbColumn.TagId,       SqlField.CreateConstant (new_key.Id,       DbRawType.Int64));
+			fields.Add (DbColumn.TagRevision, SqlField.CreateConstant (new_key.Revision, DbRawType.Int32));
+			
+			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (DbColumn.TagId),       SqlField.CreateConstant (old_key.Id,       DbRawType.Int64)));
+			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (DbColumn.TagRevision), SqlField.CreateConstant (old_key.Revision, DbRawType.Int32)));
+			
+			this.sql_builder.UpdateData (table, fields, conds);
+			
+			int num_rows_affected;
+			
+			Converter.Convert (this.ExecuteNonQuery (transaction), out num_rows_affected);
+			
+			if (num_rows_affected != 1)
+			{
+				throw new DbException (this.db_access, string.Format ("Update of row {0} in table {1} produced {2} updates.", old_key, table, num_rows_affected));
+			}
 		}
 		
 		

@@ -12,5 +12,6 @@ namespace Epsitec.Cresus.Database
 		void Execute(System.Data.IDbCommand command, DbCommandType type, int command_count);
 		void Execute(System.Data.IDbCommand command, DbCommandType type, int command_count, out object simple_data);
 		void Execute(System.Data.IDbCommand command, DbCommandType type, int command_count, out System.Data.DataSet data_set);
+		void Execute(DbRichCommand command);
 	}
 }
