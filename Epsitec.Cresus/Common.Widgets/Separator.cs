@@ -13,6 +13,18 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
+
+		public Drawing.Color Color
+		{
+			get { return this.color; }
+			set { this.color = value; }
+		}
+
+		public double Alpha
+		{
+			get { return this.alpha; }
+			set { this.alpha = value; }
+		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
@@ -20,7 +32,19 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(adorner.ColorBorder);
+
+			Drawing.Color color = adorner.ColorBorder;
+			if ( !this.color.IsEmpty )
+			{
+				color = this.color;
+			}
+			color.A = this.alpha;
+
+			graphics.RenderSolid(color);
 		}
+
+
+		protected Drawing.Color			color = Drawing.Color.Empty;
+		protected double				alpha = 1.0;
 	}
 }
