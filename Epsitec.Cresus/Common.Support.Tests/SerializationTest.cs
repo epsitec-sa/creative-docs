@@ -26,9 +26,9 @@ namespace Epsitec.Common.Support
 			
 			System.IO.File.Delete ("test.bin");
 			
-			Assertion.AssertNotNull (exc_2);
-			Assertion.AssertEquals (typeof (ResourceException), exc_2.GetType ());
-			Assertion.AssertEquals (exc_1.Message, exc_2.Message);
+			Assert.IsNotNull (exc_2);
+			Assert.AreEqual (typeof (ResourceException), exc_2.GetType ());
+			Assert.AreEqual (exc_1.Message, exc_2.Message);
 			
 			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Create))
 			{
@@ -52,9 +52,9 @@ namespace Epsitec.Common.Support
 			
 			System.IO.File.Delete ("test.soap");
 			
-			Assertion.AssertNotNull (exc_2);
-			Assertion.AssertEquals (typeof (ResourceException), exc_2.GetType ());
-			Assertion.AssertEquals (exc_1.Message, exc_2.Message);
+			Assert.IsNotNull (exc_2);
+			Assert.AreEqual (typeof (ResourceException), exc_2.GetType ());
+			Assert.AreEqual (exc_1.Message, exc_2.Message);
 		}
 		
 		[Test] public void CheckBundleAttributeSerialization()
@@ -78,10 +78,10 @@ namespace Epsitec.Common.Support
 			
 			System.IO.File.Delete ("test.bin");
 			
-			Assertion.AssertNotNull (bat_2);
-			Assertion.AssertEquals (typeof (BundleAttribute), bat_2.GetType ());
-			Assertion.AssertEquals (bat_1.PropertyName, bat_2.PropertyName);
-			Assertion.AssertEquals (bat_1.DefaultValue, bat_2.DefaultValue);
+			Assert.IsNotNull (bat_2);
+			Assert.AreEqual (typeof (BundleAttribute), bat_2.GetType ());
+			Assert.AreEqual (bat_1.PropertyName, bat_2.PropertyName);
+			Assert.AreEqual (bat_1.DefaultValue, bat_2.DefaultValue);
 			
 			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Create))
 			{
@@ -105,10 +105,10 @@ namespace Epsitec.Common.Support
 			
 			System.IO.File.Delete ("test.soap");
 			
-			Assertion.AssertNotNull (bat_2);
-			Assertion.AssertEquals (typeof (BundleAttribute), bat_2.GetType ());
-			Assertion.AssertEquals (bat_1.PropertyName, bat_2.PropertyName);
-			Assertion.AssertEquals (bat_1.DefaultValue, bat_2.DefaultValue);
+			Assert.IsNotNull (bat_2);
+			Assert.AreEqual (typeof (BundleAttribute), bat_2.GetType ());
+			Assert.AreEqual (bat_1.PropertyName, bat_2.PropertyName);
+			Assert.AreEqual (bat_1.DefaultValue, bat_2.DefaultValue);
 		}
 	}
 }
