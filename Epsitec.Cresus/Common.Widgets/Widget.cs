@@ -3524,8 +3524,35 @@ namespace Epsitec.Common.Widgets
 								break;
 							
 							case TabNavigationDir.Forwards:
-								find = this.parent.FindTabWidget (dir, mode, true, false);
+								accept = false;
+								find = this.parent.FindTabWidget (dir, mode, true, accept);
 								break;
+						}
+					}
+				}
+				else if (this.HasChildren)
+				{
+					//	Il n'y a plus de parents au-dessus. C'est donc vraisemblablement WindowRoot et
+					//	dans ce cas, il ne sert à rien de boucler. On va simplement tenter d'activer le
+					//	premier descendant trouvé :
+					
+					Widget[] candidates = this.Children[0].FindTabWidgets (mode);
+					
+					if (candidates.Length > 0)
+					{
+						if (dir == TabNavigationDir.Forwards)
+						{
+							find = candidates[0].FindTabWidget (dir, mode, true, true);
+						}
+						else if (accept_focus)
+						{
+							int count = candidates.Length;
+							find = candidates[count-1].FindTabWidget (dir, mode, true, true);
+						}
+						
+						if (find != null)
+						{
+							return find;
 						}
 					}
 				}
