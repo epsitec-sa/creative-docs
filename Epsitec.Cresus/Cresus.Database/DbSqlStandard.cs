@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public static string CreateSqlTableName(string name, DbElementCat category, DbKey key)
+		public static string MakeSqlTableName(string name, DbElementCat category, DbKey key)
 		{
 			//	Crée un nom de table SQL à partir du nom "haut niveau" ainsi que de la catégorie
 			//	de la table (les tables de l'utilisateur sont préfixées par "U_" et se terminent
@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Database
 			return buffer.ToString ();
 		}
 		
-		public static string CreateSimpleSqlName(string name)
+		public static string MakeSimpleSqlName(string name)
 		{
 			//	Simplifie le nom passé en entrée pour ne conserver plus que des
 			//	majuscules, des chiffres et le "_". Les caractères non reconnus
@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Database
 			return buffer.ToString ();
 		}
 		
-		public static string CreateSimpleSqlName(string name, string prefix, string suffix)
+		public static string MakeSimpleSqlName(string name, string prefix, string suffix)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.Database
 			return buffer.ToString ();
 		}
 		
-		public static string CreateSimpleSqlName(string name, DbElementCat category)
+		public static string MakeSimpleSqlName(string name, DbElementCat category)
 		{
 			System.Text.StringBuilder buffer;
 			

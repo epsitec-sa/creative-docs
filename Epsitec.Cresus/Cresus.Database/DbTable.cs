@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Database
 		
 		public string   CreateSqlName()
 		{
-			return DbSqlStandard.CreateSqlTableName (this.Name, this.Category, this.InternalKey);
+			return DbSqlStandard.MakeSqlTableName (this.Name, this.Category, this.InternalKey);
 		}
 		
 		public DbKey    CreateKeyFromRow(System.Data.DataRow row)
