@@ -9,18 +9,23 @@ namespace Epsitec.Common.Support
 	/// La classe ValidationRule représente des règles de validation
 	/// pour des commandes.
 	/// </summary>
-	public class ValidationRule : IValidator
+	public class ValidationRule : IValidator, ICommandDispatcherHost
 	{
-		internal ValidationRule(CommandDispatcher dispatcher) : this ("*")
+		internal ValidationRule(CommandDispatcher dispatcher) : this ("*", true)
 		{
 			this.dispatcher = dispatcher;
 		}
 		
-		public ValidationRule(string name)
+		internal ValidationRule(string name, bool top_level)
 		{
 			this.name           = name;
+			this.top_level      = top_level;
 			this.command_states = new CommandStateList (this);
 			this.validators     = new ValidatorList (this);
+		}
+		
+		public ValidationRule(string name) : this (name, false)
+		{
 		}
 		
 		
@@ -133,6 +138,31 @@ namespace Epsitec.Common.Support
 				foreach (IValidator validator in this.validators)
 				{
 					validator.MakeDirty (deep);
+				}
+			}
+		}
+		#endregion
+		
+		#region ICommandDispatcherHost Members
+		public CommandDispatcher					CommandDispatcher
+		{
+			get
+			{
+				return this.dispatcher;
+			}
+			set
+			{
+				if (this.dispatcher != value)
+				{
+					if (this.dispatcher == null)
+					{
+						this.dispatcher = value;
+						this.OnDispatcherDefined ();
+					}
+					else
+					{
+						throw new System.InvalidOperationException ("CommandDispatcher cannot be changed.");
+					}
 				}
 			}
 		}
@@ -302,6 +332,23 @@ namespace Epsitec.Common.Support
 				}
 				
 				value.BecameDirty += new EventHandler (this.HandleBecameDirty);
+				
+				if (this.host.CommandDispatcher != null)
+				{
+					//	Le validateur a été ajouté à une règle qui est liée à un CommandDispatcher
+					//	particulier; si le validateur implémente le support pour le CommandDispatcher,
+					//	alors on le met à jour.
+					
+					ICommandDispatcherHost cdh = value as ICommandDispatcherHost;
+					
+					if (cdh != null)
+					{
+						if (cdh.CommandDispatcher == null)
+						{
+							cdh.CommandDispatcher = this.host.CommandDispatcher;
+						}
+					}
+				}
 			}
 			
 			protected virtual void Detach(IValidator value)
@@ -368,6 +415,24 @@ namespace Epsitec.Common.Support
 				return index;
 			}
 			
+			public void Add(string value)
+			{
+				CommandDispatcher dispatcher = this.host.CommandDispatcher;
+				
+				if (dispatcher != null)
+				{
+					this.Add (dispatcher.FindOrCreateCommandState (value));
+				}
+				else
+				{
+					if (this.names == null)
+					{
+						this.names = new System.Collections.ArrayList ();
+					}
+					
+					this.names.Add (value);
+				}
+			}
 			
 			#region IList Members
 			public bool							IsReadOnly
@@ -485,8 +550,24 @@ namespace Epsitec.Common.Support
 			}
 			
 			
+			internal void Compile(CommandDispatcher dispatcher)
+			{
+				if (this.names != null)
+				{
+					foreach (string name in this.names)
+					{
+						this.Add (dispatcher.FindOrCreateCommandState (name));
+					}
+					
+					this.names.Clear ();
+					this.names = null;
+				}
+			}
+			
+			
 			protected ValidationRule				host;
 			protected System.Collections.ArrayList	list = new System.Collections.ArrayList ();
+			protected System.Collections.ArrayList	names;
 		}
 		#endregion
 		
@@ -520,9 +601,12 @@ namespace Epsitec.Common.Support
 			{
 				this.BecameDirty (this);
 			}
-			if (this.dispatcher != null)
+			if (this.top_level)
 			{
-				this.dispatcher.NotifyValidationRulesBecameDirty ();
+				if (this.dispatcher != null)
+				{
+					this.dispatcher.NotifyValidationRulesBecameDirty ();
+				}
 			}
 		}
 		
@@ -536,8 +620,27 @@ namespace Epsitec.Common.Support
 			this.MakeDirty (false);
 		}
 		
+		protected virtual void OnDispatcherDefined()
+		{
+			foreach (object o in this.validators)
+			{
+				ICommandDispatcherHost cdh = o as ICommandDispatcherHost;
+				
+				if (cdh != null)
+				{
+					if (cdh.CommandDispatcher == null)
+					{
+						cdh.CommandDispatcher = this.dispatcher;
+					}
+				}
+			}
+			
+			this.command_states.Compile (this.dispatcher);
+		}
+		
 		
 		protected string							name;
+		protected bool								top_level;
 		protected ValidationState					state = ValidationState.Unknown;
 		protected ValidationState					old_state = ValidationState.Unknown;
 		protected ValidationRule.CommandStateList	command_states;

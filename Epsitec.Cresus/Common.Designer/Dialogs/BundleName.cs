@@ -1,5 +1,6 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using System.Globalization;
 
 namespace Epsitec.Common.Designer.Dialogs
 {
@@ -13,11 +14,27 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 		
 		
+		public override string[]				CommandArgs
+		{
+			get
+			{
+				string[] values = new string[4];
+				
+				values[0] = this.bundle_spec.Prefix;
+				values[1] = this.text.Text;
+				values[2] = this.bundle_spec.ResourceLevel.ToString ();
+				values[3] = this.bundle_spec.CultureInfo.TwoLetterISOLanguageName;
+				
+				return values;
+			}
+		}
+		
 		protected override Widget CreateBodyWidget()
 		{
-			Widget body = new Widget ();
+			Widget body  = new Widget ();
+			double extra = this.bundle_spec.ExtraHeight;
 			
-			body.Size = new Drawing.Size (320, 80);
+			body.Size = new Drawing.Size (320, 48 + extra);
 			
 			StaticText label;
 			
@@ -30,7 +47,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.text.TabIndex = 1;
 			this.text.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
-			this.AddValueWidget ("name", this.text);
+//			this.AddValueWidget ("name", this.text);
+			
+			this.bundle_spec.AddExtraWidgets (body);
 			
 			Support.ValidationRule rule = new ValidationRule ("name");
 			
@@ -44,5 +63,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		
 		
 		protected TextField						text;
+		protected SubBundleSpec					bundle_spec = new SubBundleSpec ();
 	}
 }

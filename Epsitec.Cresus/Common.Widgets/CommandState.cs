@@ -6,6 +6,12 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class CommandState : Support.CommandDispatcher.CommandState
 	{
+		static CommandState()
+		{
+			Support.CommandDispatcher.DefaultFindCommandStateCallback = new Support.CommandDispatcher.FindCommandStateCallback (CommandState.DefaultFind);
+		}
+		
+		
 		public CommandState(string name) : this (name, Support.CommandDispatcher.Default)
 		{
 		}
@@ -97,6 +103,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public static void Initialise()
+		{
+			//	En appelant cette méthode statique, on peut garantir que le constructeur
+			//	statique de CommandState a bien été exécuté.
+		}
+		
 		public static CommandState Find(string command_name, Support.CommandDispatcher dispatcher)
 		{
 			if (dispatcher == null)
@@ -124,6 +136,11 @@ namespace Epsitec.Common.Widgets
 			//	le même objet (grâce à CommandDispatcher).
 			
 			return new CommandState (command_name, dispatcher);
+		}
+		
+		static Support.CommandDispatcher.CommandState DefaultFind(string command_name, Support.CommandDispatcher dispatcher)
+		{
+			return CommandState.Find (command_name, dispatcher);
 		}
 		
 		

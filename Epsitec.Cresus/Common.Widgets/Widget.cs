@@ -152,6 +152,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Font.Initialise ();
 			Support.ImageProvider.Initialise ();
+			Widgets.CommandState.Initialise ();
 			
 			Support.ObjectBundler.RegisterAssembly (typeof (Widget).Assembly);
 			
@@ -1194,6 +1195,13 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				return null;
+			}
+			set
+			{
+				if (this.dispatcher != value)
+				{
+					this.SetCommandDispatcher (value);
+				}
 			}
 		}
 		#endregion

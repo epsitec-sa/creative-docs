@@ -397,6 +397,8 @@ namespace Epsitec.Common.Widgets
 			set { this.window.Icon = value; }
 		}
 		
+		
+		#region ICommandDispatcherHost Members
 		public Support.CommandDispatcher		CommandDispatcher
 		{
 			get
@@ -421,7 +423,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
+		#endregion
 		
 		public bool								PreventAutoClose
 		{
@@ -566,13 +568,6 @@ namespace Epsitec.Common.Widgets
 			{
 				this.property_hash.Remove (key);
 			}
-		}
-		#endregion
-		
-		#region ICommandDispatcherHost Members
-		Support.CommandDispatcher Support.ICommandDispatcherHost.CommandDispatcher
-		{
-			get { return this.cmd_dispatcher; }
 		}
 		#endregion
 		
