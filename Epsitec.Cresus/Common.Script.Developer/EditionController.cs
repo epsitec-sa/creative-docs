@@ -53,12 +53,12 @@ namespace Epsitec.Common.Script.Developer
 			
 			this.method_book = new TabBook (parent);
 			this.method_book.HasCloseButton = true;
-			this.method_book.HasMenuButton  = true;
 			this.method_book.Dock        = DockStyle.Fill;
 			this.method_book.DockMargins = new Drawing.Margins (4, 4, 4, 4);
 			this.method_book.Items.Add (page);
 			
-			this.method_book.ActivePageChanged += new EventHandler (this.HandleActivePageChanged);
+			this.method_book.ActivePageChanged += new EventHandler (this.HandleBookActivePageChanged);
+			this.method_book.CloseClicked      += new EventHandler (this.HandleBookCloseClicked);
 			
 			this.tool_tip.Behaviour = ToolTipBehaviour.Manual;
 			
@@ -103,6 +103,7 @@ namespace Epsitec.Common.Script.Developer
 			this.tool_bar.CommandDispatcher = this.dispatcher;
 			
 			this.tool_bar.Items.Clear ();
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("NewMethod", "manifest:Epsitec.Common.Script.Developer.Images.NewMethod.icon"));
 			this.tool_bar.Items.Add (IconButton.CreateSimple ("SaveSource", "manifest:Epsitec.Common.Script.Developer.Images.Save.icon"));
 			this.tool_bar.Items.Add (new IconSeparator ());
 			this.tool_bar.Items.Add (this.compile_button);
@@ -226,7 +227,7 @@ namespace Epsitec.Common.Script.Developer
 		}
 		
 		
-		protected virtual void ShowMethod(string signature)
+		protected void ShowMethod(string signature)
 		{
 			this.UpdateMethodBook ();
 			
@@ -240,7 +241,7 @@ namespace Epsitec.Common.Script.Developer
 			}
 		}
 		
-		protected virtual void SyncFromUI ()
+		protected void SyncFromUI ()
 		{
 			if (this.method_index != -1)
 			{
@@ -253,95 +254,13 @@ namespace Epsitec.Common.Script.Developer
 			}
 		}
 		
-		protected virtual void FocusSource ()
+		protected void FocusSource ()
 		{
 			this.panel.SourceWidget.Focus ();
 		}
 		
-		private void HandlePanelIsModifiedChanged(object sender)
+		protected void CompileSource()
 		{
-			this.UpdateCommandStates (false);
-		}
-		
-		private void HandleSourceCursorChanged(object sender)
-		{
-			this.UpdateErrorMessage ();
-		}
-		
-		private void HandleActivePageChanged(object sender)
-		{
-			if (this.is_changing_page)
-			{
-				return;
-			}
-			
-			try
-			{
-				this.is_changing_page = true;
-				
-				if (this.method_index != this.method_book.ActivePageIndex)
-				{
-					//	En retirant le panel de son parent, on force automatiquement la mise à jour
-					//	des éventuels champs qui avaient encore le focus (en particulier, le nom de
-					//	la méthode) :
-					
-					this.panel.Widget.Parent = null;
-					this.SyncFromUI ();
-					
-					this.tool_tip.HideToolTipForWidget (this.panel.SourceWidget);
-					
-					this.method_index = this.method_book.ActivePageIndex;
-					
-					this.UpdateVisiblePage ();
-					this.UpdateFromSource ();
-					this.FocusSource ();
-				}
-			}
-			finally
-			{
-				this.is_changing_page = false;
-			}
-		}
-		
-		private void HandleWindowFocusedWidgetChanged(object sender)
-		{
-			EditArray edit  = this.panel.ParameterInfoPanel.EditArray;
-			bool      value = edit.ContainsFocus;
-			
-			if (this.edit_array_focused != value)
-			{
-				this.edit_array_focused = value;
-				
-				if (this.edit_array_focused == false)
-				{
-					if (edit.InteractionMode == ScrollInteractionMode.Edition)
-					{
-						edit.ValidateEdition (false);
-						
-						System.Diagnostics.Debug.WriteLine ("EditArray: validated edition.");
-					}
-				}
-			}
-		}
-		
-		private void HandleMethodNameWidgetTextChanged(object sender)
-		{
-			this.method_book.ActivePage.TabTitle = this.panel.MethodProtoPanel.MethodNameWidget.Text;
-		}
-		
-		
-		[Command ("SaveSource")]		void CommandSaveSource()
-		{
-			this.FocusSource ();
-			this.SyncFromUI ();
-			this.panel.IsModified = false;
-		}
-		
-		[Command ("CompileSourceCode")]	void CommandCompileSourceCode()
-		{
-			this.FocusSource ();
-			this.SyncFromUI ();
-			
 			string source = this.source.GenerateAssemblySource ();
 			Engine engine = new Engine ();
 			Script script = engine.Compile (source);
@@ -379,7 +298,7 @@ namespace Epsitec.Common.Script.Developer
 					int    section_id;
 					int    line_id;
 					
-					if (Source.Find (lines, line, col, out method_signature, out section_id, out line_id))
+					if (Source.Find (lines, line, ref col, out method_signature, out section_id, out line_id))
 					{
 						Source.Method method = this.source.FindMethod (method_signature);
 						
@@ -389,7 +308,7 @@ namespace Epsitec.Common.Script.Developer
 							Source.CodeSection code = method.CodeSections[section_id];
 							code.HiliteError (line_id, col, this.errors.Count);
 							
-							this.errors.Add (new Error (method, section_id, line_id, col, error));
+							this.errors.Add (new Error (method, section_id, line_id, col, error.Substring (error.IndexOf (":") + 2)));
 						}
 					}
 				}
@@ -403,18 +322,8 @@ namespace Epsitec.Common.Script.Developer
 			this.UpdateCommandStates (false);
 		}
 		
-		[Command ("FindNextError")]		void CommandFindNextError(CommandDispatcher d, CommandEventArgs e)
+		protected void FindNextError(int dir)
 		{
-			this.FocusSource ();
-			this.SyncFromUI ();
-			
-			int dir = 1;
-			
-			if (e.CommandArgs.Length >= 1)
-			{
-				Types.Converter.Convert (e.CommandArgs[0], out dir);
-			}
-			
 			if (this.errors.Count > 0)
 			{
 				int next = this.next_error;
@@ -447,6 +356,127 @@ namespace Epsitec.Common.Script.Developer
 			}
 		}
 		
+		protected void AddNewMethod(string name)
+		{
+			//	TODO: déterminer le nom de la nouvelle méthode
+			//	TODO: ajouter une méthode
+		}
+		
+		private void HandlePanelIsModifiedChanged(object sender)
+		{
+			this.UpdateCommandStates (false);
+		}
+		
+		private void HandleSourceCursorChanged(object sender)
+		{
+			this.UpdateErrorMessage ();
+		}
+		
+		private void HandleBookActivePageChanged(object sender)
+		{
+			if (this.is_changing_page)
+			{
+				return;
+			}
+			
+			try
+			{
+				this.is_changing_page = true;
+				
+				if (this.method_index != this.method_book.ActivePageIndex)
+				{
+					//	En retirant le panel de son parent, on force automatiquement la mise à jour
+					//	des éventuels champs qui avaient encore le focus (en particulier, le nom de
+					//	la méthode) :
+					
+					this.panel.Widget.Parent = null;
+					this.SyncFromUI ();
+					
+					this.tool_tip.HideToolTipForWidget (this.panel.SourceWidget);
+					
+					this.method_index = this.method_book.ActivePageIndex;
+					
+					this.UpdateVisiblePage ();
+					this.UpdateFromSource ();
+					this.FocusSource ();
+				}
+			}
+			finally
+			{
+				this.is_changing_page = false;
+			}
+		}
+		
+		private void HandleBookCloseClicked(object sender)
+		{
+			//	TODO: supprime la méthode active, après avoir posé la question...
+		}
+		
+		private void HandleWindowFocusedWidgetChanged(object sender)
+		{
+			EditArray edit  = this.panel.ParameterInfoPanel.EditArray;
+			bool      value = edit.ContainsFocus;
+			
+			if (this.edit_array_focused != value)
+			{
+				this.edit_array_focused = value;
+				
+				if (this.edit_array_focused == false)
+				{
+					if (edit.InteractionMode == ScrollInteractionMode.Edition)
+					{
+						edit.ValidateEdition (false);
+						
+						System.Diagnostics.Debug.WriteLine ("EditArray: validated edition.");
+					}
+				}
+			}
+		}
+		
+		private void HandleMethodNameWidgetTextChanged(object sender)
+		{
+			this.method_book.ActivePage.TabTitle = this.panel.MethodProtoPanel.MethodNameWidget.Text;
+		}
+		
+		
+		[Command ("SaveSource")]		void CommandSaveSource()
+		{
+			this.FocusSource ();
+			this.SyncFromUI ();
+			this.panel.IsModified = false;
+		}
+		
+		[Command ("NewMethod")]			void CommandNewMethod()
+		{
+			this.FocusSource ();
+			this.AddNewMethod (this.source.Methods.Length == 0 ? "Script" : "Routine");
+			this.SyncFromUI ();
+			this.panel.IsModified = true;
+		}
+		
+		[Command ("CompileSourceCode")]	void CommandCompileSourceCode()
+		{
+			this.FocusSource ();
+			this.SyncFromUI ();
+			this.CompileSource ();
+			this.FindNextError (1);
+		}
+		
+		[Command ("FindNextError")]		void CommandFindNextError(CommandDispatcher d, CommandEventArgs e)
+		{
+			this.FocusSource ();
+			this.SyncFromUI ();
+			
+			int dir = 1;
+			
+			if (e.CommandArgs.Length >= 1)
+			{
+				Types.Converter.Convert (e.CommandArgs[0], out dir);
+			}
+			
+			this.FindNextError (dir);
+		}
+
 		
 		
 		#region UniqueValueValidator Class
@@ -651,6 +681,8 @@ namespace Epsitec.Common.Script.Developer
 				string[] lines = text.Split ('\n');
 				
 				int cursor_index = 0;
+				
+				line = System.Math.Min (line, lines.Length);
 				
 				for (int i = 0; i < line; i++)
 				{
