@@ -1341,6 +1341,8 @@ namespace Epsitec.Common.Widgets
 					Widget.enteredWidgets.Add (this);
 					this.widgetState |= WidgetState.Entered;
 					
+					System.Diagnostics.Debug.Assert ((this.parent == null) || (this.parent.IsEntered) || (this.parent == this.RootParent));
+					
 					message = Message.FromMouseEvent (MessageType.MouseEnter, null, null);
 					
 					this.OnEntered (new MessageEventArgs (message, Message.State.LastPosition));
@@ -1399,18 +1401,26 @@ namespace Epsitec.Common.Widgets
 				if (index < Widget.enteredWidgets.Count)
 				{
 					Widget widget = Widget.enteredWidgets[index] as Widget;
-					
-					Drawing.Point point_in_widget = widget.MapRootToClient (message.Cursor);
-					
-					if ((widget.WindowFrame != window) ||
-						(point_in_widget.X < 0) ||
-						(point_in_widget.Y < 0) ||
-						(point_in_widget.X >= widget.Client.Width) ||
-						(point_in_widget.Y >= widget.Client.Height))
-					{
-						widget.SetEntered (false);
-					}
+					Widget.UpdateEntered (window, widget, message);
 				}
+			}
+		}
+		
+		public static void UpdateEntered(WindowFrame window, Widget widget, Message message)
+		{
+			Drawing.Point point_in_widget = widget.MapRootToClient (message.Cursor);
+			
+			if ((widget.WindowFrame != window) ||
+				(point_in_widget.X < 0) ||
+				(point_in_widget.Y < 0) ||
+				(point_in_widget.X >= widget.Client.Width) ||
+				(point_in_widget.Y >= widget.Client.Height))
+			{
+				widget.SetEntered (false);
+			}
+			else
+			{
+				widget.SetEntered (true);
 			}
 		}
 		

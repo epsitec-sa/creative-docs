@@ -286,6 +286,8 @@ namespace Epsitec.Common.Widgets
 				
 				case Win32Const.WM_MOUSEMOVE:
 				case Win32Const.WM_MOUSEWHEEL:
+				
+				case Win32Const.WM_MOUSELEAVE:
 					return true;
 			}
 			
@@ -399,6 +401,13 @@ namespace Epsitec.Common.Widgets
 					buttons = Message.ButtonsFromWParam (msg.WParam);
 					wheel   = Message.WheelDeltaFromWParam (msg.WParam);
 					message = Message.FromMouseEvent (MessageType.MouseWheel, form, new System.Windows.Forms.MouseEventArgs (buttons, 0, x, y, wheel));
+					break;
+				
+				case Win32Const.WM_MOUSELEAVE:
+					message = new Message ();
+					
+					message.type   = MessageType.MouseLeave;
+					message.cursor = Message.state.cursor;
 					break;
 			}
 			
