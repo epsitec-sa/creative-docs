@@ -25,9 +25,9 @@ namespace Epsitec.Common.Drawing
 			
 			System.IO.File.Delete ("test.bin");
 			
-			Assertion.AssertNotNull (point_2);
-			Assertion.AssertEquals (typeof (Point), point_2.GetType ());
-			Assertion.AssertEquals (point_1, point_2);
+			Assert.IsNotNull (point_2);
+			Assert.AreEqual (typeof (Point), point_2.GetType ());
+			Assert.AreEqual (point_1, point_2);
 			
 			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Create))
 			{
@@ -51,9 +51,9 @@ namespace Epsitec.Common.Drawing
 			
 			System.IO.File.Delete ("test.soap");
 			
-			Assertion.AssertNotNull (point_2);
-			Assertion.AssertEquals (typeof (Point), point_2.GetType ());
-			Assertion.AssertEquals (point_1, point_2);
+			Assert.IsNotNull (point_2);
+			Assert.AreEqual (typeof (Point), point_2.GetType ());
+			Assert.AreEqual (point_1, point_2);
 		}
 		
 		[Test] public void CheckSizeSerialization()
@@ -75,9 +75,9 @@ namespace Epsitec.Common.Drawing
 			
 			System.IO.File.Delete ("test.bin");
 			
-			Assertion.AssertNotNull (size_2);
-			Assertion.AssertEquals (typeof (Size), size_2.GetType ());
-			Assertion.AssertEquals (size_1, size_2);
+			Assert.IsNotNull (size_2);
+			Assert.AreEqual (typeof (Size), size_2.GetType ());
+			Assert.AreEqual (size_1, size_2);
 		}
 		
 		[Test] public void CheckColorSerialization()
@@ -99,9 +99,9 @@ namespace Epsitec.Common.Drawing
 			
 			System.IO.File.Delete ("test.bin");
 			
-			Assertion.AssertNotNull (color_2);
-			Assertion.AssertEquals (typeof (Color), color_2.GetType ());
-			Assertion.AssertEquals (color_1, color_2);
+			Assert.IsNotNull (color_2);
+			Assert.AreEqual (typeof (Color), color_2.GetType ());
+			Assert.AreEqual (color_1, color_2);
 		}
 		
 		[Test] public void CheckRectangleSerialization()
@@ -123,9 +123,9 @@ namespace Epsitec.Common.Drawing
 			
 			System.IO.File.Delete ("test.bin");
 			
-			Assertion.AssertNotNull (rect_2);
-			Assertion.AssertEquals (typeof (Rectangle), rect_2.GetType ());
-			Assertion.AssertEquals (rect_1, rect_2);
+			Assert.IsNotNull (rect_2);
+			Assert.AreEqual (typeof (Rectangle), rect_2.GetType ());
+			Assert.AreEqual (rect_1, rect_2);
 		}
 	}
 }
