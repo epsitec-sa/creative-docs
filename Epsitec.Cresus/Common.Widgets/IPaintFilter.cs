@@ -7,5 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		bool IsWidgetFullyDiscarded(Widget widget);
 		bool IsWidgetPaintDiscarded(Widget widget);
+		void EnableChildren();
+		void DisableChildren();
 	}
 }

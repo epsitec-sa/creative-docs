@@ -70,11 +70,17 @@ namespace Epsitec.Common.Document.Settings
 			{
 				ext = "*.crdoc";
 			}
-			string[] list = System.IO.Directory.GetFiles(this.initialDirectory, ext);
-			for ( int i=0 ; i<lastFilenameMax ; i++ )
+			try
 			{
-				if ( i >= list.Length )  break;
-				this.LastFilenameAdd(list[i]);
+				string[] list = System.IO.Directory.GetFiles(this.initialDirectory, ext);
+				for ( int i=0 ; i<lastFilenameMax ; i++ )
+				{
+					if ( i >= list.Length )  break;
+					this.LastFilenameAdd(list[i]);
+				}
+			}
+			catch
+			{
 			}
 		}
 

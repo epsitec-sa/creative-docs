@@ -5065,6 +5065,11 @@ namespace Epsitec.Common.Widgets
 					{
 						graphics.ResetLineStyle ();
 						this.OnPaintBackground (local_paint_args);
+						
+						if (paint_filter != null)
+						{
+							paint_filter.EnableChildren ();
+						}
 					}
 					
 					//	Peint tous les widgets enfants, en commençant par le numéro 0, lequel se trouve
@@ -5096,6 +5101,11 @@ namespace Epsitec.Common.Widgets
 					{
 						graphics.ResetLineStyle ();
 						this.OnPaintForeground (local_paint_args);
+						
+						if (paint_filter != null)
+						{
+							paint_filter.DisableChildren ();
+						}
 					}
 				}
 				finally

@@ -31,12 +31,29 @@ namespace Epsitec.Common.Widgets
 		#region IPaintFilter Members
 		public bool IsWidgetFullyDiscarded(Widget widget)
 		{
+			if (this.enable_children > 0)
+			{
+				return false;
+			}
 			return this.parents.Contains (widget) ? false : true;
 		}
 		
 		public bool IsWidgetPaintDiscarded(Widget widget)
 		{
+			if (this.enable_children > 0)
+			{
+				return false;
+			}
 			return this.allowed.Contains (widget) ? false : true;
+		}
+		public void EnableChildren()
+		{
+			this.enable_children++;
+		}
+		
+		public void DisableChildren()
+		{
+			this.enable_children--;
 		}
 		#endregion
 		
@@ -55,5 +72,6 @@ namespace Epsitec.Common.Widgets
 		
 		private System.Collections.ArrayList	allowed = new System.Collections.ArrayList ();
 		private System.Collections.ArrayList	parents = new System.Collections.ArrayList ();
+		private int								enable_children = 0;
 	}
 }
