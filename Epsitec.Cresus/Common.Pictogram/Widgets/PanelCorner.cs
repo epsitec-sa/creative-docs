@@ -29,7 +29,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldRadius = new TextFieldSlider(this);
 			this.fieldRadius.MinValue = 0;
 			this.fieldRadius.MaxValue = 10;
-			this.fieldRadius.Step = 1;
+			this.fieldRadius.Step = 0.1M;
+			this.fieldRadius.Resolution = 0.1M;
 			this.fieldRadius.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldRadius.TabIndex = 2;
 			this.fieldRadius.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -97,7 +98,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public override void SetProperty(AbstractProperty property)
 		{
 			base.SetProperty(property);
-			this.label.Text = this.text;
+			this.label.Text = this.textStyle;
 
 			PropertyCorner p = property as PropertyCorner;
 			if ( p == null )  return;
@@ -152,8 +153,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( this.fieldType == null )  return;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Left += this.extendedZoneWidth;
-			rect.Inflate(-5, -5);
+			rect.Deflate(this.extendedZoneWidth, 0);
+			rect.Deflate(5);
 
 			Drawing.Rectangle r = rect;
 			r.Bottom = r.Top-20;

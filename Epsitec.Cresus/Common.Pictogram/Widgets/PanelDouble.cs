@@ -40,7 +40,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public override void SetProperty(AbstractProperty property)
 		{
 			base.SetProperty(property);
-			this.label.Text = this.text;
+			this.label.Text = this.textStyle;
 
 			PropertyDouble p = property as PropertyDouble;
 			if ( p == null )  return;
@@ -73,8 +73,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( this.field == null )  return;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Left += this.extendedZoneWidth;
-			rect.Inflate(-5, -5);
+			rect.Deflate(this.extendedZoneWidth, 0);
+			rect.Deflate(5);
 
 			Drawing.Rectangle r = rect;
 			r.Right = rect.Right-50;

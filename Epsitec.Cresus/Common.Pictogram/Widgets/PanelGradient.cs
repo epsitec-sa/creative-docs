@@ -76,7 +76,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.labelSmooth.Alignment = Drawing.ContentAlignment.MiddleCenter;
 
 			this.swapColor = new IconButton(this);
-			this.swapColor.IconName = @"file:images/swapcolor1.icon";
+			this.swapColor.IconName = @"file:images/swapdata.icon";
 			this.swapColor.Clicked += new MessageEventHandler(this.SwapColorClicked);
 
 			this.isNormalAndExtended = true;
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public override void SetProperty(AbstractProperty property)
 		{
 			base.SetProperty(property);
-			this.label.Text = this.text;
+			this.label.Text = this.textStyle;
 
 			PropertyGradient p = property as PropertyGradient;
 			if ( p == null )  return;
@@ -266,8 +266,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( this.fieldColor1 == null )  return;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Left += this.extendedZoneWidth;
-			rect.Inflate(-5, -5);
+			rect.Deflate(this.extendedZoneWidth, 0);
+			rect.Deflate(5);
 
 			if ( this.extendedSize )
 			{
