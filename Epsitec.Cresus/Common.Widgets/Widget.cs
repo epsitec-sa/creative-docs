@@ -277,10 +277,12 @@ namespace Epsitec.Common.Widgets
 				if ((value == null) || (value.Length == 0))
 				{
 					this.text = null;
+					this.Shortcut.Mnemonic = (char) 0;
 				}
 				else
 				{
 					this.text = value;
+					this.Shortcut.Mnemonic = this.Mnemonic;
 				}
 			}
 		}
@@ -299,7 +301,7 @@ namespace Epsitec.Common.Widgets
 						if ((text[i] == '&') && (text[i+1] != '&'))
 						{
 							char mnemonic = text[i+1];
-							mnemonic = System.Char.ToLower (mnemonic, System.Globalization.CultureInfo.CurrentCulture);
+							mnemonic = System.Char.ToUpper (mnemonic, System.Globalization.CultureInfo.CurrentCulture);
 							return mnemonic;
 						}
 					}
@@ -321,16 +323,31 @@ namespace Epsitec.Common.Widgets
 			set { this.tab_navigation_mode = value; }
 		}
 		
+		public Shortcut						Shortcut
+		{
+			get
+			{
+				if (this.shortcut == null)
+				{
+					this.shortcut = new Shortcut ();
+				}
+				
+				return this.shortcut;
+			}
+		}
+		
 		
 		public event PaintEventHandler		PaintBackground;
 		public event PaintEventHandler		PaintForeground;
 		public event System.EventHandler	ChildrenChanged;
+		public event System.EventHandler	LayoutChanged;
+		
+		public event MessageEventHandler	Clicked;
+		public event MessageEventHandler	DoubleClicked;
+		public event System.EventHandler	ShortcutPressed;
 		
 		
 		//	Cursor
-		//	TabIndex, TabStop
-		//	Text
-		
 		//	Focus/SetFocus
 		//	Hide/Show/SetVisible
 		//	FindNextWidget/FindPrevWidget
@@ -687,6 +704,7 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				this.UpdateChildrenLayout ();
+				this.OnLayoutChanged (System.EventArgs.Empty);
 			}
 			finally
 			{
@@ -696,6 +714,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateChildrenLayout()
 		{
+			System.Diagnostics.Debug.WriteLine ("UpdateChildrenLayout " + this.Name);
+			
 			System.Diagnostics.Debug.Assert (this.client_info != null);
 			System.Diagnostics.Debug.Assert (this.layout_info != null);
 			
@@ -754,7 +774,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void PaintHandler(Graphics graphics, System.Drawing.RectangleF clip_rect)
+		public virtual void PaintHandler(Graphics graphics, System.Drawing.RectangleF clip_rect)
 		{
 			if (this.PaintCheckClipping (clip_rect))
 			{
@@ -826,7 +846,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void MessageHandler(Message message, System.Drawing.PointF pos)
+		public virtual void MessageHandler(Message message, System.Drawing.PointF pos)
 		{
 			this.PreProcessMessage (message, pos);
 			
@@ -835,7 +855,7 @@ namespace Epsitec.Common.Widgets
 			//	visuellement au sommet).
 			
 			if ((message.FilterNoChildren == false) &&
-				(message.Processed == false) &&
+				(message.Handled == false) &&
 				(this.Children.Count > 0))
 			{
 				System.Drawing.PointF client_pos = this.MapParentToClient (pos);
@@ -853,7 +873,7 @@ namespace Epsitec.Common.Widgets
 					{
 						widget.MessageHandler (message, client_pos);
 						
-						if (message.Processed)
+						if (message.Handled)
 						{
 							break;
 						}
@@ -861,9 +881,28 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			this.DispatchMessage (message, pos);
+			if (message.Handled == false)
+			{
+				this.DispatchMessage (message, pos);
+			}
 			
 			this.PostProcessMessage (message, pos);
+		}
+		
+		protected virtual void DispatchMessage(Message message, System.Drawing.PointF pos)
+		{
+			System.Diagnostics.Debug.WriteLine (message.ToString () + " / " + pos.ToString ());
+			
+			if (message.Type == MessageType.MouseUp)
+			{
+				switch (message.ButtonDownCount)
+				{
+					case 1:	this.OnClicked (new MessageEventArgs (message, pos));		break;
+					case 2:	this.OnDoubleClicked (new MessageEventArgs (message, pos));	break;
+				}
+			}
+			
+			this.ProcessMessage (message, pos);
 		}
 		
 		protected virtual void PreProcessMessage(Message message, System.Drawing.PointF pos)
@@ -871,13 +910,75 @@ namespace Epsitec.Common.Widgets
 			//	...appelé avant que l'événement ne soit traité...
 		}
 		
+		protected virtual void ProcessMessage(Message message, System.Drawing.PointF pos)
+		{
+			//	...appelé pour traiter l'événement...
+		}
+		
 		protected virtual void PostProcessMessage(Message message, System.Drawing.PointF pos)
 		{
 			//	...appelé après que l'événement ait été traité...
 		}
 		
-		protected virtual void DispatchMessage(Message message, System.Drawing.PointF pos)
+		
+		public virtual bool ShortcutHandler(Shortcut shortcut)
 		{
+			return this.ShortcutHandler (shortcut, true);
+		}
+		
+		protected virtual bool ShortcutHandler(Shortcut shortcut, bool execute_focused)
+		{
+			Widget[] children = this.Children.Widgets;
+			int  children_num = children.Length;
+			
+			if (execute_focused)
+			{
+				for (int i = 0; i < children_num; i++)
+				{
+					Widget widget = children[children_num-1 - i];
+				
+					if ((widget.IsEnabled) &&
+						(widget.IsFocused))
+					{
+						if (this.ShortcutHandler (shortcut))
+						{
+							return true;
+						}
+					}
+				}
+			}
+			
+			if (this.ProcessShortcut (shortcut))
+			{
+				return true;
+			}
+			
+			for (int i = 0; i < children_num; i++)
+			{
+				Widget widget = children[children_num-1 - i];
+				
+				if ((widget.IsEnabled) &&
+					(widget.IsFocused == false))
+				{
+					if (this.ShortcutHandler (shortcut, false))
+					{
+						return true;
+					}
+				}
+			}
+			
+			return false;
+		}
+		
+		protected virtual bool ProcessShortcut(Shortcut shortcut)
+		{
+			if (this.shortcut.Match (shortcut))
+			{
+				this.OnShortcutPressed (System.EventArgs.Empty);
+				return true;
+			}
+			
+			return false;
 		}
 		
 		
@@ -929,6 +1030,40 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnLayoutChanged(System.EventArgs e)
+		{
+			if (this.LayoutChanged != null)
+			{
+				this.LayoutChanged (this, e);
+			}
+		}
+		
+		
+		protected virtual void OnClicked(MessageEventArgs e)
+		{
+			if (this.Clicked != null)
+			{
+				e.Message.Handled = true;
+				this.Clicked (this, e);
+			}
+		}
+		
+		protected virtual void OnDoubleClicked(MessageEventArgs e)
+		{
+			if (this.DoubleClicked != null)
+			{
+				e.Message.Handled = true;
+				this.DoubleClicked (this, e);
+			}
+		}
+		
+		protected virtual void OnShortcutPressed(System.EventArgs e)
+		{
+			if (this.ShortcutPressed != null)
+			{
+				this.ShortcutPressed (this, e);
+			}
+		}
 		
 		
 		[System.Flags] protected enum InternalState
@@ -1261,5 +1396,6 @@ namespace Epsitec.Common.Widgets
 		protected int						suspend_counter;
 		protected int						tab_index;
 		protected TabNavigationMode			tab_navigation_mode;
+		protected Shortcut					shortcut;
 	}
 }

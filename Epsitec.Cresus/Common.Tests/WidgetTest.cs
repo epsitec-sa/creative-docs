@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Tests
 {
@@ -243,6 +244,92 @@ namespace Epsitec.Common.Tests
 			pt2 = widget.MapParentToClient (pt1);
 			pt3 = transform.TransformDirect (pt1);
 			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+		}
+		
+		[Test] public void TestTransformRectToClient()
+		{
+			Widget root = new Widget ();
+			Widget widget = new Widget ();
+			
+			root.Location = new System.Drawing.PointF (0, 0);
+			root.Size     = new System.Drawing.SizeF (300, 200);
+			
+			widget.Location = new System.Drawing.PointF (30, 20);
+			widget.Size     = new System.Drawing.SizeF (50, 40);
+			
+			root.Children.Add (widget);
+			
+			float ox = 1.0f;
+			float oy = 2.0f;
+			float dx = 10.0f;
+			float dy = 6.0f;
+			
+			System.Drawing.RectangleF rect1 = new System.Drawing.RectangleF (widget.Left + ox, widget.Top + oy, dx, dy);
+			System.Drawing.RectangleF rect2;
+			System.Drawing.PointF pt1 = new System.Drawing.PointF (rect1.Left,  rect1.Top);
+			System.Drawing.PointF pt2 = new System.Drawing.PointF (rect1.Right, rect1.Bottom);
+			System.Drawing.PointF pt3;
+			System.Drawing.PointF pt4;
+			
+			widget.SetClientAngle (0);
+			widget.SetClientZoom (2);
+			
+			rect2 = widget.MapParentToClient (rect1);
+			pt3   = widget.MapParentToClient (pt1);
+			pt4   = widget.MapParentToClient (pt2);
+			
+			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
+			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
+			
+			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Min (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Max (pt3.Y, pt4.Y)));
+			
+			widget.SetClientZoom (3);
+			widget.SetClientAngle (90);
+			
+			rect2 = widget.MapParentToClient (rect1);
+			pt3   = widget.MapParentToClient (pt1);
+			pt4   = widget.MapParentToClient (pt2);
+			
+			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
+			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
+			
+			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Min (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Max (pt3.Y, pt4.Y)));
+			
+			widget.SetClientZoom (7);
+			widget.SetClientAngle (180);
+			
+			rect2 = widget.MapParentToClient (rect1);
+			pt3   = widget.MapParentToClient (pt1);
+			pt4   = widget.MapParentToClient (pt2);
+			
+			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
+			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
+			
+			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Min (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Max (pt3.Y, pt4.Y)));
+			
+			widget.SetClientZoom (1.5f);
+			widget.SetClientAngle (270);
+			
+			rect2 = widget.MapParentToClient (rect1);
+			pt3   = widget.MapParentToClient (pt1);
+			pt4   = widget.MapParentToClient (pt2);
+			
+			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
+			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
+			
+			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Min (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Max (pt3.Y, pt4.Y)));
 		}
 		
 		[Test] public void TestTransformToParent()
