@@ -330,6 +330,10 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.AddText (30, 30, "A!", Font.GetFont ("Tahoma", "Regular"), 250);
 			e.Graphics.RenderSolid (Color.FromARGB (1.0, 0, 0, 1));
 			e.Graphics.SolidRenderer.SetAlphaMask (null, MaskComponent.None);
+			e.Graphics.AddText (-30, 50, "|", Font.GetFont ("Tahoma", "Regular"), 250);
+			e.Graphics.RenderSolid (Color.FromARGB (1.0, 0, 1, 0));
+			
+			mask_graphics.Dispose ();
 		}
 		
 		private void Curve_PaintForeground(object sender, PaintEventArgs e)

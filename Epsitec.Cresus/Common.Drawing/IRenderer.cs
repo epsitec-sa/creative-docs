@@ -4,6 +4,7 @@ namespace Epsitec.Common.Drawing
 	{
 		None = -1,
 		A = 0,
+		Alpha = 0,
 		R = 1,
 		G = 2,
 		B = 3
