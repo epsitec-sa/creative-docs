@@ -10,8 +10,8 @@ namespace Epsitec.Common.UI
 			Data.Record      record = EngineTest.CreateRecord ();
 			Types.IDataGraph graph  = record;
 			
-			Assertion.AssertEquals (record, graph.Root);
-			Assertion.AssertEquals (5, graph.Root.Count);
+			Assert.AreEqual (record, graph.Root);
+			Assert.AreEqual (5, graph.Root.Count);
 			
 			Types.IDataValue v1 = graph.Navigate ("FontName")  as Types.IDataValue;
 			Types.IDataValue v2 = graph.Navigate ("FontSize")  as Types.IDataValue;
@@ -19,35 +19,35 @@ namespace Epsitec.Common.UI
 			Types.IDataValue v4 = graph.Navigate ("FontStyle") as Types.IDataValue;
 			Types.IDataValue v5 = graph.Navigate ("Quality")   as Types.IDataValue;
 			
-			Assertion.AssertNotNull (v1);
-			Assertion.AssertNotNull (v2);
-			Assertion.AssertNotNull (v3);
-			Assertion.AssertNotNull (v4);
-			Assertion.AssertNotNull (v5);
+			Assert.IsNotNull (v1);
+			Assert.IsNotNull (v2);
+			Assert.IsNotNull (v3);
+			Assert.IsNotNull (v4);
+			Assert.IsNotNull (v5);
 			
-			Assertion.AssertEquals ("String",      v1.DataType.Name);
-			Assertion.AssertEquals ("Decimal",     v2.DataType.Name);
-			Assertion.AssertEquals ("Boolean",     v3.DataType.Name);
-			Assertion.AssertEquals ("Integer",     v4.DataType.Name);
-			Assertion.AssertEquals ("Enumeration", v5.DataType.Name);
+			Assert.AreEqual ("String",      v1.DataType.Name);
+			Assert.AreEqual ("Decimal",     v2.DataType.Name);
+			Assert.AreEqual ("Boolean",     v3.DataType.Name);
+			Assert.AreEqual ("Integer",     v4.DataType.Name);
+			Assert.AreEqual ("Enumeration", v5.DataType.Name);
 			
-			Assertion.AssertEquals (v1, record["FontName"]);
-			Assertion.AssertEquals (v2, record["FontSize"]);
-			Assertion.AssertEquals (v3, record["UseHyphen"]);
-			Assertion.AssertEquals (v4, record["FontStyle"]);
-			Assertion.AssertEquals (v5, record["Quality"]);
+			Assert.AreEqual (v1, record["FontName"]);
+			Assert.AreEqual (v2, record["FontSize"]);
+			Assert.AreEqual (v3, record["UseHyphen"]);
+			Assert.AreEqual (v4, record["FontStyle"]);
+			Assert.AreEqual (v5, record["Quality"]);
 			
-			Assertion.AssertEquals (typeof (string),  v1.DataType.SystemType);
-			Assertion.AssertEquals (typeof (decimal), v2.DataType.SystemType);
-			Assertion.AssertEquals (typeof (bool),    v3.DataType.SystemType);
-			Assertion.AssertEquals (typeof (int),     v4.DataType.SystemType);
-			Assertion.AssertEquals (typeof (Quality), v5.DataType.SystemType);
+			Assert.AreEqual (typeof (string),  v1.DataType.SystemType);
+			Assert.AreEqual (typeof (decimal), v2.DataType.SystemType);
+			Assert.AreEqual (typeof (bool),    v3.DataType.SystemType);
+			Assert.AreEqual (typeof (int),     v4.DataType.SystemType);
+			Assert.AreEqual (typeof (Quality), v5.DataType.SystemType);
 			
-			Assertion.AssertEquals ("Times", v1.ReadValue ());
-			Assertion.AssertEquals (12.0, (double)(decimal) v2.ReadValue ());
-			Assertion.AssertEquals (false, v3.ReadValue ());
-			Assertion.AssertEquals (1, (int) v4.ReadValue ());
-			Assertion.AssertEquals (Quality.Default, v5.ReadValue ());
+			Assert.AreEqual ("Times", v1.ReadValue ());
+			Assert.AreEqual (12.0, (double)(decimal) v2.ReadValue ());
+			Assert.AreEqual (false, v3.ReadValue ());
+			Assert.AreEqual (1, (int) v4.ReadValue ());
+			Assert.AreEqual (Quality.Default, v5.ReadValue ());
 		}
 		
 		[Test] public void CheckBindWidget()
@@ -72,22 +72,22 @@ namespace Epsitec.Common.UI
 			Engine.BindWidget (record, radio_1, @"<bind path=""FontStyle"" />");
 			Engine.BindWidget (record, radio_4, @"<bind path=""Quality"" />");
 			
-			Assertion.AssertEquals ("Times", text.Text);
+			Assert.AreEqual ("Times", text.Text);
 			
-			Assertion.AssertEquals ( 12.0, (double) up_down.Value);
-			Assertion.AssertEquals (  1.0, (double) up_down.MinValue);
-			Assertion.AssertEquals (299.0, (double) up_down.MaxValue);
-			Assertion.AssertEquals (  0.1, (double) up_down.Resolution);
+			Assert.AreEqual ( 12.0, (double) up_down.Value);
+			Assert.AreEqual (  1.0, (double) up_down.MinValue);
+			Assert.AreEqual (299.0, (double) up_down.MaxValue);
+			Assert.AreEqual (  0.1, (double) up_down.Resolution);
 			
-			Assertion.AssertEquals (false, check_b.IsActive);
+			Assert.AreEqual (false, check_b.IsActive);
 			
-			Assertion.AssertEquals (true,  radio_1.IsActive);
-			Assertion.AssertEquals (false, radio_2.IsActive);
-			Assertion.AssertEquals (false, radio_3.IsActive);
+			Assert.AreEqual (true,  radio_1.IsActive);
+			Assert.AreEqual (false, radio_2.IsActive);
+			Assert.AreEqual (false, radio_3.IsActive);
 			
-			Assertion.AssertEquals (true,  radio_4.IsActive);
-			Assertion.AssertEquals (false, radio_5.IsActive);
-			Assertion.AssertEquals (false, radio_6.IsActive);
+			Assert.AreEqual (true,  radio_4.IsActive);
+			Assert.AreEqual (false, radio_5.IsActive);
+			Assert.AreEqual (false, radio_6.IsActive);
 			
 			text.Text           = "Helvetica";
 			up_down.Value       = 14M;
@@ -95,19 +95,19 @@ namespace Epsitec.Common.UI
 			radio_2.ActiveState = WidgetState.ActiveYes;
 			radio_5.ActiveState = WidgetState.ActiveYes;
 			
-			Assertion.AssertEquals (false, radio_1.IsActive);
-			Assertion.AssertEquals (true,  radio_2.IsActive);
-			Assertion.AssertEquals (false, radio_3.IsActive);
+			Assert.AreEqual (false, radio_1.IsActive);
+			Assert.AreEqual (true,  radio_2.IsActive);
+			Assert.AreEqual (false, radio_3.IsActive);
 			
-			Assertion.AssertEquals (false, radio_4.IsActive);
-			Assertion.AssertEquals (true,  radio_5.IsActive);
-			Assertion.AssertEquals (false, radio_6.IsActive);
+			Assert.AreEqual (false, radio_4.IsActive);
+			Assert.AreEqual (true,  radio_5.IsActive);
+			Assert.AreEqual (false, radio_6.IsActive);
 			
-			Assertion.AssertEquals ("Helvetica",             record["FontName"].ReadValue ());
-			Assertion.AssertEquals (14.0, (double) (decimal) record["FontSize"].ReadValue ());
-			Assertion.AssertEquals (true,                    record["UseHyphen"].ReadValue ());
-			Assertion.AssertEquals (2,                 (int) record["FontStyle"].ReadValue ());
-			Assertion.AssertEquals (Quality.Fast,            record["Quality"].ReadValue ());
+			Assert.AreEqual ("Helvetica",             record["FontName"].ReadValue ());
+			Assert.AreEqual (14.0, (double) (decimal) record["FontSize"].ReadValue ());
+			Assert.AreEqual (true,                    record["UseHyphen"].ReadValue ());
+			Assert.AreEqual (2,                 (int) record["FontStyle"].ReadValue ());
+			Assert.AreEqual (Quality.Fast,            record["Quality"].ReadValue ());
 			
 			record["FontName"].WriteValue ("Courier");
 			record["FontSize"].WriteValue (10M);
@@ -115,17 +115,17 @@ namespace Epsitec.Common.UI
 			record["FontStyle"].WriteValue (3);
 			record["Quality"].WriteValue (Quality.Smooth);
 			
-			Assertion.AssertEquals ("Courier", text.Text);
-			Assertion.AssertEquals (10.0, (double) up_down.Value);
-			Assertion.AssertEquals (false, check_b.IsActive);
+			Assert.AreEqual ("Courier", text.Text);
+			Assert.AreEqual (10.0, (double) up_down.Value);
+			Assert.AreEqual (false, check_b.IsActive);
 			
-			Assertion.AssertEquals (false, radio_1.IsActive);
-			Assertion.AssertEquals (false, radio_2.IsActive);
-			Assertion.AssertEquals (true,  radio_3.IsActive);
+			Assert.AreEqual (false, radio_1.IsActive);
+			Assert.AreEqual (false, radio_2.IsActive);
+			Assert.AreEqual (true,  radio_3.IsActive);
 			
-			Assertion.AssertEquals (false, radio_4.IsActive);
-			Assertion.AssertEquals (false, radio_5.IsActive);
-			Assertion.AssertEquals (true,  radio_6.IsActive);
+			Assert.AreEqual (false, radio_4.IsActive);
+			Assert.AreEqual (false, radio_5.IsActive);
+			Assert.AreEqual (true,  radio_6.IsActive);
 		}
 		
 		[Test] public void CheckConstraint()
@@ -138,30 +138,30 @@ namespace Epsitec.Common.UI
 			Engine.BindWidget (record, text,    @"<bind path=""FontName"" />");
 			Engine.BindWidget (record, up_down, @"<bind path=""FontSize"" />");
 			
-			Assertion.AssertEquals ("Times", text.Text);
-			Assertion.AssertEquals ("Times", record["FontName"].ReadValue ());
-			Assertion.AssertEquals (12.0, (double) up_down.Value);
-			Assertion.AssertEquals (12.0, (double) (decimal) record["FontSize"].ReadValue ());
+			Assert.AreEqual ("Times", text.Text);
+			Assert.AreEqual ("Times", record["FontName"].ReadValue ());
+			Assert.AreEqual (12.0, (double) up_down.Value);
+			Assert.AreEqual (12.0, (double) (decimal) record["FontSize"].ReadValue ());
 			
 			text.Text = "XYZ";		//	pas accepté par la contrainte XStringConstraint
 			
-			Assertion.AssertEquals ("Times", record["FontName"].ReadValue ());
+			Assert.AreEqual ("Times", record["FontName"].ReadValue ());
 			
 			up_down.Text = "-5.5";	//	pas accepté
 			
-			Assertion.AssertEquals (12.0, (double) (decimal) record["FontSize"].ReadValue ());
+			Assert.AreEqual (12.0, (double) (decimal) record["FontSize"].ReadValue ());
 			
 			up_down.Value = -5.5M;	//	accepté, parce que Value contraint à [1..299]
 			
-			Assertion.AssertEquals (1.0, (double) (decimal) record["FontSize"].ReadValue ());
+			Assert.AreEqual (1.0, (double) (decimal) record["FontSize"].ReadValue ());
 			
 			text.Text = "A";		//	pas accepté par la contrainte XStringConstraint
 			
-			Assertion.AssertEquals ("Times", record["FontName"].ReadValue ());
+			Assert.AreEqual ("Times", record["FontName"].ReadValue ());
 			
 			text.Text = "ABC";		//	modification OK
 			
-			Assertion.AssertEquals ("ABC", record["FontName"].ReadValue ());
+			Assert.AreEqual ("ABC", record["FontName"].ReadValue ());
 		}
 		
 		
