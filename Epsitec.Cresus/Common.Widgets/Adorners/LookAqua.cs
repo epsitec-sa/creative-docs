@@ -1890,7 +1890,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		public LookAquaMetal()
 		{
 			this.metalRenderer = true;
-			this.dynamicReflect = false;
+			this.dynamicReflect = true;
 			this.RefreshColors();
 		}
 	}

@@ -37,7 +37,7 @@ namespace Epsitec.Common.Widgets
 			this.scroller.Parent = this;
 			//this.scroller.Dock = DockStyle.Right;
 			this.scroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
-			this.scroller.Hide ();
+			this.scroller.Hide();
 		}
 		
 		public ScrollList(Widget embedder) : this()
@@ -48,26 +48,26 @@ namespace Epsitec.Common.Widgets
 		
 		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
 		{
-			base.RestoreFromBundle (bundler, bundle);
+			base.RestoreFromBundle(bundler, bundle);
 			
 			Support.ResourceBundle items = bundle["items"].AsBundle;
 			
-			if (items != null)
+			if ( items != null )
 			{
 				string[] names = items.FieldNames;
-				System.Array.Sort (names);
+				System.Array.Sort(names);
 				
-				for (int i = 0; i < items.CountFields; i++)
+				for ( int i=0 ; i<items.CountFields ; i++ )
 				{
 					string name = names[i];
 					string item = items[name].AsString;
 					
-					if (item == null)
+					if ( item == null )
 					{
-						throw new Support.ResourceException (string.Format ("Item '{0}' is invalid", name));
+						throw new Support.ResourceException(string.Format("Item '{0}' is invalid", name));
 					}
 					
-					this.Items.Add (Support.ResourceBundle.ExtractName (name), item);
+					this.Items.Add(Support.ResourceBundle.ExtractName(name), item);
 				}
 			}
 		}
@@ -106,19 +106,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool							ComboMode
-		{
-			set
-			{
-				this.isComboList = value;
-			}
-
-			get
-			{
-				return this.isComboList;
-			}
-		}
-		
 		public AbstractScroller				Scroller
 		{
 			get { return this.scroller; }
@@ -153,12 +140,12 @@ namespace Epsitec.Common.Widgets
 			// Nom de la ligne sélectionnée, null si aucune.
 			get
 			{
-				if (this.selectedLine == -1)
+				if ( this.selectedLine == -1 )
 				{
 					return null;
 				}
 				
-				return this.items.GetName (this.selectedLine);
+				return this.items.GetName(this.selectedLine);
 			}
 
 			set
@@ -167,13 +154,13 @@ namespace Epsitec.Common.Widgets
 				{
 					int index = -1;
 					
-					if (value != null)
+					if ( value != null )
 					{
-						index = this.items.FindNameIndex (value);
+						index = this.items.FindNameIndex(value);
 					
-						if (index < 0)
+						if ( index < 0 )
 						{
-							throw new System.ArgumentException (string.Format ("No element named '{0}' in list", value));
+							throw new System.ArgumentException(string.Format("No element named '{0}' in list", value));
 						}
 					}
 					
@@ -298,7 +285,7 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case MessageType.MouseMove:
-					if ( this.mouseDown || this.isComboList )
+					if ( this.mouseDown || this.scrollListStyle == ScrollListStyle.Menu )
 					{
 						this.MouseSelect(pos);
 					}
@@ -477,6 +464,18 @@ namespace Epsitec.Common.Widgets
 			base.HandleAdornerChanged();
 		}
 
+		public override Drawing.Rectangle GetShapeBounds()
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			rect.Inflate(adorner.GeometryListShapeBounds);
+			if ( this.scrollListStyle == ScrollListStyle.Menu )
+			{
+				rect.Inflate(adorner.GeometryMenuShadow);
+			}
+			return rect;
+		}
+
 		// Calcule la largeur utile pour le texte.
 		protected double GetTextWidth()
 		{
@@ -508,7 +507,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.Validation != null )
 			{
-				this.Validation (this);
+				this.Validation(this);
 			}
 		}
 
@@ -516,7 +515,7 @@ namespace Epsitec.Common.Widgets
 		// Dessine la liste.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			this.UpdatetextLayouts ();
+			this.UpdatetextLayouts();
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
@@ -525,7 +524,9 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.scrollListStyle == ScrollListStyle.Menu )
 			{
-				adorner.PaintMenuBackground(graphics, rect, state, Direction.Down, Drawing.Rectangle.Empty, 0);
+				Drawing.Rectangle menu = rect;
+				menu.Inflate(adorner.GeometryMenuShadow);
+				adorner.PaintMenuBackground(graphics, menu, state, Direction.Down, Drawing.Rectangle.Empty, 0);
 			}
 			else
 			{
@@ -587,7 +588,6 @@ namespace Epsitec.Common.Widgets
 		protected static readonly double		Margin = 3;
 		
 		protected ScrollListStyle				scrollListStyle;
-		protected bool							isComboList = false;
 		protected bool							isDirty;
 		protected bool							mouseDown = false;
 		protected Helpers.StringCollection		items;

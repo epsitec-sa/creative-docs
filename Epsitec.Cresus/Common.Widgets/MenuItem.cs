@@ -418,7 +418,7 @@ namespace Epsitec.Common.Widgets
 					aRect.Left = aRect.Right-this.subIndicatorWidth;
 					aRect.Bottom = (rect.Height-this.subIndicatorWidth)/2;
 					aRect.Top = aRect.Bottom+this.subIndicatorWidth;
-					adorner.PaintArrow(graphics, aRect, state, Direction.Right);
+					adorner.PaintArrow(graphics, aRect, state, Direction.Right, PaintTextStyle.VMenu);
 				}
 			}
 		}

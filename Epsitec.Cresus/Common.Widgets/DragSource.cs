@@ -64,6 +64,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public double						DropTargetBaseLineOffset
+		{
+			get
+			{
+				Drawing.Point base_line = this.widget.BaseLine;
+				
+				if (base_line.IsEmpty)
+				{
+					return -1;
+				}
+				
+				return base_line.Y;
+			}
+		}
+		
 		public Widget						DropTarget
 		{
 			get
@@ -205,7 +220,7 @@ namespace Epsitec.Common.Widgets
 				Design.SmartGuide guide  = new Design.SmartGuide (this.Widget, Drawing.GripId.Body, this.DropTarget);
 				Drawing.Rectangle bounds = this.DropTargetBounds;
 				
-				guide.Constrain (bounds, cx, cy);
+				guide.Constrain (bounds, this.DropTargetBaseLineOffset, cx, cy);
 				
 				if (cx.Segments.Length > 0)
 				{

@@ -209,10 +209,12 @@ namespace Epsitec.Common.Widgets
 		
 		private void OpenCombo()
 		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			Drawing.Margins shadow = adorner.GeometryMenuShadow;
+
 			this.scrollList = new ScrollList(null);
 			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
-			this.scrollList.ComboMode = true;
-			this.scrollList.Bounds = new Drawing.Rectangle (0, 0, this.Width, 200);
+			this.scrollList.Bounds = new Drawing.Rectangle(0, 0, this.Width, 200);
 			
 			for ( int i=0 ; i<this.items.Count ; i++ )
 			{
@@ -221,25 +223,26 @@ namespace Epsitec.Common.Widgets
 				this.scrollList.Items.Add(name, text);
 			}
 			
-			Drawing.Point     pos  = this.MapClientToScreen (new Drawing.Point(0, 0));
-			ScreenInfo        info = ScreenInfo.Find (pos);
+			Drawing.Point     pos  = this.MapClientToScreen(new Drawing.Point(0, 0));
+			ScreenInfo        info = ScreenInfo.Find(pos);
 			Drawing.Rectangle area = info.WorkingArea;
 			double            hMax = pos.Y-area.Bottom;
 			
 			this.scrollList.AdjustHeightToContent(ScrollListAdjust.MoveUp, 40, hMax);
-			this.scrollList.SelectedIndex = this.items.FindExactMatch (this.Text);
+			this.scrollList.SelectedIndex = this.items.FindExactMatch(this.Text);
 			this.scrollList.ShowSelectedLine(ScrollListShow.Middle);
 			
 			this.comboWindow = new Window();
 			this.comboWindow.MakeFramelessWindow();
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			if ( adorner.AlphaVMenu < 1.0 )
 			{
 				this.comboWindow.MakeLayeredWindow();
 				this.comboWindow.Alpha = adorner.AlphaVMenu;
+				this.comboWindow.Root.BackColor = Drawing.Color.Transparent;
 			}
-			pos = this.MapClientToScreen(new Drawing.Point(0, -this.scrollList.Height));
-			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width, this.scrollList.Height);
+			pos = this.MapClientToScreen(new Drawing.Point(-shadow.Left, -this.scrollList.Height-shadow.Bottom));
+			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width+shadow.Width, this.scrollList.Height+shadow.Height);
+			this.scrollList.Location = new Drawing.Point(shadow.Left, shadow.Bottom);
 			this.scrollList.SelectedIndexChanged += new EventHandler(this.HandleScrollerSelectedIndexChanged);
 			this.scrollList.Validation += new EventHandler(this.HandleScrollListValidation);
 			Window.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);

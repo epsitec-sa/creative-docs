@@ -23,9 +23,10 @@ namespace Epsitec.Common.Widgets.Design
 			this.segments = new Drawing.Segment[0];
 			this.distance = Constraint.Infinite;
 			this.bounds   = Drawing.Rectangle.Empty;
+			this.priority = Priority.Low;
 		}
 		
-		public void Add (double coord, double model_coord, double x1, double y1, double x2, double y2)
+		public void Add (double coord, double model_coord, double x1, double y1, double x2, double y2, Priority priority)
 		{
 			double delta = coord - model_coord;
 			
@@ -36,7 +37,8 @@ namespace Epsitec.Common.Widgets.Design
 			
 			Drawing.Segment seg = new Drawing.Segment (new Drawing.Point (x1, y1), new Drawing.Point (x2, y2));
 			
-			if (delta == this.distance)
+			if ((delta == this.distance) &&
+				(priority == this.priority))
 			{
 				System.Diagnostics.Debug.Assert (this.segments.Length > 0);
 				System.Diagnostics.Debug.Assert (this.segments[0].Orientation == seg.Orientation);
@@ -56,8 +58,10 @@ namespace Epsitec.Common.Widgets.Design
 				this.segments = copy;
 				this.segments[0] = seg;
 			}
-			else if (System.Math.Abs (delta) < System.Math.Abs (this.distance))
+			else if ((System.Math.Abs (delta) < System.Math.Abs (this.distance)) &&
+				/**/ (priority >= this.priority))
 			{
+				this.priority = priority;
 				this.distance = delta;
 				this.segments = new Drawing.Segment[1];
 				this.segments[0] = seg;
@@ -149,7 +153,15 @@ namespace Epsitec.Common.Widgets.Design
 		}
 		
 		
+		public enum Priority
+		{
+			Low,
+			High
+		}
 		
+		
+		
+		protected Priority				priority;
 		protected double				filter_above = 10;
 		protected double				distance;
 		protected Drawing.Rectangle		bounds;

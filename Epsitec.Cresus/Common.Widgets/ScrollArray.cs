@@ -722,6 +722,14 @@ namespace Epsitec.Common.Widgets
 			base.HandleAdornerChanged();
 		}
 
+		public override Drawing.Rectangle GetShapeBounds()
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			rect.Inflate(adorner.GeometryListShapeBounds);
+			return rect;
+		}
+
 		// Met à jour l'ascenseur en fonction de la liste.
 		protected void UpdateScroller()
 		{
