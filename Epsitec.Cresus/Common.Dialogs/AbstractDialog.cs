@@ -20,6 +20,16 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (this.window != null)
 			{
+				if (this.Window.IsActive)
+				{
+					Window owner = this.Owner;
+					
+					if (owner != null)
+					{
+						owner.MakeActive ();
+					}
+				}
+				
 				this.window.Hide ();
 				this.window.CommandDispatcher.Dispose ();
 				this.window.CommandDispatcher = null;
@@ -45,8 +55,23 @@ namespace Epsitec.Common.Dialogs
 		#region IDialog Members
 		public void Show()
 		{
+			Window owner = this.Owner;
+			
+			if (owner != null)
+			{
+				Drawing.Rectangle owner_bounds  = owner.WindowBounds;
+				Drawing.Rectangle dialog_bounds = this.Window.WindowBounds;
+				
+				double ox = System.Math.Floor (owner_bounds.Left + (owner_bounds.Width - dialog_bounds.Width) / 2);
+				double oy = System.Math.Floor (owner_bounds.Top  - (owner_bounds.Height - dialog_bounds.Height) / 3 - dialog_bounds.Height);
+				
+				dialog_bounds.Location = new Drawing.Point (ox, oy);
+				
+				this.Window.WindowBounds = dialog_bounds;
+			}
+			
 			this.OnShowing ();
-			this.Window.Show ();
+			this.Window.ShowDialog ();
 		}
 		
 		public Window							Owner

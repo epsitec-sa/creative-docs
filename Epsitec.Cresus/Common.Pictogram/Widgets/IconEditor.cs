@@ -644,19 +644,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			else
 			{
-				string iconNo  = "";
-				string iconYes = "";
-
+				MenuItem item;
+				
 				if ( icon == "y/n" )
 				{
-					icon    = @"";
-					iconNo  = @"file:images/activeno.icon";
-					iconYes = @"file:images/activeyes.icon";
+					item = MenuItem.CreateYesNo(command, text, shortcut, name);
 				}
-
-				MenuItem item = new MenuItem(command, icon, text, shortcut, name);
-				if ( iconNo  != "" )  item.IconNameActiveNo  = iconNo;
-				if ( iconYes != "" )  item.IconNameActiveYes = iconYes;
+				else
+				{
+					item = new MenuItem(command, icon, text, shortcut, name);
+				}
+				
 				vmenu.Items.Add(item);
 			}
 		}

@@ -224,6 +224,9 @@ namespace Epsitec.Common.Designer
 			window.Root.IsEditionEnabled = true;
 			window.PreventAutoClose      = true;
 			window.PreventAutoQuit       = true;
+			window.Owner                 = this.application.MainWindow;
+			
+			window.MakeFloatingWindow ();
 			
 			this.edit_window_list.Add (window);
 			this.editors = null;

@@ -675,6 +675,14 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Images\ActiveNo.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ActiveYes.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\DeleteCell.icon"
                     BuildAction = "EmbeddedResource"
                 />

@@ -279,11 +279,16 @@ namespace Epsitec.Common.Designer.Widgets
 		{
 			System.Diagnostics.Debug.Assert (this.button_select == sender);
 			
-			VMenu menu = new VMenu ();
+			VMenu      menu  = new VMenu ();
+			MenuItem[] items = new MenuItem[this.items.Count];
+			
+			int selected = this.SelectedIndex;
 			
 			for (int i = 0; i < this.items.Count; i++)
 			{
-				menu.Items.Add (new MenuItem ("", "", this.items[i], "", this.items.GetName (i)));
+				items[i] = MenuItem.CreateYesNo ("", this.items[i], "", this.items.GetName (i));
+				items[i].ActiveState = (i == selected) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				menu.Items.Add (items[i]);
 			}
 			
 			menu.Host = this;

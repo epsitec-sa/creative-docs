@@ -596,8 +596,6 @@ namespace Epsitec.Common.Widgets
 			
 			int index = menu.SelectedIndex;
 			
-			AbstractMenu.CloseAll();
-			
 			if ( index >= 0 )
 			{
 				// L'utilisateur a sélectionné une commande dans un menu valide. On doit
@@ -610,6 +608,8 @@ namespace Epsitec.Common.Widgets
 				menu.OnAccepted(e);
 				item.ExecuteCommand ();
 			}
+			
+			AbstractMenu.CloseAll();
 		}
 		
 		protected static void CloseAll()
@@ -720,6 +720,8 @@ namespace Epsitec.Common.Widgets
 			if ( forceQuick )  anim = Animation.None;
 			this.window.AnimateShow(anim);
 			this.submenu.SetFocused(true);
+			
+			AbstractMenu.menuLastLeaf = this.submenu;
 			
 			return true;
 		}

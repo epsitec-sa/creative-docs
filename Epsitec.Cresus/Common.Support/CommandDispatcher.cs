@@ -179,6 +179,8 @@ namespace Epsitec.Common.Support
 		
 		protected void DispatchSingleCommand(string command, object source)
 		{
+			command = command.Trim ();
+			
 			//	Transmet la commande à ceux qui sont intéressés
 			
 			string   command_name     = CommandDispatcher.ExtractCommandName (command);
