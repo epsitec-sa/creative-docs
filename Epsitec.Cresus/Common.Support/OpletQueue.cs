@@ -166,6 +166,22 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public bool								IsDisabled
+		{
+			get
+			{
+				return (this.disable_count > 0);
+			}
+		}
+		
+		public bool								IsEnabled
+		{
+			get
+			{
+				return (this.disable_count == 0);
+			}
+		}
+		
 		
 		public System.IDisposable BeginAction()
 		{
@@ -174,6 +190,11 @@ namespace Epsitec.Common.Support
 		
 		public System.IDisposable BeginAction(string name)
 		{
+			if (this.IsDisabled)
+			{
+				return null;
+			}
+			
 			if (this.is_undo_redo_in_progress)
 			{
 				throw new System.InvalidOperationException ("Undo/redo in progress.");
@@ -191,6 +212,11 @@ namespace Epsitec.Common.Support
 		
 		public void Insert(IOplet oplet)
 		{
+			if (this.IsDisabled)
+			{
+				return;
+			}
+			
 			if ((this.fence_id <= 0) ||
 				(this.action == null))
 			{
@@ -202,6 +228,11 @@ namespace Epsitec.Common.Support
 		
 		public void ValidateAction()
 		{
+			if (this.IsDisabled)
+			{
+				return;
+			}
+			
 			if ((this.fence_id <= 0) ||
 				(this.action == null))
 			{
@@ -238,6 +269,11 @@ namespace Epsitec.Common.Support
 		
 		public void CancelAction()
 		{
+			if (this.IsDisabled)
+			{
+				return;
+			}
+			
 			if ((this.fence_id <= 0) ||
 				(this.action == null))
 			{
@@ -273,6 +309,11 @@ namespace Epsitec.Common.Support
 		
 		public bool UndoAction()
 		{
+			if (this.IsDisabled)
+			{
+				return false;
+			}
+			
 			if (this.is_undo_redo_in_progress)
 			{
 				throw new System.InvalidOperationException ("Undo/redo in progress.");
@@ -326,6 +367,11 @@ namespace Epsitec.Common.Support
 		
 		public bool RedoAction()
 		{
+			if (this.IsDisabled)
+			{
+				return false;
+			}
+			
 			if (this.is_undo_redo_in_progress)
 			{
 				throw new System.InvalidOperationException ("Undo/redo in progress.");
@@ -373,6 +419,11 @@ namespace Epsitec.Common.Support
 		
 		public void PurgeUndo()
 		{
+			if (this.IsDisabled)
+			{
+				return;
+			}
+			
 			if (this.is_undo_redo_in_progress)
 			{
 				throw new System.InvalidOperationException ("Undo/redo in progress.");
@@ -407,6 +458,11 @@ namespace Epsitec.Common.Support
 		
 		public void PurgeRedo()
 		{
+			if (this.IsDisabled)
+			{
+				return;
+			}
+			
 			if (this.is_undo_redo_in_progress)
 			{
 				throw new System.InvalidOperationException ("Undo/redo in progress.");
@@ -433,6 +489,28 @@ namespace Epsitec.Common.Support
 			
 			System.Diagnostics.Debug.Assert (this.live_fence == this.fence_count);
 			System.Diagnostics.Debug.Assert (this.live_index == this.queue.Count);
+		}
+		
+		
+		public void Disable()
+		{
+			lock (this)
+			{
+				this.disable_count++;
+			}
+		}
+		
+		public void Enable()
+		{
+			lock (this)
+			{
+				if (this.disable_count == 0)
+				{
+					throw new System.InvalidOperationException ("Enable not possible, queue is not disabled.");
+				}
+				
+				this.disable_count--;
+			}
 		}
 		
 		
@@ -560,5 +638,7 @@ namespace Epsitec.Common.Support
 		protected int							fence_id;
 		
 		protected bool							is_undo_redo_in_progress;
+		
+		private int								disable_count;
 	}
 }

@@ -285,6 +285,63 @@ namespace Epsitec.Common.Support
 			Assert.IsTrue (! queue.RedoAction ());
 		}
 		
+		[Test] public void CheckDisableUndoRedo()
+		{
+			OpletQueue queue = new OpletQueue ();
+			
+			Assert.IsFalse (queue.IsDisabled);
+			Assert.IsTrue (queue.IsEnabled);
+			
+			queue.Disable ();
+			
+			Assert.IsTrue (queue.IsDisabled);
+			Assert.IsFalse (queue.IsEnabled);
+			
+			using (queue.BeginAction ("a"))
+			{
+				queue.Insert (this.CreateOplet ("A1"));
+				queue.Insert (this.CreateOplet ("A2"));
+				queue.ValidateAction ();
+			}
+			
+			Assert.AreEqual (0, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
+			
+			queue.UndoAction ();
+			
+			Assert.AreEqual (0, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
+			
+			queue.RedoAction ();
+			
+			using (queue.BeginAction ("b"))
+			{
+				queue.Insert (this.CreateOplet ("B1"));
+				queue.Insert (this.CreateOplet ("B2"));
+				
+				using (queue.BeginAction ("b-a"))
+				{
+					queue.Insert (this.CreateOplet ("B-A1"));
+					queue.Insert (this.CreateOplet ("B-A2"));
+					queue.Insert (this.CreateOplet ("B-A3"));
+					queue.ValidateAction ();
+				}
+				
+				queue.Insert (this.CreateOplet ("B3"));
+				queue.ValidateAction ();
+			}
+			
+			using (queue.BeginAction ("c"))
+			{
+				queue.Insert (this.CreateOplet ("C1"));
+				queue.ValidateAction ();
+			}
+			
+			Assert.AreEqual (0, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
+		}
+		
+		
 		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckInsertUndoRedoEx1()
 		{
 			OpletQueue queue = new OpletQueue ();
