@@ -148,7 +148,9 @@ namespace Epsitec.Common.Types
 			{
 				System.TypeCode code = System.Convert.GetTypeCode (obj);
 				
+#if false
 				long num;
+#endif
 				
 				switch (code)
 				{
@@ -162,8 +164,12 @@ namespace Epsitec.Common.Types
 					case System.TypeCode.Int64:		value = ((System.Int64)   obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
 					
 					case System.TypeCode.DateTime:
+#if true
+						value = ((System.DateTime)obj).ToString ("yyyy-MM-ddTHH:mm:ss.fffffffZ", System.Globalization.CultureInfo.InvariantCulture);
+#else
 						num   = ((System.DateTime)obj).Ticks % 10000000;
 						value = string.Concat (((System.DateTime)obj).ToString ("s", System.Globalization.CultureInfo.InvariantCulture), "+", num.ToString (System.Globalization.CultureInfo.InvariantCulture));
+#endif
 						return true;
 				}
 			}
@@ -356,6 +362,10 @@ namespace Epsitec.Common.Types
 					return false;
 				}
 				
+#if true
+				value = System.DateTime.Parse (text, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal);
+				return true;
+#else
 				string[] args = text.Split ('+');
 				
 				if (args.Length == 1)
@@ -372,6 +382,7 @@ namespace Epsitec.Common.Types
 					
 					return true;
 				}
+#endif
 			}
 			
 			long num;

@@ -8,6 +8,8 @@ namespace Epsitec.Cresus.Requests
 {
 	using EventHandler = Common.Support.EventHandler;
 	
+	public delegate void RequestExecutedCallback(Orchestrator sender, DbId request_id);
+	
 	/// <summary>
 	/// La classe Orchestrator gère l'arrivée de requêtes, leur mise en queue et
 	/// leur traitement.
@@ -651,7 +653,6 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		public delegate void RequestExecutedCallback(Orchestrator sender, DbId request_id);
 		
 		public event EventHandler				StateChanged;
 		public event RequestExecutedCallback	RequestExecuted;

@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Services
 			this.execution_queue = this.orchestrator.ExecutionQueue;
 			this.client_changes  = new System.Collections.Hashtable ();
 			
-			this.orchestrator.RequestExecuted += new Orchestrator.RequestExecutedCallback (this.HandleOrchestratorRequestExecuted);
+			this.orchestrator.RequestExecuted += new RequestExecutedCallback (this.HandleOrchestratorRequestExecuted);
 			
 			System.Diagnostics.Debug.Assert (this.execution_queue.IsRunningAsServer);
 		}

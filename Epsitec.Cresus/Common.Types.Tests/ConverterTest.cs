@@ -25,7 +25,7 @@ namespace Epsitec.Common.Types
 			object c = "";
 			object d = 632350746051230000;
 			object e = new System.DateTime (2004, 11, 3, 10, 30, 5, 123);
-			object f = "2004-11-03T10:30:05+1230000";
+			object f = "2004-11-03T10:30:05.1230000";
 			object g = "2004-11-03 10:30:05Z";
 			object h = "2004-11-03 10:30:05";
 			
@@ -172,7 +172,7 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (Converter.Convert (i, out result));
 			Assert.AreEqual ("10;20;30;40", result);
 			Assert.IsTrue (Converter.Convert (j, out result));
-			Assert.AreEqual ("2004-11-03T10:30:05+1230000", result);
+			Assert.AreEqual ("2004-11-03T10:30:05.1230000Z", result);
 		}
 		
 		
