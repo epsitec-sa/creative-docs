@@ -659,7 +659,7 @@ namespace Epsitec.Cresus.Database
 
 //					this.type = new DbType (DbSimpleType.ByteArray);	
 					// DD TODO	il faudra créer une classe DbTypeByteArray
-					break;
+//					break;
 					
 				case DbSimpleType.Decimal:
 					this.type = new DbTypeNum (num_def);
