@@ -286,7 +286,7 @@ namespace Epsitec.Common.Tests
 			//	Génère les infos de debug pour le fond de la fenêtre, ce qui permet de
 			//	réaliser des timings.
 			
-//-			this.window.Root.DebugActive = true;
+			this.window.Root.DebugActive = true;
 
 #if false
 			this.listCrit.Scroller.ArrowDown.Name = "Down";

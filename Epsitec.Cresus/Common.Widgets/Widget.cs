@@ -1101,11 +1101,9 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void Invalidate(Drawing.Rectangle rect)
 		{
-			rect = this.MapClientToParent (rect);
-			
 			if (this.parent != null)
 			{
-				this.parent.Invalidate (rect);
+				this.parent.Invalidate (this.MapClientToParent (rect));
 			}
 		}
 		
