@@ -10,10 +10,10 @@ namespace Epsitec.Cresus.Database
 		{
 			//	il n'existe qu'un seul constructeur, sans paramètre
 			SqlSelect sql_select1 = new SqlSelect ();
-			Assertion.AssertEquals (SqlSelectPredicate.All, sql_select1.Predicate);
+			Assert.AreEqual (SqlSelectPredicate.All, sql_select1.Predicate);
 
 			sql_select1.Predicate = SqlSelectPredicate.Distinct;
-			Assertion.AssertEquals (SqlSelectPredicate.Distinct, sql_select1.Predicate);
+			Assert.AreEqual (SqlSelectPredicate.Distinct, sql_select1.Predicate);
 
 			//	ajoute quelques champs
 			sql_select1.Fields.Add (SqlField.CreateName ("Table1", "Colonne1"));
