@@ -8,5 +8,6 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface INamedType : INameCaption
 	{
+		System.Type		SystemType		{ get; }
 	}
 }

@@ -14,6 +14,16 @@ namespace Epsitec.Common.Types
 		}
 		
 		
+		#region INamedType Members
+		public System.Type						SystemType
+		{
+			get
+			{
+				return typeof (string);
+			}
+		}
+		#endregion
+		
 		#region IString Members
 		public int								Length
 		{
