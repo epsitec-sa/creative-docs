@@ -14,16 +14,21 @@ namespace Epsitec.Common.Script
 		{
 		}
 		
+		public Script Compile(Source source)
+		{
+			return this.Compile (source.Name, source.GenerateAssemblySource ());
+		}
 		
-		public Script Compile(string source)
+		public Script Compile(string name, string source)
 		{
 			int build_id  = Engine.GetNextBuildId ();
 			int random_id = Engine.GetRandomId ();
 			
-			string name = string.Format (System.Globalization.CultureInfo.InvariantCulture, "script_{0}_{1}", build_id, random_id);
+			string short_name = string.Format (System.Globalization.CultureInfo.InvariantCulture, "script_{0}_{1}", build_id, random_id);
+			string long_name  = string.Concat (short_name, ":", name);
 			
 			ICodeCompiler      compiler = Helpers.CompilerFactory.CreateCompiler ();
-			CompilerParameters options  = Helpers.CompilerFactory.CreateCompilerParameters (name);
+			CompilerParameters options  = Helpers.CompilerFactory.CreateCompilerParameters (short_name);
 			CompilerResults    results  = compiler.CompileAssemblyFromSource (options, source);
 			
 			Script script = new Script ();
@@ -46,7 +51,7 @@ namespace Epsitec.Common.Script
 			string pdb_file_name = System.IO.Path.GetDirectoryName (dll_file_name) + System.IO.Path.DirectorySeparatorChar + System.IO.Path.GetFileNameWithoutExtension (dll_file_name) + ".pdb";
 			string assembly_name = results.CompiledAssembly.FullName;
 			
-			System.AppDomain domain = Helpers.AppDomainFactory.CreateAppDomain (name);
+			System.AppDomain domain = Helpers.AppDomainFactory.CreateAppDomain (long_name);
 			
 			script.DefineDllFileName (dll_file_name);
 			script.DefinePdbFileName (options.IncludeDebugInformation ? pdb_file_name : null);
