@@ -158,6 +158,11 @@ namespace Epsitec.Common.Drawing
 			return new Point (a.x - b.x, a.y - b.y);
 		}
 		
+		public static Point operator -(Point a)
+		{
+			return new Point (-a.x, -a.y);
+		}
+		
 		public static Point operator -(Point a, Size b)
 		{
 			return new Point (a.x - b.Width, a.y - b.Height);

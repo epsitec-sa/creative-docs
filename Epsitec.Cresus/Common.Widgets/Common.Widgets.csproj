@@ -539,7 +539,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Layouts\Abstract.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Layouts\Grid.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Layouts\Table.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

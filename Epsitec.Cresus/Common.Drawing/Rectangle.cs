@@ -41,17 +41,17 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public static readonly Rectangle Empty;
+		public static readonly Rectangle Empty    = new Rectangle (0, 0, -1, -1);
 		public static readonly Rectangle Infinite = new Rectangle (- 1000000000, -1000000000, 2000000000, 2000000000);
 		
 		public bool						IsEmpty
 		{
-			get { return (this.x2 <= this.x1) || (this.y2 <= this.y1); }
+			get { return (this.x2 < this.x1) || (this.y2 < this.y1); }
 		}
 		
 		public bool						IsValid
 		{
-			get { return (this.x2 > this.x1) && (this.y2 > this.y1); }
+			get { return (this.x2 >= this.x1) && (this.y2 >= this.y1); }
 		}
 		
 		
