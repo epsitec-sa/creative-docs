@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 07/10/2003
 //			 DD, 19/04/2004, ajouté 'Joins'
 
@@ -34,67 +34,67 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public SqlSelectPredicate		Predicate
+		public SqlSelectPredicate				Predicate
 		{
 			get { return this.predicate; }
 			set { this.predicate = value; }
 		}
 		
-		public SqlFieldCollection		Fields
+		public Collections.SqlFields			Fields
 		{
 			get { return this.field_coll; }
 		}
 
-		public SqlFieldCollection		Tables
+		public Collections.SqlFields			Tables
 		{
 			get { return this.table_coll; }
 		}
 		
-		public SqlFieldCollection		Conditions
+		public Collections.SqlFields			Conditions
 		{
 			get { return this.where_coll; }
 		}
 
-		public SqlFieldCollection		Joins
+		public Collections.SqlFields			Joins
 		{
 			get { return this.join_coll; }
 		}
 		
 		
-		public SqlSelect				SelectSetQuery
+		public SqlSelect						SelectSetQuery
 		{
 			get { return this.set_query; }
 		}
 		
-		public SqlSelectSetOp			SelectSetOp
+		public SqlSelectSetOp					SelectSetOp
 		{
 			get { return this.set_op; }
 		}
 		
 		
-		protected SqlSelectPredicate	predicate	= SqlSelectPredicate.All;
 		
-		protected SqlFieldCollection	field_coll	= new SqlFieldCollection ();
-		protected SqlFieldCollection	table_coll	= new SqlFieldCollection ();
-		protected SqlFieldCollection	where_coll	= new SqlFieldCollection ();
-		protected SqlFieldCollection	join_coll	= new SqlFieldCollection ();
+		protected Collections.SqlFields			field_coll	= new Collections.SqlFields ();
+		protected Collections.SqlFields			table_coll	= new Collections.SqlFields ();
+		protected Collections.SqlFields			where_coll	= new Collections.SqlFields ();
+		protected Collections.SqlFields			join_coll	= new Collections.SqlFields ();
 		
-		protected SqlSelectSetOp		set_op		= SqlSelectSetOp.None;
-		protected SqlSelect				set_query	= null;
+		protected SqlSelectPredicate			predicate	= SqlSelectPredicate.All;
+		protected SqlSelectSetOp				set_op		= SqlSelectSetOp.None;
+		protected SqlSelect						set_query;
 	}
 	
 	public enum SqlSelectPredicate
 	{
-		All,							//	SELECT ALL ...
-		Distinct						//	SELECT DISTINCT ...
+		All,									//	SELECT ALL ...
+		Distinct								//	SELECT DISTINCT ...
 	}
 	
 	public enum SqlSelectSetOp
 	{
-		None,							//	un seul SELECT, pas de combinaison...
+		None,									//	un seul SELECT, pas de combinaison...
 		
-		Union,							//	SELECT ... UNION [ALL|DISTINCT] SELECT ...
-		Except,							//	SELECT ... EXCEPT [ALL|DISTINCT] SELECT ...
-		Intersect						//	SELECT ... INTERSECT [ALL|DISTINCT] SELECT ...
+		Union,									//	SELECT ... UNION [ALL|DISTINCT] SELECT ...
+		Except,									//	SELECT ... EXCEPT [ALL|DISTINCT] SELECT ...
+		Intersect								//	SELECT ... INTERSECT [ALL|DISTINCT] SELECT ...
 	}
 }

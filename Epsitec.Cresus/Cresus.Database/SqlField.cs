@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier, complété DD 2004.04.19, ajouté CreateJoin, AsJoin...
 
 namespace Epsitec.Cresus.Database
@@ -47,48 +47,38 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public bool Validate(ISqlValidator validator)
-		{
-			//	TODO: valide en fonction du validator et du type du SqlField.
-			//
-			//	Il faudra compléter au fur et à mesure si ISqlValidator sait
-			//	valider d'autres types de champs. On pourrait imaginer valider
-			//	une procédure SQL...
-			
-			switch (this.Type)
-			{
-				case SqlFieldType.Name:				return validator.ValidateName (this.AsName);
-				case SqlFieldType.QualifiedName:	return validator.ValidateQualifiedName (this.AsQualifiedName);
-			}
-			
-			return true;
-		}
-		
-		
-		public SqlFieldType				Type
+		public SqlFieldType						Type
 		{
 			get { return this.type; }
 		}
 		
-		public DbRawType				RawType
+		public DbRawType						RawType
 		{
 			get { return this.raw_type; }
 		}
 		
-		public SqlFieldOrder			Order
+		public SqlFieldOrder					Order
 		{
 			get { return this.order; }
 			set { this.order = value; }
 		}
 		
-		public string					Alias
+		public string							Alias
 		{
 			get { return this.alias; }
 			set { this.alias = value; }
 		}
 		
+		public object							Value
+		{
+			get
+			{
+				return this.value;
+			}
+		}
 		
-		public object					AsConstant
+		
+		public object							AsConstant
 		{
 			get
 			{
@@ -101,7 +91,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public object					AsParameter
+		public object							AsParameter
 		{
 			get
 			{
@@ -117,7 +107,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public string					AsName
+		public string							AsName
 		{
 			get
 			{
@@ -139,7 +129,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public string					AsQualifiedName
+		public string							AsQualifiedName
 		{
 			get
 			{
@@ -152,7 +142,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public string					AsQualifier
+		public string							AsQualifier
 		{
 			get
 			{
@@ -174,7 +164,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public SqlAggregate				AsAggregate
+		public SqlAggregate						AsAggregate
 		{
 			get
 			{
@@ -187,7 +177,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public object					AsVariable
+		public object							AsVariable
 		{
 			get
 			{
@@ -200,7 +190,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public SqlFunction				AsFunction
+		public SqlFunction						AsFunction
 		{
 			get
 			{
@@ -213,7 +203,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public SqlJoin					AsJoin
+		public SqlJoin							AsJoin
 		{
 			get
 			{
@@ -226,7 +216,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public string					AsProcedure
+		public string							AsProcedure
 		{
 			get
 			{
@@ -239,7 +229,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public SqlSelect				AsSubQuery
+		public SqlSelect						AsSubQuery
 		{
 			get
 			{
@@ -250,6 +240,24 @@ namespace Epsitec.Cresus.Database
 				
 				return null;
 			}
+		}
+		
+		
+		public bool Validate(ISqlValidator validator)
+		{
+			//	TODO: valide en fonction du validator et du type du SqlField.
+			//
+			//	Il faudra compléter au fur et à mesure si ISqlValidator sait
+			//	valider d'autres types de champs. On pourrait imaginer valider
+			//	une procédure SQL...
+			
+			switch (this.Type)
+			{
+				case SqlFieldType.Name:				return validator.ValidateName (this.AsName);
+				case SqlFieldType.QualifiedName:	return validator.ValidateQualifiedName (this.AsQualifiedName);
+			}
+			
+			return true;
 		}
 		
 		
@@ -445,47 +453,46 @@ namespace Epsitec.Cresus.Database
 			return field;
 		}
 
-
 		
 		
-		protected SqlFieldType			type = SqlFieldType.Unsupported;
-		protected SqlFieldOrder			order = SqlFieldOrder.None;
-		protected DbRawType				raw_type = DbRawType.Unknown;
-		protected object				value = null;
-		protected string				alias = null;
+		protected SqlFieldType					type		= SqlFieldType.Unsupported;
+		protected SqlFieldOrder					order		= SqlFieldOrder.None;
+		protected DbRawType						raw_type	= DbRawType.Unknown;
+		protected object						value;
+		protected string						alias;
 	}
 	
 	
 	public enum SqlFieldType
 	{
-		Unsupported,					//	champ non supporté (ou non défini)
-		
-		Null,							//	constante NULL
-		All,							//	constante spéciale pour aggrégats: *
-		Default,						//	constante spéciale pour INSERT INTO...
-		Constant,						//	constante (donnée compatible DbRawType)
-		
-		ParameterIn = Constant,			//	paramètre en entrée = comme constante
-		ParameterOut,					//	paramètre en sortie
-		ParameterInOut,					//	paramètre en entrée et en sortie
-		ParameterResult,				//	paramètre en sortie (résultat de procédure)
-		
-		Name,							//	nom simple (nom de colonne, nom de table, nom de type, ...)
-		QualifiedName,					//	nom qualifié (nom de table + nom de colonne)
-		
-		Aggregate,
-		Variable,						//	variable SQL (?)
-		Function,						//	fonction SQL (?)
-		Procedure,						//	procédure SQL (?)
-		
-		SubQuery,						//	sous-requête
-		Join							//	jointure
-	}
-	
-	public enum SqlFieldOrder
-	{
-		None,							//	pas de tri sur ce champ
-		Normal,							//	tri normal (ASC)
-		Inverse							//	tri inverse (DESC)
+		Unsupported,							//	champ non supporté (ou non défini)
+										
+		Null,									//	constante NULL
+		All,									//	constante spéciale pour aggrégats: *
+		Default,								//	constante spéciale pour INSERT INTO...
+		Constant,								//	constante (donnée compatible DbRawType)
+										
+		ParameterIn = Constant,					//	paramètre en entrée = comme constante
+		ParameterOut,							//	paramètre en sortie
+		ParameterInOut,							//	paramètre en entrée et en sortie
+		ParameterResult,						//	paramètre en sortie (résultat de procédure)
+										
+		Name,									//	nom simple (nom de colonne, nom de table, nom de type, ...)
+		QualifiedName,							//	nom qualifié (nom de table + nom de colonne)
+										
+		Aggregate,						
+		Variable,								//	variable SQL (?)
+		Function,								//	fonction SQL (?)
+		Procedure,								//	procédure SQL (?)
+										
+		SubQuery,								//	sous-requête
+		Join									//	jointure
+	}									
+										
+	public enum SqlFieldOrder			
+	{									
+		None,									//	pas de tri sur ce champ
+		Normal,									//	tri normal (ASC)
+		Inverse									//	tri inverse (DESC)
 	}
 }

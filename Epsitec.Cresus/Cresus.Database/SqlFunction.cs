@@ -1,6 +1,5 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 07/10/2003
-//			 DD, 19/04/2004	enlevé SqlFunctionType.JoinInner
 
 namespace Epsitec.Cresus.Database
 {
@@ -33,12 +32,13 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public SqlFunctionType			Type
+		
+		public SqlFunctionType					Type
 		{
 			get { return this.type; }
 		}
 		
-		public int						ArgumentCount
+		public int								ArgumentCount
 		{
 			get
 			{
@@ -102,70 +102,66 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public SqlField					A
+		public SqlField							A
 		{
 			get { return this.a; }
 		}
 		
-		public SqlField					B
+		public SqlField							B
 		{
 			get { return this.b; }
 		}
 		
-		public SqlField					C
+		public SqlField							C
 		{
 			get { return this.c; }
 		}
 
 		
-		protected SqlFunctionType		type;
-		protected SqlField				a, b, c;
+		protected SqlFunctionType				type;
+		protected SqlField						a, b, c;
 	}
 	
 	public enum SqlFunctionType
 	{
 		Unsupported,
 		
-		MathAdd,						//	a + b
-		MathSubstract,					//	a - b
-		MathMultiply,					//	a * b
-		MathDivide,						//	a / b
+		MathAdd,								//	a + b
+		MathSubstract,							//	a - b
+		MathMultiply,							//	a * b
+		MathDivide,								//	a / b
 		
-		CompareEqual,					//	a = b
-		CompareNotEqual,				//	a <> b
-		CompareLessThan,				//	a < b
-		CompareLessThanOrEqual,			//	a <= b
-		CompareGreaterThan,				//	a > b
-		CompareGreaterThanOrEqual,		//	a <= b
-		CompareIsNull,					//	a IS NULL
-		CompareIsNotNull,				//	a NOT IS NULL
-		CompareLike,					//	a LIKE b
-		CompareNotLike,					//	a NOT LIKE b
+		CompareEqual,							//	a = b
+		CompareNotEqual,						//	a <> b
+		CompareLessThan,						//	a < b
+		CompareLessThanOrEqual,					//	a <= b
+		CompareGreaterThan,						//	a > b
+		CompareGreaterThanOrEqual,				//	a <= b
+		CompareIsNull,							//	a IS NULL
+		CompareIsNotNull,						//	a NOT IS NULL
+		CompareLike,							//	a LIKE b
+		CompareNotLike,							//	a NOT LIKE b
 		
-		SetIn,							//	a IN b
-		SetNotIn,						//	a NOT IN b
-		SetBetween,						//	a BETWEEN b AND c
-		SetNotBetween,					//	a NOT BETWEEN b AND c
-		SetExists,						//	a EXISTS
-		SetNotExists,					//	a NOT EXISTS
+		SetIn,									//	a IN b
+		SetNotIn,								//	a NOT IN b
+		SetBetween,								//	a BETWEEN b AND c
+		SetNotBetween,							//	a NOT BETWEEN b AND c
+		SetExists,								//	a EXISTS
+		SetNotExists,							//	a NOT EXISTS
 		
-		LogicNot,						//	NOT a
-		LogicAnd,						//	a AND b
-		LogicOr,						//	a OR b
+		LogicNot,								//	NOT a
+		LogicAnd,								//	a AND b
+		LogicOr,								//	a OR b
 		
-		Substring,						//	SUBSTRING(a FROM b FOR c)
-		Upper,							//	UPPER(a)
-		Cast,							//	CAST(a AS b)
-		
-/*		//	Spécial, utilisé dans une condition SqlSelect pour générer une clause JOIN
-		
-		JoinInner,						//	A.a, B.b -> A INNER JOIN B ON A.a = B.b */
+		Substring,								//	SUBSTRING(a FROM b FOR c)
+		Upper,									//	UPPER(a)
+		Cast,									//	CAST(a AS b)
 		
 		//	Equivalents :
 		
-		CompareNotLessThan				= CompareGreaterThanOrEqual,
-		CompareNotGreaterThan			= CompareLessThanOrEqual,
-		CompareNotLessThanOrEqual		= CompareGreaterThan,
-		CompareNotGreaterThanOrEqual	= CompareLessThan,
+		CompareNotLessThan						= CompareGreaterThanOrEqual,
+		CompareNotGreaterThan					= CompareLessThanOrEqual,
+		CompareNotLessThanOrEqual				= CompareGreaterThan,
+		CompareNotGreaterThanOrEqual			= CompareLessThan,
 	}
 }
