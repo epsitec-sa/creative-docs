@@ -4,7 +4,17 @@ namespace Epsitec.Common.Drawing
 	{
 		static TextBreak()
 		{
+			int    line_break_length;
+			byte[] line_break_data;
+			
+			using (System.IO.Stream stream = typeof (TextBreak).Assembly.GetManifestResourceStream ("Epsitec.Common.Drawing.Resources.LineBreak.compressed"))
+			{
+				line_break_data   = IO.Decompression.DecompressToArray (stream);
+				line_break_length = line_break_data.Length;
+			}
+			
 			AntiGrain.Interface.Initialise ();
+			AntiGrain.TextBreak.InitialiseLineBreakInformation (line_break_data, line_break_length);
 		}
 		
 		public TextBreak()
