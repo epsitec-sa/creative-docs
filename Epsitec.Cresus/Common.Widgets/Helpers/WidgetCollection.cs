@@ -67,6 +67,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.HandleRemove (item);
 			this.list.RemoveAt (index);
 			this.RenumberItems ();
+			this.HandlePostRemove (item);
 		}
 
 		public void Insert(int index, object value)
@@ -81,6 +82,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.HandleRemove (value as Widget);
 			this.list.Remove (value);
 			this.RenumberItems ();
+			this.HandlePostRemove (value as Widget);
 		}
 
 		public bool Contains(object value)
@@ -90,11 +92,20 @@ namespace Epsitec.Common.Widgets.Helpers
 
 		public void Clear()
 		{
-			foreach (Widget item in this.list)
+			Widget[] widgets = new Widget[this.list.Count];
+			this.list.CopyTo (widgets, 0);
+			
+			for (int i = 0; i < widgets.Length; i++)
 			{
-				this.HandleRemove (item);
+				this.HandleRemove (widgets[i]);
 			}
+			
 			this.list.Clear ();
+			
+			for (int i = 0; i < widgets.Length; i++)
+			{
+				this.HandlePostRemove (widgets[i]);
+			}
 		}
 
 		public int IndexOf(object value)
@@ -171,6 +182,11 @@ namespace Epsitec.Common.Widgets.Helpers
 		protected void HandleRemove(Widget item)
 		{
 			this.host.NotifyRemoval (item);
+		}
+		
+		protected void HandlePostRemove(Widget item)
+		{
+			this.host.NotifyPostRemoval (item);
 		}
 		
 		protected void RenumberItems()
