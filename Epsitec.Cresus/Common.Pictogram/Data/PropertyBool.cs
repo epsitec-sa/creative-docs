@@ -27,6 +27,13 @@ namespace Epsitec.Common.Pictogram.Data
 			get { return ( this.type == PropertyType.PolyClose ); }
 		}
 
+		// Indique si cette propriété peut faire l'objet d'un style.
+		[XmlIgnore]
+		public override bool StyleAbility
+		{
+			get { return false; }
+		}
+
 		// Effectue une copie de la propriété.
 		public override void CopyTo(AbstractProperty property)
 		{

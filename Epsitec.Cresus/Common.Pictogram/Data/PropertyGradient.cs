@@ -150,6 +150,15 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+		// Indique si un changement de cette propriété modifie la bbox de l'objet.
+		[XmlIgnore]
+		public override bool AlterBoundingBox
+		{
+			get { return true; }  // (*)
+		}
+		// (*)	Doit rendre "true" à cause de BoundingBox, lorsque this.fill passe
+		//		de GradientFill.None à autre chose, et inversément.
+
 		// Indique si le dégradé est visible.
 		public bool IsVisible()
 		{
@@ -383,6 +392,43 @@ namespace Epsitec.Common.Pictogram.Data
 				graphics.SolidRenderer.SetAlphaMask(null, Drawing.MaskComponent.None);
 				mask.Dispose();
 			}
+		}
+
+
+		// Calcule la bbox pour la représentation du dégradé.
+		public Drawing.Rectangle BoundingBoxGeom(Drawing.Rectangle bbox)
+		{
+			Drawing.Rectangle gbox = bbox;
+			gbox.Inflate(this.smooth);
+			return gbox;
+		}
+
+		// Calcule la bbox pour la représentation du dégradé.
+		public Drawing.Rectangle BoundingBoxFull(Drawing.Rectangle bbox)
+		{
+			Drawing.Rectangle gbox = Drawing.Rectangle.Empty;
+
+			if ( this.fill == GradientFill.None )
+			{
+				gbox = bbox;
+			}
+			else
+			{
+				Drawing.Point center = this.Handle(0, bbox).Position;
+				double dx = this.sx*bbox.Width/2;
+				double dy = this.sy*bbox.Height/2;
+				Drawing.Point p1 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point( dx,  dy));
+				Drawing.Point p2 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point(-dx,  dy));
+				Drawing.Point p3 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point(-dx, -dy));
+				Drawing.Point p4 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point( dx, -dy));
+
+				gbox.MergeWith(p1);
+				gbox.MergeWith(p2);
+				gbox.MergeWith(p3);
+				gbox.MergeWith(p4);
+			}
+
+			return gbox;
 		}
 
 
