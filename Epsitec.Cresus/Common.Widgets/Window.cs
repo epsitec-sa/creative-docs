@@ -471,8 +471,26 @@ namespace Epsitec.Common.Widgets
 		
 		public bool								PreventAutoClose
 		{
-			get { return this.window.PreventAutoClose; }
-			set { this.window.PreventAutoClose = value; }
+			get
+			{
+				return this.window.PreventAutoClose;
+			}
+			set
+			{
+				this.window.PreventAutoClose = value;
+			}
+		}
+		
+		public bool								PreventAutoQuit
+		{
+			get
+			{
+				return this.window.PreventAutoQuit;
+			}
+			set
+			{
+				this.window.PreventAutoQuit = value;
+			}
 		}
 		
 		
@@ -836,6 +854,14 @@ namespace Epsitec.Common.Widgets
 			if (this.WindowClosed != null)
 			{
 				this.WindowClosed (this);
+			}
+		}
+
+		internal void OnWindowCloseClicked()
+		{
+			if (this.WindowCloseClicked != null)
+			{
+				this.WindowCloseClicked (this);
 			}
 		}
 
@@ -1410,6 +1436,7 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				WindowShown;
 		public event EventHandler				WindowHidden;
 		public event EventHandler				WindowClosed;
+		public event EventHandler				WindowCloseClicked;
 		public event EventHandler				WindowAnimationEnded;
 		public event EventHandler				WindowFocused;
 		public event EventHandler				WindowDefocused;

@@ -1,5 +1,5 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 10/11/2003
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Platform
 {
@@ -319,8 +319,26 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal bool							PreventAutoClose
 		{
-			get { return this.prevent_close; }
-			set { this.prevent_close = value; }
+			get
+			{
+				return this.prevent_close;
+			}
+			set
+			{
+				this.prevent_close = value;
+			}
+		}
+		
+		internal bool							PreventAutoQuit
+		{
+			get
+			{
+				return this.prevent_quit;
+			}
+			set
+			{
+				this.prevent_quit = value;
+			}
 		}
 		
 		internal bool							IsLayered
@@ -643,9 +661,16 @@ namespace Epsitec.Common.Widgets.Platform
 				return;
 			}
 			
+			this.widget_window.OnWindowCloseClicked ();
+			
 			if (this.prevent_close)
 			{
 				e.Cancel = true;
+				
+				if (this.prevent_quit)
+				{
+					return;
+				}
 				
 				//	Empêche la fermeture de la fenêtre lorsque l'utilisateur clique sur le bouton de
 				//	fermeture, et synthétise un événement clavier ALT + F4 à la place...
@@ -1394,6 +1419,7 @@ namespace Epsitec.Common.Widgets.Platform
 		private bool							has_active_frame;
 		
 		private bool							prevent_close;
+		private bool							prevent_quit;
 		private bool							forced_close;
 		private bool							filter_mouse_messages;
 		private bool							filter_key_messages;

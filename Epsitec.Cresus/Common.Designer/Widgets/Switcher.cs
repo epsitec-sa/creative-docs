@@ -71,6 +71,31 @@ namespace Epsitec.Common.Designer.Widgets
 		}
 		
 		
+		public bool								IsAcceptEnabled
+		{
+			get
+			{
+				return this.button_accept.IsEnabled;
+			}
+			set
+			{
+				this.button_accept.SetEnabled (value);
+			}
+		}
+		
+		public bool								IsRejectEnabled
+		{
+			get
+			{
+				return this.button_reject.IsEnabled;
+			}
+			set
+			{
+				this.button_reject.SetEnabled (value);
+			}
+		}
+		
+		
 		#region IStringCollectionHost Members
 		public void StringCollectionChanged()
 		{
@@ -233,11 +258,21 @@ namespace Epsitec.Common.Designer.Widgets
 		private void HandleAcceptClicked(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.Assert (this.button_accept == sender);
+			
+			if (e.Message.Button == MouseButtons.Left)
+			{
+				this.OnAcceptClicked ();
+			}
 		}
 		
 		private void HandleRejectClicked(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.Assert (this.button_reject == sender);
+			
+			if (e.Message.Button == MouseButtons.Left)
+			{
+				this.OnRejectClicked ();
+			}
 		}
 		
 		private void HandleSelectPressed(object sender, MessageEventArgs e)
@@ -277,6 +312,26 @@ namespace Epsitec.Common.Designer.Widgets
 				this.SelectedIndexChanged (this);
 			}
 		}
+		
+		protected virtual void OnAcceptClicked()
+		{
+			if (this.AcceptClicked != null)
+			{
+				this.AcceptClicked (this);
+			}
+		}
+		
+		protected virtual void OnRejectClicked()
+		{
+			if (this.RejectClicked != null)
+			{
+				this.RejectClicked (this);
+			}
+		}
+		
+		
+		public Support.EventHandler				AcceptClicked;
+		public Support.EventHandler				RejectClicked;
 		
 		protected StaticText					caption;
 		

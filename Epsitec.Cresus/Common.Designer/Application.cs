@@ -88,10 +88,11 @@ namespace Epsitec.Common.Designer
 		{
 			//	TODO: ...
 			
+			Context.Save (this);
+			
 			this.switcher.Mode         = Widgets.SwitcherMode.AcceptReject;
 			this.switcher.SelectedName = PanelName.StringEdit.ToString ();
 		}
-		
 		
 		protected void Initialise()
 		{
@@ -149,7 +150,11 @@ namespace Epsitec.Common.Designer
 			
 			this.switcher.Dock   = DockStyle.Top;
 			this.switcher.Mode   = Widgets.SwitcherMode.Select;
+			
 			this.switcher.SelectedIndexChanged += new EventHandler (this.HandleSwitcherSelectedIndexChanged);
+			this.switcher.AcceptClicked        += new EventHandler (this.HandleSwitcherAcceptClicked);
+			this.switcher.RejectClicked        += new EventHandler (this.HandleSwitcherRejectClicked);
+			
 			this.switcher.SelectedName = PanelName.InterfaceEdit.ToString ();
 		}
 		
@@ -212,6 +217,20 @@ namespace Epsitec.Common.Designer
 			this.UpdateVisiblePanel ();
 		}
 		
+		private void HandleSwitcherAcceptClicked(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.switcher == sender);
+			
+			Context.Restore (this);
+		}
+		
+		private void HandleSwitcherRejectClicked(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.switcher == sender);
+			
+			Context.Restore (this);
+		}
+		
 		
 		
 		protected enum PanelName
@@ -221,6 +240,32 @@ namespace Epsitec.Common.Designer
 			StringEdit
 		}
 		
+		private class Context
+		{
+			private Context(Application app)
+			{
+				this.switcher_mode = app.switcher.Mode;
+				this.switcher_sel  = app.switcher.SelectedName;
+			}
+			
+			
+			public static void Save(Application app)
+			{
+				app.context_stack.Push (new Context (app));
+			}
+			
+			public static void Restore(Application app)
+			{
+				Context context = app.context_stack.Pop () as Context;
+				
+				app.switcher.Mode         = context.switcher_mode;
+				app.switcher.SelectedName = context.switcher_sel;
+			}
+			
+			
+			private Widgets.SwitcherMode		switcher_mode;
+			private string						switcher_sel;
+		}
 		
 		public static Application				Current
 		{
@@ -245,6 +290,8 @@ namespace Epsitec.Common.Designer
 		
 		protected AbstractToolBar				tool_bar;
 		protected Widgets.Switcher				switcher;
+		
+		private System.Collections.Stack		context_stack = new System.Collections.Stack ();
 		
 		protected static Application			application;
 	}

@@ -114,6 +114,8 @@ namespace Epsitec.Common.Designer
 			this.creation_book.Items.Add (page_1);
 			this.creation_book.Items.Add (page_2);
 			
+			this.creation_book.ActivePage = page_1;
+			
 			//	Initialisation des palettes :
 			
 			Widget widget_panel = this.widget_palette.Widget;
@@ -220,6 +222,8 @@ namespace Epsitec.Common.Designer
 		protected void CreateEditorForWindow(Window window)
 		{
 			window.Root.IsEditionEnabled = true;
+			window.PreventAutoClose      = true;
+			window.PreventAutoQuit       = true;
 			
 			this.edit_window_list.Add (window);
 			this.editors = null;
