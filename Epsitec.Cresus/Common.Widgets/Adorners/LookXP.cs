@@ -30,6 +30,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			b = 1-(1-this.colorControlLight.B)/2;
 			this.colorScrollerBack = Drawing.Color.FromRGB(r,g,b);
 
+			r = 1-(1-this.colorControlLight.R)*0.7;
+			g = 1-(1-this.colorControlLight.G)*0.7;
+			b = 1-(1-this.colorControlLight.B)*0.7;
+			this.colorControlReadOnly = Drawing.Color.FromRGB(r,g,b);
+
 			r = 1-(1-this.colorCaption.R)*0.25;
 			g = 1-(1-this.colorCaption.G)*0.25;
 			b = 1-(1-this.colorCaption.B)*0.25;
@@ -374,7 +379,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				{
 					if ( readOnly )
 					{
-						graphics.RenderSolid(this.colorControl);
+						graphics.RenderSolid(this.colorControlReadOnly);
 					}
 					else
 					{
@@ -1024,6 +1029,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorControlLightLight;
 		protected Drawing.Color		colorControlDark;
 		protected Drawing.Color		colorControlDarkDark;
+		protected Drawing.Color		colorControlReadOnly;
 		protected Drawing.Color		colorScrollerBack;
 		protected Drawing.Color		colorCaption;
 		protected Drawing.Color		colorCaptionText;

@@ -335,7 +335,6 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			if ( style == TextFieldStyle.Normal )
 			{
-				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
 					this.PaintImageButton(graphics, rect, readOnly?28:26);
@@ -419,8 +418,8 @@ namespace Epsitec.Common.Widgets.Adorner
 						if ( frameRect.Width >= 10 && frameRect.Height >= 20 )
 						{
 							center = new Drawing.Point((frameRect.Left+frameRect.Right)/2, (frameRect.Bottom+frameRect.Top)/2);
-							rect.Left   = center.X-frameRect.Width*0.3;
-							rect.Right  = center.X+frameRect.Width*0.3;
+							rect.Left   = center.X-frameRect.Width*0.2;
+							rect.Right  = center.X+frameRect.Width*0.2;
 							rect.Bottom = center.Y-frameRect.Width*0.4;
 							rect.Top    = center.Y+frameRect.Width*0.4;
 							graphics.Align(ref rect);
@@ -435,8 +434,8 @@ namespace Epsitec.Common.Widgets.Adorner
 							center = new Drawing.Point((frameRect.Left+frameRect.Right)/2, (frameRect.Bottom+frameRect.Top)/2);
 							rect.Left   = center.X-frameRect.Height*0.4;
 							rect.Right  = center.X+frameRect.Height*0.4;
-							rect.Bottom = center.Y-frameRect.Height*0.3;
-							rect.Top    = center.Y+frameRect.Height*0.3;
+							rect.Bottom = center.Y-frameRect.Height*0.2;
+							rect.Top    = center.Y+frameRect.Height*0.2;
 							graphics.Align(ref rect);
 							this.PaintImageButton(graphics, rect, 37);
 						}

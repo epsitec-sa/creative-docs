@@ -564,6 +564,7 @@ namespace Epsitec.Common.Tests
 
 			this.pane.Location = new Point(0, 0);
 			this.pane.Size = new Size(windowDim.Width, windowDim.Height);
+			this.pane.PaneBehaviour = PaneBehaviour.Draft;
 			this.pane.SetHideDimension(0, 100);
 			this.pane.SetMinDimension(1, 300);
 			this.pane.SetDimension(0, this.listWidth);
