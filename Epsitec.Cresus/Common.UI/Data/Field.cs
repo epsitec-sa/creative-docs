@@ -82,6 +82,13 @@ namespace Epsitec.Common.UI.Data
 				
 				return;
 			}
+			if (value is System.Enum)
+			{
+				this.value = value;
+				this.type  = new Types.EnumType (value.GetType ());
+				
+				return;
+			}
 			
 			throw new System.ArgumentException (string.Format ("The specified value's type is not supported ({0}).", value.GetType ()));
 		}

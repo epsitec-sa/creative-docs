@@ -24,10 +24,25 @@ namespace Epsitec.Common.UI.Controllers
 			this.Adapter = adapter;
 		}
 		
-		public WidgetStateController(Adapters.IAdapter adapter, Widget widget) : this ()
+		public WidgetStateController(Adapters.IAdapter adapter, Widget widget, Types.INamedType type) : this ()
 		{
-			this.Adapter = adapter;
+			this.Adapter  = adapter;
+			this.DataType = type;
+			
 			this.CreateUI (widget);
+		}
+		
+		
+		public Types.INamedType					DataType
+		{
+			get
+			{
+				return this.data_type;
+			}
+			set
+			{
+				this.data_type = value;
+			}
 		}
 		
 		
@@ -46,6 +61,33 @@ namespace Epsitec.Common.UI.Controllers
 				if (this.group == null)
 				{
 					throw new System.ArgumentException ("Specified widget (RadioButton) is not properly set up.", "widget");
+				}
+				
+				if (this.data_type is Types.IEnum)
+				{
+					Types.IEnum        enum_type   = this.data_type as Types.IEnum;
+					Types.IEnumValue[] enum_values = enum_type.Values;
+					
+					//	C'est une énumération pour laquelle nous connaissons peut-être les légendes des
+					//	divers éléments. Dans ce cas, on va renommer les boutons radio qui correspondent :
+					
+					foreach (RadioButton item in RadioButton.FindRadioChildren (radio.Parent, radio.Group))
+					{
+						int index = item.Index;
+						
+						for (int i = 0; i < enum_values.Length; i++)
+						{
+							if (enum_values[i].Rank == index)
+							{
+								if (enum_values[i].Caption != null)
+								{
+									item.Text = enum_values[i].Caption;
+								}
+								
+								break;
+							}
+						}
+					}
 				}
 				
 				this.group.Changed += new EventHandler (this.HandleGroupChanged);
@@ -111,5 +153,6 @@ namespace Epsitec.Common.UI.Controllers
 		
 		private Widget							widget;
 		private RadioButton.GroupController		group;
+		private Types.INamedType				data_type;
 	}
 }

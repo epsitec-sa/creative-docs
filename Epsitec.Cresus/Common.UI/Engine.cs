@@ -82,8 +82,19 @@ namespace Epsitec.Common.UI
 				}
 				else
 				{
-					new Controllers.WidgetStateController (adapter, widget);
+					new Controllers.WidgetStateController (adapter, widget, num_type);
 				}
+				
+				return;
+			}
+			
+			if (type is Types.IEnum)
+			{
+				Types.IEnum             enum_type  = source.DataType as Types.IEnum;
+				Binders.DataValueBinder binder     = new Binders.DataValueBinder (source);
+				Adapters.DecimalAdapter adapter    = new Adapters.DecimalAdapter (binder);
+				
+				new Controllers.WidgetStateController (adapter, widget, enum_type);
 				
 				return;
 			}
