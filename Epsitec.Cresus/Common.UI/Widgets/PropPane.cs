@@ -123,12 +123,16 @@ namespace Epsitec.Common.UI.Widgets
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			this.CreateViews (list, new Drawing.Margins (PropPane.toggle_width + 5, PropPane.extra_width + 5, 0, 1));
+			Drawing.Margins margins = new Drawing.Margins (PropPane.toggle_width + 5, PropPane.extra_width + 5, 0, 1);
 			
+			this.CreateViews (list, margins);
+			
+			this.visible_view_index = -1;
 			this.views = new Widget[list.Count];
 			list.CopyTo (this.views);
 			
-			this.views[0].SetVisible (true);
+			this.MakeViewVisible (0);
+			this.AcceptToggle = this.views.Length > 1;
 		}
 		
 		protected virtual void CreateViews(System.Collections.ArrayList list, Drawing.Margins margins)
@@ -148,8 +152,9 @@ namespace Epsitec.Common.UI.Widgets
 		{
 			Widget widget = new Widget (this);
 			
-			widget.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+			widget.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			widget.AnchorMargins = margins;
+			widget.Height        = this.DefaultHeight - 1;
 			
 			widget.SetVisible (false);
 			
@@ -157,8 +162,44 @@ namespace Epsitec.Common.UI.Widgets
 		}
 		
 		
+		protected virtual void MakeViewVisible(int index)
+		{
+			if (this.visible_view_index == index)
+			{
+				return;
+			}
+			
+			if (this.visible_view_index >= 0)
+			{
+				this.views[this.visible_view_index].SetVisible (false);
+			}
+			
+			this.visible_view_index = index;
+			
+			if (this.visible_view_index < 0)
+			{
+				this.Height = this.DefaultHeight;
+			}
+			else
+			{
+				this.views[this.visible_view_index].SetVisible (true);
+				this.Height = this.views[this.visible_view_index].Height + 1;
+			}
+			
+			this.ForceLayout ();
+		}
+		
+		
 		private void HandleToggleButtonClicked(object sender, MessageEventArgs e)
 		{
+			int index = this.visible_view_index + 1;
+			
+			if (index >= this.views.Length)
+			{
+				index = 0;
+			}
+			
+			this.MakeViewVisible (index);
 		}
 		
 		private void HandleExtraButtonClicked(object sender, MessageEventArgs e)
@@ -220,6 +261,7 @@ namespace Epsitec.Common.UI.Widgets
 		
 		protected string						caption;
 		
+		protected int							visible_view_index;
 		protected Widget[]						views;
 		protected GlyphButton					toggle_button;
 		protected GlyphButton					extra_button;
