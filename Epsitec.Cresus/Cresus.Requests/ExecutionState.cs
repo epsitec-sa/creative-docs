@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Requests
 	/// d'exécution des requêtes (voir ExecutionQueue/ExecutionEngine); utilisé
 	/// dans une machine d'état.
 	/// </summary>
-	public enum ExecutionState
+	public enum ExecutionState : short
 	{
 		Pending				= 0,				//	en attente, exécution locale
 		Conflicting			= 1,				//	en attente, conflit à résoudre

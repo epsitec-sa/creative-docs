@@ -58,17 +58,28 @@ namespace Epsitec.Cresus.Requests
 		
 		public ExecutionState GetRequestExecutionState(System.Data.DataRow row)
 		{
-			if (row != null)
+			this.CheckRow (row);
+			
+			System.Enum state;
+			
+			if (Epsitec.Common.Types.Converter.Convert (row[Tags.ColumnReqExState], typeof (ExecutionState), out state))
 			{
-				System.Enum state;
-				
-				if (Epsitec.Common.Types.Converter.Convert (row[Tags.ColumnReqExState], typeof (ExecutionState), out state))
-				{
-					return (ExecutionState) state;
-				}
+				return (ExecutionState) state;
 			}
 			
 			throw new System.InvalidCastException ("Invalid ExecutionState in row.");
+		}
+		
+		public void SetRequestExecutionState(System.Data.DataRow row, ExecutionState new_state)
+		{
+			ExecutionState current_state = this.GetRequestExecutionState (row);
+			
+			if (StateMachine.Check (current_state, new_state) == false)
+			{
+				throw new System.InvalidOperationException (string.Format ("Cannot change from state {0} to {1}.", current_state, new_state));
+			}
+			
+			row[Tags.ColumnReqExState] = (short) new_state;
 		}
 		
 		
@@ -107,6 +118,19 @@ namespace Epsitec.Cresus.Requests
 			this.queue_command.AcceptChanges ();
 		}
 		#endregion
+		
+		protected void CheckRow(System.Data.DataRow row)
+		{
+			if (row == null)
+			{
+				throw new System.ArgumentNullException ("Row is null.");
+			}
+			if (row.Table.DataSet != this.queue_data_set)
+			{
+				throw new System.ArgumentException ("Invalid row specified.");
+			}
+		}
+		
 		
 		private void Setup(DbInfrastructure infrastructure)
 		{

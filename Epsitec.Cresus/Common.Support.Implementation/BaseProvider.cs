@@ -294,7 +294,7 @@ namespace Epsitec.Common.Support.Implementation
 				
 				foreach (System.Data.DataRow row in command.DataSet.Tables[0].Rows)
 				{
-					command.DeleteRow (row);
+					DbRichCommand.DeleteRow (row);
 					changes++;
 				}
 				

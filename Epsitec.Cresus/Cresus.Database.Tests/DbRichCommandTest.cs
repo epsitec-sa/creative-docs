@@ -255,8 +255,8 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (k1.Id + 2, k3.Id.Value);
 			Assertion.Assert (DbKey.CheckTemporaryId (k1.Id));
 			
-			command.DeleteRow (row_2);
-			command.DeleteRow (row_3);
+			DbRichCommand.DeleteRow (row_2);
+			DbRichCommand.DeleteRow (row_3);
 			
 			using (DbTransaction transaction = infrastructure.BeginTransaction ())
 			{

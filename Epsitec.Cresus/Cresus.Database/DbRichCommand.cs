@@ -246,58 +246,11 @@ namespace Epsitec.Cresus.Database
 			{
 				foreach (System.Data.DataTable table in this.data_set.Tables)
 				{
-					//	Passe en revue toutes les lignes de la table pour déterminer s'il y a des
-					//	clefs temporaires en utilisation; compte combien de clefs temporaires ont
-					//	été trouvées :
+					//	S'il y a des clefs temporaires dans la table, on va les remplacer par
+					//	des clefs définitives; en effet, on n'a pas le droit de "persister" des
+					//	lignes utilisant des clefs temporaires dans la base.
 					
-					int n = table.Rows.Count;
-					int m = 0;
-					
-					for (int i = 0; i < n; i++)
-					{
-						DbKey key = new DbKey (table.Rows[i]);
-						
-						if (key.IsTemporary)
-						{
-							m++;
-						}
-					}
-					
-					//	S'il y avait des clefs temporaires dans la table, on va les remplacer par
-					//	des clefs définitives; en effet, on n'a pas le droit de "persister" dans
-					//	la base des lignes utilisant des clefs temporaires.
-					
-					if (m > 0)
-					{
-						//	Trouve la clef identifiant la table courante (la recherche est basée sur
-						//	le nom de la table) :
-						
-						DbKey table_key = this.infrastructure.FindDbTableKey (transaction, table.TableName);
-						
-						//	Alloue une série de clefs (contiguës) pour la table et attribue les
-						//	séquentiellement aux diverses clefs temporaires; grâce aux relations
-						//	mises en place dans le DataSet, les foreign keys seront automatiquement
-						//	synchronisées aussi.
-						
-						long id = this.infrastructure.NewRowIdInTable (transaction, table_key, m);
-						
-						for (int i = 0; i < n; i++)
-						{
-							System.Data.DataRow data_row = table.Rows[i];
-							
-							DbKey key = new DbKey (data_row);
-							
-							if (key.IsTemporary)
-							{
-								key = new DbKey (id++);
-								
-								data_row.BeginEdit ();
-								data_row[Tags.ColumnId]     = key.Id.Value;
-								data_row[Tags.ColumnStatus] = key.IntStatus;
-								data_row.EndEdit ();
-							}
-						}
-					}
+					DbRichCommand.UpdateRealIds (this.infrastructure, transaction, table);
 				}
 			}
 			finally
@@ -306,20 +259,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		
 		public void CheckRowIds()
 		{
 			foreach (System.Data.DataTable table in this.data_set.Tables)
 			{
-				int n = table.Rows.Count;
-				
-				for (int i = 0; i < n; i++)
-				{
-					DbKey key = new DbKey (table.Rows[i]);
-					
-					System.Diagnostics.Debug.Assert (key.IsTemporary == false);
-					System.Diagnostics.Debug.Assert (key.Id.ClientId != 0);
-				}
+				DbRichCommand.CheckRowIds (table);
 			}
 		}
 		
@@ -327,24 +271,89 @@ namespace Epsitec.Cresus.Database
 		{
 			foreach (System.Data.DataTable table in this.data_set.Tables)
 			{
-				int n = table.Rows.Count;
+				DbRichCommand.UpdateLogId (table, this.infrastructure.Logger.CurrentId);
+			}
+		}
+		
+		public void CreateNewRow(string table_name, out System.Data.DataRow data_row)
+		{
+			this.CheckValidState ();
+			
+			System.Data.DataTable table = this.data_set.Tables[table_name];
+			
+			if (table == null)
+			{
+				throw new System.ArgumentException (string.Format ("Table {0} not found.", table_name), "table_name");
+			}
+			
+			data_row = DbRichCommand.CreateNewRow (table);
+		}
+		
+		
+		public static void UpdateRealIds(DbInfrastructure infrastructure, DbTransaction transaction, System.Data.DataTable table)
+		{
+			System.Collections.ArrayList list = DbRichCommand.FindRowsUsingTemporaryIds (table);
+			
+			if (list.Count == 0)
+			{
+				return;
+			}
+			
+			//	Trouve la clef identifiant la table courante (la recherche est basée sur
+			//	le nom de la table) :
+			
+			DbKey table_key = infrastructure.FindDbTableKey (transaction, table.TableName);
+			
+			//	Alloue une série de clefs (contiguës) pour la table et attribue les
+			//	séquentiellement aux diverses clefs temporaires; grâce aux relations
+			//	mises en place dans le DataSet, les foreign keys seront automatiquement
+			//	synchronisées aussi.
+			
+			long id = infrastructure.NewRowIdInTable (transaction, table_key, list.Count);
+			
+			foreach (System.Data.DataRow data_row in list)
+			{
+				DbKey key = new DbKey (data_row);
 				
-				for (int i = 0; i < n; i++)
+				System.Diagnostics.Debug.Assert (key.IsTemporary);
+				
+				key = new DbKey (id++);
+				
+				data_row.BeginEdit ();
+				data_row[Tags.ColumnId]     = key.Id.Value;
+				data_row[Tags.ColumnStatus] = key.IntStatus;
+				data_row.EndEdit ();
+			}
+		}
+		
+		public static void CheckRowIds(System.Data.DataTable table)
+		{
+			for (int i = 0; i < table.Rows.Count; i++)
+			{
+				DbKey key = new DbKey (table.Rows[i]);
+				
+				System.Diagnostics.Debug.Assert (key.IsTemporary == false);
+				System.Diagnostics.Debug.Assert (key.Id.ClientId != 0);
+			}
+		}
+		
+		public static void UpdateLogId(System.Data.DataTable table, DbId log_id)
+		{
+			for (int i = 0; i < table.Rows.Count; i++)
+			{
+				System.Data.DataRow row = table.Rows[i];
+				
+				switch (row.RowState)
 				{
-					System.Data.DataRow row = table.Rows[i];
-					
-					switch (row.RowState)
-					{
-						case System.Data.DataRowState.Added:
-						case System.Data.DataRowState.Modified:
-							row[Tags.ColumnRefLog] = this.infrastructure.Logger.CurrentId.Value;
-							break;
-					}
+					case System.Data.DataRowState.Added:
+					case System.Data.DataRowState.Modified:
+						row[Tags.ColumnRefLog] = log_id.Value;
+						break;
 				}
 			}
 		}
 		
-		public void DeleteRow(System.Data.DataRow data_row)
+		public static void DeleteRow(System.Data.DataRow data_row)
 		{
 			DbKey row_key = new DbKey (data_row);
 			
@@ -364,18 +373,9 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public void CreateNewRow(string table_name, out System.Data.DataRow data_row)
+		public static System.Data.DataRow CreateNewRow(System.Data.DataTable table)
 		{
-			this.CheckValidState ();
-			
-			System.Data.DataTable table = this.data_set.Tables[table_name];
-			
-			if (table == null)
-			{
-				throw new System.ArgumentException (string.Format ("Table {0} not found.", table_name), "table_name");
-			}
-			
-			data_row = table.NewRow ();
+			System.Data.DataRow data_row = table.NewRow ();
 			
 			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
 			
@@ -385,7 +385,31 @@ namespace Epsitec.Cresus.Database
 			data_row.EndEdit ();
 			
 			table.Rows.Add (data_row);
+			
+			return data_row;
 		}
+		
+		
+		public static System.Collections.ArrayList FindRowsUsingTemporaryIds(System.Data.DataTable table)
+		{
+			//	Passe en revue toutes les lignes de la table pour déterminer s'il y a des
+			//	clefs temporaires en utilisation et retourne la liste des lignes concernées.
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			for (int i = 0; i < table.Rows.Count; i++)
+			{
+				DbKey key = new DbKey (table.Rows[i]);
+				
+				if (key.IsTemporary)
+				{
+					list.Add (table.Rows[i]);
+				}
+			}
+			
+			return list;
+		}
+		
 		
 		public void AcceptChanges()
 		{
