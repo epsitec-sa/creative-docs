@@ -183,6 +183,16 @@ namespace Epsitec.Common.Drawing.Agg
 			this.transform.MultiplyByPostfix (Drawing.Transform.FromTranslation (ox, oy));
 			this.UpdateTransform ();
 		}
+
+		public override Point ApplyTransformDirect(Point pt)
+		{
+			return this.transform.TransformDirect (pt);
+		}
+		
+		public override Point ApplyTransformInverse(Point pt)
+		{
+			return this.transform.TransformInverse (pt);
+		}
 		
 		
 		public override void SetClippingRectangle(double x, double y, double width, double height)
