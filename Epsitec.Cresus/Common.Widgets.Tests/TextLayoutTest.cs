@@ -45,7 +45,7 @@ namespace Epsitec.Common.Widgets
 				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
 			}
 
-			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty);
+			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
 		}
 
 		[Test] public void CheckRectangle()
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Widgets
 			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
 			e.Graphics.RenderSolid(Color.FromBrightness(1));
 
-			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty);
+			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
 
 			Rectangle bounds = layout.TotalRectangle;
 			bounds.Offset(pos);
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Widgets
 			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
 			e.Graphics.RenderSolid(Color.FromBrightness(1));
 
-			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty);
+			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
 		}
 
 		[Test] public void CheckJustif()
