@@ -56,6 +56,11 @@ namespace Epsitec.Common.Drawing.Null
 		{
 		}
 		
+		public override void   AddCircle(double cx, double cy, double rx, double ry)
+		{
+		}
+
+		
 		public override double AddText(double x, double y, string text, Font font, double size)
 		{
 			return font.GetTextAdvance (text) * size;
@@ -65,6 +70,9 @@ namespace Epsitec.Common.Drawing.Null
 		{
 		}
 		
+		public override void   AddFilledCircle(double cx, double cy, double rx, double ry)
+		{
+		}
 		
 		public override void Align(ref double x, ref double y)
 		{

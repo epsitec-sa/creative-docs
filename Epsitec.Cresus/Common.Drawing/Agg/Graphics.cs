@@ -134,6 +134,21 @@ namespace Epsitec.Common.Drawing.Agg
 			}
 		}
 		
+		public override void   AddCircle(double cx, double cy, double rx, double ry)
+		{
+			using (Path path = new Path ())
+			{
+				path.MoveTo (cx-rx, cy);
+				path.CurveTo (cx-rx*1.00, cy+ry*0.56, cx-rx*0.56, cy+ry*1.00, cx,    cy+ry);
+				path.CurveTo (cx+rx*0.56, cy+ry*1.00, cx+rx*1.00, cy+ry*0.56, cx+rx, cy);
+				path.CurveTo (cx+rx*1.00, cy-ry*0.56, cx+rx*0.56, cy-ry*1.00, cx,    cy-ry);
+				path.CurveTo (cx-rx*0.56, cy-ry*1.00, cx-rx*1.00, cy-ry*0.56, cx-rx, cy);
+				path.Close ();
+				
+				this.rasterizer.AddOutline (path, this.line_width, this.line_cap, this.line_join, this.line_miter_limit);
+			}
+		}
+		
 		public override double AddText(double x, double y, string text, Font font, double size)
 		{
 			return this.rasterizer.AddText (font, text, x, y, size);
@@ -147,6 +162,21 @@ namespace Epsitec.Common.Drawing.Agg
 				path.LineTo (x+width, y);
 				path.LineTo (x+width, y+height);
 				path.LineTo (x, y+height);
+				path.Close ();
+				
+				this.rasterizer.AddSurface (path);
+			}
+		}
+		
+		public override void   AddFilledCircle(double cx, double cy, double rx, double ry)
+		{
+			using (Path path = new Path ())
+			{
+				path.MoveTo (cx-rx, cy);
+				path.CurveTo (cx-rx*1.00, cy+ry*0.56, cx-rx*0.56, cy+ry*1.00, cx,    cy+ry);
+				path.CurveTo (cx+rx*0.56, cy+ry*1.00, cx+rx*1.00, cy+ry*0.56, cx+rx, cy);
+				path.CurveTo (cx+rx*1.00, cy-ry*0.56, cx+rx*0.56, cy-ry*1.00, cx,    cy-ry);
+				path.CurveTo (cx-rx*0.56, cy-ry*1.00, cx-rx*1.00, cy-ry*0.56, cx-rx, cy);
 				path.Close ();
 				
 				this.rasterizer.AddSurface (path);

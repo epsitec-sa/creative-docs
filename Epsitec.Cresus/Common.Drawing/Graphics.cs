@@ -275,6 +275,16 @@ namespace Epsitec.Common.Drawing
 			this.AddRectangle (rect.X, rect.Y, rect.Width, rect.Height);
 		}
 		
+		public void AddCircle(Point p, double r)
+		{
+			this.AddCircle (p.X, p.Y, r, r);
+		}
+		
+		public void AddCircle(double x, double y, double r)
+		{
+			this.AddCircle (x, y, r, r);
+		}
+		
 		public void AddFilledRectangle(Point p, Size s)
 		{
 			this.AddFilledRectangle (p.X, p.Y, s.Width, s.Height);
@@ -283,6 +293,16 @@ namespace Epsitec.Common.Drawing
 		public void AddFilledRectangle(Rectangle rect)
 		{
 			this.AddFilledRectangle (rect.X, rect.Y, rect.Width, rect.Height);
+		}
+		
+		public void AddFilledCircle(Point p, double r)
+		{
+			this.AddCircle (p.X, p.Y, r, r);
+		}
+		
+		public void AddFilledCircle(double x, double y, double r)
+		{
+			this.AddFilledCircle (x, y, r, r);
 		}
 		
 		public void AddText(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment align)
@@ -351,8 +371,10 @@ namespace Epsitec.Common.Drawing
 		
 		public abstract void AddLine(double x1, double y1, double x2, double y2);
 		public abstract void AddRectangle(double x, double y, double width, double height);
+		public abstract void AddCircle(double cx, double cy, double rx, double ry);
 		public abstract double AddText(double x, double y, string text, Font font, double size);
 		public abstract void AddFilledRectangle(double x, double y, double width, double height);
+		public abstract void AddFilledCircle(double cx, double cy, double rx, double ry);
 		public abstract void Align(ref double x, ref double y);
 		public abstract void Align(ref Drawing.Rectangle rect);
 		

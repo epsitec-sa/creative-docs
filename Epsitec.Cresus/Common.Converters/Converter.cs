@@ -109,12 +109,14 @@ namespace Epsitec.Common.Converters
 				return false;
 			}
 			
-			if (obj is System.String)
+			string text = obj as string;
+			
+			if (text != null)
 			{
 				//	On va devoir faire un "Parse" coûteux... On pourrait bien sûr aussi utiliser TypeConverter,
 				//	mais ça ne nous apporterait rien ici.
 				
-				string text = obj as string;
+				text = text.Trim ();
 				
 				if (text == "")
 				{
