@@ -1712,6 +1712,11 @@ namespace Epsitec.Common.Widgets
 				{
 					this.internal_state |= InternalState.Visible;
 					this.Invalidate ();
+					
+					if (this.dock != DockStyle.None)
+					{
+						this.parent.UpdateChildrenLayout ();
+					}
 				}
 			}
 			else
@@ -1724,6 +1729,11 @@ namespace Epsitec.Common.Widgets
 					this.SetEntered (false);
 					this.internal_state &= ~ InternalState.Visible;
 					this.Invalidate ();
+					
+					if (this.dock != DockStyle.None)
+					{
+						this.parent.UpdateChildrenLayout ();
+					}
 				}
 			}
 		}
@@ -3722,6 +3732,7 @@ namespace Epsitec.Common.Widgets
 			if (this.IsLayoutSuspended == false)
 			{
 				this.UpdateChildrenLayout ();
+				this.OnClientGeometryUpdated ();
 				System.Diagnostics.Debug.Assert (this.layout_info == null);
 			}
 		}
@@ -3933,6 +3944,11 @@ namespace Epsitec.Common.Widgets
 					continue;
 				}
 				
+				if (child.IsVisible == false)
+				{
+					continue;
+				}
+				
 				Drawing.Size min = child.MinSize;
 				Drawing.Size max = child.MaxSize;
 				
@@ -4011,6 +4027,7 @@ namespace Epsitec.Common.Widgets
 			{
 				return;
 			}
+			
 			System.Diagnostics.Debug.Assert (this.client_info != null);
 			System.Diagnostics.Debug.Assert (this.HasChildren);
 			
@@ -4029,6 +4046,11 @@ namespace Epsitec.Common.Widgets
 					//	Saute les widgets qui ne sont pas "docked", car ils doivent être
 					//	positionnés par d'autres moyens.
 					
+					continue;
+				}
+				
+				if (child.IsVisible == false)
+				{
 					continue;
 				}
 				
@@ -4670,6 +4692,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected virtual void OnClientGeometryUpdated()
+		{
+			if (this.ClientGeometryUpdated != null)
+			{
+				this.ClientGeometryUpdated (this);
+			}
+		}
+		
 		protected virtual void OnPreparePaint()
 		{
 			if (this.PreparePaint != null)
@@ -5020,6 +5050,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		#region Events
+		public event Support.EventHandler			ClientGeometryUpdated;
 		public event Support.EventHandler			PreparePaint;
 		public event PaintEventHandler				PaintBackground;
 		public event PaintEventHandler				PaintForeground;

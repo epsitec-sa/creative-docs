@@ -1,5 +1,10 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 12/03/2004
+
 namespace Epsitec.Common.Widgets
 {
+	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
+	
 	/// <summary>
 	/// La classe SmartTag représente un Tag avec un menu associé.
 	/// </summary>
@@ -23,7 +28,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public VMenu							Menu
+		[Bundle("menu")] public VMenu			Menu
 		{
 			get
 			{
@@ -35,7 +40,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public object						Context
+		public object							Context
 		{
 			get
 			{
