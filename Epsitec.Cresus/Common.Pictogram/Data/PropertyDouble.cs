@@ -17,57 +17,37 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlAttribute]
 		public double Value
 		{
-			get
-			{
-				return this.doubleValue;
-			}
-
-			set
-			{
-				this.doubleValue = value;
-			}
+			get { return this.doubleValue; }
+			set { this.doubleValue = value; }
 		}
 
 		[XmlIgnore]
 		public double MinRange
 		{
-			get
-			{
-				return this.minRange;
-			}
-
-			set
-			{
-				this.minRange = value;
-			}
+			get { return this.minRange; }
+			set { this.minRange = value; }
 		}
 
 		[XmlIgnore]
 		public double MaxRange
 		{
-			get
-			{
-				return this.maxRange;
-			}
-
-			set
-			{
-				this.maxRange = value;
-			}
+			get { return this.maxRange; }
+			set { this.maxRange = value; }
 		}
 
 		[XmlIgnore]
 		public double Step
 		{
-			get
-			{
-				return this.step;
-			}
+			get { return this.step; }
+			set { this.step = value; }
+		}
 
-			set
-			{
-				this.step = value;
-			}
+		// Indique si un changement de cette propriété modifie la bbox de l'objet.
+		[XmlIgnore]
+		public override bool AlterBoundingBox
+		{
+			get { return ( this.type == PropertyType.RegularFaces ||
+						   this.type == PropertyType.RegularShape ); }
 		}
 
 		// Effectue une copie de la propriété.

@@ -19,43 +19,29 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlAttribute]
 		public double Width
 		{
-			get
-			{
-				return this.width;
-			}
-
-			set
-			{
-				this.width = value;
-			}
+			get { return this.width; }
+			set { this.width = value; }
 		}
 
 		[XmlAttribute]
 		public Drawing.CapStyle Cap
 		{
-			get
-			{
-				return this.cap;
-			}
-
-			set
-			{
-				this.cap = value;
-			}
+			get { return this.cap; }
+			set { this.cap = value; }
 		}
 
 		[XmlAttribute]
 		public Drawing.JoinStyle Join
 		{
-			get
-			{
-				return this.join;
-			}
+			get { return this.join; }
+			set { this.join = value; }
+		}
 
-			set
-			{
-				this.join = value;
-			}
+		// Indique si un changement de cette propriété modifie la bbox de l'objet.
+		[XmlIgnore]
+		public override bool AlterBoundingBox
+		{
+			get { return true; }
 		}
 
 		// Effectue une copie de la propriété.

@@ -44,53 +44,29 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlAttribute]
 		public GradientFill Fill
 		{
-			get
-			{
-				return this.fill;
-			}
-
-			set
-			{
-				this.fill = value;
-			}
+			get { return this.fill; }
+			set { this.fill = value; }
 		}
 
 		// Couleur 1 du dégradé.
 		public Drawing.Color Color1
 		{
-			get
-			{
-				return this.color1;
-			}
-
-			set
-			{
-				this.color1 = value;
-			}
+			get { return this.color1; }
+			set { this.color1 = value; }
 		}
 
 		// Couleur 2 du dégradé.
 		public Drawing.Color Color2
 		{
-			get
-			{
-				return this.color2;
-			}
-
-			set
-			{
-				this.color2 = value;
-			}
+			get { return this.color2; }
+			set { this.color2 = value; }
 		}
 
 		// Angle du dégradé.
 		[XmlAttribute]
 		public double Angle
 		{
-			get
-			{
-				return this.angle;
-			}
+			get { return this.angle; }
 
 			set
 			{
@@ -104,70 +80,39 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlAttribute]
 		public double Cx
 		{
-			get
-			{
-				return this.cx;
-			}
-
-			set
-			{
-				this.cx = value;
-			}
+			get { return this.cx; }
+			set { this.cx = value; }
 		}
 
 		// Centre y du dégradé.
 		[XmlAttribute]
 		public double Cy
 		{
-			get
-			{
-				return this.cy;
-			}
-
-			set
-			{
-				this.cy = value;
-			}
+			get { return this.cy; }
+			set { this.cy = value; }
 		}
 
 		// Echelle x du dégradé.
 		[XmlAttribute]
 		public double Sx
 		{
-			get
-			{
-				return this.sx;
-			}
-
-			set
-			{
-				this.sx = value;
-			}
+			get { return this.sx; }
+			set { this.sx = value; }
 		}
 
 		// Echelle y du dégradé.
 		[XmlAttribute]
 		public double Sy
 		{
-			get
-			{
-				return this.sy;
-			}
-
-			set
-			{
-				this.sy = value;
-			}
+			get { return this.sy; }
+			set { this.sy = value; }
 		}
 
 		// Nombre de répétitions.
 		[XmlAttribute]
 		public int Repeat
 		{
-			get
-			{
-				return this.repeat;
-			}
+			get { return this.repeat; }
 
 			set
 			{
@@ -181,10 +126,7 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlAttribute]
 		public double Middle
 		{
-			get
-			{
-				return this.middle;
-			}
+			get { return this.middle; }
 
 			set
 			{
@@ -198,10 +140,7 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlAttribute]
 		public double Smooth
 		{
-			get
-			{
-				return this.smooth;
-			}
+			get { return this.smooth; }
 
 			set
 			{
