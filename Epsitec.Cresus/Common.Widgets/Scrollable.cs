@@ -1,10 +1,24 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 16.01.2004
+//	Statut : OK/PA, 16/01/2004
 
 namespace Epsitec.Common.Widgets
 {
+	using BundleAttribute  = Support.BundleAttribute;
+	
 	/// <summary>
-	/// La classe Scrollable permet de représenter un panel de taille
+	/// L'énumération ScrollableScrollerMode détermine comment Scrollable affiche les
+	/// ascenceurs (automatiquement, en fonction de la place disponible, ne jamais les
+	/// montrer ou toujours les montrer).
+	/// </summary>
+	public enum ScrollableScrollerMode
+	{
+		Auto,
+		HideAlways,
+		ShowAlways
+	}
+	
+	/// <summary>
+	/// La classe Scrollable permet de représenter un Panel de taille
 	/// quelconque dans une surface de taille déterminée, en ajoutant
 	/// au besoin des ascenceurs.
 	/// </summary>
@@ -15,11 +29,13 @@ namespace Epsitec.Common.Widgets
 			this.h_scroller = new HScroller (this);
 			this.v_scroller = new VScroller (this);
 			
-			this.h_scroller.Parent            = this;
+			this.h_scroller_mode = ScrollableScrollerMode.Auto;
+			this.v_scroller_mode = ScrollableScrollerMode.Auto;
+			
 			this.h_scroller.MaxValue          = 0;
 			this.h_scroller.VisibleRangeRatio = 1;
+			this.h_scroller.IsInverted        = false;
 			
-			this.v_scroller.Parent            = this;
 			this.v_scroller.MaxValue          = 0;
 			this.v_scroller.VisibleRangeRatio = 1;
 			this.v_scroller.IsInverted        = true;
@@ -27,16 +43,16 @@ namespace Epsitec.Common.Widgets
 			this.h_scroller.ValueChanged += new Support.EventHandler (this.HandleHScrollerValueChanged);
 			this.v_scroller.ValueChanged += new Support.EventHandler (this.HandleVScrollerValueChanged);
 			
-			this.UpdateGeometry ();
+			this.Panel = new Panel ();
 		}
 		
-		public Scrollable(Widget embedder) : this()
+		public Scrollable(Widget embedder) : this ()
 		{
 			this.SetEmbedder (embedder);
 		}
 		
 		
-		public Panel					Panel
+		public Panel							Panel
 		{
 			get
 			{
@@ -57,8 +73,93 @@ namespace Epsitec.Common.Widgets
 					if (this.panel != null)
 					{
 						this.AttachPanel (this.panel);
-						this.UpdateGeometry ();
 					}
+					
+					this.UpdateGeometry ();
+				}
+			}
+		}
+		
+		
+		[Bundle] public ScrollableScrollerMode	HorizontalScrollerMode
+		{
+			get
+			{
+				return this.h_scroller_mode;
+			}
+			set
+			{
+				if (this.h_scroller_mode != value)
+				{
+					this.h_scroller_mode = value;
+					this.UpdateGeometry ();
+				}
+			}
+		}
+		
+		[Bundle] public ScrollableScrollerMode	VerticalScrollerMode
+		{
+			get
+			{
+				return this.v_scroller_mode;
+			}
+			set
+			{
+				if (this.v_scroller_mode != value)
+				{
+					this.v_scroller_mode = value;
+					this.UpdateGeometry ();
+				}
+			}
+		}
+		
+		
+		public override void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
+		{
+			//	Il ne faut pas sauver les widgets enfants du scrollable, car ils sont créés
+			//	explicitement dans le constructeur; par contre, il faut sauver le contenu du
+			//	panel :
+			
+			Support.ResourceBundle.FieldList widget_list = bundle["widgets"].AsList;
+			
+			if (widget_list != null)
+			{
+				//	Notre bundle contient une liste de sous-bundles contenant les descriptions des
+				//	widgets enfants. On les restitue nous-même et on les ajoute dans la liste des
+				//	enfants.
+				
+				foreach (Support.ResourceBundle.Field field in widget_list)
+				{
+					Support.ResourceBundle widget_bundle = field.AsBundle;
+					Widget widget = bundler.CreateFromBundle (widget_bundle) as Widget;
+					
+					this.Panel.Children.Add (widget);
+				}
+			}
+		}
+		
+		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
+		{
+			if (this.HasChildren)
+			{
+				System.Collections.ArrayList list    = new System.Collections.ArrayList ();
+				Widget[]                     widgets = this.Panel.Children.Widgets;
+				
+				for (int i = 0; i < widgets.Length; i++)
+				{
+					if (! widgets[i].IsEmbedded)
+					{
+						Support.ResourceBundle child_bundle = bundler.CreateEmptyBundle (widgets[i].BundleName);
+						bundler.FillBundleFromObject (child_bundle, widgets[i]);
+						list.Add (child_bundle);
+					}
+				}
+				
+				if (list.Count > 0)
+				{
+					Support.ResourceBundle.Field field = bundle.CreateField (Support.ResourceFieldType.List, list);
+					field.SetName ("widgets");
+					bundle.Add (field);
 				}
 			}
 		}
@@ -99,7 +200,6 @@ namespace Epsitec.Common.Widgets
 				panel.SetEmbedder (this);
 				panel.Aperture = Drawing.Rectangle.Empty;
 				
-				panel.LayoutChanged += new Support.EventHandler (this.HandlePanelLayoutChanged);
 				panel.SurfaceSizeChanged += new Support.EventHandler (this.HandlePanelSurfaceSizeChanged);
 			}
 		}
@@ -108,7 +208,6 @@ namespace Epsitec.Common.Widgets
 		{
 			if (panel != null)
 			{
-				panel.LayoutChanged -= new Support.EventHandler (this.HandlePanelLayoutChanged);
 				panel.SurfaceSizeChanged -= new Support.EventHandler (this.HandlePanelSurfaceSizeChanged);
 				
 				panel.SetEmbedder (null);
@@ -165,8 +264,8 @@ namespace Epsitec.Common.Widgets
 			double total_dy = this.Client.Height;
 			double panel_dx = this.panel.SurfaceWidth;
 			double panel_dy = this.panel.SurfaceHeight;
-			double margin_x = 0;
-			double margin_y = 0;
+			double margin_x = (this.v_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.v_scroller.Width : 0;
+			double margin_y = (this.h_scroller_mode == ScrollableScrollerMode.ShowAlways) ? this.h_scroller.Height : 0;
 			
 			double delta_dx;
 			double delta_dy;
@@ -179,7 +278,8 @@ namespace Epsitec.Common.Widgets
 				delta_dx = panel_dx - total_dx + margin_x;
 				delta_dy = panel_dy - total_dy + margin_y;
 				
-				if (delta_dx > 0)
+				if ((delta_dx > 0) &&
+					(this.h_scroller_mode != ScrollableScrollerMode.HideAlways))
 				{
 					//	Il y a besoin d'un ascenceur horizontal.
 					
@@ -190,7 +290,8 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
-				if (delta_dy > 0)
+				if ((delta_dy > 0) &&
+					(this.v_scroller_mode != ScrollableScrollerMode.HideAlways))
 				{
 					//	Il y a besoin d'un ascenceur vertical.
 					
@@ -273,8 +374,6 @@ namespace Epsitec.Common.Widgets
 			//	l'ouverture.
 			
 			this.panel_aperture = new Drawing.Rectangle (0, margin_y, vis_dx, vis_dy);
-			this.panel_size     = new Drawing.Size (panel_dx, panel_dy);
-			
 			this.panel.Bounds   = new Drawing.Rectangle (-offset_x, total_dy - panel_dy + offset_y, panel_dx, panel_dy);
 			this.panel.Aperture = this.panel.MapParentToClient (this.panel_aperture);
 			
@@ -307,17 +406,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		private void HandlePanelLayoutChanged(object sender)
-		{
-			System.Diagnostics.Debug.Assert (this.panel == sender);
-			
-			if (this.panel_size != this.panel.Size)
-			{
-				this.panel_size = this.panel.Size;
-				this.UpdatePanelLocation ();
-			}
-		}
-		
 		private void HandlePanelSurfaceSizeChanged(object sender)
 		{
 			System.Diagnostics.Debug.Assert (this.panel == sender);
@@ -327,17 +415,18 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		protected Panel					panel;
-		protected Drawing.Rectangle		panel_aperture;				//	ouverture par laquelle on voit le panel
-		protected Drawing.Size			panel_size;					//	taille du panel
-		protected Drawing.Point			panel_offset;				//	offset du panel, dérivé de la position des ascenceurs
+		protected Panel							panel;						//	panel utilisé pour le contenu
+		protected Drawing.Rectangle				panel_aperture;				//	ouverture par laquelle on voit le panel
+		protected Drawing.Point					panel_offset;				//	offset du panel, dérivé de la position des ascenceurs
 		
-		protected VScroller				v_scroller;
-		protected decimal				v_scroller_value;			//	dernière position de l'ascenceur
-		protected HScroller				h_scroller;
-		protected decimal				h_scroller_value;			//	dernière position de l'ascenceur
+		protected VScroller						v_scroller;
+		protected HScroller						h_scroller;
+		protected decimal						v_scroller_value;			//	dernière position de l'ascenceur vertical
+		protected decimal						h_scroller_value;			//	dernière position de l'ascenceur horizontal
+		protected ScrollableScrollerMode		v_scroller_mode;
+		protected ScrollableScrollerMode		h_scroller_mode;
 		
-		protected const double			SmallScrollPixels  = 5;
-		protected const double			LargeScrollPercent = 50;
+		protected const double					SmallScrollPixels  = 5;
+		protected const double					LargeScrollPercent = 50;
 	}
 }
