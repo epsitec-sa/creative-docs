@@ -131,6 +131,35 @@ namespace Epsitec.Common.Text
 			int position = this.text.GetCursorPosition (cursor.CursorId);
 			int length   = text.Length;
 			
+			//	Passe en revue tous les caractères et met à jour les compteurs
+			//	d'utilisation pour les styles associés :
+			
+			Internal.StyleTable styles = this.style_list.StyleTable;
+			
+			for (int i = 0; i < length; i++)
+			{
+				ulong code = text[i];
+				
+				Styles.SimpleStyle   style = styles.GetStyle (code);
+				Styles.LocalSettings local = styles.GetLocalSettings (code);
+				Styles.ExtraSettings extra = styles.GetExtraSettings (code);
+				
+				if (style != null)
+				{
+					style.IncrementUserCount ();
+				}
+				
+				if (local != null)
+				{
+					local.IncrementUserCount ();
+				}
+				
+				if (extra != null)
+				{
+					extra.IncrementUserCount ();
+				}
+			}
+			
 			this.text.InsertText (cursor.CursorId, text);
 			this.text_length += length;
 			
@@ -280,8 +309,46 @@ namespace Epsitec.Common.Text
 			this.text.InsertText (this.temp_cursor.CursorId, text);
 		}
 		
-		protected void InternalDeleteText(int position, int length, out CursorInfo[] infos)
+		protected void InternalDeleteText(int position, int length, out CursorInfo[] infos, bool book_keeping)
 		{
+			if (book_keeping)
+			{
+				//	Passe en revue tous les caractères et met à jour les compteurs
+				//	d'utilisation pour les styles associés :
+			
+				ulong[] text = new ulong[length];
+				
+				this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
+				this.text.ReadText (this.temp_cursor.CursorId, length, text);
+				
+				Internal.StyleTable styles = this.style_list.StyleTable;
+			
+				for (int i = 0; i < length; i++)
+				{
+					ulong code = text[i];
+				
+					Styles.SimpleStyle   style = styles.GetStyle (code);
+					Styles.LocalSettings local = styles.GetLocalSettings (code);
+					Styles.ExtraSettings extra = styles.GetExtraSettings (code);
+				
+					if (style != null)
+					{
+						style.DecrementUserCount ();
+					}
+				
+					if (local != null)
+					{
+						local.DecrementUserCount ();
+					}
+				
+					if (extra != null)
+					{
+						extra.DecrementUserCount ();
+					}
+				}
+			
+			}
+			
 			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
 			this.text.DeleteText (this.temp_cursor.CursorId, length, out infos);
 		}
@@ -304,7 +371,7 @@ namespace Epsitec.Common.Text
 			
 			CursorInfo[] infos;
 			
-			this.InternalDeleteText (from_pos, length, out infos);
+			this.InternalDeleteText (from_pos, length, out infos, false);
 			this.InternalInsertText (to_pos, data);
 			
 			if ((infos != null) &&
@@ -441,7 +508,7 @@ namespace Epsitec.Common.Text
 					int undo_end   = undo_start + this.story.undo_length;
 					
 					CursorInfo[] infos;
-					this.story.InternalDeleteText (undo_end - this.length, this.length, out infos);
+					this.story.InternalDeleteText (undo_end - this.length, this.length, out infos, true);
 					
 					//	TODO: gérer la suppression des curseurs...
 					//	TODO: gérer la suppression des styles...
@@ -523,7 +590,7 @@ namespace Epsitec.Common.Text
 					int undo_end   = undo_start + this.story.undo_length;
 					
 					CursorInfo[] infos;
-					this.story.InternalDeleteText (undo_end - this.length, this.length, out infos);
+					this.story.InternalDeleteText (undo_end - this.length, this.length, out infos, true);
 					
 					//	TODO: gérer la suppression des curseurs...
 					//	TODO: gérer la suppression des styles...
