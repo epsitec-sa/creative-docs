@@ -110,6 +110,16 @@ namespace Epsitec.Cresus.Services
 			return service;
 		}
 		
+		public static Remoting.IOperatorService GetRemoteOperatorService(string machine, int port)
+		{
+			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/OperatorService.soap", machine, port);
+			System.Type type = typeof (Remoting.IRequestExecutionService);
+			
+			Remoting.IOperatorService service = (Remoting.IOperatorService) System.Activator.GetObject (type, url);
+			
+			return service;
+		}
+		
 		
 		private int								port_number;
 		private Requests.Orchestrator			orchestrator;

@@ -549,6 +549,36 @@ namespace Epsitec.Cresus.Database
 			
 		}
 		
+		[Test] /*[Ignore ("Temporary")]*/ public void Check15OperatorClient()
+		{
+			Remoting.IOperatorService service = Services.Engine.GetRemoteOperatorService ("localhost", 1234);
+			Remoting.IOperation operation;
+			Remoting.IProgressInformation progress;
+			
+			Assert.IsNotNull (service);
+			
+			service.CreateRoamingClient (out operation);
+			
+			for (int i = 0; i < 10; i++)
+			{
+				System.Threading.Thread.Sleep (20);
+				bool finished = operation.HasFinished;
+				System.Diagnostics.Debug.WriteLine ("Operation: " + (finished ? "finished" : "running") + " after " + (int) operation.RunningDuration.TotalMilliseconds + " ms.");
+				if (finished) break;
+			}
+			
+			System.Diagnostics.Debug.WriteLine ("Cancelling...");
+			operation.CancelOperation (out progress);
+			
+			for (int i = 0; i < 10; i++)
+			{
+				System.Threading.Thread.Sleep (20);
+				bool finished = progress.HasFinished;
+				System.Diagnostics.Debug.WriteLine ("Cancellation: " + (finished ? "finished" : "running") + " after " + (int) progress.RunningDuration.TotalMilliseconds + " ms.");
+				if (finished) break;
+			}
+		}
+		
 		
 		private static void CreateTestTable(DbInfrastructure infrastructure, string name)
 		{
