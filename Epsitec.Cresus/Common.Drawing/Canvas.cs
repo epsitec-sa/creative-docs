@@ -118,7 +118,7 @@ namespace Epsitec.Common.Drawing
 				
 				System.Diagnostics.Debug.Assert (Canvas.Engine != null);
 				
-				using (Drawing.Agg.Graphics graphics = new Agg.Graphics ())
+				using (Graphics graphics = new Graphics ())
 				{
 					graphics.SetPixmapSize (dx, dy);
 					Drawing.Pixmap pixmap = graphics.Pixmap;
