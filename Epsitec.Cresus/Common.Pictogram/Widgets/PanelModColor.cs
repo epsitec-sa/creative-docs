@@ -1,0 +1,242 @@
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
+using Epsitec.Common.Pictogram.Data;
+
+namespace Epsitec.Common.Pictogram.Widgets
+{
+	/// <summary>
+	/// La classe PanelModColor permet de choisir une modification de couleur.
+	/// </summary>
+	public class PanelModColor : AbstractPanel
+	{
+		public PanelModColor()
+		{
+			this.label = new StaticText(this);
+			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
+			this.label.Text = "Transformation de couleur :";
+
+			this.labelArray = new StaticText[7];
+			for ( int i=0 ; i<7 ; i++ )
+			{
+				this.labelArray[i] = new StaticText(this);
+				if ( i == 0 )  this.labelArray[i].Text = "T";
+				if ( i == 1 )  this.labelArray[i].Text = "S";
+				if ( i == 2 )  this.labelArray[i].Text = "L";
+				if ( i == 3 )  this.labelArray[i].Text = "R";
+				if ( i == 4 )  this.labelArray[i].Text = "V";
+				if ( i == 5 )  this.labelArray[i].Text = "B";
+				if ( i == 6 )  this.labelArray[i].Text = "A";
+				this.labelArray[i].Alignment = Drawing.ContentAlignment.MiddleCenter;
+			}
+
+			this.fieldArray = new TextFieldSlider[7];
+			for ( int i=0 ; i<7 ; i++ )
+			{
+				this.fieldArray[i] = new TextFieldSlider(this);
+				this.fieldArray[i].TextChanged += new EventHandler(this.HandleTextChanged);
+				this.fieldArray[i].TabIndex = 1+i;
+				this.fieldArray[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				if ( i == 0 )
+				{
+					this.fieldArray[i].MinValue = 0;
+					this.fieldArray[i].MaxValue = 360;
+				}
+				else
+				{
+					this.fieldArray[i].MinValue = -100;
+					this.fieldArray[i].MaxValue =  100;
+				}
+				this.fieldArray[i].Step = 5;
+			}
+			this.fieldArray[0].Color = Drawing.Color.FromRGB(0,0,0);
+			this.fieldArray[0].BackColor = Drawing.Color.FromRGB(0.5,0.5,0.5);
+			this.fieldArray[1].Color = Drawing.Color.FromRGB(0,0,0);
+			this.fieldArray[1].BackColor = Drawing.Color.FromRGB(1,1,1);
+			this.fieldArray[2].Color = Drawing.Color.FromRGB(1,1,1);
+			this.fieldArray[2].BackColor = Drawing.Color.FromRGB(0,0,0);
+			this.fieldArray[3].Color = Drawing.Color.FromRGB(1,0,0);
+			this.fieldArray[4].Color = Drawing.Color.FromRGB(0,1,0);
+			this.fieldArray[5].Color = Drawing.Color.FromRGB(0,0,1);
+			this.fieldArray[6].Color = Drawing.Color.FromRGB(0.5,0.5,0.5);
+
+			this.negativ = new CheckButton(this);
+			this.negativ.Text = "Négatif";
+			this.negativ.TabIndex = 10;
+			this.negativ.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.negativ.ActiveStateChanged += new EventHandler(this.HandleNegativChanged);
+
+			this.reset = new Button(this);
+			this.reset.Text = "R";
+			this.reset.TabIndex = 11;
+			this.reset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.reset.Clicked += new MessageEventHandler(this.HandleReset);
+
+			this.isNormalAndExtended = true;
+		}
+		
+		public PanelModColor(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
+		protected override void Dispose(bool disposing)
+		{
+			if ( disposing )
+			{
+				for ( int i=0 ; i<7 ; i++ )
+				{
+					this.fieldArray[i].TextChanged -= new EventHandler(this.HandleTextChanged);
+				}
+				this.negativ.ActiveStateChanged -= new EventHandler(this.HandleNegativChanged);
+				this.reset.Clicked -= new MessageEventHandler(this.HandleReset);
+			}
+			
+			base.Dispose(disposing);
+		}
+
+		
+		// Retourne la hauteur standard.
+		public override double DefaultHeight
+		{
+			get
+			{
+				return ( this.extendedSize ? 99 : 30 );
+			}
+		}
+
+
+		// Propriété -> widget.
+		public override void SetProperty(AbstractProperty property)
+		{
+			base.SetProperty(property);
+
+			PropertyModColor p = property as PropertyModColor;
+			if ( p == null )  return;
+
+			this.fieldArray[0].Value = (decimal) p.H;
+			this.fieldArray[1].Value = (decimal) p.S*100;
+			this.fieldArray[2].Value = (decimal) p.V*100;
+			this.fieldArray[3].Value = (decimal) p.R*100;
+			this.fieldArray[4].Value = (decimal) p.G*100;
+			this.fieldArray[5].Value = (decimal) p.B*100;
+			this.fieldArray[6].Value = (decimal) p.A*100;
+			this.negativ.ActiveState = p.N ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
+			this.EnableWidgets();
+		}
+
+		// Widget -> propriété.
+		public override AbstractProperty GetProperty()
+		{
+			PropertyModColor p = new PropertyModColor();
+			base.GetProperty(p);
+
+			p.H = (double) this.fieldArray[0].Value;
+			p.S = (double) this.fieldArray[1].Value/100;
+			p.V = (double) this.fieldArray[2].Value/100;
+			p.R = (double) this.fieldArray[3].Value/100;
+			p.G = (double) this.fieldArray[4].Value/100;
+			p.B = (double) this.fieldArray[5].Value/100;
+			p.A = (double) this.fieldArray[6].Value/100;
+			p.N = (this.negativ.ActiveState & WidgetState.ActiveYes) != 0;
+			return p;
+		}
+
+
+		// Grise les widgets nécessaires.
+		protected void EnableWidgets()
+		{
+			for ( int i=0 ; i<7 ; i++ )
+			{
+				this.labelArray[i].SetVisible(this.extendedSize);
+				this.fieldArray[i].SetVisible(this.extendedSize);
+			}
+			this.negativ.SetVisible(this.extendedSize);
+			this.reset.SetVisible(this.extendedSize);
+		}
+
+		// Met à jour la géométrie.
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry();
+
+			if ( this.fieldArray == null )  return;
+
+			Drawing.Rectangle rect = this.Client.Bounds;
+			rect.Deflate(this.extendedZoneWidth, 0);
+			rect.Deflate(5);
+
+			Drawing.Rectangle r = rect;
+			r.Bottom = r.Top-14;
+			this.label.Bounds = r;
+
+			rect.Top -= 20;
+			rect.Bottom = rect.Top-20;
+			for ( int j=0 ; j<3 ; j++ )
+			{
+				r = rect;
+				r.Left += 1;
+				for ( int i=0 ; i<3 ; i++ )
+				{
+					if ( j*3+i >= 7 )  continue;
+					r.Width = 13;
+					this.labelArray[j*3+i].Bounds = r;
+					r.Left = r.Right;
+					r.Width = 45;
+					this.fieldArray[j*3+i].Bounds = r;
+					r.Left = r.Right;
+				}
+				rect.Offset(0, -24);
+			}
+
+			r.Left = rect.Left+72;
+			r.Right = rect.Right-24;
+			this.negativ.Bounds = r;
+
+			r.Left = r.Right;
+			r.Width = 24;
+			this.reset.Bounds = r;
+		}
+		
+		// Couleur -> sliders.
+		protected void ColoriseSliders()
+		{
+			double h = (double) this.fieldArray[0].Value;
+			Drawing.Color saturated = Drawing.Color.FromHSV(h,1,1);
+			
+			this.fieldArray[0].Color = saturated;
+			this.fieldArray[1].Color = saturated;
+			this.fieldArray[2].Color = saturated;
+		}
+
+		// Une valeur a été changée.
+		private void HandleTextChanged(object sender)
+		{
+			this.ColoriseSliders();
+			this.OnChanged();
+		}
+
+		private void HandleNegativChanged(object sender)
+		{
+			this.OnChanged();
+		}
+
+		private void HandleReset(object sender, MessageEventArgs e)
+		{
+			this.fieldArray[0].Value = 0.0M;
+			this.fieldArray[1].Value = 0.0M;
+			this.fieldArray[2].Value = 0.0M;
+			this.fieldArray[3].Value = 0.0M;
+			this.fieldArray[4].Value = 0.0M;
+			this.fieldArray[5].Value = 0.0M;
+			this.fieldArray[6].Value = 0.0M;
+			this.negativ.ActiveState = WidgetState.ActiveNo;
+		}
+
+		protected StaticText				label;
+		protected StaticText[]				labelArray;
+		protected TextFieldSlider[]			fieldArray;
+		protected CheckButton				negativ;
+		protected Button					reset;
+	}
+}
