@@ -30,7 +30,7 @@ namespace Epsitec.Common.Pictogram
 			this.toolbar = new HToolBar();
 			this.toolbar.Location = new Drawing.Point(0, window.ClientSize.Height-this.toolbar.DefaultHeight);
 			this.toolbar.Size = new Drawing.Size(window.ClientSize.Width, this.toolbar.DefaultHeight);
-			this.toolbar.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
+			this.toolbar.Dock = DockStyle.Top;
 			this.toolbar.Parent = this.root;
 
 			string[] texts =
@@ -141,25 +141,15 @@ namespace Epsitec.Common.Pictogram
 			window.Text = "CheckIconEditor";
 
 			IconEditor editor = new IconEditor();
-			HMenu menu = editor.GetMenu();
+			HMenu      menu   = editor.GetMenu();
 
-			Drawing.Rectangle rect = new Drawing.Rectangle();
-			rect.Left   = 0;
-			rect.Width  = window.ClientSize.Width;
-			rect.Bottom = 0;
-			rect.Height = window.ClientSize.Height-menu.DefaultHeight;
-			editor.Bounds = rect;
-			editor.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			window.Root.Children.Add(editor);
+			editor.Dock   = DockStyle.Fill;
+			editor.Parent = window.Root;
+			
+			menu.Dock   = DockStyle.Top;
+			menu.Parent = window.Root;
+			
 			window.CommandDispatcher = editor.CommandDispatcher;
-
-			rect.Left   = 0;
-			rect.Width  = window.ClientSize.Width;
-			rect.Bottom = window.ClientSize.Height-menu.DefaultHeight;
-			rect.Height = menu.DefaultHeight;
-			menu.Bounds = rect;
-			window.Root.Children.Add(menu);
-
 			window.Show();
 		}
 
