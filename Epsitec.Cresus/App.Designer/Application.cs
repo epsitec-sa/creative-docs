@@ -12,6 +12,8 @@ namespace Epsitec.Designer
 	{
 		public Application()
 		{
+			this.name = "Designer";
+			
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
 			
 			Button button;
@@ -58,7 +60,5 @@ namespace Epsitec.Designer
 			Application.application.MainWindow.Run ();
 		}
 		#endregion
-		
-		static Designer.Application		application;
 	}
 }
