@@ -762,6 +762,7 @@ namespace Epsitec.Common.Widgets
 			WidgetTest.open_state.Enabled = ! WidgetTest.open_state.Enabled;
 		}
 		
+		
 		static CommandState open_state = new CommandState ("open");
 		
 		[Test] public void CheckFindChildBasedOnName()
@@ -798,7 +799,50 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		
+		[Test] public void CheckSmartTagColor()
+		{
+			Window window = new Window ();
+			window.Text = "CheckSmartTagColor";
+			window.ClientSize = new Drawing.Size (510, 220);
+			window.MakeFixedSizeWindow ();
+			
+			ColorSelector selector1, selector2;
+			
+			selector1 = new ColorSelector ();
+			selector1.Bounds = new Drawing.Rectangle (100, 10, 200, 200);
+			selector1.Parent = window.Root;
+			selector1.Changed += new EventHandler (this.HandleSelectorChangedForeground);
+			
+			selector2 = new ColorSelector ();
+			selector2.Bounds = new Drawing.Rectangle (300, 10, 200, 200);
+			selector2.Parent = window.Root;
+			selector2.Changed += new EventHandler (this.HandleSelectorChangedBackground);
+			
+			Tag tag;
+			
+			tag = new Tag ("", "tag1");
+			tag.Bounds = new Drawing.Rectangle (10, 10, 10, 10);
+			tag.Parent = window.Root;
+			
+			tag = new Tag ("", "tag2");
+			tag.Bounds = new Drawing.Rectangle (10, 25, 15, 15);
+			tag.Parent = window.Root;
+			
+			tag = new Tag ("", "tag3");
+			tag.Bounds = new Drawing.Rectangle (10, 45, 20, 20);
+			tag.Parent = window.Root;
+			
+			tag = new Tag ("", "tag4");
+			tag.Bounds = new Drawing.Rectangle (10, 70, 25, 25);
+			tag.Parent = window.Root;
+			
+			selector1.Color = tag.Color;
+			selector2.Color = tag.BackColor;
+			
+			window.Show ();
+		}
+
+
 		private void CheckTextLayoutInfoPaintForeground(object sender, PaintEventArgs e)
 		{
 			Widget widget = sender as Widget;
@@ -822,6 +866,48 @@ namespace Epsitec.Common.Widgets
 			
 			e.Graphics.Rasterizer.AddOutline (path, 0.2);
 			e.Graphics.RenderSolid (Drawing.Color.FromRGB (1, 0, 0));
+		}
+		
+		private void HandleSelectorChangedForeground(object sender)
+		{
+			ColorSelector selector = sender as ColorSelector;
+			Drawing.Color color    = selector.Color;
+			Widget        parent   = selector.Parent;
+			
+			Tag tag;
+			
+			tag = parent.FindChild ("tag1", Widget.ChildFindMode.Deep) as Tag;
+			tag.Color = color;
+			
+			tag = parent.FindChild ("tag2", Widget.ChildFindMode.Deep) as Tag;
+			tag.Color = color;
+			
+			tag = parent.FindChild ("tag3", Widget.ChildFindMode.Deep) as Tag;
+			tag.Color = color;
+			
+			tag = parent.FindChild ("tag4", Widget.ChildFindMode.Deep) as Tag;
+			tag.Color = color;
+		}
+		
+		private void HandleSelectorChangedBackground(object sender)
+		{
+			ColorSelector selector = sender as ColorSelector;
+			Drawing.Color color    = selector.Color;
+			Widget        parent   = selector.Parent;
+			
+			Tag tag;
+			
+			tag = parent.FindChild ("tag1", Widget.ChildFindMode.Deep) as Tag;
+			tag.BackColor = color;
+			
+			tag = parent.FindChild ("tag2", Widget.ChildFindMode.Deep) as Tag;
+			tag.BackColor = color;
+			
+			tag = parent.FindChild ("tag3", Widget.ChildFindMode.Deep) as Tag;
+			tag.BackColor = color;
+			
+			tag = parent.FindChild ("tag4", Widget.ChildFindMode.Deep) as Tag;
+			tag.BackColor = color;
 		}
 	}
 }
