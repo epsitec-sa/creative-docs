@@ -235,6 +235,61 @@ namespace Epsitec.Common.Drawing
 			System.Diagnostics.Debug.Assert (count == n);
 		}
 		
+		public void GetTextCharEndX(string text, Font.ClassInfo[] infos, out double[] x_array)
+		{
+			int n = text.Length;
+			
+			x_array = new double[n];
+			
+			int count = AntiGrain.Font.Face.GetTextCharEndXArray (this.handle, text, 0, x_array);
+			
+			System.Diagnostics.Debug.Assert (count == n);
+			
+			double x1 = 0;
+			double x2 = 0;
+			
+			double scale_space = 1.0;
+			double scale_plain = 1.0;
+			
+			for (int i = 0; i < infos.Length; i++)
+			{
+				switch (infos[i].ClassId)
+				{
+					case ClassId.PlainText:
+						scale_plain = infos[i].Scale;
+						break;
+					
+					case ClassId.Space:
+						scale_space = infos[i].Scale;
+						break;
+				}
+			}
+			
+			//	Transforme les [x] absolus en [dx], multiplie par l'échelle à utiliser pour la classe
+			//	de caractère concernée, puis retransforme en [x] absolus :
+			
+			for (int i = 0; i < n; i++)
+			{
+				double dx = x_array[i] - x1;
+				
+				switch (text[i])
+				{
+					case ' ':
+					case (char) 160:
+						dx *= scale_space;
+						break;
+					default:
+						dx *= scale_plain;
+						break;
+				}
+				
+				x1 = x_array[i];
+				x2 = x2 + dx;
+				
+				x_array[i] = x2;
+			}
+		}
+		
 		public void GetTextClassInfos(string text, out ClassInfo[] infos, out double width, out double elasticity)
 		{
 			int n = text.Length;
