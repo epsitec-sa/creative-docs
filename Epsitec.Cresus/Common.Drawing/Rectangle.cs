@@ -16,6 +16,14 @@ namespace Epsitec.Common.Drawing
 			this.y2 = this.y1 + s.Height;
 		}
 		
+		public Rectangle(Point p1, Point p2)
+		{
+			this.x1 = System.Math.Min(p1.X, p2.X);
+			this.y1 = System.Math.Min(p1.Y, p2.Y);
+			this.x2 = System.Math.Max(p1.X, p2.X);
+			this.y2 = System.Math.Max(p1.Y, p2.Y);
+		}
+		
 		public Rectangle(double x, double y, double width, double height)
 		{
 			this.x1 = x;
@@ -117,6 +125,26 @@ namespace Epsitec.Common.Drawing
 			set { this.y2 = value; }
 		}
 		
+		
+		public Point					BottomLeft
+		{
+			get { return new Point (this.x1, this.y1); }
+		}
+		
+		public Point					TopRight
+		{
+			get { return new Point (this.x2, this.y2); }
+		}
+		
+		public Point					BottomRight
+		{
+			get { return new Point (this.x2, this.y1); }
+		}
+		
+		public Point					TopLeft
+		{
+			get { return new Point (this.x1, this.y2); }
+		}
 		
 		public Point					Center
 		{
