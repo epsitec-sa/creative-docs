@@ -203,6 +203,10 @@ namespace Epsitec.Common.UI.Controllers
 					{
 						num_adapter.Value = rank;
 					}
+					else
+					{
+						num_adapter.Validity = false;
+					}
 				}
 				
 				return;
@@ -227,6 +231,10 @@ namespace Epsitec.Common.UI.Controllers
 				if (this.CheckConstraint (value))
 				{
 					text_adapter.Value = value;
+				}
+				else
+				{
+					text_adapter.Validity = false;
 				}
 			}
 		}
