@@ -15,5 +15,7 @@ namespace Epsitec.Cresus.Database
 		Internal			= 1,	//	élément à usage interne
 		UserDataManaged		= 2,	//	élément sous contrôle de l'utilisateur, géré par Crésus
 		UserDataExternal	= 3,	//	élément sous contrôle de l'utilisateur, non géré (source externe)
+		
+		Synthetic			= 4,	//	élément synthétique (n'existe pas en tant que tel dans la base)
 	}
 }
