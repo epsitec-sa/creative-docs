@@ -5,3 +5,5 @@ history.log
 c:\\Progra~1\\winzip\\wzzip
 ...test...
 tralala
+xyz
+gada
