@@ -29,7 +29,7 @@ namespace Epsitec.Common.Widgets
 	///	La classe ScrollArray réalise une liste déroulante optimisée à deux dimensions,
 	///	ne pouvant contenir que des textes fixes.
 	/// </summary>
-	public class ScrollArray : Widget, Support.IStringSelection
+	public class ScrollArray : Widget, Support.Data.IStringSelection
 	{
 		public ScrollArray()
 		{
