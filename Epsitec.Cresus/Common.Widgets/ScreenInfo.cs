@@ -36,6 +36,22 @@ namespace Epsitec.Common.Widgets
 			get { return this.screen.Primary; }
 		}
 		
+		public string						DeviceName
+		{
+			get
+			{
+				string name = this.screen.DeviceName;
+				int pos = name.IndexOf ('\0');
+				
+				if (pos >= 0)
+				{
+					name = name.Substring (0, pos);
+				}
+				
+				return name;
+			}
+		}
+		
 		
 		public static Drawing.Rectangle		GlobalArea
 		{

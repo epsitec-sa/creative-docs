@@ -11,14 +11,15 @@ namespace Epsitec.Common.Tests
 		{
 			ScreenInfo[] screens = ScreenInfo.AllScreens;
 			
-			System.Console.Out.WriteLine ("Found {0} screens. GlobalArea=", screens.Length, ScreenInfo.GlobalArea);
+			System.Console.Out.WriteLine ("Found {0} screens. GlobalArea={1}", screens.Length, ScreenInfo.GlobalArea);
 			System.Console.Out.WriteLine ();
 			
 			foreach (ScreenInfo info in screens)
 			{
-				System.Console.Out.WriteLine ("- Bounds={0}", info.Bounds);
-				System.Console.Out.WriteLine ("  WorkingArea={0}", info.WorkingArea);
-				System.Console.Out.WriteLine ("  IsPrimary={0}", info.IsPrimary);
+				System.Console.Out.WriteLine ("{0} :", info.DeviceName);
+				System.Console.Out.WriteLine (" - Bounds={0}", info.Bounds);
+				System.Console.Out.WriteLine (" - WorkingArea={0}", info.WorkingArea);
+				System.Console.Out.WriteLine (" - IsPrimary={0}", info.IsPrimary);
 				System.Console.Out.WriteLine ();
 				
 				Assertion.Assert (info.Bounds.Contains (info.WorkingArea));
@@ -49,8 +50,8 @@ namespace Epsitec.Common.Tests
 				ScreenInfo found1 = ScreenInfo.Find (rect1);
 				ScreenInfo found2 = ScreenInfo.Find (rect2);
 				
-				System.Console.Out.WriteLine ("First rect found on {0}", found1.Bounds.ToString ());
-				System.Console.Out.WriteLine ("Second rect found on {0}", found2.Bounds.ToString ());
+				System.Console.Out.WriteLine ("First rect found on {0}, Bounds={1}", found1.DeviceName, found1.Bounds.ToString ());
+				System.Console.Out.WriteLine ("Second rect found on {0}, Bounds={1}", found2.DeviceName, found2.Bounds.ToString ());
 				System.Console.Out.WriteLine ();
 			}
 		}
