@@ -72,9 +72,9 @@ namespace Epsitec.Common.Widgets
 			rect.Right  = CheckButton.checkHeight;
 			rect.Bottom = (this.Client.Height-CheckButton.checkHeight)/2;
 			rect.Top    = rect.Bottom+CheckButton.checkHeight;
-			adorner.PaintCheck(graphics, rect, this.PaintState, this.RootDirection);
+			adorner.PaintCheck(graphics, rect, this.PaintState);
 
-			adorner.PaintGeneralTextLayout(graphics, this.LabelOffset, this.textLayout, this.PaintState, this.RootDirection);
+			adorner.PaintGeneralTextLayout(graphics, this.LabelOffset, this.textLayout, this.PaintState);
 		}
 
 		protected Drawing.Point LabelOffset
