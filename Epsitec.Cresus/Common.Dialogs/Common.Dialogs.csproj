@@ -201,6 +201,11 @@
                     RelPath = "Images\Warning.icon"
                     BuildAction = "EmbeddedResource"
                 />
+                <File
+                    RelPath = "Platform\Beep.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
             </Include>
         </Files>
     </CSHARP>

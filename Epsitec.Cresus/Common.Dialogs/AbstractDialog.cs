@@ -45,6 +45,7 @@ namespace Epsitec.Common.Dialogs
 		#region IDialog Members
 		public void Show()
 		{
+			this.OnShowing ();
 			this.Window.Show ();
 		}
 		
@@ -97,6 +98,17 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		protected abstract void CreateWindow();
+		
+		protected virtual void OnShowing()
+		{
+			if (this.Showing != null)
+			{
+				this.Showing (this);
+			}
+		}
+		
+		
+		public event Support.EventHandler		Showing;
 		
 		protected Window						window;
 	}

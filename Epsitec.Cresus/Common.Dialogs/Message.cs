@@ -62,6 +62,11 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 			
+			protected override void OnShowing()
+			{
+				base.OnShowing ();
+				Platform.Beep.MessageBeep (Platform.Beep.MessageType.Warning);
+			}
 			
 			protected override Widgets.Widget CreateBodyWidget()
 			{
@@ -90,6 +95,12 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 			
+			
+			protected override void OnShowing()
+			{
+				base.OnShowing ();
+				Platform.Beep.MessageBeep (Platform.Beep.MessageType.Warning);
+			}
 			
 			protected override Widgets.Widget CreateBodyWidget()
 			{

@@ -672,7 +672,7 @@ namespace Epsitec.Common.Widgets
 				// Un clic dans la ligne éditable doit mettre le focus sur celle-ci, quel que
 				// soit le type de gestion de focus actif (AutoFocus, etc.).
 				
-				Window.FocusWidget(this);
+				this.Focus();
 			}
 			
 			return true;
