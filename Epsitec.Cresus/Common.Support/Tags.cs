@@ -11,6 +11,7 @@ namespace Epsitec.Common.Support
 		public const string	Data		= "data";
 		public const string	Caption		= "capt";
 		public const string	Description	= "desc";
+		public const string Target		= "targ";
 		public const string InfoXml		= "info";
 	}
 }
