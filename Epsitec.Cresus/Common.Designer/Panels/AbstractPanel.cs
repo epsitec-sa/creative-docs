@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : en chantier/PA
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
@@ -23,7 +26,7 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		
 		
-		public Drawing.Size					Size
+		public Drawing.Size						Size
 		{
 			get
 			{
@@ -31,13 +34,13 @@ namespace Epsitec.Common.Designer.Panels
 			}
 		}
 		
-		public Widget						Widget
+		public Widget							Widget
 		{
 			get
 			{
 				if (this.widget == null)
 				{
-					this.widget = this.CreateWidget ();
+					this.CreateWidget ();
 					this.widget.SetCommandDispatcher (this.CommandDispatcher);
 				}
 				
@@ -45,7 +48,7 @@ namespace Epsitec.Common.Designer.Panels
 			}
 		}
 		
-		public Support.CommandDispatcher	CommandDispatcher
+		public Support.CommandDispatcher		CommandDispatcher
 		{
 			get
 			{
@@ -61,17 +64,15 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		
 		
-		protected virtual Widget CreateWidget()
+		protected virtual void CreateWidget()
 		{
-			Widget host = new Widget ();
+			this.widget = new Widget ();
 			
-			host.Size    = this.Size;
-			host.MinSize = this.Size;
-			host.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			this.widget.Size    = this.Size;
+			this.widget.MinSize = this.Size;
+			this.widget.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			
-			this.CreateWidgets (host);
-			
-			return host;
+			this.CreateWidgets (this.widget);
 		}
 
 		protected abstract void CreateWidgets(Widget parent);
@@ -85,8 +86,8 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		
 		
-		protected Drawing.Size				size;
-		protected Widget					widget;
-		protected Support.CommandDispatcher	dispatcher;
+		protected Drawing.Size					size;
+		protected Widget						widget;
+		protected Support.CommandDispatcher		dispatcher;
 	}
 }
