@@ -49,7 +49,7 @@ namespace Epsitec.Common.Widgets
 			
 			StaticText text = new StaticText ();
 			text.Dock = DockStyle.Fill;
-			text.Text = @"abracadabra abracadabra<br/><a href=""x"">abc <img src=""file:images/icon.png"" width=""5"" height=""4""/> def</a><br/>abracadabra abracadabra <a href=""y"">bla bla bla&nbsp;!</a>";
+			text.Text = @"abracadabra abracadabra<br/><a href=""x"">abc <img src=""file:images/icon.png"" width=""5"" height=""4""/> def</a><br/>abracadabra abracadabra <a href=""y"">bla bla bla&#160;!</a>";
 			text.Parent = window.Root;
 			text.BackColor = Color.FromRGB (1.0, 1.0, 1.0);
 			
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Widgets
 		[Test] public void CheckMetaChar()
 		{
 			int index = 0;
-			string text = "A&lt;&Amp;&GT;.&quot;&nbsp;";
+			string text = "A&lt;&Amp;&GT;.&quot;&#160;";
 			
 			Assertion.AssertEquals('A', TextLayout.AnalyseMetaChar(text, ref index));
 			Assertion.AssertEquals('<', TextLayout.AnalyseMetaChar(text, ref index));
@@ -271,7 +271,7 @@ namespace Epsitec.Common.Widgets
 			Assertion.Assert(TextLayout.CheckSyntax("<b><i></B></I>", out offsetError));
 			Assertion.Assert(TextLayout.CheckSyntax("Première<BR/>Deuxième", out offsetError));
 			Assertion.Assert(TextLayout.CheckSyntax("<img src=\"x\"/>", out offsetError));
-			Assertion.Assert(TextLayout.CheckSyntax("A&lt;&Amp;&GT;.&quot;&nbsp;", out offsetError));
+			Assertion.Assert(TextLayout.CheckSyntax("A&lt;&Amp;&GT;.&quot;&#160;", out offsetError));
 
 			// Textes faux qui doivent être rejetés.
 			Assertion.Assert(!TextLayout.CheckSyntax("<bold", out offsetError));
@@ -292,7 +292,7 @@ namespace Epsitec.Common.Widgets
 			//?			layout.Text = "Ceci est un petit texte ridicule, juste pour essayer !";
 			//?			layout.Text = "Normal <b>bold <i>bold-italic </b>italic </i>normal.";
 			//?			layout.Text = "<b>Première ligne</b> assez longue pour nécessiter une coupure.<br/><b>Deuxième ligne</b> assez longue pour nécessiter une coupure.";
-			layout.Text = @"Ceci est un <a href=""x"">petit texte <b>ridicule</b></a>, juste pour <font color=""#ff0000"">tester</font> le comportement de la <font size=""20"">classe</font> <font face=""Courier New"">TextLayout</font>, mes premiers pas en &quot;C#&quot;&nbsp;!<br/>Et voilà une image <img src=""file:images/icon.png""/> simple.";
+			layout.Text = @"Ceci est un <a href=""x"">petit texte <b>ridicule</b></a>, juste pour <font color=""#ff0000"">tester</font> le comportement de la <font size=""20"">classe</font> <font face=""Courier New"">TextLayout</font>, mes premiers pas en &quot;C#&quot;&#160;!<br/>Et voilà une image <img src=""file:images/icon.png""/> simple.";
 			layout.Font = Font.GetFont("Tahoma", "Regular");
 			layout.FontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleCenter;
@@ -343,7 +343,7 @@ namespace Epsitec.Common.Widgets
 		{
 			TextLayout layout = new TextLayout();
 
-			layout.Text = @"abracadabra abracadabra<br/><a href=""x"">abc <img src=""file:images/icon.png"" width=""5"" height=""4""/> def</a><br/>abracadabra abracadabra <a href=""y"">bla bla bla&nbsp;!</a>";
+			layout.Text = @"abracadabra&#8212;abracadabra<br/><a href=""x"">abc <img src=""file:images/icon.png"" width=""5"" height=""4""/> def</a><br/>abracadabra abracadabra <a href=""y"">bla bla bla&#160;!</a>";
 			layout.Font = Font.GetFont("Tahoma", "Regular");
 			layout.FontSize = 15.0;
 			layout.Alignment = ContentAlignment.MiddleCenter;
