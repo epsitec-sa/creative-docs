@@ -8,10 +8,6 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ObjectMemory()
 		{
-		}
-
-		public override void CreateProperties()
-		{
 			PropertyLine lineMode = new PropertyLine();
 			lineMode.Type = PropertyType.LineMode;
 			lineMode.Text = "Epaisseur trait";
@@ -27,6 +23,20 @@ namespace Epsitec.Common.Pictogram.Data
 			lineColor.BackgroundIntensity = 0.85;
 			lineColor.Color = Drawing.Color.FromBrightness(0.0);
 			this.AddProperty(lineColor);
+
+			PropertyArrow arrow = new PropertyArrow();
+			arrow.Type = PropertyType.Arrow;
+			arrow.Text = "Extrémités";
+			arrow.BackgroundIntensity = 0.85;
+			arrow.ArrowType1 = ArrowType.Right;
+			arrow.ArrowType2 = ArrowType.Right;
+			arrow.Length1  = 2.0;
+			arrow.Effect11 = 0.5;
+			arrow.Effect12 = 0.5;
+			arrow.Length2  = 2.0;
+			arrow.Effect21 = 0.5;
+			arrow.Effect22 = 0.5;
+			this.AddProperty(arrow);
 
 			PropertyGradient fillGradient = new PropertyGradient();
 			fillGradient.Type = PropertyType.FillGradient;
@@ -86,14 +96,14 @@ namespace Epsitec.Common.Pictogram.Data
 			PropertyString textString = new PropertyString();
 			textString.Type = PropertyType.TextString;
 			textString.Text = "Texte";
-			textString.BackgroundIntensity = 0.90;
+			textString.BackgroundIntensity = 0.80;
 			textString.String = "Abc";
 			this.AddProperty(textString);
 
 			PropertyCombo textFontName = new PropertyCombo();
 			textFontName.Type = PropertyType.TextFontName;
 			textFontName.Text = "Police";
-			textFontName.BackgroundIntensity = 0.90;
+			textFontName.BackgroundIntensity = 0.80;
 			textFontName.Choice = 0;
 			textFontName.Add("Tahoma");
 			textFontName.Add("Arial");
@@ -104,7 +114,7 @@ namespace Epsitec.Common.Pictogram.Data
 			PropertyCombo textFontOptical = new PropertyCombo();
 			textFontOptical.Type = PropertyType.TextFontOptical;
 			textFontOptical.Text = "Style";
-			textFontOptical.BackgroundIntensity = 0.90;
+			textFontOptical.BackgroundIntensity = 0.80;
 			textFontOptical.Choice = 0;
 			textFontOptical.Add("Normal");
 			textFontOptical.Add("Gras");
