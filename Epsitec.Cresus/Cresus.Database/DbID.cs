@@ -15,8 +15,43 @@ namespace Epsitec.Cresus.Database
 		{
 			this.value = id;
 		}
-		
-		
+
+		public long								LocalID
+		{
+			get
+			{
+				return this.value % DbID.LocalRange;
+			}
+		}
+
+		public int								ClientID
+		{
+			get
+			{
+				return (int) ((this.value / DbID.LocalRange) % DbID.ClientRange);
+			}
+		}
+
+
+		public static DbID CreateID(long local_id, int client_id)
+		{
+			System.Diagnostics.Debug.Assert (local_id >= 0);
+			System.Diagnostics.Debug.Assert (local_id < DbID.LocalRange);
+			System.Diagnostics.Debug.Assert (client_id >= 0);
+			System.Diagnostics.Debug.Assert (client_id < DbID.ClientRange);
+			
+			return new DbID (local_id + DbID.LocalRange * client_id);
+		}
+
+		public static DbID CreateTempID(long local_id)
+		{
+			System.Diagnostics.Debug.Assert (local_id >= 0);
+			System.Diagnostics.Debug.Assert (local_id < DbID.LocalRange);
+
+			return new DbID (local_id + DbID.MinimumTemp);
+		}
+
+
 		public static implicit operator long(DbID id)
 		{
 			return id.value;
@@ -84,10 +119,13 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion
 		
-		public const long						MinimumValid	=                   0;
-		public const long						MaximumValid	=  999999999999999999;
-		public const long						MinimumTemp		= 1000000000000000000;
-		public const long						MaximumTemp		= 1000000999999999999;
+		private const long						LocalRange		= 1000000000000;
+		private const long						ClientRange		= 1000000;
+		
+		public const long						MinimumValid	= 0;
+		public const long						MaximumValid	= DbID.LocalRange * DbID.ClientRange - 1;
+		public const long						MinimumTemp		= DbID.LocalRange * DbID.ClientRange;
+		public const long						MaximumTemp		= DbID.MinimumTemp + DbID.LocalRange - 1;
 		
 		private long							value;
 	}
