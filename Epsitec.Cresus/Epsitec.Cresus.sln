@@ -68,9 +68,13 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Fiche", "X.Setup.Fi
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Extension.Tests", "System.Extension.Tests\System.Extension.Tests.csproj", "{E9786766-8E62-4E55-850F-0C0363933664}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 18
+		SccNumberOfProjects = 19
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -142,6 +146,10 @@ Global
 		SccLocalPath17 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection17 = X.Setup.Fiche\\
+		SccProjectUniqueName18 = System.Extension.Tests\\System.Extension.Tests.csproj
+		SccLocalPath18 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection18 = System.Extension.Tests\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -214,6 +222,10 @@ Global
 		{CC74E4E2-D514-4528-BF95-D5A658DB08B9}.Release.Build.0 = Release|.NET
 		{7733D3A9-66F7-4768-959B-236236085CAC}.Debug.ActiveCfg = Debug
 		{7733D3A9-66F7-4768-959B-236236085CAC}.Release.ActiveCfg = Release
+		{E9786766-8E62-4E55-850F-0C0363933664}.Debug.ActiveCfg = Debug|.NET
+		{E9786766-8E62-4E55-850F-0C0363933664}.Debug.Build.0 = Debug|.NET
+		{E9786766-8E62-4E55-850F-0C0363933664}.Release.ActiveCfg = Release|.NET
+		{E9786766-8E62-4E55-850F-0C0363933664}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info
