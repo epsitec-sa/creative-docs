@@ -239,6 +239,15 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
+		internal bool							IsActive
+		{
+			get
+			{
+				System.Windows.Forms.Form active = System.Windows.Forms.Form.ActiveForm;
+				return (active == this);
+			}
+		}
+		
 		internal bool							IsFrozen
 		{
 			get { return this.is_frozen || (this.widget_window.Root == null); }
@@ -877,7 +886,7 @@ namespace Epsitec.Common.Widgets.Platform
 						
 						if (window != null)
 						{
-							if (this.IsOwnedWindow (window))
+							if (this.IsOwnedWindow (window.PlatformWindow))
 							{
 								//	La fenêtre qui sera activée (et qui a causé notre désactivation) nous appartient.
 								//	Si cette fenêtre est "flottante", alors on doit s'assurer que notre état visuel
@@ -943,7 +952,7 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
-		protected Platform.Window FindRootOwner()
+		internal Platform.Window FindRootOwner()
 		{
 			Window owner = this.Owner as Window;
 			
@@ -953,6 +962,19 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 			
 			return this;
+		}
+		
+		internal Platform.Window[] FindOwnedWindows()
+		{
+			System.Windows.Forms.Form[] forms = this.OwnedForms;
+			Platform.Window[] windows = new Platform.Window[forms.Length];
+			
+			for (int i = 0; i < forms.Length; i++)
+			{
+				windows[i] = forms[i] as Platform.Window;
+			}
+			
+			return windows;
 		}
 		
 		protected void FakeActivateOwned(bool active)
@@ -975,7 +997,7 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
-		protected bool IsOwnedWindow(Widgets.Window find)
+		protected bool IsOwnedWindow(Platform.Window find)
 		{
 			System.Windows.Forms.Form[] forms = this.OwnedForms;
 			
@@ -985,7 +1007,7 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				if (window != null)
 				{
-					if (window.widget_window == find)
+					if (window == find)
 					{
 						return true;
 					}

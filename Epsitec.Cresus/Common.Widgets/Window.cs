@@ -580,6 +580,24 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.window != null)
 				{
+					Platform.Window[] owned = this.window.FindOwnedWindows ();
+					
+					for (int i = 0; i < owned.Length; i++)
+					{
+						owned[i].HostingWidgetWindow.Dispose ();
+					}
+					
+					if (this.window.IsActive)
+					{
+						Platform.Window owner = this.window.Owner as Platform.Window;
+						
+						if (owner != null)
+						{
+							System.Diagnostics.Debug.WriteLine ("Disposing active window.");
+							owner.Activate ();
+						}
+					}
+					
 					this.window.ResetHostingWidgetWindow ();
 					this.window.Dispose ();
 				}

@@ -361,10 +361,12 @@ namespace Epsitec.Common.Widgets
 			
 			this.scrollList.Dispose();
 			this.scrollList = null;
+			
+			this.Window.MakeActive();
+			
 			this.comboWindow.Dispose();
 			this.comboWindow = null;
 			
-			this.Window.MakeActive();
 			this.SelectAll();
 			this.SetFocused(true);
 		}
