@@ -205,7 +205,22 @@ namespace Epsitec.Common.Pictogram.Widgets
 						}
 						PropertyList prop = po as PropertyList;
 						st = this.table[p+2, index].Children[0] as StaticText;
-						st.Text = prop.Get(prop.Choice);
+						st.Text = prop.GetListName();
+					}
+					else if ( po is PropertyCombo )
+					{
+						if ( this.table[p+2, index].Children.Count == 0 )
+						{
+							cell = new Cell();
+							st = new StaticText();
+							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
+							st.Dock = DockStyle.Fill;
+							cell.Children.Add(st);
+							this.table[p+2, index] = cell;
+						}
+						PropertyCombo prop = po as PropertyCombo;
+						st = this.table[p+2, index].Children[0] as StaticText;
+						st.Text = prop.GetListName();
 					}
 					else if ( po is PropertyColor )
 					{
@@ -236,6 +251,36 @@ namespace Epsitec.Common.Pictogram.Widgets
 						PropertyGradient prop = po as PropertyGradient;
 						gs = this.table[p+2, index].Children[0] as GradientSample;
 						gs.Gradient = prop;
+					}
+					else if ( po is PropertyCorner )
+					{
+						if ( this.table[p+2, index].Children.Count == 0 )
+						{
+							cell = new Cell();
+							st = new StaticText();
+							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
+							st.Dock = DockStyle.Fill;
+							cell.Children.Add(st);
+							this.table[p+2, index] = cell;
+						}
+						PropertyCorner prop = po as PropertyCorner;
+						st = this.table[p+2, index].Children[0] as StaticText;
+						st.Text = prop.GetListName();
+					}
+					else if ( po is PropertyRegular )
+					{
+						if ( this.table[p+2, index].Children.Count == 0 )
+						{
+							cell = new Cell();
+							st = new StaticText();
+							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
+							st.Dock = DockStyle.Fill;
+							cell.Children.Add(st);
+							this.table[p+2, index] = cell;
+						}
+						PropertyRegular prop = po as PropertyRegular;
+						st = this.table[p+2, index].Children[0] as StaticText;
+						st.Text = prop.GetListName();
 					}
 					else
 					{

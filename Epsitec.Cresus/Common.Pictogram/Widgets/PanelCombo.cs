@@ -46,7 +46,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			for ( int i=0 ; i<p.Count ; i++ )
 			{
-				this.list.Items.Add(p.Get(i));
+				this.list.Items.Add(p.GetName(i));
 			}
 			this.list.SelectedIndex = p.Choice;
 		}
