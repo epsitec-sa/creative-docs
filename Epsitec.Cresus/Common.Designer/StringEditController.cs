@@ -324,11 +324,21 @@ namespace Epsitec.Common.Designer
 			
 			public bool CheckInsertRows(int row, int num)
 			{
+				if (! this.IsDefaultActive)
+				{
+					return false;
+				}
+				
 				return (row >= 0) && (row <= this.GetRowCount ());
 			}
 			
 			public bool CheckRemoveRows(int row, int num)
 			{
+				if (! this.IsDefaultActive)
+				{
+					return false;
+				}
+				
 				return (row >= 0) && (row < this.GetRowCount ()) && (row + num <= this.GetRowCount ());
 			}
 			
@@ -340,7 +350,7 @@ namespace Epsitec.Common.Designer
 			
 			public bool CheckEnabledCell(int row, int column)
 			{
-				if (this.ActiveBundle == this.DefaultBundle)
+				if (this.IsDefaultActive)
 				{
 					return true;
 				}
@@ -350,6 +360,14 @@ namespace Epsitec.Common.Designer
 			
 			public event Support.EventHandler	StoreChanged;
 			#endregion
+			
+			public bool							IsDefaultActive
+			{
+				get
+				{
+					return this.active_bundle == this.default_bundle;
+				}
+			}
 			
 			public ResourceBundle				ActiveBundle
 			{

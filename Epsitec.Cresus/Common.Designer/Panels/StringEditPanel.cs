@@ -119,6 +119,7 @@ namespace Epsitec.Common.Designer.Panels
 			this.comment.TextChanged += new EventHandler (this.HandleCommentTextChanged);
 			
 			this.edit_array.SelectedIndex = -1;
+			this.lang_combo.SelectedIndex = 0;
 		}
 		
 		
@@ -196,6 +197,7 @@ namespace Epsitec.Common.Designer.Panels
 			
 			this.edit_array.ValidateEdition (true);
 			this.store.SetActive (level, culture);
+			this.edit_array.Columns[0].IsReadOnly = ! this.store.IsDefaultActive;
 			this.edit_array.InvalidateContents ();
 		}
 		

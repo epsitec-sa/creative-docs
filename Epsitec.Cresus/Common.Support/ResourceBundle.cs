@@ -838,7 +838,14 @@ namespace Epsitec.Common.Support
 				node.Attributes.Append (this.XmlDocument.CreateAttribute (name));
 			}
 			
-			node.Attributes[name].Value = value;
+			if (value == "")
+			{
+				node.Attributes.Remove (node.Attributes[name]);
+			}
+			else
+			{
+				node.Attributes[name].Value = value;
+			}
 			
 			this.OnFieldsChanged ();
 		}

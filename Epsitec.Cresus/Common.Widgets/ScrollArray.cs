@@ -2007,34 +2007,19 @@ invalid:	row    = -1;
 				
 				if (this.edition_row == row_line)
 				{
-					pos.Y -= this.row_height * num_add_lines;
-					
-					adorner.PaintCellBackground (graphics, new Drawing.Rectangle (pos.X, pos.Y, right - pos.X, this.row_height * (num_add_lines + 1)), widget_state);
+					pos.Y  -= this.row_height * num_add_lines;
 					n_rows -= num_add_lines;
+					
+					Drawing.Rectangle bounds = new Drawing.Rectangle (pos.X, pos.Y, right - pos.X, this.row_height * (1 + num_add_lines));
+					
+					this.PaintRowBackground (row, row_line, graphics, adorner, bounds, widget_state);
 				}
 				else
 				{
-					adorner.PaintCellBackground (graphics, new Drawing.Rectangle (pos.X, pos.Y, right - pos.X, this.row_height), widget_state);
+					Drawing.Rectangle bounds = new Drawing.Rectangle (pos.X, pos.Y, right - pos.X, this.row_height);
 					
-					pos.X += this.text_margin - System.Math.Floor (this.offset);
-					
-					for (int column = 0; column < this.max_columns; column++)
-					{
-						double end = pos.X + this.columns[column].Width;
-						
-						if ((pos.X < local_clip.Right) &&
-							(end > local_clip.Left))
-						{
-							TextLayout layout = this.layouts[row, column];
-							
-							if (layout != null)
-							{
-								adorner.PaintGeneralTextLayout (graphics, pos + new Drawing.Point (0, 0.5), layout, text_state, PaintTextStyle.Array, this.BackColor);
-							}
-						}
-						
-						pos.X = end;
-					}
+					this.PaintRowBackground (row, row_line, graphics, adorner, bounds, widget_state);
+					this.PaintRowContents (row, row_line, graphics, adorner, bounds, text_state, local_clip);
 				}
 			}
 			
@@ -2114,6 +2099,45 @@ invalid:	row    = -1;
 			WidgetState       state   = this.PaintState;
 			
 			adorner.PaintArrayForeground (graphics, rect, state);
+		}
+		
+		
+		protected virtual void PaintRowBackground(int row, int row_line, Drawing.Graphics graphics, IAdorner adorner, Drawing.Rectangle bounds, WidgetState state)
+		{
+			adorner.PaintCellBackground (graphics, bounds, state);
+		}
+		
+		protected virtual void PaintRowContents(int row, int row_line, Drawing.Graphics graphics, IAdorner adorner, Drawing.Rectangle bounds, WidgetState state, Drawing.Rectangle clip)
+		{
+			double x1 = bounds.X;
+			double y1 = bounds.Y + 0.5;
+			
+			x1 += this.text_margin;
+			x1 -= System.Math.Floor (this.offset);
+			
+			for (int column = 0; column < this.max_columns; column++)
+			{
+				double x2 = x1 + this.columns[column].Width;
+				
+				if ((x1 < clip.Right) &&
+					(x2 > clip.Left))
+				{
+					TextLayout layout = this.layouts[row, column];
+					
+					if ((layout != null) &&
+						(layout.Text.Length > 0))
+					{
+						this.PaintCellContents (row_line, column, graphics, adorner, new Drawing.Point (x1, y1), state, layout);
+					}
+				}
+				
+				x1 = x2;
+			}
+		}
+		
+		protected virtual void PaintCellContents(int row_line, int column, Drawing.Graphics graphics, IAdorner adorner, Drawing.Point pos, WidgetState state, TextLayout layout)
+		{
+			adorner.PaintGeneralTextLayout (graphics, pos, layout, state, PaintTextStyle.Array, this.BackColor);
 		}
 		
 		

@@ -399,6 +399,11 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 			
+			public bool CheckEnabledCell(int row, int column)
+			{
+				return (row % 2) == 0 ? true : false;
+			}
+			
 			public event Support.EventHandler	StoreChanged;
 		}
 		

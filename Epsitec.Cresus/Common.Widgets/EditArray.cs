@@ -355,6 +355,7 @@ namespace Epsitec.Common.Widgets
 			return cell;
 		}
 		
+		
 		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
 		{
 			if ((message.IsMouseType) &&
@@ -404,6 +405,17 @@ namespace Epsitec.Common.Widgets
 			base.ProcessMessage (message, pos);
 		}
 
+		protected override void PaintCellContents(int row_line, int column, Drawing.Graphics graphics, IAdorner adorner, Drawing.Point pos, WidgetState state, TextLayout layout)
+		{
+			if ((this.Columns[column].IsReadOnly) ||
+				(this.TextArrayStore.CheckEnabledCell (row_line, column) == false))
+			{
+				state &= ~ WidgetState.Enabled;
+			}
+			
+			base.PaintCellContents (row_line, column, graphics, adorner, pos, state, layout);
+		}
+		
 		
 		protected override void OnSelectedIndexChanging()
 		{
@@ -1498,6 +1510,11 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 
+			public bool CheckEnabledCell(int row, int column)
+			{
+				return true;
+			}
+			
 			
 			public event Support.EventHandler	StoreChanged;
 			#endregion
