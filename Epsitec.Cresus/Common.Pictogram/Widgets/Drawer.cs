@@ -2446,7 +2446,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			//?graphics.ResetClippingRectangle();
 			//?graphics.SetClippingRectangle(this.InnerBounds);
 
-#if false
+#if true
 			if ( this.iconObjects.CurrentPattern != 0 )
 			{
 				graphics.AddFilledRectangle(clipRect);
