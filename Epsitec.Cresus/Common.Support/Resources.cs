@@ -21,9 +21,11 @@ namespace Epsitec.Common.Support
 			Resources.provider_hash = new System.Collections.Hashtable ();
 			Resources.culture       = CultureInfo.CurrentCulture;
 			
+			string[] names = { "fr", "de", "it", "en" };
+			
+			Resources.DefineCultures (names);
 			Resources.Initialise ();
 		}
-		
 		
 		protected static void Initialise()
 		{
@@ -56,6 +58,18 @@ namespace Epsitec.Common.Support
 			
 			Resources.providers = new IResourceProvider[providers.Count];
 			providers.CopyTo (Resources.providers);
+		}
+		
+		protected static void DefineCultures(string[] names)
+		{
+			int n = names.Length;
+			
+			Resources.cultures = new CultureInfo[n];
+			
+			for (int i = 0; i < n; i++)
+			{
+				Resources.cultures[i] = Resources.FindCultureInfo (names[i]);
+			}
 		}
 		
 		
@@ -113,6 +127,13 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public static CultureInfo[]				Cultures
+		{
+			get
+			{
+				return Resources.cultures;
+			}
+		}
 		
 		public static string					DefaultSuffix
 		{
@@ -414,7 +435,7 @@ namespace Epsitec.Common.Support
 				switch (level)
 				{
 					case ResourceLevel.Merged:
-						bundle = ResourceBundle.Create (resource_id, prefix, level, culture, recursion);
+						bundle = ResourceBundle.Create (prefix, resource_id, level, culture, recursion);
 						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Default, culture));
 						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Localised, culture));
 						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Customised, culture));
@@ -423,7 +444,7 @@ namespace Epsitec.Common.Support
 					case ResourceLevel.Default:
 					case ResourceLevel.Localised:
 					case ResourceLevel.Customised:
-						bundle = ResourceBundle.Create (resource_id, prefix, level, culture, recursion);
+						bundle = ResourceBundle.Create (prefix, resource_id, level, culture, recursion);
 						bundle.Compile (provider.GetData (resource_id, level, culture));
 						break;
 					
@@ -603,6 +624,7 @@ namespace Epsitec.Common.Support
 			return culture_a.TwoLetterISOLanguageName == culture_b.TwoLetterISOLanguageName;
 		}
 		
+		
 		protected static void SelectLocale(CultureInfo culture)
 		{
 			Resources.culture = culture;
@@ -639,6 +661,7 @@ namespace Epsitec.Common.Support
 		
 		
 		protected static CultureInfo			culture;
+		protected static CultureInfo[]			cultures;
 		protected static IResourceProvider[]	providers;
 		protected static Hashtable				provider_hash;
 		protected static string					application_name;

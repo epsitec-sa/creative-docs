@@ -187,7 +187,17 @@ namespace Epsitec.Common.Support.Implementation
 					bundle.RefInclusionEnabled = false;
 					bundle.AutoMergeEnabled    = false;
 					
-					bundle.Compile (this.GetData (bundle_name, ResourceLevel.Default, culture));
+					try
+					{
+						bundle.Compile (this.GetData (bundle_name, ResourceLevel.Default, culture));
+					}
+					catch (System.Xml.XmlException)
+					{
+						//	Ce n'est pas un bundle compilable, probablement parce qu'il contient des
+						//	données binaires. Sautons-le.
+						
+						continue;
+					}
 					
 					if (type_filter != bundle.Type)
 					{

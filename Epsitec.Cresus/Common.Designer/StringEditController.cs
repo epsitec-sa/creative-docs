@@ -24,33 +24,79 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		public void AttachNewBundle(string full_id, string prefix, string type, ResourceLevel level, CultureInfo culture)
-		{
-			string name = Resources.ExtractName (full_id);
-			ResourceBundle bundle = ResourceBundle.Create (name, prefix, level, culture);
-			
-			bundle.DefineType (type);
-			
-			this.AttachExistingBundle (prefix, name, level, culture);
-			this.ActivateTabBookPage ();
-		}
-		
-		public void AttachExistingBundle(string prefix, string name, ResourceLevel level, CultureInfo culture)
+		public void AttachNewBundle(string prefix, string name, string type)
 		{
 			string full_name = Resources.MakeFullName (prefix, name);
 			
-			if (this.bundles.ContainsKey (full_name))
+			if (this.ActivateExistingBundle (full_name))
 			{
-				throw new System.InvalidOperationException (string.Format ("Cannot attach bundle {0} twice.", full_name));
+				return;
 			}
 			
-			string[] ids = Resources.GetBundleIds (full_name, null, ResourceLevel.All, culture);
-			ResourceBundleCollection bundles = new ResourceBundleCollection (prefix, ids);
+			ResourceBundleCollection bundles = new ResourceBundleCollection ();
+			ResourceBundle           bundle  = ResourceBundle.Create (prefix, name, ResourceLevel.Default);
+			
+			bundle.DefineType (type);
+			bundles.Add (bundle);
+			
+			this.CreateMissingBundles (bundles, prefix, name);
 			
 			this.bundles.Add (full_name, bundles);
-			this.panels.Add (this.CreatePanel (bundles));
+			this.panels.Add (this.CreatePanel (full_name, bundles));
 			
 			this.ActivateTabBookPage ();
+		}
+		
+		public void AttachExistingBundle(string prefix, string name)
+		{
+			string full_name = Resources.MakeFullName (prefix, name);
+			
+			if (this.ActivateExistingBundle (full_name))
+			{
+				return;
+			}
+			
+			string[] ids = Resources.GetBundleIds (full_name, null, ResourceLevel.All, null);
+			ResourceBundleCollection bundles = new ResourceBundleCollection (prefix, ids);
+			
+			this.CreateMissingBundles (bundles, prefix, name);
+			
+			this.bundles.Add (full_name, bundles);
+			this.panels.Add (this.CreatePanel (full_name, bundles));
+			
+			this.ActivateTabBookPage ();
+		}
+		
+		protected void CreateMissingBundles(ResourceBundleCollection bundles, string prefix, string name)
+		{
+			foreach (CultureInfo culture in Resources.Cultures)
+			{
+				if (bundles[ResourceLevel.Localised, culture] == null)
+				{
+					bundles.Add (ResourceBundle.Create (name, prefix, ResourceLevel.Localised, culture));
+				}
+			}
+		}
+		
+		protected bool ActivateExistingBundle(string full_name)
+		{
+			if (this.bundles.ContainsKey (full_name))
+			{
+				for (int i = 0; i < this.panels.Count; i++)
+				{
+					Panels.StringEditPanel panel = this.panels[i] as Panels.StringEditPanel;
+					
+					if (panel.Store.FullName == full_name)
+					{
+						this.tab_book.ActivePageIndex = i;
+						return true;
+					}
+				}
+				
+				throw new System.InvalidOperationException (string.Format ("Bundle '{0}' cannot be recycled.", full_name));
+			}
+			
+			return false;
 		}
 		
 		
@@ -100,10 +146,11 @@ namespace Epsitec.Common.Designer
 		
 		public class Store : Support.Data.ITextArrayStore
 		{
-			public Store(StringEditController controller, ResourceBundleCollection bundles)
+			public Store(StringEditController controller, string full_name, ResourceBundleCollection bundles)
 			{
-				this.bundles    = bundles;
 				this.controller = controller;
+				this.full_name  = full_name;
+				this.bundles    = bundles;
 				
 				this.bundles.FieldsChanged += new Epsitec.Common.Support.EventHandler (this.HandleBundleFieldsChanged);
 				
@@ -385,6 +432,14 @@ namespace Epsitec.Common.Designer
 				}
 			}
 			
+			public string						FullName
+			{
+				get
+				{
+					return this.full_name;
+				}
+			}
+			
 			public ResourceBundleCollection		Bundles
 			{
 				get
@@ -448,17 +503,18 @@ namespace Epsitec.Common.Designer
 			}
 			
 			
+			private string						full_name;
+			private StringEditController		controller;
 			private ResourceBundleCollection	bundles;
 			private ResourceBundle				active_bundle;
 			private ResourceBundle				default_bundle;
-			private StringEditController		controller;
 			private int							changing;
 		}
 		
 		
-		protected Panels.StringEditPanel CreatePanel(ResourceBundleCollection bundles)
+		protected Panels.StringEditPanel CreatePanel(string full_name, ResourceBundleCollection bundles)
 		{
-			Panels.StringEditPanel panel = new Panels.StringEditPanel (new Store (this, bundles));
+			Panels.StringEditPanel panel = new Panels.StringEditPanel (new Store (this, full_name, bundles));
 			
 			Widget  widget = panel.Widget;
 			Window  window = this.Window;
@@ -466,8 +522,6 @@ namespace Epsitec.Common.Designer
 			
 			System.Diagnostics.Debug.Assert (this.window != null);
 			System.Diagnostics.Debug.Assert (this.tab_book != null);
-			
-			window.Root.DockPadding = new Drawing.Margins (8, 8, 8, 8);
 			
 			widget.Dock   = DockStyle.Fill;
 			widget.Parent = page;
@@ -488,9 +542,17 @@ namespace Epsitec.Common.Designer
 			this.window.CommandDispatcher = this.dispatcher;
 			this.Window.Text = "Ressources textuelles";
 			
-			this.tab_book = new TabBook ();
+			this.tool_bar = new HToolBar (this.Window.Root);
+			this.tool_bar.Dock = DockStyle.Top;
+			this.tool_bar.CommandDispatcher = this.dispatcher;
+			
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("CreateStringBundle", "manifest:Epsitec.Common.Designer.Images.New.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("OpenStringBundle()", "manifest:Epsitec.Common.Designer.Images.Open.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("SaveStringBundle()", "manifest:Epsitec.Common.Designer.Images.Save.icon"));
+			
+			this.tab_book = new TabBook (this.Window.Root);
 			this.tab_book.Dock = DockStyle.Fill;
-			this.tab_book.Parent = this.window.Root;
+			this.tab_book.DockMargins = new Drawing.Margins (8, 8, 8, 8);
 			this.tab_book.HasCloseButton = true;
 			this.tab_book.CloseClicked += new EventHandler (this.HandleTabBookCloseClicked);
 		}
@@ -500,26 +562,20 @@ namespace Epsitec.Common.Designer
 		{
 			if (e.CommandArgs.Length == 0)
 			{
-				Dialogs.BundleName dialog = new Dialogs.BundleName ("CreateStringBundle (\"{0}\", \"{1}\", {2}, {3})", this.dispatcher);
+				Dialogs.BundleName dialog = new Dialogs.BundleName ("CreateStringBundle (\"{0}\", \"{1}\")", this.dispatcher);
 				dialog.Owner = this.Window;
 				dialog.Show ();
 			}
-			else if (e.CommandArgs.Length == 4)
+			else if (e.CommandArgs.Length == 2)
 			{
 				string bundle_prefix = e.CommandArgs[0];
-				string bundle_id     = e.CommandArgs[1];
-				string bundle_level  = e.CommandArgs[2];
-				string culture_code  = e.CommandArgs[3];
+				string bundle_name   = e.CommandArgs[1];
 				
-				string      full_id = Resources.MakeFullName (bundle_prefix, bundle_id);
-				ResourceLevel level = (ResourceLevel) System.Enum.Parse (typeof (ResourceLevel), bundle_level);
-				CultureInfo culture = Resources.FindCultureInfo (culture_code);
-				
-				this.AttachNewBundle (full_id, bundle_prefix, "String", level, culture);
+				this.AttachNewBundle (bundle_prefix, bundle_name, "String");
 			}
 			else
 			{
-				this.ThrowInvalidOperationException (e, 1);
+				this.ThrowInvalidOperationException (e, 2);
 			}
 		}
 		
@@ -527,26 +583,23 @@ namespace Epsitec.Common.Designer
 		{
 			if (e.CommandArgs.Length == 0)
 			{
-				Dialogs.OpenExistingBundle dialog = new Dialogs.OpenExistingBundle ("OpenStringBundle (\"{0}\", {1}, \"{2}\")", this.dispatcher);
+				Dialogs.OpenExistingBundle dialog = new Dialogs.OpenExistingBundle ("OpenStringBundle (\"{0}\")", this.dispatcher);
 				dialog.SubBundleSpec.TypeFilter = "String";
 				dialog.Owner = this.Window;
 				dialog.UpdateListContents ();
 				dialog.Show ();
 			}
-			else if (e.CommandArgs.Length == 3)
+			else if (e.CommandArgs.Length == 1)
 			{
-				ResourceLevel  level   = (ResourceLevel) System.Enum.Parse (typeof (ResourceLevel), e.CommandArgs[1]);
 				string         full_id = e.CommandArgs[0];
 				string         prefix  = Resources.ExtractPrefix (full_id);
 				string         name    = Resources.ExtractName (full_id);
-				CultureInfo    culture = Resources.FindCultureInfo (e.CommandArgs[2]);
-				ResourceBundle bundle  = Resources.GetBundle (e.CommandArgs[0], level, culture);
 				
-				this.AttachExistingBundle (prefix, name, level, culture);
+				this.AttachExistingBundle (prefix, name);
 			}
 			else
 			{
-				this.ThrowInvalidOperationException (e, 3);
+				this.ThrowInvalidOperationException (e, 1);
 			}
 		}
 		
@@ -563,7 +616,10 @@ namespace Epsitec.Common.Designer
 			{
 				foreach (ResourceBundle bundle in bundles)
 				{
-					Resources.SetBundle (bundle, ResourceSetMode.Write);
+					if (! bundle.IsEmpty)
+					{
+						Resources.SetBundle (bundle, ResourceSetMode.Write);
+					}
 				}
 			}
 		}
@@ -571,35 +627,31 @@ namespace Epsitec.Common.Designer
 		
 		private void HandleTabBookCloseClicked(object sender)
 		{
-			ResourceBundleCollection bundles = this.ActiveBundleCollection;
+			int index = this.tab_book.ActivePageIndex;
 			
-			if (bundles != null)
+			if (index > -1)
 			{
-				//	Ferme la page active...
+				//	Ferme la page active.
 				
-				this.tab_book.Items.RemoveAt (this.tab_book.ActivePageIndex);
+				Panels.StringEditPanel panel = this.panels[index] as Panels.StringEditPanel;
+				string full_name = panel.Store.FullName;
 				
-				foreach (System.Collections.DictionaryEntry entry in this.bundles)
-				{
-					if (entry.Value == bundles)
-					{
-						this.bundles.Remove (entry.Key);
-						break;
-					}
-				}
+				this.bundles.Remove (full_name);
+				this.panels.RemoveAt (index);
+				this.tab_book.Items.RemoveAt (index);
 			}
 		}
 		
 		private void ActivateTabBookPage()
 		{
 			this.tab_book.ActivePageIndex = this.bundles.Count - 1;
-			this.tab_book.Invalidate ();
 		}
 		
 		
 		protected System.Collections.Hashtable	bundles;
 		protected System.Collections.ArrayList	panels;
 		protected Window						window;
+		protected AbstractToolBar				tool_bar;
 		protected TabBook						tab_book;
 		protected Support.CommandDispatcher		dispatcher;
 	}

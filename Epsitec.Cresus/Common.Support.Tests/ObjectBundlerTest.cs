@@ -164,7 +164,7 @@ namespace Epsitec.Common.Support
 			Types.Time time_2 = Types.Time.Now;
 			
 			bundler = new ObjectBundler ();
-			bundle  = ResourceBundle.Create ("cloned_simple_window", "file", ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
+			bundle  = ResourceBundle.Create ("file", "cloned_simple_window", ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
 			
 			bundler.SetupPrefix ("file");
 			bundler.FillBundleFromObject (bundle, root);
@@ -197,7 +197,7 @@ namespace Epsitec.Common.Support
 			Assert.IsNotNull (root);
 			
 			bundler = new ObjectBundler ();
-			bundle  = ResourceBundle.Create ("cloned_simple_window", "file", ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
+			bundle  = ResourceBundle.Create ("file", "cloned_simple_window", ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
 			
 			bundler.SetupPrefix ("file");
 			bundler.FillBundleFromObject (bundle, root);

@@ -239,7 +239,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCompileRefLevel2AutoPrefix()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test", "file", ResourceLevel.Default, 0);
+			ResourceBundle bundle = ResourceBundle.Create ("file", "test", ResourceLevel.Default, 0);
 			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='button.cancel#Text'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);

@@ -349,7 +349,7 @@ namespace Epsitec.Common.Support
 				name = null;
 			}
 			
-			return ResourceBundle.Create (name, this.default_prefix, this.default_level, this.default_culture);
+			return ResourceBundle.Create (this.default_prefix, name, this.default_level, this.default_culture);
 		}
 		
 		public bool FillBundleFromObject(ResourceBundle bundle, object source)
