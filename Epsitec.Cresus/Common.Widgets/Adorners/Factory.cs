@@ -93,7 +93,12 @@ namespace Epsitec.Common.Widgets.Adorner
 				return false;
 			}
 			
-			Factory.active_adorner = adorner;
+			if (Factory.active_adorner != adorner)
+			{
+				Factory.active_adorner = adorner;
+				
+				Window.InvalidateAll (Window.InvalidateReason.AdornerChanged);
+			}
 			
 			return true;
 		}
