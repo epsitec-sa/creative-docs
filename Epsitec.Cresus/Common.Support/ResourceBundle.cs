@@ -658,6 +658,18 @@ namespace Epsitec.Common.Support
 				get { return this.parent == null; }
 			}
 			
+			public bool						IsRef
+			{
+				get
+				{
+					if (this.xml != null)
+					{
+						return this.xml.Name == "ref";
+					}
+					
+					return false;
+				}
+			}
 			
 			public string					AsString
 			{
