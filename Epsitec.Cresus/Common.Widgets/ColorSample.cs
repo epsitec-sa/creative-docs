@@ -70,9 +70,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.possibleOrigin && this.ActiveState == WidgetState.ActiveYes )
 			{
 				Drawing.Rectangle r = rect;
-				r.Inflate(5);
-				r.Right --;
-				r.Bottom ++;
+				r.Inflate(4);
 				graphics.AddFilledRectangle(r);
 				graphics.RenderSolid(adorner.ColorCaption);
 			}

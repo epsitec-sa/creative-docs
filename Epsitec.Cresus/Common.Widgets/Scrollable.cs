@@ -42,6 +42,9 @@ namespace Epsitec.Common.Widgets
 			
 			this.h_scroller.ValueChanged += new Support.EventHandler (this.HandleHScrollerValueChanged);
 			this.v_scroller.ValueChanged += new Support.EventHandler (this.HandleVScrollerValueChanged);
+
+			this.isForegroundFrame = false;
+			this.foregroundFrameMargins = new Drawing.Margins(0,0,0,0);
 			
 			this.Panel = new Panel ();
 		}
@@ -414,6 +417,34 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public bool								IsForegroundFrame
+		{
+			get { return this.isForegroundFrame; }
+			set { this.isForegroundFrame = value; }
+		}
+
+		public Drawing.Margins					ForegroundFrameMargins
+		{
+			get { return this.foregroundFrameMargins; }
+			set { this.foregroundFrameMargins = value; }
+		}
+
+		protected override void PaintForegroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			if (this.isForegroundFrame == false)  return;
+
+			IAdorner    adorner = Widgets.Adorner.Factory.Active;
+			WidgetState state   = this.PaintState;
+			
+			Drawing.Rectangle rect  = this.Client.Bounds;
+			double margin_x = (this.v_scroller.IsVisible) ? this.v_scroller.Width  : 0;
+			double margin_y = (this.h_scroller.IsVisible) ? this.h_scroller.Height : 0;
+			rect.Right -= margin_x;
+			rect.Bottom += margin_y;
+			rect.Deflate (this.foregroundFrameMargins);
+			adorner.PaintGroupBox (graphics, rect, Drawing.Rectangle.Empty, state);
+		}
+
 		
 		protected Panel							panel;						//	panel utilisé pour le contenu
 		protected Drawing.Rectangle				panel_aperture;				//	ouverture par laquelle on voit le panel
@@ -426,6 +457,9 @@ namespace Epsitec.Common.Widgets
 		protected ScrollableScrollerMode		v_scroller_mode;
 		protected ScrollableScrollerMode		h_scroller_mode;
 		
+		protected bool							isForegroundFrame;
+		protected Drawing.Margins				foregroundFrameMargins;
+
 		protected const double					SmallScrollPixels  = 5;
 		protected const double					LargeScrollPercent = 50;
 	}
