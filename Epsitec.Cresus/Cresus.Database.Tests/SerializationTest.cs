@@ -27,9 +27,9 @@ namespace Epsitec.Cresus.Database
 			
 			System.IO.File.Delete ("test.bin");
 			
-			Assertion.AssertNotNull (dbx2);
-			Assertion.AssertEquals (typeof (DbException), dbx2.GetType ());
-			Assertion.AssertEquals (dbx1.Message, dbx2.Message);
+			Assert.IsNotNull (dbx2);
+			Assert.AreEqual (typeof (DbException), dbx2.GetType ());
+			Assert.AreEqual (dbx1.Message, dbx2.Message);
 			
 			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Create))
 			{
@@ -53,9 +53,9 @@ namespace Epsitec.Cresus.Database
 			
 			System.IO.File.Delete ("test.soap");
 			
-			Assertion.AssertNotNull (dbx2);
-			Assertion.AssertEquals (typeof (DbException), dbx2.GetType ());
-			Assertion.AssertEquals (dbx1.Message, dbx2.Message);
+			Assert.IsNotNull (dbx2);
+			Assert.AreEqual (typeof (DbException), dbx2.GetType ());
+			Assert.AreEqual (dbx1.Message, dbx2.Message);
 		}
 	}
 }

@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Database
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
 			
-			Assertion.AssertNotNull (sql_builder);
+			Assert.IsNotNull (sql_builder);
 		}
 		
 		[Test] [ExpectedException (typeof (DbSyntaxException))] public void CheckInsertTableExPrimaryKey()
@@ -454,8 +454,8 @@ namespace Epsitec.Cresus.Database
 			command.Transaction = db_abstraction.BeginTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
 
-			Assertion.AssertEquals (typeof (int),    data_set.Tables[0].Columns[0].DataType);
-			Assertion.AssertEquals (typeof (object), data_set.Tables[0].Columns[1].DataType);
+			Assert.AreEqual (typeof (int),    data_set.Tables[0].Columns[0].DataType);
+			Assert.AreEqual (typeof (object), data_set.Tables[0].Columns[1].DataType);
 			
 			//	récupère l'objet de la première ligne, seconde colonne
 			
@@ -466,23 +466,23 @@ namespace Epsitec.Cresus.Database
 			//	Hélas, on n'a pas un type exact pour la colonne ici... J'aurais bien aimé que le
 			//	provider retourne un type byte[] !
 			
-			Assertion.AssertEquals (typeof (object), blob_type);
-//-			Assertion.AssertEquals (11000, blob_column.MaxLength);
+			Assert.AreEqual (typeof (object), blob_type);
+//-			Assert.AreEqual (11000, blob_column.MaxLength);
 			
 			DataRow     data_row  = data_table.Rows[0];
 			object	    blob      = data_row[1];
 			System.Type data_type = blob.GetType ();
 			
-			Assertion.AssertEquals (typeof (byte[]), data_type);
+			Assert.AreEqual (typeof (byte[]), data_type);
 			
 			byte[] data_array = data_row[1] as byte[];
 			
-			Assertion.AssertNotNull (data_array);
-			Assertion.AssertEquals (10000, data_array.Length);
+			Assert.IsNotNull (data_array);
+			Assert.AreEqual (10000, data_array.Length);
 
 			for (int i = 0; i < 10000; i++)
 			{
-				Assertion.AssertEquals (insert_values[i], data_array[i]);
+				Assert.AreEqual (insert_values[i], data_array[i]);
 			}
 		}
 	}
