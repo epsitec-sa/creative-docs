@@ -37,6 +37,18 @@ namespace Epsitec.Common.Widgets
 		{
 			IconButton button = new IconButton (command, icon);
 			
+			button.Name = Support.CommandDispatcher.ExtractCommandName (command);
+			
+			return button;
+		}
+		
+		public static IconButton CreateHidden(string command, string icon)
+		{
+			IconButton button = new IconButton (command, icon);
+			
+			button.SetVisible (false);
+			button.Name = Support.CommandDispatcher.ExtractCommandName (command);
+			
 			return button;
 		}
 		
@@ -45,6 +57,7 @@ namespace Epsitec.Common.Widgets
 			IconButton button = new IconButton (command, icon);
 			
 			button.InternalState |= InternalState.AutoToggle;
+			button.Name = Support.CommandDispatcher.ExtractCommandName (command);
 			
 			return button;
 		}
