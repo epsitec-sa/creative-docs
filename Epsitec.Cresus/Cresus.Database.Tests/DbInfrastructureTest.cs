@@ -86,18 +86,22 @@ namespace Epsitec.Cresus.Database
 				Assertion.AssertEquals (db_type1, db_type2);
 			}	
 			{
-				DbColumn column_a = new DbColumn ("CR_ID",  DbNumDef.FromRawType (DbRawType.Int64));
-				DbColumn column_b = new DbColumn ("CR_REV", DbNumDef.FromRawType (DbRawType.Int32));
+				DbTable db_table = infrastructure.CreateUserTable ("SimpleTest");
+				
+#if false
 				DbColumn column_c = new DbColumn ("C", DbSimpleType.String, 50, false, Nullable.Yes);
 				DbColumn column_d = new DbColumn ("D", DbSimpleType.Guid, Nullable.Yes);
 				DbColumn column_e = new DbColumn ("E", DbNumDef.FromRawType (DbRawType.Boolean), Nullable.No);
 				
-				DbTable db_table = new DbTable ("Test");
+				column_c.DefineCategory (DbElementCat.UserDataManaged);
+				column_d.DefineCategory (DbElementCat.UserDataManaged);
+				column_e.DefineCategory (DbElementCat.UserDataManaged);
 				
-				db_table.PrimaryKey = new DbColumn[] { column_a, column_b };
-				db_table.Columns.AddRange (new DbColumn[] { column_a, column_b, column_c, column_d, column_e });
+				db_table.Columns.AddRange (new DbColumn[] { column_c, column_d, column_e });
+#endif
 				
 				infrastructure.RegisterNewDbTable (db_table);
+				infrastructure.ResolveDbTable (null, db_table.Name);
 			}
 #if false			
 			DbTypeEnum db_type_enum = db_type1 as DbTypeEnum;

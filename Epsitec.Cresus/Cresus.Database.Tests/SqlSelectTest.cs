@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (SqlSelectPredicate.Distinct, sql_select1.Predicate);
 
 			//	ajoute quelques champs
-			sql_select1.Fields.Add(SqlField.CreateName ("Table1", "Colonne1"));
-			sql_select1.Fields.Add(SqlField.CreateName ("Table1", "Colonne2"));
-			sql_select1.Fields.Add(SqlField.CreateName ("Table2", "Colonne3"));
+			sql_select1.Fields.Add (SqlField.CreateName ("Table1", "Colonne1"));
+			sql_select1.Fields.Add (SqlField.CreateName ("Table1", "Colonne2"));
+			sql_select1.Fields.Add (SqlField.CreateName ("Table2", "Colonne3"));
 			//	DD?	il faudrait que les champs créés aient le nom qualifié comme Alias, automatiquement ?
 			//	PA: non, parce que le nom d'alias ne peut en principe pas contenir de ".", d'après ce que
 			//	j'ai compris de la norme SQL... A voir. A moins de transformer les noms d'alias avec "_"
@@ -28,11 +28,11 @@ namespace Epsitec.Cresus.Database
 			SqlSelect sql_select2 = new SqlSelect ();
 
 			//	ajoute quelques champs
-			sql_select2.Fields.Add(SqlField.CreateName ("Table1", "Colonne3"));
-			sql_select2.Fields.Add(SqlField.CreateName ("Table2", "Colonne2"));
+			sql_select2.Fields.Add (SqlField.CreateName ("Table1", "Colonne3"));
+			sql_select2.Fields.Add (SqlField.CreateName ("Table2", "Colonne2"));
 
 			//	combine les 2 clauses
-			sql_select1.Add(sql_select2, SqlSelectSetOp.Union);
+			sql_select1.Add (sql_select2, SqlSelectSetOp.Union);
 		}
 
 		public static DbAccess CreateDbAccess()
@@ -67,8 +67,8 @@ namespace Epsitec.Cresus.Database
 
 			//	fait la liste de tous les champs de la table EMPLOYEE
 			SqlSelect sql_select = new SqlSelect ();
-			sql_select.Fields.Add(SqlField.CreateAll ());
-			sql_select.Tables.Add(SqlField.CreateName ("EMPLOYEE"));
+			sql_select.Fields.Add (SqlField.CreateAll ());
+			sql_select.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
 
 			//	construit la commande d'extraction
 			sql_builder.SelectData(sql_select);
@@ -88,21 +88,21 @@ namespace Epsitec.Cresus.Database
 		{
 			int		nb = 0;
 			// For each table in the DataSet, print the row values.
-			foreach(DataTable myTable in data_set.Tables)
+			foreach (DataTable myTable in data_set.Tables)
 			{
-				System.Console.Out.WriteLine("TableName = " + myTable.TableName.ToString());
-				foreach(DataRow myRow in myTable.Rows)
+				System.Console.Out.WriteLine ("TableName = " + myTable.TableName.ToString ());
+				foreach (DataRow myRow in myTable.Rows)
 				{
 					nb++;
 					foreach (DataColumn myColumn in myTable.Columns)
 					{
-						System.Console.Out.Write(myRow[myColumn]);
-						System.Console.Out.Write(" ");
+						System.Console.Out.Write (myRow[myColumn]);
+						System.Console.Out.Write (" ");
 					}
-					System.Console.Out.WriteLine();
+					System.Console.Out.WriteLine ();
 				}
 			}
-			System.Console.Out.WriteLine("{0} fiches listées", nb);
+			System.Console.Out.WriteLine ("{0} fiches listées", nb);
 			return nb;
 		}
 
@@ -123,11 +123,11 @@ namespace Epsitec.Cresus.Database
 			SqlSelect sql_select = new SqlSelect ();
 			sql_select.Predicate = SqlSelectPredicate.Distinct;
 
-			sql_select.Fields.Add(SqlField.CreateName ("LAST_NAME"), SqlFieldOrder.Inverse);
-			sql_select.Tables.Add(SqlField.CreateName ("EMPLOYEE"));
+			sql_select.Fields.Add (SqlField.CreateName ("LAST_NAME"), SqlFieldOrder.Inverse);
+			sql_select.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
 
 			//	construit la commande d'extraction
-			sql_builder.SelectData(sql_select);
+			sql_builder.SelectData (sql_select);
 
 			System.Data.IDbCommand command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
@@ -156,28 +156,28 @@ namespace Epsitec.Cresus.Database
 			//	fait la liste des noms de personne distincts de la table EMPLOYEE
 			SqlSelect sql_select = new SqlSelect ();
 
-			sql_select.Fields.Add(SqlField.CreateName ("LAST_NAME"));
-			sql_select.Fields.Add(SqlField.CreateName ("FIRST_NAME"));
-			sql_select.Fields.Add(SqlField.CreateName ("JOB_GRADE"));
-			sql_select.Fields.Add(SqlField.CreateName ("JOB_COUNTRY"));
-			sql_select.Tables.Add(SqlField.CreateName ("EMPLOYEE"));
+			sql_select.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+			sql_select.Fields.Add (SqlField.CreateName ("FIRST_NAME"));
+			sql_select.Fields.Add (SqlField.CreateName ("JOB_GRADE"));
+			sql_select.Fields.Add (SqlField.CreateName ("JOB_COUNTRY"));
+			sql_select.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
 
 			//	défini la fonction JOB_COUNTRY <> 'England'
 			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareNotEqual, 
 													SqlField.CreateName("JOB_COUNTRY"),
 													SqlField.CreateConstant("England", DbRawType.String));
 
-			sql_select.Conditions.Add(SqlField.CreateFunction(sql_func));
+			sql_select.Conditions.Add (SqlField.CreateFunction(sql_func));
 
 			//	et JOB_GRADE > 3
 			sql_func = new SqlFunction (SqlFunctionType.CompareGreaterThan, 
-				SqlField.CreateName("JOB_GRADE"),
-				SqlField.CreateConstant(3, DbRawType.Int16));
+				SqlField.CreateName ("JOB_GRADE"),
+				SqlField.CreateConstant (3, DbRawType.Int16));
 
-			sql_select.Conditions.Add(SqlField.CreateFunction(sql_func));
+			sql_select.Conditions.Add (SqlField.CreateFunction(sql_func));
 
 			//	construit la commande d'extraction
-			sql_builder.SelectData(sql_select);
+			sql_builder.SelectData (sql_select);
 
 			System.Data.IDbCommand command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
@@ -189,5 +189,50 @@ namespace Epsitec.Cresus.Database
 
 			int n = this.DumpDataSet (data_set);
 		}
+
+		[Test] public void CheckSqlSelectExecute4()
+		{
+			//	Test avec une sous-requête, dans
+			//	C:\Program Files\firebird15\Data\Epsitec\Employee.Firebird
+			//	pour chercher les fiches avec le JOB_GRADE le plus élevé
+			//	select * from employee where job_grade = (select max(job_grade) from employee) 
+
+			DbAccess db_access = SqlSelectTest.CreateDbAccess ();
+
+			IDbAbstraction db_abstraction = null;
+			db_abstraction = DbFactory.FindDbAbstraction (db_access);
+
+			ISqlEngine     sql_engine    = db_abstraction.SqlEngine;
+			ISqlBuilder    sql_builder   = db_abstraction.SqlBuilder;
+
+			SqlSelect sql_select = new SqlSelect ();
+
+			sql_select.Fields.Add (SqlField.CreateAll ());
+			sql_select.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
+
+			SqlSelect sub_query = new SqlSelect ();
+			sub_query.Fields.Add (SqlField.CreateAggregate (SqlAggregateType.Max, SqlField.CreateName ("JOB_GRADE")));
+			sub_query.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
+
+			//	défini la fonction JOB_GRADE == max(JOB_GRADE)
+			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+				SqlField.CreateName ("JOB_GRADE"),
+				SqlField.CreateSubQuery (sub_query));
+
+			sql_select.Conditions.Add (SqlField.CreateFunction(sql_func));
+
+			//	construit la commande d'extraction
+			sql_builder.SelectData (sql_select);
+
+			System.Data.IDbCommand command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			//	lecture des résultats
+			DataSet data_set = new DataSet();
+			command.Transaction = db_abstraction.BeginTransaction ();
+			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
+
+			int n = this.DumpDataSet (data_set);
+		}	
 	}
 }

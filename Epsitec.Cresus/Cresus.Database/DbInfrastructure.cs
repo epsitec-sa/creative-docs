@@ -18,9 +18,6 @@ namespace Epsitec.Cresus.Database
 		public DbInfrastructure()
 		{
 			this.localisations = new string[1] { "" };
-			
-			this.InitialiseNumDefs ();
-			this.InitialiseStrTypes ();
 		}
 		
 		
@@ -34,6 +31,8 @@ namespace Epsitec.Cresus.Database
 			this.db_access = db_access;
 			this.db_access.Create = true;
 			
+			this.InitialiseNumDefs ();
+			this.InitialiseStrTypes ();
 			this.InitialiseDatabaseAbstraction ();
 			
 			//	La base de données vient d'être créée. Elle est donc toute vide (aucune
@@ -45,30 +44,25 @@ namespace Epsitec.Cresus.Database
 			
 			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
 			{
-#if false
-				string cmd1 = "CREATE TABLE X(A INTEGER NOT NULL, B INTEGER);";
-				string cmd2 = "INSERT INTO X(A, B) VALUES (1,1);";
-				
-				this.sql_engine.Execute (this.sql_builder.CreateCommand (transaction, cmd1), DbCommandType.Silent, 1);
-				this.sql_engine.Execute (this.sql_builder.CreateCommand (transaction, cmd2), DbCommandType.Silent, 1);
-#endif
-				
-				
 				this.BootCreateTableTableDef (transaction);
 				this.BootCreateTableColumnDef (transaction);
 				this.BootCreateTableTypeDef (transaction);
 				this.BootCreateTableEnumValDef (transaction);
 				this.BootCreateTableRefDef (transaction);
 				
-				//---->
+				//	Valide la création de toutes ces tables avant de commencer à peupler
+				//	les tables. Firebird requiert ce mode de fonctionnement.
+				
 				transaction.Commit ();
 			}
+			
+			//	Les tables ont toutes été créées. Il faut maintenant les remplir avec
+			//	les informations de départ.
 				
 			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
 			{
-				//<---- ce code ne devrait pas être nécessaire pour que ça marche !
-				
 				this.BootSetupTables (transaction);
+				
 				transaction.Commit ();
 			}
 		}
@@ -231,7 +225,7 @@ namespace Epsitec.Cresus.Database
 		
 		public DbKey FindDbTableKey(System.Data.IDbTransaction transaction, string name)
 		{
-			return this.FindLiveKey (this.FindDbKeys (transaction, DbTable.TagTableDef, name));
+			return this.FindLiveKey (this.FindDbKeys (transaction, DbTable.TagTableDef, DbSqlStandard.CreateSimpleSqlName (name)));
 		}
 		
 		public DbKey FindDbTypeKey(System.Data.IDbTransaction transaction, string name)
@@ -295,6 +289,33 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public DbTable CreateUserTable(string name)
+		{
+			DbTable table = new DbTable (DbSqlStandard.ConcatNames ("U_", name));
+			
+			DbType type = this.internal_types["CR.KeyId"];
+			
+			DbColumn col_id   = new DbColumn (DbColumn.TagId,       this.internal_types["CR.KeyId"]);
+			DbColumn col_rev  = new DbColumn (DbColumn.TagRevision, this.internal_types["CR.KeyRevision"]);
+			DbColumn col_stat = new DbColumn (DbColumn.TagStatus,   this.internal_types["CR.KeyStatus"]);
+			
+			col_id.DefineCategory (DbElementCat.Internal);
+			col_rev.DefineCategory (DbElementCat.Internal);
+			col_stat.DefineCategory (DbElementCat.Internal);
+			
+			table.DefineCategory (DbElementCat.UserDataManaged);
+			
+#if false
+			table.PrimaryKey.Add (col_id);
+			table.PrimaryKey.Add (col_rev);
+#else
+			table.PrimaryKey = new DbColumn[] { col_id, col_rev };
+#endif
+			table.Columns.AddRange (new DbColumn[] { col_id, col_rev, col_stat });
+
+			return table;
+		}
+		
 		public void RegisterNewDbTable(DbTable table)
 		{
 			//	Enregistre une nouvelle table dans la base de données. Ceci va attribuer à
@@ -302,25 +323,60 @@ namespace Epsitec.Cresus.Database
 			//	éventuelle table déjà existante. Cela va aussi attribuer des colonnes pour
 			//	la nouvelle table.
 			
+			//	Tous les types utilisés dans la définition des colonnes doivent être
+			//	connus (donc avoir une clef valide). On vérifie cela maintenant, avant
+			//	d'avoir touché à la base.
+				
+			for (int i = 0; i < table.Columns.Count; i++)
+			{
+				DbType type = table.Columns[i].Type;
+				
+				System.Diagnostics.Debug.Assert (type != null);
+				
+				if (type.InternalKey == null)
+				{
+					string message = string.Format ("Unregistered type '{0}' used in table '{1}', column '{2}'.",
+													type.Name, table.Name, table.Columns[i].Name);
+					
+					throw new DbException (this.db_access, message);
+				}
+			}
+			
 			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
 			{
-				//	Cherche si une table avec ce nom existe dans la base.
+				//	Cherche si une table avec ce nom existe dans la base. Si c'est le cas,
+				//	génère une exception.
 				
 				if (this.CountMatchingRows (transaction, DbTable.TagTableDef, DbColumn.TagName, table.CreateSqlName ()) > 0)
 				{
-					throw new DbException (this.db_access, string.Format ("Table {0} already exists in database with name {1}.", table.Name, table.CreateSqlName ()));
+					string message = string.Format ("Table {0} already exists in database with name {1}.",
+													table.Name, table.CreateSqlName ());
+					
+					throw new DbException (this.db_access, message);
 				}
 				
-				//	OK: aucun risque de collisions.
+				long table_id  = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagTableDef].InternalKey, 1);
+				long column_id = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagColumnDef].InternalKey, table.Columns.Count);
 				
+				//	Crée la ligne de description de la table :
 				
+				table.DefineInternalKey (new DbKey (table_id));
+				this.BootInsertTableDefRow (transaction, table);
+				
+				//	Crée les lignes de description des colonnes :
+				
+				for (int i = 0; i < table.Columns.Count; i++)
+				{
+					table.Columns[i].DefineInternalKey (new DbKey (column_id + i));
+					this.BootInsertColumnDefRow (transaction, table, table.Columns[i]);
+				}
+				
+				//	Finalement, il faut créer la table elle-même :
 				
 				SqlTable sql_table = table.CreateSqlTable (this.type_converter);
 				
-				int col_num = table.Columns.Count;
-				
-				long table_id  = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagTableDef].InternalKey, 1);
-				long column_id = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagColumnDef].InternalKey, col_num);
+				this.sql_builder.InsertTable (sql_table);
+				this.ExecuteSilent (transaction);
 				
 				transaction.Commit ();
 			}

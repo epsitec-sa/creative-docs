@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Database
 			{
 				case SqlFieldType.All:
 				case SqlFieldType.Constant:
+				case SqlFieldType.Name:
 				case SqlFieldType.QualifiedName:
 				case SqlFieldType.Function:
 				case SqlFieldType.Procedure:

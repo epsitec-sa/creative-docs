@@ -115,72 +115,86 @@ namespace Epsitec.Cresus.Database.Implementation
 			return name;
 		}
 
-		protected void AppendField(SqlField field)
+		protected void Append(string str)
+		{
+			this.buffer.Append (str);
+		}
+
+		protected void Append(char c)
+		{
+			this.buffer.Append (c);
+		}
+
+		protected void Append(SqlField field)
 		{
 			//	Ajoute au buffer un champ, quel que soit son type
 
 			switch(field.Type)
 			{
-				case SqlFieldType.Unsupported:
-					this.buffer.Append ("<unsupported>");
-					return;
 				case SqlFieldType.Null:
-					this.buffer.Append ("NULL");
+					this.Append ("NULL");
 					return;
 				case SqlFieldType.All:
-					this.buffer.Append ("*");
-					return;
-				case SqlFieldType.Default:
-					this.buffer.Append ("<default>");
+					this.Append ("*");
 					return;
 				case SqlFieldType.Constant:
 				case SqlFieldType.ParameterOut:
 				case SqlFieldType.ParameterInOut:
 				case SqlFieldType.ParameterResult:
-					this.buffer.Append (this.AddFieldAsParam (field));
+					this.Append (this.AddFieldAsParam (field));
 					return;
 				case SqlFieldType.Name:
-					this.buffer.Append (field.AsName);
+					this.Append (field.AsName);
 					return;
 				case SqlFieldType.QualifiedName:
-					this.buffer.Append (field.AsQualifiedName);
+					this.Append (field.AsQualifiedName);
 					return;
 				case SqlFieldType.Aggregate:
-					this.AppendAggregate (field.AsAggregate);
-					return;
-				case SqlFieldType.Variable:
-					this.buffer.Append (field.AsVariable.ToString());
+					this.Append (field.AsAggregate);
 					return;
 				case SqlFieldType.Function:
-					this.AppendFunction (field.AsFunction);
+					this.Append (field.AsFunction);
 					return;
 				case SqlFieldType.Procedure:
-					this.buffer.Append (field.AsProcedure);
+					this.Append (field.AsProcedure);
 					return;
 				case SqlFieldType.SubQuery:
-					this.buffer.Append (field.AsSubQuery.ToString());
+					this.Append ('(');
+					this.Append (field.AsSubQuery);
+					this.Append (')');
 					return;
 				default:
-					this.buffer.Append ("<unsupported>");
-					return;
+					throw new System.NotImplementedException (string.Format ("Field {0} not implemented.", field.Type));
 			}
 		}
 		
-		protected void AppendAggregate(SqlAggregate sql_aggregate)
+		protected void Append(SqlAggregate sql_aggregate)
 		{
 			switch (sql_aggregate.Type)
 			{
 				case SqlAggregateType.Count:
-					this.buffer.Append ("COUNT(");
-					this.AppendField (sql_aggregate.Field);
-					this.buffer.Append (")");
-					return;
+					this.Append ("COUNT(");
+					break;
+				case SqlAggregateType.Max:
+					this.Append ("MAX(");
+					break;
+				case SqlAggregateType.Min:
+					this.Append ("MIN(");
+					break;
+				case SqlAggregateType.Sum:
+					this.Append ("SUM(");
+					break;
+				case SqlAggregateType.Average:
+					this.Append ("AVG(");
+					break;
+				default:
+					throw new System.NotImplementedException (string.Format ("Aggregate {0} not implemented.", sql_aggregate.Type));
 			}
-			
-			throw new System.NotImplementedException (string.Format ("Aggregate {0} not implemented.", sql_aggregate.Type));
+			this.Append (sql_aggregate.Field);
+			this.Append (')');
 		}
 
-		protected void AppendFunction(SqlFunction sql_function)
+		protected void Append(SqlFunction sql_function)
 		{
 			System.Diagnostics.Debug.Assert (sql_function != null);
 
@@ -190,85 +204,85 @@ namespace Epsitec.Cresus.Database.Implementation
 				case 2:
 					if ( sql_function.Type == SqlFunctionType.JoinInner )
 					{
-						this.buffer.Append (sql_function.A.AsName);
-						this.buffer.Append (" INNER JOIN ");
-						this.buffer.Append (sql_function.B.AsName);
-						this.buffer.Append (" ON ");
-						this.buffer.Append (sql_function.A.AsQualifiedName);
-						this.buffer.Append (" = ");
-						this.buffer.Append (sql_function.B.AsQualifiedName);
+						this.Append (sql_function.A.AsName);
+						this.Append (" INNER JOIN ");
+						this.Append (sql_function.B.AsName);
+						this.Append (" ON ");
+						this.Append (sql_function.A.AsQualifiedName);
+						this.Append (" = ");
+						this.Append (sql_function.B.AsQualifiedName);
 						return;
 					}
 
-					AppendField (sql_function.A);
+					this.Append (sql_function.A);
 					switch (sql_function.Type)
 					{
 						case SqlFunctionType.MathAdd:
-							this.buffer.Append (" + ");	break;
+							this.Append (" + ");	break;
 						case SqlFunctionType.MathSubstract:
-							this.buffer.Append (" - "); break;
+							this.Append (" - "); break;
 						case SqlFunctionType.MathMultiply:
-							this.buffer.Append (" * "); break;
+							this.Append (" * "); break;
 						case SqlFunctionType.MathDivide:
-							this.buffer.Append (" / "); break;
+							this.Append (" / "); break;
 						case SqlFunctionType.CompareEqual:
-							this.buffer.Append (" = "); break;
+							this.Append (" = "); break;
 						case SqlFunctionType.CompareNotEqual:
-							this.buffer.Append (" <> "); break;
+							this.Append (" <> "); break;
 						case SqlFunctionType.CompareLessThan:
-							this.buffer.Append (" < "); break;
+							this.Append (" < "); break;
 						case SqlFunctionType.CompareLessThanOrEqual:
-							this.buffer.Append (" <= "); break;
+							this.Append (" <= "); break;
 						case SqlFunctionType.CompareGreaterThan:
-							this.buffer.Append (" > "); break;
+							this.Append (" > "); break;
 						case SqlFunctionType.CompareGreaterThanOrEqual:
-							this.buffer.Append (" >= "); break;
+							this.Append (" >= "); break;
 						case SqlFunctionType.CompareLike:
-							this.buffer.Append (" LIKE "); break;
+							this.Append (" LIKE "); break;
 						case SqlFunctionType.CompareNotLike:
-							this.buffer.Append (" NOT LIKE "); break;				
+							this.Append (" NOT LIKE "); break;				
 						case SqlFunctionType.SetIn:
-							this.buffer.Append (" IN "); break;
+							this.Append (" IN "); break;
 						case SqlFunctionType.SetNotIn:
-							this.buffer.Append (" NOT IN "); break;
+							this.Append (" NOT IN "); break;
 						case SqlFunctionType.LogicAnd:
-							this.buffer.Append (" AND "); break;
+							this.Append (" AND "); break;
 						case SqlFunctionType.LogicOr:
-							this.buffer.Append (" OR "); break;
+							this.Append (" OR "); break;
 						default:
 							System.Diagnostics.Debug.Assert (false); break;
 					}
-					AppendField (sql_function.B);
+					this.Append (sql_function.B);
 					return;
 				
 				case 1:
 					switch (sql_function.Type)
 					{
 						case SqlFunctionType.LogicNot:
-							this.buffer.Append ("NOT ");
-							AppendField (sql_function.A);
+							this.Append ("NOT ");
+							this.Append (sql_function.A);
 							return;
 						case SqlFunctionType.CompareIsNull:
-							AppendField (sql_function.A);
-							this.buffer.Append (" IS NULL");
+							this.Append (sql_function.A);
+							this.Append (" IS NULL");
 							return;
 						case SqlFunctionType.CompareIsNotNull:
-							AppendField (sql_function.A);
-							this.buffer.Append (" IS NOT NULL");
+							this.Append (sql_function.A);
+							this.Append (" IS NOT NULL");
 							return;
 						case SqlFunctionType.SetExists:
-							AppendField (sql_function.A);
-							this.buffer.Append (" EXISTS");
+							this.Append (sql_function.A);
+							this.Append (" EXISTS");
 							return;
 
 						case SqlFunctionType.SetNotExists:
-							AppendField (sql_function.A);
-							this.buffer.Append (" NOT EXISTS");
+							this.Append (sql_function.A);
+							this.Append (" NOT EXISTS");
 							return;
 						case SqlFunctionType.Upper:
-							this.buffer.Append ("UPPER(");
-							AppendField (sql_function.A);
-							this.buffer.Append (")");
+							this.Append ("UPPER(");
+							this.Append (sql_function.A);
+							this.Append (")");
 							return;
 						default:
 							System.Diagnostics.Debug.Assert (false);
@@ -278,41 +292,192 @@ namespace Epsitec.Cresus.Database.Implementation
 				case 3:
 					if (sql_function.Type == SqlFunctionType.Substring)
 					{
-						this.buffer.Append ("SUBSTRING(");
-						this.AppendField (sql_function.A);
-						this.buffer.Append (" FROM ");
-						this.AppendField (sql_function.B);
-						this.buffer.Append (" FOR ");
-						this.AppendField (sql_function.C);
-						this.buffer.Append (")");
+						this.Append ("SUBSTRING(");
+						this.Append (sql_function.A);
+						this.Append (" FROM ");
+						this.Append (sql_function.B);
+						this.Append (" FOR ");
+						this.Append (sql_function.C);
+						this.Append (")");
 						return;
 					}
 
-					AppendField (sql_function.A);
+					this.Append (sql_function.A);
 					switch (sql_function.Type)
 					{
 						case SqlFunctionType.SetBetween:
-							this.buffer.Append (" BETWEEN ");
-							this.AppendField (sql_function.B);
-							this.buffer.Append (" AND ");
+							this.Append (" BETWEEN ");
+							this.Append (sql_function.B);
+							this.Append (" AND ");
 							break;
 
 						case SqlFunctionType.SetNotBetween:
-							this.buffer.Append (" NOT BETWEEN ");
-							this.AppendField (sql_function.B);
-							this.buffer.Append (" AND ");
+							this.Append (" NOT BETWEEN ");
+							this.Append (sql_function.B);
+							this.Append (" AND ");
 							break;
 						default:
 							System.Diagnostics.Debug.Assert (false);
 							break;
 					}
-					AppendField (sql_function.C);
+					this.Append (sql_function.C);
 					return;
 
 				default:
 					System.Diagnostics.Debug.Assert (false);
 					return;
 			}			
+		}
+		
+		protected void Append(SqlSelect sql_query)
+		{
+			//	TODO-DD:  Compléter encore, notemment pour les JOINTURES
+			
+			this.Append ("SELECT ");
+			bool first_field = true;
+
+			if (sql_query.Predicate == SqlSelectPredicate.Distinct)
+			{
+				this.Append ("DISTINCT ");
+			}
+			
+			foreach (SqlField field in sql_query.Fields)
+			{
+				if (first_field)
+				{
+					first_field = false;
+				}
+				else
+				{
+					this.Append (", ");
+				}
+
+				switch (field.Type)
+				{
+					case SqlFieldType.All:
+						this.Append ("*");
+						break;
+					case SqlFieldType.Name:
+						this.Append (field.AsName);
+						this.AppendAlias (field);
+						break;
+					case SqlFieldType.QualifiedName:
+						this.Append (field.AsQualifiedName);
+						this.AppendAlias (field);
+						break;
+					case SqlFieldType.Aggregate:
+						this.Append (field.AsAggregate);
+						this.AppendAlias (field);
+						break;
+					default:
+						this.ThrowError (string.Format ("Unsupported field {0} in SELECT.", field.AsName));
+						break;
+				}
+			}
+
+			if (first_field)
+			{
+				// aucun champ spécifiée !
+				this.ThrowError (string.Format ("No field specified in SELECT."));
+			}
+
+			this.Append (" FROM ");
+			first_field = true;
+
+			foreach (SqlField field in sql_query.Tables)
+			{
+				if (first_field)
+				{
+					first_field = false;
+				}
+				else
+				{
+					this.Append (", ");
+				}
+
+				switch ( field.Type )
+				{
+					case SqlFieldType.Name:
+						this.Append (field.AsName);
+						this.AppendAlias (field);
+						this.Append (' ');
+						break;
+					default:
+						this.ThrowError (string.Format ("Unsupported field {0} in SELECT FROM.", field.AsName));
+						break;
+				}
+			}
+
+			if (first_field)
+			{
+				// aucune table spécifiée !
+				this.ThrowError (string.Format ("No table specified in SELECT."));
+			}
+
+			first_field = true;
+
+			foreach (SqlField field in sql_query.Conditions)
+			{
+				if (first_field)
+				{
+					this.Append ("WHERE ");
+					first_field = false;
+				}
+				else
+				{
+					this.Append (" AND ");
+				}
+
+				if (field.Type != SqlFieldType.Function)
+				{
+					this.ThrowError (string.Format ("Invalid field {0} in SELECT ... WHERE.", field.AsName));
+					break;
+				}
+
+				this.Append (field.AsFunction);
+			}
+
+			first_field = true;
+
+			foreach (SqlField field in sql_query.Fields)
+			{
+				if (field.Order == SqlFieldOrder.None) continue;
+		
+				if (first_field)
+				{
+					this.Append ("ORDER BY ");
+				}
+
+				this.Append (field.AsName);
+				this.Append (' ');
+
+				if (field.Order == SqlFieldOrder.Inverse)
+				{
+					this.Append ("DESC");
+				}
+
+				if (first_field)
+				{
+					first_field = false;
+				}				
+				else
+				{
+					this.Append (", ");
+				}
+			}
+		}
+
+		protected void AppendAlias(SqlField field)
+		{
+			//	Si un alias existe, ajoute celui-ci dans le buffer.
+			
+			string alias = field.Alias;
+			
+			if ((alias != null) && (alias.Length > 0))
+			{
+				this.buffer.Append (' ');
+				this.buffer.Append (alias);
+			}
 		}
 		
 		protected string GetSqlColumnAttributes(SqlColumn column)
@@ -468,9 +633,9 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.command_type = DbCommandType.Silent;
 			this.command_count++;
 			
-			this.buffer.Append ("CREATE TABLE ");
-			this.buffer.Append (table.Name);
-			this.buffer.Append ("(");
+			this.Append ("CREATE TABLE ");
+			this.Append (table.Name);
+			this.Append ("(");
 			
 			bool first_field = true;
 			
@@ -487,27 +652,27 @@ namespace Epsitec.Cresus.Database.Implementation
 				}
 				else
 				{
-					this.buffer.Append (", ");
+					this.Append (", ");
 				}
 				
-				this.buffer.Append (column.Name);
-				this.buffer.Append (" ");
-				this.buffer.Append (this.GetSqlType (column));
-				this.buffer.Append (this.GetSqlColumnAttributes (column));
+				this.Append (column.Name);
+				this.Append (' ');
+				this.Append (this.GetSqlType (column));
+				this.Append (this.GetSqlColumnAttributes (column));
 			}
 			
-			this.buffer.Append (");\n");
+			this.Append (");\n");
 			
 			if (table.HasPrimaryKeys)
 			{
 				this.command_count++;
 				
-				this.buffer.Append ("ALTER TABLE ");
-				this.buffer.Append (table.Name);
-				this.buffer.Append (" ADD CONSTRAINT ");
-				this.buffer.Append (DbSqlStandard.ConcatNames ("PK_", table.Name));
-				this.buffer.Append (" PRIMARY KEY ");
-				this.buffer.Append ("(");
+				this.Append ("ALTER TABLE ");
+				this.Append (table.Name);
+				this.Append (" ADD CONSTRAINT ");
+				this.Append (DbSqlStandard.ConcatNames ("PK_", table.Name));
+				this.Append (" PRIMARY KEY ");
+				this.Append ("(");
 				
 				first_field = true;
 				
@@ -524,13 +689,13 @@ namespace Epsitec.Cresus.Database.Implementation
 					}
 					else
 					{
-						this.buffer.Append (", ");
+						this.Append (", ");
 					}
 				
-					this.buffer.Append (column.Name);
+					this.Append (column.Name);
 				}
 				
-				this.buffer.Append (");\n");
+				this.Append (");\n");
 			}
 		}
 
@@ -545,9 +710,9 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.command_type = DbCommandType.Silent;
 			this.command_count++;
 			
-			this.buffer.Append ("DROP TABLE ");
-			this.buffer.Append (table_name);
-			this.buffer.Append (";\n");
+			this.Append ("DROP TABLE ");
+			this.Append (table_name);
+			this.Append (";\n");
 		}
 		
 		public void InsertTableColumns(string table_name, SqlColumn[] columns)
@@ -569,14 +734,14 @@ namespace Epsitec.Cresus.Database.Implementation
 				
 				this.command_count++;
 				
-				this.buffer.Append ("ALTER TABLE ");
-				this.buffer.Append (table_name);
-				this.buffer.Append (" ADD ");	//	not 	this.buffer.Append (" ADD COLUMN ");
-				this.buffer.Append (column.Name);
-				this.buffer.Append (" ");
-				this.buffer.Append (this.GetSqlType (column));
-				this.buffer.Append (this.GetSqlColumnAttributes (column));
-				this.buffer.Append (";\n");
+				this.Append ("ALTER TABLE ");
+				this.Append (table_name);
+				this.Append (" ADD ");			//	not " ADD COLUMN "
+				this.Append (column.Name);
+				this.Append (" ");
+				this.Append (this.GetSqlType (column));
+				this.Append (this.GetSqlColumnAttributes (column));
+				this.Append (";\n");
 			}
 		}
 
@@ -607,174 +772,24 @@ namespace Epsitec.Cresus.Database.Implementation
 				
 				this.command_count++;
 				
-				this.buffer.Append ("ALTER TABLE ");
-				this.buffer.Append (table_name);
-				this.buffer.Append (" DROP ");		// not this.buffer.Append (" DROP COLUMN ");
-				this.buffer.Append (column.Name);
-				this.buffer.Append (";\n");
-			}
-		}
-		
-		protected void AppendAlias(SqlField field)
-		{
-			//	Si un alias existe, ajoute celui-ci dans le buffer.
-			
-			string alias = field.Alias;
-			
-			if ((alias != null) && (alias.Length > 0))
-			{
-				this.buffer.Append (' ');
-				this.buffer.Append (alias);
+				this.Append ("ALTER TABLE ");
+				this.Append (table_name);
+				this.Append (" DROP ");		// not " DROP COLUMN "
+				this.Append (column.Name);
+				this.Append (";\n");
 			}
 		}
 		
 		
-		public void SelectData(SqlSelect query)
+		public void SelectData(SqlSelect sql_query)
 		{
 			this.PrepareCommand ();
 			
 			this.command_type = DbCommandType.ReturningData;
 			this.command_count++;
 			
-			//	Cela consiste à créer la commande "SELECT * FROM ..."
-			//	dans toutes ses variantes...
-
-			//	TODO-DD:  Compléter encore, notemment pour les JOINTURES
-			
-			this.buffer.Append ("SELECT ");
-			bool first_field = true;
-
-			if (query.Predicate == SqlSelectPredicate.Distinct)
-			{
-				this.buffer.Append ("DISTINCT ");
-			}
-			
-			foreach (SqlField field in query.Fields)
-			{
-				if (first_field)
-				{
-					first_field = false;
-				}
-				else
-				{
-					this.buffer.Append (", ");
-				}
-
-				switch (field.Type)
-				{
-					case SqlFieldType.All:
-						this.buffer.Append ("*");
-						break;
-					case SqlFieldType.Name:
-						this.buffer.Append (field.AsName);
-						this.AppendAlias (field);
-						break;
-					case SqlFieldType.QualifiedName:
-						this.buffer.Append (field.AsQualifiedName);
-						this.AppendAlias (field);
-						break;
-					case SqlFieldType.Aggregate:
-						this.AppendAggregate (field.AsAggregate);
-						this.AppendAlias (field);
-						break;
-					default:
-						this.ThrowError (string.Format ("Unsupported field {0} in SELECT.", field.AsName));
-						break;
-				}
-			}
-
-			if (first_field)
-			{
-				// aucun champ spécifiée !
-				this.ThrowError (string.Format ("No field specified in SELECT."));
-			}
-
-			this.buffer.Append (" FROM ");
-			first_field = true;
-
-			foreach (SqlField field in query.Tables)
-			{
-				if (first_field)
-				{
-					first_field = false;
-				}
-				else
-				{
-					this.buffer.Append (", ");
-				}
-
-				switch ( field.Type )
-				{
-					case SqlFieldType.Name:
-						this.buffer.Append (field.AsName);
-						this.AppendAlias (field);
-						this.buffer.Append (' ');
-						break;
-					default:
-						this.ThrowError (string.Format ("Unsupported field {0} in SELECT FROM.", field.AsName));
-						break;
-				}
-			}
-
-			if (first_field)
-			{
-				// aucune table spécifiée !
-				this.ThrowError (string.Format ("No table specified in SELECT."));
-			}
-
-			first_field = true;
-
-			foreach (SqlField field in query.Conditions)
-			{
-				if (first_field)
-				{
-					this.buffer.Append ("WHERE ");
-					first_field = false;
-				}
-				else
-				{
-					this.buffer.Append (" AND ");
-				}
-
-				if (field.Type != SqlFieldType.Function)
-				{
-					this.ThrowError (string.Format ("Invalid field {0} in SELECT ... WHERE.", field.AsName));
-					break;
-				}
-
-				this.AppendFunction (field.AsFunction);
-			}
-
-			first_field = true;
-
-			foreach (SqlField field in query.Fields)
-			{
-				if (field.Order == SqlFieldOrder.None) continue;
-		
-				if (first_field)
-				{
-					this.buffer.Append ("ORDER BY ");
-				}
-
-				this.buffer.Append (field.AsName);
-				this.buffer.Append (' ');
-
-				if (field.Order == SqlFieldOrder.Inverse)
-				{
-					this.buffer.Append ("DESC");
-				}
-
-				if (first_field)
-				{
-					first_field = false;
-				}				
-				else
-				{
-					this.buffer.Append (", ");
-				}
-			}
-			
-			this.buffer.Append (";\n");
+			this.Append (sql_query);			
+			this.Append (";\n");
 		}
 
 		public void InsertData(string table_name, SqlFieldCollection fields)
@@ -793,9 +808,9 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.command_type = DbCommandType.NonQuery;
 			this.command_count++;
 			
-			this.buffer.Append ("INSERT INTO ");
-			this.buffer.Append (table_name);
-			this.buffer.Append ("(");
+			this.Append ("INSERT INTO ");
+			this.Append (table_name);
+			this.Append ("(");
 			
 			bool first_field = true;
 			
@@ -812,13 +827,13 @@ namespace Epsitec.Cresus.Database.Implementation
 				}
 				else
 				{
-					this.buffer.Append (",");
+					this.Append (",");
 				}
 				
-				this.buffer.Append (field.Alias);
+				this.Append (field.Alias);
 			}
 			
-			this.buffer.Append (") VALUES (");
+			this.Append (") VALUES (");
 			
 			first_field = true;
 			
@@ -843,13 +858,13 @@ namespace Epsitec.Cresus.Database.Implementation
 				}
 				else
 				{
-					this.buffer.Append (",");
+					this.Append (",");
 				}
 				
-				this.buffer.Append (data);
+				this.Append (data);
 			}
 			
-			this.buffer.Append (");\n");
+			this.Append (");\n");
 		}
 
 		public void UpdateData(string table_name, SqlFieldCollection fields, SqlFieldCollection conditions)
@@ -858,8 +873,8 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.command_type = DbCommandType.NonQuery;
 			this.command_count++;
 			
-			this.buffer.Append ("UPDATE ");
-			this.buffer.Append (table_name);
+			this.Append ("UPDATE ");
+			this.Append (table_name);
 			bool first_field = true;
 
 			foreach (SqlField field in fields)
@@ -870,22 +885,23 @@ namespace Epsitec.Cresus.Database.Implementation
 				}
 				else
 				{
-					this.buffer.Append (",");
+					this.Append (",");
 				}
 
-				this.buffer.Append (" SET ");
-				this.buffer.Append (field.Alias);
-				this.buffer.Append (" = ");
+				this.Append (" SET ");
+				this.Append (field.Alias);
+				this.Append (" = ");
 				switch (field.Type)
 				{
 					case SqlFieldType.Constant:
-						this.AppendField (field);
+						this.Append (field);
 						break;
 					case SqlFieldType.Function:
-						this.AppendFunction (field.AsFunction);
+						this.Append (field.AsFunction);
 						break;
 						//	TODO-DD	y a-t-il d'autres cas possible ?
-						//	on pourrait généraliser ces switch / case entre les diverses méthodes...
+						//	ou plutôt quels sont les cas interdit ?
+						//	this.Append (field) serait ok pour tous
 					default:
 						this.ThrowError (string.Format ("Unsupported field {0} in UPDATE.", field.AsName));
 						break;
@@ -903,12 +919,12 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				if (first_field)
 				{
-					this.buffer.Append (" WHERE ");
+					this.Append (" WHERE ");
 					first_field = false;
 				}
 				else
 				{
-					this.buffer.Append (" AND ");
+					this.Append (" AND ");
 				}
 
 				if (field.Type != SqlFieldType.Function)
@@ -917,9 +933,9 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 				}
 
-				this.AppendFunction (field.AsFunction);
+				this.Append (field.AsFunction);
 			}
-			this.buffer.Append (";\n");
+			this.Append (";\n");
 		}
 
 		public void RemoveData(string table_name, SqlFieldCollection conditions)

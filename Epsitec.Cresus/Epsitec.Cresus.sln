@@ -244,6 +244,7 @@ Global
 		Epsitec Cresus Full Build.mgb = Epsitec Cresus Full Build.mgb
 		Epsitec.Cresus.snk = Epsitec.Cresus.snk
 		import-bin.bat = import-bin.bat
+		loc-bigdell.txt = loc-bigdell.txt
 		External\nunit-gui.exe = External\nunit-gui.exe
 		External\nunit.framework.dll = External\nunit.framework.dll
 		External\nunit.util.dll = External\nunit.util.dll
