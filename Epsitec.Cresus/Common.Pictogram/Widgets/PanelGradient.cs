@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelGradient : AbstractPanel
 	{
-		public PanelGradient()
+		public PanelGradient(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -29,18 +29,21 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			this.sample = new GradientSample(this);
 			this.sample.Clicked += new MessageEventHandler(this.SampleClicked);
+			ToolTip.Default.SetToolTip(this.sample, "Echantillon (cliquez pour remettre les valeurs standards)");
 
 			this.fieldColor1 = new ColorSample(this);
 			this.fieldColor1.PossibleOrigin = true;
 			this.fieldColor1.Clicked += new MessageEventHandler(this.FieldColorClicked);
 			this.fieldColor1.TabIndex = 2;
 			this.fieldColor1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldColor1, "Couleur 1");
 
 			this.fieldColor2 = new ColorSample(this);
 			this.fieldColor2.PossibleOrigin = true;
 			this.fieldColor2.Clicked += new MessageEventHandler(this.FieldColorClicked);
 			this.fieldColor2.TabIndex = 3;
 			this.fieldColor2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldColor2, "Couleur 2");
 
 			this.fieldRepeat = new TextFieldSlider(this);
 			this.fieldRepeat.MinValue = 1;
@@ -49,6 +52,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldRepeat.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldRepeat.TabIndex = 4;
 			this.fieldRepeat.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldRepeat, "Nombre de répétitions");
 
 			this.fieldMiddle = new TextFieldSlider(this);
 			this.fieldMiddle.MinValue = -100;
@@ -57,6 +61,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldMiddle.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldMiddle.TabIndex = 5;
 			this.fieldMiddle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldMiddle, "Couleur médiane");
 
 			this.fieldSmooth = new TextFieldSlider(this);
 			this.fieldSmooth.MinValue =  0;
@@ -66,6 +71,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldSmooth.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldSmooth.TabIndex = 6;
 			this.fieldSmooth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldSmooth, "Flou");
 
 			this.labelRepeat = new StaticText(this);
 			this.labelRepeat.Text = "n";
@@ -82,13 +88,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.swapColor = new IconButton(this);
 			this.swapColor.IconName = @"file:images/swapdata.icon";
 			this.swapColor.Clicked += new MessageEventHandler(this.SwapColorClicked);
+			ToolTip.Default.SetToolTip(this.swapColor, "Permute les 2 couleurs");
 
 			this.isNormalAndExtended = true;
-		}
-		
-		public PanelGradient(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)

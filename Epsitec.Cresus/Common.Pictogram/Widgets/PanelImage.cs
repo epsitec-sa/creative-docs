@@ -13,7 +13,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelImage : AbstractPanel
 	{
-		public PanelImage()
+		public PanelImage(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -22,6 +22,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldFilename.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldFilename.TabIndex = 1;
 			this.fieldFilename.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldFilename, "Nom du fichier de l'image");
 
 			this.buttonBrowse = new Button(this);
 			this.buttonBrowse.Text = "Parcourir...";
@@ -48,11 +49,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.buttonHomo.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.isNormalAndExtended = true;
-		}
-		
-		public PanelImage(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)
