@@ -330,7 +330,7 @@ namespace Epsitec.Common.Drawing
 			System.Windows.Forms.Form form = new System.Windows.Forms.Form ();
 			
 			form.ClientSize = new System.Drawing.Size (160, 480);
-			form.Text = "CheckGlyphPaint";
+			form.Text = "CheckGlyphDynamicBold";
 			form.Paint +=new System.Windows.Forms.PaintEventHandler(form_Paint3);
 			
 			this.global_pixmap_3 = new Pixmap ();
