@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Database
 		
 		public DbType(params string[] attributes) : this ()
 		{
-			this.attributes = new DbAttributes (attributes);
+			this.DefineAttributes (attributes);
 		}
 		
 		public DbType(DbSimpleType type, params string[] attributes) : this (attributes)
@@ -32,12 +32,23 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		internal void DefineAttributes(string[] attributes)
+		{
+			if (this.attributes != null)
+			{
+				throw new System.InvalidOperationException ("Cannot redefine attributes");
+			}
+			
+			this.attributes = new DbAttributes (attributes);
+		}
+		
+		
 		internal void Initialise(DbNumDef num_def)
 		{
 			this.EnsureTypeIsNotInitialised();
 			
 			this.simple_type = DbSimpleType.Decimal;
-			this.num_def     = num_def;
+			this.num_def     = num_def.Clone () as DbNumDef;
 		}
 		
 		internal void Initialise(DbSimpleType type)
@@ -65,12 +76,12 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public DbNumDef						DbNumDef
+		public DbNumDef						NumDef
 		{
 			get { return this.num_def; }
 		}
 		
-		public DbSimpleType					DbSimpleType
+		public DbSimpleType					SimpleType
 		{
 			get { return this.simple_type; }
 		}
