@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Database
 			this.tables   = new DbTableCollection ();
 		}
 		
+		
 		public void FillDataSet(DbAccess db_access, System.Data.IDbDataAdapter[] adapters)
 		{
 			//	Définit et remplit le DataSet en se basant sur les données fournies
@@ -30,6 +31,9 @@ namespace Epsitec.Cresus.Database
 				
 				string  ado_name_table = "Table";
 				string  db_name_table  = db_table.Name;
+				
+				//	Il faut (re)nommer les tables afin d'avoir les noms qui correspondent
+				//	à ce que définit DbTable, et faire pareil pour les colonnes.
 				
 				System.Data.ITableMapping mapping = this.adapters[i].TableMappings.Add (ado_name_table, db_name_table);
 				
@@ -81,6 +85,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		
 		public DbCommandCollection				Commands
 		{
 			get { return this.commands; }
@@ -108,7 +113,6 @@ namespace Epsitec.Cresus.Database
 		{
 			get { return this.data_set; }
 		}
-		
 		
 		
 		protected void SetCommandTransaction()

@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Database
 			
 			column.DefineColumnClass (column_class);
 			column.DefineCategory (DbElementCat.UserDataManaged);
-			column.Attributes.SetAttribute (Tags.Target, target_table_name);
+			column.DefineTargetTableName (target_table_name);
 			
 			return column;
 		}
@@ -162,6 +162,26 @@ namespace Epsitec.Cresus.Database
 			this.attributes.SetFromInitialisationList (attributes);
 		}
 		
+		
+		
+		internal void DefineTargetTableName(string target_table_name)
+		{
+			string current_name = this.TargetTableName;
+			
+			if (current_name == target_table_name)
+			{
+				return;
+			}
+			
+			if (current_name != null)
+			{
+				string message = string.Format ("Column '{0}' cannot change its target table name from '{1}' to '{2}'.",
+					/**/						this.Name, current_name, target_table_name);
+				throw new System.InvalidOperationException (message);
+			}
+
+			this.Attributes.SetAttribute (Tags.Target, target_table_name);
+		}
 		
 		internal void DefineInternalKey(DbKey key)
 		{

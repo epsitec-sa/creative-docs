@@ -291,6 +291,21 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public DbColumn   CreateColumn(string column_name, DbType type)
+		{
+			return new DbColumn (column_name, type, DbColumnClass.Data, DbElementCat.UserDataManaged);
+		}
+		
+		public DbColumn[] CreateLocalisedColumns(string column_name, DbType type)
+		{
+			//	TODO: crée la ou les colonnes localisées
+			
+			//	Note: utilise DbColumnClass.Data et DbElementCat.UserDataManaged pour ces
+			//	colonnes, puisqu'elles appartiennent à l'utilisateur.
+			
+			throw new System.NotImplementedException ("CreateLocalisedColumns not implemented.");
+		}
+		
 		public DbColumn[] CreateRefColumns(string column_name, string target_table_name, DbKeyMatchMode match_mode)
 		{
 			//	Crée la ou les colonnes nécessaires à la définition d'une référence à une autre
@@ -1100,6 +1115,12 @@ namespace Epsitec.Cresus.Database
 					db_table.PrimaryKeys.Add (db_column);
 				}
 			}
+			
+			//	TODO: il faut encore initialiser les champs TargetTableName des diverses colonnes
+			//	qui établissent une relation avec une autre table. Pour cela, il faudra faire un
+			//	SELECT dans DbTable.TagRelationDef pour les colonnes dont DbColumnClass est parmi
+			//	RefSimpleId/RefLiveId/RefTupleId/RefTupleRevision et déterminer le nom des tables
+			//	cibles, puis appeler DbColumn.DefineTargetTableName...
 			
 			return tables;
 		}

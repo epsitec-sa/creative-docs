@@ -348,6 +348,10 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TODO.txt"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "TypeConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
