@@ -62,10 +62,10 @@ namespace Epsitec.Common.UI.Controllers
 			
 			this.OnCaptionChanged ();
 			
-			this.SyncFromAdapter ();
+			this.SyncFromAdapter (SyncReason.Initialisation);
 		}
 		
-		public override void SyncFromAdapter()
+		public override void SyncFromAdapter(SyncReason reason)
 		{
 			Adapters.LayoutAdapter adapter = this.Adapter as Adapters.LayoutAdapter;
 			
