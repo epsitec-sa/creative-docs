@@ -141,6 +141,35 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
+		public void GenerateGlyphs(ulong[] text, int start, int length, out ushort[] glyphs, short[] attributes)
+		{
+			int[] gl_map;
+			
+			glyphs = new ushort[length];
+			gl_map = new int[length];
+			
+			for (int i = 0; i < length; i++)
+			{
+				int code  = 0x001fffff & (int) text[start+i];
+				glyphs[i] = this.ot_index_mapping.GetGlyphIndex (code);
+			}
+			
+			this.ApplySubstitutions (ref glyphs, ref gl_map);
+			
+			length = glyphs.Length;
+			
+			int src = 0;
+			int dst = 0;
+			
+			for (int i = 0; i < length; i++)
+			{
+				attributes[dst] = attributes[src];
+				
+				dst += 1;
+				src += gl_map[i] + 1;
+			}
+		}
+		
 		
 		public double GetTotalWidth(ushort[] glyphs, double size)
 		{
