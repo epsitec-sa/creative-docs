@@ -73,38 +73,48 @@ namespace Epsitec.Common.Widgets.Design.Panels
 		}
 		
 		
-		static IGuideAlign				Guide
+		public static IGuideAlign		Guide
 		{
 			get { return new GuideAlign (); }
 		}
 		
-		public class GuideAlign : IGuideAlign
+		
+		protected class GuideAlign : IGuideAlign
 		{
-			public GuideAlign()
-			{
-			}
-			
 			#region IGuideAlign Members
-			public Drawing.Margins GetInnerMargins(System.Type type)
+			public Drawing.Margins GetInnerMargins(Widget widget)
 			{
-				if (type.IsSubclassOf (typeof (WindowRoot)))
+				Widget parent = widget.Parent;
+				
+				while ((parent != null) && (parent.Client.Bounds == widget.Bounds))
+				{
+					widget = parent;
+					parent = widget.Parent;
+				}
+				
+				System.Type type = widget.GetType ();
+				
+				if (WidgetPalette.MatchClass (type, typeof (WindowRoot)))
 				{
 					return new Drawing.Margins (8, 8, 16, 16);;
 				}
 			
-				if (type.IsSubclassOf (typeof (GroupBox)) ||
-					type.IsSubclassOf (typeof (TabPage)) ||
-					type.IsSubclassOf (typeof (PanePage)) ||
-					type.IsSubclassOf (typeof (Panel)))
+				if (WidgetPalette.MatchClass (type, typeof (GroupBox)) ||
+					WidgetPalette.MatchClass (type, typeof (TabPage)) ||
+					WidgetPalette.MatchClass (type, typeof (PanePage)) ||
+					WidgetPalette.MatchClass (type, typeof (Panel)))
 				{
 					return new Drawing.Margins (4, 4, 6, 6);
 				}
-			
+				
 				return new Drawing.Margins (0, 0, 0, 0);
 			}
 		
-			public Drawing.Margins GetAlignMargins(System.Type type_a, System.Type type_b)
+			public Drawing.Margins GetAlignMargins(Widget widget_a, Widget widget_b)
 			{
+				System.Type type_a = widget_a.GetType ();
+				System.Type type_b = widget_b.GetType ();
+				
 				SpaceClass a = WidgetPalette.GetSpaceClass (type_a);
 				SpaceClass b = WidgetPalette.GetSpaceClass (type_b);
 				SpaceClass x = WidgetPalette.Combine (a, b);
@@ -129,32 +139,37 @@ namespace Epsitec.Common.Widgets.Design.Panels
 			#endregion
 		}
 		
+		public static bool MatchClass(System.Type type, System.Type model)
+		{
+			return (type == model) || (type.IsSubclassOf (model));
+		}
+		
 		public static SpaceClass GetSpaceClass(System.Type type)
 		{
-			if (type.IsSubclassOf (typeof (TextFieldCombo)) ||
-				type.IsSubclassOf (typeof (Button)))
+			if (WidgetPalette.MatchClass (type, typeof (TextFieldCombo)) ||
+				WidgetPalette.MatchClass (type, typeof (Button)))
 			{
 				return SpaceClass.Button;
 			}
 			
-			if (type.IsSubclassOf (typeof (AbstractTextField)))
+			if (WidgetPalette.MatchClass (type, typeof (AbstractTextField)))
 			{
 				return SpaceClass.TextField;
 			}
 			
-			if (type.IsSubclassOf (typeof (CheckButton)) ||
-				type.IsSubclassOf (typeof (RadioButton)) ||
-				type.IsSubclassOf (typeof (StaticText)) ||
-				type.IsSubclassOf (typeof (GroupBox)) ||
-				type.IsSubclassOf (typeof (TabBook)))
+			if (WidgetPalette.MatchClass (type, typeof (CheckButton)) ||
+				WidgetPalette.MatchClass (type, typeof (RadioButton)) ||
+				WidgetPalette.MatchClass (type, typeof (StaticText)) ||
+				WidgetPalette.MatchClass (type, typeof (GroupBox)) ||
+				WidgetPalette.MatchClass (type, typeof (TabBook)))
 			{
 				return SpaceClass.Compact;
 			}
 			
-			if (type.IsSubclassOf (typeof (HScroller)) ||
-				type.IsSubclassOf (typeof (VScroller)) ||
-				type.IsSubclassOf (typeof (PaneBook)) ||
-				type.IsSubclassOf (typeof (Panel)))
+			if (WidgetPalette.MatchClass (type, typeof (HScroller)) ||
+				WidgetPalette.MatchClass (type, typeof (VScroller)) ||
+				WidgetPalette.MatchClass (type, typeof (PaneBook)) ||
+				WidgetPalette.MatchClass (type, typeof (Panel)))
 			{
 				return SpaceClass.Tight;
 			}

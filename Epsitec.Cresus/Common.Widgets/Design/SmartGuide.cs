@@ -9,6 +9,7 @@ namespace Epsitec.Common.Widgets.Design
 	{
 		public SmartGuide()
 		{
+			this.align = Panels.WidgetPalette.Guide;
 		}
 		
 		public SmartGuide(Widget widget) : this()
@@ -44,6 +45,31 @@ namespace Epsitec.Common.Widgets.Design
 			get { return this.target; }
 			set { this.target = value; }
 		}
+		
+		public IGuideAlign				GuideAlign
+		{
+			get
+			{
+				if (this.align == SmartGuide.default_align)
+				{
+					return null;
+				}
+				
+				return this.align;
+			}
+			set
+			{
+				if (value == null)
+				{
+					this.align = SmartGuide.default_align;
+				}
+				else
+				{
+					this.align = value;
+				}
+			}
+		}
+		
 		
 		public void Constrain(Drawing.Rectangle bounds, Constraint cx, Constraint cy)
 		{
@@ -84,7 +110,7 @@ namespace Epsitec.Common.Widgets.Design
 			
 			Widget            widget  = this.target;
 			Drawing.Rectangle model   = widget.InnerBounds;
-			Drawing.Rectangle margins = SmartGuide.root_margins;
+			Drawing.Margins   margins = this.align.GetInnerMargins (widget);
 			
 			double mx;
 			
@@ -106,7 +132,7 @@ namespace Epsitec.Common.Widgets.Design
 			{
 				widget  = children[i];
 				model   = widget.Bounds;
-				margins = SmartGuide.align_margins;
+				margins = this.align.GetAlignMargins (widget, this.widget);
 				
 				if (widget == this.widget)
 				{
@@ -159,7 +185,7 @@ namespace Epsitec.Common.Widgets.Design
 			Widget            widget  = this.target;
 			Drawing.Rectangle model   = widget.InnerBounds;
 			Drawing.Point     basel   = widget.BaseLine;
-			Drawing.Rectangle margins = SmartGuide.root_margins;
+			Drawing.Margins   margins = this.align.GetInnerMargins (widget);
 			
 			double my;
 			
@@ -182,7 +208,7 @@ namespace Epsitec.Common.Widgets.Design
 				widget  = children[i];
 				model   = widget.Bounds;
 				basel   = widget.BaseLine;
-				margins = SmartGuide.align_margins;
+				margins = this.align.GetAlignMargins (widget, this.widget);
 				
 				if (widget == this.widget)
 				{
@@ -236,9 +262,29 @@ namespace Epsitec.Common.Widgets.Design
 		}
 		
 		
-		protected Drawing.GripId		grip_id;
-		protected Widget				widget;
-		protected Widget				target;
+		protected class DefaultGuideAlign : IGuideAlign
+		{
+			#region IGuideAlign Members
+			public Drawing.Margins GetInnerMargins(Widget widget)
+			{
+				return SmartGuide.root_margins;
+			}
+
+			public Drawing.Margins GetAlignMargins(Widget widget_a, Widget widget_b)
+			{
+				return SmartGuide.align_margins;
+			}
+			#endregion
+		}
+
+		
+		protected Drawing.GripId			grip_id;
+		protected Widget					widget;
+		protected Widget					target;
+		
+		protected IGuideAlign				align;
+		
+		protected static IGuideAlign		default_align = new DefaultGuideAlign();
 		
 		protected static Drawing.Margins	root_margins  = new Drawing.Margins (12, 12, 20, 20);
 		protected static Drawing.Margins	align_margins = new Drawing.Margins (8, 8, 6, 6);

@@ -190,6 +190,9 @@ namespace Epsitec.Common.Widgets
 		
 		void Helpers.IDragBehaviorHost.OnDragBegin()
 		{
+			//	L'utilisateur aimerait déplacer le widget pour faire du drag & drop. Il faut créer
+			//	la fenêtre miniature qui contient le widget en déplacement :
+			
 			Drawing.Point pos = this.MapClientToScreen (this.widget.Location);
 			
 			pos.X -= this.DockMargins.Left;
@@ -207,14 +210,19 @@ namespace Epsitec.Common.Widgets
 			
 			Window target = this.FindTargetWindow (this.drag_cursor);
 			Widget widget = this.FindTargetWidget (target, this.drag_cursor);
-			string title  = widget == null ? "-" : widget.ToString ();
 			
-			this.drop_adorner.Widget = widget;
+			//	Définit la cible où le "drop" aurait lieu si l'utilisateur relâchait le bouton
+			//	de la souris maintenant.
+			
+			this.drop_adorner.Widget     = widget;
 			this.drop_adorner.HiliteMode = Design.HiliteMode.DropCandidate;
 			this.drop_adorner.Path.Clear ();
 			
 			if (widget != null)
 			{
+				//	Détermine les contraintes selon [x] et selon [y] en fonction du widget courant et de sa position
+				//	relative à la cible. Pour l'alignement selon [y], on utilise aussi la ligne de base.
+				
 				Design.Constraint cx = new Design.Constraint (5);
 				Design.Constraint cy = new Design.Constraint (5);
 				
@@ -222,6 +230,9 @@ namespace Epsitec.Common.Widgets
 				Drawing.Rectangle bounds = this.DropTargetBounds;
 				
 				guide.Constrain (bounds, this.DropTargetBaseLineOffset, cx, cy);
+				
+				//	Prend note des marques verticales (cx) et horizontales (cy) définissant visuellement les
+				//	constraintes actives :
 				
 				if (cx.Segments.Length > 0)
 				{
@@ -240,6 +251,9 @@ namespace Epsitec.Common.Widgets
 						this.drop_adorner.Path.LineTo (cy.Segments[i].P2);
 					}
 				}
+				
+				//	Si les contraintes ont changé depuis la dernière fois, on met à jour nos copies locales.
+				//	Cela permet d'éviter les repeintures inutiles lorsque aucune contrainte n'a bougé.
 				
 				if (! cx.Equals (this.drop_cx))
 				{
@@ -261,12 +275,17 @@ namespace Epsitec.Common.Widgets
 		
 		void Helpers.IDragBehaviorHost.OnDragEnd()
 		{
+			//	Voilà... L'utilisateur a relâché le bouton de la souris. Il faut déterminer où
+			//	le widget devra être inséré (pour autant qu'une cible soit connue) :
+			
 			if (this.drop_adorner.Widget != null)
 			{
 				Support.ObjectBundler bundler = new Support.ObjectBundler ();
 				Drawing.Point         offset  = new Drawing.Point (this.DockMargins.Left, this.DockMargins.Bottom);
-				Widget                copy    = bundler.CopyObject (this.widget) as Widget;
 				AnchorStyles          anchor  = AnchorStyles.None;
+				
+				//	Met à jour la position d'insertion en fonction des contraintes actuellement
+				//	actives; calcule aussi la manière d'ancrer le widget par rapport à son parent :
 				
 				if (this.drop_cx.IsValid)
 				{
@@ -290,12 +309,21 @@ namespace Epsitec.Common.Widgets
 					anchor |= AnchorStyles.Top;
 				}
 				
+				//	Crée une copie toute fraîche du widget et insère celui-ci dans son parent :
+				
+				Widget copy = bundler.CopyObject (this.widget) as Widget;
+				
 				copy.Location = this.drop_adorner.Widget.MapScreenToClient (this.DragLocation) + offset;
 				copy.Dock     = DockStyle.None;
 				copy.Anchor   = anchor;
 				
 				this.drop_adorner.Widget.Children.Add (copy);
 				this.drop_adorner.Widget = null;
+			}
+			else
+			{
+				//	TODO: animation réplaçant la fenêtre miniature à sa position d'origine pour
+				//	montrer que le drop a échoué.
 			}
 			
 			this.drag_window.Hide ();
