@@ -7,16 +7,16 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldCombo()
 		{
+			this.textStyle = TextFieldStyle.Combo;
+
 			this.items = new Helpers.StringCollection (this);
 			this.isCombo = true;
 			
 			this.button = new ArrowButton(this);
 			this.button.Direction = Direction.Down;
-			this.button.ButtonStyle = ButtonStyle.Scroller;
+			this.button.ButtonStyle = ButtonStyle.Combo;
 			this.button.Pressed += new MessageEventHandler(this.HandleButtonPressed);
-			this.button.Dock = DockStyle.Right;
-			
-			this.rightMargin = this.button.Width;
+			//this.button.Dock = DockStyle.Right;
 		}
 		
 		public TextFieldCombo(Widget embedder) : this()
@@ -90,6 +90,25 @@ namespace Epsitec.Common.Widgets
 				this.button.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
 				this.button.Dispose ();
 				this.button = null;
+			}
+		}
+
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry();
+			
+			if ( this.button != null )
+			{
+				IAdorner adorner = Widgets.Adorner.Factory.Active;
+
+				this.rightMargin = this.button.Width+2-adorner.GeometryComboRightMargin;
+
+				Drawing.Rectangle rect = new Drawing.Rectangle();
+				rect.Left   = this.Bounds.Width-this.rightMargin-adorner.GeometryComboRightMargin;
+				rect.Right  = this.Bounds.Width-adorner.GeometryComboRightMargin;
+				rect.Bottom = adorner.GeometryComboBottomMargin;
+				rect.Top    = this.Bounds.Height-adorner.GeometryComboTopMargin;
+				this.button.Bounds = rect;
 			}
 		}
 
