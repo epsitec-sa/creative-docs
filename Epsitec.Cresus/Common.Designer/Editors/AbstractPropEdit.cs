@@ -102,7 +102,7 @@ namespace Epsitec.Common.Designer.Editors
 		
 		protected Widget CreatePropPane(string title, double height)
 		{
-			Widget widget = new Pictogram.Widgets.PanelDouble ();
+			Widget widget = new Ui.Widgets.PropPane ();
 			
 			widget.Dock   = DockStyle.Top;
 			widget.Size   = new Drawing.Size (this.page.Width, height);
