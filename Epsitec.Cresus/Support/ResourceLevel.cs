@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.Support
 	public enum ResourceLevel
 	{
 		None,							//	pas d'accès
+		Merged,							//	fusion (accès standard)
 		
 		Default,						//	ressources par défaut
 		Localised,						//	ressources localisées

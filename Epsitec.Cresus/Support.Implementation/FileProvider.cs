@@ -34,6 +34,26 @@ namespace Epsitec.Cresus.Support.Implementation
 		}
 		
 		
+		protected string GetPathFromId(string id, ResourceLevel level)
+		{
+			if (this.ValidateId (id))
+			{
+				switch (level)
+				{
+					case ResourceLevel.Default:
+						return id + ".resource";
+					case ResourceLevel.Localised:
+						return id + this.ext_local;
+					case ResourceLevel.Customised:
+						return id + ".custom.resource";
+					default:
+						throw new ResourceException ("Invalid resource level");
+				}
+			}
+			
+			return null;
+		}
+		
 		#region IResourceProvider Members
 		public string Prefix
 		{
@@ -46,7 +66,8 @@ namespace Epsitec.Cresus.Support.Implementation
 		
 		public void SelectLocale(System.Globalization.CultureInfo culture)
 		{
-			this.culture = culture;
+			this.culture   = culture;
+			this.ext_local = "." + this.culture.TwoLetterISOLanguageName + ".resource";
 		}
 		
 		
@@ -71,14 +92,45 @@ namespace Epsitec.Cresus.Support.Implementation
 		
 		public byte[] GetData(string id, Epsitec.Cresus.Support.ResourceLevel level)
 		{
-			// TODO:  Add FileProvider.GetData implementation
+			string path = this.GetPathFromId (id, level);
+			
+			if (path != null)
+			{
+				try
+				{
+					using (System.IO.FileStream stream = new System.IO.FileStream (path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+					{
+						int    size = (int) stream.Length;
+						byte[] data = new byte[size];
+						stream.Read (data, 0, size);
+						return data;
+					}
+				}
+				catch
+				{
+				}
+			}
+			
 			return null;
 		}
 		
 		public System.IO.Stream GetDataStream(string id, Epsitec.Cresus.Support.ResourceLevel level)
 		{
-			byte[] data = this.GetData (id, level);
-			return (data == null) ? null : new System.IO.MemoryStream (data, false);
+			string path = this.GetPathFromId (id, level);
+			
+			if (path != null)
+			{
+				try
+				{
+					System.IO.FileStream stream = new System.IO.FileStream (path, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+					return stream;
+				}
+				catch
+				{
+				}
+			}
+			
+			return null;
 		}
 		
 		public void Create(string id, Epsitec.Cresus.Support.ResourceLevel level)
@@ -102,5 +154,6 @@ namespace Epsitec.Cresus.Support.Implementation
 		
 		protected CultureInfo			culture;
 		protected Regex					id_regex;
+		protected string				ext_local;
 	}
 }

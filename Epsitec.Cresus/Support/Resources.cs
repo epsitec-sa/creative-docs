@@ -116,7 +116,50 @@ namespace Epsitec.Cresus.Support
 			
 			return false;
 		}
-
+		
+		public static ResourceBundle GetBundle(string id)
+		{
+			return Resources.GetBundle (id, ResourceLevel.Merged);
+		}
+		
+		public static ResourceBundle GetBundle(string id, ResourceLevel level)
+		{
+			string resource_id;
+			
+			IResourceProvider provider = Resources.FindProvider (id, out resource_id);
+			ResourceBundle    bundle   = null;
+			
+			if (provider != null)
+			{
+				switch (level)
+				{
+					case ResourceLevel.Merged:
+						bundle = new ResourceBundle ();
+						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Default));
+						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Localised));
+						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Customised));
+						break;
+					
+					case ResourceLevel.Default:
+					case ResourceLevel.Localised:
+					case ResourceLevel.Customised:
+						bundle = new ResourceBundle ();
+						bundle.Compile (provider.GetDataStream (resource_id, level));
+						break;
+					
+					default:
+						throw new ResourceException (string.Format ("Invalid level {0} for resource '{1}'", level, id));
+				}
+			}
+			
+			if ((bundle != null) &&
+				(bundle.IsEmpty))
+			{
+				bundle = null;
+			}
+			
+			return bundle;
+		}
 		
 		
 		public static void DebugDumpProviders()
