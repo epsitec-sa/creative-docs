@@ -220,6 +220,8 @@ namespace Epsitec.Common.Widgets
 		
 		public void Show()
 		{
+			this.AsyncValidation ();
+			
 			if (this.show_count == 0)
 			{
 				this.show_count++;

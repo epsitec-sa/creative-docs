@@ -1542,16 +1542,7 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.validator;
 			}
-			set
-			{
-				if (this.validator != value)
-				{
-					this.validator = value;
-					this.OnValidatorChanged ();
-				}
-			}
 		}
-		
 		
 		public void SuspendLayout()
 		{
@@ -1664,6 +1655,15 @@ namespace Epsitec.Common.Widgets
 				{
 					this.Validator.Validate ();
 				}
+			}
+		}
+		
+		internal void SetValidator(Support.IValidator value)
+		{
+			if (this.validator != value)
+			{
+				this.validator = value;
+				this.OnValidatorChanged ();
 			}
 		}
 		
