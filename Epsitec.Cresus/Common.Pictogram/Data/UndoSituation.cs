@@ -11,6 +11,13 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 		}
 
+		// Nom de l'opération.
+		public string Operation
+		{
+			get { return this.operation; }
+			set { this.operation = value; }
+		}
+
 		// Liste des objets.
 		public IconObjects IconObjects
 		{
@@ -18,11 +25,11 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.iconObjects = value; }
 		}
 
-		// Nom de l'opération.
-		public string Operation
+		// Liste des styles.
+		public StylesCollection StylesCollection
 		{
-			get { return this.operation; }
-			set { this.operation = value; }
+			get { return this.stylesCollection; }
+			set { this.stylesCollection = value; }
 		}
 
 		// Objet changé.
@@ -53,8 +60,9 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.modifierData = value; }
 		}
 
-		protected IconObjects			iconObjects;
 		protected string				operation;
+		protected IconObjects			iconObjects;
+		protected StylesCollection		stylesCollection;
 		protected AbstractObject		obj;
 		protected PropertyType			propertyType;
 		protected string				selectedTool;
