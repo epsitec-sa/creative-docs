@@ -12,41 +12,40 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelLayers : Epsitec.Common.Widgets.Widget
 	{
-		public PanelLayers(Drawer drawer, ToolTip toolTip)
+		public PanelLayers(Drawer drawer)
 		{
 			this.drawer = drawer;
-			this.toolTip = toolTip;
 
 			this.toolBar = new HToolBar(this);
 
 			this.buttonNew = new IconButton(@"file:images/layernew.icon");
 			this.buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNew);
 			this.toolBar.Items.Add(this.buttonNew);
-			this.toolTip.SetToolTip(this.buttonNew, "Nouveau calque vide");
+			ToolTip.Default.SetToolTip(this.buttonNew, "Nouveau calque vide");
 
 			this.buttonDuplicate = new IconButton(@"file:images/duplicate.icon");
 			this.buttonDuplicate.Clicked += new MessageEventHandler(this.HandleButtonDuplicate);
 			this.toolBar.Items.Add(this.buttonDuplicate);
-			this.toolTip.SetToolTip(this.buttonDuplicate, "Dupliquer le calque");
+			ToolTip.Default.SetToolTip(this.buttonDuplicate, "Dupliquer le calque");
 
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonUp = new IconButton(@"file:images/up.icon");
 			this.buttonUp.Clicked += new MessageEventHandler(this.HandleButtonUp);
 			this.toolBar.Items.Add(this.buttonUp);
-			this.toolTip.SetToolTip(this.buttonUp, "Calque dessus");
+			ToolTip.Default.SetToolTip(this.buttonUp, "Calque dessus");
 
 			this.buttonDown = new IconButton(@"file:images/down.icon");
 			this.buttonDown.Clicked += new MessageEventHandler(this.HandleButtonDown);
 			this.toolBar.Items.Add(this.buttonDown);
-			this.toolTip.SetToolTip(this.buttonDown, "Calque dessous");
+			ToolTip.Default.SetToolTip(this.buttonDown, "Calque dessous");
 
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonDelete = new IconButton(@"file:images/delete.icon");
 			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDelete);
 			this.toolBar.Items.Add(this.buttonDelete);
-			this.toolTip.SetToolTip(this.buttonDelete, "Supprimer le calque");
+			ToolTip.Default.SetToolTip(this.buttonDelete, "Supprimer le calque");
 
 			this.table = new CellTable(this);
 			this.table.SelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
@@ -462,8 +461,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			// Crée le panneau pour le calque.
 			PropertyModColor modColor = this.drawer.IconObjects.LayerModColor();
 
-			panel = new PanelModColor();
-			panel.Drawer = this.drawer;
+			panel = new PanelModColor(this.drawer);
 			panel.ExtendedSize = true;
 			panel.SetProperty(modColor);
 			panel.LayoutDirect = true;
@@ -556,8 +554,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
+		protected Drawer						drawer;
 		protected HToolBar						toolBar;
-		protected ToolTip						toolTip;
 		protected IconButton					buttonNew;
 		protected IconButton					buttonDuplicate;
 		protected IconButton					buttonUp;
@@ -572,7 +570,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected Button						buttonDimmed;
 		protected Button						buttonHide;
 		protected Widget						panel;
-		protected Drawer						drawer;
 		protected bool							ignoreListTextChanged = false;
 	}
 }

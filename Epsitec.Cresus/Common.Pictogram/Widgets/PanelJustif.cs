@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelJustif : AbstractPanel
 	{
-		public PanelJustif()
+		public PanelJustif(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -31,15 +31,27 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.buttons[2].IconName = @"file:images/justifhright.icon";
 			this.buttons[3].IconName = @"file:images/justifhjustif.icon";
 			this.buttons[4].IconName = @"file:images/justifhall.icon";
+			ToolTip.Default.SetToolTip(this.buttons[0], "Justification à gauche");
+			ToolTip.Default.SetToolTip(this.buttons[1], "Justification centrée");
+			ToolTip.Default.SetToolTip(this.buttons[2], "Justification à droite");
+			ToolTip.Default.SetToolTip(this.buttons[3], "Justification alignée, sauf dernière ligne");
+			ToolTip.Default.SetToolTip(this.buttons[4], "Justification alignée, y compris dernière ligne");
 
 			this.buttons[5].IconName = @"file:images/justifvtop.icon";
 			this.buttons[6].IconName = @"file:images/justifvcenter.icon";
 			this.buttons[7].IconName = @"file:images/justifvbottom.icon";
+			ToolTip.Default.SetToolTip(this.buttons[5], "En haut");
+			ToolTip.Default.SetToolTip(this.buttons[6], "Centré verticalement");
+			ToolTip.Default.SetToolTip(this.buttons[7], "En bas");
 
 			this.buttons[8].IconName = @"file:images/justifolr.icon";
 			this.buttons[9].IconName = @"file:images/justifobt.icon";
 			this.buttons[10].IconName = @"file:images/justiforl.icon";
 			this.buttons[11].IconName = @"file:images/justifotb.icon";
+			ToolTip.Default.SetToolTip(this.buttons[8], "Orientation normale");
+			ToolTip.Default.SetToolTip(this.buttons[9], "Orientation de bas en haut");
+			ToolTip.Default.SetToolTip(this.buttons[10], "Orientation de droite à gauche");
+			ToolTip.Default.SetToolTip(this.buttons[11], "Orientation de haut en bas");
 
 			this.fieldMarginH = new TextFieldSlider(this);
 			this.fieldMarginH.MinValue = 0;
@@ -49,6 +61,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldMarginH.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldMarginH.TabIndex = 20;
 			this.fieldMarginH.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldMarginH, "Marges gauche et droite");
 
 			this.fieldMarginV = new TextFieldSlider(this);
 			this.fieldMarginV.MinValue = 0;
@@ -58,6 +71,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldMarginV.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldMarginV.TabIndex = 21;
 			this.fieldMarginV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldMarginV, "Marges sup/inf");
 
 			this.fieldOffsetV = new TextFieldSlider(this);
 			this.fieldOffsetV.MinValue = -50;
@@ -67,6 +81,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldOffsetV.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldOffsetV.TabIndex = 22;
 			this.fieldOffsetV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldOffsetV, "Décalage vertical");
 
 			this.labelMarginH = new StaticText(this);
 			this.labelMarginH.Text = "Mx";
@@ -81,11 +96,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.labelOffsetV.Alignment = Drawing.ContentAlignment.MiddleCenter;
 
 			this.isNormalAndExtended = true;
-		}
-		
-		public PanelJustif(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)
