@@ -200,13 +200,23 @@ namespace Epsitec.Common.Widgets
 
 			TextFieldUpDown tud = new TextFieldUpDown();
 			tud.Location = new Point(160, 125);
-			tud.Width = 50;
+			tud.Width = 45;
 			tud.Value = 50;
 			tud.MinRange = -100;
 			tud.MaxRange = 100;
 			tud.Step = 10;
 			tud.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(tud);
+
+			TextFieldSlider slider = new TextFieldSlider();
+			slider.Location = new Point(215, 125);
+			slider.Width = 45;
+			slider.Value = 50;
+			slider.MinRange = -100;
+			slider.MaxRange = 100;
+			slider.Step = 10;
+			slider.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			window.Root.Children.Add(slider);
 
 			TextFieldMulti multi = new TextFieldMulti();
 			multi.Location = new Point(160, 70);
@@ -1174,6 +1184,35 @@ namespace Epsitec.Common.Widgets
 			text.Alignment = ContentAlignment.MiddleRight;
 			text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			window.Root.Children.Add(text);
+
+			window.Show();
+		}
+
+		[Test] public void CheckAdornerBug3()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Size(400, 300);
+			window.Text = "CheckAdornerBug3";
+
+			TextFieldCombo combo = new TextFieldCombo();
+			combo.Name = "TextFieldCombo";
+			combo.Location = new Point(160, 150);
+			combo.Width = 100;
+			combo.Items.Add("Janvier");
+			combo.Items.Add("Fevrier");
+			combo.Items.Add("Mars");
+			combo.Items.Add("Avril");
+			combo.Items.Add("Mai");
+			combo.Items.Add("Juin");
+			combo.Items.Add("Juillet");
+			combo.Items.Add("Aout");
+			combo.Items.Add("Septembre");
+			combo.Items.Add("Octobre");
+			combo.Items.Add("Novembre");
+			combo.Items.Add("Decembre");
+			combo.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(combo);
 
 			window.Show();
 		}
