@@ -11,6 +11,7 @@ namespace Epsitec.Common.Widgets
 			this.Root.BackColor = Drawing.Color.Transparent;
 			
 			this.MakeFramelessWindow ();
+			this.MakeToolWindow();
 			this.MakeLayeredWindow ();
 			
 			this.Alpha = 0.9;
