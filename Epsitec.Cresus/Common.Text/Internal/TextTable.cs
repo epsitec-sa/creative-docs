@@ -99,6 +99,10 @@ namespace Epsitec.Common.Text.Internal
 						moved   += distance;
 						distance = 0;
 						
+						cursor.CachedPosition = -1;
+						
+						this.cursors.WriteCursor (id, cursor);
+						
 						break;
 					}
 					
@@ -109,6 +113,7 @@ namespace Epsitec.Common.Text.Internal
 					this.text_chunks[index+1].AddCursor (id, 0);
 					
 					cursor.TextChunkId = index+1 + 1;
+					cursor.CachedPosition = -1;
 					
 					this.cursors.WriteCursor (id, cursor);
 					
@@ -148,6 +153,10 @@ namespace Epsitec.Common.Text.Internal
 						moved   += distance;
 						distance = 0;
 						
+						cursor.CachedPosition = -1;
+						
+						this.cursors.WriteCursor (id, cursor);
+						
 						break;
 					}
 					
@@ -158,6 +167,7 @@ namespace Epsitec.Common.Text.Internal
 					this.text_chunks[index-1].AddCursor (id, this.text_chunks[index-1].TextLength);
 					
 					cursor.TextChunkId = index-1 + 1;
+					cursor.CachedPosition = -1;
 					
 					this.cursors.WriteCursor (id, cursor);
 					
@@ -202,10 +212,23 @@ namespace Epsitec.Common.Text.Internal
 		{
 			Internal.Cursor cursor = this.cursors.ReadCursor (id);
 			
+			if (this.cursors.IsPositionCacheValid (id))
+			{
+				return cursor.CachedPosition;
+			}
+			
 			int offset = this.text_chunks[cursor.TextChunkId-1].GetCursorPosition (id);
 			int start  = this.FindTextChunkPosition (cursor.TextChunkId);
+			int pos    = start + offset;
 			
-			return start + offset;
+			//	Puisque nous venons de recalculer la position du curseur, c'est
+			//	le bon moment pour en prendre note, afin de pouvoir en bénéficier
+			//	la prochaine fois :
+			
+			cursor.CachedPosition = pos;
+			this.cursors.WriteCursor (id, cursor);
+			
+			return pos;
 		}
 		
 		public int GetCursorDistance(Internal.CursorId id_a, Internal.CursorId id_b)
@@ -243,6 +266,8 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			this.text_length += text.Length;
+			
+			this.cursors.InvalidatePositionCache ();
 		}
 		
 		

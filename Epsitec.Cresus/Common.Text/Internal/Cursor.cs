@@ -12,28 +12,18 @@ namespace Epsitec.Common.Text.Internal
 	{
 		public Cursor(Internal.Cursor cursor)
 		{
-			this.free_link = cursor.free_link;
-			this.chunk_id  = cursor.chunk_id;
+			this.chunk_id   = cursor.chunk_id;
+			this.cached_pos = cursor.cached_pos;
+			
+			this.free_link  = cursor.free_link;
 			
 			//	Indique explicitement que ceci est une copie :
 			
-			this.cursor_state   = Internal.CursorState.Copied;
+			this.cursor_state = Internal.CursorState.Copied;
 		}
 		
 		
 		public static Internal.Cursor		Empty = new Internal.Cursor ();
-		
-		public Internal.CursorId			FreeListLink
-		{
-			get
-			{
-				return this.free_link;
-			}
-			set
-			{
-				this.free_link = value;
-			}
-		}
 		
 		public Internal.TextChunkId			TextChunkId
 		{
@@ -44,6 +34,30 @@ namespace Epsitec.Common.Text.Internal
 			set
 			{
 				this.chunk_id = value;
+			}
+		}
+		
+		public int							CachedPosition
+		{
+			get
+			{
+				return this.cached_pos-1;
+			}
+			set
+			{
+				this.cached_pos = value+1;
+			}
+		}
+		
+		public Internal.CursorId			FreeListLink
+		{
+			get
+			{
+				return this.free_link;
+			}
+			set
+			{
+				this.free_link = value;
 			}
 		}
 		
@@ -105,6 +119,7 @@ namespace Epsitec.Common.Text.Internal
 		//
 		
 		private Internal.TextChunkId		chunk_id;
+		private int							cached_pos;
 		
 		private Internal.CursorId			free_link;
 		private Internal.CursorState		cursor_state;

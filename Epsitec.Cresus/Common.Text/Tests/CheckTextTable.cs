@@ -20,6 +20,7 @@ namespace Epsitec.Common.Text.Tests
 			int cursor_3 = table.NewCursor ();
 			
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 3);
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 3);
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_2) == 3);
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_3) == 0);
 			
