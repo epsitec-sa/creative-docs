@@ -17,7 +17,7 @@ namespace Epsitec.Icons
 			this.main_window = new Window ();
 			this.main_window.PreventAutoClose = true;
 			
-			this.main_window.ClientSize = new Size (700, 500);
+			this.main_window.ClientSize = new Size (800, 580);
 			this.main_window.Text       = "App.Icons";
 			this.main_window.Name       = "Application";
 			

@@ -409,7 +409,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			ap = this.tempLine.GetProperty(PropertyType.LineMode);
 			PropertyLine pl = ap as PropertyLine;
-			if ( pl.Width == 0 )  pl.Width = 1.0*this.scaleX;
+			if ( pl.Width == 0 )  pl.Width = 1.0/this.scaleX;
 			this.tempLine.SetProperty(pl);
 
 			ap = this.tempLine.GetProperty(PropertyType.Arrow);

@@ -123,9 +123,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UI", "Common.UI\Comm
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Icons", "X.Setup.Icons\X.Setup.Icons.vdproj", "{8875E452-73E5-4296-98F8-B7000023324C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 32
+		SccNumberOfProjects = 33
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -253,6 +257,10 @@ Global
 		SccLocalPath31 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection31 = Common.UI\\
+		SccProjectUniqueName32 = X.Setup.Icons\\X.Setup.Icons.vdproj
+		SccLocalPath32 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection32 = X.Setup.Icons\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -381,6 +389,8 @@ Global
 		{BDF75452-AAB1-4E62-82D5-AE23F35C6319}.Debug.Build.0 = Debug|.NET
 		{BDF75452-AAB1-4E62-82D5-AE23F35C6319}.Release.ActiveCfg = Release|.NET
 		{BDF75452-AAB1-4E62-82D5-AE23F35C6319}.Release.Build.0 = Release|.NET
+		{8875E452-73E5-4296-98F8-B7000023324C}.Debug.ActiveCfg = Debug
+		{8875E452-73E5-4296-98F8-B7000023324C}.Release.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info
