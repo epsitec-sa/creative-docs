@@ -780,7 +780,15 @@ namespace Epsitec.Common.Document.Properties
 		{
 			Drawing.Color initialColor = graphics.Color;
 
-			graphics.Color = this.color1;
+			Drawing.Color c1 = this.color1;
+			Drawing.Color c2 = this.color2;
+			if ( drawingContext != null )
+			{
+				c1 = drawingContext.AdaptColor(c1);
+				c2 = drawingContext.AdaptColor(c2);
+			}
+
+			graphics.Color = c1;
 			graphics.PaintSurface(path);  // dessine le fond
 
 			for ( int i=0 ; i<Gradient.HatchMax ; i++ )
@@ -813,7 +821,7 @@ namespace Epsitec.Common.Document.Properties
 
 				pathLines = Path.Combine(pathLines, path, PathOperation.And);
 
-				graphics.Color = this.color2;
+				graphics.Color = c2;
 				graphics.PaintSurface(pathLines);
 			}
 
@@ -825,7 +833,15 @@ namespace Epsitec.Common.Document.Properties
 		{
 			Drawing.Color initialColor = graphics.Color;
 
-			graphics.Color = this.color1;
+			Drawing.Color c1 = this.color1;
+			Drawing.Color c2 = this.color2;
+			if ( drawingContext != null )
+			{
+				c1 = drawingContext.AdaptColor(c1);
+				c2 = drawingContext.AdaptColor(c2);
+			}
+
+			graphics.Color = c1;
 			graphics.PaintSurface(path);  // dessine le fond
 
 			for ( int i=0 ; i<Gradient.HatchMax ; i++ )
@@ -867,7 +883,7 @@ namespace Epsitec.Common.Document.Properties
 
 				pathLines = Path.Combine(pathLines, path, PathOperation.And);
 
-				graphics.Color = this.color2;
+				graphics.Color = c2;
 				graphics.PaintSurface(pathLines);
 			}
 
@@ -879,7 +895,15 @@ namespace Epsitec.Common.Document.Properties
 		{
 			Drawing.Color initialColor = graphics.Color;
 
-			graphics.Color = this.color1;
+			Drawing.Color c1 = this.color1;
+			Drawing.Color c2 = this.color2;
+			if ( drawingContext != null )
+			{
+				c1 = drawingContext.AdaptColor(c1);
+				c2 = drawingContext.AdaptColor(c2);
+			}
+
+			graphics.Color = c1;
 			graphics.PaintSurface(path);  // dessine le fond
 
 			for ( int i=0 ; i<Gradient.HatchMax ; i++ )
@@ -916,7 +940,7 @@ namespace Epsitec.Common.Document.Properties
 
 				pathLines = Path.Combine(pathLines, path, PathOperation.And);
 
-				graphics.Color = this.color2;
+				graphics.Color = c2;
 				graphics.PaintSurface(pathLines);
 			}
 

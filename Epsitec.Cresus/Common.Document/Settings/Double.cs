@@ -98,6 +98,14 @@ namespace Epsitec.Common.Document.Settings
 					this.factorStep = 1.0;
 					this.factorResolution = 0.1;
 					break;
+
+				case "ToLinePrecision":
+					this.text = "Précision";
+					this.integer = true;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 100.0;
+					this.factorStep = 10.0;
+					break;
 			}
 		}
 
@@ -130,6 +138,9 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ArrowMoveDiv":
 						return this.document.Modifier.ArrowMoveDiv;
+
+					case "ToLinePrecision":
+						return this.document.Modifier.ToLinePrecision*100.0;
 				}
 
 				return 0.0;
@@ -169,6 +180,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ArrowMoveDiv":
 						this.document.Modifier.ArrowMoveDiv = value;
+						break;
+
+					case "ToLinePrecision":
+						this.document.Modifier.ToLinePrecision = value/100.0;
 						break;
 				}
 			}

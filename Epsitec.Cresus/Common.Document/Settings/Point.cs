@@ -37,7 +37,7 @@ namespace Epsitec.Common.Document.Settings
 				case "GridStep":
 					this.textX = "Pas horizontal";
 					this.textY = "Pas vertical";
-					this.factorMinValue = 0.001;  // 1mm
+					this.factorMinValue = 0.0001;  // 0.1mm
 					this.factorMaxValue = 0.1;  // 100mm
 					this.doubler = true;
 					break;

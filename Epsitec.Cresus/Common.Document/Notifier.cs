@@ -42,6 +42,7 @@ namespace Epsitec.Common.Document
 
 			this.documentChanged = true;
 			this.mouseChanged = true;
+			this.modifChanged = true;
 			this.originChanged = true;
 			this.zoomChanged = true;
 			this.toolChanged = true;
@@ -77,6 +78,14 @@ namespace Epsitec.Common.Document
 		{
 			if ( !this.enable )  return;
 			this.mouseChanged = true;
+			this.NotifyAsync();
+		}
+
+		// Indique que le texte des modifications a changé.
+		public void NotifyModifChanged()
+		{
+			if ( !this.enable )  return;
+			this.modifChanged = true;
 			this.NotifyAsync();
 		}
 
@@ -308,6 +317,12 @@ namespace Epsitec.Common.Document
 				this.mouseChanged = false;
 			}
 
+			if ( this.modifChanged )
+			{
+				this.OnModifChanged();
+				this.modifChanged = false;
+			}
+
 			if ( this.originChanged )
 			{
 				this.OnOriginChanged();
@@ -456,6 +471,14 @@ namespace Epsitec.Common.Document
 			if ( this.MouseChanged != null )  // qq'un écoute ?
 			{
 				this.MouseChanged();
+			}
+		}
+
+		protected void OnModifChanged()
+		{
+			if ( this.ModifChanged != null )  // qq'un écoute ?
+			{
+				this.ModifChanged();
 			}
 		}
 
@@ -630,6 +653,7 @@ namespace Epsitec.Common.Document
 
 		public event SimpleEventHandler			DocumentChanged;
 		public event SimpleEventHandler			MouseChanged;
+		public event SimpleEventHandler			ModifChanged;
 		public event SimpleEventHandler			OriginChanged;
 		public event SimpleEventHandler			ZoomChanged;
 		public event SimpleEventHandler			ToolChanged;
@@ -657,6 +681,7 @@ namespace Epsitec.Common.Document
 		protected bool							enableSelectionChanged = true;
 		protected bool							documentChanged;
 		protected bool							mouseChanged;
+		protected bool							modifChanged;
 		protected bool							originChanged;
 		protected bool							zoomChanged;
 		protected bool							toolChanged;

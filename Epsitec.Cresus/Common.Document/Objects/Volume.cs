@@ -122,6 +122,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
 			this.dirtyBbox = true;
+			this.TextInfoModif();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -135,6 +136,7 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(1).Position = pos;
 			drawingContext.ConstrainDelStarting();
 			this.isCreating = false;
+			this.document.Modifier.TextInfoModif = "";
 
 			// Crée les 2 autres poignées dans les coins opposés.
 			Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, this.Handle(1).Position);
@@ -148,6 +150,17 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesCreate();
 			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		// Texte des informations de modification.
+		protected void TextInfoModif()
+		{
+			Point p1 = this.Handle(0).Position;
+			Point p2 = this.Handle(1).Position;
+			double width = System.Math.Abs(p1.X-p2.X)/this.document.Modifier.RealScale;
+			double height = System.Math.Abs(p1.Y-p2.Y)/this.document.Modifier.RealScale;
+			string text = string.Format("dx={0}, dy={1}", width.ToString("F1"), height.ToString("F1"));
+			this.document.Modifier.TextInfoModif = text;
 		}
 
 		// Indique si l'objet doit exister. Retourne false si l'objet ne peut

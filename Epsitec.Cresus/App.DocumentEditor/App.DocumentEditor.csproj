@@ -824,6 +824,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\ZoomMinus.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\ZoomPage.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -841,6 +845,14 @@
                 />
                 <File
                     RelPath = "Images\ZoomSelWidth.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ZoomShift.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ZoomShiftCtrl.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

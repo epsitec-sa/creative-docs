@@ -71,12 +71,12 @@ namespace Epsitec.Common.Document
 
 		#region StaticMethods
 		// Ajoute une case dans le menu.
-		public static void MenuAddItem(System.Collections.ArrayList list, CommandDispatcher cd, string cmd, string icon, string text)
+		public static bool MenuAddItem(System.Collections.ArrayList list, CommandDispatcher cd, string cmd, string icon, string text)
 		{
 			CommandDispatcher.CommandState state = cd[cmd];
 			if ( state != null )
 			{
-				if ( !state.Enabled )  return;
+				if ( !state.Enabled )  return false;
 			}
 
 			ContextMenuItem item = new ContextMenuItem();
@@ -85,17 +85,20 @@ namespace Epsitec.Common.Document
 			item.Icon = @icon;
 			item.Text = text;
 			list.Add(item);
+			return true;
 		}
 
 		// Ajoute un sous-menu dans le menu.
-		public static void MenuAddSubmenu(System.Collections.ArrayList list, AbstractMenu submenu, string icon, string text)
+		public static bool MenuAddSubmenu(System.Collections.ArrayList list, AbstractMenu submenu, string icon, string text)
 		{
-			if ( submenu == null )  return;
+			if ( submenu == null )  return false;
+
 			ContextMenuItem item = new ContextMenuItem();
 			item.submenu = submenu;
 			item.Icon = @icon;
 			item.Text = text;
 			list.Add(item);
+			return true;
 		}
 
 		// Ajoute un séparateur dans le menu.

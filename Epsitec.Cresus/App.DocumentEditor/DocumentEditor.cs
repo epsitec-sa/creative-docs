@@ -270,7 +270,11 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(geomMenu, "", "", "", "");
 			this.MenuAdd(geomMenu, "manifest:Epsitec.App.DocumentEditor.Images.ToBezier.icon", "ToBezier", "Convertir en courbes", "");
 			this.MenuAdd(geomMenu, "manifest:Epsitec.App.DocumentEditor.Images.ToPoly.icon", "ToPoly", "Convertir en droites", "");
+			this.MenuAdd(geomMenu, "", "", "", "");
 			this.MenuAdd(geomMenu, "manifest:Epsitec.App.DocumentEditor.Images.Fragment.icon", "Fragment", "Fragmenter", "");
+#if DEBUG
+			this.MenuAdd(geomMenu, "", "ToSimplest", "Simplifie (debug)", "");
+#endif
 			geomMenu.AdjustSize();
 			objMenu.Items[14].Submenu = geomMenu;
 
@@ -471,7 +475,7 @@ namespace Epsitec.App.DocumentEditor
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.ZoomAdd.icon", 0, "ZoomAdd", "Agrandissement");
 			this.InfoAdd("", 90, "StatusZoom", "");
 			this.InfoAdd("", 120, "StatusMouse", "");
-			StatusField infoField = this.info.Items["StatusMouse"] as StatusField;
+			this.InfoAdd("", 120, "StatusModif", "");
 
 			this.vToolBar = new VToolBar(this);
 			this.vToolBar.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
@@ -1655,7 +1659,13 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ToPoly")]
 		void CommandToPoly(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.ToPolySelection(0.02);
+			this.CurrentDocument.Modifier.ToPolySelection();
+		}
+
+		[Command ("ToSimplest")]
+		void CommandToSimplest(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ToSimplestSelection();
 		}
 
 		[Command ("Fragment")]
@@ -1664,34 +1674,34 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.FragmentSelection();
 		}
 
-		[Command ("BooleanAnd")]
-		void CommandBooleanAnd(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.And, 0.03);
-		}
-
 		[Command ("BooleanOr")]
 		void CommandBooleanOr(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.Or, 0.03);
+			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.Or);
+		}
+
+		[Command ("BooleanAnd")]
+		void CommandBooleanAnd(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.And);
 		}
 
 		[Command ("BooleanXor")]
 		void CommandBooleanXor(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.Xor, 0.03);
+			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.Xor);
 		}
 
 		[Command ("BooleanFrontMinus")]
 		void CommandBooleanFrontMinus(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.AMinusB, 0.03);
+			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.AMinusB);
 		}
 
 		[Command ("BooleanBackMinus")]
 		void CommandBooleanBackMinus(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.BMinusA, 0.03);
+			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.BMinusA);
 		}
 
 		[Command ("Grid")]
@@ -2379,6 +2389,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.CurrentDocument.Notifier.DocumentChanged  += new SimpleEventHandler(this.HandleDocumentChanged);
 			this.CurrentDocument.Notifier.MouseChanged     += new SimpleEventHandler(this.HandleMouseChanged);
+			this.CurrentDocument.Notifier.ModifChanged     += new SimpleEventHandler(this.HandleModifChanged);
 			this.CurrentDocument.Notifier.OriginChanged    += new SimpleEventHandler(this.HandleOriginChanged);
 			this.CurrentDocument.Notifier.ZoomChanged      += new SimpleEventHandler(this.HandleZoomChanged);
 			this.CurrentDocument.Notifier.ToolChanged      += new SimpleEventHandler(this.HandleToolChanged);
@@ -2459,6 +2470,17 @@ namespace Epsitec.App.DocumentEditor
 					}
 				}
 			}
+		}
+
+		// Appelé par le document lorsque le texte des modifications a changé.
+		private void HandleModifChanged()
+		{
+			// TODO: [PA] Parfois, this.info.Items est nul après avoir cliqué la case de fermeture de la fenêtre !
+			if ( this.info.Items == null )  return;
+
+			StatusField field = this.info.Items["StatusModif"] as StatusField;
+			field.Text = this.TextInfoModif;
+			field.Invalidate();
 		}
 
 		// Appelé par le document lorsque l'origine a changé.
@@ -3153,6 +3175,24 @@ namespace Epsitec.App.DocumentEditor
 					{
 						return " ";
 					}
+				}
+			}
+		}
+
+		// Texte pour les informations.
+		protected string TextInfoModif
+		{
+			get
+			{
+				Document doc = this.CurrentDocument;
+				if ( doc == null )
+				{
+					return " ";
+				}
+				else
+				{
+					if ( doc.Modifier.TextInfoModif == "" )  return " ";
+					return doc.Modifier.TextInfoModif;
 				}
 			}
 		}
@@ -4044,7 +4084,7 @@ namespace Epsitec.App.DocumentEditor
 					// Initialise la variable statique utilisée par VersionDeserializationBinder.
 					// Exemple de contenu:
 					// "Common.Document, Version=1.0.1777.18519, Culture=neutral, PublicKeyToken=7344997cc606b490"
-					System.Reflection.Assembly ass = System.Reflection.Assembly.GetAssembly(this.GetType());
+					System.Reflection.Assembly ass = System.Reflection.Assembly.GetAssembly(typeof(GlobalSettings));
 					DocumentEditor.AssemblyFullName = ass.FullName;
 
 					SoapFormatter formatter = new SoapFormatter();

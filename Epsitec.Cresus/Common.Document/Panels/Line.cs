@@ -355,8 +355,8 @@ namespace Epsitec.Common.Document.Panels
 		protected void EnableWidgets()
 		{
 			int sel = this.dashType.SelectedIndex;
-			bool dash = (sel >= 1 && sel <= 4);
-			bool user = (sel == 5);
+			bool dash = (sel >= 1 && sel <= 6);
+			bool user = (sel == 7);
 
 			this.dashType.SetVisible(this.isExtendedSize);
 

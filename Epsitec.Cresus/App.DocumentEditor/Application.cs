@@ -128,6 +128,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleMainWindowWindowDragEntered(object sender, WindowDragEventArgs e)
 		{
 			string[] files = e.Data.ReadAsStringArray("FileDrop");
+			if ( files == null )  return;
 			e.AcceptDrop = false;
 			
 			if ( files.Length > 0 )
@@ -148,6 +149,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleMainWindowWindowDragDropped(object sender, WindowDragEventArgs e)
 		{
 			string[] files = e.Data.ReadAsStringArray("FileDrop");
+			if ( files == null )  return;
 			e.AcceptDrop = false;
 			
 			if ( files.Length > 0 )

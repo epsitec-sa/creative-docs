@@ -295,6 +295,7 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(rank).Position = pos;
 			}
 			this.dirtyBbox = true;
+			this.TextInfoModif(pos);
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -332,6 +333,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( len > drawingContext.CloseMargin )  return false;  // pas fini
 
 			this.isCreating = false;
+			this.document.Modifier.TextInfoModif = "";
 			this.HandleDelete(rank);
 			this.ChangePropertyPolyClose(true);
 
@@ -358,6 +360,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			this.isCreating = false;
+			this.document.Modifier.TextInfoModif = "";
 
 			if ( this.TotalHandle < 2 )  return false;
 
@@ -369,6 +372,27 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesCreate();
 			this.HandlePropertiesUpdate();
 			return true;
+		}
+
+		// Texte des informations de modification.
+		protected void TextInfoModif(Point mouse)
+		{
+			Point p1, p2;
+			if ( this.mouseDown )
+			{
+				p1 = this.Handle(this.TotalHandle-2).Position;
+				p2 = this.Handle(this.TotalHandle-1).Position;
+			}
+			else
+			{
+				p1 = this.Handle(this.TotalHandle-1).Position;
+				p2 = mouse;
+			}
+
+			double len = Point.Distance(p1, p2)/this.document.Modifier.RealScale;
+			double angle = Point.ComputeAngleDeg(p1, p2);
+			string text = string.Format("lg={0}, a={1}", len.ToString("F1"), angle.ToString("F1"));
+			this.document.Modifier.TextInfoModif = text;
 		}
 
 		// Retourne un bouton d'action pendant la création.

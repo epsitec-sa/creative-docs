@@ -48,6 +48,7 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultPoint("ArrowMove");
 			this.CreateDefaultDouble("ArrowMoveMul");
 			this.CreateDefaultDouble("ArrowMoveDiv");
+			this.CreateDefaultDouble("ToLinePrecision");
 			this.CreateDefaultInteger("DefaultUnit");
 
 			this.CreateDefaultBool("PrintAutoLandscape");

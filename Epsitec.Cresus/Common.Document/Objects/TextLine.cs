@@ -587,6 +587,7 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(1).IsVisible = true;
 			this.Handle(4).IsVisible = true;
 
+			this.isCreating = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -600,6 +601,7 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(4).Position = pos;
 			this.Handle(5).Position = pos;
 			this.dirtyBbox = true;
+			this.TextInfoModif();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -613,7 +615,18 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(4).Position = pos;
 			this.Handle(5).Position = pos;
 			drawingContext.ConstrainDelStarting();
+			this.isCreating = false;
+			this.document.Modifier.TextInfoModif = "";
 			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		// Texte des informations de modification.
+		protected void TextInfoModif()
+		{
+			double len = Point.Distance(this.Handle(1).Position, this.Handle(4).Position)/this.document.Modifier.RealScale;
+			double angle = Point.ComputeAngleDeg(this.Handle(1).Position, this.Handle(4).Position);
+			string text = string.Format("lg={0}, a={1}", len.ToString("F1"), angle.ToString("F1"));
+			this.document.Modifier.TextInfoModif = text;
 		}
 
 		// Indique si l'objet doit exister. Retourne false si l'objet ne peut

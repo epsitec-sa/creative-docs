@@ -1055,7 +1055,6 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( (this.IsSelected || this.isCreating) &&
 				 drawingContext.IsActive &&
-				 !drawingContext.PreviewActive &&
 				 !this.IsGlobalSelected )
 			{
 				double initialWidth = graphics.LineWidth;

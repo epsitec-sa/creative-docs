@@ -50,6 +50,8 @@ namespace Epsitec.Common.Document
 
 			this.repeatDuplicateMove = true;
 			this.FlushMoveAfterDuplicate();
+
+			this.toLinePrecision = 0.25;
 		}
 
 		// Outil sélectionné dans la palette.
@@ -226,6 +228,25 @@ namespace Epsitec.Common.Document
 			get
 			{
 				return new Rectangle(new Point(0,0), this.document.Size);
+			}
+		}
+
+
+		// Texte des informations de modification.
+		public string TextInfoModif
+		{
+			get
+			{
+				return this.textInfoModif;
+			}
+
+			set
+			{
+				if ( this.textInfoModif != value )
+				{
+					this.textInfoModif = value;
+					this.document.Notifier.NotifyModifChanged();
+				}
 			}
 		}
 
@@ -2070,6 +2091,25 @@ namespace Epsitec.Common.Document
 
 
 		#region Combine and Fragment
+		// Choix du diviseur avec Ctrl.
+		public double ToLinePrecision
+		{
+			get
+			{
+				return this.toLinePrecision;
+			}
+			
+			set
+			{
+				if ( this.toLinePrecision != value )
+				{
+					this.toLinePrecision = value;
+					this.document.Notifier.NotifySettingsChanged();
+					this.document.IsDirtySerialize = true;
+				}
+			}
+		}
+
 		// Combine tous les objets sélectionnés.
 		public void CombineSelection()
 		{
@@ -2255,8 +2295,10 @@ namespace Epsitec.Common.Document
 		}
 
 		// Converti en polygone tous les objets sélectionnés.
-		public void ToPolySelection(double precision)
+		public void ToPolySelection()
 		{
+			double precision = this.ToLinePrecision*0.19+0.01;  // 0.01 .. 0.2
+
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.OpletQueueBeginAction();
 			bool error = false;
@@ -2313,6 +2355,64 @@ namespace Epsitec.Common.Document
 			if ( error )
 			{
 				string message = "Un ou plusieurs objets n'ont pas pu être convertis en droites.";
+				this.ActiveViewer.DialogError(message);
+			}
+		}
+
+		// Converti en Bézier tous les objets sélectionnés.
+		public void ToSimplestSelection()
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.OpletQueueBeginAction();
+			bool error = false;
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			int total = layer.Objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
+				if ( !obj.IsSelected )  continue;
+
+				for ( int rank=0 ; rank<100 ; rank++ )
+				{
+					Path path = obj.GetPath(rank);
+					if ( path == null )
+					{
+						if ( rank == 0 )  error = true;
+						break;
+					}
+
+					Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
+					layer.Objects.Add(bezier);
+					bezier.Select(true);
+					this.XferProperties(bezier, obj);
+					this.TotalSelected ++;
+
+					Path simplyPath = Geometry.PathToCurve(path);
+
+					if ( bezier.CreateFromPath(simplyPath, -1) )
+					{
+						bezier.CreateFinalise();
+						this.Simplify(bezier);
+						this.document.Notifier.NotifyArea(bezier.BoundingBox);
+						obj.Mark = true;  // il faudra le détruire
+					}
+					else
+					{
+						obj.Mark = false;  // il ne faudra pas le détruire
+						layer.Objects.Remove(bezier);
+						this.TotalSelected --;
+						error = true;
+					}
+				}
+			}
+			this.DeleteSelection(true);  // détruit les objets sélectionnés et marqués
+			this.document.Notifier.NotifySelectionChanged();
+			this.OpletQueueValidateAction();
+
+			if ( error )
+			{
+				string message = "Un ou plusieurs objets n'ont pas pu être convertis en courbes.";
 				this.ActiveViewer.DialogError(message);
 			}
 		}
@@ -2485,8 +2585,10 @@ namespace Epsitec.Common.Document
 
 		#region Booolean
 		// Opérations booléenne sur tous les objets sélectionnés.
-		public void BooleanSelection(Drawing.PathOperation op, double precision)
+		public void BooleanSelection(Drawing.PathOperation op)
 		{
+			double precision = this.ToLinePrecision*0.19+0.01;  // 0.01 .. 0.2
+
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.OpletQueueBeginAction();
 			bool error = false;
@@ -3872,6 +3974,8 @@ namespace Epsitec.Common.Document
 		protected Point							moveAfterDuplicate;
 		protected int							uniqueObjectId = 0;
 		protected int							uniqueStyleId = 0;
+		protected double						toLinePrecision;
+		protected string						textInfoModif = "";
 
 		public static readonly double			fontSizeScale = 3.5;  // empyrique !
 	}

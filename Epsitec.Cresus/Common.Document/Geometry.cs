@@ -45,11 +45,14 @@ namespace Epsitec.Common.Document
 						break;
 
 					case PathElement.Curve3:
-						p1 = points[i++];
+						p1 = points[i];
 						p2 = points[i++];
-						if ( Point.DetectBezier(current,p1,p1,p2, pos, width) )  return rank;
+						p3 = points[i++];
+						p1 = Point.Scale(current, p1, 2.0/3.0);
+						p2 = Point.Scale(p3,      p2, 2.0/3.0);
+						if ( Point.DetectBezier(current,p1,p2,p3, pos, width) )  return rank;
 						rank ++;
-						current = p2;
+						current = p3;
 						break;
 
 					case PathElement.Curve4:
@@ -142,10 +145,13 @@ namespace Epsitec.Common.Document
 						break;
 
 					case PathElement.Curve3:
-						p1 = points[i++];
+						p1 = points[i];
 						p2 = points[i++];
-						surf.AddBezier(current, p1, p1, p2);
-						current = p2;
+						p3 = points[i++];
+						p1 = Point.Scale(current, p1, 2.0/3.0);
+						p2 = Point.Scale(p3,      p2, 2.0/3.0);
+						surf.AddBezier(current, p1, p2, p3);
+						current = p3;
 						break;
 
 					case PathElement.Curve4:
@@ -199,10 +205,13 @@ namespace Epsitec.Common.Document
 						break;
 
 					case PathElement.Curve3:
-						p1 = points[i++];
+						p1 = points[i];
 						p2 = points[i++];
-						Geometry.BoundingBoxAddBezier(ref bbox, current,p1,p1,p2);
-						current = p2;
+						p3 = points[i++];
+						p1 = Point.Scale(current, p1, 2.0/3.0);
+						p2 = Point.Scale(p3,      p2, 2.0/3.0);
+						Geometry.BoundingBoxAddBezier(ref bbox, current,p1,p2,p3);
+						current = p3;
 						break;
 
 					case PathElement.Curve4:
@@ -235,6 +244,115 @@ namespace Epsitec.Common.Document
 				bbox.MergeWith(Point.FromBezier(p1, s1, s2, p2, t));
 			}
 		}
+
+
+		#region PathToCurve
+		// Convertit un chemin composé de segments de droites en un chemin composé
+		// de courbes de Bézier.
+		public static Path PathToCurve(Path path)
+		{
+			Path newPath = new Path();
+
+			PathElement[] elements;
+			Point[] points;
+			path.GetElements(out elements, out points);
+
+			int i = 0;
+			int ii = 0;
+			while ( i < elements.Length )
+			{
+				switch ( elements[i] & PathElement.MaskCommand )
+				{
+					case PathElement.MoveTo:
+						ii = i;
+						newPath.MoveTo(points[i++]);
+						break;
+
+					case PathElement.LineTo:
+						if ( !Geometry.PathToCurveContinues(points, ii, i) )
+						{
+							Geometry.PathToCurveMagic(newPath, points, ii, i-1);
+							ii = i-1;
+						}
+						i++;
+						break;
+
+					case PathElement.Curve3:
+						Geometry.PathToCurveMagic(newPath, points, ii, i-1);
+						newPath.CurveTo(points[i++], points[i++]);
+						ii = i;
+						break;
+
+					case PathElement.Curve4:
+						Geometry.PathToCurveMagic(newPath, points, ii, i-1);
+						newPath.CurveTo(points[i++], points[i++], points[i++]);
+						ii = i;
+						break;
+
+					default:
+						Geometry.PathToCurveMagic(newPath, points, ii, i-1);
+						if ( (elements[i] & PathElement.FlagClose) != 0 )
+						{
+							newPath.Close();
+						}
+						i++;
+						ii = i;
+						break;
+				}
+			}
+
+			return newPath;
+		}
+
+		protected static bool PathToCurveContinues(Point[] points, int start, int current)
+		{
+			if ( current-start <= 1 )  return true;
+
+			double r;
+			if ( current-start <= 2 )
+			{
+				r = Geometry.PathToCurveRapport(points[current-2], points[current-1], points[current]);
+				return r < 0.1;
+			}
+			else
+			{
+				r = Geometry.PathToCurveRapport(points[current-2], points[current-1], points[current]);
+				if ( r >= 0.1 )  return false;
+
+				r = Geometry.PathToCurveRapport(points[current-1]+points[start]-points[start+1], points[start+1], points[current]);
+				return r < 0.5;
+			}
+		}
+
+		protected static void PathToCurveMagic(Path newPath, Point[] points, int start, int end)
+		{
+			if ( end <= start )  return;
+
+			if ( end-start <= 1 )
+			{
+				newPath.LineTo(points[end]);
+			}
+			else
+			{
+				Point p1 = points[start];
+				Point s1 = points[start+1];
+				Point s2 = points[end-1];
+				Point p2 = points[end];
+
+				double len = Point.Distance(p1, p2);
+				s1 = Point.Move(p1, s1, len*0.4);
+				s2 = Point.Move(p2, s2, len*0.4);
+
+				newPath.CurveTo(s1, s2, p2);
+			}
+		}
+
+		protected static double PathToCurveRapport(Point p1, Point p2, Point p3)
+		{
+			Point p = Point.Projection(p1,p3, p2);
+			return Point.Distance(p2,p) / Point.Distance(p1,p3);
+		}
+		#endregion
 
 
 		// Teste si l'objet est rectangulaire.

@@ -145,6 +145,9 @@ namespace Epsitec.Common.Document
 				this.CreatePoint(container, "ArrowMove");
 				this.CreateDouble(container, "ArrowMoveMul");
 				this.CreateDouble(container, "ArrowMoveDiv");
+
+				Dialogs.CreateTitle(container, "Convertir en droites et opérations booléennes");
+				this.CreateDouble(container, "ToLinePrecision");
 			}
 
 			this.UpdateSettings();

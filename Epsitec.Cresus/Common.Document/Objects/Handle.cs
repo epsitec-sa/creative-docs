@@ -286,8 +286,8 @@ namespace Epsitec.Common.Document.Objects
 					graphics.Align(ref rect);
 
 					if ( this.type == HandleType.Primary  ||
-						this.type == HandleType.Starting ||
-						this.type == HandleType.Ending   )
+						 this.type == HandleType.Starting ||
+						 this.type == HandleType.Ending   )
 					{
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.Adapt(DrawingContext.ColorHandleGlobal, context));
@@ -444,8 +444,8 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( context.PreviewActive )
 			{
-				color = Color.FromBrightness(color.GetBrightness());
-				color.A *= 0.1;
+				//?color = Color.FromBrightness(color.GetBrightness());
+				color.A *= 0.3;
 			}
 			return color;
 		}
