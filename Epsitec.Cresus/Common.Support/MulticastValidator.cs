@@ -263,6 +263,27 @@ namespace Epsitec.Common.Support
 			return validator;
 		}
 		
+		public static IValidator[] ToArray(IValidator validator)
+		{
+			MulticastValidator mv = validator as MulticastValidator;
+			
+			if (mv != null)
+			{
+				return mv.Validators;
+			}
+			
+			if (validator == null)
+			{
+				return new IValidator[0];
+			}
+			
+			IValidator[] array = new IValidator[1];
+			
+			array[0] = validator;
+			
+			return array;
+		}
+		
 		
 		protected ValidationState					state = ValidationState.Dirty;
 		protected IValidator[]						validators;

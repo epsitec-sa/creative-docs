@@ -179,7 +179,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (bundles[ResourceLevel.Localised, culture] == null)
 				{
-					bundles.Add (ResourceBundle.Create (name, prefix, ResourceLevel.Localised, culture));
+					bundles.Add (ResourceBundle.Create (prefix, name, ResourceLevel.Localised, culture));
 				}
 			}
 		}

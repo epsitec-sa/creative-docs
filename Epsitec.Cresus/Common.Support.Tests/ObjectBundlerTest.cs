@@ -293,6 +293,25 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("C1-Extra", c2.Extra);
 		}
 		
+		[Test] public void CheckCopyWidgetWithValidator()
+		{
+			Widgets.Widget w1 = new Widgets.Widget ();
+			Widgets.Validators.RegexValidator v1 = new Epsitec.Common.Widgets.Validators.RegexValidator (w1, "[a-z][1-9]*", false);
+			Widgets.Validators.RegexValidator v2 = new Epsitec.Common.Widgets.Validators.RegexValidator (w1, "....", false);
+			
+			ObjectBundler bundler = new ObjectBundler ();
+			
+			Widgets.Widget w2 = bundler.CopyObject (w1) as Widgets.Widget;
+			
+			Assert.AreEqual (2, Support.MulticastValidator.ToArray (w1.Validator).Length);
+			
+			Widgets.Validators.RegexValidator v3 = Support.MulticastValidator.ToArray (w1.Validator)[0] as Widgets.Validators.RegexValidator;
+			Widgets.Validators.RegexValidator v4 = Support.MulticastValidator.ToArray (w1.Validator)[1] as Widgets.Validators.RegexValidator;
+			
+			Assert.AreEqual (v1.Regex, v3.Regex);
+			Assert.AreEqual (v2.Regex, v4.Regex);
+		}
+		
 		
 		private static bool		register_window_cancel = true;
 		private Widgets.Window	test_window;

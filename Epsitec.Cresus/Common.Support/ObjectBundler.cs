@@ -278,6 +278,11 @@ namespace Epsitec.Common.Support
 				}
 			}
 			
+			ResourceBundle bundle = ResourceBundle.Create ("x");
+			
+			src_obj.SerializeToBundle (this, bundle);
+			dst_obj.RestoreFromBundle (this, bundle);
+			
 			return copy;
 		}
 		
@@ -329,6 +334,11 @@ namespace Epsitec.Common.Support
 					}
 				}
 			}
+			
+			ResourceBundle bundle = ResourceBundle.Create ("x");
+			
+			src_obj.SerializeToBundle (this, bundle);
+			dst_obj.RestoreFromBundle (this, bundle);
 			
 			return true;
 		}

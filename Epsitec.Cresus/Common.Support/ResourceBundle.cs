@@ -253,6 +253,15 @@ namespace Epsitec.Common.Support
 		{
 			if (prefix != null)
 			{
+				switch (prefix)
+				{
+					case "file":
+					case "base":
+						break;
+					default:
+						throw new System.NotImplementedException (string.Format ("Support for prefix {0} not implemented.", prefix));
+				}
+				
 				if (! RegexFactory.AlphaName.IsMatch (prefix))
 				{
 					throw new ResourceException (string.Format ("Prefix '{0}' is not a valid prefix name.", prefix));
@@ -582,7 +591,7 @@ namespace Epsitec.Common.Support
 			System.Xml.XmlAttribute attr = doc.CreateAttribute ("name");
 			
 			elem.Attributes.Append (attr);
-			attr.Value = "?";
+			attr.Value = "";
 			
 			Field field = new Field (this, elem);
 			

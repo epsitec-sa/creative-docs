@@ -72,8 +72,16 @@ namespace Epsitec.Common.Designer.Panels
 			this.edit_array.ColumnCount       = 2;
 			this.edit_array.RowCount          = 0;
 			
+			TextFieldEx column_0_edit_model = new TextFieldEx ();
+			
+			column_0_edit_model.ButtonShowCondition = ShowCondition.WhenModified;
+			column_0_edit_model.DefocusAction       = DefocusAction.Modal;
+			
+			new Common.Widgets.Validators.RegexValidator (column_0_edit_model, Support.RegexFactory.ResourceName, false);
+			
 			this.edit_array.Columns[0].HeaderText = "Clef";
 			this.edit_array.Columns[0].IsReadOnly = true;
+			this.edit_array.Columns[0].EditionWidgetModel = column_0_edit_model;
 			this.edit_array.Columns[1].HeaderText = "Valeur";
 			this.edit_array.Columns[1].IsReadOnly = false;
 			

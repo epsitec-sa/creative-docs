@@ -315,6 +315,9 @@ namespace Epsitec.Common.Designer.UI
 			}
 		}
 		
+		
+		[SuppressBundleSupport]
+		
 		private class CustomFieldValidator : Epsitec.Common.Widgets.Validators.AbstractTextValidator
 		{
 			public CustomFieldValidator(Widget widget, TextRefController controller) : base (widget)
