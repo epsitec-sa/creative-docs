@@ -463,6 +463,7 @@ namespace Epsitec.Common.Drawing
 			
 			form.Show ();
 		}
+		
 		static readonly int cpu_speed = 1700;
 
 		[Test] public void CheckRenderingSpeed()
@@ -694,6 +695,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		
 		private void form_Paint1(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
 			this.global_pixmap_1.Paint (e.Graphics, e.ClipRectangle);
@@ -713,6 +715,7 @@ namespace Epsitec.Common.Drawing
 		{
 			this.global_pixmap_4.Paint (e.Graphics, e.ClipRectangle);
 		}
+		
 		
 		private Pixmap					global_pixmap_1;
 		private Pixmap					global_pixmap_2;

@@ -17,6 +17,17 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 
+		[Test] public void CheckTextOutputWingdings()
+		{
+			Window window = new Window ();
+			
+			window.ClientSize = new Size (300, 640);
+			window.Text = "CheckTextOutputWingdings";
+			window.Root.PaintForeground += new PaintEventHandler(TextWingdings_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+
 		[Test] public void CheckGammaOutput()
 		{
 			Window window = new Window ();
@@ -284,6 +295,35 @@ namespace Epsitec.Common.Drawing
 				y += font_size;
 				line_width += 5;
 			}
+		}
+		
+		private void TextWingdings_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double x = 10;
+			double y = root.Client.Height - 10;
+			
+			Font   font = Font.GetFont ("Wingdings", "Normal");
+			double size = 48;
+			
+			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
+			e.Graphics.LineWidth = 0.2;
+			
+			y -= size;
+			
+			
+			for (int i = 0; i < 64; i += 4)
+			{
+				e.Graphics.Rasterizer.AddGlyph (font, i+0, x + 0, y, size);
+				e.Graphics.Rasterizer.AddGlyph (font, i+1, x + 64, y, size);
+				e.Graphics.Rasterizer.AddGlyph (font, i+2, x + 128, y, size);
+				e.Graphics.Rasterizer.AddGlyph (font, i+3, x + 192, y, size);
+				
+				y -= size;
+			}
+			
+			e.Graphics.RenderSolid (Color.FromBrightness (0));
 		}
 		
 		private void Gamma_PaintForeground(object sender, PaintEventArgs e)

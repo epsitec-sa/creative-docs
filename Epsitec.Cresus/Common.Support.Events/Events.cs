@@ -4,6 +4,7 @@
 namespace Epsitec.Common.Support
 {
 	public delegate void EventHandler(object sender);
+	public delegate void ArgEventHandler(object sender, object arg);
 	public delegate void CancelEventHandler(object sender, CancelEventArgs e);
 	
 	public class EventArgs : System.EventArgs
