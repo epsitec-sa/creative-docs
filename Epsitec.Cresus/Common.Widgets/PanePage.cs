@@ -10,9 +10,9 @@ namespace Epsitec.Common.Widgets
 			this.paneButton = new PaneButton(null);
 			this.paneButton.Alignment = Drawing.ContentAlignment.MiddleCenter;
 
-			this.arrowButton = new ArrowButton(this);
-			this.arrowButton.ButtonStyle = ButtonStyle.Icon;
-			this.arrowButton.Hide();
+			this.glyphButton = new GlyphButton(this);
+			this.glyphButton.ButtonStyle = ButtonStyle.Icon;
+			this.glyphButton.Hide();
 		}
 		
 		public PanePage(Widget embedder) : this()
@@ -169,11 +169,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		// Retourne le bouton associé.
-		public ArrowButton ArrowButton
+		public GlyphButton GlyphButton
 		{
 			get
 			{
-				return this.arrowButton;
+				return this.glyphButton;
 			}
 		}
 		
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Widgets
 		protected double					paneElasticity = 1;
 		protected bool						paneToggle;
 		protected PaneButton				paneButton;
-		protected ArrowButton				arrowButton;
+		protected GlyphButton				glyphButton;
 		protected bool						isDirty = true;
 	}
 }
