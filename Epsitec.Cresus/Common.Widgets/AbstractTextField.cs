@@ -515,17 +515,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public double							SelectionFontSize
+		public double							SelectionFontScale
 		{
 			// Taille de la police des caractères sélectionnés.
 			get
 			{
-				return this.TextLayout.GetSelectionFontSize(this.navigator.Context);
+				return this.TextLayout.GetSelectionFontScale(this.navigator.Context);
 			}
 
 			set
 			{
-				this.TextLayout.SetSelectionFontSize(this.navigator.Context, value);
+				this.TextLayout.SetSelectionFontScale(this.navigator.Context, value);
 				this.OnTextChanged();
 			}
 		}
