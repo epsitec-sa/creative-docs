@@ -24,7 +24,12 @@ namespace Epsitec.Cresus.Database
 		{
 			DbAccess db_access = new DbAccess ();
 			
-			db_access.provider = "Firebird";
+			db_access.provider   = "Firebird";
+			db_access.login_name = "sysdba";
+			db_access.login_pwd  = "masterkey";
+			db_access.database   = "test";
+			db_access.server     = "localhost";
+			db_access.create     = true;
 			
 			IDbAbstraction db_abstraction = DbFactory.FindDbAbstraction (db_access);
 			
