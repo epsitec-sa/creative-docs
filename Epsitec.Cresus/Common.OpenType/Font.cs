@@ -8,37 +8,34 @@ namespace Epsitec.Common.OpenType
 	/// la forme OpenType) et les besoins concrets des applications désirant
 	/// manipuler des glyphes.
 	/// </summary>
-	public class Font
+	public sealed class Font
 	{
 		public Font()
 		{
 		}
 		
-		public Font(FontData font_data)
+		public Font(FontIdentity identity)
 		{
-			this.Initialize (font_data);
+			this.Initialize (identity);
 		}
 		
 		
-		
-		public bool								IsBold
+		public FontIdentity						FontIdentity
 		{
 			get
 			{
-				return (this.ot_head.MacStyle & 0x01) != 0;
-			}
-		}
-		
-		public bool								IsItalic
-		{
-			get
-			{
-				return (this.ot_head.MacStyle & 0x02) != 0;
+				return this.identity;
 			}
 		}
 		
 		
-		public void Initialize(FontData font_data)
+		internal void Initialize(FontIdentity identity)
+		{
+			this.identity = identity;
+			this.Initialize (this.identity.FontData);
+		}
+		
+		internal void Initialize(FontData font_data)
 		{
 			this.font_data = font_data;
 			
@@ -396,7 +393,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		protected void MapToGlyphs(string text, out ushort[] glyphs, out int[] gl_map)
+		private void MapToGlyphs(string text, out ushort[] glyphs, out int[] gl_map)
 		{
 			int length = text.Length;
 			
@@ -411,7 +408,7 @@ namespace Epsitec.Common.OpenType
 			this.ApplySubstitutions (ref glyphs, ref gl_map);
 		}
 		
-		protected void MapToGlyphs(ulong[] text, int start, int length, out ushort[] glyphs, out int[] gl_map)
+		private void MapToGlyphs(ulong[] text, int start, int length, out ushort[] glyphs, out int[] gl_map)
 		{
 			glyphs = new ushort[length];
 			gl_map = new int[length];
@@ -426,7 +423,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		protected void GenerateSubstitutionLookups(System.Collections.ICollection feature_tables)
+		private void GenerateSubstitutionLookups(System.Collections.ICollection feature_tables)
 		{
 			System.Collections.ArrayList lookup_indexes = new System.Collections.ArrayList ();
 			
@@ -471,7 +468,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		protected void ApplySubstitutions(ref ushort[] glyphs, ref int[] gl_map)
+		private void ApplySubstitutions(ref ushort[] glyphs, ref int[] gl_map)
 		{
 			int count = glyphs.Length;
 			
@@ -530,7 +527,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		protected void ApplyManualLigatureSubstitutions(ushort[] input_glyphs, int input_length, ushort[] output_glyphs, out int output_length, ref int[] gl_map)
+		private void ApplyManualLigatureSubstitutions(ushort[] input_glyphs, int input_length, ushort[] output_glyphs, out int output_length, ref int[] gl_map)
 		{
 			int input_offset  = 0;
 			int output_offset = 0;
@@ -655,7 +652,7 @@ namespace Epsitec.Common.OpenType
 			output_length = output_offset;
 		}
 		
-		protected void ApplySubstitutions(BaseSubstitution substitution, ushort[] input_glyphs, int input_length, ushort[] output_glyphs, out int output_length, ref int[] gl_map)
+		private void ApplySubstitutions(BaseSubstitution substitution, ushort[] input_glyphs, int input_length, ushort[] output_glyphs, out int output_length, ref int[] gl_map)
 		{
 			int input_offset  = 0;
 			int output_offset = 0;
@@ -715,7 +712,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		protected bool HitTest(ushort[] glyphs, int[] gl_map, double size, int pos, out double x, out double y)
+		private bool HitTest(ushort[] glyphs, int[] gl_map, double size, int pos, out double x, out double y)
 		{
 			double scale = size / this.ot_head.UnitsPerEm;
 			
@@ -772,7 +769,7 @@ namespace Epsitec.Common.OpenType
 			return true;
 		}
 		
-		protected bool HitTest(ushort[] glyphs, int[] gl_map, double size, double x, double y, out int pos, out double subpos)
+		private bool HitTest(ushort[] glyphs, int[] gl_map, double size, double x, double y, out int pos, out double subpos)
 		{
 			if (x <= 0)
 			{
@@ -835,7 +832,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		protected void GetLigatureCaretPosition(ushort glyph, int simple_glyph_count, double size, int pos, out double x, out double y)
+		private void GetLigatureCaretPosition(ushort glyph, int simple_glyph_count, double size, int pos, out double x, out double y)
 		{
 			if (pos < 1)
 			{
@@ -924,6 +921,8 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		
+		private FontIdentity					identity;
 		private FontData						font_data;
 		
 		private Table_GSUB						ot_GSUB;

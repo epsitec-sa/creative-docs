@@ -18,9 +18,29 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			foreach (FontIdentity font in collection)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0}/{1} ({2}/{3}) weight={5}, italic={6} ---> {4}", font.InvariantFaceName, font.InvariantStyleName, font.LocaleFaceName, font.LocaleStyleName, font.FullFontName, font.FontWeight, font.FontIsItalic));
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}/{1} ({2}/{3}) weight={5}, italic={6} ---> {4}", font.InvariantFaceName, font.InvariantStyleName, font.LocaleFaceName, font.LocaleStyleName, font.FullName, font.FontWeight, font.FontIsItalic));
 			}
 			
+			Font         arial    = collection.CreateFont ("Arial Unicode MS");
+			FontIdentity arial_id = arial.FontIdentity;
+			
+			int[] sizes = new int[] { 8, 9, 10, 11, 12, 24, 120, 2048 };
+			
+			foreach (int size in sizes)
+			{
+				FontIdentity.SizeInfo arial_si = arial_id.GetSizeInfo (size);
+				
+				ushort[] glyphs = arial.GenerateGlyphs ("Affiche un petit texte pour vérifier le bon fonctionnement du calcul des largeurs.");
+				int      width  = 0;
+				double   ideal  = arial.GetTotalWidth (glyphs, size);
+				
+				for (int i = 0; i < glyphs.Length; i++)
+				{
+					width += arial_si.GetGlyphWidth (glyphs[i]);
+				}
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}, size {4}, text width is {1}, ideal is {2}, ratio {3}", arial_id.FullName, width, ideal, width/ideal, size));
+			}
 			
 			CheckTables.TestFeatureTable ();
 			CheckTables.TestArial ();

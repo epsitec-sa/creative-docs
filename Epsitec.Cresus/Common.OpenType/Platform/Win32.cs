@@ -28,6 +28,15 @@ namespace Epsitec.Common.OpenType.Platform
 		}
 		#endregion
 		
+		#region Win32 ABC Structure
+		[StructLayout(LayoutKind.Sequential)] public struct ABC
+		{ 
+			public int			A; 
+			public int			B; 
+			public int			C; 
+		}
+		#endregion
+		
 		#region Win32 EnumLogFontEx Structure
 		[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Unicode)] public class EnumLogFontEx
 		{ 
@@ -55,6 +64,35 @@ namespace Epsitec.Common.OpenType.Platform
 			public string		elfStyle; 
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst=LF_FACESIZE)]
 			public string		elfScript; 
+		}
+		#endregion
+		
+		#region Win32 TextMetric Structure
+		[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Unicode)] public class TextMetric
+		{ 
+			public int			tmHeight; 
+			public int			tmAscent; 
+			public int			tmDescent;
+			public int			tmInternalLeading;
+			public int			tmExternalLeading;
+			public int			tmAveCharWidth;
+			public int			tmMaxCharWidth;
+			public int			tmWeight;
+			public int			tmOverhang;
+			public int			tmDigitizedAspectX;
+			public int			tmDigitizedAspectY;
+			public char			tmFirstChar;
+			public char			tmLastChar;
+			public char			tmDefaultChar;
+			public char			tmBreakChar;
+			public byte			tmItalic;
+			public byte			tmUnderlined;
+			public byte			tmStruckOut;
+			public byte			tmPitchAndFamily;
+			public byte			tmCharSet;
+			public byte			tmReserved_1;
+			public byte			tmReserved_2;
+			public byte			tmReserved_3;
 		}
 		#endregion
 		
@@ -118,6 +156,8 @@ namespace Epsitec.Common.OpenType.Platform
 		[DllImport ("gdi32.dll", CharSet=CharSet.Unicode)] static extern int EnumFontFamiliesEx(IntPtr hdc, [In] LogFont log_font, EnumFontFamExProc proc, IntPtr lParam, uint dwFlags);
 		[DllImport ("user32.dll")] static extern IntPtr GetDC(IntPtr hwnd);
 		[DllImport ("user32.dll")] static extern void ReleaseDC(IntPtr hwnd, IntPtr hdc);
+		[DllImport ("gdi32.dll")] static extern bool GetCharABCWidthsI(IntPtr hdc, int first, int count, [In] ushort[] indices, [Out] ABC [] buffer);
+		[DllImport ("gdi32.dll", CharSet=CharSet.Unicode)] static extern bool GetTextMetrics(IntPtr hdc, [Out] TextMetric buffer);
 		#endregion
 		
 		#region Win32 Callback Procedures
@@ -125,11 +165,16 @@ namespace Epsitec.Common.OpenType.Platform
 		#endregion
 		
 		#region TempDC Class
-		class TempDC : System.IDisposable
+		internal sealed class TempDC : System.IDisposable
 		{
 			public TempDC()
 			{
 				this.hdc = Win32.GetDC (System.IntPtr.Zero);
+			}
+			
+			public TempDC(System.IntPtr font) : this ()
+			{
+				this.sel_font = Win32.SelectObject (this.hdc, font);
 			}
 			
 			
@@ -145,11 +190,62 @@ namespace Epsitec.Common.OpenType.Platform
 			#region IDisposable Members
 			public void Dispose()
 			{
+				if (this.sel_font != System.IntPtr.Zero)
+				{
+					Win32.SelectObject (this.hdc, this.sel_font);
+				}
+				
 				Win32.ReleaseDC (System.IntPtr.Zero, this.hdc);
 			}
 			#endregion
 			
 			private System.IntPtr				hdc;
+			private System.IntPtr				sel_font;
+		}
+		#endregion
+		
+		#region FontHandle Class
+		internal sealed class FontHandle : IFontHandle
+		{
+			internal FontHandle(System.IntPtr handle)
+			{
+				this.handle = handle;
+			}
+			
+			~FontHandle()
+			{
+				this.Dispose (false);
+			}
+			
+			
+			#region IFontHandle Members
+			public System.IntPtr				Handle
+			{
+				get
+				{
+					return this.handle;
+				}
+			}
+			
+			
+			public void Dispose()
+			{
+				this.Dispose (true);
+				System.GC.SuppressFinalize (this);
+			}
+			#endregion
+			
+			private void Dispose(bool disposing)
+			{
+				if (this.handle != System.IntPtr.Zero)
+				{
+					Win32.DeleteObject (this.handle);
+					this.handle = System.IntPtr.Zero;
+				}
+			}
+			
+			
+			private System.IntPtr				handle;
 		}
 		#endregion
 		
@@ -319,7 +415,61 @@ namespace Epsitec.Common.OpenType.Platform
 			}
 		}
 		
+		public static Platform.IFontHandle GetFontHandle(object system_description, int size)
+		{
+			LogFont lf = system_description as LogFont;
+			
+			lf.lfHeight = -size;
+			lf.lfWidth  = 0;
+			
+			System.IntPtr handle = Win32.CreateFontIndirect (lf);
+			
+			return handle == System.IntPtr.Zero ? null : new FontHandle (handle);
+		}
 		 
+		
+		public static bool FillFontWidths(Platform.IFontHandle font, int glyph, int count, int[] widths, int[] lsb, int[] rsb)
+		{
+			using (TempDC dc = new TempDC (font.Handle))
+			{
+				ABC[] abc = new ABC[count];
+				TextMetric metric = new TextMetric ();
+				Win32.GetTextMetrics (dc.Handle, metric);
+				
+				if (Win32.GetCharABCWidthsI (dc.Handle, glyph, count, null, abc))
+				{
+					if (widths != null)
+					{
+						for (int i = 0; i < count; i++)
+						{
+							widths[i] = abc[i].A + abc[i].B + abc[i].C;
+						}
+					}
+					
+					if (lsb != null)
+					{
+						for (int i = 0; i < count; i++)
+						{
+							lsb[i] = abc[i].A;
+						}
+					}
+					
+					if (rsb != null)
+					{
+						for (int i = 0; i < count; i++)
+						{
+							rsb[i] = abc[i].B;
+						}
+					}
+					
+					return true;
+				}
+				
+				return false;
+			}
+		}
+		
+		
 		public static int GetFontWeight(object system_description)
 		{
 			LogFont lf = system_description as LogFont;
@@ -333,6 +483,7 @@ namespace Epsitec.Common.OpenType.Platform
 			
 			return lf == null ? 0 : (int) lf.lfItalic;
 		}
+		
 		
 		public static byte[] LoadFontData(string family, string style)
 		{
@@ -351,10 +502,8 @@ namespace Epsitec.Common.OpenType.Platform
 			
 			if (font != System.IntPtr.Zero)
 			{
-				using (TempDC dc = new TempDC ())
+				using (TempDC dc = new TempDC (font))
 				{
-					System.IntPtr old_font = Win32.SelectObject (dc.Handle, font);
-					
 					int table  = 0;
 					int length = Win32.GetFontData (dc.Handle, table, 0, null, 0);
 					
@@ -363,8 +512,6 @@ namespace Epsitec.Common.OpenType.Platform
 						data = new byte[length];
 						Win32.GetFontData (dc.Handle, table, 0, data, length);
 					}
-					
-					Win32.SelectObject (dc.Handle, old_font);
 				}
 				
 				Win32.DeleteObject (font);
@@ -391,10 +538,8 @@ namespace Epsitec.Common.OpenType.Platform
 			
 			if (font != System.IntPtr.Zero)
 			{
-				using (TempDC dc = new TempDC ())
+				using (TempDC dc = new TempDC (font))
 				{
-					System.IntPtr old_font = Win32.SelectObject (dc.Handle, font);
-					
 					int table  = (('n') << 0) | (('a') << 8) | (('m') << 16) | (('e') << 24);
 					int length = Win32.GetFontData (dc.Handle, table, 0, null, 0);
 					
@@ -403,8 +548,6 @@ namespace Epsitec.Common.OpenType.Platform
 						data = new byte[length];
 						Win32.GetFontData (dc.Handle, table, 0, data, length);
 					}
-					
-					Win32.SelectObject (dc.Handle, old_font);
 				}
 				
 				Win32.DeleteObject (font);

@@ -7,7 +7,7 @@ namespace Epsitec.Common.OpenType
 	/// La classe FontCollection gère une collection de fontes, donnant accès
 	/// aux fontes individuelles.
 	/// </summary>
-	public class FontCollection : System.Collections.IEnumerable
+	public sealed class FontCollection : System.Collections.IEnumerable
 	{
 		public FontCollection()
 		{
@@ -78,7 +78,7 @@ namespace Epsitec.Common.OpenType
 				return null;
 			}
 			
-			return new Font (font.FontData);
+			return new Font (font);
 		}
 		
 		

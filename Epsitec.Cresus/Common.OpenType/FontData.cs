@@ -6,7 +6,7 @@ namespace Epsitec.Common.OpenType
 	/// <summary>
 	/// La classe FontData donne accès aux tables internes d'une fonte OpenType.
 	/// </summary>
-	public class FontData
+	internal sealed class FontData
 	{
 		public FontData()
 		{

@@ -129,6 +129,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Platform\IFontHandle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Platform\Win32.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
