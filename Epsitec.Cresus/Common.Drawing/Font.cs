@@ -4,6 +4,7 @@ namespace Epsitec.Common.Drawing
 {
 	public class Font : System.IDisposable
 	{
+		#region Private constructors
 		Font(System.IntPtr handle)
 		{
 			System.Diagnostics.Debug.Assert (handle != System.IntPtr.Zero);
@@ -20,7 +21,9 @@ namespace Epsitec.Common.Drawing
 		{
 			this.Dispose (false);
 		}
+		#endregion
 		
+		#region Low level initialisation
 		[System.Runtime.InteropServices.DllImport("Kernel32.dll")] private static extern System.IntPtr LoadLibrary(string fullpath);
 		
 		static Font()
@@ -33,16 +36,22 @@ namespace Epsitec.Common.Drawing
 			System.Diagnostics.Debug.Assert (result != System.IntPtr.Zero);
 			
 			System.Diagnostics.Debug.WriteLine ("AntiGrain.Win32.dll loaded successfully");
-			
-			Font.Initialise ();
+			Font.initialised = true;
+			System.Diagnostics.Debug.WriteLine ("Calling AntiGrain.Interface.");
+			AntiGrain.Interface.Initialise ();
+			System.Diagnostics.Debug.WriteLine ("AntiGrain.Interface initialised.");
+			AntiGrain.Font.Initialise ();
+			System.Diagnostics.Debug.WriteLine ("AntiGrain.Font initialised.");
 		}
+		#endregion
 		
+		#region IDisposable members
 		public void Dispose()
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
 		}
-		
+		#endregion
 		
 		public System.IntPtr			Handle
 		{
@@ -51,7 +60,7 @@ namespace Epsitec.Common.Drawing
 		
 		public string					FaceName
 		{
-			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameID.Face); }
+			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.Face); }
 		}
 		
 		public string					StyleName
@@ -60,7 +69,7 @@ namespace Epsitec.Common.Drawing
 			{
 				if (this.synthetic_style == null)
 				{
-					return AntiGrain.Font.Face.GetName (this.handle, (int) NameID.Style);
+					return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.Style);
 				}
 				
 				return this.synthetic_style;
@@ -69,12 +78,12 @@ namespace Epsitec.Common.Drawing
 		
 		public string					LocalStyleName
 		{
-			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameID.StyleUserLocale); }
+			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.StyleUserLocale); }
 		}
 		
 		public string					OpticalName
 		{
-			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameID.Optical); }
+			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.Optical); }
 		}
 		
 		public string					FullName
@@ -219,28 +228,98 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public double[] GetTextCharEndX(string text)
-		{
-			int      len     = text.Length;
-			double[] x_array = new double[len];
-			int      count   = AntiGrain.Font.Face.GetTextCharEndXArray (this.handle, text, 0, x_array);
-			
-			System.Diagnostics.Debug.Assert (count == len);
-			
-			return x_array;
-		}
-		
-		public void GetGlyphAndTextCharEndX(string text, out double[] glyph_x, out int[] glyph, out byte[] glyph_n)
+		public void GetTextCharEndX(string text, out double[] x_array)
 		{
 			int n = text.Length;
 			
-			glyph_x = this.GetTextCharEndX (text);
-			glyph   = new int[n];
+			x_array = new double[n];
+			
+			int count = AntiGrain.Font.Face.GetTextCharEndXArray (this.handle, text, 0, x_array);
+			
+			System.Diagnostics.Debug.Assert (count == n);
+		}
+		
+		public void GetTextClassInfos(string text, out ClassInfo[] infos, out double width, out double elasticity)
+		{
+			int n = text.Length;
+			
+			int    n_text  = 0;
+			int    n_space = 0;
+			double w_text  = 0;
+			double w_space = 0;
+			
+			width      = 0;
+			elasticity = 0;
+			
+			for (int i = 0; i < n; i++)
+			{
+				int unicode = text[i];
+				
+				switch (unicode)
+				{
+					case ' ':
+					case (char) 160:
+						n_space += 1;
+						w_space += this.GetCharAdvance (unicode);
+						break;
+					
+					default:
+						n_text += 1;
+						w_text += this.GetCharAdvance (unicode);
+						break;
+				}
+			}
+			
+			int m = ((n_text > 0 && w_text > 0) ? 1 : 0) + ((n_space > 0 && w_space > 0) ? 1 : 0);
+			infos = new ClassInfo[m];
+			
+			m = 0;
+			
+			if ((n_text > 0) && (w_text > 0))
+			{
+				double e = 0.00 * n_text;
+				
+				infos[m++]  = new ClassInfo (ClassId.PlainText, n_text, w_text, e);
+				width      += w_text;
+				elasticity += e;
+			}
+			
+			if ((n_space > 0) && (w_space > 0))
+			{
+				double e = 1.00 * n_space;
+				
+				infos[m++]  = new ClassInfo (ClassId.Space, n_space, w_space, e);
+				width      += w_space;
+				elasticity += e;
+			}
+		}
+		
+		public void GetGlyphs(string text, out int[] glyphs, out byte[] glyph_n)
+		{
+			int n = text.Length;
+			
+			glyphs  = new int[n];
 			glyph_n = new byte[n];
 			
 			for (int i = 0; i < n; i++)
 			{
-				glyph[i]   = this.GetGlyphIndex (text[i]);
+				glyphs[i]  = this.GetGlyphIndex (text[i]);
+				glyph_n[i] = 1;
+			}
+		}
+		
+		public void GetGlyphsEndX(string text, out double[] glyph_x, out int[] glyphs, out byte[] glyph_n)
+		{
+			int n = text.Length;
+			
+			this.GetTextCharEndX (text, out glyph_x);
+			
+			glyphs  = new int[n];
+			glyph_n = new byte[n];
+			
+			for (int i = 0; i < n; i++)
+			{
+				glyphs[i]  = this.GetGlyphIndex (text[i]);
 				glyph_n[i] = 1;
 			}
 		}
@@ -302,6 +381,7 @@ namespace Epsitec.Common.Drawing
 			return AntiGrain.Font.PixelCache.Paint (pixmap.Handle, this.handle, text, size, ox, oy, color.R, color.G, color.B, color.A);
 		}
 		
+		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -317,19 +397,11 @@ namespace Epsitec.Common.Drawing
 		
 		public static void Initialise()
 		{
-			if (Font.initialised == false)
-			{
-				Font.initialised = true;
-				
-				System.Diagnostics.Debug.WriteLine ("Calling AntiGrain.Interface.");
-				AntiGrain.Interface.Initialise ();
-				System.Diagnostics.Debug.WriteLine ("AntiGrain.Interface initialised.");
-				AntiGrain.Font.Initialise ();
-				System.Diagnostics.Debug.WriteLine ("AntiGrain.Font initialised.");
-			}
+			//	En appelant cette méthode statique, on peut garantir que le constructeur
+			//	statique de Font a bien été exécuté.
 		}
 
-		static protected void SetupFonts()
+		protected static void SetupFonts()
 		{
 			if (Font.array == null)
 			{
@@ -522,9 +594,85 @@ namespace Epsitec.Common.Drawing
 		protected static Font							default_font;
 		protected static bool							initialised = false;
 		
-		protected enum NameID
+		protected enum NameId
 		{
 			None, Face = 1, Style = 2, StyleUserLocale = 3, Optical = 4
+		}
+		
+		public class ClassInfo
+		{
+			public ClassInfo(ClassId id, int count, double width, double elasticity)
+			{
+				this.class_id   = id;
+				this.count      = count;
+				this.width      = width;
+				this.elasticity = elasticity;
+				this.scale      = 1.0;
+			}
+			
+			
+			public ClassId						ClassId
+			{
+				get
+				{
+					return this.class_id;
+				}
+			}
+			
+			public int							Count
+			{
+				get
+				{
+					return this.count;
+				}
+			}
+			
+			public double						Width
+			{
+				get
+				{
+					return this.width;
+				}
+			}
+			
+			public double						Elasticity
+			{
+				get
+				{
+					return this.elasticity;
+				}
+			}
+			
+			public double						Scale
+			{
+				get
+				{
+					return this.scale;
+				}
+				set
+				{
+					this.scale = value;
+				}
+			}
+			
+			
+			protected ClassId					class_id;
+			protected int						count;				//	nombre de glyphes dans cette classe
+			protected double					width;				//	largeur cumulée
+			protected double					elasticity;			//	élasticité des glyphes
+			protected double					scale;				//	facteur d'échelle [x]
+		}
+		
+		public enum ClassId
+		{
+			Space		= 0,
+			PlainText	= 1,
+			Ligature_2	= 2,
+			Ligature_3	= 3,
+			
+			//	...
+			
+			Other		= 100
 		}
 	}
 	
