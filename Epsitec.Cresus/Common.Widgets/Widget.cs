@@ -3058,10 +3058,11 @@ namespace Epsitec.Common.Widgets
 					switch (dir)
 					{
 						case TabNavigationDir.Backwards:
-							if (i > 0)
+							
+							find = this.GetTabFromSiblings (i, dir, siblings);
+							
+							if (find != null)
 							{
-								find = siblings[i-1];
-								
 								if (((find.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0) &&
 									(find.HasChildren))
 								{
@@ -3079,10 +3080,11 @@ namespace Epsitec.Common.Widgets
 							break;
 						
 						case TabNavigationDir.Forwards:
-							if (i < siblings.Length-1)
+							
+							find = this.GetTabFromSiblings (i, dir, siblings);
+							
+							if (find != null)
 							{
-								find = siblings[i+1];
-								
 								if (((find.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0) &&
 									((find.tab_navigation_mode & TabNavigationMode.ForwardOnly) != 0) &&
 									(find.HasChildren))
@@ -3181,7 +3183,17 @@ namespace Epsitec.Common.Widgets
 			return find;
 		}
 		
-		protected virtual Widget[] FindTabWidgets(TabNavigationMode mode)
+		protected Widget[] FindTabWidgets(TabNavigationMode mode)
+		{
+			System.Collections.ArrayList list = this.FindTabWidgetList (mode);
+			
+			Widget[] widgets = new Widget[list.Count];
+			list.CopyTo (widgets);
+			
+			return widgets;
+		}
+		
+		protected virtual System.Collections.ArrayList FindTabWidgetList(TabNavigationMode mode)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
@@ -3202,10 +3214,29 @@ namespace Epsitec.Common.Widgets
 			
 			list.Sort (new TabIndexComparer ());
 			
-			Widget[] widgets = new Widget[list.Count];
-			list.CopyTo (widgets);
+			return list;
+		}
+		
+		protected virtual Widget GetTabFromSiblings(int index, TabNavigationDir dir, Widget[] siblings)
+		{
+			switch (dir)
+			{
+				case TabNavigationDir.Backwards:
+					if (index > 0)
+					{
+						return siblings[index-1];
+					}
+					break;
+				
+				case TabNavigationDir.Forwards:
+					if (index < siblings.Length-1)
+					{
+						return siblings[index+1];
+					}
+					break;
+			}
 			
-			return widgets;
+			return null;
 		}
 		
 		
@@ -3247,8 +3278,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal virtual bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode)
+		internal virtual bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
+			focus = this;
 			return true;
 		}
 		

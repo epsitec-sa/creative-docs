@@ -811,9 +811,11 @@ namespace Epsitec.Common.Widgets
 							if ((this.focused_widget == null) ||
 								(this.focused_widget.AboutToLoseFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive)))
 							{
-								if (consumer.AboutToGetFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive))
+								Widget focus;
+								
+								if (consumer.AboutToGetFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive, out focus))
 								{
-									this.FocusedWidget = consumer;
+									this.FocusedWidget = focus;
 								}
 							}
 						}

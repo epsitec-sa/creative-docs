@@ -134,27 +134,27 @@ namespace Epsitec.Common.Widgets
 		
 		public bool							IsLeftButton
 		{
-			get { return (this.button & MouseButtons.Left) != 0; }
+			get { return Message.state.IsSameWindowAsButtonDown && (this.button & MouseButtons.Left) != 0; }
 		}
 		
 		public bool							IsRightButton
 		{
-			get { return (this.button & MouseButtons.Right) != 0; }
+			get { return Message.state.IsSameWindowAsButtonDown && (this.button & MouseButtons.Right) != 0; }
 		}
 		
 		public bool							IsMiddleButton
 		{
-			get { return (this.button & MouseButtons.Middle) != 0; }
+			get { return Message.state.IsSameWindowAsButtonDown && (this.button & MouseButtons.Middle) != 0; }
 		}
 		
 		public bool							IsXButton1
 		{
-			get { return (this.button & MouseButtons.XButton1) != 0; }
+			get { return Message.state.IsSameWindowAsButtonDown && (this.button & MouseButtons.XButton1) != 0; }
 		}
 		
 		public bool							IsXButton2
 		{
-			get { return (this.button & MouseButtons.XButton2) != 0; }
+			get { return Message.state.IsSameWindowAsButtonDown && (this.button & MouseButtons.XButton2) != 0; }
 		}
 		
 		
@@ -486,6 +486,8 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert (e != null);
 				System.Diagnostics.Debug.Assert (e.Button != System.Windows.Forms.MouseButtons.None);
 				
+				Message.state.window_mouse_down = Message.state.window;
+				
 				int time_new   = message.TickCount;
 				int time_delta = time_new - Message.state.button_down_time;
 				int time_max   = SystemInformation.DoubleClickDelay;
@@ -773,7 +775,17 @@ namespace Epsitec.Common.Widgets
 			get { return this.window; }
 		}
 		
-
+		public Window						MouseDownWindow
+		{
+			get { return this.window_mouse_down; }
+		}
+		
+		public bool							IsSameWindowAsButtonDown
+		{
+			get { return (this.window_mouse_down == null) || (this.window_mouse_down == this.window); }
+		}
+		
+		
 		internal ModifierKeys				modifiers;
 		internal KeyCode					key_down_code;
 		internal MouseButtons				buttons;
@@ -784,6 +796,7 @@ namespace Epsitec.Common.Widgets
 		internal int						button_down_y;
 		internal Drawing.Point				cursor;
 		internal Window						window;
+		internal Window						window_mouse_down;
 	}
 	
 	

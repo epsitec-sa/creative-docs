@@ -109,9 +109,9 @@ namespace Epsitec.Common.Widgets
 				return base.AboutToGetFocus (dir, mode, out focus);
 			}
 			
-			//	Ce n'est pas notre bouton radio qui est allumé. Si TAB doit sélectionner
-			//	un bouton radio, on doit plutôt mettre le focus sur celui qui est déjà
-			//	actif :
+			//	Ce n'est pas notre bouton radio qui est allumé. TAB voudrait nous donner le
+			//	focus, mais ce n'est pas adéquat; mieux vaut mettre le focus sur le frère qui
+			//	est activé :
 			
 			System.Collections.ArrayList list = RadioButton.FindRadioChildren (this.Parent, this.Group);
 			
@@ -132,6 +132,10 @@ namespace Epsitec.Common.Widgets
 			{
 				return base.FindTabWidgetList (mode);
 			}
+			
+			//	On recherche les frères de ce widget, pour déterminer lequel devra être activé par la
+			//	pression de la touche TAB. Pour bien faire, il faut supprimer les autres boutons radio
+			//	qui appartiennent à notre groupe :
 			
 			System.Collections.ArrayList list = base.FindTabWidgetList (mode);
 			System.Collections.ArrayList copy = new System.Collections.ArrayList ();

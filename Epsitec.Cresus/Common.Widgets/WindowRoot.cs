@@ -138,10 +138,12 @@ namespace Epsitec.Common.Widgets
 					{
 						if (find != focused)
 						{
+							Widget focus;
+							
 							if (focused.AboutToLoseFocus (dir, mode) &&
-								find.AboutToGetFocus (dir, mode))
+								find.AboutToGetFocus (dir, mode, out focus))
 							{
-								find.SetFocused (true);
+								focus.SetFocused (true);
 							}
 						}
 					}
