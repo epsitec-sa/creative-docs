@@ -226,6 +226,13 @@ namespace Epsitec.Cresus.Database
 				{
 					System.Diagnostics.Debug.WriteLine ("Row " + row[0] + " contains " + ((byte[])row[Tags.ColumnReqData]).Length + " bytes.");
 				}
+				
+				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					queue.ClearQueue ();
+					queue.SerializeToBase (transaction);
+					transaction.Commit ();
+				}
 			}
 		}
 		
@@ -307,7 +314,95 @@ namespace Epsitec.Cresus.Database
 			infrastructure.UnregisterDbTable (null, db_table);
 		}
 		
-		
+		[Test] public void Check09Orchestrator()
+		{
+			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
+			Requests.Orchestrator orchestrator = new Requests.Orchestrator (infrastructure);
+			
+			infrastructure.Logger.CreateTemporaryEntry (null);
+			
+			DbType db_type_name = infrastructure.ResolveDbType (null, "Customer Name");
+			DbType db_type_date = infrastructure.ResolveDbType (null, "Birth Date");
+			
+			Assert.IsNotNull (db_type_name);
+			Assert.IsNotNull (db_type_date);
+			
+			DbTable db_table = infrastructure.CreateDbTable ("Simple Exec Table Test", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
+			
+			DbColumn db_col_1 = DbColumn.CreateUserDataColumn ("Name",       db_type_name, Nullable.No);
+			DbColumn db_col_2 = DbColumn.CreateUserDataColumn ("Birth Date", db_type_date, Nullable.Yes);
+			
+			db_table.Columns.AddRange (new DbColumn[] { db_col_1, db_col_2 });
+			
+			infrastructure.RegisterNewDbTable (null, db_table);
+			
+			DbColumn db_col_id   = db_table.Columns[0];
+			DbColumn db_col_stat = db_table.Columns[1];
+			
+			System.Data.DataSet   set   = new System.Data.DataSet ();
+			System.Data.DataTable table = new System.Data.DataTable (db_table.Name);
+			
+			set.Tables.Add (table);
+			
+			System.Data.DataColumn col_1 = new System.Data.DataColumn (db_col_id.Name, typeof (long));
+			System.Data.DataColumn col_2 = new System.Data.DataColumn (db_col_stat.Name, typeof (int));
+			System.Data.DataColumn col_3 = new System.Data.DataColumn (db_col_1.Name, typeof (string));
+			System.Data.DataColumn col_4 = new System.Data.DataColumn (db_col_2.Name, typeof (System.DateTime));
+			
+			col_1.Unique = true;
+			
+			table.Columns.Add (col_1);
+			table.Columns.Add (col_2);
+			table.Columns.Add (col_3);
+			table.Columns.Add (col_4);
+			
+			DataLayer.RequestFactory factory = new DataLayer.RequestFactory ();
+			
+			table.Rows.Add (new object[] { DbId.CreateId (1, 1).Value, 0, "Pierre Arnaud", new System.DateTime (1972, 2, 11) });
+			
+			factory.GenerateRequests (table);
+			
+			orchestrator.ExecutionQueue.Enqueue (factory.CreateGroup ());
+			
+			table.AcceptChanges ();
+			table.Rows[0][col_3.ColumnName] = "Pierre Arnaud-Roost";
+			table.Rows[0][col_4.ColumnName] = new System.DateTime (1940, 5, 20);
+			
+			factory.Clear ();
+			factory.GenerateRequests (table);
+			
+			orchestrator.ExecutionQueue.Enqueue (factory.CreateGroup ());
+			orchestrator.Dispose ();
+			
+			infrastructure.UnregisterDbTable (null, db_table);
+		}
+
+		[Test] public void Check10ExecutionQueueClearQueue()
+		{
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
+			{
+				Assert.IsNotNull (infrastructure);
+				
+				Requests.ExecutionQueue queue = new Requests.ExecutionQueue (infrastructure, null);
+				
+				queue = new Requests.ExecutionQueue (infrastructure, null);
+				
+				System.Data.DataRowCollection rows = queue.Rows;
+				
+				foreach (System.Data.DataRow row in rows)
+				{
+					System.Diagnostics.Debug.WriteLine ("Row " + row[0] + " contains " + ((byte[])row[Tags.ColumnReqData]).Length + " bytes.");
+				}
+				
+				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					queue.ClearQueue ();
+					queue.SerializeToBase (transaction);
+					transaction.Commit ();
+				}
+			}
+		}
+
 		
 		public static System.Data.DataTable CreateSampleTable()
 		{

@@ -256,7 +256,11 @@ namespace Epsitec.Cresus.Database
 		
 		public IDbAbstraction CreateDbAbstraction()
 		{
-			return DbFactory.FindDbAbstraction (this.db_access);
+			IDbAbstraction db_abstraction = DbFactory.FindDbAbstraction (this.db_access);
+			
+			db_abstraction.SqlBuilder.AutoClear = true;
+			
+			return db_abstraction;
 		}
 		
 		

@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Requests
 	/// La classe Orchestrator gère l'arrivée de requêtes, leur mise en queue et
 	/// leur traitement.
 	/// </summary>
-	public class Orchestrator
+	public class Orchestrator : System.IDisposable
 	{
 		public Orchestrator(DbInfrastructure infrastructure)
 		{
@@ -17,35 +17,72 @@ namespace Epsitec.Cresus.Requests
 			this.database         = this.infrastructure.CreateDbAbstraction ();
 			this.execution_engine = new ExecutionEngine (this.infrastructure);
 			this.execution_queue  = new ExecutionQueue (this.infrastructure, this.database);
+			
+			this.thread_abort_event = new System.Threading.ManualResetEvent (false);
+			this.worker_thread = new System.Threading.Thread (new System.Threading.ThreadStart (this.WorkerThread));
+			
+			this.worker_thread.Start ();
 		}
 		
 		
-		public void WorkerThread()
+		public ExecutionQueue					ExecutionQueue
 		{
-			System.Threading.WaitHandle[] handles = new System.Threading.WaitHandle[2];
-			
-			handles[0] = this.execution_queue.EnqueueEvent;
-			handles[1] = Common.Support.Globals.AbortEvent;
-			
-			for (;;)
+			get
 			{
-				int handle_index = System.Threading.WaitHandle.WaitAny (handles);
-				
-				if (handle_index >= 128)
-				{
-					handle_index -= 128;
-				}
-				
-				if (handle_index != 0)
-				{
-					break;
-				}
-				
-				this.ProcessQueue ();
+				return this.execution_queue;
 			}
 		}
 		
-		public void ProcessQueue()
+		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		#endregion
+		
+		protected void WorkerThread()
+		{
+			System.Threading.WaitHandle[] handles = new System.Threading.WaitHandle[3];
+			
+			handles[0] = this.execution_queue.EnqueueEvent;
+			handles[1] = Common.Support.Globals.AbortEvent;
+			handles[2] = this.thread_abort_event;
+			
+			try
+			{
+				System.Diagnostics.Debug.WriteLine ("Requests.Orchestrator Worker Thread launched.");
+				
+				for (;;)
+				{
+					int handle_index = System.Threading.WaitHandle.WaitAny (handles);
+					
+					if (handle_index >= 128)
+					{
+						handle_index -= 128;
+					}
+					
+					if (handle_index != 0)
+					{
+						break;
+					}
+					
+					this.ProcessQueue ();
+				}
+			}
+			catch (System.Exception exception)
+			{
+				System.Diagnostics.Debug.WriteLine (exception.Message);
+				System.Diagnostics.Debug.WriteLine (exception.StackTrace);
+			}
+			finally
+			{
+				System.Diagnostics.Debug.WriteLine ("Requests.Orchestrator Worker Thread terminated.");
+			}
+		}
+		
+		protected void ProcessQueue()
 		{
 			//	Passe en revue la queue à la recherche de requêtes en attente d'exécution.
 			
@@ -57,15 +94,23 @@ namespace Epsitec.Cresus.Requests
 			
 			int n = rows.Count;
 			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Queue contains {0} {1}.", n, (n == 1) ? "request" : "requests"));
+			
 			for (int i = 0; i < n; i++)
 			{
-				ExecutionState state = this.execution_queue.GetRequestExecutionState (rows[i]);
+				System.Data.DataRow row   = rows[i];
+				ExecutionState      state = this.execution_queue.GetRequestExecutionState (row);
+				
+				System.Diagnostics.Debug.WriteLine (string.Format (" {0} --> {1}", i, state));
+				
+				AbstractRequest request = null;;
 				
 				switch (state)
 				{
 					case ExecutionState.Pending:
 					case ExecutionState.ConflictResolved:
-						this.ProcessPendingRequest (i, this.execution_queue.GetRequest (rows[i]));
+						request = this.execution_queue.GetRequest (row);
+						this.ProcessPendingRequest (row, request);
 						break;
 					
 					default:
@@ -74,8 +119,67 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		protected virtual void ProcessPendingRequest(int row_index, AbstractRequest request)
+		
+		protected virtual void ProcessPendingRequest(System.Data.DataRow row, AbstractRequest request)
 		{
+			//	Traite une requête dans l'état ExecuctionState.Pending ou ConflictResolved;
+			//	son exécution en local peut la faire passer dans l'état ExecutedByClient ou
+			//	Conflicting, en fonction de son succès ou non.
+			
+			DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database);
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Processing request ({0}).", request.RequestType));
+			
+			bool conflict_detected = false;
+			
+			try
+			{
+				this.execution_engine.Execute (transaction, request);
+				this.execution_queue.SetRequestExecutionState (row, ExecutionState.ExecutedByClient);
+				this.execution_queue.SerializeToBase (transaction);
+				
+				transaction.Commit ();
+			}
+			catch (System.Exception exception)
+			{
+				System.Diagnostics.Debug.WriteLine (exception.Message);
+				
+				conflict_detected = true;
+			}
+			finally
+			{
+				transaction.Dispose ();
+			}
+			
+			if (conflict_detected)
+			{
+				this.ProcessDetectedConflict (row, request);
+			}
+		}
+		
+		protected virtual void ProcessDetectedConflict(System.Data.DataRow row, AbstractRequest request)
+		{
+			//	Un conflit a été détecté lors de la tentative de mise à jour de la
+			//	requête. Note que la requête est en "conflit" sans pour autant mettre
+			//	à jour la base de données; en effet, si on perd maintenant l'information
+			//	qui nous indique le conflit, on risque tout au plus de re-exécuter la
+			//	requête (la dernière exécution n'a eu aucun effet de bord).
+			
+			this.execution_queue.SetRequestExecutionState (row, ExecutionState.Conflicting);
+		}
+		
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.thread_abort_event.Set ();
+				this.worker_thread.Join ();
+				
+				this.database.Dispose ();
+				
+				this.database = null;
+			}
 		}
 		
 		
@@ -83,5 +187,8 @@ namespace Epsitec.Cresus.Requests
 		protected ExecutionQueue				execution_queue;
 		protected ExecutionEngine				execution_engine;
 		protected IDbAbstraction				database;
+		
+		System.Threading.Thread					worker_thread;
+		System.Threading.ManualResetEvent		thread_abort_event;
 	}
 }

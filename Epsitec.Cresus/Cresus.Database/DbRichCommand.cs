@@ -295,10 +295,15 @@ namespace Epsitec.Cresus.Database
 		{
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
-				DbKey key = new DbKey (table.Rows[i]);
+				System.Data.DataRow row = table.Rows[i];
 				
-				System.Diagnostics.Debug.Assert (key.IsTemporary == false);
-				System.Diagnostics.Debug.Assert (key.Id.ClientId != 0);
+				if (row.RowState != System.Data.DataRowState.Deleted)
+				{
+					DbKey key = new DbKey (row);
+					
+					System.Diagnostics.Debug.Assert (key.IsTemporary == false);
+					System.Diagnostics.Debug.Assert (key.Id.ClientId != 0);
+				}
 			}
 		}
 		
@@ -390,6 +395,18 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public static void KillRow(System.Data.DataRow data_row)
+		{
+			//	Supprime réellement la ligne de la table. Cette méthode est réservée à un
+			//	usage très limité; en principe, on utilisera DeleteRow, sauf pour la queue
+			//	des requêtes, par exemple.
+			
+			if (data_row.RowState != System.Data.DataRowState.Deleted)
+			{
+				data_row.Delete ();
+			}
+		}
+		
 		
 		public static System.Collections.ArrayList FindRowsUsingTemporaryIds(System.Data.DataTable table)
 		{
@@ -400,11 +417,16 @@ namespace Epsitec.Cresus.Database
 			
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
-				DbKey key = new DbKey (table.Rows[i]);
+				System.Data.DataRow row = table.Rows[i];
 				
-				if (key.IsTemporary)
+				if (row.RowState != System.Data.DataRowState.Deleted)
 				{
-					list.Add (table.Rows[i]);
+					DbKey key = new DbKey (row);
+					
+					if (key.IsTemporary)
+					{
+						list.Add (row);
+					}
 				}
 			}
 			

@@ -53,6 +53,34 @@ namespace Epsitec.Cresus.Requests
 			this.enqueue_event.Set ();
 		}
 		
+		public void ClearQueue()
+		{
+			System.Data.DataTable table = this.queue_data_set.Tables[0];
+			System.Data.DataRow[] rows  = new System.Data.DataRow[table.Rows.Count];
+			
+			for (;;)
+			{
+				try
+				{
+					table.Rows.CopyTo (rows, 0);
+				}
+				catch (System.ArgumentException)
+				{
+					//	S'il y a plus d'éléments dans la table des lignes qu'il n'y en avait
+					//	il y a quelques microsecondes, on re-alloue le tableau et on tente une
+					//	nouvelle copie :
+					
+					rows = new System.Data.DataRow[table.Rows.Count];
+					continue;
+				}
+				break;
+			}
+			
+			for (int i = 0; i < rows.Length; i++)
+			{
+				DbRichCommand.KillRow (rows[i]);
+			}
+		}
 		
 		public void WaitOnEnqueueEvent(System.TimeSpan timeout)
 		{
