@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : en chantier/PA
+
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 
@@ -15,7 +18,7 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		public Window					MainWindow
+		public Window							MainWindow
 		{
 			get
 			{
@@ -28,7 +31,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		public CommandDispatcher		CommandDispatcher
+		public CommandDispatcher				CommandDispatcher
 		{
 			get
 			{
@@ -46,28 +49,30 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		public BundleEditController		BundleEditController
+		public BundleEditController				BundleEditController
 		{
 			get
 			{
 				System.Diagnostics.Debug.Assert (this.is_initialised);
-				
 				return this.bundle_edit_controller;
 			}
 		}
 		
-		public StringEditController		StringEditController
+		public StringEditController				StringEditController
 		{
 			get
 			{
 				System.Diagnostics.Debug.Assert (this.is_initialised);
-				
-				if (this.string_edit_controller == null)
-				{
-					this.string_edit_controller = new StringEditController (this.CommandDispatcher);
-				}
-				
 				return this.string_edit_controller;
+			}
+		}
+		
+		public BuilderController				BuilderController
+		{
+			get
+			{
+				System.Diagnostics.Debug.Assert (this.is_initialised);
+				return this.builder_controller;
 			}
 		}
 		
@@ -81,7 +86,7 @@ namespace Epsitec.Common.Designer
 			
 			this.is_initialising = true;
 			
-			Widgets.Widget.Initialise ();
+			Epsitec.Common.Widgets.Widget.Initialise ();
 			Pictogram.Engine.Initialise ();
 			
 			this.CreateMainWindow ();
@@ -91,6 +96,10 @@ namespace Epsitec.Common.Designer
 			this.is_initialising = false;
 			
 			this.bundle_edit_controller = new BundleEditController (this);
+			this.builder_controller     = new BuilderController (this.CommandDispatcher);
+			this.string_edit_controller = new StringEditController (this.CommandDispatcher);
+			
+			this.builder_controller.Initialise ();
 		}
 		
 		
@@ -120,6 +129,7 @@ namespace Epsitec.Common.Designer
 		protected Window						main_window;
 		protected Support.CommandDispatcher		dispatcher;
 		protected StringEditController			string_edit_controller;
+		protected BuilderController				builder_controller;
 		protected BundleEditController			bundle_edit_controller;
 	}
 }
