@@ -12,6 +12,7 @@ namespace Epsitec.Common.Widgets
 			this.window = window;
 		}
 		
+		
 		public override bool			IsVisible
 		{
 			get { return true; }
@@ -32,7 +33,7 @@ namespace Epsitec.Common.Widgets
 			
 			base.Dispose (disposing);
 		}
-
+		
 		protected override bool ShortcutHandler(Shortcut shortcut, bool execute_focused)
 		{
 			if (base.ShortcutHandler (shortcut, execute_focused) == false)
@@ -96,7 +97,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		internal void NotifyAdornerChanged()
+		{
+			this.HandleAdornerChanged ();
+		}
 		
-		protected Window					window;
+		
+		protected Window				window;
 	}
 }
