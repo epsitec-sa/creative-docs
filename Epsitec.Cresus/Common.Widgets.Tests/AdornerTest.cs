@@ -470,7 +470,7 @@ namespace Epsitec.Common.Widgets
 			ScrollList sl = new ScrollList();
 			sl.Location = new Point(20, 10);
 			sl.Size = new Size(90, 100);
-			sl.AdjustHeight(ScrollListAdjust.MoveDown);
+			sl.AdjustHeight(ScrollAdjustMode.MoveDown);
 			sl.Items.Add("Janvier");
 			sl.Items.Add("Fevrier");
 			sl.Items.Add("Mars <i>(A)</i>");
@@ -484,7 +484,7 @@ namespace Epsitec.Common.Widgets
 			sl.Items.Add("Novembre");
 			sl.Items.Add("Decembre");
 			sl.SelectedIndex = 5;  // sélectionne juin
-			sl.ShowSelectedLine(ScrollListShow.Middle);
+			sl.ShowSelected(ScrollShowMode.Center);
 			sl.Anchor = AnchorStyles.TopAndBottom|AnchorStyles.Left;
 			sl.TabIndex = 1;
 			sl.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -1206,7 +1206,7 @@ namespace Epsitec.Common.Widgets
 			ScrollList sl = new ScrollList();
 			sl.Location = origine;
 			sl.Size = new Size(100, 64);
-			sl.AdjustHeight(ScrollListAdjust.MoveDown);
+			sl.AdjustHeight(ScrollAdjustMode.MoveDown);
 			if ( tab != -1 )
 			{
 				sl.TabIndex = tab;
@@ -1224,7 +1224,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			sl.SelectedIndex = sel;
-			sl.ShowSelectedLine(ScrollListShow.Middle);
+			sl.ShowSelected(ScrollShowMode.Center);
 			sl.Anchor = AnchorStyles.Top|AnchorStyles.Left;
 			sl.SelectedIndexChanged += new EventHandler(this.HandleLook);
 			collection.Add(sl);

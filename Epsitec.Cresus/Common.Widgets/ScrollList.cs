@@ -272,7 +272,6 @@ namespace Epsitec.Common.Widgets
 					if ( sel >= 0 )
 					{
 						this.SelectedIndex = sel;
-						this.OnSelectedIndexChanged();
 						this.ShowSelectedLine(ScrollListShow.Extremity);
 					}
 					break;
@@ -282,7 +281,6 @@ namespace Epsitec.Common.Widgets
 					if ( sel < this.items.Count )
 					{
 						this.SelectedIndex = sel;
-						this.OnSelectedIndexChanged();
 						this.ShowSelectedLine(ScrollListShow.Extremity);
 					}
 					break;

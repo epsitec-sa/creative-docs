@@ -37,15 +37,31 @@ namespace Epsitec.Common.Widgets
 						double height = System.Math.Floor (this.EditionZoneHeight * this.row_height + 2);
 						
 						this.InnerTopMargin = height;
+						this.edit_line.DetachEditWidgets ();
+						this.edit_line.ColumnCount = this.max_columns;
 					}
 					else
 					{
 						this.InnerTopMargin = 0;
+						this.edit_line.DetachEditWidgets ();
+						this.edit_line.ColumnCount = this.max_columns;
 					}
 					
 					this.RefreshContents ();
 					this.OnEditArrayModeChanged ();
 				}
+			}
+		}
+		
+		public string[]							EditValues
+		{
+			get
+			{
+				return this.edit_line.Values;
+			}
+			set
+			{
+				this.edit_line.Values = value;
 			}
 		}
 		
@@ -428,13 +444,36 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.host.mode == EditArrayMode.Search)
 					{
-						if (message.KeyCode == KeyCode.Escape)
+						switch (message.KeyCode)
 						{
-							this.host.EditArrayMode = EditArrayMode.Standard;
-							this.host.SetFocused (true);
-							message.Consumer = this;
-							return;
+							case KeyCode.Escape:
+								this.host.EditArrayMode = EditArrayMode.Standard;
+								this.host.SetFocused (true);
+								break;
+							
+							case KeyCode.ArrowUp:
+								if (this.host.SelectedIndex > 0)
+								{
+									this.host.SelectedIndex--;
+									this.host.ShowSelected (ScrollListShow.Extremity);
+								}
+								break;
+							
+							case KeyCode.ArrowDown:
+								if (this.host.SelectedIndex+1 < this.host.RowCount)
+								{
+									this.host.SelectedIndex++;
+									this.host.ShowSelected (ScrollListShow.Extremity);
+								}
+								break;
+							
+							default:
+								base.ProcessMessage (message, pos);
+								return;
 						}
+						
+						message.Consumer = this;
+						return;
 					}
 					else
 					{
@@ -467,6 +506,8 @@ namespace Epsitec.Common.Widgets
 			
 			public void AttachEditWidgets()
 			{
+				TextFieldStyle style = (this.host.mode == EditArrayMode.Search ? TextFieldStyle.Normal : TextFieldStyle.Flat);
+				
 				for (int i = 0; i < this.edit_widgets.Length; i++)
 				{
 					if (this.edit_widgets[i] == null)
@@ -478,7 +519,7 @@ namespace Epsitec.Common.Widgets
 						else
 						{
 							this.edit_widgets[i] = new TextField (this);
-							this.edit_widgets[i].TextFieldStyle = TextFieldStyle.Flat;
+							this.edit_widgets[i].TextFieldStyle = style;
 						}
 						
 						this.Attach (this.edit_widgets[i], i);

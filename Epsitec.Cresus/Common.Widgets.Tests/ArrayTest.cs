@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 			
 			//	Exactement 4 lignes visibles :
 			
-			sa.AdjustToRows (ScrollArrayAdjustMode.MoveUp, 4);
+			sa.AdjustToRows (ScrollAdjustMode.MoveUp, 4);
 			
 			Assertion.AssertEquals (9, sa.RowCount);
 			Assertion.AssertEquals (4, sa.VisibleRowCount);
@@ -90,24 +90,24 @@ namespace Epsitec.Common.Widgets
 			sa.SelectedIndex     = 0;
 			sa.EditionIndex      = 2;
 			sa.EditionZoneHeight = 3;
-			sa.ShowSelected (ScrollArrayShowMode.Extremity);
+			sa.ShowSelected (ScrollShowMode.Extremity);
 			Assertion.AssertEquals (0, sa.FirstVisibleIndex);
 			
 			//	Sélectionner la ligne suivante ne devrait rien bouger :
 			
 			sa.SelectedIndex     = 1;
-			sa.ShowSelected (ScrollArrayShowMode.Extremity);
+			sa.ShowSelected (ScrollShowMode.Extremity);
 			Assertion.AssertEquals (0, sa.FirstVisibleIndex);
 			
 			//	Mais sélectionner la ligne 2 nécessitera un scroll, car elle occupe les
 			//	lignes virtuelles 2,3,4 et 4 dépasse avec le positionnement précédent :
 			
 			sa.SelectedIndex = 2;
-			sa.ShowSelected (ScrollArrayShowMode.Extremity);
+			sa.ShowSelected (ScrollShowMode.Extremity);
 			Assertion.AssertEquals (1, sa.FirstVisibleIndex);
 			
 			sa.SelectedIndex = 8;
-			sa.ShowSelected (ScrollArrayShowMode.Extremity);
+			sa.ShowSelected (ScrollShowMode.Extremity);
 			Assertion.AssertEquals (5, sa.FirstVisibleIndex);
 		}
 		
@@ -407,7 +407,7 @@ namespace Epsitec.Common.Widgets
 			table.HitTestTable (e.Point, out this.hilite_row, out this.hilite_column);
 			System.Diagnostics.Debug.WriteLine ("Double-clicked : " + this.hilite_row + "," + this.hilite_column);
 			table.EditionIndex = this.hilite_row;
-			table.ShowEdition (ScrollArrayShowMode.Extremity);
+			table.ShowEdition (ScrollShowMode.Extremity);
 			table.Invalidate ();
 		}
 
@@ -440,7 +440,7 @@ namespace Epsitec.Common.Widgets
 			string[] search = table.EditValues;
 			
 			table.SelectedItem = string.Join (table.Separator.ToString (), search);
-			table.ShowSelected (ScrollArrayShowMode.Center);
+			table.ShowSelected (ScrollShowMode.Center);
 		}
 		
 		

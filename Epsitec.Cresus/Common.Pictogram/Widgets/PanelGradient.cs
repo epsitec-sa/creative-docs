@@ -131,7 +131,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				case GradientFill.Conic:    sel = 4;  break;
 			}
 			this.listFill.SelectedIndex = sel;
-			this.listFill.ShowSelectedLine(ScrollListShow.Middle);
+			this.listFill.ShowSelected(ScrollShowMode.Center);
 
 			this.fieldColor1.Color = p.Color1;
 			this.fieldColor2.Color = p.Color2;
@@ -275,7 +275,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				r.Width = 80;
 				r.Bottom = r.Top-48;
 				this.listFill.Bounds = r;
-				this.listFill.ShowSelectedLine(ScrollListShow.Middle);
+				this.listFill.ShowSelected(ScrollShowMode.Center);
 
 				r.Left = r.Right+5;
 				r.Width = 33;

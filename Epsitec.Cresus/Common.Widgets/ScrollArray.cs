@@ -2102,19 +2102,14 @@ invalid:	row    = -1;
 					return null;
 				}
 				
-				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				string[] rows = new string[this.max_columns];
 				
-				for (int i = 0; i < this.max_columns; i++)
+				for (int i = 0; i < rows.Length; i++)
 				{
-					if (i > 0)
-					{
-						buffer.Append (this.separator);
-					}
-					
-					buffer.Append (this[row, i]);
+					rows[i] = this[row, i];
 				}
 				
-				return buffer.ToString ();
+				return string.Join (this.separator.ToString (), rows);
 			}
 			set
 			{

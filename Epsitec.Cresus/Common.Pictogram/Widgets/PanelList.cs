@@ -59,7 +59,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.list.Items.Add(p.GetName(i));
 			}
 			this.list.SelectedIndex = p.Choice;
-			this.list.ShowSelectedLine(ScrollListShow.Middle);
+			this.list.ShowSelected(ScrollShowMode.Center);
 		}
 
 		// Widget -> propriété.
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			r = rect;
 			r.Left = r.Right-100;
 			this.list.Bounds = r;
-			this.list.ShowSelectedLine(ScrollListShow.Middle);
+			this.list.ShowSelected(ScrollShowMode.Center);
 		}
 		
 		// Une valeur a été changée.
