@@ -67,6 +67,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldRange.Step = 10;
 			this.fieldRange.TextChanged += new EventHandler(this.TextChanged);
 
+			this.fieldSmooth = new TextFieldSlider(this);
+			this.fieldSmooth.MinRange =  0;
+			this.fieldSmooth.MaxRange = 10;
+			this.fieldSmooth.Step = 1;
+			this.fieldSmooth.TextChanged += new EventHandler(this.TextChanged);
+
 			this.labelAngle = new StaticText(this);
 			this.labelAngle.Text = "A";
 			this.labelAngle.Alignment = Drawing.ContentAlignment.MiddleCenter;
@@ -91,6 +97,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.labelRange.Text = "%";
 			this.labelRange.Alignment = Drawing.ContentAlignment.MiddleCenter;
 
+			this.labelSmooth = new StaticText(this);
+			this.labelSmooth.Text = "F";
+			this.labelSmooth.Alignment = Drawing.ContentAlignment.MiddleCenter;
+
 			this.isNormalAndExtended = true;
 		}
 		
@@ -110,6 +120,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldRepeat.TextChanged -= new EventHandler(this.TextChanged);
 			this.fieldMiddle.TextChanged -= new EventHandler(this.TextChanged);
 			this.fieldRange.TextChanged -= new EventHandler(this.TextChanged);
+			this.fieldSmooth.TextChanged -= new EventHandler(this.TextChanged);
 
 			base.Dispose(disposing);
 		}
@@ -120,7 +131,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			get
 			{
-				return ( this.extendedSize ? 108 : 30 );
+				return ( this.extendedSize ? 108+25 : 30 );
 			}
 		}
 
@@ -137,11 +148,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 			int sel = -1;
 			switch ( p.Fill )
 			{
-				case Drawing.GradientFill.None:     sel = 0;  break;
-				case Drawing.GradientFill.X:        sel = 1;  break;
-				case Drawing.GradientFill.Circle:   sel = 2;  break;
-				case Drawing.GradientFill.Diamond:  sel = 3;  break;
-				case Drawing.GradientFill.Conic:    sel = 4;  break;
+				case GradientFill.None:     sel = 0;  break;
+				case GradientFill.Linear:   sel = 1;  break;
+				case GradientFill.Circle:   sel = 2;  break;
+				case GradientFill.Diamond:  sel = 3;  break;
+				case GradientFill.Conic:    sel = 4;  break;
 			}
 			this.listFill.SelectedIndex = sel;
 			this.listFill.ShowSelectedLine(ScrollListShow.Middle);
@@ -154,6 +165,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldRepeat.Value = p.Repeat;
 			this.fieldMiddle.Value = p.Middle*100;
 			this.fieldRange.Value  = p.Range*100;
+			this.fieldSmooth.Value = p.Smooth;
 
 			this.sample.Gradient = p;
 
@@ -166,14 +178,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 			PropertyGradient p = new PropertyGradient();
 			base.GetProperty(p);
 
-			p.Fill = Drawing.GradientFill.None;
+			p.Fill = GradientFill.None;
 			switch ( this.listFill.SelectedIndex )
 			{
-				case 0:  p.Fill = Drawing.GradientFill.None;     break;
-				case 1:  p.Fill = Drawing.GradientFill.X;        break;
-				case 2:  p.Fill = Drawing.GradientFill.Circle;   break;
-				case 3:  p.Fill = Drawing.GradientFill.Diamond;  break;
-				case 4:  p.Fill = Drawing.GradientFill.Conic;    break;
+				case 0:  p.Fill = GradientFill.None;     break;
+				case 1:  p.Fill = GradientFill.Linear;   break;
+				case 2:  p.Fill = GradientFill.Circle;   break;
+				case 3:  p.Fill = GradientFill.Diamond;  break;
+				case 4:  p.Fill = GradientFill.Conic;    break;
 			}
 
 			p.Color1 = this.fieldColor1.Color;
@@ -184,6 +196,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			p.Repeat = (int)this.fieldRepeat.Value;
 			p.Middle = this.fieldMiddle.Value/100;
 			p.Range  = this.fieldRange.Value/100;
+			p.Smooth = this.fieldSmooth.Value;
 
 			this.sample.Gradient = p;
 			return p;
@@ -193,6 +206,26 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected void EnableWidgets()
 		{
 			int sel = this.listFill.SelectedIndex;
+
+			this.label.SetVisible(!this.extendedSize);
+			this.listFill.SetVisible(this.extendedSize);
+			this.sample.SetVisible(this.extendedSize);
+			this.fieldColor1.SetVisible(true);
+			this.fieldColor2.SetVisible(this.extendedSize);
+			this.fieldAngle.SetVisible(this.extendedSize);
+			this.fieldCx.SetVisible(this.extendedSize);
+			this.fieldCy.SetVisible(this.extendedSize);
+			this.fieldRepeat.SetVisible(this.extendedSize);
+			this.fieldMiddle.SetVisible(this.extendedSize);
+			this.fieldRange.SetVisible(this.extendedSize);
+			this.fieldSmooth.SetVisible(this.extendedSize);
+			this.labelAngle.SetVisible(this.extendedSize);
+			this.labelCx.SetVisible(this.extendedSize);
+			this.labelCy.SetVisible(this.extendedSize);
+			this.labelRepeat.SetVisible(this.extendedSize);
+			this.labelMiddle.SetVisible(this.extendedSize);
+			this.labelRange.SetVisible(this.extendedSize);
+			this.labelSmooth.SetVisible(this.extendedSize);
 
 			if ( sel == 1 || sel == 3 || sel == 4 )
 			{
@@ -214,7 +247,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.fieldCy.SetEnabled(false);
 			}
 
-			if ( sel != 0 )
+			if ( sel == 1 || sel == 2 || sel == 3 || sel == 4 )
 			{
 				this.fieldRepeat.SetEnabled(true);
 				this.fieldMiddle.SetEnabled(true);
@@ -233,6 +266,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				this.fieldRange.SetEnabled(false);
 			}
+
+			this.fieldSmooth.SetEnabled(true);
 		}
 
 
@@ -286,24 +321,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			if ( this.fieldColor1 == null )  return;
 
-			this.label.SetVisible(!this.extendedSize);
-			this.listFill.SetVisible(this.extendedSize);
-			this.sample.SetVisible(this.extendedSize);
-			this.fieldColor1.SetVisible(true);
-			this.fieldColor2.SetVisible(this.extendedSize);
-			this.fieldAngle.SetVisible(this.extendedSize);
-			this.fieldCx.SetVisible(this.extendedSize);
-			this.fieldCy.SetVisible(this.extendedSize);
-			this.fieldRepeat.SetVisible(this.extendedSize);
-			this.fieldMiddle.SetVisible(this.extendedSize);
-			this.fieldRange.SetVisible(this.extendedSize);
-			this.labelAngle.SetVisible(this.extendedSize);
-			this.labelCx.SetVisible(this.extendedSize);
-			this.labelCy.SetVisible(this.extendedSize);
-			this.labelRepeat.SetVisible(this.extendedSize);
-			this.labelMiddle.SetVisible(this.extendedSize);
-			this.labelRange.SetVisible(this.extendedSize);
-
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Left += this.extendedZoneWidth;
 			rect.Inflate(-5, -5);
@@ -312,7 +329,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				Drawing.Rectangle r = rect;
 				r.Width = 80;
-				r.Bottom += 50;
+				r.Bottom = r.Top-48;
 				this.listFill.Bounds = r;
 				this.listFill.ShowSelectedLine(ScrollListShow.Middle);
 
@@ -328,7 +345,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.fieldColor2.Bounds = r;
 
 				r = rect;
-				r.Bottom += 25;
+				r.Bottom = r.Top-48-25;
 				r.Height = 20;
 				r.Width = 14;
 				this.labelAngle.Bounds = r;
@@ -349,6 +366,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.fieldCy.Bounds = r;
 
 				r = rect;
+				r.Bottom = r.Top-48-25-25;
 				r.Height = 20;
 				r.Width = 14;
 				this.labelRepeat.Bounds = r;
@@ -367,6 +385,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 				r.Left = r.Right;
 				r.Width = 45;
 				this.fieldRange.Bounds = r;
+
+				r = rect;
+				r.Bottom = r.Top-48-25-25-25;
+				r.Height = 20;
+				r.Width = 14;
+				this.labelSmooth.Bounds = r;
+				r.Left = r.Right;
+				r.Width = 45;
+				this.fieldSmooth.Bounds = r;
 			}
 			else
 			{
@@ -415,12 +442,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected TextFieldSlider			fieldRepeat;
 		protected TextFieldSlider			fieldMiddle;
 		protected TextFieldSlider			fieldRange;
+		protected TextFieldSlider			fieldSmooth;
 		protected StaticText				labelAngle;
 		protected StaticText				labelCx;
 		protected StaticText				labelCy;
 		protected StaticText				labelRepeat;
 		protected StaticText				labelMiddle;
 		protected StaticText				labelRange;
+		protected StaticText				labelSmooth;
 		protected ColorSample				originFieldColor;
 		protected int						originFieldRank = -1;
 	}

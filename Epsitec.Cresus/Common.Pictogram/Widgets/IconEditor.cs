@@ -1,4 +1,5 @@
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Pictogram.Data;
 
 namespace Epsitec.Common.Pictogram.Widgets
@@ -46,110 +47,134 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected void CreateLayout()
 		{
 			this.toolBar = new ToolBar();
+			int i = 0;
 
 			this.toolBar.Items.Add(new IconButton(@"file:images/new1.icon"));
-			this.toolBar.Items[0].Name = "new";
-			this.toolBar.Items[0].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			this.toolBar.Items[i].Name = "new";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			i ++;
 			
-			TextField filename = new TextField();
-			filename.Width = 100;
-			this.toolBar.Items.Add(filename);
-
 			this.toolBar.Items.Add(new IconButton(@"file:images/open1.icon"));
-			this.toolBar.Items[2].Name = "open";
-			this.toolBar.Items[2].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			this.toolBar.Items[i].Name = "open";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/save1.icon"));
-			this.toolBar.Items[3].Name = "save";
-			this.toolBar.Items[3].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			this.toolBar.Items[i].Name = "save";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			i ++;
 
 			this.toolBar.Items.Add(new IconSeparator());
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/delete1.icon"));
-			this.toolBar.Items[5].Name = "delete";
-			this.toolBar.Items[5].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			this.toolBar.Items[i].Name = "delete";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/duplicate1.icon"));
-			this.toolBar.Items[6].Name = "duplicate";
-			this.toolBar.Items[6].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			this.toolBar.Items[i].Name = "duplicate";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconSeparator());
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/undo1.icon"));
-			this.toolBar.Items[8].Name = "undo";
-			this.toolBar.Items[8].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			this.toolBar.Items[i].Name = "undo";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/redo1.icon"));
-			this.toolBar.Items[9].Name = "redo";
-			this.toolBar.Items[9].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			this.toolBar.Items[i].Name = "redo";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconSeparator());
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/orderup1.icon"));
-			this.toolBar.Items[11].Name = "orderup";
-			this.toolBar.Items[11].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			this.toolBar.Items[i].Name = "orderup";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/orderdown1.icon"));
-			this.toolBar.Items[12].Name = "orderdown";
-			this.toolBar.Items[12].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			this.toolBar.Items[i].Name = "orderdown";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconSeparator());
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/grid1.icon"));
-			this.toolBar.Items[14].Name = "grid";
-			this.toolBar.Items[14].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			this.toolBar.Items[i].Name = "grid";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/mode1.icon"));
-			this.toolBar.Items[15].Name = "mode";
-			this.toolBar.Items[15].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			this.toolBar.Items[i].Name = "mode";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClickedAction);
+			i ++;
 			
 			StaticText label1 = new StaticText();
 			label1.Width = 60;
 			label1.Text = "<b>Outils:  </b>";
 			label1.Alignment = Drawing.ContentAlignment.MiddleRight;
 			this.toolBar.Items.Add(label1);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/select1.icon"));
-			this.toolBar.Items[17].Name = "select";
-			this.toolBar.Items[17].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			this.toolBar.Items[i].Name = "select";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconSeparator());
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/line1.icon"));
-			this.toolBar.Items[19].Name = "ObjectLine";
-			this.toolBar.Items[19].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			this.toolBar.Items[i].Name = "ObjectLine";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/arrow1.icon"));
-			this.toolBar.Items[20].Name = "ObjectArrow";
-			this.toolBar.Items[20].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			this.toolBar.Items[i].Name = "ObjectArrow";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/rectangle1.icon"));
-			this.toolBar.Items[21].Name = "ObjectRectangle";
-			this.toolBar.Items[21].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			this.toolBar.Items[i].Name = "ObjectRectangle";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/circle1.icon"));
-			this.toolBar.Items[22].Name = "ObjectCircle";
-			this.toolBar.Items[22].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			this.toolBar.Items[i].Name = "ObjectCircle";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/ellipse1.icon"));
-			this.toolBar.Items[23].Name = "ObjectEllipse";
-			this.toolBar.Items[23].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			this.toolBar.Items[i].Name = "ObjectEllipse";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/regular1.icon"));
-			this.toolBar.Items[24].Name = "ObjectRegular";
-			this.toolBar.Items[24].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			this.toolBar.Items[i].Name = "ObjectRegular";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/poly1.icon"));
-			this.toolBar.Items[25].Name = "ObjectPoly";
-			this.toolBar.Items[25].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			this.toolBar.Items[i].Name = "ObjectPoly";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/bezier1.icon"));
-			this.toolBar.Items[26].Name = "ObjectBezier";
-			this.toolBar.Items[26].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			this.toolBar.Items[i].Name = "ObjectBezier";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			i ++;
 			
 			this.toolBar.Items.Add(new IconButton(@"file:images/text1.icon"));
-			this.toolBar.Items[27].Name = "ObjectText";
-			this.toolBar.Items[27].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			this.toolBar.Items[i].Name = "ObjectText";
+			this.toolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClicked);
+			i ++;
 			
 			this.toolBar.Parent = this;
 
@@ -379,6 +404,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			this.pane.Location = new Drawing.Point(0, 0);
 			this.pane.Size = new Drawing.Size(rect.Width, rect.Height-this.toolBar.DefaultHeight);
+			this.rightPane.PaneMinSize = 20+this.drawer.IconObjects.Size.Width;
 
 			if ( this.colorSelector != null )
 			{
@@ -389,23 +415,31 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.colorSelector.Bounds = rect;
 			}
 
-			double dim = System.Math.Min(this.middlePane.Width, this.middlePane.Height)-20;
-			this.drawer.Location = new Drawing.Point(10, this.middlePane.Height-10-dim);
-			this.drawer.Size = new Drawing.Size(dim, dim);
+			Drawing.Size iconSize = this.drawer.IconObjects.Size;
+			double dimx = this.middlePane.Width-20;
+			double dimy = dimx*iconSize.Height/iconSize.Width;
+			if ( dimy > this.middlePane.Height-20 )
+			{
+				dimy = this.middlePane.Height-20;
+				dimx = dimy*iconSize.Width/iconSize.Height;
+			}
+			this.drawer.Location = new Drawing.Point(10, this.middlePane.Height-10-dimy);
+			this.drawer.Size = new Drawing.Size(dimx, dimy);
 
 			this.lister.Location = new Drawing.Point(10, 10);
 			this.lister.Size = new Drawing.Size(this.middlePane.Width-20, this.middlePane.Height-20);
 
-			dim = System.Math.Min(this.rightPane.Width, this.rightPane.Height)-20;
+			dimx = this.rightPane.Width-20;
+			dimy = dimx*iconSize.Height/iconSize.Width;
 			rect.Left   = 10;
-			rect.Bottom = this.rightPane.Height-10-dim-3;
-			rect.Width  = dim;
-			rect.Height = dim;
+			rect.Bottom = this.rightPane.Height-10-dimy-1;
+			rect.Width  = dimx;
+			rect.Height = dimy;
 			rect.Inflate(1, 1);
 			this.frame1.Bounds = rect;
 			rect.Inflate(-1, -1);
 
-			rect.Offset(0, -dim-10);
+			rect.Offset(0, -dimy-10);
 			rect.Inflate(1, 1);
 			this.frame2.Bounds = rect;
 			rect.Inflate(-1, -1);
@@ -425,28 +459,62 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Bouton de la toolbar cliqué.
 		private void ToolBarClickedAction(object sender, MessageEventArgs e)
 		{
-			TextField tf = this.toolBar.Items[1] as TextField;
-			string filename = "..\\..\\images\\" + tf.Text + ".icon";
-
 			IconButton button = sender as IconButton;
 			string cmd = button.Name;
+
+#if true
+			if ( cmd == "open" )
+			{
+				System.Console.Out.WriteLine(System.IO.Directory.GetCurrentDirectory());
+				FileOpen dialog = new FileOpen();
+			
+				dialog.Title = "Ouvrir une icone";
+				dialog.FileName = this.filename;
+				dialog.Filters.Add ("icon", "Icônes", "*.icon");
+				//dialog.InitialDirectory = "..\\..\\images\\";			
+				dialog.Show();
+
+				this.filename = dialog.FileName;
+				System.Console.Out.WriteLine(System.IO.Directory.GetCurrentDirectory());
+			}
+
+			if ( cmd == "save" )
+			{
+				FileSave dialog = new FileSave();
+			
+				dialog.Title = "Enregisrter une icone";
+				dialog.FileName = this.filename;
+				dialog.Filters.Add ("icon", "Icônes", "*.icon");
+				//dialog.InitialDirectory = "..\\..\\images\\";			
+				dialog.Show();
+
+				this.filename = dialog.FileName;
+			}
+#endif
+
 			switch ( cmd )
 			{
-				case "open":       this.drawer.ActionOpen(filename);  break;
-				case "save":       this.drawer.ActionSave(filename);  break;
-				case "new":        this.drawer.ActionNew();           break;
-				case "delete":     this.drawer.ActionDelete();        break;
-				case "duplicate":  this.drawer.ActionDuplicate();     break;
-				case "undo":       this.drawer.ActionUndo();          break;
-				case "redo":       this.drawer.ActionRedo();          break;
-				case "orderup":    this.drawer.ActionOrder(1);        break;
-				case "orderdown":  this.drawer.ActionOrder(-1);       break;
-				case "grid":       this.drawer.ActionGrid();          break;
+				case "open":       this.drawer.ActionOpen(this.filename);  break;
+				case "save":       this.drawer.ActionSave(this.filename);  break;
+				case "new":        this.drawer.ActionNew();                break;
+				case "delete":     this.drawer.ActionDelete();             break;
+				case "duplicate":  this.drawer.ActionDuplicate();          break;
+				case "undo":       this.drawer.ActionUndo();               break;
+				case "redo":       this.drawer.ActionRedo();               break;
+				case "orderup":    this.drawer.ActionOrder(1);             break;
+				case "orderdown":  this.drawer.ActionOrder(-1);            break;
+				case "grid":       this.drawer.ActionGrid();               break;
 			}
 
 			if ( cmd == "new" )
 			{
-				tf.Text = "";
+				this.filename = "";
+			}
+
+			if ( cmd == "open" )
+			{
+				this.ResizeLayout();
+				this.Invalidate();
 			}
 
 			if ( cmd == "mode" )
@@ -529,5 +597,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected PropertyType					originColorType = PropertyType.None;
 		protected int							originColorRank = -1;
 		protected double						leftHeightUsed = 0;
+		protected string						filename = "";
 	}
 }

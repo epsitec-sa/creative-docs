@@ -84,6 +84,20 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		// Liste des objets.
+		public IconObjects IconObjects
+		{
+			get
+			{
+				return this.objects;
+			}
+
+			set
+			{
+				this.objects = value;
+			}
+		}
+
+		// Liste des objets.
 		public System.Collections.ArrayList Objects
 		{
 			get
@@ -97,7 +111,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Ajoute un widget qui représente la même icone.
+		// Ajoute un widget SampleButton qui représente la même icone.
 		public void AddClone(Widget widget)
 		{
 			this.clones.Add(widget);

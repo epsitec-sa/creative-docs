@@ -58,9 +58,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 					path.LineTo(rect.Right, rect.Top);
 					path.LineTo(rect.Right, rect.Bottom);
 					path.Close();
-					graphics.Rasterizer.AddSurface(path);
 
-					gradient.Render(graphics, null, rect);
+					gradient.Render(graphics, null, path);
 				}
 			}
 
