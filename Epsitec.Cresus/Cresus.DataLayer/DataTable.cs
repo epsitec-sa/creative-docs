@@ -10,8 +10,7 @@ namespace Epsitec.Cresus.DataLayer
 	{
 		public DataTable()
 		{
-			this.data_type = new DataType ();
-			this.data_type.Initialise (null);
+			this.type = new DataType (null);
 		}
 		
 		public override bool					IsTable

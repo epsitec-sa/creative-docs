@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.DataLayer
 		
 		public override void ValidateChanges()
 		{
-			switch (this.data_state)
+			switch (this.state)
 			{
 				case DataState.Unchanged:
 					break;
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.DataLayer
 			switch (version)
 			{
 				case DataVersion.Original:
-					if (this.data_state != DataState.Added)
+					if (this.state != DataState.Added)
 					{
 						data = this.org_data;
 						data = DataCopier.Copy (data);
@@ -72,15 +72,15 @@ namespace Epsitec.Cresus.DataLayer
 					break;
 				
 				case DataVersion.Active:
-					if (this.data_state != DataState.Removed)
+					if (this.state != DataState.Removed)
 					{
-						data = (this.data_state == DataState.Unchanged) ? this.org_data : this.new_data;
+						data = (this.state == DataState.Unchanged) ? this.org_data : this.new_data;
 						data = DataCopier.Copy (data);
 					}
 					break;
 				
 				case DataVersion.ActiveOrDead:
-					data = (this.data_state == DataState.Unchanged) ? this.org_data : this.new_data;
+					data = (this.state == DataState.Unchanged) ? this.org_data : this.new_data;
 					data = DataCopier.Copy (data);
 					break;
 			}
@@ -91,9 +91,9 @@ namespace Epsitec.Cresus.DataLayer
 		
 		public void SetDataType(DataType type)
 		{
-			if (this.data_type != null)
+			if (this.type != null)
 			{
-				if (this.data_type.Equals (type))
+				if (this.type.Equals (type))
 				{
 					//	On redéfinit le champ comme ayant le même type qu'avant, ce
 					//	qui est toléré.
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.DataLayer
 				throw new DataException ("Cannot set data type more than once");
 			}
 			
-			this.data_type = type;
+			this.type = type;
 		}
 		
 		public void SetData(object data)
@@ -125,26 +125,26 @@ namespace Epsitec.Cresus.DataLayer
 					
 					//	Modifie la version active...
 					
-					switch (this.data_state)
+					switch (this.state)
 					{
 						case DataState.Unchanged:
-							this.data_state = DataState.Modified;
-							this.new_data   = DataCopier.Copy (data);
+							this.state    = DataState.Modified;
+							this.new_data = DataCopier.Copy (data);
 							return;
 						
 						case DataState.Added:
 						case DataState.Modified:
-							this.new_data   = DataCopier.Copy (data);
+							this.new_data = DataCopier.Copy (data);
 							return;
 						
 						case DataState.Removed:
-							this.data_state = DataState.Modified;
-							this.new_data   = DataCopier.Copy (data);
+							this.state    = DataState.Modified;
+							this.new_data = DataCopier.Copy (data);
 							return;
 						
 						case DataState.Invalid:
-							this.data_state = DataState.Added;
-							this.new_data   = DataCopier.Copy (data);
+							this.state    = DataState.Added;
+							this.new_data = DataCopier.Copy (data);
 							return;
 					}
 					break;
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.DataLayer
 		
 		public void ResetData()
 		{
-			switch (this.data_state)
+			switch (this.state)
 			{
 				case DataState.Unchanged:
 				case DataState.Invalid:
@@ -164,12 +164,12 @@ namespace Epsitec.Cresus.DataLayer
 				
 				case DataState.Modified:
 				case DataState.Removed:
-					this.new_data   = null;
-					this.data_state = DataState.Unchanged;
+					this.new_data = null;
+					this.state    = DataState.Unchanged;
 					break;
 				case DataState.Added:
-					this.new_data   = null;
-					this.data_state = DataState.Invalid;
+					this.new_data = null;
+					this.state    = DataState.Invalid;
 					break;
 			}
 		}

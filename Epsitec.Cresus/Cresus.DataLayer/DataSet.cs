@@ -10,10 +10,9 @@ namespace Epsitec.Cresus.DataLayer
 	{
 		public DataSet(string name)
 		{
-			this.name = name;
-			this.data_type = new DataType ();
-			this.data_type.Initialise (null);
-			this.data_state = DataState.Added;
+			this.name  = name;
+			this.type  = new DataType (null);
+			this.state = DataState.Added;
 		}
 		
 		
@@ -25,14 +24,16 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				record = this.data[name] as DataField;
 				
-				if ((record == null) ||
-					(record.DataType.BinderName != data_type.BinderName))
+				if (record == null)
 				{
 					throw new DataException ("Incompatible change");
 				}
+				if (!record.DataType.Equals (data_type))
+				{
+					throw new DataException ("Incompatible type");
+				}
 				
 				record.SetData (DataVersion.Active, data);
-				record.SetDataType (data_type);
 			}
 			else
 			{
@@ -167,7 +168,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			
 			string remaining;
-			string local_path = this.SplitPath (path, out remaining);
+			string local_path = DataRecord.SplitPath (path, out remaining);
 			
 			if (this.data.Contains (local_path))
 			{

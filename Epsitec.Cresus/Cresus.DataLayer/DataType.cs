@@ -6,32 +6,49 @@ namespace Epsitec.Cresus.DataLayer
 	/// <summary>
 	/// La classe DataType décrit un type de donnée.
 	/// </summary>
-	public class DataType
+	public class DataType : IDataAttributesHost
 	{
-		public DataType()
+		public DataType() : this (null)
 		{
 		}
 		
-		public DataType(string binder_name)
+		public DataType(string binder_engine)
 		{
-			this.Initialise (binder_name);
+			this.Initialise (binder_engine);
 		}
 		
 		
-		public void Initialise(string binder_name)
+		protected void Initialise(string binder_engine)
 		{
-			this.binder_name = binder_name;
+			this.binder_engine = binder_engine;
 		}
 		
 		
-		public string							BinderName
+		public string							BinderEngine
 		{
-			get { return this.binder_name; }
+			get { return this.binder_engine; }
 		}
 		
+		
+		#region IDataAttributesHost Members
+		public DataAttributes					DataAttributes
+		{
+			get
+			{
+				if (this.attributes == null)
+				{
+					this.attributes = new DataAttributes ();
+				}
+				
+				return this.attributes;
+			}
+		}
+		#endregion
 		
 		public override bool Equals(object obj)
 		{
+			//	ATTENTION: L'égalité ne prend pas en compte la valeur des attributs.
+			
 			DataType that = obj as DataType;
 			
 			if (that == null)
@@ -39,17 +56,18 @@ namespace Epsitec.Cresus.DataLayer
 				return false;
 			}
 			
-			return (this.binder_name == that.binder_name);
+			return (this.binder_engine == that.binder_engine);
 		}
 		
 		public override int GetHashCode()
 		{
-			return (this.binder_name == null) ? 0 : this.binder_name.GetHashCode ();
+			return (this.binder_engine == null) ? 0 : this.binder_engine.GetHashCode ();
 		}
 
 
 		
 		
-		protected string						binder_name;
+		protected string						binder_engine;
+		protected DataAttributes				attributes;
 	}
 }
