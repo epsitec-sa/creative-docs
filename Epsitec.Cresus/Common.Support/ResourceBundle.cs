@@ -49,7 +49,7 @@ namespace Epsitec.Common.Support
 			}
 			if (data is string)
 			{
-				return ResourceFieldType.String;
+				return ResourceFieldType.Data;
 			}
 			if (data is ResourceBundle)
 			{
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Support
 			}
 			if (data is System.Collections.IList)
 			{
-				return ResourceFieldType.BundleList;
+				return ResourceFieldType.List;
 			}
 			
 			throw new ResourceException (string.Format ("Invalid field type in bundle: '{0}'", data.GetType ().Name));
