@@ -35,6 +35,7 @@ namespace Epsitec.Common.Widgets
 		public const int WM_XBUTTONDOWN		= 0x020B;
 		public const int WM_XBUTTONUP		= 0x020C;
 		public const int WM_XBUTTONDBLCLK	= 0x020D;
+		public const int WM_MOUSELEAVE		= 0x02A3;
 		public const int WM_NCCALCSIZE		= 0x0083;
 		public const int WM_CHANGEUISTATE	= 0x0127;
 		

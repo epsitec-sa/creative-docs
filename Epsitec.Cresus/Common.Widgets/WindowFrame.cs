@@ -244,7 +244,6 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.engaged_widget != value)
 				{
-					System.Diagnostics.Debug.WriteLine ("Engage widget " + ((value == null) ? "NULL" : (value.GetType ().ToString () + " named " + value.Name)));
 					Widget old_engage = this.engaged_widget;
 					Widget new_engage = value;
 					
@@ -684,12 +683,12 @@ namespace Epsitec.Common.Widgets
 		
 		protected int MapToWinFormsX(double x)
 		{
-			return (int)(x + 0.5);
+			return (int) System.Math.Floor (x + 0.5);
 		}
 		
 		protected int MapToWinFormsY(double y)
 		{
-			return System.Windows.Forms.SystemInformation.VirtualScreen.Height - (int)(y + 0.5);
+			return System.Windows.Forms.SystemInformation.VirtualScreen.Height - (int) System.Math.Floor (y + 0.5);
 		}
 		
 		protected int MapToWinFormsWidth(double width)

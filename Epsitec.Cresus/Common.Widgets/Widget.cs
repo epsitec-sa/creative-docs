@@ -1414,7 +1414,8 @@ namespace Epsitec.Common.Widgets
 				(point_in_widget.X < 0) ||
 				(point_in_widget.Y < 0) ||
 				(point_in_widget.X >= widget.Client.Width) ||
-				(point_in_widget.Y >= widget.Client.Height))
+				(point_in_widget.Y >= widget.Client.Height) ||
+				(message.Type == MessageType.MouseLeave))
 			{
 				widget.SetEntered (false);
 			}
