@@ -134,18 +134,12 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
-			Drawing.Point     pos   = new Drawing.Point(0, 0);
 			
-#if false
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(Drawing.Color.FromRGB(1,0,0));
-#endif
 			if ( (state & WidgetState.Entered) != 0 || this.mouseDown )
 			{
 				state |= WidgetState.Entered;
 				state &= ~WidgetState.Focused;
-				adorner.PaintButtonBackground(graphics, rect, state, dir, ButtonStyle.Normal);
+				adorner.PaintButtonBackground(graphics, rect, state, Direction.Up, ButtonStyle.Normal);
 			}
 		}
 		
