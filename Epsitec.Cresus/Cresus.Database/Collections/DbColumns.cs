@@ -92,14 +92,14 @@ namespace Epsitec.Cresus.Database.Collections
 		}
 		
 		
-		public static DbColumns NewColumnCollection(string xml)
+		public static DbColumns CreateCollection(string xml)
 		{
 			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
 			doc.LoadXml (xml);
-			return DbColumns.NewColumnCollection (doc.DocumentElement);
+			return DbColumns.CreateCollection (doc.DocumentElement);
 		}
 		
-		public static DbColumns NewColumnCollection(System.Xml.XmlElement xml)
+		public static DbColumns CreateCollection(System.Xml.XmlElement xml)
 		{
 			return (xml.Name == "null") ? null : new DbColumns (xml);
 		}

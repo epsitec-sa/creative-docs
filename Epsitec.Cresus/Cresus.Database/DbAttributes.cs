@@ -1,4 +1,4 @@
-//	Copyright © 2004-2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 19/11/2003
 
 using Epsitec.Common.Support;
@@ -18,6 +18,45 @@ namespace Epsitec.Cresus.Database
 		public DbAttributes(params string[] list) : this ()
 		{
 			this.SetFromInitialisationList (list);
+		}
+		
+		
+		public string[]							Names
+		{
+			get
+			{
+				if ((this.attributes == null) ||
+					(this.attributes.Count == 0))
+				{
+					return new string[0];
+				}
+				
+				string[] names = new string[this.attributes.Count];
+				
+				this.attributes.Keys.CopyTo (names, 0);
+				System.Array.Sort (names);
+				
+				return names;
+			}
+		}
+		
+		
+		public string							this[string name]
+		{
+			get { return this.GetAttribute (name); }
+			set { this.SetAttribute (name, value); }
+		}
+		
+		public string							this[string name, Epsitec.Common.Support.ResourceLevel level]
+		{
+			get { return this.GetAttribute (name, level); }
+			set { this.SetAttribute (name, value, level); }
+		}
+		
+		public string							this[string name, string suffix]
+		{
+			get { return this.GetAttribute (name, suffix); }
+			set { this.SetAttribute (name, value, suffix); }
 		}
 		
 		
@@ -69,45 +108,6 @@ namespace Epsitec.Cresus.Database
 			return buffer.ToString ();
 		}
 		#endregion
-		
-		public string[]							Names
-		{
-			get
-			{
-				if ((this.attributes == null) ||
-					(this.attributes.Count == 0))
-				{
-					return new string[0];
-				}
-				
-				string[] names = new string[this.attributes.Count];
-				
-				this.attributes.Keys.CopyTo (names, 0);
-				System.Array.Sort (names);
-				
-				return names;
-			}
-		}
-		
-		
-		public string							this[string name]
-		{
-			get { return this.GetAttribute (name); }
-			set { this.SetAttribute (name, value); }
-		}
-		
-		public string							this[string name, Epsitec.Common.Support.ResourceLevel level]
-		{
-			get { return this.GetAttribute (name, level); }
-			set { this.SetAttribute (name, value, level); }
-		}
-		
-		public string							this[string name, string suffix]
-		{
-			get { return this.GetAttribute (name, suffix); }
-			set { this.SetAttribute (name, value, suffix); }
-		}
-		
 		
 		internal void SetFromInitialisationList(params string[] list)
 		{
@@ -256,6 +256,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
+		
 		
 		
 		protected System.Collections.Hashtable	attributes;
