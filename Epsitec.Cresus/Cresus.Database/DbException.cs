@@ -27,6 +27,12 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public DbAccess							DbAccess
+		{
+			get { return this.db_access; }
+		}
+		
+		
 		#region ISerializable Members
 		protected DbException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
@@ -40,12 +46,6 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion
 		
-		public DbAccess					DbAccess
-		{
-			get { return this.db_access; }
-		}
-		
-		
-		protected DbAccess				db_access;
+		protected DbAccess						db_access;
 	}
 }
