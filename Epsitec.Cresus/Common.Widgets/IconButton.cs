@@ -81,7 +81,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		[ Bundle("icon") ] public string IconName
+		[Bundle ("Icon")] public string IconName
 		{
 			get
 			{
