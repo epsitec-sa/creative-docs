@@ -412,6 +412,12 @@ namespace Epsitec.Common.Widgets.Platform
 			set { this.filter_mouse_messages = value; }
 		}
 		
+		internal bool							FilterKeyMessages
+		{
+			get { return this.filter_key_messages; }
+			set { this.filter_key_messages = value; }
+		}
+		
 		
 		internal Epsitec.Common.Widgets.Window	HostingWidgetWindow
 		{
@@ -1076,6 +1082,19 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (message != null)
 			{
+				if (this.filter_key_messages)
+				{
+					if (message.IsKeyType)
+					{
+						if (message.Type != MessageType.KeyDown)
+						{
+							return true;
+						}
+						
+						this.filter_key_messages = false;
+					}
+				}
+				
 				if (this.widget_window.FilterMessage (message))
 				{
 					return true;
@@ -1227,6 +1246,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		private bool							prevent_close = false;
 		private bool							filter_mouse_messages;
+		private bool							filter_key_messages;
 		private double							alpha = 1.0;
 		private int								wnd_proc_depth;
 		

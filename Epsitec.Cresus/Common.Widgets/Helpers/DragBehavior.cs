@@ -75,7 +75,7 @@ namespace Epsitec.Common.Widgets.Helpers
 				}
 			}
 			
-			return message.Consumer == null;
+			return message.Handled;
 		}
 		
 		
