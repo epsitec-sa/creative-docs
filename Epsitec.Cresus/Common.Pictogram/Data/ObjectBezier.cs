@@ -499,7 +499,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				this.MoveSecondary(rank-1, rank, rank-2, pos);
 			}
-			this.durtyBbox = true;
+			this.dirtyBbox = true;
 		}
 
 
@@ -568,7 +568,7 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 				this.Handle(rank+1).Position = pos;
 				this.Handle(rank-1).Position = Drawing.Point.Symmetry(this.Handle(rank).Position, pos);
-				this.durtyBbox = true;
+				this.dirtyBbox = true;
 			}
 			else
 			{
@@ -681,6 +681,9 @@ namespace Epsitec.Common.Pictogram.Data
 				Drawing.Point p2 = this.Handle(1).Position;
 				this.BboxBezier(p1, s1, s2, p2);
 			}
+
+			double width = this.PropertyLine(0).Width/2.0;
+			this.bbox.Inflate(width, width);
 		}
 
 		// Ajoute un courbe de Bézier dans la bbox.
