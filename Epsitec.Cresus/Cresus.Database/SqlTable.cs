@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 07/10/2003
 
 namespace Epsitec.Cresus.Database
@@ -19,29 +19,23 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public bool Validate(ISqlValidator validator)
-		{
-			return validator.ValidateName (this.name);
-		}
-		
-		
-		public string					Name
+		public string							Name
 		{
 			get { return this.name; }
 			set { this.name = value; }
 		}
 		
-		public SqlColumnCollection		Columns
+		public Collections.SqlColumns			Columns
 		{
 			get { return this.columns; }
 		}
 		
-		public bool						HasPrimaryKeys
+		public bool								HasPrimaryKey
 		{
 			get { return (this.primary_key != null) && (this.primary_key.Count > 0); }
 		}
 		
-		public SqlColumn[]				PrimaryKey
+		public SqlColumn[]						PrimaryKey
 		{
 			get
 			{
@@ -75,7 +69,7 @@ namespace Epsitec.Cresus.Database
 						return;
 					}
 					
-					this.primary_key = new SqlColumnCollection ();
+					this.primary_key = new Collections.SqlColumns ();
 				}
 				
 				this.primary_key.Clear ();
@@ -84,8 +78,14 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected string				name;
-		protected SqlColumnCollection	columns = new SqlColumnCollection ();
-		protected SqlColumnCollection	primary_key = null;
+		public bool Validate(ISqlValidator validator)
+		{
+			return validator.ValidateName (this.name);
+		}
+		
+		
+		protected string						name;
+		protected Collections.SqlColumns		columns		= new Collections.SqlColumns ();
+		protected Collections.SqlColumns		primary_key;
 	}
 }
