@@ -148,9 +148,6 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			base.ModifyTextLayout (text);
-			
-			this.Invalidate();
-			this.CursorScroll();
 		}
 		
 		protected override void DisposeTextLayout()
@@ -159,7 +156,7 @@ namespace Epsitec.Common.Widgets
 			// TextField n'est jamais détruit du vivant du TextField.
 			this.TextLayout.Text = "";
 		}
-
+		
 
 		// Nombre max de caractères dans la ligne éditée.
 		public int MaxChar
@@ -233,8 +230,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.cursorFrom = value;
 					this.cursorTo   = value;
-					this.CursorScroll();
-					this.Invalidate();
+					this.OnCursorChanged();
 				}
 			}
 		}
@@ -254,8 +250,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.cursorFrom )
 				{
 					this.cursorFrom = value;
-					this.CursorScroll();
-					this.Invalidate();
+					this.OnCursorChanged();
 				}
 			}
 		}
@@ -285,9 +280,8 @@ namespace Epsitec.Common.Widgets
 		public void SelectAll()
 		{
 			this.cursorFrom = 0;
-			this.cursorTo = this.Text.Length;
-			this.CursorScroll();
-			this.Invalidate();
+			this.cursorTo   = this.Text.Length;
+			this.OnCursorChanged();
 		}
 
 		protected override void UpdateTextLayout()
@@ -328,19 +322,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override void OnFocused()
-		{
-			base.OnFocused();
-			TextField.blinking = this;
-			this.ResetCursor();
-		}
-
-		protected override void OnDefocused()
-		{
-			TextField.blinking = null;
-			base.OnDefocused();
-		}
-
 		
 		// Fait clignoter le curseur.
 		protected void FlashCursor()
@@ -514,21 +495,22 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
 			if ( this.isReadOnly )  return false;
-			this.DeleteSelectedCharacter(false);
+			
+			// L'appel de DeleteSelection génère un événement TextChanged avec un texte dans
+			// un état intermédiaire. Tant pis...
+			
+			this.DeleteSelection();
 
 			if ( this.Text.Length+ins.Length > this.maxChar )  return false;
 
 			int cursor = this.TextLayout.FindOffsetFromIndex(this.cursorTo);
 			string text = this.Text;
 			text = text.Insert(cursor, ins);
-			this.Text = text;
 			this.cursorTo ++;
 			this.cursorFrom = this.cursorTo;
-			this.Invalidate();
-			this.ResetCursor();
-			this.CursorScroll();
-//-			this.OnTextChanged();
+			this.Text = text;
 			this.OnTextInserted();
+			this.OnCursorChanged();
 			return true;
 		}
 
@@ -537,7 +519,7 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
 			if ( this.isReadOnly )  return false;
-			if ( this.DeleteSelectedCharacter(true) )  return false;
+			if ( this.DeleteSelection() )  return false;
 
 			int cursor = this.TextLayout.FindOffsetFromIndex(this.cursorTo);
 
@@ -548,14 +530,11 @@ namespace Epsitec.Common.Widgets
 				string text = this.Text;
 				int len = this.TextLayout.RecedeTag(cursor);
 				text = text.Remove(cursor-len, len);
-				this.Text = text;
 				this.cursorTo --;
 				this.cursorFrom = this.cursorTo;
-				this.Invalidate();
-				this.ResetCursor();
-				this.CursorScroll();
-//-				this.OnTextChanged();
+				this.Text = text;
 				this.OnTextDeleted();
+				this.OnCursorChanged();
 			}
 			else	// à droite du curseur ?
 			{
@@ -565,41 +544,37 @@ namespace Epsitec.Common.Widgets
 				int len = this.TextLayout.AdvanceTag(cursor);
 				text = text.Remove(cursor, len);
 				this.Text = text;
-				this.Invalidate();
-				this.ResetCursor();
-				this.CursorScroll();
-//-				this.OnTextChanged();
 				this.OnTextDeleted();
 			}
 
 			return true;
 		}
-
-		// Supprime les caractères sélectionnés dans le texte.
-		protected bool DeleteSelectedCharacter(bool signalTextChanged)
+		
+		public bool DeleteSelection()
 		{
+			// Supprime les caractères sélectionnés dans le texte.
+			
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
+			
 			if ( this.isReadOnly )  return false;
 			
 			int cursorFrom = this.TextLayout.FindOffsetFromIndex(this.cursorFrom);
 			int cursorTo   = this.TextLayout.FindOffsetFromIndex(this.cursorTo);
-
+			
 			int from = System.Math.Min(cursorFrom, cursorTo);
 			int to   = System.Math.Max(cursorFrom, cursorTo);
-
+			
 			if ( from == to )  return false;
-
+			
 			string text = this.Text;
 			text = text.Remove(from, to-from);
-			this.Text = text;
 			from = this.TextLayout.FindIndexFromOffset(from);
 			this.cursorTo   = from;
 			this.cursorFrom = from;
-			this.Invalidate();
-			this.ResetCursor();
-			this.CursorScroll();
-//-			if ( signalTextChanged )  this.OnTextChanged();
+			this.Text = text;
 			this.OnTextDeleted();
+			this.OnCursorChanged();
+			
 			return true;
 		}
 
@@ -630,13 +605,13 @@ namespace Epsitec.Common.Widgets
 			int cursor = this.TextLayout.DetectIndex(posx, this.cursorLine);
 			if ( cursor == -1 )  return false;
 			this.cursorTo = cursor;
+			
 			if ( !isShiftPressed )
 			{
 				this.cursorFrom = cursor;
 			}
-			this.CursorScroll();
-			this.Invalidate();
-			this.ResetCursor();
+			
+			this.OnCursorChanged();
 			return true;
 		}
 
@@ -648,13 +623,13 @@ namespace Epsitec.Common.Widgets
 			int cursor = this.TextLayout.DetectIndex(this.cursorPosX, this.cursorLine+move);
 			if ( cursor == -1 )  return false;
 			this.cursorTo = cursor;
+			
 			if ( !isShiftPressed )
 			{
 				this.cursorFrom = cursor;
 			}
-			this.CursorScroll();
-			this.Invalidate();
-			this.ResetCursor();
+			
+			this.OnCursorChanged();
 			return true;
 		}
 
@@ -706,29 +681,63 @@ namespace Epsitec.Common.Widgets
 			{
 				this.cursorFrom = cursor;
 			}
-			this.CursorScroll();
-			this.Invalidate();
-			this.ResetCursor();
+			
+			this.OnCursorChanged();
 			return true;
 		}
 
 
-		// Génère un événement pour dire que le texte a changé (ajout).
+		protected override void OnFocused()
+		{
+			base.OnFocused();
+			TextField.blinking = this;
+			this.ResetCursor();
+		}
+
+		protected override void OnDefocused()
+		{
+			TextField.blinking = null;
+			base.OnDefocused();
+		}
+
+		protected override void OnTextChanged()
+		{
+			// Génère un événement pour dire que le texte a changé (tout changement).
+			
+			this.ResetCursor();
+			this.CursorScroll ();
+			this.Invalidate ();
+			
+			base.OnTextChanged ();
+		}
+
 		protected virtual void OnTextInserted()
 		{
+			// Génère un événement pour dire que le texte a changé (ajout).
+			
 			if ( this.TextInserted != null )  // qq'un écoute ?
 			{
 				this.TextInserted(this);
 			}
 		}
 
-		// Génère un événement pour dire que le texte a changé (suppression).
 		protected virtual void OnTextDeleted()
 		{
+			// Génère un événement pour dire que le texte a changé (suppression).
+			
 			if ( this.TextDeleted != null )  // qq'un écoute ?
 			{
 				this.TextDeleted(this);
 			}
+		}
+		
+		protected virtual void OnCursorChanged()
+		{
+			// Ne génère rien pour l'instant...
+			
+			this.CursorScroll();
+			this.ResetCursor();
+			this.Invalidate();
 		}
 
 
