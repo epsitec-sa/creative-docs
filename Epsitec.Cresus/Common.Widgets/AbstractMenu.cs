@@ -165,12 +165,38 @@ namespace Epsitec.Common.Widgets
 			{
 				AbstractMenu root = AbstractMenu.menuRoot;
 				
+				if ( root == null )
+				{
+					return null;
+				}
+				
 				while ( root.parentMenu != null )
 				{
 					root = root.parentMenu;
 				}
 				
 				return root;
+			}
+		}
+		
+		public static Window					RootWindow
+		{
+			get
+			{
+				AbstractMenu menu   = AbstractMenu.RootMenu;
+				Window       window = null;
+				
+				if ( menu != null )
+				{
+					window = menu.Window;
+					
+					while ( window.IsOwned )
+					{
+						window = window.Owner;
+					}
+				}
+				
+				return window;
 			}
 		}
 
@@ -816,6 +842,20 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
+				Window window = AbstractMenu.RootWindow;
+				
+				if ( window == null )
+				{
+					window = this.Window;
+				}
+				
+				if ( AbstractMenu.initiallyFocusedWidget == null &&
+					 window != null )
+				{
+					AbstractMenu.initiallyFocusedWidget = window.FocusedWidget;
+					System.Diagnostics.Debug.WriteLine(string.Format("Last focus on {0}, saved.", AbstractMenu.initiallyFocusedWidget));
+				}
+				
 				MenuItem item = sender as MenuItem;
 				
 				this.parentMenu = null;
@@ -940,6 +980,15 @@ namespace Epsitec.Common.Widgets
 				AbstractMenu.menuDeveloped = true;
 				AbstractMenu.menuRoot      = root;
 				AbstractMenu.menuLastLeaf  = root;
+				
+				Window window = AbstractMenu.RootWindow;
+				
+				if ( AbstractMenu.initiallyFocusedWidget == null &&
+					 window != null )
+				{
+					AbstractMenu.initiallyFocusedWidget = window.FocusedWidget;
+					System.Diagnostics.Debug.WriteLine(string.Format("Last focus on {0}, saved.", AbstractMenu.initiallyFocusedWidget));
+				}
 			}
 			else if ( AbstractMenu.menuRoot == null )
 			{
@@ -956,6 +1005,12 @@ namespace Epsitec.Common.Widgets
 				AbstractMenu.menuDeveloped = false;
 				AbstractMenu.menuLastLeaf  = null;
 				AbstractMenu.menuRoot      = null;
+				
+				if ( AbstractMenu.initiallyFocusedWidget != null )
+				{
+					AbstractMenu.initiallyFocusedWidget.SetFocused(true);
+					AbstractMenu.initiallyFocusedWidget = null;
+				}
 			}
 		}
 		
@@ -1046,5 +1101,7 @@ namespace Epsitec.Common.Widgets
 		private static bool							menuDeveloped;
 		private static AbstractMenu					menuLastLeaf;
 		private static AbstractMenu					menuRoot;
+		
+		private static Widget						initiallyFocusedWidget;
 	}
 }

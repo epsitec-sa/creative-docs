@@ -389,6 +389,14 @@ namespace Epsitec.Common.Widgets
 			get { return this.window.Focused; }
 		}
 		
+		public bool								IsOwned
+		{
+			get
+			{
+				return (this.owner != null);
+			}
+		}
+		
 		public bool								IsToolWindow
 		{
 			get
