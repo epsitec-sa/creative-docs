@@ -169,6 +169,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Internal\TextTable.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Styles\BaseSettings.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -220,6 +225,11 @@
                 />
                 <File
                     RelPath = "Tests\CheckTextStory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Tests\CheckTextTable.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

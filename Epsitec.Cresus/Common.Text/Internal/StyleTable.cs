@@ -20,7 +20,8 @@ namespace Epsitec.Common.Text.Internal
 			//	Attache un style au caractère passé en entrée.
 			
 			//	Prend note que le style a une utilisation de plus (si un style iden-
-			//	tique existe déjà, c'est ce style là qui sera utilisé).
+			//	tique existe déjà, c'est ce style là qui sera réutilisé; on évite
+			//	ainsi les doublons).
 			
 			Styles.BaseStyle find = this.FindStyle (style, null);
 			
@@ -29,6 +30,8 @@ namespace Epsitec.Common.Text.Internal
 				this.Add (style);
 				find = style;
 			}
+			
+			Debug.Assert.IsTrue (find.StyleIndex > 0);
 			
 			find.IncrementUserCount ();
 			
@@ -40,6 +43,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void Attach(ref ulong code, Styles.BaseStyle style, Styles.LocalSettings local_settings, Styles.ExtraSettings extra_settings)
 		{
+			//	Variante avec réglages de Attach (voir méthode simple ci-dessus).
+			
 			if ((local_settings == null) &&
 				(extra_settings == null))
 			{
@@ -76,17 +81,21 @@ namespace Epsitec.Common.Text.Internal
 					find = style;
 				}
 				
+				Debug.Assert.IsTrue (find.StyleIndex > 0);
+				
 				//	Ajoute les réglages au style s'ils n'en font pas encore partie :
 				
 				if (local_settings != null)
 				{
 					local_settings = find.Attach (local_settings);
 					Debug.Assert.IsNotNull (local_settings);
+					Debug.Assert.IsTrue (local_settings.SettingsIndex > 0);
 				}
 				if (extra_settings != null)
 				{
 					extra_settings = find.Attach (extra_settings);
 					Debug.Assert.IsNotNull (extra_settings);
+					Debug.Assert.IsTrue (extra_settings.SettingsIndex > 0);
 				}
 				
 				find.IncrementUserCount ();
@@ -100,7 +109,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		
 		#region SettingsStyleMatcher Class
-		private class SettingsStyleMatcher
+		public class SettingsStyleMatcher
 		{
 			public SettingsStyleMatcher(Styles.LocalSettings local_settings, Styles.ExtraSettings extra_settings)
 			{
@@ -177,7 +186,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		#endregion
 		
-		private Styles.BaseStyle FindStyle(Styles.BaseStyle style, StyleMatcher matcher)
+		public Styles.BaseStyle FindStyle(Styles.BaseStyle style, StyleMatcher matcher)
 		{
 			//	Cherche si un style identique existe déjà. Si oui, retourne la
 			//	référence au style en question; si non, retourne null.
@@ -191,6 +200,7 @@ namespace Epsitec.Common.Text.Internal
 				return this.FindSimpleStyle (style, matcher);
 			}
 		}
+		
 		
 		private Styles.SimpleStyle FindSimpleStyle(Styles.BaseStyle style, StyleMatcher matcher)
 		{
@@ -287,7 +297,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			if (style.IsRichStyle)
 			{
-				Debug.Assert.IsTrue (style.StyleIndex != 0);
+				Debug.Assert.IsTrue (style.StyleIndex > 0);
 				Debug.Assert.IsTrue (this.rich_styles[style.StyleIndex-1] == style);
 				
 				//	Retire de la liste, sans pour autant réorganiser la liste
@@ -299,7 +309,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 			else
 			{
-				Debug.Assert.IsTrue (style.StyleIndex != 0);
+				Debug.Assert.IsTrue (style.StyleIndex > 0);
 				Debug.Assert.IsTrue (this.simple_styles[style.StyleIndex-1] == style);
 
 				//	Retire de la liste, sans pour autant réorganiser la liste
@@ -312,13 +322,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		private Styles.BaseStyle FindStyleForLocalSettings(Styles.BaseStyle style, Styles.LocalSettings settings)
-		{
-			return null;
-		}
-		
-		
-		private delegate bool StyleMatcher(Styles.BaseStyle style);
+		public delegate bool StyleMatcher(Styles.BaseStyle style);
 		
 		private System.Collections.ArrayList	simple_styles;
 		private System.Collections.ArrayList	rich_styles;

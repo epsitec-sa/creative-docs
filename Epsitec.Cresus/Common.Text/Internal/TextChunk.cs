@@ -261,7 +261,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		private void GrowTextBuffer(int length)
+		public void GrowTextBuffer(int length)
 		{
 			length = System.Math.Max (length, this.text.Length + this.text.Length / 4 + 16);
 			
@@ -273,7 +273,7 @@ namespace Epsitec.Common.Text.Internal
 			this.text = new_text;
 		}
 		
-		private void OptimizeTextBuffer()
+		public void OptimizeTextBuffer()
 		{
 			int delta = this.text.Length - this.length;
 			
