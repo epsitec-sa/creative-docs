@@ -213,7 +213,7 @@ namespace Epsitec.Common.Widgets
 			TextFieldEx model_field_1 = new TextFieldEx ();
 			
 			model_field_1.ButtonShowCondition = ShowCondition.WhenFocusedFlagSet;
-			model_field_1.DefocusAction       = DefocusAction.ModalIfInvalid;
+			model_field_1.DefocusAction       = DefocusAction.ModalOrReject;
 			
 			table.Columns[0].EditionWidgetModel = model_field_1;
 			table.EditWidgetsCreated += new EventHandler(this.HandleTableEditWidgetsCreated);
