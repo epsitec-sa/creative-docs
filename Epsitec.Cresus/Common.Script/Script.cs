@@ -38,9 +38,9 @@ namespace Epsitec.Common.Script
 		}
 		
 		
-		public bool Execute(string name)
+		public bool Execute(string name, object[] in_args)
 		{
-			return this.script.Execute (name);
+			return this.script.Execute (name, in_args);
 		}
 		
 		

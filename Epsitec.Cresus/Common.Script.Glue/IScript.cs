@@ -10,6 +10,6 @@ namespace Epsitec.Common.Script.Glue
 	{
 		void SetScriptHost(IScriptHost host);
 		
-		bool Execute(string name/*, object[] in_args, object[] out_args*/);
+		bool Execute(string name, object[] in_args/*, object[] out_args*/);
 	}
 }

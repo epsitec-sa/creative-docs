@@ -14,6 +14,7 @@ namespace Epsitec.Common.Script
 		{
 		}
 		
+		
 		public Script Compile(string source)
 		{
 			int build_id  = Engine.GetNextBuildId ();

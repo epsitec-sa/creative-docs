@@ -20,7 +20,10 @@ namespace Epsitec.Common.Script.Helpers
 			System.Security.Policy.Evidence evidence = new System.Security.Policy.Evidence (current.Evidence);
 			System.AppDomainSetup           setup    = new System.AppDomainSetup ();
 			
-			setup.ApplicationName = "Epsitec.Common.Scripts";
+			//	On ne veut pas que le AppDomain provoque des "shadow copies", car cela risque de générer
+			//	des tonnes de dossiers/fichiers dans "Documents and Settings\User\Application Data" !
+			
+			setup.ApplicationName = "Epsitec.Common.Scripts " + name;
 			setup.ShadowCopyFiles = "false";
 			setup.PrivateBinPath  = Paths.DynamicCodeDirectory;
 			setup.ApplicationBase = Paths.BaseDirectory;

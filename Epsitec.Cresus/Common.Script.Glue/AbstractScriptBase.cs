@@ -22,7 +22,7 @@ namespace Epsitec.Common.Script.Glue
 		}
 		
 		
-		public abstract bool Execute(string name);
+		public abstract bool Execute(string name, object[] in_args);
 		
 		#region Remaining IScript Members
 		void Epsitec.Common.Script.Glue.IScript.SetScriptHost(IScriptHost host)
