@@ -98,6 +98,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public string							InternalSimpleText
+		{
+			get
+			{
+				return TextLayout.ConvertToSimpleText(this.InternalText);
+			}
+		}
+		
 		public int								MaxTextOffset			// offset maximum (position "physique" dans le texte brut)
 		{
 			get { return (this.text == null) ? 0 : this.text.Length; }
@@ -973,7 +981,7 @@ namespace Epsitec.Common.Widgets
 			// Adapte les index from/to pour englober des paragraphes entiers.
 			// from: début d'un paragraphe (après un <br/>)
 			// to:   fin d'un paragraphe (avant un <br/>)
-			string simple = TextLayout.ConvertToSimpleText(this.InternalText);
+			string simple = this.InternalSimpleText;
 
 			if ( to > from )  to --;  // ignore le dernier <br/>
 
@@ -1015,7 +1023,7 @@ namespace Epsitec.Common.Widgets
 		public void SelectWord(TextLayout.Context context)
 		{
 			// Sélectionne tout le mot.
-			string simple = TextLayout.ConvertToSimpleText(this.InternalText);
+			string simple = this.InternalSimpleText;
 
 			while ( context.CursorFrom > 0 )
 			{
@@ -1345,7 +1353,7 @@ namespace Epsitec.Common.Widgets
 			int to   = System.Math.Max(context.CursorFrom, context.CursorTo);
 			int cursor = (move < 0) ? from : to;
 			if ( select )  cursor = context.CursorTo;
-			string simple = TextLayout.ConvertToSimpleText(this.InternalText);
+			string simple = this.InternalSimpleText;
 
 			if ( word )  // déplacement par mots ?
 			{
@@ -1414,7 +1422,14 @@ namespace Epsitec.Common.Widgets
 
 		public void Paint(Drawing.Point pos, Drawing.IPaintPort graphics, Drawing.Rectangle clipRect, Drawing.Color uniqueColor, Drawing.GlyphPaintStyle paintStyle)
 		{
-			this.UpdateLayout();
+			if (this.Text.Length > 1000)
+			{
+				this.UpdateLayout();
+			}
+			else
+			{
+				this.UpdateLayout();
+			}
 
 			IAdorner adorner = Adorner.Factory.Active;
 			double listValue = 0.0;

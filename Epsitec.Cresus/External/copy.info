@@ -28,10 +28,3 @@ ib_util.dll
 aliases.conf
 firebird.conf
 firebird.msg
-
-intl/fbintl.dll
-
-udf/fbudf.dll
-udf/fbudf.sql
-udf/ib_udf.dll
-udf/ib_udf.sql

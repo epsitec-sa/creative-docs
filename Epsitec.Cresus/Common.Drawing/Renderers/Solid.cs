@@ -47,8 +47,11 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 			set
 			{
-				this.color = value;
-				this.SetColor (value);
+				if (this.color != value)
+				{
+					this.color = value;
+					this.SetColor (value);
+				}
 			}
 		}
 		

@@ -1,0 +1,6 @@
+# Copy Embedded Firebird engine
+
+fbudf.dll
+fbudf.sql
+ib_udf.dll
+ib_udf.sql

@@ -94,15 +94,21 @@ namespace Epsitec.Common.Script.Developer.Panels
 			this.panel_param.IsModifiedChanged += new EventHandler (this.HandlePanelParamIsModifiedChanged);
 			
 			this.text_source = new TextFieldMulti (parent);
+
+			Drawing.Font font_face = Drawing.Font.GetFont ("Courier New", "Regular");
+			double       font_size = 13.0;
 			
 			this.text_source.Dock = DockStyle.Fill;
 			this.text_source.DockMargins = new Drawing.Margins (4, 0, 0, 0);
-			this.text_source.TextLayout.DefaultFont = Drawing.Font.GetFont ("Courier New", "Regular");
-			this.text_source.TextLayout.DefaultFontSize = 13.0;
+			this.text_source.TextLayout.DefaultFont     = font_face;
+			this.text_source.TextLayout.DefaultFontSize = font_size;
 			this.text_source.TextEdited += new EventHandler (this.HandleTextSourceEdited);
 			
 			this.text_source.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.text_source.TabIndex      = 10;
+			this.text_source.MaxChar       = 100000;
+			
+			this.text_source.TextLayout.Style.DefaultTabWidth = font_face.GetCharAdvance ('x') * font_size * this.text_tab_char_width;
 			
 			this.UpdateFromMethod ();
 		}
@@ -177,5 +183,6 @@ namespace Epsitec.Common.Script.Developer.Panels
 		
 		protected Source.Method					method;
 		protected TextFieldMulti				text_source;
+		protected int							text_tab_char_width = 4;
 	}
 }
