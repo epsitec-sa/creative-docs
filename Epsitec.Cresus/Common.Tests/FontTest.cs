@@ -107,13 +107,55 @@ namespace Epsitec.Common.Tests
 			Rasterizer rasterizer = new Rasterizer ();
 			rasterizer.Gamma = 1.2;
 			
-			Font font = Font.GetFont ("Arial", "Regular");
+			Font font = Font.GetFont ("Times New Roman", "Italic");
+			Path path = new Path ();
+			Path rect = new Path ();
+			
 			double x = 20;
+			double y = 80;
+			double size = 320;
+			
+			path.MoveTo (0, y);
+			path.LineTo (form.ClientSize.Width, y);
+			
+			string text = "tjfa";
 			
 			rasterizer.FillMode = FillMode.NonZero;
-			rasterizer.AddGlyph (font, font.GetGlyphIndex ('t'), x, 20, 400);	x += font.GetGlyphAdvance (font.GetGlyphIndex ('t')) * 400;
-			rasterizer.AddGlyph (font, font.GetGlyphIndex ('m'), x, 20, 400);
+			
+			foreach (char c in text)
+			{
+				int glyph = font.GetGlyphIndex (c);
+				
+				rasterizer.AddGlyph (font, glyph, x, y, size);
+				
+				path.MoveTo (x, 0);
+				path.LineTo (x, form.ClientSize.Height);
+			
+				Rectangle r = font.GetGlyphBounds (glyph);
+				r.Scale (size);
+				r.Offset (x, y);
+			
+				rect.MoveTo (r.Left,  r.Bottom);
+				rect.LineTo (r.Right, r.Bottom);
+				rect.LineTo (r.Right, r.Top);
+				rect.LineTo (r.Left,  r.Top);
+				rect.Close ();
+				
+				x += font.GetGlyphAdvance (glyph) * size;
+			}
+			
+			path.MoveTo (x, 0);
+			path.LineTo (x, form.ClientSize.Height);
+			
 			renderer.Color = Color.FromBrightness (0);
+			rasterizer.Render (renderer);
+			
+			renderer.Color = Color.FromRGB (0, 1, 0);
+			rasterizer.AddOutline (path, 1);
+			rasterizer.Render (renderer);
+			
+			renderer.Color = Color.FromRGB (1, 0, 0);
+			rasterizer.AddOutline (rect, 1);
 			rasterizer.Render (renderer);
 			
 			form.Show ();
