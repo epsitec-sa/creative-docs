@@ -27,11 +27,15 @@ namespace Epsitec.Common.Support.Tests
 			
 			binder.DataSet = data;
 			
-			data.AddData ("a", true, new DataType ("boolean"));
-			data.AddData ("b", false, new DataType ("boolean"));
+			data.AddData ("a", true, new DataType ("name=boolean")).Attributes.SetFromInitialisationList ("label=Option vitale 'A'");
+			data.AddData ("b", false, new DataType ("name=boolean")).Attributes.SetFromInitialisationList ("label=Copie de l'option vitale 'A'");
 			
-			data.GetDataField ("a").DataAttributes.SetAttribute ("label", "Option vitale 'A'", ResourceLevel.Default);
-			data.GetDataField ("b").DataAttributes.SetAttribute ("label", "Copie de l'option vitale 'A'", ResourceLevel.Default);
+			
+			Assertion.AssertEquals ("boolean", data.GetDataField ("a").DataType.Name);
+			Assertion.AssertEquals ("boolean", data.GetDataField ("a").DataType.BinderEngine);
+			
+			Assertion.AssertEquals ("Option vitale 'A'",			data.GetDataField ("a").UserLabel);
+			Assertion.AssertEquals ("Copie de l'option vitale 'A'",	data.GetDataField ("b").UserLabel);
 			
 			data.ValidateChanges ();
 			data.AttachObserver ("a", new DataChangedHandler (HandleDataChanged));

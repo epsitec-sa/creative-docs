@@ -213,9 +213,9 @@ namespace Epsitec.Cresus.UserInterface
 				{
 					string[] bind_args = binding.Split (';');
 					
-					foreach (string bind_arg in bind_args)
+					for (int i = 0; i < bind_args.Length; i++)
 					{
-						bind_arg = bind_arg.Trim ();
+						string bind_arg = bind_args[i].Trim ();
 						
 						if (this.CheckBindingName (bind_arg))
 						{
