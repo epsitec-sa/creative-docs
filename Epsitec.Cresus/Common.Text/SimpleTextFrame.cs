@@ -4,12 +4,12 @@
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe TextFrame permet de décrire une zone dans laquelle coule du
-	/// texte.
+	/// La classe SimpleTextFrame permet de décrire une zone dans laquelle
+	/// coule du texte.
 	/// </summary>
-	public class TextFrame : ITextFrame
+	public class SimpleTextFrame : ITextFrame
 	{
-		public TextFrame()
+		public SimpleTextFrame()
 		{
 		}
 		
