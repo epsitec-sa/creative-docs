@@ -68,7 +68,7 @@ namespace Epsitec.Common.Document
 			this.exportFilename = "";
 			this.exportFilter = 0;
 
-			this.printDialog = new Common.Dialogs.Print();
+			this.printDialog = new Common.Dialogs.PrinterDocumentProperties();
 
 			if ( this.mode == DocumentMode.Modify    ||
 				 this.mode == DocumentMode.Clipboard )

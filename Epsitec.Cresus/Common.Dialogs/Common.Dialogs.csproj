@@ -124,6 +124,16 @@
                     Project = "{B2266071-EA0F-40E5-844F-98EE68A5A39C}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
+                <Reference
+                    Name = "System.XML"
+                    AssemblyName = "System.XML"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -205,6 +215,11 @@
                 />
                 <File
                     RelPath = "Print.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PrinterDocumentProperties.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

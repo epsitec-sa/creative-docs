@@ -110,6 +110,37 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
+		[Test] public void CheckShow3()
+		{
+			PrinterDocumentProperties dialog = new PrinterDocumentProperties ();
+			
+			dialog.AllowFromPageToPage = true;
+			dialog.AllowSelectedPages  = false;
+			
+			string[] printers = Printing.PrinterSettings.InstalledPrinters;
+			
+			dialog.Document.SelectPrinter (printers[printers.Length-1]);
+			
+			dialog.Document.PrinterSettings.MinimumPage = 1;
+			dialog.Document.PrinterSettings.MaximumPage = 99;
+			dialog.Document.PrinterSettings.FromPage = 5;
+			dialog.Document.PrinterSettings.ToPage = 20;
+			dialog.Document.PrinterSettings.PrintRange = Printing.PrintRange.FromPageToPage;
+			dialog.Document.PrinterSettings.Collate = false;
+			
+			dialog.OpenDialog ();
+			
+			System.Console.Out.WriteLine ("Paper Source: {0}", dialog.Document.PrinterSettings.DefaultPageSettings.PaperSource.Name);
+			System.Console.Out.WriteLine ("Paper Size:   {0}", dialog.Document.PrinterSettings.DefaultPageSettings.PaperSize.Name);
+			System.Console.Out.WriteLine ("Page Bounds:  {0}", dialog.Document.PrinterSettings.DefaultPageSettings.Bounds.ToString ());
+			System.Console.Out.WriteLine ("Page Margins: {0}", dialog.Document.PrinterSettings.DefaultPageSettings.Margins.ToString ());
+			System.Console.Out.WriteLine ("Output Port:  {0}", dialog.Document.PrinterSettings.OutputPort);
+			System.Console.Out.WriteLine ("Driver Name:  {0}", dialog.Document.PrinterSettings.DriverName);
+			System.Console.Out.WriteLine ("Collation:    {0}, {1} copies", dialog.Document.PrinterSettings.Collate, dialog.Document.PrinterSettings.Copies);
+			
+			dialog.OpenDialog ();
+		}
+		
 		[Test] public void CheckPort()
 		{
 			Drawing.Graphics preview = new Drawing.Graphics ();

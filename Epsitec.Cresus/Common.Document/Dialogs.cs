@@ -1239,12 +1239,19 @@ namespace Epsitec.Common.Document
 
 		private void HandlePrinterButtonClicked(object sender, MessageEventArgs e)
 		{
+			Button button = sender as Button;
 			Common.Dialogs.Print dialog = this.document.PrintDialog;
 			Settings.PrintInfo pi = this.document.Settings.PrintInfo;
-
+			
+			dialog.Owner = button.Window;
 			dialog.AllowFromPageToPage = false;
 			dialog.AllowSelectedPages  = false;
-			dialog.Document.SelectPrinter(pi.PrintName);
+			
+			if ( dialog.Document.PrinterSettings.PrinterName != pi.PrintName )
+			{
+				dialog.Document.SelectPrinter(pi.PrintName);
+			}
+			
 			dialog.Document.PrinterSettings.Copies = pi.Copies;
 			dialog.Document.PrinterSettings.Collate = pi.Collate;
 			dialog.Document.PrinterSettings.PrintToFile = pi.PrintToFile;

@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Dialogs
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		#region IDialog Members
-		public void OpenDialog()
+		public virtual void OpenDialog()
 		{
 			System.Windows.Forms.IWin32Window owner  = this.owner == null ? null : this.owner.PlatformWindowObject as System.Windows.Forms.IWin32Window;
 			System.Windows.Forms.DialogResult result = this.dialog.ShowDialog (owner);
@@ -162,9 +162,9 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
-		Common.Widgets.Window					owner;
-		System.Windows.Forms.PrintDialog		dialog;
-		private Printing.PrintDocument			document;
-		private DialogResult					result = DialogResult.None;
+		protected Common.Widgets.Window			owner;
+		protected System.Windows.Forms.PrintDialog	dialog;
+		protected Printing.PrintDocument		document;
+		protected DialogResult					result = DialogResult.None;
 	}
 }
