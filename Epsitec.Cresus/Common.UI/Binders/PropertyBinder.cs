@@ -21,6 +21,12 @@ namespace Epsitec.Common.UI.Binders
 			this.PropertyName = property_name;
 		}
 		
+		public PropertyBinder(object source, string property_name) : this ()
+		{
+			this.Source       = source;
+			this.PropertyName = property_name;
+		}
+		
 		
 		public object							Source
 		{
