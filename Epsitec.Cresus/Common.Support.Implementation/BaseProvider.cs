@@ -93,7 +93,7 @@ namespace Epsitec.Common.Support.Implementation
 			string base_name = application + "_resdb";
 			DbAccess  access = DbInfrastructure.CreateDbAccess (base_name);
 			
-			access.Provider = "FirebirdEmbedded";
+			access.Provider = "Firebird";
 			
 			return access;
 		}
