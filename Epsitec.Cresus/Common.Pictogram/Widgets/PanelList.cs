@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelList : AbstractPanel
 	{
-		public PanelList()
+		public PanelList(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -21,11 +21,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.list.SelectedIndexChanged += new EventHandler(this.ListChanged);
 			this.list.TabIndex = 1;
 			this.list.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-		}
-		
-		public PanelList(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)

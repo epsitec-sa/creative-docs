@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelModColor : AbstractPanel
 	{
-		public PanelModColor()
+		public PanelModColor(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -61,25 +61,29 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldArray[4].Color = Drawing.Color.FromRGB(0,1,0);
 			this.fieldArray[5].Color = Drawing.Color.FromRGB(0,0,1);
 			this.fieldArray[6].Color = Drawing.Color.FromRGB(0.5,0.5,0.5);
+			ToolTip.Default.SetToolTip(this.fieldArray[0], "Teinte");
+			ToolTip.Default.SetToolTip(this.fieldArray[1], "Saturation");
+			ToolTip.Default.SetToolTip(this.fieldArray[2], "Luminosité");
+			ToolTip.Default.SetToolTip(this.fieldArray[3], "Rouge");
+			ToolTip.Default.SetToolTip(this.fieldArray[4], "Vert");
+			ToolTip.Default.SetToolTip(this.fieldArray[5], "Bleu");
+			ToolTip.Default.SetToolTip(this.fieldArray[6], "Alpha (transparence)");
 
 			this.negativ = new CheckButton(this);
 			this.negativ.Text = "Négatif";
 			this.negativ.TabIndex = 10;
 			this.negativ.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.negativ.ActiveStateChanged += new EventHandler(this.HandleNegativChanged);
+			ToolTip.Default.SetToolTip(this.negativ, "Couleurs inversées");
 
 			this.reset = new Button(this);
 			this.reset.Text = "R";
 			this.reset.TabIndex = 11;
 			this.reset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.reset.Clicked += new MessageEventHandler(this.HandleReset);
+			ToolTip.Default.SetToolTip(this.reset, "Reset (valeurs standards)");
 
 			this.isNormalAndExtended = true;
-		}
-		
-		public PanelModColor(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)
