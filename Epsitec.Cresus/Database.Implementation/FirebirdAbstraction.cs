@@ -106,6 +106,21 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 		
+		protected virtual void EnsureConnection()
+		{
+			switch (this.db_connection.State)
+			{
+				case System.Data.ConnectionState.Closed:
+					this.db_connection.Open ();
+					break;
+				
+				case System.Data.ConnectionState.Broken:
+					this.db_connection.Close ();
+					this.db_connection.Open ();
+					break;
+			}
+		}
+		
 		protected virtual void CreateDatabase(DbAccess db_access)
 		{
 			System.Diagnostics.Debug.Assert (db_access.create);
@@ -217,6 +232,40 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 		
 		
+		public string[]								UserTableNames
+		{
+			get
+			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				
+				using (System.Data.IDbTransaction transaction = this.BeginTransaction ())
+				{
+					using (System.Data.IDbCommand command = this.NewDbCommand ())
+					{
+						command.Transaction = transaction;
+						command.CommandText = "SELECT RDB$RELATION_NAME FROM RDB$RELATIONS WHERE RDB$SYSTEM_FLAG = 0 AND RDB$VIEW_BLR IS NULL;";
+						command.CommandType = System.Data.CommandType.Text;
+						
+						using (System.Data.IDataReader reader = command.ExecuteReader ())
+						{
+							while (reader.Read ())
+							{
+								string name = reader[0] as string;
+								list.Add (name.TrimEnd ());
+							}
+						}
+					}
+					
+					transaction.Commit ();
+				}
+				
+				string[] names = new string[list.Count];
+				list.CopyTo (names);
+				return names;
+			}
+		}
+		
+		
 		public System.Data.IDbCommand NewDbCommand()
 		{
 			return this.db_connection.CreateCommand ();
@@ -236,6 +285,13 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			return new FbDataAdapter (fb_command);
 		}
+		
+		public System.Data.IDbTransaction BeginTransaction()
+		{
+			this.EnsureConnection ();
+			return this.db_connection.BeginTransaction ();
+		}
+		
 		#endregion
 
 #if false
