@@ -8,7 +8,7 @@ namespace Epsitec.Common.Script
 	/// </summary>
 	public interface IEditorEngine
 	{
-		object CreateDocument(Source source);
+		object CreateDocument(ScriptWrapper script);
 		void ShowMethod(object document, string name);
 	}
 }

@@ -18,8 +18,11 @@ namespace Epsitec.Common.Script
 			Common.UI.Data.Record record = new Epsitec.Common.UI.Data.Record ();
 			Types.IDataValue[]    values = SourceTest.CreateValues (out record);
 			Source                source = SourceTest.CreateSource (values);
+			ScriptWrapper         script = new ScriptWrapper ();
 			
-			object document = Editor.Engine.CreateDocument (source);
+			script.Source = source;
+			
+			object document = Editor.Engine.CreateDocument (script);
 			
 			Editor.Engine.ShowMethod (document, "Mysterious");
 		}

@@ -37,6 +37,7 @@ namespace Epsitec.Common.Script
 			}
 		}
 		
+		
 		public void Attach(Types.IDataGraph data)
 		{
 			this.data = data;

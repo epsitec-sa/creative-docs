@@ -25,13 +25,12 @@ namespace Epsitec.Common.Script
 			{
 				if (this.source != value)
 				{
+					this.DetachSource ();
+					
 					this.source = value;
 					
-					if (this.script != null)
-					{
-						this.script.Dispose ();
-						this.script = null;
-					}
+					this.AttachSource ();
+					this.InvalidateScript ();
 				}
 			}
 		}
@@ -48,6 +47,7 @@ namespace Epsitec.Common.Script
 					//	Compile le script à partir de sa version "source", à la volée :
 					
 					this.script = engine.Compile (this.Source);
+					this.script.Attach (this.data_graph);
 				}
 				
 				return this.script;
@@ -388,10 +388,61 @@ namespace Epsitec.Common.Script
 		}
 		#endregion
 		
+		protected void AttachSource()
+		{
+			if (this.source != null)
+			{
+				this.source.Changed += new Support.EventHandler (this.HandleSourceChanged);
+			}
+		}
+		
+		protected void DetachSource()
+		{
+			if (this.source != null)
+			{
+				this.source.Changed -= new Support.EventHandler (this.HandleSourceChanged);
+			}
+		}
+		
+		protected void InvalidateScript()
+		{
+			if (this.script != null)
+			{
+				System.Diagnostics.Debug.WriteLine ("Invalidated script.");
+				
+				this.script.Dispose ();
+				this.script = null;
+			}
+		}
+		
 		protected void UpdateSourceData()
 		{
-			//	TODO: met à jour Source.Data en fonction de this.Data
+			if (this.source != null)
+			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				
+				foreach (Types.IDataItem item in this.data_graph.Root)
+				{
+					if (item.Classes == Types.DataItemClasses.Value)
+					{
+						list.Add (item);
+					}
+				}
+				
+				Types.IDataValue[] values = new Types.IDataValue[list.Count];
+				list.CopyTo (values);
+				
+				this.source.DefineValues (values);
+				this.InvalidateScript ();
+			}
 		}
+		
+		
+		private void HandleSourceChanged(object sender)
+		{
+			this.InvalidateScript ();
+		}
+		
 		
 		protected class DataValue : Types.IDataValue
 		{

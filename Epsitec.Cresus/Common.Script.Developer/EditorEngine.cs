@@ -18,9 +18,9 @@ namespace Epsitec.Common.Script.Developer
 		}
 		
 		
-		public object CreateDocument(Source source)
+		public object CreateDocument(ScriptWrapper script)
 		{
-			return new Document (source);
+			return new Document (script);
 		}
 		
 		public void ShowMethod(object document, string name)
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Script.Developer
 		
 		protected class Document
 		{
-			public Document(Source source)
+			public Document(ScriptWrapper script)
 			{
 				this.controller = new EditionController ();
 				this.window     = new Window ();
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Script.Developer
 				this.window.Root.Text  = "[res:strings#label.ScriptEditor]";
 				this.window.ClientSize = new Drawing.Size (600, 400);
 				
-				this.controller.Source = source;
+				this.controller.Source = script.Source;
 				this.controller.CreateWidgets (this.window.Root);
 			}
 			

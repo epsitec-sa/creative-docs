@@ -7,7 +7,7 @@ namespace Epsitec.Common.Script
 	/// La classe Source représente le source complet d'un script, lequel est
 	/// constitué d'une série de méthodes et d'une source de données.
 	/// </summary>
-	public class Source
+	public class Source : Support.Data.IChangedSource
 	{
 		public Source()
 		{
@@ -82,6 +82,10 @@ namespace Epsitec.Common.Script
 			return buffer.ToString ();
 		}
 		
+		public void NotifyChanged()
+		{
+			this.OnChanged ();
+		}
 		
 		public Method FindMethod(string signature)
 		{
@@ -437,23 +441,40 @@ namespace Epsitec.Common.Script
 		internal void DefineName(string name)
 		{
 			this.name = name;
+			this.OnChanged ();
 		}
 		
 		internal void DefineMethods(Method[] methods)
 		{
 			this.methods = methods;
+			this.OnChanged ();
 		}
 		
 		internal void DefineValues(Types.IDataValue[] values)
 		{
 			this.values = values;
+			this.OnChanged ();
 		}
 		
 		internal void DefineAbout(string about)
 		{
 			this.about = about;
+			this.OnChanged ();
 		}
 		
+		
+		protected virtual void OnChanged()
+		{
+			if (this.Changed != null)
+			{
+				this.Changed (this);
+			}
+		}
+		
+		
+		#region IChangedSource Members
+		public event Support.EventHandler		Changed;
+		#endregion
 		
 		#region ParameterDirection and CodeType Enumerations
 		public enum ParameterDirection
@@ -832,6 +853,5 @@ namespace Epsitec.Common.Script
 		private Method[]						methods;
 		private Types.IDataValue[]				values;
 		private string							about;
-		
 	}
 }

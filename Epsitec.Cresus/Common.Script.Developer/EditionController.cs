@@ -259,7 +259,7 @@ namespace Epsitec.Common.Script.Developer
 		}
 		
 		
-		protected void SyncFromUI ()
+		protected void SyncFromUI()
 		{
 			if (this.method_index != -1)
 			{
@@ -272,9 +272,14 @@ namespace Epsitec.Common.Script.Developer
 			}
 		}
 		
-		protected void FocusSource ()
+		protected void FocusSource()
 		{
 			this.panel.SourceWidget.Focus ();
+		}
+		
+		protected void SaveSource()
+		{
+			this.source.NotifyChanged ();
 		}
 		
 		protected void CompileSource()
@@ -463,6 +468,7 @@ namespace Epsitec.Common.Script.Developer
 			this.FocusSource ();
 			this.SyncFromUI ();
 			this.panel.IsModified = false;
+			this.SaveSource ();
 		}
 		
 		[Command ("NewMethod")]			void CommandNewMethod()
