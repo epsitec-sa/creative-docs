@@ -119,6 +119,31 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public OpletQueue						OpletQueue
+		{
+			get
+			{
+				return this.oplet_queue;
+			}
+			set
+			{
+				if (this.oplet_queue != value)
+				{
+					this.oplet_queue = value;
+					this.OnOpletQueueChanged ();
+				}
+			}
+		}
+		
+		public ValidationRule.ValidatorList		Validators
+		{
+			get
+			{
+				return this.validation_rules.Validators;
+			}
+		}
+		
+		
 		
 		public void Dispatch(string command, object source)
 		{
@@ -173,51 +198,6 @@ namespace Epsitec.Common.Support
 			finally
 			{
 				this.pending_commands.Pop ();
-			}
-		}
-		
-		
-		protected void DispatchSingleCommand(string command, object source)
-		{
-			command = command.Trim ();
-			
-			//	Transmet la commande à ceux qui sont intéressés
-			
-			string   command_name     = CommandDispatcher.ExtractCommandName (command);
-			string[] command_elements = command_name.Split ('/');
-			int      command_length   = command_elements.Length;
-			string[] command_args     = CommandDispatcher.ExtractAndParseCommandArgs (command, source);
-			
-			System.Diagnostics.Debug.Assert (command_length == 1);
-			System.Diagnostics.Debug.Assert (command_name.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + command + "' may not contain a '*' in its name.\nPlease fix the command name definition source code.");
-			System.Diagnostics.Debug.Assert (command_name.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + command + "' may not contain a '.' in its name.\nPlease fix the command name definition source code.");
-			
-			CommandEventArgs e = new CommandEventArgs (source, command_name, command_args);
-			
-			EventSlot slot = this.event_handlers[command_name] as EventSlot;
-			int    handled = 0;
-			
-			if (slot != null)
-			{
-				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' fired.");
-				
-				if (slot.DispatchCommand (this, e))
-				{
-					handled++;
-				}
-			}
-			
-			foreach (ICommandDispatcher extra in this.extra_dispatchers)
-			{
-				if (extra.DispatchCommand (this, e))
-				{
-					handled++;
-				}
-			}
-			
-			if (handled == 0)
-			{
-				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' not handled.");
 			}
 		}
 		
@@ -306,7 +286,54 @@ namespace Epsitec.Common.Support
 			this.OnValidationRulesBecameDirty ();
 		}
 		
-		protected virtual void OnValidationRulesBecameDirty()
+		
+		
+		protected void DispatchSingleCommand(string command, object source)
+		{
+			command = command.Trim ();
+			
+			//	Transmet la commande à ceux qui sont intéressés
+			
+			string   command_name     = CommandDispatcher.ExtractCommandName (command);
+			string[] command_elements = command_name.Split ('/');
+			int      command_length   = command_elements.Length;
+			string[] command_args     = CommandDispatcher.ExtractAndParseCommandArgs (command, source);
+			
+			System.Diagnostics.Debug.Assert (command_length == 1);
+			System.Diagnostics.Debug.Assert (command_name.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + command + "' may not contain a '*' in its name.\nPlease fix the command name definition source code.");
+			System.Diagnostics.Debug.Assert (command_name.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + command + "' may not contain a '.' in its name.\nPlease fix the command name definition source code.");
+			
+			CommandEventArgs e = new CommandEventArgs (source, command_name, command_args);
+			
+			EventSlot slot = this.event_handlers[command_name] as EventSlot;
+			int    handled = 0;
+			
+			if (slot != null)
+			{
+				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' fired.");
+				
+				if (slot.DispatchCommand (this, e))
+				{
+					handled++;
+				}
+			}
+			
+			foreach (ICommandDispatcher extra in this.extra_dispatchers)
+			{
+				if (extra.DispatchCommand (this, e))
+				{
+					handled++;
+				}
+			}
+			
+			if (handled == 0)
+			{
+				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' not handled.");
+			}
+		}
+		
+		
+		protected void OnValidationRulesBecameDirty()
 		{
 			if (this.ValidationRulesBecameDirty != null)
 			{
@@ -314,16 +341,13 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		
-		public ValidationRule.ValidatorList		Validators
+		protected void OnOpletQueueChanged()
 		{
-			get
+			if (this.OpletQueueChanged != null)
 			{
-				return this.validation_rules.Validators;
+				this.OpletQueueChanged (this);
 			}
 		}
-		
-		public event EventHandler				ValidationRulesBecameDirty;
 		
 		
 		public void RegisterController(object controller)
@@ -746,12 +770,17 @@ namespace Epsitec.Common.Support
 		}
 		#endregion
 		
+		#region FindCommandStateCallback Delegate
+		public delegate CommandDispatcher.CommandState FindCommandStateCallback(string name, CommandDispatcher dispatcher);
+		#endregion
+		
+		public event EventHandler				ValidationRulesBecameDirty;
+		public event EventHandler				OpletQueueChanged;
+		
 		public static CommandDispatcher			Default
 		{
 			get { return CommandDispatcher.default_dispatcher; }
 		}
-		
-		public delegate CommandDispatcher.CommandState FindCommandStateCallback(string name, CommandDispatcher dispatcher);
 		
 		public static FindCommandStateCallback	DefaultFindCommandStateCallback
 		{
@@ -774,6 +803,7 @@ namespace Epsitec.Common.Support
 		protected string						dispatcher_name;
 		protected ValidationRule				validation_rules;
 		protected bool							aborted;
+		protected OpletQueue					oplet_queue;
 		
 		static FindCommandStateCallback			find_command_state_callback;
 		static Regex							command_arg_regex;
