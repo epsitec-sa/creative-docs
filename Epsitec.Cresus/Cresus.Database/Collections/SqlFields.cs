@@ -136,5 +136,40 @@ namespace Epsitec.Cresus.Database.Collections
 			return -1;
 		}
 		
+		
+		public virtual SqlField Merge(SqlFunctionType op)
+		{
+			//	Produit une expression du genre ((A op B) op (C op D)) en générant
+			//	un arbre aussi balancé que possible :
+			
+			SqlField[] fields = new SqlField[this.list.Count];
+			this.list.CopyTo (fields);
+			
+			return SqlFields.Merge (op, fields);
+		}
+		
+		
+		protected static SqlField Merge(SqlFunctionType op, SqlField[] fields)
+		{
+			int n = fields.Length;
+			
+			switch (n)
+			{
+				case 0: return null;
+				case 1: return fields[0];
+				case 2: return SqlField.CreateFunction (new SqlFunction (op, fields[0], fields[1]));
+			}
+			
+			SqlField[] h1 = new SqlField[n/2];
+			SqlField[] h2 = new SqlField[n-n/2];
+			
+			System.Array.Copy (fields,   0, h1, 0, n/2);
+			System.Array.Copy (fields, n/2, h2, 0, n-n/2);
+			
+			SqlField a = SqlFields.Merge (op, h1);
+			SqlField b = SqlFields.Merge (op, h2);
+			
+			return SqlField.CreateFunction (new SqlFunction (op, a, b));
+		}
 	}
 }

@@ -66,6 +66,18 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
+		public PullArgsCollection				PullArgs
+		{
+			get
+			{
+				return this.pull_args;
+			}
+			set
+			{
+				this.pull_args = value;
+			}
+		}
+		
 		
 		internal void WaitForReady()
 		{
@@ -99,11 +111,68 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
+		#region PullArgsCollection Class
+		public sealed class PullArgsCollection
+		{
+			public PullArgsCollection(Remoting.PullReplicationArgs[] args)
+			{
+				this.args = args;
+			}
+			
+			
+			public Remoting.PullReplicationArgs	this[Database.DbId id]
+			{
+				get
+				{
+					for (int i = 0; i < args.Length; i++)
+					{
+						if (args[i].TableId == id)
+						{
+							return args[i];
+						}
+					}
+					
+					return null;
+				}
+			}
+			
+			public Remoting.PullReplicationArgs	this[Database.DbTable table]
+			{
+				get
+				{
+					return this[table.InternalKey.Id];
+				}
+			}
+			
+			
+			public bool Contains(Database.DbId id)
+			{
+				for (int i = 0; i < args.Length; i++)
+				{
+					if (args[i].TableId == id)
+					{
+						return true;
+					}
+				}
+				
+				return false;
+			}
+			
+			public bool Contains(Database.DbTable table)
+			{
+				return this.Contains (table.InternalKey.Id);
+			}
+			
+			
+			Remoting.PullReplicationArgs[]		args;
+		}
+		#endregion
 		
 		private Remoting.ClientIdentity			client;
 		private Database.DbId					sync_start_id;
 		private Database.DbId					sync_end_id;
 		private byte[]							sync_data;
 		private string							sync_error;
+		private PullArgsCollection				pull_args;
 	}
 }

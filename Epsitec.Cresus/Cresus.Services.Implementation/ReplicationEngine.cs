@@ -40,6 +40,28 @@ namespace Epsitec.Cresus.Services
 			operation = job;
 		}
 		
+		public void PullReplication(ClientIdentity client, long sync_start_id, long sync_end_id, PullReplicationArgs[] args, out IOperation operation)
+		{
+			//	Signale au serveur que le client demande une réplication explicite.
+			
+			//	Crée un "job" pour Repliaction.ServerEngine; c'est là que tout le travail
+			//	se fera, par un processus séparé.
+			
+			Replication.Job job = new Replication.Job ();
+			
+			job.Client      = client;
+			job.SyncStartId = sync_start_id;
+			job.SyncEndId   = sync_end_id;
+			job.PullArgs    = new Replication.Job.PullArgsCollection (args);
+			
+			this.replicator.Enqueue (job);
+			
+			//	Maintenant que le système de réplication a reçu notre requête, il n'y a plus
+			//	qu'à attendre que le travail soit fait...
+			
+			operation = job;
+		}
+		
 		public void GetReplicationData(IOperation operation, out byte[] data)
 		{
 			//	Récupère le résultat de l'opération de réplication.

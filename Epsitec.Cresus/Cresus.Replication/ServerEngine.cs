@@ -148,6 +148,8 @@ namespace Epsitec.Cresus.Replication
 			DbId sync_start = job.SyncStartId;
 			DbId sync_end   = job.SyncEndId;
 			
+			Job.PullArgsCollection pull = job.PullArgs;
+			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly, this.database))
 			{
 				DataCruncher cruncher = new DataCruncher (this.infrastructure, transaction);
@@ -174,10 +176,10 @@ namespace Epsitec.Cresus.Replication
 				
 				ReplicationData data = new ReplicationData ();
 				
-				this.ProcessTable (cruncher, sync_start, sync_end, def_table_table, data);
-				this.ProcessTable (cruncher, sync_start, sync_end, def_column_table, data);
-				this.ProcessTable (cruncher, sync_start, sync_end, def_type_table, data);
-				this.ProcessTable (cruncher, sync_start, sync_end, def_enumval_table, data);
+				this.ProcessTable (cruncher, pull, sync_start, sync_end, def_table_table, data);
+				this.ProcessTable (cruncher, pull, sync_start, sync_end, def_column_table, data);
+				this.ProcessTable (cruncher, pull, sync_start, sync_end, def_type_table, data);
+				this.ProcessTable (cruncher, pull, sync_start, sync_end, def_enumval_table, data);
 				
 				this.ProcessLogTable (cruncher, sync_start, sync_end, log_table, data);
 				
@@ -191,7 +193,7 @@ namespace Epsitec.Cresus.Replication
 					
 					System.Diagnostics.Debug.Assert (table.ReplicationMode == DbReplicationMode.Shared);
 					
-					this.ProcessTable (cruncher, sync_start, sync_end, table, data);
+					this.ProcessTable (cruncher, pull, sync_start, sync_end, table, data);
 				}
 				
 				//	Sérialise et comprime le "delta" produit par les appels à la méthode
@@ -204,10 +206,33 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
-		protected virtual void ProcessTable(DataCruncher cruncher, DbId sync_start, DbId sync_end, DbTable table, ReplicationData data)
+		protected virtual void ProcessTable(DataCruncher cruncher, Job.PullArgsCollection pull, DbId sync_start, DbId sync_end, DbTable table, ReplicationData data)
 		{
 			System.Data.DataTable data_table = cruncher.ExtractDataUsingLogIds (table, sync_start, sync_end);
 					
+			if ((pull != null) &&
+				(pull.Contains (table)))
+			{
+				long[] ids = DataCruncher.FindUnknownRowIds (data_table, pull[table].RowIds);
+				
+				if (ids.Length > 0)
+				{
+					//	L'auteur de la demande de réplication aimerait aussi obtenir les lignes
+					//	spécifiées par 'ids'.
+					
+					System.Data.DataTable data_merge = cruncher.ExtractDataUsingIds (table, ids);
+					
+					data_table.BeginLoadData ();
+					
+					foreach (System.Data.DataRow row in data_merge.Rows)
+					{
+						data_table.LoadDataRow (row.ItemArray, false);
+					}
+					
+					data_table.EndLoadData ();
+				}
+			}
+			
 			if (data_table.Rows.Count > 0)
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("Table {0} contains {1} rows to replicate.", data_table.TableName, data_table.Rows.Count));

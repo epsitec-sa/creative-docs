@@ -65,6 +65,36 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
+		public System.Data.DataTable ExtractDataUsingIds(DbTable table, DbId[] ids)
+		{
+			long[] id_values = new long[ids.Length];
+			
+			for (int i = 0; i < ids.Length; i++)
+			{
+				id_values[i] = ids[i].Value;
+			}
+			
+			return this.ExtractDataUsingIds (table, id_values);
+		}
+		
+		public System.Data.DataTable ExtractDataUsingIds(DbTable table, long[] ids)
+		{
+			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.TypeConverter);
+			DbColumn          id_column = table.Columns[Tags.ColumnId];
+			
+			condition.Combiner = DbCompareCombiner.Or;
+			
+			for (int i = 0; i < ids.Length; i++)
+			{
+				condition.AddCondition (id_column, DbCompare.Equal, ids[0]);
+			}
+			
+			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
+			{
+				return command.DataSet.Tables[0];
+			}
+		}
+		
 		
 		public TableRowSet[] ExtractRowSetsUsingLogId(DbId log_id)
 		{
@@ -534,8 +564,35 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
+		public static long[] FindUnknownRowIds(System.Data.DataTable table, System.Collections.ICollection ids)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			list.AddRange (ids);
+			
+			foreach (System.Data.DataRow row in table.Rows)
+			{
+				if (list.Count == 0)
+				{
+					break;
+				}
+				
+				object id = row[0];
+				
+				if (list.Contains (id))
+				{
+					list.Remove (id);
+				}
+			}
+			
+			long[] found = new long[list.Count];
+			list.CopyTo (found);
+			
+			return found;
+		}
 		
-		public class TableRowSet
+		
+		public sealed class TableRowSet
 		{
 			public TableRowSet(DbTable table, System.Collections.ICollection row_ids)
 			{
@@ -577,6 +634,7 @@ namespace Epsitec.Cresus.Replication
 			private DbTable						table;
 			private long[]						ids;
 		}
+		
 		
 		private DbInfrastructure				infrastructure;
 		private DbTransaction					transaction;

@@ -29,6 +29,18 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public DbCompareCombiner				Combiner
+		{
+			get
+			{
+				return this.combiner;
+			}
+			set
+			{
+				this.combiner = value;
+			}
+		}
+		
 		
 		public void AddCondition(DbColumn a, DbCompare comparison, short value)
 		{
@@ -108,7 +120,22 @@ namespace Epsitec.Cresus.Database
 					throw new System.NotSupportedException (string.Format ("DbSelectRevision.{0} not supported", this.revision));
 			}
 			
-			fields.AddRange (this.sql_fields);
+			switch (this.combiner)
+			{
+				case DbCompareCombiner.And:
+					fields.AddRange (this.sql_fields);
+					break;
+				
+				case DbCompareCombiner.Or:
+					if (this.sql_fields.Count > 0)
+					{
+						fields.Add (this.sql_fields.Merge (SqlFunctionType.LogicOr));
+					}
+					break;
+				
+				default:
+					throw new System.InvalidOperationException (string.Format ("Cannot create conditions with {0} combiner.", this.combiner));
+			}
 		}
 		
 		
@@ -145,5 +172,6 @@ namespace Epsitec.Cresus.Database
 		private ITypeConverter					type_converter;
 		private Collections.SqlFields			sql_fields;
 		private DbSelectRevision				revision;
+		private DbCompareCombiner				combiner = DbCompareCombiner.And;
 	}
 }

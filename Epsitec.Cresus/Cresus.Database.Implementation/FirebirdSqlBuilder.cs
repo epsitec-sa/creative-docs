@@ -219,6 +219,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			switch (sql_function.ArgumentCount)
 			{
 				case 2:
+					this.Append ('(');
 					this.Append (sql_function.A, only_qualified);
 					switch (sql_function.Type)
 					{
@@ -258,13 +259,14 @@ namespace Epsitec.Cresus.Database.Implementation
 							System.Diagnostics.Debug.Assert (false); break;
 					}
 					this.Append (sql_function.B, only_qualified);
+					this.Append (')');
 					return;
 				
 				case 0:
 					switch (sql_function.Type)
 					{
-						case SqlFunctionType.CompareFalse:	this.Append ("0 = 1");	break;
-						case SqlFunctionType.CompareTrue:	this.Append ("1 = 1");	break;
+						case SqlFunctionType.CompareFalse:	this.Append ("(0 = 1)"); break;
+						case SqlFunctionType.CompareTrue:	this.Append ("(1 = 1)"); break;
 						
 						default:
 							System.Diagnostics.Debug.Assert (false);
