@@ -16,15 +16,8 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlAttribute]
 		public int Choice
 		{
-			get
-			{
-				return this.choice;
-			}
-
-			set
-			{
-				this.choice = value;
-			}
+			get { return this.choice; }
+			set { this.choice = value; }
 		}
 
 		public void Clear()
@@ -35,10 +28,7 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlIgnore]
 		public int Count
 		{
-			get
-			{
-				return this.list.Count;
-			}
+			get { return this.list.Count; }
 		}
 
 		public void Add(string text)
