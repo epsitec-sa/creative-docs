@@ -45,26 +45,33 @@ namespace Epsitec.Cresus.Database
 		
 		
 		#region ICloneable Members
-		public virtual object Clone()
+		public object Clone()
 		{
-			//	On ne fait pas un new DbNumDef, car on veut pouvoir réutiliser ce code
-			//	par héritage dans d'éventuelles classes dérivées. Vive le dynamisme !
-			
-			DbNumDef def = System.Activator.CreateInstance (this.GetType ()) as DbNumDef;
-			
-			def.raw_type  = this.raw_type;
-			
-			def.min_value = this.min_value;
-			def.max_value = this.max_value;
-			
-			def.digit_precision = this.digit_precision;
-			def.digit_shift     = this.digit_shift;
-			
-			def.InvalidateAndUpdateAutoPrecision ();
-			
-			return def;
+			return this.CloneCopyToNewObject (this.CloneNewObject ());
 		}
 		#endregion
+		
+		protected virtual object CloneNewObject()
+		{
+			return new DbNumDef ();
+		}
+		
+		protected virtual object CloneCopyToNewObject(object o)
+		{
+			DbNumDef that = o as DbNumDef;
+			
+			that.raw_type  = this.raw_type;
+			
+			that.min_value = this.min_value;
+			that.max_value = this.max_value;
+			
+			that.digit_precision = this.digit_precision;
+			that.digit_shift     = this.digit_shift;
+			
+			that.InvalidateAndUpdateAutoPrecision ();
+			
+			return that;
+		}
 		
 		
 		public static DbNumDef FromRawType(DbRawType raw_type)
