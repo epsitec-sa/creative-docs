@@ -117,6 +117,21 @@ namespace Epsitec.Cresus.Support
 			return false;
 		}
 		
+		public static string ExtractPrefix(string full_id)
+		{
+			if (full_id != null)
+			{
+				int pos = full_id.IndexOf (":");
+			
+				if (pos > 0)
+				{
+					return full_id.Substring (0, pos);
+				}
+			}
+			
+			return null;
+		}
+		
 		public static ResourceBundle GetBundle(string id)
 		{
 			return Resources.GetBundle (id, ResourceLevel.Merged);
@@ -124,10 +139,14 @@ namespace Epsitec.Cresus.Support
 		
 		public static ResourceBundle GetBundle(string id, ResourceLevel level)
 		{
+			//	TODO: il faudrait peut-être rajouter un cache pour éviter de consulter
+			//	chaque fois le provider, lorsqu'une ressource est demandée.
+			
 			string resource_id;
 			
 			IResourceProvider provider = Resources.FindProvider (id, out resource_id);
 			ResourceBundle    bundle   = null;
+			string            prefix   = provider.Prefix;
 			
 			if (provider != null)
 			{
@@ -135,16 +154,16 @@ namespace Epsitec.Cresus.Support
 				{
 					case ResourceLevel.Merged:
 						bundle = new ResourceBundle ();
-						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Default));
-						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Localised));
-						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Customised));
+						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Default), prefix, level);
+						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Localised), prefix, level);
+						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Customised), prefix, level);
 						break;
 					
 					case ResourceLevel.Default:
 					case ResourceLevel.Localised:
 					case ResourceLevel.Customised:
 						bundle = new ResourceBundle ();
-						bundle.Compile (provider.GetDataStream (resource_id, level));
+						bundle.Compile (provider.GetDataStream (resource_id, level), prefix, level);
 						break;
 					
 					default:

@@ -101,5 +101,94 @@ namespace Epsitec.Cresus.Support.Tests
 			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
 			bundle.Compile (stream);
 		}
+		
+		[Test] public void CheckCompileRefLevel1()
+		{
+			ResourceBundle bundle = new ResourceBundle ();
+			string test_string = "<bundle><a>A</a><ref t='file:button.cancel'/></bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
+			bundle.Compile (stream);
+			
+			string[] names = bundle.FieldNames;
+			
+			System.Array.Sort (names);
+			
+			Assertion.AssertEquals (4, bundle.CountFields);
+			Assertion.AssertEquals ("a", names[0]);
+			Assertion.AssertEquals ("cls", names[1]);
+			Assertion.AssertEquals ("siz", names[2]);
+			Assertion.AssertEquals ("txt", names[3]);
+		}
+		
+		[Test] public void CheckCompileRefLevel2()
+		{
+			ResourceBundle bundle = new ResourceBundle ();
+			string test_string = "<bundle><a>A</a><b><ref t='file:button.cancel#txt'/></b></bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
+			bundle.Compile (stream);
+			
+			string[] names = bundle.FieldNames;
+			
+			System.Array.Sort (names);
+			
+			Assertion.AssertEquals (2, bundle.CountFields);
+			Assertion.AssertEquals ("a", names[0]);
+			Assertion.AssertEquals ("b", names[1]);
+			
+			System.Console.Out.WriteLine ("Referenced field contains '{0}'.", bundle["b"]);
+		}
+		
+		[Test] public void CheckCompileRefLevel2AutoPrefix()
+		{
+			ResourceBundle bundle = new ResourceBundle ();
+			string test_string = "<bundle><a>A</a><b><ref t='button.cancel#txt'/></b></bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
+			bundle.Compile (stream, "file", ResourceLevel.Default);
+			
+			string[] names = bundle.FieldNames;
+			
+			System.Array.Sort (names);
+			
+			Assertion.AssertEquals (2, bundle.CountFields);
+			Assertion.AssertEquals ("a", names[0]);
+			Assertion.AssertEquals ("b", names[1]);
+			Assertion.AssertEquals ("Cancel", bundle["b"]);
+		}
+		
+		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx1()
+		{
+			ResourceBundle bundle = new ResourceBundle ();
+			string test_string = "<bundle><a>A</a><b><ref t='button.cancel#txt'/></b></bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
+			bundle.Compile (stream);
+		}
+		
+		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx2()
+		{
+			ResourceBundle bundle = new ResourceBundle ();
+			string test_string = "<bundle><a>A</a><b><ref t='file:does-not-exist#txt'/></b></bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
+			bundle.Compile (stream);
+		}
+		
+		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx3()
+		{
+			ResourceBundle bundle = new ResourceBundle ();
+			string test_string = "<bundle><a>A</a><b><ref t='file:button.cancel#does-not-exist'/></b></bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
+			bundle.Compile (stream);
+		}
 	}
 }

@@ -42,5 +42,37 @@ namespace Epsitec.Cresus.Support.Tests
 				Assertion.Assert (string.Format ("{0} should be rejected", name), !Resources.ValidateId ("file:"+name));
 			}
 		}
+		
+		[Test] public void CheckGetBundle()
+		{
+			ResourceBundle bundle;
+			
+			bundle = Resources.GetBundle ("file:button.cancel");
+			Assertion.AssertNotNull (bundle);
+			System.Console.Out.WriteLine ("Bundle with merged levels:");
+			
+			foreach (string tag in bundle.FieldNames)
+			{
+				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag]);
+			}
+			
+			bundle = Resources.GetBundle ("file:button.cancel", ResourceLevel.Default);
+			Assertion.AssertNotNull (bundle);
+			System.Console.Out.WriteLine ("Bundle with default level only:");
+			
+			foreach (string tag in bundle.FieldNames)
+			{
+				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag]);
+			}
+			
+			bundle = Resources.GetBundle ("file:button.cancel", ResourceLevel.Localised);
+			Assertion.AssertNotNull (bundle);
+			System.Console.Out.WriteLine ("Bundle with localised level only:");
+			
+			foreach (string tag in bundle.FieldNames)
+			{
+				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag]);
+			}
+		}
 	}
 }
