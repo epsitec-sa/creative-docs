@@ -57,8 +57,9 @@ namespace Epsitec.Common.Designer.UI
 			this.combo_field.IsReadOnly      = true;
 			this.combo_field.PlaceHolder     = "<b>&lt;create new field&gt;</b>";
 			
-			IValidator field_validator  = new Common.Widgets.Validators.RegexValidator (this.combo_field, RegexFactory.ResourceName, false);
-			IValidator bundle_validator = new Common.Widgets.Validators.RegexValidator (this.combo_bundle, RegexFactory.ResourceName, false);
+			IValidator field_validator_1 = new Common.Widgets.Validators.RegexValidator (this.combo_field, RegexFactory.ResourceName, false);
+			IValidator field_validator_2 = new CustomFieldValidator (this.combo_field, this);
+			IValidator bundle_validator  = new Common.Widgets.Validators.RegexValidator (this.combo_bundle, RegexFactory.ResourceName, false);
 			
 			this.combo_bundle.SelectedIndexChanged += new EventHandler (this.HandleComboBundleSelectedIndexChanged);
 			this.combo_field.SelectedIndexChanged  += new EventHandler (this.HandleComboFieldSelectedIndexChanged);
@@ -222,7 +223,6 @@ namespace Epsitec.Common.Designer.UI
 			else
 			{
 				adapter.XmlRefTarget = "";
-//-				this.State = InternalState.Passive;
 			}
 		}
 		
@@ -237,7 +237,21 @@ namespace Epsitec.Common.Designer.UI
 			
 			//	Il faut créer un nouveau champ dans le bundle.
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Create field {0}#{1}.", this.combo_bundle.Text, this.combo_field.Text));
+			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
+			
+			string bundle = this.combo_bundle.SelectedItem;
+			string field  = this.combo_field.Text;
+			string value  = this.combo_text.Text;
+			
+			if ((bundle != "") &&
+				(field != ""))
+			{
+				adapter.DefineFieldValue (bundle, field, value);
+				adapter.XmlRefTarget = ResourceBundle.MakeTarget (bundle, field);
+				
+				this.SyncFromAdapter (Common.UI.SyncReason.AdapterChanged);
+				this.State = InternalState.UsingExistingText;
+			}
 		}
 		
 		private void HandleComboFieldEditionCancelled(object sender)
@@ -285,6 +299,36 @@ namespace Epsitec.Common.Designer.UI
 					this.state = value;
 				}
 			}
+		}
+		
+		private class CustomFieldValidator : Epsitec.Common.Widgets.Validators.AbstractTextValidator
+		{
+			public CustomFieldValidator(Widget widget, TextRefController controller) : base (widget)
+			{
+				this.controller = controller;
+			}
+			
+			protected override void ValidateText(string text)
+			{
+				string bundle = this.controller.combo_bundle.SelectedItem;
+				
+				TextRefAdapter adapter = this.controller.Adapter as TextRefAdapter;
+				
+				if ((adapter != null) &&
+					(adapter.StringController != null) &&
+					(adapter.StringController.IsStringBundleLoaded (bundle)) &&
+					(System.Array.IndexOf (adapter.StringController.GetStringFieldNames (bundle), text) == -1))
+				{
+					this.state = Support.ValidationState.Ok;
+				}
+				else
+				{
+					this.state = Support.ValidationState.Error;
+				}
+			}
+			
+			
+			private TextRefController			controller;
 		}
 		
 		

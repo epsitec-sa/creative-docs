@@ -6,6 +6,8 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Designer.UI
 {
+	using CultureInfo = System.Globalization.CultureInfo;
+
 	/// <summary>
 	/// Summary description for TextRefAdapter.
 	/// </summary>
@@ -144,7 +146,7 @@ namespace Epsitec.Common.Designer.UI
 			{
 				if (this.string_controller == null)
 				{
-					this.string_controller = Support.Globals.Properties.GetProperty ("$resources$string controller") as StringEditController;
+					this.string_controller = StringEditController.Current;
 				}
 				
 				return this.string_controller;
@@ -175,6 +177,35 @@ namespace Epsitec.Common.Designer.UI
 			}
 			
 			return null;
+		}
+		
+		public bool DefineFieldValue(string bundle, string field, string value)
+		{
+			if (this.StringController.IsStringBundleLoaded (bundle))
+			{
+				StringEditController.Store store = this.StringController.FindStore (bundle);
+				
+				if (store != null)
+				{
+					ResourceLevel active_level   = store.ActiveBundle.ResourceLevel;
+					CultureInfo   active_culture = store.ActiveBundle.Culture;
+					
+					store.SetActive (ResourceLevel.Default, active_culture);
+					
+					int row = store.GetRowCount ();
+					
+					if (store.CheckInsertRows (row, 1))
+					{
+						store.InsertRows (row, 1);
+						store.SetCellText (row, 0, field);
+						store.SetCellText (row, 1, value);
+					}
+					
+					store.SetActive (active_level, active_culture);
+				}
+			}
+			
+			return false;
 		}
 		
 		

@@ -71,6 +71,59 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
+		public bool SaveAllBundles()
+		{
+			foreach (ResourceBundleCollection bundles in this.bundles.Values)
+			{
+				this.SaveBundles (bundles);
+			}
+			
+			return true;
+		}
+		
+		public bool SaveBundles(string name)
+		{
+			return this.SaveBundles (this.bundles[name] as ResourceBundleCollection);
+		}
+		
+		public bool SaveBundles(ResourceBundleCollection bundles)
+		{
+			if (bundles != null)
+			{
+				foreach (ResourceBundle bundle in bundles)
+				{
+					if (! bundle.IsEmpty)
+					{
+						Resources.SetBundle (bundle, ResourceSetMode.Write);
+					}
+				}
+				
+				return true;
+			}
+			
+			return false;
+		}
+		
+		
+		public Store FindStore(string bundle_name)
+		{
+			if (this.bundles.ContainsKey (bundle_name))
+			{
+				for (int i = 0; i < this.panels.Count; i++)
+				{
+					Panels.StringEditPanel panel = this.panels[i] as Panels.StringEditPanel;
+					
+					if (panel.Store.Name == bundle_name)
+					{
+						return panel.Store;
+					}
+				}
+			}
+			
+			return null;
+		}
+		
+		
 		protected void CreateMissingBundles(ResourceBundleCollection bundles, string prefix, string name)
 		{
 			foreach (CultureInfo culture in Resources.Cultures)
@@ -101,6 +154,15 @@ namespace Epsitec.Common.Designer
 			}
 			
 			return false;
+		}
+		
+		
+		public static StringEditController		Current
+		{
+			get
+			{
+				return Support.Globals.Properties.GetProperty ("$resources$string controller") as StringEditController;
+			}
 		}
 		
 		
@@ -555,6 +617,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 			
+			
 			private void HandleBundleFieldsChanged(object sender)
 			{
 				this.OnStoreChanged ();
@@ -773,18 +836,7 @@ namespace Epsitec.Common.Designer
 				this.ThrowInvalidOperationException (e, 0);
 			}
 			
-			ResourceBundleCollection bundles = this.ActiveBundleCollection;
-			
-			if (bundles != null)
-			{
-				foreach (ResourceBundle bundle in bundles)
-				{
-					if (! bundle.IsEmpty)
-					{
-						Resources.SetBundle (bundle, ResourceSetMode.Write);
-					}
-				}
-			}
+			this.SaveBundles (this.ActiveBundleCollection);
 		}
 		
 		
