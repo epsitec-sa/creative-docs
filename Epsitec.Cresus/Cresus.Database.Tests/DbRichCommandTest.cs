@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Database
 			
 			DbType db_type_name = infrastructure.ResolveDbType (null, "CR_NameType");
 			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR_KeyIdType");
-			DbType db_type_npa  = infrastructure.ResolveDbType (null, "CR_KeyRevisionType");
+			DbType db_type_npa  = infrastructure.ResolveDbType (null, "CR_KeyStatusType");
 			
 			db_table_a.Columns.Add (infrastructure.CreateColumn ("Nom", db_type_name));
 			db_table_a.Columns.Add (infrastructure.CreateColumn ("Prenom", db_type_name));
@@ -28,8 +28,7 @@ namespace Epsitec.Cresus.Database
 			db_table_b.Columns.Add (infrastructure.CreateColumn ("Ville", db_type_name));
 			db_table_b.Columns.Add (infrastructure.CreateColumn ("NPA", db_type_npa, Nullable.No));
 			
-			Assertion.AssertEquals ("Personnes", db_table_b.Columns[3].ParentTableName);
-			Assertion.AssertEquals ("Personnes", db_table_b.Columns[4].ParentTableName);
+			Assertion.AssertEquals ("Personnes", db_table_b.Columns[2].ParentTableName);
 			
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_a.Name, db_table_a.Columns.Count);
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_b.Name, db_table_b.Columns.Count);
@@ -93,10 +92,10 @@ namespace Epsitec.Cresus.Database
 			row_p2.BeginEdit (); row_p2["Nom"] = "Dumoulin"; row_p2["Prenom"] = "Denis";  row_p2.EndEdit ();
 			row_p3.BeginEdit (); row_p3["Nom"] = "Roux";     row_p3["Prenom"] = "Daniel"; row_p3.EndEdit ();
 			
-			row_d1.BeginEdit (); row_d1["Ville"] = "Yverdon";  row_d1["NPA"] = 1400; row_d1["Personne (ID)"] = row_p1["CR_ID"]; row_d1["Personne (REV)"] = row_p1["CR_REV"]; row_d1.EndEdit ();
-			row_d2.BeginEdit (); row_d2["Ville"] = "Morges";   row_d2["NPA"] = 1110; row_d2["Personne (ID)"] = row_p2["CR_ID"]; row_d2["Personne (REV)"] = row_p2["CR_REV"]; row_d2.EndEdit ();
-			row_d3.BeginEdit (); row_d3["Ville"] = "Saverne";  row_d3["NPA"] = 9999; row_d3["Personne (ID)"] = row_p2["CR_ID"]; row_d3["Personne (REV)"] = row_p2["CR_REV"]; row_d3.EndEdit ();
-			row_d4.BeginEdit (); row_d4["Ville"] = "Crissier"; row_d4["NPA"] = 1023; row_d4["Personne (ID)"] = row_p3["CR_ID"]; row_d4["Personne (REV)"] = row_p3["CR_REV"]; row_d4.EndEdit ();
+			row_d1.BeginEdit (); row_d1["Ville"] = "Yverdon";  row_d1["NPA"] = 1400; row_d1["Personne"] = row_p1["CR_ID"]; row_d1.EndEdit ();
+			row_d2.BeginEdit (); row_d2["Ville"] = "Morges";   row_d2["NPA"] = 1110; row_d2["Personne"] = row_p2["CR_ID"]; row_d2.EndEdit ();
+			row_d3.BeginEdit (); row_d3["Ville"] = "Saverne";  row_d3["NPA"] = 9999; row_d3["Personne"] = row_p2["CR_ID"]; row_d3.EndEdit ();
+			row_d4.BeginEdit (); row_d4["Ville"] = "Crissier"; row_d4["NPA"] = 1023; row_d4["Personne"] = row_p3["CR_ID"]; row_d4.EndEdit ();
 			
 			DbInfrastructureTest.DisplayDataSet (infrastructure, ado_table_a.TableName, ado_table_a);
 			DbInfrastructureTest.DisplayDataSet (infrastructure, ado_table_b.TableName, ado_table_b);
@@ -109,13 +108,11 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			Assertion.AssertEquals (1, ado_table_a.Rows[1]["CR_ID"]);
-			Assertion.AssertEquals (1, ado_table_b.Rows[1]["Personne (ID)"]);
-			Assertion.AssertEquals (1, ado_table_b.Rows[2]["Personne (ID)"]);
+			Assertion.AssertEquals (1, ado_table_b.Rows[1]["Personne"]);
 			
 			ado_table_a.Rows[1]["CR_ID"] = 100;
 			
-			Assertion.AssertEquals (100, ado_table_b.Rows[1]["Personne (ID)"]);
-			Assertion.AssertEquals (100, ado_table_b.Rows[2]["Personne (ID)"]);
+			Assertion.AssertEquals (100, ado_table_b.Rows[1]["Personne"]);
 			
 			infrastructure.Dispose ();
 		}
@@ -131,19 +128,18 @@ namespace Epsitec.Cresus.Database
 			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR_KeyIdType");
 			
 			Assertion.AssertEquals (4, db_table_a.Columns.Count);
-			Assertion.AssertEquals (6, db_table_b.Columns.Count);
+			Assertion.AssertEquals (5, db_table_b.Columns.Count);
 			
-			Assertion.AssertEquals ("Nom",    db_table_a.Columns[3].Name);
-			Assertion.AssertEquals ("Prenom", db_table_a.Columns[4].Name);
-			Assertion.AssertEquals (db_type_name.InternalKey,  db_table_a.Columns[3].Type.InternalKey);
-			Assertion.AssertEquals (db_type_name.InternalKey,  db_table_a.Columns[4].Type.InternalKey);
+			Assertion.AssertEquals ("Nom",    db_table_a.Columns[2].Name);
+			Assertion.AssertEquals ("Prenom", db_table_a.Columns[3].Name);
+			Assertion.AssertEquals (db_type_name.InternalKey,  db_table_a.Columns[2].Type.InternalKey);
 			
-			Assertion.AssertEquals ("Personne", db_table_b.Columns[3].Name);
-			Assertion.AssertEquals (DbColumnClass.RefId, db_table_b.Columns[3].ColumnClass);
-			Assertion.AssertEquals ("Personnes", db_table_b.Columns[3].ParentTableName);
+			Assertion.AssertEquals ("Personne", db_table_b.Columns[2].Name);
+			Assertion.AssertEquals (DbColumnClass.RefId, db_table_b.Columns[2].ColumnClass);
+			Assertion.AssertEquals ("Personnes", db_table_b.Columns[2].ParentTableName);
 			
-			Assertion.AssertEquals ("Ville", db_table_b.Columns[5].Name);
-			Assertion.AssertEquals (db_type_name.InternalKey, db_table_b.Columns[5].Type.InternalKey);
+			Assertion.AssertEquals ("Ville", db_table_b.Columns[3].Name);
+			Assertion.AssertEquals (db_type_name.InternalKey, db_table_b.Columns[3].Type.InternalKey);
 			
 			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, null, db_table_a, db_table_b);
 			

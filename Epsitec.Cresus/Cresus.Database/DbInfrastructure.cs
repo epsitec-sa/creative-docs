@@ -896,9 +896,11 @@ namespace Epsitec.Cresus.Database
 		{
 			for (int i = 0; i < keys.Length; i++)
 			{
-				if (keys[i].Revision == 0)
+				switch (keys[i].Status)
 				{
-					return keys[i];
+					case DbRowStatus.Live:
+					case DbRowStatus.Clean:
+						return keys[i];
 				}
 			}
 			
@@ -1516,7 +1518,7 @@ namespace Epsitec.Cresus.Database
 		protected void BootCreateTableColumnDef(DbTransaction transaction)
 		{
 			DbTable    table   = new DbTable (Tags.TableColumnDef);
-			DbColumn[] columns = new DbColumn[10];
+			DbColumn[] columns = new DbColumn[9];
 			
 			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
 			columns[1] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
@@ -1554,7 +1556,7 @@ namespace Epsitec.Cresus.Database
 		protected void BootCreateTableTypeDef(DbTransaction transaction)
 		{
 			DbTable    table   = new DbTable (Tags.TableTypeDef);
-			DbColumn[] columns = new DbColumn[7];
+			DbColumn[] columns = new DbColumn[6];
 			
 			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
 			columns[1] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
@@ -1586,7 +1588,7 @@ namespace Epsitec.Cresus.Database
 		protected void BootCreateTableEnumValDef(DbTransaction transaction)
 		{
 			DbTable    table   = new DbTable (Tags.TableEnumValDef);
-			DbColumn[] columns = new DbColumn[8];
+			DbColumn[] columns = new DbColumn[7];
 			
 			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
 			columns[1] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);

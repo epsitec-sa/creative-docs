@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
-		public DbKey(DbID id) : this (id, DbRowStatus.Clean)
+		public DbKey(DbID id) : this (id, DbRowStatus.Live)
 		{
 		}
 		
@@ -50,14 +50,6 @@ namespace Epsitec.Cresus.Database
 		public long								Id
 		{
 			get { return this.id; }
-		}
-		
-		public int								Revision
-		{
-			get
-			{
-				throw new System.NotImplementedException ();
-			}
 		}
 		
 		public DbRowStatus						Status

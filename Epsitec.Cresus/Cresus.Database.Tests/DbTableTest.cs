@@ -67,25 +67,22 @@ namespace Epsitec.Cresus.Database
 			
 			table = new DbTable ("Test");
 			
-			table.Columns.Add (column_3);
 			table.Columns.Add (column_2);
 			table.Columns.Add (column_1);
 			
 			fk = table.ForeignKeys;
 			
 			Assertion.AssertEquals (1, fk.Length);
-			Assertion.AssertEquals (2, fk[0].Columns.Length);
+			Assertion.AssertEquals (1, fk[0].Columns.Length);
 			Assertion.AssertEquals (column_1, fk[0].Columns[0]);
-			Assertion.AssertEquals (column_2, fk[0].Columns[1]);
 			
 			Assertion.AssertEquals (table, table.Columns[column_1.Name].Table);
 			Assertion.AssertEquals (table, table.Columns[column_2.Name].Table);
-			Assertion.AssertEquals (table, table.Columns[column_3.Name].Table);
 			
-			table.Columns.Remove (column_3);
+			table.Columns.Remove (column_2);
 			
-			Assertion.AssertNull (table.Columns[column_3.Name]);
-			Assertion.AssertNull (column_3.Table);
+			Assertion.AssertNull (table.Columns[column_2.Name]);
+			Assertion.AssertNull (column_2.Table);
 		}
 		
 		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckNewDbTableEx1()
