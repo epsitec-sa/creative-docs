@@ -5,6 +5,14 @@ namespace Epsitec.Common.UI
 {
 	[TestFixture] public class EngineTest
 	{
+		[SetUp] public void SetUp()
+		{
+			Common.Widgets.Widget.Initialise ();
+			Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
+			
+			Support.Resources.SetupProviders ("EngineTest");
+		}
+		
 		[Test] public void CheckDataRecordAndFields()
 		{
 			Data.Record      record = EngineTest.CreateRecord ();
@@ -66,6 +74,42 @@ namespace Epsitec.Common.UI
 			
 			Assert.AreEqual (Quality.Fast, v5.ReadValue ());
 			Assert.AreEqual ("Small", v6.ReadValue ());
+		}
+		
+		[Test] public void CheckConstraint()
+		{
+			Data.Record record = EngineTest.CreateRecord ();
+			
+			TextField       text    = new TextField ();
+			TextFieldUpDown up_down = new TextFieldUpDown ();
+			
+			Engine.BindWidget (record, text,    @"<bind path=""FontName"" />");
+			Engine.BindWidget (record, up_down, @"<bind path=""FontSize"" />");
+			
+			Assert.AreEqual ("Times", text.Text);
+			Assert.AreEqual ("Times", record["FontName"].ReadValue ());
+			Assert.AreEqual (12.0, (double) up_down.Value);
+			Assert.AreEqual (12.0, (double) (decimal) record["FontSize"].ReadValue ());
+			
+			text.Text = "XYZ";		//	pas accepté par la contrainte XStringConstraint
+			
+			Assert.AreEqual ("Times", record["FontName"].ReadValue ());
+			
+			up_down.Text = "-5.5";	//	pas accepté
+			
+			Assert.AreEqual (12.0, (double) (decimal) record["FontSize"].ReadValue ());
+			
+			up_down.Value = -5.5M;	//	accepté, parce que Value contraint à [1..299]
+			
+			Assert.AreEqual (1.0, (double) (decimal) record["FontSize"].ReadValue ());
+			
+			text.Text = "A";		//	pas accepté par la contrainte XStringConstraint
+			
+			Assert.AreEqual ("Times", record["FontName"].ReadValue ());
+			
+			text.Text = "ABC";		//	modification OK
+			
+			Assert.AreEqual ("ABC", record["FontName"].ReadValue ());
 		}
 		
 		[Test] public void CheckBindWidget()
@@ -201,54 +245,35 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (true,  radio_5.IsActive);
 			Assert.AreEqual (false, radio_6.IsActive);
 			
-			Assert.AreEqual ("Large", combo_w.Text);
-			Assert.AreEqual ("Large", combo_w.SelectedItem);
-			Assert.AreEqual (2,       combo_w.SelectedIndex);
-			Assert.AreEqual ("Large", combo_w.SelectedName);
+			Assert.AreEqual ("Optique grandes fontes", combo_w.Text);
+			Assert.AreEqual ("Optique grandes fontes", combo_w.SelectedItem);
+			Assert.AreEqual (2,                        combo_w.SelectedIndex);
+			Assert.AreEqual ("Large",                  combo_w.SelectedName);
 			
-			combo_r.SelectedItem = "Default";
+			combo_r.SelectedName = "Default";
 			
 			Assert.AreEqual (Quality.Default, record["Quality"].ReadValue ());
 			
-			combo_r.SelectedItem = "Xyz";
+			combo_r.SelectedName = null;
 			
 			Assert.AreEqual (Quality.Default, record["Quality"].ReadValue ());
 		}
 		
-		[Test] public void CheckConstraint()
+		[Test] public void CheckBindWidgetsFromBundle()
 		{
 			Data.Record record = EngineTest.CreateRecord ();
 			
-			TextField       text    = new TextField ();
-			TextFieldUpDown up_down = new TextFieldUpDown ();
+			Support.ResourceBundle bundle  = Support.Resources.GetBundle ("file:binding_form");
+			Support.ObjectBundler  bundler = new Support.ObjectBundler ();
 			
-			Engine.BindWidget (record, text,    @"<bind path=""FontName"" />");
-			Engine.BindWidget (record, up_down, @"<bind path=""FontSize"" />");
+			Assert.IsNotNull (bundle);
 			
-			Assert.AreEqual ("Times", text.Text);
-			Assert.AreEqual ("Times", record["FontName"].ReadValue ());
-			Assert.AreEqual (12.0, (double) up_down.Value);
-			Assert.AreEqual (12.0, (double) (decimal) record["FontSize"].ReadValue ());
+			Widget root = bundler.CreateFromBundle (bundle) as Widget;
 			
-			text.Text = "XYZ";		//	pas accepté par la contrainte XStringConstraint
+			Assert.IsNotNull (root);
 			
-			Assert.AreEqual ("Times", record["FontName"].ReadValue ());
-			
-			up_down.Text = "-5.5";	//	pas accepté
-			
-			Assert.AreEqual (12.0, (double) (decimal) record["FontSize"].ReadValue ());
-			
-			up_down.Value = -5.5M;	//	accepté, parce que Value contraint à [1..299]
-			
-			Assert.AreEqual (1.0, (double) (decimal) record["FontSize"].ReadValue ());
-			
-			text.Text = "A";		//	pas accepté par la contrainte XStringConstraint
-			
-			Assert.AreEqual ("Times", record["FontName"].ReadValue ());
-			
-			text.Text = "ABC";		//	modification OK
-			
-			Assert.AreEqual ("ABC", record["FontName"].ReadValue ());
+			Engine.BindWidgets (record, root);
+			root.Window.Show ();
 		}
 		
 		
@@ -262,6 +287,23 @@ namespace Epsitec.Common.UI
 			record.Add (new Data.Field ("FontStyle", 1));
 			record.Add (new Data.Field ("Quality", Quality.Default));
 			record.Add (new Data.Field ("Optical", Optical.Default.ToString (), new Types.CustomEnumType (typeof (Optical))));
+			
+			record["FontName"] .DefineCaption ("Nom de la fonte");
+			record["FontSize"] .DefineCaption ("Taille de la fonte");
+			record["UseHyphen"].DefineCaption ("Utilise la césure");
+			record["FontStyle"].DefineCaption ("Style de fonte");
+			record["Quality"]  .DefineCaption ("Qualité");
+			
+			Types.EnumType font_quality_enum = record["Quality"].DataType as Types.EnumType;
+			Types.EnumType font_optical_enum = record["Optical"].DataType as Types.EnumType;
+			
+			font_quality_enum[Quality.Default].DefineCaption ("Qualité standard");
+			font_quality_enum[Quality.Smooth] .DefineCaption ("Lissage de la police");
+			font_quality_enum[Quality.Fast]   .DefineCaption ("Affichage rapide");
+			
+			font_optical_enum[Optical.Default].DefineCaption ("Optique standard");
+			font_optical_enum[Optical.Large]  .DefineCaption ("Optique grandes fontes");
+			font_optical_enum[Optical.Small]  .DefineCaption ("Optique petites fontes");
 			
 			return record;
 		}
