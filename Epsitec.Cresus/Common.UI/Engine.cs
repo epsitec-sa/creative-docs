@@ -98,21 +98,37 @@ namespace Epsitec.Common.UI
 				throw new System.ArgumentException (string.Format ("Cannot bind widget; path ({0}) points to typeless data.", path), "binding");
 			}
 			
+			if (Engine.BindWidget(source, widget) == false)
+			{
+				throw new System.ArgumentException (string.Format ("Cannot bind widget; path ({0}) points to data of unknown type ({1}).", path, type.Name), "binding");
+			}
+		}
+		
+		
+		public static bool BindWidget(Types.IDataValue source, Common.Widgets.Widget widget)
+		{
+			Widgets.ISelfBindingWidget self_binding_widget = widget as Widgets.ISelfBindingWidget;
+			
+			if (self_binding_widget != null)
+			{
+				return self_binding_widget.BindWidget (source);
+			}
 			
 			Types.IDataConstraint   constraint = source.DataConstraint;
 			Binders.DataValueBinder binder     = new Binders.DataValueBinder (source);
 			
+			Types.IString str_type  = source.DataType as Types.IString;
+			Types.INum    num_type  = source.DataType as Types.INum;
+			Types.IEnum   enum_type = source.DataType as Types.IEnum;
 			
-			if (type is Types.IString)
+			if (str_type != null)
 			{
 				Adapters.StringAdapter adapter = new Adapters.StringAdapter (binder);
 				
 				new Controllers.WidgetTextController (adapter, widget, constraint);
 				
-				return;
+				return true;
 			}
-			
-			Types.INum num_type = source.DataType as Types.INum;
 			
 			if (num_type != null)
 			{
@@ -132,10 +148,8 @@ namespace Epsitec.Common.UI
 					new Controllers.WidgetStateController (adapter, widget, source.Caption, num_type);
 				}
 				
-				return;
+				return true;
 			}
-			
-			Types.IEnum enum_type = source.DataType as Types.IEnum;
 			
 			if ((enum_type != null) &&
 				(enum_type.IsCustomizable))
@@ -160,7 +174,7 @@ namespace Epsitec.Common.UI
 					new Controllers.WidgetTextController (adapter, widget, constraint);
 				}
 				
-				return;
+				return true;
 			}
 			
 			if (enum_type != null)
@@ -176,10 +190,47 @@ namespace Epsitec.Common.UI
 					new Controllers.WidgetStateController (adapter, widget, source.Caption, enum_type);
 				}
 				
-				return;
+				return true;
 			}
 			
-			throw new System.ArgumentException (string.Format ("Cannot bind widget; path ({0}) points to data of unknown type ({1}).", path, type.Name), "binding");
+			return false;
+		}
+		public static Data.Representation FindDefaultRepresentation(Types.IDataValue source)
+		{
+			if (source == null)
+			{
+				//	On ne peut pas déduire de représentation si aucune source de données
+				//	n'a été spécifiée :
+					
+				return Data.Representation.None;
+			}
+				
+			Types.INamedType source_type = source.DataType;
+				
+			if (source_type is Types.IString)
+			{
+				return Data.Representation.TextField;
+			}
+			if (source_type is Types.INum)
+			{
+				return Data.Representation.NumericUpDown;
+			}
+				
+			Types.IEnum enum_type = source_type as Types.IEnum;
+				
+			if (enum_type != null)
+			{
+				if (enum_type.IsCustomizable)
+				{
+					return Data.Representation.ComboEditableList;
+				}
+				else
+				{
+					return Data.Representation.ComboConstantList;
+				}
+			}
+				
+			return Data.Representation.None;
 		}
 	}
 }
