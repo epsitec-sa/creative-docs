@@ -2156,11 +2156,10 @@ namespace Epsitec.Common.Pictogram.Data
 
 			Drawing.Transform ot = graphics.SaveTransform();
 
-			double angle = Drawing.Point.ComputeAngle(p1, p2);
-			angle *= 180.0/System.Math.PI;  // radians -> degrés
+			double angle = Drawing.Point.ComputeAngleDeg(p1, p2);
 			Drawing.Transform transform = new Drawing.Transform();
 			transform.Translate(p1);
-			transform.Rotate(angle, p1);
+			transform.RotateDeg(angle, p1);
 			this.Cell(c,r).Transform = transform;
 			graphics.MergeTransform(transform);
 
