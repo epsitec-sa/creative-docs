@@ -54,6 +54,17 @@ namespace Epsitec.Common.Support
 			
 			data.Attach (db_table);
 			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append ("\n");
+			DbTable.ConvertTableToXml (buffer, data.FindDbTable ("x"));
+			buffer.Append ("\n");
+			DbColumn.ConvertColumnToXml (buffer, data.FindDbColumn ("x.*.a"));
+			buffer.Append ("\n");
+			DbColumn.ConvertColumnToXml (buffer, data.FindDbColumn ("x.*.b"));
+			
+			System.Console.Out.WriteLine ("XML meta description:{0}", buffer.ToString ());
+			
 			Assertion.AssertEquals ("boolean", db_table.Columns["a"].Type.Name);
 			Assertion.AssertEquals ("boolean", data.FindDbColumn ("x.*.a").Type.Name);
 			Assertion.AssertEquals ("boolean", data.FindDbColumn ("x.*.b").Type.Name);
