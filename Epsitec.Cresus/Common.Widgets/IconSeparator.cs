@@ -21,38 +21,44 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double		DefaultWidth
+		public override double DefaultWidth
 		{
 			// Retourne la largeur standard d'une séparation.
 			get
 			{
-				return this.is_horizontal ? this.breadth : 22;
+				//?return this.isHorizontal ? this.breadth : 22;
+				return this.breadth;
 			}
 		}
 
-		public override double		DefaultHeight
+		public override double DefaultHeight
 		{
 			// Retourne la hauteur standard d'une séparation.
 			get
 			{
-				return this.is_horizontal ? 22 : this.breadth;
+				//?return this.isHorizontal ? 22 : this.breadth;
+				return this.breadth;
 			}
 		}
 
 		
-		public bool					IsHorizontal
+		public bool IsHorizontal
 		{
-			get { return this.is_horizontal; }
+			get
+			{
+				return this.isHorizontal;
+			}
+
 			set
 			{
-				if (this.is_horizontal != value)
+				if ( this.isHorizontal != value )
 				{
-					this.is_horizontal = value;
+					this.isHorizontal = value;
 				}
 			}
 		}
 		
-		public double				Breadth
+		public double Breadth
 		{
 			get
 			{
@@ -61,10 +67,10 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if (this.breadth != value)
+				if ( this.breadth != value )
 				{
 					this.breadth = value;
-					this.UpdateGeometry ();
+					this.UpdateGeometry();
 				}
 			}
 		}
@@ -72,12 +78,31 @@ namespace Epsitec.Common.Widgets
 		
 		protected void UpdateGeometry()
 		{
-			Drawing.Rectangle bounds = new Drawing.Rectangle (0, 0, this.DefaultWidth, this.DefaultHeight);
-			this.Bounds = this.MapClientToParent (bounds);
+			Drawing.Rectangle bounds = new Drawing.Rectangle(0, 0, this.DefaultWidth, this.DefaultHeight);
+			this.Bounds = this.MapClientToParent(bounds);
+		}
+
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+
+			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			WidgetState       state = this.PaintState;
+			Direction         dir   = this.RootDirection;
+			Drawing.Point     pos   = new Drawing.Point(0, 0);
+			
+			if ( this.isHorizontal )
+			{
+				adorner.PaintSeparatorBackground(graphics, rect, state, dir, Direction.Right, true);
+			}
+			else
+			{
+				adorner.PaintSeparatorBackground(graphics, rect, state, dir, Direction.Down, true);
+			}
 		}
 
 		
-		protected double				breadth = 5;
-		protected bool					is_horizontal = true;
+		protected double				breadth = 12;
+		protected bool					isHorizontal = true;
 	}
 }
