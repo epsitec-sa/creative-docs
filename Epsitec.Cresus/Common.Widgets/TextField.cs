@@ -4,6 +4,7 @@ namespace Epsitec.Common.Widgets
 	{
 		Flat,							// pas de cadre, ni de relief, fond blanc
 		Normal,							// ligne éditable normale
+		Simple,							// cadre tout simple
 		Static,							// comme Flat mais fond transparent, sélectionnable, pas éditable...
 	}
 	
@@ -78,6 +79,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		// Retourne la hauteur standard d'une ligne éditable.
+		public override double DefaultHeight
+		{
+			get
+			{
+				return this.DefaultFontHeight+6;
+			}
+		}
+
 		// Texte édité.
 		public override string Text
 		{
@@ -511,15 +521,12 @@ namespace Epsitec.Common.Widgets
 		// Gestion d'un événement lorsqu'un bouton est pressé.
 		private void HandleCombo(object sender, MessageEventArgs e)
 		{
-			//System.Diagnostics.Debug.WriteLine("HandleCombo");
-			int height = 1000;  // TODO: comment calculer jusqu'en bas de la fenêtre ?
 			this.scrollList = new ScrollList();
+			this.scrollList.ScrollListStyle = ScrollListStyle.Simple;
 			this.scrollList.ComboMode = true;
-			Drawing.Point pos = new Drawing.Point(0, -height);
-			pos.X += this.Left;
-			pos.Y += this.Bottom;
+			Drawing.Point pos = new Drawing.Point(0, 0);
 			this.scrollList.Location = pos;
-			this.scrollList.Size = new Drawing.Size(this.Client.Width, height);
+			this.scrollList.Size = new Drawing.Size(this.Width, 200);
 
 			int sel = -1;
 			int i = 0;
@@ -532,17 +539,30 @@ namespace Epsitec.Common.Widgets
 				}
 				i ++;
 			}
-			this.scrollList.AdjustToContent(ScrollListAdjust.MoveDown, 10, height);
+
+			pos = this.MapClientToRoot(new Drawing.Point(0, 0));
+			pos = this.WindowFrame.MapWindowToScreen(pos);
+			double hMax = pos.Y-20;
+			this.scrollList.AdjustToContent(ScrollListAdjust.MoveUp, 40, hMax);
+
 			this.scrollList.Select = sel;
 			this.scrollList.ShowSelect(ScrollListShow.Middle);
-
 			this.scrollList.SelectChanged += new EventHandler(this.HandleScrollListSelectChanged);
-			this.scrollList.Defocused += new EventHandler(this.HandleScrollListDefocused);
-			this.Parent.Children.Add(this.scrollList);
+
+			this.comboWindow = new WindowFrame();
+			this.comboWindow.MakeFramelessWindow();
+			pos = this.MapClientToRoot(new Drawing.Point(0, -this.scrollList.Height));
+			pos = this.WindowFrame.MapWindowToScreen(pos);
+			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width, this.scrollList.Height);
+			this.comboWindow.Show();
+			this.comboWindow.WindowDeactivated += new System.EventHandler(this.HandleComboWindowDeactivated);
+			this.comboWindow.Root.Children.Add(this.scrollList);
+
+			this.SetFocused(false);
 			this.scrollList.SetFocused(true);
 		}
 
-		// Gestion d'un événement lorsque la scroll-liste est déplacée.
+		// Gestion d'un événement lorsque la scroll-liste est sélectionnée.
 		private void HandleScrollListSelectChanged(object sender)
 		{
 			int sel = this.scrollList.Select;
@@ -551,27 +571,28 @@ namespace Epsitec.Common.Widgets
 			this.OnTextChanged();
 			this.OnTextInserted();
 			this.SelectAll();
-			this.SetFocused(true);  // TODO: pourquoi ne marche pas ?
-#if false
+			this.SetFocused(true);
+
 			this.scrollList.SelectChanged -= new EventHandler(this.HandleScrollListSelectChanged);
-			this.scrollList.Defocused -= new EventHandler(this.HandleScrollListDefocused);
-			this.Parent.Children.Remove(this.scrollList);
+			this.comboWindow.WindowDeactivated -= new System.EventHandler(this.HandleComboWindowDeactivated);
 			this.scrollList.Dispose();
 			this.scrollList = null;
-#endif
+			this.comboWindow.Dispose();
+			this.comboWindow = null;
 		}
 
-		// Gestion d'un événement lorsque la scroll-liste perd le focus.
-		// <: pas appelé lorsqu'on clique n'importe où
-		private void HandleScrollListDefocused(object sender)
+		// Appelé lorsque la fenêtre de la liste combo est désactivée.
+		private void HandleComboWindowDeactivated(object sender, System.EventArgs e)
 		{
 			if ( this.scrollList == null )  return;
 			this.scrollList.SelectChanged -= new EventHandler(this.HandleScrollListSelectChanged);
-			this.scrollList.Defocused -= new EventHandler(this.HandleScrollListDefocused);
-			this.Parent.Children.Remove(this.scrollList);
+			this.comboWindow.WindowDeactivated -= new System.EventHandler(this.HandleComboWindowDeactivated);
 			this.scrollList.Dispose();
 			this.scrollList = null;
+			this.comboWindow.Dispose();
+			this.comboWindow = null;
 		}
+
 
 		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
@@ -1126,6 +1147,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( (state&WidgetState.Focused) == 0 )
 			{
+				pos.Y += 1;
 				adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
 			}
 			else
@@ -1134,12 +1156,14 @@ namespace Epsitec.Common.Widgets
 				int to   = System.Math.Max(this.cursorFrom, this.cursorTo);
 				if ( from == to )
 				{
+					pos.Y += 1;
 					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
 				}
 				else
 				{
 					Drawing.Rectangle[] rects = this.textLayout.FindTextRange(from, to);
 					adorner.PaintTextSelectionBackground(graphics, pos, rects);
+					pos.Y += 1;
 					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
 				}
 
@@ -1180,6 +1204,7 @@ namespace Epsitec.Common.Widgets
 		protected Scroller						scroller;
 		protected ArrowButton					arrowUp;
 		protected ArrowButton					arrowDown;
+		protected WindowFrame					comboWindow;
 		protected ScrollList					scrollList;
 		protected System.Collections.ArrayList	comboList = new System.Collections.ArrayList();
 		protected System.Timers.Timer			flashTimer;

@@ -10,6 +10,15 @@ namespace Epsitec.Common.Widgets
 			this.internalState |= InternalState.AutoToggle;
 		}
 		
+		// Retourne la hauteur standard.
+		public override double DefaultHeight
+		{
+			get
+			{
+				return this.DefaultFontHeight+1;
+			}
+		}
+
 		public string Group
 		{
 			get

@@ -1,5 +1,12 @@
 namespace Epsitec.Common.Widgets
 {
+	public enum ScrollListStyle
+	{
+		Flat,							// pas de cadre, ni de relief
+		Normal,							// bouton normal
+		Simple,							// cadre tout simple
+	}
+
 	public enum ScrollListShow
 	{
 		Extremity,		// déplacement minimal aux extrémités
@@ -22,11 +29,29 @@ namespace Epsitec.Common.Widgets
 			this.internalState |= InternalState.AutoFocus;
 			this.internalState |= InternalState.Focusable;
 
-			this.lineHeight = this.GetLineHeight();
+			this.scrollListStyle = ScrollListStyle.Normal;
+			this.lineHeight = this.DefaultFontHeight+1;
 			this.scroller = new Scroller();
 			this.scroller.Invert = true;
 			this.scroller.Moved += new EventHandler(this.HandleScroller);
 			this.Children.Add(this.scroller);
+		}
+
+		public ScrollListStyle ScrollListStyle
+		{
+			get
+			{
+				return this.scrollListStyle;
+			}
+
+			set
+			{
+				if ( this.scrollListStyle != value )
+				{
+					this.scrollListStyle = value;
+					this.Invalidate();
+				}
+			}
 		}
 
 		public bool ComboMode
@@ -89,12 +114,15 @@ namespace Epsitec.Common.Widgets
 					value = System.Math.Max(value, 0);
 					value = System.Math.Min(value, this.list.Count-1);
 				}
-				if ( value != this.selectedLine || this.isSendSelectChanged )
+				if ( value != this.selectedLine )
 				{
 					this.selectedLine = value;
 					this.isDirty = true;
 					this.Invalidate();
-					OnSelectChanged();
+					if ( !this.isComboList )
+					{
+						OnSelectChanged();
+					}
 				}
 			}
 		}
@@ -212,10 +240,6 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
-					if ( this.isComboList )
-					{
-						this.isSendSelectChanged = true;
-					}
 					this.mouseDown = true;
 					MouseSelect(pos.Y);
 					break;
@@ -231,6 +255,10 @@ namespace Epsitec.Common.Widgets
 					if ( this.mouseDown )
 					{
 						MouseSelect(pos.Y);
+						if ( this.isComboList )
+						{
+							OnSelectChanged();
+						}
 						this.mouseDown = false;
 					}
 					break;
@@ -278,6 +306,14 @@ namespace Epsitec.Common.Widgets
 						if ( !this.IsShowSelect() )  this.ShowSelect(ScrollListShow.Extremity);
 					}
 					break;
+
+				case (int)System.Windows.Forms.Keys.Return:
+				case (int)System.Windows.Forms.Keys.Space:
+					if ( this.isComboList )
+					{
+						OnSelectChanged();
+					}
+					break;
 			}
 		}
 
@@ -314,7 +350,10 @@ namespace Epsitec.Common.Widgets
 			int max = System.Math.Min(this.visibleLines, this.list.Count);
 			for ( int i=0 ; i<max ; i++ )
 			{
-				this.textLayouts[i] = new TextLayout();
+				if ( this.textLayouts[i] == null )
+				{
+					this.textLayouts[i] = new TextLayout();
+				}
 				this.textLayouts[i].Text = (string)this.list[i+this.firstLine];
 				this.textLayouts[i].Font = this.DefaultFont;
 				this.textLayouts[i].FontSize = this.DefaultFontSize;
@@ -355,22 +394,10 @@ namespace Epsitec.Common.Widgets
 		// Génère un événement pour dire que la sélection dans la liste a changé.
 		protected virtual void OnSelectChanged()
 		{
-			if ( !this.isComboList || this.isSendSelectChanged )
+			if ( this.SelectChanged != null )  // qq'un écoute ?
 			{
-				if ( this.SelectChanged != null )  // qq'un écoute ?
-				{
-					this.SelectChanged(this);
-				}
+				this.SelectChanged(this);
 			}
-		}
-
-
-		// Retourne la hauteur de l'interligne.
-		protected double GetLineHeight()
-		{
-			Drawing.Font font = this.DefaultFont;
-			double fontSize = this.DefaultFontSize;
-			return font.LineHeight*fontSize;
 		}
 
 
@@ -383,7 +410,13 @@ namespace Epsitec.Common.Widgets
 			WidgetState       state = this.PaintState;
 			Direction         dir   = this.RootDirection;
 			
-			adorner.PaintTextFieldBackground(graphics, rect, state, dir, TextFieldStyle.Normal);
+			TextFieldStyle style = TextFieldStyle.Normal;
+			switch ( this.scrollListStyle )
+			{
+				case ScrollListStyle.Flat:    style = TextFieldStyle.Flat;    break;
+				case ScrollListStyle.Simple:  style = TextFieldStyle.Simple;  break;
+			}
+			adorner.PaintTextFieldBackground(graphics, rect, state, dir, style);
 
 			this.UpdateScroller();
 			Drawing.Point pos = new Drawing.Point(this.margin, rect.Height-this.margin-this.lineHeight);
@@ -394,7 +427,8 @@ namespace Epsitec.Common.Widgets
 
 				Drawing.Color color = Drawing.Color.Empty;
 
-				if ( i+this.firstLine == this.selectedLine )
+				if ( i+this.firstLine == this.selectedLine &&
+					 (state&WidgetState.Enabled) != 0 )
 				{
 					Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
 					rects[0].Left   = this.margin;
@@ -406,7 +440,8 @@ namespace Epsitec.Common.Widgets
 					color = Drawing.Color.FromName("ActiveCaptionText");
 				}
 
-				this.textLayouts[i].Paint(pos, graphics, Drawing.Rectangle.Empty, color);
+				//this.textLayouts[i].Paint(pos, graphics, Drawing.Rectangle.Empty, color);
+				adorner.PaintButtonTextLayout(graphics, pos, this.textLayouts[i], state, dir, ButtonStyle.MenuItem);
 				pos.Y -= this.lineHeight;
 			}
 		}
@@ -414,9 +449,9 @@ namespace Epsitec.Common.Widgets
 
 		public event EventHandler SelectChanged;
 
+		protected ScrollListStyle				scrollListStyle;
 		protected bool							isComboList = false;
 		protected bool							isDirty;
-		protected bool							isSendSelectChanged = false;
 		protected bool							mouseDown = false;
 		protected System.Collections.ArrayList	list = new System.Collections.ArrayList();
 		protected TextLayout[]					textLayouts;

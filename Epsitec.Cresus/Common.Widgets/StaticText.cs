@@ -10,6 +10,14 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
+		// Retourne la hauteur standard.
+		public override double DefaultHeight
+		{
+			get
+			{
+				return this.DefaultFontHeight;
+			}
+		}
 
 		// Retourne l'alignement par défaut d'un bouton.
 		public override Drawing.ContentAlignment DefaultAlignment
@@ -18,6 +26,12 @@ namespace Epsitec.Common.Widgets
 			{
 				return Drawing.ContentAlignment.MiddleLeft;
 			}
+		}
+
+		// Retourne les dimensions minimales pour représenter le texte.
+		public Drawing.Size RetRequiredSize()
+		{
+			return this.textLayout.SingleLineSize();
 		}
 
 		// Dessine le texte.

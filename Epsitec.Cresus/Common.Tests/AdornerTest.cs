@@ -11,39 +11,35 @@ namespace Epsitec.Common.Tests
 		{
 			WindowFrame window = new WindowFrame();
 			
-			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.ClientSize = new System.Drawing.Size(600, 300);
 			window.Text = "CheckAdornerWidgets";
 
 			Button a = new Button();
-			a.Name = "A";
 			a.Location = new Point(10, 10);
-			a.Size = new Size(75, 24);
+			a.Width = 75;
 			a.Text = "O<m>K</m>";
 			a.ButtonStyle = ButtonStyle.DefaultActive;
 			a.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(a);
 
 			Button b = new Button();
-			b.Name = "B";
 			b.Location = new Point(95, 10);
-			b.Size = new Size(75, 24);
+			b.Width = 75;
 			b.Text = "<m>A</m>nnuler";
 			b.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(b);
 
 			Button c = new Button();
-			c.Name = "C";
 			c.Location = new Point(95+150, 10);
-			c.Size = new Size(75, 24);
+			c.Width = 75;
 			c.Text = "Ai<m>d</m>e";
 			c.SetEnabled(false);
 			c.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(c);
 
 			StaticText st = new StaticText();
-			st.Name = "Static";
 			st.Location = new Point(10, 265);
-			st.Size = new Size(200, 15);
+			st.Width = 200;
 			st.Text = "Choix du <b>look</b> de l'<i>interface</i> :";
 			st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
 			window.Root.Children.Add(st);
@@ -51,9 +47,8 @@ namespace Epsitec.Common.Tests
 			CreateRadioLook(window.Root.Children, new Point(10, 215));
 
 			CheckButton check = new CheckButton();
-			check.Name = "Check";
 			check.Location = new Point(10, 50);
-			check.Size = new Size(100, 13);
+			check.Width = 100;
 			check.Text = "<m>C</m>ochez ici";
 			check.ActiveState = WidgetState.ActiveYes;
 			check.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
@@ -61,7 +56,6 @@ namespace Epsitec.Common.Tests
 			window.Root.Children.Add(check);
 
 			GroupBox box = new GroupBox();
-			box.Name = "Box";
 			box.Location = new Point(10, 80);
 			box.Size = new Size(100, 75);
 			box.Text = "Couleur";
@@ -69,9 +63,8 @@ namespace Epsitec.Common.Tests
 			window.Root.Children.Add(box);
 
 			RadioButton radio1 = new RadioButton();
-			radio1.Name = "Radio";
 			radio1.Location = new Point(10, 40);
-			radio1.Size = new Size(80, 13);
+			radio1.Width = 80;
 			radio1.Text = "<m>R</m>ouge";
 			radio1.ActiveState = WidgetState.ActiveYes;
 			radio1.Group = "RGB";
@@ -80,9 +73,8 @@ namespace Epsitec.Common.Tests
 			box.Children.Add(radio1);
 
 			RadioButton radio2 = new RadioButton();
-			radio2.Name = "Radio";
 			radio2.Location = new Point(10, 25);
-			radio2.Size = new Size(80, 13);
+			radio2.Width = 80;
 			radio2.Text = "<m>V</m>ert";
 			radio2.Group = "RGB";
 			radio2.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
@@ -90,9 +82,8 @@ namespace Epsitec.Common.Tests
 			box.Children.Add(radio2);
 
 			RadioButton radio3 = new RadioButton();
-			radio3.Name = "Radio";
 			radio3.Location = new Point(10, 10);
-			radio3.Size = new Size(80, 13);
+			radio3.Width = 80;
 			radio3.Text = "<m>B</m>leu";
 			radio3.Group = "RGB";
 			radio3.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
@@ -100,7 +91,6 @@ namespace Epsitec.Common.Tests
 			box.Children.Add(radio3);
 
 			Scroller scrollv = new Scroller();
-			scrollv.Name = "Scroller";
 			scrollv.Location = new Point(120, 50);
 			scrollv.Size = new Size(15, 120);
 			scrollv.Range = 10;
@@ -112,7 +102,6 @@ namespace Epsitec.Common.Tests
 			window.Root.Children.Add(scrollv);
 
 			Scroller scrollh = new Scroller();
-			scrollh.Name = "Scroller";
 			scrollh.Location = new Point(140, 50);
 			scrollh.Size = new Size(120, 15);
 			scrollh.Range = 10;
@@ -125,9 +114,8 @@ namespace Epsitec.Common.Tests
 
 #if true
 			TextField combo = new TextField(TextFieldType.Combo);
-			combo.Name = "Combo";
 			combo.Location = new Point(160, 180);
-			combo.Size = new Size(100, 20);
+			combo.Width = 100;
 			combo.Text = "Janvier";
 			combo.Cursor = combo.Text.Length;
 			combo.ComboAddText("Janvier");
@@ -142,23 +130,28 @@ namespace Epsitec.Common.Tests
 			combo.ComboAddText("Octobre");
 			combo.ComboAddText("Novembre");
 			combo.ComboAddText("Decembre");
+			combo.ComboAddText("Lundi");
+			combo.ComboAddText("Mardi");
+			combo.ComboAddText("Mercredi");
+			combo.ComboAddText("Jeudi");
+			combo.ComboAddText("Vendredi");
+			combo.ComboAddText("Samedi");
+			combo.ComboAddText("Dimanche");
 			combo.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(combo);
 #endif
 
 			TextField text = new TextField(TextFieldType.SingleLine);
-			text.Name = "TextField";
 			text.Location = new Point(160, 150);
-			text.Size = new Size(100, 20);
+			text.Width = 100;
 			text.Text = "Bonjour";
 			text.Cursor = text.Text.Length;
 			text.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(text);
 
 			TextField tud = new TextField(TextFieldType.UpDown);
-			tud.Name = "TextField Up/Down";
 			tud.Location = new Point(160, 125);
-			tud.Size = new Size(50, 20);
+			tud.Width = 50;
 			tud.Value = 50;
 			tud.MinRange = -100;
 			tud.MaxRange = 100;
@@ -167,15 +160,14 @@ namespace Epsitec.Common.Tests
 			window.Root.Children.Add(tud);
 
 			TextField multi = new TextField(TextFieldType.MultiLine);
-			multi.Name = "Multi";
 			multi.Location = new Point(160, 70);
 			multi.Size = new Size(100, 50);
 			multi.Text = "Ceci est une petite phrase ridicule.<br/>Mais elle est assez longue pour faire des essais.";
 			multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(multi);
 
+#if true
 			ScrollList sl = new ScrollList();
-			sl.Name = "ScrollList";
 			sl.Location = new Point(270, 70);
 			sl.Size = new Size(90, 100);
 			sl.AdjustToMultiple(ScrollListAdjust.MoveDown);
@@ -197,6 +189,42 @@ namespace Epsitec.Common.Tests
 			if ( !sl.IsShowSelect() )  sl.ShowSelect(ScrollListShow.Middle);
 			sl.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(sl);
+#endif
+
+			ToolBar tb = new ToolBar();
+			tb.Location = new Point(160, 220);
+			tb.Width = 300;
+			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			window.Root.Children.Add(tb);
+
+			tb.SetSize(20);
+			tb.InsertIconButton("open");
+			tb.InsertIconButton("save");
+			tb.InsertSep(5);
+
+			TextField t1 = new TextField(TextFieldType.Combo);
+			t1.Width = 70;
+			t1.Text = "Rouge";
+			t1.ComboAddText("Rouge");
+			t1.ComboAddText("Vert");
+			t1.ComboAddText("Bleu");
+
+			tb.Insert(t1);
+			tb.InsertSep(5);
+			tb.InsertIconButton("cut");
+			tb.InsertIconButton("copy");
+			tb.InsertIconButton("paste");
+
+#if true
+			Menu fileMenu = new Menu(MenuType.Vertical);
+			fileMenu.InsertItem("open", "Ouvrir...", "Ctrl+O");
+			fileMenu.InsertItem("save", "Enregistrer...", "Ctrl+S");
+			fileMenu.InsertSep();
+			fileMenu.InsertItem("", "Quitter", "");
+			fileMenu.AdjustSize();
+			fileMenu.Location = new Point(370, 70);
+			window.Root.Children.Add(fileMenu);
+#endif
 
 			window.FocusedWidget = a;
 
@@ -227,6 +255,7 @@ namespace Epsitec.Common.Tests
 			multi.Name = "Multi";
 			multi.Location = new Point(10, 10);
 			multi.Size = new Size(380, 280);
+			multi.MaxChar = 10000;
 			string s = "";
 #if true
 			s += "On donnait ce jour-là un grand dîner, où, pour la première fois, je vis avec beaucoup d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête. Par hasard on vint à parler de la devise de la maison de Solar, qui était sur la tapisserie avec les armoiries: Tel fiert qui ne tue pas. Comme les Piémontais ne sont pas pour l'ordinaire consommés par la langue française, quelqu'un trouva dans cette devise une faute d'orthographe, et dit qu'au mot fiert il ne fallait point de t.<br/>";
@@ -436,50 +465,33 @@ namespace Epsitec.Common.Tests
 			{
 				for ( int x=0 ; x<5 ; x++ )
 				{
-#if true
 					StaticText text = new StaticText();
-					if ( x != 0 || y != 0 ) text.Text = string.Format("{0}.{1}", y+1, x+1);
+					if ( x != 0 || y != 0 )  text.Text = string.Format("{0}.{1}", y+1, x+1);
 					text.Alignment = ContentAlignment.MiddleCenter;
 					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 					
 					if ( x == 2 && y == 2 )
 					{
-						CheckButton widget = new CheckButton ();
+						CheckButton widget = new CheckButton();
 						widget.Text = "surprise";
 						widget.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 						widget.MouseCursor = MouseCursor.AsHand;
-						table[x,y].Insert (widget);
+						table[x,y].Insert(widget);
+						//?widget.Bounds = widget.Parent.Bounds;
+					}
+					else if ( x == 3 && y == 3 )
+					{
+						Button widget = new Button();
+						widget.Text = "OK";
+						widget.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+						table[x,y].Insert(widget);
+						//?widget.Bounds = widget.Parent.Bounds;
 					}
 					else if ( x != 1 || y != 1 )
 					{
-						table[x,y].Insert (text);
+						table[x,y].Insert(text);
+						//?text.Bounds = text.Parent.Bounds;
 					}
-#endif
-#if false
-					Cell cell = new Cell();
-					TextField text = new TextField(TextFieldType.SingleLine);
-					text.TextFieldStyle = TextFieldStyle.Flat;
-					string s = "";
-					s += y+1;
-					s += ".";
-					s += x+1;
-					text.Text = s;
-					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-					cell.Children.Add(text);
-					table[x,y] = cell;
-#endif
-#if false
-					Cell cell = new Cell();
-					Button button = new Button();
-					string s = "";
-					s += y+1;
-					s += ".";
-					s += x+1;
-					button.Text = s;
-					button.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-					cell.Children.Add(button);
-					table[x,y] = cell;
-#endif
 				}
 			}
 			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
@@ -620,10 +632,24 @@ namespace Epsitec.Common.Tests
 			{
 				for ( int x=0 ; x<5 ; x++ )
 				{
+#if false
+					if ( x == 0 && y == 0 )
+					{
+						StaticText text = new StaticText();
+						text.Text = "BUG";
+						text.Alignment = ContentAlignment.BottomLeft;
+						text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+						table[x,y].Insert(text);
+					}
+#else
 					StaticText text = new StaticText();
 					text.Text = string.Format("L{0} C{1}", x+1, y+1);
+					text.Alignment = ContentAlignment.MiddleLeft;
+					//text.Alignment = ContentAlignment.BottomLeft;
 					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-					table[x,y].Insert (text);
+					table[x,y].Insert(text);
+					//?text.Size = text.Parent.Size;
+#endif
 				}
 			}
 			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
@@ -689,8 +715,8 @@ namespace Epsitec.Common.Tests
 		{
 			RadioButton look1 = new RadioButton();
 			look1.Name = "Default";
-			look1.Location = new Point(origine.X, origine.Y+30);
-			look1.Size = new Size(100, 13);
+			look1.Location = new Point(origine.X, origine.Y+(look1.DefaultHeight+2)*2);
+			look1.Width = 100;
 			look1.Text = "Look <m>s</m>tandard";
 			look1.ActiveState = WidgetState.ActiveYes;
 			look1.Group = "Look";
@@ -700,8 +726,8 @@ namespace Epsitec.Common.Tests
 
 			RadioButton look2 = new RadioButton();
 			look2.Name = "LookXP";
-			look2.Location = new Point(origine.X, origine.Y+15);
-			look2.Size = new Size(100, 13);
+			look2.Location = new Point(origine.X, origine.Y+(look1.DefaultHeight+2)*1);
+			look2.Width = 100;
 			look2.Text = "Look <m>X</m>P";
 			look2.Group = "Look";
 			look2.Anchor = AnchorStyles.Top|AnchorStyles.Left;
@@ -710,8 +736,8 @@ namespace Epsitec.Common.Tests
 
 			RadioButton look3 = new RadioButton();
 			look3.Name = "LookDany";
-			look3.Location = new Point(origine.X, origine.Y+0);
-			look3.Size = new Size(100, 13);
+			look3.Location = new Point(origine.X, origine.Y+(look1.DefaultHeight+2)*0);
+			look3.Width = 100;
 			look3.Text = "Look <m>D</m>any";
 			look3.Group = "Look";
 			look3.Anchor = AnchorStyles.Top|AnchorStyles.Left;
@@ -756,7 +782,7 @@ namespace Epsitec.Common.Tests
 			TextField text = new TextField(TextFieldType.SingleLine);
 			text.Name = "TextField";
 			text.Location = new Point(160, 150);
-			text.Size = new Size(100, 20);
+			text.Width = 100;
 			text.Text = "Bonjour";
 			text.Cursor = text.Text.Length;
 			text.Alignment = ContentAlignment.MiddleRight;
@@ -790,37 +816,173 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 
-		[Test] public void CheckAdornerBase()
+		[Test] public void CheckAdornerDisabled()
 		{
 			WindowFrame window = new WindowFrame();
 			
-			window.ClientSize = new System.Drawing.Size(300, 200);
-			window.Text = "CheckAdornerBase";
-			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_Paint1);
+			window.ClientSize = new System.Drawing.Size(600, 300);
+			window.Text = "CheckAdornerDisabled";
+
+			StaticText st = new StaticText();
+			st.SetClientZoom(2.0);
+			st.Location = new Point(10, 260);
+			st.Width = 500;
+			st.Height = 30;
+			st.Text = "Teste tous les widgets dans l'etat disabled !";
+			st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			st.SetEnabled(false);
+			window.Root.Children.Add(st);
+
+			CreateRadioLook(window.Root.Children, new Point(10, 200));
+
+			Button a = new Button();
+			a.Location = new Point(10, 10);
+			a.Width = 75;
+			a.Text = "O<m>K</m>";
+			a.SetEnabled(false);
+			window.Root.Children.Add(a);
+
+			CheckButton check = new CheckButton();
+			check.Location = new Point(10, 50);
+			check.Width = 100;
+			check.Text = "<m>C</m>ochez ici";
+			check.ActiveState = WidgetState.ActiveYes;
+			check.SetEnabled(false);
+			window.Root.Children.Add(check);
+
+			GroupBox box = new GroupBox();
+			box.Location = new Point(10, 80);
+			box.Size = new Size(100, 75);
+			box.Text = "Couleur";
+			box.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			box.SetEnabled(false);
+			window.Root.Children.Add(box);
+
+			RadioButton radio1 = new RadioButton();
+			radio1.Location = new Point(10, 40);
+			radio1.Width = 80;
+			radio1.Text = "<m>R</m>ouge";
+			radio1.ActiveState = WidgetState.ActiveYes;
+			radio1.Group = "RGB";
+			radio1.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			radio1.Clicked += new MessageEventHandler(this.HandleRadio);
+			box.Children.Add(radio1);
+
+			RadioButton radio2 = new RadioButton();
+			radio2.Location = new Point(10, 25);
+			radio2.Width = 80;
+			radio2.Text = "<m>V</m>ert";
+			radio2.Group = "RGB";
+			radio2.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			radio2.Clicked += new MessageEventHandler(this.HandleRadio);
+			box.Children.Add(radio2);
+
+			RadioButton radio3 = new RadioButton();
+			radio3.Location = new Point(10, 10);
+			radio3.Width = 80;
+			radio3.Text = "<m>B</m>leu";
+			radio3.Group = "RGB";
+			radio3.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			radio3.Clicked += new MessageEventHandler(this.HandleRadio);
+			box.Children.Add(radio3);
+
+			TextField combo = new TextField(TextFieldType.Combo);
+			combo.Location = new Point(160, 180);
+			combo.Width = 100;
+			combo.Text = "Janvier";
+			combo.Cursor = combo.Text.Length;
+			combo.ComboAddText("Janvier");
+			combo.ComboAddText("Fevrier");
+			combo.ComboAddText("Mars");
+			combo.ComboAddText("Avril");
+			combo.ComboAddText("Mai");
+			combo.ComboAddText("Juin");
+			combo.ComboAddText("Juillet");
+			combo.ComboAddText("Aout");
+			combo.ComboAddText("Septembre");
+			combo.ComboAddText("Octobre");
+			combo.ComboAddText("Novembre");
+			combo.ComboAddText("Decembre");
+			combo.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			combo.SetEnabled(false);
+			window.Root.Children.Add(combo);
+
+			TextField text = new TextField(TextFieldType.SingleLine);
+			text.Location = new Point(160, 150);
+			text.Width = 100;
+			text.Text = "Bonjour";
+			text.Cursor = text.Text.Length;
+			text.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			text.SetEnabled(false);
+			window.Root.Children.Add(text);
+
+			TextField tud = new TextField(TextFieldType.UpDown);
+			tud.Location = new Point(160, 125);
+			tud.Width = 50;
+			tud.Value = 50;
+			tud.MinRange = -100;
+			tud.MaxRange = 100;
+			tud.Step = 10;
+			tud.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			tud.SetEnabled(false);
+			window.Root.Children.Add(tud);
+
+			TextField multi = new TextField(TextFieldType.MultiLine);
+			multi.Location = new Point(160, 70);
+			multi.Size = new Size(100, 50);
+			multi.Text = "Ceci est une petite phrase ridicule.<br/>Mais elle est assez longue pour faire des essais.";
+			multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			multi.SetEnabled(false);
+			window.Root.Children.Add(multi);
+
+			ScrollList sl = new ScrollList();
+			sl.Location = new Point(270, 70);
+			sl.Size = new Size(90, 100);
+			sl.AdjustToMultiple(ScrollListAdjust.MoveDown);
+			sl.AddText("Janvier");
+			sl.AddText("Fevrier");
+			sl.AddText("Mars <i>(A)</i>");
+			sl.AddText("Avril");
+			sl.AddText("Mai");
+			sl.AddText("Juin");
+			sl.AddText("Juillet <b>(B)</b>");
+			sl.AddText("Aout");
+			sl.AddText("Septembre");
+			sl.AddText("Octobre");
+			sl.AddText("Novembre");
+			sl.AddText("Decembre");
+			sl.Select = 5;  // sélectionne juin
+			if ( !sl.IsShowSelect() )  sl.ShowSelect(ScrollListShow.Middle);
+			sl.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			sl.SetEnabled(false);
+			window.Root.Children.Add(sl);
+
+			ToolBar tb = new ToolBar();
+			tb.Location = new Point(160, 220);
+			tb.Width = 300;
+			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			window.Root.Children.Add(tb);
+
+			tb.SetSize(20);
+			tb.InsertIconButton("open");
+			tb.InsertIconButton("save");
+			tb.InsertSep(5);
+			tb.InsertIconButton("cut");
+			tb.InsertIconButton("copy");
+			tb.InsertIconButton("paste");
+			tb.GetWidget(1).SetEnabled(false);
+
+			Menu fileMenu = new Menu(MenuType.Vertical);
+			fileMenu.InsertItem("open", "Ouvrir...", "Ctrl+O");
+			fileMenu.InsertItem("save", "Enregistrer...", "Ctrl+S");
+			fileMenu.InsertSep();
+			fileMenu.InsertItem("", "Quitter", "");
+			fileMenu.AdjustSize();
+			fileMenu.Location = new Point(370, 70);
+			fileMenu.GetWidget(1).SetEnabled(false);
+			window.Root.Children.Add(fileMenu);
 
 			window.Show();
-		}
-
-		private void CheckPaint_Paint1(object sender, PaintEventArgs e)
-		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			Widgets.Adorner.Factory.SetActive("Default");
-
-			Rectangle rect = new Rectangle(10, 10, 30, 30);
-			WidgetState state = WidgetState.Enabled;
-			Direction shadow = Direction.Up;
-			Direction dir = Direction.Up;
-			adorner.PaintArrow(e.Graphics, rect, state, shadow, dir);
-
-			rect.Offset(70, 0);
-			adorner.PaintButtonBackground(e.Graphics, rect, state, shadow, ButtonStyle.Normal);
-
-			rect.Offset(70, 0);
-			adorner.PaintButtonBackground(e.Graphics, rect, state, shadow, ButtonStyle.Flat);
-
-			rect.Offset(-70, 40);
-			rect.Offset(0.5, 0.5);
-			adorner.PaintButtonBackground(e.Graphics, rect, state, shadow, ButtonStyle.Normal);
 		}
 
 

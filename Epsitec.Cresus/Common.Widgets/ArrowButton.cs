@@ -8,8 +8,8 @@ namespace Epsitec.Common.Widgets
 		public ArrowButton()
 		{
 			this.direction = Direction.None;
-			this.internal_state &= ~InternalState.AutoFocus;
-			this.internal_state &= ~InternalState.Focusable;
+			this.internalState &= ~InternalState.AutoFocus;
+			this.internalState &= ~InternalState.Focusable;
 		}
 		
 		public Direction Direction

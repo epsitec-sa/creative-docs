@@ -212,6 +212,16 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
+				//	Attention: il n'est pas permis de faire un Dispose si l'appelant provient d'une
+				//	WndProc, car cela perturbe le bon acheminement des messages dans Windows. On
+				//	préfère donc remettre la destruction à plus tard si on détecte cette condition.
+				
+				if (this.wnd_proc_depth > 0)
+				{
+					Win32Api.PostMessage (this.Handle, Win32Const.WM_APP_DISPOSE, System.IntPtr.Zero, System.IntPtr.Zero);
+					return;
+				}
+				
 				if (this.graphics != null)
 				{
 					this.graphics.Dispose ();
@@ -508,57 +518,91 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
 		{
-			if (this.WndProcActivation (ref msg))
+			if (msg.Msg == Win32Const.WM_APP_DISPOSE)
 			{
+				System.Diagnostics.Debug.Assert (this.wnd_proc_depth == 0);
+				
+				//	L'appelant avait tenté de nous détruire alors qu'il était dans un WndProc,
+				//	on reçoint maintenant la commande explicite (asynchrone) qui nous autorise
+				//	à nous détruire réellement.
+				
+				this.Dispose ();
 				return;
 			}
 			
-			//	Tente d'unifier tous les événements qui touchent au clavier, sans faire de traitement
-			//	spécial pour les touches pressées en même temps que ALT. Mais si l'on veut que le menu
-			//	système continue à fonctionner (ALT + ESPACE), il faut laisser transiter les événements
-			//	clavier qui ne concernent que ALT ou ALT + ESPACE sans modification.
+			this.wnd_proc_depth++;
 			
-			int w_param = (int) msg.WParam;
-			int l_param = (int) msg.LParam;
-			
-			if ((w_param != Win32Const.VK_SPACE) && (w_param != Win32Const.VK_MENU))
+			try
 			{
-				switch (msg.Msg)
+				if (this.WndProcActivation (ref msg))
 				{
-					case Win32Const.WM_SYSKEYDOWN:	msg.Msg = Win32Const.WM_KEYDOWN;	break;
-					case Win32Const.WM_SYSKEYUP:	msg.Msg = Win32Const.WM_KEYUP;		break;
-					case Win32Const.WM_SYSCHAR:		msg.Msg = Win32Const.WM_CHAR;		break;
-					case Win32Const.WM_SYSDEADCHAR:	msg.Msg = Win32Const.WM_DEADCHAR;	break;
+					return;
 				}
-			}
-			
-			//	Filtre les répétitions clavier des touches super-shift. Cela n'a, à mon avis, aucun
-			//	sens, puisqu'une touche super-shift est soit enfoncée, soit non enfoncée...
-			
-			if ((msg.Msg == Win32Const.WM_KEYDOWN) ||
-				(msg.Msg == Win32Const.WM_SYSKEYDOWN))
-			{
-				switch (w_param)
+				
+				//	Tente d'unifier tous les événements qui touchent au clavier, sans faire de traitement
+				//	spécial pour les touches pressées en même temps que ALT. Mais si l'on veut que le menu
+				//	système continue à fonctionner (ALT + ESPACE), il faut laisser transiter les événements
+				//	clavier qui ne concernent que ALT ou ALT + ESPACE sans modification.
+				
+				int w_param = (int) msg.WParam;
+				int l_param = (int) msg.LParam;
+				
+				if ((w_param != Win32Const.VK_SPACE) && (w_param != Win32Const.VK_MENU))
 				{
-					case Win32Const.VK_SHIFT:
-					case Win32Const.VK_CONTROL:
-					case Win32Const.VK_MENU:
-						if ((l_param & 0x40000000) != 0)
-						{
-							return;
-						}
-						break;
+					switch (msg.Msg)
+					{
+						case Win32Const.WM_SYSKEYDOWN:	msg.Msg = Win32Const.WM_KEYDOWN;	break;
+						case Win32Const.WM_SYSKEYUP:	msg.Msg = Win32Const.WM_KEYUP;		break;
+						case Win32Const.WM_SYSCHAR:		msg.Msg = Win32Const.WM_CHAR;		break;
+						case Win32Const.WM_SYSDEADCHAR:	msg.Msg = Win32Const.WM_DEADCHAR;	break;
+					}
 				}
+				
+				//	Filtre les répétitions clavier des touches super-shift. Cela n'a, à mon avis, aucun
+				//	sens, puisqu'une touche super-shift est soit enfoncée, soit non enfoncée...
+				
+				if ((msg.Msg == Win32Const.WM_KEYDOWN) ||
+					(msg.Msg == Win32Const.WM_SYSKEYDOWN))
+				{
+					switch (w_param)
+					{
+						case Win32Const.VK_SHIFT:
+						case Win32Const.VK_CONTROL:
+						case Win32Const.VK_MENU:
+							if ((l_param & 0x40000000) != 0)
+							{
+								return;
+							}
+							break;
+					}
+				}
+				
+				if (msg.Msg == Win32Const.WM_MOUSEACTIVATE)
+				{
+					//	Si l'utilisateur clique dans la fenêtre, on veut recevoir l'événement d'activation
+					//	dans tous les cas.
+					
+					msg.Result = (System.IntPtr) Win32Const.MA_ACTIVATE;
+					return;
+				}
+				
+				if (this.WndProcFiltering (ref msg))
+				{
+					return;
+				}
+				
+				base.WndProc (ref msg);
 			}
 			
-			if (this.WndProcFiltering (ref msg))
+			finally
 			{
-				return;
+				System.Diagnostics.Debug.Assert (this.IsDisposed == false);
+				System.Diagnostics.Debug.Assert (this.wnd_proc_depth > 0);
+				this.wnd_proc_depth--;
 			}
-			
-			base.WndProc (ref msg);
 		}
 		
 		protected virtual bool WndProcActivation(ref System.Windows.Forms.Message msg)
@@ -730,6 +774,7 @@ namespace Epsitec.Common.Widgets
 				//	en utilisant une approche en profondeur d'abord.
 				
 				this.root.MessageHandler (message, message.Cursor);
+				this.Capture = false;
 			}
 			else
 			{
@@ -765,6 +810,10 @@ namespace Epsitec.Common.Widgets
 						{
 							this.capturing_widget = consumer;
 							this.Capture = true;
+						}
+						else
+						{
+							this.Capture = false;
 						}
 						
 						if ((consumer.AutoFocus) &&
@@ -865,8 +914,6 @@ namespace Epsitec.Common.Widgets
 			int width  = (int) (this.root.MinSize.Width + 0.5);
 			int height = (int) (this.root.MinSize.Height + 0.5);
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Minimum Window Size : {0} x {1}", width, height));
-			
 			width  += this.Size.Width  - this.ClientSize.Width;
 			height += this.Size.Height - this.ClientSize.Height;
 			
@@ -954,5 +1001,6 @@ namespace Epsitec.Common.Widgets
 		private bool							prevent_close;
 		private bool							is_layered;
 		private double							alpha = 1.0;
+		private int								wnd_proc_depth;
 	}
 }

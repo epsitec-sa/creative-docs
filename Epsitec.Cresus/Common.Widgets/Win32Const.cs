@@ -7,6 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public const int WM_ACTIVATE		= 0x0006;
 		public const int WM_ACTIVATEAPP		= 0x001C;
+		public const int WM_MOUSEACTIVATE	= 0x0021;
 		public const int WM_NCACTIVATE		= 0x0086;
 		public const int WM_KEYDOWN			= 0x0100;
 		public const int WM_SYSKEYDOWN		= 0x0104;
@@ -33,6 +34,9 @@ namespace Epsitec.Common.Widgets
 		public const int WM_NCCALCSIZE		= 0x0083;
 		public const int WM_CHANGEUISTATE	= 0x0127;
 		
+		public const int WM_APP				= 0x8000;
+		public const int WM_APP_DISPOSE		= WM_APP + 1;
+		
 		public const int VK_SHIFT			= 0x0010;
 		public const int VK_CONTROL			= 0x0011;
 		public const int VK_MENU			= 0x0012;
@@ -54,5 +58,10 @@ namespace Epsitec.Common.Widgets
 		
 		public const byte AC_SRC_OVER		= 0x00;
 		public const byte AC_SRC_ALPHA		= 0x01;
+		
+		public const int MA_ACTIVATE		= 1;
+		public const int MA_ACTIVATEANDEAT	= 2;
+		public const int MA_NOACTIVATE		= 3;
+		public const int MA_NOACTIVATEANDEAT= 4;
 	}
 }

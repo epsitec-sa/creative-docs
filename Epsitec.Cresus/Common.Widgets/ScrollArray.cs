@@ -35,6 +35,8 @@ namespace Epsitec.Common.Widgets
 			this.scrollerH = new Scroller();
 			this.scrollerH.Moved += new EventHandler(this.HandleScrollerH);
 			this.Children.Add(this.scrollerH);
+
+			this.rowHeight = this.DefaultFontHeight+2;
 		}
 
 

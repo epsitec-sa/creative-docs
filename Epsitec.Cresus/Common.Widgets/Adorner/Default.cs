@@ -13,6 +13,8 @@ namespace Epsitec.Common.Widgets.Adorner
 		// Initialise les couleurs en fonction des réglages de Windows.
 		public void RefreshColors()
 		{
+			double r,g,b;
+
 			this.colorBlack             = Drawing.Color.FromName("WindowFrame");
 			this.colorControl           = Drawing.Color.FromName("Control");
 			this.colorControlLight      = Drawing.Color.FromName("ControlLight");
@@ -22,10 +24,15 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorCaption           = Drawing.Color.FromName("ActiveCaption");
 			this.colorCaptionText       = Drawing.Color.FromName("ActiveCaptionText");
 
-			double r = 1-(1-this.colorControlLight.R)/2;
-			double g = 1-(1-this.colorControlLight.G)/2;
-			double b = 1-(1-this.colorControlLight.B)/2;
+			r = 1-(1-this.colorControlLight.R)/2;
+			g = 1-(1-this.colorControlLight.G)/2;
+			b = 1-(1-this.colorControlLight.B)/2;
 			this.colorScrollerBack = Drawing.Color.FromRGB(r,g,b);
+
+			r = 1-(1-this.colorCaption.R)*0.3;
+			g = 1-(1-this.colorCaption.G)*0.3;
+			b = 1-(1-this.colorCaption.B)*0.3;
+			this.colorCaptionLight = Drawing.Color.FromRGB(r,g,b);
 		}
 		
 
@@ -264,6 +271,39 @@ namespace Epsitec.Common.Widgets.Adorner
 				PaintL(graphics, rect, this.colorControlDarkDark, shadow);
 				PaintL(graphics, rInside, this.colorControlDark, shadow);
 			}
+			else if ( style == ButtonStyle.ToolItem )
+			{
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.colorControl);
+
+				graphics.LineWidth = 1;
+				graphics.LineCap = Drawing.CapStyle.Butt;
+
+				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				{
+					shadow = Opposite(shadow);
+				}
+
+				// Ombre claire en haut à gauche.
+				PaintL(graphics, rect, this.colorControlLightLight, Opposite(shadow));
+
+				// Ombre foncée en bas à droite.
+				PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+
+				state &= ~WidgetState.Focused;
+			}
+			else if ( style == ButtonStyle.MenuItem )
+			{
+				if ( (state&WidgetState.Entered)  != 0 ||  // bouton survolé ?
+					 (state&WidgetState.Engaged)  != 0 ||  // bouton pressé ?
+					 (state&WidgetState.Selected) != 0 )   // bouton sélectionné ?
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.colorCaption);
+				}
+
+				state &= ~WidgetState.Focused;
+			}
 			else
 			{
 				graphics.AddFilledRectangle(rect);
@@ -337,6 +377,15 @@ namespace Epsitec.Common.Widgets.Adorner
 				// Ombre claire en bas à droite.
 				PaintL(graphics, rect, this.colorControlLightLight, shadow);
 				PaintL(graphics, rInside, this.colorControlLight, shadow);
+			}
+			else if ( style == TextFieldStyle.Simple )
+			{
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.colorControlLightLight);
+
+				rect.Inflate(-0.5, -0.5);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(this.colorBlack);
 			}
 			else
 			{
@@ -592,6 +641,61 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 		}
 
+		// Dessine le fond d'un menu.
+		public void PaintMenuBackground(Drawing.Graphics graphics,
+										Drawing.Rectangle rect,
+										WidgetState state,
+										Direction shadow,
+										Drawing.Rectangle parentRect,
+										double iconWidth)
+		{
+#if true
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(this.colorControlLightLight);
+
+			rect.Inflate(-0.5, -0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(this.colorControlDark);
+#else
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(this.colorControl);
+
+			Drawing.Rectangle rInside = rect;
+			rInside.Inflate(-1, -1);
+
+			// Ombre claire en haut à gauche.
+			PaintL(graphics, rect, this.colorControlLightLight, Opposite(shadow));
+			PaintL(graphics, rInside, this.colorControlLight, Opposite(shadow));
+
+			// Ombre foncée en bas à droite.
+			PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+			PaintL(graphics, rInside, this.colorControlDark, shadow);
+#endif
+		}
+
+		// Dessine le texte d'un menu.
+		public void PaintMenuTextLayout(Drawing.Graphics graphics,
+										Drawing.Point pos,
+										TextLayout text,
+										WidgetState state,
+										Direction shadow,
+										ButtonStyle style)
+		{
+			if ( text == null )  return;
+			state &= ~WidgetState.Focused;
+			if ( (state&WidgetState.Entered) != 0 )  state |= WidgetState.Selected;
+			this.PaintGeneralTextLayout(graphics, pos, text, state, shadow);
+		}
+
+		public void PaintMenuForeground(Drawing.Graphics graphics,
+										Drawing.Rectangle rect,
+										WidgetState state,
+										Direction shadow,
+										Drawing.Rectangle parentRect,
+										double iconWidth)
+		{
+		}
+
 		// Dessine le rectangle pour indiquer le focus.
 		public void PaintFocusBox(Drawing.Graphics graphics,
 								  Drawing.Rectangle rect)
@@ -842,5 +946,6 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorScrollerBack;
 		protected Drawing.Color		colorCaption;
 		protected Drawing.Color		colorCaptionText;
+		protected Drawing.Color		colorCaptionLight;
 	}
 }

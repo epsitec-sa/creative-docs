@@ -24,8 +24,13 @@ namespace Epsitec.Common.Widgets
 	{
 		public AbstractCellArray()
 		{
-			this.internal_state |= InternalState.AutoFocus;
-			this.internal_state |= InternalState.Focusable;
+			this.internalState |= InternalState.AutoFocus;
+			this.internalState |= InternalState.Focusable;
+
+			double h = this.DefaultFontHeight+4;
+			this.defHeight = h;
+			this.minHeight = h;
+			this.headerHeight = h;
 
 			this.container = new Widget();
 			this.Children.Add(this.container);
@@ -212,13 +217,13 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				System.Diagnostics.Debug.Assert(this.array[column, row] != null);
-				if ( value == null ) value = new Cell ();
+				if ( value == null )  value = new Cell();
 				
 				this.array[column, row].SetArrayRank(null, -1, -1);
 				this.array[column, row] = value;
 				this.array[column, row].SetArrayRank(this, column, row);
 				
-				this.NotifyCellChanged (value);
+				this.NotifyCellChanged(value);
 			}
 		}
 		
@@ -602,121 +607,99 @@ namespace Epsitec.Common.Widgets
 		{
 			//this.OffsetV = System.Math.Floor(this.scrollerV.Range-this.scrollerV.Position+0.5);
 			this.OffsetV = System.Math.Floor(this.scrollerV.Position+0.5);
-			this.SetFocused(true);
+			//this.SetFocused(true);
 		}
 
 		// Appelé lorsque l'ascenseur horizontal a bougé.
 		private void HandleScrollerH(object sender)
 		{
 			this.OffsetH = System.Math.Floor(this.scrollerH.Position+0.5);
-			this.SetFocused(true);
+			//this.SetFocused(true);
 		}
 
 		// Appelé lorsque le bouton d'en-tête vertical a été cliqué.
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			if ( (this.styleV & AbstractCellArrayStyle.Sort) != 0 )
+			HeaderButton button = sender as HeaderButton;
+
+			if ( button.HeaderButtonStyle == HeaderButtonStyle.Left )
 			{
-				foreach ( HeaderButton button in this.headerButtonV )
+				if ( (this.styleV & AbstractCellArrayStyle.Sort) == 0 )  return;
+
+				int row = button.Rank;
+				int mode = button.SortMode;
+				switch ( mode )
 				{
-					if ( sender == button )
-					{
-						int row = button.Rank;
-						int mode = button.SortMode;
-						switch ( mode )
-						{
-							case -1:  mode =  1;  break;
-							case  0:  mode =  1;  break;
-							case  1:  mode = -1;  break;
-						}
-						this.SetHeaderSortV(row, mode);
-						this.OnSortChanged();
-						return;
-					}
+					case -1:  mode =  1;  break;
+					case  0:  mode =  1;  break;
+					case  1:  mode = -1;  break;
 				}
+				this.SetHeaderSortV(row, mode);
+				this.OnSortChanged();
 			}
-			if ( (this.styleH & AbstractCellArrayStyle.Sort) != 0 )
+
+			if ( button.HeaderButtonStyle == HeaderButtonStyle.Top )
 			{
-				foreach ( HeaderButton button in this.headerButtonH )
+				if ( (this.styleH & AbstractCellArrayStyle.Sort) == 0 )  return;
+
+				int column = button.Rank;
+				int mode = button.SortMode;
+				switch ( mode )
 				{
-					if ( sender == button )
-					{
-						int column = button.Rank;
-						int mode = button.SortMode;
-						switch ( mode )
-						{
-							case -1:  mode =  1;  break;
-							case  0:  mode =  1;  break;
-							case  1:  mode = -1;  break;
-						}
-						this.SetHeaderSortH(column, mode);
-						this.OnSortChanged();
-						return;
-					}
+					case -1:  mode =  1;  break;
+					case  0:  mode =  1;  break;
+					case  1:  mode = -1;  break;
 				}
+				this.SetHeaderSortH(column, mode);
+				this.OnSortChanged();
 			}
 		}
 
 		// Appelé lorsque le slider va être déplacé.
 		private void HandleSliderDragStarted(object sender, MessageEventArgs e)
 		{
-			foreach ( HeaderSlider slider in this.headerSliderV )
+			HeaderSlider slider = sender as HeaderSlider;
+
+			if ( slider.HeaderSliderStyle == HeaderSliderStyle.Left )
 			{
-				if ( sender == slider )
-				{
-					DragStartedRow(slider.Rank, e.Message.Y);
-					return;
-				}
+				DragStartedRow(slider.Rank, e.Message.Y);
 			}
-			foreach ( HeaderSlider slider in this.headerSliderH )
+
+			if ( slider.HeaderSliderStyle == HeaderSliderStyle.Top )
 			{
-				if ( sender == slider )
-				{
-					DragStartedColumn(slider.Rank, e.Message.X);
-					return;
-				}
+				DragStartedColumn(slider.Rank, e.Message.X);
 			}
 		}
 
 		// Appelé lorsque le slider est déplacé.
 		private void HandleSliderDragMoved(object sender, MessageEventArgs e)
 		{
-			foreach ( HeaderSlider slider in this.headerSliderV )
+			HeaderSlider slider = sender as HeaderSlider;
+
+			if ( slider.HeaderSliderStyle == HeaderSliderStyle.Left )
 			{
-				if ( sender == slider )
-				{
-					DragMovedRow(slider.Rank, e.Message.Y);
-					return;
-				}
+				DragMovedRow(slider.Rank, e.Message.Y);
 			}
-			foreach ( HeaderSlider slider in this.headerSliderH )
+
+			if ( slider.HeaderSliderStyle == HeaderSliderStyle.Top )
 			{
-				if ( sender == slider )
-				{
-					DragMovedColumn(slider.Rank, e.Message.X);
-					return;
-				}
+				DragMovedColumn(slider.Rank, e.Message.X);
 			}
 		}
 
 		// Appelé lorsque le slider est fini de déplacer.
 		private void HandleSliderDragEnded(object sender, MessageEventArgs e)
 		{
-			foreach ( HeaderSlider slider in this.headerSliderV )
+			HeaderSlider slider = sender as HeaderSlider;
+
+			if ( slider.HeaderSliderStyle == HeaderSliderStyle.Left )
 			{
-				if ( sender == slider )
-				{
-					DragEndedRow(slider.Rank, e.Message.Y);
-					return;
-				}
+				DragEndedRow(slider.Rank, e.Message.Y);
 			}
-			foreach ( HeaderSlider slider in this.headerSliderH )
+
+			if ( slider.HeaderSliderStyle == HeaderSliderStyle.Top )
 			{
-				if ( sender == slider )
-				{
-					DragEndedColumn(slider.Rank, e.Message.X);
-					return;
-				}
+				DragEndedColumn(slider.Rank, e.Message.X);
 			}
 		}
 
@@ -1383,7 +1366,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						System.Diagnostics.Debug.Assert (this.array[x,y].Parent == null);
+						System.Diagnostics.Debug.Assert(this.array[x,y].Parent == null);
 					}
 					px += dx;
 				}
@@ -1443,7 +1426,7 @@ namespace Epsitec.Common.Widgets
 				for ( int row=0 ; row<maxRows ; row++ )
 				{
 					System.Diagnostics.Debug.Assert(newArray[col,row] == null);
-					newArray[col,row] = new Cell ();
+					newArray[col,row] = new Cell();
 					newArray[col,row].SetArrayRank(this, col, row);
 				}
 			}
@@ -1455,7 +1438,7 @@ namespace Epsitec.Common.Widgets
 				for ( int col=0 ; col<minMaxCol ; col++ )
 				{
 					System.Diagnostics.Debug.Assert(newArray[col,row] == null);
-					newArray[col,row] = new Cell ();
+					newArray[col,row] = new Cell();
 					newArray[col,row].SetArrayRank(this, col, row);
 				}
 			}

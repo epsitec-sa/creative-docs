@@ -1234,7 +1234,8 @@ namespace Epsitec.Common.Widgets
 					else
 					{
 						//Drawing.TextBreakMode mode = bol ? Drawing.TextBreakMode.Split : Drawing.TextBreakMode.None;
-						Drawing.TextBreakMode mode = this.breakMode;
+						//Drawing.TextBreakMode mode = this.breakMode;
+						Drawing.TextBreakMode mode = bol ? this.breakMode : Drawing.TextBreakMode.None;
 						Drawing.TextBreak tb = new Drawing.TextBreak(blockFont, buffer.ToString(), fontItem.fontSize, mode);
 
 						string breakText;

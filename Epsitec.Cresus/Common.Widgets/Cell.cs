@@ -18,10 +18,15 @@ namespace Epsitec.Common.Widgets
 		public void Insert(Widget widget)
 		{
 			this.Children.Add(widget);
+
+			Drawing.Rectangle rect = widget.Parent.Bounds;
+			rect.Left += 1;
+			rect.Top  -= 1;  // laisse la place pour la grille
+			widget.Bounds = rect;
 			
-			if (this.cellArray != null)
+			if ( this.cellArray != null )
 			{
-				this.cellArray.NotifyCellChanged (this);
+				this.cellArray.NotifyCellChanged(this);
 			}
 		}
 		
@@ -29,9 +34,9 @@ namespace Epsitec.Common.Widgets
 		{
 			this.Children.Remove(widget);
 			
-			if (this.cellArray != null)
+			if ( this.cellArray != null )
 			{
-				this.cellArray.NotifyCellChanged (this);
+				this.cellArray.NotifyCellChanged(this);
 			}
 		}
 		

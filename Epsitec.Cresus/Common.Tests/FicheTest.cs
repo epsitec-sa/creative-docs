@@ -242,13 +242,82 @@ namespace Epsitec.Common.Tests
 		// Crée tous les widgets du layout.
 		protected void CreateLayout()
 		{
+			Rectangle rect = this.window.Root.Client.Bounds;
+
+			this.menu = new Menu(MenuType.Horizontal);
+			this.menu.Location = new Point(0, rect.Height-this.menu.DefaultHeight);
+			this.menu.Size = new Size(rect.Width, this.menu.DefaultHeight);
+			this.menu.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
+			this.menu.InsertItem("Fichier");
+			this.menu.InsertItem("Edition");
+			this.menu.InsertItem("Affichage");
+			this.menu.InsertItem("Aide");
+			this.menu.Parent = this.window.Root;
+
+			Menu fileMenu = new Menu(MenuType.Vertical);
+			fileMenu.InsertItem("", "Nouveau", "Ctrl+N");
+			fileMenu.InsertItem("open", "Ouvrir...", "Ctrl+O");
+			fileMenu.InsertItem("", "Fermer", "");
+			fileMenu.InsertSep();
+			fileMenu.InsertItem("save", "Enregistrer", "Ctrl+S");
+			fileMenu.InsertItem("", "Enregistrer sous...", "");
+			fileMenu.InsertSep();
+			fileMenu.InsertItem("print", "Imprimer...", "Ctrl+P");
+			fileMenu.InsertItem("preview", "Apercu avant impression", "");
+			fileMenu.InsertItem("", "Mise en page...", "");
+			fileMenu.InsertSep();
+			fileMenu.InsertItem("", "Quitter", "");
+			fileMenu.AdjustSize();
+			this.menu.GetWidget(0).SonMenu = fileMenu;
+
+			Menu editMenu = new Menu(MenuType.Vertical);
+			editMenu.InsertItem("", "Annuler", "Ctrl+Z");
+			editMenu.InsertSep();
+			editMenu.InsertItem("cut", "Couper", "Ctrl+X");
+			editMenu.InsertItem("copy", "Copier", "Ctrl+C");
+			editMenu.InsertItem("paste", "Coller", "Ctrl+V");
+			editMenu.AdjustSize();
+			this.menu.GetWidget(1).SonMenu = editMenu;
+
+			Menu showMenu = new Menu(MenuType.Vertical);
+			showMenu.InsertItem("", "Adresses", "F5");
+			showMenu.InsertItem("", "Objets", "F6");
+			showMenu.InsertSep();
+			showMenu.InsertItem("", "Options", "");
+			showMenu.AdjustSize();
+			this.menu.GetWidget(2).SonMenu = showMenu;
+
+			Menu optMenu = new Menu(MenuType.Vertical);
+			optMenu.InsertItem("", "Réglages...", "");
+			optMenu.InsertItem("", "Machins...", "");
+			optMenu.InsertItem("", "Bidules...", "");
+			optMenu.AdjustSize();
+			showMenu.GetWidget(3).SonMenu = optMenu;
+
+			Menu helpMenu = new Menu(MenuType.Vertical);
+			helpMenu.InsertItem("", "Aide", "F1");
+			helpMenu.InsertItem("", "A propos de...", "");
+			helpMenu.AdjustSize();
+			this.menu.GetWidget(3).SonMenu = helpMenu;
+
+			this.toolBar = new ToolBar();
+			this.toolBar.Location = new Point(0, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
+			this.toolBar.Size = new Size(rect.Width, this.toolBar.DefaultHeight);
+			this.toolBar.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
+			this.toolBar.InsertIconButton("open");
+			this.toolBar.InsertIconButton("save");
+			this.toolBar.InsertSep(5);
+			this.toolBar.InsertIconButton("cut");
+			this.toolBar.InsertIconButton("copy");
+			this.toolBar.InsertIconButton("paste");
+			this.toolBar.Parent = this.window.Root;
+
 			Widget root = new Widget();
-			
 			root.SetClientAngle(0);
 			root.SetClientZoom(1.0);
-			root.Bounds = this.window.Root.Client.Bounds;
+			root.Location = new Point(0, 0);
+			root.Size = new Size(rect.Width, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
 			root.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			
 			root.Parent = this.window.Root;
 			
 			this.pane = new Pane();
@@ -435,13 +504,14 @@ namespace Epsitec.Common.Tests
 
 			posy -= 10;
 			double maxWidth = this.rightPane.Width-this.labelWidth-10;
+			double defaultFontHeight = this.rightPane.DefaultFontHeight;
 			int nbField = this.db.TotalField;
 			for ( int x=0 ; x<nbField ; x++ )
 			{
 				int fieldID = this.db.RetFieldID(x);
 				TinyDataBase.FieldDesc fd = this.db.RetFieldDesc(fieldID);
 
-				double height = 5+15*fd.lines;
+				double height = 6+defaultFontHeight*fd.lines;
 
 				StaticText st = (StaticText)this.staticTexts[x];
 				st.Location = new Point(0, posy-20);
@@ -851,6 +921,8 @@ namespace Epsitec.Common.Tests
 		protected double						buttonWidth = 80;
 		protected double						buttonHeight = 20;
 		protected WindowFrame					window;
+		protected Menu							menu;
+		protected ToolBar						toolBar;
 		protected Pane							pane;
 		protected Pane							subPane;
 		protected Widget						leftPane;

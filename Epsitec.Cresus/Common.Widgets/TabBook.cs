@@ -528,7 +528,7 @@ namespace Epsitec.Common.Widgets
 		
 
 		protected TabBookStyle					type = TabBookStyle.Normal;
-		protected System.Collections.ArrayList	tabPages = new System.Collections.ArrayList ();
+		protected System.Collections.ArrayList	tabPages = new System.Collections.ArrayList();
 		protected TabPage						activePage;
 		protected Direction						direction;
 		protected double						tabHeight = 20;

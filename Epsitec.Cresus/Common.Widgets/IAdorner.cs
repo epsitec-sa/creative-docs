@@ -54,6 +54,10 @@ namespace Epsitec.Common.Widgets
 		void PaintHeaderBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction type);
 		void PaintHeaderForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction type);
 
+		void PaintMenuBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Drawing.Rectangle parentRect, double iconWidth);
+		void PaintMenuTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, Direction shadow, ButtonStyle style);
+		void PaintMenuForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Drawing.Rectangle parentRect, double iconWidth);
+
 		/*
 		 * Méthodes de dessin complémentaires.
 		 */
