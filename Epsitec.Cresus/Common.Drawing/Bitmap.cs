@@ -131,6 +131,19 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public override Image GetImageForPaintStyle(GlyphPaintStyle style)
+		{
+			switch (style)
+			{
+				case GlyphPaintStyle.Normal:
+					return this;
+				case GlyphPaintStyle.Disabled:
+					return Bitmap.FromImageDisabled (this, Color.FromName ("Control"));
+			}
+			
+			return null;
+		}
+		
 		public static Image FromNativeBitmap(System.Drawing.Bitmap native)
 		{
 			Image bitmap = Bitmap.FromNativeBitmap (native, new Point (0, 0));
@@ -254,15 +267,7 @@ namespace Epsitec.Common.Drawing
 		
 		public static Image FromImageDisabled(Image image, Color background)
 		{
-			if (image == null)
-			{
-				return null;
-			}
-			
-			if (image.IsDisabledDefined)
-			{
-				return image.GetDisabled ();
-			}
+			System.Diagnostics.Debug.Assert (image != null);
 			
 			int r = (int)(background.R * 255.5);
 			int g = (int)(background.G * 255.5);

@@ -10,20 +10,23 @@ namespace Epsitec.Common.Drawing
 			this.data = new byte[data.Length];
 			data.CopyTo (this.data, 0);
 			
-			this.disabled = new Canvas (this);
+			this.effects = new EffectTable ();
+			
+			this.effects[GlyphPaintStyle.Normal]   = new Canvas (this, GlyphPaintStyle.Normal);
+			this.effects[GlyphPaintStyle.Disabled] = new Canvas (this, GlyphPaintStyle.Disabled);
+			this.effects[GlyphPaintStyle.Selected] = new Canvas (this, GlyphPaintStyle.Selected);
 			
 			Canvas.global_icon_cache.Add (this);
-			
-			System.Diagnostics.Debug.WriteLine ("Inserted image into cache.");
 		}
 		
-		protected Canvas(Canvas original)
+		protected Canvas(Canvas original, GlyphPaintStyle style)
 		{
-			//	Version "disabled" du même dessin; on partage les données avec le modèle
-			//	original...
+			//	Version "normal", "disabled" ou "selected" du même dessin; on partage
+			//	les données avec le modèle original...
 			
-			this.data     = original.data;
-			this.disabled = this;
+			this.data        = original.data;
+			this.effects     = original.effects;
+			this.paint_style = style;
 		}
 		
 		public override void DefineZoom(double zoom)
@@ -53,9 +56,9 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public override Image GetDisabled()
+		public override Image GetImageForPaintStyle(GlyphPaintStyle style)
 		{
-			return this.disabled;
+			return this.effects[style];
 		}
 		
 		
@@ -97,9 +100,9 @@ namespace Epsitec.Common.Drawing
 			get { return true; }
 		}
 		
-		public override bool			IsDisabledDefined
+		public GlyphPaintStyle			PaintStyle
 		{
-			get { return true; }
+			get { return this.paint_style; }
 		}
 		
 		
@@ -120,9 +123,7 @@ namespace Epsitec.Common.Drawing
 					Drawing.Pixmap pixmap = graphics.Pixmap;
 					pixmap.Clear ();
 					
-					bool is_disabled = (this == this.disabled);
-					
-					Canvas.Engine.Paint (graphics, size, this.data, is_disabled, this.color, this.adorner);
+					Canvas.Engine.Paint (graphics, size, this.data, this.paint_style, this.color, this.adorner);
 					
 					int width, height, stride;
 					System.Drawing.Imaging.PixelFormat format;
@@ -215,10 +216,114 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		protected class EffectTable : System.Collections.IDictionary
+		{
+			public EffectTable()
+			{
+				this.hash = new System.Collections.Hashtable ();
+			}
+			
+			public Canvas				this[GlyphPaintStyle key]
+			{
+				get { return this.hash[key] as Canvas; }
+				set { this.hash[key] = value; }
+			}
+			
+			
+			#region IDictionary Members
+			public bool					IsReadOnly
+			{
+				get { return this.hash.IsReadOnly; }
+			}
+			
+			object						System.Collections.IDictionary.this[object key]
+			{
+				get { return this.hash[key]; }
+				set { this.hash[key] = value; }
+			}
+			
+			public System.Collections.ICollection Keys
+			{
+				get { return this.hash.Keys; }
+			}
+
+			public System.Collections.ICollection Values
+			{
+				get { return this.hash.Values; }
+			}
+
+			public bool					IsFixedSize
+			{
+				get { return this.hash.IsFixedSize; }
+			}
+			
+			
+			public System.Collections.IDictionaryEnumerator GetEnumerator()
+			{
+				return this.hash.GetEnumerator ();
+			}
+
+			
+			public bool Contains(object key)
+			{
+				return this.hash.Contains (key);
+			}
+			
+			public void Add(object key, object value)
+			{
+				this.hash.Add (key, value);
+			}
+			
+			public void Remove(object key)
+			{
+				this.hash.Remove (key);
+			}
+
+			public void Clear()
+			{
+				this.hash.Clear ();
+			}
+			#endregion
+
+			#region ICollection Members
+			public bool					IsSynchronized
+			{
+				get { return this.hash.IsSynchronized; }
+			}
+			
+			public int					Count
+			{
+				get { return this.hash.Count; }
+			}
+			
+			public object				SyncRoot
+			{
+				get { return this.hash.SyncRoot; }
+			}
+			
+			
+			public void CopyTo(System.Array array, int index)
+			{
+				this.CopyTo (array, index);
+			}
+			#endregion
+
+			#region IEnumerable Members
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+			{
+				return this.hash.GetEnumerator ();
+			}
+			#endregion
+			
+			protected System.Collections.Hashtable hash;
+		}
+		
+		
 		protected bool					is_disposed;
 		protected bool					is_geom_ok;
 		
-		protected Canvas				disabled;
+		protected GlyphPaintStyle		paint_style = GlyphPaintStyle.Invalid;
+		protected EffectTable			effects;
 		protected byte[]				data;
 		protected double				zoom = 1.0;
 		protected Drawing.Color			color = Drawing.Color.Empty;
