@@ -6,9 +6,8 @@ namespace Epsitec.Common.Widgets.Design
 	/// La classe WidgetWrapper encapsule un Widget de manière à le rendre
 	/// éditable.
 	/// </summary>
-	public class WidgetWrapper
+	public class WidgetWrapper : Window.IPostPaintHandler
 	{
-		
 		public WidgetWrapper()
 		{
 		}
@@ -162,10 +161,28 @@ namespace Epsitec.Common.Widgets.Design
 		{
 			System.Diagnostics.Debug.Assert (this.widget == sender);
 			
-			Drawing.Graphics graphics = e.Graphics;
+			//	La peinture des "ornements" se fait après-coup, dans une dernière phase
+			//	d'affichage, afin d'être sûr qu'aucun widget ne couvre notre dessin.
 			
+			this.widget.Window.QueuePostPaintHandler (this, e.Graphics, e.ClipRectangle);
+		}
+		
+		private void HandlePaintBoundsCallback(Widget widget, ref Drawing.Rectangle bounds)
+		{
+			double m = WidgetWrapper.GripperRadius + 1;
+			
+			bounds.Inflate (m, m);
+		}
+		
+		
+		#region IPostPaintHandler Members
+		void Window.IPostPaintHandler.Paint(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle repaint)
+		{
+			double m = WidgetWrapper.GripperRadius + 1;
+			graphics.RestoreClippingRectangle (Drawing.Rectangle.Inflate (graphics.SaveClippingRectangle (), m, m));
 			this.PaintGrips (graphics, this.Widget.Client.Bounds);
 		}
+		#endregion
 		
 		protected void PaintGrips(Drawing.Graphics graphics, Drawing.Rectangle bounds)
 		{
@@ -175,19 +192,17 @@ namespace Epsitec.Common.Widgets.Design
 				
 				if (this.grips_hilited)
 				{
-					graphics.AddFilledRectangle (bounds.Left  - 2, bounds.Bottom - 2, 4, 4);
-					graphics.AddFilledRectangle (bounds.Left  - 2, bounds.Top    - 2, 4, 4);
-					graphics.AddFilledRectangle (bounds.Right - 2, bounds.Bottom - 2, 4, 4);
-					graphics.AddFilledRectangle (bounds.Right - 2, bounds.Top    - 2, 4, 4);
+					double r = WidgetWrapper.GripperRadius;
+					double d = WidgetWrapper.GripperRadius * 2;
+					
+					graphics.AddFilledRectangle (bounds.Left  - r, bounds.Bottom - r, d, d);
+					graphics.AddFilledRectangle (bounds.Left  - r, bounds.Top    - r, d, d);
+					graphics.AddFilledRectangle (bounds.Right - r, bounds.Bottom - r, d, d);
+					graphics.AddFilledRectangle (bounds.Right - r, bounds.Top    - r, d, d);
 				}
 				
 				graphics.RenderSolid (Drawing.Color.FromARGB (0.5, 1, 0, 0));
 			}
-		}
-		
-		private void HandlePaintBoundsCallback(Widget widget, ref Drawing.Rectangle bounds)
-		{
-			bounds.Inflate (3, 3);
 		}
 		
 		
@@ -281,5 +296,7 @@ namespace Epsitec.Common.Widgets.Design
 		protected Drawing.Rectangle		original_bounds;
 		protected Drawing.Point			original_mouse;
 		protected ArrayList				ancestors = new ArrayList ();
+		
+		protected const double			GripperRadius = 2;
 	}
 }
