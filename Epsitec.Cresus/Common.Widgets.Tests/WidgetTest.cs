@@ -126,6 +126,26 @@ namespace Epsitec.Common.Widgets
 			Assertion.Assert (widget.Text == "");
 		}
 		
+		[Test] public void CheckTextLayoutInfo()
+		{
+			Window window = new Window ();
+			window.ClientSize = new Size (200, 120);
+			window.Text       = "CheckTextLayoutInfo";
+			
+			StaticText text   = new StaticText ("Abcdefgh... Abcdefgh...");
+			
+			text.SetClientZoom (3);
+			
+			text.Size     = new Drawing.Size (text.PreferredSize.Width / 2, text.PreferredSize.Height * 2) * 3;
+			text.Location = new Drawing.Point (10, window.ClientSize.Height - 10 - text.Height);
+			text.Anchor   = AnchorStyles.TopLeft;
+			text.Parent   = window.Root;
+			text.PaintForeground += new PaintEventHandler(this.CheckTextLayoutInfoPaintForeground);
+			
+			window.Show ();
+		}
+		
+		
 		[Test] public void CheckPointMath()
 		{
 			Widget root = new Widget ();
@@ -699,6 +719,32 @@ namespace Epsitec.Common.Widgets
 			Widget[] command_widgets = root.FindCommandWidgets ();
 			
 			Assertion.AssertEquals (3, command_widgets.Length);
+		}
+		
+		
+		private void CheckTextLayoutInfoPaintForeground(object sender, PaintEventArgs e)
+		{
+			Widget widget = sender as Widget;
+			
+			Drawing.Point pos;
+			
+			double ascender;
+			double descender;
+			double width;
+			
+			widget.TextLayout.GetLineGeometry (0, out pos, out ascender, out descender, out width);
+			
+			Drawing.Path path = new Drawing.Path ();
+			
+			path.MoveTo (pos.X, pos.Y);
+			path.LineTo (pos.X + width, pos.Y);
+			path.MoveTo (pos.X, pos.Y + ascender);
+			path.LineTo (pos.X + width, pos.Y + ascender);
+			path.MoveTo (pos.X, pos.Y + descender);
+			path.LineTo (pos.X + width, pos.Y + descender);
+			
+			e.Graphics.Rasterizer.AddOutline (path, 0.2);
+			e.Graphics.RenderSolid (Drawing.Color.FromRGB (1, 0, 0));
 		}
 	}
 }
