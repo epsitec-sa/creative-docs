@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 07/10/2003
+//	Statut : OK/PA, 27/11/2003
 
 namespace Epsitec.Cresus.Database
 {
@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Database
 		bool					AutoClear		{ get; set; }
 		DbCommandType			CommandType		{ get; }
 		System.Data.IDbCommand	Command			{ get; }
+		int						CommandCount	{ get; }
 		
 		void Clear();
 		

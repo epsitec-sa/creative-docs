@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 07/10/2003
+//	Statut : OK/PA, 27/11/2003
 
 namespace Epsitec.Cresus.Database
 {
@@ -9,8 +9,8 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public interface ISqlEngine
 	{
-		void Execute(System.Data.IDbCommand command, DbCommandType type);
-		void Execute(System.Data.IDbCommand command, DbCommandType type, out object simple_data);
-		void Execute(System.Data.IDbCommand command, DbCommandType type, out System.Data.DataSet data_set);
+		void Execute(System.Data.IDbCommand command, DbCommandType type, int command_count);
+		void Execute(System.Data.IDbCommand command, DbCommandType type, int command_count, out object simple_data);
+		void Execute(System.Data.IDbCommand command, DbCommandType type, int command_count, out System.Data.DataSet data_set);
 	}
 }
