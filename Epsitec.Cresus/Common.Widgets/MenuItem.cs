@@ -253,6 +253,19 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		#region Serialization support
+		protected override bool ShouldSerializeLocation()
+		{
+			return false;
+		}
+		
+		protected override bool ShouldSerializeSize()
+		{
+			return false;
+		}
+		#endregion
+		
+		
 		protected override void OnTextChanged()
 		{
 			base.OnTextChanged ();
