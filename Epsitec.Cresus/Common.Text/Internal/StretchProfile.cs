@@ -94,6 +94,15 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public double							TotalWidth
+		{
+			get
+			{
+				return this.WidthNo + this.WidthCharacter + this.WidthSpace + this.WidthKashida;
+			}
+		}
+		
+		
 		public void Clear()
 		{
 			this.count_no        = 0;
@@ -145,7 +154,15 @@ namespace Epsitec.Common.Text.Internal
 		
 		public double ComputePenalty(double width, double fence_before, double fence_after)
 		{
-			double total_width = this.WidthNo + this.WidthCharacter + this.WidthSpace + this.WidthKashida;
+			//	Calcule la pénalité pour la ligne qui doit "tenir" dans l'espace
+			//	disponible (width = largeur disponible, avec les frontières avant
+			//	et après pouvant servir à modifier les coefficients).
+			
+			//	Une pénalité nulle est attribuée à une ligne qui occupe parfaitement
+			//	l'espace disponible. Une pénalité maximale est attribuée à une ligne
+			//	qui ne "tient" pas dans l'espace donné.
+			
+			double total_width = this.TotalWidth;
 			
 			if (total_width == width)
 			{
@@ -155,7 +172,7 @@ namespace Epsitec.Common.Text.Internal
 			if ((total_width == 0) ||
 				(total_width > width + fence_after))
 			{
-				return StretchProfile.MaximumPenalty;
+				return StretchProfile.MaxPenalty;
 			}
 			
 			double ε_no;
@@ -165,9 +182,12 @@ namespace Epsitec.Common.Text.Internal
 			
 			double delta_width;
 			
+			//	L'extensibilité et la compressibilité des divers caractères utilise
+			//	des coefficients différents :
+			
 			if (total_width > width)
 			{
-				delta_width   = total_width - width;
+				delta_width = total_width - width;
 				
 				ε_no        = this.width_no        / StretchProfile.κ_no_compress;
 				ε_character = this.width_character / StretchProfile.κ_character_compress;
@@ -176,7 +196,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 			else
 			{
-				delta_width   = width - total_width;
+				delta_width = width - total_width;
 				
 				ε_no        = this.width_no        / StretchProfile.κ_no_extend;
 				ε_character = this.width_character / StretchProfile.κ_character_extend;
@@ -187,8 +207,82 @@ namespace Epsitec.Common.Text.Internal
 			double total_ε = ε_no + ε_character + ε_space + ε_kashida;
 			double total_κ = 1 / total_ε;
 			
-			return total_κ * delta_width;
+			return System.Math.Min (total_κ * delta_width, StretchProfile.MaxPenalty);
 		}
+		
+		public double AdjustWidths(double width, double[] glyph_widths, Unicode.StretchClass[] glyph_classes)
+		{
+			double total_width = this.TotalWidth;
+			int    count       = glyph_widths.Length;
+			
+			if ((total_width == width) ||
+				(total_width == 0) ||
+				(count == 0))
+			{
+				return 0;
+			}
+			
+			double ε_no;
+			double ε_character;
+			double ε_space;
+			double ε_kashida;
+			
+			double delta_width = width - total_width;
+			
+			//	L'extensibilité et la compressibilité des divers caractères utilise
+			//	des coefficients différents :
+			
+			if (total_width > width)
+			{
+				ε_no        = this.width_no        / StretchProfile.κ_no_compress;
+				ε_character = this.width_character / StretchProfile.κ_character_compress;
+				ε_space     = this.width_space     / StretchProfile.κ_space_compress;
+				ε_kashida   = this.width_kashida   / StretchProfile.κ_kashida_compress;
+			}
+			else
+			{
+				ε_no        = this.width_no        / StretchProfile.κ_no_extend;
+				ε_character = this.width_character / StretchProfile.κ_character_extend;
+				ε_space     = this.width_space     / StretchProfile.κ_space_extend;
+				ε_kashida   = this.width_kashida   / StretchProfile.κ_kashida_extend;
+			}
+			
+			double total_ε = ε_no + ε_character + ε_space + ε_kashida;
+			double total_κ = 1 / total_ε;
+			double force   = total_κ * delta_width;
+			double changed = 0;
+			
+			for (int i = 0; i < count; i++)
+			{
+				double ε = 0;
+				
+				switch (glyph_classes[i])
+				{
+					case Unicode.StretchClass.No:
+						ε = ε_no / this.width_no;
+						break;
+					
+					case Unicode.StretchClass.Character:
+					case Unicode.StretchClass.CharacterSpace:
+						ε = ε_character / this.width_character;
+						break;
+					
+					case Unicode.StretchClass.Space:
+						ε = ε_space / this.width_space;
+						break;
+					
+					case Unicode.StretchClass.Kashida:
+						ε = ε_kashida / this.width_kashida;
+						break;
+				}
+				
+				changed         += glyph_widths[i] * force * ε;
+				glyph_widths[i] *= 1 + force * ε;
+			}
+			
+			return changed;
+		}
+		
 		
 		public static void Analyse(OpenType.Font font, double size, ulong[] text, int offset, int length, StretchProfile profile)
 		{
@@ -238,6 +332,6 @@ namespace Epsitec.Common.Text.Internal
 		private static double					κ_space_extend		= 10.0;
 		private static double					κ_kashida_extend	= 1.0;
 		
-		public static readonly double			MaximumPenalty = 1000000.0*1000000.0;
+		public static readonly double			MaxPenalty = 1000000.0*1000000.0;
 	}
 }

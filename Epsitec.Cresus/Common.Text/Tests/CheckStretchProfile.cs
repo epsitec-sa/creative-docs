@@ -52,7 +52,19 @@ namespace Epsitec.Common.Text.Tests
 			p4 = profile.ComputePenalty (109, 10, 2);
 			p5 = profile.ComputePenalty (108, 10, 2);
 			p6 = profile.ComputePenalty (107, 10, 2);
-
+			
+			double[] widths;
+			Unicode.StretchClass[] stretch = new Unicode.StretchClass[] { Unicode.StretchClass.Character, Unicode.StretchClass.Character, Unicode.StretchClass.Character, Unicode.StretchClass.Character, Unicode.StretchClass.Character, Unicode.StretchClass.Space, Unicode.StretchClass.Space, Unicode.StretchClass.Kashida, Unicode.StretchClass.Kashida };
+			double delta;
+			
+			widths = new double[] { 10, 20, 30, 20, 10, 5, 5, 2, 8 };
+			delta  = profile.AdjustWidths (120, widths, stretch);
+			
+			widths = new double[] { 10, 20, 30, 20, 10, 5, 5, 2, 8 };
+			delta  = profile.AdjustWidths (150, widths, stretch);
+			
+			widths = new double[] { 10, 20, 30, 20, 10, 5, 5, 2, 8 };
+			delta  = profile.AdjustWidths (108, widths, stretch);
 		}
 	}
 }
