@@ -1,3 +1,6 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -10,12 +13,17 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
-		public StaticImage(Widget embedder) : this()
+		public StaticImage(Widget embedder) : this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
 		
-		public StaticImage(string name)
+		public StaticImage(string name) : this ()
+		{
+			this.ImageName = name;
+		}
+		
+		public StaticImage(Widget embedder, string name) : this (embedder)
 		{
 			this.ImageName = name;
 		}
