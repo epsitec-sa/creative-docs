@@ -1606,22 +1606,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Invalide la zone ainsi que celles des clones.
 		protected void InvalidateAll(Drawing.Rectangle bbox)
 		{
-			this.InvalidateAll();
-#if false
-			return;
-			//TODO: enlever ces 2 lignes !
-
+			//?System.Diagnostics.Debug.WriteLine("InvalidateAll bbox");
+#if true
 			if ( bbox.IsEmpty )  return;
 
-#if false
-			Drawing.Point p1 = this.IconToScreen(new Drawing.Point(bbox.Left, bbox.Bottom));
-			Drawing.Point p2 = this.IconToScreen(new Drawing.Point(bbox.Right, bbox.Top));
-			bbox.Left   = p1.X;
-			bbox.Right  = p2.X;
-			bbox.Bottom = p1.Y;
-			bbox.Top    = p2.Y;
-#endif
+			bbox.BottomLeft = this.IconToScreen(bbox.BottomLeft);
+			bbox.TopRight   = this.IconToScreen(bbox.TopRight);
 			this.Invalidate(bbox);
+#else
+			this.Invalidate();
+#endif
 
 			foreach ( Widget widget in this.clones )
 			{
@@ -1634,12 +1628,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 				
 				widget.Invalidate();
 			}
-#endif
 		}
 
 		// Invalide la zone ainsi que celles des clones.
 		protected void InvalidateAll()
 		{
+			//?System.Diagnostics.Debug.WriteLine("InvalidateAll");
 			this.Invalidate();
 
 			foreach ( Widget widget in this.clones )

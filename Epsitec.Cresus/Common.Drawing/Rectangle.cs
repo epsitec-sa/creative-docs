@@ -185,8 +185,8 @@ namespace Epsitec.Common.Drawing
 			get { return new Point (this.x1, this.y1); }
 			set
 			{
-				this.x1 = System.Math.Min (value.X, this.x2);
-				this.y1 = System.Math.Min (value.Y, this.y2);
+				this.x1 = value.X;
+				this.y1 = value.Y;
 			}
 		}
 		
@@ -195,8 +195,8 @@ namespace Epsitec.Common.Drawing
 			get { return new Point (this.x2, this.y1); }
 			set
 			{
-				this.x2 = System.Math.Max (value.X, this.x1);
-				this.y1 = System.Math.Min (value.Y, this.y2);
+				this.x2 = value.X;
+				this.y1 = value.Y;
 			}
 		}
 		
@@ -205,8 +205,8 @@ namespace Epsitec.Common.Drawing
 			get { return new Point (this.x2, this.y2); }
 			set
 			{
-				this.x2 = System.Math.Max (value.X, this.x1);
-				this.y2 = System.Math.Max (value.Y, this.y1);
+				this.x2 = value.X;
+				this.y2 = value.Y;
 			}
 		}
 		
@@ -215,8 +215,8 @@ namespace Epsitec.Common.Drawing
 			get { return new Point (this.x1, this.y2); }
 			set
 			{
-				this.x1 = System.Math.Min (value.X, this.x2);
-				this.y2 = System.Math.Max (value.Y, this.y1);
+				this.x1 = value.X;
+				this.y2 = value.Y;
 			}
 		}
 		
