@@ -155,6 +155,22 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public bool UpdateSimpleStyles()
+		{
+			//	Met à jour tous les styles simples (passe en revue tous les
+			//	styles et ne régénère que le minimum qui a changé).
+			
+			bool changed = false;
+			
+			foreach (Styles.SimpleStyle style in this.simple_styles)
+			{
+				changed |= style.Update ();
+			}
+			
+			return changed;
+		}
+		
+		
 		public Styles.BaseStyle GetStyle(ulong code)
 		{
 			int index = Internal.CharMarker.GetStyleIndex (code);

@@ -49,14 +49,15 @@ namespace Epsitec.Common.Text.Styles
 			this.synthesis = null;
 		}
 		
-		public void Update()
+		public bool Update()
 		{
 			//	Recalcule le numéro de version correspondant à ce style
 			//	et regénère le résumé synthétique des propriétés si cela
 			//	est nécessaire.
 			
-			//	Sélectionne le plus grand numéro trouvé parmi les divers
-			//	composants et l'affecte à la synthèse.
+			bool changed = false;
+			
+			//	Retourne true si une modification a eu lieu.
 			
 			if ((this.components != null) &&
 				(this.components.Length > 0))
@@ -86,13 +87,19 @@ namespace Epsitec.Common.Text.Styles
 					accumulator.Done ();
 					
 					this.ClearContentsSignature ();
+					
+					changed = true;
 				}
 			}
-			else
+			else if (this.synthesis != null)
 			{
 				this.synthesis = null;
 				this.ClearContentsSignature ();
+				
+				changed = true;
 			}
+			
+			return changed;
 		}
 		
 		
