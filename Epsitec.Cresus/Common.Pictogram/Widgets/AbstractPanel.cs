@@ -11,7 +11,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public AbstractPanel()
 		{
 			this.extendedButton = new ArrowButton(this);
-			this.extendedButton.ButtonStyle = ButtonStyle.Combo;
+			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.Direction = Direction.Down;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 
