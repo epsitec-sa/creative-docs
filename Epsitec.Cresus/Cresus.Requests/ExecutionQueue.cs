@@ -2,8 +2,6 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
-using System.Runtime.Serialization.Formatters.Binary;
-
 
 namespace Epsitec.Cresus.Requests
 {
@@ -29,25 +27,33 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		public void Add(Base request)
+		public System.Data.DataRow AddRequest(Requests.Base request)
 		{
-			BinaryFormatter formatter = new BinaryFormatter ();
-			System.IO.MemoryStream stream = new System.IO.MemoryStream ();
-			formatter.Serialize (stream, request);
-			stream.Close ();
-			
-			byte[] buffer = stream.ToArray ();
+			byte[] buffer = Requests.Base.SerializeToMemory (request);
 			int    length = buffer.Length;
 			
-			System.Diagnostics.Debug.WriteLine ("Buffer written, contains " + length + " bytes.");
+			System.Diagnostics.Debug.Assert (length > 0);
 			
-			System.Data.DataRow data_row;
+			System.Data.DataRow row;
 			
-			this.queue_command.CreateNewRow (Tags.TableRequestQueue, out data_row);
+			this.queue_command.CreateNewRow (Tags.TableRequestQueue, out row);
 			
-			data_row.BeginEdit ();
-			data_row[Tags.ColumnQueueData] = buffer;
-			data_row.EndEdit ();
+			row.BeginEdit ();
+			row[Tags.ColumnQueueData] = buffer;
+			row.EndEdit ();
+			
+			return row;
+		}
+		
+		public Requests.Base GetRequest(System.Data.DataRow row)
+		{
+			if (row != null)
+			{
+				byte[] buffer = row[Tags.ColumnQueueData] as byte[];
+				return Requests.Base.DeserializeFromMemory (buffer);
+			}
+			
+			return null;
 		}
 		
 		

@@ -199,8 +199,18 @@ namespace Epsitec.Cresus.Database
 					group.Add (req_2);
 					group.Add (req_3);
 					
-					queue.Add (group);
+					int n = queue.Rows.Count;
+					
+					System.Data.DataRow row_1 = queue.AddRequest (group);
+					System.Data.DataRow row_2 = queue.Rows[n];
+					
+					Assertion.AssertEquals (row_1, row_2);
+					Assertion.AssertEquals (n+1, queue.Rows.Count);
+					Assertion.AssertEquals (DbIdClass.Temporary, DbId.AnalyzeClass ((long) row_1[Tags.ColumnId]));
+					
 					queue.SerializeToBase (transaction);
+					
+					Assertion.AssertEquals (DbIdClass.Standard, DbId.AnalyzeClass ((long) row_1[Tags.ColumnId]));
 					
 					transaction.Commit ();
 				}

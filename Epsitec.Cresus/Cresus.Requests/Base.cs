@@ -1,6 +1,8 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Runtime.Serialization.Formatters.Binary;
+
 namespace Epsitec.Cresus.Requests
 {
 	/// <summary>
@@ -38,6 +40,28 @@ namespace Epsitec.Cresus.Requests
 		}
 		#endregion
 		
+		public static byte[] SerializeToMemory(Base request)
+		{
+			BinaryFormatter        formatter = new BinaryFormatter ();
+			System.IO.MemoryStream stream    = new System.IO.MemoryStream ();
+			
+			formatter.Serialize (stream, request);
+			stream.Close ();
+			
+			return stream.ToArray ();
+		}
+		
+		public static Base DeserializeFromMemory(byte[] buffer)
+		{
+			BinaryFormatter        formatter = new BinaryFormatter ();
+			System.IO.MemoryStream stream    = new System.IO.MemoryStream(buffer, 0, buffer.Length, false, false);
+			
+			Base request = formatter.Deserialize (stream) as Base;
+			
+			stream.Close ();
+			
+			return request;
+		}
 		
 		protected void SetupType(Type type)
 		{
