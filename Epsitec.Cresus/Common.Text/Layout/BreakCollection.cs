@@ -31,6 +31,11 @@ namespace Epsitec.Common.Text.Layout
 			this.break_count++;
 		}
 		
+		public void Clear()
+		{
+			this.break_count = 0;
+		}
+		
 		
 		public Layout.Break						this[int index]
 		{

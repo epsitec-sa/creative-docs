@@ -69,7 +69,6 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[0].Advance > 1092.06);
 			Debug.Assert.IsTrue (breaks[0].Advance < 1092.07);
 			
-			breaks  = null;
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1170, 40, 10);
 			status  = context.Fit (layout, ref breaks);
 			
@@ -78,7 +77,6 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[0].Advance > 1148.75);
 			Debug.Assert.IsTrue (breaks[0].Advance < 1148.76);
 			
-			breaks  = null;
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1300, 40, 10);
 			status  = context.Fit (layout, ref breaks);
 			
@@ -87,17 +85,33 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[0].Advance > 1307.10);
 			Debug.Assert.IsTrue (breaks[0].Advance < 1307.11);
 			
-			breaks  = null;
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1400, 40, 10);
 			status  = context.Fit (layout, ref breaks);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.ErrorNeedMoreText);
 			
-			breaks  = null;
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1020, 10, 10);
 			status  = context.Fit (layout, ref breaks);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.ErrorCannotFit);
+			
+			story.MoveCursor (cursor, story.TextLength);
+			properties = new System.Collections.ArrayList ();
+			
+			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			
+			story.ConvertToStyledText ("\n", properties, out styled_text);
+			story.InsertText (cursor, styled_text);
+			story.MoveCursor (cursor, - story.TextLength);
+			
+			story_text = new ulong[story.TextLength];
+			story.ReadText (cursor, story_text.Length, story_text);
+			
+			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1400, 10, 10);
+			status  = context.Fit (layout, ref breaks);
+			
+			Debug.Assert.IsTrue (status == Layout.Status.OkFitEnded);
 		}
 		
 		private static void TestLineEngineWithHyphens()
@@ -146,7 +160,6 @@ namespace Epsitec.Common.Text.Tests
 			Layout.BreakCollection breaks = null;
 			Layout.Status status;
 			
-			breaks  = null;
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1300, 150, 10);
 			status  = context.Fit (layout, ref breaks);
 			
@@ -155,7 +168,6 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[1].Offset == 42);
 			Debug.Assert.IsTrue (breaks[2].Offset == 50);
 			
-			breaks  = null;
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
 			status  = context.Fit (layout, ref breaks);
 			
@@ -165,7 +177,6 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Trace.WriteLine ("Starting layout.");
 			for (int i = 0; i < 1000; i++)
 			{
-				breaks  = null;
 				context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
 				status  = context.Fit (layout, ref breaks);
 			}

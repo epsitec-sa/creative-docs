@@ -19,6 +19,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			FitScratch scratch = new FitScratch ();
 			
+			scratch.Offset    = context.TextOffset;
 			scratch.Hyphenate = context.Hyphenate;
 			scratch.FenceMinX = context.RightMargin-context.BreakFenceBefore;
 			scratch.FenceMaxX = context.RightMargin+context.BreakFenceAfter;
@@ -28,8 +29,10 @@ namespace Epsitec.Common.Text.Layout
 			
 			for (;;)
 			{
-				if (context.GetNextWord (scratch.Offset, out scratch.Text, out scratch.TextStart, out scratch.TextLength, out scratch.WordBreakInfo))
+				if (context.GetNextWord (scratch.Offset, out scratch.Text, out scratch.TextLength, out scratch.WordBreakInfo))
 				{
+					scratch.TextStart = 0;
+					
 					while (scratch.TextLength > 0)
 					{
 						if (scratch.Advance > scratch.FenceMinX)
@@ -53,15 +56,17 @@ namespace Epsitec.Common.Text.Layout
 						if ((layout != null) &&
 							(layout != this))
 						{
-							context.SaveSnapshot (scratch.Advance);
+							//	Change de moteur de layout. Il faut par conséquent mémoriser où on
+							//	s'arrête pour que le suivant sache où reprendre :
 							
-							context.TextStart   += scratch.Offset;
+							context.X           += scratch.Advance;
+							context.TextOffset  += scratch.Offset;
 							context.LayoutEngine = layout;
 							
 							return Layout.Status.SwitchLayout;
 						}
 						
-						if (this.FitAnalyseRun (ref scratch, ref result, scratch.Hyphenate))
+						if (this.FitAnalyseRun (ref scratch, ref result))
 						{
 							goto stop; // --------------------------------------------------------------------------.
 						}              //																			|
@@ -98,7 +103,7 @@ namespace Epsitec.Common.Text.Layout
 			
 			result.Add (new Layout.Break (scratch.Offset, scratch.Advance));
 			
-			return Layout.Status.Ok;
+			return Layout.Status.OkFitEnded;
 			
 			//																										|
 stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------------------------------------'
@@ -120,7 +125,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 		}
 		
 		
-		private bool FitAnalyseRun(ref FitScratch scratch, ref Layout.BreakCollection result, bool hyphenate)
+		private bool FitAnalyseRun(ref FitScratch scratch, ref Layout.BreakCollection result)
 		{
 			//	Analyse le texte constituté de caractères de style identique (même
 			//	fonte, même layout). Si une césure est requise, procède par petites
@@ -128,6 +133,8 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			//	Retourne true s'il faut stopper immédiatement l'analyse (le texte
 			//	est trop long pour l'espace de justification disponible).
+			
+			bool hyphenate = scratch.Hyphenate;
 			
 			for (int frag_length = 0; frag_length < scratch.RunLength; )
 			{
@@ -145,18 +152,17 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				
 				if (frag_length < scratch.RunLength)
 				{
-					ulong[] buffer = scratch.GetBuffer (scratch.RunLength);
-					
-					System.Array.Copy (scratch.Text, scratch.TextStart, buffer, 0, frag_length);
-					
 					//	Produit la césure manuellement (il faudrait faire mieux pour gérer
 					//	correctement des langues comme le norvégien ou l'ancien allemand
 					//	qui peuvent provoquer le dédoublement de certains caractères) :
 					
-					buffer[frag_length] = '-';
+					ulong save = scratch.Text[frag_length];
+					scratch.Text[frag_length] = '-';
 					
-					glyphs    = scratch.Font.GenerateGlyphs (buffer, 0, frag_length+1);
+					glyphs    = scratch.Font.GenerateGlyphs (scratch.Text, scratch.TextStart, frag_length+1);
 					can_break = true;
+					
+					scratch.Text[frag_length] = save;
 				}
 				else
 				{
@@ -193,21 +199,6 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 		
 		private struct FitScratch
 		{
-			public ulong[] GetBuffer(int length)
-			{
-				if (this.buffer == null)
-				{
-					this.buffer = new ulong[System.Math.Max (length, 32)];
-				}
-				else if (this.buffer.Length < length)
-				{
-					this.buffer = new ulong[length];
-				}
-				
-				return this.buffer;
-			}
-			
-			
 			public int							Offset;
 			public double						Advance;
 			public int							LastBreakOffset;
@@ -228,8 +219,6 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			public OpenType.Font				Font;
 			public double						FontSize;
-			
-			public ulong[]						buffer;
 		}
 	}
 }

@@ -11,6 +11,8 @@ namespace Epsitec.Common.Text.Layout
 	{
 		public Context(Text.Context text_context, ulong[] text, int start, double oy_base, double mx_left, double mx_right, double break_fence_before, double break_fence_after)
 		{
+			this.buffer = null;
+			
 			this.text_context  = text_context;
 			
 			this.text       = text;
@@ -42,18 +44,6 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public ulong[]							Text
-		{
-			get
-			{
-				return this.text;
-			}
-			set
-			{
-				this.text = value;
-			}
-		}
-		
 		public Text.Context						TextContext
 		{
 			get
@@ -62,28 +52,15 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		public int								TextStart
+		public int								TextOffset
 		{
 			get
 			{
-				return this.text_start;
+				return this.text_offset;
 			}
 			set
 			{
-				this.text_start = value;
-			}
-		}
-		
-		public ulong							this[int offset]
-		{
-			get
-			{
-				if (this.text_start + offset < this.text.Length)
-				{
-					return this.text[this.text_start+offset];
-				}
-				
-				return 0;
+				this.text_offset = value;
 			}
 		}
 		
@@ -179,24 +156,68 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public bool UpdateOffset(ref int offset, int distance)
+		public Layout.Status Fit(Layout.BaseEngine engine, ref Layout.BreakCollection result)
 		{
-			//	TODO: gérer le sens <-- pour l'avance du texte
+			//	Détermine les points de découpe pour le texte courant.
 			
-			offset += distance;
+			this.hyphenate     = false;
+			this.layout_engine = engine;
 			
-			if ((offset < 0) ||
-				(this.text_start + offset >= this.text.Length))
+			Snapshot snapshot = new Snapshot (this);
+			
+			if (result == null)
 			{
-				return false;
+				result = new Layout.BreakCollection ();
 			}
 			else
 			{
-				return true;
+				result.Clear ();
 			}
+			
+			for (int pass = 0; pass < 2; )
+			{
+				if (pass > 0)
+				{
+					snapshot.Restore (this);
+				}
+				
+				Layout.Status status = this.layout_engine.Fit (this, ref result);
+				
+				switch (status)
+				{
+					case Layout.Status.Ok:
+					case Layout.Status.OkFitEnded:
+						return status;
+					
+					case Layout.Status.ErrorNeedMoreText:
+						snapshot.Restore (this);
+						return status;
+						
+					case Layout.Status.SwitchLayout:
+						break;
+					
+					case Layout.Status.ErrorCannotFit:
+						this.hyphenate = true;
+						pass++;
+						break;
+					
+					default:
+						throw new System.InvalidOperationException ();
+				}
+			}
+			
+			if (result.Count > 0)
+			{
+				return Layout.Status.Ok;
+			}
+			
+			snapshot.Restore (this);
+			
+			return Layout.Status.ErrorCannotFit;
 		}
 		
-		public bool GetNextWord(int offset, out ulong[] text, out int start, out int length, out Unicode.BreakInfo word_break_info)
+		
+		public bool GetNextWord(int offset, out ulong[] text, out int length, out Unicode.BreakInfo word_break_info)
 		{
 			word_break_info = Unicode.BreakInfo.No;
 			
@@ -219,110 +240,77 @@ namespace Epsitec.Common.Text.Layout
 				}
 			}
 			
-			text   = this.text;
-			start  = this.text_start + offset;
-			length = pos - start;
+			length = pos - (this.text_start + offset);
+			text   = this.GetInternalBuffer (length);
 			
 			if (length == 0)
 			{
 				return false;
 			}
-			else
+			
+			//	Copie le texte dans le buffer temporaire. C'est plus rapide de faire
+			//	la copie à la main que d'appeler System.Array.Copy :
+			
+			pos = this.text_start + offset;
+			
+			for (int i = 0; i < length; i++)
 			{
-				return true;
+				text[i] = this.text[pos+i];
 			}
+			
+			return true;
 		}
 		
 		
-		public Layout.Status Fit(Layout.BaseEngine engine, ref Layout.BreakCollection result)
+		private ulong[] GetInternalBuffer(int length)
 		{
-			this.hyphenate = false;
-			this.layout_engine = engine;
-			
-			if (result == null)
+			if (this.buffer == null)
 			{
-				result = new Layout.BreakCollection ();
+				this.buffer = new ulong[System.Math.Max (length, 32)];
 			}
-			
-			for (int pass = 0; pass < 2; )
+			else if (this.buffer.Length < length)
 			{
-				Layout.Status status = this.layout_engine.Fit (this, ref result);
+				this.buffer = new ulong[length];
+			}
 				
-				switch (status)
-				{
-					case Layout.Status.Ok:
-						return status;
-					
-					case Layout.Status.ErrorNeedMoreText:
-						this.RewindAllSnapshots ();
-						return status;
-						
-					case Layout.Status.SwitchLayout:
-						break;
-					
-					case Layout.Status.ErrorCannotFit:
-						this.hyphenate = true;
-						pass++;
-						break;
-					
-					default:
-						throw new System.InvalidOperationException ();
-				}
-			}
-			
-			if (result.Count > 0)
-			{
-				return Layout.Status.Ok;
-			}
-			
-			return Layout.Status.ErrorCannotFit;
-		}
-		
-		
-		public void SaveSnapshot(double advance)
-		{
-			this.snapshot = new Snapshot (this, advance);
-		}
-		
-		public void RewindSnapshot()
-		{
-			this.snapshot.Restore (this);
-		}
-		
-		public void RewindAllSnapshots()
-		{
-			while (this.snapshot != null)
-			{
-				this.snapshot.Restore (this);
-			}
+			return this.buffer;
 		}
 		
 		
 		private class Snapshot
 		{
-			public Snapshot(Context context, double advance)
+			public Snapshot(Context context)
 			{
-				this.snapshot = context.snapshot;
-				this.text_start = context.text_start;
+				this.snapshot      = context.snapshot;
+				this.text_offset   = context.text_offset;
+				this.layout_engine = context.layout_engine;
+				this.ox            = context.ox;
+				this.oy_base       = context.oy_base;
 			}
-			
 			
 			
 			public void Restore(Context context)
 			{
-				context.snapshot   = this.snapshot;
-				context.text_start = this.text_start;
+				context.snapshot      = this.snapshot;
+				context.text_offset   = this.text_offset;
+				context.layout_engine = this.layout_engine;
+				context.ox            = this.ox;
+				context.oy_base       = this.oy_base;
 			}
 			
 			
 			private Snapshot					snapshot;
-			private int							text_start;
+			private int							text_offset;
+			private Layout.BaseEngine			layout_engine;
+			private double						ox, oy_base;
 		}
+		
 		
 		
 		private Text.Context					text_context;
 		private ulong[]							text;
 		private int								text_start;
+		private int								text_offset;
 		private int								left_to_right;
 		
 		private double							oy_base;
@@ -336,5 +324,7 @@ namespace Epsitec.Common.Text.Layout
 		
 		private Layout.BaseEngine				layout_engine;
 		private Snapshot						snapshot;
+		
+		private ulong[]							buffer;
 	}
 }

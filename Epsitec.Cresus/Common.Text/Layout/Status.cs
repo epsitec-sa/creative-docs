@@ -11,6 +11,8 @@ namespace Epsitec.Common.Text.Layout
 		Undefined,
 		
 		Ok,
+		OkFitEnded,
+		
 		SwitchLayout,
 		
 		ErrorNeedMoreText,
