@@ -129,12 +129,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ExecutionStatus.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Group.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "InsertStaticData.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "StateMachine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
