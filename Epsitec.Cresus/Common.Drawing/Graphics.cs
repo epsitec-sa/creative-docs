@@ -161,6 +161,16 @@ namespace Epsitec.Common.Drawing
 			this.rasterizer.AddSurface (path);
 		}
 		
+		public void AddFilledRectangle(Point p, Size s)
+		{
+			this.AddFilledRectangle (p.X, p.Y, s.Width, s.Height);
+		}
+		
+		public void AddFilledRectangle(Rectangle rect)
+		{
+			this.AddFilledRectangle (rect.X, rect.Y, rect.Width, rect.Height);
+		}
+		
 		public void AddText(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment align)
 		{
 			double text_width  = font.GetTextAdvance (text) * size;
