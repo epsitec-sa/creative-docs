@@ -2,6 +2,8 @@ namespace Epsitec.Common.Drawing
 {
 	public enum ContentAlignment
 	{
+		None,
+		
 		BottomLeft,
 		BottomCenter,
 		BottomRight,
