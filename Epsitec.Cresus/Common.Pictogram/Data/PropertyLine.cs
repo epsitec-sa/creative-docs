@@ -14,6 +14,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.width = 1.0;
 			this.cap   = Drawing.CapStyle.Round;
 			this.join  = Drawing.JoinStyle.Round;
+			this.limit = 5.0;
 		}
 
 		[XmlAttribute]
@@ -37,6 +38,13 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.join = value; }
 		}
 
+		[XmlAttribute]
+		public double Limit
+		{
+			get { return this.limit; }
+			set { this.limit = value; }
+		}
+
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		[XmlIgnore]
 		public override bool AlterBoundingBox
@@ -50,8 +58,9 @@ namespace Epsitec.Common.Pictogram.Data
 			base.CopyTo(property);
 			PropertyLine p = property as PropertyLine;
 			p.Width = this.width;
-			p.Cap = this.cap;
-			p.Join = this.join;
+			p.Cap   = this.cap;
+			p.Join  = this.join;
+			p.Limit = this.limit;
 		}
 
 		// Compare deux propriétés.
@@ -63,6 +72,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( p.Width != this.width )  return false;
 			if ( p.Cap   != this.cap   )  return false;
 			if ( p.Join  != this.join  )  return false;
+			if ( p.Limit != this.limit )  return false;
 
 			return true;
 		}
@@ -73,8 +83,28 @@ namespace Epsitec.Common.Pictogram.Data
 			return new PanelLine();
 		}
 
+
+		// Engraisse la bbox selon le trait.
+		public void InflateBoundingBox(ref Drawing.Rectangle bbox)
+		{
+			if ( this.join == Drawing.JoinStyle.Miter )
+			{
+				bbox.Inflate(this.width*0.5*this.limit);
+			}
+			else if ( this.cap == Drawing.CapStyle.Square )
+			{
+				bbox.Inflate(this.width*0.5*1.415);  // augmente de racine de 2
+			}
+			else
+			{
+				bbox.Inflate(this.width*0.5);
+			}
+		}
+
+
 		protected double				width;
 		protected Drawing.CapStyle		cap;
 		protected Drawing.JoinStyle		join;
+		protected double				limit;  // longueur (et non angle) !
 	}
 }
