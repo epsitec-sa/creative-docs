@@ -596,7 +596,6 @@ namespace Epsitec.Common.Designer
 		protected Window						attribute_window;
 		protected System.Collections.ArrayList	edit_window_list;
 		
-		protected Window						active_window;
 		protected Editors.WidgetEditor			active_editor;
 		protected Widget						active_widget;
 	}
