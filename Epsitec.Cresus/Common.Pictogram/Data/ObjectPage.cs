@@ -24,6 +24,13 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.name = value; }
 		}
 
+		[XmlIgnore]
+		public int CurrentLayer
+		{
+			get { return this.currentLayer; }
+			set { this.currentLayer = value; }
+		}
+
 
 		// Reprend toutes les caractéristiques d'un objet.
 		public override void CloneObject(AbstractObject src)
@@ -35,5 +42,6 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		protected string		name = "";
+		protected int			currentLayer;
 	}
 }

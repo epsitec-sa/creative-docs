@@ -769,39 +769,71 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			// Crée tous les panneaux.
 			Drawing.Rectangle rect = new Drawing.Rectangle();
-
-			System.Collections.ArrayList list = this.drawer.PropertiesList();
 			double posy = this.panel.Height-1;
 			Widget originColorLastPanel = null;
-			int index = 0;
-			foreach ( AbstractProperty property in list )
+
+			AbstractObject creatingObject = this.drawer.CreatingObject;
+			if ( creatingObject == null )
 			{
-				panel = property.CreatePanel();
-				panel.Drawer = this.drawer;
-
-				AbstractProperty p = this.drawer.GetProperty(property.Type);
-				panel.SetProperty(p);
-				panel.Multi = p.Multi;
-
-				rect.Left   = 1;
-				rect.Right  = this.panel.Width-1;
-				rect.Bottom = posy-panel.DefaultHeight;
-				rect.Top    = posy;
-				panel.Bounds = rect;
-				panel.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
-				panel.Changed += new EventHandler(this.HandlePanelChanged);
-				panel.ExtendedChanged += new EventHandler(this.HandleExtendedChanged);
-				panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
-				panel.TabIndex = index++;
-				panel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
-				panel.Parent = this.panel;
-
-				if ( panel.PropertyType == this.originColorType )
+				System.Collections.ArrayList list = this.drawer.PropertiesList();
+				double lastBack = -1;
+				int index = 0;
+				foreach ( AbstractProperty property in list )
 				{
-					originColorLastPanel = panel;
-				}
+					if ( lastBack != -1 && lastBack != property.BackgroundIntensity )
+					{
+						posy -= 5;
+					}
+					lastBack = property.BackgroundIntensity;
 
-				posy -= rect.Height;
+					panel = property.CreatePanel();
+					panel.Drawer = this.drawer;
+
+					AbstractProperty p = this.drawer.GetProperty(property.Type);
+					panel.SetProperty(p);
+					panel.Multi = p.Multi;
+
+					rect.Left   = 1;
+					rect.Right  = this.panel.Width-1;
+					rect.Bottom = posy-panel.DefaultHeight;
+					rect.Top    = posy;
+					panel.Bounds = rect;
+					panel.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
+					panel.Changed += new EventHandler(this.HandlePanelChanged);
+					panel.ExtendedChanged += new EventHandler(this.HandleExtendedChanged);
+					panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
+					panel.TabIndex = index++;
+					panel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+					panel.Parent = this.panel;
+
+					if ( panel.PropertyType == this.originColorType )
+					{
+						originColorLastPanel = panel;
+					}
+
+					posy -= rect.Height;
+				}
+			}
+			else	// objet en cours de création ?
+			{
+				posy -= 50;
+				for ( i=0 ; i<100 ; i++ )
+				{
+					string cmd, name, text;
+					if ( !creatingObject.CreateAction(i, out cmd, out name, out text) )  break;
+					Button button = new Button();
+					button.Command = cmd;
+					button.Name = name;
+					button.Text = text;
+					rect.Left   = 1;
+					rect.Right  = this.panel.Width-1;
+					rect.Bottom = posy-button.DefaultHeight;
+					rect.Top    = posy;
+					button.Bounds = rect;
+					button.Parent = this.panel;
+
+					posy -= rect.Height+10;
+				}
 			}
 			this.leftHeightUsed = this.panel.Height-posy;
 

@@ -20,7 +20,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			PropertyArrow arrow = new PropertyArrow();
 			arrow.Type = PropertyType.Arrow;
-			arrow.Changed += new EventHandler(this.HandleRegularChanged);
+			arrow.Changed += new EventHandler(this.HandleChanged);
 			this.AddProperty(arrow);
 		}
 
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 		public override void Dispose()
 		{
-			if ( this.ExistProperty(2) )  this.PropertyArrow(2).Changed -= new EventHandler(this.HandleRegularChanged);
+			if ( this.ExistProperty(2) )  this.PropertyArrow(2).Changed -= new EventHandler(this.HandleChanged);
 			base.Dispose();
 		}
 
@@ -57,12 +57,12 @@ namespace Epsitec.Common.Pictogram.Data
 
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
 
-			if ( AbstractObject.DetectOutline(pathLine, width, pos) )  return true;
+			if (                 AbstractObject.DetectOutline(pathLine,  width, pos) )  return true;
 			if ( outlineStart && AbstractObject.DetectOutline(pathStart, width, pos) )  return true;
 			if ( outlineEnd   && AbstractObject.DetectOutline(pathEnd,   width, pos) )  return true;
 
-			if ( surfaceStart && AbstractObject.DetectFill(pathStart, pos) )  return true;
-			if ( surfaceEnd   && AbstractObject.DetectFill(pathEnd,   pos) )  return true;
+			if ( surfaceStart && AbstractObject.DetectSurface(pathStart, pos) )  return true;
+			if ( surfaceEnd   && AbstractObject.DetectSurface(pathEnd,   pos) )  return true;
 
 			return false;
 		}
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Pictogram.Data
 				double d = Drawing.Point.Distance(this.Handle(1).Position, pos);
 				this.PropertyArrow(2).Length2 = d;
 			}
-			this.UpdateRegularHandle();
+			this.UpdateHandle();
 			this.dirtyBbox = true;
 		}
 
@@ -123,6 +123,14 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Déplace globalement l'objet.
+		public override void MoveGlobal(GlobalModifierData initial, GlobalModifierData final, bool all)
+		{
+			base.MoveGlobal(initial, final, all);
+			this.UpdateHandle();
+		}
+
+
 		// Début de la création d'un objet.
 		public override void CreateMouseDown(Drawing.Point pos, IconContext iconContext)
 		{
@@ -145,7 +153,7 @@ namespace Epsitec.Common.Pictogram.Data
 			iconContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
 			iconContext.ConstrainDelStarting();
-			this.UpdateRegularHandle();
+			this.UpdateHandle();
 		}
 
 		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
@@ -157,13 +165,13 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		private void HandleRegularChanged(object sender)
+		private void HandleChanged(object sender)
 		{
-			this.UpdateRegularHandle();
+			this.UpdateHandle();
 		}
 
 		// Met à jour les poignées pour les profondeurs des flèches.
-		protected void UpdateRegularHandle()
+		protected void UpdateHandle()
 		{
 			if ( this.handles.Count < 2 )  return;
 
@@ -231,9 +239,9 @@ namespace Epsitec.Common.Pictogram.Data
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
 						   out pathLine);
 
-			Drawing.Rectangle bboxStart = pathStart.ComputeBounds();
-			Drawing.Rectangle bboxEnd   = pathEnd.ComputeBounds();
-			Drawing.Rectangle bboxLine  = pathLine.ComputeBounds();
+			Drawing.Rectangle bboxStart = AbstractObject.ComputeBoundingBox(pathStart);
+			Drawing.Rectangle bboxEnd   = AbstractObject.ComputeBoundingBox(pathEnd);
+			Drawing.Rectangle bboxLine  = AbstractObject.ComputeBoundingBox(pathLine);
 
 			this.PropertyLine(0).InflateBoundingBox(ref bboxLine);
 			this.bboxGeom = bboxLine;

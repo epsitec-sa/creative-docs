@@ -67,7 +67,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( this.PropertyGradient(2).IsVisible() )
 			{
 				path.Close();
-				if ( AbstractObject.DetectFill(path, pos) )  return true;
+				if ( AbstractObject.DetectSurface(path, pos) )  return true;
 			}
 			return false;
 		}

@@ -1,3 +1,4 @@
+using Epsitec.Common.Support;
 using System.Xml.Serialization;
 
 namespace Epsitec.Common.Pictogram.Data
@@ -17,6 +18,11 @@ namespace Epsitec.Common.Pictogram.Data
 			lineColor.Type = PropertyType.LineColor;
 			this.AddProperty(lineColor);
 
+			PropertyArrow arrow = new PropertyArrow();
+			arrow.Type = PropertyType.Arrow;
+			arrow.Changed += new EventHandler(this.HandleChanged);
+			this.AddProperty(arrow);
+
 			PropertyGradient fillGradient = new PropertyGradient();
 			fillGradient.Type = PropertyType.FillGradient;
 			this.AddProperty(fillGradient);
@@ -35,6 +41,12 @@ namespace Epsitec.Common.Pictogram.Data
 			return new ObjectPoly();
 		}
 
+		public override void Dispose()
+		{
+			if ( this.ExistProperty(2) )  this.PropertyArrow(2).Changed -= new EventHandler(this.HandleChanged);
+			base.Dispose();
+		}
+
 
 		// Nom de l'icône.
 		public override string IconName
@@ -51,59 +63,92 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Rectangle bbox = this.BoundingBox;
 			if ( !bbox.Contains(pos) )  return false;
 
-			Drawing.Path path = this.PathBuild();
+			Drawing.Path pathStart;  bool outlineStart, surfaceStart;
+			Drawing.Path pathEnd;    bool outlineEnd,   surfaceEnd;
+			Drawing.Path pathLine;
+			this.PathBuild(out pathStart, out outlineStart, out surfaceStart,
+						   out pathEnd,   out outlineEnd,   out surfaceEnd,
+						   out pathLine);
 
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
-			if ( AbstractObject.DetectOutline(path, width, pos) )  return true;
+			
+			if (                 AbstractObject.DetectOutline(pathLine,  width, pos) )  return true;
+			if ( outlineStart && AbstractObject.DetectOutline(pathStart, width, pos) )  return true;
+			if ( outlineEnd   && AbstractObject.DetectOutline(pathEnd,   width, pos) )  return true;
 
-			if ( this.PropertyGradient(2).IsVisible() )
+			if ( surfaceStart && AbstractObject.DetectSurface(pathStart, pos) )  return true;
+			if ( surfaceEnd   && AbstractObject.DetectSurface(pathEnd,   pos) )  return true;
+
+			if ( this.PropertyGradient(3).IsVisible() )
 			{
-				path.Close();
-				if ( AbstractObject.DetectFill(path, pos) )  return true;
+				pathLine.Close();
+				if ( AbstractObject.DetectSurface(pathLine, pos) )  return true;
 			}
+
 			return false;
 		}
 
-		// Détecte si la souris est sur le pourtour de l'objet.
-		// Retourne le rank de la poignée de départ, ou -1
-		protected int DetectOutline(Drawing.Point pos)
+
+		// Déplace une poignée.
+		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
 		{
-			int total = this.TotalHandle;
-			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
-			for ( int i=0 ; i<total-1 ; i++ )
+			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
-				Drawing.Point p1 = this.Handle(i+0).Position;
-				Drawing.Point p2 = this.Handle(i+1).Position;
-				if ( Drawing.Point.Detect(p1,p2, pos, width) )  return i;
+				base.MoveHandleProcess(rank, pos, iconContext);
+				return;
 			}
-			if ( this.PropertyBool(3).Bool && total > 2 )  // fermé ?
+
+			iconContext.ConstrainSnapPos(ref pos);
+
+			if ( this.Handle(rank).Type == HandleType.Primary )  // principale ?
 			{
-				Drawing.Point p1 = this.Handle(0).Position;
-				Drawing.Point p2 = this.Handle(total-1).Position;
-				if ( Drawing.Point.Detect(p1,p2, pos, width) )  return total-1;
+				this.Handle(rank).Position = pos;
 			}
-			return -1;
+			else
+			{
+				if ( rank == this.HandleArrowRank(0) )  // pp1 ?
+				{
+					double d = Drawing.Point.Distance(this.Handle(0).Position, pos);
+					this.PropertyArrow(2).Length1 = d;
+				}
+
+				if ( rank == this.HandleArrowRank(1) )  // pp2 ?
+				{
+					double d = Drawing.Point.Distance(this.Handle(this.TotalHandlePrimary-1).Position, pos);
+					this.PropertyArrow(2).Length2 = d;
+				}
+			}
+			this.UpdateHandle();
+			this.dirtyBbox = true;
 		}
 
-		// Détecte si la souris est dans la surface de l'objet.
-		protected bool DetectFill(Drawing.Point pos)
+		// Indique si le déplacement d'une poignée doit se répercuter sur les propriétés.
+		public override bool IsMoveHandlePropertyChanged(int rank)
 		{
-			int total = this.TotalHandle;
-			if ( !this.PropertyGradient(2).IsVisible() )  return false;
-			InsideSurface surf = new InsideSurface(pos, total);
-			for ( int i=0 ; i<total-1 ; i++ )
+			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
-				Drawing.Point p1 = this.Handle(i+0).Position;
-				Drawing.Point p2 = this.Handle(i+1).Position;
-				surf.AddLine(p1, p2);
+				return base.IsMoveHandlePropertyChanged(rank);
 			}
-			if ( true )  // toujours comme si fermé
+			return ( rank >= this.TotalHandlePrimary );
+		}
+
+		// Retourne la propriété modifiée en déplaçant une poignée.
+		public override AbstractProperty MoveHandleProperty(int rank)
+		{
+			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
 			{
-				Drawing.Point p1 = this.Handle(0).Position;
-				Drawing.Point p2 = this.Handle(total-1).Position;
-				surf.AddLine(p1, p2);
+				return base.MoveHandleProperty(rank);
 			}
-			return surf.IsInside();
+			if ( rank >= this.TotalHandlePrimary )  return this.PropertyArrow(2);
+			return null;
+		}
+
+
+		// Déplace globalement l'objet.
+		public override void MoveGlobal(GlobalModifierData initial, GlobalModifierData final, bool all)
+		{
+			base.MoveGlobal(initial, final, all);
+			this.UpdateHandle();
 		}
 
 
@@ -128,7 +173,7 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 			else
 			{
-				if ( this.handles.Count > 2 )
+				if ( this.handles.Count > 2 && this.Handle(handleRank).Type == HandleType.Primary )
 				{
 					item = new ContextMenuItem();
 					list.Add(item);  // séparateur
@@ -183,11 +228,13 @@ namespace Epsitec.Common.Pictogram.Data
 				handle.Type = HandleType.Primary;
 				handle.IsSelected = true;
 				this.HandleInsert(rank+1, handle);
+				this.UpdateHandle();
 			}
 
 			if ( cmd == "HandleDelete" )
 			{
 				this.HandleDelete(handleRank);
+				this.UpdateHandle();
 			}
 
 			if ( cmd == "HandleSym" )
@@ -201,6 +248,21 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+		// Détecte si la souris est sur le pourtour de l'objet.
+		// Retourne le rank de la poignée de départ, ou -1
+		protected int DetectOutline(Drawing.Point pos)
+		{
+			Drawing.Path pathStart;  bool outlineStart, surfaceStart;
+			Drawing.Path pathEnd;    bool outlineEnd,   surfaceEnd;
+			Drawing.Path pathLine;
+			this.PathBuild(out pathStart, out outlineStart, out surfaceStart,
+						   out pathEnd,   out outlineEnd,   out surfaceEnd,
+						   out pathLine);
+
+			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
+			return AbstractObject.DetectOutlineRank(pathLine, width, pos);
+		}
+
 
 		// Début de la création d'un objet.
 		public override void CreateMouseDown(Drawing.Point pos, IconContext iconContext)
@@ -209,7 +271,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( this.TotalHandle == 0 )
 			{
-				this.PropertyBool(3).Bool = false;
+				this.PropertyBool(4).Bool = false;
 				this.HandleAdd(pos, HandleType.Starting);
 				this.Handle(0).IsSelected = true;
 			}
@@ -271,12 +333,13 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( len > this.closeMargin )  return false;  // pas fini
 
 			this.HandleDelete(rank);
-			this.PropertyBool(3).Bool = true;
+			this.PropertyBool(4).Bool = true;
 
 			this.TempDelete();
 			this.Handle(0).Type = HandleType.Primary;
 			this.Deselect();
 			iconContext.ConstrainDelStarting();
+			this.UpdateHandle();
 			return true;
 		}
 
@@ -297,9 +360,29 @@ namespace Epsitec.Common.Pictogram.Data
 			this.Handle(0).Type = HandleType.Primary;
 			this.Deselect();
 			iconContext.ConstrainDelStarting();
+			this.UpdateHandle();
 			return true;
 		}
 
+		// Retourne un bouton d'action pendant la création.
+		public override bool CreateAction(int rank, out string cmd, out string name, out string text)
+		{
+			if ( rank == 0 )
+			{
+				cmd  = "Object";
+				name = "CreateEnding";
+				text = "Terminer la création";
+				return true;
+			}
+			if ( rank == 1 )
+			{
+				cmd  = "Object";
+				name = "CreateAndSelect";
+				text = "Terminer et sélectionner";
+				return true;
+			}
+			return base.CreateAction(rank, out cmd, out name, out text);
+		}
 
 		// Crée l'objet temporaire pour montrer le nouveau segment.
 		protected void TempCreate(Drawing.Point pos, IconContext iconContext)
@@ -318,6 +401,12 @@ namespace Epsitec.Common.Pictogram.Data
 			PropertyLine pl = ap as PropertyLine;
 			if ( pl.Width == 0 )  pl.Width = 1.0*this.scaleX;
 			this.tempLine.SetProperty(pl);
+
+			ap = this.tempLine.GetProperty(PropertyType.Arrow);
+			PropertyArrow pa = ap as PropertyArrow;
+			pa.ArrowType1 = ArrowType.Right;
+			pa.ArrowType2 = ArrowType.Right;
+			this.tempLine.SetProperty(pa);
 
 			this.tempLine.CreateMouseDown(pos, iconContext);
 		}
@@ -338,18 +427,103 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
+		private void HandleChanged(object sender)
+		{
+			this.UpdateHandle();
+		}
+
+		// Met à jour les poignées pour les profondeurs des flèches.
+		protected void UpdateHandle()
+		{
+			int total = this.TotalHandlePrimary;
+			if ( total < 2 )  return;
+
+			Drawing.Point p1, p2, pp1, pp2;
+			p1 = this.Handle(0).Position;
+			p2 = this.Handle(1).Position;
+			pp1 = Drawing.Point.Move(p1, p2, this.PropertyArrow(2).GetLength(0));
+			p1 = this.Handle(total-1).Position;
+			p2 = this.Handle(total-2).Position;
+			pp2 = Drawing.Point.Move(p1, p2, this.PropertyArrow(2).GetLength(1));
+			int r1 = this.HandleArrowRank(0);
+			int r2 = this.HandleArrowRank(1);
+			total += ((r1==-1)?0:1) + ((r2==-1)?0:1);
+
+			// Supprime les poignées en trop.
+			while ( this.handles.Count > total )
+			{
+				this.HandleDelete(this.handles.Count-1);
+			}
+
+			// Ajoute les poignées manquantes.
+			while ( this.handles.Count < total )
+			{
+				this.HandleAdd(pp1, HandleType.Secondary);
+			}
+
+			if ( r1 != -1 )
+			{
+				this.Handle(r1).Position = pp1;
+				this.Handle(r1).IsSelected = this.Handle(0).IsSelected;
+			}
+
+			if ( r2 != -1 )
+			{
+				this.Handle(r2).Position = pp2;
+				this.Handle(r2).IsSelected = this.Handle(this.TotalHandlePrimary-1).IsSelected;
+			}
+		}
+
+		// Retourne le rang d'une poignée secondaire.
+		protected int HandleArrowRank(int extremity)
+		{
+			if ( this.PropertyArrow(2).GetArrowType(extremity) == ArrowType.Right )  return -1;
+
+			int total = this.TotalHandlePrimary;
+			if ( extremity == 0 )
+			{
+				return total;
+			}
+			else
+			{
+				if ( this.PropertyArrow(2).GetArrowType(0) == ArrowType.Right )  return total;
+				return total+1;
+			}
+		}
+
+
 		// Met à jour le rectangle englobant l'objet.
 		protected override void UpdateBoundingBox()
 		{
-			Drawing.Path path = this.PathBuild();
-			this.bboxThin = path.ComputeBounds();
+			Drawing.Path pathStart;  bool outlineStart, surfaceStart;
+			Drawing.Path pathEnd;    bool outlineEnd,   surfaceEnd;
+			Drawing.Path pathLine;
+			this.PathBuild(out pathStart, out outlineStart, out surfaceStart,
+						   out pathEnd,   out outlineEnd,   out surfaceEnd,
+						   out pathLine);
 
-			this.bboxGeom = this.bboxThin;
-			this.PropertyLine(0).InflateBoundingBox(ref this.bboxGeom);
+			Drawing.Rectangle bboxStart = AbstractObject.ComputeBoundingBox(pathStart);
+			Drawing.Rectangle bboxEnd   = AbstractObject.ComputeBoundingBox(pathEnd);
+			Drawing.Rectangle bboxLine  = AbstractObject.ComputeBoundingBox(pathLine);
 
+			this.bboxThin = bboxLine;
+			this.bboxThin.MergeWith(this.Handle(0).Position);
+			this.bboxThin.MergeWith(this.Handle(this.TotalHandlePrimary-1).Position);
+
+			this.PropertyLine(0).InflateBoundingBox(ref bboxLine);
+			this.bboxGeom = bboxLine;
+
+			if ( outlineStart )  this.PropertyLine(0).InflateBoundingBox(ref bboxStart);
+			this.bboxGeom.MergeWith(bboxStart);
+
+			if ( outlineEnd )  this.PropertyLine(0).InflateBoundingBox(ref bboxEnd);
+			this.bboxGeom.MergeWith(bboxEnd);
+
+			this.bboxGeom.MergeWith(this.bboxThin);
 			this.bboxFull = this.bboxGeom;
-			this.bboxGeom.MergeWith(this.PropertyGradient(2).BoundingBoxGeom(this.bboxThin));
-			this.bboxFull.MergeWith(this.PropertyGradient(2).BoundingBoxFull(this.bboxThin));
+
+			this.bboxGeom.MergeWith(this.PropertyGradient(3).BoundingBoxGeom(this.bboxThin));
+			this.bboxFull.MergeWith(this.PropertyGradient(3).BoundingBoxFull(this.bboxThin));
 			this.bboxFull.MergeWith(this.bboxGeom);
 
 			if ( this.tempLine != null )
@@ -358,46 +532,128 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Crée le chemin de l'objet.
-		protected Drawing.Path PathBuild()
+		// Retourne le nombre de poignées principales.
+		// Ne compte pas les 1 ou 2 poignées secondaires à la fin, utilisées
+		// pour PropertyArrow.
+		protected int TotalHandlePrimary
 		{
-			Drawing.Path path = new Drawing.Path();
-
-			PropertyCorner corner = this.PropertyCorner(4);
-			if ( corner.CornerType == CornerType.Right )
+			get
 			{
-				int total = this.TotalHandle;
+				int total = this.handles.Count;
+				while ( total > 0 && this.Handle(total-1).Type == HandleType.Secondary )
+				{
+					total --;
+				}
+				return total;
+			}
+		}
+
+		// Crée les chemins de l'objet.
+		protected void PathBuild(out Drawing.Path pathStart, out bool outlineStart, out bool surfaceStart,
+								 out Drawing.Path pathEnd,   out bool outlineEnd,   out bool surfaceEnd,
+								 out Drawing.Path pathLine)
+		{
+			pathStart = new Drawing.Path();
+			pathEnd   = new Drawing.Path();
+			pathLine  = new Drawing.Path();
+
+			int total = this.TotalHandlePrimary;
+			if ( total < 2 )
+			{
+				outlineStart = false;
+				surfaceStart = false;
+				outlineEnd   = false;
+				surfaceEnd   = false;
+				return;
+			}
+
+			Drawing.Point p1, p2, pp1, pp2, s;
+			double w = this.PropertyLine(0).Width;
+			Drawing.CapStyle cap = this.PropertyLine(0).Cap;
+			p1 = this.Handle(0).Position;
+			p2 = this.Handle(1).Position;
+			pp1 = this.PropertyArrow(2).PathExtremity(pathStart, 0, w,cap, p1,p2, out outlineStart, out surfaceStart);
+			p1 = this.Handle(total-1).Position;
+			p2 = this.Handle(total-2).Position;
+			pp2 = this.PropertyArrow(2).PathExtremity(pathEnd,   1, w,cap, p1,p2, out outlineEnd,   out surfaceEnd);
+
+			bool close = ( this.PropertyBool(4).Bool && total > 2 );
+			PropertyCorner corner = this.PropertyCorner(5);
+			if ( corner.CornerType == CornerType.Right )  // coins droits ?
+			{
 				for ( int i=0 ; i<total ; i++ )
 				{
-					if ( i == 0 )  path.MoveTo(this.Handle(i).Position);
-					else           path.LineTo(this.Handle(i).Position);
+					p1 = this.Handle(i).Position;
+
+					if ( i == 0 )  // premier point ?
+					{
+						pathLine.MoveTo(pp1);
+					}
+					else if ( i < total-1 )  // point intermédiaire ?
+					{
+						pathLine.LineTo(p1);
+					}
+					else	// dernier point ?
+					{
+						pathLine.LineTo(pp2);
+					}
 				}
-				if ( this.PropertyBool(3).Bool && total > 2 )
+				if ( close )
 				{
-					path.LineTo(this.Handle(0).Position);
-					path.Close();
+					pathLine.LineTo(pp1);
+					pathLine.Close();
 				}
 			}
-			else
+			else	// coins spéciaux ?
 			{
-				int total = this.TotalHandle;
 				for ( int i=0 ; i<total ; i++ )
 				{
+					p1 = this.Handle(i).Position;
 					int prev = i-1;  if ( prev < 0 )  prev = total-1;
 					int next = i+1;  if ( next >= total )  next = 0;
-					Drawing.Point p1 = this.Handle(prev).Position;
-					Drawing.Point s  = this.Handle(i).Position;
-					Drawing.Point p2 = this.Handle(next).Position;
 					bool simply = ( this.Handle(i).ConstrainType == HandleConstrainType.Simply );
-					this.PathCorner(path, p1,s,p2, corner, simply);
+
+					if ( i == 0 )  // premier point ?
+					{
+						if ( outlineStart || surfaceStart || !close )
+						{
+							pathLine.MoveTo(pp1);
+						}
+						else
+						{
+							p1 = this.Handle(prev).Position;
+							s  = this.Handle(i).Position;
+							p2 = this.Handle(next).Position;
+							this.PathCorner(pathLine, p1,s,p2, corner, simply);
+						}
+					}
+					else if ( i < total-1 )  // point intermédiaire ?
+					{
+						p1 = this.Handle(prev).Position;
+						s  = this.Handle(i).Position;
+						p2 = this.Handle(next).Position;
+						this.PathCorner(pathLine, p1,s,p2, corner, simply);
+					}
+					else	// dernier point ?
+					{
+						if ( outlineEnd || surfaceEnd || !close )
+						{
+							pathLine.LineTo(pp2);
+						}
+						else
+						{
+							p1 = this.Handle(prev).Position;
+							s  = this.Handle(i).Position;
+							p2 = this.Handle(next).Position;
+							this.PathCorner(pathLine, p1,s,p2, corner, simply);
+						}
+					}
 				}
-				if ( this.PropertyBool(3).Bool && total > 2 )
+				if ( close )
 				{
-					path.Close();
+					pathLine.Close();
 				}
 			}
-
-			return path;
 		}
 
 		// Crée le chemin d'un coin.
@@ -429,21 +685,71 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( this.TotalHandle < 1 )  return;
 
-			Drawing.Path path = this.PathBuild();
-			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBoxThin);
+			Drawing.Path pathStart;  bool outlineStart, surfaceStart;
+			Drawing.Path pathEnd;    bool outlineEnd,   surfaceEnd;
+			Drawing.Path pathLine;
+			this.PathBuild(out pathStart, out outlineStart, out surfaceStart,
+						   out pathEnd,   out outlineEnd,   out surfaceEnd,
+						   out pathLine);
 
-			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
+			this.PropertyGradient(3).Render(graphics, iconContext, pathLine, this.BoundingBoxThin);
+
+			if ( outlineStart )
+			{
+				graphics.Rasterizer.AddOutline(pathStart, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
+				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
+			}
+			if ( surfaceStart )
+			{
+				graphics.Rasterizer.AddSurface(pathStart);
+				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
+			}
+
+			if ( outlineEnd )
+			{
+				graphics.Rasterizer.AddOutline(pathEnd, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
+				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
+			}
+			if ( surfaceEnd )
+			{
+				graphics.Rasterizer.AddSurface(pathEnd);
+				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
+			}
+
+			graphics.Rasterizer.AddOutline(pathLine, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
-				if ( this.PropertyGradient(2).IsVisible() )
+				if ( this.PropertyGradient(3).IsVisible() )
 				{
-					graphics.Rasterizer.AddSurface(path);
+					graphics.Rasterizer.AddSurface(pathLine);
 					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 				}
 
-				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
+				if ( outlineStart )
+				{
+					graphics.Rasterizer.AddOutline(pathStart, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
+					graphics.RenderSolid(iconContext.HiliteOutlineColor);
+				}
+				if ( surfaceStart )
+				{
+					graphics.Rasterizer.AddSurface(pathStart);
+					graphics.RenderSolid(iconContext.HiliteOutlineColor);
+				}
+
+				if ( outlineEnd )
+				{
+					graphics.Rasterizer.AddOutline(pathEnd, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
+					graphics.RenderSolid(iconContext.HiliteOutlineColor);
+				}
+				if ( surfaceEnd )
+				{
+					graphics.Rasterizer.AddSurface(pathEnd);
+					graphics.RenderSolid(iconContext.HiliteOutlineColor);
+				}
+
+				graphics.Rasterizer.AddOutline(pathLine, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 

@@ -1482,7 +1482,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				if ( value != this.currentPage )
 				{
-					this.UsePageLayer(value, 0);
+					this.UsePageLayer(value, -1);  // -1 = dernier calque utilisé
 				}
 			}
 		}
@@ -1507,15 +1507,28 @@ namespace Epsitec.Common.Pictogram.Data
 		// Utilise une page et un calque donné.
 		protected void UsePageLayer(int rankPage, int rankLayer)
 		{
+			ObjectPage	page;
+			ObjectLayer	layer;
+
+			if ( this.roots.Count >= 2 )
+			{
+				page = this.objects[this.currentPage] as ObjectPage;
+				page.CurrentLayer = this.currentLayer;
+			}
+
 			this.roots.Clear();
 
 			System.Diagnostics.Debug.Assert(rankPage < this.objects.Count);
-			ObjectPage page = this.objects[rankPage] as ObjectPage;
+			page = this.objects[rankPage] as ObjectPage;
 			System.Diagnostics.Debug.Assert(page != null);
 			this.roots.Add(page);
 
+			if ( rankLayer == -1 )  // dernier calque utilisé dans cette page ?
+			{
+				rankLayer = page.CurrentLayer;
+			}
 			System.Diagnostics.Debug.Assert(rankLayer < page.Objects.Count);
-			ObjectLayer layer = page.Objects[rankLayer] as ObjectLayer;
+			layer = page.Objects[rankLayer] as ObjectLayer;
 			System.Diagnostics.Debug.Assert(layer != null);
 			this.roots.Add(layer);
 

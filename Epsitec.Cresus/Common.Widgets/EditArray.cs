@@ -45,7 +45,7 @@ namespace Epsitec.Common.Widgets
 						this.edit_line.ColumnCount = this.max_columns;
 					}
 					
-					this.RefreshContents ();
+					this.InvalidateContents ();
 					this.OnEditArrayModeChanged ();
 				}
 			}

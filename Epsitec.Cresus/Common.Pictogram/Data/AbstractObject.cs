@@ -70,10 +70,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Nombre de poignées, sans compter celles des propriétés.
 		public int TotalHandle
 		{
-			get
-			{
-				return this.handles.Count;
-			}
+			get { return this.handles.Count; }
 		}
 
 		// Nombre de poignées, avec celles des propriétés.
@@ -730,6 +727,15 @@ namespace Epsitec.Common.Pictogram.Data
 			return false;
 		}
 
+		// Retourne un bouton d'action pendant la création.
+		public virtual bool CreateAction(int rank, out string cmd, out string name, out string text)
+		{
+			cmd  = "";
+			name = "";
+			text = "";
+			return false;
+		}
+
 
 		// Crée une instance de l'objet.
 		protected abstract AbstractObject CreateNewObject();
@@ -767,8 +773,98 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Détecte si la souris est sur trait d'un chemin.
+		// Dessine la géométrie de l'objet.
+		public virtual void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		{
+			if ( this.isHide )  return;
+
+			if ( iconContext.IsEditable )
+			{
+				this.scaleX       = iconContext.ScaleX;
+				this.scaleY       = iconContext.ScaleY;
+				this.minimalSize  = iconContext.MinimalSize;
+				this.minimalWidth = iconContext.MinimalWidth;
+				this.closeMargin  = iconContext.CloseMargin;
+			}
+
+			if ( iconContext.IsDrawBox )
+			{
+				double initialWidth = graphics.LineWidth;
+				graphics.LineWidth = 1.0/iconContext.ScaleX;
+
+				graphics.AddRectangle(this.bboxThin);
+				graphics.RenderSolid(Drawing.Color.FromARGB(0.5, 0,1,1));
+
+				graphics.AddRectangle(this.bboxGeom);
+				graphics.RenderSolid(Drawing.Color.FromARGB(0.5, 0,1,0));
+
+				graphics.AddRectangle(this.bboxFull);
+				graphics.RenderSolid(Drawing.Color.FromARGB(0.5, 1,1,0));
+
+				graphics.LineWidth = initialWidth;
+			}
+		}
+
+		// Dessine les poignées de l'objet.
+		public virtual void DrawHandle(Drawing.Graphics graphics, IconContext iconContext)
+		{
+			if ( this.isHide )  return;
+
+			foreach ( AbstractProperty property in this.properties )
+			{
+				property.DrawEdit(graphics, iconContext, this.bboxThin);
+			}
+
+			int total = this.TotalHandleProperties;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Handle handle = this.Handle(i);
+
+				if ( handle.Type == HandleType.Property )
+				{
+					handle.IsSelected = this.editProperties;
+				}
+
+				if ( handle.Type != HandleType.Hide )
+				{
+					handle.Draw(graphics, iconContext);
+				}
+			}
+		}
+
+
+		// Arrange un objet après sa désérialisation. Il faut supprimer les
+		// propriétés créées à double dans le constructeur et lors de la désérialisation.
+		// Le tableau contient d'abord la propriété créée dans le constructeur,
+		// puis celle qui a été désérialisée. Il faut donc remplacer la 1ère par
+		// la 2ème, et détruire la 2ème.
+		public void ArrangeAfterRead()
+		{
+			int total = this.properties.Count;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				AbstractProperty firstProp = this.properties[i] as AbstractProperty;
+				for ( int j=i+1 ; j<total ; j++ )
+				{
+					AbstractProperty secProp = this.properties[j] as AbstractProperty;
+					if ( secProp.Type != firstProp.Type )  continue;
+					this.properties[i] = this.properties[j];
+					this.properties.RemoveAt(j);
+					total = this.properties.Count;
+				}
+			}
+		}
+
+
+		// Détecte si la souris est sur le trait d'un chemin.
 		protected static bool DetectOutline(Drawing.Path path, double width, Drawing.Point pos)
+		{
+			return (AbstractObject.DetectOutlineRank(path, width, pos) != -1 );
+		}
+
+		// Détecte sur quel trait d'un chemin est la souris.
+		// Retourne le rang du trait (0..1), ou -1.
+		protected static int DetectOutlineRank(Drawing.Path path, double width, Drawing.Point pos)
 		{
 			Drawing.PathElement[] elements;
 			Drawing.Point[] points;
@@ -780,6 +876,7 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Point p2 = new Drawing.Point(0, 0);
 			Drawing.Point p3 = new Drawing.Point(0, 0);
 			int i = 0;
+			int rank = 0;
 			while ( i < elements.Length )
 			{
 				switch ( elements[i] & Drawing.PathElement.MaskCommand )
@@ -791,14 +888,16 @@ namespace Epsitec.Common.Pictogram.Data
 
 					case Drawing.PathElement.LineTo:
 						p1 = points[i++];
-						if ( Drawing.Point.Detect(current,p1, pos, width) )  return true;
+						if ( Drawing.Point.Detect(current,p1, pos, width) )  return rank;
+						rank ++;
 						current = p1;
 						break;
 
 					case Drawing.PathElement.Curve3:
 						p1 = points[i++];
 						p2 = points[i++];
-						if ( Drawing.Point.Detect(current,p1,p1,p2, pos, width) )  return true;
+						if ( Drawing.Point.Detect(current,p1,p1,p2, pos, width) )  return rank;
+						rank ++;
 						current = p2;
 						break;
 
@@ -806,24 +905,26 @@ namespace Epsitec.Common.Pictogram.Data
 						p1 = points[i++];
 						p2 = points[i++];
 						p3 = points[i++];
-						if ( Drawing.Point.Detect(current,p1,p2,p3, pos, width) )  return true;
+						if ( Drawing.Point.Detect(current,p1,p2,p3, pos, width) )  return rank;
+						rank ++;
 						current = p3;
 						break;
 
 					default:
 						if ( (elements[i] & Drawing.PathElement.FlagClose) != 0 )
 						{
-							if ( Drawing.Point.Detect(current,start, pos, width) )  return true;
+							if ( Drawing.Point.Detect(current,start, pos, width) )  return rank;
+							rank ++;
 						}
 						i ++;
 						break;
 				}
 			}
-			return false;
+			return -1;
 		}
 
 		// Détecte si la souris est dans un chemin.
-		protected static bool DetectFill(Drawing.Path path, Drawing.Point pos)
+		protected static bool DetectSurface(Drawing.Path path, Drawing.Point pos)
 		{
 			Drawing.PathElement[] elements;
 			Drawing.Point[] points;
@@ -913,63 +1014,71 @@ namespace Epsitec.Common.Pictogram.Data
 			return surf.IsInside();
 		}
 
-
-		// Dessine la géométrie de l'objet.
-		public virtual void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		// Calcule la bbox qui englobe exactement un chemin quelconque.
+		protected static Drawing.Rectangle ComputeBoundingBox(Drawing.Path path)
 		{
-			if ( this.isHide )  return;
+			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
+			Drawing.PathElement[] elements;
+			Drawing.Point[] points;
+			path.GetElements(out elements, out points);
 
-			if ( iconContext.IsEditable )
+			Drawing.Point start = new Drawing.Point(0, 0);
+			Drawing.Point current = new Drawing.Point(0, 0);
+			Drawing.Point p1 = new Drawing.Point(0, 0);
+			Drawing.Point p2 = new Drawing.Point(0, 0);
+			Drawing.Point p3 = new Drawing.Point(0, 0);
+			int i = 0;
+			while ( i < elements.Length )
 			{
-				this.scaleX       = iconContext.ScaleX;
-				this.scaleY       = iconContext.ScaleY;
-				this.minimalSize  = iconContext.MinimalSize;
-				this.minimalWidth = iconContext.MinimalWidth;
-				this.closeMargin  = iconContext.CloseMargin;
+				switch ( elements[i] & Drawing.PathElement.MaskCommand )
+				{
+					case Drawing.PathElement.MoveTo:
+						current = points[i++];
+						start = current;
+						break;
+
+					case Drawing.PathElement.LineTo:
+						p1 = points[i++];
+						bbox.MergeWith(current);
+						bbox.MergeWith(p1);
+						current = p1;
+						break;
+
+					case Drawing.PathElement.Curve3:
+						p1 = points[i++];
+						p2 = points[i++];
+						AbstractObject.BoundingBoxAddBezier(ref bbox, current,p1,p1,p2);
+						current = p2;
+						break;
+
+					case Drawing.PathElement.Curve4:
+						p1 = points[i++];
+						p2 = points[i++];
+						p3 = points[i++];
+						AbstractObject.BoundingBoxAddBezier(ref bbox, current,p1,p2,p3);
+						current = p3;
+						break;
+
+					default:
+						if ( (elements[i] & Drawing.PathElement.FlagClose) != 0 )
+						{
+							bbox.MergeWith(current);
+							bbox.MergeWith(start);
+						}
+						i ++;
+						break;
+				}
 			}
-
-			if ( iconContext.IsDrawBox )
-			{
-				double initialWidth = graphics.LineWidth;
-				graphics.LineWidth = 1.0/iconContext.ScaleX;
-
-				graphics.AddRectangle(this.bboxThin);
-				graphics.RenderSolid(Drawing.Color.FromARGB(0.5, 0,1,1));
-
-				graphics.AddRectangle(this.bboxGeom);
-				graphics.RenderSolid(Drawing.Color.FromARGB(0.5, 0,1,0));
-
-				graphics.AddRectangle(this.bboxFull);
-				graphics.RenderSolid(Drawing.Color.FromARGB(0.5, 1,1,0));
-
-				graphics.LineWidth = initialWidth;
-			}
+			return bbox;
 		}
 
-		// Dessine les poignées de l'objet.
-		public virtual void DrawHandle(Drawing.Graphics graphics, IconContext iconContext)
+		// Ajoute un courbe de Bézier dans la bbox.
+		protected static void BoundingBoxAddBezier(ref Drawing.Rectangle bbox, Drawing.Point p1, Drawing.Point s1, Drawing.Point s2, Drawing.Point p2)
 		{
-			if ( this.isHide )  return;
-
-			foreach ( AbstractProperty property in this.properties )
+			double step = 1.0/10.0;  // nombre arbitraire de 10 subdivisions
+			for ( double t=0 ; t<=1.0 ; t+=step )
 			{
-				property.DrawEdit(graphics, iconContext, this.bboxThin);
-			}
-
-			int total = this.TotalHandleProperties;
-			for ( int i=0 ; i<total ; i++ )
-			{
-				Handle handle = this.Handle(i);
-
-				if ( handle.Type == HandleType.Property )
-				{
-					handle.IsSelected = this.editProperties;
-				}
-
-				if ( handle.Type != HandleType.Hide )
-				{
-					handle.Draw(graphics, iconContext);
-				}
+				bbox.MergeWith(Drawing.Point.Bezier(p1, s1, s2, p2, t));
 			}
 		}
 
@@ -989,29 +1098,6 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			Drawing.Point p = Drawing.Point.Projection(p1, p2, p3);
 			return Drawing.Point.Distance(p, p2) < 0.00001;
-		}
-
-
-		// Arrange un objet après sa désérialisation. Il faut supprimer les
-		// propriétés créées à double dans le constructeur et lors de la désérialisation.
-		// Le tableau contient d'abord la propriété créée dans le constructeur,
-		// puis celle qui a été désérialisée. Il faut donc remplacer la 1ère par
-		// la 2ème, et détruire la 2ème.
-		public void ArrangeAfterRead()
-		{
-			int total = this.properties.Count;
-			for ( int i=0 ; i<total ; i++ )
-			{
-				AbstractProperty firstProp = this.properties[i] as AbstractProperty;
-				for ( int j=i+1 ; j<total ; j++ )
-				{
-					AbstractProperty secProp = this.properties[j] as AbstractProperty;
-					if ( secProp.Type != firstProp.Type )  continue;
-					this.properties[i] = this.properties[j];
-					this.properties.RemoveAt(j);
-					total = this.properties.Count;
-				}
-			}
 		}
 
 

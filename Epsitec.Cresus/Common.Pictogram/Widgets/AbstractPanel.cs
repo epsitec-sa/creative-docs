@@ -13,14 +13,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.extendedButton = new GlyphButton(this);
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
-			this.extendedButton.GlyphType = GlyphType.ArrowDown;
+			this.extendedButton.GlyphShape = GlyphShape.ArrowDown;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 			this.extendedButton.TabIndex = 0;
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.stylesButton = new GlyphButton(this);
 			this.stylesButton.ButtonStyle = ButtonStyle.Icon;
-			this.stylesButton.GlyphType = GlyphType.Dots;
+			this.stylesButton.GlyphShape = GlyphShape.Dots;
 			this.stylesButton.Clicked += new MessageEventHandler(this.StylesButtonClicked);
 			this.stylesButton.TabIndex = 1000;
 			this.stylesButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.styleName           = property.StyleName;
 			this.extendedSize        = property.ExtendedSize;
 
-			this.extendedButton.GlyphType = this.extendedSize ? GlyphType.ArrowUp : GlyphType.ArrowDown;
+			this.extendedButton.GlyphShape = this.extendedSize ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 		}
 
 		// Widget -> propriété.

@@ -237,13 +237,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 			for ( int i=0 ; i<total ; i++ )
 			{
 				this.table.SelectRow(i, i==sel);
-				this.table.SelectCell(1, i, false);  // à cause du TextField
 				exist |= (i==sel);
 			}
 
 			if ( exist )
 			{
 				if ( showSelect )  this.table.ShowSelect();
+				this.table.Update();
 
 				Cell cell = this.table[1, sel];
 				TextField edit = cell.Children[0] as TextField;

@@ -742,7 +742,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.table != null )
 			{
-				this.table.RefreshContents();
+				this.table.InvalidateContents();
 			}
 		}
 

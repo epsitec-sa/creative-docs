@@ -24,6 +24,7 @@ namespace Epsitec.Common.Widgets
 		
 		public Tag(string command, string name) : base (command, null, name)
 		{
+			this.AutoFocus   = false;
 			this.ButtonStyle = ButtonStyle.Flat;
 			this.ResetDefaultColors ();
 		}

@@ -187,7 +187,7 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 					
-					this.RefreshContents ();
+					this.InvalidateContents ();
 				}
 			}
 		}
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Widgets
 					this.edition_row       = value;
 					this.first_virtvis_row = this.ToVirtualRow (top);
 					
-					this.RefreshContents ();
+					this.InvalidateContents ();
 					this.OnEditionIndexChanged ();
 				}
 			}
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Widgets
 					this.edition_add_rows  = value;
 					this.first_virtvis_row = this.ToVirtualRow (top);
 					
-					this.RefreshContents ();
+					this.InvalidateContents ();
 				}
 			}
 		}
@@ -329,7 +329,7 @@ namespace Epsitec.Common.Widgets
 				if (this.title_height != value)
 				{
 					this.title_height = value;
-					this.RefreshContents ();
+					this.InvalidateContents ();
 				}
 			}
 		}
@@ -397,8 +397,22 @@ namespace Epsitec.Common.Widgets
 					
 					if (this.tag_widget != null)
 					{
-						this.tag_widget.SetEmbedder (this);
+						if (this.clip_widget == null)
+						{
+							this.clip_widget = new Widget (this);
+						}
+						
+						this.tag_widget.SetEmbedder (this.clip_widget);
+						
 						this.UpdateTagWidget ();
+					}
+					else
+					{
+						if (this.clip_widget != null)
+						{
+							this.clip_widget.Parent = null;
+							this.clip_widget = null;
+						}
 					}
 				}
 			}
@@ -415,7 +429,7 @@ namespace Epsitec.Common.Widgets
 				if (this.inner_margins.Top != value)
 				{
 					this.inner_margins.Top = value;
-					this.RefreshContents ();
+					this.InvalidateContents ();
 				}
 			}
 		}
@@ -431,7 +445,7 @@ namespace Epsitec.Common.Widgets
 				if (this.inner_margins.Bottom != value)
 				{
 					this.inner_margins.Bottom = value;
-					this.RefreshContents ();
+					this.InvalidateContents ();
 				}
 			}
 		}
@@ -925,14 +939,9 @@ namespace Epsitec.Common.Widgets
 			this.InvalidateContents ();
 		}
 		
-		public void RefreshContents()
-		{
-			this.cache_visible_rows = -1;
-			this.InvalidateContents ();
-		}
-
 		public void InvalidateContents()
 		{
+			this.cache_visible_rows = -1;
 			this.is_dirty = true;
 			this.Invalidate ();
 		}
@@ -1132,7 +1141,7 @@ invalid:	row    = -1;
 			if (this.first_virtvis_row != first)
 			{
 				this.first_virtvis_row = first;
-				this.RefreshContents ();
+				this.InvalidateContents ();
 				
 				Message.ResetButtonDownCounter ();
 			}
@@ -1192,7 +1201,7 @@ invalid:	row    = -1;
 			if (this.offset != offset)
 			{
 				this.offset = offset;
-				this.RefreshContents ();
+				this.InvalidateContents ();
 				
 				Message.ResetButtonDownCounter ();
 			}
@@ -1539,7 +1548,6 @@ invalid:	row    = -1;
 			this.UpdateScrollerGeometry ();
 			this.UpdateScrollers ();
 			this.UpdateTitleWidget ();
-			this.UpdateTagWidget ();
 		}
 		
 		protected virtual void UpdateColumnCount()
@@ -1558,7 +1566,7 @@ invalid:	row    = -1;
 				this.column_alignments[i] = Drawing.ContentAlignment.MiddleLeft;
 			}
 					
-			this.RefreshContents ();
+			this.InvalidateContents ();
 			this.UpdateTotalWidth ();
 			this.UpdateHeaderContents ();
 			this.Update ();
@@ -1695,6 +1703,8 @@ invalid:	row    = -1;
 		
 		protected virtual void UpdateScrollers()
 		{
+			this.UpdateTagWidget ();
+			
 			//	Met à jour l'ascenseur vertical :
 			
 			int rows = this.VirtualRowCount;
@@ -1867,17 +1877,39 @@ invalid:	row    = -1;
 			{
 				Drawing.Rectangle bounds = this.GetRowBounds (this.SelectedIndex);
 				
-				if (bounds.IsEmpty)
+				bounds.Inflate (0, 0, 0, 1);
+				
+				if ((this.h_scroller.IsVisible) &&
+					(bounds.Bottom < this.h_scroller.Top))
 				{
-					this.tag_widget.SetVisible (false);
+					bounds.Bottom = this.h_scroller.Top;
+				}
+				
+				if (bounds.IsSurfaceZero)
+				{
+					this.clip_widget.SetVisible (false);
 				}
 				else
 				{
-					double dx = this.row_height;
-					double dy = this.row_height;
+					this.clip_widget.Bounds = bounds;
+					this.clip_widget.SetVisible (true);
 					
-					this.tag_widget.Bounds = new Drawing.Rectangle (bounds.Right - dx, bounds.Bottom + (bounds.Height - dy) / 2, dx, dy);
-					this.tag_widget.SetVisible (true);
+					double dx = System.Math.Min (this.row_height + 1, 18);
+					double dy = dx;
+					double ox = bounds.Right - (dx + 1);
+					double oy = bounds.Top - dy;
+					double x1, x2;
+					
+					if (this.GetUnclippedCellX (this.max_columns-1, out x1, out x2))
+					{
+						x2 -= dx - 1;
+						ox  = System.Math.Min (ox, x2);
+					}
+					
+					ox -= this.clip_widget.Bounds.X;
+					oy -= this.clip_widget.Bounds.Y;
+					
+					this.tag_widget.Bounds = new Drawing.Rectangle (ox, oy, dx, dy);
 				}
 			}
 		}
@@ -2086,7 +2118,7 @@ invalid:	row    = -1;
 				//	Dessine les lignes de séparation horizontales :
 				
 				double x1 = this.inner_bounds.Left;
-				double x2 = right;
+				double x2 = right - 0.5;
 				double y  = this.inner_bounds.Top - 0.5;
 				
 				graphics.AddLine (x1, y, x2, y);
@@ -2163,7 +2195,7 @@ invalid:	row    = -1;
 				if (value != this.selected_row)
 				{
 					this.selected_row = value;
-					this.RefreshContents ();
+					this.InvalidateContents ();
 					this.OnSelectedIndexChanged ();
 				}
 			}
@@ -2232,6 +2264,7 @@ invalid:	row    = -1;
 		protected double						slider_dim			= 6;
 		
 		protected Tag							tag_widget;
+		protected Widget						clip_widget;
 		
 		protected Drawing.Rectangle				table_bounds;
 		protected Drawing.Rectangle				inner_bounds;

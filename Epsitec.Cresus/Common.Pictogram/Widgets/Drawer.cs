@@ -50,15 +50,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Indique si l'icône est active.
 		public bool IsActive
 		{
-			get
-			{
-				return this.isActive;
-			}
-
-			set
-			{
-				this.isActive = value;
-			}
+			get { return this.isActive; }
+			set { this.isActive = value; }
 		}
 
 		// Indique si l'icône est éditable.
@@ -143,29 +136,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Objet global.
 		public IconObjects IconObjects
 		{
-			get
-			{
-				return this.iconObjects;
-			}
-
-			set
-			{
-				this.iconObjects = value;
-			}
+			get { return this.iconObjects; }
+			set { this.iconObjects = value; }
 		}
 
 		// Liste des objets.
 		public System.Collections.ArrayList Objects
 		{
-			get
-			{
-				return this.iconObjects.Objects;
-			}
-
-			set
-			{
-				this.iconObjects.Objects = value;
-			}
+			get { return this.iconObjects.Objects; }
+			set { this.iconObjects.Objects = value; }
 		}
 
 		// Ajoute un widget SampleButton qui représente la même icone.
@@ -204,6 +183,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 				string text;
 				text = string.Format("Zoom {0}%", (this.iconContext.Zoom*100).ToString("F0"));
 				return text;
+			}
+		}
+
+		// Indique si un objet est en cours de création.
+		public AbstractObject CreatingObject
+		{
+			get
+			{
+				if ( this.createRank == -1 )  return null;
+				return this.iconObjects[this.createRank];
 			}
 		}
 
@@ -1208,6 +1197,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 		void CommandObject(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			Widget widget = e.Source as Widget;
+			if ( widget.Name == "CreateEnding" )
+			{
+				this.CreateEnding();
+				return;
+			}
+			if ( widget.Name == "CreateAndSelect" )
+			{
+				this.CreateEnding();
+				this.SelectedTool = "Select";
+				this.UpdateCommands();
+				return;
+			}
 			this.UndoMemorize("Object");
 			this.contextMenuObject.ContextCommand(widget.Name, this.contextMenuPos, this.contextMenuRank);
 			this.InvalidateAll();
@@ -1822,6 +1823,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconObjects.GroupUpdateParents(ref bbox);
 
 			this.InvalidateAll();
+			this.OnPanelChanged();
 			this.OnInfoObjectChanged();
 			this.OnCommandChanged();
 		}
@@ -1841,6 +1843,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			this.createRank = -1;
 			this.InvalidateAll();
+			this.OnPanelChanged();
 			this.OnInfoObjectChanged();
 		}
 

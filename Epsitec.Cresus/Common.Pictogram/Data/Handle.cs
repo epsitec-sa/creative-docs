@@ -6,6 +6,7 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		Primary,		// poignée principale
 		Secondary,		// poignée secondaire
+		Bezier,			// poignée secondaire pour courbe de Bézier
 		Starting,		// poignée de départ
 		Ending,			// poignée d'arrivée
 		Hide,			// poignée invisible
@@ -184,7 +185,8 @@ namespace Epsitec.Common.Pictogram.Data
 					graphics.RenderSolid(IconContext.ColorHandleOutline);
 				}
 
-				if ( this.type == HandleType.Secondary )
+				if ( this.type == HandleType.Secondary ||
+					 this.type == HandleType.Bezier    )
 				{
 					rect.Deflate(2.0/this.scaleX, 2.0/this.scaleY);
 					graphics.AddFilledRectangle(rect);
