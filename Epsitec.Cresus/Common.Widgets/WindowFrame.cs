@@ -151,75 +151,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void DelayedShow(DelayedShowMode mode)
-		{
-			this.DelayedShow (mode, this.delay_show_animation);
-		}
-		
-		public void DelayedShow(DelayedShowMode mode, Animation animation)
-		{
-			switch (mode)
-			{
-				case DelayedShowMode.Reset:
-					if (this.delay_show_timer != null)
-					{
-						this.delay_show_timer.Tick -= new System.EventHandler (HandleDelayedShowTimerTick);
-						this.delay_show_timer.Dispose ();
-						this.delay_show_timer = null;
-					}
-					break;
-				
-				case DelayedShowMode.Start:
-				case DelayedShowMode.Restart:
-					this.delay_show_animation = animation;
-					this.DelayedShow (DelayedShowMode.Reset);
-					this.DelayedShow (DelayedShowMode.Resume);
-					break;
-
-				case DelayedShowMode.Resume:
-					
-					int initial_menu_delay = SystemInformation.MenuShowDelay * 10000;
-					
-					if (this.delay_show_timer == null)
-					{
-						this.delay_show_timer = new System.Windows.Forms.Timer ();
-						this.delay_show_timer.Tick += new System.EventHandler (HandleDelayedShowTimerTick);
-						this.delay_show_end_time = initial_menu_delay;
-					}
-					
-					if ((this.delay_show_end_time > 0) &&
-						(this.delay_show_end_time <= initial_menu_delay))
-					{
-						int delta_ms = (int)(this.delay_show_end_time / 10000);
-						
-						//	Transforme le temps relatif (durée) en un temps absolu, jusqu'à ce que l'on
-						//	appelle Suspend, qui refait la transformation inverse.
-						
-						this.delay_show_end_time += System.DateTime.Now.Ticks;
-						this.delay_show_timer.Interval = delta_ms;
-						this.delay_show_timer.Start ();
-					}
-					
-					break;
-				
-				case DelayedShowMode.Suspend:
-					if (this.delay_show_timer != null)
-					{
-						this.delay_show_timer.Stop ();
-						this.delay_show_end_time -= System.DateTime.Now.Ticks;
-						
-						if (this.delay_show_end_time <= 0)
-						{
-							//	Oups... le temps était écoulé, on triche en ajustant le temps
-							//	relatif.
-							
-							this.delay_show_end_time = 1;
-						}
-					}
-					break;
-			}
-		}
-		
 		
 		protected virtual void AnimateWindowBounds(Drawing.Rectangle bounds, Drawing.Point offset)
 		{
@@ -261,24 +192,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
-		protected virtual void HandleDelayedShowTimerTick(object sender, System.EventArgs e)
-		{
-			this.DelayedShow (DelayedShowMode.Reset);
-			this.DelayedShowAction ();
-		}
-		
-		protected virtual void DelayedShowAction()
-		{
-			System.ComponentModel.CancelEventArgs e = new System.ComponentModel.CancelEventArgs ();
-			
-			this.OnWindowDelayedShowPending (e);
-			
-			if (e.Cancel == false)
-			{
-				this.AnimateShow (this.delay_show_animation);
-			}
-		}
 		
 		
 		public WindowRoot					Root
@@ -540,15 +453,6 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			base.Dispose (disposing);
-		}
-		
-		
-		protected virtual void OnWindowDelayedShowPending(System.ComponentModel.CancelEventArgs e)
-		{
-			if (this.WindowDelayedShowPending != null)
-			{
-				this.WindowDelayedShowPending (this, e);
-			}
 		}
 		
 		
@@ -1377,7 +1281,6 @@ namespace Epsitec.Common.Widgets
 		public event System.EventHandler		WindowShown;
 		public event System.EventHandler		WindowHidden;
 		public event EventHandler				WindowAnimationEnded;
-		public event CancelEventHandler			WindowDelayedShowPending;
 		
 		public static event MessageHandler		MessageFilter;
 		public static event EventHandler		ApplicationActivated;
@@ -1402,10 +1305,6 @@ namespace Epsitec.Common.Widgets
 		protected Widget						engaged_widget;
 		protected System.Windows.Forms.Timer	winforms_timer;
 		
-		protected System.Windows.Forms.Timer	delay_show_timer;
-		protected long							delay_show_end_time;
-		protected Animation						delay_show_animation;
-		
 		protected int							tick_count;
 		
 		protected bool							prevent_close;
@@ -1418,14 +1317,5 @@ namespace Epsitec.Common.Widgets
 		
 		protected static bool					is_app_active;
 		protected System.Collections.Queue		command_queue = new System.Collections.Queue ();
-	}
-	
-	public enum DelayedShowMode
-	{
-		Reset,									//	remet à zéro le timer sans le démarrer
-		Start,									//	cf Restart
-		Restart,								//	remet à zéro et démarre le timer
-		Suspend,								//	stoppe le timer
-		Resume									//	reprend le timer après un Suspend
 	}
 }

@@ -21,6 +21,8 @@ namespace Epsitec.Common.Widgets
 		public Menu(MenuType type)
 		{
 			this.type = type;
+			this.timer = new Timer();
+			this.timer.TimeElapsed += new EventHandler(this.HandleTimerTimeElapsed);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -40,6 +42,11 @@ namespace Epsitec.Common.Widgets
 					this.array[i].Dispose();
 					this.array[i] = null;
 				}
+				
+				this.timer.TimeElapsed -= new EventHandler(this.HandleTimerTimeElapsed);
+				this.timer.Dispose();
+				
+				this.timer = null;
 				this.array = null;
 			}
 			
@@ -628,10 +635,9 @@ namespace Epsitec.Common.Widgets
 					{
 						this.CloseAll();
 						
-						//	On n'indique qu'un message est consommé que s'il concerne la partie
-						//	client de la fenêtre...
-						
-						if (! message.NonClient)
+						// On n'indique qu'un message est consommé que s'il concerne
+						// la partie client de la fenêtre...						
+						if ( !message.NonClient )
 						{
 							message.Handled = true;
 							message.Swallowed = true;
@@ -645,10 +651,9 @@ namespace Epsitec.Common.Widgets
 							while ( sub.submenu != null )  sub = sub.submenu;
 							sub.SetFocused(true);  // TODO: il faudrait pouvoir ignorer ce clic !!!
 							
-							//	On n'indique qu'un message est consommé que s'il concerne la partie
-							//	client de la fenêtre...
-							
-							if (! message.NonClient)
+							// On n'indique qu'un message est consommé que s'il concerne
+							// la partie client de la fenêtre...						
+							if ( !message.NonClient )
 							{
 								message.Handled = true;
 								message.Swallowed = true;
@@ -668,7 +673,18 @@ namespace Epsitec.Common.Widgets
 			if ( this.menuDeveloped != TypeDeveloped.Close )
 			{
 				System.Diagnostics.Debug.WriteLine("HandleCellEntered "+this.Name+":"+item.MainText);
-				this.OpenSubmenu(item, false);
+				if ( this.type == MenuType.Horizontal )
+				{
+					this.OpenSubmenu(item, false);
+				}
+				else
+				{
+					this.delayedMenuItem = item;
+					this.timer.Delay = SystemInformation.MenuShowDelay / 1000.0;
+					this.timer.Start ();
+					// TODO: je suppose qu'il faut faire un this.timer.Stop() dans certains cas,
+					// etc... Je te laisse revoir ta logique !
+				}
 			}
 		}
 		
@@ -685,6 +701,11 @@ namespace Epsitec.Common.Widgets
 			// TODO: pourquoi ce n'est pas toujours appelé ?
 			System.Diagnostics.Debug.WriteLine("HandleApplicationDeactivated");
 			this.CloseAll();
+		}
+
+		private void HandleTimerTimeElapsed(object sender)
+		{
+			this.OpenSubmenu(this.delayedMenuItem, false);
 		}
 
 
@@ -719,9 +740,11 @@ namespace Epsitec.Common.Widgets
 		protected int					totalUsed;
 		protected TypeDeveloped			menuDeveloped = TypeDeveloped.Close;
 		protected WindowFrame			window;
+		protected Timer					timer;
 		protected Menu					submenu;
 		protected Menu					parentMenu;
 		protected double				iconWidth;
 		protected Drawing.Rectangle		parentRect;
+		protected MenuItem				delayedMenuItem;
 	}
 }

@@ -1383,7 +1383,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static void UpdateEntered(Message message)
+		public static void UpdateEntered(WindowFrame window, Message message)
 		{
 			int index = Widget.enteredWidgets.Count;
 			
@@ -1397,7 +1397,8 @@ namespace Epsitec.Common.Widgets
 					
 					Drawing.Point point_in_widget = widget.MapRootToClient (message.Cursor);
 					
-					if ((point_in_widget.X < 0) ||
+					if ((widget.WindowFrame != window) ||
+						(point_in_widget.X < 0) ||
 						(point_in_widget.Y < 0) ||
 						(point_in_widget.X >= widget.Client.Width) ||
 						(point_in_widget.Y >= widget.Client.Height))
