@@ -70,7 +70,7 @@ namespace Epsitec.Common.Tests
 					break;
 			}
 			
-			graphics.AddText (5, 5, this.Text + " " + this.RootAngle.ToString () + "°", font, size);
+			graphics.AddText (5, 5, this.Text + " " + this.RootAngle.ToString () + "°" + " " + this.RootDirection.ToString (), font, size);
 			graphics.RenderSolid (color_text);
 		}
 		

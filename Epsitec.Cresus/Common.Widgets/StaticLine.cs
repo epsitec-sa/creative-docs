@@ -1,15 +1,13 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// Summary description for StaticLine.
+	/// La classe StaticLine dessine une ligne de séparation horizontale, avec
+	/// ou sans titre.
 	/// </summary>
 	public class StaticLine : Widget
 	{
 		public StaticLine()
 		{
-			//
-			// TODO: Add constructor logic here
-			//
 		}
 	}
 }

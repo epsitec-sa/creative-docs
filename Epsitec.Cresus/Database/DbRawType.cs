@@ -11,16 +11,14 @@ namespace Epsitec.Cresus.Database
 		
 		Boolean,						//	1 bit
 		
-		Int8,							//	entier signé, 8 bits
 		Int16,							//	entier signé, 16 bits
 		Int32,							//	entier signé, 32 bits
 		Int64,							//	entier signé, 64 bits
 		
-		Decimal,						//	nombre à virgule à très haute résolution
+		SmallDecimal,					//	nombre à virgule à haute résolution (9 chiffres après la virgule)
+		LargeDecimal,					//	nombre à virgule de grande taille (mais seulement 3 chiffres après la virgule)
 		
-		Double,							//	nombre flottant, 64 bits
-		
-		DateTime,						//	date et heure, 64 bits (résolution de 100ns)
+		DateTime,						//	date et heure, 64 bits (pas de 100ns, résolution <= 1s)
 		
 		String,							//	texte (Unicode)
 		ByteArray,						//	tableau de bytes

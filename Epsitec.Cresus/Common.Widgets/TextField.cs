@@ -2,8 +2,9 @@ namespace Epsitec.Common.Widgets
 {
 	public enum TextFieldStyle
 	{
-		Flat,							//	pas de cadre, ni de relief
+		Flat,							//	pas de cadre, ni de relief, fond blanc
 		Normal,							//	ligne éditable normale
+		Static,							//	comme Flat mais fond transparent, sélectionnable, pas éditable...
 	}
 	
 	/// <summary>

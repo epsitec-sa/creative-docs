@@ -1,4 +1,3 @@
-using System;
 using NUnit.Framework;
 
 namespace Epsitec.Cresus.Database
@@ -9,8 +8,6 @@ namespace Epsitec.Cresus.Database
 		[SetUp]
 		public void LoadAssemblies()
 		{
-			DbFactory.Initialise ();
-			
 			try
 			{
 				System.Diagnostics.Debug.WriteLine ("");
@@ -18,6 +15,8 @@ namespace Epsitec.Cresus.Database
 			catch
 			{
 			}
+			
+			DbFactory.Initialise ();
 		}
 		
 		[Test]
@@ -29,7 +28,7 @@ namespace Epsitec.Cresus.Database
 			
 			IDbAbstraction db_abstraction = DbFactory.FindDbAbstraction (db_access);
 			
-			Assertion.AssertNotNull ("Could not find Firebird abstraction", db_abstraction);
+			Assertion.AssertNotNull ("Could not instanciate Firebird abstraction", db_abstraction);
 		}
 		
 		[Test]

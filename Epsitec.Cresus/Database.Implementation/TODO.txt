@@ -27,14 +27,27 @@ Questions à régler
 
  7. ---
 
- 8. Quelles sont les limites sur le type System.Decimal lorsqu'il est
-    utilisé avec Firebird ? Et pour System.Double ? Est-ce vraiment un
-    nombre réel 64-bit ?
+ 8. --- Firebird support BIGINT qui est un entier 64 bits.
 
- 9. Implémenter TypeConverter.
+ 9. Implémenter TypeConverter. Cela implique en particulier d'être
+    capable de transformer des données brutes manipulées par ADO.NET
+    en données simplifiées. Pour les données numériques, s'appuyer entre
+    autres sur la classe DbNumDef.
+    
+    L'idée est que les types numériques bruts (DbRawType.Int16, ...)
+    sont stockés tels quels dans la base, mais que des types un peu
+    plus subtils comme une valeur numérique comprise 100000..100009
+    sont d'abord convertis en Int64 au moyen de DbNumDef.ConvertToInt64
+    ce qui les ramène dans une plage 0..9 -> on peut utiliser des types
+    de données plus petits dans la base.
 
-10. Implémenter FirebirdTypeConverter selon ITypeConverter. Utiliser
-    TypeConverter.AnalyseRawType, entre autres.
+10. Implémenter FirebirdTypeConverter selon ITypeConverter. En principe,
+    il suffit d'appeler les méthodes correspondantes de la classe
+    TypeConverter pour réaliser les conversions de base.
+    
+    Les types comme Guid ne sont pas supportés par Firebird, alors on
+    ne tente pas de les émuler avec des CHAR(n) pour le moment... La
+    classe DbColumn va partager un Guid en deux Int64.
 
 11. Compléter les tests avec NUnit, vérifier que tout marche correcte-
 	ment.
@@ -47,7 +60,7 @@ Questions à régler
 	afin de vérifier si l'on peut accéder indifféremment à Firebird
 	et à une base de données parlant OLE DB (ou autre).
 
-13. Définir ISqlBuilder
+13. Implémenter ce qui manque dans DbNumDef.
 
 14. Implémenter FirebirdSqlBuilder, OleDbSqlBuilder minimal.
 
@@ -56,9 +69,11 @@ Implémentation (suite)
 ----------------------
 
 Bien que cela puisse paraître redondant, j'ai défini des classes pour
-la représentation des tables et des colonnes. Contrairement à DataTable,
-la SqlTable n'est pas prévue pour stocker des données, mais juste pour
-stocker les informations de schéma.
+la représentation des tables et des colonnes parallèles à ce qui existe
+dans System.Data.
+
+Contrairement à DataTable, la SqlTable n'est pas prévue pour stocker
+des données, mais juste pour stocker les informations de schéma.
 
 Les classes SqlTable et SqlColumn sont donc utilisées principalement
 par ISqlBuilder, ainsi que par IDbAbstraction, pour décrire le schéma
@@ -152,3 +167,17 @@ fonction de comparaison (SqlFunction.Type = Compare). Tous les termes
 sont unis par des AND. Si on désire faire des OR, il faut construire
 soi-même l'arbre des SqlFunction.
 
+
+Détails sur l'adaptation des types DbRawType
+--------------------------------------------
+
+Firebird n'a pas l'air d'implémenter des types de données correspondant
+à des quantités 128-bit. Il n'est donc pas possible de réaliser un
+support natif pour le type DbRawType.Guid.
+
+Par contre, un support "synthétique" pour DbSimpleType.Guid est tout
+à fait faisable, en attribuant à une colonne "synthétique" deux
+colonnes natives.
+
+Le soin de réaliser ces adaptations quand nécessaire est laissé au
+projet DataLayer.

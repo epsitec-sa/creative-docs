@@ -16,46 +16,29 @@ namespace Epsitec.Cresus.Database
 		/// <returns><c>true</c> si le type est supporté de manière native</returns>
 		bool CheckNativeSupport(DbRawType type);
 		
-		/// <summary>
-		/// Analyse la donnée définie par l'interface IDataRecord et trouve le type
-		/// brut correspondant.
-		/// </summary>
-		/// <param name="record">interface d'accès à la donnée à analyser</param>
-		/// <returns>type brut correspondant</returns>
-		DbRawType AnalyseRecord(System.Data.IDataRecord record);
-		
-		/// <summary>
-		/// Analyse le type .NET et trouve le type brut correspondant.
-		/// </summary>
-		/// <param name="type">type .NET à analyser</param>
-		/// <returns>type brut correspondant</returns>
-		DbRawType AnalyseType(System.Type type);
-		
-		/// <summary>
-		/// Analyse un objet et trouve le type brut correspondant.
-		/// </summary>
-		/// <param name="value">objet à analyser</param>
-		/// <returns>type brut correspondant</returns>
-		DbRawType AnalyseValue(object value);
-		
 		
 		/// <summary>
 		/// Transforme un objet tel qu'il a été fourni par le provider ADO.NET en
-		/// un objet "normal". Ceci permet de gérer les cas particuliers où le
-		/// provider ADO.NET ne fournirait pas les types de base correspondant à
-		/// l'énumération définie par DbRawType. En règle générale, cet appel
-		/// retourne simplement l'objet inchangé.
+		/// un objet simplifié. De manière interne, cette méthode appelle à son
+		/// tour TypeConverter.ConvertToSimpleType pour gérer tous les cas de
+		/// conversion normaux.
 		/// </summary>
-		/// <param name="value">objet créé par le provider ADO.NET</param>
-		/// <returns>objet "normal"</returns>
-		object ConvertToPublic(object value);
+		/// <param name="value">objet brut fourni par ADO.NET</param>
+		/// <param name="simple_type">type simplifié attendu</param>
+		/// <param name="num_def">format numérique attendu</param>
+		/// <returns>objet converti</returns>
+		object ConvertToSimpleType(object value, DbSimpleType simple_type, DbNumDef num_def);
 		
 		/// <summary>
-		/// Transforme un objet en une représentation compréhensible par le
-		/// provider ADO.NET. C'est la réciproque de la méthode ConvertToPublic.
+		/// Transforme un objet simplifié en une représentation compréhensible par
+		/// le provider ADO.NET. C'est la réciproque de la méthode ConvertToSimpleType.
+		/// De manière interne, cette méthode appelle TypeConverter.ConvertFromSimpleType
+		/// pour gérer les cas de conversion normaux.
 		/// </summary>
-		/// <param name="value">objet "normal"</param>
-		/// <returns>objet reconnu par le provider ADO.NET</returns>
-		object ConvertFromPublic(object value);
+		/// <param name="value">objet de type simplifié</param>
+		/// <param name="simple_type">type de l'objet</param>
+		/// <param name="num_def">format numérique de l'objet</param>
+		/// <returns>objet converti</returns>
+		object ConvertFromSimpleType(object value, DbSimpleType simple_type, DbNumDef num_def);
 	}
 }

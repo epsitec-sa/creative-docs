@@ -1,12 +1,12 @@
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe SqlColumn décrit une colonne dans une table de la base de données.
+	/// La classe DbColumn décrit une colonne dans une table de la base de données.
 	/// Cette classe ressemble fortement à System.Data.DataColumn.
 	/// </summary>
-	public class SqlColumn
+	public class DbColumn
 	{
-		public SqlColumn()
+		public DbColumn()
 		{
 		}
 		
@@ -17,9 +17,14 @@ namespace Epsitec.Cresus.Database
 			set { this.name = value; }
 		}
 		
-		public DbRawType				Type
+		public DbSimpleType				SimpleType
 		{
-			get { return this.type; }
+			get { return this.simple_type; }
+		}
+		
+		public DbNumDef					NumDef
+		{
+			get { return this.num_def; }
 		}
 		
 		public int						Length
@@ -52,19 +57,38 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public void SetType(DbRawType type)
+		public SqlColumn[] CreateSqlColumns(ITypeConverter type_converter)
 		{
-			this.SetType (type, 1, true);
+			//	TODO: crée la ou les colonnes équivalentes...
+			
+			DbRawType   raw_type = TypeConverter.MapToRawType (this.simple_type, this.num_def);
+			SqlColumn[] columns  = null;
+			
+/****************/
+			
+			if (type_converter.CheckNativeSupport (raw_type))
+			{
+				columns = new SqlColumn[1];
+				columns[0] = new SqlColumn ();
+				columns[0].SetType (raw_type, this.Length, this.IsFixedLength);
+			}
+			else
+			{
+				//	TODO: gère les cas comme Guid, par exemple, qui doivent être
+				//	fractionnés en plusieurs colonnes.
+			}
+			
+			return null;
 		}
 		
-		public void SetType(DbRawType type, int length, bool is_fixed_length)
+		public void SetTypeAndLength(DbSimpleType type, int length, bool is_fixed_length)
 		{
 			System.Diagnostics.Debug.Assert (length > 0);
 			
 			switch (type)
 			{
-				case DbRawType.String:
-				case DbRawType.ByteArray:
+				case DbSimpleType.String:
+				case DbSimpleType.ByteArray:
 					//	Ce sont les seuls types qui acceptent des données de longueur autres
 					//	que '1'...
 					break;
@@ -73,19 +97,20 @@ namespace Epsitec.Cresus.Database
 					if ((length != 1) ||
 						(is_fixed_length != true))
 					{
-						throw new System.ArgumentOutOfRangeException ("Length/Type mismatch");
+						throw new System.ArgumentOutOfRangeException ("Length and Type mismatch");
 					}
 					break;
 			}
 			
-			this.type = type;
+			this.simple_type = type;
 			this.length = length;
 			this.is_fixed_length = is_fixed_length;
 		}
 		
 		
 		protected string				name				= null;
-		protected DbRawType				type				= DbRawType.Null;
+		protected DbSimpleType			simple_type			= DbSimpleType.Null;
+		protected DbNumDef				num_def				= null;
 		protected bool					is_null_allowed		= false;
 		protected bool					is_unique			= false;
 		protected bool					is_indexed			= false;
