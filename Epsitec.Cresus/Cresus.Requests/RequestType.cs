@@ -4,9 +4,9 @@
 namespace Epsitec.Cresus.Requests
 {
 	/// <summary>
-	/// L'énumération Type définit le type des requêtes courantes.
+	/// L'énumération RequestType définit le type des requêtes courantes.
 	/// </summary>
-	public enum Type
+	public enum RequestType
 	{
 		Unknown = 0,
 		

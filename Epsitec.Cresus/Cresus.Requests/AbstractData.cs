@@ -10,9 +10,9 @@ namespace Epsitec.Cresus.Requests
 	
 	[System.Serializable]
 	
-	public abstract class AbstractData : Base, System.Runtime.Serialization.ISerializable
+	public abstract class AbstractData : AbstractRequest, System.Runtime.Serialization.ISerializable
 	{
-		public AbstractData(Type type) : base (type)
+		public AbstractData(RequestType type) : base (type)
 		{
 		}
 		

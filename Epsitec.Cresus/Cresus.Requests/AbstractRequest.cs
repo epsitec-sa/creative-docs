@@ -11,15 +11,15 @@ namespace Epsitec.Cresus.Requests
 	
 	[System.Serializable]
 	
-	public abstract class Base : System.Runtime.Serialization.ISerializable
+	public abstract class AbstractRequest : System.Runtime.Serialization.ISerializable
 	{
-		protected Base(Type type)
+		protected AbstractRequest(RequestType type)
 		{
-			this.SetupType (type);
+			this.SetupRequestType (type);
 		}
 		
 		
-		public Type								Type
+		public RequestType						RequestType
 		{
 			get
 			{
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Requests
 		
 		
 		#region ISerializable Members
-		protected Base(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+		protected AbstractRequest(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
 //-			this.db_access = (DbAccess) info.GetValue ("db_access", typeof (DbAccess));
 		}
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Requests
 		}
 		#endregion
 		
-		public static byte[] SerializeToMemory(Base request)
+		public static byte[] SerializeToMemory(AbstractRequest request)
 		{
 			BinaryFormatter        formatter = new BinaryFormatter ();
 			System.IO.MemoryStream stream    = new System.IO.MemoryStream ();
@@ -51,24 +51,24 @@ namespace Epsitec.Cresus.Requests
 			return stream.ToArray ();
 		}
 		
-		public static Base DeserializeFromMemory(byte[] buffer)
+		public static AbstractRequest DeserializeFromMemory(byte[] buffer)
 		{
 			BinaryFormatter        formatter = new BinaryFormatter ();
 			System.IO.MemoryStream stream    = new System.IO.MemoryStream(buffer, 0, buffer.Length, false, false);
 			
-			Base request = formatter.Deserialize (stream) as Base;
+			AbstractRequest request = formatter.Deserialize (stream) as AbstractRequest;
 			
 			stream.Close ();
 			
 			return request;
 		}
 		
-		protected void SetupType(Type type)
+		protected void SetupRequestType(RequestType type)
 		{
 			this.type = type;
 		}
 		
 		
-		private Type							type = Type.Unknown;
+		private RequestType						type = RequestType.Unknown;
 	}
 }

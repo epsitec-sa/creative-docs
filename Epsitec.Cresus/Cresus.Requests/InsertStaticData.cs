@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Requests
 	
 	public class InsertStaticData : AbstractData, System.Runtime.Serialization.ISerializable
 	{
-		public InsertStaticData() : base (Type.InsertStaticData)
+		public InsertStaticData() : base (RequestType.InsertStaticData)
 		{
 		}
 		
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Requests
 		#region ISerializable Members
 		protected InsertStaticData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
-			this.SetupType (Type.InsertStaticData);
+			this.SetupRequestType (RequestType.InsertStaticData);
 			
 			this.col_names  = info.GetValue ("ColNames", typeof (string[])) as string[];
 			this.col_values = info.GetValue ("ColValues", typeof (object[])) as object[];

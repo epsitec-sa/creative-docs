@@ -109,12 +109,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "AssemblyInfo.cs"
+                    RelPath = "AbstractRequest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Base.cs"
+                    RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -144,12 +144,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "StateMachine.cs"
+                    RelPath = "RequestType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Type.cs"
+                    RelPath = "StateMachine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

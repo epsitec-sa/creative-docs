@@ -17,7 +17,6 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		
 		public System.Data.DataRowCollection	Rows
 		{
 			get
@@ -27,9 +26,9 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		public System.Data.DataRow AddRequest(Requests.Base request)
+		public System.Data.DataRow AddRequest(Requests.AbstractRequest request)
 		{
-			byte[] buffer = Requests.Base.SerializeToMemory (request);
+			byte[] buffer = Requests.AbstractRequest.SerializeToMemory (request);
 			int    length = buffer.Length;
 			
 			System.Diagnostics.Debug.Assert (length > 0);
@@ -46,18 +45,18 @@ namespace Epsitec.Cresus.Requests
 			return row;
 		}
 		
-		public Requests.Base GetRequest(System.Data.DataRow row)
+		public Requests.AbstractRequest GetRequest(System.Data.DataRow row)
 		{
 			if (row != null)
 			{
 				byte[] buffer = row[Tags.ColumnReqData] as byte[];
-				return Requests.Base.DeserializeFromMemory (buffer);
+				return Requests.AbstractRequest.DeserializeFromMemory (buffer);
 			}
 			
 			return null;
 		}
 		
-		public ExecutionState GetExecutionState(System.Data.DataRow row)
+		public ExecutionState GetRequestExecutionState(System.Data.DataRow row)
 		{
 			if (row != null)
 			{
@@ -71,7 +70,6 @@ namespace Epsitec.Cresus.Requests
 			
 			throw new System.InvalidCastException ("Invalid ExecutionState in row.");
 		}
-		
 		
 		
 		#region IAttachable Members

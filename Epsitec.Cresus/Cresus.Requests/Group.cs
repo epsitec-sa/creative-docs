@@ -10,20 +10,20 @@ namespace Epsitec.Cresus.Requests
 	
 	[System.Serializable]
 	
-	public class Group : Base, System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, System.Collections.IEnumerable, System.Collections.ICollection
+	public class Group : AbstractRequest, System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, System.Collections.IEnumerable, System.Collections.ICollection
 	{
-		public Group() : base (Type.Group)
+		public Group() : base (RequestType.Group)
 		{
 		}
 		
 
-		public Requests.Base					this[int index]
+		public Requests.AbstractRequest			this[int index]
 		{
 			get
 			{
 				if (this.Count > 0)
 				{
-					return this.requests[index] as Requests.Base;
+					return this.requests[index] as Requests.AbstractRequest;
 				}
 				
 				throw new System.IndexOutOfRangeException ("Index invalid.");
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		public void Add(Requests.Base request)
+		public void Add(Requests.AbstractRequest request)
 		{
 			if (request == null)
 			{
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Requests
 		#region ISerializable Members
 		protected Group(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
-			this.SetupType (Type.Group);
+			this.SetupRequestType (RequestType.Group);
 			
 			object[] array = info.GetValue ("RequestArray", typeof (object[])) as object[];
 			

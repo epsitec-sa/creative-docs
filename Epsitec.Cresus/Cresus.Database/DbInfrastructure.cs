@@ -2031,7 +2031,7 @@ namespace Epsitec.Cresus.Database
 				this.str_type_dict_value  = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictValue) as DbTypeString;
 				
 				this.d_t_type_datetime    = this.infrastructure.ResolveDbType (transaction, Tags.TypeDateTime) as DbTypeDateTime;
-				this.bin_type_raw_data    = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqRawData) as DbTypeByteArray;
+				this.bin_type_raw_data    = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqData) as DbTypeByteArray;
 				
 				this.infrastructure.internal_types.Add (this.num_type_key_id);
 				this.infrastructure.internal_types.Add (this.num_type_key_status);
@@ -2065,7 +2065,7 @@ namespace Epsitec.Cresus.Database
 			void InitialiseOtherTypes()
 			{
 				this.d_t_type_datetime   = new DbTypeDateTime (Tags.Name + "=" + Tags.TypeDateTime);
-				this.bin_type_raw_data   = new DbTypeByteArray (Tags.Name + "=" + Tags.TypeReqRawData);
+				this.bin_type_raw_data   = new DbTypeByteArray (Tags.Name + "=" + Tags.TypeReqData);
 			
 				this.infrastructure.internal_types.Add (this.d_t_type_datetime);
 				this.infrastructure.internal_types.Add (this.bin_type_raw_data);

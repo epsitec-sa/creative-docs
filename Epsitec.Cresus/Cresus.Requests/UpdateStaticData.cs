@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Requests
 	
 	public class UpdateStaticData : AbstractData, System.Runtime.Serialization.ISerializable
 	{
-		public UpdateStaticData() : base (Type.UpdateStaticData)
+		public UpdateStaticData() : base (RequestType.UpdateStaticData)
 		{
 		}
 		
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Requests
 		#region ISerializable Members
 		protected UpdateStaticData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
-			this.SetupType (Type.UpdateStaticData);
+			this.SetupRequestType (RequestType.UpdateStaticData);
 			
 			this.col_names  = info.GetValue ("ColNames", typeof (string[])) as string[];
 			this.col_cur_values = info.GetValue ("ColCurValues", typeof (object[])) as object[];

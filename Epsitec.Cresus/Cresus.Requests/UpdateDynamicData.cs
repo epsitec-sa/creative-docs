@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Requests
 	
 	public class UpdateDynamicData : AbstractData, System.Runtime.Serialization.ISerializable
 	{
-		public UpdateDynamicData() : base (Type.UpdateDynamicData)
+		public UpdateDynamicData() : base (RequestType.UpdateDynamicData)
 		{
 		}
 		
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Requests
 		#region ISerializable Members
 		protected UpdateDynamicData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
-			this.SetupType (Type.UpdateDynamicData);
+			this.SetupRequestType (RequestType.UpdateDynamicData);
 		}
 		
 		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
