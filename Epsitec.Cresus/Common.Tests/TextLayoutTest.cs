@@ -116,18 +116,12 @@ namespace Epsitec.Common.Tests
 			int n = System.Convert.ToByte("17", 16);
 
 			layout.Text = "Normal, <b>gras</b>, <i><i>italique</i></i>, <b><i>italique+gras</b></i>, <font face=\"Arial\">arial <font size=\"20\">grand</font></font>, fin";
-			layout.JustifBlocks();
-			layout.JustifLines();
 			layout.JustifConsoleOut();
 
 			layout.Text = "<font size=\"12\">Premier deuxième troisième quatrième cinquième sixième septième huitième neuvième et dixième.</font>";
-			layout.JustifBlocks();
-			layout.JustifLines();
 			layout.JustifConsoleOut();
 
 			layout.Text = "Ceciestuntrèslongtextesansespacesjustepourvoir.";
-			layout.JustifBlocks();
-			layout.JustifLines();
 			layout.JustifConsoleOut();
 		}
 
@@ -140,12 +134,12 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert(layout.VisibleLineCount > 0);
 			Assertion.Assert(layout.VisibleLineCount <= layout.TotalLineCount);
 			
-			Assertion.AssertEquals(false, layout.TotalRectangle.IsEmpty);
+			Assertion.AssertEquals(layout.TotalRectangle.IsEmpty, false);
 			Assertion.Assert(layout.TotalRectangle.Width <= layout.LayoutSize.Width);
 			Assertion.Assert(layout.TotalRectangle.Width >= layout.FontSize);
 			Assertion.Assert(layout.TotalRectangle.Height >= layout.FontSize);
 			
-			Assertion.AssertEquals(false, layout.VisibleRectangle.IsEmpty);
+			Assertion.AssertEquals(layout.VisibleRectangle.IsEmpty, false);
 			Assertion.Assert(layout.VisibleRectangle.Width <= layout.LayoutSize.Width);
 			Assertion.Assert(layout.VisibleRectangle.Width >= layout.FontSize);
 			Assertion.Assert(layout.VisibleRectangle.Height >= layout.FontSize);
@@ -320,6 +314,28 @@ namespace Epsitec.Common.Tests
 			Assertion.AssertEquals(text.Length, index);
 		}
 		
+		[Test] public void CheckCheckSyntax()
+		{
+			int offsetError;
+
+			// Textes tordus mais corrects.
+			Assertion.Assert(TextLayout.CheckSyntax("<a href=\"x\">Link</a>", out offsetError));
+			Assertion.Assert(TextLayout.CheckSyntax("<b><i></B></I>", out offsetError));
+			Assertion.Assert(TextLayout.CheckSyntax("Première<BR/>Deuxième", out offsetError));
+			Assertion.Assert(TextLayout.CheckSyntax("<img src=\"x\"/>", out offsetError));
+			Assertion.Assert(TextLayout.CheckSyntax("A&lt;&Amp;&GT;.&quot;&nbsp;", out offsetError));
+
+			// Textes faux qui doivent être rejetés.
+			Assertion.Assert(!TextLayout.CheckSyntax("<bold", out offsetError));
+			Assertion.Assert(!TextLayout.CheckSyntax("&quot", out offsetError));
+			Assertion.Assert(!TextLayout.CheckSyntax("<b>bold", out offsetError));
+			Assertion.Assert(!TextLayout.CheckSyntax("bold</b>", out offsetError));
+			Assertion.Assert(!TextLayout.CheckSyntax("Première<br>Deuxième", out offsetError));
+			Assertion.Assert(!TextLayout.CheckSyntax("<img src=\"x\">", out offsetError));
+			Assertion.Assert(!TextLayout.CheckSyntax("ab&quott;cd", out offsetError));
+			Assertion.Assert(!TextLayout.CheckSyntax("<x>", out offsetError));
+		}
+			
 		private TextLayout NewTextLayout()
 		{
 			TextLayout layout = new TextLayout();
