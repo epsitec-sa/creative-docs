@@ -616,8 +616,6 @@ namespace Epsitec.Common.Widgets
 			text_ex_2.Parent = page3;
 			text_ex_2.Bounds = new Drawing.Rectangle(10, page3.Height-30-28, 120, text_ex_2.Height);
 			text_ex_2.TabIndex = 2;
-			text_ex_2.EditionAccepted += new EventHandler(this.HandleTextExEditionAccepted);
-			text_ex_2.EditionRejected += new EventHandler(this.HandleTextExEditionRejected);
 			
 			TextFieldEx text_ex_3 = new TextFieldEx();
 			text_ex_3.Parent = page3;
@@ -1582,7 +1580,8 @@ namespace Epsitec.Common.Widgets
 		private void HandleTextExEditionRejected(object sender)
 		{
 			TextFieldEx text = sender as TextFieldEx;
-			text.Text = "";
+			text.Text = "&lt;rejected&gt;";
+			text.SelectAll ();
 		}
 
 

@@ -21,8 +21,8 @@ namespace Epsitec.Common.Widgets
 		{
 			this.accept_reject_behavior = new Helpers.AcceptRejectBehavior (this);
 			
-			this.accept_reject_behavior.RejectClicked += new Support.EventHandler(this.HandleAcceptRejectRejectClicked);
-			this.accept_reject_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptRejectAcceptClicked);
+			this.accept_reject_behavior.RejectClicked += new Support.EventHandler(this.HandleRejectClicked);
+			this.accept_reject_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptClicked);
 			
 			this.IsReadOnly = true;
 			this.SwitchToState (TextFieldExListMode.Combo);
@@ -38,8 +38,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.accept_reject_behavior.RejectClicked -= new Support.EventHandler(this.HandleAcceptRejectRejectClicked);
-				this.accept_reject_behavior.AcceptClicked -= new Support.EventHandler(this.HandleAcceptRejectAcceptClicked);
+				this.accept_reject_behavior.RejectClicked -= new Support.EventHandler(this.HandleRejectClicked);
+				this.accept_reject_behavior.AcceptClicked -= new Support.EventHandler(this.HandleAcceptClicked);
 				
 				this.accept_reject_behavior = null;
 			}
@@ -80,7 +80,6 @@ namespace Epsitec.Common.Widgets
 		
 		public void StartPassiveEdition(string text)
 		{
-//-			this.RejectEdition ();
 			this.SelectedItem = text;
 			this.SwitchToState (TextFieldExListMode.EditPassive);
 			this.OnEditionStarted ();
@@ -88,7 +87,6 @@ namespace Epsitec.Common.Widgets
 		
 		public void StartActiveEdition(string text)
 		{
-//-			this.RejectEdition ();
 			this.SelectedItem = text;
 			this.SwitchToState (TextFieldExListMode.EditActive);
 			this.OnEditionStarted ();
@@ -100,7 +98,7 @@ namespace Epsitec.Common.Widgets
 				(this.mode == TextFieldExListMode.EditPassive))
 			{
 				this.SwitchToState (TextFieldExListMode.Combo);
-				this.SelectedItem = this.saved_item;
+				this.SelectedItem = this.accept_reject_behavior.InitialText;
 				this.OnEditionRejected ();
 				return true;
 			}
@@ -217,14 +215,38 @@ namespace Epsitec.Common.Widgets
 
 		protected override void UpdateButtonGeometry()
 		{
-			base.UpdateButtonGeometry ();
-			
 			if (this.accept_reject_behavior != null)
 			{
+				this.margins.Right = this.mode == TextFieldExListMode.EditActive ? this.accept_reject_behavior.DefaultWidth : this.button.DefaultWidth;
 				this.accept_reject_behavior.UpdateButtonGeometry ();
 			}
+			
+			base.UpdateButtonGeometry ();
 		}
 
+		protected virtual void  UpdateButtonEnable()
+		{
+			if ((this.accept_reject_behavior != null) &&
+				(this.mode == TextFieldExListMode.EditActive))
+			{
+				this.accept_reject_behavior.SetEnabledOk (this.IsValid);
+			}
+		}
+		
+		protected virtual void UpdateButtonVisibility()
+		{
+			if (this.mode == TextFieldExListMode.EditActive)
+			{
+				this.button.SetVisible (false);
+				this.accept_reject_behavior.SetVisible (true);
+			}
+			else
+			{
+				this.button.SetVisible (true);
+				this.accept_reject_behavior.SetVisible (false);
+			}
+		}
+		
 		
 		protected virtual void SwitchToState(TextFieldExListMode mode)
 		{
@@ -238,21 +260,7 @@ namespace Epsitec.Common.Widgets
 					return;
 				}
 				
-				if (this.mode == TextFieldExListMode.EditActive)
-				{
-					//	Montre les boutons de validation et d'annulation :
-					
-					this.margins.Right = this.accept_reject_behavior.DefaultWidth;
-					this.button.SetVisible (false);
-					this.accept_reject_behavior.SetVisible (true);
-				}
-				else
-				{
-					this.margins.Right = this.button.DefaultWidth;
-					this.button.SetVisible (true);
-					this.accept_reject_behavior.SetVisible (false);
-				}
-				
+				this.UpdateButtonVisibility ();
 				this.UpdateButtonGeometry ();
 				this.UpdateButtonEnable ();
 				this.UpdateTextLayout ();
@@ -261,15 +269,12 @@ namespace Epsitec.Common.Widgets
 			this.IsReadOnly = (this.mode == TextFieldExListMode.Combo);
 		}
 		
-		protected virtual void UpdateButtonEnable()
-		{
-			if ((this.accept_reject_behavior != null) &&
-				(this.mode == TextFieldExListMode.EditActive))
-			{
-				this.accept_reject_behavior.SetEnabledOk (this.IsValid);
-			}
-		}
 		
+		protected override void OnTextDefined()
+		{
+			base.OnTextDefined ();
+			this.accept_reject_behavior.InitialText = this.Text;
+		}
 		
 		protected override void OnTextChanged()
 		{
@@ -315,7 +320,7 @@ namespace Epsitec.Common.Widgets
 				//	Prend note de l'élément actuellement actif, afin de pouvoir le restaurer
 				//	en cas d'annulation par la suite :
 				
-				this.saved_item = this.SelectedItem;
+				this.accept_reject_behavior.InitialText = this.SelectedItem;
 			}
 			
 			base.OpenCombo ();
@@ -333,17 +338,17 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		private void HandleAcceptRejectAcceptClicked(object sender)
+		private void HandleAcceptClicked(object sender)
 		{
 			System.Diagnostics.Debug.Assert (sender == this.accept_reject_behavior);
 			this.AcceptEdition ();
 		}		
 		
-		private void HandleAcceptRejectRejectClicked(object sender)
+		private void HandleRejectClicked(object sender)
 		{
 			System.Diagnostics.Debug.Assert (sender == this.accept_reject_behavior);
 			
-			if (this.Items.FindExactMatch (this.saved_item) == -1)
+			if (this.Items.FindExactMatch (this.accept_reject_behavior.InitialText) == -1)
 			{
 				this.Text = this.PlaceHolder;
 				this.SwitchToState (TextFieldExListMode.EditPassive);
@@ -352,7 +357,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				this.SelectedItem = this.saved_item;
+				this.SelectedItem = this.accept_reject_behavior.InitialText;
 				this.SwitchToState (TextFieldExListMode.Combo);
 			}
 			
@@ -365,7 +370,6 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		EditionRejected;
 		
 		protected string						place_holder;
-		protected string						saved_item;
 		
 		protected TextFieldExListMode			mode = TextFieldExListMode.Undefined;
 		protected Helpers.AcceptRejectBehavior	accept_reject_behavior;

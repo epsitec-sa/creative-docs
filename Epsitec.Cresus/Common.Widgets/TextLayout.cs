@@ -604,7 +604,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.text == null )  return;
 
 			context.CursorFrom  = 0;
-			context.CursorTo    = this.MaxTextOffset;
+			context.CursorTo    = this.MaxTextIndex;
 			context.CursorAfter = false;
 		}
 
@@ -700,6 +700,9 @@ namespace Epsitec.Common.Widgets
 			// Insère une chaîne correspondant à un caractère ou un tag (jamais plus).
 			int cursorFrom = this.FindOffsetFromIndex(context.CursorFrom);
 			int cursorTo   = this.FindOffsetFromIndex(context.CursorTo);
+			
+			System.Diagnostics.Debug.Assert(cursorFrom >= 0);
+			System.Diagnostics.Debug.Assert(cursorTo >= 0);
 			
 			int from = System.Math.Min(cursorFrom, cursorTo);
 			int to   = System.Math.Max(cursorFrom, cursorTo);

@@ -167,6 +167,9 @@ namespace Epsitec.Common.Widgets
 						}
 						break;
 					
+					case DefocusAction.None:
+						break;
+					
 					default:
 						throw new System.NotImplementedException (string.Format ("DefocusAction.{0} not implemented.", this.DefocusAction));
 				}
@@ -178,13 +181,13 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void UpdateButtonGeometry()
 		{
-			base.UpdateButtonGeometry ();
-			
 			if (this.accept_reject_behavior != null)
 			{
 				this.margins.Right = this.accept_reject_behavior.DefaultWidth;
 				this.accept_reject_behavior.UpdateButtonGeometry ();
 			}
+			
+			base.UpdateButtonGeometry ();
 		}
 
 		
