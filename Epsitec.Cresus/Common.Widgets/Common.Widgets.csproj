@@ -307,6 +307,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Win32Api.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Win32Const.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

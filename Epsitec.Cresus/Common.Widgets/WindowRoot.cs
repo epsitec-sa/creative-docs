@@ -62,9 +62,16 @@ namespace Epsitec.Common.Widgets
 			double x2 = System.Math.Min (clip_rect.Right, dx);
 			double y2 = System.Math.Min (clip_rect.Top, dy);
 			
-			graphics.SolidRenderer.Color = this.BackColor;
-			graphics.AddFilledRectangle (x1, y1, x2-x1, y2-y1);
-			graphics.RenderSolid ();
+			if (this.BackColor.A != 1.0)
+			{
+				graphics.Pixmap.Erase (new System.Drawing.Rectangle ((int) x1, (int) y1, (int) x2, (int) y2));
+			}
+			if (this.BackColor.A > 0.0)
+			{
+				graphics.SolidRenderer.Color = this.BackColor;
+				graphics.AddFilledRectangle (x1, y1, x2-x1, y2-y1);
+				graphics.RenderSolid ();
+			}
 		}
 		
 		

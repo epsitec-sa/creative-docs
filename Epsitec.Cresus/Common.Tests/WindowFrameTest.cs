@@ -111,6 +111,39 @@ namespace Epsitec.Common.Tests
 			WindowFrame.MessageFilter += new MessageHandler (WindowFrame_MessageFilter);
 		}
 
+		[Test] public void CheckLayeredWindows()
+		{
+			WindowFrame window = new WindowFrame ();
+			window.Root.BackColor = new Color (0, 0, 0, 0);
+			window.MakeFramelessWindow ();
+			window.IsLayered = true;
+			window.Alpha = 0.5;
+			window.WindowBounds = new Rectangle (100, 100, 200, 200);
+			
+			Button button = new Button ();
+			Scroller scroller = new Scroller ();
+			
+			button.Location = new Point (10, 10);
+			button.Size     = new Size (60, 24);
+			button.Text     = "Test";
+			button.Parent   = window.Root;
+			button.Clicked += new MessageEventHandler(button_Clicked);
+			
+			scroller.Location = new Point (100, 10);
+			scroller.Size = new Size(15, 180);
+			scroller.Range = 1.0;
+			scroller.Display = 0.1;
+			scroller.Position = 0.0;
+			scroller.ButtonStep = 0.01;
+			scroller.PageStep = 0.10;
+			scroller.Parent = window.Root;
+			scroller.Moved += new EventHandler(scroller_Moved);
+			
+			window.Show ();
+			window.Root.Invalidate ();
+			window.Update ();
+		}
+
 		private void Root_Clicked(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine ("Root Clicked");
@@ -146,6 +179,19 @@ namespace Epsitec.Common.Tests
 		{
 			WindowFrame window = sender as WindowFrame;
 			System.Diagnostics.Debug.WriteLine (string.Format ("Window {0}: message={1}", window.Name, message.ToString ()));
+		}
+
+		private void scroller_Moved(object sender)
+		{
+			Scroller scroller = sender as Scroller;
+			WindowFrame window = scroller.WindowFrame;
+			window.Alpha = scroller.Position / 2 + 0.5;
+		}
+
+		private void button_Clicked(object sender, MessageEventArgs e)
+		{
+			Button button = sender as Button;
+			button.Location = new Point (button.Location.X, button.Location.Y + 5);
 		}
 	}
 }

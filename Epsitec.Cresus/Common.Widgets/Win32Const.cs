@@ -43,5 +43,16 @@ namespace Epsitec.Common.Widgets
 		public const int MK_MBUTTON			= 0x10;
 		public const int MK_XBUTTON1		= 0x20;
 		public const int MK_XBUTTON2		= 0x40;
+
+		public const int GWL_EXSTYLE		= -20;
+		
+		public const int WS_EX_LAYERED		= 0x080000;
+		
+		public const int ULW_COLORKEY		= 0x00000001;
+		public const int ULW_ALPHA			= 0x00000002;
+		public const int ULW_OPAQUE			= 0x00000004;
+		
+		public const byte AC_SRC_OVER		= 0x00;
+		public const byte AC_SRC_ALPHA		= 0x01;
 	}
 }

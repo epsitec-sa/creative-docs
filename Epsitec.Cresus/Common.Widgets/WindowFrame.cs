@@ -112,6 +112,44 @@ namespace Epsitec.Common.Widgets
 			set { this.prevent_close = value; }
 		}
 		
+		public bool						IsLayered
+		{
+			get
+			{
+				return this.is_layered;
+			}
+			set
+			{
+				if (this.is_layered != value)
+				{
+					if (this.FormBorderStyle != System.Windows.Forms.FormBorderStyle.None)
+					{
+						throw new System.Exception ("A layered window may not have a border");
+					}
+					
+					if (WindowFrame.SupportsLayeredWindows)
+					{
+						int ex_style = Win32Api.GetWindowExStyle (this.Handle);
+						ex_style |= Win32Const.WS_EX_LAYERED;
+						Win32Api.SetWindowExStyle (this.Handle, ex_style);
+						this.is_layered = value;
+					}
+				}
+			}
+		}
+		
+		public double					Alpha
+		{
+			get { return this.alpha; }
+			set
+			{
+				if (this.alpha != value)
+				{
+					this.alpha = value;
+					this.UpdateLayeredWindow ();
+				}
+			}
+		}
 		
 		public Drawing.Rectangle		WindowBounds
 		{
@@ -346,9 +384,12 @@ namespace Epsitec.Common.Widgets
 			int height = this.ClientSize.Height;
 			
 			this.graphics.SetPixmapSize (width, height);
+			this.graphics.Pixmap.Clear ();
 			
 			this.root.Size       = new Drawing.Size (width, height);
 			this.dirty_rectangle = new Drawing.Rectangle (0, 0, width, height);
+			
+			this.UpdateLayeredWindow ();
 		}
 		
 		
@@ -617,12 +658,49 @@ namespace Epsitec.Common.Widgets
 				this.root.PaintHandler (this.graphics, repaint);
 			}
 			
-			Drawing.Pixmap pixmap = this.graphics.Pixmap;
-			
-			if (pixmap != null)
+			if (this.UpdateLayeredWindow ())
 			{
-				pixmap.Paint (win_graphics, win_clip_rect);
+				Drawing.Pixmap pixmap = this.graphics.Pixmap;
+			
+				if (pixmap != null)
+				{
+					pixmap.Paint (win_graphics, win_clip_rect);
+				}
 			}
+		}
+		
+		protected virtual bool UpdateLayeredWindow()
+		{
+			bool paint_needed = true;
+			
+			if (this.is_layered)
+			{
+				if (this.dirty_rectangle.IsEmpty == false)
+				{
+					Drawing.Rectangle repaint = this.dirty_rectangle;
+					
+					this.dirty_rectangle = Drawing.Rectangle.Empty;
+					
+					this.graphics.ResetClippingRectangle ();
+					this.graphics.SetClippingRectangle (repaint);
+					
+					this.root.PaintHandler (this.graphics, repaint);
+				}
+				
+				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (this.Width, this.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+				System.Drawing.Point  client = this.PointToScreen (new System.Drawing.Point (0, 0));
+				System.Drawing.Point  offset = new System.Drawing.Point (client.X - this.Location.X, client.Y - this.Location.Y);
+				
+				using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (bitmap))
+				{
+					System.Drawing.Rectangle clip = new System.Drawing.Rectangle (0, 0, this.ClientSize.Width, this.ClientSize.Height);
+					Drawing.Pixmap pixmap = this.graphics.Pixmap;
+					pixmap.Blend (graphics, offset, clip);
+					paint_needed = ! Win32Api.UpdateLayeredWindow (this.Handle, bitmap, this.Bounds, this.alpha);
+				}
+			}
+			
+			return paint_needed;
 		}
 		
 		public virtual void DispatchMessage(Message message)
@@ -778,6 +856,7 @@ namespace Epsitec.Common.Widgets
 			return (child == null) ? this.root : child;
 		}
 
+		
 		public static double					InitialKeyboardDelay
 		{
 			get
@@ -823,6 +902,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public static bool						SupportsLayeredWindows
+		{
+			get
+			{
+				return System.Windows.Forms.OSFeature.Feature.GetVersionPresent (System.Windows.Forms.OSFeature.LayeredWindows) != null;
+			}
+		}
+		
+		
 		
 		public event System.EventHandler		WindowActivated;
 		public event System.EventHandler		WindowDeactivated;
@@ -848,5 +936,7 @@ namespace Epsitec.Common.Widgets
 		protected int							tick_count;
 		
 		private bool							prevent_close;
+		private bool							is_layered;
+		private double							alpha = 1.0;
 	}
 }
