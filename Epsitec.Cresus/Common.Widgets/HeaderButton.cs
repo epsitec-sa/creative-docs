@@ -129,7 +129,8 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.sortMode != 0 )  // triangle ?
 			{
-				dir = Direction.None;
+				GlyphType type = GlyphType.None;
+				type = GlyphType.None;
 
 				if ( this.headerButtonStyle == HeaderButtonStyle.Top )
 				{
@@ -139,11 +140,11 @@ namespace Epsitec.Common.Widgets
 
 					if ( this.sortMode > 0 )
 					{
-						dir = Direction.Down;
+						type = GlyphType.ArrowDown;
 					}
 					else
 					{
-						dir = Direction.Up;
+						type = GlyphType.ArrowUp;
 						rect.Offset(0, rect.Height/3);
 					}
 				}
@@ -156,14 +157,14 @@ namespace Epsitec.Common.Widgets
 
 					if ( this.sortMode > 0 )
 					{
-						dir = Direction.Right;
+						type = GlyphType.ArrowRight;
 					}
 					else
 					{
-						dir = Direction.Left;
+						type = GlyphType.ArrowLeft;
 					}
 				}
-				adorner.PaintArrow(graphics, rect, state, dir, PaintTextStyle.Header);
+				adorner.PaintGlyph(graphics, rect, state, type, PaintTextStyle.Header);
 			}
 		}
 		
