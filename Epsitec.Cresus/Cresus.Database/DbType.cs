@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public void Initialise(DbNumDef num_def)
+		internal void Initialise(DbNumDef num_def)
 		{
 			this.EnsureTypeIsNotInitialised();
 			
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Database
 			this.num_def     = num_def;
 		}
 		
-		public void Initialise(DbSimpleType type)
+		internal void Initialise(DbSimpleType type)
 		{
 			this.EnsureTypeIsNotInitialised();
 			
