@@ -389,6 +389,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool							AutoRepeatEngaged
+		{
+			get { return (this.internal_state & InternalState.AutoRepeatEngaged) != 0; }
+			set
+			{
+				if (value)
+				{
+					this.internal_state |= InternalState.AutoRepeatEngaged;
+				}
+				else
+				{
+					this.internal_state &= ~InternalState.AutoRepeatEngaged;
+				}
+			}
+		}
+		
 		public bool							AutoToggle
 		{
 			get { return (this.internal_state & InternalState.AutoToggle) != 0; }
@@ -780,6 +796,8 @@ namespace Epsitec.Common.Widgets
 		public event System.EventHandler	ChildrenChanged;
 		public event System.EventHandler	LayoutChanged;
 		
+		public event MessageEventHandler	Pressed;
+		public event MessageEventHandler	Released;
 		public event MessageEventHandler	Clicked;
 		public event MessageEventHandler	DoubleClicked;
 		public event System.EventHandler	ShortcutPressed;
@@ -788,6 +806,9 @@ namespace Epsitec.Common.Widgets
 		public event System.EventHandler	Defocused;
 		public event System.EventHandler	Selected;
 		public event System.EventHandler	Deselected;
+		public event System.EventHandler	Engaged;
+		public event System.EventHandler	StillEngaged;
+		public event System.EventHandler	Disengaged;
 		public event System.EventHandler	ActiveStateChanged;
 		
 		
@@ -966,6 +987,7 @@ namespace Epsitec.Common.Widgets
 					this.widget_state |= WidgetState.Engaged;
 					frame.EngagedWidget = this;
 					this.Invalidate ();
+					this.OnEngaged (System.EventArgs.Empty);
 				}
 			}
 			else
@@ -975,7 +997,16 @@ namespace Epsitec.Common.Widgets
 					this.widget_state &= ~ WidgetState.Engaged;
 					frame.EngagedWidget = null;
 					this.Invalidate ();
+					this.OnDisengaged (System.EventArgs.Empty);
 				}
+			}
+		}
+		
+		internal virtual void FireStillEngaged()
+		{
+			if (this.IsEngaged)
+			{
+				this.OnStillEngaged (System.EventArgs.Empty);
 			}
 		}
 		
@@ -1657,14 +1688,27 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void DispatchMessage(Message message, Drawing.Point pos)
 		{
-			if (message.Type == MessageType.MouseUp)
+			switch (message.Type)
 			{
-				switch (message.ButtonDownCount)
-				{
-					case 1:	this.OnClicked (new MessageEventArgs (message, pos));		break;
-					case 2:	this.OnDoubleClicked (new MessageEventArgs (message, pos));	break;
-				}
+				case MessageType.MouseUp:
+					//	Le bouton a été relâché. Ceci génère l'événement 'Released' pour signaler
+					//	ce relâchement, mais aussi un événement 'Clicked' ou 'DoubleClicked' en
+					//	fonction du nombre de clics.
+					
+					this.OnReleased (new MessageEventArgs (message, pos));
+					
+					switch (message.ButtonDownCount)
+					{
+						case 1:	this.OnClicked (new MessageEventArgs (message, pos));		break;
+						case 2:	this.OnDoubleClicked (new MessageEventArgs (message, pos));	break;
+					}
+					break;
+				
+				case MessageType.MouseDown:
+					this.OnPressed (new MessageEventArgs (message, pos));
+					break;
 			}
+			
 			
 			this.ProcessMessage (message, pos);
 		}
@@ -1817,6 +1861,24 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected virtual void OnPressed(MessageEventArgs e)
+		{
+			if (this.Pressed != null)
+			{
+				e.Message.Consumer = this;
+				this.Pressed (this, e);
+			}
+		}
+		
+		protected virtual void OnReleased(MessageEventArgs e)
+		{
+			if (this.Released != null)
+			{
+				e.Message.Consumer = this;
+				this.Released (this, e);
+			}
+		}
+		
 		protected virtual void OnClicked(MessageEventArgs e)
 		{
 			if (this.Clicked != null)
@@ -1876,6 +1938,30 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnEngaged(System.EventArgs e)
+		{
+			if (this.Engaged != null)
+			{
+				this.Engaged (this, e);
+			}
+		}
+		
+		protected virtual void OnDisengaged(System.EventArgs e)
+		{
+			if (this.Disengaged != null)
+			{
+				this.Disengaged (this, e);
+			}
+		}
+		
+		protected virtual void OnStillEngaged(System.EventArgs e)
+		{
+			if (this.StillEngaged != null)
+			{
+				this.StillEngaged (this, e);
+			}
+		}
+		
 		protected virtual void OnActiveStateChanged(System.EventArgs e)
 		{
 			if (this.ActiveStateChanged != null)
@@ -1903,6 +1989,7 @@ namespace Epsitec.Common.Widgets
 			AutoEngage			= 0x00040000,
 			AutoToggle			= 0x00080000,
 			AutoMnemonic		= 0x00100000,
+			AutoRepeatEngaged	= 0x00200000,
 		}
 		
 		[System.Flags] public enum TabNavigationMode

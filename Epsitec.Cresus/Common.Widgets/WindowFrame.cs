@@ -18,6 +18,10 @@ namespace Epsitec.Common.Widgets
 			this.root.Size = new Drawing.Size (this.ClientSize);
 			this.root.Name = "Root";
 			
+			this.winforms_timer = new System.Windows.Forms.Timer ();
+			this.winforms_timer.Tick += new System.EventHandler(HandleWinFormsTimerTick);
+			this.winforms_timer.Interval = 50;
+			
 			this.ReallocatePixmap ();
 		}
 		
@@ -74,6 +78,7 @@ namespace Epsitec.Common.Widgets
 					if (old_engage != null)
 					{
 						old_engage.SetEngaged (false);
+						this.winforms_timer.Enabled = false;
 					}
 					
 					this.engaged_widget = new_engage;
@@ -81,6 +86,11 @@ namespace Epsitec.Common.Widgets
 					if (new_engage != null)
 					{
 						new_engage.SetEngaged (true);
+						
+						if (new_engage.AutoRepeatEngaged)
+						{
+							this.winforms_timer.Enabled = true;
+						}
 					}
 				}
 			}
@@ -244,6 +254,20 @@ namespace Epsitec.Common.Widgets
 			this.Update ();
 		}
 		
+		
+		protected void HandleWinFormsTimerTick(object sender, System.EventArgs e)
+		{
+			if (this.engaged_widget != null)
+			{
+				if (this.engaged_widget.IsEngaged)
+				{
+					this.engaged_widget.FireStillEngaged ();
+					return;
+				}
+			}
+			
+			this.winforms_timer.Enabled = false;
+		}
 		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
 		{
@@ -469,12 +493,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected WindowRoot			root;
-		protected Drawing.Graphics		graphics;
-		protected Drawing.Rectangle		dirty_rectangle;
-		protected Widget				last_in_widget;
-		protected Widget				capturing_widget;
-		protected Widget				focused_widget;
-		protected Widget				engaged_widget;
+		protected WindowRoot					root;
+		protected Drawing.Graphics				graphics;
+		protected Drawing.Rectangle				dirty_rectangle;
+		protected Widget						last_in_widget;
+		protected Widget						capturing_widget;
+		protected Widget						focused_widget;
+		protected Widget						engaged_widget;
+		protected System.Windows.Forms.Timer	winforms_timer;
 	}
 }
