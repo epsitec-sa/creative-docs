@@ -143,6 +143,10 @@ namespace Epsitec.Common.Text
 			CarriageReturn			= 0x000D,		//	don't use internally (CR)
 			NextLine				= 0x0085,		//	don't use internally (NEL)
 			
+			//	Arabic:
+
+			Tatweel					= 0x0640,		//	kashida
+			
 			//	Spaces:
 			
 			EnQuad					= 0x2000,
@@ -267,6 +271,15 @@ namespace Epsitec.Common.Text
 			ID_Ideographic,							//	break before or after, except in some numeric context
 			AI_AmbiguousAlphabeticOrIdeographic,	//	...
 			SA_ComplexContextSouthEastAsian,		//	...
+		}
+		
+		public enum StretchClass : byte
+		{
+			No,
+			Character,
+			Space,
+			CharacterSpace,
+			Kashida,
 		}
 		#endregion
 		
@@ -474,16 +487,43 @@ namespace Epsitec.Common.Text
 				return this.IsSpace (this[code]);
 			}
 			
-			public bool IsStretchableSpace(int code)
+			
+			public StretchClass GetStretchClass(int code)
 			{
 				switch ((Unicode.Code) code)
 				{
 					case Unicode.Code.Space:
 					case Unicode.Code.NoBreakSpace:
-						return true;
-					default:
-						return false;
+					case Unicode.Code.NarrowNoBreakSpace:
+						return StretchClass.Space;
+					
+					case Unicode.Code.Tatweel:
+						return StretchClass.Kashida;
+					
+					case Unicode.Code.EnQuad:
+					case Unicode.Code.EmQuad:
+					case Unicode.Code.EnSpace:
+					case Unicode.Code.EmSpace:
+					case Unicode.Code.ThreePerEmSpace:
+					case Unicode.Code.FourPerEmSpace:
+					case Unicode.Code.SixPerEmSpace:
+					case Unicode.Code.ThinSpace:
+					case Unicode.Code.HairSpace:
+					case Unicode.Code.MediumMathSpace:
+						return StretchClass.CharacterSpace;
+					
+					case Unicode.Code.ZeroWidthSpace:
+					case Unicode.Code.ZeroWidthNonJoiner:
+					case Unicode.Code.ZeroWidthJoiner:
+					case Unicode.Code.WordJoiner:
+						return StretchClass.No;
+					
+					case Unicode.Code.FigureSpace:
+					case Unicode.Code.PunctuationSpace:
+						return StretchClass.CharacterSpace;
 				}
+				
+				return StretchClass.Character;
 			}
 			
 			

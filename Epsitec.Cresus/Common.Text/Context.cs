@@ -60,10 +60,10 @@ namespace Epsitec.Common.Text
 			if ((this.get_font_last_style_version == current_style_version) &&
 				(this.get_font_last_code == code))
 			{
-//				font      = this.get_font_last_font;
-//				font_size = this.get_font_last_font_size;
-//				
-//				return;
+				font      = this.get_font_last_font;
+				font_size = this.get_font_last_font_size;
+				
+				return;
 			}
 			
 			Styles.SimpleStyle style = this.style_list[code];
