@@ -1,3 +1,6 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Drawing
 {
 	public enum SegmentOrientation
@@ -88,6 +91,11 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			return false;
+		}
+		
+		public static   bool Equals(Segment a, Segment b)
+		{
+			return (a.orientation == b.orientation) && (a.location == b.location) && (a.length == b.length);
 		}
 		
 		public override int GetHashCode()
