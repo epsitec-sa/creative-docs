@@ -15,17 +15,15 @@ namespace Epsitec.Common.Pictogram.Data
 			name.Type = PropertyType.Name;
 			this.AddProperty(name);
 
-			PropertyString textString = new PropertyString();
-			textString.Type = PropertyType.TextString;
-			this.AddProperty(textString);
-
-			PropertyFont textFont = new PropertyFont();
-			textFont.Type = PropertyType.TextFont;
-			this.AddProperty(textFont);
-
 			PropertyTextLine textLine = new PropertyTextLine();
 			textLine.Type = PropertyType.TextLine;
 			this.AddProperty(textLine);
+
+			this.textLayout = new TextLayout();
+			this.textNavigator = new TextNavigator(this.textLayout);
+			this.textLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
+			this.textLayout.LayoutSize = new Drawing.Size(1000000, 1000000);
+			this.textLayout.Alignment = Drawing.ContentAlignment.BottomLeft;
 		}
 
 		protected override AbstractObject CreateNewObject()
@@ -41,6 +39,20 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		public string Content
+		{
+			get
+			{
+				return this.textLayout.Text;
+			}
+
+			set
+			{
+				this.textLayout.Text = value;
+			}
+		}
+
+		
 		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
@@ -90,7 +102,8 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( !bbox.Contains(pos) )  return false;
 
 			Drawing.Path path = this.PathBuild();
-			return AbstractObject.DetectOutline(path, this.minimalWidth, pos);
+			if ( AbstractObject.DetectOutline(path, this.minimalWidth, pos) )  return true;
+			return this.DetectTextCurve(pos);
 		}
 
 
@@ -577,19 +590,46 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
+		// Lie l'objet éditable à une règle.
+		public override void EditRulerLink(TextRuler ruler)
+		{
+			ruler.AttachToText(this.textLayout, this.textNavigator);
+		}
 
+
+		// Reprend toutes les caractéristiques d'un objet.
+		public override void CloneObject(AbstractObject src)
+		{
+			base.CloneObject(src);
+
+			ObjectTextLine obj = src as ObjectTextLine;
+			this.textLayout.Text = obj.textLayout.Text;
+		}
+
+		
 		// Gestion d'un événement pendant l'édition.
 		public override bool EditProcessMessage(Message message, Drawing.Point pos)
 		{
+			if ( message.IsMouseType )
+			{
+				int rank = this.DetectTextCurveRank(pos);
+				pos = this.RankToLinearPos(rank);
+				if ( pos == Drawing.Point.Empty )  return false;
+			}
+
 			if ( !this.textNavigator.ProcessMessage(message, pos) )  return false;
 
-			this.PropertyString(1).String = this.textLayout.Text;
+			this.dirtyBbox = true;
 			return true;
 		}
 
 		// Gestion d'un événement pendant l'édition.
 		public override void EditMouseDownMessage(Drawing.Point pos)
 		{
+			int rank = this.DetectTextCurveRank(pos);
+			pos = this.RankToLinearPos(rank);
+			if ( pos == Drawing.Point.Empty )  return;
+
 			this.textNavigator.MouseDownMessage(pos);
 		}
 
@@ -745,250 +785,241 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Détecte si la souris est sur un caractère du texte le long de la courbe multiple.
-		protected bool DetectTextCurve(Drawing.Point mouse)
+		protected bool AdvanceInit()
 		{
-			Drawing.Font font = this.PropertyFont(2).GetFont();
-			double fs = this.PropertyFont(2).FontSize;
+			if ( this.textLayout.Text == "" )  return false;
 
-			string text = this.PropertyString(1).String;
-			if ( text == "" )  return false;
-			PropertyTextLine justif = this.PropertyTextLine(3);
+			PropertyTextLine justif = this.PropertyTextLine(1);
+			this.advanceCharArray = this.textLayout.ComputeStructure();
 
-			int index = 0;
-			double bzt = 0.0;
-			Drawing.Point p1 = this.Handle(1).Position;
-			Drawing.Point p2 = p1;
-			Drawing.Point pos;
+			double width = 0;
+			this.advanceMaxAscender = 0;
+			for ( int i=0 ; i<this.advanceCharArray.Length ; i++ )
+			{
+				string s = new string(this.advanceCharArray[i].character, 1);
+				width += this.advanceCharArray[i].font.GetTextAdvance(s)*this.advanceCharArray[i].fontSize;
+				width += justif.Add*this.advanceCharArray[i].fontSize;
 
-			bool checkEnd = true;
+				this.advanceMaxAscender = System.Math.Max(this.advanceMaxAscender, this.advanceCharArray[i].font.Ascender*this.advanceCharArray[i].fontSize);
+			}
+
+			this.advanceRank = 0;
+			this.advanceIndex = 0;
+			this.advanceBzt = 0.0;
+			this.advanceP1 = this.Handle(1).Position;
+			this.advanceP2 = this.advanceP1;
+			this.advanceLastTop    = Drawing.Point.Empty;
+			this.advanceLastBottom = Drawing.Point.Empty;
+			this.advanceCheckEnd = true;
+			this.advanceFactor = 1.0;
+
 			if ( justif.Horizontal == JustifHorizontal.Center )
 			{
 				double length = this.GetLength();
-				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
 				width = System.Math.Max((length-width)/2, 0.0);
-				this.Advance(width, true, ref index, ref bzt, ref p1);
-				checkEnd = (width == 0.0);
+				this.Advance(width, true, ref this.advanceIndex, ref this.advanceBzt, ref this.advanceP1);
+				this.advanceCheckEnd = (width == 0.0);
 			}
 			if ( justif.Horizontal == JustifHorizontal.Right )
 			{
 				double length = this.GetLength();
-				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
 				width = System.Math.Max(length-width, 0.0);
-				this.Advance(width, true, ref index, ref bzt, ref p1);
-				checkEnd = (width == 0.0);
+				this.Advance(width, true, ref this.advanceIndex, ref this.advanceBzt, ref this.advanceP1);
+				this.advanceCheckEnd = (width == 0.0);
 			}
 			if ( justif.Horizontal == JustifHorizontal.Stretch )
 			{
 				double length = this.GetLength();
-				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
-				fs *= length/width;
-				checkEnd = false;
+				this.advanceFactor = length/width;
+				this.advanceCheckEnd = false;
 			}
 
-			Drawing.Point lastTop    = new Drawing.Point(0,0);
-			Drawing.Point lastBottom = new Drawing.Point(0,0);
-			for ( int i=0 ; i<text.Length ; i++ )
+			return true;
+		}
+
+		protected bool AdvanceNext(out string character,
+								   out Drawing.Font font,
+								   out double fontSize,
+								   out Drawing.Color fontColor,
+								   out Drawing.Point pos,
+								   out Drawing.Point ptl,
+								   out Drawing.Point pbl,
+								   out Drawing.Point ptr,
+								   out Drawing.Point pbr,
+								   out double angle)
+		{
+			PropertyTextLine justif = this.PropertyTextLine(1);
+
+			character = "";
+			font = null;
+			fontSize = 0;
+			fontColor = Drawing.Color.Empty;
+			pos = new Drawing.Point();
+			ptl = new Drawing.Point();
+			pbl = new Drawing.Point();
+			ptr = new Drawing.Point();
+			pbr = new Drawing.Point();
+			angle = 0;
+
+			int i = this.advanceRank++;
+			if ( i >= this.advanceCharArray.Length )  return false;
+
+			character = new string(this.advanceCharArray[i].character, 1);
+			font = this.advanceCharArray[i].font;
+			fontSize = this.advanceCharArray[i].fontSize * this.advanceFactor;
+			fontColor = this.advanceCharArray[i].fontColor;
+
+			this.advanceWidth = font.GetTextAdvance(character)*fontSize;
+			this.advanceWidth += justif.Add*fontSize;
+			if ( !this.Advance(this.advanceWidth, this.advanceCheckEnd, ref this.advanceIndex, ref this.advanceBzt, ref this.advanceP2) )
 			{
-				double width = font.GetCharAdvance(text[i])*fs + justif.Add*fs;
-				if ( !this.Advance(width, checkEnd, ref index, ref bzt, ref p2) )  break;
+				return false;
+			}
 
-				pos = p1;
-				if ( justif.Offset > 0.0 )
-				{
-					pos = Drawing.Point.Move(p1, p2, font.Ascender*fs*justif.Offset);
-					pos = Drawing.Transform.RotatePointDeg(p1, -90, pos);
-				}
+			pos = this.advanceP1;
+			if ( justif.Offset > 0.0 )
+			{
+				pos = Drawing.Point.Move(this.advanceP1, this.advanceP2, this.advanceMaxAscender*justif.Offset);
+				pos = Drawing.Transform.RotatePointDeg(this.advanceP1, -90, pos);
+			}
 
-				double angle = Drawing.Point.ComputeAngleDeg(p1, p2);
+			angle = Drawing.Point.ComputeAngleDeg(this.advanceP1, this.advanceP2);
 
-				Drawing.Rectangle gb = font.GetGlyphBounds(font.GetGlyphIndex(text[i]));
-				gb.Top    = font.Ascender;
-				gb.Bottom = font.Descender;
-				gb.Scale(fs);
-				gb.Offset(pos);
-				Drawing.Point pbl = Drawing.Transform.RotatePointDeg(pos, angle, gb.BottomLeft);
-				Drawing.Point pbr = Drawing.Transform.RotatePointDeg(pos, angle, gb.BottomRight);
-				Drawing.Point ptl = Drawing.Transform.RotatePointDeg(pos, angle, gb.TopLeft);
-				Drawing.Point ptr = Drawing.Transform.RotatePointDeg(pos, angle, gb.TopRight);
+			Drawing.Rectangle gb = font.GetGlyphBounds(font.GetGlyphIndex(character[0]));
+			gb.Top    = font.Ascender;
+			gb.Bottom = font.Descender;
+			gb.Scale(fontSize);
+			gb.Offset(pos);
+			pbl = Drawing.Transform.RotatePointDeg(pos, angle, gb.BottomLeft);
+			pbr = Drawing.Transform.RotatePointDeg(pos, angle, gb.BottomRight);
+			ptl = Drawing.Transform.RotatePointDeg(pos, angle, gb.TopLeft);
+			ptr = Drawing.Transform.RotatePointDeg(pos, angle, gb.TopRight);
 
-				if ( i > 0 )
-				{
-					ptl = lastTop;
-					pbl = lastBottom;
-				}
+			if ( !this.advanceLastTop.IsEmpty )
+			{
+				ptl = Drawing.Point.Projection(this.advanceLastTop, this.advanceLastBottom, ptl);
+				pbl = Drawing.Point.Projection(this.advanceLastTop, this.advanceLastBottom, pbl);
+			}
 
+			this.advanceP1 = this.advanceP2;
+			this.advanceLastTop    = ptr;
+			this.advanceLastBottom = pbr;
+
+			return true;
+		}
+
+		// Conversion d'un rank dans le texte en une position linéaire, c'est-à-dire
+		// une position qui suppose que le texte est droit.
+		protected Drawing.Point RankToLinearPos(int rank)
+		{
+			Drawing.Point lp = Drawing.Point.Empty;
+			if ( rank == -1 || !this.AdvanceInit() )  return lp;
+
+			lp.X = 0.00001;  // pour feinter Drawing.Point.IsEmpty !
+			lp.Y = 0.00001;
+			string			character;
+			Drawing.Font	font;
+			double			fontSize;
+			Drawing.Color	fontColor;
+			Drawing.Point	pos, ptl, pbl, ptr, pbr;
+			double			angle;
+			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
+			{
+				if ( rank == this.advanceRank-1 )  return lp;
+				lp.X += this.advanceWidth / this.advanceFactor;
+			}
+			return lp;
+		}
+
+		// Détecte si la souris est sur un caractère du texte le long de la courbe multiple.
+		protected bool DetectTextCurve(Drawing.Point mouse)
+		{
+			if ( !this.AdvanceInit() )  return false;
+
+			string			character;
+			Drawing.Font	font;
+			double			fontSize;
+			Drawing.Color	fontColor;
+			Drawing.Point	pos, ptl, pbl, ptr, pbr;
+			double			angle;
+			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
+			{
 				InsideSurface inside = new InsideSurface(mouse, 4);
 				inside.AddLine(pbl, pbr);
 				inside.AddLine(pbr, ptr);
 				inside.AddLine(ptr, ptl);
 				inside.AddLine(ptl, pbl);
 				if ( inside.IsInside() )  return true;
-
-				lastTop    = ptr;
-				lastBottom = pbr;
-				p1 = p2;
 			}
 			return false;
+		}
+
+		// Détecte sur quel caractère est la souris le long de la courbe multiple.
+		protected int DetectTextCurveRank(Drawing.Point mouse)
+		{
+			if ( !this.AdvanceInit() )  return -1;
+
+			string			character;
+			Drawing.Font	font;
+			double			fontSize;
+			Drawing.Color	fontColor;
+			Drawing.Point	pos, ptl, pbl, ptr, pbr;
+			double			angle;
+			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
+			{
+				Drawing.Point ptm = (ptl+ptr)/2;
+				Drawing.Point pbm = (pbl+pbr)/2;
+
+				InsideSurface inside = new InsideSurface(mouse, 4);
+				inside.AddLine(pbl, pbm);
+				inside.AddLine(pbm, ptm);
+				inside.AddLine(ptm, ptl);
+				inside.AddLine(ptl, pbl);
+				if ( inside.IsInside() )  return this.advanceRank-1;  // dans la moitié gauche ?
+
+				inside = new InsideSurface(mouse, 4);
+				inside.AddLine(pbm, pbr);
+				inside.AddLine(pbr, ptr);
+				inside.AddLine(ptr, ptm);
+				inside.AddLine(ptm, pbm);
+				if ( inside.IsInside() )  return this.advanceRank;  // dans la moitié droite ?
+			}
+			return -1;
 		}
 
 		// Calcule la bbox du texte le long de la courbe multiple.
 		protected void BboxTextCurve(ref Drawing.Rectangle bbox)
 		{
-			Drawing.Font font = this.PropertyFont(2).GetFont();
-			double fs = this.PropertyFont(2).FontSize;
+			if ( !this.AdvanceInit() )  return;
 
-			string text = this.PropertyString(1).String;
-			if ( text == "" )  return;
-			PropertyTextLine justif = this.PropertyTextLine(3);
-
-			int index = 0;
-			double bzt = 0.0;
-			Drawing.Point p1 = this.Handle(1).Position;
-			Drawing.Point p2 = p1;
-			Drawing.Point pos;
-
-			bool checkEnd = true;
-			if ( justif.Horizontal == JustifHorizontal.Center )
+			string			character;
+			Drawing.Font	font;
+			double			fontSize;
+			Drawing.Color	fontColor;
+			Drawing.Point	pos, ptl, pbl, ptr, pbr;
+			double			angle;
+			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
 			{
-				double length = this.GetLength();
-				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
-				width = System.Math.Max((length-width)/2, 0.0);
-				this.Advance(width, true, ref index, ref bzt, ref p1);
-				checkEnd = (width == 0.0);
-			}
-			if ( justif.Horizontal == JustifHorizontal.Right )
-			{
-				double length = this.GetLength();
-				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
-				width = System.Math.Max(length-width, 0.0);
-				this.Advance(width, true, ref index, ref bzt, ref p1);
-				checkEnd = (width == 0.0);
-			}
-			if ( justif.Horizontal == JustifHorizontal.Stretch )
-			{
-				double length = this.GetLength();
-				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
-				fs *= length/width;
-				checkEnd = false;
-			}
-
-			Drawing.Point lastTop    = new Drawing.Point(0,0);
-			Drawing.Point lastBottom = new Drawing.Point(0,0);
-			for ( int i=0 ; i<text.Length ; i++ )
-			{
-				double width = font.GetCharAdvance(text[i])*fs + justif.Add*fs;
-				if ( !this.Advance(width, checkEnd, ref index, ref bzt, ref p2) )  break;
-
-				pos = p1;
-				if ( justif.Offset > 0.0 )
-				{
-					pos = Drawing.Point.Move(p1, p2, font.Ascender*fs*justif.Offset);
-					pos = Drawing.Transform.RotatePointDeg(p1, -90, pos);
-				}
-
-				double angle = Drawing.Point.ComputeAngleDeg(p1, p2);
-
-				Drawing.Rectangle gb = font.GetGlyphBounds(font.GetGlyphIndex(text[i]));
-				gb.Top    = font.Ascender;
-				gb.Bottom = font.Descender;
-				gb.Scale(fs);
-				gb.Offset(pos);
-				Drawing.Point pbl = Drawing.Transform.RotatePointDeg(pos, angle, gb.BottomLeft);
-				Drawing.Point pbr = Drawing.Transform.RotatePointDeg(pos, angle, gb.BottomRight);
-				Drawing.Point ptl = Drawing.Transform.RotatePointDeg(pos, angle, gb.TopLeft);
-				Drawing.Point ptr = Drawing.Transform.RotatePointDeg(pos, angle, gb.TopRight);
-
-				if ( i > 0 )
-				{
-					ptl = lastTop;
-					pbl = lastBottom;
-				}
-
 				bbox.MergeWith(pbl);
 				bbox.MergeWith(pbr);
 				bbox.MergeWith(ptl);
 				bbox.MergeWith(ptr);
-
-				lastTop    = ptr;
-				lastBottom = pbr;
-				p1 = p2;
 			}
 		}
 
 		// Dessine le texte le long de la courbe multiple.
 		protected void HiliteTextCurve(Drawing.Graphics graphics, IconContext iconContext)
 		{
-			Drawing.Font font = this.PropertyFont(2).GetFont();
-			double fs = this.PropertyFont(2).FontSize;
+			if ( !this.AdvanceInit() )  return;
 
-			string text = this.PropertyString(1).String;
-			if ( text == "" )  return;
-			PropertyTextLine justif = this.PropertyTextLine(3);
-
-			int index = 0;
-			double bzt = 0.0;
-			Drawing.Point p1 = this.Handle(1).Position;
-			Drawing.Point p2 = p1;
-			Drawing.Point pos;
-
-			bool checkEnd = true;
-			if ( justif.Horizontal == JustifHorizontal.Center )
+			string			character;
+			Drawing.Font	font;
+			double			fontSize;
+			Drawing.Color	fontColor;
+			Drawing.Point	pos, ptl, pbl, ptr, pbr;
+			double			angle;
+			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
 			{
-				double length = this.GetLength();
-				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
-				width = System.Math.Max((length-width)/2, 0.0);
-				this.Advance(width, true, ref index, ref bzt, ref p1);
-				checkEnd = (width == 0.0);
-			}
-			if ( justif.Horizontal == JustifHorizontal.Right )
-			{
-				double length = this.GetLength();
-				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
-				width = System.Math.Max(length-width, 0.0);
-				this.Advance(width, true, ref index, ref bzt, ref p1);
-				checkEnd = (width == 0.0);
-			}
-			if ( justif.Horizontal == JustifHorizontal.Stretch )
-			{
-				double length = this.GetLength();
-				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
-				fs *= length/width;
-				checkEnd = false;
-			}
-
-			Drawing.Point lastTop    = new Drawing.Point(0,0);
-			Drawing.Point lastBottom = new Drawing.Point(0,0);
-			for ( int i=0 ; i<text.Length ; i++ )
-			{
-				double width = font.GetCharAdvance(text[i])*fs + justif.Add*fs;
-				if ( !this.Advance(width, checkEnd, ref index, ref bzt, ref p2) )  break;
-
-				pos = p1;
-				if ( justif.Offset > 0.0 )
-				{
-					pos = Drawing.Point.Move(p1, p2, font.Ascender*fs*justif.Offset);
-					pos = Drawing.Transform.RotatePointDeg(p1, -90, pos);
-				}
-
-				double angle = Drawing.Point.ComputeAngleDeg(p1, p2);
-
-				Drawing.Rectangle gb = font.GetGlyphBounds(font.GetGlyphIndex(text[i]));
-				gb.Top    = font.Ascender;
-				gb.Bottom = font.Descender;
-				gb.Scale(fs);
-				gb.Offset(pos);
-				Drawing.Point pbl = Drawing.Transform.RotatePointDeg(pos, angle, gb.BottomLeft);
-				Drawing.Point pbr = Drawing.Transform.RotatePointDeg(pos, angle, gb.BottomRight);
-				Drawing.Point ptl = Drawing.Transform.RotatePointDeg(pos, angle, gb.TopLeft);
-				Drawing.Point ptr = Drawing.Transform.RotatePointDeg(pos, angle, gb.TopRight);
-
-				if ( i > 0 )
-				{
-					ptl = lastTop;
-					pbl = lastBottom;
-				}
-
 				Drawing.Path path = new Drawing.Path();
 				path.MoveTo(pbl);
 				path.LineTo(pbr);
@@ -996,87 +1027,65 @@ namespace Epsitec.Common.Pictogram.Data
 				path.LineTo(ptl);
 				path.Close();
 				graphics.Rasterizer.AddSurface(path);
-
-				lastTop    = ptr;
-				lastBottom = pbr;
-				p1 = p2;
 			}
-			graphics.RenderSolid(iconContext.HiliteOutlineColor);
+			graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 		}
 
 		// Dessine le texte le long de la courbe multiple.
 		protected void DrawTextCurve(Drawing.Graphics graphics, IconContext iconContext)
 		{
-			string text = this.PropertyString(1).String;
+			if ( !this.AdvanceInit() )  return;
 
-			if ( this.textLayout == null )
+			int cursorFrom = System.Math.Min(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
+			int cursorTo   = System.Math.Max(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
+			Drawing.Point lastTop    = Drawing.Point.Empty;
+			Drawing.Point lastBottom = Drawing.Point.Empty;
+
+			string			character;
+			Drawing.Font	font;
+			double			fontSize;
+			Drawing.Color	fontColor;
+			Drawing.Point	pos, ptl, pbl, ptr, pbr;
+			double			angle;
+			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
 			{
-				this.textLayout = new TextLayout();
-				this.textNavigator = new TextNavigator(this.textLayout);
-				this.textLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
-			}
-			this.textLayout.Text = text;
-			if ( text == "" )  return;
+				int rank = this.advanceRank-1;
 
-			Drawing.Font font = this.PropertyFont(2).GetFont();
-			double fs = this.PropertyFont(2).FontSize;
-
-			PropertyTextLine justif = this.PropertyTextLine(3);
-
-			int index = 0;
-			double bzt = 0.0;
-			Drawing.Point p1 = this.Handle(1).Position;
-			Drawing.Point p2 = p1;
-			Drawing.Point pos;
-
-			bool checkEnd = true;
-			if ( justif.Horizontal == JustifHorizontal.Center )
-			{
-				double length = this.GetLength();
-				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
-				width = System.Math.Max((length-width)/2, 0.0);
-				this.Advance(width, true, ref index, ref bzt, ref p1);
-				checkEnd = (width == 0.0);
-			}
-			if ( justif.Horizontal == JustifHorizontal.Right )
-			{
-				double length = this.GetLength();
-				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
-				width = System.Math.Max(length-width, 0.0);
-				this.Advance(width, true, ref index, ref bzt, ref p1);
-				checkEnd = (width == 0.0);
-			}
-			if ( justif.Horizontal == JustifHorizontal.Stretch )
-			{
-				double length = this.GetLength();
-				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
-				fs *= length/width;
-				checkEnd = false;
-			}
-
-			for ( int i=0 ; i<text.Length ; i++ )
-			{
-				double width = font.GetCharAdvance(text[i])*fs + justif.Add*fs;
-				if ( !this.Advance(width, checkEnd, ref index, ref bzt, ref p2) )  break;
-
-				Drawing.Transform ot = graphics.Transform;
-
-				pos = p1;
-				if ( justif.Offset > 0.0 )
+				if ( this.edited && cursorFrom != cursorTo && rank >= cursorFrom && rank < cursorTo )
 				{
-					pos = Drawing.Point.Move(p1, p2, font.Ascender*fs*justif.Offset);
-					pos = Drawing.Transform.RotatePointDeg(p1, -90, pos);
+					Drawing.Path path = new Drawing.Path();
+					path.MoveTo(pbl);
+					path.LineTo(pbr);
+					path.LineTo(ptr);
+					path.LineTo(ptl);
+					path.Close();
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(IconContext.ColorSelectEdit);
 				}
 
-				double angle = Drawing.Point.ComputeAngleDeg(p1, p2);
+				Drawing.Transform ot = graphics.Transform;
 				graphics.RotateTransformDeg(angle, pos.X, pos.Y);
-
-				graphics.AddText(pos.X, pos.Y, text.Substring(i,1), font, fs);
-
+				graphics.AddText(pos.X, pos.Y, character, font, fontSize);
+				graphics.RenderSolid(iconContext.AdaptColor(fontColor));
 				graphics.Transform = ot;
-				p1 = p2;
+
+				if ( this.edited && rank == this.textNavigator.Context.CursorTo )
+				{
+					graphics.LineWidth = 1.0/iconContext.ScaleX;
+					graphics.AddLine(ptl, pbl);
+					graphics.RenderSolid(IconContext.ColorFrameEdit);
+				}
+				
+				lastTop    = ptr;
+				lastBottom = pbr;
 			}
-			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyFont(2).FontColor));
+
+			if ( this.edited && this.advanceRank-1 == this.textNavigator.Context.CursorTo )
+			{
+				graphics.LineWidth = 1.0/iconContext.ScaleX;
+				graphics.AddLine(lastTop, lastBottom);
+				graphics.RenderSolid(IconContext.ColorFrameEdit);
+			}
 		}
 
 		// Dessine l'objet.
@@ -1090,7 +1099,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			Drawing.Path path = this.PathBuild();
 
-			if ( this.IsHilite && iconContext.IsEditable )
+			if ( this.IsHilite && iconContext.IsEditable && !this.edited )
 			{
 				this.HiliteTextCurve(graphics, iconContext);
 			}
@@ -1111,13 +1120,13 @@ namespace Epsitec.Common.Pictogram.Data
 
 			this.DrawTextCurve(graphics, iconContext);  // dessine le texte
 
-			if ( (this.IsSelected() || this.PropertyString(1).String == "") && iconContext.IsEditable )
+			if ( (this.IsSelected() || this.textLayout.Text == "") && iconContext.IsEditable )
 			{
 				graphics.Rasterizer.AddOutline(path, 1.0/iconContext.ScaleX);
 				graphics.RenderSolid(Drawing.Color.FromBrightness(0.6));
 			}
 
-			if ( this.IsSelected() && iconContext.IsEditable && !this.IsGlobalSelected() )
+			if ( this.IsSelected() && iconContext.IsEditable && !this.IsGlobalSelected() && !this.edited )
 			{
 				double initialWidth = graphics.LineWidth;
 				graphics.LineWidth = 1.0/iconContext.ScaleX;
@@ -1136,6 +1145,20 @@ namespace Epsitec.Common.Pictogram.Data
 
 		protected TextLayout				textLayout;
 		protected TextNavigator				textNavigator;
+
+		protected Common.Widgets.TextLayout.OneCharStructure[] advanceCharArray;
+		protected int						advanceRank;
+		protected int						advanceIndex;
+		protected double					advanceBzt;
+		protected double					advanceWidth;
+		protected Drawing.Point				advanceP1;
+		protected Drawing.Point				advanceP2;
+		protected Drawing.Point				advanceLastTop;
+		protected Drawing.Point				advanceLastBottom;
+		protected bool						advanceCheckEnd;
+		protected double					advanceFactor;
+		protected double					advanceMaxAscender;
+
 		protected static readonly double	step = 0.01;
 	}
 }

@@ -3367,6 +3367,55 @@ noText:
 			offsetError = -1;
 			return true;
 		}
+
+
+		public OneCharStructure[] ComputeStructure()
+		{
+			// Génère la structure pour chaque caractère du texte, ce qui permet
+			// de gérer les textes spéciaux non rectangulaires, tels que l'objet
+			// ObjectTextLine de Pictogram.
+			if ( this.layoutSize.Width == 0 )
+			{
+				return new OneCharStructure[0];
+			}
+
+			this.UpdateLayout();
+
+			int len = this.MaxTextIndex;
+			OneCharStructure[] array = new OneCharStructure[len];
+
+			int index = 0;
+			foreach ( JustifBlock block in this.blocks )
+			{
+				for ( int i=0 ; i<block.text.Length ; i++ )
+				{
+					System.Diagnostics.Debug.Assert(index < len);
+					array[index] = new OneCharStructure();
+					array[index].character = block.text[i];
+					array[index].font      = block.font;
+					array[index].fontSize  = block.fontSize;
+					array[index].fontColor = block.fontColor.IsEmpty ? Drawing.Color.FromBrightness(0) : block.fontColor;
+					array[index].bold      = block.bold;
+					array[index].italic    = block.italic;
+					array[index].underline = block.underline;
+					index ++;
+				}
+			}
+			System.Diagnostics.Debug.Assert(index == len);
+
+			return array;
+		}
+
+		public class OneCharStructure
+		{
+			public char						character;
+			public Drawing.Font				font;
+			public double					fontSize;
+			public Drawing.Color			fontColor = Drawing.Color.Empty;
+			public bool						bold;
+			public bool						italic;
+			public bool						underline;
+		}
 		
 
 		// Tous les tags possibles.

@@ -27,17 +27,13 @@ namespace Epsitec.Common.Pictogram.Data
 			fillGradient.Type = PropertyType.FillGradient;
 			this.AddProperty(fillGradient);
 
-			PropertyString textString = new PropertyString();
-			textString.Type = PropertyType.TextString;
-			this.AddProperty(textString);
-
-			PropertyFont textFont = new PropertyFont();
-			textFont.Type = PropertyType.TextFont;
-			this.AddProperty(textFont);
-
 			PropertyJustif textJustif = new PropertyJustif();
 			textJustif.Type = PropertyType.TextJustif;
 			this.AddProperty(textJustif);
+
+			this.textLayout = new TextLayout();
+			this.textNavigator = new TextNavigator(this.textLayout);
+			this.textLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
 		}
 
 		protected override AbstractObject CreateNewObject()
@@ -55,6 +51,20 @@ namespace Epsitec.Common.Pictogram.Data
 		public override string IconName
 		{
 			get { return @"file:images/textbox.icon"; }
+		}
+
+
+		public string Content
+		{
+			get
+			{
+				return this.textLayout.Text;
+			}
+
+			set
+			{
+				this.textLayout.Text = value;
+			}
 		}
 
 
@@ -190,6 +200,22 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
+		// Lie l'objet éditable à une règle.
+		public override void EditRulerLink(TextRuler ruler)
+		{
+			ruler.AttachToText(this.textLayout, this.textNavigator);
+		}
+
+
+		// Reprend toutes les caractéristiques d'un objet.
+		public override void CloneObject(AbstractObject src)
+		{
+			base.CloneObject(src);
+
+			ObjectTextBox obj = src as ObjectTextBox;
+			this.textLayout.Text = obj.textLayout.Text;
+		}
+
 
 		// Gestion d'un événement pendant l'édition.
 		public override bool EditProcessMessage(Message message, Drawing.Point pos)
@@ -198,8 +224,6 @@ namespace Epsitec.Common.Pictogram.Data
 
 			pos = this.transform.TransformInverse(pos);
 			if ( !this.textNavigator.ProcessMessage(message, pos) )  return false;
-
-			this.PropertyString(4).String = this.textLayout.Text;
 			return true;
 		}
 
@@ -259,18 +283,8 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine le texte du pavé.
 		protected void DrawText(Drawing.Graphics graphics, IconContext iconContext)
 		{
-			string text = this.PropertyString(4).String;
-
-			if ( this.textLayout == null )
-			{
-				this.textLayout = new TextLayout();
-				this.textNavigator = new TextNavigator(this.textLayout);
-				this.textLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
-			}
-			this.textLayout.Text = text;
-
 			Drawing.Point p1, p2, p3, p4;
-			switch ( this.PropertyJustif(6).Orientation )
+			switch ( this.PropertyJustif(4).Orientation )
 			{
 				case JustifOrientation.RightToLeft:  // <-
 					p1 = this.Handle(1).Position;
@@ -297,18 +311,18 @@ namespace Epsitec.Common.Pictogram.Data
 					p4 = this.Handle(1).Position;
 					break;
 			}
-			if ( !this.PropertyJustif(6).DeflateBox(ref p1, ref p2, ref p3, ref p4) )  return;
+			if ( !this.PropertyJustif(4).DeflateBox(ref p1, ref p2, ref p3, ref p4) )  return;
 
 			Drawing.Size size = new Drawing.Size();
 			size.Width  = Drawing.Point.Distance(p1,p2);
 			size.Height = Drawing.Point.Distance(p1,p3);
 			this.textLayout.LayoutSize = size;
 
-			this.textLayout.Font     = this.PropertyFont(5).GetFont();
-			this.textLayout.FontSize = this.PropertyFont(5).FontSize;
+			//?this.textLayout.Font     = this.PropertyFont(5).GetFont();
+			//?this.textLayout.FontSize = this.PropertyFont(5).FontSize;
 
-			JustifVertical   jv = this.PropertyJustif(6).Vertical;
-			JustifHorizontal jh = this.PropertyJustif(6).Horizontal;
+			JustifVertical   jv = this.PropertyJustif(4).Vertical;
+			JustifHorizontal jh = this.PropertyJustif(4).Horizontal;
 
 			if ( jv == JustifVertical.Top )
 			{
@@ -355,8 +369,9 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 
 			this.textLayout.ShowLineBreak = this.edited;
-			Drawing.Color color = iconContext.AdaptColor(this.PropertyFont(5).FontColor);
-			this.textLayout.Paint(new Drawing.Point(0,0), graphics, Drawing.Rectangle.Empty, color, Drawing.GlyphPaintStyle.Normal);
+			//?Drawing.Color color = iconContext.AdaptColor(this.PropertyFont(5).FontColor);
+			//?this.textLayout.Paint(new Drawing.Point(0,0), graphics, Drawing.Rectangle.Empty, color, Drawing.GlyphPaintStyle.Normal);
+			this.textLayout.Paint(new Drawing.Point(0,0), graphics);
 
 			if ( this.edited && this.textNavigator.Context.CursorTo != -1 )
 			{

@@ -563,6 +563,11 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.edited;
 		}
 
+		// Lie l'objet éditable à une règle.
+		public virtual void EditRulerLink(TextRuler ruler)
+		{
+		}
+
 		
 		// Indique si les propriétés de l'objet sont en cours d'édition.
 		[XmlIgnore]
@@ -1091,7 +1096,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			if ( this.IsFullHide(iconContext) )  return;
 
-			Pictogram.Widgets.Drawer.totalObjectDraw ++;
+			Widgets.Drawer.totalObjectDraw ++;
 
 			if ( iconContext.IsEditable )
 			{

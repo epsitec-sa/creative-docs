@@ -14,7 +14,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 	{
 		public Drawer()
 		{
+			this.InternalState |= InternalState.AutoFocus;
+			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.AutoDoubleClick;
+
 			this.BackColor = Drawing.Color.FromBrightness(1);  // fond blanc
 
 			this.iconObjects = new IconObjects();
@@ -23,6 +26,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			this.iconContext = new IconContext();
 			this.objectMemory = new ObjectMemory();
+
+			this.textRuler = new TextRuler(this);
+			this.textRuler.Changed += new EventHandler(this.HandleRulerChanged);
 
 			this.Exited += new MessageEventHandler(this.HandleMouseExited);
 		}
@@ -309,6 +315,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					else
 					{
 						this.Select(null, false, false);  // désélectionne tout
+						this.editObject = null;
 						this.InvalidateAll();
 						this.OnInfoObjectChanged();
 						this.MouseCursor = MouseCursor.AsCross;
@@ -335,6 +342,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 			this.iconObjects.Hilite(null, ref bbox);
 			this.HiliteHandle(null, -1, ref bbox);
+			this.InvalidateAll(bbox);
+		}
+
+		// Appelé lorsque la règle est changée.
+		private void HandleRulerChanged(object sender)
+		{
+			if ( this.editObject == null )  return;
+
+			Drawing.Rectangle bbox = this.editObject.BoundingBox;
 			this.InvalidateAll(bbox);
 		}
 
@@ -712,6 +728,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconObjects.DeleteSelection();
 			this.globalModifier.Visible = false;
 			this.createRank = -1;
+			this.editObject = null;
 			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
@@ -1739,13 +1756,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 			bool newEdit = false;
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 
-			this.editObject = this.iconObjects.DetectEdit(mouse);
-			if ( this.editObject != null )
+			AbstractObject initialObject = this.editObject;
+			this.editObjectSel = this.iconObjects.DetectEdit(mouse);
+			if ( this.editObjectSel != null )
 			{
+				this.editObject = this.editObjectSel;
 				this.Select(this.editObject, true, false);
 				this.OnInfoObjectChanged();
 				bbox.MergeWith(this.editObject.BoundingBox);
 				newEdit = true;
+			}
+			if ( initialObject != null && initialObject != this.editObjectSel )
+			{
+				bbox.MergeWith(initialObject.BoundingBox);
 			}
 
 			this.InvalidateAll(bbox);
@@ -1759,11 +1782,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			if ( this.mouseDown )  // bouton souris pressé ?
 			{
-				if ( this.editObject == null )
+				if ( this.editObjectSel == null )
 				{
-					this.editObject = this.iconObjects.DetectEdit(mouse);
-					if ( this.editObject != null )
+					this.editObjectSel = this.iconObjects.DetectEdit(mouse);
+					if ( this.editObjectSel != null )
 					{
+						this.editObject = this.editObjectSel;
 						this.Select(this.editObject, true, false);
 						this.OnInfoObjectChanged();
 						bbox.MergeWith(this.editObject.BoundingBox);
@@ -1793,7 +1817,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 
 			this.OnPanelChanged();
-			this.InvalidateAll(bbox);
+			this.InvalidateAll();
 		}
 
 
@@ -2483,7 +2507,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 
 			// Dessine les géométries.
-#if false
+#if true
 			this.iconObjects.DrawGeometry(graphics, this.iconContext, this.iconObjects, adorner, clipRect, false);
 #else
 			Drawer.totalObjectDraw = 0;
@@ -2536,6 +2560,28 @@ namespace Epsitec.Common.Pictogram.Widgets
 				rect.Deflate(0.5);
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(adorner.ColorBorder);
+			}
+
+			if ( this.editObject == null )
+			{
+				this.textRuler.SetVisible(false);
+				this.textRuler.DetachFromText();
+			}
+			else
+			{
+				this.textRuler.SetVisible(true);
+
+				Drawing.Rectangle editRect = this.editObject.BoundingBoxThin;
+				Drawing.Rectangle rulerRect = new Drawing.Rectangle();
+				Drawing.Point p1 = this.IconToScreen(editRect.TopLeft);
+				Drawing.Point p2 = this.IconToScreen(editRect.TopRight);
+				rulerRect.BottomLeft = p1;
+				rulerRect.Width = System.Math.Max(p2.X-p1.X, this.textRuler.MinimalWidth);
+				rulerRect.Height = this.textRuler.DefaultHeight;
+				graphics.Align(ref rulerRect);
+				this.textRuler.Bounds = rulerRect;
+
+				this.editObject.EditRulerLink(this.textRuler);
 			}
 		}
 
@@ -2667,6 +2713,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected AbstractObject		hiliteHandleObject = null;
 		protected int					hiliteHandleRank = -1;
 		protected AbstractObject		editObject;
+		protected AbstractObject		editObjectSel;
+		protected TextRuler				textRuler;
 
 		protected VMenu					contextMenu;
 		protected AbstractObject		contextMenuObject;
