@@ -1409,10 +1409,12 @@ invalid:	row    = -1;
 		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
+			int row, column;
+			
 			switch (message.Type)
 			{
 				case MessageType.MouseDown:
-					if (this.HitTestTable (pos) && message.IsLeftButton && this.is_select_enabled)
+					if (this.HitTestTable (pos, out row, out column) && message.IsLeftButton && this.is_select_enabled)
 					{
 						this.is_mouse_down = true;
 						this.ProcessMouseSelect (pos);

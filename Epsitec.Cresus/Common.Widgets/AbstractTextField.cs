@@ -57,8 +57,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		// Mode pour la ligne éditable.
-		[ Bundle ("ro") ] public bool IsReadOnly
+		[Bundle ("ro")]			public bool		IsReadOnly
 		{
 			get
 			{
@@ -75,8 +74,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Retourne la hauteur standard d'une ligne éditable.
-		public override double DefaultHeight
+		[Bundle ("SelOnFocus")]	public bool		AutoSelectOnFocus
+		{
+			get { return this.autoSelectOnFocus; }
+			set { this.autoSelectOnFocus = value; }
+		}
+		
+		
+		public override double					DefaultHeight
 		{
 			get
 			{
@@ -84,7 +89,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public override Drawing.Point BaseLine
+		public override Drawing.Point			BaseLine
 		{
 			get
 			{
@@ -103,7 +108,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.Rectangle InnerBounds
+		public override Drawing.Rectangle		InnerBounds
 		{
 			get
 			{
@@ -130,7 +135,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual Drawing.Rectangle InnerTextBounds
+		public virtual Drawing.Rectangle		InnerTextBounds
 		{
 			get
 			{
@@ -153,24 +158,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		// Texte édité.
-		protected override void ModifyTextLayout(string text)
-		{
-			if ( text.Length > this.maxChar )
-			{
-				text = text.Substring(0, this.maxChar);
-			}
-			
-			base.ModifyTextLayout(text);
-		}
-		
-		protected override void DisposeTextLayout()
-		{
-			// Ne fait rien, on veut s'assurer que le TextLayout associé avec le
-			// TextField n'est jamais détruit du vivant du TextField.
-			this.TextLayout.Text = "";
-		}
-		
 		
 		internal override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
@@ -183,45 +170,43 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Nombre max de caractères dans la ligne éditée.
-		public int MaxChar
+		public int								MaxChar
 		{
 			get { return this.maxChar; }
 			set { this.maxChar = value; }
 		}
 
-		public virtual Drawing.Margins Margins
+		public virtual Drawing.Margins			Margins
 		{
 			get { return this.margins; }
 			set { this.margins = value; }
 		}
 		
-		public virtual double LeftMargin
+		public virtual double					LeftMargin
 		{
 			get { return this.margins.Left; }
 			set { this.margins.Left = value; }
 		}
 		
-		public virtual double RightMargin
+		public virtual double					RightMargin
 		{
 			get { return this.margins.Right; }
 			set { this.margins.Right = value; }
 		}
 		
-		public virtual double BottomMargin
+		public virtual double					BottomMargin
 		{
 			get { return this.margins.Bottom; }
 			set { this.margins.Bottom = value; }
 		}
 		
-		public virtual double TopMargin
+		public virtual double					TopMargin
 		{
 			get { return this.margins.Top; }
 			set { this.margins.Top = value; }
 		}
 		
-		
-		public TextFieldStyle TextFieldStyle
+		public TextFieldStyle					TextFieldStyle
 		{
 			get
 			{
@@ -238,8 +223,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Position du curseur d'édition.
-		public int Cursor
+		
+		public int								Cursor
 		{
 			get
 			{
@@ -260,7 +245,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int CursorFrom
+		public int								CursorFrom
 		{
 			get
 			{
@@ -280,7 +265,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int CursorTo
+		public int								CursorTo
 		{
 			get
 			{
@@ -301,6 +286,25 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
+		
+		protected override void ModifyTextLayout(string text)
+		{
+			if ( text.Length > this.maxChar )
+			{
+				text = text.Substring(0, this.maxChar);
+			}
+			
+			base.ModifyTextLayout(text);
+		}
+		
+		protected override void DisposeTextLayout()
+		{
+			// Ne fait rien, on veut s'assurer que le TextLayout associé avec le
+			// TextField n'est jamais détruit du vivant du TextField.
+			this.TextLayout.Text = "";
+		}
+		
 		// Sélectione tous les caractères.
 		public void SelectAll()
 		{
@@ -416,15 +420,27 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
-					this.mouseDown = true;
-					this.BeginPress(pos);
-					message.Consumer = this;
+					this.ProcessBeginPress (pos);
+					
+					if ((this.AutoSelectOnFocus) &&
+						(this.IsFocusedOrPassive == false))
+					{
+						this.SelectAll ();
+						message.Consumer  = this;
+						message.Swallowed = true;
+					}
+					else
+					{
+						message.Consumer = this;
+						this.mouseDown = true;
+					}
+					
 					break;
 				
 				case MessageType.MouseMove:
 					if ( this.mouseDown )
 					{
-						this.MovePress(pos);
+						this.ProcessMovePress(pos);
 						message.Consumer = this;
 					}
 					break;
@@ -432,7 +448,7 @@ namespace Epsitec.Common.Widgets
 				case MessageType.MouseUp:
 					if ( this.mouseDown )
 					{
-						this.EndPress(pos, message.ButtonDownCount);
+						this.ProcessEndPress(pos, message.ButtonDownCount);
 						this.mouseDown = false;
 						message.Consumer = this;
 					}
@@ -455,7 +471,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Appelé lorsque le bouton de la souris est pressé.
-		protected void BeginPress(Drawing.Point pos)
+		protected bool ProcessBeginPress(Drawing.Point pos)
 		{
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
 			
@@ -465,11 +481,14 @@ namespace Epsitec.Common.Widgets
 				this.cursorFrom = detect;
 				this.cursorTo   = detect;
 				this.Invalidate();
+				return true;
 			}
+			
+			return false;
 		}
 
 		// Appelé lorsque la souris est déplacée, bouton pressé.
-		protected void MovePress(Drawing.Point pos)
+		protected void ProcessMovePress(Drawing.Point pos)
 		{
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
 			
@@ -482,7 +501,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Appelé lorsque le bouton de la souris est relâché.
-		protected void EndPress(Drawing.Point pos, int downCount)
+		protected void ProcessEndPress(Drawing.Point pos, int downCount)
 		{
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
 			
@@ -787,6 +806,11 @@ namespace Epsitec.Common.Widgets
 			base.OnFocused();
 			TextField.blinking = this;
 			this.ResetCursor();
+			
+			if ( this.autoSelectOnFocus )
+			{
+				this.SelectAll();
+			}
 		}
 
 		protected override void OnDefocused()
@@ -1030,6 +1054,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected bool							isReadOnly = false;
 		protected bool							isCombo = false;
+		protected bool							autoSelectOnFocus = false;
 		protected Drawing.Margins				margins = new Drawing.Margins();
 		protected Drawing.Size					realSize;
 		protected Drawing.Point					scrollOffset = new Drawing.Point();

@@ -454,10 +454,14 @@ namespace Epsitec.Common.Widgets
 		private void HandleTableEditTextChanged(object sender)
 		{
 			EditArray table = sender as EditArray;
-			string[] search = table.EditValues;
 			
-			table.SelectedItem = string.Join (table.Separator.ToString (), search);
-			table.ShowSelected (ScrollShowMode.Center);
+			if (table.EditArrayMode == EditArrayMode.Search)
+			{
+				string[] search = table.EditValues;
+				
+				table.SelectedItem = string.Join (table.Separator.ToString (), search);
+				table.ShowSelected (ScrollShowMode.Center);
+			}
 		}
 		
 		

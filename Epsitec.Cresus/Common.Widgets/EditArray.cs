@@ -199,9 +199,19 @@ namespace Epsitec.Common.Widgets
 					this.edit_line.Bounds = bounds;
 					this.edit_line.Show ();
 					this.edit_line.UpdateGeometry ();
+					
+					if ((this.focused_column >= 0) &&
+						(this.focused_column < this.max_columns))
+					{
+						this.edit_line.FocusColumn (this.focused_column);
+					}
+					
+					this.focused_column = -1;
 				}
 				else if (this.edit_line.IsVisible)
 				{
+					this.focused_column = this.edit_line.FindFocusedColumn ();
+					
 					if (this.edit_line.ContainsFocus)
 					{
 						this.SetFocused (true);
@@ -265,6 +275,48 @@ namespace Epsitec.Common.Widgets
 			return cell;
 		}
 		
+		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
+		{
+			base.ProcessMessage (message, pos);
+			
+			if ((message.IsMouseType) &&
+				(message.Type != MessageType.MouseLeave))
+			{
+				Window window = this.Window;
+				
+				if (window != null)
+				{
+					int row, column;
+					
+					if ((this.HitTestTable (pos, out row, out column)) &&
+						(this.EditArrayMode == EditArrayMode.Edition))
+					{
+						window.MouseCursor = MouseCursor.AsIBeam;
+						
+						if ((message.Type == MessageType.MouseDown) &&
+							(message.ButtonDownCount == 1) &&
+							(message.IsLeftButton) &&
+							(row >= 0) && (row < this.max_rows))
+						{
+							//	L'utilisateur a cliqué dans une cellule de la table. On va faire en sorte
+							//	de changer la cellule active (repositionner les lignes éditables) tout en
+							//	passant l'événement plus loin :
+							
+							this.is_mouse_down = false;
+							this.EditionIndex  = row;
+							this.Update ();
+							this.edit_line.FocusColumn (column);
+							window.DispatchMessage (message);
+							System.Diagnostics.Debug.Assert (message.Consumer == this.edit_line[column]);
+						}
+					}
+					else
+					{
+						window.MouseCursor = this.MouseCursor;
+					}
+				}
+			}
+		}
 
 		
 		protected override void OnEditionIndexChanged()
@@ -302,6 +354,21 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		protected override void OnDefocused()
+		{
+			base.OnDefocused ();
+			
+			if (this.ContainsFocus)
+			{
+				//	En fait, on contient toujours le focus...
+			}
+			else
+			{
+				this.focused_column = -1;
+			}
+		}
+
+
 		
 		protected bool MoveEditionToLine(int offset)
 		{
@@ -559,6 +626,19 @@ namespace Epsitec.Common.Widgets
 			{
 				this.edit_widgets[column].SetFocused (true);
 				this.edit_widgets[column].SelectAll ();
+			}
+			
+			public int FindFocusedColumn()
+			{
+				for (int i = 0; i < this.edit_widgets.Length; i++)
+				{
+					if (this.edit_widgets[i].ContainsFocus)
+					{
+						return i;
+					}
+				}
+				
+				return -1;
 			}
 			
 			public void AttachEditWidgets()
@@ -1079,6 +1159,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected EditArrayMode					mode = EditArrayMode.Standard;
 		protected string						search_caption;
+		protected int							focused_column = -1;
 	}
 	
 	public enum EditArrayMode
