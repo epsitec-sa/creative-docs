@@ -155,6 +155,48 @@ namespace Epsitec.Common.Widgets
 			window.Show();
 		}
 		
+		[Test] public void CheckEditArray()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Drawing.Size(400, 300);
+			window.Text = "CheckEditArray";
+			window.Root.DockMargins = new Drawing.Margins (5, 5, 5, 5);
+			
+			EditArray table = new EditArray();
+			
+			table.Parent            = window.Root;
+			table.Dock              = DockStyle.Fill;
+			table.ColumnCount       = 5;
+			table.RowCount          = 100;
+			table.SelectedIndex     = 0;
+			table.EditionIndex      = -1;
+			table.EditionZoneHeight = 2;
+			table.TitleHeight       = 32;
+			table.DoubleClicked    += new MessageEventHandler(this.HandleEditDoubleClicked);
+			
+			for (int x = 0 ; x < table.ColumnCount; x++)
+			{
+				table.SetHeaderText (x, string.Format ("C{0}", x));
+				table.SetColumnWidth (x, 80);
+			}
+			for (int y = 0; y < 100; y++)
+			{
+				for (int x = 0 ; x < table.ColumnCount; x++)
+				{
+					table[y,x] = string.Format ("Val {0}.{1}", y, x);
+				}
+			}
+			
+			StaticText title = new StaticText (@"<font size=""160%"">EditArray test.</font> Double-click to start edition.");
+			
+			title.Parent = table;
+			title.Bounds = table.TitleBounds;
+			title.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			
+			window.Show();
+		}
+		
 		[Test] public void CheckSmartTagColor()
 		{
 			Window window = new Window ();
@@ -220,6 +262,17 @@ namespace Epsitec.Common.Widgets
 			table.EditionIndex = this.hilite_row;
 			table.ShowEdition (ScrollArrayShowMode.Extremity);
 			table.Invalidate ();
+		}
+
+		private void HandleEditDoubleClicked(object sender, MessageEventArgs e)
+		{
+			EditArray table = sender as EditArray;
+			
+			int row, column;
+			
+			table.HitTestTable (e.Point, out row, out column);
+			System.Diagnostics.Debug.WriteLine ("Double-clicked : " + row + "," + column);
+			table.StartEdition (row, column);
 		}
 
 		private void HandlePaintForeground(object sender, PaintEventArgs e)
