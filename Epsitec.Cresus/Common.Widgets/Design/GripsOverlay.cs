@@ -21,6 +21,21 @@ namespace Epsitec.Common.Widgets.Design
 		}
 		
 		
+		static GripsOverlay()
+		{
+			GripsOverlay.grip_map = new GripMap[9];
+			
+			GripsOverlay.grip_map[0] = new GripMap (Drawing.GripId.VertexBottomLeft, GripType.Vertex, 0, 0);
+			GripsOverlay.grip_map[1] = new GripMap (Drawing.GripId.VertexBottomRight, GripType.Vertex, -1, 0);
+			GripsOverlay.grip_map[2] = new GripMap (Drawing.GripId.VertexTopLeft, GripType.Vertex, 0, -1);
+			GripsOverlay.grip_map[3] = new GripMap (Drawing.GripId.VertexTopRight, GripType.Vertex, -1, -1);
+			GripsOverlay.grip_map[4] = new GripMap (Drawing.GripId.Body, GripType.Center, 0, 0);
+			GripsOverlay.grip_map[5] = new GripMap (Drawing.GripId.EdgeBottom, GripType.Edge, 0, 0);
+			GripsOverlay.grip_map[6] = new GripMap (Drawing.GripId.EdgeRight, GripType.Edge, -1, 0);
+			GripsOverlay.grip_map[7] = new GripMap (Drawing.GripId.EdgeTop, GripType.Edge, 0, -1);
+			GripsOverlay.grip_map[8] = new GripMap (Drawing.GripId.EdgeLeft, GripType.Edge, 0, 0);
+		}
+		
 		public Widget					TargetWidget
 		{
 			get
@@ -121,30 +136,35 @@ namespace Epsitec.Common.Widgets.Design
 		{
 			if (this.grips == null)
 			{
-				this.grips = new Grip[GripsOverlay.GripCount];
+				int n = GripsOverlay.grip_map.Length;
+				this.grips = new Grip[n];
 				
-				for (int i = 0; i < this.grips.Length; i++)
+				for (int i = 0; i < n; i++)
 				{
 					this.grips[i] = new Grip (this);
-					
-					switch (i)
-					{
-						case GripsOverlay.GripBottomLeft:
-						case GripsOverlay.GripBottomRight:
-						case GripsOverlay.GripTopLeft:
-						case GripsOverlay.GripTopRight:
-							this.grips[i].GripType = GripType.Vertex;
-							break;
-						
-						case GripsOverlay.GripCenter:
-							this.grips[i].GripType = GripType.Center;
-							break;
-					}
-					
-					this.grips[i].Index = i;
+					this.grips[i].GripType  = GripsOverlay.grip_map[i].type;
+					this.grips[i].Index     = i;
 					this.grips[i].Dragging += new DragEventHandler (this.HandleGripsDragging);
 				}
 			}
+		}
+		
+		public virtual Grip FindGrip(Drawing.GripId id)
+		{
+			if (this.grips != null)
+			{
+				System.Diagnostics.Debug.Assert (this.grips.Length == GripsOverlay.grip_map.Length);
+				
+				for (int i = 0; i < GripsOverlay.grip_map.Length; i++)
+				{
+					if (GripsOverlay.grip_map[i].id == id)
+					{
+						return this.grips[i];
+					}
+				}
+			}
+			
+			return null;
 		}
 		
 		
@@ -163,11 +183,13 @@ namespace Epsitec.Common.Widgets.Design
 				this.TargetBounds = parent.MapClientToRoot (this.target_widget.Bounds);
 				this.TargetClip   = parent.MapClientToRoot (parent.GetClipStackBounds ());
 				
-				this.grips[GripsOverlay.GripBottomLeft].GripLocation  = this.target_bounds.BottomLeft;
-				this.grips[GripsOverlay.GripBottomRight].GripLocation = this.target_bounds.BottomRight - new Drawing.Point (1, 0);
-				this.grips[GripsOverlay.GripTopRight].GripLocation    = this.target_bounds.TopRight    - new Drawing.Point (1, 1);
-				this.grips[GripsOverlay.GripTopLeft].GripLocation     = this.target_bounds.TopLeft     - new Drawing.Point (0, 1);
-				this.grips[GripsOverlay.GripCenter].GripLocation      = this.target_bounds.Center;
+				for (int i = 0; i < this.grips.Length; i++)
+				{
+					GripMap map  = GripsOverlay.grip_map[i];
+					Grip    grip = this.grips[i];
+					
+					grip.GripLocation = this.target_bounds.GetGrip (map.id) + map.offset;
+				}
 			}
 		}
 		
@@ -204,86 +226,88 @@ namespace Epsitec.Common.Widgets.Design
 			System.Diagnostics.Debug.Assert (grip != null);
 			System.Diagnostics.Debug.Assert (this.grips[grip.Index] == grip);
 			
-			int index = grip.Index;
+			int     index = grip.Index;
+			GripMap map   = GripsOverlay.grip_map[index];
 			
 			Drawing.Rectangle bounds = this.target_bounds;
 			
-			if (index < GripsOverlay.GripCenter)
-			{
-				Drawing.VertexIndex vertex = (Drawing.VertexIndex) index;
-				
-				bounds.OffsetVertex (vertex, e.Offset);
-				
-				bounds = this.target_widget.MapRootToClient (bounds);
-				bounds = this.target_widget.MapClientToParent (bounds);
-				bounds = this.ConstrainWidgetBounds (vertex, bounds);
-			}
-			else if (index == GripsOverlay.GripCenter)
-			{
-				bounds.Offset (e.Offset);
-			}
+			bounds.OffsetGrip (map.id, e.Offset);
+			bounds = this.target_widget.MapRootToClient (bounds);
+			bounds = this.target_widget.MapClientToParent (bounds);
+			bounds = this.ConstrainWidgetBounds (map.id, bounds);
 			
 			this.target_widget.Bounds = bounds;
 		}
 		
-		protected virtual Drawing.Rectangle ConstrainWidgetBounds(Drawing.VertexIndex vertex, Drawing.Rectangle new_bounds)
+		protected virtual Drawing.Rectangle ConstrainWidgetBounds(Drawing.GripId grip, Drawing.Rectangle new_bounds)
 		{
-			Drawing.Rectangle old_bounds = this.target_widget.Bounds;
+			return GripsOverlay.ConstrainWidgetBounds (grip, this.target_widget.Bounds, new_bounds, this.target_widget.MinSize, this.target_widget.MaxSize);
+		}
+		
+		public static Drawing.Rectangle ConstrainWidgetBounds(Drawing.GripId grip, Drawing.Rectangle old_bounds, Drawing.Rectangle new_bounds, Drawing.Size min, Drawing.Size max)
+		{
+			if (new_bounds.Width < min.Width)
+			{
+				switch (grip)
+				{
+					case Drawing.GripId.EdgeLeft:
+					case Drawing.GripId.VertexBottomLeft:
+					case Drawing.GripId.VertexTopLeft:
+						new_bounds.Left = old_bounds.Right - min.Width;
+						break;
+					case Drawing.GripId.EdgeRight:
+					case Drawing.GripId.VertexBottomRight:
+					case Drawing.GripId.VertexTopRight:
+						new_bounds.Right = old_bounds.Left + min.Width;
+						break;
+				}
+			}
+			if (new_bounds.Width > max.Width)
+			{
+				switch (grip)
+				{
+					case Drawing.GripId.EdgeLeft:
+					case Drawing.GripId.VertexBottomLeft:
+					case Drawing.GripId.VertexTopLeft:
+						new_bounds.Left = old_bounds.Right - max.Width;
+						break;
+					case Drawing.GripId.EdgeRight:
+					case Drawing.GripId.VertexBottomRight:
+					case Drawing.GripId.VertexTopRight:
+						new_bounds.Right = old_bounds.Left + max.Width;
+						break;
+				}
+			}
 			
-			if (new_bounds.Width < this.target_widget.MinSize.Width)
+			if (new_bounds.Height < min.Height)
 			{
-				switch (vertex)
+				switch (grip)
 				{
-					case Drawing.VertexIndex.BottomLeft:
-					case Drawing.VertexIndex.TopLeft:
-						new_bounds.Left = old_bounds.Right - this.target_widget.MinSize.Width;
+					case Drawing.GripId.EdgeBottom:
+					case Drawing.GripId.VertexBottomLeft:
+					case Drawing.GripId.VertexBottomRight:
+						new_bounds.Bottom = old_bounds.Top - min.Height;
 						break;
-					case Drawing.VertexIndex.BottomRight:
-					case Drawing.VertexIndex.TopRight:
-						new_bounds.Right = old_bounds.Left + this.target_widget.MinSize.Width;
+					case Drawing.GripId.EdgeTop:
+					case Drawing.GripId.VertexTopLeft:
+					case Drawing.GripId.VertexTopRight:
+						new_bounds.Top = old_bounds.Bottom + min.Height;
 						break;
 				}
 			}
-			if (new_bounds.Width > this.target_widget.MaxSize.Width)
+			if (new_bounds.Height > max.Height)
 			{
-				switch (vertex)
+				switch (grip)
 				{
-					case Drawing.VertexIndex.BottomLeft:
-					case Drawing.VertexIndex.TopLeft:
-						new_bounds.Left = old_bounds.Right - this.target_widget.MaxSize.Width;
+					case Drawing.GripId.EdgeBottom:
+					case Drawing.GripId.VertexBottomLeft:
+					case Drawing.GripId.VertexBottomRight:
+						new_bounds.Bottom = old_bounds.Top - max.Height;
 						break;
-					case Drawing.VertexIndex.BottomRight:
-					case Drawing.VertexIndex.TopRight:
-						new_bounds.Right = old_bounds.Left + this.target_widget.MaxSize.Width;
-						break;
-				}
-			}
-			
-			if (new_bounds.Height < this.target_widget.MinSize.Height)
-			{
-				switch (vertex)
-				{
-					case Drawing.VertexIndex.BottomLeft:
-					case Drawing.VertexIndex.BottomRight:
-						new_bounds.Bottom = old_bounds.Top - this.target_widget.MinSize.Height;
-						break;
-					case Drawing.VertexIndex.TopLeft:
-					case Drawing.VertexIndex.TopRight:
-						new_bounds.Top = old_bounds.Bottom + this.target_widget.MinSize.Height;
-						break;
-				}
-			}
-			if (new_bounds.Height > this.target_widget.MaxSize.Height)
-			{
-				switch (vertex)
-				{
-					case Drawing.VertexIndex.BottomLeft:
-					case Drawing.VertexIndex.BottomRight:
-						new_bounds.Bottom = old_bounds.Top - this.target_widget.MaxSize.Height;
-						break;
-					case Drawing.VertexIndex.TopLeft:
-					case Drawing.VertexIndex.TopRight:
-						new_bounds.Top = old_bounds.Bottom + this.target_widget.MaxSize.Height;
+					case Drawing.GripId.EdgeTop:
+					case Drawing.GripId.VertexTopLeft:
+					case Drawing.GripId.VertexTopRight:
+						new_bounds.Top = old_bounds.Bottom + max.Height;
 						break;
 				}
 			}
@@ -291,13 +315,22 @@ namespace Epsitec.Common.Widgets.Design
 			return new_bounds;
 		}
 		
+		protected struct GripMap
+		{
+			public GripMap(Drawing.GripId id, GripType type, double x, double y)
+			{
+				this.id     = id;
+				this.type   = type;
+				this.offset = new Drawing.Point (x, y);
+			}
+			
+			public Drawing.GripId			id;
+			public GripType					type;
+			public Drawing.Point			offset;
+		}
 		
-		protected const int					GripBottomLeft	= (int) Drawing.VertexIndex.BottomLeft;
-		protected const int					GripBottomRight	= (int) Drawing.VertexIndex.BottomRight;
-		protected const int					GripTopRight	= (int) Drawing.VertexIndex.TopRight;
-		protected const int					GripTopLeft		= (int) Drawing.VertexIndex.TopLeft;
-		protected const int					GripCenter		= 4;
-		protected const int					GripCount		= 5;
+		
+		protected static GripMap[]			grip_map;
 		
 		protected Widget					target_widget;
 		protected Drawing.Rectangle			target_bounds;
