@@ -389,7 +389,7 @@ namespace Epsitec.Common.Widgets
 		[Test] public void CheckSelectAll()
 		{
 			TextLayout         text    = new TextLayout ();
-			TextLayout.Context context = new TextLayout.Context ();
+			TextLayout.Context context = new TextLayout.Context (text);
 			
 			text.Text = "<b>&lt;x<br/>y&gt;</b>";
 			
