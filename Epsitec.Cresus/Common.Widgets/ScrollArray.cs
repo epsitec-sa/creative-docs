@@ -1623,11 +1623,14 @@ invalid:	row    = -1;
 					this.layouts[row, column].BreakMode  = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 				}
 			}
-			for (int row = max; row < this.cache_dx; row++)
+			if (max > -1)
 			{
-				for (int column = 0; column < this.max_columns; column++)
+				for (int row = max; row < this.cache_dx; row++)
 				{
-					this.layouts[row, column] = null;
+					for (int column = 0; column < this.max_columns; column++)
+					{
+						this.layouts[row, column] = null;
+					}
 				}
 			}
 			

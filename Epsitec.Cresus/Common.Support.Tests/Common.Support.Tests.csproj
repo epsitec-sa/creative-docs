@@ -185,6 +185,10 @@
                     BuildAction = "None"
                 />
                 <File
+                    RelPath = "resources\strings.fr.resource"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "resources\strings.resource"
                     BuildAction = "None"
                 />
