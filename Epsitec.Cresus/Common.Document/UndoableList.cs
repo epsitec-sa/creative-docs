@@ -222,15 +222,15 @@ namespace Epsitec.Common.Document
 			}
 
 			if ( listType == UndoableListType.ObjectsInsideDocument &&
-				 operation.Object is AbstractObject )
+				 operation.Object is Objects.Abstract )
 			{
-				if ( operation.Object is ObjectPage )
+				if ( operation.Object is Objects.Page )
 				{
 					document.Notifier.NotifyArea();
 					document.Notifier.NotifyPagesChanged();
 					document.Notifier.NotifySelectionChanged();
 				}
-				else if ( operation.Object is ObjectLayer )
+				else if ( operation.Object is Objects.Layer )
 				{
 					document.Notifier.NotifyArea();
 					document.Notifier.NotifyLayersChanged();
@@ -238,7 +238,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					AbstractObject obj = operation.Object as AbstractObject;
+					Objects.Abstract obj = operation.Object as Objects.Abstract;
 					if ( obj.IsSelected )
 					{
 						//document.Modifier.DirtyCounters();
@@ -249,9 +249,9 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			if ( operation.Object is AbstractProperty )
+			if ( operation.Object is Properties.Abstract )
 			{
-				AbstractProperty prop = operation.Object as AbstractProperty;
+				Properties.Abstract prop = operation.Object as Properties.Abstract;
 				if ( prop.IsStyle )
 				{
 					document.Notifier.NotifyStyleChanged();
@@ -261,18 +261,18 @@ namespace Epsitec.Common.Document
 			if ( listType == UndoableListType.PropertiesInsideObject &&
 				 operation.Type == OperationType.Change )
 			{
-				AbstractProperty prop1 = operation.Object as AbstractProperty;
-				AbstractProperty prop2 = arrayList[index] as AbstractProperty;
+				Properties.Abstract prop1 = operation.Object as Properties.Abstract;
+				Properties.Abstract prop2 = arrayList[index] as Properties.Abstract;
 				
 				if ( prop1.Owners.Count > 0 )
 				{
-					AbstractObject obj = prop1.Owners[prop1.Owners.Count-1] as AbstractObject;
+					Objects.Abstract obj = prop1.Owners[prop1.Owners.Count-1] as Objects.Abstract;
 					document.Notifier.NotifyArea(obj.BoundingBox);
 				}
 
 				if ( prop2.Owners.Count > 0 )
 				{
-					AbstractObject obj = prop2.Owners[prop2.Owners.Count-1] as AbstractObject;
+					Objects.Abstract obj = prop2.Owners[prop2.Owners.Count-1] as Objects.Abstract;
 					document.Notifier.NotifyArea(obj.BoundingBox);
 				}
 			}
@@ -359,9 +359,9 @@ namespace Epsitec.Common.Document
 		#endregion
 
 		
-		protected Document							document;
-		protected UndoableListType					type;
-		protected System.Collections.ArrayList		arrayList;
-		protected int								selected;
+		protected Document						document;
+		protected UndoableListType				type;
+		protected System.Collections.ArrayList	arrayList;
+		protected int							selected;
 	}
 }

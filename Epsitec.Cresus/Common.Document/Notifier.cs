@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document
 {
 	public delegate void SimpleEventHandler();
-	public delegate void ObjectEventHandler(AbstractObject obj);
+	public delegate void ObjectEventHandler(Objects.Abstract obj);
 	public delegate void PropertyEventHandler(System.Collections.ArrayList propertyList);
 	public delegate void RedrawEventHandler(Viewer viewer, Rectangle rect);
 
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Indique qu'une page a changé.
-		public void NotifyPageChanged(AbstractObject page)
+		public void NotifyPageChanged(Objects.Abstract page)
 		{
 			if ( !this.enable )  return;
 			this.pageObject = page;
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Indique qu'un calque a changé.
-		public void NotifyLayerChanged(AbstractObject layer)
+		public void NotifyLayerChanged(Objects.Abstract layer)
 		{
 			if ( !this.enable )  return;
 			this.layerObject = layer;
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Document
 
 
 		// Indique qu'une propriété a changé.
-		public void NotifyPropertyChanged(AbstractProperty property)
+		public void NotifyPropertyChanged(Properties.Abstract property)
 		{
 			if ( !this.enable )  return;
 			if ( !this.propertyList.Contains(property) )
@@ -478,7 +478,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected void OnPageChanged(AbstractObject page)
+		protected void OnPageChanged(Objects.Abstract page)
 		{
 			if ( this.PageChanged != null )  // qq'un écoute ?
 			{
@@ -486,7 +486,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected void OnLayerChanged(AbstractObject layer)
+		protected void OnLayerChanged(Objects.Abstract layer)
 		{
 			if ( this.LayerChanged != null )  // qq'un écoute ?
 			{
@@ -585,8 +585,8 @@ namespace Epsitec.Common.Document
 		protected bool							styleChanged;
 		protected bool							pagesChanged;
 		protected bool							layersChanged;
-		protected AbstractObject				pageObject;
-		protected AbstractObject				layerObject;
+		protected Objects.Abstract		pageObject;
+		protected Objects.Abstract		layerObject;
 		protected bool							undoRedoChanged;
 		protected bool							gridChanged;
 		protected bool							previewChanged;

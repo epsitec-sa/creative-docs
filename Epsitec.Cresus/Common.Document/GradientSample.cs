@@ -24,7 +24,7 @@ namespace Epsitec.Common.Document
 		
 		
 		// Dégradé.
-		public PropertyGradient Gradient
+		public Properties.Gradient Gradient
 		{
 			get
 			{
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Document
 					path.LineTo(rect.Right, rect.Bottom);
 					path.Close();
 
-					gradient.Render(graphics, null, path, rect);
+					gradient.RenderSurface(graphics, null, path, rect);
 				}
 			}
 
@@ -70,6 +70,6 @@ namespace Epsitec.Common.Document
 		}
 
 
-		protected PropertyGradient			gradient;
+		protected Properties.Gradient			gradient;
 	}
 }

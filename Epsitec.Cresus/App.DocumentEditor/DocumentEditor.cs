@@ -1,7 +1,9 @@
-using Epsitec.Common.Document;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Document;
+using Epsitec.Common.Document.Containers;
+using Epsitec.Common.Document.Objects;
 using System.IO;
 
 namespace Epsitec.App.DocumentEditor
@@ -240,7 +242,7 @@ namespace Epsitec.App.DocumentEditor
 			for ( int j=0 ; j<100 ; j++ )
 			{
 				string text, name;
-				if ( !ObjectArray.CommandLook(j, out text, out name) )  break;
+				if ( !Array.CommandLook(j, out text, out name) )  break;
 				if ( name == "" )
 				{
 					this.MenuAdd(arrayLookMenu, @"", "", "", "");
@@ -380,9 +382,9 @@ namespace Epsitec.App.DocumentEditor
 			this.book.Arrows = TabBookArrows.Stretch;
 			this.book.Parent = this;
 
-			this.bookProperties = new TabPage();
-			this.bookProperties.TabTitle = "Attributs";
-			this.book.Items.Add(this.bookProperties);
+			this.bookPrincipal = new TabPage();
+			this.bookPrincipal.TabTitle = "Attributs";
+			this.book.Items.Add(this.bookPrincipal);
 
 			this.bookStyles = new TabPage();
 			this.bookStyles.TabTitle = "Styles";
@@ -407,45 +409,45 @@ namespace Epsitec.App.DocumentEditor
 			this.bookOper.TabTitle = "Op";
 			this.book.Items.Add(this.bookOper);
 
-			this.book.ActivePage = this.bookProperties;
+			this.book.ActivePage = this.bookPrincipal;
 
-			this.containerProperties = new ContainerProperties(this.document);
-			this.containerProperties.Dock = DockStyle.Fill;
-			this.containerProperties.DockMargins = new Margins(4, 4, 10, 4);
-			this.containerProperties.Parent = this.bookProperties;
-			this.document.Modifier.AttachContainer(this.containerProperties);
+			this.containerPrincipal = new Principal(this.document);
+			this.containerPrincipal.Dock = DockStyle.Fill;
+			this.containerPrincipal.DockMargins = new Margins(4, 4, 10, 4);
+			this.containerPrincipal.Parent = this.bookPrincipal;
+			this.document.Modifier.AttachContainer(this.containerPrincipal);
 
-			this.containerStyles = new ContainerStyles(this.document);
+			this.containerStyles = new Styles(this.document);
 			this.containerStyles.Dock = DockStyle.Fill;
 			this.containerStyles.DockMargins = new Margins(4, 4, 10, 4);
 			this.containerStyles.Parent = this.bookStyles;
 			this.document.Modifier.AttachContainer(this.containerStyles);
 
 #if DEBUG
-			this.containerAutos = new ContainerAutos(this.document);
+			this.containerAutos = new Autos(this.document);
 			this.containerAutos.Dock = DockStyle.Fill;
 			this.containerAutos.DockMargins = new Margins(4, 4, 10, 4);
 			this.containerAutos.Parent = this.bookAutos;
 			this.document.Modifier.AttachContainer(this.containerAutos);
 #endif
 
-			this.containerPages = new ContainerPages(this.document);
+			this.containerPages = new Pages(this.document);
 			this.containerPages.Dock = DockStyle.Fill;
 			this.containerPages.DockMargins = new Margins(4, 4, 10, 4);
 			this.containerPages.Parent = this.bookPages;
 			this.document.Modifier.AttachContainer(this.containerPages);
 
-			this.containerLayers = new ContainerLayers(this.document);
+			this.containerLayers = new Layers(this.document);
 			this.containerLayers.Dock = DockStyle.Fill;
 			this.containerLayers.DockMargins = new Margins(4, 4, 10, 4);
 			this.containerLayers.Parent = this.bookLayers;
 			this.document.Modifier.AttachContainer(this.containerLayers);
 
-			this.containerOper = new ContainerOper(this.document);
-			this.containerOper.Dock = DockStyle.Fill;
-			this.containerOper.DockMargins = new Margins(4, 4, 10, 4);
-			this.containerOper.Parent = this.bookOper;
-			this.document.Modifier.AttachContainer(this.containerOper);
+			this.containerOperations = new Operations(this.document);
+			this.containerOperations.Dock = DockStyle.Fill;
+			this.containerOperations.DockMargins = new Margins(4, 4, 10, 4);
+			this.containerOperations.Parent = this.bookOper;
+			this.document.Modifier.AttachContainer(this.containerOperations);
 
 			Widget mainViewParent;
 			if ( this.document.Type == DocumentType.Pictogram )
@@ -669,7 +671,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			if ( !this.allWidgets )  return;
 
-			Rectangle rect = new Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Common.Drawing.Rectangle rect = new Common.Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 
 			this.hToolBar.Location = new Point(0, rect.Height-this.hToolBar.DefaultHeight);
 			this.hToolBar.Size = new Size(rect.Width, this.hToolBar.DefaultHeight);
@@ -684,8 +686,8 @@ namespace Epsitec.App.DocumentEditor
 
 			this.book.Location = new Point(rect.Right-pw, this.info.Height+1);
 			this.book.Size = new Size(pw-1, rect.Height-this.info.Height-this.hToolBar.DefaultHeight-2);
-			Rectangle inside = this.book.InnerBounds;
-			this.bookProperties.Bounds = inside;
+			Common.Drawing.Rectangle inside = this.book.InnerBounds;
+			this.bookPrincipal.Bounds = inside;
 			this.bookStyles.Bounds = inside;
 #if DEBUG
 			this.bookAutos.Bounds = inside;
@@ -805,14 +807,15 @@ namespace Epsitec.App.DocumentEditor
 			this.UpdateLookCommand();
 		}
 		
+		#region IO
 		// Affiche le dialogue pour demander s'il faut enregistrer le
 		// document modifié, avant de passer à un autre document.
-		protected bool DialogSave(CommandDispatcher dispatcher, string cmdYes, string cmdNo)
+		protected Common.Dialogs.DialogResult DialogSave(CommandDispatcher dispatcher)
 		{
 			if ( !this.document.IsDirtySerialize ||
 				 this.document.Modifier.StatisticTotalObjects() == 0 )
 			{
-				return false;
+				return Common.Dialogs.DialogResult.None;
 			}
 
 			string title = "Crésus";
@@ -826,10 +829,10 @@ namespace Epsitec.App.DocumentEditor
 
 			string statistic = string.Format("<font size=\"80%\">{0}</font><br/>", this.document.Modifier.Statistic());
 			string message = string.Format("<font size=\"100%\">Le fichier {0} a été modifié.</font><br/><br/>{1}Voulez-vous enregistrer les modifications ?", shortFilename, statistic);
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, icon, message, cmdYes, cmdNo, dispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, icon, message, "", "", dispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
-			return true;
+			return dialog.Result;
 		}
 
 		// Retourne un texte multi-lignes de statistiques sur le fichier.
@@ -874,68 +877,41 @@ namespace Epsitec.App.DocumentEditor
 
 		// Affiche le dialogue pour demander s'il faut effacer le
 		// fichier existant.
-		protected void DialogDelete(CommandDispatcher dispatcher, string cmdYes)
+		protected Common.Dialogs.DialogResult DialogDelete(CommandDispatcher dispatcher, string filename)
 		{
 			string title = "Crésus";
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 
-			string shortFilename = string.Format("<b>{0}</b>", Misc.ExtractName(this.saveAsFilename));
-			string statistic = string.Format("<font size=\"80%\">{0}</font><br/>", DocumentEditor.StatisticFilename(this.saveAsFilename));
+			string shortFilename = string.Format("<b>{0}</b>", Misc.ExtractName(filename));
+			string statistic = string.Format("<font size=\"80%\">{0}</font><br/>", DocumentEditor.StatisticFilename(filename));
 			string message = string.Format("<font size=\"100%\">Le fichier {0} existe déjà.</font><br/><br/>{1}Voulez-vous le remplacer ?", shortFilename, statistic);
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOkCancel(title, icon, message, cmdYes, dispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNo(title, icon, message, "", "", dispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
+			return dialog.Result;
 		}
 
 		// Affiche le dialogue pour signaler une erreur.
-		protected void DialogError(CommandDispatcher dispatcher, string error)
+		protected Common.Dialogs.DialogResult DialogError(CommandDispatcher dispatcher, string error)
 		{
-			if ( error == "" )  return;
+			if ( error == "" )  return Common.Dialogs.DialogResult.None;
 
 			string title = "Crésus";
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 			string message = error;
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOkCancel(title, icon, message, "", dispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", dispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
+			return dialog.Result;
 		}
 
-		[Command ("New")]
-		void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
+		// Demande un nom de fichier puis ouvre le fichier.
+		// Affiche l'erreur éventuelle.
+		// Retourne false si le fichier n'a pas été ouvert.
+		protected bool Open(CommandDispatcher dispatcher)
 		{
-			if ( this.DialogSave(dispatcher, "NewYes", "NewNo") )  return;
-			this.document.Modifier.New();
-		}
-
-		[Command ("NewYes")]
-		void CommandNewYes(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			if ( this.document.Filename == "" )
-			{
-				this.CommandSaveAs(dispatcher, e);
-			}
-			else
-			{
-				this.CommandSave(dispatcher, e);
-			}
-
-			this.CommandNew(dispatcher, e);
-		}
-
-		[Command ("NewNo")]
-		void CommandNewNo(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.document.IsDirtySerialize = false;
-			this.CommandNew(dispatcher, e);
-		}
-
-		[Command ("Open")]
-		void CommandOpen(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			if ( this.DialogSave(dispatcher, "SaveYes", "SaveNo") )  return;
-
 			Common.Dialogs.FileOpen dialog = new Common.Dialogs.FileOpen();
 		
 			dialog.FileName = "";
@@ -951,89 +927,102 @@ namespace Epsitec.App.DocumentEditor
 			}
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
-			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return;
+			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return false;
 
 			string err = this.document.Read(dialog.FileName);
 			this.DialogError(dispatcher, err);
+			return (err == "");
 		}
 
-		[Command ("SaveYes")]
-		void CommandSaveYes(CommandDispatcher dispatcher, CommandEventArgs e)
+		// Demande un nom de fichier puis enregistre le fichier.
+		// Si le document a déjà un nom de fichier et que ask=false,
+		// l'enregistrement est fait directement avec le nom connu.
+		// Affiche l'erreur éventuelle.
+		// Retourne false si le fichier n'a pas été enregistré.
+		protected bool Save(CommandDispatcher dispatcher, bool ask)
 		{
-			if ( this.document.Filename == "" )
+			string filename;
+
+			if ( this.document.Filename == "" || ask )
 			{
-				this.CommandSaveAs(dispatcher, e);
+				Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
+			
+				dialog.FileName = this.document.Filename;
+				if ( this.document.Type == DocumentType.Graphic )
+				{
+					dialog.Title = "Enregistrer un document";
+					dialog.Filters.Add("crdoc", "Document", "*.crdoc");
+				}
+				else
+				{
+					dialog.Title = "Enregistrer une icône";
+					dialog.Filters.Add("icon", "Icônes", "*.icon");
+				}
+				dialog.PromptForOverwriting = true;
+				dialog.Owner = this.Window;
+				dialog.OpenDialog();
+				if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return false;
+				filename = dialog.FileName;
 			}
 			else
 			{
-				this.CommandSave(dispatcher, e);
+				filename = this.document.Filename;
 			}
 
-			this.CommandOpen(dispatcher, e);
+			string err = this.document.Write(filename);
+			this.DialogError(dispatcher, err);
+			return (err == "");
 		}
 
-		[Command ("SaveNo")]
-		void CommandSaveNo(CommandDispatcher dispatcher, CommandEventArgs e)
+		// Fait tout ce qu'il faut pour éventuellement sauvegarder le document
+		// avant de passer à autre chose.
+		// Retourne false si on ne peut pas continuer.
+		protected bool AutoSave(CommandDispatcher dispatcher)
 		{
-			this.document.IsDirtySerialize = false;
-			this.CommandOpen(dispatcher, e);
+			Common.Dialogs.DialogResult result = this.DialogSave(dispatcher);
+			if ( result == Common.Dialogs.DialogResult.Yes )
+			{
+				return this.Save(dispatcher, false);
+			}
+			if ( result == Common.Dialogs.DialogResult.Cancel )
+			{
+				return false;
+			}
+			return true;
+		}
+		#endregion
+
+		[Command ("New")]
+		void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.AutoSave(dispatcher) )  return;
+			this.document.Modifier.New();
+		}
+
+		[Command ("Open")]
+		void CommandOpen(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.AutoSave(dispatcher) )  return;
+			this.Open(dispatcher);
 		}
 
 		[Command ("Save")]
 		void CommandSave(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.document.IsDirtySerialize )  return;
-
-			if ( this.document.Filename == "" )
-			{
-				this.CommandSaveAs(dispatcher, e);
-			}
-			else
-			{
-				string err = this.document.Write(this.document.Filename);
-				this.DialogError(dispatcher, err);
-			}
+			this.Save(dispatcher, false);
 		}
 		
 		[Command ("SaveAs")]
 		void CommandSaveAs(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
-			
-			dialog.FileName = this.document.Filename;
-			if ( this.document.Type == DocumentType.Graphic )
-			{
-				dialog.Title = "Enregistrer un document";
-				dialog.Filters.Add("crdoc", "Document", "*.crdoc");
-			}
-			else
-			{
-				dialog.Title = "Enregistrer une icône";
-				dialog.Filters.Add("icon", "Icônes", "*.icon");
-			}
-			dialog.PromptForOverwriting = true;
-			dialog.Owner = this.Window;
-			dialog.OpenDialog();
-			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return;
-
-#if false
-			if ( File.Exists(dialog.FileName) )
-			{
-				this.saveAsFilename = dialog.FileName;
-				this.DialogDelete(dispatcher, "SaveAsYes");
-				return;
-			}
-#endif
-
-			string err = this.document.Write(dialog.FileName);
-			this.DialogError(dispatcher, err);
+			this.Save(dispatcher, true);
 		}
 		
-		[Command ("SaveAsYes")]
-		void CommandSaveAsYes(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("QuitApplication")]
+		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			string err = this.document.Write(this.saveAsFilename);
-			this.DialogError(dispatcher, err);
+			if ( !this.AutoSave(dispatcher) )  return;
+			this.QuitApplication();
 		}
 
 		[Command ("Print")]
@@ -1059,34 +1048,6 @@ namespace Epsitec.App.DocumentEditor
 			this.document.Print(dialog);
 		}
 		
-		[Command ("QuitApplication")]
-		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			if ( this.DialogSave(dispatcher, "QuitYes", "QuitNo") )  return;
-			this.QuitApplication();
-		}
-
-		[Command ("QuitYes")]
-		void CommandQuitYes(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			if ( this.document.Filename == "" )
-			{
-				this.CommandSaveAs(dispatcher, e);
-			}
-			else
-			{
-				this.CommandSave(dispatcher, e);
-			}
-
-			this.CommandQuitApplication(dispatcher, e);
-		}
-
-		[Command ("QuitNo")]
-		void CommandQuitNo(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.document.IsDirtySerialize = false;
-			this.CommandQuitApplication(dispatcher, e);
-		}
 
 		[Command ("Delete")]
 		void CommandDelete()
@@ -1542,12 +1503,12 @@ namespace Epsitec.App.DocumentEditor
 		public VMenu CreatePagesMenu()
 		{
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			UndoableList pages = this.document.Objects;  // liste des pages
+			UndoableList pages = this.document.GetObjects;  // liste des pages
 			int total = pages.Count;
 			VMenu menu = new VMenu();
 			for ( int i=0 ; i<total ; i++ )
 			{
-				ObjectPage page = pages[i] as ObjectPage;
+				Page page = pages[i] as Page;
 
 				string name = string.Format("{0}: {1}", (i+1).ToString(), page.Name);
 
@@ -1568,19 +1529,19 @@ namespace Epsitec.App.DocumentEditor
 		public VMenu CreateLayersMenu()
 		{
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			AbstractObject page = context.RootObject(1);
+			Common.Document.Objects.Abstract page = context.RootObject(1);
 			UndoableList layers = page.Objects;  // liste des calques
 			int total = layers.Count;
 			VMenu menu = new VMenu();
 			for ( int i=0 ; i<total ; i++ )
 			{
 				int ii = total-i-1;
-				ObjectLayer layer = layers[i] as ObjectLayer;
+				Layer layer = layers[i] as Layer;
 
 				string name = "";
 				if ( layer.Name == "" )
 				{
-					name = string.Format("{0}: {1}", ((char)('A'+ii)).ToString(), ObjectLayer.LayerPositionName(ii, total));
+					name = string.Format("{0}: {1}", ((char)('A'+ii)).ToString(), Layer.LayerPositionName(ii, total));
 				}
 				else
 				{
@@ -1783,11 +1744,11 @@ namespace Epsitec.App.DocumentEditor
 		{
 			viewer = this.document.Modifier.ActiveViewer;
 
-			this.containerProperties.SetDirtyContent();
+			this.containerPrincipal.SetDirtyContent();
 #if DEBUG
 			this.containerAutos.SetDirtyContent();
 #endif
-			this.containerOper.SetDirtyContent();
+			this.containerOperations.SetDirtyContent();
 
 			int totalSelected  = this.document.Modifier.TotalSelected;
 			int totalHide      = this.document.Modifier.TotalHide;
@@ -1795,7 +1756,7 @@ namespace Epsitec.App.DocumentEditor
 			int totalObjects   = this.document.Modifier.TotalObjects;
 			bool isCreating    = this.document.Modifier.ActiveViewer.IsCreating;
 			bool isBase        = viewer.DrawingContext.RootStackIsBase;
-			AbstractObject one = this.document.Modifier.RetOnlySelectedObject();
+			Common.Document.Objects.Abstract one = this.document.Modifier.RetOnlySelectedObject();
 
 			this.newState.Enabled = true;
 			this.openState.Enabled = true;
@@ -1815,8 +1776,8 @@ namespace Epsitec.App.DocumentEditor
 			this.zoomDiv2State.Enabled = ( totalSelected > 0 && !isCreating );
 			this.mergeState.Enabled = ( totalSelected > 1 && !isCreating );
 			this.groupState.Enabled = ( totalSelected > 0 && !isCreating );
-			this.ungroupState.Enabled = ( totalSelected == 1 && one is ObjectGroup && !isCreating );
-			this.insideState.Enabled = ( totalSelected == 1 && one is ObjectGroup && !isCreating );
+			this.ungroupState.Enabled = ( totalSelected == 1 && one is Group && !isCreating );
+			this.insideState.Enabled = ( totalSelected == 1 && one is Group && !isCreating );
 			this.outsideState.Enabled = ( !isBase && !isCreating );
 
 			this.hideSelState.Enabled = ( totalSelected > 0 && !isCreating );
@@ -1900,13 +1861,13 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		// Appelé par le document lorsqu'un nom de page a changé.
-		private void HandlePageChanged(AbstractObject page)
+		private void HandlePageChanged(Common.Document.Objects.Abstract page)
 		{
 			this.containerPages.SetDirtyObject(page);
 		}
 
 		// Appelé par le document lorsqu'un nom de calque a changé.
-		private void HandleLayerChanged(AbstractObject layer)
+		private void HandleLayerChanged(Common.Document.Objects.Abstract layer)
 		{
 			this.containerLayers.SetDirtyObject(layer);
 		}
@@ -1952,14 +1913,14 @@ namespace Epsitec.App.DocumentEditor
 		// Appelé lorsqu'une propriété a changé.
 		private void HandlePropertyChanged(System.Collections.ArrayList propertyList)
 		{
-			this.containerProperties.SetDirtyProperties(propertyList);
+			this.containerPrincipal.SetDirtyProperties(propertyList);
 			this.containerStyles.SetDirtyProperties(propertyList);
 		}
 
 		// Appelé par le document lorsque le dessin a changé.
-		private void HandleDrawChanged(Viewer viewer, Rectangle rect)
+		private void HandleDrawChanged(Viewer viewer, Common.Drawing.Rectangle rect)
 		{
-			Rectangle box = rect;
+			Common.Drawing.Rectangle box = rect;
 
 			if ( viewer.DrawingContext.IsActive )
 			{
@@ -1972,7 +1933,7 @@ namespace Epsitec.App.DocumentEditor
 
 
 		// Invalide une partie de la zone de dessin d'un visualisateur.
-		protected void InvalidateDraw(Viewer viewer, Rectangle bbox)
+		protected void InvalidateDraw(Viewer viewer, Common.Drawing.Rectangle bbox)
 		{
 			if ( bbox.IsEmpty )  return;
 
@@ -1997,14 +1958,22 @@ namespace Epsitec.App.DocumentEditor
 			Size size = this.document.Size;
 			Size area = this.document.Modifier.SizeArea;
 
-			this.hScroller.MinValue = (decimal) context.MinOriginX;
-			this.hScroller.MaxValue = (decimal) context.MaxOriginX;
+			double min, max;
+
+			min = context.MinOriginX;
+			max = context.MaxOriginX;
+			max = System.Math.Max(min, max);
+			this.hScroller.MinValue = (decimal) min;
+			this.hScroller.MaxValue = (decimal) max;
 			this.hScroller.VisibleRangeRatio = (decimal) ((size.Width/area.Width)/context.Zoom);
 			this.hScroller.Value = (decimal) (-context.OriginX);
 			//?context.OriginX = (double) (-this.hScroller.Value);
 
-			this.vScroller.MinValue = (decimal) context.MinOriginY;
-			this.vScroller.MaxValue = (decimal) context.MaxOriginY;
+			min = context.MinOriginY;
+			max = context.MaxOriginY;
+			max = System.Math.Max(min, max);
+			this.vScroller.MinValue = (decimal) min;
+			this.vScroller.MaxValue = (decimal) max;
 			this.vScroller.VisibleRangeRatio = (decimal) ((size.Height/area.Height)/context.Zoom);
 			this.vScroller.Value = (decimal) (-context.OriginY);
 			//?context.OriginY = (double) (-this.vScroller.Value);
@@ -2098,18 +2067,18 @@ namespace Epsitec.App.DocumentEditor
 		protected PanePage				leftPane;
 		protected PanePage				rightPane;
 		protected TabBook				book;
-		protected TabPage				bookProperties;
+		protected TabPage				bookPrincipal;
 		protected TabPage				bookStyles;
 		protected TabPage				bookAutos;
 		protected TabPage				bookPages;
 		protected TabPage				bookLayers;
 		protected TabPage				bookOper;
-		protected ContainerProperties	containerProperties;
-		protected ContainerStyles		containerStyles;
-		protected ContainerAutos		containerAutos;
-		protected ContainerPages		containerPages;
-		protected ContainerLayers		containerLayers;
-		protected ContainerOper			containerOper;
+		protected Principal				containerPrincipal;
+		protected Styles				containerStyles;
+		protected Autos					containerAutos;
+		protected Pages					containerPages;
+		protected Layers				containerLayers;
+		protected Operations			containerOperations;
 		protected Viewer				viewer;
 		protected Viewer				frame1;
 		protected Viewer				frame2;
@@ -2126,8 +2095,6 @@ namespace Epsitec.App.DocumentEditor
 		protected VScroller				vScroller;
 
 		protected double				panelsWidth = 235;
-
-		protected string				saveAsFilename;
 
 		protected CommandState			newState;
 		protected CommandState			openState;

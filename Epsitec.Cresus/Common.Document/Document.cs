@@ -3,6 +3,7 @@ using Epsitec.Common.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters.Soap;
 
 namespace Epsitec.Common.Document
 {
@@ -26,6 +27,13 @@ namespace Epsitec.Common.Document
 	[System.Serializable()]
 	public class Document : ISerializable
 	{
+		public enum IOType
+		{
+			Unknow,				// format inconnu
+			BinaryCompress,		// format standard
+			SoapUncompress,		// format de debug
+		}
+
 		// Crée un nouveau document vide.
 		public Document(DocumentType type, DocumentMode mode)
 		{
@@ -38,7 +46,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				this.size = new Size(210, 297);  // A4 vertical
+				this.size = new Size(2100, 2970);  // A4 vertical
 			}
 
 			this.hotSpot = new Point(0, 0);
@@ -61,6 +69,9 @@ namespace Epsitec.Common.Document
 				this.Modifier.AttachViewer(clipboardViewer);
 				this.Modifier.New();
 			}
+
+			this.ioType = IOType.BinaryCompress;
+			//this.ioType = IOType.SoapUncompress;
 		}
 
 		// Type de ce document.
@@ -90,7 +101,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Liste des objets de ce document.
-		public UndoableList Objects
+		public UndoableList GetObjects
 		{
 			get { return this.objects; }
 		}
@@ -244,13 +255,11 @@ namespace Epsitec.Common.Document
 		// explicitement un fichier, soit par Engine.
 		public string Read(Stream stream)
 		{
-			if ( !this.ReadIdentifier(stream) )
+			IOType type = Document.ReadIdentifier(stream);
+			if ( type == IOType.Unknow )
 			{
 				return "Type de fichier incorrect.";
 			}
-
-			BinaryFormatter formatter = new BinaryFormatter();
-			formatter.Binder = new VersionDeserializationBinder();
 
 			// Initialise la variable statique utilisée par VersionDeserializationBinder.
 			// Exemple de contenu:
@@ -262,18 +271,57 @@ namespace Epsitec.Common.Document
 			// de connaître le pointeur au document.
 			Document.ReadDocument = this;
 
-			Document doc = null;
-			try
+			if ( this.Modifier != null )
 			{
-				string compressorName;
-				using ( Stream compressor = IO.Decompression.CreateStream(stream, out compressorName) )
+				this.Modifier.OpletQueueEnable = false;
+			}
+
+			Document doc = null;
+
+			if ( type == IOType.BinaryCompress )
+			{
+				BinaryFormatter formatter = new BinaryFormatter();
+				formatter.Binder = new VersionDeserializationBinder();
+
+				try
 				{
-					doc = (Document) formatter.Deserialize(compressor);
+					string compressorName;
+					using ( Stream compressor = IO.Decompression.CreateStream(stream, out compressorName) )
+					{
+						doc = (Document) formatter.Deserialize(compressor);
+					}
+				}
+				catch ( System.Exception e )
+				{
+					if ( this.Modifier != null )
+					{
+						this.Modifier.OpletQueueEnable = true;
+					}
+					return e.Message;
 				}
 			}
-			catch ( System.Exception e )
+			if ( type == IOType.SoapUncompress )
 			{
-				return e.Message;
+				SoapFormatter formatter = new SoapFormatter();
+				formatter.Binder = new VersionDeserializationBinder();
+
+				try
+				{
+					doc = (Document) formatter.Deserialize(stream);
+				}
+				catch ( System.Exception e )
+				{
+					if ( this.Modifier != null )
+					{
+						this.Modifier.OpletQueueEnable = true;
+					}
+					return e.Message;
+				}
+			}
+
+			if ( this.Modifier != null )
+			{
+				this.Modifier.OpletQueueEnable = true;
 			}
 
 			this.objects = doc.objects;
@@ -318,7 +366,7 @@ namespace Epsitec.Common.Document
 				this.Modifier.OpletQueueEnable = false;
 			}
 
-			foreach ( AbstractObject obj in this.Deep(null) )
+			foreach ( Objects.Abstract obj in this.Deep(null) )
 			{
 				obj.ReadFinalize();
 			}
@@ -339,11 +387,20 @@ namespace Epsitec.Common.Document
 			{
 				using ( Stream stream = File.OpenWrite(filename) )
 				{
-					this.WriteIdentifier(stream);
-					Stream compressor = IO.Compression.CreateBZip2Stream(stream);
-					BinaryFormatter formatter = new BinaryFormatter();
-					formatter.Serialize(compressor, this);
-					compressor.Close();
+					Document.WriteIdentifier(stream, this.ioType);
+
+					if ( this.ioType == IOType.BinaryCompress )
+					{
+						Stream compressor = IO.Compression.CreateBZip2Stream(stream);
+						BinaryFormatter formatter = new BinaryFormatter();
+						formatter.Serialize(compressor, this);
+						compressor.Close();
+					}
+					if ( this.ioType == IOType.SoapUncompress )
+					{
+						SoapFormatter formatter = new SoapFormatter();
+						formatter.Serialize(stream, this);
+					}
 				}
 			}
 			catch ( System.Exception e )
@@ -357,23 +414,25 @@ namespace Epsitec.Common.Document
 		}
 
 		// Lit les 8 bytes d'en-tête et vérifie qu'ils contiennent bien "<?icon?>".
-		protected bool ReadIdentifier(Stream stream)
+		protected static IOType ReadIdentifier(Stream stream)
 		{
 			byte[] buffer = new byte[8];
 			stream.Read(buffer, 0, 8);
-			if ( buffer[0] != (byte) '<' )  return false;
-			if ( buffer[1] != (byte) '?' )  return false;
-			if ( buffer[2] != (byte) 'i' )  return false;
-			if ( buffer[3] != (byte) 'c' )  return false;
-			if ( buffer[4] != (byte) 'o' )  return false;
-			if ( buffer[5] != (byte) 'n' )  return false;
-			if ( buffer[6] != (byte) '?' )  return false;
-			if ( buffer[7] != (byte) '>' )  return false;
-			return true;
+			if ( buffer[0] != (byte) '<' )  return IOType.Unknow;
+			if ( buffer[1] != (byte) '?' )  return IOType.Unknow;
+			if ( buffer[2] != (byte) 'i' )  return IOType.Unknow;
+			if ( buffer[3] != (byte) 'c' )  return IOType.Unknow;
+			if ( buffer[4] != (byte) 'o' )  return IOType.Unknow;
+			if ( buffer[6] != (byte) '?' )  return IOType.Unknow;
+			if ( buffer[7] != (byte) '>' )  return IOType.Unknow;
+
+			if ( buffer[5] == (byte) 'n' )  return IOType.BinaryCompress;
+			if ( buffer[5] == (byte) 'x' )  return IOType.SoapUncompress;
+			return IOType.Unknow;
 		}
 
 		// Ecrit les 8 bytes d'en-tête "<?icon?>".
-		protected void WriteIdentifier(Stream stream)
+		protected static void WriteIdentifier(Stream stream, IOType type)
 		{
 			byte[] buffer = new byte[8];
 			buffer[0] = (byte) '<';
@@ -381,7 +440,9 @@ namespace Epsitec.Common.Document
 			buffer[2] = (byte) 'i';
 			buffer[3] = (byte) 'c';
 			buffer[4] = (byte) 'o';
-			buffer[5] = (byte) 'n';
+			buffer[5] = (byte) '-';
+			if ( type == IOType.BinaryCompress ) buffer[5] = (byte) 'n';
+			if ( type == IOType.SoapUncompress ) buffer[5] = (byte) 'x';
 			buffer[6] = (byte) '?';
 			buffer[7] = (byte) '>';
 			stream.Write(buffer, 0, 8);
@@ -446,33 +507,33 @@ namespace Epsitec.Common.Document
 				clipRect = drawingContext.Viewer.ScreenToInternal(clipRect);
 			}
 
-			AbstractObject branch = drawingContext.RootObject();
-			AbstractObject activLayer = drawingContext.RootObject(2);
-			AbstractObject page = drawingContext.RootObject(1);
-			foreach ( ObjectLayer layer in this.Flat(page) )
+			Objects.Abstract branch = drawingContext.RootObject();
+			Objects.Abstract activLayer = drawingContext.RootObject(2);
+			Objects.Abstract page = drawingContext.RootObject(1);
+			foreach ( Objects.Layer layer in this.Flat(page) )
 			{
 				bool dimmedLayer = false;
 				if ( layer != activLayer )  // calque passif ?
 				{
-					if ( layer.Type == LayerType.Hide ||
+					if ( layer.Type == Objects.LayerType.Hide ||
 						 drawingContext.LayerDrawingMode == LayerDrawingMode.HideInactive )
 					{
 						continue;
 					}
 
-					if ( layer.Type == LayerType.Dimmed &&
+					if ( layer.Type == Objects.LayerType.Dimmed &&
 						 drawingContext.LayerDrawingMode == LayerDrawingMode.DimmedInactive )
 					{
 						dimmedLayer = true;
 					}
 				}
 
-				PropertyModColor modColor = layer.PropertyModColor;
+				Properties.ModColor modColor = layer.PropertyModColor;
 				drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
 
 				foreach ( DeepBranchEntry entry in this.DeepBranch(layer, branch) )
 				{
-					AbstractObject obj = entry.Object;
+					Objects.Abstract obj = entry.Object;
 					if ( !obj.BoundingBox.IntersectsWith(clipRect) )  continue;
 
 					if ( obj.IsHide )  // objet caché ?
@@ -485,7 +546,7 @@ namespace Epsitec.Common.Document
 						drawingContext.IsDimmed = dimmedLayer;
 					}
 
-					if ( !entry.IsInsideBranch && layer.Type != LayerType.Show )
+					if ( !entry.IsInsideBranch && layer.Type != Objects.LayerType.Show )
 					{
 						drawingContext.IsDimmed = true;
 					}
@@ -502,12 +563,12 @@ namespace Epsitec.Common.Document
 
 
 		#region Flat
-		public System.Collections.IEnumerable Flat(AbstractObject root)
+		public System.Collections.IEnumerable Flat(Objects.Abstract root)
 		{
 			return new FlatEnumerable(this, root, false);
 		}
 
-		public System.Collections.IEnumerable Flat(AbstractObject root, bool onlySelected)
+		public System.Collections.IEnumerable Flat(Objects.Abstract root, bool onlySelected)
 		{
 			return new FlatEnumerable(this, root, onlySelected);
 		}
@@ -516,14 +577,14 @@ namespace Epsitec.Common.Document
 		protected class FlatEnumerable : System.Collections.IEnumerable,
 										 System.Collections.IEnumerator
 		{
-			public FlatEnumerable(Document document, AbstractObject root, bool onlySelected)
+			public FlatEnumerable(Document document, Objects.Abstract root, bool onlySelected)
 			{
 				this.document = document;
 				this.onlySelected = onlySelected;
 
 				if ( root == null )
 				{
-					this.list = this.document.Objects;
+					this.list = this.document.GetObjects;
 				}
 				else
 				{
@@ -554,7 +615,7 @@ namespace Epsitec.Common.Document
 						this.index ++;
 						if ( this.index >= this.list.Count )  return false;
 
-						AbstractObject obj = this.list[this.index] as AbstractObject;
+						Objects.Abstract obj = this.list[this.index] as Objects.Abstract;
 						if ( obj.IsSelected )  return true;
 					}
 				}
@@ -571,7 +632,7 @@ namespace Epsitec.Common.Document
 				{
 					if ( this.index >= 0 && this.index < this.list.Count )
 					{
-						return this.list[this.index] as AbstractObject;
+						return this.list[this.index] as Objects.Abstract;
 					}
 					else
 					{
@@ -588,12 +649,12 @@ namespace Epsitec.Common.Document
 		#endregion
 
 		#region FlatReverse
-		public System.Collections.IEnumerable FlatReverse(AbstractObject root)
+		public System.Collections.IEnumerable FlatReverse(Objects.Abstract root)
 		{
 			return new FlatReverseEnumerable(this, root, false);
 		}
 
-		public System.Collections.IEnumerable FlatReverse(AbstractObject root, bool onlySelected)
+		public System.Collections.IEnumerable FlatReverse(Objects.Abstract root, bool onlySelected)
 		{
 			return new FlatReverseEnumerable(this, root, onlySelected);
 		}
@@ -602,14 +663,14 @@ namespace Epsitec.Common.Document
 		protected class FlatReverseEnumerable : System.Collections.IEnumerable,
 												System.Collections.IEnumerator
 		{
-			public FlatReverseEnumerable(Document document, AbstractObject root, bool onlySelected)
+			public FlatReverseEnumerable(Document document, Objects.Abstract root, bool onlySelected)
 			{
 				this.document = document;
 				this.onlySelected = onlySelected;
 
 				if ( root == null )
 				{
-					this.list = this.document.Objects;
+					this.list = this.document.GetObjects;
 				}
 				else
 				{
@@ -640,7 +701,7 @@ namespace Epsitec.Common.Document
 						this.index --;
 						if ( this.index < 0 )  return false;
 
-						AbstractObject obj = this.list[this.index] as AbstractObject;
+						Objects.Abstract obj = this.list[this.index] as Objects.Abstract;
 						if ( obj.IsSelected )  return true;
 					}
 				}
@@ -657,7 +718,7 @@ namespace Epsitec.Common.Document
 				{
 					if ( this.index >= 0 && this.index < this.list.Count )
 					{
-						return this.list[this.index] as AbstractObject;
+						return this.list[this.index] as Objects.Abstract;
 					}
 					else
 					{
@@ -674,12 +735,12 @@ namespace Epsitec.Common.Document
 		#endregion
 
 		#region Deep
-		public System.Collections.IEnumerable Deep(AbstractObject root)
+		public System.Collections.IEnumerable Deep(Objects.Abstract root)
 		{
 			return new DeepEnumerable(this, root, false);
 		}
 
-		public System.Collections.IEnumerable Deep(AbstractObject root, bool onlySelected)
+		public System.Collections.IEnumerable Deep(Objects.Abstract root, bool onlySelected)
 		{
 			return new DeepEnumerable(this, root, onlySelected);
 		}
@@ -692,7 +753,7 @@ namespace Epsitec.Common.Document
 		protected class DeepEnumerable : System.Collections.IEnumerable,
 										 System.Collections.IEnumerator
 		{
-			public DeepEnumerable(Document document, AbstractObject root, bool onlySelected)
+			public DeepEnumerable(Document document, Objects.Abstract root, bool onlySelected)
 			{
 				this.document = document;
 				this.onlySelected = onlySelected;
@@ -711,7 +772,7 @@ namespace Epsitec.Common.Document
 			{
 				this.stack = new System.Collections.Stack();
 
-				UndoableList list = this.document.Objects;
+				UndoableList list = this.document.GetObjects;
 				if ( this.root != null )
 				{
 					list = this.root.Objects;
@@ -736,7 +797,7 @@ namespace Epsitec.Common.Document
 				if ( this.index == -1 )  return false;
 
 				ti = this.stack.Peek() as TreeInfo;
-				AbstractObject obj = ti.List[this.index] as AbstractObject;
+				Objects.Abstract obj = ti.List[this.index] as Objects.Abstract;
 				if ( obj.Objects != null && obj.Objects.Count > 0 )  // objet avec fils ?
 				{
 					if ( this.onlySelected )  // seulement les objets sélectionnés ?
@@ -777,7 +838,7 @@ namespace Epsitec.Common.Document
 					{
 						if ( !this.InternalMoveNext() )  return false;
 						if ( this.stack.Count > 1 )  return true;
-						AbstractObject obj = this.Current as AbstractObject;
+						Objects.Abstract obj = this.Current as Objects.Abstract;
 						if ( obj.IsSelected )  return true;
 					}
 				}
@@ -806,7 +867,7 @@ namespace Epsitec.Common.Document
 
 			protected Document					document;
 			protected bool						onlySelected;
-			protected AbstractObject			root;
+			protected Objects.Abstract	root;
 			protected bool						first;
 			protected int						index;
 			protected System.Collections.Stack	stack;
@@ -814,7 +875,7 @@ namespace Epsitec.Common.Document
 		#endregion
 
 		#region DeepBranch
-		public System.Collections.IEnumerable DeepBranch(AbstractObject root, AbstractObject branch)
+		public System.Collections.IEnumerable DeepBranch(Objects.Abstract root, Objects.Abstract branch)
 		{
 			return new DeepBranchEnumerable(this, root, branch);
 		}
@@ -825,7 +886,7 @@ namespace Epsitec.Common.Document
 		protected class DeepBranchEnumerable : System.Collections.IEnumerable,
 											   System.Collections.IEnumerator
 		{
-			public DeepBranchEnumerable(Document document, AbstractObject root, AbstractObject branch)
+			public DeepBranchEnumerable(Document document, Objects.Abstract root, Objects.Abstract branch)
 			{
 				this.document = document;
 				this.root = root;
@@ -844,7 +905,7 @@ namespace Epsitec.Common.Document
 			{
 				this.stack = new System.Collections.Stack();
 
-				UndoableList list = this.document.Objects;
+				UndoableList list = this.document.GetObjects;
 				if ( this.root != null )
 				{
 					list = this.root.Objects;
@@ -859,7 +920,7 @@ namespace Epsitec.Common.Document
 			public bool MoveNext()
 			{
 				TreeInfo ti;
-				AbstractObject obj;
+				Objects.Abstract obj;
 
 				if ( this.first )
 				{
@@ -871,7 +932,7 @@ namespace Epsitec.Common.Document
 				if ( this.index == -1 )  return false;
 
 				ti = this.stack.Peek() as TreeInfo;
-				obj = ti.List[this.index] as AbstractObject;
+				obj = ti.List[this.index] as Objects.Abstract;
 				if ( obj.Objects != null && obj.Objects.Count > 0 )  // objet avec fils ?
 				{
 					if ( !this.isInsideBranch )
@@ -896,7 +957,7 @@ namespace Epsitec.Common.Document
 
 					if ( this.isInsideBranch )
 					{
-						obj = ti.List[this.index] as AbstractObject;
+						obj = ti.List[this.index] as Objects.Abstract;
 						if ( obj == this.branch )  this.isInsideBranch = false;
 					}
 				}
@@ -910,7 +971,7 @@ namespace Epsitec.Common.Document
 
 					if ( this.index < ti.List.Count )
 					{
-						AbstractObject obj = ti.List[this.index] as AbstractObject;
+						Objects.Abstract obj = ti.List[this.index] as Objects.Abstract;
 						return new DeepBranchEntry(obj, this.isInsideBranch);
 					}
 					else
@@ -921,8 +982,8 @@ namespace Epsitec.Common.Document
 			}
 
 			protected Document					document;
-			protected AbstractObject			root;
-			protected AbstractObject			branch;
+			protected Objects.Abstract	root;
+			protected Objects.Abstract	branch;
 			protected bool						isInsideBranch;
 			protected bool						first;
 			protected int						index;
@@ -933,13 +994,13 @@ namespace Epsitec.Common.Document
 		#region DeepBranchEntry
 		public class DeepBranchEntry
 		{
-			public DeepBranchEntry(AbstractObject obj, bool isInsideBranch)
+			public DeepBranchEntry(Objects.Abstract obj, bool isInsideBranch)
 			{
 				this.obj = obj;
 				this.isInsideBranch = isInsideBranch;
 			}
 
-			public AbstractObject Object
+			public Objects.Abstract Object
 			{
 				get { return this.obj; }
 			}
@@ -949,8 +1010,8 @@ namespace Epsitec.Common.Document
 				get { return this.isInsideBranch; }
 			}
 
-			protected AbstractObject	obj;
-			protected bool				isInsideBranch;
+			protected Objects.Abstract	obj;
+			protected bool						isInsideBranch;
 		}
 		#endregion
 
@@ -995,5 +1056,6 @@ namespace Epsitec.Common.Document
 		protected Notifier						notifier;
 		protected int							readRevision;
 		protected int							readVersion;
+		protected IOType						ioType;
 	}
 }

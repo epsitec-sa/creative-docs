@@ -17,7 +17,19 @@ namespace Epsitec.Common.Document
 			this.tool = "Select";
 			this.zoomHistory = new ZoomHistory();
 			this.opletQueue = new OpletQueue();
-			this.objectMemory = new ObjectMemory(this.document, null);
+			this.objectMemory = new Objects.Memory(this.document, null);
+
+			int total = 0;
+			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
+			{
+				Properties.Type type = (Properties.Type)value;
+				total ++;
+			}
+			this.isPropertiesExtended = new bool[total];
+			for ( int i=0 ; i<total ; i++ )
+			{
+				this.isPropertiesExtended[i] = false;
+			}
 		}
 
 		// Outil sélectionné dans la palette.
@@ -36,7 +48,7 @@ namespace Epsitec.Common.Document
 					this.OpletQueueBeginAction();
 					this.InsertOpletTool();
 
-					AbstractObject editObject = this.RetEditObject();
+					Objects.Abstract editObject = this.RetEditObject();
 
 					if ( this.tool == "HotSpot" || value == "HotSpot" )
 					{
@@ -48,16 +60,16 @@ namespace Epsitec.Common.Document
 					if ( this.tool == "Select" && isCreate )  // on vient de créer un objet ?
 					{
 						DrawingContext context = this.ActiveViewer.DrawingContext;
-						AbstractObject layer = context.RootObject();
-						AbstractObject obj = layer.Objects[layer.Objects.Count-1] as AbstractObject;
+						Objects.Abstract layer = context.RootObject();
+						Objects.Abstract obj = layer.Objects[layer.Objects.Count-1] as Objects.Abstract;
 						this.ActiveViewer.Select(obj, false, false);
 					}
 
 					else if ( this.tool == "Edit" && isCreate )  // on vient de créer un objet ?
 					{
 						DrawingContext context = this.ActiveViewer.DrawingContext;
-						AbstractObject layer = context.RootObject();
-						AbstractObject obj = layer.Objects[layer.Objects.Count-1] as AbstractObject;
+						Objects.Abstract layer = context.RootObject();
+						Objects.Abstract obj = layer.Objects[layer.Objects.Count-1] as Objects.Abstract;
 						this.ActiveViewer.Select(obj, true, false);
 					}
 
@@ -73,7 +85,7 @@ namespace Epsitec.Common.Document
 					{
 						if ( this.TotalSelected == 1 )
 						{
-							AbstractObject sel = this.RetOnlySelectedObject();
+							Objects.Abstract sel = this.RetOnlySelectedObject();
 							if ( sel != null )
 							{
 								if ( sel.IsEditable )
@@ -126,7 +138,7 @@ namespace Epsitec.Common.Document
 			get { return this.opletQueue; }
 		}
 
-		public ObjectMemory ObjectMemory
+		public Objects.Memory ObjectMemory
 		{
 			get { return this.objectMemory; }
 		}
@@ -184,28 +196,28 @@ namespace Epsitec.Common.Document
 
 		#region Containers
 		// Attache un nouveau conteneur à ce document.
-		public void AttachContainer(AbstractContainer container)
+		public void AttachContainer(Containers.Abstract container)
 		{
 			this.attachContainers.Add(container);
 		}
 
 		// Détache un conteneur de ce document.
-		public void DetachContainer(AbstractContainer container)
+		public void DetachContainer(Containers.Abstract container)
 		{
 			this.attachContainers.Remove(container);
 		}
 
 		// Met en évidence l'objet survolé par la souris.
-		public void ContainerHilite(AbstractObject obj)
+		public void ContainerHilite(Objects.Abstract obj)
 		{
-			foreach ( AbstractContainer container in this.attachContainers )
+			foreach ( Containers.Abstract container in this.attachContainers )
 			{
 				container.Hilite(obj);
 			}
 		}
 
 		// Indique quel est le container actif (visible).
-		public AbstractContainer ActiveContainer
+		public Containers.Abstract ActiveContainer
 		{
 			get { return this.activeContainer; }
 			set { this.activeContainer = value; }
@@ -224,17 +236,17 @@ namespace Epsitec.Common.Document
 			this.TotalSelected = 0;
 			this.totalHide = 0;
 			this.totalPageHide = 0;
-			this.document.Objects.Clear();
+			this.document.GetObjects.Clear();
 
 			this.document.PropertiesAuto.Clear();
 			this.document.PropertiesSel.Clear();
 			this.document.PropertiesStyle.Clear();
-			this.objectMemory = new ObjectMemory(this.document, null);
+			this.objectMemory = new Objects.Memory(this.document, null);
 
-			ObjectPage page = new ObjectPage(this.document, null);  // crée la page initiale
-			this.document.Objects.Add(page);
+			Objects.Page page = new Objects.Page(this.document, null);  // crée la page initiale
+			this.document.GetObjects.Add(page);
 
-			ObjectLayer layer = new ObjectLayer(this.document, null);  // crée le calque initial
+			Objects.Layer layer = new Objects.Layer(this.document, null);  // crée le calque initial
 			page.Objects.Add(layer);
 
 			foreach ( Viewer viewer in this.attachViewers )
@@ -280,16 +292,16 @@ namespace Epsitec.Common.Document
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 
 			this.totalPageHide = 0;
-			AbstractObject page = context.RootObject(1);
-			foreach ( AbstractObject obj in this.document.Deep(page) )
+			Objects.Abstract page = context.RootObject(1);
+			foreach ( Objects.Abstract obj in this.document.Deep(page) )
 			{
 				if ( obj.IsHide )  this.totalPageHide ++;
 			}
 
 			this.totalSelected = 0;
 			this.totalHide = 0;
-			AbstractObject layer = context.RootObject();
-			foreach ( AbstractObject obj in this.document.Deep(layer) )
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 			{
 				if ( obj.IsSelected )  this.totalSelected ++;
 				if ( obj.IsHide )  this.totalHide ++;
@@ -304,7 +316,7 @@ namespace Epsitec.Common.Document
 			get
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
-				AbstractObject layer = context.RootObject();
+				Objects.Abstract layer = context.RootObject();
 				return layer.Objects.Count;
 			}
 		}
@@ -382,9 +394,9 @@ namespace Epsitec.Common.Document
 		protected int StatisticTotalLayers()
 		{
 			int total = 0;
-			foreach ( AbstractObject obj in this.document.Deep(null) )
+			foreach ( Objects.Abstract obj in this.document.Deep(null) )
 			{
-				if ( obj is ObjectLayer )  total ++;
+				if ( obj is Objects.Layer )  total ++;
 			}
 			return total;
 		}
@@ -393,11 +405,11 @@ namespace Epsitec.Common.Document
 		public int StatisticTotalObjects()
 		{
 			int total = 0;
-			foreach ( AbstractObject obj in this.document.Deep(null) )
+			foreach ( Objects.Abstract obj in this.document.Deep(null) )
 			{
-				if ( obj is ObjectPage  )  continue;
-				if ( obj is ObjectLayer )  continue;
-				if ( obj is ObjectGroup )  continue;
+				if ( obj is Objects.Page  )  continue;
+				if ( obj is Objects.Layer )  continue;
+				if ( obj is Objects.Group )  continue;
 				total ++;
 			}
 			return total;
@@ -413,8 +425,8 @@ namespace Epsitec.Common.Document
 			{
 				Rectangle bbox = Rectangle.Empty;
 				DrawingContext context = this.ActiveViewer.DrawingContext;
-				AbstractObject layer = context.RootObject();
-				foreach ( AbstractObject obj in this.document.Flat(layer, true) )
+				Objects.Abstract layer = context.RootObject();
+				foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 				{
 					bbox.MergeWith(obj.BoundingBoxDetect);
 				}
@@ -423,21 +435,21 @@ namespace Epsitec.Common.Document
 		}
 
 		// Retourne le seul objet sélectionné.
-		public AbstractObject RetOnlySelectedObject()
+		public Objects.Abstract RetOnlySelectedObject()
 		{
 			if ( this.TotalSelected != 1 )  return null;
 
 			DrawingContext context = this.ActiveViewer.DrawingContext;
-			AbstractObject layer = context.RootObject();
+			Objects.Abstract layer = context.RootObject();
 #if true
 			int total = layer.Objects.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{
-				AbstractObject obj = layer.Objects[i] as AbstractObject;
+				Objects.Abstract obj = layer.Objects[i] as Objects.Abstract;
 				if ( obj.IsSelected )  return obj;
 			}
 #else
-			foreach ( AbstractObject obj in this.document.Flat(layer, true) )
+			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 			{
 				return obj;
 			}
@@ -446,17 +458,17 @@ namespace Epsitec.Common.Document
 		}
 
 		// Retourne le seul objet en édition.
-		public AbstractObject RetEditObject()
+		public Objects.Abstract RetEditObject()
 		{
 			if ( this.tool != "Edit" )  return null;
 			if ( this.TotalSelected != 1 )  return null;
 
 			DrawingContext context = this.ActiveViewer.DrawingContext;
-			AbstractObject layer = context.RootObject();
+			Objects.Abstract layer = context.RootObject();
 			int total = layer.Objects.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{
-				AbstractObject obj = layer.Objects[i] as AbstractObject;
+				Objects.Abstract obj = layer.Objects[i] as Objects.Abstract;
 				if ( obj.IsSelected && obj.IsEdited )  return obj;
 			}
 			return null;
@@ -471,8 +483,8 @@ namespace Epsitec.Common.Document
 				if ( this.TotalSelected > 0 )
 				{
 					DrawingContext context = this.ActiveViewer.DrawingContext;
-					AbstractObject layer = context.RootObject();
-					foreach ( AbstractObject obj in this.document.Flat(layer, true) )
+					Objects.Abstract layer = context.RootObject();
+					foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 					{
 						obj.Deselect();
 					}
@@ -494,8 +506,8 @@ namespace Epsitec.Common.Document
 				this.Tool = "Select";
 
 				DrawingContext context = this.ActiveViewer.DrawingContext;
-				AbstractObject layer = context.RootObject();
-				foreach ( AbstractObject obj in this.document.Flat(layer) )
+				Objects.Abstract layer = context.RootObject();
+				foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 				{
 					if ( !obj.IsSelected && !obj.IsHide )
 					{
@@ -520,8 +532,8 @@ namespace Epsitec.Common.Document
 				this.Tool = "Select";
 
 				DrawingContext context = this.ActiveViewer.DrawingContext;
-				AbstractObject layer = context.RootObject();
-				foreach ( AbstractObject obj in this.document.Flat(layer) )
+				Objects.Abstract layer = context.RootObject();
+				foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 				{
 					if ( obj.IsHide )  continue;
 
@@ -563,8 +575,8 @@ namespace Epsitec.Common.Document
 					{
 						bDo = false;
 						DrawingContext context = this.ActiveViewer.DrawingContext;
-						AbstractObject layer = context.RootObject();
-						foreach ( AbstractObject obj in this.document.Flat(layer, true) )
+						Objects.Abstract layer = context.RootObject();
+						foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 						{
 							this.document.Modifier.TotalSelected --;
 							this.document.Notifier.NotifyArea(obj.BoundingBox);
@@ -594,7 +606,7 @@ namespace Epsitec.Common.Document
 			{
 				this.Tool = "Select";
 				DrawingContext context = this.ActiveViewer.DrawingContext;
-				AbstractObject layer = context.RootObject();
+				Objects.Abstract layer = context.RootObject();
 				Modifier.Duplicate(this.document, this.document, layer.Objects, layer.Objects, true, move, true);
 				this.ActiveViewer.GlobalSelect = ( this.document.Modifier.TotalSelected > 1 );
 
@@ -613,7 +625,7 @@ namespace Epsitec.Common.Document
 			using ( this.OpletQueueBeginAction() )
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
-				AbstractObject layer = context.RootObject();
+				Objects.Abstract layer = context.RootObject();
 				this.document.Clipboard.Modifier.New();
 				this.document.Clipboard.Modifier.OpletQueueEnable = false;
 				this.Duplicate(this.document, this.document.Clipboard, new Point(0,0), true);
@@ -631,7 +643,7 @@ namespace Epsitec.Common.Document
 			using ( this.OpletQueueBeginAction() )
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
-				AbstractObject layer = context.RootObject();
+				Objects.Abstract layer = context.RootObject();
 				this.document.Clipboard.Modifier.New();
 				this.document.Clipboard.Modifier.OpletQueueEnable = false;
 				this.Duplicate(this.document, this.document.Clipboard, new Point(0,0), true);
@@ -649,7 +661,7 @@ namespace Epsitec.Common.Document
 			using ( this.OpletQueueBeginAction() )
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
-				AbstractObject layer = context.RootObject();
+				Objects.Abstract layer = context.RootObject();
 				this.DeselectAll();
 				this.document.Clipboard.Modifier.OpletQueueEnable = false;
 				this.Duplicate(this.document.Clipboard, this.document, new Point(0,0), true);
@@ -682,10 +694,10 @@ namespace Epsitec.Common.Document
 			int total = srcList.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
-				AbstractObject obj = srcList[index] as AbstractObject;
+				Objects.Abstract obj = srcList[index] as Objects.Abstract;
 				if ( onlySelected && !obj.IsSelected )  continue;
 
-				AbstractObject newObject = null;
+				Objects.Abstract newObject = null;
 				if ( !obj.DuplicateObject(dstDoc, ref newObject) )  continue;
 
 				if ( deselect && obj.IsSelected )
@@ -792,14 +804,14 @@ namespace Epsitec.Common.Document
 		protected void OrderSelection(int dir)
 		{
 			DrawingContext context = this.ActiveViewer.DrawingContext;
-			AbstractObject layer = context.RootObject();
+			Objects.Abstract layer = context.RootObject();
 
 			int total = layer.Objects.Count;
 			int iSrc = 0;
 			int iDst = (dir < 0) ? 0 : total-1;
 			do
 			{
-				AbstractObject obj = layer.Objects[iSrc] as AbstractObject;
+				Objects.Abstract obj = layer.Objects[iSrc] as Objects.Abstract;
 				if ( obj.IsSelected )
 				{
 					layer.Objects.RemoveAt(iSrc);
@@ -935,12 +947,12 @@ namespace Epsitec.Common.Document
 		protected void Group()
 		{
 			DrawingContext context = this.ActiveViewer.DrawingContext;
-			AbstractObject layer = context.RootObject();
+			Objects.Abstract layer = context.RootObject();
 			System.Collections.ArrayList extract = new System.Collections.ArrayList();
 
 			// Extrait tous les objets sélectionnés dans la liste extract.
 			Rectangle bbox = Rectangle.Empty;
-			foreach ( AbstractObject obj in this.document.Flat(layer, true) )
+			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 			{
 				extract.Add(obj);
 				bbox.MergeWith(obj.BoundingBoxGroup);
@@ -952,7 +964,7 @@ namespace Epsitec.Common.Document
 			do
 			{
 				bDo = false;
-				foreach ( AbstractObject obj in this.document.Flat(layer, true) )
+				foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 				{
 					this.document.Modifier.TotalSelected --;
 					layer.Objects.Remove(obj);
@@ -963,14 +975,14 @@ namespace Epsitec.Common.Document
 			while ( bDo );
 
 			// Crée l'objet groupe.
-			ObjectGroup group = new ObjectGroup(this.document, null);
+			Objects.Group group = new Objects.Group(this.document, null);
 			layer.Objects.Add(group);
 			group.UpdateDim(bbox);
 			group.Select();
 			this.TotalSelected ++;
 
 			// Remet les objets extraits dans le groupe.
-			foreach ( AbstractObject obj in extract )
+			foreach ( Objects.Abstract obj in extract )
 			{
 				obj.Deselect();
 				group.Objects.Add(obj);
@@ -983,16 +995,16 @@ namespace Epsitec.Common.Document
 		protected void Ungroup()
 		{
 			DrawingContext context = this.ActiveViewer.DrawingContext;
-			AbstractObject layer = context.RootObject();
+			Objects.Abstract layer = context.RootObject();
 			int total = layer.Objects.Count;
 			int index = 0;
 			do
 			{
-				AbstractObject obj = layer.Objects[index] as AbstractObject;
-				if ( obj.IsSelected && obj is ObjectGroup )
+				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
+				if ( obj.IsSelected && obj is Objects.Group )
 				{
 					int rank = index+1;
-					foreach ( AbstractObject inside in this.document.Flat(obj) )
+					foreach ( Objects.Abstract inside in this.document.Flat(obj) )
 					{
 						inside.Select();
 						layer.Objects.Insert(rank++, inside);
@@ -1017,11 +1029,11 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction() )
 			{
-				AbstractObject group = this.RetOnlySelectedObject();
-				if ( group != null && group is ObjectGroup )
+				Objects.Abstract group = this.RetOnlySelectedObject();
+				if ( group != null && group is Objects.Group )
 				{
 					DrawingContext context = this.ActiveViewer.DrawingContext;
-					AbstractObject layer = context.RootObject();
+					Objects.Abstract layer = context.RootObject();
 					group.Deselect();
 					int index = layer.Objects.IndexOf(group);
 					context.RootStackPush(index);
@@ -1048,8 +1060,8 @@ namespace Epsitec.Common.Document
 					this.DeselectAll();
 					this.GroupUpdateParents();
 					int index = context.RootStackPop();
-					AbstractObject layer = context.RootObject();
-					AbstractObject group = layer.Objects[index] as AbstractObject;
+					Objects.Abstract layer = context.RootObject();
+					Objects.Abstract group = layer.Objects[index] as Objects.Abstract;
 					group.Select();
 					this.Tool = "Select";
 					this.DirtyCounters();
@@ -1062,10 +1074,10 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected Rectangle RetBbox(AbstractObject group)
+		protected Rectangle RetBbox(Objects.Abstract group)
 		{
 			Rectangle bbox = Rectangle.Empty;
-			foreach ( AbstractObject obj in this.document.Flat(group) )
+			foreach ( Objects.Abstract obj in this.document.Flat(group) )
 			{
 				bbox.MergeWith(obj.BoundingBoxGroup);
 			}
@@ -1076,10 +1088,10 @@ namespace Epsitec.Common.Document
 		public void GroupUpdateChildrens()
 		{
 			DrawingContext context = this.ActiveViewer.DrawingContext;
-			AbstractObject layer = context.RootObject();
-			foreach ( AbstractObject obj in this.document.Deep(layer) )
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 			{
-				ObjectGroup group = obj as ObjectGroup;
+				Objects.Group group = obj as Objects.Group;
 				if ( group != null )
 				{
 					this.document.Notifier.NotifyArea(group.BoundingBox);
@@ -1099,7 +1111,7 @@ namespace Epsitec.Common.Document
 			int deep = context.RootStackDeep;
 			for ( int i=deep ; i>=3 ; i-- )
 			{
-				ObjectGroup group = context.RootObject(i) as ObjectGroup;
+				Objects.Group group = context.RootObject(i) as Objects.Group;
 				if ( group != null )
 				{
 					this.document.Notifier.NotifyArea(group.BoundingBox);
@@ -1121,10 +1133,10 @@ namespace Epsitec.Common.Document
 			using ( this.OpletQueueBeginAction() )
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
-				AbstractObject layer = context.RootObject();
-				foreach ( AbstractObject obj in this.document.Flat(layer) )
+				Objects.Abstract layer = context.RootObject();
+				foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 				{
-					if ( !(obj is ObjectPage) && !(obj is ObjectLayer) )
+					if ( !(obj is Objects.Page) && !(obj is Objects.Layer) )
 					{
 						if ( obj.IsSelected && !obj.IsHide )
 						{
@@ -1149,10 +1161,10 @@ namespace Epsitec.Common.Document
 			using ( this.OpletQueueBeginAction() )
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
-				AbstractObject layer = context.RootObject();
-				foreach ( AbstractObject obj in this.document.Flat(layer) )
+				Objects.Abstract layer = context.RootObject();
+				foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 				{
-					if ( !(obj is ObjectPage) && !(obj is ObjectLayer) )
+					if ( !(obj is Objects.Page) && !(obj is Objects.Layer) )
 					{
 						if ( !obj.IsSelected && !obj.IsHide )
 						{
@@ -1166,7 +1178,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Cache un objet et tous ses fils.
-		protected void HideObjectAndSoons(AbstractObject obj)
+		protected void HideObjectAndSoons(Objects.Abstract obj)
 		{
 			obj.IsHide = true;
 
@@ -1175,7 +1187,7 @@ namespace Epsitec.Common.Document
 				int total = obj.Objects.Count;
 				for ( int i=0 ; i<total ; i++ )
 				{
-					AbstractObject sub = obj.Objects[i] as AbstractObject;
+					Objects.Abstract sub = obj.Objects[i] as Objects.Abstract;
 					this.HideObjectAndSoons(sub);
 				}
 			}
@@ -1189,10 +1201,10 @@ namespace Epsitec.Common.Document
 			using ( this.OpletQueueBeginAction() )
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
-				AbstractObject page = context.RootObject(1);
-				foreach ( AbstractObject obj in this.document.Deep(page) )
+				Objects.Abstract page = context.RootObject(1);
+				foreach ( Objects.Abstract obj in this.document.Deep(page) )
 				{
-					if ( !(obj is ObjectPage) && !(obj is ObjectLayer) )
+					if ( !(obj is Objects.Page) && !(obj is Objects.Layer) )
 					{
 						obj.IsHide = false;
 					}
@@ -1210,8 +1222,11 @@ namespace Epsitec.Common.Document
 		public void InitiateChangingPage()
 		{
 			int rank = this.ActiveViewer.DrawingContext.CurrentPage;
-			ObjectPage page = this.document.Objects[rank] as ObjectPage;
-			page.CurrentLayer = this.ActiveViewer.DrawingContext.CurrentLayer;
+			if ( rank < this.document.GetObjects.Count )
+			{
+				Objects.Page page = this.document.GetObjects[rank] as Objects.Page;
+				page.CurrentLayer = this.ActiveViewer.DrawingContext.CurrentLayer;
+			}
 
 			this.DeselectAll();
 		}
@@ -1219,7 +1234,7 @@ namespace Epsitec.Common.Document
 		// Termine un changement de page.
 		public void TerminateChangingPage(int rank)
 		{
-			ObjectPage page = this.document.Objects[rank] as ObjectPage;
+			Objects.Page page = this.document.GetObjects[rank] as Objects.Page;
 			int layer = page.CurrentLayer;
 			this.ActiveViewer.DrawingContext.PageLayer(rank, layer);
 			this.DirtyCounters();
@@ -1235,15 +1250,15 @@ namespace Epsitec.Common.Document
 			{
 				this.InitiateChangingPage();
 
-				UndoableList list = this.document.Objects;  // liste des pages
+				UndoableList list = this.document.GetObjects;  // liste des pages
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count);
 
-				ObjectPage page = new ObjectPage(this.document, null);
+				Objects.Page page = new Objects.Page(this.document, null);
 				page.Name = name;
 				list.Insert(rank, page);
 
-				ObjectLayer layer = new ObjectLayer(this.document, null);
+				Objects.Layer layer = new Objects.Layer(this.document, null);
 				page.Objects.Add(layer);
 
 				this.TerminateChangingPage(rank);
@@ -1266,13 +1281,13 @@ namespace Epsitec.Common.Document
 			{
 				this.InitiateChangingPage();
 
-				UndoableList list = this.document.Objects;  // liste des pages
+				UndoableList list = this.document.GetObjects;  // liste des pages
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count-1);
 
-				ObjectPage srcPage = list[rank] as ObjectPage;
+				Objects.Page srcPage = list[rank] as Objects.Page;
 
-				ObjectPage page = new ObjectPage(this.document, srcPage);
+				Objects.Page page = new Objects.Page(this.document, srcPage);
 				if ( name == "" )
 				{
 					page.Name = Misc.CopyName(srcPage.Name);
@@ -1307,13 +1322,13 @@ namespace Epsitec.Common.Document
 			{
 				this.DeselectAll();
 
-				UndoableList list = this.document.Objects;  // liste des pages
+				UndoableList list = this.document.GetObjects;  // liste des pages
 				if ( list.Count <= 1 )  return;  // il doit rester une page
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count-1);
 
-				UndoableList pages = this.document.Objects;
-				ObjectPage page = pages[rank] as ObjectPage;
+				UndoableList pages = this.document.GetObjects;
+				Objects.Page page = pages[rank] as Objects.Page;
 				page.Dispose();
 				list.RemoveAt(rank);
 
@@ -1336,14 +1351,14 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction() )
 			{
-				UndoableList list = this.document.Objects;  // liste des pages
+				UndoableList list = this.document.GetObjects;  // liste des pages
 				rank1 = System.Math.Max(rank1, 0);
 				rank1 = System.Math.Min(rank1, list.Count-1);
 				rank2 = System.Math.Max(rank2, 0);
 				rank2 = System.Math.Min(rank2, list.Count-1);
 
-				UndoableList pages = this.document.Objects;
-				ObjectPage temp = pages[rank1] as ObjectPage;
+				UndoableList pages = this.document.GetObjects;
+				Objects.Page temp = pages[rank1] as Objects.Page;
 				pages.RemoveAt(rank1);
 				pages.Insert(rank2, temp);
 
@@ -1358,8 +1373,8 @@ namespace Epsitec.Common.Document
 		// Retourne le nom d'une page.
 		public string PageName(int rank)
 		{
-			UndoableList pages = this.document.Objects;
-			ObjectPage page = pages[rank] as ObjectPage;
+			UndoableList pages = this.document.GetObjects;
+			Objects.Page page = pages[rank] as Objects.Page;
 			return page.Name;
 		}
 
@@ -1369,8 +1384,8 @@ namespace Epsitec.Common.Document
 			this.document.IsDirtySerialize = true;
 			using ( this.OpletQueueBeginAction("ChangePageName") )
 			{
-				UndoableList pages = this.document.Objects;
-				ObjectPage page = pages[rank] as ObjectPage;
+				UndoableList pages = this.document.GetObjects;
+				Objects.Page page = pages[rank] as Objects.Page;
 				page.Name = name;
 
 				this.document.Notifier.NotifySelectionChanged();
@@ -1411,7 +1426,7 @@ namespace Epsitec.Common.Document
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count);
 
-				ObjectLayer layer = new ObjectLayer(this.document, null);
+				Objects.Layer layer = new Objects.Layer(this.document, null);
 				layer.Name = name;
 				list.Insert(rank, layer);
 
@@ -1439,9 +1454,9 @@ namespace Epsitec.Common.Document
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count-1);
 
-				ObjectLayer srcLayer = list[rank] as ObjectLayer;
+				Objects.Layer srcLayer = list[rank] as Objects.Layer;
 
-				ObjectLayer layer = new ObjectLayer(this.document, srcLayer);
+				Objects.Layer layer = new Objects.Layer(this.document, srcLayer);
 				if ( name == "" )
 				{
 					layer.Name = Misc.CopyName(srcLayer.Name);
@@ -1482,7 +1497,7 @@ namespace Epsitec.Common.Document
 				rank = System.Math.Min(rank, list.Count-1);
 
 				UndoableList layers = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
-				ObjectLayer layer = layers[rank] as ObjectLayer;
+				Objects.Layer layer = layers[rank] as Objects.Layer;
 				layer.Dispose();
 				list.RemoveAt(rank);
 
@@ -1512,7 +1527,7 @@ namespace Epsitec.Common.Document
 				rank2 = System.Math.Min(rank2, list.Count-1);
 
 				UndoableList layers = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
-				ObjectLayer temp = layers[rank1] as ObjectLayer;
+				Objects.Layer temp = layers[rank1] as Objects.Layer;
 				layers.RemoveAt(rank1);
 				layers.Insert(rank2, temp);
 
@@ -1528,7 +1543,7 @@ namespace Epsitec.Common.Document
 		public string LayerName(int rank)
 		{
 			UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
-			ObjectLayer layer = list[rank] as ObjectLayer;
+			Objects.Layer layer = list[rank] as Objects.Layer;
 			return layer.Name;
 		}
 
@@ -1539,7 +1554,7 @@ namespace Epsitec.Common.Document
 			using ( this.OpletQueueBeginAction("ChangeLayerName") )
 			{
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
-				ObjectLayer layer = list[rank] as ObjectLayer;
+				Objects.Layer layer = list[rank] as Objects.Layer;
 				layer.Name = name;
 
 				this.document.Notifier.NotifySelectionChanged();
@@ -1579,7 +1594,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Ajoute une nouvelle propriété.
-		public void PropertyAdd(AbstractProperty property)
+		public void PropertyAdd(Properties.Abstract property)
 		{
 			this.PropertyList(property).Add(property);
 
@@ -1590,7 +1605,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Supprime une propriété.
-		public void PropertyRemove(AbstractProperty property)
+		public void PropertyRemove(Properties.Abstract property)
 		{
 			this.PropertyList(property).Remove(property);
 
@@ -1601,7 +1616,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Donne la liste à utiliser pour une propriété.
-		public UndoableList PropertyList(AbstractProperty property)
+		public UndoableList PropertyList(Properties.Abstract property)
 		{
 			return this.PropertyList(property.IsStyle,  property.IsSelected);
 		}
@@ -1635,8 +1650,8 @@ namespace Epsitec.Common.Document
 			if ( this.IsTool )  // outil select, edit, loupe, etc. ?
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
-				AbstractObject layer = context.RootObject();
-				foreach ( AbstractObject obj in this.document.Flat(layer, true) )
+				Objects.Abstract layer = context.RootObject();
+				foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 				{
 					obj.PropertiesList(list, this.propertiesDetail);
 				}
@@ -1645,13 +1660,55 @@ namespace Epsitec.Common.Document
 			{
 				// Crée un objet factice (document = null), c'est-à-dire sans
 				// propriétés, qui servira juste de filtre pour objectMemory.
-				AbstractObject dummy = AbstractObject.CreateObject(null, this.tool, null);
+				Objects.Abstract dummy = Objects.Abstract.CreateObject(null, this.tool, null);
 				this.objectMemory.PropertiesList(list, dummy);
 				dummy.Dispose();
 			}
 
 			list.Sort();
 			this.document.Modifier.OpletQueueEnable = true;
+		}
+		#endregion
+
+
+		#region IsPropertiesExtended
+		// Indique si le panneau d'une propriété doit être étendu.
+		public bool IsPropertiesExtended(Properties.Type type)
+		{
+			int i=0;
+			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
+			{
+				if ( type == (Properties.Type)value )
+				{
+					return this.isPropertiesExtended[i];
+				}
+				i++;
+			}
+			return false;
+		}
+
+		// Indique si le panneau d'une propriété doit être étendu.
+		public void IsPropertiesExtended(Properties.Type type, bool extended)
+		{
+			int i=0;
+			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
+			{
+				if ( type == (Properties.Type)value )
+				{
+					this.isPropertiesExtended[i] = extended;
+					break;
+				}
+				i++;
+			}
+
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
+			{
+				obj.HandlePropertiesUpdateVisible();
+				obj.HandlePropertiesUpdatePosition();
+				this.document.Notifier.NotifyArea(this.ActiveViewer, obj.BoundingBox);
+			}
 		}
 		#endregion
 
@@ -1679,7 +1736,7 @@ namespace Epsitec.Common.Document
 			this.ZoomChange(factor, (p1+p2)/2);
 		}
 
-		// Change le zoom d'un certain facteur, avec centrage au centre du dessin.
+		// Change le zoom d'un certain facteur, avec centrage au milieu du dessin.
 		public void ZoomChange(double factor)
 		{
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -1759,7 +1816,7 @@ namespace Epsitec.Common.Document
 
 		#region StyleMenu
 		// Construit le menu des styles.
-		public VMenu CreateStyleMenu(AbstractProperty original)
+		public VMenu CreateStyleMenu(Properties.Abstract original)
 		{
 			this.menuProperty = original;
 
@@ -1770,7 +1827,7 @@ namespace Epsitec.Common.Document
 			bool isAuto  = false;
 			if ( original.IsMulti )
 			{
-				foreach ( AbstractProperty property in original.Owners )
+				foreach ( Properties.Abstract property in original.Owners )
 				{
 					if ( property.IsStyle )  isStyle = true;
 					else                     isAuto  = true;
@@ -1800,7 +1857,7 @@ namespace Epsitec.Common.Document
 			int total = this.document.PropertiesStyle.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{
-				AbstractProperty property = this.document.PropertiesStyle[i] as AbstractProperty;
+				Properties.Abstract property = this.document.PropertiesStyle[i] as Properties.Abstract;
 				if ( property.Type != original.Type )  continue;
 
 				if ( first )
@@ -1841,7 +1898,7 @@ namespace Epsitec.Common.Document
 			if ( item.Command == "StyleUse" )
 			{
 				int rank = System.Convert.ToInt32(item.Name);
-				AbstractProperty style = this.document.PropertiesStyle[rank] as AbstractProperty;
+				Properties.Abstract style = this.document.PropertiesStyle[rank] as Properties.Abstract;
 				this.StyleUse(this.menuProperty, style);
 			}
 
@@ -1849,7 +1906,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Fabrique un nouveau style.
-		public void StyleMake(AbstractProperty property)
+		public void StyleMake(Properties.Abstract property)
 		{
 			if ( this.IsTool )  // // propriétés des objets sélectionnés ?
 			{
@@ -1857,15 +1914,15 @@ namespace Epsitec.Common.Document
 				{
 					if ( property.IsMulti )
 					{
-						AbstractProperty style = AbstractProperty.NewProperty(this.document, property.Type);
+						Properties.Abstract style = Properties.Abstract.NewProperty(this.document, property.Type);
 						property.CopyTo(style);
 						style.IsStyle = true;
 						style.StyleName = Modifier.GetNextStyleName();
 						this.PropertyList(style).Add(style);
 
 						DrawingContext context = this.ActiveViewer.DrawingContext;
-						AbstractObject layer = context.RootObject();
-						foreach ( AbstractObject obj in this.document.Flat(layer, true) )
+						Objects.Abstract layer = context.RootObject();
+						foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 						{
 							obj.UseProperty(style);
 						}
@@ -1888,7 +1945,7 @@ namespace Epsitec.Common.Document
 			{
 				using ( this.OpletQueueBeginAction() )
 				{
-					AbstractProperty style = AbstractProperty.NewProperty(this.document, property.Type);
+					Properties.Abstract style = Properties.Abstract.NewProperty(this.document, property.Type);
 					property.CopyTo(style);
 					style.IsStyle = true;
 					style.StyleName = Modifier.GetNextStyleName();
@@ -1903,15 +1960,15 @@ namespace Epsitec.Common.Document
 		}
 
 		// Libère un style.
-		public void StyleFree(AbstractProperty property)
+		public void StyleFree(Properties.Abstract property)
 		{
 			if ( this.IsTool )  // propriétés des objets sélectionnés ?
 			{
 				using ( this.OpletQueueBeginAction() )
 				{
 					DrawingContext context = this.ActiveViewer.DrawingContext;
-					AbstractObject layer = context.RootObject();
-					foreach ( AbstractObject obj in this.document.Flat(layer, true) )
+					Objects.Abstract layer = context.RootObject();
+					foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 					{
 						obj.FreeProperty(property);
 					}
@@ -1926,7 +1983,7 @@ namespace Epsitec.Common.Document
 			{
 				using ( this.OpletQueueBeginAction() )
 				{
-					AbstractProperty free = AbstractProperty.NewProperty(this.document, property.Type);
+					Properties.Abstract free = Properties.Abstract.NewProperty(this.document, property.Type);
 					property.CopyTo(free);
 					free.IsOnlyForCreation = true;
 					free.IsStyle = false;
@@ -1941,15 +1998,15 @@ namespace Epsitec.Common.Document
 		}
 
 		// Utilise un style.
-		public void StyleUse(AbstractProperty property, AbstractProperty style)
+		public void StyleUse(Properties.Abstract property, Properties.Abstract style)
 		{
 			if ( this.IsTool )  // propriétés des objets sélectionnés ?
 			{
 				using ( this.OpletQueueBeginAction() )
 				{
 					DrawingContext context = this.ActiveViewer.DrawingContext;
-					AbstractObject layer = context.RootObject();
-					foreach ( AbstractObject obj in this.document.Flat(layer, true) )
+					Objects.Abstract layer = context.RootObject();
+					foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 					{
 						if ( property.IsMulti )
 						{
@@ -1981,7 +2038,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Crée un nouveau style d'un type quelconque.
-		public void StyleCreate(int rank, PropertyType type)
+		public void StyleCreate(int rank, Properties.Type type)
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
@@ -1992,7 +2049,7 @@ namespace Epsitec.Common.Document
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count-1);
 
-				AbstractProperty style = AbstractProperty.NewProperty(this.document, type);
+				Properties.Abstract style = Properties.Abstract.NewProperty(this.document, type);
 				style.IsStyle = true;
 				style.IsOnlyForCreation = false;
 				style.StyleName = Modifier.GetNextStyleName();
@@ -2015,9 +2072,9 @@ namespace Epsitec.Common.Document
 				UndoableList list = this.document.PropertiesStyle;
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count-1);
-				AbstractProperty property = list[rank] as AbstractProperty;
+				Properties.Abstract property = list[rank] as Properties.Abstract;
 
-				AbstractProperty style = AbstractProperty.NewProperty(this.document, property.Type);
+				Properties.Abstract style = Properties.Abstract.NewProperty(this.document, property.Type);
 				property.CopyTo(style);
 				style.IsStyle = true;
 				style.IsOnlyForCreation = false;
@@ -2041,11 +2098,11 @@ namespace Epsitec.Common.Document
 				UndoableList list = this.document.PropertiesStyle;
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count-1);
-				AbstractProperty property = list[rank] as AbstractProperty;
+				Properties.Abstract property = list[rank] as Properties.Abstract;
 
 				DrawingContext context = this.ActiveViewer.DrawingContext;
-				AbstractObject doc = context.RootObject(0);
-				foreach ( AbstractObject obj in this.document.Deep(doc) )
+				Objects.Abstract doc = context.RootObject(0);
+				foreach ( Objects.Abstract obj in this.document.Deep(doc) )
 				{
 					obj.FreeProperty(property);
 				}
@@ -2075,7 +2132,7 @@ namespace Epsitec.Common.Document
 				rank2 = System.Math.Max(rank2, 0);
 				rank2 = System.Math.Min(rank2, list.Count-1);
 
-				AbstractProperty temp = list[rank1] as AbstractProperty;
+				Properties.Abstract temp = list[rank1] as Properties.Abstract;
 				list.RemoveAt(rank1);
 				list.Insert(rank2, temp);
 				list.Selected = rank2;
@@ -2087,12 +2144,12 @@ namespace Epsitec.Common.Document
 
 		// Le style sélectionné reprend la bonne propriété de l'objet modèle
 		// pointé par la souris avec la pipette.
-		public void PickerProperty(AbstractObject model)
+		public void PickerProperty(Objects.Abstract model)
 		{
 			int sel = this.document.PropertiesStyle.Selected;
 			if ( sel < 0 )  return;
-			AbstractProperty dst = this.document.PropertiesStyle[sel] as AbstractProperty;
-			AbstractProperty src = model.Property(dst.Type);
+			Properties.Abstract dst = this.document.PropertiesStyle[sel] as Properties.Abstract;
+			Properties.Abstract src = model.Property(dst.Type);
 			if ( src == null )  return;
 
 			using ( this.OpletQueueBeginAction() )
@@ -2292,9 +2349,10 @@ namespace Epsitec.Common.Document
 		protected bool							opletCreate;
 		protected string						opletLastCmd;
 		protected int							opletLastId;
-		protected ObjectMemory					objectMemory;
-		protected AbstractProperty				menuProperty;
+		protected Objects.Memory				objectMemory;
+		protected Properties.Abstract			menuProperty;
 		protected bool							operInitialSelector;
-		protected AbstractContainer				activeContainer;
+		protected Containers.Abstract			activeContainer;
+		protected bool[]						isPropertiesExtended;
 	}
 }

@@ -42,6 +42,7 @@ namespace Epsitec.Common.Document
 		{
 			size   = new Size(20, 20);
 			origin = new Point(0, 0);
+			//return;  //?
 
 			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
 			{
@@ -57,6 +58,7 @@ namespace Epsitec.Common.Document
 		
 		public void Paint(Graphics graphics, Size size, byte[] data, GlyphPaintStyle style, Color color, object adornerObject)
 		{
+			//return;  //?
 			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
 			{
 				Document doc = new Document(DocumentType.Pictogram, DocumentMode.ReadOnly);

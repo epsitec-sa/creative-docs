@@ -288,17 +288,17 @@ namespace Epsitec.Common.Document
 				}
 
 				this.document.Modifier.OpletQueueBeginAction("Create");
-				AbstractObject obj = AbstractObject.CreateObject(this.document, this.document.Modifier.Tool, this.document.Modifier.ObjectMemory);
+				Objects.Abstract obj = Objects.Abstract.CreateObject(this.document, this.document.Modifier.Tool, this.document.Modifier.ObjectMemory);
 
 				this.document.Modifier.OpletQueueEnable = false;
-				AbstractObject layer = this.drawingContext.RootObject();
+				Objects.Abstract layer = this.drawingContext.RootObject();
 				this.createRank = layer.Objects.Add(obj);  // ajoute à la fin de la liste
 			}
 
 			if ( this.createRank != -1 )
 			{
-				AbstractObject layer = this.drawingContext.RootObject();
-				AbstractObject obj = layer.Objects[this.createRank] as AbstractObject;
+				Objects.Abstract layer = this.drawingContext.RootObject();
+				Objects.Abstract obj = layer.Objects[this.createRank] as Objects.Abstract;
 
 				obj.CreateMouseDown(mouse, this.drawingContext);
 			}
@@ -311,8 +311,8 @@ namespace Epsitec.Common.Document
 
 			if ( this.createRank == -1 )  return;
 
-			AbstractObject layer = this.drawingContext.RootObject();
-			AbstractObject obj = layer.Objects[this.createRank] as AbstractObject;
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			Objects.Abstract obj = layer.Objects[this.createRank] as Objects.Abstract;
 
 			obj.CreateMouseMove(mouse, this.drawingContext);
 		}
@@ -323,8 +323,8 @@ namespace Epsitec.Common.Document
 
 			if ( this.createRank == -1 )  return;
 
-			AbstractObject layer = this.drawingContext.RootObject();
-			AbstractObject obj = layer.Objects[this.createRank] as AbstractObject;
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			Objects.Abstract obj = layer.Objects[this.createRank] as Objects.Abstract;
 
 			obj.CreateMouseUp(mouse, this.drawingContext);
 
@@ -375,8 +375,8 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.createRank == -1 )  return;
 
-			AbstractObject layer = this.drawingContext.RootObject();
-			AbstractObject obj = layer.Objects[this.createRank] as AbstractObject;
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			Objects.Abstract obj = layer.Objects[this.createRank] as Objects.Abstract;
 
 			if ( obj.CreateEnding(this.drawingContext) && !delete )
 			{
@@ -433,7 +433,7 @@ namespace Epsitec.Common.Document
 			this.moveObject = null;
 			this.cellObject = null;
 
-			AbstractObject obj;
+			Objects.Abstract obj;
 			int rank;
 			if ( this.selector.Detect(mouse, !this.drawingContext.IsShift, out rank) )
 			{
@@ -574,10 +574,10 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					AbstractObject hiliteObj = this.Detect(mouse);
+					Objects.Abstract hiliteObj = this.Detect(mouse);
 					this.document.Modifier.ContainerHilite(hiliteObj);
 
-					AbstractObject obj;
+					Objects.Abstract obj;
 					int rank;
 					if ( this.selector.Detect(mouse, !this.drawingContext.IsShift, out rank) )
 					{
@@ -669,7 +669,7 @@ namespace Epsitec.Common.Document
 		#region EditMouse
 		protected void EditMouseDown(Message message, Point mouse, int downCount)
 		{
-			AbstractObject obj = this.DetectEdit(mouse);
+			Objects.Abstract obj = this.DetectEdit(mouse);
 
 			if ( obj != this.document.Modifier.RetEditObject() )
 			{
@@ -691,7 +691,7 @@ namespace Epsitec.Common.Document
 			}
 			else	// bouton souris relâché ?
 			{
-				AbstractObject obj = this.DetectEdit(mouse);
+				Objects.Abstract obj = this.DetectEdit(mouse);
 				this.Hilite(obj);
 
 				this.ChangeMouseCursor(MouseCursorType.IBeam);
@@ -705,7 +705,7 @@ namespace Epsitec.Common.Document
 
 		protected void EditProcessMessage(Message message, Point pos)
 		{
-			AbstractObject editObject = this.document.Modifier.RetEditObject();
+			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
 			if ( editObject == null )  return;
 
 			if ( editObject.EditProcessMessage(message, pos) )
@@ -794,10 +794,10 @@ namespace Epsitec.Common.Document
 		#region PickerMouse
 		protected void PickerMouseDown(Point mouse)
 		{
-			AbstractObject model = this.Detect(mouse);
+			Objects.Abstract model = this.Detect(mouse);
 			if ( model != null )
 			{
-				if ( this.document.Modifier.ActiveContainer is ContainerStyles )
+				if ( this.document.Modifier.ActiveContainer is Containers.Styles )
 				{
 					this.document.Modifier.PickerProperty(model);
 				}
@@ -809,8 +809,8 @@ namespace Epsitec.Common.Document
 				{
 					using ( this.document.Modifier.OpletQueueBeginAction() )
 					{
-						AbstractObject layer = this.drawingContext.RootObject();
-						foreach ( AbstractObject obj in this.document.Flat(layer, true) )
+						Objects.Abstract layer = this.drawingContext.RootObject();
+						foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 						{
 							if ( obj == model )  continue;
 							this.document.Notifier.NotifyArea(obj.BoundingBox);
@@ -826,7 +826,7 @@ namespace Epsitec.Common.Document
 
 		protected void PickerMouseMove(Point mouse)
 		{
-			AbstractObject model = this.Detect(mouse);
+			Objects.Abstract model = this.Detect(mouse);
 			if ( model == null )
 			{
 				this.ChangeMouseCursor(MouseCursorType.PickerEmpty);
@@ -870,10 +870,10 @@ namespace Epsitec.Common.Document
 
 		
 		// Détecte l'objet pointé par la souris.
-		protected AbstractObject Detect(Point mouse)
+		protected Objects.Abstract Detect(Point mouse)
 		{
-			AbstractObject layer = this.drawingContext.RootObject();
-			foreach ( AbstractObject obj in this.document.FlatReverse(layer) )
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			foreach ( Objects.Abstract obj in this.document.FlatReverse(layer) )
 			{
 				if ( obj.Detect(mouse) )  return obj;
 			}
@@ -881,10 +881,10 @@ namespace Epsitec.Common.Document
 		}
 
 		// Détecte l'objet éditable pointé par la souris.
-		protected AbstractObject DetectEdit(Point mouse)
+		protected Objects.Abstract DetectEdit(Point mouse)
 		{
-			AbstractObject layer = this.drawingContext.RootObject();
-			foreach ( AbstractObject obj in this.document.FlatReverse(layer) )
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			foreach ( Objects.Abstract obj in this.document.FlatReverse(layer) )
 			{
 				if ( obj.DetectEdit(mouse) )  return obj;
 			}
@@ -892,10 +892,10 @@ namespace Epsitec.Common.Document
 		}
 
 		// Détecte la poignée pointée par la souris.
-		protected bool DetectHandle(Point mouse, out AbstractObject detect, out int rank)
+		protected bool DetectHandle(Point mouse, out Objects.Abstract detect, out int rank)
 		{
-			AbstractObject layer = this.drawingContext.RootObject();
-			foreach ( AbstractObject obj in this.document.FlatReverse(layer, true) )
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			foreach ( Objects.Abstract obj in this.document.FlatReverse(layer, true) )
 			{
 				rank = obj.DetectHandle(mouse);
 				if ( rank != -1 )
@@ -911,10 +911,10 @@ namespace Epsitec.Common.Document
 		}
 
 		// Hilite un objet.
-		protected void Hilite(AbstractObject item)
+		protected void Hilite(Objects.Abstract item)
 		{
-			AbstractObject layer = this.drawingContext.RootObject();
-			foreach ( AbstractObject obj in this.document.Flat(layer) )
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 			{
 				if ( obj.IsHilite != (obj == item) )
 				{
@@ -924,7 +924,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Survolle une poignée.
-		protected void HiliteHandle(AbstractObject obj, int rank)
+		protected void HiliteHandle(Objects.Abstract obj, int rank)
 		{
 			if ( this.hiliteHandleObject != null )
 			{
@@ -941,7 +941,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Déplace une poignée d'un objet.
-		protected void MoveHandleProcess(AbstractObject obj, int rank, Point pos)
+		protected void MoveHandleProcess(Objects.Abstract obj, int rank, Point pos)
 		{
 			obj.MoveHandleProcess(rank, pos, this.drawingContext);
 		}
@@ -1002,18 +1002,18 @@ namespace Epsitec.Common.Document
 		// Indique si tous les objets sélectionnés le sont globalement.
 		protected void GlobalSelectUpdate(bool global)
 		{
-			AbstractObject layer = this.drawingContext.RootObject();
-			foreach ( AbstractObject obj in this.document.Flat(layer, true) )
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 			{
 				obj.GlobalSelect(global);
 			}
 		}
 
 		// Sélectionne un objet et désélectionne tous les autres.
-		public void Select(AbstractObject item, bool edit, bool add)
+		public void Select(Objects.Abstract item, bool edit, bool add)
 		{
-			AbstractObject layer = this.drawingContext.RootObject();
-			foreach ( AbstractObject obj in this.document.Flat(layer) )
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 			{
 				if ( obj == item )
 				{
@@ -1042,8 +1042,8 @@ namespace Epsitec.Common.Document
 		// partial = true  -> une seule poignée doit être dans le rectangle
 		protected void Select(Rectangle rect, bool add, bool partial)
 		{
-			AbstractObject layer = this.drawingContext.RootObject();
-			foreach ( AbstractObject obj in this.document.Flat(layer) )
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 			{
 				if ( obj.Detect(rect, partial) )
 				{
@@ -1089,8 +1089,8 @@ namespace Epsitec.Common.Document
 		// Début du déplacement de tous les objets sélectionnés.
 		protected void MoveAllStarting()
 		{
-			AbstractObject layer = this.drawingContext.RootObject();
-			foreach ( AbstractObject obj in this.document.Deep(layer, true) )
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
 			{
 				obj.MoveAllStarting();
 			}
@@ -1099,8 +1099,8 @@ namespace Epsitec.Common.Document
 		// Effectue le déplacement de tous les objets sélectionnés.
 		protected void MoveAllProcess(Point move)
 		{
-			AbstractObject layer = this.drawingContext.RootObject();
-			foreach ( AbstractObject obj in this.document.Deep(layer, true) )
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
 			{
 				obj.MoveAllProcess(move);
 			}
@@ -1109,8 +1109,8 @@ namespace Epsitec.Common.Document
 		// Début du déplacement global de tous les objets sélectionnés.
 		public void MoveGlobalStarting()
 		{
-			AbstractObject layer = this.drawingContext.RootObject();
-			foreach ( AbstractObject obj in this.document.Deep(layer, true) )
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
 			{
 				obj.MoveGlobalStarting();
 			}
@@ -1119,8 +1119,8 @@ namespace Epsitec.Common.Document
 		// Effectue le déplacement global de tous les objets sélectionnés.
 		public void MoveGlobalProcess(SelectorData initial, SelectorData final)
 		{
-			AbstractObject layer = this.drawingContext.RootObject();
-			foreach ( AbstractObject obj in this.document.Deep(layer, true) )
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
 			{
 				obj.MoveGlobalProcess(initial, final);
 			}
@@ -1129,8 +1129,8 @@ namespace Epsitec.Common.Document
 		// Dessine les poignées de tous les objets.
 		public void DrawHandle(Graphics graphics)
 		{
-			AbstractObject layer = this.drawingContext.RootObject();
-			foreach ( AbstractObject obj in this.document.Flat(layer) )
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 			{
 				obj.DrawHandle(graphics, this.drawingContext);
 			}
@@ -1299,7 +1299,7 @@ namespace Epsitec.Common.Document
 		// Appelé lorsque la règle est changée.
 		private void HandleRulerChanged(object sender)
 		{
-			AbstractObject editObject = this.document.Modifier.RetEditObject();
+			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
 			if ( editObject == null )  return;
 			this.document.Notifier.NotifyArea(editObject.BoundingBox);
 		}
@@ -1309,7 +1309,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.textRuler == null )  return;
 
-			AbstractObject editObject = this.document.Modifier.RetEditObject();
+			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
 			if ( editObject == null )
 			{
 				this.textRuler.SetVisible(false);
@@ -1533,8 +1533,8 @@ namespace Epsitec.Common.Document
 
 			graphics.RenderSolid(Color.FromRGB(1.0, 0.0, 0.0));  // rouge
 
-			Handle handle = new Handle(this.document);
-			handle.Type = HandleType.Center;
+			Objects.Handle handle = new Objects.Handle(this.document);
+			handle.Type = Objects.HandleType.Center;
 			handle.Position = this.document.HotSpot;
 			handle.IsVisible = true;
 			handle.Draw(graphics, this.drawingContext);
@@ -1703,9 +1703,9 @@ namespace Epsitec.Common.Document
 		protected bool							moveAccept;
 		protected int							moveHandle = -1;
 		protected int							moveGlobal = -1;
-		protected AbstractObject				moveObject;
-		protected AbstractObject				cellObject;
-		protected AbstractObject				hiliteHandleObject;
+		protected Objects.Abstract				moveObject;
+		protected Objects.Abstract				cellObject;
+		protected Objects.Abstract				hiliteHandleObject;
 		protected int							hiliteHandleRank = -1;
 		protected int							cellRank = -1;
 		protected int							createRank = -1;
@@ -1713,7 +1713,7 @@ namespace Epsitec.Common.Document
 		protected TextRuler						textRuler;
 
 		protected VMenu							contextMenu;
-		protected AbstractObject				contextMenuObject;
+		protected Objects.Abstract				contextMenuObject;
 		protected Point							contextMenuPos;
 		protected int							contextMenuRank;
 

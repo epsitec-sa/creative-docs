@@ -16,15 +16,15 @@ namespace Epsitec.Common.Document
 			this.data.Visible = false;
 			this.data.Handles = false;
 
-			this.h1     = new Handle(this.document);
-			this.h2     = new Handle(this.document);
-			this.h3     = new Handle(this.document);
-			this.h4     = new Handle(this.document);
-			this.center = new Handle(this.document);
-			this.rotate = new Handle(this.document);
+			this.h1     = new Objects.Handle(this.document);
+			this.h2     = new Objects.Handle(this.document);
+			this.h3     = new Objects.Handle(this.document);
+			this.h4     = new Objects.Handle(this.document);
+			this.center = new Objects.Handle(this.document);
+			this.rotate = new Objects.Handle(this.document);
 
-			this.center.Type = HandleType.Center;
-			this.rotate.Type = HandleType.Rotate;
+			this.center.Type = Objects.HandleType.Center;
+			this.rotate.Type = Objects.HandleType.Rotate;
 		}
 
 		public SelectorData Data
@@ -483,15 +483,14 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
-		
 		protected Document			document;
 		protected SelectorData		data;
-		protected Handle			h1;
-		protected Handle			h2;
-		protected Handle			h3;
-		protected Handle			h4;
-		protected Handle			center;
-		protected Handle			rotate;
+		protected Objects.Handle	h1;
+		protected Objects.Handle	h2;
+		protected Objects.Handle	h3;
+		protected Objects.Handle	h4;
+		protected Objects.Handle	center;
+		protected Objects.Handle	rotate;
 		protected Point				moveStart;
 		protected Point				moveOffset;
 	}

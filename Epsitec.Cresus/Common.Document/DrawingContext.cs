@@ -32,6 +32,15 @@ namespace Epsitec.Common.Document
 			this.document = document;
 			this.viewer = viewer;
 			this.rootStack = new System.Collections.ArrayList();
+
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				this.gridStep = new Point(1.0, 1.0);
+			}
+			else
+			{
+				this.gridStep = new Point(50.0, 50.0);  // 5mm
+			}
 		}
 
 		public Viewer Viewer
@@ -86,9 +95,9 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				Size size = this.document.Size;
+				Size size = this.ContainerSize;
 				Size area = this.document.Modifier.SizeArea;
-				return (area.Width+this.MinOriginX) - size.Width/this.Zoom;
+				return (area.Width+this.MinOriginX) - size.Width/this.ScaleX;
 			}
 		}
 
@@ -97,9 +106,9 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				Size size = this.document.Size;
+				Size size = this.ContainerSize;
 				Size area = this.document.Modifier.SizeArea;
-				return (area.Height+this.MinOriginY) - size.Height/this.Zoom;
+				return (area.Height+this.MinOriginY) - size.Height/this.ScaleY;
 			}
 		}
 
@@ -253,6 +262,15 @@ namespace Epsitec.Common.Document
 				Size size = this.ContainerSize;
 				double sx = this.zoom*size.Width/this.document.Size.Width;
 				double sy = this.zoom*size.Height/this.document.Size.Height;
+				if ( this.document.Type != DocumentType.Pictogram )
+				{
+					if ( sx > sy )
+					{
+						sx = sy;
+					}
+					sx *= 0.9;  // ch'tite marge
+					sy = sx;
+				}
 				return new Point(sx, sy);
 			}
 		}
@@ -260,21 +278,13 @@ namespace Epsitec.Common.Document
 		// Echelle horizontale à utiliser pour le dessin.
 		public double ScaleX
 		{
-			get
-			{
-				Size size = this.ContainerSize;
-				return this.zoom*size.Width/this.document.Size.Width;
-			}
+			get { return this.Scale.X; }
 		}
 
 		// Echelle verticale à utiliser pour le dessin.
 		public double ScaleY
 		{
-			get
-			{
-				Size size = this.ContainerSize;
-				return this.zoom*size.Height/this.document.Size.Height;
-			}
+			get { return this.Scale.Y; }
 		}
 
 
@@ -360,7 +370,13 @@ namespace Epsitec.Common.Document
 		public void SnapGrid(ref Point pos)
 		{
 			if ( !this.gridActive ^ this.isAlt )  return;
-			pos = Point.GridAlign(pos, new Point(this.gridStep.X/2, this.gridStep.Y/2), this.gridStep);
+
+			Point offset = new Point(0.0, 0.0);
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				offset = new Point(this.gridStep.X/2, this.gridStep.Y/2);
+			}
+			pos = Point.GridAlign(pos, offset, this.gridStep);
 		}
 
 		// Force un point sur la grille magnétique.
@@ -905,23 +921,23 @@ namespace Epsitec.Common.Document
 
 		// Retourne l'objet racine le plus profond.
 		// Il s'agira d'un calque ou d'un groupe.
-		public AbstractObject RootObject()
+		public Objects.Abstract RootObject()
 		{
 			return this.RootObject(1000);
 		}
 
 		// Retourne l'objet racine à une profondeur donnée.
-		public AbstractObject RootObject(int deepMax)
+		public Objects.Abstract RootObject(int deepMax)
 		{
-			UndoableList list = this.document.Objects;
-			AbstractObject obj = null;
+			UndoableList list = this.document.GetObjects;
+			Objects.Abstract obj = null;
 			int deep = System.Math.Min(this.rootStack.Count, deepMax);
 			for ( int i=0 ; i<deep ; i++ )
 			{
 				System.Diagnostics.Debug.Assert(list != null);
 				int index = (int) this.rootStack[i];
 				System.Diagnostics.Debug.Assert(index < list.Count);
-				obj = list[index] as AbstractObject;
+				obj = list[index] as Objects.Abstract;
 				System.Diagnostics.Debug.Assert(obj != null);
 				list = obj.Objects;
 			}
@@ -949,13 +965,13 @@ namespace Epsitec.Common.Document
 		// Retourne le nombre total de pages.
 		public int TotalPages()
 		{
-			return this.document.Objects.Count;
+			return this.document.GetObjects.Count;
 		}
 
 		// Retourne le nombre total de calques.
 		public int TotalLayers()
 		{
-			AbstractObject page = this.RootObject(1);
+			Objects.Abstract page = this.RootObject(1);
 			return page.Objects.Count;
 		}
 
