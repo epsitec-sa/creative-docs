@@ -62,6 +62,8 @@ namespace Epsitec.Common.Widgets
 			surface.Size   = new Drawing.Size (400, 300);
 			surface.Panel  = panel;
 			
+			window.Root.IsEditionDisabled = true;
+			
 			window.Text = "PanelTest.CheckAbsLayout";
 			window.ClientSize = new Drawing.Size (400, 300);
 			window.Show ();
