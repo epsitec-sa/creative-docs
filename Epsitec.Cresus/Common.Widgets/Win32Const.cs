@@ -9,6 +9,10 @@ namespace Epsitec.Common.Widgets
 		public const int WM_ACTIVATEAPP		= 0x001C;
 		public const int WM_MOUSEACTIVATE	= 0x0021;
 		public const int WM_NCACTIVATE		= 0x0086;
+		public const int WM_NCLBUTTONDOWN	= 0x00A1;
+		public const int WM_NCRBUTTONDOWN	= 0x00A4;
+		public const int WM_NCMBUTTONDOWN	= 0x00A7;
+		public const int WM_NCXBUTTONDOWN	= 0x00AB;
 		public const int WM_KEYDOWN			= 0x0100;
 		public const int WM_SYSKEYDOWN		= 0x0104;
 		public const int WM_KEYUP			= 0x0101;

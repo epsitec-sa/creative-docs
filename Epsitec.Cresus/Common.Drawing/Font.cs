@@ -271,10 +271,8 @@ namespace Epsitec.Common.Drawing
 				
 				for (int i = 0; i < n; i++)
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("{0}: ptr={1}", i, AntiGrain.Font.GetFaceByRank (i)));
 					Font   font = new Font (AntiGrain.Font.GetFaceByRank (i));
 					string name = font.FullName;
-					System.Diagnostics.Debug.WriteLine (string.Format ("{0}: name={1}", i, name));
 					
 					if (Font.hash.ContainsKey (name) == false)
 					{
@@ -328,7 +326,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return 11.6;
+				return 10.8;
 			}
 		}
 		

@@ -78,7 +78,8 @@ namespace Epsitec.Common.Tests
 			window.Paint += new System.Windows.Forms.PaintEventHandler(window_Paint);
 			window.WindowActivated += new System.EventHandler(window_Activated);
 			window.WindowDeactivated += new System.EventHandler(window_Deactivated);
-			window.WindowBounds = new Rectangle (ox+10, oy+10, 24, 16);
+			window.WindowBounds = new Rectangle (ox+10, oy+10, 50, 25);
+			window.Root.BackColor = Color.FromRGB (1, 0, 0);
 			window.Show ();
 		}
 
@@ -150,6 +151,12 @@ namespace Epsitec.Common.Tests
 			window.Root.Invalidate ();
 		}
 
+		[Test] public void CheckAppActivation()
+		{
+			WindowFrame.ApplicationActivated   += new EventHandler(WindowFrame_ApplicationActivated);
+			WindowFrame.ApplicationDeactivated += new EventHandler(WindowFrame_ApplicationDeactivated);
+		}
+
 		private void Root_Clicked(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine ("Root Clicked");
@@ -198,6 +205,18 @@ namespace Epsitec.Common.Tests
 		{
 			Button button = sender as Button;
 			button.Location = new Point (button.Location.X, button.Location.Y + 5);
+		}
+
+		private void WindowFrame_ApplicationActivated(object sender)
+		{
+			System.Diagnostics.Debug.Assert (WindowFrame.IsApplicationActive == true);
+			System.Diagnostics.Debug.WriteLine ("Application activated");
+		}
+		
+		private void WindowFrame_ApplicationDeactivated(object sender)
+		{
+			System.Diagnostics.Debug.Assert (WindowFrame.IsApplicationActive == false);
+			System.Diagnostics.Debug.WriteLine ("Application deactivated");
 		}
 	}
 }

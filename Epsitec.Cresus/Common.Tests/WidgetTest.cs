@@ -586,5 +586,14 @@ namespace Epsitec.Common.Tests
 			
 			window.Show ();
 		}
+		
+		[Test] public void CheckAliveWidgets()
+		{
+			System.Console.Out.WriteLine ("{0} widgets alive", Widget.DebugAliveWidgetsCount);
+			foreach (Widget widget in Widget.DebugAliveWidgets)
+			{
+				System.Console.Out.WriteLine ("{0}: Name='{1}', Text='{2}', Parent={3}", widget.GetType ().Name, widget.Name, widget.Text, (widget.Parent == null) ? "<null>" : (widget.Parent.GetType ().Name));
+			}
+		}
 	}
 }

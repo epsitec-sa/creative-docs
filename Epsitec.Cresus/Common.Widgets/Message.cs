@@ -50,6 +50,11 @@ namespace Epsitec.Common.Widgets
 			set { this.is_handled = value; }
 		}
 		
+		public bool							NonClient
+		{
+			get { return this.is_non_client; }
+		}
+		
 		public Widget						Consumer
 		{
 			get { return this.consumer; }
@@ -256,21 +261,25 @@ namespace Epsitec.Common.Widgets
 				case Win32Const.WM_LBUTTONDOWN:
 				case Win32Const.WM_LBUTTONDBLCLK:
 				case Win32Const.WM_LBUTTONUP:
+				case Win32Const.WM_NCLBUTTONDOWN:
 					return System.Windows.Forms.MouseButtons.Left;
 				
 				case Win32Const.WM_RBUTTONDOWN:
 				case Win32Const.WM_RBUTTONDBLCLK:
 				case Win32Const.WM_RBUTTONUP:
+				case Win32Const.WM_NCRBUTTONDOWN:
 					return System.Windows.Forms.MouseButtons.Right;
 				
 				case Win32Const.WM_MBUTTONDOWN:
 				case Win32Const.WM_MBUTTONDBLCLK:
 				case Win32Const.WM_MBUTTONUP:
+				case Win32Const.WM_NCMBUTTONDOWN:
 					return System.Windows.Forms.MouseButtons.Middle;
 				
 				case Win32Const.WM_XBUTTONDOWN:
 				case Win32Const.WM_XBUTTONDBLCLK:
 				case Win32Const.WM_XBUTTONUP:
+				case Win32Const.WM_NCXBUTTONDOWN:
 					int w_param = (int) msg.WParam;
 					switch (w_param & 0x00ff0000)
 					{
@@ -304,6 +313,23 @@ namespace Epsitec.Common.Widgets
 					Message.XYFromLParam (msg.LParam, out x, out y);
 					buttons = Message.ButtonsFromWParam (msg.WParam);
 					message = Message.FromMouseEvent (MessageType.MouseMove, form, new System.Windows.Forms.MouseEventArgs (buttons, 0, x, y, 0));
+					break;
+				
+				case Win32Const.WM_NCLBUTTONDOWN:
+				case Win32Const.WM_NCRBUTTONDOWN:
+				case Win32Const.WM_NCMBUTTONDOWN:
+				case Win32Const.WM_NCXBUTTONDOWN:
+					
+					//	Spécial : événement bouton pressé dans la partie non-client (barre de titre ou cadre).
+					//	En principe, l'application ne doit pas traiter cet événement !
+					
+					Message.XYFromLParam (msg.LParam, out x, out y);
+					System.Drawing.Point pt = form.PointToClient (new System.Drawing.Point (x, y));
+					x = pt.X;
+					y = pt.Y;
+					buttons = Message.ButtonFromMsg (msg);
+					message = Message.FromMouseEvent (MessageType.MouseDown, form, new System.Windows.Forms.MouseEventArgs (buttons, 0, x, y, 0));
+					message.is_non_client = true;
 					break;
 				
 				case Win32Const.WM_LBUTTONDOWN:
@@ -511,6 +537,7 @@ namespace Epsitec.Common.Widgets
 		protected bool						filter_only_on_hit;
 		protected bool						is_captured;
 		protected bool						is_handled;
+		protected bool						is_non_client;
 		protected Widget					in_widget;
 		protected Widget					consumer;
 		

@@ -798,7 +798,26 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case Win32Const.WM_ACTIVATEAPP:
-					message = WindowFrame.CreateNCActivate (this, ((int) msg.WParam) != 0);
+					bool app_active = ((int) msg.WParam) != 0;
+					if (WindowFrame.is_app_active != app_active)
+					{
+						WindowFrame.is_app_active = app_active;
+						if (app_active)
+						{
+							if (WindowFrame.ApplicationActivated != null)
+							{
+								WindowFrame.ApplicationActivated (this);
+							}
+						}
+						else
+						{
+							if (WindowFrame.ApplicationDeactivated != null)
+							{
+								WindowFrame.ApplicationDeactivated (this);
+							}
+						}
+					}
+					message = WindowFrame.CreateNCActivate (this, WindowFrame.is_app_active);
 					base.WndProc (ref message);
 					break;
 				
@@ -833,6 +852,17 @@ namespace Epsitec.Common.Widgets
 					{
 						return true;
 					}
+				}
+				
+				if (message.NonClient)
+				{
+					System.Diagnostics.Debug.WriteLine ("NonClient Message: " + message.ToString ());
+					
+					//	Les messages "non-client" ne sont pas acheminés aux widgets normaux,
+					//	car ils ne présentent aucun intérêt. Par contre, le filtre peut les
+					//	voir.
+					
+					return false;
 				}
 				
 				this.DispatchMessage (message);
@@ -1089,12 +1119,20 @@ namespace Epsitec.Common.Widgets
 
 		
 		
+		public static bool						IsApplicationActive
+		{
+			get { return WindowFrame.is_app_active; }
+		}
+		
+		
 		
 		public event System.EventHandler		WindowActivated;
 		public event System.EventHandler		WindowDeactivated;
 		public event EventHandler				WindowAnimationEnded;
 		
 		public static event MessageHandler		MessageFilter;
+		public static event EventHandler		ApplicationActivated;
+		public static event EventHandler		ApplicationDeactivated;
 		
 		public new event System.EventHandler	Resize;
 		public new event System.EventHandler	SizeChanged;
@@ -1120,5 +1158,7 @@ namespace Epsitec.Common.Widgets
 		protected bool							is_frozen;
 		protected double						alpha = 1.0;
 		protected int							wnd_proc_depth;
+		
+		protected static bool					is_app_active;
 	}
 }

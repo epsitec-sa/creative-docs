@@ -118,12 +118,12 @@ namespace Epsitec.Common.Widgets
 		
 		public static int				MenuAnimationFadeInTime
 		{
-			get { return 400; }
+			get { return 200; }
 		}
 		
 		public static int				MenuAnimationFadeOutTime
 		{
-			get { return 400; }
+			get { return 200; }
 		}
 		
 		

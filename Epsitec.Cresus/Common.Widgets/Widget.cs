@@ -66,6 +66,8 @@ namespace Epsitec.Common.Widgets
 			
 			this.minSize = this.DefaultMinSize;
 			this.maxSize = this.DefaultMaxSize;
+			
+			Widget.aliveWidgets.Add (this);
 		}
 		
 		public void Dispose()
@@ -78,20 +80,39 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.Parent = null;
-				
 				if (this.HasChildren)
 				{
 					Widget[] widgets = this.children.Widgets;
 					
-					this.children.Clear ();
-					
 					for (int i = 0; i < widgets.Length; i++)
 					{
-						System.Diagnostics.Debug.Assert (widgets[i].parent == null);
 						widgets[i].Dispose ();
+						System.Diagnostics.Debug.Assert (widgets[i].parent == null);
 					}
+					
+					System.Diagnostics.Debug.Assert (this.children.Count == 0);
 				}
+				
+				this.Parent = null;
+			}
+			
+			System.Diagnostics.Debug.Assert (Widget.aliveWidgets.Contains (this));
+			Widget.aliveWidgets.Remove (this);
+		}
+		
+		
+		public static int					DebugAliveWidgetsCount
+		{
+			get { return Widget.aliveWidgets.Count; }
+		}
+		
+		public static Widget[]				DebugAliveWidgets
+		{
+			get
+			{
+				Widget[] widgets = new Widget[Widget.aliveWidgets.Count];
+				Widget.aliveWidgets.CopyTo (widgets);
+				return widgets;
 			}
 		}
 
@@ -2898,5 +2919,6 @@ namespace Epsitec.Common.Widgets
 		protected MouseCursor				mouseCursor;
 		
 		static System.Collections.ArrayList	enteredWidgets = new System.Collections.ArrayList ();
+		static System.Collections.ArrayList	aliveWidgets = new System.Collections.ArrayList ();
 	}
 }
