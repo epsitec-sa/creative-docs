@@ -113,6 +113,11 @@
                     Project = "{BDF75452-AAB1-4E62-82D5-AE23F35C6319}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -234,6 +239,11 @@
                 />
                 <File
                     RelPath = "Widgets\GripsOverlay.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\TabOrderOverlay.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

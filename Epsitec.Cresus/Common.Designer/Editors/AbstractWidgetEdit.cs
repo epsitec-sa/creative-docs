@@ -17,6 +17,7 @@ namespace Epsitec.Common.Designer.Editors
 		{
 			this.hilite_adorner = new HiliteWidgetAdorner ();
 			this.grips_overlay  = new Widgets.GripsOverlay ();
+			this.tab_o_overlay  = new Widgets.TabOrderOverlay ();
 			
 			this.grips_overlay.SelectedTarget    += new SelectionEventHandler (this.HandleSelectedTarget);
 			this.grips_overlay.DeselectingTarget += new SelectionEventHandler (this.HandleDeselectingTarget);
@@ -67,6 +68,19 @@ namespace Epsitec.Common.Designer.Editors
 		}
 		
 		
+		public void SetTabIndexEdition(bool enable)
+		{
+			if (enable)
+			{
+				this.tab_o_overlay.RootWidget = this.panel;
+			}
+			else
+			{
+				this.tab_o_overlay.RootWidget = null;
+			}
+		}
+		
+		
 		protected virtual void AttachPanel(Panel panel)
 		{
 			if (panel != null)
@@ -83,6 +97,8 @@ namespace Epsitec.Common.Designer.Editors
 				
 				this.hot_widget = null;
 				this.hilite_adorner.Widget = null;
+				
+				this.tab_o_overlay.RootWidget = null;
 			}
 		}
 		
@@ -243,5 +259,6 @@ namespace Epsitec.Common.Designer.Editors
 		
 		protected HiliteWidgetAdorner			hilite_adorner;
 		protected Widgets.GripsOverlay			grips_overlay;
+		protected Widgets.TabOrderOverlay		tab_o_overlay;
 	}
 }

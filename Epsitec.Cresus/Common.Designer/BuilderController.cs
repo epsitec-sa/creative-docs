@@ -31,8 +31,6 @@ namespace Epsitec.Common.Designer
 			this.CreateCreationWindow ();
 			this.CreateAttributeWindow ();
 			
-			this.state_delete_selection = new CommandState ("DeleteActiveSelection", this.dispatcher);
-			
 			//	Enregistre cette classe comme un contrôleur sachant exécuter des commandes
 			//	interactives :
 			
@@ -66,7 +64,15 @@ namespace Epsitec.Common.Designer
 		{
 			get
 			{
-				return this.state_delete_selection;
+				return CommandState.Find ("DeleteActiveSelection", this.dispatcher);
+			}
+		}
+		
+		public CommandState						StateSetTabIndexEdition
+		{
+			get
+			{
+				return CommandState.Find ("SetTabIndexEdition", this.dispatcher);
 			}
 		}
 		
@@ -117,9 +123,11 @@ namespace Epsitec.Common.Designer
 			
 			//	Initialisation de la barre d'outils pour l'édition :
 			
-			this.tool_bar.Items.Add (new IconButton ("CreateNewWindow", "file:images/new.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("CreateNewWindow", "file:images/new.icon"));
 			this.tool_bar.Items.Add (new IconSeparator ());
-			this.tool_bar.Items.Add (new IconButton ("DeleteActiveSelection", "file:images/delete.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("DeleteActiveSelection", "file:images/delete.icon"));
+			this.tool_bar.Items.Add (new IconSeparator ());
+			this.tool_bar.Items.Add (IconButton.CreateToggle ("SetTabIndexEdition(this.IsActive)", "file:images/edit.icon"));
 			
 			this.tool_bar.Size   = new Drawing.Size (dx, this.tool_bar.DefaultHeight);
 			this.tool_bar.Parent = root;
@@ -183,6 +191,8 @@ namespace Epsitec.Common.Designer
 				Editors.AbstractWidgetEdit editor = this.FindEditor (window);
 				
 				editor.SelectedWidgets.Clear ();
+				
+				this.dispatcher.Dispatch ("SetTabIndexEdition(False)", this);
 			}
 		}
 		
@@ -385,6 +395,12 @@ namespace Epsitec.Common.Designer
 			this.active_editor.SelectedWidgets.Clear ();
 		}
 		
+		[Command ("SetTabIndexEdition")]		void CommandSetTabIndexEdition(CommandDispatcher d, CommandEventArgs e)
+		{
+			bool enable = System.Boolean.Parse (e.CommandArgs[0]);
+			this.StateSetTabIndexEdition.ActiveState = enable ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.active_editor.SetTabIndexEdition (enable);
+		}
 		
 		
 		
@@ -402,7 +418,5 @@ namespace Epsitec.Common.Designer
 		protected Window						active_window;
 		protected Editors.AbstractWidgetEdit	active_editor;
 		protected Widget						active_widget;
-		
-		protected CommandState					state_delete_selection;
 	}
 }
