@@ -27,13 +27,6 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		public Internal.CursorIdArray		Cursors
-		{
-			get
-			{
-				return this.cursors;
-			}
-		}
 		
 		public ulong						this[int position]
 		{
@@ -48,6 +41,7 @@ namespace Epsitec.Common.Text.Internal
 				return this.text[position];
 			}
 		}
+		
 		
 		public ulong						AccumulatedCharMarkers
 		{
@@ -251,7 +245,7 @@ namespace Epsitec.Common.Text.Internal
 			//	Ensuite, il faut déplacer les curseurs de 'a' situés après l'offset
 			//	vers 'b' :
 			
-			a.cursors.ProcessMigration (offset, b.cursors);
+			a.cursors.ProcessMigration (offset, ref b.cursors);
 			
 			if (a.acc_markers != 0)
 			{
@@ -288,6 +282,27 @@ namespace Epsitec.Common.Text.Internal
 				
 				this.text = new_text;
 			}
+		}
+		
+		
+		public void AddCursor(Internal.CursorId id, int position)
+		{
+			this.cursors.Add (id, position);
+		}
+		
+		public int GetCursorPosition(Internal.CursorId id)
+		{
+			return this.cursors.GetCursorPosition (id);
+		}
+		
+		public int GetCursorCount()
+		{
+			return this.cursors.ElementCount;
+		}
+		
+		public Internal.CursorId GetNthCursorId(int index)
+		{
+			return this.cursors.GetElementCursorId (index);
 		}
 		
 		

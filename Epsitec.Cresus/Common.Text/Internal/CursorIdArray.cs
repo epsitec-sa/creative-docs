@@ -4,18 +4,11 @@
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
-	/// La classe CursorIdArray stocke les CursorIds associés à un
+	/// La structure CursorIdArray stocke les CursorIds associés à un
 	/// TextChunk.
 	/// </summary>
-	internal class CursorIdArray
+	internal struct CursorIdArray
 	{
-		public CursorIdArray()
-		{
-			this.elements = new Element[0];
-			this.length   = 0;
-		}
-		
-		
 		public void Add(Internal.CursorId id, int position)
 		{
 			//	Insère un élément pour représenter le curseur à la position
@@ -180,7 +173,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		public void ProcessMigration(int origin, CursorIdArray destination)
+		public void ProcessMigration(int origin, ref CursorIdArray destination)
 		{
 			//	Migre des curseurs situés après la position indiquée vers
 			//	la destination.
@@ -301,6 +294,11 @@ namespace Epsitec.Common.Text.Internal
 			//	index = 0 insère au début; index = n insère à la fin.
 			//
 			//	Ajuste l'offset de l'élément suivant.
+			
+			if (this.elements == null)
+			{
+				this.elements = new Element[0];
+			}
 			
 			Debug.Assert.IsInBounds (this.length, 0, this.elements.Length);
 			Debug.Assert.IsInBounds (index, 0, this.length);

@@ -122,7 +122,7 @@ namespace Epsitec.Common.Text.Tests
 			a.Add (id2, 20);
 			a.Add (id3, 30);
 			
-			a.ProcessMigration (25, b);
+			a.ProcessMigration (25, ref b);
 			
 			Debug.Assert.IsTrue (a.ElementCount == 2);
 			Debug.Assert.IsTrue (b.ElementCount == 1);
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (a.GetCursorPosition (id2) == 20);
 			Debug.Assert.IsTrue (b.GetCursorPosition (id3) == 5);
 			
-			a.ProcessMigration (20, b);
+			a.ProcessMigration (20, ref b);
 			
 			Debug.Assert.IsTrue (a.ElementCount == 2);
 			Debug.Assert.IsTrue (b.ElementCount == 1);
@@ -140,7 +140,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (a.GetCursorPosition (id2) == 20);
 			Debug.Assert.IsTrue (b.GetCursorPosition (id3) == 5);
 			
-			a.ProcessMigration (18, b);
+			a.ProcessMigration (18, ref b);
 			
 			Debug.Assert.IsTrue (a.ElementCount == 1);
 			Debug.Assert.IsTrue (b.ElementCount == 2);
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Text.Tests
 			b.Remove (id2);
 			b.Remove (id3);
 			
-			a.ProcessMigration (5, b);
+			a.ProcessMigration (5, ref b);
 			
 			Debug.Assert.IsTrue (a.ElementCount == 0);
 			Debug.Assert.IsTrue (b.ElementCount == 3);

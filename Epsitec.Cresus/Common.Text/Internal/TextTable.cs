@@ -4,8 +4,8 @@
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
-	/// La classe TextTable représente un ensemble de morceaux de texte avec les
-	/// curseurs associés.
+	/// La classe TextTable représente un ensemble de morceaux de texte avec
+	/// ses curseurs associés.
 	/// </summary>
 	internal sealed class TextTable
 	{
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			this.cursors.WriteCursor (id, cursor);
 			
-			this.text_chunks[0].Cursors.Add (id, 0);
+			this.text_chunks[0].AddCursor (id, 0);
 			
 			return id;
 		}
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Text.Internal
 			Internal.TextChunkId chunk_id = cursor.TextChunkId;
 			Internal.TextChunk   chunk    = this.text_chunks[chunk_id-1];
 			
-			int cursor_position = chunk.Cursors.GetCursorPosition (cursor_id);
+			int cursor_position = chunk.GetCursorPosition (cursor_id);
 			
 			chunk.InsertText (cursor_position, text);
 			
@@ -285,12 +285,12 @@ namespace Epsitec.Common.Text.Internal
 			//	fraîchement créé (ils n'ont pas été affectés par la mise à jour qui
 			//	vient juste d'être faite) :
 			
-			Internal.CursorIdArray fresh = this.text_chunks[id_2].Cursors;
-			int                    count = fresh.ElementCount;
+			Internal.TextChunk chunk = this.text_chunks[id_2];
+			int                count = chunk.GetCursorCount ();
 			
 			for (int i = 0; i < count; i++)
 			{
-				this.cursors.ModifyCursorTextChunkId (fresh.GetElementCursorId (i), 1);
+				this.cursors.ModifyCursorTextChunkId (chunk.GetNthCursorId (i), 1);
 			}
 		}
 		

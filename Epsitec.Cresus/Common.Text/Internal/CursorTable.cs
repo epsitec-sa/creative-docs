@@ -91,6 +91,8 @@ namespace Epsitec.Common.Text.Internal
 				this.GrowCursors ();
 			}
 			
+			this.gen_id++;
+			
 			CursorId free = this.free_cursor_id;
 			CursorId next = this.cursors[free].FreeListLink;
 			
@@ -111,6 +113,8 @@ namespace Epsitec.Common.Text.Internal
 		public void RecycleCursor(Internal.CursorId id)
 		{
 			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
+			
+			this.gen_id++;
 			
 			this.cursors[id].FreeListLink = this.free_cursor_id;
 			this.cursors[id].TextChunkId  = 0;
