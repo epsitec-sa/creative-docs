@@ -26,6 +26,8 @@ namespace Epsitec.Common.Widgets.Platform
 			this.graphics = Epsitec.Common.Drawing.GraphicsFactory.NewGraphics ();
 			
 			this.ReallocatePixmap ();
+			
+			WindowList.Insert (this);
 		}
 		
 		internal void MakeFramelessWindow()
@@ -387,6 +389,8 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			if (disposing)
 			{
+				WindowList.Remove (this);
+				
 				//	Attention: il n'est pas permis de faire un Dispose si l'appelant provient d'une
 				//	WndProc, car cela perturbe le bon acheminement des messages dans Windows. On
 				//	préfère donc remettre la destruction à plus tard si on détecte cette condition.
