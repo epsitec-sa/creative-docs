@@ -68,7 +68,6 @@ namespace Epsitec.Common.Designer.Widgets
 		}
 		
 		
-		
 		public static Drawing.Rectangle ConstrainWidgetBoundsMinMax(Drawing.GripId grip, Drawing.Rectangle old_bounds, Drawing.Rectangle new_bounds, Drawing.Size min, Drawing.Size max)
 		{
 			if (new_bounds.Width < min.Width)
@@ -235,11 +234,6 @@ namespace Epsitec.Common.Designer.Widgets
 			this.UpdateGeometry ();
 		}
 
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
-		{
-			base.PaintBackgroundImplementation (graphics, clip_rect);
-		}
-		
 		
 		protected struct GripMap
 		{
@@ -420,18 +414,24 @@ namespace Epsitec.Common.Designer.Widgets
 			}
 			
 			
-			private Drawing.Rectangle ConstrainWidgetBoundsRelative(Drawing.GripId grip, Drawing.Rectangle new_bounds)
+			private Drawing.Rectangle ConstrainWidgetBoundsRelative1(Drawing.GripId grip, Drawing.Rectangle new_bounds)
 			{
-				Behaviors.ConstraintBehavior cx = new Behaviors.ConstraintBehavior (5);
-				Behaviors.ConstraintBehavior cy = new Behaviors.ConstraintBehavior (5);
-				
 				this.overlay.drop_adorner.Widget     = this.target_parent;
 				this.overlay.drop_adorner.HiliteMode = WidgetHiliteMode.DropCandidate;
 				this.overlay.drop_adorner.Path.Clear ();
 				
-				Behaviors.SmartGuideBehavior guide  = new Behaviors.SmartGuideBehavior (this.target_widget, grip, this.target_parent, this.filter);
+				return this.ConstrainWidgetBoundsRelative2 (grip, new_bounds, this.target_parent, this.target_widget);
+			}
+			
+			private Drawing.Rectangle ConstrainWidgetBoundsRelative2(Drawing.GripId grip, Drawing.Rectangle new_bounds, Widget parent, Widget widget)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Constrain, bounds: {0}, parent: {1}, widget: {2}", new_bounds, parent.GetType (), widget.GetType ()));
+				Behaviors.ConstraintBehavior cx = new Behaviors.ConstraintBehavior (5);
+				Behaviors.ConstraintBehavior cy = new Behaviors.ConstraintBehavior (5);
+				
+				Behaviors.SmartGuideBehavior guide  = new Behaviors.SmartGuideBehavior (widget, grip, parent, this.filter);
 				Drawing.Rectangle            bounds = new_bounds;
-				Drawing.Point                bline  = this.target_widget.BaseLine;
+				Drawing.Point                bline  = widget.BaseLine;
 				
 				if ((grip == Drawing.GripId.Body) &&
 					(! bline.IsEmpty))
@@ -464,12 +464,12 @@ namespace Epsitec.Common.Designer.Widgets
 				if (! cx.Equals (this.overlay.drop_cx))
 				{
 					this.overlay.drop_cx = cx.Clone ();
-					this.target_parent.Invalidate ();
+					parent.Invalidate ();
 				}
 				if (! cy.Equals (this.overlay.drop_cy))
 				{
 					this.overlay.drop_cy = cy.Clone ();
-					this.target_parent.Invalidate ();
+					parent.Invalidate ();
 				}
 				
 				if (cx.IsValid)
@@ -498,6 +498,33 @@ namespace Epsitec.Common.Designer.Widgets
 			{
 				System.Diagnostics.Debug.Assert (this.active_grip == sender);
 				
+				if (this.drag_window != null)
+				{
+					Drawing.Point drag_cursor = this.overlay.Window.MapWindowToScreen (Message.State.LastPosition) - new Drawing.Point (1, 1);
+					
+					this.drag_window.WindowLocation = this.drag_window_origin + e.Offset;
+					
+					Window target = DragSource.FindTargetWindow (drag_cursor);
+					Widget widget = DragSource.FindTargetWidget (target, drag_cursor);
+					
+					System.Diagnostics.Debug.WriteLine (string.Format ("Cursor: {0}, Offset: {1}, Drop onto: {2}", drag_cursor, e.Offset, widget));
+					
+					//	Définit la cible où le "drop" aurait lieu si l'utilisateur relâchait le bouton
+					//	de la souris maintenant.
+					
+					this.overlay.drop_adorner.Widget     = widget;
+					this.overlay.drop_adorner.HiliteMode = WidgetHiliteMode.DropCandidate;
+					this.overlay.drop_adorner.Path.Clear ();
+					
+					Drawing.Point     dw_pos  = this.drag_window.WindowLocation;
+					Drawing.Rectangle dw_rect = new Drawing.Rectangle (dw_pos, this.target_widget.Size);
+					
+					dw_rect = widget.MapScreenToClient (dw_rect);
+					
+					this.ConstrainWidgetBoundsRelative2 (Drawing.GripId.Body, dw_rect, widget, this.target_widget);
+					return;
+				}
+				
 				Grip grip = sender as Grip;
 				
 				System.Diagnostics.Debug.Assert (grip != null);
@@ -513,7 +540,7 @@ namespace Epsitec.Common.Designer.Widgets
 				
 				bounds.OffsetGrip (map.id, e.Offset);
 				bounds = this.target_parent.MapRootToClient (bounds);
-				bounds = this.ConstrainWidgetBoundsRelative (map.id, bounds);
+				bounds = this.ConstrainWidgetBoundsRelative1 (map.id, bounds);
 				bounds = this.ConstrainWidgetBoundsMinMax (map.id, bounds);
 				
 				Drawing.Point     new_pos = bounds.GetGrip (map.id);
@@ -545,10 +572,31 @@ namespace Epsitec.Common.Designer.Widgets
 				
 				this.active_grip = grip;
 				this.overlay.HandleGripDragBegin (this);
+				
+				if ((GripsOverlay.grip_map[this.active_grip.Index].id == Drawing.GripId.Body) &&
+					(this.overlay.SelectedWidgets.Count == 1))
+				{
+					//	TODO: gérer l'extraction du widget...
+					
+					System.Diagnostics.Debug.WriteLine ("Widget tear-off.");
+					
+					Drawing.Point pos = this.target_widget.MapClientToScreen (new Drawing.Point (0, 0));
+					
+					this.drag_window = DragSource.CreateDragWindow (this.target_widget, false, new Drawing.Margins ());
+					this.drag_window.WindowLocation = pos;
+					this.drag_window.Show ();
+					this.drag_window_origin = pos;
+				}
 			}
 			
 			private void HandleGripsDragEnd(object sender)
 			{
+				if (this.drag_window != null)
+				{
+					this.drag_window = null;
+					return;
+				}
+				
 				System.Diagnostics.Debug.Assert (this.active_grip == sender);
 				
 				Grip grip = sender as Grip;
@@ -600,6 +648,9 @@ namespace Epsitec.Common.Designer.Widgets
 			Drawing.Rectangle					target_bounds;
 			Drawing.Rectangle					target_clip;
 			Behaviors.SmartGuideBehavior.Filter	filter;
+			
+			DragWindow							drag_window;
+			Drawing.Point						drag_window_origin;
 		}
 		
 		protected void HandleGripDragBegin(Selection selection)
@@ -673,6 +724,7 @@ namespace Epsitec.Common.Designer.Widgets
 		
 		protected Grip[]						grips;
 		protected Grip							active_grip;
+		protected bool							hilite_root;
 		
 		protected HiliteWidgetAdorner			drop_adorner;
 		protected Behaviors.ConstraintBehavior	drop_cx;

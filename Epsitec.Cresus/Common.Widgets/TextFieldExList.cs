@@ -2,6 +2,8 @@ using System;
 
 namespace Epsitec.Common.Widgets
 {
+	using BundleAttribute  = Support.BundleAttribute;
+	
 	public enum TextFieldExListMode
 	{
 		Undefined,
@@ -25,7 +27,8 @@ namespace Epsitec.Common.Widgets
 			this.accept_reject_behavior.RejectClicked += new Support.EventHandler(this.HandleRejectClicked);
 			this.accept_reject_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptClicked);
 			
-			this.IsReadOnly = true;
+			this.DefocusAction = DefocusAction.None;
+			this.IsReadOnly    = true;
 			this.SwitchToState (TextFieldExListMode.Combo);
 		}
 		
@@ -50,7 +53,7 @@ namespace Epsitec.Common.Widgets
 
 		
 		
-		public string							PlaceHolder
+		[Bundle] public string					PlaceHolder
 		{
 			get
 			{
@@ -75,6 +78,18 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.mode;
+			}
+		}
+		
+		[Bundle] public DefocusAction			DefocusAction
+		{
+			get
+			{
+				return this.defocus_action;
+			}
+			set
+			{
+				this.defocus_action = value;
 			}
 		}
 		
@@ -123,6 +138,36 @@ namespace Epsitec.Common.Widgets
 			
 			return false;
 		}
+		
+		public bool AutoRejectEdition(bool change_focus)
+		{
+			if ((this.mode == TextFieldExListMode.EditActive) ||
+				(this.mode == TextFieldExListMode.EditPassive))
+			{
+				if (this.Items.FindExactMatch (this.accept_reject_behavior.InitialText) == -1)
+				{
+					this.Text = this.PlaceHolder;
+					this.SwitchToState (TextFieldExListMode.EditPassive);
+					
+					if (change_focus)
+					{
+						this.Focus ();
+					}
+					
+					this.SelectAll ();
+				}
+				else
+				{
+					this.SelectedItem = this.accept_reject_behavior.InitialText;
+					this.SwitchToState (TextFieldExListMode.Combo);
+				}
+				
+				this.OnEditionRejected ();
+				return true;
+			}
+			
+			return false;
+		}		
 		
 		private void SwitchToActiveEdition()
 		{
@@ -178,6 +223,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override bool AboutToLoseFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode)
+		{
+			if (this.Mode == TextFieldExListMode.EditActive)
+			{
+				switch (this.DefocusAction)
+				{
+					case DefocusAction.Modal:
+						return this.IsValid;
+				}
+			}
+			
+			return base.AboutToLoseFocus (dir, mode);
+		}
+		
 		protected override bool AboutToGetFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode, out Widget focus)
 		{
 			if ((this.mode == TextFieldExListMode.EditPassive) &&
@@ -192,6 +251,44 @@ namespace Epsitec.Common.Widgets
 			return base.AboutToGetFocus (dir, mode, out focus);
 		}
 
+		protected override void OnDefocused()
+		{
+			if ((this.IsFocusedFlagSet == false) &&
+				(this.Mode == TextFieldExListMode.EditActive))
+			{
+				switch (this.DefocusAction)
+				{
+					case DefocusAction.AcceptEdition:
+						this.AcceptEdition ();
+						break;
+					
+					case DefocusAction.RejectEdition:
+						this.AutoRejectEdition (false);
+						break;
+					
+					case DefocusAction.Modal:
+					case DefocusAction.AutoAcceptOrRejectEdition:
+						if (this.IsValid)
+						{
+							this.AcceptEdition ();
+						}
+						else
+						{
+							this.AutoRejectEdition (false);
+						}
+						break;
+					
+					case DefocusAction.None:
+						break;
+					
+					default:
+						throw new System.NotImplementedException (string.Format ("DefocusAction.{0} not implemented.", this.DefocusAction));
+				}
+			}
+			
+			base.OnDefocused ();
+		}
+		
 		protected override void FillComboList(Epsitec.Common.Widgets.Helpers.StringCollection list)
 		{
 			if (this.HasPlaceHolder)
@@ -390,22 +487,8 @@ namespace Epsitec.Common.Widgets
 		private void HandleRejectClicked(object sender)
 		{
 			System.Diagnostics.Debug.Assert (sender == this.accept_reject_behavior);
-			
-			if (this.Items.FindExactMatch (this.accept_reject_behavior.InitialText) == -1)
-			{
-				this.Text = this.PlaceHolder;
-				this.SwitchToState (TextFieldExListMode.EditPassive);
-				this.Focus ();
-				this.SelectAll ();
-			}
-			else
-			{
-				this.SelectedItem = this.accept_reject_behavior.InitialText;
-				this.SwitchToState (TextFieldExListMode.Combo);
-			}
-			
-			this.OnEditionRejected ();
-		}		
+			this.AutoRejectEdition (true);
+		}
 		
 		
 		public event Support.EventHandler		EditionStarted;
@@ -415,6 +498,7 @@ namespace Epsitec.Common.Widgets
 		protected string						place_holder;
 		
 		protected TextFieldExListMode			mode = TextFieldExListMode.Undefined;
+		protected DefocusAction					defocus_action;
 		protected Helpers.AcceptRejectBehavior	accept_reject_behavior;
 	}
 }

@@ -3214,6 +3214,13 @@ namespace Epsitec.Common.Widgets
 							continue;
 						}
 					}
+					if ((mode & ChildFindMode.SkipNonContainer) != 0)
+					{
+						if (widget.PossibleContainer == false)
+						{
+							continue;
+						}
+					}
 				}
 				
 				if (widget.HitTest (point))
@@ -3292,6 +3299,13 @@ namespace Epsitec.Common.Widgets
 					else if ((mode & ChildFindMode.SkipHidden) != 0)
 					{
 						if (widget.IsVisibleFlagSet == false)
+						{
+							continue;
+						}
+					}
+					else if ((mode & ChildFindMode.SkipNonContainer) != 0)
+					{
+						if (widget.PossibleContainer == false)
 						{
 							continue;
 						}
@@ -5706,6 +5720,7 @@ namespace Epsitec.Common.Widgets
 			SkipDisabled		= 0x00000002,
 			SkipTransparent		= 0x00000004,
 			SkipEmbedded		= 0x00000008,
+			SkipNonContainer	= 0x00000010,
 			SkipMask			= 0x000000ff,
 			
 			Deep				= 0x00010000
