@@ -1,7 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
-
-using System;
+//	Statut : OK/PA, 22/03/2004
 
 namespace Epsitec.Common.Support
 {
@@ -13,7 +11,8 @@ namespace Epsitec.Common.Support
 	/// dérivées.
 	/// </summary>
 	
-	[AttributeUsage (AttributeTargets.Class)]
+	[System.Serializable]
+	[System.AttributeUsage (System.AttributeTargets.Class)]
 	
 	public class SuppressBundleSupportAttribute : System.Attribute
 	{
