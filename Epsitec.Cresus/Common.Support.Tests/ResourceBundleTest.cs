@@ -13,7 +13,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckCompile()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><data name='a'>A</data><data name='b'>B</data></bundle>";
+			string test_string = "<bundle type='String'><data name='a'>A</data><data name='b'>B</data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
@@ -25,6 +25,8 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals (2, bundle.CountFields);
 			Assertion.AssertEquals ("a", names[0]);
 			Assertion.AssertEquals ("b", names[1]);
+			Assertion.AssertEquals ("test", bundle.Name);
+			Assertion.AssertEquals ("String", bundle.Type);
 		}
 		
 		[Test] public void CheckCompileRefBundle()
@@ -180,6 +182,15 @@ namespace Epsitec.Common.Support
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
 			string test_string = "<bundle><data name='a'>A<data name='b'>B</data></bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			bundle.Compile (test_data);
+		}
+		
+		[Test] [ExpectedException (typeof (Support.ResourceException))] public void CheckCompileEx3()
+		{
+			ResourceBundle bundle = ResourceBundle.Create ("test");
+			string test_string = "<invalid_root><data name='a'>A</data><data name='b'>B</data></invalid_root>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
@@ -354,9 +365,9 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCreateXmlNode2()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create ();
 			string test_string = 
-				"<bundle name='test'>\r\n" +
+				"<bundle name=\"&quot;test&quot;\" type='String'>\r\n" +
 				"  <data name='a'>\r\n" +
 				"    <ref target='strings#label.OK' />\r\n" +
 				"  </data>\r\n" +
@@ -365,6 +376,9 @@ namespace Epsitec.Common.Support
 			byte[] test_data = encoding.GetBytes (test_string);
 			
 			bundle.Compile (test_data);
+			
+			Assertion.AssertEquals ("\"test\"", bundle.Name);
+			Assertion.AssertEquals ("String", bundle.Type);
 			
 			byte[] live_data = bundle.CreateXmlAsData ();
 			
@@ -397,6 +411,51 @@ namespace Epsitec.Common.Support
 			
 			System.Console.Out.WriteLine (bundle[0].Xml.OuterXml);
 		}
+		
+		[Test] public void CheckCreateXmlNode4()
+		{
+			ResourceBundle bundle = ResourceBundle.Create ();
+			
+			string test_string = 
+				"<bundle name='test' type='String'>\r\n" +
+				"  <data name='a'>A</data>\r\n" +
+				"  <data name='b'>\r\n" +
+				"    <xml>\r\n" + 
+				"      <b>B  B</b>\r\n" +
+				"    </xml>\r\n" +
+				"  </data>\r\n" +
+				"</bundle>";
+			
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			
+			ResourceBundle.Field field_1 = bundle.CreateEmptyField (ResourceFieldType.Data);
+			ResourceBundle.Field field_2 = bundle.CreateEmptyField (ResourceFieldType.Data);
+			
+			field_1.SetName ("a");
+			field_1.SetStringValue ("A");
+			
+			field_2.SetName ("b");
+			field_2.SetStringValue ("<b>B  B</b>");
+			
+			bundle.Add (field_1);
+			bundle.Add (field_2);
+			
+			bundle.DefineName ("test");
+			bundle.DefineType ("String");
+			
+			byte[] live_data = bundle.CreateXmlAsData ();
+			
+			ResourceBundleTest.XmlDumpIfDifferent (test_data, live_data, bundle);
+			Assertion.Assert ("Serialised data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
+			
+			bundle = ResourceBundle.Create ();
+			bundle.Compile (test_data);
+			
+			Assertion.AssertEquals ("A", bundle[0].AsString);
+			Assertion.AssertEquals ("<b>B  B</b>", bundle[1].AsString);
+		}
+		
 		
 		
 		static void XmlDumpIfDifferent(byte[] a, byte[] b, ResourceBundle bundle)
