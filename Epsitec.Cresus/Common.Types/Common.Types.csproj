@@ -88,6 +88,11 @@
         <Files>
             <Include>
                 <File
+                    RelPath = "AbstractDataCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -99,6 +104,31 @@
                 />
                 <File
                     RelPath = "DecimalRange.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IDataCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IDataFolder.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IDataGraph.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IDataItem.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IDataValue.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -134,6 +164,16 @@
                 />
                 <File
                     RelPath = "IString.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NumType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "StringType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -7,7 +7,7 @@ namespace Epsitec.Common.Types
 	/// La classe DecimalRange permet de définir une plage de valeurs numériques
 	/// (de type decimal).
 	/// </summary>
-	public class DecimalRange
+	public class DecimalRange : System.ICloneable
 	{
 		public DecimalRange()
 		{
@@ -239,6 +239,33 @@ namespace Epsitec.Common.Types
 			{
 				return ((int)value).ToString (culture);
 			}
+		}
+		
+		
+		#region ICloneable Members
+		public object Clone()
+		{
+			return this.CloneCopyToNewObject (this.CloneNewObject ());
+		}
+		#endregion
+		
+		protected virtual object CloneNewObject()
+		{
+			return new DecimalRange ();
+		}
+		
+		protected virtual object CloneCopyToNewObject(object o)
+		{
+			DecimalRange that = o as DecimalRange;
+			
+			this.minimum     = that.minimum;
+			this.maximum     = that.maximum;
+			this.resolution  = that.resolution;
+			this.digits_mul  = that.digits_mul;
+			this.digits_div  = that.digits_div;
+			this.frac_digits = that.frac_digits;
+			
+			return that;
 		}
 		
 		
