@@ -22,7 +22,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "Epsitec.Common.Support.Tests"
+                RootNamespace = "Epsitec.Common.Support"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
