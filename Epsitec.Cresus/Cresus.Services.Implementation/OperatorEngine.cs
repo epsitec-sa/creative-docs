@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Services
 			operation = new Operation (this);
 		}
 		
-		public bool ReadRoamingClientData(Remoting.IOperation operation, out byte[] compressed_data)
+		public void GetRoamingClientData(Remoting.IOperation operation, out Remoting.ClientIdentity client, out byte[] compressed_data)
 		{
 			if (operation == null)
 			{
@@ -30,22 +30,18 @@ namespace Epsitec.Cresus.Services
 			
 			if (op == null)
 			{
-				throw new System.ArgumentException ("Wrong operation specified.");
+				throw new System.ArgumentException ("Operation mismatch.");
 			}
 			
-			//	Vérifie que l'opération s'est bien correctement terminée.
+			op.WaitForProgress (100);
 			
-			if (! op.HasFinished)
-			{
-				compressed_data = null;
-				return false;
-			}
+			this.ThrowExceptionBasedOnStatus (op.ProgressStatus);
+			
 			
 			//	Récupère les données qui attendent le client :
 			
+			client          = new Remoting.ClientIdentity ("", 101);	//	TODO: générer l'identité correctement
 			compressed_data = op.GetCompressedData ();
-			
-			return true;
 		}
 		#endregion
 		
@@ -73,14 +69,18 @@ namespace Epsitec.Cresus.Services
 				{
 					this.SetLastStep (3);
 					
-					this.Step1_CopyDatabase ();				if (this.IsCancelRequested) return;
-					this.Step2_CompressDatabase ();			if (this.IsCancelRequested) return;
-					this.Step2_CompressDatabaseDeflate ();	if (this.IsCancelRequested) return;
+					this.Step1_CopyDatabase ();				this.InterruptIfCancelRequested ();
+					this.Step2_CompressDatabase ();			this.InterruptIfCancelRequested ();
+					this.Step2_CompressDatabaseDeflate ();	this.InterruptIfCancelRequested ();
 					this.Step3_Finished ();
+				}
+				catch (Remoting.Exceptions.InterruptedException)
+				{
+					this.SetCancelled ();
 				}
 				catch (System.Exception exception)
 				{
-					System.Diagnostics.Debug.WriteLine (exception.Message);
+					this.SetFailed (exception.Message);
 				}
 				finally
 				{

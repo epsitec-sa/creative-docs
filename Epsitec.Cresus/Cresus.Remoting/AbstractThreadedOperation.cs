@@ -110,6 +110,14 @@ namespace Epsitec.Cresus.Remoting
 		}
 		
 		
+		protected void InterruptIfCancelRequested()
+		{
+			if (this.IsCancelRequested)
+			{
+				throw new Exceptions.InterruptedException ();
+			}
+		}
+		
 		
 		private System.Threading.Thread			thread;
 		private System.Threading.AutoResetEvent	thread_cancel;

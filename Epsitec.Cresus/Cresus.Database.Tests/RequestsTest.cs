@@ -557,7 +557,7 @@ namespace Epsitec.Cresus.Database
 			
 		}
 		
-		[Test] /*[Ignore ("Temporary")]*/ public void Check15OperatorClient()
+		[Test] /*[Ignore ("Temporary")]*/ public void Check15OperatorClientPolling()
 		{
 			Remoting.IOperatorService service = Services.Engine.GetRemoteOperatorService ("localhost", 1234);
 			Remoting.IOperation operation;
@@ -570,18 +570,21 @@ namespace Epsitec.Cresus.Database
 			for (int i = 0; i < 10; i++)
 			{
 				System.Threading.Thread.Sleep (100);
-				bool finished = operation.HasFinished;
+				Remoting.ProgressStatus status = operation.ProgressStatus;
 				
-				System.Diagnostics.Debug.WriteLine ("Operation: " + (finished ? "finished" : "running") + " after " + (int) operation.RunningDuration.TotalMilliseconds + " ms.");
+				System.Diagnostics.Debug.WriteLine ("Operation: " + status + " after " + (int) operation.RunningDuration.TotalMilliseconds + " ms.");
 				
-				if (finished)
+				if (status == Remoting.ProgressStatus.Succeeded)
 				{
-					byte[] data;
-					if ((service.ReadRoamingClientData (operation, out data)) &&
-						(data != null) &&
+					Remoting.ClientIdentity client;
+					byte[]                  data;
+					
+					service.GetRoamingClientData (operation, out client, out data);
+					
+					if ((data != null) &&
 						(data.Length > 0))
 					{
-						System.Diagnostics.Debug.WriteLine ("Returned data, " + data.Length + " bytes.");
+						System.Diagnostics.Debug.WriteLine ("Returned data, " + data.Length + " bytes for client ID " + client.ClientId + ".");
 					}
 					else
 					{
@@ -598,21 +601,58 @@ namespace Epsitec.Cresus.Database
 			for (int i = 0; i < 100; i++)
 			{
 				System.Threading.Thread.Sleep (10);
-				bool finished = progress.HasFinished;
-				System.Diagnostics.Debug.WriteLine ("Cancellation: " + (finished ? "finished" : "running") + " after " + (int) progress.RunningDuration.TotalMilliseconds + " ms.");
-				if (finished) break;
+				
+				Remoting.ProgressStatus status = progress.ProgressStatus;
+				
+				System.Diagnostics.Debug.WriteLine ("Cancellation: " + status + " after " + (int) progress.RunningDuration.TotalMilliseconds + " ms.");
+				if (status == Remoting.ProgressStatus.Succeeded) break;
 			}
 		}
 		
-		[Test] /*[Ignore ("Temporary")]*/ public void Check15OperatorClientLoop()
+		[Test] /*[Ignore ("Temporary")]*/ public void Check16OperatorClientWaiting()
 		{
-			for (int i = 0; i < 100; i++)
+			Remoting.IOperatorService service = Services.Engine.GetRemoteOperatorService ("localhost", 1234);
+			Remoting.IOperation operation;
+			
+			Assert.IsNotNull (service);
+			
+			System.Diagnostics.Debug.WriteLine ("Starting asynchronous request.");
+			
+			service.CreateRoamingClient (out operation);
+			
+			Remoting.ClientIdentity client;
+			byte[]                  data;
+			
+			service.GetRoamingClientData (operation, out client, out data);
+			
+			if ((data != null) &&
+				(data.Length > 0))
 			{
-				this.Check15OperatorClient ();
+				System.Diagnostics.Debug.WriteLine ("Returned data, " + data.Length + " bytes for client ID " + client.ClientId + ".");
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine ("No data returned.");
 			}
 		}
 		
-		[Test] public void Check16ServiceServer_Kill()
+		[Test] /*[Ignore ("Temporary")]*/ public void Check17OperatorClientLoop()
+		{
+			for (int i = 0; i < 1000; i++)
+			{
+				try
+				{
+					this.Check16OperatorClientWaiting ();
+				}
+				catch (System.Exception ex)
+				{
+					System.Console.WriteLine (ex.Message);
+					System.Console.WriteLine (ex.ToString ());
+				}
+			}
+		}
+		
+		[Test] public void Check20ServiceServer_Kill()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			RequestsTest.DeleteTestTable (infrastructure, "ServiceTest");

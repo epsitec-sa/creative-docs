@@ -22,11 +22,11 @@ namespace Epsitec.Cresus.Remoting
 			}
 		}
 		
-		public bool								HasFinished
+		public virtual Remoting.ProgressStatus	ProgressStatus
 		{
 			get
 			{
-				return this.ProgressPercent == 100;
+				return this.progress_status;
 			}
 		}
 		
@@ -58,10 +58,14 @@ namespace Epsitec.Cresus.Remoting
 		{
 			get
 			{
-				return new System.TimeSpan (0, 0, 0, 0, -1);
+				return System.TimeSpan.FromMilliseconds (-1);
 			}
 		}
 		
+		public bool WaitForProgress(int minimum_progress)
+		{
+			return this.WaitForProgress (minimum_progress, System.TimeSpan.FromMilliseconds (-1));
+		}
 		
 		public virtual bool WaitForProgress(int minimum_progress, System.TimeSpan timeout)
 		{
@@ -70,8 +74,6 @@ namespace Epsitec.Cresus.Remoting
 				return true;
 			}
 			
-			System.Threading.WaitHandle wait = this.GetProgressEvent (true);
-			
 			bool infinite = (timeout.Ticks < 0);
 			
 			System.DateTime start_time = System.DateTime.Now;
@@ -79,30 +81,33 @@ namespace Epsitec.Cresus.Remoting
 			
 			for (;;)
 			{
-				bool got_event = false;
+				bool      got_event = false;
+				const int max_wait  = 30*1000;
 				
-				if (infinite)
+				lock (this.monitor)
 				{
-					got_event = wait.WaitOne ();
-				}
-				else
-				{
-					timeout = stop_time - System.DateTime.Now;
-					
-					if (timeout.Ticks > 0)
+					if (this.ProgressPercent >= minimum_progress)
 					{
-						got_event = wait.WaitOne (timeout, false);
+						return true;
+					}
+					if (infinite)
+					{
+						got_event = System.Threading.Monitor.Wait (this.monitor, max_wait);
+					}
+					else
+					{
+						timeout = System.TimeSpan.FromTicks (System.Math.Min (stop_time.Ticks - System.DateTime.Now.Ticks, max_wait*10*1000L));
+					
+						if (timeout.Ticks > 0)
+						{
+							got_event = System.Threading.Monitor.Wait (this.monitor, timeout);
+						}
 					}
 				}
 				
 				if (got_event == false)
 				{
 					break;
-				}
-				
-				if (this.ProgressPercent >= minimum_progress)
-				{
-					return true;
 				}
 			}
 			
@@ -122,27 +127,14 @@ namespace Epsitec.Cresus.Remoting
 		{
 			if (disposing)
 			{
-				if (this.wait_progress_event != null)
+				if (System.Threading.Monitor.TryEnter (this.monitor, 1))
 				{
-					this.wait_progress_event.Close ();
-					this.wait_progress_event = null;
+					System.Threading.Monitor.PulseAll (this.monitor);
+					System.Threading.Monitor.Exit (this.monitor);
 				}
 			}
 		}
 		
-		protected System.Threading.AutoResetEvent GetProgressEvent(bool create)
-		{
-			lock (this)
-			{
-				if ((this.wait_progress_event == null) &&
-					(create))
-				{
-					this.wait_progress_event = new System.Threading.AutoResetEvent (false);
-				}
-				
-				return this.wait_progress_event;
-			}
-		}
 		
 		
 		protected virtual void SetProgress(int progress)
@@ -152,14 +144,35 @@ namespace Epsitec.Cresus.Remoting
 				return;
 			}
 			
-			lock (this)
+			lock (this.monitor)
 			{
+				this.progress_status  = (progress < 100) ? Remoting.ProgressStatus.Running : Remoting.ProgressStatus.Succeeded;
 				this.progress_percent = progress;
 				
-				if (this.wait_progress_event != null)
-				{
-					this.wait_progress_event.Set ();
-				}
+				System.Threading.Monitor.PulseAll (this.monitor);
+			}
+		}
+		
+		protected virtual void SetCancelled()
+		{
+			lock (this.monitor)
+			{
+				this.progress_status  = Remoting.ProgressStatus.Cancelled;
+				this.progress_percent = 100;
+				
+				System.Threading.Monitor.PulseAll (this.monitor);
+			}
+		}
+		
+		protected virtual void SetFailed(string message)
+		{
+			lock (this.monitor)
+			{
+				this.failure_message  = message;
+				this.progress_status  = Remoting.ProgressStatus.Failed;
+				this.progress_percent = 100;
+				
+				System.Threading.Monitor.PulseAll (this.monitor);
 			}
 		}
 		
@@ -170,9 +183,12 @@ namespace Epsitec.Cresus.Remoting
 				return;
 			}
 			
-			lock (this)
+			lock (this.monitor)
 			{
-				this.current_step = step;
+				this.current_step    = step;
+				this.progress_status = (this.progress_percent < 100) ? Remoting.ProgressStatus.Running : Remoting.ProgressStatus.Succeeded;
+				
+				System.Threading.Monitor.PulseAll (this.monitor);
 			}
 		}
 		
@@ -183,17 +199,18 @@ namespace Epsitec.Cresus.Remoting
 				return;
 			}
 			
-			lock (this)
+			lock (this.monitor)
 			{
 				this.last_step = step;
 			}
 		}
 		
 		
-		private System.Threading.AutoResetEvent	wait_progress_event;
-		
-		private System.DateTime					start_time       = System.DateTime.Now;
-		private volatile int					progress_percent = -1;
+		object									monitor          = new object ();
+		System.DateTime							start_time       = System.DateTime.Now;
+		volatile int							progress_percent = -1;
+		volatile Remoting.ProgressStatus		progress_status  = Remoting.ProgressStatus.None;
+		volatile string							failure_message  = null;
 		
 		protected volatile int					current_step     = 0;
 		protected volatile int					last_step	     = -1;

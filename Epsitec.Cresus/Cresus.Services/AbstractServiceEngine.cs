@@ -33,7 +33,23 @@ namespace Epsitec.Cresus.Services
 			
 			return null;
 		}
-
+		
+		protected void ThrowExceptionBasedOnStatus(Remoting.ProgressStatus status)
+		{
+			switch (status)
+			{
+				case Remoting.ProgressStatus.None:		throw new Remoting.Exceptions.InvalidOperationException ();
+				case Remoting.ProgressStatus.Running:	throw new Remoting.Exceptions.PendingException ();
+				case Remoting.ProgressStatus.Cancelled:	throw new Remoting.Exceptions.CancelledException ();
+				case Remoting.ProgressStatus.Failed:	throw new Remoting.Exceptions.FailedException ();
+				
+				case Remoting.ProgressStatus.Succeeded:
+					break;
+				
+				default:
+					throw new System.ArgumentOutOfRangeException ("status", status, "Unsupported status value.");
+			}
+		}
 		
 		
 		protected Engine						engine;

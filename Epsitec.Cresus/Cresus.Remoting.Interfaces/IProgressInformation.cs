@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Remoting
 	public interface IProgressInformation
 	{
 		int				ProgressPercent		{ get; }	//	avancement 0..100, -1 = indéterminé
-		bool			HasFinished			{ get; }	//	true => opération terminée
+		ProgressStatus	ProgressStatus		{ get; }	//	état (en cours d'exécution, terminé, annulé, échoué)
 		int				CurrentStep			{ get; }	//	# de l'étape en cours (0..n)
 		int				LastStep			{ get; }	//	# de la dernière étape, -1 = indéterminé
 		
