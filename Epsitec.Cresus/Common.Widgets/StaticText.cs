@@ -30,7 +30,7 @@ namespace Epsitec.Common.Widgets
 			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 			
-			adorner.PaintGeneralTextLayout(graphics, pos, this.text_layout, state, dir);
+			adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state, dir);
 		}
 	}
 }

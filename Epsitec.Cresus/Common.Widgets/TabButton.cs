@@ -7,12 +7,12 @@ namespace Epsitec.Common.Widgets
 	{
 		public TabButton()
 		{
-			this.internal_state &= ~InternalState.Engageable;
+			this.internalState &= ~InternalState.Engageable;
 		}
 		
 		public override Drawing.Rectangle GetPaintBounds()
 		{
-			return new Drawing.Rectangle(0, -2, this.client_info.width, this.client_info.height+2);
+			return new Drawing.Rectangle(0, -2, this.clientInfo.width, this.clientInfo.height+2);
 		}
 
 		// Dessine le bouton.
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Widgets
 				adorner.PaintTabSunkenBackground(graphics, frameRect, rect, state, dir);
 			}
 
-			adorner.PaintButtonTextLayout(graphics, pos, this.text_layout, state, dir, ButtonStyle.Normal);
+			adorner.PaintButtonTextLayout(graphics, pos, this.textLayout, state, dir, ButtonStyle.Normal);
 
 			graphics.RestoreClippingRectangle(saveClip);
 		}

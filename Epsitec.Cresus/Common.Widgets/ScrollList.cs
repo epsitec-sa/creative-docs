@@ -19,8 +19,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public ScrollList()
 		{
-			this.internal_state |= InternalState.AutoFocus;
-			this.internal_state |= InternalState.Focusable;
+			this.internalState |= InternalState.AutoFocus;
+			this.internalState |= InternalState.Focusable;
 
 			this.lineHeight = this.GetLineHeight();
 			this.scroller = new Scroller();
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Widgets
 		private void HandleScroller(object sender)
 		{
 			this.FirstLine = (int)this.scroller.Position;
-			this.SetFocused(true);
+			//this.SetFocused(true);
 		}
 
 

@@ -21,8 +21,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public ScrollArray()
 		{
-			this.internal_state |= InternalState.AutoFocus;
-			this.internal_state |= InternalState.Focusable;
+			this.internalState |= InternalState.AutoFocus;
+			this.internalState |= InternalState.Focusable;
 
 			this.header = new Widget();
 			this.Children.Add(this.header);

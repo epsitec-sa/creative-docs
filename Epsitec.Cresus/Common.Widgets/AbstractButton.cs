@@ -8,10 +8,10 @@ namespace Epsitec.Common.Widgets
 	{
 		public AbstractButton()
 		{
-			this.internal_state |= InternalState.AutoFocus;
-			this.internal_state |= InternalState.AutoEngage;
-			this.internal_state |= InternalState.Focusable;
-			this.internal_state |= InternalState.Engageable;
+			this.internalState |= InternalState.AutoFocus;
+			this.internalState |= InternalState.AutoEngage;
+			this.internalState |= InternalState.Focusable;
+			this.internalState |= InternalState.Engageable;
 		}
 		
 		

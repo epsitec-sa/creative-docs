@@ -8,8 +8,8 @@ namespace Epsitec.Common.Widgets
 		// Constructeur de l'ascenseur.
 		public Scroller()
 		{
-			this.internal_state |= InternalState.AutoEngage;
-			this.internal_state |= InternalState.Engageable;
+			this.internalState |= InternalState.AutoEngage;
+			this.internalState |= InternalState.Engageable;
 
 			this.arrowUp = new ArrowButton();
 			this.arrowDown = new ArrowButton();

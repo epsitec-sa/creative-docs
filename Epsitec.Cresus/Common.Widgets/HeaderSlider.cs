@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public HeaderSlider()
 		{
-			this.internal_state &= ~InternalState.Engageable;
+			this.internalState &= ~InternalState.Engageable;
 			this.HeaderSliderStyle = HeaderSliderStyle.Top;
 		}
 		

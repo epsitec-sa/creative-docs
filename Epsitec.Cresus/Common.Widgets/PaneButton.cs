@@ -13,11 +13,14 @@ namespace Epsitec.Common.Widgets
 	{
 		public PaneButton()
 		{
-			this.internal_state &= ~InternalState.Engageable;
-			this.internal_state &= ~InternalState.AutoFocus;
-			this.internal_state &= ~InternalState.Focusable;
+			this.internalState &= ~InternalState.Engageable;
+			this.internalState &= ~InternalState.AutoFocus;
+			this.internalState &= ~InternalState.Focusable;
 
-			this.color = Drawing.Color.FromName("ControlDark");
+			this.color[0] = Drawing.Color.FromName("ControlLightLight");
+			this.color[1] = Drawing.Color.FromName("ControlLight");
+			this.color[2] = Drawing.Color.FromName("ControlDark");
+			this.color[3] = Drawing.Color.FromName("ControlDarkDark");
 		}
 		
 		// Bouton dans en-tête supérieure ou gauche ?
@@ -119,18 +122,43 @@ namespace Epsitec.Common.Widgets
 			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 
+			double x, y;
 			if ( this.paneButtonStyle == PaneButtonStyle.Vertical )
 			{
-				rect.Left  += 1;
-				rect.Right -= 1;
+				x = rect.Left+0.5;
+				graphics.AddLine(x, rect.Bottom, x, rect.Top);
+				graphics.RenderSolid(color[0]);
+
+				x = rect.Left+1.5;
+				graphics.AddLine(x, rect.Bottom, x, rect.Top);
+				graphics.RenderSolid(color[1]);
+
+				x = rect.Right-1.5;
+				graphics.AddLine(x, rect.Bottom, x, rect.Top);
+				graphics.RenderSolid(color[2]);
+
+				x = rect.Right-0.5;
+				graphics.AddLine(x, rect.Bottom, x, rect.Top);
+				graphics.RenderSolid(color[3]);
 			}
 			else
 			{
-				rect.Bottom += 1;
-				rect.Top    -= 1;
+				y = rect.Top-0.5;
+				graphics.AddLine(rect.Left, y, rect.Right, y);
+				graphics.RenderSolid(color[0]);
+
+				y = rect.Top-1.5;
+				graphics.AddLine(rect.Left, y, rect.Right, y);
+				graphics.RenderSolid(color[1]);
+
+				y = rect.Bottom+1.5;
+				graphics.AddLine(rect.Left, y, rect.Right, y);
+				graphics.RenderSolid(color[2]);
+
+				y = rect.Bottom+0.5;
+				graphics.AddLine(rect.Left, y, rect.Right, y);
+				graphics.RenderSolid(color[3]);
 			}
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(color);
 		}
 		
 		public event MessageEventHandler	DragStarted;
@@ -138,7 +166,7 @@ namespace Epsitec.Common.Widgets
 		public event MessageEventHandler	DragEnded;
 		
 		protected PaneButtonStyle			paneButtonStyle;
-		protected Drawing.Color				color;
+		protected Drawing.Color[]			color = new Drawing.Color[4];
 		protected bool						mouseDown = false;
 	}
 }

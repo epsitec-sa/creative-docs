@@ -733,7 +733,7 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(400, 300);
-			window.Text = "CheckAdornerBug";
+			window.Text = "CheckAdornerBug1";
 
 			Button button1 = new Button();
 			//button1.Text = "";

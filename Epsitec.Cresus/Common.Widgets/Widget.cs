@@ -39,19 +39,19 @@ namespace Epsitec.Common.Widgets
 	{
 		public Widget()
 		{
-			this.internal_state |= InternalState.Visible;
-			this.internal_state |= InternalState.AutoCapture;
-			this.internal_state |= InternalState.AutoMnemonic;
+			this.internalState |= InternalState.Visible;
+			this.internalState |= InternalState.AutoCapture;
+			this.internalState |= InternalState.AutoMnemonic;
 			
-			this.widget_state |= WidgetState.Enabled;
+			this.widgetState |= WidgetState.Enabled;
 			
 			this.alignment = this.DefaultAlignment;
 			this.Width     = this.DefaultWidth;
 			this.Height    = this.DefaultHeight;
 			this.anchor    = this.DefaultAnchor;
 			
-			this.back_color = Drawing.Color.FromName ("Control");
-			this.fore_color = Drawing.Color.FromName ("ControlText");
+			this.backColor = Drawing.Color.FromName ("Control");
+			this.foreColor = Drawing.Color.FromName ("ControlText");
 		}
 		
 		public void Dispose()
@@ -77,12 +77,12 @@ namespace Epsitec.Common.Widgets
 		
 		public Drawing.Color				BackColor
 		{
-			get { return this.back_color; }
+			get { return this.backColor; }
 			set
 			{
-				if (this.back_color != value)
+				if (this.backColor != value)
 				{
-					this.back_color = value;
+					this.backColor = value;
 					this.Invalidate ();
 				}
 			}
@@ -90,12 +90,12 @@ namespace Epsitec.Common.Widgets
 		
 		public Drawing.Color				ForeColor
 		{
-			get { return this.fore_color; }
+			get { return this.foreColor; }
 			set
 			{
-				if (this.fore_color != value)
+				if (this.foreColor != value)
 				{
-					this.fore_color = value;
+					this.foreColor = value;
 					this.Invalidate ();
 				}
 			}
@@ -172,7 +172,7 @@ namespace Epsitec.Common.Widgets
 		
 		public ClientInfo					Client
 		{
-			get { return this.client_info; }
+			get { return this.clientInfo; }
 		}
 		
 		
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Widgets
 		{
 			lock (this)
 			{
-				this.suspend_counter++;
+				this.suspendCounter++;
 			}
 		}
 		
@@ -188,16 +188,16 @@ namespace Epsitec.Common.Widgets
 		{
 			lock (this)
 			{
-				if (this.suspend_counter > 0)
+				if (this.suspendCounter > 0)
 				{
-					this.suspend_counter--;
+					this.suspendCounter--;
 				}
 				
-				if (this.suspend_counter == 0)
+				if (this.suspendCounter == 0)
 				{
-					if ((this.internal_state & InternalState.ChildrenChanged) != 0)
+					if ((this.internalState & InternalState.ChildrenChanged) != 0)
 					{
-						this.internal_state -= InternalState.ChildrenChanged;
+						this.internalState -= InternalState.ChildrenChanged;
 						this.OnChildrenChanged ();
 					}
 				}
@@ -206,13 +206,13 @@ namespace Epsitec.Common.Widgets
 		
 		public void SetClientAngle(int angle)
 		{
-			this.client_info.SetAngle (angle);
+			this.clientInfo.SetAngle (angle);
 			this.UpdateClientGeometry ();
 		}
 		
 		public void SetClientZoom(double zoom)
 		{
-			this.client_info.SetZoom (zoom);
+			this.clientInfo.SetZoom (zoom);
 			this.UpdateClientGeometry ();
 		}
 		
@@ -254,16 +254,16 @@ namespace Epsitec.Common.Widgets
 #endif
 		public bool							DebugActive
 		{
-			get { return (this.internal_state & InternalState.DebugActive) != 0; }
+			get { return (this.internalState & InternalState.DebugActive) != 0; }
 			set
 			{
 				if (value)
 				{
-					this.internal_state |= InternalState.DebugActive;
+					this.internalState |= InternalState.DebugActive;
 				}
 				else
 				{
-					this.internal_state &= ~ InternalState.DebugActive;
+					this.internalState &= ~ InternalState.DebugActive;
 				}
 			}
 		}
@@ -273,7 +273,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ((this.widget_state & WidgetState.Enabled) == 0)
+				if ((this.widgetState & WidgetState.Enabled) == 0)
 				{
 					return false;
 				}
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ((this.internal_state & InternalState.Frozen) != 0)
+				if ((this.internalState & InternalState.Frozen) != 0)
 				{
 					return true;
 				}
@@ -307,7 +307,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (((this.internal_state & InternalState.Visible) == 0) ||
+				if (((this.internalState & InternalState.Visible) == 0) ||
 					(this.parent == null))
 				{
 					return false;
@@ -319,38 +319,38 @@ namespace Epsitec.Common.Widgets
 
 		public bool							IsFocused
 		{
-			get { return (this.widget_state & WidgetState.Focused) != 0; }
+			get { return (this.widgetState & WidgetState.Focused) != 0; }
 		}
 		
 		public bool							IsEntered
 		{
-			get { return (this.widget_state & WidgetState.Entered) != 0; }
+			get { return (this.widgetState & WidgetState.Entered) != 0; }
 		}
 		
 		public bool							IsSelected
 		{
-			get { return (this.widget_state & WidgetState.Selected) != 0; }
+			get { return (this.widgetState & WidgetState.Selected) != 0; }
 		}
 		
 		public bool							IsEngaged
 		{
-			get { return (this.widget_state & WidgetState.Engaged) != 0; }
+			get { return (this.widgetState & WidgetState.Engaged) != 0; }
 		}
 		
 		public bool							IsError
 		{
-			get { return (this.widget_state & WidgetState.Error) != 0; }
+			get { return (this.widgetState & WidgetState.Error) != 0; }
 			set
 			{
 				if (this.IsError != value)
 				{
 					if (value)
 					{
-						this.widget_state |= WidgetState.Error;
+						this.widgetState |= WidgetState.Error;
 					}
 					else
 					{
-						this.widget_state &= ~WidgetState.Error;
+						this.widgetState &= ~WidgetState.Error;
 					}
 					
 					this.Invalidate ();
@@ -360,108 +360,108 @@ namespace Epsitec.Common.Widgets
 		
 		public bool							AutoCapture
 		{
-			get { return (this.internal_state & InternalState.AutoCapture) != 0; }
+			get { return (this.internalState & InternalState.AutoCapture) != 0; }
 			set
 			{
 				if (value)
 				{
-					this.internal_state |= InternalState.AutoCapture;
+					this.internalState |= InternalState.AutoCapture;
 				}
 				else
 				{
-					this.internal_state &= ~InternalState.AutoCapture;
+					this.internalState &= ~InternalState.AutoCapture;
 				}
 			}
 		}
 		
 		public bool							AutoFocus
 		{
-			get { return (this.internal_state & InternalState.AutoFocus) != 0; }
+			get { return (this.internalState & InternalState.AutoFocus) != 0; }
 			set
 			{
 				if (value)
 				{
-					this.internal_state |= InternalState.AutoFocus;
+					this.internalState |= InternalState.AutoFocus;
 				}
 				else
 				{
-					this.internal_state &= ~InternalState.AutoFocus;
+					this.internalState &= ~InternalState.AutoFocus;
 				}
 			}
 		}
 		
 		public bool							AutoEngage
 		{
-			get { return (this.internal_state & InternalState.AutoEngage) != 0; }
+			get { return (this.internalState & InternalState.AutoEngage) != 0; }
 			set
 			{
 				if (value)
 				{
-					this.internal_state |= InternalState.AutoEngage;
+					this.internalState |= InternalState.AutoEngage;
 				}
 				else
 				{
-					this.internal_state &= ~InternalState.AutoEngage;
+					this.internalState &= ~InternalState.AutoEngage;
 				}
 			}
 		}
 		
 		public bool							AutoRepeatEngaged
 		{
-			get { return (this.internal_state & InternalState.AutoRepeatEngaged) != 0; }
+			get { return (this.internalState & InternalState.AutoRepeatEngaged) != 0; }
 			set
 			{
 				if (value)
 				{
-					this.internal_state |= InternalState.AutoRepeatEngaged;
+					this.internalState |= InternalState.AutoRepeatEngaged;
 				}
 				else
 				{
-					this.internal_state &= ~InternalState.AutoRepeatEngaged;
+					this.internalState &= ~InternalState.AutoRepeatEngaged;
 				}
 			}
 		}
 		
 		public bool							AutoToggle
 		{
-			get { return (this.internal_state & InternalState.AutoToggle) != 0; }
+			get { return (this.internalState & InternalState.AutoToggle) != 0; }
 			set
 			{
 				if (value)
 				{
-					this.internal_state |= InternalState.AutoToggle;
+					this.internalState |= InternalState.AutoToggle;
 				}
 				else
 				{
-					this.internal_state &= InternalState.AutoToggle;
+					this.internalState &= InternalState.AutoToggle;
 				}
 			}
 		}
 		
 		public bool							AutoMnemonic
 		{
-			get { return (this.internal_state & InternalState.AutoMnemonic) != 0; }
+			get { return (this.internalState & InternalState.AutoMnemonic) != 0; }
 		}
 		
 		
 		public virtual WidgetState			State
 		{
-			get { return this.widget_state; }
+			get { return this.widgetState; }
 		}
 		
 		public virtual WidgetState			ActiveState
 		{
-			get { return this.widget_state & WidgetState.ActiveMask; }
+			get { return this.widgetState & WidgetState.ActiveMask; }
 			set
 			{
-				WidgetState active = this.widget_state & WidgetState.ActiveMask;
+				WidgetState active = this.widgetState & WidgetState.ActiveMask;
 				
 				System.Diagnostics.Debug.Assert ((value & WidgetState.ActiveMask) == value);
 				
 				if (active != value)
 				{
-					this.widget_state &= ~WidgetState.ActiveMask;
-					this.widget_state |= value & WidgetState.ActiveMask;
+					this.widgetState &= ~WidgetState.ActiveMask;
+					this.widgetState |= value & WidgetState.ActiveMask;
 					this.OnActiveStateChanged ();
 					this.Invalidate ();
 				}
@@ -479,7 +479,7 @@ namespace Epsitec.Common.Widgets
 									WidgetState.Selected |
 									WidgetState.Error;
 				
-				WidgetState state = this.widget_state & mask;
+				WidgetState state = this.widgetState & mask;
 				
 				if (this.IsEnabled)
 				{
@@ -520,31 +520,31 @@ namespace Epsitec.Common.Widgets
 		
 		public bool							CanFocus
 		{
-			get { return ((this.internal_state & InternalState.Focusable) != 0) && !this.IsFrozen; }
+			get { return ((this.internalState & InternalState.Focusable) != 0) && !this.IsFrozen; }
 		}
 		
 		public bool							CanSelect
 		{
-			get { return ((this.internal_state & InternalState.Selectable) != 0) && !this.IsFrozen; }
+			get { return ((this.internalState & InternalState.Selectable) != 0) && !this.IsFrozen; }
 		}
 		
 		public bool							CanEngage
 		{
-			get { return ((this.internal_state & InternalState.Engageable) != 0) && this.IsEnabled && !this.IsFrozen; }
+			get { return ((this.internalState & InternalState.Engageable) != 0) && this.IsEnabled && !this.IsFrozen; }
 		}
 		
 		public bool							AcceptThreeState
 		{
-			get { return (this.internal_state & InternalState.AcceptThreeState) != 0; }
+			get { return (this.internalState & InternalState.AcceptThreeState) != 0; }
 			set
 			{
 				if (value)
 				{
-					this.internal_state |= InternalState.AcceptThreeState;
+					this.internalState |= InternalState.AcceptThreeState;
 				}
 				else
 				{
-					this.internal_state &= ~InternalState.AcceptThreeState;
+					this.internalState &= ~InternalState.AcceptThreeState;
 				}
 			}
 		}
@@ -710,12 +710,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.text_layout == null)
+				if (this.textLayout == null)
 				{
 					return "";
 				}
 				
-				string text = this.text_layout.Text;
+				string text = this.textLayout.Text;
 				
 				if (text == null)
 				{
@@ -735,7 +735,7 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					this.CreateTextLayout ();
-					this.text_layout.Text = value;
+					this.textLayout.Text = value;
 					this.Shortcut.Mnemonic = this.Mnemonic;
 				}
 			}
@@ -758,14 +758,14 @@ namespace Epsitec.Common.Widgets
 		
 		public int							TabIndex
 		{
-			get { return this.tab_index; }
-			set { this.tab_index = value; }
+			get { return this.tabIndex; }
+			set { this.tabIndex = value; }
 		}
 		
 		public TabNavigationMode			TabNavigation
 		{
-			get { return this.tab_navigation_mode; }
-			set { this.tab_navigation_mode = value; }
+			get { return this.tabNavigationMode; }
+			set { this.tabNavigationMode = value; }
 		}
 		
 		public Shortcut						Shortcut
@@ -851,11 +851,11 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void SetVisible(bool visible)
 		{
-			if ((this.internal_state & InternalState.Visible) == 0)
+			if ((this.internalState & InternalState.Visible) == 0)
 			{
 				if (visible)
 				{
-					this.internal_state |= InternalState.Visible;
+					this.internalState |= InternalState.Visible;
 					this.Invalidate ();
 				}
 			}
@@ -863,7 +863,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!visible)
 				{
-					this.internal_state &= ~ InternalState.Visible;
+					this.internalState &= ~ InternalState.Visible;
 					this.Invalidate ();
 				}
 			}
@@ -871,11 +871,11 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void SetEnabled(bool enabled)
 		{
-			if ((this.widget_state & WidgetState.Enabled) == 0)
+			if ((this.widgetState & WidgetState.Enabled) == 0)
 			{
 				if (enabled)
 				{
-					this.widget_state |= WidgetState.Enabled;
+					this.widgetState |= WidgetState.Enabled;
 					this.Invalidate ();
 				}
 			}
@@ -883,7 +883,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!enabled)
 				{
-					this.widget_state &= ~ WidgetState.Enabled;
+					this.widgetState &= ~ WidgetState.Enabled;
 					this.Invalidate ();
 				}
 			}
@@ -891,11 +891,11 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void SetFrozen(bool frozen)
 		{
-			if ((this.internal_state & InternalState.Frozen) == 0)
+			if ((this.internalState & InternalState.Frozen) == 0)
 			{
 				if (frozen)
 				{
-					this.internal_state |= InternalState.Frozen;
+					this.internalState |= InternalState.Frozen;
 					this.Invalidate ();
 				}
 			}
@@ -903,7 +903,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!frozen)
 				{
-					this.internal_state &= ~ InternalState.Frozen;
+					this.internalState &= ~ InternalState.Frozen;
 					this.Invalidate ();
 				}
 			}
@@ -918,11 +918,11 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			if ((this.widget_state & WidgetState.Focused) == 0)
+			if ((this.widgetState & WidgetState.Focused) == 0)
 			{
 				if (focused)
 				{
-					this.widget_state |= WidgetState.Focused;
+					this.widgetState |= WidgetState.Focused;
 					frame.FocusedWidget = this;
 					this.OnFocused ();
 					this.Invalidate ();
@@ -932,7 +932,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!focused)
 				{
-					this.widget_state &= ~ WidgetState.Focused;
+					this.widgetState &= ~ WidgetState.Focused;
 					frame.FocusedWidget = null;
 					this.OnDefocused ();
 					this.Invalidate ();
@@ -942,11 +942,11 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void SetSelected(bool selected)
 		{
-			if ((this.widget_state & WidgetState.Selected) == 0)
+			if ((this.widgetState & WidgetState.Selected) == 0)
 			{
 				if (selected)
 				{
-					this.widget_state |= WidgetState.Selected;
+					this.widgetState |= WidgetState.Selected;
 					this.Invalidate ();
 					this.OnSelected ();
 				}
@@ -955,7 +955,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!selected)
 				{
-					this.widget_state &= ~WidgetState.Selected;
+					this.widgetState &= ~WidgetState.Selected;
 					this.Invalidate ();
 					this.OnDeselected ();
 				}
@@ -971,16 +971,16 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			if ((this.internal_state & InternalState.Engageable) == 0)
+			if ((this.internalState & InternalState.Engageable) == 0)
 			{
 				return;
 			}
 			
-			if ((this.widget_state & WidgetState.Engaged) == 0)
+			if ((this.widgetState & WidgetState.Engaged) == 0)
 			{
 				if (engaged)
 				{
-					this.widget_state |= WidgetState.Engaged;
+					this.widgetState |= WidgetState.Engaged;
 					frame.EngagedWidget = this;
 					this.Invalidate ();
 					this.OnEngaged ();
@@ -990,7 +990,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!engaged)
 				{
-					this.widget_state &= ~ WidgetState.Engaged;
+					this.widgetState &= ~ WidgetState.Engaged;
 					frame.EngagedWidget = null;
 					this.Invalidate ();
 					this.OnDisengaged ();
@@ -1030,15 +1030,15 @@ namespace Epsitec.Common.Widgets
 				
 				if (entered)
 				{
-					Widget.entered_widgets.Add (this);
-					this.widget_state |= WidgetState.Entered;
+					Widget.enteredWidgets.Add (this);
+					this.widgetState |= WidgetState.Entered;
 					
 					message = Message.FromMouseEvent (MessageType.MouseEnter, null, null);
 				}
 				else
 				{
-					Widget.entered_widgets.Remove (this);
-					this.widget_state &= ~ WidgetState.Entered;
+					Widget.enteredWidgets.Remove (this);
+					this.widgetState &= ~ WidgetState.Entered;
 					
 					message = Message.FromMouseEvent (MessageType.MouseLeave, null, null);
 				}
@@ -1051,15 +1051,15 @@ namespace Epsitec.Common.Widgets
 		
 		public static void UpdateEntered(Message message)
 		{
-			int index = Widget.entered_widgets.Count;
+			int index = Widget.enteredWidgets.Count;
 			
 			while (index > 0)
 			{
 				index--;
 				
-				if (index < Widget.entered_widgets.Count)
+				if (index < Widget.enteredWidgets.Count)
 				{
-					Widget widget = Widget.entered_widgets[index] as Widget;
+					Widget widget = Widget.enteredWidgets[index] as Widget;
 					
 					Drawing.Point point_in_widget = widget.MapRootToClient (message.Cursor);
 					
@@ -1091,7 +1091,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Rectangle GetPaintBounds()
 		{
-			return new Drawing.Rectangle (0, 0, this.client_info.width, this.client_info.height);
+			return new Drawing.Rectangle (0, 0, this.clientInfo.width, this.clientInfo.height);
 		}
 		
 		public virtual void Invalidate()
@@ -1112,9 +1112,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Point result = new Drawing.Point ();
 			
-			double z = this.client_info.zoom;
+			double z = this.clientInfo.zoom;
 			
-			switch (this.client_info.angle)
+			switch (this.clientInfo.angle)
 			{
 				case 0:
 					result.X = (point.X - this.x1) / z;
@@ -1147,9 +1147,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Point result = new Drawing.Point ();
 			
-			double z = this.client_info.zoom;
+			double z = this.clientInfo.zoom;
 			
-			switch (this.client_info.angle)
+			switch (this.clientInfo.angle)
 			{
 				case 0:
 					result.X = point.X * z + this.x1;
@@ -1326,7 +1326,7 @@ namespace Epsitec.Common.Widgets
 			
 			double ox, oy;
 			
-			switch (this.client_info.angle)
+			switch (this.clientInfo.angle)
 			{
 				case 0:		ox = this.x1; oy = this.y1; break;
 				case 90:	ox = this.x2; oy = this.y1; break;
@@ -1336,8 +1336,8 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			t.Translate (-ox, -oy);
-			t.Rotate (-this.client_info.angle);
-			t.Scale (1 / this.client_info.zoom);
+			t.Rotate (-this.clientInfo.angle);
+			t.Scale (1 / this.clientInfo.zoom);
 			t.Round ();
 			
 			return t;
@@ -1349,7 +1349,7 @@ namespace Epsitec.Common.Widgets
 			
 			double ox, oy;
 			
-			switch (this.client_info.angle)
+			switch (this.clientInfo.angle)
 			{
 				case 0:		ox = this.x1; oy = this.y1; break;
 				case 90:	ox = this.x2; oy = this.y1; break;
@@ -1358,8 +1358,8 @@ namespace Epsitec.Common.Widgets
 				default:	throw new System.ArgumentOutOfRangeException ("Invalid angle");
 			}
 			
-			t.Scale (this.client_info.zoom);
-			t.Rotate (this.client_info.angle);
+			t.Scale (this.clientInfo.zoom);
+			t.Rotate (this.clientInfo.angle);
 			t.Translate (ox, oy);
 			t.Round ();
 			
@@ -1443,10 +1443,10 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateLayoutSize()
 		{
-			if (this.text_layout != null)
+			if (this.textLayout != null)
 			{
-				this.text_layout.Alignment  = this.Alignment;
-				this.text_layout.LayoutSize = this.Client.Size;
+				this.textLayout.Alignment  = this.Alignment;
+				this.textLayout.LayoutSize = this.Client.Size;
 			}
 		}
 		
@@ -1454,34 +1454,34 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateClientGeometry()
 		{
-			System.Diagnostics.Debug.Assert (this.layout_info == null);
+			System.Diagnostics.Debug.Assert (this.layoutInfo == null);
 			
-			this.layout_info = new LayoutInfo (this.client_info.width, this.client_info.height);
+			this.layoutInfo = new LayoutInfo (this.clientInfo.width, this.clientInfo.height);
 			
 			try
 			{
-				double zoom = this.client_info.zoom;
+				double zoom = this.clientInfo.zoom;
 				
 				double dx = (this.x2 - this.x1) / zoom;
 				double dy = (this.y2 - this.y1) / zoom;
 				
-				switch (this.client_info.angle)
+				switch (this.clientInfo.angle)
 				{
 					case 0:
 					case 180:
-						this.client_info.SetSize (dx, dy);
+						this.clientInfo.SetSize (dx, dy);
 						break;
 					
 					case 90:
 					case 270:
-						this.client_info.SetSize (dy, dx);
+						this.clientInfo.SetSize (dy, dx);
 						break;
 					
 					default:
-						double angle = this.client_info.angle * System.Math.PI / 180.0;
+						double angle = this.clientInfo.angle * System.Math.PI / 180.0;
 						double cos = System.Math.Cos (angle);
 						double sin = System.Math.Sin (angle);
-						this.client_info.SetSize (cos*cos*dx + sin*sin*dy, sin*sin*dx + cos*cos*dy);
+						this.clientInfo.SetSize (cos*cos*dx + sin*sin*dy, sin*sin*dx + cos*cos*dy);
 						break;
 				}
 				
@@ -1490,19 +1490,19 @@ namespace Epsitec.Common.Widgets
 			}
 			finally
 			{
-				this.layout_info = null;
+				this.layoutInfo = null;
 			}
 		}
 		
 		protected virtual void UpdateChildrenLayout()
 		{
-			System.Diagnostics.Debug.Assert (this.client_info != null);
-			System.Diagnostics.Debug.Assert (this.layout_info != null);
+			System.Diagnostics.Debug.Assert (this.clientInfo != null);
+			System.Diagnostics.Debug.Assert (this.layoutInfo != null);
 			
 			if (this.HasChildren)
 			{
-				double width_diff  = this.client_info.width  - this.layout_info.OriginalWidth;
-				double height_diff = this.client_info.height - this.layout_info.OriginalHeight;
+				double width_diff  = this.clientInfo.width  - this.layoutInfo.OriginalWidth;
+				double height_diff = this.clientInfo.height - this.layoutInfo.OriginalHeight;
 				
 				foreach (Widget child in this.children)
 				{
@@ -1850,12 +1850,12 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void CreateTextLayout()
 		{
-			if (this.text_layout == null)
+			if (this.textLayout == null)
 			{
-				this.text_layout = new TextLayout ();
+				this.textLayout = new TextLayout ();
 				
-				this.text_layout.Font     = this.DefaultFont;
-				this.text_layout.FontSize = this.DefaultFontSize;
+				this.textLayout.Font     = this.DefaultFont;
+				this.textLayout.FontSize = this.DefaultFontSize;
 				
 				this.UpdateLayoutSize ();
 			}
@@ -1863,9 +1863,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void DisposeTextLayout()
 		{
-			if (this.text_layout != null)
+			if (this.textLayout != null)
 			{
-				this.text_layout = null;
+				this.textLayout = null;
 			}
 		}
 		
@@ -2195,13 +2195,13 @@ namespace Epsitec.Common.Widgets
 			
 			private void PostInsert(object widget)
 			{
-				if (this.widget.suspend_counter == 0)
+				if (this.widget.suspendCounter == 0)
 				{
 					this.widget.OnChildrenChanged ();
 				}
 				else
 				{
-					this.widget.internal_state |= InternalState.ChildrenChanged;
+					this.widget.internalState |= InternalState.ChildrenChanged;
 				}
 			}
 			
@@ -2228,13 +2228,13 @@ namespace Epsitec.Common.Widgets
 			
 			private void NotifyChanged()
 			{
-				if (this.widget.suspend_counter == 0)
+				if (this.widget.suspendCounter == 0)
 				{
 					this.widget.OnChildrenChanged ();
 				}
 				else
 				{
-					this.widget.internal_state |= InternalState.ChildrenChanged;
+					this.widget.internalState |= InternalState.ChildrenChanged;
 				}
 			}
 			
@@ -2372,24 +2372,24 @@ namespace Epsitec.Common.Widgets
 		
 		
 		protected AnchorStyles				anchor;
-		protected Drawing.Color				back_color;
-		protected Drawing.Color				fore_color;
+		protected Drawing.Color				backColor;
+		protected Drawing.Color				foreColor;
 		protected double					x1, y1, x2, y2;
-		protected ClientInfo				client_info = new ClientInfo ();
+		protected ClientInfo				clientInfo = new ClientInfo ();
 		
 		protected WidgetCollection			children;
 		protected Widget					parent;
 		protected string					name;
-		protected TextLayout				text_layout;
+		protected TextLayout				textLayout;
 		protected ContentAlignment			alignment;
-		protected LayoutInfo				layout_info;
-		protected InternalState				internal_state;
-		protected WidgetState				widget_state;
-		protected int						suspend_counter;
-		protected int						tab_index;
-		protected TabNavigationMode			tab_navigation_mode;
+		protected LayoutInfo				layoutInfo;
+		protected InternalState				internalState;
+		protected WidgetState				widgetState;
+		protected int						suspendCounter;
+		protected int						tabIndex;
+		protected TabNavigationMode			tabNavigationMode;
 		protected Shortcut					shortcut;
 		
-		static System.Collections.ArrayList	entered_widgets = new System.Collections.ArrayList ();
+		static System.Collections.ArrayList	enteredWidgets = new System.Collections.ArrayList ();
 	}
 }

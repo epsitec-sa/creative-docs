@@ -25,9 +25,16 @@ namespace Epsitec.Common.Widgets
 			this.slider.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
 			this.Children.Add(this.slider);
 
+			this.button = new ArrowButton();
+			this.button.Hide();
+			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.Children.Add(this.button);
+
 			this.panes[1] = new Widget();
 			this.Children.Add(this.panes[1]);
 
+			SetHideDimension(0, 20);
+			SetHideDimension(1, 20);
 			SetMinDimension(0, 0);
 			SetMinDimension(1, 0);
 			SetMaxDimension(0, 1000000);
@@ -55,6 +62,22 @@ namespace Epsitec.Common.Widgets
 				{
 					this.slider.PaneButtonStyle = PaneButtonStyle.Horizontal;
 				}
+			}
+		}
+
+		// Mode avec ou sans bouton.
+		// Avec PaneStyle.LeftRight, il faut spécifier les min/max du panneau gauche (0).
+		// Avec PaneStyle.BottomTop, il faut spécifier les min/max du panneau supérieur (1).
+		public bool FlipFlop
+		{
+			get
+			{
+				return this.flipFlop;
+			}
+
+			set
+			{
+				this.flipFlop = value;
 			}
 		}
 
@@ -89,6 +112,8 @@ namespace Epsitec.Common.Widgets
 
 				if ( rank == 0 )  // panneau gauche ?
 				{
+					if ( dim < this.hideDimension[0] )  dim = 0;
+
 					rect.Width = dim;
 					this.panes[0].Bounds = rect;
 
@@ -103,6 +128,8 @@ namespace Epsitec.Common.Widgets
 
 				if ( rank == 1 )  // panneau droite ?
 				{
+					if ( dim < this.hideDimension[1] )  dim = 0;
+
 					rect.Width = total-dim;
 					this.panes[0].Bounds = rect;
 
@@ -115,8 +142,31 @@ namespace Epsitec.Common.Widgets
 					this.panes[1].Bounds = rect;
 				}
 
-				this.panes[0].SetVisible( this.panes[0].Width > 20 );
-				this.panes[1].SetVisible( this.panes[1].Width > 20 );
+				this.panes[0].SetVisible( this.panes[0].Width > this.hideDimension[0] );
+				this.panes[1].SetVisible( this.panes[1].Width > this.hideDimension[1] );
+
+				if ( this.flipFlop )
+				{
+					this.button.Show();
+					rect.Left   = this.slider.Left-3;
+					rect.Right  = this.slider.Right+3;
+					rect.Bottom = this.slider.Bottom;
+					rect.Top    = this.slider.Bottom+12;
+					this.button.Bounds = rect;
+
+					if ( this.RetDimension(0) == this.minDimension[0] )
+					{
+						this.button.Direction = Direction.Right;
+					}
+					else
+					{
+						this.button.Direction = Direction.Left;
+					}
+				}
+				else
+				{
+					this.button.Hide();
+				}
 			}
 
 			if ( this.paneStyle == PaneStyle.BottomTop )
@@ -127,6 +177,8 @@ namespace Epsitec.Common.Widgets
 
 				if ( rank == 0 )  // panneau inférieur ?
 				{
+					if ( dim < this.hideDimension[0] )  dim = 0;
+
 					rect.Height = dim;
 					this.panes[0].Bounds = rect;
 
@@ -141,6 +193,8 @@ namespace Epsitec.Common.Widgets
 
 				if ( rank == 1 )  // panneau supérieur ?
 				{
+					if ( dim < this.hideDimension[1] )  dim = 0;
+
 					rect.Height = total-dim;
 					this.panes[0].Bounds = rect;
 
@@ -153,8 +207,31 @@ namespace Epsitec.Common.Widgets
 					this.panes[1].Bounds = rect;
 				}
 
-				this.panes[0].SetVisible( this.panes[0].Height > 20 );
-				this.panes[1].SetVisible( this.panes[1].Height > 20 );
+				this.panes[0].SetVisible( this.panes[0].Height > this.hideDimension[0] );
+				this.panes[1].SetVisible( this.panes[1].Height > this.hideDimension[1] );
+
+				if ( this.flipFlop )
+				{
+					this.button.Show();
+					rect.Right  = this.slider.Right;
+					rect.Left   = this.slider.Right-12;
+					rect.Bottom = this.slider.Bottom-3;
+					rect.Top    = this.slider.Top+3;
+					this.button.Bounds = rect;
+
+					if ( this.RetDimension(1) == this.minDimension[1] )
+					{
+						this.button.Direction = Direction.Down;
+					}
+					else
+					{
+						this.button.Direction = Direction.Up;
+					}
+				}
+				else
+				{
+					this.button.Hide();
+				}
 			}
 		}
 
@@ -177,6 +254,16 @@ namespace Epsitec.Common.Widgets
 			}
 
 			return 0;
+		}
+
+		// Spécifie une dimension en dessous de laquelle la panneau est caché.
+		public void SetHideDimension(int rank, double dim)
+		{
+			if ( rank < 0 || rank >= 2 )
+			{
+				throw new System.ArgumentOutOfRangeException();
+			}
+			this.hideDimension[rank] = dim;
 		}
 
 		// Spécifie une dimension minimale.
@@ -202,8 +289,10 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque le slider va être déplacé.
 		private void HandleSliderDragStarted(object sender, MessageEventArgs e)
 		{
+			if ( this.flipFlop )  return;
+
 			Widget slider = sender as Widget;
-			Drawing.Point pos = slider.MapClientToParent (e.Point);
+			Drawing.Point pos = slider.MapClientToParent(e.Point);
 			
 			switch ( this.paneStyle )
 			{
@@ -221,8 +310,10 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque le slider est déplacé.
 		private void HandleSliderDragMoved(object sender, MessageEventArgs e)
 		{
+			if ( this.flipFlop )  return;
+
 			Widget slider = sender as Widget;
-			Drawing.Point pos = slider.MapClientToParent (e.Point);
+			Drawing.Point pos = slider.MapClientToParent(e.Point);
 			
 			System.Diagnostics.Debug.Assert(this.panes.Length == 2);
 			
@@ -249,6 +340,38 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
+		// Bouton flip-flop cliqué.
+		private void HandleButtonClicked(object sender, MessageEventArgs e)
+		{
+			if ( this.paneStyle == PaneStyle.LeftRight )
+			{
+				if ( this.RetDimension(0) == this.minDimension[0] )
+				{
+					this.SetDimension(0, this.maxDimension[0]);
+					OnDimensionChanged();
+				}
+				else
+				{
+					this.SetDimension(0, this.minDimension[0]);
+					OnDimensionChanged();
+				}
+			}
+
+			if ( this.paneStyle == PaneStyle.BottomTop )
+			{
+				if ( this.RetDimension(1) == this.minDimension[1] )
+				{
+					this.SetDimension(1, this.maxDimension[1]);
+					OnDimensionChanged();
+				}
+				else
+				{
+					this.SetDimension(1, this.minDimension[1]);
+					OnDimensionChanged();
+				}
+			}
+		}
+
 		// Génère un événement pour dire que la sélection dans la liste a changé.
 		protected virtual void OnDimensionChanged()
 		{
@@ -262,11 +385,14 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler DimensionChanged;
 
 		protected PaneStyle					paneStyle = PaneStyle.LeftRight;
+		protected bool						flipFlop = false;
 		protected Widget[]					panes;
+		protected ArrowButton				button;
 		protected PaneButton				slider;
-		protected double					sliderDim = 4;
+		protected double					sliderDim = 5;
 		protected double					sliderDragPos;
 		protected double					sliderDragDim;
+		protected double[]					hideDimension = new double[2];
 		protected double[]					minDimension = new double[2];
 		protected double[]					maxDimension = new double[2];
 	}

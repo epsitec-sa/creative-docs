@@ -14,8 +14,8 @@ namespace Epsitec.Common.Widgets
 		public HeaderButton()
 		{
 			//this.internal_state &= ~InternalState.Engageable;
-			this.internal_state &= ~InternalState.AutoFocus;
-			this.internal_state &= ~InternalState.Focusable;
+			this.internalState &= ~InternalState.AutoFocus;
+			this.internalState &= ~InternalState.Focusable;
 			this.headerButtonStyle = HeaderButtonStyle.Top;
 		}
 		
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Widgets
 				type = Direction.Left;
 			}
 			adorner.PaintHeaderBackground(graphics, rect, state, dir, type);
-			adorner.PaintButtonTextLayout(graphics, pos, this.text_layout, state, dir, ButtonStyle.Flat);
+			adorner.PaintButtonTextLayout(graphics, pos, this.textLayout, state, dir, ButtonStyle.Flat);
 
 			if ( this.sortMode != 0 )  // triangle ?
 			{

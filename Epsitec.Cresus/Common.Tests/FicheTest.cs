@@ -10,7 +10,7 @@ namespace Epsitec.Common.Tests
 		[Test] public void CheckFicheApplication()
 		{
 			this.window = new WindowFrame();
-			this.window.Root.LayoutChanged += new EventHandler(Root_LayoutChanged);
+			this.window.Root.LayoutChanged += new EventHandler(this.Root_LayoutChanged);
 			
 			Widgets.Adorner.Factory.SetActive("LookDany");
 
@@ -242,12 +242,12 @@ namespace Epsitec.Common.Tests
 		// Crée tous les widgets du layout.
 		protected void CreateLayout()
 		{
-			Widget root = new Widget ();
+			Widget root = new Widget();
 			
-			root.SetClientAngle (0);
-			root.SetClientZoom (1.0);
+			root.SetClientAngle(0);
+			root.SetClientZoom(1.0);
 			root.Bounds = this.window.Root.Client.Bounds;
-			root.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+			root.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			
 			root.Parent = this.window.Root;
 			
@@ -255,14 +255,14 @@ namespace Epsitec.Common.Tests
 			this.pane.PaneStyle = PaneStyle.LeftRight;
 			this.pane.DimensionChanged += new EventHandler(this.pane_DimensionChanged);
 			this.pane.Parent = root;
-			this.leftPane = this.pane.RetPane(0);
+			this.leftPane  = this.pane.RetPane(0);
 			this.rightPane = this.pane.RetPane(1);
 
 			this.subPane = new Pane();
 			this.subPane.PaneStyle = PaneStyle.BottomTop;
 			this.subPane.DimensionChanged += new EventHandler(this.pane_DimensionChanged);
-			this.subPane.Parent = root;
-			this.topPane = this.subPane.RetPane(1);
+			this.subPane.Parent = this.leftPane;
+			this.topPane    = this.subPane.RetPane(1);
 			this.bottomPane = this.subPane.RetPane(0);
 
 			this.title = new StaticText();
@@ -286,7 +286,7 @@ namespace Epsitec.Common.Tests
 			//	Génère les infos de debug pour le fond de la fenêtre, ce qui permet de
 			//	réaliser des timings.
 			
-			this.window.Root.DebugActive = true;
+//-			this.window.Root.DebugActive = true;
 
 #if false
 			this.listCrit.Scroller.ArrowDown.Name = "Down";
@@ -393,11 +393,13 @@ namespace Epsitec.Common.Tests
 
 			this.pane.Location = new Point(0, 0);
 			this.pane.Size = new Size(windowDim.Width, windowDim.Height);
-			this.pane.SetMinDimension(1, 200);
+			this.pane.SetHideDimension(0, 100);
+			this.pane.SetMinDimension(1, 300);
 			this.pane.SetDimension(0, this.listWidth);
 
 			this.subPane.Location = new Point(0, 0);
 			this.subPane.Size = new Size(this.leftPane.Width, this.leftPane.Height);
+			this.subPane.FlipFlop = true;
 			this.subPane.SetMinDimension(1, 80);
 			this.subPane.SetMaxDimension(1, 80+this.listCritHeight+10);
 			this.subPane.SetDimension(1, this.critHeight);
