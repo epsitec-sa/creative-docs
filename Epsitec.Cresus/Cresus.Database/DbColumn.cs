@@ -125,14 +125,14 @@ namespace Epsitec.Cresus.Database
 			return column;
 		}
 		
-		public static string SerialiseToXml(DbColumn column, bool full)
+		public static string SerializeToXml(DbColumn column, bool full)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			DbColumn.SerialiseToXml (buffer, column, full);
+			DbColumn.SerializeToXml (buffer, column, full);
 			return buffer.ToString ();
 		}
 		
-		public static void SerialiseToXml(System.Text.StringBuilder buffer, DbColumn column, bool full)
+		public static void SerializeToXml(System.Text.StringBuilder buffer, DbColumn column, bool full)
 		{
 			if (column == null)
 			{
@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Database
 			}
 			else
 			{
-				column.SerialiseXmlDefinition (buffer, full);
+				column.SerializeXmlDefinition (buffer, full);
 			}
 		}
 		
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer, bool full)
+		protected void SerializeXmlDefinition(System.Text.StringBuilder buffer, bool full)
 		{
 			buffer.Append (@"<col");
 			
@@ -269,11 +269,11 @@ namespace Epsitec.Cresus.Database
 			
 			if (full)
 			{
-				DbKey.SerialiseToXmlAttributes (buffer, this.internal_column_key);
-				this.Attributes.SerialiseXmlAttributes (buffer);
+				DbKey.SerializeToXmlAttributes (buffer, this.internal_column_key);
+				this.Attributes.SerializeXmlAttributes (buffer);
 				buffer.Append (@">");
 				
-				DbTypeFactory.SerialiseToXml (buffer, this.type, true);
+				DbTypeFactory.SerializeToXml (buffer, this.type, true);
 				
 				buffer.Append (@"</col>");
 			}
@@ -310,8 +310,8 @@ namespace Epsitec.Cresus.Database
 			
 			this.column_class        = (DbColumnClass) column_class_code;
 			this.column_localisation = (DbColumnLocalisation) column_localisation_code;
-			this.internal_column_key = DbKey.DeserialiseFromXmlAttributes (xml);
-			this.Attributes.DeserialiseXmlAttributes (xml);
+			this.internal_column_key = DbKey.DeserializeFromXmlAttributes (xml);
+			this.Attributes.DeserializeXmlAttributes (xml);
 		}
 		
 		
