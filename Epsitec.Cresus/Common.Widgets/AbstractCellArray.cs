@@ -25,8 +25,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public AbstractCellArray()
 		{
-			this.internalState |= InternalState.AutoFocus;
-			this.internalState |= InternalState.Focusable;
+			this.InternalState |= InternalState.AutoFocus;
+			this.InternalState |= InternalState.Focusable;
 
 			double h = this.DefaultFontHeight+4;
 			this.defHeight = h;
@@ -40,8 +40,8 @@ namespace Epsitec.Common.Widgets
 			this.scrollerH  = new HScroller(this);
 			
 			this.scrollerV.IsInverted = true;  // de haut en bas
-			this.scrollerV.Moved += new EventHandler(this.HandleScrollerV);
-			this.scrollerH.Moved += new EventHandler(this.HandleScrollerH);
+			this.scrollerV.ValueChanged += new EventHandler(this.HandleScrollerV);
+			this.scrollerH.ValueChanged += new EventHandler(this.HandleScrollerH);
 		}
 		
 		
@@ -49,8 +49,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.scrollerV.Moved -= new EventHandler(this.HandleScrollerV);
-				this.scrollerH.Moved -= new EventHandler(this.HandleScrollerH);
+				this.scrollerV.ValueChanged -= new EventHandler(this.HandleScrollerV);
+				this.scrollerH.ValueChanged -= new EventHandler(this.HandleScrollerH);
 			}
 			
 			base.Dispose(disposing);
