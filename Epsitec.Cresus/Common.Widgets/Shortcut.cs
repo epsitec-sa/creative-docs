@@ -72,11 +72,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.key_code != value)
 				{
-					char key_char  = System.Char.ToUpper ((char) (value & 0x0000ffff), System.Globalization.CultureInfo.CurrentCulture);
-					int  modifiers = value & 0x0fff0000;
+//					char key_char  = System.Char.ToUpper ((char) (value & 0x0000ffff), System.Globalization.CultureInfo.CurrentCulture);
+//					int  modifiers = value & 0x0fff0000;
 					
 					this.mode     = ShortcutMode.KeyCode;
-					this.key_code = key_char | modifiers;
+					this.key_code = value; //key_char | modifiers;
 				}
 			}
 		}

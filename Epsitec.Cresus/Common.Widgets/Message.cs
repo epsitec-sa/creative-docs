@@ -287,6 +287,21 @@ namespace Epsitec.Common.Widgets
 			message.filter_only_focused = true;
 			message.filter_only_on_hit  = false;
 			
+			if (e.Alt)
+			{
+				message.modifiers |= ModifierKeys.Alt;
+			}
+			
+			if (e.Shift)
+			{
+				message.modifiers |= ModifierKeys.Shift;
+			}
+			
+			if (e.Control)
+			{
+				message.modifiers |= ModifierKeys.Ctrl;
+			}
+			
 			if (type == MessageType.KeyDown)
 			{
 				Message.state.key_down_code = e.KeyValue;
