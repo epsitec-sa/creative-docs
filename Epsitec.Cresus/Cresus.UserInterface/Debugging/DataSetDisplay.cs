@@ -87,11 +87,14 @@ namespace Epsitec.Cresus.UserInterface.Debugging
 		
 		private void CreateWindow()
 		{
+			Widgets.Adorner.Factory.SetActive ("LookMetal");
+			
 			this.window = new Widgets.Window ();
 			
 			this.window.ClientSize = new Drawing.Size (400, 300);
 			this.window.Text = "DataSet Explorer";
 			this.window.Root.PreferHorizontalDockLayout = false;
+			this.window.Root.DockMargins = new Drawing.Margins (2, 2, 2, 2);
 			
 			this.book = new Widgets.TabBook ();
 			this.book.Dock = Widgets.DockStyle.Fill;

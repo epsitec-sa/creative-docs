@@ -587,12 +587,12 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 
-		[Test] public void CheckAdornerTab()
+		[Test] public void CheckAdornerTab1()
 		{
 			Window window = new Window();
 			
 			window.ClientSize = new Size(400, 300);
-			window.Text = "CheckAdornerTab";
+			window.Text = "CheckAdornerTab1";
 			window.WindowClosed += new EventHandler(this.HandleWindowClosed);
 
 			TabBook tb = new TabBook();
@@ -731,6 +731,100 @@ namespace Epsitec.Common.Tests
 #endif
 
 			tb.ActivePage = page1;
+
+			window.FocusedWidget = tb;
+
+			window.Show();
+		}
+
+		[Test] public void CheckAdornerTab2()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Size(400, 300);
+			window.Text = "CheckAdornerTab2";
+			window.WindowClosed += new EventHandler(this.HandleWindowClosed);
+
+			TabBook tb = new TabBook();
+			tb.TabBookStyle = TabBookStyle.Normal;
+			tb.Name = "TabBook";
+			tb.Location = new Point(10, 10);
+			tb.Size = new Size(380, 280);
+			tb.Text = "";
+			tb.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
+			window.Root.Children.Add(tb);
+			this.tabBook = tb;
+
+			Rectangle inside = tb.Inside;
+
+			string[] texts =
+			{
+#if true
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>DbTable.[1.0]</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>DbTable.[2.0]</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>DbTable.[3.0]</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>DbTable.[5.0]</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>DbTable.[4.0]</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+				"Table <i>CR_TABLE_DEF</i>...",
+#else
+				"Janvier",
+				"Fevrier",
+				"Mars",
+				"Avril",
+				"Mai",
+				"Juin",
+				"Juillet",
+				"Aout",
+				"Septembre",
+				"Octobre",
+				"Novembre",
+				"Decembre",
+				"Lundi",
+				"Mardi",
+				"Mercredi",
+				"Jeudi",
+				"Vendredi",
+				"Samedi",
+				"Dimanche",
+				"Blabla",
+				"Coucou",
+#endif
+			};
+
+#if false
+			for ( int i=0 ; i<21 ; i++ )
+			{
+				TabPage page = new TabPage();
+				page.Bounds = inside;
+				page.TabTitle = texts[i];
+				tb.Items.Add(page);
+				if ( i == 20 )  tb.ActivePage = page;
+			}
+#else
+			for ( int i=0 ; i<5 ; i++ )
+			{
+				TabPage page = new TabPage();
+				page.Bounds = inside;
+				page.TabTitle = "Table DbTable.[3.0]...";
+				tb.Items.Add(page);
+				if ( i == 4 )  tb.ActivePage = page;
+			}
+#endif
 
 			window.FocusedWidget = tb;
 
@@ -1296,12 +1390,12 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 
-		[Test] public void CheckAdornerPaneBook()
+		[Test] public void CheckAdornerPaneBook1()
 		{
 			Window window = new Window();
 			
 			window.ClientSize = new Size(500, 300);
-			window.Text = "CheckAdornerPaneBook";
+			window.Text = "CheckAdornerPaneBook1";
 
 			PaneBook book = new PaneBook();
 			book.Location = new Point(10, 10);
@@ -1402,6 +1496,150 @@ namespace Epsitec.Common.Tests
 			buttonv2.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			buttonv2.Text = "P2.2";
 			v2.Children.Add(buttonv2);
+
+			window.Show();
+		}
+
+		[Test] public void CheckAdornerPaneBook2()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Size(500, 300);
+			window.Text = "CheckAdornerPaneBook2";
+
+			PaneBook book = new PaneBook();
+			book.Location = new Point(10, 10);
+			book.Size = new Size(480, 280);
+			book.PaneBookStyle = PaneBookStyle.LeftRight;
+			book.PaneBehaviour = PaneBookBehaviour.FollowMe;
+			book.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			book.Parent = window.Root;
+
+			PanePage p1 = new PanePage();
+			p1.PaneRelativeSize = 10;
+			p1.PaneMinSize = 50;
+			p1.PaneElasticity = 0;
+			book.Items.Add(p1);
+
+			Button button1 = new Button();
+			button1.Location = new Point(10, 10);
+			button1.Width = p1.Width-20;
+			button1.Height = p1.Height-20;
+			button1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			button1.Text = "P1";
+			p1.Children.Add(button1);
+
+			PanePage p2 = new PanePage();
+			p2.PaneRelativeSize = 10;
+			p2.PaneMinSize = 50;
+			p2.PaneElasticity = 1;
+			book.Items.Add(p2);
+
+			Button button2 = new Button();
+			button2.Location = new Point(10, 10);
+			button2.Width = p2.Width-20;
+			button2.Height = p2.Height-20;
+			button2.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			button2.Text = "P2";
+			p2.Children.Add(button2);
+
+			window.Show();
+		}
+
+
+		[Test] public void CheckAdornerPaneBook3()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Size(500, 300);
+			window.Text = "CheckAdornerPaneBook3";
+
+			PaneBook book = new PaneBook();
+			book.Location = new Point(10, 10);
+			book.Size = new Size(480, 280);
+			book.PaneBookStyle = PaneBookStyle.LeftRight;
+			book.PaneBehaviour = PaneBookBehaviour.FollowMe;
+			book.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			book.Parent = window.Root;
+
+			PanePage p1 = new PanePage();
+			p1.PaneRelativeSize = 10;
+			p1.PaneMinSize = 50;
+			p1.PaneElasticity = 1;
+			book.Items.Add(p1);
+
+			Button button1 = new Button();
+			button1.Location = new Point(10, 10);
+			button1.Width = p1.Width-20;
+			button1.Height = p1.Height-20;
+			button1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			button1.Text = "P1";
+			p1.Children.Add(button1);
+
+			PanePage p2 = new PanePage();
+			p2.PaneRelativeSize = 10;
+//-			p2.PaneAbsoluteSize = 200;
+			p2.PaneMinSize = 50;
+			p2.PaneElasticity = 0;
+			book.Items.Add(p2);
+
+			Button button2 = new Button();
+			button2.Location = new Point(10, 10);
+			button2.Width = p2.Width-20;
+			button2.Height = p2.Height-20;
+			button2.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			button2.Text = "P2";
+			p2.Children.Add(button2);
+
+			window.Show();
+		}
+
+		[Test] public void CheckAdornerAntialiasing1()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Size(400, 500);
+			window.Text = "CheckAdornerAntialiasing1";
+			window.WindowClosed += new EventHandler(this.HandleWindowClosed);
+
+			Point pos = new Point(100, 10);
+			for ( int i=0 ; i<20 ; i++ )
+			{
+				StaticText st = new StaticText();
+				st.Location = pos;
+				st.Width = 150;
+				st.Text = "Table <i>DbTable.[2.0]</i>...";
+				st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+				window.Root.Children.Add(st);
+				pos.X += 0.05;
+				pos.Y += 20;
+			}
+
+			window.Show();
+		}
+
+		[Test] public void CheckAdornerAntialiasing2()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Size(1200, 200);
+			window.Text = "CheckAdornerAntialiasing2";
+			window.WindowClosed += new EventHandler(this.HandleWindowClosed);
+
+			Point pos = new Point(-90, 10);
+			for ( int i=0 ; i<10 ; i++ )
+			{
+				StaticText st = new StaticText();
+				StaticText co = new StaticText();
+				st.Location = pos;
+				st.Width = 120;
+				st.Text = "Table <i>DbTable.[2.0]</i>...";
+				st.Alignment = ContentAlignment.MiddleCenter;
+				st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+				window.Root.Children.Add(st);
+				
+				pos.X += 120.0+3.0/7.0;
+			}
 
 			window.Show();
 		}
