@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Epsitec.Cresus.UserInterface;
 using Epsitec.Cresus.DataLayer;
+using Epsitec.Cresus.Database;
 
 namespace Epsitec.Common.Support.Tests
 {
@@ -20,25 +21,48 @@ namespace Epsitec.Common.Support.Tests
 		
 		[Test] public void CheckBinderWithSimpleWindow()
 		{
+			System.Data.DataSet data_set = new System.Data.DataSet ("test");
+			
+			object o1 = true;
+			object o2 = false;
+			
+			data_set.Tables.Add ("x");
+			data_set.Tables["x"].Columns.Add ("a", typeof (bool));
+			data_set.Tables["x"].Columns.Add ("b", typeof (bool));
+			data_set.Tables["x"].Rows.Add (new object[] { o1, o2 });
+			data_set.AcceptChanges ();
+			
+			System.Data.DataRow row = data_set.Tables["x"].Rows[0];
+			
 			ResourceBundle bundle  = Resources.GetBundle ("file:simple_window");
 			DataBinder     binder  = new DataBinder ();
 			ObjectBundler  bundler = binder.ObjectBundler;
-			DataSet        data    = new DataSet ("test");
+			DataStore      data    = new DataStore (data_set);
 			
-			binder.DataSet = data;
+			binder.DataStore = data;
 			
-			data.AddData ("a", true, new DataType ("name=boolean")).Attributes.SetFromInitialisationList ("label=Option vitale 'A'");
-			data.AddData ("b", false, new DataType ("name=boolean")).Attributes.SetFromInitialisationList ("label=Copie de l'option vitale 'A'");
+			DbType   db_bool_type = new DbType (DbNumDef.FromRawType (DbRawType.Boolean), "name=boolean");
+			DbTable  db_table = new DbTable ("x");
+			DbColumn db_col_a = new DbColumn ("a", db_bool_type);
+			DbColumn db_col_b = new DbColumn ("b", db_bool_type);
 			
+			db_col_a.DefineAttributes ("capt=Option vitale 'A'");
+			db_col_b.DefineAttributes ("capt=Copie de l'option vitale 'A'");
 			
-			Assertion.AssertEquals ("boolean", data.GetDataField ("a").DataType.Name);
+			db_table.Columns.Add (db_col_a);
+			db_table.Columns.Add (db_col_b);
 			
-			Assertion.AssertEquals ("Option vitale 'A'",			data.GetDataField ("a").UserLabel);
-			Assertion.AssertEquals ("Copie de l'option vitale 'A'",	data.GetDataField ("b").UserLabel);
+			data.Attach (db_table);
 			
-			data.ValidateChanges ();
-			data.AttachObserver ("a", new DataChangedHandler (HandleDataChanged));
-			data.AttachObserver ("b", new DataChangedHandler (HandleDataChanged));
+			Assertion.AssertEquals ("boolean", db_table.Columns["a"].Type.Name);
+			Assertion.AssertEquals ("boolean", data.FindDbColumn ("x.*.a").Type.Name);
+			Assertion.AssertEquals ("boolean", data.FindDbColumn ("x.*.b").Type.Name);
+			
+			Assertion.AssertEquals ("Option vitale 'A'",			data.FindDbColumn ("x.*.a").Caption);
+			Assertion.AssertEquals ("Copie de l'option vitale 'A'",	data.FindDbColumn ("x.*.b").Caption);
+			
+			data.AttachObserver ("x.0.a", new DataChangeEventHandler (HandleDataChanged));
+			data.AttachObserver ("x.0.b", new DataChangeEventHandler (HandleDataChanged));
 			
 			Assertion.AssertNotNull (bundle);
 			Assertion.AssertNotNull (bundler);
@@ -52,19 +76,19 @@ namespace Epsitec.Common.Support.Tests
 			window.Show ();
 		}
 
-		private void HandleDataChanged(AbstractRecord sender, string path)
+		private void HandleDataChanged(object sender, DataChangeEventArgs e)
 		{
-			System.Diagnostics.Debug.WriteLine ("Data changed: " + path);
+			System.Diagnostics.Debug.WriteLine ("Data changed: " + e.Path);
 			
-			if (path == "a")
+			if (e.Path == "x.0.a")
 			{
 				//	On change la valeur "b" dès que la valeur "a" change... Mais pas
 				//	le contraire. Ca permet de montrer que les événements de l'interface
 				//	modifient bien les données, et la modification de celles-ci met bien
 				//	à jour l'interface...
 				
-				DataSet data_set = sender as DataSet;
-				data_set.UpdateData ("b", data_set.GetData ("a"));
+				DataStore store = sender as DataStore;
+				store["x.0.b"] = store["x.0.a"];
 			}
 		}
 	}

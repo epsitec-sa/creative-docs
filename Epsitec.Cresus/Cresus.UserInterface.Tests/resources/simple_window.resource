@@ -97,7 +97,7 @@
      <field name='cmd'>on</field>
      <field name='size'>200;*</field>
      <field name='pos'>10;215</field>
-     <field name='bind'>a;a#label</field>
+     <field name='bind'>x.0.a;x.*.a#capt</field>
     </bundle>
     <bundle>
      <field name='class'>Button</field>
@@ -135,7 +135,7 @@
      <field name='cmd'>on</field>
      <field name='size'>200;*</field>
      <field name='pos'>10;140</field>
-     <field name='bind'>b;b#label</field>
+     <field name='bind'>x.0.b;x.*.b#capt</field>
     </bundle>
     <bundle>
      <field name='class'>GroupBox</field>

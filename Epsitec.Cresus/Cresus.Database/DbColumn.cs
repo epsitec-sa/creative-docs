@@ -3,11 +3,14 @@
 
 namespace Epsitec.Cresus.Database
 {
+	using Tags = Epsitec.Common.Support.Tags;
+	using ResourceLevel = Epsitec.Common.Support.ResourceLevel;
+	
 	/// <summary>
 	/// La classe DbColumn décrit une colonne dans une table de la base de données.
 	/// Cette classe ressemble dans l'esprit à System.Data.DataColumn.
 	/// </summary>
-	public class DbColumn
+	public class DbColumn : IDbAttributesHost
 	{
 		public DbColumn()
 		{
@@ -15,7 +18,7 @@ namespace Epsitec.Cresus.Database
 		
 		public DbColumn(string name)
 		{
-			this.name = name;
+			this.attributes[Tags.Name] = name;
 		}
 		
 		public DbColumn(string name, DbSimpleType type) : this (name, type, 1, true, null, Nullable.Undefined)
@@ -42,19 +45,50 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
-		public DbColumn(string name, DbSimpleType type, int length, bool is_fixed_length, DbNumDef num_def, Nullable nullable)
+		public DbColumn(string name, DbSimpleType type, int length, bool is_fixed_length, DbNumDef num_def, Nullable nullable) : this (name)
 		{
-			this.name = name;
 			this.SetTypeAndLength (type, length, is_fixed_length, num_def);
 			this.IsNullAllowed = (nullable == Nullable.Yes);
 		}
 		
 		
+		public DbColumn(string name, DbType type) : this (name)
+		{
+			this.type = type;
+		}
+		
+		
+		//	TODO: add missing constructors...
+		
+		public void DefineAttributes(params string[] attributes)
+		{
+			this.attributes.SetFromInitialisationList (attributes);
+		}
+		
+		
+		#region IDbAttributesHost Members
+		public DbAttributes				Attributes
+		{
+			get
+			{
+				return this.attributes;
+			}
+		}
+		#endregion
 		
 		public string					Name
 		{
-			get { return this.name; }
-			set { this.name = value; }
+			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
+		}
+		
+		public string					Caption
+		{
+			get { return this.Attributes[Tags.Caption]; }
+		}
+		
+		public string					Description
+		{
+			get { return this.Attributes[Tags.Description]; }
 		}
 		
 		public DbType					Type
@@ -205,8 +239,32 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected string				name				= null;
-		protected DbType				type				= null;
+		#region Equals and GetHashCode support
+		public override bool Equals(object obj)
+		{
+			//	ATTENTION: L'égalité se base uniquement sur le nom des colonnes, pas sur les
+			//	détails internes...
+			
+			DbColumn that = obj as DbColumn;
+			
+			if (that == null)
+			{
+				return false;
+			}
+			
+			return (this.Name == that.Name);
+		}
+		
+		public override int GetHashCode()
+		{
+			string name = this.Name;
+			return (name == null) ? 0 : name.GetHashCode ();
+		}
+
+		#endregion
+		
+		protected DbAttributes			attributes = new DbAttributes ();
+		protected DbType				type;
 		protected bool					is_null_allowed		= false;
 		protected bool					is_unique			= false;
 		protected bool					is_indexed			= false;

@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.UserInterface
 			return BinderFactory.binders[name] as IBinder;
 		}
 		
-		public static IBinder FindBinderForType(DataLayer.DataType type)
+		public static IBinder FindBinderForType(Database.DbType type)
 		{
 			if (type != null)
 			{

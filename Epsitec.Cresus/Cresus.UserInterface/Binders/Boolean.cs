@@ -15,13 +15,12 @@ namespace Epsitec.Cresus.UserInterface.Binders
 		
 		
 		#region IBinder Members
-		public void CreateBinding(object ui_object, DataLayer.DataSet root, string binding_path, DataLayer.DataRecord data_record)
+		public void CreateBinding(object ui_object, DataLayer.DataStore root, string binding_path, Database.DbColumn db_column)
 		{
 			Epsitec.Common.Widgets.Widget widget = ui_object as Epsitec.Common.Widgets.Widget;
-			DataLayer.DataField           field  = data_record as DataLayer.DataField;
 			
 			System.Diagnostics.Debug.Assert (widget != null);
-			System.Diagnostics.Debug.Assert (field != null);
+			System.Diagnostics.Debug.Assert (db_column != null);
 			
 			new Controller (widget, root, binding_path);
 		}
@@ -29,16 +28,16 @@ namespace Epsitec.Cresus.UserInterface.Binders
 		
 		protected class Controller
 		{
-			public Controller(Epsitec.Common.Widgets.Widget widget, DataLayer.DataSet data_set, string binding_path)
+			public Controller(Epsitec.Common.Widgets.Widget widget, DataLayer.DataStore data_store, string binding_path)
 			{
-				this.widget   = widget;
-				this.data_set = data_set;
-				this.binding  = binding_path;
+				this.widget     = widget;
+				this.data_store = data_store;
+				this.binding    = binding_path;
 				
 				this.widget.ActiveStateChanged += new Epsitec.Common.Widgets.EventHandler(this.SetDataFromWidget);
-				data_set.AttachObserver (binding, new DataLayer.DataChangedHandler (this.SetWidgetFromData));
+				data_store.AttachObserver (binding, new DataLayer.DataChangeEventHandler (this.SetWidgetFromData));
 				
-				this.SetWidgetFromData (null, null);
+				this.SetWidgetFromData (null, new DataLayer.DataChangeEventArgs (binding_path, System.Data.DataRowAction.Nothing));
 			}
 			
 			public void SetWidgetValue(bool value)
@@ -51,18 +50,18 @@ namespace Epsitec.Cresus.UserInterface.Binders
 			public void SetDataFromWidget(object sender)
 			{
 				bool value1 = (this.widget.ActiveState == Epsitec.Common.Widgets.WidgetState.ActiveYes);
-				bool value2 = (bool) this.data_set.GetData (this.binding);
+				bool value2 = (bool) this.data_store[this.binding];
 				
 				if (value1 != value2)
 				{
 					System.Diagnostics.Debug.WriteLine ("Widget changed to " + value1.ToString () + ", updating data");
-					this.data_set.UpdateData (this.binding, value1);
+					this.data_store[this.binding] = value1;
 				}
 			}
 			
-			public void SetWidgetFromData(DataLayer.AbstractRecord data, string path)
+			public void SetWidgetFromData(object sender, DataLayer.DataChangeEventArgs e)
 			{
-				bool value1 = (bool) this.data_set.GetData (this.binding);
+				bool value1 = (bool) this.data_store[this.binding];
 				bool value2 = (this.widget.ActiveState == Epsitec.Common.Widgets.WidgetState.ActiveYes);
 				
 				if (value1 != value2)
@@ -73,7 +72,7 @@ namespace Epsitec.Cresus.UserInterface.Binders
 			}
 			
 			private Epsitec.Common.Widgets.Widget	widget;
-			private DataLayer.DataSet				data_set;
+			private DataLayer.DataStore				data_store;
 			private string							binding;
 		}
 	}
