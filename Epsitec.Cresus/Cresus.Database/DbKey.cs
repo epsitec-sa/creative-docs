@@ -25,110 +25,19 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public long						Id
+		public long								Id
 		{
 			get { return this.id; }
 		}
 		
-		public int						Revision
+		public int								Revision
 		{
 			get { return this.revision; }
 		}
 		
-		public int						RawStatus
+		public int								RawStatus
 		{
 			get { return this.raw_status; }
-		}
-		
-		
-		#region ICloneable Members
-		public object Clone()
-		{
-			return this.CloneCopyToNewObject (this.CloneNewObject ());
-		}
-		#endregion
-		
-		protected virtual object CloneNewObject()
-		{
-			return new DbKey ();
-		}
-		
-		protected virtual object CloneCopyToNewObject(object o)
-		{
-			DbKey that = o as DbKey;
-			
-			that.id         = this.id;
-			that.revision   = this.revision;
-			that.raw_status = this.raw_status;
-			
-			return that;
-		}
-		
-		
-		#region IComparable Members
-		public int CompareTo(object obj)
-		{
-			DbKey key = obj as DbKey;
-			
-			if (key == null)
-			{
-				return 1;
-			}
-			
-			if (this.id == key.id)
-			{
-				return this.revision.CompareTo (key.revision);
-			}
-			
-			return this.id.CompareTo (key.id);
-		}
-		#endregion
-		
-		public override bool Equals(object obj)
-		{
-			//	Ne considère que Id et Revision pour la comparaison (et pour le
-			//	calcul d'une valeur de hachage).
-			
-			DbKey key = obj as DbKey;
-			
-			if (key == null)
-			{
-				return false;
-			}
-			
-			return (key.id == this.id) && (key.revision == this.revision);
-		}
-		
-		public override int GetHashCode()
-		{
-			return this.id.GetHashCode () ^ (this.revision);
-		}
-		
-		public override string ToString()
-		{
-			return string.Format ("[{0}.{1}]", this.id, this.revision);
-		}
-
-		
-		protected void SerializeXmlAttributes(System.Text.StringBuilder buffer)
-		{
-			buffer.Append (@" key.id=""");
-			buffer.Append (this.id.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			buffer.Append (@"""");
-			
-			if (this.revision != 0)
-			{
-				buffer.Append (@" key.rev=""");
-				buffer.Append (this.revision.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (@"""");
-			}
-			
-			if (this.raw_status != 0)
-			{
-				buffer.Append (@" key.stat=""");
-				buffer.Append (this.raw_status.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (@"""");
-			}
 		}
 		
 		
@@ -179,15 +88,107 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected long					id;
-		protected int					revision;
-		protected int					raw_status;
+		#region ICloneable Members
+		public object Clone()
+		{
+			return this.CloneCopyToNewObject (this.CloneNewObject ());
+		}
+		#endregion
+		
+		protected virtual object CloneNewObject()
+		{
+			return new DbKey ();
+		}
+		
+		protected virtual object CloneCopyToNewObject(object o)
+		{
+			DbKey that = o as DbKey;
+			
+			that.id         = this.id;
+			that.revision   = this.revision;
+			that.raw_status = this.raw_status;
+			
+			return that;
+		}
+		
+		
+		#region IComparable Members
+		public int CompareTo(object obj)
+		{
+			DbKey key = obj as DbKey;
+			
+			if (key == null)
+			{
+				return 1;
+			}
+			
+			if (this.id == key.id)
+			{
+				return this.revision.CompareTo (key.revision);
+			}
+			
+			return this.id.CompareTo (key.id);
+		}
+		#endregion
+		
+		#region Equals, GetHashCode and ToString support
+		public override bool Equals(object obj)
+		{
+			//	Ne considère que Id et Revision pour la comparaison (et pour le
+			//	calcul d'une valeur de hachage).
+			
+			DbKey key = obj as DbKey;
+			
+			if (key == null)
+			{
+				return false;
+			}
+			
+			return (key.id == this.id) && (key.revision == this.revision);
+		}
+		
+		public override int GetHashCode()
+		{
+			return this.id.GetHashCode () ^ (this.revision);
+		}
+		
+		public override string ToString()
+		{
+			return string.Format ("[{0}.{1}]", this.id, this.revision);
+		}
+		#endregion
+		
+		protected void SerializeXmlAttributes(System.Text.StringBuilder buffer)
+		{
+			buffer.Append (@" key.id=""");
+			buffer.Append (this.id.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			buffer.Append (@"""");
+			
+			if (this.revision != 0)
+			{
+				buffer.Append (@" key.rev=""");
+				buffer.Append (this.revision.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (@"""");
+			}
+			
+			if (this.raw_status != 0)
+			{
+				buffer.Append (@" key.stat=""");
+				buffer.Append (this.raw_status.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (@"""");
+			}
+		}
+		
+		
+		protected long							id;
+		protected int							revision;
+		protected int							raw_status;
 	}
 	
 	public enum DbKeyMatchMode
 	{
-		SimpleId,						//	ne compare que l'identificateur (ID)
-		LiveId,							//	compare l'identificateur, révision=0
-		ExactIdRevision					//	compare l'identificateur et la révision
+		SimpleId,								//	ne compare que l'identificateur (ID)
+		LiveId,									//	compare l'identificateur, révision=0
+		ExactIdRevision							//	compare l'identificateur et la révision
 	}
 }
