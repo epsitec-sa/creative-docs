@@ -93,6 +93,14 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			if (this.data_type != null)
 			{
+				if (this.data_type.Equals (type))
+				{
+					//	On redéfinit le champ comme ayant le même type qu'avant, ce
+					//	qui est toléré.
+					
+					return;
+				}
+				
 				throw new DataException ("Cannot set data type more than once");
 			}
 			

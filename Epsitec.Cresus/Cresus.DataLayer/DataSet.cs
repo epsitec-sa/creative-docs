@@ -17,11 +17,13 @@ namespace Epsitec.Cresus.DataLayer
 		}
 		
 		
-		public void AddData(string name, object data, DataType data_type)
+		public DataField AddData(string name, object data, DataType data_type)
 		{
+			DataField record;
+			
 			if (this.data.Contains (name))
 			{
-				DataField record = this.data[name] as DataField;
+				record = this.data[name] as DataField;
 				
 				if ((record == null) ||
 					(record.DataType.BinderName != data_type.BinderName))
@@ -34,7 +36,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			else
 			{
-				DataField record = new DataField ();
+				record = new DataField ();
 				
 				record.SetParent (this);
 				record.SetData (DataVersion.Active, data);
@@ -45,9 +47,11 @@ namespace Epsitec.Cresus.DataLayer
 			
 			this.MarkAsModified ();
 			this.NotifyDataChanged (name);
+			
+			return record;
 		}
 		
-		public void UpdateData(string name, object data)
+		public DataField UpdateData(string name, object data)
 		{
 			DataField record = this.FindRecord (name) as DataField;
 			
@@ -60,9 +64,11 @@ namespace Epsitec.Cresus.DataLayer
 			
 			this.MarkAsModified ();
 			this.NotifyDataChanged (name);
+			
+			return record;
 		}
 		
-		public void ResetData(string name)
+		public DataField ResetData(string name)
 		{
 			DataField record = this.FindRecord (name, DataVersion.ActiveOrDead) as DataField;
 			
@@ -74,6 +80,8 @@ namespace Epsitec.Cresus.DataLayer
 			record.ResetData ();
 			
 			this.NotifyDataChanged (name);
+			
+			return record;
 		}
 		
 		public void RemoveData(string name)
@@ -92,8 +100,13 @@ namespace Epsitec.Cresus.DataLayer
 		
 		public object GetData(string name)
 		{
-			DataField record = this.FindRecord (name) as DataField;
+			DataField record = this.GetDataField (name);
 			return (record == null) ? null : record.GetData ();
+		}
+		
+		public DataField GetDataField(string name)
+		{
+			return this.FindRecord (name) as DataField;
 		}
 		
 		

@@ -253,23 +253,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 		
 		
-		protected string SplitPath(string path, out string path_remaining)
-		{
-			System.Diagnostics.Debug.Assert (path != null);
-			
-			int pos = path.IndexOf ('.');
-			
-			if (pos < 0)
-			{
-				path_remaining = null;
-				return path;
-			}
-			
-			path_remaining = path.Substring (pos+1);
-			return path.Substring (0, pos);
-		}
-		
-		protected string GetAttribute(string name, ResourceLevel level)
+		public string GetAttribute(string name, ResourceLevel level)
 		{
 			if (this.attributes == null)
 			{
@@ -306,7 +290,7 @@ namespace Epsitec.Cresus.DataLayer
 			return (this.attributes.Contains (find)) ? this.attributes[find] as string : null;
 		}
 		
-		protected void SetAttribute(string name, string value, ResourceLevel level)
+		public void SetAttribute(string name, string value, ResourceLevel level)
 		{
 			if (this.attributes == null)
 			{
@@ -324,6 +308,23 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			
 			this.attributes[name] = value;
+		}
+		
+		
+		protected string SplitPath(string path, out string path_remaining)
+		{
+			System.Diagnostics.Debug.Assert (path != null);
+			
+			int pos = path.IndexOf ('.');
+			
+			if (pos < 0)
+			{
+				path_remaining = null;
+				return path;
+			}
+			
+			path_remaining = path.Substring (pos+1);
+			return path.Substring (0, pos);
 		}
 		
 		

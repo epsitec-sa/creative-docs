@@ -146,11 +146,12 @@ namespace Epsitec.Cresus.DataLayer.Tests
 		
 		[Test] [ExpectedException (typeof (DataException))] public void CheckDataFieldSetDataTypeEx()
 		{
-			DataField test = new DataField ();
-			DataType  type = new DataType ();
+			DataField test  = new DataField ();
+			DataType  type1 = new DataType ("a");
+			DataType  type2 = new DataType ("b");
 			
-			test.SetDataType (type);
-			test.SetDataType (type);
+			test.SetDataType (type1);
+			test.SetDataType (type2);
 		}
 	}
 }

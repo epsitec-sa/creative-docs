@@ -146,19 +146,15 @@ namespace Epsitec.Cresus.UserInterface
 			
 			switch (bind_tag)
 			{
-				case "data":
-					this.CreateDataBinding (obj, data_record, binding);
-					break;
+				case "data":	this.CreateDataBinding (obj, data_record, binding);			break;
+				case "label":	this.CreateLabelBinding (obj, data_record, binding);		break;
+				case "desc":	this.CreateDescriptionBinding (obj, data_record, binding);	break;
 				
-				case "label":
-					this.CreateLabelBinding (obj, data_record, binding);
-					break;
-				
-				case "desc":
-					this.CreateDescriptionBinding (obj, data_record, binding);
-					break;
+				default:
+					throw new BinderException (string.Format ("Unknown bind tag '{0}' used with data '{1}'", bind_tag, binding));
 			}
 		}
+		
 		protected virtual void CreateDataBinding(object obj, DataLayer.DataRecord data_record, string binding_path)
 		{
 			DataLayer.DataType data_type = data_record.DataType;
@@ -213,20 +209,32 @@ namespace Epsitec.Cresus.UserInterface
 			{
 				string binding = bundle.GetFieldString ("binding");
 				
-				if (this.CheckBindingName (binding))
+				if (binding != null)
 				{
-					if (this.root_data_set != null)
+					string[] bind_args = binding.Split (';');
+					
+					foreach (string bind_arg in bind_args)
 					{
-						this.CreateBinding (obj, binding);
-					}
-					else
-					{
-						this.object_list.Add (obj);
+						if (this.CheckBindingName (bind_arg))
+						{
+							if (this.root_data_set != null)
+							{
+								this.CreateBinding (obj, bind_arg);
+							}
+							else
+							{
+								this.object_list.Add (obj);
+							}
+						}
+						else
+						{
+							throw new System.FormatException (string.Format ("Bad binding information for class '{0}' in bundle '{1}': '{2}'", obj.GetType ().ToString (), bundle.Name, bind_arg));
+						}
 					}
 				}
 				else
 				{
-					throw new System.FormatException (string.Format ("Bad binding information for class '{0}' in bundle '{1}'", obj.GetType ().ToString (), bundle.Name));
+					throw new System.FormatException (string.Format ("Bad binding information for class '{0}' in bundle '{1}': null", obj.GetType ().ToString (), bundle.Name));
 				}
 			}
 		}
