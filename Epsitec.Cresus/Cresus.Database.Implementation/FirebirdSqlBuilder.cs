@@ -23,6 +23,11 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		protected void UpdateCommand()
 		{
+			if (this.expect_more)
+			{
+				throw new DbSyntaxException (this.fb.DbAccess, string.Format ("Command is defined partially: AppendMore called without additional commands."));
+			}
+			
 			if (this.command_cache == null)
 			{
 				this.command_cache = this.fb.NewDbCommand () as FbCommand;
@@ -528,14 +533,21 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		protected void PrepareCommand()
 		{
-			if (this.auto_clear)
+			if (this.expect_more)
 			{
-				this.Clear ();
+				this.expect_more = false;
 			}
-			
-			if (this.command_type != DbCommandType.None)
+			else
 			{
-				throw new DbException (this.fb.DbAccess, "Previous command not cleared");
+				if (this.auto_clear)
+				{
+					this.Clear ();
+				}
+				
+				if (this.command_type != DbCommandType.None)
+				{
+					throw new DbException (this.fb.DbAccess, "Previous command not cleared");
+				}
 			}
 		}
 		
@@ -587,11 +599,17 @@ namespace Epsitec.Cresus.Database.Implementation
 			//	On n'a pas le droit de faire un Dispose de l'objet 'commande', car il peut encore
 			//	être utilisé par un appelant. C'est le cas lorsque l'on est en mode AutoClear.
 			
+			this.expect_more   = false;
 			this.command_cache = null;
 			this.command_type  = DbCommandType.None;
 			this.command_count = 0;
 			this.buffer = new System.Text.StringBuilder ();
 			this.command_params.Clear ();
+		}
+		
+		public void AppendMore()
+		{
+			this.expect_more = true;
 		}
 
 		
@@ -881,6 +899,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				if (first_field)
 				{
+					this.Append (" SET ");
 					first_field = false;
 				}
 				else
@@ -888,7 +907,6 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.Append (",");
 				}
 
-				this.Append (" SET ");
 				this.Append (field.Alias);
 				this.Append (" = ");
 				switch (field.Type)
@@ -1017,6 +1035,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		private FirebirdAbstraction				fb;
 		private bool							auto_clear;
+		private bool							expect_more;
 		private FbCommand						command_cache;
 		private System.Text.StringBuilder		buffer;
 		private System.Collections.ArrayList	command_params;

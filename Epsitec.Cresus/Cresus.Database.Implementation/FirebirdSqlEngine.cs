@@ -105,6 +105,25 @@ namespace Epsitec.Cresus.Database.Implementation
 					throw new DbException (this.fb.DbAccess, "Illegal command type");
 			}
 		}
+		
+		public void Execute(DbRichCommand rich_command)
+		{
+			int num_commands = rich_command.Commands.Count;
+			
+			System.Data.IDbDataAdapter[] adapters = new System.Data.IDbDataAdapter[num_commands];
+			
+			for (int i = 0; i < num_commands; i++)
+			{
+				System.Data.IDbCommand command = rich_command.Commands[i];
+				
+				FbDataAdapter    adapter = this.fb.NewDataAdapter (command) as FbDataAdapter;
+				FbCommandBuilder builder = new FbCommandBuilder (adapter);
+				
+				adapters[i] = adapter;
+			}
+				
+			rich_command.FillDataSet (this.fb.DbAccess, adapters);
+		}
 		#endregion
 		
 		#region IDisposable Members
