@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Database
 				Replication.DataCruncher cruncher = new Replication.DataCruncher (this.infrastructure, transaction);
 				DbTable table = this.infrastructure.ResolveDbTable (transaction, Tags.TableTypeDef);
 				
-				System.Data.DataTable data = cruncher.ExtractDataUsingLogIds (table, DbId.CreateId (1, 1));
+				System.Data.DataTable data = cruncher.ExtractDataUsingLogIds (table, DbId.CreateId (2, 1), DbId.CreateId (999999999, 1));
 				
 				foreach (System.Data.DataRow row in data.Rows)
 				{
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Database
 				Replication.DataCruncher cruncher = new Replication.DataCruncher (this.infrastructure, transaction);
 				DbTable table = this.infrastructure.ResolveDbTable (transaction, Tags.TableTypeDef);
 				
-				System.Data.DataTable data = cruncher.ExtractDataUsingLogIds (table, DbId.CreateId (1, 1));
+				System.Data.DataTable data = cruncher.ExtractDataUsingLogIds (table, DbId.CreateId (2, 1), DbId.CreateId (999999999, 1));
 				
 				for (int i = 0; i < data.Columns.Count; i++)
 				{
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Database
 				Replication.DataCruncher cruncher = new Replication.DataCruncher (this.infrastructure, transaction);
 				DbTable table = this.infrastructure.ResolveDbTable (transaction, Tags.TableTypeDef);
 				
-				System.Data.DataTable data = cruncher.ExtractDataUsingLogIds (table, DbId.CreateId (1, 1));
+				System.Data.DataTable data = cruncher.ExtractDataUsingLogIds (table, DbId.CreateId (2, 1), DbId.CreateId (999999999, 1));
 				
 				object[][] store = new object[data.Rows.Count][];
 				
@@ -192,6 +192,8 @@ namespace Epsitec.Cresus.Database
 			table_a.Rows.Add (new object[] { 8, "J", System.DBNull.Value, System.DBNull.Value });
 			
 			DbTable db_table = new DbTable ("A");
+			
+			db_table.DefineInternalKey (new DbKey ());
 			
 			Replication.PackedTableData packed = Replication.PackedTableData.CreateFromTable (db_table, table_a);
 			

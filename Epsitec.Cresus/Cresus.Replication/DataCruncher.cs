@@ -18,21 +18,30 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
-		public System.Data.DataTable ExtractDataUsingLogIds(DbTable table, DbId sync_id)
+		public System.Data.DataTable ExtractDataUsingLogId(DbTable table, DbId log_id)
 		{
-			//	Extrait les données de la table spécifiée en ne considérant que ce qui a changé
-			//	depuis la synchronisation définie par 'sync_id'.
+			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.TypeConverter);
 			
-			return this.ExtractDataUsingLogIds (table, sync_id, DbId.CreateId (DbId.LocalRange-1, sync_id.ClientId));
+			condition.AddCondition (table.Columns[Tags.ColumnRefLog], DbCompare.Equal, log_id);
+			
+			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
+			{
+				return command.DataSet.Tables[0];
+			}
 		}
+		
+//		public System.Data.DataTable ExtractDataUsingLogIds(DbTable table, DbId sync_id)
+//		{
+//			//	Extrait les données de la table spécifiée en ne considérant que ce qui a changé
+//			//	depuis la synchronisation définie par 'sync_id'.
+//			
+//			return this.ExtractDataUsingLogIds (table, sync_id, DbId.CreateId (DbId.LocalRange-1, sync_id.ClientId));
+//		}
 		
 		public System.Data.DataTable ExtractDataUsingLogIds(DbTable table, DbId sync_start_id, DbId sync_end_id)
 		{
 			long sync_id_min = sync_start_id.Value;
 			long sync_id_max = sync_end_id.Value;
-			
-			System.Diagnostics.Debug.Assert (DbId.AnalyzeClass (sync_id_min) == DbIdClass.Standard);
-			System.Diagnostics.Debug.Assert (DbId.AnalyzeClass (sync_id_max) == DbIdClass.Standard);
 			
 			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.TypeConverter);
 			
