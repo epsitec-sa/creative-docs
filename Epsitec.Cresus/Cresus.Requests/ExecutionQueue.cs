@@ -13,6 +13,8 @@ namespace Epsitec.Cresus.Requests
 	{
 		public ExecutionQueue(DbInfrastructure infrastructure)
 		{
+			this.enqueue_event = new System.Threading.AutoResetEvent (false);
+			
 			this.Setup (infrastructure);
 		}
 		
@@ -23,6 +25,27 @@ namespace Epsitec.Cresus.Requests
 			{
 				return this.queue_data_set.Tables[Tags.TableRequestQueue].Rows;
 			}
+		}
+		
+		public System.Threading.AutoResetEvent	EnqueueEvent
+		{
+			get
+			{
+				return this.enqueue_event;
+			}
+		}
+		
+		
+		public void Enqueue(AbstractRequest request)
+		{
+			this.AddRequest (request);
+			this.enqueue_event.Set ();
+		}
+		
+		
+		public void WaitOnEnqueueEvent(System.TimeSpan timeout)
+		{
+			this.enqueue_event.WaitOne (timeout, true);
 		}
 		
 		
@@ -150,5 +173,7 @@ namespace Epsitec.Cresus.Requests
 		private DbTable							queue_db_table;
 		private DbRichCommand					queue_command;
 		private System.Data.DataSet				queue_data_set;
+		
+		private System.Threading.AutoResetEvent	enqueue_event;
 	}
 }

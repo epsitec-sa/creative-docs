@@ -3,6 +3,9 @@
 
 namespace Epsitec.Common.Support
 {
+	using WaitHandle = System.Threading.WaitHandle;
+	using ManualResetEvent = System.Threading.ManualResetEvent;
+	
 	/// <summary>
 	/// La classe Globals permet de stocker des variables globales à une application.
 	/// </summary>
@@ -17,6 +20,7 @@ namespace Epsitec.Common.Support
 		{
 			Globals.properties  = new Globals ();
 			Globals.directories = new DirectoriesAccessor ();
+			Globals.abort_event = new System.Threading.ManualResetEvent (false);
 		}
 		
 		
@@ -55,6 +59,25 @@ namespace Epsitec.Common.Support
 			{
 				this.SetProperty (key, value);
 			}
+		}
+		
+		public static WaitHandle				AbortEvent
+		{
+			//	Cet événement peut être utilisé par toutes les classes qui désirent réaliser
+			//	une attente qui soit interruptible par l'arrêt de l'application; pour cela,
+			//	on réalise un appel à WaitHandle.WaitAny en spécifiant AbortEvent comme l'un
+			//	des "événements" sur lesquels attendre.
+			
+			get
+			{
+				return Globals.abort_event;
+			}
+		}
+		
+		
+		public static void SignalAbort()
+		{
+			Globals.abort_event.Set ();
 		}
 		
 		
@@ -142,5 +165,6 @@ namespace Epsitec.Common.Support
 		private System.Collections.Hashtable	property_hash;
 		private static Globals					properties;
 		private static DirectoriesAccessor		directories;
+		private static ManualResetEvent			abort_event;
 	}
 }

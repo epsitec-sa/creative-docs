@@ -14,5 +14,38 @@ namespace Epsitec.Cresus.Requests
 		public Orchestrator()
 		{
 		}
+		
+		public void WorkerThread()
+		{
+			System.Threading.WaitHandle[] handles = new System.Threading.WaitHandle[2];
+			
+			handles[0] = this.execution_queue.EnqueueEvent;
+			handles[1] = Common.Support.Globals.AbortEvent;
+			
+			for (;;)
+			{
+				int handle_index = System.Threading.WaitHandle.WaitAny (handles);
+				
+				if (handle_index >= 128)
+				{
+					handle_index -= 128;
+				}
+				
+				if (handle_index != 0)
+				{
+					break;
+				}
+				
+				this.ProcessQueue ();
+			}
+		}
+		
+		public void ProcessQueue()
+		{
+			//	TODO: gère le contenu de la queue.
+		}
+		
+		
+		protected ExecutionQueue				execution_queue;
 	}
 }
