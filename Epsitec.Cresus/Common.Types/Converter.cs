@@ -307,6 +307,16 @@ namespace Epsitec.Common.Types
 						return true;
 					}
 				}
+				else if (obj is string)
+				{
+					System.ComponentModel.TypeConverter conv = System.ComponentModel.TypeDescriptor.GetConverter (type);
+					
+					if (conv != null)
+					{
+						value = conv.ConvertFromInvariantString (obj as string);
+						return true;
+					}
+				}
 			}
 			
 			value = null;
