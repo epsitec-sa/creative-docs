@@ -20,6 +20,8 @@ namespace Epsitec.Common.Widgets
 		public PaneBook()
 		{
 			this.items = new PanePageCollection(this);
+			
+			this.InternalState &= ~InternalState.PossibleContainer;
 		}
 		
 		public PaneBook(Widget embedder) : this()
