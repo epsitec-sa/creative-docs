@@ -218,14 +218,21 @@ namespace Epsitec.Common.Support
 				System.Diagnostics.Debug.Assert (this.action == null);
 				
 				this.PurgeRedo ();
-				this.queue.AddRange (this.temp_queue);
-				this.queue.Add (new Fence (this.temp_name));
-				this.temp_queue.Clear ();
 				
-				this.fence_count++;
-				
-				this.live_fence = this.fence_count;
-				this.live_index = this.queue.Count;
+				if (this.temp_queue.Count > 0)
+				{
+					//	N'insère un élément dans la liste que si des oplets seront effectivement
+					//	ajoutés; une insertion vide ne va pas apparaître dans la queue !
+					
+					this.queue.AddRange (this.temp_queue);
+					this.queue.Add (new Fence (this.temp_name));
+					this.temp_queue.Clear ();
+					
+					this.fence_count++;
+					
+					this.live_fence = this.fence_count;
+					this.live_index = this.queue.Count;
+				}
 			}
 		}
 		

@@ -169,6 +169,21 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (0, queue.RedoActionCount);
 		}
 		
+		[Test] public void CheckInsertUndoRedoEmpty()
+		{
+			OpletQueue queue = new OpletQueue ();
+			
+			using (queue.BeginAction ("a"))
+			{
+				queue.ValidateAction ();
+			}
+			
+			Assert.AreEqual (0, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
+			Assert.AreEqual (0, queue.UndoActionNames.Length);
+			Assert.AreEqual (0, queue.RedoActionNames.Length);
+		}
+
 		[Test] public void CheckHistory()
 		{
 			OpletQueue queue = new OpletQueue ();
