@@ -93,16 +93,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Date.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Time.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "TimedLock.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
