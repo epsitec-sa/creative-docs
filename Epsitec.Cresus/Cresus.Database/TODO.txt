@@ -57,7 +57,7 @@ Les tables suivantes sont définies :
     o Nom de haut niveau (CR_NAME).
     o Titre (CR_CAPTION) et description (CR_DESCRIPTION).
     o Info supplémentaire XML (CR_INFO).
-    o ID (clef) de la prochaine ligne dans la table (CD_NEXT_ID).
+    o ID (clef) de la prochaine ligne dans la table (CR_NEXT_ID).
 
 - CR_COLUMN_DEF définit les descriptions des colonnes :
 
@@ -98,8 +98,8 @@ les statuts suivants sont supportés :
 
     o CR_REV=n, CR_STAT=n, ligne valide, en vie.
 
-    o CR_REV=n, CR_STAT=-1, ligne "effacée". Pas encore utilisé,
-      mais pourra être utile...
+    o CR_REV=n, CR_STAT=-1, ligne "effacée". C'est utilisé par
+      CR_TABLE_DEF pour indiquer qu'une table a été effacée.
 
 -----------------------------------------------------------------
 LOCALISATION DE L'INFORMATION

@@ -1,12 +1,13 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Responsable: Pierre ARNAUD
+
+using System.Globalization;
+using System.Text.RegularExpressions;
+
+using Epsitec.Cresus.Database;
 
 namespace Epsitec.Common.Support.Implementation
 {
-	using System.Globalization;
-	using System.Text.RegularExpressions;
-	using Cresus.Database;
-	
 	/// <summary>
 	/// La classe BaseProvider donne accès aux ressources stockées dans une base
 	/// de données.

@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (revision > 0);
 			
 			DbKey old_key = table.InternalKey;
-			DbKey new_key = new DbKey (old_key.Id, revision, revision);
+			DbKey new_key = new DbKey (old_key.Id, revision, DbKey.RawStatusDeleted);
 			
 			this.UpdateKeyInRow (transaction, Tags.TableTableDef, old_key, new_key);
 		}
@@ -997,8 +997,9 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			Collections.SqlFields conds  = new Collections.SqlFields ();
 			
-			fields.Add (Tags.ColumnId,       SqlField.CreateConstant (new_key.Id,       DbRawType.Int64));
-			fields.Add (Tags.ColumnRevision, SqlField.CreateConstant (new_key.Revision, DbRawType.Int32));
+			fields.Add (Tags.ColumnId,       SqlField.CreateConstant (new_key.Id,        DbRawType.Int64));
+			fields.Add (Tags.ColumnRevision, SqlField.CreateConstant (new_key.Revision,  DbRawType.Int32));
+			fields.Add (Tags.ColumnStatus,   SqlField.CreateConstant (new_key.RawStatus, DbRawType.Int32));
 			
 			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnId),       SqlField.CreateConstant (old_key.Id,       DbRawType.Int64)));
 			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnRevision), SqlField.CreateConstant (old_key.Revision, DbRawType.Int32)));

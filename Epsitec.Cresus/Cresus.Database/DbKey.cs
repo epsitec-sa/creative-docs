@@ -180,6 +180,8 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public const int						RawStatusDeleted = -1;		//	signale que l'objet a été effacé
+		
 		protected long							id;
 		protected int							revision;
 		protected int							raw_status;
