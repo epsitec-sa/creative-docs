@@ -1328,59 +1328,6 @@
             Returns the length of the string that is being parsed.
             </summary>
         </member>
-        <member name="T:FirebirdSql.Data.Firebird.Services.FbBackupFlags">
-            <summary>
-			Specifies access flags for database backup.
-			</summary>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.IgnoreChecksums">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbBackup.xml" path="doc/enum[@name=&quot;FbBackupFlags&quot;]/field[@name=&quot;IgnoreChecksums&quot;]/*"/>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.IgnoreLimbo">
-            <summary>Ignore limbo transactions during backup.</summary><value>0x02</value>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.MetaDataOnly">
-            <summary>Output backup file for metadata only with empty tables.</summary><value>0x04</value>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.NoGarbageCollect">
-            <summary>
-			Suppress normal garbage collection during backup. Improves performance on some databases.
-			</summary><value>0x08</value>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.OldDescriptions">
-            <summary>
-			Output metadata in pre-4.0 format.
-			</summary><value>0x10</value>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.NonTransportable">
-            <summary>
-			Output backup file format with non-XDR data format. Improves space and performance by a negligible amount.
-			</summary><value>0x20</value>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.Convert">
-            <summary>Convert external table data to internal tables.</summary><value>0x40</value>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.Expand">
-            <summary>No data compression.</summary><value>0x80</value>
-        </member>
-        <member name="T:FirebirdSql.Data.Firebird.Services.FbBackupFile">
-            <summary>
-			Specifies a backup file path and length to be used in Backup or Restore process.
-			</summary>
-        </member>
-        <member name="M:FirebirdSql.Data.Firebird.Services.FbBackupFile.#ctor(System.String,System.Int32)">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbBackup.xml" path="doc/struct[@name=&quot;FbBackupFile&quot;]/constructor[@name=&quot;ctor(system.String,System.Int32)&quot;]/*"/>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbBackupFile.BackupFile">
-            <summary>
-			Path of a backup output file; you can specify multiple output files.
-			</summary>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbBackupFile.BackupLength">
-            <summary>
-			Path of a backup output file; you can specify multiple output files.
-			</summary>
-        </member>
         <member name="T:FirebirdSql.Data.Firebird.Services.FbBackup">
             <summary>
 			Back up a database to a file or tape device. This class cannot be inherited.
@@ -1556,32 +1503,58 @@ static void ServiceOutput(object sender, ServiceOutputEventArgs e)
 			A bitwise combination of the <see cref="T:FirebirdSql.Data.Firebird.Services.FbBackupFlags">FbBackupFlags</see> values which provides information about backup options.
 			</value>
         </member>
-        <member name="T:FirebirdSql.Data.Firebird.Services.FbShutdownMode">
+        <member name="T:FirebirdSql.Data.Firebird.Services.FbBackupFile">
             <summary>
-			Allowed shutdown modes.
+			Specifies a backup file path and length to be used in Backup or Restore process.
 			</summary>
         </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbShutdownMode.Forced">
+        <member name="M:FirebirdSql.Data.Firebird.Services.FbBackupFile.#ctor(System.String,System.Int32)">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbBackup.xml" path="doc/struct[@name=&quot;FbBackupFile&quot;]/constructor[@name=&quot;ctor(system.String,System.Int32)&quot;]/*"/>
+        </member>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbBackupFile.BackupFile">
             <summary>
-			Shut down the database after the specified number of seconds; 
-			to shut down the database immediately, set the shutdown interval to 0.
+			Path of a backup output file; you can specify multiple output files.
 			</summary>
         </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbShutdownMode.DenyTransaction">
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbBackupFile.BackupLength">
             <summary>
-			Deny new transactions and shut down the database after the specified number
-			of seconds; if transactions are active after the shutdown interval has expired,
-			the shutdown will fail; to shut down the database immediately, set the
-			shutdown interval to 0.
+			Path of a backup output file; you can specify multiple output files.
 			</summary>
         </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbShutdownMode.DenyConnection">
+        <member name="T:FirebirdSql.Data.Firebird.Services.FbBackupFlags">
             <summary>
-			Deny new connections and shut down the database after the specified number
-			of seconds; if connections are active after the shutdown interval has expired,
-			the shutdown will fail; to shut down the database immediately, set the
-			shutdown interval to 0
+			Specifies access flags for database backup.
 			</summary>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.IgnoreChecksums">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbBackup.xml" path="doc/enum[@name=&quot;FbBackupFlags&quot;]/field[@name=&quot;IgnoreChecksums&quot;]/*"/>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.IgnoreLimbo">
+            <summary>Ignore limbo transactions during backup.</summary><value>0x02</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.MetaDataOnly">
+            <summary>Output backup file for metadata only with empty tables.</summary><value>0x04</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.NoGarbageCollect">
+            <summary>
+			Suppress normal garbage collection during backup. Improves performance on some databases.
+			</summary><value>0x08</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.OldDescriptions">
+            <summary>
+			Output metadata in pre-4.0 format.
+			</summary><value>0x10</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.NonTransportable">
+            <summary>
+			Output backup file format with non-XDR data format. Improves space and performance by a negligible amount.
+			</summary><value>0x20</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.Convert">
+            <summary>Convert external table data to internal tables.</summary><value>0x40</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbBackupFlags.Expand">
+            <summary>No data compression.</summary><value>0x80</value>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Services.FbConfiguration">
             <summary>
@@ -1648,6 +1621,25 @@ configurationSvc.SetForcedWrites(true);
 			Set the access mode of the database.
 			</summary><param name="readOnly"><b>true</b> to set database in read only access; or false for read write access.</param>
         </member>
+        <member name="T:FirebirdSql.Data.Firebird.Services.FbDatabasesInfo">
+            <summary>
+			Retrieves information about databases on server.
+			</summary>
+        </member>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbDatabasesInfo.ConnectionCount">
+            <summary>
+			Returns the number of databases attached to the server.
+			</summary><value>
+			Number of databases attached to the server.
+			</value>
+        </member>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbDatabasesInfo.Databases">
+            <summary>
+			Returns the list of database file paths.
+			</summary><value>
+			List of database file paths.
+			</value>
+        </member>
         <member name="T:FirebirdSql.Data.Firebird.Services.FbLog">
             <summary>
 			Retrieve the firebird.log file from the server if the log file exists. An error is returned if the log file does not exist.
@@ -1679,34 +1671,6 @@ logSvc.Close();
             <summary>
 			Executes Firebird log service task.
 			</summary>
-        </member>
-        <member name="T:FirebirdSql.Data.Firebird.Services.FbRestoreFlags">
-            <summary>
-			Specifies access flags for database restore.
-			</summary>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbRestoreFlags.DeactivateIndexes">
-            <summary>Do not build user indexes during restore.</summary><value>0x0100</value>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbRestoreFlags.NoShadow">
-            <summary>Do not recreate shadow files during restore.</summary><value>0x0200</value>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbRestoreFlags.NoValidity">
-            <summary>
-			Do not enforce validity conditions (for example, NOT NULL) during restore.
-			</summary><value>0x0400</value>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbRestoreFlags.IndividualCommit">
-            <summary>Commit after completing restore of each table.</summary><value>0x0800</value>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbRestoreFlags.Replace">
-            <summary>Replace database, if one exists.</summary><value>0x1000</value>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbRestoreFlags.Create">
-            <summary>Restore but do not overwrite an existing database.</summary><value>0x2000</value>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbRestoreFlags.UseAllSpace">
-            <summary>Do not reserve 20% of each data page for future record versions.</summary><value>0x4000</value>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Services.FbRestore">
             <summary>
@@ -1794,6 +1758,34 @@ static void ServiceOutput(object sender, ServiceOutputEventArgs e)
 			A bitwise combination of the <see cref="T:FirebirdSql.Data.Firebird.Services.FbRestoreFlags"/> values which provides information about restore options.
 			</value>
         </member>
+        <member name="T:FirebirdSql.Data.Firebird.Services.FbRestoreFlags">
+            <summary>
+			Specifies access flags for database restore.
+			</summary>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbRestoreFlags.DeactivateIndexes">
+            <summary>Do not build user indexes during restore.</summary><value>0x0100</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbRestoreFlags.NoShadow">
+            <summary>Do not recreate shadow files during restore.</summary><value>0x0200</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbRestoreFlags.NoValidity">
+            <summary>
+			Do not enforce validity conditions (for example, NOT NULL) during restore.
+			</summary><value>0x0400</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbRestoreFlags.IndividualCommit">
+            <summary>Commit after completing restore of each table.</summary><value>0x0800</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbRestoreFlags.Replace">
+            <summary>Replace database, if one exists.</summary><value>0x1000</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbRestoreFlags.Create">
+            <summary>Restore but do not overwrite an existing database.</summary><value>0x2000</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbRestoreFlags.UseAllSpace">
+            <summary>Do not reserve 20% of each data page for future record versions.</summary><value>0x4000</value>
+        </member>
         <member name="T:FirebirdSql.Data.Firebird.Services.FbSecurity">
             <summary>
 			Allow to list, add, delete, and modify users.
@@ -1824,60 +1816,6 @@ static void ServiceOutput(object sender, ServiceOutputEventArgs e)
         <member name="P:FirebirdSql.Data.Firebird.Services.FbSecurity.UsersDbPath">
             <summary>
 			The path to the security database on the server; for example, /usr/interbase/.
-			</summary>
-        </member>
-        <member name="T:FirebirdSql.Data.Firebird.Services.FbServerProperties">
-            <summary>
-			Retrieve server configuration information.
-			</summary>
-        </member>
-        <member name="M:FirebirdSql.Data.Firebird.Services.FbServerProperties.#ctor">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbServerProperties.xml" path="doc/class[@name=&quot;FbServerProperties&quot;]/constructor[@name=&quot;FbServerProperties&quot;]/*"/>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.Version">
-            <summary>
-			Gets the version of the services manager.
-			</summary>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.ServerVersion">
-            <summary>
-			Gets the version of the Firebird server.
-			</summary>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.Implementation">
-            <summary>
-			Gets the implementation of the Firebird server.
-			</summary>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.RootDirectory">
-            <summary>
-			Gets the location of the Firebird root directory on the server; this is the value 
-			of the $INTERBASE system environment variable, or the contents of the registry 
-			key.
-			</summary>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.LockManager">
-            <summary>
-			Gets the location of the InterBase lock manager file on the server; this is the 
-			value of the $INTERBASE_LCK system environment variable, or by default 
-			$INTERBASE/serverhostname.lck.
-			</summary>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.MessageFile">
-            <summary>
-			Gets the location of the InterBase message file on the server; this is the value 
-			of the $INTERBASE_MSG system environment variable, or by default 
-			$INTERBASE/interbase.msg.
-			</summary>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.DatabasesInfo">
-            <summary>
-			Gets information about databases on server.
-			</summary>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.ServerConfig">
-            <summary>
-			Gets the parameters and values for IB_CONFIG.
 			</summary>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Services.FbServerConfig">
@@ -1992,59 +1930,59 @@ static void ServiceOutput(object sender, ServiceOutputEventArgs e)
 			Number of cached database pages.
 			</summary>
         </member>
-        <member name="T:FirebirdSql.Data.Firebird.Services.FbDatabasesInfo">
+        <member name="T:FirebirdSql.Data.Firebird.Services.FbServerProperties">
             <summary>
-			Retrieves information about databases on server.
+			Retrieve server configuration information.
 			</summary>
         </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbDatabasesInfo.ConnectionCount">
-            <summary>
-			Returns the number of databases attached to the server.
-			</summary><value>
-			Number of databases attached to the server.
-			</value>
+        <member name="M:FirebirdSql.Data.Firebird.Services.FbServerProperties.#ctor">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbServerProperties.xml" path="doc/class[@name=&quot;FbServerProperties&quot;]/constructor[@name=&quot;FbServerProperties&quot;]/*"/>
         </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbDatabasesInfo.Databases">
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.Version">
             <summary>
-			Returns the list of database file paths.
-			</summary><value>
-			List of database file paths.
-			</value>
-        </member>
-        <member name="T:FirebirdSql.Data.Firebird.Services.FbUserData">
-            <summary>
-			Represents data of a user of security.fdb security database.
+			Gets the version of the services manager.
 			</summary>
         </member>
-        <member name="M:FirebirdSql.Data.Firebird.Services.FbUserData.#ctor">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/class[@name=&quot;FbUserData&quot;]/constructor[@name=&quot;FbUserData&quot;]/*"/>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.ServerVersion">
+            <summary>
+			Gets the version of the Firebird server.
+			</summary>
         </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.UserName">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;UserName&quot;]/*"/>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.Implementation">
+            <summary>
+			Gets the implementation of the Firebird server.
+			</summary>
         </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.UserPassword">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;UserPassword&quot;]/*"/>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.RootDirectory">
+            <summary>
+			Gets the location of the Firebird root directory on the server; this is the value 
+			of the $INTERBASE system environment variable, or the contents of the registry 
+			key.
+			</summary>
         </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.FirstName">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;FirstName&quot;]/*"/>		
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.LockManager">
+            <summary>
+			Gets the location of the InterBase lock manager file on the server; this is the 
+			value of the $INTERBASE_LCK system environment variable, or by default 
+			$INTERBASE/serverhostname.lck.
+			</summary>
         </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.LastName">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;LastName&quot;]/*"/>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.MessageFile">
+            <summary>
+			Gets the location of the InterBase message file on the server; this is the value 
+			of the $INTERBASE_MSG system environment variable, or by default 
+			$INTERBASE/interbase.msg.
+			</summary>
         </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.MiddleName">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;MiddleName&quot;]/*"/>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.DatabasesInfo">
+            <summary>
+			Gets information about databases on server.
+			</summary>
         </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.UserID">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;UserID&quot;]/*"/>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.GroupID">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;GroupID&quot;]/*"/>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.GroupName">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;GroupName&quot;]/*"/>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.RoleName">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;RoleName&quot;]/*"/>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbServerProperties.ServerConfig">
+            <summary>
+			Gets the parameters and values for IB_CONFIG.
+			</summary>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Services.FbServiceState">
             <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/enum[@name=&quot;FbServiceState&quot;]/overview/*"/>
@@ -2055,47 +1993,32 @@ static void ServiceOutput(object sender, ServiceOutputEventArgs e)
         <member name="F:FirebirdSql.Data.Firebird.Services.FbServiceState.Open">
             <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/enum[@name=&quot;FbServiceState&quot;]/field[@name=&quot;Open&quot;]/*"/>
         </member>
-        <member name="T:FirebirdSql.Data.Firebird.Services.ServiceOutputEventArgs">
+        <member name="T:FirebirdSql.Data.Firebird.Services.FbShutdownMode">
             <summary>
-			Provides data for the <see cref="E:FirebirdSql.Data.Firebird.Services.FbService.ServiceOutput"/> event. 
-			This class cannot be inherited.
-            </summary>
-        </member>
-        <member name="M:FirebirdSql.Data.Firebird.Services.ServiceOutputEventArgs.#ctor(System.String)">
-            <summary>
-                Initializes a new instance of the ServiceOutputEventArgs class with
-                the given service output message.
-            </summary><param name="message">
-                The service output message.
-            </param>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.Services.ServiceOutputEventArgs.Message">
-            <summary>
-                Gets the service output message.
-            </summary><value>A string that represents the service output message.</value>
-        </member>
-        <member name="T:FirebirdSql.Data.Firebird.Services.ServiceOutputEventHandler">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/delegate[@name=&quot;ServiceOutputEventHandler(System.Object,ServiceOutputEventArgs)&quot;]/*"/>
-        </member>
-        <member name="T:FirebirdSql.Data.Firebird.Services.FbStatisticalFlags">
-            <summary>
-			Specifies access flags for retrieve database statistics.
+			Allowed shutdown modes.
 			</summary>
         </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbStatisticalFlags.DataPages">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbStatistical.xml" path="doc/enum[@name=&quot;FbStatisticalFlags&quot;]/field[@name=&quot;DataPages&quot;]/*"/>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbShutdownMode.Forced">
+            <summary>
+			Shut down the database after the specified number of seconds; 
+			to shut down the database immediately, set the shutdown interval to 0.
+			</summary>
         </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbStatisticalFlags.DatabaseLog">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbStatistical.xml" path="doc/enum[@name=&quot;FbStatisticalFlags&quot;]/field[@name=&quot;DatabaseLog&quot;]/*"/>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbShutdownMode.DenyTransaction">
+            <summary>
+			Deny new transactions and shut down the database after the specified number
+			of seconds; if transactions are active after the shutdown interval has expired,
+			the shutdown will fail; to shut down the database immediately, set the
+			shutdown interval to 0.
+			</summary>
         </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbStatisticalFlags.HeaderPages">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbStatistical.xml" path="doc/enum[@name=&quot;FbStatisticalFlags&quot;]/field[@name=&quot;HeaderPages&quot;]/*"/>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbStatisticalFlags.IndexPages">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbStatistical.xml" path="doc/enum[@name=&quot;FbStatisticalFlags&quot;]/field[@name=&quot;IndexPages&quot;]/*"/>
-        </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbStatisticalFlags.SystemTablesRelations">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbStatistical.xml" path="doc/enum[@name=&quot;FbStatisticalFlags&quot;]/field[@name=&quot;SystemTablesRelations&quot;]/*"/>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbShutdownMode.DenyConnection">
+            <summary>
+			Deny new connections and shut down the database after the specified number
+			of seconds; if connections are active after the shutdown interval has expired,
+			the shutdown will fail; to shut down the database immediately, set the
+			shutdown interval to 0
+			</summary>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Services.FbStatistical">
             <summary>
@@ -2138,43 +2061,60 @@ statisticalSvc.Close();
 			provides information about statistics options.
 			</value>
         </member>
-        <member name="T:FirebirdSql.Data.Firebird.Services.FbValidationFlags">
+        <member name="T:FirebirdSql.Data.Firebird.Services.FbStatisticalFlags">
             <summary>
-			Specifies access flags for database validation.
+			Specifies access flags for retrieve database statistics.
 			</summary>
         </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbValidationFlags.ValidateDatabase">
-            <summary>    
-			Locate and release pages that are allocated but unassigned to any data structures.
-			</summary><value>0x01</value>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbStatisticalFlags.DataPages">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbStatistical.xml" path="doc/enum[@name=&quot;FbStatisticalFlags&quot;]/field[@name=&quot;DataPages&quot;]/*"/>
         </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbValidationFlags.SweepDatabase">
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbStatisticalFlags.DatabaseLog">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbStatistical.xml" path="doc/enum[@name=&quot;FbStatisticalFlags&quot;]/field[@name=&quot;DatabaseLog&quot;]/*"/>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbStatisticalFlags.HeaderPages">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbStatistical.xml" path="doc/enum[@name=&quot;FbStatisticalFlags&quot;]/field[@name=&quot;HeaderPages&quot;]/*"/>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbStatisticalFlags.IndexPages">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbStatistical.xml" path="doc/enum[@name=&quot;FbStatisticalFlags&quot;]/field[@name=&quot;IndexPages&quot;]/*"/>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbStatisticalFlags.SystemTablesRelations">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbStatistical.xml" path="doc/enum[@name=&quot;FbStatisticalFlags&quot;]/field[@name=&quot;SystemTablesRelations&quot;]/*"/>
+        </member>
+        <member name="T:FirebirdSql.Data.Firebird.Services.FbUserData">
             <summary>
-			Request database sweep to mark outdated records as free space.
-			</summary><value>0x02</value>
+			Represents data of a user of security.fdb security database.
+			</summary>
         </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbValidationFlags.MendDatabase">
-            <summary>
-			Mark corrupted records as unavailable, so subsequent operations skip them.
-			</summary><value>0x04</value>
+        <member name="M:FirebirdSql.Data.Firebird.Services.FbUserData.#ctor">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/class[@name=&quot;FbUserData&quot;]/constructor[@name=&quot;FbUserData&quot;]/*"/>
         </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbValidationFlags.CheckDatabase">
-            <summary>
-			Request read-only validation of the database, without correcting any problems.
-			</summary><value>0x10</value>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.UserName">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;UserName&quot;]/*"/>
         </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbValidationFlags.IgnoreChecksum">
-            <summary>Ignore all checksum errors.</summary><value>0x20</value>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.UserPassword">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;UserPassword&quot;]/*"/>
         </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbValidationFlags.KillShadows">
-            <summary>Remove references to unavailable shadow files.</summary><value>0x40</value>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.FirstName">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;FirstName&quot;]/*"/>		
         </member>
-        <member name="F:FirebirdSql.Data.Firebird.Services.FbValidationFlags.Full">
-            <summary>
-			Check record and page structures, releasing unassigned record fragments.
-			</summary><value>
-			0x80
-			</value>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.LastName">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;LastName&quot;]/*"/>
+        </member>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.MiddleName">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;MiddleName&quot;]/*"/>
+        </member>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.UserID">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;UserID&quot;]/*"/>
+        </member>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.GroupID">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;GroupID&quot;]/*"/>
+        </member>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.GroupName">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;GroupName&quot;]/*"/>
+        </member>
+        <member name="P:FirebirdSql.Data.Firebird.Services.FbUserData.RoleName">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/struct[@name=&quot;FbUserData&quot;]/property[@name=&quot;RoleName&quot;]/*"/>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Services.FbValidation">
             <summary>
@@ -2224,6 +2164,66 @@ validationSvc.Close();
         </member>
         <member name="P:FirebirdSql.Data.Firebird.Services.FbValidation.Options">
             <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbValidation.xml" path="doc/class[@name=&quot;FbValidation&quot;]/property[@name=&quot;Options&quot;]/*"/>
+        </member>
+        <member name="T:FirebirdSql.Data.Firebird.Services.FbValidationFlags">
+            <summary>
+			Specifies access flags for database validation.
+			</summary>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbValidationFlags.ValidateDatabase">
+            <summary>    
+			Locate and release pages that are allocated but unassigned to any data structures.
+			</summary><value>0x01</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbValidationFlags.SweepDatabase">
+            <summary>
+			Request database sweep to mark outdated records as free space.
+			</summary><value>0x02</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbValidationFlags.MendDatabase">
+            <summary>
+			Mark corrupted records as unavailable, so subsequent operations skip them.
+			</summary><value>0x04</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbValidationFlags.CheckDatabase">
+            <summary>
+			Request read-only validation of the database, without correcting any problems.
+			</summary><value>0x10</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbValidationFlags.IgnoreChecksum">
+            <summary>Ignore all checksum errors.</summary><value>0x20</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbValidationFlags.KillShadows">
+            <summary>Remove references to unavailable shadow files.</summary><value>0x40</value>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.Services.FbValidationFlags.Full">
+            <summary>
+			Check record and page structures, releasing unassigned record fragments.
+			</summary><value>
+			0x80
+			</value>
+        </member>
+        <member name="T:FirebirdSql.Data.Firebird.Services.ServiceOutputEventHandler">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbService.xml" path="doc/delegate[@name=&quot;ServiceOutputEventHandler(System.Object,ServiceOutputEventArgs)&quot;]/*"/>
+        </member>
+        <member name="T:FirebirdSql.Data.Firebird.Services.ServiceOutputEventArgs">
+            <summary>
+			Provides data for the <see cref="E:FirebirdSql.Data.Firebird.Services.FbService.ServiceOutput"/> event. 
+			This class cannot be inherited.
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.Services.ServiceOutputEventArgs.#ctor(System.String)">
+            <summary>
+                Initializes a new instance of the ServiceOutputEventArgs class with
+                the given service output message.
+            </summary><param name="message">
+                The service output message.
+            </param>
+        </member>
+        <member name="P:FirebirdSql.Data.Firebird.Services.ServiceOutputEventArgs.Message">
+            <summary>
+                Gets the service output message.
+            </summary><value>A string that represents the service output message.</value>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.FbCharset">
             <summary>
@@ -6987,10 +6987,15 @@ finally
 				</code>
 			</example>
         </member>
+        <member name="M:FirebirdSql.Data.Firebird.FbTransaction.Commit(System.String)">
+            <summary>
+			Commits a transaction from a pending state, and specifies a savepoint name.
+			</summary><param name="savePointName">The savepoint name to which commit changes.</param><exception cref="T:FirebirdSql.Data.Firebird.FbException">An error occurred while trying to commit the transaction.</exception><exception cref="T:System.InvalidOperationException">The transaction has already been committed or rolled back.</exception><exception cref="T:System.InvalidOperationException">FbCommand is currently busy Open, Fetching.</exception>
+        </member>
         <member name="M:FirebirdSql.Data.Firebird.FbTransaction.Rollback(System.String)">
             <summary>
 			Rolls back a transaction from a pending state, and specifies a savepoint name.
-			</summary><param name="savePointName">The savepoint name to which rollback changes.</param><exception cref="T:FirebirdSql.Data.Firebird.FbException">An error occurred while trying to commit the transaction.</exception><exception cref="T:System.InvalidOperationException">The transaction has already been committed or rolled back.</exception><exception cref="T:System.InvalidOperationException">FbCommand is currently busy Open, Fetching.</exception><example>
+			</summary><param name="savePointName">The savepoint name to which rollback changes.</param><exception cref="T:FirebirdSql.Data.Firebird.FbException">An error occurred while trying to rollback the transaction.</exception><exception cref="T:System.InvalidOperationException">The transaction has already been committed or rolled back.</exception><exception cref="T:System.InvalidOperationException">FbCommand is currently busy Open, Fetching.</exception><example>
 				<code>
 FbConnection myConnection = new FbConnection(connectionString);
 myConnection.Open();

@@ -1,6 +1,8 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.IO.IsolatedStorage;
+
 namespace Epsitec.Cresus.Services
 {
 	/// <summary>
@@ -69,6 +71,8 @@ namespace Epsitec.Cresus.Services
 				{
 					this.SetLastStep (3);
 					
+					this.temp = new TemporaryFile ();
+					
 					this.Step1_CopyDatabase ();				this.InterruptIfCancelRequested ();
 					this.Step2_CompressDatabase ();			this.InterruptIfCancelRequested ();
 					this.Step2_CompressDatabaseDeflate ();	this.InterruptIfCancelRequested ();
@@ -80,10 +84,16 @@ namespace Epsitec.Cresus.Services
 				}
 				catch (System.Exception exception)
 				{
-					this.SetFailed (exception.Message);
+					this.SetFailed (exception.ToString ());
 				}
 				finally
 				{
+					if (this.temp != null)
+					{
+						this.temp.Dispose ();
+						this.temp = null;
+					}
+					
 					System.Diagnostics.Debug.WriteLine ("Operator: operation thread exited.");
 				}
 			}
@@ -96,24 +106,11 @@ namespace Epsitec.Cresus.Services
 				Database.DbInfrastructure infrastructure = this.oper.engine.Orchestrator.Infrastructure;
 				Database.IDbServiceTools  tools          = infrastructure.DefaultDbAbstraction.ServiceTools;
 				
-				tools.Backup (@"c:\test.backup.firebird");
+				tools.Backup (this.temp.Path);
 				
-				for (int i = 5; i < 50; i += 5)
+				if (! this.WaitForFileReadable (this.temp.Path, 10*1000))
 				{
-					System.IO.FileStream stream;
-					
-					try
-					{
-						stream = System.IO.File.OpenRead (@"c:\test.backup.firebird");
-					}
-					catch
-					{
-						System.Threading.Thread.Sleep (i);
-						continue;
-					}
-					
-					stream.Close ();
-					break;
+					throw new System.IO.IOException ("File cannot be opened in read mode within specified delay.");
 				}
 			}
 			
@@ -123,7 +120,7 @@ namespace Epsitec.Cresus.Services
 				
 				this.SetCurrentStep (2);
 				
-				System.IO.FileStream   source = System.IO.File.OpenRead (@"c:\test.backup.firebird");
+				System.IO.FileStream   source = System.IO.File.OpenRead (this.temp.Path);
 				System.IO.MemoryStream memory = new System.IO.MemoryStream ();
 				System.IO.Stream compressed = Common.IO.Compression.CreateBZip2Stream (memory);
 				
@@ -156,7 +153,7 @@ namespace Epsitec.Cresus.Services
 				
 				this.SetCurrentStep (2);
 				
-				System.IO.FileStream   source = System.IO.File.OpenRead (@"c:\test.backup.firebird");
+				System.IO.FileStream   source = System.IO.File.OpenRead (this.temp.Path);
 				System.IO.MemoryStream memory = new System.IO.MemoryStream ();
 				System.IO.Stream compressed = Common.IO.Compression.CreateDeflateStream (memory, 9);
 				
@@ -192,8 +189,118 @@ namespace Epsitec.Cresus.Services
 			}
 			
 			
+			private bool WaitForFileReadable(string name, int max_wait)
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				bool ok = false;
+				int wait = 0;
+				
+				for (int i = 5; wait < max_wait; i += 5)
+				{
+					this.InterruptIfCancelRequested ();
+					
+					System.IO.FileStream stream;
+					
+					try
+					{
+						stream = System.IO.File.OpenRead (name);
+					}
+					catch
+					{
+						System.Threading.Thread.Sleep (i);
+						wait += i;
+						buffer.Append ('.');
+						continue;
+					}
+					
+					stream.Close ();
+					ok = true;
+					break;
+				}
+				
+				if (buffer.Length > 0)
+				{
+					if (wait > max_wait)
+					{
+						System.Diagnostics.Debug.WriteLine ("Timed out waiting for file.");
+					}
+					else
+					{
+						System.Diagnostics.Debug.WriteLine ("Waited for file for " + wait + " ms " + buffer.ToString ());
+					}
+				}
+				
+				return ok;
+			}
+			
+			
+			private TemporaryFile				temp;
 			private OperatorEngine				oper;
 			private byte[]						data;
+		}
+		
+		private class TemporaryFile : System.IDisposable
+		{
+			public TemporaryFile()
+			{
+				this.name = System.IO.Path.GetTempFileName ();
+			}
+			
+			~ TemporaryFile()
+			{
+				this.Dispose (false);
+			}
+			
+			
+			public string						Path
+			{
+				get
+				{
+					return this.name;
+				}
+			}
+			
+			
+			#region IDisposable Members
+			public void Dispose()
+			{
+				this.Dispose (true);
+				System.GC.SuppressFinalize (this);
+			}
+			#endregion
+			
+			protected virtual void Dispose(bool disposing)
+			{
+				if (disposing)
+				{
+					//	rien à faire de plus...
+				}
+				
+				this.RemoveFile ();
+			}
+			
+			protected virtual void RemoveFile()
+			{
+				if (this.name != null)
+				{
+					try
+					{
+						if (System.IO.File.Exists (this.name))
+						{
+							System.IO.File.Delete (this.name);
+						}
+					}
+					catch (System.Exception ex)
+					{
+						System.Diagnostics.Debug.WriteLine ("Could not remove file " + this.name + ";\n" + ex.ToString ());
+					}
+					
+					this.name = null;
+				}
+			}
+			
+			
+			private string						name;
 		}
 	}
 }

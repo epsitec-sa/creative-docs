@@ -172,6 +172,9 @@ namespace Epsitec.Cresus.Remoting
 				this.progress_status  = Remoting.ProgressStatus.Failed;
 				this.progress_percent = 100;
 				
+				System.Diagnostics.Debug.WriteLine ("*** failure ***\nReason:");
+				System.Diagnostics.Debug.WriteLine (message);
+				
 				System.Threading.Monitor.PulseAll (this.monitor);
 			}
 		}

@@ -646,7 +646,7 @@ namespace Epsitec.Cresus.Database
 				}
 				catch (System.Exception ex)
 				{
-					System.Console.WriteLine (ex.Message);
+					System.Console.WriteLine ("At step {0}, {1}", i, ex.Message);
 					System.Console.WriteLine (ex.ToString ());
 				}
 			}
