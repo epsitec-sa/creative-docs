@@ -112,7 +112,7 @@ namespace Epsitec.Common.Pictogram
 			radio2.Parent = this.root;
 
 			string[] list = Epsitec.Common.Widgets.Adorner.Factory.AdornerNames;
-			Drawing.Point pos = new Drawing.Point(100, window.ClientSize.Height-170);
+			Drawing.Point pos = new Drawing.Point(100, window.ClientSize.Height-160);
 			foreach ( string name in list )
 			{
 				RadioButton radio = new RadioButton();
