@@ -488,7 +488,7 @@ namespace Epsitec.Common.Designer.Widgets
 					this.overlay.drop_behavior.DropTarget           = null;
 					this.overlay.drop_behavior.DropTargetHiliteMode = WidgetHiliteMode.DropCandidate;
 					
-					this.overlay.drop_behavior.StartWidgetDragging ();
+					this.overlay.drop_behavior.StartWidgetDragging (bounds.Size);
 					
 					this.drag_window_origin = this.overlay.drop_behavior.DragWindowLocation;
 					this.drag_drop_active   = true;

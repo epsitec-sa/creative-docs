@@ -63,6 +63,7 @@ namespace Epsitec.Common.Designer.Panels
 			this.CreateDragSource (typeof (Button), "[ 1 ]", "1", 10+34*0, 133, 32, 32);
 			this.CreateDragSource (typeof (Button), "[ 2 ]", "2", 10+34*1, 133, 32, 32);
 			this.CreateDragSource (typeof (Button), "[ 3 ]", "3", 10+34*2, 133, 32, 32);
+			this.CreateDragSource (typeof (Button), "[ 4 ]", "4", 10+34*3, 133, 32, 32);
 			
 			Button test = new Button (this.widget);
 			
@@ -136,6 +137,10 @@ namespace Epsitec.Common.Designer.Panels
 				
 				case "3":
 					widget = this.CreateDataWidget (Common.UI.Data.Representation.RadioList);
+					break;
+				
+				case "4":
+					widget = this.CreateDataWidget (Common.UI.Data.Representation.RadioColumns);
 					break;
 			}
 			

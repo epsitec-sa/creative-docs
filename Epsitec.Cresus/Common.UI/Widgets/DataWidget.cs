@@ -14,6 +14,7 @@ namespace Epsitec.Common.UI.Widgets
 	{
 		public DataWidget()
 		{
+			this.InternalState &= ~ InternalState.PossibleContainer;
 		}
 		
 		public DataWidget(Widget embedder) : this ()
@@ -92,6 +93,12 @@ namespace Epsitec.Common.UI.Widgets
 			return false;
 		}
 		
+		
+		public override Drawing.Size GetBestFitSize()
+		{
+			return this.best_fit_size;
+		}
+
 		
 		#region ISelfBindingWidget Members
 		public bool BindWidget(Epsitec.Common.Types.IDataValue source)
@@ -178,8 +185,9 @@ namespace Epsitec.Common.UI.Widgets
 			text_field.Anchor        = AnchorStyles.Top | AnchorStyles.LeftAndRight;
 			text_field.AnchorMargins = new Drawing.Margins (this.caption_width, 0, 0, 0);
 			
-			this.MinSize = new Drawing.Size (this.caption_width + text_field.MinSize.Width, text_field.MinSize.Height);
-			this.Size    = this.MinSize;
+			this.best_fit_size = new Drawing.Size (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinSize.Height);
+			this.Size          = this.best_fit_size;
+			this.MinSize       = new Drawing.Size (this.caption_width + text_field.MinSize.Width, text_field.MinSize.Height);
 			
 			Engine.BindWidget (this.source, text_field);
 		}
@@ -200,8 +208,9 @@ namespace Epsitec.Common.UI.Widgets
 			text_field.Anchor        = AnchorStyles.Top | AnchorStyles.LeftAndRight;
 			text_field.AnchorMargins = new Drawing.Margins (this.caption_width, 0, 0, 0);
 			
-			this.MinSize = new Drawing.Size (this.caption_width + text_field.MinSize.Width, text_field.MinSize.Height);
-			this.Size    = this.MinSize;
+			this.best_fit_size = new Drawing.Size (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinSize.Height);
+			this.Size          = this.best_fit_size;
+			this.MinSize       = new Drawing.Size (this.caption_width + text_field.MinSize.Width, text_field.MinSize.Height);
 			
 			Engine.BindWidget (this.source, text_field);
 		}
@@ -231,7 +240,7 @@ namespace Epsitec.Common.UI.Widgets
 			
 			foreach (Types.IEnumValue enum_value in enum_values)
 			{
-				RadioButton button = new RadioButton (this.widget_container, "Group", enum_value.Rank);
+				RadioButton button = new RadioButton (this.widget_container);
 				
 				string caption = enum_value.Caption;
 				
@@ -240,6 +249,8 @@ namespace Epsitec.Common.UI.Widgets
 					caption = enum_value.Name;
 				}
 				
+				button.Group    = "Group";
+				button.Index    = enum_value.Rank;
 				button.Text     = caption;
 				button.TabIndex = 1;
 				button.Dock     = DockStyle.Top;
@@ -249,7 +260,54 @@ namespace Epsitec.Common.UI.Widgets
 				{
 					radio_0 = button;
 				}
+				else
+				{
+					//	On pourrait ajouter un espace vertical entre les boutons radio; les
+					//	informations de distance pourraient venir de IGuideAlignHint, par
+					//	exemple...
+					
+//					button.DockMargins = new Drawing.Margins (0, 0, 2, 0);
+				}
 			}
+			
+			Drawing.Size cell_size = this.GetCellSize ();
+			
+			int n = this.widget_container.Children.Count;
+			
+			double table_width  = cell_size.Width;
+			double table_height = cell_size.Height * n;
+			
+			switch (this.widget_layout_mode)
+			{
+				case LayoutMode.None:
+					break;
+				
+				case LayoutMode.Rows:
+				case LayoutMode.Columns:
+					for (int columns = 1; columns <= n; columns++)
+					{
+						int lines = (n + columns - 1) / columns;
+						
+						double dx = cell_size.Width * columns;
+						double dy = cell_size.Height * lines;
+						
+						if (dx > dy)
+						{
+							break;
+						}
+						
+						table_width  = dx;
+						table_height = dy;
+					}
+					break;
+			}
+			
+			double frame_width  = this.widget_container.Client.Width  - (this.widget_container.InnerBounds.Width  - this.widget_container.DockPadding.Width);
+			double frame_height = this.widget_container.Client.Height - (this.widget_container.InnerBounds.Height - this.widget_container.DockPadding.Height);
+			
+			this.best_fit_size = new Drawing.Size (table_width + frame_width, table_height + frame_height);
+			this.Size          = this.best_fit_size;
+			this.MinSize       = new Drawing.Size (frame_width + cell_size.Width, frame_height + cell_size.Height);
 			
 			this.UpdateInternalLayout ();
 			
@@ -421,5 +479,6 @@ namespace Epsitec.Common.UI.Widgets
 		protected LayoutMode					widget_layout_mode;
 		protected AbstractGroup					widget_container;
 		protected double						caption_width = 80;
+		protected Drawing.Size					best_fit_size = Drawing.Size.Empty;
 	}
 }

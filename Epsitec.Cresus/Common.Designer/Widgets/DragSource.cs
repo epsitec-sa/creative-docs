@@ -171,6 +171,8 @@ namespace Epsitec.Common.Designer.Widgets
 			
 			this.is_dragging = true;
 			
+			Drawing.Size initial_size = copy.Size;
+			
 			copy.Dock   = DockStyle.None;
 			copy.Anchor = AnchorStyles.None;
 			copy.Bounds = this.widget.Bounds;
@@ -179,7 +181,7 @@ namespace Epsitec.Common.Designer.Widgets
 			this.drop_behavior.Widget     = copy;
 			this.drop_behavior.DropTarget = null;
 			
-			this.drop_behavior.StartWidgetDragging ();
+			this.drop_behavior.StartWidgetDragging (initial_size);
 			
 			if (this.DragBegin != null)
 			{

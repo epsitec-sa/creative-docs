@@ -157,16 +157,17 @@ namespace Epsitec.Common.Designer.Behaviors
 		}
 		
 		
-		public void StartWidgetDragging()
+		public void StartWidgetDragging(Drawing.Size initial_size)
 		{
 			System.Diagnostics.Debug.Assert (this.widget != null);
 			System.Diagnostics.Debug.Assert (this.drag_window == null);
 			
-			Drawing.Point pos = this.WidgetScreenBounds.Location;
+			Drawing.Point offset = new Drawing.Point (this.widget.Width - initial_size.Width, this.widget.Height - initial_size.Height);
+			Drawing.Point pos    = this.WidgetScreenBounds.Location;
 			
 			this.drag_window = new DragWindow ();
-			this.drag_window.DefineWidget (this.widget, this.drag_window_margins);
-			this.DragWindowLocation = pos;
+			this.drag_window.DefineWidget (this.widget, initial_size, this.drag_window_margins);
+			this.DragWindowLocation = pos + (offset / 2);
 			this.drag_window.Show ();
 		}
 		

@@ -214,7 +214,9 @@ namespace Epsitec.Common.Designer
 			data_panel.Dock = DockStyle.Fill;
 			
 			this.widget_palette.DragBegin += new Support.EventHandler (this.HandleSourceDragBegin);
+			this.data_palette.DragBegin   += new Support.EventHandler (this.HandleSourceDragBegin);
 			this.widget_palette.DragEnd   += new Support.EventHandler (this.HandleSourceDragEnd);
+			this.data_palette.DragEnd     += new Support.EventHandler (this.HandleSourceDragEnd);
 		}
 		
 		protected void CreateAttributeWindow()
@@ -278,7 +280,7 @@ namespace Epsitec.Common.Designer
 		
 		private void HandleSourceDragBegin(object sender)
 		{
-			System.Diagnostics.Debug.Assert (this.widget_palette == sender);
+			System.Diagnostics.Debug.Assert ((this.widget_palette == sender) || (this.data_palette == sender));
 			
 			this.SetTabIndexSetter (false);
 			this.SetTabIndexPicker (false);
