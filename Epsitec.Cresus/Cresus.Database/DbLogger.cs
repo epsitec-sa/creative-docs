@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
@@ -77,16 +77,6 @@ namespace Epsitec.Cresus.Database
 			this.Insert (transaction, new Entry (DbId.CreateId (1, this.client_id)));
 		}
 		
-		
-		public DbId CreatePermanentEntry()
-		{
-			return this.CreatePermanentEntry (null);
-		}
-		
-		public DbId CreateTemporaryEntry()
-		{
-			return this.CreateTemporaryEntry (null);
-		}
 		
 		public DbId CreatePermanentEntry(DbTransaction transaction)
 		{

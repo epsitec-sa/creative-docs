@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
@@ -173,14 +173,33 @@ namespace Epsitec.Cresus.Database
 			
 			foreach (System.Data.DataTable data_table in command.DataSet.Tables)
 			{
-				if (data_table.Columns[Tags.ColumnId].Unique == false)
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("Warning: Table {0} ID not unique, fixing.", data_table.TableName));
-					data_table.Columns[Tags.ColumnId].Unique = true;
-				}
+				DbRichCommand.RelaxConstraints (data_table);
 			}
 			
 			return command;
+		}
+		
+		
+		public static void RelaxConstraints(System.Data.DataTable data_table)
+		{
+			if (data_table.Columns[Tags.ColumnId].Unique == false)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Warning: Table {0} ID not unique, fixing.", data_table.TableName));
+				data_table.Columns[Tags.ColumnId].Unique = true;
+			}
+			
+			//	Si certaines colonnes empêchent l'utilisateur de valeurs 'null' dans la
+			//	base de données, il faut effacer ces fanions pour éviter des problèmes
+			//	pendant le peuplement de la table (où toutes les colonnes ne sont pas
+			//	encore affectées) :
+			
+			foreach (System.Data.DataColumn data_column in data_table.Columns)
+			{
+				if (data_column.AllowDBNull == false)
+				{
+					data_column.AllowDBNull = true;
+				}
+			}
 		}
 		
 		

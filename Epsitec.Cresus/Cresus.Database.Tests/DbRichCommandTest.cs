@@ -64,6 +64,9 @@ namespace Epsitec.Cresus.Database
 			
 			infrastructure.Execute (null, command);
 			
+			DbRichCommand.RelaxConstraints (command.DataSet.Tables["Personnes"]);
+			DbRichCommand.RelaxConstraints (command.DataSet.Tables["Domiciles"]);
+			
 			System.Console.Out.WriteLine ("Tables : {0}", command.DataSet.Tables.Count);
 			
 			Assert.AreEqual (2, command.DataSet.Tables.Count);

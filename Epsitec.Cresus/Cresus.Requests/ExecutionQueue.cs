@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
@@ -166,22 +166,38 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		public void Enqueue(AbstractRequest request)
+		public void Enqueue(Database.DbTransaction transaction, AbstractRequest request)
 		{
 			//	Ajoute une requête dans la queue.
 			
-			System.Data.DataRow row = this.AddRequest (request);
-			
-			lock (this)
+			if (transaction == null)
 			{
-				this.queue_data_table.Rows.Add (row);
-				this.UpdateCounts ();
+				try
+				{
+					transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
+					this.Enqueue (transaction, request);
+				}
+				finally
+				{
+					transaction.Commit ();
+					transaction.Dispose ();
+				}
 			}
-			
-			this.enqueue_event.Set ();
+			else
+			{
+				System.Data.DataRow row = this.AddRequest (transaction, request);
+				
+				lock (this)
+				{
+					this.queue_data_table.Rows.Add (row);
+					this.UpdateCounts ();
+				}
+				
+				this.enqueue_event.Set ();
+			}
 		}
 		
-		public void Enqueue(byte[][] serialized_requests, DbId[] ids)
+		public void Enqueue(Database.DbTransaction transaction, byte[][] serialized_requests, DbId[] ids)
 		{
 			//	Ajoute une série de requêtes qui sont déjà sous forme sérialisée,
 			//	en leur attribuant un ID particulier (cet ID dépend du client et
@@ -197,7 +213,7 @@ namespace Epsitec.Cresus.Requests
 					//	Crée la ligne décrivant la requête sérialisée. La date
 					//	courante (locale au processus) est affectée à la ligne :
 					
-					System.Data.DataRow row  = this.AddRequest (serialized_requests[i]);
+					System.Data.DataRow row  = this.AddRequest (transaction, serialized_requests[i]);
 					System.Data.DataRow find = DbRichCommand.FindRow (this.queue_data_table, ids[i]);
 					
 					//	L'appelant force des IDs pour les diverses requêtes (parce
@@ -263,12 +279,12 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		public System.Data.DataRow AddRequest(AbstractRequest request)
+		public System.Data.DataRow AddRequest(Database.DbTransaction transaction, AbstractRequest request)
 		{
-			return this.AddRequest (AbstractRequest.SerializeToMemory (request));
+			return this.AddRequest (transaction, AbstractRequest.SerializeToMemory (request));
 		}
 		
-		public System.Data.DataRow AddRequest(byte[] data)
+		public System.Data.DataRow AddRequest(Database.DbTransaction transaction, byte[] data)
 		{
 			int length = data.Length;
 			
@@ -276,7 +292,9 @@ namespace Epsitec.Cresus.Requests
 			
 			System.Data.DataRow row;
 			
-			DbRichCommand.CreateRow (this.queue_data_table, this.CreateLogId (), out row);
+			DbId log_id = this.CreateLogId (transaction);
+			
+			DbRichCommand.CreateRow (this.queue_data_table, log_id, out row);
 			
 			row.BeginEdit ();
 			row[Tags.ColumnReqData]    = data;
@@ -465,15 +483,15 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		protected DbId CreateLogId()
+		protected DbId CreateLogId(Database.DbTransaction transaction)
 		{
 			if (this.is_server)
 			{
-				return this.infrastructure.Logger.CreatePermanentEntry ();
+				return this.infrastructure.Logger.CreatePermanentEntry (transaction);
 			}
 			else
 			{
-				return this.infrastructure.Logger.CreateTemporaryEntry ();
+				return this.infrastructure.Logger.CreateTemporaryEntry (transaction);
 			}
 		}
 		

@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Database
 					
 					int n = rows.Length;
 					
-					queue.Enqueue (group);
+					queue.Enqueue (transaction, group);
 					
 					Assert.AreEqual (n, rows.Length);
 					
@@ -369,7 +369,7 @@ namespace Epsitec.Cresus.Database
 			
 			factory.GenerateRequests (table);
 			
-			orchestrator.ExecutionQueue.Enqueue (factory.CreateGroup ());
+			orchestrator.ExecutionQueue.Enqueue (null, factory.CreateGroup ());
 			
 			table.AcceptChanges ();
 			table.Rows[0][col_3.ColumnName] = "Pierre Arnaud-Roost";
@@ -378,7 +378,7 @@ namespace Epsitec.Cresus.Database
 			factory.Clear ();
 			factory.GenerateRequests (table);
 			
-			orchestrator.ExecutionQueue.Enqueue (factory.CreateGroup ());
+			orchestrator.ExecutionQueue.Enqueue (null, factory.CreateGroup ());
 			orchestrator.Dispose ();
 			
 			infrastructure.UnregisterDbTable (null, db_table);
@@ -430,7 +430,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-#if true
+#if false
 		[Test] [Ignore ("Temporary")] public void Check12ServiceServer()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);

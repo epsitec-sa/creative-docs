@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Cresus.Remoting;
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Services
 				}
 			}
 			
-			this.execution_queue.Enqueue (data, ids);
+			this.execution_queue.Enqueue (null, data, ids);
 		}
 		
 		void IRequestExecutionService.QueryRequestStates(Remoting.ClientIdentity client, out RequestState[] states)
