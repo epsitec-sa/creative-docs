@@ -610,7 +610,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				case DbRawType.Date:			return FbDbType.Date;
 				case DbRawType.DateTime:		return FbDbType.TimeStamp;
 				case DbRawType.String:			return FbDbType.VarChar;
-				case DbRawType.ByteArray:		return FbDbType.LongVarBinary;
+				case DbRawType.ByteArray:		return FbDbType.Binary;
 			}
 			
 			this.ThrowError (string.Format (TypeConverter.InvariantFormatProvider, "Type {0} cannot be mapped to Firebird Type.", raw_type.ToString ()));

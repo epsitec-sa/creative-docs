@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Database
 			reader.Close ();
 			
 			command.Transaction.Rollback ();
-			command.Transaction.Dispose ();
+			//command.Transaction.Dispose ();
 			command.Dispose ();
 		}
 		
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			command.Transaction.Commit ();
-			command.Transaction.Dispose ();
+			//command.Transaction.Dispose ();
 			command.Dispose ();
 		}
 		
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Database
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 
 			command.Transaction.Commit ();
-			command.Transaction.Dispose ();
+			//command.Transaction.Dispose ();
 			command.Dispose ();
 		}
 
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Database
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 
 			command.Transaction.Commit ();
-			command.Transaction.Dispose ();
+			//command.Transaction.Dispose ();
 			command.Dispose ();
 		}
 
@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.Database
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 			
 			command.Transaction.Commit ();
-			command.Transaction.Dispose ();
+			//command.Transaction.Dispose ();
 			command.Dispose ();
 		}
 
@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.Database
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 			
 			command.Transaction.Commit ();
-			command.Transaction.Dispose ();
+			//command.Transaction.Dispose ();
 			command.Dispose ();
 		}
 
@@ -276,7 +276,7 @@ namespace Epsitec.Cresus.Database
 			command.Transaction = db_abstraction.BeginTransaction ();
 			command.ExecuteNonQuery ();
 			command.Transaction.Commit ();
-			command.Transaction.Dispose ();
+			//command.Transaction.Dispose ();
 			command.Dispose ();
 		}
 
@@ -310,7 +310,7 @@ namespace Epsitec.Cresus.Database
 			sql_engine.Execute (command, command_type, sql_builder.CommandCount);
 			
 			command.Transaction.Commit ();
-			command.Transaction.Dispose ();
+			//command.Transaction.Dispose ();
 			command.Dispose ();
 		}
 		
@@ -333,7 +333,7 @@ namespace Epsitec.Cresus.Database
 			sql_engine.Execute (command, command_type, sql_builder.CommandCount);
 			
 			command.Transaction.Commit ();
-			command.Transaction.Dispose ();
+			//command.Transaction.Dispose ();
 			command.Dispose ();
 		}
 
@@ -358,13 +358,13 @@ namespace Epsitec.Cresus.Database
 			{
 				command.ExecuteNonQuery ();
 				command.Transaction.Commit ();
-				command.Transaction.Dispose ();
+				//command.Transaction.Dispose ();
 				command.Dispose ();
 			}
 			catch
 			{
 				command.Transaction.Rollback ();
-				command.Transaction.Dispose ();
+				//command.Transaction.Dispose ();
 				command.Dispose ();
 			}
 			
@@ -393,7 +393,7 @@ namespace Epsitec.Cresus.Database
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 			
 			command.Transaction.Commit ();
-			command.Transaction.Dispose ();
+			//command.Transaction.Dispose ();
 			command.Dispose ();
 
 			//	y écrit des données
@@ -425,7 +425,7 @@ namespace Epsitec.Cresus.Database
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 			
 			command.Transaction.Commit ();
-			command.Transaction.Dispose ();
+			//command.Transaction.Dispose ();
 			command.Dispose ();
 
 			//	va relire les données écrites dans le BLOB

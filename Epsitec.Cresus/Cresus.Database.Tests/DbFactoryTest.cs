@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Database
 			System.Console.Out.WriteLine ("Result: " + result.ToString () + ", type is " + result.GetType ().ToString ());
 			
 			command.Transaction.Commit ();
-			command.Transaction.Dispose ();
+			//command.Transaction.Dispose ();
 			command.Dispose ();
 		}
 		
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			command.Transaction.Commit ();
-			command.Transaction.Dispose ();
+			//command.Transaction.Dispose ();
 			command.Dispose ();
 		}
 
