@@ -4,6 +4,11 @@ namespace Epsitec.Common.Support
 {
 	[TestFixture] public class ClipboardTest
 	{
+		[SetUp] public void Initialise()
+		{
+			Widgets.Widget.Initialise ();
+		}
+		
 		[Test] public void CheckGetData()
 		{
 			Clipboard.ReadData data = Clipboard.GetData ();
