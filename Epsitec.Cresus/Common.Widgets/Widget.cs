@@ -3735,13 +3735,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal virtual bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
+		public virtual bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
 			focus = this;
 			return true;
 		}
 		
-		internal virtual bool AboutToLoseFocus(TabNavigationDir dir, TabNavigationMode mode)
+		public virtual bool AboutToLoseFocus(TabNavigationDir dir, TabNavigationMode mode)
 		{
 			return true;
 		}

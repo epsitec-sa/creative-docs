@@ -178,6 +178,10 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 		
+		public void MakeTopLevelWindow()
+		{
+			this.window.MakeTopLevelWindow ();
+		}
 		
 		public void MakeFramelessWindow()
 		{
