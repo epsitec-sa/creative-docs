@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Rectangle	Inside
 		{
-			get { return new Drawing.Rectangle (0, 0, this.Client.Width, this.Client.Height); }
+			get { return this.Client.Bounds; }
 		}
 	}
 }

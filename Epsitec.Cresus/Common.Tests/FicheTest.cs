@@ -10,7 +10,7 @@ namespace Epsitec.Common.Tests
 		[Test] public void CheckFicheApplication()
 		{
 			this.window = new WindowFrame();
-			this.window.Resize += new System.EventHandler(this.window_Resize);
+			this.window.Root.LayoutChanged += new EventHandler(Root_LayoutChanged);
 			
 			Widgets.Adorner.Factory.SetActive("LookDany");
 
@@ -343,7 +343,7 @@ namespace Epsitec.Common.Tests
 			this.UpdateButton();
 		}
 
-		private void window_Resize(object sender, System.EventArgs e)
+		private void Root_LayoutChanged(object sender)
 		{
 			this.ResizeLayout();
 		}

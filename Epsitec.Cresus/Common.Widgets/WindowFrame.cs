@@ -296,6 +296,9 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnSizeChanged(System.EventArgs e)
 		{
+			System.Diagnostics.Debug.Assert (this.Resize == null, "WindowFrame.Resize event may not be used!");
+			System.Diagnostics.Debug.Assert (this.SizeChanged == null, "WindowFrame.SizeChanged event may not be used!");
+
 			if ((this.Created == false) &&
 				(this.form_bounds_set) &&
 				(this.form_bounds.Size != this.Size))
@@ -746,6 +749,8 @@ namespace Epsitec.Common.Widgets
 		public event System.EventHandler		WindowActivated;
 		public event System.EventHandler		WindowDeactivated;
 		
+		public new event System.EventHandler	Resize;
+		public new event System.EventHandler	SizeChanged;
 		
 		protected WindowRoot					root;
 		protected Drawing.Graphics				graphics;

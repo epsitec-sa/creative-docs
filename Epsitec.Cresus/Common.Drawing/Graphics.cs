@@ -305,12 +305,12 @@ namespace Epsitec.Common.Drawing
 				return new Drawing.Rectangle (this.clip_x1, this.clip_y1, this.clip_x2-this.clip_x1, this.clip_y2-this.clip_y1);
 			}
 			
-			return new Drawing.Rectangle ();
+			return Drawing.Rectangle.Infinite;
 		}
 		
 		public void RestoreClippingRectangle(Drawing.Rectangle rect)
 		{
-			if (rect.IsEmpty)
+			if (rect == Drawing.Rectangle.Infinite)
 			{
 				this.ResetClippingRectangle ();
 			}
