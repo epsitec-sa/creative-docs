@@ -39,12 +39,10 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				lock (this.queue_data_table)
+				lock (this)
 				{
 					System.Data.DataRow[] rows = new System.Data.DataRow[this.queue_data_table.Rows.Count];
-					
 					this.queue_data_table.Rows.CopyTo (rows, 0);
-					
 					return rows;
 				}
 			}
@@ -54,9 +52,12 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				System.Data.DataRow[] rows = this.Rows;
-				System.Array.Sort (rows, new DateTimeRowComparer ());
-				return rows;
+				lock (this)
+				{
+					System.Data.DataRow[] rows = DbRichCommand.CopyLiveRows (this.Rows);
+					System.Array.Sort (rows, new DateTimeRowComparer ());
+					return rows;
+				}
 			}
 		}
 		
@@ -156,78 +157,84 @@ namespace Epsitec.Cresus.Requests
 		
 		public void Enqueue(AbstractRequest request)
 		{
+			//	Ajoute une requête dans la queue.
+			
 			System.Data.DataRow row = this.AddRequest (request);
 			
-			lock (this.queue_data_table)
+			lock (this)
 			{
 				this.queue_data_table.Rows.Add (row);
+				this.UpdateCounts ();
 			}
 			
-			this.UpdateCounts ();
 			this.enqueue_event.Set ();
 		}
 		
 		public void Enqueue(byte[][] serialized_requests, DbId[] ids)
 		{
-			//	Ajoute une série de requêtes qui sont déjà sous forme sérialisée et leur
-			//	attribue un ID particulier (cet ID dépend du client et doit être associé
-			//	à la requête pour permettre de dialoguer correctement avec le client).
+			//	Ajoute une série de requêtes qui sont déjà sous forme sérialisée,
+			//	en leur attribuant un ID particulier (cet ID dépend du client et
+			//	doit être associé à la requête pour permettre un dialogue correct
+			//	avec le client).
 			
 			System.Diagnostics.Debug.Assert (serialized_requests.Length == ids.Length);
 			
-			lock (this.queue_data_table)
+			lock (this)
 			{
 				for (int i = 0; i < serialized_requests.Length; i++)
 				{
+					//	Crée la ligne décrivant la requête sérialisée. La date
+					//	courante (locale au processus) est affectée à la ligne :
+					
 					System.Data.DataRow row  = this.AddRequest (serialized_requests[i]);
 					System.Data.DataRow find = DbRichCommand.FindRow (this.queue_data_table, ids[i]);
 					
-					//	L'appelant force des IDs pour les diverses requêtes (parce qu'elles proviennent
-					//	d'un client distant qui a déjà attribué les IDs).
+					//	L'appelant force des IDs pour les diverses requêtes (parce
+					//	qu'elles proviennent d'un client distant qui a déjà attribué
+					//	des IDs aux requêtes).
 					
 					row[Tags.ColumnId] = ids[i].Value;
 					
 					if ((find != null) &&
 						(find.RowState != System.Data.DataRowState.Deleted))
 					{
-						//	Si la table contient déjà une requête avec cet ID, on va simplement la
-						//	remplacer par la nouvelle requête :
+						//	Si la table contient déjà une requête avec cet ID, on va
+						//	simplement la remplacer par la nouvelle requête :
 						
 						find.BeginEdit ();
 						find.ItemArray = row.ItemArray;
 						find.EndEdit ();
-						
-						System.Diagnostics.Debug.WriteLine ("Server: Replaced request " + ids[i].Value);
 					}
 					else
 					{
 						this.queue_data_table.Rows.Add (row);
-						
-						System.Diagnostics.Debug.WriteLine ("Server: Inserted request " + ids[i].Value);
 					}
 				}
+				
+				this.UpdateCounts ();
 			}
 			
 			System.Diagnostics.Debug.WriteLine ("Enqueued " + serialized_requests.Length + " serialized requests.");
 			
-			this.UpdateCounts ();
 			this.enqueue_event.Set ();
 		}
 		
 		
 		public void ClearQueue()
 		{
-			System.Data.DataRow[] rows = this.Rows;
-			
-			for (int i = 0; i < rows.Length; i++)
+			lock (this)
 			{
-				DbRichCommand.KillRow (rows[i]);
+				System.Data.DataRow[] rows = this.Rows;
+				
+				for (int i = 0; i < rows.Length; i++)
+				{
+					DbRichCommand.KillRow (rows[i]);
+				}
+				
+				this.UpdateCounts ();
 			}
-		}
-		
-		public void WaitOnEnqueueEvent(System.TimeSpan timeout)
-		{
-			this.enqueue_event.WaitOne (timeout, true);
+			
+			this.enqueue_event.Set ();
 		}
 		
 		
@@ -248,7 +255,7 @@ namespace Epsitec.Cresus.Requests
 			
 			row.BeginEdit ();
 			row[Tags.ColumnReqData]    = data;
-			row[Tags.ColumnReqExState] = (int) ExecutionState.Pending;
+			row[Tags.ColumnReqExState] = this.ConvertFromExecutionState (ExecutionState.Pending);
 			row[Tags.ColumnDateTime]   = System.DateTime.UtcNow;
 			row.EndEdit ();
 			
@@ -257,17 +264,38 @@ namespace Epsitec.Cresus.Requests
 		
 		public void RemoveRequest(System.Data.DataRow row)
 		{
-			Database.DbRichCommand.KillRow (row);
-			this.UpdateCounts ();
+			lock (this)
+			{
+				Database.DbRichCommand.KillRow (row);
+				this.UpdateCounts ();
+			}
+			this.enqueue_event.Set ();
+		}
+		
+		public void RemoveRequests(System.Collections.IEnumerable rows)
+		{
+			lock (this)
+			{
+				foreach (System.Data.DataRow row in rows)
+				{
+					Database.DbRichCommand.KillRow (row);
+				}
+				
+				this.UpdateCounts ();
+			}
 			this.enqueue_event.Set ();
 		}
 		
 		public AbstractRequest GetRequest(System.Data.DataRow row)
 		{
-			if (row != null)
+			lock (this)
 			{
-				byte[] buffer = row[Tags.ColumnReqData] as byte[];
-				return AbstractRequest.DeserializeFromMemory (buffer);
+				if ((row != null) &&
+					(DbRichCommand.IsRowDeleted (row) == false))
+				{
+					byte[] buffer = row[Tags.ColumnReqData] as byte[];
+					return AbstractRequest.DeserializeFromMemory (buffer);
+				}
 			}
 			
 			return null;
@@ -275,13 +303,10 @@ namespace Epsitec.Cresus.Requests
 		
 		public ExecutionState GetRequestExecutionState(System.Data.DataRow row)
 		{
-			this.CheckRow (row);
-			
-			System.Enum state;
-			
-			if (Epsitec.Common.Types.Converter.Convert (row[Tags.ColumnReqExState], typeof (ExecutionState), out state))
+			lock (this)
 			{
-				return (ExecutionState) state;
+				this.CheckRow (row);
+				return this.ConvertToExecutionState (row[Tags.ColumnReqExState]);
 			}
 			
 			throw new System.InvalidCastException ("Invalid ExecutionState in row.");
@@ -289,22 +314,22 @@ namespace Epsitec.Cresus.Requests
 		
 		public void SetRequestExecutionState(System.Data.DataRow row, ExecutionState new_state)
 		{
-			ExecutionState old_state = this.GetRequestExecutionState (row);
-			
-			if (old_state == new_state)
-			{
-				return;
-			}
-			
-			if (StateMachine.Check (old_state, new_state) == false)
-			{
-				throw new System.InvalidOperationException (string.Format ("Cannot change from state {0} to {1}.", old_state, new_state));
-			}
-			
-			row[Tags.ColumnReqExState] = (short) new_state;
-			
 			lock (this)
 			{
+				ExecutionState old_state = this.GetRequestExecutionState (row);
+				
+				if (old_state == new_state)
+				{
+					return;
+				}
+				
+				if (StateMachine.Check (old_state, new_state) == false)
+				{
+					throw new System.InvalidOperationException (string.Format ("Cannot change from state {0} to {1}.", old_state, new_state));
+				}
+				
+				row[Tags.ColumnReqExState] = this.ConvertFromExecutionState (new_state);
+				
 				this.state_count[(int) old_state]--;
 				this.state_count[(int) new_state]++;
 			}
@@ -344,11 +369,14 @@ namespace Epsitec.Cresus.Requests
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (this.infrastructure != null);
 			
-			this.queue_command    = DbRichCommand.CreateFromTable (this.infrastructure, transaction, this.queue_db_table, DbSelectRevision.LiveActive);
-			this.queue_data_set   = this.queue_command.DataSet;
-			this.queue_data_table = this.queue_data_set.Tables[Tags.TableRequestQueue];
-			
-			this.UpdateCounts ();
+			lock (this)
+			{
+				this.queue_command    = DbRichCommand.CreateFromTable (this.infrastructure, transaction, this.queue_db_table, DbSelectRevision.LiveActive);
+				this.queue_data_set   = this.queue_command.DataSet;
+				this.queue_data_table = this.queue_data_set.Tables[Tags.TableRequestQueue];
+				
+				this.UpdateCounts ();
+			}
 		}
 		
 		public void SerializeToBase(DbTransaction transaction)
@@ -356,7 +384,7 @@ namespace Epsitec.Cresus.Requests
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (this.queue_command != null);
 			
-			lock (this.queue_data_table)
+			lock (this)
 			{
 				this.queue_command.UpdateRealIds (transaction);
 				this.queue_command.UpdateTables (transaction);
@@ -367,13 +395,16 @@ namespace Epsitec.Cresus.Requests
 		#endregion
 		
 		#region DateTimeRowComparer Class
-		public class DateTimeRowComparer : System.Collections.IComparer
+		protected class DateTimeRowComparer : System.Collections.IComparer
 		{
 			#region IComparer Members
 			public int Compare(object x, object y)
 			{
 				System.Data.DataRow row_x = x as System.Data.DataRow;
 				System.Data.DataRow row_y = y as System.Data.DataRow;
+				
+				System.Diagnostics.Debug.Assert (row_x.RowState != System.Data.DataRowState.Deleted);
+				System.Diagnostics.Debug.Assert (row_y.RowState != System.Data.DataRowState.Deleted);
 				
 				System.DateTime date_x = (System.DateTime) row_x[Tags.ColumnDateTime];
 				System.DateTime date_y = (System.DateTime) row_y[Tags.ColumnDateTime];
@@ -383,6 +414,24 @@ namespace Epsitec.Cresus.Requests
 			#endregion
 		}
 		#endregion
+		
+		protected ExecutionState ConvertToExecutionState(object value)
+		{
+			System.Enum state;
+				
+			if (Common.Types.Converter.Convert (value, typeof (ExecutionState), out state))
+			{
+				return (ExecutionState) state;
+			}
+			
+			throw new System.InvalidCastException ("Invalid ExecutionState value.");
+		}
+		
+		protected object ConvertFromExecutionState(ExecutionState value)
+		{
+			return (short) value;
+		}
+		
 		
 		protected void CheckRow(System.Data.DataRow row)
 		{
@@ -410,16 +459,14 @@ namespace Epsitec.Cresus.Requests
 			{
 				if (DbRichCommand.IsRowDeleted (row) == false)
 				{
-					short state = (short) row[Tags.ColumnReqExState];
+					short state = (short) this.ConvertToExecutionState (row[Tags.ColumnReqExState]);
 					count[state]++;
 				}
 			}
 			
-			lock (this)
-			{
-				this.state_count = count;
-			}
+			this.state_count = count;
 		}
+		
 		
 		
 		private DbInfrastructure				infrastructure;

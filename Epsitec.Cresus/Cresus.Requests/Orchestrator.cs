@@ -130,29 +130,33 @@ namespace Epsitec.Cresus.Requests
 					
 					for (int i = 0; i < states.Length; i++)
 					{
-						System.Data.DataRow row = this.FindMatchingRow (rows, states[i].Identifier);
-						
-						if (row == null)
+						lock (this.execution_queue)
 						{
-							list.Add (states[i]);
-							continue;
-						}
-						
-						//	La requête est contenue dans la queue d'exécution. En fonction de
-						//	l'état de celle-ci, il va falloir soit la valider définitivement,
-						//	soit la marquer comme étant invalide.
-						
-						switch ((ExecutionState) states[i].State)
-						{
-							case ExecutionState.ExecutedByServer:
-								this.ProcessServerExecuted (row);
-								list.Add (states[i]);
-								break;
+							System.Data.DataRow row = DbRichCommand.FindRow (rows, states[i].Identifier);
 							
-							case ExecutionState.Conflicting:
-								this.ProcessServerConflict (row);
-								conflict_detected = true;
-								break;
+							if ((row == null) ||
+								(DbRichCommand.IsRowDeleted (row)))
+							{
+								list.Add (states[i]);
+								continue;
+							}
+							
+							//	La requête est contenue dans la queue d'exécution. En fonction de
+							//	l'état de celle-ci, il va falloir soit la valider définitivement,
+							//	soit la marquer comme étant invalide.
+							
+							switch ((ExecutionState) states[i].State)
+							{
+								case ExecutionState.ExecutedByServer:
+									this.ProcessServerExecuted (row);
+									list.Add (states[i]);
+									break;
+								
+								case ExecutionState.Conflicting:
+									this.ProcessServerConflict (row);
+									conflict_detected = true;
+									break;
+							}
 						}
 					}
 					
@@ -190,31 +194,6 @@ namespace Epsitec.Cresus.Requests
 		{
 			System.Diagnostics.Debug.WriteLine ("Requests.Orchestrator: server detected conflict on request " + row[Tags.ColumnId]);
 			this.execution_queue.SetRequestExecutionState (row, ExecutionState.Conflicting);
-		}
-		
-		
-		protected System.Data.DataRow FindMatchingRow(System.Data.DataRow[] rows, DbId id)
-		{
-			int n = rows.Length;
-			
-			for (int i = 0; i < n; i++)
-			{
-				System.Data.DataRow row = rows[i];
-				
-				if (DbRichCommand.IsRowDeleted (row))
-				{
-					continue;
-				}
-				
-				DbKey request_key = new DbKey (row);
-				
-				if (request_key.Id == id)
-				{
-					return row;
-				}
-			}
-			
-			return null;
 		}
 		
 		

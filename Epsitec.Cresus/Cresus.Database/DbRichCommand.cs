@@ -534,6 +534,28 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public static System.Data.DataRow CopyRowIfValid(System.Data.DataRow row)
+		{
+			if ((row == null) ||
+				(row.Table == null))
+			{
+				return null;
+			}
+			
+			switch (row.RowState)
+			{
+				case System.Data.DataRowState.Deleted:
+				case System.Data.DataRowState.Detached:
+					return null;
+			}
+			
+			System.Data.DataRow copy = row.Table.NewRow ();
+			
+			copy.ItemArray = row.ItemArray;
+			
+			return copy;
+		}
+		
 		public static System.Data.DataRow FindRow(System.Data.DataTable table, DbId id)
 		{
 			int n = table.Rows.Count;
@@ -547,11 +569,46 @@ namespace Epsitec.Cresus.Database
 				{
 					row_id = (long) row[Tags.ColumnId, System.Data.DataRowVersion.Original];
 				}
+				else if (row.RowState == System.Data.DataRowState.Detached)
+				{
+					continue;
+				}
 				else
 				{
 					row_id = (long) row[Tags.ColumnId];
 				}
 						
+				if (id.Value == row_id)
+				{
+					return row;
+				}
+			}
+			
+			return null;
+		}
+		
+		public static System.Data.DataRow FindRow(System.Data.DataRow[] rows, DbId id)
+		{
+			int n = rows.Length;
+			
+			for (int i = 0; i < n; i++)
+			{
+				System.Data.DataRow row = rows[i];
+				long row_id;
+				
+				if (row.RowState == System.Data.DataRowState.Deleted)
+				{
+					row_id = (long) row[Tags.ColumnId, System.Data.DataRowVersion.Original];
+				}
+				else if (row.RowState == System.Data.DataRowState.Detached)
+				{
+					continue;
+				}
+				else
+				{
+					row_id = (long) row[Tags.ColumnId];
+				}
+				
 				if (id.Value == row_id)
 				{
 					return row;

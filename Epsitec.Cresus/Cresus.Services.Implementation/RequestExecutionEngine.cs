@@ -94,50 +94,54 @@ namespace Epsitec.Cresus.Services
 			//	Supprime de la queue les requêtes dont l'état correspond à celui
 			//	décrit.
 			
-			System.Data.DataRow[] rows = this.execution_queue.DateTimeSortedRows;
-			
-			for (int i = 0; i < rows.Length; i++)
+			lock (this.execution_queue)
 			{
-				if (Database.DbRichCommand.IsRowDeleted (rows[i]))
-				{
-					continue;
-				}
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				System.Data.DataRow[]        rows = this.execution_queue.DateTimeSortedRows;
 				
-				Database.DbKey row_key   = new Database.DbKey (rows[i]);
-				ExecutionState row_state = this.execution_queue.GetRequestExecutionState (rows[i]);
-					
-				if (row_state == Requests.ExecutionState.ExecutedByClient)
+				for (int i = 0; i < rows.Length; i++)
 				{
-					row_state = Requests.ExecutionState.ExecutedByServer;
-				}
-				
-				for (int j = 0; j < states.Length; j++)
-				{
-					if ((states[j].Identifier == row_key.Id.Value) &&
-						(states[j].State == (int)row_state))
+					Database.DbKey row_key   = new Database.DbKey (rows[i]);
+					ExecutionState row_state = this.execution_queue.GetRequestExecutionState (rows[i]);
+						
+					if (row_state == Requests.ExecutionState.ExecutedByClient)
 					{
-						this.execution_queue.RemoveRequest (rows[i]);
-						
-						//	Si c'était le seul élément restant à supprimer de la table, on s'arrête
-						//	tout de suite.
-						
-						if (states.Length == 1)
-						{
-							return;
-						}
-						
-						//	Retire l'élément que l'on vient de supprimer de la liste des éléments
-						//	à supprimer :
-						
-						RequestState[] copy = new RequestState[states.Length-1];
-						
-						System.Array.Copy (states, 0, copy, 0, j);
-						System.Array.Copy (states, j+1, copy, j, states.Length-j-1);
-						
-						states = copy;
-						
-						break;
+						row_state = Requests.ExecutionState.ExecutedByServer;
 					}
+					
+					for (int j = 0; j < states.Length; j++)
+					{
+						if ((states[j].Identifier == row_key.Id.Value) &&
+							(states[j].State == (int)row_state))
+						{
+							list.Add (rows[i]);
+							
+							//	Si c'était le seul élément restant à supprimer de la table, on s'arrête
+							//	tout de suite.
+							
+							if (states.Length == 1)
+							{
+								goto end;
+							}
+							
+							//	Retire l'élément que l'on vient de supprimer de la liste des éléments
+							//	à supprimer :
+							
+							RequestState[] copy = new RequestState[states.Length-1];
+							
+							System.Array.Copy (states, 0, copy, 0, j);
+							System.Array.Copy (states, j+1, copy, j, states.Length-j-1);
+							
+							states = copy;
+							
+							break;
+						}
+					}
+				}
+			end:
+				if (list.Count > 0)
+				{
+					this.execution_queue.RemoveRequests (list);
 				}
 			}
 		}
@@ -148,38 +152,34 @@ namespace Epsitec.Cresus.Services
 			//	Détermine l'état de toutes les requêtes soumises par le client
 			//	spécifié.
 			
-			System.Data.DataRow[] rows = this.execution_queue.DateTimeSortedRows;
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
-			for (int i = 0; i < rows.Length; i++)
+			lock (this.execution_queue)
 			{
-				if (Database.DbRichCommand.IsRowDeleted (rows[i]))
-				{
-					continue;
-				}
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				System.Data.DataRow[]        rows = this.execution_queue.DateTimeSortedRows;
 				
-				Database.DbKey row_key = new Database.DbKey (rows[i]);
-				
-				if (row_key.Id.ClientId == client.ClientId)
+				for (int i = 0; i < rows.Length; i++)
 				{
-					Requests.ExecutionState state = this.execution_queue.GetRequestExecutionState (rows[i]);
+					Database.DbKey row_key = new Database.DbKey (rows[i]);
 					
-					//	Comme l'exécution a été faite sur le serveur, il faut ajuster l'état d'exécution
-					//	de manière à refléter la réalité :
-					
-					if (state == Requests.ExecutionState.ExecutedByClient)
+					if (row_key.Id.ClientId == client.ClientId)
 					{
-						state = Requests.ExecutionState.ExecutedByServer;
+						Requests.ExecutionState state = this.execution_queue.GetRequestExecutionState (rows[i]);
+						
+						//	Comme l'exécution a été faite sur le serveur, il faut ajuster l'état d'exécution
+						//	de manière à refléter la réalité :
+						
+						if (state == Requests.ExecutionState.ExecutedByClient)
+						{
+							state = Requests.ExecutionState.ExecutedByServer;
+						}
+						
+						list.Add (new RequestState (row_key.Id.Value, (int) state));
 					}
-					
-					list.Add (new RequestState (row_key.Id.Value, (int) state));
 				}
+				
+				states = new RequestState[list.Count];
+				list.CopyTo (states);
 			}
-			
-			states = new RequestState[list.Count];
-			
-			list.CopyTo (states);
 		}
 		
 		private ClientChangeInfo GetClientChangeInfo(int client_id)
