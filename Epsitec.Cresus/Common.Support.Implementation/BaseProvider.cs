@@ -18,6 +18,15 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
+		public static void CreateResourceDatabase(string application_name)
+		{
+			//	TODO: crée la base de données au moyen de DbInfrastructure.CreateDatabase,
+			//	puis remplit celle-ci avec les types et tables initiales, puis ferme la
+			//	connexion et retourne. Si on essaie de faire un CreateResourceDatabase
+			//	alors que la base existe déjà, une exception sera générée.
+		}
+		
+		
 		protected string GetRowNameFromId(string id, ResourceLevel level)
 		{
 			if (this.ValidateId (id))
@@ -25,8 +34,8 @@ namespace Epsitec.Common.Support.Implementation
 				switch (level)
 				{
 					case ResourceLevel.Default:		return id;
-					case ResourceLevel.Localised:	return id + this.suffix;
-					case ResourceLevel.Customised:	return id + this.custom;
+					case ResourceLevel.Localised:	return id;
+					case ResourceLevel.Customised:	return id;
 					
 					default:
 						throw new ResourceException (string.Format ("Invalid resource level {0} for resource '{1}'.", level, id));
@@ -36,11 +45,26 @@ namespace Epsitec.Common.Support.Implementation
 			return null;
 		}
 		
+		protected string GetTableNameFromId(string id, ResourceLevel level)
+		{
+			switch (level)
+			{
+				case ResourceLevel.Default:		return this.table_default;
+				case ResourceLevel.Localised:	return this.table_local;
+				case ResourceLevel.Customised:	return this.table_custom;
+				
+				default:
+					throw new ResourceException (string.Format ("Invalid resource level {0} for resource '{1}'.", level, id));
+			}
+		}
+		
+		
 		protected static DbAccess GetDbAccess(string application)
 		{
 			string base_name = application + ".resdb";
 			return DbInfrastructure.CreateDbAccess (base_name);
 		}
+		
 		
 		public override string			Prefix
 		{
@@ -60,9 +84,21 @@ namespace Epsitec.Common.Support.Implementation
 #endif
 		}
 		
+		public override void SelectLocale(System.Globalization.CultureInfo culture)
+		{
+			this.table_default = "Data";
+			this.table_local   = this.table_default + this.suffix;
+			this.table_custom  = this.table_default + this.custom;
+		}
+		
+		
 		
 		public override bool ValidateId(string id)
 		{
+			//	Autorise en principe tous les caractères, car c'est un nom qui ne
+			//	sera utilisé que pour une recherche paramétrisée où il n'y a pas
+			//	besoin de faire attention aux caractères spéciaux.
+			
 			return base.ValidateId (id);
 		}
 		
@@ -110,5 +146,9 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		protected DbInfrastructure		dbi;
+		
+		protected string				table_default;
+		protected string				table_local;
+		protected string				table_custom;
 	}
 }
