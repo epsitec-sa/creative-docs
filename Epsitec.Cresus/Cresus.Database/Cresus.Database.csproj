@@ -203,12 +203,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DbTableCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DbTools.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "DbType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DbTypeCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Database
 	/// La classe DbKey stocke une clef de la base de données. Cette
 	/// clef comporte en tout cas un identificateur (ID).
 	/// </summary>
-	public class DbKey
+	public class DbKey : System.ICloneable
 	{
 		public DbKey()
 		{
@@ -40,7 +40,21 @@ namespace Epsitec.Cresus.Database
 			get { return this.raw_status; }
 		}
 		
-
+		
+		#region ICloneable Members
+		public virtual object Clone()
+		{
+			DbKey key = System.Activator.CreateInstance (this.GetType ()) as DbKey;
+			
+			key.id = this.id;
+			key.revision = this.revision;
+			key.raw_status = this.raw_status;
+			
+			return key;
+		}
+		#endregion
+		
+		
 		protected long					id;
 		protected int					revision;
 		protected int					raw_status;

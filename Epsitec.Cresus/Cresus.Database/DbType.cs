@@ -36,6 +36,21 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		internal void DefineInternalKey(DbKey key)
+		{
+			if (this.internal_type_key == key)
+			{
+				return;
+			}
+			
+			if (this.internal_type_key != null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Type '{0}' cannot change its internal key.", this.Name));
+			}
+			
+			this.internal_type_key = key.Clone () as DbKey;
+		}
+		
 		internal void DefineAttributes(string[] attributes)
 		{
 			if (this.attributes != null)
@@ -54,27 +69,31 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public string						Name
+		public string					Name
 		{
 			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
 		}
 		
-		public string						Caption
+		public string					Caption
 		{
 			get { return this.Attributes[Tags.Caption]; }
 		}
 		
-		public string						Description
+		public string					Description
 		{
 			get { return this.Attributes[Tags.Description]; }
 		}
 		
 		
-		public DbSimpleType					SimpleType
+		public DbSimpleType				SimpleType
 		{
 			get { return this.simple_type; }
 		}
 		
+		public DbKey					InternalKey
+		{
+			get { return this.internal_type_key; }
+		}
 		
 		#region ICloneable Members
 		public virtual object Clone()
@@ -138,7 +157,8 @@ namespace Epsitec.Cresus.Database
 		
 		
 		
-		protected DbAttributes				attributes;
-		protected DbSimpleType				simple_type;
+		protected DbAttributes			attributes;
+		protected DbSimpleType			simple_type;
+		protected DbKey					internal_type_key;
 	}
 }

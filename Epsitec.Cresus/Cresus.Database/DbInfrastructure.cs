@@ -3,6 +3,8 @@
 
 namespace Epsitec.Cresus.Database
 {
+	using Tags = Epsitec.Common.Support.Tags;
+	
 	/// <summary>
 	/// La classe DbInfrastructure offre le support pour l'infrastructure
 	/// nécessaire à toute base de données "Crésus" (tables internes, méta-
@@ -90,21 +92,12 @@ namespace Epsitec.Cresus.Database
 		#region Internal Management Table Creation
 		protected void CreateTableTableDef()
 		{
-			DbTable  db_table  = this.GetTableDefDbTable ();
-			SqlTable sql_table = db_table.CreateSqlTable (this.type_converter);
-			
-			this.sql_builder.InsertTable (sql_table);
-			this.ExecuteSilent ();
-		}
-		
-		protected DbTable GetTableDefDbTable()
-		{
 			DbTable    table   = new DbTable (DbTable.TagTableDef);
 			DbColumn[] columns = new DbColumn[7];
 			
-			columns[0] = new DbColumn (DbColumn.TagId,			this.num_def_id);
-			columns[1] = new DbColumn (DbColumn.TagRevision,	this.num_def_revision);
-			columns[2] = new DbColumn (DbColumn.TagStatus,		this.num_def_status);
+			columns[0] = new DbColumn (DbColumn.TagId,			this.num_type_id);
+			columns[1] = new DbColumn (DbColumn.TagRevision,	this.num_type_revision);
+			columns[2] = new DbColumn (DbColumn.TagStatus,		this.num_type_status);
 			columns[3] = new DbColumn (DbColumn.TagName,		this.str_type_name, Nullable.No);
 			columns[4] = new DbColumn (DbColumn.TagCaption,		this.str_type_caption, Nullable.Yes);
 			columns[5] = new DbColumn (DbColumn.TagDescription,	this.str_type_description, Nullable.Yes);
@@ -113,127 +106,240 @@ namespace Epsitec.Cresus.Database
 			table.Columns.AddRange (columns);
 			table.PrimaryKey = new DbColumn[] { columns[0], columns[1] };
 			
-			return table;
-		}
-		
-		protected virtual void CreateTableColumnDef()
-		{
-			SqlTable    table   = new SqlTable (DbTable.TagColumnDef);
-			SqlColumn[] columns = new SqlColumn[8];
+			this.internal_tables.Add (table);
 			
-			columns[0] = new SqlColumn (DbColumn.TagId,				DbRawType.Int32);
-			columns[1] = new SqlColumn (DbColumn.TagRevision,		DbRawType.Int32);
-			columns[2] = new SqlColumn (DbColumn.TagStatus,			DbRawType.Int32);
-			columns[3] = new SqlColumn (DbColumn.TagName,			DbRawType.String, DbColumn.MaxNameLength,			false, Nullable.No);
-			columns[4] = new SqlColumn (DbColumn.TagCaption,		DbRawType.String, DbColumn.MaxCaptionLength,		false, Nullable.Yes);
-			columns[5] = new SqlColumn (DbColumn.TagDescription,	DbRawType.String, DbColumn.MaxDescriptionLength,	false, Nullable.Yes);
-			columns[6] = new SqlColumn (DbColumn.TagInfoXml,		DbRawType.String, DbColumn.MaxInfoXmlLength,	false, Nullable.No);
-			columns[7] = new SqlColumn (DbColumn.TagRefTable,		DbRawType.Int32);
-			
-			table.Columns.AddRange (columns);
-			table.PrimaryKey = new SqlColumn[] { columns[0], columns[1] };
-			
-			this.sql_builder.InsertTable (table);
+			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
+			this.sql_builder.InsertTable (sql_table);
 			this.ExecuteSilent ();
 		}
 		
-		protected virtual void CreateTableTypeDef()
+		protected void CreateTableColumnDef()
 		{
-			SqlTable    table   = new SqlTable (DbTable.TagTypeDef);
-			SqlColumn[] columns = new SqlColumn[7];
+			DbTable    table   = new DbTable (DbTable.TagColumnDef);
+			DbColumn[] columns = new DbColumn[9];
 			
-			columns[0] = new SqlColumn (DbColumn.TagId,				DbRawType.Int32);
-			columns[1] = new SqlColumn (DbColumn.TagRevision,		DbRawType.Int32);
-			columns[2] = new SqlColumn (DbColumn.TagStatus,			DbRawType.Int32);
-			columns[3] = new SqlColumn (DbColumn.TagName,			DbRawType.String, DbColumn.MaxNameLength,			false, Nullable.No);
-			columns[4] = new SqlColumn (DbColumn.TagCaption,		DbRawType.String, DbColumn.MaxCaptionLength,		false, Nullable.Yes);
-			columns[5] = new SqlColumn (DbColumn.TagDescription,	DbRawType.String, DbColumn.MaxDescriptionLength,	false, Nullable.Yes);
-			columns[6] = new SqlColumn (DbColumn.TagInfoXml,		DbRawType.String, DbColumn.MaxInfoXmlLength,		false, Nullable.No);
+			columns[0] = new DbColumn (DbColumn.TagId,			this.num_type_id);
+			columns[1] = new DbColumn (DbColumn.TagRevision,	this.num_type_revision);
+			columns[2] = new DbColumn (DbColumn.TagStatus,		this.num_type_status);
+			columns[3] = new DbColumn (DbColumn.TagName,		this.str_type_name, Nullable.No);
+			columns[4] = new DbColumn (DbColumn.TagCaption,		this.str_type_caption, Nullable.Yes);
+			columns[5] = new DbColumn (DbColumn.TagDescription,	this.str_type_description, Nullable.Yes);
+			columns[6] = new DbColumn (DbColumn.TagInfoXml,		this.str_type_info_xml, Nullable.No);
+			columns[7] = new DbColumn (DbColumn.TagRefTable,	this.num_type_id);
+			columns[8] = new DbColumn (DbColumn.TagRefType,		this.num_type_id);
 			
 			table.Columns.AddRange (columns);
-			table.PrimaryKey = new SqlColumn[] { columns[0], columns[1] };
+			table.PrimaryKey = new DbColumn[] { columns[0], columns[1] };
 			
-			this.sql_builder.InsertTable (table);
+			this.internal_tables.Add (table);
+			
+			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
+			this.sql_builder.InsertTable (sql_table);
 			this.ExecuteSilent ();
 		}
 		
-		protected virtual void CreateTableEnumValDef()
+		protected void CreateTableTypeDef()
 		{
-			SqlTable    table   = new SqlTable (DbTable.TagEnumValDef);
-			SqlColumn[] columns = new SqlColumn[7];
+			DbTable    table   = new DbTable (DbTable.TagTypeDef);
+			DbColumn[] columns = new DbColumn[7];
 			
-			columns[0] = new SqlColumn (DbColumn.TagId,				DbRawType.Int32);
-			columns[1] = new SqlColumn (DbColumn.TagRevision,		DbRawType.Int32);
-			columns[2] = new SqlColumn (DbColumn.TagStatus,			DbRawType.Int32);
-			columns[3] = new SqlColumn (DbColumn.TagName,			DbRawType.String, DbColumn.MaxNameLength,			false, Nullable.No);
-			columns[4] = new SqlColumn (DbColumn.TagCaption,		DbRawType.String, DbColumn.MaxCaptionLength,		false, Nullable.Yes);
-			columns[5] = new SqlColumn (DbColumn.TagDescription,	DbRawType.String, DbColumn.MaxDescriptionLength,	false, Nullable.Yes);
-			columns[6] = new SqlColumn (DbColumn.TagRefType,		DbRawType.Int32);
+			columns[0] = new DbColumn (DbColumn.TagId,			this.num_type_id);
+			columns[1] = new DbColumn (DbColumn.TagRevision,	this.num_type_revision);
+			columns[2] = new DbColumn (DbColumn.TagStatus,		this.num_type_status);
+			columns[3] = new DbColumn (DbColumn.TagName,		this.str_type_name, Nullable.No);
+			columns[4] = new DbColumn (DbColumn.TagCaption,		this.str_type_caption, Nullable.Yes);
+			columns[5] = new DbColumn (DbColumn.TagDescription,	this.str_type_description, Nullable.Yes);
+			columns[6] = new DbColumn (DbColumn.TagInfoXml,		this.str_type_info_xml, Nullable.No);
 			
 			table.Columns.AddRange (columns);
-			table.PrimaryKey = new SqlColumn[] { columns[0], columns[1] };
+			table.PrimaryKey = new DbColumn[] { columns[0], columns[1] };
 			
-			this.sql_builder.InsertTable (table);
+			this.internal_tables.Add (table);
+			
+			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
+			this.sql_builder.InsertTable (sql_table);
 			this.ExecuteSilent ();
 		}
 		
-		protected virtual void CreateTableRefDef()
+		protected void CreateTableEnumValDef()
 		{
-			SqlTable    table   = new SqlTable (DbTable.TagRefDef);
-			SqlColumn[] columns = new SqlColumn[4];
+			DbTable    table   = new DbTable (DbTable.TagEnumValDef);
+			DbColumn[] columns = new DbColumn[8];
 			
-			columns[0] = new SqlColumn (DbColumn.TagId,		DbRawType.Int32);
-			columns[1] = new SqlColumn (DbColumn.TagName,	DbRawType.String, DbColumn.MaxNameLength, false, Nullable.No);
-			columns[2] = new SqlColumn (DbColumn.TagSource,	DbRawType.Int32);
-			columns[3] = new SqlColumn (DbColumn.TagTarget,	DbRawType.Int32);
+			columns[0] = new DbColumn (DbColumn.TagId,			this.num_type_id);
+			columns[1] = new DbColumn (DbColumn.TagRevision,	this.num_type_revision);
+			columns[2] = new DbColumn (DbColumn.TagStatus,		this.num_type_status);
+			columns[3] = new DbColumn (DbColumn.TagName,		this.str_type_name, Nullable.No);
+			columns[4] = new DbColumn (DbColumn.TagCaption,		this.str_type_caption, Nullable.Yes);
+			columns[5] = new DbColumn (DbColumn.TagDescription,	this.str_type_description, Nullable.Yes);
+			columns[6] = new DbColumn (DbColumn.TagInfoXml,		this.str_type_info_xml, Nullable.No);
+			columns[7] = new DbColumn (DbColumn.TagRefType,		this.num_type_id);
 			
 			table.Columns.AddRange (columns);
-			table.PrimaryKey = new SqlColumn[] { columns[0] };
+			table.PrimaryKey = new DbColumn[] { columns[0], columns[1] };
 			
-			this.sql_builder.InsertTable (table);
+			this.internal_tables.Add (table);
+			
+			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
+			this.sql_builder.InsertTable (sql_table);
+			this.ExecuteSilent ();
+		}
+		
+		protected void CreateTableRefDef()
+		{
+			DbTable    table   = new DbTable (DbTable.TagRefDef);
+			DbColumn[] columns = new DbColumn[4];
+			
+			columns[0] = new DbColumn (DbColumn.TagId,			this.num_type_id);
+			columns[1] = new DbColumn (DbColumn.TagRefColumn,	this.num_type_id);
+			columns[2] = new DbColumn (DbColumn.TagRefSource,	this.num_type_id);
+			columns[3] = new DbColumn (DbColumn.TagRefTarget,	this.num_type_id);
+			
+			table.Columns.AddRange (columns);
+			table.PrimaryKey = new DbColumn[] { columns[0] };
+			
+			this.internal_tables.Add (table);
+			
+			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
+			this.sql_builder.InsertTable (sql_table);
 			this.ExecuteSilent ();
 		}
 		#endregion
 		
-		protected SqlField CreateField(DbColumn column, int value)
+		protected void BootInsertTypeDefRow(DbType type)
 		{
-			return column.CreateSqlField (this.type_converter, value);
-		}
-		
-		protected SqlField CreateField(DbColumn column, long value)
-		{
-			return column.CreateSqlField (this.type_converter, value);
-		}
-		
-		protected SqlField CreateField(DbColumn column, string value)
-		{
-			return column.CreateSqlField (this.type_converter, value);
-		}
-		
-		protected void InsertTableDef(DbTable table, DbKey key, string name, string info_xml)
-		{
+			DbTable type_def = this.internal_tables[DbTable.TagTypeDef];
+			
+			//	Phase d'initialisation de la base : insère une ligne dans la table de définition des
+			//	types. Les colonnes descriptives (pour l'utilisateur) ne sont pas initialisées.
+			
 			SqlFieldCollection fields = new SqlFieldCollection ();
 			
-			fields.Add (this.CreateField (table.Columns[DbColumn.TagId], key.Id));
-			fields.Add (this.CreateField (table.Columns[DbColumn.TagRevision], key.Revision));
-			fields.Add (this.CreateField (table.Columns[DbColumn.TagStatus], key.RawStatus));
-			fields.Add (this.CreateField (table.Columns[DbColumn.TagName], name));
-			fields.Add (this.CreateField (table.Columns[DbColumn.TagInfoXml], info_xml));
+			fields.Add (type_def.Columns[DbColumn.TagId]		.CreateSqlField (this.type_converter, type.InternalKey.Id));
+			fields.Add (type_def.Columns[DbColumn.TagRevision]	.CreateSqlField (this.type_converter, type.InternalKey.Revision));
+			fields.Add (type_def.Columns[DbColumn.TagStatus]	.CreateSqlField (this.type_converter, type.InternalKey.RawStatus));
+			fields.Add (type_def.Columns[DbColumn.TagName]		.CreateSqlField (this.type_converter, type.Name));
+			fields.Add (type_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, DbTypeFactory.ConvertTypeToXml (type)));
 			
-			this.sql_builder.InsertData (table.Name, fields);
+			this.sql_builder.InsertData (type_def.Name, fields);
+			
+			this.ExecuteSilent ();
+		}
+		
+		protected void BootInsertTableDefRow(DbTable table)
+		{
+			DbTable table_def = this.internal_tables[DbTable.TagTableDef];
+			
+			//	Phase d'initialisation de la base : insère une ligne dans la table de définition des
+			//	tables. Les colonnes descriptives (pour l'utilisateur) ne sont pas initialisées.
+			
+			SqlFieldCollection fields = new SqlFieldCollection ();
+			
+			fields.Add (table_def.Columns[DbColumn.TagId]		.CreateSqlField (this.type_converter, table.InternalKey.Id));
+			fields.Add (table_def.Columns[DbColumn.TagRevision]	.CreateSqlField (this.type_converter, table.InternalKey.Revision));
+			fields.Add (table_def.Columns[DbColumn.TagStatus]	.CreateSqlField (this.type_converter, table.InternalKey.RawStatus));
+			fields.Add (table_def.Columns[DbColumn.TagName]		.CreateSqlField (this.type_converter, table.Name));
+			fields.Add (table_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, "<table/>"));
+			
+			this.sql_builder.InsertData (table_def.Name, fields);
+			
+			this.ExecuteSilent ();
+		}
+		
+		protected void BootInsertColumnDefRow(DbTable table, DbColumn column)
+		{
+			DbTable column_def = this.internal_tables[DbTable.TagColumnDef];
+			
+			//	Phase d'initialisation de la base : insère une ligne dans la table de définition des
+			//	colonnes. Les colonnes descriptives (pour l'utilisateur) ne sont pas initialisées.
+			
+			SqlFieldCollection fields = new SqlFieldCollection ();
+			
+			fields.Add (column_def.Columns[DbColumn.TagId]		.CreateSqlField (this.type_converter, column.InternalKey.Id));
+			fields.Add (column_def.Columns[DbColumn.TagRevision].CreateSqlField (this.type_converter, column.InternalKey.Revision));
+			fields.Add (column_def.Columns[DbColumn.TagStatus]	.CreateSqlField (this.type_converter, column.InternalKey.RawStatus));
+			fields.Add (column_def.Columns[DbColumn.TagName]	.CreateSqlField (this.type_converter, column.Name));
+			fields.Add (column_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, DbColumn.ConvertColumnToXml (column)));
+			fields.Add (column_def.Columns[DbColumn.TagRefTable].CreateSqlField (this.type_converter, table.InternalKey.Id));
+			fields.Add (column_def.Columns[DbColumn.TagRefType]	.CreateSqlField (this.type_converter, column.Type.InternalKey.Id));
+			
+			this.sql_builder.InsertData (column_def.Name, fields);
+			
+			this.ExecuteSilent ();
+		}
+		
+		protected void BootInsertRefDefRow(int ref_id, string src_table_name, string src_column_name, string target_table_name)
+		{
+			DbTable ref_def = this.internal_tables[DbTable.TagRefDef];
+			
+			//	Phase d'initialisation de la base : insère une ligne dans la table de définition des
+			//	références.
+			
+			SqlFieldCollection fields = new SqlFieldCollection ();
+			
+			DbTable  source = this.internal_tables[src_table_name];
+			DbTable  target = this.internal_tables[target_table_name];
+			DbColumn column = source.Columns[src_column_name];
+			
+			fields.Add (ref_def.Columns[DbColumn.TagId].CreateSqlField (this.type_converter, ref_id));
+			fields.Add (ref_def.Columns[DbColumn.TagRefColumn].CreateSqlField (this.type_converter, column.InternalKey.Id));
+			fields.Add (ref_def.Columns[DbColumn.TagRefSource].CreateSqlField (this.type_converter, source.InternalKey.Id));
+			fields.Add (ref_def.Columns[DbColumn.TagRefTarget].CreateSqlField (this.type_converter, target.InternalKey.Id));
+			
+			this.sql_builder.InsertData (ref_def.Name, fields);
 			
 			this.ExecuteSilent ();
 		}
 		
 		protected virtual void FillTableTableDef()
 		{
-			DbTable table = this.GetTableDefDbTable ();
+			int type_key_id   = 1;
+			int table_key_id  = 1;
+			int column_key_id = 1;
 			
-			this.InsertTableDef (table, new DbKey (1), DbTable.TagTableDef,		"<table/>");
-			this.InsertTableDef (table, new DbKey (2), DbTable.TagColumnDef,	"<table/>");
-			this.InsertTableDef (table, new DbKey (3), DbTable.TagTypeDef,		"<table/>");
-			this.InsertTableDef (table, new DbKey (4), DbTable.TagEnumValDef,	"<table/>");
-			this.InsertTableDef (table, new DbKey (5), DbTable.TagRefDef,		"<table/>");
+			//	Il faut commencer par finir d'initialiser les descriptions des types, parce
+			//	que les description des colonnes doivent y faire référence.
+			
+			foreach (DbType type in this.internal_types)
+			{
+				//	Attribue à chaque type interne une clef unique et établit les informations de base
+				//	dans la table de définition des types.
+				
+				type.DefineInternalKey (new DbKey (type_key_id++));
+				this.BootInsertTypeDefRow (type);
+			}
+			
+			foreach (DbTable table in this.internal_tables)
+			{
+				//	Attribue à chaque table interne une clef unique et établit les informations de base
+				//	dans la table de définition des tables.
+				
+				table.DefineInternalKey (new DbKey (table_key_id++));
+				this.BootInsertTableDefRow (table);
+				
+				foreach (DbColumn column in table.Columns)
+				{
+					//	Pour chaque colonne de la table, établit les informations de base dans la table de
+					//	définition des colonnes.
+					
+					column.DefineInternalKey (new DbKey (column_key_id++));
+					this.BootInsertColumnDefRow (table, column);
+				}
+			}
+			
+			//	Complète encore les informations au sujet des relations :
+			//
+			//	- La description d'une colonne fait référence à la table et à un type.
+			//	- La description d'une valeur d'enum fait référence à un type.
+			//	- La description d'une référence fait elle-même référence à la table
+			//	  source et destination, ainsi qu'à la colonne.
+			
+			this.BootInsertRefDefRow (1, DbTable.TagColumnDef,  DbColumn.TagRefTable,  DbTable.TagTableDef);
+			this.BootInsertRefDefRow (2, DbTable.TagColumnDef,  DbColumn.TagRefType,   DbTable.TagTypeDef);
+			this.BootInsertRefDefRow (3, DbTable.TagEnumValDef, DbColumn.TagRefType,   DbTable.TagTypeDef);
+			this.BootInsertRefDefRow (4, DbTable.TagRefDef,     DbColumn.TagRefColumn, DbTable.TagColumnDef);
+			this.BootInsertRefDefRow (5, DbTable.TagRefDef,     DbColumn.TagRefSource, DbTable.TagTableDef);
+			this.BootInsertRefDefRow (6, DbTable.TagRefDef,     DbColumn.TagRefTarget, DbTable.TagTableDef);
 		}
 		
 		protected virtual void InitTableEnumValDef()
@@ -244,6 +350,7 @@ namespace Epsitec.Cresus.Database
 		protected virtual void AddRefDef(DbKey source, DbKey target, string name)
 		{
 		}
+		
 		
 		#region IDisposable Members
 		public void Dispose()
@@ -272,7 +379,8 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		protected virtual void SetupDatabaseAbstraction()
+		
+		protected void SetupDatabaseAbstraction()
 		{
 			this.db_abstraction = DbFactory.FindDbAbstraction (this.db_access);
 			
@@ -293,18 +401,28 @@ namespace Epsitec.Cresus.Database
 		{
 			//	Faut-il plutôt utiliser Int64 pour l'ID ???
 			
-			this.num_def_id       = DbNumDef.FromRawType (DbRawType.Int32);
-			this.num_def_revision = DbNumDef.FromRawType (DbRawType.Int32);
-			this.num_def_status   = DbNumDef.FromRawType (DbRawType.Int32);
+			this.num_type_id       = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int32), Tags.Name + "=CR.KeyId");
+			this.num_type_revision = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int32), Tags.Name + "=CR.KeyRevision");
+			this.num_type_status   = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int32), Tags.Name + "=CR.KeyStatus");
+			
+			this.internal_types.Add (this.num_type_id);
+			this.internal_types.Add (this.num_type_revision);
+			this.internal_types.Add (this.num_type_status);
 		}
 		
 		protected void InitialiseStrTypes()
 		{
-			this.str_type_name        = new DbTypeString (DbColumn.MaxNameLength, false);
-			this.str_type_caption     = new DbTypeString (DbColumn.MaxCaptionLength, false);
-			this.str_type_description = new DbTypeString (DbColumn.MaxDescriptionLength, false);
-			this.str_type_info_xml    = new DbTypeString (DbColumn.MaxInfoXmlLength, false);
+			this.str_type_name        = new DbTypeString (DbColumn.MaxNameLength, false,		Tags.Name + "=CR.Name");
+			this.str_type_caption     = new DbTypeString (DbColumn.MaxCaptionLength, false,		Tags.Name + "=CR.Caption");
+			this.str_type_description = new DbTypeString (DbColumn.MaxDescriptionLength, false, Tags.Name + "=CR.Description");
+			this.str_type_info_xml    = new DbTypeString (DbColumn.MaxInfoXmlLength, false,		Tags.Name + "=CR.InfoXml");
+			
+			this.internal_types.Add (this.str_type_name);
+			this.internal_types.Add (this.str_type_caption);
+			this.internal_types.Add (this.str_type_description);
+			this.internal_types.Add (this.str_type_info_xml);
 		}
+		
 		
 		
 		protected DbAccess				db_access;
@@ -314,13 +432,16 @@ namespace Epsitec.Cresus.Database
 		protected ISqlEngine			sql_engine;
 		protected ITypeConverter		type_converter;
 		
-		protected DbNumDef				num_def_id;
-		protected DbNumDef				num_def_revision;
-		protected DbNumDef				num_def_status;
+		protected DbTypeNum				num_type_id;
+		protected DbTypeNum				num_type_revision;
+		protected DbTypeNum				num_type_status;
 		
 		protected DbTypeString			str_type_name;
 		protected DbTypeString			str_type_caption;
 		protected DbTypeString			str_type_description;
 		protected DbTypeString			str_type_info_xml;
+		
+		protected DbTableCollection		internal_tables = new DbTableCollection ();
+		protected DbTypeCollection		internal_types  = new DbTypeCollection ();
 	}
 }

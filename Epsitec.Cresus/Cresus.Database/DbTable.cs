@@ -34,6 +34,21 @@ namespace Epsitec.Cresus.Database
 			this.category = category;
 		}
 		
+		public void DefineInternalKey(DbKey key)
+		{
+			if (this.internal_table_key == key)
+			{
+				return;
+			}
+			
+			if (this.internal_table_key != null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot change its internal key.", this.Name));
+			}
+			
+			this.internal_table_key = key.Clone () as DbKey;
+		}
+		
 		
 		public string					Name
 		{
@@ -96,6 +111,11 @@ namespace Epsitec.Cresus.Database
 		public DbElementCat				Category
 		{
 			get { return this.category; }
+		}
+		
+		public DbKey					InternalKey
+		{
+			get { return this.internal_table_key; }
 		}
 		
 		
@@ -210,6 +230,7 @@ namespace Epsitec.Cresus.Database
 		protected DbColumnCollection	columns = new DbColumnCollection ();
 		protected DbColumnCollection	primary_key = null;
 		protected DbElementCat			category;
+		protected DbKey					internal_table_key;
 		
 		
 		internal const string			TagTableDef			= "CR_TABLE_DEF";

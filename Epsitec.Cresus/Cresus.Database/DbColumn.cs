@@ -117,6 +117,21 @@ namespace Epsitec.Cresus.Database
 			this.attributes.SetFromInitialisationList (attributes);
 		}
 		
+		public void DefineInternalKey(DbKey key)
+		{
+			if (this.internal_column_key == key)
+			{
+				return;
+			}
+			
+			if (this.internal_column_key != null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot change its internal key.", this.Name));
+			}
+			
+			this.internal_column_key = key.Clone () as DbKey;
+		}
+		
 		
 		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer)
 		{
@@ -166,6 +181,7 @@ namespace Epsitec.Cresus.Database
 			this.is_indexed      = (arg_index == "1");
 			this.category        = DbTools.ParseElementCategory (arg_cat);
 		}
+		
 		
 		#region IDbAttributesHost Members
 		public DbAttributes				Attributes
@@ -237,6 +253,11 @@ namespace Epsitec.Cresus.Database
 		public DbElementCat				Category
 		{
 			get { return this.category; }
+		}
+		
+		public DbKey					InternalKey
+		{
+			get { return this.internal_column_key; }
 		}
 		
 		
@@ -437,20 +458,22 @@ namespace Epsitec.Cresus.Database
 		protected bool					is_unique			= false;
 		protected bool					is_indexed			= false;
 		protected DbElementCat			category;
+		protected DbKey					internal_column_key;
 		
 		
 		internal const string			TagId				= "CR_ID";
 		internal const string			TagRevision			= "CR_REV";
 		internal const string			TagStatus			= "CR_STAT";
-		internal const string			TagName				= "NAME";
-		internal const string			TagCaption			= "CAPTION";
-		internal const string			TagDescription		= "DESCRIPTION";
-		internal const string			TagInfoXml			= "INFO";
-		internal const string			TagSource			= "SOURCE";
-		internal const string			TagTarget			= "TARGET";
+		internal const string			TagName				= "CR_NAME";
+		internal const string			TagCaption			= "CR_CAPTION";
+		internal const string			TagDescription		= "CR_DESCRIPTION";
+		internal const string			TagInfoXml			= "CR_INFO";
 		
-		internal const string			TagRefTable			= "REF_TABLE";
-		internal const string			TagRefType			= "REF_TYPE";
+		internal const string			TagRefTable			= "CREF_TABLE";
+		internal const string			TagRefType			= "CREF_TYPE";
+		internal const string			TagRefColumn		= "CREF_COLUMN";
+		internal const string			TagRefSource		= "CREF_SOURCE";
+		internal const string			TagRefTarget		= "CREF_TARGET";
 		
 		internal const int				MaxNameLength		= 40;
 		internal const int				MaxCaptionLength	= 100;
