@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Database
 			db_table_b.Columns.Add (infrastructure.CreateColumn ("Ville", db_type_name));
 			db_table_b.Columns.Add (infrastructure.CreateColumn ("NPA", db_type_npa, Nullable.No));
 			
-			Assertion.AssertEquals ("Personnes", db_table_b.Columns[3].ParentTableName);
+			Assert.AreEqual ("Personnes", db_table_b.Columns[3].ParentTableName);
 			
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_a.Name, db_table_a.Columns.Count);
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_b.Name, db_table_b.Columns.Count);
@@ -107,12 +107,12 @@ namespace Epsitec.Cresus.Database
 				transaction.Commit ();
 			}
 			
-			Assertion.AssertEquals (1000000000002L, ado_table_a.Rows[1]["CR_ID"]);
-			Assertion.AssertEquals (1000000000002L, ado_table_b.Rows[1]["Personne"]);
+			Assert.AreEqual (1000000000002L, ado_table_a.Rows[1]["CR_ID"]);
+			Assert.AreEqual (1000000000002L, ado_table_b.Rows[1]["Personne"]);
 			
 			ado_table_a.Rows[1]["CR_ID"] = 100;
 			
-			Assertion.AssertEquals (100, ado_table_b.Rows[1]["Personne"]);
+			Assert.AreEqual (100, ado_table_b.Rows[1]["Personne"]);
 			
 			infrastructure.Dispose ();
 		}
@@ -127,19 +127,19 @@ namespace Epsitec.Cresus.Database
 			DbType db_type_name = infrastructure.ResolveDbType (null, "CR_NameType");
 			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR_KeyIdType");
 			
-			Assertion.AssertEquals (5, db_table_a.Columns.Count);
-			Assertion.AssertEquals (6, db_table_b.Columns.Count);
+			Assert.AreEqual (5, db_table_a.Columns.Count);
+			Assert.AreEqual (6, db_table_b.Columns.Count);
 			
-			Assertion.AssertEquals ("Nom",    db_table_a.Columns[3].Name);
-			Assertion.AssertEquals ("Prenom", db_table_a.Columns[4].Name);
-			Assertion.AssertEquals (db_type_name.InternalKey,  db_table_a.Columns[3].Type.InternalKey);
+			Assert.AreEqual ("Nom",    db_table_a.Columns[3].Name);
+			Assert.AreEqual ("Prenom", db_table_a.Columns[4].Name);
+			Assert.AreEqual (db_type_name.InternalKey,  db_table_a.Columns[3].Type.InternalKey);
 			
-			Assertion.AssertEquals ("Personne", db_table_b.Columns[3].Name);
-			Assertion.AssertEquals (DbColumnClass.RefId, db_table_b.Columns[3].ColumnClass);
-			Assertion.AssertEquals ("Personnes", db_table_b.Columns[3].ParentTableName);
+			Assert.AreEqual ("Personne", db_table_b.Columns[3].Name);
+			Assert.AreEqual (DbColumnClass.RefId, db_table_b.Columns[3].ColumnClass);
+			Assert.AreEqual ("Personnes", db_table_b.Columns[3].ParentTableName);
 			
-			Assertion.AssertEquals ("Ville", db_table_b.Columns[4].Name);
-			Assertion.AssertEquals (db_type_name.InternalKey, db_table_b.Columns[4].Type.InternalKey);
+			Assert.AreEqual ("Ville", db_table_b.Columns[4].Name);
+			Assert.AreEqual (db_type_name.InternalKey, db_table_b.Columns[4].Type.InternalKey);
 			
 			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, null, db_table_a, db_table_b);
 			
@@ -175,13 +175,13 @@ namespace Epsitec.Cresus.Database
 			DbKey k2 = new DbKey (row_2);
 			DbKey k3 = new DbKey (row_3);
 			
-			Assertion.AssertEquals (DbRowStatus.Live, k1.Status);
-			Assertion.AssertEquals (DbRowStatus.Live, k2.Status);
-			Assertion.AssertEquals (DbRowStatus.Live, k3.Status);
+			Assert.AreEqual (DbRowStatus.Live, k1.Status);
+			Assert.AreEqual (DbRowStatus.Live, k2.Status);
+			Assert.AreEqual (DbRowStatus.Live, k3.Status);
 			
-			Assertion.AssertEquals (k1.Id + 1, k2.Id.Value);
-			Assertion.AssertEquals (k1.Id + 2, k3.Id.Value);
-			Assertion.Assert (DbKey.CheckTemporaryId (k1.Id));
+			Assert.AreEqual (k1.Id + 1, k2.Id.Value);
+			Assert.AreEqual (k1.Id + 2, k3.Id.Value);
+			Assert.IsTrue (DbKey.CheckTemporaryId (k1.Id));
 			
 			using (DbTransaction transaction = infrastructure.BeginTransaction ())
 			{
@@ -247,13 +247,13 @@ namespace Epsitec.Cresus.Database
 			DbKey k2 = new DbKey (row_2);
 			DbKey k3 = new DbKey (row_3);
 			
-			Assertion.AssertEquals (DbRowStatus.Live, k1.Status);
-			Assertion.AssertEquals (DbRowStatus.Live, k2.Status);
-			Assertion.AssertEquals (DbRowStatus.Live, k3.Status);
+			Assert.AreEqual (DbRowStatus.Live, k1.Status);
+			Assert.AreEqual (DbRowStatus.Live, k2.Status);
+			Assert.AreEqual (DbRowStatus.Live, k3.Status);
 			
-			Assertion.AssertEquals (k1.Id + 1, k2.Id.Value);
-			Assertion.AssertEquals (k1.Id + 2, k3.Id.Value);
-			Assertion.Assert (DbKey.CheckTemporaryId (k1.Id));
+			Assert.AreEqual (k1.Id + 1, k2.Id.Value);
+			Assert.AreEqual (k1.Id + 2, k3.Id.Value);
+			Assert.IsTrue (DbKey.CheckTemporaryId (k1.Id));
 			
 			command.DeleteExistingRow (row_2);
 			command.DeleteExistingRow (row_3);

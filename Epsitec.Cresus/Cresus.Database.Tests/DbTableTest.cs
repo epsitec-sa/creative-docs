@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Database
 			table.PrimaryKeys.Add (column);
 			table.Columns.Add (column);
 			
-			Assertion.AssertEquals (table, column.Table);
+			Assert.AreEqual (table, column.Table);
 			
 			string xml = DbTable.SerializeToXml (table, true);
 			
@@ -45,11 +45,11 @@ namespace Epsitec.Cresus.Database
 			
 			DbTable test = DbTable.CreateTable (xml);
 			
-			Assertion.AssertEquals (test, test.Columns["A"].Table);
-			Assertion.AssertEquals (DbElementCat.UserDataManaged, test.Category);
-			Assertion.AssertEquals (DbRevisionMode.Enabled, test.RevisionMode);
-			Assertion.AssertEquals ("Test", test.Name);
-			Assertion.AssertEquals (DbElementCat.UserDataManaged, test.Columns["A"].Category);
+			Assert.AreEqual (test, test.Columns["A"].Table);
+			Assert.AreEqual (DbElementCat.UserDataManaged, test.Category);
+			Assert.AreEqual (DbRevisionMode.Enabled, test.RevisionMode);
+			Assert.AreEqual ("Test", test.Name);
+			Assert.AreEqual (DbElementCat.UserDataManaged, test.Columns["A"].Category);
 		}
 		
 		[Test] public void CheckForeignKeys()
@@ -66,11 +66,11 @@ namespace Epsitec.Cresus.Database
 			
 			DbForeignKey[] fk = table.ForeignKeys;
 			
-			Assertion.AssertEquals (2, fk.Length);
-			Assertion.AssertEquals (1, fk[0].Columns.Length);
-			Assertion.AssertEquals (1, fk[1].Columns.Length);
-			Assertion.AssertEquals (column_1, fk[0].Columns[0]);
-			Assertion.AssertEquals (column_3, fk[1].Columns[0]);
+			Assert.AreEqual (2, fk.Length);
+			Assert.AreEqual (1, fk[0].Columns.Length);
+			Assert.AreEqual (1, fk[1].Columns.Length);
+			Assert.AreEqual (column_1, fk[0].Columns[0]);
+			Assert.AreEqual (column_3, fk[1].Columns[0]);
 			
 			table = new DbTable ("Test");
 			
@@ -79,17 +79,17 @@ namespace Epsitec.Cresus.Database
 			
 			fk = table.ForeignKeys;
 			
-			Assertion.AssertEquals (1, fk.Length);
-			Assertion.AssertEquals (1, fk[0].Columns.Length);
-			Assertion.AssertEquals (column_1, fk[0].Columns[0]);
+			Assert.AreEqual (1, fk.Length);
+			Assert.AreEqual (1, fk[0].Columns.Length);
+			Assert.AreEqual (column_1, fk[0].Columns[0]);
 			
-			Assertion.AssertEquals (table, table.Columns[column_1.Name].Table);
-			Assertion.AssertEquals (table, table.Columns[column_2.Name].Table);
+			Assert.AreEqual (table, table.Columns[column_1.Name].Table);
+			Assert.AreEqual (table, table.Columns[column_2.Name].Table);
 			
 			table.Columns.Remove (column_2);
 			
-			Assertion.AssertNull (table.Columns[column_2.Name]);
-			Assertion.AssertNull (column_2.Table);
+			Assert.IsNull (table.Columns[column_2.Name]);
+			Assert.IsNull (column_2.Table);
 		}
 		
 		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckNewDbTableEx1()

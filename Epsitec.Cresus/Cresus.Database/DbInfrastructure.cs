@@ -246,12 +246,23 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public IDbAbstraction CreateDbAbstraction()
+		{
+			return DbFactory.FindDbAbstraction (this.db_access);
+		}
+		
+		
 		public DbTransaction BeginTransaction()
 		{
 			return this.BeginTransaction (DbTransactionMode.ReadWrite);
 		}
 		
 		public DbTransaction BeginTransaction(DbTransactionMode mode)
+		{
+			return this.BeginTransaction (mode, this.db_abstraction);
+		}
+		
+		public DbTransaction BeginTransaction(DbTransactionMode mode, IDbAbstraction db_abstraction)
 		{
 			//	Débute une nouvelle transaction. Ceci n'est possible que si aucune
 			//	autre transaction n'est actuellement en cours sur cette connexion.
@@ -261,11 +272,11 @@ namespace Epsitec.Cresus.Database
 			switch (mode)
 			{
 				case DbTransactionMode.ReadOnly:
-					transaction = new DbTransaction (this.db_abstraction.BeginReadOnlyTransaction (), this.db_abstraction, this, mode);
+					transaction = new DbTransaction (db_abstraction.BeginReadOnlyTransaction (), db_abstraction, this, mode);
 					break;
 				
 				case DbTransactionMode.ReadWrite:
-					transaction = new DbTransaction (this.db_abstraction.BeginReadWriteTransaction (), this.db_abstraction, this, mode);
+					transaction = new DbTransaction (db_abstraction.BeginReadWriteTransaction (), db_abstraction, this, mode);
 					break;
 				
 				default:
@@ -1858,7 +1869,7 @@ namespace Epsitec.Cresus.Database
 		{
 			this.types = new TypeHelper (this);
 			
-			this.db_abstraction = DbFactory.FindDbAbstraction (this.db_access);
+			this.db_abstraction = this.CreateDbAbstraction ();
 			
 			this.sql_builder = this.db_abstraction.SqlBuilder;
 			this.sql_engine  = this.db_abstraction.SqlEngine;

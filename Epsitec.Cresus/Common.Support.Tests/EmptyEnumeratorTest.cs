@@ -12,12 +12,12 @@ namespace Epsitec.Common.Support
 			
 			foreach (object x in t)
 			{
-				Assertion.AssertNull (x);
+				Assert.IsNull (x);
 				
 				n++;
 			}
 			
-			Assertion.AssertEquals (0, n);
+			Assert.AreEqual (0, n);
 		}
 		
 		public class TestClass : System.Collections.IEnumerable

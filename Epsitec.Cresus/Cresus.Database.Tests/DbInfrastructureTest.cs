@@ -350,19 +350,55 @@ namespace Epsitec.Cresus.Database
 		{
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
-				Assertion.AssertEquals (DbId.TempClientId, infrastructure.Logger.CurrentId.ClientId);
-				Assertion.AssertEquals (6L, infrastructure.Logger.CurrentId.LocalId);
+				Assert.AreEqual (DbId.TempClientId, infrastructure.Logger.CurrentId.ClientId);
+				Assert.AreEqual (6L, infrastructure.Logger.CurrentId.LocalId);
 				
 				infrastructure.Logger.CreateTemporaryEntry (null);
 				infrastructure.Logger.CreateTemporaryEntry (null);
 				infrastructure.Logger.CreateTemporaryEntry (null);
 				
-				Assertion.Assert (infrastructure.Logger.Remove (null, DbId.MinimumTemp + 7));
+				Assert.IsTrue (infrastructure.Logger.Remove (null, DbId.MinimumTemp + 7));
 				
 				infrastructure.Logger.RemoveRange (null, DbId.MinimumTemp + 7, DbId.MinimumTemp + 8);
 				
-				Assertion.Assert (! infrastructure.Logger.Remove (null, DbId.MinimumTemp + 8));
-				Assertion.Assert (infrastructure.Logger.Remove (null, DbId.MinimumTemp + 9));
+				Assert.IsTrue (! infrastructure.Logger.Remove (null, DbId.MinimumTemp + 8));
+				Assert.IsTrue (infrastructure.Logger.Remove (null, DbId.MinimumTemp + 9));
+			}
+		}
+		
+		[Test] public void Check14MultipleTransactions()
+		{
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
+			{
+				Assert.IsNotNull (infrastructure);
+				
+				IDbAbstraction dba1 = infrastructure.CreateDbAbstraction ();
+				IDbAbstraction dba2 = infrastructure.CreateDbAbstraction ();
+				
+				Assert.IsFalse (dba1 == dba2);
+				Assert.IsFalse (dba1.SqlBuilder == dba2.SqlBuilder);
+				Assert.IsTrue (dba1.Factory == dba2.Factory);
+				
+				DbTransaction tr0 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
+				DbTransaction tr1 = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, dba1);
+				DbTransaction tr2 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly, dba2);
+				
+				Assert.AreEqual (3, infrastructure.LiveTransactions.Length);
+				
+				tr2.Commit ();
+				
+				Assert.AreEqual (2, infrastructure.LiveTransactions.Length);
+				
+				tr1.Rollback ();
+				
+				Assert.AreEqual (1, infrastructure.LiveTransactions.Length);
+				
+				tr0.Commit ();
+				
+				Assert.AreEqual (0, infrastructure.LiveTransactions.Length);
+				
+				dba1.Dispose ();
+				dba2.Dispose ();
 			}
 		}
 		

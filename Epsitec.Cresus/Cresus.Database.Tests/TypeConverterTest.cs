@@ -159,14 +159,14 @@ namespace Epsitec.Cresus.Database
 			object a = TypeConverter.ConvertToInternal (converter, "ABC", DbRawType.String);
 			object b = TypeConverter.ConvertToInternal (converter, true, DbRawType.Boolean);
 			
-			Assertion.AssertEquals (typeof (string), a.GetType ());
-			Assertion.AssertEquals (typeof (short), b.GetType ());
+			Assert.AreEqual (typeof (string), a.GetType ());
+			Assert.AreEqual (typeof (short), b.GetType ());
 			
 			object c = TypeConverter.ConvertFromInternal (converter, a, DbRawType.String);
 			object d = TypeConverter.ConvertFromInternal (converter, b, DbRawType.Boolean);
 			
-			Assertion.AssertEquals ("ABC", c);
-			Assertion.AssertEquals (true, d);
+			Assert.AreEqual ("ABC", c);
+			Assert.AreEqual (true, d);
 		}
 	}
 }

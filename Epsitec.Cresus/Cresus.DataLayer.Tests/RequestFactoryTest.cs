@@ -35,23 +35,23 @@ namespace Epsitec.Cresus.DataLayer
 			
 			factory.GenerateRequests (table);
 			
-			Assertion.AssertEquals (2, factory.PendingRequests.Count);
+			Assert.AreEqual (2, factory.PendingRequests.Count);
 			
 			Requests.AbstractRequest req_1 = factory.PendingRequests[0] as Requests.AbstractRequest;
 			Requests.AbstractRequest req_2 = factory.PendingRequests[1] as Requests.AbstractRequest;
 			
-			Assertion.AssertEquals (Requests.RequestType.InsertStaticData, req_1.RequestType);
-			Assertion.AssertEquals (Requests.RequestType.InsertStaticData, req_2.RequestType);
+			Assert.AreEqual (Requests.RequestType.InsertStaticData, req_1.RequestType);
+			Assert.AreEqual (Requests.RequestType.InsertStaticData, req_2.RequestType);
 			
 			table.AcceptChanges ();
 			
 			factory.Clear ();
 			
-			Assertion.AssertEquals (0, factory.PendingRequests.Count);
+			Assert.AreEqual (0, factory.PendingRequests.Count);
 			
 			factory.GenerateRequests (table);
 			
-			Assertion.AssertEquals (0, factory.PendingRequests.Count);
+			Assert.AreEqual (0, factory.PendingRequests.Count);
 			
 			table.Rows[1].BeginEdit ();
 			table.Rows[1][col_c] = 25M;
@@ -60,23 +60,23 @@ namespace Epsitec.Cresus.DataLayer
 			factory.Clear ();
 			factory.GenerateRequests (table);
 			
-			Assertion.AssertEquals (1, factory.PendingRequests.Count);
+			Assert.AreEqual (1, factory.PendingRequests.Count);
 			
 			Requests.AbstractRequest req_3 = factory.PendingRequests[0] as Requests.AbstractRequest;
 			
-			Assertion.AssertEquals (Requests.RequestType.UpdateStaticData, req_3.RequestType);
+			Assert.AreEqual (Requests.RequestType.UpdateStaticData, req_3.RequestType);
 			
 			Requests.UpdateStaticData update;
 			update = req_3 as Requests.UpdateStaticData;
 			
-			Assertion.AssertEquals (table.TableName, update.TableName);
-			Assertion.AssertEquals (2, update.ColumnNames.Length);
-			Assertion.AssertEquals (col_id.ColumnName, update.ColumnNames[0]);
-			Assertion.AssertEquals (col_c.ColumnName, update.ColumnNames[1]);
-			Assertion.AssertEquals (1000000000002L, update.ColumnValues[0]);
-			Assertion.AssertEquals (1000000000002L, update.ColumnOriginalValues[0]);
-			Assertion.AssertEquals (System.DBNull.Value, update.ColumnOriginalValues[1]);
-			Assertion.AssertEquals (25M, update.ColumnValues[1]);
+			Assert.AreEqual (table.TableName, update.TableName);
+			Assert.AreEqual (2, update.ColumnNames.Length);
+			Assert.AreEqual (col_id.ColumnName, update.ColumnNames[0]);
+			Assert.AreEqual (col_c.ColumnName, update.ColumnNames[1]);
+			Assert.AreEqual (1000000000002L, update.ColumnValues[0]);
+			Assert.AreEqual (1000000000002L, update.ColumnOriginalValues[0]);
+			Assert.AreEqual (System.DBNull.Value, update.ColumnOriginalValues[1]);
+			Assert.AreEqual (25M, update.ColumnValues[1]);
 			
 			factory.Dispose ();
 		}

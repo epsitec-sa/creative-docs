@@ -28,10 +28,10 @@ namespace Epsitec.Common.DynamicData
 			dfc.Add (f02);
 			dfc.Add (f22);
 			
-			Assertion.AssertEquals (f00, dfc.FindDynamicField (table, 0, 0));
-			Assertion.AssertEquals (f01, dfc.FindDynamicField (table, 0, 1));
-			Assertion.AssertEquals (f02, dfc.FindDynamicField (table, 0, 2));
-			Assertion.AssertEquals (f22, dfc.FindDynamicField (table, 2, 2));
+			Assert.AreEqual (f00, dfc.FindDynamicField (table, 0, 0));
+			Assert.AreEqual (f01, dfc.FindDynamicField (table, 0, 1));
+			Assert.AreEqual (f02, dfc.FindDynamicField (table, 0, 2));
+			Assert.AreEqual (f22, dfc.FindDynamicField (table, 2, 2));
 		}
 		
 		[Test] public void Check02FindDynamicCells()
@@ -51,15 +51,15 @@ namespace Epsitec.Common.DynamicData
 			
 			CellIndex[] cells = dfc.FindDynamicCells (table);
 			
-			Assertion.AssertEquals (4, cells.Length);
-			Assertion.AssertEquals (0, cells[0].Row);
-			Assertion.AssertEquals (0, cells[1].Row);
-			Assertion.AssertEquals (0, cells[2].Row);
-			Assertion.AssertEquals (2, cells[3].Row);
-			Assertion.AssertEquals (0, cells[0].Column);
-			Assertion.AssertEquals (1, cells[1].Column);
-			Assertion.AssertEquals (2, cells[2].Column);
-			Assertion.AssertEquals (2, cells[3].Column);
+			Assert.AreEqual (4, cells.Length);
+			Assert.AreEqual (0, cells[0].Row);
+			Assert.AreEqual (0, cells[1].Row);
+			Assert.AreEqual (0, cells[2].Row);
+			Assert.AreEqual (2, cells[3].Row);
+			Assert.AreEqual (0, cells[0].Column);
+			Assert.AreEqual (1, cells[1].Column);
+			Assert.AreEqual (2, cells[2].Column);
+			Assert.AreEqual (2, cells[3].Column);
 		}
 		
 		[Test] public void Check03FindDynamicCells()
@@ -77,20 +77,20 @@ namespace Epsitec.Common.DynamicData
 			
 			CellIndex[] cells = dfc.FindDynamicCells (table);
 			
-			Assertion.AssertEquals (6, cells.Length);
-			Assertion.AssertEquals (0, cells[0].Row);
-			Assertion.AssertEquals (0, cells[1].Row);
-			Assertion.AssertEquals (1, cells[2].Row);
-			Assertion.AssertEquals (2, cells[3].Row);
-			Assertion.AssertEquals (2, cells[4].Row);
-			Assertion.AssertEquals (3, cells[5].Row);
+			Assert.AreEqual (6, cells.Length);
+			Assert.AreEqual (0, cells[0].Row);
+			Assert.AreEqual (0, cells[1].Row);
+			Assert.AreEqual (1, cells[2].Row);
+			Assert.AreEqual (2, cells[3].Row);
+			Assert.AreEqual (2, cells[4].Row);
+			Assert.AreEqual (3, cells[5].Row);
 			
-			Assertion.AssertEquals (0, cells[0].Column);
-			Assertion.AssertEquals (1, cells[1].Column);
-			Assertion.AssertEquals (1, cells[2].Column);
-			Assertion.AssertEquals (1, cells[3].Column);
-			Assertion.AssertEquals (2, cells[4].Column);
-			Assertion.AssertEquals (1, cells[5].Column);
+			Assert.AreEqual (0, cells[0].Column);
+			Assert.AreEqual (1, cells[1].Column);
+			Assert.AreEqual (1, cells[2].Column);
+			Assert.AreEqual (1, cells[3].Column);
+			Assert.AreEqual (2, cells[4].Column);
+			Assert.AreEqual (1, cells[5].Column);
 		}
 		
 		[Test] public void Check04Changed()
@@ -102,17 +102,17 @@ namespace Epsitec.Common.DynamicData
 			dfc.Changed += new Support.EventHandler (this.ChangedEventHandler);
 			dfc.Clear ();
 			
-			Assertion.AssertEquals (0, this.changed_counter);
+			Assert.AreEqual (0, this.changed_counter);
 			
 			IDynamicField field = new DynamicFieldAllInColumn (null);
 			
 			dfc.Add (field);
 			
-			Assertion.AssertEquals (1, this.changed_counter);
+			Assert.AreEqual (1, this.changed_counter);
 			
 			dfc.Clear ();
 			
-			Assertion.AssertEquals (2, this.changed_counter);
+			Assert.AreEqual (2, this.changed_counter);
 		}
 		
 		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void Check05AddEx()

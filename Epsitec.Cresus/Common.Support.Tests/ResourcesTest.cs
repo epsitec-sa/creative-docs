@@ -58,7 +58,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckFileContains()
 		{
-			Assertion.Assert (Resources.ContainsId ("file:button.cancel"));
+			Assert.IsTrue (Resources.ContainsId ("file:button.cancel"));
 		}
 		
 		[Test] public void CheckFileGetBundle()
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckBase00ContainsNo()
 		{
-			Assertion.Assert (! Resources.ContainsId ("base:raw_data_test"));
+			Assert.IsTrue (! Resources.ContainsId ("base:raw_data_test"));
 		}
 		
 		[Test] public void CheckBase01SetBinaryData()
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckBase02ContainsYes()
 		{
-			Assertion.Assert (Resources.ContainsId ("base:raw_data_test"));
+			Assert.IsTrue (Resources.ContainsId ("base:raw_data_test"));
 		}
 		
 		[Test] public void CheckBase03GetBinaryData()
@@ -117,18 +117,18 @@ namespace Epsitec.Common.Support
 			byte[] data = Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Default, null);
 			System.Diagnostics.Debug.WriteLine ("<< end");
 			
-			Assertion.AssertNotNull (data);
-			Assertion.AssertEquals (5, data.Length);
-			Assertion.AssertEquals (1, data[0]);
-			Assertion.AssertEquals (2, data[1]);
-			Assertion.AssertEquals (3, data[2]);
-			Assertion.AssertEquals (4, data[3]);
-			Assertion.AssertEquals (5, data[4]);
+			Assert.IsNotNull (data);
+			Assert.AreEqual (5, data.Length);
+			Assert.AreEqual (1, data[0]);
+			Assert.AreEqual (2, data[1]);
+			Assert.AreEqual (3, data[2]);
+			Assert.AreEqual (4, data[3]);
+			Assert.AreEqual (5, data[4]);
 		}
 		
 		[Test] public void CheckBase04RemoveResource()
 		{
-			Assertion.Assert (Resources.ContainsId ("base:raw_data_test"));
+			Assert.IsTrue (Resources.ContainsId ("base:raw_data_test"));
 			
 			byte[] data_xx = new byte[] { (byte)'X' };
 			byte[] data_de = new byte[] { (byte)'D', (byte)'E' };
@@ -139,37 +139,37 @@ namespace Epsitec.Common.Support
 			byte[] find_xx = Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null);
 			byte[] find_de = Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de"));
 			
-			Assertion.AssertNotNull (find_xx);
-			Assertion.AssertNotNull (find_de);
-			Assertion.AssertEquals (data_xx[0], find_xx[0]);
-			Assertion.AssertEquals (data_de[0], find_de[0]);
-			Assertion.AssertEquals (data_de[1], find_de[1]);
+			Assert.IsNotNull (find_xx);
+			Assert.IsNotNull (find_de);
+			Assert.AreEqual (data_xx[0], find_xx[0]);
+			Assert.AreEqual (data_de[0], find_de[0]);
+			Assert.AreEqual (data_de[1], find_de[1]);
 			
 			Resources.RemoveResource ("base:raw_data_test", ResourceLevel.Customised, null);
 			Resources.RemoveResource ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de"));
 			
-			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null));
-			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de")));
-			Assertion.AssertNotNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Default, null));
-			Assertion.Assert (Resources.ContainsId ("base:raw_data_test"));
+			Assert.IsNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null));
+			Assert.IsNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de")));
+			Assert.IsNotNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Default, null));
+			Assert.IsTrue (Resources.ContainsId ("base:raw_data_test"));
 			
 			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null, data_xx, ResourceSetMode.CreateOnly);
 			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de"), data_de, ResourceSetMode.CreateOnly);
 			
 			Resources.RemoveResource ("base:raw_data_test", ResourceLevel.All, null);
 			
-			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null));
-			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de")));
-			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Default, null));
-			Assertion.Assert (! Resources.ContainsId ("base:raw_data_test"));
+			Assert.IsNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null));
+			Assert.IsNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de")));
+			Assert.IsNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Default, null));
+			Assert.IsTrue (! Resources.ContainsId ("base:raw_data_test"));
 		}
 		
 
 #if false
 		[Test] public void CheckBaseStressTest()
 		{
-			Assertion.Assert (! Resources.ContainsId ("base:StressResourceLtl.0"));
-			Assertion.Assert (! Resources.ContainsId ("base:StressResourceBig.0"));
+			Assert.IsTrue (! Resources.ContainsId ("base:StressResourceLtl.0"));
+			Assert.IsTrue (! Resources.ContainsId ("base:StressResourceBig.0"));
 			
 			System.Diagnostics.Debug.WriteLine ("Creating 1000 resources (10 bytes).");
 			for (int i = 0; i < 1000; i++)

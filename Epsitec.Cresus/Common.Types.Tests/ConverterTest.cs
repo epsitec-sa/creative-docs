@@ -12,10 +12,10 @@ namespace Epsitec.Common.Types
 			object a = null;
 			object b = System.DBNull.Value;
 			
-			Assertion.Assert (Converter.IsNull (a));
-			Assertion.Assert (Converter.IsNull (b));
-			Assertion.Assert (! Converter.IsNotNull (a));
-			Assertion.Assert (! Converter.IsNotNull (b));
+			Assert.IsTrue (Converter.IsNull (a));
+			Assert.IsTrue (Converter.IsNull (b));
+			Assert.IsTrue (! Converter.IsNotNull (a));
+			Assert.IsTrue (! Converter.IsNotNull (b));
 		}
 		
 		[Test] public void CheckToDateTime()
@@ -31,20 +31,20 @@ namespace Epsitec.Common.Types
 			
 			System.DateTime result;
 			
-			Assertion.Assert (! Converter.Convert (a, out result));
-			Assertion.Assert (! Converter.Convert (b, out result));
-			Assertion.Assert (! Converter.Convert (c, out result));
+			Assert.IsTrue (! Converter.Convert (a, out result));
+			Assert.IsTrue (! Converter.Convert (b, out result));
+			Assert.IsTrue (! Converter.Convert (c, out result));
 			
-			Assertion.Assert (Converter.Convert (d, out result));
-			Assertion.AssertEquals (new System.DateTime (2004, 11, 3, 10, 30, 5, 123), result);
-			Assertion.Assert (Converter.Convert (e, out result));
-			Assertion.AssertEquals (new System.DateTime (2004, 11, 3, 10, 30, 5, 123), result);
-			Assertion.Assert (Converter.Convert (f, out result));
-			Assertion.AssertEquals (new System.DateTime (2004, 11, 3, 10, 30, 5, 123), result);
-			Assertion.Assert (Converter.Convert (g, out result));
-			Assertion.AssertEquals (new System.DateTime (2004, 11, 3, 10, 30, 5, 0), result);
-			Assertion.Assert (Converter.Convert (h, out result));
-			Assertion.AssertEquals (new System.DateTime (2004, 11, 3, 10, 30, 5, 0), result);
+			Assert.IsTrue (Converter.Convert (d, out result));
+			Assert.AreEqual (new System.DateTime (2004, 11, 3, 10, 30, 5, 123), result);
+			Assert.IsTrue (Converter.Convert (e, out result));
+			Assert.AreEqual (new System.DateTime (2004, 11, 3, 10, 30, 5, 123), result);
+			Assert.IsTrue (Converter.Convert (f, out result));
+			Assert.AreEqual (new System.DateTime (2004, 11, 3, 10, 30, 5, 123), result);
+			Assert.IsTrue (Converter.Convert (g, out result));
+			Assert.AreEqual (new System.DateTime (2004, 11, 3, 10, 30, 5, 0), result);
+			Assert.IsTrue (Converter.Convert (h, out result));
+			Assert.AreEqual (new System.DateTime (2004, 11, 3, 10, 30, 5, 0), result);
 			
 			System.DateTime tloc = System.DateTime.Now;
 			System.DateTime tutc = System.DateTime.UtcNow;
@@ -69,22 +69,22 @@ namespace Epsitec.Common.Types
 			
 			decimal result;
 			
-			Assertion.Assert (! Converter.Convert (a, out result));
-			Assertion.Assert (! Converter.Convert (b, out result));
-			Assertion.Assert (! Converter.Convert (c, out result));
+			Assert.IsTrue (! Converter.Convert (a, out result));
+			Assert.IsTrue (! Converter.Convert (b, out result));
+			Assert.IsTrue (! Converter.Convert (c, out result));
 			
-			Assertion.Assert (Converter.Convert (d, out result));
-			Assertion.Assert (result == 10);
-			Assertion.Assert (Converter.Convert (e, out result));
-			Assertion.Assert (result == 10);
-			Assertion.Assert (Converter.Convert (f, out result));
-			Assertion.Assert (result == 10);
-			Assertion.Assert (Converter.Convert (g, out result));
-			Assertion.Assert (result == 1);
-			Assertion.Assert (Converter.Convert (h, out result));
-			Assertion.Assert (result == 10);
-			Assertion.Assert (Converter.Convert (i, out result));
-			Assertion.Assert (result == 10);
+			Assert.IsTrue (Converter.Convert (d, out result));
+			Assert.IsTrue (result == 10);
+			Assert.IsTrue (Converter.Convert (e, out result));
+			Assert.IsTrue (result == 10);
+			Assert.IsTrue (Converter.Convert (f, out result));
+			Assert.IsTrue (result == 10);
+			Assert.IsTrue (Converter.Convert (g, out result));
+			Assert.IsTrue (result == 1);
+			Assert.IsTrue (Converter.Convert (h, out result));
+			Assert.IsTrue (result == 10);
+			Assert.IsTrue (Converter.Convert (i, out result));
+			Assert.IsTrue (result == 10);
 		}
 		
 		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckToDecimalEx1()
@@ -103,38 +103,38 @@ namespace Epsitec.Common.Types
 		{
 			System.Enum v1, v2, v3, v;
 			
-			Assertion.Assert (Converter.Convert (MyEnum.First, typeof (MyEnum), out v1));
-			Assertion.Assert (Converter.Convert ("Second",     typeof (MyEnum), out v2));
-			Assertion.Assert (Converter.Convert (99,           typeof (MyEnum), out v3));
+			Assert.IsTrue (Converter.Convert (MyEnum.First, typeof (MyEnum), out v1));
+			Assert.IsTrue (Converter.Convert ("Second",     typeof (MyEnum), out v2));
+			Assert.IsTrue (Converter.Convert (99,           typeof (MyEnum), out v3));
 			
-			Assertion.AssertEquals (MyEnum.First,  v1);
-			Assertion.AssertEquals (MyEnum.Second, v2);
-			Assertion.AssertEquals (MyEnum.Extra,  v3);
+			Assert.AreEqual (MyEnum.First,  v1);
+			Assert.AreEqual (MyEnum.Second, v2);
+			Assert.AreEqual (MyEnum.Extra,  v3);
 			
-			Assertion.Assert (! Converter.Convert (0,   typeof (MyEnum), out v));
-			Assertion.Assert (! Converter.Convert ("",  typeof (MyEnum), out v));
-			Assertion.Assert (! Converter.Convert ("X", typeof (MyEnum), out v));
-			Assertion.Assert (! Converter.Convert ("0", typeof (MyEnum), out v));
+			Assert.IsTrue (! Converter.Convert (0,   typeof (MyEnum), out v));
+			Assert.IsTrue (! Converter.Convert ("",  typeof (MyEnum), out v));
+			Assert.IsTrue (! Converter.Convert ("X", typeof (MyEnum), out v));
+			Assert.IsTrue (! Converter.Convert ("0", typeof (MyEnum), out v));
 		}
 		
 		[Test] public void CheckToEnum2()
 		{
 			System.Enum v1, v2, v3, v;
 			
-			Assertion.Assert (Converter.Convert (MyFlags.Flag1,  typeof (MyFlags), out v1));
-			Assertion.Assert (Converter.Convert ("Flag2, Flag4", typeof (MyFlags), out v2));
-			Assertion.Assert (Converter.Convert (9,              typeof (MyFlags), out v3));
+			Assert.IsTrue (Converter.Convert (MyFlags.Flag1,  typeof (MyFlags), out v1));
+			Assert.IsTrue (Converter.Convert ("Flag2, Flag4", typeof (MyFlags), out v2));
+			Assert.IsTrue (Converter.Convert (9,              typeof (MyFlags), out v3));
 			
-			Assertion.AssertEquals (MyFlags.Flag1,  v1);
-			Assertion.AssertEquals (MyFlags.Flag2 | MyFlags.Flag4, v2);
-			Assertion.AssertEquals (MyFlags.Flag1 | MyFlags.Flag4, v3);
+			Assert.AreEqual (MyFlags.Flag1,  v1);
+			Assert.AreEqual (MyFlags.Flag2 | MyFlags.Flag4, v2);
+			Assert.AreEqual (MyFlags.Flag1 | MyFlags.Flag4, v3);
 			
-			Assertion.Assert (! Converter.Convert (-1,   typeof (MyFlags), out v));
-			Assertion.Assert (  Converter.Convert (0x0f, typeof (MyFlags), out v));
-			Assertion.Assert (! Converter.Convert (0x1f, typeof (MyFlags), out v));
-			Assertion.Assert (! Converter.Convert ("",   typeof (MyFlags), out v));
-			Assertion.Assert (! Converter.Convert ("X",  typeof (MyFlags), out v));
-			Assertion.Assert (! Converter.Convert ("-1", typeof (MyFlags), out v));
+			Assert.IsTrue (! Converter.Convert (-1,   typeof (MyFlags), out v));
+			Assert.IsTrue (  Converter.Convert (0x0f, typeof (MyFlags), out v));
+			Assert.IsTrue (! Converter.Convert (0x1f, typeof (MyFlags), out v));
+			Assert.IsTrue (! Converter.Convert ("",   typeof (MyFlags), out v));
+			Assert.IsTrue (! Converter.Convert ("X",  typeof (MyFlags), out v));
+			Assert.IsTrue (! Converter.Convert ("-1", typeof (MyFlags), out v));
 		}
 		
 		[Test] public void CheckToString()
@@ -152,27 +152,27 @@ namespace Epsitec.Common.Types
 			
 			string result;
 			
-			Assertion.Assert (! Converter.Convert (a, out result));
-			Assertion.Assert (! Converter.Convert (b, out result));
+			Assert.IsTrue (! Converter.Convert (a, out result));
+			Assert.IsTrue (! Converter.Convert (b, out result));
 			
-			Assertion.Assert (Converter.Convert (c, out result));
-			Assertion.AssertEquals ("test", result);
-			Assertion.Assert (Converter.Convert (d, out result));
-			Assertion.AssertEquals ("10", result);
-			Assertion.Assert (Converter.Convert (e, out result));
-			Assertion.AssertEquals ("10", result);
-			Assertion.Assert (Converter.Convert (f, out result));
-			Assertion.AssertEquals ("10.00", result);
-			Assertion.Assert (Converter.Convert (g, out result));
-			Assertion.AssertEquals ("True", result);
-			Assertion.Assert (Converter.Convert (h, out result));
-			Assertion.AssertEquals ("0.1;0.2;0.3;0.4", result);
-			Assertion.Assert (Converter.Convert (i, out result));
-			Assertion.AssertEquals ("10;20;30;40", result);
-			Assertion.Assert (Converter.Convert (i, out result));
-			Assertion.AssertEquals ("10;20;30;40", result);
-			Assertion.Assert (Converter.Convert (j, out result));
-			Assertion.AssertEquals ("2004-11-03T10:30:05+1230000", result);
+			Assert.IsTrue (Converter.Convert (c, out result));
+			Assert.AreEqual ("test", result);
+			Assert.IsTrue (Converter.Convert (d, out result));
+			Assert.AreEqual ("10", result);
+			Assert.IsTrue (Converter.Convert (e, out result));
+			Assert.AreEqual ("10", result);
+			Assert.IsTrue (Converter.Convert (f, out result));
+			Assert.AreEqual ("10.00", result);
+			Assert.IsTrue (Converter.Convert (g, out result));
+			Assert.AreEqual ("True", result);
+			Assert.IsTrue (Converter.Convert (h, out result));
+			Assert.AreEqual ("0.1;0.2;0.3;0.4", result);
+			Assert.IsTrue (Converter.Convert (i, out result));
+			Assert.AreEqual ("10;20;30;40", result);
+			Assert.IsTrue (Converter.Convert (i, out result));
+			Assert.AreEqual ("10;20;30;40", result);
+			Assert.IsTrue (Converter.Convert (j, out result));
+			Assert.AreEqual ("2004-11-03T10:30:05+1230000", result);
 		}
 		
 		

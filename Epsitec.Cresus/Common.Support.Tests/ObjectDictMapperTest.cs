@@ -18,10 +18,10 @@ namespace Epsitec.Common.Support
 			
 			ObjectDictMapper.CopyFromDict (data, dict);
 			
-			Assertion.AssertEquals (15, data.NumValue);
-			Assertion.AssertEquals ("Hello", data.StringValue);
-			Assertion.AssertEquals (123.456M, data.DecimalValue);
-			Assertion.AssertEquals (new System.DateTime (2004, 11, 3, 10, 30, 5, 123), data.DateTimeValue);
+			Assert.AreEqual (15, data.NumValue);
+			Assert.AreEqual ("Hello", data.StringValue);
+			Assert.AreEqual (123.456M, data.DecimalValue);
+			Assert.AreEqual (new System.DateTime (2004, 11, 3, 10, 30, 5, 123), data.DateTimeValue);
 		}
 		
 		[Test] public void CheckCopyToDict()
@@ -36,16 +36,16 @@ namespace Epsitec.Common.Support
 			
 			ObjectDictMapper.CopyToDict (data, dict);
 			
-			Assertion.AssertEquals (4, dict.Count);
+			Assert.AreEqual (4, dict.Count);
 			
-			Assertion.AssertEquals ("15", dict["NumValue"]);
-			Assertion.AssertEquals ("Hello", dict["StringValue"]);
-			Assertion.AssertEquals ("123.456", dict["DecimalValue"]);
+			Assert.AreEqual ("15", dict["NumValue"]);
+			Assert.AreEqual ("Hello", dict["StringValue"]);
+			Assert.AreEqual ("123.456", dict["DecimalValue"]);
 			
 			System.DateTime date;
 			Types.Converter.Convert (dict["DateTimeValue"], out date);
 			
-			Assertion.AssertEquals (data.DateTimeValue, date);
+			Assert.AreEqual (data.DateTimeValue, date);
 		}
 		
 		[Test] public void CheckUpdateToDict()
@@ -64,10 +64,10 @@ namespace Epsitec.Common.Support
 			
 			ObjectDictMapper.UpdateToDict (data, dict);
 			
-			Assertion.AssertEquals (2, dict.Count);
+			Assert.AreEqual (2, dict.Count);
 			
-			Assertion.AssertEquals ("123", dict["XYZ"]);
-			Assertion.AssertEquals ("Hello", dict["StringValue"]);
+			Assert.AreEqual ("123", dict["XYZ"]);
+			Assert.AreEqual ("Hello", dict["StringValue"]);
 		}
 		
 		

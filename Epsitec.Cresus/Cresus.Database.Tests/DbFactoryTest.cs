@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Database
 				error_message = e.Message;
 			}
 			
-			Assertion.Assert (error_message.IndexOf ("attempted update during read-only transaction") > 0);
+			Assert.IsTrue (error_message.IndexOf ("attempted update during read-only transaction") > 0);
 		}
 		
 		[Test] public void CheckDebugDumpRegisteredDbAbstractions ()

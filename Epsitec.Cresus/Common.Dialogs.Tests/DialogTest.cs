@@ -90,10 +90,10 @@ namespace Epsitec.Common.Dialogs
 			dialog.AddRule (record.Validator, "Ok;Apply");
 			dialog.AddController (controller);
 			
-			Assertion.AssertEquals ("Test", record["UserName"].Value);
-			Assertion.AssertEquals (10, record["UserAge"].Value);
-			Assertion.AssertEquals (AccessMode.Local, record["AccessMode"].Value);
-			Assertion.AssertEquals (LoginOptions.None, record["LoginOptions"].Value);
+			Assert.AreEqual ("Test", record["UserName"].Value);
+			Assert.AreEqual (10, record["UserAge"].Value);
+			Assert.AreEqual (AccessMode.Local, record["AccessMode"].Value);
+			Assert.AreEqual (LoginOptions.None, record["LoginOptions"].Value);
 			
 //			ScriptWrapper script = new ScriptWrapper ();
 //			script.Source = DialogTest.CreateSource (null);

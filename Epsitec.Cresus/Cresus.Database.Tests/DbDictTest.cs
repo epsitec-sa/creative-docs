@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Database
 			{
 				this.dict.RestoreFromBase (transaction);
 				
-				Assertion.AssertEquals (0, this.dict.Count);
+				Assert.AreEqual (0, this.dict.Count);
 				transaction.Commit ();
 			}
 		}
@@ -58,15 +58,15 @@ namespace Epsitec.Cresus.Database
 			this.dict.Add ("Key B", "Value B");
 			this.dict.Add ("Key C", "Value C");
 			
-			Assertion.AssertEquals (3, this.dict.Count);
+			Assert.AreEqual (3, this.dict.Count);
 			
 			this.dict["Key B"] = "Value B, update 1";
 			
-			Assertion.AssertEquals (3, this.dict.Count);
+			Assert.AreEqual (3, this.dict.Count);
 			
 			this.dict.Remove ("Key C");
 			
-			Assertion.AssertEquals (2, this.dict.Count);
+			Assert.AreEqual (2, this.dict.Count);
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
@@ -79,12 +79,12 @@ namespace Epsitec.Cresus.Database
 		{
 			this.dict.Add ("Key D", "Value D");
 			
-			Assertion.AssertEquals (3, this.dict.Count);
+			Assert.AreEqual (3, this.dict.Count);
 			
 			this.dict["Key B"] = "Value B, update 2";
 			this.dict.Remove ("Key A");
 			
-			Assertion.AssertEquals (2, this.dict.Count);
+			Assert.AreEqual (2, this.dict.Count);
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Database
 				this.dict.RestoreFromBase (transaction);
 				transaction.Commit ();
 				
-				Assertion.AssertEquals (2, this.dict.Count);
+				Assert.AreEqual (2, this.dict.Count);
 			}
 		}
 
