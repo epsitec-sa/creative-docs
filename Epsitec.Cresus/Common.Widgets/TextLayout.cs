@@ -123,6 +123,24 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+
+		// Retourne les dimensions du texte indépendament de LayoutSize,
+		// s'il est mis sur une seule ligne.
+		public Drawing.Size SingleLineSize()
+		{
+			Drawing.Size originalSize = this.LayoutSize;
+			Drawing.ContentAlignment originalAlignment = this.Alignment;
+
+			this.LayoutSize = new Drawing.Size(1000000, 1000000);
+			this.Alignment = Drawing.ContentAlignment.TopLeft;
+
+			Drawing.Point end = this.FindTextEnd();
+			
+			this.LayoutSize = originalSize;
+			this.Alignment = originalAlignment;
+
+			return new Drawing.Size(end.X, 1000000-end.Y);
+		}
 		
 		// Retourne le nombre de lignes total dans le layout courant
 		// (y compris les lignes qui débordent).
@@ -148,7 +166,7 @@ namespace Epsitec.Common.Widgets
 		
 		// Retourne le rectangle englobant du layout, en tenant compte de
 		// toutes les lignes (all=true) ou seulement des lignes visibles (all=false).
-		// Si le texte est aligné sur le bord droit, rectangle.X n'est pas
+		// Si le texte est aligné sur le bord gauche, rectangle.Left n'est pas
 		// forcément égal à 0.
 		protected Drawing.Rectangle RectangleBounds(bool all)
 		{
@@ -196,6 +214,40 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.RectangleBounds(false);
+			}
+		}
+		
+		// Retourne le rectangle standard englobant du layout courant; ce
+		// rectangle ne dépend pas de la hauteur des lettres du texte.
+		// Le rectangle aura la même hauteur avec "ace" ou "Ap".
+		public Drawing.Rectangle StandardRectangle
+		{
+			get
+			{
+				this.UpdateLayout();
+
+				Drawing.Rectangle totalRect = new Drawing.Rectangle();
+				foreach ( JustifBlock block in this.blocks )
+				{
+					if ( !block.visible )  continue;
+
+					Drawing.Rectangle blockRect = new Drawing.Rectangle();
+					blockRect.Left  = 0;
+					blockRect.Right = block.width;
+					if ( block.image )
+					{
+						blockRect.Top    = block.imageAscender;
+						blockRect.Bottom = block.imageDescender;
+					}
+					else
+					{
+						blockRect.Top    = block.fontSize*block.font.Ascender;
+						blockRect.Bottom = block.fontSize*block.font.Descender;
+					}
+					blockRect.Offset(block.pos.X, block.pos.Y);
+					totalRect.MergeWith(blockRect);
+				}
+				return totalRect;
 			}
 		}
 		
@@ -280,9 +332,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		// Trouve l'offset dans le texte interne qui correspond à la
+		// Trouve l'index dans le texte interne qui correspond à la
 		// position indiquée. Retourne -1 en cas d'échec.
-		public int DetectOffset(Drawing.Point pos)
+		public int DetectIndex(Drawing.Point pos)
 		{
 			if ( pos.X < 0                      ||
 				 pos.X > this.layoutSize.Width  ||
@@ -296,44 +348,127 @@ namespace Epsitec.Common.Widgets
 				if ( !line.visible )  continue;
 
 				if ( pos.Y <= line.pos.Y+line.ascender  &&
-					 pos.Y >= line.pos.Y-line.descender )
+					 pos.Y >= line.pos.Y+line.descender )
 				{
 					for ( int j=line.firstBlock ; j<=line.lastBlock ; j++ )
 					{
-						if ( pos.X >= line.pos.X            &&
-							 pos.X <= line.pos.X+line.width )
+						JustifBlock block = (JustifBlock)this.blocks[j];
+
+						double width = block.width;
+						if ( j == this.blocks.Count-1 )  // dernier bloc ?
 						{
-							JustifBlock block = (JustifBlock)this.blocks[j];
+							width = this.layoutSize.Width-block.pos.X;
+						}
+						else
+						{
+							JustifBlock nextBlock = (JustifBlock)this.blocks[j+1];
+							if ( nextBlock.bol )
+							{
+								width = this.layoutSize.Width-block.pos.X;
+							}
+						}
+
+						if ( pos.X >= block.pos.X       &&
+							 pos.X <= block.pos.X+width )
+						{
 							if ( block.image )
 							{
-								return block.beginOffset;
+								return block.beginIndex;
 							}
 							else
 							{
 								double[] charsWidth = block.font.GetTextCharEndX(block.text);
+								double left = 0;
+								double right;
 								for ( int k=0 ; k<charsWidth.Length ; k++ )
 								{
-									// TODO: faire mieux !
-									if ( pos.X-line.pos.X <= charsWidth[k]*block.fontSize )
+									right = charsWidth[k]*block.fontSize;
+									if ( pos.X-line.pos.X <= left+(right-left)/2 )
 									{
-										return block.beginOffset+k;
+										return block.beginIndex+k;
 									}
+									left = right;
 								}
+								return block.beginIndex+charsWidth.Length;
 							}
 						}
 					}
 				}
 			}
-
 			return -1;
 		}
 		
+		// Trouve l'index dans le texte interne qui correspond à la
+		// position indiquée. Retourne -1 en cas d'échec.
+		public int DetectIndex(double posx, int posLine)
+		{
+			if ( posx < 0                     ||
+				 posx > this.layoutSize.Width )  return -1;
+
+			this.UpdateLayout();
+
+			foreach ( JustifLine line in this.lines )
+			{
+				if ( !line.visible )  continue;
+
+				if ( posLine == line.rank )
+				{
+					for ( int j=line.firstBlock ; j<=line.lastBlock ; j++ )
+					{
+						JustifBlock block = (JustifBlock)this.blocks[j];
+
+						double width = block.width;
+						if ( j == this.blocks.Count-1 )  // dernier bloc ?
+						{
+							width = this.layoutSize.Width-block.pos.X;
+						}
+						else
+						{
+							JustifBlock nextBlock = (JustifBlock)this.blocks[j+1];
+							if ( nextBlock.bol )
+							{
+								width = this.layoutSize.Width-block.pos.X;
+							}
+						}
+
+						if ( posx >= block.pos.X       &&
+							posx <= block.pos.X+width )
+						{
+							if ( block.image )
+							{
+								return block.beginIndex;
+							}
+							else
+							{
+								double[] charsWidth = block.font.GetTextCharEndX(block.text);
+								double left = 0;
+								double right;
+								for ( int k=0 ; k<charsWidth.Length ; k++ )
+								{
+									right = charsWidth[k]*block.fontSize;
+									if ( posx-line.pos.X <= left+(right-left)/2 )
+									{
+										return block.beginIndex+k;
+									}
+									left = right;
+								}
+								return block.beginIndex+charsWidth.Length;
+							}
+						}
+					}
+				}
+			}
+			return -1;
+		}
+
 		// Détecte s'il y a un lien hypertexte dans la liste des
 		// tags actifs à la position en question. Si oui, extrait la chaîne
 		// de l'argument href, en supprimant les guillemets.
 		public string DetectAnchor(Drawing.Point pos)
 		{
-			int offset = this.DetectOffset(pos);
+			int index = this.DetectIndex(pos);
+			if ( index < 0 )  return null;
+			int offset = this.FindOffsetFromIndex(index);
 			if ( offset < 0 )  return null;
 			
 			string[] tags;
@@ -352,36 +487,36 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		// Retourne la position horizontale correspondant à un offset dans un bloc.
-		protected double OffsetToPosX(JustifBlock block, int offset)
+		// Retourne la position horizontale correspondant à un index dans un bloc.
+		protected double IndexToPosX(JustifBlock block, int index)
 		{
-			if ( offset <= block.beginOffset )  return block.pos.X;
-			if ( offset >  block.endOffset   )  return block.pos.X+block.width;
+			if ( index <= block.beginIndex )  return block.pos.X;
+			if ( index >  block.endIndex   )  return block.pos.X+block.width;
 			double[] charsWidth = block.font.GetTextCharEndX(block.text);
-			return block.pos.X+charsWidth[offset-block.beginOffset-1]*block.fontSize;
+			return block.pos.X+charsWidth[index-block.beginIndex-1]*block.fontSize;
 		}
 
 		// Retourne un tableau avec les rectangles englobant le texte
 		// spécifié par son début et sa fin. Il y a un rectangle par ligne.
-		public Drawing.Rectangle[] FindTextRange(int offsetBegin, int offsetEnd)
+		public Drawing.Rectangle[] FindTextRange(int indexBegin, int indexEnd)
 		{
-			if ( offsetBegin >= offsetEnd )  return new Drawing.Rectangle[0];
+			if ( indexBegin >= indexEnd )  return new Drawing.Rectangle[0];
 
 			this.UpdateLayout();
 
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			Drawing.Rectangle rect = new Drawing.Rectangle();
-			rect.Top    = -100000;
-			rect.Bottom =  100000;
-			rect.Left   =  100000;
-			rect.Right  = -100000;
+			rect.Top    = -1000000;
+			rect.Bottom =  1000000;
+			rect.Left   =  1000000;
+			rect.Right  = -1000000;
 			foreach ( JustifBlock block in this.blocks )
 			{
 				JustifLine line = (JustifLine)this.lines[block.indexLine];
 				if ( !block.visible )  continue;
 
-				int localBegin = System.Math.Max(offsetBegin, block.beginOffset);
-				int localEnd   = System.Math.Min(offsetEnd,   block.endOffset  );
+				int localBegin = System.Math.Max(indexBegin, block.beginIndex);
+				int localEnd   = System.Math.Min(indexEnd,   block.endIndex  );
 
 				if ( localBegin >= localEnd )  continue;
 
@@ -391,15 +526,15 @@ namespace Epsitec.Common.Widgets
 				if ( rect.Top    != top    ||
 					 rect.Bottom != bottom )  // rectangle dans autre ligne ?
 				{
-					if ( rect.Top > -100000 && rect.Left < 100000 )
+					if ( rect.Top > -1000000 && rect.Left < 1000000 )
 					{
 						list.Add(rect);
 					}
 
 					rect.Top    = top;
 					rect.Bottom = bottom;
-					rect.Left   =  100000;
-					rect.Right  = -100000;
+					rect.Left   =  1000000;
+					rect.Right  = -1000000;
 				}
 
 				if ( block.image )
@@ -409,12 +544,12 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					rect.Left  = System.Math.Min(rect.Left,  OffsetToPosX(block, localBegin));
-					rect.Right = System.Math.Max(rect.Right, OffsetToPosX(block, localEnd  ));
+					rect.Left  = System.Math.Min(rect.Left,  IndexToPosX(block, localBegin));
+					rect.Right = System.Math.Max(rect.Right, IndexToPosX(block, localEnd  ));
 				}
 			}
 			
-			if ( rect.Top > -100000 && rect.Left < 100000 )
+			if ( rect.Top > -1000000 && rect.Left < 1000000 )
 			{
 				list.Add(rect);
 			}
@@ -424,7 +559,122 @@ namespace Epsitec.Common.Widgets
 			return rects;
 		}
 		
+		// Retourne le rectangle correspondant au curseur.
+		// Indique également le numéro de la ligne (0..n).
+		public Drawing.Rectangle FindTextCursor(int index, out int rankLine)
+		{
+			this.UpdateLayout();
+
+			rankLine = -1;
+			foreach ( JustifBlock block in this.blocks )
+			{
+				JustifLine line = (JustifLine)this.lines[block.indexLine];
+				if ( !block.visible )  continue;
+
+				if ( index >= block.beginIndex && index <= block.endIndex )
+				{
+					Drawing.Rectangle rect = new Drawing.Rectangle();
+					rect.Top    = line.pos.Y+line.ascender;
+					rect.Bottom = line.pos.Y+line.descender;
+					if ( block.image )
+					{
+						rect.Left  = block.pos.X;
+						rect.Right = block.pos.X+block.width;
+					}
+					else
+					{
+						rect.Left  = IndexToPosX(block, index);
+						rect.Right = rect.Left;
+						rect.Left  -= 0.5;
+						rect.Right += 0.5;
+					}
+					rankLine = line.rank;
+					return rect;
+				}
+			}
+			
+			return Drawing.Rectangle.Empty;
+		}
+
+		// Retourne le coin inférieur/droite du dernier caractère.
+		public Drawing.Point FindTextEnd()
+		{
+			this.UpdateLayout();
+
+			if ( this.blocks.Count == 0 )
+			{
+				return new Drawing.Point(0, 0);
+			}
+
+			JustifBlock block = (JustifBlock)this.blocks[this.blocks.Count-1];
+			Drawing.Point pos = new Drawing.Point(block.pos.X+block.width, block.pos.Y+block.font.Descender*block.fontSize);
+			return pos;
+		}
 		
+		
+		// Si on est au début d'un tag, donne la longueur jusqu'à la fin.
+		public int AdvanceTag(int offset)
+		{
+			if ( offset >= this.text.Length )  return 0;
+
+			if ( this.text[offset] == '<' )  // tag <xx> ?
+			{
+				int initial = offset;
+				while ( this.text[offset] != '>' )
+				{
+					offset ++;
+					if ( offset >= this.text.Length )  break;
+				}
+				return offset-initial+1;
+			}
+
+			if ( this.text[offset] == '&' )  // tag &xx; ?
+			{
+				int initial = offset;
+				while ( this.text[offset] != ';' )
+				{
+					offset ++;
+					if ( offset >= this.text.Length )  break;
+				}
+				return offset-initial+1;
+			}
+
+			return 1;
+		}
+
+		// Si on est à la fin d'un tag, donne la longueur jusqu'au début.
+		public int RecedeTag(int offset)
+		{
+			if ( offset <= 0 )  return 0;
+			offset --;
+
+			if ( this.text[offset] == '>' )  // tag <xx> ?
+			{
+				int initial = offset;
+				while ( this.text[offset] != '<' )
+				{
+					offset --;
+					if ( offset == 0 )  break;
+				}
+				return initial-offset+1;
+			}
+
+			if ( this.text[offset] == ';' )  // tag &xx; ?
+			{
+				int initial = offset;
+				while ( this.text[offset] != '&' )
+				{
+					offset --;
+					if ( initial-offset > 10 || this.text[offset] == ';' )  return 1;
+					if ( offset == 0 )  break;
+				}
+				return initial-offset+1;
+			}
+
+			return 1;
+		}
+
+
 		// Retourne l'offset dans le texte interne, correspondant à l'index
 		// spécifié pour le texte sans tags. On saute tous les tags qui précèdent
 		// le caractère indiqué (textIndex=0 => premier caractère non tag dans
@@ -434,8 +684,9 @@ namespace Epsitec.Common.Widgets
 			int    index = 0;
 			int    beginOffset;
 
-			for ( int endOffset=0 ; endOffset<this.text.Length ; )
+			for ( int endOffset=0 ; endOffset<=this.text.Length ; )
 			{
+				if ( endOffset == this.text.Length )  return endOffset;
 				beginOffset = endOffset;
 
 				if ( this.text[endOffset] == '<' )
@@ -471,6 +722,8 @@ namespace Epsitec.Common.Widgets
 		{
 			int    index = 0;
 			int    beginOffset;
+
+			if ( taggedTextOffset == 0 )  return index;
 
 			for ( int endOffset=0 ; endOffset<this.text.Length ; )
 			{
@@ -854,6 +1107,17 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		// Met à jour le layout si nécessaire.
+		protected virtual void UpdateLayout()
+		{
+			if ( this.isDirty && this.layoutSize.Width > 0 )
+			{
+				JustifBlocks();
+				JustifLines();
+				this.isDirty = false;
+			}
+		}
+
 		// Met à jour this.blocks en fonction du texte, de la fonte et des dimensions.
 		protected void JustifBlocks()
 		{
@@ -865,12 +1129,12 @@ namespace Epsitec.Common.Widgets
 			this.blocks.Clear();
 			fontStack = new System.Collections.Stack();
 			buffer = new System.Text.StringBuilder();
+			bool stringExist = false;
 
 			// Prépare la fonte initiale par défaut.
 			fontItem = new FontItem();
 			fontItem.fontName  = this.font.FaceName;
 			fontItem.fontSize  = this.fontSize;
-//?			fontItem.fontColor = Drawing.Color.FromRGB(0,0,0);  // noir
 			fontItem.fontColor = Drawing.Color.FromBrightness(0);  // noir
 			fontItem.bold      = 0;
 			fontItem.italic    = 0;
@@ -879,66 +1143,119 @@ namespace Epsitec.Common.Widgets
 
 			fontStack.Push(fontItem);  // push la fonte initiale (jamais de pop)
 
+			// Si le texte n'existe pas, met quand même un bloc vide,
+			// afin de voir apparaître le curseur (FindTextCursor).
+			if ( this.text.Length == 0 )
+			{
+				fontItem = (FontItem)fontStack.Peek();
+				Drawing.Font blockFont = fontItem.RetFont();
+
+				JustifBlock block = new JustifBlock();
+				block.bol        = true;
+				block.image      = false;
+				block.text       = "";
+				block.beginIndex = 0;
+				block.endIndex   = 0;
+				block.indexLine  = 0;
+				block.font       = blockFont;
+				block.fontSize   = fontItem.fontSize;
+				block.fontColor  = fontItem.fontColor;
+				block.underline  = false;
+				block.anchor     = false;
+				block.width      = 0;
+				block.pos        = new Drawing.Point(0,0);
+				block.visible    = false;
+				this.blocks.Add(block);
+				return;
+			}
+
 			double restWidth = this.layoutSize.Width;
 			bool bol = true;
 
 			int		beginOffset;
-			int		textOffset = 0;
 			int		endOffset = 0;
+			int		index = 0;
+			int		textIndex = 0;
 			while ( endOffset <= this.text.Length )
 			{
 				beginOffset = endOffset;
 				TextLayout.Tag tag = TextLayout.ParseTag(this.text, ref endOffset, out parameters);
 
-				if ( tag != TextLayout.Tag.None && buffer.Length > 0 )
+				if ( tag != TextLayout.Tag.None &&
+					 (tag == TextLayout.Tag.LineBreak || stringExist) )
 				{
 					fontItem = (FontItem)fontStack.Peek();
 					Drawing.Font blockFont = fontItem.RetFont();
 
-					Drawing.TextBreakMode mode = bol ? Drawing.TextBreakMode.Split : Drawing.TextBreakMode.None;
-					Drawing.TextBreak tb = new Drawing.TextBreak(blockFont, buffer.ToString(), fontItem.fontSize, mode);
-
-					string breakText;
-					double breakWidth;
-					while ( tb.GetNextBreak(restWidth, out breakText, out breakWidth) )
+					if ( buffer.Length == 0 )  // ligne vide ?
 					{
-						if ( breakWidth == 0 )  // pas la place ?
-						{
-							restWidth = this.layoutSize.Width;
-							bol = true;
-							continue;
-						}
-
 						JustifBlock block = new JustifBlock();
-						block.bol         = bol;
-						block.image       = false;
-						block.text        = breakText;
-						block.beginOffset = textOffset;
-						block.endOffset   = textOffset+breakText.Length;
-						block.indexLine   = 0;
-						block.font        = blockFont;
-						block.fontSize    = fontItem.fontSize;
-						block.fontColor   = fontItem.fontColor;
-						block.underline   = fontItem.underline > 0;
-						block.anchor      = fontItem.anchor > 0;
-						block.width       = breakWidth;
-						block.pos         = new Drawing.Point(0,0);
-						block.visible     = false;
+						block.bol        = bol;
+						block.image      = false;
+						block.text       = "";
+						block.beginIndex = index;
+						block.endIndex   = index;
+						block.indexLine  = 0;
+						block.font       = blockFont;
+						block.fontSize   = fontItem.fontSize;
+						block.fontColor  = fontItem.fontColor;
+						block.underline  = fontItem.underline > 0;
+						block.anchor     = fontItem.anchor > 0;
+						block.width      = 0;
+						block.pos        = new Drawing.Point(0,0);
+						block.visible    = false;
 						this.blocks.Add(block);
+					}
+					else
+					{
+						Drawing.TextBreakMode mode = bol ? Drawing.TextBreakMode.Split : Drawing.TextBreakMode.None;
+						Drawing.TextBreak tb = new Drawing.TextBreak(blockFont, buffer.ToString(), fontItem.fontSize, mode);
 
-						if ( tb.MoreText )  // reste encore du texte ?
+						string breakText;
+						double breakWidth;
+						while ( tb.GetNextBreak(restWidth, out breakText, out breakWidth) )
 						{
-							restWidth = this.layoutSize.Width;
-							bol = true;
-						}
-						else
-						{
-							restWidth -= breakWidth;
-							bol = false;
+							if ( breakWidth == 0 )  // pas la place ?
+							{
+								restWidth = this.layoutSize.Width;
+								bol = true;
+								continue;
+							}
+
+							JustifBlock block = new JustifBlock();
+							block.bol        = bol;
+							block.image      = false;
+							block.text       = breakText;
+							block.beginIndex = textIndex;
+							block.endIndex   = textIndex+breakText.Length;
+							block.indexLine  = 0;
+							block.font       = blockFont;
+							block.fontSize   = fontItem.fontSize;
+							block.fontColor  = fontItem.fontColor;
+							block.underline  = fontItem.underline > 0;
+							block.anchor     = fontItem.anchor > 0;
+							block.width      = breakWidth;
+							block.pos        = new Drawing.Point(0,0);
+							block.visible    = false;
+							this.blocks.Add(block);
+
+							textIndex += breakText.Length+1;  // TODO: améliorer GetNextBreak !!!
+
+							if ( tb.MoreText )  // reste encore du texte ?
+							{
+								restWidth = this.layoutSize.Width;
+								bol = true;
+							}
+							else
+							{
+								restWidth -= breakWidth;
+								bol = false;
+							}
 						}
 					}
 
 					buffer = new System.Text.StringBuilder();
+					stringExist = false;
 				}
 
 				if ( tag == TextLayout.Tag.Ending )  break;
@@ -1020,6 +1337,8 @@ namespace Epsitec.Common.Widgets
 					case TextLayout.Tag.LineBreak:
 						restWidth = this.layoutSize.Width;
 						bol = true;
+						stringExist = true;
+						index ++;
 						break;
 
 					case TextLayout.Tag.Image:
@@ -1049,8 +1368,8 @@ namespace Epsitec.Common.Widgets
 								block.bol            = bol;
 								block.image          = true;
 								block.text           = imageName;
-								block.beginOffset    = beginOffset;
-								block.endOffset      = endOffset;
+								block.beginIndex     = index;
+								block.endIndex       = endOffset-beginOffset;
 								block.indexLine      = 0;
 								block.font           = blockFont;
 								block.fontSize       = fontItem.fontSize;
@@ -1071,8 +1390,12 @@ namespace Epsitec.Common.Widgets
 						break;
 
 					case TextLayout.Tag.None:
-						if ( buffer.Length == 0 )  textOffset = beginOffset;
-						buffer.Append(this.text[beginOffset]);
+						if ( buffer.Length == 0 )  textIndex = index;
+						endOffset = beginOffset;
+						char c = AnalyseMetaChar(this.text, ref endOffset);
+						buffer.Append(c);
+						stringExist = true;
+						index ++;
 						break;
 				}
 			}
@@ -1131,7 +1454,8 @@ namespace Epsitec.Common.Widgets
 
 				bool visible;
 				this.totalLine ++;
-				if ( pos.Y-ascender+descender >= 0 )
+//?				if ( pos.Y-ascender+descender >= 0 )
+				if ( pos.Y-ascender+descender >= 0 || this.totalLine == 1 )
 				{
 					visible = true;
 					this.visibleLine ++;
@@ -1168,6 +1492,7 @@ namespace Epsitec.Common.Widgets
 				line = new JustifLine();
 				line.firstBlock = i;
 				line.lastBlock  = j-1;
+				line.rank       = this.totalLine-1;
 				line.pos        = pos;
 				line.width      = width;
 				line.height     = height;
@@ -1236,17 +1561,6 @@ namespace Epsitec.Common.Widgets
 			{
 				string bol = block.bol ? "BOL: " : "";
 				System.Console.Out.WriteLine(bol + block.font.FullName + " " + block.fontSize + "     " + "pos=" + block.pos.X + ";" + block.pos.Y + " width=" + block.width + "     " + "\"" + block.text + "\"");
-			}
-		}
-
-		// Met à jour le layout si nécessaire.
-		protected virtual void UpdateLayout()
-		{
-			if ( this.isDirty )
-			{
-				JustifBlocks();
-				JustifLines();
-				this.isDirty = false;
 			}
 		}
 
@@ -1336,7 +1650,8 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 		
-		
+
+		// Tous les tags possibles.
 		public enum Tag
 		{
 			None,						//	pas un tag
@@ -1348,7 +1663,7 @@ namespace Epsitec.Common.Widgets
 			Bold, BoldEnd,				//	<b>...</b>
 			Italic, ItalicEnd,			//	<i>...</i>
 			Underline, UnderlineEnd,	//	<u>...</u>
-			Mnemonic, MnemonicEnd,		//	<m>...</m>				--> comme <u>...</u>
+			Mnemonic, MnemonicEnd,		//	<m>...</m>  --> comme <u>...</u>
 			Font, FontEnd,				//	<font ...>...</font>
 			Anchor, AnchorEnd,			//	<a href="x">...</a>
 			Image,						//	<img src="x"/>
@@ -1410,8 +1725,8 @@ namespace Epsitec.Common.Widgets
 			public bool				bol;		// begin of line
 			public bool				image;		// image bitmap
 			public string			text;
-			public int				beginOffset;
-			public int				endOffset;
+			public int				beginIndex;
+			public int				endIndex;
 			public int				indexLine;	// index dans this.lines
 			public Drawing.Font		font;
 			public double			fontSize;
@@ -1431,6 +1746,7 @@ namespace Epsitec.Common.Widgets
 		{
 			public int				firstBlock;	// index du premier bloc
 			public int				lastBlock;	// index du dernier bloc
+			public int				rank;		// rang de la ligne (0..n)
 			public Drawing.Point	pos;		// position sur la ligne de base
 			public double			width;		// largeur occupée par la ligne
 			public double			height;		// interligne
@@ -1443,8 +1759,8 @@ namespace Epsitec.Common.Widgets
 		// Variables membres de TextLayout.
 		protected bool							isDirty;
 		protected string						text;
-		protected Drawing.Font					font;
-		protected double						fontSize;
+		protected Drawing.Font					font = Drawing.Font.DefaultFont;
+		protected double						fontSize = Drawing.Font.DefaultFontSize;
 		protected Drawing.Size					layoutSize;
 		protected int							totalLine;
 		protected int							visibleLine;

@@ -4,10 +4,9 @@
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
         ProjectGuid = "{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}"
-        SccProjectName = "SAK"
-        SccLocalPath = "SAK"
-        SccAuxPath = "SAK"
-        SccProvider = "SAK"
+        SccProjectName = '"$/Epsitec.Cresus", HQNAAAAA'
+        SccLocalPath = ".."
+        SccProvider = "MSSCCI:Microsoft Visual SourceSafe"
     >
         <Build>
             <Settings
@@ -91,12 +90,12 @@
                 <Reference
                     Name = "System.Data"
                     AssemblyName = "System.Data"
-                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
                 />
                 <Reference
                     Name = "System.XML"
                     AssemblyName = "System.Xml"
-                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
             </References>
         </Build>
@@ -208,6 +207,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ScrollList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Shortcut.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -234,6 +238,11 @@
                 />
                 <File
                     RelPath = "TabBook.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TabButton.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -279,6 +288,11 @@
                 />
                 <File
                     RelPath = "Adorner\Factory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Adorner\LookDany.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -1,11 +1,11 @@
 namespace Epsitec.Common.Widgets.Adorner
 {
 	/// <summary>
-	/// La classe Adorner.LookXP implémente le décorateur "presque comme Windows XP".
+	/// La classe Adorner.LookDany implémente le décorateur idéal pour Crésus.
 	/// </summary>
-	public class LookXP : IAdorner
+	public class LookDany : IAdorner
 	{
-		public LookXP()
+		public LookDany()
 		{
 			RefreshColors();
 		}
@@ -21,13 +21,16 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorControlDarkDark   = Drawing.Color.FromName("ControlDarkDark");
 			this.colorCaption           = Drawing.Color.FromName("ActiveCaption");
 
-			double r = 1-(1-this.colorControlLight.R)/2;
-			double g = 1-(1-this.colorControlLight.G)/2;
-			double b = 1-(1-this.colorControlLight.B)/2;
+			double r = 1-(1-this.colorControlLight.R)*0.5;
+			double g = 1-(1-this.colorControlLight.G)*0.5;
+			double b = 1-(1-this.colorControlLight.B)*0.5;
 			this.colorScrollerBack = Drawing.Color.FromRGB(r,g,b);
 
-			this.colorButton = Drawing.Color.FromRGB(243.0/255.0, 243.0/255.0, 238.0/255.0);
-			this.colorFocus  = Drawing.Color.FromRGB(157.0/255.0, 188.0/255.0, 235.0/255.0);
+			r = 1-(1-this.colorControlLight.R)*0.7;
+			g = 1-(1-this.colorControlLight.G)*0.7;
+			b = 1-(1-this.colorControlLight.B)*0.7;
+			this.colorButton = Drawing.Color.FromRGB(r,g,b);
+
 			this.colorHilite = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
 		}
 		
@@ -140,7 +143,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.Rasterizer.AddSurface(path);
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
-					graphics.RenderSolid(this.colorCaption);
+					graphics.RenderSolid(this.colorBlack);
 				}
 				else
 				{
@@ -185,7 +188,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				rInside.Inflate(-rect.Height*0.3, -rect.Height*0.3);
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
-					this.PaintCircle(graphics, rInside, this.colorCaption);
+					this.PaintCircle(graphics, rInside, this.colorBlack);
 				}
 				else
 				{
@@ -237,7 +240,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					Drawing.Rectangle rInside = rect;
 					rInside.Inflate(-1.5, -1.5);
 					Drawing.Path pInside = PathRoundRectangle(rInside, 0);
-					graphics.SolidRenderer.Color = this.colorFocus;
+					graphics.SolidRenderer.Color = this.colorControlDark;
 					graphics.Rasterizer.AddOutline(pInside, 2);
 					graphics.RenderSolid();
 				}
@@ -265,18 +268,32 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else if ( style == ButtonStyle.Scroller )
 			{
-				Drawing.Path path = PathRoundRectangle(rect, 0);
-				graphics.SolidRenderer.Color = this.colorFocus;
-				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid();
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.colorControl);
 
-				Drawing.Rectangle rInside = rect;
-				rInside.Right  -= 1;
-				rInside.Bottom += 1;
-				Drawing.Path pInside = PathRoundRectangle(rInside, 0);
-				graphics.SolidRenderer.Color = this.colorControlLightLight;
-				graphics.Rasterizer.AddOutline(pInside, 1);
-				graphics.RenderSolid();
+				Drawing.Rectangle rInside;
+
+				if ( (state&WidgetState.Entered) != 0 )
+				{
+					rInside = rect;
+					rInside.Inflate(-1.5, -1.5);
+					Drawing.Path pInside = PathRoundRectangle(rInside, 0);
+					graphics.SolidRenderer.Color = this.colorHilite;
+					graphics.Rasterizer.AddOutline(pInside, 2);
+					graphics.RenderSolid();
+				}
+
+				rInside = rect;
+				rInside.Inflate(-0.5, -0.5);
+				graphics.AddRectangle(rInside);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.RenderSolid(this.colorBlack);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControlDark);
+				}
 			}
 			else
 			{
@@ -331,7 +348,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				rInside.Inflate(-0.5, -0.5);
 
 				graphics.AddRectangle(rInside);
-				graphics.RenderSolid(this.colorCaption);
+				graphics.RenderSolid(this.colorBlack);
 			}
 			else
 			{
@@ -357,6 +374,12 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			graphics.AddFilledRectangle(frameRect);
 			graphics.RenderSolid(this.colorScrollerBack);
+
+			Drawing.Rectangle rInside = new Drawing.Rectangle();
+			rInside = frameRect;
+			rInside.Inflate(-0.5, -0.5);
+			graphics.AddRectangle(rInside);
+			graphics.RenderSolid(this.colorControlDark);
 
 			if ( !tabRect.IsEmpty )
 			{
@@ -394,7 +417,7 @@ namespace Epsitec.Common.Widgets.Adorner
 								graphics.AddLine(center.X-rect.Width*0.25, y, center.X+rect.Width*0.25, y);
 								y += 2;
 							}
-							graphics.RenderSolid(this.colorCaption);
+							graphics.RenderSolid(this.colorControlDark);
 
 							y = center.Y-4+1;
 							for ( int i=0 ; i<4 ; i++ )
@@ -419,7 +442,7 @@ namespace Epsitec.Common.Widgets.Adorner
 								graphics.AddLine(x, center.Y-rect.Height*0.25, x, center.Y+rect.Height*0.25);
 								x += 2;
 							}
-							graphics.RenderSolid(this.colorCaption);
+							graphics.RenderSolid(this.colorControlDark);
 
 							x = center.X-4;
 							for ( int i=0 ; i<4 ; i++ )
@@ -514,7 +537,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			rect.Inflate(-0.5, -0.5);
 			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.colorButton);
+			graphics.RenderSolid(this.colorControlLight);
 		}
 
 		// Dessine l'onglet devant les autres.
@@ -529,17 +552,20 @@ namespace Epsitec.Common.Widgets.Adorner
 			double radius = System.Math.Min(titleRect.Width, titleRect.Height)/8;
 			Drawing.Path pTitle = PathTopRoundRectangle(titleRect, radius);
 
-			graphics.SolidRenderer.Color = this.colorButton;
+			graphics.SolidRenderer.Color = this.colorControlLight;
 			graphics.Rasterizer.AddSurface(pTitle);
 			graphics.RenderSolid();
 
-			Drawing.Rectangle rHilite = new Drawing.Rectangle();
-			rHilite = titleRect;
-			rHilite.Bottom = rHilite.Top-3;
-			Drawing.Path pHilite = PathTopRoundRectangle(rHilite, radius);
-			graphics.SolidRenderer.Color = this.colorHilite;
-			graphics.Rasterizer.AddSurface(pHilite);
-			graphics.RenderSolid();
+			if ( (state&WidgetState.Entered) != 0 )
+			{
+				Drawing.Rectangle rHilite = new Drawing.Rectangle();
+				rHilite = titleRect;
+				rHilite.Bottom = rHilite.Top-3;
+				Drawing.Path pHilite = PathTopRoundRectangle(rHilite, radius);
+				graphics.SolidRenderer.Color = this.colorHilite;
+				graphics.Rasterizer.AddSurface(pHilite);
+				graphics.RenderSolid();
+			}
 
 			graphics.SolidRenderer.Color = this.colorControlDarkDark;
 			graphics.Rasterizer.AddOutline(pTitle, 1);
@@ -674,7 +700,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				radius = System.Math.Min(dx, dy)/8;
 			}
-
+			
 			Drawing.Path path = new Drawing.Path();
 			path.MoveTo (ox+radius+0.5, oy+0.5);
 			path.LineTo (ox+dx-radius-0.5, oy+0.5);
@@ -744,7 +770,6 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorScrollerBack;
 		protected Drawing.Color		colorCaption;
 		protected Drawing.Color		colorButton;
-		protected Drawing.Color		colorFocus;
 		protected Drawing.Color		colorHilite;
 	}
 }

@@ -9,15 +9,55 @@ namespace Epsitec.Common.Widgets
 	{
 		public TabPage()
 		{
+			this.tabButton = new TabButton();
+			this.tabButton.Alignment = Drawing.ContentAlignment.MiddleCenter;
 		}
-		
-		public string						Title
+
+		public string TabTitle
 		{
-			get { return this.Text; }
-			set { this.Text = value; }
+			get
+			{
+				return this.tabButton.Text;
+			}
+
+			set
+			{
+				this.tabButton.Text = value;
+			}
+		}
+
+		public Drawing.Rectangle TabBounds
+		{
+			get
+			{
+				return this.tabButton.Bounds;
+			}
+
+			set
+			{
+				this.tabButton.Bounds = value;
+			}
+		}
+
+		public Drawing.Size TabSize
+		{
+			get
+			{
+				TextLayout tl = new TextLayout();
+				tl.Text = this.tabButton.Text;
+				return tl.SingleLineSize();
+			}
 		}
 		
-		public TabBook						Book
+		public TabButton TabButton
+		{
+			get
+			{
+				return this.tabButton;
+			}
+		}
+		
+		public TabBook Book
 		{
 			get
 			{
@@ -26,13 +66,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Direction					Direction
+		public Direction Direction
 		{
 			get
 			{
 				TabBook book = this.Book;
 				
-				if (book == null)
+				if ( book == null )
 				{
 					return Direction.None;
 				}
@@ -40,33 +80,43 @@ namespace Epsitec.Common.Widgets
 				return book.Direction;
 			}
 		}
-		public int							Rank
+		public int Rank
 		{
-			get { return this.rank; }
+			get
+			{
+				return this.rank;
+			}
+
 			set
 			{
-				if (this.rank != value)
+				if ( this.rank != value )
 				{
 					this.rank = value;
-					this.OnRankChanged (System.EventArgs.Empty);
+					this.OnRankChanged(System.EventArgs.Empty);
 				}
 			}
 		}
 		
 		
-		public event System.EventHandler	RankChanged;
-		
-		
+		public event System.EventHandler RankChanged;
 		
 		protected virtual void OnRankChanged(System.EventArgs e)
 		{
-			if (this.RankChanged !=  null)
+			if ( this.RankChanged != null )
 			{
-				this.RankChanged (this, e);
+				this.RankChanged(this, e);
 			}
 		}
+
 		
+		// Dessine l'onglet.
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+		}
 		
+
 		protected int					rank;
+		protected TabButton				tabButton;
 	}
 }

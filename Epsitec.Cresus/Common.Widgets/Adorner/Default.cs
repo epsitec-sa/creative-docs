@@ -13,12 +13,18 @@ namespace Epsitec.Common.Widgets.Adorner
 		// Initialise les couleurs en fonction des réglages de Windows.
 		public void RefreshColors()
 		{
-			colorControl           = Drawing.Color.FromName("Control");
-			colorControlLight      = Drawing.Color.FromName("ControlLight");
-			colorControlLightLight = Drawing.Color.FromName("ControlLightLight");
-			colorControlDark       = Drawing.Color.FromName("ControlDark");
-			colorControlDarkDark   = Drawing.Color.FromName("ControlDarkDark");
-			colorBlack             = Drawing.Color.FromName("WindowFrame");
+			this.colorBlack             = Drawing.Color.FromName("WindowFrame");
+			this.colorControl           = Drawing.Color.FromName("Control");
+			this.colorControlLight      = Drawing.Color.FromName("ControlLight");
+			this.colorControlLightLight = Drawing.Color.FromName("ControlLightLight");
+			this.colorControlDark       = Drawing.Color.FromName("ControlDark");
+			this.colorControlDarkDark   = Drawing.Color.FromName("ControlDarkDark");
+			this.colorCaption           = Drawing.Color.FromName("ActiveCaption");
+
+			double r = 1-(1-this.colorControlLight.R)/2;
+			double g = 1-(1-this.colorControlLight.G)/2;
+			double b = 1-(1-this.colorControlLight.B)/2;
+			this.colorScrollerBack = Drawing.Color.FromRGB(r,g,b);
 		}
 		
 
@@ -29,22 +35,147 @@ namespace Epsitec.Common.Widgets.Adorner
 							   Widgets.Direction shadow,
 							   Widgets.Direction dir)
 		{
-			graphics.AddFilledRectangle(rect.Left, rect.Bottom, rect.Width, rect.Height);
-			graphics.RenderSolid(Drawing.Color.FromBrightness(1));
+			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+			{
+				rect.Offset(1, -1);
+			}
+			Drawing.Point center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
+			Drawing.Path path = new Drawing.Path();
+			double spikeShift = 0.15;
+			double baseShiftH = 0.30;
+			double baseShiftV = 0.15;
+			switch ( dir )
+			{
+				case Direction.Up:
+					path.MoveTo(center.X, center.Y+rect.Height*spikeShift);
+					path.LineTo(center.X-rect.Width*baseShiftH, center.Y-rect.Height*baseShiftV);
+					path.LineTo(center.X+rect.Width*baseShiftH, center.Y-rect.Height*baseShiftV);
+					break;
+
+				case Direction.Down:
+					path.MoveTo(center.X, center.Y-rect.Height*spikeShift);
+					path.LineTo(center.X-rect.Width*baseShiftH, center.Y+rect.Height*baseShiftV);
+					path.LineTo(center.X+rect.Width*baseShiftH, center.Y+rect.Height*baseShiftV);
+					break;
+
+				case Direction.Right:
+					path.MoveTo(center.X+rect.Width*spikeShift, center.Y);
+					path.LineTo(center.X-rect.Width*baseShiftV, center.Y+rect.Height*baseShiftH);
+					path.LineTo(center.X-rect.Width*baseShiftV, center.Y-rect.Height*baseShiftH);
+					break;
+
+				case Direction.Left:
+					path.MoveTo(center.X-rect.Width*spikeShift, center.Y);
+					path.LineTo(center.X+rect.Width*baseShiftV, center.Y+rect.Height*baseShiftH);
+					path.LineTo(center.X+rect.Width*baseShiftV, center.Y-rect.Height*baseShiftH);
+					break;
+			}
+			path.Close();
+			graphics.Rasterizer.AddSurface(path);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBlack);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControlDark);
+			}
 		}
 
+		// Dessine un bouton à cocher sans texte.
 		public void PaintCheck(Drawing.Graphics graphics,
 							   Drawing.Rectangle rect,
 							   Widgets.WidgetState state,
 							   Widgets.Direction shadow)
 		{
+			graphics.AddFilledRectangle(rect);
+			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+			{
+				graphics.RenderSolid(this.colorControl);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControlLightLight);
+			}
+
+			graphics.LineWidth = 1;
+			graphics.LineCap = Drawing.CapStyle.Butt;
+
+			Drawing.Rectangle rInside = rect;
+			rInside.Inflate(-1, -1);
+
+			// Ombre claire en bas à droite.
+			this.PaintL(graphics, rect, this.colorControlLightLight, shadow);
+			this.PaintL(graphics, rInside, this.colorControlLight, shadow);
+
+			// Ombre foncée en haut à droite.
+			this.PaintL(graphics, rect, this.colorControlDarkDark, Opposite(shadow));
+			this.PaintL(graphics, rInside, this.colorControlDark, Opposite(shadow));
+
+			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
+			{
+				Drawing.Point center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
+				Drawing.Path path = new Drawing.Path();
+				path.MoveTo(center.X-rect.Width*0.1, center.Y-rect.Height*0.1);
+				path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.3);
+				path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.1);
+				path.LineTo(center.X-rect.Width*0.1, center.Y-rect.Height*0.3);
+				path.LineTo(center.X-rect.Width*0.3, center.Y-rect.Height*0.1);
+				path.LineTo(center.X-rect.Width*0.3, center.Y+rect.Height*0.1);
+				path.Close();
+				graphics.Rasterizer.AddSurface(path);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.RenderSolid(this.colorBlack);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControlDark);
+				}
+			}
 		}
 
+		// Dessine un bouton radio sans texte.
 		public void PaintRadio(Drawing.Graphics graphics,
 							   Drawing.Rectangle rect,
 							   Widgets.WidgetState state,
 							   Widgets.Direction shadow)
 		{
+			Drawing.Rectangle rInside = rect;
+			rInside.Inflate(-1, -1);
+
+			// Ombre claire en bas à droite.
+			this.PaintHalfCircle(graphics, rect, this.colorControlLightLight, shadow);
+			this.PaintHalfCircle(graphics, rInside, this.colorControlLight, shadow);
+
+			// Ombre foncée en haut à droite.
+			this.PaintHalfCircle(graphics, rect, this.colorControlDarkDark, Opposite(shadow));
+			this.PaintHalfCircle(graphics, rInside, this.colorControlDark, Opposite(shadow));
+
+			rInside = rect;
+			rInside.Inflate(-2, -2);
+			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+			{
+				this.PaintCircle(graphics, rInside, this.colorControl);
+			}
+			else
+			{
+				this.PaintCircle(graphics, rInside, this.colorControlLightLight);
+			}
+
+			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
+			{
+				rInside = rect;
+				rInside.Inflate(-rect.Height*0.3, -rect.Height*0.3);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintCircle(graphics, rInside, this.colorBlack);
+				}
+				else
+				{
+					this.PaintCircle(graphics, rInside, this.colorControlDark);
+				}
+			}
 		}
 
 		public void PaintIcon(Drawing.Graphics graphics,
@@ -55,7 +186,460 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 		}
 
-		// Dessine un "L".
+		// Dessine le fond d'un bouton rectangulaire.
+		public void PaintButtonBackground(Drawing.Graphics graphics,
+										  Drawing.Rectangle rect,
+										  Widgets.WidgetState state,
+										  Widgets.Direction shadow,
+										  Widgets.ButtonStyle style)
+		{
+			if ( style == ButtonStyle.Normal        ||
+				 style == ButtonStyle.DefaultActive )
+			{
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.colorControl);
+
+				graphics.LineWidth = 1;
+				graphics.LineCap = Drawing.CapStyle.Butt;
+
+				Drawing.Rectangle rInside = rect;
+				rInside.Inflate(-1, -1);
+
+				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				{
+					// Rectangle noir autour.
+					Drawing.Rectangle rOut = rect;
+					rOut.Inflate(-0.5, -0.5);
+					graphics.AddRectangle(rOut);
+					graphics.RenderSolid(this.colorBlack);
+					rOut.Inflate(-1, -1);
+					graphics.AddRectangle(rOut);
+					graphics.RenderSolid(this.colorControlDark);
+				}
+				else
+				{
+					if ( style == ButtonStyle.DefaultActive )
+					{
+						// Rectangle noir autour.
+						Drawing.Rectangle rOut = rect;
+						rOut.Inflate(-0.5, -0.5);
+						graphics.AddRectangle(rOut);
+						graphics.RenderSolid(this.colorBlack);
+
+						rect.Inflate(-1, -1);
+						rInside.Inflate(-1, -1);
+					}
+
+					// Ombre claire en haut à gauche.
+					PaintL(graphics, rect, this.colorControlLightLight, Opposite(shadow));
+					PaintL(graphics, rInside, this.colorControlLight, Opposite(shadow));
+
+					// Ombre foncée en bas à droite.
+					PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+					PaintL(graphics, rInside, this.colorControlDark, shadow);
+				}
+			}
+			else if ( style == ButtonStyle.Scroller )
+			{
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.colorControl);
+
+				graphics.LineWidth = 1;
+				graphics.LineCap = Drawing.CapStyle.Butt;
+
+				Drawing.Rectangle rInside = rect;
+				rInside.Inflate(-1, -1);
+
+				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				{
+					shadow = Opposite(shadow);
+				}
+
+				// Ombre claire en haut à gauche.
+				PaintL(graphics, rect, this.colorControlLight, Opposite(shadow));
+				PaintL(graphics, rInside, this.colorControlLightLight, Opposite(shadow));
+
+				// Ombre foncée en bas à droite.
+				PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+				PaintL(graphics, rInside, this.colorControlDark, shadow);
+			}
+			else
+			{
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.colorControl);
+			}
+
+			if ( (state&WidgetState.Focused) != 0 )
+			{
+				Drawing.Rectangle rFocus = rect;
+				rFocus.Inflate(-3.5, -3.5);
+				PaintFocusBox(graphics, rFocus);
+			}
+		}
+
+		// Dessine le texte d'un bouton.
+		public void PaintButtonTextLayout(Drawing.Graphics graphics,
+										  Drawing.Point pos,
+										  TextLayout text,
+										  WidgetState state,
+										  Direction shadow,
+										  ButtonStyle style)
+		{
+			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+			{
+				pos.X ++;
+				pos.Y --;
+			}
+			state &= ~WidgetState.Focused;
+			this.PaintGeneralTextLayout(graphics, pos, text, state, shadow);
+		}
+
+		public void PaintButtonForeground(Drawing.Graphics graphics,
+										  Drawing.Rectangle rect,
+										  Widgets.WidgetState state,
+										  Widgets.Direction shadow,
+										  Widgets.ButtonStyle style)
+		{
+		}
+
+		// Dessine le fond d'une ligne éditable.
+		public void PaintTextFieldBackground(Drawing.Graphics graphics,
+											 Drawing.Rectangle rect,
+											 Widgets.WidgetState state,
+											 Widgets.Direction shadow,
+											 Widgets.TextFieldStyle style)
+		{
+			if ( style == TextFieldStyle.Normal )
+			{
+				graphics.AddFilledRectangle(rect);
+				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
+				{
+					graphics.RenderSolid(this.colorControlLightLight);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControl);
+				}
+
+				graphics.LineWidth = 1;
+				graphics.LineCap = Drawing.CapStyle.Butt;
+
+				Drawing.Rectangle rInside = rect;
+				rInside.Inflate(-1, -1);
+
+				// Ombre foncée en haut à gauche.
+				PaintL(graphics, rect, this.colorControlDark, Opposite(shadow));
+				PaintL(graphics, rInside, this.colorControlDarkDark, Opposite(shadow));
+
+				// Ombre claire en bas à droite.
+				PaintL(graphics, rect, this.colorControlLightLight, shadow);
+				PaintL(graphics, rInside, this.colorControlLight, shadow);
+			}
+			else
+			{
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.colorControlLightLight);
+			}
+		}
+
+		public void PaintTextFieldForeground(Drawing.Graphics graphics,
+											 Drawing.Rectangle rect,
+											 Widgets.WidgetState state,
+											 Widgets.Direction shadow,
+											 Widgets.TextFieldStyle style)
+		{
+		}
+
+		// Dessine le fond d'un ascenseur.
+		public void PaintScrollerBackground(Drawing.Graphics graphics,
+											Drawing.Rectangle frameRect,
+											Drawing.Rectangle tabRect,
+											Widgets.WidgetState state,
+											Widgets.Direction shadow)
+		{
+			graphics.AddFilledRectangle(frameRect);
+			graphics.RenderSolid(this.colorScrollerBack);
+
+			if ( !tabRect.IsEmpty )
+			{
+				graphics.AddFilledRectangle(tabRect);
+				graphics.RenderSolid(this.colorControlDarkDark);
+			}
+		}
+
+		// Dessine la cabine d'un ascenseur.
+		public void PaintScrollerHandle(Drawing.Graphics graphics,
+										Drawing.Rectangle frameRect,
+										Drawing.Rectangle tabRect,
+										Widgets.WidgetState state,
+										Widgets.Direction shadow)
+		{
+			this.PaintButtonBackground(graphics, frameRect, state, Direction.Up, ButtonStyle.Scroller);
+		}
+
+		public void PaintScrollerForeground(Drawing.Graphics graphics,
+											Drawing.Rectangle frameRect,
+											Drawing.Rectangle tabRect,
+											Widgets.WidgetState state,
+											Widgets.Direction shadow)
+		{
+		}
+
+		// Dessine le cadre d'un GroupBox.
+		public void PaintGroupBox(Drawing.Graphics graphics,
+								  Drawing.Rectangle frameRect,
+								  Drawing.Rectangle titleRect,
+								  Widgets.WidgetState state,
+								  Widgets.Direction shadow)
+		{
+			Drawing.Rectangle rect = new Drawing.Rectangle();
+
+//?			graphics.SetClippingRectangle(~titleRect);
+
+			rect = frameRect;
+			rect.Inflate(-1, -1);
+			graphics.LineWidth = 2;
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(this.colorControlLightLight);
+
+			rect = frameRect;
+			rect.Inflate(-0.5, -0.5);
+			rect.Right --;
+			rect.Bottom ++;
+			graphics.LineWidth = 1;
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(this.colorControlDark);
+
+//?			graphics.ResetClippingRectangle();
+			graphics.AddFilledRectangle(titleRect);
+			graphics.RenderSolid(this.colorControl);
+		}
+
+		public void PaintSepLine(Drawing.Graphics graphics,
+								 Drawing.Rectangle frameRect,
+								 Drawing.Rectangle titleRect,
+								 Widgets.WidgetState state,
+								 Widgets.Direction shadow)
+		{
+		}
+
+		public void PaintFrameTitleBackground(Drawing.Graphics graphics,
+											  Drawing.Rectangle rect,
+											  Drawing.Rectangle titleRect,
+											  Widgets.WidgetState state,
+											  Widgets.Direction shadow)
+		{
+		}
+
+		public void PaintFrameTitleForeground(Drawing.Graphics graphics,
+											  Drawing.Rectangle rect,
+											  Drawing.Rectangle titleRect,
+											  Widgets.WidgetState state,
+											  Widgets.Direction shadow)
+		{
+		}
+
+		public void PaintFrameBody(Drawing.Graphics graphics,
+								   Drawing.Rectangle rect,
+								   Widgets.WidgetState state,
+								   Widgets.Direction shadow)
+		{
+		}
+
+		// Dessine toute la bande sous les onglets.
+		public void PaintTabBand(Drawing.Graphics graphics,
+								 Drawing.Rectangle rect,
+								 Widgets.WidgetState state,
+								 Widgets.Direction shadow)
+		{
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(this.colorControl);
+		}
+
+		// Dessine la zone principale sous les onglets.
+		public void PaintTabFrame(Drawing.Graphics graphics,
+								  Drawing.Rectangle rect,
+								  Widgets.WidgetState state,
+								  Widgets.Direction shadow)
+		{
+			graphics.LineWidth = 1;
+			graphics.LineCap = Drawing.CapStyle.Butt;
+
+			Drawing.Rectangle rInside = rect;
+			rInside.Inflate(-1, -1);
+
+			// Ombre claire en haut à gauche.
+			PaintL(graphics, rect, this.colorControlLightLight, Opposite(shadow));
+			PaintL(graphics, rInside, this.colorControlLight, Opposite(shadow));
+
+			// Ombre foncée en bas à droite.
+			PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+			PaintL(graphics, rInside, this.colorControlDark, shadow);
+		}
+
+		// Dessine l'onglet devant les autres.
+		public void PaintTabAboveBackground(Drawing.Graphics graphics,
+											Drawing.Rectangle frameRect,
+											Drawing.Rectangle titleRect,
+											Widgets.WidgetState state,
+											Widgets.Direction shadow)
+		{
+			Drawing.Rectangle rBack = new Drawing.Rectangle();
+			rBack = titleRect;
+			rBack.Left   += 2;
+			rBack.Right  -= 2;
+			rBack.Bottom -= 1;
+			rBack.Top    -= 2;
+			graphics.AddFilledRectangle(rBack);
+			graphics.RenderSolid(this.colorControl);
+
+			PaintTabSunkenBackground(graphics, frameRect, titleRect, state, shadow);
+		}
+
+		public void PaintTabAboveForeground(Drawing.Graphics graphics,
+											Drawing.Rectangle frameRect,
+											Drawing.Rectangle titleRect,
+											Widgets.WidgetState state,
+											Widgets.Direction shadow)
+		{
+		}
+
+		// Dessine un onglet derrière (non sélectionné).
+		public void PaintTabSunkenBackground(Drawing.Graphics graphics,
+											 Drawing.Rectangle frameRect,
+											 Drawing.Rectangle titleRect,
+											 Widgets.WidgetState state,
+											 Widgets.Direction shadow)
+		{
+			graphics.LineWidth = 1;
+			graphics.LineCap = Drawing.CapStyle.Butt;
+
+			Drawing.Point p1 = new Drawing.Point();
+			Drawing.Point p2 = new Drawing.Point();
+
+			p1.X = titleRect.Left+0.5;
+			p1.Y = titleRect.Bottom;
+			p2.X = titleRect.Left+0.5;
+			p2.Y = titleRect.Top-2;
+			graphics.AddLine(p1, p2);
+			p1.X = titleRect.Left+2;
+			p1.Y = titleRect.Top-0.5;
+			p2.X = titleRect.Right-2;
+			p2.Y = titleRect.Top-0.5;
+			graphics.AddLine(p1, p2);
+			graphics.RenderSolid(this.colorControlLightLight);
+
+			p1.X = titleRect.Left+1.5;
+			p1.Y = titleRect.Bottom;
+			p2.X = titleRect.Left+1.5;
+			p2.Y = titleRect.Top-1;
+			graphics.AddLine(p1, p2);
+			p1.X = titleRect.Left+1;
+			p1.Y = titleRect.Top-1.5;
+			p2.X = titleRect.Right-1;
+			p2.Y = titleRect.Top-1.5;
+			graphics.AddLine(p1, p2);
+			graphics.RenderSolid(this.colorControlLight);
+
+			p1.X = titleRect.Right-0.5;
+			p1.Y = titleRect.Bottom;
+			p2.X = titleRect.Right-0.5;
+			p2.Y = titleRect.Top-2;
+			graphics.AddLine(p1, p2);
+			graphics.RenderSolid(this.colorControlDarkDark);
+
+			p1.X = titleRect.Right-1.5;
+			p1.Y = titleRect.Bottom;
+			p2.X = titleRect.Right-1.5;
+			p2.Y = titleRect.Top-1;
+			graphics.AddLine(p1, p2);
+			graphics.RenderSolid(this.colorControlDark);
+		}
+
+		public void PaintTabSunkenForeground(Drawing.Graphics graphics,
+											 Drawing.Rectangle frameRect,
+											 Drawing.Rectangle titleRect,
+											 Widgets.WidgetState state,
+											 Widgets.Direction shadow)
+		{
+		}
+
+		// Dessine le rectangle pour indiquer le focus.
+		public void PaintFocusBox(Drawing.Graphics graphics,
+								  Drawing.Rectangle rect)
+		{
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(this.colorControlDark);
+		}
+
+		// Dessine le curseur du texte.
+		public void PaintTextCursor(Drawing.Graphics graphics,
+									Drawing.Point pos,
+									Drawing.Rectangle rect,
+									bool cursorOn)
+		{
+			if ( cursorOn )
+			{
+				rect.Offset(pos);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(this.colorBlack);
+			}
+		}
+		
+		// Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
+		public void PaintTextSelectionBackground(Drawing.Graphics graphics,
+												 Drawing.Point pos,
+												 Drawing.Rectangle[] rects)
+		{
+			foreach ( Drawing.Rectangle rect in rects )
+			{
+				rect.Offset(pos);
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.colorCaption);
+			}
+		}
+
+		public void PaintTextSelectionForeground(Drawing.Graphics graphics,
+												 Drawing.Point pos,
+												 Drawing.Rectangle[] rects)
+		{
+		}
+
+		// Dessine le texte d'un widget.
+		public void PaintGeneralTextLayout(Drawing.Graphics graphics,
+										   Drawing.Point pos,
+										   TextLayout text,
+										   WidgetState state,
+										   Direction shadow)
+		{
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				text.Paint(pos, graphics);
+			}
+			else
+			{
+				double gamma = graphics.Rasterizer.Gamma;
+				graphics.Rasterizer.Gamma = 0.5;
+				pos.X ++;
+				pos.Y --;
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromName("ControlLightLight"));
+				graphics.Rasterizer.Gamma = gamma;  // remet gamma initial
+				pos.X --;
+				pos.Y ++;
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromName("ControlDark"));
+			}
+
+			if ( (state&WidgetState.Focused) != 0 )
+			{
+				Drawing.Rectangle rFocus = text.StandardRectangle;
+				rFocus.Offset(pos);
+				rFocus.Inflate(2.5, -0.5);
+				PaintFocusBox(graphics, rFocus);
+			}
+		}
+
+
+		// Dessine un "L" pour simuler une ombre.
 		protected void PaintL(Drawing.Graphics graphics,
 							  Drawing.Rectangle rect,
 							  Drawing.Color color,
@@ -121,256 +705,80 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.RenderSolid(color);
 		}
 
-		// Dessine le fond d'un bouton rectangulaire.
-		public void PaintButtonBackground(Drawing.Graphics graphics,
-										  Drawing.Rectangle rect,
-										  Widgets.WidgetState state,
-										  Widgets.Direction shadow,
-										  Widgets.ButtonStyle style)
+		// Dessine un demi-cercle en bas à droite si dir=Up.
+		protected void PaintHalfCircle(Drawing.Graphics graphics,
+									   Drawing.Rectangle rect,
+									   Drawing.Color color,
+									   Widgets.Direction dir)
 		{
-			if ( style == ButtonStyle.Normal || style == ButtonStyle.DefaultActive )
+			double angle = 0;
+			switch ( dir )
 			{
-				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.colorControl);
-
-				graphics.LineWidth = 1;
-				graphics.LineCap = Drawing.CapStyle.Butt;
-
-				Drawing.Point p1 = new Drawing.Point();
-				Drawing.Point p2 = new Drawing.Point();
-
-				Drawing.Rectangle rInside = rect;
-				rInside.Inflate(-1, -1);
-
-				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
-				{
-					shadow = Opposite(shadow);
-				}
-
-				if ( style == ButtonStyle.DefaultActive )
-				{
-					// Rectangle noir autour.
-					PaintL(graphics, rect, this.colorBlack, Opposite(shadow));
-					PaintL(graphics, rect, this.colorBlack, shadow);
-
-					rect.Inflate(-1, -1);
-					rInside.Inflate(-1, -1);
-				}
-
-				// Ombre claire en haut à droite.
-				PaintL(graphics, rect, this.colorControlLightLight, Opposite(shadow));
-				PaintL(graphics, rInside, this.colorControlLight, Opposite(shadow));
-
-				// Ombre foncée en bas à droite.
-				PaintL(graphics, rect, this.colorControlDarkDark, shadow);
-				PaintL(graphics, rInside, this.colorControlDark, shadow);
+				case Direction.Up:		angle = 180+45;	break;  // en bas à droite
+				case Direction.Down:	angle =     45;	break;  // en haut à gauche
+				case Direction.Left:	angle =  90+45;	break;  // en bas à gauche
+				case Direction.Right:	angle = 270+45;	break;  // en haut à droite
 			}
-			else
-			{
-				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.colorControl);
-			}
+			PaintHalfCircle(graphics, rect, color, angle);
 		}
 
-		public void PaintButtonTextLayout(Drawing.Graphics graphics,
-										  Drawing.Point pos,
-										  TextLayout text,
-										  WidgetState state,
-										  Direction shadow,
-										  ButtonStyle style)
+		// Dessine un demi-cercle. Si angle=0, le demi-cercle est en haut.
+		// L'angle est donné en degrés.
+		protected void PaintHalfCircle(Drawing.Graphics graphics,
+									   Drawing.Rectangle rect,
+									   Drawing.Color color,
+									   double angle)
 		{
-			//	TODO: gère state et style pour déterminer un éventuel offset
-			//	de la position d'affichage.
-			
-			if ((state & WidgetState.Engaged) != 0 )  // bouton pressé ?
-			{
-				pos.X ++;
-				pos.Y --;
-			}
-			
-			this.PaintGeneralTextLayout (graphics, pos, text, state, shadow);
+			Drawing.Point c = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
+			double rx = rect.Width/2;
+			double ry = rect.Height/2;
+			Drawing.Path path = new Drawing.Path();
+			angle = angle*System.Math.PI/180;  // angle en radians
+			double c1x, c1y, c2x, c2y, px, py;
+			px  = -rx;       py  = 0;        this.RotatePoint(angle, ref px,  ref py);
+			path.MoveTo(c.X+px, c.Y+py);
+			c1x = -rx;       c1y = ry*0.56;  this.RotatePoint(angle, ref c1x, ref c1y);
+			c2x = -rx*0.56;  c2y = ry;       this.RotatePoint(angle, ref c2x, ref c2y);
+			px  = 0;         py  = ry;       this.RotatePoint(angle, ref px,  ref py);
+			path.CurveTo(c.X+c1x, c.Y+c1y, c.X+c2x, c.Y+c2y, c.X+px, c.Y+py);
+			c1x = rx*0.56;   c1y = ry;       this.RotatePoint(angle, ref c1x, ref c1y);
+			c2x = rx;        c2y = ry*0.56;  this.RotatePoint(angle, ref c2x, ref c2y);
+			px  = rx;        py  = 0;        this.RotatePoint(angle, ref px,  ref py);
+			path.CurveTo(c.X+c1x, c.Y+c1y, c.X+c2x, c.Y+c2y, c.X+px, c.Y+py);
+			path.Close();
+			graphics.Rasterizer.AddSurface(path);
+			graphics.RenderSolid(color);
 		}
 
-		public void PaintButtonForeground(Drawing.Graphics graphics,
-										  Drawing.Rectangle rect,
-										  Widgets.WidgetState state,
-										  Widgets.Direction shadow,
-										  Widgets.ButtonStyle style)
+		// Fait tourner un point autour de l'origine.
+		// L'angle est exprimé en radians.
+		// Un angle positif est anti-horaire (CCW).
+		protected void RotatePoint(double angle, ref double x, ref double y)
 		{
+			double xx = x*System.Math.Cos(angle) - y*System.Math.Sin(angle);
+			double yy = x*System.Math.Sin(angle) + y*System.Math.Cos(angle);
+			x = xx;
+			y = yy;
 		}
 
-		public void PaintTextFieldBackground(Drawing.Graphics graphics,
-											 Drawing.Rectangle rect,
-											 Widgets.WidgetState state,
-											 Widgets.Direction shadow,
-											 Widgets.TextFieldStyle style)
-		{
-		}
-
-		public void PaintTextFieldForeground(Drawing.Graphics graphics,
-											 Drawing.Rectangle rect,
-											 Widgets.WidgetState state,
-											 Widgets.Direction shadow,
-											 Widgets.TextFieldStyle style)
-		{
-		}
-
-		public void PaintScrollerBackground(Drawing.Graphics graphics,
-											Drawing.Rectangle frame_rect,
-											Drawing.Rectangle tab_rect,
-											Widgets.WidgetState state,
-											Widgets.Direction shadow)
-		{
-		}
-
-		public void PaintScrollerHandle(Drawing.Graphics graphics,
-										Drawing.Rectangle frame_rect,
-										Drawing.Rectangle tab_rect,
-										Widgets.WidgetState state,
-										Widgets.Direction shadow)
-		{
-		}
-
-		public void PaintScrollerForeground(Drawing.Graphics graphics,
-											Drawing.Rectangle frame_rect,
-											Drawing.Rectangle tab_rect,
-											Widgets.WidgetState state,
-											Widgets.Direction shadow)
-		{
-		}
-
-		public void PaintGroupBox(Drawing.Graphics graphics,
-								  Drawing.Rectangle frame_rect,
-								  Drawing.Rectangle title_rect,
-								  Widgets.WidgetState state,
-								  Widgets.Direction shadow)
-		{
-		}
-
-		public void PaintSepLine(Drawing.Graphics graphics,
-								 Drawing.Rectangle frame_rect,
-								 Drawing.Rectangle title_rect,
-								 Widgets.WidgetState state,
-								 Widgets.Direction shadow)
-		{
-		}
-
-		public void PaintFrameTitleBackground(Drawing.Graphics graphics,
-											  Drawing.Rectangle rect,
-											  Drawing.Rectangle title_rect,
-											  Widgets.WidgetState state,
-											  Widgets.Direction shadow)
-		{
-		}
-
-		public void PaintFrameTitleForeground(Drawing.Graphics graphics,
-											  Drawing.Rectangle rect,
-											  Drawing.Rectangle title_rect,
-											  Widgets.WidgetState state,
-											  Widgets.Direction shadow)
-		{
-		}
-
-		public void PaintFrameBody(Drawing.Graphics graphics,
+		// Dessine un cercle complet.
+		protected void PaintCircle(Drawing.Graphics graphics,
 								   Drawing.Rectangle rect,
-								   Widgets.WidgetState state,
-								   Widgets.Direction shadow)
+								   Drawing.Color color)
 		{
+			Drawing.Point c = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
+			double rx = rect.Width/2;
+			double ry = rect.Height/2;
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo(c.X-rx, c.Y);
+			path.CurveTo(c.X-rx, c.Y+ry*0.56, c.X-rx*0.56, c.Y+ry, c.X, c.Y+ry);
+			path.CurveTo(c.X+rx*0.56, c.Y+ry, c.X+rx, c.Y+ry*0.56, c.X+rx, c.Y);
+			path.CurveTo(c.X+rx, c.Y-ry*0.56, c.X+rx*0.56, c.Y-ry, c.X, c.Y-ry);
+			path.CurveTo(c.X-rx*0.56, c.Y-ry, c.X-rx, c.Y-ry*0.56, c.X-rx, c.Y);
+			path.Close();
+			graphics.Rasterizer.AddSurface(path);
+			graphics.RenderSolid(color);
 		}
-
-		public void PaintTabBand(Drawing.Graphics graphics,
-								 Drawing.Rectangle rect,
-								 Widgets.WidgetState state,
-								 Widgets.Direction shadow)
-		{
-		}
-
-		public void PaintTabFrame(Drawing.Graphics graphics,
-								  Drawing.Rectangle rect,
-								  Widgets.WidgetState state,
-								  Widgets.Direction shadow)
-		{
-		}
-
-		public void PaintTabAboveBackground(Drawing.Graphics graphics,
-											Drawing.Rectangle frame_rect,
-											Drawing.Rectangle title_rect,
-											Widgets.WidgetState state,
-											Widgets.Direction shadow)
-		{
-		}
-
-		public void PaintTabAboveForeground(Drawing.Graphics graphics,
-											Drawing.Rectangle frame_rect,
-											Drawing.Rectangle title_rect,
-											Widgets.WidgetState state,
-											Widgets.Direction shadow)
-		{
-		}
-
-		public void PaintTabSunkenBackground(Drawing.Graphics graphics,
-											 Drawing.Rectangle frame_rect,
-											 Drawing.Rectangle title_rect,
-											 Widgets.WidgetState state,
-											 Widgets.Direction shadow)
-		{
-		}
-
-		public void PaintTabSunkenForeground(Drawing.Graphics graphics,
-											 Drawing.Rectangle frame_rect,
-											 Drawing.Rectangle title_rect,
-											 Widgets.WidgetState state,
-											 Widgets.Direction shadow)
-		{
-		}
-
-		public void PaintFocusBox(Drawing.Graphics graphics,
-								  Drawing.Rectangle rect)
-		{
-		}
-
-		public void PaintTextCursor(Drawing.Graphics graphics,
-									Drawing.Rectangle rect,
-									bool cursor_on)
-		{
-		}
-		
-		public void PaintTextSelectionBackground(Drawing.Graphics graphics,
-												 Drawing.Rectangle[] rect)
-		{
-		}
-
-		public void PaintTextSelectionForeground(Drawing.Graphics graphics,
-												 Drawing.Rectangle[] rect)
-		{
-		}
-
-		public void PaintGeneralTextLayout(Drawing.Graphics graphics,
-										   Drawing.Point pos,
-										   TextLayout text,
-										   WidgetState state,
-										   Direction shadow)
-		{
-			if ((state & WidgetState.Enabled) != 0)
-			{
-				text.Paint(pos, graphics);
-			}
-			else
-			{
-				double gamma = graphics.Rasterizer.Gamma;
-				
-				pos.X ++;
-				pos.Y --;
-				
-				graphics.Rasterizer.Gamma = 0.5;
-				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromName("ControlLightLight"));
-				graphics.Rasterizer.Gamma = gamma;
-				pos.X ++;
-				pos.Y ++;
-				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromName("ControlDark"));
-			}
-		}
-
 
 		// Retourne la direction opposée.
 		protected Direction Opposite(Direction dir)
@@ -387,11 +795,13 @@ namespace Epsitec.Common.Widgets.Adorner
 		
 
 		// Variables membres de TextLayout.
+		protected Drawing.Color		colorBlack;
 		protected Drawing.Color		colorControl;
 		protected Drawing.Color		colorControlLight;
 		protected Drawing.Color		colorControlLightLight;
 		protected Drawing.Color		colorControlDark;
 		protected Drawing.Color		colorControlDarkDark;
-		protected Drawing.Color		colorBlack;
+		protected Drawing.Color		colorScrollerBack;
+		protected Drawing.Color		colorCaption;
 	}
 }
