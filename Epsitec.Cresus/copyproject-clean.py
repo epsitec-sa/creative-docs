@@ -30,7 +30,7 @@ class CopyProject:
         self.copy_ext.append('.txt')
         self.copy_ext.append('.png')
         self.copy_ext.append('.jpg')
-        self.copy_ext.append('.icon')
+        self.copy_ext.append('.rtf')
         self.copy_ext.append('.tif')
         self.copy_ext.append('.chm')
         self.copy_ext.append('.py')
@@ -39,6 +39,7 @@ class CopyProject:
         self.copy_ext.append('.sln')
         self.copy_ext.append('.config')
         self.copy_ext.append('.info')
+        self.copy_ext.append('.icon')
         self.copy_ext.append('.log')
         self.copy_ext.append('.vdproj')
 

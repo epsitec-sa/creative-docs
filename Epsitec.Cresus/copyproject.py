@@ -41,6 +41,7 @@ class CopyProject:
         self.copy_ext.append('.txt')
         self.copy_ext.append('.png')
         self.copy_ext.append('.jpg')
+        self.copy_ext.append('.rtf')
         self.copy_ext.append('.tif')
         self.copy_ext.append('.chm')
         self.copy_ext.append('.py')
@@ -59,6 +60,7 @@ class CopyProject:
         self.sol_count = 0
         self.bad_count = 0
         self.del_count = 0
+        self.redo = 0
 
     def current_time(self):
         return ''.join ((string.zfill(str (time.localtime(time.time()).tm_mday), 2), '/',
@@ -295,10 +297,22 @@ class CopyProject:
                     f.close()
                     shutil.copystat(ref_name, delta_name)
                     os.chmod(delta_name, 0777)
-                    try:
-                        os.remove(ref_name) # ne sait pas supprimer les dossiers
-                    except OSError, e:
-                        e = ''
+
+                    if os.path.isdir(ref_name):
+                        try:
+                            os.rmdir(ref_name)
+                            self.redo = 1   # dossier vide supprimé
+                        except OSError, e:
+                            e = ''
+                            # print "error"
+                            self.redo = -1  # dossier non vide trouvé
+                    else:
+                        os.remove(ref_name)
+                        if self.redo == -1:
+                            self.redo = 2   # dossier a peut-être été vidé ?
+
+                    if self.redo == 1:
+                        raise OSError  #abandonne le parcours de l'arbre
 
                     self.del_count += 1
 
@@ -333,7 +347,17 @@ def copy_analyse(arg, dirname, fnames):
     for name in fnames:
         arg.copy_file(dirname, name)
 
-def delete_analyse(arg, dirname, fnames):
+def delete_analyse1(arg, dst):
+    arg.redo = 1
+    while arg.redo > 0 :
+        arg.redo = 0
+        try:
+            os.path.walk(dst, delete_analyse2, arg)
+        except OSError, e:
+            # print "reloop"
+            e = ''
+
+def delete_analyse2(arg, dirname, fnames):
     for name in fnames:
         arg.delete_file(dirname, name)
 
@@ -388,10 +412,10 @@ def do_it():
     os.makedirs(dst + "\\delta")
 
     print "Updating references tree..."
-    os.path.walk(src,copy_analyse,copy_project)
+    os.path.walk(src, copy_analyse, copy_project)
 
     print "Removing deleted references..."
-    os.path.walk(dst+"\\ref-temp",delete_analyse,copy_project)
+    delete_analyse1(copy_project, dst + "\\ref-temp")
     copy_project.print_statistics()
 
     if diff_log == 0:
@@ -432,7 +456,7 @@ def do_it():
     cmd   = wzzip + ' ' + opt + ' ' + qzip + ' ' + what
 
     if copy_project.mod_count > 100 :   # wzzip se bloque lorsqu'il y a trop de fichiers
-        cmd.replace ("wzzip" , "WINZIP32.EXE")  # utilise winzip32 à la place
+        cmd = cmd.replace ("wzzip" , "WINZIP32.EXE")  # utilise winzip32 à la place
     
     print 'MEGABUILD.SET %ziprev%=' + rev
     print 'MEGABUILD.SET %zipfile%=' + zip
@@ -450,7 +474,8 @@ def do_it():
         except OSError, e:
             e = ''
         try:
-            os.rename(dst+"\\ref-temp", dst+"\\ref")
+            print "Setting new references..."
+            os.rename(dst + "\\ref-temp", dst + "\\ref")
         except OSError, e:
             e = ''
         try:
