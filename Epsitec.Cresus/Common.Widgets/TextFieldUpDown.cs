@@ -80,6 +80,12 @@ namespace Epsitec.Common.Widgets
 			base.OnAdornerChanged();
 		}
 
+		protected override void OnTextChanged()
+		{
+			base.OnTextChanged ();
+			this.OnValueChanged ();
+		}
+		
 		protected virtual void OnValueChanged()
 		{
 			if ( this.ValueChanged != null )  // qq'un écoute ?
@@ -147,7 +153,6 @@ namespace Epsitec.Common.Widgets
 				{
 					this.Text = System.Convert.ToString(value);
 					this.SelectAll();
-					this.OnValueChanged();
 				}
 			}
 		}

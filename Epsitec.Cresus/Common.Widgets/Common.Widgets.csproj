@@ -192,17 +192,17 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ColorCircle.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "ColorSample.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "ColorSelector.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ColorWheel.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

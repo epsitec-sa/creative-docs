@@ -106,7 +106,11 @@ namespace Epsitec.Common.Widgets
 		{
 			// Valeur numérique éditée.
 			base.OnValueChanged ();
-			this.slider.Value = this.Value;
+			
+			if (this.Text != "")
+			{
+				this.slider.Value = this.Value;
+			}
 		}
 
 		// Slider bougé.

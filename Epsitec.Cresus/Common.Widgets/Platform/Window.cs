@@ -513,13 +513,24 @@ namespace Epsitec.Common.Widgets.Platform
 			System.Drawing.Point point = this.PointToClient (System.Windows.Forms.Control.MousePosition);
 			System.Windows.Forms.MouseEventArgs fake_event = new System.Windows.Forms.MouseEventArgs (System.Windows.Forms.MouseButtons.None, 0, point.X, point.Y, 0);
 			
-			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseEnter, this, fake_event));
+			Message message = Message.FromMouseEvent (MessageType.MouseEnter, this, fake_event);
+			
+			if (this.widget_window.FilterMessage (message) == false)
+			{
+				this.DispatchMessage (message);
+			}
 		}
 
 		protected override void OnMouseLeave(System.EventArgs e)
 		{
 			base.OnMouseLeave (e);
-			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseLeave, this, null));
+			
+			Message message = Message.FromMouseEvent (MessageType.MouseLeave, this, null);
+			
+			if (this.widget_window.FilterMessage (message) == false)
+			{
+				this.DispatchMessage (message);
+			}
 		}
 
 		protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)

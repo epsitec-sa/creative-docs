@@ -760,17 +760,11 @@ namespace Epsitec.Common.Widgets
 					}
 					break;
 				
+				case MessageType.MouseEnter:
 				case MessageType.MouseMove:
 					mouse = window.Root.MapClientToScreen(message.Cursor);
 					menu = this.DetectMenu(mouse);
 					if ( menu == null )
-					{
-						message.Swallowed = true;
-					}
-					break;
-				
-				case MessageType.MouseLeave:
-					if ( AbstractMenu.menuContextOpen )
 					{
 						message.Swallowed = true;
 					}
