@@ -30,8 +30,8 @@ namespace Epsitec.Common.Support.Tests
 			data.AddData ("a", true, new DataType ("boolean"));
 			data.AddData ("b", false, new DataType ("boolean"));
 			
-			data.GetDataField ("a").SetAttribute ("label", "Option vitale 'A'", ResourceLevel.Default);
-			data.GetDataField ("b").SetAttribute ("label", "Copie de l'option vitale 'A'", ResourceLevel.Default);
+			data.GetDataField ("a").DataAttributes.SetAttribute ("label", "Option vitale 'A'", ResourceLevel.Default);
+			data.GetDataField ("b").DataAttributes.SetAttribute ("label", "Copie de l'option vitale 'A'", ResourceLevel.Default);
 			
 			data.ValidateChanges ();
 			data.AttachObserver ("a", new DataChangedHandler (HandleDataChanged));
