@@ -8,6 +8,8 @@ namespace Epsitec.Common.NiceIcon
 	/// La classe IconObjects contient tous les objets qui forment une icône.
 	/// </summary>
 
+	[XmlRootAttribute("NiceIcon")]
+
 	[
 	XmlInclude(typeof(ObjectArrow)),
 	XmlInclude(typeof(ObjectBezier)),

@@ -1,6 +1,8 @@
 namespace Epsitec.Common.Drawing
 {
-	public struct Point
+	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
+
+	[System.Serializable] public struct Point
 	{
 		public Point(double x, double y)
 		{
@@ -21,22 +23,24 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public double					X
+		[XmlAttribute] public double	X
 		{
 			get { return this.x; }
 			set { this.x = value; }
 		}
 		
-		public double					Y
+		[XmlAttribute] public double	Y
 		{
 			get { return this.y; }
 			set { this.y = value; }
 		}
 		
+		
 		public bool						IsEmpty
 		{
 			get { return this.x == 0 && this.y == 0; }
 		}
+		
 		
 		public static readonly Point 	Empty;
 		

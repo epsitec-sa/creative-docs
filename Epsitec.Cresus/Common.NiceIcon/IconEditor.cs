@@ -425,7 +425,7 @@ namespace Epsitec.Common.Widgets
 		private void ToolBarClickedAction(object sender, MessageEventArgs e)
 		{
 			TextField tf = this.toolBar.Items[1] as TextField;
-			string filename = "..\\..\\images\\" + tf.Text + ".icon";
+			string filename = /*"..\\..\\images\\" +*/ tf.Text + ".icon";
 
 			IconButton button = sender as IconButton;
 			string cmd = button.Name;

@@ -1,6 +1,9 @@
 namespace Epsitec.Common.Drawing
 {
-	public struct Rectangle
+	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
+	using XmlIgnore    = System.Xml.Serialization.XmlIgnoreAttribute;
+	
+	[System.Serializable] public struct Rectangle
 	{
 		public Rectangle(Point p, Size s)
 		{
@@ -48,61 +51,64 @@ namespace Epsitec.Common.Drawing
 			get { return (this.x2 > this.x1) && (this.y2 > this.y1); }
 		}
 		
-		public Point					Location
+		
+		[XmlIgnore] public Point		Location
 		{
 			get { return new Point (this.x1, this.y1); }
 			set { double dx = this.Width; double dy = this.Height; this.x1 = value.X; this.y1 = value.Y; this.x2 = this.x1 + dx; this.y2 = this.y1 + dy; }
 		}
 
-		public Size						Size
+		[XmlIgnore] public Size			Size
 		{
 			get { return new Size (this.x2 - this.x1, this.y2 - this.y1); }
 			set { this.x2 = this.x1 + value.Width; this.y2 = this.y1 + value.Height; }
 		}
 		
-		public double					X
+		
+		[XmlAttribute] public double	X
 		{
 			get { return this.x1; }
 			set { double dx = this.Width; this.x1 = value; this.x2 = value + dx; }
 		}
 		
-		public double					Y
+		[XmlAttribute] public double	Y
 		{
 			get { return this.y1; }
 			set { double dy = this.Height; this.y1 = value; this.y2 = value + dy; }
 		}
 		
-		public double					Width
+		[XmlAttribute] public double	Width
 		{
 			get { return this.x2 - this.x1; }
 			set { this.x2 = this.x1 + value; }
 		}
 		
-		public double					Height
+		[XmlAttribute] public double	Height
 		{
 			get { return this.y2 - this.y1; }
 			set { this.y2 = this.y1 + value; }
 		}
 		
-		public double					Left
+		
+		[XmlIgnore] public double		Left
 		{
 			get { return this.x1; }
 			set { this.x1 = value; }
 		}
 		
-		public double					Right
+		[XmlIgnore] public double		Right
 		{
 			get { return this.x2; }
 			set { this.x2 = value; }
 		}
 		
-		public double					Bottom
+		[XmlIgnore] public double		Bottom
 		{
 			get { return this.y1; }
 			set { this.y1 = value; }
 		}
 		
-		public double					Top
+		[XmlIgnore] public double		Top
 		{
 			get { return this.y2; }
 			set { this.y2 = value; }

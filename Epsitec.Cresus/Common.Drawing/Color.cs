@@ -1,66 +1,68 @@
 namespace Epsitec.Common.Drawing
 {
-	public struct Color
+	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
+	
+	[System.Serializable] public struct Color
 	{
 		public Color(System.Drawing.Color color)
 		{
-			this.r = color.R / 255.0f;
-			this.g = color.G / 255.0f;
-			this.b = color.B / 255.0f;
-			this.a = color.A / 255.0f;
+			this.r = color.R / 255.0;
+			this.g = color.G / 255.0;
+			this.b = color.B / 255.0;
+			this.a = color.A / 255.0;
 			this.is_empty = color.IsEmpty;
 		}
 		
 		public Color(double a, double r, double g, double b)
 		{
-			this.r = (float) r;
-			this.g = (float) g;
-			this.b = (float) b;
-			this.a = (float) a;
+			this.r = r;
+			this.g = g;
+			this.b = b;
+			this.a = a;
 			this.is_empty = false;
 		}
 		
 		public Color(double r, double g, double b)
 		{
-			this.r = (float) r;
-			this.g = (float) g;
-			this.b = (float) b;
-			this.a = 1.0f;
+			this.r = r;
+			this.g = g;
+			this.b = b;
+			this.a = 1.0;
 			this.is_empty = false;
 		}
 		
 		public Color(double brightness)
 		{
-			this.r = (float) brightness;
-			this.g = (float) brightness;
-			this.b = (float) brightness;
-			this.a = 1.0f;
+			this.r = brightness;
+			this.g = brightness;
+			this.b = brightness;
+			this.a = 1.0;
 			this.is_empty = false;
 		}
 		
 		
-		public double					R
+		[XmlAttribute] public double	R
 		{
 			get { return this.r; }
-			set { this.r = (float) value; }
+			set { this.r = value; }
 		}
 		
-		public double					G
+		[XmlAttribute] public double	G
 		{
 			get { return this.g; }
-			set { this.g = (float) value; }
+			set { this.g = value; }
 		}
 		
-		public double					B
+		[XmlAttribute] public double	B
 		{
 			get { return this.b; }
-			set { this.b = (float) value; }
+			set { this.b = value; }
 		}
 		
-		public double					A
+		[XmlAttribute] public double	A
 		{
 			get { return this.a; }
-			set { this.a = (float) value; }
+			set { this.a = value; }
 		}
 		
 		
@@ -83,10 +85,10 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return (this.r >= 0.0f) && (this.r <= 1.0f)
-					&& (this.g >= 0.0f) && (this.g <= 1.0f)
-					&& (this.b >= 0.0f) && (this.b <= 1.0f)
-					&& (this.a >= 0.0f) && (this.a <= 1.0f);
+				return (this.r >= 0.0) && (this.r <= 1.0)
+					&& (this.g >= 0.0) && (this.g <= 1.0)
+					&& (this.b >= 0.0) && (this.b <= 1.0)
+					&& (this.a >= 0.0) && (this.a <= 1.0);
 			}
 		}
 		
@@ -323,7 +325,7 @@ namespace Epsitec.Common.Drawing
 
 		
 		
-		private float					r, g, b, a;
+		private double					r, g, b, a;
 		private bool					is_empty;
 	}
 }
