@@ -276,7 +276,8 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size(400, 300);
 			window.Text = "CheckAdorner";
 
-			TabBook tb = new TabBook();
+			TabBook tb = new TabBook(TabBookStyle.Normal);
+			//TabBook tb = new TabBook(TabBookStyle.Right);
 			tb.Name = "TabBook";
 			tb.Location = new Point(10, 10);
 			tb.Size = new Size(380, 280);

@@ -20,7 +20,7 @@ namespace Epsitec.Common.Tests
 			window.Root.Clicked += new MessageEventHandler(Root_Clicked);
 			window.Root.DoubleClicked += new MessageEventHandler(Root_DoubleClicked);
 			window.Root.Text = "Hel&lo";
-			window.Root.ShortcutPressed += new System.EventHandler(Root_ShortcutPressed);
+			window.Root.ShortcutPressed += new EventHandler(Root_ShortcutPressed);
 			
 			window.Text = "CheckFrameCreation";
 			window.Show ();
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Tests
 			System.Diagnostics.Debug.WriteLine ("Root Double Clicked");
 		}
 
-		private void Root_ShortcutPressed(object sender, System.EventArgs e)
+		private void Root_ShortcutPressed(object sender)
 		{
 			System.Diagnostics.Debug.WriteLine ("Shortcut key pressed");
 		}

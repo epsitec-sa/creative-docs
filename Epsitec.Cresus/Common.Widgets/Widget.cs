@@ -198,7 +198,7 @@ namespace Epsitec.Common.Widgets
 					if ((this.internal_state & InternalState.ChildrenChanged) != 0)
 					{
 						this.internal_state -= InternalState.ChildrenChanged;
-						this.OnChildrenChanged (System.EventArgs.Empty);
+						this.OnChildrenChanged ();
 					}
 				}
 			}
@@ -445,7 +445,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.widget_state &= ~WidgetState.ActiveMask;
 					this.widget_state |= value & WidgetState.ActiveMask;
-					this.OnActiveStateChanged (System.EventArgs.Empty);
+					this.OnActiveStateChanged ();
 					this.Invalidate ();
 				}
 			}
@@ -793,23 +793,23 @@ namespace Epsitec.Common.Widgets
 		
 		public event PaintEventHandler		PaintBackground;
 		public event PaintEventHandler		PaintForeground;
-		public event System.EventHandler	ChildrenChanged;
-		public event System.EventHandler	LayoutChanged;
+		public event EventHandler			ChildrenChanged;
+		public event EventHandler			LayoutChanged;
 		
 		public event MessageEventHandler	Pressed;
 		public event MessageEventHandler	Released;
 		public event MessageEventHandler	Clicked;
 		public event MessageEventHandler	DoubleClicked;
-		public event System.EventHandler	ShortcutPressed;
+		public event EventHandler			ShortcutPressed;
 		
-		public event System.EventHandler	Focused;
-		public event System.EventHandler	Defocused;
-		public event System.EventHandler	Selected;
-		public event System.EventHandler	Deselected;
-		public event System.EventHandler	Engaged;
-		public event System.EventHandler	StillEngaged;
-		public event System.EventHandler	Disengaged;
-		public event System.EventHandler	ActiveStateChanged;
+		public event EventHandler			Focused;
+		public event EventHandler			Defocused;
+		public event EventHandler			Selected;
+		public event EventHandler			Deselected;
+		public event EventHandler			Engaged;
+		public event EventHandler			StillEngaged;
+		public event EventHandler			Disengaged;
+		public event EventHandler			ActiveStateChanged;
 		
 		
 		//	Cursor
@@ -933,7 +933,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.widget_state |= WidgetState.Focused;
 					frame.FocusedWidget = this;
-					this.OnFocused (System.EventArgs.Empty);
+					this.OnFocused ();
 					this.Invalidate ();
 				}
 			}
@@ -943,7 +943,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.widget_state &= ~ WidgetState.Focused;
 					frame.FocusedWidget = null;
-					this.OnDefocused (System.EventArgs.Empty);
+					this.OnDefocused ();
 					this.Invalidate ();
 				}
 			}
@@ -957,7 +957,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.widget_state |= WidgetState.Selected;
 					this.Invalidate ();
-					this.OnSelected (System.EventArgs.Empty);
+					this.OnSelected ();
 				}
 			}
 			else
@@ -966,7 +966,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.widget_state &= ~WidgetState.Selected;
 					this.Invalidate ();
-					this.OnDeselected (System.EventArgs.Empty);
+					this.OnDeselected ();
 				}
 			}
 		}
@@ -987,7 +987,7 @@ namespace Epsitec.Common.Widgets
 					this.widget_state |= WidgetState.Engaged;
 					frame.EngagedWidget = this;
 					this.Invalidate ();
-					this.OnEngaged (System.EventArgs.Empty);
+					this.OnEngaged ();
 				}
 			}
 			else
@@ -997,7 +997,7 @@ namespace Epsitec.Common.Widgets
 					this.widget_state &= ~ WidgetState.Engaged;
 					frame.EngagedWidget = null;
 					this.Invalidate ();
-					this.OnDisengaged (System.EventArgs.Empty);
+					this.OnDisengaged ();
 				}
 			}
 		}
@@ -1006,7 +1006,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.IsEngaged)
 			{
-				this.OnStillEngaged (System.EventArgs.Empty);
+				this.OnStillEngaged ();
 			}
 		}
 		
@@ -1471,7 +1471,7 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				this.UpdateChildrenLayout ();
-				this.OnLayoutChanged (System.EventArgs.Empty);
+				this.OnLayoutChanged ();
 			}
 			finally
 			{
@@ -1642,25 +1642,32 @@ namespace Epsitec.Common.Widgets
 				{
 					Widget widget = children[children_num-1 - i];
 					
-					if ((widget.IsEnabled) &&
+					if ((widget.IsVisible) &&
 						(widget.IsFrozen == false) &&
 						((message.FilterOnlyFocused == false) || (widget.ContainsFocus)) &&
 						((message.FilterOnlyOnHit == false) || (widget.HitTest (client_pos))))
 					{
-						if (message.IsMouseType)
+						if (widget.IsEnabled)
 						{
-							//	C'est un message souris. Vérifions d'abord si le widget contenait déjà
-							//	la souris auparavant.
-							
-							if (widget.IsEntered == false)
+							if (message.IsMouseType)
 							{
-								widget.SetEntered (true);
+								//	C'est un message souris. Vérifions d'abord si le widget contenait déjà
+								//	la souris auparavant.
+								
+								if (widget.IsEntered == false)
+								{
+									widget.SetEntered (true);
+								}
+							}
+							
+							widget.MessageHandler (message, client_pos);
+							
+							if (message.Handled)
+							{
+								break;
 							}
 						}
-						
-						widget.MessageHandler (message, client_pos);
-						
-						if (message.Handled)
+						else
 						{
 							break;
 						}
@@ -1784,7 +1791,7 @@ namespace Epsitec.Common.Widgets
 			if ((this.shortcut != null) &&
 				(this.shortcut.Match (shortcut)))
 			{
-				this.OnShortcutPressed (System.EventArgs.Empty);
+				this.OnShortcutPressed ();
 				return true;
 			}
 			
@@ -1842,21 +1849,21 @@ namespace Epsitec.Common.Widgets
 			this.PaintForegroundImplementation (e.Graphics, e.ClipRectangle);
 		}
 		
-		protected virtual void OnChildrenChanged(System.EventArgs e)
+		protected virtual void OnChildrenChanged()
 		{
 			this.Invalidate ();
 			
 			if (this.ChildrenChanged != null)
 			{
-				this.ChildrenChanged (this, e);
+				this.ChildrenChanged (this);
 			}
 		}
 		
-		protected virtual void OnLayoutChanged(System.EventArgs e)
+		protected virtual void OnLayoutChanged()
 		{
 			if (this.LayoutChanged != null)
 			{
-				this.LayoutChanged (this, e);
+				this.LayoutChanged (this);
 			}
 		}
 		
@@ -1897,76 +1904,76 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnShortcutPressed(System.EventArgs e)
+		protected virtual void OnShortcutPressed()
 		{
 			if (this.ShortcutPressed != null)
 			{
-				this.ShortcutPressed (this, e);
+				this.ShortcutPressed (this);
 			}
 		}
 		
 		
-		protected virtual void OnFocused(System.EventArgs e)
+		protected virtual void OnFocused()
 		{
 			if (this.Focused != null)
 			{
-				this.Focused (this, e);
+				this.Focused (this);
 			}
 		}
 		
-		protected virtual void OnDefocused(System.EventArgs e)
+		protected virtual void OnDefocused()
 		{
 			if (this.Defocused != null)
 			{
-				this.Defocused (this, e);
+				this.Defocused (this);
 			}
 		}
 		
-		protected virtual void OnSelected(System.EventArgs e)
+		protected virtual void OnSelected()
 		{
 			if (this.Selected != null)
 			{
-				this.Selected (this, e);
+				this.Selected (this);
 			}
 		}
 		
-		protected virtual void OnDeselected(System.EventArgs e)
+		protected virtual void OnDeselected()
 		{
 			if (this.Deselected != null)
 			{
-				this.Deselected (this, e);
+				this.Deselected (this);
 			}
 		}
 		
-		protected virtual void OnEngaged(System.EventArgs e)
+		protected virtual void OnEngaged()
 		{
 			if (this.Engaged != null)
 			{
-				this.Engaged (this, e);
+				this.Engaged (this);
 			}
 		}
 		
-		protected virtual void OnDisengaged(System.EventArgs e)
+		protected virtual void OnDisengaged()
 		{
 			if (this.Disengaged != null)
 			{
-				this.Disengaged (this, e);
+				this.Disengaged (this);
 			}
 		}
 		
-		protected virtual void OnStillEngaged(System.EventArgs e)
+		protected virtual void OnStillEngaged()
 		{
 			if (this.StillEngaged != null)
 			{
-				this.StillEngaged (this, e);
+				this.StillEngaged (this);
 			}
 		}
 		
-		protected virtual void OnActiveStateChanged(System.EventArgs e)
+		protected virtual void OnActiveStateChanged()
 		{
 			if (this.ActiveStateChanged != null)
 			{
-				this.ActiveStateChanged (this, e);
+				this.ActiveStateChanged (this);
 			}
 		}
 		
@@ -2117,7 +2124,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.widget.suspend_counter == 0)
 				{
-					this.widget.OnChildrenChanged (System.EventArgs.Empty);
+					this.widget.OnChildrenChanged ();
 				}
 				else
 				{
@@ -2147,7 +2154,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.widget.suspend_counter == 0)
 				{
-					this.widget.OnChildrenChanged (System.EventArgs.Empty);
+					this.widget.OnChildrenChanged ();
 				}
 				else
 				{

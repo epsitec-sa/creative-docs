@@ -17,10 +17,10 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown.Direction = Direction.Down;
 			this.arrowUp.ButtonStyle = ButtonStyle.Scroller;
 			this.arrowDown.ButtonStyle = ButtonStyle.Scroller;
-			this.arrowUp.Engaged += new System.EventHandler(this.HandleButton);
-			this.arrowDown.Engaged += new System.EventHandler(this.HandleButton);
-			this.arrowUp.StillEngaged += new System.EventHandler(this.HandleButton);
-			this.arrowDown.StillEngaged += new System.EventHandler(this.HandleButton);
+			this.arrowUp.Engaged += new EventHandler(this.HandleButton);
+			this.arrowDown.Engaged += new EventHandler(this.HandleButton);
+			this.arrowUp.StillEngaged += new EventHandler(this.HandleButton);
+			this.arrowDown.StillEngaged += new EventHandler(this.HandleButton);
 			this.arrowUp.AutoRepeatEngaged = true;
 			this.arrowDown.AutoRepeatEngaged = true;
 			this.Children.Add(this.arrowUp);
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Gestion d'un événement lorsqu'un bouton est pressé.
-		private void HandleButton(object sender, System.EventArgs e)
+		private void HandleButton(object sender)
 		{
 			ArrowButton button = sender as ArrowButton;
 

@@ -20,7 +20,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 
 			TabBook tabBook = this.Parent as TabBook;
-			Drawing.Rectangle frameRect = tabBook.TabRectangle;
+			Drawing.Rectangle frameRect = tabBook.TabClipRectangle;
 			graphics.SetClippingRectangle(frameRect);
 			
 			if ( this.ActiveState == WidgetState.ActiveYes )

@@ -24,9 +24,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected override void OnActiveStateChanged(System.EventArgs e)
+		protected override void OnActiveStateChanged()
 		{
-			base.OnActiveStateChanged(e);
+			base.OnActiveStateChanged();
 			
 			if ( this.ActiveState != WidgetState.ActiveNo )
 			{

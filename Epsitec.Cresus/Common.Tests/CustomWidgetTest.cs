@@ -1,4 +1,3 @@
-using System;
 using NUnit.Framework;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
@@ -36,12 +35,12 @@ namespace Epsitec.Common.Tests
 			b.Pressed += new MessageEventHandler(this.HandleWidgetPressed);
 			a.Released += new MessageEventHandler(this.HandleWidgetReleased);
 			b.Released += new MessageEventHandler(this.HandleWidgetReleased);
-			a.Engaged += new System.EventHandler(this.HandleWidgetEngaged);
-			b.Engaged += new System.EventHandler(this.HandleWidgetEngaged);
-			a.Disengaged += new System.EventHandler(this.HandleWidgetDisengaged);
-			b.Disengaged += new System.EventHandler(this.HandleWidgetDisengaged);
-			a.StillEngaged += new System.EventHandler(this.HandleWidgetStillEngaged);
-			b.StillEngaged += new System.EventHandler(this.HandleWidgetStillEngaged);
+			a.Engaged += new EventHandler(this.HandleWidgetEngaged);
+			b.Engaged += new EventHandler(this.HandleWidgetEngaged);
+			a.Disengaged += new EventHandler(this.HandleWidgetDisengaged);
+			b.Disengaged += new EventHandler(this.HandleWidgetDisengaged);
+			a.StillEngaged += new EventHandler(this.HandleWidgetStillEngaged);
+			b.StillEngaged += new EventHandler(this.HandleWidgetStillEngaged);
 			
 			a.AutoRepeatEngaged = true;
 			b.AutoRepeatEngaged = false;
@@ -70,21 +69,21 @@ namespace Epsitec.Common.Tests
 			System.Diagnostics.Debug.WriteLine ("Souris relâchée dans " + widget.Name + ", bouton " + e.Message.Button.ToString ());
 		}
 
-		private void HandleWidgetEngaged(object sender, System.EventArgs e)
+		private void HandleWidgetEngaged(object sender)
 		{
 			Widget widget = sender as Widget;
 			
 			System.Diagnostics.Debug.WriteLine ("Pressé Widget " + widget.Name);
 		}
 
-		private void HandleWidgetDisengaged(object sender, System.EventArgs e)
+		private void HandleWidgetDisengaged(object sender)
 		{
 			Widget widget = sender as Widget;
 			
 			System.Diagnostics.Debug.WriteLine ("Relâché Widget  " + widget.Name);
 		}
 
-		private void HandleWidgetStillEngaged(object sender, System.EventArgs e)
+		private void HandleWidgetStillEngaged(object sender)
 		{
 			Widget widget = sender as Widget;
 			

@@ -51,7 +51,7 @@ namespace Epsitec.Common.Widgets
 						(this.is_keyboard_pressed == false))
 					{
 						this.is_keyboard_pressed = true;
-						this.OnShortcutPressed (System.EventArgs.Empty);
+						this.OnShortcutPressed ();
 					}
 					
 					break;
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		protected override void OnShortcutPressed(System.EventArgs e)
+		protected override void OnShortcutPressed()
 		{
 			if (this.AutoToggle)
 			{
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Widgets
 				this.WindowFrame.EngagedWidget = this;
 			}
 			
-			base.OnShortcutPressed (e);
+			base.OnShortcutPressed ();
 		}
 		
 		
