@@ -764,7 +764,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.mouseDown )  return;
 
-			this.scrollOffset = new Drawing.Point(0, 0);
+			this.scrollOffset = new Drawing.Point();
 
 			Drawing.Rectangle cursor = this.TextLayout.FindTextCursor(this.cursorTo, out this.cursorLine);
 			this.cursorPosX = (cursor.Left+cursor.Right)/2;
@@ -871,7 +871,7 @@ namespace Epsitec.Common.Widgets
 		public override Drawing.Rectangle GetShapeBounds()
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Inflate(adorner.GeometryTextFieldShapeBounds);
 			return rect;
 		}
@@ -889,7 +889,7 @@ namespace Epsitec.Common.Widgets
 		protected bool							isCombo = false;
 		protected Drawing.Margins				margins = new Drawing.Margins();
 		protected Drawing.Size					realSize;
-		protected Drawing.Point					scrollOffset = new Drawing.Point(0, 0);
+		protected Drawing.Point					scrollOffset = new Drawing.Point();
 		protected TextFieldStyle				textStyle;
 		protected int							cursorFrom = 0;
 		protected int							cursorTo = 0;

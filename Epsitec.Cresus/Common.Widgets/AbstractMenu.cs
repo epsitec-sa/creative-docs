@@ -540,7 +540,7 @@ namespace Epsitec.Common.Widgets
 			this.submenu.parentMenu = this;
 			this.submenu.parentItem = item;
 
-			Drawing.Point pos = new Drawing.Point(0, 0);
+			Drawing.Point pos = new Drawing.Point();
 
 			if ( this.IsHorizontal )
 			{
@@ -869,7 +869,7 @@ namespace Epsitec.Common.Widgets
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect = this.Client.Bounds;
 			WidgetState       state = this.PaintState;
 
 			this.Update();
