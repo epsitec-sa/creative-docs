@@ -217,6 +217,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Grip.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "GroupBox.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -514,17 +519,17 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Design\AbsPosWidgetEdit.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Design\AbstractAdorner.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Design\AbstractWidgetEdit.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\AbsWidgetEdit.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -544,7 +549,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Helpers\AbsLayoutEngine.cs"
+                    RelPath = "Helpers\AbsPosLayoutEngine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

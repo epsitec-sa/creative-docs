@@ -8,8 +8,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Window window = new Window ();
 			
-			Helpers.AbsLayoutEngine layout   = new Helpers.AbsLayoutEngine ();
-			Design.AbsWidgetEdit    designer = new Design.AbsWidgetEdit ();
+			Helpers.AbsPosLayoutEngine layout   = new Helpers.AbsPosLayoutEngine ();
+			Design.AbsPosWidgetEdit    designer = new Design.AbsPosWidgetEdit ();
 			
 			Panel panel = new Panel ();
 			
