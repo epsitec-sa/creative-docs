@@ -278,14 +278,6 @@ namespace Epsitec.Common.Designer
 			private Support.EventHandler		switcher_accept_handler;
 		}
 		
-		public static Application				Current
-		{
-			get
-			{
-				return Application.application;
-			}
-		}
-		
 		
 		protected bool							is_initialised;
 		protected bool							is_initialising;

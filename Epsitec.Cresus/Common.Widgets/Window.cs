@@ -249,6 +249,19 @@ namespace Epsitec.Common.Widgets
 			this.window.ShowWindow ();
 		}
 		
+		public void ShowDialog()
+		{
+			this.AsyncValidation ();
+			
+			if (this.show_count == 0)
+			{
+				this.show_count++;
+				this.root.InternalUpdateGeometry ();
+			}
+			
+			this.window.ShowDialogWindow ();
+		}
+		
 		public void Hide()
 		{
 			this.window.Hide ();
@@ -391,6 +404,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
+		public bool								IsActive
+		{
+			get
+			{
+				return this.window.IsActive;
+			}
+		}
 		
 		public bool								IsFrozen
 		{

@@ -1099,7 +1099,22 @@ namespace Epsitec.Common.Widgets.Platform
 						}
 					}
 					
-					this.FindRootOwner ().FakeActivateOwned (active);
+					if (this.is_tool_window)
+					{
+						//	Il ne faut touiller l'état d'activation des fenêtres que si la fenêtre
+						//	actuelle est une palette...
+						
+						this.FindRootOwner ().FakeActivateOwned (active);
+					}
+					else
+					{
+						//	TODO: mieux gérer la question de l'affichage de l'état (activé ou non) des fenêtres
+						//	de l'application... On aimerait pouvoir spécifier par programmation l'état à donner
+						//	à chaque fenêtre, plus un état général lié à l'activation de l'application et aussi
+						//	dépendant de la présence ou non d'un dialogue modal... Pfff...
+						
+						this.FakeActivate (active);
+					}
 					
 					if ((Window.is_app_active == false) &&
 						(active == true))
@@ -1108,6 +1123,7 @@ namespace Epsitec.Common.Widgets.Platform
 //						System.Diagnostics.Debug.WriteLine ("Fire ApplicationActivated (synthetic)");
 						this.widget_window.OnApplicationActivated ();
 					}
+					
 					break;
 				
 				case Win32Const.WM_ACTIVATEAPP:
@@ -1397,6 +1413,11 @@ namespace Epsitec.Common.Widgets.Platform
 			{
 				Win32Api.ShowWindow (this.Handle, Win32Const.SW_SHOWNA);
 			}
+		}
+		
+		internal void ShowDialogWindow()
+		{
+			this.ShowDialog (this.Owner);
 		}
 		
 		
