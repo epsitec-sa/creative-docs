@@ -19,7 +19,6 @@ namespace Epsitec.Common.Pictogram.Data
 		Regular,			// définitions du polygone régulier
 		Arc,				// arc de cercle ou d'ellipse
 		BackColor,			// texte: couleur de fond
-		TextString,			// texte: chaîne
 		TextFont,			// texte: police
 		TextJustif,			// texte: justification
 		TextLine,			// texte: justification
@@ -53,7 +52,6 @@ namespace Epsitec.Common.Pictogram.Data
 				case PropertyType.Regular:          property = new PropertyRegular();   break;
 				case PropertyType.Arc:              property = new PropertyArc();       break;
 				case PropertyType.BackColor:        property = new PropertyColor();     break;
-				case PropertyType.TextString:       property = new PropertyString();    break;
 				case PropertyType.TextFont:         property = new PropertyFont();      break;
 				case PropertyType.TextJustif:       property = new PropertyJustif();    break;
 				case PropertyType.TextLine:         property = new PropertyTextLine();  break;
@@ -81,7 +79,6 @@ namespace Epsitec.Common.Pictogram.Data
 				case PropertyType.Regular:          return "Regular";
 				case PropertyType.Arc:              return "Arc";
 				case PropertyType.BackColor:        return "BackColor";
-				case PropertyType.TextString:       return "TextString";
 				case PropertyType.TextFont:         return "TextFont";
 				case PropertyType.TextJustif:       return "TextJustif";
 				case PropertyType.TextLine:         return "TextLine";
@@ -107,7 +104,6 @@ namespace Epsitec.Common.Pictogram.Data
 				case "Regular":          return PropertyType.Regular;
 				case "Arc":              return PropertyType.Arc;
 				case "BackColor":        return PropertyType.BackColor;
-				case "TextString":       return PropertyType.TextString;
 				case "TextFont":         return PropertyType.TextFont;
 				case "TextJustif":       return PropertyType.TextJustif;
 				case "TextLine":         return PropertyType.TextLine;
@@ -161,7 +157,6 @@ namespace Epsitec.Common.Pictogram.Data
 					case PropertyType.Regular:          return 0.90;
 					case PropertyType.Arc:              return 0.90;
 					case PropertyType.BackColor:        return 0.80;
-					case PropertyType.TextString:       return 0.80;
 					case PropertyType.TextFont:         return 0.80;
 					case PropertyType.TextJustif:       return 0.80;
 					case PropertyType.TextLine:         return 0.80;
@@ -191,7 +186,6 @@ namespace Epsitec.Common.Pictogram.Data
 					case PropertyType.Regular:          return "Nombre de côtés";
 					case PropertyType.Arc:              return "Arc";
 					case PropertyType.BackColor:        return "Couleur fond";
-					case PropertyType.TextString:       return "Texte";
 					case PropertyType.TextFont:         return "Police";
 					case PropertyType.TextJustif:       return "Mise en page";
 					case PropertyType.TextLine:         return "Position texte";
