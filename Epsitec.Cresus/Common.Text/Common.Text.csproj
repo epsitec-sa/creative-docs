@@ -184,6 +184,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TextFitter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TextStory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -195,6 +200,11 @@
                 />
                 <File
                     RelPath = "Unicode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Cursors\FitterCursor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

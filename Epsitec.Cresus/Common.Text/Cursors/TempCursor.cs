@@ -27,6 +27,7 @@ namespace Epsitec.Common.Text.Cursors
 				this.cursor_id = value;
 			}
 		}
+		
 		public CursorAttachment					Attachment
 		{
 			get

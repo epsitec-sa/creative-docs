@@ -78,6 +78,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public int								TextChangeMarkPosition
+		{
+			get
+			{
+				return this.low_text_change_mark;
+			}
+		}
+		
 		
 		internal bool							DebugDisableOpletQueue
 		{
@@ -210,6 +218,12 @@ namespace Epsitec.Common.Text
 		public void ChangeMarkers(ICursor cursor, int length, ulong marker, bool set)
 		{
 			this.text.ChangeMarkers (cursor.CursorId, length, marker, set);
+		}
+		
+		
+		public void ResetTextChangeMarkPosition()
+		{
+			this.low_text_change_mark = this.TextLength;
 		}
 		
 		
@@ -396,6 +410,13 @@ namespace Epsitec.Common.Text
 		{
 			//	Met à jour l'information relative à la coupure des lignes autour
 			//	du passage modifié.
+			
+			if (position < this.low_text_change_mark)
+			{
+				this.low_text_change_mark = position;
+			}
+			
+			Debug.Assert.IsTrue (position <= this.TextLength);
 			
 			int area_begin = System.Math.Max (0, position - 20);
 			int area_end   = System.Math.Min (position + length + 20, this.text_length);
@@ -837,5 +858,7 @@ namespace Epsitec.Common.Text
 		private Context							context;
 		
 		private bool							debug_disable_oplet;
+		
+		private int								low_text_change_mark;
 	}
 }
