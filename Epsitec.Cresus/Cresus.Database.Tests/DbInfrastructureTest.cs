@@ -44,17 +44,17 @@ namespace Epsitec.Cresus.Database
 			Assertion.Assert (table.InternalKey.Id == 3);
 			Assertion.Assert (table.Columns.Count == 7);
 			
-			Assertion.AssertEquals (0, infrastructure.CountMatchingNamedRows (null, "CR_COLUMN_DEF", "CR_NAME", DbSqlStandard.CreateSimpleSqlName ("MyColumn")));
-			Assertion.AssertEquals (4, infrastructure.CountMatchingNamedRows (null, "CR_COLUMN_DEF", "CR_NAME", "CR_INFO"));
+			Assertion.AssertEquals (0, infrastructure.CountMatchingRows (null, "CR_COLUMN_DEF", "CR_NAME", DbSqlStandard.CreateSimpleSqlName ("MyColumn")));
+			Assertion.AssertEquals (4, infrastructure.CountMatchingRows (null, "CR_COLUMN_DEF", "CR_NAME", "CR_INFO"));
 			
 			//	Vérifie que les statements UPDATE ... lors de la création ont bien passé,
 			//	puis vérifie aussi que l'incrément de l'ID fonctionne correctement.
 			
 			table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
 			
-			Assertion.AssertEquals ( 8L, infrastructure.NewRowIdInTable (table.InternalKey, 2));
-			Assertion.AssertEquals (10L, infrastructure.NewRowIdInTable (table.InternalKey, 0));
-			Assertion.AssertEquals (10L, infrastructure.NewRowIdInTable (table.InternalKey, 0));
+			Assertion.AssertEquals (6L, infrastructure.NewRowIdInTable (null, table.InternalKey, 2));
+			Assertion.AssertEquals (8L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
+			Assertion.AssertEquals (8L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
 			
 			infrastructure.Dispose ();
 		}

@@ -40,21 +40,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public override string ToString()
-		{
-			//	TODO: remplacer ce code par un code interne à SqlBuilder... et/ou DbSqlStandard.
-			//	TODO: améliorer (StringBuffer, etc.)
-			
-			switch (this.type)
-			{
-				case SqlAggregateType.Count:
-					return "COUNT("+this.Field.ToString ()+")";
-			}
-			
-			throw new System.NotImplementedException (string.Format ("Aggregate {0} not implemented.", this.type));
-		}
-		
-		
+	
 		protected SqlAggregateType		type	= SqlAggregateType.Unsupported;
 		protected SqlField				field	= null;
 	}

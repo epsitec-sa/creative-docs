@@ -306,11 +306,16 @@ namespace Epsitec.Cresus.Database
 			{
 				//	Cherche si une table avec ce nom existe dans la base.
 				
-				if (this.CountMatchingNamedRows (transaction, DbTable.TagTableDef, DbColumn.TagName, table.CreateSqlName ()) > 0)
+				if (this.CountMatchingRows (transaction, DbTable.TagTableDef, DbColumn.TagName, table.CreateSqlName ()) > 0)
 				{
 					throw new DbException (this.db_access, string.Format ("Table {0} already exists in database with name {1}.", table.Name, table.CreateSqlName ()));
 				}
 				
+				//	OK: aucun risque de collisions.
+				
+				
+				
+				SqlTable sql_table = table.CreateSqlTable (this.type_converter);
 				
 				int col_num = table.Columns.Count;
 				
@@ -321,11 +326,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public int CountMatchingNamedRows(System.Data.IDbTransaction transaction, string table, string name_column, string value)
+		public int CountMatchingRows(System.Data.IDbTransaction transaction, string table, string name_column, string value)
 		{
-			SqlSelect query = new SqlSelect ();
+			//	Compte combien de lignes dans la table ont le texte spécifié dans la colonne spécifiée.
 			
-			//	Ce qui est propre à la table :
+			SqlSelect query = new SqlSelect ();
 			
 			query.Fields.Add ("N", new SqlAggregate (SqlAggregateType.Count, SqlField.CreateAll ()));
 			query.Tables.Add ("T", SqlField.CreateName (table));
@@ -540,19 +545,21 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public long NewRowIdInTable(DbKey key, int num_keys)
-		{
-			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
-			{
-				long id = this.NewRowIdInTable (transaction, key, num_keys);
-				transaction.Commit ();
-				return id;
-			}
-		}
-		
 		public long NewRowIdInTable(System.Data.IDbTransaction transaction, DbKey key, int num_keys)
 		{
+			//	Attribue 'num_keys' clef consécutives dans la table spécifiée.
+			
 			System.Diagnostics.Debug.Assert (num_keys >= 0);
+			
+			if (transaction == null)
+			{
+				using (transaction = this.db_abstraction.BeginTransaction ())
+				{
+					long id = this.NewRowIdInTable (transaction, key, num_keys);
+					transaction.Commit ();
+					return id;
+				}
+			}
 			
 			SqlFieldCollection fields = new SqlFieldCollection ();
 			SqlFieldCollection conds  = new SqlFieldCollection ();
