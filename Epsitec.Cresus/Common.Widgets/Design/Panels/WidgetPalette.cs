@@ -4,7 +4,7 @@ namespace Epsitec.Common.Widgets.Design.Panels
 	/// La classe WidgetPalette permet de remplir un panel servant de base à la
 	/// palette des widgets servant à la construction de la GUI.
 	/// </summary>
-	public class WidgetPalette
+	public class WidgetPalette : AbstractPalette
 	{
 		public WidgetPalette(PreferredLayout preference)
 		{
@@ -17,14 +17,6 @@ namespace Epsitec.Common.Widgets.Design.Panels
 			this.size = new Drawing.Size (172, 125);
 		}
 		
-		public Drawing.Size				Size
-		{
-			get
-			{
-				return this.size;
-			}
-		}
-		
 		public PreferredLayout			PreferredLayout
 		{
 			get
@@ -34,7 +26,7 @@ namespace Epsitec.Common.Widgets.Design.Panels
 		}
 		
 		
-		public void CreateWidgets(Widget parent, Drawing.Point origin)
+		public override void CreateWidgets(Widget parent, Drawing.Point origin)
 		{
 			System.Diagnostics.Debug.Assert (this.preference != PreferredLayout.None);
 			System.Diagnostics.Debug.Assert (this.parent == null);
@@ -79,9 +71,9 @@ namespace Epsitec.Common.Widgets.Design.Panels
 		}
 		
 		
+		#region GuideAlign class
 		protected class GuideAlign : IGuideAlign
 		{
-			#region IGuideAlign Members
 			public Drawing.Margins GetInnerMargins(Widget widget)
 			{
 				Widget parent = widget.Parent;
@@ -136,8 +128,8 @@ namespace Epsitec.Common.Widgets.Design.Panels
 				
 				return new Drawing.Margins (2, 2, 2, 2);
 			}
-			#endregion
 		}
+		#endregion
 		
 		public static bool MatchClass(System.Type type, System.Type model)
 		{
@@ -220,7 +212,6 @@ namespace Epsitec.Common.Widgets.Design.Panels
 		
 		protected Widget				parent;
 		protected PreferredLayout		preference;
-		protected Drawing.Size			size;
 		protected Drawing.Point			origin;
 	}
 }

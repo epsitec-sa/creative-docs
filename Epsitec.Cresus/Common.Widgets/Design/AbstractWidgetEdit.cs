@@ -12,7 +12,13 @@ namespace Epsitec.Common.Widgets.Design
 		{
 			this.hilite_adorner = new HiliteAdorner ();
 			this.grips_overlay  = new GripsOverlay ();
+			
+			this.grips_overlay.SelectedTarget    += new SelectionEventHandler (this.HandleSelectedTarget);
+			this.grips_overlay.DeselectingTarget += new SelectionEventHandler (this.HandleDeselectingTarget);
 		}
+
+		//	TODO: Dispose
+		
 		
 		public Panel					Panel
 		{
@@ -37,6 +43,14 @@ namespace Epsitec.Common.Widgets.Design
 						this.AttachPanel (this.panel);
 					}
 				}
+			}
+		}
+		
+		public Helpers.WidgetCollection	SelectedWidgets
+		{
+			get
+			{
+				return this.grips_overlay.SelectedWidgets;
 			}
 		}
 		
@@ -81,7 +95,7 @@ namespace Epsitec.Common.Widgets.Design
 				this.hot_widget = null;
 				
 				if ((Message.State.Buttons == MouseButtons.None) &&
-					(this.grips_overlay.TargetWidget != hot))
+					(!this.SelectedWidgets.Contains (hot)))
 				{
 					//	Ne met en évidence le widget "chaud" que si celui-ci n'est pas sélectionné comme
 					//	cible. Si l'utilisateur survole la poignée d'un objet sélectionné, c'est celle-ci
@@ -112,11 +126,17 @@ namespace Epsitec.Common.Widgets.Design
 			e.Suppress = true;
 		}
 		
-		protected virtual void HandleMouseDown(Message message, Drawing.Point pos, Widget hot)
+		private void HandleMouseDown(Message message, Drawing.Point pos, Widget hot)
 		{
 			if (message.Button == MouseButtons.Left)
 			{
-				this.grips_overlay.TargetWidget = hot;
+				if (this.SelectedWidgets.Contains (hot))
+				{
+					return;
+				}
+				
+				this.SelectedWidgets.Clear ();
+				this.SelectedWidgets.Add (hot);
 				
 				if (hot != null)
 				{
@@ -127,10 +147,30 @@ namespace Epsitec.Common.Widgets.Design
 		
 		
 		
-		protected Panel					panel;
-		protected Widget				hot_widget;
+		protected virtual void HandleSelectedTarget(object sender, object o)
+		{
+			if (this.Selected != null)
+			{
+				this.Selected (this, o);
+			}
+		}
 		
-		protected HiliteAdorner			hilite_adorner;
-		protected GripsOverlay			grips_overlay;
+		protected virtual void HandleDeselectingTarget(object sender, object o)
+		{
+			if (this.Deselecting != null)
+			{
+				this.Deselecting (this, o);
+			}
+		}
+		
+		
+		public event SelectionEventHandler	Selected;
+		public event SelectionEventHandler	Deselecting;
+		
+		protected Panel						panel;
+		protected Widget					hot_widget;
+		
+		protected HiliteAdorner				hilite_adorner;
+		protected GripsOverlay				grips_overlay;
 	}
 }

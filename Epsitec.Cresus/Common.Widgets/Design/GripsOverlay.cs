@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets.Design
 	/// (widgets Grip) et un rectangle correspondant au Bounds du widget
 	/// cible.
 	/// </summary>
-	public class GripsOverlay : Widget
+	public class GripsOverlay : Widget, Helpers.IWidgetCollectionHost
 	{
 		public GripsOverlay()
 		{
@@ -38,6 +38,8 @@ namespace Epsitec.Common.Widgets.Design
 		}
 		
 		
+		//	TODO: utilise SelectedWidgets, pas TargetWidget...
+		
 		public Widget					TargetWidget
 		{
 			get
@@ -51,6 +53,7 @@ namespace Epsitec.Common.Widgets.Design
 				{
 					if (this.target_widget != null)
 					{
+						this.SelectedWidgets.Remove (this.target_widget);
 						this.DetachWidget ();
 					}
 					
@@ -59,12 +62,30 @@ namespace Epsitec.Common.Widgets.Design
 					if (this.target_widget != null)
 					{
 						this.AttachWidget ();
+						this.SelectedWidgets.Add (this.target_widget);
 					}
 					
 					this.Invalidate ();
 				}
 			}
 		}
+		
+		public Grip						ActiveGrip
+		{
+			get
+			{
+				return this.active_grip;
+			}
+		}
+		
+		public Helpers.WidgetCollection	SelectedWidgets
+		{
+			get
+			{
+				return this.selected;
+			}
+		}
+		
 		
 		protected Drawing.Rectangle		TargetBounds
 		{
@@ -230,6 +251,8 @@ namespace Epsitec.Common.Widgets.Design
 		
 		private void HandleGripsDragging(object sender, DragEventArgs e)
 		{
+			System.Diagnostics.Debug.Assert (this.active_grip == sender);
+			
 			Grip grip = sender as Grip;
 			
 			System.Diagnostics.Debug.Assert (grip != null);
@@ -247,10 +270,17 @@ namespace Epsitec.Common.Widgets.Design
 			bounds = this.ConstrainWidgetBoundsMinMax (map.id, bounds);
 			
 			this.target_widget.Bounds = bounds;
+			
+			if (this.Dragging != null)
+			{
+				this.Dragging (this, e);
+			}
 		}
 		
 		private void HandleGripsDragBegin(object sender)
 		{
+			System.Diagnostics.Debug.Assert (this.active_grip == null);
+			
 			Grip grip = sender as Grip;
 			
 			System.Diagnostics.Debug.Assert (grip != null);
@@ -263,10 +293,19 @@ namespace Epsitec.Common.Widgets.Design
 					this.grips[i].SetVisible (false);
 				}
 			}
+			
+			this.active_grip = grip;
+			
+			if (this.DragBegin != null)
+			{
+				this.DragBegin (this);
+			}
 		}
 		
 		private void HandleGripsDragEnd(object sender)
 		{
+			System.Diagnostics.Debug.Assert (this.active_grip == sender);
+			
 			Grip grip = sender as Grip;
 			
 			System.Diagnostics.Debug.Assert (grip != null);
@@ -288,6 +327,13 @@ namespace Epsitec.Common.Widgets.Design
 			this.drop_adorner.Widget = null;
 			this.drop_cx = null;
 			this.drop_cy = null;
+			
+			if (this.DragEnd != null)
+			{
+				this.DragEnd (this);
+			}
+			
+			this.active_grip = null;
 		}
 		
 		
@@ -450,6 +496,35 @@ namespace Epsitec.Common.Widgets.Design
 			public Drawing.Point			offset;
 		}
 		
+		#region IWidgetCollectionHost Members
+		public void NotifyInsertion(Widget widget)
+		{
+			if (this.SelectedTarget != null)
+			{
+				this.SelectedTarget (this, widget);
+			}
+		}
+		
+		public void NotifyRemoval(Widget widget)
+		{
+			if (this.DeselectingTarget != null)
+			{
+				this.DeselectingTarget (this, widget);
+			}
+		}
+		
+		public Epsitec.Common.Widgets.Helpers.WidgetCollection GetWidgetCollection()
+		{
+			return this.SelectedWidgets;
+		}
+		#endregion
+		
+		public event SelectionEventHandler	SelectedTarget;
+		public event SelectionEventHandler	DeselectingTarget;
+		
+		public event EventHandler			DragBegin;
+		public event EventHandler			DragEnd;
+		public event DragEventHandler		Dragging;
 		
 		protected static GripMap[]			grip_map;
 		
@@ -458,9 +533,12 @@ namespace Epsitec.Common.Widgets.Design
 		protected Drawing.Rectangle			target_clip;
 		
 		protected Grip[]					grips;
+		protected Grip						active_grip;
 		
 		protected Design.HiliteAdorner		drop_adorner;
 		protected Design.Constraint			drop_cx;
 		protected Design.Constraint			drop_cy;
+		
+		protected Helpers.WidgetCollection	selected;
 	}
 }

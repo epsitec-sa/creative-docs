@@ -641,7 +641,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Design\Panels\EditToolsPalette.cs"
+                    RelPath = "Design\Panels\EditToolsBar.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -20,8 +20,23 @@ namespace Epsitec.Common.Widgets.Design.Panels
 			}
 		}
 		
-		public abstract void CreateWidgets(Widget parent, Drawing.Point origin);
+		public virtual Widget			Widget
+		{
+			get
+			{
+				if (this.widget == null)
+				{
+					this.widget = this.CreateWidget ();
+				}
+				
+				return this.widget;
+			}
+		}
+		
+		
+		protected abstract Widget CreateWidget();
 		
 		protected Drawing.Size			size;
+		protected Widget				widget;
 	}
 }
