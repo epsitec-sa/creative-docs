@@ -1942,9 +1942,16 @@ namespace Epsitec.Common.Widgets
 				{
 					this.command = null;
 				}
-				else
+				else if (this.command != value)
 				{
 					this.command = value;
+					
+					Support.CommandDispatcher dispatcher = this.CommandDispatcher;
+					
+					if (dispatcher != null)
+					{
+						dispatcher.SyncCommandStates (this.command);
+					}
 				}
 			}
 		}

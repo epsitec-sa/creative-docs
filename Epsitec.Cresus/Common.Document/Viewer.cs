@@ -156,7 +156,6 @@ namespace Epsitec.Common.Document
 
 			mouse = this.ScreenToInternal(mouse);  // position en coordonnées internes
 			this.DispatchDummyMouseMoveEvent();
-			//-this.ProcessMouseMove(this.autoScrollMessage, mouse);
 		}
 
 		// Retourne le rectangle correspondant à la zone visible dans le Viewer

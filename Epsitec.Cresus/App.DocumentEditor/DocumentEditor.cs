@@ -42,7 +42,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CreateLayout();
 			this.InitCommands();
 
-			this.clipboard = new Document(this.type, DocumentMode.Clipboard, this.globalSettings);
+			this.clipboard = new Document(this.type, DocumentMode.Clipboard, this.globalSettings, this.CommandDispatcher);
 			this.clipboard.Name = "Clipboard";
 
 			this.documents = new System.Collections.ArrayList();
@@ -51,6 +51,7 @@ namespace Epsitec.App.DocumentEditor
 			string[] args = System.Environment.GetCommandLineArgs();
 			if ( args.Length >= 2 )
 			{
+				this.CreateDocument();
 				string err = this.CurrentDocument.Read(args[1]);
 				if ( err == "" )
 				{
@@ -1389,7 +1390,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SelectTotal")]
 		void CommandSelectTotal(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-//-			this.CurrentDocument.Modifier.Tool = "Select";
+			this.CurrentDocument.Modifier.Tool = "Select";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.PartialSelect = false;
 		}
@@ -1397,7 +1398,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SelectPartial")]
 		void CommandSelectPartial(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-//-			this.CurrentDocument.Modifier.Tool = "Select";
+			this.CurrentDocument.Modifier.Tool = "Select";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.PartialSelect = true;
 		}
@@ -1405,7 +1406,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SelectorAuto")]
 		void CommandSelectorAuto(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-//-			this.CurrentDocument.Modifier.Tool = "Select";
+			this.CurrentDocument.Modifier.Tool = "Select";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.SelectorType = SelectorType.Auto;
 		}
@@ -1413,7 +1414,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SelectorIndividual")]
 		void CommandSelectorIndividual(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-//-			this.CurrentDocument.Modifier.Tool = "Select";
+			this.CurrentDocument.Modifier.Tool = "Select";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.SelectorType = SelectorType.Individual;
 		}
@@ -1421,7 +1422,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SelectorZoom")]
 		void CommandSelectorZoom(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-//-			this.CurrentDocument.Modifier.Tool = "Select";
+			this.CurrentDocument.Modifier.Tool = "Select";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.SelectorType = SelectorType.Zoomer;
 		}
@@ -1429,7 +1430,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SelectorStretch")]
 		void CommandSelectorStretch(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-//-			this.CurrentDocument.Modifier.Tool = "Select";
+			this.CurrentDocument.Modifier.Tool = "Select";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.SelectorType = SelectorType.Stretcher;
 		}
@@ -1437,7 +1438,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("HideHalf")]
 		void CommandHideHalf(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-//-			this.CurrentDocument.Modifier.Tool = "Select";
+			this.CurrentDocument.Modifier.Tool = "Select";
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			context.HideHalfActive = !context.HideHalfActive;
 		}
@@ -3091,13 +3092,13 @@ namespace Epsitec.App.DocumentEditor
 				string version = typeof(Document).Assembly.FullName.Split(',')[1].Split('=')[1];
 				StaticText sv = new StaticText(this.windowSplash.Root);
 				sv.Text = string.Format("<b>Version {0}</b>    Langue: français", version);
-				sv.Location = new Point(62, 28);
+				sv.Location = new Point(22, 22);
 				sv.Size = new Size(270, 14);
 				sv.SetClientZoom(0.8);
 
 				StaticText ep = new StaticText(this.windowSplash.Root);
 				ep.Text = "(c) 2004-2005 EPSITEC SA, Daniel Roux, Pierre Arnaud";
-				ep.Location = new Point(62, 16);
+				ep.Location = new Point(22, 10);
 				ep.Size = new Size(270, 14);
 				ep.SetClientZoom(0.8);
 
@@ -3204,7 +3205,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.PrepareCloseDocument();
 
-			Document doc = new Document(this.type, DocumentMode.Modify, this.globalSettings);
+			Document doc = new Document(this.type, DocumentMode.Modify, this.globalSettings, this.CommandDispatcher);
 			doc.Name = "Document";
 			doc.Clipboard = this.clipboard;
 

@@ -64,8 +64,11 @@ namespace Epsitec.Common.Document
 					default:
 						if ( (elements[i] & PathElement.FlagClose) != 0 )
 						{
-							if ( Point.DetectSegment(current,start, pos, width) )  return rank;
-							rank ++;
+							if ( current != start )
+							{
+								if ( Point.DetectSegment(current,start, pos, width) )  return rank;
+								rank ++;
+							}
 						}
 						i ++;
 						break;

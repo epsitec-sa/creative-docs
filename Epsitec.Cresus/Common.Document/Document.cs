@@ -35,11 +35,12 @@ namespace Epsitec.Common.Document
 		}
 
 		// Crée un nouveau document vide.
-		public Document(DocumentType type, DocumentMode mode, Settings.GlobalSettings globalSettings)
+		public Document(DocumentType type, DocumentMode mode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher)
 		{
 			this.type = type;
 			this.mode = mode;
 			this.globalSettings = globalSettings;
+			this.commandDispatcher = commandDispatcher;
 
 			if ( this.type == DocumentType.Pictogram )
 			{
@@ -95,7 +96,13 @@ namespace Epsitec.Common.Document
 		{
 			get { return this.globalSettings; }
 		}
-
+		
+		// CommandDispatcher de l'éditeur.
+		public CommandDispatcher CommandDispatcher
+		{
+			get { return this.commandDispatcher; }
+		}
+		
 		// Nom du document.
 		public string Name
 		{
@@ -1143,6 +1150,7 @@ namespace Epsitec.Common.Document
 		protected DocumentType					type;
 		protected DocumentMode					mode;
 		protected Settings.GlobalSettings		globalSettings;
+		protected CommandDispatcher				commandDispatcher;
 		protected string						name;
 		protected Document						clipboard;
 		protected Size							size;

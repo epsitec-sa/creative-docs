@@ -262,6 +262,20 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public void SyncCommandStates(string name)
+		{
+			CommandState[] states = new CommandState[this.command_states.Count];
+			this.command_states.CopyTo (states);
+			
+			for (int i = 0; i < states.Length; i++)
+			{
+				if (states[i].Name == name)
+				{
+					states[i].Synchronise ();
+				}
+			}
+		}
+		
 		public void SyncValidationRule()
 		{
 			if (this.validation_rule.State == ValidationState.Dirty)

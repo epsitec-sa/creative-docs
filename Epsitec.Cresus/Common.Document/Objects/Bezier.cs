@@ -356,9 +356,8 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			int prev = rank+0;
-			int curr = rank+3;
-			int next = rank+6;
-			if ( next >= this.TotalMainHandle )  next = 0;
+			int curr = this.NextRank(rank);
+			int next = this.NextRank(curr);
 
 			if ( this.Handle(prev+2).Type == HandleType.Hide && this.Handle(next+0).Type == HandleType.Hide )
 			{
@@ -397,10 +396,8 @@ namespace Epsitec.Common.Document.Objects
 			// Il doit toujours y avoir une poignée de départ !
 			this.Handle(1).Type = HandleType.Starting;
 
-			int prev = rank-4;
-			if ( prev < 0 )  prev = this.TotalMainHandle-3;
+			int prev = this.PrevRank(rank-1);
 			int next = rank-1;
-			if ( next >= this.TotalMainHandle )  next = 0;
 
 			if ( this.Handle(prev+2).Type == HandleType.Hide || this.Handle(next+0).Type == HandleType.Hide )
 			{
@@ -416,8 +413,7 @@ namespace Epsitec.Common.Document.Objects
 		// Conversion d'un segement en ligne droite.
 		protected void ContextToLine(int rank)
 		{
-			int next = rank+3;
-			if ( next >= this.TotalMainHandle )  next = 0;
+			int next = this.NextRank(rank);
 			this.Handle(rank+2).Position = this.Handle(rank+1).Position;
 			this.Handle(next+0).Position = this.Handle(next+1).Position;
 			this.Handle(rank+2).Type = HandleType.Hide;
@@ -431,8 +427,7 @@ namespace Epsitec.Common.Document.Objects
 		// Conversion d'un segement en courbe.
 		protected void ContextToCurve(int rank)
 		{
-			int next = rank+3;
-			if ( next >= this.TotalMainHandle )  next = 0;
+			int next = this.NextRank(rank);
 			this.Handle(rank+2).Position = Point.Scale(this.Handle(rank+1).Position, this.Handle(next+1).Position, 0.25);
 			this.Handle(next+0).Position = Point.Scale(this.Handle(next+1).Position, this.Handle(rank+1).Position, 0.25);
 			this.Handle(rank+2).Type = HandleType.Bezier;
@@ -447,9 +442,14 @@ namespace Epsitec.Common.Document.Objects
 		// Adapte le point secondaire s'il est en mode "en ligne".
 		protected void AdaptPrimaryLine(int rankPrimary, int rankSecondary, out int rankExtremity)
 		{
-			rankExtremity = rankPrimary - (rankSecondary-rankPrimary)*3;
-			if ( rankExtremity < 0 )  rankExtremity = this.TotalMainHandle-2;
-			if ( rankExtremity >= this.TotalMainHandle )  rankExtremity = 1;
+			if ( rankSecondary > rankPrimary )
+			{
+				rankExtremity = this.PrevRank(rankPrimary-1)+1;
+			}
+			else
+			{
+				rankExtremity = this.NextRank(rankPrimary-1)+1;
+			}
 
 			if ( this.Handle(rankPrimary).ConstrainType != HandleConstrainType.Smooth )  return;
 			int rankOpposite = rankPrimary - (rankSecondary-rankPrimary);
@@ -462,6 +462,40 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(rankSecondary).Position = pos;
 			this.dirtyBbox = true;
 			this.HandlePropertiesUpdatePosition();
+		}
+
+		// Cherche le rang du groupe "sps" précédent, en tenant compte
+		// des ensembles Starting-Primary(s).
+		protected int PrevRank(int rank)
+		{
+			System.Diagnostics.Debug.Assert(rank%3 == 0);
+			if ( rank == 0 || this.Handle(rank+1).Type == HandleType.Starting )
+			{
+				do
+				{
+					rank += 3;
+				}
+				while ( rank < this.TotalMainHandle && this.Handle(rank+1).Type != HandleType.Starting );
+			}
+			rank -= 3;
+			return rank;
+		}
+
+		// Cherche le rang du groupe "sps" suivant, en tenant compte
+		// des ensembles Starting-Primary(s).
+		protected int NextRank(int rank)
+		{
+			System.Diagnostics.Debug.Assert(rank%3 == 0);
+			rank += 3;
+			if ( rank >= this.TotalMainHandle || this.Handle(rank+1).Type == HandleType.Starting )
+			{
+				do
+				{
+					rank -= 3;
+				}
+				while ( rank > 0 && this.Handle(rank+1).Type != HandleType.Starting );
+			}
+			return rank;
 		}
 
 		// Déplace une poignée primaire selon les contraintes.
@@ -1029,7 +1063,9 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.PropertyFillGradient.PaintColor(port, drawingContext) )
 			{
+				port.FillMode = FillMode.EvenOdd;
 				port.PaintSurface(pathLine);
+				port.FillMode = FillMode.NonZero;
 			}
 
 			if ( this.PropertyLineColor.PaintColor(port, drawingContext) )

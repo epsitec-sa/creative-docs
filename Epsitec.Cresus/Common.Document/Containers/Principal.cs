@@ -49,36 +49,38 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorToolBar.Dock = DockStyle.Top;
 			this.selectorToolBar.DockMargins = new Margins(0, 0, 0, 5);
 
+			System.Diagnostics.Debug.Assert(this.selectorToolBar.CommandDispatcher != null);
+			
 			this.selectorAuto = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorAuto.icon");
-			this.selectorAuto.Command = "SelectorAuto";
 			this.selectorToolBar.Items.Add(this.selectorAuto);
+			this.selectorAuto.Command = "SelectorAuto";
 			ToolTip.Default.SetToolTip(this.selectorAuto, "Sélection automatique");
 			
 			this.selectorIndividual = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorIndividual.icon");
-			this.selectorIndividual.Command = "SelectorIndividual";
 			this.selectorToolBar.Items.Add(this.selectorIndividual);
+			this.selectorIndividual.Command = "SelectorIndividual";
 			ToolTip.Default.SetToolTip(this.selectorIndividual, "Sélectionne les objets individuellement");
 			
 			this.selectorZoom = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorZoom.icon");
-			this.selectorZoom.Command = "SelectorZoom";
 			this.selectorToolBar.Items.Add(this.selectorZoom);
+			this.selectorZoom.Command = "SelectorZoom";
 			ToolTip.Default.SetToolTip(this.selectorZoom, "Déplacement, zoom et rotation");
 			
 			this.selectorStretch = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorStretch.icon");
-			this.selectorStretch.Command = "SelectorStretch";
 			this.selectorToolBar.Items.Add(this.selectorStretch);
+			this.selectorStretch.Command = "SelectorStretch";
 			ToolTip.Default.SetToolTip(this.selectorStretch, "Déformation");
 
 			this.selectorToolBar.Items.Add(new IconSeparator());
 			
 			this.selectorTotal = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectTotal.icon");
-			this.selectorTotal.Command = "SelectTotal";
 			this.selectorToolBar.Items.Add(this.selectorTotal);
+			this.selectorTotal.Command = "SelectTotal";
 			ToolTip.Default.SetToolTip(this.selectorTotal, "Sélection totale requise");
 			
 			this.selectorPartial = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectPartial.icon");
-			this.selectorPartial.Command = "SelectPartial";
 			this.selectorToolBar.Items.Add(this.selectorPartial);
+			this.selectorPartial.Command = "SelectPartial";
 			ToolTip.Default.SetToolTip(this.selectorPartial, "Sélection partielle autorisée");
 		}
 
