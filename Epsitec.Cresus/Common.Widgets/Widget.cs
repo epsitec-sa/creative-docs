@@ -1646,6 +1646,17 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		public Support.OpletQueue					OpletQueue
+		{
+			get
+			{
+				Support.CommandDispatcher dispatcher = this.CommandDispatcher;
+				
+				return dispatcher == null ? null : dispatcher.OpletQueue;
+			}
+		}
+		
+		
 		public Widget								RootParent
 		{
 			get
