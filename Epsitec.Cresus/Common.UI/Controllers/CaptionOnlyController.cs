@@ -26,7 +26,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.OnCaptionChanged ();
 		}
 		
-		public override void SyncFromAdapter()
+		public override void SyncFromAdapter(SyncReason reason)
 		{
 		}
 		
