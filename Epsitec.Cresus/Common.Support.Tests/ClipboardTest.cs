@@ -35,11 +35,9 @@ namespace Epsitec.Common.Support
 			
 			for (int i = 0; i < fmt_2.Length; i++)
 			{
-				object                 as_object = data.Read (fmt_2[i]);
-				string                 as_string = data.ReadAsString (fmt_2[i]);
-				System.IO.MemoryStream as_stream = data.ReadAsStream (fmt_2[i]);
-				
-				string type = (as_object == null) ? "<null>" : as_object.GetType ().Name;
+				object as_object = data.Read (fmt_2[i]);
+				string as_string = data.ReadAsString (fmt_2[i]);
+				string type      = (as_object == null) ? "<null>" : as_object.GetType ().Name;
 				
 				System.Console.Out.WriteLine ("  {0}: {1}, {2}, [ {3} ]", i, fmt_2[i], type, as_string);
 			}
@@ -64,23 +62,31 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals (source, unicode);
 		}
 		
-		[Test] public void CheckGetDataHtml()
+		[Test] public void CheckReadHtmlFragment()
 		{
 			Clipboard.Data data = Clipboard.GetData ();
-			string         html = data.ReadAsString ("HTML Format");
+			string         html = data.ReadHtmlFragment ();
 			
 			if (html != null)
 			{
-				int idx_start = html.IndexOf ("<!--StartFragment-->");
-				int idx_end   = html.IndexOf ("<!--EndFragment-->");
-				int idx_begin = idx_start + 20;
-				
-				Assertion.Assert (idx_start > 0);
-				Assertion.Assert (idx_end > idx_start);
-				
-				string clean = Clipboard.ConvertBrokenUtf8ToString (html.Substring (idx_begin, idx_end - idx_begin));
-				System.Console.Out.WriteLine (clean);
-				System.Console.Out.WriteLine (Clipboard.ConvertToSimpleXml (clean));
+				System.Console.Out.WriteLine ("[ {0} ]", html);
+				System.Console.Out.WriteLine ("[ {0} ]", Clipboard.ConvertToSimpleXml (html));
+			}
+			else
+			{
+				System.Console.Out.WriteLine ("*** No HTML format found ***");
+			}
+		}
+		
+		[Test] public void CheckReadHtmlDocument()
+		{
+			Clipboard.Data data = Clipboard.GetData ();
+			string         html = data.ReadHtmlDocument ();
+			
+			if (html != null)
+			{
+				System.Console.Out.WriteLine ("[ {0} ]", html);
+				System.Console.Out.WriteLine ("[ {0} ]", Clipboard.ConvertToSimpleXml (html));
 			}
 			else
 			{

@@ -3,7 +3,12 @@
 
 namespace Epsitec.Common.Support
 {
-	using IDataObject = System.Windows.Forms.IDataObject;
+	using IDataObject       = System.Windows.Forms.IDataObject;
+	using Regex             = System.Text.RegularExpressions.Regex;
+	using RegexOptions      = System.Text.RegularExpressions.RegexOptions;
+	using Match             = System.Text.RegularExpressions.Match;
+	using CaptureCollection = System.Text.RegularExpressions.CaptureCollection;
+	using Capture           = System.Text.RegularExpressions.Capture;
 	
 	/// <summary>
 	/// La classe Clipboard donne accès au presse-papier.
@@ -53,15 +58,27 @@ namespace Epsitec.Common.Support
 			int last_tag  = -1;
 			int last_elem = -1;
 			
-			bool is_space = true;
+			bool is_space        = true;
+			bool preserve_spaces = false;
 			
 			for (int i = 0; i < value.Length; i++)
 			{
 				char c = value[i];
 				
+				//	Tous les caratères "blancs" sont considérés comme des espaces :
+				
+				if ((c == '\t') || (c == '\n') || (c == '\r'))
+				{
+					c = ' ';
+				}
+				
+				//	Traite de manière différenciée les débuts de tags "<x>", les débuts
+				//	d'entités "&amp;" et le texte normal :
+				
 				if (c == '<')
 				{
-					last_tag = buffer.Length;
+					last_tag        = buffer.Length;
+					preserve_spaces = false;
 				}
 				else if (c == '&')
 				{
@@ -69,53 +86,89 @@ namespace Epsitec.Common.Support
 				}
 				else if (last_tag == -1)
 				{
-					if ((c == ' ') ||
-						(c == '\t') ||
-						(c == '\n') ||
-						(c == '\r'))
+					if (c == ' ')
 					{
-						if (is_space)
+						if (is_space && !preserve_spaces)
 						{
+							//	Si plusieurs espaces se suivent, on n'en conserve que le
+							//	premier, sauf si on est dans le mode spécial dicté par
+							//	Office (<span style="mso-spacerun: yes">..</span>) :
+							
 							continue;
 						}
+						
 						is_space = true;
-						c = ' ';
 					}
-				}
-				
-				if (c == 160)
-				{
-					c = ' ';
+					else
+					{
+						is_space = false;
+					}
 				}
 				
 				buffer.Append (c);
 				
+				//	Traite la fin des tags et éléments :
+				
 				if (c == '>')
 				{
+					//	Si on a trouvé une fin de tag ">", il y a forcément eu un début de tag
+					//	auparavant. On peut maintenant analyser ce tag et déterminer ce qu'il
+					//	faut en faire :
+					
 					System.Diagnostics.Debug.Assert (last_tag >= 0);
 					
 					string tag = buffer.ToString (last_tag, buffer.Length - last_tag);
 					
+					//	Supprime le tag du buffer; s'il est compatible avec la version simplifiée
+					//	il sera rajouté par la suite :
+					
+					buffer.Length = last_tag;
+					last_tag      = -1;
+					
 					switch (tag)
 					{
-						case "<b>": case "</b>":
-						case "<i>": case "</i>":
-							break;
-						case "</p>":
-							buffer.Length = last_tag;
-							buffer.Append ("</br>");
-							break;
+						case  "<b>": case  "<B>": buffer.Append ("<b>");  continue;
+						case "</b>": case "</B>": buffer.Append ("</b>"); continue;
+						case  "<i>": case  "<I>": buffer.Append ("<i>");  continue;
+						case "</i>": case "</I>": buffer.Append ("</i>"); continue;
 						
-						default:
-							buffer.Length = last_tag;
-							break;
+						case "</p>": case "</P>":
+						case "<br>": case "<BR>": case "<br/>":
+							buffer.Append ("<br/>");
+							is_space = true;
+							continue;
 					}
 					
-					last_tag = -1;
+					Match match_style = Clipboard.regex_style.Match (tag);
+					
+					if (match_style.Success)
+					{
+						CaptureCollection style_captures = match_style.Groups["style"].Captures;
+						
+						foreach (Capture style_capture in style_captures)
+						{
+							string style     = style_capture.Value;
+							Match  match_opt = Clipboard.regex_mso_spacerun.Match (style);
+							
+							if ((match_opt.Success) &&
+								(match_opt.Groups["opt"].Captures.Count == 1) &&
+								(match_opt.Groups["opt"].Captures[0].Value == "yes"))
+							{
+								preserve_spaces = true;
+							}
+						}
+					}
 				}
 				else if ((c == ';') && (last_elem >= 0))
 				{
+					//	Si on a trouvé une fin d'entité, il faut vérifier si c'est l'une des
+					//	entités de base valides pour du XML, ou au contraire, s'il s'agit de
+					//	particularités liées à HTML :
+					
 					string elem = buffer.ToString (last_elem, buffer.Length - last_elem);
+					
+					buffer.Length = last_elem;
+					last_elem     = -1;
 					
 					switch (elem)
 					{
@@ -124,39 +177,32 @@ namespace Epsitec.Common.Support
 						case "&amp;":
 						case "&quot;":
 						case "&apos;":
-						case "&#160;":
-						case "&#8212;":
-							break;
-						
-						default:
-							elem = elem.Substring (1, elem.Length - 2);
-							
-							if (Clipboard.map_entities.Contains (elem))
-							{
-								elem = Clipboard.map_entities[elem] as string;
-							}
-							
-							if (elem.StartsWith ("#"))
-							{
-								int num = System.Int32.Parse (elem.Substring (1), System.Globalization.CultureInfo.InvariantCulture);
-								buffer.Length = last_elem;
-								buffer.Append ((char) num);
-							}
-							else
-							{
-								throw new System.FormatException (string.Format ("Illegal entity {0} found.", elem));
-							}
-							
-							break;
+							buffer.Append (elem);
+							continue;
 					}
 					
+					elem = elem.Substring (1, elem.Length - 2);
 					
-					last_elem = -1;
+					if (Clipboard.map_entities.Contains (elem))
+					{
+						elem = Clipboard.map_entities[elem] as string;
+					}
+					
+					if (elem.StartsWith ("#"))
+					{
+						int num = System.Int32.Parse (elem.Substring (1), System.Globalization.CultureInfo.InvariantCulture);
+						buffer.Append ((char) num);
+					}
+					else
+					{
+						throw new System.FormatException (string.Format ("Illegal entity {0} found.", elem));
+					}
 				}
 			}
 			
 			return buffer.ToString ();
 		}
+		
 		
 		public class Data
 		{
@@ -193,11 +239,98 @@ namespace Epsitec.Common.Support
 				return this.Read (format) as string;
 			}
 			
-			public System.IO.MemoryStream ReadAsStream(string format)
+			public string ReadHtmlFragment()
 			{
-				return this.Read (format) as System.IO.MemoryStream;
+				string raw_html = this.ReadAsString ("HTML Format");
+				
+				if (raw_html == null)
+				{
+					return null;
+				}
+				
+				//	Vérifie qu'il y a bien tous les tags dans le fragment HTML :
+				
+				int idx_version    = raw_html.IndexOf ("Version:");
+				int idx_start_html = raw_html.IndexOf ("StartHTML:");
+				int idx_end_html   = raw_html.IndexOf ("EndHTML:");
+				int idx_start_frag = raw_html.IndexOf ("StartFragment:");
+				int idx_end_frag   = raw_html.IndexOf ("EndFragment:");
+				int idx_start      = raw_html.IndexOf ("<!--StartFragment");
+				int idx_end        = raw_html.IndexOf ("<!--EndFragment");
+				int idx_begin      = raw_html.IndexOf (">", idx_start) + 1;
+				
+				if ((idx_start      < idx_version) ||
+					(idx_end        < idx_start) ||
+					(idx_begin      < 1) ||
+					(idx_version    < 0) ||
+					(idx_start_html < idx_version) ||
+					(idx_end_html   < idx_start_html) ||
+					(idx_start_frag < idx_version) ||
+					(idx_end_frag   < idx_start_frag))
+				{
+					return null;
+				}
+				
+				return Clipboard.ConvertBrokenUtf8ToString (raw_html.Substring (idx_begin, idx_end - idx_begin));
 			}
 			
+			public string ReadHtmlDocument()
+			{
+				string raw_html = this.ReadAsString ("HTML Format");
+				
+				if (raw_html == null)
+				{
+					return null;
+				}
+				
+				//	Vérifie qu'il y a bien tous les tags dans le fragment HTML :
+				
+				int idx_version    = raw_html.IndexOf ("Version:");
+				int idx_start_html = raw_html.IndexOf ("StartHTML:");
+				int idx_end_html   = raw_html.IndexOf ("EndHTML:");
+				int idx_start_frag = raw_html.IndexOf ("StartFragment:");
+				int idx_end_frag   = raw_html.IndexOf ("EndFragment:");
+				int idx_start      = raw_html.IndexOf ("<!--StartFragment");
+				int idx_end        = raw_html.IndexOf ("<!--EndFragment");
+				int idx_begin      = raw_html.IndexOf (">", idx_start) + 1;
+				
+				if ((idx_start      < idx_version) ||
+					(idx_end        < idx_start) ||
+					(idx_begin      < 1) ||
+					(idx_version    < 0) ||
+					(idx_start_html < idx_version) ||
+					(idx_end_html   < idx_start_html) ||
+					(idx_start_frag < idx_version) ||
+					(idx_end_frag   < idx_start_frag))
+				{
+					return null;
+				}
+				
+				idx_begin = System.Int32.Parse (this.ExtractDigits (raw_html, idx_start_html + 10));
+				idx_end   = System.Int32.Parse (this.ExtractDigits (raw_html, idx_end_html + 8));
+				
+				return Clipboard.ConvertBrokenUtf8ToString (raw_html.Substring (idx_begin, idx_end - idx_begin));
+			}
+			
+			
+			protected string ExtractDigits(string text, int pos)
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				for (int i = pos; i < text.Length; i++)
+				{
+					char c = text[i];
+					
+					if ((c < '0') || (c > '9'))
+					{
+						break;
+					}
+					
+					buffer.Append (c);
+				}
+				
+				return buffer.ToString ();
+			}
 			
 			public bool IsCompatible(Format format)
 			{
@@ -228,6 +361,7 @@ namespace Epsitec.Common.Support
 			MicrosoftHtml
 		}
 		
+		#region Clipboard setup
 		static Clipboard()
 		{
 			//	Référence: http://www.w3.org/TR/REC-html40/sgml/entities.html#iso-88591
@@ -338,8 +472,14 @@ namespace Epsitec.Common.Support
 			{
 				Clipboard.map_entities[pairs[i+0]] = pairs[i+1];
 			}
+			
+			Clipboard.regex_style        = new Regex (@"\A<span((\s*style\s*=\s*(?<a>['""])(?<style>.*?)\k<a>)|(\s*\w*)|(\s*\w*\s*=\s*[^\s>]*?\s*))*\s*\>\Z", RegexOptions.Compiled | RegexOptions.Multiline);
+			Clipboard.regex_mso_spacerun = new Regex (@"\Amso\-spacerun\:\s*(?<opt>\w*)\s*\Z", RegexOptions.Compiled | RegexOptions.Multiline);
 		}
+		#endregion
 		
 		static System.Collections.Hashtable		map_entities;
+		static Regex							regex_style;
+		static Regex							regex_mso_spacerun;
 	}
 }
