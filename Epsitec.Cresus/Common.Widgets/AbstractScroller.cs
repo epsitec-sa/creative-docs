@@ -663,6 +663,6 @@ namespace Epsitec.Common.Widgets
 		private Drawing.Rectangle			tabRect;
 		
 		private Zone						hiliteZone;
-		private Converters.DecimalRange		range = new Converters.DecimalRange (0, 1, 0.000001M);
+		private Types.DecimalRange			range = new Types.DecimalRange (0, 1, 0.000001M);
 	}
 }
