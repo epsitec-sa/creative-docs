@@ -945,6 +945,13 @@ namespace Epsitec.Common.Widgets
 				
 				this.host.EditArrayModeChanged += new Support.EventHandler (this.HandleHostEditArrayModeChanged);
 				this.host.SelectedIndexChanged += new Support.EventHandler (this.HandleHostSelectedIndexChanged);
+				
+				this.store = this.host.TextArrayStore;
+				
+				if (this.store == null)
+				{
+					this.store = new EditArray.SelfStore (this.host);
+				}
 			}
 			
 			
@@ -1025,10 +1032,58 @@ namespace Epsitec.Common.Widgets
 			
 			public virtual void MoveUp()
 			{
+				EditArrayMode mode = this.SaveModeAndReset ();
+				int           row  = this.host.SelectedIndex;
+				
+				this.store.MoveRow (row, -1);
+				this.host.SelectedIndex = row-1;
+				this.RestoreMode (mode);
 			}
 			
 			public virtual void MoveDown()
 			{
+				EditArrayMode mode = this.SaveModeAndReset ();
+				int           row  = this.host.SelectedIndex;
+				
+				this.store.MoveRow (row, 1);
+				this.host.SelectedIndex = row+1;
+				this.RestoreMode (mode);
+			}
+			
+			
+			protected EditArrayMode SaveModeAndReset()
+			{
+				EditArrayMode mode = this.host.EditArrayMode;
+				this.StartReadOnly ();
+				return mode;
+			}
+			
+			protected void RestoreMode(EditArrayMode mode)
+			{
+				switch (mode)
+				{
+					case EditArrayMode.Standard:	this.StartReadOnly ();	break;
+					case EditArrayMode.Edition:		this.StartEdition ();	break;
+					case EditArrayMode.Search:		this.StartSearch ();	break;
+				}
+			}
+			
+			
+			public int							ActiveRow
+			{
+				get
+				{
+					int row = -1;
+					
+					switch (this.host.EditArrayMode)
+					{
+						case EditArrayMode.Standard:	row = this.host.SelectedIndex;	break;
+						case EditArrayMode.Edition:		row = this.host.EditionIndex;	break;
+						case EditArrayMode.Search:		row = this.host.SelectedIndex;	break;
+					}
+					
+					return row;
+				}
 			}
 			
 			
@@ -1142,15 +1197,23 @@ namespace Epsitec.Common.Widgets
 						break;
 				}
 				
+				
+				bool ok_edit       = this.store.CheckSetRow (act_index);
+				bool ok_ins_before = this.store.CheckInsertRows (act_index, 1);
+				bool ok_ins_after  = this.store.CheckInsertRows (act_index+1, 1);
+				bool ok_delete     = this.store.CheckRemoveRows (act_index, 1);
+				bool ok_move_up    = this.store.CheckMoveRow (act_index, -1);
+				bool ok_move_down  = this.store.CheckMoveRow (act_index, 1);
+				
 				this.UpdateCommandState ("StartReadOnly", true, act_readonly);
-				this.UpdateCommandState ("StartEdition", (act_index >= 0), act_edition);
+				this.UpdateCommandState ("StartEdition", ok_edit, act_edition);
 				this.UpdateCommandState ("StartSearch", true, act_search);
 				
-				this.UpdateCommandState ("InsertBefore", (act_index >= 0), WidgetState.ActiveNo);
-				this.UpdateCommandState ("InsertAfter", (act_index >= 0), WidgetState.ActiveNo);
-				this.UpdateCommandState ("Delete", (act_index >= 0), WidgetState.ActiveNo);
-				this.UpdateCommandState ("MoveUp", (act_index >  0), WidgetState.ActiveNo);
-				this.UpdateCommandState ("MoveDown", (act_index >= 0) && (act_index+1 < this.host.RowCount), WidgetState.ActiveNo);
+				this.UpdateCommandState ("InsertBefore", ok_ins_before, WidgetState.ActiveNo);
+				this.UpdateCommandState ("InsertAfter",  ok_ins_after,  WidgetState.ActiveNo);
+				this.UpdateCommandState ("Delete",       ok_delete,     WidgetState.ActiveNo);
+				this.UpdateCommandState ("MoveUp",       ok_move_up,    WidgetState.ActiveNo);
+				this.UpdateCommandState ("MoveDown",     ok_move_down,  WidgetState.ActiveNo);
 			}
 			
 			protected virtual void UpdateCommandState(string name, bool enabled, WidgetState active)
@@ -1166,8 +1229,110 @@ namespace Epsitec.Common.Widgets
 			protected EditArray					host;
 			protected string					name;
 			protected ToolTip					tips;
+			Support.Data.ITextArrayStore		store;
 		}
 		
+		public class SelfStore : Support.Data.ITextArrayStore
+		{
+			public SelfStore(ScrollArray host)
+			{
+				this.host = host;
+			}
+			
+			
+			#region ITextArrayStore Members
+			public int GetRowCount()
+			{
+				return this.host.RowCount;
+			}
+
+			public int GetColumnCount()
+			{
+				return this.host.ColumnCount;
+			}
+
+			
+			public string GetCellText(int row, int column)
+			{
+				return this.host[row, column];
+			}
+
+			public void SetCellText(int row, int column, string value)
+			{
+				if (this.host[row, column] != value)
+				{
+					this.host[row, column] = value;
+					this.OnStoreChanged ();
+				}
+			}
+
+			
+			public void InsertRows(int row, int num)
+			{
+				throw new System.NotSupportedException ("Cannot InsertRows.");
+			}
+
+			public void RemoveRows(int row, int num)
+			{
+				throw new System.NotSupportedException ("Cannot RemoveRows.");
+			}
+
+			public void MoveRow(int row, int distance)
+			{
+				int row_a = row;
+				int row_b = row + distance;
+				
+				int n = this.host.ColumnCount;
+				
+				for (int i = 0; i < n; i++)
+				{
+					string a = this.host[row_a, i];
+					string b = this.host[row_b, i];
+					
+					this.host[row_a, i] = b;
+					this.host[row_b, i] = a;
+				}
+				
+				this.OnStoreChanged ();
+			}
+
+			
+			public bool CheckSetRow(int row)
+			{
+				return (row >= 0) && (row < this.host.RowCount);
+			}
+
+			public bool CheckInsertRows(int row, int num)
+			{
+				return false;
+			}
+
+			public bool CheckMoveRow(int row, int distance)
+			{
+				int max = this.host.RowCount;
+				
+				return (row >= 0) && (row < max) && (row + distance >= 0) && (row + distance < max);
+			}
+
+			public bool CheckRemoveRows(int row, int num)
+			{
+				return false;
+			}
+
+			
+			public event Support.EventHandler	StoreChanged;
+			#endregion
+			
+			protected virtual void OnStoreChanged()
+			{
+				if (this.StoreChanged != null)
+				{
+					this.StoreChanged (this);
+				}
+			}
+			
+			protected ScrollArray				host;
+		}
 		
 		
 		public event Support.EventHandler		EditArrayModeChanged;

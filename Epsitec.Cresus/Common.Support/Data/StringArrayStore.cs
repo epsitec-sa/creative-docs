@@ -81,6 +81,32 @@ namespace Epsitec.Common.Support.Data
 			throw new System.NotSupportedException (string.Format ("Cannot remove rows."));
 		}
 
+		public void MoveRow(int row, int distance)
+		{
+			throw new System.NotSupportedException (string.Format ("Cannot move row."));
+		}
+		
+		public bool CheckSetRow(int row)
+		{
+			return (row >= 0) && (row < this.array.Length);
+		}
+		
+		public bool CheckInsertRows(int row, int num)
+		{
+			return false;
+		}
+		
+		public bool CheckRemoveRows(int row, int num)
+		{
+			return false;
+		}
+		
+		public bool CheckMoveRow(int row, int distance)
+		{
+			return false;
+		}
+		
+		
 		public event Epsitec.Common.Support.EventHandler StoreChanged;
 		#endregion
 		

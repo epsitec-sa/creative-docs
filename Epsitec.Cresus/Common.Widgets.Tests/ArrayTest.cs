@@ -380,6 +380,10 @@ namespace Epsitec.Common.Widgets
 					this.StoreChanged (this);
 				}
 			}
+			
+			public void MoveRow(int row, int distance)
+			{
+			}
 
 			public string GetCellText(int row, int column)
 			{
@@ -398,6 +402,26 @@ namespace Epsitec.Common.Widgets
 
 			public void SetCellText(int row, int column, string value)
 			{
+			}
+			
+			public bool CheckSetRow(int row)
+			{
+				return false;
+			}
+			
+			public bool CheckInsertRows(int row, int num)
+			{
+				return false;
+			}
+			
+			public bool CheckRemoveRows(int row, int num)
+			{
+				return false;
+			}
+			
+			public bool CheckMoveRow(int row, int distance)
+			{
+				return false;
 			}
 			
 			public event Support.EventHandler	StoreChanged;

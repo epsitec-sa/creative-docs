@@ -24,21 +24,21 @@ namespace Epsitec.Common.Widgets.Design.Tools
 		
 		
 		#region ITextArrayStore Members
-		public void InsertRows(int row, int num)
+		public int GetColumnCount()
 		{
-			if (this.StoreChanged != null)
-			{
-				this.StoreChanged (this);
-			}
+			return 2;
 		}
 		
-		public void RemoveRows(int row, int num)
+		public int GetRowCount()
 		{
-			if (this.StoreChanged != null)
+			if (this.bundle != null)
 			{
-				this.StoreChanged (this);
+				return this.bundle.CountFields;
 			}
+			
+			return 0;
 		}
+		
 		
 		public string GetCellText(int row, int column)
 		{
@@ -70,20 +70,49 @@ namespace Epsitec.Common.Widgets.Design.Tools
 			}
 		}
 		
-		public int GetColumnCount()
+		
+		public void InsertRows(int row, int num)
 		{
-			return 2;
+			if (this.StoreChanged != null)
+			{
+				this.StoreChanged (this);
+			}
 		}
 		
-		public int GetRowCount()
+		public void RemoveRows(int row, int num)
 		{
-			if (this.bundle != null)
+			if (this.StoreChanged != null)
 			{
-				return this.bundle.CountFields;
+				this.StoreChanged (this);
 			}
-			
-			return 0;
 		}
+		
+		public void MoveRow(int row, int distance)
+		{
+			throw new System.NotSupportedException (string.Format ("Cannot move row."));
+		}
+		
+		
+		public bool CheckSetRow(int row)
+		{
+			return (row >= 0) && (row < this.bundle.CountFields);
+		}
+		
+		public bool CheckInsertRows(int row, int num)
+		{
+			return false;
+		}
+		
+		public bool CheckRemoveRows(int row, int num)
+		{
+			return false;
+		}
+		
+		public bool CheckMoveRow(int row, int distance)
+		{
+			return false;
+		}
+		
 		
 		public event Support.EventHandler		StoreChanged;
 		#endregion
