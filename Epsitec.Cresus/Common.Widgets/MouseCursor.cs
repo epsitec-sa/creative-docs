@@ -10,6 +10,12 @@ namespace Epsitec.Common.Widgets
 			this.cursor = cursor;
 		}
 		
+		private MouseCursor(System.Windows.Forms.Cursor cursor, System.IntPtr handle)
+		{
+			this.cursor = cursor;
+			this.handle = handle;
+		}
+		
 		~MouseCursor()
 		{
 			this.Dispose (false);
@@ -18,30 +24,51 @@ namespace Epsitec.Common.Widgets
 		
 		public static MouseCursor FromImage(Drawing.Image image, int xhot, int yhot)
 		{
-			System.IntPtr     org_handle = image.BitmapImage.NativeBitmap.GetHicon ();
-			Win32Api.IconInfo icon_info;
+			System.Drawing.Bitmap bitmap     = image.BitmapImage.NativeBitmap;
+			System.IntPtr         org_handle = bitmap == null ? System.IntPtr.Zero : bitmap.GetHicon ();
+			Win32Api.IconInfo     icon_info  = new Win32Api.IconInfo ();
+			
+			if (org_handle == System.IntPtr.Zero)
+			{
+				throw new System.NullReferenceException ("FromImage cannot derive bitmap handle.");
+			}
 			
 			Win32Api.GetIconInfo (org_handle, out icon_info);
+			
+			if ((icon_info.BitmapColor == System.IntPtr.Zero) ||
+				(icon_info.BitmapMask == System.IntPtr.Zero))
+			{
+				throw new System.NullReferenceException ("FromImage got empty IconInfo.");
+			}
 			
 			icon_info.FlagIcon = 0;
 			icon_info.HotspotX = xhot;
 			icon_info.HotspotY = (int)(image.Height) - yhot;
 			
-			System.IntPtr new_handle = Win32Api.CreateIconIndirect (ref icon_info);
+			System.IntPtr               new_handle = Win32Api.CreateIconIndirect (ref icon_info);
+			System.Windows.Forms.Cursor win_cursor = new System.Windows.Forms.Cursor (new_handle);
 			
-			MouseCursor cursor = new MouseCursor (new System.Windows.Forms.Cursor (new_handle));
-			
-			cursor.handle = new_handle;
-			
-			return cursor;
+			return new MouseCursor (win_cursor, new_handle);
 		}
 		
 		public static MouseCursor FromImage(Drawing.Image image)
 		{
-			System.IntPtr     org_handle = image.BitmapImage.NativeBitmap.GetHicon ();
-			Win32Api.IconInfo icon_info;
+			System.Drawing.Bitmap bitmap     = image.BitmapImage.NativeBitmap;
+			System.IntPtr         org_handle = bitmap == null ? System.IntPtr.Zero : bitmap.GetHicon ();
+			Win32Api.IconInfo     icon_info  = new Win32Api.IconInfo ();
+			
+			if (org_handle == System.IntPtr.Zero)
+			{
+				throw new System.NullReferenceException ("FromImage cannot derive bitmap handle.");
+			}
 			
 			Win32Api.GetIconInfo (org_handle, out icon_info);
+			
+			if ((icon_info.BitmapColor == System.IntPtr.Zero) ||
+				(icon_info.BitmapMask == System.IntPtr.Zero))
+			{
+				throw new System.NullReferenceException ("FromImage got empty IconInfo.");
+			}
 			
 			double ox = image.Origin.X;
 			double oy = image.Height - image.Origin.Y;
@@ -50,13 +77,10 @@ namespace Epsitec.Common.Widgets
 			icon_info.HotspotX = (int)System.Math.Floor(ox+0.5);;
 			icon_info.HotspotY = (int)System.Math.Floor(oy+0.5);;
 			
-			System.IntPtr new_handle = Win32Api.CreateIconIndirect (ref icon_info);
+			System.IntPtr               new_handle = Win32Api.CreateIconIndirect (ref icon_info);
+			System.Windows.Forms.Cursor win_cursor = new System.Windows.Forms.Cursor (new_handle);
 			
-			MouseCursor cursor = new MouseCursor (new System.Windows.Forms.Cursor (new_handle));
-			
-			cursor.handle = new_handle;
-			
-			return cursor;
+			return new MouseCursor (win_cursor, new_handle);
 		}
 		
 		
