@@ -53,6 +53,10 @@ namespace Epsitec.Common.Drawing
 			get { return this.top + this.bottom; }
 		}
 		
+		public Size						Size
+		{
+			get { return new Size (this.Width, this.Height); }
+		}
 		
 		public override bool Equals(object obj)
 		{
