@@ -12,9 +12,20 @@ namespace System
 			this.date_time = new System.DateTime (year, month, day);
 		}
 		
-		public Date(System.DateTime date)
+		public Date(object date)
 		{
-			this.date_time = date.Date;
+			if (date is System.DateTime)
+			{
+				this.date_time = ((System.DateTime)date).Date;
+			}
+			else if (date is System.Date)
+			{
+				this.date_time = ((System.Date)date).date_time;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Not a Date nor a DateTime");
+			}
 		}
 		
 		

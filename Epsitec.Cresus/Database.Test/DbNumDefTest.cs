@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Database
 			
 			Assertion.AssertEquals (false, def.IsMinMaxDefined);
 			Assertion.AssertEquals (true, def.IsDigitDefined);
-			Assertion.AssertEquals ( 999, def.MaxValue);
-			Assertion.AssertEquals (-999, def.MinValue);
+			Assertion.AssertEquals ( 999.000M, def.MaxValue);
+			Assertion.AssertEquals (-999.000M, def.MinValue);
 			
 			def.DigitPrecision = 6;
 			def.DigitShift     = 3;

@@ -144,12 +144,12 @@ namespace Epsitec.Cresus.Database
 		{
 			DbAccess db_access = new DbAccess ();
 			
-			db_access.provider   = "Firebird";
-			db_access.login_name = "sysdba";
-			db_access.login_pwd  = "masterkey";
-			db_access.database   = "test";
-			db_access.server     = "localhost";
-			db_access.create     = force_db_creation;
+			db_access.Provider		= "Firebird";
+			db_access.LoginName		= "sysdba";
+			db_access.LoginPassword = "masterkey";
+			db_access.Database		= "test";
+			db_access.Server		= "localhost";
+			db_access.Create		= force_db_creation;
 			
 			return db_access;
 		}
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Database
 				
 				//	OK: la base existait déjà... on ne peut pas la créer !
 				
-				db_access.create = false;
+				db_access.Create = false;
 				db_abstraction = DbFactory.FindDbAbstraction (db_access);
 			}
 			

@@ -37,8 +37,23 @@ namespace System
 			System.Diagnostics.Debug.Assert (this.Ticks < Time.DayTicks);
 		}
 		
-		public Time(System.DateTime date_time) : this (date_time.Hour, date_time.Minute, date_time.Second, date_time.Millisecond)
+		public Time(object time)
 		{
+			if (time is System.DateTime)
+			{
+				System.DateTime date_time  = (System.DateTime)time;
+				System.Time date_time_time = new Time (date_time.Hour, date_time.Minute, date_time.Second, date_time.Millisecond);
+				
+				this.time = date_time_time.time;
+			}
+			else if (time is System.Time)
+			{
+				this.time = ((System.Time)time).time;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Not a Time nor a DateTime");
+			}
 		}
 		
 		

@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		public IDbAbstraction NewDbAbstraction(DbAccess db_access)
 		{
-			System.Diagnostics.Debug.Assert (db_access.provider == this.ProviderName);
+			System.Diagnostics.Debug.Assert (db_access.Provider == this.ProviderName);
 			
 			FirebirdAbstraction fb = new FirebirdAbstraction (db_access, this);
 			
@@ -30,9 +30,11 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		public ITypeConverter						TypeConverter
 		{
-			get { return null; }
+			get { return this.type_converter; }
 		}
 		
 		#endregion
+		
+		protected FirebirdTypeConverter				type_converter = new FirebirdTypeConverter ();
 	}
 }

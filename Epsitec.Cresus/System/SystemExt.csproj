@@ -3,7 +3,7 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{C757AD58-605D-4480-BC2E-03E8076368B2}"
+        ProjectGuid = "{10453A3B-CA2A-4D36-B634-78BA87AAAB26}"
         SccProjectName = "SAK"
         SccLocalPath = "SAK"
         SccAuxPath = "SAK"
@@ -13,7 +13,7 @@
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "Database.Implementation"
+                AssemblyName = "SystemExt"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -22,7 +22,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "Epsitec.Cresus.Database.Implementation"
+                RootNamespace = "System"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -71,28 +71,17 @@
                 <Reference
                     Name = "System"
                     AssemblyName = "System"
-                    HintPath = "c:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
                     Name = "System.Data"
                     AssemblyName = "System.Data"
-                    HintPath = "c:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.Xml"
-                    HintPath = "c:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
-                />
-                <Reference
-                    Name = "Database"
-                    Project = "{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "FirebirdSql.Data.Firebird"
-                    AssemblyName = "FirebirdSql.Data.Firebird"
-                    HintPath = "..\External\FirebirdSql.Data.Firebird.dll"
-                    Private = "True"
+                    AssemblyName = "System.XML"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
             </References>
         </Build>
@@ -104,23 +93,14 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "FirebirdAbstraction.cs"
+                    RelPath = "Date.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "FirebirdAbstractionFactory.cs"
+                    RelPath = "Time.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "FirebirdTypeConverter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "TODO.txt"
-                    BuildAction = "Content"
                 />
             </Include>
         </Files>

@@ -32,11 +32,11 @@ namespace Epsitec.Cresus.Database
 		
 		public static IDbAbstraction FindDbAbstraction(DbAccess db_access)
 		{
-			System.Diagnostics.Debug.Assert (db_access.provider != null);
+			System.Diagnostics.Debug.Assert (db_access.Provider != null);
 			
 			foreach (IDbAbstractionFactory db_factory in DbFactories)
 			{
-				if (db_factory.ProviderName == db_access.provider)
+				if (db_factory.ProviderName == db_access.Provider)
 				{
 					try
 					{

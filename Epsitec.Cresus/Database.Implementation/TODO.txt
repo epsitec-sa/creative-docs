@@ -10,15 +10,22 @@ Questions à régler
  3.	Comment des chaînes String sont-elles stockées dans la base de
 	données (Firebird) si elles contiennent des caractères en dehors
 	du jeu strictement 8-bit ?
+	
+	> En utilisant UNICODE_FSS, le provider fait la transformation
+	> UTF-8 de manière transparente.
 
  4.	En relation directe avec (3) étudier comment la directive CHARSET
 	doit être initialisée avec Firebird pour pouvoir stocker les infos
 	en format UTF-8.
+	
+	> Cf. 3.
 
  5. Faut-il, en particulier, utiliser System.Text.Encoding pour
     transformer les chaînes .NET en UTF-8 et vice-versa lorsque l'on
     communique avec Firebird, ou est-ce que le "provider ADO.NET"
     fait le travail à notre place ?
+    
+    > Non, c'est transparent.
 
  6. Est-ce que le type System.DateTime peut être utilisé avec Firebird ?
     Combien de bits est-ce que cela prend ? Les données stockées dans la

@@ -16,6 +16,14 @@ namespace Epsitec.Cresus.Database
 		/// <returns><c>true</c> si le type est supporté de manière native</returns>
 		bool CheckNativeSupport(DbRawType type);
 		
+		/// <summary>
+		/// Trouve le meilleur type natif correspondant au type brut spécifié.
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="native_type"></param>
+		/// <param name="length"></param>
+		/// <returns></returns>
+		bool GetRawTypeConverter(DbRawType type, out IRawTypeConverter converter);
 		
 		/// <summary>
 		/// Transforme un objet tel qu'il a été fourni par le provider ADO.NET en
