@@ -3189,15 +3189,24 @@ namespace Epsitec.Common.Widgets
 			{
 				this.parent.BuildCommandName (buffer);
 			}
-			int length = buffer.Length;
 			
-			if ((length > 0) &&
-				(buffer[length-1] != '.'))
+			string name = this.Name;
+			
+			if (name != "")
 			{
-				buffer.Append (".");
+				//	Ne tient pas compte du nom si celui-ci est absent, sinon le chemin de la
+				//	commande risque de contenir des suites de ".." inutiles.
+				
+				int length = buffer.Length;
+				
+				if ((length > 0) &&
+					(buffer[length-1] != '.'))
+				{
+					buffer.Append (".");
+				}
+				
+				buffer.Append (name);
 			}
-			
-			buffer.Append (this.Name);
 		}
 		
 		
