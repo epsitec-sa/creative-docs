@@ -2,12 +2,6 @@
 Ce qu'il reste à faire dans "Support"
 -------------------------------------
 
--	La classe ObjectBundler ne contient pas encore le code qui
-	énumère toutes les assemblies chargées et les analyse
-	dynamiquement pour enregistrer tous les types qui implémentent
-	l'interface IBundleSupport.
-
-
 -	La classe Implementation.BaseProvider ne fait pour l'instant aucun
 	accès à la base de données. Il faut implémenter les méthodes qui
 	manquent, en particulier compléter GetData et Setup.
@@ -28,22 +22,21 @@ En plus des tables décrivant les méta-données, il y a les tables
 suivantes :
 
 -	DbTable.Name = "Data";
--	DbTable.Name = "Data.xx";
 
-La première contient toutes les données par défaut (non localisées)
-et les autres, avec le suffixe "xx" correspondent aux versions
-traduites.
+La table "Data" contient toutes les données, par défaut (non localisées)
+et aussi toutes les autres (localisées ou personnalisées).
 
-Les colonnes dans une table "Data" sont les suivantes :
+Les colonnes dans "Data" sont les suivantes :
 
 -	Clef et statut (CR_ID, CR_REV, CR_STAT).
--	Name (DbColumn.Name = "Name";), type DbTypeString, max=100
--	Data (DbColumn.Name = "Data";), type DbType(DbSimpleType.ByteArray)
+-	Name  (DbColumn.Name = "Name"; ), type DbTypeString, max=100
+-	Level (DbColumn.Name = "Level";), type DbTypeString, max=4
+-	Data  (DbColumn.Name = "Data"; ), type DbType(DbSimpleType.ByteArray)
 	contenant des BLOBs binaires.
 
-La recherche dans une des tables (Data ou Data.xx) se fait au moyen
-d'un SELECT tel que :
+La recherche se fait au moyen d'un SELECT tel que :
 
--	Name = id de la ressource
+-	Name   = id de la ressource
+-	Level  = niveau (Default="00", Localised="fr", Customised="Xfr")
 -	CR_REV = 0
 
