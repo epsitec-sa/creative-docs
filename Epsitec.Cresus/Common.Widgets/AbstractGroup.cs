@@ -9,6 +9,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public AbstractGroup()
 		{
+			this.InternalState |= InternalState.PossibleContainer;
 		}
 		
 		public AbstractGroup(Widget embedder) : this()
