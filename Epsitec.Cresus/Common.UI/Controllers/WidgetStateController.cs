@@ -106,10 +106,10 @@ namespace Epsitec.Common.UI.Controllers
 				this.widget.ActiveStateChanged += new EventHandler (this.HandleStateChanged);
 			}
 			
-			this.SyncFromAdapter ();
+			this.SyncFromAdapter (SyncReason.Initialisation);
 		}
 		
-		public override void SyncFromAdapter()
+		public override void SyncFromAdapter(SyncReason reason)
 		{
 			Adapters.DecimalAdapter adapter = this.Adapter as Adapters.DecimalAdapter;
 			

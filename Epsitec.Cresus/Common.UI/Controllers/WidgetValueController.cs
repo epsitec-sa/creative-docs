@@ -70,10 +70,10 @@ namespace Epsitec.Common.UI.Controllers
 			
 			this.num_value.ValueChanged += new EventHandler (this.HandleWidgetValueChanged);
 			
-			this.SyncFromAdapter ();
+			this.SyncFromAdapter (SyncReason.Initialisation);
 		}
 		
-		public override void SyncFromAdapter()
+		public override void SyncFromAdapter(SyncReason reason)
 		{
 			Adapters.DecimalAdapter adapter = this.Adapter as Adapters.DecimalAdapter;
 			

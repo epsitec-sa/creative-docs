@@ -124,10 +124,10 @@ namespace Epsitec.Common.UI.Controllers
 			this.named_sel.SelectedIndexChanged += new EventHandler(HandleSelectedIndexChanged);
 			this.widget.TextChanged += new EventHandler(HandleTextChanged);
 			
-			this.SyncFromAdapter ();
+			this.SyncFromAdapter (SyncReason.Initialisation);
 		}
 		
-		public override void SyncFromAdapter()
+		public override void SyncFromAdapter(SyncReason reason)
 		{
 			Adapters.DecimalAdapter num_adapter  = this.Adapter as Adapters.DecimalAdapter;
 			Adapters.StringAdapter  text_adapter = this.Adapter as Adapters.StringAdapter;
