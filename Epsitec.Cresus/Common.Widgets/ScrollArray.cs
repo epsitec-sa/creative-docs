@@ -33,6 +33,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.frame_margins = adorner.GeometryArrayMargins;
 			this.table_margins = new Drawing.Margins ();
+			this.inner_margins = new Drawing.Margins ();
 			this.row_height    = System.Math.Floor (this.DefaultFontHeight * 1.25 + 0.5);
 			
 			this.header = new Widget (this);
@@ -332,6 +333,38 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public double							InnerTopMargin
+		{
+			get
+			{
+				return this.inner_margins.Top;
+			}
+			set
+			{
+				if (this.inner_margins.Top != value)
+				{
+					this.inner_margins.Top = value;
+					this.RefreshContents ();
+				}
+			}
+		}
+		
+		public double							InnerBottomMargin
+		{
+			get
+			{
+				return this.inner_margins.Bottom;
+			}
+			set
+			{
+				if (this.inner_margins.Bottom != value)
+				{
+					this.inner_margins.Bottom = value;
+					this.RefreshContents ();
+				}
+			}
+		}
+		
 		public Drawing.Rectangle				TitleBounds
 		{
 			get
@@ -353,7 +386,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.table_bounds.Width - this.total_width;
+				return this.inner_bounds.Width - this.total_width;
 			}
 		}
 		
@@ -683,15 +716,15 @@ namespace Epsitec.Common.Widgets
 				double y1 = (first_row - this.first_virtvis_row) * this.row_height;
 				double y2 = (last_row - this.first_virtvis_row + 1) * this.row_height;
 				
-				y1 = System.Math.Min (y1, this.table_bounds.Height);
-				y2 = System.Math.Min (y2, this.table_bounds.Height);
+				y1 = System.Math.Min (y1, this.inner_bounds.Height);
+				y2 = System.Math.Min (y2, this.inner_bounds.Height);
 				
 				if (y2 > y1)
 				{
-					y1 = this.table_bounds.Top - y1;
-					y2 = this.table_bounds.Top - y2;
+					y1 = this.inner_bounds.Top - y1;
+					y2 = this.inner_bounds.Top - y2;
 					
-					return new Drawing.Rectangle (this.table_bounds.Left, y2, this.table_bounds.Width, y1 - y2);
+					return new Drawing.Rectangle (this.inner_bounds.Left, y2, this.inner_bounds.Width, y1 - y2);
 				}
 			}
 			
@@ -714,10 +747,10 @@ namespace Epsitec.Common.Widgets
 					
 					if (column == i)
 					{
-						x1 += this.table_bounds.Left - this.offset;
-						x2 += this.table_bounds.Left - this.offset;
-						x1 = System.Math.Max (this.table_bounds.Left, x1);
-						x2 = System.Math.Min (this.table_bounds.Right, x2);
+						x1 += this.inner_bounds.Left - this.offset;
+						x2 += this.inner_bounds.Left - this.offset;
+						x1 = System.Math.Max (this.inner_bounds.Left, x1);
+						x2 = System.Math.Min (this.inner_bounds.Right, x2);
 						
 						if (x1 < x2)
 						{
@@ -760,10 +793,10 @@ namespace Epsitec.Common.Widgets
 				
 				if (y2 > y1)
 				{
-					y1 = this.table_bounds.Top - y1;
-					y2 = this.table_bounds.Top - y2;
+					y1 = this.inner_bounds.Top - y1;
+					y2 = this.inner_bounds.Top - y2;
 					
-					return new Drawing.Rectangle (this.table_bounds.Left, y2, this.table_bounds.Width, y1 - y2);
+					return new Drawing.Rectangle (this.inner_bounds.Left, y2, this.inner_bounds.Width, y1 - y2);
 				}
 			}
 			
@@ -776,33 +809,46 @@ namespace Epsitec.Common.Widgets
 			
 			if (bounds.IsValid)
 			{
-				double x1 = 0;
-				double x2 = 0;
+				double x1;
+				double x2;
 				
-				for (int i = 0; i < this.max_columns; i++)
+				if (this.GetUnclippedCellX (column, out x1, out x2))
 				{
-					x1 = x2;
-					x2 = x1 + this.column_widths[i];
+					bounds.Left  = x1;
+					bounds.Right = x2;
 					
-					if (column == i)
-					{
-						x1 += this.table_bounds.Left - this.offset;
-						x2 += this.table_bounds.Left - this.offset;
-						
-						if (x1 < x2)
-						{
-							bounds.Left  = x1;
-							bounds.Right = x2;
-							
-							return bounds;
-						}
-						
-						break;
-					}
+					return bounds;
 				}
 			}
 			
 			return Drawing.Rectangle.Empty;
+		}
+		
+		protected bool GetUnclippedCellX(int column, out double x1, out double x2)
+		{
+			x1 = 0;
+			x2 = 0;
+			
+			for (int i = 0; i < this.max_columns; i++)
+			{
+				x1 = x2;
+				x2 = x1 + this.column_widths[i];
+				
+				if (column == i)
+				{
+					x1 += this.inner_bounds.Left - this.offset;
+					x2 += this.inner_bounds.Left - this.offset;
+					
+					if (x1 < x2)
+					{
+						return true;
+					}
+					
+					break;
+				}
+			}
+			
+			return false;
 		}
 		
 		
@@ -849,15 +895,15 @@ namespace Epsitec.Common.Widgets
 		
 		public bool HitTestTable(Drawing.Point pos)
 		{
-			return this.table_bounds.Contains (pos);
+			return this.inner_bounds.Contains (pos);
 		}
 		
 		public bool HitTestTable(Drawing.Point pos, out int row, out int column)
 		{
 			if (this.HitTestTable (pos))
 			{
-				double x = this.offset + pos.X - this.table_bounds.Left;
-				double y = this.Client.Height - pos.Y - this.frame_margins.Top - this.table_margins.Top;
+				double x = this.offset + pos.X - this.inner_bounds.Left;
+				double y = this.inner_bounds.Top - pos.Y;
 				
 				int line = (int) (y / this.row_height);
 				int top  = this.first_virtvis_row;
@@ -1053,7 +1099,7 @@ invalid:	row    = -1;
 			double x1 = ox - this.offset;
 			double x2 = ox + dx - this.offset;
 			double min_x = 0;
-			double max_x = this.table_bounds.Width;
+			double max_x = this.inner_bounds.Width;
 			double offset = this.offset;
 			
 			switch (mode)
@@ -1110,7 +1156,7 @@ invalid:	row    = -1;
 			
 			this.Update ();
 			
-			double height = this.table_bounds.Height;
+			double height = this.inner_bounds.Height;
 			int    num    = (int) (height / this.row_height);
 			double adjust = height - num * this.row_height;
 			
@@ -1485,11 +1531,15 @@ invalid:	row    = -1;
 			bounds.Deflate (this.table_margins);
 			
 			this.table_bounds = bounds;
+			
+			bounds.Deflate (this.inner_margins);
+			
+			this.inner_bounds = bounds;
 		}
 		
 		protected virtual void UpdateVisibleRows()
 		{
-			double v = this.table_bounds.Height / this.row_height;
+			double v = this.inner_bounds.Height / this.row_height;
 
 			this.n_visible_rows       = (int) System.Math.Ceiling (v);	//	compte la dernière ligne partielle
 			this.n_fully_visible_rows = (int) System.Math.Floor (v);	//	nb de lignes entières
@@ -1863,8 +1913,9 @@ invalid:	row    = -1;
 			
 			Drawing.Rectangle local_clip = this.MapClientToRoot (this.table_bounds);
 			Drawing.Rectangle save_clip  = graphics.SaveClippingRectangle ();
+			Drawing.Rectangle table_clip = this.MapClientToRoot (this.inner_bounds);
 			
-			graphics.SetClippingRectangle (local_clip);
+			graphics.SetClippingRectangle (table_clip);
 			
 			//	Dessine le contenu du tableau, constitué des textes :
 			
@@ -1872,9 +1923,9 @@ invalid:	row    = -1;
 			
 			int           top    = this.FromVirtualRow (this.first_virtvis_row);						//	index de la ligne en haut
 			int           delta  = this.first_virtvis_row - this.ToVirtualRow (top);					//	0 si complètement visible, n => déborde n 'lignes'
-			Drawing.Point pos    = new Drawing.Point (this.table_bounds.Left, this.table_bounds.Top);
-			double        limit  = this.total_width - this.offset + this.table_bounds.Left + 1;
-			double        right  = System.Math.Min (this.table_bounds.Right, limit);
+			Drawing.Point pos    = new Drawing.Point (this.inner_bounds.Left, this.inner_bounds.Top);
+			double        limit  = this.total_width - this.offset + this.inner_bounds.Left + 1;
+			double        right  = System.Math.Min (this.inner_bounds.Right, limit);
 			
 			//	Détermine le nombre de lignes (virtuelles) actuellement affichables. Ceci est limité
 			//	par la place disponible et par le nombre total de lignes :
@@ -1890,7 +1941,7 @@ invalid:	row    = -1;
 			
 			for (int row = 0; row < n_rows; row++)
 			{
-				pos.X  = this.table_bounds.Left;
+				pos.X  = this.inner_bounds.Left;
 				pos.Y -= this.row_height;
 				
 				int         row_line      = row + top;
@@ -1938,6 +1989,8 @@ invalid:	row    = -1;
 				}
 			}
 			
+			graphics.RestoreClippingRectangle (local_clip);
+			
 			n_rows = System.Math.Min (virt_bottom, virt_end) - virt_top;
 			
 			rect = this.table_bounds;
@@ -1954,9 +2007,11 @@ invalid:	row    = -1;
 			{
 				//	Dessine les lignes de séparation horizontales :
 				
-				double x1 = this.table_bounds.Left;
+				double x1 = this.inner_bounds.Left;
 				double x2 = right;
-				double y  = this.table_bounds.Top - 0.5;
+				double y  = this.inner_bounds.Top - 0.5;
+				
+				graphics.AddLine (x1, y, x2, y);
 				
 				for (int i = 0; i < n_rows; i++)
 				{
@@ -1971,34 +2026,33 @@ invalid:	row    = -1;
 					y -= this.row_height;
 					
 					graphics.AddLine (x1, y, x2, y);
-					graphics.RenderSolid (color);
 				}
 			}
 			{
 				//	Dessine les lignes de séparation verticales :
 				
 				limit = this.VirtualRowCount * this.row_height;
-				limit = this.table_bounds.Top - (limit - top * this.row_height);
+				limit = this.inner_bounds.Top - (limit - top * this.row_height);
 				
-				double y1 = System.Math.Max (this.table_bounds.Bottom, limit);
-				double y2 = this.table_bounds.Top;
-				double x  = this.table_bounds.Left - this.offset + 0.5;
+				double y1 = System.Math.Max (this.inner_bounds.Bottom, limit);
+				double y2 = this.inner_bounds.Top - 0.5;
+				double x  = this.inner_bounds.Left - this.offset + 0.5;
 				
 				for (int i = 0; i < this.max_columns; i++)
 				{
 					x += this.GetColumnWidth (i);
 					
-					if ((x < this.table_bounds.Left) ||
-						(x > this.table_bounds.Right))
+					if ((x < this.inner_bounds.Left) ||
+						(x > this.inner_bounds.Right))
 					{
 						continue;
 					}
 					
 					graphics.AddLine (x, y1, x, y2);
-					graphics.RenderSolid (color);
 				}
 			}
 
+			graphics.RenderSolid (color);
 			graphics.RestoreClippingRectangle (save_clip);
 		}
 
@@ -2100,9 +2154,11 @@ invalid:	row    = -1;
 		protected double						text_margin			= 2;
 		protected double						row_height			= 16;
 		protected double						title_height		= 0;
+		protected Drawing.Margins				inner_margins;
 		protected double						slider_dim			= 6;
 		
 		protected Drawing.Rectangle				table_bounds;
+		protected Drawing.Rectangle				inner_bounds;
 		protected Widget						header;
 		protected System.Collections.ArrayList	header_buttons		= new System.Collections.ArrayList ();
 		protected System.Collections.ArrayList	header_sliders		= new System.Collections.ArrayList ();

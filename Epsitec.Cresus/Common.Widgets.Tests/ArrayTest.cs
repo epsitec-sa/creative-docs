@@ -305,7 +305,7 @@ namespace Epsitec.Common.Widgets
 			Window window = new Window();
 			
 			window.ClientSize = new Drawing.Size(400, 300);
-			window.Text = "CheckScrollArraySearch";
+			window.Text = "CheckEditArraySearch";
 			window.Root.DockMargins = new Drawing.Margins (5, 5, 5, 5);
 			
 			EditArray table = new EditArray();
@@ -326,11 +326,13 @@ namespace Epsitec.Common.Widgets
 			for (int y = 0; y < 100; y++)
 			{
 				table[y,0] = string.Format ("Val {0}.{1}", y/5, 0);
-				table[y,1] = string.Format ("Val {0}.{1}", y/5, y%5);
-				table[y,2] = string.Format ("Val {0}.{1}", y/5, "A");
-				table[y,3] = string.Format ("Val {0}.{1}", y/5, "B");
+				table[y,1] = string.Format ("Val {0}.{1}", "X", y%5);
+				table[y,2] = string.Format ("Val {0}.{1}", y/10, "A");
+				table[y,3] = string.Format ("Val {0}.{1}", "Y", y%10);
 				table[y,4] = string.Format ("Val {0}.{1}", y/5, "C");
 			}
+			
+			table.EditTextChanged += new EventHandler(HandleTableEditTextChanged);
 			
 			window.Show();
 		}
@@ -430,6 +432,15 @@ namespace Epsitec.Common.Widgets
 				e.Graphics.AddFilledRectangle (hilite);
 				e.Graphics.RenderSolid (Drawing.Color.FromARGB (0.25, 0, 0, 1));
 			}
+		}
+		
+		private void HandleTableEditTextChanged(object sender)
+		{
+			EditArray table = sender as EditArray;
+			string[] search = table.EditValues;
+			
+			table.SelectedItem = string.Join (table.Separator.ToString (), search);
+			table.ShowSelected (ScrollArrayShowMode.Center);
 		}
 		
 		

@@ -89,9 +89,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.edit_active > -1)
 			{
-				string[] values = this.GetRowTexts (this.edit_active);
-				
-				this.edit_line.SetValues (values);
+				this.edit_line.Values = this.GetRowTexts (this.edit_active);
 				
 				if (finished)
 				{
@@ -105,9 +103,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.edit_active > -1)
 			{
-				string[] values = this.edit_line.GetValues ();
-				
-				this.SetRowTexts (this.edit_active, values);
+				this.SetRowTexts (this.edit_active, this.edit_line.Values);
 				
 				if (finished)
 				{
@@ -259,6 +255,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual  void OnEditTextChanged()
+		{
+			if (this.EditTextChanged != null)
+			{
+				this.EditTextChanged (this);
+			}
+		}
+		
 		
 		protected bool MoveEditionToLine(int offset)
 		{
@@ -299,6 +303,73 @@ namespace Epsitec.Common.Widgets
 				{
 					return this.edit_widgets[i];
 				}
+			}
+			
+			public int							ColumnCount
+			{
+				get
+				{
+					return this.edit_widgets.Length;
+				}
+				set
+				{
+					AbstractTextField[] widgets = new AbstractTextField[value];
+					
+					int n = System.Math.Min (value, this.edit_widgets.Length);
+					
+					for (int i = 0; i < n; i++)
+					{
+						widgets[i] = this.edit_widgets[i];
+					}
+					
+					for (int i = n; i < this.edit_widgets.Length; i++)
+					{
+						this.Detach (this.edit_widgets[i]);
+					}
+					
+					this.edit_widgets = widgets;
+					
+					this.AttachEditWidgets ();
+				}
+			}
+			
+			public string[]						Values
+			{
+				get
+				{
+					string[] values = new string[this.edit_widgets.Length];
+				    
+					for (int i = 0; i < this.edit_widgets.Length; i++)
+					{
+						values[i] = this.edit_widgets[i].Text;
+					}
+					
+					return values;
+				}
+				set
+				{
+					//	Evite de générer des événements EditTextChanged pendant la mise à jour
+					//	des divers champs :
+					
+					this.setting_values = true;
+					this.text_change_count = 0;
+					
+					for (int i = 0; i < this.edit_widgets.Length; i++)
+					{
+						this.edit_widgets[i].Text = value[i];
+					}
+					
+					this.setting_values = false;
+					
+					//	S'il y a effectivement eu des changements dans les contenus de champs,
+					//	on envoie l'événement maintenant et une seule fois :
+					
+					if (this.text_change_count > 0)
+					{
+						this.host.OnEditTextChanged ();
+					}
+				}
+                
 			}
 			
 			
@@ -394,54 +465,6 @@ namespace Epsitec.Common.Widgets
 				this.edit_widgets[column].SelectAll ();
 			}
 			
-			public void SetValues(string[] values)
-			{
-				for (int i = 0; i < this.edit_widgets.Length; i++)
-				{
-					this.edit_widgets[i].Text = values[i];
-				}
-			}
-			
-			public string[] GetValues()
-			{
-				string[] values = new string[this.edit_widgets.Length];
-				
-				for (int i = 0; i < this.edit_widgets.Length; i++)
-				{
-					values[i] = this.edit_widgets[i].Text;
-				}
-				
-				return values;
-			}
-			
-			public int							ColumnCount
-			{
-				get
-				{
-					return this.edit_widgets.Length;
-				}
-				set
-				{
-					AbstractTextField[] widgets = new AbstractTextField[value];
-					
-					int n = System.Math.Min (value, this.edit_widgets.Length);
-					
-					for (int i = 0; i < n; i++)
-					{
-						widgets[i] = this.edit_widgets[i];
-					}
-					
-					for (int i = n; i < this.edit_widgets.Length; i++)
-					{
-						this.Detach (this.edit_widgets[i]);
-					}
-					
-					this.edit_widgets = widgets;
-					
-					this.AttachEditWidgets ();
-				}
-			}
-			
 			public void AttachEditWidgets()
 			{
 				for (int i = 0; i < this.edit_widgets.Length; i++)
@@ -475,14 +498,16 @@ namespace Epsitec.Common.Widgets
 				widget.TabIndex      = i;
 				widget.TabNavigation = TabNavigationMode.ActivateOnTab;
 				widget.Focused      += new Support.EventHandler (this.HandleEditArrayFocused);
+				widget.TextChanged  += new Epsitec.Common.Support.EventHandler (this.HandleTextChanged);
 			}
 			
 			protected void Detach(AbstractTextField widget)
 			{
 				if (widget != null)
 				{
-					widget.Focused -= new Support.EventHandler (this.HandleEditArrayFocused);
-					widget.Parent   = null;
+					widget.Focused     -= new Support.EventHandler (this.HandleEditArrayFocused);
+					widget.TextChanged -= new Epsitec.Common.Support.EventHandler (this.HandleTextChanged);
+					widget.Parent       = null;
 					widget.Dispose ();
 					widget = null;
 				}
@@ -499,15 +524,30 @@ namespace Epsitec.Common.Widgets
 				this.host.ShowCell (ScrollArrayShowMode.Extremity, row, column);
 			}
 			
+			private void HandleTextChanged(object sender)
+			{
+				if (this.setting_values)
+				{
+					this.text_change_count++;
+				}
+				else
+				{
+					this.host.OnEditTextChanged ();
+				}
+			}
 			
 			
+			protected bool						setting_values;
+			protected int						text_change_count;
 			protected EditArray					host;
 			protected AbstractTextField[]		edit_widgets = new AbstractTextField[0];
+
 		}
 		#endregion
 		
 		
 		public event Support.EventHandler		EditArrayModeChanged;
+		public event Support.EventHandler		EditTextChanged;
 		
 		protected int							edit_active  = -1;
 		protected EditWidget					edit_line    = null;
