@@ -9,7 +9,7 @@ namespace Epsitec.Common.Text.Layout
 	/// </summary>
 	public class Context
 	{
-		public Context(Text.Context text_context, ulong[] text, int start, double oy_base, double mx_left, double mx_right, double break_fence_width)
+		public Context(Text.Context text_context, ulong[] text, int start, double oy_base, double mx_left, double mx_right, double break_fence_before, double break_fence_after)
 		{
 			this.text_context = text_context;
 			
@@ -20,7 +20,8 @@ namespace Epsitec.Common.Text.Layout
 			this.mx_left  = mx_left;
 			this.mx_right = mx_right;
 			
-			this.break_fence_width = break_fence_width;
+			this.break_fence_before = break_fence_before;
+			this.break_fence_after  = break_fence_after;
 			
 			this.ox = this.mx_left;
 			
@@ -70,15 +71,28 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		public double							BreakFenceWidth
+		
+		public double							BreakFenceBefore
 		{
 			get
 			{
-				return this.break_fence_width;
+				return this.break_fence_before;
 			}
 			set
 			{
-				this.break_fence_width = value;
+				this.break_fence_before = value;
+			}
+		}
+		
+		public double							BreakFenceAfter
+		{
+			get
+			{
+				return this.break_fence_after;
+			}
+			set
+			{
+				this.break_fence_after = value;
 			}
 		}
 		
@@ -182,6 +196,7 @@ namespace Epsitec.Common.Text.Layout
 		private double							ox;
 		private double							mx_left;
 		private double							mx_right;
-		private double							break_fence_width;
+		private double							break_fence_before;
+		private double							break_fence_after;
 	}
 }
