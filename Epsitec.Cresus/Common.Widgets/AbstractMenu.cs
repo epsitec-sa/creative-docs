@@ -15,6 +15,9 @@ namespace Epsitec.Common.Widgets
 	{
 		protected AbstractMenu(MenuType type)
 		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			this.margins = adorner.GeometryMenuMargins;
+
 			this.type  = type;
 			this.items = new MenuItemCollection(this);
 			this.timer = new Timer();
@@ -147,11 +150,14 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.IsVertical )
 			{
+				IAdorner adorner = Widgets.Adorner.Factory.Active;
+				this.margins = adorner.GeometryMenuMargins;
+
 				this.Size = this.RequiredSize;
 			}
 		}
 
-		// Donne les dimensions nécessaires pour tout le menu.
+		// Donne les dimensions nécessaires pour tout le menu vertical.
 		protected Drawing.Size RequiredSize
 		{
 			get
@@ -171,8 +177,8 @@ namespace Epsitec.Common.Widgets
 					size.Width = System.Math.Max(size.Width, rs.Width);
 					size.Height += rs.Height;
 				}
-				size.Width  += this.margin*2;
-				size.Height += this.margin*2;
+				size.Width  += this.margins.Width;
+				size.Height += this.margins.Height;
 				return size;
 			}
 		}
@@ -191,6 +197,9 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.items == null ) return;
 
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			this.margins = adorner.GeometryMenuMargins;
+
 			if ( this.IsHorizontal )
 			{
 				double x = this.margin;
@@ -208,14 +217,14 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				double y = this.Height-this.margin;
+				double y = this.Height-this.margins.Top;
 				foreach ( MenuItem cell in this.items )
 				{
 					Drawing.Size rs = cell.RequiredSize;
 					y -= rs.Height;
 					Drawing.Rectangle rect = new Drawing.Rectangle();
-					rect.Left   = this.margin;
-					rect.Right  = this.Width-this.margin;
+					rect.Left   = this.margins.Left;
+					rect.Right  = this.Width-this.margins.Right;
 					rect.Bottom = y;
 					rect.Top    = y+rs.Height;
 					cell.Bounds = rect;
@@ -223,6 +232,12 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.isDirty = false;
+		}
+
+		protected override void HandleAdornerChanged()
+		{
+			this.UpdateClientGeometry();
+			base.HandleAdornerChanged();
 		}
 
 
@@ -468,6 +483,7 @@ namespace Epsitec.Common.Widgets
 			this.isActive = false;
 			this.SelectedIndex = item.Index;  // sélectionne la case parent
 
+			this.submenu.AdjustSize();
 			this.submenu.isActive = true;
 			this.submenu.SelectedIndex = -1;  // désélectionne tout
 			this.submenu.parentMenu = this;
@@ -854,7 +870,8 @@ namespace Epsitec.Common.Widgets
 		protected MenuType					type;
 		protected bool						isDirty;
 		protected bool						isActive = true;  // dernier menu (feuille)
-		protected double					margin = 2;
+		protected double					margin = 2;  // pour menu horizontal
+		protected Drawing.Margins			margins = new Drawing.Margins(2,2,2,2);
 		protected MenuItemCollection		items;
 		protected Window					window;
 		protected Timer						timer;
