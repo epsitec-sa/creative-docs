@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 07/10/2003
+//	Statut : OK/PA, 19/11/2003
 
 namespace Epsitec.Cresus.Database
 {
@@ -50,25 +50,39 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		
 		public string					Name
 		{
 			get { return this.name; }
 			set { this.name = value; }
 		}
 		
+		public DbType					Type
+		{
+			get { return this.type; }
+		}
 		public DbSimpleType				SimpleType
 		{
-			get { return this.simple_type; }
+			get { return this.type.SimpleType; }
 		}
 		
 		public DbNumDef					NumDef
 		{
-			get { return this.num_def; }
+			get { return this.type.NumDef; }
 		}
 		
 		public int						Length
 		{
-			get { return this.length; }
+			get
+			{
+				if (this.type is DbTypeString)
+				{
+					DbTypeString type = this.type as DbTypeString;
+					return type.Length;
+				}
+				
+				return 1;
+			}
 		}
 		
 		
@@ -98,7 +112,7 @@ namespace Epsitec.Cresus.Database
 		
 		public SqlColumn CreateSqlColumn(ITypeConverter type_converter)
 		{
-			DbRawType raw_type = TypeConverter.MapToRawType (this.simple_type, this.num_def);
+			DbRawType raw_type = TypeConverter.MapToRawType (this.SimpleType, this.NumDef);
 			SqlColumn column   = null;
 			
 			IRawTypeConverter raw_converter;
@@ -130,26 +144,26 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public void SetType(DbSimpleType type)
+		internal void SetType(DbSimpleType type)
 		{
 			this.SetTypeAndLength (type, 1, true, null);
 		}
 		
-		public void SetType(DbSimpleType type, DbNumDef num_def)
+		internal void SetType(DbSimpleType type, DbNumDef num_def)
 		{
 			this.SetTypeAndLength (type, 1, true, num_def);
 		}
 		
-		public void SetTypeAndLength(DbSimpleType type, int length, bool is_fixed_length)
+		internal void SetTypeAndLength(DbSimpleType type, int length, bool is_fixed_length)
 		{
 			this.SetTypeAndLength (type, length, is_fixed_length, null);
 		}
 		
-		public void SetTypeAndLength(DbSimpleType type, int length, bool is_fixed_length, DbNumDef num_def)
+		internal void SetTypeAndLength(DbSimpleType type, int length, bool is_fixed_length, DbNumDef num_def)
 		{
 			if (length < 1)
 			{
-				throw new System.ArgumentOutOfRangeException ("Invalid length");
+				throw new System.ArgumentOutOfRangeException ("length", length, "Invalid length");
 			}
 			
 			switch (type)
@@ -169,24 +183,33 @@ namespace Epsitec.Cresus.Database
 					break;
 			}
 			
-			if (num_def != null)
+			switch (type)
 			{
-				this.num_def = num_def.Clone () as DbNumDef;
+				case DbSimpleType.String:
+					this.type = new DbTypeString (length);
+					break;
+				
+				case DbSimpleType.ByteArray:
+					throw new System.NotImplementedException ("ByteArray not implemented yet");
+					
+				case DbSimpleType.Decimal:
+					this.type = new DbType (num_def);
+					break;
+				
+				default:
+					this.type = new DbType (type);
+					break;
 			}
 			
-			this.simple_type = type;
 			this.is_fixed_length = is_fixed_length;
-			this.length = length;
 		}
 		
 		
 		protected string				name				= null;
-		protected DbSimpleType			simple_type			= DbSimpleType.Null;
-		protected DbNumDef				num_def				= null;
+		protected DbType				type				= null;
 		protected bool					is_null_allowed		= false;
 		protected bool					is_unique			= false;
 		protected bool					is_indexed			= false;
 		protected bool					is_fixed_length		= true;
-		protected int					length				= 1;
 	}
 }
