@@ -1,6 +1,8 @@
 namespace Epsitec.Common.Drawing
 {
-	public struct Size
+	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
+	
+	[System.Serializable] public struct Size
 	{
 		public Size(double width, double height)
 		{
@@ -20,22 +22,25 @@ namespace Epsitec.Common.Drawing
 			this.height = size.Height;
 		}
 		
-		public double					Width
+		
+		[XmlAttribute] public double	Width
 		{
 			get { return this.width; }
 			set { this.width = value; }
 		}
 		
-		public double					Height
+		[XmlAttribute] public double	Height
 		{
 			get { return this.height; }
 			set { this.height = value; }
 		}
 		
+		
 		public bool						IsEmpty
 		{
 			get { return this.width == 0 && this.height == 0; }
 		}
+		
 		
 		public static readonly Size		Empty;
 		
@@ -129,6 +134,7 @@ namespace Epsitec.Common.Drawing
 		{
 			return (a.width != b.width) || (a.height != b.height);
 		}
+		
 		
 		private double					width, height;
 	}
