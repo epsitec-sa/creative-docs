@@ -4,17 +4,17 @@
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe CascadedStylesProperty contient une liste de styles cascadés
+	/// La classe StylesProperty contient une liste de styles (cascadés)
 	/// qui doivent s'appliquer au texte.
 	/// </summary>
-	public class CascadedStylesProperty : BaseProperty
+	public class StylesProperty : BaseProperty
 	{
-		public CascadedStylesProperty()
+		public StylesProperty()
 		{
 			this.styles = new TextStyle[0];
 		}
 		
-		public CascadedStylesProperty(TextStyle style)
+		public StylesProperty(TextStyle style)
 		{
 			this.styles = new TextStyle[1];
 			this.styles[0] = style;
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return WellKnownType.CascadedStyles;
+				return WellKnownType.Styles;
 			}
 		}
 		
@@ -77,11 +77,11 @@ namespace Epsitec.Common.Text.Properties
 			//	la propriété actuelle avec celle passée en entrée (qui vient
 			//	ajouter ses attributs aux attributs actuels).
 			
-			Debug.Assert.IsTrue (property is Properties.CascadedStylesProperty);
+			Debug.Assert.IsTrue (property is Properties.StylesProperty);
 			
-			CascadedStylesProperty a = this;
-			CascadedStylesProperty b = property as CascadedStylesProperty;
-			CascadedStylesProperty c = new CascadedStylesProperty ();
+			StylesProperty a = this;
+			StylesProperty b = property as StylesProperty;
+			StylesProperty c = new StylesProperty ();
 			
 			c.styles = new TextStyle[a.styles.Length + b.styles.Length];
 			
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override bool CompareEqualContents(object value)
 		{
-			return CascadedStylesProperty.CompareEqualContents (this, value as CascadedStylesProperty);
+			return StylesProperty.CompareEqualContents (this, value as StylesProperty);
 		}
 		
 		public override void UpdateContentsSignature(Epsitec.Common.IO.IChecksum checksum)
@@ -105,7 +105,7 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		private static bool CompareEqualContents(CascadedStylesProperty a, CascadedStylesProperty b)
+		private static bool CompareEqualContents(StylesProperty a, StylesProperty b)
 		{
 			if (a.styles.Length != b.styles.Length)
 			{

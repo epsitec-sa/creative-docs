@@ -12,7 +12,7 @@ namespace Epsitec.Common.Text.Properties
 	{
 		Font			= 1,
 		
-		CascadedStyles,
+		Styles,
 		
 		Other			= 1000000,
 	}

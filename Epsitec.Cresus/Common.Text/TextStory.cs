@@ -230,7 +230,7 @@ namespace Epsitec.Common.Text
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			//	TODO: générer une CascadedStylesProperty s'il y a plusieurs styles en cascade
+			//	TODO: générer une StylesProperty s'il y a plusieurs styles en cascade
 			
 			foreach (TextStyle style in text_styles)
 			{

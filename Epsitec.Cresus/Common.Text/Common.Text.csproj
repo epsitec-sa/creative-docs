@@ -244,17 +244,17 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Properties\CascadedStylesProperty.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Properties\FontProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Properties\PropertyType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\StylesProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
