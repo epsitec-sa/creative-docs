@@ -13,15 +13,33 @@ namespace Epsitec.Common.Drawing
 			this.size   = size;
 		}
 		
+		
 		~TextBreak()
 		{
 			this.Dispose (false);
 		}
 		
+		
+		#region IDisposable Members
 		public void Dispose()
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
+		}
+		#endregion
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				//	Rien de spécial à libérer...
+			}
+			
+			if (this.handle != System.IntPtr.Zero)
+			{
+				AntiGrain.Font.Break.Delete (this.handle);
+				this.handle = System.IntPtr.Zero;
+			}
 		}
 		
 		
@@ -66,27 +84,11 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				//	Rien de spécial à libérer...
-			}
-			
-			if (this.handle != System.IntPtr.Zero)
-			{
-				AntiGrain.Font.Break.Delete (this.handle);
-				this.handle = System.IntPtr.Zero;
-			}
-		}
-		
-		
 		private System.IntPtr			handle;
 		private double					size;
 	}
 	
-	[System.Flags]
-	public enum TextBreakMode
+	[System.Flags] public enum TextBreakMode
 	{
 		None			= 0x0000,
 		
