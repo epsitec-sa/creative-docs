@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 22/11/2003
 
 namespace Epsitec.Cresus.Database
@@ -6,9 +6,12 @@ namespace Epsitec.Cresus.Database
 	/// <summary>
 	/// Définition d'un accès à une base de données.
 	/// </summary>
+	
+	[System.Serializable]
+	
 	public struct DbAccess
 	{
-		DbAccess (string provider, string database, string server, string login_name, string login_pwd, bool create)
+		public DbAccess (string provider, string database, string server, string login_name, string login_pwd, bool create)
 		{
 			this.Provider		= provider;
 			this.Database		= database;
