@@ -11,7 +11,7 @@ namespace Epsitec.Common.Widgets
 			this.iconDockStyle = DockStyle.Top;
 			
 			double m = (this.DefaultWidth-this.defaultButtonWidth)/2;
-			this.DockMargins = new Drawing.Margins(m, m, m, m);
+			this.DockPadding = new Drawing.Margins(m, m, m, m);
 		}
 		
 		public VToolBar(Widget embedder) : this()

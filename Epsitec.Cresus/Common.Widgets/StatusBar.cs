@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.items = new Helpers.WidgetCollection(this);
 
-			this.DockMargins = new Drawing.Margins(1, 1, 2, 1);
+			this.DockPadding = new Drawing.Margins(1, 1, 2, 1);
 		}
 		
 		public StatusBar(Widget embedder) : this()

@@ -28,7 +28,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		[Bundle("menu")] public VMenu			Menu
+		[Bundle] public VMenu					Menu
 		{
 			get
 			{

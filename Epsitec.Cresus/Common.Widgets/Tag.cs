@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		[Bundle("color")] public Drawing.Color	Color
+		[Bundle]	public Drawing.Color		Color
 		{
 			get
 			{
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle("dir")]   public Direction		Direction
+		[Bundle]	public Direction			Direction
 		{
 			get
 			{
