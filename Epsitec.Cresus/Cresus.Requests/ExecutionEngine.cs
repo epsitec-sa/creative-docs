@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Requests
 	{
 		public ExecutionEngine(DbInfrastructure infrastructure)
 		{
-			this.Setup (infrastructure);
+			this.infrastructure = infrastructure;
 		}
 		
 		
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Requests
 				
 				request.Execute (this);
 				
-				DbRichCommand.DebugDumpCommand (this.infrastructure.SqlBuilder.Command);
+				DbRichCommand.DebugDumpCommand (this.CurrentTransaction.SqlBuilder.Command);
 				
 				this.infrastructure.ExecuteSilent (transaction);
 			}
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Requests
 			}
 			
 			this.PrepareNewCommand ();
-			this.infrastructure.SqlBuilder.InsertData (table.CreateSqlName (), sql_fields);
+			this.CurrentTransaction.SqlBuilder.InsertData (table.CreateSqlName (), sql_fields);
 		}
 		
 		public void GenerateUpdateDataCommand(string table_name, string[] cond_columns, object[] cond_values, string[] data_columns, object[] data_values)
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Requests
 			}
 			
 			this.PrepareNewCommand ();
-			this.infrastructure.SqlBuilder.UpdateData (table.CreateSqlName (), sql_data_fields, sql_cond_fields);
+			this.CurrentTransaction.SqlBuilder.UpdateData (table.CreateSqlName (), sql_data_fields, sql_cond_fields);
 		}
 		
 		
@@ -161,10 +161,6 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		private void Setup(DbInfrastructure infrastructure)
-		{
-			this.infrastructure = infrastructure;
-		}
 		
 		
 		private void DefineCurrentLogId()
@@ -184,7 +180,7 @@ namespace Epsitec.Cresus.Requests
 		
 		private DbTable FindTable(string table_name)
 		{
-			DbTable table = this.infrastructure.ResolveDbTable (this.current_transaction, table_name);
+			DbTable table = this.infrastructure.ResolveDbTable (this.CurrentTransaction, table_name);
 			
 			if (table == null)
 			{
@@ -229,7 +225,7 @@ namespace Epsitec.Cresus.Requests
 		{
 			if (this.pending_commands > 0)
 			{
-				this.infrastructure.SqlBuilder.AppendMore ();
+				this.CurrentTransaction.SqlBuilder.AppendMore ();
 			}
 			
 			this.pending_commands++;
@@ -237,14 +233,16 @@ namespace Epsitec.Cresus.Requests
 		
 		private void CleanUp()
 		{
-			this.current_log_id      = DbId.Zero;
-			this.current_transaction = null;
+			System.Diagnostics.Debug.Assert (this.current_transaction != null);
 			
 			if (this.pending_commands > 0)
 			{
-				this.infrastructure.SqlBuilder.Clear ();
+				this.CurrentTransaction.SqlBuilder.Clear ();
 				this.pending_commands = 0;
 			}
+			
+			this.current_log_id      = DbId.Zero;
+			this.current_transaction = null;
 		}
 		
 		

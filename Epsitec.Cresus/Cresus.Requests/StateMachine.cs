@@ -19,7 +19,8 @@ namespace Epsitec.Cresus.Requests
 			switch (before)
 			{
 				case ExecutionState.Pending:			return (after == ExecutionState.ExecutedByClient) || (after == ExecutionState.Conflicting);
-				case ExecutionState.Conflicting:		return (after == ExecutionState.ExecutedByClient);
+				case ExecutionState.Conflicting:		return (after == ExecutionState.ConflictResolved);
+				case ExecutionState.ConflictResolved:	return (after == ExecutionState.ExecutedByClient) || (after == ExecutionState.Conflicting);
 				case ExecutionState.ExecutedByClient:	return (after == ExecutionState.SentToServer);
 				case ExecutionState.SentToServer:		return (after == ExecutionState.ExecutedByServer) || (after == ExecutionState.Conflicting);
 				case ExecutionState.ExecutedByServer:	break;

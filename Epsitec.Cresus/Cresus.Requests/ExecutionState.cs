@@ -12,14 +12,15 @@ namespace Epsitec.Cresus.Requests
 	{
 		Pending				= 0,				//	en attente, exécution locale
 		Conflicting			= 1,				//	en attente, conflit à résoudre
-		ExecutedByClient	= 2,				//	exécution par le client OK
-		SentToServer		= 3,				//	envoi au serveur OK
-		ExecutedByServer	= 4,				//	exécution par le serveur OK
+		ConflictResolved	= 2,				//	en attente, conflit résolu
+		ExecutedByClient	= 3,				//	exécution par le client OK
+		SentToServer		= 4,				//	envoi au serveur OK
+		ExecutedByServer	= 5,				//	exécution par le serveur OK
 	}
 	
 	//	Les transitions suivantes sont possibles :
 	//
-	//		Pending -----> | -> ExecutedByClient -> SentToServer -> | -> ExecutedByServer
-	//		               |                                        |
-	//		Conflicting -> | -> Conflicting                         | -> Conflicting
+	//		Pending ----------> | -> ExecutedByClient -> SentToServer -> | -> ExecutedByServer
+	//		                    |                                        |
+	//		ConflictResolved -> | -> Conflicting -> ConflictResolved     | -> Conflicting -> ConflictResolved
 }

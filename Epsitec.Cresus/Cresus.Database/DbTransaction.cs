@@ -40,6 +40,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public ISqlBuilder						SqlBuilder
+		{
+			get
+			{
+				return this.database.SqlBuilder;
+			}
+		}
+		
 		public DbInfrastructure					Infrastructure
 		{
 			get

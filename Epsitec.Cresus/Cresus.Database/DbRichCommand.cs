@@ -100,6 +100,20 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (tables.Length == conditions.Length);
 			
+			if (transaction == null)
+			{
+				try
+				{
+					transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
+					return DbRichCommand.CreateFromTables (infrastructure, transaction, tables, conditions);
+				}
+				finally
+				{
+					transaction.Commit ();
+					transaction.Dispose ();
+				}
+			}
+			
 			DbRichCommand command = new DbRichCommand (infrastructure);
 			
 			int n = tables.Length;
@@ -110,7 +124,7 @@ namespace Epsitec.Cresus.Database
 				DbSelectCondition condition = conditions[i];
 				
 				SqlSelect   select  = new SqlSelect ();
-				ISqlBuilder builder = infrastructure.SqlBuilder;
+				ISqlBuilder builder = transaction.SqlBuilder;
 				
 				select.Fields.Add (SqlField.CreateAll ());
 				select.Tables.Add (table.Name, SqlField.CreateName (table.CreateSqlName ()));

@@ -90,28 +90,58 @@ namespace Epsitec.Cresus.Database
 		
 		public void Insert(DbTransaction transaction, DbLogger.Entry entry)
 		{
-			Collections.SqlFields fields = new Collections.SqlFields ();
-			
-			fields.Add (this.table.Columns[Tags.ColumnId].CreateSqlField (this.infrastructure.TypeConverter, entry.Id));
-			fields.Add (this.table.Columns[Tags.ColumnDateTime].CreateSqlField (this.infrastructure.TypeConverter, entry.DateTime));
-			
-			long next_id = entry.Id.LocalId + 1;
-			
-			this.infrastructure.SqlBuilder.InsertData (this.table_sql_name, fields);
-			this.infrastructure.ExecuteSilent (transaction);
-			
-			//	Enregistre dans la base le prochain ID à utiliser, en prenant note du
-			//	ClientId appliqué à l'élément que l'on vient d'enregistrer dans le LOG :
-			
-			this.infrastructure.UpdateTableNextId (transaction, this.table_key, DbId.CreateId (next_id, entry.Id.ClientId));
-			
-			this.next_id    = next_id;
-			this.current_id = entry.Id;
+			if (transaction == null)
+			{
+				try
+				{
+					transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
+					this.Insert (transaction, entry);
+				}
+				finally
+				{
+					transaction.Commit ();
+					transaction.Dispose ();
+				}
+			}
+			else
+			{
+				Collections.SqlFields fields = new Collections.SqlFields ();
+				
+				fields.Add (this.table.Columns[Tags.ColumnId].CreateSqlField (this.infrastructure.TypeConverter, entry.Id));
+				fields.Add (this.table.Columns[Tags.ColumnDateTime].CreateSqlField (this.infrastructure.TypeConverter, entry.DateTime));
+				
+				long next_id = entry.Id.LocalId + 1;
+				
+				transaction.SqlBuilder.InsertData (this.table_sql_name, fields);
+				this.infrastructure.ExecuteSilent (transaction);
+				
+				//	Enregistre dans la base le prochain ID à utiliser, en prenant note du
+				//	ClientId appliqué à l'élément que l'on vient d'enregistrer dans le LOG :
+				
+				this.infrastructure.UpdateTableNextId (transaction, this.table_key, DbId.CreateId (next_id, entry.Id.ClientId));
+				
+				this.next_id    = next_id;
+				this.current_id = entry.Id;
+			}
 		}
 		
 		public bool Remove(DbTransaction transaction, DbId id)
 		{
 			//	Supprime l'élément spécifié du log.
+			
+			if (transaction == null)
+			{
+				try
+				{
+					transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
+					return this.Remove (transaction, id);
+				}
+				finally
+				{
+					transaction.Commit ();
+					transaction.Dispose ();
+				}
+			}
 			
 			Collections.SqlFields conditions = new Collections.SqlFields ();
 			
@@ -120,7 +150,7 @@ namespace Epsitec.Cresus.Database
 			
 			conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, log_id_name, log_id_value));
 			
-			this.infrastructure.SqlBuilder.RemoveData (this.table.CreateSqlName (), conditions);
+			transaction.SqlBuilder.RemoveData (this.table.CreateSqlName (), conditions);
 			object result = this.infrastructure.ExecuteNonQuery (transaction);
 			
 			return 1 == (int) result;
@@ -135,23 +165,53 @@ namespace Epsitec.Cresus.Database
 		{
 			//	Supprime les éléments allant de start à end, y compris start et end.
 			
-			Collections.SqlFields conditions = new Collections.SqlFields ();
-			
-			SqlField log_id_name  = SqlField.CreateName (this.table_sql_name, Tags.ColumnId);
-			SqlField log_id_val_1 = SqlField.CreateConstant (id_start.Value, DbKey.RawTypeForId);
-			SqlField log_id_val_2 = SqlField.CreateConstant (id_end.Value, DbKey.RawTypeForId);
-			
-			conditions.Add (new SqlFunction (SqlFunctionType.CompareGreaterThanOrEqual, log_id_name, log_id_val_1));
-			conditions.Add (new SqlFunction (SqlFunctionType.CompareLessThanOrEqual, log_id_name, log_id_val_2));
-			
-			this.infrastructure.SqlBuilder.RemoveData (this.table.CreateSqlName (), conditions);
-			this.infrastructure.ExecuteSilent (transaction);
+			if (transaction == null)
+			{
+				try
+				{
+					transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
+					this.RemoveRange (transaction, id_start, id_end);
+				}
+				finally
+				{
+					transaction.Commit ();
+					transaction.Dispose ();
+				}
+			}
+			else
+			{
+				Collections.SqlFields conditions = new Collections.SqlFields ();
+				
+				SqlField log_id_name  = SqlField.CreateName (this.table_sql_name, Tags.ColumnId);
+				SqlField log_id_val_1 = SqlField.CreateConstant (id_start.Value, DbKey.RawTypeForId);
+				SqlField log_id_val_2 = SqlField.CreateConstant (id_end.Value, DbKey.RawTypeForId);
+				
+				conditions.Add (new SqlFunction (SqlFunctionType.CompareGreaterThanOrEqual, log_id_name, log_id_val_1));
+				conditions.Add (new SqlFunction (SqlFunctionType.CompareLessThanOrEqual, log_id_name, log_id_val_2));
+				
+				transaction.SqlBuilder.RemoveData (this.table.CreateSqlName (), conditions);
+				this.infrastructure.ExecuteSilent (transaction);
+			}
 		}
 		
 		
 		public DbLogger.Entry[] Find(DbTransaction transaction, DbId id_start, DbId id_end)
 		{
 			//	Trouve les éléments allant de start à end, y compris start et end.
+			
+			if (transaction == null)
+			{
+				try
+				{
+					transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
+					return this.Find (transaction, id_start, id_end);
+				}
+				finally
+				{
+					transaction.Commit ();
+					transaction.Dispose ();
+				}
+			}
 			
 			SqlField log_id_name  = SqlField.CreateName ("T", Tags.ColumnId);
 			SqlField log_id_val_1 = SqlField.CreateConstant (id_start.Value, DbKey.RawTypeForId);

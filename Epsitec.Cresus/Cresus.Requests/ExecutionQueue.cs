@@ -11,11 +11,22 @@ namespace Epsitec.Cresus.Requests
 	/// </summary>
 	public class ExecutionQueue : IAttachable, IPersistable
 	{
-		public ExecutionQueue(DbInfrastructure infrastructure)
+		public ExecutionQueue(DbInfrastructure infrastructure, IDbAbstraction database)
 		{
-			this.enqueue_event = new System.Threading.AutoResetEvent (false);
+			this.infrastructure = infrastructure;
+			this.database       = (database == null) ? this.infrastructure.DefaultDbAbstraction : database;
+			this.enqueue_event  = new System.Threading.AutoResetEvent (false);
 			
-			this.Setup (infrastructure);
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly, this.database))
+			{
+				DbTable table = this.infrastructure.ResolveDbTable (transaction, Tags.TableRequestQueue);
+				
+				this.Attach (infrastructure, table);
+				this.RestoreFromBase (transaction);
+				
+				transaction.Commit ();
+			}
+
 		}
 		
 		
@@ -109,13 +120,24 @@ namespace Epsitec.Cresus.Requests
 		#region IAttachable Members
 		public void Attach(DbInfrastructure infrastructure, DbTable table)
 		{
-			this.infrastructure = infrastructure;
-			this.queue_db_table = table;
+			if (this.infrastructure == infrastructure)
+			{
+				System.Diagnostics.Debug.Assert (this.database != null);
+				
+				this.queue_db_table = table;
+			}
+			else
+			{
+				this.infrastructure = infrastructure;
+				this.database       = this.infrastructure.DefaultDbAbstraction;
+				this.queue_db_table = table;
+			}
 		}
 		
 		public void Detach()
 		{
 			this.infrastructure = null;
+			this.database       = null;
 			this.queue_db_table = null;
 		}
 		#endregion
@@ -155,21 +177,8 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		private void Setup(DbInfrastructure infrastructure)
-		{
-			using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				DbTable table = infrastructure.ResolveDbTable (transaction, Tags.TableRequestQueue);
-				
-				this.Attach (infrastructure, table);
-				this.RestoreFromBase (transaction);
-				
-				transaction.Commit ();
-			}
-		}
-		
-		
 		private DbInfrastructure				infrastructure;
+		private IDbAbstraction					database;
 		private DbTable							queue_db_table;
 		private DbRichCommand					queue_command;
 		private System.Data.DataSet				queue_data_set;

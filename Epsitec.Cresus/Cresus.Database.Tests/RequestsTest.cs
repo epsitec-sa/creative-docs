@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Database
 			{
 				Assert.IsNotNull (infrastructure);
 				
-				Requests.ExecutionQueue queue = new Requests.ExecutionQueue (infrastructure);
+				Requests.ExecutionQueue queue = new Requests.ExecutionQueue (infrastructure, null);
 				
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.Database
 				
 				queue.Detach ();
 				
-				queue = new Requests.ExecutionQueue (infrastructure);
+				queue = new Requests.ExecutionQueue (infrastructure, null);
 				
 				System.Data.DataRowCollection rows = queue.Rows;
 				

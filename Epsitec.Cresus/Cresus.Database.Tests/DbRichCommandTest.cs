@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Database
 			//	leur variante Db... neutre. Cela va certainement migrer dans DbInfrastructure.
 			
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
-			ISqlBuilder sql_builder = infrastructure.SqlBuilder;
-			ISqlEngine  sql_engine  = infrastructure.SqlEngine;
+			ISqlBuilder sql_builder = infrastructure.DefaultSqlBuilder;
+			ISqlEngine  sql_engine  = infrastructure.DefaultSqlEngine;
 			
 			DbTable db_table_a = infrastructure.CreateDbTable ("Personnes", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
 			DbTable db_table_b = infrastructure.CreateDbTable ("Domiciles", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
