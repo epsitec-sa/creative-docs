@@ -36,6 +36,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.text_field.Anchor           = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.text_field.AnchorMargins    = new Drawing.Margins (this.caption_label.Right, 0, h_pane - y - h_line, 0);
 			this.text_field.TextChanged     += new EventHandler (this.HandleTextFieldTextChanged);
+			this.text_field.TabIndex         = 10;
 			
 			this.OnCaptionChanged ();
 			

@@ -114,6 +114,19 @@ namespace Epsitec.Common.Designer.Editors
 			return pane;
 		}
 		
+		protected void AddPropPane(Widget pane)
+		{
+			if (this.prop_panes == null)
+			{
+				this.prop_panes = new System.Collections.ArrayList ();
+			}
+			
+			this.prop_panes.Add (pane);
+			
+			pane.TabIndex      = this.prop_panes.Count;
+			pane.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+		}
+		
 		protected abstract void FillTabPage();
 		
 		protected virtual void LoadContents()
@@ -183,6 +196,7 @@ namespace Epsitec.Common.Designer.Editors
 		protected int							rank;
 		protected TabPage						page;
 		
+		protected System.Collections.ArrayList	prop_panes;
 		protected System.Collections.Hashtable	binders;
 	}
 }

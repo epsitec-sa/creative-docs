@@ -17,14 +17,14 @@ namespace Epsitec.Common.Designer.Editors
 		
 		protected override void FillTabPage()
 		{
-			this.CreatePropPane ("Name",		new Common.UI.Adapters.StringAdapter ());
-			this.CreatePropPane ("Text",		new UI.TextRefAdapter ());
-			this.CreatePropPane ("Command",		new Common.UI.Adapters.StringAdapter ());
-			this.CreatePropPane ("Location",	new Common.UI.Adapters.Num2Adapter ());
-			this.CreatePropPane ("Size",		new Common.UI.Adapters.Num2Adapter ());
-			this.CreatePropPane ("TabIndex",	new Common.UI.Adapters.StringAdapter ());
-			this.CreatePropPane ("Group",		new Common.UI.Adapters.StringAdapter ());
-			this.CreatePropPane ("Layout",		new Common.UI.Adapters.LayoutAdapter ());
+			this.AddPropPane (this.CreatePropPane ("Name",		new Common.UI.Adapters.StringAdapter ()));
+			this.AddPropPane (this.CreatePropPane ("Text",		new UI.TextRefAdapter ()));
+			this.AddPropPane (this.CreatePropPane ("Command",	new Common.UI.Adapters.StringAdapter ()));
+			this.AddPropPane (this.CreatePropPane ("Location",	new Common.UI.Adapters.Num2Adapter ()));
+			this.AddPropPane (this.CreatePropPane ("Size",		new Common.UI.Adapters.Num2Adapter ()));
+			this.AddPropPane (this.CreatePropPane ("TabIndex",	new Common.UI.Adapters.StringAdapter ()));
+			this.AddPropPane (this.CreatePropPane ("Group",		new Common.UI.Adapters.StringAdapter ()));
+			this.AddPropPane (this.CreatePropPane ("Layout",	new Common.UI.Adapters.LayoutAdapter ()));
 			
 			this.TabPage.TabTitle = "Attributes";
 		}

@@ -34,21 +34,25 @@ namespace Epsitec.Common.UI.Controllers
 			this.caption_label.Anchor        = AnchorStyles.TopLeft;
 			this.caption_label.AnchorMargins = new Drawing.Margins (0, 0, h_pane - y - h_line, 0);
 			
-			this.container.Height = h_line;
-			this.container.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.container.AnchorMargins = new Drawing.Margins (this.caption_label.Right, 0, h_pane - y - h_line, 0);
+			this.container.Height                     = h_line;
+			this.container.Anchor                     = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.container.AnchorMargins              = new Drawing.Margins (this.caption_label.Right, 0, h_pane - y - h_line, 0);
 			this.container.PreferHorizontalDockLayout = true;
+			this.container.TabIndex                   = 10;
+			this.container.TabNavigation              = Widget.TabNavigationMode.ForwardTabPassive;
 			
 			this.text_field_1.Dock        = DockStyle.Fill;
 			this.text_field_1.DockMargins = new Drawing.Margins (0, 2, 0, 0);
 			this.text_field_1.MinValue    = 0;
 			this.text_field_1.MaxValue    = 9999;
 			this.text_field_1.Resolution  = 1;
+			this.text_field_1.TabIndex    = 1;
 			this.text_field_2.Dock        = DockStyle.Fill;
 			this.text_field_2.DockMargins = new Drawing.Margins (2, 0, 0, 0);
 			this.text_field_2.MinValue    = 0;
 			this.text_field_2.MaxValue    = 9999;
 			this.text_field_2.Resolution  = 1;
+			this.text_field_2.TabIndex    = 2;
 			
 			this.text_field_1.TextChanged += new EventHandler (this.HandleTextFieldTextChanged);
 			this.text_field_2.TextChanged += new EventHandler (this.HandleTextFieldTextChanged);
