@@ -188,7 +188,34 @@ namespace Epsitec.Common.Dialogs
 			dialog.Document.PrinterSettings.PrintToFile = true;
 			dialog.Document.PrinterSettings.OutputFileName = @"c:\test.ps";
 			dialog.Document.Print (new PrintEngine ());
+			
+			try
+			{
+				Adobe.AcrobatDistiller.PdfDistiller distiller = new Adobe.AcrobatDistiller.PdfDistillerClass ();
+				distiller.bShowWindow = 0;
+				distiller.OnJobStart += new Adobe.AcrobatDistiller._PdfEvents_OnJobStartEventHandler (PrintDialogTest.HandleDistillerOnJobStart);
+				distiller.OnJobDone  += new Adobe.AcrobatDistiller._PdfEvents_OnJobDoneEventHandler (PrintDialogTest.HandleDistillerOnJobDone);
+				distiller.FileToPDF (@"c:\test.ps", @"c:\auto-generated-test.pdf", @"");
+				System.Diagnostics.Debug.WriteLine ("Done.");
+			}
+			catch (System.Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine ("Acrobat Distiller failed:");
+				System.Diagnostics.Debug.WriteLine ("  " + ex.Message);
+			}
 		}
+		
+		private static void HandleDistillerOnJobStart(string strInputPostScript, string strOutputPDF)
+		{
+			System.Diagnostics.Debug.WriteLine ("JobStart: " + strOutputPDF);
+		}
+			
+		private static void HandleDistillerOnJobDone(string strInputPostScript, string strOutputPDF)
+		{
+			System.Diagnostics.Debug.WriteLine ("JobDone: " + strOutputPDF);
+		}
+			
+		
 		
 		[Support.SuppressBundleSupport]
 		protected class AggPreview : Widgets.Widget
@@ -401,6 +428,7 @@ namespace Epsitec.Common.Dialogs
 #endif
 			}
 			
+			
 			public static void HandleFormPaintSmooth(object sender, System.Windows.Forms.PaintEventArgs e)
 			{
 				System.Windows.Forms.Form form = sender as System.Windows.Forms.Form;
@@ -423,5 +451,6 @@ namespace Epsitec.Common.Dialogs
 				PrintDialogTest.Helper.TestDocument (port);
 			}
 		}
+
 	}
 }

@@ -382,6 +382,7 @@ Global
 		External\copy.info = External\copy.info
 		copyproject-clean.py = copyproject-clean.py
 		copyproject.py = copyproject.py
+		CreateAcrobatDistillerAssembly.bat = CreateAcrobatDistillerAssembly.bat
 		Epsitec Cresus Full Build.mgb = Epsitec Cresus Full Build.mgb
 		Epsitec.Cresus.snk = Epsitec.Cresus.snk
 		External\FirebirdNETProviderSDK.chm = External\FirebirdNETProviderSDK.chm
