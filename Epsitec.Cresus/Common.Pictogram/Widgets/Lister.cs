@@ -269,6 +269,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public event EventHandler PanelChanged;
 
 
+		public override Drawing.Rectangle GetShapeBounds()
+		{
+			if ( table == null )
+			{
+				return new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			}
+			else
+			{
+				return table.GetShapeBounds();
+			}
+		}
+
+		
 		protected CellTable			table;
 		protected IconObjects		iconObjects;
 	}
