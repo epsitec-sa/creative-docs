@@ -153,6 +153,12 @@ namespace Epsitec.Common.Widgets
 					System.Diagnostics.Debug.Assert (this.children.Count == 0);
 				}
 				
+				if (this.Disposing != null)
+				{
+					this.Disposing (this);
+					this.Disposing = null;
+				}
+				
 				this.Parent = null;
 			}
 		}
@@ -1145,6 +1151,7 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler			ActiveStateChanged;
 		public event EventHandler			MinSizeChanged;
 		public event EventHandler			MaxSizeChanged;
+		public event EventHandler			Disposing;
 		
 		
 		//	FindNextWidget/FindPrevWidget

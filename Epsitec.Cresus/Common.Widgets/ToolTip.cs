@@ -40,12 +40,14 @@ namespace Epsitec.Common.Widgets
 				if ( text == null )
 				{
 					this.hash.Remove(widget);
-					widget.Entered -= new MessageEventHandler(this.HandleWidgetEntered);
-					widget.Exited  -= new MessageEventHandler(this.HandleWidgetExited);
+					widget.Entered   -= new MessageEventHandler(this.HandleWidgetEntered);
+					widget.Exited    -= new MessageEventHandler(this.HandleWidgetExited);
+					widget.Disposing -= new EventHandler(this.HandleWidgetDisposing);
 					return;
 				}
-				widget.Entered += new MessageEventHandler(this.HandleWidgetEntered);
-				widget.Exited  += new MessageEventHandler(this.HandleWidgetExited);
+				widget.Entered   += new MessageEventHandler(this.HandleWidgetEntered);
+				widget.Exited    += new MessageEventHandler(this.HandleWidgetExited);
+				widget.Disposing += new EventHandler(this.HandleWidgetDisposing);
 			}
 
 			this.hash[widget] = text;
@@ -55,17 +57,60 @@ namespace Epsitec.Common.Widgets
 		private void HandleWidgetEntered(object sender, MessageEventArgs e)
 		{
 			this.widget = sender as Widget;
+			
+			if ( this.filterRegisterCount++ == 0 )
+			{
+				Window.MessageFilter += new Widgets.MessageHandler(this.MessageFilter);
+			}
+
 			this.timer.Suspend();
-			this.timer.Delay = this.openDelay;
+			this.timer.Delay = SystemInformation.ToolTipShowDelay;
 			this.timer.Start();
 		}
 
 		// La souris sort d'un widget.
 		private void HandleWidgetExited(object sender, MessageEventArgs e)
 		{
+			if ( --this.filterRegisterCount == 0 )
+			{
+				Window.MessageFilter -= new Widgets.MessageHandler(this.MessageFilter);
+			}
+
 			this.timer.Stop();
 			this.HideToolTip();
 			this.widget = null;
+		}
+		
+		// Un widget est supprimé -- on doit donc le retirer de notre liste interne.
+		private void HandleWidgetDisposing(object sender)
+		{
+			Widget widget = sender as Widget;
+			
+			System.Diagnostics.Debug.Assert(this.widget != widget);
+			System.Diagnostics.Debug.Assert(this.hash.Contains(widget));
+			
+			this.SetToolTip(widget, null);
+		}
+
+		private void MessageFilter(object sender, Message message)
+		{
+			if ( !this.isVisible )  return;  // pas encore visible ?
+
+			switch ( message.Type )
+			{
+				case MessageType.MouseMove:
+					Drawing.Point mouse = Message.State.LastWindow.MapWindowToScreen(Message.State.LastPosition);
+					double dist = System.Math.Sqrt(System.Math.Pow(mouse.X-this.birthPos.X, 2) + System.Math.Pow(mouse.Y-this.birthPos.Y, 2));
+					if ( dist > 12 )
+					{
+						this.timer.Stop();
+						this.HideToolTip();
+
+						this.timer.Delay = SystemInformation.ToolTipShowDelay;
+						this.timer.Start();
+					}
+					break;
+			}
 		}
 
 		// Le timer arrive à zéro.
@@ -75,7 +120,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.ShowToolTip();
 				this.timer.Suspend();
-				this.timer.Delay = this.closeDelay;
+				this.timer.Delay = SystemInformation.ToolTipAutoCloseDelay;
 				this.timer.Start();
 			}
 			else	// déjà visible ?
@@ -95,6 +140,7 @@ namespace Epsitec.Common.Widgets
 			size.Height += this.margin.Y*2;
 
 			Drawing.Point mouse = Message.State.LastWindow.MapWindowToScreen(Message.State.LastPosition);
+			this.birthPos = mouse;
 			mouse += this.offset;
 			mouse.Y -= size.Height;
 
@@ -145,14 +191,13 @@ namespace Epsitec.Common.Widgets
 		protected Window				window;
 		protected bool					isVisible = false;
 		protected Timer					timer;
-		protected double				openDelay = 1;  // délai d'ouverture en secondes
-		protected double				closeDelay = 5;  // délai de fermeture en secondes
 		protected Widget				widget;
-		protected Drawing.Point			mouse;
+		protected Drawing.Point			birthPos;
 		protected Drawing.Point			margin = new Drawing.Point(3, 2);
 		protected Drawing.Point			offset = new Drawing.Point(8, -16);
 		protected Drawing.Color			colorBack;
 		protected Drawing.Color			colorFrame;
 		protected System.Collections.Hashtable	hash = new System.Collections.Hashtable();
+		protected int					filterRegisterCount;
 	}
 }

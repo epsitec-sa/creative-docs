@@ -127,6 +127,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public static double			ToolTipShowDelay
+		{
+			get { return 1.0; }
+		}
+		
+		public static double			ToolTipAutoCloseDelay
+		{
+			get { return 5.0; }
+		}
+		
+		
 		public static bool				IsMenuAnimationEnabled
 		{
 			get { return (SystemInformation.UserPreferenceMask[0] & 0x02) != 0; }
