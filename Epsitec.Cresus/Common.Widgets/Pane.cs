@@ -507,8 +507,8 @@ namespace Epsitec.Common.Widgets
 		protected double					sliderDragDim;
 		protected Drawing.Rectangle			sliderDragRect;
 		protected double[]					hideSize = new double[2];
-		protected new double[]				minSize = new double[2];
-		protected new double[]				maxSize = new double[2];
+		protected double[]					minSize = new double[2];
+		protected double[]					maxSize = new double[2];
 		protected AlphaBar					alphaBar;
 	}
 }
