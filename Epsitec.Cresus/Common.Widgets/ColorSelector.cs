@@ -148,25 +148,30 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.color;
+				return this.circle.Color;
 			}
 
 			set
 			{
-				if ( this.color != value )
+				if ( this.Color != value )
 				{
 					System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
 					
 					this.suspendColorEvents = true;
-					this.color = value;
-					this.circle.Color = this.color;
-					this.ColorToFieldsRGB();
-					this.ColorToFieldsHSV();
+					this.circle.Color = value;
+					this.UpdateColors ();
 					this.suspendColorEvents = false;
 					this.OnChanged ();
-					this.Invalidate();
 				}
 			}
+		}
+		
+		protected void UpdateColors()
+		{
+			this.ColorToFieldsRGB ();
+			this.ColorToFieldsHSV ();
+			this.OnChanged ();
+			this.Invalidate ();
 		}
 
 		// Couleur -> textes éditables.
@@ -185,7 +190,7 @@ namespace Epsitec.Common.Widgets
 		protected void ColorToFieldsHSV()
 		{
 			double h,s,v;
-			this.Color.GetHSV(out h, out s, out v);
+			this.circle.GetHSV(out h, out s, out v);
 			
 			this.fields[4].Value = System.Math.Floor(h);
 			this.fields[5].Value = System.Math.Floor(s*100+0.5);
@@ -212,14 +217,19 @@ namespace Epsitec.Common.Widgets
 			double s = this.fields[5].Value/100;
 			double v = this.fields[6].Value/100;
 			
-			this.Color = Drawing.Color.FromHSV(h,s,v);
+			System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
+			
+			this.suspendColorEvents = true;
+			this.circle.SetHSV (h,s,v);
+			this.UpdateColors ();
+			this.suspendColorEvents = false;
 		}
 
 		// Couleur -> sliders.
 		protected void ColoriseSliders()
 		{
 			double h,s,v;
-			this.Color.GetHSV(out h, out s, out v);
+			this.circle.GetHSV(out h, out s, out v);
 			
 			Drawing.Color saturated = Drawing.Color.FromHSV(h,1,1);
 			
@@ -343,7 +353,9 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( ! this.suspendColorEvents )
 			{
-				this.Color = this.circle.Color;
+				this.suspendColorEvents = true;
+				this.UpdateColors();
+				this.suspendColorEvents = false;
 			}
 		}
 
@@ -383,7 +395,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected Drawing.Color				color;
 		protected Drawing.Color				colorBlack;
 		protected ColorCircle				circle;
 		protected int						nbPalette;

@@ -63,6 +63,26 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
+		public void GetHSV(out double h, out double s, out double v)
+		{
+			h = this.h;
+			s = this.s;
+			v = this.v;
+		}
+		
+		public void SetHSV(double h, double s, double v)
+		{
+			if ( h != this.h || s != this.s || v != this.v )
+			{
+				this.h = h;
+				this.s = s;
+				this.v = v;
+				this.ComputePosHandler();
+				this.Invalidate();
+			}
+		}
+		
 		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{

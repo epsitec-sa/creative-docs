@@ -239,11 +239,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Widget							CapturingWidget
+		{
+			get
+			{
+				return this.capturing_widget;
+			}
+		}
+		
+		
 		public MouseCursor						MouseCursor
 		{
 			set
 			{
-				this.window.Cursor = value == null ? null : value.GetPlatformCursor ();
+				this.window.Cursor = (value == null) ? null : value.GetPlatformCursor ();
 			}
 		}
 		

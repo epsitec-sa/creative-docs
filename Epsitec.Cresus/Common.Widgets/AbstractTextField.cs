@@ -496,15 +496,31 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
 			if ( this.isReadOnly )  return false;
 			
-			// L'appel de DeleteSelection génère un événement TextChanged avec un texte dans
-			// un état intermédiaire. Tant pis...
+			int cursorFrom = this.TextLayout.FindOffsetFromIndex(this.cursorFrom);
+			int cursorTo   = this.TextLayout.FindOffsetFromIndex(this.cursorTo);
 			
-			this.DeleteSelection();
-
-			if ( this.Text.Length+ins.Length > this.maxChar )  return false;
-
-			int cursor = this.TextLayout.FindOffsetFromIndex(this.cursorTo);
+			int from = System.Math.Min(cursorFrom, cursorTo);
+			int to   = System.Math.Max(cursorFrom, cursorTo);
+			
 			string text = this.Text;
+			
+			if ( from < to )
+			{
+				text = text.Remove(from, to-from);
+				from = this.TextLayout.FindIndexFromOffset(from);
+				this.cursorTo   = from;
+				this.cursorFrom = from;
+			}
+			
+			if ( this.Text.Length+ins.Length > this.maxChar )
+			{
+				this.Text = text;
+				this.OnTextDeleted ();
+				this.OnCursorChanged ();
+				return false;
+			}
+			
+			int cursor = this.TextLayout.FindOffsetFromIndex(this.cursorTo);
 			text = text.Insert(cursor, ins);
 			this.cursorTo ++;
 			this.cursorFrom = this.cursorTo;

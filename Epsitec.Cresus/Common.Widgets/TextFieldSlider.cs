@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.slider = new Slider(this);
 			this.slider.HasFrame = false;
-			this.slider.ValueChanged += new EventHandler(this.SliderValueChanged);
+			this.slider.ValueChanged += new EventHandler(this.HandleSliderValueChanged);
 		}
 		
 		public TextFieldSlider(Widget embedder) : this()
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.slider.ValueChanged -= new EventHandler(this.SliderValueChanged);
+				this.slider.ValueChanged -= new EventHandler(this.HandleSliderValueChanged);
 				this.slider.Dispose();
 				this.slider = null;
 			}
@@ -29,21 +29,6 @@ namespace Epsitec.Common.Widgets
 			base.Dispose(disposing);
 		}
 		
-		// Valeur numérique éditée.
-		public override double Value
-		{
-			get
-			{
-				return base.Value;
-			}
-
-			set
-			{
-				base.Value = value;
-				this.slider.Value = value;
-			}
-		}
-
 		// Valeur numérique minimale possible.
 		public override double MinRange
 		{
@@ -117,18 +102,17 @@ namespace Epsitec.Common.Widgets
 			this.slider.Bounds = rect;
 		}
 
-		// Génère un événement pour dire que le texte a changé (ajout ou suppression).
-		protected override void OnTextChanged()
+		protected override void OnValueChanged()
 		{
-			base.OnTextChanged();
-			this.slider.Value = base.Value;
+			// Valeur numérique éditée.
+			base.OnValueChanged ();
+			this.slider.Value = this.Value;
 		}
 
 		// Slider bougé.
-		private void SliderValueChanged(object sender)
+		private void HandleSliderValueChanged(object sender)
 		{
-			base.Value = this.slider.Value;
-			this.OnTextChanged();
+			this.Value = this.slider.Value;
 		}
 
 

@@ -4142,7 +4142,18 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnEntered(MessageEventArgs e)
 		{
-			this.Window.MouseCursor = this.MouseCursor;
+			Window window = this.Window;
+				
+			if (window != null)
+			{
+				window.MouseCursor = this.MouseCursor;
+				
+				if (window.CapturingWidget == this)
+				{
+					e.Message.FilterNoChildren = true;
+					e.Message.Captured         = true;
+				}
+			}
 			
 			if (this.Entered != null)
 			{
@@ -4163,7 +4174,10 @@ namespace Epsitec.Common.Widgets
 				
 				if (window != null)
 				{
-					window.MouseCursor = this.parent.MouseCursor;
+					if (window.CapturingWidget == null)
+					{
+						window.MouseCursor = this.parent.MouseCursor;
+					}
 				}
 			}
 			
@@ -4193,7 +4207,6 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.hypertext == null)
 				{
-				
 					window.MouseCursor = this.MouseCursor;
 				}
 				else

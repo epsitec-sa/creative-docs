@@ -35,6 +35,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.sliderValue != value )
 				{
 					this.sliderValue = value;
+					this.OnValueChanged();
 					this.Invalidate();
 				}
 			}
@@ -118,19 +119,16 @@ namespace Epsitec.Common.Widgets
 		protected void MouseDown(Drawing.Point pos)
 		{
 			this.Value = this.Detect(pos);
-			this.OnValueChanged();
 		}
 
 		protected void MouseMove(Drawing.Point pos)
 		{
 			this.Value = this.Detect(pos);
-			this.OnValueChanged();
 		}
 
 		protected void MouseUp(Drawing.Point pos)
 		{
 			this.Value = this.Detect(pos);
-			this.OnValueChanged();
 		}
 
 		protected double Detect(Drawing.Point pos)
@@ -202,14 +200,14 @@ namespace Epsitec.Common.Widgets
 				
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(back);
-				rect.Width *= (this.sliderValue-this.minRange)/(this.maxRange-this.minRange);
+				rect.Width *= (this.Value-this.minRange)/(this.maxRange-this.minRange);
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(front);
 			}
 		}
 
 		
-		protected double					sliderValue = 0;
+		private double						sliderValue = 0;
 		protected double					minRange = 0;
 		protected double					maxRange = 100;
 		protected Drawing.Color				color;

@@ -62,6 +62,24 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public CommandDispatcher.CommandState[] FindCommandStates(string command)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (CommandState state in this.command_states)
+			{
+				if (state.Name == command)
+				{
+					list.Add (state);
+				}
+			}
+			
+			CommandState[] states = new CommandState[list.Count];
+			list.CopyTo (states);
+			
+			return states;
+		}
+		
 		
 		public void RegisterController(object controller)
 		{

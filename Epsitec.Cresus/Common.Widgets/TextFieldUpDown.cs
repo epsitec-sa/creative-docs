@@ -80,6 +80,13 @@ namespace Epsitec.Common.Widgets
 			base.OnAdornerChanged();
 		}
 
+		protected virtual void OnValueChanged()
+		{
+			if ( this.ValueChanged != null )  // qq'un écoute ?
+			{
+				this.ValueChanged(this);
+			}
+		}
 		
 		private void HandleButton(object sender)
 		{
@@ -135,10 +142,12 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if (this.Value != value)
+				if ((this.Value != value) ||
+					(this.Text == ""))
 				{
 					this.Text = System.Convert.ToString(value);
 					this.SelectAll();
+					this.OnValueChanged();
 				}
 			}
 		}
@@ -184,6 +193,8 @@ namespace Epsitec.Common.Widgets
 				this.step = value;
 			}
 		}
+		
+		public event EventHandler				ValueChanged;
 		
 		protected ArrowButton					arrowUp;
 		protected ArrowButton					arrowDown;
