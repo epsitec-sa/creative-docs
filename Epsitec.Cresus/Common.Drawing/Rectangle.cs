@@ -279,6 +279,33 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public void Deflate(Size s)
+		{
+			this.Deflate (s.Width, s.Height);
+		}
+		
+		public void Deflate(double x, double y)
+		{
+			if (! this.IsEmpty)
+			{
+				this.x1 += x;
+				this.x2 -= x;
+				this.y1 += y;
+				this.y2 -= y;
+			}
+		}
+		
+		public void Deflate(Margins margins)
+		{
+			if (! this.IsEmpty)
+			{
+				this.x1 += margins.Left;
+				this.x2 -= margins.Right;
+				this.y1 += margins.Bottom;
+				this.y2 -= margins.Top;
+			}
+		}
+		
 		public void Offset(Point p)
 		{
 			this.Offset (p.X, p.Y);
@@ -410,6 +437,28 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			r.Inflate (margins);
+			return r;
+		}
+		
+		public static Rectangle Deflate(Rectangle r, double x, double y)
+		{
+			if (r.IsEmpty)
+			{
+				return Rectangle.Empty;
+			}
+			
+			r.Deflate (x, y);
+			return r;
+		}
+		
+		public static Rectangle Deflate(Rectangle r, Margins margins)
+		{
+			if (r.IsEmpty)
+			{
+				return Rectangle.Empty;
+			}
+			
+			r.Deflate (margins);
 			return r;
 		}
 		
