@@ -3580,6 +3580,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.UpdateChildrenLayout ();
+			this.Invalidate ();
 		}
 		
 		protected void HandleAdornerChanged()

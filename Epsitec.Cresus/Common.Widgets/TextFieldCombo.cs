@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.textStyle = TextFieldStyle.Combo;
 
-			this.items = new Helpers.StringCollection (this);
+			this.items = new Helpers.StringCollection(this);
 			this.isCombo = true;
 			
 			this.button = new ArrowButton(this);
@@ -61,6 +61,34 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public int SelectedIndex
+		{
+			get
+			{
+				int		sel;
+				bool	exact;
+				if ( this.FindMatch(this.Text, out sel, out exact) )  return sel;
+				return -1;
+			}
+
+			set
+			{
+				string text = "";
+				if ( value >= 0 && value < this.items.Count )
+				{
+					text = this.items[value];
+				}
+
+				if ( this.Text != text )
+				{
+					this.Text = text;
+					this.OnTextChanged();
+					this.OnTextInserted();
+					this.SelectAll();
+				}
+			}
+		}
+
 		public bool FindMatch(string find, out int index, out bool exactMatch)
 		{
 			index = this.items.FindExactMatch(find);
