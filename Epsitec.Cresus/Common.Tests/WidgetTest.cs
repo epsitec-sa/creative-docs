@@ -102,8 +102,8 @@ namespace Epsitec.Common.Tests
 			
 			Assertion.Assert (widget.Left == 30);
 			Assertion.Assert (widget.Right == 80);
-			Assertion.Assert (widget.Top == 20);
-			Assertion.Assert (widget.Bottom == 60);
+			Assertion.Assert (widget.Top == 60);
+			Assertion.Assert (widget.Bottom == 20);
 			Assertion.Assert (widget.Client.Width == 50);
 			Assertion.Assert (widget.Client.Height == 40);
 			
@@ -111,8 +111,8 @@ namespace Epsitec.Common.Tests
 			
 			Assertion.Assert (widget.Left == 30);
 			Assertion.Assert (widget.Right == 80);
-			Assertion.Assert (widget.Top == 20);
-			Assertion.Assert (widget.Bottom == 60);
+			Assertion.Assert (widget.Top == 60);
+			Assertion.Assert (widget.Bottom == 20);
 			
 			Point pt_test   = new Point (40, 35);
 			Point pt_client = widget.MapParentToClient (pt_test);
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Tests
 				widget.SetClientAngle (angle);
 				widget.SetClientZoom (zoom);
 			
-				pt_test   = new Point (widget.Left + ox, widget.Top + oy);
+				pt_test   = new Point (widget.Left + ox, widget.Bottom + oy);
 				pt_client = widget.MapParentToClient (pt_test);
 				pt_widget = widget.MapClientToParent (pt_client);
 			
@@ -206,7 +206,7 @@ namespace Epsitec.Common.Tests
 			double ox = 1.0;
 			double oy = 2.0;
 			
-			Point pt1 = new Point (widget.Left + ox, widget.Top + oy);
+			Point pt1 = new Point (widget.Left + ox, widget.Bottom + oy);
 			Point pt2;
 			Point pt3;
 			
@@ -262,10 +262,10 @@ namespace Epsitec.Common.Tests
 			double dx = 10.0;
 			double dy = 6.0;
 			
-			Rectangle rect1 = new Rectangle (widget.Left + ox, widget.Top + oy, dx, dy);
+			Rectangle rect1 = new Rectangle (widget.Left + ox, widget.Bottom + oy, dx, dy);
 			Rectangle rect2;
-			Point pt1 = new Point (rect1.Left,  rect1.Top);
-			Point pt2 = new Point (rect1.Right, rect1.Bottom);
+			Point pt1 = new Point (rect1.Left,  rect1.Bottom);
+			Point pt2 = new Point (rect1.Right, rect1.Top);
 			Point pt3;
 			Point pt4;
 			
@@ -280,9 +280,9 @@ namespace Epsitec.Common.Tests
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
 			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Min (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
 			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Max (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 			
 			widget.SetClientZoom (3);
 			widget.SetClientAngle (90);
@@ -295,9 +295,9 @@ namespace Epsitec.Common.Tests
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
 			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Min (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
 			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Max (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 			
 			widget.SetClientZoom (7);
 			widget.SetClientAngle (180);
@@ -310,9 +310,9 @@ namespace Epsitec.Common.Tests
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
 			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Min (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
 			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Max (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 			
 			widget.SetClientZoom (1.5f);
 			widget.SetClientAngle (270);
@@ -325,9 +325,9 @@ namespace Epsitec.Common.Tests
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
 			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Min (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
 			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Max (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 		}
 		
 		[Test] public void CheckTransformRectToParent()
@@ -348,10 +348,10 @@ namespace Epsitec.Common.Tests
 			double dx = 10.0;
 			double dy = 6.0;
 			
-			Rectangle rect1 = new Rectangle (widget.Left + ox, widget.Top + oy, dx, dy);
+			Rectangle rect1 = new Rectangle (widget.Left + ox, widget.Bottom + oy, dx, dy);
 			Rectangle rect2;
-			Point pt1 = new Point (rect1.Left,  rect1.Top);
-			Point pt2 = new Point (rect1.Right, rect1.Bottom);
+			Point pt1 = new Point (rect1.Left,  rect1.Bottom);
+			Point pt2 = new Point (rect1.Right, rect1.Top);
 			Point pt3;
 			Point pt4;
 			
@@ -366,9 +366,9 @@ namespace Epsitec.Common.Tests
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
 			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Min (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
 			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Max (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 			
 			widget.SetClientZoom (3);
 			widget.SetClientAngle (90);
@@ -381,9 +381,9 @@ namespace Epsitec.Common.Tests
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
 			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Min (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
 			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Max (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 			
 			widget.SetClientZoom (7);
 			widget.SetClientAngle (180);
@@ -396,9 +396,9 @@ namespace Epsitec.Common.Tests
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
 			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Min (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
 			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Max (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 			
 			widget.SetClientZoom (1.5f);
 			widget.SetClientAngle (270);
@@ -411,9 +411,9 @@ namespace Epsitec.Common.Tests
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
 			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Min (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
 			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Max (pt3.Y, pt4.Y)));
+			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 		}
 		
 		[Test] public void CheckTransformToParent()

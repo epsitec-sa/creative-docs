@@ -63,7 +63,7 @@ namespace Epsitec.Common.Drawing
 
 		public void Paint(System.IntPtr hdc, System.Drawing.Rectangle clip)
 		{
-			Agg.Library.AggBufferPaint (this.agg_buffer, hdc, clip.Left, clip.Top, clip.Right, clip.Bottom);
+			Agg.Library.AggBufferPaint (this.agg_buffer, hdc, clip.Left, clip.Bottom, clip.Right, clip.Top);
 		}
 
 

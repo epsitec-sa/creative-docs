@@ -23,9 +23,11 @@ namespace Epsitec.Common.Tests
 			
 			window.Root.Children.Add (a);
 			window.Root.Children.Add (b);
+			
+			double x = window.ClientSize.Width - 90;
 
-			a.Name = "A"; a.Location = new Point (10, 50); a.Size = new Size (80, 20); a.Text = "OK";
-			b.Name = "B"; b.Location = new Point (10, 10); b.Size = new Size (80, 20); b.Text = "Cancel";
+			a.Name = "A"; a.Location = new Point (x, 40); a.Size = new Size (80, 20); a.Text = "OK";	 a.Anchor = Widget.AnchorStyles.Bottom | Widget.AnchorStyles.Right;
+			b.Name = "B"; b.Location = new Point (x, 10); b.Size = new Size (80, 20); b.Text = "Cancel"; b.Anchor = Widget.AnchorStyles.Bottom | Widget.AnchorStyles.Right;
 			
 			window.Show ();
 		}

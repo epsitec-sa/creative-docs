@@ -118,8 +118,28 @@ namespace Epsitec.Common.Widgets
 			get { return (this.modifiers & ModifierKeys.Alt) != 0; }
 		}
 		
+		public bool							IsMouseType
+		{
+			get
+			{
+				switch (this.type)
+				{
+					case MessageType.MouseDown:
+					case MessageType.MouseEnter:
+					case MessageType.MouseHover:
+					case MessageType.MouseLeave:
+					case MessageType.MouseMove:
+					case MessageType.MouseUp:
+					case MessageType.MouseWheel:
+						return true;
+				}
+				
+				return false;
+			}
+		}
 		
-		internal static Message FromMouseEvent(MessageType type, System.Windows.Forms.MouseEventArgs e)
+		
+		internal static Message FromMouseEvent(MessageType type, System.Windows.Forms.Form form, System.Windows.Forms.MouseEventArgs e)
 		{
 			Message message = new Message ();
 			
@@ -129,9 +149,15 @@ namespace Epsitec.Common.Widgets
 			message.filter_only_focused = false;
 			message.filter_only_on_hit  = true;
 			
+			int x = 0;
+			int y = 0;
+			
 			if (e != null)
 			{
-				message.cursor = new Drawing.Point (e.X, e.Y);
+				x = e.X;
+				y = form.ClientSize.Height - e.Y - 1;
+				
+				message.cursor = new Drawing.Point (x, y);
 				message.button = (MouseButtons) (int) e.Button;
 				message.wheel  = e.Delta;
 				
@@ -158,8 +184,8 @@ namespace Epsitec.Common.Widgets
 					int max_dy  = offset_max.Height;
 					int max_dr2 = max_dx*max_dx + max_dy*max_dy;
 					
-					int dx  = e.X - Message.state.button_down_x;
-					int dy  = e.Y - Message.state.button_down_y;
+					int dx  = x - Message.state.button_down_x;
+					int dy  = y - Message.state.button_down_y;
 					int dr2 = dx*dx + dy*dy;
 					
 					if (dr2 <= max_dr2)
@@ -169,8 +195,8 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				Message.state.button_down_time  = time_new;
-				Message.state.button_down_x     = e.X;
-				Message.state.button_down_y     = e.Y;
+				Message.state.button_down_x     = x;
+				Message.state.button_down_y     = y;
 				Message.state.button_down_count = down_count;
 				Message.state.button_down_id    = message.button;
 			}

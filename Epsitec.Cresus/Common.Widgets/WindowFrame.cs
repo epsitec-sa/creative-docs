@@ -13,14 +13,16 @@ namespace Epsitec.Common.Widgets
 			this.SetStyle (System.Windows.Forms.ControlStyles.UserPaint, true);
 			
 			this.graphics = new Epsitec.Common.Drawing.Graphics ();
-			this.root     = new WindowRoot ();
+			this.root     = new WindowRoot (this);
 			
 			this.root.Size = new Drawing.Size (this.ClientSize);
 			this.root.Name = "Root";
+			
+			this.ReallocatePixmap ();
 		}
 		
 		
-		public WindowRoot					Root
+		public WindowRoot				Root
 		{
 			get { return this.root; }
 		}
@@ -30,6 +32,13 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
+				if (this.graphics != null)
+				{
+					this.graphics.Dispose ();
+				}
+				
+				this.graphics = null;
+				this.root = null;
 			}
 			
 			base.Dispose (disposing);
@@ -85,25 +94,25 @@ namespace Epsitec.Common.Widgets
 		protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
 		{
 			base.OnMouseDown (e);
-			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseDown, e));
+			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseDown, this, e));
 		}
 
 		protected override void OnMouseUp(System.Windows.Forms.MouseEventArgs e)
 		{
 			base.OnMouseUp (e);
-			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseUp, e));
+			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseUp, this, e));
 		}
 
 		protected override void OnMouseMove(System.Windows.Forms.MouseEventArgs e)
 		{
 			base.OnMouseMove (e);
-			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseMove, e));
+			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseMove, this, e));
 		}
 
 		protected override void OnMouseWheel(System.Windows.Forms.MouseEventArgs e)
 		{
 			base.OnMouseWheel (e);
-			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseWheel, e));
+			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseWheel, this, e));
 		}
 
 		protected override void OnMouseEnter(System.EventArgs e)
@@ -113,13 +122,13 @@ namespace Epsitec.Common.Widgets
 			System.Drawing.Point point = this.PointToClient (System.Windows.Forms.Control.MousePosition);
 			System.Windows.Forms.MouseEventArgs fake_event = new System.Windows.Forms.MouseEventArgs (System.Windows.Forms.MouseButtons.None, 0, point.X, point.Y, 0);
 			
-			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseEnter, fake_event));
+			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseEnter, this, fake_event));
 		}
 
 		protected override void OnMouseLeave(System.EventArgs e)
 		{
 			base.OnMouseLeave (e);
-			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseLeave, null));
+			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseLeave, this, null));
 		}
 
 		
@@ -145,7 +154,30 @@ namespace Epsitec.Common.Widgets
 		protected override void OnSizeChanged(System.EventArgs e)
 		{
 			base.OnSizeChanged (e);
-			this.root.Size = new Drawing.Size (this.ClientSize);
+			this.ReallocatePixmap ();
+		}
+		
+		protected virtual void ReallocatePixmap()
+		{
+			int width  = this.ClientSize.Width;
+			int height = this.ClientSize.Height;
+			
+			this.graphics.SetPixmapSize (width, height);
+			
+			this.root.Size       = new Drawing.Size (width, height);
+			this.dirty_rectangle = new Drawing.Rectangle (0, 0, width, height);
+		}
+		
+		public virtual void MarkForRepaint(Drawing.Rectangle rect)
+		{
+			this.dirty_rectangle.MergeWith (rect);
+			
+			int x = (int) rect.Left;
+			int y = this.ClientSize.Height - 1 - (int) rect.Bottom;
+			int width  = (int) rect.Width;
+			int height = (int) rect.Height;
+			
+			this.Invalidate (new System.Drawing.Rectangle (x, y, width, height));
 		}
 
 		
@@ -205,23 +237,32 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void DispatchPaint(System.Drawing.Graphics win_graphics, System.Drawing.Rectangle win_clip_rect)
 		{
-			System.IntPtr hdc = win_graphics.GetHdc ();
+			//	Ce que Windows appelle "Paint", nous l'appelons "Display". En effet, lorsque l'on reçoit un événement
+			//	de type WM_PAINT (PaintEvent), on doit simplement afficher le contenu de la fenêtre, sans regénérer le
+			//	contenu du pixmap servant de cache.
 			
-			try
+			if (this.dirty_rectangle.IsEmpty == false)
 			{
-				this.graphics.AttachHandle (hdc);
-				System.Drawing.RectangleF clip_rect = new System.Drawing.RectangleF (win_clip_rect.X, win_clip_rect.Y, win_clip_rect.Width, win_clip_rect.Height);
-				this.root.PaintHandler (this.graphics, new Drawing.Rectangle (clip_rect));
+				Drawing.Rectangle repaint = this.dirty_rectangle;
+				
+				this.dirty_rectangle = Drawing.Rectangle.Empty;
+				this.root.PaintHandler (this.graphics, repaint);
 			}
-			finally
-			{
-				this.graphics.DetachHandle ();
-				win_graphics.ReleaseHdc (hdc);
-			}
+			
+			this.graphics.Pixmap.Paint (win_graphics, win_clip_rect);
 		}
 		
 		protected virtual void DispatchMessage(Message message)
 		{
+			if (message.IsMouseType)
+			{
+				//	C'est un message souris. Nous allons commencer par vérifier si tous les widgets
+				//	encore marqués comme IsEntered contiennent effectivement encore la souris. Si non,
+				//	on les retire de la liste en leur signalant qu'ils viennent de perdre la souris.
+				
+				Widget.UpdateEntered (message);
+			}
+			
 			this.root.MessageHandler (message, message.Cursor);
 			
 			if (message.Handled == false)
@@ -257,5 +298,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected WindowRoot			root;
 		protected Drawing.Graphics		graphics;
+		protected Drawing.Rectangle		dirty_rectangle;
 	}
 }

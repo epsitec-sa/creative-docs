@@ -21,17 +21,17 @@ namespace Epsitec.Common.Drawing
 		public Rectangle(System.Drawing.RectangleF r)
 		{
 			this.x1 = r.Left;
-			this.y1 = r.Top;
+			this.y1 = r.Bottom;
 			this.x2 = r.Right;
-			this.y2 = r.Bottom;
+			this.y2 = r.Top;
 		}
 		
 		public Rectangle(System.Drawing.Rectangle r)
 		{
 			this.x1 = r.Left;
-			this.y1 = r.Top;
+			this.y1 = r.Bottom;
 			this.x2 = r.Right;
-			this.y2 = r.Bottom;
+			this.y2 = r.Top;
 		}
 		
 		
@@ -90,13 +90,13 @@ namespace Epsitec.Common.Drawing
 			set { this.x2 = value; }
 		}
 		
-		public double					Top
+		public double					Bottom
 		{
 			get { return this.y1; }
 			set { this.y1 = value; }
 		}
 		
-		public double					Bottom
+		public double					Top
 		{
 			get { return this.y2; }
 			set { this.y2 = value; }

@@ -1,16 +1,21 @@
 namespace Epsitec.Common.Widgets
 {
-	using Epsitec.Common.Drawing;
-	
 	/// <summary>
 	/// 
 	/// </summary>
-	public class Widget
+	public class Widget : System.IDisposable
 	{
 		public Widget()
 		{
+			this.internal_state = InternalState.Enabled | InternalState.Visible;
+			this.anchor = AnchorStyles.Left | AnchorStyles.Top;
 		}
 		
+		public void Dispose()
+		{
+			this.SetEntered (false);
+		}
+
 		public AnchorStyles					Anchor
 		{
 			get { return this.anchor; }
@@ -63,13 +68,13 @@ namespace Epsitec.Common.Widgets
 		
 		public Drawing.Point				Location
 		{
-			get { return new Point (this.x1, this.y1); }
+			get { return new Drawing.Point (this.x1, this.y1); }
 			set { this.SetBounds (value.X, value.Y, value.X + this.x2 - this.x1, value.Y + this.y2 - this.y1); }
 		}
 		
 		public Drawing.Size					Size
 		{
-			get { return new Size (this.x2 - this.x1, this.y2 - this.y1); }
+			get { return new Drawing.Size (this.x2 - this.x1, this.y2 - this.y1); }
 			set { this.SetBounds (this.x1, this.y1, this.x1 + value.Width, this.y1 + value.Height); }
 		}
 		
@@ -155,21 +160,47 @@ namespace Epsitec.Common.Widgets
 			get;
 		}
 #endif
-		public bool							IsEnabled
+		public virtual bool					IsEnabled
 		{
-			get { return true; }	//	TODO:
+			get
+			{
+				if ((this.internal_state & InternalState.Enabled) == 0)
+				{
+					return false;
+				}
+				if (this.parent != null)
+				{
+					return this.parent.IsEnabled;
+				}
+				
+				return true;
+			}
 		}
 		
-		public bool							IsFocused
+		public virtual bool					IsVisible
 		{
-			get { return true; }	//	TODO:
-		}
-		
-		public bool							IsVisible
-		{
-			get { return true; }	//	TODO:
+			get
+			{
+				if (((this.internal_state & InternalState.Visible) == 0) ||
+					(this.parent == null))
+				{
+					return false;
+				}
+				
+				return this.parent.IsVisible;
+			}
 		}
 
+		public bool							IsFocused
+		{
+			get { return (this.internal_state & InternalState.Focused) != 0; }
+		}
+		
+		public bool							IsEntered
+		{
+			get { return (this.internal_state & InternalState.Entered) != 0; }
+		}
+		
 		
 		public WidgetCollection				Children
 		{
@@ -349,11 +380,86 @@ namespace Epsitec.Common.Widgets
 		
 		//	Cursor
 		//	Focus/SetFocus
-		//	Hide/Show/SetVisible
 		//	FindNextWidget/FindPrevWidget
 		//	Invalidate/Update/Refresh
 		
-		public virtual bool HitTest(Point point)
+		public virtual void Hide()
+		{
+			this.SetVisible (false);
+		}
+		
+		public virtual void Show()
+		{
+			this.SetVisible (true);
+		}
+		
+		public virtual void SetVisible(bool visible)
+		{
+			if ((this.internal_state & InternalState.Visible) == 0)
+			{
+				if (visible)
+				{
+					this.internal_state |= InternalState.Visible;
+					this.Invalidate ();
+				}
+			}
+			else
+			{
+				if (!visible)
+				{
+					this.internal_state &= ~ InternalState.Visible;
+					this.Invalidate ();
+				}
+			}
+		}
+		
+		
+		protected void SetEntered(bool entered)
+		{
+			if (this.IsEntered != entered)
+			{
+				if (entered)
+				{
+					Widget.entered_widgets.Add (this);
+					this.internal_state |= InternalState.Entered;
+					this.MessageHandler (Message.FromMouseEvent (MessageType.MouseEnter, null, null));
+				}
+				else
+				{
+					Widget.entered_widgets.Remove (this);
+					this.internal_state &= ~ InternalState.Entered;
+					this.MessageHandler (Message.FromMouseEvent (MessageType.MouseLeave, null, null));
+				}
+			}
+		}
+		
+		public static void UpdateEntered(Message message)
+		{
+			int index = Widget.entered_widgets.Count;
+			
+			while (index > 0)
+			{
+				index--;
+				
+				if (index < Widget.entered_widgets.Count)
+				{
+					Widget widget = Widget.entered_widgets[index] as Widget;
+					
+					Drawing.Point point_in_widget = widget.MapRootToClient (message.Cursor);
+					
+					if ((point_in_widget.X < 0) ||
+						(point_in_widget.Y < 0) ||
+						(point_in_widget.X >= widget.Client.Width) ||
+						(point_in_widget.Y >= widget.Client.Height))
+					{
+						widget.SetEntered (false);
+					}
+				}
+			}
+		}
+		
+		
+		public virtual bool HitTest(Drawing.Point point)
 		{
 			if ((point.X >= this.x1) &&
 				(point.X <  this.x2) &&
@@ -367,7 +473,32 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual Point MapParentToClient(Point point)
+		public virtual Drawing.Rectangle GetPaintBounds()
+		{
+			return new Drawing.Rectangle (0, 0, this.client_info.width, this.client_info.height);
+		}
+		
+		public virtual void Invalidate()
+		{
+			this.Invalidate (this.GetPaintBounds ());
+		}
+		
+		public virtual void Invalidate(Drawing.Rectangle rect)
+		{
+			rect = this.MapClientToParent (rect);
+			
+			if (this.parent != null)
+			{
+				this.parent.Invalidate (rect);
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine ("Widget.Invalidate has no parent");
+			}
+		}
+		
+		
+		public virtual Drawing.Point MapParentToClient(Drawing.Point point)
 		{
 			double x = point.X - this.x1;
 			double y = point.Y - this.y1;
@@ -398,10 +529,10 @@ namespace Epsitec.Common.Widgets
 				y /= zoom;
 			}
 			
-			return new Point (x, y);
+			return new Drawing.Point (x, y);
 		}
 		
-		public virtual Point MapClientToParent(Point point)
+		public virtual Drawing.Point MapClientToParent(Drawing.Point point)
 		{
 			double x = point.X;
 			double y = point.Y;
@@ -432,10 +563,10 @@ namespace Epsitec.Common.Widgets
 				y *= zoom;
 			}
 			
-			return new Point (x + this.x1, y + this.y1);
+			return new Drawing.Point (x + this.x1, y + this.y1);
 		}
 		
-		public virtual Point MapRootToClient(Point point)
+		public virtual Drawing.Point MapRootToClient(Drawing.Point point)
 		{
 			Widget parent = this.Parent;
 			
@@ -450,7 +581,7 @@ namespace Epsitec.Common.Widgets
 			return this.MapParentToClient (point);
 		}
 		
-		public virtual Point MapClientToRoot(Point point)
+		public virtual Drawing.Point MapClientToRoot(Drawing.Point point)
 		{
 			Widget iter = this;
 			
@@ -469,6 +600,11 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Rectangle MapParentToClient(Drawing.Rectangle rect)
 		{
+			//	La conversion du rectangle du parent vers le client se fait en traitant le rectangle
+			//	comme un bounding-box. En effet, si une rotation intervient, le rectangle résultant
+			//	n'est plus aligné sur les axes Ox/Oy, et il n'a plus de sens; on calcule donc le
+			//	nouveau rectangle aligné, englobant le rectangle transformé.
+			
 			double x1 = rect.Left   - this.x1;
 			double y1 = rect.Top    - this.y1;
 			double x2 = rect.Right  - this.x1;
@@ -491,10 +627,28 @@ namespace Epsitec.Common.Widgets
 				x1 -= cx;		x2 -= cx;
 				y1 -= cy;		y2 -= cy;
 				
-				double xr1 = (x1 * cos - y1 * sin) / zoom;
-				double yr1 = (x1 * sin + y1 * cos) / zoom;
-				double xr2 = (x2 * cos - y2 * sin) / zoom;
-				double yr2 = (x2 * sin + y2 * cos) / zoom;
+				//	La rotation d'un rectangle peut être périlleuse... Il faut donc considérer les quatre
+				//	coins, et prendre en fin de compte les extrêmes.
+				
+				double xr1 = (x1 * cos - y1 * sin);
+				double yr1 = (x1 * sin + y1 * cos);
+				double xr2 = (x2 * cos - y2 * sin);
+				double yr2 = (x2 * sin + y2 * cos);
+				
+				double xr3 = (x1 * cos - y2 * sin);
+				double yr3 = (x1 * sin + y2 * cos);
+				double xr4 = (x2 * cos - y1 * sin);
+				double yr4 = (x2 * sin + y1 * cos);
+				
+				xr1 = System.Math.Min (xr1, System.Math.Min (xr2, System.Math.Min (xr3, xr4)));
+				xr2 = System.Math.Max (xr1, System.Math.Max (xr2, System.Math.Max (xr3, xr4)));
+				yr1 = System.Math.Min (yr1, System.Math.Min (yr2, System.Math.Min (yr3, yr4)));
+				yr2 = System.Math.Max (yr1, System.Math.Max (yr2, System.Math.Max (yr3, yr4)));
+				
+				xr1 /= zoom;
+				yr1 /= zoom;
+				xr2 /= zoom;
+				yr2 /= zoom;
 				
 				cx = this.client_info.width / 2;
 				cy = this.client_info.height / 2;
@@ -508,22 +662,96 @@ namespace Epsitec.Common.Widgets
 				y1 /= zoom;		y2 /= zoom;
 			}
 			
-			rect.X = System.Math.Min (x1, x2);
-			rect.Y = System.Math.Min (y1, y2);
+			rect.X = x1;
+			rect.Y = y1;
 			
-			rect.Width  = System.Math.Abs (x2 - x1);
-			rect.Height = System.Math.Abs (y2 - y1);
+			rect.Width  = x2 - x1;
+			rect.Height = y2 - y1;
 			
 			return rect;
 		}
 		
+		public virtual Drawing.Rectangle MapClientToParent(Drawing.Rectangle rect)
+		{
+			//	La conversion du rectangle du client vers le parent se fait en traitant le rectangle
+			//	comme un bounding-box. En effet, si une rotation intervient, le rectangle résultant
+			//	n'est plus aligné sur les axes Ox/Oy, et il n'a plus de sens; on calcule donc le
+			//	nouveau rectangle aligné, englobant le rectangle transformé.
+			
+			double x1 = rect.Left;
+			double y1 = rect.Top;
+			double x2 = rect.Right;
+			double y2 = rect.Bottom;
+			
+			double angle = this.client_info.angle * System.Math.PI / 180.0;
+			double zoom  = this.client_info.zoom;
+			
+			System.Diagnostics.Debug.Assert (zoom > 0.0f);
+			System.Diagnostics.Debug.Assert ((angle >= 0) && (angle < 360));
+			
+			if (angle != 0)
+			{
+				double sin = System.Math.Sin (angle);
+				double cos = System.Math.Cos (angle);
+				
+				double cx = this.client_info.width / 2;
+				double cy = this.client_info.height / 2;
+				
+				x1 -= cx;		x2 -= cx;
+				y1 -= cy;		y2 -= cy;
+				
+				//	La rotation d'un rectangle peut être périlleuse... Il faut donc considérer les quatre
+				//	coins, et prendre en fin de compte les extrêmes.
+				
+				double xr1 = ( x1 * cos + y1 * sin);
+				double yr1 = (-x1 * sin + y1 * cos);
+				double xr2 = ( x2 * cos + y2 * sin);
+				double yr2 = (-x2 * sin + y2 * cos);
+				
+				double xr3 = ( x1 * cos + y2 * sin);
+				double yr3 = (-x1 * sin + y2 * cos);
+				double xr4 = ( x2 * cos + y1 * sin);
+				double yr4 = (-x2 * sin + y1 * cos);
+				
+				xr1 = System.Math.Min (xr1, System.Math.Min (xr2, System.Math.Min (xr3, xr4)));
+				xr2 = System.Math.Max (xr1, System.Math.Max (xr2, System.Math.Max (xr3, xr4)));
+				yr1 = System.Math.Min (yr1, System.Math.Min (yr2, System.Math.Min (yr3, yr4)));
+				yr2 = System.Math.Max (yr1, System.Math.Max (yr2, System.Math.Max (yr3, yr4)));
+				
+				xr1 *= zoom;
+				yr1 *= zoom;
+				xr2 *= zoom;
+				yr2 *= zoom;
+				
+				
+				cx = (this.x2 - this.x1) / 2;
+				cy = (this.y2 - this.y1) / 2;
+				
+				x1 = xr1 + cx;		x2 = xr2 + cx;
+				y1 = yr1 + cy;		y2 = yr2 + cy;
+			}
+			else
+			{
+				x1 *= zoom;		x2 *= zoom;
+				y1 *= zoom;		y2 *= zoom;
+			}
+			
+			rect.X = x1 + this.x1;
+			rect.Y = y1 + this.y1;
+			
+			rect.Width  = x2 - x1;
+			rect.Height = y2 - y1;
+			
+			return rect;
+		}
+
 		
 		public virtual Epsitec.Common.Drawing.Transform GetRootToClientTransform()
 		{
 			Widget iter = this;
 			
-			Transform full_transform  = new Transform ();
-			Transform local_transform = new Transform ();
+			Drawing.Transform full_transform  = new Drawing.Transform ();
+			Drawing.Transform local_transform = new Drawing.Transform ();
 			
 			while (iter != null)
 			{
@@ -550,8 +778,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget iter = this;
 			
-			Transform full_transform  = new Transform ();
-			Transform local_transform = new Transform ();
+			Drawing.Transform full_transform  = new Drawing.Transform ();
+			Drawing.Transform local_transform = new Drawing.Transform ();
 			
 			while (iter != null)
 			{
@@ -600,12 +828,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected Widget FindChild(Point point)
+		protected Widget FindChild(Drawing.Point point)
 		{
 			return this.FindChild (point, ChildFindMode.All);
 		}
 		
-		protected virtual Widget FindChild(Point point, ChildFindMode mode)
+		protected virtual Widget FindChild(Drawing.Point point, ChildFindMode mode)
 		{
 			if (this.Children.Count == 0)
 			{
@@ -661,11 +889,14 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
+			this.Invalidate ();
+			
 			this.x1 = x1;
 			this.y1 = y1;
 			this.x2 = x2;
 			this.y2 = y2;
 			
+			this.Invalidate ();
 			this.UpdateClientGeometry ();
 		}
 		
@@ -714,8 +945,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateChildrenLayout()
 		{
-			System.Diagnostics.Debug.WriteLine ("UpdateChildrenLayout " + this.Name);
-			
 			System.Diagnostics.Debug.Assert (this.client_info != null);
 			System.Diagnostics.Debug.Assert (this.layout_info != null);
 			
@@ -774,22 +1003,22 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual void PaintHandler(Graphics graphics, Drawing.Rectangle clip_rect)
+		public virtual void PaintHandler(Drawing.Graphics graphics, Drawing.Rectangle repaint)
 		{
-			if (this.PaintCheckClipping (clip_rect))
+			if (this.PaintCheckClipping (repaint))
 			{
-				clip_rect = this.MapParentToClient (clip_rect);
+				repaint = this.MapParentToClient (repaint);
 				
-				Transform original_transform = graphics.Transform;
-				Transform graphics_transform = new Transform (original_transform);
+				Drawing.Transform original_transform = graphics.SaveTransform ();
+				Drawing.Transform graphics_transform = new Drawing.Transform (original_transform);
 				
-				this.MergeTransformToClient (graphics_transform);
+				this.MergeTransformToParent (graphics_transform);
 				
 				graphics.Transform = graphics_transform;
 			
 				try
 				{
-					PaintEventArgs local_paint_args = new PaintEventArgs (graphics, clip_rect);
+					PaintEventArgs local_paint_args = new PaintEventArgs (graphics, repaint);
 					
 					//	Peint l'arrière-plan du widget. En principe, tout va dans l'arrière plan, sauf
 					//	si l'on désire réaliser des effets de transparence par dessus le dessin des
@@ -813,7 +1042,7 @@ namespace Epsitec.Common.Widgets
 						
 							if (widget.IsVisible)
 							{
-								widget.PaintHandler (graphics, clip_rect);
+								widget.PaintHandler (graphics, repaint);
 							}
 						}
 					}
@@ -830,23 +1059,33 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void PaintBackgroundImplementation(Graphics graphics)
+		protected virtual void PaintBackgroundImplementation(Drawing.Graphics graphics)
 		{
 			//	Implémenter le dessin du fond dans cette méthode.
 		}
 		
-		protected virtual void PaintForegroundImplementation(Graphics graphics)
+		protected virtual void PaintForegroundImplementation(Drawing.Graphics graphics)
 		{
 			//	Implémenter le dessin des enjoliveurs additionnels dans cette méthode.
 		}
 		
-		protected virtual bool PaintCheckClipping(Drawing.Rectangle clip_rect)
+		protected virtual bool PaintCheckClipping(Drawing.Rectangle repaint)
 		{
-			return clip_rect.IntersectsWith (this.Bounds);
+			return repaint.IntersectsWith (this.Bounds);
 		}
 		
 		
-		public virtual void MessageHandler(Message message, Point pos)
+		public void MessageHandler(Message message)
+		{
+			Drawing.Point point = message.Cursor;
+			
+			point = this.MapRootToClient (point);
+			point = this.MapClientToParent (point);
+			
+			this.MessageHandler (message, point);
+		}
+		
+		public virtual void MessageHandler(Message message, Drawing.Point pos)
 		{
 			this.PreProcessMessage (message, pos);
 			
@@ -858,7 +1097,7 @@ namespace Epsitec.Common.Widgets
 				(message.Handled == false) &&
 				(this.Children.Count > 0))
 			{
-				Point client_pos = this.MapParentToClient (pos);
+				Drawing.Point client_pos = this.MapParentToClient (pos);
 				
 				Widget[] children = this.Children.Widgets;
 				int  children_num = children.Length;
@@ -871,6 +1110,17 @@ namespace Epsitec.Common.Widgets
 						((message.FilterOnlyFocused == false) || (widget.IsFocused)) &&
 						((message.FilterOnlyOnHit == false) || (widget.HitTest (client_pos))))
 					{
+						if (message.IsMouseType)
+						{
+							//	C'est un message souris. Vérifions d'abord si le widget contenait déjà
+							//	la souris auparavant.
+							
+							if (widget.IsEntered == false)
+							{
+								widget.SetEntered (true);
+							}
+						}
+						
 						widget.MessageHandler (message, client_pos);
 						
 						if (message.Handled)
@@ -889,10 +1139,8 @@ namespace Epsitec.Common.Widgets
 			this.PostProcessMessage (message, pos);
 		}
 		
-		protected virtual void DispatchMessage(Message message, Point pos)
+		protected virtual void DispatchMessage(Message message, Drawing.Point pos)
 		{
-			System.Diagnostics.Debug.WriteLine (message.ToString () + " / " + pos.ToString ());
-			
 			if (message.Type == MessageType.MouseUp)
 			{
 				switch (message.ButtonDownCount)
@@ -905,17 +1153,17 @@ namespace Epsitec.Common.Widgets
 			this.ProcessMessage (message, pos);
 		}
 		
-		protected virtual void PreProcessMessage(Message message, Point pos)
+		protected virtual void PreProcessMessage(Message message, Drawing.Point pos)
 		{
 			//	...appelé avant que l'événement ne soit traité...
 		}
 		
-		protected virtual void ProcessMessage(Message message, Point pos)
+		protected virtual void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			//	...appelé pour traiter l'événement...
 		}
 		
-		protected virtual void PostProcessMessage(Message message, Point pos)
+		protected virtual void PostProcessMessage(Message message, Drawing.Point pos)
 		{
 			//	...appelé après que l'événement ait été traité...
 		}
@@ -1024,6 +1272,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnChildrenChanged(System.EventArgs e)
 		{
+			this.Invalidate ();
+			
 			if (this.ChildrenChanged != null)
 			{
 				this.ChildrenChanged (this, e);
@@ -1070,6 +1320,11 @@ namespace Epsitec.Common.Widgets
 		{
 			None				= 0,
 			ChildrenChanged		= 0x00000001,
+			
+			Visible				= 0x00000100,
+			Enabled				= 0x00000200,
+			Focused				= 0x00000400,
+			Entered				= 0x00000800,
 		}
 		
 		[System.Flags] public enum TabNavigationMode
@@ -1138,9 +1393,9 @@ namespace Epsitec.Common.Widgets
 				get { return this.height; }
 			}
 			
-			public Size						Size
+			public Drawing.Size				Size
 			{
-				get { return new Size (this.width, this.height); }
+				get { return new Drawing.Size (this.width, this.height); }
 			}
 			
 			public int						Angle
@@ -1354,10 +1609,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected class LayoutManager
-		{
-		}
-		
 		protected class LayoutInfo
 		{
 			internal LayoutInfo(double width, double height)
@@ -1397,5 +1648,7 @@ namespace Epsitec.Common.Widgets
 		protected int						tab_index;
 		protected TabNavigationMode			tab_navigation_mode;
 		protected Shortcut					shortcut;
+		
+		static System.Collections.ArrayList	entered_widgets = new System.Collections.ArrayList ();
 	}
 }
