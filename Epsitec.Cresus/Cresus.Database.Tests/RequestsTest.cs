@@ -430,7 +430,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 		
-		[Test] /*[Ignore ("Temporary")]*/ public void Check12ServiceServer()
+		[Test] [Ignore ("Temporary")] public void Check12ServiceServer()
 		{
 			DbInfrastructure      infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			
@@ -453,7 +453,7 @@ namespace Epsitec.Cresus.Database
 			Common.Support.Globals.SignalAbort ();
 		}
 		
-		[Test] /*[Ignore ("Temporary")]*/ public void Check13ConnectionClient()
+		[Test] [Ignore ("Temporary")] public void Check13ConnectionClient()
 		{
 			Remoting.IConnectionService service = Services.Engine.GetRemoteConnectionService ("localhost", 1234);
 			
@@ -473,7 +473,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] /*[Ignore ("Temporary")]*/ public void Check14RequestExecutionClient()
+		[Test] [Ignore ("Temporary")] public void Check14RequestExecutionClient()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			System.Data.DataTable table = RequestsTest.GetDataTableFromTable (infrastructure, "ServiceTest");
@@ -548,7 +548,7 @@ namespace Epsitec.Cresus.Database
 			
 		}
 		
-		[Test] /*[Ignore ("Temporary")]*/ public void Check15OperatorClient()
+		[Test] [Ignore ("Temporary")] public void Check15OperatorClient()
 		{
 			Remoting.IOperatorService service = Services.Engine.GetRemoteOperatorService ("localhost", 1234);
 			Remoting.IOperation operation;

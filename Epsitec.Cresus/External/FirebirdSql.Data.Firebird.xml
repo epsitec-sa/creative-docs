@@ -38,7 +38,7 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.DataSetGenerator.GenerateDataset(FirebirdSql.Data.Firebird.FbDataAdapter,System.String,System.Boolean)">
             <summary>
-            Generates a DataSet using the given <see cref="!:FbDataAdpter"/>
+            Generates a DataSet using the given <see cref="T:FirebirdSql.Data.Firebird.FbDataAdapter"/>
             </summary>
             <param name="adapter">A <see cref="T:FirebirdSql.Data.Firebird.FbDataAdapter"/> objects.</param>
             <param name="name">The DataSet name.</param>
@@ -3717,7 +3717,7 @@ Console.WriteLine(cs.ToString());
             <returns>The Firebird connection string.</returns>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.FbConnectionStringBuilder.ConnectionString">
-            <summary>Sets the connections string.</summary><value>The connection string.</value>
+            <summary>Gets or sets the connection string.</summary><value>The connection string.</value>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.FbConnectionStringBuilder.UserID">
             <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbConnectionStringBuilder.xml" path="doc/class[@name=&quot;FbConnectionStringBuilder&quot;]/property[@name=&quot;UserID&quot;]/*"/>
@@ -3912,7 +3912,7 @@ Console.WriteLine(cs.ToString());
 			</remarks>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.FbConnectionStringBuilder.IsolationLevel">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbConnectionStringBuilder.xml" path="doc/class[@name=&quot;FbConnectionStringBuilder&quot;]/property[@name=&quot;IsolationLevel&quot;]/*"/>
+            <summary>Gets or sets the default Isolation Leve for implicit transactions.</summary><value>An IsolationLevel..</value>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.FbDataAdapter">
             <summary>
@@ -6496,6 +6496,11 @@ public void DisplayFbErrors(FbException myException)
 			that will be lost.
 			</remarks><param name="events">List of requested events.</param><exception name="ArgumentNullException">If the events parameter is null.</exception><exception name="ArgumentException">If the event list count is greater than 15.</exception>
         </member>
+        <member name="E:FirebirdSql.Data.Firebird.FbEvent.RemoteEventCounts">
+            <summary>
+			Gets or sets the event handlers that will be fired each time the event counts notification is received from server.
+			</summary>
+        </member>
         <member name="P:FirebirdSql.Data.Firebird.FbEvent.Item(System.Int32)">
             <summary>
 			Gets the event name at the specified index.
@@ -6816,7 +6821,7 @@ myDataAdapter.Fill(myDataSet);
         <member name="P:FirebirdSql.Data.Firebird.FbParameterCollection.Item(System.Int32)">
             <summary>
 			Gets or sets the <see cref="T:FirebirdSql.Data.Firebird.FbParameter"/> at the specified index.
-			</summary><param name="">The zero-based index of the parameter to retrieve.</param>
+			</summary><param name="index">The zero-based index of the parameter to retrieve.</param>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.FbParameterCollection.Count">
             <summary>
@@ -6824,9 +6829,33 @@ myDataAdapter.Fill(myDataSet);
 			</summary><value>The number of <see cref="T:FirebirdSql.Data.Firebird.FbParameter"/> objects in the collection.</value>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.FbRemoteEventHandler">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbRemoteEventEventArgs.xml" path="doc/delegate[@name=&quot;FbRemoteEventHandler&quot;]/overview/*"/>
+        </member>
+        <member name="T:FirebirdSql.Data.Firebird.FbRemoteEventEventArgs">
             <summary>
-		    Represents the method that will handle the EventCounts callback of an <see cref="T:FirebirdSql.Data.Firebird.FbEvent"/>.
-		    </summary>
+			Provides data for the RemoteEventCounts event. 
+			This class cannot be inherited.
+			</summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.FbRemoteEventEventArgs.#ctor(System.String,System.Int32)">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbRemoteEventEventArgs.xml" path="doc/class[@name=&quot;FbRemoteEventEventArgs&quot;]/constructor[@name=&quot;ctor(System.String,System.Int32)&quot;]/*"/>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.FbRemoteEventEventArgs.#ctor(System.String,System.Int32,System.Boolean)">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbRemoteEventEventArgs.xml" path="doc/class[@name=&quot;FbRemoteEventEventArgs&quot;]/constructor[@name=&quot;ctor(System.String,System.Int32,System.Boolean)&quot;]/*"/>
+        </member>
+        <member name="P:FirebirdSql.Data.Firebird.FbRemoteEventEventArgs.Name">
+            <summary>
+			Gets the name of the remote event.
+			</summary><value>
+			The remote event name.
+			</value>
+        </member>
+        <member name="P:FirebirdSql.Data.Firebird.FbRemoteEventEventArgs.Counts">
+            <summary>
+			Gets the counts of the remote event.
+			</summary><value>
+			The remote event counts.
+			</value>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.FbRowUpdatedEventHandler">
             <summary>
@@ -7239,19 +7268,6 @@ finally
             <param name="step">A <see cref="T:FirebirdSql.WizardFramework.WizardStep"/> object.</param>
             <returns>The zero-based index of the requested step.</returns>
         </member>
-        <member name="M:FirebirdSql.WizardFramework.WizardStepCollection.Insert(System.Int32,FirebirdSql.WizardFramework.WizardStep)">
-            <summary>
-            Inserts a new step in the collection at the specified index.
-            </summary>
-            <param name="index">the zero-based index at which the step should be inserted.</param>
-            <param name="step">The step to insert. The step cannot be null</param>
-        </member>
-        <member name="M:FirebirdSql.WizardFramework.WizardStepCollection.Remove(FirebirdSql.WizardFramework.WizardStep)">
-            <summary>
-            Removes the requestion step from the collection.
-            </summary>
-            <param name="step">An <see cref="T:FirebirdSql.WizardFramework.WizardStep"/> object.</param>
-        </member>
         <member name="M:FirebirdSql.WizardFramework.WizardStepCollection.Contains(FirebirdSql.WizardFramework.WizardStep)">
             <summary>
             Determines wheter an step is in the collection.
@@ -7261,7 +7277,7 @@ finally
         </member>
         <member name="P:FirebirdSql.WizardFramework.WizardStepCollection.Item(System.Int32)">
             <summary>
-            Gets or sets the step at the specified index.
+            Gets the step at the specified index.
             </summary>
             <param name="index">The zero-based index of the element to get or set. </param>
             <returns>The element at the specified index</returns>

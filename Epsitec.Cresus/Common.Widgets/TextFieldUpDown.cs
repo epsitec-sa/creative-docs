@@ -60,7 +60,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				if ( this.Value == value )
+				if ( this.Value == value && this.Text != "" )
 				{
 					return;
 				}

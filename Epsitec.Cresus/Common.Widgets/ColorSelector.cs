@@ -81,7 +81,7 @@ namespace Epsitec.Common.Widgets
 			for ( int i=0 ; i<this.nbPalette ; i++ )
 			{
 				this.palette[i] = new ColorSample(this);
-				this.palette[i].Clicked += new MessageEventHandler(this.ColorSelectorClicked);
+				this.palette[i].Clicked += new MessageEventHandler(this.HandleColorSelectorClicked);
 				this.palette[i].TabIndex = i;
 				this.palette[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
@@ -107,6 +107,12 @@ namespace Epsitec.Common.Widgets
 			this.picker = new Tools.Magnifier.DragSource(this);
 			this.picker.HotColorChanged += new Support.EventHandler(this.HandlePickerHotColorChanged);
 			ToolTip.Default.SetToolTip(this.picker, "Pipette-loupe");
+
+			this.buttonClose = new GlyphButton(this);
+			this.buttonClose.GlyphShape = GlyphShape.Close;
+			this.buttonClose.ButtonStyle = ButtonStyle.Normal;
+			this.buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+			ToolTip.Default.SetToolTip(this.buttonClose, "Fermer ce panneau");
 		}
 		
 		public ColorSelector(Widget embedder) : this()
@@ -114,48 +120,8 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
-		protected override void Dispose(bool disposing)
-		{
-			if ( disposing )
-			{
-				for ( int i=0 ; i<this.nbField ; i++ )
-				{
-					if ( i < 4 )
-					{
-						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextRGBChanged);
-					}
-					else if ( i == 4 )
-					{
-						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextHSVChanged);
-					}
-					else
-					{
-						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextHSVChanged);
-					}
-				}
-				
-				if ( this.circle != null )
-				{
-					this.circle.Changed -= new Support.EventHandler(this.HandleCircleChanged);
-				}
-
-				foreach ( ColorSample cs in this.palette )
-				{
-					cs.Clicked -= new MessageEventHandler(this.ColorSelectorClicked);
-				}
-				
-				if ( this.picker != null )
-				{
-					this.picker.HotColorChanged -= new Support.EventHandler(this.HandlePickerHotColorChanged);
-				}
-			}
-			
-			base.Dispose(disposing);
-		}
-
 		
-		// Retourne la hauteur standard.
-		public override double DefaultHeight
+		public override double					DefaultHeight
 		{
 			get
 			{
@@ -163,8 +129,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Couleur.
-		public Drawing.Color Color
+		public Drawing.Color					Color
 		{
 			get
 			{
@@ -184,6 +149,24 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		public bool								HasCloseButton
+		{
+			get
+			{
+				return this.hasCloseButton;
+			}
+
+			set
+			{
+				if ( this.hasCloseButton != value )
+				{
+					this.hasCloseButton = value;
+					this.UpdateClientGeometry();
+				}
+			}
+		}
+
 		
 		protected void UpdateColors()
 		{
@@ -371,8 +354,70 @@ namespace Epsitec.Common.Widgets
 			r.Left  = r.Right - r.Height;
 			this.picker.Bounds = r;
 			this.picker.SetVisible(visibleFields);
+
+			if ( this.hasCloseButton )
+			{
+				r.Left = rect.Left;
+				r.Width = 14;
+				r.Bottom = rect.Top-14;
+				r.Top = rect.Top;
+				this.buttonClose.Bounds = r;
+				this.buttonClose.SetVisible(true);
+			}
+			else
+			{
+				this.buttonClose.SetVisible(false);
+			}
 		}
 		
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			if ( !this.BackColor.IsEmpty )
+			{
+				graphics.AddFilledRectangle(this.Client.Bounds);
+				graphics.RenderSolid(this.BackColor);
+			}
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if ( disposing )
+			{
+				for ( int i=0 ; i<this.nbField ; i++ )
+				{
+					if ( i < 4 )
+					{
+						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextRGBChanged);
+					}
+					else if ( i == 4 )
+					{
+						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextHSVChanged);
+					}
+					else
+					{
+						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextHSVChanged);
+					}
+				}
+				
+				if ( this.circle != null )
+				{
+					this.circle.Changed -= new Support.EventHandler(this.HandleCircleChanged);
+				}
+
+				foreach ( ColorSample cs in this.palette )
+				{
+					cs.Clicked -= new MessageEventHandler(this.HandleColorSelectorClicked);
+				}
+				
+				if ( this.picker != null )
+				{
+					this.picker.HotColorChanged -= new Support.EventHandler(this.HandlePickerHotColorChanged);
+				}
+			}
+			
+			base.Dispose(disposing);
+		}
+
 		
 		private void HandlePickerHotColorChanged(object sender)
 		{
@@ -409,7 +454,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Couleur dans palette cliquée.
-		private void ColorSelectorClicked(object sender, MessageEventArgs e)
+		private void HandleColorSelectorClicked(object sender, MessageEventArgs e)
 		{
 			ColorSample cs = sender as ColorSample;
 			if ( e != null && (e.Message.IsShiftPressed || e.Message.IsCtrlPressed) )
@@ -423,7 +468,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
+		{
+			this.OnCloseClicked();
+		}
 
+		
 		// Génère un événement pour dire ça a changé.
 		protected virtual void OnChanged()
 		{
@@ -433,27 +483,28 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event Support.EventHandler	Changed;
-		
-
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		protected virtual void OnCloseClicked()
 		{
-			if ( !this.BackColor.IsEmpty )
+			if ( this.CloseClicked != null )
 			{
-				graphics.AddFilledRectangle(this.Client.Bounds);
-				graphics.RenderSolid(this.BackColor);
+				this.CloseClicked(this);
 			}
 		}
+		
+		
+		public event Support.EventHandler		Changed;
+		public event Support.EventHandler		CloseClicked;
 
-
-		protected Drawing.Color				black;
-		protected ColorWheel				circle;
-		protected int						nbPalette;
-		protected ColorSample[]				palette;
-		protected int						nbField;
-		protected StaticText[]				labels;
-		protected TextFieldSlider[]			fields;
-		protected bool						suspendColorEvents = false;
-		private Tools.Magnifier.DragSource	picker;
+		protected Drawing.Color					black;
+		protected ColorWheel					circle;
+		protected int							nbPalette;
+		protected ColorSample[]					palette;
+		protected int							nbField;
+		protected StaticText[]					labels;
+		protected TextFieldSlider[]				fields;
+		protected bool							suspendColorEvents = false;
+		protected bool							hasCloseButton = false;
+		protected GlyphButton					buttonClose;
+		private Tools.Magnifier.DragSource		picker;
 	}
 }

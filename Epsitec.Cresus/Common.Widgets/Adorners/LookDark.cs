@@ -15,21 +15,6 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			double r,g,b;
 
-#if false
-			this.colorBlack             = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorWhite             = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
-			this.colorWindow            = Drawing.Color.FromRGB( 80.0/255.0,  80.0/255.0, 100.0/255.0);
-			this.colorControl           = Drawing.Color.FromRGB( 80.0/255.0,  80.0/255.0, 100.0/255.0);
-			this.colorControlLight      = Drawing.Color.FromRGB(100.0/255.0, 100.0/255.0, 110.0/255.0);
-			this.colorControlLightLight = Drawing.Color.FromRGB(128.0/255.0, 128.0/255.0, 138.0/255.0);
-			this.colorControlDark       = Drawing.Color.FromRGB( 70.0/255.0,  70.0/255.0,  90.0/255.0);
-			this.colorControlDarkDark   = Drawing.Color.FromRGB( 60.0/255.0,  60.0/255.0,  80.0/255.0);
-			this.colorButton            = Drawing.Color.FromRGB( 50.0/255.0,  50.0/255.0,  70.0/255.0);
-			this.colorScrollerBack      = Drawing.Color.FromRGB(128.0/255.0, 128.0/255.0, 138.0/255.0);
-			this.colorCaptionNF         = Drawing.Color.FromRGB(148.0/255.0, 148.0/255.0, 158.0/255.0);
-			this.colorCaption           = Drawing.Color.FromRGB(255.0/255.0, 215.0/255.0,  89.0/255.0);
-			this.colorCaptionText       = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-#else
 			this.colorBlack             = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
 			this.colorWhite             = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
 			this.colorWindow            = Drawing.Color.FromRGB( 80.0/255.0,  80.0/255.0,  90.0/255.0);
@@ -43,7 +28,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorCaptionNF         = Drawing.Color.FromRGB(148.0/255.0, 148.0/255.0, 158.0/255.0);
 			this.colorCaption           = Drawing.Color.FromRGB(255.0/255.0, 215.0/255.0,  89.0/255.0);
 			this.colorCaptionText       = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-#endif
+			this.colorError             = Drawing.Color.FromRGB(150.0/255.0,   0.0/255.0,   0.0/255.0);
 			this.colorInfo              = Drawing.Color.FromName("Info");
 
 			r = 1-(1-this.colorControlLight.R)*0.7;
@@ -548,13 +533,20 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					if ( readOnly )
+					if ( (state&WidgetState.Error) != 0 )
 					{
-						graphics.RenderSolid(this.colorControlReadOnly);
+						graphics.RenderSolid(this.colorError);
 					}
 					else
 					{
-						graphics.RenderSolid(this.colorControlDark);
+						if ( readOnly )
+						{
+							graphics.RenderSolid(this.colorControlReadOnly);
+						}
+						else
+						{
+							graphics.RenderSolid(this.colorControlDark);
+						}
 					}
 				}
 				else
@@ -1732,6 +1724,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorInfo;
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;
+		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorWindow;
 	}
 }

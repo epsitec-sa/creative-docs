@@ -26,6 +26,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorCaptionNF         = Drawing.Color.FromName("ControlDark");
 			this.colorCaptionText       = Drawing.Color.FromName("ActiveCaptionText");
 			this.colorInfo              = Drawing.Color.FromName("Info");
+			this.colorError             = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
 
 			r = 1-(1-this.colorControlLight.R)/2;
 			g = 1-(1-this.colorControlLight.G)/2;
@@ -505,13 +506,20 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					if ( readOnly )
+					if ( (state&WidgetState.Error) != 0 )
 					{
-						graphics.RenderSolid(this.colorControlReadOnly);
+						graphics.RenderSolid(this.colorError);
 					}
 					else
 					{
-						graphics.RenderSolid(this.colorControlLightLight);
+						if ( readOnly )
+						{
+							graphics.RenderSolid(this.colorControlReadOnly);
+						}
+						else
+						{
+							graphics.RenderSolid(this.colorControlLightLight);
+						}
 					}
 				}
 				else
@@ -1535,6 +1543,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorCaptionNF;  // NF = no focused
 		protected Drawing.Color		colorCaptionText;
 		protected Drawing.Color		colorInfo;
+		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorWindow;
 	}
 }

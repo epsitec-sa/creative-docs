@@ -39,6 +39,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorCaption = Drawing.Color.FromRGB( 58.0/255.0, 167.0/255.0, 233.0/255.0);
 			this.colorHilite  = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
 			this.colorBorder  = Drawing.Color.FromRGB( 23.0/255.0, 132.0/255.0, 198.0/255.0);
+			this.colorError   = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
 			this.colorWindow  = Drawing.Color.FromRGB(198.0/255.0, 226.0/255.0, 234.0/255.0);
 		}
 		
@@ -511,21 +512,34 @@ namespace Epsitec.Common.Widgets.Adorner
 											 Widgets.TextFieldStyle style,
 											 bool readOnly)
 		{
+			double radius;
+			Drawing.Path path;
+
 			if ( style == TextFieldStyle.Normal ||
 				 style == TextFieldStyle.Multi  ||
 				 style == TextFieldStyle.Combo  )
 			{
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					this.PaintImageButton(graphics, rect, readOnly?28:26);
+					if ( (state&WidgetState.Error) != 0 )
+					{
+						radius = this.RetRadiusFrame(rect);
+						path = this.PathRoundRectangle(rect, radius);
+						graphics.Rasterizer.AddSurface(path);
+						graphics.RenderSolid(this.colorError);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, readOnly?28:26);
+					}
 				}
 				else
 				{
 					this.PaintImageButton(graphics, rect, 28);
 				}
 
-				double radius = this.RetRadiusFrame(rect);
-				Drawing.Path path = this.PathRoundRectangle(rect, radius);
+				radius = this.RetRadiusFrame(rect);
+				path = this.PathRoundRectangle(rect, radius);
 				graphics.Rasterizer.AddOutline(path, 1);
 				graphics.RenderSolid(this.colorBorder);
 			}
@@ -533,15 +547,25 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					this.PaintImageButton(graphics, rect, readOnly?28:26);
+					if ( (state&WidgetState.Error) != 0 )
+					{
+						radius = this.RetRadiusFrame(rect);
+						path = this.PathRoundRectangle(rect, radius);
+						graphics.Rasterizer.AddSurface(path);
+						graphics.RenderSolid(this.colorError);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, readOnly?28:26);
+					}
 				}
 				else
 				{
 					this.PaintImageButton(graphics, rect, 28);
 				}
 
-				double radius = this.RetRadiusFrame(rect);
-				Drawing.Path path = this.PathRoundRectangle(rect, radius);
+				radius = this.RetRadiusFrame(rect);
+				path = this.PathRoundRectangle(rect, radius);
 				graphics.Rasterizer.AddOutline(path, 1);
 				graphics.RenderSolid(this.colorBorder);
 			}
@@ -1632,6 +1656,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;
 		protected Drawing.Color		colorBorder;
+		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorWindow;
 	}
 }

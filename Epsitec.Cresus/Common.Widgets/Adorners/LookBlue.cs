@@ -27,6 +27,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorCaptionNF         = Drawing.Color.FromRGB(178.0/255.0, 198.0/255.0, 221.0/255.0);
 			this.colorCaptionText       = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
 			this.colorHilite            = Drawing.Color.FromRGB(255.0/255.0, 186.0/255.0,   1.0/255.0);
+			this.colorError             = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
 			this.colorInfo              = Drawing.Color.FromName("Info");
 
 			r = 1-(1-this.colorControlLight.R)*0.5;
@@ -546,13 +547,20 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.Rasterizer.AddSurface(path);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					if ( readOnly )
+					if ( (state&WidgetState.Error) != 0 )
 					{
-						graphics.RenderSolid(this.colorControlReadOnly);
+						graphics.RenderSolid(this.colorError);
 					}
 					else
 					{
-						graphics.RenderSolid(this.colorControlLightLight);
+						if ( readOnly )
+						{
+							graphics.RenderSolid(this.colorControlReadOnly);
+						}
+						else
+						{
+							graphics.RenderSolid(this.colorControlLightLight);
+						}
 					}
 				}
 				else
@@ -575,13 +583,20 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					if ( readOnly )
+					if ( (state&WidgetState.Error) != 0 )
 					{
-						graphics.RenderSolid(this.colorControlReadOnly);
+						graphics.RenderSolid(this.colorError);
 					}
 					else
 					{
-						graphics.RenderSolid(this.colorControlLightLight);
+						if ( readOnly )
+						{
+							graphics.RenderSolid(this.colorControlReadOnly);
+						}
+						else
+						{
+							graphics.RenderSolid(this.colorControlLightLight);
+						}
 					}
 				}
 				else
@@ -1616,6 +1631,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorInfo;
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;
+		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorWindow;
 	}
 }

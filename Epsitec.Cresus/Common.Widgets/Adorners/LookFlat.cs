@@ -29,6 +29,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorCaption           = Drawing.Color.FromRGB(255.0/255.0, 210.0/255.0,   0.0/255.0);
 			this.colorCaptionText       = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
 			this.colorInfo              = Drawing.Color.FromRGB(250.0/255.0, 250.0/255.0, 250.0/255.0);
+			this.colorError             = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
 		}
 		
 
@@ -441,7 +442,14 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					graphics.RenderSolid(readOnly ? this.colorControlReadOnly : this.colorControlField);
+					if ( (state&WidgetState.Error) != 0 )
+					{
+						graphics.RenderSolid(this.colorError);
+					}
+					else
+					{
+						graphics.RenderSolid(readOnly ? this.colorControlReadOnly : this.colorControlField);
+					}
 				}
 				else
 				{
@@ -1329,6 +1337,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorCaptionNF;  // NF = no focused
 		protected Drawing.Color		colorCaptionText;
 		protected Drawing.Color		colorInfo;
+		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorWindow;
 	}
 }

@@ -32,6 +32,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorCaptionText  = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
 			this.colorHilite       = Drawing.Color.FromRGB(255.0/255.0, 186.0/255.0,   1.0/255.0);
 			this.colorWhite        = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorError        = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
 			this.colorInfo         = Drawing.Color.FromName("Info");
 
 			r = 1-(1-this.colorCaption.R)*0.25;
@@ -577,7 +578,15 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					this.PaintImageButton(graphics, rect, readOnly?17:16);
+					if ( (state&WidgetState.Error) != 0 )
+					{
+						graphics.AddFilledRectangle(rect);
+						graphics.RenderSolid(this.colorError);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, readOnly?17:16);
+					}
 
 					rect.Deflate(0.5);
 					graphics.AddRectangle(rect);
@@ -1888,6 +1897,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorDefault;
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorFrame;
+		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorWindow;
 		protected Drawing.Color		colorWhite;
 	}

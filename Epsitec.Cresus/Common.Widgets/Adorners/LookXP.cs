@@ -46,6 +46,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorButton = Drawing.Color.FromRGB(243.0/255.0, 243.0/255.0, 238.0/255.0);
 			this.colorFocus  = Drawing.Color.FromRGB(157.0/255.0, 188.0/255.0, 235.0/255.0);
 			this.colorHilite = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorError  = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
 		}
 		
 
@@ -505,13 +506,20 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					if ( readOnly )
+					if ( (state&WidgetState.Error) != 0 )
 					{
-						graphics.RenderSolid(this.colorControlReadOnly);
+						graphics.RenderSolid(this.colorError);
 					}
 					else
 					{
-						graphics.RenderSolid(this.colorControlLightLight);
+						if ( readOnly )
+						{
+							graphics.RenderSolid(this.colorControlReadOnly);
+						}
+						else
+						{
+							graphics.RenderSolid(this.colorControlLightLight);
+						}
 					}
 				}
 				else
@@ -1568,6 +1576,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorFocus;
 		protected Drawing.Color		colorHilite;
+		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorWindow;
 	}
 }

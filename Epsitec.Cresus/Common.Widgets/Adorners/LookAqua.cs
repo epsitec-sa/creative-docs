@@ -26,6 +26,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorInfo        = Drawing.Color.FromRGB(213.0/255.0, 233.0/255.0, 255.0/255.0);
 			this.colorBorder      = Drawing.Color.FromRGB(170.0/255.0, 170.0/255.0, 170.0/255.0);
 			this.colorDisabled    = Drawing.Color.FromRGB(140.0/255.0, 140.0/255.0, 140.0/255.0);
+			this.colorError       = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
 			this.colorWindow      = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
 
 			this.colorCaption.A = 0.7;
@@ -605,7 +606,14 @@ namespace Epsitec.Common.Widgets.Adorner
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
 					graphics.Rasterizer.AddSurface(path);
-					graphics.RenderSolid(Drawing.Color.FromBrightness(readOnly?0.9:1.0));
+					if ( (state&WidgetState.Error) != 0 )
+					{
+						graphics.RenderSolid(this.colorError);
+					}
+					else
+					{
+						graphics.RenderSolid(Drawing.Color.FromBrightness(readOnly?0.9:1.0));
+					}
 				}
 				else
 				{
@@ -634,7 +642,14 @@ namespace Epsitec.Common.Widgets.Adorner
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
 					graphics.Rasterizer.AddSurface(path);
-					graphics.RenderSolid(Drawing.Color.FromBrightness(readOnly?0.9:1.0));
+					if ( (state&WidgetState.Error) != 0 )
+					{
+						graphics.RenderSolid(this.colorError);
+					}
+					else
+					{
+						graphics.RenderSolid(Drawing.Color.FromBrightness(readOnly?0.9:1.0));
+					}
 				}
 				else
 				{
@@ -2134,6 +2149,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorInfo;
 		protected Drawing.Color		colorBorder;
 		protected Drawing.Color		colorDisabled;
+		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorWindow;
 	}
 
