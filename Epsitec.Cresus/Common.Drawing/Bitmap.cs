@@ -187,6 +187,41 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public void FlipY()
+		{
+			try
+			{
+				this.LockBits ();
+				
+				int nx = this.bitmap_dx / 2;
+				int ny = this.bitmap_dy / 2;
+				int my = this.bitmap_dy - 1;
+				
+				unsafe
+				{
+					for (int y = 0; y < ny; y++)
+					{
+						int y1 = y;
+						int y2 = my-y;
+						int* s1 = (int*) (this.bitmap_data.Scan0.ToPointer ()) + y1 * this.bitmap_data.Stride / 4;
+						int* s2 = (int*) (this.bitmap_data.Scan0.ToPointer ()) + y2 * this.bitmap_data.Stride / 4;
+						
+						for (int x = 0; x < this.bitmap_dx; x++)
+						{
+							int v1 = s1[x];
+							int v2 = s2[x];
+							s1[x] = v2;
+							s2[x] = v1;
+						}
+					}
+				}
+			}
+			finally
+			{
+				this.UnlockBits ();
+			}
+		}
+		
 		public override Image GetImageForPaintStyle(GlyphPaintStyle style)
 		{
 			switch (style)
