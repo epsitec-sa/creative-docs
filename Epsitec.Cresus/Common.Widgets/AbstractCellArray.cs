@@ -273,7 +273,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Choix de la ligne de tri.
-		public virtual void SetHeaderSortV(int rank, int mode)
+		public virtual void SetHeaderSortV(int rank, SortMode mode)
 		{
 			if ( rank < 0 || rank >= this.maxRows )
 			{
@@ -283,12 +283,12 @@ namespace Epsitec.Common.Widgets
 			for ( int i=0 ; i<this.maxRows ; i++ )
 			{
 				HeaderButton button = this.FindButtonV(i);
-				button.SortMode = i==rank ? mode : 0;
+				button.SortMode = i==rank ? mode : SortMode.None;
 			}
 		}
 
 		// Choix de la colonne de tri.
-		public virtual void SetHeaderSortH(int rank, int mode)
+		public virtual void SetHeaderSortH(int rank, SortMode mode)
 		{
 			if ( rank < 0 || rank >= this.maxColumns )
 			{
@@ -298,18 +298,18 @@ namespace Epsitec.Common.Widgets
 			for ( int i=0 ; i<this.maxColumns ; i++ )
 			{
 				HeaderButton button = this.FindButtonH(i);
-				button.SortMode = i==rank ? mode : 0;
+				button.SortMode = i==rank ? mode : SortMode.None;
 			}
 		}
 
 		// Retourne la ligne de tri.
-		public virtual bool GetHeaderSortV(out int rank, out int mode)
+		public virtual bool GetHeaderSortV(out int rank, out SortMode mode)
 		{
 			for ( rank=0 ; rank<this.maxRows ; rank++ )
 			{
 				HeaderButton button = this.FindButtonV(rank);
 				mode = button.SortMode;
-				if ( mode != 0 )  return true;
+				if ( mode != SortMode.None )  return true;
 			}
 
 			rank = -1;
@@ -318,13 +318,13 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Retourne la colonne de tri.
-		public virtual bool GetHeaderSortH(out int rank, out int mode)
+		public virtual bool GetHeaderSortH(out int rank, out SortMode mode)
 		{
 			for ( rank=0 ; rank<this.maxColumns ; rank++ )
 			{
 				HeaderButton button = this.FindButtonH(rank);
 				mode = button.SortMode;
-				if ( mode != 0 )  return true;
+				if ( mode != SortMode.None )  return true;
 			}
 
 			rank = -1;
@@ -630,34 +630,48 @@ namespace Epsitec.Common.Widgets
 		{
 			HeaderButton button = sender as HeaderButton;
 
-			if ( button.HeaderButtonStyle == HeaderButtonStyle.Left )
+			if ( button.Style == HeaderButtonStyle.Left )
 			{
 				if ( (this.styleV & CellArrayStyle.Sort) == 0 )  return;
 
-				int row = button.Rank;
-				int mode = button.SortMode;
-				switch ( mode )
+				int      row  = button.Index;
+				SortMode mode = button.SortMode;
+				
+				switch (mode)
 				{
-					case -1:  mode =  1;  break;
-					case  0:  mode =  1;  break;
-					case  1:  mode = -1;  break;
+					case SortMode.Up:
+					case SortMode.None:
+						mode = SortMode.Down;
+						break;
+					
+					case SortMode.Down:
+						mode = SortMode.Up;
+						break;
 				}
+				
 				this.SetHeaderSortV(row, mode);
 				this.OnSortChanged();
 			}
 
-			if ( button.HeaderButtonStyle == HeaderButtonStyle.Top )
+			if ( button.Style == HeaderButtonStyle.Top )
 			{
 				if ( (this.styleH & CellArrayStyle.Sort) == 0 )  return;
 
-				int column = button.Rank;
-				int mode = button.SortMode;
-				switch ( mode )
+				int      column = button.Index;
+				SortMode mode   = button.SortMode;
+				
+				switch (mode)
 				{
-					case -1:  mode =  1;  break;
-					case  0:  mode =  1;  break;
-					case  1:  mode = -1;  break;
+					case SortMode.Up:
+					case SortMode.None:
+						mode = SortMode.Down;
+						break;
+					
+					case SortMode.Down:
+						mode = SortMode.Up;
+						break;
 				}
+				
 				this.SetHeaderSortH(column, mode);
 				this.OnSortChanged();
 			}
@@ -668,14 +682,14 @@ namespace Epsitec.Common.Widgets
 		{
 			HeaderSlider slider = sender as HeaderSlider;
 
-			if ( slider.HeaderSliderStyle == HeaderSliderStyle.Left )
+			if ( slider.Style == HeaderSliderStyle.Left )
 			{
-				DragStartedRow(slider.Rank, e.Message.Y);
+				DragStartedRow(slider.Index, e.Message.Y);
 			}
 
-			if ( slider.HeaderSliderStyle == HeaderSliderStyle.Top )
+			if ( slider.Style == HeaderSliderStyle.Top )
 			{
-				DragStartedColumn(slider.Rank, e.Message.X);
+				DragStartedColumn(slider.Index, e.Message.X);
 			}
 		}
 
@@ -684,14 +698,14 @@ namespace Epsitec.Common.Widgets
 		{
 			HeaderSlider slider = sender as HeaderSlider;
 
-			if ( slider.HeaderSliderStyle == HeaderSliderStyle.Left )
+			if ( slider.Style == HeaderSliderStyle.Left )
 			{
-				DragMovedRow(slider.Rank, e.Message.Y);
+				DragMovedRow(slider.Index, e.Message.Y);
 			}
 
-			if ( slider.HeaderSliderStyle == HeaderSliderStyle.Top )
+			if ( slider.Style == HeaderSliderStyle.Top )
 			{
-				DragMovedColumn(slider.Rank, e.Message.X);
+				DragMovedColumn(slider.Index, e.Message.X);
 			}
 		}
 
@@ -700,14 +714,14 @@ namespace Epsitec.Common.Widgets
 		{
 			HeaderSlider slider = sender as HeaderSlider;
 
-			if ( slider.HeaderSliderStyle == HeaderSliderStyle.Left )
+			if ( slider.Style == HeaderSliderStyle.Left )
 			{
-				DragEndedRow(slider.Rank, e.Message.Y);
+				DragEndedRow(slider.Index, e.Message.Y);
 			}
 
-			if ( slider.HeaderSliderStyle == HeaderSliderStyle.Top )
+			if ( slider.Style == HeaderSliderStyle.Top )
 			{
-				DragEndedColumn(slider.Rank, e.Message.X);
+				DragEndedColumn(slider.Index, e.Message.X);
 			}
 		}
 
@@ -1510,8 +1524,8 @@ namespace Epsitec.Common.Widgets
 			for ( int i=0 ; i<this.maxRows ; i++ )
 			{
 				HeaderButton button = new HeaderButton(null);
-				button.HeaderButtonStyle = HeaderButtonStyle.Left;
-				button.Rank = i;
+				button.Style = HeaderButtonStyle.Left;
+				button.Index = i;
 				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				this.headerButtonV.Add(button);
 			}
@@ -1526,8 +1540,8 @@ namespace Epsitec.Common.Widgets
 			for ( int i=0 ; i<this.maxColumns ; i++ )
 			{
 				HeaderButton button = new HeaderButton(null);
-				button.HeaderButtonStyle = HeaderButtonStyle.Top;
-				button.Rank = i;
+				button.Style = HeaderButtonStyle.Top;
+				button.Index = i;
 				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				this.headerButtonH.Add(button);
 			}
@@ -1545,8 +1559,8 @@ namespace Epsitec.Common.Widgets
 			for ( int i=0 ; i<this.maxRows ; i++ )
 			{
 				HeaderSlider slider = new HeaderSlider(null);
-				slider.HeaderSliderStyle = HeaderSliderStyle.Left;
-				slider.Rank = i;
+				slider.Style = HeaderSliderStyle.Left;
+				slider.Index = i;
 				slider.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);
 				slider.DragMoved   += new MessageEventHandler(this.HandleSliderDragMoved);
 				slider.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
@@ -1565,8 +1579,8 @@ namespace Epsitec.Common.Widgets
 			for ( int i=0 ; i<this.maxColumns ; i++ )
 			{
 				HeaderSlider slider = new HeaderSlider(null);
-				slider.HeaderSliderStyle = HeaderSliderStyle.Top;
-				slider.Rank = i;
+				slider.Style = HeaderSliderStyle.Top;
+				slider.Index = i;
 				slider.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);
 				slider.DragMoved   += new MessageEventHandler(this.HandleSliderDragMoved);
 				slider.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);

@@ -15,7 +15,7 @@ namespace Epsitec.Common.Widgets
 		public HeaderSlider()
 		{
 			this.InternalState &= ~InternalState.Engageable;
-			this.HeaderSliderStyle = HeaderSliderStyle.Top;
+			this.headerSliderStyle = HeaderSliderStyle.Top;
 		}
 		
 		public HeaderSlider(Widget embedder) : this()
@@ -24,7 +24,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		// Type du bouton.
-		public HeaderSliderStyle HeaderSliderStyle
+		public HeaderSliderStyle Style
 		{
 			get
 			{
@@ -38,20 +38,6 @@ namespace Epsitec.Common.Widgets
 					this.headerSliderStyle = value;
 					this.Invalidate();
 				}
-			}
-		}
-
-		// Rang de la ligne ou de la colonne associé au bouton.
-		public int Rank
-		{
-			get
-			{
-				return this.rank;
-			}
-
-			set
-			{
-				this.rank = value;
 			}
 		}
 
@@ -149,7 +135,6 @@ namespace Epsitec.Common.Widgets
 		public event MessageEventHandler	DragEnded;
 		
 		protected HeaderSliderStyle			headerSliderStyle;
-		protected int						rank;
 		protected bool						mouseDown = false;
 	}
 }

@@ -3,7 +3,7 @@ namespace Epsitec.Common.Widgets
 	public enum ScrollArrayShow
 	{
 		Extremity,		// déplacement minimal aux extrémités
-		Middle,			// déplacement central
+		Center,			// déplacement central
 	}
 
 	public enum ScrollArrayAdjust
@@ -12,10 +12,11 @@ namespace Epsitec.Common.Widgets
 		MoveDown,		// déplace le bas
 	}
 
+	public delegate string TextProviderCallback(int row, int column);
+
 	/// <summary>
-	/// La classe ScrollArray réalise une liste déroulante optimisée
-	/// à deux dimensions ne pouvant contenir que des textes fixes,
-	/// dans le style de la liste gauche de Crésus.
+	///	La classe ScrollArray réalise une liste déroulante optimisée à deux dimensions,
+	///	ne pouvant contenir que des textes fixes.
 	/// </summary>
 	public class ScrollArray : Widget
 	{
@@ -23,456 +24,554 @@ namespace Epsitec.Common.Widgets
 		{
 			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.Focusable;
-
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			this.margins = adorner.GeometryArrayMargins;
-
-			this.header = new Widget(this);
-
-			this.scrollerV = new VScroller(this);
-			this.scrollerH = new HScroller(this);
 			
-			this.scrollerV.IsInverted = true;
-			this.scrollerV.ValueChanged += new EventHandler(this.HandleScrollerV);
-			this.scrollerH.ValueChanged += new EventHandler(this.HandleScrollerH);
-
-			this.rowHeight = this.DefaultFontHeight+2;
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			
+			this.frame_margins = adorner.GeometryArrayMargins;
+			this.table_margins = new Drawing.Margins ();
+			this.row_height    = this.DefaultFontHeight + 2;
+			
+			this.header = new Widget (this);
+			this.v_scroller = new VScroller (this);
+			this.h_scroller = new HScroller (this);
+			this.v_scroller.IsInverted = true;
+			this.v_scroller.ValueChanged += new EventHandler (this.HandleVScrollerChanged);
+			this.h_scroller.ValueChanged += new EventHandler (this.HandleHScrollerChanged);
+			
+			this.is_dirty        = true;
+			this.is_header_dirty = true;
 		}
-		
+
 		public ScrollArray(Widget embedder) : this()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
 
-
-		// Spécifie le délégué pour remplir les cellules.
-		// En mode sans FillText, la liste est remplie à l'avance avec SetText.
-		// Une copie de tous les strings est alors contenue dans this.array.
-		// En mode FillText, c'est ScrollArray qui demande le contenu de chaque
-		// cellule au fur et à mesure à l'aide du délégué FillText. Ce mode
-		// est particulièrement efficace pour de grandes quantités de données.
-		public FillText FuncFillText
+		
+		public TextProviderCallback				TextProviderCallback
 		{
-			set
-			{
-				this.funcFillText = value;
-			}
-		}
-
-
-		// Vide toute la liste.
-		public void Reset()
-		{
-			if ( this.funcFillText == null )
-			{
-				for ( int row=0 ; row<this.array.Count ; row++ )
-				{
-					System.Collections.ArrayList list = (System.Collections.ArrayList)this.array[row];
-					list.Clear();
-				}
-				this.array.Clear();
-			}
-			this.maxRows = 0;
-			this.firstRow = 0;
-			this.selectedRow = -1;
-
-			this.isDirty = true;
-			this.Invalidate();
-		}
-
-		// Donne le nombre de colonnes.
-		public int Columns
-		{
+			// Spécifie le délégué pour remplir les cellules.
+			// En mode sans FillText, la liste est remplie à l'avance avec SetText.
+			// Une copie de tous les strings est alors contenue dans this.array.
+			// En mode FillText, c'est ScrollArray qui demande le contenu de chaque
+			// cellule au fur et à mesure à l'aide du délégué FillText. Ce mode
+			// est particulièrement efficace pour de grandes quantités de données.
+			
 			get
 			{
-				return this.maxColumns;
+				return this.text_provider;
 			}
-
 			set
 			{
-				if ( this.maxColumns != value )
+				if (this.text_provider != value)
 				{
-					this.maxColumns = value;
-					this.isGrimy = true;
-
-					this.widthColumns = new double[this.maxColumns];
-					this.widthTotal = 0;
-					for ( int i=0 ; i<this.maxColumns ; i++ )
-					{
-						this.widthColumns[i] = this.defWidth;
-						this.widthTotal += this.defWidth;
-					}
-
-					this.alignmentColumns = new Drawing.ContentAlignment[this.maxColumns];
-					for ( int i=0 ; i<this.maxColumns ; i++ )
-					{
-						this.alignmentColumns[i] = Drawing.ContentAlignment.MiddleLeft;
-					}
-
-					this.headerButton.Clear();
-					for ( int i=0 ; i<this.maxColumns ; i++ )
-					{
-						HeaderButton button = new HeaderButton(null);
-						button.HeaderButtonStyle = HeaderButtonStyle.Top;
-						button.Dynamic = true;
-						button.Rank = i;
-						button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-						this.headerButton.Add(button);
-					}
-
-					this.headerSlider.Clear();
-					for ( int i=0 ; i<this.maxColumns ; i++ )
-					{
-						HeaderSlider slider = new HeaderSlider(null);
-						slider.HeaderSliderStyle = HeaderSliderStyle.Top;
-						slider.Rank = i;
-						slider.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);
-						slider.DragMoved   += new MessageEventHandler(this.HandleSliderDragMoved);
-						slider.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
-						this.headerSlider.Add(slider);
-					}
-
-					this.isDirty = true;
-					this.Update();
+					this.text_provider = value;
+					this.Clear ();
 				}
 			}
 		}
 
-		// Donne le nombre de lignes.
-		public int Rows
+		
+		public void Clear()
 		{
-			get
+			//	Purge le contenu de la table, pour autant que l'on soit en mode FillText.
+			
+			if (this.text_provider == null)
 			{
-				return this.maxRows;
-			}
-
-			set
-			{
-				if ( this.funcFillText != null )
-				{
-					this.maxRows = value;
-					this.isDirty = true;
-					this.Invalidate();
-				}
-			}
-		}
-
-		// Ajoute un texte dans le tableau.
-		public void SetText(int row, int column, string text)
-		{
-			if ( this.funcFillText != null )  return;
-			if ( this.widthColumns == null )  return;
-			if ( row < 0 || column < 0 )  return;
-
-			if ( row >= this.array.Count )
-			{
-				for ( int i=this.array.Count ; i<=row ; i++ )
-				{
-					System.Collections.ArrayList newLine = new System.Collections.ArrayList();
-					this.array.Add(newLine);
-				}
-			}
-			this.maxRows = System.Math.Max(this.maxRows, row+1);
-			System.Collections.ArrayList list = (System.Collections.ArrayList)this.array[row];
-
-			if ( column >= list.Count )
-			{
-				for ( int i=list.Count ; i<=column ; i++ )
-				{
-					string newCell = "";
-					list.Add(newCell);
-				}
-			}
-			list[column] = text;
-
-			this.isDirty = true;
-			this.Invalidate();
-		}
-
-		// Donne un texte du tableau.
-		public string GetText(int row, int column)
-		{
-			if ( this.funcFillText != null )  return "";
-			if ( this.widthColumns == null )  return "";
-			if ( row < 0 || column < 0 )  return "";
-
-			if ( row >= this.array.Count )  return "";
-			System.Collections.ArrayList list = (System.Collections.ArrayList)this.array[row];
-
-			if ( column >= list.Count )  return "";
-			return (string)list[column];
-		}
-
-
-		// Ligne sélectionnée, -1 si aucune.
-		public int SelectedIndex
-		{
-			get
-			{
-				return this.selectedRow;
-			}
-
-			set
-			{
-				if ( value != -1 )
-				{
-					value = System.Math.Max(value, 0);
-					value = System.Math.Min(value, this.maxRows);
-				}
-				if ( value != this.selectedRow )
-				{
-					this.selectedRow = value;
-					this.isDirty = true;
-					this.Invalidate();
-					this.OnSelectedIndexChanged();
-				}
-			}
-		}
-
-		// Première ligne visible.
-		public int FirstRow
-		{
-			get
-			{
-				return this.firstRow;
-			}
-
-			set
-			{
-				value = System.Math.Max(value, 0);
-				value = System.Math.Min(value, System.Math.Max(this.maxRows-this.visibleRowsFull, 0));
-				if ( value != this.firstRow )
-				{
-					this.firstRow = value;
-					this.UpdateScroller();
-					this.Invalidate();
-				}
-			}
-		}
-
-		// Offset horizontal.
-		public double OffsetH
-		{
-			get
-			{
-				return this.offsetH;
-			}
-
-			set
-			{
-				if ( this.offsetH != value )
-				{
-					this.offsetH = value;
-					this.isDirty = true;
-					this.Invalidate();
-				}
-			}
-		}
-
-		// Spécifie la largeur d'une colonne.
-		public void SetWidthColumn(int column, double width)
-		{
-			if ( this.widthColumns == null )  return;
-			width = System.Math.Floor(width);
-			if ( this.widthColumns[column] != width )
-			{
-				width = System.Math.Max(width, this.minWidth);
-				this.widthColumns[column] = width;
-				this.widthTotal = 0;
-				for ( int i=0 ; i<this.maxColumns ; i++ )
-				{
-					this.widthTotal += this.widthColumns[i];
-				}
-				this.isDirty = true;
-				this.Invalidate();
-			}
-		}
-
-		// Retourne la largeur d'une colonne.
-		public double RetWidthColumn(int column)
-		{
-			if ( this.widthColumns == null )  return 0;
-			return this.widthColumns[column];
-		}
-
-		// Spécifie l'alignement d'une colonne.
-		public void SetAlignmentColumn(int column, Drawing.ContentAlignment alignment)
-		{
-			if ( this.widthColumns == null )  return;
-			if ( this.alignmentColumns[column] != alignment )
-			{
-				this.alignmentColumns[column] = alignment;
-				this.isDirty = true;
-				this.Invalidate();
-			}
-		}
-
-		// Retourne l'alignement d'une colonne.
-		public Drawing.ContentAlignment RetAlignmentColumn(int column)
-		{
-			if ( this.widthColumns == null )  return Drawing.ContentAlignment.MiddleLeft;
-			return this.alignmentColumns[column];
-		}
-
-		// Choix du nom d'une colonne de l'en-tête.
-		public void SetHeaderText(int rank, string text)
-		{
-			if ( rank < 0 || rank >= this.maxColumns )
-			{
-				throw new System.ArgumentOutOfRangeException();
+				this.text_array.Clear ();
 			}
 			
-			HeaderButton button = this.FindButton(rank);
-			button.Text = text;
-
-			this.isDirty = true;
-			this.Invalidate();
+			this.max_rows = 0;
+			this.first_visible_row = 0;
+			this.selected_row = -1;
+			this.InvalidateContents ();
+		}
+		
+		public void InvalidateContents()
+		{
+			this.is_dirty = true;
+			this.Invalidate ();
 		}
 
-		// Choix de la colonne de tri.
-		public void SetHeaderSort(int rank, int mode)
+		
+		public int								ColumnCount
 		{
-			if ( rank < 0 || rank >= this.maxColumns )
+			get
 			{
-				throw new System.ArgumentOutOfRangeException();
+				return this.max_columns;
+			}
+			set
+			{
+				if (this.max_columns != value)
+				{
+					this.max_columns = value;
+					
+					this.is_header_dirty   = true;
+					this.column_widths     = new double[this.max_columns];
+					this.column_alignments = new Drawing.ContentAlignment[this.max_columns];
+					
+					for (int i = 0; i < this.max_columns; i++)
+					{
+						this.column_widths[i] = this.def_width;
+					}
+					
+					for (int i = 0; i < this.max_columns; i++)
+					{
+						this.column_alignments[i] = Drawing.ContentAlignment.MiddleLeft;
+					}
+					
+					this.InvalidateContents ();
+					this.UpdateTotalWidth ();
+					this.UpdateHeader ();
+					this.Update ();
+				}
+			}
+		}
+
+		public int								RowCount
+		{
+			get
+			{
+				return this.max_rows;
+			}
+			set
+			{
+				if (this.max_rows != value)
+				{
+					this.max_rows = value;
+					
+					if (this.text_provider == null)
+					{
+						//	Met à jour le nombre de lignes dans la table. Si la table est trop longue, on
+						//	va la tronquer; si elle est trop courte, on va l'allonger.
+						
+						int n = this.text_array.Count;
+						
+						if (this.max_rows > n)
+						{
+							for (int i = n; i < this.max_rows; i++)
+							{
+								this.text_array.Add (new System.Collections.ArrayList ());
+							}
+						}
+						else if (this.max_rows < n)
+						{
+							this.text_array.RemoveRange (this.max_rows, n - this.max_rows);
+						}
+					}
+					
+					this.InvalidateContents ();
+				}
+			}
+		}
+
+		
+		public string							this[int row, int column]
+		{
+			get
+			{
+				if ((this.text_provider != null) ||
+					(this.column_widths == null) ||
+					(row < 0) ||
+					(column < 0) ||
+					(row >= this.text_array.Count))
+				{
+					return "";
+				}
+				
+				System.Collections.ArrayList line = this.text_array[row] as System.Collections.ArrayList;
+				
+				return (column >= line.Count) ? "" : line[column] as string;
+			}
+			set
+			{
+				if (this.text_provider != null)  return;
+				if (this.column_widths == null)  return;
+				if (row < 0 || column < 0)  return;
+				
+				System.Diagnostics.Debug.Assert (this.text_array.Count == this.max_rows);
+				
+				bool changed = false;
+				
+				changed |= (row >= this.max_rows);
+				changed |= (column >= this.max_columns);
+				
+				this.RowCount    = System.Math.Max (this.max_rows, row + 1);
+				this.ColumnCount = System.Math.Max (this.max_columns, column + 1);
+				
+				System.Collections.ArrayList line = this.text_array[row] as System.Collections.ArrayList;
+				
+				if (column >= line.Count)
+				{
+					for (int i = line.Count; i <= column; i++)
+					{
+						line.Add ("");
+					}
+				}
+				
+				string text = line[column] as string;
+				
+				if (text != value)
+				{
+					line[column] = value;
+					changed      = true;
+				}
+				
+				if (changed)
+				{
+					this.OnContentsChanged ();
+					this.InvalidateContents ();
+				}
+			}
+		}
+
+		
+		public int								SelectedIndex
+		{
+			get
+			{
+				return this.selected_row;
+			}
+			set
+			{
+				if (value != -1)
+				{
+					value = System.Math.Max (value, 0);
+					value = System.Math.Min (value, this.max_rows);
+				}
+
+				if (value != this.selected_row)
+				{
+					this.selected_row = value;
+					this.InvalidateContents ();
+					this.OnSelectedIndexChanged ();
+				}
+			}
+		}
+
+		
+		public int								FirstVisibleIndex
+		{
+			get
+			{
+				return this.first_visible_row;
+			}
+			set
+			{
+				int n = this.max_rows - this.n_fully_visible_rows;
+				value = System.Math.Max (value, 0);
+				value = System.Math.Min (value, System.Math.Max (n, 0));
+				
+				if (value != this.first_visible_row)
+				{
+					this.first_visible_row = value;
+					this.UpdateScrollers ();
+				}
+			}
+		}
+
+		public double							Offset
+		{
+			// Offset horizontal.
+			get
+			{
+				return this.offset;
+			}
+			set
+			{
+				if (this.offset != value)
+				{
+					this.offset = value;
+					this.InvalidateContents ();
+				}
+			}
+		}
+
+		
+		public void SetColumnWidth(int column, double width)
+		{
+			System.Diagnostics.Debug.Assert (this.column_widths != null);
+			System.Diagnostics.Debug.Assert (column > -1);
+			System.Diagnostics.Debug.Assert (column < this.column_widths.Length);
+			
+			width = System.Math.Floor (width);
+			width = System.Math.Max (width, this.min_width);
+			
+			if (this.column_widths[column] != width)
+			{
+				this.column_widths[column] = width;
+				this.UpdateTotalWidth ();
+				this.InvalidateContents ();
+			}
+		}
+		
+		public double GetColumnWidth(int column)
+		{
+			System.Diagnostics.Debug.Assert (this.column_widths != null);
+			System.Diagnostics.Debug.Assert (column > -1);
+			System.Diagnostics.Debug.Assert (column < this.column_widths.Length);
+			
+			return this.column_widths[column];
+		}
+		
+		
+		protected void UpdateTotalWidth()
+		{
+			this.total_width = 0;
+			
+			for (int i = 0; i < this.max_columns; i++)
+			{
+				this.total_width += this.column_widths[i];
+			}
+		}
+		
+		protected void UpdateHeader()
+		{
+			foreach (HeaderButton button in this.header_buttons)
+			{
+				button.Clicked     -= new MessageEventHandler (this.HandleButtonClicked);
+			}
+			foreach (HeaderSlider slider in this.header_sliders)
+			{
+				slider.DragStarted -= new MessageEventHandler (this.HandleSliderDragStarted);
+				slider.DragMoved   -= new MessageEventHandler (this.HandleSliderDragMoved);
+				slider.DragEnded   -= new MessageEventHandler (this.HandleSliderDragEnded);
 			}
 			
-			for ( int i=0 ; i<this.maxColumns ; i++ )
+			this.header_buttons.Clear ();
+			this.header_sliders.Clear ();
+			
+			for (int i = 0; i < this.max_columns; i++)
 			{
-				HeaderButton button = this.FindButton(i);
-				button.SortMode = i==rank ? mode : 0;
+				HeaderButton button = new HeaderButton ();
+				
+				button.Style    = HeaderButtonStyle.Top;
+				button.Dynamic  = true;
+				button.Index    = i;
+				button.Clicked += new MessageEventHandler (this.HandleButtonClicked);
+				
+				this.header_buttons.Add (button);
+			}
+			for (int i = 0; i < this.max_columns; i++)
+			{
+				HeaderSlider slider = new HeaderSlider ();
+				
+				slider.Style        = HeaderSliderStyle.Top;
+				slider.Index        = i;
+				slider.DragStarted += new MessageEventHandler (this.HandleSliderDragStarted);
+				slider.DragMoved   += new MessageEventHandler (this.HandleSliderDragMoved);
+				slider.DragEnded   += new MessageEventHandler (this.HandleSliderDragEnded);
+				
+				this.header_sliders.Add (slider);
+			}
+		}
+
+		
+		public void SetColumnAlignment(int column, Drawing.ContentAlignment alignment)
+		{
+			System.Diagnostics.Debug.Assert (this.column_alignments != null);
+			System.Diagnostics.Debug.Assert (column > -1);
+			System.Diagnostics.Debug.Assert (column < this.column_alignments.Length);
+			
+			if (this.column_alignments[column] != alignment)
+			{
+				this.column_alignments[column] = alignment;
+				this.InvalidateContents ();
+			}
+		}
+
+		public Drawing.ContentAlignment GetColumnAlignment(int column)
+		{
+			System.Diagnostics.Debug.Assert (this.column_alignments != null);
+			System.Diagnostics.Debug.Assert (column > -1);
+			System.Diagnostics.Debug.Assert (column < this.column_alignments.Length);
+			
+			return this.column_alignments[column];
+		}
+		
+		
+		public void SetHeaderText(int column, string text)
+		{
+			if (column < 0 || column >= this.max_columns)
+			{
+				throw new System.ArgumentOutOfRangeException ("column", column, "Column index out of range");
+			}
+			
+			this.FindButton (column).Text = text;
+			this.InvalidateContents ();
+		}
+		
+		public string GetHeaderText(int column)
+		{
+			if (column < 0 || column >= this.max_columns)
+			{
+				throw new System.ArgumentOutOfRangeException ("column", column, "Column index out of range");
+			}
+			
+			return this.FindButton (column).Text;
+		}
+		
+		
+		public void SetSortingHeader(int column, SortMode mode)
+		{
+			if (column < 0 || column >= this.max_columns)
+			{
+				throw new System.ArgumentOutOfRangeException ("column", column, "Column index out of range");
+			}
+
+			for (int i = 0; i < this.max_columns; i++)
+			{
+				this.FindButton (i).SortMode = i == column ? mode : SortMode.None;
 			}
 		}
 
 		// Retourne la colonne de tri.
-		public bool GetHeaderSort(out int rank, out int mode)
+		public bool GetSortingHeader(out int column, out SortMode mode)
 		{
-			for ( rank=0 ; rank<this.maxColumns ; rank++ )
+			for (column = 0; column < this.max_columns; column++)
 			{
-				HeaderButton button = this.FindButton(rank);
+				HeaderButton button = this.FindButton (column);
+
 				mode = button.SortMode;
-				if ( mode != 0 )  return true;
+				if (mode != 0)  return true;
 			}
 
-			rank = -1;
+			column = -1;
 			mode = 0;
 			return false;
 		}
 
-
 		// Indique si la ligne sélectionnée est visible.
 		public bool IsShowSelect()
 		{
-			if ( this.selectedRow == -1 )  return true;
-			if ( this.selectedRow >= this.firstRow &&
-				this.selectedRow <  this.firstRow+this.visibleRowsFull )  return true;
+			if (this.selected_row == -1)  return true;
+
+			if (this.selected_row >= this.first_visible_row && this.selected_row < this.first_visible_row + this.n_fully_visible_rows)  return true;
+
 			return false;
 		}
 
 		// Rend la ligne sélectionnée visible.
 		public void ShowSelect(ScrollArrayShow mode)
 		{
-			if ( this.selectedRow == -1 )  return;
+			if (this.selected_row == -1)  return;
 
-			int fl = this.firstRow;
-			if ( mode == ScrollArrayShow.Extremity )
+			int fl = this.first_visible_row;
+
+			if (mode == ScrollArrayShow.Extremity)
 			{
-				if ( this.selectedRow < this.firstRow )
+				if (this.selected_row < this.first_visible_row)
 				{
-					fl = this.selectedRow;
+					fl = this.selected_row;
 				}
-				if ( this.selectedRow > this.firstRow+this.visibleRowsFull-1 )
+
+				if (this.selected_row > this.first_visible_row + this.n_fully_visible_rows - 1)
 				{
-					fl = this.selectedRow-(this.visibleRowsFull-1);
+					fl = this.selected_row - (this.n_fully_visible_rows - 1);
 				}
 			}
-			if ( mode == ScrollArrayShow.Middle )
+
+			if (mode == ScrollArrayShow.Center)
 			{
-				int display = System.Math.Min(this.visibleRowsFull, this.maxRows);
-				fl = System.Math.Min(this.selectedRow+display/2, this.maxRows-1);
-				fl = System.Math.Max(fl-display+1, 0);
+				int display = System.Math.Min (this.n_fully_visible_rows, this.max_rows);
+
+				fl = System.Math.Min (this.selected_row + display / 2, this.max_rows - 1);
+				fl = System.Math.Max (fl - display + 1, 0);
 			}
-			this.firstRow = fl;
+
+			this.first_visible_row = fl;
 		}
 
 		// Ajuste la hauteur pour afficher pile un nombre entier de lignes.
 		public bool AdjustToMultiple(ScrollArrayAdjust mode)
 		{
-			this.Update();
+			this.Update ();
 
-			double h = this.rectInside.Height;
-			int nbLines = (int)(h/this.rowHeight);
-			double adjust = h - nbLines*this.rowHeight;
-			if ( adjust == 0 )  return false;
+			double h = this.table_bounds.Height;
+			int nbLines = (int) (h / this.row_height);
+			double adjust = h - nbLines * this.row_height;
 
-			if ( mode == ScrollArrayAdjust.MoveUp )
+			if (adjust == 0)  return false;
+
+			if (mode == ScrollArrayAdjust.MoveUp)
 			{
-				this.Top = System.Math.Floor(this.Top-adjust);
+				this.Top = System.Math.Floor (this.Top - adjust);
 			}
-			if ( mode == ScrollArrayAdjust.MoveDown )
+
+			if (mode == ScrollArrayAdjust.MoveDown)
 			{
-				this.Bottom = System.Math.Floor(this.Bottom+adjust);
+				this.Bottom = System.Math.Floor (this.Bottom + adjust);
 			}
-			this.Invalidate();
+
+			this.Invalidate ();
 			return true;
 		}
 
 		// Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
 		public bool AdjustToContent(ScrollArrayAdjust mode, double hMin, double hMax)
 		{
-			this.Update();
+			this.Update ();
 
-			double h = this.rowHeight*this.maxRows+this.margins.Height+this.topMargin+this.bottomMargin;
+			double h = this.row_height * this.max_rows + this.frame_margins.Height + this.table_margins.Height;
 			double hope = h;
-			h = System.Math.Max(h, hMin);
-			h = System.Math.Min(h, hMax);
-			if ( h == this.Height )  return false;
 
-			if ( mode == ScrollArrayAdjust.MoveUp )
+			h = System.Math.Max (h, hMin);
+			h = System.Math.Min (h, hMax);
+			if (h == this.Height)  return false;
+
+			if (mode == ScrollArrayAdjust.MoveUp)
 			{
-				this.Top = this.Bottom+h;
+				this.Top = this.Bottom + h;
 			}
-			if ( mode == ScrollArrayAdjust.MoveDown )
+
+			if (mode == ScrollArrayAdjust.MoveDown)
 			{
-				this.Bottom = this.Top-h;
+				this.Bottom = this.Top - h;
 			}
-			this.Invalidate();
-			if ( h != hope )  AdjustToMultiple(mode);
+
+			this.Invalidate ();
+			if (h != hope)  AdjustToMultiple (mode);
+
 			return true;
 		}
 
-
 		// Appelé lorsque l'ascenseur a bougé.
-		private void HandleScrollerV(object sender)
+		private void HandleVScrollerChanged(object sender)
 		{
-			this.FirstRow = (int)System.Math.Floor(this.scrollerV.Value+0.5);
+			this.FirstVisibleIndex = (int) System.Math.Floor (this.v_scroller.Value + 0.5);
 			//this.SetFocused(true);
 		}
 
 		// Appelé lorsque l'ascenseur a bougé.
-		private void HandleScrollerH(object sender)
+		private void HandleHScrollerChanged(object sender)
 		{
-			this.OffsetH = System.Math.Floor(this.scrollerH.Value);
+			this.Offset = System.Math.Floor (this.h_scroller.Value);
 			//this.SetFocused(true);
 		}
 
 		// Appelé lorsque le bouton d'en-tête a été cliqué.
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			foreach ( HeaderButton button in this.headerButton )
+			foreach (HeaderButton button in this.header_buttons)
 			{
-				if ( sender == button )
+				if (sender == button)
 				{
-					int column = button.Rank;
-					int mode = button.SortMode;
-					switch ( mode )
+					int      column = button.Index;
+					SortMode mode   = button.SortMode;
+					
+					switch (mode)
 					{
-						case -1:  mode =  1;  break;
-						case  0:  mode =  1;  break;
-						case  1:  mode = -1;  break;
+						case SortMode.Up:
+						case SortMode.None:
+							mode = SortMode.Down;
+							break;
+
+						case SortMode.Down:
+							mode = SortMode.Up;
+							break;
 					}
-					this.SetHeaderSort(column, mode);
-					this.OnSortChanged();
+					this.SetSortingHeader (column, mode);
+					this.OnSortChanged ();
 					return;
 				}
 			}
@@ -482,90 +581,95 @@ namespace Epsitec.Common.Widgets
 		private void HandleSliderDragStarted(object sender, MessageEventArgs e)
 		{
 			HeaderSlider slider = sender as HeaderSlider;
-			this.DragStartedColumn(slider.Rank, e.Point.X);
+
+			this.DragStartedColumn (slider.Index, e.Point.X);
 		}
 
 		// Appelé lorsque le slider est déplacé.
 		private void HandleSliderDragMoved(object sender, MessageEventArgs e)
 		{
 			HeaderSlider slider = sender as HeaderSlider;
-			this.DragMovedColumn(slider.Rank, e.Point.X);
+
+			this.DragMovedColumn (slider.Index, e.Point.X);
 		}
 
 		// Appelé lorsque le slider est fini de déplacer.
 		private void HandleSliderDragEnded(object sender, MessageEventArgs e)
 		{
 			HeaderSlider slider = sender as HeaderSlider;
-			this.DragEndedColumn(slider.Rank, e.Point.X);
+
+			this.DragEndedColumn (slider.Index, e.Point.X);
 		}
 
 		// La largeur d'une colonne va être modifiée.
 		protected void DragStartedColumn(int column, double pos)
 		{
 			this.dragRank = column;
-			this.dragPos  = pos;
-			this.dragDim  = this.RetWidthColumn(column);
+			this.dragPos = pos;
+			this.dragDim = this.GetColumnWidth (column);
 		}
 
 		// Modifie la largeur d'une colonne.
 		protected void DragMovedColumn(int column, double pos)
 		{
-			double newWidth = this.RetWidthColumn(column) + pos-this.dragPos;
-			this.SetWidthColumn(this.dragRank, newWidth);
-			this.isDirty = true;
-			this.Invalidate();
+			double newWidth = this.GetColumnWidth (column) + pos - this.dragPos;
+
+			this.SetColumnWidth (this.dragRank, newWidth);
+			this.InvalidateContents ();
 		}
 
 		// La largeur d'une colonne a été modifiée.
 		protected void DragEndedColumn(int column, double pos)
 		{
-			this.isDirty = true;
-			this.Invalidate();
+			this.InvalidateContents ();
 		}
-
-
 
 		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			switch ( message.Type )
+			switch (message.Type)
 			{
-				case MessageType.MouseDown:
-					this.mouseDown = true;
-					this.MouseSelect(pos.Y);
-					break;
-				
-				case MessageType.MouseMove:
-					if ( this.mouseDown  )
-					{
-						this.MouseSelect(pos.Y);
-					}
+				case MessageType.MouseDown :
+					this.is_mouse_down = true;
+					this.MouseSelect (pos.Y);
 					break;
 
-				case MessageType.MouseUp:
-					if ( this.mouseDown )
+				case MessageType.MouseMove :
+					if (this.is_mouse_down)
 					{
-						this.MouseSelect(pos.Y);
-						this.mouseDown = false;
+						this.MouseSelect (pos.Y);
 					}
+
 					break;
 
-				case MessageType.KeyDown:
-					ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
+				case MessageType.MouseUp :
+					if (this.is_mouse_down)
+					{
+						this.MouseSelect (pos.Y);
+						this.is_mouse_down = false;
+					}
+
+					break;
+
+				case MessageType.KeyDown :
+					ProcessKeyDown (message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
 					break;
 			}
-			
 			message.Consumer = this;
 		}
 
 		// Sélectionne la ligne selon la souris.
 		protected bool MouseSelect(double pos)
 		{
-			pos = this.Client.Height-pos;
-			int line = (int)((pos-this.margins.Top-this.topMargin)/this.rowHeight);
-			if ( line < 0 || line >= this.visibleRows )  return false;
-			line += this.firstRow;
-			if ( line > this.maxRows-1 )  return false;
+			pos = this.Client.Height - pos;
+
+			int line = (int) ((pos - this.frame_margins.Top - this.table_margins.Top) / this.row_height);
+
+			if (line < 0 || line >= this.n_visible_rows)  return false;
+
+			line += this.first_visible_row;
+			if (line > this.max_rows - 1)  return false;
+
 			this.SelectedIndex = line;
 			return true;
 		}
@@ -573,430 +677,452 @@ namespace Epsitec.Common.Widgets
 		// Gestion d'une touche pressée avec KeyDown dans la liste.
 		protected void ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
-			int		sel;
+			int sel;
 
-			switch ( key )
+			switch (key)
 			{
-				case KeyCode.ArrowUp:
-					sel = this.SelectedIndex-1;
-					if ( sel >= 0 )
+				case KeyCode.ArrowUp :
+					sel = this.SelectedIndex - 1;
+					if (sel >= 0)
 					{
 						this.SelectedIndex = sel;
-						if ( !this.IsShowSelect() )  this.ShowSelect(ScrollArrayShow.Extremity);
+						if (!this.IsShowSelect ())  this.ShowSelect (ScrollArrayShow.Extremity);
 					}
+
 					break;
 
-				case KeyCode.ArrowDown:
-					sel = this.SelectedIndex+1;
-					if ( sel < this.maxRows )
+				case KeyCode.ArrowDown :
+					sel = this.SelectedIndex + 1;
+					if (sel < this.max_rows)
 					{
 						this.SelectedIndex = sel;
-						if ( !this.IsShowSelect() )  this.ShowSelect(ScrollArrayShow.Extremity);
+						if (!this.IsShowSelect ())  this.ShowSelect (ScrollArrayShow.Extremity);
 					}
+
 					break;
 			}
 		}
-
 
 		// Demande de régénérer tout le contenu.
 		public void RefreshContent()
 		{
 			this.lastVisibleRows = -1;
-			this.isDirty = true;
+			this.InvalidateContents ();
 		}
 
 		// Met à jour la géométrie du tableau.
 		protected void Update()
 		{
-			if ( this.widthColumns == null )  return;
-			if ( !this.isDirty )  return;
-			this.UpdateClientGeometry();
+			if (this.column_widths == null)  return;
+
+			if (!this.is_dirty)  return;
+
+			this.UpdateClientGeometry ();
 		}
 
 		// Met à jour la géométrie de la liste.
 		protected override void UpdateClientGeometry()
 		{
-			base.UpdateClientGeometry();
-
-			if ( this.widthColumns == null )  return;
-			if ( this.scrollerV == null || this.scrollerH == null )  return;
+			base.UpdateClientGeometry ();
 			
-			this.isDirty = false;
+			
+			if (this.column_widths == null)  return;
+
+			if (this.v_scroller == null || this.h_scroller == null)  return;
+
+			this.is_dirty = false;
 
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			this.margins = adorner.GeometryArrayMargins;
 
-			this.topMargin = this.rowHeight;
-			this.rightMargin = this.scrollerV.Width-1;
-			this.bottomMargin = this.scrollerH.Height-1;
+			this.row_height    = this.DefaultFontHeight + 2;
+			this.frame_margins = adorner.GeometryArrayMargins;
+			this.table_margins = new Drawing.Margins (0, this.v_scroller.Width - 1, this.row_height, this.h_scroller.Height - 1);
+			
+			this.table_bounds = this.Client.Bounds;
+			this.table_bounds.Deflate (this.frame_margins);
+			this.table_bounds.Deflate (this.table_margins);
+			
+			double v = this.table_bounds.Height / this.row_height;
 
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Width, this.Height);
-			rect.Left   += this.margins.Left;
-			rect.Right  -= this.margins.Right;
-			rect.Bottom += this.margins.Bottom;
-			rect.Top    -= this.margins.Top;
-
-			this.rectInside.Left   = rect.Left  +this.leftMargin;
-			this.rectInside.Right  = rect.Right -this.rightMargin;
-			this.rectInside.Bottom = rect.Bottom+this.bottomMargin;
-			this.rectInside.Top    = rect.Top   -this.topMargin;
-
-			double v = this.rectInside.Height/this.rowHeight;
-			this.visibleRows = (int)System.Math.Ceiling(v);  // compte la dernière ligne partielle
-			this.visibleRowsFull = (int)System.Math.Floor(v);  // nb de lignes entières
+			this.n_visible_rows = (int) System.Math.Ceiling (v);  // compte la dernière ligne partielle
+			this.n_fully_visible_rows = (int) System.Math.Floor (v);  // nb de lignes entières
 
 			// Alloue le tableau des textes.
-			int dx = System.Math.Max(this.visibleRows, 1);
-			int dy = System.Math.Max(this.maxColumns, 1);
-			if ( dx != this.lastDx || dy != this.lastDy )
+			int dx = System.Math.Max (this.n_visible_rows, 1);
+			int dy = System.Math.Max (this.max_columns, 1);
+
+			if (dx != this.lastDx || dy != this.lastDy)
 			{
-				this.textLayouts = new TextLayout[dx, dy];
-				this.lastDx = dx;
-				this.lastDy = dy;
+				this.layouts = new TextLayout[dx, dy];
+				this.lastDx  = dx;
+				this.lastDy  = dy;
 				this.lastVisibleRows = -1;
 			}
 
 			// Place l'en-tête
-			Drawing.Rectangle aRect = new Drawing.Rectangle();
-			aRect.Left   = this.rectInside.Left;
-			aRect.Right  = this.rectInside.Right;
-			aRect.Bottom = this.rectInside.Top;
-			aRect.Top    = this.rectInside.Top+this.rowHeight;
+			Drawing.Rectangle aRect = new Drawing.Rectangle ();
+
+			aRect.Left   = this.table_bounds.Left;
+			aRect.Right  = this.table_bounds.Right;
+			aRect.Bottom = this.table_bounds.Top;
+			aRect.Top    = this.table_bounds.Top + this.row_height;
 			this.header.Bounds = aRect;
-			if ( this.isGrimy )  this.header.Children.Clear();
+			if (this.is_header_dirty)  this.header.Children.Clear ();
 
 			// Place les boutons dans l'en-tête.
 			aRect.Bottom = 0;
-			aRect.Top    = this.topMargin;
-			aRect.Left   = -this.offsetH;
-			for ( int i=0 ; i<this.maxColumns ; i++ )
+			aRect.Top    = this.table_margins.Top;
+			aRect.Left   = -this.offset;
+			for (int i = 0; i < this.max_columns; i++)
 			{
-				aRect.Right = aRect.Left+this.RetWidthColumn(i);
-				HeaderButton button = this.FindButton(i);
-				button.Show();
+				aRect.Right = aRect.Left + this.GetColumnWidth (i);
+
+				HeaderButton button = this.FindButton (i);
+
+				button.Show ();
 				button.Bounds = aRect;
-				if ( this.isGrimy )  this.header.Children.Add(button);
+				if (this.is_header_dirty)  this.header.Children.Add (button);
+
 				aRect.Left = aRect.Right;
 			}
 
 			// Place les sliders dans l'en-tête.
 			aRect.Bottom = 0;
-			aRect.Top    = this.topMargin;
-			aRect.Left   = -this.offsetH;
-			for ( int i=0 ; i<this.maxColumns ; i++ )
+			aRect.Top = this.table_margins.Top;
+			aRect.Left = -this.offset;
+			for (int i = 0; i < this.max_columns; i++)
 			{
-				aRect.Right = aRect.Left+this.RetWidthColumn(i);
-				HeaderSlider slider = this.FindSlider(i);
-				Drawing.Rectangle sRect = new Drawing.Rectangle();
-				sRect.Left   = aRect.Right-this.sliderDim/2;
-				sRect.Right  = aRect.Right+this.sliderDim/2;
+				aRect.Right = aRect.Left + this.GetColumnWidth (i);
+
+				HeaderSlider slider = this.FindSlider (i);
+				Drawing.Rectangle sRect = new Drawing.Rectangle ();
+
+				sRect.Left   = aRect.Right - this.slider_dim / 2;
+				sRect.Right  = aRect.Right + this.slider_dim / 2;
 				sRect.Bottom = aRect.Bottom;
 				sRect.Top    = aRect.Top;
-				slider.Show();
+				slider.Show ();
 				slider.Bounds = sRect;
-				if ( this.isGrimy )  this.header.Children.Add(slider);
+				if (this.is_header_dirty)  this.header.Children.Add (slider);
+
 				aRect.Left = aRect.Right;
 			}
 
 			// Place l'ascenseur vertical.
-			aRect.Left   = this.rectInside.Right-1;
-			aRect.Right  = this.rectInside.Right-1+this.scrollerV.Width;
-			aRect.Bottom = this.rectInside.Bottom;
-			aRect.Top    = this.rectInside.Top;
-			this.scrollerV.Bounds = aRect;
+			aRect.Left   = this.table_bounds.Right-1;
+			aRect.Right  = this.table_bounds.Right-1 + this.v_scroller.Width;
+			aRect.Bottom = this.table_bounds.Bottom;
+			aRect.Top    = this.table_bounds.Top;
+			this.v_scroller.Bounds = aRect;
 
 			// Place l'ascenseur horizontal.
-			aRect.Left   = this.rectInside.Left;
-			aRect.Right  = this.rectInside.Right;
-			aRect.Bottom = this.rectInside.Bottom+1-this.scrollerH.Height;
-			aRect.Top    = this.rectInside.Bottom+1;
-			this.scrollerH.Bounds = aRect;
-
-			this.isGrimy = false;
-			this.UpdateScroller();
+			aRect.Left   = this.table_bounds.Left;
+			aRect.Right  = this.table_bounds.Right;
+			aRect.Bottom = this.table_bounds.Bottom+1 - this.h_scroller.Height;
+			aRect.Top    = this.table_bounds.Bottom+1;
+			this.h_scroller.Bounds = aRect;
+			this.is_header_dirty = false;
+			this.UpdateScrollers ();
 		}
 
 		protected override void OnAdornerChanged()
 		{
-			this.UpdateClientGeometry();
-			base.OnAdornerChanged();
+			this.UpdateClientGeometry ();
+			base.OnAdornerChanged ();
 		}
 
 		public override Drawing.Rectangle GetShapeBounds()
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-			rect.Inflate(adorner.GeometryListShapeBounds);
+			Drawing.Rectangle rect = new Drawing.Rectangle (0, 0, this.Client.Width, this.Client.Height);
+
+			rect.Inflate (adorner.GeometryListShapeBounds);
 			return rect;
 		}
 
 		// Met à jour l'ascenseur en fonction de la liste.
-		protected void UpdateScroller()
+		protected void UpdateScrollers()
 		{
 			// Met à jour l'ascenseur vertical.
-			int nbRows = this.maxRows;
-			if ( nbRows <= this.visibleRowsFull ||
-				 nbRows <= 0                    ||
-				 this.visibleRowsFull <= 0      )
+			int nbRows = this.max_rows;
+
+			if (nbRows <= this.n_fully_visible_rows || nbRows <= 0 || this.n_fully_visible_rows <= 0)
 			{
-				this.scrollerV.SetEnabled(false);
-				this.scrollerV.Range = 1;
-				this.scrollerV.VisibleRangeRatio = 1;
-				this.scrollerV.Value = 0;
+				this.v_scroller.SetEnabled (false);
+				this.v_scroller.Range = 1;
+				this.v_scroller.VisibleRangeRatio = 1;
+				this.v_scroller.Value = 0;
 			}
 			else
 			{
-				this.scrollerV.SetEnabled(true);
-				this.scrollerV.Range = nbRows-this.visibleRowsFull;
-				this.scrollerV.VisibleRangeRatio = this.visibleRowsFull/(double)nbRows;
-				this.scrollerV.Value = this.firstRow;
-				this.scrollerV.SmallChange = 1;
-				this.scrollerV.LargeChange = this.visibleRowsFull/2.0;
+				this.v_scroller.SetEnabled (true);
+				this.v_scroller.Range = nbRows - this.n_fully_visible_rows;
+				this.v_scroller.VisibleRangeRatio = this.n_fully_visible_rows / (double) nbRows;
+				this.v_scroller.Value = this.first_visible_row;
+				this.v_scroller.SmallChange = 1;
+				this.v_scroller.LargeChange = this.n_fully_visible_rows / 2.0;
 			}
-			
-			this.UpdateTextlayouts();
+
+			this.UpdateTextlayouts ();
 
 			// Met à jour l'ascenseur horizontal.
-			double width = this.widthTotal;
-			if ( width <= this.rectInside.Width ||
-				 width <= 0                     ||
-				 this.rectInside.Width <= 0     )
+			double width = this.total_width;
+
+			if (width <= this.table_bounds.Width || width <= 0 || this.table_bounds.Width <= 0)
 			{
-				this.scrollerH.SetEnabled(false);
-				this.scrollerH.Range = 1;
-				this.scrollerH.VisibleRangeRatio = 1;
-				this.scrollerH.Value = 0;
+				this.h_scroller.SetEnabled (false);
+				this.h_scroller.Range = 1;
+				this.h_scroller.VisibleRangeRatio = 1;
+				this.h_scroller.Value = 0;
 			}
 			else
 			{
-				this.scrollerH.SetEnabled(true);
-				this.scrollerH.Range = width-this.rectInside.Width;
-				this.scrollerH.VisibleRangeRatio = this.rectInside.Width/width;
-				this.scrollerH.Value = this.offsetH;
-				this.scrollerH.SmallChange = 10;
-				this.scrollerH.LargeChange = this.rectInside.Width/2.0;
+				this.h_scroller.SetEnabled (true);
+				this.h_scroller.Range = width - this.table_bounds.Width;
+				this.h_scroller.VisibleRangeRatio = this.table_bounds.Width / width;
+				this.h_scroller.Value = this.offset;
+				this.h_scroller.SmallChange = 10;
+				this.h_scroller.LargeChange = this.table_bounds.Width / 2.0;
 			}
+			
+			this.Invalidate ();
 		}
 
 		// Met à jour les textes en fonction de l'ascenseur vertical.
 		protected void UpdateTextlayouts()
 		{
-			if ( this.widthColumns == null )  return;
+			if (this.column_widths == null)  return;
 
-			int max = System.Math.Min(this.visibleRows, this.maxRows);
-			bool quick = ( max == this.lastVisibleRows && this.firstRow == this.lastFirstRow );
+			int max = System.Math.Min (this.n_visible_rows, this.max_rows);
+			bool quick = (max == this.lastVisibleRows && this.first_visible_row == this.lastFirstRow);
 
 			this.lastVisibleRows = max;
-			this.lastFirstRow = this.firstRow;
-
-			for ( int row=0 ; row<max ; row++ )
+			this.lastFirstRow = this.first_visible_row;
+			for (int row = 0; row < max; row++)
 			{
-				for ( int column=0 ; column<this.maxColumns ; column++ )
+				for (int column = 0; column < this.max_columns; column++)
 				{
-					if ( !quick )
+					if (!quick)
 					{
-						if ( this.textLayouts[row,column] == null )
+						if (this.layouts[row, column] == null)
 						{
-							this.textLayouts[row,column] = new TextLayout();
+							this.layouts[row, column] = new TextLayout ();
 						}
-						if ( this.funcFillText == null )
+
+						if (this.text_provider == null)
 						{
-							this.textLayouts[row,column].Text = this.GetText(row+this.firstRow, column);
+							this.layouts[row, column].Text = this[row + this.first_visible_row, column];
 						}
 						else
 						{
-							this.textLayouts[row,column].Text = this.funcFillText(row+this.firstRow, column);
+							this.layouts[row, column].Text = this.text_provider (row + this.first_visible_row, column);
 						}
-						this.textLayouts[row,column].Font = this.DefaultFont;
-						this.textLayouts[row,column].FontSize = this.DefaultFontSize;
+
+						this.layouts[row, column].Font = this.DefaultFont;
+						this.layouts[row, column].FontSize = this.DefaultFontSize;
 					}
-					this.textLayouts[row,column].LayoutSize = new Drawing.Size(this.widthColumns[column]-this.textMargin*2, this.rowHeight);
-					this.textLayouts[row,column].Alignment = this.alignmentColumns[column];
-					this.textLayouts[row,column].BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
+
+					this.layouts[row, column].LayoutSize = new Drawing.Size (this.column_widths[column] - this.text_margin * 2, this.row_height);
+					this.layouts[row, column].Alignment = this.column_alignments[column];
+					this.layouts[row, column].BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 				}
 			}
 		}
 
-
 		// Génère un événement pour dire que la sélection dans la liste a changé.
-		protected void OnSelectedIndexChanged()
+		protected virtual void OnSelectedIndexChanged()
 		{
-			if ( this.SelectedIndexChanged != null )  // qq'un écoute ?
+			if (this.SelectedIndexChanged != null)  // qq'un écoute ?
 			{
-				this.SelectedIndexChanged(this);
+				this.SelectedIndexChanged (this);
+			}
+		}
+		
+		protected virtual void OnContentsChanged()
+		{
+			if (this.ContentsChanged != null)  // qq'un écoute ?
+			{
+				this.ContentsChanged (this);
 			}
 		}
 
 		// Génère un événement pour dire que le tri a changé.
 		protected void OnSortChanged()
 		{
-			if ( this.SortChanged != null )  // qq'un écoute ?
+			if (this.SortChanged != null)  // qq'un écoute ?
 			{
-				this.SortChanged(this);
+				this.SortChanged (this);
 			}
 		}
 
-
 		protected HeaderButton FindButton(int index)
 		{
-			return this.headerButton[index] as HeaderButton;
+			return this.header_buttons[index] as HeaderButton;
 		}
 
 		protected HeaderSlider FindSlider(int index)
 		{
-			return this.headerSlider[index] as HeaderSlider;
+			return this.header_sliders[index] as HeaderSlider;
 		}
 
-		
 		// Dessine le tableau.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			if ( this.widthColumns == null )  return;
 
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			if (this.column_widths == null)  return;
+
+			Drawing.Rectangle rect = new Drawing.Rectangle (0, 0, this.Client.Width, this.Client.Height);
 			WidgetState state = this.PaintState;
-			
-			adorner.PaintArrayBackground(graphics, rect, state);
 
-			Drawing.Rectangle localClip = this.MapClientToRoot(this.rectInside);
-			Drawing.Rectangle saveClip = graphics.SaveClippingRectangle();
-			graphics.SetClippingRectangle(localClip);
+			adorner.PaintArrayBackground (graphics, rect, state);
+
+			Drawing.Rectangle localClip = this.MapClientToRoot (this.table_bounds);
+			Drawing.Rectangle saveClip = graphics.SaveClippingRectangle ();
+
+			graphics.SetClippingRectangle (localClip);
 
 			// Dessine le tableau des textes.
-			this.Update();
-			Drawing.Point pos = new Drawing.Point(this.rectInside.Left, this.rectInside.Top-this.rowHeight);
+			this.Update ();
 
-			double limit = this.widthTotal-this.offsetH+this.rectInside.Left+1;
-			double maxx = System.Math.Min(this.rectInside.Right, limit);
-			
-			int max = System.Math.Min(this.visibleRows, this.maxRows);
-			for ( int row=0 ; row<max ; row++ )
+			Drawing.Point pos = new Drawing.Point (this.table_bounds.Left, this.table_bounds.Top - this.row_height);
+			double limit = this.total_width - this.offset + this.table_bounds.Left + 1;
+			double maxx = System.Math.Min (this.table_bounds.Right, limit);
+			int max = System.Math.Min (this.n_visible_rows, this.max_rows);
+
+			for (int row = 0; row < max; row++)
 			{
-				pos.X = this.margins.Left;
+				pos.X = this.frame_margins.Left;
+
 				WidgetState widgetState = WidgetState.Enabled;
 
-				if ( row+this.firstRow == this.selectedRow )  // ligne sélectionnée ?
+				if (row + this.first_visible_row == this.selected_row)  // ligne sélectionnée ?
 				{
 					widgetState |= WidgetState.Selected;
 				}
-				Drawing.Rectangle rectLine = new Drawing.Rectangle();
-				rectLine.Left   = this.rectInside.Left;
-				rectLine.Right  = maxx;
-				rectLine.Bottom = pos.Y;
-				rectLine.Top    = pos.Y+this.rowHeight;
-				adorner.PaintCellBackground(graphics, rectLine, widgetState);
 
-				pos.X += this.textMargin-System.Math.Floor(this.offsetH);
-				for ( int column=0 ; column<this.maxColumns ; column++ )
+				Drawing.Rectangle rectLine = new Drawing.Rectangle ();
+
+				rectLine.Left = this.table_bounds.Left;
+				rectLine.Right = maxx;
+				rectLine.Bottom = pos.Y;
+				rectLine.Top = pos.Y + this.row_height;
+				adorner.PaintCellBackground (graphics, rectLine, widgetState);
+				pos.X += this.text_margin - System.Math.Floor (this.offset);
+				for (int column = 0; column < this.max_columns; column++)
 				{
-					double endx = pos.X+this.widthColumns[column];
-					if ( pos.X < localClip.Right && endx > localClip.Left )
+					double endx = pos.X + this.column_widths[column];
+
+					if (pos.X < localClip.Right && endx > localClip.Left)
 					{
-						adorner.PaintGeneralTextLayout(graphics, pos, this.textLayouts[row,column], widgetState, PaintTextStyle.Array, this.BackColor);
+						adorner.PaintGeneralTextLayout (graphics, pos, this.layouts[row, column], widgetState, PaintTextStyle.Array, this.BackColor);
 					}
+
 					pos.X = endx;
 				}
-				pos.Y -= this.rowHeight;
+
+				pos.Y -= this.row_height;
 			}
 
-			rect = this.rectInside;
-			rect.Inflate(-0.5, -0.5);
-
+			rect = this.table_bounds;
+			rect.Inflate (-0.5, -0.5);
 			graphics.LineWidth = 1;
-			Drawing.Color color = adorner.ColorTextFieldBorder((state&WidgetState.Enabled) != 0);
+
+			Drawing.Color color = adorner.ColorTextFieldBorder ((state & WidgetState.Enabled) != 0);
 
 			// Dessine le rectangle englobant.
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(color);
+			graphics.AddRectangle (rect);
+			graphics.RenderSolid (color);
 
 			// Dessine les lignes de séparation horizontales.
-			if ( true )
+			if (true)
 			{
-				double x1 = this.rectInside.Left;
+				double x1 = this.table_bounds.Left;
 				double x2 = maxx;
-				double y  = this.rectInside.Top-0.5;
-				for ( int i=0 ; i<max ; i++ )
+				double y = this.table_bounds.Top - 0.5;
+
+				for (int i = 0; i < max; i++)
 				{
-					y -= this.rowHeight;
-					graphics.AddLine(x1, y, x2, y);
-					graphics.RenderSolid(color);
+					y -= this.row_height;
+					graphics.AddLine (x1, y, x2, y);
+					graphics.RenderSolid (color);
 				}
 			}
 
 			// Dessine les lignes de séparation verticales.
-			if ( true )
+			if (true)
 			{
-				limit = this.maxRows*this.rowHeight;
-				limit = this.rectInside.Top-(limit-this.firstRow*this.rowHeight);
-				double y1 = System.Math.Max(this.rectInside.Bottom, limit);
-				double y2 = this.rectInside.Top;
-				double x  = this.rectInside.Left-this.offsetH+0.5;
-				for ( int i=0 ; i<this.maxColumns ; i++ )
+				limit = this.max_rows * this.row_height;
+				limit = this.table_bounds.Top - (limit - this.first_visible_row * this.row_height);
+
+				double y1 = System.Math.Max (this.table_bounds.Bottom, limit);
+				double y2 = this.table_bounds.Top;
+				double x = this.table_bounds.Left - this.offset + 0.5;
+
+				for (int i = 0; i < this.max_columns; i++)
 				{
-					x += this.RetWidthColumn(i);
-					if ( x < this.rectInside.Left || x > this.rectInside.Right )  continue;
-					graphics.AddLine(x, y1, x, y2);
-					graphics.RenderSolid(color);
+					x += this.GetColumnWidth (i);
+					if (x < this.table_bounds.Left || x > this.table_bounds.Right)  continue;
+
+					graphics.AddLine (x, y1, x, y2);
+					graphics.RenderSolid (color);
 				}
 			}
 
-			graphics.RestoreClippingRectangle(saveClip);
+			graphics.RestoreClippingRectangle (saveClip);
 		}
 
 		protected override void PaintForegroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect = new Drawing.Rectangle (0, 0, this.Client.Width, this.Client.Height);
 			WidgetState state = this.PaintState;
-			adorner.PaintArrayForeground(graphics, rect, state);
+
+			adorner.PaintArrayForeground (graphics, rect, state);
 		}
 
-
-		public event EventHandler SelectedIndexChanged;
-		public event EventHandler SortChanged;
-
-		public delegate string FillText(int row, int column);
-
-		protected bool							isDirty;
-		protected bool							isGrimy;
-		protected bool							mouseDown = false;
-		protected int							maxRows = 0;
-		protected int							maxColumns = 0;
-		protected System.Collections.ArrayList	array = new System.Collections.ArrayList();
-		protected FillText						funcFillText = null;
-		protected TextLayout[,]					textLayouts;
-		protected double						defWidth = 100;	// largeur par défaut
-		protected double						minWidth = 10;	// largeur minimale
-		protected double[]						widthColumns;	// largeur des colonnes
-		protected double						widthTotal;		// largeur totale
-		protected Drawing.ContentAlignment[]	alignmentColumns;
-		protected Drawing.Margins				margins;
-		protected double						textMargin = 2;
-		protected double						rowHeight = 16;
-		protected double						sliderDim = 6;
-		protected double						leftMargin = 0;		// marge pour en-tête
-		protected double						rightMargin = 0;	// marge pour ascenseur
-		protected double						bottomMargin = 0;	// marge pour ascenseur
-		protected double						topMargin = 0;		// marge pour en-tête
-		protected Drawing.Rectangle				rectInside = new Drawing.Rectangle();
-		protected Widget						header;		// père de l'en-tête horizontale
-		protected System.Collections.ArrayList	headerButton = new System.Collections.ArrayList();
-		protected System.Collections.ArrayList	headerSlider = new System.Collections.ArrayList();
-		protected VScroller						scrollerV;
-		protected HScroller						scrollerH;
-		protected int							visibleRows;
-		protected int							visibleRowsFull;
-		protected int							firstRow = 0;
-		protected int							selectedRow = -1;
-		protected double						offsetH = 0;
-		protected int							dragRank;
-		protected double						dragPos;
-		protected double						dragDim;
-		protected int							lastDx;
-		protected int							lastDy;
-		protected int							lastVisibleRows;
-		protected int							lastFirstRow;
+		public event EventHandler				SelectedIndexChanged;
+		public event EventHandler				ContentsChanged;
+		public event EventHandler				SortChanged;
+		
+		
+		protected bool							is_dirty;
+		protected bool							is_header_dirty;
+		protected bool							is_mouse_down = false;
+		protected int							max_rows = 0;
+		protected int							max_columns = 0;
+		protected System.Collections.ArrayList	text_array = new System.Collections.ArrayList ();
+		protected TextProviderCallback			text_provider = null;
+		protected TextLayout[,]					layouts;
+		protected double						def_width = 100;	// largeur par défaut
+		protected double						min_width = 10;	// largeur minimale
+		protected double[]						column_widths;	// largeur des colonnes
+		protected double						total_width;		// largeur totale
+		protected Drawing.ContentAlignment[]	column_alignments;
+		
+		protected Drawing.Margins				frame_margins;			//	marges du cadre
+		protected Drawing.Margins				table_margins;			//	marges de la table interne
+		protected double						text_margin = 2;
+		protected double						row_height = 16;
+		protected double						slider_dim = 6;
+		
+		private Drawing.Rectangle				table_bounds = new Drawing.Rectangle ();
+		protected Widget header;		// père de l'en-tête horizontale
+		protected System.Collections.ArrayList header_buttons = new System.Collections.ArrayList ();
+		protected System.Collections.ArrayList header_sliders = new System.Collections.ArrayList ();
+		protected VScroller v_scroller;
+		protected HScroller h_scroller;
+		protected int n_visible_rows;
+		protected int n_fully_visible_rows;
+		protected int first_visible_row = 0;
+		protected int selected_row = -1;
+		protected double offset = 0;
+		protected int dragRank;
+		protected double dragPos;
+		protected double dragDim;
+		protected int lastDx;
+		protected int lastDy;
+		protected int lastVisibleRows;
+		protected int lastFirstRow;
 	}
 }

@@ -6,6 +6,13 @@ namespace Epsitec.Common.Widgets
 		Left,			// bouton dans en-tête gauche
 	}
 	
+	public enum SortMode
+	{
+		Up		= -1,
+		None	= 0,
+		Down	= 1
+	}
+	
 	/// <summary>
 	/// La class HeaderButton représente un bouton d'un en-tête de tableau.
 	/// </summary>
@@ -25,7 +32,7 @@ namespace Epsitec.Common.Widgets
 		}		
 		
 		// Bouton dans en-tête supérieure ou gauche ?
-		public HeaderButtonStyle HeaderButtonStyle
+		public HeaderButtonStyle Style
 		{
 			get
 			{
@@ -56,22 +63,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Rang de la ligne ou de la colonne associé au bouton.
-		public int Rank
-		{
-			get
-			{
-				return this.rank;
-			}
-
-			set
-			{
-				this.rank = value;
-			}
-		}
-
 		// Choix pour le triangle du bouton.
-		public int SortMode
+		public SortMode						SortMode
 		{
 			get
 			{
@@ -176,8 +169,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected HeaderButtonStyle			headerButtonStyle;
 		protected bool						dynamic = false;
-		protected int						sortMode = 0;
-		protected int						rank;
+		protected SortMode					sortMode = SortMode.None;
 		
 		protected const double				Margin = 2;
 	}
