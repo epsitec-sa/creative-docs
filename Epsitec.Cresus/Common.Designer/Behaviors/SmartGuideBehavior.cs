@@ -15,7 +15,7 @@ namespace Epsitec.Common.Designer.Behaviors
 	{
 		public SmartGuideBehavior()
 		{
-			this.align = Panels.WidgetSourcePalette.Guide;
+			this.align = Panels.WidgetSourcePanel.Guide;
 			this.default_bounds = Drawing.Rectangle.Empty;
 		}
 		

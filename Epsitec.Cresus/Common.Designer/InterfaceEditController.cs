@@ -28,7 +28,7 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		public Panels.DataSourcePalette			DataSourcePalette
+		public Panels.DataSourcePanel			DataSourcePalette
 		{
 			get
 			{
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		public Panels.WidgetSourcePalette		WidgetSourcePalette
+		public Panels.WidgetSourcePanel		WidgetSourcePalette
 		{
 			get
 			{
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		public Panels.WidgetAttributePalette	WidgetAttributePalette
+		public Panels.WidgetAttributePanel	WidgetAttributePalette
 		{
 			get
 			{
@@ -244,8 +244,8 @@ namespace Epsitec.Common.Designer
 			
 			this.creation_panel = this.CreatePanel ("ToolKitWindow", "Boîte à outils");
 			this.creation_book  = new TabBook (this.creation_panel);
-			this.widget_palette = new Panels.WidgetSourcePalette ();
-			this.data_palette   = new Panels.DataSourcePalette ();
+			this.widget_palette = new Panels.WidgetSourcePanel ();
+			this.data_palette   = new Panels.DataSourcePanel ();
 			
 			double dx = System.Math.Max (this.widget_palette.Size.Width,  this.data_palette.Size.Width);
 			double dy = System.Math.Max (this.widget_palette.Size.Height, this.data_palette.Size.Height);
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Designer
 			//	Crée la fenêtre contenant les attributs.
 			
 			this.attribute_panel   = this.CreatePanel ("AttributesWindow", "Attributs");
-			this.attribute_palette = new Panels.WidgetAttributePalette (this.application);
+			this.attribute_palette = new Panels.WidgetAttributePanel (this.application);
 			this.tool_bar          = new HToolBar ();
 			
 			double dx = this.attribute_palette.Size.Width;
@@ -920,15 +920,15 @@ namespace Epsitec.Common.Designer
 		
 		protected Widget						creation_panel;
 		protected TabBook						creation_book;
-		protected Panels.WidgetSourcePalette	widget_palette;
-		protected Panels.DataSourcePalette		data_palette;
+		protected Panels.WidgetSourcePanel	widget_palette;
+		protected Panels.DataSourcePanel		data_palette;
 		
 		protected AbstractToolBar				tool_bar;
 		protected bool							is_tool_tab_setter_active;
 		protected bool							is_tool_tab_picker_active;
 		
 		protected Widget						attribute_panel;
-		protected Panels.WidgetAttributePalette	attribute_palette;
+		protected Panels.WidgetAttributePanel	attribute_palette;
 		
 		protected System.Collections.ArrayList	edit_window_list	= new System.Collections.ArrayList ();
 		protected Editors.WidgetEditor[]		editors;
