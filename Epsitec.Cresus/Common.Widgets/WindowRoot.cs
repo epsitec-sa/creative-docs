@@ -11,6 +11,7 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.PossibleContainer;
 		}
 		
+		
 		public WindowRoot(Window window) : this ()
 		{
 			this.window   = window;
@@ -100,7 +101,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override bool ShortcutHandler(Shortcut shortcut, bool execute_focused)
 		{
-			if (base.ShortcutHandler (shortcut, execute_focused) == false)
+			if ((base.ShortcutHandler (shortcut, execute_focused) == false) &&
+				(this.window != null))
 			{
 				//	Le raccourci clavier n'a pas été consommé. Il faut voir si le raccourci clavier
 				//	est attaché à une commande globale.
@@ -109,7 +111,9 @@ namespace Epsitec.Common.Widgets
 				
 				if (shortcut.KeyCode == KeyCode.Tab)
 				{
-					System.Diagnostics.Debug.WriteLine ("TAB pressed.");
+					Widget focused = this.window.FocusedWidget;
+					
+					System.Diagnostics.Debug.WriteLine ("TAB pressed. Focus on " + focused + " in window " + this.window.Text);
 				}
 				
 				return false;
@@ -173,6 +177,7 @@ namespace Epsitec.Common.Widgets
 				adorner.PaintWindowBackground(graphics, this.Client.Bounds, rect, WidgetState.None);
 			}
 		}
+		
 		
 		internal void NotifyAdornerChanged()
 		{
