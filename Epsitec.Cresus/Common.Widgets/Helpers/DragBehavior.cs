@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets.Helpers
 {
 	/// <summary>
@@ -81,9 +84,6 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		protected void StartDragging(Message message, Drawing.Point pos)
 		{
-			message.Captured = true;
-			message.Consumer = this.widget;
-			
 			if (this.is_relative)
 			{
 				this.host.OnDragBegin (pos);
@@ -91,9 +91,16 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 			else
 			{
-				this.host.OnDragBegin (message.Cursor);
+				if (this.host.OnDragBegin (message.Cursor) == false)
+				{
+					return;
+				}
+				
 				this.drag_offset = message.Cursor - this.host.DragLocation;
 			}
+			
+			message.Captured = true;
+			message.Consumer = this.widget;
 			
 			this.is_dragging = true;
 		}
