@@ -681,6 +681,19 @@ namespace Epsitec.Common.Drawing
 			form.Show ();
 		}
 		
+		[Test] public void CheckDebugTrapZeroPointer()
+		{
+			try
+			{
+				System.Threading.Thread.Sleep (30000);
+				Agg.Library.TrapZeroPointer ();
+			}
+			catch (System.Exception ex)
+			{
+				System.Console.Out.WriteLine (ex.ToString ());
+			}
+		}
+		
 		private void form_Paint1(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
 			this.global_pixmap_1.Paint (e.Graphics, e.ClipRectangle);

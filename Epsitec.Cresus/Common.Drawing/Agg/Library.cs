@@ -56,6 +56,12 @@ namespace Epsitec.Common.Drawing.Agg
 			}
 		}
 		
+		
+		public static void TrapZeroPointer()
+		{
+			AntiGrain.Interface.DebugTrapZeroPointer ();
+		}
+		
 		static Library				instance = new Library ();
 	}
 }
