@@ -13,7 +13,7 @@ namespace Epsitec.Common.UI.Adapters
 	/// </summary>
 	
 	[System.Serializable]
-	[System.AttributeUsage (System.AttributeTargets.Class)]
+	[System.AttributeUsage (System.AttributeTargets.Class, AllowMultiple = true)]
 	
 	public class ControllerAttribute : System.Attribute
 	{
@@ -23,6 +23,7 @@ namespace Epsitec.Common.UI.Adapters
 		
 		public ControllerAttribute(int rank, System.Type type)
 		{
+			this.rank = rank;
 			this.type = type;
 		}
 		
