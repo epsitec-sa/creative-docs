@@ -13,7 +13,7 @@ namespace Epsitec.Common.Widgets
 			this.button = new ArrowButton(this);
 			this.button.Direction = Direction.Down;
 			this.button.ButtonStyle = ButtonStyle.Scroller;
-			this.button.Pressed += new MessageEventHandler (this.HandleButtonPressed);
+			this.button.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			this.button.Dock = DockStyle.Right;
 			
 			this.rightMargin = this.button.Width;
@@ -27,26 +27,26 @@ namespace Epsitec.Common.Widgets
 		
 		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
 		{
-			base.RestoreFromBundle (bundler, bundle);
+			base.RestoreFromBundle(bundler, bundle);
 			
-			Support.ResourceBundle items = bundle.GetFieldBundle ("items");
+			Support.ResourceBundle items = bundle.GetFieldBundle("items");
 			
-			if (items != null)
+			if ( items != null )
 			{
 				string[] names = items.FieldNames;
-				System.Array.Sort (names);
+				System.Array.Sort(names);
 				
-				for (int i = 0; i < items.CountFields; i++)
+				for ( int i=0 ; i<items.CountFields ; i++ )
 				{
 					string name = names[i];
 					string item = items[name] as string;
 					
-					if (item == null)
+					if ( item == null )
 					{
-						throw new Support.ResourceException (string.Format ("Item '{0}' is invalid", name));
+						throw new Support.ResourceException(string.Format("Item '{0}' is invalid", name));
 					}
 					
-					this.Items.Add (Support.ResourceBundle.ExtractName (name), item);
+					this.Items.Add(Support.ResourceBundle.ExtractName(name), item);
 				}
 			}
 		}
@@ -58,23 +58,23 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool FindMatch(string find, out int index, out bool exact_match)
+		public bool FindMatch(string find, out int index, out bool exactMatch)
 		{
-			index = this.items.FindExactMatch (find);
+			index = this.items.FindExactMatch(find);
 			
-			if (index < 0)
+			if ( index < 0 )
 			{
-				exact_match = false;
-				index = this.items.FindStartMatch (find);
+				exactMatch = false;
+				index = this.items.FindStartMatch(find);
 				
-				if (index < 0)
+				if ( index < 0 )
 				{
 					return false;
 				}
 			}
 			else
 			{
-				exact_match = true;
+				exactMatch = true;
 			}
 			
 			return true;
@@ -83,11 +83,11 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void Dispose(bool disposing)
 		{
-			base.Dispose (disposing);
+			base.Dispose(disposing);
 			
-			if (disposing)
+			if ( disposing )
 			{
-				this.button.Pressed -= new MessageEventHandler (this.HandleButtonPressed);
+				this.button.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
 				this.button.Dispose ();
 				this.button = null;
 			}
@@ -95,16 +95,16 @@ namespace Epsitec.Common.Widgets
 
 		protected override void ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
-			if (this.IsReadOnly)
+			if ( this.IsReadOnly )
 			{
-				if (key == KeyCode.ArrowDown)
+				if ( key == KeyCode.ArrowDown )
 				{
-					this.OpenCombo ();
+					this.OpenCombo();
 				}
 			}
 			else
 			{
-				switch (key)
+				switch ( key )
 				{
 					case KeyCode.ArrowUp:
 						this.Navigate(-1);
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Widgets
 						this.Navigate(1);
 						break;
 					default:
-						base.ProcessKeyDown (key, isShiftPressed, isCtrlPressed);
+						base.ProcessKeyDown(key, isShiftPressed, isCtrlPressed);
 						break;
 				}
 			}
@@ -130,7 +130,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.FindMatch(this.Text, out sel, out exact) )
 			{
-				if ( exact)  sel += dir;
+				if ( exact )  sel += dir;
 			}
 			
 			sel = System.Math.Max(sel, 0);
@@ -143,16 +143,16 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			if (this.IsReadOnly)
+			if ( this.IsReadOnly )
 			{
-				if (message.Type == MessageType.MouseDown)
+				if ( message.Type == MessageType.MouseDown )
 				{
-					this.OpenCombo ();
+					this.OpenCombo();
 					return;
 				}
 			}
 			
-			base.ProcessMessage (message, pos);
+			base.ProcessMessage(message, pos);
 		}
 
 		
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Widgets
 				case MessageType.KeyPress:
 					if (message.KeyCode == KeyCode.Escape)
 					{
-						this.CloseCombo ();
+						this.CloseCombo();
 						message.Swallowed = true;
 					}
 					break;
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Widgets
 					Drawing.Point pos = this.scrollList.MapScreenToClient(mouse);
 					if ( !this.scrollList.HitTest(pos) )
 					{
-						this.CloseCombo ();
+						this.CloseCombo();
 						message.Swallowed = ! message.NonClient;
 					}
 					break;
@@ -189,9 +189,9 @@ namespace Epsitec.Common.Widgets
 			this.scrollList.ComboMode = true;
 			this.scrollList.Bounds = new Drawing.Rectangle (0, 0, this.Width, 200);
 			
-			for (int i = 0; i < this.items.Count; i++)
+			for ( int i=0 ; i<this.items.Count ; i++ )
 			{
-				string name = this.items.GetName (i);
+				string name = this.items.GetName(i);
 				string text = this.items[i];
 				this.scrollList.Items.Add(name, text);
 			}
@@ -207,7 +207,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.comboWindow = new Window();
 			this.comboWindow.MakeFramelessWindow();
-			pos = this.MapClientToScreen (new Drawing.Point(0, -this.scrollList.Height));
+			pos = this.MapClientToScreen(new Drawing.Point(0, -this.scrollList.Height));
 			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width, this.scrollList.Height);
 			this.scrollList.SelectedIndexChanged += new EventHandler(this.HandleScrollerSelectedIndexChanged);
 			this.scrollList.Validation += new EventHandler(this.HandleScrollListValidation);
@@ -240,13 +240,13 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleApplicationDeactivated(object sender)
 		{
-			this.CloseCombo ();
+			this.CloseCombo();
 		}
 
 		
 		private void HandleButtonPressed(object sender, MessageEventArgs e)
 		{
-			this.OpenCombo ();
+			this.OpenCombo();
 		}
 		
 		private void HandleScrollListValidation(object sender)
