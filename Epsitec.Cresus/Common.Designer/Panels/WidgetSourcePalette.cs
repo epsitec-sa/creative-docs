@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Panels
 	/// La classe WidgetSourcePalette permet de remplir un panel servant de base à la
 	/// palette des widgets servant à la construction de la GUI.
 	/// </summary>
-	public class WidgetSourcePalette : AbstractPalette
+	public class WidgetSourcePalette : AbstractPalette, IDropSource
 	{
 		public WidgetSourcePalette()
 		{
@@ -18,14 +18,7 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		
 		
-		public Widgets.DragSource				ActiveDragSource
-		{
-			get
-			{
-				return this.active_drag_source;
-			}
-		}
-		
+		#region IDropSource Members
 		public Widget							DroppedWidget
 		{
 			get
@@ -38,7 +31,7 @@ namespace Epsitec.Common.Designer.Panels
 				return null;
 			}
 		}
-		
+		#endregion
 		
 		protected override void CreateWidgets(Widget parent)
 		{
