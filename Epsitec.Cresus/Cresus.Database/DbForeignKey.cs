@@ -1,10 +1,10 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbForeignKey décrit une clef, constituée par une ou deux
+	/// La classe DbForeignKey décrit une clef, constituée par une ou plusieurs
 	/// colonnes DbColumn.
 	/// </summary>
 	public class DbForeignKey

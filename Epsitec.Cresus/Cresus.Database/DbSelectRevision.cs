@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Database
 	public enum DbSelectRevision
 	{
 		All,
+		LiveActive,					//	sél. DbRowStatus.Live, Copied
 		LiveAll,					//	sél. DbRowStatus.Live, Copied, Archive
-		LiveCurrent,				//	sél. DbRowStatus.Live, Copied
 	}
 }

@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Database
 		ArchiveCopy		= (1 << DbRowStatus.ArchiveCopy),
 		Deleted			= (1 << DbRowStatus.Deleted),
 		
-		LiveOrCopied	= Live | Copied,
-		NotDeleted		= Live | Copied | ArchiveCopy,
+		LiveActive		= Live | Copied,
+		LiveAll			= Live | Copied | ArchiveCopy,
 	}
 }

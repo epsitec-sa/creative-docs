@@ -958,7 +958,7 @@ namespace Epsitec.Cresus.Database
 			
 			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName ("T", name_column), SqlField.CreateConstant (value, DbRawType.String)));
 
-			this.AddKeyExtraction (query, "T", DbRowSearchMode.LiveOrCopied);
+			this.AddKeyExtraction (query, "T", DbRowSearchMode.LiveActive);
 			
 			this.sql_builder.SelectData (query);
 			
@@ -1033,7 +1033,7 @@ namespace Epsitec.Cresus.Database
 				//	'active' (ignore les versions archivées et détruites). Extrait aussi les colonnes
 				//	correspondantes.
 				
-				this.AddKeyExtraction (query, "T_TABLE", DbRowSearchMode.LiveOrCopied);
+				this.AddKeyExtraction (query, "T_TABLE", DbRowSearchMode.LiveActive);
 				this.AddKeyExtraction (query, "T_COLUMN", Tags.ColumnRefTable, "T_TABLE");
 			}
 			else
@@ -1182,7 +1182,7 @@ namespace Epsitec.Cresus.Database
 				//	On extrait toutes les définitions de types qui correspondent à la version
 				//	'active'.
 				
-				this.AddKeyExtraction (query, "T_TYPE", DbRowSearchMode.LiveOrCopied);
+				this.AddKeyExtraction (query, "T_TYPE", DbRowSearchMode.LiveActive);
 			}
 			else
 			{
@@ -1439,7 +1439,7 @@ namespace Epsitec.Cresus.Database
 					function = SqlFunctionType.CompareEqual;
 					break;
 				
-				case DbRowSearchMode.LiveOrCopied:
+				case DbRowSearchMode.LiveActive:
 					status = DbRowStatus.ArchiveCopy;
 					function = SqlFunctionType.CompareLessThan;
 					break;
@@ -1452,7 +1452,7 @@ namespace Epsitec.Cresus.Database
 					function = SqlFunctionType.CompareEqual;
 					break;
 
-				case DbRowSearchMode.NotDeleted:
+				case DbRowSearchMode.LiveAll:
 					status = DbRowStatus.Deleted;
 					function = SqlFunctionType.CompareLessThan;
 					break;
