@@ -113,6 +113,11 @@
                     AssemblyName = "System.Data"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
                 />
+                <Reference
+                    Name = "System.Runtime.Serialization.Formatters.Soap"
+                    AssemblyName = "System.Runtime.Serialization.Formatters.Soap"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Serialization.Formatters.Soap.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -154,6 +159,11 @@
                 />
                 <File
                     RelPath = "ResourcesTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SerialisationTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
