@@ -9,7 +9,7 @@ namespace Epsitec.Common.Script.Developer
 	/// <summary>
 	/// Summary description for EditionController.
 	/// </summary>
-	public class EditionController : IScriptSource
+	public class EditionController
 	{
 		public EditionController()
 		{
@@ -107,6 +107,26 @@ namespace Epsitec.Common.Script.Developer
 			this.panel.MethodProtoPanel.MethodNameWidget.TextChanged += new EventHandler (this.HandleMethodNameWidgetTextChanged);
 			
 			parent.Window.FocusedWidgetChanged += new EventHandler (this.HandleWindowFocusedWidgetChanged);
+		}
+		
+		public void ShowMethod(string signature)
+		{
+			this.UpdateMethodBook ();
+			
+			foreach (TabPage page in this.method_book.Items)
+			{
+				if (page.Name == signature)
+				{
+					this.method_book.ActivePage = page;
+					return;
+				}
+				
+				if (this.Source.Methods[page.Index].Name == signature)
+				{
+					this.method_book.ActivePage = page;
+					return;
+				}
+			}
 		}
 		
 		
@@ -238,20 +258,6 @@ namespace Epsitec.Common.Script.Developer
 			}
 		}
 		
-		
-		protected void ShowMethod(string signature)
-		{
-			this.UpdateMethodBook ();
-			
-			foreach (TabPage page in this.method_book.Items)
-			{
-				if (page.Name == signature)
-				{
-					this.method_book.ActivePage = page;
-					return;
-				}
-			}
-		}
 		
 		protected void SyncFromUI ()
 		{

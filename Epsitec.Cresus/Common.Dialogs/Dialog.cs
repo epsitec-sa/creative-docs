@@ -35,9 +35,13 @@ namespace Epsitec.Common.Dialogs
 					{
 						this.designer.DialogData = this.data;
 					}
-					else if (this.window != null)
+					if (this.window != null)
 					{
 						this.UpdateWindowBindings ();
+					}
+					if (this.script_wrapper != null)
+					{
+						this.script_wrapper.Data = this.data;
 					}
 				}
 			}
@@ -67,9 +71,33 @@ namespace Epsitec.Common.Dialogs
 					{
 						this.designer.DialogCommands = this.dispatcher;
 					}
-					else if (this.window != null)
+					if (this.window != null)
 					{
 						this.window.CommandDispatcher = this.dispatcher;
+					}
+				}
+			}
+		}
+		
+		public Script.ScriptWrapper				ScriptWrapper
+		{
+			get
+			{
+				return this.script_wrapper;
+			}
+			set
+			{
+				if (this.script_wrapper != value)
+				{
+					this.script_wrapper = value;
+					
+					if (this.designer != null)
+					{
+						this.designer.DialogScript = this.script_wrapper;
+					}
+					if (this.data != null)
+					{
+						this.script_wrapper.Data = this.data;
 					}
 				}
 			}
@@ -242,6 +270,7 @@ namespace Epsitec.Common.Dialogs
 			this.designer.DialogWindow   = this.window;
 			this.designer.ResourceName   = this.full_name;
 			this.designer.DialogCommands = this.dispatcher;
+			this.designer.DialogScript   = this.script_wrapper;
 			
 			this.designer.Disposed += new Support.EventHandler (this.HandleDesignerDisposed);
 		}
@@ -317,6 +346,7 @@ namespace Epsitec.Common.Dialogs
 		protected Types.IDataGraph				data;
 		protected Widgets.Window				window;
 		protected Support.CommandDispatcher		dispatcher;
+		protected Script.ScriptWrapper			script_wrapper;
 		protected IDialogDesigner				designer;
 		protected string						full_name;
 		protected Widgets.Widget				designer_activator_widget;
