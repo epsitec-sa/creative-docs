@@ -4,7 +4,7 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 
-namespace Epsitec.Common.Ui.Widgets
+namespace Epsitec.Common.UI.Widgets
 {
 	/// <summary>
 	/// La classe PropPane définit un panneau pour les propriétés.
@@ -13,12 +13,18 @@ namespace Epsitec.Common.Ui.Widgets
 	{
 		public PropPane()
 		{
-			this.CreateWidgets ();
 		}
 		
 		public PropPane(Widget embedder) : this ()
 		{
 			this.SetEmbedder (embedder);
+		}
+		
+		
+		public void Attach(Adapters.IAdapter adapter)
+		{
+			this.controllers = Controllers.ControllerFactory.CreateControllers (adapter);
+			this.CreateWidgets ();
 		}
 		
 		
@@ -96,7 +102,7 @@ namespace Epsitec.Common.Ui.Widgets
 			this.toggle_button = new GlyphButton (this, GlyphShape.ArrowDown);
 			this.extra_button  = new GlyphButton (this, GlyphShape.Dots);
 			
-			Drawing.Rectangle rect = this.Bounds;
+			Drawing.Rectangle rect = this.Client.Bounds;
 			double dim = PropPane.button_dim;
 			
 			this.toggle_button.Clicked      += new MessageEventHandler (this.HandleToggleButtonClicked);
@@ -116,23 +122,29 @@ namespace Epsitec.Common.Ui.Widgets
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
+			rect.Left   += PropPane.toggle_width + 5;
+			rect.Right  -= PropPane.extra_width  + 5;
+			rect.Bottom += 1;
+			
 			this.CreateViews (list, rect);
 			
 			this.views = new Widget[list.Count];
 			list.CopyTo (this.views);
+			
+			this.views[0].SetVisible (true);
 		}
 		
 		protected virtual void CreateViews(System.Collections.ArrayList list, Drawing.Rectangle bounds)
 		{
-			Widget base_view = this.CreateViewWidget (bounds);
+			string caption = this.controllers[0].Adapter.Binder.Caption;
 			
-			this.InitialiseBaseView (base_view);
-			
-			list.Add (base_view);
-		}
-		
-		protected virtual void InitialiseBaseView(Widget base_view)
-		{
+			for (int i = 0; i < this.controllers.Length; i++)
+			{
+				Widget view = this.CreateViewWidget (bounds);
+				this.controllers[i].CreateUI (view);
+				this.controllers[i].Caption = caption;
+				list.Add (view);
+			}
 		}
 		
 		protected Widget CreateViewWidget(Drawing.Rectangle bounds)
@@ -216,5 +228,7 @@ namespace Epsitec.Common.Ui.Widgets
 		
 		protected bool							accept_toggle = false;
 		protected bool							accept_extra  = false;
+		
+		protected Controllers.IController[]		controllers;
 	}
 }
