@@ -105,7 +105,7 @@ namespace Epsitec.Common.Widgets
 		 */
 		
 		void PaintFocusBox(Drawing.Graphics graphics, Drawing.Rectangle rect);
-		void PaintTextCursor(Drawing.Graphics graphics, Drawing.Rectangle rect, bool cursorOn);
+		void PaintTextCursor(Drawing.Graphics graphics, Drawing.Point p1, Drawing.Point p2, bool cursorOn);
 		void PaintTextSelectionBackground(Drawing.Graphics graphics, Drawing.Rectangle[] rect, WidgetState state);
 		void PaintTextSelectionForeground(Drawing.Graphics graphics, Drawing.Rectangle[] rect, WidgetState state);
 		
