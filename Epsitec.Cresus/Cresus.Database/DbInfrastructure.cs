@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Database
 			this.db_access = db_access;
 			this.db_access.Create = true;
 			
-			this.SetupDatabaseAbstraction ();
+			this.InitialiseDatabaseAbstraction ();
 			
 			//	La base de données vient d'être créée. Elle est donc toute vide (aucune
 			//	table n'est encore définie).
@@ -38,13 +38,13 @@ namespace Epsitec.Cresus.Database
 			
 			//	Il faut créer les tables internes utilisées pour la gestion des méta-données.
 			
-			this.CreateTableTableDef ();
-			this.CreateTableColumnDef ();
-			this.CreateTableTypeDef ();
-			this.CreateTableEnumValDef ();
-			this.CreateTableRefDef ();
+			this.BootCreateTableTableDef ();
+			this.BootCreateTableColumnDef ();
+			this.BootCreateTableTypeDef ();
+			this.BootCreateTableEnumValDef ();
+			this.BootCreateTableRefDef ();
 			
-			this.FillTableTableDef ();
+			this.BootSetupTables ();
 		}
 		
 		public void AttachDatabase(DbAccess db_access)
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Database
 			this.db_access = db_access;
 			this.db_access.Create = false;
 			
-			this.SetupDatabaseAbstraction ();
+			this.InitialiseDatabaseAbstraction ();
 			
 			System.Diagnostics.Debug.Assert (this.db_abstraction.UserTableNames.Length > 0);
 		}
@@ -89,8 +89,8 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		#region Internal Management Table Creation
-		protected void CreateTableTableDef()
+		#region Bootstrapping
+		protected void BootCreateTableTableDef()
 		{
 			DbTable    table   = new DbTable (DbTable.TagTableDef);
 			DbColumn[] columns = new DbColumn[7];
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent ();
 		}
 		
-		protected void CreateTableColumnDef()
+		protected void BootCreateTableColumnDef()
 		{
 			DbTable    table   = new DbTable (DbTable.TagColumnDef);
 			DbColumn[] columns = new DbColumn[9];
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent ();
 		}
 		
-		protected void CreateTableTypeDef()
+		protected void BootCreateTableTypeDef()
 		{
 			DbTable    table   = new DbTable (DbTable.TagTypeDef);
 			DbColumn[] columns = new DbColumn[7];
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent ();
 		}
 		
-		protected void CreateTableEnumValDef()
+		protected void BootCreateTableEnumValDef()
 		{
 			DbTable    table   = new DbTable (DbTable.TagEnumValDef);
 			DbColumn[] columns = new DbColumn[8];
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent ();
 		}
 		
-		protected void CreateTableRefDef()
+		protected void BootCreateTableRefDef()
 		{
 			DbTable    table   = new DbTable (DbTable.TagRefDef);
 			DbColumn[] columns = new DbColumn[4];
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Database
 			this.sql_builder.InsertTable (sql_table);
 			this.ExecuteSilent ();
 		}
-		#endregion
+		
 		
 		protected void BootInsertTypeDefRow(DbType type)
 		{
@@ -291,7 +291,8 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent ();
 		}
 		
-		protected virtual void FillTableTableDef()
+		
+		protected void BootSetupTables()
 		{
 			int type_key_id   = 1;
 			int table_key_id  = 1;
@@ -341,46 +342,10 @@ namespace Epsitec.Cresus.Database
 			this.BootInsertRefDefRow (5, DbTable.TagRefDef,     DbColumn.TagRefSource, DbTable.TagTableDef);
 			this.BootInsertRefDefRow (6, DbTable.TagRefDef,     DbColumn.TagRefTarget, DbTable.TagTableDef);
 		}
-		
-		protected virtual void InitTableEnumValDef()
-		{
-			
-		}
-		
-		protected virtual void AddRefDef(DbKey source, DbKey target, string name)
-		{
-		}
-		
-		
-		#region IDisposable Members
-		public void Dispose()
-		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
-		}
 		#endregion
 		
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				if (this.db_abstraction != null)
-				{
-					this.db_abstraction.Dispose ();
-					this.db_abstraction = null;
-					this.sql_builder = null;
-					this.sql_engine = null;
-					this.type_converter = null;
-				}
-				
-				System.Diagnostics.Debug.Assert (this.sql_builder == null);
-				System.Diagnostics.Debug.Assert (this.sql_engine == null);
-				System.Diagnostics.Debug.Assert (this.type_converter == null);
-			}
-		}
-		
-		
-		protected void SetupDatabaseAbstraction()
+		#region Initialisation
+		protected void InitialiseDatabaseAbstraction()
 		{
 			this.db_abstraction = DbFactory.FindDbAbstraction (this.db_access);
 			
@@ -422,6 +387,35 @@ namespace Epsitec.Cresus.Database
 			this.internal_types.Add (this.str_type_description);
 			this.internal_types.Add (this.str_type_info_xml);
 		}
+		#endregion
+		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		#endregion
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.db_abstraction != null)
+				{
+					this.db_abstraction.Dispose ();
+					this.db_abstraction = null;
+					this.sql_builder = null;
+					this.sql_engine = null;
+					this.type_converter = null;
+				}
+				
+				System.Diagnostics.Debug.Assert (this.sql_builder == null);
+				System.Diagnostics.Debug.Assert (this.sql_engine == null);
+				System.Diagnostics.Debug.Assert (this.type_converter == null);
+			}
+		}
+		
 		
 		
 		
@@ -435,7 +429,6 @@ namespace Epsitec.Cresus.Database
 		protected DbTypeNum				num_type_id;
 		protected DbTypeNum				num_type_revision;
 		protected DbTypeNum				num_type_status;
-		
 		protected DbTypeString			str_type_name;
 		protected DbTypeString			str_type_caption;
 		protected DbTypeString			str_type_description;
