@@ -307,8 +307,6 @@ namespace Epsitec.Common.Designer
 			this.tab_book.Parent = this.window.Root;
 			this.tab_book.HasCloseButton = true;
 			this.tab_book.CloseClicked += new EventHandler (this.HandleTabBookCloseClicked);
-			this.tab_book.TabIndex = 1;
-			this.tab_book.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren;
 		}
 		
 		

@@ -70,7 +70,6 @@ namespace Epsitec.Common.Designer.Panels
 			ctrl.CreateToolBarButtons ();
 			ctrl.StartReadOnly ();
 			
-			this.edit_array.TabIndex = 1;
 			this.edit_array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 		}
