@@ -258,21 +258,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.first_visible_row;
+				return this.FromVirtualRow (this.first_virtvis_row);
 			}
 			set
 			{
-				int n = this.VirtualRowCount - this.n_fully_visible_rows;
-				value = this.ToVirtualRow (value);
-				value = System.Math.Max (value, 0);
-				value = System.Math.Min (value, System.Math.Max (n, 0));
-				value = this.FromVirtualRow (value);
-				
-				if (value != this.first_visible_row)
-				{
-					this.first_visible_row = value;
-					this.UpdateScrollers ();
-				}
+				this.SetFirstVirtualVisibleIndex (this.ToVirtualRow (value));
 			}
 		}
 		
@@ -342,10 +332,9 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				int row = this.ToVirtualRow (this.selected_row);
-				int top = this.ToVirtualRow (this.first_visible_row);
 				
-				if ((row >= top) &&
-					(row < top + this.n_fully_visible_rows))
+				if ((row >= this.first_virtvis_row) &&
+					(row < this.first_virtvis_row + this.n_fully_visible_rows))
 				{
 					return true;
 				}
@@ -434,7 +423,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.max_rows          = 0;
-			this.first_visible_row = 0;
+			this.first_virtvis_row = 0;
 			this.selected_row      = -1;
 			this.edition_row       = -1;
 			this.edition_add_rows  = 0;
@@ -548,7 +537,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			int row    = this.ToVirtualRow (this.selected_row);
-			int top    = this.ToVirtualRow (this.first_visible_row);
+			int top    = this.first_virtvis_row;
 			int first  = top;
 			int num    = System.Math.Min (this.n_fully_visible_rows, this.max_rows);
 			int height = (this.selected_row == this.edition_row) ? this.edition_add_rows+1 : 1;
@@ -579,7 +568,7 @@ namespace Epsitec.Common.Widgets
 					break;
 			}
 
-			this.first_visible_row = this.FromVirtualRow (first);
+			this.first_virtvis_row = first;
 		}
 
 		
@@ -679,10 +668,23 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		protected void SetFirstVirtualVisibleIndex(int value)
+		{
+			int n = this.VirtualRowCount - this.n_fully_visible_rows;
+			value = System.Math.Max (value, 0);
+			value = System.Math.Min (value, System.Math.Max (n, 0));
+				
+			if (value != this.first_virtvis_row)
+			{
+				this.first_virtvis_row = value;
+				this.UpdateScrollers ();
+			}
+		}
+		
 		private void HandleVScrollerChanged(object sender)
 		{
 			int virtual_row = (int) System.Math.Floor (this.v_scroller.Value + 0.5);
-			this.FirstVisibleIndex = this.FromVirtualRow (virtual_row);
+			this.SetFirstVirtualVisibleIndex (virtual_row);
 		}
 
 		private void HandleHScrollerChanged(object sender)
@@ -792,7 +794,7 @@ namespace Epsitec.Common.Widgets
 			pos = this.Client.Height - pos;
 			
 			int line = (int) ((pos - this.frame_margins.Top - this.table_margins.Top) / this.row_height);
-			int top  = this.ToVirtualRow (this.first_visible_row);
+			int top  = this.first_virtvis_row;
 			
 			if ((line < 0) ||
 				(line >= this.n_visible_rows))
@@ -1006,7 +1008,7 @@ namespace Epsitec.Common.Widgets
 				this.v_scroller.SetEnabled (true);
 				this.v_scroller.Range             = rows - this.n_fully_visible_rows;
 				this.v_scroller.VisibleRangeRatio = this.n_fully_visible_rows / (double) rows;
-				this.v_scroller.Value             = this.ToVirtualRow (this.first_visible_row);
+				this.v_scroller.Value             = this.first_virtvis_row;
 				this.v_scroller.SmallChange       = 1;
 				this.v_scroller.LargeChange       = this.n_fully_visible_rows / 2.0;
 			}
@@ -1046,11 +1048,12 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
+			int  top     = this.FromVirtualRow (this.first_virtvis_row);
 			int  max     = System.Math.Min (this.n_visible_rows, this.max_rows);
-			bool refresh = (max != this.cache_visible_rows) || (this.first_visible_row != this.cache_first_visible_row);
+			bool refresh = (max != this.cache_visible_rows) || (this.first_virtvis_row != this.cache_first_virtvis_row);
 			
 			this.cache_visible_rows      = max;
-			this.cache_first_visible_row = this.first_visible_row;
+			this.cache_first_virtvis_row = this.first_virtvis_row;
 			
 			for (int row = 0; row < max; row++)
 			{
@@ -1065,11 +1068,11 @@ namespace Epsitec.Common.Widgets
 						
 						if (this.text_provider_callback == null)
 						{
-							this.layouts[row, column].Text = this[row + this.first_visible_row, column];
+							this.layouts[row, column].Text = this[row + top, column];
 						}
 						else
 						{
-							this.layouts[row, column].Text = this.text_provider_callback (row + this.first_visible_row, column);
+							this.layouts[row, column].Text = this.text_provider_callback (row + top, column);
 						}
 						
 						this.layouts[row, column].Font     = this.DefaultFont;
@@ -1202,6 +1205,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.Update ();
 			
+			int           top    = this.FromVirtualRow (this.first_virtvis_row);
 			Drawing.Point pos    = new Drawing.Point (this.table_bounds.Left, this.table_bounds.Top);
 			double        limit  = this.total_width - this.offset + this.table_bounds.Left + 1;
 			double        right  = System.Math.Min (this.table_bounds.Right, limit);
@@ -1212,7 +1216,7 @@ namespace Epsitec.Common.Widgets
 				pos.X  = this.table_bounds.Left;
 				pos.Y -= this.row_height;
 				
-				int         row_line      = this.first_visible_row + row;
+				int         row_line      = row + top;
 				int         num_add_lines = (this.edition_row == row_line)  ? this.edition_add_rows : 0;
 				WidgetState widget_state  = (this.selected_row == row_line) ? WidgetState.Selected : WidgetState.Enabled;
 				
@@ -1280,7 +1284,7 @@ namespace Epsitec.Common.Widgets
 				
 				for (int i = 0; i < n_rows; i++)
 				{
-					int row_line = this.first_visible_row + i;
+					int row_line = i + top;
 					
 					if (this.edition_row == row_line)
 					{
@@ -1297,8 +1301,8 @@ namespace Epsitec.Common.Widgets
 			{
 				//	Dessine les lignes de séparation verticales :
 				
-				limit = this.max_rows * this.row_height;
-				limit = this.table_bounds.Top - (limit - this.first_visible_row * this.row_height);
+				limit = this.VirtualRowCount * this.row_height;
+				limit = this.table_bounds.Top - (limit - top * this.row_height);
 				
 				double y1 = System.Math.Max (this.table_bounds.Bottom, limit);
 				double y2 = this.table_bounds.Top;
@@ -1370,7 +1374,7 @@ namespace Epsitec.Common.Widgets
 		protected HScroller						h_scroller;
 		protected int							n_visible_rows;
 		protected int							n_fully_visible_rows;
-		protected int							first_visible_row;
+		protected int							first_virtvis_row;
 		protected double						offset;
 		protected int							selected_row		= -1;
 		
@@ -1384,6 +1388,6 @@ namespace Epsitec.Common.Widgets
 		protected int							cache_dx;
 		protected int							cache_dy;
 		protected int							cache_visible_rows;
-		protected int							cache_first_visible_row;
+		protected int							cache_first_virtvis_row;
 	}
 }

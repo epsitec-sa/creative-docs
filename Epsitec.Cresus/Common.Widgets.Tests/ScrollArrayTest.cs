@@ -128,17 +128,19 @@ namespace Epsitec.Common.Widgets
 			table.EditionIndex      = 1;
 			table.EditionZoneHeight = 2;
 			table.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
+			table.Clicked              += new MessageEventHandler(this.HandleClicked);
+			table.DoubleClicked        += new MessageEventHandler(this.HandleDoubleClicked);
 			
 			for (int x = 0 ; x < table.ColumnCount; x++)
 			{
-				table.SetHeaderText (x, string.Format ("C{0}", x+1));
+				table.SetHeaderText (x, string.Format ("C{0}", x));
 				table.SetColumnWidth (x, 80);
 			}
 			for (int y = 0; y < 100; y++)
 			{
 				for (int x = 0 ; x < table.ColumnCount; x++)
 				{
-					table[y,x] = string.Format ("Val {0}.{1}", y+1, x+1);
+					table[y,x] = string.Format ("Val {0}.{1}", y, x);
 				}
 			}
 			
@@ -148,8 +150,24 @@ namespace Epsitec.Common.Widgets
 		private void HandleSelectedIndexChanged(object sender)
 		{
 			ScrollArray table = sender as ScrollArray;
-			table.EditionIndex = table.SelectedIndex;
-			table.ShowSelected (ScrollArrayShowMode.Extremity);
+			System.Diagnostics.Debug.WriteLine ("Selected : " + table.SelectedIndex);
+		}
+
+		private void HandleClicked(object sender, MessageEventArgs e)
+		{
+			ScrollArray table = sender as ScrollArray;
+			int row, column;
+			table.HitTestTable (e.Point, out row, out column);
+			System.Diagnostics.Debug.WriteLine ("Clicked : " + row + "," + column);
+		}
+		
+		private void HandleDoubleClicked(object sender, MessageEventArgs e)
+		{
+			ScrollArray table = sender as ScrollArray;
+			int row, column;
+			table.HitTestTable (e.Point, out row, out column);
+			System.Diagnostics.Debug.WriteLine ("Double-clicked : " + row + "," + column);
+			table.EditionIndex = row;
 		}
 	}
 }
