@@ -112,10 +112,20 @@ namespace Epsitec.Common.Widgets
 				case GripType.Center:
 					using (Drawing.Path path = new Drawing.Path ())
 					{
-						this.DefineGradientShape (graphics);
-						this.DefineGradientOffset (graphics, 2, 4, 3);
-						
-						path.AppendCircle (3, 3, 3);
+						if (this.IsEnabled)
+						{
+							this.DefineGradientShape (graphics);
+							this.DefineGradientOffset (graphics, 2, 4, 3);
+							
+							path.AppendCircle (3, 3, 3);
+						}
+						else
+						{
+							this.DefineGradientShape (graphics);
+							this.DefineGradientOffset (graphics, 2, 4, 1.5);
+							
+							path.AppendCircle (3, 3, 1.5);
+						}
 						graphics.Rasterizer.AddSurface (path);
 						graphics.RenderGradient ();
 					}
