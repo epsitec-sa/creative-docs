@@ -550,6 +550,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public double						RootZoom
+		{
+			get
+			{
+				Widget widget = this;
+				double zoom   = 0;
+				
+				while (widget != null)
+				{
+					zoom  *= widget.Client.Zoom;
+					widget = widget.parent;
+				}
+				
+				return zoom;
+			}
+		}
+		
 		public Direction					RootDirection
 		{
 			get

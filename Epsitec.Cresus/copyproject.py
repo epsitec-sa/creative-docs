@@ -295,6 +295,9 @@ def do_it(src,dst,zip):
     what  = '"' + dst + '\\delta\\*.*"'
 
     cmd   = wzzip+' '+opt+' '+qzip+' '+what
+    
+    print 'MEGABUILD.SET %ziprev%=' + rev
+    print 'MEGABUILD.SET %zipfile%=' + zip
 
     r,w,e = popen2.popen3 (cmd)
     result = r.read()

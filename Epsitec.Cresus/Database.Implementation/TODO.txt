@@ -128,7 +128,7 @@ par l'objet SqlSelect. En particulier :
   doit être capable de retrouver le nom des tables pour construire la
   clause 'FROM Table1 JOIN Table2 ON Table1.id = Table2.id'.
 
-- La clause GROUP BY n'est pas supportée.
+- La clause GROUP BY n'est pas supportée, la clause HAVING non plus.
 
 
 Détails sur ISqlBuilder.Insert/Update/RemoveData
