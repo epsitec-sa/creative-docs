@@ -29,21 +29,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		#region Interface IBundleSupport
-		public override void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			base.RestoreFromBundle (bundler, bundle);
-			this.items.RestoreFromBundle ("items", bundler, bundle);
-			this.AdjustSize ();
-		}
-		
-		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
-		{
-			base.SerializeToBundle (bundler, bundle);
-			this.items.SerializeToBundle ("items", bundler, bundle);
-		}
-		#endregion
-		
 		public bool								IsHorizontal
 		{
 			get { return this.type == MenuType.Horizontal; }
@@ -99,9 +84,9 @@ namespace Epsitec.Common.Widgets
 
 		public Drawing.Size						RequiredSize
 		{
-			// Donne les dimensions nécessaires pour tout le menu vertical.
 			get
 			{
+				// Retourne les dimensions nécessaires pour tout le menu vertical.
 				double maxWidth = 0;
 				foreach ( MenuItem cell in this.items )
 				{
@@ -166,9 +151,100 @@ namespace Epsitec.Common.Widgets
 		
 		public static bool						IsMenuDeveloped
 		{
-			get { return AbstractMenu.menuDeveloped; }
+			get
+			{
+				// Indique si au moins un menu est actuellement ouvert (on ne compte pas
+				// le menu horizontal au sommet d'une fenêtre).
+				return AbstractMenu.menuDeveloped;
+			}
 		}
 		
+		public static AbstractMenu				RootMenu
+		{
+			get
+			{
+				AbstractMenu root = AbstractMenu.menuRoot;
+				
+				while ( root.parentMenu != null )
+				{
+					root = root.parentMenu;
+				}
+				
+				return root;
+			}
+		}
+
+		
+		public void AdjustSize()
+		{
+			// Ajuste les dimensions du menu selon son contenu.
+			// Il faut appeler AdjustSize après avoir fini de remplir le menu vertical.
+			if ( this.IsVertical )
+			{
+				IAdorner adorner = Widgets.Adorner.Factory.Active;
+				this.margins = adorner.GeometryMenuMargins;
+				this.shadow  = adorner.GeometryMenuShadow;
+				this.Size    = this.RequiredSize;
+				this.isDirty = true;
+			}
+		}
+
+		public void ShowAsContextMenu(Window owner, Drawing.Point pos)
+		{
+			// Affiche un menu contextuel dont on spécifie le coin supérieur/gauche.
+			
+			Window lastWindow = Message.State.LastWindow;
+			
+			if ( lastWindow != null )
+			{
+				lastWindow.MouseCursor = MouseCursor.Default;
+			}
+			
+			pos.Y -= this.Height;
+			pos.X -= this.shadow.Left;
+			pos.Y += this.shadow.Top;
+
+			this.window = new Window();
+			this.window.MakeFramelessWindow();
+			this.window.MakeFloatingWindow();
+			this.window.Owner = owner;
+			this.window.CommandDispatcher = owner.CommandDispatcher;
+			this.window.Name = "ContextMenu";
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			if ( adorner.AlphaVMenu < 1.0 )
+			{
+				this.window.MakeLayeredWindow();
+				this.window.Alpha = adorner.AlphaVMenu;
+				this.window.Root.BackColor = Drawing.Color.Transparent;
+			}
+			this.window.DisableMouseActivation();
+			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.Width, this.Height);
+			
+			AbstractMenu.RegisterFilter(this);
+
+			this.window.Root.Children.Add(this);
+			this.window.AnimateShow(Animation.FadeIn);
+			this.SetFocused(true);
+			
+			//	TODO: vérifier que lorsque le menu est refermé, les deux event handlers sont
+			//	bien supprimés correctement...
+		}
+
+		
+		#region Interface IBundleSupport
+		public override void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
+		{
+			base.RestoreFromBundle (bundler, bundle);
+			this.items.RestoreFromBundle ("items", bundler, bundle);
+			this.AdjustSize ();
+		}
+		
+		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
+		{
+			base.SerializeToBundle (bundler, bundle);
+			this.items.SerializeToBundle ("items", bundler, bundle);
+		}
+		#endregion
 		
 		#region Serialization support
 		protected override bool ShouldSerializeLocation()
@@ -182,15 +258,41 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		protected void Update()
+		{
+			// Met à jour si nécessaire.
+			if ( !this.isDirty )  return;
+			this.UpdateClientGeometry();
+		}
+
+		protected Support.ICommandDispatcherHost GetHost()
+		{
+			if (this.host != null)
+			{
+				return this.host;
+			}
+			if (this.parentMenu != null)
+			{
+				this.parentMenu.GetHost ();
+			}
+			if (this.Window != null)
+			{
+				return this.Window;
+			}
+			
+			return null;
+		}
+		
+		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
 				MenuItem[] items = new MenuItem[this.items.Count];
-				this.items.CopyTo (items, 0);
-				this.items.Clear ();
+				this.items.CopyTo(items, 0);
+				this.items.Clear();
 				
-				foreach (MenuItem item in items)
+				foreach ( MenuItem item in items )
 				{
 					item.Dispose ();
 				}
@@ -208,45 +310,14 @@ namespace Epsitec.Common.Widgets
 			base.Dispose(disposing);
 		}
 
-
-		
-		// Ajuste les dimensions du menu selon son contenu.
-		// Il faut appeler AdjustSize après avoir fini tous les InsertItem.
-		public void AdjustSize()
-		{
-			if ( this.IsVertical )
-			{
-				IAdorner adorner = Widgets.Adorner.Factory.Active;
-				this.margins = adorner.GeometryMenuMargins;
-				this.shadow  = adorner.GeometryMenuShadow;
-
-				this.Size = this.RequiredSize;
-			}
-		}
-
-
-		// Ajoute une case.
-		protected int InsertItem(string iconName, string mainText, string shortKey)
-		{
-			string   name = this.items.Count.ToString ();
-			MenuItem item = new MenuItem(name, iconName, mainText, shortKey);
-			return this.items.Add(item);
-		}
-
-		// Met à jour si nécessaire.
-		protected void Update()
-		{
-			if ( !this.isDirty )  return;
-			this.UpdateClientGeometry();
-		}
-
-		// Met à jour la géométrie du menu.
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
 			
 			if ( this.items == null ) return;
-
+			
+			// Met à jour la géométrie du menu.
+			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			this.margins = adorner.GeometryMenuMargins;
 			this.shadow  = adorner.GeometryMenuShadow;
@@ -291,35 +362,16 @@ namespace Epsitec.Common.Widgets
 			base.OnAdornerChanged();
 		}
 
-		protected Support.ICommandDispatcherHost GetHost()
-		{
-			if (this.host != null)
-			{
-				return this.host;
-			}
-			if (this.parentMenu != null)
-			{
-				this.parentMenu.GetHost ();
-			}
-			if (this.Window != null)
-			{
-				return this.Window;
-			}
-			
-			return null;
-		}
-		
 
-		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			switch ( message.Type )
 			{
 				case MessageType.KeyDown:
-					if (message.IsAltPressed == false &&
-						message.IsCtrlPressed == false &&
-						message.IsShiftPressed == false &&
-						this.ProcessKeyDown(message))
+					if ( message.IsAltPressed == false &&
+						 message.IsCtrlPressed == false &&
+						 message.IsShiftPressed == false &&
+						 this.ProcessKeyDown(message) )
 					{
 						message.Consumer = this;
 					}
@@ -327,9 +379,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Gestion d'une touche pressée avec KeyDown dans le menu.
-		protected bool ProcessKeyDown(Message message)
+		protected virtual  bool ProcessKeyDown(Message message)
 		{
+			// Gestion d'une touche pressée avec KeyDown dans le menu.
+			
 			AbstractMenu parent = this.parentMenu;
 			
 			switch ( message.KeyCode )
@@ -375,7 +428,7 @@ namespace Epsitec.Common.Widgets
 						int sel = this.SelectedIndex;
 						if ( sel == -1 || this.items[sel].Submenu == null )
 						{
-							while ( parent.parentMenu != null )  parent = parent.parentMenu;
+							parent = AbstractMenu.RootMenu;
 							if ( parent.IsHorizontal )
 							{
 								parent.CloseSubmenu();
@@ -424,9 +477,28 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		// Sélectionne la case suivante ou précédente.
+		
+		protected bool OpenMenuItem()
+		{
+			// Ouvre le sous-menu correspondant à la case sélectionnée.
+			int sel = this.SelectedIndex;
+			if ( sel == -1 )  return false;
+			if ( !this.OpenSubmenu(this.items[sel], true) )  return false;
+			this.submenu.SelectedIndex = 0;
+			return true;
+		}
+
+		protected bool CloseMenuItem()
+		{
+			// Ferme le sous-menu contenant la case sélectionnée.
+			if ( this.parentMenu == null )  return false;
+			return this.parentMenu.CloseSubmenu();
+		}
+		
 		protected void SelectOtherMenuItem(int dir)
 		{
+			// Sélectionne la case suivante ou précédente.
+			
 			int sel = this.SelectedIndex;
 			if ( sel == -1 )
 			{
@@ -451,23 +523,6 @@ namespace Epsitec.Common.Widgets
 			this.SelectedIndex = sel;
 		}
 
-		// Ouvre le sous-menu correspondant à la case sélectionnée.
-		protected bool OpenMenuItem()
-		{
-			int sel = this.SelectedIndex;
-			if ( sel == -1 )  return false;
-			if ( !this.OpenSubmenu(this.items[sel], true) )  return false;
-			this.submenu.SelectedIndex = 0;
-			return true;
-		}
-
-		// Ferme le sous-menu contenant la case sélectionnée.
-		protected bool CloseMenuItem()
-		{
-			if ( this.parentMenu == null )  return false;
-			return this.parentMenu.CloseSubmenu();
-		}
-		
 		
 		protected static void ValidateAndExecuteCommand()
 		{
@@ -488,24 +543,9 @@ namespace Epsitec.Common.Widgets
 			AbstractMenu.CloseAll();
 		}
 		
-		protected static AbstractMenu			RootMenu
-		{
-			get
-			{
-				AbstractMenu root = AbstractMenu.menuRoot;
-				
-				while ( root.parentMenu != null )
-				{
-					root = root.parentMenu;
-				}
-				
-				return root;
-			}
-		}
-
-		// Ferme complètement le menu et tous les sous-menus.
 		protected static void CloseAll()
 		{
+			// Ferme complètement tous les menus ouverts.
 			AbstractMenu root = AbstractMenu.RootMenu;
 			
 			root.CloseSubmenu();
@@ -514,52 +554,14 @@ namespace Epsitec.Common.Widgets
 			// Il faut dés-enregistrer la même instance que celle qui avait été enregistrée
 			// au départ, sinon on se retrouve avec un filtre qui traîne...
 			
-			AbstractMenu.UnregisterFilter ();
+			AbstractMenu.UnregisterFilter();
 		}
 
-		// Affiche un menu contextuel dont on spécifie le coin sup/gauche.
-		public void ShowContextMenu(Window owner, Drawing.Point pos)
+		
+		private bool OpenSubmenu(MenuItem item, bool forceQuick)
 		{
-			Window lastWindow = Message.State.LastWindow;
+			// Ouvre le sous-menu correspondant à un item.
 			
-			if ( lastWindow != null )
-			{
-				lastWindow.MouseCursor = MouseCursor.Default;
-			}
-			
-			pos.Y -= this.Height;
-			pos.X -= this.shadow.Left;
-			pos.Y += this.shadow.Top;
-
-			this.window = new Window();
-			this.window.MakeFramelessWindow();
-			this.window.MakeFloatingWindow();
-			this.window.Owner = owner;
-			this.window.CommandDispatcher = owner.CommandDispatcher;
-			this.window.Name = "ContextMenu";
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			if ( adorner.AlphaVMenu < 1.0 )
-			{
-				this.window.MakeLayeredWindow();
-				this.window.Alpha = adorner.AlphaVMenu;
-				this.window.Root.BackColor = Drawing.Color.Transparent;
-			}
-			this.window.DisableMouseActivation();
-			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.Width, this.Height);
-			
-			AbstractMenu.RegisterFilter(this);
-
-			this.window.Root.Children.Add(this);
-			this.window.AnimateShow(Animation.FadeIn);
-			this.SetFocused(true);
-			
-			//	TODO: vérifier que lorsque le menu est refermé, les deux event handlers sont
-			//	bien supprimés correctement...
-		}
-
-		// Ouvre le sous-menu correspondant à un item.
-		protected bool OpenSubmenu(MenuItem item, bool forceQuick)
-		{
 			if ( this.submenu == item.Submenu )  return false;
 			bool closed = this.CloseSubmenu();
 			this.submenu = item.Submenu;
@@ -643,9 +645,10 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		// Ferme le sous-menu ouvert.
-		protected bool CloseSubmenu()
+		private bool CloseSubmenu()
 		{
+			// Ferme le sous-menu ouvert.
+			
 			if ( this.window == null )  return false;
 			
 			System.Diagnostics.Debug.Assert(this.window.Root.HasChildren);
@@ -686,10 +689,11 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-
-		// Cherche dans quel menu ou sous-menu est la souris.
-		protected static AbstractMenu DetectMenu(Drawing.Point mouse)
+		
+		private static AbstractMenu DetectMenu(Drawing.Point mouse)
 		{
+			// Cherche dans quel menu ou sous-menu est la souris.
+			
 			AbstractMenu menu = AbstractMenu.RootMenu;
 			Drawing.Point pos;
 			pos = menu.MapScreenToParent(mouse);
@@ -707,9 +711,9 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 
-		// Cherche dans quel item d'un menu est la souris.
-		protected static MenuItem SearchItem(Drawing.Point mouse, AbstractMenu menu)
+		private static MenuItem     SearchItem(Drawing.Point mouse, AbstractMenu menu)
 		{
+			// Cherche dans quel item d'un menu est la souris.
 			foreach ( MenuItem cell in menu.items )
 			{
 				Drawing.Point pos;
@@ -720,35 +724,10 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 
-		// Case du menu cliquée.
-		private void HandleCellPressed(object sender, MessageEventArgs e)
-		{
-			if ( AbstractMenu.menuDeveloped )
-			{
-				if ( this.parentMenu == null )
-				{
-					AbstractMenu.ValidateAndExecuteCommand();
-				}
-				else
-				{
-					MenuItem item = (MenuItem)sender;
-					this.OpenSubmenu(item, false);
-				}
-			}
-			else
-			{
-				MenuItem item = sender as MenuItem;
-				
-				this.parentMenu = null;
-				this.parentItem = null;
-				this.SetFocused(true);
-				this.OpenSubmenu(item, false);
-			}
-		}
-
+		
 		private static void MessageFilter(object sender, Message message)
 		{
-			if (!AbstractMenu.menuDeveloped)
+			if ( !AbstractMenu.menuDeveloped )
 			{
 				System.Diagnostics.Debug.Assert ( AbstractMenu.menuDeveloped );
 			}
@@ -814,6 +793,38 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		private static void HandleApplicationDeactivated(object sender)
+		{
+			AbstractMenu.CloseAll();
+		}
+
+		
+		private void HandleCellPressed(object sender, MessageEventArgs e)
+		{
+			// Case du menu cliquée.
+			if ( AbstractMenu.menuDeveloped )
+			{
+				if ( this.parentMenu == null )
+				{
+					AbstractMenu.ValidateAndExecuteCommand();
+				}
+				else
+				{
+					MenuItem item = (MenuItem)sender;
+					this.OpenSubmenu(item, false);
+				}
+			}
+			else
+			{
+				MenuItem item = sender as MenuItem;
+				
+				this.parentMenu = null;
+				this.parentItem = null;
+				this.SetFocused(true);
+				this.OpenSubmenu(item, false);
+			}
+		}
+
 		private void HandleCellEntered(object sender, MessageEventArgs e)
 		{
 			MenuItem item = (MenuItem)sender;
@@ -874,11 +885,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		private static void HandleApplicationDeactivated(object sender)
-		{
-			AbstractMenu.CloseAll();
-		}
-
 		private void HandleTimerTimeElapsed(object sender)
 		{
 			if ( this.delayedMenuItem != null )
@@ -927,7 +933,7 @@ namespace Epsitec.Common.Widgets
 		
 		private static void RegisterFilter(AbstractMenu root)
 		{
-			if (AbstractMenu.menuDeveloped == false)
+			if ( AbstractMenu.menuDeveloped == false )
 			{
 				Window.ApplicationDeactivated += new Support.EventHandler(AbstractMenu.HandleApplicationDeactivated);
 				Window.MessageFilter += new MessageHandler(AbstractMenu.MessageFilter);
@@ -935,7 +941,7 @@ namespace Epsitec.Common.Widgets
 				AbstractMenu.menuRoot      = root;
 				AbstractMenu.menuLastLeaf  = root;
 			}
-			else if (AbstractMenu.menuRoot == null)
+			else if ( AbstractMenu.menuRoot == null )
 			{
 				AbstractMenu.menuRoot = root;
 			}
@@ -943,7 +949,7 @@ namespace Epsitec.Common.Widgets
 		
 		private static void UnregisterFilter()
 		{
-			if (AbstractMenu.menuDeveloped)
+			if ( AbstractMenu.menuDeveloped )
 			{
 				Window.ApplicationDeactivated -= new Support.EventHandler(AbstractMenu.HandleApplicationDeactivated);
 				Window.MessageFilter -= new MessageHandler(AbstractMenu.MessageFilter);
@@ -952,6 +958,7 @@ namespace Epsitec.Common.Widgets
 				AbstractMenu.menuRoot      = null;
 			}
 		}
+		
 		
 		#region IWidgetCollectionHost Members
 		Helpers.WidgetCollection Helpers.IWidgetCollectionHost.GetWidgetCollection()
@@ -1019,21 +1026,22 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		protected MenuType							type;
-		protected bool								isDirty;
-		protected bool								isActive = true;	// dernier menu (feuille)
-		protected double							margin = 2;			// pour menu horizontal
-		protected Drawing.Margins					margins = new Drawing.Margins(2,2,2,2);
-		protected Drawing.Margins					shadow  = new Drawing.Margins(0,0,0,0);
-		protected MenuItemCollection				items;
-		protected Window							window;
-		protected Support.ICommandDispatcherHost	host;
-		protected Timer								timer;
-		protected AbstractMenu						submenu;
-		protected AbstractMenu						parentMenu;
-		protected MenuItem							parentItem;
-		protected double							iconWidth;
-		protected Drawing.Rectangle					parentRect;
-		protected MenuItem							delayedMenuItem;
+		
+		private bool								isDirty;
+		private bool								isActive = true;	// dernier menu (feuille)
+		private double								margin = 2;			// pour menu horizontal
+		private Drawing.Margins						margins = new Drawing.Margins(2,2,2,2);
+		private Drawing.Margins						shadow  = new Drawing.Margins(0,0,0,0);
+		private MenuItemCollection					items;
+		private Window								window;
+		private Support.ICommandDispatcherHost		host;
+		private Timer								timer;
+		private AbstractMenu						submenu;
+		private AbstractMenu						parentMenu;
+		private MenuItem							parentItem;
+		private double								iconWidth;
+		private Drawing.Rectangle					parentRect;
+		private MenuItem							delayedMenuItem;
 		
 		private static bool							menuDeveloped;
 		private static AbstractMenu					menuLastLeaf;
