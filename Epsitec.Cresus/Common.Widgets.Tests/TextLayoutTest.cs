@@ -337,6 +337,55 @@ namespace Epsitec.Common.Widgets
 			window.Show ();
 		}
 		
+		
+		[Test] public void CheckFindIndexFromOffset()
+		{
+			TextLayout text = new TextLayout ();
+			text.Text = "<b>&lt;x<br/>y&gt;</b>";
+			
+			Assert.AreEqual (0, text.FindIndexFromOffset (0));
+			Assert.AreEqual (0, text.FindIndexFromOffset (1));
+			Assert.AreEqual (0, text.FindIndexFromOffset (2));
+			Assert.AreEqual (0, text.FindIndexFromOffset (3));
+			Assert.AreEqual (1, text.FindIndexFromOffset (7));
+			Assert.AreEqual (2, text.FindIndexFromOffset (8));
+			Assert.AreEqual (3, text.FindIndexFromOffset (13));
+			Assert.AreEqual (4, text.FindIndexFromOffset (14));
+			Assert.AreEqual (5, text.FindIndexFromOffset (18));
+			Assert.AreEqual (5, text.FindIndexFromOffset (22));
+			
+			Assert.AreEqual (-1, text.FindIndexFromOffset (23));
+		}
+		
+		[Test] public void CheckFindOffsetFromIndex()
+		{
+			TextLayout text = new TextLayout ();
+			text.Text = "<b>&lt;x<br/>y&gt;</b>";
+			
+			Assert.AreEqual (0, text.FindOffsetFromIndex (0, false));
+			Assert.AreEqual (3, text.FindOffsetFromIndex (0, true));
+			Assert.AreEqual (7, text.FindOffsetFromIndex (1));
+			Assert.AreEqual (8, text.FindOffsetFromIndex (2));
+			Assert.AreEqual (13, text.FindOffsetFromIndex (3));
+			Assert.AreEqual (14, text.FindOffsetFromIndex (4));
+			Assert.AreEqual (18, text.FindOffsetFromIndex (5, false));
+			Assert.AreEqual (22, text.FindOffsetFromIndex (5, true));
+			
+			Assert.AreEqual (-1, text.FindOffsetFromIndex (6));
+		}
+		
+		[Test] public void CheckMaxText()
+		{
+			TextLayout text = new TextLayout ();
+			text.Text = "<b>&lt;x<br/>y&gt;</b>";
+			
+			Assert.AreEqual (22, text.Text.Length);
+			Assert.AreEqual (5, TextLayout.ConvertToSimpleText (text.Text).Length);
+			
+			Assert.AreEqual (5, text.MaxTextIndex);
+			Assert.AreEqual (22, text.MaxTextOffset);
+		}
+		
 		private void CheckPaint_Paint1(object sender, PaintEventArgs e)
 		{
 			TextLayout layout = new TextLayout();

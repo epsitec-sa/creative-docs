@@ -77,7 +77,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void StartPassiveEdition(string text)
 		{
-			this.CancelEdition ();
+//-			this.CancelEdition ();
 			this.SelectedItem = text;
 			this.SwitchToState (TextFieldExListMode.EditPassive);
 			this.OnEditionStarted ();
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void StartActiveEdition(string text)
 		{
-			this.CancelEdition ();
+//-			this.CancelEdition ();
 			this.SelectedItem = text;
 			this.SwitchToState (TextFieldExListMode.EditActive);
 			this.OnEditionStarted ();
@@ -93,7 +93,8 @@ namespace Epsitec.Common.Widgets
 		
 		public bool CancelEdition()
 		{
-			if (this.mode != TextFieldExListMode.EditActive)
+			if ((this.mode == TextFieldExListMode.EditActive) ||
+				(this.mode == TextFieldExListMode.EditPassive))
 			{
 				this.SwitchToState (TextFieldExListMode.Combo);
 				this.SelectedItem = this.saved_item;

@@ -81,10 +81,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int								TextLength
+		public int								MaxTextOffset
 		{
 			get { return (this.text == null) ? 0 : this.text.Length; }
 		}
+		
+		public int								MaxTextIndex
+		{
+			get { return this.FindIndexFromOffset(this.MaxTextOffset); }
+		}
+		
 		
 		public Drawing.Font						Font
 		{
@@ -598,7 +604,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.text == null )  return;
 
 			context.CursorFrom  = 0;
-			context.CursorTo    = this.TextLength;
+			context.CursorTo    = this.MaxTextOffset;
 			context.CursorAfter = false;
 		}
 
@@ -697,7 +703,7 @@ namespace Epsitec.Common.Widgets
 				context.CursorTo   = from;
 				context.CursorFrom = from;
 
-				if ( this.TextLength+ins.Length > context.MaxChar )  return false;
+				if ( this.MaxTextOffset+ins.Length > context.MaxChar )  return false;
 
 				string text = this.Text;
 				text = text.Insert(cursor, ins);
@@ -712,7 +718,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				if ( this.TextLength+ins.Length > context.MaxChar )  return false;
+				if ( this.MaxTextOffset+ins.Length > context.MaxChar )  return false;
 			
 				string text = this.Text;
 				int cursor = this.FindOffsetFromIndex(context.CursorTo, context.CursorAfter);
@@ -1626,7 +1632,7 @@ namespace Epsitec.Common.Widgets
 		public int AdvanceTag(int offset)
 		{
 			// Si on est au début d'un tag, donne la longueur jusqu'à la fin.
-			if ( offset >= this.TextLength )  return 0;
+			if ( offset >= this.MaxTextOffset )  return 0;
 
 			if ( this.text[offset] == '<' )  // tag <xx> ?
 			{
@@ -1634,7 +1640,7 @@ namespace Epsitec.Common.Widgets
 				while ( this.text[offset] != '>' )
 				{
 					offset ++;
-					if ( offset >= this.TextLength )  break;
+					if ( offset >= this.MaxTextOffset )  break;
 				}
 				return offset-initial+1;
 			}
@@ -1645,7 +1651,7 @@ namespace Epsitec.Common.Widgets
 				while ( this.text[offset] != ';' )
 				{
 					offset ++;
-					if ( offset >= this.TextLength )  break;
+					if ( offset >= this.MaxTextOffset )  break;
 				}
 				return offset-initial+1;
 			}
@@ -1700,11 +1706,17 @@ namespace Epsitec.Common.Widgets
 			int    index = 0;
 			int    beginOffset;
 			int    endOffset = 0;
-			int    textLength = this.TextLength;
+			int    textLength = this.MaxTextOffset;
 			
 			while ( endOffset <= textLength )
 			{
-				if ( endOffset == textLength )  return endOffset;
+				if ( endOffset == textLength )
+				{
+					if ( index == textIndex )  return endOffset;
+					
+					break;
+				}
+				
 				beginOffset = endOffset;
 
 				if ( !after )
@@ -1716,8 +1728,9 @@ namespace Epsitec.Common.Widgets
 				{
 					int length = this.text.IndexOf(">", endOffset)-endOffset+1;
 					if ( length < 0 )  return -1;
+					int more = System.Math.Min(5, length);
 					endOffset += length;
-					string startOfTag = this.text.Substring(beginOffset, 5);
+					string startOfTag = this.text.Substring(beginOffset, more);
 					
 					if ( startOfTag != "<br/>" && startOfTag != "<img " )  continue;
 				}
@@ -1752,7 +1765,7 @@ namespace Epsitec.Common.Widgets
 			if ( taggedTextOffset == 0 )  return index;
 
 			int endOffset = 0;
-			int textLength = this.TextLength;
+			int textLength = this.MaxTextOffset;
 			
 			while ( endOffset < textLength )
 			{
@@ -1763,8 +1776,9 @@ namespace Epsitec.Common.Widgets
 					int length = this.text.IndexOf(">", endOffset)-endOffset+1;
 					if ( length < 0 )  return -1;
 					endOffset += length;
+					int more = System.Math.Min(5, length);
 
-					string startOfTag = this.text.Substring(beginOffset, 5);
+					string startOfTag = this.text.Substring(beginOffset, more);
 					
 					if ( startOfTag == "<br/>" || startOfTag == "<img " )
 					{
@@ -1816,7 +1830,7 @@ namespace Epsitec.Common.Widgets
 		{
 			// Parcourt le texte et accumule les informations sur les tags <>
 			// reconnus.
-			if ( offset < 0 || offset > this.TextLength )
+			if ( offset < 0 || offset > this.MaxTextOffset )
 			{
 				tags = null;
 				return false;
@@ -2226,7 +2240,7 @@ namespace Epsitec.Common.Widgets
 			buffer = new System.Text.StringBuilder();
 			bool	fontCmd = false;
 			int		offset = 0;
-			int		textLength = this.TextLength;
+			int		textLength = this.MaxTextOffset;
 			while ( offset <= textLength )
 			{
 				int begin = offset;
@@ -2589,7 +2603,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected void GenerateTextBreaks()
 		{
-			if ( this.TextLength == 0 )
+			if ( this.MaxTextOffset == 0 )
 			{
 				this.textBreak = null;
 				this.imageList = null;
@@ -2603,7 +2617,7 @@ namespace Epsitec.Common.Widgets
 			System.Text.StringBuilder		buffer = new System.Text.StringBuilder();
 			System.Collections.Hashtable	parameters;
 			
-			int       textLength = this.TextLength;
+			int       textLength = this.MaxTextOffset;
 			SupplItem supplItem  = new SupplItem();
 			
 			int		beginOffset;
@@ -2733,7 +2747,7 @@ namespace Epsitec.Common.Widgets
 
 			// Si le texte n'existe pas, met quand même un bloc vide,
 			// afin de voir apparaître le curseur (FindTextCursor).
-			int textLength = this.TextLength;
+			int textLength = this.MaxTextOffset;
 noText:
 			if ( textLength == 0 )
 			{

@@ -857,7 +857,25 @@ namespace Epsitec.Common.Widgets
 		protected virtual void CursorScrollText(Drawing.Rectangle cursor, bool force)
 		{
 			Drawing.Point end = this.TextLayout.FindTextEnd();
-
+			
+			if ( this.TextLayout.TotalLineCount == 1 )
+			{
+				Drawing.Point linePos;
+				
+				double lineAscender;
+				double lineDescender;
+				double lineWidth;
+				
+				this.TextLayout.GetLineGeometry(0, out linePos, out lineAscender, out lineDescender, out lineWidth);
+				
+				if ( lineWidth-this.scrollOffset.X < this.realSize.Width )
+				{
+					force = true;
+				}
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("Text: {0}, realSize: {1}, offset: {2}, width: {3}, force: {4}", this.Text, this.realSize.ToString(), this.scrollOffset.X, lineWidth, force));
+			}
+			
 			if ( force )
 			{
 				double offset = cursor.Right;
