@@ -1,0 +1,83 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database.Implementation", "Database.Implementation\Database.Implementation.csproj", "{C757AD58-605D-4480-BC2E-03E8076368B2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349} = {BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database.Test", "Database.Test\Database.Test.csproj", "{065F982F-9739-426E-99C3-D7C1ED2E791C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database.TestConsole", "Database.TestConsole\Database.TestConsole.csproj", "{15F8ADEB-112E-45A5-8BF9-6E51C2260969}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Widgets", "Widgets\Widgets.csproj", "{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 6
+		SccLocalPath0 = .
+		CanCheckoutShared = false
+		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
+		SccProjectUniqueName1 = Database.Implementation\\Database.Implementation.csproj
+		SccLocalPath1 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection1 = Database.Implementation\\
+		SccProjectUniqueName2 = Database.Test\\Database.Test.csproj
+		SccLocalPath2 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection2 = Database.Test\\
+		SccProjectUniqueName3 = Database.TestConsole\\Database.TestConsole.csproj
+		SccLocalPath3 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection3 = Database.TestConsole\\
+		SccProjectUniqueName4 = Database\\Database.csproj
+		SccLocalPath4 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection4 = Database\\
+		SccProjectUniqueName5 = Widgets\\Widgets.csproj
+		SccLocalPath5 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection5 = Widgets\\
+	EndGlobalSection
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}.Debug.ActiveCfg = Debug|.NET
+		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}.Debug.Build.0 = Debug|.NET
+		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}.Release.ActiveCfg = Release|.NET
+		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}.Release.Build.0 = Release|.NET
+		{C757AD58-605D-4480-BC2E-03E8076368B2}.Debug.ActiveCfg = Debug|.NET
+		{C757AD58-605D-4480-BC2E-03E8076368B2}.Debug.Build.0 = Debug|.NET
+		{C757AD58-605D-4480-BC2E-03E8076368B2}.Release.ActiveCfg = Release|.NET
+		{C757AD58-605D-4480-BC2E-03E8076368B2}.Release.Build.0 = Release|.NET
+		{065F982F-9739-426E-99C3-D7C1ED2E791C}.Debug.ActiveCfg = Debug|.NET
+		{065F982F-9739-426E-99C3-D7C1ED2E791C}.Debug.Build.0 = Debug|.NET
+		{065F982F-9739-426E-99C3-D7C1ED2E791C}.Release.ActiveCfg = Release|.NET
+		{065F982F-9739-426E-99C3-D7C1ED2E791C}.Release.Build.0 = Release|.NET
+		{15F8ADEB-112E-45A5-8BF9-6E51C2260969}.Debug.ActiveCfg = Debug|.NET
+		{15F8ADEB-112E-45A5-8BF9-6E51C2260969}.Debug.Build.0 = Debug|.NET
+		{15F8ADEB-112E-45A5-8BF9-6E51C2260969}.Release.ActiveCfg = Release|.NET
+		{15F8ADEB-112E-45A5-8BF9-6E51C2260969}.Release.Build.0 = Release|.NET
+		{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}.Debug.ActiveCfg = Debug|.NET
+		{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}.Debug.Build.0 = Debug|.NET
+		{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}.Release.ActiveCfg = Release|.NET
+		{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
+		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
+	EndGlobalSection
+EndGlobal

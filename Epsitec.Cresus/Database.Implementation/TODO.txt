@@ -1,0 +1,53 @@
+
+Questions à régler
+------------------
+
+ 1.	Comment les BLOBs sont-ils gérés avec ADO.NET ?
+
+ 2.	Quel est le type retourné par DataColumn.Type quand on est sur
+	une colonne de type BLOB ?
+
+ 3.	Comment des chaînes String sont-elles stockées dans la base de
+	données (FireBird) si elles contiennent des caractères en dehors
+	du jeu strictement 8-bit ?
+
+ 4.	En relation directe avec (3) étudier comment la directive CHARSET
+	doit être initialisée avec FireBird pour pouvoir stocker les infos
+	en format UTF-8.
+
+ 5. Faut-il, en particulier, utiliser System.Text.Encoding pour
+    transformer les chaînes .NET en UTF-8 et vice-versa lorsque l'on
+    communique avec FireBird, ou est-ce que le "provider ADO.NET"
+    fait le travail à notre place ?
+
+ 6. Est-ce que le type System.DateTime peut être utilisé avec FireBird ?
+    Combien de bits est-ce que cela prend ? Les données stockées dans la
+    base sont-elles indépendantes du format de la date du système (un
+    contre exemple serait un stockage ASCII de type jj-mm-aaaa hh:mm:ss) ?
+
+ 7. ---
+
+ 8. Quelles sont les limites sur le type System.Decimal lorsqu'il est
+    utilisé avec FireBird ? Et pour System.Double ? Est-ce vraiment un
+    nombre réel 64-bit ?
+
+ 9. Implémenter TypeConverter.
+
+10. Implémenter FireBirdTypeConverter selon ITypeConverter. Utiliser
+    TypeConverter.AnalyseRawType, entre autres.
+
+11. Compléter les tests avec NUnit, vérifier que tout marche correcte-
+	ment.
+
+12. Tenter une implémentation minimale de, par exemple :
+	
+	- OleDbAbstraction
+	- OleDbAbstractionFactory
+	
+	afin de vérifier si l'on peut accéder indifféremment à FireBird
+	et à une base de données parlant OLE DB (ou autre).
+
+13. Définir ISqlBuilder
+
+14. Implémenter FireBirdSqlBuilder, OleDbSqlBuilder minimal.
+
