@@ -126,7 +126,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Widget implémente la classe de base dont dérivent tous les
 	/// widgets de l'interface graphique ("controls" dans l'appellation Windows).
 	/// </summary>
-	public class Widget : System.IDisposable, Support.IBundleSupport, Support.ICommandDispatcherHost, Support.IPropertyProvider
+	public class Widget : System.IDisposable, Support.IBundleSupport, Support.ICommandDispatcherHost, Support.Data.IPropertyProvider
 	{
 		public Widget()
 		{

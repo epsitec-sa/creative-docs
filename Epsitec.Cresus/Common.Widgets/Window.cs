@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : System.IDisposable, Support.IContainer, Support.ICommandDispatcherHost, Support.IPropertyProvider
+	public class Window : System.IDisposable, Support.Data.IContainer, Support.ICommandDispatcherHost, Support.Data.IPropertyProvider
 	{
 		public Window()
 		{
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets
 		private void Initialise(WindowRoot root)
 		{
 			this.CommandDispatcher = Support.CommandDispatcher.Default;
-			this.components        = new ComponentCollection (this);
+			this.components        = new Support.Data.ComponentCollection (this);
 			
 			this.root   = root;
 			this.window = new Platform.Window (this);
@@ -610,16 +610,16 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region IContainer Members
-		public void NotifyComponentInsertion(ComponentCollection collection, IComponent component)
+		public void NotifyComponentInsertion(Support.Data.ComponentCollection collection, Support.Data.IComponent component)
 		{
 		}
 
-		public void NotifyComponentRemoval(ComponentCollection collection, IComponent component)
+		public void NotifyComponentRemoval(Support.Data.ComponentCollection collection, Support.Data.IComponent component)
 		{
 		}
 
 		
-		public ComponentCollection				Components
+		public Support.Data.ComponentCollection	Components
 		{
 			get
 			{
@@ -719,7 +719,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.components.Count > 0)
 				{
-					IComponent[] components = new IComponent[this.components.Count];
+					Support.Data.IComponent[] components = new Support.Data.IComponent[this.components.Count];
 					this.components.CopyTo (components, 0);
 					
 					//	S'il y a des composants attachés, on les détruit aussi. Si l'utilisateur
@@ -728,7 +728,7 @@ namespace Epsitec.Common.Widgets
 					
 					for (int i = 0; i < components.Length; i++)
 					{
-						IComponent component = components[i];
+						Support.Data.IComponent component = components[i];
 						this.components.Remove (component);
 						component.Dispose ();
 					}
@@ -1471,7 +1471,7 @@ namespace Epsitec.Common.Widgets
 		private System.Collections.Queue		post_paint_queue = new System.Collections.Queue ();
 		private System.Collections.Hashtable	property_hash;
 		
-		private ComponentCollection				components;
+		private Support.Data.ComponentCollection components;
 		
 		static System.Collections.ArrayList		windows = new System.Collections.ArrayList ();
 	}
