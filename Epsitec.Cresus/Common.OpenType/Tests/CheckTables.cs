@@ -381,6 +381,12 @@ namespace Epsitec.Common.OpenType.Tests
 			double w1a = font_1.GetTotalWidth (glyphs_1a, 10.0);
 			double w2a = font_2.GetTotalWidth (glyphs_2a, 10.0);
 			
+			double[] x_pos_1c = new double[glyphs_1a.Length];
+			double[] x_pos_2c = new double[glyphs_2a.Length];
+			
+			double w1c = font_1.GetPositions (glyphs_1a, 10.0, 0.0, x_pos_1c);
+			double w2c = font_1.GetPositions (glyphs_1a, 10.0, 0.0, x_pos_2c);
+			
 			font_1.SelectFeatures ();
 			font_2.SelectFeatures ();
 			
