@@ -249,6 +249,163 @@ namespace Epsitec.Common.Widgets
 			window.Show ();
 		}
 		
+		[Test] public void CheckTabNavigation()
+		{
+			Window window = new Window ();
+			window.Text = "CheckTabNavigation";
+			window.ClientSize = new Drawing.Size (450, 230);
+			window.MakeFixedSizeWindow ();
+			
+			Button   button;
+			GroupBox group;
+			
+			button = new Button ("A");
+			button.Bounds = new Drawing.Rectangle (10, 170, 40, 25);
+			button.Parent = window.Root;
+			button.TabIndex = 1;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("B");
+			button.Bounds = new Drawing.Rectangle (10, 140, 40, 25);
+			button.Parent = window.Root;
+			button.TabIndex = 2;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("C");
+			button.Bounds = new Drawing.Rectangle (10, 110, 40, 25);
+			button.Parent = window.Root;
+			button.TabIndex = 3;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("D");
+			button.Bounds = new Drawing.Rectangle (10, 80, 40, 25);
+			button.Parent = window.Root;
+			button.TabIndex = 4;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			group = new GroupBox ();
+			group.Bounds = new Drawing.Rectangle (60, 80, 110, 115);
+			group.Parent = window.Root;
+			group.TabIndex = 10;
+			group.Text = "Group 1";
+			group.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("A");
+			button.Bounds = new Drawing.Rectangle (10, 40, 40, 25);
+			button.Parent = group;
+			button.TabIndex = 1;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("B");
+			button.Bounds = new Drawing.Rectangle (10, 10, 40, 25);
+			button.Parent = group;
+			button.TabIndex = 2;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("C");
+			button.Bounds = new Drawing.Rectangle (55, 40, 40, 25);
+			button.Parent = group;
+			button.TabIndex = 3;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("D");
+			button.Bounds = new Drawing.Rectangle (55, 10, 40, 25);
+			button.Parent = group;
+			button.TabIndex = 4;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			group = new GroupBox ();
+			group.Bounds = new Drawing.Rectangle (180, 80, 110, 115);
+			group.Parent = window.Root;
+			group.TabIndex = 11;
+			group.Text = "Group 2";
+			group.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren;
+			
+			button = new Button ("A");
+			button.Bounds = new Drawing.Rectangle (10, 40, 40, 25);
+			button.Parent = group;
+			button.TabIndex = 1;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("B");
+			button.Bounds = new Drawing.Rectangle (10, 10, 40, 25);
+			button.Parent = group;
+			button.TabIndex = 2;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("C");
+			button.Bounds = new Drawing.Rectangle (55, 40, 40, 25);
+			button.Parent = group;
+			button.TabIndex = 3;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("D");
+			button.Bounds = new Drawing.Rectangle (55, 10, 40, 25);
+			button.Parent = group;
+			button.TabIndex = 4;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			group = new GroupBox ();
+			group.Bounds = new Drawing.Rectangle (300, 80, 110, 115);
+			group.Parent = window.Root;
+			group.TabIndex = 12;
+			group.Text = "Group 3";
+			group.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			
+			button = new Button ("A");
+			button.Bounds = new Drawing.Rectangle (10, 40, 40, 25);
+			button.Parent = group;
+			button.TabIndex = 1;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("B");
+			button.Bounds = new Drawing.Rectangle (10, 10, 40, 25);
+			button.Parent = group;
+			button.TabIndex = 2;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("C");
+			button.Bounds = new Drawing.Rectangle (55, 40, 40, 25);
+			button.Parent = group;
+			button.TabIndex = 3;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("D");
+			button.Bounds = new Drawing.Rectangle (55, 10, 40, 25);
+			button.Parent = group;
+			button.TabIndex = 4;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("E");
+			button.Bounds = new Drawing.Rectangle (10, 50, 40, 25);
+			button.Parent = window.Root;
+			button.TabIndex = 20;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			button = new Button ("F");
+			button.Bounds = new Drawing.Rectangle (10, 20, 40, 25);
+			button.Parent = window.Root;
+			button.TabIndex = 21;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			StaticText text = new StaticText ();
+			
+			text.Bounds    = new Drawing.Rectangle (60, 20, 420, 50);
+			text.Parent    = window.Root;
+			text.Alignment = Drawing.ContentAlignment.TopLeft;
+			text.Text      = "<b>Group 1:</b> cannot be entered with TAB<br/>"
+				/**/       + "<b>Group 2:</b> can be focused and entered with TAB<br/>"
+				/**/       + "<b>Group 3:</b> cannot be focused, but can be entered with TAB<br/>";
+			text.TextLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
+			
+			text = new StaticText ();
+			text.Bounds = new Drawing.Rectangle (10, 200, 230, 25);
+			text.Text   = "<font size=\"130%\">Press <b>TAB</b> to move the focus...</font>";
+			text.Parent = window.Root;
+			
+			window.Show ();
+		}
+		
 		private void Root_Clicked(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine ("Root Clicked");

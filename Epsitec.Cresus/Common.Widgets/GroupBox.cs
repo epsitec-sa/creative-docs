@@ -47,7 +47,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				Drawing.Rectangle rect = this.TextLayout.StandardRectangle;
+				TextLayout layout = this.TextLayout;
+				
+				if (layout == null)
+				{
+					return Drawing.Rectangle.Empty;
+				}
+				
+				Drawing.Rectangle rect = layout.StandardRectangle;
 				rect.Offset(this.TitleTextOffset);
 				rect.Inflate(3, 0);
 				return rect;
@@ -60,8 +67,13 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle rect  = this.Client.Bounds;
 				Drawing.Rectangle title = this.TitleRectangle;
-				double dy = title.Bottom + title.Top;
-				rect.Top -= System.Math.Floor (rect.Height - dy/2);
+				
+				if (title.IsValid)
+				{
+					double dy = title.Bottom + title.Top;
+					rect.Top -= System.Math.Floor (rect.Height - dy/2);
+				}
+				
 				return rect;
 			}
 		}
