@@ -135,7 +135,7 @@ namespace Epsitec.Common.Drawing
 			int cy1 = (int)(y1);
 			int cx2 = (int)(x2+0.9999);
 			int cy2 = (int)(y2+0.9999);
-			AntiGrain.Buffer.AddClipBox (this.agg_buffer, cx1, cy1, cx2, cy2);
+			AntiGrain.Buffer.AddClipBox (this.agg_buffer, cx1, cy1, cx2-1, cy2-1);
 		}
 		
 		
