@@ -31,6 +31,7 @@ namespace Epsitec.Common.UI
 		{
 			Data.Field field_1 = new Data.Field ("Field1", "Hello, world...", new Types.StringType ());
 			Data.Field field_2 = new Data.Field ("Field2", 10.0M, new Types.DecimalType (-100, 100, 0.05M));
+			Data.Field field_3 = new Data.Field ("Field3", Data.Representation.None);
 			
 			Window window = new Window ();
 			window.Text = "CheckSimpleDataWidgets";
@@ -38,9 +39,13 @@ namespace Epsitec.Common.UI
 			
 			Widgets.DataWidget data_widget_1 = new Widgets.DataWidget ();
 			Widgets.DataWidget data_widget_2 = new Widgets.DataWidget ();
+			Widgets.DataWidget data_widget_3 = new Widgets.DataWidget ();
+			Widgets.DataWidget data_widget_4 = new Widgets.DataWidget ();
+			Widgets.DataWidget data_widget_5 = new Widgets.DataWidget ();
 			
 			field_1.DefineCaption ("Text");
 			field_2.DefineCaption ("Numeric value");
+			field_3.DefineCaption ("Representation");
 			
 			data_widget_1.Dock           = DockStyle.Top;
 			data_widget_1.Parent         = window.Root;
@@ -53,6 +58,24 @@ namespace Epsitec.Common.UI
 			data_widget_2.DataSource     = field_2;
 			data_widget_2.Representation = Data.Representation.Automatic;
 			data_widget_2.DockMargins    = new Drawing.Margins (0, 0, 0, 2);
+			
+			data_widget_3.Dock           = DockStyle.Fill;
+			data_widget_3.Parent         = window.Root;
+			data_widget_3.DataSource     = field_3;
+			data_widget_3.Representation = Data.Representation.RadioColumns;
+			data_widget_3.DockMargins    = new Drawing.Margins (0, 0, 0, 2);
+			
+			data_widget_4.Dock           = DockStyle.Fill;
+			data_widget_4.Parent         = window.Root;
+			data_widget_4.DataSource     = field_3;
+			data_widget_4.Representation = Data.Representation.RadioRows;
+			data_widget_4.DockMargins    = new Drawing.Margins (0, 0, 0, 2);
+			
+			data_widget_5.Dock           = DockStyle.Fill;
+			data_widget_5.Parent         = window.Root;
+			data_widget_5.DataSource     = field_3;
+			data_widget_5.Representation = Data.Representation.RadioList;
+			data_widget_5.DockMargins    = new Drawing.Margins (0, 0, 0, 0);
 			
 			window.Show ();
 		}

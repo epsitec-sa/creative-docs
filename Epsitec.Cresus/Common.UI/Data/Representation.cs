@@ -21,7 +21,7 @@ namespace Epsitec.Common.UI.Data
 		ComboEditableList,
 		
 		RadioList,
-		RadioLines,
-		RadioRows
-	}
+		RadioRows,
+		RadioColumns,
+}
 }

@@ -103,9 +103,16 @@ namespace Epsitec.Common.UI.Widgets
 					this.CreateUINumericUpDown ();
 					break;
 				
-				case Data.Representation.RadioLines:
 				case Data.Representation.RadioList:
+					this.CreateUIRadio (LayoutMode.None);
+					break;
+				
+				case Data.Representation.RadioColumns:
+					this.CreateUIRadio (LayoutMode.Columns);
+					break;
+				
 				case Data.Representation.RadioRows:
+					this.CreateUIRadio (LayoutMode.Rows);
 					break;
 				
 				default:
@@ -160,6 +167,59 @@ namespace Epsitec.Common.UI.Widgets
 			Engine.BindWidget (this.source, text_field);
 		}
 		
+		protected virtual void CreateUIRadio(LayoutMode layout_mode)
+		{
+			this.widget_layout_mode = layout_mode;
+			
+			Types.IEnum enum_type = this.source.DataType as Types.IEnum;
+			
+			if (enum_type == null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Cannot setup radio buttons based on type {0}.", this.source.DataType.Name));
+			}
+			
+			Types.IEnumValue[] enum_values = enum_type.Values;
+			
+			//	C'est une énumération pour laquelle nous devons trouver les légendes des
+			//	divers éléments.
+			
+			this.widget_container = new GroupBox (this);
+			this.widget_container.Dock = DockStyle.Fill;
+			this.widget_container.Text = this.source.Caption;
+			this.widget_container.DockPadding = new Drawing.Margins (4, 0, 4, 4);
+			
+			RadioButton radio_0 = null;
+			
+			foreach (Types.IEnumValue enum_value in enum_values)
+			{
+				RadioButton button = new RadioButton (this.widget_container, "Group", enum_value.Rank);
+				
+				string caption = enum_value.Caption;
+				
+				if (caption == null)
+				{
+					caption = enum_value.Name;
+				}
+				
+				button.Text     = caption;
+				button.TabIndex = 1;
+				button.Dock     = DockStyle.Top;
+				button.MinSize  = button.GetBestFitSize ();
+				
+				if (radio_0 == null)
+				{
+					radio_0 = button;
+				}
+			}
+			
+			this.UpdateInternalLayout ();
+			
+			if (radio_0 != null)
+			{
+				Engine.BindWidget (this.source, radio_0);
+			}
+		}
+		
 		protected virtual void DisposeUI()
 		{
 			if (this.widget_container != null)
@@ -202,13 +262,15 @@ namespace Epsitec.Common.UI.Widgets
 			return new Drawing.Size (max_dx, max_dy);
 		}
 		
-		protected override void OnLayoutChanged()
+		protected virtual void UpdateInternalLayout()
 		{
 			if ((this.widget_container != null) &&
 				(this.widget_container.HasChildren) &&
 				(this.widget_layout_mode != LayoutMode.None))
 			{
 				Drawing.Size cell_size = this.GetCellSize ();
+				
+				cell_size.Width += 4;
 				
 				int num_columns = 0;
 				int num_rows    = 0;
@@ -217,8 +279,8 @@ namespace Epsitec.Common.UI.Widgets
 				int row    = 0;
 				int column = 0;
 				
-				double width  = this.widget_container.Client.Width  - this.widget_container.DockPadding.Width;
-				double height = this.widget_container.Client.Height - this.widget_container.DockPadding.Height;
+				double width  = this.widget_container.InnerBounds.Width  - this.widget_container.DockPadding.Width;
+				double height = this.widget_container.InnerBounds.Height - this.widget_container.DockPadding.Height;
 				
 				double ox = 0;
 				double oy = 0;
@@ -226,14 +288,16 @@ namespace Epsitec.Common.UI.Widgets
 				switch (this.widget_layout_mode)
 				{
 					case LayoutMode.Rows:
-						num_columns = System.Math.Max (1, (int) (this.Client.Width / width));
+						num_columns = System.Math.Max (1, (int) (width / cell_size.Width));
 						num_rows    = (num_total + num_columns - 1) / num_columns;
 						
 						foreach (Widget widget in this.widget_container.Children)
 						{
-							widget.Bounds = new Drawing.Rectangle (this.widget_container.DockPadding.Left + ox,
-								/**/                            this.widget_container.DockPadding.Bottom + height - cell_size.Height - oy,
-								/**/                            cell_size.Width, cell_size.Height);
+							widget.Dock   = DockStyle.None;
+							widget.Anchor = AnchorStyles.None;
+							widget.Bounds = new Drawing.Rectangle (this.widget_container.InnerBounds.Left + this.widget_container.DockPadding.Left + ox,
+								/**/                               this.widget_container.InnerBounds.Bottom + this.widget_container.DockPadding.Bottom + height - cell_size.Height - oy,
+								/**/                               cell_size.Width, cell_size.Height);
 							
 							ox += cell_size.Width;
 							column++;
@@ -250,13 +314,15 @@ namespace Epsitec.Common.UI.Widgets
 						break;
 					
 					case LayoutMode.Columns:
-						num_rows    = System.Math.Max (1, (int) (this.Client.Height / height));
+						num_rows    = System.Math.Max (1, (int) (height / cell_size.Height));
 						num_columns = (num_total + num_rows - 1) / num_rows;
 						
 						foreach (Widget widget in this.widget_container.Children)
 						{
-							widget.Bounds = new Drawing.Rectangle (this.widget_container.DockPadding.Left + ox,
-								/**/                               this.widget_container.DockPadding.Bottom + height - cell_size.Height - oy,
+							widget.Dock   = DockStyle.None;
+							widget.Anchor = AnchorStyles.None;
+							widget.Bounds = new Drawing.Rectangle (this.widget_container.InnerBounds.Left + this.widget_container.DockPadding.Left + ox,
+								/**/                               this.widget_container.InnerBounds.Bottom + this.widget_container.DockPadding.Bottom + height - cell_size.Height - oy,
 								/**/                               cell_size.Width, cell_size.Height);
 							
 							oy += cell_size.Height;
@@ -265,8 +331,8 @@ namespace Epsitec.Common.UI.Widgets
 							if (row >= num_rows)
 							{
 								row     = 0;
-								ox      = 0;
-								oy     += cell_size.Height;
+								oy      = 0;
+								ox     += cell_size.Width;
 								column += 1;
 							}
 						}
@@ -274,7 +340,12 @@ namespace Epsitec.Common.UI.Widgets
 						break;
 				}
 			}
-			
+		}
+		
+		
+		protected override void OnLayoutChanged()
+		{
+			this.UpdateInternalLayout ();
 			base.OnLayoutChanged ();
 		}
 		
