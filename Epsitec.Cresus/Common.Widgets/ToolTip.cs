@@ -176,10 +176,12 @@ namespace Epsitec.Common.Widgets
 			{
 				Window.MessageFilter += new Widgets.MessageHandler(this.MessageFilter);
 			}
-
-			this.timer.Suspend();
-			this.timer.Delay = SystemInformation.ToolTipShowDelay;
-			this.timer.Start();
+			if ( this.behaviour != ToolTipBehaviour.Manual )
+			{
+				this.timer.Suspend();
+				this.timer.Delay = SystemInformation.ToolTipShowDelay;
+				this.timer.Start();
+			}
 		}
 
 		// La souris sort d'un widget.
@@ -189,10 +191,12 @@ namespace Epsitec.Common.Widgets
 			{
 				Window.MessageFilter -= new Widgets.MessageHandler(this.MessageFilter);
 			}
-
-			this.timer.Stop();
-			this.HideToolTip();
-			this.widget = null;
+			if ( this.behaviour != ToolTipBehaviour.Manual )
+			{
+				this.timer.Stop();
+				this.HideToolTip();
+				this.widget = null;
+			}
 		}
 		
 		// Un widget est supprimé -- on doit donc le retirer de notre liste interne.
