@@ -96,7 +96,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					this.icon.Text = "<img src=\"..\\..\\" + this.iconName + ".png\"/>";
+					this.icon.Text = @"<img src=""file:..\..\" + this.iconName + @".png""/>";
 				}
 				this.iconSize = this.icon.SingleLineSize();
 				AdjustSize(ref this.iconSize);

@@ -367,7 +367,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public new Drawing.Bitmap			Icon
+		public new Drawing.Image			Icon
 		{
 			get
 			{
@@ -386,7 +386,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					base.Icon = System.Drawing.Icon.FromHandle (value.NativeBitmap.GetHicon ());
+					base.Icon = System.Drawing.Icon.FromHandle (value.BitmapImage.NativeBitmap.GetHicon ());
 				}
 			}
 		}
@@ -445,10 +445,9 @@ namespace Epsitec.Common.Widgets
 			this.Root.Name = this.Name;
 			this.Root.RestoreFromBundle (bundler, bundle);
 			
-			if (bundle.GetFieldType ("icon") == Support.ResourceFieldType.Binary)
+			if (bundle.GetFieldType ("icon") == Support.ResourceFieldType.String)
 			{
-				byte[] data = bundle.GetFieldBinary ("icon");
-				this.Icon = Drawing.Bitmap.FromData (data);
+				this.Icon = Support.ImageProvider.Default.GetImage ("res:" + bundle.GetFieldString ("icon"));
 			}
 		}
 		#endregion

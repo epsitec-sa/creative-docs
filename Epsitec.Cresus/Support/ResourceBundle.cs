@@ -127,6 +127,55 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public Drawing.Bitmap GetBitmap(string image_name)
+		{
+			string field_name = "i." + image_name;
+			
+			if (this.bitmap_cache == null)
+			{
+				if (this.GetFieldType ("image.data") != ResourceFieldType.Binary)
+				{
+					throw new ResourceException ("Bundle does not contain image");
+				}
+				
+				byte[] image_data = this.GetFieldBinary ("image.data");
+				string image_args = this.GetFieldString ("image.size");
+				
+				Drawing.Size size = Drawing.Size.Parse (image_args);
+				
+				this.bitmap_cache = Drawing.Bitmap.FromData (image_data, Drawing.Point.Empty, size);
+			}
+			
+			System.Diagnostics.Debug.Assert (this.bitmap_cache != null);
+			
+			if (this.Contains (field_name))
+			{
+				//	Une image est définie par un champ 'i.name' qui contient une chaîne composée
+				//	de 'x;y;dx;dy;ox;oy' définissant l'origine dans l'image mère, la taille et
+				//	l'offset de l'origine dans la sous-image. 'oy;oy' sont facultatifs.
+				
+				string[] args = this.GetFieldString (field_name).Split (';', ':');
+				
+				if ((args.Length != 4) && (args.Length != 6))
+				{
+					throw new ResourceException (string.Format ("Invalid image specification for '{0}', {1} arguments", image_name, args.Length));
+				}
+				
+				Drawing.Point rect_pos = Drawing.Point.Parse (args[0] + ";" + args[1]);
+				Drawing.Size  rect_siz = Drawing.Size.Parse (args[2] + ";" + args[3]);
+				Drawing.Point origin   = Drawing.Point.Empty;
+				
+				if (args.Length >= 6)
+				{
+					origin = Drawing.Point.Parse (args[4] + ";" + args[5]);
+				}
+				
+				return Drawing.Bitmap.FromLargerImage (this.bitmap_cache, new Drawing.Rectangle (rect_pos, rect_siz), origin);
+			}
+			
+			return null;
+		}
+		
 		public void Compile(byte[] data)
 		{
 			this.Compile (data, null, ResourceLevel.Merged, 0);
@@ -163,6 +212,25 @@ namespace Epsitec.Common.Support
 					stream.Close ();
 				}
 			}
+		}
+		
+		
+		public static bool SplitTarget(string target, out string target_bundle, out string target_field)
+		{
+			int pos = target.IndexOf ("#");
+			
+			target_bundle = target;
+			target_field  = null;
+			
+			if (pos >= 0)
+			{
+				target_bundle = target.Substring (0, pos);
+				target_field  = target.Substring (pos+1);
+				
+				return true;
+			}
+			
+			return false;
 		}
 		
 		
@@ -470,16 +538,10 @@ namespace Epsitec.Common.Support
 			//	La cible peut être composée de deux parties: un nom de bundle et un nom de champ;
 			//	le séparateur est le "#", donc target = "bundle#field" ou target = "bundle".
 			
-			int pos = target.IndexOf ("#");
+			string target_bundle;
+			string target_field;
 			
-			string target_bundle = target;
-			string target_field  = null;
-			
-			if (pos >= 0)
-			{
-				target_bundle = target.Substring (0, pos);
-				target_field  = target.Substring (pos+1);
-			}
+			ResourceBundle.SplitTarget (target, out target_bundle, out target_field);
 			
 			//	La cible peut avoir une spécification de type. La seule spécification actuellement
 			//	autorisée est "binary" qui indique que la cible n'est pas une ressource standard,
@@ -521,6 +583,7 @@ namespace Epsitec.Common.Support
 			if (reader_depth == 1)
 			{
 				System.Diagnostics.Debug.Assert (element_name == null);
+				System.Diagnostics.Debug.Assert (target_field == null);
 				
 				new_bundle = bundle;
 			}
@@ -552,9 +615,13 @@ namespace Epsitec.Common.Support
 					{
 						buffer.Append (field_data);
 					}
-					else
+					else if (field_data is ResourceBundle)
 					{
 						child_bundle = field_data as ResourceBundle;
+					}
+					else
+					{
+						throw new ResourceException (string.Format ("Target bundle '{0}' contains unsupported data of type '{1}'", target_bundle, field_data.GetType ().ToString ()));
 					}
 				}
 				else
@@ -572,7 +639,6 @@ namespace Epsitec.Common.Support
 				throw new ResourceException (string.Format ("Illegal reference to '{0}' at level {1}", target, reader_depth));
 			}
 		}
-		
 		
 		
 		protected void AddChildBundle(string element_name, ResourceBundle child_bundle)
@@ -649,6 +715,7 @@ namespace Epsitec.Common.Support
 		
 		protected string				name;
 		protected Hashtable				fields;
+		protected Drawing.Bitmap		bitmap_cache;
 		
 		protected const int				max_recursion = 50;
 	}

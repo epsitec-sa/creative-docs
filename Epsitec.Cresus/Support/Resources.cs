@@ -185,6 +185,11 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public static byte[] GetBinaryData(string id)
+		{
+			return Resources.GetBinaryData (id, ResourceLevel.Merged);
+		}
+		
 		public static byte[] GetBinaryData(string id, ResourceLevel level)
 		{
 			//	TODO: il faudrait peut-être rajouter un cache pour éviter de consulter

@@ -1380,7 +1380,7 @@ namespace Epsitec.Common.Widgets
 						{
 							if ( parameters.ContainsKey("src") )
 							{
-								string imageName = "file:" + parameters["src"] as string;
+								string imageName = parameters["src"] as string;
 								Drawing.Image image = this.imageProvider.GetImage(imageName);
 								double dx = image.Width;
 								double dy = image.Height;
@@ -1411,8 +1411,18 @@ namespace Epsitec.Common.Widgets
 								block.underline      = fontItem.underline > 0;
 								block.anchor         = fontItem.anchor > 0;
 								block.width          = dx;
-								block.imageAscender  = dy*fontAscender/fontHeight;
-								block.imageDescender = dy*fontDescender/fontHeight;
+								
+								if (image.IsOriginDefined)
+								{
+									block.imageAscender  = image.Height - image.Origin.Y;
+									block.imageDescender = - image.Origin.Y;
+								}
+								else
+								{
+									block.imageAscender  = dy*fontAscender/fontHeight;
+									block.imageDescender = dy*fontDescender/fontHeight;
+								}
+								
 								block.pos            = new Drawing.Point(0,0);
 								block.visible        = false;
 								this.blocks.Add(block);
@@ -1800,7 +1810,7 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.TextBreakMode			breakMode = Drawing.TextBreakMode.Split;
 		protected int							totalLine;
 		protected int							visibleLine;
-		protected Drawing.IImageProvider		imageProvider = Drawing.ImageProvider.Default;
+		protected Drawing.IImageProvider		imageProvider = Support.ImageProvider.Default;
 		protected Drawing.ContentAlignment		alignment = Drawing.ContentAlignment.TopLeft;
 		protected System.Collections.ArrayList	blocks = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	lines = new System.Collections.ArrayList();

@@ -70,7 +70,12 @@ namespace Epsitec.Common.Drawing
 		
 		public static Size Parse(string value)
 		{
-			string[] args = value.Split (new char[] { ';', ':' });
+			if (value == null)
+			{
+				return Size.Empty;
+			}
+			
+			string[] args = value.Split (';', ':');
 			
 			if (args.Length != 2)
 			{

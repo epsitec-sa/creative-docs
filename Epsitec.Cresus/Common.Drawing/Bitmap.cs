@@ -90,12 +90,29 @@ namespace Epsitec.Common.Drawing
 		
 		public static Bitmap FromNativeBitmap(System.Drawing.Bitmap native)
 		{
+			Bitmap bitmap = Bitmap.FromNativeBitmap (native, new Point (0, 0));
+			bitmap.is_origin_defined = false;
+			return bitmap;
+		}
+		
+		public static Bitmap FromNativeBitmap(System.Drawing.Bitmap native, Point origin)
+		{
+			return Bitmap.FromNativeBitmap (native, origin, Size.Empty);
+		}
+		
+		public static Bitmap FromNativeBitmap(System.Drawing.Bitmap native, Point origin, Size size)
+		{
+			if (size == Size.Empty)
+			{
+				size = new Size (native.Width, native.Height);
+			}
+			
 			Bitmap bitmap = new Bitmap ();
 			bitmap.bitmap = native;
-			bitmap.size   = new Size (bitmap.bitmap.Width, bitmap.bitmap.Height);
-			bitmap.origin = new Point (0, 0);
-				
-			bitmap.is_origin_defined = false;
+			bitmap.size   = size;
+			bitmap.origin = origin;
+			
+			bitmap.is_origin_defined = true;
 			
 			return bitmap;
 		}
@@ -104,28 +121,56 @@ namespace Epsitec.Common.Drawing
 		{
 			using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
 			{
+				System.Drawing.Bitmap native = new System.Drawing.Bitmap (stream);
+				Bitmap bitmap = Bitmap.FromNativeBitmap (native);
+				bitmap.is_origin_defined = false;
+				return bitmap;
+			}
+		}
+		
+		public static Bitmap FromData(byte[] data, Point origin)
+		{
+			using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
+			{
 				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (stream);
-				return Bitmap.FromNativeBitmap (bitmap);
+				return Bitmap.FromNativeBitmap (bitmap, origin);
+			}
+		}
+		
+		public static Bitmap FromData(byte[] data, Point origin, Size size)
+		{
+			using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
+			{
+				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (stream);
+				return Bitmap.FromNativeBitmap (bitmap, origin, size);
 			}
 		}
 		
 		public static Bitmap FromFile(string file_name)
 		{
 			Bitmap bitmap = Bitmap.FromFile (file_name, new Point (0, 0));
-			
 			bitmap.is_origin_defined = false;
-			
 			return bitmap;
 		}
 		
 		public static Bitmap FromFile(string file_name, Point origin)
 		{
+			return Bitmap.FromFile (file_name, origin, Size.Empty);
+		}
+		
+		public static Bitmap FromFile(string file_name, Point origin, Size size)
+		{
 			Bitmap bitmap = new Bitmap ();
 			
 			using (System.Drawing.Image src_image = System.Drawing.Image.FromFile (file_name))
 			{
+				if (size == Size.Empty)
+				{
+					size = new Size (src_image.Width, src_image.Height);
+				}
+				
 				bitmap.bitmap = new System.Drawing.Bitmap (src_image);
-				bitmap.size   = new Size (bitmap.bitmap.Width, bitmap.bitmap.Height);
+				bitmap.size   = size;
 				bitmap.origin = origin;
 				
 				bitmap.is_origin_defined = true;
@@ -175,6 +220,48 @@ namespace Epsitec.Common.Drawing
 				
 				return bitmap;
 			}
+		}
+		
+		public static Bitmap FromLargerImage(Image image, Rectangle clip)
+		{
+			Bitmap bitmap = Bitmap.FromLargerImage (image, clip, Point.Empty);
+			bitmap.is_origin_defined = false;
+			return bitmap;
+		}
+		
+		public static Bitmap FromLargerImage(Image image, Rectangle clip, Point origin)
+		{
+			if (image == null)
+			{
+				return null;
+			}
+			
+			System.Drawing.Bitmap src_bitmap = image.BitmapImage.bitmap;
+			
+			int dx = (int)(clip.Width  + 0.5);
+			int dy = (int)(clip.Height + 0.5);
+			int x  = (int)(clip.Left);
+			int y  = (int)(clip.Bottom);
+			int yy = src_bitmap.Height - dy - y;
+			
+			System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (dx, dy);
+			
+			using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+			{
+				graphics.DrawImage (src_bitmap, 0, 0, new System.Drawing.Rectangle (x, yy, dx, dy), System.Drawing.GraphicsUnit.Pixel);
+			}
+			
+			Bitmap bitmap = new Bitmap ();
+			
+			double sx = image.Width  / src_bitmap.Width;
+			double sy = image.Height / src_bitmap.Height;
+			
+			bitmap.bitmap			 = dst_bitmap;
+			bitmap.size				 = new Size (sx * dx, sy * dy);
+			bitmap.origin			 = origin;
+			bitmap.is_origin_defined = true;
+			
+			return bitmap;
 		}
 		
 		
