@@ -16,6 +16,6 @@ namespace Epsitec.Common.UI.Controllers
 		
 		void CreateUI(Widget panel);
 		void SyncFromUI();
-		void SyncFromAdapter();
+		void SyncFromAdapter(SyncReason reason);
 	}
 }
