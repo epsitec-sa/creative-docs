@@ -253,6 +253,21 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Data\Representation.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\DataWidget.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\ISelfBindingWidget.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\PropPane.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -10,7 +10,7 @@ namespace Epsitec.Common.UI
 			Common.Widgets.Widget.Initialise ();
 			Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
 			
-			Support.Resources.SetupProviders ("EngineTest");
+			Support.Resources.SetupProviders ("Test");
 		}
 		
 		[Test] public void CheckDataRecordAndFields()
