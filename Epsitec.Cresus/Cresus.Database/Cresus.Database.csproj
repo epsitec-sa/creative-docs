@@ -319,7 +319,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "IPersist.cs"
+                    RelPath = "IPersistable.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
