@@ -36,6 +36,16 @@ namespace Epsitec.Common.Widgets.Platform
 			this.ShowInTaskbar   = false;
 		}
 		
+		internal void MakeFixedSizeWindow()
+		{
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+		}
+		
+		internal void MakeSecondaryWindow()
+		{
+			this.ShowInTaskbar   = false;
+		}
+		
 		internal void ResetHostingWidgetWindow()
 		{
 			this.widget_window_disposed = true;

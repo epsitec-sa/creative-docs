@@ -78,6 +78,16 @@ namespace Epsitec.Common.Widgets
 			this.window.IsLayered = true;
 		}
 		
+		public void MakeFixedSizeWindow()
+		{
+			this.window.MakeFixedSizeWindow ();
+		}
+		
+		public void MakeSecondaryWindow()
+		{
+			this.window.MakeSecondaryWindow ();
+		}
+		
 		public void MakeActive()
 		{
 			if (! this.IsDisposed)

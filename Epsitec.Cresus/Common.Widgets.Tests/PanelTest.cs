@@ -143,6 +143,6 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("Panel desired size: {0}", panel.Panel.DesiredSize);
 			
 			window.Show ();
-		}	
+		}
 	}
 }
