@@ -117,6 +117,7 @@ namespace Epsitec.Common.Text.Layout
 					if ((word_break_info == Unicode.BreakInfo.Yes) ||
 						(word_break_info == Unicode.BreakInfo.HorizontalTab))
 					{
+						break;
 					}
 				}
 				else
@@ -128,6 +129,8 @@ namespace Epsitec.Common.Text.Layout
 					return Layout.Status.ErrorNeedMoreText;
 				}
 			}
+			
+			return Layout.Status.Ok;
 			
 stop:
 			
