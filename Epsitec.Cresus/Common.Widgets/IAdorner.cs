@@ -51,6 +51,7 @@ namespace Epsitec.Common.Widgets
 		void PaintTabSunkenBackground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
 		void PaintTabSunkenForeground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
 		
+		void PaintArrayBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
 		void PaintCellBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
 
 		void PaintHeaderBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction type);
@@ -66,6 +67,15 @@ namespace Epsitec.Common.Widgets
 		void PaintMenuItemTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, Direction shadow, MenuType type, MenuItemType itemType);
 		void PaintMenuItemForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, MenuType type, MenuItemType itemType);
 
+		void PaintSeparatorBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction type, bool optional);
+		void PaintSeparatorForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction type, bool optional);
+
+		void PaintStatusBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
+		void PaintStatusForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
+
+		void PaintTooltipBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Direction shadow);
+		void PaintTooltipTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, Direction shadow);
+
 		/*
 		 * Méthodes de dessin complémentaires.
 		 */
@@ -77,9 +87,13 @@ namespace Epsitec.Common.Widgets
 		
 		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, Direction shadow);
 
+		void AdaptEnabledTextColor(ref Drawing.Color color);
+		void AdaptDisabledTextColor(ref Drawing.Color color, Drawing.Color uniqueColor);
+
 		Drawing.Color GetColorCaption();
 		Drawing.Color GetColorControl();
 		Drawing.Color GetColorWindow();
+		Drawing.Color GetColorBorder();
 	}
 	
 	public enum Direction
