@@ -56,6 +56,77 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			Assertion.Assert (! test1.Equals (test3));
 			
 			Assertion.AssertNull (test1.Attributes.GetAttribute ("missing"));
+			
+			Assertion.AssertEquals (@"descr=""d""; extra=""e""; label=""c""; name=""a""", test1.Attributes.ToString ());
+			Assertion.AssertEquals (@"descr=""d2""; extra=""e2""; label=""c2""; name=""a""", test2.Attributes.ToString ());
+			Assertion.AssertEquals (@"name=""x""", test3.Attributes.ToString ());
+		}
+		
+		[Test] public void CheckEnumType()
+		{
+			EnumType e_type = new EnumType ();
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			list.Add (new EnumValue ("id=2", "name=MME", "label=Madame"));
+			list.Add (new EnumValue ("id=3", "name=MLLE", "label=Mademoiselle"));
+			list.Add (new EnumValue ("id=1", "name=M", "label=Monsieur"));
+			
+			e_type.DefineValues (list);
+			
+			EnumType e_copy = e_type.Clone () as EnumType;
+			
+			Assertion.AssertEquals ("1", e_type[0].Id);
+			Assertion.AssertEquals ("M", e_type[0].Name);
+			Assertion.AssertEquals ("1", e_type["M"].Id);
+			Assertion.AssertEquals ("M", e_type["M"].Name);
+			
+			Assertion.AssertEquals ("2",   e_copy[1].Id);
+			Assertion.AssertEquals ("MME", e_copy[1].Name);
+			Assertion.AssertEquals ("2",   e_copy["MME"].Id);
+			Assertion.AssertEquals ("MME", e_copy["MME"].Name);
+			
+			Assertion.AssertNull (e_type["X"]);
+			
+			Assertion.AssertEquals ("Monsieur", e_type["M"].UserLabel);
+			Assertion.AssertEquals ("Madame", e_type["MME"].UserLabel);
+			Assertion.AssertEquals ("Mademoiselle", e_type["MLLE"].UserLabel);
+		}
+		
+		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckEnumTypeEx1()
+		{
+			EnumType e_type = new EnumType ();
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			list.Add (new EnumValue ("id=2", "name=MME", "label=Madame"));
+			list.Add (new EnumValue ("id=3", "name=MLLE", "label=Mademoiselle"));
+			list.Add (new EnumValue ("id=1", "name=M", "label=Monsieur"));
+			
+			e_type.DefineValues (list);
+			e_type.DefineValues (list);
+		}
+		
+		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckEnumTypeEx2()
+		{
+			EnumType e_type = new EnumType ();
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			list.Add (new EnumValue ("id=2", "name=A"));
+			list.Add (new EnumValue ("id=3", "name=B"));
+			list.Add (new EnumValue ("id=1", "name=A"));
+			
+			e_type.DefineValues (list);
+		}
+		
+		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckEnumTypeEx3()
+		{
+			EnumType e_type = new EnumType ();
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			list.Add (new EnumValue ("id=1", "name=A"));
+			list.Add (new EnumValue ("id=2", "name=B"));
+			list.Add (new EnumValue ("id=1", "name=C"));
+			
+			e_type.DefineValues (list);
 		}
 		
 		[Test] public void CheckCreateSet()
