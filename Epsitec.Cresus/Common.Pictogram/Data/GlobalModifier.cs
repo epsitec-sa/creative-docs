@@ -199,8 +199,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( rank == 6 )  // rotate ?
 			{
-				double angle = Drawing.Point.ComputeAngle(this.data.Center, pos);
-				this.data.Angle = angle*180.0/System.Math.PI - 90.0;  // en degrés
+				this.data.Angle = Drawing.Point.ComputeAngleDeg(this.data.Center, pos) - 90;
 			}
 
 			this.UpdateHandle();
@@ -229,8 +228,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.center.Position = this.data.Center;
 
 			double radius = this.data.Radius;
-			double angle = this.data.Angle*System.Math.PI/180.0;  // en radians
-			this.rotate.Position = this.data.Center + Drawing.Transform.RotatePoint(angle, new Drawing.Point(0, radius));
+			this.rotate.Position = this.data.Center + Drawing.Transform.RotatePointDeg(this.data.Angle, new Drawing.Point(0, radius));
 		}
 
 		// Dessine le modificateur.
@@ -290,7 +288,7 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Point c = Drawing.Point.Move(p2, p1, distPara);
 			Drawing.Point p = Drawing.Point.Move(c, Drawing.Point.Symmetry(p2, p1), distPerp);
 			double angle = (rank==0) ? System.Math.PI/2 : -System.Math.PI/2;
-			return Drawing.Transform.RotatePoint(c, angle, p);
+			return Drawing.Transform.RotatePointRad(c, angle, p);
 		}
 
 		protected GlobalModifierData	data;
@@ -429,7 +427,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( rot != 0 )
 			{
 				rot = rot*System.Math.PI/180.0;  // en radians
-				pos = Drawing.Transform.RotatePoint(final.Center, rot, pos);
+				pos = Drawing.Transform.RotatePointRad(final.Center, rot, pos);
 			}
 
 			return pos;
