@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.button = new ArrowButton(this);
 			this.button.Name = "Open";
-			this.button.Direction = Direction.Down;
+			this.button.GlyphType = GlyphType.ArrowDown;
 			this.button.ButtonStyle = ButtonStyle.Combo;
 			this.button.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			//this.button.Dock = DockStyle.Right;
@@ -150,7 +150,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.IsReadOnly )
 			{
-				if ( key == KeyCode.ArrowDown )
+				if ( key == KeyCode.ArrowUp || key == KeyCode.ArrowDown )
 				{
 					this.OpenCombo();
 					return true;

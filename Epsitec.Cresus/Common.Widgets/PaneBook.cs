@@ -326,11 +326,11 @@ namespace Epsitec.Common.Widgets
 
 						if ( this.RetSize(i) < (this.RetMinSize(i)+this.RetMaxSize(i))/2 )
 						{
-							page.ArrowButton.Direction = Direction.Right;
+							page.ArrowButton.GlyphType = GlyphType.ArrowRight;
 						}
 						else
 						{
-							page.ArrowButton.Direction = Direction.Left;
+							page.ArrowButton.GlyphType = GlyphType.ArrowLeft;
 						}
 					}
 					else
@@ -366,11 +366,11 @@ namespace Epsitec.Common.Widgets
 
 						if ( this.RetSize(i) < (this.RetMinSize(i)+this.RetMaxSize(i))/2 )
 						{
-							page.ArrowButton.Direction = Direction.Down;
+							page.ArrowButton.GlyphType = GlyphType.ArrowDown;
 						}
 						else
 						{
-							page.ArrowButton.Direction = Direction.Up;
+							page.ArrowButton.GlyphType = GlyphType.ArrowUp;
 						}
 					}
 					else

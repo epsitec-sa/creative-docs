@@ -21,8 +21,8 @@ namespace Epsitec.Common.Widgets
 
 			this.arrowLeft = new ArrowButton(this);
 			this.arrowRight = new ArrowButton(this);
-			this.arrowLeft.Direction = Direction.Left;
-			this.arrowRight.Direction = Direction.Right;
+			this.arrowLeft.GlyphType = GlyphType.ArrowLeft;
+			this.arrowRight.GlyphType = GlyphType.ArrowRight;
 			this.arrowLeft.ButtonStyle = ButtonStyle.Scroller;
 			this.arrowRight.ButtonStyle = ButtonStyle.Scroller;
 			this.arrowLeft.Engaged += new Support.EventHandler(this.HandleScrollButton);
@@ -31,6 +31,16 @@ namespace Epsitec.Common.Widgets
 			this.arrowRight.StillEngaged += new Support.EventHandler(this.HandleScrollButton);
 			this.arrowLeft.AutoRepeatEngaged = true;
 			this.arrowRight.AutoRepeatEngaged = true;
+
+			this.buttonMenu = new ArrowButton(this);
+			this.buttonMenu.GlyphType = GlyphType.Menu;
+			this.buttonMenu.ButtonStyle = ButtonStyle.Icon;
+			this.buttonMenu.Command = "MenuClicked";
+
+			this.buttonClose = new ArrowButton(this);
+			this.buttonClose.GlyphType = GlyphType.Close;
+			this.buttonClose.ButtonStyle = ButtonStyle.Icon;
+			this.buttonClose.Command = "CloseClicked";
 		}
 		
 		public TabBook(Widget embedder) : this()
@@ -71,6 +81,8 @@ namespace Epsitec.Common.Widgets
 				this.arrowRight.StillEngaged -= new Support.EventHandler(this.HandleScrollButton);
 				this.arrowLeft = null;
 				this.arrowRight = null;
+				this.buttonMenu = null;
+				this.buttonClose = null;
 
 				this.Clear();
 			}
@@ -78,6 +90,40 @@ namespace Epsitec.Common.Widgets
 			base.Dispose(disposing);
 		}
 
+
+		public bool HasMenuButton
+		{
+			get
+			{
+				return this.hasMenuButton;
+			}
+
+			set
+			{
+				if ( this.hasMenuButton != value )
+				{
+					this.hasMenuButton = value;
+					this.UpdateArrowButtons();
+				}
+			}
+		}
+
+		public bool HasCloseButton
+		{
+			get
+			{
+				return this.hasCloseButton;
+			}
+
+			set
+			{
+				if ( this.hasCloseButton != value )
+				{
+					this.hasCloseButton = value;
+					this.UpdateArrowButtons();
+				}
+			}
+		}
 
 		public override Drawing.Rectangle InnerBounds
 		{
@@ -87,7 +133,7 @@ namespace Epsitec.Common.Widgets
 				double height = this.Client.Height - this.TabHeight;
 				
 				Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, width, height);
-				rect.Inflate(-2, -2);
+				rect.Deflate(2, 2);
 				return rect;
 			}
 		}
@@ -220,6 +266,8 @@ namespace Epsitec.Common.Widgets
 						max = this.Client.Width-(this.tabHeight*2-6);
 					}
 				}
+				if ( this.hasMenuButton  )  max -= this.tabHeight-4;
+				if ( this.hasCloseButton )  max -= this.tabHeight-4;
 				return max;
 			}
 		}
@@ -283,7 +331,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void UpdateClientGeometry()
 		{
-			base.UpdateClientGeometry ();
+			base.UpdateClientGeometry();
 			
 			Direction newDir = this.RootDirection;
 			Direction oldDir = this.direction;
@@ -409,7 +457,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.scrollArrow = ( this.scrollTotalWidth > this.Client.Width-4 );
 
-			if ( this.arrowLeft == null || this.arrowRight == null )  return;
+			if ( this.arrowLeft == null )  return;
 
 			if ( this.scrollArrow )
 			{
@@ -423,7 +471,10 @@ namespace Epsitec.Common.Widgets
 					this.arrowLeft.SetVisible(true);
 					this.arrowLeft.SetEnabled(this.scrollOffset > this.TabOffsetMin);
 
-					rect = new Drawing.Rectangle(this.Client.Width-this.tabHeight, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
+					double x = this.Client.Width-this.tabHeight;
+					if ( this.hasMenuButton  )  x -= this.tabHeight-4;
+					if ( this.hasCloseButton )  x -= this.tabHeight-4;
+					rect = new Drawing.Rectangle(x, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 					rect.Inflate(-2, -2);
 					rect.Offset(2, 0);
 					this.arrowRight.Bounds = rect;
@@ -433,7 +484,10 @@ namespace Epsitec.Common.Widgets
 
 				if ( this.type == TabBookStyle.Right )
 				{
-					Drawing.Rectangle rect = new Drawing.Rectangle(this.Client.Width-this.tabHeight*2, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
+					double x = this.Client.Width-this.tabHeight*2;
+					if ( this.hasMenuButton  )  x -= this.tabHeight-4;
+					if ( this.hasCloseButton )  x -= this.tabHeight-4;
+					Drawing.Rectangle rect = new Drawing.Rectangle(x, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 					rect.Inflate(-2, -2);
 					rect.Offset(6, 0);
 					this.arrowLeft.Bounds = rect;
@@ -452,13 +506,43 @@ namespace Epsitec.Common.Widgets
 				this.arrowRight.SetVisible(false);
 			}
 
+			if ( this.hasMenuButton )
+			{
+				double x = this.Client.Width-(this.tabHeight-2);
+				if ( this.hasCloseButton )  x -= this.tabHeight-4;
+				Drawing.Rectangle rect = new Drawing.Rectangle(x, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
+				rect.Inflate(-2, -2);
+				this.buttonMenu.Bounds = rect;
+				this.buttonMenu.SetVisible(true);
+			}
+			else
+			{
+				this.buttonMenu.SetVisible(false);
+			}
+
+			if ( this.hasCloseButton )
+			{
+				Drawing.Rectangle rect = new Drawing.Rectangle(this.Client.Width-(this.tabHeight-2), this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
+				rect.Inflate(-2, -2);
+				this.buttonClose.Bounds = rect;
+				this.buttonClose.SetVisible(true);
+			}
+			else
+			{
+				this.buttonClose.SetVisible(false);
+			}
+
 			// Pour détecter le clic sur les flèches en premier.
 			if ( this.isGrimy )
 			{
 				this.Children.Remove(this.arrowLeft);
 				this.Children.Remove(this.arrowRight);
+				this.Children.Remove(this.buttonMenu);
+				this.Children.Remove(this.buttonClose);
 				this.Children.Add(this.arrowLeft);
 				this.Children.Add(this.arrowRight);
+				this.Children.Add(this.buttonMenu);
+				this.Children.Add(this.buttonClose);
 				this.isGrimy = false;
 			}
 		}
@@ -536,7 +620,7 @@ namespace Epsitec.Common.Widgets
 				if ( dir != 0 )
 				{
 					int index = this.ActivePageIndex + dir;
-					index = System.Math.Min(index, this.items.Count - 1);
+					index = System.Math.Min(index, this.items.Count-1);
 					index = System.Math.Max(index, 0);
 					this.ActivePageIndex = index;
 					message.Consumer = this;
@@ -650,8 +734,12 @@ namespace Epsitec.Common.Widgets
 		protected Direction						direction;
 		protected double						tabHeight = 20;
 		protected bool							scrollArrow = false;
+		protected bool							hasMenuButton = false;
+		protected bool							hasCloseButton = false;
 		protected ArrowButton					arrowLeft;
 		protected ArrowButton					arrowRight;
+		protected ArrowButton					buttonMenu;
+		protected ArrowButton					buttonClose;
 		protected double						scrollTotalWidth;
 		protected double						scrollOffset = 0;
 		protected bool							isGrimy;
