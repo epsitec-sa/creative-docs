@@ -43,6 +43,7 @@ namespace Epsitec.Common.Printing
 			this.ResetTransform ();
 		}
 		
+		
 		public double							LineWidth
 		{
 			get
@@ -130,6 +131,34 @@ namespace Epsitec.Common.Printing
 			}
 		}
 		
+		public Drawing.Transform				Transform
+		{
+			get
+			{
+			   return new Drawing.Transform (this.transform);
+			}
+			set
+			{
+				if (this.transform != value)
+				{
+					this.ResetTransform ();
+					
+					this.transform = new Drawing.Transform (value);
+					
+					float m11 = (float)(transform.XX);
+					float m12 = (float)(transform.YX);
+					float m21 = (float)(transform.XY);
+					float m22 = (float)(transform.YY);
+					float dx  = (float)(transform.TX);
+					float dy  = (float)(transform.TY);
+					
+					System.Drawing.Drawing2D.Matrix matrix = new System.Drawing.Drawing2D.Matrix (m11, m12, m21, m22, dx, dy);
+					
+					this.graphics.MultiplyTransform (matrix, System.Drawing.Drawing2D.MatrixOrder.Prepend);
+				}
+			}
+		}
+
 		public PageSettings						PageSettings
 		{
 			get
@@ -211,50 +240,13 @@ namespace Epsitec.Common.Printing
 		}
 		
 		
-		public Drawing.Transform SaveTransform()
-		{
-			return new Drawing.Transform (this.transform);
-		}
-		
-		public double GetTransformZoom()
-		{
-			//	Détermine le zoom approximatif en vigueur dans la transformation actuelle.
-			//	Calcule la longueur d'un segment diagonal [1 1] après transformation pour
-			//	connaître ce zoom.
-			
-			Drawing.Transform transform = this.SaveTransform ();
-			
-			double a = transform.XX + transform.XY;
-			double b = transform.YX + transform.YY;
-			
-			return System.Math.Sqrt ((a*a + b*b) / 2);
-		}
-		
-		public void RestoreTransform(Drawing.Transform transform)
-		{
-			this.ResetTransform ();
-			
-			this.transform = new Drawing.Transform (transform);
-			
-			float m11 = (float)(transform.XX);
-			float m12 = (float)(transform.YX);
-			float m21 = (float)(transform.XY);
-			float m22 = (float)(transform.YY);
-			float dx  = (float)(transform.TX);
-			float dy  = (float)(transform.TY);
-			
-			System.Drawing.Drawing2D.Matrix matrix = new System.Drawing.Drawing2D.Matrix (m11, m12, m21, m22, dx, dy);
-			
-			this.graphics.MultiplyTransform (matrix, System.Drawing.Drawing2D.MatrixOrder.Prepend);
-		}
-		
 		public void ScaleTransform(double sx, double sy, double cx, double cy)
 		{
 			Drawing.Transform transform = new Drawing.Transform (this.transform);
 			
 			transform.MultiplyByPostfix (Drawing.Transform.FromScale (sx, sy, cx, cy));
 			
-			this.RestoreTransform (transform);
+			this.Transform = transform;
 		}
 		
 		public void RotateTransformDeg(double angle, double cx, double cy)
@@ -263,7 +255,7 @@ namespace Epsitec.Common.Printing
 			
 			transform.MultiplyByPostfix (Drawing.Transform.FromRotationDeg (angle, cx, cy));
 			
-			this.RestoreTransform (transform);
+			this.Transform = transform;
 		}
 		
 		public void RotateTransformRad(double angle, double cx, double cy)
@@ -272,7 +264,7 @@ namespace Epsitec.Common.Printing
 			
 			transform.MultiplyByPostfix (Drawing.Transform.FromRotationRad (angle, cx, cy));
 			
-			this.RestoreTransform (transform);
+			this.Transform = transform;
 		}
 		
 		public void TranslateTransform(double ox, double oy)
@@ -281,7 +273,7 @@ namespace Epsitec.Common.Printing
 			
 			transform.MultiplyByPostfix (Drawing.Transform.FromTranslation (ox, oy));
 			
-			this.RestoreTransform (transform);
+			this.Transform = transform;
 		}
 		
 		public void MergeTransform(Drawing.Transform transform)
@@ -290,7 +282,7 @@ namespace Epsitec.Common.Printing
 			
 			transform.MultiplyByPostfix (current_transform);
 			
-			this.RestoreTransform (current_transform);
+			this.Transform = transform;
 		}
 		
 		

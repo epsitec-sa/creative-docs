@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets.Platform
 			this.SetStyle (System.Windows.Forms.ControlStyles.ResizeRedraw, true);
 			this.SetStyle (System.Windows.Forms.ControlStyles.UserPaint, true);
 			
-			this.graphics = Epsitec.Common.Drawing.GraphicsFactory.NewGraphics ();
+			this.graphics = new Epsitec.Common.Drawing.Graphics ();
 			
 			Window.DummyHandleEater (this.Handle);
 			

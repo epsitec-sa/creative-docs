@@ -349,7 +349,7 @@ namespace Epsitec.Common.Widgets
 				double x2 = rect.Right;
 				double y2 = rect.Top;
 				
-				Drawing.Transform transform = graphics.SaveTransform ();
+				Drawing.Transform transform = graphics.Transform;
 				
 				transform.TransformDirect (ref x1, ref y1);
 				transform.TransformDirect (ref x2, ref y2);

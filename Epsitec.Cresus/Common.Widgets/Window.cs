@@ -1361,13 +1361,13 @@ namespace Epsitec.Common.Widgets
 				this.handler   = handler;
 				this.repaint   = repaint;
 				this.clipping  = graphics.SaveClippingRectangle ();
-				this.transform = graphics.SaveTransform ();
+				this.transform = graphics.Transform;
 			}
 			
 			public void Paint(Drawing.Graphics graphics)
 			{
 				graphics.RestoreClippingRectangle (this.clipping);
-				graphics.RestoreTransform (this.transform);
+				graphics.Transform = this.transform;
 				
 				handler.Paint (graphics, this.repaint);
 			}

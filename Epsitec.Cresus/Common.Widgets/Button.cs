@@ -155,10 +155,10 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.innerZoom != 1.0 )
 			{
-				Drawing.Transform transform = graphics.SaveTransform();
+				Drawing.Transform transform = graphics.Transform;
 				graphics.ScaleTransform(this.innerZoom, this.innerZoom, this.Client.Width / 2, this.Client.Height / 2);
 				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
-				graphics.RestoreTransform(transform);
+				graphics.Transform = transform;
 			}
 			else
 			{

@@ -4604,7 +4604,7 @@ namespace Epsitec.Common.Widgets
 				repaint = this.MapParentToClient (repaint);
 				
 				Drawing.Rectangle original_clipping  = graphics.SaveClippingRectangle ();
-				Drawing.Transform original_transform = graphics.SaveTransform ();
+				Drawing.Transform original_transform = graphics.Transform;
 				Drawing.Transform graphics_transform = this.GetTransformToParent ();
 				
 				graphics.SetClippingRectangle (bounds);

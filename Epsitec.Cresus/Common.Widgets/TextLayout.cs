@@ -999,7 +999,7 @@ namespace Epsitec.Common.Widgets
 						image = image.GetImageForPaintStyle(paintStyle);
 					}
 					
-					image.DefineZoom(graphics.GetTransformZoom());
+					image.DefineZoom(graphics.Transform.GetZoom());
 					image.DefineColor(uniqueColor);
 					image.DefineAdorner(adorner);
 					
