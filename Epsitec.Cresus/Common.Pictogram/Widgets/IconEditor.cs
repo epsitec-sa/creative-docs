@@ -365,7 +365,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer = new Drawer();
 			this.drawer.InitCommands(this.CommandDispatcher);
 			this.CommandDispatcher.RegisterController(this.drawer);
-			this.drawer.IsEditable = true;
+			this.drawer.IsIconEditable = true;
 			this.drawer.SelectedTool = "Select";
 			this.drawer.PanelChanged += new EventHandler(this.HandleDrawerPanelChanged);
 			this.drawer.CommandChanged += new EventHandler(this.HandleDrawerCommandChanged);
@@ -1212,9 +1212,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("Mode")]
 		void CommandMode(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( this.drawer.IsActive )
+			if ( this.drawer.IsIconActive )
 			{
-				this.drawer.IsActive = false;
+				this.drawer.IsIconActive = false;
 				this.drawer.Hide();
 				this.quickPageNext.Hide();
 				this.quickPageMenu.Hide();
@@ -1231,7 +1231,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			else
 			{
-				this.drawer.IsActive = true;
+				this.drawer.IsIconActive = true;
 				this.drawer.Show();
 				this.quickPageNext.Show();
 				this.quickPageMenu.Show();
