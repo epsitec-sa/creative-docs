@@ -118,21 +118,9 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 		
-		protected override void UpdateTextLayout()
+		protected override Drawing.Size GetTextLayoutSize()
 		{
-			if ( this.TextLayout != null )
-			{
-				double dx = this.Client.Width - AbstractTextField.Margin*2 - this.margins.Width;
-				double dy = this.Client.Height - AbstractTextField.Margin*2;
-				this.realSize = new Drawing.Size(dx, dy);
-				this.TextLayout.Alignment = this.Alignment;
-				this.TextLayout.LayoutSize = new Drawing.Size(dx, AbstractTextField.Infinity);
-
-				if ( this.TextLayout.Text != null )
-				{
-					this.CursorScroll();
-				}
-			}
+			return new Drawing.Size(this.realSize.Width, AbstractTextField.Infinity);
 		}
 
 		private void HandleScrollerValueChanged(object sender)

@@ -678,7 +678,7 @@ namespace Epsitec.Common.Widgets
 			
 			for (int i = 0; i < rects.Length; i++)
 			{
-				rects[i].Offset (pos.X, pos.Y);
+				rects[i].Offset (pos.X, pos.Y - 1);
 			}
 					
 			return rects;
@@ -741,8 +741,8 @@ namespace Epsitec.Common.Widgets
 				if ( index >= block.beginIndex && index <= block.endIndex )
 				{
 					Drawing.Rectangle rect = new Drawing.Rectangle();
-					rect.Top    = line.pos.Y+line.ascender;
-					rect.Bottom = line.pos.Y+line.descender;
+					rect.Top    = line.pos.Y+line.ascender-1;
+					rect.Bottom = line.pos.Y+line.descender-1;
 					if ( block.image )
 					{
 						rect.Left  = block.pos.X;

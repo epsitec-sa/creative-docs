@@ -22,7 +22,8 @@ namespace Epsitec.Common.Widgets
 		
 		public void StartEdition(int row, int column)
 		{
-			this.EditionIndex = row;
+			this.EditionIndex  = row;
+			this.SelectedIndex = -1;
 			
 			if (row > -1)
 			{
@@ -68,7 +69,8 @@ namespace Epsitec.Common.Widgets
 				
 				if (finished)
 				{
-					this.EditionIndex = -1;
+					this.SelectedIndex = this.edit_active;
+					this.EditionIndex  = -1;
 				}
 			}
 		}
@@ -88,6 +90,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (finished)
 				{
+					this.SelectedIndex = this.edit_active;
 					this.EditionIndex = -1;
 				}
 			}
@@ -109,19 +112,9 @@ namespace Epsitec.Common.Widgets
 					widgets[i] = this.edit_widgets[i];
 				}
 				
-				for (int i = 0; i < this.max_columns; i++)
-				{
-					if (widgets[i] == null)
-					{
-						widgets[i] = new TextFieldMulti (this.edit_line);
-						widgets[i].Index = i;
-						widgets[i].TabIndex = i;
-						widgets[i].TabNavigation = TabNavigationMode.ActivateOnTab;
-						widgets[i].Focused += new EventHandler (this.HandleEditArrayFocused);
-					}
-				}
-				
 				this.edit_widgets = widgets;
+				
+				this.AttachEditWidgets ();
 			}
 		}
 		
@@ -129,17 +122,51 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				for (int i = 0; i < this.max_columns; i++)
-				{
-					this.edit_widgets[i].Focused -= new EventHandler (this.HandleEditArrayFocused);
-					this.edit_widgets[i] = null;
-				}
+				this.DetachEditWidgets ();
 				
 				this.max_columns  = 0;
 				this.edit_widgets = null;
 			}
 			
 			base.Dispose (disposing);
+		}
+		
+		protected virtual void AttachEditWidgets()
+		{
+			for (int i = 0; i < this.edit_widgets.Length; i++)
+			{
+				if (this.edit_widgets[i] == null)
+				{
+					if (this.edition_add_rows > 0)
+					{
+						this.edit_widgets[i] = new TextFieldMulti (this.edit_line);
+					}
+					else
+					{
+						this.edit_widgets[i] = new TextField (this.edit_line);
+						this.edit_widgets[i].TextFieldStyle = TextFieldStyle.Flat;
+					}
+					
+					this.edit_widgets[i].Index         = i;
+					this.edit_widgets[i].TabIndex      = i;
+					this.edit_widgets[i].TabNavigation = TabNavigationMode.ActivateOnTab;
+					this.edit_widgets[i].Focused      += new EventHandler (this.HandleEditArrayFocused);
+				}
+			}
+		}
+		
+		protected virtual void DetachEditWidgets()
+		{
+			for (int i = 0; i < this.edit_widgets.Length; i++)
+			{
+				if (this.edit_widgets[i] != null)
+				{
+					this.edit_widgets[i].Focused -= new EventHandler (this.HandleEditArrayFocused);
+					this.edit_widgets[i].Parent   = null;
+					this.edit_widgets[i].Dispose ();
+					this.edit_widgets[i] = null;
+				}
+			}
 		}
 
 		

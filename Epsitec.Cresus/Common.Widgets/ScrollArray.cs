@@ -33,7 +33,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.frame_margins = adorner.GeometryArrayMargins;
 			this.table_margins = new Drawing.Margins ();
-			this.row_height    = this.DefaultFontHeight + 2;
+			this.row_height    = System.Math.Floor (this.DefaultFontHeight * 1.25 + 0.5);
 			
 			this.header = new Widget (this);
 			this.v_scroller = new VScroller (this);
@@ -1268,7 +1268,7 @@ invalid:	row    = -1;
 			switch (message.Type)
 			{
 				case MessageType.MouseDown:
-					if (this.HitTestTable (pos))
+					if (this.HitTestTable (pos) && message.IsLeftButton && this.is_select_enabled)
 					{
 						this.is_mouse_down = true;
 						this.ProcessMouseSelect (pos);
@@ -1277,7 +1277,7 @@ invalid:	row    = -1;
 					break;
 				
 				case MessageType.MouseMove:
-					if (this.is_mouse_down)
+					if (this.is_mouse_down && message.IsLeftButton && this.is_select_enabled)
 					{
 						this.ProcessMouseSelect (pos);
 						message.Consumer = this;
@@ -1400,7 +1400,7 @@ invalid:	row    = -1;
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			
 			this.is_dirty      = false;
-			this.row_height    = this.DefaultFontHeight + 2;
+			this.row_height    = System.Math.Floor (this.DefaultFontHeight * 1.25 + 0.5);
 			this.frame_margins = adorner.GeometryArrayMargins;
 			this.table_margins = new Drawing.Margins (0, this.v_scroller.Width - 1, this.row_height + this.title_height, this.h_scroller.Height - 1);
 			this.table_bounds  = this.Client.Bounds;
@@ -1779,7 +1779,18 @@ invalid:	row    = -1;
 			Drawing.Point pos    = new Drawing.Point (this.table_bounds.Left, this.table_bounds.Top);
 			double        limit  = this.total_width - this.offset + this.table_bounds.Left + 1;
 			double        right  = System.Math.Min (this.table_bounds.Right, limit);
-			int           n_rows = System.Math.Min (this.n_visible_rows, this.max_rows);
+			
+			//	Détermine le nombre de lignes (virtuelles) actuellement affichables. Ceci est limité
+			//	par la place disponible et par le nombre total de lignes :
+			
+			int virt_top    = this.first_virtvis_row;
+			int virt_bottom = virt_top + this.n_visible_rows;
+			int virt_end    = this.ToVirtualRow (this.max_rows);
+			
+			int n_rows = System.Math.Min (virt_bottom, virt_end) - virt_top;
+			
+			//	Peint toutes les lignes (virtuelles) en sautant celles qui correspondent à la ligne
+			//	réelle en cours d'édition :
 			
 			for (int row = 0; row < n_rows; row++)
 			{
@@ -1790,7 +1801,8 @@ invalid:	row    = -1;
 				int         num_add_lines = (this.edition_row == row_line)  ? this.edition_add_rows - delta : 0;
 				WidgetState widget_state  = state & WidgetState.Enabled;
 				
-				if (this.selected_row == row_line)
+				if ((this.selected_row == row_line) &&
+					(this.edition_row < 0))
 				{
 					widget_state |= WidgetState.Selected;
 				}
@@ -1835,7 +1847,7 @@ invalid:	row    = -1;
 							
 							if (layout != null)
 							{
-								adorner.PaintGeneralTextLayout (graphics, pos, layout, widget_state, PaintTextStyle.Array, this.BackColor);
+								adorner.PaintGeneralTextLayout (graphics, pos + new Drawing.Point (0, 0.5), layout, widget_state, PaintTextStyle.Array, this.BackColor);
 							}
 						}
 						
@@ -1843,6 +1855,8 @@ invalid:	row    = -1;
 					}
 				}
 			}
+			
+			n_rows = System.Math.Min (virt_bottom, virt_end) - virt_top;
 			
 			rect = this.table_bounds;
 			rect.Inflate (-0.5, -0.5);
@@ -1963,6 +1977,7 @@ invalid:	row    = -1;
 		protected int							first_virtvis_row;
 		protected double						offset;
 		protected int							selected_row		= -1;
+		protected bool							is_select_enabled	= true;
 		
 		protected int							edition_row			= -1;
 		protected int							edition_add_rows	= 0;
