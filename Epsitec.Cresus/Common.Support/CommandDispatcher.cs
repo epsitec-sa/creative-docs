@@ -1,16 +1,36 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier
 
+using System.Text.RegularExpressions;
+
 namespace Epsitec.Common.Support
 {
-	using Regex = System.Text.RegularExpressions.Regex;
-	
 	/// <summary>
 	/// La classe CommandDispatcher permet de gérer la distribution des
 	/// commandes de l'interface graphique vers les routines de traitement.
 	/// </summary>
 	public class CommandDispatcher
 	{
+		static CommandDispatcher()
+		{
+			//	Capture le nom et les arguments d'une commande complexe, en filtrant les
+			//	caractères et vérifiant ainsi la validité de la syntaxe. Voici l'inter-
+			//	prétation de la regex :
+			//
+			//	- un <name> est constitué de caractères alphanumériques;
+			//	- suit une parenthèse ouvrante, avec évtl. des espaces;
+			//	- suit zéro à n arguments <arg> séparés par une virgule;
+			//	- chaque <arg> est soit une chaîne "", soit une chaîne '',
+			//	  soit un mot.
+			//
+			//	La capture retourne dans l'ordre <name>, puis la liste des <arg> trouvés.
+			
+			string       regex   = @"\A(?<name>(\w+))\s*\(\s*((?<arg>((\""[^\""]{0,}\""|(\'[^\']{0,}\'|[\w.]{1,}))))\s*(\,?)\s*){0,}\)\s*\z";
+			RegexOptions options = RegexOptions.Compiled | RegexOptions.ExplicitCapture;
+			
+			CommandDispatcher.command_arg_regex = new Regex (regex, options);
+		}
+		
 		public CommandDispatcher() : this ("anonymous")
 		{
 		}
@@ -135,6 +155,51 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		
+		public static string ExtractCommandName(string command)
+		{
+			int pos = command.IndexOf ('(');
+			if (pos < 0)
+			{
+				return command;
+			}
+			
+			return command.Substring (0, pos-1).Trim ();
+		}
+		
+		public static bool IsSimpleCommand(string command)
+		{
+			int pos = command.IndexOf ('(');
+			return (pos < 0) ? true : false;
+		}
+		
+		public static string[] ExtractCommandArgs(string command)
+		{
+			int pos = command.IndexOf ('(');
+			
+			if (pos < 0)
+			{
+				return new string[0];
+			}
+			
+			Match match = CommandDispatcher.command_arg_regex.Match (command);
+			
+			if ((match.Success) &&
+				(match.Groups.Count == 3))
+			{
+				int      n    = match.Groups[2].Captures.Count;
+				string[] args = new string[n];
+				
+				for (int i = 0; i < n; i++)
+				{
+					args[i] = match.Groups[2].Captures[i].Value;
+				}
+				
+				return args;
+			}
+			
+			throw new System.FormatException (string.Format ("Command '{0}' is not well formed.", command));
+		}
 		
 		protected void RegisterMethod(object controller, System.Reflection.MethodInfo info)
 		{
@@ -339,6 +404,7 @@ namespace Epsitec.Common.Support
 		protected System.Collections.ArrayList	command_states = new System.Collections.ArrayList ();
 		protected string						dispatcher_name;
 		
+		private static Regex					command_arg_regex;
 		private static System.Type				command_attr_type  = typeof (CommandAttribute);
 		private static CommandDispatcher		default_dispatcher = new CommandDispatcher ("default");
 	}

@@ -85,6 +85,38 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals ("s1/s2/s3/", CommandDispatcherTest.buffer.ToString ());
 		}
 		
+		[Test] public void CheckExtractCommandArgs()
+		{
+			string cmd1 = "foo";
+			string cmd2 = "foo ()";
+			string cmd3 = "foo (a)";
+			string cmd4 = "foo (this.Name, \"Hello, world !\", 123)";
+			string cmd5 = "foo ( this.Name , 'Hello, world !' , 123 ) ";
+			
+			Assertion.Assert (CommandDispatcher.IsSimpleCommand (cmd1));
+			Assertion.Assert (CommandDispatcher.IsSimpleCommand (cmd2) == false);
+			
+			Assertion.AssertEquals ("foo", CommandDispatcher.ExtractCommandName (cmd1));
+			Assertion.AssertEquals ("foo", CommandDispatcher.ExtractCommandName (cmd2));
+			Assertion.AssertEquals ("foo", CommandDispatcher.ExtractCommandName (cmd3));
+			Assertion.AssertEquals ("foo", CommandDispatcher.ExtractCommandName (cmd4));
+			Assertion.AssertEquals ("foo", CommandDispatcher.ExtractCommandName (cmd5));
+			
+			Assertion.AssertEquals (0, CommandDispatcher.ExtractCommandArgs (cmd1).Length);
+			Assertion.AssertEquals (0, CommandDispatcher.ExtractCommandArgs (cmd2).Length);
+			Assertion.AssertEquals (1, CommandDispatcher.ExtractCommandArgs (cmd3).Length);
+			Assertion.AssertEquals (3, CommandDispatcher.ExtractCommandArgs (cmd4).Length);
+			Assertion.AssertEquals (3, CommandDispatcher.ExtractCommandArgs (cmd5).Length);
+
+			Assertion.AssertEquals ("a", CommandDispatcher.ExtractCommandArgs (cmd3)[0]);
+			Assertion.AssertEquals ("this.Name",          CommandDispatcher.ExtractCommandArgs (cmd4)[0]);
+			Assertion.AssertEquals ("\"Hello, world !\"", CommandDispatcher.ExtractCommandArgs (cmd4)[1]);
+			Assertion.AssertEquals ("123",                CommandDispatcher.ExtractCommandArgs (cmd4)[2]);
+			Assertion.AssertEquals ("this.Name",          CommandDispatcher.ExtractCommandArgs (cmd5)[0]);
+			Assertion.AssertEquals ("'Hello, world !'",   CommandDispatcher.ExtractCommandArgs (cmd5)[1]);
+			Assertion.AssertEquals ("123",                CommandDispatcher.ExtractCommandArgs (cmd5)[2]);
+		}
+		
 		class CommandState : CommandDispatcher.CommandState
 		{
 			public CommandState(string name, CommandDispatcher dispatcher) : base (name, dispatcher)

@@ -9,10 +9,10 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public class CommandEventArgs : System.EventArgs
 	{
-		public CommandEventArgs(object source, string name)
+		public CommandEventArgs(object source, string command)
 		{
-			this.source = source;
-			this.name   = name;
+			this.source  = source;
+			this.command = command;
 		}
 		
 		public object					Source
@@ -20,14 +20,23 @@ namespace Epsitec.Common.Support
 			get { return this.source; }
 		}
 		
-		public string					Name
+		public string					CommandName
 		{
-			get { return this.name; }
+			get { return CommandDispatcher.ExtractCommandName (this.command); }
 		}
 		
+		public string[]					CommandArgs
+		{
+			get { return CommandDispatcher.ExtractCommandArgs (this.command); }
+		}
+		
+		public string					CommandText
+		{
+			get { return this.command; }
+		}
 		
 		protected object				source;
-		protected string				name;
+		protected string				command;
 	}
 	
 	public delegate void CommandEventHandler(CommandDispatcher sender, CommandEventArgs e);

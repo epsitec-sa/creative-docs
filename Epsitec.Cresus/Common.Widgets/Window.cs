@@ -253,6 +253,7 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.window.Cursor = (value == null) ? null : value.GetPlatformCursor ();
+				this.window_cursor = value;
 			}
 		}
 		
@@ -1047,6 +1048,7 @@ namespace Epsitec.Common.Widgets
 		private Widget							focused_widget;
 		private Widget							engaged_widget;
 		private Timer							timer;
+		private MouseCursor						window_cursor;
 		
 		private Support.CommandDispatcher		cmd_dispatcher;
 		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();

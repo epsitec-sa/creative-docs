@@ -106,7 +106,7 @@ namespace Epsitec.Common.Support
 		[Command ("QuitSimpleWindow")]
 		private void HandleCommandCancel(CommandDispatcher sender, CommandEventArgs e)
 		{
-			System.Diagnostics.Debug.WriteLine ("Execute command " + e.Name + " from " + e.Source);
+			System.Diagnostics.Debug.WriteLine ("Execute command " + e.CommandName + " from " + e.Source);
 			
 			if (this.test_window != null)
 			{

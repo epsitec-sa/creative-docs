@@ -18,6 +18,9 @@ namespace Epsitec.Common.Widgets
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetWindow(System.IntPtr handle, int direction);
 		[DllImport ("User32.dll")]	internal extern static bool IsWindowVisible(System.IntPtr handle);
 		[DllImport ("User32.dll")]	internal extern static bool BringWindowToTop(System.IntPtr handle);
+		[DllImport ("User32.dll")]	internal extern static bool GetIconInfo(System.IntPtr handle, out IconInfo info);
+		[DllImport ("User32.dll")]	internal extern static System.IntPtr CreateIconIndirect(ref IconInfo info);
+		[DllImport ("User32.dll")]	internal extern static bool DestroyIcon(System.IntPtr handle);
 		
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr CreateCompatibleDC(System.IntPtr dc);
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr SelectObject(System.IntPtr dc, System.IntPtr handle_object);
@@ -28,13 +31,13 @@ namespace Epsitec.Common.Widgets
 		{
 			public int x;
 			public int y;
-		};
+		}
 		
 		[StructLayout(LayoutKind.Sequential, Pack=1)] public struct Size
 		{
 			public int cx;
 			public int cy;
-		};
+		}
 		
 		[StructLayout(LayoutKind.Sequential, Pack=1)] public struct BlendFunction
 		{
@@ -42,8 +45,17 @@ namespace Epsitec.Common.Widgets
 			public byte BlendFlags;
 			public byte SourceConstantAlpha;
 			public byte AlphaFormat;
-		};
+		}
 		
+		[StructLayout(LayoutKind.Sequential, Pack=1)] public struct IconInfo
+		{
+			public byte	FlagIcon;
+			public byte r1,r2,r3;
+			public int HotspotX;
+			public int HotspotY;
+			public System.IntPtr BitmapMask;
+			public System.IntPtr BitmapColor;
+		}
 		
 		
 		internal static int GetWindowExStyle(System.IntPtr handle)
