@@ -13,6 +13,19 @@ namespace Epsitec.Common.UI
 		{
 		}
 		
+		static Engine()
+		{
+			Epsitec.Common.Widgets.Widget.Initialise ();
+			Epsitec.Common.Support.ObjectBundler.RegisterAssembly (typeof (Engine).Assembly);
+		}
+		
+		
+		public static void Initialise()
+		{
+			//	En appelant cette méthode statique, on peut garantir que le constructeur
+			//	statique de Engine a bien été exécuté.
+		}
+		
 		
 		public static void BindWidgets(Types.IDataGraph graph, Common.Widgets.Widget root)
 		{

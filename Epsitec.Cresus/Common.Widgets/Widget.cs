@@ -2539,8 +2539,6 @@ namespace Epsitec.Common.Widgets
 				{
 					window.PostProcessMessage (message);
 				}
-				
-				this.Invalidate ();
 			}
 		}
 		

@@ -148,13 +148,34 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		static public void Initialise()
+		
+		public static void Initialise()
 		{
 			//	En appelant cette méthode statique, on peut garantir que le constructeur
 			//	statique de ObjectBundler a bien été exécuté.
 		}
 		
-		protected static void RegisterAssembly(System.Reflection.Assembly assembly)
+		
+		public static void RegisterAssembly(System.Reflection.Assembly assembly)
+		{
+			System.Reflection.AssemblyName name_self = System.Reflection.Assembly.GetExecutingAssembly ().GetName ();
+			System.Reflection.AssemblyName name_reg  = assembly.GetName ();
+			
+			byte[] public_key_self = name_self.GetPublicKey ();
+			byte[] public_key_reg  = name_reg.GetPublicKey ();
+			
+			if (ObjectBundler.EqualPublicKeys (public_key_self, public_key_reg))
+			{
+				ObjectBundler.RegisterTrustedAssembly (assembly);
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Skipping foreign assembly {0}.", assembly.FullName));
+			}
+		}
+		
+		
+		protected static void RegisterTrustedAssembly(System.Reflection.Assembly assembly)
 		{
 			System.Type[] assembly_types = assembly.GetTypes ();
 			
@@ -178,7 +199,7 @@ namespace Epsitec.Common.Support
 						try
 						{
 							IBundleSupport bundle_support = System.Activator.CreateInstance (type, true) as IBundleSupport;
-							ObjectBundler.Register (bundle_support);
+							ObjectBundler.RegisterClass (bundle_support);
 							bundle_support.Dispose ();
 						}
 						catch (System.Exception ex)
@@ -190,7 +211,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		protected static void Register(IBundleSupport bundle_support)
+		protected static void RegisterClass(IBundleSupport bundle_support)
 		{
 			System.Diagnostics.Debug.Assert (bundle_support != null);
 			System.Diagnostics.Debug.Assert (bundle_support.PublicClassName != null);
@@ -1067,6 +1088,27 @@ namespace Epsitec.Common.Support
 			{
 				this.PropertyBundled (this, e);
 			}
+		}
+		
+		
+		protected static bool EqualPublicKeys(byte[] a, byte[] b)
+		{
+			if (a.Length != b.Length)
+			{
+				return false;
+			}
+			
+			int n = a.Length;
+			
+			for  (int i = 0; i < n; i++)
+			{
+				if (a[i] != b[i])
+				{
+					return false;
+				}
+			}
+			
+			return true;
 		}
 		
 		

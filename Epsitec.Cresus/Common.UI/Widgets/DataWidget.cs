@@ -39,7 +39,8 @@ namespace Epsitec.Common.UI.Widgets
 			}
 		}
 		
-		public Data.Representation				Representation
+		
+		[Bundle] public Data.Representation		Representation
 		{
 			get
 			{
