@@ -35,7 +35,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.TextLayout != null )
 				{
-					return this.TextLayout.GetLineOrigin(0);
+					return this.MapClientToParent (this.TextLayout.GetLineOrigin (0)) - this.Location;
 				}
 				
 				return base.BaseLine;
