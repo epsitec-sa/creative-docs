@@ -71,14 +71,21 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
-			//	TODO: ...
+			buffer.Append (SerializerSupport.SerializeString (this.face_name));
+			buffer.Append ("/");
+			buffer.Append (SerializerSupport.SerializeString (this.style_name));
 		}
 
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
-			//	TODO: ...
+			string[] args = text.Substring (pos, length).Split ('/');
+			
+			Debug.Assert.IsTrue (args.Length == 2);
+			
+			this.face_name  = SerializerSupport.DeserializeString (args[0]);
+			this.style_name = SerializerSupport.DeserializeString (args[0]);
 		}
-
+		
 		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
 		{
 			Debug.Assert.IsTrue (property is Properties.FontProperty);
@@ -91,7 +98,6 @@ namespace Epsitec.Common.Text.Properties
 			
 			return c;
 		}
-
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{

@@ -119,7 +119,6 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 
-
 		public override BaseProperty GetCombination(BaseProperty property)
 		{
 			//	Produit une propriété qui est le résultat de la combinaison de
