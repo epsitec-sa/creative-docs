@@ -461,6 +461,22 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public HScroller						HScroller
+		{
+			get
+			{
+				return this.h_scroller;
+			}
+		}
+		
+		public VScroller						VScroller
+		{
+			get
+			{
+				return this.v_scroller;
+			}
+		}
+		
 		public ColumnDefinition[]				Columns
 		{
 			get
@@ -1580,6 +1596,16 @@ invalid:	row    = -1;
 		{
 			this.frame_margins = Widgets.Adorner.Factory.Active.GeometryArrayMargins;
 			this.table_margins = new Drawing.Margins (0, this.v_scroller.Width - 1, this.row_height + this.title_height, this.h_scroller.Height - 1);
+			
+			if (this.v_scroller.IsVisible == false)
+			{
+				this.table_margins.Right = 0;
+			}
+			
+			if (this.h_scroller.IsVisible == false)
+			{
+				this.table_margins.Bottom = 0;
+			}
 			
 			Drawing.Rectangle bounds = this.Client.Bounds;
 			
