@@ -12,9 +12,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 	{
 		public GradientSample()
 		{
-			this.colorBlack   = Drawing.Color.FromName("WindowFrame");
-			this.colorWhite   = Drawing.Color.FromName("Window");
-			this.colorCaption = Drawing.Color.FromName("ActiveCaption");
 		}
 		
 		public GradientSample(Widget embedder) : this()
@@ -42,13 +39,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Dessine la couleur.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
 			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 
 			if ( this.IsEnabled )
 			{
-				graphics.AddLine(rect.Left, rect.Bottom, rect.Right, rect.Top);
-				graphics.AddLine(rect.Left, rect.Top, rect.Right, rect.Bottom);
-				graphics.RenderSolid(this.colorBlack);
+				graphics.AddLine(rect.Left+0.5, rect.Bottom+0.5, rect.Right-0.5, rect.Top-0.5);
+				graphics.AddLine(rect.Left+0.5, rect.Top-0.5, rect.Right-0.5, rect.Bottom+0.5);
+				graphics.RenderSolid(adorner.ColorBorder);  // dessine la croix
 
 				if ( this.gradient != null )
 				{
@@ -65,14 +63,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			rect.Inflate(-0.5, -0.5);
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorBlack);
+			graphics.RenderSolid(adorner.ColorBorder);
 		}
 
 
-
-		protected Drawing.Color				colorBlack;
-		protected Drawing.Color				colorWhite;
-		protected Drawing.Color				colorCaption;
 		protected PropertyGradient			gradient;
 	}
 }
