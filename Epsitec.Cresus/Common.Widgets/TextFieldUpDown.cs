@@ -214,6 +214,23 @@ namespace Epsitec.Common.Widgets
 
 		
 		
+		protected override void SelectAll(bool silent)
+		{
+			if ( this.textSuffix == null || this.textSuffix == "" )
+			{
+				this.TextLayout.SelectAll(this.TextNavigator.Context);
+			}
+			else
+			{
+				this.TextNavigator.Context.CursorFrom  = 0;
+				this.TextNavigator.Context.CursorTo    = this.TextLayout.MaxTextIndex-this.textSuffix.Length;
+				this.TextNavigator.Context.CursorAfter = false;
+			}
+
+			this.OnCursorChanged(silent);
+		}
+
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )

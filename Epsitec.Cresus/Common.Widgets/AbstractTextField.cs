@@ -445,7 +445,7 @@ namespace Epsitec.Common.Widgets
 			this.SelectAll(false);
 		}
 
-		protected void SelectAll(bool silent)
+		protected virtual void SelectAll(bool silent)
 		{
 			this.TextLayout.SelectAll(this.navigator.Context);
 			this.OnCursorChanged(silent);

@@ -552,6 +552,14 @@ namespace Epsitec.Common.Types
 			{
 				char c = value[i++];
 				
+				if (i == 1)
+				{
+					if (c == '-')
+					{
+						continue;
+					}
+				}
+				
 				if (System.Char.IsDigit (c))
 				{
 					continue;

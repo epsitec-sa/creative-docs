@@ -173,6 +173,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "CustomInstaller.resx"
+                    DependentUpon = "CustomInstaller.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "GlobalNames.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

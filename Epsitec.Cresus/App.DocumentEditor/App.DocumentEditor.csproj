@@ -124,6 +124,26 @@
                     AssemblyName = "System.Runtime.Serialization.Formatters.Soap"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Serialization.Formatters.Soap.dll"
                 />
+                <Reference
+                    Name = "System.Configuration.Install"
+                    AssemblyName = "System.Configuration.Install"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Configuration.Install.dll"
+                />
+                <Reference
+                    Name = "System.Windows.Forms"
+                    AssemblyName = "System.Windows.Forms"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
+                />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -857,6 +877,31 @@
                 />
                 <File
                     RelPath = "Images\ZoomSub.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Installer\CustomInstaller.cs"
+                    SubType = "Component"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Installer\CustomInstaller.resx"
+                    DependentUpon = "CustomInstaller.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Installer\SerialAlgorithm.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Installer\SerialInput.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Installer\SerialInput.resx"
+                    DependentUpon = "SerialInput.cs"
                     BuildAction = "EmbeddedResource"
                 />
             </Include>
