@@ -84,6 +84,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public override Drawing.Size GetBestFitSize()
+		{
+			Drawing.Size size = this.TextLayout.SingleLineSize;
+			
+			size.Width  = System.Math.Ceiling (size.Width);
+			size.Height = System.Math.Ceiling (size.Height);
+			
+			return size;
+		}
+		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;

@@ -1,5 +1,10 @@
+//	Désolé -- j'ai fait ces modifications dans l'urgence, avec mon propre
+//	style. C'est possible que je prenne une fois le contrôle de ce source... / PA
+
 namespace Epsitec.Common.Widgets
 {
+	using BundleAttribute  = Support.BundleAttribute;
+	
 	/// <summary>
 	/// La classe TextFieldCombo implémente la ligne éditable avec bouton "v".
 	/// </summary>
@@ -18,16 +23,19 @@ namespace Epsitec.Common.Widgets
 			this.button.ButtonStyle = ButtonStyle.Combo;
 			this.button.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			
+			this.default_button_width = this.button.Width;
 			this.margins.Right = this.button.Width;
+			
+			this.ButtonShowCondition = ShowCondition.Always;
 		}
 		
-		public TextFieldCombo(Widget embedder) : this()
+		public TextFieldCombo(Widget embedder) : this ()
 		{
 			this.SetEmbedder(embedder);
 		}
 		
 		
-		public GlyphShape							ButtonGlyphShape
+		public GlyphShape						ButtonGlyphShape
 		{
 			get
 			{
@@ -39,11 +47,35 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Button								Button
+		public Button							Button
 		{
 			get
 			{
 				return this.button;
+			}
+		}
+		
+		[Bundle] public ShowCondition			ButtonShowCondition
+		{
+			get
+			{
+				return this.button_show_condition;
+			}
+			set
+			{
+				if (this.button_show_condition != value)
+				{
+					this.button_show_condition = value;
+					this.UpdateButtonVisibility ();
+				}
+			}
+		}
+		
+		public bool								IsComboOpen
+		{
+			get
+			{
+				return this.scrollList != null;
 			}
 		}
 		
@@ -111,11 +143,65 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.button != null )
 			{
+				this.margins.Right = this.button.IsVisibleFlagSet ? this.default_button_width : 0;
 				this.button.Bounds = this.GetButtonBounds();
 			}
 		}
 		
-		protected virtual void OnSelectedIndexChanged()
+		protected virtual  void UpdateButtonVisibility()
+		{
+			this.SetButtonVisibility (this.ComputeButtonVisibility ());
+		}
+		
+		protected virtual  bool ComputeButtonVisibility()
+		{
+			bool show = false;
+			
+			switch (this.ButtonShowCondition)
+			{
+				case ShowCondition.Always:
+					show = true;
+					break;
+				
+				case ShowCondition.Never:
+					break;
+				
+				case ShowCondition.WhenFocused:
+					show = this.IsFocused || this.IsComboOpen;
+					break;
+				
+				case ShowCondition.WhenFocusedFlagSet:
+					show = this.IsFocusedFlagSet || this.IsComboOpen;
+					break;
+				
+				case ShowCondition.WhenModified:
+					show = this.has_edited_text;
+					break;
+				
+				default:
+					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));
+			}
+			
+			return show;
+		}
+		
+		protected virtual  void SetButtonVisibility(bool show)
+		{
+			if (this.button != null)
+			{
+				if (this.button.IsVisibleFlagSet != show)
+				{
+					this.button.SetVisible (show);
+					
+					this.UpdateButtonGeometry ();
+					this.UpdateTextLayout ();
+					this.UpdateMouseCursor (this.MapRootToClient (Message.State.LastPosition));
+				}
+			}
+		}
+		
+		
+		protected virtual  void OnSelectedIndexChanged()
 		{
 			if ( this.scrollList == null )
 			{
@@ -125,6 +211,40 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+
+		protected override void OnTextDefined()
+		{
+			base.OnTextDefined ();
+			
+			this.has_edited_text = false;
+		}
+		
+		protected override void OnTextChanged()
+		{
+			base.OnTextChanged ();
+			
+			this.UpdateButtonVisibility ();
+		}
+
+		protected override void OnFocusChanged()
+		{
+			base.OnFocusChanged ();
+			this.UpdateButtonVisibility ();
+		}
+		
+		protected override void OnTextEdited()
+		{
+			base.OnTextEdited ();
+			
+			if (this.has_edited_text == false)
+			{
+				this.has_edited_text = true;
+				
+				this.UpdateButtonVisibility ();
+			}
+		}
+
+
 
 		
 		protected virtual bool OpenComboAfterKeyDown(Message message)
@@ -253,7 +373,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OpenCombo()
 		{
-			if ( this.scrollList != null )  return;
+			if ( this.IsComboOpen )  return;
 			
 			Support.CancelEventArgs cancel_event = new Support.CancelEventArgs ();
 			this.OnOpeningCombo (cancel_event);
@@ -304,6 +424,7 @@ namespace Epsitec.Common.Widgets
 			this.scrollList.SetFocused(true);
 			
 			this.openText = this.Text;
+			this.OnOpenedCombo ();
 		}
 		
 		protected virtual void CloseCombo(bool accept)
@@ -334,6 +455,8 @@ namespace Epsitec.Common.Widgets
 				this.Text = this.openText;
 			}
 			
+			this.OnClosedCombo ();
+			
 			if ( this.openText != this.Text )
 			{
 				this.OnSelectedIndexChanged();
@@ -343,9 +466,31 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnOpeningCombo(Support.CancelEventArgs e)
 		{
-			if ( this.OpeningCombo != null )
+			if (this.OpeningCombo != null)
 			{
-				this.OpeningCombo(this, e);
+				this.OpeningCombo (this, e);
+			}
+		}
+		
+		protected virtual void OnOpenedCombo()
+		{
+			System.Diagnostics.Debug.Assert (this.IsComboOpen == true);
+			this.UpdateButtonVisibility ();
+			
+			if (this.OpenedCombo != null)
+			{
+				this.OpenedCombo (this);
+			}
+		}
+		
+		protected virtual void OnClosedCombo()
+		{
+			System.Diagnostics.Debug.Assert (this.IsComboOpen == false);
+			this.UpdateButtonVisibility ();
+			
+			if (this.ClosedCombo != null)
+			{
+				this.ClosedCombo (this);
 			}
 		}
 		
@@ -354,7 +499,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Window window = sender as Window;
 			
-			System.Diagnostics.Debug.Assert(this.scrollList != null);
+			System.Diagnostics.Debug.Assert(this.IsComboOpen);
 			System.Diagnostics.Debug.Assert(window != null);
 			
 			if ( this.scrollList == null )  return;
@@ -560,14 +705,19 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			SelectedIndexChanged;
 		#endregion
 		
-		public event Support.CancelEventHandler		OpeningCombo;
+		public event Support.CancelEventHandler	OpeningCombo;
+		public event Support.EventHandler		OpenedCombo;
+		public event Support.EventHandler		ClosedCombo;
 		
-		private Widget								initiallyFocusedWidget;
+		private Widget							initiallyFocusedWidget;
 		
-		protected GlyphButton						button;
-		protected Helpers.StringCollection			items;
-		protected Window							comboWindow;
-		protected ScrollList						scrollList;
-		protected string							openText;
+		protected GlyphButton					button;
+		protected Helpers.StringCollection		items;
+		protected Window						comboWindow;
+		protected ScrollList					scrollList;
+		protected string						openText;
+		protected ShowCondition					button_show_condition;
+		protected bool							has_edited_text;
+		protected double						default_button_width;
 	}
 }

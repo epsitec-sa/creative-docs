@@ -94,6 +94,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		
 		public void StartPassiveEdition(string text)
 		{
 			this.SelectedItem = text;
@@ -340,17 +341,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual  void UpdateButtonVisibility()
+		protected override  void UpdateButtonVisibility()
 		{
-			if (this.mode == TextFieldExListMode.EditActive)
+			if ((this.button != null) &&
+				(this.accept_reject_behavior != null))
 			{
-				this.button.SetVisible (false);
-				this.accept_reject_behavior.SetVisible (true);
-			}
-			else
-			{
-				this.button.SetVisible (true);
-				this.accept_reject_behavior.SetVisible (false);
+				if (this.mode == TextFieldExListMode.EditActive)
+				{
+					this.button.SetVisible (false);
+					this.accept_reject_behavior.SetVisible (this.ComputeButtonVisibility ());
+				}
+				else
+				{
+					this.button.SetVisible (this.ComputeButtonVisibility ());
+					this.accept_reject_behavior.SetVisible (false);
+				}
 			}
 		}
 		

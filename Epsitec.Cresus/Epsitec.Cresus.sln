@@ -131,12 +131,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Script.Tests", "Comm
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Script.Developer", "Common.Script.Developer\Common.Script.Developer.csproj", "{D6D65D1A-47C1-44F8-992F-F55816D95F05}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
 	EndGlobalSection
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 34
+		SccNumberOfProjects = 35
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -272,6 +276,10 @@ Global
 		SccLocalPath33 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection33 = Common.Script.Tests\\
+		SccProjectUniqueName34 = Common.Script.Developer\\Common.Script.Developer.csproj
+		SccLocalPath34 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection34 = Common.Script.Developer\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -408,6 +416,10 @@ Global
 		{F723801F-398D-4E6F-8467-D0ACC845CD2E}.Debug.Build.0 = Debug|.NET
 		{F723801F-398D-4E6F-8467-D0ACC845CD2E}.Release.ActiveCfg = Release|.NET
 		{F723801F-398D-4E6F-8467-D0ACC845CD2E}.Release.Build.0 = Release|.NET
+		{D6D65D1A-47C1-44F8-992F-F55816D95F05}.Debug.ActiveCfg = Debug|.NET
+		{D6D65D1A-47C1-44F8-992F-F55816D95F05}.Debug.Build.0 = Debug|.NET
+		{D6D65D1A-47C1-44F8-992F-F55816D95F05}.Release.ActiveCfg = Release|.NET
+		{D6D65D1A-47C1-44F8-992F-F55816D95F05}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info
