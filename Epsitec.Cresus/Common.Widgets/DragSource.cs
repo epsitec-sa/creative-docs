@@ -33,13 +33,42 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Drawing.Rectangle			DragScreenBounds
+		public Drawing.Rectangle			DropScreenBounds
 		{
 			get
 			{
-				Drawing.Point pos  = this.drag_window.WindowLocation;
+				if (this.drag_window != null)
+				{
+					Drawing.Point pos  = this.drag_window.WindowLocation;
+					pos.X += this.widget_margins.Left;
+					pos.Y += this.widget_margins.Bottom;
+					return new Drawing.Rectangle (pos, this.widget.Size);
+				}
 				
-				return new Drawing.Rectangle (pos.X + this.widget_margins.Left, pos.Y + this.widget_margins.Bottom, this.widget.Width, this.widget.Height);
+				return Drawing.Rectangle.Empty;
+			}
+		}
+		
+		public Drawing.Rectangle			DropTargetBounds
+		{
+			get
+			{
+				Drawing.Rectangle bounds = this.DropScreenBounds;
+				
+				if (bounds.IsValid)
+				{
+					return this.DropTarget.MapScreenToClient (bounds);
+				}
+				
+				return bounds;
+			}
+		}
+		
+		public Widget						DropTarget
+		{
+			get
+			{
+				return this.drop_adorner.Widget;
 			}
 		}
 		
@@ -165,22 +194,47 @@ namespace Epsitec.Common.Widgets
 			Widget widget = this.FindTargetWidget (target, this.drag_cursor);
 			string title  = widget == null ? "-" : widget.ToString ();
 			
+			this.drop_adorner.Widget = widget;
+			this.drop_adorner.Path.Clear ();
+			
 			if (widget != null)
 			{
-				Design.SmartGuide.Constraint cx = new Design.SmartGuide.Constraint ();
-				Design.SmartGuide.Constraint cy = new Design.SmartGuide.Constraint ();
+				Design.Constraint cx = new Design.Constraint (5);
+				Design.Constraint cy = new Design.Constraint (5);
 				
-				Design.SmartGuide guide  = new Design.SmartGuide (this.widget, Drawing.GripId.Body, widget);
-				Drawing.Rectangle bounds = this.drag_window.WindowBounds;
-				
-				bounds = widget.MapScreenToClient (bounds);
+				Design.SmartGuide guide  = new Design.SmartGuide (this.Widget, Drawing.GripId.Body, this.DropTarget);
+				Drawing.Rectangle bounds = this.DropTargetBounds;
 				
 				guide.Constrain (bounds, cx, cy);
 				
-				this.drop_adorner.Widget = widget;
+				if (cx.Segments.Length > 0)
+				{
+					for (int i = 0; i < cx.Segments.Length; i++)
+					{
+						this.drop_adorner.Path.MoveTo (cx.Segments[i].P1);
+						this.drop_adorner.Path.LineTo (cx.Segments[i].P2);
+					}
+				}
 				
-//				System.Diagnostics.Debug.WriteLine ("Hot: " + this.drag_cursor.ToString () + " Wdo: " + this.drag_window.WindowBounds.ToString () + " => " + title);
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0} {1} : {2} {3}", cx.P1, cx.P2, cy.P1, cy.P2));
+				if (cy.Segments.Length > 0)
+				{
+					for (int i = 0; i < cy.Segments.Length; i++)
+					{
+						this.drop_adorner.Path.MoveTo (cy.Segments[i].P1);
+						this.drop_adorner.Path.LineTo (cy.Segments[i].P2);
+					}
+				}
+				
+				if (! cx.Equals (this.drop_cx))
+				{
+					this.drop_cx = cx.Clone ();
+					this.DropTarget.Invalidate ();
+				}
+				if (! cy.Equals (this.drop_cy))
+				{
+					this.drop_cy = cy.Clone ();
+					this.DropTarget.Invalidate ();
+				}
 			}
 			
 			if (this.Dragging != null)
@@ -220,5 +274,7 @@ namespace Epsitec.Common.Widgets
 		protected DragWindow				drag_window;
 		protected Helpers.DragBehavior		drag_behavior;
 		protected Design.HiliteAdorner		drop_adorner;
+		protected Design.Constraint			drop_cx;
+		protected Design.Constraint			drop_cy;
 	}
 }

@@ -144,59 +144,6 @@ namespace Epsitec.Common.Widgets.Design
 		}
 		
 		
-		public class Constraint
-		{
-			public Constraint()
-			{
-				this.distance = Constraint.Infinite;
-				this.p1 = Drawing.Point.Empty;
-				this.p2 = Drawing.Point.Empty;
-			}
-			
-			public void Add (double coord, double model_coord, double x1, double y1, double x2, double y2)
-			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0} {1} {2} {3} {4} {5}", coord, model_coord, x1, y1, x2, y2));
-				double delta = coord - model_coord;
-				
-				if (System.Math.Abs (delta) < System.Math.Abs (this.distance))
-				{
-					this.distance = delta;
-					this.p1 = new Drawing.Point (x1, y1);
-					this.p2 = new Drawing.Point (x2, y2);
-				}
-			}
-			
-			public double				Distance
-			{
-				get { return this.distance; }
-				set { this.distance = value; }
-			}
-			
-			public Drawing.Rectangle	Bounds
-			{
-				get { return this.bounds; }
-				set { this.bounds = value; }
-			}
-			
-			public Drawing.Point		P1
-			{
-				get { return this.p1; }
-			}
-			
-			public Drawing.Point		P2
-			{
-				get { return this.p2; }
-			}
-			
-			
-			public const double			Infinite = 1000000;
-			
-			protected double			distance;
-			protected Drawing.Rectangle	bounds;
-			protected Drawing.Point		p1, p2;
-		}
-		
-		
 		protected Drawing.GripId		grip_id;
 		protected Widget				widget;
 		protected Widget				target;
