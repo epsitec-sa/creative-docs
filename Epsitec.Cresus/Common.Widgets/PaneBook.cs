@@ -172,7 +172,7 @@ namespace Epsitec.Common.Widgets
 			for ( int i=0 ; i<count ; i++ )
 			{
 				PanePage page = this.items[i];
-				double abs = page.GetAbsoluteOrder();
+				double abs = page.AbsoluteOrder;
 				if ( System.Double.IsNaN(abs) )  continue;
 
 				double delta = page.PaneRelativeSize;
@@ -393,7 +393,7 @@ namespace Epsitec.Common.Widgets
 			{
 				PanePage page = this.items[i];
 				double size = this.RetSize(i);
-				page.SetAbsoluteSize(size);
+				page.AbsoluteSize = size;
 			}
 		}
 
