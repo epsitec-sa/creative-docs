@@ -1037,8 +1037,15 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (msg.Msg == Win32Const.WM_APP_EXEC_CMD)
 			{
-				System.Diagnostics.Debug.Assert (this.wnd_proc_depth == 0);
-				this.widget_window.DispatchQueuedCommands ();
+				if (this.wnd_proc_depth == 0)
+				{
+					this.widget_window.DispatchQueuedCommands ();
+				}
+				else
+				{
+					this.is_dispatch_pending = true;
+				}
+				
 				return;
 			}
 			
@@ -1116,6 +1123,13 @@ namespace Epsitec.Common.Widgets.Platform
 				System.Diagnostics.Debug.Assert (this.IsDisposed == false);
 				System.Diagnostics.Debug.Assert (this.wnd_proc_depth > 0);
 				this.wnd_proc_depth--;
+				
+				if ((this.wnd_proc_depth == 0) &&
+					(this.is_dispatch_pending))
+				{
+					this.is_dispatch_pending = false;
+					this.widget_window.DispatchQueuedCommands ();
+				}
 			}
 		}
 		
@@ -1537,6 +1551,7 @@ namespace Epsitec.Common.Widgets.Platform
 		private WindowType						window_type;
 		
 		private int								wnd_proc_depth;
+		private bool							is_dispatch_pending;
 		
 		private static bool						is_app_active;
 	}
