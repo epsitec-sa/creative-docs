@@ -109,10 +109,6 @@ namespace Epsitec.Cresus.DataLayer
 		
 		private class IdComparerClass : System.Collections.IComparer
 		{
-			public IdComparerClass()
-			{
-			}
-			
 			#region IComparer Members
 			public int Compare(object x, object y)
 			{
@@ -140,10 +136,6 @@ namespace Epsitec.Cresus.DataLayer
 		
 		private class NameComparerClass : System.Collections.IComparer
 		{
-			public NameComparerClass()
-			{
-			}
-			
 			#region IComparer Members
 			public int Compare(object x, object y)
 			{
