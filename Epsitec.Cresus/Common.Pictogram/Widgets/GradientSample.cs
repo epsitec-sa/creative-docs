@@ -61,7 +61,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				}
 			}
 
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(adorner.ColorBorder);
 		}
