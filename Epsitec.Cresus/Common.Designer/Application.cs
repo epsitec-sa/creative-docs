@@ -46,10 +46,22 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
+		public BundleEditController		BundleEditController
+		{
+			get
+			{
+				System.Diagnostics.Debug.Assert (this.is_initialised);
+				
+				return this.bundle_edit_controller;
+			}
+		}
+		
 		public StringEditController		StringEditController
 		{
 			get
 			{
+				System.Diagnostics.Debug.Assert (this.is_initialised);
+				
 				if (this.string_edit_controller == null)
 				{
 					this.string_edit_controller = new StringEditController (this.CommandDispatcher);
@@ -77,6 +89,8 @@ namespace Epsitec.Common.Designer
 			
 			this.is_initialised  = true;
 			this.is_initialising = false;
+			
+			this.bundle_edit_controller = new BundleEditController (this);
 		}
 		
 		
@@ -106,5 +120,6 @@ namespace Epsitec.Common.Designer
 		protected Window						main_window;
 		protected Support.CommandDispatcher		dispatcher;
 		protected StringEditController			string_edit_controller;
+		protected BundleEditController			bundle_edit_controller;
 	}
 }
