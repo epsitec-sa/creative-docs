@@ -24,15 +24,17 @@ namespace Epsitec.Common.Script.Developer.Panels
 		{
 			get
 			{
+				if (this.IsModified)
+				{
+					this.UpdateFromUI ();
+				}
+				
 				return this.method;
 			}
 			set
 			{
-				if (this.method != value)
-				{
-					this.method = value;
-					this.UpdateFromMethod ();
-				}
+				this.method = value;
+				this.UpdateFromMethod ();
 			}
 		}
 		
@@ -49,6 +51,14 @@ namespace Epsitec.Common.Script.Developer.Panels
 			get
 			{
 				return this.panel_param;
+			}
+		}
+		
+		public TextFieldMulti					SourceWidget
+		{
+			get
+			{
+				return this.text_source;
 			}
 		}
 		
@@ -86,6 +96,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 			this.UpdateFromMethod ();
 		}
 		
+		
 		protected virtual void UpdateFromMethod()
 		{
 			if ((this.method == null) ||
@@ -103,6 +114,17 @@ namespace Epsitec.Common.Script.Developer.Panels
 			this.text_source.SelectAll ();
 		}
 		
+		protected virtual void UpdateFromUI()
+		{
+			string           method_name = this.MethodProtoPanel.MethodName;
+			Types.INamedType return_type = this.MethodProtoPanel.MethodType;
+			Source.ParameterInfo[] infos = this.ParameterInfoPanel.Parameters;
+			Source.CodeSection[]   codes = new Source.CodeSection[1];
+			
+			codes[0] = new Source.CodeSection (Source.CodeType.Local, this.text_source.Text);
+			
+			this.method = new Source.Method (method_name, return_type, infos, codes);
+		}
 		
 		protected override void OnIsModifiedChanged()
 		{

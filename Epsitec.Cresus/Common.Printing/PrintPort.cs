@@ -250,7 +250,7 @@ namespace Epsitec.Common.Printing
 		{
 			Drawing.Transform transform = new Drawing.Transform (this.transform);
 			
-			transform.MultiplyByPostfix (Drawing.Transform.FromScale (sx, sy, cx, cy));
+			transform.MultiplyBy (Drawing.Transform.FromScale (sx, sy, cx, cy));
 			
 			this.Transform = transform;
 		}
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Printing
 		{
 			Drawing.Transform transform = new Drawing.Transform (this.transform);
 			
-			transform.MultiplyByPostfix (Drawing.Transform.FromRotationDeg (angle, cx, cy));
+			transform.MultiplyBy (Drawing.Transform.FromRotationDeg (angle, cx, cy));
 			
 			this.Transform = transform;
 		}
@@ -268,7 +268,7 @@ namespace Epsitec.Common.Printing
 		{
 			Drawing.Transform transform = new Drawing.Transform (this.transform);
 			
-			transform.MultiplyByPostfix (Drawing.Transform.FromRotationRad (angle, cx, cy));
+			transform.MultiplyBy (Drawing.Transform.FromRotationRad (angle, cx, cy));
 			
 			this.Transform = transform;
 		}
@@ -277,7 +277,7 @@ namespace Epsitec.Common.Printing
 		{
 			Drawing.Transform transform = new Drawing.Transform (this.transform);
 			
-			transform.MultiplyByPostfix (Drawing.Transform.FromTranslation (ox, oy));
+			transform.MultiplyBy (Drawing.Transform.FromTranslation (ox, oy));
 			
 			this.Transform = transform;
 		}
@@ -286,7 +286,7 @@ namespace Epsitec.Common.Printing
 		{
 			Drawing.Transform current_transform = new Drawing.Transform (this.transform);
 			
-			transform.MultiplyByPostfix (current_transform);
+			transform.MultiplyBy (current_transform);
 			
 			this.Transform = transform;
 		}
