@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets.Validators
 	{
 		public SelectionValidator(Widget widget) : base (widget)
 		{
-			if (widget is Support.INamedStringSelection)
+			if (widget is Support.Data.INamedStringSelection)
 			{
 				//	OK.
 			}
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		public override void Validate()
 		{
-			Support.INamedStringSelection sel = this.widget as Support.INamedStringSelection;
+			Support.Data.INamedStringSelection sel = this.widget as Support.Data.INamedStringSelection;
 			
 			if ((sel.SelectedIndex >= 0) &&
 				(this.IsSelectionValid (sel)))
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Widgets.Validators
 		}
 		
 		
-		protected virtual bool IsSelectionValid(Support.INamedStringSelection selection)
+		protected virtual bool IsSelectionValid(Support.Data.INamedStringSelection selection)
 		{
 			return true;
 		}
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Widgets.Validators
 		{
 			base.AttachWidget (widget);
 			
-			Support.INamedStringSelection sel = this.widget as Support.INamedStringSelection;
+			Support.Data.INamedStringSelection sel = this.widget as Support.Data.INamedStringSelection;
 			
 			sel.SelectedIndexChanged += new Epsitec.Common.Support.EventHandler (this.HandleSelectionSelectedIndexChanged);
 		}
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Widgets.Validators
 		{
 			base.DetachWidget (widget);
 			
-			Support.INamedStringSelection sel = this.widget as Support.INamedStringSelection;
+			Support.Data.INamedStringSelection sel = this.widget as Support.Data.INamedStringSelection;
 			
 			sel.SelectedIndexChanged -= new Epsitec.Common.Support.EventHandler (this.HandleSelectionSelectedIndexChanged);
 		}
