@@ -89,7 +89,8 @@ namespace Epsitec.Common.Widgets
 
 				rect.Inflate(-0.5, -0.5);
 				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.colorBlack);
+				//?graphics.RenderSolid(this.colorBlack);
+				graphics.RenderSolid(adorner.ColorBorder);
 			}
 			else
 			{

@@ -7,6 +7,7 @@ namespace Epsitec.Common.Widgets
 		Scroller,						// bouton pour Scroller
 		Combo,							// bouton pour TextFieldCombo
 		UpDown,							// bouton pour TextFieldUpDown
+		Icon,							// bouton pour une icône
 		ToolItem,						// bouton pour barre d'icône
 		ListItem,						// bouton pour liste
 		DefaultActive,					// bouton pour l'action par défaut (OK)

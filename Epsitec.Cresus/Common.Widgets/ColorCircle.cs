@@ -386,7 +386,8 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			Drawing.Rectangle rect = this.rectCircle;
-			Drawing.Color color = this.IsEnabled ? this.colorBlack : adorner.ColorBorder;
+			//?Drawing.Color color = this.IsEnabled ? this.colorBlack : adorner.ColorBorder;
+			Drawing.Color color = adorner.ColorBorder;
 			this.PaintGradientCircle(graphics, rect, color);
 
 			rect = this.rectSquare;
