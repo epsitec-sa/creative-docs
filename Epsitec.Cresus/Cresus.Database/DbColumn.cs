@@ -162,6 +162,13 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		internal bool					IsPrimaryKey
+		{
+			get { return this.is_primary_key; }
+			set { this.is_primary_key = value; }
+		}
+		
+		
 		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer)
 		{
 			buffer.Append (@"<col");
@@ -179,6 +186,11 @@ namespace Epsitec.Cresus.Database
 			if (this.IsIndexed)
 			{
 				buffer.Append (@" index=""1""");
+			}
+			
+			if (this.is_primary_key)
+			{
+				buffer.Append (@" pk=""1""");
 			}
 			
 			string arg_cat = DbTools.ElementCategoryToString (this.category);
@@ -219,10 +231,12 @@ namespace Epsitec.Cresus.Database
 			string arg_unique = xml.GetAttribute ("unique");
 			string arg_index  = xml.GetAttribute ("index");
 			string arg_cat    = xml.GetAttribute ("cat");
+			string arg_pk     = xml.GetAttribute ("pk");
 			
-			this.is_null_allowed = (arg_null == "1");
+			this.is_null_allowed = (arg_null   == "1");
 			this.is_unique       = (arg_unique == "1");
-			this.is_indexed      = (arg_index == "1");
+			this.is_indexed      = (arg_index  == "1");
+			this.is_primary_key  = (arg_pk     == "1");
 			this.category        = DbTools.ParseElementCategory (arg_cat);
 			
 			int column_class_code;
@@ -528,6 +542,7 @@ namespace Epsitec.Cresus.Database
 		protected bool					is_null_allowed		= false;
 		protected bool					is_unique			= false;
 		protected bool					is_indexed			= false;
+		protected bool					is_primary_key		= false;
 		protected DbElementCat			category;
 		protected DbKey					internal_column_key;
 		

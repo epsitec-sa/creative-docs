@@ -200,6 +200,40 @@ namespace Epsitec.Cresus.Database
 			return false;
 		}
 		
+		public static string CreateSqlTableName(string name, DbElementCat category, DbKey key)
+		{
+			//	Crée un nom de table SQL à partir du nom "haut niveau" ainsi que de la catégorie
+			//	de la table (les tables de l'utilisateur sont préfixées par "U_" et se terminent
+			//	par l'ID de la table, pour permettre d'avoir plusieurs tables avec le même nom
+			//	dans la durée de vie de la base).
+			
+			System.Text.StringBuilder buffer;
+			
+			switch (category)
+			{
+				case DbElementCat.Internal:
+					if ((DbSqlStandard.ValidateName (name)) &&
+						(name.StartsWith ("CR_")))
+					{
+						return name;
+					}
+					throw new DbException (DbAccess.Empty, string.Format ("'{0}' is an invalid internal table name.", name));
+				
+				case DbElementCat.UserDataManaged:
+					buffer = new System.Text.StringBuilder ();
+					buffer.Append ("U_");
+					break;
+				
+				default:
+					throw new System.NotImplementedException (string.Format ("Support for {0} is not implemented.", category));
+			}
+			
+			DbSqlStandard.CreateSimpleSqlName (name, buffer);
+			
+			buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "_{0}", key.Id);
+			
+			return buffer.ToString ();
+		}
 		
 		public static string CreateSimpleSqlName(string name)
 		{
@@ -211,7 +245,12 @@ namespace Epsitec.Cresus.Database
 			//	sont simplement supprimés.
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
+			DbSqlStandard.CreateSimpleSqlName (name, buffer);
+			return buffer.ToString ();
+		}
+		
+		protected static void CreateSimpleSqlName(string name, System.Text.StringBuilder buffer)
+		{
 			for (int i = 0; i < name.Length; i++)
 			{
 				char c = name[i];
@@ -244,8 +283,6 @@ namespace Epsitec.Cresus.Database
 					buffer.Append ('_');
 				}
 			}
-			
-			return buffer.ToString ();
 		}
 		
 		

@@ -109,6 +109,128 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public DbTable CreateDbTable(string name, DbElementCat category)
+		{
+			//	Crée la description d'une table qui ne contient que le strict minimum nécessaire au fonctionnement
+			//	de Crésus (tuple pour la clef primaire, statut). Il faudra compléter les colonnes en fonction des
+			//	besoins, puis appeler la méthode RegisterNewDbTable.
+			
+			switch (category)
+			{
+				case DbElementCat.Internal:
+					throw new DbException (this.db_access, string.Format ("User may not create internal table. Table '{0}'.", name));
+				
+				case DbElementCat.UserDataManaged:
+					return this.CreateUserTable(name);
+				
+				default:
+					throw new DbException (this.db_access, string.Format ("Unsupported category {0} specified. Table '{1}'.", category, name));
+			}
+		}
+		
+		internal DbTable CreateUserTable(string name)
+		{
+			DbTable table = new DbTable (name);
+			
+			DbType type = this.internal_types["CR.KeyId"];
+			
+			DbColumn col_id   = new DbColumn (DbColumn.TagId,       this.internal_types["CR.KeyId"]);
+			DbColumn col_rev  = new DbColumn (DbColumn.TagRevision, this.internal_types["CR.KeyRevision"]);
+			DbColumn col_stat = new DbColumn (DbColumn.TagStatus,   this.internal_types["CR.KeyStatus"]);
+			
+			col_id.DefineCategory (DbElementCat.Internal);
+			col_rev.DefineCategory (DbElementCat.Internal);
+			col_stat.DefineCategory (DbElementCat.Internal);
+			
+			table.DefineCategory (DbElementCat.UserDataManaged);
+			
+			table.Columns.Add (col_id);
+			table.Columns.Add (col_rev);
+			table.Columns.Add (col_stat);
+			
+			table.PrimaryKeys.Add (col_id);
+			table.PrimaryKeys.Add (col_rev);
+
+			return table;
+		}
+		
+		
+		public void RegisterNewDbTable(DbTable table)
+		{
+			//	Enregistre une nouvelle table dans la base de données. Ceci va attribuer à
+			//	la table une clef DbKey et vérifier qu'il n'y a pas de collision avec une
+			//	éventuelle table déjà existante. Cela va aussi attribuer des colonnes pour
+			//	la nouvelle table.
+			
+			//	Tous les types utilisés dans la définition des colonnes doivent être
+			//	connus (donc avoir une clef valide). On vérifie cela maintenant, avant
+			//	d'avoir touché à la base.
+				
+			for (int i = 0; i < table.Columns.Count; i++)
+			{
+				DbType type = table.Columns[i].Type;
+				
+				System.Diagnostics.Debug.Assert (type != null);
+				
+				if (type.InternalKey == null)
+				{
+					string message = string.Format ("Unregistered type '{0}' used in table '{1}', column '{2}'.",
+						type.Name, table.Name, table.Columns[i].Name);
+					
+					throw new DbException (this.db_access, message);
+				}
+			}
+			
+			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
+			{
+				//	Cherche si une table avec ce nom existe dans la base. Si c'est le cas,
+				//	génère une exception.
+				
+				if (this.CountMatchingRows (transaction, DbTable.TagTableDef, DbColumn.TagName, table.Name) > 0)
+				{
+					string message = string.Format ("Table {0} already exists in database.", table.Name);
+					
+					throw new DbException (this.db_access, message);
+				}
+				
+				long table_id  = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagTableDef].InternalKey, 1);
+				long column_id = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagColumnDef].InternalKey, table.Columns.Count);
+				
+				//	Crée la ligne de description de la table :
+				
+				table.DefineInternalKey (new DbKey (table_id));
+				table.UpdatePrimaryKeyInfo ();
+				
+				this.BootInsertTableDefRow (transaction, table);
+				
+				//	Crée les lignes de description des colonnes :
+				
+				for (int i = 0; i < table.Columns.Count; i++)
+				{
+					table.Columns[i].DefineInternalKey (new DbKey (column_id + i));
+					this.BootInsertColumnDefRow (transaction, table, table.Columns[i]);
+				}
+				
+				//	Finalement, il faut créer la table elle-même :
+				
+				SqlTable sql_table = table.CreateSqlTable (this.type_converter);
+				
+				this.sql_builder.InsertTable (sql_table);
+				this.ExecuteSilent (transaction);
+				
+				transaction.Commit ();
+			}
+		}
+		
+		public void UnregisterDbTable(DbTable table)
+		{
+			//	Supprime la description de la table de la base. Pour des raisons de sécurité,
+			//	la table n'est pas réellement supprimée.
+		}
+		
+		
+		
+		
 		
 		public void					ExecuteSilent(System.Data.IDbTransaction transaction)
 		{
@@ -225,7 +347,7 @@ namespace Epsitec.Cresus.Database
 		
 		public DbKey FindDbTableKey(System.Data.IDbTransaction transaction, string name)
 		{
-			return this.FindLiveKey (this.FindDbKeys (transaction, DbTable.TagTableDef, DbSqlStandard.CreateSimpleSqlName (name)));
+			return this.FindLiveKey (this.FindDbKeys (transaction, DbTable.TagTableDef, name));
 		}
 		
 		public DbKey FindDbTypeKey(System.Data.IDbTransaction transaction, string name)
@@ -288,99 +410,6 @@ namespace Epsitec.Cresus.Database
 			return keys;
 		}
 		
-		
-		public DbTable CreateUserTable(string name)
-		{
-			DbTable table = new DbTable (DbSqlStandard.ConcatNames ("U_", name));
-			
-			DbType type = this.internal_types["CR.KeyId"];
-			
-			DbColumn col_id   = new DbColumn (DbColumn.TagId,       this.internal_types["CR.KeyId"]);
-			DbColumn col_rev  = new DbColumn (DbColumn.TagRevision, this.internal_types["CR.KeyRevision"]);
-			DbColumn col_stat = new DbColumn (DbColumn.TagStatus,   this.internal_types["CR.KeyStatus"]);
-			
-			col_id.DefineCategory (DbElementCat.Internal);
-			col_rev.DefineCategory (DbElementCat.Internal);
-			col_stat.DefineCategory (DbElementCat.Internal);
-			
-			table.DefineCategory (DbElementCat.UserDataManaged);
-			
-#if false
-			table.PrimaryKey.Add (col_id);
-			table.PrimaryKey.Add (col_rev);
-#else
-			table.PrimaryKey = new DbColumn[] { col_id, col_rev };
-#endif
-			table.Columns.AddRange (new DbColumn[] { col_id, col_rev, col_stat });
-
-			return table;
-		}
-		
-		public void RegisterNewDbTable(DbTable table)
-		{
-			//	Enregistre une nouvelle table dans la base de données. Ceci va attribuer à
-			//	la table une clef DbKey et vérifier qu'il n'y a pas de collision avec une
-			//	éventuelle table déjà existante. Cela va aussi attribuer des colonnes pour
-			//	la nouvelle table.
-			
-			//	Tous les types utilisés dans la définition des colonnes doivent être
-			//	connus (donc avoir une clef valide). On vérifie cela maintenant, avant
-			//	d'avoir touché à la base.
-				
-			for (int i = 0; i < table.Columns.Count; i++)
-			{
-				DbType type = table.Columns[i].Type;
-				
-				System.Diagnostics.Debug.Assert (type != null);
-				
-				if (type.InternalKey == null)
-				{
-					string message = string.Format ("Unregistered type '{0}' used in table '{1}', column '{2}'.",
-													type.Name, table.Name, table.Columns[i].Name);
-					
-					throw new DbException (this.db_access, message);
-				}
-			}
-			
-			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
-			{
-				//	Cherche si une table avec ce nom existe dans la base. Si c'est le cas,
-				//	génère une exception.
-				
-				if (this.CountMatchingRows (transaction, DbTable.TagTableDef, DbColumn.TagName, table.CreateSqlName ()) > 0)
-				{
-					string message = string.Format ("Table {0} already exists in database with name {1}.",
-													table.Name, table.CreateSqlName ());
-					
-					throw new DbException (this.db_access, message);
-				}
-				
-				long table_id  = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagTableDef].InternalKey, 1);
-				long column_id = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagColumnDef].InternalKey, table.Columns.Count);
-				
-				//	Crée la ligne de description de la table :
-				
-				table.DefineInternalKey (new DbKey (table_id));
-				this.BootInsertTableDefRow (transaction, table);
-				
-				//	Crée les lignes de description des colonnes :
-				
-				for (int i = 0; i < table.Columns.Count; i++)
-				{
-					table.Columns[i].DefineInternalKey (new DbKey (column_id + i));
-					this.BootInsertColumnDefRow (transaction, table, table.Columns[i]);
-				}
-				
-				//	Finalement, il faut créer la table elle-même :
-				
-				SqlTable sql_table = table.CreateSqlTable (this.type_converter);
-				
-				this.sql_builder.InsertTable (sql_table);
-				this.ExecuteSilent (transaction);
-				
-				transaction.Commit ();
-			}
-		}
 		
 		public int CountMatchingRows(System.Data.IDbTransaction transaction, string table, string name_column, string value)
 		{
@@ -550,6 +579,11 @@ namespace Epsitec.Cresus.Database
 				
 				db_column.SetType (db_type);
 				db_table.Columns.Add (db_column);
+				
+				if (db_column.IsPrimaryKey)
+				{
+					db_table.PrimaryKeys.Add (db_column);
+				}
 			}
 			
 			return db_table;
@@ -827,8 +861,11 @@ namespace Epsitec.Cresus.Database
 			
 			this.SetCategory (columns, DbElementCat.Internal);
 			
+			table.DefineCategory (DbElementCat.Internal);
 			table.Columns.AddRange (columns);
-			table.PrimaryKey = new DbColumn[] { columns[0], columns[1] };
+			
+			table.PrimaryKeys.Add (columns[0]);
+			table.PrimaryKeys.Add (columns[1]);
 			
 			this.internal_tables.Add (table);
 			
@@ -861,8 +898,11 @@ namespace Epsitec.Cresus.Database
 			
 			this.SetCategory (columns, DbElementCat.Internal);
 			
+			table.DefineCategory (DbElementCat.Internal);
 			table.Columns.AddRange (columns);
-			table.PrimaryKey = new DbColumn[] { columns[0], columns[1] };
+			
+			table.PrimaryKeys.Add (columns[0]);
+			table.PrimaryKeys.Add (columns[1]);
 			
 			this.internal_tables.Add (table);
 			
@@ -891,8 +931,11 @@ namespace Epsitec.Cresus.Database
 			
 			this.SetCategory (columns, DbElementCat.Internal);
 			
+			table.DefineCategory (DbElementCat.Internal);
 			table.Columns.AddRange (columns);
-			table.PrimaryKey = new DbColumn[] { columns[0], columns[1] };
+			
+			table.PrimaryKeys.Add (columns[0]);
+			table.PrimaryKeys.Add (columns[1]);
 			
 			this.internal_tables.Add (table);
 			
@@ -923,8 +966,11 @@ namespace Epsitec.Cresus.Database
 			
 			this.SetCategory (columns, DbElementCat.Internal);
 			
+			table.DefineCategory (DbElementCat.Internal);
 			table.Columns.AddRange (columns);
-			table.PrimaryKey = new DbColumn[] { columns[0], columns[1] };
+			
+			table.PrimaryKeys.Add (columns[0]);
+			table.PrimaryKeys.Add (columns[1]);
 			
 			this.internal_tables.Add (table);
 			
@@ -950,8 +996,11 @@ namespace Epsitec.Cresus.Database
 			
 			this.SetCategory (columns, DbElementCat.Internal);
 			
+			table.DefineCategory (DbElementCat.Internal);
 			table.Columns.AddRange (columns);
-			table.PrimaryKey = new DbColumn[] { columns[0] };
+			
+			table.PrimaryKeys.Add (columns[0]);
+			table.PrimaryKeys.Add (columns[1]);
 			
 			this.internal_tables.Add (table);
 			
@@ -992,8 +1041,8 @@ namespace Epsitec.Cresus.Database
 			fields.Add (table_def.Columns[DbColumn.TagId]		.CreateSqlField (this.type_converter, table.InternalKey.Id));
 			fields.Add (table_def.Columns[DbColumn.TagRevision]	.CreateSqlField (this.type_converter, table.InternalKey.Revision));
 			fields.Add (table_def.Columns[DbColumn.TagStatus]	.CreateSqlField (this.type_converter, table.InternalKey.RawStatus));
-			fields.Add (table_def.Columns[DbColumn.TagName]		.CreateSqlField (this.type_converter, table.CreateSqlName ()));
-			fields.Add (table_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, "<table/>"));
+			fields.Add (table_def.Columns[DbColumn.TagName]		.CreateSqlField (this.type_converter, table.Name));
+			fields.Add (table_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, DbTable.ConvertTableToXml (table)));
 			fields.Add (table_def.Columns[DbColumn.TagNextId]	.CreateSqlField (this.type_converter, 0));
 			
 			this.sql_builder.InsertData (table_def.CreateSqlName (), fields);
@@ -1086,6 +1135,8 @@ namespace Epsitec.Cresus.Database
 				//	dans la table de définition des tables.
 				
 				table.DefineInternalKey (new DbKey (table_key_id++));
+				table.UpdatePrimaryKeyInfo ();
+				
 				this.BootInsertTableDefRow (transaction, table);
 				
 				foreach (DbColumn column in table.Columns)

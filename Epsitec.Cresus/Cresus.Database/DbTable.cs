@@ -46,7 +46,14 @@ namespace Epsitec.Cresus.Database
 		{
 			buffer.Append (@"<table");
 			
-			//	TODO: ajoute les réglages propres à la table
+			string arg_cat = DbTools.ElementCategoryToString (this.category);
+			
+			if (arg_cat != null)
+			{
+				buffer.Append (@" cat=""");
+				buffer.Append (arg_cat);
+				buffer.Append (@"""");
+			}
 			
 			buffer.Append (@"/>");
 		}
@@ -58,7 +65,24 @@ namespace Epsitec.Cresus.Database
 				throw new System.ArgumentException (string.Format ("Expected root element named <table>, but found <{0}>.", xml.Name));
 			}
 			
-			//	TODO: extrait les réglages propres à la table
+			string arg_cat = xml.GetAttribute ("cat");
+			
+			this.category  = DbTools.ParseElementCategory (arg_cat);
+		}
+		
+		
+		public static string ConvertTableToXml(DbTable table)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			DbTable.ConvertTableToXml (buffer, table);
+			
+			return buffer.ToString ();
+		}
+		
+		public static void ConvertTableToXml(System.Text.StringBuilder buffer, DbTable table)
+		{
+			table.SerialiseXmlDefinition (buffer);
 		}
 		
 		
@@ -95,6 +119,22 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.internal_table_key = key.Clone () as DbKey;
+		}
+		
+		
+		internal void UpdatePrimaryKeyInfo()
+		{
+			if (this.HasPrimaryKeys)
+			{
+				foreach (DbColumn column in this.Columns)
+				{
+					column.IsPrimaryKey = false;
+				}
+				foreach (DbColumn column in this.PrimaryKeys)
+				{
+					column.IsPrimaryKey = true;
+				}
+			}
 		}
 		
 		
@@ -222,7 +262,7 @@ namespace Epsitec.Cresus.Database
 		
 		public string CreateSqlName()
 		{
-			return DbSqlStandard.CreateSimpleSqlName (this.Name);
+			return DbSqlStandard.CreateSqlTableName (this.Name, this.Category, this.InternalKey);
 		}
 		
 		
