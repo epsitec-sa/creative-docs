@@ -14,13 +14,13 @@ namespace Epsitec.Common.Widgets
 	{
 		public MenuItem()
 		{
-			this.internalState |= InternalState.Command;
+			this.InternalState |= InternalState.Command;
 			
-			this.internalState &= ~InternalState.AutoCapture;
-			this.internalState &= ~InternalState.AutoFocus;
-			this.internalState &= ~InternalState.AutoEngage;
-			this.internalState &= ~InternalState.Focusable;
-			this.internalState &= ~InternalState.Engageable;
+			this.InternalState &= ~InternalState.AutoCapture;
+			this.InternalState &= ~InternalState.AutoFocus;
+			this.InternalState &= ~InternalState.AutoEngage;
+			this.InternalState &= ~InternalState.Focusable;
+			this.InternalState &= ~InternalState.Engageable;
 
 			this.icon     = new TextLayout();
 			this.mainText = new TextLayout();
@@ -193,11 +193,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if (value == null)
 				{
-					this.internalState |= InternalState.Command;
+					this.InternalState |= InternalState.Command;
 				}
 				else
 				{
-					this.internalState &= ~InternalState.Command;
+					this.InternalState &= ~InternalState.Command;
 				}
 				
 				this.separator = false;
