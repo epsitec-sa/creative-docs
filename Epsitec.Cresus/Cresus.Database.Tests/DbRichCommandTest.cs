@@ -272,73 +272,7 @@ namespace Epsitec.Cresus.Database
 			infrastructure.Dispose ();
 		}
 		
-#if false
-		[Test] public void XxxTest()
-		{
-			//	Test synthétique pour soumission du problème à Carlos Guzman Alvarez.
-			
-			FbConnection connection = new FbConnection (@"User=sysdba;Password=masterkey;" +
-				/**/									@"DataSource=localhost;Database=C:\Program Files\Firebird15\Data\Epsitec\fiche.firebird;Port=3050;Dialect=3;Packet Size=8192;" +
-				/**/									@"ServerType=1;Charset=UNICODE_FSS;Role=;Pooling=true;Connection Lifetime=10;");
-			
-#if false
-			connection.Open();
-           
-			string sql = "insert into U_DOMICILES_35 (CR_ID, CR_REV, CR_STAT, U_VILLE, U_NPA) values (@CR_ID, @CR_REV, @CR_STAT, @U_VILLE, @U_NPA)";
-
-			FbCommand cmd = new FbCommand(sql, connection);
-			cmd.Parameters.Add("@CR_ID", FbDbType.BigInt).Value = 1;
-			cmd.Parameters.Add("@CR_REV", FbDbType.Integer).Value = 2;
-			cmd.Parameters.Add("@CR_STAT", FbDbType.SmallInt).Value = 3;
-			cmd.Parameters.Add("@U_VILLE", FbDbType.VarChar, 40).Value = "aa";
-			cmd.Parameters.Add("@U_NPA", FbDbType.Integer).Value = null;
-
-			cmd.ExecuteNonQuery();
-
-			connection.Close();
-
-#else
-			FbCommand    command    = connection.CreateCommand ();
-			
-			command.CommandType = System.Data.CommandType.Text;
-			command.CommandText = "SELECT * FROM U_DOMICILES_35 WHERE 0=1;";
-			
-			FbDataAdapter    adapter = new FbDataAdapter (command);
-			FbCommandBuilder builder = new FbCommandBuilder (adapter);
-			
-			connection.Open ();
-			
-			FbTransaction transaction = connection.BeginTransaction (System.Data.IsolationLevel.RepeatableRead);
-			
-			System.Data.DataSet set = new System.Data.DataSet ();
-			command.Transaction = transaction;
-			adapter.Fill (set);
-			transaction.Commit ();
-			
-			System.Data.DataTable table = set.Tables[0];
-			System.Data.DataRow   row   = table.NewRow ();
-			
-			row["CR_ID"] = 1000;
-			row["CR_REV"] = 0;
-			row["CR_STAT"] = 0;
-			row["REF_PERSONNE_ID"] = System.DBNull.Value;
-			row["REF_PERSONNE_REV"] = System.DBNull.Value;
-			row["U_VILLE"] = "Yverdon";
-			row["U_NPA"] = System.DBNull.Value;		//	<- devrait être rejeté
-			
-			table.Rows.Add (row);
-			
-			transaction = connection.BeginTransaction (System.Data.IsolationLevel.RepeatableRead);
-			command.Transaction = transaction;
-			adapter.Update (set);
-			transaction.Rollback ();
-
-			connection.Close ();
-#endif
-		}
-#endif
-		
-		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckInternalFillDataSetEx()
+		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void Check06InternalFillDataSetEx()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			DbRichCommand    command        = new DbRichCommand (infrastructure);
@@ -348,7 +282,7 @@ namespace Epsitec.Cresus.Database
 			infrastructure.Dispose ();
 		}
 		
-		[Test] public void Check06ReplaceTables()
+		[Test] public void Check07ReplaceTables()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			

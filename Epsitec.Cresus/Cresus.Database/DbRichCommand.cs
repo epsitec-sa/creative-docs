@@ -271,7 +271,13 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		
 		public void ReplaceTables(DbTransaction transaction)
+		{
+			this.ReplaceTables (transaction, null);
+		}
+		
+		public void ReplaceTables(DbTransaction transaction, IReplaceOptions options)
 		{
 			//	Similaire à UpdateTables, mais en écrasant les données contenues dans
 			//	la base, sans égard pour d'éventuelles anciennes données déjà présentes
@@ -285,10 +291,10 @@ namespace Epsitec.Cresus.Database
 			this.CheckValidState ();
 			this.CheckRowIds ();
 			
-			this.ReplaceTablesWithoutValidityChecking(transaction);
+			this.ReplaceTablesWithoutValidityChecking(transaction, options);
 		}
 		
-		public void ReplaceTablesWithoutValidityChecking(DbTransaction transaction)
+		public void ReplaceTablesWithoutValidityChecking(DbTransaction transaction, IReplaceOptions options)
 		{
 			//	ATTENTION: Cette méthode ne gère pas les conflits; elle écrase les données
 			//	dans la base en fonction du contenu des tables du DataSet.
@@ -329,7 +335,7 @@ namespace Epsitec.Cresus.Database
 				if ((change_count > 0) ||
 					(delete_count > 0))
 				{
-					this.ReplaceTable (transaction, data_table, this.Tables[i]);
+					this.ReplaceTable (transaction, data_table, this.Tables[i], options);
 				}
 				
 				data_table.AcceptChanges ();
@@ -791,7 +797,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		protected void ReplaceTable(DbTransaction transaction, System.Data.DataTable data_table, DbTable db_table)
+		protected void ReplaceTable(DbTransaction transaction, System.Data.DataTable data_table, DbTable db_table, IReplaceOptions options)
 		{
 			string table_name = db_table.CreateSqlName ();
 			
@@ -799,7 +805,8 @@ namespace Epsitec.Cresus.Database
 			ISqlBuilder    builder   = database.SqlBuilder;
 			ITypeConverter converter = this.infrastructure.TypeConverter;
 			
-			Collections.SqlFields sql_fields = new Collections.SqlFields ();
+			Collections.SqlFields sql_update = new Collections.SqlFields ();
+			Collections.SqlFields sql_insert = new Collections.SqlFields ();
 			Collections.SqlFields sql_conds  = new Collections.SqlFields ();
 			
 			int col_count = db_table.Columns.Count;
@@ -810,17 +817,42 @@ namespace Epsitec.Cresus.Database
 			
 			SqlColumn[] sql_columns = new SqlColumn[col_count];
 			
+			int[]    update_map     = new int[col_count];
+			object[] insert_default = new object[col_count];
+			
 			for (int c = 0; c < col_count; c++)
 			{
 				DbColumn column = db_table.Columns[c];
 				sql_columns[c] = column.CreateSqlColumn (converter);
-				sql_fields.Add (column.CreateEmptySqlField (converter));
+				
+				if ((options == null) ||
+					(options.IgnoreColumn (c, column) == false))
+				{
+					//	Aucune option particulière pour cette colonne. Ajoute simplement
+					//	la colonne à la fois pour le UPDATE et pour le INSERT :
+					
+					sql_update.Add (column.CreateEmptySqlField (converter));
+					sql_insert.Add (column.CreateEmptySqlField (converter));
+					
+					update_map[c]     = c;
+					insert_default[c] = null;
+				}
+				else
+				{
+					//	Les options indiquent que l'on doit ignorer cette colonne lors du
+					//	UPDATE; on va aussi fournir une valeur par défaut pour le INSERT :
+					
+					sql_insert.Add (column.CreateEmptySqlField (converter));
+					
+					update_map[c]     = -1;
+					insert_default[c] = options.GetDefaultValue (c, column);
+				}
 			}
 			
 			//	Crée la condition pour le UPDATE ... WHERE CR_ID = n
 			
 			SqlField field_id_name  = SqlField.CreateName (table_name, sql_columns[0].Name);
-			SqlField field_id_value = sql_fields[0];
+			SqlField field_id_value = sql_update[0];
 			
 			sql_conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, field_id_name, field_id_value));
 			
@@ -832,12 +864,12 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand delete_command;
 			
 			builder.Clear ();
-			builder.UpdateData (table_name, sql_fields, sql_conds);
+			builder.UpdateData (table_name, sql_update, sql_conds);
 			
 			update_command = builder.Command;
 			
 			builder.Clear ();
-			builder.InsertData (table_name, sql_fields);
+			builder.InsertData (table_name, sql_insert);
 			
 			insert_command = builder.Command;
 			
@@ -893,10 +925,25 @@ namespace Epsitec.Cresus.Database
 						
 						for (int c = 0; c < col_count; c++)
 						{
-							object value = sql_columns[c].ConvertToInternalType (row[c]);
+							int map_c = update_map[c];
 							
-							builder.SetCommandParameterValue (update_command, c, value);
-							builder.SetCommandParameterValue (insert_command, c, value);
+							//	La colonne peut-elle être utilisée telle quelle dans un UPDATE ?
+							
+							if (map_c < 0)
+							{
+								//	La colonne ne sera utilisée que pour le INSERT; dans ce cas
+								//	il faudra utiliser une valeur par défaut en lieu et place de
+								//	la valeur proposée dans la source :
+								
+								builder.SetCommandParameterValue (insert_command, c, insert_default[c]);
+							}
+							else
+							{
+								object value = sql_columns[c].ConvertToInternalType (row[c]);
+								
+								builder.SetCommandParameterValue (update_command, map_c, value);
+								builder.SetCommandParameterValue (insert_command, c, value);
+							}
 						}
 						
 						count = update_command.ExecuteNonQuery ();
@@ -1019,6 +1066,45 @@ namespace Epsitec.Cresus.Database
 		public void Dispose()
 		{
 			this.Dispose (true);
+		}
+		#endregion
+		
+		#region IReplaceOptions Interface
+		public interface IReplaceOptions
+		{
+			bool IgnoreColumn(int index, DbColumn column);
+			object GetDefaultValue(int index, DbColumn column);
+		}
+		#endregion
+		
+		#region ReplaceIgnoreColumns Class
+		public class ReplaceIgnoreColumns : IReplaceOptions
+		{
+			public ReplaceIgnoreColumns()
+			{
+				this.columns = new System.Collections.Hashtable ();
+			}
+			
+			
+			public void AddIgnoreColumn(string name, object default_value)
+			{
+				this.columns[name] = default_value;
+			}
+			
+			
+			#region IReplaceOptions Members
+			public bool IgnoreColumn(int index, DbColumn column)
+			{
+				return this.columns.ContainsKey (column.Name);
+			}
+			
+			public object GetDefaultValue(int index, DbColumn column)
+			{
+				return this.columns[column.Name];
+			}
+			#endregion
+			
+			System.Collections.Hashtable		columns;
 		}
 		#endregion
 		

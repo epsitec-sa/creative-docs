@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
-		public DbId							LargestLogId
+		public DbId								LargestLogId
 		{
 			get
 			{
@@ -134,6 +134,7 @@ namespace Epsitec.Cresus.Replication
 					{
 						this.ApplyLogChanges (transaction, log_table);
 						this.ApplyChanges (transaction, list);
+						this.UpdateSyncLogId (transaction);
 						this.NotifyBeforeCommit (transaction);
 						transaction.Commit ();
 					}
@@ -149,6 +150,7 @@ namespace Epsitec.Cresus.Replication
 				{
 					this.ApplyLogChanges (transaction, log_table);
 					this.ApplyChanges (transaction, list);
+					this.UpdateSyncLogId (transaction);
 					this.NotifyBeforeCommit (transaction);
 					transaction.Commit ();
 				}
@@ -184,7 +186,22 @@ namespace Epsitec.Cresus.Replication
 				
 				System.Diagnostics.Debug.Assert (data_table.Rows.Count > 0);
 				
-				command.ReplaceTables (transaction);
+				if (data_table.TableName == Tags.TableTableDef)
+				{
+					//	Cas particulier: la table de définition des tables ne doit pas
+					//	être répliquée dans son entier. La colonne CR_NEXT_ID doit être
+					//	sautée (ou initialisée avec des valeurs par défaut) :
+					
+					DbRichCommand.ReplaceIgnoreColumns options = new DbRichCommand.ReplaceIgnoreColumns ();
+					
+					options.AddIgnoreColumn (Tags.ColumnNextId, DbId.CreateId (1, this.infrastructure.LocalSettings.ClientId).Value);
+					
+					command.ReplaceTables (transaction, options);
+				}
+				else
+				{
+					command.ReplaceTables (transaction);
+				}
 			}
 		}
 		
@@ -212,7 +229,7 @@ namespace Epsitec.Cresus.Replication
 				
 				System.Diagnostics.Debug.Assert (data_table.Rows.Count > 0);
 				
-				command.ReplaceTablesWithoutValidityChecking (transaction);
+				command.ReplaceTablesWithoutValidityChecking (transaction, null);
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("Replicated {0} lines from CR_LOG.", data_table.Rows.Count));
 				
@@ -302,6 +319,16 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
+		private void UpdateSyncLogId(DbTransaction transaction)
+		{
+			if (this.LargestLogId.IsValid)
+			{
+				this.infrastructure.LocalSettings.SyncLogId = this.LargestLogId;
+				this.infrastructure.LocalSettings.PersistToBase (transaction);
+				
+				System.Diagnostics.Debug.WriteLine ("Persisted SyncLogId.");
+			}
+		}
 		
 		private static PackedTableData FindPackedTable(System.Collections.ArrayList list, string name)
 		{
