@@ -376,7 +376,7 @@ namespace Epsitec.Common.Support.Implementation
 			//	La base de données a été créée et elle est parfaitement vide. Il faut maintenant
 			//	définir les types et les tables de base :
 			
-			DbTable db_table = infrastructure.CreateDbTable (BaseProvider.DataTableName, DbElementCat.UserDataManaged);
+			DbTable db_table = infrastructure.CreateDbTable (BaseProvider.DataTableName, DbElementCat.UserDataManaged, BaseProvider.UseRevisions);
 			
 			DbType db_type_name  = infrastructure.CreateDbType ("Name", 80, false) as DbTypeString;
 			DbType db_type_level = infrastructure.CreateDbType ("Level", 4, false) as DbTypeString;
@@ -399,6 +399,7 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		private const string				DataTableName = "Data";
+		private const bool					UseRevisions  = false;
 		
 		protected DbInfrastructure			dbi;
 		protected DbTable					data_table;

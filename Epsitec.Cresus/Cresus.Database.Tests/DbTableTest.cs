@@ -31,6 +31,8 @@ namespace Epsitec.Cresus.Database
 			column.IsIndexed = true;
 			column.DefineCategory (DbElementCat.UserDataManaged);
 			
+			table.DefineCategory (DbElementCat.UserDataManaged, true);
+			
 			table.PrimaryKeys.Add (column);
 			table.Columns.Add (column);
 			
@@ -43,6 +45,10 @@ namespace Epsitec.Cresus.Database
 			DbTable test = DbTable.CreateTable (xml);
 			
 			Assertion.AssertEquals (test, test.Columns["A"].Table);
+			Assertion.AssertEquals (DbElementCat.UserDataManaged, test.Category);
+			Assertion.AssertEquals (true, test.UseRevisions);
+			Assertion.AssertEquals ("Test", test.Name);
+			Assertion.AssertEquals (DbElementCat.UserDataManaged, test.Columns["A"].Category);
 		}
 		
 		[Test] public void CheckForeignKeys()

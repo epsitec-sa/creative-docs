@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Database
 			ISqlBuilder sql_builder = infrastructure.SqlBuilder;
 			ISqlEngine  sql_engine  = infrastructure.SqlEngine;
 			
-			DbTable db_table_a = infrastructure.CreateDbTable ("Personnes", DbElementCat.UserDataManaged);
-			DbTable db_table_b = infrastructure.CreateDbTable ("Domiciles", DbElementCat.UserDataManaged);
+			DbTable db_table_a = infrastructure.CreateDbTable ("Personnes", DbElementCat.UserDataManaged, false);
+			DbTable db_table_b = infrastructure.CreateDbTable ("Domiciles", DbElementCat.UserDataManaged, false);
 			
 			DbType db_type_name = infrastructure.ResolveDbType (null, "CR_NameType");
 			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR_KeyIdType");

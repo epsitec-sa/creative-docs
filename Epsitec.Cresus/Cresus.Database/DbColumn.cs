@@ -273,6 +273,11 @@ namespace Epsitec.Cresus.Database
 			get { return this.category; }
 		}
 		
+		public bool								UseRevisions
+		{
+			get { return this.use_revisions; }
+		}
+		
 		public DbKey							InternalKey
 		{
 			get { return this.internal_column_key; }
@@ -314,20 +319,26 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		
 		public void DefineCategory(DbElementCat category)
 		{
-			if (this.category == category)
+			this.DefineCategory (category, this.use_revisions);
+		}
+		
+		public void DefineCategory(DbElementCat category, bool use_revisions)
+		{
+			if ((this.category == category) &&
+				(this.use_revisions == use_revisions))
 			{
 				return;
 			}
 			
 			if (this.category != DbElementCat.Unknown)
 			{
-				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot change its category.", this.Name));
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new category.", this.Name));
 			}
 			
-			this.category = category;
+			this.category      = category;
+			this.use_revisions = use_revisions;
 		}
 		
 		public void DefineAttributes(params string[] attributes)
@@ -644,22 +655,27 @@ namespace Epsitec.Cresus.Database
 			
 			if (this.IsNullAllowed)
 			{
-				buffer.Append (@" null=""1""");
+				buffer.Append (@" null=""Y""");
 			}
 			
 			if (this.IsUnique)
 			{
-				buffer.Append (@" unique=""1""");
+				buffer.Append (@" uniq=""Y""");
 			}
 			
 			if (this.IsIndexed)
 			{
-				buffer.Append (@" index=""1""");
+				buffer.Append (@" idx=""Y""");
 			}
 			
 			if (this.is_primary_key)
 			{
-				buffer.Append (@" pk=""1""");
+				buffer.Append (@" pk=""Y""");
+			}
+			
+			if (this.use_revisions)
+			{
+				buffer.Append (@" revs=""Y""");
 			}
 			
 			string arg_cat = DbTools.ElementCategoryToString (this.category);
@@ -710,15 +726,17 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			string arg_null   = xml.GetAttribute ("null");
-			string arg_unique = xml.GetAttribute ("unique");
-			string arg_index  = xml.GetAttribute ("index");
+			string arg_unique = xml.GetAttribute ("uniq");
+			string arg_index  = xml.GetAttribute ("idx");
 			string arg_cat    = xml.GetAttribute ("cat");
 			string arg_pk     = xml.GetAttribute ("pk");
+			string arg_revs   = xml.GetAttribute ("revs");
 			
-			this.is_null_allowed = (arg_null   == "1");
-			this.is_unique       = (arg_unique == "1");
-			this.is_indexed      = (arg_index  == "1");
-			this.is_primary_key  = (arg_pk     == "1");
+			this.is_null_allowed = (arg_null   == "Y");
+			this.is_unique       = (arg_unique == "Y");
+			this.is_indexed      = (arg_index  == "Y");
+			this.is_primary_key  = (arg_pk     == "Y");
+			this.use_revisions   = (arg_revs   == "Y");
 			this.category        = DbTools.ParseElementCategory (arg_cat);
 			
 			int column_class_code;
@@ -743,6 +761,7 @@ namespace Epsitec.Cresus.Database
 		protected bool							is_indexed;
 		protected bool							is_primary_key;
 		protected DbElementCat					category;
+		protected bool							use_revisions;
 		protected DbKey							internal_column_key;
 		
 		protected DbColumnLocalisation			column_localisation		= DbColumnLocalisation.None;

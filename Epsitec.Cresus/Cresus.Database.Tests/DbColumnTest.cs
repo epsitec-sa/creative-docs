@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_a = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
 			DbColumn column_b = new DbColumn ("B", DbSimpleType.Guid);
 			DbColumn column_c = new DbColumn ("C", DbSimpleType.String, 100, true);
-			DbColumn column_x = DbColumn.CreateColumn ("<col null='1' index='1' unique='0' cat='1'/>");
+			DbColumn column_x = DbColumn.CreateColumn ("<col null='Y' idx='Y' uniq='N' cat='1'/>");
 			
 			Assert.AreEqual ("A", column_a.Name);
 			Assert.AreEqual (DbSimpleType.Decimal, column_a.SimpleType);
@@ -77,7 +77,14 @@ namespace Epsitec.Cresus.Database
 			column.IsIndexed = true;
 			column.DefineCategory (DbElementCat.UserDataManaged);
 			
-			System.Console.Out.WriteLine ("XML: " + DbColumn.SerializeToXml (column, true));
+			System.Console.Out.WriteLine ("XML/1: " + DbColumn.SerializeToXml (column, true));
+			
+			column = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.No);
+			
+			column.IsIndexed = false;
+			column.DefineCategory (DbElementCat.UserDataManaged, true);
+			
+			System.Console.Out.WriteLine ("XML/2: " + DbColumn.SerializeToXml (column, true));
 		}
 		
 		[Test] public void CheckTypes()

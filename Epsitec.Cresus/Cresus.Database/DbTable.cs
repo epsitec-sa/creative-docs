@@ -125,6 +125,11 @@ namespace Epsitec.Cresus.Database
 			get { return this.category; }
 		}
 		
+		public bool								UseRevisions
+		{
+			get { return this.use_revisions; }
+		}
+		
 		public DbKey							InternalKey
 		{
 			get { return this.internal_table_key; }
@@ -133,17 +138,24 @@ namespace Epsitec.Cresus.Database
 		
 		public void DefineCategory(DbElementCat category)
 		{
-			if (this.category == category)
+			this.DefineCategory (category, this.use_revisions);
+		}
+		
+		public void DefineCategory(DbElementCat category, bool use_revisions)
+		{
+			if ((this.category == category) &&
+				(this.use_revisions == use_revisions))
 			{
 				return;
 			}
 			
 			if (this.category != DbElementCat.Unknown)
 			{
-				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot change its category.", this.Name));
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot define a new category.", this.Name));
 			}
 			
-			this.category = category;
+			this.category      = category;
+			this.use_revisions = use_revisions;
 		}
 		
 		public void DefineAttributes(params string[] attributes)
@@ -318,6 +330,11 @@ namespace Epsitec.Cresus.Database
 				buffer.Append (@"""");
 			}
 			
+			if (this.use_revisions)
+			{
+				buffer.Append (@" revs=""Y""");
+			}
+			
 			if (full)
 			{
 				DbKey.SerializeToXmlAttributes (buffer, this.internal_table_key);
@@ -342,8 +359,11 @@ namespace Epsitec.Cresus.Database
 				throw new System.FormatException (string.Format ("Expected root element named <table>, but found <{0}>.", xml.Name));
 			}
 			
-			string arg_cat = xml.GetAttribute ("cat");
-			this.category  = DbTools.ParseElementCategory (arg_cat);
+			string arg_cat  = xml.GetAttribute ("cat");
+			string arg_revs = xml.GetAttribute ("revs");
+			
+			this.category      = DbTools.ParseElementCategory (arg_cat);
+			this.use_revisions = (arg_revs == "Y");
 			
 			this.internal_table_key = DbKey.DeserializeFromXmlAttributes (xml);
 			this.Attributes.DeserializeXmlAttributes (xml);
@@ -409,6 +429,7 @@ namespace Epsitec.Cresus.Database
 		protected Collections.DbColumns			columns;
 		protected Collections.DbColumns			primary_keys;
 		protected DbElementCat					category;
+		protected bool							use_revisions;
 		protected DbKey							internal_table_key;
 	}
 }
