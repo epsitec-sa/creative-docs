@@ -20,9 +20,12 @@ namespace Epsitec.Common.Widgets
 		
 		public void DefineWidget(Widget widget, Drawing.Margins margins)
 		{
-			this.WindowSize = widget.Size + margins.Size;
+			Drawing.Size size = widget.Size;
+			
+			this.WindowSize = size + margins.Size;
 			
 			widget.Dock     = DockStyle.None;
+			widget.Size     = size;
 			widget.Parent   = this.Root;
 			widget.Location = new Drawing.Point (margins.Bottom, margins.Left);
 			
