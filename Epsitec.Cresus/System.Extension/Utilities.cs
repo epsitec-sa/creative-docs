@@ -104,5 +104,83 @@ namespace System
 			}
 			return nb;
 		}
+		
+		public static bool CheckForDuplicates(System.Collections.ICollection data)
+		{
+			object[] temp = new object[data.Count];
+			data.CopyTo (temp, 0);
+			
+			System.Array.Sort (temp);
+			
+			for (int i = 1; i < temp.Length; i++)
+			{
+				if (temp[i-1] == temp[i])
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		public static bool CheckForDuplicates(System.Collections.ICollection data, bool sort)
+		{
+			if (sort)
+			{
+				return Utilities.CheckForDuplicates (data);
+			}
+			
+			object[] temp = new object[data.Count];
+			data.CopyTo (temp, 0);
+			
+			for (int i = 1; i < temp.Length; i++)
+			{
+				if (temp[i-1] == temp[i])
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		public static bool CheckForDuplicates(System.Collections.ICollection data, System.Collections.IComparer comparer)
+		{
+			object[] temp = new object[data.Count];
+			data.CopyTo (temp, 0);
+			
+			System.Array.Sort (temp, comparer);
+			
+			for (int i = 1; i < temp.Length; i++)
+			{
+				if (comparer.Compare (temp[i-1], temp[i]) == 0)
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		public static bool CheckForDuplicates(System.Collections.ICollection data, System.Collections.IComparer comparer, bool sort)
+		{
+			if (sort)
+			{
+				return Utilities.CheckForDuplicates (data, comparer);
+			}
+			
+			object[] temp = new object[data.Count];
+			data.CopyTo (temp, 0);
+			
+			for (int i = 1; i < temp.Length; i++)
+			{
+				if (comparer.Compare (temp[i-1], temp[i]) == 0)
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
 	}
 }
