@@ -66,7 +66,6 @@ namespace Epsitec.Common.Widgets.Helpers
 			Widget item = this.list[index] as Widget;
 			this.HandleRemove (item);
 			this.list.RemoveAt (index);
-			this.RenumberItems ();
 			this.HandlePostRemove (item);
 		}
 
@@ -74,14 +73,12 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			this.list.Insert (index, value);
 			this.HandleInsert (value as Widget);
-			this.RenumberItems ();
 		}
 
 		public void Remove(object value)
 		{
 			this.HandleRemove (value as Widget);
 			this.list.Remove (value);
-			this.RenumberItems ();
 			this.HandlePostRemove (value as Widget);
 		}
 
@@ -119,7 +116,6 @@ namespace Epsitec.Common.Widgets.Helpers
 			{
 				int index = this.list.Add (value);
 				this.HandleInsert (value as Widget);
-				this.RenumberItems ();
 				return index;
 			}
 			
@@ -176,16 +172,19 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		protected void HandleInsert(Widget item)
 		{
+			this.RenumberItems ();
 			this.host.NotifyInsertion (item);
 		}
 		
 		protected void HandleRemove(Widget item)
 		{
 			this.host.NotifyRemoval (item);
+			this.RenumberItems ();
 		}
 		
 		protected void HandlePostRemove(Widget item)
 		{
+			item.Index = -1;
 			this.host.NotifyPostRemoval (item);
 		}
 		
