@@ -55,6 +55,7 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				Drawing.Rectangle rect = layout.StandardRectangle;
+				rect.RoundInflate();
 				rect.Offset(this.TitleTextOffset);
 				rect.Inflate(3, 0);
 				return rect;
