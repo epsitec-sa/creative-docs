@@ -3,8 +3,7 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Widgets
 {
-	[TestFixture]
-	public class WidgetTest
+	[TestFixture] public class WidgetTest
 	{
 		[Test] public void CheckParentChildRelationship()
 		{
@@ -31,6 +30,51 @@ namespace Epsitec.Common.Widgets
 			Assertion.AssertSame (widget.Parent, root);
 			Assertion.AssertSame (root.Children[0], widget);
 		}
+		
+		[Test] public void CheckParentChanged()
+		{
+			Widget w0 = new Widget ();
+			Widget w1 = new Widget ();
+			Widget w2 = new Widget ();
+			
+			w2.ParentChanged += new EventHandler (HandleCheckParentChangedParentChanged);
+			
+			this.check_parent_changed_sender = null;
+			this.check_parent_changed_count  = 0;
+			w2.Parent = w1;
+			Assertion.AssertEquals (w2, this.check_parent_changed_sender);
+			Assertion.AssertEquals (1, this.check_parent_changed_count);
+			
+			this.check_parent_changed_sender = null;
+			this.check_parent_changed_count  = 0;
+			w2.Parent = null;
+			Assertion.AssertEquals (w2, this.check_parent_changed_sender);
+			Assertion.AssertEquals (1, this.check_parent_changed_count);
+			
+			this.check_parent_changed_sender = null;
+			this.check_parent_changed_count  = 0;
+			w1.Children.Add (w2);
+			Assertion.AssertEquals (w2, this.check_parent_changed_sender);
+			Assertion.AssertEquals (1, this.check_parent_changed_count);
+			
+			this.check_parent_changed_sender = null;
+			this.check_parent_changed_count  = 0;
+			w0.Children.Add (w2);
+			Assertion.AssertEquals (w2, this.check_parent_changed_sender);
+			Assertion.AssertEquals (2, this.check_parent_changed_count);
+		}
+		
+		
+		#region CheckParentChanged event handler
+		private object		check_parent_changed_sender;
+		private int			check_parent_changed_count;
+		
+		private void HandleCheckParentChangedParentChanged(object sender)
+		{
+			this.check_parent_changed_sender = sender;
+			this.check_parent_changed_count++;
+		}
+		#endregion
 		
 		[Test] public void CheckAnchor()
 		{
