@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Editors
 	/// La classe AbstractPropEdit définit les méthodes communes à toutes les
 	/// classes permettant d'éditer des propriétés.
 	/// </summary>
-	public class AbstractPropEdit
+	public abstract class AbstractPropEdit
 	{
 		public AbstractPropEdit()
 		{
@@ -114,9 +114,7 @@ namespace Epsitec.Common.Designer.Editors
 			return pane;
 		}
 		
-		protected virtual void FillTabPage()
-		{
-		}
+		protected abstract void FillTabPage();
 		
 		protected virtual void LoadContents()
 		{

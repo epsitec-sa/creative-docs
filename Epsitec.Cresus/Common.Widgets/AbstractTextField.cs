@@ -872,8 +872,6 @@ namespace Epsitec.Common.Widgets
 				{
 					force = true;
 				}
-				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Text: {0}, realSize: {1}, offset: {2}, width: {3}, force: {4}", this.Text, this.realSize.ToString(), this.scrollOffset.X, lineWidth, force));
 			}
 			
 			if ( force )

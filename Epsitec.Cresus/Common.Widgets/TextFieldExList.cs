@@ -107,13 +107,16 @@ namespace Epsitec.Common.Widgets
 		
 		public bool ValidateEdition()
 		{
-			if (((this.mode == TextFieldExListMode.EditActive) || (this.mode == TextFieldExListMode.EditPassive)) &&
-				(this.IsValid))
+			if ((this.mode == TextFieldExListMode.EditActive) ||
+				(this.mode == TextFieldExListMode.EditPassive))
 			{
-				this.SwitchToState (TextFieldExListMode.Combo);
-				this.SelectedItem = this.Text;
-				this.OnEditionValidated ();
-				return true;
+				if (this.IsValid)
+				{
+					this.SwitchToState (TextFieldExListMode.Combo);
+					this.SelectedItem = this.Text;
+					this.OnEditionValidated ();
+					return true;
+				}
 			}
 			
 			return false;

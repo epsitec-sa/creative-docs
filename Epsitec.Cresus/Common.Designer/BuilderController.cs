@@ -449,6 +449,23 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
+		protected Widget[] GetSelectedWidgets()
+		{
+			Widget[] widgets = new Widget[this.active_editor.SelectedWidgets.Count];
+			this.active_editor.SelectedWidgets.CopyTo (widgets, 0);
+			return widgets;
+		}
+		
+		protected void DeselectAllWidgets()
+		{
+			this.active_editor.SelectedWidgets.Clear ();
+		}
+		
+		protected void ReselectWidgets(Widget[] widgets)
+		{
+			this.active_editor.SelectedWidgets.AddRange (widgets);
+		}
+		
 		[Command ("CreateNewWindow")]			void CommandCreateNewWindow()
 		{
 			Window window = new Window ();
@@ -474,7 +491,10 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert (this.active_editor != null);
 			System.Diagnostics.Debug.Assert (this.active_editor.Root != null);
 			
-			Widget root = this.active_editor.Root;
+			Widget[] selected = this.GetSelectedWidgets ();
+			Widget   root     = this.active_editor.Root;
+			
+			this.DeselectAllWidgets ();
 			
 			Support.ObjectBundler  bundler = new Support.ObjectBundler ();
 			Support.ResourceBundle bundle  = Support.ResourceBundle.Create ("file", root.Name, ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
@@ -482,7 +502,11 @@ namespace Epsitec.Common.Designer
 			bundler.SetupPrefix ("file");
 			bundler.FillBundleFromObject (bundle, root);
 			
+			StringEditController.Current.SaveAllBundles ();
+			
 			bundle.CreateXmlDocument (false).Save (@"resources\test.00.resource");
+			
+			this.ReselectWidgets (selected);
 		}
 		
 		[Command ("OpenLoadWindow")]			void CommandOpenLoadWindow()
@@ -515,14 +539,12 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert (this.active_editor != null);
 			System.Diagnostics.Debug.Assert (this.active_editor.SelectedWidgets.Count > 0);
 			
-			Widget[] widgets = new Widget[this.active_editor.SelectedWidgets.Count];
-			this.active_editor.SelectedWidgets.CopyTo (widgets, 0);
+			Widget[] widgets = this.GetSelectedWidgets ();
+			this.DeselectAllWidgets ();
 			
-			this.CommandDeselectAll ();
-			
-			for (int i = 0; i < widgets.Length; i++)
+			foreach (Widget widget in widgets)
 			{
-				widgets[i].Dispose ();
+				widget.Dispose ();
 			}
 		}
 		
@@ -531,7 +553,7 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert (this.active_editor != null);
 			System.Diagnostics.Debug.Assert (this.active_editor.SelectedWidgets.Count > 0);
 			
-			this.active_editor.SelectedWidgets.Clear ();
+			this.DeselectAllWidgets ();
 		}
 		
 		

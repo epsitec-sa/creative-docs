@@ -17,8 +17,6 @@ namespace Epsitec.Common.Designer.Editors
 		
 		protected override void FillTabPage()
 		{
-			base.FillTabPage ();
-			
 			this.CreatePropPane ("Name",		new Common.UI.Adapters.StringAdapter ());
 			this.CreatePropPane ("Text",		new UI.TextRefAdapter ());
 			this.CreatePropPane ("Command",		new Common.UI.Adapters.StringAdapter ());
@@ -27,6 +25,8 @@ namespace Epsitec.Common.Designer.Editors
 			this.CreatePropPane ("TabIndex",	new Common.UI.Adapters.StringAdapter ());
 			this.CreatePropPane ("Group",		new Common.UI.Adapters.StringAdapter ());
 			this.CreatePropPane ("Layout",		new Common.UI.Adapters.LayoutAdapter ());
+			
+			this.TabPage.TabTitle = "Attributes";
 		}
 	}
 }
