@@ -320,7 +320,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.pane = new PaneBook();
 			this.pane.PaneBookStyle = PaneBookStyle.LeftRight;
 			this.pane.PaneBehaviour = PaneBookBehaviour.FollowMe;
-			this.pane.SizeChanged += new EventHandler(this.HandlePaneSizeChanged);
+			this.pane.PaneSizeChanged += new EventHandler(this.HandlePaneSizeChanged);
 			this.pane.Parent = root;
 
 			this.leftPane = new PanePage();

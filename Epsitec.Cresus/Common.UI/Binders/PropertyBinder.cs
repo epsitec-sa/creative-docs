@@ -10,7 +10,7 @@ namespace Epsitec.Common.UI.Binders
 	/// La classe PropertyBinder permet d'accéder à la propriété d'un objet
 	/// comme source de données.
 	/// </summary>
-	public class PropertyBinder : AbstractBinder
+	public class PropertyBinder : AbstractBinder, System.IDisposable
 	{
 		public PropertyBinder()
 		{
@@ -32,6 +32,7 @@ namespace Epsitec.Common.UI.Binders
 			{
 				if (this.source_object != value)
 				{
+					this.Detach ();
 					this.source_object = value;
 					this.UpdateSourceType ();
 					this.OnSourceChanged ();
@@ -49,6 +50,7 @@ namespace Epsitec.Common.UI.Binders
 			{
 				if (this.prop_name != value)
 				{
+					this.Detach ();
 					this.prop_name = value;
 					this.UpdatePropertyInfo ();
 					this.OnPropertyChanged ();
@@ -121,10 +123,44 @@ namespace Epsitec.Common.UI.Binders
 				(this.prop_name != null))
 			{
 				this.prop_info = this.source_type.GetProperty (this.prop_name);
+				this.Attach ();
 			}
 			else
 			{
 				this.prop_info = null;
+			}
+		}
+		
+		protected void Detach()
+		{
+			if (this.source_attached)
+			{
+				string event_name = this.prop_name + "Changed";
+				
+				System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public;
+				System.Reflection.EventInfo    info  = this.source_type.GetEvent (event_name, flags);
+				
+				info.RemoveEventHandler (this.source_object, new EventHandler (this.HandlePropChanged));
+				
+				this.source_attached = false;
+			}
+		}
+		
+		protected void Attach()
+		{
+			if (! this.source_attached)
+			{
+				string event_name = this.prop_name + "Changed";
+				
+				System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public;
+				System.Reflection.EventInfo    info  = this.source_type.GetEvent (event_name, flags);
+				
+				if (info != null)
+				{
+					info.AddEventHandler (this.source_object, new EventHandler (this.HandlePropChanged));
+					
+					this.source_attached = true;
+				}
 			}
 		}
 		
@@ -144,6 +180,32 @@ namespace Epsitec.Common.UI.Binders
 		}
 		
 		
+		private void HandlePropChanged(object sender)
+		{
+			this.OnPropertyChanged ();
+		}
+		
+		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		#endregion
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.Source       = null;
+				this.PropertyName = null;
+			}
+		}
+		
+		
+		
+		private bool							source_attached;
 		private object							source_object;
 		private System.Type						source_type;
 		private string							prop_name;
