@@ -8,6 +8,9 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface IDataValue : IDataItem
 	{
+		INamedType		DataType		{ get; }
+		IDataConstraint	DataConstraint	{ get; }
+		
 		object ReadValue();
 		void WriteValue(object value);
 	}

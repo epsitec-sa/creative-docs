@@ -30,7 +30,7 @@ namespace Epsitec.Common.UI.Data
 			this.DefineValue (value, type);
 		}
 		
-		public Field(string name, object value, Types.INamedType type, Support.IConstraint constraint) : this (name, value, type)
+		public Field(string name, object value, Types.INamedType type, Types.IDataConstraint constraint) : this (name, value, type)
 		{
 			this.DefineConstraint (constraint);
 		}
@@ -73,13 +73,29 @@ namespace Epsitec.Common.UI.Data
 			this.type  = type;
 		}
 		
-		public void DefineConstraint(Support.IConstraint constraint)
+		public void DefineConstraint(Types.IDataConstraint constraint)
 		{
 			this.constraint = constraint;
 		}
 		
 		
 		#region IDataValue Members
+		public Types.INamedType					DataType
+		{
+			get
+			{
+				return this.type;
+			}
+		}
+		
+		public Types.IDataConstraint			DataConstraint
+		{
+			get
+			{
+				return this.constraint;
+			}
+		}
+		
 		public object ReadValue()
 		{
 			return this.value;
@@ -132,7 +148,7 @@ namespace Epsitec.Common.UI.Data
 		private string							description;
 		
 		private Types.INamedType				type;
-		private Support.IConstraint				constraint;
+		private Types.IDataConstraint			constraint;
 		
 		private object							value;
 	}
