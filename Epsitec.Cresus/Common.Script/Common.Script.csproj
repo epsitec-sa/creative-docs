@@ -108,6 +108,11 @@
                     Project = "{EAF258A4-E107-4466-A3E1-9FC072557940}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -118,12 +123,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Editor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Engine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "IScriptSource.cs"
+                    RelPath = "IEditorEngine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
