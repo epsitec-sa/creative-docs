@@ -275,12 +275,12 @@ namespace Epsitec.Common.Types
 		{
 			DecimalRange that = o as DecimalRange;
 			
-			this.minimum     = that.minimum;
-			this.maximum     = that.maximum;
-			this.resolution  = that.resolution;
-			this.digits_mul  = that.digits_mul;
-			this.digits_div  = that.digits_div;
-			this.frac_digits = that.frac_digits;
+			that.minimum     = this.minimum;
+			that.maximum     = this.maximum;
+			that.resolution  = this.resolution;
+			that.digits_mul  = this.digits_mul;
+			that.digits_div  = this.digits_div;
+			that.frac_digits = this.frac_digits;
 			
 			return that;
 		}

@@ -111,6 +111,73 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		[Test] public void CheckClone()
+		{
+			Folder root_1 = new Folder ("/");
+			
+			string[] names = { "a", "b", "c/x/one", "c/x/two", "c/y/three", "test", "long item name" };
+			
+			for (int i = 0; i < names.Length; i++)
+			{
+				root_1.CreateValue (names[i]);
+			}
+			
+			Folder root_2 = root_1.Clone ();
+			
+			DataGraphTest.CompareFolders (root_1, root_2);
+			
+			Assert.IsTrue (DataGraph.Equal (root_1, root_2));
+		}
+		
+		[Test] public void CheckEqual()
+		{
+			Folder root_1 = new Folder ("/");
+			Folder root_2 = new Folder ("/");
+			Folder root_3 = new Folder ("/");
+			
+			string[] names_1 = { "a", "b", "c/x/one", "c/x/two", "c/y/three", "test", "long item name" };
+			string[] names_2 = { "a", "b", "c/x/one", "c/x/two", "c/y/four", "test", "long item name" };
+			string[] names_3 = { "a", "b", "c/x/one", "c/x/two", "c/z", "test", "long item name" };
+			
+			for (int i = 0; i < names_1.Length; i++)
+			{
+				root_1.CreateValue (names_1[i]);
+			}
+			for (int i = 0; i < names_2.Length; i++)
+			{
+				root_2.CreateValue (names_2[i]);
+			}
+			for (int i = 0; i < names_3.Length; i++)
+			{
+				root_3.CreateValue (names_3[i]);
+			}
+			
+			Assert.IsFalse (DataGraph.Equal (root_1, root_2));
+			Assert.IsFalse (DataGraph.Equal (root_1, root_3));
+		}		
+		
+		private static void CompareFolders(IDataFolder f1, IDataFolder f2)
+		{
+			//	Vérifie que les dossiers sont identiques... récursivement.
+			
+			Assert.AreEqual (f1.Name, f2.Name);
+			Assert.AreEqual (f1.Caption, f2.Caption);
+			Assert.AreEqual (f1.Description, f2.Description);
+			Assert.AreEqual (f1.Count, f2.Count);
+			
+			int n = f1.Count;
+			
+			for (int i = 0; i < n; i++)
+			{
+				Assert.AreEqual (f1[i].Name, f2[i].Name);
+				Assert.AreEqual (f1[i].GetType (), f2[i].GetType ());
+				
+				if (f1[i] is Folder)
+				{
+					DataGraphTest.CompareFolders (f1[i] as Folder, f2[i] as Folder);
+				}
+			}
+		}
 		
 		
 		private class Folder : AbstractDataCollection, IDataFolder
@@ -120,12 +187,6 @@ namespace Epsitec.Common.Types
 				this.name = name;
 			}
 			
-			
-			public void Add(IDataItem item)
-			{
-				this.list.Add (item);
-				this.ClearCachedItemArray ();
-			}
 			
 			public void CreateValue(string path)
 			{
@@ -164,6 +225,13 @@ namespace Epsitec.Common.Types
 				}
 			}
 			
+			public Folder Clone()
+			{
+				System.ICloneable cloneable = this;
+				return cloneable.Clone () as Folder;
+			}
+			
+			
 			protected override void ClearCachedItemArray()
 			{
 				base.ClearCachedItemArray ();
@@ -183,7 +251,6 @@ namespace Epsitec.Common.Types
 				return this.items;
 			}
 
-
 			
 			#region IDataItem Members
 			public DataItemClasses				Classes
@@ -194,7 +261,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 			#endregion
-
+			
 			#region INameCaption Members
 			public string						Description
 			{
@@ -221,7 +288,13 @@ namespace Epsitec.Common.Types
 			}
 
 			#endregion
-
+			
+			protected override object CloneNewObject()
+			{
+				return new Folder (this.name);
+			}
+			
+			
 			private string						name;
 			private IDataItem[]					items;
 		}
@@ -309,6 +382,13 @@ namespace Epsitec.Common.Types
 				{
 					return this.name;
 				}
+			}
+			#endregion
+			
+			#region ICloneable Members
+			public object Clone()
+			{
+				return new Value (this.name);
 			}
 			#endregion
 			

@@ -38,7 +38,7 @@ namespace Epsitec.Common.Dialogs
 		[Test] public void CheckLoad1Unknwon()
 		{
 			Dialog dialog = new Dialog ();
-			dialog.Load ("file:unknown_dialog");
+			dialog.Load ("unknown_dialog");
 			
 			Assert.IsTrue (dialog.IsLoaded);
 			Assert.IsFalse (dialog.IsReady);
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Dialogs
 		[Test] public void CheckLoad2SimpleTest()
 		{
 			Dialog dialog = new Dialog ();
-			dialog.Load ("file:test");
+			dialog.Load ("test");
 			dialog.ShowWindow ();
 		}
 		
@@ -61,11 +61,7 @@ namespace Epsitec.Common.Dialogs
 			
 			dispatcher.RegisterController (this);
 			
-			Record record = new Record ();
-			
-			record.DefineName ("SimpleData");
-			record.DefineResourcePrefix ("file:strings");
-			record.DefineFieldChangedEventHandler (new Support.EventHandler (this.HandleFieldChanged));
+			Record record = new Record ("Rec", "dialog_with_data_strings", new Support.EventHandler (this.HandleFieldChanged));
 			
 			record.AddNewField ("UserName", "Test", new Types.StringType (), new Support.RegexConstraint (Support.PredefinedRegex.Alpha));
 			record.AddNewField ("UserAge",  10);
@@ -76,22 +72,22 @@ namespace Epsitec.Common.Dialogs
 			Assertion.AssertEquals (10, record["UserAge"].Value);
 			Assertion.AssertEquals (Representation.None, record["Representation"].Value);
 			
-			ScriptWrapper script = new ScriptWrapper ();
+//			ScriptWrapper script = new ScriptWrapper ();
 			
-			script.Source = DialogTest.CreateSource (null);
+//			script.Source = DialogTest.CreateSource (null);
 			
-			dispatcher.RegisterExtraDispatcher (script);
+//			dispatcher.RegisterExtraDispatcher (script);
 			
 			Dialog dialog = new Dialog ();
-			dialog.Load ("file:dialog_with_data");
+			dialog.Load ("dialog_with_data");
 			dialog.Data = record;
-			dialog.ScriptWrapper = script;
+//			dialog.ScriptWrapper = script;
 			dialog.CommandDispatcher = dispatcher;
 			dialog.ShowWindow ();
 			
 			
-			object document = Editor.Engine.CreateDocument (script);
-			Editor.Engine.ShowMethod (document, "Main");
+//			object document = Editor.Engine.CreateDocument (script);
+//			Editor.Engine.ShowMethod (document, "Main");
 		}
 		
 		

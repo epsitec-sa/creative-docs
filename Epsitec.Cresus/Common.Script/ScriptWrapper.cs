@@ -531,6 +531,26 @@ namespace Epsitec.Common.Script
 			}
 			#endregion
 			
+			#region ICloneable Members
+			public object Clone()
+			{
+				return this.CloneCopyToNewObject (this.CloneNewObject ());
+			}
+			#endregion
+			
+			protected virtual object CloneNewObject()
+			{
+				return new DataValue (this.name, this.type);
+			}
+			
+			protected virtual object CloneCopyToNewObject(object o)
+			{
+				DataValue that = o as DataValue;
+				
+				//	...rien à faire ici car tout est copié dans CloneNewObject...
+				
+				return that;
+			}
 			protected void OnChanged()
 			{
 				if (this.Changed != null)

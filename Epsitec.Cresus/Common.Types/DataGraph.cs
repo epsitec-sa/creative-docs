@@ -109,6 +109,81 @@ namespace Epsitec.Common.Types
 		}
 		
 		
+		public static bool Equal(IDataFolder f1, IDataFolder f2)
+		{
+			if (f1 == f2)
+			{
+				return true;
+			}
+			
+			if ((f1 == null) ||
+				(f2 == null))
+			{
+				return false;
+			}
+			
+			if ((f1.Name != f2.Name) ||
+				(f1.Count != f2.Count))
+			{
+				return false;
+			}
+			
+			int n = f1.Count;
+			
+			for (int i = 0; i < n; i++)
+			{
+				IDataItem i1 = f1[i];
+				IDataItem i2 = f2[i];
+				
+				if (DataGraph.Equal (i1, i2) == false)
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
+		public static bool Equal(IDataItem i1, IDataItem i2)
+		{
+			if (i1 == i2)
+			{
+				return true;
+			}
+			
+			if ((i1 == null) ||
+				(i2 == null))
+			{
+				return false;
+			}
+			
+			if (i1.Name != i2.Name)
+			{
+				return false;
+			}
+			
+			if ((i1 is IDataFolder) &&
+				(i2 is IDataFolder))
+			{
+				return DataGraph.Equal (i1 as IDataFolder, i2 as IDataFolder);
+			}
+			
+			if ((i1 is IDataValue) &&
+				(i2 is IDataValue))
+			{
+				IDataValue v1 = i1 as IDataValue;
+				IDataValue v2 = i2 as IDataValue;
+				
+				object o1 = v1.ReadValue ();
+				object o2 = v2.ReadValue ();
+				
+				return Comparer.Equal (o1, o2);
+			}
+			
+			throw new System.InvalidOperationException (string.Format ("Cannot compare items of type {0} and {1}.", i1.GetType ().Name, i2.GetType ().Name));
+		}
+		
+		
 		#region QueryResult Class
 		protected class QueryResult : AbstractDataCollection
 		{
@@ -263,6 +338,12 @@ namespace Epsitec.Common.Types
 			protected override IDataItem[] GetCachedItemArray()
 			{
 				return this.items;
+			}
+			
+			
+			protected override object CloneNewObject()
+			{
+				return new QueryResult ();
 			}
 			
 			

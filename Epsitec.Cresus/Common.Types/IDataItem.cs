@@ -7,13 +7,17 @@ namespace Epsitec.Common.Types
 	/// L'interface IDataItem donne accès à un élément dans un IDataGraph en
 	/// regroupant IDataFolder et IDataValue sous le même toit.
 	/// </summary>
-	public interface IDataItem : INameCaption
+	public interface IDataItem : INameCaption, System.ICloneable
 	{
 		//	INameCaption Members:
 		//
 		//	string	Name		{ get; }
 		//	string	Caption		{ get; }
 		//	string	Description	{ get; }
+		//
+		//	ICloneable Members:
+		//
+		//	object Clone();
 		
 		DataItemClasses		Classes	{ get; }
 	}

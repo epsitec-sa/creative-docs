@@ -4,15 +4,22 @@
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe Record décrit un ensemble de champs utilisés pour échanger des
-	/// données entre une application et son interface via mapper/binder/...
+	/// La classe AbstractDataCollection décrit une collection de données IDataItem
+	/// et sert de base à UI.Data.Record et à bien d'autres classes.
 	/// </summary>
-	public abstract class AbstractDataCollection : IDataCollection
+	public abstract class AbstractDataCollection : IDataCollection, System.ICloneable
 	{
 		public AbstractDataCollection()
 		{
 		}
 		
+		
+		public virtual void Add(IDataItem item)
+		{
+			this.list.Add (item);
+			this.ClearCachedItemArray ();
+		}
+			
 		
 		#region IDataCollection Members
 		public IDataItem						this[string name]
@@ -99,6 +106,13 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 		
+		#region ICloneable Members
+		object System.ICloneable.Clone()
+		{
+			return this.CloneCopyToNewObject (this.CloneNewObject ());
+		}
+		#endregion
+		
 		protected IDataItem[]					CachedItemArray
 		{
 			get
@@ -126,6 +140,23 @@ namespace Epsitec.Common.Types
 			//	faudra purger la table ici...
 			
 			this.is_dirty = true;
+		}
+		
+		
+		protected abstract object CloneNewObject();
+		protected virtual object CloneCopyToNewObject(object o)
+		{
+			//	Les classes qui dérivent de celle-ci devraient surcharger cette méthode
+			//	pour copier d'éventuels autres champs importants.
+			
+			AbstractDataCollection that = o as AbstractDataCollection;
+			
+			foreach (IDataItem item in this.list)
+			{
+				that.Add (item.Clone () as IDataItem);
+			}
+			
+			return that;
 		}
 		
 		

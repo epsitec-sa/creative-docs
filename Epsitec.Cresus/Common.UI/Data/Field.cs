@@ -260,6 +260,46 @@ namespace Epsitec.Common.UI.Data
 		public event Support.EventHandler		Changed;
 		#endregion
 		
+		#region ICloneable Members
+		object System.ICloneable.Clone()
+		{
+			return this.Clone ();
+		}
+		#endregion
+		
+		public Field Clone()
+		{
+			return this.CloneCopyToNewObject (this.CloneNewObject ()) as Field;
+		}
+		
+		
+		protected virtual object CloneNewObject()
+		{
+			return new Field ();
+		}
+		
+		protected virtual object CloneCopyToNewObject(object o)
+		{
+			//	La copie du champ ne se fait pas en profondeur, car on part de l'idée que
+			//	seule la valeur présente un réel intérêt; celle-ci étant passée par valeur
+			//	(justement !) elle n'a pas besoin de traitement particulier.
+			
+			Field that = o as Field;
+			
+			that.name           = this.name;
+			that.caption        = this.caption;
+			that.description    = this.description;
+			that.type           = this.type;
+			that.constraint     = this.constraint;
+			that.value          = this.value;
+			that.is_value_valid = this.is_value_valid;
+			
+			System.Diagnostics.Debug.Assert ((that.value == null) || (that.value.GetType ().IsValueType));
+			
+			return that;
+		}
+		
+		
 		public static Field CreateFromValue(Types.IDataValue value)
 		{
 			Field field = new Field (value.Name, null, value.DataType, value.DataConstraint);

@@ -14,6 +14,21 @@ namespace Epsitec.Common.UI.Data
 			this.graph = new Types.DataGraph (this);
 		}
 		
+		public Record(string name) : this (name, null, null)
+		{
+		}
+		
+		public Record(string name, string prefix) : this (name, prefix, null)
+		{
+		}
+		
+		public Record(string name, string prefix, Support.EventHandler handler) : this ()
+		{
+			this.DefineName (name);
+			this.DefineResourcePrefix (prefix);
+			this.DefineFieldChangedEventHandler (handler);
+		}
+		
 		
 		public void DefineName(string name)
 		{
@@ -57,9 +72,16 @@ namespace Epsitec.Common.UI.Data
 		}
 		
 		
-		public void Add(Field field)
+		public override void Add(Types.IDataItem item)
 		{
-			this.list.Add (field);
+			Field field = item as Field;
+			
+			if (field == null)
+			{
+				throw new System.ArgumentException ("Expected a valid field.", "item");
+			}
+			
+			base.Add (field);
 			
 			if (this.field_changed_event_handler != null)
 			{
@@ -82,10 +104,11 @@ namespace Epsitec.Common.UI.Data
 				}
 				
 				this.list.AddRange (fields);
+				this.ClearCachedItemArray ();
 				
-				foreach (Field field in fields)
+				if (this.field_changed_event_handler != null)
 				{
-					if (this.field_changed_event_handler != null)
+					foreach (Field field in fields)
 					{
 						field.Changed += this.field_changed_event_handler;
 					}
@@ -129,6 +152,7 @@ namespace Epsitec.Common.UI.Data
 		public void Clear()
 		{
 			this.list.Clear ();
+			this.ClearCachedItemArray ();
 			this.OnChanged ();
 		}
 		
@@ -247,6 +271,32 @@ namespace Epsitec.Common.UI.Data
 		public event Support.EventHandler		Changed;
 		#endregion
 		
+		public Record Clone()
+		{
+			System.ICloneable cloneable = this;
+
+			return cloneable.Clone () as Record;
+		}
+		
+		
+		protected override object CloneNewObject()
+		{
+			return new Record ();
+		}
+		
+		protected override object CloneCopyToNewObject(object o)
+		{
+			base.CloneCopyToNewObject (o);
+			
+			Record that = o as Record;
+			
+			that.DefineName (this.name);
+			that.DefineResourcePrefix (this.resource_prefix);
+			that.DefineFieldChangedEventHandler (this.field_changed_event_handler);
+			
+			return that;
+		}
+		
 		protected virtual Field InitFieldAndAdd(Field field)
 		{
 			string field_name = field.Name;
@@ -274,8 +324,6 @@ namespace Epsitec.Common.UI.Data
 		
 		protected virtual void OnChanged()
 		{
-			this.ClearCachedItemArray ();
-			
 			if (this.Changed != null)
 			{
 				this.Changed (this);

@@ -280,6 +280,7 @@ namespace Epsitec.Common.Dialogs
 			this.designer.Disposed -= new Support.EventHandler (this.HandleDesignerDisposed);
 		}
 		
+		
 		public static bool LoadDesignerFactory()
 		{
 			if (Dialog.factory != null)
@@ -331,6 +332,7 @@ namespace Epsitec.Common.Dialogs
 			System.Diagnostics.Debug.Assert (this.designer == sender);
 			this.SwitchBackToDialog ();
 		}
+		
 		
 		protected enum InternalMode
 		{
