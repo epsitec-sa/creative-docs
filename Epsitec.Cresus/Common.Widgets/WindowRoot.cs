@@ -101,8 +101,12 @@ namespace Epsitec.Common.Widgets
 
 		protected override bool ShortcutHandler(Shortcut shortcut, bool execute_focused)
 		{
-			if ((base.ShortcutHandler (shortcut, execute_focused) == false) &&
-				(this.window != null))
+			if (base.ShortcutHandler (shortcut, execute_focused))
+			{
+				return true;
+			}
+			
+			if (this.window != null)
 			{
 				//	Le raccourci clavier n'a pas été consommé. Il faut voir si le raccourci clavier
 				//	est attaché à une commande globale.
@@ -158,11 +162,9 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 				}
-				
-				return false;
 			}
-			
-			return true;
+				
+			return false;
 		}
 		
 		protected override void OnTextChanged()
