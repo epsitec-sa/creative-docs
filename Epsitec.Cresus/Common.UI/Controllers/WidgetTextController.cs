@@ -66,6 +66,10 @@ namespace Epsitec.Common.UI.Controllers
 				{
 					adapter.Value = text;
 				}
+				else
+				{
+					adapter.Validity = false;
+				}
 			}
 		}
 		

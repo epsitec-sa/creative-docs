@@ -98,8 +98,7 @@ namespace Epsitec.Common.UI.Controllers
 				{
 					System.Diagnostics.Debug.Assert (this.num_type.Range.CheckInRange (value));
 					
-					adapter.Value    = value;
-					adapter.Validity = true;
+					adapter.Value = value;
 				}
 				else
 				{

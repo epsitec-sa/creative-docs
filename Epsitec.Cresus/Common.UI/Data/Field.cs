@@ -144,14 +144,6 @@ namespace Epsitec.Common.UI.Data
 			}
 		}
 		
-		public bool								IsValueValid
-		{
-			get
-			{
-				return this.is_value_valid;
-			}
-		}
-		
 		
 		#region IDataValue Members
 		public Types.INamedType					DataType
@@ -167,6 +159,14 @@ namespace Epsitec.Common.UI.Data
 			get
 			{
 				return this.constraint;
+			}
+		}
+		
+		public bool								IsValueValid
+		{
+			get
+			{
+				return this.is_value_valid;
 			}
 		}
 		

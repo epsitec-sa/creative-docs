@@ -251,6 +251,14 @@ namespace Epsitec.Common.Types
 				}
 			}
 			
+			public bool							IsValueValid
+			{
+				get
+				{
+					return false;
+				}
+			}
+			
 			public object ReadValue()
 			{
 				return null;
@@ -263,6 +271,9 @@ namespace Epsitec.Common.Types
 			public void NotifyInvalidData()
 			{
 			}
+			
+			
+			public event Support.EventHandler	Changed;
 			#endregion
 
 			#region IDataItem Members
@@ -300,6 +311,15 @@ namespace Epsitec.Common.Types
 				}
 			}
 			#endregion
+			
+			protected void OnChanged()
+			{
+				if (this.Changed != null)
+				{
+					this.Changed (this);
+				}
+			}
+			
 			
 			private string						name;
 		}

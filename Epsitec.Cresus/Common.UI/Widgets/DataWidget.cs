@@ -15,6 +15,8 @@ namespace Epsitec.Common.UI.Widgets
 		public DataWidget()
 		{
 			this.InternalState &= ~ InternalState.PossibleContainer;
+			
+			this.validator = new DataWidgetValidator (this);
 		}
 		
 		public DataWidget(Widget embedder) : this ()
@@ -33,7 +35,9 @@ namespace Epsitec.Common.UI.Widgets
 			{
 				if (this.source != value)
 				{
+					this.DetachSource ();
 					this.source = value;
+					this.AttachSource ();
 					this.CreateUI ();
 					System.Diagnostics.Debug.WriteLine ("DataSource set to " + value);
 				}
@@ -148,6 +152,22 @@ namespace Epsitec.Common.UI.Widgets
 			return true;
 		}
 		#endregion
+		
+		protected void AttachSource()
+		{
+			if (this.source != null)
+			{
+				this.source.Changed += new EventHandler (this.HandleSourceChanged);
+			}
+		}
+		
+		protected void DetachSource()
+		{
+			if (this.source != null)
+			{
+				this.source.Changed -= new EventHandler (this.HandleSourceChanged);
+			}
+		}
 		
 		protected virtual bool CreateUI()
 		{
@@ -618,7 +638,27 @@ namespace Epsitec.Common.UI.Widgets
 			this.size_change_count++;
 		}
 
-
+		protected virtual  void OnDataChanged()
+		{
+			if (this.DataChanged != null)
+			{
+				this.DataChanged (this);
+			}
+		}
+		
+		
+		protected override bool ShouldSerializeValidator(Support.IValidator validator)
+		{
+			if (this.validator == validator)
+			{
+				//	On ne sérialise pas le validateur interne qui est là juste pour
+				//	s'assurer que la valeur est OK.
+				
+				return false;
+			}
+			
+			return base.ShouldSerializeValidator (validator);
+		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
@@ -638,6 +678,14 @@ namespace Epsitec.Common.UI.Widgets
 		}
 		
 		
+		private void HandleSourceChanged(object sender)
+		{
+			this.OnDataChanged ();
+		}
+		
+		
+		public event Support.EventHandler		DataChanged;
+		
 		protected enum LayoutMode
 		{
 			None,
@@ -655,5 +703,6 @@ namespace Epsitec.Common.UI.Widgets
 		protected bool							has_caption       = true;
 		protected int							size_change_count = 0;
 		protected Drawing.Size					best_fit_size = Drawing.Size.Empty;
+		protected DataWidgetValidator			validator;
 	}
 }
