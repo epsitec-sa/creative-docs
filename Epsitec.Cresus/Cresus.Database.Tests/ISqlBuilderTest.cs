@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Database
 			SqlColumn sql_col_c = new SqlColumn ("C", DbRawType.Int32);
 			
 			sql_table.Columns.Add (sql_col_a);
+		// 	sql_table.Columns.Add (sql_col_b);		// volontairement omis pour provoquer l'exception !
 			sql_table.Columns.Add (sql_col_c);
 			
 			sql_table.PrimaryKey = new SqlColumn[] { sql_col_a, sql_col_b };
