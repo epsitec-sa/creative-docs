@@ -131,9 +131,9 @@ namespace Epsitec.Common.Widgets
 					this.fontName = value;
 					this.UpdateButtons();
 
-					if ( this.textLayout != null && this.textNavigator != null )
+					if ( this.textNavigator != null )
 					{
-						this.textLayout.SetSelectionFontName(this.textNavigator.Context, this.fontName);
+						this.textNavigator.SelectionFontName = this.fontName;
 					}
 
 					if ( this.textField != null )
@@ -158,9 +158,9 @@ namespace Epsitec.Common.Widgets
 					this.fontScale = value;
 					this.UpdateButtons();
 
-					if ( this.textLayout != null && this.textNavigator != null )
+					if ( this.textNavigator != null )
 					{
-						this.textLayout.SetSelectionFontScale(this.textNavigator.Context, this.fontScale);
+						this.textNavigator.SelectionFontScale = this.fontScale;
 					}
 
 					if ( this.textField != null )
@@ -186,9 +186,9 @@ namespace Epsitec.Common.Widgets
 					this.bold = value;
 					this.UpdateButtons();
 
-					if ( this.textLayout != null && this.textNavigator != null )
+					if ( this.textNavigator != null )
 					{
-						this.textLayout.SetSelectionBold(this.textNavigator.Context, this.bold);
+						this.textNavigator.SelectionBold = this.bold;
 					}
 
 					if ( this.textField != null )
@@ -214,9 +214,9 @@ namespace Epsitec.Common.Widgets
 					this.italic = value;
 					this.UpdateButtons();
 
-					if ( this.textLayout != null && this.textNavigator != null )
+					if ( this.textNavigator != null )
 					{
-						this.textLayout.SetSelectionItalic(this.textNavigator.Context, this.italic);
+						this.textNavigator.SelectionItalic = this.italic;
 					}
 
 					if ( this.textField != null )
@@ -242,9 +242,9 @@ namespace Epsitec.Common.Widgets
 					this.underlined = value;
 					this.UpdateButtons();
 
-					if ( this.textLayout != null && this.textNavigator != null )
+					if ( this.textNavigator != null )
 					{
-						this.textLayout.SetSelectionUnderlined(this.textNavigator.Context, this.underlined);
+						this.textNavigator.SelectionUnderlined = this.underlined;
 					}
 
 					if ( this.textField != null )
@@ -269,9 +269,9 @@ namespace Epsitec.Common.Widgets
 					this.fontColor = value;
 					this.UpdateButtons();
 
-					if ( this.textLayout != null && this.textNavigator != null )
+					if ( this.textNavigator != null )
 					{
-						this.textLayout.SetSelectionFontColor(this.textNavigator.Context, this.fontColor);
+						this.textNavigator.SelectionFontColor = this.fontColor;
 					}
 
 					if ( this.textField != null )
@@ -283,17 +283,16 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public void AttachToText(AbstractTextField text)
+		public void AttachToTextField(AbstractTextField text)
 		{
 			this.textField = text;
-			this.AttachToText(text.TextLayout, text.TextNavigator);
+			this.AttachToText(text.TextNavigator);
 		}
 
-		public void AttachToText(TextLayout textLayout, TextNavigator textNavigator)
+		public void AttachToText(TextNavigator textNavigator)
 		{
 			// Lie la règle à un texte éditable.
-			if ( this.textLayout    == textLayout    &&
-				 this.textNavigator == textNavigator )  return;
+			if ( this.textNavigator == textNavigator )  return;
 
 			if ( this.textNavigator != null )
 			{
@@ -302,7 +301,6 @@ namespace Epsitec.Common.Widgets
 				this.textNavigator.TextDeleted -= new Epsitec.Common.Support.EventHandler(this.HandleCursorChanged);
 			}
 
-			this.textLayout    = textLayout;
 			this.textNavigator = textNavigator;
 
 			if ( this.textNavigator != null )
@@ -317,7 +315,7 @@ namespace Epsitec.Common.Widgets
 		public void DetachFromText()
 		{
 			this.textField = null;
-			this.AttachToText(null, null);
+			this.AttachToText(null);
 		}
 		
 		
@@ -365,12 +363,12 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleCursorChanged(object sender)
 		{
-			this.fontName   = this.textLayout.GetSelectionFontName(this.textNavigator.Context);
-			this.fontScale  = this.textLayout.GetSelectionFontScale(this.textNavigator.Context);
-			this.bold       = this.textLayout.IsSelectionBold(this.textNavigator.Context);
-			this.italic     = this.textLayout.IsSelectionItalic(this.textNavigator.Context);
-			this.underlined = this.textLayout.IsSelectionUnderlined(this.textNavigator.Context);
-			this.fontColor  = this.textLayout.GetSelectionFontColor(this.textNavigator.Context);
+			this.fontName   = this.textNavigator.SelectionFontName;
+			this.fontScale  = this.textNavigator.SelectionFontScale;
+			this.bold       = this.textNavigator.SelectionBold;
+			this.italic     = this.textNavigator.SelectionItalic;
+			this.underlined = this.textNavigator.SelectionUnderlined;
+			this.fontColor  = this.textNavigator.SelectionFontColor;
 			this.UpdateButtons();
 		}
 
@@ -518,7 +516,6 @@ namespace Epsitec.Common.Widgets
 
 
 		protected AbstractTextField			textField;
-		protected TextLayout				textLayout;
 		protected TextNavigator				textNavigator;
 		protected string					fontName = "";
 		protected double					fontScale = 1;
