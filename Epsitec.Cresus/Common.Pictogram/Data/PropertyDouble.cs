@@ -46,8 +46,7 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlIgnore]
 		public override bool AlterBoundingBox
 		{
-			get { return ( this.type == PropertyType.RegularFaces ||
-						   this.type == PropertyType.RegularShape ); }
+			get { return false; }
 		}
 
 		// Effectue une copie de la propriété.
