@@ -24,6 +24,8 @@ namespace Epsitec.Common.Support
 		
 		byte[] GetData(string id, ResourceLevel level);
 		
+		string[] GetIds(string filter, ResourceLevel level);
+		
 		//	Méthodes d'accès en écriture/modification :
 		
 		void Create(string id, ResourceLevel level);
