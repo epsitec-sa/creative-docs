@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			backup.ConnectionString = FirebirdAbstraction.MakeStandardConnectionString (fb.DbAccess, fb.MakeDbFileName (fb.DbAccess), fb.ServerType);
 			backup.Options          = FbBackupFlags.IgnoreLimbo;
-			backup.Verbose          = true;
+			backup.Verbose          = false;
 			backup.ServiceOutput   += new ServiceOutputEventHandler (FirebirdServiceTools.ServiceOutput);
 			
 			System.Diagnostics.Debug.WriteLine ("Backup: running.");

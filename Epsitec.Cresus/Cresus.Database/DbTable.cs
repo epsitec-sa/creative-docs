@@ -127,7 +127,18 @@ namespace Epsitec.Cresus.Database
 		
 		public DbRevisionMode					RevisionMode
 		{
-			get { return this.revision_mode; }
+			get
+			{
+				return this.revision_mode;
+			}
+		}
+		
+		public DbReplicationMode				ReplicationMode
+		{
+			get
+			{
+				return this.replication_mode;
+			}
 		}
 		
 		public DbKey							InternalKey
@@ -166,6 +177,21 @@ namespace Epsitec.Cresus.Database
 			this.revision_mode = revision_mode;
 		}
 		
+		public void DefineReplicationMode(DbReplicationMode replication_mode)
+		{
+			if (this.replication_mode == replication_mode)
+			{
+				return;
+			}
+			
+			if (this.replication_mode != DbReplicationMode.Unknown)
+			{
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot define a new replication mode.", this.Name));
+			}
+			
+			this.replication_mode = replication_mode;
+		}
+		
 		public void DefineAttributes(params string[] attributes)
 		{
 			this.attributes.SetFromInitialisationList (attributes);
@@ -199,8 +225,11 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (this.primary_keys[0] == column);
 		}
 		
+		
 		public SqlTable CreateSqlTable(ITypeConverter type_converter)
 		{
+			System.Diagnostics.Debug.Assert (this.ReplicationMode != DbReplicationMode.Unknown);
+			
 			SqlTable sql_table = new SqlTable (this.CreateSqlName ());
 			
 			foreach (DbColumn db_column in this.columns)
@@ -343,6 +372,7 @@ namespace Epsitec.Cresus.Database
 			
 			string arg_cat = DbTools.ElementCategoryToString (this.category);
 			string arg_rev = DbTools.RevisionModeToString (this.revision_mode);
+			string arg_rep = DbTools.ReplicationModeToString (this.replication_mode);
 			
 			if (arg_cat != null)
 			{
@@ -354,6 +384,12 @@ namespace Epsitec.Cresus.Database
 			{
 				buffer.Append (@" rev=""");
 				buffer.Append (arg_rev);
+				buffer.Append (@"""");
+			}
+			if (arg_rep != null)
+			{
+				buffer.Append (@" rep=""");
+				buffer.Append (arg_rep);
 				buffer.Append (@"""");
 			}
 			
@@ -383,9 +419,11 @@ namespace Epsitec.Cresus.Database
 			
 			string arg_cat = xml.GetAttribute ("cat");
 			string arg_rev = xml.GetAttribute ("rev");
+			string arg_rep = xml.GetAttribute ("rep");
 			
-			this.category      = DbTools.ParseElementCategory (arg_cat);
-			this.revision_mode = DbTools.ParseRevisionMode (arg_rev);
+			this.category         = DbTools.ParseElementCategory (arg_cat);
+			this.revision_mode    = DbTools.ParseRevisionMode (arg_rev);
+			this.replication_mode = DbTools.ParseReplicationMode (arg_rep);
 			
 			this.internal_table_key = DbKey.DeserializeFromXmlAttributes (xml);
 			this.Attributes.DeserializeXmlAttributes (xml);
@@ -452,6 +490,7 @@ namespace Epsitec.Cresus.Database
 		protected Collections.DbColumns			primary_keys;
 		protected DbElementCat					category;
 		protected DbRevisionMode				revision_mode;
+		protected DbReplicationMode				replication_mode;
 		protected DbKey							internal_table_key;
 	}
 }

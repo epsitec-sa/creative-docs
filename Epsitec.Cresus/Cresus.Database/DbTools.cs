@@ -82,6 +82,19 @@ namespace Epsitec.Cresus.Database
 			return (DbRevisionMode) mode;
 		}
 		
+		public static DbReplicationMode ParseReplicationMode(string text)
+		{
+			if ((text == null) ||
+				(text.Length == 0))
+			{
+				return DbReplicationMode.Unknown;
+			}
+			
+			int mode;
+			Converter.Convert (text, out mode);
+			return (DbReplicationMode) mode;
+		}
+		
 		
 		public static string ElementCategoryToString(DbElementCat cat)
 		{
@@ -96,6 +109,16 @@ namespace Epsitec.Cresus.Database
 		public static string RevisionModeToString(DbRevisionMode mode)
 		{
 			if (mode == DbRevisionMode.Unknown)
+			{
+				return null;
+			}
+			
+			return Converter.ToString ((int) mode);
+		}
+		
+		public static string ReplicationModeToString(DbReplicationMode mode)
+		{
+			if (mode == DbReplicationMode.Unknown)
 			{
 				return null;
 			}

@@ -51,11 +51,11 @@ namespace Epsitec.Cresus.Database.Settings
 			return name;
 		}
 		
-		public static void CreateTable(DbInfrastructure infrastructure, DbTransaction transaction, string name, DbElementCat category, DbRevisionMode revision_mode)
+		public static void CreateTable(DbInfrastructure infrastructure, DbTransaction transaction, string name, DbElementCat category, DbRevisionMode revision_mode, DbReplicationMode replication_mode)
 		{
 			string table_name = AbstractBase.CreateTableName (name);
 			
-			DbDict.CreateTable (infrastructure, transaction, table_name, category, revision_mode);
+			DbDict.CreateTable (infrastructure, transaction, table_name, category, revision_mode, replication_mode);
 		}
 		
 		

@@ -55,8 +55,25 @@ namespace Epsitec.Cresus.Database.Settings
 			}
 		}
 		
+		public long								SyncLogId
+		{
+			get
+			{
+				return this.sync_log_id;
+			}
+			set
+			{
+				if (this.sync_log_id != value)
+				{
+					this.sync_log_id = value;
+					this.NotifyPropertyChanged ("SyncLogId");
+				}
+			}
+		}
+		
 		
 		private int								client_id;
 		private bool							is_server;
+		private long							sync_log_id;
 	}
 }

@@ -202,14 +202,14 @@ namespace Epsitec.Cresus.Database
 		
 		public static void CreateTable(DbInfrastructure infrastructure, DbTransaction transaction, string table_name)
 		{
-			DbDict.CreateTable (infrastructure, transaction, table_name, DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
+			DbDict.CreateTable (infrastructure, transaction, table_name, DbElementCat.UserDataManaged, DbRevisionMode.Disabled, DbReplicationMode.Shared);
 		}
 		
-		public static void CreateTable(DbInfrastructure infrastructure, DbTransaction transaction, string table_name, DbElementCat category, DbRevisionMode revision_mode)
+		public static void CreateTable(DbInfrastructure infrastructure, DbTransaction transaction, string table_name, DbElementCat category, DbRevisionMode revision_mode, DbReplicationMode replication_mode)
 		{
 			//	Crée une table pour stocker un dictionnaire.
 			
-			DbTable table = infrastructure.CreateTable (table_name, category, revision_mode);
+			DbTable table = infrastructure.CreateTable (table_name, category, revision_mode, replication_mode);
 			
 			DbType type_dict_key   = infrastructure.ResolveDbType (transaction, Tags.TypeDictKey);
 			DbType type_dict_value = infrastructure.ResolveDbType (transaction, Tags.TypeDictValue);

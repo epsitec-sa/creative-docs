@@ -18,6 +18,35 @@ namespace Epsitec.Cresus.Services
 		{
 			operation = new Operation (this);
 		}
+		
+		public bool ReadRoamingClientData(Remoting.IOperation operation, out byte[] compressed_data)
+		{
+			if (operation == null)
+			{
+				throw new System.ArgumentNullException ("operation");
+			}
+			
+			Operation op = operation as Operation;
+			
+			if (op == null)
+			{
+				throw new System.ArgumentException ("Wrong operation specified.");
+			}
+			
+			//	Vérifie que l'opération s'est bien correctement terminée.
+			
+			if (! op.HasFinished)
+			{
+				compressed_data = null;
+				return false;
+			}
+			
+			//	Récupère les données qui attendent le client :
+			
+			compressed_data = op.GetCompressedData ();
+			
+			return true;
+		}
 		#endregion
 		
 		
@@ -27,6 +56,12 @@ namespace Epsitec.Cresus.Services
 			{
 				this.oper = oper;
 				this.Start ();
+			}
+			
+			
+			public byte[] GetCompressedData()
+			{
+				return this.data;
 			}
 			
 			
@@ -42,13 +77,6 @@ namespace Epsitec.Cresus.Services
 					this.Step2_CompressDatabase ();			if (this.IsCancelRequested) return;
 					this.Step2_CompressDatabaseDeflate ();	if (this.IsCancelRequested) return;
 					this.Step3_Finished ();
-					
-//					while (! this.IsCancelRequested)
-//					{
-//						//	TODO: faire du travail réel ici
-//						
-//						System.Threading.Thread.Sleep (50);
-//					}
 				}
 				catch (System.Exception exception)
 				{
@@ -60,6 +88,7 @@ namespace Epsitec.Cresus.Services
 				}
 			}
 			
+			
 			private void Step1_CopyDatabase()
 			{
 				this.SetCurrentStep (1);
@@ -68,6 +97,24 @@ namespace Epsitec.Cresus.Services
 				Database.IDbServiceTools  tools          = infrastructure.DefaultDbAbstraction.ServiceTools;
 				
 				tools.Backup (@"c:\test.backup.firebird");
+				
+				for (int i = 5; i < 50; i += 5)
+				{
+					System.IO.FileStream stream;
+					
+					try
+					{
+						stream = System.IO.File.OpenRead (@"c:\test.backup.firebird");
+					}
+					catch
+					{
+						System.Threading.Thread.Sleep (i);
+						continue;
+					}
+					
+					stream.Close ();
+					break;
+				}
 			}
 			
 			private void Step2_CompressDatabase()
@@ -134,6 +181,8 @@ namespace Epsitec.Cresus.Services
 				memory.Close ();
 				
 				System.Diagnostics.Debug.WriteLine ("Compressed database from " + total_read + " to " + memory.ToArray ().Length + " bytes (deflate).");
+				
+				this.data = memory.ToArray ();
 			}
 			
 			private void Step3_Finished()
@@ -144,6 +193,7 @@ namespace Epsitec.Cresus.Services
 			
 			
 			private OperatorEngine				oper;
+			private byte[]						data;
 		}
 	}
 }

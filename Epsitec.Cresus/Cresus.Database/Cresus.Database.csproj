@@ -189,6 +189,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DbReplicationMode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DbRevisionMode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

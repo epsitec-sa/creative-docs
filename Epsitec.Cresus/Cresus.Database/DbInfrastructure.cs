@@ -161,8 +161,8 @@ namespace Epsitec.Cresus.Database
 				//	la base, donc nécessiter une validation de transaction avant que celles-ci
 				//	ne soient accessibles en écriture :
 				
-				Settings.Globals.CreateTable (this, transaction, Settings.Globals.Name, DbElementCat.Internal, DbRevisionMode.Disabled);
-				Settings.Locals.CreateTable (this, transaction, Settings.Locals.Name, DbElementCat.Internal, DbRevisionMode.Disabled);
+				Settings.Globals.CreateTable (this, transaction, Settings.Globals.Name, DbElementCat.Internal, DbRevisionMode.Disabled, DbReplicationMode.Shared);
+				Settings.Locals.CreateTable (this, transaction, Settings.Locals.Name, DbElementCat.Internal, DbRevisionMode.Disabled, DbReplicationMode.Private);
 				
 				transaction.Commit ();
 			}
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.Database
 					throw new Exceptions.GenericException (this.db_access, string.Format ("User may not create internal table. Table '{0}'.", name));
 				
 				case DbElementCat.UserDataManaged:
-					return this.CreateTable(name, category, revision_mode);
+					return this.CreateTable(name, category, revision_mode, DbReplicationMode.Shared);
 				
 				default:
 					throw new Exceptions.GenericException (this.db_access, string.Format ("Unsupported category {0} specified. Table '{1}'.", category, name));
@@ -713,7 +713,7 @@ namespace Epsitec.Cresus.Database
 		
 		
 		
-		internal DbTable CreateTable(string name, DbElementCat category, DbRevisionMode revision_mode)
+		internal DbTable CreateTable(string name, DbElementCat category, DbRevisionMode revision_mode, DbReplicationMode replication_mode)
 		{
 			System.Diagnostics.Debug.Assert (revision_mode != DbRevisionMode.Unknown);
 			
@@ -736,6 +736,7 @@ namespace Epsitec.Cresus.Database
 			
 			table.DefineCategory (category);
 			table.DefineRevisionMode (revision_mode);
+			table.DefineReplicationMode (replication_mode);
 			
 			table.Columns.Add (col_id);
 			table.Columns.Add (col_stat);
@@ -1971,7 +1972,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnNextId,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefInternal)
 					};
 				
-				this.CreateTable (table, columns);
+				this.CreateTable (table, columns, DbReplicationMode.Shared);
 			}
 			
 			public void CreateTableColumnDef()
@@ -1992,7 +1993,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnRefParent,	  types.KeyId,       Nullable.Yes, DbColumnClass.RefId)
 					};
 				
-				this.CreateTable (table, columns);
+				this.CreateTable (table, columns, DbReplicationMode.Shared);
 			}
 			
 			public void CreateTableTypeDef()
@@ -2010,7 +2011,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 Nullable.No,  DbColumnClass.Data)
 					};
 				
-				this.CreateTable (table, columns);
+				this.CreateTable (table, columns, DbReplicationMode.Shared);
 			}
 			
 			public void CreateTableEnumValDef()
@@ -2029,7 +2030,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnRefType,	  types.KeyId,       Nullable.No,  DbColumnClass.RefId)
 					};
 				
-				this.CreateTable (table, columns);
+				this.CreateTable (table, columns, DbReplicationMode.Shared);
 			}
 			
 			public void CreateTableLog()
@@ -2045,7 +2046,7 @@ namespace Epsitec.Cresus.Database
 				//	TODO: ajouter ici une colonne définissant la nature du changement (et l'utilisateur
 				//	qui en est la cause).
 				
-				this.CreateTable (table, columns);
+				this.CreateTable (table, columns, DbReplicationMode.Shared);
 			}
 			
 			public void CreateTableRequestQueue()
@@ -2061,11 +2062,11 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnReqData,	  types.ReqRawData,	 Nullable.No,  DbColumnClass.Data)
 					};
 				
-				this.CreateTable (table, columns);
+				this.CreateTable (table, columns, DbReplicationMode.Private);
 			}
 			
 			
-			private void CreateTable(DbTable table, DbColumn[] columns)
+			private void CreateTable(DbTable table, DbColumn[] columns, DbReplicationMode replication_mode)
 			{
 				DbInfrastructure.SetCategory (columns, DbElementCat.Internal);
 				
@@ -2073,6 +2074,7 @@ namespace Epsitec.Cresus.Database
 				
 				table.DefineCategory (DbElementCat.Internal);
 				table.DefinePrimaryKey (columns[0]);
+				table.DefineReplicationMode (replication_mode);
 				
 				this.infrastructure.internal_tables.Add (table);
 				

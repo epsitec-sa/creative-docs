@@ -571,8 +571,25 @@ namespace Epsitec.Cresus.Database
 			{
 				System.Threading.Thread.Sleep (100);
 				bool finished = operation.HasFinished;
+				
 				System.Diagnostics.Debug.WriteLine ("Operation: " + (finished ? "finished" : "running") + " after " + (int) operation.RunningDuration.TotalMilliseconds + " ms.");
-				if (finished) break;
+				
+				if (finished)
+				{
+					byte[] data;
+					if ((service.ReadRoamingClientData (operation, out data)) &&
+						(data != null) &&
+						(data.Length > 0))
+					{
+						System.Diagnostics.Debug.WriteLine ("Returned data, " + data.Length + " bytes.");
+					}
+					else
+					{
+						System.Diagnostics.Debug.WriteLine ("No data returned.");
+					}
+					
+					return;
+				}
 			}
 			
 			System.Diagnostics.Debug.WriteLine ("Cancelling...");
@@ -584,6 +601,14 @@ namespace Epsitec.Cresus.Database
 				bool finished = progress.HasFinished;
 				System.Diagnostics.Debug.WriteLine ("Cancellation: " + (finished ? "finished" : "running") + " after " + (int) progress.RunningDuration.TotalMilliseconds + " ms.");
 				if (finished) break;
+			}
+		}
+		
+		[Test] /*[Ignore ("Temporary")]*/ public void Check15OperatorClientLoop()
+		{
+			for (int i = 0; i < 100; i++)
+			{
+				this.Check15OperatorClient ();
 			}
 		}
 		
