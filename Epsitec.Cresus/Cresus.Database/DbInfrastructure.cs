@@ -251,14 +251,26 @@ namespace Epsitec.Cresus.Database
 			{
 				using (DbTransaction transaction = this.BeginTransaction ())
 				{
+					//	Prend note du dernier ID stocké dans le LOG; il sert à définir le ID actif
+					//	au moment de la synchronisation (puisqu'on part d'une 'image' de la base,
+					//	ça revient à considérer qu'on a fait une synchronisation).
+					
 					DbId last_server_id = this.logger.CurrentId;
+					
+					//	Les prochains IDs affectés aux diverses lignes des diverses tables vont
+					//	tous commencer à 1, combiné avec notre ID de client.
 					
 					this.ResetIdColumn (transaction, this.internal_tables[Tags.TableTableDef], Tags.ColumnNextId, DbId.CreateId (1, client_id));
 					
-					this.logger.Detach ();
+					//	Vide les tables des requêtes et des clients, qui ne sont normalement pas
+					//	répliquées :
 					
 					this.ClearTable (transaction, this.internal_tables[Tags.TableRequestQueue]);
 					this.ClearTable (transaction, this.internal_tables[Tags.TableClientDef]);
+					
+					//	Met à jour le Logger afin d'utiliser dès à présent notre ID de client :
+					
+					this.logger.Detach ();
 					
 					this.logger = new DbLogger ();
 					this.logger.DefineClientId (client_id);
@@ -266,13 +278,15 @@ namespace Epsitec.Cresus.Database
 					this.logger.Attach (this, this.internal_tables[Tags.TableLog]);
 					this.logger.Insert (transaction, new DbLogger.Entry (1, client_id));
 					
-					//	Adapte les réglages locaux pour le client :
+					//	Adapte les divers réglages locaux en fonction du client :
 					
 					this.LocalSettings.ClientId  = client_id;
 					this.LocalSettings.IsServer  = false;
 					this.LocalSettings.SyncLogId = last_server_id.Value;
 					
 					this.LocalSettings.PersistToBase (transaction);
+					
+					//	...et dès maintenant, nous sommes prêts à travailler !
 					
 					transaction.Commit ();
 					
