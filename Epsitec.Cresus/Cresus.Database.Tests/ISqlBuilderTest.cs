@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Data;
 
 namespace Epsitec.Cresus.Database
 {
@@ -334,6 +335,155 @@ namespace Epsitec.Cresus.Database
 			command.Transaction.Commit ();
 			command.Transaction.Dispose ();
 			command.Dispose ();
+		}
+
+		[Test] public void CheckInsertArrayTable()
+		{
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
+			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
+			ISqlEngine		sql_engine     = db_abstraction.SqlEngine;
+			
+			sql_builder.AutoClear = true;
+			System.Data.IDbCommand command;
+
+			// supprime la table si jamais
+			
+			sql_builder.RemoveTable ("FbTestArrayTable");
+			
+			command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+				
+			command.Transaction = db_abstraction.BeginTransaction ();
+			try
+			{
+				command.ExecuteNonQuery ();
+				command.Transaction.Commit ();
+				command.Transaction.Dispose ();
+				command.Dispose ();
+			}
+			catch
+			{
+				command.Transaction.Rollback ();
+				command.Transaction.Dispose ();
+				command.Dispose ();
+			}
+			
+			//	crée une table avec des champs binaires variables (BLOB)
+
+			SqlTable  sql_table = new SqlTable ();
+			
+			SqlColumn sql_col_1 = new SqlColumn ("Cr_ID", DbRawType.Int32);
+			SqlColumn sql_col_2 = new SqlColumn ("ArrayDynamic", DbRawType.ByteArray, 11000, false);
+			SqlColumn sql_col_3 = new SqlColumn ("ArrayFixed",   DbRawType.ByteArray, 50, true, Nullable.Yes);	// les blobs fixes existent-ils ?
+			
+			sql_table.Name = "FbTestArrayTable";
+			sql_table.Columns.Add (sql_col_1);
+			sql_table.Columns.Add (sql_col_2);
+			sql_table.Columns.Add (sql_col_3);
+			sql_table.PrimaryKey = new SqlColumn[] { sql_col_1 };
+			
+			sql_builder.InsertTable (sql_table);
+			
+			command	= sql_builder.Command;
+			
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			command.Transaction = db_abstraction.BeginTransaction ();
+			
+			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
+			
+			command.Transaction.Commit ();
+			command.Transaction.Dispose ();
+			command.Dispose ();
+
+			//	y écrit des données
+
+			byte[] insert_values = new byte[10000];
+			for ( int i = 0 ; i < 10000 ; i++ )
+			{
+				insert_values[i] = (byte)(i);
+			}
+
+			SqlFieldCollection fields = new SqlFieldCollection ();
+
+			SqlField field_ID, field_BLOB;
+			
+			field_ID = SqlField.CreateConstant (1, DbRawType.Int32);
+			field_ID.Alias = "Cr_ID";
+			fields.Add (field_ID);
+			
+			field_BLOB = SqlField.CreateConstant (insert_values, DbRawType.ByteArray);
+			field_BLOB.Alias = "ArrayDynamic";
+			fields.Add (field_BLOB);
+
+			sql_builder.InsertData ("FbTestArrayTable", fields);
+			
+			command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			command.Transaction = db_abstraction.BeginTransaction ();
+			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
+			
+			command.Transaction.Commit ();
+			command.Transaction.Dispose ();
+			command.Dispose ();
+
+			//	va relire les données écrites dans le BLOB
+
+			SqlSelect sql_select = new SqlSelect ();
+
+			sql_select.Fields.Add (SqlField.CreateName ("Cr_ID"));
+			sql_select.Fields.Add (SqlField.CreateName ("ArrayDynamic"));
+			sql_select.Tables.Add (SqlField.CreateName ("FbTestArrayTable"));
+
+			//	défini la fonction CR_ID == valeur
+			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+				SqlField.CreateName ("Cr_ID"),
+				field_ID);
+
+			sql_select.Conditions.Add (SqlField.CreateFunction(sql_func));
+
+			//	construit la commande d'extraction
+			sql_builder.SelectData (sql_select);
+
+			//	lecture des résultats
+			command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+
+			DataSet data_set = new DataSet ();
+			command.Transaction = db_abstraction.BeginTransaction ();
+			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
+
+			Assertion.AssertEquals (typeof (int),    data_set.Tables[0].Columns[0].DataType);
+			Assertion.AssertEquals (typeof (object), data_set.Tables[0].Columns[1].DataType);
+			
+			//	récupère l'objet de la première ligne, seconde colonne
+			
+			DataTable  data_table  = data_set.Tables[0];
+			DataColumn blob_column = data_table.Columns[1];
+			System.Type blob_type  = blob_column.DataType;
+			
+			//	Hélas, on n'a pas un type exact pour la colonne ici... J'aurais bien aimé que le
+			//	provider retourne un type byte[] !
+			
+			Assertion.AssertEquals (typeof (object), blob_type);
+//-			Assertion.AssertEquals (11000, blob_column.MaxLength);
+			
+			DataRow     data_row  = data_table.Rows[0];
+			object	    blob      = data_row[1];
+			System.Type data_type = blob.GetType ();
+			
+			Assertion.AssertEquals (typeof (byte[]), data_type);
+			
+			byte[] data_array = data_row[1] as byte[];
+			
+			Assertion.AssertNotNull (data_array);
+			Assertion.AssertEquals (10000, data_array.Length);
+
+			for (int i = 0; i < 10000; i++)
+			{
+				Assertion.AssertEquals (insert_values[i], data_array[i]);
+			}
 		}
 	}
 }

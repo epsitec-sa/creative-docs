@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Database
 			column_a.DefineCategory (DbElementCat.Internal);
 		}
 		
-		[Test] [Ignore ("Not implemented")] public void CheckNewDbColumnByteArray()
+		[Test] public void CheckNewDbColumnByteArray()
 		{
 			DbColumn column_d = new DbColumn ("D", DbSimpleType.ByteArray, 10, false);
 			Assertion.AssertEquals ("D", column_d.Name);
@@ -70,10 +70,12 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_a = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.Int32));
 			DbColumn column_b = new DbColumn ("B", DbSimpleType.String, 100, true);
 			DbColumn column_c = new DbColumn ("C", DbSimpleType.Time);
+			DbColumn column_d = new DbColumn ("D", DbSimpleType.ByteArray, 1000000, false);
 			
 			Assertion.Assert (column_a.Type.GetType () == typeof (DbTypeNum));
 			Assertion.Assert (column_b.Type.GetType () == typeof (DbTypeString));
 			Assertion.Assert (column_c.Type.GetType () == typeof (DbType));
+			Assertion.Assert (column_d.Type.GetType () == typeof (DbTypeByteArray));
 		}
 		
 		[Test] public void CheckCreateSqlColumn()
@@ -83,12 +85,18 @@ namespace Epsitec.Cresus.Database
 			
 			DbColumn column_a = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
 			DbColumn column_b = new DbColumn ("B", DbSimpleType.Guid);
+			DbColumn column_c = new DbColumn ("C", DbSimpleType.String, 100, true);
+			DbColumn column_d = new DbColumn ("D", DbSimpleType.ByteArray, 1000000, false);
 			
 			column_a.DefineCategory (DbElementCat.UserDataManaged);
 			column_b.DefineCategory (DbElementCat.UserDataManaged);
+			column_c.DefineCategory (DbElementCat.UserDataManaged);
+			column_d.DefineCategory (DbElementCat.UserDataManaged);
 			
 			SqlColumn sql_a = column_a.CreateSqlColumn (type_converter);
 			SqlColumn sql_b = column_b.CreateSqlColumn (type_converter);
+			SqlColumn sql_c = column_c.CreateSqlColumn (type_converter);
+			SqlColumn sql_d = column_d.CreateSqlColumn (type_converter);
 			
 			Assertion.AssertEquals (DbRawType.SmallDecimal, sql_a.Type);
 			Assertion.AssertEquals ("U_A", sql_a.Name);
@@ -101,6 +109,18 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (sql_b.RawConverter.InternalType, sql_b.Type);
 			Assertion.AssertEquals (sql_b.RawConverter.ExternalType, TypeConverter.MapToRawType (column_b.SimpleType, column_b.NumDef));
 			
+			Assertion.AssertEquals (DbRawType.String, sql_c.Type);
+			Assertion.AssertEquals ("U_C", sql_c.Name);
+			Assertion.AssertEquals (true, sql_c.IsFixedLength);
+			Assertion.AssertEquals (false, sql_c.IsNullAllowed);
+			Assertion.AssertEquals (false, sql_c.HasRawConverter);
+
+			Assertion.AssertEquals (DbRawType.ByteArray, sql_d.Type);
+			Assertion.AssertEquals ("U_D", sql_d.Name);
+			Assertion.AssertEquals (false, sql_d.IsFixedLength);
+			Assertion.AssertEquals (false, sql_d.IsNullAllowed);
+			Assertion.AssertEquals (false, sql_d.HasRawConverter);
+
 			System.Console.Out.WriteLine ("Column {0} raw type is {1}, length={2}, fixed={3}.", sql_b.Name, sql_b.Type, sql_b.Length, sql_b.IsFixedLength);
 			System.Console.Out.WriteLine ("Raw Converter between type {0} and {1}.", sql_b.RawConverter.InternalType, sql_b.RawConverter.ExternalType);
 		}
