@@ -283,7 +283,7 @@ namespace Epsitec.Common.Widgets
 			this.menu.Name = "base";
 			this.menu.Location = new Point(0, rect.Height-this.menu.DefaultHeight);
 			this.menu.Size = new Size(rect.Width, this.menu.DefaultHeight);
-			this.menu.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
+			this.menu.Dock = DockStyle.Top;
 			this.menu.Items.Add(new MenuItem ("file", "Fichier"));
 			this.menu.Items.Add(new MenuItem ("edit", "Edition"));
 			this.menu.Items.Add(new MenuItem ("display", "Affichage"));
@@ -399,7 +399,7 @@ namespace Epsitec.Common.Widgets
 			this.toolBar = new HToolBar();
 			this.toolBar.Location = new Point(0, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
 			this.toolBar.Size = new Size(rect.Width, this.toolBar.DefaultHeight);
-			this.toolBar.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
+			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.Items.Add (new IconButton (@"file:images/open.png"));
 			this.toolBar.Items.Add (new IconButton (@"file:images/save.png"));
 			this.toolBar.Items.Add (new IconSeparator());
@@ -413,7 +413,7 @@ namespace Epsitec.Common.Widgets
 			root.SetClientZoom(1.0);
 			root.Location = new Point(0, 0);
 			root.Size = new Size(rect.Width, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
-			root.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			root.Dock = DockStyle.Fill;
 			root.Parent = this.window.Root;
 			
 			this.pane = new PaneBook();
@@ -422,7 +422,7 @@ namespace Epsitec.Common.Widgets
 			this.pane.PaneBookStyle = PaneBookStyle.LeftRight;
 			this.pane.PaneBehaviour = PaneBookBehaviour.Draft;
 			//this.pane.PaneBehaviour = PaneBookBehaviour.FollowMe;
-			this.pane.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			this.pane.Dock = DockStyle.Fill;
 			this.pane.PaneSizeChanged += new EventHandler(this.pane_SizeChanged);
 			this.pane.Parent = root;
 
