@@ -79,12 +79,39 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.WriteLine (string.Format ("Conversion of DbColumn to SqlColumn not possible for {0}.", this.Name));
 			}
 			
+			if (column != null)
+			{
+				column.Name          = this.Name;
+				column.IsNullAllowed = this.IsNullAllowed;
+				column.IsUnique      = this.IsUnique;
+				column.IsIndexed     = this.IsIndexed;
+			}
+			
 			return column;
+		}
+		
+		
+		public void SetType(DbSimpleType type)
+		{
+			this.SetTypeAndLength (type, 1, true, null);
+		}
+		
+		public void SetType(DbSimpleType type, DbNumDef num_def)
+		{
+			this.SetTypeAndLength (type, 1, true, num_def);
 		}
 		
 		public void SetTypeAndLength(DbSimpleType type, int length, bool is_fixed_length)
 		{
-			System.Diagnostics.Debug.Assert (length > 0);
+			this.SetTypeAndLength (type, length, is_fixed_length, null);
+		}
+		
+		public void SetTypeAndLength(DbSimpleType type, int length, bool is_fixed_length, DbNumDef num_def)
+		{
+			if (length < 1)
+			{
+				throw new System.ArgumentOutOfRangeException ("Invalid length");
+			}
 			
 			switch (type)
 			{
@@ -103,9 +130,14 @@ namespace Epsitec.Cresus.Database
 					break;
 			}
 			
+			if (num_def != null)
+			{
+				this.num_def = num_def.Clone () as DbNumDef;
+			}
+			
 			this.simple_type = type;
-			this.length = length;
 			this.is_fixed_length = is_fixed_length;
+			this.length = length;
 		}
 		
 		

@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand command = sql_builder.Command;
 		}
 		
-		[Test] public void CheckInsertTable()
+		[Test] [Ignore ("Bug in Firebird .NET Provider 1.5")] public void CheckInsertTableBug()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -69,15 +69,55 @@ namespace Epsitec.Cresus.Database
 			for (;;)
 			{
 				System.Console.Out.WriteLine ("Result {0}", result++);
-//				while (reader.Read ())
-//				{
-//					System.Console.Out.WriteLine ("{0} columns found.", reader.FieldCount);
-//				}
+				while (reader.Read ())
+				{
+					System.Console.Out.WriteLine ("{0} columns found.", reader.FieldCount);
+				}
 				if (reader.NextResult () == false)
 				{
 					break;
 				}
 			}
+			reader.Close ();
+			
+			command.Transaction.Commit ();
+			command.Transaction.Dispose ();
+			command.Dispose ();
+		}
+		
+		[Test] public void CheckInsertTable()
+		{
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
+			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
+			
+			SqlTable  sql_table = new SqlTable ();
+			
+			SqlColumn sql_col_1 = new SqlColumn ("Cr_ID", DbRawType.Int32);
+			SqlColumn sql_col_2 = new SqlColumn ("Cr_REV", DbRawType.Int32);
+			SqlColumn sql_col_3 = new SqlColumn ("StringDynamic", DbRawType.String, 100, false, Nullable.Yes);
+			SqlColumn sql_col_4 = new SqlColumn ("StringFixed",   DbRawType.String,  50, false, Nullable.Yes);
+			
+			sql_table.Name = "FbTestTable";
+			sql_table.Columns.Add (sql_col_1);
+			sql_table.Columns.Add (sql_col_2);
+			sql_table.Columns.Add (sql_col_3);
+			sql_table.Columns.Add (sql_col_4);
+			sql_table.PrimaryKey = new SqlColumn[] { sql_col_1, sql_col_2 };
+			
+			sql_builder.InsertTable (sql_table);
+			
+			System.Data.IDbCommand command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			System.Data.IDataReader reader;
+			command.Transaction = db_abstraction.BeginTransaction ();
+			reader = command.ExecuteReader ();
+			int n = 1;
+			while (reader.NextResult ())
+			{
+				n++;
+			}
+			System.Console.Out.WriteLine ("Executed {0} commands", n);
 			reader.Close ();
 			
 			command.Transaction.Commit ();

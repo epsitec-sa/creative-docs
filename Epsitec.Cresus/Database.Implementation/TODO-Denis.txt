@@ -74,3 +74,6 @@ A FAIRE
 		SqlFieldType.Aggregate+SqlAggregate, évtl. fonctions).
 	
 	-	Spécifier les conditions (ce sont là uniquement des fonctions).
+
+
+Je m'arrête là pour l'instant. La partie Db... -> Sql... viendra ensuite.
