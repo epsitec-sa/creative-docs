@@ -1823,7 +1823,7 @@ namespace Epsitec.Common.Widgets
 					return "";
 				}
 				
-				string text = (Support.Resources.IsTextRef (this.text)) ? this.text : this.text_layout.Text;
+				string text = (this.AutoResolveResRef && Support.Resources.IsTextRef (this.text)) ? this.text : this.text_layout.Text;
 				
 				if (text == null)
 				{
