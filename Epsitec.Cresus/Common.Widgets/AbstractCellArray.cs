@@ -777,6 +777,10 @@ namespace Epsitec.Common.Widgets
 		{
 			switch ( message.Type )
 			{
+				case MessageType.MouseEnter:
+				case MessageType.MouseLeave:
+					break;
+				
 				case MessageType.MouseDown:
 					this.ProcessMouse(pos, message.IsShiftPressed, message.IsCtrlPressed);
 					this.mouseDown = true;
@@ -797,35 +801,47 @@ namespace Epsitec.Common.Widgets
 					}
 					break;
 
-				case MessageType.KeyDown:
-					this.ProcessKeyDown(message.KeyCode);
+				case MessageType.MouseWheel:
+					if ( message.Wheel < 0 )  this.ProcessKeyDown(KeyCode.ArrowDown);
+					if ( message.Wheel > 0 )  this.ProcessKeyDown(KeyCode.ArrowUp);
 					break;
+
+				case MessageType.KeyDown:
+					if ( !this.ProcessKeyDown(message.KeyCode) )
+					{
+						return;
+					}
+					break;
+				
+				default:
+					return;
 			}
 			
 			message.Consumer = this;
 		}
 
 		// Gestion d'une touche pressée avec KeyDown.
-		protected void ProcessKeyDown(KeyCode key)
+		protected bool ProcessKeyDown(KeyCode key)
 		{
 			switch ( key )
 			{
 				case KeyCode.ArrowLeft:
 					this.SelectCellDir(-1, 0);
-					break;
+					return true;
 
 				case KeyCode.ArrowRight:
 					this.SelectCellDir(1, 0);
-					break;
+					return true;
 
 				case KeyCode.ArrowUp:
 					this.SelectCellDir(0, -1);
-					break;
+					return true;
 
 				case KeyCode.ArrowDown:
 					this.SelectCellDir(0, 1);
-					break;
+					return true;
 			}
+			return false;
 		}
 
 		// Sélectionne une cellule.

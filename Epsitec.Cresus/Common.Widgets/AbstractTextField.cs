@@ -27,6 +27,7 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.AutoEngage;
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= InternalState.AutoDoubleClick;
 			this.textStyle = TextFieldStyle.Normal;
 
 			this.ResetCursor();
@@ -89,7 +90,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.TextLayout != null)
 				{
-					Drawing.Point pos   = this.TextLayout.GetLineOrigin (0);
+					Drawing.Point pos   = this.TextLayout.GetLineOrigin(0);
 					Drawing.Point shift = this.InnerTextBounds.Location;
 					
 					double y_from_top = this.TextLayout.LayoutSize.Height - pos.Y;
@@ -138,7 +139,7 @@ namespace Epsitec.Common.Widgets
 				text = text.Substring(0, this.maxChar);
 			}
 			
-			base.ModifyTextLayout (text);
+			base.ModifyTextLayout(text);
 		}
 		
 		protected override void DisposeTextLayout()
@@ -151,12 +152,12 @@ namespace Epsitec.Common.Widgets
 		
 		internal override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
-			if (mode != TabNavigationMode.Passive)
+			if ( mode != TabNavigationMode.Passive )
 			{
-				this.SelectAll ();
+				this.SelectAll();
 			}
 			
-			return base.AboutToGetFocus (dir, mode, out focus);
+			return base.AboutToGetFocus(dir, mode, out focus);
 		}
 
 
@@ -278,7 +279,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Sélectione tous les caractéres.
+		// Sélectione tous les caractères.
 		public void SelectAll()
 		{
 			this.SelectAll(false);
@@ -289,6 +290,35 @@ namespace Epsitec.Common.Widgets
 			this.cursorFrom = 0;
 			this.cursorTo   = this.Text.Length;
 			this.OnCursorChanged(silent);
+		}
+
+		// Sélectionne toute la ligne (triple clic).
+		public virtual void SelectLine()
+		{
+			this.MoveExtremity(-1, false, false);
+			int from = this.cursorFrom;
+			this.MoveExtremity(1, false, false);
+			this.cursorFrom = from;
+		}
+
+		// Sélectionne tout le mot (double clic).
+		public virtual void SelectWord()
+		{
+			string simple = TextLayout.ConvertToSimpleText(this.Text);
+
+			while ( this.cursorFrom > 0 )
+			{
+				if ( this.IsWordSeparator(simple[this.cursorFrom-1]) )  break;
+				this.cursorFrom --;
+			}
+
+			while ( this.cursorTo < simple.Length )
+			{
+				if ( this.IsWordSeparator(simple[this.cursorTo]) )  break;
+				this.cursorTo ++;
+			}
+
+			this.OnCursorChanged();
 		}
 
 		protected override void UpdateTextLayout()
@@ -380,21 +410,21 @@ namespace Epsitec.Common.Widgets
 				case MessageType.MouseUp:
 					if ( this.mouseDown )
 					{
-						this.EndPress(pos);
+						this.EndPress(pos, message.ButtonDownCount);
 						this.mouseDown = false;
 						message.Consumer = this;
 					}
 					break;
 				
 				case MessageType.KeyDown:
-					if (this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed))
+					if ( this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed) )
 					{
 						message.Consumer = this;
 					}
 					break;
 				
 				case MessageType.KeyPress:
-					if (this.ProcessKeyPress(message.KeyChar))
+					if ( this.ProcessKeyPress(message.KeyChar) )
 					{
 						message.Consumer = this;
 					}
@@ -430,22 +460,42 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Appelé lorsque le bouton de la souris est relâché.
-		protected void EndPress(Drawing.Point pos)
+		protected void EndPress(Drawing.Point pos, int downCount)
 		{
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
 			
-			int detect = this.TextLayout.DetectIndex(pos);
-			if ( detect != -1 )
+			if ( this.textStyle == TextFieldStyle.UpDown )
 			{
-				this.cursorTo = detect;
-				this.Invalidate();
+				if ( downCount >= 2 )  downCount = 4;  // double clic -> sélectionne tout
+			}
+
+			if ( downCount >= 4 )  // quadruple clic ?
+			{
+				this.SelectAll();
+			}
+			else if ( downCount >= 3 )  // triple clic ?
+			{
+				this.SelectLine();
+			}
+			else if ( downCount >= 2 )  // double clic ?
+			{
+				this.SelectWord();
+			}
+			else	// simple clic ?
+			{
+				int detect = this.TextLayout.DetectIndex(pos);
+				if ( detect != -1 )
+				{
+					this.cursorTo = detect;
+					this.Invalidate();
+				}
 			}
 		}
 
 		// Gestion d'une touche pressée avec KeyDown dans le texte.
 		protected virtual bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
-			switch (key)
+			switch ( key )
 			{
 				case KeyCode.Back:
 					this.DeleteCharacter(-1);
@@ -500,9 +550,9 @@ namespace Epsitec.Common.Widgets
 		// Gestion d'une touche pressée avec KeyPress dans le texte.
 		protected virtual bool ProcessKeyPress(int key)
 		{
-			if (key >= 32)  // TODO: à vérifier ...
+			if ( key >= 32 )  // TODO: à vérifier ...
 			{
-				this.InsertCharacter ((char)key);
+				this.InsertCharacter((char)key);
 				return true;
 			}
 			
@@ -512,7 +562,7 @@ namespace Epsitec.Common.Widgets
 		// Insère un caractère.
 		protected bool InsertCharacter(char character)
 		{
-			return this.InsertString(TextLayout.ConvertToTaggedText (character));
+			return this.InsertString(TextLayout.ConvertToTaggedText(character));
 		}
 
 		// Insère une chaîne correspondant à un caractère ou un tag (jamais plus).
@@ -540,8 +590,8 @@ namespace Epsitec.Common.Widgets
 			if ( this.Text.Length+ins.Length > this.maxChar )
 			{
 				this.Text = text;
-				this.OnTextDeleted ();
-				this.OnCursorChanged ();
+				this.OnTextDeleted();
+				this.OnCursorChanged();
 				return false;
 			}
 			
@@ -747,10 +797,10 @@ namespace Epsitec.Common.Widgets
 			// Génère un événement pour dire que le texte a changé (tout changement).
 			
 			this.ResetCursor();
-			this.CursorScroll ();
-			this.Invalidate ();
+			this.CursorScroll();
+			this.Invalidate();
 			
-			base.OnTextChanged ();
+			base.OnTextChanged();
 		}
 
 		protected virtual void OnTextInserted()
@@ -775,14 +825,14 @@ namespace Epsitec.Common.Widgets
 		
 		protected void OnCursorChanged()
 		{
-			this.OnCursorChanged (false);
+			this.OnCursorChanged(false);
 		}
 		
 		protected virtual void OnCursorChanged(bool silent)
 		{
 			// Ne génère rien pour l'instant...
 			
-			if (silent == false)
+			if ( silent == false )
 			{
 				this.CursorScroll();
 			}
@@ -813,9 +863,9 @@ namespace Epsitec.Common.Widgets
 		{
 			double offset = cursor.Right;
 			offset += this.realSize.Width/2;
-			offset  = System.Math.Min (offset, end.X);
+			offset  = System.Math.Min(offset, end.X);
 			offset -= this.realSize.Width;
-			offset  = System.Math.Max (offset, 0);
+			offset  = System.Math.Max(offset, 0);
 			this.scrollOffset.X = offset;
 		}
 
@@ -855,8 +905,8 @@ namespace Epsitec.Common.Widgets
 			
 			adorner.PaintTextFieldBackground(graphics, rFill, state, this.textStyle, this.isReadOnly);
 			
-//			graphics.AddFilledRectangle (rText);
-//			graphics.RenderSolid (Drawing.Color.FromARGB (0.6, 1, 0, 0));
+//			graphics.AddFilledRectangle(rText);
+//			graphics.RenderSolid(Drawing.Color.FromARGB(0.6, 1, 0, 0));
 			
 			rClip = this.MapClientToRoot(rClip);
 			graphics.SetClippingRectangle(rClip);
@@ -873,7 +923,7 @@ namespace Epsitec.Common.Widgets
 					Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
 					rects[0] = rInside;
 					rects[0].Deflate(1, 1);
-					adorner.PaintTextSelectionBackground(graphics, rects);
+					adorner.PaintTextSelectionBackground(graphics, rects, state);
 					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.BackColor);
 					adorner.PaintFocusBox(graphics, rects[0]);
 				}
@@ -899,7 +949,7 @@ namespace Epsitec.Common.Widgets
 						graphics.Align(ref rects[i]);
 					}
 					
-					adorner.PaintTextSelectionBackground(graphics, rects);
+					adorner.PaintTextSelectionBackground(graphics, rects, state);
 					
 					for ( int i=0 ; i<rects.Length ; i++ )
 					{

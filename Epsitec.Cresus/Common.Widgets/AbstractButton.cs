@@ -33,9 +33,9 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.TextLayout != null)
+				if ( this.TextLayout != null )
 				{
-					return this.TextLayout.GetLineOrigin (0);
+					return this.TextLayout.GetLineOrigin(0);
 				}
 				
 				return base.BaseLine;
@@ -67,11 +67,10 @@ namespace Epsitec.Common.Widgets
 						this.OnShortcutPressed();
 						break;
 					}
-					
 					return;
 				
 				case MessageType.KeyUp:
-					if (this.isKeyboardPressed)
+					if ( this.isKeyboardPressed )
 					{
 						this.isKeyboardPressed = false;
 						break;
