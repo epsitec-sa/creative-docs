@@ -8,6 +8,11 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public class DbTypeNum : DbType
 	{
+		protected DbTypeNum()
+		{
+		}
+		
+		
 		public DbTypeNum(DbNumDef num_def) : base (DbSimpleType.Decimal)
 		{
 			this.num_def = num_def;
@@ -79,13 +84,20 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public override object Clone()
+		protected override object CloneNewObject()
 		{
-			DbTypeNum type = base.Clone () as DbTypeNum;
+			return new DbTypeNum ();
+		}
+		
+		protected override object CloneCopyToNewObject(object o)
+		{
+			DbTypeNum that = o as DbTypeNum;
 			
-			type.num_def = (this.num_def == null) ? null : this.num_def.Clone () as DbNumDef;
+			base.CloneCopyToNewObject (that);
 			
-			return type;
+			that.num_def = (this.num_def == null) ? null : this.num_def.Clone () as DbNumDef;
+			
+			return that;
 		}
 		
 		

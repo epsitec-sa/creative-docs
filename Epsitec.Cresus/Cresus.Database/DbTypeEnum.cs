@@ -87,15 +87,21 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		
-		public override object Clone()
+		protected override object CloneNewObject()
 		{
-			DbTypeEnum type = base.Clone () as DbTypeEnum;
+			return new DbTypeEnum ();
+		}
+		
+		protected override object CloneCopyToNewObject(object o)
+		{
+			DbTypeEnum that = o as DbTypeEnum;
 			
-			type.CopyValues (this.values);
-			type.max_name_length = this.max_name_length;
+			base.CloneCopyToNewObject (that);
 			
-			return type;
+			that.CopyValues (this.values);
+			that.max_name_length = this.max_name_length;
+			
+			return that;
 		}
 		
 		

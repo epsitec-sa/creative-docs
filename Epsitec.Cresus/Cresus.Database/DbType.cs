@@ -111,16 +111,27 @@ namespace Epsitec.Cresus.Database
 		
 		
 		#region ICloneable Members
-		public virtual object Clone()
+		public object Clone()
 		{
-			DbType type = System.Activator.CreateInstance (this.GetType ()) as DbType;
-			
-			type.attributes  = this.attributes == null ? null : this.attributes.Clone () as DbAttributes;
-			type.simple_type = this.simple_type;
-			
-			return type;
+			return this.CloneCopyToNewObject (this.CloneNewObject ());
 		}
 		#endregion
+		
+		protected virtual object CloneNewObject()
+		{
+			return new DbType ();
+		}
+		
+		protected virtual object CloneCopyToNewObject(object o)
+		{
+			DbType that = o as DbType;
+			
+			that.attributes  = this.attributes == null ? null : this.attributes.Clone () as DbAttributes;
+			that.simple_type = this.simple_type;
+			
+			return that;
+		}
+		
 		
 		#region IDbAttributesHost Members
 		public DbAttributes					Attributes

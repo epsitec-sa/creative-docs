@@ -9,6 +9,11 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public class DbTypeString : DbType
 	{
+		protected DbTypeString()
+		{
+		}
+		
+		
 		public DbTypeString(int length) : this (length, true)
 		{
 		}
@@ -74,14 +79,21 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public override object Clone()
+		protected override object CloneNewObject()
 		{
-			DbTypeString type = base.Clone () as DbTypeString;
+			return new DbTypeString ();
+		}
+		
+		protected override object CloneCopyToNewObject(object o)
+		{
+			DbTypeString that = o as DbTypeString;
 			
-			type.length = this.length;
-			type.is_fixed_length = this.is_fixed_length;
+			base.CloneCopyToNewObject (that);
 			
-			return type;
+			that.length = this.length;
+			that.is_fixed_length = this.is_fixed_length;
+			
+			return that;
 		}
 		
 		
