@@ -1,5 +1,5 @@
-using System;
 using NUnit.Framework;
+
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 
@@ -13,7 +13,7 @@ namespace Epsitec.Common.Tests
 			try { System.Diagnostics.Debug.WriteLine (""); } catch { }
 		}
 		
-		[Test] public void TestParentChildRelationship()
+		[Test] public void CheckParentChildRelationship()
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
@@ -39,17 +39,17 @@ namespace Epsitec.Common.Tests
 			Assertion.AssertSame (root.Children[0], widget);
 		}
 		
-		[Test] public void TestAnchor()
+		[Test] public void CheckAnchor()
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 			
-			root.Bounds = new System.Drawing.RectangleF (0, 0, 120, 50);
+			root.Bounds = new Rectangle (0, 0, 120, 50);
 			
 			root.Children.Add (widget);
 			
 			widget.Anchor = Widget.AnchorStyles.Left;
-			widget.Bounds = new System.Drawing.RectangleF (20, 10, 80, 30);
+			widget.Bounds = new Rectangle (20, 10, 80, 30);
 			
 			Assertion.Assert (widget.Anchor == Widget.AnchorStyles.Left);
 			
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert (widget.Width == 80);
 			
 			widget.Anchor = Widget.AnchorStyles.Right;
-			widget.Bounds = new System.Drawing.RectangleF (20, 10, 80, 30);
+			widget.Bounds = new Rectangle (20, 10, 80, 30);
 			
 			Assertion.Assert (widget.Anchor == Widget.AnchorStyles.Right);
 			
@@ -78,27 +78,27 @@ namespace Epsitec.Common.Tests
 		}
 		
 		
-		[Test] public void TestText()
+		[Test] public void CheckText()
 		{
 			Widget widget = new Widget ();
 			string text = "Hel&Lo";
 			widget.Text = text;
 			Assertion.Assert (widget.Text == text);
-			Assertion.Assert (widget.Mnemonic == 'l');
+			Assertion.Assert (widget.Mnemonic == 'L');
 			widget.Text = null;
 			Assertion.Assert (widget.Text == "");
 		}
 		
-		[Test] public void TestPointMath()
+		[Test] public void CheckPointMath()
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 			
-			root.Location = new System.Drawing.PointF (0, 0);
-			root.Size     = new System.Drawing.SizeF (300, 200);
+			root.Location = new Point (0, 0);
+			root.Size     = new Size (300, 200);
 			
-			widget.Location = new System.Drawing.PointF (30, 20);
-			widget.Size     = new System.Drawing.SizeF (50, 40);
+			widget.Location = new Point (30, 20);
+			widget.Size     = new Size (50, 40);
 			
 			Assertion.Assert (widget.Left == 30);
 			Assertion.Assert (widget.Right == 80);
@@ -114,9 +114,9 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert (widget.Top == 20);
 			Assertion.Assert (widget.Bottom == 60);
 			
-			System.Drawing.PointF pt_test   = new System.Drawing.PointF (40, 35);
-			System.Drawing.PointF pt_client = widget.MapParentToClient (pt_test);
-			System.Drawing.PointF pt_widget = widget.MapClientToParent (pt_client);
+			Point pt_test   = new Point (40, 35);
+			Point pt_client = widget.MapParentToClient (pt_test);
+			Point pt_widget = widget.MapClientToParent (pt_client);
 			
 			Assertion.Assert (pt_client.X == 10);
 			Assertion.Assert (pt_client.Y == 15);
@@ -143,74 +143,72 @@ namespace Epsitec.Common.Tests
 			pt_client = widget.MapParentToClient (pt_test);
 			pt_widget = widget.MapClientToParent (pt_client);
 			
-			Assertion.Assert (pt_widget.X == pt_test.X);
-			Assertion.Assert (pt_widget.Y == pt_test.Y);
-			Assertion.Assert (pt_client.X == widget.Client.Width);
-			Assertion.Assert (pt_client.Y == widget.Client.Height);
+			Assertion.Assert (Transform.Equal (pt_widget, pt_test));
+			Assertion.Assert (Transform.Equal (pt_client.X, widget.Client.Width));
+			Assertion.Assert (Transform.Equal (pt_client.Y, widget.Client.Height));
 			
 			
-			float zoom = 2.0f;
-			float ox = 1.0f;
-			float oy = 2.0f;
+			double zoom = 2.0;
+			double ox = 1.0;
+			double oy = 2.0;
 			
 			for (int angle = 0; angle < 360; angle += 90)
 			{
 				widget.SetClientAngle (angle);
 				widget.SetClientZoom (zoom);
 			
-				pt_test   = new System.Drawing.PointF (widget.Left + ox, widget.Top + oy);
+				pt_test   = new Point (widget.Left + ox, widget.Top + oy);
 				pt_client = widget.MapParentToClient (pt_test);
 				pt_widget = widget.MapClientToParent (pt_client);
 			
-				Assertion.Assert (pt_widget.X == pt_test.X);
-				Assertion.Assert (pt_widget.Y == pt_test.Y);
+				Assertion.Assert (Transform.Equal (pt_widget, pt_test));
 				
 				switch (angle)
 				{
 					case 0:
-						Assertion.Assert ("0° failed", pt_client.X == ox / zoom);
-						Assertion.Assert ("0° failed", pt_client.Y == oy / zoom);
+						Assertion.Assert ("0° failed", Transform.Equal (pt_client.X, ox / zoom));
+						Assertion.Assert ("0° failed", Transform.Equal (pt_client.Y, oy / zoom));
 						break;
 					
 					case 90:
-						Assertion.Assert ("90° failed", pt_client.X == oy / zoom);
-						Assertion.Assert ("90° failed", pt_client.Y == (widget.Client.Height - ox / zoom));
+						Assertion.Assert ("90° failed", Transform.Equal (pt_client.X, (widget.Client.Width - oy / zoom)));
+						Assertion.Assert ("90° failed", Transform.Equal (pt_client.Y, ox / zoom));
 						break;
 					
 					case 180:
-						Assertion.Assert ("180° failed", pt_client.X == (widget.Client.Width - ox / zoom));
-						Assertion.Assert ("180° failed", pt_client.Y == (widget.Client.Height - oy / zoom));
+						Assertion.Assert ("180° failed", Transform.Equal (pt_client.X, (widget.Client.Width - ox / zoom)));
+						Assertion.Assert ("180° failed", Transform.Equal (pt_client.Y, (widget.Client.Height - oy / zoom)));
 						break;
 					
 					case 270:
-						Assertion.Assert ("270° failed", pt_client.X == (widget.Client.Width - oy / zoom));
-						Assertion.Assert ("270° failed", pt_client.Y == ox / zoom);
+						Assertion.Assert ("270° failed", Transform.Equal (pt_client.X, oy / zoom));
+						Assertion.Assert ("270° failed", Transform.Equal (pt_client.Y, (widget.Client.Height - ox / zoom)));
 						break;
 				}
 			}
 		}
 		
-		[Test] public void TestTransformToClient()
+		[Test] public void CheckTransformToClient()
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 			
-			root.Location = new System.Drawing.PointF (0, 0);
-			root.Size     = new System.Drawing.SizeF (300, 200);
+			root.Location = new Point (0, 0);
+			root.Size     = new Size (300, 200);
 			
-			widget.Location = new System.Drawing.PointF (30, 20);
-			widget.Size     = new System.Drawing.SizeF (50, 40);
+			widget.Location = new Point (30, 20);
+			widget.Size     = new Size (50, 40);
 			
 			root.Children.Add (widget);
 			
 			Epsitec.Common.Drawing.Transform transform = new Epsitec.Common.Drawing.Transform ();
 			
-			float ox = 1.0f;
-			float oy = 2.0f;
+			double ox = 1.0;
+			double oy = 2.0;
 			
-			System.Drawing.PointF pt1 = new System.Drawing.PointF (widget.Left + ox, widget.Top + oy);
-			System.Drawing.PointF pt2;
-			System.Drawing.PointF pt3;
+			Point pt1 = new Point (widget.Left + ox, widget.Top + oy);
+			Point pt2;
+			Point pt3;
 			
 			transform.Reset ();
 			widget.SetClientAngle (0);
@@ -246,30 +244,30 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 		}
 		
-		[Test] public void TestTransformRectToClient()
+		[Test] public void CheckTransformRectToClient()
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 			
-			root.Location = new System.Drawing.PointF (0, 0);
-			root.Size     = new System.Drawing.SizeF (300, 200);
+			root.Location = new Point (0, 0);
+			root.Size     = new Size (300, 200);
 			
-			widget.Location = new System.Drawing.PointF (30, 20);
-			widget.Size     = new System.Drawing.SizeF (50, 40);
+			widget.Location = new Point (30, 20);
+			widget.Size     = new Size (50, 40);
 			
 			root.Children.Add (widget);
 			
-			float ox = 1.0f;
-			float oy = 2.0f;
-			float dx = 10.0f;
-			float dy = 6.0f;
+			double ox = 1.0;
+			double oy = 2.0;
+			double dx = 10.0;
+			double dy = 6.0;
 			
-			System.Drawing.RectangleF rect1 = new System.Drawing.RectangleF (widget.Left + ox, widget.Top + oy, dx, dy);
-			System.Drawing.RectangleF rect2;
-			System.Drawing.PointF pt1 = new System.Drawing.PointF (rect1.Left,  rect1.Top);
-			System.Drawing.PointF pt2 = new System.Drawing.PointF (rect1.Right, rect1.Bottom);
-			System.Drawing.PointF pt3;
-			System.Drawing.PointF pt4;
+			Rectangle rect1 = new Rectangle (widget.Left + ox, widget.Top + oy, dx, dy);
+			Rectangle rect2;
+			Point pt1 = new Point (rect1.Left,  rect1.Top);
+			Point pt2 = new Point (rect1.Right, rect1.Bottom);
+			Point pt3;
+			Point pt4;
 			
 			widget.SetClientAngle (0);
 			widget.SetClientZoom (2);
@@ -332,27 +330,27 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Max (pt3.Y, pt4.Y)));
 		}
 		
-		[Test] public void TestTransformToParent()
+		[Test] public void CheckTransformToParent()
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 			
-			root.Location = new System.Drawing.PointF (0, 0);
-			root.Size     = new System.Drawing.SizeF (300, 200);
+			root.Location = new Point (0, 0);
+			root.Size     = new Size (300, 200);
 			
-			widget.Location = new System.Drawing.PointF (30, 20);
-			widget.Size     = new System.Drawing.SizeF (50, 40);
+			widget.Location = new Point (30, 20);
+			widget.Size     = new Size (50, 40);
 			
 			root.Children.Add (widget);
 			
 			Epsitec.Common.Drawing.Transform transform = new Epsitec.Common.Drawing.Transform ();
 			
-			float ox = 1.0f;
-			float oy = 2.0f;
+			double ox = 1.0;
+			double oy = 2.0;
 			
-			System.Drawing.PointF pt1 = new System.Drawing.PointF (ox, oy);
-			System.Drawing.PointF pt2;
-			System.Drawing.PointF pt3;
+			Point pt1 = new Point (ox, oy);
+			Point pt2;
+			Point pt3;
 			
 			transform.Reset ();
 			widget.SetClientAngle (0);
@@ -388,16 +386,16 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 		}
 		
-		[Test] public void TestTransformParentClientIdentity()
+		[Test] public void CheckTransformParentClientIdentity()
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 			
-			root.Location = new System.Drawing.PointF (0, 0);
-			root.Size     = new System.Drawing.SizeF (300, 200);
+			root.Location = new Point (0, 0);
+			root.Size     = new Size (300, 200);
 			
-			widget.Location = new System.Drawing.PointF (30, 20);
-			widget.Size     = new System.Drawing.SizeF (50, 40);
+			widget.Location = new Point (30, 20);
+			widget.Size     = new Size (50, 40);
 			
 			root.Children.Add (widget);
 			
@@ -420,16 +418,16 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert (identity.Equals (transform));
 		}
 		
-		[Test] public void TestTransformHierarchy()
+		[Test] public void CheckTransformHierarchy()
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
 			
-			root.Location = new System.Drawing.PointF (100, 150);
-			root.Size     = new System.Drawing.SizeF (300, 200);
+			root.Location = new Point (100, 150);
+			root.Size     = new Size (300, 200);
 			
-			widget.Location = new System.Drawing.PointF (30, 20);
-			widget.Size     = new System.Drawing.SizeF (50, 40);
+			widget.Location = new Point (30, 20);
+			widget.Size     = new Size (50, 40);
 			widget.Parent   = root;
 			
 			widget.SetClientZoom (3);

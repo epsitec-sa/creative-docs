@@ -17,7 +17,7 @@ namespace Epsitec.Common.Tests
 		{
 		}
 		
-		[Test] public void TestCreation()
+		[Test] public void CheckCreation()
 		{
 			Transform t1 = new Transform ();
 			Transform t2 = Transform.FromTranslation (20, 10);
@@ -28,16 +28,42 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert ((t3.XX == t3.YY) && (t3.XY == -t3.YX) && (t3.TX == 0) && (t3.TY == 0));
 		}
 		
-		[Test] public void TestRotation()
+		[Test] public void CheckCompare()
+		{
+			Transform t1 = new Transform ();
+			Transform t2 = new Transform ();
+			Transform t3 = t1;
+			
+			Assertion.Assert (t1 == t1);
+			Assertion.Assert (t1 == t2);
+			Assertion.Assert (t1 == t3);
+			
+			Assertion.AssertEquals ((t1 == null), false);
+			Assertion.AssertEquals ((t1 != null), true);
+			
+			t2.Rotate (10);
+			
+			Assertion.Assert (t1 != t2);
+			Assertion.AssertEquals (t1.Equals (t2), false);
+			Assertion.AssertEquals (t1.EqualsStrictly (t2), false);
+			Assertion.AssertEquals (t1.EqualsStrictly (null), false);
+			
+			t2.Rotate (-10);
+			
+			Assertion.Assert (t1 == t2);
+			Assertion.AssertEquals (t1.Equals (t2), true);
+		}
+		
+		[Test] public void CheckRotation()
 		{
 			Transform identity = new Transform ();
 			
 			Transform t1 = Transform.FromTranslation (20, 10);
 			Transform t2 = Transform.FromTranslation (-20, -10);
 			Transform t3 = Transform.FromRotation (60);
-			Transform t4 = Transform.FromRotation (60, new System.Drawing.PointF (20, 10));
+			Transform t4 = Transform.FromRotation (60, new Point (20, 10));
 			Transform t5 = Transform.FromRotation (- 60);
-			Transform t6 = Transform.FromRotation (- 60, new System.Drawing.PointF (20, 10));
+			Transform t6 = Transform.FromRotation (- 60, new Point (20, 10));
 			
 			Transform t;
 			
@@ -51,17 +77,16 @@ namespace Epsitec.Common.Tests
 			t = Transform.Multiply (t4, t6);
 			Assertion.Assert (t.Equals (identity));
 			
-			Assertion.Assert (t.EqualsStrictly (identity) == false);
 			t.Round ();
 			Assertion.Assert (t.EqualsStrictly (identity));
 			
-			t3 = Transform.FromRotation (30);
-			System.Drawing.PointF pt = t3.TransformDirect (new System.Drawing.PointF (1, 3));
+			t3 = Transform.FromRotation (-30);
+			Point pt = t3.TransformDirect (new Point (1, 3));
 			
-			Assertion.Assert (Transform.Equal (pt, new System.Drawing.PointF (2.366025f, 2.098076f)));
+			Assertion.Assert (Transform.Equal (pt, new Point (2.366025f, 2.098076f)));
 		}
 		
-		[Test] public void TestScale()
+		[Test] public void CheckScale()
 		{
 			Transform identity = new Transform ();
 			
@@ -74,16 +99,16 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert (t.Equals (identity));
 		}
 		
-		[Test] public void TestInversion()
+		[Test] public void CheckInversion()
 		{
 			Transform identity = new Transform ();
 			
 			Transform t1 = Transform.FromTranslation (20, 10);
 			Transform t2 = Transform.FromTranslation (-20, -10);
 			Transform t3 = Transform.FromRotation (60);
-			Transform t4 = Transform.FromRotation (60, new System.Drawing.PointF (20, 10));
+			Transform t4 = Transform.FromRotation (60, new Point (20, 10));
 			Transform t5 = Transform.FromRotation (- 60);
-			Transform t6 = Transform.FromRotation (- 60, new System.Drawing.PointF (20, 10));
+			Transform t6 = Transform.FromRotation (- 60, new Point (20, 10));
 			
 			Transform t;
 			
@@ -100,19 +125,19 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert (t.Equals (t6));
 		}
 		
-		[Test] public void TestPointTransform()
+		[Test] public void CheckPointTransform()
 		{
 			Transform identity = new Transform ();
-			System.Drawing.PointF pt = new System.Drawing.PointF (30, 40);
+			Point pt = new Point (30, 40);
 			
 			Transform t1 = Transform.FromTranslation (20, 10);
 			Transform t2 = Transform.FromTranslation (-20, -10);
 			Transform t3 = Transform.FromRotation (60);
-			Transform t4 = Transform.FromRotation (60, new System.Drawing.PointF (20, 10));
+			Transform t4 = Transform.FromRotation (60, new Point (20, 10));
 			Transform t5 = Transform.FromRotation (- 60);
-			Transform t6 = Transform.FromRotation (- 60, new System.Drawing.PointF (20, 10));
+			Transform t6 = Transform.FromRotation (- 60, new Point (20, 10));
 			
-			System.Drawing.PointF result;
+			Point result;
 			
 			result = t1.TransformDirect (pt);
 			Assertion.Assert ((result.X == 50) && (result.Y == 50));
@@ -137,14 +162,20 @@ namespace Epsitec.Common.Tests
 			result = t6.TransformDirect (pt);
 			result = t6.TransformInverse (result);
 			Assertion.Assert (Transform.Equal (result, pt));
+			
+			pt = new Point (20, 10);
+			result = t4.TransformDirect (pt);
+			Assertion.Assert (Transform.Equal (result, pt));
+			result = t4.TransformInverse (pt);
+			Assertion.Assert (Transform.Equal (result, pt));
 		}	
 		
-		[Test] public void TestOps()
+		[Test] public void CheckOps()
 		{
 			Transform t1 = Transform.FromTranslation (20, 10);
 			Transform t2 = Transform.FromTranslation (-20, -10);
 			Transform t3 = Transform.FromRotation (60);
-			Transform t4 = Transform.FromRotation (60, new System.Drawing.PointF (20, 10));
+			Transform t4 = Transform.FromRotation (60, new Point (20, 10));
 			
 			Transform t = new Transform ();
 			

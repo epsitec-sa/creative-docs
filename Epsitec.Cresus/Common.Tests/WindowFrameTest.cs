@@ -14,7 +14,7 @@ namespace Epsitec.Common.Tests
 			catch { }
 		}
 		
-		[Test] public void TestCreation()
+		[Test] public void CheckCreation()
 		{
 			WindowFrame window = new WindowFrame ();
 			window.Show ();
