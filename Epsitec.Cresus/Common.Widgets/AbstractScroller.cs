@@ -5,7 +5,7 @@ namespace Epsitec.Common.Widgets
 	/// HScroller et VScroller.
 	/// </summary>
 	[Support.SuppressBundleSupport]
-	public abstract class AbstractScroller : Widget, Helpers.IDragBehaviorHost, Support.INumValue
+	public abstract class AbstractScroller : Widget, Helpers.IDragBehaviorHost, Support.Data.INumValue
 	{
 		protected AbstractScroller(bool vertical)
 		{

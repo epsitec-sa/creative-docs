@@ -510,7 +510,7 @@ namespace Epsitec.Common.Support
 					prop_name = prop_info.Name;
 				}
 				
-				IPropertyProvider prop = obj as IPropertyProvider;
+				Data.IPropertyProvider prop = obj as Data.IPropertyProvider;
 				
 				System.Diagnostics.Debug.Assert (prop_name != null);
 				System.Diagnostics.Debug.Assert (prop_name != "");
@@ -781,7 +781,7 @@ namespace Epsitec.Common.Support
 				{
 					//	L'appelant désire conserver des informations au sujet de la définition des propriétés.
 					
-					IPropertyProvider prop = obj as IPropertyProvider;
+					Data.IPropertyProvider prop = obj as Data.IPropertyProvider;
 					
 					//	Si la propriété est définie au moyen d'un champ <ref...>, on prend note du code XML
 					//	source :
