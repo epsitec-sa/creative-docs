@@ -205,6 +205,9 @@ namespace Epsitec.Common.Pictogram.Data
 				IconObjects obj;
 				obj = (IconObjects)serializer.Deserialize(stream);
 
+				this.size = obj.size;
+				this.origin = obj.origin;
+
 				this.objects.Clear();
 				foreach ( AbstractObject ob in obj.Objects )
 				{

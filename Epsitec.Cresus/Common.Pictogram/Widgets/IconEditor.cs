@@ -4,7 +4,7 @@ using Epsitec.Common.Pictogram.Data;
 namespace Epsitec.Common.Pictogram.Widgets
 {
 	/// <summary>
-	/// La classe ButtonGraphics représente un bouton avec une icône vectorielle.
+	/// La classe IconEditor représente l'éditeur d'icône complet.
 	/// </summary>
 	public class IconEditor : Epsitec.Common.Widgets.Widget
 	{
@@ -196,13 +196,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.lister.Parent = this.middlePane;
 			this.lister.Hide();
 
-			this.frame1 = new ButtonGraphics();
+			this.frame1 = new SampleButton();
 			this.frame1.ButtonStyle = ButtonStyle.ToolItem;
 			this.frame1.ActiveState = WidgetState.ActiveYes;
 			this.frame1.IconObjects.Objects = this.drawer.Objects;
 			this.frame1.Parent = this.rightPane;
 
-			this.frame2 = new ButtonGraphics();
+			this.frame2 = new SampleButton();
 			this.frame2.ButtonStyle = ButtonStyle.ToolItem;
 			this.frame2.ActiveState = WidgetState.ActiveYes;
 			this.frame2.SetEnabled(false);
@@ -522,8 +522,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected ColorCircle					circle;
 		protected Drawer						drawer;
 		protected Lister						lister;
-		protected ButtonGraphics				frame1;
-		protected ButtonGraphics				frame2;
+		protected SampleButton					frame1;
+		protected SampleButton					frame2;
 		protected ColorSelector					colorSelector;
 		protected AbstractPanel					originColorPanel = null;
 		protected PropertyType					originColorType = PropertyType.None;

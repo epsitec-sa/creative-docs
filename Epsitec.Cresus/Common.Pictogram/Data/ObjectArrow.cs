@@ -191,7 +191,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		protected double			distPara = 10;
-		protected double			distPerp = 5;
+		protected double			distPara = 3;
+		protected double			distPerp = 2;
 	}
 }

@@ -15,8 +15,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			this.field = new TextFieldSlider(this);
 			this.field.MinRange = 0;
-			this.field.MaxRange = 20;
-			this.field.Step = 1;
+			this.field.MaxRange = 5;
+			this.field.Step = 0.5;
 			this.field.TextChanged += new EventHandler(this.TextChanged);
 
 			this.buttons = new IconButton[6];

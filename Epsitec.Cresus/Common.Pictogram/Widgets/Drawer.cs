@@ -370,7 +370,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public void ActionDuplicate()
 		{
 			this.UndoMemorize("duplicate");
-			this.DuplicateSelection(new Drawing.Point(10, 10));
+			this.DuplicateSelection(new Drawing.Point(1, 1));
 			this.OnToolChanged();
 		}
 
@@ -1152,6 +1152,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			foreach ( Widget widget in this.clones )
 			{
+				SampleButton sample = widget as SampleButton;
+				if ( sample != null )
+				{
+					sample.IconObjects.Size = this.objects.Size;
+					sample.IconObjects.Origin = this.objects.Origin;
+				}
+				
 				widget.Invalidate();
 			}
 		}
@@ -1161,7 +1168,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected void SnapGrid(ref Drawing.Point pos)
 		{
 			if ( !this.gridShow )  return;
-			pos = pos.GridAlign(this.gridStep);
+			pos = pos.GridAlign(new Drawing.Point(this.gridStep.X/2, this.gridStep.Y/2), this.gridStep);
 		}
 
 		// Dessine la grille magnétique.
@@ -1175,32 +1182,41 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			if ( this.gridShow )
 			{
-				double step = this.gridStep;
-				for ( double pos=step ; pos<=100-step ; pos+=step )
+				double step = this.gridStep.X;
+				for ( double pos=step ; pos<this.objects.Size.Width ; pos+=step )
 				{
 					double x = pos;
+					double y = 0;
+					graphics.Align(ref x, ref y);
+					x += ix;
+					y += iy;
+					graphics.AddLine(x, 0, x, this.objects.Size.Height);
+				}
+				step = this.gridStep.Y;
+				for ( double pos=step ; pos<this.objects.Size.Height ; pos+=step )
+				{
+					double x = 0;
 					double y = pos;
 					graphics.Align(ref x, ref y);
 					x += ix;
 					y += iy;
-					graphics.AddLine(x, 0, x, 100);
-					graphics.AddLine(0, y, 100, y);
+					graphics.AddLine(0, y, this.objects.Size.Width, y);
 				}
 				graphics.RenderSolid(Drawing.Color.FromBrightness(0.9));
 			}
 
-			Drawing.Rectangle rect = new Drawing.Rectangle(10, 10, 80, 80);
+			Drawing.Rectangle rect = new Drawing.Rectangle(2, 2, this.objects.Size.Width-4, this.objects.Size.Height-4);
 			graphics.Align(ref rect);
 			rect.Offset(ix, iy);
 			graphics.AddRectangle(rect);
 
-			double cx = 100/2;
-			double cy = 100/2;
+			double cx = this.objects.Size.Width/2;
+			double cy = this.objects.Size.Height/2;
 			graphics.Align(ref cx, ref cy);
 			cx += ix;
 			cy += iy;
-			graphics.AddLine(cx, 0, cx, 100);
-			graphics.AddLine(0, cy, 100, cy);
+			graphics.AddLine(cx, 0, cx, this.objects.Size.Height);
+			graphics.AddLine(0, cy, this.objects.Size.Width, cy);
 			graphics.RenderSolid(Drawing.Color.FromBrightness(1.0));
 
 			graphics.LineWidth = initialWidth;
@@ -1213,19 +1229,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			if ( type == ConstrainType.Normal || type == ConstrainType.Line )
 			{
-				graphics.AddLine(pos.X, 0, pos.X, 100);
-				graphics.AddLine(0, pos.Y, 100, pos.Y);
+				graphics.AddLine(pos.X, 0, pos.X, this.objects.Size.Height);
+				graphics.AddLine(0, pos.Y, this.objects.Size.Width, pos.Y);
 				graphics.RenderSolid(Drawing.Color.FromARGB(0.5, 1,0,0));
 			}
 
 			if ( type == ConstrainType.Normal || type == ConstrainType.Square )
 			{
-				Drawing.Point p1 = Drawing.Transform.RotatePoint(pos, System.Math.PI*0.25, pos+new Drawing.Point(100,0));
-				Drawing.Point p2 = Drawing.Transform.RotatePoint(pos, System.Math.PI*1.25, pos+new Drawing.Point(100,0));
+				Drawing.Point p1 = Drawing.Transform.RotatePoint(pos, System.Math.PI*0.25, pos+new Drawing.Point(this.objects.Size.Width,0));
+				Drawing.Point p2 = Drawing.Transform.RotatePoint(pos, System.Math.PI*1.25, pos+new Drawing.Point(this.objects.Size.Width,0));
 				graphics.AddLine(p1, p2);
 
-				p1 = Drawing.Transform.RotatePoint(pos, System.Math.PI*0.75, pos+new Drawing.Point(100,0));
-				p2 = Drawing.Transform.RotatePoint(pos, System.Math.PI*1.75, pos+new Drawing.Point(100,0));
+				p1 = Drawing.Transform.RotatePoint(pos, System.Math.PI*0.75, pos+new Drawing.Point(this.objects.Size.Width,0));
+				p2 = Drawing.Transform.RotatePoint(pos, System.Math.PI*1.75, pos+new Drawing.Point(this.objects.Size.Width,0));
 				graphics.AddLine(p1, p2);
 
 				graphics.RenderSolid(Drawing.Color.FromARGB(0.5, 1,0,0));
@@ -1237,9 +1253,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			double initialWidth = graphics.LineWidth;
 			Drawing.Transform save = graphics.SaveTransform();
-			this.iconContext.ScaleX = this.Client.Width/100;
-			this.iconContext.ScaleY = this.Client.Height/100;
-			graphics.TranslateTransform(0.5, 0.5);
+			this.iconContext.ScaleX = this.Client.Width/this.objects.Size.Width;
+			this.iconContext.ScaleY = this.Client.Height/this.objects.Size.Height;
 			graphics.ScaleTransform(this.iconContext.ScaleX, this.iconContext.ScaleY, 0, 0);
 
 			// Dessine la grille magnétique.
@@ -1343,7 +1358,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected Drawing.Point		selectRectP1;
 		protected Drawing.Point		selectRectP2;
 		protected bool				gridShow = false;
-		protected double			gridStep = 5;
+		protected Drawing.Point		gridStep = new Drawing.Point(1, 1);
 		protected int				rankLastCreated = -1;
 
 		protected Drawing.Color		colorBlack;

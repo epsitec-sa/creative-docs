@@ -49,10 +49,10 @@ namespace Epsitec.Common.Pictogram
 				if ( icon.Read(stream) )
 				{
 					context.IsEnable = !disabled;
-					context.ScaleX = size.Width / 100;
-					context.ScaleY = size.Height / 100;
-					
-					graphics.TranslateTransform(0.5, 0.5);
+					context.ScaleX = size.Width / icon.Size.Width;
+					context.ScaleY = size.Height / icon.Size.Height;
+					//context.ScaleX = 0.2;
+					//context.ScaleY = 0.2;
 					graphics.ScaleTransform(context.ScaleX, context.ScaleY, 0, 0);
 					
 					icon.DrawGeometry(graphics, context);

@@ -52,27 +52,27 @@ namespace Epsitec.Common.Drawing
 			return new Size (this.x, this.y);
 		}
 		
-		public Point GridAlign(double step)
+		public Point GridAlign(double offset, double step)
 		{
-			return new Point (Point.GridAlign (this.X, step), Point.GridAlign (this.Y, step));
+			return new Point (Point.GridAlign (this.X, offset, step), Point.GridAlign (this.Y, offset, step));
 		}
 		
-		public Point GridAlign(Point step)
+		public Point GridAlign(Point offset, Point step)
 		{
-			return new Point (Point.GridAlign (this.X, step.X), Point.GridAlign (this.Y, step.Y));
+			return new Point (Point.GridAlign (this.X, offset.X, step.X), Point.GridAlign (this.Y, offset.Y, step.Y));
 		}
 		
 		
-		internal static double GridAlign(double value, double step)
+		internal static double GridAlign(double value, double offset, double step)
 		{
 			// Met une valeur sur la grille la plus proche.
 			if ( value < 0.0 )
 			{
-				return (double)((int)((value-step/2.0)/step)*step);
+				return (double)((int)((value+offset-step/2.0)/step)*step)-offset;
 			}
 			else
 			{
-				return (double)((int)((value+step/2.0)/step)*step);
+				return (double)((int)((value+offset+step/2.0)/step)*step)-offset;
 			}
 		}
 

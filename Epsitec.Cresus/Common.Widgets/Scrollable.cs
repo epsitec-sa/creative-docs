@@ -16,7 +16,13 @@ namespace Epsitec.Common.Widgets
 			this.v_scroller = new VScroller (this);
 			
 			this.h_scroller.Parent = this;
+			this.h_scroller.Minimum = 0;
+			this.h_scroller.Maximum = 1;
+			this.h_scroller.Display = 0;
+			
 			this.v_scroller.Parent = this;
+			this.h_scroller.ValueChanged += new EventHandler (HandleHScrollerValueChanged);
+			this.v_scroller.ValueChanged += new EventHandler(HandleVScrollerValueChanged);
 			
 			this.panel_container = new Widget (this);
 			this.panel_container.Parent = this;
@@ -113,6 +119,8 @@ namespace Epsitec.Common.Widgets
 				
 				if (delta_dx > 0)
 				{
+					//	Il y a besoin d'un ascenceur horizontal.
+					
 					if (margin_y == 0)
 					{
 						margin_y = this.h_scroller.Height;
@@ -122,6 +130,8 @@ namespace Epsitec.Common.Widgets
 				
 				if (delta_dy > 0)
 				{
+					//	Il y a besoin d'un ascenceur vertical.
+					
 					if (margin_x == 0)
 					{
 						margin_x = this.v_scroller.Width;
@@ -132,12 +142,40 @@ namespace Epsitec.Common.Widgets
 				break;
 			}
 			
-			this.panel_container.Bounds = new Drawing.Rectangle (0, margin_y, this.Client.Width - margin_x, this.Client.Height - margin_y);
-			this.panel.Location = new Drawing.Point (0, margin_y - delta_dy);
+			double vis_dx = this.Client.Width - margin_x;
+			double vis_dy = this.Client.Height - margin_y;
+			double offset_x = 0;
+			double offset_y = 0;
+			
+			if (delta_dx > 0)
+			{
+				offset_x = delta_dx * this.h_scroller.Value;
+			}
+			if (delta_dy > 0)
+			{
+				offset_y = delta_dy * this.v_scroller.Value;
+			}
+			
+			this.panel_container.Bounds = new Drawing.Rectangle (0, margin_y, vis_dx, vis_dy);
+			this.panel.Location = new Drawing.Point (offset_x, offset_y + this.Client.Height - this.panel.Height);
 			
 			this.h_scroller.SetVisible (margin_y > 0);
 			this.v_scroller.SetVisible (margin_x > 0);
 		}
+		
+		
+		private void HandleHScrollerValueChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.h_scroller == sender);
+			this.UpdatePanelLocation ();
+		}
+		
+		private void HandleVScrollerValueChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.v_scroller == sender);
+			this.UpdatePanelLocation ();
+		}
+		
 		
 		
 		protected Panel					panel;

@@ -16,7 +16,7 @@ namespace Epsitec.Common.Pictogram.Data
 			lineMode.Type = PropertyType.LineMode;
 			lineMode.Text = "Epaisseur trait";
 			lineMode.BackgroundColor = Drawing.Color.FromBrightness(0.7);
-			lineMode.Width = 5.0;
+			lineMode.Width = 1.0;
 			lineMode.Cap   = Drawing.CapStyle.Round;
 			lineMode.Join  = Drawing.JoinStyle.Round;
 			this.AddProperty(lineMode);
@@ -56,8 +56,8 @@ namespace Epsitec.Common.Pictogram.Data
 			roundRect.BackgroundColor = Drawing.Color.FromBrightness(0.8);
 			roundRect.Value = 0;
 			roundRect.MinRange = 0;
-			roundRect.MaxRange = 20;
-			roundRect.Step = 2;
+			roundRect.MaxRange = 10;
+			roundRect.Step = 1;
 			this.AddProperty(roundRect);
 
 			PropertyDouble regularFaces = new PropertyDouble();
