@@ -20,9 +20,9 @@ namespace Epsitec.Cresus.Database
 		
 		//	Vérification de la validité de noms et de valeurs SQL :
 		
-		bool ValidateName(string name);
-		bool ValidateString(string name);
-		bool ValidateNumber(string name);
+		bool ValidateName(string value);
+		bool ValidateString(string value);
+		bool ValidateNumber(string value);
 		
 		//	Manipulation de tables :
 		

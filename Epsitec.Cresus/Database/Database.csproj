@@ -153,6 +153,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DbSqlStandard.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DbSyntaxException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

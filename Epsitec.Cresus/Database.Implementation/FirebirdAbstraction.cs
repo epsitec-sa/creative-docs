@@ -46,6 +46,8 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				this.CreateConnection (true);
 			}
+			
+			this.sql_builder = new FirebirdSqlBuilder (this);
 		}
 
 		~FirebirdAbstraction()
@@ -186,7 +188,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				throw new DbSyntaxException (db_access, string.Format ("Name is too long (length={0})", name));
 			}
-			if (System.Text.RegularExpressions.Regex.IsMatch (name, @"\w") == false)
+			if (System.Text.RegularExpressions.Regex.IsMatch (name, @"^\w+$") == false)
 			{
 				throw new DbSyntaxException (db_access, string.Format ("{0} contains an invalid character", name));
 			}
@@ -206,7 +208,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		public ISqlBuilder							SqlBuilder
 		{
-			get { return null; }
+			get { return this.sql_builder; }
 		}
 
 		
@@ -334,6 +336,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		private IDbAbstractionFactory				db_factory;
 		private FbConnection						db_connection;
 		private string								db_connection_string;
+		private FirebirdSqlBuilder					sql_builder;
 		
 		protected static int						fb_port				= 3050;
 		protected static byte						fb_dialect			= 3;
