@@ -91,5 +91,30 @@ namespace Epsitec.Common.Converters
 			decimal result;
 			Converter.Convert (new Drawing.Rectangle (10, 20, 30, 40), out result);
 		}
+		[Test] public void CheckToEnum()
+		{
+			System.Enum v1, v2, v3, v;
+			
+			Assertion.Assert (Converter.Convert (MyEnum.First, typeof (MyEnum), out v1));
+			Assertion.Assert (Converter.Convert ("Second",     typeof (MyEnum), out v2));
+			Assertion.Assert (Converter.Convert (99,           typeof (MyEnum), out v3));
+			
+			Assertion.AssertEquals (MyEnum.First,  v1);
+			Assertion.AssertEquals (MyEnum.Second, v2);
+			Assertion.AssertEquals (MyEnum.Extra,  v3);
+			
+			Assertion.Assert (Converter.Convert (0,   typeof (MyEnum), out v) == false);
+			Assertion.Assert (Converter.Convert ("",  typeof (MyEnum), out v) == false);
+			Assertion.Assert (Converter.Convert ("0", typeof (MyEnum), out v) == false);
+		}
+		
+		private enum MyEnum
+		{
+			None	= -1,
+			First	=  1,
+			Second	=  2,
+			Third	=  3,
+			Extra	= 99
+		}
 	}
 }
