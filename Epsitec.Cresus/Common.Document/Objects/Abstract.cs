@@ -294,6 +294,15 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
+		// Fin du déplacement d'une poignée.
+		public virtual void MoveHandleEnding(int rank, Point pos, DrawingContext drawingContext)
+		{
+			if ( rank < this.handles.Count )  // poignée de l'objet ?
+			{
+				this.document.Modifier.TextInfoModif = "";
+			}
+		}
+
 		// Déplace un coin tout en conservant une forme rectangulaire.
 		protected void MoveCorner(Point pc, int corner, int left, int right, int opposite)
 		{
@@ -412,6 +421,61 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Texte des informations de modification pour un objet segment de ligne.
+		protected void TextInfoModifLine()
+		{
+			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
+			double angle = Point.ComputeAngleDeg(this.Handle(0).Position, this.Handle(1).Position);
+			string text = string.Format("lg={0} a={1}", this.document.Modifier.RealToString(len), this.document.Modifier.AngleToString(angle));
+			this.document.Modifier.TextInfoModif = text;
+		}
+
+		// Texte des informations de modification pour un objet rectangulaire.
+		protected void TextInfoModifRect()
+		{
+			double width  = 0.0;
+			double height = 0.0;
+
+			if ( this.handles.Count < 4 )
+			{
+				Point p1 = this.Handle(0).Position;
+				Point p2 = this.Handle(1).Position;
+				width = System.Math.Abs(p1.X-p2.X);
+				height = System.Math.Abs(p1.Y-p2.Y);
+			}
+			else
+			{
+				Point p1 = this.Handle(0).Position;
+				Point p2 = this.Handle(1).Position;
+				Point p3 = this.Handle(2).Position;
+				Point p4 = this.Handle(3).Position;
+				if ( Geometry.IsRectangular(p1, p2, p3, p4) )
+				{
+					width  = (Point.Distance(p1,p4)+Point.Distance(p3,p2))/2.0;
+					height = (Point.Distance(p1,p3)+Point.Distance(p4,p2))/2.0;
+				}
+			}
+
+			if ( width == 0.0 && height == 0.0 )
+			{
+				this.document.Modifier.TextInfoModif = "";
+			}
+			else
+			{
+				string text = string.Format("dx={0} dy={1}", this.document.Modifier.RealToString(width), this.document.Modifier.RealToString(height));
+				this.document.Modifier.TextInfoModif = text;
+			}
+		}
+
+		// Texte des informations de modification pour un objet circulaire.
+		protected void TextInfoModifCircle()
+		{
+			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
+			string text = string.Format("r={0}", this.document.Modifier.RealToString(len));
+			this.document.Modifier.TextInfoModif = text;
+		}
+
+		
 		// Gestion d'un événement pendant l'édition.
 		public virtual bool EditProcessMessage(Message message, Point pos)
 		{

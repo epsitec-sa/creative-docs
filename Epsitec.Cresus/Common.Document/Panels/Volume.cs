@@ -34,7 +34,7 @@ namespace Epsitec.Common.Document.Panels
 
 			this.fieldRapport = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealPercent(this.fieldRapport);
-			this.fieldRapport.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldRapport.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldRapport.TabIndex = 2;
 			this.fieldRapport.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldLeft = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldLeft);
 			this.fieldLeft.InternalMaxValue = 90.0M;
-			this.fieldLeft.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldLeft.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldLeft.TabIndex = 3;
 			this.fieldLeft.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRight = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldRight);
 			this.fieldRight.InternalMaxValue = 90.0M;
-			this.fieldRight.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldRight.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldRight.TabIndex = 4;
 			this.fieldRight.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -67,9 +67,9 @@ namespace Epsitec.Common.Document.Panels
 			{
 				//?this.volumeType.SelectedIndexChanged -= new EventHandler(this.HandleTypeChanged);
 				this.volumeType.TextChanged -= new EventHandler(this.HandleTypeChanged);
-				this.fieldRapport.TextChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldLeft.TextChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldRight.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldRapport.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldLeft.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldRight.ValueChanged -= new EventHandler(this.HandleFieldChanged);
 
 				this.label = null;
 				this.volumeType = null;

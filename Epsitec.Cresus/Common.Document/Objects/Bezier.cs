@@ -611,6 +611,7 @@ namespace Epsitec.Common.Document.Objects
 
 			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
+			this.TextInfoModif(pos, rank);
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -721,6 +722,7 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(rank+1).Position = pos;
 				this.Handle(rank-1).Position = Point.Symmetry(this.Handle(rank).Position, pos);
 				this.dirtyBbox = true;
+				this.TextInfoModif(pos, rank);
 			}
 			else
 			{
@@ -736,6 +738,7 @@ namespace Epsitec.Common.Document.Objects
 						this.Handle(1).Type = HandleType.Starting;
 					}
 				}
+				this.document.Modifier.TextInfoModif = "";
 			}
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -783,6 +786,7 @@ namespace Epsitec.Common.Document.Objects
 				this.HandlePropertiesCreate();
 				this.HandlePropertiesUpdate();
 				this.isCreating = false;
+				this.document.Modifier.TextInfoModif = "";
 				return true;
 			}
 			else
@@ -803,6 +807,7 @@ namespace Epsitec.Common.Document.Objects
 		public override bool CreateEnding(DrawingContext drawingContext)
 		{
 			this.isCreating = false;
+			this.document.Modifier.TextInfoModif = "";
 
 			int total = this.TotalHandle;
 			if ( total <= 3 )  return false;
@@ -812,6 +817,42 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesCreate();
 			this.HandlePropertiesUpdate();
 			return true;
+		}
+
+		// Texte des informations de modification.
+		protected void TextInfoModif(Point mouse, int rank)
+		{
+			int r1, r2;
+			if ( this.isCreating )
+			{
+				r1 = this.TotalHandle-2;
+				r2 = this.TotalHandle-1;
+			}
+			else
+			{
+				if ( rank%3 == 0 )
+				{
+					r1 = rank;
+					r2 = rank+1;
+				}
+				else if ( rank%3 == 2 )
+				{
+					r1 = rank;
+					r2 = rank-1;
+				}
+				else
+				{
+					this.document.Modifier.TextInfoModif = "";
+					return;
+				}
+			}
+
+			Point p1 = this.Handle(r1).Position;
+			Point p2 = this.Handle(r2).Position;
+			double len = Point.Distance(p1, p2);
+			double angle = Point.ComputeAngleDeg(p1, p2);
+			string text = string.Format("lg={0} a={1}", this.document.Modifier.RealToString(len), angle.ToString("F1"));
+			this.document.Modifier.TextInfoModif = text;
 		}
 
 		// Retourne un bouton d'action pendant la création.

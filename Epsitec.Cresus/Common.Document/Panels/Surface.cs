@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Panels
 
 				this.fieldFactor[i] = new TextFieldReal(this);
 				this.document.Modifier.AdaptTextFieldRealPercent(this.fieldFactor[i]);
-				this.fieldFactor[i].TextChanged += new EventHandler(this.HandleFieldChanged);
+				this.fieldFactor[i].ValueChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldFactor[i].TabIndex = 2+i;
 				this.fieldFactor[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldScalar[i].InternalMinValue = 1;
 				this.fieldScalar[i].InternalMaxValue = 20;
 				this.fieldScalar[i].Step = 1;
-				this.fieldScalar[i].TextChanged += new EventHandler(this.HandleFieldChanged);
+				this.fieldScalar[i].ValueChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldScalar[i].TabIndex = 2+i;
 				this.fieldScalar[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
@@ -78,12 +78,12 @@ namespace Epsitec.Common.Document.Panels
 				this.surfaceType.TextChanged -= new EventHandler(this.HandleTypeChanged);
 				for ( int i=0 ; i<4 ; i++ )
 				{
-					this.fieldFactor[i].TextChanged += new EventHandler(this.HandleFieldChanged);
+					this.fieldFactor[i].ValueChanged -= new EventHandler(this.HandleFieldChanged);
 					this.fieldFactor[i] = null;
 				}
 				for ( int i=0 ; i<2 ; i++ )
 				{
-					this.fieldScalar[i].TextChanged += new EventHandler(this.HandleFieldChanged);
+					this.fieldScalar[i].ValueChanged -= new EventHandler(this.HandleFieldChanged);
 					this.fieldScalar[i] = null;
 				}
 				this.resetButton.Clicked -= new MessageEventHandler(this.HandleResetButton);

@@ -56,7 +56,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMarginH.FactorMaxRange = 0.1M;
 			this.fieldMarginH.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldMarginH);
-			this.fieldMarginH.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldMarginH.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldMarginH.TabIndex = 20;
 			this.fieldMarginH.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMarginH, "Marges gauche et droite");
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMarginV.FactorMaxRange = 0.1M;
 			this.fieldMarginV.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldMarginV);
-			this.fieldMarginV.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldMarginV.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldMarginV.TabIndex = 21;
 			this.fieldMarginV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMarginV, "Marges sup/inf");
@@ -75,7 +75,8 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldOffsetV);
 			this.fieldOffsetV.InternalMinValue = -50.0M;
 			this.fieldOffsetV.InternalMaxValue =  50.0M;
-			this.fieldOffsetV.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldOffsetV.TextSuffix = "%";
+			this.fieldOffsetV.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldOffsetV.TabIndex = 22;
 			this.fieldOffsetV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldOffsetV, "Décalage vertical");
@@ -104,9 +105,9 @@ namespace Epsitec.Common.Document.Panels
 					this.buttons[i].Clicked -= new MessageEventHandler(this.HandlePanelJustifClicked);
 					this.buttons[i] = null;
 				}
-				this.fieldMarginH.TextChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldMarginV.TextChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldOffsetV.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldMarginH.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldMarginV.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldOffsetV.ValueChanged -= new EventHandler(this.HandleFieldChanged);
 
 				this.label = null;
 				this.fieldMarginH = null;

@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldNbFaces.InternalMinValue = 3;
 			this.fieldNbFaces.InternalMaxValue = 24;
 			this.fieldNbFaces.Step = 1;
-			this.fieldNbFaces.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldNbFaces.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldNbFaces.TabIndex = 1;
 			this.fieldNbFaces.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -35,7 +35,8 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDeep.InternalMinValue = 0;
 			this.fieldDeep.InternalMaxValue = 100;
 			this.fieldDeep.Step = 5;
-			this.fieldDeep.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldDeep.TextSuffix = "%";
+			this.fieldDeep.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldDeep.TabIndex = 3;
 			this.fieldDeep.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -50,9 +51,9 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.fieldNbFaces.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldNbFaces.ValueChanged -= new EventHandler(this.HandleFieldChanged);
 				this.checkStar.ActiveStateChanged -= new EventHandler(this.HandleCheckChanged);
-				this.fieldDeep.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldDeep.ValueChanged -= new EventHandler(this.HandleFieldChanged);
 
 				this.label = null;
 				this.fieldNbFaces = null;

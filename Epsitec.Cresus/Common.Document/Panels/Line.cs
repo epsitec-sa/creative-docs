@@ -88,7 +88,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldStandardLength.FactorMinRange = 0.0M;
 			this.fieldStandardLength.FactorMaxRange = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldStandardLength);
-			this.fieldStandardLength.TextChanged += new EventHandler(this.HandleDashChanged);
+			this.fieldStandardLength.ValueChanged += new EventHandler(this.HandleDashChanged);
 			this.fieldStandardLength.TabIndex = 20;
 			this.fieldStandardLength.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldStandardLength, "Longueur du motif");
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDashPen.FactorMinRange = 0.0M;
 			this.fieldDashPen.FactorMaxRange = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashPen);
-			this.fieldDashPen.TextChanged += new EventHandler(this.HandleDashChanged);
+			this.fieldDashPen.ValueChanged += new EventHandler(this.HandleDashChanged);
 			this.fieldDashPen.TabIndex = 21;
 			this.fieldDashPen.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldDashPen, "Longueur du trait");
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDashGap.FactorMinRange = 0.0M;
 			this.fieldDashGap.FactorMaxRange = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashGap);
-			this.fieldDashGap.TextChanged += new EventHandler(this.HandleDashChanged);
+			this.fieldDashGap.ValueChanged += new EventHandler(this.HandleDashChanged);
 			this.fieldDashGap.TabIndex = 22;
 			this.fieldDashGap.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldDashGap, "Longueur du trou");
@@ -145,9 +145,9 @@ namespace Epsitec.Common.Document.Panels
 					this.radioDashRank[i].ActiveStateChanged -= new EventHandler(this.HandleDashRankChanged);
 					this.radioDashRank[i] = null;
 				}
-				this.fieldStandardLength.TextChanged -= new EventHandler(this.HandleDashChanged);
-				this.fieldDashPen.TextChanged -= new EventHandler(this.HandleDashChanged);
-				this.fieldDashGap.TextChanged -= new EventHandler(this.HandleDashChanged);
+				this.fieldStandardLength.ValueChanged -= new EventHandler(this.HandleDashChanged);
+				this.fieldDashPen.ValueChanged -= new EventHandler(this.HandleDashChanged);
+				this.fieldDashGap.ValueChanged -= new EventHandler(this.HandleDashChanged);
 
 				this.label = null;
 				this.field = null;

@@ -69,6 +69,7 @@ namespace Epsitec.Common.Document
 					Dialogs.CreateTitle(container, "Dimensions d'une page");
 					this.CreatePaper(container);
 					this.CreatePoint(container, "PageSize");
+					this.CreateDouble(container, "OutsideArea");
 					Dialogs.CreateSeparator(container);
 					this.CreateCombo(container, "DefaultUnit");
 				}
@@ -413,6 +414,7 @@ namespace Epsitec.Common.Document
 			TextFieldReal field = new TextFieldReal(container);
 			field.Width = 60;
 			field.Name = sDouble.Name;
+			field.TextSuffix = sDouble.Suffix;
 			if ( sDouble.Integer )
 			{
 				this.document.Modifier.AdaptTextFieldRealScalar(field);
@@ -638,9 +640,10 @@ namespace Epsitec.Common.Document
 
 				button = new Button(containerDX);
 				button.ButtonStyle = ButtonStyle.Icon;
-				button.Width = 16;
+				button.Width = 17;
 				button.Name = sPoint.Name;
-				button.Text = "/2";
+				button.Text = "\u00F72";  // /2
+				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
@@ -650,13 +653,14 @@ namespace Epsitec.Common.Document
 
 				button = new Button(containerDX);
 				button.ButtonStyle = ButtonStyle.Icon;
-				button.Width = 16;
+				button.Width = 17;
 				button.Name = sPoint.Name;
-				button.Text = "x2";
+				button.Text = "\u00D72";  // x2
+				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
-				button.DockMargins = new Margins(1, 0, 2, 2);
+				button.DockMargins = new Margins(-1, 0, 2, 2);
 				button.Clicked += new MessageEventHandler(HandleDoublerPointMulXClicked);
 				this.WidgetsTableAdd(button, ".DoublerMulX");
 
@@ -669,9 +673,10 @@ namespace Epsitec.Common.Document
 
 				button = new Button(containerDY);
 				button.ButtonStyle = ButtonStyle.Icon;
-				button.Width = 16;
+				button.Width = 17;
 				button.Name = sPoint.Name;
-				button.Text = "/2";
+				button.Text = "\u00F72";  // /2
+				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
@@ -681,13 +686,14 @@ namespace Epsitec.Common.Document
 
 				button = new Button(containerDY);
 				button.ButtonStyle = ButtonStyle.Icon;
-				button.Width = 16;
+				button.Width = 17;
 				button.Name = sPoint.Name;
-				button.Text = "x2";
+				button.Text = "\u00D72";  // x2
+				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
-				button.DockMargins = new Margins(1, 0, 2, 2);
+				button.DockMargins = new Margins(-1, 0, 2, 2);
 				button.Clicked += new MessageEventHandler(HandleDoublerPointMulYClicked);
 				this.WidgetsTableAdd(button, ".DoublerMulY");
 			}

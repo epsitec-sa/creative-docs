@@ -44,7 +44,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldLength[j].FactorMaxRange = 0.1M;
 				this.fieldLength[j].FactorStep = 1.0M;
 				this.document.Modifier.AdaptTextFieldRealDimension(this.fieldLength[j]);
-				this.fieldLength[j].TextChanged += new EventHandler(this.HandleFieldChanged);
+				this.fieldLength[j].ValueChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldLength[j].TabIndex = index++;
 				this.fieldLength[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.fieldLength[j], "Longueur");
@@ -53,7 +53,8 @@ namespace Epsitec.Common.Document.Panels
 				this.document.Modifier.AdaptTextFieldRealScalar(this.fieldEffect1[j]);
 				this.fieldEffect1[j].InternalMinValue = -100;
 				this.fieldEffect1[j].InternalMaxValue = 200;
-				this.fieldEffect1[j].TextChanged += new EventHandler(this.HandleFieldChanged);
+				this.fieldEffect1[j].TextSuffix = "%";
+				this.fieldEffect1[j].ValueChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldEffect1[j].TabIndex = index++;
 				this.fieldEffect1[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.fieldEffect1[j], "Paramètre A");
@@ -62,7 +63,8 @@ namespace Epsitec.Common.Document.Panels
 				this.document.Modifier.AdaptTextFieldRealScalar(this.fieldEffect2[j]);
 				this.fieldEffect2[j].InternalMinValue = -100;
 				this.fieldEffect2[j].InternalMaxValue = 200;
-				this.fieldEffect2[j].TextChanged += new EventHandler(this.HandleFieldChanged);
+				this.fieldEffect2[j].TextSuffix = "%";
+				this.fieldEffect2[j].ValueChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldEffect2[j].TabIndex = index++;
 				this.fieldEffect2[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.fieldEffect2[j], "Paramètre B");
@@ -98,9 +100,9 @@ namespace Epsitec.Common.Document.Panels
 				{
 					//?this.fieldType[j].SelectedIndexChanged -= new EventHandler(this.HandleTypeChanged);
 					this.fieldType[j].TextChanged -= new EventHandler(this.HandleTypeChanged);
-					this.fieldLength[j].TextChanged -= new EventHandler(this.HandleFieldChanged);
-					this.fieldEffect1[j].TextChanged -= new EventHandler(this.HandleFieldChanged);
-					this.fieldEffect2[j].TextChanged -= new EventHandler(this.HandleFieldChanged);
+					this.fieldLength[j].ValueChanged -= new EventHandler(this.HandleFieldChanged);
+					this.fieldEffect1[j].ValueChanged -= new EventHandler(this.HandleFieldChanged);
+					this.fieldEffect2[j].ValueChanged -= new EventHandler(this.HandleFieldChanged);
 					this.fieldType[j] = null;
 					this.fieldLength[j] = null;
 					this.fieldEffect1[j] = null;

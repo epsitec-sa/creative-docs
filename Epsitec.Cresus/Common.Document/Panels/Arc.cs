@@ -35,14 +35,14 @@ namespace Epsitec.Common.Document.Panels
 
 			this.fieldStarting = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldStarting);
-			this.fieldStarting.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldStarting.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldStarting.TabIndex = 20;
 			this.fieldStarting.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldStarting, "Angle initial");
 
 			this.fieldEnding = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldEnding);
-			this.fieldEnding.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldEnding.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldEnding.TabIndex = 21;
 			this.fieldEnding.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldEnding, "Angle final");
@@ -67,8 +67,8 @@ namespace Epsitec.Common.Document.Panels
 					this.buttons[i].Clicked -= new MessageEventHandler(this.HandlePanelArcClicked);
 					this.buttons[i] = null;
 				}
-				this.fieldStarting.TextChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldEnding.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldStarting.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldEnding.ValueChanged -= new EventHandler(this.HandleFieldChanged);
 
 				this.label = null;
 				this.fieldStarting = null;
@@ -194,17 +194,17 @@ namespace Epsitec.Common.Document.Panels
 			}
 
 			r.Offset(0, -25);
-			r.Left = rect.Left+41;
+			r.Left = rect.Left+29;
 			r.Width = 20;
 			this.labelStarting.Bounds = r;
 			r.Left = r.Right+2;
-			r.Width = 44;
+			r.Width = 50;
 			this.fieldStarting.Bounds = r;
 			r.Left = r.Right+2;
 			r.Width = 20;
 			this.labelEnding.Bounds = r;
 			r.Left = r.Right+2;
-			r.Width = 44;
+			r.Width = 50;
 			this.fieldEnding.Bounds = r;
 		}
 		

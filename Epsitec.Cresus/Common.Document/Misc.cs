@@ -116,5 +116,12 @@ namespace Epsitec.Common.Document
 			a = b;
 			b = t;
 		}
+
+		static public void Swap(ref Size a, ref Size b)
+		{
+			Size t = a;
+			a = b;
+			b = t;
+		}
 	}
 }

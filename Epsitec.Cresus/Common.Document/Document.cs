@@ -21,6 +21,13 @@ namespace Epsitec.Common.Document
 		Clipboard,		// document servant uniquement de bloc-notes
 	}
 
+	public enum InstallType
+	{
+		Demo,			// version demo
+		Full,			// version pleine valide
+		Expired,		// version pleine échue
+	}
+
 	/// <summary>
 	/// Summary description for Document.
 	/// </summary>
@@ -35,10 +42,11 @@ namespace Epsitec.Common.Document
 		}
 
 		// Crée un nouveau document vide.
-		public Document(DocumentType type, DocumentMode mode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher)
+		public Document(DocumentType type, DocumentMode mode, InstallType installType, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher)
 		{
 			this.type = type;
 			this.mode = mode;
+			this.installType = installType;
 			this.globalSettings = globalSettings;
 			this.commandDispatcher = commandDispatcher;
 
@@ -93,6 +101,13 @@ namespace Epsitec.Common.Document
 		public DocumentMode Mode
 		{
 			get { return this.mode; }
+		}
+
+		// Type d'installation du logiciel.
+		public InstallType InstallType
+		{
+			get { return this.installType; }
+			set { this.installType = value; }
 		}
 
 		// Réglages globaux.
@@ -207,19 +222,30 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.size != value )
 				{
-					this.size = value;
-					this.IsDirtySerialize = true;
-
-					if ( this.Modifier != null )
+					if ( this.modifier != null && this.notifier != null )
 					{
-						this.Modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
+						this.modifier.OpletQueueBeginAction("ChangeDocSize");
+						this.modifier.InsertOpletSize();
+						this.size = value;
+						this.IsDirtySerialize = true;
+						this.modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
+						this.notifier.NotifyAllChanged();
+						this.modifier.OpletQueueValidateAction();
 					}
-
-					if ( this.notifier != null )
+					else
 					{
-						this.Notifier.NotifyAllChanged();
+						this.size = value;
+						this.IsDirtySerialize = true;
 					}
 				}
+			}
+		}
+
+		public Size InternalSize
+		{
+			set
+			{
+				this.size = value;
 			}
 		}
 
@@ -538,6 +564,7 @@ namespace Epsitec.Common.Document
 			if ( this.Modifier != null )
 			{
 				this.Modifier.OpletQueueEnable = true;
+				this.Modifier.OpletQueuePurge();
 			}
 		}
 
@@ -1317,6 +1344,7 @@ namespace Epsitec.Common.Document
 
 		protected DocumentType					type;
 		protected DocumentMode					mode;
+		protected InstallType					installType;
 		protected Settings.GlobalSettings		globalSettings;
 		protected CommandDispatcher				commandDispatcher;
 		protected string						name;

@@ -32,6 +32,14 @@ namespace Epsitec.Common.Document
 			Fine,
 		}
 
+		protected enum ZoomType
+		{
+			None,			// zoom quelconque
+			Page,			// zoom sur toute la page
+			PageWidth,		// zoom sur la largeur de la page
+		}
+
+
 		public Viewer(Document document)
 		{
 			this.InternalState |= InternalState.AutoFocus;
@@ -920,6 +928,11 @@ namespace Epsitec.Common.Document
 			}
 			else if ( this.moveObject != null )
 			{
+				if ( this.moveHandle != -1 )  // déplace une poignée ?
+				{
+					this.moveObject.MoveHandleEnding(this.moveHandle, mouse, this.drawingContext);
+				}
+
 				if ( this.moveReclick && !this.moveAccept && !isRight && !this.drawingContext.IsShift )
 				{
 					this.SelectOther(mouse, this.moveObject);
@@ -2498,10 +2511,39 @@ namespace Epsitec.Common.Document
 				return;
 			}
 			
-			if ( clipRect.Right == 1 ||				// un pixel à gauche, ignore
-				 clipRect.Bottom == this.Height-1 )	// un pixel en haut, ignore
+			// Ignore une zone de repeinture d'un pixel à gauche ou en haut,
+			// à cause des règles qui chevauchent Viewer.
+			if ( clipRect.Right == 1              ||  // un pixel à gauche ?
+				 clipRect.Bottom == this.Height-1 )   // un pixel en haut ?
 			{
-				return;
+				return;  // ignore
+			}
+
+			if ( this.lastSize != this.Size     &&  // redimensionnement ?
+				 this.zoomType != ZoomType.None )   // zoom spécial ?
+			{
+				if ( this.zoomType == ZoomType.Page )
+				{
+					this.drawingContext.ZoomPageAndCenter();
+				}
+				if ( this.zoomType == ZoomType.PageWidth )
+				{
+					this.drawingContext.ZoomPageWidthAndCenter();
+				}
+			}
+			this.lastSize = this.Size;
+
+			if ( this.drawingContext.IsZoomPage )
+			{
+				this.zoomType = ZoomType.Page;
+			}
+			else if ( this.drawingContext.IsZoomPageWidth )
+			{
+				this.zoomType = ZoomType.PageWidth;
+			}
+			else
+			{
+				this.zoomType = ZoomType.None;
 			}
 			
 			//?System.Diagnostics.Debug.WriteLine("PaintBackgroundImplementation "+clipRect.ToString());
@@ -2721,6 +2763,8 @@ namespace Epsitec.Common.Document
 		protected Point							zoomOrigin;
 		protected Point							zoomOffset;
 		protected double						zoomStart;
+		protected Size							lastSize = new Size(0, 0);
+		protected ZoomType						zoomType = ZoomType.None;
 
 		protected VMenu							contextMenu;
 		protected VMenu							contextMenuOper;

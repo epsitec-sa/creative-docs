@@ -99,6 +99,7 @@ namespace Epsitec.Common.Document.Objects
 
 			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
+			this.TextInfoModif(pos, rank);
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -295,7 +296,7 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(rank).Position = pos;
 			}
 			this.dirtyBbox = true;
-			this.TextInfoModif(pos);
+			this.TextInfoModif(pos, rank);
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -375,24 +376,44 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Texte des informations de modification.
-		protected void TextInfoModif(Point mouse)
+		protected void TextInfoModif(Point mouse, int rank)
 		{
-			Point p1, p2;
-			if ( this.mouseDown )
+			if ( this.isCreating )
 			{
-				p1 = this.Handle(this.TotalHandle-2).Position;
-				p2 = this.Handle(this.TotalHandle-1).Position;
+				Point p1, p2;
+				if ( this.mouseDown )
+				{
+					p1 = this.Handle(this.TotalHandle-2).Position;
+					p2 = this.Handle(this.TotalHandle-1).Position;
+				}
+				else
+				{
+					p1 = this.Handle(this.TotalHandle-1).Position;
+					p2 = mouse;
+				}
+				double len = Point.Distance(p1, p2);
+				double angle = Point.ComputeAngleDeg(p1, p2);
+				string text = string.Format("lg={0} a={1}", this.document.Modifier.RealToString(len), angle.ToString("F1"));
+				this.document.Modifier.TextInfoModif = text;
 			}
 			else
 			{
-				p1 = this.Handle(this.TotalHandle-1).Position;
-				p2 = mouse;
-			}
+				int prev = rank-1;
+				int next = rank+1;
+				if ( prev < 0 )  prev = this.TotalMainHandle-1;
+				if ( next >= this.TotalMainHandle )  next = 0;
 
-			double len = Point.Distance(p1, p2)/this.document.Modifier.RealScale;
-			double angle = Point.ComputeAngleDeg(p1, p2);
-			string text = string.Format("lg={0}, a={1}", len.ToString("F1"), angle.ToString("F1"));
-			this.document.Modifier.TextInfoModif = text;
+				Point p1 = this.Handle(prev).Position;
+				Point p2 = this.Handle(rank).Position;
+				Point p3 = this.Handle(next).Position;
+
+				double len1 = Point.Distance(p1, p2);
+				double len2 = Point.Distance(p2, p3);
+				double angle1 = Point.ComputeAngleDeg(p1, p2);
+				double angle2 = Point.ComputeAngleDeg(p3, p2);
+				string text = string.Format("lg={0} a={2}  |  lg={1} a={3}", this.document.Modifier.RealToString(len1), this.document.Modifier.RealToString(len2), this.document.Modifier.AngleToString(angle1), this.document.Modifier.AngleToString(angle2));
+				this.document.Modifier.TextInfoModif = text;
+			}
 		}
 
 		// Retourne un bouton d'action pendant la création.

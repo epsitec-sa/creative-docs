@@ -319,6 +319,15 @@ namespace Epsitec.Common.Document
 			{
 				this.PrintTarget(port, drawingContext, offset);
 			}
+
+			if ( this.document.InstallType == InstallType.Demo )
+			{
+				this.PrintDemo(port, offset);
+			}
+			if ( this.document.InstallType == InstallType.Expired )
+			{
+				this.PrintExpired(port, offset);
+			}
 		}
 
 		// Calcule les zones d'impression.
@@ -768,6 +777,121 @@ namespace Epsitec.Common.Document
 			port.PaintOutline(path);
 		}
 
+		// Imprime le warning d'installation.
+		protected void PrintDemo(Printing.PrintPort port, Point offset)
+		{
+			Transform initialTransform = port.Transform;
+			this.InitSimplyPort(port, offset);
+			this.PaintDemo(port);
+			port.Transform = initialTransform;
+		}
+
+		// Desine le warning d'installation.
+		protected void PaintDemo(Drawing.IPaintPort port)
+		{
+			Size ds = this.document.Size;
+			Path path = new Path();
+
+			path.MoveTo(Printer.Conv(ds,  2,4));
+			path.LineTo(Printer.Conv(ds,  2,0));
+			path.LineTo(Printer.Conv(ds,  0,0));
+			path.LineTo(Printer.Conv(ds,  0,2));
+			path.LineTo(Printer.Conv(ds,  2,2));  // d
+
+			path.MoveTo(Printer.Conv(ds,  5,2));
+			path.LineTo(Printer.Conv(ds,  3,2));
+			path.LineTo(Printer.Conv(ds,  3,0));
+			path.LineTo(Printer.Conv(ds,  5,0));
+			path.MoveTo(Printer.Conv(ds,  3,1));
+			path.LineTo(Printer.Conv(ds,  4,1));  // e
+
+			path.MoveTo(Printer.Conv(ds,  6,0));
+			path.LineTo(Printer.Conv(ds,  6,2));
+			path.LineTo(Printer.Conv(ds,  8,2));
+			path.LineTo(Printer.Conv(ds,  8,0));
+			path.MoveTo(Printer.Conv(ds,  7,0));
+			path.LineTo(Printer.Conv(ds,  7,2));  // m
+			
+			path.MoveTo(Printer.Conv(ds,  9,0));
+			path.LineTo(Printer.Conv(ds,  9,2));
+			path.LineTo(Printer.Conv(ds, 11,2));
+			path.LineTo(Printer.Conv(ds, 11,0));
+			path.LineTo(Printer.Conv(ds,  9,0));  // o
+			
+			port.Color = Color.FromBrightness(1.0);
+			port.LineWidth = 20.0;
+			port.PaintOutline(path);
+
+			port.Color = Color.FromBrightness(0.8);
+			port.LineWidth = 10.0;
+			port.PaintOutline(path);
+		}
+
+		// Imprime le warning d'installation.
+		protected void PrintExpired(Printing.PrintPort port, Point offset)
+		{
+			Transform initialTransform = port.Transform;
+			this.InitSimplyPort(port, offset);
+			this.PaintExpired(port);
+			port.Transform = initialTransform;
+		}
+
+		// Dessine le warning d'installation.
+		protected void PaintExpired(Drawing.IPaintPort port)
+		{
+			Size ds = this.document.Size;
+			Path path = new Path();
+
+			path.MoveTo(Printer.Conv(ds,  2,2));
+			path.LineTo(Printer.Conv(ds,  0,2));
+			path.LineTo(Printer.Conv(ds,  0,0));
+			path.LineTo(Printer.Conv(ds,  2,0));
+			path.MoveTo(Printer.Conv(ds,  0,1));
+			path.LineTo(Printer.Conv(ds,  1,1));  // e
+
+			path.MoveTo(Printer.Conv(ds,  5,2));
+			path.LineTo(Printer.Conv(ds,  3,2));
+			path.LineTo(Printer.Conv(ds,  3,0));
+			path.LineTo(Printer.Conv(ds,  5,0));  // c
+
+			path.MoveTo(Printer.Conv(ds,  6,4));
+			path.LineTo(Printer.Conv(ds,  6,0));
+			path.MoveTo(Printer.Conv(ds,  6,2));
+			path.LineTo(Printer.Conv(ds,  8,2));
+			path.LineTo(Printer.Conv(ds,  8,0));  // h
+			
+			path.MoveTo(Printer.Conv(ds,  9,2));
+			path.LineTo(Printer.Conv(ds,  9,0));
+			path.LineTo(Printer.Conv(ds, 11,0));
+			path.LineTo(Printer.Conv(ds, 11,2));  // u
+			
+			port.Color = Color.FromBrightness(1.0);
+			port.LineWidth = 20.0;
+			port.PaintOutline(path);
+
+			port.Color = Color.FromBrightness(0.8);
+			port.LineWidth = 10.0;
+			port.PaintOutline(path);
+		}
+
+		protected static Point Conv(Size size, double x, double y)
+		{
+			double margin = System.Math.Min(size.Width, size.Height)/4.0;
+
+			if ( size.Width > size.Height )
+			{
+				double xx = margin + (size.Width-margin*2.0)*(x/11.0);
+				double yy = margin + (size.Height-margin*2.0)*(y/4.0);
+				return new Point(xx, yy);
+			}
+			else
+			{
+				double xx = size.Width - margin - (size.Width-margin*2.0)*(y/4.0);
+				double yy = margin + (size.Height-margin*2.0)*(x/11.0);
+				return new Point(xx, yy);
+			}
+		}
+
 		// Initialise le port pour une impression simplifiée.
 		protected void InitSimplyPort(Printing.PrintPort port, Point offset)
 		{
@@ -842,6 +966,15 @@ namespace Epsitec.Common.Document
 					if ( obj.IsHide )  continue;  // objet caché ?
 					obj.DrawGeometry(gfx, drawingContext);
 				}
+			}
+
+			if ( this.document.InstallType == InstallType.Demo )
+			{
+				this.PaintDemo(gfx);
+			}
+			if ( this.document.InstallType == InstallType.Expired )
+			{
+				this.PaintExpired(gfx);
 			}
 
 			Bitmap bitmap = Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;

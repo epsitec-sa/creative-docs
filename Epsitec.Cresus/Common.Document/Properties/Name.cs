@@ -27,6 +27,8 @@ namespace Epsitec.Common.Document.Properties
 			
 			set
 			{
+				value = value.Trim();  // enlève les espaces superflus avant et après
+
 				if ( this.stringValue != value )
 				{
 					this.NotifyBefore();

@@ -28,6 +28,7 @@ namespace Epsitec.Common.Document.Settings
 		protected void CreateDefault()
 		{
 			this.CreateDefaultPoint("PageSize");
+			this.CreateDefaultDouble("OutsideArea");
 
 			this.CreateDefaultBool("GridActive");
 			this.CreateDefaultBool("GridShow");

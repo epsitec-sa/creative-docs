@@ -1,7 +1,8 @@
-using Epsitec.Common.Support;
-
 namespace Epsitec.Common.Widgets
 {
+	using SuppressBundleSupportAttribute = Support.SuppressBundleSupportAttribute;
+	using EventHandler                   = Support.EventHandler;
+	
 	public enum ToolTipBehaviour
 	{
 		Normal,							// presque comme Window
@@ -17,6 +18,15 @@ namespace Epsitec.Common.Widgets
 	{
 		public ToolTip()
 		{
+			if (Support.ObjectBundler.IsBooting)
+			{
+				//	N'initialise rien, car cela prend passablement de temps... et de toute
+				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
+				//	utiliser IBundleSupport.
+				
+				return;
+			}
+			
 			this.colorBack  = Drawing.Color.FromName("Info");
 			this.colorFrame = Drawing.Color.FromName("Black");
 
@@ -370,6 +380,16 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
+				if ( Support.ObjectBundler.IsBooting )
+				{
+					return null;
+				}
+				
+				if ( ToolTip.defaultToolTip == null )
+				{
+					ToolTip.defaultToolTip = new ToolTip();
+				}
+				
 				return ToolTip.defaultToolTip;
 			}
 		}
@@ -390,6 +410,6 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Color					colorFrame;
 		protected System.Collections.Hashtable	hash = new System.Collections.Hashtable();
 		protected int							filterRegisterCount;
-		protected static ToolTip				defaultToolTip = new ToolTip();
+		protected static ToolTip				defaultToolTip;
 	}
 }

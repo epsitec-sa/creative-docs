@@ -142,6 +142,39 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 		
+		private static System.DateTime SerialLimit(string snum)
+		{
+			//	ppppp-nnnnnn-ssss-cccccc
+			
+			if (snum.Length != 24)
+			{
+				return System.DateTime.Now;
+			}
+			
+			if ((snum[ 5] != '-') ||
+				(snum[12] != '-') ||
+				(snum[17] != '-'))
+			{
+				return System.DateTime.Now;
+			}
+
+			try
+			{
+				string scompl  = snum.Substring (18, 6);
+				int complement = System.Int32.Parse (scompl);
+				int limite     = (complement/100)%1000;			//	extrait la date limite
+
+				int year = 2000+limite/12;
+				int month = 1+limite%12;
+				return new System.DateTime(year, month, 1);
+			}
+			catch
+			{
+			}
+			
+			return System.DateTime.Now;
+		}
+		
 		private static string GetAppDataPath()
 		{
 			string path = System.Windows.Forms.Application.CommonAppDataPath;
@@ -204,6 +237,18 @@ namespace Epsitec.Common.Support
 		public static bool CheckSerial(string key)
 		{
 			return SerialAlgorithm.TestSerial (key);
+		}
+
+		public static System.DateTime DateLimit(string key)
+		{
+			return SerialAlgorithm.SerialLimit(key);
+		}
+		
+		public static int DaysBreakdown(string key)
+		{
+			System.DateTime limit = SerialAlgorithm.SerialLimit(key);
+			System.TimeSpan diff = limit.Subtract(System.DateTime.Now);
+			return diff.Days;
 		}
 		
 		

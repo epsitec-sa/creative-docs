@@ -14,17 +14,10 @@ namespace Epsitec.App.DocumentEditor
 		[System.STAThread]
 		static void Main() 
 		{
-			// Il faut indiquer ci-après la date de diffusion du logiciel, qui doit être mise
-			// à jour chaque fois que l'on génère un nouveau CD :
-			
+			// Il faut indiquer ci-après la date de diffusion du logiciel, qui doit
+			// être mise à jour chaque fois que l'on génère un nouveau CD :
 			Common.Support.SerialAlgorithm.SetProductBuildDate(new System.DateTime(2005, 1, 20));
 			Common.Support.SerialAlgorithm.SetProductGenerationNumber(1, 0);
-			
-// -------- Juste pour le test -------
-			string key = Common.Support.SerialAlgorithm.ReadSerial();
-			System.Diagnostics.Trace.WriteLine("Serial: " + key);
-			System.Diagnostics.Trace.WriteLine("Validation: " + Common.Support.SerialAlgorithm.CheckSerial(key));
-// -------- Fin du test --------------
 			
 			Widget.Initialise();
 			
@@ -42,8 +35,6 @@ namespace Epsitec.App.DocumentEditor
 		{
 			//?System.Threading.Thread.Sleep(60000);
 			this.editor = new DocumentEditor(type);
-
-			Epsitec.Common.Widgets.Adorner.Factory.SetActive(this.editor.GlobalSettings.Adorner);
 
 			this.mainWindow = new Window();
 			this.mainWindow.Root.WindowStyles = WindowStyles.CanResize |
@@ -113,6 +104,8 @@ namespace Epsitec.App.DocumentEditor
 			
 			this.mainWindow.CommandDispatcher = this.editor.CommandDispatcher;
 			this.mainWindow.Show();
+
+			this.editor.Finalize();
 		}
 		
 		private void HandleWindowAsyncNotification(object sender)

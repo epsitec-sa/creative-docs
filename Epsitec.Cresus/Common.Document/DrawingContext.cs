@@ -79,7 +79,16 @@ namespace Epsitec.Common.Document
 			{
 				Size size = this.document.Size;
 				Size area = this.document.Modifier.SizeArea;
-				return (size.Width-area.Width)/2;
+				Size container = this.ContainerSize/this.ScaleX;
+				
+				double min = -(area.Width-size.Width)/2;
+
+				if ( area.Width < container.Width )  // fenêtre trop grande ?
+				{
+					min -= (container.Width-area.Width)/2;  // centrer
+				}
+
+				return min;
 			}
 		}
 
@@ -90,7 +99,16 @@ namespace Epsitec.Common.Document
 			{
 				Size size = this.document.Size;
 				Size area = this.document.Modifier.SizeArea;
-				return (size.Height-area.Height)/2;
+				Size container = this.ContainerSize/this.ScaleY;
+				
+				double min = -(area.Height-size.Height)/2;
+
+				if ( area.Height < container.Height )  // fenêtre trop grande ?
+				{
+					min -= (container.Height-area.Height)/2;  // centrer
+				}
+
+				return min;
 			}
 		}
 
@@ -99,9 +117,15 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				Size size = this.ContainerSize;
 				Size area = this.document.Modifier.SizeArea;
-				return (area.Width+this.MinOriginX) - size.Width/this.ScaleX;
+				Size container = this.ContainerSize/this.ScaleX;
+
+				if ( area.Width < container.Width )  // fenêtre trop grande ?
+				{
+					return this.MinOriginX;
+				}
+
+				return (area.Width+this.MinOriginX) - container.Width;
 			}
 		}
 
@@ -110,9 +134,15 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				Size size = this.ContainerSize;
 				Size area = this.document.Modifier.SizeArea;
-				return (area.Height+this.MinOriginY) - size.Height/this.ScaleY;
+				Size container = this.ContainerSize/this.ScaleY;
+
+				if ( area.Height < container.Height )  // fenêtre trop grande ?
+				{
+					return this.MinOriginY;
+				}
+
+				return (area.Height+this.MinOriginY) - container.Height;
 			}
 		}
 
@@ -126,7 +156,7 @@ namespace Epsitec.Common.Document
 		public void Origin(double originX, double originY)
 		{
 			if ( this.originX != originX ||
-				this.originY != originY )
+				 this.originY != originY )
 			{
 				this.originX = originX;
 				this.originY = originY;
@@ -166,7 +196,7 @@ namespace Epsitec.Common.Document
 				double originY = size.Height/2 - (cs.Height/scale.Y)/2;
 
 				return ( System.Math.Abs(this.originX+originX) < 0.00001 &&
-					System.Math.Abs(this.originY+originY) < 0.00001 );
+						 System.Math.Abs(this.originY+originY) < 0.00001 );
 			}
 		}
 
@@ -184,7 +214,7 @@ namespace Epsitec.Common.Document
 				double originY = size.Height/2 - (cs.Height/scale.Y)/2;
 
 				return ( System.Math.Abs(this.originX+originX) < 0.00001 &&
-					System.Math.Abs(this.originY+originY) < 0.00001 );
+						 System.Math.Abs(this.originY+originY) < 0.00001 );
 			}
 		}
 
@@ -270,18 +300,32 @@ namespace Epsitec.Common.Document
 
 		public void ZoomAndCenter(double zoom, double centerX, double centerY)
 		{
-			Size cs = this.ContainerSize;
+			Size container = this.ContainerSize;
 			Point scale = this.ScaleForZoom(zoom);
-			double originX = centerX - (cs.Width/scale.X)/2;
-			double originY = centerY - (cs.Height/scale.Y)/2;
+			container.Width  /= scale.X;
+			container.Height /= scale.Y;
+			Size area = this.document.Modifier.SizeArea;
+
+			double originX = centerX-container.Width/2;
+			if ( area.Width < container.Width )  // fenêtre trop grande ?
+			{
+				originX = -(container.Width-this.document.Size.Width)/2;
+			}
+
+			double originY = centerY-container.Height/2;
+			if ( area.Height < container.Height )  // fenêtre trop grande ?
+			{
+				originY = -(container.Height-this.document.Size.Height)/2;
+			}
+
 			this.ZoomAndOrigin(zoom, -originX, -originY);
 		}
 
 		protected void ZoomAndOrigin(double zoom, double originX, double originY)
 		{
 			if ( this.zoom    != zoom    ||
-				this.originX != originX ||
-				this.originY != originY )
+				 this.originX != originX ||
+				 this.originY != originY )
 			{
 				this.zoom    = zoom;
 				this.originX = originX;

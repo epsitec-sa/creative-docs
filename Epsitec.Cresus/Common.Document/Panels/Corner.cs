@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRadius.FactorMaxRange = 0.1M;
 			this.fieldRadius.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldRadius);
-			this.fieldRadius.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldRadius.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldRadius.TabIndex = 2;
 			this.fieldRadius.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRadius, "Rayon");
@@ -43,7 +43,8 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldEffect1.InternalMinValue = -100;
 			this.fieldEffect1.InternalMaxValue = 200;
 			this.fieldEffect1.Step = 5;
-			this.fieldEffect1.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldEffect1.TextSuffix = "%";
+			this.fieldEffect1.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldEffect1.TabIndex = 3;
 			this.fieldEffect1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldEffect1, "Paramètre A");
@@ -53,7 +54,8 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldEffect2.InternalMinValue = -100;
 			this.fieldEffect2.InternalMaxValue = 200;
 			this.fieldEffect2.Step = 5;
-			this.fieldEffect2.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldEffect2.TextSuffix = "%";
+			this.fieldEffect2.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldEffect2.TabIndex = 4;
 			this.fieldEffect2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldEffect2, "Paramètre B");
@@ -79,9 +81,9 @@ namespace Epsitec.Common.Document.Panels
 			{
 				//?this.fieldType.SelectedIndexChanged -= new EventHandler(this.HandleTypeChanged);
 				this.fieldType.TextChanged -= new EventHandler(this.HandleTypeChanged);
-				this.fieldRadius.TextChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldEffect1.TextChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldEffect2.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldRadius.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldEffect1.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldEffect2.ValueChanged -= new EventHandler(this.HandleFieldChanged);
 
 				this.label = null;
 				this.fieldType = null;

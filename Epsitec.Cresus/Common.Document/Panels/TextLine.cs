@@ -38,7 +38,8 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldOffset.InternalMinValue =  0.0M;
 			this.fieldOffset.InternalMaxValue = 70.0M;
 			this.fieldOffset.Step = 5.0M;
-			this.fieldOffset.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldOffset.TextSuffix = "%";
+			this.fieldOffset.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldOffset.TabIndex = 20;
 			this.fieldOffset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldOffset, "Offset perpendiculaire");
@@ -48,7 +49,8 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldAdd.InternalMinValue = -20.0M;
 			this.fieldAdd.InternalMaxValue = 100.0M;
 			this.fieldAdd.Step = 1.0M;
-			this.fieldAdd.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldAdd.TextSuffix = "%";
+			this.fieldAdd.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldAdd.TabIndex = 21;
 			this.fieldAdd.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldAdd, "Espace intercaractère");
@@ -73,8 +75,8 @@ namespace Epsitec.Common.Document.Panels
 					this.buttons[i].Clicked -= new MessageEventHandler(this.HandlePanelTextLineClicked);
 					this.buttons[i] = null;
 				}
-				this.fieldOffset.TextChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldAdd.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldOffset.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldAdd.ValueChanged -= new EventHandler(this.HandleFieldChanged);
 
 				this.label = null;
 				this.fieldOffset = null;

@@ -20,9 +20,18 @@ namespace Epsitec.Common.Document.Settings
 		{
 			this.conditionName = "";
 			this.conditionState = false;
+			this.suffix = "";
 
 			switch ( this.name )
 			{
+				case "OutsideArea":
+					this.text = "Zone hors page";
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 1.0;
+					this.factorResolution = 1.0;
+					this.factorStep = 1.0;
+					break;
+
 				case "PrintDpi":
 					this.text = "Résolution (dpi)";
 					this.conditionName = "PrintDraft";
@@ -70,6 +79,7 @@ namespace Epsitec.Common.Document.Settings
 					this.factorMinValue = 0.0;
 					this.factorMaxValue = 100.0;
 					this.factorStep = 5.0;
+					this.suffix = "%";
 					break;
 
 				case "ImageAA":
@@ -79,6 +89,7 @@ namespace Epsitec.Common.Document.Settings
 					this.factorMinValue = 0.0;
 					this.factorMaxValue = 100.0;
 					this.factorStep = 10.0;
+					this.suffix = "%";
 					break;
 
 				case "ArrowMoveMul":
@@ -87,7 +98,7 @@ namespace Epsitec.Common.Document.Settings
 					this.factorMinValue = 1.1;
 					this.factorMaxValue = 20.0;
 					this.factorStep = 1.0;
-					this.factorResolution = 0.1;
+					this.factorResolution = 1.0;
 					break;
 
 				case "ArrowMoveDiv":
@@ -96,7 +107,7 @@ namespace Epsitec.Common.Document.Settings
 					this.factorMinValue = 1.1;
 					this.factorMaxValue = 20.0;
 					this.factorStep = 1.0;
-					this.factorResolution = 0.1;
+					this.factorResolution = 1.0;
 					break;
 
 				case "ToLinePrecision":
@@ -105,6 +116,7 @@ namespace Epsitec.Common.Document.Settings
 					this.factorMinValue = 0.0;
 					this.factorMaxValue = 100.0;
 					this.factorStep = 10.0;
+					this.suffix = "%";
 					break;
 			}
 		}
@@ -115,6 +127,9 @@ namespace Epsitec.Common.Document.Settings
 			{
 				switch ( this.name )
 				{
+					case "OutsideArea":
+						return this.document.Modifier.OutsideArea;
+
 					case "PrintDpi":
 						return this.document.Settings.PrintInfo.Dpi;
 
@@ -150,6 +165,10 @@ namespace Epsitec.Common.Document.Settings
 			{
 				switch ( this.name )
 				{
+					case "OutsideArea":
+						this.document.Modifier.OutsideArea = value;
+						break;
+
 					case "PrintDpi":
 						this.document.Settings.PrintInfo.Dpi = value;
 						break;
@@ -234,6 +253,14 @@ namespace Epsitec.Common.Document.Settings
 			get
 			{
 				return this.info;
+			}
+		}
+
+		public string Suffix
+		{
+			get
+			{
+				return this.suffix;
 			}
 		}
 
@@ -348,5 +375,6 @@ namespace Epsitec.Common.Document.Settings
 		protected double			factorStep = 1.0;
 		protected bool				integer = false;
 		protected bool				info = false;
+		protected string			suffix;
 	}
 }

@@ -26,7 +26,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRadius.FactorMaxRange = 0.1M;
 			this.fieldRadius.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldRadius);
-			this.fieldRadius.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldRadius.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldRadius.TabIndex = 2;
 			this.fieldRadius.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldOx.FactorMaxRange = 0.1M;
 			this.fieldOx.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldOx);
-			this.fieldOx.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldOx.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldOx.TabIndex = 3;
 			this.fieldOx.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldOy.FactorMaxRange = 0.1M;
 			this.fieldOy.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldOy);
-			this.fieldOy.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldOy.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldOy.TabIndex = 4;
 			this.fieldOy.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -68,9 +68,9 @@ namespace Epsitec.Common.Document.Panels
 			if ( disposing )
 			{
 				this.fieldColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
-				this.fieldRadius.TextChanged -= new EventHandler(this.HandleTextChanged);
-				this.fieldOx.TextChanged -= new EventHandler(this.HandleTextChanged);
-				this.fieldOy.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.fieldRadius.ValueChanged -= new EventHandler(this.HandleValueChanged);
+				this.fieldOx.ValueChanged -= new EventHandler(this.HandleValueChanged);
+				this.fieldOy.ValueChanged -= new EventHandler(this.HandleValueChanged);
 
 				this.label = null;
 				this.fieldColor = null;
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Document.Panels
 			this.OnOriginColorChanged();
 		}
 
-		private void HandleTextChanged(object sender)
+		private void HandleValueChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();

@@ -26,6 +26,7 @@ namespace Epsitec.Common.Document
 				this.arrowMove = new Point(1.0, 1.0);
 				this.arrowMoveMul = 10.0;
 				this.arrowMoveDiv = 10.0;
+				this.outsideArea = 10.0;
 			}
 			else
 			{
@@ -34,6 +35,7 @@ namespace Epsitec.Common.Document
 				this.arrowMove = new Point(10.0, 10.0);  // 1mm
 				this.arrowMoveMul = 10.0;
 				this.arrowMoveDiv = 10.0;
+				this.outsideArea = 100.0;  // 10mm
 			}
 
 			int total = 0;
@@ -191,12 +193,13 @@ namespace Epsitec.Common.Document
 			get { return this.IsToolText ? this.objectMemoryText : this.objectMemory; }
 		}
 
+
 		// Taille de la zone de travail.
 		public Size SizeArea
 		{
 			get
 			{
-				return new Size(this.document.Size.Width*3, this.document.Size.Height*3);
+				return new Size(this.document.Size.Width+this.outsideArea*2.0, this.document.Size.Height+this.outsideArea*2.0);
 			}
 		}
 
@@ -205,11 +208,7 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				Size area = this.SizeArea;
-				Point origin = new Point();
-				origin.X = (this.document.Size.Width-area.Width)/2;
-				origin.Y = (this.document.Size.Height-area.Height)/2;
-				return origin;
+				return new Point(-this.outsideArea, -this.outsideArea);
 			}
 		}
 
@@ -228,6 +227,28 @@ namespace Epsitec.Common.Document
 			get
 			{
 				return new Rectangle(new Point(0,0), this.document.Size);
+			}
+		}
+
+		// Marges autour de la page physique.
+		public double OutsideArea
+		{
+			get
+			{
+				return this.outsideArea;
+			}
+
+			set
+			{
+				if ( this.outsideArea != value )
+				{
+					this.OpletQueueBeginAction("ChangeDocSize");
+					this.InsertOpletSize();
+					this.outsideArea = value;
+					this.document.Notifier.NotifyOriginChanged();
+					this.document.Notifier.NotifyArea(this.ActiveViewer);
+					this.OpletQueueValidateAction();
+				}
 			}
 		}
 
@@ -252,6 +273,29 @@ namespace Epsitec.Common.Document
 
 
 		#region RealUnit
+		// Conversion d'une distance en chaîne.
+		public string RealToString(double value)
+		{
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				return value.ToString("F1");
+			}
+			else
+			{
+				value /= this.realScale;
+				value /= this.realPrecision*10.0;  // *10 -> un digit de moins
+				value = System.Math.Floor(value+this.realPrecision/2);
+				value *= this.realPrecision*10.0;
+				return value.ToString();
+			}
+		}
+
+		// Conversion d'un angle en chaîne.
+		public string AngleToString(double value)
+		{
+			return value.ToString("F1");
+		}
+
 		// Choix de l'unité de dimension par défaut.
 		public RealUnitType RealUnitDimension
 		{
@@ -268,18 +312,22 @@ namespace Epsitec.Common.Document
 				{
 					case RealUnitType.DimensionMillimeter:
 						this.realScale = 10.0;
+						this.realPrecision = 0.01;
 						break;
 
 					case RealUnitType.DimensionCentimeter:
 						this.realScale = 100.0;
+						this.realPrecision = 0.001;
 						break;
 
 					case RealUnitType.DimensionInch:
 						this.realScale = 254.0;
+						this.realPrecision = 0.0001;
 						break;
 
 					default:
 						this.realScale = 1.0;
+						this.realPrecision = 1.0;
 						break;
 				}
 
@@ -310,6 +358,7 @@ namespace Epsitec.Common.Document
 			field.UnitType = RealUnitType.Percent;
 			field.Step = 1.0M;
 			field.Resolution = 0.1M;
+			field.TextSuffix = "%";
 		}
 
 		// Adapte un TextFieldReal pour éditer une dimension.
@@ -334,24 +383,22 @@ namespace Epsitec.Common.Document
 				{
 					case RealUnitType.DimensionMillimeter:
 						field.Step = 1.0M * field.FactorStep;
-						field.Resolution = 0.01M;
 						break;
 
 					case RealUnitType.DimensionCentimeter:
 						field.Step = 0.1M * field.FactorStep;
-						field.Resolution = 0.001M;
 						break;
 
 					case RealUnitType.DimensionInch:
 						field.Step = 0.1M * field.FactorStep;
-						field.Resolution = 0.0001M;
 						break;
 
 					default:
 						field.Step = 1.0M * field.FactorStep;
-						field.Resolution = 1.0M;
 						break;
 				}
+
+				field.Resolution = (decimal) this.realPrecision;
 			}
 		}
 
@@ -386,6 +433,7 @@ namespace Epsitec.Common.Document
 			field.InternalMaxValue = 360.0M;
 			field.Step = 2.5M;
 			field.Resolution = 0.1M;
+			field.TextSuffix = "\u00B0";  // symbole unicode "degré" (#176)
 		}
 
 		// Modifie tous les widgets de l'application reflétant des dimensions
@@ -526,8 +574,7 @@ namespace Epsitec.Common.Document
 			this.opletCreate = false;
 
 			this.OpletQueueEnable = true;
-			this.opletQueue.PurgeUndo();
-			this.opletQueue.PurgeRedo();
+			this.OpletQueuePurge();
 
 			this.document.Notifier.NotifyArea();
 			this.document.Notifier.NotifySelectionChanged();
@@ -690,7 +737,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 			
-			info = string.Format("{0}Dimensions: {1}x{2}<br/>", chip, this.document.Size.Width/this.document.Modifier.RealScale, this.document.Size.Height/this.document.Modifier.RealScale);
+			info = string.Format("{0}Dimensions: {1}x{2}<br/>", chip, this.RealToString(this.document.Size.Width), this.RealToString(this.document.Size.Height));
 			builder.Append(info);
 			
 			info = string.Format("{0}Nombre de pages: {1}<br/>", chip, this.StatisticTotalPages());
@@ -1549,6 +1596,8 @@ namespace Epsitec.Common.Document
 		// Déplace tous les objets sélectionnés.
 		public void MoveSelection(Point dir, int alter)
 		{
+			if ( this.tool == "Edit" )  return;
+
 			Point move = Point.ScaleMul(this.arrowMove, dir);
 
 			if ( alter < 0 )  // touche Ctrl ?
@@ -1569,6 +1618,7 @@ namespace Epsitec.Common.Document
 		// Déplace tous les objets sélectionnés.
 		public void MoveSelection(Point move)
 		{
+			if ( this.tool == "Edit" )  return;
 			this.PrepareOper();
 			this.ActiveViewer.Selector.OperMove(move);
 			this.TerminateOper();
@@ -1577,6 +1627,7 @@ namespace Epsitec.Common.Document
 		// Tourne tous les objets sélectionnés.
 		public void RotateSelection(double angle)
 		{
+			if ( this.tool == "Edit" )  return;
 			this.PrepareOper();
 			this.ActiveViewer.Selector.OperRotate(angle);
 			this.TerminateOper();
@@ -1585,6 +1636,7 @@ namespace Epsitec.Common.Document
 		// Miroir de tous les objets sélectionnés. 
 		public void MirrorSelection(bool horizontal)
 		{
+			if ( this.tool == "Edit" )  return;
 			this.PrepareOper();
 			this.ActiveViewer.Selector.OperMirror(horizontal);
 			this.TerminateOper();
@@ -1593,6 +1645,7 @@ namespace Epsitec.Common.Document
 		// Zoom de tous les objets sélectionnés.
 		public void ZoomSelection(double scale)
 		{
+			if ( this.tool == "Edit" )  return;
 			this.PrepareOper();
 			this.ActiveViewer.Selector.OperZoom(scale);
 			this.TerminateOper();
@@ -3852,7 +3905,65 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		#region OpletSize
+		// Ajoute un oplet pour mémoriser les dimensions du document.
+		public void InsertOpletSize()
+		{
+			if ( !this.document.Modifier.OpletQueueEnable )  return;
+			OpletSize oplet = new OpletSize(this.document);
+			this.document.Modifier.OpletQueue.Insert(oplet);
+		}
+
+		// Mémorise les dimensions.
+		protected class OpletSize : AbstractOplet
+		{
+			public OpletSize(Document host)
+			{
+				this.host = host;
+				this.documentSize = this.host.Size;
+				this.outsideArea = this.host.Modifier.outsideArea;
+			}
+
+			protected void Swap()
+			{
+				Size temp = this.documentSize;
+				this.documentSize = this.host.Size;
+				this.host.InternalSize = temp;
+
+				Misc.Swap(ref this.outsideArea, ref this.host.Modifier.outsideArea);
+
+				this.host.Modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
+				this.host.Notifier.NotifyAllChanged();
+			}
+
+			public override IOplet Undo()
+			{
+				this.Swap();
+				return this;
+			}
+
+			public override IOplet Redo()
+			{
+				this.Swap();
+				return this;
+			}
+
+			protected Document				host;
+			protected Size					documentSize;
+			protected double				outsideArea;
+		}
+		#endregion
+
+
 		#region OpletQueue
+		// Vide toutes les queues.
+		public void OpletQueuePurge()
+		{
+			this.opletQueue.PurgeUndo();
+			this.opletQueue.PurgeRedo();
+			this.opletLastCmd = "";
+		}
+
 		// Détermine si les actions seront annulables ou non.
 		public bool OpletQueueEnable
 		{
@@ -3863,8 +3974,11 @@ namespace Epsitec.Common.Document
 
 			set
 			{
-				if ( value )  this.opletQueue.Enable();
-				else          this.opletQueue.Disable();
+				if ( value != this.opletQueue.IsEnabled )
+				{
+					if ( value )  this.opletQueue.Enable();
+					else          this.opletQueue.Disable();
+				}
 			}
 		}
 
@@ -3889,7 +4003,8 @@ namespace Epsitec.Common.Document
 				if ( cmd == "ChangeProperty"  ||
 					 cmd == "ChangePageName"  ||
 					 cmd == "ChangeLayerName" ||
-					 cmd == "ChangeGuide"     )
+					 cmd == "ChangeGuide"     ||
+					 cmd == "ChangeDocSize"   )
 				{
 					this.opletSkip = true;
 					return null;
@@ -3965,6 +4080,7 @@ namespace Epsitec.Common.Document
 		protected bool[]						isPropertiesExtended;
 		protected RealUnitType					realUnitDimension;
 		protected double						realScale;
+		protected double						realPrecision;
 		protected Point							duplicateMove;
 		protected Point							arrowMove;
 		protected double						arrowMoveMul;
@@ -3976,6 +4092,7 @@ namespace Epsitec.Common.Document
 		protected int							uniqueStyleId = 0;
 		protected double						toLinePrecision;
 		protected string						textInfoModif = "";
+		protected double						outsideArea;
 
 		public static readonly double			fontSizeScale = 3.5;  // empyrique !
 	}

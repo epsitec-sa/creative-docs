@@ -161,9 +161,16 @@ namespace Epsitec.Common.Document.Containers
 		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
-			bool enabled = (this.document.Modifier.TotalSelected > 0);
+			bool enabled  = (this.document.Modifier.TotalSelected > 0);
 			bool enabled2 = (this.document.Modifier.TotalSelected > 1);
 			bool enabled3 = (this.document.Modifier.TotalSelected > 2);
+
+			if ( this.document.Modifier.Tool == "Edit" )
+			{
+				enabled  = false;
+				enabled2 = false;
+				enabled3 = false;
+			}
 
 			this.buttonMoveH.SetEnabled(enabled);
 			this.buttonMoveHi.SetEnabled(enabled);

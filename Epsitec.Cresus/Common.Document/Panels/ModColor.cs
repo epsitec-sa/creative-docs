@@ -34,7 +34,7 @@ namespace Epsitec.Common.Document.Panels
 			for ( int i=0 ; i<7 ; i++ )
 			{
 				this.fieldArray[i] = new TextFieldReal(this);
-				this.fieldArray[i].TextChanged += new EventHandler(this.HandleTextChanged);
+				this.fieldArray[i].ValueChanged += new EventHandler(this.HandleValueChanged);
 				this.fieldArray[i].TabIndex = 1+i;
 				this.fieldArray[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				if ( i == 0 )
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				for ( int i=0 ; i<7 ; i++ )
 				{
-					this.fieldArray[i].TextChanged -= new EventHandler(this.HandleTextChanged);
+					this.fieldArray[i].ValueChanged -= new EventHandler(this.HandleValueChanged);
 					this.fieldArray[i] = null;
 					this.labelArray[i] = null;
 				}
@@ -237,7 +237,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		// Une valeur a été changée.
-		private void HandleTextChanged(object sender)
+		private void HandleValueChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
 			this.ColoriseSliders();

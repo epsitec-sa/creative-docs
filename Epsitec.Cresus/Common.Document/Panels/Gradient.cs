@@ -64,7 +64,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldAngle);
 			this.fieldAngle.InternalMinValue = -360.0M;
 			this.fieldAngle.InternalMaxValue =  360.0M;
-			this.fieldAngle.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldAngle.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldAngle.TabIndex = 6;
 			this.fieldAngle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldAngle, "Angle");
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldRepeat);
 			this.fieldRepeat.InternalMinValue = 1;
 			this.fieldRepeat.InternalMaxValue = 8;
-			this.fieldRepeat.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldRepeat.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldRepeat.TabIndex = 20;
 			this.fieldRepeat.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRepeat, "Nombre de répétitions");
@@ -96,7 +96,8 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMiddle.InternalMinValue = -500;
 			this.fieldMiddle.InternalMaxValue =  500;
 			this.fieldMiddle.Step = 10;
-			this.fieldMiddle.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldMiddle.TextSuffix = "%";
+			this.fieldMiddle.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldMiddle.TabIndex = 21;
 			this.fieldMiddle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMiddle, "Couleur médiane");
@@ -106,7 +107,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldSmooth.FactorMaxRange = 0.1M;
 			this.fieldSmooth.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldSmooth);
-			this.fieldSmooth.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldSmooth.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldSmooth.TabIndex = 22;
 			this.fieldSmooth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldSmooth, "Flou");
@@ -115,7 +116,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldHatchAngle);
 			this.fieldHatchAngle.InternalMinValue = -360.0M;
 			this.fieldHatchAngle.InternalMaxValue =  360.0M;
-			this.fieldHatchAngle.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldHatchAngle.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldHatchAngle.TabIndex = 23;
 			this.fieldHatchAngle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHatchAngle, "Angle");
@@ -125,7 +126,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldHatchWidth.FactorMaxRange = 0.1M;
 			this.fieldHatchWidth.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldHatchWidth);
-			this.fieldHatchWidth.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldHatchWidth.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldHatchWidth.TabIndex = 24;
 			this.fieldHatchWidth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHatchWidth, "Epaisseur");
@@ -135,7 +136,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldHatchDistance.FactorMaxRange = 0.1M;
 			this.fieldHatchDistance.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldHatchDistance);
-			this.fieldHatchDistance.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldHatchDistance.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldHatchDistance.TabIndex = 25;
 			this.fieldHatchDistance.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHatchDistance, "Distance");
@@ -187,10 +188,10 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldColor1.Changed -= new EventHandler(this.HandleFieldColorChanged);
 				this.fieldColor2.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.fieldColor2.Changed -= new EventHandler(this.HandleFieldColorChanged);
-				this.fieldAngle.TextChanged -= new EventHandler(this.HandleTextChanged);
-				this.fieldRepeat.TextChanged -= new EventHandler(this.HandleTextChanged);
-				this.fieldMiddle.TextChanged -= new EventHandler(this.HandleTextChanged);
-				this.fieldSmooth.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.fieldAngle.ValueChanged -= new EventHandler(this.HandleValueChanged);
+				this.fieldRepeat.ValueChanged -= new EventHandler(this.HandleValueChanged);
+				this.fieldMiddle.ValueChanged -= new EventHandler(this.HandleValueChanged);
+				this.fieldSmooth.ValueChanged -= new EventHandler(this.HandleValueChanged);
 				this.swapColor.Clicked -= new MessageEventHandler(this.HandleSwapColorClicked);
 
 				for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
@@ -693,7 +694,7 @@ namespace Epsitec.Common.Document.Panels
 			this.HandleReset(null, null);
 		}
 
-		private void HandleTextChanged(object sender)
+		private void HandleValueChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();

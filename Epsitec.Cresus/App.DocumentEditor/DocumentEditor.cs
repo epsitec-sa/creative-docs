@@ -10,7 +10,6 @@ namespace Epsitec.App.DocumentEditor
 {
 	using Drawing        = Common.Drawing;
 	using Widgets        = Common.Widgets;
-	using Dialogs        = Common.Dialogs;
 	using Containers     = Common.Document.Containers;
 	using Objects        = Common.Document.Objects;
 	using Settings       = Common.Document.Settings;
@@ -27,16 +26,49 @@ namespace Epsitec.App.DocumentEditor
 			this.type = type;
 			this.useArray = false;
 
+			if ( this.type == DocumentType.Pictogram )
+			{
+				this.installType = InstallType.Full;
+			}
+			else
+			{
+				string key = Common.Support.SerialAlgorithm.ReadSerial();
+				this.askKey = (key == null);
+
+				if ( key == null || key == "demo" )
+				{
+					this.installType = InstallType.Demo;
+				}
+				else if ( Common.Support.SerialAlgorithm.CheckSerial(key) )
+				{
+					this.installType = InstallType.Full;
+				}
+				else
+				{
+					this.installType = InstallType.Expired;
+				}
+			}
+
 			if ( !this.ReadGlobalSettings() )
 			{
 				this.globalSettings = new GlobalSettings();
 				this.globalSettings.Initialise(this.type);
 			}
 
+			Epsitec.Common.Widgets.Adorner.Factory.SetActive(this.globalSettings.Adorner);
+
+			this.dlgSplash   = new Dialogs.Splash(this);
+			this.dlgKey      = new Dialogs.Key(this);
+			this.dlgUpdate   = new Dialogs.Update(this);
+			this.dlgAbout    = new Dialogs.About(this);
+			this.dlgInfos    = new Dialogs.Infos(this);
+			this.dlgExport   = new Dialogs.Export(this);
+			this.dlgSettings = new Dialogs.Settings(this);
+
 			if ( this.type != DocumentType.Pictogram &&
 				 this.globalSettings.SplashScreen )
 			{
-				this.CreateWindowSplash();
+				this.dlgSplash.Show();
 
 				// Donne l'occasion aux événements d'affichage d'être traités:
 				Window.PumpEvents();
@@ -44,7 +76,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CreateLayout();
 			this.InitCommands();
 
-			this.clipboard = new Document(this.type, DocumentMode.Clipboard, this.globalSettings, this.CommandDispatcher);
+			this.clipboard = new Document(this.type, DocumentMode.Clipboard, this.installType, this.globalSettings, this.CommandDispatcher);
 			this.clipboard.Name = "Clipboard";
 
 			this.documents = new System.Collections.ArrayList();
@@ -115,6 +147,26 @@ namespace Epsitec.App.DocumentEditor
 			get { return this.type; }
 		}
 		
+		public InstallType InstallType
+		{
+			get
+			{
+				return this.installType;
+			}
+
+			set
+			{
+				this.installType = value;
+
+				int total = this.documents.Count;
+				for ( int i=0 ; i<total ; i++ )
+				{
+					DocumentInfo di = this.documents[i] as DocumentInfo;
+					di.document.InstallType = this.installType;
+				}
+			}
+		}
+		
 		public GlobalSettings GlobalSettings
 		{
 			get { return this.globalSettings; }
@@ -132,6 +184,18 @@ namespace Epsitec.App.DocumentEditor
 				}
 				
 				return this.commandDispatcher;
+			}
+		}
+
+
+		// Appelé lorsque l'application a fini de démarrer.
+		public void Finalize()
+		{
+			if ( this.askKey )
+			{
+				this.askKey = false;
+				this.dlgSplash.Hide();
+				this.dlgKey.Show();
 			}
 		}
 
@@ -402,6 +466,9 @@ namespace Epsitec.App.DocumentEditor
 			VMenu helpMenu = new VMenu();
 			helpMenu.Name = "Help";
 			helpMenu.Host = this;
+			this.MenuAdd(helpMenu, "manifest:Epsitec.App.DocumentEditor.Images.Key.icon", "KeyApplication", "Clé...", "");
+			this.MenuAdd(helpMenu, "manifest:Epsitec.App.DocumentEditor.Images.Update.icon", "UpdateApplication", "Mise à jour...", "");
+			this.MenuAdd(helpMenu, "", "", "", "");
 			this.MenuAdd(helpMenu, "manifest:Epsitec.App.DocumentEditor.Images.About.icon", "AboutApplication", "A propos de...", "");
 			helpMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = helpMenu;
@@ -474,8 +541,8 @@ namespace Epsitec.App.DocumentEditor
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.ZoomSub.icon", 0, "ZoomSub", "Réduction");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.ZoomAdd.icon", 0, "ZoomAdd", "Agrandissement");
 			this.InfoAdd("", 90, "StatusZoom", "");
-			this.InfoAdd("", 120, "StatusMouse", "");
-			this.InfoAdd("", 120, "StatusModif", "");
+			this.InfoAdd("", 110, "StatusMouse", "");
+			this.InfoAdd("", 220, "StatusModif", "");
 
 			this.vToolBar = new VToolBar(this);
 			this.vToolBar.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
@@ -928,12 +995,12 @@ namespace Epsitec.App.DocumentEditor
 		#region IO
 		// Affiche le dialogue pour demander s'il faut enregistrer le
 		// document modifié, avant de passer à un autre document.
-		protected Dialogs.DialogResult DialogSave(CommandDispatcher dispatcher)
+		protected Common.Dialogs.DialogResult DialogSave(CommandDispatcher dispatcher)
 		{
 			if ( !this.CurrentDocument.IsDirtySerialize ||
 				 this.CurrentDocument.Modifier.StatisticTotalObjects() == 0 )
 			{
-				return Dialogs.DialogResult.None;
+				return Common.Dialogs.DialogResult.None;
 			}
 
 			string title = "Crésus";
@@ -942,7 +1009,7 @@ namespace Epsitec.App.DocumentEditor
 			string shortFilename = Misc.ExtractName(this.CurrentDocument.Filename, this.CurrentDocument.IsDirtySerialize);
 			string statistic = string.Format("<font size=\"80%\">{0}</font><br/>", this.CurrentDocument.Modifier.Statistic(false, false));
 			string message = string.Format("<font size=\"100%\">Le fichier {0} a été modifié.</font><br/><br/>{1}Voulez-vous enregistrer les modifications ?", shortFilename, statistic);
-			Dialogs.IDialog dialog = Dialogs.Message.CreateYesNoCancel(title, icon, message, "", "", dispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, icon, message, "", "", dispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -990,7 +1057,7 @@ namespace Epsitec.App.DocumentEditor
 
 		// Affiche le dialogue pour demander s'il faut effacer le
 		// fichier existant.
-		protected Dialogs.DialogResult DialogDelete(CommandDispatcher dispatcher, string filename)
+		protected Common.Dialogs.DialogResult DialogDelete(CommandDispatcher dispatcher, string filename)
 		{
 			string title = "Crésus";
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
@@ -999,16 +1066,16 @@ namespace Epsitec.App.DocumentEditor
 			string statistic = string.Format("<font size=\"80%\">{0}</font><br/>", DocumentEditor.StatisticFilename(filename));
 			string message = string.Format("<font size=\"100%\">Le fichier {0} existe déjà.</font><br/><br/>{1}Voulez-vous le remplacer ?", shortFilename, statistic);
 
-			Dialogs.IDialog dialog = Dialogs.Message.CreateYesNo(title, icon, message, "", "", dispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNo(title, icon, message, "", "", dispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
 		}
 
 		// Affiche le dialogue pour signaler la liste de tous les problèmes.
-		protected Dialogs.DialogResult DialogWarnings(CommandDispatcher dispatcher, System.Collections.ArrayList warnings)
+		protected Common.Dialogs.DialogResult DialogWarnings(CommandDispatcher dispatcher, System.Collections.ArrayList warnings)
 		{
-			if ( warnings == null || warnings.Count == 0 )  return Dialogs.DialogResult.None;
+			if ( warnings == null || warnings.Count == 0 )  return Common.Dialogs.DialogResult.None;
 			warnings.Sort();
 
 			string title = "Crésus";
@@ -1029,22 +1096,22 @@ namespace Epsitec.App.DocumentEditor
 			builder.Append("Son aspect est toutefois différent de ce qu'il devrait être.<br/>");
 			string message = builder.ToString();
 
-			Dialogs.IDialog dialog = Dialogs.Message.CreateOk(title, icon, message, "", dispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", dispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
 		}
 
 		// Affiche le dialogue pour signaler une erreur.
-		protected Dialogs.DialogResult DialogError(CommandDispatcher dispatcher, string error)
+		public Common.Dialogs.DialogResult DialogError(CommandDispatcher dispatcher, string error)
 		{
-			if ( error == "" )  return Dialogs.DialogResult.None;
+			if ( error == "" )  return Common.Dialogs.DialogResult.None;
 
 			string title = "Crésus";
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 			string message = error;
 
-			Dialogs.IDialog dialog = Dialogs.Message.CreateOk(title, icon, message, "", dispatcher);
+			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", dispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -1077,7 +1144,7 @@ namespace Epsitec.App.DocumentEditor
 		// Retourne false si le fichier n'a pas été ouvert.
 		protected bool Open(CommandDispatcher dispatcher)
 		{
-			Dialogs.FileOpen dialog = new Dialogs.FileOpen();
+			Common.Dialogs.FileOpen dialog = new Common.Dialogs.FileOpen();
 
 			dialog.InitialDirectory = this.globalSettings.InitialDirectory;
 			dialog.FileName = "";
@@ -1094,7 +1161,7 @@ namespace Epsitec.App.DocumentEditor
 			dialog.AcceptMultipleSelection = true;
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
-			if ( dialog.Result != Dialogs.DialogResult.Accept )  return false;
+			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return false;
 
 			string[] names = dialog.FileNames;
 			if ( names.Length >= 1 )
@@ -1164,7 +1231,7 @@ namespace Epsitec.App.DocumentEditor
 
 			if ( this.CurrentDocument.Filename == "" || ask )
 			{
-				Dialogs.FileSave dialog = new Dialogs.FileSave();
+				Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
 			
 				dialog.InitialDirectory = this.globalSettings.InitialDirectory;
 				dialog.FileName = this.CurrentDocument.Filename;
@@ -1181,7 +1248,7 @@ namespace Epsitec.App.DocumentEditor
 				dialog.PromptForOverwriting = true;
 				dialog.Owner = this.Window;
 				dialog.OpenDialog();
-				if ( dialog.Result != Dialogs.DialogResult.Accept )  return false;
+				if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return false;
 				filename = dialog.FileName;
 				filename = DocumentEditor.AdjustFilename(filename);
 			}
@@ -1206,12 +1273,12 @@ namespace Epsitec.App.DocumentEditor
 		// Retourne false si on ne peut pas continuer.
 		protected bool AutoSave(CommandDispatcher dispatcher)
 		{
-			Dialogs.DialogResult result = this.DialogSave(dispatcher);
-			if ( result == Dialogs.DialogResult.Yes )
+			Common.Dialogs.DialogResult result = this.DialogSave(dispatcher);
+			if ( result == Common.Dialogs.DialogResult.Yes )
 			{
 				return this.Save(dispatcher, false);
 			}
-			if ( result == Dialogs.DialogResult.Cancel )
+			if ( result == Common.Dialogs.DialogResult.Cancel )
 			{
 				return false;
 			}
@@ -1306,13 +1373,13 @@ namespace Epsitec.App.DocumentEditor
 		void CommandPrint(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			Document document = this.CurrentDocument;
-			Dialogs.Print dialog = document.PrintDialog;
+			Common.Dialogs.Print dialog = document.PrintDialog;
 			document.Printer.RestoreSettings(dialog.Document.PrinterSettings);
 			
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			
-			if ( dialog.Result == Dialogs.DialogResult.Accept )
+			if ( dialog.Result == Common.Dialogs.DialogResult.Accept )
 			{
 				document.Printer.SaveSettings(dialog.Document.PrinterSettings);
 				document.Print(dialog);
@@ -1322,7 +1389,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("Export")]
 		void CommandExport(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			Dialogs.FileSave dialog = new Dialogs.FileSave();
+			Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
 			
 			if ( this.CurrentDocument.ExportDirectory == "" )
 			{
@@ -1354,7 +1421,7 @@ namespace Epsitec.App.DocumentEditor
 			dialog.PromptForOverwriting = true;
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
-			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
+			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return;
 
 			this.CurrentDocument.ExportDirectory = System.IO.Path.GetDirectoryName(dialog.FileName);
 			this.CurrentDocument.ExportFilename = System.IO.Path.GetFileName(dialog.FileName);
@@ -1370,7 +1437,7 @@ namespace Epsitec.App.DocumentEditor
 			string ext = dialog.Filters[this.CurrentDocument.ExportFilter].Name;
 			this.CurrentDocument.Printer.ImageFormat = Printer.GetImageFormat(ext);
 
-			this.CreateWindowExport(this.CurrentDocument.ExportFilename);
+			this.dlgExport.Show(this.CurrentDocument.ExportFilename);
 		}
 		
 		#region PaletteIO
@@ -1407,7 +1474,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("OpenPalette")]
 		void CommandOpenPalette()
 		{
-			Dialogs.FileOpen dialog = new Dialogs.FileOpen();
+			Common.Dialogs.FileOpen dialog = new Common.Dialogs.FileOpen();
 			
 			dialog.InitialDirectory = this.CurrentDocument.GlobalSettings.ColorCollectionDirectory;
 			dialog.FileName = this.CurrentDocument.GlobalSettings.ColorCollectionFilename;
@@ -1416,7 +1483,7 @@ namespace Epsitec.App.DocumentEditor
 			dialog.FilterIndex = this.CurrentDocument.ExportFilter;
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
-			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
+			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return;
 
 			this.CurrentDocument.GlobalSettings.ColorCollectionDirectory = System.IO.Path.GetDirectoryName(dialog.FileName);
 			this.CurrentDocument.GlobalSettings.ColorCollectionFilename = System.IO.Path.GetFileName(dialog.FileName);
@@ -1428,7 +1495,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SavePalette")]
 		void CommandSavePalette()
 		{
-			Dialogs.FileSave dialog = new Dialogs.FileSave();
+			Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
 			
 			dialog.InitialDirectory = this.CurrentDocument.GlobalSettings.ColorCollectionDirectory;
 			dialog.FileName = this.CurrentDocument.GlobalSettings.ColorCollectionFilename;
@@ -1438,7 +1505,7 @@ namespace Epsitec.App.DocumentEditor
 			dialog.PromptForOverwriting = true;
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
-			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
+			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return;
 
 			this.CurrentDocument.GlobalSettings.ColorCollectionDirectory = System.IO.Path.GetDirectoryName(dialog.FileName);
 			this.CurrentDocument.GlobalSettings.ColorCollectionFilename = System.IO.Path.GetFileName(dialog.FileName);
@@ -1916,19 +1983,34 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("Settings")]
 		void CommandSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CreateWindowSettings();
+			this.dlgSettings.Show();
 		}
 
 		[Command ("Infos")]
 		void CommandInfos(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CreateWindowInfos();
+			this.dlgInfos.Show();
+		}
+
+		[Command ("KeyApplication")]
+		void CommandKeyApplication(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.dlgSplash.Hide();
+			this.dlgKey.Show();
+		}
+
+		[Command ("UpdateApplication")]
+		void CommandUpdateApplication(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.dlgSplash.Hide();
+			this.dlgUpdate.Show();
 		}
 
 		[Command ("AboutApplication")]
 		void CommandAboutApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CreateWindowAbout();
+			this.dlgSplash.Hide();
+			this.dlgAbout.Show();
 		}
 
 
@@ -2368,6 +2450,8 @@ namespace Epsitec.App.DocumentEditor
 			this.settingsState = new CommandState("Settings", this.commandDispatcher, KeyCode.FuncF5);
 			this.infosState = new CommandState("Infos", this.commandDispatcher);
 			this.aboutState = new CommandState("AboutApplication", this.commandDispatcher);
+			this.updateState = new CommandState("UpdateApplication", this.commandDispatcher);
+			this.keyState = new CommandState("KeyApplication", this.commandDispatcher);
 
 			this.moveLeftNormState   = new CommandState("MoveLeftNorm",   this.commandDispatcher, KeyCode.ArrowLeft);
 			this.moveRightNormState  = new CommandState("MoveRightNorm",  this.commandDispatcher, KeyCode.ArrowRight);
@@ -2595,6 +2679,7 @@ namespace Epsitec.App.DocumentEditor
 				int totalObjects   = this.CurrentDocument.Modifier.TotalObjects;
 				bool isCreating    = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
 				bool isBase        = viewer.DrawingContext.RootStackIsBase;
+				bool isEdit        = this.CurrentDocument.Modifier.Tool == "Edit";
 				SelectorType sType = viewer.SelectorType;
 				Objects.Abstract one = this.CurrentDocument.Modifier.RetOnlySelectedObject();
 
@@ -2602,30 +2687,30 @@ namespace Epsitec.App.DocumentEditor
 				this.openState.Enabled = true;
 				this.deleteState.Enabled = ( totalSelected > 0 || isCreating );
 				this.duplicateState.Enabled = ( totalSelected > 0 && !isCreating );
-				this.orderUpState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating );
-				this.orderDownState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating );
-				this.rotate90State.Enabled = ( totalSelected > 0 && !isCreating );
-				this.rotate180State.Enabled = ( totalSelected > 0 && !isCreating );
-				this.rotate270State.Enabled = ( totalSelected > 0 && !isCreating );
-				this.mirrorHState.Enabled = ( totalSelected > 0 && !isCreating );
-				this.mirrorVState.Enabled = ( totalSelected > 0 && !isCreating );
-				this.zoomMul2State.Enabled = ( totalSelected > 0 && !isCreating );
-				this.zoomDiv2State.Enabled = ( totalSelected > 0 && !isCreating );
-				this.mergeState.Enabled = ( totalSelected > 1 && !isCreating );
-				this.groupState.Enabled = ( totalSelected > 0 && !isCreating );
-				this.ungroupState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating );
-				this.insideState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating );
-				this.outsideState.Enabled = ( !isBase && !isCreating );
-				this.combineState.Enabled = ( totalSelected > 1 && !isCreating );
-				this.uncombineState.Enabled = ( totalSelected > 0 && !isCreating );
-				this.toBezierState.Enabled = ( totalSelected > 0 && !isCreating );
-				this.toPolyState.Enabled = ( totalSelected > 0 && !isCreating );
-				this.fragmentState.Enabled = ( totalSelected > 0 && !isCreating );
-				this.booleanAndState.Enabled = ( totalSelected > 1 && !isCreating );
-				this.booleanOrState.Enabled = ( totalSelected > 1 && !isCreating );
-				this.booleanXorState.Enabled = ( totalSelected > 1 && !isCreating );
-				this.booleanFrontMinusState.Enabled = ( totalSelected > 1 && !isCreating );
-				this.booleanBackMinusState.Enabled = ( totalSelected > 1 && !isCreating );
+				this.orderUpState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating && !isEdit );
+				this.orderDownState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating && !isEdit );
+				this.rotate90State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.rotate180State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.rotate270State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.mirrorHState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.mirrorVState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.zoomMul2State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.zoomDiv2State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.mergeState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.groupState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.ungroupState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating && !isEdit );
+				this.insideState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating && !isEdit );
+				this.outsideState.Enabled = ( !isBase && !isCreating && !isEdit );
+				this.combineState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.uncombineState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.toBezierState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.toPolyState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.fragmentState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.booleanAndState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.booleanOrState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.booleanXorState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.booleanFrontMinusState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.booleanBackMinusState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
 
 				this.hideSelState.Enabled = ( totalSelected > 0 && !isCreating );
 				this.hideRestState.Enabled = ( totalObjects-totalSelected-totalHide > 0 && !isCreating );
@@ -3113,8 +3198,8 @@ namespace Epsitec.App.DocumentEditor
 				}
 				else
 				{
-					Size size = doc.Size / doc.Modifier.RealScale;
-					return string.Format("Format {0}x{1}", size.Width, size.Height);
+					Size size = doc.Size;
+					return string.Format("Format {0}x{1}", doc.Modifier.RealToString(size.Width), doc.Modifier.RealToString(size.Height));
 				}
 			}
 		}
@@ -3168,8 +3253,7 @@ namespace Epsitec.App.DocumentEditor
 					Point mouse;
 					if ( doc.Modifier.ActiveViewer.MousePos(out mouse) )
 					{
-						mouse /= doc.Modifier.RealScale;
-						return string.Format("x:{0} y:{1}", mouse.X.ToString("F1"), mouse.Y.ToString("F1"));
+						return string.Format("x:{0} y:{1}", doc.Modifier.RealToString(mouse.X), doc.Modifier.RealToString(mouse.Y));
 					}
 					else
 					{
@@ -3217,678 +3301,6 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
-		#region Dialogs
-		// Crée la fenêtre pour les réglages.
-		protected void CreateWindowSettings()
-		{
-			if ( this.windowSettings == null )
-			{
-				double dx = 300;
-				double dy = 412;
-				this.windowSettings = new Window();
-				this.windowSettings.MakeSecondaryWindow();
-				this.windowSettings.MakeFixedSizeWindow();
-				this.windowSettings.MakeToolWindow();
-				if ( this.globalSettings.SettingsLocation.IsEmpty )
-				{
-					Rectangle wrect = this.CurrentBounds;
-					this.windowSettings.ClientSize = new Size(dx, dy);
-					this.windowSettings.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
-				}
-				else
-				{
-					this.windowSettings.ClientSize = new Size(dx, dy);
-					this.windowSettings.WindowLocation = this.globalSettings.SettingsLocation;
-				}
-				this.windowSettings.Text = "Réglages";
-				this.windowSettings.PreventAutoClose = true;
-				this.windowSettings.Owner = this.Window;
-				this.windowSettings.WindowCloseClicked += new EventHandler(this.HandleWindowSettingsCloseClicked);
-
-				Panel topPart = new Panel(this.windowSettings.Root);
-				topPart.Height = 20;
-				topPart.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-				topPart.AnchorMargins = new Margins(6, 6, 6, 0);
-
-				// Crée les boutons radio.
-				RadioButton radio1 = new RadioButton(topPart);
-				radio1.Name = "RadioGlobal";
-				radio1.Text = "Global";
-				radio1.Width = 80;
-				radio1.Dock = DockStyle.Left;
-				radio1.Clicked += new MessageEventHandler(this.HandleRadioSettingsChanged);
-
-				RadioButton radio2 = new RadioButton(topPart);
-				radio2.Name = "RadioDocument";
-				radio2.Text = "Document";
-				radio2.Width = 80;
-				radio2.Dock = DockStyle.Left;
-				radio2.ActiveState = WidgetState.ActiveYes;
-				radio2.Clicked += new MessageEventHandler(this.HandleRadioSettingsChanged);
-
-				// Crée le panneau "global".
-				Panel global = new Panel(this.windowSettings.Root);
-				global.Name = "BookGlobal";
-				global.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-				global.AnchorMargins = new Margins(6, 6, 6+20, 34);
-				global.SetVisible(false);
-
-				TextFieldCombo combo;
-				TextFieldSlider field;
-				CheckButton check;
-				this.tabIndex = 0;
-
-				Common.Document.Dialogs.CreateTitle(global, "Que faire au démarrage du logiciel ?");
-
-				combo = this.CreateCombo(global, "FirstAction", "Action");
-				for ( int i=0 ; i<GlobalSettings.FirstActionCount ; i++ )
-				{
-					Common.Document.Settings.FirstAction action = GlobalSettings.FirstActionType(i);
-					combo.Items.Add(GlobalSettings.FirstActionString(action));
-				}
-				combo.SelectedIndex = GlobalSettings.FirstActionRank(this.globalSettings.FirstAction);
-
-				check = this.CreateCheck(global, "SplashScreen", "Ecran initial");
-				check.ActiveState = this.globalSettings.SplashScreen ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-
-				Common.Document.Dialogs.CreateTitle(global, "Réglages de la souris");
-
-				combo = this.CreateCombo(global, "MouseWheelAction", "Molette");
-				for ( int i=0 ; i<GlobalSettings.MouseWheelActionCount ; i++ )
-				{
-					Common.Document.Settings.MouseWheelAction action = GlobalSettings.MouseWheelActionType(i);
-					combo.Items.Add(GlobalSettings.MouseWheelActionString(action));
-				}
-				combo.SelectedIndex = GlobalSettings.MouseWheelActionRank(this.globalSettings.MouseWheelAction);
-
-				field = this.CreateField(global, "DefaultZoom", "Grossissement");
-				field.MinValue = 1.1M;
-				field.MaxValue = 4.0M;
-				field.Step = 0.1M;
-				field.Resolution = 0.1M;
-				field.Value = (decimal) this.globalSettings.DefaultZoom;
-
-				check = this.CreateCheck(global, "FineCursor", "Curseur précis");
-				check.ActiveState = this.globalSettings.FineCursor ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-
-				Common.Document.Dialogs.CreateTitle(global, "Réglages de l'écran");
-
-				combo = this.CreateCombo(global, "Adorner", "Aspect de l'interface");
-				string[] list = Widgets.Adorner.Factory.AdornerNames;
-				int rank = 0;
-				foreach ( string name in list )
-				{
-#if !DEBUG
-					if ( name == "LookAquaMetal" )  continue;
-					if ( name == "LookAquaDyna" )  continue;
-					if ( name == "LookXP" )  continue;
-#endif
-					combo.Items.Add(name);
-					if ( name == Widgets.Adorner.Factory.ActiveName )
-					{
-						combo.SelectedIndex = rank;
-					}
-					rank++;
-				}
-
-				field = this.CreateField(global, "ScreenDpi", "Résolution (dpi)");
-				field.MinValue = 30.0M;
-				field.MaxValue = 300.0M;
-				field.Step = 1.0M;
-				field.Resolution = 1.0M;
-				field.Value = (decimal) this.globalSettings.ScreenDpi;
-
-				// Crée les onglets "document".
-				TabBook bookDoc = new TabBook(this.windowSettings.Root);
-				bookDoc.Name = "BookDocument";
-				bookDoc.Arrows = TabBookArrows.Stretch;
-				bookDoc.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-				bookDoc.AnchorMargins = new Margins(6, 6, 6+20, 34);
-
-				TabPage bookFormat = new TabPage();
-				bookFormat.Name = "Format";
-				bookFormat.TabTitle = "Format";
-				bookDoc.Items.Add(bookFormat);
-
-				TabPage bookGrid = new TabPage();
-				bookGrid.Name = "Grid";
-				bookGrid.TabTitle = "Grille";
-				bookDoc.Items.Add(bookGrid);
-
-				TabPage bookGuides = new TabPage();
-				bookGuides.Name = "Guides";
-				bookGuides.TabTitle = "Repères";
-				bookDoc.Items.Add(bookGuides);
-
-				TabPage bookPrint = new TabPage();
-				bookPrint.Name = "Print";
-				bookPrint.TabTitle = "Impression";
-				bookDoc.Items.Add(bookPrint);
-
-				TabPage bookMisc = new TabPage();
-				bookMisc.Name = "Misc";
-				bookMisc.TabTitle = "Divers";
-				bookDoc.Items.Add(bookMisc);
-
-				bookDoc.ActivePage = bookFormat;
-
-				// Bouton de fermeture.
-				Button buttonClose = new Button(this.windowSettings.Root);
-				buttonClose.Width = 75;
-				buttonClose.Text = "Fermer";
-				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
-				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.AnchorMargins = new Margins(6, 0, 0, 6);
-				buttonClose.Clicked += new MessageEventHandler(this.HandleSettingsButtonCloseClicked);
-				buttonClose.TabIndex = 1000;
-				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonClose, "Fermer les réglages");
-			}
-
-			this.windowSettings.Show();
-
-			if ( this.IsCurrentDocument )
-			{
-				this.CurrentDocument.Dialogs.BuildSettings(this.windowSettings);
-			}
-		}
-
-		// Crée un widget combo.
-		protected TextFieldCombo CreateCombo(Widget parent, string name, string label)
-		{
-			Panel container = new Panel(parent);
-			container.Height = 22;
-			container.TabIndex = this.tabIndex++;
-			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, 5);
-
-			StaticText text = new StaticText(container);
-			text.Text = label;
-			text.Width = 100;
-			text.Dock = DockStyle.Left;
-			text.DockMargins = new Margins(0, 0, 0, 0);
-
-			TextFieldCombo field = new TextFieldCombo(container);
-			field.Width = 160;
-			field.IsReadOnly = true;
-			field.Name = name;
-			field.SelectedIndexChanged += new EventHandler(this.HandleComboSettingsChanged);
-			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			field.Dock = DockStyle.Left;
-			field.DockMargins = new Margins(0, 0, 0, 0);
-			return field;
-		}
-
-		// Crée un widget textfield.
-		protected TextFieldSlider CreateField(Widget parent, string name, string label)
-		{
-			Panel container = new Panel(parent);
-			container.Height = 22;
-			container.TabIndex = this.tabIndex++;
-			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, 5);
-
-			StaticText text = new StaticText(container);
-			text.Text = label;
-			text.Width = 100;
-			text.Dock = DockStyle.Left;
-			text.DockMargins = new Margins(0, 0, 0, 0);
-
-			TextFieldSlider field = new TextFieldSlider(container);
-			field.Width = 50;
-			field.Name = name;
-			field.ValueChanged += new EventHandler(this.HandleDoubleSettingsChanged);
-			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			field.Dock = DockStyle.Left;
-			field.DockMargins = new Margins(0, 0, 0, 0);
-			return field;
-		}
-
-		// Crée un widget checkbutton.
-		protected CheckButton CreateCheck(Widget parent, string name, string text)
-		{
-			CheckButton check = new CheckButton(parent);
-			check.Text = text;
-			check.Name = name;
-			check.Clicked +=new MessageEventHandler(this.HandleCheckSettingsClicked);
-			check.TabIndex = this.tabIndex++;
-			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			check.Dock = DockStyle.Top;
-			check.DockMargins = new Margins(10+100, 0, 0, 5);
-			return check;
-		}
-
-		private void HandleRadioSettingsChanged(object sender, MessageEventArgs e)
-		{
-			RadioButton radio = sender as RadioButton;
-			if ( radio.Name == "RadioGlobal" )
-			{
-				this.windowSettings.Root.FindChild("BookGlobal").SetVisible(true);
-				this.windowSettings.Root.FindChild("BookDocument").SetVisible(false);
-			}
-			else
-			{
-				this.windowSettings.Root.FindChild("BookGlobal").SetVisible(false);
-				this.windowSettings.Root.FindChild("BookDocument").SetVisible(true);
-			}
-		}
-		
-		private void HandleComboSettingsChanged(object sender)
-		{
-			TextFieldCombo combo = sender as TextFieldCombo;
-
-			if ( combo.Name == "FirstAction" )
-			{
-				this.globalSettings.FirstAction = GlobalSettings.FirstActionType(combo.SelectedIndex);
-			}
-
-			if ( combo.Name == "MouseWheelAction" )
-			{
-				this.globalSettings.MouseWheelAction = GlobalSettings.MouseWheelActionType(combo.SelectedIndex);
-			}
-
-			if ( combo.Name == "Adorner" )
-			{
-				this.globalSettings.Adorner = combo.Text;
-				Widgets.Adorner.Factory.SetActive(combo.Text);
-			}
-		}
-
-		private void HandleDoubleSettingsChanged(object sender)
-		{
-			TextFieldSlider field = sender as TextFieldSlider;
-
-			if ( field.Name == "ScreenDpi" )
-			{
-				this.globalSettings.ScreenDpi = (double) field.Value;
-				if ( this.IsCurrentDocument )
-				{
-					this.CurrentDocument.Notifier.NotifyAllChanged();
-				}
-			}
-
-			if ( field.Name == "DefaultZoom" )
-			{
-				this.globalSettings.DefaultZoom = (double) field.Value;
-			}
-		}
-
-		private void HandleCheckSettingsClicked(object sender, MessageEventArgs e)
-		{
-			CheckButton check = sender as CheckButton;
-
-			if ( check.Name == "SplashScreen" )
-			{
-				this.globalSettings.SplashScreen = !this.globalSettings.SplashScreen;
-			}
-			if ( check.Name == "FineCursor" )
-			{
-				this.globalSettings.FineCursor = !this.globalSettings.FineCursor;
-			}
-		}
-
-		private void HandleWindowSettingsCloseClicked(object sender)
-		{
-			this.Window.MakeActive();
-			this.windowSettings.Hide();
-		}
-
-		private void HandleSettingsButtonCloseClicked(object sender, MessageEventArgs e)
-		{
-			this.Window.MakeActive();
-			this.windowSettings.Hide();
-		}
-
-		protected void RebuildWindowSettings()
-		{
-			if ( !this.IsCurrentDocument )  return;
-			if ( this.windowSettings == null )  return;
-			this.CurrentDocument.Dialogs.BuildSettings(this.windowSettings);
-		}
-
-		// Crée la fenêtre pour les informations.
-		protected void CreateWindowInfos()
-		{
-			if ( this.windowInfos == null )
-			{
-				double dx = 300;
-				double dy = 250;
-				this.windowInfos = new Window();
-				//?this.windowInfos.MakeFixedSizeWindow();
-				this.windowInfos.MakeSecondaryWindow();
-				this.windowInfos.PreventAutoClose = true;
-				if ( this.globalSettings.InfosLocation.IsEmpty )
-				{
-					Rectangle wrect = this.CurrentBounds;
-					this.windowInfos.ClientSize = new Size(dx, dy);
-					this.windowInfos.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
-				}
-				else
-				{
-					this.windowInfos.ClientSize = this.globalSettings.InfosSize;
-					this.windowInfos.WindowLocation = this.globalSettings.InfosLocation;
-				}
-				this.windowInfos.Text = "Informations";
-				this.windowInfos.Owner = this.Window;
-				this.windowInfos.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
-				this.windowInfos.WindowCloseClicked += new EventHandler(this.HandleWindowInfosCloseClicked);
-				this.windowInfos.Root.MinSize = new Size(160, 100);
-
-				TextFieldMulti multi = new TextFieldMulti(this.windowInfos.Root);
-				multi.Name = "Infos";
-				multi.IsReadOnly = true;
-				multi.MaxChar = 10000;
-				multi.Dock = DockStyle.Fill;
-				multi.DockMargins = new Margins(10, 10, 10, 40);
-
-				// Bouton de fermeture.
-				Button buttonClose = new Button(this.windowInfos.Root);
-				buttonClose.Width = 75;
-				buttonClose.Text = "Fermer";
-				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
-				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.AnchorMargins = new Margins(10, 0, 0, 10);
-				buttonClose.Clicked += new MessageEventHandler(this.HandleInfosButtonCloseClicked);
-				buttonClose.TabIndex = 1000;
-				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonClose, "Fermer ce dialogue");
-			}
-
-			this.windowInfos.Show();
-			this.CurrentDocument.Dialogs.BuildInfos(this.windowInfos);
-		}
-
-		private void HandleWindowInfosCloseClicked(object sender)
-		{
-			this.Window.MakeActive();
-			this.windowInfos.Hide();
-		}
-
-		private void HandleInfosButtonCloseClicked(object sender, MessageEventArgs e)
-		{
-			this.Window.MakeActive();
-			this.windowInfos.Hide();
-		}
-
-		protected void RebuildWindowInfos()
-		{
-			if ( !this.IsCurrentDocument )  return;
-			if ( this.windowInfos == null )  return;
-			this.CurrentDocument.Dialogs.BuildInfos(this.windowInfos);
-		}
-
-		// Crée la fenêtre "à propos de".
-		protected void CreateWindowAbout()
-		{
-			if ( this.windowAbout == null )
-			{
-				double dx = 400;
-				double dy = 243;
-				this.windowAbout = new Window();
-				this.windowAbout.MakeFixedSizeWindow();
-				this.windowAbout.MakeSecondaryWindow();
-				if ( this.globalSettings.AboutLocation.IsEmpty )
-				{
-					Rectangle wrect = this.CurrentBounds;
-					this.windowAbout.ClientSize = new Size(dx, dy);
-					this.windowAbout.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
-				}
-				else
-				{
-					this.windowAbout.ClientSize = new Size(dx, dy);
-					this.windowAbout.WindowLocation = this.globalSettings.AboutLocation;
-				}
-				this.windowAbout.Text = "A propos de...";
-				this.windowAbout.PreventAutoClose = true;
-				this.windowAbout.Owner = this.Window;
-				this.windowAbout.WindowCloseClicked += new EventHandler(this.HandleWindowAboutCloseClicked);
-
-				this.CreateWidgetSplash(this.windowAbout.Root);
-
-				// Bouton de fermeture.
-				Button buttonClose = new Button(this.windowAbout.Root);
-				buttonClose.Width = 75;
-				buttonClose.Text = "Fermer";
-				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
-				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.AnchorMargins = new Margins(10, 0, 0, 10);
-				buttonClose.Clicked += new MessageEventHandler(this.HandleAboutButtonCloseClicked);
-				buttonClose.TabIndex = 1000;
-				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonClose, "Fermer ce dialogue");
-			}
-
-			this.windowAbout.Show();
-		}
-
-		private void HandleWindowAboutCloseClicked(object sender)
-		{
-			this.Window.MakeActive();
-			this.windowAbout.Hide();
-		}
-
-		private void HandleAboutButtonCloseClicked(object sender, MessageEventArgs e)
-		{
-			this.Window.MakeActive();
-			this.windowAbout.Hide();
-		}
-
-		// Crée la fenêtre "splash screen".
-		protected void CreateWindowSplash()
-		{
-			if ( this.windowSplash == null )
-			{
-				double dx = 400;
-				double dy = 200;
-
-				Point wLoc = this.globalSettings.WindowLocation;
-				Size wSize = this.globalSettings.WindowSize;
-				if ( wLoc.IsEmpty )
-				{
-					ScreenInfo si = ScreenInfo.Find(new Point(0,0));
-					Rectangle wa = si.WorkingArea;
-					wLoc = wa.Center-wSize/2;
-				}
-				Rectangle wrect = new Rectangle(wLoc, wSize);
-
-				this.windowSplash = new Window();
-				this.windowSplash.MakeFramelessWindow();
-				this.windowSplash.MakeTopLevelWindow();
-				this.windowSplash.ClientSize = new Size(dx, dy);
-				this.windowSplash.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
-				this.windowSplash.PreventAutoClose = true;
-				this.windowSplash.Root.PaintForeground += new PaintEventHandler(this.HandleSplashPaintForeground);
-				this.windowSplash.Owner = this.Window;
-
-				StaticText image = this.CreateWidgetSplash(this.windowSplash.Root);
-				image.Clicked += new MessageEventHandler(this.HandleSplashImageClicked);
-
-				this.splashTimer = new Timer();
-				this.splashTimer.TimeElapsed += new EventHandler(this.HandleSplashTimerTimeElapsed);
-				this.splashTimer.Delay = 10.0;
-				this.splashTimer.Start();
-			}
-
-			this.windowSplash.Show();
-		}
-
-		// Crée les widgets pour l'image de bienvenue.
-		protected StaticText CreateWidgetSplash(Widget parent)
-		{
-			double y = parent.Height-200;
-
-			string res = "manifest:Epsitec.App.DocumentEditor.Images.SplashScreen.png";
-			string text = string.Format("<img src=\"{0}\"/>", res);
-			StaticText image = new StaticText(parent);
-			image.Text = text;
-			image.Location = new Point(0, y+0);
-			image.Size = new Size(400, 200);
-
-			string version = typeof(Document).Assembly.FullName.Split(',')[1].Split('=')[1];
-			if ( version.EndsWith(".0") )
-			{
-				version = version.Substring(0, version.Length-2);
-			}
-			StaticText sv = new StaticText(parent);
-			sv.Text = string.Format("<b>Version {0}</b>    Langue: français", version);
-			sv.Location = new Point(22, y+22);
-			sv.Size = new Size(270, 14);
-			sv.SetClientZoom(0.8);
-
-			StaticText ep = new StaticText(parent);
-			ep.Text = "© 2004-2005 EPSITEC SA, Daniel Roux, Pierre Arnaud";
-			ep.Location = new Point(22, y+10);
-			ep.Size = new Size(270, 14);
-			ep.SetClientZoom(0.8);
-
-			return image;
-		}
-
-		private void HandleSplashPaintForeground(object sender, PaintEventArgs e)
-		{
-			WindowRoot root = sender as WindowRoot;
-			double dx = root.Client.Width;
-			double dy = root.Client.Height;
-			Graphics graphics = e.Graphics;
-			graphics.LineWidth = 1;
-			graphics.AddRectangle(0.5, 0.5, dx-1, dy-1);
-			graphics.RenderSolid(Color.FromBrightness(0));
-		}
-
-		private void HandleSplashImageClicked(object sender, MessageEventArgs e)
-		{
-			this.DeleteWindowSplash();
-		}
-
-		private void HandleSplashTimerTimeElapsed(object sender)
-		{
-			this.DeleteWindowSplash();
-		}
-
-		protected void DeleteWindowSplash()
-		{
-			if ( this.windowSplash == null )  return;
-
-			this.windowSplash.Hide();
-			this.windowSplash.Dispose();
-			this.windowSplash = null;
-
-			this.splashTimer.Stop();
-			this.splashTimer.TimeElapsed -= new EventHandler(this.HandleSplashTimerTimeElapsed);
-			this.splashTimer.Dispose();
-			this.splashTimer = null;
-		}
-
-		// Crée la fenêtre d'exportation.
-		protected void CreateWindowExport(string filename)
-		{
-			if ( this.windowExport == null )
-			{
-				double dx = 300;
-				double dy = 300;
-				this.windowExport = new Window();
-				this.windowExport.MakeFixedSizeWindow();
-				this.windowExport.MakeSecondaryWindow();
-				if ( this.globalSettings.ExportLocation.IsEmpty )
-				{
-					Rectangle wrect = this.CurrentBounds;
-					this.windowExport.ClientSize = new Size(dx, dy);
-					this.windowExport.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
-				}
-				else
-				{
-					this.windowExport.ClientSize = new Size(dx, dy);
-					this.windowExport.WindowLocation = this.globalSettings.ExportLocation;
-				}
-				this.windowExport.PreventAutoClose = true;
-				this.windowExport.Owner = this.Window;
-				this.windowExport.WindowCloseClicked += new EventHandler(this.HandleWindowExportCloseClicked);
-
-				Panel panel = new Panel(this.windowExport.Root);
-				panel.Name = "Panel";
-				panel.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-				panel.AnchorMargins = new Margins(10, 10, 10, 40);
-
-				// Boutons de fermeture.
-				Button buttonOk = new Button(this.windowExport.Root);
-				buttonOk.Width = 75;
-				buttonOk.Text = "Exporter";
-				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
-				buttonOk.Anchor = AnchorStyles.BottomLeft;
-				buttonOk.AnchorMargins = new Margins(10, 0, 0, 10);
-				buttonOk.Clicked += new MessageEventHandler(this.HandleExportButtonOkClicked);
-				buttonOk.TabIndex = this.tabIndex++;
-				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonOk, "Exporter l'image");
-
-				Button buttonCancel = new Button(this.windowExport.Root);
-				buttonCancel.Width = 75;
-				buttonCancel.Text = "Annuler";
-				buttonCancel.Anchor = AnchorStyles.BottomLeft;
-				buttonCancel.AnchorMargins = new Margins(10+75+10, 0, 0, 10);
-				buttonCancel.Clicked += new MessageEventHandler(this.HandleExportButtonCancelClicked);
-				buttonCancel.TabIndex = this.tabIndex++;
-				buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonCancel, "Annuler l'exportation");
-			}
-
-			this.windowExport.Text = string.Format("Exportation de {0}", System.IO.Path.GetFileName(filename));
-			this.windowExport.Show();
-
-			if ( this.IsCurrentDocument )
-			{
-				this.CurrentDocument.Dialogs.BuildExport(this.windowExport);
-			}
-		}
-
-		private void HandleWindowExportCloseClicked(object sender)
-		{
-			this.Window.MakeActive();
-			this.windowExport.Hide();
-		}
-
-		private void HandleExportButtonCancelClicked(object sender, MessageEventArgs e)
-		{
-			this.Window.MakeActive();
-			this.windowExport.Hide();
-		}
-
-		private void HandleExportButtonOkClicked(object sender, MessageEventArgs e)
-		{
-			this.Window.MakeActive();
-			this.windowExport.Hide();
-			string filename = string.Format("{0}\\{1}", this.CurrentDocument.ExportDirectory, this.CurrentDocument.ExportFilename);
-			string err = this.CurrentDocument.Export(filename);
-			this.DialogError(this.commandDispatcher, err);
-		}
-
-		protected void RebuildWindowExport()
-		{
-			if ( !this.IsCurrentDocument )  return;
-			if ( this.windowExport == null )  return;
-			this.CurrentDocument.Dialogs.BuildExport(this.windowExport);
-		}
-
-		// Donne les frontières de l'application.
-		protected Rectangle CurrentBounds
-		{
-			get
-			{
-				if ( this.Window == null )
-				{
-					return new Rectangle(this.globalSettings.WindowLocation, this.globalSettings.WindowSize);
-				}
-				else
-				{
-					return new Rectangle(this.Window.WindowLocation, this.Window.WindowSize);
-				}
-			}
-		}
-		#endregion
-
-
 		#region TabBook
 		// L'onglet pour le document courant a été cliqué.
 		private void HandleBookDocumentsActivePageChanged(object sender)
@@ -3908,7 +3320,7 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		// Indique s'il existe un document courant.
-		protected bool IsCurrentDocument
+		public bool IsCurrentDocument
 		{
 			get
 			{
@@ -3927,7 +3339,7 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		// Retourne le Document courant.
-		protected Document CurrentDocument
+		public Document CurrentDocument
 		{
 			get
 			{
@@ -3941,7 +3353,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.PrepareCloseDocument();
 
-			Document doc = new Document(this.type, DocumentMode.Modify, this.globalSettings, this.CommandDispatcher);
+			Document doc = new Document(this.type, DocumentMode.Modify, this.installType, this.globalSettings, this.CommandDispatcher);
 			doc.Name = "Document";
 			doc.Clipboard = this.clipboard;
 
@@ -4059,9 +3471,9 @@ namespace Epsitec.App.DocumentEditor
 		// Préparation après l'ouverture d'un document.
 		protected void PrepareOpenDocument()
 		{
-			this.RebuildWindowSettings();
-			this.RebuildWindowExport();
-			this.RebuildWindowInfos();
+			this.dlgSettings.Rebuild();
+			this.dlgInfos.Rebuild();
+			this.dlgExport.Rebuild();
 		}
 
 		// Secoue un CommandState pour le forcer à se remettre à jour.
@@ -4131,29 +3543,10 @@ namespace Epsitec.App.DocumentEditor
 			this.globalSettings.WindowLocation = this.Window.WindowPlacementNormalBounds.Location;
 			this.globalSettings.WindowSize = this.Window.WindowPlacementNormalBounds.Size;
 
-			if ( this.windowSettings != null )
-			{
-				this.globalSettings.SettingsLocation = this.windowSettings.WindowLocation;
-				this.globalSettings.SettingsSize = this.windowSettings.ClientSize;
-			}
-
-			if ( this.windowInfos != null )
-			{
-				this.globalSettings.InfosLocation = this.windowInfos.WindowLocation;
-				this.globalSettings.InfosSize = this.windowInfos.ClientSize;
-			}
-
-			if ( this.windowExport != null )
-			{
-				this.globalSettings.ExportLocation = this.windowExport.WindowLocation;
-				this.globalSettings.ExportSize = this.windowExport.ClientSize;
-			}
-
-			if ( this.windowAbout != null )
-			{
-				this.globalSettings.AboutLocation = this.windowAbout.WindowLocation;
-				this.globalSettings.AboutSize = this.windowAbout.ClientSize;
-			}
+			this.dlgAbout.Save();
+			this.dlgInfos.Save();
+			this.dlgExport.Save();
+			this.dlgSettings.Save();
 
 			this.globalSettings.Adorner = Epsitec.Common.Widgets.Adorner.Factory.ActiveName;
 
@@ -4200,12 +3593,14 @@ namespace Epsitec.App.DocumentEditor
 
 
 		protected DocumentType					type;
+		protected InstallType					installType;
 		protected bool							useArray;
 		protected bool							firstInitialise;
 		protected Document						clipboard;
 		protected int							currentDocument;
 		protected System.Collections.ArrayList	documents;
 		protected GlobalSettings				globalSettings;
+		protected bool							askKey = false;
 
 		protected CommandDispatcher				commandDispatcher;
 
@@ -4218,13 +3613,14 @@ namespace Epsitec.App.DocumentEditor
 		protected double						panelsWidth = 247;
 		protected bool							ignoreChange;
 		protected int							tabIndex;
-		protected Timer							splashTimer;
 
-		protected Window						windowSplash;
-		protected Window						windowAbout;
-		protected Window						windowInfos;
-		protected Window						windowSettings;
-		protected Window						windowExport;
+		protected Dialogs.Splash				dlgSplash;
+		protected Dialogs.Key					dlgKey;
+		protected Dialogs.Update				dlgUpdate;
+		protected Dialogs.About					dlgAbout;
+		protected Dialogs.Infos					dlgInfos;
+		protected Dialogs.Export				dlgExport;
+		protected Dialogs.Settings				dlgSettings;
 
 		protected CommandState					newState;
 		protected CommandState					openState;
@@ -4329,6 +3725,8 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					settingsState;
 		protected CommandState					infosState;
 		protected CommandState					aboutState;
+		protected CommandState					updateState;
+		protected CommandState					keyState;
 		protected CommandState					moveLeftNormState;
 		protected CommandState					moveRightNormState;
 		protected CommandState					moveUpNormState;

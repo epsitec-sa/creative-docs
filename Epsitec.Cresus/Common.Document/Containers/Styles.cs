@@ -340,6 +340,13 @@ namespace Epsitec.Common.Document.Containers
 			{
 				obj.IsHilite = obj.PropertyExist(property);
 			}
+
+			this.table.HiliteColor = context.HiliteSurfaceColor;
+			int total = this.document.PropertiesStyle.Count;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				this.TableHiliteRow(i, i==rank);
+			}
 		}
 
 		// Le widget qui détermine la couleur d'origine a changé.
