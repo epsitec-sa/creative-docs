@@ -1179,7 +1179,7 @@ namespace Epsitec.Common.Widgets
 				hRect.Bottom = iRect.Bottom;
 				this.containerV.Bounds = hRect;
 				this.containerV.Show();
-				this.containerV.Children.Clear();
+				if ( this.isGrimy )  this.containerV.Children.Clear();
 
 				hRect.Left  = 0;
 				hRect.Right = this.leftMargin;
@@ -1191,7 +1191,7 @@ namespace Epsitec.Common.Widgets
 					button.Show();
 					button.Bounds = hRect;
 					button.Dynamic = ( (this.styleV & CellArrayStyle.Sort) != 0 );
-					this.containerV.Children.Add(button);
+					if ( this.isGrimy )  this.containerV.Children.Add(button);
 					hRect.Top = hRect.Bottom;
 				}
 
@@ -1216,7 +1216,7 @@ namespace Epsitec.Common.Widgets
 						sRect.Top    = hRect.Bottom+this.sliderDim/2;
 						slider.Show();
 						slider.Bounds = sRect;
-						this.containerV.Children.Add(slider);
+						if ( this.isGrimy )  this.containerV.Children.Add(slider);
 					}
 					hRect.Top = hRect.Bottom;
 				}
@@ -1236,7 +1236,7 @@ namespace Epsitec.Common.Widgets
 				hRect.Right  = iRect.Right;
 				this.containerH.Bounds = hRect;
 				this.containerH.Show();
-				this.containerH.Children.Clear();
+				if ( this.isGrimy )  this.containerH.Children.Clear();
 
 				hRect.Bottom = 0;
 				hRect.Top    = this.topMargin;
@@ -1248,7 +1248,7 @@ namespace Epsitec.Common.Widgets
 					button.Show();
 					button.Bounds = hRect;
 					button.Dynamic = ( (this.styleH & CellArrayStyle.Sort) != 0 );
-					this.containerH.Children.Add(button);
+					if ( this.isGrimy )  this.containerH.Children.Add(button);
 					hRect.Left = hRect.Right;
 				}
 
@@ -1273,12 +1273,13 @@ namespace Epsitec.Common.Widgets
 						sRect.Top    = hRect.Top;
 						slider.Show();
 						slider.Bounds = sRect;
-						this.containerH.Children.Add(slider);
+						if ( this.isGrimy )  this.containerH.Children.Add(slider);
 					}
 					hRect.Left = hRect.Right;
 				}
 			}
 
+			this.isGrimy = false;
 			this.UpdateScrollers();
 		}
 
@@ -1364,6 +1365,8 @@ namespace Epsitec.Common.Widgets
 					if ( cRect.Right > 0 && cRect.Left   < rect.Width  &&
 						 cRect.Top   > 0 && cRect.Bottom < rect.Height )
 					{
+						cRect.Left += 1;
+						cRect.Top  -= 1;  // laisse la place pour la grille
 						this.array[x,y].Bounds = cRect;
 						this.array[x,y].Parent = this.container;
 					}
@@ -1544,6 +1547,8 @@ namespace Epsitec.Common.Widgets
 				slider.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
 				this.headerSliderH.Add(slider);
 			}
+
+			this.isGrimy = true;
 		}
 
 
@@ -1658,6 +1663,7 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler SortChanged;
 
 		protected bool							isDirty;
+		protected bool							isGrimy;
 		protected bool							mouseDown = false;
 		protected bool							mouseState;
 		protected CellArrayStyle				styleH;

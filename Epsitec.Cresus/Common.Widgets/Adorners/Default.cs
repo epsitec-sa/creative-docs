@@ -558,14 +558,15 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			Drawing.Rectangle rBack = new Drawing.Rectangle();
 			rBack = titleRect;
-			rBack.Left   += 2;
 			rBack.Right  -= 2;
 			rBack.Bottom -= 1;
 			rBack.Top    -= 2;
 			graphics.AddFilledRectangle(rBack);
 			graphics.RenderSolid(this.colorControl);
 
-			PaintTabSunkenBackground(graphics, frameRect, titleRect, state, shadow);
+			titleRect.Left   -= 2;
+			titleRect.Bottom += 1;
+			this.PaintTabBackground(graphics, frameRect, titleRect, state, shadow);
 		}
 
 		public void PaintTabAboveForeground(Drawing.Graphics graphics,
@@ -583,6 +584,16 @@ namespace Epsitec.Common.Widgets.Adorner
 											 Widgets.WidgetState state,
 											 Widgets.Direction shadow)
 		{
+			this.PaintTabBackground(graphics, frameRect, titleRect, state, shadow);
+		}
+
+		// Dessine un onglet quelconque.
+		protected void PaintTabBackground(Drawing.Graphics graphics,
+										  Drawing.Rectangle frameRect,
+										  Drawing.Rectangle titleRect,
+										  Widgets.WidgetState state,
+										  Widgets.Direction shadow)
+		{
 			graphics.LineWidth = 1;
 			graphics.LineCap = Drawing.CapStyle.Butt;
 
@@ -594,6 +605,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			p2.X = titleRect.Left+0.5;
 			p2.Y = titleRect.Top-2;
 			graphics.AddLine(p1, p2);
+			p1.X = titleRect.Left+0.5;
+			p1.Y = titleRect.Top-2.5;
+			p2.X = titleRect.Left+2.5;
+			p2.Y = titleRect.Top-0.5;
+			graphics.AddLine(p1, p2);
 			p1.X = titleRect.Left+2;
 			p1.Y = titleRect.Top-0.5;
 			p2.X = titleRect.Right-2;
@@ -604,9 +620,9 @@ namespace Epsitec.Common.Widgets.Adorner
 			p1.X = titleRect.Left+1.5;
 			p1.Y = titleRect.Bottom;
 			p2.X = titleRect.Left+1.5;
-			p2.Y = titleRect.Top-1;
+			p2.Y = titleRect.Top-2;
 			graphics.AddLine(p1, p2);
-			p1.X = titleRect.Left+1;
+			p1.X = titleRect.Left+2;
 			p1.Y = titleRect.Top-1.5;
 			p2.X = titleRect.Right-1;
 			p2.Y = titleRect.Top-1.5;

@@ -409,8 +409,8 @@ namespace Epsitec.Common.Tests
 			this.pane.Location = new Point(0, 0);
 			this.pane.Size = root.Size;
 			this.pane.PaneBookStyle = PaneBookStyle.LeftRight;
-			//this.pane.PaneBehaviour = PaneBookBehaviour.Draft;
-			this.pane.PaneBehaviour = PaneBookBehaviour.FollowMe;
+			this.pane.PaneBehaviour = PaneBookBehaviour.Draft;
+			//this.pane.PaneBehaviour = PaneBookBehaviour.FollowMe;
 			this.pane.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			this.pane.SizeChanged += new EventHandler(this.pane_SizeChanged);
 			this.pane.Parent = root;
@@ -418,20 +418,22 @@ namespace Epsitec.Common.Tests
 			this.leftPane = new PanePage();
 			this.leftPane.PaneRelativeSize = 10;
 			this.leftPane.PaneElasticity = 1;
+			this.leftPane.PaneHideSize = 150;
 			this.pane.Items.Add(this.leftPane);
 
 			this.rightPane = new PanePage();
 			this.rightPane.PaneRelativeSize = 10;
 			this.rightPane.PaneElasticity = 0;
 			//this.rightPane.PaneMaxSize = 300;
+			this.rightPane.PaneHideSize = 300;
 			this.pane.Items.Add(this.rightPane);
 
 			this.subPane = new PaneBook();
 			this.subPane.Location = new Point(0, 0);
 			this.subPane.Size = new Size(this.leftPane.Width, this.leftPane.Height);
 			this.subPane.PaneBookStyle = PaneBookStyle.BottomTop;
-			//this.subPane.PaneBehaviour = PaneBookBehaviour.Draft;
-			this.subPane.PaneBehaviour = PaneBookBehaviour.FollowMe;
+			this.subPane.PaneBehaviour = PaneBookBehaviour.Draft;
+			//this.subPane.PaneBehaviour = PaneBookBehaviour.FollowMe;
 			this.subPane.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			this.subPane.SizeChanged += new EventHandler(this.pane_SizeChanged);
 			this.subPane.Parent = this.leftPane;
@@ -587,7 +589,7 @@ namespace Epsitec.Common.Tests
 			ScrollList sl = sender as ScrollList;
 			int sel = sl.SelectedIndex;
 			Widgets.Adorner.Factory.SetActive(sl.Items[sel]);
-			Window.InvalidateAll();	// redessine toutes les fenêtres
+			Window.InvalidateAll();  // redessine toutes les fenêtres
 		}
 
 		protected void ResizeLayout()
