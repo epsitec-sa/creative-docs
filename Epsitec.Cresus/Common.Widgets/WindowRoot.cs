@@ -44,20 +44,25 @@ namespace Epsitec.Common.Widgets
 			this.window_frame.MarkForRepaint (rect);
 		}
 		
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics)
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
 			Drawing.Path path = new Drawing.Path ();
 			
 			double dx = this.Client.Width;
 			double dy = this.Client.Height;
 			
-			path.MoveTo (0, 0);
-			path.LineTo (dx, 0);
-			path.LineTo (dx, dy);
-			path.LineTo (0, dy);
+			double x1 = System.Math.Max (clip_rect.Left, 0);
+			double y1 = System.Math.Max (clip_rect.Bottom, 0);
+			double x2 = System.Math.Min (clip_rect.Right, dx);
+			double y2 = System.Math.Min (clip_rect.Top, dy);
+			
+			path.MoveTo (x1, y1);
+			path.LineTo (x2, y1);
+			path.LineTo (x2, y2);
+			path.LineTo (x1, y2);
 			path.Close ();
 			
-			graphics.Solid.Color = System.Drawing.Color.LightSalmon;
+			graphics.Solid.Color = System.Drawing.Color.FromArgb (239, 235, 222);
 			graphics.Rasterizer.AddSurface (path);
 			graphics.RenderSolid ();
 		}
