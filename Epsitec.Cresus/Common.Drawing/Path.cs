@@ -413,11 +413,16 @@ namespace Epsitec.Common.Drawing
 						yc = (float) points[i+0].Y;
 						x3 = (float) points[i+1].X;
 						y3 = (float) points[i+1].Y;
+						
+						//	Formules de conversion trouvées ici: http://ungwe.org/blog/2004/02/22/15:50/
+						
 						x1 = (ox + 2 * xc) / 3;
 						y1 = (oy + 2 * yc) / 3;
 						x2 = (x3 + 2 * xc) / 3;
 						y2 = (y3 + 2 * yc) / 3;
+						
 						gp.AddBezier (ox, oy, x1, y1, x2, y2, x3, y3);
+						
 						ox = x3;
 						oy = y3;
 						i += 1;

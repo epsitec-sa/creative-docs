@@ -134,7 +134,8 @@ namespace Epsitec.Common.Printing
 		{
 			System.Drawing.Graphics graphics = e.Graphics;
 			PageSettings            settings = new PageSettings (e.PageSettings);
-			PrintEngineStatus       status   = this.engine.PrintPage (settings);
+			PrintPort               port     = new PrintPort (graphics, settings);
+			PrintEngineStatus       status   = this.engine.PrintPage (port);
 			
 			switch (status)
 			{

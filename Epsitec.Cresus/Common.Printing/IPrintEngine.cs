@@ -12,7 +12,7 @@ namespace Epsitec.Common.Printing
 		void FinishingPrintJob();
 		
 		void PrepareNewPage(PageSettings settings);
-		PrintEngineStatus PrintPage(PageSettings settings);
+		PrintEngineStatus PrintPage(PrintPort port);
 	}
 	
 	public enum PrintEngineStatus
