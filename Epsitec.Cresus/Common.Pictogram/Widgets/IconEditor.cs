@@ -16,6 +16,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			
 			this.CreateLayout();
 			this.UpdatePanels();
+			this.panelPages.Update();
+			this.panelLayers.Update();
+			this.panelStyles.UpdateAll(-1);
+			this.UpdatePagesLayers();
 		}
 
 		public IconEditor(Widget embedder) : this()
@@ -38,14 +42,27 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.pane = null;
 				this.leftPane = null;
 				this.rightPane = null;
-				this.separator = null;
+				this.book = null;
+				this.bookPanel = null;
+				this.bookStyles = null;
+				this.bookPages = null;
+				this.bookLayers = null;
 				this.panel = null;
 				this.drawer = null;
+				this.quickPagePrev = null;
+				this.quickPageMenu = null;
+				this.quickPageNext = null;
 				this.hScroller = null;
+				this.quickLayerPrev = null;
+				this.quickLayerMenu = null;
+				this.quickLayerNext = null;
 				this.vScroller = null;
 				this.lister = null;
 				this.frame1 = null;
 				this.frame2 = null;
+				this.panelStyles = null;
+				this.panelPages = null;
+				this.panelLayers = null;
 			}
 			
 			base.Dispose(disposing);
@@ -78,14 +95,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.menu.Items.Add(new MenuItem("", "Edition"));
 			this.menu.Items.Add(new MenuItem("", "Objets"));
 			this.menu.Items.Add(new MenuItem("", "Affichage"));
+			this.menu.Items.Add(new MenuItem("", "Debug"));
 			this.menu.Items.Add(new MenuItem("", "Aide"));
 
 			VMenu fileMenu = new VMenu();
 			fileMenu.Name = "File";
 			fileMenu.Host = this;
-			this.MenuAdd(fileMenu, @"file:images/new1.icon", "New", "Nouveau", "Ctrl+N");
-			this.MenuAdd(fileMenu, @"file:images/open1.icon", "Open", "Ouvrir...", "Ctrl+O");
-			this.MenuAdd(fileMenu, @"file:images/save1.icon", "Save", "Enregistrer sous...", "Ctrl+S");
+			this.MenuAdd(fileMenu, @"file:images/new.icon", "New", "Nouveau", "Ctrl+N");
+			this.MenuAdd(fileMenu, @"file:images/open.icon", "Open", "Ouvrir...", "Ctrl+O");
+			this.MenuAdd(fileMenu, @"file:images/save.icon", "Save", "Enregistrer sous...", "Ctrl+S");
 			this.MenuAdd(fileMenu, @"", "", "", "");
 			this.MenuAdd(fileMenu, @"", "Quit", "Quitter", "");
 			fileMenu.AdjustSize();
@@ -94,52 +112,57 @@ namespace Epsitec.Common.Pictogram.Widgets
 			VMenu editMenu = new VMenu();
 			editMenu.Name = "Edit";
 			editMenu.Host = this;
-			this.MenuAdd(editMenu, @"file:images/undo1.icon", "Undo", "Annuler", "Ctrl+Z");
-			this.MenuAdd(editMenu, @"file:images/redo1.icon", "Redo", "Refaire", "Ctrl+Y");
+			this.MenuAdd(editMenu, @"file:images/undo.icon", "Undo", "Annuler", "Ctrl+Z");
+			this.MenuAdd(editMenu, @"file:images/redo.icon", "Redo", "Refaire", "Ctrl+Y");
 			this.MenuAdd(editMenu, @"", "", "", "");
-			this.MenuAdd(editMenu, @"file:images/cut1.icon", "Cut", "Couper", "Ctrl+X");
-			this.MenuAdd(editMenu, @"file:images/copy1.icon", "Copy", "Copier", "Ctrl+C");
-			this.MenuAdd(editMenu, @"file:images/paste1.icon", "Paste", "Coller", "Ctrl+V");
+			this.MenuAdd(editMenu, @"file:images/cut.icon", "Cut", "Couper", "Ctrl+X");
+			this.MenuAdd(editMenu, @"file:images/copy.icon", "Copy", "Copier", "Ctrl+C");
+			this.MenuAdd(editMenu, @"file:images/paste.icon", "Paste", "Coller", "Ctrl+V");
 			this.MenuAdd(editMenu, @"", "", "", "");
-			this.MenuAdd(editMenu, @"file:images/delete1.icon", "Delete", "Supprimer", "Del");
-			this.MenuAdd(editMenu, @"file:images/duplicate1.icon", "Duplicate", "Dupliquer", "");
+			this.MenuAdd(editMenu, @"file:images/delete.icon", "Delete", "Supprimer", "Del");
+			this.MenuAdd(editMenu, @"file:images/duplicate.icon", "Duplicate", "Dupliquer", "");
 			editMenu.AdjustSize();
 			this.menu.Items[1].Submenu = editMenu;
 
 			VMenu objMenu = new VMenu();
 			objMenu.Name = "Obj";
 			objMenu.Host = this;
-			this.MenuAdd(objMenu, @"file:images/deselect1.icon", "Deselect", "Désélectionner tout", "");
-			this.MenuAdd(objMenu, @"file:images/selectall1.icon", "SelectAll", "Tout sélectionner", "");
-			this.MenuAdd(objMenu, @"file:images/selectinvert1.icon", "SelectInvert", "Inverser la sélection", "");
+			this.MenuAdd(objMenu, @"file:images/deselect.icon", "Deselect", "Désélectionner tout", "");
+			this.MenuAdd(objMenu, @"file:images/selectall.icon", "SelectAll", "Tout sélectionner", "");
+			this.MenuAdd(objMenu, @"file:images/selectinvert.icon", "SelectInvert", "Inverser la sélection", "");
+			this.MenuAdd(objMenu, @"file:images/selectglobal.icon", "SelectGlobal", "Changer le mode de sélection", "");
 			this.MenuAdd(objMenu, @"", "", "", "");
-			this.MenuAdd(objMenu, @"file:images/orderup1.icon", "OrderUp", "Dessus", "");
-			this.MenuAdd(objMenu, @"file:images/orderdown1.icon", "OrderDown", "Dessous", "");
+			this.MenuAdd(objMenu, @"file:images/hidesel.icon", "HideSel", "Cacher la sélection", "");
+			this.MenuAdd(objMenu, @"file:images/hiderest.icon", "HideRest", "Cacher le reste", "");
+			this.MenuAdd(objMenu, @"file:images/hidecancel.icon", "HideCancel", "Montrer tout", "");
 			this.MenuAdd(objMenu, @"", "", "", "");
-			this.MenuAdd(objMenu, @"file:images/groupempty1.icon", "", "Groupe", "");
+			this.MenuAdd(objMenu, @"file:images/orderup.icon", "OrderUp", "Dessus", "");
+			this.MenuAdd(objMenu, @"file:images/orderdown.icon", "OrderDown", "Dessous", "");
+			this.MenuAdd(objMenu, @"", "", "", "");
+			this.MenuAdd(objMenu, @"file:images/groupempty.icon", "", "Groupe", "");
 			objMenu.AdjustSize();
 			this.menu.Items[2].Submenu = objMenu;
 
 			VMenu groupMenu = new VMenu();
 			groupMenu.Name = "Group";
 			groupMenu.Host = this;
-			this.MenuAdd(groupMenu, @"file:images/merge1.icon", "Merge", "Fusionner", "");
-			this.MenuAdd(groupMenu, @"file:images/group1.icon", "Group", "Associer", "");
-			this.MenuAdd(groupMenu, @"file:images/ungroup1.icon", "Ungroup", "Dissocier", "");
+			this.MenuAdd(groupMenu, @"file:images/merge.icon", "Merge", "Fusionner", "");
+			this.MenuAdd(groupMenu, @"file:images/group.icon", "Group", "Associer", "");
+			this.MenuAdd(groupMenu, @"file:images/ungroup.icon", "Ungroup", "Dissocier", "");
 			this.MenuAdd(groupMenu, @"", "", "", "");
-			this.MenuAdd(groupMenu, @"file:images/inside1.icon", "Inside", "Entrer dans le groupe", "");
-			this.MenuAdd(groupMenu, @"file:images/outside1.icon", "Outside", "Sortir du groupe", "");
+			this.MenuAdd(groupMenu, @"file:images/inside.icon", "Inside", "Entrer dans le groupe", "");
+			this.MenuAdd(groupMenu, @"file:images/outside.icon", "Outside", "Sortir du groupe", "");
 			groupMenu.AdjustSize();
-			objMenu.Items[7].Submenu = groupMenu;
+			objMenu.Items[12].Submenu = groupMenu;
 
 			VMenu showMenu = new VMenu();
 			showMenu.Name = "Show";
 			showMenu.Host = this;
-			this.MenuAdd(showMenu, @"file:images/selectmode1.icon", "SelectMode", "Sélection partielle", "");
-			this.MenuAdd(showMenu, @"file:images/grid1.icon", "Grid", "Grille magnétique", "");
-			this.MenuAdd(showMenu, @"file:images/mode1.icon", "Mode", "Tableau des objets", "");
+			this.MenuAdd(showMenu, @"file:images/selectmode.icon", "SelectMode", "Sélection partielle", "");
+			this.MenuAdd(showMenu, @"file:images/grid.icon", "Grid", "Grille magnétique", "");
+			this.MenuAdd(showMenu, @"file:images/mode.icon", "Mode", "Tableau des objets", "");
 			this.MenuAdd(showMenu, @"", "", "", "");
-			this.MenuAdd(showMenu, @"file:images/zoommenu1.icon", "", "Zoom", "");
+			this.MenuAdd(showMenu, @"file:images/zoommenu.icon", "", "Zoom", "");
 			this.MenuAdd(showMenu, @"", "", "", "");
 			this.MenuAdd(showMenu, @"", "", "Apparence", "");
 			showMenu.AdjustSize();
@@ -148,13 +171,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 			VMenu zoomMenu = new VMenu();
 			zoomMenu.Name = "Zoom";
 			zoomMenu.Host = this;
-			this.MenuAdd(zoomMenu, @"file:images/zoommin1.icon", "ZoomMin", "Zoom minimal", "");
-			this.MenuAdd(zoomMenu, @"file:images/zoomdefault1.icon", "ZoomDefault", "Zoom 100%", "");
-			this.MenuAdd(zoomMenu, @"file:images/zoomsel1.icon", "ZoomSel", "Zoom sélection", "");
-			this.MenuAdd(zoomMenu, @"file:images/zoomprev1.icon", "ZoomPrev", "Zoom précédent", "");
+			this.MenuAdd(zoomMenu, @"file:images/zoommin.icon", "ZoomMin", "Zoom minimal", "");
+			this.MenuAdd(zoomMenu, @"file:images/zoomdefault.icon", "ZoomDefault", "Zoom 100%", "");
+			this.MenuAdd(zoomMenu, @"file:images/zoomsel.icon", "ZoomSel", "Zoom sélection", "");
+			this.MenuAdd(zoomMenu, @"file:images/zoomprev.icon", "ZoomPrev", "Zoom précédent", "");
 			this.MenuAdd(zoomMenu, @"", "", "", "");
-			this.MenuAdd(zoomMenu, @"file:images/zoomsub1.icon", "ZoomSub", "Réduction", "");
-			this.MenuAdd(zoomMenu, @"file:images/zoomadd1.icon", "ZoomAdd", "Agrandissement", "");
+			this.MenuAdd(zoomMenu, @"file:images/zoomsub.icon", "ZoomSub", "Réduction", "");
+			this.MenuAdd(zoomMenu, @"file:images/zoomadd.icon", "ZoomAdd", "Agrandissement", "");
 			zoomMenu.AdjustSize();
 			showMenu.Items[4].Submenu = zoomMenu;
 
@@ -164,10 +187,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 			string[] list = Epsitec.Common.Widgets.Adorner.Factory.AdornerNames;
 			foreach ( string name in list )
 			{
-				this.MenuAdd(lookMenu, @"y/n", "SelectLook (this.Name)", name, "", name);
+				this.MenuAdd(lookMenu, @"y/n", "SelectLook(this.Name)", name, "", name);
 			}
 			lookMenu.AdjustSize();
 			showMenu.Items[6].Submenu = lookMenu;
+
+			VMenu debugMenu = new VMenu();
+			debugMenu.Name = "Debug";
+			debugMenu.Host = this;
+			this.MenuAdd(debugMenu, @"", "DebugBbox", "Affiche les bbox", "");
+			debugMenu.AdjustSize();
+			this.menu.Items[4].Submenu = debugMenu;
 
 			VMenu helpMenu = new VMenu();
 			helpMenu.Name = "Help";
@@ -176,50 +206,53 @@ namespace Epsitec.Common.Pictogram.Widgets
 			helpMenu.Items.Add(new MenuItem("ctxhelp", "", "Aide contextuelle", ""));
 			helpMenu.Items.Add(new MenuItem("about", "", "A propos de...", ""));
 			helpMenu.AdjustSize();
-			this.menu.Items[4].Submenu = helpMenu;
+			this.menu.Items[5].Submenu = helpMenu;
 
 			this.hToolBar = new HToolBar();
 			this.hToolBar.Parent = this;
-			this.HToolBarAdd(@"file:images/new1.icon", "New", "Nouveau");
-			this.HToolBarAdd(@"file:images/open1.icon", "Open", "Ouvrir");
-			this.HToolBarAdd(@"file:images/save1.icon", "Save", "Enregistrer");
+			this.HToolBarAdd(@"file:images/new.icon", "New", "Nouveau");
+			this.HToolBarAdd(@"file:images/open.icon", "Open", "Ouvrir");
+			this.HToolBarAdd(@"file:images/save.icon", "Save", "Enregistrer");
 			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(@"file:images/delete1.icon", "Delete", "Supprimer");
-			this.HToolBarAdd(@"file:images/duplicate1.icon", "Duplicate", "Dupliquer");
+			this.HToolBarAdd(@"file:images/delete.icon", "Delete", "Supprimer");
+			this.HToolBarAdd(@"file:images/duplicate.icon", "Duplicate", "Dupliquer");
 			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(@"file:images/undo1.icon", "Undo", "Annuler");
-			this.HToolBarAdd(@"file:images/redo1.icon", "Redo", "Refaire");
+			this.HToolBarAdd(@"file:images/cut.icon", "Cut", "Couper");
+			this.HToolBarAdd(@"file:images/copy.icon", "Copy", "Copier");
+			this.HToolBarAdd(@"file:images/paste.icon", "Paste", "Coller");
 			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(@"file:images/orderup1.icon", "OrderUp", "Dessus");
-			this.HToolBarAdd(@"file:images/orderdown1.icon", "OrderDown", "Dessous");
+			this.HToolBarAdd(@"file:images/undo.icon", "Undo", "Annuler");
+			this.HToolBarAdd(@"file:images/redo.icon", "Redo", "Refaire");
 			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(@"file:images/merge1.icon", "Merge", "Fusionner");
-			this.HToolBarAdd(@"file:images/group1.icon", "Group", "Associer");
-			this.HToolBarAdd(@"file:images/ungroup1.icon", "Ungroup", "Dissocier");
-			this.HToolBarAdd(@"file:images/inside1.icon", "Inside", "Entrer dans le groupe");
-			this.HToolBarAdd(@"file:images/outside1.icon", "Outside", "Sortir du groupe");
+			this.HToolBarAdd(@"file:images/orderup.icon", "OrderUp", "Dessus");
+			this.HToolBarAdd(@"file:images/orderdown.icon", "OrderDown", "Dessous");
 			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(@"file:images/selectmode1.icon", "SelectMode", "Sélection partielle");
-			this.HToolBarAdd(@"file:images/grid1.icon", "Grid", "Grille magnétique");
-			this.HToolBarAdd(@"file:images/mode1.icon", "Mode", "Tableau des objets");
+			this.HToolBarAdd(@"file:images/merge.icon", "Merge", "Fusionner");
+			this.HToolBarAdd(@"file:images/group.icon", "Group", "Associer");
+			this.HToolBarAdd(@"file:images/ungroup.icon", "Ungroup", "Dissocier");
+			this.HToolBarAdd(@"file:images/inside.icon", "Inside", "Entrer dans le groupe");
+			this.HToolBarAdd(@"file:images/outside.icon", "Outside", "Sortir du groupe");
+			this.HToolBarAdd("", "", "");
+			this.HToolBarAdd(@"file:images/selectmode.icon", "SelectMode", "Sélection partielle");
+			this.HToolBarAdd(@"file:images/grid.icon", "Grid", "Grille magnétique");
+			this.HToolBarAdd(@"file:images/mode.icon", "Mode", "Tableau des objets");
 			this.HToolBarAdd("", "", "");
 
 			this.vToolBar = new VToolBar();
 			this.vToolBar.Parent = this;
-			this.VToolBarAdd(@"file:images/select1.icon", "SelectTool", "Sélectionner", "Select");
-			this.VToolBarAdd(@"file:images/zoom1.icon", "SelectTool", "Agrandir", "Zoom");
-			this.VToolBarAdd(@"file:images/hand1.icon", "SelectTool", "Déplacer", "Hand");
-			this.VToolBarAdd(@"file:images/picker1.icon", "SelectTool", "Pipette", "Picker");
+			this.VToolBarAdd(@"file:images/select.icon", "SelectTool", "Sélectionner", "Select");
+			this.VToolBarAdd(@"file:images/zoom.icon", "SelectTool", "Agrandir", "Zoom");
+			this.VToolBarAdd(@"file:images/hand.icon", "SelectTool", "Déplacer", "Hand");
+			this.VToolBarAdd(@"file:images/picker.icon", "SelectTool", "Pipette", "Picker");
 			this.VToolBarAdd("", "", "");
-			this.VToolBarAdd(@"file:images/line1.icon", "SelectTool", "Segment de ligne", "ObjectLine");
-			this.VToolBarAdd(@"file:images/arrow1.icon", "SelectTool", "Flèche", "ObjectArrow");
-			this.VToolBarAdd(@"file:images/rectangle1.icon", "SelectTool", "Rectangle", "ObjectRectangle");
-			this.VToolBarAdd(@"file:images/circle1.icon", "SelectTool", "Cercle", "ObjectCircle");
-			this.VToolBarAdd(@"file:images/ellipse1.icon", "SelectTool", "Ellipse", "ObjectEllipse");
-			this.VToolBarAdd(@"file:images/regular1.icon", "SelectTool", "Polygone régulier", "ObjectRegular");
-			this.VToolBarAdd(@"file:images/poly1.icon", "SelectTool", "Polygone quelconque", "ObjectPoly");
-			this.VToolBarAdd(@"file:images/bezier1.icon", "SelectTool", "Courbes de Bézier", "ObjectBezier");
-			this.VToolBarAdd(@"file:images/text1.icon", "SelectTool", "Texte", "ObjectText");
+			this.VToolBarAdd(@"file:images/line.icon", "SelectTool", "Segment de ligne", "ObjectLine");
+			this.VToolBarAdd(@"file:images/rectangle.icon", "SelectTool", "Rectangle", "ObjectRectangle");
+			this.VToolBarAdd(@"file:images/circle.icon", "SelectTool", "Cercle", "ObjectCircle");
+			this.VToolBarAdd(@"file:images/ellipse.icon", "SelectTool", "Ellipse", "ObjectEllipse");
+			this.VToolBarAdd(@"file:images/regular.icon", "SelectTool", "Polygone régulier", "ObjectRegular");
+			this.VToolBarAdd(@"file:images/poly.icon", "SelectTool", "Polygone quelconque", "ObjectPoly");
+			this.VToolBarAdd(@"file:images/bezier.icon", "SelectTool", "Courbes de Bézier", "ObjectBezier");
+			this.VToolBarAdd(@"file:images/text.icon", "SelectTool", "Texte", "ObjectText");
 			this.VToolBarAdd("", "", "");
 			
 			this.root = new Widget();
@@ -244,11 +277,31 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.rightPane.PaneMaxSize = 200;
 			this.pane.Items.Add(this.rightPane);
 
-			this.separator = new Separator();
-			this.separator.Parent = this;
+			this.book = new TabBook();
+			this.book.Arrows = TabBookArrows.Right;
+			this.book.ActivePageChanged += new EventHandler(this.HandleActivePageChanged);
+			this.book.Parent = this;
+
+			this.bookPanel = new TabPage();
+			this.bookPanel.TabTitle = "Attributs";
+			this.book.Items.Add(this.bookPanel);
+
+			this.bookStyles = new TabPage();
+			this.bookStyles.TabTitle = "Styles";
+			this.book.Items.Add(this.bookStyles);
+
+			this.bookPages = new TabPage();
+			this.bookPages.TabTitle = "Pages";
+			this.book.Items.Add(this.bookPages);
+
+			this.bookLayers = new TabPage();
+			this.bookLayers.TabTitle = "Calques";
+			this.book.Items.Add(this.bookLayers);
+
+			this.book.ActivePage = this.bookPanel;
 
 			this.panel = new Widget();
-			this.panel.Parent = this;
+			this.panel.Parent = this.bookPanel;
 
 			this.drawer = new Drawer();
 			this.drawer.InitCommands(this.CommandDispatcher);
@@ -262,18 +315,22 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.InfoObjectChanged += new EventHandler(this.HandleDrawerInfoObjectChanged);
 			this.drawer.InfoMouseChanged += new EventHandler(this.HandleDrawerInfoMouseChanged);
 			this.drawer.InfoZoomChanged += new EventHandler(this.HandleDrawerInfoZoomChanged);
+			this.drawer.UsePropertiesPanel += new EventHandler(this.HandleDrawerUsePropertiesPanel);
+			this.drawer.SetSyncPaint(true);
 			this.drawer.Parent = this.leftPane;
 
 			this.lister = new Lister();
 			this.lister.PanelChanged += new EventHandler(this.HandleDrawerAllChanged);
 			this.lister.IconObjects = this.drawer.IconObjects;
 			this.lister.Parent = this.leftPane;
+			this.lister.SetSyncPaint(true);
 			this.lister.Hide();
 
 			this.frame1 = new SampleButton();
 			this.frame1.ButtonStyle = ButtonStyle.ToolItem;
 			this.frame1.ActiveState = WidgetState.ActiveYes;
 			this.frame1.IconObjects.Objects = this.drawer.Objects;
+			this.frame1.SetSyncPaint(true);
 			this.frame1.Parent = this.rightPane;
 
 			this.frame2 = new SampleButton();
@@ -281,35 +338,83 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.frame2.ActiveState = WidgetState.ActiveYes;
 			this.frame2.SetEnabled(false);
 			this.frame2.IconObjects.Objects = this.drawer.Objects;
+			this.frame2.SetSyncPaint(true);
 			this.frame2.Parent = this.rightPane;
 
 			this.drawer.AddClone(this.frame1);
 			this.drawer.AddClone(this.frame2);
 			this.drawer.AddClone(this.lister);
 
+			this.quickPagePrev = new GlyphButton();
+			this.quickPagePrev.GlyphType = GlyphType.ArrowLeft;
+			this.quickPagePrev.Clicked += new MessageEventHandler(this.HandleQuickPagePrev);
+			this.quickPagePrev.Parent = this.leftPane;
+
+			this.quickPageMenu = new Button();
+			this.quickPageMenu.Text = "1";
+			this.quickPageMenu.Clicked += new MessageEventHandler(this.HandleQuickPageMenu);
+			this.quickPageMenu.Parent = this.leftPane;
+
+			this.quickPageNext = new GlyphButton();
+			this.quickPageNext.GlyphType = GlyphType.ArrowRight;
+			this.quickPageNext.Clicked += new MessageEventHandler(this.HandleQuickPageNext);
+			this.quickPageNext.Parent = this.leftPane;
+
 			this.hScroller = new HScroller();
 			this.hScroller.ValueChanged += new EventHandler(this.HandleHScrollerValueChanged);
 			this.hScroller.Parent = this.leftPane;
+
+			this.quickLayerNext = new GlyphButton();
+			this.quickLayerNext.GlyphType = GlyphType.ArrowUp;
+			this.quickLayerNext.Clicked += new MessageEventHandler(this.HandleQuickLayerNext);
+			this.quickLayerNext.Parent = this.leftPane;
+
+			this.quickLayerMenu = new Button();
+			this.quickLayerMenu.Text = "A";
+			this.quickLayerMenu.Clicked += new MessageEventHandler(this.HandleQuickLayerMenu);
+			this.quickLayerMenu.Parent = this.leftPane;
+
+			this.quickLayerPrev = new GlyphButton();
+			this.quickLayerPrev.GlyphType = GlyphType.ArrowDown;
+			this.quickLayerPrev.Clicked += new MessageEventHandler(this.HandleQuickLayerPrev);
+			this.quickLayerPrev.Parent = this.leftPane;
 
 			this.vScroller = new VScroller();
 			this.vScroller.ValueChanged += new EventHandler(this.HandleVScrollerValueChanged);
 			this.vScroller.Parent = this.leftPane;
 
+			this.panelStyles = new PanelStyles(this.drawer, this.toolTip);
+			this.panelStyles.Parent = this.bookStyles;
+
+			this.panelPages = new PanelPages(this.drawer, this.toolTip);
+			this.panelPages.ObjectsChanged += new EventHandler(this.HandlePanelPagesObjectsChanged);
+			this.panelPages.Parent = this.bookPages;
+
+			this.panelLayers = new PanelLayers(this.drawer, this.toolTip);
+			this.panelLayers.ObjectsChanged += new EventHandler(this.HandlePanelLayersObjectsChanged);
+			this.panelLayers.Parent = this.bookLayers;
+
 			this.info = new StatusBar();
 			this.info.Parent = this;
 			this.InfoAdd("", 200, "StatusDocument", "");
-			this.InfoAdd(@"file:images/deselect1.icon", 0, "Deselect", "Désélectionner tout");
-			this.InfoAdd(@"file:images/selectall1.icon", 0, "SelectAll", "Tout sélectionner");
-			this.InfoAdd(@"file:images/selectinvert1.icon", 0, "SelectInvert", "Inverser la sélection");
+			this.InfoAdd(@"file:images/deselect.icon", 0, "Deselect", "Désélectionner tout");
+			this.InfoAdd(@"file:images/selectall.icon", 0, "SelectAll", "Tout sélectionner");
+			this.InfoAdd(@"file:images/selectinvert.icon", 0, "SelectInvert", "Inverser la sélection");
+			this.InfoAdd(@"file:images/selectglobal.icon", 0, "SelectGlobal", "Changer le mode de sélection");
+			this.InfoAdd(@"file:images/hidesel.icon", 0, "HideSel", "Cacher la sélection");
+			this.InfoAdd(@"file:images/hiderest.icon", 0, "HideRest", "Cacher le reste");
+			this.InfoAdd(@"file:images/hidecancel.icon", 0, "HideCancel", "Montrer tout");
 			this.InfoAdd("", 120, "StatusObject", "");
-			this.InfoAdd(@"file:images/zoommin1.icon", 0, "ZoomMin", "Zoom minimal");
-			this.InfoAdd(@"file:images/zoomdefault1.icon", 0, "ZoomDefault", "Zoom 100%");
-			this.InfoAdd(@"file:images/zoomsel1.icon", 0, "ZoomSel", "Zoom sélection");
-			this.InfoAdd(@"file:images/zoomprev1.icon", 0, "ZoomPrev", "Zoom précédent");
-			this.InfoAdd(@"file:images/zoomsub1.icon", 0, "ZoomSub", "Réduction");
-			this.InfoAdd(@"file:images/zoomadd1.icon", 0, "ZoomAdd", "Agrandissement");
+			this.InfoAdd(@"file:images/zoommin.icon", 0, "ZoomMin", "Zoom minimal");
+			this.InfoAdd(@"file:images/zoomdefault.icon", 0, "ZoomDefault", "Zoom 100%");
+			this.InfoAdd(@"file:images/zoomsel.icon", 0, "ZoomSel", "Zoom sélection");
+			this.InfoAdd(@"file:images/zoomprev.icon", 0, "ZoomPrev", "Zoom précédent");
+			this.InfoAdd(@"file:images/zoomsub.icon", 0, "ZoomSub", "Réduction");
+			this.InfoAdd(@"file:images/zoomadd.icon", 0, "ZoomAdd", "Agrandissement");
 			this.InfoAdd("", 90, "StatusZoom", "");
 			this.InfoAdd("", 120, "StatusMouse", "");
+			StatusField infoField = this.info.Items["StatusMouse"] as StatusField;
+			infoField.SetSyncPaint(true);
 
 			this.allWidgets = true;
 			this.ResizeLayout();
@@ -319,6 +424,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public HMenu GetMenu()
 		{
 			return this.menu;
+		}
+
+		private void HandleActivePageChanged(object sender)
+		{
+			this.UpdatePanels();
 		}
 
 		private void HandleDrawerPanelChanged(object sender)
@@ -356,6 +466,96 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.OriginY = (double) (-this.vScroller.Value);
 		}
 
+		// Bouton "page précédente" cliqué.
+		private void HandleQuickPagePrev(object sender, MessageEventArgs e)
+		{
+			if ( this.drawer.IconObjects.CurrentPage > 0 )
+			{
+				this.panelPages.PageSelect(this.drawer.IconObjects.CurrentPage-1);
+			}
+		}
+
+		// Bouton "page suivante" cliqué.
+		private void HandleQuickPageNext(object sender, MessageEventArgs e)
+		{
+			if ( this.drawer.IconObjects.CurrentPage < this.drawer.IconObjects.TotalPages()-1 )
+			{
+				this.panelPages.PageSelect(this.drawer.IconObjects.CurrentPage+1);
+			}
+		}
+
+		// Bouton "menu des pages" cliqué.
+		private void HandleQuickPageMenu(object sender, MessageEventArgs e)
+		{
+			Button button = sender as Button;
+			Drawing.Point pos = button.MapClientToScreen(new Drawing.Point(0, button.Height));
+			VMenu menu = this.panelPages.CreateMenu();
+			menu.Host = this;
+			pos.Y += menu.Height;
+			menu.ShowContextMenu(this.Window, pos);
+		}
+
+		[Command ("SelectPage")]
+		void CommandSelectPage(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			int sel = System.Convert.ToInt32(e.CommandArgs[0]);
+			this.panelPages.PageSelect(sel);
+		}
+
+		// Bouton "calque précédent" cliqué.
+		private void HandleQuickLayerPrev(object sender, MessageEventArgs e)
+		{
+			if ( this.drawer.IconObjects.CurrentLayer > 0 )
+			{
+				this.panelLayers.LayerSelect(this.drawer.IconObjects.CurrentLayer-1);
+			}
+		}
+
+		// Bouton "calque suivant" cliqué.
+		private void HandleQuickLayerNext(object sender, MessageEventArgs e)
+		{
+			if ( this.drawer.IconObjects.CurrentLayer < this.drawer.IconObjects.TotalLayers()-1 )
+			{
+				this.panelLayers.LayerSelect(this.drawer.IconObjects.CurrentLayer+1);
+			}
+		}
+
+		// Bouton "menu des calques" cliqué.
+		private void HandleQuickLayerMenu(object sender, MessageEventArgs e)
+		{
+			Button button = sender as Button;
+			Drawing.Point pos = button.MapClientToScreen(new Drawing.Point(0, button.Height));
+			VMenu menu = this.panelLayers.CreateMenu();
+			menu.Host = this;
+			pos.X -= menu.Width;
+			menu.ShowContextMenu(this.Window, pos);
+		}
+
+		[Command ("SelectLayer")]
+		void CommandSelectLayer(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			int sel = System.Convert.ToInt32(e.CommandArgs[0]);
+			this.panelLayers.LayerSelect(sel);
+		}
+
+		// Met à jour les boutons pour les pages et les calques.
+		protected void UpdatePagesLayers()
+		{
+			int cp = this.drawer.IconObjects.CurrentPage;
+			int tp = this.drawer.IconObjects.TotalPages();
+			this.quickPagePrev.SetEnabled(cp > 0);
+			this.quickPageNext.SetEnabled(cp < tp-1);
+			this.quickPageMenu.SetEnabled(tp > 1);
+			this.quickPageMenu.Text = (cp+1).ToString();
+
+			int cl = this.drawer.IconObjects.CurrentLayer;
+			int tl = this.drawer.IconObjects.TotalLayers();
+			this.quickLayerPrev.SetEnabled(cl > 0);
+			this.quickLayerNext.SetEnabled(cl < tl-1);
+			this.quickLayerMenu.SetEnabled(tl > 1);
+			this.quickLayerMenu.Text = ((char)('A'+(tl-cl-1))).ToString();
+		}
+
 		// Ajoute une icône.
 		protected void MenuAdd(VMenu vmenu, string icon, string command, string text, string shortcut)
 		{
@@ -376,8 +576,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 				if ( icon == "y/n" )
 				{
 					icon    = @"";
-					iconNo  = @"file:images/activeno1.icon";
-					iconYes = @"file:images/activeyes1.icon";
+					iconNo  = @"file:images/activeno.icon";
+					iconYes = @"file:images/activeyes.icon";
 				}
 
 				MenuItem item = new MenuItem(command, icon, text, shortcut, name);
@@ -495,6 +695,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 			field.Invalidate();
 		}
 
+		private void HandleDrawerUsePropertiesPanel(object sender)
+		{
+			this.book.ActivePage = this.bookPanel;
+		}
+
 		private void HandleHScrollerValueChanged(object sender)
 		{
 			this.drawer.OriginX = (double) -this.hScroller.Value;
@@ -505,27 +710,81 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.OriginY = (double) -this.vScroller.Value;
 		}
 
-		// Met à jour les panneaux de gauche en fonction des propriétés de l'objet.
+		private void HandlePanelPagesObjectsChanged(object sender)
+		{
+			this.drawer.PageOrLayerChanged();
+			this.drawer.InvalidateAll();
+			this.drawer.UpdateCommands();
+			this.HandleDrawerInfoObjectChanged(null);
+			this.panelLayers.Update();
+			this.UpdatePagesLayers();
+		}
+
+		private void HandlePanelLayersObjectsChanged(object sender)
+		{
+			this.drawer.PageOrLayerChanged();
+			this.drawer.InvalidateAll();
+			this.drawer.UpdateCommands();
+			this.HandleDrawerInfoObjectChanged(null);
+			this.UpdatePagesLayers();
+		}
+
+		// Met à jour les panneaux des propriétés de droite en fonction de l'objet.
 		protected void UpdatePanels()
 		{
-			this.panel.Children.Clear();
+			if ( this.panel == null )  return;
 
+			// Supprime tous les panneaux, sauf le ColorSelector.
+			AbstractPanel panel;
+			int i = 0;
+			while ( i < this.panel.Children.Count )
+			{
+				if ( this.panel.Children[i] is ColorSelector )
+				{
+					i ++;
+				}
+				else
+				{
+					panel = this.panel.Children[i] as AbstractPanel;
+					if ( panel != null )
+					{
+						panel.Changed -= new EventHandler(this.HandlePanelChanged);
+						panel.ExtendedChanged -= new EventHandler(this.HandleExtendedChanged);
+						panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
+					}
+					this.panel.Children.RemoveAt(i);
+				}
+			}
+
+			// Crée une fois pour toutes le ColorSelector.
+			if ( this.colorSelector == null )
+			{
+				this.colorSelector = new ColorSelector();
+				this.colorSelector.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
+				this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
+				this.colorSelector.TabIndex = 100;
+				this.colorSelector.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+				this.colorSelector.Parent = this.panel;
+			}
+
+			// Crée tous les panneaux.
 			Drawing.Rectangle rect = new Drawing.Rectangle();
 
 			System.Collections.ArrayList list = this.drawer.PropertiesList();
-			double posy = this.panel.Height;
+			double posy = this.panel.Height-1;
 			Widget originColorLastPanel = null;
 			int index = 0;
 			foreach ( AbstractProperty property in list )
 			{
-				AbstractPanel panel = property.CreatePanel();
+				panel = property.CreatePanel();
+				panel.Drawer = this.drawer;
 
 				AbstractProperty p = this.drawer.GetProperty(property.Type);
 				panel.SetProperty(p);
 				panel.Multi = p.Multi;
 
-				rect.Left   = 0;
-				rect.Right  = this.panel.Width;
+				rect.Left   = 1;
+				rect.Right  = this.panel.Width-1;
 				rect.Bottom = posy-panel.DefaultHeight;
 				rect.Top    = posy;
 				panel.Bounds = rect;
@@ -546,20 +805,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			this.leftHeightUsed = this.panel.Height-posy;
 
-			if ( this.colorSelector == null )
-			{
-				this.colorSelector = new ColorSelector();
-			}
+			// Positionne le ColorSelector.
 			rect.Left   = 0;
 			rect.Right  = this.panel.Width;
 			rect.Bottom = 0;
 			rect.Top    = System.Math.Min(this.colorSelector.DefaultHeight, this.panel.Height-this.leftHeightUsed);
 			this.colorSelector.Bounds = rect;
-			this.colorSelector.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
-			this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
-			this.colorSelector.TabIndex = index++;
-			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
-			this.colorSelector.Parent = this.panel;
 
 			this.HandleOriginColorChanged(originColorLastPanel, true);
 			this.HandleDrawerScrollerChanged(null);
@@ -574,7 +825,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			AbstractPanel panel = sender as AbstractPanel;
 			AbstractProperty property = panel.GetProperty();
-			this.drawer.SetProperty(property);
+			this.drawer.SetProperty(property, true);
 			panel.Multi = false;
 		}
 
@@ -596,6 +847,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		private void HandleOriginColorChanged(object sender, bool lastOrigin)
 		{
 			this.originColorPanel = null;
+			Drawing.Color backColor = Drawing.Color.Empty;
 
 			foreach ( Widget widget in this.panel.Children )
 			{
@@ -606,6 +858,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 				{
 					this.originColorPanel = panel;
 					panel.OriginColorSelect( lastOrigin ? this.originColorRank : -1 );
+					if ( panel.GetProperty().StyleID != 0 )
+					{
+						backColor = IconContext.ColorStyleBack;
+					}
 				}
 				else
 				{
@@ -616,10 +872,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( this.originColorPanel == null )
 			{
 				this.colorSelector.SetEnabled(false);
+				this.colorSelector.BackColor = Drawing.Color.Empty;
 			}
 			else
 			{
 				this.colorSelector.SetEnabled(true);
+				this.colorSelector.BackColor = backColor;
 				this.ignoreColorChanged = true;
 				this.colorSelector.Color = this.originColorPanel.OriginColorGet();
 				this.ignoreColorChanged = false;
@@ -628,14 +886,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Couleur d'origine changée dans la roue.
+		// Couleur changée dans la roue.
 		private void HandleColorSelectorChanged(object sender)
 		{
 			if ( this.ignoreColorChanged || this.originColorPanel == null )  return;
 			this.originColorPanel.OriginColorChange(this.colorSelector.Color);
 
 			AbstractProperty property = this.originColorPanel.GetProperty();
-			this.drawer.SetProperty(property);
+			this.drawer.SetProperty(property, true);
 			this.originColorPanel.Multi = false;
 		}
 
@@ -661,16 +919,23 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.info.Location = new Drawing.Point(0, 0);
 			this.info.Size = new Drawing.Size(rect.Width, this.info.DefaultHeight);
 
-			this.separator.Location = new Drawing.Point(rect.Right-200-1, this.info.Height);
-			this.separator.Size = new Drawing.Size(1, rect.Height-this.info.Height-this.hToolBar.DefaultHeight);
+			double pw = this.panelsWidth+12+1;
 
-			this.panel.Location = new Drawing.Point(rect.Right-200, this.info.Height);
-			this.panel.Size = new Drawing.Size(200, rect.Height-this.info.Height-this.hToolBar.DefaultHeight);
+			this.book.Location = new Drawing.Point(rect.Right-pw, this.info.Height+1);
+			this.book.Size = new Drawing.Size(pw-1, rect.Height-this.info.Height-this.hToolBar.DefaultHeight-2);
+			Drawing.Rectangle inside = this.book.InnerBounds;
+			this.bookPanel.Bounds = inside;
+			this.bookStyles.Bounds = inside;
+			inside.Left += 1;
+			inside.Width = this.panelsWidth+2;
+			inside.Top -= 10;
+			this.panel.Bounds = inside;
+			this.panelStyles.Bounds = inside;
+			this.panelPages.Bounds = inside;
+			this.panelLayers.Bounds = inside;
 
 			this.root.Location = new Drawing.Point(this.vToolBar.DefaultWidth, this.info.Height);
-			this.root.Size = new Drawing.Size(rect.Width-this.vToolBar.DefaultWidth-200-1, rect.Height-this.info.Height-this.hToolBar.DefaultHeight);
-			//this.root.SetClientAngle(0);
-			//this.root.SetClientZoom(1.0);
+			this.root.Size = new Drawing.Size(rect.Width-this.vToolBar.DefaultWidth-pw, rect.Height-this.info.Height-this.hToolBar.DefaultHeight);
 
 			this.pane.Location = new Drawing.Point(0, 0);
 			this.pane.Size = this.root.Size;
@@ -695,19 +960,35 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			dimx -= this.vScroller.DefaultWidth;
 			dimy -= this.hScroller.DefaultHeight;
-			this.drawer.Location = new Drawing.Point(10, this.leftPane.Height-10-dimy-1);
-			this.drawer.Size = new Drawing.Size(dimx+1, dimy+1);
+			this.drawer.Location = new Drawing.Point(10, this.leftPane.Height-10-dimy+1);
+			this.drawer.Size = new Drawing.Size(dimx-1, dimy-1);
 
-			rect.Left   = 10;
-			rect.Width  = dimx+1;
 			rect.Bottom = this.leftPane.Height-10-dimy-this.hScroller.DefaultHeight;
 			rect.Height = this.hScroller.DefaultHeight;
+			rect.Left   = 10;
+			rect.Width  = this.hScroller.DefaultHeight;
+			this.quickPagePrev.Bounds = rect;
+			rect.Offset(rect.Width, 0);
+			rect.Width += this.hScroller.DefaultHeight*0.5;
+			this.quickPageMenu.Bounds = rect;
+			rect.Offset(rect.Width, 0);
+			rect.Width -= this.hScroller.DefaultHeight*0.5;
+			this.quickPageNext.Bounds = rect;
+			rect.Left   = 10+this.hScroller.DefaultHeight*3.7;
+			rect.Width  = dimx-1-this.hScroller.DefaultHeight*3.7;
 			this.hScroller.Bounds = rect;
 
 			rect.Left   = 10+dimx;
 			rect.Width  = this.vScroller.DefaultWidth;
-			rect.Bottom = this.leftPane.Height-10-dimy-1;
-			rect.Height = dimy+1;
+			rect.Bottom = this.leftPane.Height-10-this.vScroller.DefaultWidth;
+			rect.Height = this.vScroller.DefaultWidth;
+			this.quickLayerNext.Bounds = rect;
+			rect.Offset(0, -rect.Height);
+			this.quickLayerMenu.Bounds = rect;
+			rect.Offset(0, -rect.Height);
+			this.quickLayerPrev.Bounds = rect;
+			rect.Bottom = this.leftPane.Height-10-dimy+1;
+			rect.Height = dimy-1-this.vScroller.DefaultWidth*3.2;
 			this.vScroller.Bounds = rect;
 
 			this.lister.Location = new Drawing.Point(10, 10);
@@ -719,14 +1000,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 			rect.Bottom = this.rightPane.Height-10-dimy-1;
 			rect.Width  = dimx;
 			rect.Height = dimy;
-			rect.Inflate(1, 1);
+			rect.Inflate(1);
 			this.frame1.Bounds = rect;
-			rect.Inflate(-1, -1);
+			rect.Deflate(1);
 
 			rect.Offset(0, -dimy-10);
-			rect.Inflate(1, 1);
+			rect.Inflate(1);
 			this.frame2.Bounds = rect;
-			rect.Inflate(-1, -1);
+			rect.Deflate(1);
 		}
 
 		private void HandlePaneSizeChanged(object sender)
@@ -753,6 +1034,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.drawer.SelectedTool = "Select";
 			}
 			
+			this.book.ActivePage = this.bookPanel;
 			this.drawer.UpdateCommands();
 			this.UpdatePanels();
 		}
@@ -770,6 +1052,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.CommandNew();
 			this.filename = "";
 			this.UpdateInfoDocument();
+			this.panelPages.Update();
+			this.panelLayers.Update();
+			this.UpdatePagesLayers();
 		}
 
 		[Command ("Open")]
@@ -790,6 +1075,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.ResizeLayout();
 			this.Invalidate();
 			this.UpdateInfoDocument();
+			this.panelPages.Update();
+			this.panelLayers.Update();
+			this.UpdatePagesLayers();
 		}
 
 		[Command ("Save")]
@@ -815,7 +1103,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				this.drawer.IsActive = false;
 				this.drawer.Hide();
+				this.quickPageNext.Hide();
+				this.quickPageMenu.Hide();
+				this.quickPagePrev.Hide();
 				this.hScroller.Hide();
+				this.quickLayerPrev.Hide();
+				this.quickLayerMenu.Hide();
+				this.quickLayerNext.Hide();
 				this.vScroller.Hide();
 				this.lister.Show();
 
@@ -826,11 +1120,56 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				this.drawer.IsActive = true;
 				this.drawer.Show();
+				this.quickPageNext.Show();
+				this.quickPageMenu.Show();
+				this.quickPagePrev.Show();
 				this.hScroller.Show();
+				this.quickLayerPrev.Show();
+				this.quickLayerMenu.Show();
+				this.quickLayerNext.Show();
 				this.vScroller.Show();
 				this.lister.Hide();
 			}
 			this.drawer.UpdateCommands();
+			this.Invalidate();
+		}
+
+		// TODO: pourquoi cette méthode ne peut pas être directement dans PanelStyles ?
+		[Command ("StyleCreate")]
+		void CommandStyleCreate(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.drawer.UndoMemorize("StyleCreate");
+			PropertyType type = AbstractProperty.TypeName(e.CommandArgs[0]);
+			this.panelStyles.CommandStyleCreate(type);
+		}
+
+		[Command ("StyleMake")]
+		void CommandStyleMake(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.drawer.UndoMemorize("StyleMake");
+			PropertyType type = AbstractProperty.TypeName(e.CommandArgs[0]);
+			int sel = this.drawer.StyleMake(type);
+			if ( sel == -1 )  return;
+			this.panelStyles.UpdateAll(sel);
+			this.UpdatePanels();
+		}
+
+		[Command ("StyleFree")]
+		void CommandStyleFree(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.drawer.UndoMemorize("StyleFree");
+			PropertyType type = AbstractProperty.TypeName(e.CommandArgs[0]);
+			this.drawer.StyleFree(type);
+			this.UpdatePanels();
+		}
+
+		[Command ("StyleUse")]
+		void CommandStyleUse(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.drawer.UndoMemorize("StyleUse");
+			int rank = System.Convert.ToInt32(e.CommandArgs[0]);
+			this.drawer.StyleUse(rank);
+			this.UpdatePanels();
 		}
 
 
@@ -845,21 +1184,34 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected PaneBook						pane;
 		protected PanePage						leftPane;
 		protected PanePage						rightPane;
-		protected Separator						separator;
+		protected TabBook						book;
+		protected TabPage						bookPanel;
+		protected TabPage						bookStyles;
+		protected TabPage						bookPages;
+		protected TabPage						bookLayers;
 		protected Widget						panel;
-		protected ColorWheel					circle;
 		protected Drawer						drawer;
+		protected GlyphButton					quickPagePrev;
+		protected Button						quickPageMenu;
+		protected GlyphButton					quickPageNext;
 		protected HScroller						hScroller;
+		protected GlyphButton					quickLayerPrev;
+		protected Button						quickLayerMenu;
+		protected GlyphButton					quickLayerNext;
 		protected VScroller						vScroller;
 		protected Lister						lister;
 		protected SampleButton					frame1;
 		protected SampleButton					frame2;
 		protected ColorSelector					colorSelector;
+		protected PanelStyles					panelStyles;
+		protected PanelPages					panelPages;
+		protected PanelLayers					panelLayers;
 		protected AbstractPanel					originColorPanel = null;
 		protected PropertyType					originColorType = PropertyType.None;
 		protected int							originColorRank = -1;
 		protected double						leftHeightUsed = 0;
 		protected string						filename = "";
 		protected bool							ignoreColorChanged = false;
+		protected double						panelsWidth = 215;
 	}
 }

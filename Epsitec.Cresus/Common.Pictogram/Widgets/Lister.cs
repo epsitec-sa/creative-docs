@@ -61,34 +61,35 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( !this.IsVisible )  return;
 
 			ObjectMemory memo = new ObjectMemory();
-			memo.CreateProperties();
 
 			int ir = this.table.Columns;
 			int tp = memo.TotalProperty;
 			int total = this.iconObjects.Count;
 			int rows = this.table.Rows;
-			this.table.SetArraySize(tp+2, total);
+			this.table.SetArraySize(tp+3, total);
 
-			if ( ir != tp+2 )
+			if ( ir != tp+3 )
 			{
 				this.table.SetWidthColumn(0, 35);
 				this.table.SetWidthColumn(1, 35);
+				this.table.SetWidthColumn(2, 40);
 
 				for ( int p=0 ; p<tp; p++ )
 				{
-					this.table.SetWidthColumn(p+2, 50);
+					this.table.SetWidthColumn(p+3, 50);
 				}
 			}
 
-			if ( ir != tp+2 || total != rows )
+			if ( ir != tp+3 || total != rows )
 			{
 				this.table.SetHeaderTextH(0, "Rang");
 				this.table.SetHeaderTextH(1, "Type");
+				this.table.SetHeaderTextH(2, "Etat");
 
 				for ( int p=0 ; p<tp; p++ )
 				{
 					AbstractProperty property = memo.Property(p);
-					this.table.SetHeaderTextH(p+2, property.Text);
+					this.table.SetHeaderTextH(p+3, property.Text);
 				}
 			}
 
@@ -126,6 +127,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 				ib = this.table[1, index].Children[0] as IconButton;
 				ib.IconName = obj.IconName;
 
+				if ( this.table[2, index].Children.Count == 0 )
+				{
+					cell = new Cell();
+					st = new StaticText();
+					st.Alignment = Drawing.ContentAlignment.MiddleCenter;
+					st.Dock = DockStyle.Fill;
+					cell.Children.Add(st);
+					this.table[2, index] = cell;
+				}
+				st = this.table[2, index].Children[0] as StaticText;
+				st.Text = obj.IsHide ? "Caché" : "Visible";
+
 				for ( int p=0 ; p<tp; p++ )
 				{
 					AbstractProperty property = memo.Property(p);
@@ -133,158 +146,173 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 					if ( po is PropertyBool )
 					{
-						if ( this.table[p+2, index].Children.Count == 0 )
+						if ( this.table[p+3, index].Children.Count == 0 )
 						{
 							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
 							cell.Children.Add(st);
-							this.table[p+2, index] = cell;
+							this.table[p+3, index] = cell;
 						}
 						PropertyBool prop = po as PropertyBool;
-						st = this.table[p+2, index].Children[0] as StaticText;
+						st = this.table[p+3, index].Children[0] as StaticText;
 						if ( prop.Bool )  st.Text = "Oui";
 						else              st.Text = "Non";
 					}
 					else if ( po is PropertyDouble )
 					{
-						if ( this.table[p+2, index].Children.Count == 0 )
+						if ( this.table[p+3, index].Children.Count == 0 )
 						{
 							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
 							cell.Children.Add(st);
-							this.table[p+2, index] = cell;
+							this.table[p+3, index] = cell;
 						}
 						PropertyDouble prop = po as PropertyDouble;
-						st = this.table[p+2, index].Children[0] as StaticText;
+						st = this.table[p+3, index].Children[0] as StaticText;
 						st.Text = System.Convert.ToString(prop.Value);
 					}
 					else if ( po is PropertyLine )
 					{
-						if ( this.table[p+2, index].Children.Count == 0 )
+						if ( this.table[p+3, index].Children.Count == 0 )
 						{
 							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
 							cell.Children.Add(st);
-							this.table[p+2, index] = cell;
+							this.table[p+3, index] = cell;
 						}
 						PropertyLine prop = po as PropertyLine;
-						st = this.table[p+2, index].Children[0] as StaticText;
+						st = this.table[p+3, index].Children[0] as StaticText;
 						st.Text = System.Convert.ToString(prop.Width);
 					}
 					else if ( po is PropertyString )
 					{
-						if ( this.table[p+2, index].Children.Count == 0 )
+						if ( this.table[p+3, index].Children.Count == 0 )
 						{
 							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
 							cell.Children.Add(st);
-							this.table[p+2, index] = cell;
+							this.table[p+3, index] = cell;
 						}
 						PropertyString prop = po as PropertyString;
-						st = this.table[p+2, index].Children[0] as StaticText;
+						st = this.table[p+3, index].Children[0] as StaticText;
 						st.Text = prop.String;
 					}
 					else if ( po is PropertyList )
 					{
-						if ( this.table[p+2, index].Children.Count == 0 )
+						if ( this.table[p+3, index].Children.Count == 0 )
 						{
 							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
 							cell.Children.Add(st);
-							this.table[p+2, index] = cell;
+							this.table[p+3, index] = cell;
 						}
 						PropertyList prop = po as PropertyList;
-						st = this.table[p+2, index].Children[0] as StaticText;
+						st = this.table[p+3, index].Children[0] as StaticText;
 						st.Text = prop.GetListName();
 					}
 					else if ( po is PropertyCombo )
 					{
-						if ( this.table[p+2, index].Children.Count == 0 )
+						if ( this.table[p+3, index].Children.Count == 0 )
 						{
 							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
 							cell.Children.Add(st);
-							this.table[p+2, index] = cell;
+							this.table[p+3, index] = cell;
 						}
 						PropertyCombo prop = po as PropertyCombo;
-						st = this.table[p+2, index].Children[0] as StaticText;
+						st = this.table[p+3, index].Children[0] as StaticText;
 						st.Text = prop.GetListName();
 					}
 					else if ( po is PropertyColor )
 					{
-						if ( this.table[p+2, index].Children.Count == 0 )
+						if ( this.table[p+3, index].Children.Count == 0 )
 						{
 							cell = new Cell();
 							cs = new ColorSample();
 							cs.SetFrozen(true);
 							cs.Dock = DockStyle.Fill;
 							cell.Children.Add(cs);
-							this.table[p+2, index] = cell;
+							this.table[p+3, index] = cell;
 						}
 						PropertyColor prop = po as PropertyColor;
-						cs = this.table[p+2, index].Children[0] as ColorSample;
+						cs = this.table[p+3, index].Children[0] as ColorSample;
 						cs.Color = prop.Color;
 					}
 					else if ( po is PropertyGradient )
 					{
-						if ( this.table[p+2, index].Children.Count == 0 )
+						if ( this.table[p+3, index].Children.Count == 0 )
 						{
 							cell = new Cell();
 							gs = new GradientSample();
 							gs.SetFrozen(true);
 							gs.Dock = DockStyle.Fill;
 							cell.Children.Add(gs);
-							this.table[p+2, index] = cell;
+							this.table[p+3, index] = cell;
 						}
 						PropertyGradient prop = po as PropertyGradient;
-						gs = this.table[p+2, index].Children[0] as GradientSample;
+						gs = this.table[p+3, index].Children[0] as GradientSample;
 						gs.Gradient = prop;
 					}
-					else if ( po is PropertyCorner )
+					else if ( po is PropertyArrow )
 					{
-						if ( this.table[p+2, index].Children.Count == 0 )
+						if ( this.table[p+3, index].Children.Count == 0 )
 						{
 							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
 							cell.Children.Add(st);
-							this.table[p+2, index] = cell;
+							this.table[p+3, index] = cell;
+						}
+						PropertyArrow prop = po as PropertyArrow;
+						st = this.table[p+3, index].Children[0] as StaticText;
+						st.Text = prop.GetListName();
+					}
+					else if ( po is PropertyCorner )
+					{
+						if ( this.table[p+3, index].Children.Count == 0 )
+						{
+							cell = new Cell();
+							st = new StaticText();
+							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
+							st.Dock = DockStyle.Fill;
+							cell.Children.Add(st);
+							this.table[p+3, index] = cell;
 						}
 						PropertyCorner prop = po as PropertyCorner;
-						st = this.table[p+2, index].Children[0] as StaticText;
+						st = this.table[p+3, index].Children[0] as StaticText;
 						st.Text = prop.GetListName();
 					}
 					else if ( po is PropertyRegular )
 					{
-						if ( this.table[p+2, index].Children.Count == 0 )
+						if ( this.table[p+3, index].Children.Count == 0 )
 						{
 							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
 							cell.Children.Add(st);
-							this.table[p+2, index] = cell;
+							this.table[p+3, index] = cell;
 						}
 						PropertyRegular prop = po as PropertyRegular;
-						st = this.table[p+2, index].Children[0] as StaticText;
+						st = this.table[p+3, index].Children[0] as StaticText;
 						st.Text = prop.GetListName();
 					}
 					else
 					{
-						this.table[p+2, index] = new Cell();  // cellule vide
+						this.table[p+3, index] = new Cell();  // cellule vide
 					}
 
 					this.table.SelectRow(index, obj.IsSelected());
