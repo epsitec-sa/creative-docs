@@ -224,5 +224,54 @@ namespace Epsitec.Common.Support.Tests
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
 		}
+		
+		private void CompileWithExceptionHandling(string test_string)
+		{
+			ResourceBundle bundle = new ResourceBundle ("test");
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			
+			try
+			{
+				bundle.Compile (test_data);
+			}
+			catch (System.Exception ex)
+			{
+				System.Console.Out.WriteLine ("Message: " + ex.Message);
+				return;
+			}
+			
+			throw new System.Exception ("Expected exception not thrown");
+		}
+		
+		[Test] public void CheckCompileSyntax1()
+		{
+			string test_string = "<bundle><field name='a'>A</field><fold name='b'>B</field></bundle>";
+			this.CompileWithExceptionHandling (test_string);
+		}
+		
+		[Test] public void CheckCompileSyntax2()
+		{
+			string test_string = "<bundle><field name='a'>A</field><field name='b'>B</fold></bundle>";
+			this.CompileWithExceptionHandling (test_string);
+		}
+		
+		[Test] public void CheckCompileSyntax3()
+		{
+			string test_string = "<bundle><field name='a'>A</field><field nome='b'>B</field></bundle>";
+			this.CompileWithExceptionHandling (test_string);
+		}
+		
+		[Test] public void CheckCompileSyntax4()
+		{
+			string test_string = "<bundle><field name='a'>A</field>\n<ref target='x'/></bundle>";
+			this.CompileWithExceptionHandling (test_string);
+		}
+		
+		[Test] public void CheckCompileSyntax5()
+		{
+			string test_string = "<bundle><field name='a'>A</field>\n<ref target='file:button.cancel' type='x'/></bundle>";
+			this.CompileWithExceptionHandling (test_string);
+		}
 	}
 }

@@ -91,7 +91,7 @@ namespace Epsitec.Common.Support
 				return ResourceFieldType.BundleList;
 			}
 			
-			throw new ResourceException ("Invalid field type in bundle");
+			throw new ResourceException (string.Format ("Invalid field type in bundle: '{0}'", data.GetType ().Name));
 		}
 		
 		public string GetFieldString(string field)
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Support
 			{
 				if (this.GetFieldType ("image.data") != ResourceFieldType.Binary)
 				{
-					throw new ResourceException ("Bundle does not contain image");
+					throw new ResourceException (string.Format ("Bundle does not contain image"));
 				}
 				
 				byte[] image_data = this.GetFieldBinary ("image.data");
@@ -245,13 +245,18 @@ namespace Epsitec.Common.Support
 			return sort_name.Substring (pos+1);
 		}
 		
+		protected string XmlErrorContext(System.Xml.XmlTextReader reader)
+		{
+			return string.Format ("Line {0}, position {1}", reader.LineNumber, reader.LinePosition);
+		}
+		
 		protected void ParseXml(System.Xml.XmlTextReader reader, string default_prefix, ResourceLevel level, int reader_depth, int recursion)
 		{
 			//	Analyse un fragment de XML.
 			
 			if (recursion > ResourceBundle.max_recursion)
 			{
-				throw new ResourceException ("Bundle is too complex, giving up");
+				throw new ResourceException (string.Format ("Bundle is too complex, giving up. {0}.", this.XmlErrorContext (reader)));
 			}
 			
 			if (this.fields == null)
@@ -325,7 +330,7 @@ namespace Epsitec.Common.Support
 										//	Quelqu'un a voulu placer un sous-bundle directement dans le bundle.
 										//	Ce n'est pas permis, car ce serait un bundle anonyme !
 										
-										throw new ResourceException ("Sub-bundle in bundle cannot be anonymous");
+										throw new ResourceException (string.Format ("Sub-bundle in bundle cannot be anonymous. {0}.", this.XmlErrorContext (reader)));
 									}
 									else
 									{
@@ -357,7 +362,7 @@ namespace Epsitec.Common.Support
 									continue;
 								
 								default:
-									throw new ResourceException ("Illegal bundle depth");
+									throw new ResourceException (string.Format ("Illegal bundle depth. {0}.", this.XmlErrorContext (reader)));
 							}
 							
 							reader_depth++;
@@ -373,11 +378,11 @@ namespace Epsitec.Common.Support
 						
 						if (reader_depth == 0)
 						{
-							throw new ResourceException (string.Format ("Bundle does not start with root <bundle>, but <{0}>", name));
+							throw new ResourceException (string.Format ("Bundle does not start with root <bundle>, but <{0}>. {1}.", name, this.XmlErrorContext (reader)));
 						}
 						else
 						{
-							throw new ResourceException (string.Format ("Malformed XML bundle, unknown tag '{0}' found", name));
+							throw new ResourceException (string.Format ("Malformed XML bundle, unknown tag '{0}' found. {1}.", name, this.XmlErrorContext (reader)));
 						}
 					
 					
@@ -443,14 +448,14 @@ namespace Epsitec.Common.Support
 		{
 			if (reader_depth != 1)
 			{
-				throw new ResourceException (string.Format ("Found field at depth {0}.", reader_depth));
+				throw new ResourceException (string.Format ("Found field at depth {0}. {1}.", reader_depth, this.XmlErrorContext (reader)));
 			}
 			
 			string name = reader.GetAttribute ("name");
 			
 			if (name == null)
 			{
-				throw new ResourceException ("Field has no name");
+				throw new ResourceException (string.Format ("Field has no name. {0}.", this.XmlErrorContext (reader)));
 			}
 			
 			element_name = name;
@@ -467,7 +472,7 @@ namespace Epsitec.Common.Support
 			
 			if (reader_depth != 1)
 			{
-				throw new ResourceException (string.Format ("Found list at depth {0}.", reader_depth));
+				throw new ResourceException (string.Format ("Found list at depth {0}. {1}.", reader_depth, this.XmlErrorContext (reader)));
 			}
 			
 			System.Diagnostics.Debug.Assert (element_name == null);
@@ -476,7 +481,7 @@ namespace Epsitec.Common.Support
 			
 			if (element_name == null)
 			{
-				throw new ResourceException ("List has no name");
+				throw new ResourceException (string.Format ("List has no name. {0}.", this.XmlErrorContext (reader)));
 			}
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList (); 
@@ -503,14 +508,14 @@ namespace Epsitec.Common.Support
 							
 							if (child_bundle == null)
 							{
-								throw new ResourceException ("Illegal reference in list");
+								throw new ResourceException (string.Format ("Illegal reference in list. {0}.", this.XmlErrorContext (reader)));
 							}
 							
 							list.Add (child_bundle);
 						}
 						else
 						{
-							throw new ResourceException (string.Format ("Found tag <{0}> in list.", name));
+							throw new ResourceException (string.Format ("Found tag <{0}> in list. {1}.", name, this.XmlErrorContext (reader)));
 						}
 						break;
 					
@@ -521,7 +526,7 @@ namespace Epsitec.Common.Support
 						}
 						else
 						{
-							throw new ResourceException (string.Format ("Found end tag </{0}> in list.", name));
+							throw new ResourceException (string.Format ("Found end tag </{0}> in list. {1}.", name, this.XmlErrorContext (reader)));
 						}
 						break;
 					
@@ -552,14 +557,14 @@ namespace Epsitec.Common.Support
 			
 			if (target == null)
 			{
-				throw new ResourceException ("Reference has no target");
+				throw new ResourceException (string.Format ("Reference has no target. {1}.", this.XmlErrorContext (reader)));
 			}
 			
 			if (Resources.ExtractPrefix (target) == null)
 			{
 				if (default_prefix == null)
 				{
-					throw new ResourceException (string.Format ("No default prefix specified, target '{0}' cannot be resolved", target));
+					throw new ResourceException (string.Format ("No default prefix specified, target '{0}' cannot be resolved. {1}.", target, this.XmlErrorContext (reader)));
 				}
 				
 				target = default_prefix + ":" + target;
@@ -588,18 +593,18 @@ namespace Epsitec.Common.Support
 						
 						if (data == null)
 						{
-							throw new ResourceException (string.Format ("Binary target '{0}' cannot be resolved", target));
+							throw new ResourceException (string.Format ("Binary target '{0}' cannot be resolved. {1}.", target, this.XmlErrorContext (reader)));
 						}
 						
 						this.AddBinaryField (element_name, data);
 						return;
 					}
 					
-					throw new ResourceException (string.Format ("Illegal reference to binary target '{0}' at depth {1}", target, reader_depth));
+					throw new ResourceException (string.Format ("Illegal reference to binary target '{0}' at depth {1}. {2}.", target, reader_depth, this.XmlErrorContext (reader)));
 				}
 				else
 				{
-					throw new ResourceException (string.Format ("Target '{0}' has unsupported type '{1}'", target, type));
+					throw new ResourceException (string.Format ("Target '{0}' has unsupported type '{1}'. {2}.", target, type, this.XmlErrorContext (reader)));
 				}
 			}
 			
@@ -607,7 +612,7 @@ namespace Epsitec.Common.Support
 			
 			if (bundle == null)
 			{
-				throw new ResourceException (string.Format ("Reference to target '{0}' cannot be resolved", target));
+				throw new ResourceException (string.Format ("Reference to target '{0}' cannot be resolved. {1}.", target, this.XmlErrorContext (reader)));
 			}
 			
 			if (reader_depth == 1)
@@ -636,7 +641,7 @@ namespace Epsitec.Common.Support
 				{
 					if (!bundle.Contains (target_field))
 					{
-						throw new ResourceException (string.Format ("Target bundle '{0}' does not contain field '{1}'", target_bundle, target_field));
+						throw new ResourceException (string.Format ("Target bundle '{0}' does not contain field '{1}'. {2}.", target_bundle, target_field, this.XmlErrorContext (reader)));
 					}
 					
 					object field_data = bundle[target_field];
@@ -651,7 +656,7 @@ namespace Epsitec.Common.Support
 					}
 					else
 					{
-						throw new ResourceException (string.Format ("Target bundle '{0}' contains unsupported data of type '{1}'", target_bundle, field_data.GetType ().ToString ()));
+						throw new ResourceException (string.Format ("Target bundle '{0}' contains unsupported data of type '{1}'. {2}.", target_bundle, field_data.GetType ().ToString (), this.XmlErrorContext (reader)));
 					}
 				}
 				else
@@ -666,7 +671,7 @@ namespace Epsitec.Common.Support
 			}
 			else
 			{
-				throw new ResourceException (string.Format ("Illegal reference to '{0}' at level {1}", target, reader_depth));
+				throw new ResourceException (string.Format ("Illegal reference to '{0}' at level {1}. {2}.", target, reader_depth, this.XmlErrorContext (reader)));
 			}
 		}
 		
