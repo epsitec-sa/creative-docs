@@ -4,7 +4,7 @@
 namespace Epsitec.Cresus.Replication
 {
 	/// <summary>
-	/// Summary description for Job.
+	/// La classe Job représente une tâche de réplication.
 	/// </summary>
 	public class Job : Remoting.AbstractOperation
 	{
@@ -67,7 +67,6 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
-		
 		internal void WaitForReady()
 		{
 			this.WaitForProgress (100);
@@ -100,12 +99,6 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
-		public override void CancelOperation(out Epsitec.Cresus.Remoting.IProgressInformation progress_information)
-		{
-			base.CancelOperation (out progress_information);
-		}
-		
-
 		
 		private Remoting.ClientIdentity			client;
 		private Database.DbId					sync_start_id;

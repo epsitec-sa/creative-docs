@@ -331,8 +331,8 @@ namespace Epsitec.Cresus.Database
 					DbAccess db_access = DbInfrastructure.CreateDbAccess ("replitest");
 					
 					infrastructure.CreateDatabase (db_access);
-					Replication.ClientEngine client = new Replication.ClientEngine (infrastructure);
-					client.ApplyChanges (infrastructure.DefaultDbAbstraction, buffer);
+					Replication.ClientEngine client = new Replication.ClientEngine (infrastructure, service);
+					client.ApplyChanges (infrastructure.DefaultDbAbstraction, operation);
 				}
 			}
 		}

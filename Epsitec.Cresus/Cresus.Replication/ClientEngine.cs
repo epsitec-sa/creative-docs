@@ -6,27 +6,64 @@ using Epsitec.Cresus.Database;
 namespace Epsitec.Cresus.Replication
 {
 	/// <summary>
-	/// Summary description for ClientEngine.
+	/// La classe ClientEngine s'exécute sur le client et permet de traiter les
+	/// données de réplication reçues du serveur pour reproduire les modifications
+	/// en local.
 	/// </summary>
-	public class ClientEngine
+	public sealed class ClientEngine
 	{
-		public ClientEngine(DbInfrastructure infrastructure)
+		public ClientEngine(DbInfrastructure infrastructure, Remoting.IReplicationService service)
 		{
 			this.infrastructure = infrastructure;
+			this.replication_service = service;
 		}
 		
-		public void RequestRollback()
+		
+		public void ApplyChanges(IDbAbstraction database, Remoting.IOperation operation)
 		{
-			//	TODO: Demande au serveur de répliquer tout ce qui a été modifié depuis
-			//	l'instant spécifié.
+			this.ApplyChanges (database, operation, null);
 		}
 		
-		public void ApplyChanges(IDbAbstraction database, byte[] compressed_data)
+		public void ApplyChanges(IDbAbstraction database, Remoting.IOperation operation, Callback before_commit_callback)
 		{
-			this.ApplyChanges (database, Common.IO.Serialization.DeserializeAndDecompressFromMemory (compressed_data) as ReplicationData);
+			byte[] data;
+			
+			this.replication_service.GetReplicationData (operation, out data);
+			
+			lock (this)
+			{
+				try
+				{
+					this.before_commit_callback = before_commit_callback;
+					
+					this.ApplyChanges (database, data);
+				}
+				finally
+				{
+					this.before_commit_callback = null;
+				}
+			}
 		}
 		
-		public void ApplyChanges(IDbAbstraction database, ReplicationData data)
+		
+		#region Delegates
+		public delegate void Callback(DbTransaction transaction);
+		#endregion
+		
+		private void ApplyChanges(IDbAbstraction database, byte[] compressed_data)
+		{
+			if (compressed_data != null)
+			{
+				ReplicationData data = Common.IO.Serialization.DeserializeAndDecompressFromMemory (compressed_data) as ReplicationData;
+				
+				if (data != null)
+				{
+					this.ApplyChanges (database, data);
+				}
+			}
+		}
+		
+		private void ApplyChanges(IDbAbstraction database, ReplicationData data)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
@@ -81,6 +118,7 @@ namespace Epsitec.Cresus.Replication
 					using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, database))
 					{
 						this.ApplyChanges (transaction, list);
+						this.NotifyBeforeCommit (transaction);
 						transaction.Commit ();
 					}
 				}
@@ -94,12 +132,13 @@ namespace Epsitec.Cresus.Replication
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, database))
 				{
 					this.ApplyChanges (transaction, list);
+					this.NotifyBeforeCommit (transaction);
 					transaction.Commit ();
 				}
 			}
 		}
 		
-		protected void ApplyChanges(DbTransaction transaction, System.Collections.ArrayList list)
+		private void ApplyChanges(DbTransaction transaction, System.Collections.ArrayList list)
 		{
 			//	Applique les modifications pour toutes les tables de la liste :
 			
@@ -109,7 +148,7 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
-		protected void ApplyChanges(DbTransaction transaction, PackedTableData data)
+		private void ApplyChanges(DbTransaction transaction, PackedTableData data)
 		{
 			//	Applique les modifications décrites pour la table spécifiée. Pour ce faire,
 			//	on remplit une table avec les lignes à répliquer et on utiliser un 'REPLACE'
@@ -132,7 +171,7 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
-		protected void ApplyStructuralChanges(IDbAbstraction database, PackedTableData def_table, PackedTableData def_column, PackedTableData def_type)
+		private void ApplyStructuralChanges(IDbAbstraction database, PackedTableData def_table, PackedTableData def_column, PackedTableData def_type)
 		{
 			//	Applique des modifications structurelles (tables, colonnes, types...)
 			//	Pour l'instant, seule la création d'une nouvelle table est gérée.
@@ -218,6 +257,18 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
+		private void NotifyBeforeCommit(DbTransaction transaction)
+		{
+			if (this.before_commit_callback != null)
+			{
+				this.before_commit_callback (transaction);
+			}
+		}
+		
+		
 		private DbInfrastructure				infrastructure;
+		private Remoting.IReplicationService	replication_service;
+		
+		private Callback						before_commit_callback;
 	}
 }
