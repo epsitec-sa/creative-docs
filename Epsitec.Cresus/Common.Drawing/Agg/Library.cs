@@ -76,6 +76,11 @@ namespace Epsitec.Common.Drawing.Agg
 		[DllImport ("AGG-Wrapper.dll", CharSet=CharSet.Unicode)]
 										internal extern static double	AggFontFaceGetTextAdvance(System.IntPtr face, string text, int mode);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static double	AggFontFaceGetMetrics(System.IntPtr face, int id);
+		[DllImport ("AGG-Wrapper.dll", CharSet=CharSet.Unicode)]
+										internal extern static IntPtr	AggFontFaceBreakNew(System.IntPtr face, string text, int mode);
+		[DllImport ("AGG-Wrapper.dll", CharSet=CharSet.Unicode)]
+										internal extern static string	AggFontFaceBreakIter(System.IntPtr context, ref double width);
+		[DllImport ("AGG-Wrapper.dll")]	internal extern static void		AggFontFaceBreakDelete(System.IntPtr context);
 		
 		public void Dispose()
 		{
