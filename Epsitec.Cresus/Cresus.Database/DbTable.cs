@@ -186,6 +186,18 @@ namespace Epsitec.Cresus.Database
 			this.internal_table_key = key.Clone () as DbKey;
 		}
 		
+		public void DefinePrimaryKey(DbColumn column)
+		{
+			if (this.primary_keys != null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot change its primary key.", this.Name));
+			}
+			
+			this.PrimaryKeys.Add (column);
+			
+			System.Diagnostics.Debug.Assert (this.primary_keys.Count == 1);
+			System.Diagnostics.Debug.Assert (this.primary_keys[0] == column);
+		}
 		
 		public SqlTable CreateSqlTable(ITypeConverter type_converter)
 		{

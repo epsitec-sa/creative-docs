@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.Database
 		public const string	TypeCaption			= "CR_CaptionType";
 		public const string	TypeDescription		= "CR_DescriptionType";
 		public const string	TypeInfoXml			= "CR_InfoXmlType";
+		public const string	TypeDateTime		= "CR_DateTimeType";
 		
 		//	Noms des colonnes "Crésus" fondamentales :
 		
@@ -23,11 +24,13 @@ namespace Epsitec.Cresus.Database
 		public const string	ColumnDescription	= "CR_DESCRIPTION";
 		public const string	ColumnInfoXml		= "CR_INFO";
 		public const string	ColumnNextId		= "CR_NEXT_ID";
+		public const string ColumnDateTime		= "CR_DATETIME";
 		
 		public const string	ColumnRefTable		= "CREF_TABLE";
 		public const string	ColumnRefType		= "CREF_TYPE";
 		public const string	ColumnRefColumn		= "CREF_COLUMN";
 		public const string	ColumnRefParent		= "CREF_PARENT_TABLE";
+		public const string ColumnRefLog		= "CREF_LOG";
 		
 		//	Noms des tables "Crésus" fondamentales :
 		
@@ -35,5 +38,6 @@ namespace Epsitec.Cresus.Database
 		public const string	TableColumnDef		= "CR_COLUMN_DEF";
 		public const string	TableTypeDef		= "CR_TYPE_DEF";
 		public const string	TableEnumValDef		= "CR_ENUMVAL_DEF";
+		public const string TableLog			= "CR_LOG";
 	}
 }

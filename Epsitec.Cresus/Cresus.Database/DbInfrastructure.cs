@@ -3,7 +3,6 @@
 
 namespace Epsitec.Cresus.Database
 {
-//	using Tags = Epsitec.Common.Support.Tags;
 	using Converter = Epsitec.Common.Types.Converter;
 	
 	public delegate void CallbackDisplayDataSet(DbInfrastructure infrastructure, string name, System.Data.DataTable table);
@@ -17,50 +16,71 @@ namespace Epsitec.Cresus.Database
 	{
 		public DbInfrastructure()
 		{
-			this.localisations = new string[2] { "", "FR" };
+			this.localisations = new string[] { "", "FR" };
 		}
 		
 		
 		public CallbackDisplayDataSet			DisplayDataSet
 		{
-			get { return this.display_data_set; }
-			set { this.display_data_set = value; }
+			get
+			{
+				return this.display_data_set;
+			}
+			set
+			{
+				this.display_data_set = value;
+			}
 		}
 		
 		public ISqlBuilder						SqlBuilder
 		{
-			get { return this.sql_builder; }
+			get
+			{
+				return this.sql_builder;
+			}
 		}
 		
 		public ISqlEngine						SqlEngine
 		{
-			get { return this.sql_engine; }
+			get
+			{
+				return this.sql_engine;
+			}
 		}
 		
 		public ITypeConverter					TypeConverter
 		{
-			get { return this.type_converter; }
+			get
+			{
+				return this.type_converter;
+			}
 		}
 		
 		public DbTransaction					LiveTransaction
 		{
-			get { return this.live_transaction; }
+			get
+			{
+				return this.live_transaction;
+			}
 		}
 		
 		
 		public void CreateDatabase(DbAccess db_access)
 		{
+			//	Crée une base de données avec les structures de gestion requises par Crésus
+			//	(tables de description, etc.).
+			
 			if (this.db_access.IsValid)
 			{
-				throw new DbException (this.db_access, "Database already exists");
+				throw new DbException (this.db_access, "A database already exists for this DbInfrastructure.");
 			}
 			
 			this.db_access = db_access;
 			this.db_access.Create = true;
 			
+			this.InitialiseDatabaseAbstraction ();
 			this.InitialiseNumDefs ();
 			this.InitialiseStrTypes ();
-			this.InitialiseDatabaseAbstraction ();
 			
 			//	La base de données vient d'être créée. Elle est donc toute vide (aucune
 			//	table n'est encore définie).
@@ -75,6 +95,7 @@ namespace Epsitec.Cresus.Database
 				this.BootCreateTableColumnDef (transaction);
 				this.BootCreateTableTypeDef (transaction);
 				this.BootCreateTableEnumValDef (transaction);
+				this.BootCreateTableLog (transaction);
 				
 				//	Valide la création de toutes ces tables avant de commencer à peupler
 				//	les tables. Firebird requiert ce mode de fonctionnement.
@@ -109,17 +130,24 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbTransaction transaction = this.BeginTransaction ())
 			{
+				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableLog));
 				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableTableDef));
 				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableColumnDef));
 				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
 				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableEnumValDef));
-			
+				
 				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeKeyId));
 				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeKeyStatus));
 				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeName));
 				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeCaption));
 				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeDescription));
 				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeInfoXml));
+				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeDateTime));
+				
+				long log_id = this.NextRowIdInTable (transaction, this.internal_tables[Tags.TableLog].InternalKey);
+				
+				this.client_id      = 0;
+				this.current_log_id = DbID.CreateID (log_id, this.client_id);
 				
 				transaction.Commit ();
 			}
@@ -1232,6 +1260,11 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public long NextRowIdInTable(DbTransaction transaction, DbKey key)
+		{
+			return this.NewRowIdInTable (transaction, key, 0);
+		}
+		
 		public long NewRowIdInTable(DbTransaction transaction, DbKey key, int num_keys)
 		{
 			//	Attribue 'num_keys' clef consécutives dans la table spécifiée.
@@ -1488,28 +1521,30 @@ namespace Epsitec.Cresus.Database
 		protected void BootCreateTableTableDef(DbTransaction transaction)
 		{
 			DbTable    table   = new DbTable (Tags.TableTableDef);
-			DbColumn[] columns = new DbColumn[7];
+			DbColumn[] columns = new DbColumn[8];
 			
 			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
 			columns[1] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
-			columns[2] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
-			columns[3] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
-			columns[4] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
-			columns[5] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
-			columns[6] = new DbColumn (Tags.ColumnNextId,		this.num_type_id);
+			columns[2] = new DbColumn (Tags.ColumnRefLog,		this.num_type_id);
+			columns[3] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
+			columns[4] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
+			columns[5] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
+			columns[6] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
+			columns[7] = new DbColumn (Tags.ColumnNextId,		this.num_type_id);
 			
 			columns[0].DefineColumnClass (DbColumnClass.KeyId);
 			columns[1].DefineColumnClass (DbColumnClass.KeyStatus);
-			columns[3].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			columns[2].DefineColumnClass (DbColumnClass.RefId);
+			
 			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
 			
 			this.SetCategory (columns, DbElementCat.Internal);
 			
-			table.DefineCategory (DbElementCat.Internal);
 			table.Columns.AddRange (columns);
 			
-			table.PrimaryKeys.Add (columns[0]);
-			table.PrimaryKeys.Add (columns[1]);
+			table.DefineCategory (DbElementCat.Internal);
+			table.DefinePrimaryKey (columns[0]);
 			
 			this.internal_tables.Add (table);
 			
@@ -1521,33 +1556,36 @@ namespace Epsitec.Cresus.Database
 		protected void BootCreateTableColumnDef(DbTransaction transaction)
 		{
 			DbTable    table   = new DbTable (Tags.TableColumnDef);
-			DbColumn[] columns = new DbColumn[9];
+			DbColumn[] columns = new DbColumn[10];
 			
 			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
 			columns[1] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
-			columns[2] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
-			columns[3] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
-			columns[4] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
-			columns[5] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
-			columns[6] = new DbColumn (Tags.ColumnRefTable,		this.num_type_id);
-			columns[7] = new DbColumn (Tags.ColumnRefType,		this.num_type_id);
-			columns[8] = new DbColumn (Tags.ColumnRefParent,	this.num_type_id, Nullable.Yes);
+			columns[2] = new DbColumn (Tags.ColumnRefLog,		this.num_type_id);
+			columns[3] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
+			columns[4] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
+			columns[5] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
+			columns[6] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
+			columns[7] = new DbColumn (Tags.ColumnRefTable,		this.num_type_id);
+			columns[8] = new DbColumn (Tags.ColumnRefType,		this.num_type_id);
+			columns[9] = new DbColumn (Tags.ColumnRefParent,	this.num_type_id, Nullable.Yes);
 			
 			columns[0].DefineColumnClass (DbColumnClass.KeyId);
 			columns[1].DefineColumnClass (DbColumnClass.KeyStatus);
-			columns[3].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			columns[2].DefineColumnClass (DbColumnClass.RefId);
+			
 			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			columns[6].DefineColumnClass (DbColumnClass.RefId);
+			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			
 			columns[7].DefineColumnClass (DbColumnClass.RefId);
 			columns[8].DefineColumnClass (DbColumnClass.RefId);
+			columns[9].DefineColumnClass (DbColumnClass.RefId);
 
 			this.SetCategory (columns, DbElementCat.Internal);
 			
-			table.DefineCategory (DbElementCat.Internal);
 			table.Columns.AddRange (columns);
 			
-			table.PrimaryKeys.Add (columns[0]);
-			table.PrimaryKeys.Add (columns[1]);
+			table.DefineCategory (DbElementCat.Internal);
+			table.DefinePrimaryKey (columns[0]);
 			
 			this.internal_tables.Add (table);
 			
@@ -1559,27 +1597,29 @@ namespace Epsitec.Cresus.Database
 		protected void BootCreateTableTypeDef(DbTransaction transaction)
 		{
 			DbTable    table   = new DbTable (Tags.TableTypeDef);
-			DbColumn[] columns = new DbColumn[6];
+			DbColumn[] columns = new DbColumn[7];
 			
 			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
 			columns[1] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
-			columns[2] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
-			columns[3] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
-			columns[4] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
-			columns[5] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
+			columns[2] = new DbColumn (Tags.ColumnRefLog,		this.num_type_id);
+			columns[3] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
+			columns[4] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
+			columns[5] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
+			columns[6] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
 			
 			columns[0].DefineColumnClass (DbColumnClass.KeyId);
 			columns[1].DefineColumnClass (DbColumnClass.KeyStatus);
-			columns[3].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			columns[2].DefineColumnClass (DbColumnClass.RefId);
+			
 			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
 			
 			this.SetCategory (columns, DbElementCat.Internal);
 			
-			table.DefineCategory (DbElementCat.Internal);
 			table.Columns.AddRange (columns);
 			
-			table.PrimaryKeys.Add (columns[0]);
-			table.PrimaryKeys.Add (columns[1]);
+			table.DefineCategory (DbElementCat.Internal);
+			table.DefinePrimaryKey (columns[0]);
 			
 			this.internal_tables.Add (table);
 			
@@ -1591,29 +1631,59 @@ namespace Epsitec.Cresus.Database
 		protected void BootCreateTableEnumValDef(DbTransaction transaction)
 		{
 			DbTable    table   = new DbTable (Tags.TableEnumValDef);
-			DbColumn[] columns = new DbColumn[7];
+			DbColumn[] columns = new DbColumn[8];
 			
 			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
 			columns[1] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
-			columns[2] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
-			columns[3] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
-			columns[4] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
-			columns[5] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
-			columns[6] = new DbColumn (Tags.ColumnRefType,		this.num_type_id);
+			columns[2] = new DbColumn (Tags.ColumnRefLog,		this.num_type_id);
+			columns[3] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
+			columns[4] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
+			columns[5] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
+			columns[6] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
+			columns[7] = new DbColumn (Tags.ColumnRefType,		this.num_type_id);
 			
 			columns[0].DefineColumnClass (DbColumnClass.KeyId);
 			columns[1].DefineColumnClass (DbColumnClass.KeyStatus);
-			columns[3].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			columns[2].DefineColumnClass (DbColumnClass.RefId);
+			
 			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			columns[6].DefineColumnClass (DbColumnClass.RefId);
+			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			
+			columns[7].DefineColumnClass (DbColumnClass.RefId);
 			
 			this.SetCategory (columns, DbElementCat.Internal);
 			
-			table.DefineCategory (DbElementCat.Internal);
 			table.Columns.AddRange (columns);
 			
-			table.PrimaryKeys.Add (columns[0]);
-			table.PrimaryKeys.Add (columns[1]);
+			table.DefineCategory (DbElementCat.Internal);
+			table.DefinePrimaryKey (columns[0]);
+			
+			this.internal_tables.Add (table);
+			
+			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
+			this.sql_builder.InsertTable (sql_table);
+			this.ExecuteSilent (transaction);
+		}
+		
+		protected void BootCreateTableLog(DbTransaction transaction)
+		{
+			DbTable    table   = new DbTable (Tags.TableLog);
+			DbColumn[] columns = new DbColumn[2];
+			
+			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
+			columns[1] = new DbColumn (Tags.ColumnDateTime,		this.num_type_datetime);
+			
+			//	TODO: ajouter ici une colonne définissant la nature du changement (et l'utilisateur
+			//	qui en est la cause).
+			
+			columns[0].DefineColumnClass (DbColumnClass.KeyId);
+			
+			this.SetCategory (columns, DbElementCat.Internal);
+			
+			table.Columns.AddRange (columns);
+			
+			table.DefineCategory (DbElementCat.Internal);
+			table.DefinePrimaryKey (columns[0]);
 			
 			this.internal_tables.Add (table);
 			
@@ -1623,8 +1693,25 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		protected void BootInsertLogRow(DbTransaction transaction, DbID id, long date_time)
+		{
+			DbTable log_table = this.internal_tables[Tags.TableLog];
+			
+			//	Phase d'initialisation de la base : insère une ligne dans la table de logging.
+			
+			Collections.SqlFields fields = new Collections.SqlFields ();
+			
+			fields.Add (log_table.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, id));
+			fields.Add (log_table.Columns[Tags.ColumnDateTime].CreateSqlField (this.type_converter, date_time));
+			
+			this.sql_builder.InsertData (log_table.CreateSqlName (), fields);
+			this.ExecuteSilent (transaction);
+		}
+		
 		protected void BootInsertTypeDefRow(DbTransaction transaction, DbType type)
 		{
+			System.Diagnostics.Debug.Assert (this.current_log_id.LocalID > 0);
+			
 			DbTable type_def = this.internal_tables[Tags.TableTypeDef];
 			
 			//	Phase d'initialisation de la base : insère une ligne dans la table de définition des
@@ -1634,6 +1721,7 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (type_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, type.InternalKey.Id));
 			fields.Add (type_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, type.InternalKey.IntStatus));
+			fields.Add (type_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.current_log_id));
 			fields.Add (type_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, type.Name));
 			fields.Add (type_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTypeFactory.SerializeToXml (type, false)));
 			
@@ -1643,6 +1731,8 @@ namespace Epsitec.Cresus.Database
 		
 		protected void BootInsertEnumValueDefRow(DbTransaction transaction, DbType type, DbEnumValue value)
 		{
+			System.Diagnostics.Debug.Assert (this.current_log_id.LocalID > 0);
+			
 			DbTable enum_def = this.internal_tables[Tags.TableEnumValDef];
 			
 			//	Phase d'initialisation de la base : insère une ligne dans la table de définition des
@@ -1652,6 +1742,7 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (enum_def.Columns[Tags.ColumnId]	     .CreateSqlField (this.type_converter, value.InternalKey.Id));
 			fields.Add (enum_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, value.InternalKey.IntStatus));
+			fields.Add (enum_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.current_log_id));
 			fields.Add (enum_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, value.Name));
 			fields.Add (enum_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbEnumValue.SerializeToXml (value, false)));
 			fields.Add (enum_def.Columns[Tags.ColumnRefType] .CreateSqlField (this.type_converter, type.InternalKey.Id));
@@ -1662,6 +1753,8 @@ namespace Epsitec.Cresus.Database
 		
 		protected void BootInsertTableDefRow(DbTransaction transaction, DbTable table)
 		{
+			System.Diagnostics.Debug.Assert (this.current_log_id.LocalID > 0);
+			
 			DbTable table_def = this.internal_tables[Tags.TableTableDef];
 			
 			//	Phase d'initialisation de la base : insère une ligne dans la table de définition des
@@ -1671,6 +1764,7 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (table_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, table.InternalKey.Id));
 			fields.Add (table_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, table.InternalKey.IntStatus));
+			fields.Add (table_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.current_log_id));
 			fields.Add (table_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, table.Name));
 			fields.Add (table_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTable.SerializeToXml (table, false)));
 			fields.Add (table_def.Columns[Tags.ColumnNextId]  .CreateSqlField (this.type_converter, 0));
@@ -1696,6 +1790,8 @@ namespace Epsitec.Cresus.Database
 		
 		protected void BootInsertColumnDefRow(DbTransaction transaction, DbTable table, DbColumn column)
 		{
+			System.Diagnostics.Debug.Assert (this.current_log_id.LocalID > 0);
+			
 			DbTable column_def = this.internal_tables[Tags.TableColumnDef];
 			
 			//	Phase d'initialisation de la base : insère une ligne dans la table de définition des
@@ -1705,6 +1801,7 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (column_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, column.InternalKey.Id));
 			fields.Add (column_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, column.InternalKey.IntStatus));
+			fields.Add (column_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.current_log_id));
 			fields.Add (column_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, column.Name));
 			fields.Add (column_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbColumn.SerializeToXml (column, false)));
 			fields.Add (column_def.Columns[Tags.ColumnRefTable].CreateSqlField (this.type_converter, table.InternalKey.Id));
@@ -1734,10 +1831,15 @@ namespace Epsitec.Cresus.Database
 		
 		protected void BootSetupTables(DbTransaction transaction)
 		{
+			int log_key_id		= 1;
 			int type_key_id     = 1;
 			int table_key_id    = 1;
 			int column_key_id   = 1;
 			int enum_val_key_id = 1;
+			
+			this.current_log_id = DbID.CreateID (log_key_id++, this.client_id);
+			
+			this.BootInsertLogRow (transaction, this.current_log_id, 0);
 			
 			//	Il faut commencer par finir d'initialiser les descriptions des types, parce
 			//	que les description des colonnes doivent y faire référence.
@@ -1783,6 +1885,7 @@ namespace Epsitec.Cresus.Database
 			this.BootUpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefParent, Tags.TableTypeDef);
 			this.BootUpdateColumnRelation (transaction, Tags.TableEnumValDef,  Tags.ColumnRefType,   Tags.TableTypeDef);
 			
+			this.BootUpdateTableNextId (transaction, this.internal_tables[Tags.TableLog].InternalKey, log_key_id);
 			this.BootUpdateTableNextId (transaction, this.internal_tables[Tags.TableTableDef].InternalKey, table_key_id);
 			this.BootUpdateTableNextId (transaction, this.internal_tables[Tags.TableColumnDef].InternalKey, column_key_id);
 			this.BootUpdateTableNextId (transaction, this.internal_tables[Tags.TableTypeDef].InternalKey, type_key_id);
@@ -1798,10 +1901,10 @@ namespace Epsitec.Cresus.Database
 			this.sql_builder = this.db_abstraction.SqlBuilder;
 			this.sql_engine  = this.db_abstraction.SqlEngine;
 			
-			this.type_converter = this.db_abstraction.Factory.TypeConverter;
-			
 			System.Diagnostics.Debug.Assert (this.sql_builder != null);
 			System.Diagnostics.Debug.Assert (this.sql_engine != null);
+			
+			this.type_converter = this.db_abstraction.Factory.TypeConverter;
 			
 			System.Diagnostics.Debug.Assert (this.type_converter != null);
 			
@@ -1810,11 +1913,13 @@ namespace Epsitec.Cresus.Database
 		
 		protected void InitialiseNumDefs()
 		{
-			this.num_type_id       = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId),       Tags.Name + "=" + Tags.TypeKeyId);
-			this.num_type_status   = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForStatus),   Tags.Name + "=" + Tags.TypeKeyStatus);
+			this.num_type_id       = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId),     Tags.Name + "=" + Tags.TypeKeyId);
+			this.num_type_status   = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForStatus), Tags.Name + "=" + Tags.TypeKeyStatus);
+			this.num_type_datetime = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int64),        Tags.Name + "=" + Tags.TypeDateTime);
 			
 			this.internal_types.Add (this.num_type_id);
 			this.internal_types.Add (this.num_type_status);
+			this.internal_types.Add (this.num_type_datetime);
 		}
 		
 		protected void InitialiseStrTypes()
@@ -1872,8 +1977,8 @@ namespace Epsitec.Cresus.Database
 		protected ITypeConverter				type_converter;
 		
 		protected DbTypeNum						num_type_id;
-		protected DbTypeNum						num_type_revision;
 		protected DbTypeNum						num_type_status;
+		protected DbTypeNum						num_type_datetime;
 		protected DbTypeString					str_type_name;
 		protected DbTypeString					str_type_caption;
 		protected DbTypeString					str_type_description;
@@ -1881,6 +1986,9 @@ namespace Epsitec.Cresus.Database
 		
 		protected Collections.DbTables			internal_tables = new Collections.DbTables ();
 		protected Collections.DbTypes			internal_types  = new Collections.DbTypes ();
+		
+		protected int							client_id;
+		protected DbID							current_log_id;
 		
 		CallbackDisplayDataSet					display_data_set;
 		string[]								localisations;
