@@ -45,18 +45,18 @@ namespace Epsitec.Common.Widgets
 		
 		public MenuItem(string command, string text) : this()
 		{
-			this.CommandName = command;
-			this.MainText    = text;
-			this.onlyText    = true;
+			this.Command  = command;
+			this.MainText = text;
+			this.onlyText = true;
 		}
 		
 		public MenuItem(string command, string icon, string text, string shortcut) : this()
 		{
-			this.CommandName = command;
-			this.IconName    = icon;
-			this.MainText    = text;
-			this.ShortKey    = shortcut;
-			this.onlyText    = false;
+			this.Command  = command;
+			this.IconName = icon;
+			this.MainText = text;
+			this.ShortKey = shortcut;
+			this.onlyText = false;
 		}
 		
 		public MenuItem(string command, string icon, string text, string shortcut, string name) : this(command, icon, text, shortcut)
@@ -66,11 +66,11 @@ namespace Epsitec.Common.Widgets
 		
 		public MenuItem(AbstractMenu submenu, string icon, string text, string shortcut) : this()
 		{
-			this.IconName    = icon;
-			this.MainText    = text;
-			this.ShortKey    = shortcut;
-			this.onlyText    = false;
-			this.Submenu     = submenu;
+			this.IconName = icon;
+			this.MainText = text;
+			this.ShortKey = shortcut;
+			this.onlyText = false;
+			this.Submenu  = submenu;
 		}
 		
 		public MenuItem(AbstractMenu submenu, string icon, string text, string shortcut, string name) : this(submenu, icon, text, shortcut)

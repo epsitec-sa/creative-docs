@@ -16,6 +16,7 @@ namespace Epsitec.Common.Widgets
 			
 			controller.Initialise ();
 			controller.CreationWindow.Show ();
+			controller.AttributeWindow.Show ();
 		}
 	}
 }

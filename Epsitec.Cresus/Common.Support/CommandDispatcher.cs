@@ -52,17 +52,16 @@ namespace Epsitec.Common.Support
 		{
 			//	Transmet la commande à ceux qui sont intéressés
 			
-			CommandEventArgs e = new CommandEventArgs (source, command);
-			
-			
-			string   command_name     = e.CommandName;
+			string   command_name     = CommandDispatcher.ExtractCommandName (command);
 			string[] command_elements = command_name.Split ('/');
 			int      command_length   = command_elements.Length;
+			string[] command_args     = CommandDispatcher.ExtractAndParseCommandArgs (command, source);
 			
 			System.Diagnostics.Debug.Assert (command_length == 1);
 			System.Diagnostics.Debug.Assert (command_name.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + command + "' may not contain a '*' in its name.\nPlease fix the command name definition source code.");
 			System.Diagnostics.Debug.Assert (command_name.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + command + "' may not contain a '.' in its name.\nPlease fix the command name definition source code.");
 			
+			CommandEventArgs e = new CommandEventArgs (source, command_name, command_args);
 			
 			EventSlot slot = this.event_handlers[command_name] as EventSlot;
 			
@@ -91,13 +90,13 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public CommandDispatcher.CommandState[] FindCommandStates(string command)
+		public CommandDispatcher.CommandState[] FindCommandStates(string command_name)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
 			foreach (CommandState state in this.command_states)
 			{
-				if (state.Name == command)
+				if (state.Name == command_name)
 				{
 					list.Add (state);
 				}

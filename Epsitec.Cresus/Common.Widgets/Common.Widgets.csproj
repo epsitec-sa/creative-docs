@@ -646,6 +646,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Design\Panels\WidgetAttributePalette.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Design\Panels\WidgetPalette.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

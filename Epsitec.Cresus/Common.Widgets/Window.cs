@@ -669,7 +669,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.cmd_names.Contains (source) == false, "Cannot queue same command twice");
 			
 			this.cmd_queue.Enqueue (new QueueItem (source));
-			this.cmd_names[source] = source.CommandName;
+			this.cmd_names[source] = source.Command;
 			
 			if (this.cmd_queue.Count == 1)
 			{

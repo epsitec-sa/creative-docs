@@ -643,7 +643,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool									IsCommand
 		{
-			get { return (this.command_name != null); }
+			get { return (this.command != null); }
 		}
 		
 		
@@ -1227,28 +1227,41 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[Bundle ("cmd")]	public string			CommandName
+		[Bundle ("cmd")]	public string			Command
 		{
 			get
 			{
-				if (this.command_name == null)
+				if (this.command == null)
 				{
 					return "";
 				}
-
-				return this.command_name;
+				
+				return this.command;
 			}
 			
 			set
 			{
 				if ((value == null) || (value.Length == 0))
 				{
-					this.command_name = null;
+					this.command = null;
 				}
 				else
 				{
-					this.command_name = value;
+					this.command = value;
 				}
+			}
+		}
+
+		public string								CommandName
+		{
+			get
+			{
+				if (this.command == null)
+				{
+					return "";
+				}
+
+				return Support.CommandDispatcher.ExtractCommandName (this.command);
 			}
 		}
 
@@ -4777,7 +4790,7 @@ namespace Epsitec.Common.Widgets
 		private WidgetCollection				children;
 		private Widget							parent;
 		private string							name;
-		private string							command_name;
+		private string							command;
 		private int								index;
 		private TextLayout						text_layout;
 		private ContentAlignment				alignment;

@@ -25,6 +25,7 @@ namespace Epsitec.Common.Widgets.Design
 			//	Crée toute l'infrastructure nécessaire au designer de GUI :
 			
 			this.CreateCreationWindow ();
+			this.CreateAttributeWindow ();
 			
 			this.state_delete_selection = new CommandState ("DeleteActiveSelection", this.dispatcher);
 			
@@ -49,6 +50,11 @@ namespace Epsitec.Common.Widgets.Design
 		public Window							CreationWindow
 		{
 			get { return this.creation_window; }
+		}
+		
+		public Window							AttributeWindow
+		{
+			get { return this.attribute_window; }
 		}
 		
 		
@@ -112,6 +118,34 @@ namespace Epsitec.Common.Widgets.Design
 			
 			widget.Parent = root;
 			widget.Dock   = DockStyle.Top;
+		}
+		
+		protected void CreateAttributeWindow()
+		{
+			//	Crée la fenêtre contenant les attributs.
+			
+			this.attribute_window = this.CreateWindow ("widget palette");
+			this.attribute_window.MakeFixedSizeWindow ();
+			this.attribute_window.MakeSecondaryWindow ();
+			
+			this.attribute_palette = new Panels.WidgetAttributePalette ();
+			
+			double dx = this.attribute_palette.Size.Width;
+			double dy = this.attribute_palette.Size.Height;
+			
+			this.attribute_window.ClientSize = new Drawing.Size (dx, dy);
+			
+			Widget root   = this.attribute_window.Root;
+			Widget widget;
+			
+			root.IsEditionDisabled = true;
+			
+			//	Initialisation de la palette des attributs :
+			
+			widget = this.attribute_palette.Widget;
+			
+			widget.Parent = root;
+			widget.Dock   = DockStyle.Fill;
 		}
 		
 		
@@ -195,6 +229,7 @@ namespace Epsitec.Common.Widgets.Design
 			//	nouvel éditeur actif :
 			
 			this.SetActiveEditor (editor);
+			this.UpdateActiveWidget ();
 		}
 		
 		
@@ -270,6 +305,7 @@ namespace Epsitec.Common.Widgets.Design
 			if (this.active_widget != widget)
 			{
 				this.active_widget = widget;
+				this.attribute_palette.ActiveObject = widget;
 			}
 		}
 		
@@ -333,9 +369,11 @@ namespace Epsitec.Common.Widgets.Design
 		protected bool							is_initialised;
 		
 		protected Panels.WidgetPalette			widget_palette;
+		protected Panels.WidgetAttributePalette	attribute_palette;
 		protected Panels.EditToolsBar			edit_tools_bar;
 		
 		protected Window						creation_window;
+		protected Window						attribute_window;
 		protected System.Collections.ArrayList	edit_window_list;
 		
 		protected Window						active_window;
