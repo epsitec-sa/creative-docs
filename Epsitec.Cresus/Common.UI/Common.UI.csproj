@@ -128,6 +128,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Adapters\LayoutAdapter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Adapters\Num2Adapter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -158,12 +163,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Controllers\CaptionOnlyController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Controllers\ControllerFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Controllers\IController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Controllers\LayoutController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
