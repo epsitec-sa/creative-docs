@@ -46,10 +46,18 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.selectedTool = value; }
 		}
 
+		// Modificateur global.
+		public GlobalModifierData ModifierData
+		{
+			get { return this.modifierData; }
+			set { this.modifierData = value; }
+		}
+
 		protected IconObjects			iconObjects;
 		protected string				operation;
 		protected AbstractObject		obj;
 		protected PropertyType			propertyType;
 		protected string				selectedTool;
+		protected GlobalModifierData	modifierData;
 	}
 }
