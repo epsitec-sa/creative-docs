@@ -7,6 +7,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public HScroller() : base(false)
 		{
+			this.arrowUp.Name = "Right";
+			this.arrowDown.Name = "Left";
 		}
 		
 		public HScroller(Widget embedder) : this()
