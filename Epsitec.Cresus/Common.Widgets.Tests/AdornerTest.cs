@@ -47,6 +47,7 @@ namespace Epsitec.Common.Tests
 			window.Text = "CheckAdornerWidgets";
 
 			ToolTip tip = new ToolTip();
+			tip.Behaviour = ToolTipBehaviour.Normal;
 
 			Button a = new Button();
 			a.Location = new Point(10, 10);
@@ -602,7 +603,7 @@ namespace Epsitec.Common.Tests
 			tb.Text = "";
 			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(tb);
-			this.tabBook = tb;  // TODO: fait qu'il reste TabBook dans la liste "alive" !
+			this.tabBook = tb;
 
 			Rectangle inside = tb.Inside;
 
@@ -611,7 +612,7 @@ namespace Epsitec.Common.Tests
 			page1.Name = "p1";
 			page1.Bounds = inside;
 			page1.TabTitle = "<m>P</m>remier";
-			tb.Add(page1);
+			tb.Items.Add(page1);
 
 			Button a = new Button();
 			a.Name = "A";
@@ -643,7 +644,7 @@ namespace Epsitec.Common.Tests
 			page2.Name = "p2";
 			page2.Bounds = inside;
 			page2.TabTitle = "<m>D</m>euxieme";
-			tb.Add(page2);
+			tb.Items.Add(page2);
 
 			VScroller scrollv = new VScroller();
 			scrollv.Name = "Scroller";
@@ -662,7 +663,7 @@ namespace Epsitec.Common.Tests
 			page3.Name = "p3";
 			page3.Bounds = inside;
 			page3.TabTitle = "<m>T</m>roisieme";
-			tb.Add(page3);
+			tb.Items.Add(page3);
 
 			StaticText st = new StaticText();
 			st.Name = "Static";
@@ -677,7 +678,7 @@ namespace Epsitec.Common.Tests
 			page4.Name = "p4";
 			page4.Bounds = inside;
 			page4.TabTitle = "<m>L</m>ook";
-			tb.Add(page4);
+			tb.Items.Add(page4);
 
 			CreateListLook(page4.Children, new Point(10, 95), null);
 
@@ -694,7 +695,7 @@ namespace Epsitec.Common.Tests
 			page5.Name = "p5";
 			page5.Bounds = inside;
 			page5.TabTitle = "<m>A</m>dd";
-			tb.Add(page5);
+			tb.Items.Add(page5);
 
 			Button add = new Button();
 			add.Name = "Add";
@@ -712,21 +713,21 @@ namespace Epsitec.Common.Tests
 			page6.Name = "p6";
 			page6.Bounds = inside;
 			page6.TabTitle = "Titre long";
-			tb.Add(page6);
+			tb.Items.Add(page6);
 
 			// Crée l'onglet 7.
 			TabPage page7 = new TabPage();
 			page7.Name = "p7";
 			page7.Bounds = inside;
 			page7.TabTitle = "Titre assez long";
-			tb.Add(page7);
+			tb.Items.Add(page7);
 
 			// Crée l'onglet 8.
 			TabPage page8 = new TabPage();
 			page8.Name = "p8";
 			page8.Bounds = inside;
 			page8.TabTitle = "Titre encore plus long";
-			tb.Add(page8);
+			tb.Items.Add(page8);
 #endif
 
 			tb.ActivePage = page1;
@@ -747,7 +748,7 @@ namespace Epsitec.Common.Tests
 			TabPage page = new TabPage();
 			page.Bounds = inside;
 			page.TabTitle = "Nouveau";
-			this.tabBook.Add(page);
+			this.tabBook.Items.Add(page);
 		}
 
 		[Test] public void CheckAdornerCell1()
@@ -1195,7 +1196,7 @@ namespace Epsitec.Common.Tests
 			page1.Name = "p1";
 			page1.Bounds = inside;
 			page1.TabTitle = "<m>P</m>remier";
-			tb.Add(page1);
+			tb.Items.Add(page1);
 
 #if true
 			Button a = new Button();
@@ -1212,7 +1213,7 @@ namespace Epsitec.Common.Tests
 			page2.Name = "p2";
 			page2.Bounds = inside;
 			page2.TabTitle = "<m>D</m>euxieme";
-			tb.Add(page2);
+			tb.Items.Add(page2);
 
 #if true
 			VScroller scrollv = new VScroller();
