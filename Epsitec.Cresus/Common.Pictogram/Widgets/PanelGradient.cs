@@ -62,6 +62,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.labelSmooth.Text = "F";
 			this.labelSmooth.Alignment = Drawing.ContentAlignment.MiddleCenter;
 
+			this.swapColor = new IconButton(this);
+			this.swapColor.IconName = @"file:images/swapcolor1.icon";
+			this.swapColor.Clicked += new MessageEventHandler(this.SwapColorClicked);
+
 			this.isNormalAndExtended = true;
 		}
 		
@@ -79,6 +83,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldRepeat.TextChanged -= new EventHandler(this.TextChanged);
 			this.fieldMiddle.TextChanged -= new EventHandler(this.TextChanged);
 			this.fieldSmooth.TextChanged -= new EventHandler(this.TextChanged);
+			this.swapColor.Clicked -= new MessageEventHandler(this.SwapColorClicked);
 
 			base.Dispose(disposing);
 		}
@@ -180,6 +185,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.labelRepeat.SetVisible(this.extendedSize);
 			this.labelMiddle.SetVisible(this.extendedSize);
 			this.labelSmooth.SetVisible(this.extendedSize);
+			this.swapColor.SetVisible(this.extendedSize);
 
 			if ( sel == 1 || sel == 2 || sel == 3 || sel == 4 )
 			{
@@ -269,6 +275,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 				r.Offset(0, -28);
 				this.fieldColor2.Bounds = r;
 
+				r.Bottom = r.Top-2;
+				r.Height = 12;
+				r.Left += (r.Width-(r.Height+8))/2;
+				r.Width = r.Height+8;
+				this.swapColor.Bounds = r;
+
 				r = rect;
 				r.Bottom = r.Top-48-25;
 				r.Height = 20;
@@ -325,6 +337,30 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnOriginColorChanged();
 		}
 
+		private void SwapColorClicked(object sender, MessageEventArgs e)
+		{
+			Drawing.Color temp = this.fieldColor1.Color;
+			this.fieldColor1.Color = this.fieldColor2.Color;
+			this.fieldColor2.Color = temp;
+
+			if ( this.originFieldRank != -1 )
+			{
+				if ( this.originFieldRank == 0 )
+				{
+					this.originFieldRank = 1;
+					this.originFieldColor = this.fieldColor2;
+				}
+				else
+				{
+					this.originFieldRank = 0;
+					this.originFieldColor = this.fieldColor1;
+				}
+				this.OnOriginColorChanged();
+			}
+
+			this.OnChanged();
+		}
+
 		private void ListChanged(object sender)
 		{
 			this.EnableWidgets();
@@ -342,6 +378,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected GradientSample			sample;
 		protected ColorSample				fieldColor1;
 		protected ColorSample				fieldColor2;
+		protected IconButton				swapColor;
 		protected TextFieldSlider			fieldRepeat;
 		protected TextFieldSlider			fieldMiddle;
 		protected TextFieldSlider			fieldSmooth;

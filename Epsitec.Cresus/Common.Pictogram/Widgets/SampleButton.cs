@@ -72,7 +72,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			if ( this.iconObjects != null )
 			{
-				this.iconContext.IsEnable = this.IsEnabled;
+				this.iconContext.Adorner = adorner;
+
+				if ( this.IsEnabled )
+				{
+					this.iconContext.UniqueColor = Drawing.Color.Empty;
+				}
+				else
+				{
+					this.iconContext.UniqueColor = Drawing.Color.FromBrightness(0.6);
+				}
 
 				double initialWidth = graphics.LineWidth;
 				Drawing.Transform save = graphics.SaveTransform();
@@ -81,7 +90,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				graphics.TranslateTransform(1, 1);
 				graphics.ScaleTransform(this.iconContext.ScaleX, this.iconContext.ScaleY, 0, 0);
 
-				this.iconObjects.DrawGeometry(graphics, this.iconContext);
+				this.iconObjects.DrawGeometry(graphics, this.iconContext, Drawing.Color.Empty, adorner);
 
 				graphics.Transform = save;
 				graphics.LineWidth = initialWidth;

@@ -25,7 +25,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.table.StyleV |= CellArrayStyle.SelectMulti;
 			this.table.DefHeight = 20;
 
-			this.objects = new IconObjects();
+			this.iconObjects = new IconObjects();
 		}
 		
 		public Lister(Widget embedder) : this()
@@ -34,16 +34,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 		
 		// Liste des objets.
-		public System.Collections.ArrayList Objects
+		public IconObjects IconObjects
 		{
 			get
 			{
-				return this.objects.Objects;
+				return this.iconObjects;
 			}
 
 			set
 			{
-				this.objects.Objects = value;
+				this.iconObjects = value;
 			}
 		}
 
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Met à jour le contenu du tableau.
 		public void UpdateContent()
 		{
-			if ( this.objects == null )  return;
+			if ( this.iconObjects == null )  return;
 			if ( !this.IsVisible )  return;
 
 			ObjectMemory memo = new ObjectMemory();
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			int ir = this.table.Columns;
 			int tp = memo.TotalProperty;
-			int total = this.objects.Count;
+			int total = this.iconObjects.Count;
 			int rows = this.table.Rows;
 			this.table.SetArraySize(tp+2, total);
 
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			for ( int index=0 ; index<total ; index++ )
 			{
-				AbstractObject obj = this.objects[index];
+				AbstractObject obj = this.iconObjects[index];
 
 				if ( this.table[0, index].Children.Count == 0 )
 				{
@@ -251,7 +251,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			for ( int i=0 ; i<this.table.Rows ; i++ )
 			{
-				this.objects[i].SelectObject(this.table.IsCellSelected(i, 0));
+				this.iconObjects[i].Select(this.table.IsCellSelected(i, 0));
 			}
 
 			this.OnPanelChanged();
@@ -270,6 +270,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 
 		protected CellTable			table;
-		protected IconObjects		objects;
+		protected IconObjects		iconObjects;
 	}
 }

@@ -71,10 +71,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Propriété -> widget.
 		public virtual void SetProperty(AbstractProperty property)
 		{
-			this.type            = property.Type;
-			this.text            = property.Text;
-			this.backgroundColor = property.BackgroundColor;
-			this.extendedSize    = property.ExtendedSize;
+			this.type                = property.Type;
+			this.text                = property.Text;
+			this.backgroundIntensity = property.BackgroundIntensity;
+			this.extendedSize        = property.ExtendedSize;
 
 			this.extendedButton.Direction = this.extendedSize ? Direction.Up : Direction.Down;
 		}
@@ -87,10 +87,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		protected void GetProperty(AbstractProperty property)
 		{
-			property.Type            = this.type;
-			property.Text            = this.text;
-			property.BackgroundColor = this.backgroundColor;
-			property.ExtendedSize    = this.extendedSize;
+			property.Type                = this.type;
+			property.Text                = this.text;
+			property.BackgroundIntensity = this.backgroundIntensity;
+			property.ExtendedSize        = this.extendedSize;
 		}
 
 		// Retourne le type de la propriété éditée par le panneau.
@@ -198,7 +198,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			
 			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.backgroundColor);
+			Drawing.Color color = adorner.GetColorWindow();
+			color = Drawing.Color.FromRGB(color.R*this.backgroundIntensity, color.G*this.backgroundIntensity, color.B*this.backgroundIntensity);
+			graphics.RenderSolid(color);
 
 			if ( this.multi )
 			{
@@ -210,16 +212,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			rect.Inflate(-0.5, -0.5);
 
-			graphics.AddLine(rect.Left+this.extendedZoneWidth, rect.Bottom, rect.Left+this.extendedZoneWidth, rect.Top);
-			graphics.RenderSolid(this.colorBlack);
+			graphics.AddLine(rect.Left+this.extendedZoneWidth, rect.Bottom-0.5, rect.Left+this.extendedZoneWidth, rect.Top+0.5);
+			graphics.RenderSolid(adorner.GetColorBorder());
 
-			graphics.AddLine(rect.Left, rect.Bottom, rect.Right, rect.Bottom);
-			graphics.RenderSolid(this.colorBlack);
+			graphics.AddLine(rect.Left-0.5, rect.Bottom, rect.Right+0.5, rect.Bottom);
+			graphics.RenderSolid(adorner.GetColorBorder());
 		}
 
 
 		protected Drawing.Color				colorBlack;
-		protected Drawing.Color				backgroundColor;
+		protected double					backgroundIntensity;
 		protected bool						extendedSize;
 		protected PropertyType				type;
 		protected string					text;
