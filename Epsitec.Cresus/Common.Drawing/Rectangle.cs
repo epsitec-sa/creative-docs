@@ -36,6 +36,7 @@ namespace Epsitec.Common.Drawing
 		
 		
 		public static readonly Rectangle Empty;
+		public static readonly Rectangle Infinite = new Rectangle (- 1000000000, -1000000000, 2000000000, 2000000000);
 		
 		public bool						IsEmpty
 		{

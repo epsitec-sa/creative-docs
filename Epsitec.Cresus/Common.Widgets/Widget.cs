@@ -45,9 +45,13 @@ namespace Epsitec.Common.Widgets
 			
 			this.widget_state |= WidgetState.Enabled;
 			
-			this.anchor = AnchorStyles.Left | AnchorStyles.Top;
-			this.back_color = new Drawing.Color (0.9);
-			this.fore_color = new Drawing.Color (0.0);
+			this.alignment = this.DefaultAlignment;
+			this.Width     = this.DefaultWidth;
+			this.Height    = this.DefaultHeight;
+			this.anchor    = this.DefaultAnchor;
+			
+			this.back_color = Drawing.Color.FromName ("Control");
+			this.fore_color = Drawing.Color.FromName ("ControlText");
 		}
 		
 		public void Dispose()
@@ -217,15 +221,20 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return ContentAlignment.MiddleLeft; }
 		}
+
+		public virtual AnchorStyles			DefaultAnchor
+		{
+			get { return AnchorStyles.Left | AnchorStyles.Top; }
+		}
 		
 		public virtual Drawing.Font			DefaultFont
 		{
-			get { return Drawing.Font.GetFont ("Tahoma", "Regular"); }
+			get { return Drawing.Font.DefaultFont; }
 		}
 		
 		public virtual double				DefaultFontSize
 		{
-			get { return 10.6; }
+			get { return Drawing.Font.DefaultFontSize; }
 		}
 		
 		public virtual double				DefaultWidth
@@ -992,6 +1001,7 @@ namespace Epsitec.Common.Widgets
 				
 				this.MessageHandler (message);
 				frame.PostProcessMessage (message);
+				this.Invalidate ();
 			}
 		}
 		
@@ -1751,8 +1761,6 @@ namespace Epsitec.Common.Widgets
 			this.UpdateLayoutText ();
 		}
 		
-		protected TextLayout			text_layout;
-
 		protected virtual void OnPaintBackground(PaintEventArgs e)
 		{
 			if (this.PaintBackground != null)
@@ -2197,6 +2205,7 @@ namespace Epsitec.Common.Widgets
 		protected Widget					parent;
 		protected string					name;
 		protected string					text;
+		protected TextLayout				text_layout;
 		protected ContentAlignment			alignment;
 		protected LayoutInfo				layout_info;
 		protected InternalState				internal_state;

@@ -303,7 +303,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return 10.6;
+				return 11.6;
 			}
 		}
 		

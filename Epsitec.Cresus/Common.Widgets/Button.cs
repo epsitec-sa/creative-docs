@@ -17,24 +17,41 @@ namespace Epsitec.Common.Widgets
 	{
 		public Button()
 		{
-			this.button_style = ButtonStyle.Normal;
+			this.buttonStyle = ButtonStyle.Normal;
 		}
 		
-		public ButtonStyle				ButtonStyle
+		public ButtonStyle ButtonStyle
 		{
-			get { return this.button_style; }
+			get
+			{
+				return this.buttonStyle;
+			}
+
 			set
 			{
-				if (this.button_style != value)
+				if ( this.buttonStyle != value )
 				{
-					this.button_style = value;
-					this.Invalidate ();
+					this.buttonStyle = value;
+					this.Invalidate();
 				}
 			}
 		}
+
+		// Dessine le bouton.
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+
+			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			WidgetState       state = this.PaintState;
+			Direction         dir   = this.RootDirection;
+			Drawing.Point     pos   = new Drawing.Point (0, 0);
+			
+			adorner.PaintButtonBackground(graphics, rect, state, dir, this.buttonStyle);
+			adorner.PaintButtonTextLayout(graphics, pos, this.text_layout, state, dir, this.buttonStyle);
+		}
 		
-
-
-		protected ButtonStyle			button_style;
+		
+		protected ButtonStyle			buttonStyle;
 	}
 }

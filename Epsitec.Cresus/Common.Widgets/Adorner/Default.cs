@@ -17,7 +17,8 @@ namespace Epsitec.Common.Widgets.Adorner
 			colorControlLight      = Drawing.Color.FromName("ControlLight");
 			colorControlLightLight = Drawing.Color.FromName("ControlLightLight");
 			colorControlDark       = Drawing.Color.FromName("ControlDark");
-			colorControlDarkDark   = Drawing.Color.FromName("ControlDark");
+			colorControlDarkDark   = Drawing.Color.FromName("ControlDarkDark");
+			colorBlack             = Drawing.Color.FromName("WindowFrame");
 		}
 		
 
@@ -72,7 +73,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					p2.Y = p1.Y;
 					graphics.AddLine(p1, p2);
 					p1.X = rect.Right-0.5;
-					p1.Y = rect.Bottom;
+					p1.Y = rect.Bottom+1.0;
 					p2.X = p1.X;
 					p2.Y = rect.Top;
 					graphics.AddLine(p1, p2);
@@ -84,7 +85,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					p2.X = p1.X;
 					p2.Y = rect.Top;
 					graphics.AddLine(p1, p2);
-					p1.X = rect.Left;
+					p1.X = rect.Left+1.0;
 					p1.Y = rect.Top-0.5;
 					p2.X = rect.Right;
 					p2.Y = p1.Y;
@@ -97,7 +98,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					p2.X = p1.X;
 					p2.Y = rect.Bottom;
 					graphics.AddLine(p1, p2);
-					p1.X = rect.Left;
+					p1.X = rect.Left+1.0;
 					p1.Y = rect.Bottom+0.5;
 					p2.X = rect.Right;
 					p2.Y = p1.Y;
@@ -111,7 +112,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					p2.Y = p1.Y;
 					graphics.AddLine(p1, p2);
 					p1.X = rect.Right-0.5;
-					p1.Y = rect.Top;
+					p1.Y = rect.Top+1.0;
 					p2.X = p1.X;
 					p2.Y = rect.Bottom;
 					graphics.AddLine(p1, p2);
@@ -127,10 +128,10 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Widgets.Direction shadow,
 										  Widgets.ButtonStyle style)
 		{
-			if ( style == ButtonStyle.Normal )
+			if ( style == ButtonStyle.Normal || style == ButtonStyle.DefaultActive )
 			{
 				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(colorControl);
+				graphics.RenderSolid(this.colorControl);
 
 				graphics.LineWidth = 1;
 				graphics.LineCap = Drawing.CapStyle.Butt;
@@ -141,18 +142,33 @@ namespace Epsitec.Common.Widgets.Adorner
 				Drawing.Rectangle rInside = rect;
 				rInside.Inflate(-1, -1);
 
-				// Ombre en haut à droite.
-				PaintL(graphics, rect, colorControlLightLight, Opposite(shadow));
-				PaintL(graphics, rInside, colorControlLight, Opposite(shadow));
+				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				{
+					shadow = Opposite(shadow);
+				}
 
-				// Ombre en bas à droite.
-				PaintL(graphics, rect, colorControlDarkDark, shadow);
-				PaintL(graphics, rInside, colorControlDark, shadow);
+				if ( style == ButtonStyle.DefaultActive )
+				{
+					// Rectangle noir autour.
+					PaintL(graphics, rect, this.colorBlack, Opposite(shadow));
+					PaintL(graphics, rect, this.colorBlack, shadow);
+
+					rect.Inflate(-1, -1);
+					rInside.Inflate(-1, -1);
+				}
+
+				// Ombre claire en haut à droite.
+				PaintL(graphics, rect, this.colorControlLightLight, Opposite(shadow));
+				PaintL(graphics, rInside, this.colorControlLight, Opposite(shadow));
+
+				// Ombre foncée en bas à droite.
+				PaintL(graphics, rect, this.colorControlDarkDark, shadow);
+				PaintL(graphics, rInside, this.colorControlDark, shadow);
 			}
 			else
 			{
 				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(colorControl);
+				graphics.RenderSolid(this.colorControl);
 			}
 		}
 
@@ -327,10 +343,11 @@ namespace Epsitec.Common.Widgets.Adorner
 		
 
 		// Variables membres de TextLayout.
-		protected Drawing.Color		colorControl           = new Drawing.Color(1,1,1);
-		protected Drawing.Color		colorControlLight      = new Drawing.Color(1,1,1);
-		protected Drawing.Color		colorControlLightLight = new Drawing.Color(1,1,1);
-		protected Drawing.Color		colorControlDark       = new Drawing.Color(1,1,1);
-		protected Drawing.Color		colorControlDarkDark   = new Drawing.Color(1,1,1);
+		protected Drawing.Color		colorControl;
+		protected Drawing.Color		colorControlLight;
+		protected Drawing.Color		colorControlLightLight;
+		protected Drawing.Color		colorControlDark;
+		protected Drawing.Color		colorControlDarkDark;
+		protected Drawing.Color		colorBlack;
 	}
 }

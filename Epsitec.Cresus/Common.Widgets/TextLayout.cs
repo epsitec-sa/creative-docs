@@ -217,11 +217,14 @@ namespace Epsitec.Common.Widgets
 		// Dessine le texte, en fonction du layout...
 		// Si une couleur est donnée avec uniqueColor, tout le texte est peint
 		// avec cette couleur, en ignorant les <font color=...>.
-		public void Paint(Drawing.Point pos, PaintEventArgs e, Drawing.Color uniqueColor)
+		public void Paint(Drawing.Point pos, Drawing.Graphics graphics)
+		{
+			this.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.Empty);
+		}
+
+		public void Paint(Drawing.Point pos, Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Color uniqueColor)
 		{
 			this.UpdateLayout();
-
-			Drawing.Graphics graphics = e.Graphics;
 
 			foreach ( JustifBlock block in this.blocks )
 			{

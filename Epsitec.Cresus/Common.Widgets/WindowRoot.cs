@@ -39,8 +39,11 @@ namespace Epsitec.Common.Widgets
 		
 		public override void Invalidate()
 		{
-			System.Diagnostics.Debug.Assert (this.parent == null);
-			this.window_frame.MarkForRepaint (this.Bounds);
+			if (this.window_frame != null)
+			{
+				System.Diagnostics.Debug.Assert (this.parent == null);
+				this.window_frame.MarkForRepaint (this.Bounds);
+			}
 		}
 		
 		public override void Invalidate(Drawing.Rectangle rect)

@@ -24,7 +24,7 @@ namespace Epsitec.Common.Tests
 //?			layout.Text = "Ceci est un petit texte ridicule, juste pour essayer !";
 //?			layout.Text = "Normal <b>bold <i>bold-italic </b>italic </i>normal.";
 //?			layout.Text = "<b>Première ligne</b> assez longue pour nécessiter une coupure.<br/><b>Deuxième ligne</b> assez longue pour nécessiter une coupure.";
-			layout.Text = "Ceci est un <a href=\"x\">petit texte <b>ridicule</b></a>, juste pour <font color=\"#ff0000\">tester</font> le comportement de la <font size=\"20\">classe</font> <font face=\"Courier New\">TextLayout</font>, mes premiers pas en C# !<br/>Et voilà une image <img src=\"..\\..\\icon.png\"/> simple.";
+			layout.Text = "Ceci est un <a href=\"x\">petit texte <b>ridicule</b></a>, juste pour <font color=\"#ff0000\">tester</font> le comportement de la <font size=\"20\">classe</font> <font face=\"Courier New\">TextLayout</font>, mes premiers pas en &quot;C#&quot;&nbsp;!<br/>Et voilà une image <img src=\"..\\..\\icon.png\"/> simple.";
 			layout.Font = Font.GetFont("Tahoma", "Regular");
 			layout.FontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleCenter;
@@ -46,8 +46,8 @@ namespace Epsitec.Common.Tests
 				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
 			}
 
-//?			layout.Paint(pos, e, Color.FromRGB(0,1,0));
-			layout.Paint(pos, e, Color.Empty);
+//?			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.FromRGB(0,1,0));
+			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty);
 		}
 
 		[Test] public void CheckRectangle()
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Tests
 			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
 			e.Graphics.RenderSolid(Color.FromBrightness(1));
 
-			layout.Paint(pos, e, Color.Empty);
+			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty);
 
 			Rectangle bounds = layout.TotalRectangle;
 			bounds.Offset(pos);
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Tests
 			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
 			e.Graphics.RenderSolid(Color.FromBrightness(1));
 
-			layout.Paint(pos, e, Color.Empty);
+			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty);
 		}
 
 		[Test] public void CheckJustif()
