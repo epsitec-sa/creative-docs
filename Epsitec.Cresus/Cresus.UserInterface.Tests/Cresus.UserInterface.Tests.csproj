@@ -22,7 +22,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "Epsitec.Cresus.UserInterface.Tests"
+                RootNamespace = "Epsitec.Cresus.UserInterface"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >

@@ -22,7 +22,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "Epsitec.Cresus.DataLayer.Tests"
+                RootNamespace = "Epsitec.Cresus.DataLayer"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >

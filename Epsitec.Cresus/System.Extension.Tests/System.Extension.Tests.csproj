@@ -22,7 +22,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "System.Tests"
+                RootNamespace = "System"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >

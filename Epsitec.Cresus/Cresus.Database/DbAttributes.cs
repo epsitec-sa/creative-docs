@@ -24,16 +24,23 @@ namespace Epsitec.Cresus.Database
 		#region ICloneable Members
 		public object Clone()
 		{
-			DbAttributes attr = System.Activator.CreateInstance (this.GetType ()) as DbAttributes;
-			
-			if (this.attributes != null)
-			{
-				attr.attributes = this.attributes.Clone () as System.Collections.Hashtable;
-			}
-			
-			return attr;
+			return this.CloneCopyToNewObject (this.CloneNewObject ());
 		}
-		#endregion		
+		#endregion
+		
+		protected virtual object CloneNewObject()
+		{
+			return new DbAttributes ();
+		}
+		
+		protected virtual object CloneCopyToNewObject(object o)
+		{
+			DbAttributes that = o as DbAttributes;
+			
+			that.attributes = (this.attributes == null) ? null : this.attributes.Clone () as System.Collections.Hashtable;
+			
+			return that;
+		}
 		
 		#region ToString override
 		public override string ToString()

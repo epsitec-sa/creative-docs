@@ -3535,7 +3535,7 @@ namespace Epsitec.Common.Widgets
 			private double					width, height;
 		}
 		
-		protected class HypertextInfo : System.ICloneable, System.IComparable
+		protected sealed class HypertextInfo : System.ICloneable, System.IComparable
 		{
 			internal HypertextInfo(TextLayout layout, Drawing.Rectangle bounds, int index)
 			{
