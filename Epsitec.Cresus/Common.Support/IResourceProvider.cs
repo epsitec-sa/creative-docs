@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 29/10/2003
 
 namespace Epsitec.Common.Support
@@ -24,7 +24,7 @@ namespace Epsitec.Common.Support
 		
 		byte[] GetData(string id, ResourceLevel level, System.Globalization.CultureInfo culture);
 		
-		string[] GetIds(string filter, ResourceLevel level, System.Globalization.CultureInfo culture);
+		string[] GetIds(string name_filter, string type_filter, ResourceLevel level, System.Globalization.CultureInfo culture);
 		
 		//	Méthodes d'accès en écriture/modification :
 		

@@ -1,6 +1,6 @@
 ﻿<!-- Save as UTF-8 -->
 
-<bundle>
+<bundle type="String">
 <data name='label.OK'>OK</data>
 <data name='label.Hello'><![CDATA[Hello <i>world</i>&nbsp;!]]></data>
 <data name='title.MainWindow'>Crésus Réseau</data>
