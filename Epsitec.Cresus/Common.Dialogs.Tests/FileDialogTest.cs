@@ -43,6 +43,8 @@ namespace Epsitec.Common.Dialogs
 			window.Root.Children.Add(button4);
 
 			window.Show();
+			
+			this.app_window = window;
 		}
 
 		private void button1_Clicked(object sender, MessageEventArgs e)
@@ -53,6 +55,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.Filters.Add ("text", "Textes", "*.txt");
 			dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
+			dialog.Owner = this.app_window;
 			dialog.Show ();
 		}
 
@@ -64,6 +67,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.Filters.Add ("text", "Textes", "*.txt");
 			dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
+			dialog.Owner = this.app_window;
 			dialog.Show ();
 		}
 
@@ -75,7 +79,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.Filters.Add ("text", "Textes", "*.txt");
 			dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
-			
+			dialog.Owner = this.app_window;
 			dialog.Show ();
 			
 			System.Console.Out.WriteLine ("Name: {0}", dialog.FileName);
@@ -91,7 +95,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.Filters.Add ("text", "Textes", "*.txt");
 			dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
-			
+			dialog.Owner = this.app_window;
 			dialog.Show ();
 			
 			System.Console.Out.WriteLine ("Name: {0}", dialog.FileName);
@@ -109,12 +113,14 @@ namespace Epsitec.Common.Dialogs
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 			dialog.PromptForCreation = true;
 			dialog.PromptForOverwriting = true;
-			
+			dialog.Owner = this.app_window;
 			dialog.Show ();
 			
 			System.Console.Out.WriteLine ("Name: {0}", dialog.FileName);
 			System.Console.Out.WriteLine ("Filter: {0} -> {1}", dialog.FilterIndex, dialog.Filters[dialog.FilterIndex].Name);
 			System.Console.Out.WriteLine ("Initial directory: {0}", dialog.InitialDirectory);
 		}
+		
+		private Window					app_window;
 	}
 }

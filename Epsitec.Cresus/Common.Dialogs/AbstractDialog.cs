@@ -6,17 +6,12 @@ namespace Epsitec.Common.Dialogs
 	/// <summary>
 	/// Summary description for AbstractClass.
 	/// </summary>
-	public abstract class AbstractDialog
+	public abstract class AbstractDialog : IDialog
 	{
 		public AbstractDialog()
 		{
 		}
 		
-		
-		public void Show()
-		{
-			this.Window.Show ();
-		}
 		
 		public void Close()
 		{
@@ -43,6 +38,13 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
+		
+		#region IDialog Members
+		public void Show()
+		{
+			this.Window.Show ();
+		}
+		
 		public Window							Owner
 		{
 			get
@@ -60,11 +62,9 @@ namespace Epsitec.Common.Dialogs
 				this.Window.Owner = value;
 			}
 		}
-		
+		#endregion
 		
 		protected abstract void CreateWindow();
 		
-		
-		protected Window						window;
-	}
+		protected Window						window;}
 }
