@@ -41,6 +41,11 @@ namespace Epsitec.Cresus.Database
 			
 			switch (raw_type)
 			{
+				case DbRawType.Boolean:
+					def = new DbNumDef ( 1, 0, 0, 1);
+					def.raw_type = raw_type;
+					break;
+				
 				case DbRawType.Int16:
 					def = new DbNumDef ( 5, 0, System.Int16.MinValue, System.Int16.MaxValue);
 					def.raw_type = raw_type;
@@ -116,6 +121,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public bool						IsConversionNeeded
+		{
+			get
+			{
+				return this.raw_type == DbRawType.Unsupported;
+			}
+		}
+		
 		public decimal					MinValue
 		{
 			get
@@ -162,6 +175,8 @@ namespace Epsitec.Cresus.Database
 				
 				switch (this.raw_type)
 				{
+					case DbRawType.Boolean:
+						return 1;
 					case DbRawType.Int16:
 						return 16;
 					case DbRawType.Int32:
@@ -186,14 +201,6 @@ namespace Epsitec.Cresus.Database
 				}
 				
 				return bits;
-			}
-		}
-		
-		public bool						ConversionNeeded
-		{
-			get
-			{
-				return this.raw_type == DbRawType.Unsupported;
 			}
 		}
 		
@@ -293,6 +300,34 @@ namespace Epsitec.Cresus.Database
 			return (decimal) conv;
 		}
 		
+		
+		public decimal Parse(string value)
+		{
+			return this.Parse (value, System.Globalization.CultureInfo.CurrentCulture);
+		}
+		
+		public decimal Parse(string value, System.IFormatProvider format_provider)
+		{
+			//	TODO: convertit le texte en une valeur numérique correspondant, vérifie que la
+			//	syntaxe est respectée et que la valeur est dans les bornes admises. Lève une
+			//	exception dans le cas contraire...
+			
+			return System.Decimal.Parse (value, format_provider);
+		}
+		
+		
+		public string ToString(decimal value)
+		{
+			return this.ToString (value, System.Globalization.CultureInfo.CurrentCulture);
+		}
+		
+		public string ToString(decimal value, System.IFormatProvider format_provider)
+		{
+			//	TODO: convertit la valeur en un texte, en tenant compte des divers réglages
+			//	internes (nombre de décimales, etc.)
+			
+			return value.ToString (format_provider);
+		}
 		
 		
 		static DbNumDef()

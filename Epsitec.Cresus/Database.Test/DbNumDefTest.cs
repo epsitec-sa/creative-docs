@@ -206,5 +206,40 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (-1000.00M, def.Clip (-2000.00M));
 			Assertion.AssertEquals ( 1000.00M, def.Clip ( 2000.00M));
 		}
+		
+		[Test] public void CheckParse0()
+		{
+			DbNumDef def = new DbNumDef (3, 1, 0.0M, 49.9M);
+			Assertion.AssertEquals (10.5M, def.Parse ("10.5", System.Globalization.CultureInfo.InvariantCulture));
+		}
+		
+		[Test] [ExpectedException (typeof (System.OverflowException))] public void CheckParse1()
+		{
+			DbNumDef def = new DbNumDef (3, 1, 0.0M, 49.9M);
+			def.Parse ("50.0", System.Globalization.CultureInfo.InvariantCulture);
+		}
+		
+		[Test] [ExpectedException (typeof (System.OverflowException))] public void CheckParse2()
+		{
+			DbNumDef def = new DbNumDef (3, 1, 0.0M, 49.9M);
+			def.Parse ("-1");
+		}
+		
+		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckParse3()
+		{
+			DbNumDef def = new DbNumDef (3, 1, 0.0M, 49.9M);
+			def.Parse ("x");
+		}
+		
+		[Test] public void CheckToString()
+		{
+			System.IFormatProvider format_provider = System.Globalization.CultureInfo.InvariantCulture;
+			DbNumDef def = new DbNumDef (3, 1, 0.0M, 49.9M);
+			Assertion.AssertEquals ("10.5", def.ToString (10.5M, format_provider));
+			
+			def = new DbNumDef (3, 2, -9.99M, 9.99M);
+			Assertion.AssertEquals ("1.00", def.ToString (1.00M, format_provider));
+			Assertion.AssertEquals ("-3.50", def.ToString (-3.5M, format_provider));
+		}
 	}
 }
