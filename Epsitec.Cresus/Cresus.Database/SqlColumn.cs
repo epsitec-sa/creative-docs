@@ -109,6 +109,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		
 		public void SetRawConverter(IRawTypeConverter raw_converter)
 		{
 			this.raw_converter = raw_converter;
