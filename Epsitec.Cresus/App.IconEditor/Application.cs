@@ -67,7 +67,9 @@ namespace Epsitec.Icons
 		private Window					main_window;
 		private IconEditor				icon_editor;
 		private HMenu					icon_menu;
+#if DEBUG
 		private int						in_geom_update;
+#endif
 
 		private void HandleRootClientGeometryUpdated(object sender)
 		{
