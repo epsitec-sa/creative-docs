@@ -134,7 +134,7 @@ namespace Epsitec.Common.OpenType.Tests
 		
 		private static void TestFeatureTable()
 		{
-			string font = "Arial Unicode MS";
+			string font = "Palatino Linotype";
 			byte[] data = Platform.Win32.LoadFontData (font);
 			
 			TableDirectory td = new TableDirectory (data, 0);
@@ -222,43 +222,125 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			uint[] fina_features = gsub_t.GetFeatureIndexes ("fina");
 			
-			Debug.Assert.IsTrue (fina_features.Length == 3);
-			
-			Debug.Assert.IsTrue (fina_features[0] == 3);
-			Debug.Assert.IsTrue (fina_features[1] == 6);
-			Debug.Assert.IsTrue (fina_features[2] == 11);
+//			Debug.Assert.IsTrue (fina_features.Length == 3);
+//			Debug.Assert.IsTrue (fina_features[0] == 3);
+//			Debug.Assert.IsTrue (fina_features[1] == 6);
+//			Debug.Assert.IsTrue (fina_features[2] == 11);
 			
 			LookupListTable gsub_lookup = gsub_t.LookupListTable;
-			uint[] liga_features = gsub_t.GetFeatureIndexes ("liga");
 			
-			for (int i = 0; i < liga_features.Length; i++)
+			uint[] liga_features = gsub_t.GetFeatureIndexes ("liga");
+			uint[] rlig_features = gsub_t.GetFeatureIndexes ("rlig");
+			uint[] dlig_features = gsub_t.GetFeatureIndexes ("dlig");
+			
+			System.Collections.ArrayList ligature_list = new System.Collections.ArrayList ();
+			
+			ligature_list.AddRange (liga_features);
+			ligature_list.AddRange (rlig_features);
+			ligature_list.AddRange (dlig_features);
+			
+			for (int i = 0; i < ligature_list.Count; i++)
 			{
-				LookupTable lookup = gsub_lookup.GetLookupTable (liga_features[i]);
+				uint         feature_i    = (uint)ligature_list[i];
+				FeatureTable feature      = gsub_t.FeatureListTable.GetFeatureTable (feature_i);
+				uint         lookup_count = feature.LookupCount;
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Lookup: type={0}, flags={1}, sub={2}", lookup.LookupType, lookup.LookupFlags.ToString ("X4"), lookup.SubTableCount));
-				
-				for (uint s = 0; s < lookup.SubTableCount; s++)
+				for (uint feature_lookup_i = 0; feature_lookup_i < lookup_count; feature_lookup_i++)
 				{
-					SubstSubTable subst = lookup.GetSubTable (s);
+					LookupTable lookup = gsub_lookup.GetLookupTable (feature.GetLookupIndex (feature_lookup_i));
 					
-					System.Diagnostics.Debug.WriteLine (string.Format ("Lookup {0}-{1}: format {2}, coverage {3}", i, s, subst.SubstFormat, subst.CoverageOffset));
+					System.Diagnostics.Debug.WriteLine (string.Format ("Lookup: type={0}, flags={1}, sub.count={2}", lookup.LookupType, lookup.LookupFlags.ToString ("X4"), lookup.SubTableCount));
 					
-					LigatureSubst liga_subst = new LigatureSubst (subst);
-					
-					System.Diagnostics.Debug.WriteLine (string.Format ("LigatureSetCount = {0}", liga_subst.LigatureSetCount));
-					
-					for (uint j = 0; j < liga_subst.LigatureSetCount; j++)
+					if (lookup.LookupType == 1)
 					{
-						LigatureSet liga_set = liga_subst.GetLigatureSet (j);
-						
-						for (uint k = 0; k < liga_set.LigatureCount; k++)
+						for (uint s = 0; s < lookup.SubTableCount; s++)
 						{
-							Ligature ligature = liga_set.GetLigature (k);
-							System.Diagnostics.Debug.WriteLine (string.Format ("  {0:00} : {1}, {2} replacements", k, ligature.Glyph, ligature.ComponentCount));
+							SubstSubTable base_subst = lookup.GetSubTable (s);
+							SingleSubst single_subst = new SingleSubst (base_subst);
+							
+							uint[] covered = CheckTables.GetCoverageIndexes (single_subst.Coverage);
+							
+							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2}", single_subst.SubstFormat, single_subst.Coverage.CoverageFormat, covered.Length));
+							
+							for (int c = 0; c < covered.Length; c++)
+							{
+								System.Diagnostics.Debug.WriteLine (string.Format ("Replace {0:0000} --> {1:0000}", covered[c], single_subst.FindSubstitution (covered[c])));
+							}
+						}
+					}
+					else if (lookup.LookupType == 4)
+					{
+						for (uint s = 0; s < lookup.SubTableCount; s++)
+						{
+							SubstSubTable base_subst = lookup.GetSubTable (s);
+							LigatureSubst liga_subst = new LigatureSubst (base_subst);
+							
+							uint[] covered = CheckTables.GetCoverageIndexes (liga_subst.Coverage);
+							
+							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2}", liga_subst.SubstFormat, liga_subst.Coverage.CoverageFormat, covered.Length));
+							System.Diagnostics.Debug.WriteLine (string.Format ("            # of ligature sets: {0}", liga_subst.LigatureSetCount));
+							
+							Debug.Assert.IsTrue (liga_subst.LigatureSetCount == covered.Length);
+							
+							for (uint j = 0; j < liga_subst.LigatureSetCount; j++)
+							{
+								LigatureSet liga_set = liga_subst.GetLigatureSet (j);
+								
+								for (uint k = 0; k < liga_set.LigatureCount; k++)
+								{
+									System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+									
+									Ligature ligature = liga_set.GetLigature (k);
+									uint result_glyph = ligature.Glyph;
+									
+									buffer.Append ("  o ");
+									buffer.Append (covered[j]);
+									
+									for (uint l = 1; l < ligature.ComponentCount; l++)
+									{
+										buffer.Append ("+");
+										buffer.Append (ligature.GetComponent (l-1));
+									}
+									
+									buffer.Append (" -> ");
+									buffer.Append (ligature.Glyph);
+									
+									System.Diagnostics.Debug.WriteLine (buffer.ToString ());
+								}
+							}
+						}
+					}
+					else if (lookup.LookupType == 6)
+					{
+						for (uint s = 0; s < lookup.SubTableCount; s++)
+						{
+							SubstSubTable        base_subst = lookup.GetSubTable (s);
+							ChainingContextSubst cctx_subst = new ChainingContextSubst (base_subst);
+							
+							uint[] covered = CheckTables.GetCoverageIndexes (cctx_subst.Coverage);
+							
+							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2}", cctx_subst.SubstFormat, cctx_subst.Coverage.CoverageFormat, covered.Length));
 						}
 					}
 				}
 			}
+		}
+		
+		private static uint[] GetCoverageIndexes(Coverage coverage)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			for (uint i = 0; i < 0xffff; i++)
+			{
+				int index = coverage.FindIndex (i);
+				
+				if (index != -1)
+				{
+					list.Add (i);
+				}
+			}
+			
+			return (uint[]) list.ToArray (typeof (uint));
 		}
 	}
 }

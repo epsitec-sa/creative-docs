@@ -1242,7 +1242,9 @@ namespace Epsitec.Common.OpenType
 	
 	public class Table_GSUB : Tables
 	{
-		//	See http://www.microsoft.com/OpenType/OTSpec/GSUB.htm for GSUB table
+		//	See http://www.microsoft.com/OpenType/OTSpec/gsub.htm or
+		//	http://partners.adobe.com/public/developer/opentype/index_table_formats1.html
+
 		//	See http://www.microsoft.com/OpenType/OTSpec/chapter2.htm for the common table format
 		//	See http://www.microsoft.com/OpenType/OTSpec/featurelist.htm for 'liga' and others.
 		
@@ -1715,7 +1717,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		SubstFormat
+		public uint					SubstFormat
 		{
 			get
 			{
@@ -1723,19 +1725,216 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		CoverageOffset
+		protected virtual uint		CoverageOffset
 		{
 			get
 			{
 				return this.ReadInt16 (2);
 			}
 		}
+		
+		public Coverage				Coverage
+		{
+			get
+			{
+				return new Coverage (this.data, this.offset + (int) this.CoverageOffset);
+			}
+		}
+	}
+	
+	public class Coverage : Tables
+	{
+		public Coverage(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		CoverageFormat
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}
+		}
+		
+		
+		public int FindIndex(uint glyph)
+		{
+			switch (this.CoverageFormat)
+			{
+				case 1: return this.FindIndexFmt1 (glyph);
+				case 2: return this.FindIndexFmt2 (glyph);
+				
+				default:
+					throw new System.NotSupportedException ();
+			}
+		}
+		
+		
+		private int FindIndexFmt1(uint glyph)
+		{
+			uint max  = this.ReadInt16 (2);
+			uint dist = max / 2;
+			uint iter = dist;
+			
+			for (;;)
+			{
+				uint find = this.ReadInt16 ((int)(4+2*iter));
+				
+				if (find == glyph)
+				{
+					return (int) iter;
+				}
+				
+				if (dist < 3)
+				{
+					if (find < glyph)
+					{
+						while ((find < glyph)
+							&& (iter < max-1))
+						{
+							iter++;
+							find = this.ReadInt16 ((int)(4+2*iter));
+							
+							if (find == glyph)
+							{
+								return (int) iter;
+							}
+						}
+						
+						return -1;
+					}
+					else
+					{
+						while ((find > glyph)
+							&& (iter > 0))
+						{
+							iter--;
+							find = this.ReadInt16 ((int)(4+2*iter));
+							
+							if (find == glyph)
+							{
+								return (int) iter;
+							}
+						}
+						
+						return -1;
+					}
+				}
+				
+				dist = dist / 2;
+				
+				if (find < glyph)
+				{
+					iter -= dist;
+				}
+				else
+				{
+					iter += dist;
+				}
+			}
+		}
+		
+		private int FindIndexFmt2(uint glyph)
+		{
+			uint range = this.ReadInt16 (2);
+			
+			for (uint i = 0; i < range; i++)
+			{
+				uint start = this.ReadInt16 ((int)(4+6*i+0));
+				uint end   = this.ReadInt16 ((int)(4+6*i+2));
+				
+				if ((glyph >= start) &&
+					(glyph <= end))
+				{
+					uint start_coverage = this.ReadInt16 ((int)(4+6*i+4));
+					
+					return (int)(start_coverage + glyph - start);
+				}
+			}
+			
+			return -1;
+		}
 	}
 	
 	public class SingleSubst : SubstSubTable
 	{
+		public SingleSubst(SubstSubTable sub) : base (sub.BaseData, sub.BaseOffset)
+		{
+		}
+		
 		public SingleSubst(byte[] data, int offset) : base (data, offset)
 		{
+		}
+		
+		
+		public uint FindSubstitution(uint glyph)
+		{
+			switch (this.SubstFormat)
+			{
+				case 1: return this.FindSubstitutionFmt1 (glyph);
+				case 2: return this.FindSubstitutionFmt2 (glyph);
+				
+				default:
+					throw new System.NotSupportedException ();
+			}
+		}
+		
+		
+		private uint FindSubstitutionFmt1(uint glyph)
+		{
+			return this.ReadInt16 (4) + glyph;
+		}
+		
+		private uint FindSubstitutionFmt2(uint glyph)
+		{
+			uint max = this.ReadInt16 (4);
+			int  cov = this.Coverage.FindIndex (glyph);
+			
+			if ((cov >= 0) &&
+				(cov < max))
+			{
+				return this.ReadInt16 ((int)(6+2*cov));
+			}
+			
+			return 0xffff;
+		}
+	}
+	
+	public class ChainingContextSubst : SubstSubTable
+	{
+		public ChainingContextSubst(SubstSubTable sub) : base (sub.BaseData, sub.BaseOffset)
+		{
+		}
+		
+		public ChainingContextSubst(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		protected override uint		CoverageOffset
+		{
+			get
+			{
+				switch (this.SubstFormat)
+				{
+					case 1:
+					case 2:
+						return base.CoverageOffset;
+					case 3:
+						return this.ReadInt16 (4);
+					default:
+						throw new System.NotSupportedException ();
+				}
+			}
+		}
+
+		public uint					ChainSubRuleSetCount
+		{
+			get
+			{
+				return this.ReadInt16 (4);
+			}
 		}
 	}
 	
@@ -1823,7 +2022,7 @@ namespace Epsitec.Common.OpenType
 		
 		public uint GetComponent(uint n)
 		{
-			return this.ReadInt16 ((int)(2+n*2));
+			return this.ReadInt16 ((int)(4+n*2));
 		}
 	}
 }
