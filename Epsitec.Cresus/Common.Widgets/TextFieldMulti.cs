@@ -68,7 +68,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.scroller != null )
 			{
 				double h = AbstractTextField.Infinity-end.Y;  // hauteur de tout le texte
-				if ( h <= this.realSize.Height )
+				if ( h <= this.realSize.Height || this.realSize.Height < 0 )
 				{
 					this.scroller.SetEnabled(false);
 					this.scroller.Range = 1;
@@ -80,7 +80,13 @@ namespace Epsitec.Common.Widgets
 					this.scroller.SetEnabled(true);
 					this.scroller.Range = h-this.realSize.Height;
 					this.scroller.VisibleRangeRatio = this.realSize.Height/h;
-					this.scroller.Value = this.scroller.Range - (AbstractTextField.Infinity-offset);
+					
+					double value = this.scroller.Range - (AbstractTextField.Infinity-offset);
+					
+					value = System.Math.Min (value, this.scroller.Range);
+					value = System.Math.Max (value, 0.0);
+					
+					this.scroller.Value = value;
 					this.scroller.SmallChange = 20;
 					this.scroller.LargeChange = this.realSize.Height/2;
 				}
