@@ -11,19 +11,27 @@ namespace Epsitec.Common.Script
 			Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
 		}
 		
+		
 		[Test] public void CheckSourceGeneration()
 		{
 			Common.UI.Data.Record record  = new Epsitec.Common.UI.Data.Record ();
-			Types.IDataValue[]    values  = this.CreateValues (out record);
+			Types.IDataValue[]    values  = SourceTest.CreateValues (out record);
 			
-			Source source = this.CreateSource (values);
+			Source source = SourceTest.CreateSource (values);
+			
+			Assert.AreEqual ("Hello", source.Name);
+			Assert.AreEqual (2, source.Methods.Length);
+			Assert.AreEqual ("Main", source.Methods[0].Name);
+			Assert.AreEqual ("Mysterious", source.Methods[1].Name);
+			Assert.AreEqual ("Main:Void()", source.Methods[0].Signature);
+			Assert.AreEqual ("Mysterious:Void(Integer,String,Integer)", source.Methods[1].Signature);
 			
 			string script_source = source.GenerateAssemblySource ();
 			
 			System.Console.Out.WriteLine (script_source);
 			
 			Engine engine = new Engine ();
-			Script script = engine.Compile (script_source);
+			Script script = engine.Compile (source.Name, script_source);
 			
 			if (script.HasErrors)
 			{
@@ -60,130 +68,28 @@ namespace Epsitec.Common.Script
 			script.Dispose ();
 		}
 		
-		[Test] public void CheckParameterInfoStore()
+		[Test] public void CheckScriptWrapper()
 		{
-			Widgets.Window window = new Widgets.Window ();
-			Helpers.ParameterInfoStore store = new Helpers.ParameterInfoStore ();
-			Support.CommandDispatcher dispatcher = new Support.CommandDispatcher ("Table", true);
+			Common.UI.Data.Record record = new Epsitec.Common.UI.Data.Record ();
+			Types.IDataValue[]    values = SourceTest.CreateValues (out record);
+			Source                source = SourceTest.CreateSource (values);
 			
-			store.SetContents (this.CreateSource (null).Methods[1].Parameters);
+			ScriptWrapper wrapper = new ScriptWrapper ();
 			
-			window.Text             = "CheckParameterInfoStore";
-			window.Root.DockPadding = new Drawing.Margins (4, 4, 8, 8);
+			wrapper.Source = source;
+			wrapper.CreateXmlDocument (false).Save (System.Console.Out);
 			
-			Widgets.EditArray            edit  = new Widgets.EditArray (window.Root);
-			Widgets.EditArray.Header     title = new Widgets.EditArray.Header (edit);
-			Widgets.EditArray.Controller ctrl  = new Widgets.EditArray.Controller (edit, "Table");
+			string xml = wrapper.CreateXmlDocument (false).DocumentElement.OuterXml;
 			
-			edit.AutoResolveResRef = false;
-			edit.CommandDispatcher = dispatcher;
-			edit.Dock              = Widgets.DockStyle.Fill;
-			edit.ColumnCount       = 3;
-			edit.RowCount          = 0;
+			wrapper.LoadFromXml (xml);
 			
-			Widgets.TextFieldCombo column_0_edit_model = new Widgets.TextFieldCombo ();
-			Widgets.TextFieldCombo column_1_edit_model = new Widgets.TextFieldCombo ();
-			Widgets.TextFieldEx    column_2_edit_model = new Widgets.TextFieldEx ();
+			string s1 = source.GenerateAssemblySource ();
+			string s2 = wrapper.Source.GenerateAssemblySource ();
 			
-			column_0_edit_model.IsReadOnly = true;
-			column_0_edit_model.Items.AddRange (new string[] { "In", "Out", "InOut" });
-			column_1_edit_model.IsReadOnly = true;
-			column_1_edit_model.Items.AddRange (new string[] { "Integer", "Decimal", "String" });
-			
-			column_2_edit_model.ButtonShowCondition = Widgets.ShowCondition.WhenModified;
-			column_2_edit_model.DefocusAction       = Widgets.DefocusAction.Modal;
-			
-			new Widgets.Validators.RegexValidator (column_2_edit_model, Support.RegexFactory.AlphaNumName, false);
-			new Widgets.EditArray.UniqueValueValidator (column_2_edit_model, 2);
-			
-			edit.Columns[0].HeaderText = "Dir.";
-			edit.Columns[0].Width      = 60;
-			edit.Columns[0].EditionWidgetModel = column_0_edit_model;
-			edit.Columns[1].HeaderText = "Type";
-			edit.Columns[1].EditionWidgetModel = column_1_edit_model;
-			edit.Columns[1].Width      = 80;
-			edit.Columns[1].Elasticity = 0.5;
-			edit.Columns[2].HeaderText = "Name";
-			edit.Columns[2].EditionWidgetModel = column_2_edit_model;
-			edit.Columns[2].Elasticity = 1.0;
-			
-			ctrl.CreateCommands ();
-			ctrl.CreateToolBarButtons ();
-			ctrl.StartReadOnly ();
-			
-			edit.TextArrayStore = store;
-			
-			window.Show ();
-			
+			Assert.AreEqual (s1, s2);
 		}
 		
-		[Test] public void CheckDeveloper1()
-		{
-			Widgets.Window window = new Widgets.Window ();
-			
-			Developer.Panels.MethodProtoPanel   panel_1 = new Developer.Panels.MethodProtoPanel ();
-			Developer.Panels.ParameterInfoPanel panel_2 = new Developer.Panels.ParameterInfoPanel ();
-			
-			window.Text             = "CheckDeveloper1";
-			window.Root.DockPadding = new Drawing.Margins (4, 4, 8, 8);
-			window.ClientSize       = new Drawing.Size (8+200, 16+120);
-			
-			Source        source = this.CreateSource (null);
-			Source.Method method = source.Methods[1];
-			
-			panel_1.MethodName    = method.Name;
-			panel_1.MethodType    = method.ReturnType;
-			panel_1.Widget.Parent = window.Root;
-			panel_1.Widget.Dock   = Widgets.DockStyle.Top;
-			
-			panel_2.Parameters    = method.Parameters;
-			panel_2.Widget.Parent = window.Root;
-			panel_2.Widget.Dock   = Widgets.DockStyle.Fill;
-			
-			window.Show ();
-		}
-		
-		[Test] public void CheckDeveloper2()
-		{
-			Widgets.Window window = new Widgets.Window ();
-			
-			Developer.Panels.MethodEditionPanel panel = new Developer.Panels.MethodEditionPanel ();
-			
-			window.Text             = "CheckDeveloper2";
-			window.Root.DockPadding = new Drawing.Margins (4, 4, 8, 8);
-			window.ClientSize       = new Drawing.Size (8+panel.Size.Width, 16+panel.Size.Height);
-			
-			Source        source = this.CreateSource (null);
-			Source.Method method = source.Methods[1];
-			
-			panel.Widget.Parent = window.Root;
-			panel.Widget.Dock   = Widgets.DockStyle.Fill;
-			panel.Method        = method;
-			
-			window.Show ();
-		}
-		
-		[Test] public void CheckDeveloper3()
-		{
-			Widgets.Window window = new Widgets.Window ();
-			
-			Common.UI.Data.Record record  = new Epsitec.Common.UI.Data.Record ();
-			Types.IDataValue[]    values  = this.CreateValues (out record);
-			
-			Developer.EditionController controller = new Developer.EditionController ();
-			
-			window.Text       = "CheckDeveloper3";
-			window.ClientSize = new Drawing.Size (600, 400);
-			
-			Source source = this.CreateSource (values);
-			
-			controller.Source = source;
-			controller.CreateWidgets (window.Root);
-			
-			window.Show ();
-		}
-		
-		private Source CreateSource(Types.IDataValue[] values)
+		public static Source CreateSource(Types.IDataValue[] values)
 		{
 			Source.Method[]      methods = new Source.Method[2];
 			Source.CodeSection[] code_1  = new Source.CodeSection[1];
@@ -206,7 +112,7 @@ namespace Epsitec.Common.Script
 			return new Source ("Hello", methods, values, "");
 		}
 		
-		private Types.IDataValue[] CreateValues(out Common.UI.Data.Record record)
+		public static Types.IDataValue[] CreateValues(out Common.UI.Data.Record record)
 		{
 			record  = new Epsitec.Common.UI.Data.Record ();
 			
