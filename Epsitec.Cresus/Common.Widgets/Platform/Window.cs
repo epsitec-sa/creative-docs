@@ -47,6 +47,8 @@ namespace Epsitec.Common.Widgets.Platform
 			Drawing.Point o1;
 			Drawing.Point o2;
 			
+			double start_alpha = this.alpha;
+			
 			this.WindowBounds = bounds;
 			this.MarkForRepaint ();
 			this.RefreshGraphics ();
@@ -94,7 +96,7 @@ namespace Epsitec.Common.Widgets.Platform
 					
 					animator = new Animator (SystemInformation.MenuAnimationFadeInTime);
 					animator.SetCallback (new DoubleCallback (this.AnimateAlpha), new AnimatorCallback (this.AnimateCleanup));
-					animator.SetValue (0.0, 1.0);
+					animator.SetValue (0.0, start_alpha);
 					animator.Start ();
 					this.Show ();
 					return;
@@ -102,11 +104,11 @@ namespace Epsitec.Common.Widgets.Platform
 				case Animation.FadeOut:
 					this.is_frozen = true;
 					this.IsLayered = true;
-					this.Alpha = 1.0;
+//					this.Alpha = 1.0;
 					
 					animator = new Animator (SystemInformation.MenuAnimationFadeOutTime);
 					animator.SetCallback (new DoubleCallback (this.AnimateAlpha), new AnimatorCallback (this.AnimateCleanup));
-					animator.SetValue (1.0, 0.0);
+					animator.SetValue (start_alpha, 0.0);
 					animator.Start ();
 					return;
 				

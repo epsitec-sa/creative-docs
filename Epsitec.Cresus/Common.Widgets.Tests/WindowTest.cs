@@ -212,7 +212,7 @@ namespace Epsitec.Common.Widgets
 
 		private void button_Clicked(object sender, MessageEventArgs e)
 		{
-			Button button = sender as Button;
+			Widget button = sender as Widget;
 			button.Location = new Point (button.Location.X, button.Location.Y + 5);
 		}
 

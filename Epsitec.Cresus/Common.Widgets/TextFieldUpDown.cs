@@ -53,15 +53,15 @@ namespace Epsitec.Common.Widgets
 			base.UpdateClientGeometry();
 			
 			Drawing.Rectangle rect = this.Bounds;
-			this.rightMargin = System.Math.Floor(rect.Height*0.6);
+			this.margins.Right = System.Math.Floor(rect.Height*0.6);
 
 			if ( this.arrowUp   != null &&
 				 this.arrowDown != null )
 			{
 				Drawing.Rectangle aRect = new Drawing.Rectangle();
 
-				aRect.Left   = rect.Width-this.rightMargin;
-				aRect.Width  = this.rightMargin;
+				aRect.Left   = rect.Width-this.margins.Right;
+				aRect.Width  = this.margins.Right;
 
 				aRect.Bottom = 0;
 				aRect.Height = System.Math.Floor(rect.Height/2)+1;

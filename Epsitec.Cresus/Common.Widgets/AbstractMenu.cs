@@ -471,14 +471,7 @@ namespace Epsitec.Common.Widgets
 			AbstractMenu.menuFiltering = this;
 
 			this.window.Root.Children.Add(this);
-			if ( this.window.Alpha == 1.0 )
-			{
-				this.window.AnimateShow(Animation.FadeIn);
-			}
-			else
-			{
-				this.window.Show();
-			}
+			this.window.AnimateShow(Animation.FadeIn);
 			this.SetFocused(true);
 			
 			//	TODO: vérifier que lorsque le menu est refermé, les deux event handlers sont
@@ -551,14 +544,7 @@ namespace Epsitec.Common.Widgets
 			Animation anim = Animation.None;
 			if ( this.IsVertical || !closed )  anim = Animation.FadeIn;
 			if ( forceQuick )  anim = Animation.None;
-			if ( this.window.Alpha == 1.0 )
-			{
-				this.window.AnimateShow(anim);
-			}
-			else
-			{
-				this.window.Show();
-			}
+			this.window.AnimateShow(anim);
 			this.submenu.SetFocused(true);
 			
 			// Prend note du dernier menu "feuille" actif.

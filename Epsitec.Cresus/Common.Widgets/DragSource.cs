@@ -4,11 +4,19 @@ namespace Epsitec.Common.Widgets
 	/// La classe DragSource abrite un widget qui, lorsqu'il est "dragged" vient
 	/// automatiquement clôné dans un DragWindow.
 	/// </summary>
-	public class DragSource : Widget
+	public class DragSource : Widget, Helpers.IDragBehaviorHost
 	{
 		public DragSource()
 		{
+			this.drag_behavior  = new Helpers.DragBehavior (this);
+			this.widget_margins = new Drawing.Margins (3, 3, 3, 3);
 		}
+		
+		public DragSource(Widget embedder) : this()
+		{
+			this.SetEmbedder (embedder);
+		}
+		
 		
 		public Widget						Widget
 		{
@@ -24,6 +32,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Drawing.Point				DragLocation
+		{
+			get
+			{
+				return this.drag_window.WindowLocation;
+			}
+		}
+		
 		
 		public DragWindow CreateDragWindow(Widget widget)
 		{
@@ -32,7 +48,7 @@ namespace Epsitec.Common.Widgets
 			Widget     copy   = bundler.CopyObject (widget) as Widget;
 			DragWindow window = new DragWindow ();
 			
-			window.DefineWidget (copy, new Drawing.Margins (3, 3, 3, 3));
+			window.DefineWidget (copy, this.widget_margins);
 			
 			return window;
 		}
@@ -60,40 +76,49 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
 		{
-			if ((message.Type == MessageType.MouseDown) &&
-				(message.Button == MouseButtons.Left))
+			if (this.drag_behavior.ProcessMessage (message, pos))
 			{
-				this.drag_pos = pos;
-				this.drag_window = this.CreateDragWindow (this.widget);
-				this.drag_window.WindowLocation = this.MapClientToScreen (this.widget.Location);
-				this.drag_window.Show ();
-				
-				message.Captured = true;
-				message.Consumer = this;
-			}
-			else if (this.drag_window != null)
-			{
-				if (message.Type == MessageType.MouseMove)
-				{
-					message.Consumer = this;
-					Drawing.Point delta = pos - this.drag_pos;
-					this.drag_window.WindowLocation += delta;
-					this.drag_pos = pos;
-				}
-				else if (message.Type == MessageType.MouseUp)
-				{
-					message.Consumer = this;
-					this.drag_window.Hide ();
-					this.drag_window.Dispose ();
-					this.drag_window = null;
-				}
+				base.ProcessMessage (message, pos);
 			}
 		}
 		
 		
+		void Helpers.IDragBehaviorHost.OnDragBegin()
+		{
+			Drawing.Point pos = this.MapClientToScreen (this.widget.Location);
+			
+			pos.X -= this.widget_margins.Left;
+			pos.Y -= this.widget_margins.Bottom;
+			
+			this.drag_window = this.CreateDragWindow (this.widget);
+			this.drag_window.WindowLocation = pos;
+			this.drag_window.Show ();
+		}
+		
+		void Helpers.IDragBehaviorHost.OnDragging(DragEventArgs e)
+		{
+			this.drag_window.WindowLocation += e.Offset;
+			
+			if (this.Dragging != null)
+			{
+				this.Dragging (this, e);
+			}
+		}
+		
+		void Helpers.IDragBehaviorHost.OnDragEnd()
+		{
+			this.drag_window.Hide ();
+			this.drag_window.Dispose ();
+			this.drag_window = null;
+		}
+		
+		
+		public event DragEventHandler		Dragging;
+		
 		
 		protected Widget					widget;
+		protected Drawing.Margins			widget_margins;
 		protected DragWindow				drag_window;
-		protected Drawing.Point				drag_pos;
+		protected Helpers.DragBehavior		drag_behavior;
 	}
 }

@@ -612,6 +612,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Helpers\DragBehavior.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Helpers\IDragBehaviorHost.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Helpers\IStringCollectionHost.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -327,20 +327,10 @@ namespace Epsitec.Common.Widgets
 		// avec cette couleur, en ignorant les <font color=...>.
 		public void Paint(Drawing.Point pos, Drawing.Graphics graphics)
 		{
-			this.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.Empty, Drawing.GlyphPaintStyle.Normal, true);
+			this.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.Empty, Drawing.GlyphPaintStyle.Normal);
 		}
 
-		public void Paint(Drawing.Point pos, Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Color uniqueColor)
-		{
-			//PA: Cette méthode pourra être supprimée une fois que tous les adorners auront été
-			// adaptés...
-			
-			Drawing.GlyphPaintStyle paintStyle = (uniqueColor.IsEmpty ? Drawing.GlyphPaintStyle.Normal : Drawing.GlyphPaintStyle.Disabled);
-			
-			this.Paint (pos, graphics, clipRect, uniqueColor, paintStyle, true);
-		}
-			
-		public void Paint(Drawing.Point pos, Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Color uniqueColor, Drawing.GlyphPaintStyle paintStyle, bool paintImages)
+		public void Paint(Drawing.Point pos, Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Color uniqueColor, Drawing.GlyphPaintStyle paintStyle)
 		{
 			this.UpdateLayout();
 
@@ -351,8 +341,6 @@ namespace Epsitec.Common.Widgets
 
 				if ( block.image )
 				{
-					if ( !paintImages )  continue;
-					
 					Drawing.Image image = this.imageProvider.GetImage(block.text);
 					
 					if ( image == null )
@@ -403,9 +391,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						//PA: Utiliser AdaptGlyphColor.
 						color = block.fontColor;
-						adorner.AdaptEnabledTextColor(ref color);
 					}
 				}
 				else
@@ -1493,7 +1479,7 @@ namespace Epsitec.Common.Widgets
 								string imageName = parameters["src"] as string;
 								Drawing.Image image = this.imageProvider.GetImage(imageName);
 								
-								if (image == null)
+								if ( image == null )
 								{
 									throw new System.FormatException(string.Format("<img> tag references unknown image '{0}'.", imageName));
 								}
