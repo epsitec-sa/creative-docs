@@ -151,7 +151,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
-			//			this.SuspendLayout ();
+//			this.SuspendLayout ();
 			
 			//	L'ObjectBundler sait initialiser la plupart des propriétés simples (celles
 			//	qui sont marquées par l'attribut [Bundle]), mais il ne sait pas comment
@@ -173,7 +173,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			//			this.ResumeLayout ();
+//			this.ResumeLayout ();
 		}
 		#endregion
 		
