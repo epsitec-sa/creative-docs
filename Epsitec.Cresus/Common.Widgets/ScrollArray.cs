@@ -90,6 +90,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.maxColumns != value )
 				{
 					this.maxColumns = value;
+					this.isGrimy = true;
 
 					this.widthColumns = new double[this.maxColumns];
 					this.widthTotal = 0;
@@ -653,7 +654,7 @@ namespace Epsitec.Common.Widgets
 			aRect.Bottom = this.rectInside.Top;
 			aRect.Top    = this.rectInside.Top+this.rowHeight;
 			this.header.Bounds = aRect;
-			this.header.Children.Clear();
+			if ( this.isGrimy )  this.header.Children.Clear();
 
 			// Place les boutons dans l'en-tête.
 			aRect.Bottom = 0;
@@ -665,7 +666,7 @@ namespace Epsitec.Common.Widgets
 				HeaderButton button = this.FindButton(i);
 				button.Show();
 				button.Bounds = aRect;
-				this.header.Children.Add(button);
+				if ( this.isGrimy )  this.header.Children.Add(button);
 				aRect.Left = aRect.Right;
 			}
 
@@ -684,7 +685,7 @@ namespace Epsitec.Common.Widgets
 				sRect.Top    = aRect.Top;
 				slider.Show();
 				slider.Bounds = sRect;
-				this.header.Children.Add(slider);
+				if ( this.isGrimy )  this.header.Children.Add(slider);
 				aRect.Left = aRect.Right;
 			}
 
@@ -702,6 +703,7 @@ namespace Epsitec.Common.Widgets
 			aRect.Top    = this.rectInside.Bottom;
 			this.scrollerH.Bounds = aRect;
 
+			this.isGrimy = false;
 			this.UpdateScroller();
 		}
 
@@ -924,6 +926,7 @@ namespace Epsitec.Common.Widgets
 		public delegate string FillText(int row, int column);
 
 		protected bool							isDirty;
+		protected bool							isGrimy;
 		protected bool							mouseDown = false;
 		protected int							maxRows = 0;
 		protected int							maxColumns = 0;
