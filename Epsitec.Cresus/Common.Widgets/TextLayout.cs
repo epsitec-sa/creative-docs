@@ -420,7 +420,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public bool IsSelectionBold(TextLayout.Context context)
+		internal bool IsSelectionBold(TextLayout.Context context)
 		{
 			// Indique si les caractères sélectionnés sont gras.
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
@@ -437,14 +437,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public void SetSelectionBold(TextLayout.Context context, bool bold)
+		internal void SetSelectionBold(TextLayout.Context context, bool bold)
 		{
 			// Met en gras ou en normal tous les caractères sélectionnés.
 			string state = bold ? "yes" : "no";
 			this.InsertPutCommand(context, "bold=\"" + state + "\"");
 		}
 
-		public bool IsSelectionItalic(TextLayout.Context context)
+		internal bool IsSelectionItalic(TextLayout.Context context)
 		{
 			// Indique si les caractères sélectionnés sont italiques.
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
@@ -462,14 +462,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public void SetSelectionItalic(TextLayout.Context context, bool italic)
+		internal void SetSelectionItalic(TextLayout.Context context, bool italic)
 		{
 			// Met en italique ou en normal tous les caractères sélectionnés.
 			string state = italic ? "yes" : "no";
 			this.InsertPutCommand(context, "italic=\"" + state + "\"");
 		}
 
-		public bool IsSelectionUnderlined(TextLayout.Context context)
+		internal bool IsSelectionUnderlined(TextLayout.Context context)
 		{
 			// Indique si les caractères sélectionnés sont soulignés.
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
@@ -484,14 +484,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public void SetSelectionUnderlined(TextLayout.Context context, bool underlined)
+		internal void SetSelectionUnderlined(TextLayout.Context context, bool underlined)
 		{
 			// Met en souligné ou en normal tous les caractères sélectionnés.
 			string state = underlined ? "yes" : "no";
 			this.InsertPutCommand(context, "underlined=\"" + state + "\"");
 		}
 
-		public string GetSelectionFontName(TextLayout.Context context)
+		internal string GetSelectionFontName(TextLayout.Context context)
 		{
 			// Indique le nom de la fonte des caractères sélectionnés.
 			// Une chaîne vide indique la fonte par défaut.
@@ -513,7 +513,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public void SetSelectionFontName(TextLayout.Context context, string name)
+		internal void SetSelectionFontName(TextLayout.Context context, string name)
 		{
 			// Modifie le nom de la fonte des caractères sélectionnés.
 			// Une chaîne vide indique la fonte par défaut.
@@ -521,7 +521,7 @@ namespace Epsitec.Common.Widgets
 			this.InsertPutCommand(context, "face=\"" + name + "\"");
 		}
 
-		public double GetSelectionFontScale(TextLayout.Context context)
+		internal double GetSelectionFontScale(TextLayout.Context context)
 		{
 			// Indique l'échelle des caractères sélectionnés.
 			// 1 indique l'échelle par défaut.
@@ -539,7 +539,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public void SetSelectionFontScale(TextLayout.Context context, double scale)
+		internal void SetSelectionFontScale(TextLayout.Context context, double scale)
 		{
 			// Modifie l'échelle des caractères sélectionnés.
 			// 1 indique l'échelle par défaut.
@@ -548,7 +548,7 @@ namespace Epsitec.Common.Widgets
 			this.InsertPutCommand(context, "size=\"" + scale*100.0 + "%\"");
 		}
 
-		public Drawing.Color GetSelectionFontColor(TextLayout.Context context)
+		internal Drawing.Color GetSelectionFontColor(TextLayout.Context context)
 		{
 			// Indique la couleur des caractères sélectionnés.
 			// Une couleur vide indique la couleur par défaut.
@@ -565,7 +565,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void SetSelectionFontColor(TextLayout.Context context, Drawing.Color color)
+		internal void SetSelectionFontColor(TextLayout.Context context, Drawing.Color color)
 		{
 			// Modifie la couleur des caractères sélectionnés.
 			// Une couleur vide indique la couleur par défaut.
@@ -3573,7 +3573,25 @@ noText:
 			this.UpdateLayout();
 
 			int len = this.MaxTextIndex;
+			if ( len == 0 )  len ++;
 			OneCharStructure[] array = new OneCharStructure[len];
+
+			if ( this.blocks.Count == 1 )
+			{
+				JustifBlock block = this.blocks[0] as JustifBlock;
+				if ( block.text.Length == 0 )  // texte vide ?
+				{
+					array[0] = new OneCharStructure();
+					array[0].character  = TextLayout.CodeEndOfText;
+					array[0].font       = block.font;
+					array[0].fontSize   = block.FontSize;
+					array[0].fontColor  = block.FontColor;
+					array[0].bold       = block.bold;
+					array[0].italic     = block.italic;
+					array[0].underlined = block.underlined;
+					return array;
+				}
+			}
 
 			int index = 0;
 			foreach ( JustifBlock block in this.blocks )
@@ -4003,5 +4021,6 @@ noText:
 		public const char						CodeSpace		= '\u0020';
 		public const char						CodeObject		= '\ufffc';
 		public const char						CodeLineBreak	= '\u2028';
+		public const char						CodeEndOfText	= '\u0003';
 	}
 }

@@ -1464,7 +1464,7 @@ namespace Epsitec.Common.Pictogram.Data
 			TextLayout textLayout = this.Cell(c,r).TextLayout;
 			TextNavigator textNavigator = this.Cell(c,r).TextNavigator;
 
-			ruler.AttachToText(textLayout, textNavigator);
+			ruler.AttachToText(textNavigator);
 		}
 
 		

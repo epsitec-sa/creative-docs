@@ -207,7 +207,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Lie l'objet éditable à une règle.
 		public override void EditRulerLink(TextRuler ruler)
 		{
-			ruler.AttachToText(this.textLayout, this.textNavigator);
+			ruler.AttachToText(this.textNavigator);
 		}
 
 

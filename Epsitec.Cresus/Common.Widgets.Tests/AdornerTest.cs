@@ -7,6 +7,13 @@ namespace Epsitec.Common.Widgets
 	[TestFixture]
 	public class AdornerTest
 	{
+		[SetUp] public void Initialise()
+		{
+			Epsitec.Common.UI.Engine.Initialise ();
+			Epsitec.Common.Pictogram.Engine.Initialise ();
+			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
+		}
+		
 		[Test] public void CheckAdornerWidgets()
 		{
 			this.CreateAdornerWidgets();
@@ -975,7 +982,7 @@ namespace Epsitec.Common.Widgets
 			
 			ruler.Anchor = AnchorStyles.TopLeft|AnchorStyles.LeftAndRight;
 			ruler.AnchorMargins = new Margins(10, 10, 10, 0);
-			ruler.AttachToText(multi);
+			ruler.AttachToTextField(multi);
 			ruler.Parent = window.Root;
 			ruler.Changed += new EventHandler(this.HandleMultiSelectionOrCursorChanged2);
 			

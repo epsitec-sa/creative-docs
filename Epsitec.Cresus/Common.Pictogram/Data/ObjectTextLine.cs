@@ -25,6 +25,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			this.textLayout = new TextLayout();
 			this.textNavigator = new TextNavigator(this.textLayout);
+			this.textNavigator.StyleChanged += new EventHandler(this.HandleStyleChanged);
 			this.textLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
 			this.textLayout.LayoutSize = new Drawing.Size(1000000, 1000000);
 			this.textLayout.Alignment = Drawing.ContentAlignment.BottomLeft;
@@ -33,6 +34,12 @@ namespace Epsitec.Common.Pictogram.Data
 		protected override AbstractObject CreateNewObject()
 		{
 			return new ObjectTextLine();
+		}
+
+		public override void Dispose()
+		{
+			this.textNavigator.StyleChanged -= new EventHandler(this.HandleStyleChanged);
+			base.Dispose();
 		}
 
 
@@ -597,7 +604,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Lie l'objet éditable à une règle.
 		public override void EditRulerLink(TextRuler ruler)
 		{
-			ruler.AttachToText(this.textLayout, this.textNavigator);
+			ruler.AttachToText(this.textNavigator);
 		}
 
 
@@ -623,7 +630,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( !this.textNavigator.ProcessMessage(message, pos) )  return false;
 
-			this.dirtyBbox = true;
+			//?this.dirtyBbox = true;
 			return true;
 		}
 
@@ -789,10 +796,37 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+		// Retourne la largeur d'un caractère.
+		protected static double AdvanceString(Drawing.Font font, string text)
+		{
+			System.Diagnostics.Debug.Assert(text.Length == 1);
+			if ( text[0] == TextLayout.CodeEndOfText )
+			{
+				return 0.000001;
+			}
+			else
+			{
+				return font.GetTextAdvance(text);
+			}
+		}
+
+		// Retourne la bbox d'un caractère.
+		protected static Drawing.Rectangle AdvanceBounds(Drawing.Font font, string text)
+		{
+			System.Diagnostics.Debug.Assert(text.Length == 1);
+			if ( text[0] == TextLayout.CodeEndOfText )
+			{
+				return new Drawing.Rectangle(0, font.Descender, 0.000001, font.Ascender-font.Descender);
+			}
+			else
+			{
+				return font.GetGlyphBounds(font.GetGlyphIndex(text[0]));
+			}
+		}
+
+		// Initialise l'avance le long des caractères du texte.
 		protected bool AdvanceInit()
 		{
-			if ( this.textLayout.Text == "" )  return false;
-
 			PropertyTextLine justif = this.PropertyTextLine(1);
 
 			this.textLayout.DefaultFont     = this.PropertyFont(2).GetFont();
@@ -805,7 +839,7 @@ namespace Epsitec.Common.Pictogram.Data
 			for ( int i=0 ; i<this.advanceCharArray.Length ; i++ )
 			{
 				string s = new string(this.advanceCharArray[i].character, 1);
-				width += this.advanceCharArray[i].font.GetTextAdvance(s)*this.advanceCharArray[i].fontSize;
+				width += ObjectTextLine.AdvanceString(this.advanceCharArray[i].font, s)*this.advanceCharArray[i].fontSize;
 				width += justif.Add*this.advanceCharArray[i].fontSize;
 
 				this.advanceMaxAscender = System.Math.Max(this.advanceMaxAscender, this.advanceCharArray[i].font.Ascender*this.advanceCharArray[i].fontSize);
@@ -845,6 +879,7 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
+		// Avance sur le prochain caractère du texte.
 		protected bool AdvanceNext(out string character,
 								   out Drawing.Font font,
 								   out double fontSize,
@@ -877,7 +912,7 @@ namespace Epsitec.Common.Pictogram.Data
 			fontSize = this.advanceCharArray[i].fontSize * this.advanceFactor;
 			fontColor = this.advanceCharArray[i].fontColor;
 
-			this.advanceWidth = font.GetTextAdvance(character)*fontSize;
+			this.advanceWidth = ObjectTextLine.AdvanceString(font, character)*fontSize;
 			this.advanceWidth += justif.Add*fontSize;
 			if ( !this.Advance(this.advanceWidth, this.advanceCheckEnd, ref this.advanceIndex, ref this.advanceBzt, ref this.advanceP2) )
 			{
@@ -893,7 +928,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			angle = Drawing.Point.ComputeAngleDeg(this.advanceP1, this.advanceP2);
 
-			Drawing.Rectangle gb = font.GetGlyphBounds(font.GetGlyphIndex(character[0]));
+			Drawing.Rectangle gb = ObjectTextLine.AdvanceBounds(font, character);
 			gb.Top    = font.Ascender;
 			gb.Bottom = font.Descender;
 			gb.Scale(fontSize);
@@ -1075,20 +1110,23 @@ namespace Epsitec.Common.Pictogram.Data
 					graphics.RenderSolid(IconContext.ColorSelectEdit);
 				}
 
-				Drawing.Transform ot = port.Transform;
-				port.RotateTransformDeg(angle, pos.X, pos.Y);
-				if ( port is Drawing.Graphics )
+				if ( character[0] != TextLayout.CodeEndOfText )
 				{
-					Drawing.Graphics graphics = port as Drawing.Graphics;
-					graphics.AddText(pos.X, pos.Y, character, font, fontSize);
-					graphics.RenderSolid(iconContext.AdaptColor(fontColor));
+					Drawing.Transform ot = port.Transform;
+					port.RotateTransformDeg(angle, pos.X, pos.Y);
+					if ( port is Drawing.Graphics )
+					{
+						Drawing.Graphics graphics = port as Drawing.Graphics;
+						graphics.AddText(pos.X, pos.Y, character, font, fontSize);
+						graphics.RenderSolid(iconContext.AdaptColor(fontColor));
+					}
+					else
+					{
+						port.Color = iconContext.AdaptColor(fontColor);
+						port.PaintText(pos.X, pos.Y, character, font, fontSize);
+					}
+					port.Transform = ot;
 				}
-				else
-				{
-					port.Color = iconContext.AdaptColor(fontColor);
-					port.PaintText(pos.X, pos.Y, character, font, fontSize);
-				}
-				port.Transform = ot;
 
 				if ( port is Drawing.Graphics &&
 					 iconContext.IsFocused &&
@@ -1184,6 +1222,12 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
+		private void HandleStyleChanged(object sender)
+		{
+			this.dirtyBbox = true;
+		}
+
+
 		protected TextLayout				textLayout;
 		protected TextNavigator				textNavigator;
 

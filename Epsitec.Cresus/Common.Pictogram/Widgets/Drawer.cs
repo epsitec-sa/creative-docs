@@ -99,10 +99,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 				if ( this.iconContext.Zoom != value )
 				{
 					this.iconContext.Zoom = value;
-					this.Invalidate();
 					this.OnScrollerChanged();
 					this.OnInfoZoomChanged();
 					this.OnCommandChanged();
+					this.InvalidateDraw();
 				}
 			}
 		}
@@ -120,9 +120,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 				if ( this.iconContext.OriginX != value )
 				{
 					this.iconContext.OriginX = value;
-					this.Invalidate();
 					this.OnScrollerChanged();
 					this.OnCommandChanged();
+					this.InvalidateDraw();
 				}
 			}
 		}
@@ -140,9 +140,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 				if ( this.iconContext.OriginY != value )
 				{
 					this.iconContext.OriginY = value;
-					this.Invalidate();
 					this.OnScrollerChanged();
 					this.OnCommandChanged();
+					this.InvalidateDraw();
 				}
 			}
 		}
@@ -890,7 +890,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		void CommandGrid(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.iconContext.GridActive = !this.iconContext.GridActive;
-			this.Invalidate();
+			this.InvalidateDraw();
 			this.OnCommandChanged();
 		}
 
@@ -898,7 +898,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		void CommandPreview(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.iconContext.PreviewActive = !this.iconContext.PreviewActive;
-			this.Invalidate();
+			this.InvalidateDraw();
 			this.OnCommandChanged();
 		}
 
@@ -1293,7 +1293,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					if ( message.KeyCode == KeyCode.ControlKey )
 					{
 						this.iconContext.IsCtrl = true;
-						this.Invalidate();
+						this.InvalidateDraw();
 					}
 					if ( this.createRank != -1 )
 					{
@@ -1314,7 +1314,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					if ( message.KeyCode == KeyCode.ControlKey )
 					{
 						this.iconContext.IsCtrl = false;
-						this.Invalidate();
+						this.InvalidateDraw();
 					}
 					break;
 			}
@@ -1836,7 +1836,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( this.mouseDown )
 			{
 				this.selectRectP2 = mouse;
-				this.Invalidate();
+				this.InvalidateDraw();
 			}
 		}
 		
@@ -2077,6 +2077,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Sort du groupe en cours.
 		protected void OutsideSelection()
 		{
+			this.iconObjects.DeselectAll();
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.rankLastCreated = -1;
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 			this.iconObjects.GroupUpdateParents(ref bbox);
@@ -2361,6 +2363,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			if ( bbox.IsEmpty )  return;
 
+			this.UpdateRulerGeometry();
+
 			bbox.Inflate(this.iconContext.SelectMarginSize);
 			bbox.BottomLeft = this.IconToScreen(bbox.BottomLeft);
 			bbox.TopRight   = this.IconToScreen(bbox.TopRight);
@@ -2380,11 +2384,58 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Invalide la zone ainsi que celles des clones.
 		public void InvalidateAll()
 		{
+			this.UpdateRulerGeometry();
 			this.Invalidate();
 
 			foreach ( Widget widget in this.clones )
 			{
 				widget.Invalidate();
+			}
+		}
+
+		// Invalide la zone de dessin. Il faut appeler cette méthode à la
+		// place de this.Invalidate() pour positionner correctement la règle.
+		public void InvalidateDraw()
+		{
+			this.UpdateRulerGeometry();
+			this.Invalidate();
+		}
+
+
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry();
+			this.UpdateRulerGeometry();
+		}
+
+		// Positionne la règle en fonction de l'éventuel objet en cours d'édition.
+		protected void UpdateRulerGeometry()
+		{
+			if ( this.textRuler == null )  return;
+
+			if ( this.editObject == null )
+			{
+				this.textRuler.SetVisible(false);
+				this.textRuler.DetachFromText();
+			}
+			else
+			{
+				this.textRuler.SetVisible(true);
+
+				this.iconContext.ScaleX = this.iconContext.Zoom*this.Client.Width/this.iconObjects.Size.Width;
+				this.iconContext.ScaleY = this.iconContext.Zoom*this.Client.Height/this.iconObjects.Size.Height;
+
+				Drawing.Rectangle editRect = this.editObject.BoundingBoxThin;
+				Drawing.Rectangle rulerRect = new Drawing.Rectangle();
+				Drawing.Point p1 = this.IconToScreen(editRect.TopLeft);
+				Drawing.Point p2 = this.IconToScreen(editRect.TopRight);
+				rulerRect.BottomLeft = p1;
+				rulerRect.Width = System.Math.Max(p2.X-p1.X, this.textRuler.MinimalWidth);
+				rulerRect.Height = this.textRuler.DefaultHeight;
+				rulerRect.RoundFloor();
+				this.textRuler.Bounds = rulerRect;
+
+				this.editObject.EditRulerLink(this.textRuler);
 			}
 		}
 
@@ -2564,28 +2615,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 				rect.Deflate(0.5);
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(adorner.ColorBorder);
-			}
-
-			if ( this.editObject == null )
-			{
-				this.textRuler.SetVisible(false);
-				this.textRuler.DetachFromText();
-			}
-			else
-			{
-				this.textRuler.SetVisible(true);
-
-				Drawing.Rectangle editRect = this.editObject.BoundingBoxThin;
-				Drawing.Rectangle rulerRect = new Drawing.Rectangle();
-				Drawing.Point p1 = this.IconToScreen(editRect.TopLeft);
-				Drawing.Point p2 = this.IconToScreen(editRect.TopRight);
-				rulerRect.BottomLeft = p1;
-				rulerRect.Width = System.Math.Max(p2.X-p1.X, this.textRuler.MinimalWidth);
-				rulerRect.Height = this.textRuler.DefaultHeight;
-				graphics.Align(ref rulerRect);
-				this.textRuler.Bounds = rulerRect;
-
-				this.editObject.EditRulerLink(this.textRuler);
 			}
 		}
 
