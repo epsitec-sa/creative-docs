@@ -14,6 +14,24 @@ namespace Epsitec.Common.OpenType
 			this.offset = offset;
 		}
 		
+		
+		public byte[]							BaseData
+		{
+			get
+			{
+				return this.data;
+			}
+		}
+		
+		public int								BaseOffset
+		{
+			get
+			{
+				return this.offset;
+			}
+		}
+		
+		
 		protected uint ReadInt8(int offset)
 		{
 			return (uint) this.data[this.offset + offset];
@@ -28,6 +46,7 @@ namespace Epsitec.Common.OpenType
 		{
 			return Support.ReadInt32 (this.data, this.offset + offset);
 		}
+		
 		
 		protected byte[]						data;
 		protected int							offset;
@@ -582,45 +601,45 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetSubtablePlatformId(int n)
+		public uint GetSubTablePlatformId(int n)
 		{
 			return this.ReadInt16 (4+n*8+0);
 		}
 		
-		public uint GetSubtableEncodingId(int n)
+		public uint GetSubTableEncodingId(int n)
 		{
 			return this.ReadInt16 (4+n*8+2);
 		}
 		
-		public uint GetSubtableOffset(int n)
+		public uint GetSubTableOffset(int n)
 		{
 			return this.ReadInt32 (4+n*8+4);
 		}
 		
-		public IndexMappingTable GetGenericSubtable(int n)
+		public IndexMappingTable GetGenericSubTable(int n)
 		{
-			return new IndexMappingTable (this.data, this.offset + (int) this.GetSubtableOffset (n));
+			return new IndexMappingTable (this.data, this.offset + (int) this.GetSubTableOffset (n));
 		}
 		
 		
-		public IndexMappingTable FindFormatSubtable(uint platform, uint encoding, uint format)
+		public IndexMappingTable FindFormatSubTable(uint platform, uint encoding, uint format)
 		{
 			int n = (int) this.NumEncodingTables;
 			
 			for (int i = 0; i < n; i++)
 			{
-				if ((this.GetSubtablePlatformId (i) == platform) &&
-					(this.GetSubtableEncodingId (i) == encoding))
+				if ((this.GetSubTablePlatformId (i) == platform) &&
+					(this.GetSubTableEncodingId (i) == encoding))
 				{
-					IndexMappingTable fmt = this.GetGenericSubtable (i);
+					IndexMappingTable fmt = this.GetGenericSubTable (i);
 					
 					if (fmt.Format == format)
 					{
 						switch (fmt.Format)
 						{
-							case 0:  return new IndexMappingTable0 (this.data, this.offset + (int) this.GetSubtableOffset (i));
-							case 4:  return new IndexMappingTable4 (this.data, this.offset + (int) this.GetSubtableOffset (i));
-							case 12: return new IndexMappingTable12 (this.data, this.offset + (int) this.GetSubtableOffset (i));
+							case 0:  return new IndexMappingTable0 (this.data, this.offset + (int) this.GetSubTableOffset (i));
+							case 4:  return new IndexMappingTable4 (this.data, this.offset + (int) this.GetSubTableOffset (i));
+							case 12: return new IndexMappingTable12 (this.data, this.offset + (int) this.GetSubTableOffset (i));
 						}
 						
 						return null;
@@ -631,15 +650,15 @@ namespace Epsitec.Common.OpenType
 			return null;
 		}
 		
-		public IndexMappingTable FindFormatSubtable()
+		public IndexMappingTable FindFormatSubTable()
 		{
 			IndexMappingTable sub;
 			
-			sub = this.FindFormatSubtable (3, 1, 12);
+			sub = this.FindFormatSubTable (3, 1, 12);
 			
 			if (sub == null)
 			{
-				sub = this.FindFormatSubtable (3, 1, 4);
+				sub = this.FindFormatSubTable (3, 1, 4);
 			}
 			
 			return sub;
@@ -1221,7 +1240,590 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class Table_GSUB
+	public class Table_GSUB : Tables
 	{
+		//	See http://www.microsoft.com/OpenType/OTSpec/GSUB.htm for GSUB table
+		//	See http://www.microsoft.com/OpenType/OTSpec/chapter2.htm for the common table format
+		//	See http://www.microsoft.com/OpenType/OTSpec/featurelist.htm for 'liga' and others.
+		
+		public Table_GSUB(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		TableVersion
+		{
+			get
+			{
+				return this.ReadInt32 (0);
+			}
+		}
+		
+		public uint		ScriptListOffset
+		{
+			get
+			{
+				return this.ReadInt16 (4);
+			}
+		}
+		
+		public uint		FeatureListOffset
+		{
+			get
+			{
+				return this.ReadInt16 (6);
+			}
+		}
+		
+		public uint		LookupListOffset
+		{
+			get
+			{
+				return this.ReadInt16 (8);
+			}
+		}
+		
+		
+		public ScriptListTable	ScriptListTable
+		{
+			get
+			{
+				return new ScriptListTable (this.data, (int)(this.offset + this.ScriptListOffset));
+			}
+		}
+		
+		public FeatureListTable	FeatureListTable
+		{
+			get
+			{
+				return new FeatureListTable (this.data, (int)(this.offset + this.FeatureListOffset));
+			}
+		}
+		
+		public LookupListTable	LookupListTable
+		{
+			get
+			{
+				return new LookupListTable (this.data, (int)(this.offset + this.LookupListOffset));
+			}
+		}
+		
+		
+		public uint GetRequiredFeatureIndex(string script_tag, string language_tag)
+		{
+			ScriptTable script_table = this.ScriptListTable.GetScriptTable (script_tag);
+			
+			if (script_table != null)
+			{
+				LangSysTable lang_sys_table = script_table.GetLangSysTable (language_tag);
+				
+				if (lang_sys_table == null)
+				{
+					lang_sys_table = script_table.DefaultLangSysTable;
+				}
+				
+				return lang_sys_table.RequiredFeatureIndex;
+			}
+			else
+			{
+				return 0xffffu;
+			}
+		}
+		
+		
+		public uint[] GetFeatureIndexes(string script_tag, string language_tag)
+		{
+			ScriptTable script_table = this.ScriptListTable.GetScriptTable (script_tag);
+			
+			if (script_table != null)
+			{
+				LangSysTable lang_sys_table = script_table.GetLangSysTable (language_tag);
+				
+				if (lang_sys_table == null)
+				{
+					lang_sys_table = script_table.DefaultLangSysTable;
+				}
+				
+				uint   f_count  = lang_sys_table.FeatureCount;
+				uint[] features = new uint[f_count];
+				
+				for (uint i = 0; i < f_count; i++)
+				{
+					features[i] = lang_sys_table.GetFeatureIndex (i);
+				}
+				
+				return features;
+			}
+			else
+			{
+				return new uint[0];
+			}
+		}
+		
+		public uint[] GetFeatureIndexes(string feature_tag)
+		{
+			FeatureListTable table = this.FeatureListTable;
+			
+			uint max = table.FeatureCount;
+			uint hit = 0xffff;
+			int  num = 0;
+			
+			for (uint i = 0; i < max; i++)
+			{
+				if (table.GetFeatureTag (i) == feature_tag)
+				{
+					if (num == 0)
+					{
+						hit = i;
+					}
+					
+					num++;
+				}
+			}
+			
+			uint[] features = new uint[num];
+			int    index    = 0;
+			
+			for (uint i = hit; i < max; i++)
+			{
+				if (table.GetFeatureTag (i) == feature_tag)
+				{
+					features[index++] = i;
+					
+					if (index == num)
+					{
+						break;
+					}
+				}
+			}
+			
+			return features;
+		}
+		
+	}
+	
+	public class ScriptListTable : Tables
+	{
+		public ScriptListTable(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		ScriptCount
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}
+		}
+		
+		
+		public string GetScriptTag(uint n)
+		{
+			char[] tag = new char[4];
+			int offset = (int)(2+6*n+0);
+				
+			tag[0] = (char) this.ReadInt8 (offset+0);
+			tag[1] = (char) this.ReadInt8 (offset+1);
+			tag[2] = (char) this.ReadInt8 (offset+2);
+			tag[3] = (char) this.ReadInt8 (offset+3);
+				
+			return new string (tag);
+		}
+		
+		public uint GetScriptOffset(uint n)
+		{
+			return this.ReadInt16 ((int)(2+6*n+4));
+		}
+		
+		public ScriptTable GetScriptTable(uint n)
+		{
+			return new ScriptTable (this.data, this.offset + (int) this.GetScriptOffset (n));
+		}
+		
+		public ScriptTable GetScriptTable(string tag)
+		{
+			uint max  = this.ScriptCount;
+			
+			for (uint i = 0; i < max; i++)
+			{
+				if (this.GetScriptTag (i) == tag)
+				{
+					return this.GetScriptTable (i);
+				}
+			}
+			
+			return null;
+		}
+		
+	}
+	
+	public class ScriptTable : Tables
+	{
+		public ScriptTable(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint			DefaultLangSysOffset
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}
+		}
+		
+		public LangSysTable	DefaultLangSysTable
+		{
+			get
+			{
+				return new LangSysTable (this.data, this.offset + (int) this.DefaultLangSysOffset);
+			}
+		}
+		
+		public uint			LangSysCount
+		{
+			get
+			{
+				return this.ReadInt16 (2);
+			}
+		}
+		
+		
+		public string GetLangSysTag(uint n)
+		{
+			char[] tag = new char[4];
+			int offset = (int)(4+6*n+0);
+				
+			tag[0] = (char) this.ReadInt8 (offset+0);
+			tag[1] = (char) this.ReadInt8 (offset+1);
+			tag[2] = (char) this.ReadInt8 (offset+2);
+			tag[3] = (char) this.ReadInt8 (offset+3);
+				
+			return new string (tag);
+		}
+		
+		public uint GetLangSysOffset(uint n)
+		{
+			return this.ReadInt16 ((int)(4+6*n+4));
+		}
+		
+		
+		public LangSysTable GetLangSysTable(uint n)
+		{
+			return new LangSysTable (this.data, this.offset + (int) this.GetLangSysOffset (n));
+		}
+		
+		public LangSysTable GetLangSysTable(string tag)
+		{
+			uint max  = this.LangSysCount;
+			
+			for (uint i = 0; i < max; i++)
+			{
+				if (this.GetLangSysTag (i) == tag)
+				{
+					return this.GetLangSysTable (i);
+				}
+			}
+			
+			return null;
+		}
+	}
+	
+	public class LangSysTable : Tables
+	{
+		public LangSysTable(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		RequiredFeatureIndex
+		{
+			get
+			{
+				return this.ReadInt16 (2);
+			}
+		}
+		
+		public uint		FeatureCount
+		{
+			get
+			{
+				return this.ReadInt16 (4);
+			}
+		}
+		
+		
+		public uint GetFeatureIndex(uint n)
+		{
+			return this.ReadInt16 ((int)(6+2*n));
+		}
+	}
+	
+	public class FeatureListTable : Tables
+	{
+		public FeatureListTable(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		FeatureCount
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}
+		}
+		
+		
+		public string GetFeatureTag(uint n)
+		{
+			char[] tag = new char[4];
+			int offset = (int)(2+6*n+0);
+				
+			tag[0] = (char) this.ReadInt8 (offset+0);
+			tag[1] = (char) this.ReadInt8 (offset+1);
+			tag[2] = (char) this.ReadInt8 (offset+2);
+			tag[3] = (char) this.ReadInt8 (offset+3);
+				
+			return new string (tag);
+		}
+		
+		public uint GetFeatureOffset(uint n)
+		{
+			return this.ReadInt16 ((int)(2+6*n+4));
+		}
+		
+		public FeatureTable GetFeatureTable(uint n)
+		{
+			return new FeatureTable (this.data, this.offset + (int) this.GetFeatureOffset (n));
+		}
+		
+		public FeatureTable GetFeatureTable(string tag)
+		{
+			uint max  = this.FeatureCount;
+			
+			for (uint i = 0; i < max; i++)
+			{
+				if (this.GetFeatureTag (i) == tag)
+				{
+					return this.GetFeatureTable (i);
+				}
+			}
+			
+			return null;
+		}
+	}
+	
+	public class FeatureTable : Tables
+	{
+		public FeatureTable(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		LookupCount
+		{
+			get
+			{
+				return this.ReadInt16 (2);
+			}
+		}
+		
+		
+		public uint GetLookupIndex(uint n)
+		{
+			return this.ReadInt16 ((int)(4+2*n));
+		}
+	}
+	
+	public class LookupListTable : Tables
+	{
+		public LookupListTable(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		LookupCount
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}
+		}
+		
+		
+		public uint GetLookupOffset(uint n)
+		{
+			return this.ReadInt16 ((int)(2+n*2));
+		}
+		
+		public LookupTable GetLookupTable(uint n)
+		{
+			return new LookupTable (this.data, this.offset + (int) this.GetLookupOffset (n));
+		}
+	}
+	
+	public class LookupTable : Tables
+	{
+		public LookupTable(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		LookupType
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}
+		}
+		
+		public uint		LookupFlags
+		{
+			get
+			{
+				return this.ReadInt16 (2);
+			}
+		}
+		
+		public uint		SubTableCount
+		{
+			get
+			{
+				return this.ReadInt16 (4);
+			}
+		}
+		
+		
+		public uint GetSubTableOffset(uint n)
+		{
+			return this.ReadInt16 ((int)(6+n*2));
+		}
+		
+		public SubstSubTable GetSubTable(uint n)
+		{
+			return new SubstSubTable (this.data, this.offset + (int) this.GetSubTableOffset (n));
+		}
+	}
+	
+	
+	public class SubstSubTable : Tables
+	{
+		public SubstSubTable(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		SubstFormat
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}
+		}
+		
+		public uint		CoverageOffset
+		{
+			get
+			{
+				return this.ReadInt16 (2);
+			}
+		}
+	}
+	
+	public class SingleSubst : SubstSubTable
+	{
+		public SingleSubst(byte[] data, int offset) : base (data, offset)
+		{
+		}
+	}
+	
+	public class LigatureSubst : SubstSubTable
+	{
+		public LigatureSubst(SubstSubTable sub) : base (sub.BaseData, sub.BaseOffset)
+		{
+		}
+		
+		public LigatureSubst(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		LigatureSetCount
+		{
+			get
+			{
+				return this.ReadInt16 (4);
+			}
+		}
+		
+		
+		public uint GetLigatureSetOffset(uint n)
+		{
+			return this.ReadInt16 ((int)(6+n*2));
+		}
+		
+		public LigatureSet GetLigatureSet(uint n)
+		{
+			return new LigatureSet (this.data, this.offset + (int) this.GetLigatureSetOffset (n));
+		}
+	}
+	
+	public class LigatureSet : Tables
+	{
+		public LigatureSet(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		LigatureCount
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}
+		}
+		
+		
+		public uint GetLigatureOffset(uint n)
+		{
+			return this.ReadInt16 ((int)(2+2*n));
+		}
+		
+		public Ligature GetLigature(uint n)
+		{
+			return new Ligature (this.data, this.offset + (int) this.GetLigatureOffset (n));
+		}
+	}
+	
+	public class Ligature : Tables
+	{
+		public Ligature(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		Glyph
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}
+		}
+		
+		public uint		ComponentCount
+		{
+			get
+			{
+				return this.ReadInt16 (2);
+			}
+		}
+		
+		
+		public uint GetComponent(uint n)
+		{
+			return this.ReadInt16 ((int)(2+n*2));
+		}
 	}
 }

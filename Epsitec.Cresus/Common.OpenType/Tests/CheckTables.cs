@@ -12,8 +12,10 @@ namespace Epsitec.Common.OpenType.Tests
 		{
 			//			Platform.Win32.LoadFontDataDrawing ();
 			
+			CheckTables.TestFeatureTable ();
 			CheckTables.TestArial ();
 		}
+		
 		
 		private static void TestArial()
 		{
@@ -71,7 +73,7 @@ namespace Epsitec.Common.OpenType.Tests
 			Table_hmtx hmtx_t = new Table_hmtx (data, (int) td.FindTable ("hmtx").Offset);
 			Table_cmap cmap_t = new Table_cmap (data, (int) td.FindTable ("cmap").Offset);
 			
-			IndexMappingTable cmap_sub_t = cmap_t.FindFormatSubtable ();
+			IndexMappingTable cmap_sub_t = cmap_t.FindFormatSubTable ();
 			
 			int total = 0;
 			int width = 0;
@@ -128,6 +130,135 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			System.Diagnostics.Trace.WriteLine ("Done, " + total + " glyphs.");
 			System.Diagnostics.Trace.WriteLine ("Width is " + width + " units.");
+		}
+		
+		private static void TestFeatureTable()
+		{
+			string font = "Arial Unicode MS";
+			byte[] data = Platform.Win32.LoadFontData (font);
+			
+			TableDirectory td = new TableDirectory (data, 0);
+			TableEntry gsub_e = td.FindTable ("GSUB");
+			Table_GSUB gsub_t = new Table_GSUB (data, (int) gsub_e.Offset);
+			
+			ScriptListTable  script_l  = gsub_t.ScriptListTable;
+			FeatureListTable feature_l = gsub_t.FeatureListTable;
+			
+			System.Collections.Hashtable referenced_features = new System.Collections.Hashtable ();
+			
+			for (uint i = 0; i < script_l.ScriptCount; i++)
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				buffer.Append (script_l.GetScriptTag (i));
+				buffer.Append (": ");
+				
+				ScriptTable script_t = script_l.GetScriptTable (i);
+				
+				buffer.Append ("default=[");
+				
+				for (uint k = 0; k < script_t.DefaultLangSysTable.FeatureCount; k++)
+				{
+					if (k > 0) buffer.Append (";");
+					buffer.Append (script_t.DefaultLangSysTable.GetFeatureIndex (k));
+					referenced_features[(int) script_t.DefaultLangSysTable.GetFeatureIndex (k)] = true;
+				}
+				
+				buffer.Append ("]");
+				
+				for (uint j = 0; j < script_t.LangSysCount; j++)
+				{
+					buffer.Append (", '");
+					buffer.Append (script_t.GetLangSysTag (j));
+					buffer.Append ("' f=[");
+					buffer.Append ((short) script_t.GetLangSysTable (j).RequiredFeatureIndex);
+					
+					if (script_t.GetLangSysTable (j).RequiredFeatureIndex != 0xffff)
+					{
+						referenced_features[(int) script_t.GetLangSysTable (j).RequiredFeatureIndex] = true;
+					}
+					
+					for (uint k = 0; k < script_t.GetLangSysTable (j).FeatureCount; k++)
+					{
+						buffer.Append (";");
+						buffer.Append (script_t.GetLangSysTable (j).GetFeatureIndex (k));
+						referenced_features[(int) script_t.DefaultLangSysTable.GetFeatureIndex (k)] = true;
+					}
+					
+					buffer.Append ("]");
+				}
+				
+				System.Diagnostics.Debug.WriteLine (buffer.ToString ());
+			}
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("{0} features, {1} referenced.", feature_l.FeatureCount, referenced_features.Count));
+			
+			
+			string[] feature_names = new string[feature_l.FeatureCount];
+			uint[]   feature_index = new uint[feature_l.FeatureCount];
+			
+			for (uint i = 0; i < feature_l.FeatureCount; i++)
+			{
+				feature_names[i] = feature_l.GetFeatureTag (i) + "-" + i.ToString ("X4");
+				feature_index[i] = i;
+			}
+			
+			System.Array.Sort (feature_names, feature_index);
+			
+			for (int i = 0; i < feature_index.Length; i++)
+			{
+				string       feature_n = feature_l.GetFeatureTag (feature_index[i]);
+				FeatureTable feature_t = feature_l.GetFeatureTable (feature_index[i]);
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}-{2:000}: {1} lookups.{3}", feature_n, feature_t.LookupCount, feature_index[i], referenced_features.Contains ((int)i) ? "" : " Not referenced."));
+				
+			}
+			
+			uint rq_feature_arab_urdu = gsub_t.GetRequiredFeatureIndex ("arab", "URD ");
+			uint[] features_arab_urdu = gsub_t.GetFeatureIndexes ("arab", "URD ");
+			
+			uint rq_feature_arab_xxxx = gsub_t.GetRequiredFeatureIndex ("arab", "XXXX");
+			uint[] features_arab_xxxx = gsub_t.GetFeatureIndexes ("arab", "XXXX");
+			
+			uint[] fina_features = gsub_t.GetFeatureIndexes ("fina");
+			
+			Debug.Assert.IsTrue (fina_features.Length == 3);
+			
+			Debug.Assert.IsTrue (fina_features[0] == 3);
+			Debug.Assert.IsTrue (fina_features[1] == 6);
+			Debug.Assert.IsTrue (fina_features[2] == 11);
+			
+			LookupListTable gsub_lookup = gsub_t.LookupListTable;
+			uint[] liga_features = gsub_t.GetFeatureIndexes ("liga");
+			
+			for (int i = 0; i < liga_features.Length; i++)
+			{
+				LookupTable lookup = gsub_lookup.GetLookupTable (liga_features[i]);
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("Lookup: type={0}, flags={1}, sub={2}", lookup.LookupType, lookup.LookupFlags.ToString ("X4"), lookup.SubTableCount));
+				
+				for (uint s = 0; s < lookup.SubTableCount; s++)
+				{
+					SubstSubTable subst = lookup.GetSubTable (s);
+					
+					System.Diagnostics.Debug.WriteLine (string.Format ("Lookup {0}-{1}: format {2}, coverage {3}", i, s, subst.SubstFormat, subst.CoverageOffset));
+					
+					LigatureSubst liga_subst = new LigatureSubst (subst);
+					
+					System.Diagnostics.Debug.WriteLine (string.Format ("LigatureSetCount = {0}", liga_subst.LigatureSetCount));
+					
+					for (uint j = 0; j < liga_subst.LigatureSetCount; j++)
+					{
+						LigatureSet liga_set = liga_subst.GetLigatureSet (j);
+						
+						for (uint k = 0; k < liga_set.LigatureCount; k++)
+						{
+							Ligature ligature = liga_set.GetLigature (k);
+							System.Diagnostics.Debug.WriteLine (string.Format ("  {0:00} : {1}, {2} replacements", k, ligature.Glyph, ligature.ComponentCount));
+						}
+					}
+				}
+			}
 		}
 	}
 }
