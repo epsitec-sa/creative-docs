@@ -21,7 +21,10 @@ namespace Epsitec.Common.Pictogram.Data
 	XmlInclude(typeof(ObjectPoly)),
 	XmlInclude(typeof(ObjectRectangle)),
 	XmlInclude(typeof(ObjectRegular)),
-	XmlInclude(typeof(ObjectText)),
+	XmlInclude(typeof(ObjectTextLine)),
+	XmlInclude(typeof(ObjectTextBox)),
+	XmlInclude(typeof(ObjectArray)),
+	XmlInclude(typeof(ObjectImage)),
 
 	XmlInclude(typeof(Handle)),
 
@@ -33,10 +36,14 @@ namespace Epsitec.Common.Pictogram.Data
 	XmlInclude(typeof(PropertyLine)),
 	XmlInclude(typeof(PropertyList)),
 	XmlInclude(typeof(PropertyCombo)),
+	XmlInclude(typeof(PropertyFont)),
+	XmlInclude(typeof(PropertyJustif)),
+	XmlInclude(typeof(PropertyTextLine)),
 	XmlInclude(typeof(PropertyString)),
 	XmlInclude(typeof(PropertyArrow)),
 	XmlInclude(typeof(PropertyCorner)),
 	XmlInclude(typeof(PropertyRegular)),
+	XmlInclude(typeof(PropertyImage)),
 	XmlInclude(typeof(PropertyModColor)),
 	]
 
@@ -115,7 +122,10 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlArrayItem("Polyline",  Type=typeof(ObjectPoly))]
 		[XmlArrayItem("Rectangle", Type=typeof(ObjectRectangle))]
 		[XmlArrayItem("Polygon",   Type=typeof(ObjectRegular))]
-		[XmlArrayItem("Text",      Type=typeof(ObjectText))]
+		[XmlArrayItem("TextLine",  Type=typeof(ObjectTextLine))]
+		[XmlArrayItem("TextBox",   Type=typeof(ObjectTextBox))]
+		[XmlArrayItem("Array",     Type=typeof(ObjectArray))]
+		[XmlArrayItem("Image",     Type=typeof(ObjectImage))]
 		public System.Collections.ArrayList Objects
 		{
 			get { return this.objects; }
@@ -217,15 +227,13 @@ namespace Epsitec.Common.Pictogram.Data
 
 		// Ajoute les propriétés des objets sélectionnés dans la liste.
 		// Un type de propriété donné n'est qu'une fois dans la liste.
-		public void PropertiesList(System.Collections.ArrayList list,
-								   AbstractObject objectMemory)
+		public void PropertiesList(System.Collections.ArrayList list)
 		{
-			this.PropertiesList(this.CurrentGroup, list, objectMemory, false);
+			this.PropertiesList(this.CurrentGroup, list, false);
 		}
 
 		protected void PropertiesList(System.Collections.ArrayList objects,
 									  System.Collections.ArrayList list,
-									  AbstractObject objectMemory,
 									  bool all)
 		{
 			int total = objects.Count;
@@ -234,69 +242,32 @@ namespace Epsitec.Common.Pictogram.Data
 				AbstractObject obj = objects[index] as AbstractObject;
 				if ( !all && !obj.IsSelected() )  continue;
 
-				obj.CloneInfoProperties(objectMemory);
-
-				int tp = obj.TotalProperty;
-				for ( int i=0 ; i<tp ; i++ )
-				{
-					AbstractProperty property = obj.Property(i);
-					AbstractProperty existing = property.Search(list);
-					if ( existing == null )
-					{
-						property.Multi = false;
-						list.Add(property);
-					}
-					else
-					{
-						if ( !property.Compare(existing) )
-						{
-							existing.Multi = true;
-						}
-					}
-				}
+				obj.PropertiesList(list);
 
 				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
-					this.PropertiesList(obj.Objects, list, objectMemory, true);
+					this.PropertiesList(obj.Objects, list, true);
 				}
 			}
 		}
 
 
-		// Modifie juste l'état "étendu" d'une propriété.
-		public void SetPropertyExtended(AbstractProperty property)
+		// Mets une propriété piquée avec la pipette aux objets sélectionnés.
+		public void SetPropertyPicker(AbstractProperty property, ref Drawing.Rectangle bbox)
 		{
-			this.SetPropertyExtended(this.CurrentGroup, property, false);
+			this.SetProperty(this.CurrentGroup, property, ref bbox, false);
 		}
-
-		protected void SetPropertyExtended(System.Collections.ArrayList objects, AbstractProperty property, bool all)
-		{
-			int total = objects.Count;
-			for ( int index=0 ; index<total ; index++ )
-			{
-				AbstractObject obj = objects[index] as AbstractObject;
-				if ( !all && !obj.IsSelected() )  continue;
-
-				obj.SetPropertyExtended(property);
-
-				if ( obj.Objects != null && obj.Objects.Count > 0 )
-				{
-					this.SetPropertyExtended(obj.Objects, property, true);
-				}
-			}
-		}
-
 
 		// Modifie une propriété des objets sélectionnés.
 		public void SetProperty(AbstractProperty property, ref Drawing.Rectangle bbox, bool changeStylesCollection)
 		{
 			if ( property.StyleID == 0 )  // propriété indépendante ?
 			{
-				this.SetPropertyFree(this.CurrentGroup, property, ref bbox, false);
+				this.SetProperty(this.CurrentGroup, property, ref bbox, false);
 			}
 			else	// propriété liée à un style ?
 			{
-				this.SetPropertyStyle(this.objects, property, ref bbox);
+				this.SetProperty(this.objects, property, ref bbox, false);
 
 				if ( changeStylesCollection )
 				{
@@ -305,53 +276,46 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Mets une propriété piquée avec la pipette aux objets sélectionnés.
-		public void SetPropertyPicker(AbstractProperty property, ref Drawing.Rectangle bbox)
-		{
-			this.SetPropertyFree(this.CurrentGroup, property, ref bbox, false);
-		}
-
-		protected void SetPropertyFree(System.Collections.ArrayList objects, AbstractProperty property, ref Drawing.Rectangle bbox, bool all)
-		{
-			int total = objects.Count;
-			for ( int index=0 ; index<total ; index++ )
-			{
-				AbstractObject obj = objects[index] as AbstractObject;
-				if ( !all && !obj.IsSelected() )  continue;
-
-				bbox.MergeWith(obj.BoundingBox);
-				obj.SetProperty(property);
-				bbox.MergeWith(obj.BoundingBox);
-
-				ObjectGroup group = obj as ObjectGroup;
-				if ( group != null && group.Objects != null && group.Objects.Count > 0 )
-				{
-					this.SetPropertyFree(group.Objects, property, ref bbox, true);
-
-					Drawing.Rectangle gbox = this.RetBbox(group.Objects);
-					group.UpdateDim(gbox);
-					bbox.MergeWith(gbox);
-				}
-			}
-		}
-
-		protected void SetPropertyStyle(System.Collections.ArrayList objects, AbstractProperty property, ref Drawing.Rectangle bbox)
+		protected void SetProperty(System.Collections.ArrayList objects, AbstractProperty property, ref Drawing.Rectangle bbox, bool all)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
 				AbstractObject obj = objects[index] as AbstractObject;
 
-				if ( obj.IsLinkProperty(property) )
+				bool deepAll = all;
+				if ( property.StyleID == 0 )  // propriété indépendante ?
 				{
+					if ( !all && !obj.IsSelected() )  continue;
+
 					bbox.MergeWith(obj.BoundingBox);
 					obj.SetProperty(property);
 					bbox.MergeWith(obj.BoundingBox);
+					deepAll = true;
+				}
+				else	// propriété liée à un style ?
+				{
+					if ( all || obj.IsSelected() )
+					{
+						bbox.MergeWith(obj.BoundingBox);
+						obj.SetProperty(property);
+						bbox.MergeWith(obj.BoundingBox);
+						deepAll = true;
+					}
+					else
+					{
+						if ( obj.IsLinkProperty(property) )
+						{
+							bbox.MergeWith(obj.BoundingBox);
+							obj.SetProperty(property);
+							bbox.MergeWith(obj.BoundingBox);
+						}
+					}
 				}
 
 				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
-					this.SetPropertyStyle(obj.Objects, property, ref bbox);
+					this.SetProperty(obj.Objects, property, ref bbox, deepAll);
 
 					ObjectGroup group = obj as ObjectGroup;
 					if ( group != null )
@@ -538,6 +502,25 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Détecte l'objet pointé par la souris, pour l'édition.
+		public AbstractObject DetectEdit(Drawing.Point mouse)
+		{
+			return this.DetectEdit(this.CurrentGroup, mouse);
+		}
+
+		protected AbstractObject DetectEdit(System.Collections.ArrayList objects, Drawing.Point mouse)
+		{
+			int total = objects.Count;
+			for ( int index=total-1 ; index>=0 ; index-- )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+
+				if ( obj.DetectEdit(mouse) )  return obj;
+			}
+			return null;
+		}
+
+
 		// Détecte en porfondeur l'objet pointé par la souris.
 		public AbstractObject DeepDetect(Drawing.Point mouse)
 		{
@@ -642,6 +625,22 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Détecte la cellule pointée par la souris.
+		public bool DetectCell(Drawing.Point mouse, out AbstractObject obj, out int rank)
+		{
+			obj = null;
+			rank = -1;
+
+			if ( this.TotalSelected() != 1 )  return false;
+
+			obj = this.RetFirstSelected();
+			if ( obj == null )  return false;
+
+			rank = obj.DetectCell(mouse);
+			return ( rank != -1 );
+		}
+
+
 		// Retourne le premier objet sélectionné.
 		public AbstractObject RetFirstSelected()
 		{
@@ -667,12 +666,12 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Sélectionne un objet et désélectionne tous les autres.
-		public void Select(AbstractObject item, bool add)
+		public void Select(AbstractObject item, bool edit, bool add)
 		{
-			this.Select(this.CurrentGroup, item, add);
+			this.Select(this.CurrentGroup, item, edit, add);
 		}
 
-		protected void Select(System.Collections.ArrayList objects, AbstractObject item, bool add)
+		protected void Select(System.Collections.ArrayList objects, AbstractObject item, bool edit, bool add)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -680,7 +679,7 @@ namespace Epsitec.Common.Pictogram.Data
 				AbstractObject obj = objects[index] as AbstractObject;
 				if ( obj == item )
 				{
-					obj.Select();
+					obj.Select(true, edit);
 				}
 				else
 				{
@@ -770,12 +769,12 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Adapte le mode d'édition des propriétés.
-		public void UpdateEditProperties()
+		public void UpdateEditProperties(AbstractObject objectMemory)
 		{
-			this.UpdateEditProperties(this.CurrentGroup);
+			this.UpdateEditProperties(this.CurrentGroup, objectMemory);
 		}
 
-		protected void UpdateEditProperties(System.Collections.ArrayList objects)
+		protected void UpdateEditProperties(System.Collections.ArrayList objects, AbstractObject objectMemory)
 		{
 			int sel = this.TotalSelected();
 			int total = objects.Count;
@@ -785,6 +784,7 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( obj.IsSelected() )
 				{
 					obj.EditProperties = ( sel == 1 );
+					obj.SetPropertyExtended(objectMemory);
 				}
 				else
 				{
@@ -900,37 +900,12 @@ namespace Epsitec.Common.Pictogram.Data
 				AbstractObject newObject = null;
 				if ( !obj.DuplicateObject(ref newObject) )  continue;
 				dst.Add(newObject);
-				this.PasteAdaptStyles(newObject);  // adapte les styles
+				newObject.PasteAdaptStyles(this.StylesCollection);  // adapte les styles
 
 				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
 					this.PasteSelection(obj.Objects, newObject.Objects, true);
 				}
-			}
-		}
-
-		// Adapte les styles de l'objet collé, qui peut provenir d'un autre fichier,
-		// donc d'une autre collection de styles. On se base sur le nom des styles
-		// (StyleName) pour faire la correspondance.
-		// Si on trouve un nom identique -> le style de l'objet collé est modifié
-		// en fonction du style existant.
-		// Si on ne trouve pas un nom identique -> on crée un nouveau style, en
-		// modifiant bien entendu l'identificateur (StyleID) de l'objet collé.
-		protected void PasteAdaptStyles(AbstractObject obj)
-		{
-			int total = obj.TotalProperty;
-			for ( int i=0 ; i<total ; i++ )
-			{
-				AbstractProperty property = obj.Property(i);
-				if ( property.StyleID == 0 )  continue;  // n'utilise pas un style ?
-
-				AbstractProperty style = this.StylesCollection.SearchProperty(property);
-				if ( style == null )
-				{
-					int rank = this.StylesCollection.AddProperty(property);
-					style = this.StylesCollection.GetProperty(rank);
-				}
-				style.CopyTo(property);
 			}
 		}
 
@@ -1369,7 +1344,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Entre dans un groupe.
 		public void InsideGroup(AbstractObject obj)
 		{
-			this.Select(null, false);
+			this.Select(null, false, false);
 			this.roots.Add(obj);
 		}
 
@@ -1377,11 +1352,10 @@ namespace Epsitec.Common.Pictogram.Data
 		public void OutsideGroup()
 		{
 			if ( this.roots.Count <= 2 )  return;
-			this.Select(null, false);
-			this.UpdateEditProperties();
+			this.Select(null, false, false);
 			AbstractObject obj = this.roots[this.roots.Count-1] as AbstractObject;
 			this.roots.RemoveAt(this.roots.Count-1);
-			this.Select(obj, false);
+			this.Select(obj, false, false);
 		}
 
 		// Indique si on est à la racine.
@@ -1471,6 +1445,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Gestion de la page en cours.
+		[XmlIgnore]
 		public int CurrentPage
 		{
 			get
@@ -1488,6 +1463,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Gestion du calque en cours.
+		[XmlIgnore]
 		public int CurrentLayer
 		{
 			get

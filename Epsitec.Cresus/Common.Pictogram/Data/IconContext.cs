@@ -70,6 +70,13 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Mode "aperçu avant impression".
+		public bool PreviewActive
+		{
+			get { return this.previewActive; }
+			set { this.previewActive = value; }
+		}
+
 		// Présence de la grille magnétique.
 		public bool GridActive
 		{
@@ -101,6 +108,14 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Mode caché à moitié (estomper).
+		public bool HideHalfActive
+		{
+			get { return this.hideHalfActive; }
+			set { this.hideHalfActive = value; }
+		}
+
+
 		// Indique si l'objet Drawer est éditable.
 		public bool IsEditable
 		{
@@ -116,10 +131,24 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Indique s'il faut afficher les bbox.
-		public bool IsDrawBox
+		public bool IsDrawBoxThin
 		{
-			get { return this.isDrawBox; }
-			set { this.isDrawBox = value; }
+			get { return this.isDrawBoxThin; }
+			set { this.isDrawBoxThin = value; }
+		}
+
+		// Indique s'il faut afficher les bbox.
+		public bool IsDrawBoxGeom
+		{
+			get { return this.isDrawBoxGeom; }
+			set { this.isDrawBoxGeom = value; }
+		}
+
+		// Indique s'il faut afficher les bbox.
+		public bool IsDrawBoxFull
+		{
+			get { return this.isDrawBoxFull; }
+			set { this.isDrawBoxFull = value; }
 		}
 
 		// Taille minimale que doit avoir un objet à sa création.
@@ -399,6 +428,12 @@ namespace Epsitec.Common.Pictogram.Data
 			get { return Drawing.Color.FromARGB(0.5, 1.0, 0.0, 0.0); }  // rouge
 		}
 
+		// Retourne la couleur du cadre pendant l'édition.
+		static public Drawing.Color ColorFrameEdit
+		{
+			get { return Drawing.Color.FromARGB(1.0, 1.0, 0.0, 0.0); }  // rouge
+		}
+
 
 		protected IAdorner					adorner;
 		protected Drawing.GlyphPaintStyle	glyphPaintStyle;
@@ -408,11 +443,15 @@ namespace Epsitec.Common.Pictogram.Data
 		protected double					zoom = 1;
 		protected double					originX = 0;
 		protected double					originY = 0;
+		protected bool						previewActive = false;
 		protected bool						gridActive = false;
 		protected Drawing.Point				gridStep = new Drawing.Point(1, 1);
+		protected bool						hideHalfActive = true;
 		protected bool						isEditable = false;
 		protected bool						isDimmed = false;
-		protected bool						isDrawBox = false;
+		protected bool						isDrawBoxThin = false;
+		protected bool						isDrawBoxGeom = false;
+		protected bool						isDrawBoxFull = false;
 		protected double					minimalSize = 3;
 		protected double					minimalWidth = 5;
 		protected double					closeMargin = 10;
