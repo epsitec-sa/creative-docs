@@ -82,20 +82,21 @@ namespace Epsitec.Common.Widgets.Design
 			double xl = bounds.Left;
 			double xr = bounds.Right;
 			
-			Widget            widget = this.target;
-			Drawing.Rectangle model  = widget.InnerBounds;
+			Widget            widget  = this.target;
+			Drawing.Rectangle model   = widget.InnerBounds;
+			Drawing.Rectangle margins = SmartGuide.root_margins;
 			
 			double mx;
 			
 			if ((edges & Drawing.EdgeId.Left) != 0)
 			{
-				mx = model.Left + widget.DockMargins.Left + SmartGuide.root_margins.Left;
+				mx = model.Left + widget.DockMargins.Left + margins.Left;
 				constraint.Add (xl, mx, mx, model.Bottom, mx, model.Top, Constraint.Priority.Low, AnchorStyles.Left);
 			}
 			
 			if ((edges & Drawing.EdgeId.Right) != 0)
 			{
-				mx = model.Right - widget.DockMargins.Right - SmartGuide.root_margins.Right;
+				mx = model.Right - widget.DockMargins.Right - margins.Right;
 				constraint.Add (xr, mx, mx, model.Bottom, mx, model.Top, Constraint.Priority.Low, AnchorStyles.Right);
 			}
 			
@@ -103,8 +104,9 @@ namespace Epsitec.Common.Widgets.Design
 			
 			for (int i = 0; i < children.Length; i++)
 			{
-				widget = children[i];
-				model  = widget.Bounds;
+				widget  = children[i];
+				model   = widget.Bounds;
+				margins = SmartGuide.align_margins;
 				
 				if (widget == this.widget)
 				{
@@ -125,7 +127,7 @@ namespace Epsitec.Common.Widgets.Design
 					if ((bounds.Bottom < model.Top) &&
 						(bounds.Top > model.Bottom))
 					{
-						mx = model.Right + SmartGuide.align_margins.Right;
+						mx = model.Right + margins.Right;
 						constraint.Add (xl, mx, mx, y1, mx, y2);
 					}
 				}
@@ -141,7 +143,7 @@ namespace Epsitec.Common.Widgets.Design
 					if ((bounds.Bottom < model.Top) &&
 						(bounds.Top > model.Bottom))
 					{
-						mx = model.Left - SmartGuide.align_margins.Left;
+						mx = model.Left - margins.Left;
 						constraint.Add (xr, mx, mx, y1, mx, y2);
 					}
 				}
@@ -154,21 +156,22 @@ namespace Epsitec.Common.Widgets.Design
 			double y2 = bounds.Bottom + base_line_offset;
 			double y3 = bounds.Top;
 			
-			Widget            widget = this.target;
-			Drawing.Rectangle model  = widget.InnerBounds;
-			Drawing.Point     basel  = widget.BaseLine;
+			Widget            widget  = this.target;
+			Drawing.Rectangle model   = widget.InnerBounds;
+			Drawing.Point     basel   = widget.BaseLine;
+			Drawing.Rectangle margins = SmartGuide.root_margins;
 			
 			double my;
 			
 			if ((edges & Drawing.EdgeId.Bottom) != 0)
 			{
-				my = model.Bottom + widget.DockMargins.Bottom + SmartGuide.root_margins.Bottom;
+				my = model.Bottom + widget.DockMargins.Bottom + margins.Bottom;
 				constraint.Add (y1, my, model.Left, my, model.Right, my, Constraint.Priority.Low, AnchorStyles.Bottom);
 			}
 			
 			if ((edges & Drawing.EdgeId.Top) != 0)
 			{
-				my = model.Top - widget.DockMargins.Top - SmartGuide.root_margins.Top;
+				my = model.Top - widget.DockMargins.Top - margins.Top;
 				constraint.Add (y3, my, model.Left, my, model.Right, my, Constraint.Priority.Low, AnchorStyles.Top);
 			}
 			
@@ -176,9 +179,10 @@ namespace Epsitec.Common.Widgets.Design
 			
 			for (int i = 0; i < children.Length; i++)
 			{
-				widget = children[i];
-				model  = widget.Bounds;
-				basel  = widget.BaseLine;
+				widget  = children[i];
+				model   = widget.Bounds;
+				basel   = widget.BaseLine;
+				margins = SmartGuide.align_margins;
 				
 				if (widget == this.widget)
 				{
@@ -208,7 +212,7 @@ namespace Epsitec.Common.Widgets.Design
 					if ((bounds.Left < model.Right) &&
 						(bounds.Right > model.Left))
 					{
-						my = model.Top + SmartGuide.align_margins.Top;
+						my = model.Top + margins.Top;
 						constraint.Add (y1, my, x1, my, x2, my);
 					}
 				}
@@ -224,7 +228,7 @@ namespace Epsitec.Common.Widgets.Design
 					if ((bounds.Left < model.Right) &&
 						(bounds.Right > model.Left))
 					{
-						my = model.Bottom - SmartGuide.align_margins.Bottom;
+						my = model.Bottom - margins.Bottom;
 						constraint.Add (y3, my, x1, my, x2, my);
 					}
 				}
@@ -237,7 +241,6 @@ namespace Epsitec.Common.Widgets.Design
 		protected Widget				target;
 		
 		protected static Drawing.Margins	root_margins  = new Drawing.Margins (12, 12, 20, 20);
-		protected static Drawing.Margins	group_margins = new Drawing.Margins (8, 8, 8, 8);
 		protected static Drawing.Margins	align_margins = new Drawing.Margins (8, 8, 6, 6);
 	}
 }
