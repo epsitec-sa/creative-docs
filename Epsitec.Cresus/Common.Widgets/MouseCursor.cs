@@ -24,7 +24,30 @@ namespace Epsitec.Common.Widgets
 			
 			icon_info.FlagIcon = 0;
 			icon_info.HotspotX = xhot;
-			icon_info.HotspotY = yhot;
+			icon_info.HotspotY = (int)(image.Height) - yhot;
+			
+			System.IntPtr new_handle = Win32Api.CreateIconIndirect (ref icon_info);
+			
+			MouseCursor cursor = new MouseCursor (new System.Windows.Forms.Cursor (new_handle));
+			
+			cursor.handle = new_handle;
+			
+			return cursor;
+		}
+		
+		public static MouseCursor FromImage(Drawing.Image image)
+		{
+			System.IntPtr     org_handle = image.BitmapImage.NativeBitmap.GetHicon ();
+			Win32Api.IconInfo icon_info;
+			
+			Win32Api.GetIconInfo (org_handle, out icon_info);
+			
+			double ox = image.Origin.X;
+			double oy = image.Height - image.Origin.Y;
+			
+			icon_info.FlagIcon = 0;
+			icon_info.HotspotX = (int)System.Math.Floor(ox+0.5);;
+			icon_info.HotspotY = (int)System.Math.Floor(oy+0.5);;
 			
 			System.IntPtr new_handle = Win32Api.CreateIconIndirect (ref icon_info);
 			
