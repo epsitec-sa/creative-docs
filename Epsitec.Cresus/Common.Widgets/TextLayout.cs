@@ -1434,7 +1434,20 @@ namespace Epsitec.Common.Widgets
 								continue;
 							}
 
-							JustifBlock block = new JustifBlock();
+							JustifBlock block;
+							JustifBlock previous = (this.blocks.Count < 1) ? null : this.blocks[this.blocks.Count-1] as JustifBlock;
+							if ((previous != null) &&
+								(previous.text == ""))
+							{
+								//	Ré-utilise le bloc précédent, puisqu'il est vide...
+								
+								block = previous;
+							}
+							else
+							{
+								block = new JustifBlock();
+								this.blocks.Add(block);
+							}
 							block.bol        = bol;
 							block.image      = false;
 							block.text       = breakText;
@@ -1449,7 +1462,6 @@ namespace Epsitec.Common.Widgets
 							block.width      = breakWidth;
 							block.pos        = new Drawing.Point(0,0);
 							block.visible    = false;
-							this.blocks.Add(block);
 
 							textIndex += breakChars;
 
