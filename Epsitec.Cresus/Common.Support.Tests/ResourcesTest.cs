@@ -105,5 +105,21 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals ("file:complex#widgets[1]", bundle["widgets"].AsList[1].AsBundle.Name);
 			Assertion.AssertEquals ("file:button.cancel",      bundle["widgets"].AsList[2].AsBundle.Name);
 		}
+		
+		[Test] public void CheckGetText()
+		{
+			string text_default = Resources.GetText ("file:strings#title.SettingsWindow", ResourceLevel.Default);
+			string text_merged  = Resources.GetText ("file:strings#title.SettingsWindow", ResourceLevel.Merged);
+			string text_miss_1  = Resources.GetText ("file:strings#DoesNotExist");
+			string text_miss_2  = Resources.GetText ("file:does_not_exist#DoesNotExist");
+			
+			Assertion.AssertNotNull (text_default);
+			Assertion.AssertNotNull (text_merged);
+			Assertion.AssertNull (text_miss_1);
+			Assertion.AssertNull (text_miss_2);
+			
+			Assertion.AssertEquals ("Settings", text_default);
+			Assertion.AssertEquals ("Réglages", text_merged);
+		}
 	}
 }
