@@ -3,9 +3,27 @@ Questions à régler
 ------------------
 
  1.	Comment les BLOBs sont-ils gérés avec ADO.NET ?
+ 
+	>	Dans les DataSet, un BLOB est vu comme un byte[]
 
  2.	Quel est le type retourné par DataColumn.Type quand on est sur
 	une colonne de type BLOB ?
+
+		DataSet data_set = new DataSet();
+		command.Transaction = db_abstraction.BeginTransaction ();
+		sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
+
+		DataTable thisTable = data_set.Tables[0];
+		DataColumn blobColumn = thisTable.Columns[1];
+		System.Type blobType = blobColumn.GetType();
+	>			// le type donné ici est System.Data.DataColumn
+	>			// je n'ai pas vu comment déterminer le type du contenu prévu.
+
+		DataRow thisRow = thisTable.Rows[0];
+		object	o = thisRow[blobColumn];
+		System.Type objectType = o.GetType();
+	>			// le type donné ici est System.Byte[]
+	
 
  3.	Comment des chaînes String sont-elles stockées dans la base de
 	données (Firebird) si elles contiennent des caractères en dehors
