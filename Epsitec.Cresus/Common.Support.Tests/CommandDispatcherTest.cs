@@ -41,7 +41,7 @@ namespace Epsitec.Common.Support
 			dispatcher.Dispatch ("public-base-d", null);
 			dispatcher.Dispatch ("public-base-virtual-e", null);	//	n'existe pas
 			
-			Assertion.AssertEquals ("ba/bx/bb/bc/bd/", CommandDispatcherTest.buffer.ToString ());
+			Assert.AreEqual ("ba/bx/bb/bc/bd/", CommandDispatcherTest.buffer.ToString ());
 		}
 		
 		[Test] public void CheckDispatchDerived()
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Support
 			dispatcher.Dispatch ("public-override-c", null);		//	accessible, surcharge la base -> visible
 			dispatcher.Dispatch ("public-override-e", null);		//	accessible, surcharge la base -> visible
 			
-			Assertion.AssertEquals ("bb/bd/da/db/dc/de/", CommandDispatcherTest.buffer.ToString ());
+			Assert.AreEqual ("bb/bd/da/db/dc/de/", CommandDispatcherTest.buffer.ToString ());
 		}
 		
 		[Test] public void CheckCommandState()
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Support
 			
 			dispatcher.SynchroniseCommandStates ();
 			
-			Assertion.AssertEquals ("s1/s2/s3/", CommandDispatcherTest.buffer.ToString ());
+			Assert.AreEqual ("s1/s2/s3/", CommandDispatcherTest.buffer.ToString ());
 		}
 		
 		[Test] public void CheckExtractCommandArgs()
@@ -94,32 +94,32 @@ namespace Epsitec.Common.Support
 			string cmd5 = "foo ( this.Name , 'Hello, world !' , 123 ) ";
 			string cmd6 = "foo(this.Name,\"Hello, world !\",123)";
 			
-			Assertion.Assert (CommandDispatcher.IsSimpleCommand (cmd1));
-			Assertion.Assert (CommandDispatcher.IsSimpleCommand (cmd2) == false);
+			Assert.IsTrue (CommandDispatcher.IsSimpleCommand (cmd1));
+			Assert.IsTrue (CommandDispatcher.IsSimpleCommand (cmd2) == false);
 			
-			Assertion.AssertEquals ("foo", CommandDispatcher.ExtractCommandName (cmd1));
-			Assertion.AssertEquals ("foo", CommandDispatcher.ExtractCommandName (cmd2));
-			Assertion.AssertEquals ("foo", CommandDispatcher.ExtractCommandName (cmd3));
-			Assertion.AssertEquals ("foo", CommandDispatcher.ExtractCommandName (cmd4));
-			Assertion.AssertEquals ("foo", CommandDispatcher.ExtractCommandName (cmd5));
-			Assertion.AssertEquals ("foo", CommandDispatcher.ExtractCommandName (cmd6));
+			Assert.AreEqual ("foo", CommandDispatcher.ExtractCommandName (cmd1));
+			Assert.AreEqual ("foo", CommandDispatcher.ExtractCommandName (cmd2));
+			Assert.AreEqual ("foo", CommandDispatcher.ExtractCommandName (cmd3));
+			Assert.AreEqual ("foo", CommandDispatcher.ExtractCommandName (cmd4));
+			Assert.AreEqual ("foo", CommandDispatcher.ExtractCommandName (cmd5));
+			Assert.AreEqual ("foo", CommandDispatcher.ExtractCommandName (cmd6));
 			
-			Assertion.AssertEquals (0, CommandDispatcher.ExtractCommandArgs (cmd1).Length);
-			Assertion.AssertEquals (0, CommandDispatcher.ExtractCommandArgs (cmd2).Length);
-			Assertion.AssertEquals (1, CommandDispatcher.ExtractCommandArgs (cmd3).Length);
-			Assertion.AssertEquals (3, CommandDispatcher.ExtractCommandArgs (cmd4).Length);
-			Assertion.AssertEquals (3, CommandDispatcher.ExtractCommandArgs (cmd5).Length);
-			Assertion.AssertEquals (3, CommandDispatcher.ExtractCommandArgs (cmd6).Length);
+			Assert.AreEqual (0, CommandDispatcher.ExtractCommandArgs (cmd1).Length);
+			Assert.AreEqual (0, CommandDispatcher.ExtractCommandArgs (cmd2).Length);
+			Assert.AreEqual (1, CommandDispatcher.ExtractCommandArgs (cmd3).Length);
+			Assert.AreEqual (3, CommandDispatcher.ExtractCommandArgs (cmd4).Length);
+			Assert.AreEqual (3, CommandDispatcher.ExtractCommandArgs (cmd5).Length);
+			Assert.AreEqual (3, CommandDispatcher.ExtractCommandArgs (cmd6).Length);
 
-			Assertion.AssertEquals ("a", CommandDispatcher.ExtractCommandArgs (cmd3)[0]);
-			Assertion.AssertEquals ("this.Name",          CommandDispatcher.ExtractCommandArgs (cmd4)[0]);
-			Assertion.AssertEquals ("\"Hello, world !\"", CommandDispatcher.ExtractCommandArgs (cmd4)[1]);
-			Assertion.AssertEquals ("123",                CommandDispatcher.ExtractCommandArgs (cmd4)[2]);
-			Assertion.AssertEquals ("this.Name",          CommandDispatcher.ExtractCommandArgs (cmd5)[0]);
-			Assertion.AssertEquals ("'Hello, world !'",   CommandDispatcher.ExtractCommandArgs (cmd5)[1]);
-			Assertion.AssertEquals ("123",                CommandDispatcher.ExtractCommandArgs (cmd5)[2]);
-			Assertion.AssertEquals ("\"Hello, world !\"", CommandDispatcher.ExtractCommandArgs (cmd6)[1]);
-			Assertion.AssertEquals ("123",                CommandDispatcher.ExtractCommandArgs (cmd6)[2]);
+			Assert.AreEqual ("a", CommandDispatcher.ExtractCommandArgs (cmd3)[0]);
+			Assert.AreEqual ("this.Name",          CommandDispatcher.ExtractCommandArgs (cmd4)[0]);
+			Assert.AreEqual ("\"Hello, world !\"", CommandDispatcher.ExtractCommandArgs (cmd4)[1]);
+			Assert.AreEqual ("123",                CommandDispatcher.ExtractCommandArgs (cmd4)[2]);
+			Assert.AreEqual ("this.Name",          CommandDispatcher.ExtractCommandArgs (cmd5)[0]);
+			Assert.AreEqual ("'Hello, world !'",   CommandDispatcher.ExtractCommandArgs (cmd5)[1]);
+			Assert.AreEqual ("123",                CommandDispatcher.ExtractCommandArgs (cmd5)[2]);
+			Assert.AreEqual ("\"Hello, world !\"", CommandDispatcher.ExtractCommandArgs (cmd6)[1]);
+			Assert.AreEqual ("123",                CommandDispatcher.ExtractCommandArgs (cmd6)[2]);
 		}
 		
 		[Test] public void CheckExtractAndParseCommandArgs()
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Support
 			
 			for (int i = 0; i < args.Length; i++)
 			{
-				Assertion.AssertEquals (string.Format ("{0} mismatched;", args[i]), expect[i], vals[i]);
+				Assert.AreEqual (expect[i], vals[i], string.Format ("{0} mismatched;", args[i]));
 			}
 		}
 		
@@ -277,41 +277,41 @@ namespace Epsitec.Common.Support
 			dispatcher.Validators.Add (v1);
 			dispatcher.Validators.Add (v2);
 			
-			Assertion.AssertEquals (ValidationState.Dirty, v1.State);
-			Assertion.AssertEquals (ValidationState.Dirty, v11.State);
-			Assertion.AssertEquals (ValidationState.Dirty, v2.State);
+			Assert.AreEqual (ValidationState.Dirty, v1.State);
+			Assert.AreEqual (ValidationState.Dirty, v11.State);
+			Assert.AreEqual (ValidationState.Dirty, v2.State);
 			
 			dispatcher.ApplyValidationRules ();
 			
-			Assertion.AssertEquals (ValidationState.Ok, v1.State);
-			Assertion.AssertEquals (ValidationState.Ok, v11.State);
-			Assertion.AssertEquals (ValidationState.Ok, v2.State);
+			Assert.AreEqual (ValidationState.Ok, v1.State);
+			Assert.AreEqual (ValidationState.Ok, v11.State);
+			Assert.AreEqual (ValidationState.Ok, v2.State);
 			
 			v1.MakeDirty (false);
 			
-			Assertion.AssertEquals (ValidationState.Dirty, v1.State);
-			Assertion.AssertEquals (ValidationState.Ok, v11.State);
-			Assertion.AssertEquals (ValidationState.Ok, v2.State);
+			Assert.AreEqual (ValidationState.Dirty, v1.State);
+			Assert.AreEqual (ValidationState.Ok, v11.State);
+			Assert.AreEqual (ValidationState.Ok, v2.State);
 			
 			v1.MakeDirty (true);
 			
-			Assertion.AssertEquals (ValidationState.Dirty, v1.State);
-			Assertion.AssertEquals (ValidationState.Dirty, v11.State);
-			Assertion.AssertEquals (ValidationState.Ok, v2.State);
+			Assert.AreEqual (ValidationState.Dirty, v1.State);
+			Assert.AreEqual (ValidationState.Dirty, v11.State);
+			Assert.AreEqual (ValidationState.Ok, v2.State);
 			
 			dispatcher.ApplyValidationRules ();
 			
 			v2.MakeDirty (false);
 			
-			Assertion.AssertEquals (ValidationState.Ok, v1.State);
-			Assertion.AssertEquals (ValidationState.Ok, v11.State);
-			Assertion.AssertEquals (ValidationState.Dirty, v2.State);
+			Assert.AreEqual (ValidationState.Ok, v1.State);
+			Assert.AreEqual (ValidationState.Ok, v11.State);
+			Assert.AreEqual (ValidationState.Dirty, v2.State);
 			
 			v11.MakeDirty (false);
 			
-			Assertion.AssertEquals (ValidationState.Dirty, v1.State);
-			Assertion.AssertEquals (ValidationState.Dirty, v11.State);
-			Assertion.AssertEquals (ValidationState.Dirty, v2.State);
+			Assert.AreEqual (ValidationState.Dirty, v1.State);
+			Assert.AreEqual (ValidationState.Dirty, v11.State);
+			Assert.AreEqual (ValidationState.Dirty, v2.State);
 		}
 		
 		
