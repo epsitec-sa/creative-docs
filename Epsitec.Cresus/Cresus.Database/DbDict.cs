@@ -57,7 +57,12 @@ namespace Epsitec.Cresus.Database
 			
 			System.Diagnostics.Debug.Assert (row != null);
 			
-			this[key] = value;
+			row.BeginEdit ();
+			row[Tags.ColumnDictKey]   = key;
+			row[Tags.ColumnDictValue] = value;
+			row.EndEdit ();
+			
+			System.Diagnostics.Debug.Assert (this[key] == value);
 		}
 		
 		public void Remove(string key)
@@ -79,7 +84,18 @@ namespace Epsitec.Cresus.Database
 		{
 			//	Crée une table pour stocker un dictionnaire.
 			
-			//	TODO: ...
+			DbTable table = infrastructure.CreateDbTable (table_name, DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
+			
+			DbType type_dict_key   = infrastructure.ResolveDbType (transaction, Tags.TypeDictKey);
+			DbType type_dict_value = infrastructure.ResolveDbType (transaction, Tags.TypeDictValue);
+			
+			DbColumn col1 = new DbColumn (Tags.ColumnDictKey,   type_dict_key,   Nullable.No, DbColumnClass.Data, DbElementCat.Internal);
+			DbColumn col2 = new DbColumn (Tags.ColumnDictValue, type_dict_value, Nullable.No, DbColumnClass.Data, DbElementCat.Internal);
+			
+			table.Columns.Add (col1);
+			table.Columns.Add (col2);
+			
+			infrastructure.RegisterNewDbTable (transaction, table);
 		}
 		
 		
@@ -92,7 +108,10 @@ namespace Epsitec.Cresus.Database
 		
 		public void Detach()
 		{
-			this.data_set.Dispose ();
+			if (this.data_set != null)
+			{
+				this.data_set.Dispose ();
+			}
 			
 			this.infrastructure = null;
 			this.table          = null;
@@ -105,6 +124,7 @@ namespace Epsitec.Cresus.Database
 		#region IPersistable Members
 		public void SerializeToBase(DbTransaction transaction)
 		{
+			this.command.UpdateRealIds (transaction);
 			this.command.UpdateTables (transaction);
 		}
 		

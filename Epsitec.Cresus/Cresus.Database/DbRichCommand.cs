@@ -206,6 +206,8 @@ namespace Epsitec.Cresus.Database
 			this.CheckValidState ();
 			this.CheckRowIds ();
 			
+			this.UpdateLogId ();
+			
 			this.SetCommandTransaction (transaction);
 			
 			try
@@ -297,6 +299,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		
 		public void CheckRowIds()
 		{
 			foreach (System.Data.DataTable table in this.data_set.Tables)
@@ -313,6 +316,26 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public void UpdateLogId()
+		{
+			foreach (System.Data.DataTable table in this.data_set.Tables)
+			{
+				int n = table.Rows.Count;
+				
+				for (int i = 0; i < n; i++)
+				{
+					System.Data.DataRow row = table.Rows[i];
+					
+					switch (row.RowState)
+					{
+						case System.Data.DataRowState.Added:
+						case System.Data.DataRowState.Modified:
+							row[Tags.ColumnRefLog] = this.infrastructure.Logger.CurrentId.Value;
+							break;
+					}
+				}
+			}
+		}
 		
 		public void DeleteRow(System.Data.DataRow data_row)
 		{
@@ -349,8 +372,10 @@ namespace Epsitec.Cresus.Database
 			
 			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
 			
+			data_row.BeginEdit ();
 			data_row[Tags.ColumnId]     = key.Id.Value;
 			data_row[Tags.ColumnStatus] = key.IntStatus;
+			data_row.EndEdit ();
 			
 			table.Rows.Add (data_row);
 		}
