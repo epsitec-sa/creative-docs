@@ -17,78 +17,15 @@ namespace Epsitec.Common.Support
 		
 		static Resources()
 		{
-			Resources.providers     = new IResourceProvider[0];
-			Resources.provider_hash = new System.Collections.Hashtable ();
-			Resources.culture       = CultureInfo.CurrentCulture;
+			Resources.resource_providers     = new IResourceProvider[0];
+			Resources.resource_provider_hash = new System.Collections.Hashtable ();
+			Resources.bundle_providers       = new IBundleProvider[0];
+			Resources.culture                = CultureInfo.CurrentCulture;
 			
 			string[] names = { "fr", "de", "it", "en" };
 			
-			Resources.DefineCultures (names);
-			Resources.Initialise ();
-		}
-		
-		protected static void Initialise()
-		{
-			System.Collections.ArrayList providers = new System.Collections.ArrayList ();
-			System.Reflection.Assembly   assembly  = System.Reflection.Assembly.LoadWithPartialName ("Common.Support.Implementation");
-			
-			System.Type[] types_in_assembly = assembly.GetTypes ();
-			
-			foreach (System.Type type in types_in_assembly)
-			{
-				if ((type.IsClass) &&
-					(!type.IsAbstract))
-				{
-					if (type.GetInterface ("IResourceProvider") != null)
-					{
-						IResourceProvider provider = System.Activator.CreateInstance (type) as IResourceProvider;
-						
-						if (provider != null)
-						{
-							System.Diagnostics.Debug.Assert (Resources.provider_hash.Contains (provider.Prefix) == false);
-							
-							providers.Add (provider);
-							Resources.provider_hash[provider.Prefix] = provider;
-							
-							provider.SelectLocale (Resources.culture);
-						}
-					}
-				}
-			}
-			
-			Resources.providers = new IResourceProvider[providers.Count];
-			providers.CopyTo (Resources.providers);
-		}
-		
-		protected static void DefineCultures(string[] names)
-		{
-			int n = names.Length;
-			
-			Resources.cultures = new CultureInfo[n];
-			
-			for (int i = 0; i < n; i++)
-			{
-				Resources.cultures[i] = Resources.FindCultureInfo (names[i]);
-			}
-		}
-		
-		
-		public static void SetupProviders(string application_name)
-		{
-			if (Resources.application_name == application_name)
-			{
-				return;
-			}
-			
-			if (Resources.application_name != null)
-			{
-				throw new System.InvalidOperationException ("Resource Providers may not be setup more than once.");
-			}
-			
-			for (int i = 0; i < Resources.providers.Length; i++)
-			{
-				Resources.providers[i].Setup (application_name);
-			}
+			Resources.InternalDefineCultures (names);
+			Resources.InternalInitialise ();
 		}
 		
 		
@@ -109,18 +46,18 @@ namespace Epsitec.Common.Support
 		
 		public static int						ProviderCount
 		{
-			get { return Resources.providers.Length; }
+			get { return Resources.resource_providers.Length; }
 		}
 		
 		public static string[]					ProviderPrefixes
 		{
 			get
 			{
-				string[] prefixes = new string[Resources.providers.Length];
+				string[] prefixes = new string[Resources.resource_providers.Length];
 				
-				for (int i = 0; i < Resources.providers.Length; i++)
+				for (int i = 0; i < Resources.resource_providers.Length; i++)
 				{
-					prefixes[i] = Resources.providers[i].Prefix;
+					prefixes[i] = Resources.resource_providers[i].Prefix;
 				}
 				
 				return prefixes;
@@ -171,6 +108,46 @@ namespace Epsitec.Common.Support
 		public static string					CustomisedSuffix
 		{
 			get { return string.Concat ("X", Resources.LocalisedSuffix); }
+		}
+		
+		
+		public static void SetupProviders(string application_name)
+		{
+			if (Resources.application_name == application_name)
+			{
+				return;
+			}
+			
+			if (Resources.application_name != null)
+			{
+				throw new System.InvalidOperationException ("Resource Providers may not be setup more than once.");
+			}
+			
+			for (int i = 0; i < Resources.resource_providers.Length; i++)
+			{
+				Resources.resource_providers[i].Setup (application_name);
+			}
+		}
+		
+		
+		public static void Add(IBundleProvider bundle_provider)
+		{
+			ArrayList list = new ArrayList ();
+			list.AddRange (Resources.bundle_providers);
+			list.Add (bundle_provider);
+			
+			Resources.bundle_providers = new IBundleProvider[list.Count];
+			list.CopyTo (Resources.bundle_providers);
+		}
+		
+		public static void Remove(IBundleProvider bundle_provider)
+		{
+			ArrayList list = new ArrayList ();
+			list.AddRange (Resources.bundle_providers);
+			list.Remove (bundle_provider);
+			
+			Resources.bundle_providers = new IBundleProvider[list.Count];
+			list.CopyTo (Resources.bundle_providers);
 		}
 		
 		
@@ -428,28 +405,42 @@ namespace Epsitec.Common.Support
 		
 		public static ResourceBundle GetBundle(string id, ResourceLevel level, int recursion)
 		{
-			return Resources.GetBundle (id, level, recursion, Resources.Culture);
+			return Resources.GetBundle (id, level, Resources.Culture, recursion);
 		}
 		
 		public static ResourceBundle GetBundle(string id, ResourceLevel level, CultureInfo culture)
 		{
-			return Resources.GetBundle (id, level, 0, culture);
+			return Resources.GetBundle (id, level, culture, 0);
 		}
 		
-		public static ResourceBundle GetBundle(string id, ResourceLevel level, int recursion, CultureInfo culture)
+		public static ResourceBundle GetBundle(string id, ResourceLevel level, CultureInfo culture, int recursion)
 		{
 			if (culture == null)
 			{
 				culture = Resources.Culture;
 			}
 			
-			//	TODO: il faudrait peut-être rajouter un cache pour éviter de consulter
-			//	chaque fois le provider, lorsqu'une ressource est demandée.
+			//	TODO: il faudra rajouter un cache pour éviter de consulter chaque fois
+			//	le provider, lorsqu'une ressource est demandée...
 			
 			string resource_id;
 			
 			IResourceProvider provider = Resources.FindProvider (id, out resource_id);
 			ResourceBundle    bundle   = null;
+			
+			//	Passe en revue les divers providers de bundles pour voir si la ressource
+			//	demandée n'est pas disponible chez eux. Si oui, c'est celle-ci qui sera
+			//	utilisée :
+			
+			foreach (IBundleProvider bundle_provider in Resources.bundle_providers)
+			{
+				bundle = bundle_provider.GetBundle (provider, resource_id, level, culture, recursion);
+				
+				if (bundle != null)
+				{
+					return bundle;
+				}
+			}
 			
 			if (provider != null)
 			{
@@ -657,9 +648,9 @@ namespace Epsitec.Common.Support
 		
 		public static void DebugDumpProviders()
 		{
-			for (int i = 0; i < Resources.providers.Length; i++)
+			for (int i = 0; i < Resources.resource_providers.Length; i++)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Prefix '{0}' implemented by class {1}", Resources.providers[i].Prefix, Resources.providers[i].GetType ().Name));
+				System.Diagnostics.Debug.WriteLine (string.Format ("Prefix '{0}' implemented by class {1}", Resources.resource_providers[i].Prefix, Resources.resource_providers[i].GetType ().Name));
 			}
 		}
 		
@@ -689,6 +680,17 @@ namespace Epsitec.Common.Support
 			{
 				return true;
 			}
+			
+			return Resources.EqualCultures (culture_a, culture_b);
+		}
+		
+		public static bool EqualCultures(CultureInfo culture_a, CultureInfo culture_b)
+		{
+			if (culture_a == culture_b)
+			{
+				return true;
+			}
+			
 			if ((culture_a == null) ||
 				(culture_b == null))
 			{
@@ -699,13 +701,59 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		protected static void InternalInitialise()
+		{
+			System.Collections.ArrayList providers = new System.Collections.ArrayList ();
+			System.Reflection.Assembly   assembly  = System.Reflection.Assembly.LoadWithPartialName ("Common.Support.Implementation");
+			
+			System.Type[] types_in_assembly = assembly.GetTypes ();
+			
+			foreach (System.Type type in types_in_assembly)
+			{
+				if ((type.IsClass) &&
+					(!type.IsAbstract))
+				{
+					if (type.GetInterface ("IResourceProvider") != null)
+					{
+						IResourceProvider provider = System.Activator.CreateInstance (type) as IResourceProvider;
+						
+						if (provider != null)
+						{
+							System.Diagnostics.Debug.Assert (Resources.resource_provider_hash.Contains (provider.Prefix) == false);
+							
+							providers.Add (provider);
+							Resources.resource_provider_hash[provider.Prefix] = provider;
+							
+							provider.SelectLocale (Resources.culture);
+						}
+					}
+				}
+			}
+			
+			Resources.resource_providers = new IResourceProvider[providers.Count];
+			providers.CopyTo (Resources.resource_providers);
+		}
+		
+		protected static void InternalDefineCultures(string[] names)
+		{
+			int n = names.Length;
+			
+			Resources.cultures = new CultureInfo[n];
+			
+			for (int i = 0; i < n; i++)
+			{
+				Resources.cultures[i] = Resources.FindCultureInfo (names[i]);
+			}
+		}
+		
+		
 		protected static void SelectLocale(CultureInfo culture)
 		{
 			Resources.culture = culture;
 			
-			for (int i = 0; i < Resources.providers.Length; i++)
+			for (int i = 0; i < Resources.resource_providers.Length; i++)
 			{
-				Resources.providers[i].SelectLocale (culture);
+				Resources.resource_providers[i].SelectLocale (culture);
 			}
 		}
 		
@@ -722,7 +770,7 @@ namespace Epsitec.Common.Support
 					prefix   = full_id.Substring (0, pos);
 					local_id = full_id.Substring (pos+1);
 					
-					IResourceProvider provider = Resources.provider_hash[prefix] as IResourceProvider;
+					IResourceProvider provider = Resources.resource_provider_hash[prefix] as IResourceProvider;
 					
 					return provider;
 				}
@@ -734,7 +782,7 @@ namespace Epsitec.Common.Support
 					prefix   = Resources.DefaultPrefix;
 					local_id = full_id;
 					
-					IResourceProvider provider = Resources.provider_hash[prefix] as IResourceProvider;
+					IResourceProvider provider = Resources.resource_provider_hash[prefix] as IResourceProvider;
 					
 					return provider;
 				}
@@ -748,9 +796,10 @@ namespace Epsitec.Common.Support
 		
 		protected static CultureInfo			culture;
 		protected static CultureInfo[]			cultures;
-		protected static IResourceProvider[]	providers;
-		protected static Hashtable				provider_hash;
+		protected static IResourceProvider[]	resource_providers;
+		protected static Hashtable				resource_provider_hash;
 		protected static string					application_name;
 		protected static string					default_prefix = "file";
+		protected static IBundleProvider[]		bundle_providers;
 	}
 }

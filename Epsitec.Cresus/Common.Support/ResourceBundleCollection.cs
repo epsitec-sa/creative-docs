@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 10/05/2004
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
@@ -48,6 +48,14 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
+				if (level == ResourceLevel.Merged)
+				{
+					//	L'appelant aimerait avoir la version fusionnée des ressources. Nous
+					//	fabriquons ce bundle à la volée si besoin...
+					
+					return this.GetMerged (culture);
+				}
+				
 				foreach (ResourceBundle bundle in this.list)
 				{
 					if (Resources.EqualCultures (bundle.ResourceLevel, bundle.Culture, level, culture))
@@ -83,6 +91,14 @@ namespace Epsitec.Common.Support
 			set
 			{
 				this.name = value;
+			}
+		}
+		
+		public string							Prefix
+		{
+			get
+			{
+				return this.prefix;
 			}
 		}
 		
@@ -137,8 +153,15 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public void DefinePrefix(string prefix)
+		{
+			this.prefix = prefix;
+		}
+		
 		public void LoadBundles(string prefix, string[] ids)
 		{
+			this.DefinePrefix (prefix);
+			
 			this.Clear ();
 			
 			foreach (string id in ids)
@@ -328,8 +351,70 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		protected virtual ResourceBundle GetMerged(CultureInfo culture)
+		{
+			//	Retrouve la version "fusionnée" des divers bundles pour la culture
+			//	spécifiée. Si celle-ci a déjà été synthétisée auparavant, on utilise
+			//	la version cachée, sinon il faut la générer...
+			
+			if (this.merged == null)
+			{
+				this.merged = new System.Collections.ArrayList ();
+			}
+			
+			foreach (ResourceBundle bundle in this.merged)
+			{
+				if (Resources.EqualCultures (bundle.Culture, culture))
+				{
+					return bundle;
+				}
+			}
+			
+			//	Rien trouvé en cache pour cette culture : génère la version fusionnée
+			//	par nos propres moyens.
+			
+			ResourceBundle merged = this.CreateMerged (culture);
+			
+			if (merged != null)
+			{
+				this.merged.Add (merged);
+			}
+			
+			return merged;
+		}
+		
+		protected virtual ResourceBundle CreateMerged(CultureInfo culture)
+		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("Merging ressource {0} for culture '{1}'.", this.Name, culture.TwoLetterISOLanguageName));
+			
+			ResourceBundle model_default    = this[ResourceLevel.Default, culture];
+			ResourceBundle model_localised  = this[ResourceLevel.Localised, culture];
+			ResourceBundle model_customised = this[ResourceLevel.Customised, culture];
+			
+			if (model_default == null)
+			{
+				return null;
+			}
+			
+			ResourceBundle bundle = model_default.Clone ();
+			
+			if (model_localised != null)
+			{
+				bundle.Compile (model_localised.CreateXmlAsData ());
+			}
+			
+			if (model_customised != null)
+			{
+				bundle.Compile (model_customised.CreateXmlAsData ());
+			}
+			
+			return bundle;
+		}
+		
+		
 		private void HandleBundleFieldsChanged(object sender)
 		{
+			this.merged = null;
 			this.OnFieldsChanged ();
 		}
 		
@@ -338,7 +423,9 @@ namespace Epsitec.Common.Support
 		public event EventHandler				FieldsChanged;
 		
 		
+		private System.Collections.ArrayList	merged;
 		private System.Collections.ArrayList	list;
+		private string							prefix;
 		private string							name;
 	}
 }

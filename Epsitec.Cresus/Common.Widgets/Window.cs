@@ -72,17 +72,19 @@ namespace Epsitec.Common.Widgets
 					
 					switch (reason)
 					{
+						case InvalidateReason.Generic:
+							root.Invalidate ();
+							break;
+						
 						case InvalidateReason.AdornerChanged:
 							root.NotifyAdornerChanged ();
+							root.Invalidate ();
 							break;
 						
 						case InvalidateReason.CultureChanged:
 							root.NotifyCultureChanged ();
 							break;
 					}
-					
-					
-					root.Invalidate ();
 					
 					i++;
 				}

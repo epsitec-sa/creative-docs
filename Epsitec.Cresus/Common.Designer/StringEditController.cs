@@ -123,7 +123,7 @@ namespace Epsitec.Common.Designer
 				//	On s'assure que lors de la sauvegarde des bundles, l'édition n'est plus active; ceci
 				//	permet de garantir qu'aucun bundle partiel n'est enregistré...
 				
-				this.ValidateEdition ();
+				this.ValidateEdition (true);
 				
 				foreach (ResourceBundle bundle in bundles)
 				{
@@ -163,7 +163,7 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		public void ValidateEdition()
+		public void ValidateEdition(bool finished)
 		{
 			for (int i = 0; i < this.panels.Count; i++)
 			{
@@ -172,8 +172,22 @@ namespace Epsitec.Common.Designer
 				
 				if (edit.InteractionMode == ScrollInteractionMode.Edition)
 				{
-					edit.ValidateEdition (false);
+					edit.ValidateEdition (finished);
 				}
+			}
+		}
+		
+		public void SelectBundleField(string bundle, string field)
+		{
+			this.ValidateEdition (true);
+			
+			if (this.ActivateExistingBundle (bundle))
+			{
+				Panels.StringEditPanel panel = this.FindStore (bundle).Panel;
+				EditArray              edit  = panel.EditArray;
+				
+				edit.SelectedItem = field;
+				edit.Focus ();
 			}
 		}
 		
@@ -492,6 +506,7 @@ namespace Epsitec.Common.Designer
 				this.OnStoreContentsChanged ();
 			}
 			
+			
 			public string GetCellText(int row, int column)
 			{
 				ResourceBundle.Field field;
@@ -610,6 +625,7 @@ namespace Epsitec.Common.Designer
 				this.OnStoreContentsChanged ();
 			}
 			
+			
 			public int GetColumnCount()
 			{
 				return 2;
@@ -619,6 +635,7 @@ namespace Epsitec.Common.Designer
 			{
 				return this.CountBundleFields;
 			}
+			
 			
 			public bool CheckSetRow(int row)
 			{
@@ -660,6 +677,7 @@ namespace Epsitec.Common.Designer
 				
 				return this.ActiveBundle[this.DefaultBundle[row].Name].IsEmpty ? false : true;
 			}
+			
 			
 			public event Support.EventHandler	StoreContentsChanged;
 			#endregion
@@ -1061,7 +1079,7 @@ namespace Epsitec.Common.Designer
 		private void HandleMainPanelVisibleChanged(object sender)
 		{
 			System.Diagnostics.Debug.Assert (this.main_panel == sender);
-			this.ValidateEdition ();
+			this.ValidateEdition (false);
 		}
 		
 		
@@ -1109,7 +1127,7 @@ namespace Epsitec.Common.Designer
 		
 		protected virtual void OnActiveStoreChanged()
 		{
-			this.ValidateEdition ();
+			this.ValidateEdition (false);
 			this.UpdateCommandStates ();
 			
 			if (this.ActiveStoreChanged != null)
@@ -1121,6 +1139,8 @@ namespace Epsitec.Common.Designer
 		protected virtual void OnStoreContentsChanged()
 		{
 			this.UpdateCommandStates ();
+			
+			Window.InvalidateAll (Window.InvalidateReason.CultureChanged);
 			
 			if (this.StoreContentsChanged != null)
 			{

@@ -110,6 +110,8 @@ namespace Epsitec.Common.Designer.UI
 						string field  = adapter.FieldName;
 						string bundle = adapter.BundleName;
 						
+						adapter.StringController.LoadStringBundle (bundle);
+						
 						this.UpdateBundleList (adapter);
 						this.UpdateFieldList (adapter, bundle);
 						
@@ -221,7 +223,11 @@ namespace Epsitec.Common.Designer.UI
 			
 			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
 			
-			adapter.Application.OpenStringPicker (new Support.EventHandler (this.HandleStringPickerValidated));
+			string bundle = this.combo_bundle.Text;
+			string field  = this.combo_field.Text;
+			
+			adapter.StringController.LoadStringBundle (bundle);
+			adapter.Application.OpenStringPicker (bundle, field, new Support.EventHandler (this.HandleStringPickerValidated));
 		}
 		
 		private void HandleStringPickerValidated(object sender)

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Support
 	/// Implémentation d'un ResourceBundle basé sur un stockage interne de
 	/// l'information sous forme XML DOM.
 	/// </summary>
-	public class ResourceBundle
+	public class ResourceBundle : System.ICloneable
 	{
 		public static ResourceBundle Create()
 		{
@@ -62,14 +62,17 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		protected ResourceBundle(string name)
+		protected ResourceBundle()
 		{
-			this.DefineName (name);
-			
 			this.fields = new Field[0];
 		}
 		
-		protected ResourceBundle(ResourceBundle parent, string name, System.Xml.XmlNode xmlroot) : this(name)
+		protected ResourceBundle(string name) : this ()
+		{
+			this.DefineName (name);
+		}
+		
+		protected ResourceBundle(ResourceBundle parent, string name, System.Xml.XmlNode xmlroot) : this (name)
 		{
 			this.DefinePrefix (parent.prefix);
 			this.level  = parent.level;
@@ -938,6 +941,41 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		
+		public ResourceBundle Clone()
+		{
+			return this.CloneCopyToNewObject (this.CloneNewObject ()) as ResourceBundle;
+		}
+		
+		
+		protected virtual object CloneNewObject()
+		{
+			return new ResourceBundle ();
+		}
+		
+		protected virtual object CloneCopyToNewObject(object o)
+		{
+			ResourceBundle that = o as ResourceBundle;
+			
+			that.name    = this.name;
+			that.type    = this.type;
+			that.about   = this.about;
+			that.prefix  = this.prefix;
+			that.level   = this.level;
+			that.culture = this.culture;
+			
+			that.Compile (this.CreateXmlAsData ());
+			
+			return that;
+		}
+		
+		
+		#region ICloneable Members
+		object System.ICloneable.Clone()
+		{
+			return this.Clone ();
+		}
+		#endregion
 		
 		#region Class FieldList
 		public class FieldList : System.Collections.IList

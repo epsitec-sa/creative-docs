@@ -216,7 +216,6 @@ namespace Epsitec.Common.Designer.Panels
 			if ((this.old_edit_array_mode == ScrollInteractionMode.Edition) &&
 				(this.edit_array.InteractionMode != ScrollInteractionMode.Edition))
 			{
-				
 				//	L'utilisateur a terminé l'édition. Si la ligne actuellement sélectionnée
 				//	contient un nom invalide, on la supprime.
 				

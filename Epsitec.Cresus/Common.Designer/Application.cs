@@ -84,7 +84,7 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		internal void OpenStringPicker(Support.EventHandler accept_handler)
+		internal void OpenStringPicker(string bundle, string field, Support.EventHandler accept_handler)
 		{
 			Context.Save (this);
 			
@@ -92,6 +92,8 @@ namespace Epsitec.Common.Designer
 			this.switcher.SelectedName = PanelName.StringEdit.ToString ();
 			
 			this.switcher_accept_handler = accept_handler;
+			
+			this.StringEditController.SelectBundleField (bundle, field);
 		}
 		
 		

@@ -445,7 +445,7 @@ namespace Epsitec.Common.Designer.Editors
 			}
 			else
 			{
-				this.window.Text = this.root.Text;
+				this.window.Text = Support.Resources.ResolveTextRef (this.root.Text);
 			}
 		}
 		
