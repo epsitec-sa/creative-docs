@@ -68,7 +68,9 @@ namespace Epsitec.Cresus.Database
 /*		[Test] [Ignore("Assert in code, no exception thrown")] [ExpectedException (typeof (System.OverflowException))] public void CheckOverflowMax()
 		{
 			DbNumDef def = new DbNumDef ();
-			def.MaxValue = 1000000000000000000000000.0M;
+			def.MinValue = 0;
+			def.MaxValue = 99999999999999999999999.0M;
+			def.MaxValue++;		// Assert, car dépasse 24 digits
 		}*/
 
 		[Test] public void CheckMinimumBitsInt()

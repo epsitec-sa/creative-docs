@@ -4,7 +4,7 @@
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// L'énumération DbRawType liste tous les type bruts supportés par la base
+	/// L'énumération DbRawType liste tous les type bruts "supportés" par la base
 	/// de données, lesquels correspondent aux types fournis par ADO.NET.
 	/// </summary>
 	public enum DbRawType

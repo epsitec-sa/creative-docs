@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Database
 			field = SqlField.CreateConstant ("Test © Copyright 2003", DbRawType.String);
 			field.Alias = "StringDynamic";
 			fields.Add (field);
-			
+
 			sql_builder.InsertData ("FbTestTable", fields);
 			
 			System.Data.IDbCommand command = sql_builder.Command;

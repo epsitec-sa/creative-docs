@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier
+//	Statut : en chantier, complété DD 2003.11.14
 
 namespace Epsitec.Cresus.Database
 {
@@ -220,7 +220,16 @@ namespace Epsitec.Cresus.Database
 		
 		public void SetParameterOutResult(object raw_value)
 		{
-			//	TODO: crée et initialise une instance de SqlField.
+			if ((this.type == SqlFieldType.ParameterInOut) ||
+				(this.type == SqlFieldType.ParameterOut) ||
+				(this.type == SqlFieldType.ParameterResult))
+			{
+				this.value = raw_value;
+			}
+			else
+			{
+				throw new System.InvalidOperationException ("Field must be an 'out' parameter");
+			}
 		}
 		
 		
@@ -253,8 +262,9 @@ namespace Epsitec.Cresus.Database
 			
 			//	Exemple de constantes : 1.5, "X", etc.
 			
-			//	Une constante n'a généralement pas de nom d'alias (ça n'a pas
-			//	de sens).
+			//	Une constante n'a généralement pas de nom d'alias, sauf si la
+			//	constante est un paramètre à insérer. Dans ce cas, le nom d'alias
+			//	est alors le nom de la colonne dans la table.
 			
 			SqlField field	= new SqlField ();
 			
@@ -272,74 +282,105 @@ namespace Epsitec.Cresus.Database
 		
 		public static SqlField CreateParameterInOut(object raw_value, DbRawType raw_type)
 		{
-			//	TODO: crée et initialise une instance de SqlField.
-			return null;
+			SqlField field	= new SqlField ();
+			
+			field.type		= SqlFieldType.ParameterInOut;
+			field.raw_type	= raw_type;
+			field.value		= raw_value;
+
+			return field;
 		}
 		
 		public static SqlField CreateParameterOut(DbRawType raw_type)
 		{
-			//	TODO: crée et initialise une instance de SqlField.
-			return null;
+			SqlField field	= new SqlField ();
+			
+			field.type		= SqlFieldType.ParameterOut;
+			field.raw_type	= raw_type;
+//			field.value		= null;
+
+			return field;
 		}
 		
 		public static SqlField CreateParameterResult(DbRawType raw_type)
 		{
-			//	TODO: crée et initialise une instance de SqlField.
-			return null;
+			SqlField field	= new SqlField ();
+			
+			field.type		= SqlFieldType.ParameterResult;
+			field.raw_type	= raw_type;
+//			field.value		= null;
+
+			return field;
 		}
 		
 		public static SqlField CreateAll()
 		{
-			//	TODO: crée et initialise une instance de SqlField.
-			return null;
+			SqlField field	= new SqlField ();
+
+			return field;
 		}
 		
 		public static SqlField CreateName(string name)
 		{
-			//	TODO: crée et initialise une instance de SqlField.
-			return null;
+			return new SqlField (name);
 		}
 		
 		public static SqlField CreateName(string table_name, string column_name)
 		{
-			//	TODO: crée et initialise une instance de SqlField.
-			return null;
+			return new SqlField (DbSqlStandard.QualifyName (table_name, column_name));
 		}
 		
 		public static SqlField CreateAggregate(SqlAggregate aggregate)
 		{
-			//	TODO: crée et initialise une instance de SqlField.
-			return null;
+			SqlField field	= new SqlField ();
+			
+			field.type		= SqlFieldType.Aggregate;
+			field.value		= aggregate;
+
+			return field;
 		}
 		
 		public static SqlField CreateAggregate(SqlAggregateType aggregate_type, SqlField field)
 		{
-			//	TODO: crée et initialise une instance de SqlField.
-			return null;
+			return SqlField.CreateAggregate (new SqlAggregate(aggregate_type, field));
 		}
 		
 		public static SqlField CreateVariable()
 		{
-			//	TODO: crée et initialise une instance de SqlField.
-			return null;
+			SqlField field	= new SqlField ();
+			
+			field.type		= SqlFieldType.Variable;
+
+			return field;
 		}
 		
 		public static SqlField CreateFunction()
 		{
-			//	TODO: crée et initialise une instance de SqlField.
-			return null;
+			SqlField field	= new SqlField ();
+			
+			field.type		= SqlFieldType.Function;
+
+			return field;
 		}
 		
 		public static SqlField CreateProcedure(string procedure_name)
 		{
-			//	TODO: crée et initialise une instance de SqlField.
-			return null;
+			SqlField field	= new SqlField ();
+			
+			field.type		= SqlFieldType.Procedure;
+			field.value		= procedure_name;
+
+			return field;
 		}
 		
 		public static SqlField CreateSubQuery(SqlSelect sub_query)
 		{
-			//	TODO: crée et initialise une instance de SqlField.
-			return null;
+			SqlField field	= new SqlField ();
+			
+			field.type		= SqlFieldType.SubQuery;
+			field.value		= sub_query;
+
+			return field;
 		}
 		
 		
