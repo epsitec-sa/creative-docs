@@ -69,6 +69,12 @@ namespace Epsitec.Cresus.Remoting
 		}
 		
 		
+		public override string ToString()
+		{
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0}:{1}]", this.ClientId, this.Name);
+		}
+		
+		
 		private string							name;
 		private int								client_id;
 		

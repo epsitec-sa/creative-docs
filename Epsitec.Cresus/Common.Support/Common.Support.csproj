@@ -274,6 +274,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Sync.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Tags.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -25,6 +25,14 @@ namespace Epsitec.Cresus.Services
 		}
 		
 		
+		public Database.DbInfrastructure		Infrastructure
+		{
+			get
+			{
+				return this.orchestrator.Infrastructure;
+			}
+		}
+		
 		public Requests.Orchestrator			Orchestrator
 		{
 			get

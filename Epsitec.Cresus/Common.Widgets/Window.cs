@@ -700,12 +700,10 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.window != null)
 				{
-					System.Drawing.Size size = new System.Drawing.Size ((int)(value.Width + 0.5), (int)(value.Height + 0.5));
+					Drawing.Size window_size = this.window.WindowSize;
+					Drawing.Size client_size = this.ClientSize;
 					
-					if (this.window.ClientSize != size)
-					{
-						this.window.ClientSize = size;
-					}
+					this.window.WindowSize = new Drawing.Size (value.Width - client_size.Width + window_size.Width, value.Height - client_size.Height + window_size.Height);
 				}
 			}
 		}

@@ -12,11 +12,14 @@ namespace Epsitec.Cresus.Replication
 	{
 		public ServerEngine(DbInfrastructure infrastructure)
 		{
-			this.infrastructure   = infrastructure;
-			this.database         = this.infrastructure.CreateDbAbstraction ();
+			this.infrastructure = infrastructure;
+			this.database       = this.infrastructure.CreateDbAbstraction ();
+			this.queue          = new System.Collections.Queue ();
 			
-			this.thread_abort_event = new System.Threading.ManualResetEvent (false);
-			this.worker_thread = new System.Threading.Thread (new System.Threading.ThreadStart (this.WorkerThread));
+			this.abort_event    = new System.Threading.ManualResetEvent (false);
+			this.queue_event    = new System.Threading.AutoResetEvent (false);
+			
+			this.worker_thread  = new System.Threading.Thread (new System.Threading.ThreadStart (this.WorkerThread));
 			
 			this.worker_thread.Start ();
 		}
@@ -39,6 +42,16 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
+		public void Enqueue(Job job)
+		{
+			lock (this.queue)
+			{
+				this.queue.Enqueue (job);
+			}
+			
+			this.queue_event.Set ();
+		}
+		
 		#region IDisposable Members
 		public void Dispose()
 		{
@@ -49,27 +62,13 @@ namespace Epsitec.Cresus.Replication
 		
 		protected void WorkerThread()
 		{
-			System.Threading.WaitHandle[] handles = new System.Threading.WaitHandle[3];
-			
-//			handles[0] = ...;
-			handles[1] = Common.Support.Globals.AbortEvent;
-			handles[2] = this.thread_abort_event;
-			
 			try
 			{
 				System.Diagnostics.Debug.WriteLine ("Replication.ServerEngine Worker Thread launched.");
 				
 				for (;;)
 				{
-					int handle_index = System.Threading.WaitHandle.WaitAny (handles);
-					
-					//	Gère le cas particulier décrit dans la documentation où l'index peut être
-					//	incorrect dans certains cas :
-					
-					if (handle_index >= 128)
-					{
-						handle_index -= 128;
-					}
+					int handle_index = Common.Support.Sync.Wait (this.queue_event, this.abort_event);
 					
 					//	Tout événement autre que celui lié à la queue provoque l'interruption
 					//	du processus :
@@ -98,6 +97,38 @@ namespace Epsitec.Cresus.Replication
 		
 		protected void ProcessQueue()
 		{
+			for (;;)
+			{
+				Job job = null;
+				lock (this.queue)
+				{
+					if (this.queue.Count > 0)
+					{
+						job = this.queue.Dequeue () as Job;
+					}
+				}
+				
+				if (job == null)
+				{
+					break;
+				}
+				
+				try
+				{
+					this.ProcessQueueEntry (job);
+				}
+				catch (System.Exception ex)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Replication: ServerEngine.ProcessQueue failed job for client {0}; {1}", job.Client.ToString (), ex.Message));
+				}
+			}
+		}
+		
+		protected virtual void ProcessQueueEntry(Job job)
+		{
+			//	TODO: traiter la requête...
+			
+			job.SignalReady ();
 		}
 		
 		
@@ -111,7 +142,7 @@ namespace Epsitec.Cresus.Replication
 		{
 			if (disposing)
 			{
-				this.thread_abort_event.Set ();
+				this.abort_event.Set ();
 				this.worker_thread.Join ();
 				
 				this.database.Dispose ();
@@ -125,6 +156,8 @@ namespace Epsitec.Cresus.Replication
 		protected IDbAbstraction				database;
 		
 		System.Threading.Thread					worker_thread;
-		System.Threading.ManualResetEvent		thread_abort_event;
+		System.Threading.ManualResetEvent		abort_event;
+		System.Collections.Queue				queue;
+		System.Threading.AutoResetEvent			queue_event;
 	}
 }

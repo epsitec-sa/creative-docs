@@ -528,7 +528,9 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 			set
 			{
-				this.WindowBounds = new Drawing.Rectangle (value, this.WindowSize);
+				Drawing.Rectangle bounds = this.WindowBounds;
+				bounds.Offset (value.X - bounds.X, value.Y - bounds.Y);
+				this.WindowBounds = bounds;
 			}
 		}
 		

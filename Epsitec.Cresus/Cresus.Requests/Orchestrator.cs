@@ -60,27 +60,13 @@ namespace Epsitec.Cresus.Requests
 		
 		protected void WorkerThread()
 		{
-			System.Threading.WaitHandle[] handles = new System.Threading.WaitHandle[3];
-			
-			handles[0] = this.execution_queue.EnqueueEvent;
-			handles[1] = Common.Support.Globals.AbortEvent;
-			handles[2] = this.thread_abort_event;
-			
 			try
 			{
 				System.Diagnostics.Debug.WriteLine ("Requests.Orchestrator Worker Thread launched.");
 				
 				for (;;)
 				{
-					int handle_index = System.Threading.WaitHandle.WaitAny (handles);
-					
-					//	Gère le cas particulier décrit dans la documentation où l'index peut être
-					//	incorrect dans certains cas :
-					
-					if (handle_index >= 128)
-					{
-						handle_index -= 128;
-					}
+					int handle_index = Common.Support.Sync.Wait (this.execution_queue.EnqueueEvent, this.thread_abort_event);
 					
 					//	Tout événement autre que celui lié à la queue provoque l'interruption
 					//	du processus :
