@@ -34,7 +34,7 @@ namespace Epsitec.Common.NiceIcon
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"manifest:Epsitec.Common.NiceIcon/ObjectPoly/Images.poly.png"; }
+			get { return @"manifest:Epsitec.Common.NiceIcon/Images.poly.png"; }
 		}
 
 

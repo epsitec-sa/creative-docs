@@ -192,6 +192,34 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new Drawing.Size(700, 500);  // TODO: dessin initial KO sans cela !
 		}
 
+		[Test] public void CheckCanvasEngine()
+		{
+			Engine.Initialise();
+			
+			Window window = new Window();
+			
+			window.ClientSize = new Drawing.Size(200, 100);
+			window.Text = "CheckCanvasEngine";
+			
+			StaticText icon1 = new StaticText (@"<img src=""file:images/open2.icon""/>");
+			StaticText icon2 = new StaticText (@"<img src=""file:images/open2.icon""/>");
+			StaticText icon3 = new StaticText (@"<img src=""file:images/open2.icon""/>");
+			
+			icon1.Dock = DockStyle.Top;
+			icon1.Parent = window.Root;
+			icon1.Size = new Drawing.Size (20, 20);
+			icon2.Dock = DockStyle.Top;
+			icon2.Parent = window.Root;
+			icon2.SetClientZoom (1.5);
+			icon2.Size = new Drawing.Size (20*1.5, 20*1.5);
+			icon3.Dock = DockStyle.Top;
+			icon3.Parent = window.Root;
+			icon3.SetClientZoom (4.0);
+			icon3.Size = new Drawing.Size (20*4.0, 20*4.0);
+			
+			window.Show();
+			window.ClientSize = new Drawing.Size(200, 160);
+		}
 
 		protected Widget			root;
 		protected ToolBar			toolbar;
