@@ -98,6 +98,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public override string ToString()
+		{
+			return System.String.Format ("{{Key={0}}}", this.key_code);
+		}
+
+		
 		private ShortcutMode			mode;
 		private char					mnemonic_code;
 		private int						key_code;
