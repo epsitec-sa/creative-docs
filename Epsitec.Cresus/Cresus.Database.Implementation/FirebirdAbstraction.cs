@@ -12,10 +12,12 @@ namespace Epsitec.Cresus.Database.Implementation
 	/// </summary>
 	public class FirebirdAbstraction : IDbAbstraction
 	{
-		public FirebirdAbstraction(DbAccess db_access, IDbAbstractionFactory db_factory)
+		public FirebirdAbstraction(DbAccess db_access, IDbAbstractionFactory db_factory, EngineType engine_type)
 		{
-			this.db_access  = db_access;
-			this.db_factory = db_factory;
+			this.engine_type = engine_type;
+			this.server_type = (int) engine_type;
+			this.db_access   = db_access;
+			this.db_factory  = db_factory;
 			this.db_connection_string = this.MakeConnectionString (db_access);
 			
 			if (db_access.Create)
@@ -176,7 +178,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			values["Port"]        = FirebirdAbstraction.fb_port;
 			values["Charset"]     = FirebirdAbstraction.fb_charset;
 			values["PageSize"]    = FirebirdAbstraction.fb_page_size;
-			values["ServerType"]  = FirebirdAbstraction.fb_server_type;
+			values["ServerType"]  = this.server_type;
 			values["ForcedWrite"] = true;
 			
 			FbConnection.CreateDatabase (values);
@@ -198,7 +200,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			buffer.AppendFormat ("Port={0};", FirebirdAbstraction.fb_port);
 			buffer.AppendFormat ("Dialect={0};", FirebirdAbstraction.fb_dialect);
 			buffer.AppendFormat ("Packet Size={0};", FirebirdAbstraction.fb_page_size);
-			buffer.AppendFormat ("ServerType={0};", FirebirdAbstraction.fb_server_type);
+			buffer.AppendFormat ("ServerType={0};", this.server_type);
 			buffer.AppendFormat ("Charset={0};", FirebirdAbstraction.fb_charset);
 			
 			buffer.Append ("Role=;");
@@ -214,8 +216,22 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			buffer.Append (FirebirdAbstraction.fb_root_db_path);
-			buffer.Append (System.IO.Path.DirectorySeparatorChar);
+			switch (this.engine_type)
+			{
+				case EngineType.Embedded:
+					buffer.Append (Common.Support.Globals.Directories.CommonAppData);
+					buffer.Append (System.IO.Path.DirectorySeparatorChar);
+					break;
+				
+				case EngineType.Server:
+					buffer.Append (FirebirdAbstraction.fb_root_db_path);
+					buffer.Append (System.IO.Path.DirectorySeparatorChar);
+					break;
+				
+				default:
+					throw new Database.DbFactoryException (string.Format ("EngineType {0} not supported.", this.engine_type));
+			}
+			
 			buffer.Append (db_access.Database);
 			buffer.Append (FirebirdAbstraction.fb_db_extension);
 			
@@ -364,6 +380,9 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 		#endregion
 		
+		private int						server_type;
+		private EngineType				engine_type;
+		
 		private DbAccess				db_access;
 		private IDbAbstractionFactory	db_factory;
 		private FbConnection			db_connection;
@@ -376,7 +395,6 @@ namespace Epsitec.Cresus.Database.Implementation
 		protected static int			fb_port				= 3050;
 		protected static byte			fb_dialect			= 3;
 		protected static short			fb_page_size		= 8192;
-		protected static int			fb_server_type		= 0; // 1 = local, 0 = server
 		protected static string			fb_charset			= "UNICODE_FSS";
 		protected static string			fb_root_path		= @"C:\Program Files\Firebird15";
 		protected static string			fb_root_db_path		= @"C:\Program Files\Firebird15\Data\Epsitec";

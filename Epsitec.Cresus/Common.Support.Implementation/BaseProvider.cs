@@ -91,7 +91,11 @@ namespace Epsitec.Common.Support.Implementation
 		protected static DbAccess GetDbAccess(string application)
 		{
 			string base_name = application + "_resdb";
-			return DbInfrastructure.CreateDbAccess (base_name);
+			DbAccess  access = DbInfrastructure.CreateDbAccess (base_name);
+			
+			access.Provider = "FirebirdEmbedded";
+			
+			return access;
 		}
 		
 		

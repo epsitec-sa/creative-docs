@@ -203,6 +203,39 @@ namespace Epsitec.Cresus.Database
 			infrastructure.Dispose ();
 		}
 		
+		[Test] public void Check04CreateNewRowBatch()
+		{
+			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
+			
+			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
+			
+			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, null, db_table_a);
+			
+			int num = 1000;
+			
+			System.Diagnostics.Debug.WriteLine ("Creating " + num.ToString() + " rows.");
+			for (int i = 0; i < num; i++)
+			{
+				System.Data.DataRow row;
+				command.CreateNewRow ("Personnes", out row);
+				row["Nom"] = "Toto" + i.ToString ();
+				row["Prenom"] = "Foo" + i.ToString ();
+			}
+			System.Diagnostics.Debug.WriteLine ("-> created in DataTable");
+			
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
+			{
+				command.UpdateRealIds (transaction);
+				System.Diagnostics.Debug.WriteLine ("-> using real IDs");
+				command.UpdateTables (transaction);
+				System.Diagnostics.Debug.WriteLine ("-> sent to database");
+				transaction.Rollback ();
+				System.Diagnostics.Debug.WriteLine ("-> rolled back");
+			}
+			
+			infrastructure.Dispose ();
+		}
+		
 #if false
 		[Test] public void XxxTest()
 		{

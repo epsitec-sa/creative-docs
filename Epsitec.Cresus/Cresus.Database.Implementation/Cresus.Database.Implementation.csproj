@@ -105,12 +105,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "EngineType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "FirebirdAbstraction.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "FirebirdAbstractionFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FirebirdEmbeddedAbstractionFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

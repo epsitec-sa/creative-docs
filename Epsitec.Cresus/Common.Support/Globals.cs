@@ -15,7 +15,8 @@ namespace Epsitec.Common.Support
 		
 		static Globals()
 		{
-			Globals.properties = new Globals ();
+			Globals.properties  = new Globals ();
+			Globals.directories = new DirectoriesAccessor ();
 		}
 		
 		
@@ -24,6 +25,14 @@ namespace Epsitec.Common.Support
 			get
 			{
 				return Globals.properties;
+			}
+		}
+		
+		public static DirectoriesAccessor		Directories
+		{
+			get
+			{
+				return Globals.directories;
 			}
 		}
 		
@@ -96,8 +105,42 @@ namespace Epsitec.Common.Support
 			}
 		}
 		#endregion
+
+		#region DirectoriesAccessor class
+		public sealed class DirectoriesAccessor
+		{
+			public string						CommonAppData
+			{
+				get
+				{
+					return System.Windows.Forms.Application.CommonAppDataPath;
+				}
+			}
+			
+			public string						UserAppData
+			{
+				get
+				{
+					return System.Windows.Forms.Application.UserAppDataPath;
+				}
+			}
+			
+			public string						Executable
+			{
+				get
+				{
+					string name = System.Windows.Forms.Application.ExecutablePath;
+					string root = System.IO.Path.GetPathRoot (name);
+					string dir  = System.IO.Path.GetDirectoryName (name);
+					string path = System.IO.Path.Combine (root, dir);
+					return System.Windows.Forms.Application.StartupPath;
+				}
+			}
+		}
+		#endregion
 		
 		private System.Collections.Hashtable	property_hash;
 		private static Globals					properties;
+		private static DirectoriesAccessor		directories;
 	}
 }

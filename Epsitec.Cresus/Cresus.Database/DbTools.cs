@@ -23,11 +23,17 @@ namespace Epsitec.Cresus.Database
 			//	TODO: gérer les suffixes en fonction de la culture active, non en fonction de
 			//	la culture par défaut du gestionnaire de ressources par défaut !
 			
+			System.Globalization.CultureInfo culture = Resources.DefaultCulture;
+			ResourceManager                  manager = Resources.DefaultManager;
+			
 			switch (level)
 			{
-				case ResourceLevel.Default:		return name;
-				case ResourceLevel.Customised:	return DbTools.BuildCompositeName (name, Resources.CustomisedSuffix);
-				case ResourceLevel.Localised:	return DbTools.BuildCompositeName (name, Resources.LocalisedSuffix);
+				case ResourceLevel.Default:
+					return name;
+				
+				case ResourceLevel.Customised:
+				case ResourceLevel.Localised:
+					return DbTools.BuildCompositeName (name, manager.MapToSuffix (level, culture));
 			}
 			
 			throw new System.ArgumentException (string.Format ("Level {0} not valid here (name='{1}').", level, name), "level");
