@@ -44,6 +44,7 @@ namespace Epsitec.Common.Tests
 			this.editCrit = null;
 			this.buttonSearch = null;
 			this.listCrit = null;
+			this.listLook = null;
 			this.table = null;
 
 			this.buttonCreate = null;
@@ -272,7 +273,7 @@ namespace Epsitec.Common.Tests
 		{
 			Rectangle rect = this.window.Root.Client.Bounds;
 
-			this.menu = new Menu(MenuType.Horizontal);
+			this.menu = new HMenu();
 			this.menu.Name = "base";
 			this.menu.Location = new Point(0, rect.Height-this.menu.DefaultHeight);
 			this.menu.Size = new Size(rect.Width, this.menu.DefaultHeight);
@@ -284,7 +285,7 @@ namespace Epsitec.Common.Tests
 			this.menu.InsertItem("Aide");
 			this.menu.Parent = this.window.Root;
 
-			Menu fileMenu = new Menu(MenuType.Vertical);
+			VMenu fileMenu = new VMenu();
 			fileMenu.Name = "fileMenu";
 			fileMenu.InsertItem("", "Nouveau", "Ctrl+N");
 			fileMenu.InsertItem("open", "Ouvrir...", "Ctrl+O");
@@ -301,7 +302,7 @@ namespace Epsitec.Common.Tests
 			fileMenu.AdjustSize();
 			this.menu[0].Submenu = fileMenu;
 
-			Menu editMenu = new Menu(MenuType.Vertical);
+			VMenu editMenu = new VMenu();
 			editMenu.Name = "editMenu";
 			editMenu.InsertItem("", "Annuler", "Ctrl+Z");
 			editMenu.InsertSep();
@@ -311,7 +312,7 @@ namespace Epsitec.Common.Tests
 			editMenu.AdjustSize();
 			this.menu[1].Submenu = editMenu;
 
-			Menu showMenu = new Menu(MenuType.Vertical);
+			VMenu showMenu = new VMenu();
 			showMenu.Name = "showMenu";
 			showMenu.InsertItem("", "Adresses", "F5");
 			showMenu.InsertItem("", "Objets", "F6");
@@ -321,7 +322,7 @@ namespace Epsitec.Common.Tests
 			showMenu.AdjustSize();
 			this.menu[2].Submenu = showMenu;
 
-			Menu optMenu = new Menu(MenuType.Vertical);
+			VMenu optMenu = new VMenu();
 			optMenu.Name = "optMenu";
 			optMenu.InsertItem("", "Divers...", "");
 			optMenu.InsertItem("print", "Impression...", "");
@@ -329,7 +330,7 @@ namespace Epsitec.Common.Tests
 			optMenu.AdjustSize();
 			showMenu[3].Submenu = optMenu;
 
-			Menu setupMenu = new Menu(MenuType.Vertical);
+			VMenu setupMenu = new VMenu();
 			setupMenu.Name = "setupMenu";
 			setupMenu.InsertItem("", "Base...", "");
 			setupMenu.InsertItem("", "Global...", "");
@@ -339,7 +340,7 @@ namespace Epsitec.Common.Tests
 			setupMenu.AdjustSize();
 			showMenu[4].Submenu = setupMenu;
 
-			Menu debugMenu = new Menu(MenuType.Vertical);
+			VMenu debugMenu = new VMenu();
 			debugMenu.Name = "debugMenu";
 			debugMenu.InsertItem("", "Couleur A", "");
 			debugMenu.InsertItem("", "Couleur B", "");
@@ -347,7 +348,7 @@ namespace Epsitec.Common.Tests
 			debugMenu.AdjustSize();
 			this.menu[3].Submenu = debugMenu;
 
-			Menu debugMenu1 = new Menu(MenuType.Vertical);
+			VMenu debugMenu1 = new VMenu();
 			debugMenu1.Name = "debugMenu1";
 			debugMenu1.InsertItem("", "Rouge", "");
 			debugMenu1.InsertItem("", "Vert", "");
@@ -355,7 +356,7 @@ namespace Epsitec.Common.Tests
 			debugMenu1.AdjustSize();
 			debugMenu[0].Submenu = debugMenu1;
 
-			Menu debugMenu2 = new Menu(MenuType.Vertical);
+			VMenu debugMenu2 = new VMenu();
 			debugMenu2.Name = "debugMenu2";
 			debugMenu2.InsertItem("", "Rouge", "");
 			debugMenu2.InsertItem("", "Vert", "");
@@ -363,7 +364,7 @@ namespace Epsitec.Common.Tests
 			debugMenu2.AdjustSize();
 			debugMenu[1].Submenu = debugMenu2;
 
-			Menu debugMenu3 = new Menu(MenuType.Vertical);
+			VMenu debugMenu3 = new VMenu();
 			debugMenu3.Name = "debugMenu3";
 			debugMenu3.InsertItem("", "Rouge", "");
 			debugMenu3.InsertItem("", "Vert", "");
@@ -371,7 +372,7 @@ namespace Epsitec.Common.Tests
 			debugMenu3.AdjustSize();
 			debugMenu[2].Submenu = debugMenu3;
 
-			Menu helpMenu = new Menu(MenuType.Vertical);
+			VMenu helpMenu = new VMenu();
 			helpMenu.Name = "helpMenu";
 			helpMenu.InsertItem("", "Aide", "F1");
 			helpMenu.InsertItem("help", "Aide contextuelle", "");
@@ -418,7 +419,7 @@ namespace Epsitec.Common.Tests
 			this.title.Text = "<b>"+db.Title+"</b>";  // en gras
 			this.topPane.Children.Add(this.title);
 
-			this.editCrit = new TextField(TextFieldType.SingleLine);
+			this.editCrit = new TextField();
 			this.editCrit.Text = "";
 			this.editCrit.TextInserted += new EventHandler(this.editCrit_TextInserted);
 			this.topPane.Children.Add(this.editCrit);
@@ -429,21 +430,23 @@ namespace Epsitec.Common.Tests
 			this.topPane.Children.Add(this.buttonSearch);
 
 			this.listCrit = new ScrollList();
-			
-			
-			//	Génère les infos de debug pour le fond de la fenêtre, ce qui permet de
-			//	réaliser des timings.
-			
-//-			this.window.Root.DebugActive = true;
-
-#if false
-			this.listCrit.Scroller.ArrowDown.Name = "Down";
-			this.listCrit.Scroller.ArrowDown.DebugActive = true;
-			this.listCrit.Scroller.ArrowUp.Name = "Up";
-			this.listCrit.Scroller.ArrowUp.DebugActive = true;
-#endif
-			
 			this.topPane.Children.Add(this.listCrit);
+			
+			this.listLook = new ScrollList();
+
+			string[] list = Widgets.Adorner.Factory.AdornerNames;
+			int i = 0;
+			int sel = 0;
+			foreach ( string name in list )
+			{
+				this.listLook.AddText(name);
+				if ( name == Widgets.Adorner.Factory.ActiveName )  sel = i;
+				i ++;
+			}
+
+			this.listLook.SelectedIndex = sel;
+			this.listLook.SelectedIndexChanged += new EventHandler(this.HandleLook);
+			this.topPane.Children.Add(this.listLook);
 
 			this.table = new ScrollArray();
 			this.table.SelectedIndexChanged += new EventHandler(this.table_SelectedIndexChanged);
@@ -490,7 +493,7 @@ namespace Epsitec.Common.Tests
 				TextFieldType type = TextFieldType.SingleLine;
 				if ( fd.lines > 1 )  type = TextFieldType.MultiLine;
 				if ( fd.combo != "" )  type = TextFieldType.Combo;
-				TextField tf = new TextField(type);
+				TextFieldAny tf = new TextFieldAny(type);
 				tf.Name = fd.name;
 				tf.Text = "";
 				tf.Alignment = fd.alignment;
@@ -535,6 +538,14 @@ namespace Epsitec.Common.Tests
 			this.ResizeLayout();
 		}
 
+		private void HandleLook(object sender)
+		{
+			ScrollList sl = sender as ScrollList;
+			int sel = sl.SelectedIndex;
+			Widgets.Adorner.Factory.SetActive(sl.GetText(sel));
+			sl.RootParent.Invalidate();  // redessine toute la fenêtre
+		}
+
 		protected void ResizeLayout()
 		{
 			if ( this.pane == null )  return;
@@ -565,6 +576,9 @@ namespace Epsitec.Common.Tests
 
 			this.listCrit.Location = new Point(10, this.topPane.Height-50-this.buttonHeight-10-this.listCritHeight);
 			this.listCrit.Size = new Size(200, this.listCritHeight);
+
+			this.listLook.Location = new Point(220, this.topPane.Height-50-this.buttonHeight-10-this.listCritHeight);
+			this.listLook.Size = new Size(100, this.listCritHeight);
 
 			this.table.Location = new Point(10, 10);
 			this.table.Size = new Size(this.bottomPane.Width-20, this.bottomPane.Height-20);
@@ -598,7 +612,7 @@ namespace Epsitec.Common.Tests
 				st.Location = new Point(0, posy-20);
 				st.Size = new Size(this.labelWidth-10, 20);
 
-				TextField tf = (TextField)this.textFields[x];
+				TextFieldAny tf = (TextFieldAny)this.textFields[x];
 				tf.Location = new Point(this.labelWidth, posy-height);
 				double width = System.Math.Min(fd.max*7, maxWidth);
 				tf.Size = new Size(width, height);
@@ -660,7 +674,7 @@ namespace Epsitec.Common.Tests
 		}
 
 		// Initialise la liste d'une ligne éditable "combo".
-		protected void InitCombo(TextField tf, string combo)
+		protected void InitCombo(TextFieldAny tf, string combo)
 		{
 			while ( true )
 			{
@@ -842,7 +856,7 @@ namespace Epsitec.Common.Tests
 			int nbFields = this.db.TotalField;
 			for ( int i=0 ; i<nbFields ; i++ )
 			{
-				TextField tf = (TextField)this.textFields[i];
+				TextFieldAny tf = (TextFieldAny)this.textFields[i];
 				int fieldID = this.db.RetFieldID(i);
 				tf.Text = this.db.RetFieldInRecord(this.record, fieldID);
 			}
@@ -855,7 +869,7 @@ namespace Epsitec.Common.Tests
 			int nbFields = this.db.TotalField;
 			for ( int i=0 ; i<nbFields ; i++ )
 			{
-				TextField tf = (TextField)this.textFields[i];
+				TextFieldAny tf = (TextFieldAny)this.textFields[i];
 				int fieldID = this.db.RetFieldID(i);
 				this.db.SetFieldInRecord(this.record, fieldID, tf.Text);
 			}
@@ -889,7 +903,7 @@ namespace Epsitec.Common.Tests
 		// Met le focus dans une rubrique éditable.
 		protected void SetFocus(int rank)
 		{
-			TextField tf = (TextField)this.textFields[rank];
+			TextFieldAny tf = (TextFieldAny)this.textFields[rank];
 			tf.SelectAll();
 			tf.SetFocused(true);
 		}
@@ -1002,7 +1016,7 @@ namespace Epsitec.Common.Tests
 		protected double						buttonWidth = 80;
 		protected double						buttonHeight = 20;
 		protected WindowFrame					window;
-		protected Menu							menu;
+		protected HMenu							menu;
 		protected ToolBar						toolBar;
 		protected Pane							pane;
 		protected Pane							subPane;
@@ -1014,6 +1028,7 @@ namespace Epsitec.Common.Tests
 		protected TextField						editCrit;
 		protected Button						buttonSearch;
 		protected ScrollList					listCrit;
+		protected ScrollList					listLook;
 		protected ScrollArray					table;
 		protected Button						buttonCreate;
 		protected Button						buttonDuplicate;

@@ -99,7 +99,7 @@ namespace Epsitec.Common.Widgets
 					this.icon.Text = @"<img src=""file:..\..\" + this.iconName + @".png""/>";
 				}
 				this.iconSize = this.icon.SingleLineSize();
-				AdjustSize(ref this.iconSize);
+				this.AdjustSize(ref this.iconSize);
 			}
 		}
 
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.mainText.Text = value;
 				this.mainTextSize = this.mainText.SingleLineSize();
-				AdjustSize(ref this.mainTextSize);
+				this.AdjustSize(ref this.mainTextSize);
 			}
 		}
 
@@ -131,12 +131,12 @@ namespace Epsitec.Common.Widgets
 			{
 				this.shortKey.Text = value;
 				this.shortKeySize = this.shortKey.SingleLineSize();
-				AdjustSize(ref this.shortKeySize);
+				this.AdjustSize(ref this.shortKeySize);
 			}
 		}
 
 		// Sous-menu éventuel associé à la case.
-		public Menu Submenu
+		public AbstractMenu Submenu
 		{
 			get
 			{
@@ -308,7 +308,7 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Size		iconSize;
 		protected Drawing.Size		mainTextSize;
 		protected Drawing.Size		shortKeySize;
-		protected Menu				submenu;
+		protected AbstractMenu		submenu;
 		protected Drawing.Color		colorControlDark;
 	}
 }

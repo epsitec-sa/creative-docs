@@ -39,11 +39,18 @@ namespace Epsitec.Common.Tests
 
 			StaticText st = new StaticText();
 			st.Location = new Point(10, 265);
-			st.Width = 200;
-			st.Text = @"Choix du <b>look</b> de l'<a href=""http://www.epsitec.ch"">interface</a> :";
+			st.Width = 150;
+			st.Text = @"Choix du <b>look</b> de l'<i>interface</i> :";
 			st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
-			st.HyperTextClicked += new MessageEventHandler(st_HyperTextClicked);
 			window.Root.Children.Add(st);
+
+			StaticText link = new StaticText();
+			link.Location = new Point(360, 16);
+			link.Width = 200;
+			link.Text = @"Visitez notre <a href=""http://www.epsitec.ch"">site web</a> !";
+			link.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
+			link.HyperTextClicked += new MessageEventHandler(link_HyperTextClicked);
+			window.Root.Children.Add(link);
 
 			CreateListLook(window.Root.Children, new Point(10, 195));
 
@@ -91,7 +98,7 @@ namespace Epsitec.Common.Tests
 			radio3.Clicked += new MessageEventHandler(this.HandleRadio);
 			box.Children.Add(radio3);
 
-			Scroller scrollv = new VScroller();
+			VScroller scrollv = new VScroller();
 			scrollv.Location = new Point(120, 50);
 			scrollv.Size = new Size(15, 120);
 			scrollv.Range = 10;
@@ -102,7 +109,7 @@ namespace Epsitec.Common.Tests
 			scrollv.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(scrollv);
 
-			Scroller scrollh = new HScroller();
+			HScroller scrollh = new HScroller();
 			scrollh.Location = new Point(140, 50);
 			scrollh.Size = new Size(120, 15);
 			scrollh.Range = 10;
@@ -113,8 +120,7 @@ namespace Epsitec.Common.Tests
 			scrollh.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(scrollh);
 
-#if true
-			TextField combo = new TextField(TextFieldType.Combo);
+			TextFieldCombo combo = new TextFieldCombo();
 			combo.Location = new Point(160, 180);
 			combo.Width = 100;
 			combo.Text = "Janvier";
@@ -140,9 +146,8 @@ namespace Epsitec.Common.Tests
 			combo.ComboAddText("Dimanche");
 			combo.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(combo);
-#endif
 
-			TextField text = new TextField(TextFieldType.SingleLine);
+			TextField text = new TextField();
 			text.Location = new Point(160, 150);
 			text.Width = 100;
 			text.Text = "Bonjour";
@@ -150,7 +155,7 @@ namespace Epsitec.Common.Tests
 			text.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(text);
 
-			TextField tud = new TextField(TextFieldType.UpDown);
+			TextFieldUpDown tud = new TextFieldUpDown();
 			tud.Location = new Point(160, 125);
 			tud.Width = 50;
 			tud.Value = 50;
@@ -160,14 +165,13 @@ namespace Epsitec.Common.Tests
 			tud.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(tud);
 
-			TextField multi = new TextField(TextFieldType.MultiLine);
+			TextFieldMulti multi = new TextFieldMulti();
 			multi.Location = new Point(160, 70);
 			multi.Size = new Size(100, 50);
 			multi.Text = "Ceci est une petite phrase ridicule.<br/>Mais elle est assez longue pour faire des essais.";
 			multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(multi);
 
-#if true
 			ScrollList sl = new ScrollList();
 			sl.Location = new Point(270, 70);
 			sl.Size = new Size(90, 100);
@@ -178,22 +182,50 @@ namespace Epsitec.Common.Tests
 			sl.AddText("Avril");
 			sl.AddText("Mai");
 			sl.AddText("Juin");
-#if true
 			sl.AddText("Juillet <b>(B)</b>");
 			sl.AddText("Aout");
 			sl.AddText("Septembre");
 			sl.AddText("Octobre");
 			sl.AddText("Novembre");
 			sl.AddText("Decembre");
-#endif
 			sl.SelectedIndex = 5;  // sélectionne juin
 			if ( !sl.IsShowSelect() )  sl.ShowSelect(ScrollListShow.Middle);
 			sl.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(sl);
-#endif
+
+			StaticText st2 = new StaticText();
+			st2.Location = new Point(160, 220+4);
+			st2.Width = 90;
+			st2.Text = "Non editable :";
+			st2.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			window.Root.Children.Add(st2);
+
+			TextField textfix = new TextField();
+			textfix.Location = new Point(260, 220);
+			textfix.Width = 100;
+			textfix.Text = "Texte fixe";
+			textfix.ReadOnly = true;
+			textfix.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			window.Root.Children.Add(textfix);
+
+			TextFieldCombo combofix = new TextFieldCombo();
+			combofix.Location = new Point(370, 220);
+			combofix.Width = 100;
+			combofix.Text = "Mardi";
+			combofix.ReadOnly = true;
+			combofix.ComboAddText("Lundi");
+			combofix.ComboAddText("Mardi");
+			combofix.ComboAddText("Mercredi");
+			combofix.ComboAddText("Jeudi");
+			combofix.ComboAddText("Vendredi");
+			combofix.ComboAddText("Samedi");
+			combofix.ComboAddText("Dimanche");
+			combofix.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			window.Root.Children.Add(combofix);
+
 
 			ToolBar tb = new ToolBar();
-			tb.Location = new Point(160, 220);
+			tb.Location = new Point(160, 260);
 			tb.Width = 300;
 			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(tb);
@@ -203,7 +235,7 @@ namespace Epsitec.Common.Tests
 			tb.InsertIconButton("save");
 			tb.InsertSep(5);
 
-			TextField t1 = new TextField(TextFieldType.Combo);
+			TextFieldCombo t1 = new TextFieldCombo();
 			t1.Width = 70;
 			t1.Text = "Rouge";
 			t1.ComboAddText("Rouge");
@@ -217,7 +249,7 @@ namespace Epsitec.Common.Tests
 			tb.InsertIconButton("paste");
 
 #if true
-			Menu fileMenu = new Menu(MenuType.Vertical);
+			VMenu fileMenu = new VMenu();
 			fileMenu.Name = "0";
 			fileMenu.InsertItem("open", "Ouvrir...", "Ctrl+O");
 			fileMenu.InsertItem("save", "Enregistrer...", "Ctrl+S");
@@ -230,7 +262,7 @@ namespace Epsitec.Common.Tests
 			fileMenu.Location = new Point(370, 70);
 			window.Root.Children.Add(fileMenu);
 
-			Menu optMenu1 = new Menu(MenuType.Vertical);
+			VMenu optMenu1 = new VMenu();
 			optMenu1.Name = "1a";
 			optMenu1.InsertItem("", "Reglages 1.A", "");
 			optMenu1.InsertItem("", "Reglages 1.B", "");
@@ -239,7 +271,7 @@ namespace Epsitec.Common.Tests
 			optMenu1.AdjustSize();
 			fileMenu[3].Submenu = optMenu1;
 
-			Menu optMenu2 = new Menu(MenuType.Vertical);
+			VMenu optMenu2 = new VMenu();
 			optMenu2.Name = "1b";
 			optMenu2.InsertItem("", "Reglages 2.A", "");
 			optMenu2.InsertItem("", "Reglages 2.B", "");
@@ -248,7 +280,7 @@ namespace Epsitec.Common.Tests
 			optMenu2.AdjustSize();
 			fileMenu[4].Submenu = optMenu2;
 
-			Menu setupMenu1A = new Menu(MenuType.Vertical);
+			VMenu setupMenu1A = new VMenu();
 			setupMenu1A.Name = "2a";
 			setupMenu1A.InsertItem("", "Reglage 1.A.a", "");
 			setupMenu1A.InsertItem("", "Reglage 1.A.b", "");
@@ -257,7 +289,7 @@ namespace Epsitec.Common.Tests
 			setupMenu1A.AdjustSize();
 			optMenu1[0].Submenu = setupMenu1A;
 
-			Menu setupMenu1B = new Menu(MenuType.Vertical);
+			VMenu setupMenu1B = new VMenu();
 			setupMenu1B.Name = "2b";
 			setupMenu1B.InsertItem("", "Reglage 1.B.a", "");
 			setupMenu1B.InsertItem("", "Reglage 1.B.b", "");
@@ -266,7 +298,7 @@ namespace Epsitec.Common.Tests
 			setupMenu1B.AdjustSize();
 			optMenu1[1].Submenu = setupMenu1B;
 
-			Menu setupMenu2A = new Menu(MenuType.Vertical);
+			VMenu setupMenu2A = new VMenu();
 			setupMenu2A.Name = "2c";
 			setupMenu2A.InsertItem("", "Reglage 2.A.a", "");
 			setupMenu2A.InsertItem("", "Reglage 2.A.b", "");
@@ -275,7 +307,7 @@ namespace Epsitec.Common.Tests
 			setupMenu2A.AdjustSize();
 			optMenu2[0].Submenu = setupMenu2A;
 
-			Menu setupMenu2B = new Menu(MenuType.Vertical);
+			VMenu setupMenu2B = new VMenu();
 			setupMenu2B.Name = "2d";
 			setupMenu2B.InsertItem("", "Reglage 2.B.a", "");
 			setupMenu2B.InsertItem("", "Reglage 2.B.b", "");
@@ -302,6 +334,12 @@ namespace Epsitec.Common.Tests
 //			button.Toggle();
 		}
 
+		private void link_HyperTextClicked(object sender, MessageEventArgs e)
+		{
+			Widget widget = sender as Widget;
+			System.Diagnostics.Process.Start ("IExplore.exe", widget.HyperText);
+		}
+
 
 		[Test] public void CheckAdornerBigText()
 		{
@@ -310,7 +348,7 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size(400, 300);
 			window.Text = "CheckAdornerBigText";
 
-			TextField multi = new TextField(TextFieldType.MultiLine);
+			TextFieldMulti multi = new TextFieldMulti();
 			multi.Name = "Multi";
 			multi.Location = new Point(10, 10);
 			multi.Size = new Size(380, 280);
@@ -380,7 +418,7 @@ namespace Epsitec.Common.Tests
 			//b.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			page1.Children.Add(b);
 
-			TextField multi = new TextField(TextFieldType.MultiLine);
+			TextFieldMulti multi = new TextFieldMulti();
 			multi.Name = "Multi";
 			multi.Location = new Point(10, 45);
 			multi.Size = new Size(350, 200);
@@ -395,7 +433,7 @@ namespace Epsitec.Common.Tests
 			page2.TabTitle = "<m>D</m>euxieme";
 			tb.Add(page2);
 
-			Scroller scrollv = new VScroller();
+			VScroller scrollv = new VScroller();
 			scrollv.Name = "Scroller";
 			scrollv.Location = new Point(10, 10);
 			scrollv.Size = new Size(15, inside.Height-20);
@@ -618,7 +656,7 @@ namespace Epsitec.Common.Tests
 				for ( int x=0 ; x<5 ; x++ )
 				{
 					Cell cell = new Cell();
-					TextField text = new TextField(TextFieldType.SingleLine);
+					TextField text = new TextField();
 					text.TextFieldStyle = TextFieldStyle.Flat;
 					if ( x != 1 )
 					{
@@ -828,7 +866,7 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size(400, 300);
 			window.Text = "CheckAdornerBug2";
 
-			TextField text = new TextField(TextFieldType.SingleLine);
+			TextField text = new TextField();
 			text.Name = "TextField";
 			text.Location = new Point(160, 150);
 			text.Width = 100;
@@ -894,7 +932,7 @@ namespace Epsitec.Common.Tests
 				for ( int x=0 ; x<2 ; x++ )
 				{
 #if true
-					TextField text = new TextField(TextFieldType.SingleLine);
+					TextField text = new TextField();
 					text.TextFieldStyle = TextFieldStyle.Flat;
 					text.Text = "abc";
 					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
@@ -960,7 +998,7 @@ namespace Epsitec.Common.Tests
 			tb.Add(page2);
 
 #if true
-			Scroller scrollv = new VScroller();
+			VScroller scrollv = new VScroller();
 			scrollv.Name = "Scroller";
 			scrollv.Location = new Point(10, 10);
 			scrollv.Size = new Size(15, inside.Height-20);
@@ -1007,7 +1045,7 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(300, 300);
-			window.Text = "CheckAdornerTestParents1";
+			window.Text = "CheckAdornerTestParents2";
 
 			Button button1 = new Button();
 			button1.Location = new Point(50, 50);
@@ -1110,7 +1148,7 @@ namespace Epsitec.Common.Tests
 			radio3.Clicked += new MessageEventHandler(this.HandleRadio);
 			box.Children.Add(radio3);
 
-			TextField combo = new TextField(TextFieldType.Combo);
+			TextFieldCombo combo = new TextFieldCombo();
 			combo.Location = new Point(160, 180);
 			combo.Width = 100;
 			combo.Text = "Janvier";
@@ -1131,7 +1169,7 @@ namespace Epsitec.Common.Tests
 			combo.SetEnabled(false);
 			window.Root.Children.Add(combo);
 
-			TextField text = new TextField(TextFieldType.SingleLine);
+			TextField text = new TextField();
 			text.Location = new Point(160, 150);
 			text.Width = 100;
 			text.Text = "Bonjour";
@@ -1140,7 +1178,7 @@ namespace Epsitec.Common.Tests
 			text.SetEnabled(false);
 			window.Root.Children.Add(text);
 
-			TextField tud = new TextField(TextFieldType.UpDown);
+			TextFieldUpDown tud = new TextFieldUpDown();
 			tud.Location = new Point(160, 125);
 			tud.Width = 50;
 			tud.Value = 50;
@@ -1151,7 +1189,7 @@ namespace Epsitec.Common.Tests
 			tud.SetEnabled(false);
 			window.Root.Children.Add(tud);
 
-			TextField multi = new TextField(TextFieldType.MultiLine);
+			TextFieldMulti multi = new TextFieldMulti();
 			multi.Location = new Point(160, 70);
 			multi.Size = new Size(100, 50);
 			multi.Text = "Ceci est une petite phrase ridicule.<br/>Mais elle est assez longue pour faire des essais.";
@@ -1196,7 +1234,7 @@ namespace Epsitec.Common.Tests
 			tb.InsertIconButton("paste");
 			tb[1].SetEnabled(false);
 
-			Menu fileMenu = new Menu(MenuType.Vertical);
+			VMenu fileMenu = new VMenu();
 			fileMenu.InsertItem("open", "Ouvrir...", "Ctrl+O");
 			fileMenu.InsertItem("save", "Enregistrer...", "Ctrl+S");
 			fileMenu.InsertSep();
@@ -1211,11 +1249,5 @@ namespace Epsitec.Common.Tests
 
 
 		protected TabBook	tabBook;
-
-		private void st_HyperTextClicked(object sender, MessageEventArgs e)
-		{
-			Widget widget = sender as Widget;
-			System.Diagnostics.Process.Start ("IExplore.exe", widget.HyperText);
-		}
 	}
 }

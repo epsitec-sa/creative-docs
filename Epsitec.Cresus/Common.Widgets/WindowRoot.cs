@@ -69,9 +69,15 @@ namespace Epsitec.Common.Widgets
 			}
 			if (this.BackColor.A > 0.0)
 			{
+#if false
 				graphics.SolidRenderer.Color = this.BackColor;
 				graphics.AddFilledRectangle (x1, y1, x2-x1, y2-y1);
 				graphics.RenderSolid ();
+#else
+				IAdorner adorner = Widgets.Adorner.Factory.Active;
+				Drawing.Rectangle rect = new Drawing.Rectangle(x1, y1, x2-x1, y2-y1);
+				adorner.PaintWindowBackground(graphics, rect, WidgetState.None, Direction.None);
+#endif
 			}
 		}
 		

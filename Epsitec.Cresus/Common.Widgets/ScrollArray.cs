@@ -827,7 +827,7 @@ namespace Epsitec.Common.Widgets
 			WidgetState       state = this.PaintState;
 			Direction         dir   = this.RootDirection;
 			
-			adorner.PaintTextFieldBackground(graphics, rect, state, dir, TextFieldStyle.Normal);
+			adorner.PaintTextFieldBackground(graphics, rect, state, dir, TextFieldStyle.Normal, false);
 
 			Drawing.Rectangle localClip = this.MapClientToRoot(this.rectInside);
 			Drawing.Rectangle saveClip  = graphics.SaveClippingRectangle();
@@ -946,8 +946,8 @@ namespace Epsitec.Common.Widgets
 		protected Widget						header;		// père de l'en-tête horizontale
 		protected System.Collections.ArrayList	headerButton = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	headerSlider = new System.Collections.ArrayList();
-		protected Scroller						scrollerV;
-		protected Scroller						scrollerH;
+		protected VScroller						scrollerV;
+		protected HScroller						scrollerH;
 		protected int							visibleRows;
 		protected int							visibleRowsFull;
 		protected int							firstRow = 0;

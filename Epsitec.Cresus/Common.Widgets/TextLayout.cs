@@ -4,21 +4,26 @@ namespace Epsitec.Common.Widgets
 	{
 		public AnchorEventArgs(double x, double y, double dx, double dy, int index)
 		{
-			this.rect  = new Drawing.Rectangle (x, y, dx, dy);
+			this.rect  = new Drawing.Rectangle(x, y, dx, dy);
 			this.index = index;
 		}
 		
-		public Drawing.Rectangle			Bounds
+		public Drawing.Rectangle Bounds
 		{
-			get { return this.rect; }
+			get
+			{
+				return this.rect;
+			}
 		}
 		
-		public int							Index
+		public int Index
 		{
-			get { return this.index; }
+			get
+			{
+				return this.index;
+			}
 		}
-		
-		
+				
 		private Drawing.Rectangle			rect;
 		private int							index;
 	}
@@ -379,7 +384,7 @@ namespace Epsitec.Common.Widgets
 					double ascender  = block.font.Ascender * block.fontSize;
 					double descender = block.font.Descender * block.fontSize;
 					
-					this.OnAnchor(new AnchorEventArgs (x, y+descender, block.width, ascender-descender, block.beginIndex));
+					this.OnAnchor(new AnchorEventArgs(x, y+descender, block.width, ascender-descender, block.beginIndex));
 				}
 
 				graphics.PaintText(x, y, block.text, block.font, block.fontSize, color);

@@ -80,7 +80,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Scroller Scroller
+		public AbstractScroller Scroller
 		{
 			get { return this.scroller; }
 		}
@@ -449,7 +449,7 @@ namespace Epsitec.Common.Widgets
 				case ScrollListStyle.Flat:    style = TextFieldStyle.Flat;    break;
 				case ScrollListStyle.Simple:  style = TextFieldStyle.Simple;  break;
 			}
-			adorner.PaintTextFieldBackground(graphics, rect, state, dir, style);
+			adorner.PaintTextFieldBackground(graphics, rect, state, dir, style, false);
 
 			this.UpdateScroller();
 			Drawing.Point pos = new Drawing.Point(this.margin, rect.Height-this.margin-this.lineHeight);
@@ -497,7 +497,7 @@ namespace Epsitec.Common.Widgets
 		protected double						rightMargin;
 		protected double						extraMargin;
 		protected double						lineHeight;
-		protected Scroller						scroller;
+		protected VScroller						scroller;
 		protected int							visibleLines;
 		protected int							firstLine = 0;
 		protected int							selectedLine = -1;

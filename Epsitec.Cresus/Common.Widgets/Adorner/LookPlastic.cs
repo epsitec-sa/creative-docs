@@ -1,12 +1,13 @@
 namespace Epsitec.Common.Widgets.Adorner
 {
 	/// <summary>
-	/// La classe Adorner.LookXP implémente le décorateur "presque comme Windows XP".
+	/// La classe Adorner.LookPlastic implémente le décorateur qui imite le plastic.
 	/// </summary>
-	public class LookXP : IAdorner
+	public class LookPlastic : IAdorner
 	{
-		public LookXP()
+		public LookPlastic()
 		{
+			this.bitmap = Support.ImageProvider.Default.GetImage(@"file:..\..\lookPlastic.png").BitmapImage;
 			RefreshColors();
 		}
 
@@ -16,7 +17,6 @@ namespace Epsitec.Common.Widgets.Adorner
 			double r,g,b;
 
 			this.colorBlack             = Drawing.Color.FromName("WindowFrame");
-			this.colorWindow            = Drawing.Color.FromName("Control");
 			this.colorControl           = Drawing.Color.FromName("Control");
 			this.colorControlLight      = Drawing.Color.FromName("ControlLight");
 			this.colorControlLightLight = Drawing.Color.FromName("ControlLightLight");
@@ -25,9 +25,9 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorCaption           = Drawing.Color.FromName("ActiveCaption");
 			this.colorCaptionText       = Drawing.Color.FromName("ActiveCaptionText");
 
-			r = 1-(1-this.colorControlLight.R)/2;
-			g = 1-(1-this.colorControlLight.G)/2;
-			b = 1-(1-this.colorControlLight.B)/2;
+			r = 1-(1-this.colorControlLight.R)*0.5;
+			g = 1-(1-this.colorControlLight.G)*0.5;
+			b = 1-(1-this.colorControlLight.B)*0.5;
 			this.colorScrollerBack = Drawing.Color.FromRGB(r,g,b);
 
 			r = 1-(1-this.colorCaption.R)*0.25;
@@ -35,9 +35,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			b = 1-(1-this.colorCaption.B)*0.25;
 			this.colorCaptionLight = Drawing.Color.FromRGB(r,g,b);
 
-			this.colorButton = Drawing.Color.FromRGB(243.0/255.0, 243.0/255.0, 238.0/255.0);
-			this.colorFocus  = Drawing.Color.FromRGB(157.0/255.0, 188.0/255.0, 235.0/255.0);
+			r = 1-(1-this.colorControlLight.R)*0.7;
+			g = 1-(1-this.colorControlLight.G)*0.7;
+			b = 1-(1-this.colorControlLight.B)*0.7;
+			this.colorButton = Drawing.Color.FromRGB(r,g,b);
+
 			this.colorHilite = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorBorder = Drawing.Color.FromRGB( 23.0/255.0, 132.0/255.0, 198.0/255.0);
+			this.colorWindow = Drawing.Color.FromRGB(198.0/255.0, 226.0/255.0, 234.0/255.0);
 		}
 		
 
@@ -58,56 +63,44 @@ namespace Epsitec.Common.Widgets.Adorner
 							   Widgets.Direction shadow,
 							   Widgets.Direction dir)
 		{
+			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+			{
+				rect.Offset(1, -1);
+			}
 			Drawing.Point center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
 			Drawing.Path path = new Drawing.Path();
+			double spikeShift = 0.15;
+			double baseShiftH = 0.30;
+			double baseShiftV = 0.15;
 			switch ( dir )
 			{
 				case Direction.Up:
-					path.MoveTo(center.X+0.0*rect.Width, center.Y+0.2*rect.Height);
-					path.LineTo(center.X-0.3*rect.Width, center.Y-0.1*rect.Height);
-					path.LineTo(center.X-0.2*rect.Width, center.Y-0.2*rect.Height);
-					path.LineTo(center.X+0.0*rect.Width, center.Y+0.0*rect.Height);
-					path.LineTo(center.X+0.2*rect.Width, center.Y-0.2*rect.Height);
-					path.LineTo(center.X+0.3*rect.Width, center.Y-0.1*rect.Height);
+					path.MoveTo(center.X, center.Y+rect.Height*spikeShift);
+					path.LineTo(center.X-rect.Width*baseShiftH, center.Y-rect.Height*baseShiftV);
+					path.LineTo(center.X+rect.Width*baseShiftH, center.Y-rect.Height*baseShiftV);
 					break;
 
 				case Direction.Down:
-					path.MoveTo(center.X+0.0*rect.Width, center.Y-0.2*rect.Height);
-					path.LineTo(center.X-0.3*rect.Width, center.Y+0.1*rect.Height);
-					path.LineTo(center.X-0.2*rect.Width, center.Y+0.2*rect.Height);
-					path.LineTo(center.X+0.0*rect.Width, center.Y-0.0*rect.Height);
-					path.LineTo(center.X+0.2*rect.Width, center.Y+0.2*rect.Height);
-					path.LineTo(center.X+0.3*rect.Width, center.Y+0.1*rect.Height);
+					path.MoveTo(center.X, center.Y-rect.Height*spikeShift);
+					path.LineTo(center.X-rect.Width*baseShiftH, center.Y+rect.Height*baseShiftV);
+					path.LineTo(center.X+rect.Width*baseShiftH, center.Y+rect.Height*baseShiftV);
 					break;
 
 				case Direction.Right:
-					path.MoveTo(center.X+0.2*rect.Width, center.Y+0.0*rect.Height);
-					path.LineTo(center.X-0.1*rect.Width, center.Y-0.3*rect.Height);
-					path.LineTo(center.X-0.2*rect.Width, center.Y-0.2*rect.Height);
-					path.LineTo(center.X+0.0*rect.Width, center.Y+0.0*rect.Height);
-					path.LineTo(center.X-0.2*rect.Width, center.Y+0.2*rect.Height);
-					path.LineTo(center.X-0.1*rect.Width, center.Y+0.3*rect.Height);
+					path.MoveTo(center.X+rect.Width*spikeShift, center.Y);
+					path.LineTo(center.X-rect.Width*baseShiftV, center.Y+rect.Height*baseShiftH);
+					path.LineTo(center.X-rect.Width*baseShiftV, center.Y-rect.Height*baseShiftH);
 					break;
 
 				case Direction.Left:
-					path.MoveTo(center.X-0.2*rect.Width, center.Y+0.0*rect.Height);
-					path.LineTo(center.X+0.1*rect.Width, center.Y-0.3*rect.Height);
-					path.LineTo(center.X+0.2*rect.Width, center.Y-0.2*rect.Height);
-					path.LineTo(center.X-0.0*rect.Width, center.Y+0.0*rect.Height);
-					path.LineTo(center.X+0.2*rect.Width, center.Y+0.2*rect.Height);
-					path.LineTo(center.X+0.1*rect.Width, center.Y+0.3*rect.Height);
+					path.MoveTo(center.X-rect.Width*spikeShift, center.Y);
+					path.LineTo(center.X+rect.Width*baseShiftV, center.Y+rect.Height*baseShiftH);
+					path.LineTo(center.X+rect.Width*baseShiftV, center.Y-rect.Height*baseShiftH);
 					break;
 			}
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
-			if ( (state&WidgetState.Enabled) != 0 )
-			{
-				graphics.RenderSolid(this.colorBlack);
-			}
-			else
-			{
-				graphics.RenderSolid(this.colorControlDark);
-			}
+			graphics.RenderSolid(this.colorBlack);
 		}
 
 		// Dessine un bouton à cocher sans texte.
@@ -116,55 +109,51 @@ namespace Epsitec.Common.Widgets.Adorner
 							   Widgets.WidgetState state,
 							   Widgets.Direction shadow)
 		{
+			rect.Inflate(-0.5, -0.5);
 			graphics.Align(ref rect);
-			Drawing.Rectangle rInside;
-
-			graphics.AddFilledRectangle(rect);
-			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
-			{
-				graphics.RenderSolid(this.colorControl);
-			}
-			else
-			{
-				graphics.RenderSolid(this.colorControlLightLight);
-			}
-
-			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
-			{
-				rInside = rect;
-				rInside.Inflate(-1.5, -1.5);
-				graphics.LineWidth = 2;
-				graphics.AddRectangle(rInside);
-				graphics.RenderSolid(this.colorHilite);
-			}
-
-			graphics.LineWidth = 1;
-			graphics.LineCap = Drawing.CapStyle.Butt;
-
-			rInside = rect;
-			rInside.Inflate(-0.5, -0.5);
-			graphics.AddRectangle(rInside);
-			graphics.RenderSolid(this.colorControlDarkDark);
 
 			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
 			{
-				Drawing.Point center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
-				Drawing.Path path = new Drawing.Path();
-				path.MoveTo(center.X-rect.Width*0.1, center.Y-rect.Height*0.1);
-				path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.3);
-				path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.1);
-				path.LineTo(center.X-rect.Width*0.1, center.Y-rect.Height*0.3);
-				path.LineTo(center.X-rect.Width*0.3, center.Y-rect.Height*0.1);
-				path.LineTo(center.X-rect.Width*0.3, center.Y+rect.Height*0.1);
-				path.Close();
-				graphics.Rasterizer.AddSurface(path);
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
-					graphics.RenderSolid(this.colorCaption);
+					if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rect, 52);
+					}
+					else if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rect, 51);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, 51);
+					}
 				}
 				else
 				{
-					graphics.RenderSolid(this.colorControlDark);
+					this.PaintImageButton(graphics, rect, 53);
+				}
+			}
+			else
+			{
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rect, 49);
+					}
+					else if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rect, 51);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, 48);
+					}
+				}
+				else
+				{
+					this.PaintImageButton(graphics, rect, 50);
 				}
 			}
 		}
@@ -175,42 +164,51 @@ namespace Epsitec.Common.Widgets.Adorner
 							   Widgets.WidgetState state,
 							   Widgets.Direction shadow)
 		{
+			rect.Inflate(-0.5, -0.5);
 			graphics.Align(ref rect);
-			Drawing.Rectangle rInside;
-
-			this.PaintCircle(graphics, rect, this.colorControlDarkDark);
-
-			rInside = rect;
-			rInside.Inflate(-1, -1);
-
-			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
-			{
-				this.PaintCircle(graphics, rInside, this.colorHilite);
-				rInside.Inflate(-1, -1);
-				this.PaintCircle(graphics, rInside, this.colorHilite);
-				rInside.Inflate(-1, -1);
-			}
-
-			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
-			{
-				this.PaintCircle(graphics, rInside, this.colorControl);
-			}
-			else
-			{
-				this.PaintCircle(graphics, rInside, this.colorControlLightLight);
-			}
 
 			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
 			{
-				rInside = rect;
-				rInside.Inflate(-rect.Height*0.3, -rect.Height*0.3);
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
-					this.PaintCircle(graphics, rInside, this.colorCaption);
+					if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rect, 44);
+					}
+					else if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rect, 43);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, 43);
+					}
 				}
 				else
 				{
-					this.PaintCircle(graphics, rInside, this.colorControlDark);
+					this.PaintImageButton(graphics, rect, 45);
+				}
+			}
+			else
+			{
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rect, 41);
+					}
+					else if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rect, 43);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, 40);
+					}
+				}
+				else
+				{
+					this.PaintImageButton(graphics, rect, 42);
 				}
 			}
 		}
@@ -230,104 +228,73 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Widgets.Direction shadow,
 										  Widgets.ButtonStyle style)
 		{
+			Drawing.Rectangle rInside;
+			rInside = rect;
+			rInside.Inflate(-1, -1);
+
 			if ( style == ButtonStyle.Normal        ||
-				style == ButtonStyle.DefaultActive )
+				 style == ButtonStyle.DefaultActive )
 			{
-				Drawing.Path path = PathRoundRectangle(rect, 0);
-			
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
 					if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 					{
-						graphics.SolidRenderer.Color = this.colorControl;
+						this.PaintImageButton(graphics, rect, 4);
+					}
+					else if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rect, 1);
 					}
 					else
 					{
-						graphics.SolidRenderer.Color = this.colorButton;
+						this.PaintImageButton(graphics, rect, 0);
 					}
 				}
 				else
 				{
-					graphics.SolidRenderer.Color = this.colorControl;
+					this.PaintImageButton(graphics, rect, 3);
 				}
-				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid();
-			
-				if ( (state&WidgetState.Focused) != 0 )
-				{
-					Drawing.Rectangle rInside = rect;
-					rInside.Inflate(-1.5, -1.5);
-					Drawing.Path pInside = PathRoundRectangle(rInside, 0);
-					graphics.SolidRenderer.Color = this.colorFocus;
-					graphics.Rasterizer.AddOutline(pInside, 2);
-					graphics.RenderSolid();
-				}
-
-				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
-				{
-					Drawing.Rectangle rInside = rect;
-					rInside.Inflate(-1.5, -1.5);
-					Drawing.Path pInside = PathRoundRectangle(rInside, 0);
-					graphics.SolidRenderer.Color = this.colorHilite;
-					graphics.Rasterizer.AddOutline(pInside, 2);
-					graphics.RenderSolid();
-				}
-
-				if ( (state&WidgetState.Enabled) != 0 )
-				{
-					graphics.SolidRenderer.Color = this.colorBlack;
-				}
-				else
-				{
-					graphics.SolidRenderer.Color = this.colorControlDark;
-				}
-				graphics.Rasterizer.AddOutline(path, 1);
-				graphics.RenderSolid();
 			}
 			else if ( style == ButtonStyle.Scroller )
 			{
-				Drawing.Path path = PathRoundRectangle(rect, 0);
-				graphics.SolidRenderer.Color = this.colorFocus;
-				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid();
-
-				Drawing.Rectangle rInside = rect;
-				rInside.Right  -= 1;
-				rInside.Bottom += 1;
-				Drawing.Path pInside = PathRoundRectangle(rInside, 0);
-				graphics.SolidRenderer.Color = this.colorControlLightLight;
-				graphics.Rasterizer.AddOutline(pInside, 1);
-				graphics.RenderSolid();
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rInside, 4);
+					}
+					else if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rInside, 1);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rInside, 0);
+					}
+				}
+				else
+				{
+					this.PaintImageButton(graphics, rInside, 3);
+				}
 			}
 			else if ( style == ButtonStyle.ToolItem )
 			{
-				if ( (state&WidgetState.Entered) != 0 ||  // bouton survolé ?
-					(state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.colorCaptionLight);
-
-					Drawing.Rectangle rInside;
-					rInside = rect;
-					rInside.Inflate(-0.5, -0.5);
-					graphics.AddRectangle(rInside);
-					graphics.RenderSolid(this.colorCaption);
+					this.PaintImageButton(graphics, rect, 1);
 				}
-
-				state &= ~WidgetState.Focused;
+				if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+				{
+					this.PaintImageButton(graphics, rect, 4);
+				}
 			}
 			else if ( style == ButtonStyle.ListItem )
 			{
-				if ( (state&WidgetState.Selected) != 0 )
-				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.colorCaption);
-				}
+				this.PaintImageButton(graphics, rect, 0);
 			}
 			else
 			{
-				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.colorControl);
+				this.PaintImageButton(graphics, rect, 0);
 			}
 		}
 
@@ -341,8 +308,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			if ( text == null )  return;
 
-			if ( (state&WidgetState.Engaged) != 0 &&  // bouton pressé ?
-				 style == ButtonStyle.ToolItem )
+			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 			{
 				pos.X ++;
 				pos.Y --;
@@ -372,28 +338,18 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					if ( readOnly )
-					{
-						graphics.RenderSolid(this.colorControl);
-					}
-					else
-					{
-						graphics.RenderSolid(this.colorControlLightLight);
-					}
+					this.PaintImageButton(graphics, rect, readOnly?28:26);
 				}
 				else
 				{
-					graphics.RenderSolid(this.colorControl);
+					this.PaintImageButton(graphics, rect, 28);
 				}
 
-				graphics.LineWidth = 1;
-				graphics.LineCap = Drawing.CapStyle.Butt;
-
-				Drawing.Rectangle rInside = rect;
-				rInside.Inflate(-0.5, -0.5);
-
-				graphics.AddRectangle(rInside);
-				graphics.RenderSolid(this.colorCaption);
+				double radius = this.RetRadiusFrame(rect);
+				Drawing.Path path = PathRoundRectangle(rect, radius);
+				graphics.SolidRenderer.Color = this.colorBorder;
+				graphics.Rasterizer.AddOutline(path, 1);
+				graphics.RenderSolid();
 			}
 			else if ( style == TextFieldStyle.Simple )
 			{
@@ -402,7 +358,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 				rect.Inflate(-0.5, -0.5);
 				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.colorBlack);
+				graphics.RenderSolid(this.colorBorder);
 			}
 			else
 			{
@@ -427,13 +383,18 @@ namespace Epsitec.Common.Widgets.Adorner
 											Widgets.WidgetState state,
 											Widgets.Direction shadow)
 		{
-			graphics.AddFilledRectangle(frameRect);
-			graphics.RenderSolid(this.colorScrollerBack);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				this.PaintImageButton(graphics, frameRect, 25);
+			}
+			else
+			{
+				this.PaintImageButton(graphics, frameRect, 27);
+			}
 
 			if ( !tabRect.IsEmpty )
 			{
-				graphics.AddFilledRectangle(tabRect);
-				graphics.RenderSolid(this.colorControlDark);
+				this.PaintImageButton(graphics, tabRect, 34);
 			}
 		}
 
@@ -446,7 +407,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			this.PaintButtonBackground(graphics, frameRect, state, shadow, ButtonStyle.Scroller);
 
-			Drawing.Rectangle	rect;
+			Drawing.Rectangle	rect = new Drawing.Rectangle();
 			Drawing.Point		center;
 
 			if ( (state&WidgetState.Enabled) != 0 )
@@ -455,51 +416,29 @@ namespace Epsitec.Common.Widgets.Adorner
 				{
 					case Direction.Up:
 					case Direction.Down:
-						rect = frameRect;
-						if ( rect.Width >= 10 && rect.Height >= 20 )
+						if ( frameRect.Width >= 10 && frameRect.Height >= 20 )
 						{
-							center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
-							center.Y = System.Math.Floor(center.Y)+0.5;
-							double y = center.Y-4;
-							for ( int i=0 ; i<4 ; i++ )
-							{
-								graphics.AddLine(center.X-rect.Width*0.25, y, center.X+rect.Width*0.25, y);
-								y += 2;
-							}
-							graphics.RenderSolid(this.colorCaption);
-
-							y = center.Y-4+1;
-							for ( int i=0 ; i<4 ; i++ )
-							{
-								graphics.AddLine(center.X-rect.Width*0.25-1, y, center.X+rect.Width*0.25-1, y);
-								y += 2;
-							}
-							graphics.RenderSolid(this.colorControlLightLight);
+							center = new Drawing.Point((frameRect.Left+frameRect.Right)/2, (frameRect.Bottom+frameRect.Top)/2);
+							rect.Left   = center.X-frameRect.Width*0.3;
+							rect.Right  = center.X+frameRect.Width*0.3;
+							rect.Bottom = center.Y-frameRect.Width*0.4;
+							rect.Top    = center.Y+frameRect.Width*0.4;
+							graphics.Align(ref rect);
+							this.PaintImageButton(graphics, rect, 36);
 						}
 						break;
 
 					case Direction.Left:
 					case Direction.Right:
-						rect = frameRect;
-						if ( rect.Height >= 10 && rect.Width >= 20 )
+						if ( frameRect.Height >= 10 && frameRect.Width >= 20 )
 						{
-							center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
-							center.X = System.Math.Floor(center.X)-0.5;
-							double x = center.X-4+1;
-							for ( int i=0 ; i<4 ; i++ )
-							{
-								graphics.AddLine(x, center.Y-rect.Height*0.25, x, center.Y+rect.Height*0.25);
-								x += 2;
-							}
-							graphics.RenderSolid(this.colorCaption);
-
-							x = center.X-4;
-							for ( int i=0 ; i<4 ; i++ )
-							{
-								graphics.AddLine(x, center.Y-rect.Height*0.25+1, x, center.Y+rect.Height*0.25+1);
-								x += 2;
-							}
-							graphics.RenderSolid(this.colorControlLightLight);
+							center = new Drawing.Point((frameRect.Left+frameRect.Right)/2, (frameRect.Bottom+frameRect.Top)/2);
+							rect.Left   = center.X-frameRect.Height*0.4;
+							rect.Right  = center.X+frameRect.Height*0.4;
+							rect.Bottom = center.Y-frameRect.Height*0.3;
+							rect.Top    = center.Y+frameRect.Height*0.3;
+							graphics.Align(ref rect);
+							this.PaintImageButton(graphics, rect, 37);
 						}
 						break;
 				}
@@ -521,16 +460,14 @@ namespace Epsitec.Common.Widgets.Adorner
 								  Widgets.WidgetState state,
 								  Widgets.Direction shadow)
 		{
-			Drawing.Rectangle rect = new Drawing.Rectangle();
-
-			rect = frameRect;
-			rect.Inflate(-0.5, -0.5);
-			graphics.LineWidth = 1;
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorControlDark);
+			double radius = this.RetRadiusFrame(frameRect);
+			Drawing.Path path = PathRoundRectangle(frameRect, radius);
+			graphics.SolidRenderer.Color = this.colorBorder;
+			graphics.Rasterizer.AddOutline(path, 1);
+			graphics.RenderSolid();
 
 			graphics.AddFilledRectangle(titleRect);
-			graphics.RenderSolid(this.colorControl);
+			graphics.RenderSolid(this.colorWindow);
 		}
 
 		public void PaintSepLine(Drawing.Graphics graphics,
@@ -580,13 +517,11 @@ namespace Epsitec.Common.Widgets.Adorner
 								  Widgets.WidgetState state,
 								  Widgets.Direction shadow)
 		{
-			rect.Inflate(-0.5, -0.5);
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorControlDarkDark);
+			this.PaintImageButton(graphics, rect, 32);
 
 			rect.Inflate(-0.5, -0.5);
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.colorButton);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(this.colorBorder);
 		}
 
 		// Dessine l'onglet devant les autres.
@@ -597,25 +532,14 @@ namespace Epsitec.Common.Widgets.Adorner
 											Widgets.Direction shadow)
 		{
 			titleRect.Bottom += 1;
-
-			double radius = System.Math.Min(titleRect.Width, titleRect.Height)/8;
-			Drawing.Path pTitle = PathTopRoundRectangle(titleRect, radius);
-
-			graphics.SolidRenderer.Color = this.colorButton;
-			graphics.Rasterizer.AddSurface(pTitle);
-			graphics.RenderSolid();
-
-			Drawing.Rectangle rHilite = new Drawing.Rectangle();
-			rHilite = titleRect;
-			rHilite.Bottom = rHilite.Top-3;
-			Drawing.Path pHilite = PathTopRoundRectangle(rHilite, radius);
-			graphics.SolidRenderer.Color = this.colorHilite;
-			graphics.Rasterizer.AddSurface(pHilite);
-			graphics.RenderSolid();
-
-			graphics.SolidRenderer.Color = this.colorControlDarkDark;
-			graphics.Rasterizer.AddOutline(pTitle, 1);
-			graphics.RenderSolid();
+			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+			{
+				this.PaintImageButton(graphics, titleRect, 9);
+			}
+			else
+			{
+				this.PaintImageButton(graphics, titleRect, 8);
+			}
 		}
 
 		public void PaintTabAboveForeground(Drawing.Graphics graphics,
@@ -635,28 +559,14 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			titleRect.Left  += 1;
 			titleRect.Right -= 1;
-
-			double radius = System.Math.Min(titleRect.Width, titleRect.Height)/8;
-			Drawing.Path pTitle = PathTopRoundRectangle(titleRect, radius);
-
-			graphics.SolidRenderer.Color = this.colorControl;
-			graphics.Rasterizer.AddSurface(pTitle);
-			graphics.RenderSolid();
-
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 			{
-				Drawing.Rectangle rHilite = new Drawing.Rectangle();
-				rHilite = titleRect;
-				rHilite.Bottom = rHilite.Top-3;
-				Drawing.Path pHilite = PathTopRoundRectangle(rHilite, radius);
-				graphics.SolidRenderer.Color = this.colorHilite;
-				graphics.Rasterizer.AddSurface(pHilite);
-				graphics.RenderSolid();
+				this.PaintImageButton(graphics, titleRect, 9);
 			}
-
-			graphics.SolidRenderer.Color = this.colorControlDarkDark;
-			graphics.Rasterizer.AddOutline(pTitle, 1);
-			graphics.RenderSolid();
+			else
+			{
+				this.PaintImageButton(graphics, titleRect, 12);
+			}
 		}
 
 		public void PaintTabSunkenForeground(Drawing.Graphics graphics,
@@ -672,8 +582,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			if ( (state&WidgetState.Selected) != 0 )
 			{
-				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.colorCaption);
+				this.PaintImageButton(graphics, rect, 33);
 			}
 		}
 
@@ -696,22 +605,26 @@ namespace Epsitec.Common.Widgets.Adorner
 				rect.Top    -= 1;
 				rect.Left   += 1;
 			}
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.colorControl);
-
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 			{
 				if ( type == Direction.Up )
 				{
-					rect.Top = rect.Bottom+2;
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.colorHilite);
+					this.PaintImageButton(graphics, rect, 9);
 				}
 				if ( type == Direction.Left )
 				{
-					rect.Left = rect.Right-2;
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.colorHilite);
+					this.PaintImageButton(graphics, rect, 17);
+				}
+			}
+			else
+			{
+				if ( type == Direction.Up )
+				{
+					this.PaintImageButton(graphics, rect, 8);
+				}
+				if ( type == Direction.Left )
+				{
+					this.PaintImageButton(graphics, rect, 16);
 				}
 			}
 		}
@@ -731,15 +644,7 @@ namespace Epsitec.Common.Widgets.Adorner
 										Direction shadow,
 										Direction type)
 		{
-			rect.Inflate(-0.5, -0.5);
-
-			graphics.AddLine(rect.Left, rect.Top, rect.Right, rect.Top);
-			graphics.AddLine(rect.Left, rect.Bottom, rect.Left, rect.Top);
-			graphics.RenderSolid(this.colorControlLightLight);
-
-			graphics.AddLine(rect.Left, rect.Bottom, rect.Right, rect.Bottom);
-			graphics.AddLine(rect.Right, rect.Bottom, rect.Right, rect.Top);
-			graphics.RenderSolid(this.colorControlDark);
+			this.PaintImageButton(graphics, rect, 0);
 		}
 
 		public void PaintToolForeground(Drawing.Graphics graphics,
@@ -758,33 +663,23 @@ namespace Epsitec.Common.Widgets.Adorner
 										Drawing.Rectangle parentRect,
 										double iconWidth)
 		{
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.colorControlLightLight);
+			this.PaintImageButton(graphics, rect, 32);
 
+#if false
 			if ( iconWidth > 0 )
 			{
 				Drawing.Rectangle band = rect;
-				band.Width = iconWidth;
+				band.Left += 1;
+				band.Width = iconWidth-1;
 				band.Top -= 1;
 				band.Bottom += 1;
-				graphics.AddFilledRectangle(band);
-				graphics.RenderSolid(this.colorControl);
+				this.PaintImageButton(graphics, band, 32);
 			}
+#endif
 
 			rect.Inflate(-0.5, -0.5);
-			if ( parentRect.IsEmpty )
-			{
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.colorControlDark);
-			}
-			else
-			{
-				graphics.AddLine(rect.Left, rect.Top+0.5, rect.Left, rect.Bottom-0.5);
-				graphics.AddLine(rect.Left-0.5, rect.Bottom, rect.Right+0.5, rect.Bottom);
-				graphics.AddLine(rect.Right, rect.Bottom-0.5, rect.Right, rect.Top+0.5);
-				graphics.AddLine(parentRect.Right-0.5, rect.Top, rect.Right+0.5, rect.Top);
-				graphics.RenderSolid(this.colorControlDark);
-			}
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(this.colorBorder);
 		}
 
 		public void PaintMenuForeground(Drawing.Graphics graphics,
@@ -808,27 +703,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( itemType == MenuItemType.Select )
 				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.colorCaptionLight);
-
-					Drawing.Rectangle rInside;
-					rInside = rect;
-					rInside.Inflate(-0.5, -0.5);
-					graphics.AddRectangle(rInside);
-					graphics.RenderSolid(this.colorCaption);
+					this.PaintImageButton(graphics, rect, 0);
 				}
 				if ( itemType == MenuItemType.Parent )
 				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.colorControl);
-
-					Drawing.Rectangle rInside;
-					rInside = rect;
-					rInside.Inflate(-0.5, -0.5);
-					graphics.AddLine(rInside.Left, rInside.Bottom-0.5, rInside.Left, rInside.Top);
-					graphics.AddLine(rInside.Left, rInside.Top, rInside.Right, rInside.Top);
-					graphics.AddLine(rInside.Right, rInside.Top, rInside.Right, rInside.Bottom-0.5);
-					graphics.RenderSolid(this.colorControlDark);
+					this.PaintImageButton(graphics, rect, 8);
 				}
 			}
 
@@ -836,14 +715,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( itemType != MenuItemType.Deselect )
 				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.colorCaptionLight);
-
-					Drawing.Rectangle rInside;
-					rInside = rect;
-					rInside.Inflate(-0.5, -0.5);
-					graphics.AddRectangle(rInside);
-					graphics.RenderSolid(this.colorCaption);
+					this.PaintImageButton(graphics, rect, 0);
 				}
 			}
 		}
@@ -903,8 +775,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			foreach ( Drawing.Rectangle rect in rects )
 			{
 				rect.Offset(pos);
-				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.colorCaption);
+				this.PaintImageButton(graphics, rect, 33);
 			}
 		}
 
@@ -936,14 +807,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlDark);
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlDarkDark);
 			}
 
 			if ( (state&WidgetState.Focused) != 0 )
 			{
 				Drawing.Rectangle rFocus = text.StandardRectangle;
 				rFocus.Offset(pos);
-				graphics.Align (ref rFocus);
+				graphics.Align(ref rFocus);
 				rFocus.Inflate(2.5, -0.5);
 				PaintFocusBox(graphics, rFocus);
 			}
@@ -962,7 +833,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				radius = System.Math.Min(dx, dy)/8;
 			}
-
+			
 			Drawing.Path path = new Drawing.Path();
 			path.MoveTo (ox+radius+0.5, oy+0.5);
 			path.LineTo (ox+dx-radius-0.5, oy+0.5);
@@ -978,7 +849,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			return path;
 		}
 
-		// Crée le chemin d'un rectangle à coins arrondis en forme de "u" inversé.
+		// Crée le chemin d'un rectangle à coins arrondis en forme de "U" inversé.
 		protected Drawing.Path PathTopRoundRectangle(Drawing.Rectangle rect, double radius)
 		{
 			double ox = rect.Left;
@@ -1002,6 +873,30 @@ namespace Epsitec.Common.Widgets.Adorner
 			return path;
 		}
 
+		// Crée le chemin d'un rectangle à coins arrondis en forme de "D" inversé.
+		protected Drawing.Path PathLeftRoundRectangle(Drawing.Rectangle rect, double radius)
+		{
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			if ( radius == 0 )
+			{
+				radius = System.Math.Min(dx, dy)/8;
+			}
+			
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo (ox+dx-0.5, oy+0.5);
+			path.LineTo (ox+radius+0.5, oy+0.5);
+			path.CurveTo(ox+0.5, oy+0.5, ox+0.5, oy+radius+0.5);
+			path.LineTo (ox+0.5, oy+dy-radius-0.5);
+			path.CurveTo(ox+0.5, oy+dy-0.5, ox+radius+0.5, oy+dy-0.5);
+			path.LineTo (ox+dx-0.5, oy+dy-0.5);
+
+			return path;
+		}
+
 		// Dessine un cercle complet.
 		protected void PaintCircle(Drawing.Graphics graphics,
 								   Drawing.Rectangle rect,
@@ -1021,8 +916,123 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.RenderSolid(color);
 		}
 
+		// Retourne le rayon à utiliser pour une zone rectangulaire.
+		protected double RetRadiusButton(Drawing.Rectangle rect)
+		{
+			double dim = System.Math.Min(rect.Width, rect.Height);
+			double radius = System.Math.Min(dim/2, 10);
+			double middle = System.Math.Max(dim-radius*2, 2);
+			return System.Math.Floor((dim-middle)/2);
+		}
 
-		// Variables membres de TextLayout.
+		// Retourne le rayon à utiliser pour une zone rectangulaire.
+		protected double RetRadiusFrame(Drawing.Rectangle rect)
+		{
+			double dim = System.Math.Min(rect.Width, rect.Height);
+			double radius = System.Math.Min(dim/2, 5);
+			double middle = System.Math.Max(dim-radius*2, 2);
+			return System.Math.Floor((dim-middle)/2);
+		}
+
+		// Dessine un bouton composé de 9 morceaux d'image.
+		protected void PaintImageButton(Drawing.Graphics graphics,
+										Drawing.Rectangle rect,
+										int rank)
+		{
+			Drawing.Rectangle icon = new Drawing.Rectangle();
+			icon.Left   = 32*(rank%8);
+			icon.Right  = icon.Left+32;
+			icon.Top    = 256-32*(rank/8);
+			icon.Bottom = icon.Top-32;
+
+			if ( rank < 24 )
+			{
+				this.PaintImageButton9(graphics, rect, this.RetRadiusButton(rect), icon, 14);
+			}
+			else if ( rank < 32 )
+			{
+				this.PaintImageButton9(graphics, rect, this.RetRadiusFrame(rect), icon, 14);
+			}
+			else
+			{
+				this.PaintImageButton1(graphics, rect, icon);
+			}
+		}
+
+		// Dessine un bouton composé d'un seul morceau d'image.
+		protected void PaintImageButton1(Drawing.Graphics graphics,
+										 Drawing.Rectangle rect,
+										 Drawing.Rectangle icon)
+		{
+			icon.Inflate(-0.5, -0.5);
+			graphics.PaintImage(this.bitmap, rect, icon);
+		}
+
+		// Dessine un bouton composé de 9 morceaux d'image.
+		protected void PaintImageButton9(Drawing.Graphics graphics,
+										 Drawing.Rectangle rect,
+										 double rectMargin,
+										 Drawing.Rectangle icon,
+										 double iconMargin)
+		{
+			if ( rectMargin <= 1 )
+			{
+				PaintImageButton1(graphics, rect, icon);
+				return;
+			}
+
+			graphics.Align(ref rect);
+
+			Drawing.Rectangle prect = new Drawing.Rectangle();
+			Drawing.Rectangle picon = new Drawing.Rectangle();
+
+			for ( int i=0 ; i<3 ; i++ )
+			{
+				switch ( i )
+				{
+					case 0:
+						prect.Bottom = rect.Bottom;
+						prect.Top    = rect.Bottom+rectMargin;
+						picon.Bottom = icon.Bottom;
+						picon.Top    = icon.Bottom+iconMargin;
+						break;
+					case 1:
+						prect.Bottom = rect.Bottom+rectMargin;
+						prect.Top    = rect.Top-rectMargin;
+						picon.Bottom = icon.Bottom+iconMargin;
+						picon.Top    = icon.Top-iconMargin;
+						break;
+					case 2:
+						prect.Bottom = rect.Top-rectMargin;
+						prect.Top    = rect.Top;
+						picon.Bottom = icon.Top-iconMargin;
+						picon.Top    = icon.Top;
+						break;
+				}
+
+				prect.Left   = rect.Left;
+				prect.Right  = rect.Left+rectMargin;
+				picon.Left   = icon.Left;
+				picon.Right  = icon.Left+iconMargin;
+				graphics.PaintImage(this.bitmap, prect, picon);
+
+				prect.Left   = rect.Left+rectMargin;
+				prect.Right  = rect.Right-rectMargin;
+				picon.Left   = icon.Left+iconMargin;
+				picon.Right  = icon.Right-iconMargin;
+				graphics.PaintImage(this.bitmap, prect, picon);
+
+				prect.Left   = rect.Right-rectMargin;
+				prect.Right  = rect.Right;
+				picon.Left   = icon.Right-iconMargin;
+				picon.Right  = icon.Right;
+				graphics.PaintImage(this.bitmap, prect, picon);
+			}
+		}
+
+
+		// Variables membres.
+		protected Drawing.Bitmap	bitmap;
 		protected Drawing.Color		colorBlack;
 		protected Drawing.Color		colorControl;
 		protected Drawing.Color		colorControlLight;
@@ -1034,8 +1044,8 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorCaptionText;
 		protected Drawing.Color		colorCaptionLight;
 		protected Drawing.Color		colorButton;
-		protected Drawing.Color		colorFocus;
 		protected Drawing.Color		colorHilite;
+		protected Drawing.Color		colorBorder;
 		protected Drawing.Color		colorWindow;
 	}
 }

@@ -45,10 +45,10 @@ namespace Epsitec.Common.Widgets
 			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 			
-			if (this.BackColor.IsTransparent == false)
+			if ( !this.BackColor.IsTransparent )
 			{
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.BackColor);
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.BackColor);
 			}
 			
 			adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state, dir);

@@ -16,6 +16,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			double r,g,b;
 
 			this.colorBlack             = Drawing.Color.FromName("WindowFrame");
+			this.colorWindow            = Drawing.Color.FromName("Control");
 			this.colorControl           = Drawing.Color.FromName("Control");
 			this.colorControlLight      = Drawing.Color.FromName("ControlLight");
 			this.colorControlLightLight = Drawing.Color.FromName("ControlLightLight");
@@ -42,6 +43,16 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorHilite = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
 		}
 		
+
+		// Dessine le fond d'une fenêtre.
+		public void PaintWindowBackground(Drawing.Graphics graphics,
+										  Drawing.Rectangle rect,
+										  WidgetState state,
+										  Direction shadow)
+		{
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(this.colorWindow);
+		}
 
 		// Dessine une flèche (dans un bouton d'ascenseur par exemple).
 		public void PaintArrow(Drawing.Graphics graphics,
@@ -108,6 +119,7 @@ namespace Epsitec.Common.Widgets.Adorner
 							   Widgets.WidgetState state,
 							   Widgets.Direction shadow)
 		{
+			graphics.Align(ref rect);
 			Drawing.Rectangle rInside;
 
 			graphics.AddFilledRectangle(rect);
@@ -166,6 +178,7 @@ namespace Epsitec.Common.Widgets.Adorner
 							   Widgets.WidgetState state,
 							   Widgets.Direction shadow)
 		{
+			graphics.Align(ref rect);
 			Drawing.Rectangle rInside;
 
 			this.PaintCircle(graphics, rect, this.colorControlDarkDark);
@@ -370,14 +383,22 @@ namespace Epsitec.Common.Widgets.Adorner
 											 Drawing.Rectangle rect,
 											 Widgets.WidgetState state,
 											 Widgets.Direction shadow,
-											 Widgets.TextFieldStyle style)
+											 Widgets.TextFieldStyle style,
+											 bool readOnly)
 		{
 			if ( style == TextFieldStyle.Normal )
 			{
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					graphics.RenderSolid(this.colorControlLightLight);
+					if ( readOnly )
+					{
+						graphics.RenderSolid(this.colorControl);
+					}
+					else
+					{
+						graphics.RenderSolid(this.colorControlLightLight);
+					}
 				}
 				else
 				{
@@ -413,7 +434,8 @@ namespace Epsitec.Common.Widgets.Adorner
 											 Drawing.Rectangle rect,
 											 Widgets.WidgetState state,
 											 Widgets.Direction shadow,
-											 Widgets.TextFieldStyle style)
+											 Widgets.TextFieldStyle style,
+											 bool readOnly)
 		{
 		}
 
@@ -1041,5 +1063,6 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorCaptionLight;
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;
+		protected Drawing.Color		colorWindow;
 	}
 }

@@ -1587,7 +1587,7 @@ namespace Epsitec.Common.Widgets
 			Direction         dir   = this.RootDirection;
 			
 			// Dessine le cadre et le fond du tableau.
-			adorner.PaintTextFieldBackground(graphics, rect, state, dir, TextFieldStyle.Normal);
+			adorner.PaintTextFieldBackground(graphics, rect, state, dir, TextFieldStyle.Normal, false);
 
 #if false
 			if ( this.showScrollerV && this.showScrollerH )
@@ -1695,8 +1695,8 @@ namespace Epsitec.Common.Widgets
 		protected bool							showScrollerH = true;
 		protected double						offsetV = 0;
 		protected double						offsetH = 0;
-		protected Scroller						scrollerV;
-		protected Scroller						scrollerH;
+		protected VScroller						scrollerV;
+		protected HScroller						scrollerH;
 		protected System.Collections.ArrayList	headerButtonV = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	headerButtonH = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	headerSliderV = new System.Collections.ArrayList();

@@ -3,20 +3,26 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe HScroller implémente l'ascenceur horizontal.
 	/// </summary>
-	public class HScroller : Scroller
+	public class HScroller : AbstractScroller
 	{
-		public HScroller() : base (false)
+		public HScroller() : base(false)
 		{
 		}
 		
-		public override double				DefaultHeight
+		public override double DefaultHeight
 		{
-			get { return Scroller.defaultBreadth; }
+			get
+			{
+				return AbstractScroller.defaultBreadth;
+			}
 		}
 		
-		public override Drawing.Size		DefaultMinSize
+		public override Drawing.Size DefaultMinSize
 		{
-			get { return new Drawing.Size (Scroller.minimalThumb+6, Scroller.defaultBreadth); }
+			get
+			{
+				return new Drawing.Size (AbstractScroller.minimalThumb+6, AbstractScroller.defaultBreadth);
+			}
 		}
 	}
 }

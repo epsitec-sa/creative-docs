@@ -3,20 +3,26 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe VScroller implémente l'ascenceur vertical.
 	/// </summary>
-	public class VScroller : Scroller
+	public class VScroller : AbstractScroller
 	{
-		public VScroller() : base (true)
+		public VScroller() : base(true)
 		{
 		}
 		
-		public override double				DefaultWidth
+		public override double DefaultWidth
 		{
-			get { return Scroller.defaultBreadth; }
+			get
+			{
+				return AbstractScroller.defaultBreadth;
+			}
 		}
 		
-		public override Drawing.Size		DefaultMinSize
+		public override Drawing.Size DefaultMinSize
 		{
-			get { return new Drawing.Size (Scroller.defaultBreadth, Scroller.minimalThumb+6); }
+			get
+			{
+				return new Drawing.Size (AbstractScroller.defaultBreadth, AbstractScroller.minimalThumb+6);
+			}
 		}
 	}
 }

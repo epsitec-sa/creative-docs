@@ -122,6 +122,21 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "AbstractMenu.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AbstractScroller.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AbstractTextField.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Animation.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -197,6 +212,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "HMenu.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "HScroller.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -208,11 +228,6 @@
                 />
                 <File
                     RelPath = "IconButton.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Menu.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -263,11 +278,6 @@
                 />
                 <File
                     RelPath = "ScrollArray.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Scroller.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -327,6 +337,26 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TextFieldAny.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TextFieldCombo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TextFieldMulti.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TextFieldUpDown.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TextLayout.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -343,6 +373,11 @@
                 />
                 <File
                     RelPath = "ToolBar.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "VMenu.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -398,6 +433,11 @@
                 />
                 <File
                     RelPath = "Adorner\LookMetal.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Adorner\LookPlastic.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

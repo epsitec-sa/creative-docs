@@ -42,8 +42,19 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorCaption = Drawing.Color.FromRGB(170.0/255.0, 195.0/255.0, 249.0/255.0);
 			this.colorHilite  = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
 			this.colorBorder  = Drawing.Color.FromRGB(102.0/255.0, 102.0/255.0, 126.0/255.0);
+			this.colorWindow  = Drawing.Color.FromRGB(212.0/255.0, 212.0/255.0, 218.0/255.0);
 		}
 		
+
+		// Dessine le fond d'une fenêtre.
+		public void PaintWindowBackground(Drawing.Graphics graphics,
+										  Drawing.Rectangle rect,
+										  WidgetState state,
+										  Direction shadow)
+		{
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(this.colorWindow);
+		}
 
 		// Dessine une flèche (dans un bouton d'ascenseur par exemple).
 		public void PaintArrow(Drawing.Graphics graphics,
@@ -110,6 +121,7 @@ namespace Epsitec.Common.Widgets.Adorner
 							   Widgets.WidgetState state,
 							   Widgets.Direction shadow)
 		{
+			graphics.Align(ref rect);
 			Drawing.Rectangle rInside;
 
 			graphics.AddFilledRectangle(rect);
@@ -137,7 +149,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			rInside = rect;
 			rInside.Inflate(-0.5, -0.5);
 			graphics.AddRectangle(rInside);
-			graphics.RenderSolid(this.colorControlDarkDark);
+			graphics.RenderSolid(this.colorBorder);
 
 			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
 			{
@@ -168,9 +180,10 @@ namespace Epsitec.Common.Widgets.Adorner
 							   Widgets.WidgetState state,
 							   Widgets.Direction shadow)
 		{
+			graphics.Align(ref rect);
 			Drawing.Rectangle rInside;
 
-			this.PaintCircle(graphics, rect, this.colorControlDarkDark);
+			this.PaintCircle(graphics, rect, this.colorBorder);
 
 			rInside = rect;
 			rInside.Inflate(-1, -1);
@@ -342,14 +355,15 @@ namespace Epsitec.Common.Widgets.Adorner
 											 Drawing.Rectangle rect,
 											 Widgets.WidgetState state,
 											 Widgets.Direction shadow,
-											 Widgets.TextFieldStyle style)
+											 Widgets.TextFieldStyle style,
+											 bool readOnly)
 		{
 			if ( style == TextFieldStyle.Normal )
 			{
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					this.PaintImageButton(graphics, rect, 16);
+					this.PaintImageButton(graphics, rect, readOnly?20:16);
 				}
 				else
 				{
@@ -379,7 +393,8 @@ namespace Epsitec.Common.Widgets.Adorner
 											 Drawing.Rectangle rect,
 											 Widgets.WidgetState state,
 											 Widgets.Direction shadow,
-											 Widgets.TextFieldStyle style)
+											 Widgets.TextFieldStyle style,
+											 bool readOnly)
 		{
 		}
 
@@ -495,10 +510,10 @@ namespace Epsitec.Common.Widgets.Adorner
 			rect.Inflate(-0.5, -0.5);
 			graphics.LineWidth = 1;
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorControlDark);
+			graphics.RenderSolid(this.colorBorder);
 
 			graphics.AddFilledRectangle(titleRect);
-			graphics.RenderSolid(this.colorControl);
+			graphics.RenderSolid(this.colorWindow);
 		}
 
 		public void PaintSepLine(Drawing.Graphics graphics,
@@ -1069,5 +1084,6 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;
 		protected Drawing.Color		colorBorder;
+		protected Drawing.Color		colorWindow;
 	}
 }
