@@ -24,6 +24,33 @@ namespace Epsitec.Cresus.Database
 			this.int_status = (short) status;
 		}
 		
+		public DbKey(System.Data.DataRow data_row)
+		{
+			object value_id       = data_row[Tags.ColumnId];
+			object value_revision = data_row[Tags.ColumnRevision];
+			object value_status   = data_row[Tags.ColumnStatus];
+			
+			long id;
+			
+			if ((Common.Types.Converter.Convert (value_id, out id)) &&
+				(id > 0))
+			{
+				int   revision;
+				short status;
+				
+				Common.Types.Converter.Convert (value_revision, out revision);
+				Common.Types.Converter.Convert (value_status, out status);
+				
+				this.id         = id;
+				this.revision   = revision;
+				this.int_status = status;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Row does not contain valid key.", "data_row");
+			}
+		}
+		
 		
 		public long								Id
 		{
@@ -49,6 +76,26 @@ namespace Epsitec.Cresus.Database
 			{
 				return this.int_status;
 			}
+		}
+		
+		
+		public static long CreateTemporaryId()
+		{
+			lock (DbKey.temp_lock)
+			{
+				return DbKey.temp_id++;
+			}
+		}
+		
+		public static bool CheckTemporaryId(long id)
+		{
+			if ((id >= DbKey.MinimumTempId) &&
+				(id <= DbKey.MaximumTempId))
+			{
+				return true;
+			}
+			
+			return false;
 		}
 		
 		
@@ -199,6 +246,12 @@ namespace Epsitec.Cresus.Database
 		public const DbRawType					RawTypeForId		= DbRawType.Int64;
 		public const DbRawType					RawTypeForRevision	= DbRawType.Int32;
 		public const DbRawType					RawTypeForStatus	= DbRawType.Int16;
+		
+		public const long						MinimumTempId		= 1000000000000000000;
+		public const long						MaximumTempId		= 1000000999999999999;
+		
+		private static object					temp_lock	= new object ();
+		private static long						temp_id		= DbKey.MinimumTempId;
 		
 		protected long							id;
 		protected int							revision;

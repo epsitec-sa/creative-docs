@@ -96,8 +96,25 @@ namespace Epsitec.Cresus.Database
 			this.CreateDataRelations ();
 		}
 		
+		public void UpdateTables()
+		{
+			if (this.adapters != null)
+			{
+				for (int i = 0; i < this.adapters.Length; i++)
+				{
+					this.adapters[i].Update (this.data_set);
+				}
+			}
+		}
+		
+		
 		public void CreateEmptyDataSet(DbInfrastructure infrastructure)
 		{
+			if (this.data_set != null)
+			{
+				throw new System.InvalidOperationException ("DataSet already exists.");
+			}
+			
 			ITypeConverter type_converter = infrastructure.TypeConverter;
 			
 			//	Crée un DataSet vide, en ajoutant le schéma correspondant aux tables
@@ -129,15 +146,26 @@ namespace Epsitec.Cresus.Database
 			this.CreateDataRelations ();
 		}
 		
-		public void UpdateTables()
+		public void CreateNewRow(string table_name, out System.Data.DataRow data_row)
 		{
-			if (this.adapters != null)
+			this.CheckValidDataSet ();
+			
+			System.Data.DataTable table = this.data_set.Tables[table_name];
+			
+			if (table == null)
 			{
-				for (int i = 0; i < this.adapters.Length; i++)
-				{
-					this.adapters[i].Update (this.data_set);
-				}
+				throw new System.ArgumentException (string.Format ("Table {0} not found.", table_name), "table_name");
 			}
+			
+			data_row = table.NewRow ();
+			
+			DbKey key = new DbKey (DbKey.CreateTemporaryId (), 0, DbRowStatus.Live);
+			
+			data_row[Tags.ColumnId]       = key.Id;
+			data_row[Tags.ColumnRevision] = key.Revision;
+			data_row[Tags.ColumnStatus]   = key.IntStatus;
+			
+			table.Rows.Add (data_row);
 		}
 		
 		
@@ -194,6 +222,13 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		protected void CheckValidDataSet()
+		{
+			if (this.data_set == null)
+			{
+				throw new System.InvalidOperationException ("No data set defined.");
+			}
+		}
 		
 		
 		protected Collections.DbCommands		commands;

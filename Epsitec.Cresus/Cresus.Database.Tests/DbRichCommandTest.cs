@@ -152,6 +152,43 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		[Test] public void Check03CreateNewRow()
+		{
+			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
+			
+			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
+			DbTable db_table_b = infrastructure.ResolveDbTable (null, "Domiciles");
+			
+			DbType db_type_name = infrastructure.ResolveDbType (null, "CR_NameType");
+			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR_KeyIdType");
+			DbType db_type_rev  = infrastructure.ResolveDbType (null, "CR_KeyRevisionType");
+			
+			DbRichCommand command = new DbRichCommand ();
+			
+			System.Data.DataRow row_1;
+			System.Data.DataRow row_2;
+			System.Data.DataRow row_3;
+			
+			command.Tables.Add (db_table_a);
+			command.Tables.Add (db_table_b);
+			command.CreateEmptyDataSet (infrastructure);
+			command.CreateNewRow ("Personnes", out row_1);
+			command.CreateNewRow ("Personnes", out row_2);
+			command.CreateNewRow ("Domiciles", out row_3);
+			
+			DbKey k1 = new DbKey (row_1);
+			DbKey k2 = new DbKey (row_2);
+			DbKey k3 = new DbKey (row_3);
+			
+			Assertion.AssertEquals (DbRowStatus.Live, k1.Status);
+			Assertion.AssertEquals (DbRowStatus.Live, k2.Status);
+			Assertion.AssertEquals (DbRowStatus.Live, k3.Status);
+			
+			Assertion.AssertEquals (k1.Id + 1, k2.Id);
+			Assertion.AssertEquals (k1.Id + 2, k3.Id);
+			Assertion.Assert (DbKey.CheckTemporaryId (k1.Id));
+		}
+		
 		[Test] public void Check99UnregisterDbTables()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);

@@ -194,6 +194,14 @@ namespace Epsitec.Common.Types
 			return ok;
 		}
 		
+		public static bool Convert(object obj, out short value)
+		{
+			decimal value_decimal;
+			bool ok = Converter.Convert (obj, out value_decimal);
+			value = (short) value_decimal;
+			return ok;
+		}
+		
 		public static bool Convert(object obj, out decimal value)
 		{
 			//	Retourne true si la valeur de 'obj' n'est pas 'null' ou une
