@@ -262,6 +262,15 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
+		public static BreakAnalyzer				DefaultBreakAnalyzer
+		{
+			get
+			{
+				return Unicode.break_analyzer;
+			}
+		}
+		
+		
 		public class BreakAnalyzer
 		{
 			public BreakAnalyzer()
@@ -466,6 +475,9 @@ namespace Epsitec.Common.Text
 			
 			public void GenerateBreaks(ulong[] text, int start, int length, Unicode.BreakInfo[] breaks)
 			{
+				//	L'algorithme est tiré de l'Unicode Standard Annex #14, décrit
+				//	ici : http://www.unicode.org/reports/tr14
+				
 				if (length == 0)
 				{
 					return;
@@ -504,6 +516,11 @@ namespace Epsitec.Common.Text
 					{
 						Unicode.Bits.SetCombiningFlag (ref text[start+i], false);
 					}
+					
+					//	TODO: implémenter le reoredering... Voir :
+					//	- http://www.unicode.org/Public/UNIDATA/UCD.html#Bidi_Class_Values
+					//	- http://www.unicode.org/reports/tr9/
+					//	- http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
 					
 					//	Simplifie les traitements ultérieurs en remplaçant certaines
 					//	classes par d'autres :
@@ -890,20 +907,21 @@ namespace Epsitec.Common.Text
 			}
 			
 			
+			#region Element Class
 			private class Element
 			{
 				public Unicode.BreakClass		break_class;
 				public int						code_begin;
 				public int						code_end;
 			}
-			
+			#endregion
 			
 			Unicode.BreakClass[]				table_1;
 			Unicode.BreakClass[]				table_2;
 			System.Collections.ArrayList		elements;
 		}
+		
+		
+		private static BreakAnalyzer			break_analyzer;
 	}
-	
-	
-	
 }

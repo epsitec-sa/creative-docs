@@ -540,6 +540,18 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public int WriteText(Internal.CursorId cursor_id, int length, ulong[] buffer)
+		{
+			return this.WriteText (cursor_id, length, buffer, 0);
+		}
+		
+		public int WriteText(Internal.CursorId cursor_id, int length, ulong[] buffer, int offset)
+		{
+			//	TODO: écrit le texte en mémoire
+			
+			return length;
+		}
+		
 		
 		internal void WriteRawText(System.IO.Stream stream)
 		{
