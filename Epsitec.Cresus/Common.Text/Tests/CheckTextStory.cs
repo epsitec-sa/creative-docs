@@ -34,7 +34,7 @@ namespace Epsitec.Common.Text.Tests
 			OpenType.Font font;
 			double font_size;
 			
-			story.Context.GetFont (text[0], out font, out font_size);
+			story.TextContext.GetFont (text[0], out font, out font_size);
 			
 			Debug.Assert.IsTrue (font.FontIdentity.InvariantFaceName == "Arial");
 			Debug.Assert.IsTrue (font.FontIdentity.InvariantStyleName == "Regular");
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Trace.WriteLine ("Timing Context.GetFont :");
 			for (int i = 0; i < 1000000; i++)
 			{
-				story.Context.GetFont (text[1], out font, out font_size);
+				story.TextContext.GetFont (text[1], out font, out font_size);
 			}
 			System.Diagnostics.Trace.WriteLine ("Done");
 			
@@ -322,7 +322,7 @@ namespace Epsitec.Common.Text.Tests
 				System.Diagnostics.Debug.WriteLine (string.Format ("{0:00}: {1}, {2}", i, buffer[i].ToString ("X8"), Unicode.Bits.GetBreakInfo (buffer[i])));
 			}
 			
-			story.ChangeMarkers (cursor, text_1.Length, story.Context.Marker.RequiresSpellChecking, false);
+			story.ChangeMarkers (cursor, text_1.Length, story.TextContext.Marker.RequiresSpellChecking, false);
 			story.ReadText (cursor, text_1.Length, buffer);
 			
 			for (int i = 0; i < buffer.Length; i++)
@@ -342,7 +342,7 @@ namespace Epsitec.Common.Text.Tests
 				System.Diagnostics.Debug.WriteLine (string.Format ("{0:00}: {1}, {2}", i, buffer[i].ToString ("X8"), Unicode.Bits.GetBreakInfo (buffer[i])));
 			}
 			
-			story.ChangeMarkers (cursor, text_1.Length, story.Context.Marker.RequiresSpellChecking, false);
+			story.ChangeMarkers (cursor, text_1.Length, story.TextContext.Marker.RequiresSpellChecking, false);
 			story.ReadText (cursor, text_1.Length, buffer);
 			
 			for (int i = 0; i < buffer.Length; i++)

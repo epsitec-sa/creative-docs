@@ -129,6 +129,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DefaultPageCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FrameList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IContentsComparer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -149,7 +159,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IPageCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ISerializableAsText.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ITextFrame.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -190,6 +210,11 @@
                 />
                 <File
                     RelPath = "TextFitter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TextFrame.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -70,7 +70,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		public Context							Context
+		public Text.Context						TextContext
 		{
 			get
 			{

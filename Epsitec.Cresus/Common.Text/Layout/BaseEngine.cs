@@ -14,7 +14,7 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public Text.Context						Context
+		public Text.Context						TextContext
 		{
 			get
 			{

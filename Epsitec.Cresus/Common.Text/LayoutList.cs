@@ -40,7 +40,7 @@ namespace Epsitec.Common.Text
 		public void DisposeEngine(Layout.BaseEngine engine)
 		{
 			Debug.Assert.IsTrue (this.hash.Contains (engine.Name));
-			Debug.Assert.IsTrue (this.context == engine.Context);
+			Debug.Assert.IsTrue (this.context == engine.TextContext);
 			
 			this.hash.Remove (engine.Name);
 			

@@ -61,7 +61,7 @@ namespace Epsitec.Common.Text.Tests
 			Layout.Status status;
 			
 			breaks  = null;
-			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1100, 40, 10);
+			context = new Layout.Context (story.TextContext, story_text, 0, -100, 1000, 1100, 40, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Text.Tests
 			double y1 = context.MaxY;
 			double y2 = context.MinY;
 			
-			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1170, 40, 10);
+			context = new Layout.Context (story.TextContext, story_text, 0, -100, 1000, 1170, 40, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Text.Tests
 			double y3 = context.MaxY;
 			double y4 = context.MinY;
 			
-			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1300, 40, 10);
+			context = new Layout.Context (story.TextContext, story_text, 0, -100, 1000, 1300, 40, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
@@ -91,12 +91,12 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[0].Advance > 1307.10);
 			Debug.Assert.IsTrue (breaks[0].Advance < 1307.11);
 			
-			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1400, 40, 10);
+			context = new Layout.Context (story.TextContext, story_text, 0, -100, 1000, 1400, 40, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.ErrorNeedMoreText);
 			
-			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1020, 10, 10);
+			context = new Layout.Context (story.TextContext, story_text, 0, -100, 1000, 1020, 10, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.ErrorCannotFit);
@@ -114,13 +114,13 @@ namespace Epsitec.Common.Text.Tests
 			story_text = new ulong[story.TextLength];
 			story.ReadText (cursor, story_text.Length, story_text);
 			
-			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1400, 10, 10);
+			context = new Layout.Context (story.TextContext, story_text, 0, -100, 1000, 1400, 10, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.OkFitEnded);
 			
 			
-			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1200, 10, 10);
+			context = new Layout.Context (story.TextContext, story_text, 0, -100, 1000, 1200, 10, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks[0].Offset == 27);
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Text.Tests
 			Layout.BreakCollection breaks = null;
 			Layout.Status status;
 			
-			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1300, 150, 10);
+			context = new Layout.Context (story.TextContext, story_text, 0, 0, 1000, 1300, 150, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks.Count == 3);
@@ -200,12 +200,12 @@ namespace Epsitec.Common.Text.Tests
 			OpenType.Font font;
 			double        font_size;
 			
-			story.Context.GetFont (story_text[0], out font, out font_size);
+			story.TextContext.GetFont (story_text[0], out font, out font_size);
 			
 			Layout.StretchProfile profile = new Layout.StretchProfile ();
 			profile.Add (font, font_size, story_text, 0, 26);
 			
-			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
+			context = new Layout.Context (story.TextContext, story_text, 0, 0, 1000, 1270, 30, 0);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks.Count == 1);
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Text.Tests
 //			System.Diagnostics.Trace.WriteLine ("Starting layout.");
 //			for (int i = 0; i < 1000000; i++)
 //			{
-//				context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
+//				context = new Layout.Context (story.TextContext, story_text, 0, 0, 1000, 1270, 30, 0);
 //				status  = context.Fit (ref breaks, 0);
 //			}
 //			System.Diagnostics.Trace.WriteLine ("Done.");

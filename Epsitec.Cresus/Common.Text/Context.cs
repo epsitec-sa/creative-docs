@@ -13,7 +13,10 @@ namespace Epsitec.Common.Text
 		{
 			this.style_list  = new StyleList ();
 			this.layout_list = new LayoutList (this);
+			this.frame_list  = new FrameList (this);
 			this.char_marker = new Internal.CharMarker ();
+			
+			this.page_collection = new DefaultPageCollection ();
 			
 			this.char_marker.Add (Context.Markers.TagSelected);
 			this.char_marker.Add (Context.Markers.TagRequiresSpellChecking);
@@ -45,6 +48,31 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public FrameList						FrameList
+		{
+			get
+			{
+				return this.frame_list;
+			}
+		}
+		
+		
+		public IPageCollection					PageCollection
+		{
+			get
+			{
+				return this.page_collection;
+			}
+			set
+			{
+				if (this.page_collection != value)
+				{
+					this.page_collection = value;
+				}
+			}
+		}
+		
+		
 		public Context.Markers					Marker
 		{
 			get
@@ -52,7 +80,6 @@ namespace Epsitec.Common.Text
 				return this.markers;
 			}
 		}
-		
 		
 		internal Internal.CharMarker			CharMarker
 		{
@@ -218,8 +245,12 @@ namespace Epsitec.Common.Text
 		
 		private StyleList						style_list;
 		private LayoutList						layout_list;
+		private FrameList						frame_list;
 		private Internal.CharMarker				char_marker;
 		private Markers							markers;
+		
+		private IPageCollection					page_collection;
+		
 		private OpenType.FontCollection			font_collection;
 		private System.Collections.Hashtable	font_cache;
 		
