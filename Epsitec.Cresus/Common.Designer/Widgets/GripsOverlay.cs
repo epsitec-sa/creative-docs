@@ -165,9 +165,9 @@ namespace Epsitec.Common.Designer.Widgets
 			
 			if (this.Parent == null)
 			{
-				this.Parent = widget.Window.Root;
-				this.Bounds = this.Parent.Client.Bounds;
-				this.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+				this.Parent        = widget.Window.Root;
+				this.Anchor        = AnchorStyles.All;
+				this.AnchorMargins = new Drawing.Margins (0, 0, 0, 0);
 			}
 			else
 			{
