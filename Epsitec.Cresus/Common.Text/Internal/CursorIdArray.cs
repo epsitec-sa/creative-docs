@@ -90,12 +90,24 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
+		public void Remove(CursorId id)
+		{
+			Debug.Assert.IsTrue (this.Contains (id));
+			
+			this.RemoveElement (this.FindElement (id));
+		}
+		
 		
 		public int GetCursorPosition(CursorId id)
 		{
 			Debug.Assert.IsTrue (this.Contains (id));
 			
 			return this.FindElementPosition (this.FindElement (id));
+		}
+		
+		public int CountElements()
+		{
+			return this.length;
 		}
 		
 		
@@ -170,7 +182,7 @@ namespace Epsitec.Common.Text.Internal
 			//
 			//	Ajuste l'offset de l'élément suivant.
 			
-			Debug.Assert.IsTrue (this.length > 0);
+			Debug.Assert.IsTrue (this.length >= 0);
 			Debug.Assert.IsTrue (this.length <= this.elements.Length);
 			
 			Debug.Assert.IsTrue (index >= 0);
@@ -272,7 +284,7 @@ namespace Epsitec.Common.Text.Internal
 				
 				Element element = this.elements[from_index];
 				
-				for (int i = from_index; i < to_index-2; i++)
+				for (int i = from_index; i < to_index-1; i++)
 				{
 					this.elements[i] = this.elements[i+1];
 				}

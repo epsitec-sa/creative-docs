@@ -129,12 +129,17 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Tests\CheckCursor.cs"
+                    RelPath = "Tests\CheckInternalCursor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Tests\CheckCursorTable.cs"
+                    RelPath = "Tests\CheckInternalCursorTable.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Tests\CheckInternalCursorIdArray.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
