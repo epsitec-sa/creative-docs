@@ -711,42 +711,51 @@ namespace Epsitec.Common.Widgets
 		protected void UpdateScroller()
 		{
 			// Met à jour l'ascenseur vertical.
-			int total = this.maxRows;
-			if ( total <= this.visibleRowsFull )
+			
+			int n_rows = this.maxRows;
+			
+			if ((n_rows <= this.visibleRowsFull) ||
+				(n_rows <= 0) ||
+				(this.visibleRowsFull <= 0))
 			{
 				this.scrollerV.SetEnabled(false);
 				this.scrollerV.Range = 1;
-				this.scrollerV.Display = 1;
+				this.scrollerV.VisibleRange = 1;
 				this.scrollerV.Value = 0;
 			}
 			else
 			{
 				this.scrollerV.SetEnabled(true);
-				this.scrollerV.Range = total-this.visibleRowsFull;
-				this.scrollerV.Display = this.scrollerV.Range*((double)this.visibleRowsFull/total);
+				this.scrollerV.Range = n_rows-this.visibleRowsFull;
+				this.scrollerV.VisibleRange = this.scrollerV.Range * this.visibleRowsFull/n_rows;
 				this.scrollerV.Value = this.firstRow;
 				this.scrollerV.SmallChange = 1;
-				this.scrollerV.LargeChange = this.visibleRowsFull/2;
+				this.scrollerV.LargeChange = this.visibleRowsFull/2.0;
 			}
+			
 			this.UpdateTextlayouts();
 
 			// Met à jour l'ascenseur horizontal.
+			
 			double width = this.widthTotal;
-			if ( width <= this.rectInside.Width )
+			
+			if ((width <= this.rectInside.Width) ||
+				(width <= 0) ||
+				(this.rectInside.Width <= 0))
 			{
 				this.scrollerH.SetEnabled(false);
 				this.scrollerH.Range = 1;
-				this.scrollerH.Display = 1;
+				this.scrollerH.VisibleRange = 1;
 				this.scrollerH.Value = 0;
 			}
 			else
 			{
 				this.scrollerH.SetEnabled(true);
 				this.scrollerH.Range = width-this.rectInside.Width;
-				this.scrollerH.Display = this.rectInside.Width/width * this.scrollerH.Range;
+				this.scrollerH.VisibleRange = this.scrollerH.Range * this.rectInside.Width/width;
 				this.scrollerH.Value = this.offsetH;
 				this.scrollerH.SmallChange = 10;
-				this.scrollerH.LargeChange = this.rectInside.Width/2;
+				this.scrollerH.LargeChange = this.rectInside.Width/2.0;
 			}
 		}
 
