@@ -128,6 +128,16 @@ namespace Epsitec.Common.Drawing
 			return new Size (a.Width - b.Width, a.Height - b.Height);
 		}
 		
+		public static Size operator *(Size a, double value)
+		{
+			return new Size (a.width * value, a.height * value);
+		}
+		
+		public static Size operator /(Size a, double value)
+		{
+			return new Size (a.width / value, a.height / value);
+		}
+		
 		public static bool operator ==(Size a, Size b)
 		{
 			return (a.width == b.width) && (a.height == b.height);
