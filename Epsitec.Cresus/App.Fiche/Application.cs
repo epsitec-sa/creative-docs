@@ -27,7 +27,7 @@ namespace Epsitec.Fiche
 		}
 		
 		#region Application Commands
-		private void CommandQuit(object sender, CommandEventArgs e)
+		private void CommandQuit(CommandDispatcher sender, CommandEventArgs e)
 		{
 			this.main_window.Quit ();
 		}
