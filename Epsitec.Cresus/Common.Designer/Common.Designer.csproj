@@ -183,7 +183,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Editors\AbstractPropEdit.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Editors\AbstractWidgetEdit.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Editors\WidgetPropEdit1.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

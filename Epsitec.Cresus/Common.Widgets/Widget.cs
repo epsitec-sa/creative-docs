@@ -1172,7 +1172,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual WidgetCollection				Children
+		public virtual ChildrenCollection			Children
 		{
 			get
 			{
@@ -1182,7 +1182,7 @@ namespace Epsitec.Common.Widgets
 					{
 						if (this.children == null)
 						{
-							this.CreateWidgetCollection ();
+							this.CreateChildrenCollection ();
 						}
 					}
 				}
@@ -4643,9 +4643,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void CreateWidgetCollection()
+		protected virtual void CreateChildrenCollection()
 		{
-			this.children = new WidgetCollection (this);
+			this.children = new ChildrenCollection (this);
 		}
 		
 		protected virtual void CreateTextLayout()
@@ -5299,10 +5299,10 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		#region WidgetCollection class
-		public class WidgetCollection : System.Collections.IList
+		#region ChildrenCollection class
+		public class ChildrenCollection : System.Collections.IList
 		{
-			public WidgetCollection(Widget widget)
+			public ChildrenCollection(Widget widget)
 			{
 				this.list   = new System.Collections.ArrayList ();
 				this.widget = widget;
@@ -5670,7 +5670,7 @@ namespace Epsitec.Common.Widgets
 		private System.Collections.ArrayList	hypertext_list;
 		private HypertextInfo					hypertext;
 		
-		private WidgetCollection				children;
+		private ChildrenCollection				children;
 		private Widget							parent;
 		private string							name;
 		private string							command;

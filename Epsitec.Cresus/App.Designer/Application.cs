@@ -37,6 +37,11 @@ namespace Epsitec.Designer
 			button.Anchor  = AnchorStyles.BottomLeft;
 			button.CreateCommandState ();
 			
+			this.MainWindow.Show ();
+			
+			this.BuilderController.CreationWindow.Owner = this.MainWindow;
+			this.BuilderController.AttributeWindow.Owner = this.MainWindow;
+			
 			this.StringEditController.Window.Show ();
 			this.BuilderController.CreationWindow.Show ();
 			this.BuilderController.AttributeWindow.Show ();
@@ -53,7 +58,6 @@ namespace Epsitec.Designer
 		[System.STAThread] static void Main() 
 		{
 			Application.application = new Application ();
-			Application.application.MainWindow.Show ();
 			Application.application.MainWindow.Run ();
 		}
 		#endregion

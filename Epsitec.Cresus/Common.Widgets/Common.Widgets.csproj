@@ -614,8 +614,6 @@
                     RelPath = "Adorners\Resources\metal2.png"
                     BuildAction = "EmbeddedResource"
                 />
-                <Folder RelPath = "Design\Panels\" />
-                <Folder RelPath = "Design\Tools\" />
                 <File
                     RelPath = "Helpers\AbsPosLayoutEngine.cs"
                     SubType = "Code"
