@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 09/10/2003
 
 namespace Epsitec.Common.Support
@@ -7,7 +7,10 @@ namespace Epsitec.Common.Support
 	/// L'exception ResourceException est levée lorsqu'un problème survient avec
 	/// l'accès aux ressources.
 	/// </summary>
-	public class ResourceException : System.Exception
+	
+	[System.Serializable]
+	
+	public class ResourceException : System.ApplicationException, System.Runtime.Serialization.ISerializable
 	{
 		public ResourceException()
 		{
@@ -15,12 +18,22 @@ namespace Epsitec.Common.Support
 		
 		public ResourceException(string message) : base (message)
 		{
-			System.Diagnostics.Debug.WriteLine ("Raising ResourceException: " + message);
 		}
 		
 		public ResourceException(string message, System.Exception inner_exception) : base (message, inner_exception)
 		{
-			System.Diagnostics.Debug.WriteLine ("Raising ResourceException: " + message + "/" + inner_exception.Message);
 		}
+		
+		
+		#region ISerializable Members
+		protected ResourceException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+		{
+		}
+		
+		void System.Runtime.Serialization.ISerializable.GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+		{
+			base.GetObjectData (info, context);
+		}
+		#endregion
 	}
 }
