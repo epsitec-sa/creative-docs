@@ -170,6 +170,17 @@ namespace Epsitec.Common.Drawing
 			window.Root.Invalidate ();
 			window.Show ();
 		}
+		
+		[Test] public void CheckImage100dpi200dpi()
+		{
+			Window window = new Window ();
+			
+			window.ClientSize = new Size (400, 200);
+			window.Text = "CheckImage100dpi200dpi";
+			window.Root.PaintForeground += new PaintEventHandler(Image100dpi200dpi_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
 
 		
 		private void Text_PaintForeground(object sender, PaintEventArgs e)
@@ -838,6 +849,24 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.PaintImage (bitmap, new Rectangle ( 10,  10,  40,  40), new Rectangle (32, 32, 32, 32));
 			e.Graphics.PaintImage (bitmap, new Rectangle ( 60,  10,  64,  64), new Rectangle (32, 32, 32, 32));
 			e.Graphics.PaintImage (bitmap, new Rectangle ( 10,  60, 100, 100), new Rectangle (32, 32, 32, 32));
+		}
+		
+		private void Image100dpi200dpi_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			//	L'image fait 200 x 200 pixels
+			
+			Bitmap bitmap_1 = Bitmap.FromFile ("..\\..\\images\\100-dpi.tif").BitmapImage;
+			Bitmap bitmap_2 = Bitmap.FromFile ("..\\..\\images\\200-dpi.tif").BitmapImage;
+			
+			Font font = Font.GetFont ("Tahoma", "Regular");
+			
+			e.Graphics.PaintImage (bitmap_1, new Rectangle (0, 0, 200, 200), new Rectangle (0, 0, 200, 200));
+			e.Graphics.PaintImage (bitmap_2, new Rectangle (200, 0, 200, 200), new Rectangle (0, 0, 200, 200));
+			
+			e.Graphics.PaintText ( 10, 10, string.Format ("{0} dpi", bitmap_1.DpiX), font, 12, Color.FromBrightness (0));
+			e.Graphics.PaintText (210, 10, string.Format ("{0} dpi", bitmap_2.DpiX), font, 12, Color.FromBrightness (0));
 		}
 	}
 }
