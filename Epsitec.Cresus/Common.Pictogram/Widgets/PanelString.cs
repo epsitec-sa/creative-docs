@@ -14,10 +14,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
 
-			this.field = new TextField(this);
-			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.field.TabIndex = 1;
-			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.fieldSingle = new TextField(this);
+			this.fieldSingle.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldSingle.TabIndex = 1;
+			this.fieldSingle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.fieldMulti = new TextFieldMulti(this);
+			this.fieldMulti.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldMulti.TabIndex = 2;
+			this.fieldMulti.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.isNormalAndExtended = true;
 		}
 		
 		public PanelString(Widget embedder) : this()
@@ -29,13 +36,52 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			if ( disposing )
 			{
-				this.field.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.fieldSingle.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.fieldMulti.TextChanged -= new EventHandler(this.HandleTextChanged);
 			}
 			
 			base.Dispose(disposing);
 		}
 
-		
+
+		// Retourne la hauteur standard.
+		public override double DefaultHeight
+		{
+			get
+			{
+				return ( this.extendedSize ? 80 : 30 );
+			}
+		}
+
+		// Indique si le panneau est réduit (petite hauteur) ou étendu (grande hauteur).
+		public override bool ExtendedSize
+		{
+			get
+			{
+				return this.extendedSize;
+			}
+
+			set
+			{
+				if ( this.extendedSize != value )
+				{
+					if ( value )
+					{
+						this.fieldMulti.Text = this.fieldSingle.Text;
+					}
+					else
+					{
+						this.fieldSingle.Text = this.fieldMulti.Text;
+					}
+				}
+
+				base.ExtendedSize = value;
+
+				this.fieldSingle.SetVisible(!this.extendedSize);
+				this.fieldMulti.SetVisible(this.extendedSize);
+			}
+		}
+
 		// Propriété -> widget.
 		public override void SetProperty(AbstractProperty property)
 		{
@@ -45,7 +91,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 			PropertyString p = property as PropertyString;
 			if ( p == null )  return;
 
-			this.field.Text = p.String;
+			if ( this.extendedSize )
+			{
+				this.fieldMulti.Text = p.String;
+			}
+			else
+			{
+				this.fieldSingle.Text = p.String;
+			}
 		}
 
 		// Widget -> propriété.
@@ -54,8 +107,36 @@ namespace Epsitec.Common.Pictogram.Widgets
 			PropertyString p = new PropertyString();
 			base.GetProperty(p);
 
-			p.String = this.field.Text;
+			if ( this.extendedSize )
+			{
+				p.String = this.fieldMulti.Text;
+			}
+			else
+			{
+				p.String = this.fieldSingle.Text;
+			}
 			return p;
+		}
+
+
+		// Met le focus par défaut dans ce panneau.
+		public override bool DefaultFocus()
+		{
+			if ( this.type == PropertyType.TextString )
+			{
+				if ( this.extendedSize )
+				{
+					this.fieldMulti.SelectAll();
+					this.fieldMulti.SetFocused(true);
+				}
+				else
+				{
+					this.fieldSingle.SelectAll();
+					this.fieldSingle.SetFocused(true);
+				}
+				return true;
+			}
+			return false;
 		}
 
 
@@ -64,19 +145,24 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.field == null )  return;
+			if ( this.fieldSingle == null )  return;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Deflate(this.extendedZoneWidth, 0);
 			rect.Deflate(5);
 
 			Drawing.Rectangle r = rect;
-			r.Right = rect.Right-100;
+			r.Bottom = r.Top-20;
+			r.Right = rect.Right-110;
 			this.label.Bounds = r;
 
 			r = rect;
-			r.Left = r.Right-100;
-			this.field.Bounds = r;
+			r.Left = r.Right-110;
+			this.fieldSingle.Bounds = r;
+			this.fieldMulti.Bounds = r;
+
+			this.fieldSingle.SetVisible(!this.extendedSize);
+			this.fieldMulti.SetVisible(this.extendedSize);
 		}
 		
 		// Une valeur a été changée.
@@ -87,6 +173,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 
 		protected StaticText				label;
-		protected TextField					field;
+		protected TextField					fieldSingle;
+		protected TextFieldMulti			fieldMulti;
 	}
 }

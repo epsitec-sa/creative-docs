@@ -116,6 +116,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Sélectionne un calque.
 		public void LayerSelect(int sel)
 		{
+			this.drawer.CreateEnding();
 			this.drawer.IconObjects.CurrentLayer = sel;
 			this.TableSelect(sel, true, false);
 			this.UpdateRadio();
@@ -457,12 +458,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			// Crée le panneau pour le calque.
 			PropertyModColor modColor = this.drawer.IconObjects.LayerModColor();
-			modColor.ExtendedSize = true;
-			modColor.BackgroundIntensity = 0.95;
 
 			Drawing.Rectangle rect;
 			panel = new PanelModColor();
 			panel.Drawer = this.drawer;
+			panel.ExtendedSize = true;
 			panel.SetProperty(modColor);
 			panel.LayoutDirect = true;
 

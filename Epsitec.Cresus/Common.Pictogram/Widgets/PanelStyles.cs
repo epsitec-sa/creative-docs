@@ -213,7 +213,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdateToolBar();
 		}
 
-		// Supprime le propriété sélectionnée.
+		// Supprime la propriété sélectionnée.
 		private void HandleButtonDelete(object sender, MessageEventArgs e)
 		{
 			int sel = this.TableSelect();
@@ -231,8 +231,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Met à jour le contenu de la table.
 		protected void UpdateTable()
 		{
-			this.Styles.AdaptInfoProperties(this.drawer);
-
 			int rows = this.Styles.TotalProperty;
 			int initialColumns = this.table.Columns;
 			this.table.SetArraySize(2, rows);
@@ -278,7 +276,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				edit.Text = property.StyleName;
 				this.ignoreListTextChanged = false;
 			}
-			
+
 			this.UpdateToolBar();
 		}
 
@@ -290,7 +288,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			for ( int i=0 ; i<total ; i++ )
 			{
 				this.table.SelectRow(i, i==sel);
-				this.table.SelectCell(1, i, false);  // à cause du TextField
 				exist |= (i==sel);
 			}
 
@@ -302,7 +299,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				Cell cell = this.table[1, sel];
 				TextField edit = cell.Children[0] as TextField;
 				if ( selectText )  edit.SelectAll();
-				if ( edit.IsVisible)  edit.SetFocused(true);
+				if ( edit.IsVisible )  edit.SetFocused(true);
 			}
 		}
 
@@ -396,9 +393,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				panel = property.CreatePanel();
 				panel.Drawer = this.drawer;
-				property.ExtendedSize = true;
+				panel.ExtendedSize = true;
 				panel.SetProperty(property);
-				property.ExtendedSize = false;
 				panel.StyleDirect = true;
 
 				rect = new Drawing.Rectangle();

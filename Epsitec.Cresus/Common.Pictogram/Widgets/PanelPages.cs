@@ -79,6 +79,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Sélectionne une page.
 		public void PageSelect(int sel)
 		{
+			this.drawer.CreateEnding();
 			this.drawer.IconObjects.CurrentPage = sel;
 			this.TableSelect(sel, true, false);
 			this.UpdateToolBar();

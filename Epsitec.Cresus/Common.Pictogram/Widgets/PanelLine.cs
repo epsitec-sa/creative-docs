@@ -18,7 +18,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.field.MinValue = 0;
 			this.field.MaxValue = 5;
 			this.field.Step = 0.1M;
-			this.field.Resolution = 0.1M;
+			this.field.Resolution = 0.01M;
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -192,20 +192,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			rect.Top = r.Bottom-5;
 			rect.Bottom = rect.Top-20;
-			rect.Left = rect.Right-(rect.Height*6+5);
-			rect.Width = rect.Height;
+			rect.Left = rect.Right-(20*6+15);
+			rect.Width = 20;
 			for ( int i=0 ; i<6 ; i++ )
 			{
 				this.buttons[i].Bounds = rect;
-
-				if ( i == 2 )
-				{
-					rect.Offset(rect.Width+5, 0);
-				}
-				else
-				{
-					rect.Offset(rect.Width, 0);
-				}
+				rect.Offset(20+((i==2)?15:0), 0);
 			}
 
 		}
