@@ -557,18 +557,9 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
-					this.navigator.ProcessMessage(message, pos);
-					
-					if ( this.AutoSelectOnFocus && !this.IsFocusedFlagSet )
-					{
-						this.SelectAll();
-						message.Consumer  = this;
-						message.Swallowed = true;
-					}
-					else
+					if ( this.ProcessMouseDown(message, pos) )
 					{
 						message.Consumer = this;
-						this.mouseDown = true;
 					}
 					break;
 				
@@ -594,7 +585,7 @@ namespace Epsitec.Common.Widgets
 				case MessageType.KeyDown:
 					if ( this.ProcessKeyDown(message, pos) )
 					{
-						message.Consumer  = this;
+						message.Consumer = this;
 					}
 					break;
 				
@@ -606,7 +597,24 @@ namespace Epsitec.Common.Widgets
 					break;
 			}
 		}
-
+		
+		protected virtual bool ProcessMouseDown(Message message, Drawing.Point pos)
+		{
+			this.navigator.ProcessMessage(message, pos);
+			
+			if ( this.AutoSelectOnFocus && !this.IsFocusedFlagSet )
+			{
+				this.SelectAll();
+				message.Swallowed = true;
+			}
+			else
+			{
+				this.mouseDown = true;
+			}
+			
+			return true;
+		}
+		
 		protected virtual bool ProcessKeyDown(Message message, Drawing.Point pos)
 		{
 			// Gestion d'une touche pressée avec KeyDown dans le texte.

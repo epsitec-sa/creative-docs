@@ -711,46 +711,37 @@ namespace Epsitec.Common.Widgets
 					(message.IsCtrlPressed == false) &&
 					(message.IsAltPressed == false))
 				{
+					IFeel feel = Feel.Factory.Active;
+					
 					if (this.host.InteractionMode == ScrollInteractionMode.Search)
 					{
-						switch (message.KeyCode)
+						if (feel.TestAcceptKey (message))
 						{
-							case KeyCode.Escape:
-								if (message.IsShiftPressed == false)
-								{
-									this.host.SetInteractionMode (ScrollInteractionMode.ReadOnly);
-									this.host.SetFocused (true);
-									message.Consumer  = this;
-									message.Swallowed = true;
-									return;
-								}
-								break;
+							this.host.OnEditTextChanged ();
+							message.Consumer  = this;
+							message.Swallowed = true;
+							return;
+						}
+						if (feel.TestCancelKey (message))
+						{
+							this.host.SetInteractionMode (ScrollInteractionMode.ReadOnly);
+							this.host.SetFocused (true);
+							message.Consumer  = this;
+							message.Swallowed = true;
+							return;
+						}
+						if (this.host.ProcessKeyEvent (message))
+						{
+							//	L'événement a été traité par la liste; on va donc le consommer.
 							
-							case KeyCode.Return:
-								if (message.IsShiftPressed == false)
-								{
-									this.host.OnEditTextChanged ();
-									message.Consumer  = this;
-									message.Swallowed = true;
-									return;
-								}
-								break;
-							
-							default:
-								if (this.host.ProcessKeyEvent (message))
-								{
-									//	L'événement a été traité par la liste; on va donc le consommer.
-									
-									message.Consumer = this;
-									message.Swallowed = true;
-									return;
-								}
-								break;
+							message.Consumer = this;
+							message.Swallowed = true;
+							return;
 						}
 					}
 					else if (this.host.InteractionMode == ScrollInteractionMode.Edition)
 					{
-						if (message.KeyCode == KeyCode.Escape)
+						if (feel.TestCancelKey (message))
 						{
 							this.host.ValidateEdition ();
 							this.host.SetFocused (true);
@@ -758,7 +749,7 @@ namespace Epsitec.Common.Widgets
 							message.Swallowed = true;
 							return;
 						}
-						if (message.KeyCode == KeyCode.Return)
+						if (feel.TestAcceptKey (message))
 						{
 							int index = (message.IsShiftPressed) ? this.host.SelectedIndex - 1 : this.host.SelectedIndex + 1;
 							

@@ -7,6 +7,9 @@ namespace Epsitec.Common.Widgets
 		Scroller,						// bouton pour Scroller
 		Combo,							// bouton pour TextFieldCombo
 		UpDown,							// bouton pour TextFieldUpDown
+		ExListLeft,						// bouton pour TextFieldExList, à gauche
+		ExListMiddle,					// bouton pour TextFieldExList, au milieu
+		ExListRight,					// bouton pour TextFieldExList, à droite (cf Combo)
 		Tab,							// bouton pour TabButton
 		Icon,							// bouton pour une icône
 		ToolItem,						// bouton pour barre d'icône
@@ -69,11 +72,11 @@ namespace Epsitec.Common.Widgets
 					
 					if ( this.buttonStyle == ButtonStyle.DefaultAccept )
 					{
-						this.Shortcut = new Shortcut(KeyCode.Return);
+						this.Shortcut = Feel.Factory.Active.AcceptShortcut;
 					}
 					else if ( this.buttonStyle == ButtonStyle.DefaultCancel )
 					{
-						this.Shortcut = new Shortcut(KeyCode.Escape);
+						this.Shortcut = Feel.Factory.Active.CancelShortcut;
 					}
 					
 					this.Invalidate();
@@ -108,14 +111,15 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.ButtonStyle == ButtonStyle.Normal)
 			{
-				switch (this.Shortcut.KeyCode)
+				IFeel feel = Feel.Factory.Active;
+				
+				if (feel.AcceptShortcut == this.Shortcut)
 				{
-					case KeyCode.Return:
-						this.ButtonStyle = ButtonStyle.DefaultAccept;
-						break;
-					case KeyCode.Escape:
-						this.ButtonStyle = ButtonStyle.DefaultCancel;
-						break;
+					this.ButtonStyle = ButtonStyle.DefaultAccept;
+				}
+				else if (feel.CancelShortcut == this.Shortcut)
+				{
+					this.ButtonStyle = ButtonStyle.DefaultCancel;
 				}
 			}
 		}

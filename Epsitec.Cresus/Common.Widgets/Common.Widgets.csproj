@@ -297,6 +297,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IFeel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MenuItem.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -613,6 +618,16 @@
                 <File
                     RelPath = "Adorners\Resources\metal2.png"
                     BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Feels\Default.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Feels\Factory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Helpers\CopyPasteBehavior.cs"
