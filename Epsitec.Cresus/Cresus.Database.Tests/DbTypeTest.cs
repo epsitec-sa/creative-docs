@@ -51,24 +51,24 @@ namespace Epsitec.Cresus.Database
 			
 			DbTypeEnum e_type = new DbTypeEnum (list);
 			
-			string xml_p = DbEnumValue.SerialiseToXml (ev_1, false);
-			string xml_f = DbEnumValue.SerialiseToXml (ev_1, true);
+			string xml_p = DbEnumValue.SerializeToXml (ev_1, false);
+			string xml_f = DbEnumValue.SerializeToXml (ev_1, true);
 			
 			Assertion.AssertEquals (@"<enumval rank=""2""/>", xml_p);
 			Assertion.AssertEquals (@"<enumval rank=""2"" attr.capt=""Madame"" attr.name=""MME""/>", xml_f);
 			
-			xml_p = DbEnumValue.SerialiseToXml (ev_2, false);
-			xml_f = DbEnumValue.SerialiseToXml (ev_2, true);
+			xml_p = DbEnumValue.SerializeToXml (ev_2, false);
+			xml_f = DbEnumValue.SerializeToXml (ev_2, true);
 			
 			Assertion.AssertEquals (@"<enumval rank=""3""/>", xml_p);
 			Assertion.AssertEquals (@"<enumval rank=""3"" attr.capt=""&gt;Mademoiselle&lt;"" attr.name=""MLLE""/>", xml_f);
 			
-			string full_xml = DbTypeFactory.SerialiseToXml (e_type, true);
+			string full_xml = DbTypeFactory.SerializeToXml (e_type, true);
 			System.Console.Out.WriteLine ("XML: {0}", full_xml);
 			
-			DbEnumValue ev_1x = DbEnumValue.NewEnumValue (DbEnumValue.SerialiseToXml (ev_1, true));
-			DbEnumValue ev_2x = DbEnumValue.NewEnumValue (DbEnumValue.SerialiseToXml (ev_2, true));
-			DbEnumValue ev_3x = DbEnumValue.NewEnumValue (DbEnumValue.SerialiseToXml (ev_3, true));
+			DbEnumValue ev_1x = DbEnumValue.NewEnumValue (DbEnumValue.SerializeToXml (ev_1, true));
+			DbEnumValue ev_2x = DbEnumValue.NewEnumValue (DbEnumValue.SerializeToXml (ev_2, true));
+			DbEnumValue ev_3x = DbEnumValue.NewEnumValue (DbEnumValue.SerializeToXml (ev_3, true));
 			
 			Assertion.AssertEquals (ev_1.Name,    ev_1x.Name);
 			Assertion.AssertEquals (ev_1.Caption, ev_1x.Caption);
@@ -125,42 +125,42 @@ namespace Epsitec.Cresus.Database
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 				buffer.Append ("<test");
-				DbKey.SerialiseToXmlAttributes (buffer, k0);
+				DbKey.SerializeToXmlAttributes (buffer, k0);
 				buffer.Append ("/>");
 				System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
 				doc.LoadXml (buffer.ToString ());
 				System.Xml.XmlElement  xml = doc.DocumentElement;
-				Assertion.AssertEquals (k0, DbKey.DeserialiseFromXmlAttributes (xml));
+				Assertion.AssertEquals (k0, DbKey.DeserializeFromXmlAttributes (xml));
 			}
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 				buffer.Append ("<test");
-				DbKey.SerialiseToXmlAttributes (buffer, k1);
+				DbKey.SerializeToXmlAttributes (buffer, k1);
 				buffer.Append ("/>");
 				System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
 				doc.LoadXml (buffer.ToString ());
 				System.Xml.XmlElement  xml = doc.DocumentElement;
-				Assertion.AssertEquals (k1, DbKey.DeserialiseFromXmlAttributes (xml));
+				Assertion.AssertEquals (k1, DbKey.DeserializeFromXmlAttributes (xml));
 			}
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 				buffer.Append ("<test");
-				DbKey.SerialiseToXmlAttributes (buffer, k2);
+				DbKey.SerializeToXmlAttributes (buffer, k2);
 				buffer.Append ("/>");
 				System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
 				doc.LoadXml (buffer.ToString ());
 				System.Xml.XmlElement  xml = doc.DocumentElement;
-				Assertion.AssertEquals (k2, DbKey.DeserialiseFromXmlAttributes (xml));
+				Assertion.AssertEquals (k2, DbKey.DeserializeFromXmlAttributes (xml));
 			}
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 				buffer.Append ("<test");
-				DbKey.SerialiseToXmlAttributes (buffer, k3);
+				DbKey.SerializeToXmlAttributes (buffer, k3);
 				buffer.Append ("/>");
 				System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
 				doc.LoadXml (buffer.ToString ());
 				System.Xml.XmlElement  xml = doc.DocumentElement;
-				Assertion.AssertEquals (k3, DbKey.DeserialiseFromXmlAttributes (xml));
+				Assertion.AssertEquals (k3, DbKey.DeserializeFromXmlAttributes (xml));
 			}
 		}
 	}

@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Database
 			table.DefineCategory (DbElementCat.Internal);
 		}
 		
-		[Test] public void CheckSerialiseToXml()
+		[Test] public void CheckSerializeToXml()
 		{
 			DbTable table = new DbTable ("Test");
 			DbColumn column = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Database
 			table.PrimaryKeys.Add (column);
 			table.Columns.Add (column);
 			
-			string xml = DbTable.SerialiseToXml (table, true);
+			string xml = DbTable.SerializeToXml (table, true);
 			
 			System.Console.Out.WriteLine ("XML: {0}", xml);
 			
