@@ -1344,6 +1344,7 @@ namespace Epsitec.Common.Widgets
 
 				JustifBlock block = new JustifBlock();
 				block.bol        = true;
+				block.eol        = false;
 				block.image      = false;
 				block.text       = "";
 				block.beginIndex = 0;
@@ -1418,6 +1419,7 @@ namespace Epsitec.Common.Widgets
 					{
 						JustifBlock block = new JustifBlock();
 						block.bol        = bol;
+						block.eol        = (tag == TextLayout.Tag.LineBreak);
 						block.image      = false;
 						block.text       = "";
 						block.beginIndex = index;
@@ -1462,7 +1464,8 @@ namespace Epsitec.Common.Widgets
 							JustifBlock block;
 							JustifBlock previous = (this.blocks.Count < 1) ? null : this.blocks[this.blocks.Count-1] as JustifBlock;
 							if ((previous != null) &&
-								(previous.text == ""))
+								(previous.text == "") &&
+								(previous.eol == false))
 							{
 								//	Ré-utilise le bloc précédent, puisqu'il est vide...
 								
@@ -1474,6 +1477,7 @@ namespace Epsitec.Common.Widgets
 								this.blocks.Add(block);
 							}
 							block.bol        = bol;
+							block.eol        = false;
 							block.image      = false;
 							block.text       = breakText;
 							block.beginIndex = textIndex;
@@ -2027,6 +2031,7 @@ namespace Epsitec.Common.Widgets
 		protected class JustifBlock
 		{
 			public bool				bol;		// begin of line
+			public bool				eol;		// line ends with <br/>
 			public bool				image;		// image bitmap
 			public string			text;
 			public int				beginIndex;

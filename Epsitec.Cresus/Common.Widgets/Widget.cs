@@ -1817,8 +1817,6 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void SetFocused(bool focused)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("Focus {0} -> {1}", focused, this.ToString ()));
-			
 			Window window = this.Window;
 			
 			if (! this.IsFocusedFlagSet)
