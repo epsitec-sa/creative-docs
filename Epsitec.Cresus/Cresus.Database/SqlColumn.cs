@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 07/10/2003
 
 namespace Epsitec.Cresus.Database
@@ -52,62 +52,62 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public bool Validate(ISqlValidator validator)
-		{
-			return validator.ValidateName (this.name);
-		}
-		
-
-		public string					Name
+		public string							Name
 		{
 			get { return this.name; }
 			set { this.name = value; }
 		}
 		
-		public DbRawType				Type
+		public DbRawType						Type
 		{
 			get { return this.type; }
 		}
 		
-		public int						Length
+		public int								Length
 		{
 			get { return this.length; }
 		}
 		
-		public IRawTypeConverter		RawConverter
+		public bool								IsFixedLength
+		{
+			get { return this.is_fixed_length; }
+		}
+		
+		
+		public bool								HasRawConverter
+		{
+			get { return this.raw_converter != null; }
+		}
+		
+		public IRawTypeConverter				RawConverter
 		{
 			get { return this.raw_converter; }
 		}
 		
 		
-		public bool						IsNullAllowed
+		public bool								IsNullAllowed
 		{
 			get { return this.is_null_allowed; }
 			set { this.is_null_allowed = value; }
 		}
 		
-		public bool						IsUnique
+		public bool								IsUnique
 		{
 			get { return this.is_unique; }
 			set { this.is_unique = value; }
 		}
 		
-		public bool						IsIndexed
+		public bool								IsIndexed
 		{
 			get { return this.is_indexed; }
 			set { this.is_indexed = value; }
 		}
 		
-		public bool						IsFixedLength
-		{
-			get { return this.is_fixed_length; }
-		}
 		
-		public bool						HasRawConverter
+		public bool Validate(ISqlValidator validator)
 		{
-			get { return this.raw_converter != null; }
+			return validator.ValidateName (this.name);
 		}
-		
 		
 		
 		public void SetRawConverter(IRawTypeConverter raw_converter)
@@ -151,13 +151,13 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected string				name				= null;
-		protected DbRawType				type				= DbRawType.Null;
-		protected bool					is_null_allowed		= false;
-		protected bool					is_unique			= false;
-		protected bool					is_indexed			= false;
-		protected bool					is_fixed_length		= true;
-		protected int					length				= 1;
-		protected IRawTypeConverter		raw_converter		= null;
+		protected string						name				= null;
+		protected DbRawType						type				= DbRawType.Null;
+		protected bool							is_null_allowed		= false;
+		protected bool							is_unique			= false;
+		protected bool							is_indexed			= false;
+		protected bool							is_fixed_length		= true;
+		protected int							length				= 1;
+		protected IRawTypeConverter				raw_converter		= null;
 	}
 }
