@@ -32,15 +32,6 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		
 		
-		public void Dispose()
-		{
-			System.Diagnostics.Debug.Assert (this.list.Count == 0);
-			
-			this.host = null;
-			this.list = null;
-		}
-		
-		
 		public bool								AutoEmbedding
 		{
 			get
@@ -52,6 +43,26 @@ namespace Epsitec.Common.Widgets.Helpers
 				this.auto_embedding = value;
 			}
 		}
+		
+		
+		public void AddRange(Widget[] widgets)
+		{
+			this.list.AddRange (widgets);
+			
+			foreach (Widget widget in widgets)
+			{
+				this.HandleInsert (widget);
+			}
+		}
+		
+		public void Dispose()
+		{
+			System.Diagnostics.Debug.Assert (this.list.Count == 0);
+			
+			this.host = null;
+			this.list = null;
+		}
+		
 		
 		public virtual void RestoreFromBundle(string items_name, Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
