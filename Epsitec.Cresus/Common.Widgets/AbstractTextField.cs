@@ -19,7 +19,7 @@ namespace Epsitec.Common.Widgets
 	/// aussi de réaliser l'équivalent de la ComboBox Windows.
 	/// </summary>
 	[Support.SuppressBundleSupport]
-	public abstract class AbstractTextField : Widget
+	public abstract class AbstractTextField : Widget, Types.IReadOnly
 	{
 		public AbstractTextField()
 		{
@@ -760,6 +760,16 @@ namespace Epsitec.Common.Widgets
 			return rect;
 		}
 
+		
+		#region IReadOnly Members
+		bool									Types.IReadOnly.IsReadOnly
+		{
+			get
+			{
+				return this.IsReadOnly;
+			}
+		}
+		#endregion
 		
 		public event Support.EventHandler		TextInserted;
 		public event Support.EventHandler		TextDeleted;
