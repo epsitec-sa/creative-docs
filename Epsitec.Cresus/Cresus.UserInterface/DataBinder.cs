@@ -174,15 +174,32 @@ namespace Epsitec.Cresus.UserInterface
 		
 		protected virtual void CreateLabelBinding(object obj, DataLayer.DataRecord data_record, string binding_path)
 		{
-			string text_base = data_record.DataLabel;
+			string text = data_record.DataLabel;
 			
-			Widget widget = obj as Widget;
-			
-			
+			if (text != null)
+			{
+				Widget widget = obj as Widget;
+				
+				if (widget != null)
+				{
+					widget.Text = text;
+				}
+			}
 		}
 		
 		protected virtual void CreateDescriptionBinding(object obj, DataLayer.DataRecord data_record, string binding_path)
 		{
+			string text = data_record.DataDescription;
+			
+			if (text != null)
+			{
+				Widget widget = obj as Widget;
+				
+				if (widget != null)
+				{
+					widget.Text = text;
+				}
+			}
 		}
 		
 		

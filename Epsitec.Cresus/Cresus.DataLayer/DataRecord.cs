@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 03/11/2003
+//	Statut : OK/PA, 12/11/2003
 
 using Epsitec.Common.Support;
 
@@ -93,6 +93,11 @@ namespace Epsitec.Cresus.DataLayer
 		public string							DataLabel
 		{
 			get { return this.GetAttribute ("label", ResourceLevel.Merged); }
+		}
+		
+		public string							DataDescription
+		{
+			get { return this.GetAttribute ("descr", ResourceLevel.Merged); }
 		}
 		
 		public DataRecord						Parent
