@@ -260,6 +260,7 @@ namespace Epsitec.Common.Widgets
 			GroupBox    group;
 			Widget      widget;
 			RadioButton radio;
+			CheckButton check;
 			
 			button = new Button ("A");
 			button.Bounds = new Drawing.Rectangle (10, 170, 40, 25);
@@ -424,9 +425,9 @@ namespace Epsitec.Common.Widgets
 			text.Parent = window.Root;
 			
 			radio = new RadioButton ();
-			radio.Bounds = new Drawing.Rectangle (260, 75+7, 60, 20);
+			radio.Bounds = new Drawing.Rectangle (260, 75+7, 40, 20);
 			radio.Text   = "A";
-			radio.Group  = "Option";
+			radio.Group  = "Option1";
 			radio.Index  = 0;
 			radio.Parent = window.Root;
 			radio.TabIndex = 40;
@@ -434,13 +435,72 @@ namespace Epsitec.Common.Widgets
 			radio.ActiveState = WidgetState.ActiveYes;
 			
 			radio = new RadioButton ();
-			radio.Bounds = new Drawing.Rectangle (260, 61+7, 60, 20);
+			radio.Bounds = new Drawing.Rectangle (260, 61+7, 40, 20);
 			radio.Text   = "B";
-			radio.Group  = "Option";
+			radio.Group  = "Option1";
 			radio.Index  = 1;
 			radio.Parent = window.Root;
 			radio.TabIndex = 40;
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			radio = new RadioButton ();
+			radio.Bounds = new Drawing.Rectangle (260, 47+7, 40, 20);
+			radio.Text   = "C";
+			radio.Group  = "Option1";
+			radio.Index  = 2;
+			radio.Parent = window.Root;
+			radio.TabIndex = 40;
+			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			radio = new RadioButton ();
+			radio.Bounds = new Drawing.Rectangle (300, 75+7, 40, 20);
+			radio.Text   = "D";
+			radio.Group  = "Option2";
+			radio.Index  = 0;
+			radio.Parent = window.Root;
+			radio.TabIndex = 41;
+			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			radio.ActiveState = WidgetState.ActiveYes;
+			
+			radio = new RadioButton ();
+			radio.Bounds = new Drawing.Rectangle (300, 61+7, 40, 20);
+			radio.Text   = "E";
+			radio.Group  = "Option2";
+			radio.Index  = 1;
+			radio.Parent = window.Root;
+			radio.TabIndex = 41;
+			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			radio = new RadioButton ();
+			radio.Bounds = new Drawing.Rectangle (300, 47+7, 40, 20);
+			radio.Text   = "F";
+			radio.Group  = "Option2";
+			radio.Index  = 2;
+			radio.Parent = window.Root;
+			radio.TabIndex = 41;
+			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			check = new CheckButton ();
+			check.Bounds = new Drawing.Rectangle (340, 75+7, 40, 20);
+			check.Text   = "G";
+			check.Parent = window.Root;
+			check.TabIndex = 50;
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.ActiveState = WidgetState.ActiveYes;
+			
+			check = new CheckButton ();
+			check.Bounds = new Drawing.Rectangle (340, 61+7, 40, 20);
+			check.Text   = "H";
+			check.Parent = window.Root;
+			check.TabIndex = 51;
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			check = new CheckButton ();
+			check.Bounds = new Drawing.Rectangle (340, 47+7, 40, 20);
+			check.Text   = "I";
+			check.Parent = window.Root;
+			check.TabIndex = 52;
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
 			window.Show ();
 		}
