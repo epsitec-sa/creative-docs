@@ -3029,7 +3029,7 @@ noText:
 						block.width      = blockFont.GetTextAdvance(text)*fontItem.fontSize;
 						block.DefineFont(blockFont, fontItem, supplItem);
 						
-						if ( this.JustifMode == Drawing.TextJustifMode.None )
+						if ( this.JustifMode == Drawing.TextJustifMode.NoLine )
 						{
 							block.infos     = null;
 							block.infoWidth = 0;
@@ -3108,7 +3108,7 @@ noText:
 									block.imageDescender = dy*fontDescender/fontHeight;
 								}
 								
-								if ( this.JustifMode != Drawing.TextJustifMode.None )
+								if ( this.JustifMode != Drawing.TextJustifMode.NoLine )
 								{
 									double width = dx/fontItem.fontSize;
 									block.infos = new Drawing.Font.ClassInfo[1];
