@@ -212,7 +212,9 @@ namespace Epsitec.Common.Designer.UI
 			//	avec des boutons pour accepter/rejeter le choix. A la fin de l'édition, on
 			//	demande d'appeler HandleStringPickerValidated en cas d'acceptation :
 			
-			Application.Current.OpenStringPicker (new Support.EventHandler (this.HandleStringPickerValidated));
+			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
+			
+			adapter.Application.OpenStringPicker (new Support.EventHandler (this.HandleStringPickerValidated));
 		}
 		
 		private void HandleStringPickerValidated(object sender)
@@ -220,19 +222,25 @@ namespace Epsitec.Common.Designer.UI
 			//	L'utilisateur a validé le choix d'une string dans l'éditeur de ressources
 			//	textuelles. Il faut reprendre le nom du bundle et celui du champ :
 			
-			Application            app   = sender as Application;
-			Panels.StringEditPanel panel = app.StringEditController.ActivePanel;
-			EditArray              edit  = panel.EditArray;
+			Application            app     = sender as Application;
+			Panels.StringEditPanel panel   = app.StringEditController.ActivePanel;
+			EditArray              edit    = panel.EditArray;
+			TextRefAdapter         adapter = this.Adapter as TextRefAdapter;
 			
 			int index = edit.SelectedIndex;
 			
 			if (index >= 0)
 			{
+				this.UpdateBundleList (adapter);
+				
 				string bundle = panel.Store.Name;
 				string field  = edit[index, 0];
 				
 				this.combo_bundle.SelectedItem = bundle;
 				this.combo_field.SelectedItem  = field;
+				
+				System.Diagnostics.Debug.Assert (this.combo_bundle.SelectedItem == bundle);
+				System.Diagnostics.Debug.Assert (this.combo_field.SelectedItem == field);
 				
 				this.combo_text.SelectAll ();
 				this.combo_text.Focus ();

@@ -13,20 +13,32 @@ namespace Epsitec.Common.Dialogs
 		{
 		}
 		
-		public static bool LoadDesigner()
+		public static bool LoadDesignerFactory()
 		{
-			System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadWithPartialName ("App.Designer");
+			if (Dialog.factory != null)
+			{
+				return true;
+			}
+			
+			System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadWithPartialName ("Common.Designer");
 			
 			if (assembly != null)
 			{
-				System.Type type = assembly.GetType ("Epsitec.Designer.Application");
+				System.Type type = assembly.GetType ("Epsitec.Common.Designer.DialogDesignerFactory");
+				object      obj  = type.InvokeMember ("GetFactory", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.InvokeMethod, null, null, null);
 				
-				type.InvokeMember ("StartAsPlugIn", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.InvokeMethod, null, null, null);
+				Dialog.factory = obj as IDialogDesignerFactory;
 				
-				return true;
+				if (Dialog.factory != null)
+				{
+					return true;
+				}
 			}
 			
 			return false;
 		}
+		
+		
+		private static IDialogDesignerFactory	factory;
 	}
 }

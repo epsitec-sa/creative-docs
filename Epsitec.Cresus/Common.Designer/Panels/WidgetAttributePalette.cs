@@ -12,10 +12,12 @@ namespace Epsitec.Common.Designer.Panels
 	/// </summary>
 	public class WidgetAttributePalette : AbstractPalette
 	{
-		public WidgetAttributePalette()
+		public WidgetAttributePalette(Application application)
 		{
 			this.size  = new Drawing.Size (250, 600);
 			this.props = new System.Collections.ArrayList ();
+			
+			this.application = application;
 		}
 		
 		
@@ -239,7 +241,11 @@ namespace Epsitec.Common.Designer.Panels
 			
 			//	Pas trouvé de propriété correspondante. Il faut donc en créer une nouvelle !
 			
-			Editors.AbstractPropEdit new_prop = System.Activator.CreateInstance (prop_type) as Editors.AbstractPropEdit;
+			object[] args = new object[1];
+			
+			args[0] = this.application;
+			
+			Editors.AbstractPropEdit new_prop = System.Activator.CreateInstance (prop_type, args) as Editors.AbstractPropEdit;
 			
 			new_prop.ActiveObject = this.active;
 			
@@ -255,5 +261,6 @@ namespace Epsitec.Common.Designer.Panels
 		protected System.Type					type;
 		protected TabBook						book;
 		protected System.Collections.ArrayList	props;
+		protected Application					application;
 	}
 }

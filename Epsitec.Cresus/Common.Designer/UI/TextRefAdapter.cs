@@ -16,14 +16,9 @@ namespace Epsitec.Common.Designer.UI
 	
 	public class TextRefAdapter : Common.UI.Adapters.AbstractAdapter
 	{
-		public TextRefAdapter()
+		public TextRefAdapter(Application application)
 		{
-		}
-		
-		public TextRefAdapter(Common.UI.Binders.IBinder binder) : this ()
-		{
-			this.Binder = binder;
-			this.Binder.Adapter = this;
+			this.application = application;
 		}
 		
 		
@@ -127,13 +122,21 @@ namespace Epsitec.Common.Designer.UI
 		}
 		
 		
+		public Application						Application
+		{
+			get
+			{
+				return this.application;
+			}
+		}
+		
 		public Support.Data.IPropertyProvider	StringProvider
 		{
 			get
 			{
 				if (this.string_provider == null)
 				{
-					this.string_provider = Application.Current.StringEditController.Provider;
+					this.string_provider = this.application.StringEditController.Provider;
 				}
 				
 				return this.string_provider;
@@ -146,7 +149,7 @@ namespace Epsitec.Common.Designer.UI
 			{
 				if (this.string_controller == null)
 				{
-					this.string_controller = Application.Current.StringEditController;
+					this.string_controller = this.application.StringEditController;
 				}
 				
 				return this.string_controller;
@@ -235,5 +238,6 @@ namespace Epsitec.Common.Designer.UI
 		private string							value;
 		private Support.Data.IPropertyProvider	string_provider;
 		private StringEditController			string_controller;
+		private Application						application;
 	}
 }

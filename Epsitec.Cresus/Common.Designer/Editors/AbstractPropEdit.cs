@@ -14,8 +14,9 @@ namespace Epsitec.Common.Designer.Editors
 	/// </summary>
 	public abstract class AbstractPropEdit
 	{
-		public AbstractPropEdit()
+		public AbstractPropEdit(Application application)
 		{
+			this.application = application;
 		}
 		
 		
@@ -199,5 +200,6 @@ namespace Epsitec.Common.Designer.Editors
 		
 		protected System.Collections.ArrayList	prop_panes;
 		protected System.Collections.Hashtable	binders;
+		protected Application					application;
 	}
 }

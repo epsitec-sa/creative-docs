@@ -120,7 +120,7 @@ namespace Epsitec.Common.Designer
 				//	On s'assure que lors de la sauvegarde des bundles, l'édition n'est plus active; ceci
 				//	permet de garantir qu'aucun bundle partiel n'est enregistré...
 				
-				store.Panel.EditArray.ValidateEdition ();
+				this.ValidateEdition ();
 				
 				foreach (ResourceBundle bundle in bundles)
 				{
@@ -155,6 +155,21 @@ namespace Epsitec.Common.Designer
 						this.tab_book.Items.RemoveAt (i);
 						return;
 					}
+				}
+			}
+		}
+		
+		
+		public void ValidateEdition()
+		{
+			for (int i = 0; i < this.panels.Count; i++)
+			{
+				Panels.StringEditPanel panel = this.panels[i] as Panels.StringEditPanel;
+				EditArray              edit  = panel.EditArray;
+				
+				if (edit.InteractionMode == ScrollInteractionMode.Edition)
+				{
+					edit.ValidateEdition (false);
 				}
 			}
 		}
@@ -880,6 +895,7 @@ namespace Epsitec.Common.Designer
 			this.main_panel = new Widget ();
 			this.main_panel.Size = size + new Drawing.Size (20, 60);
 			this.main_panel.CommandDispatcher = this.dispatcher;
+			this.main_panel.VisibleChanged   += new EventHandler (this.HandleMainPanelVisibleChanged);
 			
 			this.tab_book = new TabBook (this.main_panel);
 			this.tab_book.Dock = DockStyle.Fill;
@@ -984,7 +1000,7 @@ namespace Epsitec.Common.Designer
 					string command_yes = "SaveStringBundle (\""+name+"\") -> CloseStringBundle (\""+name+"\")";
 					string command_no  = "CloseStringBundle (\""+name+"\")";
 					
-					Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel (Application.Current.Name, Common.Dialogs.Icon.Warning, question, command_yes, command_no, this.dispatcher);
+					Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel (this.application.Name, Common.Dialogs.Icon.Warning, question, command_yes, command_no, this.dispatcher);
 					
 					dialog.Owner = this.main_panel.Window;
 					dialog.Show ();
@@ -997,6 +1013,12 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert (this.tab_book == sender);
 			
 			this.OnActiveStoreChanged ();
+		}
+		
+		private void HandleMainPanelVisibleChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.main_panel == sender);
+			this.ValidateEdition ();
 		}
 		
 		
@@ -1044,6 +1066,7 @@ namespace Epsitec.Common.Designer
 		
 		protected virtual void OnActiveStoreChanged()
 		{
+			this.ValidateEdition ();
 			this.UpdateCommandStates ();
 			
 			if (this.ActiveStoreChanged != null)

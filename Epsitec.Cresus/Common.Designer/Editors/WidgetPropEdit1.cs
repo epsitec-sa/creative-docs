@@ -11,14 +11,14 @@ namespace Epsitec.Common.Designer.Editors
 	/// </summary>
 	public class WidgetPropEdit1 : AbstractPropEdit
 	{
-		public WidgetPropEdit1()
+		public WidgetPropEdit1(Application application) : base (application)
 		{
 		}
 		
 		protected override void FillTabPage()
 		{
 			this.AddPropPane (this.CreatePropPane ("Name",		new Common.UI.Adapters.StringAdapter ()));
-			this.AddPropPane (this.CreatePropPane ("Text",		new UI.TextRefAdapter ()));
+			this.AddPropPane (this.CreatePropPane ("Text",		new UI.TextRefAdapter (this.application)));
 			this.AddPropPane (this.CreatePropPane ("Command",	new Common.UI.Adapters.StringAdapter ()));
 			this.AddPropPane (this.CreatePropPane ("Location",	new Common.UI.Adapters.Num2Adapter ()));
 			this.AddPropPane (this.CreatePropPane ("Size",		new Common.UI.Adapters.Num2Adapter ()));

@@ -140,7 +140,7 @@ namespace Epsitec.Common.Designer
 			//	Crée la fenêtre contenant les attributs.
 			
 			this.attribute_panel   = this.CreatePanel ("AttributesWindow", "Attributs");
-			this.attribute_palette = new Panels.WidgetAttributePalette ();
+			this.attribute_palette = new Panels.WidgetAttributePalette (this.application);
 			this.tool_bar          = new HToolBar ();
 			
 			double dx = this.attribute_palette.Size.Width;

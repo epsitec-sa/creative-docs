@@ -173,6 +173,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IDialogDesigner.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IDialogDesignerFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Message.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

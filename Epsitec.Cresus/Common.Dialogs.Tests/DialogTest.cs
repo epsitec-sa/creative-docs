@@ -4,9 +4,9 @@ namespace Epsitec.Common.Dialogs
 {
 	[TestFixture] public class DialogTest
 	{
-		[Test] public void CheckDialogLoadDesigner()
+		[Test] public void CheckDialogLoadDesignerFactory()
 		{
-			Assert.IsTrue (Dialog.LoadDesigner ());
+			Assert.IsTrue (Dialog.LoadDesignerFactory ());
 		}
 	}
 }

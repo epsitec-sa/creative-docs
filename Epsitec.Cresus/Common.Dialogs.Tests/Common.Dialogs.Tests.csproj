@@ -128,6 +128,11 @@
                     AssemblyName = "System.Windows.Forms"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
                 />
+                <Reference
+                    Name = "Common.Designer"
+                    Project = "{55C3166C-C975-4147-91B1-9A57E4F48538}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
