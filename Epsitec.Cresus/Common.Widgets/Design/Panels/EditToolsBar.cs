@@ -18,9 +18,9 @@ namespace Epsitec.Common.Widgets.Design.Panels
 			
 			tools.Size = this.Size;
 			
-			tools.Items.Add (new IconButton ("CreateNewWindow", "file:images/new1.icon"));
+			tools.Items.Add (new IconButton ("CreateNewWindow", "file:images/new.icon"));
 			tools.Items.Add (new IconSeparator ());
-			tools.Items.Add (new IconButton ("DeleteActiveSelection", "file:images/delete1.icon"));
+			tools.Items.Add (new IconButton ("DeleteActiveSelection", "file:images/delete.icon"));
 			
 			return tools;
 		}
