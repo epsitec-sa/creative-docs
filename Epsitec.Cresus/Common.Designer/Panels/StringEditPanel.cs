@@ -12,11 +12,10 @@ namespace Epsitec.Common.Designer.Panels
 	/// </summary>
 	public class StringEditPanel : AbstractPanel
 	{
-		public StringEditPanel(Support.Data.ITextArrayStore store, ResourceBundle bundle)
+		public StringEditPanel(StringEditController.Store store)
 		{
-			this.size   = StringEditPanel.DefaultSize;
-			this.store  = store;
-			this.bundle = bundle;
+			this.size  = StringEditPanel.DefaultSize;
+			this.store = store;
 		}
 		
 		
@@ -32,6 +31,15 @@ namespace Epsitec.Common.Designer.Panels
 				return this.edit_array;
 			}
 		}
+		
+		public StringEditController.Store		Store
+		{
+			get
+			{
+				return this.store;
+			}
+		}
+		
 		
 		public static Drawing.Size				DefaultSize
 		{
@@ -49,6 +57,8 @@ namespace Epsitec.Common.Designer.Panels
 			
 			this.edit_array = new EditArray (parent);
 			this.lang_combo = new TextFieldCombo ();
+			
+			this.FillLangCombo ();
 			
 			EditArray.Header     title = new EditArray.Header (this.edit_array);
 			EditArray.Controller ctrl  = new EditArray.Controller (this.edit_array, "Table");
@@ -109,13 +119,29 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		
 		
+		protected virtual void FillLangCombo()
+		{
+			this.lang_combo.Items.Clear ();
+			
+			string[] names;
+			string[] captions;
+			
+			this.store.GetLevelNamesAndCaptions (out names, out captions);
+			
+			for (int i = 0; i < names.Length; i++)
+			{
+				this.lang_combo.Items.Add (names[i], captions[i]);
+			}
+		}
+		
+		
 		private void HandleEditArraySelectedIndexChanged(object sender)
 		{
 			int index = this.edit_array.SelectedIndex;
 			
 			if (index >= 0)
 			{
-				this.comment.Text = this.bundle[index].About;
+				this.comment.Text = this.store.DefaultBundle[index].About;
 			}
 			else
 			{
@@ -129,7 +155,7 @@ namespace Epsitec.Common.Designer.Panels
 			
 			if (index >= 0)
 			{
-				this.bundle[index].SetAbout (this.comment.Text);
+				this.store.DefaultBundle[index].SetAbout (this.comment.Text);
 			}
 		}
 		
@@ -158,7 +184,6 @@ namespace Epsitec.Common.Designer.Panels
 		protected EditArray						edit_array;
 		protected TextFieldCombo				lang_combo;
 		protected AbstractTextField				comment;
-		protected Support.Data.ITextArrayStore	store;
-		protected ResourceBundle				bundle;
+		protected StringEditController.Store	store;
 	}
 }

@@ -42,10 +42,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			get
 			{
-				string[] values = new string[2];
+				string[] values = new string[3];
 				
 				values[0] = Resources.MakeFullName (this.bundle_spec.Prefix, this.list.Items[this.list.SelectedIndex]);
 				values[1] = this.bundle_spec.ResourceLevel.ToString ();
+				values[2] = this.bundle_spec.CultureInfo.TwoLetterISOLanguageName;
 				
 				return values;
 			}

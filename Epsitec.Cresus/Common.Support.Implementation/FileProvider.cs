@@ -153,13 +153,20 @@ namespace Epsitec.Common.Support.Implementation
 				this.SelectLocale (culture);
 			}
 			
-			string file_filter = "*";
-			
-			//	TODO: utiliser name_filter pour filtrer les noms des fichiers
+			string file_filter = name_filter;
 			
 			string path   = this.path_prefix;
 			string suffix = this.GetLevelSuffix (level);
-			string search = file_filter + suffix;
+			string search;
+			
+			if (level == ResourceLevel.All)
+			{
+				search = string.Concat (file_filter, ".*", suffix);
+			}
+			else
+			{
+				search = string.Concat (file_filter, suffix);
+			}
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			string[] files = System.IO.Directory.GetFiles (path, search);

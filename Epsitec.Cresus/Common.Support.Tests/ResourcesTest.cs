@@ -126,7 +126,7 @@ namespace Epsitec.Common.Support
 			string[] names_1 = Resources.GetBundleIds ("file:*");
 			string[] names_2 = Resources.GetBundleIds ("file:*", ResourceLevel.Localised);
 			string[] names_3 = Resources.GetBundleIds ("file:*", "String", ResourceLevel.Localised);
-			string[] names_4 = Resources.GetBundleIds ("file:*", ResourceLevel.All);
+			string[] names_4 = Resources.GetBundleIds ("file:strings", ResourceLevel.All);
 			
 			System.Console.Out.WriteLine ("file:*");
 			
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Support
 				System.Console.Out.WriteLine (" {0} : {1}", i, names_3[i]);
 			}
 			
-			System.Console.Out.WriteLine ("file:*, level=all");
+			System.Console.Out.WriteLine ("file:strings, level=all");
 			
 			for (int i = 0; i < names_4.Length; i++)
 			{
