@@ -290,12 +290,12 @@ namespace Epsitec.Common.Types
 		{
 			if (this.Changed != null)
 			{
-				this.Changed (this, System.EventArgs.Empty);
+				this.Changed (this);
 			}
 		}
 		
 		
-		public event System.EventHandler	Changed;
+		public event Support.EventHandler	Changed;
 		
 		private decimal						minimum		=   0.0M;
 		private decimal						maximum		= 100.0M;
