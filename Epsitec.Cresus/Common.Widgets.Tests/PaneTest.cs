@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 			Pane pane = new Pane ();
 			
 			pane.PaneStyle = PaneStyle.LeftRight;
-			pane.SizeChanged += new EventHandler(this.pane_SizeChanged);
+			pane.PaneSizeChanged += new EventHandler(this.pane_SizeChanged);
 			pane.Bounds = window.Root.Client.Bounds;
 			pane.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 			pane.LayoutChanged += new EventHandler(pane_LayoutChanged);

@@ -423,7 +423,7 @@ namespace Epsitec.Common.Widgets
 			this.pane.PaneBehaviour = PaneBookBehaviour.Draft;
 			//this.pane.PaneBehaviour = PaneBookBehaviour.FollowMe;
 			this.pane.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			this.pane.SizeChanged += new EventHandler(this.pane_SizeChanged);
+			this.pane.PaneSizeChanged += new EventHandler(this.pane_SizeChanged);
 			this.pane.Parent = root;
 
 			this.leftPane = new PanePage();
@@ -446,7 +446,7 @@ namespace Epsitec.Common.Widgets
 			this.subPane.PaneBehaviour = PaneBookBehaviour.Draft;
 			//this.subPane.PaneBehaviour = PaneBookBehaviour.FollowMe;
 			this.subPane.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			this.subPane.SizeChanged += new EventHandler(this.pane_SizeChanged);
+			this.subPane.PaneSizeChanged += new EventHandler(this.pane_SizeChanged);
 			this.subPane.Parent = this.leftPane;
 
 			this.topPane = new PanePage();

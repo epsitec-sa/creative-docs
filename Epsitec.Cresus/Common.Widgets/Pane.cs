@@ -412,7 +412,7 @@ namespace Epsitec.Common.Widgets
 					break;
 			}
 			
-			this.OnSizeChanged();
+			this.OnPaneSizeChanged();
 		}
 
 		// Appelé lorsque le slider est fini de déplacer.
@@ -449,7 +449,7 @@ namespace Epsitec.Common.Widgets
 					break;
 			}
 
-			this.OnSizeChanged();
+			this.OnPaneSizeChanged();
 		}
 
 		// Bouton flip-flop cliqué.
@@ -460,12 +460,12 @@ namespace Epsitec.Common.Widgets
 				if ( this.RetSize(0) == this.minSize[0] )
 				{
 					this.SetSize(0, this.maxSize[0]);
-					OnSizeChanged();
+					this.OnPaneSizeChanged();
 				}
 				else
 				{
 					this.SetSize(0, this.minSize[0]);
-					OnSizeChanged();
+					this.OnPaneSizeChanged();
 				}
 			}
 
@@ -474,27 +474,26 @@ namespace Epsitec.Common.Widgets
 				if ( this.RetSize(1) == this.minSize[1] )
 				{
 					this.SetSize(1, this.maxSize[1]);
-					OnSizeChanged();
+					this.OnPaneSizeChanged();
 				}
 				else
 				{
 					this.SetSize(1, this.minSize[1]);
-					OnSizeChanged();
+					this.OnPaneSizeChanged();
 				}
 			}
 		}
 
-		// Génère un événement pour dire que la sélection dans la liste a changé.
-		protected virtual void OnSizeChanged()
+		protected virtual void OnPaneSizeChanged()
 		{
-			if ( this.SizeChanged != null )  // qq'un écoute ?
+			if ( this.PaneSizeChanged != null )  // qq'un écoute ?
 			{
-				this.SizeChanged(this);
+				this.PaneSizeChanged(this);
 			}
 		}
 
 
-		public event Support.EventHandler	SizeChanged;
+		public event Support.EventHandler	PaneSizeChanged;
 
 		protected PaneStyle					paneStyle = PaneStyle.LeftRight;
 		protected PaneBehaviour				paneBehaviour = PaneBehaviour.Draft;

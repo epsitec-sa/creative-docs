@@ -382,7 +382,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			this.OnSizeChanged();
+			this.OnPaneSizeChanged();
 		}
 
 		// Met à jour les tailles absolues en fonction des tailles relatives.
@@ -737,16 +737,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		// Génère un événement pour dire qu'une taille a changé.
-		protected virtual void OnSizeChanged()
+		protected virtual void OnPaneSizeChanged()
 		{
-			if ( this.SizeChanged != null )  // qq'un écoute ?
+			if ( this.PaneSizeChanged != null )  // qq'un écoute ?
 			{
-				this.SizeChanged(this);
+				this.PaneSizeChanged(this);
 			}
 		}
 
 
-		public event Support.EventHandler SizeChanged;
+		public event Support.EventHandler PaneSizeChanged;
 
 		
 		// Dessine le groupe de panneaux.
