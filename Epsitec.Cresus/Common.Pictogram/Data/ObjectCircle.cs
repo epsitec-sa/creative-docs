@@ -141,11 +141,16 @@ namespace Epsitec.Common.Pictogram.Data
 		protected Drawing.Path PathCircle(Drawing.Point c, double rx, double ry)
 		{
 			Drawing.Path path = new Drawing.Path();
+#if true
+			path.DefaultZoom = 20;
+			path.Arc(c, rx, ry, 0, 3.1415926*2, true);
+#else
 			path.MoveTo(c.X-rx, c.Y);
 			path.CurveTo(c.X-rx, c.Y+ry*0.56, c.X-rx*0.56, c.Y+ry, c.X, c.Y+ry);
 			path.CurveTo(c.X+rx*0.56, c.Y+ry, c.X+rx, c.Y+ry*0.56, c.X+rx, c.Y);
 			path.CurveTo(c.X+rx, c.Y-ry*0.56, c.X+rx*0.56, c.Y-ry, c.X, c.Y-ry);
 			path.CurveTo(c.X-rx*0.56, c.Y-ry, c.X-rx, c.Y-ry*0.56, c.X-rx, c.Y);
+#endif
 			path.Close();
 			return path;
 		}
