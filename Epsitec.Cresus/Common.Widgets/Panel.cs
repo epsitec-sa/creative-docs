@@ -3,13 +3,14 @@ namespace Epsitec.Common.Widgets
 	public delegate void PaintFrameCallback(Panel panel, Drawing.Graphics graphics, Drawing.Rectangle frame_outside, Drawing.Rectangle frame_inside);
 	
 	/// <summary>
-	/// La classe Panel permet de gérer des panneaux avec une marge peinte par des
-	/// décorateurs externes.
+	/// La classe Panel est un widget qui permet de grouper d'autres widgets
+	/// tout en limitant la surface affichée à une ouverture (aperture).
 	/// </summary>
 	public class Panel : AbstractGroup
 	{
 		public Panel()
 		{
+			this.aperture = Drawing.Rectangle.Infinite;
 		}
 		
 		public Panel(Widget embedder) : this()
@@ -17,46 +18,15 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder (embedder);
 		}
 		
-		public override Drawing.Rectangle GetShapeBounds()
-		{
-			return Drawing.Rectangle.Inflate (base.GetShapeBounds (), this.frame_margins);
-		}
 		
-		public override Drawing.Rectangle GetClipBounds()
-		{
-			Drawing.Rectangle parent_clip = this.MapParentToClient (this.parent.GetClipBounds ());
-			Drawing.Rectangle client_clip = base.GetClipBounds ();
-			
-			return Drawing.Rectangle.Intersection (parent_clip, client_clip);
-		}
-		
-		
-		public Drawing.Margins			FrameMargins
-		{
-			//	Les marges du cadre du panel sont utilisées par la classe Scrollable pour
-			//	assurer que l'ouverture est toujours calée de telle manière qu'il reste de
-			//	la place pour un cadre autour du morceau de panel visible.
-			
-			get
-			{
-				return this.frame_margins;
-			}
-			
-			set
-			{
-				if (this.frame_margins != value)
-				{
-					this.frame_margins = value;
-					this.Invalidate ();
-				}
-			}
-		}
-		
-		public Drawing.Rectangle		Aperture
+		public Drawing.Rectangle			Aperture
 		{
 			//	L'ouverture, si elle est définie pour un panel, permet de définir quelle
 			//	partie est actuellement visible, relativement au système de coordonnées
 			//	client du panel.
+			
+			//	Pour indiquer que le panel complet est visible, il faut assigner à Aperture
+			//	la valeur Drawing.Rectangle.Infinite.
 			
 			get
 			{
@@ -72,6 +42,94 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		
+		public Drawing.Margins				FrameMargins
+		{
+			//	Les marges du cadre permettent de restreindre la surface utilisable pour
+			//	le layout du contenu du panel.
+			
+			get
+			{
+				return this.frame_margins;
+			}
+			
+			set
+			{
+				if (this.frame_margins != value)
+				{
+					this.frame_margins = value;
+					this.OnSurfaceSizeChanged ();
+				}
+			}
+		}
+		
+		
+		public Drawing.Size					DesiredSize
+		{
+			get
+			{
+				return this.desired_size;
+			}
+			set
+			{
+				if (this.desired_size != value)
+				{
+					this.desired_size = value;
+					this.OnSurfaceSizeChanged ();
+				}
+			}
+		}
+		
+		public Drawing.Size					SurfaceSize
+		{
+			get
+			{
+				return this.desired_size + this.frame_margins;
+			}
+		}
+		
+		
+		public double						DesiredWidth
+		{
+			get { return this.DesiredSize.Width; }
+		}
+		
+		public double						DesiredHeight
+		{
+			get { return this.DesiredSize.Height; }
+		}
+		
+		
+		public double						SurfaceWidth
+		{
+			get { return this.SurfaceSize.Width; }
+		}
+		
+		public double						SurfaceHeight
+		{
+			get { return this.SurfaceSize.Height; }
+		}
+		
+		
+		public override Drawing.Rectangle GetClipBounds()
+		{
+			if (this.aperture == Drawing.Rectangle.Infinite)
+			{
+				//	Si aucune ouverture n'a été définie, elle a une taille infinie et on
+				//	peut donc utiliser la région de clipping retournée par Widget.
+				
+				return base.GetClipBounds ();
+			}
+			else
+			{
+				//	Une ouverture limite la surface visible; il faut donc réaliser
+				//	l'intersection de la région complète avec l'ouverture.
+				
+				return Drawing.Rectangle.Intersection (base.GetClipBounds (), this.aperture);
+			}
+		}
+		
 		
 		protected override void PaintForegroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clip_rect)
 		{
@@ -100,10 +158,21 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event PaintFrameCallback	PaintFrameCallback;
+		protected virtual void OnSurfaceSizeChanged()
+		{
+			if (this.SurfaceSizeChanged != null)
+			{
+				this.SurfaceSizeChanged (this);
+			}
+		}
 		
 		
-		protected Drawing.Margins		frame_margins;
-		protected Drawing.Rectangle		aperture;
+		public event PaintFrameCallback		PaintFrameCallback;
+		public event EventHandler			SurfaceSizeChanged;
+		
+		
+		protected Drawing.Margins			frame_margins;
+		protected Drawing.Rectangle			aperture;
+		protected Drawing.Size				desired_size;
 	}
 }

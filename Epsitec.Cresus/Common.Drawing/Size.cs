@@ -139,6 +139,17 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public static Size operator +(Size a, Margins b)
+		{
+			return new Size (a.Width + b.Width, a.Height + b.Height);
+		}
+		
+		public static Size operator -(Size a, Margins b)
+		{
+			return new Size (System.Math.Max (0, a.Width - b.Width), System.Math.Max (0, a.Height - b.Height));
+		}
+		
+		
 		public class Converter : Epsitec.Common.Converters.AbstractStringConverter
 		{
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)

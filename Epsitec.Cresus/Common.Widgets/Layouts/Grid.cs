@@ -70,6 +70,10 @@ namespace Epsitec.Common.Widgets.Layouts
 			get { return this.columns; }
 		}
 		
+		public Drawing.Size				DesiredSize
+		{
+			get { return new Drawing.Size (this.DesiredWidth, this.DesiredHeight); }
+		}
 		
 		public double					DesiredWidth
 		{
@@ -236,7 +240,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.designer_adjust_widget = null;
 			}
 			
-			this.root.Size = new Drawing.Size (this.current_width, this.current_height);
+			this.root.DesiredSize = new Drawing.Size (this.current_width, this.current_height);
 			this.root.Invalidate ();
 		}
 		

@@ -165,9 +165,11 @@ namespace Epsitec.Common.Widgets
 			layout.DesiredHeight = 150;
 			layout.Invalidate ();
 			
-			panel.FrameMargins = new Drawing.Margins (10, 10, 10, 40);
+//			panel.FrameMargins = new Drawing.Margins (10, 10, 10, 40);
 			
 			Scrollable surface = new Scrollable ();
+			
+			panel.DesiredSize = layout.DesiredSize;
 			
 			surface.Width     = layout.CurrentWidth + 50;
 			surface.Height    = layout.DesiredHeight + 50;
