@@ -233,6 +233,7 @@ namespace Epsitec.Common.Widgets
 			this.comboWindow.Dispose();
 			this.comboWindow = null;
 			
+			this.Window.MakeActive ();
 			this.SelectAll ();
 			this.SetFocused (true);
 		}

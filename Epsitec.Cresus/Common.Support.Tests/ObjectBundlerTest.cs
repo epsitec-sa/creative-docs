@@ -61,6 +61,8 @@ namespace Epsitec.Common.Support.Tests
 			Assertion.AssertNotNull (obj);
 			Assertion.AssertNotNull (window);
 			
+			this.test_window = window;
+			
 			window.Show ();
 		}
 		
@@ -75,14 +77,16 @@ namespace Epsitec.Common.Support.Tests
 			}
 		}
 		
-		private static bool register_window_cancel = true;
+		private static bool		register_window_cancel = true;
+		private Widgets.Window	test_window;
 		
 		private void HandleCommandCancel(object sender, CommandEventArgs e)
 		{
-			System.Diagnostics.Debug.WriteLine ("User clicked cancel button -> close window");
-			
-			Widgets.Widget widget = sender as Widgets.Widget;
-			widget.Window.Dispose ();
+			if (this.test_window != null)
+			{
+				this.test_window.Dispose ();
+				this.test_window = null;
+			}
 		}
 	}
 }

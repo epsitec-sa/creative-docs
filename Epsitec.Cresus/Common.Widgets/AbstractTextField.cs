@@ -766,7 +766,7 @@ namespace Epsitec.Common.Widgets
 					rects[0].Inflate(-3, -3);
 					rects[0].Right -= button;
 					adorner.PaintTextSelectionBackground(graphics, rects);
-					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
+					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, (state&~WidgetState.Focused) | WidgetState.Selected, dir);
 					adorner.PaintFocusBox(graphics, rects[0]);
 				}
 				else if ( from == to )

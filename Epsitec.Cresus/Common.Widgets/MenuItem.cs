@@ -14,6 +14,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public MenuItem()
 		{
+			this.internalState |= InternalState.Command;
+			
 			this.internalState &= ~InternalState.AutoCapture;
 			this.internalState &= ~InternalState.AutoFocus;
 			this.internalState &= ~InternalState.AutoEngage;
@@ -189,6 +191,15 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
+				if (value == null)
+				{
+					this.internalState |= InternalState.Command;
+				}
+				else
+				{
+					this.internalState &= ~InternalState.Command;
+				}
+				
 				this.separator = false;
 				this.submenu = value;
 			}

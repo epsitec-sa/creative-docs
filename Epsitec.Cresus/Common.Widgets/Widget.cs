@@ -2063,7 +2063,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool WalkChildren(WalkWidgetCallback callback)
+		public virtual bool WalkChildren(WalkWidgetCallback callback)
 		{
 			if (this.HasChildren == false)
 			{
@@ -2088,6 +2088,19 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 		
+		public virtual void ExecuteCommand()
+		{
+			if (this.IsCommand)
+			{
+				Window window = this.Window;
+				
+				if (window != null)
+				{
+					window.QueueCommand (this);
+				}
+			}
+		}
+		
 		
 		protected virtual void SetBounds(double x1, double y1, double x2, double y2)
 		{
@@ -2106,7 +2119,6 @@ namespace Epsitec.Common.Widgets
 			this.UpdateLayoutSize ();
 		}
 		
-		
 		protected virtual void UpdateLayoutSize()
 		{
 			if (this.textLayout != null)
@@ -2115,8 +2127,6 @@ namespace Epsitec.Common.Widgets
 				this.textLayout.LayoutSize = this.Client.Size;
 			}
 		}
-		
-		
 		
 		protected virtual void UpdateClientGeometry()
 		{
@@ -2967,15 +2977,7 @@ namespace Epsitec.Common.Widgets
 				this.Clicked (this, e);
 			}
 			
-			if (this.IsCommand)
-			{
-				Window window = this.Window;
-				
-				if (window != null)
-				{
-					window.QueueCommand (this);
-				}
-			}
+			this.ExecuteCommand ();
 		}
 		
 		protected virtual void OnDoubleClicked(MessageEventArgs e)

@@ -58,6 +58,14 @@ namespace Epsitec.Common.Widgets
 			this.window.IsLayered = true;
 		}
 		
+		public void MakeActive()
+		{
+			if (! this.IsDisposed)
+			{
+				this.window.Activate ();
+			}
+		}
+		
 		public void DisableMouseActivation()
 		{
 			this.window.IsMouseActivationEnabled = false;
@@ -435,7 +443,10 @@ namespace Epsitec.Common.Widgets
 		
 		internal void QueueCommand(Widget source)
 		{
+			System.Diagnostics.Debug.Assert (this.cmd_names.Contains (source) == false, "Cannot queue same command twice");
+			
 			this.cmd_queue.Enqueue (source);
+			this.cmd_names[source] = source.CommandName;
 			
 			if (this.cmd_queue.Count == 1)
 			{
@@ -448,7 +459,9 @@ namespace Epsitec.Common.Widgets
 			while (this.cmd_queue.Count > 0)
 			{
 				Widget widget = this.cmd_queue.Dequeue () as Widget;
-				string name   = widget.CommandName;
+				string name   = this.cmd_names[widget] as string;
+				
+				this.cmd_names.Remove (widget);
 				
 				this.cmd_dispatcher.Dispatch (name, widget);
 			}
@@ -493,6 +506,9 @@ namespace Epsitec.Common.Widgets
 				//	en utilisant une approche en profondeur d'abord.
 				
 				this.root.MessageHandler (message, message.Cursor);
+				
+				if (this.IsDisposed) return;
+				
 				this.window.Capture = false;
 			}
 			else
@@ -503,10 +519,9 @@ namespace Epsitec.Common.Widgets
 				this.capturing_widget.MessageHandler (message);
 			}
 			
-			if (this.window != null)
-			{
-				this.PostProcessMessage (message);
-			}
+			if (this.IsDisposed) return;
+			
+			this.PostProcessMessage (message);
 		}
 		
 		internal void PostProcessMessage(Message message)
@@ -729,8 +744,9 @@ namespace Epsitec.Common.Widgets
 		private Widget						engaged_widget;
 		private Timer						timer;
 		
-		private Support.CommandDispatcher	cmd_dispatcher;
-		private System.Collections.Queue	cmd_queue = new System.Collections.Queue ();
+		private Support.CommandDispatcher	 cmd_dispatcher;
+		private System.Collections.Queue	 cmd_queue = new System.Collections.Queue ();
+		private System.Collections.Hashtable cmd_names = new System.Collections.Hashtable ();
 		
 		static System.Collections.ArrayList	windows = new System.Collections.ArrayList ();
 	}
