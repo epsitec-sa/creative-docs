@@ -101,6 +101,12 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		public event System.EventHandler TransformUpdating;
 		
+		public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
+		{
+			this.AssertAttached ();
+			AntiGrain.Renderer.Gradient.SetAlphaMask (this.agg_ren, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
+		}
+		
 		
 		public void SetColors(Color a, Color b)
 		{

@@ -10,5 +10,9 @@ namespace Epsitec.Common.Drawing.Null
 		public SolidRenderer()
 		{
 		}
+		
+		public override void SetAlphaMask(Pixmap pixmap, MaskComponent component)
+		{
+		}
 	}
 }

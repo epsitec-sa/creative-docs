@@ -42,15 +42,30 @@ namespace Epsitec.Common.Drawing.Agg
 		
 		public override void Clear(double r, double g, double b, double a)
 		{
+			this.AssertAttached ();
 			AntiGrain.Renderer.Solid.Clear (this.agg_ren, r, g, b, a);
 		}
 		
 		public override void SetColor(double r, double g, double b, double a)
 		{
+			this.AssertAttached ();
 			AntiGrain.Renderer.Solid.Color (this.agg_ren, r, g, b, a);
 		}
 		
 		
+		public override void SetAlphaMask(Pixmap pixmap, MaskComponent component)
+		{
+			this.AssertAttached ();
+			AntiGrain.Renderer.Solid.SetAlphaMask (this.agg_ren, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
+		}
+		
+		protected virtual void AssertAttached()
+		{
+			if (this.agg_ren == System.IntPtr.Zero)
+			{
+				throw new System.NullReferenceException ("SolidRenderer not attached");
+			}
+		}
 		
 		protected override void Dispose(bool disposing)
 		{
