@@ -17,37 +17,6 @@ namespace Epsitec.Common.Widgets
 			window.Show();
 		}
 
-		private void CheckPaint_Paint1(object sender, PaintEventArgs e)
-		{
-			TextLayout layout = new TextLayout();
-
-//?			layout.Text = "Ceci est un petit texte ridicule, juste pour essayer !";
-//?			layout.Text = "Normal <b>bold <i>bold-italic </b>italic </i>normal.";
-//?			layout.Text = "<b>Première ligne</b> assez longue pour nécessiter une coupure.<br/><b>Deuxième ligne</b> assez longue pour nécessiter une coupure.";
-			layout.Text = @"Ceci est un <a href=""x"">petit texte <b>ridicule</b></a>, juste pour <font color=""#ff0000"">tester</font> le comportement de la <font size=""20"">classe</font> <font face=""Courier New"">TextLayout</font>, mes premiers pas en &quot;C#&quot;&nbsp;!<br/>Et voilà une image <img src=""file:images/icon.png""/> simple.";
-			layout.Font = Font.GetFont("Tahoma", "Regular");
-			layout.FontSize = 11.0;
-			layout.Alignment = ContentAlignment.MiddleCenter;
-			layout.LayoutSize = new Size(200, 100);
-
-			Point pos = new Point(20, 20);
-
-//?			e.Graphics.RotateTransform (5, 0, 0);
-			e.Graphics.ScaleTransform (1.2, 1.2, 0, 0);
-			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
-			e.Graphics.RenderSolid(Color.FromBrightness(1));
-
-			Rectangle[] rects = layout.FindTextRange(pos, 0, layout.Text.Length);
-			for ( int i=0 ; i<rects.Length ; i++ )
-			{
-				e.Graphics.Align (ref rects[i]);
-				e.Graphics.AddFilledRectangle(rects[i].Left, rects[i].Bottom, rects[i].Width, rects[i].Height);
-				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
-			}
-
-			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
-		}
-
 		[Test] public void CheckRectangle()
 		{
 			Window window = new Window();
@@ -57,29 +26,6 @@ namespace Epsitec.Common.Widgets
 			window.Root.PaintForeground += new PaintEventHandler(CheckRectangle_Paint1);
 			window.Root.Invalidate();
 			window.Show();
-		}
-
-		private void CheckRectangle_Paint1(object sender, PaintEventArgs e)
-		{
-			TextLayout layout = new TextLayout();
-
-			layout.Text = @"Juste <font size=""30"">trois</font> lignes de texte <font size=""10"">(et une image <img src=""file:images/icon.png""/>)</font> pour rigoler !";
-			layout.Font = Font.GetFont("Tahoma", "Regular");
-			layout.FontSize = 20.0;
-			layout.Alignment = ContentAlignment.MiddleCenter;
-			layout.LayoutSize = new Size(200, 100);
-
-			Point pos = new Point(50, 50);
-
-			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
-			e.Graphics.RenderSolid(Color.FromBrightness(1));
-
-			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
-
-			Rectangle bounds = layout.TotalRectangle;
-			bounds.Offset(pos);
-			e.Graphics.AddRectangle(bounds);
-			e.Graphics.RenderSolid(Color.FromRGB(1,0,0));
 		}
 
 		[Test] public void CheckImage()
@@ -108,24 +54,6 @@ namespace Epsitec.Common.Widgets
 			text.BackColor = Color.FromRGB (1.0, 1.0, 1.0);
 			
 			window.Show ();
-		}
-
-		private void CheckImage_Paint1(object sender, PaintEventArgs e)
-		{
-			TextLayout layout = new TextLayout();
-
-			layout.Text = @"abracadabra abracadabra<br/><a href=""x"">abc <img src=""file:images/icon.png"" width=""5"" height=""4""/> def</a><br/>abracadabra abracadabra <a href=""y"">bla bla bla&nbsp;!</a>";
-			layout.Font = Font.GetFont("Tahoma", "Regular");
-			layout.FontSize = 15.0;
-			layout.Alignment = ContentAlignment.MiddleCenter;
-			layout.LayoutSize = new Size(200, 100);
-
-			Point pos = new Point(50, 50);
-
-			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
-			e.Graphics.RenderSolid(Color.FromBrightness(1));
-
-			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
 		}
 
 		[Test] public void CheckJustif()
@@ -356,6 +284,80 @@ namespace Epsitec.Common.Widgets
 			Assertion.Assert(!TextLayout.CheckSyntax("<x>", out offsetError));
 		}
 			
+		
+		private void CheckPaint_Paint1(object sender, PaintEventArgs e)
+		{
+			TextLayout layout = new TextLayout();
+
+			//?			layout.Text = "Ceci est un petit texte ridicule, juste pour essayer !";
+			//?			layout.Text = "Normal <b>bold <i>bold-italic </b>italic </i>normal.";
+			//?			layout.Text = "<b>Première ligne</b> assez longue pour nécessiter une coupure.<br/><b>Deuxième ligne</b> assez longue pour nécessiter une coupure.";
+			layout.Text = @"Ceci est un <a href=""x"">petit texte <b>ridicule</b></a>, juste pour <font color=""#ff0000"">tester</font> le comportement de la <font size=""20"">classe</font> <font face=""Courier New"">TextLayout</font>, mes premiers pas en &quot;C#&quot;&nbsp;!<br/>Et voilà une image <img src=""file:images/icon.png""/> simple.";
+			layout.Font = Font.GetFont("Tahoma", "Regular");
+			layout.FontSize = 11.0;
+			layout.Alignment = ContentAlignment.MiddleCenter;
+			layout.LayoutSize = new Size(200, 100);
+
+			Point pos = new Point(20, 20);
+
+			//?			e.Graphics.RotateTransform (5, 0, 0);
+			e.Graphics.ScaleTransform (1.2, 1.2, 0, 0);
+			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
+			e.Graphics.RenderSolid(Color.FromBrightness(1));
+
+			Rectangle[] rects = layout.FindTextRange(pos, 0, layout.Text.Length);
+			for ( int i=0 ; i<rects.Length ; i++ )
+			{
+				e.Graphics.Align (ref rects[i]);
+				e.Graphics.AddFilledRectangle(rects[i].Left, rects[i].Bottom, rects[i].Width, rects[i].Height);
+				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
+			}
+
+			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
+		}
+
+		private void CheckRectangle_Paint1(object sender, PaintEventArgs e)
+		{
+			TextLayout layout = new TextLayout();
+
+			layout.Text = @"Juste <font size=""30"">trois</font> lignes de texte <font size=""10"">(et une image <img src=""file:images/icon.png""/>)</font> pour rigoler !";
+			layout.Font = Font.GetFont("Tahoma", "Regular");
+			layout.FontSize = 20.0;
+			layout.Alignment = ContentAlignment.MiddleCenter;
+			layout.LayoutSize = new Size(200, 100);
+
+			Point pos = new Point(50, 50);
+
+			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
+			e.Graphics.RenderSolid(Color.FromBrightness(1));
+
+			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
+
+			Rectangle bounds = layout.TotalRectangle;
+			bounds.Offset(pos);
+			e.Graphics.AddRectangle(bounds);
+			e.Graphics.RenderSolid(Color.FromRGB(1,0,0));
+		}
+
+		private void CheckImage_Paint1(object sender, PaintEventArgs e)
+		{
+			TextLayout layout = new TextLayout();
+
+			layout.Text = @"abracadabra abracadabra<br/><a href=""x"">abc <img src=""file:images/icon.png"" width=""5"" height=""4""/> def</a><br/>abracadabra abracadabra <a href=""y"">bla bla bla&nbsp;!</a>";
+			layout.Font = Font.GetFont("Tahoma", "Regular");
+			layout.FontSize = 15.0;
+			layout.Alignment = ContentAlignment.MiddleCenter;
+			layout.LayoutSize = new Size(200, 100);
+
+			Point pos = new Point(50, 50);
+
+			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
+			e.Graphics.RenderSolid(Color.FromBrightness(1));
+
+			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
+		}
+
+		
 		private TextLayout NewTextLayout()
 		{
 			TextLayout layout = new TextLayout();
