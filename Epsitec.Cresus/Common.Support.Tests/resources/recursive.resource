@@ -1,3 +1,3 @@
 <bundle>
- <field name='loop'><ref target='recursive'></field>
+ <data name='loop'><ref target='recursive#loop'/></data>
 </bundle>

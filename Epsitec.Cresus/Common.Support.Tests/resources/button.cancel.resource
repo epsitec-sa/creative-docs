@@ -1,7 +1,7 @@
 <bundle>
- <field name='anchor'>Bottom, Left</field>
- <field name='class'>Button</field>
- <field name='size'>100;*</field>
- <field name='name'>cancel</field>
- <field name='text'><![CDATA[Cancel]]></field>
+ <data name='anchor'>Bottom, Left</data>
+ <data name='class'>Button</data>
+ <data name='size'>100;*</data>
+ <data name='name'>cancel</data>
+ <data name='text'><![CDATA[Cancel]]></data>
 </bundle>

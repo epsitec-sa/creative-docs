@@ -1,13 +1,13 @@
 <bundle>
- <field name='class'>GroupBox</field>
- <field name='name'>my_group</field>
- <field name='size'>500;300</field>
+ <data name='class'>GroupBox</data>
+ <data name='name'>my_group</data>
+ <data name='size'>500;300</data>
  <list name='widgets'>				<!-- la liste 'widgets' est constitué par une collection de bundles -->
   <bundle>							<!-- premier bundle -->
-   <field name='class'>CheckButton</field>
+   <data name='class'>CheckButton</data>
   </bundle>
   <bundle>							<!-- second bundle -->
-   <field name='class'>RadioButton</field>
+   <data name='class'>RadioButton</data>
   </bundle>
   <ref target='button.cancel'/>
  </list>							<!-- fin de la liste -->
