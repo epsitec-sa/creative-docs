@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Database
 			
 			string arg_rank = xml.GetAttribute ("rank");
 			
-			if (arg_rank != "")
+			if (arg_rank.Length > 0)
 			{
 				this.rank = System.Int32.Parse (arg_rank, System.Globalization.CultureInfo.InvariantCulture);
 			}
