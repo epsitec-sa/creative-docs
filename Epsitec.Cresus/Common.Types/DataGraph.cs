@@ -13,6 +13,11 @@ namespace Epsitec.Common.Types
 		{
 		}
 		
+		public DataGraph(IDataFolder root) : this ()
+		{
+			this.DefineRoot (root);
+		}
+		
 		
 		public void DefineRoot(IDataFolder folder)
 		{
