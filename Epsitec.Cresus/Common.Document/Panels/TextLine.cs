@@ -24,10 +24,10 @@ namespace Epsitec.Common.Document.Panels
 				this.buttons[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
-			this.buttons[0].IconName = @"file:images/justifhleft.icon";
-			this.buttons[1].IconName = @"file:images/justifhcenter.icon";
-			this.buttons[2].IconName = @"file:images/justifhright.icon";
-			this.buttons[3].IconName = @"file:images/justifhstretch.icon";
+			this.buttons[0].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHLeft.icon";
+			this.buttons[1].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHCenter.icon";
+			this.buttons[2].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHRight.icon";
+			this.buttons[3].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHStretch.icon";
 			ToolTip.Default.SetToolTip(this.buttons[0], "Justification à gauche");
 			ToolTip.Default.SetToolTip(this.buttons[1], "Justification centrée");
 			ToolTip.Default.SetToolTip(this.buttons[2], "Justification à droite");

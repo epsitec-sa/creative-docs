@@ -84,7 +84,7 @@ namespace Epsitec.Common.Document.Panels
 			this.labelSmooth.Alignment = ContentAlignment.MiddleCenter;
 
 			this.swapColor = new IconButton(this);
-			this.swapColor.IconName = @"file:images/swapdata.icon";
+			this.swapColor.IconName = "manifest:Epsitec.App.DocumentEditor.Images.SwapData.icon";
 			this.swapColor.Clicked += new MessageEventHandler(this.HandleSwapColorClicked);
 			ToolTip.Default.SetToolTip(this.swapColor, "Permute les 2 couleurs");
 

@@ -63,7 +63,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"file:images/textline.icon"; }
+			get { return "manifest:Epsitec.App.DocumentEditor.Images.TextLine.icon"; }
 		}
 
 
@@ -178,7 +178,7 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "Curve";
-					item.Icon = @"file:images/tocurve.icon";
+					item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.ToCurve.icon";
 					item.Text = "Courbe";
 					list.Add(item);
 				}
@@ -187,7 +187,7 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "Line";
-					item.Icon = @"file:images/toline.icon";
+					item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.ToLine.icon";
 					item.Text = "Droit";
 					list.Add(item);
 				}
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Document.Objects
 				item = new ContextMenuItem();
 				item.Command = "Object";
 				item.Name = "HandleAdd";
-				item.Icon = @"file:images/add.icon";
+				item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.Add.icon";
 				item.Text = "Ajouter un point";
 				list.Add(item);
 			}
@@ -213,8 +213,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleSym";
-						item.IconActiveNo = @"file:images/activeno.icon";
-						item.IconActiveYes = @"file:images/activeyes.icon";
+						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
+						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
 						item.Active = ( type == HandleConstrainType.Symmetric );
 						item.Text = "Symetrique";
 						list.Add(item);
@@ -222,8 +222,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleSmooth";
-						item.IconActiveNo = @"file:images/activeno.icon";
-						item.IconActiveYes = @"file:images/activeyes.icon";
+						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
+						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
 						item.Active = ( type == HandleConstrainType.Smooth );
 						item.Text = "Lisse";
 						list.Add(item);
@@ -231,8 +231,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleCorner";
-						item.IconActiveNo = @"file:images/activeno.icon";
-						item.IconActiveYes = @"file:images/activeyes.icon";
+						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
+						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
 						item.Active = ( type == HandleConstrainType.Corner );
 						item.Text = "Anguleux";
 						list.Add(item);
@@ -247,8 +247,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleSmooth";
-						item.IconActiveNo = @"file:images/activeno.icon";
-						item.IconActiveYes = @"file:images/activeyes.icon";
+						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
+						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
 						item.Active = ( type == HandleConstrainType.Smooth );
 						item.Text = "En ligne";
 						list.Add(item);
@@ -256,8 +256,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleCorner";
-						item.IconActiveNo = @"file:images/activeno.icon";
-						item.IconActiveYes = @"file:images/activeyes.icon";
+						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
+						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
 						item.Active = ( type != HandleConstrainType.Smooth );
 						item.Text = "Libre";
 						list.Add(item);
@@ -271,7 +271,7 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleDelete";
-						item.Icon = @"file:images/sub.icon";
+						item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.Sub.icon";
 						item.Text = "Enlever le point";
 						list.Add(item);
 					}
@@ -1142,7 +1142,13 @@ namespace Epsitec.Common.Document.Objects
 			Color	fontColor;
 			Point	pos, ptl, pbl, ptr, pbr;
 			double	angle;
-			bool	active = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext);
+
+			bool	active = true;
+			if ( this.document.Modifier != null )
+			{
+				active = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext);
+			}
+
 			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
 			{
 				int rank = this.advanceRank-1;
@@ -1293,6 +1299,12 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.Initialise();
 			this.textLayout.Text = info.GetString("Text");
+		}
+
+		// Vérifie si tous les fichiers existent.
+		public override void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
+		{
+			Common.Document.Objects.Abstract.ReadCheckFonts(fonts, warnings, this.textLayout);
 		}
 		#endregion
 

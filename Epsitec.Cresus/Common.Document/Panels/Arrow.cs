@@ -83,7 +83,7 @@ namespace Epsitec.Common.Document.Panels
 			this.separator = new Separator(this);
 
 			this.swapArrow = new IconButton(this);
-			this.swapArrow.IconName = @"file:images/swapdata.icon";
+			this.swapArrow.IconName = "manifest:Epsitec.App.DocumentEditor.Images.SwapData.icon";
 			this.swapArrow.Clicked += new MessageEventHandler(this.HandleSwapArrowClicked);
 			ToolTip.Default.SetToolTip(this.swapArrow, "Permute les extrémités");
 

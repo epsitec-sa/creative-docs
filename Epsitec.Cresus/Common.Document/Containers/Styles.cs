@@ -16,31 +16,31 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
 
-			this.buttonNew = new IconButton(@"file:images/stylenew.icon");
+			this.buttonNew = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.StyleNew.icon");
 			this.buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNew);
 			this.toolBar.Items.Add(this.buttonNew);
 			ToolTip.Default.SetToolTip(this.buttonNew, "Nouveau style");
 
-			this.buttonDuplicate = new IconButton(@"file:images/duplicate.icon");
+			this.buttonDuplicate = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Duplicate.icon");
 			this.buttonDuplicate.Clicked += new MessageEventHandler(this.HandleButtonDuplicate);
 			this.toolBar.Items.Add(this.buttonDuplicate);
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, "Dupliquer le style");
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonUp = new IconButton(@"file:images/up.icon");
+			this.buttonUp = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Up.icon");
 			this.buttonUp.Clicked += new MessageEventHandler(this.HandleButtonUp);
 			this.toolBar.Items.Add(this.buttonUp);
 			ToolTip.Default.SetToolTip(this.buttonUp, "Style plus haut");
 
-			this.buttonDown = new IconButton(@"file:images/down.icon");
+			this.buttonDown = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Down.icon");
 			this.buttonDown.Clicked += new MessageEventHandler(this.HandleButtonDown);
 			this.toolBar.Items.Add(this.buttonDown);
 			ToolTip.Default.SetToolTip(this.buttonDown, "Style plus bas");
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonDelete = new IconButton(@"file:images/delete.icon");
+			this.buttonDelete = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Delete.icon");
 			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDelete);
 			this.toolBar.Items.Add(this.buttonDelete);
 			ToolTip.Default.SetToolTip(this.buttonDelete, "Supprimer le style");

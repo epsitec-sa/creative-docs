@@ -24,28 +24,28 @@ namespace Epsitec.Common.Document.Panels
 				this.buttons[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
-			this.buttons[0].IconName = @"file:images/justifhleft.icon";
-			this.buttons[1].IconName = @"file:images/justifhcenter.icon";
-			this.buttons[2].IconName = @"file:images/justifhright.icon";
-			this.buttons[3].IconName = @"file:images/justifhjustif.icon";
-			this.buttons[4].IconName = @"file:images/justifhall.icon";
+			this.buttons[0].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHLeft.icon";
+			this.buttons[1].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHCenter.icon";
+			this.buttons[2].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHRight.icon";
+			this.buttons[3].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHJustif.icon";
+			this.buttons[4].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHAll.icon";
 			ToolTip.Default.SetToolTip(this.buttons[0], "Justification à gauche");
 			ToolTip.Default.SetToolTip(this.buttons[1], "Justification centrée");
 			ToolTip.Default.SetToolTip(this.buttons[2], "Justification à droite");
 			ToolTip.Default.SetToolTip(this.buttons[3], "Justification alignée, sauf dernière ligne");
 			ToolTip.Default.SetToolTip(this.buttons[4], "Justification alignée, y compris dernière ligne");
 
-			this.buttons[5].IconName = @"file:images/justifvtop.icon";
-			this.buttons[6].IconName = @"file:images/justifvcenter.icon";
-			this.buttons[7].IconName = @"file:images/justifvbottom.icon";
+			this.buttons[5].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifVTop.icon";
+			this.buttons[6].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifVCenter.icon";
+			this.buttons[7].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifVBottom.icon";
 			ToolTip.Default.SetToolTip(this.buttons[5], "En haut");
 			ToolTip.Default.SetToolTip(this.buttons[6], "Centré verticalement");
 			ToolTip.Default.SetToolTip(this.buttons[7], "En bas");
 
-			this.buttons[8].IconName = @"file:images/justifolr.icon";
-			this.buttons[9].IconName = @"file:images/justifobt.icon";
-			this.buttons[10].IconName = @"file:images/justiforl.icon";
-			this.buttons[11].IconName = @"file:images/justifotb.icon";
+			this.buttons[8].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifOLR.icon";
+			this.buttons[9].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifOBT.icon";
+			this.buttons[10].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifORL.icon";
+			this.buttons[11].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifOTB.icon";
 			ToolTip.Default.SetToolTip(this.buttons[8], "Orientation normale");
 			ToolTip.Default.SetToolTip(this.buttons[9], "Orientation de bas en haut");
 			ToolTip.Default.SetToolTip(this.buttons[10], "Orientation de droite à gauche");

@@ -420,7 +420,6 @@ namespace Epsitec.Common.Printing
 				
 				font.GetTextCharEndX (text, out end_x);
 				
-				System.Diagnostics.Debug.WriteLine ("adjust = " + adjust);
 				System.Drawing.FontFamily family = os_font.FontFamily;
 				
 				int ascent = family.GetCellAscent (System.Drawing.FontStyle.Regular);

@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else
 			{
-				this.width = 10.0;  // 1mm
+				this.width = 5.0;  // 0.5mm
 			}
 
 			this.cap   = CapStyle.Round;

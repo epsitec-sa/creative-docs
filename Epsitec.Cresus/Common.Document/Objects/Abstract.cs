@@ -1665,6 +1665,42 @@ namespace Epsitec.Common.Document.Objects
 				property.Owners.Add(this);
 			}
 		}
+
+		// Vérifie si tous les fichiers existent.
+		public virtual void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
+		{
+		}
+
+		// Vérifie si toutes les fontes d'un TextLayout existent.
+		protected static void ReadCheckFonts(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings, TextLayout textLayout)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			textLayout.FillFontFaceList(list);
+			foreach ( string face in list )
+			{
+				if ( !Abstract.ReadSearchFont(fonts, face) )
+				{
+					string message = string.Format("La fonte <b>{0}</b> n'existe pas.", face);
+					if ( !warnings.Contains(message) )
+					{
+						warnings.Add(message);
+					}
+				}
+			}
+		}
+
+		// Cherche si une fonte existe dans la liste des fontes.
+		protected static bool ReadSearchFont(Font.FaceInfo[] fonts, string face)
+		{
+			foreach ( Font.FaceInfo info in fonts )
+			{
+				if ( info.IsLatin )
+				{
+					if ( info.Name == face )  return true;
+				}
+			}
+			return false;
+		}
 		#endregion
 
 

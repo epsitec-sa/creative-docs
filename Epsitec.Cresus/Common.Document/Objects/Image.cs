@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"file:images/image.icon"; }
+			get { return "manifest:Epsitec.App.DocumentEditor.Images.Image.icon"; }
 		}
 
 
@@ -466,6 +466,21 @@ namespace Epsitec.Common.Document.Objects
 		// Constructeur qui désérialise l'objet.
 		protected Image(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+		}
+
+		// Vérifie si tous les fichiers existent.
+		public override void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
+		{
+			Properties.Image pi = this.PropertyImage;
+			if ( pi == null )  return;
+			if ( !System.IO.File.Exists(pi.Filename) )
+			{
+				string message = string.Format("Le fichier <b>{0}</b> n'existe pas.", pi.Filename);
+				if ( !warnings.Contains(message) )
+				{
+					warnings.Add(message);
+				}
+			}
 		}
 		#endregion
 

@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"file:images/ellipse.icon"; }
+			get { return "manifest:Epsitec.App.DocumentEditor.Images.Ellipse.icon"; }
 		}
 
 

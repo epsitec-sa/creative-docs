@@ -534,6 +534,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Settings\GlobalSettings.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Settings\Guide.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -168,6 +168,28 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
+		[Test] public void CheckPrintToFile()
+		{
+			Print dialog = new Print ();
+			
+			dialog.Document.SelectPrinter ("Adobe PDF");
+			
+			dialog.AllowFromPageToPage = false;
+			dialog.AllowSelectedPages  = false;
+			
+			string[] printers = Printing.PrinterSettings.InstalledPrinters;
+			
+			dialog.Document.PrinterSettings.MinimumPage = 1;
+			dialog.Document.PrinterSettings.MaximumPage = 1;
+			dialog.Document.PrinterSettings.FromPage = 1;
+			dialog.Document.PrinterSettings.ToPage = 1;
+			dialog.Document.PrinterSettings.PrintRange = Printing.PrintRange.AllPages;
+			dialog.Document.PrinterSettings.Collate = false;
+			dialog.Document.PrinterSettings.PrintToFile = true;
+			dialog.Document.PrinterSettings.OutputFileName = @"c:\test.ps";
+			dialog.Document.Print (new PrintEngine ());
+		}
+		
 		[Support.SuppressBundleSupport]
 		protected class AggPreview : Widgets.Widget
 		{

@@ -15,9 +15,8 @@ namespace Epsitec.App.DocumentEditor
 		static void Main() 
 		{
 			Widget.Initialise();
-			Epsitec.Common.Pictogram.Engine.Initialise();
+			//Epsitec.Common.Pictogram.Engine.Initialise();
 			Epsitec.Common.Document.Engine.Initialise();
-			Epsitec.Common.UI.Engine.Initialise();
 			//Application.application = new Application(DocumentType.Pictogram);
 			Application.application = new Application(DocumentType.Graphic);
 			Application.application.MainWindow.Run();
@@ -29,7 +28,7 @@ namespace Epsitec.App.DocumentEditor
 			//?System.Threading.Thread.Sleep(60000);
 			this.editor = new DocumentEditor(type);
 
-			Epsitec.Common.Widgets.Adorner.Factory.SetActive(this.editor.Memory.Adorner);
+			Epsitec.Common.Widgets.Adorner.Factory.SetActive(this.editor.GlobalSettings.Adorner);
 
 			this.mainWindow = new Window();
 			this.mainWindow.Root.WindowStyles = WindowStyles.CanResize |
@@ -46,14 +45,16 @@ namespace Epsitec.App.DocumentEditor
 			
 			if ( type == DocumentType.Graphic )
 			{
-				this.mainWindow.Root.MinSize = new Size(400, 250);
+				this.mainWindow.Root.MinSize = new Size(410, 250);
 			}
 			else
 			{
-				this.mainWindow.Root.MinSize = new Size(400, 250);
+				this.mainWindow.Root.MinSize = new Size(430, 250);
 			}
-			this.mainWindow.WindowLocation = this.editor.Memory.WindowLocation;
-			this.mainWindow.WindowSize = this.editor.Memory.WindowSize;
+			this.mainWindow.WindowLocation = this.editor.GlobalSettings.WindowLocation;
+			this.mainWindow.WindowSize = this.editor.GlobalSettings.WindowSize;
+			this.mainWindow.Show();
+			this.mainWindow.IsFullScreen = this.editor.GlobalSettings.IsFullScreen;
 
 			switch ( type )
 			{
@@ -112,7 +113,6 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleMainWindowWindowDragEntered(object sender, WindowDragEventArgs e)
 		{
 			string[] files = e.Data.ReadAsStringArray("FileDrop");
-			
 			e.AcceptDrop = false;
 			
 			if ( files.Length > 0 )
@@ -132,7 +132,6 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleMainWindowWindowDragDropped(object sender, WindowDragEventArgs e)
 		{
 			string[] files = e.Data.ReadAsStringArray("FileDrop");
-			
 			e.AcceptDrop = false;
 			
 			if ( files.Length > 0 )

@@ -41,6 +41,10 @@ namespace Epsitec.Common.Document
 
 			this.textRuler = new TextRuler(this);
 			this.textRuler.SetVisible(false);
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				this.textRuler.AllFonts = false;
+			}
 			this.textRuler.Changed += new EventHandler(this.HandleRulerChanged);
 		}
 
@@ -1173,25 +1177,25 @@ namespace Epsitec.Common.Document
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			if ( globalMenu || nbSel == 0 )
 			{
-				this.MenuAddItem(list, "Deselect",     "file:images/deselect.icon",     "Désélectionner tout");
-				this.MenuAddItem(list, "SelectAll",    "file:images/selectall.icon",    "Tout sélectionner");
-				this.MenuAddItem(list, "SelectInvert", "file:images/selectinvert.icon", "Inverser la sélection");
-				this.MenuAddItem(list, "SelectGlobal", "file:images/selectglobal.icon", "Changer le mode de sélection");
+				this.MenuAddItem(list, "Deselect",     "manifest:Epsitec.App.DocumentEditor.Images.Deselect.icon",     "Désélectionner tout");
+				this.MenuAddItem(list, "SelectAll",    "manifest:Epsitec.App.DocumentEditor.Images.SelectAll.icon",    "Tout sélectionner");
+				this.MenuAddItem(list, "SelectInvert", "manifest:Epsitec.App.DocumentEditor.Images.SelectInvert.icon", "Inverser la sélection");
+				this.MenuAddItem(list, "SelectGlobal", "manifest:Epsitec.App.DocumentEditor.Images.SelectGlobal.icon", "Changer le mode de sélection");
 				this.MenuAddSep(list);
-				this.MenuAddItem(list, "HideSel",      "file:images/hidesel.icon",      "Cacher la sélection");
-				this.MenuAddItem(list, "HideRest",     "file:images/hiderest.icon",     "Cacher le reste");
-				this.MenuAddItem(list, "HideCancel",   "file:images/hidecancel.icon",   "Montrer tout");
+				this.MenuAddItem(list, "HideSel",      "manifest:Epsitec.App.DocumentEditor.Images.HideSel.icon",      "Cacher la sélection");
+				this.MenuAddItem(list, "HideRest",     "manifest:Epsitec.App.DocumentEditor.Images.HideRest.icon",     "Cacher le reste");
+				this.MenuAddItem(list, "HideCancel",   "manifest:Epsitec.App.DocumentEditor.Images.HideCancel.icon",   "Montrer tout");
 				this.MenuAddSep(list);
-				this.MenuAddItem(list, "ZoomMin",      "file:images/zoommin.icon",      "Zoom minimal");
-				this.MenuAddItem(list, "ZoomDefault",  "file:images/zoomdefault.icon",  "Zoom 100%");
-				this.MenuAddItem(list, "ZoomSel",      "file:images/zoomsel.icon",      "Zoom sélection");
-				this.MenuAddItem(list, "ZoomPrev",     "file:images/zoomprev.icon",     "Zoom précédent");
-				this.MenuAddItem(list, "ZoomSub",      "file:images/zoomsub.icon",      "Réduction");
-				this.MenuAddItem(list, "ZoomAdd",      "file:images/zoomadd.icon",      "Agrandissement");
+				this.MenuAddItem(list, "ZoomMin",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomMin.icon",      "Zoom minimal");
+				this.MenuAddItem(list, "ZoomDefault",  "manifest:Epsitec.App.DocumentEditor.Images.ZoomDefault.icon",  "Zoom 100%");
+				this.MenuAddItem(list, "ZoomSel",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomSel.icon",      "Zoom sélection");
+				this.MenuAddItem(list, "ZoomPrev",     "manifest:Epsitec.App.DocumentEditor.Images.ZoomPrev.icon",     "Zoom précédent");
+				this.MenuAddItem(list, "ZoomSub",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomSub.icon",      "Réduction");
+				this.MenuAddItem(list, "ZoomAdd",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomAdd.icon",      "Agrandissement");
 				this.MenuAddSep(list);
-				this.MenuAddItem(list, "Outside",      "file:images/outside.icon",      "Sortir du groupe");
-				this.MenuAddItem(list, "SelectMode",   "file:images/selectmode.icon",   "Sélection partielle");
-				this.MenuAddItem(list, "Grid",         "file:images/grid.icon",         "Grille magnétique");
+				this.MenuAddItem(list, "Outside",      "manifest:Epsitec.App.DocumentEditor.Images.Outside.icon",      "Sortir du groupe");
+				this.MenuAddItem(list, "SelectMode",   "manifest:Epsitec.App.DocumentEditor.Images.SelectMode.icon",   "Sélection partielle");
+				this.MenuAddItem(list, "Grid",         "manifest:Epsitec.App.DocumentEditor.Images.Grid.icon",         "Grille magnétique");
 			}
 			else
 			{
@@ -1203,22 +1207,22 @@ namespace Epsitec.Common.Document
 					this.contextMenuRank = -1;
 				}
 
-				this.MenuAddItem(list, "Delete",       "file:images/delete.icon",       "Supprimer");
-				this.MenuAddItem(list, "Duplicate",    "file:images/duplicate.icon",    "Dupliquer");
-				this.MenuAddItem(list, "OrderUp",      "file:images/orderup.icon",      "Dessus");
-				this.MenuAddItem(list, "OrderDown",    "file:images/orderdown.icon",    "Dessous");
-				this.MenuAddItem(list, "Merge",        "file:images/merge.icon",        "Fusionner");
-				this.MenuAddItem(list, "Group",        "file:images/group.icon",        "Associer");
-				this.MenuAddItem(list, "Ungroup",      "file:images/ungroup.icon",      "Dissocier");
-				this.MenuAddItem(list, "Inside",       "file:images/inside.icon",       "Entrer dans groupe");
-				this.MenuAddItem(list, "Outside",      "file:images/outside.icon",      "Sortir du groupe");
+				this.MenuAddItem(list, "Delete",       "manifest:Epsitec.App.DocumentEditor.Images.Delete.icon",       "Supprimer");
+				this.MenuAddItem(list, "Duplicate",    "manifest:Epsitec.App.DocumentEditor.Images.Duplicate.icon",    "Dupliquer");
+				this.MenuAddItem(list, "OrderUp",      "manifest:Epsitec.App.DocumentEditor.Images.OrderUp.icon",      "Dessus");
+				this.MenuAddItem(list, "OrderDown",    "manifest:Epsitec.App.DocumentEditor.Images.OrderDown.icon",    "Dessous");
+				this.MenuAddItem(list, "Merge",        "manifest:Epsitec.App.DocumentEditor.Images.Merge.icon",        "Fusionner");
+				this.MenuAddItem(list, "Group",        "manifest:Epsitec.App.DocumentEditor.Images.Group.icon",        "Associer");
+				this.MenuAddItem(list, "Ungroup",      "manifest:Epsitec.App.DocumentEditor.Images.Ungroup.icon",      "Dissocier");
+				this.MenuAddItem(list, "Inside",       "manifest:Epsitec.App.DocumentEditor.Images.Inside.icon",       "Entrer dans groupe");
+				this.MenuAddItem(list, "Outside",      "manifest:Epsitec.App.DocumentEditor.Images.Outside.icon",      "Sortir du groupe");
 				this.MenuAddSep(list);
-				this.MenuAddItem(list, "SelectGlobal", "file:images/selectglobal.icon", "Changer le mode de sélection");
-				this.MenuAddItem(list, "ZoomSel",      "file:images/zoomsel.icon",      "Zoom sélection");
+				this.MenuAddItem(list, "SelectGlobal", "manifest:Epsitec.App.DocumentEditor.Images.SelectGlobal.icon", "Changer le mode de sélection");
+				this.MenuAddItem(list, "ZoomSel",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomSel.icon",      "Zoom sélection");
 				this.MenuAddSep(list);
-				this.MenuAddItem(list, "HideSel",      "file:images/hidesel.icon",      "Cacher la sélection");
-				this.MenuAddItem(list, "HideRest",     "file:images/hiderest.icon",     "Cacher le reste");
-				this.MenuAddItem(list, "HideCancel",   "file:images/hidecancel.icon",   "Montrer tout");
+				this.MenuAddItem(list, "HideSel",      "manifest:Epsitec.App.DocumentEditor.Images.HideSel.icon",      "Cacher la sélection");
+				this.MenuAddItem(list, "HideRest",     "manifest:Epsitec.App.DocumentEditor.Images.HideRest.icon",     "Cacher le reste");
+				this.MenuAddItem(list, "HideCancel",   "manifest:Epsitec.App.DocumentEditor.Images.HideCancel.icon",   "Montrer tout");
 
 				if ( nbSel == 1 && this.contextMenuObject != null )
 				{
@@ -1381,7 +1385,7 @@ namespace Epsitec.Common.Document
 					break;
 
 				case MouseCursorType.Hand:
-					this.MouseCursorImage(ref this.mouseCursorHand, @"file:images/hand.icon");
+					this.MouseCursorImage(ref this.mouseCursorHand, "manifest:Epsitec.App.DocumentEditor.Images.Hand.icon");
 					break;
 
 				case MouseCursorType.Finger:
@@ -1389,19 +1393,19 @@ namespace Epsitec.Common.Document
 					break;
 
 				case MouseCursorType.Pen:
-					this.MouseCursorImage(ref this.mouseCursorPen, @"file:images/pen.icon");
+					this.MouseCursorImage(ref this.mouseCursorPen, "manifest:Epsitec.App.DocumentEditor.Images.Pen.icon");
 					break;
 
 				case MouseCursorType.Zoom:
-					this.MouseCursorImage(ref this.mouseCursorZoom, @"file:images/zoom.icon");
+					this.MouseCursorImage(ref this.mouseCursorZoom, "manifest:Epsitec.App.DocumentEditor.Images.Zoom.icon");
 					break;
 
 				case MouseCursorType.Picker:
-					this.MouseCursorImage(ref this.mouseCursorPicker, @"file:images/picker.icon");
+					this.MouseCursorImage(ref this.mouseCursorPicker, "manifest:Epsitec.App.DocumentEditor.Images.Picker.icon");
 					break;
 
 				case MouseCursorType.PickerEmpty:
-					this.MouseCursorImage(ref this.mouseCursorPickerEmpty, @"file:images/pickerempty.icon");
+					this.MouseCursorImage(ref this.mouseCursorPickerEmpty, "manifest:Epsitec.App.DocumentEditor.Images.PickerEmpty.icon");
 					break;
 
 				default:

@@ -170,8 +170,53 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Remet le zoom et le centre par défaut.
-		public void ZoomAndCenter()
+		// Vérifie si on utilise le zoom pleine page centré.
+		public bool IsZoomPage
+		{
+			get
+			{
+				if ( System.Math.Abs(this.zoom-this.ZoomPage) > 0.00001 )  return false;
+
+				Size cs = this.ContainerSize;
+				Size size = this.document.Size;
+				Point scale = this.ScaleForZoom(this.zoom);
+				double originX = size.Width/2 - (cs.Width/scale.X)/2;
+				double originY = size.Height/2 - (cs.Height/scale.Y)/2;
+
+				return ( System.Math.Abs(this.originX+originX) < 0.00001 &&
+						 System.Math.Abs(this.originY+originY) < 0.00001 );
+			}
+		}
+
+		// Retourne le zoom pleine page.
+		public double ZoomPage
+		{
+			get
+			{
+				if ( this.document.Type == DocumentType.Pictogram )
+				{
+					return 1.0;
+				}
+				else
+				{
+					Size cs = this.ContainerSize;
+					if ( cs.Width <= 0.0 || cs.Height <= 0.0 )  return 1.0;
+					Size size = this.document.Size;
+					double zx = cs.Width/size.Width;
+					double zy = cs.Height/size.Height;
+					return System.Math.Min(zx, zy)*2.54;
+				}
+			}
+		}
+
+		// Remet le zoom pleine page et le centre par défaut.
+		public void ZoomPageAndCenter()
+		{
+			this.ZoomAndCenter(this.ZoomPage, this.document.Size.Width/2, this.document.Size.Height/2);
+		}
+
+		// Remet le zoom 100% et le centre par défaut.
+		public void ZoomDefaultAndCenter()
 		{
 			this.ZoomAndCenter(1.0, this.document.Size.Width/2, this.document.Size.Height/2);
 		}
@@ -307,15 +352,20 @@ namespace Epsitec.Common.Document
 		// Echelles à utiliser pour le dessin pour un zoom donné.
 		protected Point ScaleForZoom(double zoom)
 		{
-			Size size = this.ContainerSize;
-			double sx = zoom*size.Width/this.document.Size.Width;
-			double sy = zoom*size.Height/this.document.Size.Height;
-			double scale = System.Math.Min(sx, sy);
-			if ( this.document.Type != DocumentType.Pictogram )
+			if ( this.document.Type == DocumentType.Pictogram )
 			{
-				scale *= 0.9;  // ch'tite marge
+				Size size = this.ContainerSize;
+				double sx = zoom*size.Width/this.document.Size.Width;
+				double sy = zoom*size.Height/this.document.Size.Height;
+				double scale = System.Math.Min(sx, sy);
+				return new Point(scale, scale);
 			}
-			return new Point(scale, scale);
+			else
+			{
+				double dpi = this.document.GlobalSettings.ScreenDpi;
+				double scale = (dpi*zoom) / (25.4*10.0);
+				return new Point(scale, scale);
+			}
 		}
 
 		// Echelles à utiliser pour le dessin.

@@ -54,7 +54,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"file:images/textbox.icon"; }
+			get { return "manifest:Epsitec.App.DocumentEditor.Images.TextBox.icon"; }
 		}
 
 
@@ -530,6 +530,12 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.Initialise();
 			this.textLayout.Text = info.GetString("Text");
+		}
+
+		// Vérifie si tous les fichiers existent.
+		public override void ReadCheckWarnings(Font.FaceInfo[] fonts, System.Collections.ArrayList warnings)
+		{
+			Common.Document.Objects.Abstract.ReadCheckFonts(fonts, warnings, this.textLayout);
 		}
 		#endregion
 

@@ -35,10 +35,11 @@ namespace Epsitec.Common.Document
 		}
 
 		// Crée un nouveau document vide.
-		public Document(DocumentType type, DocumentMode mode)
+		public Document(DocumentType type, DocumentMode mode, Settings.GlobalSettings globalSettings)
 		{
 			this.type = type;
 			this.mode = mode;
+			this.globalSettings = globalSettings;
 
 			if ( this.type == DocumentType.Pictogram )
 			{
@@ -87,6 +88,12 @@ namespace Epsitec.Common.Document
 		public DocumentMode Mode
 		{
 			get { return this.mode; }
+		}
+
+		// Réglages globaux.
+		public Settings.GlobalSettings GlobalSettings
+		{
+			get { return this.globalSettings; }
 		}
 
 		// Nom du document.
@@ -178,7 +185,7 @@ namespace Epsitec.Common.Document
 
 					if ( this.Modifier != null )
 					{
-						this.Modifier.ActiveViewer.DrawingContext.ZoomAndCenter();
+						this.Modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
 					}
 
 					if ( this.notifier != null )
@@ -267,6 +274,7 @@ namespace Epsitec.Common.Document
 					if ( err == "" )
 					{
 						this.Filename = filename;
+						this.globalSettings.LastFilenameAdd(filename);
 						this.IsDirtySerialize = false;
 					}
 					else
@@ -288,6 +296,7 @@ namespace Epsitec.Common.Document
 		public string Read(Stream stream, string directory)
 		{
 			this.ioDirectory = directory;
+			this.readWarnings = new System.Collections.ArrayList();
 
 			IOType type = Document.ReadIdentifier(stream);
 			if ( type == IOType.Unknow )
@@ -381,6 +390,15 @@ namespace Epsitec.Common.Document
 			return "";
 		}
 
+		// Retourne la liste éventuelle des warnings de lecture.
+		public System.Collections.ArrayList ReadWarnings
+		{
+			get
+			{
+				return this.readWarnings;
+			}
+		}
+
 		sealed class VersionDeserializationBinder : SerializationBinder 
 		{
 			// Retourne un type correspondant à l'application courante, afin
@@ -409,9 +427,11 @@ namespace Epsitec.Common.Document
 				this.Modifier.OpletQueueEnable = false;
 			}
 
+			Font.FaceInfo[] fonts = Font.Faces;
 			foreach ( Objects.Abstract obj in this.Deep(null) )
 			{
 				obj.ReadFinalize();
+				obj.ReadCheckWarnings(fonts, this.readWarnings);
 			}
 
 			if ( this.settings != null )
@@ -1122,6 +1142,7 @@ namespace Epsitec.Common.Document
 
 		protected DocumentType					type;
 		protected DocumentMode					mode;
+		protected Settings.GlobalSettings		globalSettings;
 		protected string						name;
 		protected Document						clipboard;
 		protected Size							size;
@@ -1140,6 +1161,7 @@ namespace Epsitec.Common.Document
 		protected string						ioDirectory;
 		protected int							readRevision;
 		protected int							readVersion;
+		protected System.Collections.ArrayList	readWarnings;
 		protected IOType						ioType;
 	}
 }

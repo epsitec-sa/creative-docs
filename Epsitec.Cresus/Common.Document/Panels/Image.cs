@@ -175,6 +175,7 @@ namespace Epsitec.Common.Document.Panels
 		
 			dialog.Title = "Ouvrir une image";
 			dialog.FileName = this.fieldFilename.Text;
+			dialog.Filters.Add("all", "Toutes les images", "*.tif; *.jpg");
 			dialog.Filters.Add("tiff", "Images TIFF", "*.tif");
 			dialog.Filters.Add("jpg", "Images JPG", "*.jpg");
 			dialog.OpenDialog();

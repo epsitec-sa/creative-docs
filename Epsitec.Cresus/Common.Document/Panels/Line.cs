@@ -38,16 +38,16 @@ namespace Epsitec.Common.Document.Panels
 				this.buttons[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
-			this.buttons[0].IconName = @"file:images/capround.icon";
-			this.buttons[1].IconName = @"file:images/capsquare.icon";
-			this.buttons[2].IconName = @"file:images/capbutt.icon";
+			this.buttons[0].IconName = "manifest:Epsitec.App.DocumentEditor.Images.CapRound.icon";
+			this.buttons[1].IconName = "manifest:Epsitec.App.DocumentEditor.Images.CapSquare.icon";
+			this.buttons[2].IconName = "manifest:Epsitec.App.DocumentEditor.Images.CapButt.icon";
 			ToolTip.Default.SetToolTip(this.buttons[0], "Extrémité ronde");
 			ToolTip.Default.SetToolTip(this.buttons[1], "Extrémité carrée");
 			ToolTip.Default.SetToolTip(this.buttons[2], "Extrémité tronquée");
 
-			this.buttons[3].IconName = @"file:images/joinround.icon";
-			this.buttons[4].IconName = @"file:images/joinmiter.icon";
-			this.buttons[5].IconName = @"file:images/joinbevel.icon";
+			this.buttons[3].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JoinRound.icon";
+			this.buttons[4].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JoinMiter.icon";
+			this.buttons[5].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JoinBevel.icon";
 			ToolTip.Default.SetToolTip(this.buttons[3], "Jointure ronde");
 			ToolTip.Default.SetToolTip(this.buttons[4], "Jointure pointue");
 			ToolTip.Default.SetToolTip(this.buttons[5], "Jointure tronquée");

@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"file:images/poly.icon"; }
+			get { return "manifest:Epsitec.App.DocumentEditor.Images.Poly.icon"; }
 		}
 
 
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Document.Objects
 				item = new ContextMenuItem();
 				item.Command = "Object";
 				item.Name = "HandleAdd";
-				item.Icon = @"file:images/add.icon";
+				item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.Add.icon";
 				item.Text = "Ajouter un point";
 				list.Add(item);
 			}
@@ -143,8 +143,8 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "HandleSym";
-					item.IconActiveNo = @"file:images/activeno.icon";
-					item.IconActiveYes = @"file:images/activeyes.icon";
+					item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
+					item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
 					item.Active = ( type == HandleConstrainType.Symmetric );
 					item.Text = "Coin quelconque";
 					list.Add(item);
@@ -152,8 +152,8 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "HandleSimply";
-					item.IconActiveNo = @"file:images/activeno.icon";
-					item.IconActiveYes = @"file:images/activeyes.icon";
+					item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
+					item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
 					item.Active = ( type == HandleConstrainType.Simply );
 					item.Text = "Coin toujours droit";
 					list.Add(item);
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "HandleDelete";
-					item.Icon = @"file:images/sub.icon";
+					item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.Sub.icon";
 					item.Text = "Enlever le point";
 					list.Add(item);
 				}

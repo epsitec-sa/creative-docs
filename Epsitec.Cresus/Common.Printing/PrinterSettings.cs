@@ -161,6 +161,22 @@ namespace Epsitec.Common.Printing
 		}
 		
 		
+		public string							OutputFileName
+		{
+			get
+			{
+				System.Type type = typeof (System.Drawing.Printing.PrinterSettings);
+				System.Reflection.FieldInfo info = type.GetField ("outputPort", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+				return info.GetValue (this.ps) as string;
+			}
+			set
+			{
+				System.Type type = typeof (System.Drawing.Printing.PrinterSettings);
+				System.Reflection.FieldInfo info = type.GetField ("outputPort", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+				info.SetValue (this.ps, value);
+			}
+		}
+		
 		public string							OutputPort
 		{
 			get
@@ -192,7 +208,6 @@ namespace Epsitec.Common.Printing
 				info.SetValue (this.ps, value, null);
 			}
 		}
-		
 		
 		public PageSettings						DefaultPageSettings
 		{
@@ -305,6 +320,10 @@ namespace Epsitec.Common.Printing
 			get
 			{
 				return this.ps.PrintToFile;
+			}
+			set
+			{
+				this.ps.PrintToFile = value;
 			}
 		}
 		

@@ -13,6 +13,7 @@ namespace Epsitec.Common.Pictogram
 		[SetUp] public void Initialise()
 		{
 			Epsitec.Common.Pictogram.Engine.Initialise();
+			Epsitec.Common.Document.Engine.Initialise();
 			Epsitec.Common.Widgets.Widget.Initialise();
 			Epsitec.Common.UI.Engine.Initialise ();
 		}

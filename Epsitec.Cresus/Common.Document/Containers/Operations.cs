@@ -37,12 +37,12 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.fieldMoveH, "Valeur du déplacement horizontal");
 			this.toolBarMove.Items.Add(this.fieldMoveH);
 
-			this.buttonMoveHi = new IconButton(@"file:images/opermovehi.icon");
+			this.buttonMoveHi = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperMoveHi.icon");
 			this.buttonMoveHi.Clicked += new MessageEventHandler(this.HandleButtonMoveHi);
 			ToolTip.Default.SetToolTip(this.buttonMoveHi, "Déplacement à gauche");
 			this.toolBarMove.Items.Add(this.buttonMoveHi);
 
-			this.buttonMoveH = new IconButton(@"file:images/opermoveh.icon");
+			this.buttonMoveH = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperMoveH.icon");
 			this.buttonMoveH.Clicked += new MessageEventHandler(this.HandleButtonMoveH);
 			ToolTip.Default.SetToolTip(this.buttonMoveH, "Déplacement à droite");
 			this.toolBarMove.Items.Add(this.buttonMoveH);
@@ -63,12 +63,12 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.fieldMoveV, "Valeur du déplacement vertical");
 			this.toolBarMove.Items.Add(this.fieldMoveV);
 
-			this.buttonMoveVi = new IconButton(@"file:images/opermovevi.icon");
+			this.buttonMoveVi = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperMoveVi.icon");
 			this.buttonMoveVi.Clicked += new MessageEventHandler(this.HandleButtonMoveVi);
 			ToolTip.Default.SetToolTip(this.buttonMoveVi, "Déplacement en bas");
 			this.toolBarMove.Items.Add(this.buttonMoveVi);
 
-			this.buttonMoveV = new IconButton(@"file:images/opermovev.icon");
+			this.buttonMoveV = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperMoveV.icon");
 			this.buttonMoveV.Clicked += new MessageEventHandler(this.HandleButtonMoveV);
 			ToolTip.Default.SetToolTip(this.buttonMoveV, "Déplacement en haut");
 			this.toolBarMove.Items.Add(this.buttonMoveV);
@@ -84,17 +84,17 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBarRot.Dock = DockStyle.Top;
 			this.toolBarRot.DockMargins = new Margins(0, 0, 0, 10);
 
-			this.buttonRotate90 = new IconButton(@"file:images/operrot90.icon");
+			this.buttonRotate90 = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperRot90.icon");
 			this.buttonRotate90.Clicked += new MessageEventHandler(this.HandleButtonRotate90);
 			ToolTip.Default.SetToolTip(this.buttonRotate90, "Quart de tour à gauche");
 			this.toolBarRot.Items.Add(this.buttonRotate90);
 
-			this.buttonRotate180 = new IconButton(@"file:images/operrot180.icon");
+			this.buttonRotate180 = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperRot180.icon");
 			this.buttonRotate180.Clicked += new MessageEventHandler(this.HandleButtonRotate180);
 			ToolTip.Default.SetToolTip(this.buttonRotate180, "Demi-tour");
 			this.toolBarRot.Items.Add(this.buttonRotate180);
 
-			this.buttonRotate270 = new IconButton(@"file:images/operrot270.icon");
+			this.buttonRotate270 = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperRot270.icon");
 			this.buttonRotate270.Clicked += new MessageEventHandler(this.HandleButtonRotate270);
 			ToolTip.Default.SetToolTip(this.buttonRotate270, "Quart de tour à droite");
 			this.toolBarRot.Items.Add(this.buttonRotate270);
@@ -108,12 +108,12 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.fieldRotate, "Angle de rotation en degrés");
 			this.toolBarRot.Items.Add(this.fieldRotate);
 
-			this.buttonRotate = new IconButton(@"file:images/operrot.icon");
+			this.buttonRotate = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperRot.icon");
 			this.buttonRotate.Clicked += new MessageEventHandler(this.HandleButtonRotate);
 			ToolTip.Default.SetToolTip(this.buttonRotate, "Rotation anti-horaire");
 			this.toolBarRot.Items.Add(this.buttonRotate);
 
-			this.buttonRotatei = new IconButton(@"file:images/operroti.icon");
+			this.buttonRotatei = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperRoti.icon");
 			this.buttonRotatei.Clicked += new MessageEventHandler(this.HandleButtonRotatei);
 			ToolTip.Default.SetToolTip(this.buttonRotatei, "Rotation horaire");
 			this.toolBarRot.Items.Add(this.buttonRotatei);
@@ -129,12 +129,12 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBarMirror.Dock = DockStyle.Top;
 			this.toolBarMirror.DockMargins = new Margins(0, 0, 0, 10);
 
-			this.buttonMirrorH = new IconButton(@"file:images/opermirrorh.icon");
+			this.buttonMirrorH = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperMirrorH.icon");
 			this.buttonMirrorH.Clicked += new MessageEventHandler(this.HandleButtonMirrorH);
 			ToolTip.Default.SetToolTip(this.buttonMirrorH, "Miroir horizontal");
 			this.toolBarMirror.Items.Add(this.buttonMirrorH);
 
-			this.buttonMirrorV = new IconButton(@"file:images/opermirrorv.icon");
+			this.buttonMirrorV = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperMirrorV.icon");
 			this.buttonMirrorV.Clicked += new MessageEventHandler(this.HandleButtonMirrorV);
 			ToolTip.Default.SetToolTip(this.buttonMirrorV, "Miroir vertical");
 			this.toolBarMirror.Items.Add(this.buttonMirrorV);
@@ -150,12 +150,12 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBarZoom.Dock = DockStyle.Top;
 			this.toolBarZoom.DockMargins = new Margins(0, 0, 0, 10);
 
-			this.buttonZoomDiv2 = new IconButton(@"file:images/operzoomdiv2.icon");
+			this.buttonZoomDiv2 = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperZoomDiv2.icon");
 			this.buttonZoomDiv2.Clicked += new MessageEventHandler(this.HandleButtonZoomDiv2);
 			ToolTip.Default.SetToolTip(this.buttonZoomDiv2, "Réduction /2");
 			this.toolBarZoom.Items.Add(this.buttonZoomDiv2);
 
-			this.buttonZoomMul2 = new IconButton(@"file:images/operzoommul2.icon");
+			this.buttonZoomMul2 = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperZoomMul2.icon");
 			this.buttonZoomMul2.Clicked += new MessageEventHandler(this.HandleButtonZoomMul2);
 			ToolTip.Default.SetToolTip(this.buttonZoomMul2, "Agrandissement x2");
 			this.toolBarZoom.Items.Add(this.buttonZoomMul2);
@@ -173,12 +173,12 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.fieldZoom, "Facteur d'agrandissement/réduction");
 			this.toolBarZoom.Items.Add(this.fieldZoom);
 
-			this.buttonZoomi = new IconButton(@"file:images/operzoomi.icon");
+			this.buttonZoomi = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperZoomi.icon");
 			this.buttonZoomi.Clicked += new MessageEventHandler(this.HandleButtonZoomi);
 			ToolTip.Default.SetToolTip(this.buttonZoomi, "Réduction");
 			this.toolBarZoom.Items.Add(this.buttonZoomi);
 
-			this.buttonZoom = new IconButton(@"file:images/operzoom.icon");
+			this.buttonZoom = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperZoom.icon");
 			this.buttonZoom.Clicked += new MessageEventHandler(this.HandleButtonZoom);
 			ToolTip.Default.SetToolTip(this.buttonZoom, "Agrandissement");
 			this.toolBarZoom.Items.Add(this.buttonZoom);

@@ -24,10 +24,10 @@ namespace Epsitec.Common.Document.Panels
 				this.buttons[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
-			this.buttons[0].IconName = @"file:images/arcfull.icon";
-			this.buttons[1].IconName = @"file:images/arcopen.icon";
-			this.buttons[2].IconName = @"file:images/arcclose.icon";
-			this.buttons[3].IconName = @"file:images/arcpie.icon";
+			this.buttons[0].IconName = "manifest:Epsitec.App.DocumentEditor.Images.ArcFull.icon";
+			this.buttons[1].IconName = "manifest:Epsitec.App.DocumentEditor.Images.ArcOpen.icon";
+			this.buttons[2].IconName = "manifest:Epsitec.App.DocumentEditor.Images.ArcClose.icon";
+			this.buttons[3].IconName = "manifest:Epsitec.App.DocumentEditor.Images.ArcPie.icon";
 			ToolTip.Default.SetToolTip(this.buttons[0], "Ellipse complète");
 			ToolTip.Default.SetToolTip(this.buttons[1], "Arc ouvert");
 			ToolTip.Default.SetToolTip(this.buttons[2], "Arc fermé");

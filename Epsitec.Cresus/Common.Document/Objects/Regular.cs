@@ -41,7 +41,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"file:images/regular.icon"; }
+			get { return "manifest:Epsitec.App.DocumentEditor.Images.Regular.icon"; }
 		}
 
 

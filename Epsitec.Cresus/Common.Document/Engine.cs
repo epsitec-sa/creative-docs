@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document
 
 			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
 			{
-				Document doc = new Document(DocumentType.Pictogram, DocumentMode.ReadOnly);
+				Document doc = new Document(DocumentType.Pictogram, DocumentMode.ReadOnly, null);
 				
 				if ( doc.Read(stream, "") == "" )
 				{
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Document
 			//return;  //?
 			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
 			{
-				Document doc = new Document(DocumentType.Pictogram, DocumentMode.ReadOnly);
+				Document doc = new Document(DocumentType.Pictogram, DocumentMode.ReadOnly, null);
 				DrawingContext context = new DrawingContext(doc, null);
 				
 				Epsitec.Common.Widgets.IAdorner adorner = adornerObject as Epsitec.Common.Widgets.IAdorner;

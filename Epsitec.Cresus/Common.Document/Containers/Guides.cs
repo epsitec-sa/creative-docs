@@ -16,36 +16,36 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
 
-			this.buttonNewH = new IconButton(@"file:images/guidenewh.icon");
+			this.buttonNewH = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.GuideNewH.icon");
 			this.buttonNewH.Clicked += new MessageEventHandler(this.HandleButtonNewH);
 			this.toolBar.Items.Add(this.buttonNewH);
 			ToolTip.Default.SetToolTip(this.buttonNewH, "Nouveau repère horizontal");
 
-			this.buttonNewV = new IconButton(@"file:images/guidenewv.icon");
+			this.buttonNewV = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.GuideNewV.icon");
 			this.buttonNewV.Clicked += new MessageEventHandler(this.HandleButtonNewV);
 			this.toolBar.Items.Add(this.buttonNewV);
 			ToolTip.Default.SetToolTip(this.buttonNewV, "Nouveau repère vertical");
 
-			this.buttonDuplicate = new IconButton(@"file:images/duplicate.icon");
+			this.buttonDuplicate = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Duplicate.icon");
 			this.buttonDuplicate.Clicked += new MessageEventHandler(this.HandleButtonDuplicate);
 			this.toolBar.Items.Add(this.buttonDuplicate);
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, "Dupliquer le repère");
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonUp = new IconButton(@"file:images/up.icon");
+			this.buttonUp = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Up.icon");
 			this.buttonUp.Clicked += new MessageEventHandler(this.HandleButtonUp);
 			this.toolBar.Items.Add(this.buttonUp);
 			ToolTip.Default.SetToolTip(this.buttonUp, "Repère avant");
 
-			this.buttonDown = new IconButton(@"file:images/down.icon");
+			this.buttonDown = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Down.icon");
 			this.buttonDown.Clicked += new MessageEventHandler(this.HandleButtonDown);
 			this.toolBar.Items.Add(this.buttonDown);
 			ToolTip.Default.SetToolTip(this.buttonDown, "Repère après");
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonDelete = new IconButton(@"file:images/delete.icon");
+			this.buttonDelete = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Delete.icon");
 			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDelete);
 			this.toolBar.Items.Add(this.buttonDelete);
 			ToolTip.Default.SetToolTip(this.buttonDelete, "Supprimer le repère");

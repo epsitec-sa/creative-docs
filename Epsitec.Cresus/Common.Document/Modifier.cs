@@ -453,7 +453,7 @@ namespace Epsitec.Common.Document
 			{
 				DrawingContext context = viewer.DrawingContext;
 				context.InternalPageLayer(0, 0);
-				context.ZoomAndCenter();
+				context.ZoomPageAndCenter();
 			}
 
 			this.document.Settings.Reset();
@@ -2125,9 +2125,16 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				double x = this.SizeArea.Width/this.document.Size.Width;
-				double y = this.SizeArea.Height/this.document.Size.Height;
-				return 1.0/System.Math.Min(x,y);
+				if ( this.document.Type == DocumentType.Pictogram )
+				{
+					double x = this.SizeArea.Width/this.document.Size.Width;
+					double y = this.SizeArea.Height/this.document.Size.Height;
+					return 1.0/System.Math.Min(x,y);
+				}
+				else
+				{
+					return 0.1;  // 10%
+				}
 			}
 		}
 
@@ -2142,7 +2149,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					return 32.0;  // 3200%
+					return 16.0;  // 1600%
 				}
 			}
 		}
@@ -2176,14 +2183,14 @@ namespace Epsitec.Common.Document
 
 			if ( isAuto )
 			{
-				item = new MenuItem("StyleMake", @"file:images/stylemake.icon", "Créer un nouveau style", "");
+				item = new MenuItem("StyleMake", "manifest:Epsitec.App.DocumentEditor.Images.StyleMake.icon", "Créer un nouveau style", "");
 				item.Pressed += new MessageEventHandler(this.HandleMenuPressed);
 				menu.Items.Add(item);
 			}
 
 			if ( isStyle )
 			{
-				item = new MenuItem("StyleFree", @"file:images/stylefree.icon", "Rendre indépendant du style", "");
+				item = new MenuItem("StyleFree", "manifest:Epsitec.App.DocumentEditor.Images.StyleFree.icon", "Rendre indépendant du style", "");
 				item.Pressed += new MessageEventHandler(this.HandleMenuPressed);
 				menu.Items.Add(item);
 			}
@@ -2201,10 +2208,10 @@ namespace Epsitec.Common.Document
 					first = false;
 				}
 
-				string icon = @"file:images/activeno.icon";
+				string icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
 				if ( property == original )
 				{
-					icon = @"file:images/activeyes.icon";
+					icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
 				}
 
 				item = new MenuItem("StyleUse", icon, property.StyleName, "", i.ToString());
