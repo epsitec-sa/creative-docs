@@ -1022,7 +1022,9 @@ namespace Epsitec.Common.Widgets
 					case "&gt;":	code = '>';			break;
 					case "&amp;":	code = '&';			break;
 					case "&quot;":	code = '"';			break;
-					case "&nbsp;":	code = (char)160;	break;
+					case "&apos;":	code = '\'';		break;
+					case "&#160;":	code = (char)160;	break;
+					case "&#8212;":	code = (char)8212;	break;
 					
 					default:
 						throw new System.FormatException("Bad meta: " + meta);
@@ -1205,7 +1207,9 @@ namespace Epsitec.Common.Widgets
 						case '<':		buffer.Append("&lt;");		break;
 						case '>':		buffer.Append("&gt;");		break;
 						case '\"':		buffer.Append("&quot;");	break;
-						case (char)160:	buffer.Append("&nbsp;");	break;
+						case '\'':		buffer.Append("&apos;");	break;
+						case (char)160:	buffer.Append("&#160;");	break;
+						case (char)8212:buffer.Append("&#8212;");	break;
 						case '\n':		buffer.Append("<br/>");		break;
 						default:		buffer.Append(text[pos]);	break;
 					}
@@ -1215,12 +1219,14 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				text = text.Replace("&", "&amp;");
-				text = text.Replace("<", "&lt;");
-				text = text.Replace(">", "&gt;");
-				text = text.Replace("\"", "&quot;");
-				text = text.Replace("\u00A0", "&nbsp;");  // (char)160
-				text = text.Replace("\n", "<br/>");
+				text = text.Replace("&",      "&amp;");
+				text = text.Replace("<",      "&lt;");
+				text = text.Replace(">",      "&gt;");
+				text = text.Replace("\"",     "&quot;");
+				text = text.Replace("'",      "&apos;");
+				text = text.Replace("\u00A0", "&#160;");
+				text = text.Replace("\u2014", "&#8212;");
+				text = text.Replace("\n",     "<br/>");
 				return text;
 			}
 		}
@@ -1262,7 +1268,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else if ( text[offset] == '&' )
 				{
-					buffer.Append(AnalyseMetaChar(text, ref offset));
+					buffer.Append(TextLayout.AnalyseMetaChar(text, ref offset));
 				}
 				else
 				{
@@ -1640,7 +1646,7 @@ namespace Epsitec.Common.Widgets
 					case TextLayout.Tag.None:
 						if ( buffer.Length == 0 )  textIndex = index;
 						endOffset = beginOffset;
-						char c = AnalyseMetaChar(this.text, ref endOffset);
+						char c = TextLayout.AnalyseMetaChar(this.text, ref endOffset);
 						buffer.Append(c);
 						stringExist = true;
 						index ++;
@@ -1839,7 +1845,9 @@ namespace Epsitec.Common.Widgets
 						case "&gt;":	break;
 						case "&amp;":	break;
 						case "&quot;":	break;
-						case "&nbsp;":	break;
+						case "&apos;":	break;
+						case "&#160;":	break;
+						case "&#8212;":	break;
 					
 						default:
 							offsetError = beginOffset;
