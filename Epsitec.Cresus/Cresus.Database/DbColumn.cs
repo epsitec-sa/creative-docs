@@ -5,7 +5,7 @@ namespace Epsitec.Cresus.Database
 {
 	using Tags = Epsitec.Common.Support.Tags;
 	using ResourceLevel = Epsitec.Common.Support.ResourceLevel;
-	using Converter = Epsitec.Common.Support.Data.Converter;
+	using Converter = Epsitec.Common.Converters.Converter;
 	
 	public enum DbColumnLocalisation : byte
 	{

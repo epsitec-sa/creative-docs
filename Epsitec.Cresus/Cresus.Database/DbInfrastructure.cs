@@ -1,10 +1,10 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier/PA
 
 namespace Epsitec.Cresus.Database
 {
 	using Tags = Epsitec.Common.Support.Tags;
-	using Converter = Epsitec.Common.Support.Data.Converter;
+	using Converter = Epsitec.Common.Converters.Converter;
 	
 	public delegate void CallbackDisplayDataSet(DbInfrastructure infrastructure, string name, System.Data.DataTable table);
 	
