@@ -157,7 +157,6 @@ namespace Epsitec.Cresus.Database
 			return sql_table;
 		}
 		
-		
 		public DbKey CreateKeyFromRow(System.Data.DataRow row)
 		{
 			DbColumn[] primary_key = this.PrimaryKey;
@@ -211,5 +210,12 @@ namespace Epsitec.Cresus.Database
 		protected DbColumnCollection	columns = new DbColumnCollection ();
 		protected DbColumnCollection	primary_key = null;
 		protected DbElementCat			category;
+		
+		
+		internal const string			TagTableDef			= "CR_TABLE_DEF";
+		internal const string			TagColumnDef		= "CR_COLUMN_DEF";
+		internal const string			TagTypeDef			= "CR_TYPE_DEF";
+		internal const string			TagEnumValDef		= "CR_ENUMVAL_DEF";
+		internal const string			TagRefDef			= "CR_REF_DEF";
 	}
 }
