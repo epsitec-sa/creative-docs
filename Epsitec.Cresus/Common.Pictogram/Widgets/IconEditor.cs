@@ -163,7 +163,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			string[] list = Epsitec.Common.Widgets.Adorner.Factory.AdornerNames;
 			foreach ( string name in list )
 			{
-				this.MenuAdd(lookMenu, @"y/n", "SelectLook", name, "", name);
+				this.MenuAdd(lookMenu, @"y/n", "SelectLook (this.Name)", name, "", name);
 			}
 			lookMenu.AdjustSize();
 			showMenu.Items[5].Submenu = lookMenu;
@@ -751,8 +751,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("SelectLook")]
 		void CommandSelectLook(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			Widget widget = e.Source as Widget;
-			Epsitec.Common.Widgets.Adorner.Factory.SetActive(widget.Name);
+			Epsitec.Common.Widgets.Adorner.Factory.SetActive(e.CommandArgs[0]);
 			this.drawer.UpdateCommands();
 		}
 		

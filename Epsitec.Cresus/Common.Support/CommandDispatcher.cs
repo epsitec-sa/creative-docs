@@ -21,14 +21,21 @@ namespace Epsitec.Common.Support
 			//	- suit une parenthèse ouvrante, avec évtl. des espaces;
 			//	- suit zéro à n arguments <arg> séparés par une virgule;
 			//	- chaque <arg> est soit une chaîne "", soit une chaîne '',
-			//	  soit un mot.
+			//	  soit une valeur numérique, soit un mot.
 			//
 			//	La capture retourne dans l'ordre <name>, puis la liste des <arg> trouvés.
 			
-			string       regex   = @"\A(?<name>(\w+))\s*\(\s*((?<arg>((\""[^\""]{0,}\""|(\'[^\']{0,}\'|[\w.]{1,}))))\s*(\,?)\s*){0,}\)\s*\z";
+			string regex_1 = @"\A(?<name>(\w+))\s*\(\s*((?<arg>((\""[^\""]{0,}\""|(\'[^\']{0,}\'|(\-{0,}\d{1,}([\.]\d{1,}){0,1}|[\w.]{1,})))))\s*(\,?)\s*){0,}\)\s*\z";
+			
+			//	Filtre les valeurs numériques correctement formatées, avec ou sans signe '-'
+			//	comme préfixe et avec une partie fractionnaire ('.nnn') optionnelle.
+			
+			string regex_2 = @"\A\s*\-{0,}\d{1,}([\.]\d{1,}){0,1}\s*\z";
+			
 			RegexOptions options = RegexOptions.Compiled | RegexOptions.ExplicitCapture;
 			
-			CommandDispatcher.command_arg_regex = new Regex (regex, options);
+			CommandDispatcher.command_arg_regex = new Regex (regex_1, options);
+			CommandDispatcher.numeric_regex     = new Regex (regex_2, options);
 		}
 		
 		public CommandDispatcher() : this ("anonymous")
@@ -201,6 +208,68 @@ namespace Epsitec.Common.Support
 			}
 			
 			throw new System.FormatException (string.Format ("Command '{0}' is not well formed.", command));
+		}
+		
+		public static string[] ExtractAndParseCommandArgs(string command, object source)
+		{
+			string[] args = CommandDispatcher.ExtractCommandArgs (command);
+			
+			for (int i = 0; i < args.Length; i++)
+			{
+				string arg   = args[i];
+				Match  match = CommandDispatcher.numeric_regex.Match (arg);
+				
+				if (match.Success)
+				{
+					//	C'est une valeur numérique proprement formatée. On la garde telle
+					//	quelle.
+				}
+				else if ((arg[0] == '\'') || (arg[0] == '\"'))
+				{
+					//	C'est un texte entre guillemets. On supprime le premier et le dernier
+					//	caractère.
+					
+					System.Diagnostics.Debug.Assert (arg.Length > 1);
+					System.Diagnostics.Debug.Assert (arg[arg.Length-1] == arg[0]);
+					
+					arg = arg.Substring (1, arg.Length - 2);
+				}
+				else
+				{
+					//	Ce n'est ni une valeur numérique, ni un texte; c'est probablement un
+					//	symbole que l'on va passer tel quel plus loin, sauf si c'est une
+					//	expression commençant par 'this.'.
+					
+					if (arg.StartsWith ("this."))
+					{
+						//	L'argument décrit une propriété de la source. On va tenter d'aller
+						//	lire la source.
+						
+						System.Reflection.PropertyInfo info;
+						System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.GetProperty
+							/**/							 | System.Reflection.BindingFlags.Instance
+							/**/							 | System.Reflection.BindingFlags.Public;
+						
+						string prop_name = arg.Substring (5);
+						System.Type type = source.GetType ();
+						
+						info = type.GetProperty (prop_name, flags);
+						
+						if (info == null)
+						{
+							throw new System.FieldAccessException (string.Format ("Command {0} tries to access property {1} which cannot be found in class {2}.", command, prop_name, type.Name));
+						}
+						
+						object data = info.GetValue (source, null);
+						
+						arg = data.ToString ();
+					}
+				}
+				
+				args[i] = arg;
+			}
+			
+			return args;
 		}
 		
 		protected void RegisterMethod(object controller, System.Reflection.MethodInfo info)
@@ -407,6 +476,7 @@ namespace Epsitec.Common.Support
 		protected string						dispatcher_name;
 		
 		private static Regex					command_arg_regex;
+		private static Regex					numeric_regex;
 		private static System.Type				command_attr_type  = typeof (CommandAttribute);
 		private static CommandDispatcher		default_dispatcher = new CommandDispatcher ("default");
 	}
