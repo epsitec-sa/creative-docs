@@ -198,12 +198,26 @@ namespace Epsitec.Cresus.Requests
 					if ((find != null) &&
 						(find.RowState != System.Data.DataRowState.Deleted))
 					{
-						//	Si la table contient déjà une requête avec cet ID, on va
-						//	simplement la remplacer par la nouvelle requête :
+						//	La table contient déjà une requête avec cet ID, ce qui est
+						//	une indication qu'il y a eu un problème, manifestement.
 						
-						find.BeginEdit ();
-						find.ItemArray = row.ItemArray;
-						find.EndEdit ();
+						ExecutionState old_state = this.GetRequestExecutionState (find);
+						
+						System.Diagnostics.Debug.WriteLine (string.Format ("Overwrite request {0}, old state was {1}.", ids[i].Value, old_state));
+						
+						if (old_state == ExecutionState.Conflicting)
+						{
+							//	L'ancienne requête était en conflit. Elle est remplacée
+							//	par une requête fraîche -- le conflit va disparaître :
+							
+							find.BeginEdit ();
+							find.ItemArray = row.ItemArray;
+							find.EndEdit ();
+						}
+						else
+						{
+							System.Diagnostics.Debug.WriteLine (string.Format ("Dropped request {0}.", ids[i].Value));
+						}
 					}
 					else
 					{
@@ -255,7 +269,7 @@ namespace Epsitec.Cresus.Requests
 			
 			row.BeginEdit ();
 			row[Tags.ColumnReqData]    = data;
-			row[Tags.ColumnReqExState] = this.ConvertFromExecutionState (ExecutionState.Pending);
+			row[Tags.ColumnReqExState] = ExecutionQueue.ConvertFromExecutionState (ExecutionState.Pending);
 			row[Tags.ColumnDateTime]   = System.DateTime.UtcNow;
 			row.EndEdit ();
 			
@@ -306,10 +320,8 @@ namespace Epsitec.Cresus.Requests
 			lock (this)
 			{
 				this.CheckRow (row);
-				return this.ConvertToExecutionState (row[Tags.ColumnReqExState]);
+				return ExecutionQueue.ConvertToExecutionState (row[Tags.ColumnReqExState]);
 			}
-			
-			throw new System.InvalidCastException ("Invalid ExecutionState in row.");
 		}
 		
 		public void SetRequestExecutionState(System.Data.DataRow row, ExecutionState new_state)
@@ -328,7 +340,7 @@ namespace Epsitec.Cresus.Requests
 					throw new System.InvalidOperationException (string.Format ("Cannot change from state {0} to {1}.", old_state, new_state));
 				}
 				
-				row[Tags.ColumnReqExState] = this.ConvertFromExecutionState (new_state);
+				row[Tags.ColumnReqExState] = ExecutionQueue.ConvertFromExecutionState (new_state);
 				
 				this.state_count[(int) old_state]--;
 				this.state_count[(int) new_state]++;
@@ -415,7 +427,12 @@ namespace Epsitec.Cresus.Requests
 		}
 		#endregion
 		
-		protected ExecutionState ConvertToExecutionState(object value)
+		internal static ExecutionState ConvertToExecutionState(short value)
+		{
+			return (ExecutionState) value;
+		}
+		
+		internal static ExecutionState ConvertToExecutionState(object value)
 		{
 			System.Enum state;
 				
@@ -427,7 +444,7 @@ namespace Epsitec.Cresus.Requests
 			throw new System.InvalidCastException ("Invalid ExecutionState value.");
 		}
 		
-		protected object ConvertFromExecutionState(ExecutionState value)
+		internal static object ConvertFromExecutionState(ExecutionState value)
 		{
 			return (short) value;
 		}
@@ -459,7 +476,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				if (DbRichCommand.IsRowDeleted (row) == false)
 				{
-					short state = (short) this.ConvertToExecutionState (row[Tags.ColumnReqExState]);
+					short state = (short) ExecutionQueue.ConvertToExecutionState (row[Tags.ColumnReqExState]);
 					count[state]++;
 				}
 			}

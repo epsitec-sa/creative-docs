@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Requests
 			this.execution_queue  = new ExecutionQueue (this.infrastructure, this.database);
 			
 			this.abort_event   = new System.Threading.ManualResetEvent (false);
+			this.server_event  = new System.Threading.AutoResetEvent (false);
 			this.worker_thread = new System.Threading.Thread (new System.Threading.ThreadStart (this.WorkerThread));
 			this.waiter_thread = new System.Threading.Thread (new System.Threading.ThreadStart (this.WaiterThread));
 			
@@ -91,8 +92,12 @@ namespace Epsitec.Cresus.Requests
 			this.service = service;
 			this.client  = client;
 			
-			if (this.service != null)
+			if ((this.service != null) &&
+				(this.waiter_thread.IsAlive == false))
 			{
+				//	Démarre le processus de synchronisation entre le serveur et le
+				//	client.
+				
 				this.waiter_thread.Start ();
 			}
 		}
@@ -106,6 +111,7 @@ namespace Epsitec.Cresus.Requests
 		}
 		#endregion
 		
+		#region WaiterThread Implementation
 		protected void WaiterThread()
 		{
 			try
@@ -118,59 +124,17 @@ namespace Epsitec.Cresus.Requests
 				{
 					RequestState[] states;
 					
-					this.service.QueryRequestStates (this.client, ref change_id, System.TimeSpan.FromSeconds (30.0), out states);
+					//	Charge l'état de nos requêtes sur le serveur. Cet appel est bloquant
+					//	si rien n'a changé depuis le dernier appel :
 					
-					System.Collections.ArrayList list = new System.Collections.ArrayList ();
-					System.Data.DataRow[]        rows = DbRichCommand.CopyLiveRows (this.execution_queue.DateTimeSortedRows);
+					this.service.QueryRequestStates (this.client, ref change_id, System.TimeSpan.FromSeconds (60.0), out states);
 					
-					bool conflict_detected = false;
-					
-					//	Passe en revue l'état de toutes les requêtes retournées par le
-					//	serveur :
-					
-					for (int i = 0; i < states.Length; i++)
+					lock (this)
 					{
-						lock (this.execution_queue)
-						{
-							System.Data.DataRow row = DbRichCommand.FindRow (rows, states[i].Identifier);
-							
-							if ((row == null) ||
-								(DbRichCommand.IsRowDeleted (row)))
-							{
-								list.Add (states[i]);
-								continue;
-							}
-							
-							//	La requête est contenue dans la queue d'exécution. En fonction de
-							//	l'état de celle-ci, il va falloir soit la valider définitivement,
-							//	soit la marquer comme étant invalide.
-							
-							switch ((ExecutionState) states[i].State)
-							{
-								case ExecutionState.ExecutedByServer:
-									this.ProcessServerExecuted (row);
-									list.Add (states[i]);
-									break;
-								
-								case ExecutionState.Conflicting:
-									this.ProcessServerConflict (row);
-									conflict_detected = true;
-									break;
-							}
-						}
+						this.server_request_states = states;
 					}
 					
-					if (conflict_detected)
-					{
-						//	Le serveur a détecté un conflit pour notre client.
-					}
-					
-					if (list.Count > 0)
-					{
-						states = new RequestState[list.Count];
-						list.CopyTo (states);
-						this.service.ClearRequestStates (this.client, states);
-					}
+					this.server_event.Set ();
 				}
 			}
 			catch (System.Exception exception)
@@ -183,31 +147,21 @@ namespace Epsitec.Cresus.Requests
 				System.Diagnostics.Debug.WriteLine ("Requests.Orchestrator Waiter Thread terminated.");
 			}
 		}
+		#endregion
 		
-		protected void ProcessServerExecuted(System.Data.DataRow row)
-		{
-			System.Diagnostics.Debug.WriteLine ("Requests.Orchestrator: server executed request " + row[Tags.ColumnId]);
-			this.execution_queue.RemoveRequest (row);
-		}
-		
-		protected void ProcessServerConflict(System.Data.DataRow row)
-		{
-			System.Diagnostics.Debug.WriteLine ("Requests.Orchestrator: server detected conflict on request " + row[Tags.ColumnId]);
-			this.execution_queue.SetRequestExecutionState (row, ExecutionState.Conflicting);
-		}
-		
-		
+		#region WorkerThread Implementation
 		protected void WorkerThread()
 		{
 			try
 			{
 				System.Diagnostics.Debug.WriteLine ("Requests.Orchestrator Worker Thread launched.");
 				
-				System.Threading.WaitHandle[] wait_events = new System.Threading.WaitHandle[3];
+				System.Threading.WaitHandle[] wait_events = new System.Threading.WaitHandle[4];
 				
 				wait_events[0] = this.execution_queue.EnqueueWaitEvent;
 				wait_events[1] = this.execution_queue.ExecutionStateWaitEvent;
-				wait_events[2] = this.abort_event;
+				wait_events[2] = this.server_event;
+				wait_events[3] = this.abort_event;
 				
 				for (;;)
 				{
@@ -215,26 +169,38 @@ namespace Epsitec.Cresus.Requests
 					
 					int handle_index = Common.Support.Sync.Wait (wait_events);
 					
-					//	Tout événement autre que ceux liés à la queue provoque l'interruption
-					//	du processus :
 					
 					if ((handle_index < 0) ||
-						(handle_index > 1))
+						(handle_index > 2))
 					{
+						//	L'événement reçu ne fait pas partie de ceux qui requièrent du
+						//	travail; cela signifie qu'il faut s'arrêter :
+						
 						this.ProcessShutdown ();
 						break;
 					}
 					
-					//	Analyse le contenu de la queue.
+					if (handle_index == 2)
+					{
+						//	L'état des requêtes dans la queue du serveur a changé. Il faut
+						//	traiter ces modifications :
+						
+						this.ProcessServerChanges ();
+					}
+					
+					//	Analyse le contenu de la queue locale.
 					
 					if (this.execution_queue.HasConflicting)
 					{
-						//	La queue contient des éléments en conflit.
+						//	La queue contient des requêtes en conflit. On cesse tout travail
+						//	en attendant que le conflit ait été résolu...
 						
 						this.ChangeToState (OrchestratorState.Conflicting);
 					}
 					else
 					{
+						//	La queue contient peut-être des requêtes prêtes à être traitées.
+						
 						this.ChangeToState (OrchestratorState.Processing);
 						
 						if ((this.execution_queue.HasConflictResolved) ||
@@ -244,13 +210,18 @@ namespace Epsitec.Cresus.Requests
 							continue;
 						}
 						
+						//	Regarde encore si nous avons une connexion avec un serveur,
+						//	auquel cas nous devons assurer la synchronisation de la queue
+						//	du serveur avec la nôtre.
+						
 						if ((this.service != null) &&
 							(this.execution_queue.IsRunningAsServer == false))
 						{
 							if (this.execution_queue.HasExecutedByClient)
 							{
-								//	Le client possède une série de requêtes exécutées localement que
-								//	l'on peut maintenant tenter d'envoyer au serveur.
+								//	Le client possède une série de requêtes exécutées
+								//	localement que l'on peut maintenant tenter d'envoyer
+								//	au serveur.
 								
 								this.ProcessSendToServer ();
 							}
@@ -268,7 +239,7 @@ namespace Epsitec.Cresus.Requests
 				System.Diagnostics.Debug.WriteLine ("Requests.Orchestrator Worker Thread terminated.");
 			}
 		}
-		
+		#endregion
 		
 		protected void ProcessReadyInQueue()
 		{
@@ -437,6 +408,72 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
+		protected void ProcessServerChanges()
+		{
+			//	Met à jour la queue locale en fonction de l'état des requêtes dans la
+			//	queue du serveur.
+			
+			RequestState[] states;
+			
+			lock (this)
+			{
+				states = (RequestState[]) this.server_request_states.Clone ();
+			}
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			System.Data.DataRow[]        rows = this.execution_queue.DateTimeSortedRows;
+			
+			for (int i = 0; i < states.Length; i++)
+			{
+				System.Data.DataRow row = DbRichCommand.FindRow (rows, states[i].Identifier);
+				
+				if (row == null)
+				{
+					//	La requête n'existe plus dans la queue locale; ceci implique que
+					//	celle stockée sur le serveur est caduque et peut être supprimée :
+					
+					list.Add (states[i]);
+					continue;
+				}
+				
+				//	La requête existe dans la queue d'exécution locale. Détermine s'il faut
+				//	modifier son état :
+				
+				ExecutionState remote_state = ExecutionQueue.ConvertToExecutionState (states[i].State);
+				ExecutionState local_state  = this.execution_queue.GetRequestExecutionState (row);
+				
+				System.Diagnostics.Debug.Assert (local_state == ExecutionState.SentToServer);
+				
+				switch (remote_state)
+				{
+					case ExecutionState.Pending:
+						break;
+					
+					case ExecutionState.ExecutedByServer:
+					case ExecutionState.Conflicting:
+						
+						//	La requête a été exécutée sur le serveur. Il faut mettre à jour
+						//	l'état dans la queue locale :
+						
+						this.execution_queue.SetRequestExecutionState (row, remote_state);
+						break;
+					
+					default:
+						throw new System.InvalidOperationException (string.Format ("Request ExecutionState set to {0} on server.", remote_state));
+				}
+			}
+			
+			if (list.Count > 0)
+			{
+				//	Il y a des requêtes "mortes" qui peuvent être supprimées de la queue
+				//	du serveur :
+				
+				states = new RequestState[list.Count];
+				list.CopyTo (states);
+				this.service.ClearRequestStates (this.client, states);
+			}
+		}
+		
 		protected void ProcessShutdown()
 		{
 			//	Avant l'arrêt planifié du processus, on s'empresse encore de mettre à jour
@@ -512,10 +549,12 @@ namespace Epsitec.Cresus.Requests
 		protected ExecutionEngine				execution_engine;
 		protected IDbAbstraction				database;
 		protected OrchestratorState				state;
+		protected volatile RequestState[]		server_request_states;
 		
 		System.Threading.Thread					worker_thread;
 		System.Threading.Thread					waiter_thread;
 		System.Threading.ManualResetEvent		abort_event;
+		System.Threading.AutoResetEvent			server_event;
 		
 		protected IRequestExecutionService		service;
 		protected ClientIdentity				client;

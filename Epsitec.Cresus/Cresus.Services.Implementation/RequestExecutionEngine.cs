@@ -152,10 +152,11 @@ namespace Epsitec.Cresus.Services
 			//	Détermine l'état de toutes les requêtes soumises par le client
 			//	spécifié.
 			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
 			lock (this.execution_queue)
 			{
-				System.Collections.ArrayList list = new System.Collections.ArrayList ();
-				System.Data.DataRow[]        rows = this.execution_queue.DateTimeSortedRows;
+				System.Data.DataRow[] rows = this.execution_queue.DateTimeSortedRows;
 				
 				for (int i = 0; i < rows.Length; i++)
 				{
@@ -176,10 +177,10 @@ namespace Epsitec.Cresus.Services
 						list.Add (new RequestState (row_key.Id.Value, (int) state));
 					}
 				}
-				
-				states = new RequestState[list.Count];
-				list.CopyTo (states);
 			}
+			
+			states = new RequestState[list.Count];
+			list.CopyTo (states);
 		}
 		
 		private ClientChangeInfo GetClientChangeInfo(int client_id)
