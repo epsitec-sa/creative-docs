@@ -11,6 +11,7 @@ namespace Epsitec.Common.Widgets
 			this.field.TextChanged += new EventHandler(this.FieldTextChanged);
 
 			this.slider = new Slider(this);
+			this.slider.Frame = false;
 			this.slider.ValueChanged += new EventHandler(this.SliderValueChanged);
 		}
 		
@@ -135,12 +136,14 @@ namespace Epsitec.Common.Widgets
 			base.UpdateClientGeometry();
 
 			if ( this.field == null )  return;
+
+			this.field.BottomMargin = this.sliderHeight-1;
 			
 			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-			rect.Bottom += this.sliderHeight-1;
 			this.field.Bounds = rect;
 			
 			rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			rect.Width -= System.Math.Floor(rect.Height*0.6)-1;
 			rect.Height = this.sliderHeight;
 			this.slider.Bounds = rect;
 		}
