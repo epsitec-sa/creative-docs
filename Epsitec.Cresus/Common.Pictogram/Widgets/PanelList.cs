@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelList permet de choisir un rang dans une liste.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelList : AbstractPanel
 	{
 		public PanelList()

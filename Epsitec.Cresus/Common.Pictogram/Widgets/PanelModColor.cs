@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelModColor permet de choisir une modification de couleur.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelModColor : AbstractPanel
 	{
 		public PanelModColor()
