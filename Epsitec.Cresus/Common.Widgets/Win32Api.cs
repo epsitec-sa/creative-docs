@@ -20,19 +20,19 @@ namespace Epsitec.Common.Widgets
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr DeleteObject(System.IntPtr handle_object);
 		[DllImport ("GDI32.dll")]	internal extern static bool DeleteDC(System.IntPtr dc);
 		
-		[StructLayout (LayoutKind.Sequential)] public struct Point
+		[StructLayout(LayoutKind.Sequential, Pack=1)] public struct Point
 		{
 			public int x;
 			public int y;
 		};
 		
-		[StructLayout (LayoutKind.Sequential)] public struct Size
+		[StructLayout(LayoutKind.Sequential, Pack=1)] public struct Size
 		{
 			public int cx;
 			public int cy;
 		};
 		
-		[StructLayout (LayoutKind.Sequential)] public struct BlendFunction
+		[StructLayout(LayoutKind.Sequential, Pack=1)] public struct BlendFunction
 		{
 			public byte BlendOp;
 			public byte BlendFlags;
