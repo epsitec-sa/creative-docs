@@ -1,5 +1,11 @@
 namespace Epsitec.Common.Widgets
 {
+	public enum ScrollListShow
+	{
+		Extremity,		// déplacement minimal aux extrémités
+		Middle,			// déplacement central
+	}
+
 	public enum ScrollListAdjust
 	{
 		MoveUp,			// déplace le haut
@@ -13,10 +19,26 @@ namespace Epsitec.Common.Widgets
 	{
 		public ScrollList()
 		{
+			this.internal_state |= InternalState.AutoFocus;
+			this.internal_state |= InternalState.Focusable;
+
 			this.lineHeight = this.GetLineHeight();
 			this.scroller = new Scroller();
 			this.scroller.Moved += new EventHandler(this.HandleScroller);
 			this.Children.Add(this.scroller);
+		}
+
+		public bool ComboMode
+		{
+			set
+			{
+				this.isComboList = value;
+			}
+
+			get
+			{
+				return this.isComboList;
+			}
 		}
 
 
@@ -61,7 +83,7 @@ namespace Epsitec.Common.Widgets
 					value = System.Math.Max(value, 0);
 					value = System.Math.Min(value, this.list.Count-1);
 				}
-				if ( value != this.selectedLine )
+				if ( value != this.selectedLine || this.isSendSelectChanged )
 				{
 					this.selectedLine = value;
 					this.isDirty = true;
@@ -82,7 +104,7 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				value = System.Math.Max(value, 0);
-				value = System.Math.Min(value, this.list.Count-this.visibleLines);
+				value = System.Math.Min(value, System.Math.Max(this.list.Count-this.visibleLines, 0));
 				if ( value != this.firstLine )
 				{
 					this.firstLine = value;
@@ -102,18 +124,33 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Rend la ligne sélectionnée visible.
-		public void ShowSelect()
+		public void ShowSelect(ScrollListShow mode)
 		{
 			if ( this.selectedLine == -1 )  return;
 
-			int display = System.Math.Min(this.visibleLines, this.list.Count);
-			int fl = System.Math.Min(this.selectedLine+display/2, this.list.Count-1);
-			fl = System.Math.Max(fl-display+1, 0);
+			int fl = this.FirstLine;
+			if ( mode == ScrollListShow.Extremity )
+			{
+				if ( this.selectedLine < this.firstLine )
+				{
+					fl = this.selectedLine;
+				}
+				if ( this.selectedLine > this.firstLine+this.visibleLines-1 )
+				{
+					fl = this.selectedLine-(this.visibleLines-1);
+				}
+			}
+			if ( mode == ScrollListShow.Middle )
+			{
+				int display = System.Math.Min(this.visibleLines, this.list.Count);
+				fl = System.Math.Min(this.selectedLine+display/2, this.list.Count-1);
+				fl = System.Math.Max(fl-display+1, 0);
+			}
 			this.FirstLine = fl;
 		}
 
 		// Ajuste la hauteur pour afficher pile un nombre entier de lignes.
-		public bool Adjust(ScrollListAdjust mode)
+		public bool AdjustToMultiple(ScrollListAdjust mode)
 		{
 			double h = this.Height-this.margin*2;
 			int nbLines = (int)(h/this.lineHeight);
@@ -122,13 +159,35 @@ namespace Epsitec.Common.Widgets
 
 			if ( mode == ScrollListAdjust.MoveUp )
 			{
-				this.Top -= adjust;
+				this.Top = System.Math.Floor(this.Top-adjust);
 			}
 			if ( mode == ScrollListAdjust.MoveDown )
 			{
-				this.Bottom += adjust;
+				this.Bottom = System.Math.Floor(this.Bottom+adjust);
 			}
 			this.Invalidate();
+			return true;
+		}
+
+		// Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
+		public bool AdjustToContent(ScrollListAdjust mode, double hMin, double hMax)
+		{
+			double h = this.lineHeight*this.list.Count+this.margin*2;
+			double hope = h;
+			h = System.Math.Max(h, hMin);
+			h = System.Math.Min(h, hMax);
+			if ( h == this.Height )  return false;
+
+			if ( mode == ScrollListAdjust.MoveUp )
+			{
+				this.Top = this.Bottom+h;
+			}
+			if ( mode == ScrollListAdjust.MoveDown )
+			{
+				this.Bottom = this.Top-h;
+			}
+			this.Invalidate();
+			if ( h != hope )  AdjustToMultiple(mode);
 			return true;
 		}
 
@@ -146,12 +205,16 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
+					if ( this.isComboList )
+					{
+						this.isSendSelectChanged = true;
+					}
 					this.mouseDown = true;
 					MouseSelect(pos.Y);
 					break;
 				
 				case MessageType.MouseMove:
-					if ( this.mouseDown )
+					if ( this.mouseDown || this.isComboList )
 					{
 						MouseSelect(pos.Y);
 					}
@@ -163,6 +226,11 @@ namespace Epsitec.Common.Widgets
 						MouseSelect(pos.Y);
 						this.mouseDown = false;
 					}
+					break;
+
+				case MessageType.KeyDown:
+					//System.Diagnostics.Debug.WriteLine("KeyDown "+message.KeyChar+" "+message.KeyCode);
+					ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
 					break;
 			}
 			
@@ -177,6 +245,33 @@ namespace Epsitec.Common.Widgets
 			if ( line < 0 || line >= this.visibleLines )  return false;
 			this.Select = this.firstLine+line;
 			return true;
+		}
+
+		// Gestion d'une touche pressée avec KeyDown dans la liste.
+		protected void ProcessKeyDown(int key, bool isShiftPressed, bool isCtrlPressed)
+		{
+			int		sel;
+
+			switch ( key )
+			{
+				case (int)System.Windows.Forms.Keys.Up:
+					sel = this.Select-1;
+					if ( sel >= 0 )
+					{
+						Select = sel;
+						if ( !this.IsShowSelect() )  this.ShowSelect(ScrollListShow.Extremity);
+					}
+					break;
+
+				case (int)System.Windows.Forms.Keys.Down:
+					sel = this.Select+1;
+					if ( sel < this.list.Count )
+					{
+						Select = sel;
+						if ( !this.IsShowSelect() )  this.ShowSelect(ScrollListShow.Extremity);
+					}
+					break;
+			}
 		}
 
 
@@ -227,9 +322,9 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateClientGeometry();
 			
-			if (this.lineHeight == 0)
+			if ( this.lineHeight == 0 )
 			{
-				return;		//	PA
+				return;  // PA
 			}
 
 			Drawing.Rectangle rect = this.Bounds;
@@ -255,9 +350,12 @@ namespace Epsitec.Common.Widgets
 		// Génère un événement pour dire que la sélection dans la liste a changé.
 		protected virtual void OnSelectChanged()
 		{
-			if ( this.SelectChanged != null )  // qq'un écoute ?
+			if ( !this.isComboList || this.isSendSelectChanged )
 			{
-				this.SelectChanged(this);
+				if ( this.SelectChanged != null )  // qq'un écoute ?
+				{
+					this.SelectChanged(this);
+				}
 			}
 		}
 
@@ -309,7 +407,9 @@ namespace Epsitec.Common.Widgets
 
 		public event EventHandler SelectChanged;
 
+		protected bool							isComboList = false;
 		protected bool							isDirty;
+		protected bool							isSendSelectChanged = false;
 		protected bool							mouseDown = false;
 		protected System.Collections.ArrayList	list = new System.Collections.ArrayList();
 		protected TextLayout[]					textLayouts;

@@ -189,6 +189,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public void SelectAll()
+		{
+			this.cursorFrom = 0;
+			this.cursorTo = this.Text.Length;
+			CursorScroll();
+			this.Invalidate();
+		}
+
 		// Valeur numérique éditée.
 		public double Value
 		{
@@ -461,33 +469,63 @@ namespace Epsitec.Common.Widgets
 		private void HandleCombo(object sender, MessageEventArgs e)
 		{
 			//System.Diagnostics.Debug.WriteLine("HandleCombo");
+			int height = 1000;  // TODO: comment calculer jusqu'en bas de la fenêtre ?
 			this.scrollList = new ScrollList();
-			Drawing.Point pos = new Drawing.Point(0, -70);
+			this.scrollList.ComboMode = true;
+			Drawing.Point pos = new Drawing.Point(0, -height);
 			pos.X += this.Left;
 			pos.Y += this.Bottom;
 			this.scrollList.Location = pos;
-			this.scrollList.Size = new Drawing.Size(this.Client.Width, 70);
-			this.scrollList.Adjust(ScrollListAdjust.MoveDown);
+			this.scrollList.Size = new Drawing.Size(this.Client.Width, height);
 
+			int sel = -1;
+			int i = 0;
 			foreach ( string text in this.comboList )
 			{
 				this.scrollList.AddText(text);
+				if ( text == this.Text )
+				{
+					sel = i;
+				}
+				i ++;
 			}
+			this.scrollList.AdjustToContent(ScrollListAdjust.MoveDown, 10, height);
+			this.scrollList.Select = sel;
+			this.scrollList.ShowSelect(ScrollListShow.Middle);
 
-			this.scrollList.SelectChanged += new EventHandler(this.HandleScrollList);
+			this.scrollList.SelectChanged += new EventHandler(this.HandleScrollListSelectChanged);
+			this.scrollList.Defocused += new EventHandler(this.HandleScrollListDefocused);
 			this.Parent.Children.Add(this.scrollList);
+			this.scrollList.SetFocused(true);
 		}
 
 		// Gestion d'un événement lorsque la scroll-liste est déplacée.
-		private void HandleScrollList(object sender)
+		private void HandleScrollListSelectChanged(object sender)
 		{
 			int sel = this.scrollList.Select;
 			if ( sel == -1 )  return;
 			this.Text = this.scrollList.GetText(sel);
-			this.Invalidate();
-			this.scrollList.SelectChanged -= new EventHandler(this.HandleScrollList);
+			this.SelectAll();
+			this.SetFocused(true);  // TODO: pourquoi ne marche pas ?
+#if false
+			this.scrollList.SelectChanged -= new EventHandler(this.HandleScrollListSelectChanged);
+			this.scrollList.Defocused -= new EventHandler(this.HandleScrollListDefocused);
 			this.Parent.Children.Remove(this.scrollList);
 			this.scrollList.Dispose();
+			this.scrollList = null;
+#endif
+		}
+
+		// Gestion d'un événement lorsque la scroll-liste perd le focus.
+		// <: pas appelé lorsqu'on clique n'importe où
+		private void HandleScrollListDefocused(object sender)
+		{
+			if ( this.scrollList == null )  return;
+			this.scrollList.SelectChanged -= new EventHandler(this.HandleScrollListSelectChanged);
+			this.scrollList.Defocused -= new EventHandler(this.HandleScrollListDefocused);
+			this.Parent.Children.Remove(this.scrollList);
+			this.scrollList.Dispose();
+			this.scrollList = null;
 		}
 
 		// Gestion d'un événement.
@@ -521,7 +559,7 @@ namespace Epsitec.Common.Widgets
 
 				case MessageType.KeyDown:
 					//System.Diagnostics.Debug.WriteLine("KeyDown "+message.KeyChar+" "+message.KeyCode);
-					ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed );
+					ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
 					break;
 
 				case MessageType.KeyPress:
@@ -629,24 +667,38 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case (int)System.Windows.Forms.Keys.Up:
-					if ( this.type == TextFieldType.MultiLine )
+					if ( this.type == TextFieldType.Combo )
 					{
-						this.MoveLine(-1, isShiftPressed, isCtrlPressed);
+						ComboExcavation(-1);
 					}
 					else
 					{
-						this.MoveCursor(-1, isShiftPressed, isCtrlPressed);
+						if ( this.type == TextFieldType.MultiLine )
+						{
+							this.MoveLine(-1, isShiftPressed, isCtrlPressed);
+						}
+						else
+						{
+							this.MoveCursor(-1, isShiftPressed, isCtrlPressed);
+						}
 					}
 					break;
 
 				case (int)System.Windows.Forms.Keys.Down:
-					if ( this.type == TextFieldType.MultiLine )
+					if ( this.type == TextFieldType.Combo )
 					{
-						this.MoveLine(1, isShiftPressed, isCtrlPressed);
+						ComboExcavation(1);
 					}
 					else
 					{
-						this.MoveCursor(1, isShiftPressed, isCtrlPressed);
+						if ( this.type == TextFieldType.MultiLine )
+						{
+							this.MoveLine(1, isShiftPressed, isCtrlPressed);
+						}
+						else
+						{
+							this.MoveCursor(1, isShiftPressed, isCtrlPressed);
+						}
 					}
 					break;
 			}
@@ -877,6 +929,54 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 			this.ResetCursor();
 			return true;
+		}
+
+		// Cherche le nom suivant ou précédent dans la comboList, même si elle
+		// n'est pas "déroulée".
+		protected void ComboExcavation(int dir)
+		{
+			int		sel;
+			bool	exact;
+
+			if ( !ComboSearch(out sel, out exact) )
+			{
+				sel = 0;
+			}
+			else
+			{
+				if ( exact)  sel += dir;
+			}
+			sel = System.Math.Max(sel, 0);
+			sel = System.Math.Min(sel, this.comboList.Count-1);
+			this.Text = (string)this.comboList[sel];
+			this.SelectAll();
+			this.SetFocused(true);
+		}
+
+		// Cherche à quelle ligne (dans comboList) correspond le mieux la ligne éditée.
+		protected bool ComboSearch(out int rank, out bool exact)
+		{
+			string edit = this.Text.ToUpper();
+			rank = 0;
+			exact = false;
+			foreach ( string text in this.comboList )
+			{
+				string maj = text.ToUpper();
+				if ( maj == edit )
+				{
+					exact = true;
+					return true;
+				}
+
+				if ( maj.StartsWith(edit) )
+				{
+					exact = false;
+					return true;
+				}
+
+				rank ++;
+			}
+			return false;
 		}
 
 

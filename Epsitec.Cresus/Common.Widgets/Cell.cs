@@ -22,26 +22,36 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool						IsSimple
-		{
-			get { return this.text == null; }
-		}
-		
-		public string					Value
-		{
-			get { return this.value; }
-			set { this.value = value; }
-		}
-		
-		public string					Contents
+		public bool IsSimple
 		{
 			get
 			{
-				if (this.IsSimple)
+				return this.text == null;
+			}
+		}
+		
+		public string Value
+		{
+			get
+			{
+				return this.value;
+			}
+
+			set
+			{
+				this.value = value;
+			}
+		}
+		
+		public string Contents
+		{
+			get
+			{
+				if ( this.IsSimple )
 				{
-					if (this.AcceptTaggedText)
+					if ( this.AcceptTaggedText )
 					{
-						return TextLayout.ConvertToTaggedText (this.value);
+						return TextLayout.ConvertToTaggedText(this.value);
 					}
 					else
 					{
@@ -55,7 +65,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public AbstractCellArray		CellArray
+		public AbstractCellArray CellArray
 		{
 			get
 			{
@@ -64,27 +74,33 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public int						RankColumn
+		public int RankColumn
 		{
-			get { return this.rank_column; }
+			get
+			{
+				return this.rankColumn;
+			}
 		}
 		
-		public int						RankRow
+		public int RankRow
 		{
-			get { return this.rank_row; }
+			get
+			{
+				return this.rankRow;
+			}
 		}
 		
 		
 		internal void SetArrayRank(AbstractCellArray array, int column, int row)
 		{
-			this.Parent      = array;
-			this.rank_column = column;
-			this.rank_row    = row;
+			this.Parent     = array;
+			this.rankColumn = column;
+			this.rankRow    = row;
 		}
 		
 		
-		protected string				value;
-		protected int					rank_column;
-		protected int					rank_row;
+		protected string		value;
+		protected int			rankColumn;
+		protected int			rankRow;
 	}
 }

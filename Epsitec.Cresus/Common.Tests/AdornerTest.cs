@@ -207,7 +207,7 @@ namespace Epsitec.Common.Tests
 			sl.Name = "ScrollList";
 			sl.Location = new Point(270, 70);
 			sl.Size = new Size(90, 100);
-			sl.Adjust(ScrollListAdjust.MoveDown);
+			sl.AdjustToMultiple(ScrollListAdjust.MoveDown);
 			sl.AddText("Janvier");
 			sl.AddText("Fevrier");
 			sl.AddText("Mars <i>(A)</i>");
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Tests
 			sl.AddText("Decembre");
 #endif
 			sl.Select = 5;  // sélectionne juin
-			if ( !sl.IsShowSelect() )  sl.ShowSelect();
+			if ( !sl.IsShowSelect() )  sl.ShowSelect(ScrollListShow.Middle);
 			sl.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(sl);
 
