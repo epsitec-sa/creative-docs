@@ -1,7 +1,8 @@
 using System;
 using NUnit.Framework;
+using Epsitec.Common.Widgets;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Tests
 {
 	[TestFixture]
 	public class WidgetTest
@@ -11,14 +12,7 @@ namespace Epsitec.Common.Widgets
 			try { System.Diagnostics.Debug.WriteLine (""); } catch { }
 		}
 		
-		[SetUp]
-		public void Initialise()
-		{
-		}
-		
-		[Test]
-		[Ignore ("Not implemented yet")]
-		public void CheckParentChildRelationship()
+		[Test] [Ignore ("Not implemented yet")] public void TestParentChildRelationship()
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
@@ -44,8 +38,7 @@ namespace Epsitec.Common.Widgets
 			Assertion.AssertSame (root.Children[0], widget);
 		}
 		
-		[Test]
-		public void CheckAnchor()
+		[Test] [Ignore ("Not implemented yet")] public void TestAnchor()
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
@@ -83,8 +76,8 @@ namespace Epsitec.Common.Widgets
 			//	TODO: ...tests additionnels...
 		}
 		
-		[Test]
-		public void CheckText()
+		
+		[Test] public void TestText()
 		{
 			Widget widget = new Widget ();
 			string text = "Hel&Lo";
@@ -95,8 +88,7 @@ namespace Epsitec.Common.Widgets
 			Assertion.Assert (widget.Text == "");
 		}
 		
-		[Test]
-		public void CheckPointMath()
+		[Test] public void TestPointMath()
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
@@ -197,5 +189,172 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		[Test] public void TestTransformToClient()
+		{
+			Widget root = new Widget ();
+			Widget widget = new Widget ();
+			
+			root.Location = new System.Drawing.PointF (0, 0);
+			root.Size     = new System.Drawing.SizeF (300, 200);
+			
+			widget.Location = new System.Drawing.PointF (30, 20);
+			widget.Size     = new System.Drawing.SizeF (50, 40);
+			
+			root.Children.Add (widget);
+			
+			Epsitec.Common.Grafix.Transform transform = new Epsitec.Common.Grafix.Transform ();
+			
+			float ox = 1.0f;
+			float oy = 2.0f;
+			
+			System.Drawing.PointF pt1 = new System.Drawing.PointF (widget.Left + ox, widget.Top + oy);
+			System.Drawing.PointF pt2;
+			System.Drawing.PointF pt3;
+			
+			transform.Reset ();
+			widget.SetClientAngle (0);
+			widget.MergeTransformToClient (transform);
+			
+			pt2 = widget.MapParentToClient (pt1);
+			pt3 = transform.TransformDirect (pt1);
+			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+			
+			transform.Reset ();
+			widget.SetClientZoom (3);
+			widget.SetClientAngle (90);
+			widget.MergeTransformToClient (transform);
+			
+			pt2 = widget.MapParentToClient (pt1);
+			pt3 = transform.TransformDirect (pt1);
+			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+			
+			transform.Reset ();
+			widget.SetClientAngle (180);
+			widget.MergeTransformToClient (transform);
+			
+			pt2 = widget.MapParentToClient (pt1);
+			pt3 = transform.TransformDirect (pt1);
+			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+			
+			transform.Reset ();
+			widget.SetClientAngle (270);
+			widget.MergeTransformToClient (transform);
+			
+			pt2 = widget.MapParentToClient (pt1);
+			pt3 = transform.TransformDirect (pt1);
+			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+		}
+		
+		[Test] public void TestTransformToParent()
+		{
+			Widget root = new Widget ();
+			Widget widget = new Widget ();
+			
+			root.Location = new System.Drawing.PointF (0, 0);
+			root.Size     = new System.Drawing.SizeF (300, 200);
+			
+			widget.Location = new System.Drawing.PointF (30, 20);
+			widget.Size     = new System.Drawing.SizeF (50, 40);
+			
+			root.Children.Add (widget);
+			
+			Epsitec.Common.Grafix.Transform transform = new Epsitec.Common.Grafix.Transform ();
+			
+			float ox = 1.0f;
+			float oy = 2.0f;
+			
+			System.Drawing.PointF pt1 = new System.Drawing.PointF (ox, oy);
+			System.Drawing.PointF pt2;
+			System.Drawing.PointF pt3;
+			
+			transform.Reset ();
+			widget.SetClientAngle (0);
+			widget.MergeTransformToParent (transform);
+			
+			pt2 = widget.MapClientToParent (pt1);
+			pt3 = transform.TransformDirect (pt1);
+			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+			
+			transform.Reset ();
+			widget.SetClientZoom (3);
+			widget.SetClientAngle (90);
+			widget.MergeTransformToParent (transform);
+			
+			pt2 = widget.MapClientToParent (pt1);
+			pt3 = transform.TransformDirect (pt1);
+			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+			
+			transform.Reset ();
+			widget.SetClientAngle (180);
+			widget.MergeTransformToParent (transform);
+			
+			pt2 = widget.MapClientToParent (pt1);
+			pt3 = transform.TransformDirect (pt1);
+			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+			
+			transform.Reset ();
+			widget.SetClientAngle (270);
+			widget.MergeTransformToParent (transform);
+			
+			pt2 = widget.MapClientToParent (pt1);
+			pt3 = transform.TransformDirect (pt1);
+			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+		}
+		
+		[Test] public void TestTransformParentClientIdentity()
+		{
+			Widget root = new Widget ();
+			Widget widget = new Widget ();
+			
+			root.Location = new System.Drawing.PointF (0, 0);
+			root.Size     = new System.Drawing.SizeF (300, 200);
+			
+			widget.Location = new System.Drawing.PointF (30, 20);
+			widget.Size     = new System.Drawing.SizeF (50, 40);
+			
+			root.Children.Add (widget);
+			
+			Epsitec.Common.Grafix.Transform identity  = new Epsitec.Common.Grafix.Transform ();
+			Epsitec.Common.Grafix.Transform transform = new Epsitec.Common.Grafix.Transform ();
+			
+			widget.SetClientZoom (3);
+			widget.SetClientAngle (90);
+			
+			transform.Reset ();
+			widget.MergeTransformToClient (transform);
+			widget.MergeTransformToParent (transform);
+			
+			Assertion.Assert (identity.Equals (transform));
+			
+			transform.Reset ();
+			widget.MergeTransformToParent (transform);
+			widget.MergeTransformToClient (transform);
+			
+			Assertion.Assert (identity.Equals (transform));
+		}
+		
+		[Test] public void TestTransformHierarchy()
+		{
+			Widget root = new Widget ();
+			Widget widget = new Widget ();
+			
+			root.Location = new System.Drawing.PointF (100, 150);
+			root.Size     = new System.Drawing.SizeF (300, 200);
+			
+			widget.Location = new System.Drawing.PointF (30, 20);
+			widget.Size     = new System.Drawing.SizeF (50, 40);
+			widget.Parent   = root;
+			
+			widget.SetClientZoom (3);
+			widget.SetClientAngle (90);
+			
+			Epsitec.Common.Grafix.Transform t1 = widget.GetRootToClientTransform ();
+			Epsitec.Common.Grafix.Transform t2 = widget.GetClientToRootTransform ();
+			
+			System.Console.Out.WriteLine ("root -> client : " + t1.ToString ());
+			System.Console.Out.WriteLine ("client -> root : " + t2.ToString ());
+			
+			Assertion.Assert (Epsitec.Common.Grafix.Transform.Multiply (t1, t2).Equals (new Epsitec.Common.Grafix.Transform ()));
+		}
 	}
 }

@@ -448,6 +448,87 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public virtual Epsitec.Common.Grafix.Transform GetRootToClientTransform()
+		{
+			Widget iter = this;
+			
+			Epsitec.Common.Grafix.Transform full_transform  = new Epsitec.Common.Grafix.Transform ();
+			Epsitec.Common.Grafix.Transform local_transform = new Epsitec.Common.Grafix.Transform ();
+			
+			while (iter != null)
+			{
+				local_transform.Reset ();
+				iter.MergeTransformToClient (local_transform);
+				
+				//	Les transformations de la racine au client doivent s'appliquer en commençant par
+				//	la racine. Comme nous remontons la hiérarchie des widgets en sens inverse, il nous
+				//	suffit d'utiliser la multiplication post-fixe pour arriver au même résultat :
+				//
+				//	 T = Tn * ... * T2 * T1 * T0, P' = T * P
+				//
+				//	avec Ti la transformation pour le widget 'i', où i=0 correspond à la racine,
+				//	P le point en coordonnées racine et P' le point en coordonnées client.
+				
+				full_transform.MultiplyByPostfix (local_transform);
+				iter = iter.Parent;
+			}
+			
+			return full_transform;
+		}
+		
+		public virtual Epsitec.Common.Grafix.Transform GetClientToRootTransform()
+		{
+			Widget iter = this;
+			
+			Epsitec.Common.Grafix.Transform full_transform  = new Epsitec.Common.Grafix.Transform ();
+			Epsitec.Common.Grafix.Transform local_transform = new Epsitec.Common.Grafix.Transform ();
+			
+			while (iter != null)
+			{
+				local_transform.Reset ();
+				iter.MergeTransformToParent (local_transform);
+				
+				//	Les transformations du client à la racine doivent s'appliquer en commençant par
+				//	le client. Comme nous remontons la hiérarchie des widgets dans ce sens là, il nous
+				//	suffit d'utiliser la multiplication normale pour arriver à ce résultat :
+				//
+				//	 T = T0 * T1 * T2 * ... * Tn, P' = T * P
+				//
+				//	avec Ti la transformation pour le widget 'i', où i=0 correspond à la racine.
+				//	P le point en coordonnées client et P' le point en coordonnées racine.
+				
+				full_transform.MultiplyBy (local_transform);
+				iter = iter.Parent;
+			}
+			
+			return full_transform;
+		}
+		
+		
+		public virtual void MergeTransformToClient(Epsitec.Common.Grafix.Transform t)
+		{
+			float scale = 1 / this.client_info.zoom;
+			
+			t.Translate (- this.x1, - this.y1);
+			t.Translate (- this.Width / 2, - this.Height / 2);
+			t.Rotate (this.client_info.angle);
+			t.Scale (scale);
+			t.Translate (this.client_info.width / 2, this.client_info.height / 2);
+			t.Round ();
+		}
+		
+		public virtual void MergeTransformToParent(Epsitec.Common.Grafix.Transform t)
+		{
+			float scale = this.client_info.zoom;
+			
+			t.Translate (- this.client_info.width / 2, - this.client_info.height / 2);
+			t.Scale (scale);
+			t.Rotate (- this.client_info.angle);
+			t.Translate (this.Width / 2, this.Height / 2);
+			t.Translate (this.x1, this.y1);
+			t.Round ();
+		}
+		
 		
 		protected virtual void SetBounds(float x1, float y1, float x2, float y2)
 		{
