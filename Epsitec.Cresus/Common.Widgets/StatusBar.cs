@@ -92,7 +92,8 @@ namespace Epsitec.Common.Widgets
 		public void NotifyInsertion(Widget widget)
 		{
 			widget.Dock = DockStyle.Left;
-			widget.SetEmbedder (this);
+			widget.AutoFocus = false;
+			widget.SetEmbedder(this);
 		}
 
 		public void NotifyRemoval(Widget widget)
