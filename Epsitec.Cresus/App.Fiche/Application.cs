@@ -13,7 +13,9 @@ namespace Epsitec.Fiche
 			ResourceBundle bundle = Resources.GetBundle ("file:MainWindow");
 			ObjectBundler bundler = new ObjectBundler ();
 			
-			this.main_window = bundler.CreateFromBundle (bundle) as Window;
+			WindowRoot root = bundler.CreateFromBundle (bundle) as WindowRoot;
+			
+			this.main_window = root.Window;
 			this.main_window.PreventAutoClose = true;
 			
 			this.RegisterCommands ();
@@ -23,11 +25,11 @@ namespace Epsitec.Fiche
 		{
 			CommandDispatcher cd = this.main_window.CommandDispatcher;
 			
-			cd.Register ("MainMenu.Quit", new CommandEventHandler (this.CommandQuit));
+			cd.RegisterController (this);
 		}
 		
 		#region Application Commands
-		private void CommandQuit(CommandDispatcher sender, CommandEventArgs e)
+		[Command ("Quit")] void CommandQuit()
 		{
 			this.main_window.Quit ();
 		}
