@@ -533,8 +533,6 @@ namespace Epsitec.Cresus.Database
 		
 		public SqlField CreateSqlField(ITypeConverter type_converter, int value)
 		{
-			//	TODO: implémenter pour de vrai
-			//	DD:	c'est à dire ??
 			SqlField field = SqlField.CreateConstant (value, DbRawType.Int32);
 			field.Alias = this.Name;
 			return field;
@@ -542,8 +540,6 @@ namespace Epsitec.Cresus.Database
 		
 		public SqlField CreateSqlField(ITypeConverter type_converter, long value)
 		{
-			//	TODO: implémenter pour de vrai
-			//	DD:	c'est à dire ??
 			SqlField field = SqlField.CreateConstant (value, DbRawType.Int64);
 			field.Alias = this.Name;
 			return field;
@@ -551,9 +547,14 @@ namespace Epsitec.Cresus.Database
 		
 		public SqlField CreateSqlField(ITypeConverter type_converter, string value)
 		{
-			//	TODO: implémenter pour de vrai
-			//	DD:	c'est à dire ??
 			SqlField field = SqlField.CreateConstant (value, DbRawType.String);
+			field.Alias = this.Name;
+			return field;
+		}
+		
+		public SqlField CreateSqlField(ITypeConverter type_converter, System.DateTime value)
+		{
+			SqlField field = SqlField.CreateConstant (value, DbRawType.DateTime);
 			field.Alias = this.Name;
 			return field;
 		}

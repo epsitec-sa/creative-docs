@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Database
 			public Entry(long log_id, int client_id)
 			{
 				this.id = DbId.CreateID (log_id, client_id);
-				this.date_time = 0;
+				this.date_time = System.DateTime.UtcNow;
 			}
 			
 			
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			public long							DateTime
+			public System.DateTime				DateTime
 			{
 				get
 				{
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Database
 			
 			
 			private DbId						id;
-			private long						date_time;
+			private System.DateTime				date_time;
 		}
 		
 		private DbInfrastructure				infrastructure;

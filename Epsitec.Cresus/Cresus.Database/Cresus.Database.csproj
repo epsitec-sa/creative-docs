@@ -284,6 +284,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DbTypeDateTime.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DbTypeEnum.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

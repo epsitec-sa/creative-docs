@@ -48,6 +48,7 @@ namespace Epsitec.Cresus.Database
 				case "num":		type = new DbTypeNum ();		break;
 				case "str":		type = new DbTypeString ();		break;
 				case "bin":		type = new DbTypeByteArray ();	break;
+				case "d_t":		type = new DbTypeDateTime ();	break;
 				
 				default:
 					throw new System.FormatException (string.Format ("Unsupported value for <type class='{0}'>.", type_class));
@@ -95,6 +96,10 @@ namespace Epsitec.Cresus.Database
 				{
 					class_name = "bin";
 				}
+				else if (type_type == DbTypeFactory.type_d_t)
+				{
+					class_name = "d_t";
+				}
 				else
 				{
 					throw new System.ArgumentException (string.Format ("Unsupported type specified: {0}.", type_type.Name));
@@ -127,5 +132,6 @@ namespace Epsitec.Cresus.Database
 		static readonly System.Type		type_num  = typeof (DbTypeNum);
 		static readonly System.Type		type_str  = typeof (DbTypeString);
 		static readonly System.Type		type_bin  = typeof (DbTypeByteArray);
+		static readonly System.Type		type_d_t  = typeof (DbTypeDateTime);
 	}
 }
