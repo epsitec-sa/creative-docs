@@ -34,6 +34,22 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals (new Widgets.Button ().Height, button.Height);
 		}
 		
+		[Test] public void CheckFillBundleFromObject()
+		{
+			ResourceBundle bundle = Resources.GetBundle ("file:button.cancel");
+			ObjectBundler bundler = new ObjectBundler ();
+			
+			Assertion.AssertNotNull (bundle);
+			
+			object         obj    = bundler.CreateFromBundle (bundle);
+			Widgets.Button button = obj as Widgets.Button;
+			
+			bundle = ResourceBundle.Create ("button.cancel");
+			bundler.FillBundleFromObject (bundle, button);
+			
+			bundle.CreateXmlDocument (false).Save (System.Console.Out);
+		}
+		
 		[Test] public void CheckFindPropertyInfo()
 		{
 			ObjectBundler bundler = new ObjectBundler ();
