@@ -12,6 +12,7 @@ namespace Epsitec.Common.Text.Driver
 		{
 			Tests.CheckInternalCursor.RunTests ();
 			Tests.CheckInternalCursorTable.RunTests ();
+			Tests.CheckInternalCursorIdArray.RunTests ();
 			
 //			Tests.CheckInternalCursor.OptimizerTest ();
 //			System.Diagnostics.Debugger.Break ();
