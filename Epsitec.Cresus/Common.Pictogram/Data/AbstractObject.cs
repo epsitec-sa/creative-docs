@@ -859,6 +859,24 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Teste si l'objet est rectangulaire.
+		protected static bool IsRectangular(Drawing.Point p0, Drawing.Point p1, Drawing.Point p2, Drawing.Point p3)
+		{
+			if ( !AbstractObject.IsRight(p3, p0, p2) )  return false;
+			if ( !AbstractObject.IsRight(p0, p2, p1) )  return false;
+			if ( !AbstractObject.IsRight(p2, p1, p3) )  return false;
+			if ( !AbstractObject.IsRight(p1, p3, p0) )  return false;
+			return true;
+		}
+
+		// Teste si 3 points forment un angle droit.
+		protected static bool IsRight(Drawing.Point p1, Drawing.Point p2, Drawing.Point p3)
+		{
+			Drawing.Point p = Drawing.Point.Projection(p1, p2, p3);
+			return Drawing.Point.Distance(p, p2) < 0.00001;
+		}
+
+
 		protected bool							isHilite;
 		protected double						scaleX;
 		protected double						scaleY;

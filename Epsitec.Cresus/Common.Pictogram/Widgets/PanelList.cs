@@ -16,6 +16,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			this.list = new ScrollList(this);
 			this.list.SelectedIndexChanged += new EventHandler(this.ListChanged);
+			this.list.TabIndex = 1;
+			this.list.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 		}
 		
 		public PanelList(Widget embedder) : this()

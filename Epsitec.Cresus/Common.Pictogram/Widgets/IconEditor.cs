@@ -515,6 +515,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			System.Collections.ArrayList list = this.drawer.PropertiesList();
 			double posy = this.panel.Height;
 			Widget originColorLastPanel = null;
+			int index = 0;
 			foreach ( AbstractProperty property in list )
 			{
 				AbstractPanel panel = property.CreatePanel();
@@ -532,6 +533,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 				panel.Changed += new EventHandler(this.HandlePanelChanged);
 				panel.ExtendedChanged += new EventHandler(this.HandleExtendedChanged);
 				panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
+				panel.TabIndex = index++;
+				panel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 				panel.Parent = this.panel;
 
 				if ( panel.PropertyType == this.originColorType )
@@ -554,6 +557,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.colorSelector.Bounds = rect;
 			this.colorSelector.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
 			this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
+			this.colorSelector.TabIndex = index++;
+			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			this.colorSelector.Parent = this.panel;
 
 			this.HandleOriginColorChanged(originColorLastPanel, true);

@@ -17,24 +17,32 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldColor = new ColorSample(this);
 			this.fieldColor.PossibleOrigin = true;
 			this.fieldColor.Clicked += new MessageEventHandler(this.FieldColorClicked);
+			this.fieldColor.TabIndex = 1;
+			this.fieldColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldRadius = new TextFieldSlider(this);
 			this.fieldRadius.MinRange =  0;
 			this.fieldRadius.MaxRange = 10;
 			this.fieldRadius.Step = 1;
 			this.fieldRadius.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldRadius.TabIndex = 2;
+			this.fieldRadius.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldOx = new TextFieldSlider(this);
 			this.fieldOx.MinRange = -10;
 			this.fieldOx.MaxRange =  10;
 			this.fieldOx.Step = 1;
 			this.fieldOx.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldOx.TabIndex = 3;
+			this.fieldOx.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldOy = new TextFieldSlider(this);
 			this.fieldOy.MinRange = -10;
 			this.fieldOy.MaxRange =  10;
 			this.fieldOy.Step = 1;
 			this.fieldOy.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldOy.TabIndex = 4;
+			this.fieldOy.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.labelRadius = new StaticText(this);
 			this.labelRadius.Text = "R";

@@ -53,18 +53,18 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.RenderSolid(this.colorWindow);
 		}
 
-		// Dessine une flèche (dans un bouton d'ascenseur par exemple).
-		public void PaintArrow(Drawing.Graphics graphics,
+		// Dessine une icône simple (dans un bouton d'ascenseur par exemple).
+		public void PaintGlyph(Drawing.Graphics graphics,
 							   Drawing.Rectangle rect,
 							   Widgets.WidgetState state,
-							   Widgets.Direction dir,
+							   GlyphType type,
 							   PaintTextStyle style)
 		{
 			Drawing.Point center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
 			Drawing.Path path = new Drawing.Path();
-			switch ( dir )
+			switch ( type )
 			{
-				case Direction.Up:
+				case GlyphType.ArrowUp:
 					path.MoveTo(center.X+0.0*rect.Width, center.Y+0.2*rect.Height);
 					path.LineTo(center.X-0.3*rect.Width, center.Y-0.1*rect.Height);
 					path.LineTo(center.X-0.2*rect.Width, center.Y-0.2*rect.Height);
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+0.3*rect.Width, center.Y-0.1*rect.Height);
 					break;
 
-				case Direction.Down:
+				case GlyphType.ArrowDown:
 					path.MoveTo(center.X+0.0*rect.Width, center.Y-0.2*rect.Height);
 					path.LineTo(center.X-0.3*rect.Width, center.Y+0.1*rect.Height);
 					path.LineTo(center.X-0.2*rect.Width, center.Y+0.2*rect.Height);
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+0.3*rect.Width, center.Y+0.1*rect.Height);
 					break;
 
-				case Direction.Right:
+				case GlyphType.ArrowRight:
 					path.MoveTo(center.X+0.2*rect.Width, center.Y+0.0*rect.Height);
 					path.LineTo(center.X-0.1*rect.Width, center.Y-0.3*rect.Height);
 					path.LineTo(center.X-0.2*rect.Width, center.Y-0.2*rect.Height);
@@ -91,13 +91,34 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X-0.1*rect.Width, center.Y+0.3*rect.Height);
 					break;
 
-				case Direction.Left:
+				case GlyphType.ArrowLeft:
 					path.MoveTo(center.X-0.2*rect.Width, center.Y+0.0*rect.Height);
 					path.LineTo(center.X+0.1*rect.Width, center.Y-0.3*rect.Height);
 					path.LineTo(center.X+0.2*rect.Width, center.Y-0.2*rect.Height);
 					path.LineTo(center.X-0.0*rect.Width, center.Y+0.0*rect.Height);
 					path.LineTo(center.X+0.2*rect.Width, center.Y+0.2*rect.Height);
 					path.LineTo(center.X+0.1*rect.Width, center.Y+0.3*rect.Height);
+					break;
+
+				case GlyphType.Menu:
+					path.MoveTo(center.X+rect.Width*0.00, center.Y-rect.Height*0.25);
+					path.LineTo(center.X-rect.Width*0.30, center.Y+rect.Height*0.15);
+					path.LineTo(center.X+rect.Width*0.30, center.Y+rect.Height*0.15);
+					break;
+
+				case GlyphType.Close:
+					path.MoveTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.30);
+					path.LineTo(center.X-rect.Width*0.30, center.Y-rect.Height*0.20);
+					path.LineTo(center.X-rect.Width*0.10, center.Y+rect.Height*0.00);
+					path.LineTo(center.X-rect.Width*0.30, center.Y+rect.Height*0.20);
+					path.LineTo(center.X-rect.Width*0.20, center.Y+rect.Height*0.30);
+					path.LineTo(center.X-rect.Width*0.00, center.Y+rect.Height*0.10);
+					path.LineTo(center.X+rect.Width*0.20, center.Y+rect.Height*0.30);
+					path.LineTo(center.X+rect.Width*0.30, center.Y+rect.Height*0.20);
+					path.LineTo(center.X+rect.Width*0.10, center.Y+rect.Height*0.00);
+					path.LineTo(center.X+rect.Width*0.30, center.Y-rect.Height*0.20);
+					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.30);
+					path.LineTo(center.X+rect.Width*0.00, center.Y-rect.Height*0.10);
 					break;
 			}
 			path.Close();
@@ -229,9 +250,11 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Widgets.Direction dir,
 										  Widgets.ButtonStyle style)
 		{
-			Drawing.Rectangle rInside;
-			rInside = rect;
-			rInside.Inflate(-1, -1);
+			Drawing.Rectangle rFocus = rect;
+			rFocus.Deflate(3.5, 3.5);
+
+			Drawing.Rectangle rInside = rect;
+			rInside.Deflate(1, 1);
 
 			if ( style == ButtonStyle.Normal        ||
 				 style == ButtonStyle.DefaultActive )
@@ -296,6 +319,8 @@ namespace Epsitec.Common.Widgets.Adorner
 				rect.Inflate(-0.5, -0.5);
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(this.colorBorder);
+
+				if ( style == ButtonStyle.Icon )  rFocus.Inflate(1.0, 1.0);
 			}
 			else if ( style == ButtonStyle.ToolItem )
 			{
@@ -323,6 +348,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.AddRectangle(rect);
 					graphics.RenderSolid(this.colorBorder);
 				}
+				rFocus.Inflate(3.0, 3.0);
 			}
 			else if ( style == ButtonStyle.ListItem )
 			{
@@ -335,8 +361,6 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			if ( (state&WidgetState.Focused) != 0 )
 			{
-				Drawing.Rectangle rFocus = rect;
-				rFocus.Deflate(3.5, 3.5);
 				this.PaintFocusBox(graphics, rFocus);
 			}
 		}
@@ -1065,7 +1089,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.Rasterizer.AddOutline(path, 1);
 			graphics.RenderSolid(this.colorBorder);
 
-			this.PaintArrow(graphics, rect, state, Direction.Down, PaintTextStyle.Button);
+			this.PaintGlyph(graphics, rect, state, GlyphType.Menu, PaintTextStyle.Button);
 		}
 
 		public void PaintTagForeground(Drawing.Graphics graphics,

@@ -19,12 +19,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.field.MaxRange = 5;
 			this.field.Step = 0.5;
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.field.TabIndex = 1;
+			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.buttons = new IconButton[6];
 			for ( int i=0 ; i<6 ; i++ )
 			{
 				this.buttons[i] = new IconButton(this);
 				this.buttons[i].Clicked += new MessageEventHandler(this.PanelLineClicked);
+				this.buttons[i].TabIndex = 2+i;
+				this.buttons[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
 			this.buttons[0].IconName = @"file:images/capround1.icon";
@@ -90,6 +94,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( p.Join == Drawing.JoinStyle.Miter )  sel = 1;
 			if ( p.Join == Drawing.JoinStyle.Bevel )  sel = 2;
 			this.SelectButtonJoin = sel;
+
+			this.EnableWidgets();
 		}
 
 		// Widget -> propriété.
@@ -153,6 +159,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
+
+		// Grise les widgets nécessaires.
+		protected void EnableWidgets()
+		{
+			for ( int i=0 ; i<6 ; i++ )
+			{
+				this.buttons[i].SetEnabled(this.extendedSize);
+			}
+		}
 
 		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()

@@ -13,8 +13,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.extendedButton = new ArrowButton(this);
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
-			this.extendedButton.Direction = Direction.Down;
+			this.extendedButton.GlyphType = GlyphType.ArrowDown;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
+			this.extendedButton.TabIndex = 0;
+			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.colorBlack = Drawing.Color.FromName("WindowFrame");
 		}
@@ -77,7 +79,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.backgroundIntensity = property.BackgroundIntensity;
 			this.extendedSize        = property.ExtendedSize;
 
-			this.extendedButton.Direction = this.extendedSize ? Direction.Up : Direction.Down;
+			this.extendedButton.GlyphType = this.extendedSize ? GlyphType.ArrowUp : GlyphType.ArrowDown;
 		}
 
 		// Widget -> propriété.

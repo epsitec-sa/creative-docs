@@ -42,11 +42,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.RenderSolid(this.colorWindow);
 		}
 
-		// Dessine une flèche (dans un bouton d'ascenseur par exemple).
-		public void PaintArrow(Drawing.Graphics graphics,
+		// Dessine une icône simple (dans un bouton d'ascenseur par exemple).
+		public void PaintGlyph(Drawing.Graphics graphics,
 							   Drawing.Rectangle rect,
 							   Widgets.WidgetState state,
-							   Widgets.Direction dir,
+							   GlyphType type,
 							   PaintTextStyle style)
 		{
 			double zoom = 1.0;
@@ -59,30 +59,51 @@ namespace Epsitec.Common.Widgets.Adorner
 			double spikeShift = 0.20*zoom;
 			double baseShiftH = 0.25*zoom;
 			double baseShiftV = 0.15*zoom;
-			switch ( dir )
+			switch ( type )
 			{
-				case Direction.Up:
+				case GlyphType.ArrowUp:
 					path.MoveTo(center.X, center.Y+rect.Height*spikeShift);
 					path.LineTo(center.X-rect.Width*baseShiftH, center.Y-rect.Height*baseShiftV);
 					path.LineTo(center.X+rect.Width*baseShiftH, center.Y-rect.Height*baseShiftV);
 					break;
 
-				case Direction.Down:
+				case GlyphType.ArrowDown:
 					path.MoveTo(center.X, center.Y-rect.Height*spikeShift);
 					path.LineTo(center.X-rect.Width*baseShiftH, center.Y+rect.Height*baseShiftV);
 					path.LineTo(center.X+rect.Width*baseShiftH, center.Y+rect.Height*baseShiftV);
 					break;
 
-				case Direction.Right:
+				case GlyphType.ArrowRight:
 					path.MoveTo(center.X+rect.Width*spikeShift, center.Y);
 					path.LineTo(center.X-rect.Width*baseShiftV, center.Y+rect.Height*baseShiftH);
 					path.LineTo(center.X-rect.Width*baseShiftV, center.Y-rect.Height*baseShiftH);
 					break;
 
-				case Direction.Left:
+				case GlyphType.ArrowLeft:
 					path.MoveTo(center.X-rect.Width*spikeShift, center.Y);
 					path.LineTo(center.X+rect.Width*baseShiftV, center.Y+rect.Height*baseShiftH);
 					path.LineTo(center.X+rect.Width*baseShiftV, center.Y-rect.Height*baseShiftH);
+					break;
+
+				case GlyphType.Menu:
+					path.MoveTo(center.X+rect.Width*0.00*zoom, center.Y-rect.Height*0.25*zoom);
+					path.LineTo(center.X-rect.Width*0.30*zoom, center.Y+rect.Height*0.15*zoom);
+					path.LineTo(center.X+rect.Width*0.30*zoom, center.Y+rect.Height*0.15*zoom);
+					break;
+
+				case GlyphType.Close:
+					path.MoveTo(center.X-rect.Width*0.20*zoom, center.Y-rect.Height*0.30*zoom);
+					path.LineTo(center.X-rect.Width*0.30*zoom, center.Y-rect.Height*0.20*zoom);
+					path.LineTo(center.X-rect.Width*0.10*zoom, center.Y+rect.Height*0.00*zoom);
+					path.LineTo(center.X-rect.Width*0.30*zoom, center.Y+rect.Height*0.20*zoom);
+					path.LineTo(center.X-rect.Width*0.20*zoom, center.Y+rect.Height*0.30*zoom);
+					path.LineTo(center.X-rect.Width*0.00*zoom, center.Y+rect.Height*0.10*zoom);
+					path.LineTo(center.X+rect.Width*0.20*zoom, center.Y+rect.Height*0.30*zoom);
+					path.LineTo(center.X+rect.Width*0.30*zoom, center.Y+rect.Height*0.20*zoom);
+					path.LineTo(center.X+rect.Width*0.10*zoom, center.Y+rect.Height*0.00*zoom);
+					path.LineTo(center.X+rect.Width*0.30*zoom, center.Y-rect.Height*0.20*zoom);
+					path.LineTo(center.X+rect.Width*0.20*zoom, center.Y-rect.Height*0.30*zoom);
+					path.LineTo(center.X+rect.Width*0.00*zoom, center.Y-rect.Height*0.10*zoom);
 					break;
 			}
 			path.Close();
@@ -191,6 +212,10 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Widgets.Direction dir,
 										  Widgets.ButtonStyle style)
 		{
+			Drawing.Rectangle rFocus = rect;
+			rFocus.Deflate(1.0, 1.0);
+			double radFocus = 0;
+
 			if ( style == ButtonStyle.Normal        ||
 				 style == ButtonStyle.DefaultActive )
 			{
@@ -239,6 +264,8 @@ namespace Epsitec.Common.Widgets.Adorner
 				{
 					graphics.RenderSolid(this.colorBackDisabled);
 				}
+				rFocus.Inflate(1, 1);
+				radFocus = -1;
 			}
 			else if ( style == ButtonStyle.ToolItem )
 			{
@@ -251,8 +278,9 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.AddFilledRectangle(rect);
 					graphics.RenderSolid(this.colorCaption);
 				}
-
-				state &= ~WidgetState.Focused;
+				rFocus.Inflate(1, 1);
+				rFocus.Right ++;
+				radFocus = -1;
 			}
 			else if ( style == ButtonStyle.ListItem )
 			{
@@ -270,9 +298,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			
 			if ( (state&WidgetState.Focused) != 0 )
 			{
-				Drawing.Rectangle rInside = rect;
-				rInside.Inflate(-1.5, -1.5);
-				Drawing.Path pInside = this.PathRoundRectangle(rInside, 0);
+				Drawing.Path pInside = this.PathRoundRectangle(rFocus, radFocus);
 				graphics.Rasterizer.AddOutline(pInside, 2);
 				graphics.RenderSolid(this.colorControlDark);
 			}
@@ -893,7 +919,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.RenderSolid(color);
 			}
 
-			this.PaintArrow(graphics, rect, state, Direction.Down, PaintTextStyle.Button);
+			this.PaintGlyph(graphics, rect, state, GlyphType.Menu, PaintTextStyle.Button);
 		}
 
 		public void PaintTagForeground(Drawing.Graphics graphics,

@@ -16,6 +16,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			this.field = new TextField(this);
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.field.TabIndex = 1;
+			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 		}
 		
 		public PanelString(Widget embedder) : this()

@@ -18,8 +18,8 @@ namespace Epsitec.Common.Widgets
 
 			this.arrowUp = new ArrowButton(this);
 			this.arrowDown = new ArrowButton(this);
-			this.arrowUp.Direction = Direction.Up;
-			this.arrowDown.Direction = Direction.Down;
+			this.arrowUp.GlyphType = GlyphType.ArrowUp;
+			this.arrowDown.GlyphType = GlyphType.ArrowDown;
 			this.arrowUp.ButtonStyle = ButtonStyle.Scroller;
 			this.arrowDown.ButtonStyle = ButtonStyle.Scroller;
 			this.arrowUp.Engaged += new Support.EventHandler(this.HandleButton);
@@ -244,13 +244,13 @@ namespace Epsitec.Common.Widgets
 				{
 					Drawing.Rectangle aRect = new Drawing.Rectangle(0, rect.Height-rect.Width, rect.Width, rect.Width);
 					this.arrowUp.Bounds = aRect;
-					this.arrowUp.Direction = Direction.Up;
+					this.arrowUp.GlyphType = GlyphType.ArrowUp;
 				}
 				else
 				{
 					Drawing.Rectangle aRect = new Drawing.Rectangle(rect.Width-rect.Height, 0, rect.Height, rect.Height);
 					this.arrowUp.Bounds = aRect;
-					this.arrowUp.Direction = Direction.Right;
+					this.arrowUp.GlyphType = GlyphType.ArrowRight;
 				}
 			}
 			if ( this.arrowDown != null )
@@ -259,13 +259,13 @@ namespace Epsitec.Common.Widgets
 				{
 					Drawing.Rectangle aRect = new Drawing.Rectangle(0, 0, rect.Width, rect.Width);
 					this.arrowDown.Bounds = aRect;
-					this.arrowDown.Direction = Direction.Down;
+					this.arrowDown.GlyphType = GlyphType.ArrowDown;
 				}
 				else
 				{
 					Drawing.Rectangle aRect = new Drawing.Rectangle(0, 0, rect.Height, rect.Height);
 					this.arrowDown.Bounds = aRect;
-					this.arrowDown.Direction = Direction.Left;
+					this.arrowDown.GlyphType = GlyphType.ArrowLeft;
 				}
 			}
 		}

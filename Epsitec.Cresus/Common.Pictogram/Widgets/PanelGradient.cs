@@ -21,6 +21,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.listFill.Items.Add("Diamant");
 			this.listFill.Items.Add("Conique");
 			this.listFill.SelectedIndexChanged += new EventHandler(this.ListChanged);
+			this.listFill.TabIndex = 1;
+			this.listFill.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.sample = new GradientSample(this);
 			this.sample.Clicked += new MessageEventHandler(this.SampleClicked);
@@ -28,28 +30,38 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldColor1 = new ColorSample(this);
 			this.fieldColor1.PossibleOrigin = true;
 			this.fieldColor1.Clicked += new MessageEventHandler(this.FieldColorClicked);
+			this.fieldColor1.TabIndex = 2;
+			this.fieldColor1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldColor2 = new ColorSample(this);
 			this.fieldColor2.PossibleOrigin = true;
 			this.fieldColor2.Clicked += new MessageEventHandler(this.FieldColorClicked);
+			this.fieldColor2.TabIndex = 3;
+			this.fieldColor2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldRepeat = new TextFieldSlider(this);
 			this.fieldRepeat.MinRange = 1;
 			this.fieldRepeat.MaxRange = 8;
 			this.fieldRepeat.Step = 1;
 			this.fieldRepeat.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldRepeat.TabIndex = 4;
+			this.fieldRepeat.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldMiddle = new TextFieldSlider(this);
 			this.fieldMiddle.MinRange = -100;
 			this.fieldMiddle.MaxRange =  100;
 			this.fieldMiddle.Step = 10;
 			this.fieldMiddle.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldMiddle.TabIndex = 5;
+			this.fieldMiddle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldSmooth = new TextFieldSlider(this);
 			this.fieldSmooth.MinRange =  0;
 			this.fieldSmooth.MaxRange = 10;
 			this.fieldSmooth.Step = 1;
 			this.fieldSmooth.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldSmooth.TabIndex = 6;
+			this.fieldSmooth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.labelRepeat = new StaticText(this);
 			this.labelRepeat.Text = "n";
@@ -190,8 +202,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			if ( sel == 1 || sel == 2 || sel == 3 || sel == 4 )
 			{
-				this.fieldRepeat.SetEnabled(true);
-				this.fieldMiddle.SetEnabled(true);
+				this.fieldRepeat.SetEnabled(this.extendedSize);
+				this.fieldMiddle.SetEnabled(this.extendedSize);
 			}
 			else
 			{
@@ -199,7 +211,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.fieldMiddle.SetEnabled(false);
 			}
 
-			this.fieldSmooth.SetEnabled(true);
+			this.fieldSmooth.SetEnabled(this.extendedSize);
 		}
 
 

@@ -19,16 +19,22 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldNbFaces.MaxRange = 24;
 			this.fieldNbFaces.Step = 1;
 			this.fieldNbFaces.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldNbFaces.TabIndex = 1;
+			this.fieldNbFaces.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.checkStar = new CheckButton(this);
 			this.checkStar.Text = "Etoile";
 			this.checkStar.ActiveStateChanged += new EventHandler(this.HandleCheckChanged);
+			this.checkStar.TabIndex = 2;
+			this.checkStar.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldDeep = new TextFieldSlider(this);
 			this.fieldDeep.MinRange = 0;
 			this.fieldDeep.MaxRange = 100;
 			this.fieldDeep.Step = 5;
 			this.fieldDeep.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldDeep.TabIndex = 3;
+			this.fieldDeep.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.labelDeep = new StaticText(this);
 			this.labelDeep.Text = "Renfoncement";
@@ -96,8 +102,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			this.checkStar.SetEnabled(this.extendedSize);
+
 			bool star = ( this.checkStar.ActiveState == WidgetState.ActiveYes );
-			this.fieldDeep.SetEnabled(star);
+			this.fieldDeep.SetEnabled(this.extendedSize && star);
 		}
 
 		// Met à jour la géométrie.

@@ -95,11 +95,17 @@ namespace Epsitec.Common.Pictogram.Data
 
 			iconContext.ConstrainSnapPos(ref pos);
 
-			if ( rank < 2 )
+			if ( rank == 0 )  // centre ?
 			{
-				this.Handle(rank).Position = pos;
+				Drawing.Point move = pos-this.Handle(rank).Position;
+				this.Handle(0).Position = pos;
+				this.Handle(1).Position += move;
 			}
-			else
+			else if ( rank == 1 )  // extrémité ?
+			{
+				this.Handle(1).Position = pos;
+			}
+			else if ( rank == 2 )  // renfoncement de l'étoile ?
 			{
 				double d1 = Drawing.Point.Distance(this.Handle(1).Position, this.Handle(0).Position);
 				double d2 = Drawing.Point.Distance(this.Handle(1).Position, pos);
@@ -142,6 +148,7 @@ namespace Epsitec.Common.Pictogram.Data
 			iconContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
 			iconContext.ConstrainDelStarting();
+			this.UpdateRegularHandle();
 		}
 
 		// Indique si l'objet doit exister. Retourne false si l'objet ne peut

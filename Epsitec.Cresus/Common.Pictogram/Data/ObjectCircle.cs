@@ -68,6 +68,31 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Déplace une poignée.
+		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
+		{
+			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
+			{
+				base.MoveHandleProcess(rank, pos, iconContext);
+				return;
+			}
+
+			iconContext.ConstrainSnapPos(ref pos);
+
+			if ( rank == 0 )  // centre ?
+			{
+				Drawing.Point move = pos-this.Handle(rank).Position;
+				this.Handle(0).Position = pos;
+				this.Handle(1).Position += move;
+			}
+			else if ( rank == 1 )  // extrémité ?
+			{
+				this.Handle(1).Position = pos;
+			}
+			this.dirtyBbox = true;
+		}
+
+
 		// Début de la création d'un objet.
 		public override void CreateMouseDown(Drawing.Point pos, IconContext iconContext)
 		{

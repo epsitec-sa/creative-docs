@@ -17,6 +17,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.field = new ColorSample(this);
 			this.field.PossibleOrigin = true;
 			this.field.Clicked += new MessageEventHandler(this.FieldClicked);
+			this.field.TabIndex = 1;
+			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 		}
 		
 		public PanelColor(Widget embedder) : this()

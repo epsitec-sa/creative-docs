@@ -445,6 +445,8 @@ namespace Epsitec.Common.Widgets
 			tab.Location = new Point(280, 70);
 			tab.Size = new Size(300, 180);
 			tab.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			tab.HasMenuButton = true;
+			tab.HasCloseButton = true;
 			tab.TabIndex = 15;
 			tab.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren;
 			window.Root.Children.Add(tab);

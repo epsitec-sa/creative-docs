@@ -84,7 +84,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( rank < 4 )
 			{
-				if ( ObjectRectangle.IsRectangular(this.Handle(0).Position, this.Handle(1).Position, this.Handle(2).Position, this.Handle(3).Position) )
+				if ( AbstractObject.IsRectangular(this.Handle(0).Position, this.Handle(1).Position, this.Handle(2).Position, this.Handle(3).Position) )
 				{
 					this.Handle(rank).Position = pos;
 
@@ -172,6 +172,8 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Point p2 = this.Handle(1).Position;
 			this.HandleAdd(new Drawing.Point(p1.X, p2.Y), HandleType.Primary);  // rang = 2
 			this.HandleAdd(new Drawing.Point(p2.X, p1.Y), HandleType.Primary);  // rang = 3
+
+			this.UpdateCornerHandle();
 		}
 
 		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
@@ -371,24 +373,6 @@ namespace Epsitec.Common.Pictogram.Data
 				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
-		}
-
-
-		// Teste si l'objet est rectangulaire.
-		protected static bool IsRectangular(Drawing.Point p0, Drawing.Point p1, Drawing.Point p2, Drawing.Point p3)
-		{
-			if ( !ObjectRectangle.IsRight(p3, p0, p2) )  return false;
-			if ( !ObjectRectangle.IsRight(p0, p2, p1) )  return false;
-			if ( !ObjectRectangle.IsRight(p2, p1, p3) )  return false;
-			if ( !ObjectRectangle.IsRight(p1, p3, p0) )  return false;
-			return true;
-		}
-
-		// Teste si 3 points forment un angle droit.
-		protected static bool IsRight(Drawing.Point p1, Drawing.Point p2, Drawing.Point p3)
-		{
-			Drawing.Point p = Drawing.Point.Projection(p1, p2, p3);
-			return Drawing.Point.Distance(p, p2) < 0.00001;
 		}
 	}
 }

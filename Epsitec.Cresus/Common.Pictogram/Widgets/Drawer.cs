@@ -641,6 +641,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.SelectedTool = "Select";
 			this.selectModePartial = !this.selectModePartial;
+			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.InvalidateAll();
 		}

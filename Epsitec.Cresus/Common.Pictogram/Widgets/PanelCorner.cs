@@ -23,24 +23,32 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.fieldType.Items.Add(PropertyCorner.GetName(type));
 			}
 			this.fieldType.TextChanged += new EventHandler(this.HandleTypeChanged);
+			this.fieldType.TabIndex = 1;
+			this.fieldType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldRadius = new TextFieldSlider(this);
 			this.fieldRadius.MinRange = 0;
 			this.fieldRadius.MaxRange = 10;
 			this.fieldRadius.Step = 1;
 			this.fieldRadius.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldRadius.TabIndex = 2;
+			this.fieldRadius.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldEffect1 = new TextFieldSlider(this);
 			this.fieldEffect1.MinRange = -100;
 			this.fieldEffect1.MaxRange = 200;
 			this.fieldEffect1.Step = 5;
 			this.fieldEffect1.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldEffect1.TabIndex = 3;
+			this.fieldEffect1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldEffect2 = new TextFieldSlider(this);
 			this.fieldEffect2.MinRange = -100;
 			this.fieldEffect2.MaxRange = 200;
 			this.fieldEffect2.Step = 5;
 			this.fieldEffect2.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldEffect2.TabIndex = 4;
+			this.fieldEffect2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.labelRadius = new StaticText(this);
 			this.labelRadius.Text = "R";
@@ -131,9 +139,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldEffect2.MinRange = min2*100;
 			this.fieldEffect2.MaxRange = max2*100;
 
-			this.fieldRadius.SetEnabled(enableRadius);
-			this.fieldEffect1.SetEnabled(enable1);
-			this.fieldEffect2.SetEnabled(enable2);
+			this.fieldRadius.SetEnabled(this.extendedSize && enableRadius);
+			this.fieldEffect1.SetEnabled(this.extendedSize && enable1);
+			this.fieldEffect2.SetEnabled(this.extendedSize && enable2);
 		}
 
 		// Met à jour la géométrie.

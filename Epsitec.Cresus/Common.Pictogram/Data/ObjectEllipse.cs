@@ -42,29 +42,20 @@ namespace Epsitec.Common.Pictogram.Data
 		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
-			Drawing.Point p1 = this.Handle(0).Position;
-			Drawing.Point p2 = this.Handle(1).Position;
-			Drawing.Point center = new Drawing.Point();
-			center.X = (p1.X+p2.X)/2;
-			center.Y = (p1.Y+p2.Y)/2;
-			double rx = System.Math.Abs(p1.X-center.X);
-			double ry = System.Math.Abs(p1.Y-center.Y);
-			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
-			Drawing.Point s1,s2;
-			for ( int i=0 ; i<4 ; i++ )
-			{
-				this.ComputeBezier(i, center, rx, ry, out p1, out s1, out s2, out p2);
-				if ( Drawing.Point.Detect(p1,s1,s2,p2, pos, width) )  return true;
-			}
+			Drawing.Rectangle bbox = this.BoundingBox;
+			if ( !bbox.Contains(pos) )  return false;
 
-			if ( !this.PropertyGradient(2).IsVisible() )  return false;
-			InsideSurface surf = new InsideSurface(pos, 4*InsideSurface.bezierStep);
-			for ( int i=0 ; i<4 ; i++ )
+			Drawing.Path path = this.PathBuild();
+
+			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
+			if ( base.DetectOutline(path, width, pos) )  return true;
+			
+			if ( this.PropertyGradient(2).IsVisible() )
 			{
-				this.ComputeBezier(i, center, rx, ry, out p1, out s1, out s2, out p2);
-				surf.AddBezier(p1, s1, s2, p2);
+				path.Close();
+				if ( base.DetectFill(path, pos) )  return true;
 			}
-			return surf.IsInside();
+			return false;
 		}
 
 		// Détecte si l'objet est dans un rectangle.
@@ -95,46 +86,35 @@ namespace Epsitec.Common.Pictogram.Data
 
 			iconContext.ConstrainSnapPos(ref pos);
 
-			Drawing.Point p1 = this.Handle(0).Position;
-			Drawing.Point p2 = this.Handle(1).Position;
+			if ( AbstractObject.IsRectangular(this.Handle(0).Position, this.Handle(1).Position, this.Handle(2).Position, this.Handle(3).Position) )
+			{
+				this.Handle(rank).Position = pos;
 
-			if ( rank == 2 )
-			{
-				this.Handle(0).Position = new Drawing.Point(pos.X, p1.Y);
-				this.Handle(1).Position = new Drawing.Point(p2.X, pos.Y);
-			}
-			else if ( rank == 3 )
-			{
-				this.Handle(0).Position = new Drawing.Point(p1.X, pos.Y);
-				this.Handle(1).Position = new Drawing.Point(pos.X, p2.Y);
+				if ( rank == 0 )
+				{
+					this.Handle(2).Position = Drawing.Point.Projection(this.Handle(2).Position, this.Handle(1).Position, pos);
+					this.Handle(3).Position = Drawing.Point.Projection(this.Handle(3).Position, this.Handle(1).Position, pos);
+				}
+				if ( rank == 1 )
+				{
+					this.Handle(2).Position = Drawing.Point.Projection(this.Handle(2).Position, this.Handle(0).Position, pos);
+					this.Handle(3).Position = Drawing.Point.Projection(this.Handle(3).Position, this.Handle(0).Position, pos);
+				}
+				if ( rank == 2 )
+				{
+					this.Handle(0).Position = Drawing.Point.Projection(this.Handle(0).Position, this.Handle(3).Position, pos);
+					this.Handle(1).Position = Drawing.Point.Projection(this.Handle(1).Position, this.Handle(3).Position, pos);
+				}
+				if ( rank == 3 )
+				{
+					this.Handle(0).Position = Drawing.Point.Projection(this.Handle(0).Position, this.Handle(2).Position, pos);
+					this.Handle(1).Position = Drawing.Point.Projection(this.Handle(1).Position, this.Handle(2).Position, pos);
+				}
 			}
 			else
 			{
 				this.Handle(rank).Position = pos;
 			}
-
-			p1 = this.Handle(0).Position;
-			p2 = this.Handle(1).Position;
-			this.Handle(2).Position = new Drawing.Point(p1.X, p2.Y);
-			this.Handle(3).Position = new Drawing.Point(p2.X, p1.Y);
-			this.dirtyBbox = true;
-		}
-
-		// Déplace tout l'objet.
-		public override void MoveAll(Drawing.Point move, bool all)
-		{
-			Drawing.Point p1 = this.Handle(0).Position;
-			Drawing.Point p2 = this.Handle(1).Position;
-
-			if ( all || this.Handle(0).IsSelected || this.Handle(2).IsSelected )  p1.X += move.X;
-			if ( all || this.Handle(0).IsSelected || this.Handle(3).IsSelected )  p1.Y += move.Y;
-			if ( all || this.Handle(1).IsSelected || this.Handle(3).IsSelected )  p2.X += move.X;
-			if ( all || this.Handle(1).IsSelected || this.Handle(2).IsSelected )  p2.Y += move.Y;
-
-			this.Handle(0).Position = p1;
-			this.Handle(1).Position = p2;
-			this.Handle(2).Position = new Drawing.Point(p1.X, p2.Y);
-			this.Handle(3).Position = new Drawing.Point(p2.X, p1.Y);
 
 			this.dirtyBbox = true;
 		}
@@ -188,65 +168,20 @@ namespace Epsitec.Common.Pictogram.Data
 			this.bbox.Inflate(width, width);
 		}
 
-		// Calcule une courbe de Bézier de l'objet.
-		protected bool ComputeBezier(int i, Drawing.Point c, double rx, double ry,
-									 out Drawing.Point p1, out Drawing.Point s1, out Drawing.Point s2, out Drawing.Point p2)
+		// Crée le chemin d'une ellipse inscrite dans un quadrilatère.
+		protected Drawing.Path PathEllipse(Drawing.Point p1, Drawing.Point p2, Drawing.Point p3, Drawing.Point p4)
 		{
-			p1 = new Drawing.Point(0, 0);
-			s1 = new Drawing.Point(0, 0);
-			s2 = new Drawing.Point(0, 0);
-			p2 = new Drawing.Point(0, 0);
+			Drawing.Point p12 = (p1+p2)/2;
+			Drawing.Point p23 = (p2+p3)/2;
+			Drawing.Point p34 = (p3+p4)/2;
+			Drawing.Point p41 = (p4+p1)/2;
 
-			if ( i == 0 )
-			{
-				p1.X = c.X-rx;       p1.Y = c.Y;
-				s1.X = c.X-rx;       s1.Y = c.Y+ry*0.56;
-				s2.X = c.X-rx*0.56;  s2.Y = c.Y+ry;
-				p2.X = c.X;          p2.Y = c.Y+ry;
-				return true;
-			}
-
-			if ( i == 1 )
-			{
-				p1.X = c.X;          p1.Y = c.Y+ry;
-				s1.X = c.X+rx*0.56;  s1.Y = c.Y+ry;
-				s2.X = c.X+rx;       s2.Y = c.Y+ry*0.56;
-				p2.X = c.X+rx;       p2.Y = c.Y;
-				return true;
-			}
-
-			if ( i == 2 )
-			{
-				p1.X = c.X+rx;       p1.Y = c.Y;
-				s1.X = c.X+rx;       s1.Y = c.Y-ry*0.56;
-				s2.X = c.X+rx*0.56;  s2.Y = c.Y-ry;
-				p2.X = c.X;          p2.Y = c.Y-ry;
-				return true;
-			}
-
-			if ( i == 3 )
-			{
-				p1.X = c.X;          p1.Y = c.Y-ry;
-				s1.X = c.X-rx*0.56;  s1.Y = c.Y-ry;
-				s2.X = c.X-rx;       s2.Y = c.Y-ry*0.56;
-				p2.X = c.X-rx;       p2.Y = c.Y;
-				return true;
-			}
-
-			return false;
-		}
-
-		// Crée le chemin d'un cercle.
-		protected Drawing.Path PathCircle(Drawing.Point c, double rx, double ry)
-		{
 			Drawing.Path path = new Drawing.Path();
-			Drawing.Point p1,s1,s2,p2;
-			for ( int i=0 ; i<4 ; i++ )
-			{
-				this.ComputeBezier(i, c, rx, ry, out p1, out s1, out s2, out p2);
-				if ( i == 0 )  path.MoveTo(p1);
-				path.CurveTo(s1, s2, p2);
-			}
+			path.MoveTo(p12);
+			path.CurveTo(Drawing.Point.Scale(p12, p2, 0.56), Drawing.Point.Scale(p23, p2, 0.56), p23);
+			path.CurveTo(Drawing.Point.Scale(p23, p3, 0.56), Drawing.Point.Scale(p34, p3, 0.56), p34);
+			path.CurveTo(Drawing.Point.Scale(p34, p4, 0.56), Drawing.Point.Scale(p41, p4, 0.56), p41);
+			path.CurveTo(Drawing.Point.Scale(p41, p1, 0.56), Drawing.Point.Scale(p12, p1, 0.56), p12);
 			path.Close();
 			return path;
 		}
@@ -255,13 +190,24 @@ namespace Epsitec.Common.Pictogram.Data
 		protected Drawing.Path PathBuild()
 		{
 			Drawing.Point p1 = this.Handle(0).Position;
-			Drawing.Point p2 = this.Handle(1).Position;
-			Drawing.Point center = new Drawing.Point();
-			center.X = (p1.X+p2.X)/2;
-			center.Y = (p1.Y+p2.Y)/2;
-			double rx = System.Math.Abs(p1.X-center.X);
-			double ry = System.Math.Abs(p1.Y-center.Y);
-			return this.PathCircle(center, rx, ry);
+			Drawing.Point p2 = new Drawing.Point();
+			Drawing.Point p3 = this.Handle(1).Position;
+			Drawing.Point p4 = new Drawing.Point();
+
+			if ( this.handles.Count < 4 )
+			{
+				p2.X = p1.X;
+				p2.Y = p3.Y;
+				p4.X = p3.X;
+				p4.Y = p1.Y;
+			}
+			else
+			{
+				p2 = this.Handle(2).Position;
+				p4 = this.Handle(3).Position;
+			}
+
+			return this.PathEllipse(p1, p2, p3, p4);
 		}
 
 		// Dessine l'objet.
