@@ -10,23 +10,17 @@ namespace Epsitec.Cresus.UserInterface
 	/// </summary>
 	public class DataSetDisplay
 	{
-		public DataSetDisplay(System.Data.DataSet data)
+		public DataSetDisplay()
 		{
-			this.data = data;
-			
 			this.CreateWindow ();
-			
-			foreach (System.Data.DataTable table in this.data.Tables)
-			{
-				this.CreateTabPage (table);
-			}
-			
-			this.book.ActivePage = this.book.Items[0];
-			
+		}
+		
+		public void ShowWindow()
+		{
 			this.window.Show();
 		}
 		
-		public void CreateWindow()
+		private void CreateWindow()
 		{
 			this.window = new Widgets.Window ();
 			
@@ -39,13 +33,12 @@ namespace Epsitec.Cresus.UserInterface
 			this.book.Parent = this.window.Root;
 		}
 		
-		public void CreateTabPage(System.Data.DataTable data_table)
+		public void AddTable(string table_name, System.Data.DataTable data_table)
 		{
 			Widgets.TabPage page = new Widgets.TabPage ();
 			
-			page.TabTitle = string.Format ("Table <i>{0}</i>", data_table.TableName);
+			page.TabTitle = string.Format ("Table <i>{0}</i>", table_name);
 			page.DockMargins = new Drawing.Margins (4, 4, 4, 4);
-			this.book.Items.Add (page);
 			
 			Widgets.CellTable table = new Widgets.CellTable ();
 			
@@ -88,6 +81,9 @@ namespace Epsitec.Cresus.UserInterface
 			
 			table.Dock = Widgets.DockStyle.Fill;
 			table.Parent = page;
+			
+			this.book.Items.Add (page);
+			this.book.ActivePage = page;
 		}
 		
 		private System.Data.DataSet		data;

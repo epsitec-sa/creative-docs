@@ -31,9 +31,19 @@ namespace Epsitec.Cresus.Database
 			DbAccess db_access = DbFactoryTest.CreateDbAccess ("fiche");
 			
 			infrastructure.AttachDatabase (db_access);
-			System.Data.DataSet data = infrastructure.ReadDbTableMeta ("CR_TABLE_DEF");
-			new Epsitec.Cresus.UserInterface.DataSetDisplay (data);
+			infrastructure.DebugDisplayDataSet = new CallbackDebugDisplayDataSet (this.DebugDisplay);
+			
+			DbTable db_table = infrastructure.ReadDbTableMeta ("CR_TABLE_DEF");
+			
 			infrastructure.Dispose ();
 		}
+		
+		private void DebugDisplay(DbInfrastructure infrastructure, string name, System.Data.DataTable table)
+		{
+			this.display.AddTable (name, table);
+			this.display.ShowWindow ();
+		}
+		
+		Epsitec.Cresus.UserInterface.DataSetDisplay		display = new Epsitec.Cresus.UserInterface.DataSetDisplay ();
 	}
 }

@@ -5,6 +5,8 @@ namespace Epsitec.Cresus.Database
 {
 	using Tags = Epsitec.Common.Support.Tags;
 	
+	public delegate void CallbackDebugDisplayDataSet(DbInfrastructure infrastructure, string name, System.Data.DataTable table);
+	
 	/// <summary>
 	/// La classe DbInfrastructure offre le support pour l'infrastructure
 	/// nécessaire à toute base de données "Crésus" (tables internes, méta-
@@ -115,7 +117,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public System.Data.DataSet ReadDbTableMeta(string table_name)
+		public DbTable ReadDbTableMeta(string table_name)
 		{
 			SqlSelect query = new SqlSelect ();
 			
@@ -135,30 +137,37 @@ namespace Epsitec.Cresus.Database
 			
 			this.sql_builder.SelectData (query);
 			
-			System.Data.DataSet data;
+			System.Data.DataSet   data_set;
+			System.Data.DataTable data_table;
 			
-			this.ExecuteReturningData (out data);
+			this.ExecuteReturningData (out data_set);
 			
-			foreach (System.Data.DataTable t in data.Tables)
+			if (data_set.Tables.Count == 0)
 			{
-				System.Console.Out.WriteLine ("Table " + t.TableName);
-				foreach (System.Data.DataColumn c in t.Columns)
-				{
-					System.Console.Out.Write ("'" + c.Caption + "'");
-				}
-				System.Console.Out.WriteLine ();
-				foreach (System.Data.DataRow r in t.Rows)
-				{
-					foreach (object o in r.ItemArray)
-					{
-						System.Console.Out.Write ("'" + o + "' ");
-					}
-					System.Console.Out.WriteLine ();
-				}
+				//	La table n'existe pas (on n'a pas trouvé de description dans la base),
+				//	alors on retourne simplement null plutôt que de lever une exception.
+				
+				return null;
 			}
 			
-			return data;
+			System.Diagnostics.Debug.Assert (data_set.Tables.Count == 1);
+			
+			data_table = data_set.Tables[0];
+			
+			if (this.debug_display_data_set != null)
+			{
+				this.debug_display_data_set (this, table_name, data_table);
+			}
+			
+			return null;
 		}
+		
+		
+		public CallbackDebugDisplayDataSet DebugDisplayDataSet
+		{
+			set { this.debug_display_data_set = value; }
+		}
+		
 		
 		
 		#region Bootstrapping
@@ -508,5 +517,7 @@ namespace Epsitec.Cresus.Database
 		
 		protected DbTableCollection		internal_tables = new DbTableCollection ();
 		protected DbTypeCollection		internal_types  = new DbTypeCollection ();
+		
+		CallbackDebugDisplayDataSet		debug_display_data_set;
 	}
 }
