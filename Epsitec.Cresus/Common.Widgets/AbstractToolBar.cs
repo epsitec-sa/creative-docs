@@ -7,6 +7,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public AbstractToolBar()
 		{
+			this.iconDockStyle = this.DefaultIconDockStyle;
+			
 			this.items = new Helpers.WidgetCollection (this);
 			this.items.AutoEmbedding = true;
 			
@@ -21,6 +23,33 @@ namespace Epsitec.Common.Widgets
 		public Helpers.WidgetCollection		Items
 		{
 			get { return this.items; }
+		}
+		
+		public abstract DockStyle			DefaultIconDockStyle
+		{
+			get;
+		}
+		
+		public DockStyle					OppositeIconDockStyle
+		{
+			get
+			{
+				return AbstractToolBar.GetOpposite (this.DefaultIconDockStyle);
+			}
+		}
+		
+		
+		public static DockStyle GetOpposite(DockStyle style)
+		{
+			switch (style)
+			{
+				case DockStyle.Left:	style = DockStyle.Right;	break;
+				case DockStyle.Right:	style = DockStyle.Left;		break;
+				case DockStyle.Top:		style = DockStyle.Bottom;	break;
+				case DockStyle.Bottom:	style = DockStyle.Top;		break;
+			}
+			
+			return style;
 		}
 		
 		
@@ -77,7 +106,11 @@ namespace Epsitec.Common.Widgets
 		
 		public void NotifyInsertion(Widget widget)
 		{
-			widget.Dock = this.iconDockStyle;
+			if (widget.Dock == DockStyle.None)
+			{
+				widget.Dock = this.iconDockStyle;
+			}
+			
 			widget.AutoFocus = false;
 			widget.SetEmbedder (this);
 			this.OnItemsChanged ();
@@ -105,7 +138,7 @@ namespace Epsitec.Common.Widgets
 		
 		public event Support.EventHandler	ItemsChanged;
 		
-		protected DockStyle					iconDockStyle;
+		private DockStyle					iconDockStyle;
 		protected Direction					direction;
 		protected Helpers.WidgetCollection	items;
 		
