@@ -455,6 +455,9 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void Check12ServiceServer_Create()
 		{
+			//	Le service doit tourner (installer & lancer avec "installutil Cresus.Server.exe" depuis
+			//	le dossier "App.Server/bin/Debug"). Ou alors, utiliser l'installateur X.Setup.Server.
+			
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			RequestsTest.CreateTestTable (infrastructure, "ServiceTest");
 		}

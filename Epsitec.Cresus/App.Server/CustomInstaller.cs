@@ -28,6 +28,8 @@ namespace Epsitec.Cresus.Server
 			this.service_installer.ServiceName = GlobalNames.ServiceName;
 			this.service_installer.StartType   = System.ServiceProcess.ServiceStartMode.Automatic;
 			
+			this.service_installer.ServicesDependedOn = new string[] { "Firebird Server - DefaultInstance" };
+			
 			this.Installers.Add (this.service_process_installer);
 			this.Installers.Add (this.service_installer);
 			this.Installers.Add (this.service_startup_installer);
