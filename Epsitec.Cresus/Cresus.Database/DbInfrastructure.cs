@@ -37,6 +37,11 @@ namespace Epsitec.Cresus.Database
 			get { return this.sql_engine; }
 		}
 		
+		public ITypeConverter					TypeConverter
+		{
+			get { return this.type_converter; }
+		}
+		
 		public DbTransaction					LiveTransaction
 		{
 			get { return this.live_transaction; }
@@ -1614,11 +1619,11 @@ namespace Epsitec.Cresus.Database
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			
-			fields.Add (type_def.Columns[Tags.ColumnId]		.CreateSqlField (this.type_converter, type.InternalKey.Id));
-			fields.Add (type_def.Columns[Tags.ColumnRevision]	.CreateSqlField (this.type_converter, type.InternalKey.Revision));
-			fields.Add (type_def.Columns[Tags.ColumnStatus]	.CreateSqlField (this.type_converter, type.InternalKey.RawStatus));
-			fields.Add (type_def.Columns[Tags.ColumnName]		.CreateSqlField (this.type_converter, type.Name));
-			fields.Add (type_def.Columns[Tags.ColumnInfoXml]	.CreateSqlField (this.type_converter, DbTypeFactory.SerializeToXml (type, false)));
+			fields.Add (type_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, type.InternalKey.Id));
+			fields.Add (type_def.Columns[Tags.ColumnRevision].CreateSqlField (this.type_converter, type.InternalKey.Revision));
+			fields.Add (type_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, type.InternalKey.RawStatus));
+			fields.Add (type_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, type.Name));
+			fields.Add (type_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTypeFactory.SerializeToXml (type, false)));
 			
 			this.sql_builder.InsertData (type_def.CreateSqlName (), fields);
 			this.ExecuteSilent (transaction);
@@ -1633,12 +1638,12 @@ namespace Epsitec.Cresus.Database
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			
-			fields.Add (enum_def.Columns[Tags.ColumnId]		.CreateSqlField (this.type_converter, value.InternalKey.Id));
-			fields.Add (enum_def.Columns[Tags.ColumnRevision]	.CreateSqlField (this.type_converter, value.InternalKey.Revision));
-			fields.Add (enum_def.Columns[Tags.ColumnStatus]	.CreateSqlField (this.type_converter, value.InternalKey.RawStatus));
-			fields.Add (enum_def.Columns[Tags.ColumnName]		.CreateSqlField (this.type_converter, value.Name));
-			fields.Add (enum_def.Columns[Tags.ColumnInfoXml]	.CreateSqlField (this.type_converter, DbEnumValue.SerializeToXml (value, false)));
-			fields.Add (enum_def.Columns[Tags.ColumnRefType]	.CreateSqlField (this.type_converter, type.InternalKey.Id));
+			fields.Add (enum_def.Columns[Tags.ColumnId]	     .CreateSqlField (this.type_converter, value.InternalKey.Id));
+			fields.Add (enum_def.Columns[Tags.ColumnRevision].CreateSqlField (this.type_converter, value.InternalKey.Revision));
+			fields.Add (enum_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, value.InternalKey.RawStatus));
+			fields.Add (enum_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, value.Name));
+			fields.Add (enum_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbEnumValue.SerializeToXml (value, false)));
+			fields.Add (enum_def.Columns[Tags.ColumnRefType] .CreateSqlField (this.type_converter, type.InternalKey.Id));
 			
 			this.sql_builder.InsertData (enum_def.CreateSqlName (), fields);
 			this.ExecuteSilent (transaction);
@@ -1653,12 +1658,12 @@ namespace Epsitec.Cresus.Database
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			
-			fields.Add (table_def.Columns[Tags.ColumnId]		.CreateSqlField (this.type_converter, table.InternalKey.Id));
+			fields.Add (table_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, table.InternalKey.Id));
 			fields.Add (table_def.Columns[Tags.ColumnRevision].CreateSqlField (this.type_converter, table.InternalKey.Revision));
-			fields.Add (table_def.Columns[Tags.ColumnStatus]	.CreateSqlField (this.type_converter, table.InternalKey.RawStatus));
-			fields.Add (table_def.Columns[Tags.ColumnName]	.CreateSqlField (this.type_converter, table.Name));
-			fields.Add (table_def.Columns[Tags.ColumnInfoXml]	.CreateSqlField (this.type_converter, DbTable.SerializeToXml (table, false)));
-			fields.Add (table_def.Columns[Tags.ColumnNextId]	.CreateSqlField (this.type_converter, 0));
+			fields.Add (table_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, table.InternalKey.RawStatus));
+			fields.Add (table_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, table.Name));
+			fields.Add (table_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTable.SerializeToXml (table, false)));
+			fields.Add (table_def.Columns[Tags.ColumnNextId]  .CreateSqlField (this.type_converter, 0));
 			
 			this.sql_builder.InsertData (table_def.CreateSqlName (), fields);
 			this.ExecuteSilent (transaction);
@@ -1689,10 +1694,10 @@ namespace Epsitec.Cresus.Database
 			
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			
-			fields.Add (column_def.Columns[Tags.ColumnId]		 .CreateSqlField (this.type_converter, column.InternalKey.Id));
+			fields.Add (column_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, column.InternalKey.Id));
 			fields.Add (column_def.Columns[Tags.ColumnRevision].CreateSqlField (this.type_converter, column.InternalKey.Revision));
-			fields.Add (column_def.Columns[Tags.ColumnStatus]	 .CreateSqlField (this.type_converter, column.InternalKey.RawStatus));
-			fields.Add (column_def.Columns[Tags.ColumnName]	 .CreateSqlField (this.type_converter, column.Name));
+			fields.Add (column_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, column.InternalKey.RawStatus));
+			fields.Add (column_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, column.Name));
 			fields.Add (column_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbColumn.SerializeToXml (column, false)));
 			fields.Add (column_def.Columns[Tags.ColumnRefTable].CreateSqlField (this.type_converter, table.InternalKey.Id));
 			fields.Add (column_def.Columns[Tags.ColumnRefType] .CreateSqlField (this.type_converter, column.Type.InternalKey.Id));

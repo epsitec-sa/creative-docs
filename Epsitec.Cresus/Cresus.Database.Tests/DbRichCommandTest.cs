@@ -4,7 +4,7 @@ namespace Epsitec.Cresus.Database
 {
 	[TestFixture] public class DbRichCommandTest
 	{
-		[Test] public void CheckSelect()
+		[Test] public void Check01Select()
 		{
 			//	Tout ceci est provisoire !!! Les structures SQL ne devraient pas être exposées, seulement
 			//	leur variante Db... neutre. Cela va certainement migrer dans DbInfrastructure.
@@ -91,6 +91,45 @@ namespace Epsitec.Cresus.Database
 				command.UpdateTables ();
 				transaction.Commit ();
 			}
+			
+			infrastructure.UnregisterDbTable (null, db_table_a);
+			infrastructure.UnregisterDbTable (null, db_table_b);
+		}
+		
+		[Test] public void Check02CreateEmptyDataSet()
+		{
+			try
+			{
+				System.IO.File.Delete (@"C:\Program Files\firebird15\Data\Epsitec\FICHE.FIREBIRD");
+			}
+			catch {}
+			
+			DbAccess db_access = DbInfrastructure.CreateDbAccess ("fiche");
+			DbInfrastructure infrastructure = new DbInfrastructure ();
+			
+			infrastructure.CreateDatabase (db_access);
+			
+			DbTable db_table_a = infrastructure.CreateDbTable ("Personnes", DbElementCat.UserDataManaged);
+			DbTable db_table_b = infrastructure.CreateDbTable ("Domiciles", DbElementCat.UserDataManaged);
+			
+			DbType db_type_name = infrastructure.ResolveDbType (null, "CR_NameType");
+			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR_KeyIdType");
+			DbType db_type_rev  = infrastructure.ResolveDbType (null, "CR_KeyRevisionType");
+			
+			db_table_a.Columns.Add (infrastructure.CreateColumn ("Nom", db_type_name));
+			db_table_a.Columns.Add (infrastructure.CreateColumn ("Prenom", db_type_name));
+			
+			db_table_b.Columns.AddRange (infrastructure.CreateRefColumns ("Personne", "Personnes", DbKeyMatchMode.ExactIdRevision));
+			db_table_b.Columns.Add (infrastructure.CreateColumn ("Ville", db_type_name));
+			
+			infrastructure.RegisterNewDbTable (null, db_table_a);
+			infrastructure.RegisterNewDbTable (null, db_table_b);
+			
+			DbRichCommand command = new DbRichCommand ();
+			
+			command.Tables.Add (db_table_a);
+			command.Tables.Add (db_table_b);
+			command.CreateEmptyDataSet (infrastructure);
 			
 			infrastructure.UnregisterDbTable (null, db_table_a);
 			infrastructure.UnregisterDbTable (null, db_table_b);

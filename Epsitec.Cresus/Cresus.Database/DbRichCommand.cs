@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public void FillDataSet(DbAccess db_access, System.Data.IDbDataAdapter[] adapters)
+		public void FillDataSet(System.Data.IDbDataAdapter[] adapters)
 		{
 			//	Définit et remplit le DataSet en se basant sur les données fournies
 			//	par l'objet 'adapter' (ADO.NET).
@@ -82,8 +82,10 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public void CreateEmptyDataSet(ITypeConverter type_converter)
+		public void CreateEmptyDataSet(DbInfrastructure infrastructure)
 		{
+			ITypeConverter type_converter = infrastructure.TypeConverter;
+			
 			//	Crée un DataSet vide, en ajoutant le schéma correspondant aux tables
 			//	définies.
 			
@@ -91,16 +93,22 @@ namespace Epsitec.Cresus.Database
 			
 			for (int i = 0; i < this.tables.Count; i++)
 			{
-				DbTable db_table = this.tables[i];
+				DbTable db_table      = this.tables[i];
+				string  db_name_table = db_table.Name;
 				
-				System.Data.DataTable ado_table = this.data_set.Tables.Add (db_table.Name);
+				System.Data.DataTable ado_table = this.data_set.Tables.Add (db_name_table);
 				
 				for (int c = 0; c < db_table.Columns.Count; c++)
 				{
-					DbColumn db_column = db_table.Columns[c];
-					System.Type native_type = TypeConverter.MapToNativeType (db_column.CreateSqlColumn (type_converter).Type);
+					DbColumn  db_column  = db_table.Columns[c];
+					SqlColumn sql_column = db_column.CreateSqlColumn (type_converter);
 					
-					ado_table.Columns.Add (db_column.Name, native_type);
+					string db_name_column  = db_column.CreateDisplayName ();
+					string ado_name_column = db_column.CreateSqlName ();
+					
+					System.Type native_type = TypeConverter.MapToNativeType (sql_column.Type);
+					
+					ado_table.Columns.Add (ado_name_column, native_type);
 				}
 			}
 		}

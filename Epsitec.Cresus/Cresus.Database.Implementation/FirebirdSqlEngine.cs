@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				adapters[i] = adapter;
 			}
 				
-			rich_command.FillDataSet (this.fb.DbAccess, adapters);
+			rich_command.FillDataSet (adapters);
 		}
 		#endregion
 		
