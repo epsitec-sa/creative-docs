@@ -255,7 +255,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		public event EventHandler				TimeElapsed;
+		public event Support.EventHandler		TimeElapsed;
 		
 		
 		protected System.Windows.Forms.Timer	timer;
