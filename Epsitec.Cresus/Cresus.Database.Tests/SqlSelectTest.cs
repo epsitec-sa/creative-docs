@@ -230,5 +230,49 @@ namespace Epsitec.Cresus.Database
 
 			int n = this.DumpDataSet (data_set);
 		}	
+
+		[Test] public void CheckSqlSelectInnerJoin()
+		{
+			//	Test avec jointure, dans
+			//	C:\Program Files\firebird15\Data\Epsitec\Employee.Firebird
+			//	pour lister les employés et leurs projets
+			//	SELECT LAST_NAME , FIRST_NAME , PROJ_ID FROM EMPLOYEE INNER JOIN employee_project ON EMPLOYEE.emp_no = employee_project.emp_no;
+
+			DbAccess db_access = SqlSelectTest.CreateDbAccess ();
+
+			IDbAbstraction db_abstraction = null;
+			db_abstraction = DbFactory.FindDbAbstraction (db_access);
+
+			ISqlEngine     sql_engine    = db_abstraction.SqlEngine;
+			ISqlBuilder    sql_builder   = db_abstraction.SqlBuilder;
+
+			SqlSelect sql_select = new SqlSelect ();
+
+			sql_select.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+			sql_select.Fields.Add (SqlField.CreateName ("FIRST_NAME"));
+			sql_select.Fields.Add (SqlField.CreateName ("PROJ_ID"));
+			sql_select.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
+			sql_select.Tables.Add (SqlField.CreateName ("EMPLOYEE_PROJECT"));
+
+			//	défini la fonction INNER JOIN ...
+			SqlJoin sql_join = new SqlJoin (SqlJoinType.Inner, 
+				SqlField.CreateName ("EMPLOYEE.EMP_NO"), 
+				SqlField.CreateName ("EMPLOYEE_PROJECT.EMP_NO"));
+
+			sql_select.Joins.Add (SqlField.CreateJoin (sql_join));
+
+			//	construit la commande d'extraction
+			sql_builder.SelectData (sql_select);
+
+			System.Data.IDbCommand command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			//	lecture des résultats
+			DataSet data_set = new DataSet();
+			command.Transaction = db_abstraction.BeginTransaction ();
+			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
+
+			int n = this.DumpDataSet (data_set);
+		}
 	}
 }
