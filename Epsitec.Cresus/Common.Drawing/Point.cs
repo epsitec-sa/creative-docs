@@ -1,8 +1,11 @@
 namespace Epsitec.Common.Drawing
 {
 	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
-
-	[System.Serializable] public struct Point
+	
+	[System.Serializable]
+	[System.ComponentModel.TypeConverter (typeof (Point.Converter))]
+	
+	public struct Point
 	{
 		public Point(double x, double y)
 		{
@@ -89,11 +92,11 @@ namespace Epsitec.Common.Drawing
 		
 		public override string ToString()
 		{
-			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1}", this.x, this.y);
+			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0};{1}]", this.x, this.y);
 		}
 		
 		
-		public static Point Parse(string value)
+		public static Point Parse(string value, System.Globalization.CultureInfo culture)
 		{
 			if (value == null)
 			{
@@ -104,32 +107,32 @@ namespace Epsitec.Common.Drawing
 			
 			if (args.Length != 2)
 			{
-				throw new System.ArgumentException (string.Format ("Invalid point specification ({0})", value));
+				throw new System.ArgumentException (string.Format ("Invalid point specification ({0}).", value));
 			}
 			
 			string arg_x = args[0].Trim ();
 			string arg_y = args[1].Trim ();
 			
-			double x = System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
-			double y = System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
+			double x = System.Double.Parse (arg_x, culture);
+			double y = System.Double.Parse (arg_y, culture);
 			
 			return new Point (x, y);
 		}
 		
-		public static Point Parse(string value, Point default_value)
+		public static Point Parse(string value, System.Globalization.CultureInfo culture, Point default_value)
 		{
 			string[] args = value.Split (new char[] { ';', ':' });
 			
 			if (args.Length != 2)
 			{
-				throw new System.ArgumentException (string.Format ("Invalid point specification ({0})", value));
+				throw new System.ArgumentException (string.Format ("Invalid point specification ({0}).", value));
 			}
 			
 			string arg_x = args[0].Trim ();
 			string arg_y = args[1].Trim ();
 			
-			if (arg_x != "*") default_value.X = System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
-			if (arg_y != "*") default_value.Y = System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
+			if (arg_x != "*") default_value.X = System.Double.Parse (arg_x, culture);
+			if (arg_y != "*") default_value.Y = System.Double.Parse (arg_y, culture);
 			
 			return default_value;
 		}
@@ -395,6 +398,21 @@ namespace Epsitec.Common.Drawing
 			return true;
 		}
 		
+		
+		
+		public class Converter : Epsitec.Common.Converters.AbstractStringConverter
+		{
+			public override object ParseString(string value, System.Globalization.CultureInfo culture)
+			{
+				return Point.Parse (value, culture);
+			}
+			
+			public override string ToString(object value, System.Globalization.CultureInfo culture)
+			{
+				Point point = (Point) value;
+				return string.Format ("{0};{1}", point.X, point.Y);
+			}
+		}
 		
 		
 		private double					x, y;

@@ -2,7 +2,10 @@ namespace Epsitec.Common.Drawing
 {
 	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
 	
-	[System.Serializable] public struct Color
+	[System.Serializable]
+	[System.ComponentModel.TypeConverter (typeof (Color.Converter))]
+	
+	public struct Color
 	{
 		public Color(System.Drawing.Color color)
 		{
@@ -224,7 +227,48 @@ namespace Epsitec.Common.Drawing
 		{
 			return System.String.Format ("{{R={0:0.00},G={1:0.00},B={2:0.00},A={3:0.00}}}", this.r, this.g, this.b, this.a);
 		}
-
+		
+		
+		public static Color Parse(string value, System.Globalization.CultureInfo culture)
+		{
+			if (value == null)
+			{
+				return Color.Empty;
+			}
+			
+			string[] args = value.Split (';', ':');
+			
+			if (args.Length == 3)
+			{
+				string arg_r = args[0].Trim ();
+				string arg_g = args[1].Trim ();
+				string arg_b = args[2].Trim ();
+			
+				double r = System.Double.Parse (arg_r, culture);
+				double g = System.Double.Parse (arg_g, culture);
+				double b = System.Double.Parse (arg_b, culture);
+			
+				return new Color (r, g, b);
+			}
+			
+			if (args.Length == 4)
+			{
+				string arg_a = args[0].Trim ();
+				string arg_r = args[1].Trim ();
+				string arg_g = args[2].Trim ();
+				string arg_b = args[3].Trim ();
+				
+				double a = System.Double.Parse (arg_a, culture);
+				double r = System.Double.Parse (arg_r, culture);
+				double g = System.Double.Parse (arg_g, culture);
+				double b = System.Double.Parse (arg_b, culture);
+				
+				return new Color (a, r, g, b);
+			}
+			
+			throw new System.ArgumentException (string.Format ("Invalid color specification ({0}).", value));
+		}
+		
 
 		
 		public static bool operator==(Color a, Color b)
@@ -323,6 +367,28 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		
+		
+		public class Converter : Epsitec.Common.Converters.AbstractStringConverter
+		{
+			public override object ParseString(string value, System.Globalization.CultureInfo culture)
+			{
+				return Color.Parse (value, culture);
+			}
+			
+			public override string ToString(object value, System.Globalization.CultureInfo culture)
+			{
+				Color color = (Color) value;
+				if (color.A == 1.0)
+				{
+					return string.Format ("{0};{1};{2}", color.R, color.G, color.B);
+				}
+				else
+				{
+					return string.Format ("{0};{1};{2};{3}", color.A, color.R, color.G, color.B);
+				}
+			}
+		}
 		
 		
 		private double					r, g, b, a;

@@ -2,7 +2,10 @@ namespace Epsitec.Common.Drawing
 {
 	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
 	
-	[System.Serializable] public struct Size
+	[System.Serializable]
+	[System.ComponentModel.TypeConverter (typeof (Size.Converter))]
+	
+	public struct Size
 	{
 		public Size(double width, double height)
 		{
@@ -69,11 +72,11 @@ namespace Epsitec.Common.Drawing
 		
 		public override string ToString()
 		{
-			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1}", this.width, this.height);
+			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0};{1}]", this.width, this.height);
 		}
 		
 		
-		public static Size Parse(string value)
+		public static Size Parse(string value, System.Globalization.CultureInfo culture)
 		{
 			if (value == null)
 			{
@@ -84,32 +87,32 @@ namespace Epsitec.Common.Drawing
 			
 			if (args.Length != 2)
 			{
-				throw new System.ArgumentException (string.Format ("Invalid size specification ({0})", value));
+				throw new System.ArgumentException (string.Format ("Invalid size specification ({0}).", value));
 			}
 			
 			string arg_x = args[0].Trim ();
 			string arg_y = args[1].Trim ();
 			
-			double x = System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
-			double y = System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
+			double x = System.Double.Parse (arg_x, culture);
+			double y = System.Double.Parse (arg_y, culture);
 			
 			return new Size (x, y);
 		}
 		
-		public static Size Parse(string value, Size default_value)
+		public static Size Parse(string value, System.Globalization.CultureInfo culture, Size default_value)
 		{
 			string[] args = value.Split (new char[] { ';', ':' });
 			
 			if (args.Length != 2)
 			{
-				throw new System.ArgumentException (string.Format ("Invalid size specification ({0})", value));
+				throw new System.ArgumentException (string.Format ("Invalid size specification ({0}).", value));
 			}
 			
 			string arg_x = args[0].Trim ();
 			string arg_y = args[1].Trim ();
 			
-			if (arg_x != "*") default_value.Width  = System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
-			if (arg_y != "*") default_value.Height = System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
+			if (arg_x != "*") default_value.Width  = System.Double.Parse (arg_x, culture);
+			if (arg_y != "*") default_value.Height = System.Double.Parse (arg_y, culture);
 			
 			return default_value;
 		}
@@ -133,6 +136,21 @@ namespace Epsitec.Common.Drawing
 		public static bool operator !=(Size a, Size b)
 		{
 			return (a.width != b.width) || (a.height != b.height);
+		}
+		
+		
+		public class Converter : Epsitec.Common.Converters.AbstractStringConverter
+		{
+			public override object ParseString(string value, System.Globalization.CultureInfo culture)
+			{
+				return Size.Parse (value, culture);
+			}
+			
+			public override string ToString(object value, System.Globalization.CultureInfo culture)
+			{
+				Size size = (Size) value;
+				return string.Format ("{0};{1}", size.Width, size.Height);
+			}
 		}
 		
 		

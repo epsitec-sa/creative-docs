@@ -3,7 +3,10 @@ namespace Epsitec.Common.Drawing
 	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
 	using XmlIgnore    = System.Xml.Serialization.XmlIgnoreAttribute;
 	
-	[System.Serializable] public struct Rectangle
+	[System.Serializable]
+	[System.ComponentModel.TypeConverter (typeof (Rectangle.Converter))]
+	
+	public struct Rectangle
 	{
 		public Rectangle(Point p, Size s)
 		{
@@ -337,6 +340,55 @@ namespace Epsitec.Common.Drawing
 		}
 
 		
+		public static Rectangle Parse(string value, System.Globalization.CultureInfo culture)
+		{
+			if (value == null)
+			{
+				return Rectangle.Empty;
+			}
+			
+			string[] args = value.Split (';', ':');
+			
+			if (args.Length != 4)
+			{
+				throw new System.ArgumentException (string.Format ("Invalid rectangle specification ({0}).", value));
+			}
+			
+			string arg_x  = args[0].Trim ();
+			string arg_y  = args[1].Trim ();
+			string arg_dx = args[2].Trim ();
+			string arg_dy = args[3].Trim ();
+			
+			double x  = System.Double.Parse (arg_x, culture);
+			double y  = System.Double.Parse (arg_y, culture);
+			double dx = System.Double.Parse (arg_dx, culture);
+			double dy = System.Double.Parse (arg_dy, culture);
+			
+			return new Rectangle (x, y, dx, dy);
+		}
+		
+		public static Rectangle Parse(string value, System.Globalization.CultureInfo culture, Rectangle default_value)
+		{
+			string[] args = value.Split (new char[] { ';', ':' });
+			
+			if (args.Length != 4)
+			{
+				throw new System.ArgumentException (string.Format ("Invalid rectangle specification ({0}).", value));
+			}
+			
+			string arg_x  = args[0].Trim ();
+			string arg_y  = args[1].Trim ();
+			string arg_dx = args[2].Trim ();
+			string arg_dy = args[3].Trim ();
+			
+			if (arg_x  != "*") default_value.X      = System.Double.Parse (arg_x, culture);
+			if (arg_y  != "*") default_value.Y      = System.Double.Parse (arg_y, culture);
+			if (arg_dx != "*") default_value.Width  = System.Double.Parse (arg_dx, culture);
+			if (arg_dy != "*") default_value.Height = System.Double.Parse (arg_dy, culture);
+			
+			return default_value;
+		}
+		
 		public static bool operator ==(Rectangle a, Rectangle b)
 		{
 			return (a.x1 == b.x1) && (a.x2 == b.x2) && (a.y1 == b.y1) && (a.y2 == b.y2);
@@ -368,21 +420,24 @@ namespace Epsitec.Common.Drawing
 		
 		public override string ToString()
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			buffer.Append ("{X=");
-			buffer.Append (this.x1.ToString ());
-			buffer.Append (",Y=");
-			buffer.Append (this.y1.ToString ());
-			buffer.Append (",Width=");
-			buffer.Append (this.Width.ToString ());
-			buffer.Append (",Height=");
-			buffer.Append (this.Height.ToString ());
-			buffer.Append ("}");
-			
-			return buffer.ToString ();
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0};{1};{2};{3}]",
+								  this.X, this.Y, this.Width, this.Height);
 		}
 
+		
+		public class Converter : Epsitec.Common.Converters.AbstractStringConverter
+		{
+			public override object ParseString(string value, System.Globalization.CultureInfo culture)
+			{
+				return Rectangle.Parse (value, culture);
+			}
+			
+			public override string ToString(object value, System.Globalization.CultureInfo culture)
+			{
+				Rectangle rect = (Rectangle) value;
+				return string.Format ("{0};{1};{2};{3}", rect.X, rect.Y, rect.Width, rect.Height);
+			}
+		}
 		
 		
 		private double					x1, y1;
