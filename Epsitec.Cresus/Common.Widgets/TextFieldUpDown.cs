@@ -10,7 +10,7 @@ namespace Epsitec.Common.Widgets
 			this.textFieldStyle = TextFieldStyle.UpDown;
 			this.TextNavigator.IsNumeric = true;
 			this.range = new Types.DecimalRange(0, 100, 1);
-			this.range.Changed += new System.EventHandler(this.HandleDecimalRangeChanged);
+			this.range.Changed += new Support.EventHandler(this.HandleDecimalRangeChanged);
 			
 			this.arrowUp = new GlyphButton(this);
 			this.arrowDown = new GlyphButton(this);
@@ -335,7 +335,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void HandleDecimalRangeChanged(object sender, System.EventArgs e)
+		private void HandleDecimalRangeChanged(object sender)
 		{
 			this.UpdateValidator();
 			this.OnDecimalRangeChanged();

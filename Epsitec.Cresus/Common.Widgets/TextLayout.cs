@@ -1,6 +1,6 @@
 namespace Epsitec.Common.Widgets
 {
-	public class AnchorEventArgs : System.EventArgs
+	public class AnchorEventArgs : Support.EventArgs
 	{
 		public AnchorEventArgs(double x, double y, double dx, double dy, int index)
 		{

@@ -404,13 +404,13 @@ namespace Epsitec.Common.Widgets
 					System.Diagnostics.Debug.Assert (this.children.Count == 0);
 				}
 				
+				this.Parent = null;
+				
 				if (this.Disposed != null)
 				{
 					this.Disposed (this);
 					this.Disposed = null;
 				}
-				
-				this.Parent = null;
 			}
 		}
 		

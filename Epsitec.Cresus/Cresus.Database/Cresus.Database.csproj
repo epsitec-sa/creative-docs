@@ -98,6 +98,11 @@
                     Project = "{8960D1EA-3B82-49A1-9D44-F92F467209FF}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Common.Support.Events"
+                    Project = "{EAF258A4-E107-4466-A3E1-9FC072557940}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
