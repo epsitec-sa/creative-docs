@@ -13,11 +13,36 @@ namespace Epsitec.Common.Dialogs
 			return new Message.YesNoCancel (dialog_title, message_icon, message_text, command_yes_template, command_no_template, command_dispatcher);
 		}
 		
+		public static IDialog CreateYesNoCancel(string dialog_title, Icon icon, string message_text, string command_yes_template, string command_no_template, Support.CommandDispatcher command_dispatcher)
+		{
+			string message_icon = Message.GetIconName (icon);
+			
+			return Message.CreateYesNoCancel (dialog_title, message_icon, message_text, command_yes_template, command_no_template, command_dispatcher);
+		}
+		
 		public static IDialog CreateOkCancel(string dialog_title, string message_icon, string message_text, string command_ok_template, Support.CommandDispatcher command_dispatcher)
 		{
 			return new Message.OkCancel (dialog_title, message_icon, message_text, command_ok_template, command_dispatcher);
 		}
 		
+		public static IDialog CreateOkCancel(string dialog_title, Icon icon, string message_text, string command_ok_template, Support.CommandDispatcher command_dispatcher)
+		{
+			string message_icon = Message.GetIconName (icon);
+			
+			return Message.CreateOkCancel (dialog_title, message_icon, message_text, command_ok_template, command_dispatcher);
+		}
+		
+		
+		protected static string GetIconName(Icon icon)
+		{
+			switch (icon)
+			{
+				case Icon.Warning:
+					return "manifest:Epsitec.Common.Dialogs.Images." + icon.ToString () + ".icon";
+			}
+			
+			return null;
+		}
 		
 		
 		public class YesNoCancel : AbstractYesNoCancel
