@@ -312,6 +312,14 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.AddRectangle(rect);
 					graphics.RenderSolid(this.colorBorder);
 				}
+				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+				{
+					this.PaintImageButton(graphics, rInside, 10);
+
+					rect.Inflate(-0.5, -0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorBorder);
+				}
 			}
 			else if ( style == ButtonStyle.ListItem )
 			{
@@ -1061,6 +1069,22 @@ namespace Epsitec.Common.Widgets.Adorner
 				picon.Right  = icon.Right;
 				graphics.PaintImage(this.bitmap, prect, picon);
 			}
+		}
+
+
+		public Drawing.Color GetColorCaption()
+		{
+			return this.colorCaption;
+		}
+
+		public Drawing.Color GetColorControl()
+		{
+			return this.colorControl;
+		}
+
+		public Drawing.Color GetColorWindow()
+		{
+			return this.colorWindow;
 		}
 
 
