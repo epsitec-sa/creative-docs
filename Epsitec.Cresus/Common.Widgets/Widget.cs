@@ -1,5 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
+	using ContentAlignment = Drawing.ContentAlignment;
+	
 	[System.Flags] public enum AnchorStyles
 	{
 		None			= 0,
@@ -28,6 +30,7 @@ namespace Epsitec.Common.Widgets
 		Engaged			= 0x00100000,		//	=> pression en cours
 	}
 	
+	
 	/// <summary>
 	/// 
 	/// </summary>
@@ -35,8 +38,11 @@ namespace Epsitec.Common.Widgets
 	{
 		public Widget()
 		{
-			this.internal_state = InternalState.Visible | InternalState.AutoCapture;
-			this.widget_state   = WidgetState.Enabled;
+			this.internal_state |= InternalState.Visible;
+			this.internal_state |= InternalState.AutoCapture;
+			this.internal_state |= InternalState.AutoMnemonic;
+			
+			this.widget_state |= WidgetState.Enabled;
 			
 			this.anchor = AnchorStyles.Left | AnchorStyles.Top;
 			this.back_color = new Drawing.Color (0.9);
@@ -45,7 +51,16 @@ namespace Epsitec.Common.Widgets
 		
 		public void Dispose()
 		{
-			this.SetEntered (false);
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.SetEntered (false);
+			}
 		}
 
 		
@@ -136,6 +151,19 @@ namespace Epsitec.Common.Widgets
 			set { this.SetBounds (this.x1, this.y1, this.x2, this.y1 + value); }
 		}
 		
+		public ContentAlignment				Alignment
+		{
+			get { return this.alignment; }
+			set
+			{
+				if (this.alignment != value)
+				{
+					this.alignment = value;
+					this.UpdateLayoutSize ();
+					this.Invalidate ();
+				}
+			}
+		}
 		
 		public ClientInfo					Client
 		{
@@ -184,6 +212,29 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public virtual ContentAlignment		DefaultAlignment
+		{
+			get { return ContentAlignment.MiddleLeft; }
+		}
+		
+		public virtual Drawing.Font			DefaultFont
+		{
+			get { return Drawing.Font.GetFont ("Tahoma", "Regular"); }
+		}
+		
+		public virtual double				DefaultFontSize
+		{
+			get { return 10.6; }
+		}
+		
+		public virtual double				DefaultWidth
+		{
+			get { return 80; }
+		}
+		public virtual double				DefaultHeight
+		{
+			get { return 20; }
+		}
 #if false
 		public bool							CausesValidation
 		{
@@ -205,6 +256,23 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				return true;
+			}
+		}
+		
+		public virtual bool					IsFrozen
+		{
+			get
+			{
+				if ((this.internal_state & InternalState.Frozen) != 0)
+				{
+					return true;
+				}
+				if (this.parent != null)
+				{
+					return this.parent.IsFrozen;
+				}
+				
+				return false;
 			}
 		}
 		
@@ -290,6 +358,27 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool							AutoToggle
+		{
+			get { return (this.internal_state & InternalState.AutoToggle) != 0; }
+			set
+			{
+				if (value)
+				{
+					this.internal_state |= InternalState.AutoToggle;
+				}
+				else
+				{
+					this.internal_state &= InternalState.AutoToggle;
+				}
+			}
+		}
+		
+		public bool							AutoMnemonic
+		{
+			get { return (this.internal_state & InternalState.AutoMnemonic) != 0; }
+		}
+		
 		public virtual WidgetState			State
 		{
 			get { return this.widget_state; }
@@ -298,6 +387,17 @@ namespace Epsitec.Common.Widgets
 		public virtual WidgetState			ActiveState
 		{
 			get { return this.widget_state & WidgetState.ActiveMask; }
+			set
+			{
+				WidgetState active = this.widget_state & WidgetState.ActiveMask;
+				if (active != value)
+				{
+					this.widget_state &= ~WidgetState.ActiveMask;
+					this.widget_state |= value & WidgetState.ActiveMask;
+					this.OnActiveStateChanged (System.EventArgs.Empty);
+					this.Invalidate ();
+				}
+			}
 		}
 		public bool							ContainsFocus
 		{
@@ -328,17 +428,38 @@ namespace Epsitec.Common.Widgets
 		
 		public bool							CanFocus
 		{
-			get { return (this.internal_state & InternalState.Focusable) != 0; }
+			get { return ((this.internal_state & InternalState.Focusable) != 0) && !this.IsFrozen; }
 		}
 		
 		public bool							CanSelect
 		{
-			get { return (this.internal_state & InternalState.Selectable) != 0; }
+			get { return ((this.internal_state & InternalState.Selectable) != 0) && !this.IsFrozen; }
 		}
 		
 		public bool							CanEngage
 		{
-			get { return this.IsEnabled && ((this.internal_state & InternalState.Engageable) != 0); }
+			get { return ((this.internal_state & InternalState.Engageable) != 0) && this.IsEnabled && !this.IsFrozen; }
+		}
+		
+		public bool							AcceptThreeState
+		{
+			get { return (this.internal_state & InternalState.AcceptThreeState) != 0; }
+			set
+			{
+				if (value)
+				{
+					this.internal_state |= InternalState.AcceptThreeState;
+				}
+				else
+				{
+					this.internal_state &= ~InternalState.AcceptThreeState;
+				}
+			}
+		}
+		
+		public bool							AcceptTaggedText
+		{
+			get { return (this.internal_state & InternalState.AcceptTaggedText) != 0; }
 		}
 		
 		
@@ -352,7 +473,7 @@ namespace Epsitec.Common.Widgets
 					{
 						if (this.children == null)
 						{
-							this.children = this.CreateWidgetCollection ();
+							this.CreateWidgetCollection ();
 						}
 					}
 				}
@@ -412,6 +533,40 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public int							RootAngle
+		{
+			get
+			{
+				Widget widget = this;
+				int    angle  = 0;
+				
+				while (widget != null)
+				{
+					angle += widget.Client.Angle;
+					widget = widget.parent;
+				}
+				
+				return angle % 360;
+			}
+		}
+		
+		public Direction					RootDirection
+		{
+			get
+			{
+				switch (this.RootAngle)
+				{
+					case 0:		return Direction.Up;
+					case 90:	return Direction.Left;
+					case 180:	return Direction.Down;
+					case 270:	return Direction.Right;
+				}
+				
+				return Direction.None;
+			}
+		}
+		
+		
 		public bool							HasChildren
 		{
 			get { return (this.children != null) && (this.children.Count > 0); }
@@ -447,7 +602,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public string						Text
+		public virtual string				Text
 		{
 			get
 			{
@@ -464,11 +619,19 @@ namespace Epsitec.Common.Widgets
 				if ((value == null) || (value.Length == 0))
 				{
 					this.text = null;
+					this.UpdateLayoutText ();
 					this.Shortcut.Mnemonic = (char) 0;
 				}
 				else
 				{
 					this.text = value;
+					
+					if (this.text_layout == null)
+					{
+						this.CreateTextLayout ();
+					}
+					
+					this.UpdateLayoutText ();
 					this.Shortcut.Mnemonic = this.Mnemonic;
 				}
 			}
@@ -480,16 +643,28 @@ namespace Epsitec.Common.Widgets
 			{
 				string text = this.Text;
 				
-				if (text != null)
+				if ((text != null) &&
+					(this.AutoMnemonic))
 				{
-					int max = text.Length - 1;
-					for (int i = 0; i < max; i++)
+					if (this.AcceptTaggedText)
 					{
-						if ((text[i] == '&') && (text[i+1] != '&'))
+						//	Le texte stocké dans le widget n'est pas un texte simple, mais
+						//	un texte formaté avec des tags. Le code mnémonique est préfixé
+						//	par des tags <m>..</m>.
+						
+						return TextLayout.ExtractMnemonic (text);
+					}
+					else
+					{
+						int max = text.Length - 1;
+						for (int i = 0; i < max; i++)
 						{
-							char mnemonic = text[i+1];
-							mnemonic = System.Char.ToUpper (mnemonic, System.Globalization.CultureInfo.CurrentCulture);
-							return mnemonic;
+							if ((text[i] == '&') && (text[i+1] != '&'))
+							{
+								char mnemonic = text[i+1];
+								mnemonic = System.Char.ToUpper (mnemonic, System.Globalization.CultureInfo.CurrentCulture);
+								return mnemonic;
+							}
 						}
 					}
 				}
@@ -537,6 +712,7 @@ namespace Epsitec.Common.Widgets
 		public event System.EventHandler	Defocused;
 		public event System.EventHandler	Selected;
 		public event System.EventHandler	Deselected;
+		public event System.EventHandler	ActiveStateChanged;
 		
 		
 		//	Cursor
@@ -551,6 +727,39 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetVisible (true);
 		}
+		
+		public virtual void Toggle()
+		{
+			if (this.AcceptThreeState)
+			{
+				switch (this.ActiveState)
+				{
+					case WidgetState.ActiveYes:
+						this.ActiveState = WidgetState.ActiveMaybe;
+						break;
+					case WidgetState.ActiveMaybe:
+						this.ActiveState = WidgetState.ActiveNo;
+						break;
+					case WidgetState.ActiveNo:
+						this.ActiveState = WidgetState.ActiveYes;
+						break;
+				}
+			}
+			else
+			{
+				switch (this.ActiveState)
+				{
+					case WidgetState.ActiveYes:
+					case WidgetState.ActiveMaybe:
+						this.ActiveState = WidgetState.ActiveNo;
+						break;
+					case WidgetState.ActiveNo:
+						this.ActiveState = WidgetState.ActiveYes;
+						break;
+				}
+			}
+		}
+		
 		
 		public virtual void SetVisible(bool visible)
 		{
@@ -567,6 +776,46 @@ namespace Epsitec.Common.Widgets
 				if (!visible)
 				{
 					this.internal_state &= ~ InternalState.Visible;
+					this.Invalidate ();
+				}
+			}
+		}
+		
+		public virtual void SetEnabled(bool enabled)
+		{
+			if ((this.widget_state & WidgetState.Enabled) == 0)
+			{
+				if (enabled)
+				{
+					this.widget_state |= WidgetState.Enabled;
+					this.Invalidate ();
+				}
+			}
+			else
+			{
+				if (!enabled)
+				{
+					this.widget_state &= ~ WidgetState.Enabled;
+					this.Invalidate ();
+				}
+			}
+		}
+		
+		public virtual void SetFrozen(bool frozen)
+		{
+			if ((this.internal_state & InternalState.Frozen) == 0)
+			{
+				if (frozen)
+				{
+					this.internal_state |= InternalState.Frozen;
+					this.Invalidate ();
+				}
+			}
+			else
+			{
+				if (!frozen)
+				{
+					this.internal_state &= ~ InternalState.Frozen;
 					this.Invalidate ();
 				}
 			}
@@ -625,7 +874,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void SetEngaged(bool focused)
+		public virtual void SetEngaged(bool engaged)
 		{
 			WindowFrame frame = this.WindowFrame;
 			
@@ -636,7 +885,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ((this.widget_state & WidgetState.Engaged) == 0)
 			{
-				if (focused)
+				if (engaged)
 				{
 					this.widget_state |= WidgetState.Engaged;
 					frame.EngagedWidget = this;
@@ -645,7 +894,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				if (!focused)
+				if (!engaged)
 				{
 					this.widget_state &= ~ WidgetState.Engaged;
 					frame.EngagedWidget = null;
@@ -659,18 +908,26 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.IsEntered != entered)
 			{
+				WindowFrame frame = this.WindowFrame;
+				Message message = null;
+				
 				if (entered)
 				{
 					Widget.entered_widgets.Add (this);
 					this.widget_state |= WidgetState.Entered;
-					this.MessageHandler (Message.FromMouseEvent (MessageType.MouseEnter, null, null));
+					
+					message = Message.FromMouseEvent (MessageType.MouseEnter, null, null);
 				}
 				else
 				{
 					Widget.entered_widgets.Remove (this);
 					this.widget_state &= ~ WidgetState.Entered;
-					this.MessageHandler (Message.FromMouseEvent (MessageType.MouseLeave, null, null));
+					
+					message = Message.FromMouseEvent (MessageType.MouseLeave, null, null);
 				}
+				
+				this.MessageHandler (message);
+				frame.PostProcessMessage (message);
 			}
 		}
 		
@@ -1139,6 +1396,35 @@ namespace Epsitec.Common.Widgets
 			
 			this.Invalidate ();
 			this.UpdateClientGeometry ();
+			this.UpdateLayoutSize ();
+		}
+		
+		
+		protected virtual void UpdateLayoutSize()
+		{
+			if (this.text_layout != null)
+			{
+				this.text_layout.Alignment  = this.Alignment;
+				this.text_layout.LayoutSize = this.Size;
+			}
+		}
+		
+		protected virtual void UpdateLayoutText()
+		{
+			if (this.text_layout != null)
+			{
+				if (this.AcceptTaggedText)
+				{
+					this.text_layout.Text = this.Text;
+				}
+				else
+				{
+					//	Le widget n'accepte pas de texte formaté en entrée; on doit donc
+					//	s'assurer que le texte passé à TextLayout est conforme.
+					
+					this.text_layout.Text = TextLayout.ConvertToTaggedText (this.Text, this.AutoMnemonic);
+				}
+			}
 		}
 		
 		
@@ -1348,6 +1634,7 @@ namespace Epsitec.Common.Widgets
 					Widget widget = children[children_num-1 - i];
 					
 					if ((widget.IsEnabled) &&
+						(widget.IsFrozen == false) &&
 						((message.FilterOnlyFocused == false) || (widget.ContainsFocus)) &&
 						((message.FilterOnlyOnHit == false) || (widget.HitTest (client_pos))))
 					{
@@ -1437,6 +1724,7 @@ namespace Epsitec.Common.Widgets
 					Widget widget = children[children_num-1 - i];
 				
 					if ((widget.IsEnabled) &&
+						(widget.IsFrozen == false) &&
 						(widget.ContainsFocus))
 					{
 						if (widget.ShortcutHandler (shortcut))
@@ -1456,7 +1744,8 @@ namespace Epsitec.Common.Widgets
 			{
 				Widget widget = children[children_num-1 - i];
 				
-				if (widget.IsEnabled)
+				if ((widget.IsEnabled) &&
+					(widget.IsFrozen == false))
 				{
 					if (widget.ShortcutHandler (shortcut, false))
 					{
@@ -1481,12 +1770,24 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual WidgetCollection CreateWidgetCollection()
+		protected virtual void CreateWidgetCollection()
 		{
-			return new WidgetCollection (this);
+			this.children = new WidgetCollection (this);
 		}
 		
+		protected virtual void CreateTextLayout()
+		{
+			this.text_layout = new TextLayout ();
+			
+			this.text_layout.Font       = this.DefaultFont;
+			this.text_layout.FontSize   = this.DefaultFontSize;
+			
+			this.UpdateLayoutSize ();
+			this.UpdateLayoutText ();
+		}
 		
+		protected TextLayout			text_layout;
+
 		protected virtual void OnPaintBackground(PaintEventArgs e)
 		{
 			if (this.PaintBackground != null)
@@ -1599,6 +1900,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnActiveStateChanged(System.EventArgs e)
+		{
+			if (this.ActiveStateChanged != null)
+			{
+				this.ActiveStateChanged (this, e);
+			}
+		}
+		
 		
 		[System.Flags] protected enum InternalState
 		{
@@ -1607,13 +1916,17 @@ namespace Epsitec.Common.Widgets
 			
 			Focusable			= 0x00000010,
 			Selectable			= 0x00000020,
-			Engageable			= 0x00000040,
-			
+			Engageable			= 0x00000040,		//	=> peut être enfoncé par une pression
+			Frozen				= 0x00000080,		//	=> n'accepte aucun événement
 			Visible				= 0x00000100,
+			AcceptThreeState	= 0x00000200,
+			AcceptTaggedText	= 0x00000400,
 			
 			AutoCapture			= 0x00010000,
 			AutoFocus			= 0x00020000,
 			AutoEngage			= 0x00040000,
+			AutoToggle			= 0x00080000,
+			AutoMnemonic		= 0x00100000,
 		}
 		
 		[System.Flags] public enum TabNavigationMode
@@ -1919,6 +2232,7 @@ namespace Epsitec.Common.Widgets
 		protected Widget					parent;
 		protected string					name;
 		protected string					text;
+		protected ContentAlignment			alignment;
 		protected LayoutInfo				layout_info;
 		protected InternalState				internal_state;
 		protected WidgetState				widget_state;

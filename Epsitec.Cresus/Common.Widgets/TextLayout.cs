@@ -58,19 +58,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public string					CleanText
-		{
-			get
-			{
-				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-				
-				//	TODO: épure le texte en supprimant les tags <> et en remplaçant les
-				//	tags &gt; et &lt; par leurs caractères équivalents.
-				
-				return buffer.ToString ();
-			}
-		}
-		
 		public Drawing.Size				LayoutSize
 		{
 			get { return this.layout_size; }
@@ -311,6 +298,8 @@ namespace Epsitec.Common.Widgets
 						case "</i>":	return Tag.ItalicEnd;
 						case "<u>":		return Tag.Underline;
 						case "</u>":	return Tag.UnderlineEnd;
+						case "<m>":		return Tag.Mnemonic;
+						case "<m/>":	return Tag.MnemonicEnd;
 						case "</a>":	return Tag.AnchorEnd;
 					}
 					
@@ -368,6 +357,56 @@ namespace Epsitec.Common.Widgets
 			return Tag.None;
 		}
 		
+		public static char ExtractMnemonic(string text)
+		{
+			//	TODO: trouve la séquence <m>x</m> dans le texte et retourne le premier caractère
+			//	de x comme code mnémonique (en majuscules).
+			
+			return '\0';
+		}
+		
+		public static string ConvertToTaggedText(string text)
+		{
+			return TextLayout.ConvertToTaggedText (text, false);
+		}
+		
+		public static string ConvertToTaggedText(string text, bool auto_mnemonic)
+		{
+			//	Convertit le texte simple en un texte compatible avec les tags. Supprime
+			//	toute occurrence de "<", "&" et ">" dans le texte.
+			
+			if (auto_mnemonic)
+			{
+				//	TODO: cherche les occurrences de "&" dans le texte et gère comme suit:
+				//
+				//	- Remplace "&x" par "<m>x</m>" (le tag <m> spécifie un code mnémonique)
+				//	- Remplace "&&" par "&"
+			}
+			
+			text = text.Replace ("&", "&amp;");
+			text = text.Replace ("<", "&lt;");
+			text = text.Replace (">", "&gt;");
+			
+			return text;
+		}
+		
+		public static string ConvertToSimpleText(string text)
+		{
+			return TextLayout.ConvertToSimpleText (text, "");
+		}
+		
+		public static string ConvertToSimpleText(string text, string image_replacement)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			//	TODO: épure le texte en supprimant les tags <> et en remplaçant les
+			//	tags &gt; et &lt; (et autres) par leurs caractères équivalents.
+			//	En plus, les images sont remplacées par le texte 'image_replacement'
+			
+			return buffer.ToString ();
+		}
+		
+		
 		protected virtual void UpdateLayout()
 		{
 			if (this.is_dirty)
@@ -389,6 +428,7 @@ namespace Epsitec.Common.Widgets
 			Bold, BoldEnd,				//	<b>...</b>
 			Italic, ItalicEnd,			//	<i>...</i>
 			Underline, UnderlineEnd,	//	<u>...</u>
+			Mnemonic, MnemonicEnd,		//	<m>...</m>				--> comme <u>...</u>
 			Font, FontEnd,				//	<font ...>...</font>
 			Anchor, AnchorEnd,			//	<a href='x'>...</a>
 			Image,						//	<img src='x'/>

@@ -106,6 +106,32 @@ namespace Epsitec.Common.Widgets
 			get { return this.button; }
 		}
 		
+		public bool							IsLeftButton
+		{
+			get { return (this.button & MouseButtons.Left) != 0; }
+		}
+		
+		public bool							IsRightButton
+		{
+			get { return (this.button & MouseButtons.Right) != 0; }
+		}
+		
+		public bool							IsMiddleButton
+		{
+			get { return (this.button & MouseButtons.Middle) != 0; }
+		}
+		
+		public bool							IsXButton1
+		{
+			get { return (this.button & MouseButtons.XButton1) != 0; }
+		}
+		
+		public bool							IsXButton2
+		{
+			get { return (this.button & MouseButtons.XButton2) != 0; }
+		}
+		
+		
 		public int							ButtonDownCount
 		{
 			get { return this.button_down_count; }
@@ -360,6 +386,31 @@ namespace Epsitec.Common.Widgets
 		public ModifierKeys					ModifierKeys
 		{
 			get { return this.modifiers; }
+		}
+		
+		public bool							IsLeftButton
+		{
+			get { return (this.buttons & MouseButtons.Left) != 0; }
+		}
+		
+		public bool							IsRightButton
+		{
+			get { return (this.buttons & MouseButtons.Right) != 0; }
+		}
+		
+		public bool							IsMiddleButton
+		{
+			get { return (this.buttons & MouseButtons.Middle) != 0; }
+		}
+		
+		public bool							IsXButton1
+		{
+			get { return (this.buttons & MouseButtons.XButton1) != 0; }
+		}
+		
+		public bool							IsXButton2
+		{
+			get { return (this.buttons & MouseButtons.XButton2) != 0; }
 		}
 		
 		public bool							IsShiftPressed

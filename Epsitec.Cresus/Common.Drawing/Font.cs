@@ -142,13 +142,23 @@ namespace Epsitec.Common.Drawing
 				Font.array = new Font[n];
 				Font.hash = new System.Collections.Hashtable ();
 				
+				int j = 0;
+				
 				for (int i = 0; i < n; i++)
 				{
-					Font.array[i] = new Font (Agg.Library.AggFontGetFaceByRank (i));
-					Font.hash[Font.array[i].FullName] = Font.array[i];
+					Font   font = new Font (Agg.Library.AggFontGetFaceByRank (i));
+					string name = font.FullName;
 					
-					System.Diagnostics.Debug.Assert (Font.array[i] != null);
+					if (Font.hash.ContainsKey (name) == false)
+					{
+						Font.array[j++] = font;
+						Font.hash[name] = font;
+					}
+					
+					System.Diagnostics.Debug.Assert (font != null);
 				}
+				
+				Font.count = j;
 			}
 		}
 		
@@ -158,7 +168,7 @@ namespace Epsitec.Common.Drawing
 			get
 			{
 				Font.SetupFonts ();
-				return Font.array.Length;
+				return Font.count;
 			}
 		}
 		
@@ -167,7 +177,7 @@ namespace Epsitec.Common.Drawing
 			Font.SetupFonts ();
 			
 			if ((rank >= 0) &&
-				(rank < Font.array.Length))
+				(rank < Font.count))
 			{
 				return Font.array[rank];
 			}
@@ -209,6 +219,7 @@ namespace Epsitec.Common.Drawing
 		protected System.IntPtr							handle;
 		protected static Font[]							array;
 		protected static System.Collections.Hashtable	hash;
+		protected static int							count;
 		
 		protected enum NameID
 		{

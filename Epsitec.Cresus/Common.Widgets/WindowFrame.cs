@@ -310,7 +310,7 @@ namespace Epsitec.Common.Widgets
 			this.graphics.Pixmap.Paint (win_graphics, win_clip_rect);
 		}
 		
-		protected virtual void DispatchMessage(Message message)
+		public virtual void DispatchMessage(Message message)
 		{
 			if (message.IsMouseType)
 			{
@@ -343,14 +343,18 @@ namespace Epsitec.Common.Widgets
 				this.capturing_widget.MessageHandler (message);
 			}
 			
-			if (message.Handled)
+			this.PostProcessMessage (message);
+		}
+		
+		public virtual void PostProcessMessage(Message message)
+		{
+			Widget consumer = message.Consumer;
+			
+			if (consumer != null)
 			{
-				if (message.Type == MessageType.MouseDown)
+				switch (message.Type)
 				{
-					Widget consumer = message.Consumer;
-					
-					if (consumer != null)
-					{
+					case MessageType.MouseDown:
 						if (consumer.AutoCapture)
 						{
 							this.capturing_widget = consumer;
@@ -364,13 +368,53 @@ namespace Epsitec.Common.Widgets
 							this.FocusedWidget = consumer;
 						}
 						
-						if ((consumer.AutoEngage) &&
+						if (message.IsLeftButton)
+						{
+							if ((consumer.AutoEngage) &&
+								(consumer.IsEngaged == false) &&
+								(consumer.CanEngage))
+							{
+								this.EngagedWidget = consumer;
+							}
+						}
+						break;
+					
+					case MessageType.MouseUp:
+						this.capturing_widget = null;
+						this.Capture = false;
+						
+						if (message.IsLeftButton)
+						{
+							if ((consumer.AutoToggle) &&
+								(consumer.IsEnabled) &&
+								(consumer.IsEntered) &&
+								(!consumer.IsFrozen))
+							{
+								//	Change l'état du bouton...
+								
+								consumer.Toggle ();
+							}
+							
+							this.EngagedWidget = null;
+						}
+						break;
+					
+					case MessageType.MouseLeave:
+						if (consumer.IsEngaged)
+						{
+							this.EngagedWidget = null;
+						}
+						break;
+					
+					case MessageType.MouseEnter:
+						if ((Message.State.IsLeftButton) &&
+							(consumer.AutoEngage) &&
 							(consumer.IsEngaged == false) &&
 							(consumer.CanEngage))
 						{
 							this.EngagedWidget = consumer;
 						}
-					}
+						break;
 				}
 			}
 			else
@@ -400,13 +444,6 @@ namespace Epsitec.Common.Widgets
 				{
 					message.Handled = this.root.ShortcutHandler (shortcut);
 				}
-			}
-			
-			if (message.Type == MessageType.MouseUp)
-			{
-				this.capturing_widget = null;
-				this.Capture = false;
-				this.EngagedWidget = null;
 			}
 		}
 		
