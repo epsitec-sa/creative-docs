@@ -54,6 +54,71 @@ namespace Epsitec.Common.Script
 			}
 		}
 		
+		public IEditorEngine					Editor
+		{
+			get
+			{
+				if (this.editor == null)
+				{
+					this.editor = Common.Script.Editor.Engine;
+				}
+				
+				return this.editor;
+			}
+		}
+		
+		public string							Name
+		{
+			get
+			{
+				return this.source == null ? null : this.source.Name;
+			}
+			set
+			{
+				if (this.source == null)
+				{
+					throw new System.InvalidOperationException ("Cannot define name without source object.");
+				}
+			
+				this.source.DefineName (value);
+			}
+		}
+		
+		public Types.IDataGraph					Data
+		{
+			get
+			{
+				return this.data_graph;
+			}
+			set
+			{
+				this.data_graph = value;
+				this.UpdateSourceData ();
+			}
+		}
+		
+		
+		public string[] GetMethodNames()
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (Source.Method method in this.source.Methods)
+			{
+				string name = method.Name;
+				
+				if (! list.Contains (name))
+				{
+					list.Add (name);
+				}
+			}
+			
+			string[] names = new string[list.Count];
+			list.CopyTo (names);
+			
+			return names;
+		}
+		
+		
 		
 		public System.Xml.XmlDocument CreateXmlDocument(bool include_declaration)
 		{
@@ -314,14 +379,19 @@ namespace Epsitec.Common.Script
 			return false;
 		}
 
-		public string							Name
+		string									Support.ICommandDispatcher.Name
 		{
 			get
 			{
-				return this.source == null ? null : this.source.Name;
+				return this.Name;
 			}
 		}
 		#endregion
+		
+		protected void UpdateSourceData()
+		{
+			//	TODO: met à jour Source.Data en fonction de this.Data
+		}
 		
 		protected class DataValue : Types.IDataValue
 		{
@@ -426,5 +496,8 @@ namespace Epsitec.Common.Script
 		private Source							source;
 		private Script							script;
 		private Helpers.ParameterInfoStore		info_store;
+		
+		private IEditorEngine					editor;
+		private Types.IDataGraph				data_graph;
 	}
 }
