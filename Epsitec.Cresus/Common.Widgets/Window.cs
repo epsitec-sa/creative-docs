@@ -1206,7 +1206,7 @@ namespace Epsitec.Common.Widgets
 						break;
 				}
 			}
-			else
+			else if (! message.Handled)
 			{
 				Shortcut shortcut = Shortcut.FromMessage (message);
 				

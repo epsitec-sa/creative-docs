@@ -382,8 +382,20 @@ namespace Epsitec.Common.Widgets
 
 			if ( key >= 32 )  // TODO: à vérifier ...
 			{
+				bool replaced = this.textLayout.HasSelection(this.context);
+				
 				this.textLayout.InsertCharacter(this.context, (char)key);
-				this.OnTextInserted(false);
+				
+				if ( replaced )
+				{
+					this.OnTextDeleted(true);
+					this.OnTextInserted(true);
+				}
+				else
+				{
+					this.OnTextInserted(false);
+				}
+				
 				return true;
 			}
 			

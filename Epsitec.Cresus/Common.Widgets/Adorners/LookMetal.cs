@@ -1554,7 +1554,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			Drawing.Point center = rect.Center;
 			t.Scale(rect.Width/100/2, rect.Height/100/2);
 			t.Translate(center);
-			t.Rotate(0, center);
+//			t.RotateDeg(0, center);
 			graphics.GradientRenderer.Transform = t;
 			graphics.RenderGradient();
 			graphics.GradientRenderer.Transform = ot;

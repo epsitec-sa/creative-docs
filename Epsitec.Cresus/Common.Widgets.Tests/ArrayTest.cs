@@ -212,8 +212,8 @@ namespace Epsitec.Common.Widgets
 			
 			TextFieldEx model_field_1 = new TextFieldEx ();
 			
-			model_field_1.ButtonShowCondition = ShowCondition.WhenFocusedFlagSet;
-			model_field_1.DefocusAction       = DefocusAction.ModalOrReject;
+			model_field_1.ButtonShowCondition = ShowCondition.WhenModified;
+			model_field_1.DefocusAction       = DefocusAction.Modal;
 			
 			table.Columns[0].EditionWidgetModel = model_field_1;
 			table.EditWidgetsCreated += new EventHandler(this.HandleTableEditWidgetsCreated);
@@ -379,7 +379,25 @@ namespace Epsitec.Common.Widgets
 		{
 			EditArray edit = sender as EditArray;
 			
-			IValidator validator = new Validators.RegexValidator (edit.Columns[0].EditionWidget, Support.RegexFactory.ResourceName);
+			if (edit.InteractionMode == ScrollInteractionMode.Edition)
+			{
+				TextFieldEx col_0_text = edit.Columns[0].EditionWidget as TextFieldEx;
+				IValidator validator = new Validators.RegexValidator (col_0_text, Support.RegexFactory.ResourceName);
+				col_0_text.EditionAccepted += new EventHandler(this.HandleColumnZeroEditionAccepted);
+				col_0_text.EditionRejected += new EventHandler(this.HandleColumnZeroEditionRejected);
+			}
+		}
+		
+		private void HandleColumnZeroEditionAccepted(object sender)
+		{
+			TextFieldEx text = sender as TextFieldEx;
+			System.Diagnostics.Debug.WriteLine (string.Format ("Edition accepted: {0}", text.Text));
+		}
+		
+		private void HandleColumnZeroEditionRejected(object sender)
+		{
+			TextFieldEx text = sender as TextFieldEx;
+			System.Diagnostics.Debug.WriteLine (string.Format ("Edition rejected: {0}", text.Text));
 		}
 		
 		

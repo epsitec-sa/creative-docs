@@ -11,8 +11,7 @@ namespace Epsitec.Common.Widgets
 		AcceptEdition,
 		RejectEdition,
 		
-		ModalOrAccept,
-		ModalOrReject
+		Modal
 	}
 	
 	public enum ShowCondition
@@ -21,6 +20,8 @@ namespace Epsitec.Common.Widgets
 		
 		WhenFocused,
 		WhenFocusedFlagSet,
+		
+		WhenModified,
 		
 		Never
 	}
@@ -92,44 +93,89 @@ namespace Epsitec.Common.Widgets
 		
 		public bool AcceptEdition()
 		{
-			this.OnEditionAccepted ();
-			return true;
+			if (this.IsValid)
+			{
+				this.accept_reject_behavior.InitialText = this.Text;
+				this.SelectAll ();
+				this.OnEditionAccepted ();
+				return true;
+			}
+			
+			return false;
 		}
 		
 		public bool RejectEdition()
 		{
+			this.Text = this.accept_reject_behavior.InitialText;
+			this.SelectAll ();
 			this.OnEditionRejected ();
-			return false;
+			return true;
 		}
 		
 		
-		protected override bool ProcessMouseDown(Message message, Epsitec.Common.Drawing.Point pos)
+		protected override bool ProcessMouseDown(Message message, Drawing.Point pos)
 		{
 			return base.ProcessMouseDown (message, pos);
 		}
 		
-		protected override bool ProcessKeyDown(Message message, Epsitec.Common.Drawing.Point pos)
+		protected override bool ProcessKeyDown(Message message, Drawing.Point pos)
 		{
 			return base.ProcessKeyDown (message, pos);
 		}
 
-		protected override bool AboutToLoseFocus(Epsitec.Common.Widgets.Widget.TabNavigationDir dir, Epsitec.Common.Widgets.Widget.TabNavigationMode mode)
+		protected override bool AboutToLoseFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode)
 		{
-			switch (this.DefocusAction)
+			if (this.accept_reject_behavior.IsVisible)
 			{
-				case DefocusAction.ModalOrAccept:
-				case DefocusAction.ModalOrReject:
-					return this.IsValid;
+				switch (this.DefocusAction)
+				{
+					case DefocusAction.Modal:
+						return this.IsValid;
+				}
 			}
 			
 			return base.AboutToLoseFocus (dir, mode);
 		}
-
+		
 		protected override bool AboutToGetFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode, out Widget focus)
 		{
 			return base.AboutToGetFocus (dir, mode, out focus);
 		}
+		
+		protected override void OnDefocused()
+		{
+			if (this.IsFocusedFlagSet == false)
+			{
+				switch (this.DefocusAction)
+				{
+					case DefocusAction.AcceptEdition:
+						this.AcceptEdition ();
+						break;
+					
+					case DefocusAction.RejectEdition:
+						this.RejectEdition ();
+						break;
+					
+					case DefocusAction.Modal:
+						if (this.IsValid)
+						{
+							this.AcceptEdition ();
+						}
+						else
+						{
+							this.RejectEdition ();
+						}
+						break;
+					
+					default:
+						throw new System.NotImplementedException (string.Format ("DefocusAction.{0} not implemented.", this.DefocusAction));
+				}
+			}
+			
+			base.OnDefocused ();
+		}
 
+		
 		protected override void UpdateButtonGeometry()
 		{
 			base.UpdateButtonGeometry ();
@@ -169,14 +215,24 @@ namespace Epsitec.Common.Widgets
 				case ShowCondition.Always:
 					show = true;
 					break;
+				
 				case ShowCondition.Never:
 					break;
+				
 				case ShowCondition.WhenFocused:
 					show = this.IsFocused;
 					break;
+				
 				case ShowCondition.WhenFocusedFlagSet:
 					show = this.IsFocusedFlagSet;
 					break;
+				
+				case ShowCondition.WhenModified:
+					show = this.Text != this.accept_reject_behavior.InitialText;
+					break;
+				
+				default:
+					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));
 			}
 			
 			this.SetButtonVisibility (show);
@@ -191,20 +247,26 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected override void OnTextDefined()
+		{
+			base.OnTextDefined ();
+			this.accept_reject_behavior.InitialText = this.Text;
+		}
+
 		protected override void OnTextChanged()
 		{
 			base.OnTextChanged ();
 			this.UpdateButtonEnable ();
+			this.UpdateButtonVisibility ();
 		}
 
 		protected override void OnFocusChanged()
 		{
 			base.OnFocusChanged ();
-			
 			this.UpdateButtonVisibility ();
 		}
 		
-		protected virtual void OnEditionAccepted()
+		protected virtual void  OnEditionAccepted()
 		{
 			if (this.EditionAccepted != null)
 			{
@@ -212,7 +274,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnEditionRejected()
+		protected virtual void  OnEditionRejected()
 		{
 			if (this.EditionRejected != null)
 			{

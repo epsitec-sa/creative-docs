@@ -102,14 +102,14 @@ namespace Epsitec.Common.Widgets
 			this.centerCircle.Y = this.rectCircle.Bottom+this.rectCircle.Height/2;
 
 			Drawing.Point p1 = this.centerCircle + new Drawing.Point(this.radiusCircleMin*0.95, 0);
-			Drawing.Point p2 = Drawing.Transform.RotatePoint(this.centerCircle, (180.0+60.0)*System.Math.PI/180.0, p1);
+			Drawing.Point p2 = Drawing.Transform.RotatePointDeg(this.centerCircle, 180.0+60.0, p1);
 			this.rectTriangle.Left   = p2.X;
 			this.rectTriangle.Right  = p1.X;
 			this.rectTriangle.Bottom = p2.Y;
 			this.rectTriangle.Top    = p2.Y+(p1.Y-p2.Y)*2;
 
-			Drawing.Point p3 = Drawing.Transform.RotatePoint(this.centerCircle, (180.0+45.0)*System.Math.PI/180.0, p1);
-			Drawing.Point p4 = Drawing.Transform.RotatePoint(this.centerCircle, 45.0*System.Math.PI/180.0, p1);
+			Drawing.Point p3 = Drawing.Transform.RotatePointDeg(this.centerCircle, 180.0+45.0, p1);
+			Drawing.Point p4 = Drawing.Transform.RotatePointDeg(this.centerCircle, 45.0, p1);
 			this.rectSquare.Left   = p3.X;
 			this.rectSquare.Right  = p4.X;
 			this.rectSquare.Bottom = p3.Y;
@@ -122,9 +122,8 @@ namespace Epsitec.Common.Widgets
 		protected void ComputePosHandler()
 		{
 			double radius = (this.radiusCircleMax+this.radiusCircleMin)/2;
-			double angle = this.h*System.Math.PI*2/360;  // 0..2*PI
-			this.posHandlerH = this.centerCircle + Drawing.Transform.RotatePoint(angle, new Drawing.Point(0, radius));
-
+			
+			this.posHandlerH    = this.centerCircle + Drawing.Transform.RotatePointDeg(this.h, new Drawing.Point(0, radius));
 			this.posHandlerSV.X = this.rectSquare.Left + this.rectSquare.Width*this.s;
 			this.posHandlerSV.Y = this.rectSquare.Bottom + this.rectSquare.Height*this.v;
 		}
@@ -196,9 +195,9 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			double angle = Drawing.Point.ComputeAngle(this.centerCircle, pos);
-			angle = Epsitec.Common.Math.ClipAngle(angle-System.Math.PI/2);
-			h = angle/(System.Math.PI*2)*360;  // 0..360
+			double angle = Drawing.Point.ComputeAngleDeg(this.centerCircle, pos);
+			angle = Epsitec.Common.Math.ClipAngleDeg(angle-90);
+			h = angle;  // 0..360
 			return true;
 		}
 
@@ -282,7 +281,7 @@ namespace Epsitec.Common.Widgets
 			
 				Drawing.Transform t = new Drawing.Transform();
 				t.Translate(cx, cy);
-				t.Rotate(-90, cx, cy);  // rouge en haut
+				t.RotateDeg(-90, cx, cy);  // rouge en haut
 				graphics.GradientRenderer.Transform = t;
 			
 				graphics.RenderGradient();

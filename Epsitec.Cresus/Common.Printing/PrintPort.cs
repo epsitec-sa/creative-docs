@@ -257,11 +257,20 @@ namespace Epsitec.Common.Printing
 			this.RestoreTransform (transform);
 		}
 		
-		public void RotateTransform(double angle, double cx, double cy)
+		public void RotateTransformDeg(double angle, double cx, double cy)
 		{
 			Drawing.Transform transform = new Drawing.Transform (this.transform);
 			
-			transform.MultiplyByPostfix (Drawing.Transform.FromRotation (angle, cx, cy));
+			transform.MultiplyByPostfix (Drawing.Transform.FromRotationDeg (angle, cx, cy));
+			
+			this.RestoreTransform (transform);
+		}
+		
+		public void RotateTransformRad(double angle, double cx, double cy)
+		{
+			Drawing.Transform transform = new Drawing.Transform (this.transform);
+			
+			transform.MultiplyByPostfix (Drawing.Transform.FromRotationRad (angle, cx, cy));
 			
 			this.RestoreTransform (transform);
 		}

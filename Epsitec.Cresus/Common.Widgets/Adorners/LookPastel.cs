@@ -1475,7 +1475,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( angle == 0 )  t.Scale(rect.Width/100/2, rect.Height/100/2);
 			else               t.Scale(rect.Height/100/2, rect.Width/100/2);
 			t.Translate(center);
-			t.Rotate(angle, center);
+			t.RotateDeg(angle, center);
 			graphics.GradientRenderer.Transform = t;
 			graphics.RenderGradient();
 			graphics.GradientRenderer.Transform = ot;

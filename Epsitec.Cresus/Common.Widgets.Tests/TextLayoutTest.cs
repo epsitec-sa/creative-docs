@@ -386,6 +386,23 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual (22, text.MaxTextOffset);
 		}
 		
+		[Test] public void CheckSelectAll()
+		{
+			TextLayout         text    = new TextLayout ();
+			TextLayout.Context context = new TextLayout.Context ();
+			
+			text.Text = "<b>&lt;x<br/>y&gt;</b>";
+			
+			text.SelectAll (context);
+			
+			Assert.AreEqual (0, context.CursorFrom);
+			Assert.AreEqual (5, context.CursorTo);
+			
+			text.ReplaceSelection (context, "*");
+			
+			Assert.AreEqual ("<b>*</b>", text.Text);
+		}
+		
 		private void CheckPaint_Paint1(object sender, PaintEventArgs e)
 		{
 			TextLayout layout = new TextLayout();

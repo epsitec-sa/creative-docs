@@ -128,6 +128,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.InteractionMode == ScrollInteractionMode.Edition)
 			{
+				if (finished)
+				{
+					this.edit_line.Defocus ();
+				}
+				
 				if (this.SelectedIndex >= 0)
 				{
 					this.edit_line.Values = this.GetRowTexts (this.SelectedIndex);
@@ -148,6 +153,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.InteractionMode == ScrollInteractionMode.Edition)
 			{
+				if (finished)
+				{
+					this.edit_line.Defocus ();
+				}
+				
 				if (this.SelectedIndex >= 0)
 				{
 					this.SetRowTexts (this.SelectedIndex, this.edit_line.Values);
@@ -463,6 +473,12 @@ namespace Epsitec.Common.Widgets
 			{
 				this.ReloadEdition ();
 			}
+		}
+		
+		protected override void OnInteractionModeChanging()
+		{
+			this.edit_line.DeallocateLines ();
+			base.OnInteractionModeChanging ();
 		}
 		
 		protected override void OnInteractionModeChanged()
@@ -809,6 +825,16 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
+			public void Defocus()
+			{
+				int column = this.FindFocusedColumn ();
+				
+				if (column >= 0)
+				{
+					this.edit_widgets[column].SetFocused (false);
+				}
+			}
+			
 			public void SelectFocusedColumn()
 			{
 				this.FocusColumn (this.FindFocusedColumn ());
@@ -947,6 +973,11 @@ namespace Epsitec.Common.Widgets
 				this.host.UpdateInnerTopMargin ();
 			}
 			
+			public void DeallocateLines()
+			{
+				this.ColumnCount = 0;
+			}
+			
 			public void ReallocateLines()
 			{
 				this.ColumnCount = 0;
@@ -969,9 +1000,9 @@ namespace Epsitec.Common.Widgets
 			{
 				if (widget != null)
 				{
+					widget.Parent       = null;
 					widget.Focused     -= new Support.EventHandler (this.HandleEditArrayFocused);
 					widget.TextChanged -= new Epsitec.Common.Support.EventHandler (this.HandleTextChanged);
-					widget.Parent       = null;
 					widget.Dispose ();
 					widget = null;
 				}

@@ -45,6 +45,19 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 		
+		public string							InitialText
+		{
+			get
+			{
+				return this.initial_text;
+			}
+			set
+			{
+				this.initial_text = value;
+			}
+		}
+		
+		
 		public void SetVisible(bool visible)
 		{
 			this.is_visible = visible;
@@ -139,5 +152,6 @@ namespace Epsitec.Common.Widgets.Helpers
 		protected GlyphButton					button_reject;
 		
 		protected bool							is_visible;
+		protected string						initial_text;
 	}
 }

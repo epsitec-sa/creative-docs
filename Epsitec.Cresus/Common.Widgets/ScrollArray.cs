@@ -1277,8 +1277,8 @@ invalid:	row    = -1;
 		{
 			if (this.interaction_mode != value)
 			{
+				this.OnInteractionModeChanging ();
 				this.interaction_mode = value;
-				
 				this.InvalidateContents ();
 				this.OnInteractionModeChanged ();
 			}
@@ -1912,6 +1912,14 @@ invalid:	row    = -1;
 			}
 		}
 		
+		protected virtual  void OnInteractionModeChanging()
+		{
+			if (this.InteractionModeChanging != null)
+			{
+				this.InteractionModeChanging (this);
+			}
+		}
+		
 		protected virtual  void OnInteractionModeChanged()
 		{
 			if (this.InteractionModeChanged != null)
@@ -2210,6 +2218,7 @@ invalid:	row    = -1;
 		}
 		#endregion
 		
+		public event Support.EventHandler		InteractionModeChanging;
 		public event Support.EventHandler		InteractionModeChanged;
 		public event Support.EventHandler		ContentsChanged;
 		public event Support.EventHandler		ContentsInvalidated;

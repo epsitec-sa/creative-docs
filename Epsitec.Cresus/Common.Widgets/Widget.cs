@@ -1721,6 +1721,7 @@ namespace Epsitec.Common.Widgets
 					if (this.text_layout != null)
 					{
 						this.DisposeTextLayout ();
+						this.OnTextDefined ();
 						this.OnTextChanged ();
 						this.Invalidate ();
 					}
@@ -1729,6 +1730,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.CreateTextLayout ();
 					this.ModifyTextLayout (value);
+					this.OnTextDefined ();
 					this.OnTextChanged ();
 					this.Invalidate ();
 				}
@@ -3071,7 +3073,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			t.Translate (-ox, -oy);
-			t.Rotate (-this.client_info.angle);
+			t.RotateDeg (-this.client_info.angle);
 			t.Scale (1 / this.client_info.zoom);
 			t.Translate (-this.client_info.ox, -this.client_info.oy);
 			t.Round ();
@@ -3096,7 +3098,7 @@ namespace Epsitec.Common.Widgets
 			
 			t.Translate (this.client_info.ox, this.client_info.oy);
 			t.Scale (this.client_info.zoom);
-			t.Rotate (this.client_info.angle);
+			t.RotateDeg (this.client_info.angle);
 			t.Translate (ox, oy);
 			t.Round ();
 			
@@ -5419,6 +5421,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnTextDefined()
+		{
+			if (this.TextDefined != null)
+			{
+				this.TextDefined (this);
+			}
+		}
+		
 		protected virtual void OnTextChanged()
 		{
 			if (this.TextChanged != null)
@@ -5592,6 +5602,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			MinSizeChanged;
 		public event Support.EventHandler			MaxSizeChanged;
 		public event Support.EventHandler			Disposing;
+		public event Support.EventHandler			TextDefined;
 		public event Support.EventHandler			TextChanged;
 		public event Support.EventHandler			NameChanged;
 		public event Support.EventHandler			SizeChanged;

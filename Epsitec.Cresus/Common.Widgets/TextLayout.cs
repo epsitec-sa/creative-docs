@@ -668,6 +668,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		public bool HasSelection(TextLayout.Context context)
+		{
+			int cursorFrom = this.FindOffsetFromIndex(context.CursorFrom);
+			int cursorTo   = this.FindOffsetFromIndex(context.CursorTo);
+			
+			return cursorFrom != cursorTo;
+		}
+		
 		public bool DeleteSelection(TextLayout.Context context)
 		{
 			// Supprime les caractères sélectionnés dans le texte.
