@@ -304,6 +304,10 @@ namespace Epsitec.Common.Widgets
 				Drawing.Rectangle repaint = this.dirty_rectangle;
 				
 				this.dirty_rectangle = Drawing.Rectangle.Empty;
+				
+				this.graphics.ResetClippingRectangle ();
+				this.graphics.SetClippingRectangle (repaint);
+				
 				this.root.PaintHandler (this.graphics, repaint);
 			}
 			
