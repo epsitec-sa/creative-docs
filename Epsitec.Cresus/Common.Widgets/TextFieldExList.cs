@@ -2,6 +2,15 @@ using System;
 
 namespace Epsitec.Common.Widgets
 {
+	public enum TextFieldExListMode
+	{
+		Undefined		= -1,
+		
+		Combo,
+		EditPassive,
+		EditActive
+	}
+	
 	/// <summary>
 	/// La classe TextFieldExList implémente une variante de TextFieldCombo, permettant
 	/// d'éditer les éléments contenus dans la liste.
@@ -24,6 +33,7 @@ namespace Epsitec.Common.Widgets
 			this.button_cancel.Clicked    += new MessageEventHandler(this.HandleButtonCancelClicked);
 			
 			this.IsReadOnly = true;
+			this.SwitchToState (TextFieldExListMode.Combo);
 		}
 		
 		public TextFieldExList(Widget embedder) : this ()
@@ -52,7 +62,107 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public TextFieldExListMode				Mode
+		{
+			get
+			{
+				return this.mode;
+			}
+		}
 		
+		
+		public void StartPassiveEdition(string text)
+		{
+			this.CancelEdition ();
+			this.SelectedItem = text;
+			this.SwitchToState (TextFieldExListMode.EditPassive);
+			this.OnEditionStarted ();
+		}
+		
+		public void StartActiveEdition(string text)
+		{
+			this.CancelEdition ();
+			this.SelectedItem = text;
+			this.SwitchToState (TextFieldExListMode.EditActive);
+			this.OnEditionStarted ();
+		}
+		
+		public bool CancelEdition()
+		{
+			if (this.mode == TextFieldExListMode.EditActive)
+			{
+				this.SwitchToState (TextFieldExListMode.Combo);
+				this.SelectedItem = this.saved_item;
+				this.OnEditionCancelled ();
+				return true;
+			}
+			
+			return false;
+		}
+		
+		public bool ValidateEdition()
+		{
+			if ((this.mode == TextFieldExListMode.EditActive) &&
+				(this.IsValid))
+			{
+				this.SwitchToState (TextFieldExListMode.Combo);
+				this.SelectedItem = this.Text;
+				this.OnEditionValidated ();
+				return true;
+			}
+			
+			return false;
+		}
+		
+		
+		protected override bool ProcessMouseDown(Message message, Epsitec.Common.Drawing.Point pos)
+		{
+			if (this.mode == TextFieldExListMode.EditPassive)
+			{
+				this.Text = "";
+				this.SwitchToState (TextFieldExListMode.EditActive);
+			}
+			
+			return base.ProcessMouseDown (message, pos);
+		}
+		
+		protected override bool ProcessKeyDown(Message message, Epsitec.Common.Drawing.Point pos)
+		{
+			if (this.mode == TextFieldExListMode.EditPassive)
+			{
+				this.Text = "";
+				this.SwitchToState (TextFieldExListMode.EditActive);
+			}
+			if (this.mode == TextFieldExListMode.EditActive)
+			{
+				IFeel feel = Feel.Factory.Active;
+				
+				if (feel.TestCancelKey (message))
+				{
+					this.button_cancel.SimulateClicked ();
+					return true;
+				}
+				if (feel.TestAcceptKey (message))
+				{
+					this.button_ok.SimulateClicked ();
+					return true;
+				}
+			}
+			
+			return base.ProcessKeyDown (message, pos);
+		}
+
+		protected override bool AboutToGetFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode, out Widget focus)
+		{
+			if (this.mode == TextFieldExListMode.EditPassive)
+			{
+				this.Text = "";
+				this.SwitchToState (TextFieldExListMode.EditActive);
+			}
+			
+			return base.AboutToGetFocus (dir, mode, out focus);
+		}
+
 		protected override void FillComboList(Epsitec.Common.Widgets.Helpers.StringCollection list)
 		{
 			if (this.HasPlaceHolder)
@@ -89,8 +199,7 @@ namespace Epsitec.Common.Widgets
 			if ((this.HasPlaceHolder) &&
 				(sel == 0))
 			{
-				this.IsReadOnly = false;
-				this.SelectedItem = "";
+				this.StartPassiveEdition (this.PlaceHolder);
 				this.SetFocused (true);
 				this.CloseCombo ();
 			}
@@ -120,60 +229,138 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		protected virtual void SwitchToState(TextFieldExListMode mode)
+		{
+			if (this.mode != mode)
+			{
+				this.mode = mode;
+				
+				if ((this.button == null) ||
+					(this.button_ok == null) ||
+					(this.button_cancel == null))
+				{
+					return;
+				}
+				
+				if (this.mode == TextFieldExListMode.EditActive)
+				{
+					//	Montre les boutons de validation et d'annulation :
+					
+					this.margins.Right = this.button_ok.DefaultWidth + this.button_cancel.DefaultWidth;
+					this.button.SetVisible (false);
+					this.button_ok.SetVisible (true);
+					this.button_cancel.SetVisible (true);
+				}
+				else
+				{
+					this.margins.Right = this.button.DefaultWidth;
+					this.button.SetVisible (true);
+					this.button_ok.SetVisible (false);
+					this.button_cancel.SetVisible (false);
+				}
+				
+				this.UpdateButtonGeometry ();
+				this.UpdateButtonEnable ();
+			}
+			
+			this.IsReadOnly = (this.mode == TextFieldExListMode.Combo);
+		}
+		
+		protected virtual void UpdateButtonEnable()
+		{
+			if ((this.button_ok != null) &&
+				(this.mode == TextFieldExListMode.EditActive))
+			{
+				bool enable_ok = this.IsValid;
+				
+				this.button_ok.SetEnabled (enable_ok);
+			}
+		}
+		
+		
 		protected override void OnTextChanged()
 		{
 			base.OnTextChanged ();
-			
-			if (this.button_ok != null)
-			{
-				this.button_ok.SetEnabled (this.IsValid);
-			}
+			this.UpdateButtonEnable ();
 		}
 
 		
-		protected override void OnReadOnlyChanged()
+		protected virtual void OnEditionStarted()
 		{
-			base.OnReadOnlyChanged ();
-			
-			if ((this.button == null) ||
-				(this.button_ok == null) ||
-				(this.button_cancel == null))
+			if (this.EditionStarted != null)
 			{
-				return;
+				this.EditionStarted (this);
+			}
+		}
+		
+		protected virtual void OnEditionValidated()
+		{
+			if (this.EditionValidated != null)
+			{
+				this.EditionValidated (this);
+			}
+		}
+		
+		protected virtual void OnEditionCancelled()
+		{
+			if (this.EditionCancelled != null)
+			{
+				this.EditionCancelled (this);
+			}
+		}
+		
+		
+		protected override void OpenCombo()
+		{
+			if (this.mode != TextFieldExListMode.Combo)
+			{
+				this.SwitchToState (TextFieldExListMode.Combo);
 			}
 			
-			if (this.IsReadOnly)
+			if (this.SelectedItem != "")
 			{
-				this.margins.Right = this.button.DefaultWidth;
-				this.button.SetVisible (true);
-				this.button_ok.SetVisible (false);
-				this.button_cancel.SetVisible (false);
-			}
-			else
-			{
-				this.margins.Right = this.button_ok.DefaultWidth + this.button_cancel.DefaultWidth;
-				this.button.SetVisible (false);
-				this.button_ok.SetVisible (true);
-				this.button_cancel.SetVisible (true);
+				//	Prend note de l'élément actuellement actif, afin de pouvoir le restaurer
+				//	en cas d'annulation par la suite :
+				
+				this.saved_item = this.SelectedItem;
 			}
 			
-			this.UpdateButtonGeometry ();
+			base.OpenCombo ();
+		}
+		
+		protected override void CloseCombo()
+		{
+			base.CloseCombo ();
+			
+			if ((this.HasPlaceHolder) &&
+				(this.Text == this.PlaceHolder))
+			{
+				this.SwitchToState (TextFieldExListMode.EditPassive);
+			}
 		}
 
 		
 		private void HandleButtonOkClicked(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.Assert (sender == this.button_ok);
+			this.ValidateEdition ();
 		}		
 		
 		private void HandleButtonCancelClicked(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.Assert (sender == this.button_cancel);
+			this.CancelEdition ();
 		}		
 		
 		
+		public event Support.EventHandler		EditionStarted;
+		public event Support.EventHandler		EditionValidated;
+		public event Support.EventHandler		EditionCancelled;
 		
 		protected string						place_holder;
+		protected string						saved_item;
+		
+		protected TextFieldExListMode			mode = TextFieldExListMode.Undefined;
 		
 		protected GlyphButton					button_ok;
 		protected GlyphButton					button_cancel;

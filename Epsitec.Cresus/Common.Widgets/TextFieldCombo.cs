@@ -205,12 +205,15 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.KeyPress:
-					if ( message.KeyCode == KeyCode.Escape )
+					IFeel feel = Feel.Factory.Active;
+					
+					if ( feel.TestCancelKey(message) )
 					{
 						this.CloseCombo();
 						message.Swallowed = true;
 					}
 					break;
+				
 				case MessageType.MouseDown:
 					Drawing.Point mouse = window.Root.MapClientToScreen(message.Cursor);
 					Drawing.Point pos = this.scrollList.MapScreenToClient(mouse);
@@ -245,7 +248,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected void OpenCombo()
+		protected virtual void OpenCombo()
 		{
 			if ( this.scrollList != null )
 			{
@@ -299,7 +302,7 @@ namespace Epsitec.Common.Widgets
 			this.openText = this.Text;
 		}
 		
-		protected void CloseCombo()
+		protected virtual void CloseCombo()
 		{
 			this.scrollList.SelectionActivated -= new Support.EventHandler(this.HandleScrollListSelectionActivated);
 			this.scrollList.SelectedIndexChanged -= new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
@@ -420,12 +423,17 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				int index = this.SelectedIndex;
-				if ( index < 0 )  return null;
+				if ( index < 0 )  return "";
 				return this.Items[index];
 			}
 			
 			set
 			{
+				if ( value == null )
+				{
+					value = "";
+				}
+				
 				int index = this.Items.IndexOf(value);
 				if ( index < 0 )
 				{
@@ -446,17 +454,22 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				int index = this.SelectedIndex;
-				if ( index < 0 )  return null;
+				if ( index < 0 )  return "";
 				return this.items.GetName(index);
 			}
 			
 			set
 			{
+				if ( value == null )
+				{
+					value = "";
+				}
+				
 				if ( this.SelectedName != value )
 				{
 					int index = -1;
 					
-					if ( value != null )
+					if ( value.Length > 0 )
 					{
 						index = this.items.FindNameIndex(value);
 						

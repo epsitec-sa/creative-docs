@@ -627,8 +627,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected int DeleteText(int from, int to)
 		{
-			// Supprime des caractères, tout en conservant les commandes.
-			// Retourne l'index où insérer les caractères remplaçants.
+			// Supprime des caractères, tout en conservant les commandes. S'il reste
+			// des commandes superflues, elles seront supprimées par Symplify().
+			// Retourne l'index où insérer les éventuels caractères remplaçants.
 			System.Collections.Hashtable parameters;
 			string text = this.Text;
 
@@ -752,10 +753,20 @@ namespace Epsitec.Common.Widgets
 
 			if ( from == to )  return false;
 			this.DeleteText(from, to);
-			from = this.FindIndexFromOffset(from);
-			context.CursorTo   = from;
-			context.CursorFrom = from;
+			int cursor = this.FindIndexFromOffset(from);
+			context.CursorTo    = cursor;
+			context.CursorFrom  = cursor;
+			context.CursorAfter = (dir < 0);
+
+			string text = this.Text;
 			this.Simplify();
+			if ( text == this.Text )
+			{
+				context.PrepareOffset  = from;
+				context.PrepareLength1 = 0;
+				context.PrepareLength2 = 0;
+			}
+
 			return true;
 		}
 		
