@@ -595,5 +595,23 @@ namespace Epsitec.Common.Tests
 				System.Console.Out.WriteLine ("{0}: Name='{1}', Text='{2}', Parent={3}", widget.GetType ().Name, widget.Name, widget.Text, (widget.Parent == null) ? "<null>" : (widget.Parent.GetType ().Name));
 			}
 		}
+		
+		[Test] public void CheckButtonNew()
+		{
+			Button button = new Button ();
+		}
+		
+		[Test] public void CheckButtonNewDispose()
+		{
+			Button button = new Button ();
+			button.Dispose ();
+		}
+		
+		[Test] public void CheckButtonNewGC()
+		{
+			Button button = new Button ();
+			button = null;
+			System.GC.Collect ();
+		}
 	}
 }

@@ -37,7 +37,6 @@ namespace Epsitec.Cresus.Support
 			}
 		}
 		
-		
 		public string					this[string name]
 		{
 			get
@@ -50,8 +49,18 @@ namespace Epsitec.Cresus.Support
 			}
 		}
 		
+		
 		public void Compile(System.IO.Stream stream)
 		{
+			//	La compilation des données part du principe que le bundle XML est "well formed",
+			//	c'est-à-dire qu'il comprend un seul bloc à la racine (<bundle>..</bundle>), et
+			//	que son contenu est valide (l'en-tête <?xml ...?> n'est pas requis).
+			
+			//	Les divers éléments ne peuvent pas contenir d'autres éléments à leur tour. Ceci signifie
+			//	que pour stocker du code XML dans un bundle, il faut l'êncapsuler dans une section CDATA
+			//	(voir http://www.w3.org/TR/2000/REC-xml-20001006#sec-cdata-sect). Cette encapsulation ne
+			//	peut se faire que sur un niveau.
+			
 			if (stream != null)
 			{
 				System.Xml.XmlTextReader reader = new System.Xml.XmlTextReader (stream);
@@ -73,10 +82,10 @@ namespace Epsitec.Cresus.Support
 							{
 								switch (reader.Name)
 								{
-									case "BUNDLE":
+									case "bundle":
 										break;
 									default:
-										throw new ResourceException (string.Format ("Bundle does not start with root <BUNDLE>, but <{0}>", reader.Name));
+										throw new ResourceException (string.Format ("Bundle does not start with root <bundle>, but <{0}>", reader.Name));
 								}
 							}
 							else if (reader_depth == 1)
@@ -100,6 +109,9 @@ namespace Epsitec.Cresus.Support
 							
 							if (reader_depth == 1)
 							{
+								//	Les assertions qui suivent sont redondantes, car en principe, XmlTextReader ne doit
+								//	pas laisser passer ce genre d'erreurs.
+								
 								System.Diagnostics.Debug.Assert (element_name != null);
 								System.Diagnostics.Debug.Assert (element_name == reader.Name);
 								element_name = null;

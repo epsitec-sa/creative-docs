@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Support.Tests
 		[Test] public void CheckCompile()
 		{
 			ResourceBundle bundle = new ResourceBundle ();
-			string test_string = "<BUNDLE><a>A</a><b>B</b></BUNDLE>";
+			string test_string = "<bundle><a>A</a><b>B</b></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
@@ -23,11 +23,43 @@ namespace Epsitec.Cresus.Support.Tests
 			Assertion.AssertEquals ("b", names[1]);
 		}
 		
+		[Test] public void CheckCompileCDATA()
+		{
+			ResourceBundle bundle = new ResourceBundle ();
+			string test_string = "<bundle><txt><![CDATA[Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.]]></txt></bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
+			bundle.Compile (stream);
+			
+			string[] names = bundle.FieldNames;
+			
+			Assertion.AssertEquals (1, bundle.CountFields);
+			Assertion.AssertEquals ("txt", names[0]);
+			Assertion.AssertEquals ("Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.", bundle["txt"]);
+		}
+		
+		[Test] public void CheckCompileEscapes()
+		{
+			ResourceBundle bundle = new ResourceBundle ();
+			string test_string = "<bundle><txt>&lt;&amp;&gt;</txt></bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
+			bundle.Compile (stream);
+			
+			string[] names = bundle.FieldNames;
+			
+			Assertion.AssertEquals (1, bundle.CountFields);
+			Assertion.AssertEquals ("txt", names[0]);
+			Assertion.AssertEquals ("<&>", bundle["txt"]);
+		}
+		
 		[Test] public void CheckCompileAndMerge()
 		{
 			ResourceBundle bundle = new ResourceBundle ();
-			string test_string_1 = "<BUNDLE><a>A</a><b>B</b></BUNDLE>";
-			string test_string_2 = "<BUNDLE><a>X</a><c>C</c></BUNDLE>";
+			string test_string_1 = "<bundle><a>A</a><b>B</b></bundle>";
+			string test_string_2 = "<bundle><a>X</a><c>C</c></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data_1 = encoding.GetBytes (test_string_1);
 			byte[] test_data_2 = encoding.GetBytes (test_string_2);
@@ -63,7 +95,7 @@ namespace Epsitec.Cresus.Support.Tests
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileEx2()
 		{
 			ResourceBundle bundle = new ResourceBundle ();
-			string test_string = "<BUNDLE><a>A<b>B</b></BUNDLE>";
+			string test_string = "<bundle><a>A<b>B</b></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);

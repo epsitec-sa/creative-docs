@@ -67,7 +67,7 @@ namespace Epsitec.Common.Widgets
 			this.minSize = this.DefaultMinSize;
 			this.maxSize = this.DefaultMaxSize;
 			
-			Widget.aliveWidgets.Add (this);
+			Widget.aliveWidgets.Add (new System.WeakReference (this));
 		}
 		
 		public void Dispose()
@@ -95,23 +95,44 @@ namespace Epsitec.Common.Widgets
 				
 				this.Parent = null;
 			}
-			
-			System.Diagnostics.Debug.Assert (Widget.aliveWidgets.Contains (this));
-			Widget.aliveWidgets.Remove (this);
 		}
 		
 		
 		public static int					DebugAliveWidgetsCount
 		{
-			get { return Widget.aliveWidgets.Count; }
+			get
+			{
+				System.Collections.ArrayList alive = new System.Collections.ArrayList ();
+				
+				foreach (System.WeakReference weak_ref in Widget.aliveWidgets)
+				{
+					if (weak_ref.IsAlive)
+					{
+						alive.Add (weak_ref);
+					}
+				}
+				
+				Widget.aliveWidgets = alive;
+				return alive.Count;
+			}
 		}
 		
 		public static Widget[]				DebugAliveWidgets
 		{
 			get
 			{
-				Widget[] widgets = new Widget[Widget.aliveWidgets.Count];
-				Widget.aliveWidgets.CopyTo (widgets);
+				Widget[] widgets = new Widget[Widget.DebugAliveWidgetsCount];
+				
+				int i = 0;
+				
+				foreach (System.WeakReference weak_ref in Widget.aliveWidgets)
+				{
+					if (weak_ref.IsAlive)
+					{
+						widgets[i++] = weak_ref.Target as Widget;
+					}
+				}
+				
 				return widgets;
 			}
 		}

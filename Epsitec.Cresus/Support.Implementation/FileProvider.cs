@@ -31,6 +31,23 @@ namespace Epsitec.Cresus.Support.Implementation
 			//	Sont refusés : ".abc", "a++b", "a.", "b ".
 			
 			this.id_regex = new Regex (@"^([a-zA-Z0-9_]((?![ \.]$)(?<X>[ \+\-\.])(?!\k<X>))*)+$", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+			this.path_prefix = System.IO.Directory.GetCurrentDirectory () + System.IO.Path.DirectorySeparatorChar;
+			
+			//	Pas très propre, mais ça suffit maintenant: on supprime le chemin \bin\... pour remonter au niveau
+			//	plus intéressant (celui des sources).
+			
+			if (this.path_prefix.EndsWith (@"\bin\Debug\"))
+			{
+				this.path_prefix = this.path_prefix.Substring (0, this.path_prefix.Length - 10);
+			}
+			else if (this.path_prefix.EndsWith (@"\bin\Release\"))
+			{
+				this.path_prefix = this.path_prefix.Substring (0, this.path_prefix.Length - 12);
+			}
+			
+			this.path_prefix = this.path_prefix + "resources" + System.IO.Path.DirectorySeparatorChar;
+			
+			System.Diagnostics.Debug.WriteLine ("Path prefix for files: " + this.path_prefix);
 		}
 		
 		
@@ -41,11 +58,11 @@ namespace Epsitec.Cresus.Support.Implementation
 				switch (level)
 				{
 					case ResourceLevel.Default:
-						return id + ".resource";
+						return this.path_prefix + id + ".resource";
 					case ResourceLevel.Localised:
-						return id + this.ext_local;
+						return this.path_prefix + id + this.ext_local;
 					case ResourceLevel.Customised:
-						return id + ".custom.resource";
+						return this.path_prefix + id + ".custom.resource";
 					default:
 						throw new ResourceException ("Invalid resource level");
 				}
@@ -53,6 +70,7 @@ namespace Epsitec.Cresus.Support.Implementation
 			
 			return null;
 		}
+		
 		
 		#region IResourceProvider Members
 		public string Prefix
@@ -152,6 +170,7 @@ namespace Epsitec.Cresus.Support.Implementation
 		}
 		#endregion
 		
+		protected string				path_prefix;
 		protected CultureInfo			culture;
 		protected Regex					id_regex;
 		protected string				ext_local;
