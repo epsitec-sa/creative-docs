@@ -637,27 +637,42 @@ namespace Epsitec.Common.Widgets
 			window.Text = "CheckAdornerBigText";
 
 			TextFieldMulti multi = new TextFieldMulti();
+			StaticText     stats = new StaticText();
+			
 			multi.Name = "Multi";
-			multi.Location = new Point(10, 10);
-			multi.Size = new Size(380, 280);
+			multi.Bounds = new Rectangle(10, 30, 380, 260);
 			multi.MaxChar = 10000;
+			
 			string s = "";
-#if true
+			
 			s += "On donnait ce jour-là un grand dîner, où, pour la première fois, je vis avec beaucoup d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête. Par hasard on vint à parler de la devise de la maison de Solar, qui était sur la tapisserie avec les armoiries: Tel fiert qui ne tue pas. Comme les Piémontais ne sont pas pour l'ordinaire consommés par la langue française, quelqu'un trouva dans cette devise une faute d'orthographe, et dit qu'au mot fiert il ne fallait point de t.<br/>";
-			s += "Le vieux comte de Gouvon allait répondre; mais ayant jeté les yeux sur moi, il vit que je souriait sans oser rien dire: il m'ordonna de parler. Alors je dis que je ne croyait pas que le t fût de trop, que fiert était un vieux mots français qui ne venait pas du nom ferus, fier, menaçant, mais du verbe ferit, il frappe, il blesse; qu'ainsi la devise ne me paraissait pas dire: Tel menace, mais tel frappe qui ne tue pas.<br/>";
-			s += "Tout le monde me regardait et se regardait sans rien dire. On ne vit de la vie un pareil étonnement. Mais ce qui me flatta davantage fut de voir clairement sur le visage de Mlle de Breil un air de satisfaction. Cette personne si dédaigneuse daigna me jeter un second regard qui valait tout au moins le premier; puis, tournant les yeux vers son grand-papa, elle semblait attendre avec une sorte d'impatience la louange qu'il me devait, et qu'il me donna en effet si pleine et entière et d'un air si content, que toute la table s'empressa de faire chorus. Ce moment fut cours, mais délicieux à tous égards. Ce fut un de ces moments trop rares qui replacent les choses dans leur ordre naturel, et vengent le mérite avili des outrages de la fortune. FIN";
-#else
-			s += "aa<br/><br/>bb";
-#endif
+			s += "Le vieux comte de Gouvon allait répondre; mais ayant jeté les yeux sur moi, il vit que je souriait sans oser rien dire: il m'ordonna de parler. Alors je dis que je ne croyait pas que le <i>t</i> fût de trop, que fiert était un vieux mots français qui ne venait pas du nom ferus, fier, menaçant, mais du verbe ferit, il frappe, il blesse; qu'ainsi la devise ne me paraissait pas dire: Tel menace, mais tel frappe qui ne tue pas.<br/>";
+			s += "Tout le monde me regardait et se regardait sans rien dire. On ne vit de la vie un pareil étonnement. Mais ce qui me flatta davantage fut de voir clairement sur le visage de Mlle de Breil un air de satisfaction. Cette personne si dédaigneuse daigna me jeter un second regard qui valait tout au moins le premier; puis, tournant les yeux vers son grand-papa, elle semblait attendre avec une sorte d'impatience la louange qu'il me devait, et qu'il me donna en effet si pleine et entière et d'un air si content, que toute la table s'empressa de faire chorus. Ce moment fut court, mais délicieux à tous égards. Ce fut un de ces moments trop rares qui replacent les choses dans leur ordre naturel, et vengent le mérite avili des outrages de la fortune.<br/>";
+			s += "<b>FIN</b>";
+			
 			multi.Text = s;
-			//multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			multi.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			window.Root.Children.Add(multi);
+			multi.Parent = window.Root;
+			multi.SetProperty("stats", stats);
+			multi.SelectionChanged += new EventHandler(this.HandleMultiSelectionOrCursorChanged);
+			multi.CursorChanged    += new EventHandler(this.HandleMultiSelectionOrCursorChanged);
+			
+			stats.Bounds = new Rectangle(10, 2, 380, 26);
+			stats.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
+			stats.Parent = window.Root;
+			
 			window.Root.DebugActive = true;
-
-			window.FocusedWidget = multi;
+			window.FocusedWidget    = multi;
 
 			window.Show();
+		}
+		
+		private void HandleMultiSelectionOrCursorChanged(object sender)
+		{
+			AbstractTextField text  = sender as AbstractTextField;
+			StaticText        stats = text.GetProperty("stats") as StaticText;
+			
+			stats.Text = string.Format("{0} - {1}", text.CursorFrom, text.CursorTo);
 		}
 
 		[Test] public void CheckAdornerTab1()

@@ -450,11 +450,10 @@ namespace Epsitec.Common.Widgets
 		// position indiquée. Retourne -1 en cas d'échec.
 		public int DetectIndex(Drawing.Point pos)
 		{
-			if ( pos.Y < 0                      ||
-				 pos.Y > this.layoutSize.Height )  return -1;
-
 			this.UpdateLayout();
 
+			pos.Y = System.Math.Max (pos.Y, 0);
+			pos.Y = System.Math.Min (pos.Y, this.layoutSize.Height);
 			pos.X = System.Math.Max (pos.X, 0);
 			pos.X = System.Math.Min (pos.X, this.layoutSize.Width);
 			

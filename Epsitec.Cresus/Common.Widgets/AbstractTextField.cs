@@ -521,12 +521,12 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
 			
-			int detect = this.TextLayout.DetectIndex(pos);
+			int detect = this.TextLayout.DetectIndex(this.Client.Bounds.Constrain(pos-this.scrollOffset)+this.scrollOffset);
 			if ( detect != -1 )
 			{
 				this.cursorFrom = detect;
 				this.cursorTo   = detect;
-				this.Invalidate();
+				this.OnCursorChanged();
 				return true;
 			}
 			
@@ -538,11 +538,11 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
 			
-			int detect = this.TextLayout.DetectIndex(pos);
+			int detect = this.TextLayout.DetectIndex(this.Client.Bounds.Constrain(pos-this.scrollOffset)+this.scrollOffset);
 			if ( detect != -1 )
 			{
 				this.cursorTo = detect;
-				this.Invalidate();
+				this.OnCursorChanged();
 			}
 		}
 
@@ -570,11 +570,11 @@ namespace Epsitec.Common.Widgets
 			}
 			else	// simple clic ?
 			{
-				int detect = this.TextLayout.DetectIndex(pos);
+				int detect = this.TextLayout.DetectIndex(this.Client.Bounds.Constrain(pos-this.scrollOffset)+this.scrollOffset);
 				if ( detect != -1 )
 				{
 					this.cursorTo = detect;
-					this.Invalidate();
+					this.OnCursorChanged();
 				}
 			}
 		}
@@ -920,12 +920,47 @@ namespace Epsitec.Common.Widgets
 			this.CursorScroll();
 			this.ResetCursor();
 			this.Invalidate();
+			
+			if ((this.cursorFrom != this.oldCursorFrom) ||
+				(this.cursorTo != this.oldCursorTo))
+			{
+				int new_delta = this.cursorTo - this.cursorFrom;
+				int old_delta = this.oldCursorTo - this.oldCursorFrom;
+				
+				if ((new_delta != old_delta) ||
+					(new_delta != 0))
+				{
+					this.OnSelectionChanged ();
+				}
+				
+				if ((!silent) &&
+					(old_delta == 0) &&
+					(new_delta == 0))
+				{
+					if (this.CursorChanged != null)
+					{
+						this.CursorChanged (this);
+					}
+				}
+				
+				this.oldCursorTo   = this.cursorTo;
+				this.oldCursorFrom = this.cursorFrom;
+			}
 		}
 
+		protected virtual void OnSelectionChanged()
+		{
+			if (this.SelectionChanged != null)
+			{
+				this.SelectionChanged (this);
+			}
+		}
 
-		// Calcule le scrolling pour que le curseur soit visible.
+		
 		protected void CursorScroll()
 		{
+			//	Calcule le scrolling pour que le curseur soit visible.
+			
 			if (this.TextLayout == null)
 			{
 				return;
@@ -1097,6 +1132,8 @@ namespace Epsitec.Common.Widgets
 		
 		public event Support.EventHandler		TextInserted;
 		public event Support.EventHandler		TextDeleted;
+		public event Support.EventHandler		SelectionChanged;
+		public event Support.EventHandler		CursorChanged;
 		
 		
 		internal static readonly double			TextMargin = 2;
@@ -1119,6 +1156,8 @@ namespace Epsitec.Common.Widgets
 		protected bool							preventScroll = false;
 		
 		private Helpers.CopyPasteBehavior		copyPasteBehavior;
+		private int								oldCursorFrom;
+		private int								oldCursorTo;
 		
 		private static Timer					flashTimer;
 		private static bool						flashTimerStarted = false;
