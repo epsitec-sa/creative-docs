@@ -4279,7 +4279,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Point client_pos = this.MapParentToClient (pos);
 			
-			if (this.PreProcessMessage (message, client_pos) == false)
+			if (! this.PreProcessMessage (message, client_pos))
 			{
 				return;
 			}

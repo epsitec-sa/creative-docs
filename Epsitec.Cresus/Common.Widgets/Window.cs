@@ -824,7 +824,7 @@ namespace Epsitec.Common.Widgets
 								break;
 								
 							case MessageType.KeyDown:
-								//	TODO: prend note qu'il faut manger l'événement
+								this.window.FilterKeyMessages = true;
 								break;
 						}
 					}
@@ -1156,7 +1156,7 @@ namespace Epsitec.Common.Widgets
 							break;
 								
 						case MessageType.KeyDown:
-							//	TODO: prend note qu'il faut manger l'événement
+							this.window.FilterKeyMessages = true;
 							break;
 					}
 				}
