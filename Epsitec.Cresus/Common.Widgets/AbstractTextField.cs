@@ -126,7 +126,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual Drawing.Rectangle InnerBounds
+		public override Drawing.Rectangle InnerBounds
 		{
 			get
 			{

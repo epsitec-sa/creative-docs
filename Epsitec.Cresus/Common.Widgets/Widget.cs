@@ -47,8 +47,10 @@ namespace Epsitec.Common.Widgets
 	[System.Flags] public enum InternalState : uint
 	{
 		None				= 0,
-		ChildrenChanged		= 0x00000001,
-		ChildrenDocked		= 0x00000002,		//	=> il y a des enfants avec Dock != None
+		
+		ChildrenChanged		= 0x00000001,		//	certains enfants ont changé
+		ChildrenDocked		= 0x00000002,		//	certains enfants utilisent un DockStyle simple
+		ChildrenLayout		= 0x00000004,		//	certains enfants nécessitent un layout particulier
 		
 		Embedded			= 0x00000008,		//	=> widget appartient au parent (widgets composés)
 		
@@ -89,7 +91,7 @@ namespace Epsitec.Common.Widgets
 		Layout				= 6,				//	utilise un Layout Manager externe
 	}
 	
-	public enum LayoutFlags : byte
+	[System.Flags] public enum LayoutFlags : byte
 	{
 		None				= 0,
 		
@@ -110,7 +112,7 @@ namespace Epsitec.Common.Widgets
 			this.internal_state |= InternalState.AutoCapture;
 			this.internal_state |= InternalState.AutoMnemonic;
 			
-			this.widget_state |= WidgetState.Enabled;
+			this.widget_state   |= WidgetState.Enabled;
 			
 			this.default_font_height = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
 			this.alignment           = this.DefaultAlignment;
@@ -130,15 +132,24 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder (embedder);
 		}
 		
+		
 		static Widget()
 		{
 			Drawing.Font.Initialise ();
+			
 			Support.ObjectBundler.RegisterAssembly (typeof (Widget).Assembly);
+			
+			System.Threading.Thread          thread  = System.Threading.Thread.CurrentThread;
+			System.Globalization.CultureInfo culture = thread.CurrentCulture;
+			
+			thread.CurrentUICulture = culture;
 		}
+		
 		
 		public static void Initialise()
 		{
-			System.Threading.Thread.CurrentThread.CurrentUICulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+			//	En appelant cette méthode statique, on peut garantir que le constructeur
+			//	statique de Widget a bien été exécuté.
 		}
 		
 		
@@ -213,6 +224,26 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		#region Debugging Support
+		public bool							DebugActive
+		{
+			get
+			{
+				return (this.internal_state & InternalState.DebugActive) != 0;
+			}
+			set
+			{
+				if (value)
+				{
+					this.internal_state |= InternalState.DebugActive;
+				}
+				else
+				{
+					this.internal_state &= ~ InternalState.DebugActive;
+				}
+			}
+		}
+		
 		public static int					DebugAliveWidgetsCount
 		{
 			get
@@ -251,17 +282,26 @@ namespace Epsitec.Common.Widgets
 				return widgets;
 			}
 		}
-
+		#endregion
 		
 		[Bundle ("anchor")]	public AnchorStyles		Anchor
 		{
-			get { return this.anchor; }
-			set { this.anchor = value; }
+			get
+			{
+				return this.anchor;
+			}
+			set
+			{
+				this.anchor = value;
+			}
 		}
 		
 		[Bundle ("dock")]	public DockStyle		Dock
 		{
-			get{ return this.dock; }
+			get
+			{
+				return this.dock;
+			}
 			set
 			{
 				if (this.dock != value)
@@ -270,7 +310,10 @@ namespace Epsitec.Common.Widgets
 					
 					if (this.parent != null)
 					{
-						this.parent.HandleChildrenChanged ();
+						//	Si le widget a un parent, il faut donner l'occasion au parent de
+						//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
+						//	de notre nouveau mode de docking.
+						
 						this.parent.UpdateChildrenLayout ();
 					}
 				}
@@ -279,16 +322,16 @@ namespace Epsitec.Common.Widgets
 		
 		[Bundle ("dock_m")] public Drawing.Margins	DockMargins
 		{
-			get { return this.dock_margins; }
+			get
+			{
+				return this.dock_margins;
+			}
 			set
 			{
 				if (this.dock_margins != value)
 				{
 					this.dock_margins = value;
-					if (this.parent != null)
-					{
-						this.parent.UpdateChildrenLayout ();
-					}
+					this.UpdateChildrenLayout ();
 				}
 			}
 		}
@@ -302,23 +345,6 @@ namespace Epsitec.Common.Widgets
 				{
 					this.layout_flags = value;
 					
-					if (this.parent != null)
-					{
-						this.parent.HandleChildrenChanged ();
-						this.parent.UpdateChildrenLayout ();
-					}
-				}
-			}
-		}
-		
-		[Bundle ("lay_m")]	public Drawing.Margins	LayoutMargins
-		{
-			get { return this.layout_margins; }
-			set
-			{
-				if (this.layout_margins != value)
-				{
-					this.layout_margins = value;
 					if (this.parent != null)
 					{
 						this.parent.UpdateChildrenLayout ();
@@ -343,32 +369,35 @@ namespace Epsitec.Common.Widgets
 						this.internal_state &= ~ InternalState.PreferXLayout;
 					}
 					
-					this.UpdateDockedChildrenLayout ();
+					this.UpdateChildrenLayout ();
 				}
 			}
 		}
 		
 		
-		public int							LayoutArg1
+		public int									LayoutArg1
 		{
 			get { return this.layout_arg1; }
 		}
 		
-		public int							LayoutArg2
+		public int									LayoutArg2
 		{
 			get { return this.layout_arg2; }
 		}
 		
 		
-		public MouseCursor					MouseCursor
+		public MouseCursor							MouseCursor
 		{
 			get { return this.mouse_cursor == null ? MouseCursor.Default : this.mouse_cursor; }
 			set { this.mouse_cursor = value; }
 		}
 		
-		public Drawing.Color				BackColor
+		public Drawing.Color						BackColor
 		{
-			get { return this.back_color; }
+			get
+			{
+				return this.back_color;
+			}
 			set
 			{
 				if (this.back_color != value)
@@ -381,31 +410,31 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		public double						Top
+		public double								Top
 		{
 			get { return this.y2; }
 			set { this.SetBounds (this.x1, this.y1, this.x2, value); }
 		}
 		
-		public double						Left
+		public double								Left
 		{
 			get { return this.x1; }
 			set { this.SetBounds (value, this.y1, this.x2, this.y2); }
 		}
 		
-		public double						Bottom
+		public double								Bottom
 		{
 			get { return this.y1; }
 			set { this.SetBounds (this.x1, value, this.x2, this.y2); }
 		}
 		
-		public double						Right
+		public double								Right
 		{
 			get { return this.x2; }
 			set { this.SetBounds (this.x1, this.y1, value, this.y2); }
 		}
 		
-		public Drawing.Rectangle			Bounds
+		public Drawing.Rectangle					Bounds
 		{
 			get { return new Drawing.Rectangle (this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1); }
 			set { this.SetBounds (value.X, value.Y, value.X + value.Width, value.Y + value.Height); }
@@ -425,38 +454,41 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public double						Width
+		public double								Width
 		{
 			get { return this.x2 - this.x1; }
 			set { this.SetBounds (this.x1, this.y1, this.x1 + value, this.y2); }
 		}
 		
-		public double						Height
+		public double								Height
 		{
 			get { return this.y2 - this.y1; }
 			set { this.SetBounds (this.x1, this.y1, this.x2, this.y1 + value); }
 		}
 		
-		public ContentAlignment				Alignment
+		public ContentAlignment						Alignment
 		{
-			get { return this.alignment; }
+			get
+			{
+				return this.alignment;
+			}
 			set
 			{
 				if (this.alignment != value)
 				{
 					this.alignment = value;
-					this.UpdateLayoutSize ();
+					this.UpdateTextLayout ();
 					this.Invalidate ();
 				}
 			}
 		}
 		
-		public ClientInfo					Client
+		public ClientInfo							Client
 		{
 			get { return this.client_info; }
 		}
 		
-		public virtual Drawing.Size			MinSize
+		public virtual Drawing.Size					MinSize
 		{
 			get
 			{
@@ -472,7 +504,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual Drawing.Size			MaxSize
+		public virtual Drawing.Size					MaxSize
 		{
 			get
 			{
@@ -489,170 +521,66 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void SuspendLayout()
-		{
-			lock (this)
-			{
-				this.suspend_counter++;
-			}
-		}
-		
-		public void ResumeLayout()
-		{
-			lock (this)
-			{
-				if (this.suspend_counter > 0)
-				{
-					this.suspend_counter--;
-				}
-				
-				if (this.suspend_counter == 0)
-				{
-					if (this.layout_info != null)
-					{
-						this.UpdateChildrenLayout ();
-						this.OnLayoutChanged ();
-						this.layout_info = null;
-					}
-					if ((this.internal_state & InternalState.ChildrenChanged) != 0)
-					{
-						this.internal_state -= InternalState.ChildrenChanged;
-						this.HandleChildrenChanged ();
-					}
-				}
-			}
-		}
-		
-		
-		protected virtual void HandleChildrenChanged()
-		{
-			this.internal_state &= ~InternalState.ChildrenDocked;
-			
-			foreach (Widget child in this.Children)
-			{
-				if ((child.Dock != DockStyle.None) &&
-					(child.Dock != DockStyle.Layout))
-				{
-					this.internal_state |= InternalState.ChildrenDocked;
-					break;
-				}
-			}
-			
-			if ((this.internal_state & InternalState.ChildrenDocked) != 0)
-			{
-				this.UpdateDockedChildrenLayout ();
-			}
-			
-			this.Invalidate ();
-			this.OnChildrenChanged ();
-		}
-		
-		protected virtual void HandleAdornerChanged()
-		{
-			foreach (Widget child in this.Children)
-			{
-				child.HandleAdornerChanged ();
-			}
-		}
-		
-		public void SetClientAngle(int angle)
-		{
-			this.client_info.SetAngle (angle);
-			this.UpdateClientGeometry ();
-		}
-		
-		public void SetClientZoom(double zoom)
-		{
-			this.client_info.SetZoom (zoom);
-			this.UpdateClientGeometry ();
-		}
-		
-		public void SetClientOffset(double ox, double oy)
-		{
-			this.client_info.SetOffset (ox, oy);
-		}
-		
-		public virtual ContentAlignment		DefaultAlignment
+		public virtual ContentAlignment				DefaultAlignment
 		{
 			get { return ContentAlignment.MiddleLeft; }
 		}
 
-		public virtual AnchorStyles			DefaultAnchor
+		public virtual AnchorStyles					DefaultAnchor
 		{
 			get { return AnchorStyles.Left | AnchorStyles.Top; }
 		}
 		
-		public virtual Drawing.Font			DefaultFont
+		public virtual Drawing.Font					DefaultFont
 		{
 			get { return Drawing.Font.DefaultFont; }
 		}
 		
-		public virtual double				DefaultFontSize
+		public virtual double						DefaultFontSize
 		{
 			get { return Drawing.Font.DefaultFontSize; }
 		}
 		
-		public virtual double				DefaultWidth
+		public virtual double						DefaultWidth
 		{
 			get { return 80; }
 		}
-		public virtual double				DefaultHeight
+		public virtual double						DefaultHeight
 		{
 			get { return 20; }
 		}
-		public virtual double				DefaultFontHeight
+		public virtual double						DefaultFontHeight
 		{
 			get { return this.default_font_height; }
 		}
 		
-		public virtual Drawing.Size			DefaultMinSize
+		public virtual Drawing.Size					DefaultMinSize
 		{
 			get { return new Drawing.Size (4, 4); }
 		}
 		
-		public virtual Drawing.Size			DefaultMaxSize
+		public virtual Drawing.Size					DefaultMaxSize
 		{
-			get { return new Drawing.Size (1000000, 1000000); }
+			get { return Drawing.Size.Infinite; }
 		}
 		
-		public virtual Drawing.Size			PreferredSize
+		public virtual Drawing.Size					PreferredSize
 		{
 			get { return new Drawing.Size (this.DefaultWidth, this.DefaultHeight); }
 		}
 		
-		public virtual Drawing.Point		BaseLine
+		public virtual Drawing.Point				BaseLine
 		{
 			get { return Drawing.Point.Empty; }
 		}
 		
 		
-#if false
-		public bool							CausesValidation
+		[Bundle ("cmd")] public bool				IsCommand
 		{
-			get;
-			set;
-		}
-#endif
-		public bool							DebugActive
-		{
-			get { return (this.internal_state & InternalState.DebugActive) != 0; }
-			set
+			get
 			{
-				if (value)
-				{
-					this.internal_state |= InternalState.DebugActive;
-				}
-				else
-				{
-					this.internal_state &= ~ InternalState.DebugActive;
-				}
+				return (this.internal_state & InternalState.Command) != 0;
 			}
-		}
-		
-		
-		[Bundle ("cmd")] public bool		IsCommand
-		{
-			get { return (this.internal_state & InternalState.Command) != 0; }
 			set
 			{
 				if (value)
@@ -667,7 +595,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual bool					IsEnabled
+		public virtual bool							IsEnabled
 		{
 			get
 			{
@@ -684,7 +612,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual bool					IsFrozen
+		public virtual bool							IsFrozen
 		{
 			get
 			{
@@ -701,7 +629,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual bool					IsVisible
+		public virtual bool							IsVisible
 		{
 			get
 			{
@@ -715,27 +643,27 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool							IsFocused
+		public bool									IsFocused
 		{
 			get { return (this.widget_state & WidgetState.Focused) != 0; }
 		}
 		
-		public bool							IsEntered
+		public bool									IsEntered
 		{
 			get { return (this.widget_state & WidgetState.Entered) != 0; }
 		}
 		
-		public bool							IsSelected
+		public bool									IsSelected
 		{
 			get { return (this.widget_state & WidgetState.Selected) != 0; }
 		}
 		
-		public bool							IsEngaged
+		public bool									IsEngaged
 		{
 			get { return (this.widget_state & WidgetState.Engaged) != 0; }
 		}
 		
-		public bool							IsError
+		public bool									IsError
 		{
 			get { return (this.widget_state & WidgetState.Error) != 0; }
 			set
@@ -756,14 +684,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool							IsEmbedded
+		public bool									IsEmbedded
 		{
 			get { return (this.internal_state & InternalState.Embedded) != 0; }
 		}
 		
-		public bool							IsEditionDisabled
+		public bool									IsEditionDisabled
 		{
-			get { return (this.internal_state & InternalState.EditionDisabled) != 0; }
+			get
+			{
+				return (this.internal_state & InternalState.EditionDisabled) != 0;
+			}
 			set
 			{
 				if (this.IsEditionDisabled != value)
@@ -780,9 +711,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool							AutoCapture
+		
+		public bool									AutoCapture
 		{
-			get { return (this.internal_state & InternalState.AutoCapture) != 0; }
+			get
+			{
+				return (this.internal_state & InternalState.AutoCapture) != 0;
+			}
 			set
 			{
 				if (value)
@@ -796,9 +731,35 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool							AutoFocus
+		public bool									AutoMinMax
 		{
-			get { return (this.internal_state & InternalState.AutoFocus) != 0; }
+			get
+			{
+				return (this.internal_state & InternalState.AutoMinMax) != 0;
+			}
+			set
+			{
+				if (this.AutoMinMax != value)
+				{
+					if (value)
+					{
+						this.internal_state |= InternalState.AutoMinMax;
+						this.UpdateMinMaxBasedOnDockedChildren ();
+					}
+					else
+					{
+						this.internal_state &= ~ InternalState.AutoMinMax;
+					}
+				}
+			}
+		}
+		
+		public bool									AutoFocus
+		{
+			get
+			{
+				return (this.internal_state & InternalState.AutoFocus) != 0;
+			}
 			set
 			{
 				if (value)
@@ -812,9 +773,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool							AutoEngage
+		public bool									AutoEngage
 		{
-			get { return (this.internal_state & InternalState.AutoEngage) != 0; }
+			get
+			{
+				return (this.internal_state & InternalState.AutoEngage) != 0;
+			}
 			set
 			{
 				if (value)
@@ -828,9 +792,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool							AutoRepeatEngaged
+		public bool									AutoRepeatEngaged
 		{
-			get { return (this.internal_state & InternalState.AutoRepeatEngaged) != 0; }
+			get
+			{
+				return (this.internal_state & InternalState.AutoRepeatEngaged) != 0;
+			}
 			set
 			{
 				if (value)
@@ -844,9 +811,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool							AutoToggle
+		public bool									AutoToggle
 		{
-			get { return (this.internal_state & InternalState.AutoToggle) != 0; }
+			get
+			{
+				return (this.internal_state & InternalState.AutoToggle) != 0;
+			}
 			set
 			{
 				if (value)
@@ -860,27 +830,30 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool							AutoMnemonic
+		public bool									AutoMnemonic
 		{
 			get { return (this.internal_state & InternalState.AutoMnemonic) != 0; }
 		}
 		
 		
-		protected InternalState				InternalState
+		protected InternalState						InternalState
 		{
 			get { return this.internal_state; }
 			set { this.internal_state = value; }
 		}
 		
 		
-		public virtual WidgetState			State
+		public WidgetState							State
 		{
 			get { return this.widget_state; }
 		}
 		
-		public virtual WidgetState			ActiveState
+		public WidgetState							ActiveState
 		{
-			get { return this.widget_state & WidgetState.ActiveMask; }
+			get
+			{
+				return this.widget_state & WidgetState.ActiveMask;
+			}
 			set
 			{
 				WidgetState active = this.widget_state & WidgetState.ActiveMask;
@@ -897,16 +870,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual WidgetState			PaintState
+		public WidgetState							PaintState
 		{
 			get
 			{
 				WidgetState mask  = WidgetState.ActiveMask |
-									WidgetState.Focused |
-									WidgetState.Entered |
-									WidgetState.Engaged |
-									WidgetState.Selected |
-									WidgetState.Error;
+					WidgetState.Focused |
+					WidgetState.Entered |
+					WidgetState.Engaged |
+					WidgetState.Selected |
+					WidgetState.Error;
 				
 				WidgetState state = this.widget_state & mask;
 				
@@ -920,7 +893,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool							ContainsFocus
+		public bool									ContainsFocus
 		{
 			get
 			{
@@ -947,24 +920,27 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool							CanFocus
+		public bool									CanFocus
 		{
 			get { return ((this.internal_state & InternalState.Focusable) != 0) && !this.IsFrozen; }
 		}
 		
-		public bool							CanSelect
+		public bool									CanSelect
 		{
 			get { return ((this.internal_state & InternalState.Selectable) != 0) && !this.IsFrozen; }
 		}
 		
-		public bool							CanEngage
+		public bool									CanEngage
 		{
 			get { return ((this.internal_state & InternalState.Engageable) != 0) && this.IsEnabled && !this.IsFrozen; }
 		}
 		
-		public bool							AcceptThreeState
+		public bool									AcceptThreeState
 		{
-			get { return (this.internal_state & InternalState.AcceptThreeState) != 0; }
+			get
+			{
+				return (this.internal_state & InternalState.AcceptThreeState) != 0;
+			}
 			set
 			{
 				if (value)
@@ -978,13 +954,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual bool					PossibleContainer
+		public bool									PossibleContainer
 		{
 			get { return ((this.internal_state & InternalState.PossibleContainer) != 0) && !this.IsFrozen; }
 		}
 		
 		
-		public WidgetCollection				Children
+		public WidgetCollection						Children
 		{
 			get
 			{
@@ -1003,10 +979,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Widget						Parent
+		public Widget								Parent
 		{
-			get { return this.parent; }
-			
+			get
+			{
+				return this.parent;
+			}
 			set
 			{
 				if (value != this.parent)
@@ -1023,7 +1001,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual Window				Window
+		public virtual Window						Window
 		{
 			get
 			{
@@ -1039,7 +1017,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Support.CommandDispatcher	CommandDispatcher
+		public Support.CommandDispatcher			CommandDispatcher
 		{
 			get
 			{
@@ -1048,7 +1026,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual Widget				RootParent
+		public Widget								RootParent
 		{
 			get
 			{
@@ -1063,7 +1041,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int							RootAngle
+		public int									RootAngle
 		{
 			get
 			{
@@ -1080,7 +1058,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public double						RootZoom
+		public double								RootZoom
 		{
 			get
 			{
@@ -1097,7 +1075,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Direction					RootDirection
+		public Direction							RootDirection
 		{
 			get
 			{
@@ -1114,18 +1092,23 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool							HasChildren
+		public bool									HasChildren
 		{
 			get { return (this.children != null) && (this.children.Count > 0); }
 		}
 		
-		public bool							HasParent
+		public bool									HasParent
 		{
 			get { return this.parent != null; }
 		}
 		
+		public bool									HasDockedChildren
+		{
+			get { return (this.internal_state & InternalState.ChildrenDocked) != 0; }
+		}
 		
-		public string						CommandName
+		
+		public string								CommandName
 		{
 			get
 			{
@@ -1137,7 +1120,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int							Index
+		public int									Index
 		{
 			get
 			{
@@ -1175,7 +1158,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[Bundle ("text")]	public virtual string	Text
+		[Bundle ("text")]	public string			Text
 		{
 			get
 			{
@@ -1204,72 +1187,19 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					this.CreateTextLayout ();
-					this.text_layout.Text = value;
+					this.ModifyTextLayout (value);
+					
 					this.Shortcut.Mnemonic = this.Mnemonic;
 				}
 			}
 		}
 		
-		public TextLayout					TextLayout
+		public TextLayout							TextLayout
 		{
 			get { return this.text_layout; }
 		}
 		
-		
-		public char							Mnemonic
-		{
-			get
-			{
-				if (this.AutoMnemonic)
-				{
-					//	Le code mnémonique est encapsulé par des tags <m>..</m>.
-					
-					return TextLayout.ExtractMnemonic (this.Text);
-				}
-				
-				return (char) 0;
-			}
-		}
-		
-		public int							TabIndex
-		{
-			get { return this.tab_index; }
-			set { this.tab_index = value; }
-		}
-		
-		public TabNavigationMode			TabNavigation
-		{
-			get { return this.tab_navigation_mode; }
-			set { this.tab_navigation_mode = value; }
-		}
-		
-		public Shortcut						Shortcut
-		{
-			get
-			{
-				if (this.shortcut == null)
-				{
-					this.shortcut = new Shortcut ();
-				}
-				
-				return this.shortcut;
-			}
-		}
-		
-		public string						Hypertext
-		{
-			get
-			{
-				if (this.hypertext == null)
-				{
-					return null;
-				}
-				
-				return this.hypertext.Anchor;
-			}
-		}
-		
-		public Drawing.TextBreakMode		TextBreakMode
+		public Drawing.TextBreakMode				TextBreakMode
 		{
 			get
 			{
@@ -1292,42 +1222,156 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event EventHandler			PreparePaint;
-		public event PaintEventHandler		PaintBackground;
-		public event PaintEventHandler		PaintForeground;
-		public event EventHandler			ChildrenChanged;
-		public event EventHandler			ParentChanged;
-		public event EventHandler			LayoutChanged;
+		public char									Mnemonic
+		{
+			get
+			{
+				if (this.AutoMnemonic)
+				{
+					//	Le code mnémonique est encapsulé par des tags <m>..</m>.
+					
+					return TextLayout.ExtractMnemonic (this.Text);
+				}
+				
+				return (char) 0;
+			}
+		}
 		
-		public event MessageEventHandler	Pressed;
-		public event MessageEventHandler	Released;
-		public event MessageEventHandler	Clicked;
-		public event MessageEventHandler	DoubleClicked;
-		public event MessageEventHandler	Entered;
-		public event MessageEventHandler	Exited;
-		public event EventHandler			ShortcutPressed;
-		public event EventHandler			HypertextHot;
-		public event MessageEventHandler	HypertextClicked;
+		public int									TabIndex
+		{
+			get { return this.tab_index; }
+			set { this.tab_index = value; }
+		}
 		
-		public event MessageEventHandler	PreProcessing;
-		public event MessageEventHandler	PostProcessing;
+		public TabNavigationMode					TabNavigation
+		{
+			get { return this.tab_navigation_mode; }
+			set { this.tab_navigation_mode = value; }
+		}
 		
-		public event EventHandler			Focused;
-		public event EventHandler			Defocused;
-		public event EventHandler			Selected;
-		public event EventHandler			Deselected;
-		public event EventHandler			Engaged;
-		public event EventHandler			StillEngaged;
-		public event EventHandler			Disengaged;
-		public event EventHandler			ActiveStateChanged;
-		public event EventHandler			MinSizeChanged;
-		public event EventHandler			MaxSizeChanged;
-		public event EventHandler			Disposing;
+		public Shortcut								Shortcut
+		{
+			get
+			{
+				if (this.shortcut == null)
+				{
+					this.shortcut = new Shortcut ();
+				}
+				
+				return this.shortcut;
+			}
+		}
 		
-		public event PaintBoundsCallback	PaintBoundsCallback;
+		public string								Hypertext
+		{
+			get
+			{
+				if (this.hypertext == null)
+				{
+					return null;
+				}
+				
+				return this.hypertext.Anchor;
+			}
+		}
 		
 		
-		//	FindNextWidget/FindPrevWidget
+		public event EventHandler					PreparePaint;
+		public event PaintEventHandler				PaintBackground;
+		public event PaintEventHandler				PaintForeground;
+		public event EventHandler					ChildrenChanged;
+		public event EventHandler					ParentChanged;
+		public event EventHandler					AdornerChanged;
+		public event EventHandler					LayoutChanged;
+		
+		public event MessageEventHandler			Pressed;
+		public event MessageEventHandler			Released;
+		public event MessageEventHandler			Clicked;
+		public event MessageEventHandler			DoubleClicked;
+		public event MessageEventHandler			Entered;
+		public event MessageEventHandler			Exited;
+		public event EventHandler					ShortcutPressed;
+		public event EventHandler					HypertextHot;
+		public event MessageEventHandler			HypertextClicked;
+		
+		public event MessageEventHandler			PreProcessing;
+		public event MessageEventHandler			PostProcessing;
+		
+		public event EventHandler					Focused;
+		public event EventHandler					Defocused;
+		public event EventHandler					Selected;
+		public event EventHandler					Deselected;
+		public event EventHandler					Engaged;
+		public event EventHandler					StillEngaged;
+		public event EventHandler					Disengaged;
+		public event EventHandler					ActiveStateChanged;
+		public event EventHandler					MinSizeChanged;
+		public event EventHandler					MaxSizeChanged;
+		public event EventHandler					Disposing;
+		
+		public event PaintBoundsCallback			PaintBoundsCallback;
+		
+		
+		public void SuspendLayout()
+		{
+			lock (this)
+			{
+				this.suspend_counter++;
+			}
+		}
+		
+		public void ResumeLayout()
+		{
+			this.ResumeLayout (true);
+		}
+		
+		public void ResumeLayout(bool update)
+		{
+			lock (this)
+			{
+				if (this.suspend_counter > 0)
+				{
+					this.suspend_counter--;
+				}
+				
+				if (this.suspend_counter == 0)
+				{
+					if (this.layout_info != null)
+					{
+						if (update)
+						{
+							this.UpdateChildrenLayout ();
+							this.OnLayoutChanged ();
+							this.layout_info = null;
+						}
+					}
+					if ((this.internal_state & InternalState.ChildrenChanged) != 0)
+					{
+						this.internal_state &= ~ InternalState.ChildrenChanged;
+						this.HandleChildrenChanged ();
+					}
+				}
+			}
+		}
+		
+		
+		public void SetClientAngle(int angle)
+		{
+			this.client_info.SetAngle (angle);
+			this.UpdateClientGeometry ();
+		}
+		
+		public void SetClientZoom(double zoom)
+		{
+			this.client_info.SetZoom (zoom);
+			this.UpdateClientGeometry ();
+		}
+		
+		public void SetClientOffset(double ox, double oy)
+		{
+			this.client_info.SetOffset (ox, oy);
+		}
+		
 		
 		public virtual void Hide()
 		{
@@ -1525,19 +1569,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void SetAutoMinMax(bool automatic)
-		{
-			if (automatic)
-			{
-				this.internal_state |= InternalState.AutoMinMax;
-				this.UpdateMinMaxBasedOnDockedChildren ();
-			}
-			else
-			{
-				this.internal_state &= ~ InternalState.AutoMinMax;
-			}
-		}
-		
 		public virtual void SetLayoutArgs(int arg1, int arg2)
 		{
 			this.layout_arg1 = (byte) arg1;
@@ -1550,23 +1581,23 @@ namespace Epsitec.Common.Widgets
 			arg2 = this.layout_arg2;
 		}
 		
-		public virtual void SetPropagationModes(PropagationModes modes, bool on, PropagationSetting propagation)
+		public virtual void SetEventPropagation(Propagate events, bool on, Setting setting)
 		{
 			if (on)
 			{
-				this.propagation |= modes;
+				this.propagate |= events;
 			}
 			else
 			{
-				this.propagation &= ~modes;
+				this.propagate &= ~events;
 			}
 			
-			if ((propagation == PropagationSetting.IncludeChildren) &&
+			if ((setting == Setting.IncludeChildren) &&
 				(this.HasChildren))
 			{
 				for (int i = 0; i < this.children.Count; i++)
 				{
-					this.children[i].SetPropagationModes (modes, on, propagation);
+					this.children[i].SetEventPropagation (events, on, setting);
 				}
 			}
 		}
@@ -2628,15 +2659,36 @@ namespace Epsitec.Common.Widgets
 			
 			this.Invalidate ();
 			this.UpdateClientGeometry ();
-			this.UpdateLayoutSize ();
+			this.UpdateTextLayout ();
 		}
 		
-		protected virtual void UpdateLayoutSize()
+		protected virtual void UpdateTextLayout()
 		{
 			if (this.text_layout != null)
 			{
 				this.text_layout.Alignment  = this.Alignment;
 				this.text_layout.LayoutSize = this.Client.Size;
+			}
+		}
+		
+		protected virtual void UpdateHasDockedChildren()
+		{
+			//	Met à jour le flag interne qui indique s'il y a des widgets dans l'état
+			//	docked, ou non.
+			
+			lock (this)
+			{
+				this.internal_state &= ~InternalState.ChildrenDocked;
+				
+				foreach (Widget child in this.Children)
+				{
+					if ((child.Dock != DockStyle.None) &&
+						(child.Dock != DockStyle.Layout))
+					{
+						this.internal_state |= InternalState.ChildrenDocked;
+						break;
+					}
+				}
 			}
 		}
 		
@@ -2691,7 +2743,10 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateMinMaxBasedOnDockedChildren()
 		{
-			if ((this.internal_state & InternalState.ChildrenDocked) == 0)
+			//	Recalcule les tailles minimales et maximales en se basant sur les enfants
+			//	contenus dans le widget.
+			
+			if (this.HasDockedChildren == false)
 			{
 				return;
 			}
@@ -2830,16 +2885,10 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateDockedChildrenLayout()
 		{
-			if ((this.internal_state & InternalState.AutoMinMax) != 0)
-			{
-				this.UpdateMinMaxBasedOnDockedChildren ();
-			}
-			
-			if ((this.internal_state & InternalState.ChildrenDocked) == 0)
+			if (this.HasDockedChildren == false)
 			{
 				return;
 			}
-			
 			System.Diagnostics.Debug.Assert (this.client_info != null);
 			System.Diagnostics.Debug.Assert (this.HasChildren);
 			
@@ -2923,6 +2972,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateChildrenLayout()
 		{
+			this.UpdateHasDockedChildren ();
+			this.UpdateMinMaxBasedOnDockedChildren ();
 			this.UpdateDockedChildrenLayout ();
 			
 			if (this.layout_info == null)
@@ -3428,7 +3479,15 @@ namespace Epsitec.Common.Widgets
 				this.text_layout.FontSize = this.DefaultFontSize;
 				this.text_layout.Anchor  += new AnchorEventHandler (this.HandleTextLayoutAnchor);
 				
-				this.UpdateLayoutSize ();
+				this.UpdateTextLayout ();
+			}
+		}
+		
+		protected virtual void ModifyTextLayout(string text)
+		{
+			if (this.text_layout != null)
+			{
+				this.text_layout.Text = text;
 			}
 		}
 		
@@ -3441,7 +3500,79 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void HandleTextLayoutAnchor(object sender, AnchorEventArgs e)
+		
+		protected void HandleParentChanged()
+		{
+			//	Cette méthode est appelée chaque fois qu'un widget change de parent.
+			
+			if ((this.propagate & Propagate.ParentChanged) != 0)
+			{
+				if (this.HasChildren)
+				{
+					for (int i = 0; i < this.children.Count; i++)
+					{
+						this.children[i].OnParentChanged ();
+					}
+				}
+			}
+			
+			this.OnParentChanged ();
+		}
+		
+		protected void HandleChildrenChanged()
+		{
+			//	Cette méthode est appelée chaque fois qu'un widget fils a été ajouté ou supprimé
+			//	de ce widget.
+			
+			System.Diagnostics.Debug.Assert (this.suspend_counter >= 0);
+			
+			if (this.suspend_counter != 0)
+			{
+				//	L'utilisateur pour suspendre le traitement des événements de layout (ceci comprend
+				//	aussi les événements liés aux changement de widgets fils), ce qui permet d'accélérer
+				//	les modifications massives de l'interface graphique :
+				
+				this.internal_state |= InternalState.ChildrenChanged;
+				
+				return;
+			}
+			
+			//	On veut éviter que le parent génère un nouveau layout de notre instance, car on va le
+			//	forcer nous-même en fin de méthode, alors on suspend temporairement le layout.
+			
+			try
+			{
+				this.SuspendLayout ();
+				
+				if ((this.propagate & Propagate.ChildrenChanged) != 0)
+				{
+					if (this.parent != null)
+					{
+						this.parent.HandleChildrenChanged ();
+					}
+				}
+				
+				this.OnChildrenChanged ();
+			}
+			finally
+			{
+				this.ResumeLayout (false);
+			}
+			
+			this.UpdateChildrenLayout ();
+		}
+		
+		protected void HandleAdornerChanged()
+		{
+			foreach (Widget child in this.Children)
+			{
+				child.HandleAdornerChanged ();
+			}
+			
+			this.OnAdornerChanged ();
+		}
+		
+		protected void HandleTextLayoutAnchor(object sender, AnchorEventArgs e)
 		{
 			System.Diagnostics.Debug.Assert (sender == this.text_layout);
 			
@@ -3454,6 +3585,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.hypertext_list.Add (info);
 		}
+		
 		
 		protected virtual void OnPreparePaint()
 		{
@@ -3499,14 +3631,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnChildrenChanged()
 		{
-			if ((this.propagation & PropagationModes.UpChildrenChanged) != 0)
-			{
-				if (this.parent != null)
-				{
-					this.parent.OnChildrenChanged ();
-				}
-			}
-			
 			if (this.ChildrenChanged != null)
 			{
 				this.ChildrenChanged (this);
@@ -3515,20 +3639,17 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnParentChanged()
 		{
-			if ((this.propagation & PropagationModes.DownParentChanged) != 0)
-			{
-				if (this.HasChildren)
-				{
-					for (int i = 0; i < this.children.Count; i++)
-					{
-						this.children[i].OnParentChanged ();
-					}
-				}
-			}
-			
 			if (this.ParentChanged != null)
 			{
 				this.ParentChanged (this);
+			}
+		}
+		
+		protected virtual void OnAdornerChanged()
+		{
+			if (this.AdornerChanged != null)
+			{
+				this.AdornerChanged (this);
 			}
 		}
 		
@@ -3760,19 +3881,19 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public enum PropagationSetting : byte
+		public enum Setting : byte
 		{
 			None				= 0,
 			IncludeChildren		= 1
 		}
 		
-		[System.Flags] public enum PropagationModes : uint
+		[System.Flags] public enum Propagate : uint
 		{
 			None				= 0,
 			
-			UpChildrenChanged	= 0x00000001,		//	propage au parent: ChildrenChanged
+			ChildrenChanged		= 0x00000001,		//	propage au parent: ChildrenChanged
 			
-			DownParentChanged	= 0x00010000,		//	propage aux enfants: ParentChanged
+			ParentChanged		= 0x00010000,		//	propage aux enfants: ParentChanged
 		}
 		
 		[System.Flags] public enum TabNavigationMode
@@ -3979,7 +4100,7 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				widget.parent = this.widget;
-				widget.OnParentChanged ();
+				widget.HandleParentChanged ();
 			}
 			
 			private void PreRemove(object widget)
@@ -4001,19 +4122,12 @@ namespace Epsitec.Common.Widgets
 				widget.SetEngaged (false);
 				widget.SetEntered (false);
 				widget.parent = null;
-				widget.OnParentChanged ();
+				widget.HandleParentChanged ();
 			}
 			
 			private void NotifyChanged()
 			{
-				if (this.widget.suspend_counter == 0)
-				{
-					this.widget.HandleChildrenChanged ();
-				}
-				else
-				{
-					this.widget.internal_state |= InternalState.ChildrenChanged;
-				}
+				this.widget.HandleChildrenChanged ();
 			}
 			
 			
@@ -4223,9 +4337,8 @@ namespace Epsitec.Common.Widgets
 		private LayoutFlags						layout_flags;
 		private byte							layout_arg1;
 		private byte							layout_arg2;
-		private Drawing.Margins					layout_margins;
 		
-		private PropagationModes				propagation;
+		private Propagate						propagate;
 		
 		private Drawing.Color					back_color;
 		private double							x1, y1, x2, y2;

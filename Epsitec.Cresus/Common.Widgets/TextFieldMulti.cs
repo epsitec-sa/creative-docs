@@ -50,10 +50,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void HandleAdornerChanged()
+		protected override void OnAdornerChanged()
 		{
 			this.UpdateClientGeometry();
-			base.HandleAdornerChanged();
+			base.OnAdornerChanged();
 		}
 
 		protected override void CursorScrollTextEnd(Drawing.Point end, Drawing.Rectangle cursor)
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override void UpdateLayoutSize()
+		protected override void UpdateTextLayout()
 		{
 			if ( this.TextLayout != null )
 			{

@@ -182,12 +182,12 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler ValueChanged;
 
 
-		protected override void HandleAdornerChanged()
+		protected override void OnAdornerChanged()
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			if ( this.defaultColor )  this.color = adorner.ColorCaption;
 			if ( this.defaultColorBack )  this.colorBack = adorner.ColorWindow;
-			base.HandleAdornerChanged();
+			base.OnAdornerChanged();
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)

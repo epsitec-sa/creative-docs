@@ -16,7 +16,7 @@ namespace Epsitec.Common.Widgets
 
 		
 		// Retourne l'alignement par défaut d'un bouton.
-		public override Drawing.ContentAlignment DefaultAlignment
+		public override Drawing.ContentAlignment	DefaultAlignment
 		{
 			get
 			{
@@ -24,12 +24,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override void AdjustDockBounds(ref Drawing.Rectangle bounds)
+		public override Drawing.Rectangle			InnerBounds
 		{
-			base.AdjustDockBounds (ref bounds);
-			
-			//	TODO: augmenter les marges gauche, droite, haute et basse pour que le
-			//	contenu n'empiète pas sur le titre, ni sur le cadre...
+			get
+			{
+				//	TODO: augmenter les marges gauche, droite, haute et basse pour que le
+				//	contenu n'empiète pas sur le titre, ni sur le cadre...
+				
+				return base.InnerBounds;
+			}
 		}
 
 		public override Drawing.Rectangle GetShapeBounds()

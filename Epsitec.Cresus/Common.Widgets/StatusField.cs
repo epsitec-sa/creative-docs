@@ -36,7 +36,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void UpdateLayoutSize()
+		protected override void UpdateTextLayout()
 		{
 			if ( this.TextLayout != null )
 			{
