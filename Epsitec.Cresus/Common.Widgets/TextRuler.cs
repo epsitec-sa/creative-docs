@@ -37,6 +37,7 @@ namespace Epsitec.Common.Widgets
 			this.fieldFontScale.MaxValue = 1000.0M;
 			this.fieldFontScale.Step = 10.0M;
 			this.fieldFontScale.Resolution = 1.0M;
+			this.fieldFontScale.TextSuffix = "%";
 			this.fieldFontScale.ValueChanged += new Support.EventHandler(this.HandleFieldFontScaleChanged);
 			ToolTip.Default.SetToolTip(this.fieldFontScale, "Taille en pourcents");
 
@@ -887,10 +888,6 @@ namespace Epsitec.Common.Widgets
 			this.GlyphType(this.buttonTab, this.tabType);
 			this.ComboSelectedName(this.fieldFontName, this.fontName);
 			this.fieldFontScale.Value = (decimal) this.fontScale * 100;
-			if ( !this.fieldFontScale.Text.EndsWith("%") )
-			{
-				this.fieldFontScale.Text = string.Concat(this.fieldFontScale.Text, "%");
-			}
 			this.ButtonActive(this.buttonBold,       this.bold      );
 			this.ButtonActive(this.buttonItalic,     this.italic    );
 			this.ButtonActive(this.buttonUnderlined, this.underlined);
@@ -1275,7 +1272,7 @@ namespace Epsitec.Common.Widgets
 		protected static readonly double	buttonWidth = 20;
 		protected static readonly double	buttonFontNameMinWidth = 100;
 		protected static readonly double	buttonFontNameMaxWidth = 150;
-		protected static readonly double	buttonFontScaleWidth = 45;
+		protected static readonly double	buttonFontScaleWidth = 50;
 		protected static readonly double	buttonFontColorWidth = 90;
 		protected static readonly double	zoneSupHeight = TextRuler.buttonMargin*2+TextRuler.buttonWidth;
 		protected static readonly double	zoneInfHeight = 15;

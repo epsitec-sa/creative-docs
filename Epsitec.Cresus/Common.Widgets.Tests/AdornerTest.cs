@@ -443,6 +443,7 @@ namespace Epsitec.Common.Widgets
 			TextFieldUpDown tud = new TextFieldUpDown();
 //			tud.Location = new Point(160, 160);
 			tud.Width = 45;
+			tud.TextSuffix = "%";
 			
 			tud.Value        =   5.00M;
 			tud.DefaultValue =   0.00M;

@@ -176,6 +176,43 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public virtual string					TextSuffix
+		{
+			get
+			{
+				return this.textSuffix;
+			}
+			set
+			{
+				if ( value == "" )
+				{
+					value = null;
+				}
+				
+				if ( this.textSuffix != value )
+				{
+					this.textSuffix = value;
+					this.OnTextSuffixChanged();
+				}
+			}
+		}
+		
+		public override TextLayout				TextLayout
+		{
+			get
+			{
+				if ( this.textSuffix == null )
+				{
+					return base.TextLayout;
+				}
+				
+				TextLayout layout = new TextLayout(base.TextLayout);
+				layout.Text = string.Concat(this.Text, this.TextSuffix);
+				return layout;
+			}
+		}
+
+		
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -316,6 +353,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual  void OnTextSuffixChanged()
+		{
+			if ( this.TextSuffixChanged != null )
+			{
+				this.TextSuffixChanged(this);
+			}
+		}
+		
 		
 		protected virtual void IncrementValue(decimal delta)
 		{
@@ -387,7 +432,9 @@ namespace Epsitec.Common.Widgets
 		protected Types.DecimalRange			range;
 		
 		public event Support.EventHandler		DecimalRangeChanged;
+		public event Support.EventHandler		TextSuffixChanged;
 		
+		protected string						textSuffix;
 		protected GlyphButton					arrowUp;
 		protected GlyphButton					arrowDown;
 		protected decimal						defaultValue = 0;

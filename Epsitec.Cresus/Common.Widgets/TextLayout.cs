@@ -42,6 +42,18 @@ namespace Epsitec.Common.Widgets
 			this.verticalMark = double.NaN;
 		}
 		
+		public TextLayout(TextLayout model) : this()
+		{
+			if ( model != null )
+			{
+				this.ResourceManager = model.ResourceManager;
+				this.style           = model.style;
+				this.DrawingScale    = model.DrawingScale;
+				this.VerticalMark    = model.VerticalMark;
+				this.LayoutSize      = model.LayoutSize;
+			}
+		}
+		
 		public TextLayout(Support.ResourceManager resource_manager) : this ()
 		{
 			this.resourceManager = resource_manager;

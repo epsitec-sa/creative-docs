@@ -2064,7 +2064,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public TextLayout							TextLayout
+		public virtual TextLayout					TextLayout
 		{
 			get { return this.text_layout; }
 		}

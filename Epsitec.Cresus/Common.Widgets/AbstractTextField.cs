@@ -605,6 +605,18 @@ namespace Epsitec.Common.Widgets
 					{
 						message.Consumer = this;
 					}
+					else
+					{
+						switch ( message.KeyCode )
+						{
+							case KeyCode.Home:
+							case KeyCode.End:
+							case KeyCode.ArrowLeft:
+							case KeyCode.ArrowRight:
+								message.Consumer = this;
+								break;
+						}
+					}
 					break;
 				
 				case MessageType.KeyPress:
