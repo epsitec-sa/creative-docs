@@ -1042,6 +1042,14 @@ namespace Epsitec.Common.Tests
 	}
 	
 	
+	public enum TextFieldType
+	{
+		SingleLine,						// ligne simple, scrollable horizontalement
+		MultiLine,						// ligne multiple, scrollable verticalement
+		UpDown,							// valeur numérique avec boutons +/-
+		Combo,							// combo box
+	}
+	
 	public class TextFieldAny
 	{
 		private TextFieldAny()

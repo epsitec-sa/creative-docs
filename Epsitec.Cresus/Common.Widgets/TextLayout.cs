@@ -1204,8 +1204,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.isDirty && this.layoutSize.Width > 0 )
 			{
-				JustifBlocks();
-				JustifLines();
+				this.JustifBlocks();
+				this.JustifLines();
 				this.isDirty = false;
 			}
 		}

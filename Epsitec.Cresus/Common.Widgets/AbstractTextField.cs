@@ -10,13 +10,6 @@ namespace Epsitec.Common.Widgets
 		Static,							// comme Flat mais fond transparent, sélectionnable, pas éditable...
 	}
 	
-	public enum TextFieldType
-	{
-		SingleLine,						// ligne simple, scrollable horizontalement
-		MultiLine,						// ligne multiple, scrollable verticalement
-		UpDown,							// valeur numérique avec boutons +/-
-		Combo,							// combo box
-	}
 	
 	/// <summary>
 	/// La classe TextField implémente la ligne éditable, tout en permettant
@@ -29,14 +22,10 @@ namespace Epsitec.Common.Widgets
 			TextField.flashTimer.Tick += new System.EventHandler(TextField.HandleFlashTimer);
 		}
 		
-		public AbstractTextField() : this(TextFieldType.SingleLine)
-		{
-		}
 		
-		// Crée une ligne éditable d'un type quelconque.
-		public AbstractTextField(TextFieldType type)
+		public AbstractTextField()
 		{
-			this.type = type;
+			this.dockMargins = new Drawing.Margins (2, 2, 2, 2);
 
 			this.internalState |= InternalState.AutoFocus;
 			this.internalState |= InternalState.AutoEngage;
@@ -47,39 +36,6 @@ namespace Epsitec.Common.Widgets
 			this.ResetCursor();
 			this.MouseCursor = MouseCursor.AsIBeam;
 
-			switch ( type )
-			{
-				case TextFieldType.SingleLine:
-					break;
-
-				case TextFieldType.MultiLine:
-					this.scroller = new VScroller();
-					this.scroller.SetEnabled(false);
-					this.scroller.Moved += new EventHandler(this.HandleScroller);
-					this.Children.Add(this.scroller);
-					break;
-
-				case TextFieldType.UpDown:
-					this.arrowUp = new ArrowButton();
-					this.arrowDown = new ArrowButton();
-					this.arrowUp.Direction = Direction.Up;
-					this.arrowDown.Direction = Direction.Down;
-					this.arrowUp.ButtonStyle = ButtonStyle.Scroller;
-					this.arrowDown.ButtonStyle = ButtonStyle.Scroller;
-					this.arrowUp.Engaged += new EventHandler(this.HandleButton);
-					this.arrowDown.Engaged += new EventHandler(this.HandleButton);
-					this.arrowUp.StillEngaged += new EventHandler(this.HandleButton);
-					this.arrowDown.StillEngaged += new EventHandler(this.HandleButton);
-					this.arrowUp.AutoRepeatEngaged = true;
-					this.arrowDown.AutoRepeatEngaged = true;
-					this.Children.Add(this.arrowUp);
-					this.Children.Add(this.arrowDown);
-					break;
-
-				case TextFieldType.Combo:
-					break;
-			}
-			
 			this.CreateTextLayout();
 		}
 		
@@ -90,23 +46,9 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Diagnostics.Debug.WriteLine("Dispose TextField " + this.Text);
 				
-				TextField.blinking = null;
-				
-				switch ( this.type )
+				if (TextField.blinking == this)
 				{
-					case TextFieldType.MultiLine:
-						this.scroller.Moved -= new EventHandler(this.HandleScroller);
-						break;
-
-					case TextFieldType.UpDown:
-						this.arrowUp.Engaged -= new EventHandler(this.HandleButton);
-						this.arrowDown.Engaged -= new EventHandler(this.HandleButton);
-						this.arrowUp.StillEngaged -= new EventHandler(this.HandleButton);
-						this.arrowDown.StillEngaged -= new EventHandler(this.HandleButton);
-						break;
-
-					case TextFieldType.Combo:
-						break;
+					TextField.blinking = null;
 				}
 			}
 			
@@ -137,7 +79,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.DefaultFontHeight+6;
+				return this.DefaultFontHeight + 2*AbstractTextField.Margin;
 			}
 		}
 
@@ -297,152 +239,15 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 		}
 
-		// Valeur numérique éditée.
-		public double Value
-		{
-			get
-			{
-				string text = this.Text;
-				double number = 0;
-				try
-				{
-					number = System.Convert.ToDouble(text);
-				}
-				catch
-				{
-					number = 0;
-				}
-				return number;
-			}
-
-			set
-			{
-				string text = System.Convert.ToString(value);
-				this.Text = text;
-				this.cursorFrom = 0;
-				this.cursorTo   = text.Length;
-				this.CursorScroll();
-				this.Invalidate();
-			}
-		}
-
-		// Valeur numérique minimale possible.
-		public double MinRange
-		{
-			get
-			{
-				return this.minRange;
-			}
-
-			set
-			{
-				this.minRange = value;
-			}
-		}
-		
-		// Valeur numérique maximale possible.
-		public double MaxRange
-		{
-			get
-			{
-				return this.maxRange;
-			}
-
-			set
-			{
-				this.maxRange = value;
-			}
-		}
-		
-		// Pas pour les boutons up/down.
-		public double Step
-		{
-			get
-			{
-				return this.step;
-			}
-
-			set
-			{
-				this.step = value;
-			}
-		}
-		
-
-		// Met à jour la géométrie des boutons de l'ascenseur.
-		protected override void UpdateClientGeometry()
-		{
-			base.UpdateClientGeometry();
-
-			if ( this.type == TextFieldType.MultiLine )
-			{
-				Drawing.Rectangle rect = this.Bounds;
-				this.rightMargin = this.scroller.Width;
-				double m = TextField.margin-1;
-				rect.Inflate(-m, -m);
-
-				if ( this.scroller != null )
-				{
-					Drawing.Rectangle aRect = new Drawing.Rectangle(m+rect.Width-this.rightMargin, m, this.rightMargin, rect.Height);
-					this.scroller.Bounds = aRect;
-				}
-			}
-
-			if ( this.type == TextFieldType.UpDown )
-			{
-#if false
-				Drawing.Rectangle rect = this.Bounds;
-				//this.rightMargin = System.Math.Floor(rect.Height/2+1);
-				this.rightMargin = System.Math.Floor(rect.Height*0.6);
-				double m = TextField.margin-1;
-				rect.Inflate(-m, -m);
-
-				if ( this.arrowUp != null )
-				{
-					Drawing.Rectangle aRect = new Drawing.Rectangle(m+rect.Width-this.rightMargin, m+rect.Height/2, this.rightMargin, rect.Height/2);
-					this.arrowUp.Bounds = aRect;
-				}
-				if ( this.arrowDown != null )
-				{
-					Drawing.Rectangle aRect = new Drawing.Rectangle(m+rect.Width-this.rightMargin, m, this.rightMargin, rect.Height/2);
-					this.arrowDown.Bounds = aRect;
-				}
-#else
-				Drawing.Rectangle rect = this.Bounds;
-				//this.rightMargin = System.Math.Floor(rect.Height/2+1);
-				this.rightMargin = System.Math.Floor(rect.Height*0.6);
-
-				if ( this.arrowUp != null )
-				{
-					Drawing.Rectangle aRect = new Drawing.Rectangle(rect.Width-this.rightMargin, rect.Height/2, this.rightMargin, rect.Height/2);
-					this.arrowUp.Bounds = aRect;
-				}
-				if ( this.arrowDown != null )
-				{
-					Drawing.Rectangle aRect = new Drawing.Rectangle(rect.Width-this.rightMargin, 0, this.rightMargin, rect.Height/2);
-					this.arrowDown.Bounds = aRect;
-				}
-#endif
-			}
-		}
-
 		protected override void UpdateLayoutSize()
 		{
 			if ( this.textLayout != null )
 			{
-				double dx = this.Client.Width - TextField.margin*2 - this.rightMargin - this.leftMargin;
-				double dy = this.Client.Height - TextField.margin*2;
+				double dx = this.Client.Width - AbstractTextField.Margin*2 - this.rightMargin - this.leftMargin;
+				double dy = this.Client.Height - AbstractTextField.Margin*2;
 				this.realSize = new Drawing.Size(dx, dy);
-				if ( this.type == TextFieldType.MultiLine )
-				{
-					dy = TextField.infinity;  // hauteur infinie
-				}
-				else
-				{
-					dx = TextField.infinity;  // largeur infinie
-				}
 				this.textLayout.Alignment = this.Alignment;
-				this.textLayout.LayoutSize = new Drawing.Size(dx, dy);
+				this.textLayout.LayoutSize = new Drawing.Size(AbstractTextField.Infinity, dy);
 
 				if ( this.textLayout.Text != null )
 				{
@@ -460,17 +265,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-#if false
-		public override Drawing.Rectangle GetPaintBounds()
-		{
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.client_info.width, this.client_info.height);
-			if ( this.scroller != null )
-			{
-				rect.Bottom -= this.scroller.Height;
-			}
-			return rect;
-		}
-#endif
 
 		// Gère le temps écoulé pour faire clignoter un curseur.
 		protected static void HandleFlashTimer(object source, System.EventArgs e)
@@ -516,56 +310,12 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Gestion d'un événement lorsque l'ascenseur est déplacé.
-		private void HandleScroller(object sender)
-		{
-			if ( this.type != TextFieldType.MultiLine )  return;
-
-			this.scrollOffset.Y = this.scroller.Value-this.scroller.Range+TextField.infinity-this.realSize.Height;
-			this.Invalidate();
-		}
-
-		// Gestion d'un événement lorsqu'un bouton est pressé.
-		private void HandleButton(object sender)
-		{
-			ArrowButton button = sender as ArrowButton;
-
-			string text = this.Text;
-			double number;
-			try
-			{
-				number = System.Convert.ToDouble(text);
-			}
-			catch
-			{
-				return;
-			}
-
-			if ( button == this.arrowUp )
-			{
-				number += this.step;
-			}
-			else if ( button == this.arrowDown )
-			{
-				number -= this.step;
-			}
-			number = System.Math.Max(number, this.minRange);
-			number = System.Math.Min(number, this.maxRange);
-
-			text = System.Convert.ToString(number);
-			this.Text = text;
-			this.cursorFrom = 0;
-			this.cursorTo   = text.Length;
-			this.Invalidate();
-		}
-
-
 
 		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			pos.X -= TextField.margin;
-			pos.Y -= TextField.margin;
+			pos.X -= AbstractTextField.Margin;
+			pos.Y -= AbstractTextField.Margin;
 			pos += this.scrollOffset;
 
 			switch ( message.Type )
@@ -649,13 +399,6 @@ namespace Epsitec.Common.Widgets
 		{
 			switch ( key )
 			{
-				case Keys.Enter:
-					if ( this.type == TextFieldType.MultiLine )
-					{
-						this.InsertCharacter('\n');
-					}
-					break;
-
 				case Keys.Back:
 					this.DeleteCharacter(-1);
 					break;
@@ -668,25 +411,11 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case Keys.Home:
-					if ( this.type == TextFieldType.MultiLine )
-					{
-						this.MoveExtremity(-1, isShiftPressed, isCtrlPressed);
-					}
-					else
-					{
-						this.MoveCursor(-1000000, isShiftPressed, false);  // recule beaucoup
-					}
+					this.MoveCursor(-1000000, isShiftPressed, false);  // recule beaucoup
 					break;
 
 				case Keys.End:
-					if ( this.type == TextFieldType.MultiLine )
-					{
-						this.MoveExtremity(1, isShiftPressed, isCtrlPressed);
-					}
-					else
-					{
-						this.MoveCursor(1000000, isShiftPressed, false);  // avance beaucoup
-					}
+					this.MoveCursor(1000000, isShiftPressed, false);  // avance beaucoup
 					break;
 
 				case Keys.PageUp:
@@ -706,25 +435,11 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case Keys.Up:
-					if ( this.type == TextFieldType.MultiLine )
-					{
-						this.MoveLine(-1, isShiftPressed, isCtrlPressed);
-					}
-					else
-					{
-						this.MoveCursor(-1, isShiftPressed, isCtrlPressed);
-					}
+					this.MoveCursor(-1, isShiftPressed, isCtrlPressed);
 					break;
 
 				case Keys.Down:
-					if ( this.type == TextFieldType.MultiLine )
-					{
-						this.MoveLine(1, isShiftPressed, isCtrlPressed);
-					}
-					else
-					{
-						this.MoveCursor(1, isShiftPressed, isCtrlPressed);
-					}
+					this.MoveCursor(1, isShiftPressed, isCtrlPressed);
 					break;
 			}
 		}
@@ -985,55 +700,27 @@ namespace Epsitec.Common.Widgets
 
 			this.scrollOffset = new Drawing.Point(0, 0);
 
-			Drawing.Rectangle rCursor = this.textLayout.FindTextCursor(this.cursorTo, out this.cursorLine);
-			this.cursorPosX = (rCursor.Left+rCursor.Right)/2;
+			Drawing.Rectangle cursor = this.textLayout.FindTextCursor(this.cursorTo, out this.cursorLine);
+			this.cursorPosX = (cursor.Left+cursor.Right)/2;
 
-			Drawing.Point pEnd = this.textLayout.FindTextEnd();
-
-			if ( this.type == TextFieldType.MultiLine )  // scroll vertical ?
-			{
-				double offset = rCursor.Bottom;
-				offset -= this.realSize.Height/2;
-				if ( offset < pEnd.Y )  offset = pEnd.Y;
-				offset += this.realSize.Height;
-				if ( offset > TextField.infinity )  offset = TextField.infinity;
-				this.scrollOffset.Y = offset-this.realSize.Height;
-
-				if ( this.scroller != null )
-				{
-					double h = TextField.infinity-pEnd.Y;  // hauteur de tout le texte
-					if ( h <= this.realSize.Height )
-					{
-						this.scroller.SetEnabled(false);
-						this.scroller.Range = 1;
-						this.scroller.Display = 1;
-						this.scroller.Value = 0;
-					}
-					else
-					{
-						this.scroller.SetEnabled(true);
-						this.scroller.Range = h-this.realSize.Height;
-						this.scroller.Display = this.realSize.Height/h * this.scroller.Range;
-						this.scroller.Value = this.scroller.Range - (TextField.infinity-offset);
-						this.scroller.SmallChange = 20;
-						this.scroller.LargeChange = this.realSize.Height/2;
-					}
-				}
-			}
-			else	// scroll horizontal ?
-			{
-				double offset = rCursor.Right;
-				offset += this.realSize.Width/2;
-				if ( offset > pEnd.X )  offset = pEnd.X;
-				offset -= this.realSize.Width;
-				if ( offset < 0 )  offset = 0;
-				this.scrollOffset.X = offset;
-			}
+			Drawing.Point end = this.textLayout.FindTextEnd();
+			
+			this.CursorScrollTextEnd(end, cursor);
+		}
+		
+		protected virtual void CursorScrollTextEnd(Drawing.Point end, Drawing.Rectangle cursor)
+		{
+			double offset = cursor.Right;
+			offset += this.realSize.Width/2;
+			offset  = System.Math.Min (offset, end.X);
+			offset -= this.realSize.Width;
+			offset  = System.Math.Max (offset, 0);
+			this.scrollOffset.X = offset;
 		}
 
-		// Dessine le texte en cours d'édition.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			// Dessine le texte en cours d'édition.
 			System.Diagnostics.Debug.Assert(this.textLayout != null);
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
@@ -1041,7 +728,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
 			Direction         dir   = this.RootDirection;
-			Drawing.Point     pos   = new Drawing.Point(TextField.margin, TextField.margin);
+			Drawing.Point     pos   = new Drawing.Point(AbstractTextField.Margin, AbstractTextField.Margin);
 			pos -= this.scrollOffset;
 			
 			adorner.PaintTextFieldBackground(graphics, rect, state, dir, this.textStyle, this.readOnly);
@@ -1055,7 +742,6 @@ namespace Epsitec.Common.Widgets
 
 			if ( (state&WidgetState.Focused) == 0 )
 			{
-				pos.Y += 1;
 				adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
 			}
 			else
@@ -1067,7 +753,6 @@ namespace Epsitec.Common.Widgets
 				
 				if ( from == to )
 				{
-					pos.Y += 1;
 					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
 					visibleCursor = TextField.showCursor && this.WindowFrame.Focused;
 				}
@@ -1075,7 +760,6 @@ namespace Epsitec.Common.Widgets
 				{
 					Drawing.Rectangle[] rects = this.textLayout.FindTextRange(from, to);
 					adorner.PaintTextSelectionBackground(graphics, pos, rects);
-					pos.Y += 1;
 					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
 				}
 
@@ -1087,8 +771,8 @@ namespace Epsitec.Common.Widgets
 					double x = rCursor.Left;
 					double y = rCursor.Bottom;
 					graphics.Align(ref x, ref y);
-					rCursor.Offset(x-rCursor.Left+0.5, 0);
-				
+					rCursor.Left = x;
+					rCursor.Right = x+1;
 					adorner.PaintTextCursor(graphics, pos, rCursor, visibleCursor);
 				}
 			}
@@ -1102,12 +786,10 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler TextDeleted;
 		
 		
-		protected TextFieldType					type = TextFieldType.SingleLine;
-		protected ArrowButton					arrowUp;
-		protected ArrowButton					arrowDown;
+		protected static readonly double		Margin = 4;
+		protected static readonly double		Infinity = 1000000;
+		
 		protected bool							readOnly = false;
-		protected static readonly double		margin = 3;
-		protected static readonly double		infinity = 1000000;
 		protected double						leftMargin = 0;
 		protected double						rightMargin = 0;
 		protected Drawing.Size					realSize;
@@ -1119,10 +801,6 @@ namespace Epsitec.Common.Widgets
 		protected double						cursorPosX;
 		protected int							maxChar = 1000;
 		protected bool							mouseDown = false;
-		protected double						minRange = 0;
-		protected double						maxRange = 100;
-		protected double						step = 1;
-		protected VScroller						scroller;
 		
 		protected static System.Windows.Forms.Timer	flashTimer = new System.Windows.Forms.Timer();
 		protected static bool					showCursor = true;

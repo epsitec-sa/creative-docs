@@ -1592,6 +1592,21 @@ namespace Epsitec.Common.Widgets
 			return point;
 		}
 		
+		public virtual Drawing.Point MapClientToScreen(Drawing.Point point)
+		{
+			point = this.MapClientToRoot (point);
+			point = this.WindowFrame.MapWindowToScreen (point);
+			return point;
+		}
+		
+		public virtual Drawing.Point MapParentToScreen(Drawing.Point point)
+		{
+			point = this.MapParentToClient (point);
+			point = this.MapClientToRoot (point);
+			point = this.WindowFrame.MapWindowToScreen (point);
+			return point;
+		}
+		
 		
 		public virtual Drawing.Rectangle MapRootToClient(Drawing.Rectangle rect)
 		{

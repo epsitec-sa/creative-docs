@@ -5,7 +5,7 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class TextField : AbstractTextField
 	{
-		public TextField() : base(TextFieldType.SingleLine)
+		public TextField()
 		{
 		}
 	}

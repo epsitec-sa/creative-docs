@@ -491,20 +491,12 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		// Conversion d'une coordonnée écran -> parent du widget.
-		protected Drawing.Point MapScreenToClient(Widget widget, Drawing.Point pos)
-		{
-			pos = widget.WindowFrame.MapScreenToWindow(pos);
-			pos = widget.MapRootToClient(pos);
-			pos = widget.MapClientToParent(pos);
-			return pos;
-		}
 
 		// Cherche dans quel menu ou sous-menu est la souris.
 		protected AbstractMenu DetectMenu(Drawing.Point mouse)
 		{
 			Drawing.Point pos;
-			pos = this.MapScreenToClient(this, mouse);
+			pos = this.MapScreenToParent(mouse);
 			if ( this.HitTest(pos) )  return this;
 
 			AbstractMenu sub = this;
@@ -513,7 +505,7 @@ namespace Epsitec.Common.Widgets
 				sub = sub.submenu;
 				if ( sub == null )  break;
 
-				pos = this.MapScreenToClient(sub, mouse);
+				pos = sub.MapScreenToParent(mouse);
 				if ( sub.HitTest(pos) )  return sub;
 			}
 
@@ -526,7 +518,7 @@ namespace Epsitec.Common.Widgets
 			foreach ( MenuItem cell in menu.items )
 			{
 				Drawing.Point pos;
-				pos = this.MapScreenToClient(cell, mouse);
+				pos = cell.MapScreenToParent(mouse);
 				if ( cell.HitTest(pos) )  return cell;
 			}
 
