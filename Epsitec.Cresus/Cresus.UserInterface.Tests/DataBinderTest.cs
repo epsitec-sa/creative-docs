@@ -10,7 +10,7 @@ namespace Epsitec.Common.Support
 	{
 		[SetUp] public void SetUp()
 		{
-			ObjectBundler.RegisterAssembly (typeof (Widgets.Widget).Assembly);
+			ObjectBundler.Initialise ();
 		}
 		
 		[Test] public void CheckBinderFactory()
