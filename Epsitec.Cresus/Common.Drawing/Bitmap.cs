@@ -235,6 +235,11 @@ namespace Epsitec.Common.Drawing
 			return bitmap;
 		}
 		
+		public static Image FromNativeBitmap(int dx, int dy)
+		{
+			return Bitmap.FromNativeBitmap (new System.Drawing.Bitmap (dx, dy));
+		}
+		
 		public static Image FromNativeBitmap(System.Drawing.Bitmap native)
 		{
 			Image bitmap = Bitmap.FromNativeBitmap (native, new Point (0, 0));
