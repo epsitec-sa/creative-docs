@@ -1,9 +1,10 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
 	using Hashtable = System.Collections.Hashtable;
+	using ArrayList = System.Collections.ArrayList;
 	
 	/// <summary>
 	/// La classe ImageProvider permet d'obtenir des images à partir de leur
@@ -62,6 +63,33 @@ namespace Epsitec.Common.Support
 			set
 			{
 				this.check_path = value;
+			}
+		}
+		
+		public bool						EnableLongLifeCache
+		{
+			get
+			{
+				if (this.keep_alive_images == null)
+				{
+					return false;
+				}
+				
+				return true;
+			}
+			set
+			{
+				if (this.EnableLongLifeCache != value)
+				{
+					if (value)
+					{
+						this.keep_alive_images = new ArrayList ();
+					}
+					else
+					{
+						this.keep_alive_images = null;
+					}
+				}
 			}
 		}
 		
@@ -152,6 +180,11 @@ namespace Epsitec.Common.Support
 				else
 				{
 					this.images[name] = new System.WeakReference (image);
+					
+					if (this.keep_alive_images != null)
+					{
+						this.keep_alive_images.Add (image);
+					}
 				}
 				
 				return image;
@@ -200,6 +233,11 @@ namespace Epsitec.Common.Support
 				if (image != null)
 				{
 					this.images[name] = new System.WeakReference (image);
+					
+					if (this.keep_alive_images != null)
+					{
+						this.keep_alive_images.Add (image);
+					}
 				}
 				
 				return image;
@@ -259,12 +297,94 @@ namespace Epsitec.Common.Support
 				if (image != null)
 				{
 					this.images[name] = new System.WeakReference (image);
+					
+					if (this.keep_alive_images != null)
+					{
+						this.keep_alive_images.Add (image);
+					}
 				}
 				
 				return image;
 			}
 			
 			return null;
+		}
+		
+		public Drawing.Image[] GetLongLifeCacheContents()
+		{
+			if (this.keep_alive_images == null)
+			{
+				return new Drawing.Image[0];
+			}
+			
+			object[]        objects = this.keep_alive_images.ToArray ();
+			Drawing.Image[] images  = new Drawing.Image[objects.Length];
+			
+			for (int i = 0; i < objects.Length; i++)
+			{
+				images[i] = objects[i] as Drawing.Image;
+			}
+			
+			return images;
+		}
+		
+		
+		public void PrefillManifestIconCache()
+		{
+			System.AppDomain             domain     = System.AppDomain.CurrentDomain;
+			System.Reflection.Assembly[] assemblies = domain.GetAssemblies ();
+			
+			for (int i = 0; i < assemblies.Length; i++)
+			{
+				object assembly_object = assemblies[i];
+				
+				if (assembly_object is System.Reflection.Emit.AssemblyBuilder)
+				{
+					//	Saute les assembly dont on sait qu'elles n'ont pas de ressources intéressantes,
+					//	puisqu'elles ont été générées dynamiquement.
+					
+					continue;
+				}
+				
+				string[] names = assemblies[i].GetManifestResourceNames ();
+				
+				for (int j = 0; j < names.Length; j++)
+				{
+					if (names[j].EndsWith (".icon"))
+					{
+						string                     res_name = names[j];
+						System.Reflection.Assembly assembly = assemblies[i];
+						
+						string name = string.Concat ("manifest:", res_name);
+						
+						System.WeakReference weak_ref = this.images[name] as System.WeakReference;
+						
+						if ((weak_ref == null) ||
+							(weak_ref.IsAlive == false))
+						{
+							try
+							{
+								Drawing.Image image = Drawing.Bitmap.FromManifestResource (res_name, assembly);
+								
+								if (image != null)
+								{
+									System.Diagnostics.Debug.WriteLine ("Pre-loaded image " + res_name + " from assembly " + assembly.GetName ());
+									
+									this.images[name] = new System.WeakReference (image);
+									
+									if (this.keep_alive_images != null)
+									{
+										this.keep_alive_images.Add (image);
+									}
+								}
+							}
+							catch
+							{
+							}
+						}
+					}
+				}
+			}
 		}
 		
 		public void ClearImageCache(string name)
@@ -291,6 +411,11 @@ namespace Epsitec.Common.Support
 				{
 					image.RemoveFromCache ();
 				}
+			}
+			
+			if (this.keep_alive_images != null)
+			{
+				this.keep_alive_images.Clear ();
 			}
 		}
 		
@@ -350,6 +475,7 @@ namespace Epsitec.Common.Support
 
 		
 		protected Hashtable				images = new Hashtable ();
+		protected ArrayList				keep_alive_images = null;
 		protected Hashtable				bundle_hash = new Hashtable ();
 		protected string				default_resource_provider = "file:";
 		protected bool					check_path = true;

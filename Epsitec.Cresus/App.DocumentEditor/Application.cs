@@ -15,6 +15,10 @@ namespace Epsitec.App.DocumentEditor
 		static void Main() 
 		{
 			Widget.Initialise();
+			
+			Common.Support.ImageProvider.Default.EnableLongLifeCache = true;
+			Common.Support.ImageProvider.Default.PrefillManifestIconCache();
+
 			Epsitec.Common.Document.Engine.Initialise();
 			//Application.application = new Application(DocumentType.Pictogram);
 			Application.application = new Application(DocumentType.Graphic);
@@ -64,11 +68,11 @@ namespace Epsitec.App.DocumentEditor
 				}
 				this.editor.GlobalSettings.WindowLocation = wa.Center-this.editor.GlobalSettings.WindowSize/2;
 			}
+			
 			this.mainWindow.WindowLocation = this.editor.GlobalSettings.WindowLocation;
 			this.mainWindow.WindowSize     = this.editor.GlobalSettings.WindowSize;
 			this.mainWindow.IsFullScreen   = this.editor.GlobalSettings.IsFullScreen;
-			this.mainWindow.Show();
-
+			
 			switch ( type )
 			{
 				case DocumentType.Graphic:
