@@ -11,6 +11,7 @@ namespace Epsitec.Common.Widgets
 			this.paneButton.Alignment = Drawing.ContentAlignment.MiddleCenter;
 
 			this.arrowButton = new ArrowButton(this);
+			this.arrowButton.ButtonStyle = ButtonStyle.Icon;
 			this.arrowButton.Hide();
 		}
 		
