@@ -17,7 +17,14 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.version;
+				long version = 0;
+				
+				for (int i = 0; i < this.properties.Length; i++)
+				{
+					version = System.Math.Max (version, this.properties[i].Version);
+				}
+				
+				return version;
 			}
 		}
 		
@@ -41,23 +48,12 @@ namespace Epsitec.Common.Text
 		public void Invalidate()
 		{
 			this.contents_signature = 0;
-			this.version            = 0;
 		}
 		
 		
 		public static void ChangeCurrentVersion()
 		{
 			TextStyle.current_version++;
-		}
-		
-		public void UpdateVersion()
-		{
-			this.version = TextStyle.CurrentVersion;
-		}
-		
-		public void DefineVersion(long version)
-		{
-			this.version = version;
 		}
 		
 		public TextStyle.Accumulator StartAccumulation()
@@ -150,7 +146,6 @@ namespace Epsitec.Common.Text
 		
 		
 		private int								contents_signature;
-		private long							version;
 		private Properties.BaseProperty[]		properties;
 		
 		private static long						current_version = 1;

@@ -85,10 +85,6 @@ namespace Epsitec.Common.Text.Styles
 					
 					accumulator.Done ();
 					
-					//	Attribue à la synthèse la version du composant le plus
-					//	récent et efface encore notre signature.
-					
-					this.synthesis.DefineVersion (version);
 					this.ClearContentsSignature ();
 				}
 			}
