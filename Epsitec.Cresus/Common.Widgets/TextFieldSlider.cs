@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.slider = new Slider(this);
 			this.slider.HasFrame = false;
-			this.slider.ValueChanged += new EventHandler(this.HandleSliderValueChanged);
+			this.slider.ValueChanged += new Support.EventHandler(this.HandleSliderValueChanged);
 		}
 		
 		public TextFieldSlider(Widget embedder) : this()
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.slider.ValueChanged -= new EventHandler(this.HandleSliderValueChanged);
+				this.slider.ValueChanged -= new Support.EventHandler(this.HandleSliderValueChanged);
 				this.slider.Dispose();
 				this.slider = null;
 			}
