@@ -28,10 +28,10 @@ namespace Epsitec.Common.Widgets
 		{
 			this.DockMargins = new Drawing.Margins (2, 2, 2, 2);
 
-			this.internalState |= InternalState.AutoFocus;
-			this.internalState |= InternalState.AutoEngage;
-			this.internalState |= InternalState.Focusable;
-			this.internalState |= InternalState.Engageable;
+			this.InternalState |= InternalState.AutoFocus;
+			this.InternalState |= InternalState.AutoEngage;
+			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= InternalState.Engageable;
 			this.textStyle = TextFieldStyle.Normal;
 
 			this.ResetCursor();
