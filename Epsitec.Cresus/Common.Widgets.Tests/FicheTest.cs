@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
