@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.UserInterface.Binders
 				this.data_store = data_store;
 				this.binding    = path;
 				
-				this.widget.ActiveStateChanged += new Epsitec.Common.Widgets.EventHandler(this.SetDataFromWidget);
+				this.widget.ActiveStateChanged += new Epsitec.Common.Support.EventHandler(this.SetDataFromWidget);
 				data_store.AttachObserver (binding, new DataLayer.DataChangeEventHandler (this.SetWidgetFromData));
 				
 				this.SetWidgetFromData (null, new DataLayer.DataChangeEventArgs (path, System.Data.DataRowAction.Nothing));
