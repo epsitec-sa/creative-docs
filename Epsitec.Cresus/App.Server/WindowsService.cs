@@ -75,17 +75,14 @@ namespace Epsitec.Cresus.Server
 		private void StartServices()
 		{
 			System.Diagnostics.Debug.WriteLine ("Cresus Server: starting.");
-//-			System.Threading.Thread.Sleep (20*1000);
 			
-			Database.DbAccess access = this.CreateAccess ();
+			this.infrastructure = this.GetDatabaseInfrastructure ();
 			
-			this.infrastructure = new Epsitec.Cresus.Database.DbInfrastructure ();
-			this.infrastructure.AttachDatabase (access);
+			System.Diagnostics.Debug.Assert (this.infrastructure.LocalSettings.IsServer);
+			System.Diagnostics.Debug.Assert (this.infrastructure.LocalSettings.ClientId == 100);
 			
-			this.infrastructure.LocalSettings.IsServer = true;
 			this.orchestrator = new Epsitec.Cresus.Requests.Orchestrator (this.infrastructure);
-			this.engine = new Epsitec.Cresus.Services.Engine (this.orchestrator, 1234);
-			this.infrastructure.LocalSettings.IsServer = false;
+			this.engine       = new Epsitec.Cresus.Services.Engine (this.orchestrator, 1234);
 			
 			System.Diagnostics.Debug.WriteLine ("Cresus Server: running.");
 		}
@@ -109,7 +106,41 @@ namespace Epsitec.Cresus.Server
 			}
 		}
 		
-		private Database.DbAccess CreateAccess()
+		
+		private Database.DbInfrastructure GetDatabaseInfrastructure()
+		{
+			Database.DbInfrastructure infrastructure = new Database.DbInfrastructure ();
+			Database.DbAccess         access         = WindowsService.CreateAccess ();
+			
+			try
+			{
+				System.Diagnostics.Debug.WriteLine ("Trying to open database.");
+				infrastructure.AttachDatabase (access);
+			}
+			catch
+			{
+				infrastructure.Dispose ();
+				infrastructure = new Database.DbInfrastructure ();
+				
+				try
+				{
+					System.Diagnostics.Debug.WriteLine ("Creating database.");
+					InitialDatabase.Create (this);
+					System.Diagnostics.Debug.WriteLine ("Trying to open database (2).");
+					infrastructure.AttachDatabase (access);
+				}
+				catch
+				{
+					System.Diagnostics.Debug.WriteLine ("Database could not be opened.");
+					infrastructure.Dispose ();
+					infrastructure = null;
+				}
+			}
+			
+			return infrastructure;
+		}
+		
+		internal static Database.DbAccess CreateAccess()
 		{
 			Database.DbAccess db_access = new Database.DbAccess ();
 			

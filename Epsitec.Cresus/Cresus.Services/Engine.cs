@@ -4,6 +4,7 @@
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Http;
+using System.Runtime.Remoting.Lifetime;
 
 namespace Epsitec.Cresus.Services
 {

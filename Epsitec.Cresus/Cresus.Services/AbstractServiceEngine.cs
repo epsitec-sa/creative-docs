@@ -25,6 +25,17 @@ namespace Epsitec.Cresus.Services
 		}
 		
 		
+		public override object InitializeLifetimeService()
+		{
+			//	En retournant null ici, on garantit que le service ne sera jamais
+			//	recyclé (sinon, après un temps défini par ILease, l'objet est retiré
+			//	de la table des objets joignables par "remoting").
+			
+			return null;
+		}
+
+		
+		
 		protected Engine						engine;
 		private string							service_name;
 	}

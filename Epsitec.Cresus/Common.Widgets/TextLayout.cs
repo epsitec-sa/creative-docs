@@ -4250,6 +4250,31 @@ noText:
 		}
 
 
+		public void FillFontFaceList(System.Collections.ArrayList list)
+		{
+			// Ajoute toutes les fontes utilisées dans une liste.
+			if ( this.text == null )  return;
+			int from = 0;
+			int to   = this.text.Length;
+			System.Collections.Hashtable parameters;
+			while ( from < to )
+			{
+				Tag tag = TextLayout.ParseTag(text, ref from, out parameters);
+				if ( tag == Tag.Font )
+				{
+					if ( parameters.ContainsKey("face") )
+					{
+						string s = (string)parameters["face"];
+						if ( !list.Contains(s) )
+						{
+							list.Add(s);
+						}
+					}
+				}
+			}
+		}
+
+
 		public OneCharStructure[] ComputeStructure()
 		{
 			// Génère la structure pour chaque caractère du texte, ce qui permet

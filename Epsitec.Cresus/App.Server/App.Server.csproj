@@ -178,6 +178,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "InitialDatabase.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "WindowsService.cs"
                     SubType = "Component"
                     BuildAction = "Compile"
