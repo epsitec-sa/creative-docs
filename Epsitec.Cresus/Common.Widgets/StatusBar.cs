@@ -84,6 +84,11 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region IWidgetCollectionHost Members
+		Helpers.WidgetCollection Helpers.IWidgetCollectionHost.GetWidgetCollection()
+		{
+			return this.Items;
+		}
+		
 		public void NotifyInsertion(Widget widget)
 		{
 			widget.Dock = DockStyle.Left;

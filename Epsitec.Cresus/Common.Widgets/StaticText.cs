@@ -43,10 +43,23 @@ namespace Epsitec.Common.Widgets
 			// Retourne les dimensions minimales pour représenter le texte.
 			get
 			{
-				return this.TextLayout.SingleLineSize();
+				return this.TextLayout.SingleLineSize;
 			}
 		}
-
+		
+		public override Drawing.Point				BaseLine
+		{
+			get
+			{
+				if (this.TextLayout != null)
+				{
+					return this.TextLayout.GetLineOrigin (0);
+				}
+				
+				return base.BaseLine;
+			}
+		}
+		
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{

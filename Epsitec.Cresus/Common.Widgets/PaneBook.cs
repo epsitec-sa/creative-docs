@@ -783,6 +783,11 @@ namespace Epsitec.Common.Widgets
 
 
 		#region IWidgetCollectionHost Members
+		Helpers.WidgetCollection Helpers.IWidgetCollectionHost.GetWidgetCollection()
+		{
+			return this.Items;
+		}
+		
 		public void NotifyInsertion(Widget widget)
 		{
 			PanePage item = widget as PanePage;

@@ -141,7 +141,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.icon.Text = @"<img src=""" + this.iconName + @"""/>";
 				}
-				this.iconSize = this.icon.SingleLineSize();
+				this.iconSize = this.icon.SingleLineSize;
 				this.separator = false;
 				this.AdjustSize(ref this.iconSize);
 			}
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.mainText.Text = value;
 				this.separator = false;
-				this.mainTextSize = this.mainText.SingleLineSize();
+				this.mainTextSize = this.mainText.SingleLineSize;
 				this.AdjustSize(ref this.mainTextSize);
 			}
 		}
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.shortKey.Text = value;
 				this.separator = false;
-				this.shortKeySize = this.shortKey.SingleLineSize();
+				this.shortKeySize = this.shortKey.SingleLineSize;
 				this.AdjustSize(ref this.shortKeySize);
 			}
 		}

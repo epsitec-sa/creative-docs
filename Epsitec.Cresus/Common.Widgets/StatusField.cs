@@ -61,7 +61,7 @@ namespace Epsitec.Common.Widgets
 			// Retourne les dimensions minimales pour représenter le texte.
 			get
 			{
-				return this.TextLayout.SingleLineSize();
+				return this.TextLayout.SingleLineSize;
 			}
 		}
 		

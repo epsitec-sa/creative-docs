@@ -486,6 +486,11 @@ namespace Epsitec.Common.Widgets
 		
 
 		#region IWidgetCollectionHost Members
+		Helpers.WidgetCollection Helpers.IWidgetCollectionHost.GetWidgetCollection()
+		{
+			return this.Items;
+		}
+		
 		public void NotifyInsertion(Widget widget)
 		{
 			TabPage item = widget as TabPage;
