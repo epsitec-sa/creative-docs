@@ -259,6 +259,14 @@ namespace Epsitec.Common.Support
 			return CommandDispatcher.find_command_state_callback (command_name, this);
 		}
 		
+		public string[] FindCommandNames()
+		{
+			string[] names = new string[this.event_handlers.Keys.Count];
+			this.event_handlers.Keys.CopyTo (names, 0);
+			System.Array.Sort (names);
+			return names;
+		}
+		
 		
 		public void ApplyValidationRules()
 		{

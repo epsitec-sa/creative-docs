@@ -18,6 +18,15 @@ namespace Epsitec.Common.Designer.UI
 		}
 		
 		
+		public new TextRefAdapter				Adapter
+		{
+			get
+			{
+				return base.Adapter as TextRefAdapter;
+			}
+		}
+		
+		
 		public override void CreateUI(Widget panel)
 		{
 			this.caption_label = new StaticText (panel);
@@ -77,7 +86,7 @@ namespace Epsitec.Common.Designer.UI
 			this.combo_field.EditionAccepted       += new EventHandler (this.HandleComboFieldEditionAccepted);
 			this.combo_field.EditionRejected       += new EventHandler (this.HandleComboFieldEditionRejected);
 			
-			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
+			TextRefAdapter adapter = this.Adapter;
 			
 			System.Diagnostics.Debug.Assert (adapter != null);
 			System.Diagnostics.Debug.Assert (adapter.StringController != null);
@@ -105,7 +114,7 @@ namespace Epsitec.Common.Designer.UI
 					this.State = InternalState.Passive;
 				}
 				
-				TextRefAdapter adapter = this.Adapter as TextRefAdapter;
+				TextRefAdapter adapter = this.Adapter;
 				
 				if ((adapter != null) &&
 					(this.combo_text != null))
@@ -141,12 +150,6 @@ namespace Epsitec.Common.Designer.UI
 					{
 						this.combo_text.SelectAll ();
 					}
-					
-					if ((reason == Common.UI.SyncReason.SourceChanged) ||
-						(reason == Common.UI.SyncReason.Initialisation))
-					{
-						this.combo_text.SelectAll ();
-					}
 				}
 			}
 			finally
@@ -157,7 +160,7 @@ namespace Epsitec.Common.Designer.UI
 		
 		public override void SyncFromUI()
 		{
-			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
+			TextRefAdapter adapter = this.Adapter;
 			
 			if ((adapter != null) &&
 				(this.combo_text != null))
@@ -232,7 +235,7 @@ namespace Epsitec.Common.Designer.UI
 			//	avec des boutons pour accepter/rejeter le choix. A la fin de l'édition, on
 			//	demande d'appeler HandleStringPickerValidated en cas d'acceptation :
 			
-			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
+			TextRefAdapter adapter = this.Adapter;
 			
 			string bundle = this.combo_bundle.Text;
 			string field  = this.combo_field.Text;
@@ -249,7 +252,7 @@ namespace Epsitec.Common.Designer.UI
 			Application            app     = sender as Application;
 			Panels.StringEditPanel panel   = app.StringEditController.ActivePanel;
 			EditArray              edit    = panel.EditArray;
-			TextRefAdapter         adapter = this.Adapter as TextRefAdapter;
+			TextRefAdapter         adapter = this.Adapter;
 			
 			int index = edit.SelectedIndex;
 			
@@ -279,7 +282,7 @@ namespace Epsitec.Common.Designer.UI
 			}
 			
 			System.Diagnostics.Debug.Assert (sender == this.combo_bundle);
-			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
+			TextRefAdapter adapter = this.Adapter;
 			this.UpdateFieldList (adapter, this.combo_bundle.SelectedItem);
 		}
 		
@@ -291,7 +294,7 @@ namespace Epsitec.Common.Designer.UI
 			}
 			
 			System.Diagnostics.Debug.Assert (sender == this.combo_field);
-			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
+			TextRefAdapter adapter = this.Adapter;
 			
 			string bundle = this.combo_bundle.SelectedItem;
 			string field  = this.combo_field.SelectedItem;
@@ -321,7 +324,7 @@ namespace Epsitec.Common.Designer.UI
 			
 			//	Il faut créer un nouveau champ dans le bundle.
 			
-			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
+			TextRefAdapter adapter = this.Adapter;
 			
 			string bundle = this.combo_bundle.SelectedItem;
 			string field  = this.combo_field.Text;
@@ -382,17 +385,17 @@ namespace Epsitec.Common.Designer.UI
 		
 		private void HandleStringControllerBundleAdded(object sender)
 		{
-			this.UpdateBundleList (this.Adapter as TextRefAdapter);
+			this.UpdateBundleList (this.Adapter);
 		}
 		
 		private void HandleStringControllerBundleRemoved(object sender)
 		{
-			this.UpdateBundleList (this.Adapter as TextRefAdapter);
+			this.UpdateBundleList (this.Adapter);
 		}
 		
 		private void HandleStringControllerStoreContentsChanged(object sender)
 		{
-			this.UpdateFieldList (this.Adapter as TextRefAdapter, this.combo_bundle.SelectedItem);
+			this.UpdateFieldList (this.Adapter, this.combo_bundle.SelectedItem);
 		}
 		
 		
@@ -406,7 +409,7 @@ namespace Epsitec.Common.Designer.UI
 			{
 				if (this.state != value)
 				{
-					TextRefAdapter adapter = this.Adapter as TextRefAdapter;
+					TextRefAdapter adapter = this.Adapter;
 					
 					switch (value)
 					{
@@ -452,7 +455,7 @@ namespace Epsitec.Common.Designer.UI
 			{
 				string bundle = this.controller.combo_bundle.SelectedItem;
 				
-				TextRefAdapter adapter = this.controller.Adapter as TextRefAdapter;
+				TextRefAdapter adapter = this.controller.Adapter;
 				
 				if ((adapter != null) &&
 					(adapter.StringController != null) &&

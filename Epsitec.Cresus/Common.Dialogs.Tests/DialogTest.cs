@@ -53,6 +53,12 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckLoad3WithData()
 		{
+			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookPastel");
+			
+			Support.CommandDispatcher dispatcher = new Support.CommandDispatcher ("CheckLoad3WithData");
+			
+			dispatcher.RegisterController (this);
+			
 			Record record = new Record ();
 			
 			Field field_a = new Field ("a", "Test");
@@ -70,7 +76,24 @@ namespace Epsitec.Common.Dialogs
 			Dialog dialog = new Dialog ();
 			dialog.Load ("file:dialog_with_data");
 			dialog.Data = record;
+			dialog.CommandDispatcher = dispatcher;
 			dialog.ShowWindow ();
+		}
+		
+		
+		[Support.Command ("Ok")] private void CommandOk()
+		{
+			System.Diagnostics.Debug.WriteLine ("OK executed.");
+		}
+		
+		[Support.Command ("Cancel")] private void CommandCancel()
+		{
+			System.Diagnostics.Debug.WriteLine ("Cancel executed.");
+		}
+		
+		[Support.Command ("Apply")] private void CommandApply()
+		{
+			System.Diagnostics.Debug.WriteLine ("Apply executed.");
 		}
 	}
 }

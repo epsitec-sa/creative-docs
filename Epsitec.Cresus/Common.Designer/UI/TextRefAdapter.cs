@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
@@ -14,28 +14,11 @@ namespace Epsitec.Common.Designer.UI
 	
 	[Common.UI.Adapters.Controller (1, typeof (TextRefController))]
 	
-	public class TextRefAdapter : Common.UI.Adapters.AbstractAdapter
+	public class TextRefAdapter : Common.UI.Adapters.AbstractStringAdapter
 	{
 		public TextRefAdapter(Application application)
 		{
 			this.application = application;
-		}
-		
-		
-		public string							Value
-		{
-			get
-			{
-				return this.value;
-			}
-			set
-			{
-				if (this.value != value)
-				{
-					this.value = value;
-					this.OnValueChanged ();
-				}
-			}
 		}
 		
 		
@@ -96,12 +79,7 @@ namespace Epsitec.Common.Designer.UI
 		{
 			get
 			{
-				if (this.string_provider == null)
-				{
-					this.string_provider = this.application.StringEditController.Provider;
-				}
-				
-				return this.string_provider;
+				return this.application.StringEditController.Provider;
 			}
 		}
 		
@@ -109,35 +87,12 @@ namespace Epsitec.Common.Designer.UI
 		{
 			get
 			{
-				if (this.string_controller == null)
-				{
-					this.string_controller = this.application.StringEditController;
-				}
-				
-				return this.string_controller;
+				return this.application.StringEditController;
 			}
 		}
 		
 		
 		
-		protected override object ConvertToObject()
-		{
-			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (this.binder.GetDataType ());
-			return converter.ConvertFromString (this.Value);
-		}
-		
-		protected override bool ConvertFromObject(object data)
-		{
-			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (this.binder.GetDataType ());
-			this.Value = converter.ConvertToString (data);
-			
-			return true;
-		}
-		
-		
-		private string							value;
-		private Support.Data.IPropertyProvider	string_provider;
-		private StringEditController			string_controller;
 		private Application						application;
 	}
 }
