@@ -871,7 +871,7 @@ namespace Epsitec.Common.Widgets.Platform
 				return false;
 			}
 			
-			if (this.dirty_rectangle.IsEmpty == false)
+			if (this.dirty_rectangle.IsValid)
 			{
 				Drawing.Rectangle repaint = this.dirty_rectangle;
 					
