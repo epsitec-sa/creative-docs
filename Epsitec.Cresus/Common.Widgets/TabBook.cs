@@ -25,10 +25,10 @@ namespace Epsitec.Common.Widgets
 			this.arrowRight.Direction = Direction.Right;
 			this.arrowLeft.ButtonStyle = ButtonStyle.Scroller;
 			this.arrowRight.ButtonStyle = ButtonStyle.Scroller;
-			this.arrowLeft.Engaged += new EventHandler(this.HandleScrollButton);
-			this.arrowRight.Engaged += new EventHandler(this.HandleScrollButton);
-			this.arrowLeft.StillEngaged += new EventHandler(this.HandleScrollButton);
-			this.arrowRight.StillEngaged += new EventHandler(this.HandleScrollButton);
+			this.arrowLeft.Engaged += new Support.EventHandler(this.HandleScrollButton);
+			this.arrowRight.Engaged += new Support.EventHandler(this.HandleScrollButton);
+			this.arrowLeft.StillEngaged += new Support.EventHandler(this.HandleScrollButton);
+			this.arrowRight.StillEngaged += new Support.EventHandler(this.HandleScrollButton);
 			this.arrowLeft.AutoRepeatEngaged = true;
 			this.arrowRight.AutoRepeatEngaged = true;
 		}
@@ -65,10 +65,10 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.arrowLeft.Engaged -= new EventHandler(this.HandleScrollButton);
-				this.arrowRight.Engaged -= new EventHandler(this.HandleScrollButton);
-				this.arrowLeft.StillEngaged -= new EventHandler(this.HandleScrollButton);
-				this.arrowRight.StillEngaged -= new EventHandler(this.HandleScrollButton);
+				this.arrowLeft.Engaged -= new Support.EventHandler(this.HandleScrollButton);
+				this.arrowRight.Engaged -= new Support.EventHandler(this.HandleScrollButton);
+				this.arrowLeft.StillEngaged -= new Support.EventHandler(this.HandleScrollButton);
+				this.arrowRight.StillEngaged -= new Support.EventHandler(this.HandleScrollButton);
 				this.arrowLeft = null;
 				this.arrowRight = null;
 

@@ -273,10 +273,10 @@ namespace Epsitec.Common.Widgets
 			pos = this.MapClientToScreen(new Drawing.Point(-shadow.Left, -this.scrollList.Height-shadow.Bottom));
 			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width+shadow.Width, this.scrollList.Height+shadow.Height);
 			this.scrollList.Location = new Drawing.Point(shadow.Left, shadow.Bottom);
-			this.scrollList.SelectedIndexChanged += new EventHandler(this.HandleScrollerSelectedIndexChanged);
-			this.scrollList.Validation += new EventHandler(this.HandleScrollListValidation);
+			this.scrollList.SelectedIndexChanged += new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
+			this.scrollList.Validation += new Support.EventHandler(this.HandleScrollListValidation);
 			Window.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
-			Window.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
+			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
 			this.comboWindow.Root.Children.Add(this.scrollList);
 			this.comboWindow.AnimateShow(Animation.RollDown);
 			
@@ -287,10 +287,10 @@ namespace Epsitec.Common.Widgets
 		
 		private void CloseCombo()
 		{
-			this.scrollList.Validation -= new EventHandler(this.HandleScrollListValidation);
-			this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollerSelectedIndexChanged);
+			this.scrollList.Validation -= new Support.EventHandler(this.HandleScrollListValidation);
+			this.scrollList.SelectedIndexChanged -= new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
 			Window.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
-			Window.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
+			Window.ApplicationDeactivated -= new Support.EventHandler(this.HandleApplicationDeactivated);
 			
 			this.scrollList.Dispose();
 			this.scrollList = null;
