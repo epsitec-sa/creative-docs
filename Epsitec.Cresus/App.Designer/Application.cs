@@ -12,6 +12,8 @@ namespace Epsitec.Designer
 	{
 		public Application()
 		{
+			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
+			
 			Button button  = new Button ("New bundle");
 			button.Bounds  = new Rectangle (10, 10, 80, 24);
 			button.Command = "CreateStringBundle";
