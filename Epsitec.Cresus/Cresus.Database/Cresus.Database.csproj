@@ -304,6 +304,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IAttachable.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IDbAbstraction.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

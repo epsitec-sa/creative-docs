@@ -140,8 +140,8 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion
 		
-		private const long						LocalRange		= 1000000000000;	//	10^12
-		private const long						ClientRange		= 1000000;			//	10^6
+		public const long						LocalRange		= 1000000000000;	//	10^12
+		public const long						ClientRange		= 1000000;			//	10^6
 		
 		private const long						TempClientID	= DbId.ClientRange - 1;
 		

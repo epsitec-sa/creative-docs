@@ -9,8 +9,6 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public interface IPersistable
 	{
-		void Attach(DbInfrastructure infrastructure, DbTable table);
-		void Detach();
 		void SerializeToBase(DbTransaction transaction);
 		void RestoreFromBase(DbTransaction transaction);
 	}

@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Database
 	/// paires clef/valeur) stocké dans une table de la base.
 	/// </summary>
 	
-	public class DbDict : IPersistable, System.IDisposable
+	public class DbDict : IPersistable, IAttachable, System.IDisposable
 	{
 		public DbDict()
 		{
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		#region IPersistable Members
+		#region IAttachable Members
 		public void Attach(DbInfrastructure infrastructure, DbTable table)
 		{
 			this.infrastructure = infrastructure;
@@ -100,7 +100,9 @@ namespace Epsitec.Cresus.Database
 			this.data_set       = null;
 			this.data_table     = null;
 		}
+		#endregion
 		
+		#region IPersistable Members
 		public void SerializeToBase(DbTransaction transaction)
 		{
 			this.command.UpdateTables (transaction);
