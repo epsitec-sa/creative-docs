@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 07/10/2003
+//	Statut : OK/PA, 22/10/2003
 
 namespace Epsitec.Cresus.Database
 {
@@ -155,6 +155,55 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			return sql_table;
+		}
+		
+		
+		public DbKey CreateKeyFromRow(System.Data.DataRow row)
+		{
+			DbColumn[] primary_key = this.PrimaryKey;
+			DbKey      key = null;
+			
+			switch (this.category)
+			{
+				case DbElementCat.Internal:
+				case DbElementCat.UserDataManaged:
+					if (primary_key.Length == 1)
+					{
+						System.Diagnostics.Debug.Assert (primary_key[0].Name.ToUpper () == DbColumn.TagId);
+						
+						long id = (long) row[DbColumn.TagId];
+						
+						key = new DbKey (id);
+					}
+					else if (primary_key.Length == 2)
+					{
+						System.Diagnostics.Debug.Assert (primary_key[0].Name.ToUpper () == DbColumn.TagId);
+						System.Diagnostics.Debug.Assert (primary_key[1].Name.ToUpper () == DbColumn.TagRevision);
+						
+						long id   = (long) row[DbColumn.TagId];
+						int  rev  = (int)  row[DbColumn.TagRevision];
+						int  stat = (int)  row[DbColumn.TagStatus];
+						
+						key = new DbKey (id, rev, stat);
+					}
+					break;
+				
+				default:
+					if (primary_key.Length == 1)
+					{
+						long id = (long) row[primary_key[0].Name];
+						
+						key = new DbKey (id);
+					}
+					break;
+			}
+			
+			if (key == null)
+			{
+				throw new DbException (DbAccess.Empty, string.Format ("Table {0} uses unsupported key format.", this.Name));
+			}
+			
+			return key;
 		}
 		
 		

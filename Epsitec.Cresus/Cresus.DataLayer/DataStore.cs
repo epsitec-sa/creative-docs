@@ -102,6 +102,7 @@ namespace Epsitec.Cresus.DataLayer
 			return key;
 		}
 		
+		
 		public void AttachObserver(string path, DataChangeEventHandler handler)
 		{
 			if (this.changed_events == null)
