@@ -398,21 +398,14 @@ namespace Epsitec.Common.Pictogram.Data
 		// Calcule la bbox pour la représentation du dégradé.
 		public Drawing.Rectangle BoundingBoxGeom(Drawing.Rectangle bbox)
 		{
-			Drawing.Rectangle gbox = bbox;
-			gbox.Inflate(this.smooth);
-			return gbox;
+			bbox.Inflate(this.smooth);
+			return bbox;
 		}
 
 		// Calcule la bbox pour la représentation du dégradé.
 		public Drawing.Rectangle BoundingBoxFull(Drawing.Rectangle bbox)
 		{
-			Drawing.Rectangle gbox = Drawing.Rectangle.Empty;
-
-			if ( this.fill == GradientFill.None )
-			{
-				gbox = bbox;
-			}
-			else
+			if ( this.fill != GradientFill.None )
 			{
 				Drawing.Point center = this.Handle(0, bbox).Position;
 				double dx = this.sx*bbox.Width/2;
@@ -422,13 +415,12 @@ namespace Epsitec.Common.Pictogram.Data
 				Drawing.Point p3 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point(-dx, -dy));
 				Drawing.Point p4 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point( dx, -dy));
 
-				gbox.MergeWith(p1);
-				gbox.MergeWith(p2);
-				gbox.MergeWith(p3);
-				gbox.MergeWith(p4);
+				bbox.MergeWith(p1);
+				bbox.MergeWith(p2);
+				bbox.MergeWith(p3);
+				bbox.MergeWith(p4);
 			}
-
-			return gbox;
+			return bbox;
 		}
 
 
@@ -488,6 +480,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public override void MoveHandleProcess(int rank, Drawing.Point pos, Drawing.Rectangle bbox, IconContext iconContext)
 		{
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 
 			if ( rank == 0 )  // centre ?
 			{
@@ -518,7 +511,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public override bool IsHandleVisible()
 		{
 			if ( !this.extendedSize )  return false;
-			if ( !this.EditProperties )  return false;
+			if ( !this.editProperties )  return false;
 			if ( this.fill == GradientFill.None )  return false;
 			return true;
 		}
