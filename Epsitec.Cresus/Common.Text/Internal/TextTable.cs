@@ -361,6 +361,28 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public CursorInfo[] FindNextCursor(Internal.CursorId id, CursorInfo.Filter filter)
+		{
+			int pos = this.GetCursorPosition (id);
+			int len = this.text_length - pos;
+			
+			//	TODO: on pourrait faire nettement mieux ici !
+			
+			CursorInfo[] infos = this.FindCursors (pos, 1, filter);
+			
+			for (int i = 0; i < infos.Length; i++)
+			{
+				if ((infos[i].CursorId == id) &&
+					(i+1 < infos.Length))
+				{
+					return new CursorInfo[] { infos[i+1] };
+				}
+			}
+			
+			return this.FindCursors (pos+1, len-1, filter, true);
+		}
+		
+		
 		public CursorInfo[] FilterCursors(CursorInfo[] array, CursorInfo.Filter filter)
 		{
 			bool[] keep = new bool[array.Length];

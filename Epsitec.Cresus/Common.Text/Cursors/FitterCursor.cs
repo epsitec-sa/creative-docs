@@ -115,6 +115,19 @@ namespace Epsitec.Common.Text.Cursors
 			}
 		}
 		
+		public bool ContainsFrameIndex(int index)
+		{
+			for (int i = 0; i < this.elements.Length; i++)
+			{
+				if (this.elements[i].FrameIndex == index)
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
 		
 		public static CursorInfo.Filter GetFrameFilter(int frame_index)
 		{

@@ -207,6 +207,12 @@ namespace Epsitec.Common.Text.Tests
 				}
 			}
 			
+			System.Diagnostics.Trace.WriteLine ("Fitter: render (3) -- single frame x 1000");
+			for (int i = 0; i < 1000; i++)
+			{
+				fitter.RenderTextFrame (fitter.FrameList[0], renderer);
+			}
+			System.Diagnostics.Trace.WriteLine ("Done.");
 			
 			System.Diagnostics.Trace.WriteLine ("Fitter: clear.");
 			fitter.ClearAllMarks ();

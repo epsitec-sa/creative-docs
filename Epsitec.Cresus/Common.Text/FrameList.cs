@@ -62,13 +62,15 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public Cursors.FitterCursor FindFirstCursor(ITextFrame frame)
+		public Cursors.FitterCursor FindFirstCursor(int index)
 		{
 			//	Trouve le curseur correspondant au paragraphe qui se trouve au
 			//	début du ITextFrame.
 			
 			//	Note: un paragraphe peut couvrir plusieurs ITextFrame, ce qui
 			//	complique légèrement les choses.
+			
+			ITextFrame frame = this[index];
 			
 			if (this.cursor_map.Contains (frame))
 			{
@@ -80,7 +82,6 @@ namespace Epsitec.Common.Text
 			//	à trouver :
 			
 			TextStory          story  = this.TextFitter.TextStory;
-			int                index  = this.IndexOf (frame);
 			int                length = story.TextLength;
 			CursorInfo.Filter  filter = Cursors.FitterCursor.GetFrameFilter (index);
 			CursorInfo[]       infos  = this.fitter.TextStory.TextTable.FindCursors (0, length, filter, true);
@@ -96,6 +97,16 @@ namespace Epsitec.Common.Text
 			}
 			
 			return null;
+		}
+		
+		public Cursors.FitterCursor FindFirstCursor(ITextFrame frame)
+		{
+			if (this.cursor_map.Contains (frame))
+			{
+				return this.cursor_map[frame] as Cursors.FitterCursor;
+			}
+			
+			return this.FindFirstCursor (this.IndexOf (frame));
 		}
 		
 		

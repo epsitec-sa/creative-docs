@@ -13,6 +13,8 @@ namespace Epsitec.Common.Text
 		
 		
 		bool ConstrainLineBox(double y_dist, double ascender, double descender, double height, out double ox, out double oy, out double width, out double next_y_dist);
+		
 		void MapToView(ref double x, ref double y);
+		void MapFromView(ref double x, ref double y);
 	}
 }

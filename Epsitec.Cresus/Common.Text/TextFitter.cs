@@ -79,6 +79,11 @@ namespace Epsitec.Common.Text
 		
 		public void RenderParagraph(ICursor cursor, ITextRenderer renderer)
 		{
+			this.RenderParagraphInTextFrame (cursor, renderer, null);
+		}
+		
+		public void RenderParagraphInTextFrame(ICursor cursor, ITextRenderer renderer, ITextFrame frame)
+		{
 			Cursors.FitterCursor c = cursor as Cursors.FitterCursor;
 			
 			if (c == null)
@@ -98,28 +103,69 @@ namespace Epsitec.Common.Text
 			
 			for (int i = 0; i < n; i++)
 			{
-				int frame = c.Elements[i].FrameIndex;
+				int index = c.Elements[i].FrameIndex;
 				int count = c.Elements[i].Length;
 				
-				double ox    = c.Elements[i].LineBaseX;
-				double oy    = c.Elements[i].LineBaseY;
-				double width = c.Elements[i].LineWidth;
-				double asc   = c.Elements[i].LineAscender;
-				double desc  = c.Elements[i].LineDescender;
+				layout.SelectFrame (index, 0);
 				
-				Layout.StretchProfile profile = c.Elements[i].Profile;
-				
-				layout.SelectFrame (frame, 0);
-				
-				layout.Frame.MapToView (ref ox, ref oy);
-				
-				if ((count > 0) &&
-					(renderer.IsFrameAreaVisible (layout.Frame, ox, oy+desc, width, asc+desc)))
+				if ((frame == null) ||
+					(layout.Frame == frame))
 				{
-					layout.RenderLine (renderer, profile, count, ox, oy, width, i, i == n-1);
+					if (count > 0)
+					{
+						double ox    = c.Elements[i].LineBaseX;
+						double oy    = c.Elements[i].LineBaseY;
+						double width = c.Elements[i].LineWidth;
+						double asc   = c.Elements[i].LineAscender;
+						double desc  = c.Elements[i].LineDescender;
+						
+						layout.Frame.MapToView (ref ox, ref oy);
+						
+						if (renderer.IsFrameAreaVisible (layout.Frame, ox, oy+desc, width, asc+desc))
+						{
+							Layout.StretchProfile profile = c.Elements[i].Profile;
+							layout.RenderLine (renderer, profile, count, ox, oy, width, i, i == n-1);
+						}
+					}
 				}
 				
 				layout.TextOffset += count;
+			}
+		}
+		
+		public void RenderTextFrame(ITextFrame frame, ITextRenderer renderer)
+		{
+			int index = this.frame_list.IndexOf (frame);
+			
+			if (index < 0)
+			{
+				throw new System.ArgumentException ("Not a valid ITextFrame.", "frame");
+			}
+			
+			Cursors.FitterCursor cursor = this.frame_list.FindFirstCursor (index);
+			Internal.TextTable   text   = this.story.TextTable;
+			
+			while (cursor != null)
+			{
+				if (cursor.ContainsFrameIndex (index) == false)
+				{
+					break;
+				}
+				
+				this.RenderParagraph (cursor, renderer);
+				
+				//	Trouve le curseur du paragraphe suivant :
+				
+				CursorInfo[] cursors = text.FindNextCursor (cursor.CursorId, Cursors.FitterCursor.Filter);
+				
+				if (cursors.Length == 1)
+				{
+					cursor = text.GetCursorInstance (cursors[0].CursorId) as Cursors.FitterCursor;
+				}
+				else
+				{
+					break;
+				}
 			}
 		}
 		
