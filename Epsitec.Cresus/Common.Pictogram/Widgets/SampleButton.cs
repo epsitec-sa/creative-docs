@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe SampleButton représente un bouton avec une icône vectorielle.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class SampleButton : Epsitec.Common.Widgets.Button
 	{
 		public SampleButton()
