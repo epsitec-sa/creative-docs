@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 07/10/2003
 
 namespace Epsitec.Cresus.Database
@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Database
 			DbFactory.Initialise ();
 		}
 		
+		
 		protected static void Initialise()
 		{
 			System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadWithPartialName ("Cresus.Database.Implementation");
@@ -32,6 +33,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
+		
 		
 		public static IDbAbstraction FindDbAbstraction(DbAccess db_access)
 		{
