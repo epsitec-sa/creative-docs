@@ -491,7 +491,11 @@ namespace Epsitec.Common.Widgets
 			// Déplace le curseur par lignes.
 			int index;
 			bool after;
-			if ( !this.DetectIndex(context.CursorPosX, context.CursorLine+move, out index, out after) )
+			int line = context.CursorLine+move;
+			
+			if ( line < 0 ||
+				 line >= this.TotalLineCount ||
+				 !this.DetectIndex(context.CursorPosX, line, out index, out after) )
 			{
 				return false;
 			}

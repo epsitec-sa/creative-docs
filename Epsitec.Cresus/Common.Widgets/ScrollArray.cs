@@ -2177,7 +2177,7 @@ invalid:	row    = -1;
 		public event Support.EventHandler		SelectedIndexChanged;
 		
 		
-		public class ColumnDefinition : System.IDisposable
+		public class ColumnDefinition : System.IDisposable, Types.IReadOnly
 		{
 			internal ColumnDefinition(ScrollArray host, int column, double width, Drawing.ContentAlignment alignment)
 			{
@@ -2245,6 +2245,18 @@ invalid:	row    = -1;
 				}
 			}
 			
+			public string						HeaderText
+			{
+				get
+				{
+					return this.header_button.Text;
+				}
+				set
+				{
+					this.header_button.Text = value;
+				}
+			}
+			
 			public HeaderButton					HeaderButton
 			{
 				get
@@ -2258,6 +2270,18 @@ invalid:	row    = -1;
 				get
 				{
 					return this.header_slider;
+				}
+			}
+			
+			public bool							IsReadOnly
+			{
+				get
+				{
+					return this.is_read_only;
+				}
+				set
+				{
+					this.is_read_only = value;
 				}
 			}
 			
@@ -2284,6 +2308,16 @@ invalid:	row    = -1;
 			}
 			#endregion
 			
+			#region IReadOnly Members
+			bool								Types.IReadOnly.IsReadOnly
+			{
+				get
+				{
+					return this.IsReadOnly;
+				}
+			}
+			#endregion
+			
 			protected virtual void Dispose(bool is_disposing)
 			{
 				if (is_disposing)
@@ -2306,8 +2340,10 @@ invalid:	row    = -1;
 			}
 			
 			
+			
 			private ScrollArray					host;
 			private int							column;
+			private bool						is_read_only;
 			private double						width;
 			private double						offset;
 			private Drawing.ContentAlignment	alignment;
