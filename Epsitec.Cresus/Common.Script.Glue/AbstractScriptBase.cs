@@ -22,12 +22,13 @@ namespace Epsitec.Common.Script.Glue
 		}
 		
 		
+		public abstract bool Execute(string name, object[] in_args, out object[] out_args);
+		
 		protected object ReadData(string name, System.Type type)
 		{
-			System.Diagnostics.Debug.WriteLine ("Read data '" + name + "' of type " + type.FullName);
 			object value;
 			
-			if (this.host.ReadData (name, out value))
+			if (this.host.ReadData (name, type, out value))
 			{
 				return value;
 			}
@@ -35,7 +36,16 @@ namespace Epsitec.Common.Script.Glue
 			throw new System.ArgumentException (string.Format ("Data '{0}' not found in Script Host.", name));
 		}
 		
-		public abstract bool Execute(string name, object[] in_args);
+		protected void WriteData(string name, object value)
+		{
+			if (this.host.WriteData (name, value))
+			{
+				return;
+			}
+			
+			throw new System.ArgumentException (string.Format ("Data '{0}' not found in Script Host.", name));
+		}
+		
 		
 		#region Remaining IScript Members
 		void Epsitec.Common.Script.Glue.IScript.SetScriptHost(IScriptHost host)
