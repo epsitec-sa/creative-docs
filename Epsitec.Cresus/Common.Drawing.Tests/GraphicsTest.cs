@@ -164,6 +164,7 @@ namespace Epsitec.Common.Drawing
 		{
 			Window window = new Window ();
 			
+			window.ClientSize = new Size (200, 200);
 			window.Text = "CheckImageRectTIFF";
 			window.Root.PaintForeground += new PaintEventHandler(ImageRectTIFF_PaintForeground);
 			window.Root.Invalidate ();
@@ -797,6 +798,7 @@ namespace Epsitec.Common.Drawing
 			double cx = root.Client.Width / 2;
 			double cy = root.Client.Height / 2;
 			
+			e.Graphics.ScaleTransform (2, 2, 0, 0);
 			e.Graphics.RotateTransform (0, cx, cy);
 			
 			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
