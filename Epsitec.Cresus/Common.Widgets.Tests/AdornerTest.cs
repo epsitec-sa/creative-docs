@@ -737,13 +737,26 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 
+		private void HandleWindowClosed(object sender)
+		{
+			this.tabBook = null;
+		}
+
+		private void HandleAdd(object sender, MessageEventArgs e)
+		{
+			Rectangle inside = this.tabBook.Inside;
+			TabPage page = new TabPage();
+			page.Bounds = inside;
+			page.TabTitle = "Nouveau";
+			this.tabBook.Items.Add(page);
+		}
+
 		[Test] public void CheckAdornerTab2()
 		{
 			Window window = new Window();
 			
 			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerTab2";
-			window.WindowClosed += new EventHandler(this.HandleWindowClosed);
 
 			TabBook tb = new TabBook();
 			tb.TabBookStyle = TabBookStyle.Right;
@@ -753,7 +766,6 @@ namespace Epsitec.Common.Tests
 			tb.Text = "";
 			tb.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			window.Root.Children.Add(tb);
-			this.tabBook = tb;
 
 			Rectangle inside = tb.Inside;
 
@@ -818,20 +830,6 @@ namespace Epsitec.Common.Tests
 			window.FocusedWidget = tb;
 
 			window.Show();
-		}
-
-		private void HandleWindowClosed(object sender)
-		{
-			this.tabBook = null;
-		}
-
-		private void HandleAdd(object sender, MessageEventArgs e)
-		{
-			Rectangle inside = this.tabBook.Inside;
-			TabPage page = new TabPage();
-			page.Bounds = inside;
-			page.TabTitle = "Nouveau";
-			this.tabBook.Items.Add(page);
 		}
 
 		[Test] public void CheckAdornerCell1()
@@ -1271,7 +1269,6 @@ namespace Epsitec.Common.Tests
 			tb.Text = "";
 			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(tb);
-			//this.tabBook = tb;
 
 			Rectangle inside = tb.Inside;
 

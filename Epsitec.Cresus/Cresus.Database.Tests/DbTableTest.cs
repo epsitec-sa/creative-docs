@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals ("Test", table.Name);
 			Assertion.AssertEquals (DbElementCat.Unknown, table.Category);
 			Assertion.AssertEquals (false, table.HasPrimaryKeys);
-			Assertion.AssertEquals (0, table.PrimaryKey.Length);
+			Assertion.AssertEquals (0, table.PrimaryKeys.Count);
 			Assertion.AssertEquals (0, table.Columns.Count);
 			
 			table.DefineCategory (DbElementCat.Internal);
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Database
 			
 			DbTable db_table = new DbTable ("Test (1)");
 			
-			db_table.PrimaryKey = new DbColumn[] { column_a, column_b };
+			db_table.PrimaryKeys.AddRange (new DbColumn[] { column_a, column_b });
 			db_table.Columns.AddRange (new DbColumn[] { column_a, column_b, column_c, column_d, column_e });
 			
 			SqlTable sql_table = db_table.CreateSqlTable (type_converter);
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertNotNull (sql_table);
 			Assertion.AssertEquals ("TEST__1_", sql_table.Name);
 			Assertion.AssertEquals (db_table.Columns.Count, sql_table.Columns.Count);
-			Assertion.AssertEquals (db_table.PrimaryKey.Length, sql_table.PrimaryKey.Length);
+			Assertion.AssertEquals (db_table.PrimaryKeys.Count, sql_table.PrimaryKey.Length);
 		}
 		
 		[Test] [ExpectedException (typeof (DbSyntaxException))] public void CheckCreateSqlTableEx1()
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Database
 			
 			DbTable db_table = new DbTable ("Test");
 			
-			db_table.PrimaryKey = new DbColumn[] { column_a, column_b };
+			db_table.PrimaryKeys.AddRange (new DbColumn[] { column_a, column_b });
 			db_table.Columns.AddRange (new DbColumn[] { column_b, column_c, column_d, column_e });
 			
 			SqlTable sql_table = db_table.CreateSqlTable (type_converter);
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Database
 			
 			DbTable db_table = new DbTable ("Test");
 			
-			db_table.PrimaryKey = new DbColumn[] { column_a, column_b };
+			db_table.PrimaryKeys.AddRange (new DbColumn[] { column_a, column_b });
 			db_table.Columns.AddRange (new DbColumn[] { column_a, column_b, column_c, column_d, column_e });
 			
 			SqlTable sql_table = db_table.CreateSqlTable (type_converter);

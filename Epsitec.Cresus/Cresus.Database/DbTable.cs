@@ -133,45 +133,21 @@ namespace Epsitec.Cresus.Database
 			get { return (this.primary_key != null) && (this.primary_key.Count > 0); }
 		}
 		
-		public DbColumn[]				PrimaryKey
+		public DbColumnCollection		PrimaryKeys
 		{
 			get
 			{
-				//	NB: les clefs primaires spécifiées par PrimaryKey sont utilisées
+				//	NB: les clefs primaires spécifiées par PrimaryKeys sont utilisées
 				//	pour former un 'tuple' (par exemple une paire de clef). Déclarer
-				//	une série de colonnes comme PrimaryKey implique que les tuples
+				//	une série de colonnes comme PrimaryKeys implique que les tuples
 				//	doivent être uniques !
 				
 				if (this.primary_key == null)
 				{
-					return new DbColumn[0];
-				}
-				
-				DbColumn[] columns = new DbColumn[this.primary_key.Count];
-				this.primary_key.CopyTo (columns, 0);
-				return columns;
-			}
-			set
-			{
-				//	Il n'est pas nécessaire de marquer les colonnes ajoutées ici comme
-				//	étant indexées (SqlColumn.IsIndexed). Si l'appelant le spécifie
-				//	néanmoins, des index supplémentaires seront créés pour les colonnes
-				//	spécifiées. Cela permet par exemple d'avoir l'indexage automatique
-				//	selon le tuple des clefs primaires, et l'indexage de chaque clef
-				//	individuellement.
-				
-				if (this.primary_key == null)
-				{
-					if (value == null)
-					{
-						return;
-					}
-					
 					this.primary_key = new DbColumnCollection ();
 				}
 				
-				this.primary_key.Clear ();
-				this.primary_key.AddRange (value);
+				return this.primary_key;
 			}
 		}
 		
@@ -212,13 +188,13 @@ namespace Epsitec.Cresus.Database
 				//	correspondent (elles doivent être définies dans la collection des colonnes
 				//	de la table).
 				
-				int n = this.primary_key.Count;
+				int n = this.PrimaryKeys.Count;
 				
 				SqlColumn[] primary_keys = new SqlColumn[n];
 				
 				for (int i = 0; i < n; i++)
 				{
-					DbColumn db_key   = this.primary_key[i];
+					DbColumn db_key   = this.PrimaryKeys[i];
 					string   key_name = db_key.Name;
 					
 					if (sql_table.Columns.IndexOf (key_name) < 0)
@@ -252,25 +228,24 @@ namespace Epsitec.Cresus.Database
 		
 		public DbKey CreateKeyFromRow(System.Data.DataRow row)
 		{
-			DbColumn[] primary_key = this.PrimaryKey;
-			DbKey      key = null;
+			DbKey key = null;
 			
 			switch (this.category)
 			{
 				case DbElementCat.Internal:
 				case DbElementCat.UserDataManaged:
-					if (primary_key.Length == 1)
+					if (this.PrimaryKeys.Count == 1)
 					{
-						System.Diagnostics.Debug.Assert (primary_key[0].Name.ToUpper () == DbColumn.TagId);
+						System.Diagnostics.Debug.Assert (this.PrimaryKeys[0].Name.ToUpper () == DbColumn.TagId);
 						
 						long id = (long) row[DbColumn.TagId];
 						
 						key = new DbKey (id);
 					}
-					else if (primary_key.Length == 2)
+					else if (this.PrimaryKeys.Count == 2)
 					{
-						System.Diagnostics.Debug.Assert (primary_key[0].Name.ToUpper () == DbColumn.TagId);
-						System.Diagnostics.Debug.Assert (primary_key[1].Name.ToUpper () == DbColumn.TagRevision);
+						System.Diagnostics.Debug.Assert (this.PrimaryKeys[0].Name.ToUpper () == DbColumn.TagId);
+						System.Diagnostics.Debug.Assert (this.PrimaryKeys[1].Name.ToUpper () == DbColumn.TagRevision);
 						
 						long id   = (long) row[DbColumn.TagId];
 						int  rev  = (int)  row[DbColumn.TagRevision];
@@ -281,9 +256,9 @@ namespace Epsitec.Cresus.Database
 					break;
 				
 				default:
-					if (primary_key.Length == 1)
+					if (this.PrimaryKeys.Count == 1)
 					{
-						long id = (long) row[primary_key[0].Name];
+						long id = (long) row[this.PrimaryKeys[0].Name];
 						
 						key = new DbKey (id);
 					}
