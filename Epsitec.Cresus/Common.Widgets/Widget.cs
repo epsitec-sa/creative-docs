@@ -31,6 +31,16 @@ namespace Epsitec.Common.Widgets
 		Error			= 0x00200000,		//	=> signale une erreur
 	}
 	
+	public enum DockStyle
+	{
+		None			= 0,
+		Top				= 1,
+		Bottom			= 2,
+		Left			= 3,
+		Right			= 4,
+		Fill			= 5
+	}
+	
 	
 	/// <summary>
 	/// 
@@ -45,6 +55,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.widgetState |= WidgetState.Enabled;
 			
+			this.defaultFontHeight = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
 			this.alignment = this.DefaultAlignment;
 			this.Width     = this.DefaultWidth;
 			this.Height    = this.DefaultHeight;
@@ -73,6 +84,22 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return this.anchor; }
 			set { this.anchor = value; }
+		}
+		
+		public DockStyle					Dock
+		{
+			get { return this.dock; }
+			set
+			{
+				if (this.dock != value)
+				{
+					this.dock = value;
+					if (this.parent != null)
+					{
+						this.parent.UpdateChildrenLayout ();
+					}
+				}
+			}
 		}
 		
 		public Drawing.Color				BackColor
@@ -198,10 +225,32 @@ namespace Epsitec.Common.Widgets
 					if ((this.internalState & InternalState.ChildrenChanged) != 0)
 					{
 						this.internalState -= InternalState.ChildrenChanged;
-						this.OnChildrenChanged ();
+						this.HandleChildrenChanged ();
 					}
 				}
 			}
+		}
+		
+		protected virtual void HandleChildrenChanged()
+		{
+			this.internalState &= ~InternalState.ChildrenDocked;
+			
+			foreach (Widget child in this.Children)
+			{
+				if (child.Dock != DockStyle.None)
+				{
+					this.internalState |= InternalState.ChildrenDocked;
+					break;
+				}
+			}
+			
+			if ((this.internalState & InternalState.ChildrenDocked) != 0)
+			{
+				this.UpdateDockedChildrenLayout ();
+			}
+			
+			this.Invalidate ();
+			this.OnChildrenChanged ();
 		}
 		
 		public void SetClientAngle(int angle)
@@ -245,6 +294,10 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return 20; }
 		}
+		public virtual double				DefaultFontHeight
+		{
+			get { return this.defaultFontHeight; }
+		}
 #if false
 		public bool							CausesValidation
 		{
@@ -268,6 +321,26 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool							PreferHorizontalDockLayout
+		{
+			get { return (this.internalState & InternalState.PreferXLayout) != 0; }
+			set
+			{
+				if (value != this.PreferHorizontalDockLayout)
+				{
+					if (value)
+					{
+						this.internalState |= InternalState.PreferXLayout;
+					}
+					else
+					{
+						this.internalState &= ~ InternalState.PreferXLayout;
+					}
+					
+					this.UpdateDockedChildrenLayout ();
+				}
+			}
+		}
 		
 		public virtual bool					IsEnabled
 		{
@@ -500,7 +573,7 @@ namespace Epsitec.Common.Widgets
 					return true;
 				}
 				
-				if (this.Children.Count > 0)
+				if (this.HasChildren)
 				{
 					Widget[] children = this.Children.Widgets;
 					int  children_num = children.Length;
@@ -1374,7 +1447,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Widget FindChild(Drawing.Point point, ChildFindMode mode)
 		{
-			if (this.Children.Count == 0)
+			if (this.HasChildren == false)
 			{
 				return null;
 			}
@@ -1494,8 +1567,100 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void UpdateDockedChildrenLayout()
+		{
+			if ((this.internalState & InternalState.ChildrenDocked) == 0)
+			{
+				return;
+			}
+			
+			System.Diagnostics.Debug.Assert (this.clientInfo != null);
+			System.Diagnostics.Debug.Assert (this.HasChildren);
+			
+			System.Collections.Queue fill_queue = null;
+			Drawing.Rectangle client_rect = this.clientInfo.Bounds;
+			
+			foreach (Widget child in this.Children)
+			{
+				if (child.Dock == DockStyle.None)
+				{
+					//	Saute les widgets qui ne sont pas "docked", car ils doivent être
+					//	positionnés par d'autres moyens.
+					
+					continue;
+				}
+				
+				double dx = child.Width;
+				double dy = child.Height;
+				
+				switch (child.Dock)
+				{
+					case DockStyle.Top:
+						child.SetBounds (client_rect.Left, client_rect.Top - dy, client_rect.Right, client_rect.Top);
+						client_rect.Top -= dy;
+						break;
+						
+					case DockStyle.Bottom:
+						child.SetBounds (client_rect.Left, client_rect.Bottom, client_rect.Right, client_rect.Bottom + dy);
+						client_rect.Bottom += dy;
+						break;
+					
+					case DockStyle.Left:
+						child.SetBounds (client_rect.Left, client_rect.Bottom, client_rect.Left + dx, client_rect.Top);
+						client_rect.Left += dx;
+						break;
+					
+					case DockStyle.Right:
+						child.SetBounds (client_rect.Right - dx, client_rect.Bottom, client_rect.Right, client_rect.Top);
+						client_rect.Right -= dx;
+						break;
+					
+					case DockStyle.Fill:
+						if (fill_queue == null)
+						{
+							fill_queue = new System.Collections.Queue ();
+						}
+						fill_queue.Enqueue (child);
+						break;
+				}
+			}
+			
+			if (fill_queue != null)
+			{
+				if (this.PreferHorizontalDockLayout)
+				{
+					int n = fill_queue.Count;
+					double fill_dx = client_rect.Width;
+					
+					foreach (Widget child in fill_queue)
+					{
+						child.SetBounds (client_rect.Left, client_rect.Bottom, client_rect.Left + fill_dx / n, client_rect.Top);
+						client_rect.Left += fill_dx / n;
+					}
+				}
+				else
+				{
+					int n = fill_queue.Count;
+					double fill_dy = client_rect.Height;
+					
+					foreach (Widget child in fill_queue)
+					{
+						child.SetBounds (client_rect.Left, client_rect.Top - fill_dy / n, client_rect.Right, client_rect.Top);
+						client_rect.Top -= fill_dy / n;
+					}
+				}
+			}
+		}
+		
 		protected virtual void UpdateChildrenLayout()
 		{
+			this.UpdateDockedChildrenLayout ();
+			
+			if (this.layoutInfo == null)
+			{
+				return;
+			}
+			
 			System.Diagnostics.Debug.Assert (this.clientInfo != null);
 			System.Diagnostics.Debug.Assert (this.layoutInfo != null);
 			
@@ -1504,8 +1669,16 @@ namespace Epsitec.Common.Widgets
 				double width_diff  = this.clientInfo.width  - this.layoutInfo.OriginalWidth;
 				double height_diff = this.clientInfo.height - this.layoutInfo.OriginalHeight;
 				
-				foreach (Widget child in this.children)
+				foreach (Widget child in this.Children)
 				{
+					if (child.Dock != DockStyle.None)
+					{
+						//	Saute les widgets qui sont "docked" dans le parent, car ils ont déjà été
+						//	positionnés par la méthode UpdateDockedChildrenLayout.
+						
+						continue;
+					}
+					
 					AnchorStyles anchor_x = (AnchorStyles) child.Anchor & AnchorStyles.LeftAndRight;
 					AnchorStyles anchor_y = (AnchorStyles) child.Anchor & AnchorStyles.TopAndBottom;
 					
@@ -1602,7 +1775,7 @@ namespace Epsitec.Common.Widgets
 					//	Peint tous les widgets enfants, en commençant par le numéro 0, lequel se trouve
 					//	derrière tous les autres, etc. On saute les widgets qui ne sont pas visibles.
 					
-					if (this.Children.Count > 0)
+					if (this.HasChildren)
 					{
 						Widget[] children = this.Children.Widgets;
 						int  children_num = children.Length;
@@ -1678,7 +1851,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ((message.FilterNoChildren == false) &&
 				(message.Handled == false) &&
-				(this.Children.Count > 0))
+				(this.HasChildren))
 			{
 				Widget[] children = this.Children.Widgets;
 				int  children_num = children.Length;
@@ -1906,8 +2079,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnChildrenChanged()
 		{
-			this.Invalidate ();
-			
 			if (this.ChildrenChanged != null)
 			{
 				this.ChildrenChanged (this);
@@ -2049,6 +2220,7 @@ namespace Epsitec.Common.Widgets
 		{
 			None				= 0,
 			ChildrenChanged		= 0x00000001,
+			ChildrenDocked		= 0x00000002,		//	=> il y a des enfants avec Dock != None
 			
 			Focusable			= 0x00000010,
 			Selectable			= 0x00000020,
@@ -2056,6 +2228,8 @@ namespace Epsitec.Common.Widgets
 			Frozen				= 0x00000080,		//	=> n'accepte aucun événement
 			Visible				= 0x00000100,
 			AcceptThreeState	= 0x00000200,
+			
+			PreferXLayout		= 0x00000400,		//	=> en cas de DockStyle.Fill multiple, place le contenu horizontalement
 			
 			AutoCapture			= 0x00010000,
 			AutoFocus			= 0x00020000,
@@ -2197,7 +2371,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.widget.suspendCounter == 0)
 				{
-					this.widget.OnChildrenChanged ();
+					this.widget.HandleChildrenChanged ();
 				}
 				else
 				{
@@ -2230,7 +2404,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.widget.suspendCounter == 0)
 				{
-					this.widget.OnChildrenChanged ();
+					this.widget.HandleChildrenChanged ();
 				}
 				else
 				{
@@ -2372,6 +2546,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		protected AnchorStyles				anchor;
+		protected DockStyle					dock;
 		protected Drawing.Color				backColor;
 		protected Drawing.Color				foreColor;
 		protected double					x1, y1, x2, y2;
@@ -2389,6 +2564,7 @@ namespace Epsitec.Common.Widgets
 		protected int						tabIndex;
 		protected TabNavigationMode			tabNavigationMode;
 		protected Shortcut					shortcut;
+		protected double					defaultFontHeight;
 		
 		static System.Collections.ArrayList	enteredWidgets = new System.Collections.ArrayList ();
 	}

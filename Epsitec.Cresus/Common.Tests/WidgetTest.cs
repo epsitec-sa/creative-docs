@@ -519,5 +519,70 @@ namespace Epsitec.Common.Tests
 			
 			Assertion.Assert (Epsitec.Common.Drawing.Transform.Multiply (t1, t2).Equals (new Epsitec.Common.Drawing.Transform ()));
 		}
+		
+		[Test] public void CheckDocking()
+		{
+			WindowFrame window = new WindowFrame();
+			
+			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.Text = "CheckDocking";
+			
+			Button button;
+			button = new Button();
+			button.Size = new Size(40, 24);
+			button.Text = "A";
+			button.Dock = DockStyle.Left;
+			window.Root.Children.Add(button);
+			
+			button = new Button();
+			button.Size = new Size(40, 24);
+			button.Text = "B";
+			button.Dock = DockStyle.Left;
+			window.Root.Children.Add(button);
+			
+			button = new Button();
+			button.Size = new Size(40, 24);
+			button.Text = "C";
+			button.Dock = DockStyle.Right;
+			window.Root.Children.Add(button);
+			
+			button = new Button();
+			button.Size = new Size(40, 24);
+			button.Text = "D";
+			button.Dock = DockStyle.Top;
+			window.Root.Children.Add(button);
+			
+			button = new Button();
+			button.Size = new Size(40, 24);
+			button.Text = "E";
+			button.Dock = DockStyle.Bottom;
+			window.Root.Children.Add(button);
+			
+			button = new Button();
+			button.Size = new Size(40, 24);
+			button.Text = "F";
+			button.Dock = DockStyle.Left;
+			window.Root.Children.Add(button);
+			
+			button = new Button();
+			button.Size = new Size(40, 24);
+			button.Text = "G";
+			button.Dock = DockStyle.Right;
+			window.Root.Children.Add(button);
+			
+			button = new Button();
+			button.Size = new Size(40, 24);
+			button.Text = "H";
+			button.Dock = DockStyle.Fill;
+			window.Root.Children.Add(button);
+			
+			button = new Button();
+			button.Size = new Size(40, 24);
+			button.Text = "I";
+			button.Dock = DockStyle.Fill;
+			window.Root.Children.Add(button);
+			
+			window.Show ();
+		}
 	}
 }
