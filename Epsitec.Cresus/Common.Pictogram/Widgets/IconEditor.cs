@@ -35,7 +35,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				this.allWidgets = false;
 
-				this.toolTip = null;
 				this.menu = null;
 				this.hToolBar = null;
 				this.vToolBar = null;
@@ -90,8 +89,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		protected void CreateLayout()
 		{
-			this.toolTip = new ToolTip();
-			this.toolTip.Behaviour = ToolTipBehaviour.Normal;
+			ToolTip.Default.Behaviour = ToolTipBehaviour.Normal;
 
 			this.menu = new HMenu();
 			this.menu.Host = this;
@@ -354,7 +352,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			this.bookPatterns = new TabPage();
 			this.bookPatterns.TabTitle = "Motifs";
-			//?this.book.Items.Add(this.bookPatterns);
+			this.book.Items.Add(this.bookPatterns);
 
 			this.bookPages = new TabPage();
 			this.bookPages.TabTitle = "Pages";
@@ -383,21 +381,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.InfoMouseChanged += new EventHandler(this.HandleDrawerInfoMouseChanged);
 			this.drawer.InfoZoomChanged += new EventHandler(this.HandleDrawerInfoZoomChanged);
 			this.drawer.UsePropertiesPanel += new EventHandler(this.HandleDrawerUsePropertiesPanel);
-			//?this.drawer.SetSyncPaint(true);
 			this.drawer.Parent = this.leftPane;
 
 			this.lister = new Lister();
 			this.lister.PanelChanged += new EventHandler(this.HandleDrawerAllChanged);
 			this.lister.IconObjects = this.drawer.IconObjects;
 			this.lister.Parent = this.leftPane;
-			//?this.lister.SetSyncPaint(true);
 			this.lister.Hide();
 
 			this.frame1 = new SampleButton();
 			this.frame1.ButtonStyle = ButtonStyle.ToolItem;
 			this.frame1.ActiveState = WidgetState.ActiveYes;
 			this.frame1.IconObjects.Objects = this.drawer.Objects;
-			//?this.frame1.SetSyncPaint(true);
 			this.frame1.Parent = this.rightPane;
 
 			this.frame2 = new SampleButton();
@@ -405,7 +400,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.frame2.ActiveState = WidgetState.ActiveYes;
 			this.frame2.SetEnabled(false);
 			this.frame2.IconObjects.Objects = this.drawer.Objects;
-			//?this.frame2.SetSyncPaint(true);
 			this.frame2.Parent = this.rightPane;
 
 			this.drawer.AddClone(this.frame1);
@@ -416,16 +410,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.quickPagePrev.GlyphShape = GlyphShape.ArrowLeft;
 			this.quickPagePrev.Clicked += new MessageEventHandler(this.HandleQuickPagePrev);
 			this.quickPagePrev.Parent = this.leftPane;
+			ToolTip.Default.SetToolTip(this.quickPagePrev, "Page précédente");
 
 			this.quickPageMenu = new Button();
 			this.quickPageMenu.Text = "1";
 			this.quickPageMenu.Clicked += new MessageEventHandler(this.HandleQuickPageMenu);
 			this.quickPageMenu.Parent = this.leftPane;
+			ToolTip.Default.SetToolTip(this.quickPageMenu, "Choix d'une page");
 
 			this.quickPageNext = new GlyphButton();
 			this.quickPageNext.GlyphShape = GlyphShape.ArrowRight;
 			this.quickPageNext.Clicked += new MessageEventHandler(this.HandleQuickPageNext);
 			this.quickPageNext.Parent = this.leftPane;
+			ToolTip.Default.SetToolTip(this.quickPageNext, "Page suivante");
 
 			this.hScroller = new HScroller();
 			this.hScroller.ValueChanged += new EventHandler(this.HandleHScrollerValueChanged);
@@ -435,33 +432,36 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.quickLayerNext.GlyphShape = GlyphShape.ArrowUp;
 			this.quickLayerNext.Clicked += new MessageEventHandler(this.HandleQuickLayerNext);
 			this.quickLayerNext.Parent = this.leftPane;
+			ToolTip.Default.SetToolTip(this.quickLayerNext, "Calque suivant");
 
 			this.quickLayerMenu = new Button();
 			this.quickLayerMenu.Text = "A";
 			this.quickLayerMenu.Clicked += new MessageEventHandler(this.HandleQuickLayerMenu);
 			this.quickLayerMenu.Parent = this.leftPane;
+			ToolTip.Default.SetToolTip(this.quickLayerMenu, "Choix d'un calque");
 
 			this.quickLayerPrev = new GlyphButton();
 			this.quickLayerPrev.GlyphShape = GlyphShape.ArrowDown;
 			this.quickLayerPrev.Clicked += new MessageEventHandler(this.HandleQuickLayerPrev);
 			this.quickLayerPrev.Parent = this.leftPane;
+			ToolTip.Default.SetToolTip(this.quickLayerPrev, "Calque précédent");
 
 			this.vScroller = new VScroller();
 			this.vScroller.ValueChanged += new EventHandler(this.HandleVScrollerValueChanged);
 			this.vScroller.Parent = this.leftPane;
 
-			this.panelStyles = new PanelStyles(this.drawer, this.toolTip);
+			this.panelStyles = new PanelStyles(this.drawer);
 			this.panelStyles.Parent = this.bookStyles;
 
-			this.panelPatterns = new PanelPatterns(this.drawer, this.toolTip);
+			this.panelPatterns = new PanelPatterns(this.drawer);
 			this.panelPatterns.ObjectsChanged += new EventHandler(this.HandlePanelPatternsObjectsChanged);
 			this.panelPatterns.Parent = this.bookPatterns;
 
-			this.panelPages = new PanelPages(this.drawer, this.toolTip);
+			this.panelPages = new PanelPages(this.drawer);
 			this.panelPages.ObjectsChanged += new EventHandler(this.HandlePanelPagesObjectsChanged);
 			this.panelPages.Parent = this.bookPages;
 
-			this.panelLayers = new PanelLayers(this.drawer, this.toolTip);
+			this.panelLayers = new PanelLayers(this.drawer);
 			this.panelLayers.ObjectsChanged += new EventHandler(this.HandlePanelLayersObjectsChanged);
 			this.panelLayers.Parent = this.bookLayers;
 
@@ -485,7 +485,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.InfoAdd("", 90, "StatusZoom", "");
 			this.InfoAdd("", 120, "StatusMouse", "");
 			StatusField infoField = this.info.Items["StatusMouse"] as StatusField;
-			//?infoField.SetSyncPaint(true);
 
 			this.allWidgets = true;
 			this.ResizeLayout();
@@ -675,7 +674,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				IconButton button = new IconButton(command, icon, command);
 				this.hToolBar.Items.Add(button);
-				this.toolTip.SetToolTip(button, tooltip);
+				ToolTip.Default.SetToolTip(button, tooltip);
 			}
 		}
 
@@ -697,7 +696,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				IconButton button = new IconButton(command, icon, name);
 				this.vToolBar.Items.Add(button);
-				this.toolTip.SetToolTip(button, tooltip);
+				ToolTip.Default.SetToolTip(button, tooltip);
 			}
 		}
 
@@ -724,7 +723,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				double h = this.info.DefaultHeight-3;
 				button.Size = new Drawing.Size(h, h);
 				this.info.Items.Add(button);
-				this.toolTip.SetToolTip(button, tooltip);
+				ToolTip.Default.SetToolTip(button, tooltip);
 			}
 		}
 
@@ -856,8 +855,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 						if ( this.drawer.SelectedTool == "Edit" )  continue;
 					}
 
-					panel = property.CreatePanel();
-					panel.Drawer = this.drawer;
+					panel = property.CreatePanel(this.drawer);
 					panel.ExtendedSize = this.drawer.GetPropertyExtended(property.Type);
 					panel.Multi = property.Multi;
 					panel.LayoutDirect = (property.Type == PropertyType.Name);
@@ -1334,7 +1332,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		protected CommandDispatcher				commandDispatcher;
 		protected bool							allWidgets = false;
-		protected ToolTip						toolTip;
 		protected HMenu							menu;
 		protected HToolBar						hToolBar;
 		protected VToolBar						vToolBar;

@@ -210,6 +210,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.hiliteHandleObject = null;
 			this.editObject = null;
 			this.iconObjects.DeselectAll();
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.globalModifier.Visible = false;
 		}
 
@@ -501,6 +502,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.objectMemory.SetProperty(property);  // mémorise les changements
 		}
 
+		// Adapte tout après la destruction d'un pattern.
+		public void AdaptDeletePattern(int rank)
+		{
+			if ( this.newObject != null )
+			{
+				this.newObject.DeletePattern(rank);
+			}
+			this.objectMemory.DeletePattern(rank);
+			this.iconObjects.UpdateDeletePattern(rank);
+			this.iconObjects.StylesDeletePattern(rank);
+		}
+
 
 		// Initialise toutes les commandes.
 		public void InitCommands(CommandDispatcher commandDispatcher)
@@ -648,6 +661,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.UndoFlush();
 			this.iconObjects.Clear();
+			this.objectMemory.DeletePattern();
 			this.StyleFreeAll();
 			this.globalModifier.Visible = false;
 			this.rankLastCreated = -1;
@@ -668,6 +682,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( filename == "" )  return;
 			this.UndoFlush();
 			this.iconObjects.Clear();
+			this.objectMemory.DeletePattern();
 			this.StyleFreeAll();
 			this.globalModifier.Visible = false;
 			this.rankLastCreated = -1;
@@ -2432,7 +2447,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 			//?graphics.ResetClippingRectangle();
 			//?graphics.SetClippingRectangle(this.InnerBounds);
 
-			if ( !this.BackColor.IsTransparent && this.iconContext.PreviewActive )
+			if ( this.iconObjects.CurrentPattern != 0 )
+			{
+				graphics.AddFilledRectangle(clipRect);
+				graphics.RenderSolid(Drawing.Color.FromRGB(0.75, 1.0, 1.0));  // cyan pastel
+			}
+			else if ( !this.BackColor.IsTransparent && this.iconContext.PreviewActive )
 			{
 				graphics.AddFilledRectangle(clipRect);
 				graphics.RenderSolid(this.BackColor);
