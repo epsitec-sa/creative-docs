@@ -445,6 +445,11 @@ namespace Epsitec.Common.Widgets
 					break;
 			}
 			
+			if (message != null)
+			{
+				Message.state.window = form.HostingWidgetWindow;
+			}
+			
 			return message;
 		}
 		
@@ -632,6 +637,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		internal static void DefineLastWindow(Window window)
+		{
+			Message.state.window = window;
+		}
+		
+		
 		public override string ToString()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -784,6 +795,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return (this.window_mouse_down == null) || (this.window_mouse_down == this.window); }
 		}
+		
 		
 		
 		internal ModifierKeys				modifiers;
