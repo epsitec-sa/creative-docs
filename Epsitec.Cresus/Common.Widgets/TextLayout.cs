@@ -303,8 +303,11 @@ namespace Epsitec.Common.Widgets
 		// Sélectionne tout le texte.
 		public void SelectAll(TextLayout.Context context)
 		{
-			context.CursorFrom = 0;
-			context.CursorTo   = this.Text.Length;
+			if ( this.text != null )
+			{
+				context.CursorFrom = 0;
+				context.CursorTo   = this.text.Length;
+			}
 		}
 
 		// Sélectionne toute la ligne.
