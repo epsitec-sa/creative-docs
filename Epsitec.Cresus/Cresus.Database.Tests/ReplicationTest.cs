@@ -257,8 +257,11 @@ namespace Epsitec.Cresus.Database
 			DbId from_id = DbId.CreateId (1, 1);
 			DbId to_id   = DbId.CreateId (999999, 1);
 			
+			Remoting.IOperation operation;
 			System.Diagnostics.Debug.WriteLine ("Asking server for replication data.");
-			service.AcceptReplication (new Remoting.ClientIdentity ("test", 1000), from_id, to_id, out buffer);
+			service.AcceptReplication (new Remoting.ClientIdentity ("test", 1000), from_id, to_id, out operation);
+			System.Diagnostics.Debug.WriteLine ("Waiting...");
+			service.GetReplicationData (operation, out buffer);
 			System.Diagnostics.Debug.WriteLine ("Server reply received.");
 			
 			System.Console.WriteLine ("Replication produced {0} bytes of data.", (buffer == null ? 0 : buffer.Length));
@@ -303,8 +306,11 @@ namespace Epsitec.Cresus.Database
 			DbId from_id = DbId.CreateId (1, 1);
 			DbId to_id   = DbId.CreateId (999999, 1);
 			
+			Remoting.IOperation operation;
 			System.Diagnostics.Debug.WriteLine ("Asking server for replication data.");
-			service.AcceptReplication (new Remoting.ClientIdentity ("test", 1000), from_id, to_id, out buffer);
+			service.AcceptReplication (new Remoting.ClientIdentity ("test", 1000), from_id, to_id, out operation);
+			System.Diagnostics.Debug.WriteLine ("Waiting...");
+			service.GetReplicationData (operation, out buffer);
 			System.Diagnostics.Debug.WriteLine ("Server reply received.");
 			
 			System.Console.WriteLine ("Replication produced {0} bytes of data.", (buffer == null ? 0 : buffer.Length));

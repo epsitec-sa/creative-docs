@@ -8,6 +8,8 @@ namespace Epsitec.Cresus.Remoting
 	/// </summary>
 	public interface IReplicationService
 	{
-		void AcceptReplication(ClientIdentity client, long sync_start_id, long sync_end_id, out byte[] data);
+		void AcceptReplication(ClientIdentity client, long sync_start_id, long sync_end_id, out IOperation operation);
+		
+		void GetReplicationData(IOperation operation, out byte[] data);
 	}
 }

@@ -100,6 +100,7 @@ namespace Epsitec.Cresus.Replication
 			for (;;)
 			{
 				Job job = null;
+				
 				lock (this.queue)
 				{
 					if (this.queue.Count > 0)
@@ -113,10 +114,16 @@ namespace Epsitec.Cresus.Replication
 					break;
 				}
 				
+				if (job.ProgressStatus == Remoting.ProgressStatus.Cancelled)
+				{
+					//	Saute un éventuel job qui aurait été marqué comme annulé.
+					
+					continue;
+				}
+				
 				try
 				{
-					job.Data  = null;
-					job.Error = null;
+					job.SignalStartedProcessing ();
 					
 					this.ProcessQueueEntry (job);
 				}
@@ -124,11 +131,11 @@ namespace Epsitec.Cresus.Replication
 				{
 					System.Diagnostics.Debug.WriteLine (string.Format ("Replication: ServerEngine.ProcessQueue failed job for client {0}; {1}", job.Client.ToString (), ex.Message));
 					
-					job.Error = ex.ToString ();
+					job.SignalError (ex.ToString ());
 				}
 				finally
 				{
-					job.SignalReady ();
+					System.Diagnostics.Debug.Assert (job.ProgressStatus != Remoting.ProgressStatus.Running);
 				}
 			}
 		}
@@ -189,7 +196,7 @@ namespace Epsitec.Cresus.Replication
 				//	ProcessTable. On va faire transiter sur le réseau un nombre minimal de
 				//	données :
 				
-				job.Data = Common.IO.Serialization.SerializeAndCompressToMemory (data, Common.IO.Compressor.DeflateCompact);
+				job.SignalFinishedProcessing (Common.IO.Serialization.SerializeAndCompressToMemory (data, Common.IO.Compressor.DeflateCompact));
 				
 				transaction.Commit ();
 			}

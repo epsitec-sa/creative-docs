@@ -181,7 +181,8 @@ namespace Epsitec.Cresus.Remoting
 		
 		protected virtual void SetCurrentStep(int step)
 		{
-			if (this.current_step == step)
+			if ((this.current_step == step) &&
+				((step != 0) || (this.progress_status == Remoting.ProgressStatus.Running)))
 			{
 				return;
 			}

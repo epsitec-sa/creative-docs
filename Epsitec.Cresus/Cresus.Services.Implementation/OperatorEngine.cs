@@ -6,7 +6,8 @@ using System.IO.IsolatedStorage;
 namespace Epsitec.Cresus.Services
 {
 	/// <summary>
-	/// Summary description for OperatorEngine.
+	/// La classe OperatorEngine gère la création de bases de données "client"
+	/// et leur durée de vie.
 	/// </summary>
 	internal sealed class OperatorEngine : AbstractServiceEngine, Remoting.IOperatorService
 	{
@@ -18,11 +19,16 @@ namespace Epsitec.Cresus.Services
 		#region IOperatorService Members
 		public void CreateRoamingClient(string name, out Remoting.IOperation operation)
 		{
+			//	Démarre, de manière asynchrone, la création d'une copie comprimée de la base
+			//	de données du serveur.
+			
 			operation = new CreateRoamingClientOperation (this, name);
 		}
 		
 		public void GetRoamingClientData(Remoting.IOperation operation, out Remoting.ClientIdentity client, out byte[] compressed_data)
 		{
+			//	Récupère la base de données sous sa forme comprimée.
+			
 			if (operation == null)
 			{
 				throw new System.ArgumentNullException ("operation");
@@ -47,15 +53,12 @@ namespace Epsitec.Cresus.Services
 		}
 		#endregion
 		
-		
 		#region CreateRoamingClientOperation Class
-		
 		/// <summary>
 		/// La classe CreateRoamingClientOperation crée une copie de la base de données
 		/// active, la comprime et remplit un buffer avec ces données pour pouvoir les
 		/// retourner à l'appelant.
 		/// </summary>
-		
 		private class CreateRoamingClientOperation : Remoting.AbstractStepThreadedOperation
 		{
 			public CreateRoamingClientOperation(OperatorEngine oper, string name)
@@ -141,7 +144,7 @@ namespace Epsitec.Cresus.Services
 				
 				tools.Backup (this.temp.Path);
 				
-				if (! this.WaitForFileReadable (this.temp.Path, 10*1000))
+				if (! Common.IO.Tools.WaitForFileReadable (this.temp.Path, 10*1000, new Common.IO.Tools.Callback (this.InterruptIfCancelRequested)))
 				{
 					throw new System.IO.IOException ("File cannot be opened in read mode within specified delay.");
 				}
@@ -183,50 +186,6 @@ namespace Epsitec.Cresus.Services
 				System.Diagnostics.Debug.WriteLine ("Ready for data transfer.");
 			}
 			
-			
-			private bool WaitForFileReadable(string name, int max_wait)
-			{
-				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-				bool ok = false;
-				int wait = 0;
-				
-				for (int i = 5; wait < max_wait; i += 5)
-				{
-					this.InterruptIfCancelRequested ();
-					
-					System.IO.FileStream stream;
-					
-					try
-					{
-						stream = System.IO.File.OpenRead (name);
-					}
-					catch
-					{
-						System.Threading.Thread.Sleep (i);
-						wait += i;
-						buffer.Append ('.');
-						continue;
-					}
-					
-					stream.Close ();
-					ok = true;
-					break;
-				}
-				
-				if (buffer.Length > 0)
-				{
-					if (wait > max_wait)
-					{
-						System.Diagnostics.Debug.WriteLine ("Timed out waiting for file.");
-					}
-					else
-					{
-						System.Diagnostics.Debug.WriteLine ("Waited for file for " + wait + " ms " + buffer.ToString ());
-					}
-				}
-				
-				return ok;
-			}
 			
 			
 			Epsitec.Common.IO.TemporaryFile		temp;

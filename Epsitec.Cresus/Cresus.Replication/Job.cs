@@ -6,11 +6,11 @@ namespace Epsitec.Cresus.Replication
 	/// <summary>
 	/// Summary description for Job.
 	/// </summary>
-	public class Job
+	public class Job : Remoting.AbstractOperation
 	{
 		public Job()
 		{
-			this.wait_event = new System.Threading.AutoResetEvent (false);
+			this.SetLastStep (1);
 		}
 		
 		
@@ -56,41 +56,61 @@ namespace Epsitec.Cresus.Replication
 			{
 				return this.sync_data;
 			}
-			set
-			{
-				this.sync_data = value;
-			}
 		}
 		
 		public string							Error
 		{
 			get
 			{
-				return this.error;
-			}
-			set
-			{
-				this.error = value;
+				return this.sync_error;
 			}
 		}
 		
 		
-		public void SignalReady()
+		
+		internal void WaitForReady()
 		{
-			this.wait_event.Set ();
+			this.WaitForProgress (100);
 		}
 		
-		public void WaitForReady()
+		
+		internal void SignalStartedProcessing()
 		{
-			Common.Support.Sync.Wait (this.wait_event);
+			this.sync_data  = null;
+			this.sync_error = null;
+			
+			this.SetCurrentStep (0);
 		}
 		
+		internal void SignalFinishedProcessing(byte[] data)
+		{
+			this.sync_data  = data;
+			this.sync_error = null;
+			
+			this.SetCurrentStep (1);
+			this.SetProgress (100);
+		}
+		
+		internal void SignalError(string message)
+		{
+			this.sync_data  = null;
+			this.sync_error = message;
+			
+			this.SetFailed (message);
+		}
+		
+		
+		public override void CancelOperation(out Epsitec.Cresus.Remoting.IProgressInformation progress_information)
+		{
+			base.CancelOperation (out progress_information);
+		}
+		
+
 		
 		private Remoting.ClientIdentity			client;
 		private Database.DbId					sync_start_id;
 		private Database.DbId					sync_end_id;
 		private byte[]							sync_data;
-		private string							error;
-		private System.Threading.AutoResetEvent	wait_event;
+		private string							sync_error;
 	}
 }

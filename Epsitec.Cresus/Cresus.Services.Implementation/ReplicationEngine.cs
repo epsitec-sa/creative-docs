@@ -19,23 +19,46 @@ namespace Epsitec.Cresus.Services
 		
 		
 		#region IReplicationService Members
-		public void AcceptReplication(ClientIdentity client, long sync_start_id, long sync_end_id, out byte[] data)
+		public void AcceptReplication(ClientIdentity client, long sync_start_id, long sync_end_id, out IOperation operation)
 		{
+			//	Signale au serveur que le client accepte des données relatives à une réplication.
+			
 			//	Crée un "job" pour Repliaction.ServerEngine; c'est là que tout le travail
-			//	se fera, par un processus séparé :
+			//	se fera, par un processus séparé.
 			
 			Replication.Job job = new Replication.Job ();
 			
-			job.Client = client;
+			job.Client      = client;
 			job.SyncStartId = sync_start_id;
 			job.SyncEndId   = sync_end_id;
 			
 			this.replicator.Enqueue (job);
 			
 			//	Maintenant que le système de réplication a reçu notre requête, il n'y a plus
-			//	qu'à attendre que le travail soit fait pour retourner à l'appelant :
+			//	qu'à attendre que le travail soit fait...
 			
-			job.WaitForReady ();
+			operation = job;
+		}
+		
+		public void GetReplicationData(IOperation operation, out byte[] data)
+		{
+			//	Récupère le résultat de l'opération de réplication.
+
+			if (operation == null)
+			{
+				throw new System.ArgumentNullException ("operation");
+			}
+			
+			Replication.Job job = operation as Replication.Job;
+			
+			if (job == null)
+			{
+				throw new System.ArgumentException ("Operation mismatch.");
+			}
+			
+			job.WaitForProgress (100);
+			
+			this.ThrowExceptionBasedOnStatus (job.ProgressStatus);
 			
 			if (job.Error != null)
 			{
@@ -45,7 +68,6 @@ namespace Epsitec.Cresus.Services
 			data = job.Data;
 		}
 		#endregion
-		
 		
 		protected override void Dispose(bool disposing)
 		{
