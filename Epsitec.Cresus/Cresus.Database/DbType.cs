@@ -109,6 +109,7 @@ namespace Epsitec.Cresus.Database
 			get { return this.internal_type_key; }
 		}
 		
+		
 		#region ICloneable Members
 		public virtual object Clone()
 		{
