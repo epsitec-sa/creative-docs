@@ -409,7 +409,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.window != null)
 				{
-					this.window.ResetWindow ();
+					this.window.ResetHostingWidgetWindow ();
 					this.window.Dispose ();
 				}
 				

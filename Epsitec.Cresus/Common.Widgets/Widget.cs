@@ -2122,6 +2122,8 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
+			this.Invalidate ();
+			
 			this.x1 = x1;
 			this.y1 = y1;
 			this.x2 = x2;
@@ -2687,29 +2689,41 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void DispatchMessage(Message message, Drawing.Point pos)
 		{
-			switch (message.Type)
+			if (this.IsVisible)
 			{
-				case MessageType.MouseUp:
-					//	Le bouton a été relâché. Ceci génère l'événement 'Released' pour signaler
-					//	ce relâchement, mais aussi un événement 'Clicked' ou 'DoubleClicked' en
-					//	fonction du nombre de clics.
-					
-					this.OnReleased (new MessageEventArgs (message, pos));
-					
-					switch (message.ButtonDownCount)
-					{
-						case 1:	this.OnClicked (new MessageEventArgs (message, pos));		break;
-						case 2:	this.OnDoubleClicked (new MessageEventArgs (message, pos));	break;
-					}
-					break;
+				bool is_entered = this.IsEntered;
 				
-				case MessageType.MouseDown:
-					this.OnPressed (new MessageEventArgs (message, pos));
-					break;
+				switch (message.Type)
+				{
+					case MessageType.MouseUp:
+						//	Le bouton a été relâché. Ceci génère l'événement 'Released' pour signaler
+						//	ce relâchement, mais aussi un événement 'Clicked' ou 'DoubleClicked' en
+						//	fonction du nombre de clics.
+						
+						this.OnReleased (new MessageEventArgs (message, pos));
+						
+						if (is_entered)
+						{
+							switch (message.ButtonDownCount)
+							{
+								case 1:	this.OnClicked (new MessageEventArgs (message, pos));		break;
+								case 2:	this.OnDoubleClicked (new MessageEventArgs (message, pos));	break;
+							}
+						}
+						break;
+					
+					case MessageType.MouseDown:
+						this.OnPressed (new MessageEventArgs (message, pos));
+						break;
+				}
+				
+				
+				this.ProcessMessage (message, pos);
 			}
-			
-			
-			this.ProcessMessage (message, pos);
+			else
+			{
+				System.Diagnostics.Debug.WriteLine ("Dispatching to invisible widget...");
+			}
 		}
 		
 		protected virtual void PreProcessMessage(Message message, Drawing.Point pos)

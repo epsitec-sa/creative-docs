@@ -16,7 +16,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal Window(Epsitec.Common.Widgets.Window window)
 		{
-			this.window = window;
+			this.widget_window = window;
 			
 			this.SetStyle (System.Windows.Forms.ControlStyles.AllPaintingInWmPaint, true);
 			this.SetStyle (System.Windows.Forms.ControlStyles.Opaque, true);
@@ -34,9 +34,9 @@ namespace Epsitec.Common.Widgets.Platform
 			this.ShowInTaskbar   = false;
 		}
 		
-		internal void ResetWindow()
+		internal void ResetHostingWidgetWindow()
 		{
-			this.window = null;
+			this.widget_window_disposed = true;
 		}
 		
 		
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			this.is_frozen = false;
 			this.Invalidate ();
-			this.window.OnWindowAnimationEnded ();
+			this.widget_window.OnWindowAnimationEnded ();
 		}
 		
 		
@@ -207,7 +207,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal bool							IsFrozen
 		{
-			get { return this.is_frozen || (this.window.Root == null); }
+			get { return this.is_frozen || (this.widget_window.Root == null); }
 		}
 		
 		internal bool							IsMouseActivationEnabled
@@ -338,7 +338,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal Epsitec.Common.Widgets.Window	HostingWidgetWindow
 		{
-			get { return this.window; }
+			get { return this.widget_window; }
 		}
 		
 		internal static bool					IsApplicationActive
@@ -368,10 +368,14 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				this.graphics = null;
 				
-				if (this.window != null)
+				if (this.widget_window != null)
 				{
-					this.window.ResetWindow ();
-					this.window.Dispose ();
+					if (this.widget_window_disposed == false)
+					{
+						this.widget_window.ResetWindow ();
+						this.widget_window.Dispose ();
+						this.widget_window_disposed = true;
+					}
 				}
 			}
 			
@@ -395,7 +399,7 @@ namespace Epsitec.Common.Widgets.Platform
 				}
 			}
 			
-			this.window.OnWindowClosed ();
+			this.widget_window.OnWindowClosed ();
 			
 			base.OnClosed (e);
 		}
@@ -515,9 +519,9 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			base.OnActivated (e);
 			
-			if (this.window != null)
+			if (this.widget_window != null)
 			{
-				this.window.OnWindowActivated ();
+				this.widget_window.OnWindowActivated ();
 			}
 		}
 		
@@ -525,9 +529,9 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			base.OnDeactivate (e);
 			
-			if (this.window != null)
+			if (this.widget_window != null)
 			{
-				this.window.OnWindowDeactivated ();
+				this.widget_window.OnWindowDeactivated ();
 			}
 		}
 
@@ -537,11 +541,11 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (this.Visible)
 			{
-				this.window.OnWindowShown ();
+				this.widget_window.OnWindowShown ();
 			}
 			else
 			{
-				this.window.OnWindowHidden ();
+				this.widget_window.OnWindowHidden ();
 			}
 		}
 
@@ -560,7 +564,7 @@ namespace Epsitec.Common.Widgets.Platform
 			{
 				this.graphics.Pixmap.Clear ();
 				
-				this.window.Root.Size = new Drawing.Size (width, height);
+				this.widget_window.Root.Size = new Drawing.Size (width, height);
 				this.dirty_rectangle  = new Drawing.Rectangle (0, 0, width, height);
 				
 				this.UpdateLayeredWindow ();
@@ -655,7 +659,7 @@ namespace Epsitec.Common.Widgets.Platform
 			if (msg.Msg == Win32Const.WM_APP_EXEC_CMD)
 			{
 				System.Diagnostics.Debug.Assert (this.wnd_proc_depth == 0);
-				this.window.DispatchQueuedCommands ();
+				this.widget_window.DispatchQueuedCommands ();
 				return;
 			}
 			
@@ -755,11 +759,11 @@ namespace Epsitec.Common.Widgets.Platform
 						Window.is_app_active = app_active;
 						if (app_active)
 						{
-							this.window.OnApplicationActivated ();
+							this.widget_window.OnApplicationActivated ();
 						}
 						else
 						{
-							this.window.OnApplicationDeactivated ();
+							this.widget_window.OnApplicationDeactivated ();
 						}
 					}
 					message = Window.CreateNCActivate (this, Window.is_app_active);
@@ -803,7 +807,7 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (message != null)
 			{
-				if (this.window.FilterMessage (message))
+				if (this.widget_window.FilterMessage (message))
 				{
 					return true;
 				}
@@ -876,7 +880,7 @@ namespace Epsitec.Common.Widgets.Platform
 				this.graphics.ResetClippingRectangle ();
 				this.graphics.SetClippingRectangle (repaint);
 					
-				this.window.Root.PaintHandler (this.graphics, repaint);
+				this.widget_window.Root.PaintHandler (this.graphics, repaint);
 				
 				return true;
 			}
@@ -913,13 +917,17 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal void DispatchMessage(Message message)
 		{
-			this.window.DispatchMessage (message);
+			if (this.widget_window != null)
+			{
+				this.widget_window.DispatchMessage (message);
+			}
 		}
 		
 		
 		
 		
-		private Epsitec.Common.Widgets.Window	window;
+		private bool							widget_window_disposed;
+		private Epsitec.Common.Widgets.Window	widget_window;
 		
 		private Drawing.Graphics				graphics;
 		private Drawing.Rectangle				dirty_rectangle;
