@@ -58,6 +58,12 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
+		public override void Execute(ExecutionEngine engine)
+		{
+			engine.GenerateInsertDataCommand (this.TableName, this.col_names, this.col_values);
+		}
+		
+		
 		#region ISerializable Members
 		protected InsertStaticData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{

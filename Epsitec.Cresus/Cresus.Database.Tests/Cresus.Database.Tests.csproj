@@ -129,6 +129,11 @@
                     Project = "{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Cresus.DataLayer"
+                    Project = "{BA604F89-53C1-4228-AC76-5D5E68205029}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

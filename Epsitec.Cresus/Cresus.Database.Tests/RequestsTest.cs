@@ -283,48 +283,30 @@ namespace Epsitec.Cresus.Database
 			table.Columns.Add (col_3);
 			table.Columns.Add (col_4);
 			
+			DataLayer.RequestFactory factory = new DataLayer.RequestFactory ();
+			
+			table.Rows.Add (new object[] { 1L, 0, "Pierre Arnaud", new System.DateTime (1972, 2, 11) });
+			
+			factory.GenerateRequests (table);
+			
 			DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
 			
-			engine.SetUpExecution (transaction);
-			engine.GenerateInsertDataCommand (db_table.Name,
-				/**/						  new string[] { col_1.ColumnName, col_2.ColumnName, col_3.ColumnName, col_4.ColumnName },
-				/**/						  new object[] { 1L, 0, "Pierre Arnaud", new System.DateTime (1972, 2, 11) });
+			engine.Execute (transaction, factory.CreateGroup ());
 			
-			System.Data.IDbCommand command = engine.GetCommand ();
+			table.AcceptChanges ();
+			table.Rows[0][col_3.ColumnName] = "Pierre Arnaud-Roost";
+			table.Rows[0][col_4.ColumnName] = new System.DateTime (1940, 5, 20);
 			
-			System.Console.Write ("Insert Data Command:\n  {0}", command.CommandText);
+			factory.Clear ();
+			factory.GenerateRequests (table);
 			
-			foreach (System.Data.IDataParameter p in command.Parameters)
-			{
-				System.Console.WriteLine ("    {0} = {1}", p.ParameterName, p.Value);
-			}
-			
-			infrastructure.ExecuteSilent (transaction);
-			engine.CleanUpExecution ();
-			
-			engine.SetUpExecution (transaction);
-			engine.GenerateUpdateDataCommand (db_table.Name,
-				/**/						  new string[] { col_1.ColumnName },
-				/**/						  new object[] { 1L },
-				/**/						  new string[] { col_3.ColumnName, col_4.ColumnName },
-				/**/						  new object[] { "Pierre Arnaud-Roost", new System.DateTime (1940, 5, 20) });
-			
-			command = engine.GetCommand ();
-			
-			System.Console.Write ("Update Data Command:\n  {0}", command.CommandText);
-			
-			foreach (System.Data.IDataParameter p in command.Parameters)
-			{
-				System.Console.WriteLine ("    {0} = {1}", p.ParameterName, p.Value);
-			}
-			
-			infrastructure.ExecuteSilent (transaction);
-			engine.CleanUpExecution ();
+			engine.Execute (transaction, factory.CreateGroup ());
 			
 			transaction.Commit ();
 			
 			infrastructure.UnregisterDbTable (null, db_table);
 		}
+		
 		
 		
 		public static System.Data.DataTable CreateSampleTable()

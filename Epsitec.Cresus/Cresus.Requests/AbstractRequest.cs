@@ -28,6 +28,8 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
+		public abstract void Execute(ExecutionEngine engine);
+		
 		#region ISerializable Members
 		protected AbstractRequest(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
@@ -62,6 +64,7 @@ namespace Epsitec.Cresus.Requests
 			
 			return request;
 		}
+		
 		
 		protected void SetupRequestType(RequestType type)
 		{

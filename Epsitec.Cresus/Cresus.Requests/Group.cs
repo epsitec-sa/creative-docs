@@ -61,6 +61,18 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
+		public override void Execute(ExecutionEngine engine)
+		{
+			if (this.Count > 0)
+			{
+				foreach (AbstractRequest request in this.requests)
+				{
+					request.Execute (engine);
+				}
+			}
+		}
+		
+		
 		#region ISerializable Members
 		protected Group(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{

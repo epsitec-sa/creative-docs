@@ -141,6 +141,12 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
+		public override void Execute(ExecutionEngine engine)
+		{
+			engine.GenerateUpdateDataCommand (this.TableName, this.col_names, this.col_org_values, this.col_names, this.col_cur_values);
+		}
+		
+		
 		#region ISerializable Members
 		protected UpdateStaticData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{

@@ -48,26 +48,19 @@ namespace Epsitec.Cresus.Requests
 		{
 			try
 			{
-				this.SetUpExecution (transaction);
+				this.DefineCurrentLogId ();
+				this.DefineCurrentTransaction (transaction);
 				
-//				request.Execute (this);
+				request.Execute (this);
+				
+				DbRichCommand.DebugDumpCommand (this.infrastructure.SqlBuilder.Command);
+				
+				this.infrastructure.ExecuteSilent (transaction);
 			}
 			finally
 			{
-				this.CleanUpExecution ();
+				this.CleanUp ();
 			}
-		}
-		
-		
-		public void SetUpExecution(DbTransaction transaction)
-		{
-			this.DefineCurrentLogId ();
-			this.DefineCurrentTransaction (transaction);
-		}
-		
-		public void CleanUpExecution()
-		{
-			this.CleanUp ();
 		}
 		
 		
@@ -134,11 +127,6 @@ namespace Epsitec.Cresus.Requests
 			this.infrastructure.SqlBuilder.UpdateData (table.CreateSqlName (), sql_data_fields, sql_cond_fields);
 		}
 		
-		
-		public System.Data.IDbCommand GetCommand()
-		{
-			return this.infrastructure.SqlBuilder.Command;
-		}
 		
 		protected bool IsLogIdNeededForTable(DbTable table)
 		{

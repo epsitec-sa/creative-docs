@@ -393,6 +393,17 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public static void DebugDumpCommand(System.Data.IDbCommand command)
+		{
+			System.Diagnostics.Debug.WriteLine (command.CommandText);
+			
+			foreach (System.Data.IDataParameter command_parameter in command.Parameters)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("  {0} = {1}, type {2}", command_parameter.ParameterName, command_parameter.Value, command_parameter.Value.GetType ().FullName));
+			}
+		}
+		
+		
 		protected void CreateDataRelations ()
 		{
 			//	Crée pour le DataSet actuel les relations entre les diverses colonnes,

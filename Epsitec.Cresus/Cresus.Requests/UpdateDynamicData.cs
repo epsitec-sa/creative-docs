@@ -36,6 +36,12 @@ namespace Epsitec.Cresus.Requests
 		
 		//	TODO: à compléter...
 		
+		public override void Execute(ExecutionEngine engine)
+		{
+			//	TODO: Exécute...
+		}
+		
+		
 		#region ISerializable Members
 		protected UpdateDynamicData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
