@@ -13,8 +13,10 @@ namespace Epsitec.Common.Script.Developer.Panels
 	{
 		public MethodEditionPanel()
 		{
-			this.size.Width  = System.Math.Max (MethodProtoPanel.DefaultSize.Width, ParameterInfoPanel.DefaultSize.Width);
-			this.size.Height = MethodProtoPanel.DefaultSize.Height + ParameterInfoPanel.DefaultSize.Height;
+			this.panel_size.Width  = System.Math.Max (MethodProtoPanel.DefaultSize.Width, ParameterInfoPanel.DefaultSize.Width);
+			this.panel_size.Height = MethodProtoPanel.DefaultSize.Height + ParameterInfoPanel.DefaultSize.Height;
+			
+			this.size = new Drawing.Size (this.panel_size.Width + 200, this.panel_size.Height);
 		}
 		
 		
@@ -37,23 +39,33 @@ namespace Epsitec.Common.Script.Developer.Panels
 		
 		protected override void CreateWidgets(Widget parent)
 		{
+			Widget panel = new Widget (parent);
+			
+			panel.Size = this.panel_size;
+			panel.Dock = DockStyle.Left;
+			
 			this.panel_proto = new MethodProtoPanel ();
 			this.panel_param = new ParameterInfoPanel ();
 			
 			Widget widget_proto = this.panel_proto.Widget;
 			Widget widget_param = this.panel_param.Widget;
 			
-			widget_proto.SetEmbedder (parent);
-			widget_param.SetEmbedder (parent);
+			widget_proto.SetEmbedder (panel);
+			widget_param.SetEmbedder (panel);
 			
 			widget_proto.Dock = DockStyle.Top;
-			widget_param.Dock = DockStyle.Top;
-			
-			this.panel_proto.ComboName.IsReadOnly          = false;
-			this.panel_proto.ComboName.ButtonShowCondition = ShowCondition.Never;
+			widget_param.Dock = DockStyle.Fill;
 			
 			this.panel_proto.IsModifiedChanged += new EventHandler (this.HandlePanelProtoIsModifiedChanged);
-			this.panel_param.IsModifiedChanged += new EventHandler (this.HandlePanelProtoIsModifiedChanged);
+			this.panel_param.IsModifiedChanged += new EventHandler (this.HandlePanelParamIsModifiedChanged);
+			
+			this.text_source = new TextFieldMulti (parent);
+			
+			this.text_source.Dock = DockStyle.Fill;
+			this.text_source.DockMargins = new Drawing.Margins (4, 0, 0, 0);
+			this.text_source.TextLayout.Font = Drawing.Font.GetFont ("Courier New", "Regular");
+			this.text_source.TextLayout.FontSize = 13.0;
+			this.text_source.TextEdited += new EventHandler (this.HandleTextSourceEdited);
 			
 			this.UpdateFromMethod ();
 		}
@@ -70,6 +82,9 @@ namespace Epsitec.Common.Script.Developer.Panels
 			this.panel_proto.MethodName = this.method.Name;
 			this.panel_proto.MethodType = this.method.ReturnType;
 			this.panel_param.Parameters = this.method.Parameters;
+			
+			this.text_source.Text       = this.method.CodeSections[0].Code;
+			this.text_source.SelectAll ();
 		}
 		
 		
@@ -101,10 +116,17 @@ namespace Epsitec.Common.Script.Developer.Panels
 			}
 		}
 		
+		private void HandleTextSourceEdited(object sender)
+		{
+			this.IsModified = true;
+		}
 		
+		
+		protected Drawing.Size					panel_size;
 		protected MethodProtoPanel				panel_proto;
 		protected ParameterInfoPanel			panel_param;
 		
 		protected Source.Method					method;
+		protected TextFieldMulti				text_source;
 	}
 }

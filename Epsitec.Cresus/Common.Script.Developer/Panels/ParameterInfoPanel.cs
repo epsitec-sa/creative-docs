@@ -142,6 +142,8 @@ namespace Epsitec.Common.Script.Developer.Panels
 			
 			edit.TextArrayStore = this.edit_store;
 			
+			title.Caption = "Method arguments";
+			
 			this.edit_array = edit;
 		}
 		

@@ -39,9 +39,9 @@ namespace Epsitec.Common.Script.Developer.Panels
 				{
 					this.method_name = value;
 					
-					if (this.combo_name != null)
+					if (this.text_name != null)
 					{
-						this.combo_name.Text = this.method_name;
+						this.text_name.Text = this.method_name;
 					}
 				}
 			}
@@ -68,18 +68,9 @@ namespace Epsitec.Common.Script.Developer.Panels
 		}
 
 		
-		internal TextFieldExList				ComboName
-		{
-			get
-			{
-				return this.combo_name;
-			}
-		}
-		
-		
 		protected override void CreateWidgets(Widget parent)
 		{
-			this.combo_name = new TextFieldExList (parent);
+			this.text_name  = new TextField (parent);
 			this.combo_type = new TextFieldCombo (parent);
 			
 			this.type_info.FillTypeNames (this.combo_type.Items);
@@ -89,14 +80,14 @@ namespace Epsitec.Common.Script.Developer.Panels
 			
 			double width = System.Math.Max (label_1.GetBestFitSize ().Width, label_2.GetBestFitSize ().Width) + 4;
 			
-			this.combo_name.Text = this.MethodName;
+			this.text_name.Text  = this.MethodName;
 			this.combo_type.Text = this.type_info.GetNameFromType (this.MethodType);
 			
-			this.combo_name.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.combo_name.AnchorMargins = new Drawing.Margins (width, 0, 0, 0);
+			this.text_name.Anchor         = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.text_name.AnchorMargins  = new Drawing.Margins (width, 0, 0, 0);
 			
 			this.combo_type.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.combo_type.AnchorMargins = new Drawing.Margins (width, 0, this.combo_name.Height + 2, 0);
+			this.combo_type.AnchorMargins = new Drawing.Margins (width, 0, this.text_name.Height + 2, 0);
 			this.combo_type.IsReadOnly    = true;
 			
 			label_1.Anchor = AnchorStyles.TopLeft;
@@ -105,20 +96,20 @@ namespace Epsitec.Common.Script.Developer.Panels
 			label_2.Anchor = AnchorStyles.TopLeft;
 			label_2.Width  = width;
 			
-			Widget.BaseLineAlign (this.combo_name, label_1);
+			Widget.BaseLineAlign (this.text_name, label_1);
 			Widget.BaseLineAlign (this.combo_type, label_2);
 			
-			this.combo_name.TextChanged += new EventHandler (this.HandleComboNameTextChanged);
-			this.combo_type.TextChanged += new EventHandler (this.HandleComboTypeTextChanged);
+			this.text_name.TextEdited  += new EventHandler (this.HandleTextNameTextEdited);
+			this.combo_type.SelectedIndexChanged += new EventHandler (this.HandleComboTypeSelectedIndexChanged);
 		}
 		
 		
-		private void HandleComboNameTextChanged(object sender)
+		private void HandleTextNameTextEdited(object sender)
 		{
 			this.IsModified = true;
 		}
 		
-		private void HandleComboTypeTextChanged(object sender)
+		private void HandleComboTypeSelectedIndexChanged(object sender)
 		{
 			this.IsModified = true;
 		}
@@ -129,7 +120,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 		
 		protected Helpers.ParameterInfoStore	type_info;
 		
-		protected TextFieldExList				combo_name;
+		protected TextField						text_name;
 		protected TextFieldCombo				combo_type;
 	}
 }
