@@ -12,13 +12,13 @@ namespace Epsitec.Common.Text.Internal
 	{
 		public CharMarker()
 		{
-			this.keys = new object[8];
-			this.bits = new ulong[8];
+			this.keys = new object[6];
+			this.bits = new ulong[6];
 			
-			for (int i = 0; i < 8; i++)
+			for (int i = 0; i < 6; i++)
 			{
 				this.keys[i] = null;
-				this.bits[i] = 0x01000000ul << i;
+				this.bits[i] = 0x04000000ul << i;
 			}
 		}
 		
@@ -26,13 +26,14 @@ namespace Epsitec.Common.Text.Internal
 		/*
 		 *	Structure d'un caractère en mémoire :
 		 *
-		 *	[bbbb bbb][c:cccc cc][dd:dddd dddd:dddd dddd]:[mmmm mmmm]:[xxx][y yyyy:yyyy yyyy:yyyy yyyy]
+		 *	[bbbb bbb][c:cccc cc][dd:dddd dddd:dddd dddd]:[mmmm mm][ss:s][xx][y yyyy:yyyy yyyy:yyyy yyyy]
 		 *
 		 *	- 63..57 : b,  7-bit, "extra index"			1..100
 		 *	- 56..50 : c,  7-bit, "local index"			1..100
 		 *	- 49..32 : d, 18-bit, "style index"			1..250'000
-		 *	- 31..24 : m,  8-bit, "markers"
-		 *  - 23..21 : x,  3-bit, "unicode flags"
+		 *	- 31..26 : m,  6-bit, "markers"
+		 *  - 25..23 : s,  3-bit, "line break status"
+		 *  - 22..21 : x,  2-bit, "unicode flags"
 		 *	- 20...0 : y, 21-bit, "unicode code"
 		 *
 		 *	- Le "extra index" pointe (au sein du style) sur un descripteur qui
@@ -121,7 +122,7 @@ namespace Epsitec.Common.Text.Internal
 			//	'true' si des modifications ont été apportées au texte.
 			
 			Debug.Assert.IsTrue (marker != 0);
-			Debug.Assert.IsTrue ((marker & 0xFFFFFFFF00FFFFFFul) == 0);
+			Debug.Assert.IsTrue ((marker & 0xFFFFFFFF03FFFFFFul) == 0);
 			
 			ulong acc = marker;
 			int   end = offset + length;
@@ -141,7 +142,7 @@ namespace Epsitec.Common.Text.Internal
 			//	'true' si des modifications ont été apportées au texte.
 			
 			Debug.Assert.IsTrue (marker != 0);
-			Debug.Assert.IsTrue ((marker & 0xFFFFFFFF00FFFFFFul) == 0);
+			Debug.Assert.IsTrue ((marker & 0xFFFFFFFF03FFFFFFul) == 0);
 			
 			ulong mask = ~marker;
 			ulong acc  = 0;
@@ -167,7 +168,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = offset; i < end; i++)
 			{
-				acc |= text[i] & 0x00000000FF000000UL;
+				acc |= text[i] & 0x00000000FC000000UL;
 			}
 			
 			return acc;

@@ -46,11 +46,18 @@ namespace Epsitec.Common.Text
 		
 		public static bool CompareEqualContents(TextStyle a, TextStyle b)
 		{
-			//	Ignore le nom dans la comparaison du contenu. C'est voulu !
-			
-			//	TODO: compléter
-			
-			return true;
+			if (Styles.BasePropertyContainer.CompareEqualContents (a, b))
+			{
+				//	Ignore le nom dans la comparaison du contenu. C'est voulu !
+				
+				//	TODO: compléter
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		
 		
