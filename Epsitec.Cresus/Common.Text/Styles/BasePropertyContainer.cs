@@ -217,27 +217,47 @@ namespace Epsitec.Common.Text.Styles
 			}
 			
 			
-			public void Accumulate(Styles.BasePropertyContainer source)
+			public Accumulator Accumulate(System.Collections.IEnumerable source)
+			{
+				foreach (Properties.BaseProperty property in source)
+				{
+					this.Accumulate (property);
+				}
+				
+				return this;
+			}
+			
+			public Accumulator Accumulate(Styles.BasePropertyContainer source)
 			{
 				int n = source.CountProperties;
 				
 				for (int i = 0; i < n; i++)
 				{
-					System.Type type = source[i].GetType ();
-					
-					if (this.hash.Contains (type))
-					{
-						Properties.BaseProperty base_prop = this.hash[type] as Properties.BaseProperty;
-						Properties.BaseProperty comb_prop = base_prop.GetCombination (source[i]);
-						
-						this.hash[type] = comb_prop;
-					}
-					else
-					{
-						this.hash[type] = source[i];
-					}
+					this.Accumulate (source[i]);
 				}
+				
+				return this;
 			}
+			
+			public Accumulator Accumulate(Properties.BaseProperty property)
+			{
+				System.Type type = property.GetType ();
+				
+				if (this.hash.Contains (type))
+				{
+					Properties.BaseProperty base_prop = this.hash[type] as Properties.BaseProperty;
+					Properties.BaseProperty comb_prop = base_prop.GetCombination (property);
+					
+					this.hash[type] = comb_prop;
+				}
+				else
+				{
+					this.hash[type] = property;
+				}
+				
+				return this;
+			}
+			
 			
 			public void Done()
 			{

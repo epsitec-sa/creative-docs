@@ -219,6 +219,43 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void ConvertToStyledText(string simple_text, TextStyle text_style, System.Collections.ICollection properties, out ulong[] styled_text)
+		{
+			TextStyle[] text_styles = { text_style };
+			
+			this.ConvertToStyledText (simple_text, text_styles, properties, out styled_text);
+		}
+		
+		public void ConvertToStyledText(string simple_text, System.Collections.ICollection text_styles, System.Collections.ICollection properties, out ulong[] styled_text)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			//	TODO: générer une CascadedStylesProperty s'il y a plusieurs styles en cascade
+			
+			foreach (TextStyle style in text_styles)
+			{
+				//	Passe en revue toutes les propriétés définies par le style
+				//	en cours d'analyse et ajoute celles-ci séquentillement dans
+				//	la liste des propriétés :
+				
+				int n = style.CountProperties;
+				
+				for (int i = 0; i < n; i++)
+				{
+					list.Add (style[i]);
+				}
+				
+				//	TODO: ajouter les réglages associés au style, s'il y en a
+			}
+			
+			//	Les propriétés "manuelles" viennent s'ajouter à la fin de la
+			//	liste, après les propriétés du/des styles :
+			
+			list.AddRange (properties);
+			
+			this.ConvertToStyledText (simple_text, list, out styled_text);
+		}
+		
 		public void ConvertToStyledText(string simple_text, System.Collections.ICollection properties, out ulong[] styled_text)
 		{
 			//	Génère un texte en lui appliquant les propriétés qui définissent
@@ -236,9 +273,13 @@ namespace Epsitec.Common.Text
 			
 			Properties.BaseProperty[] prop_mixed = new Properties.BaseProperty[length];
 			
-			System.Collections.ArrayList prop_style = new System.Collections.ArrayList ();
-			System.Collections.ArrayList prop_local = new System.Collections.ArrayList ();
-			System.Collections.ArrayList prop_extra = new System.Collections.ArrayList ();
+			Styles.SimpleStyle   search_style = new Styles.SimpleStyle ();
+			Styles.LocalSettings search_local = new Styles.LocalSettings ();
+			Styles.ExtraSettings search_extra = new Styles.ExtraSettings ();
+			
+			Styles.BasePropertyContainer.Accumulator style_acc = search_style.StartAccumulation ();
+			Styles.BasePropertyContainer.Accumulator local_acc = search_local.StartAccumulation ();
+			Styles.BasePropertyContainer.Accumulator extra_acc = search_extra.StartAccumulation ();
 			
 			properties.CopyTo (prop_mixed, 0);
 			
@@ -246,17 +287,9 @@ namespace Epsitec.Common.Text
 			{
 				switch (prop_mixed[i].PropertyType)
 				{
-					case Properties.PropertyType.Style:
-						prop_style.Add (prop_mixed[i]);
-						break;
-					
-					case Properties.PropertyType.LocalSetting:
-						prop_local.Add (prop_mixed[i]);
-						break;
-					
-					case Properties.PropertyType.ExtraSetting:
-						prop_extra.Add (prop_mixed[i]);
-						break;
+					case Properties.PropertyType.Style:			style_acc.Accumulate (prop_mixed[i]); break;
+					case Properties.PropertyType.LocalSetting:	local_acc.Accumulate (prop_mixed[i]); break;
+					case Properties.PropertyType.ExtraSetting:	extra_acc.Accumulate (prop_mixed[i]); break;
 					
 					default:
 						throw new System.ArgumentException ("Invalid property type", "properties");
@@ -265,9 +298,9 @@ namespace Epsitec.Common.Text
 			
 			//	Génère le style et les réglages en fonction des propriétés :
 			
-			Styles.SimpleStyle   search_style = new Styles.SimpleStyle (prop_style);
-			Styles.LocalSettings search_local = new Styles.LocalSettings (prop_local);
-			Styles.ExtraSettings search_extra = new Styles.ExtraSettings (prop_extra);
+			style_acc.Done ();
+			local_acc.Done ();
+			extra_acc.Done ();
 			
 			ulong style = 0;
 			
