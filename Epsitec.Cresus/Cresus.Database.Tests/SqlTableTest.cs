@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Database
 		{
 			SqlTable sql_table = new SqlTable ("Test");
 			
-			Assertion.AssertEquals ("Test", sql_table.Name);
+			Assert.AreEqual ("Test", sql_table.Name);
 		}
 	}
 }
