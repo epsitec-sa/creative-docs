@@ -38,8 +38,9 @@ namespace Epsitec.Common.Designer
 			
 			//	Définit l'état initial des commandes :
 			
-			this.StateDeleteActiveSelection.Enabled = false;
-			this.StateTabIndexSetter.Enabled        = false;
+			this.UpdateSelectionState ();
+			
+			this.StateTabIndexSetter.Enabled = false;
 			
 			this.UpdateTabIndexIcons ();
 			
@@ -95,6 +96,38 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return CommandState.Find ("DeleteActiveSelection", this.dispatcher);
+			}
+		}
+		
+		public CommandState						StateZTopActiveSelection
+		{
+			get
+			{
+				return CommandState.Find ("ZTopActiveSelection", this.dispatcher);
+			}
+		}
+		
+		public CommandState						StateZBottomActiveSelection
+		{
+			get
+			{
+				return CommandState.Find ("ZBottomActiveSelection", this.dispatcher);
+			}
+		}
+		
+		public CommandState						StateZUpActiveSelection
+		{
+			get
+			{
+				return CommandState.Find ("ZUpActiveSelection", this.dispatcher);
+			}
+		}
+		
+		public CommandState						StateZDownActiveSelection
+		{
+			get
+			{
+				return CommandState.Find ("ZDownActiveSelection", this.dispatcher);
 			}
 		}
 		
@@ -202,7 +235,12 @@ namespace Epsitec.Common.Designer
 			this.tool_bar.Items.Add (IconButton.CreateSimple ("TabIndexResetSeq",				"manifest:Epsitec.Common.Designer.Images.NumOne.icon"));
 			this.tool_bar.Items.Add (IconButton.CreateToggle ("TabIndexPicker(this.IsActive)",	"manifest:Epsitec.Common.Designer.Images.NumPicker.icon"));
 			this.tool_bar.Items.Add (new IconSeparator ());
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("DeleteActiveSelection", "manifest:Epsitec.Common.Designer.Images.Delete.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("DeleteActiveSelection",  "manifest:Epsitec.Common.Designer.Images.Delete.icon"));
+			this.tool_bar.Items.Add (new IconSeparator ());
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("ZTopActiveSelection",    "manifest:Epsitec.Common.Designer.Images.ZTop.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("ZBottomActiveSelection", "manifest:Epsitec.Common.Designer.Images.ZBottom.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("ZUpActiveSelection",     "manifest:Epsitec.Common.Designer.Images.ZUp.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("ZDownActiveSelection",   "manifest:Epsitec.Common.Designer.Images.ZDown.icon"));
 			
 			this.tool_bar.Size   = new Drawing.Size (dx, this.tool_bar.DefaultHeight);
 			this.tool_bar.Parent = root;
@@ -330,7 +368,11 @@ namespace Epsitec.Common.Designer
 			//	S'il y a une sélection, il faut mettre à jour l'état des commandes qui s'y
 			//	rapportent :
 			
-			this.StateDeleteActiveSelection.Enabled = has_selection;
+			this.StateDeleteActiveSelection.Enabled  = has_selection;
+			this.StateZBottomActiveSelection.Enabled = has_selection;
+			this.StateZTopActiveSelection.Enabled    = has_selection;
+			this.StateZUpActiveSelection.Enabled     = has_selection;
+			this.StateZDownActiveSelection.Enabled   = has_selection;
 		}
 		
 		protected void UpdateActiveWidget ()
@@ -485,6 +527,36 @@ namespace Epsitec.Common.Designer
 			this.active_editor.SelectedWidgets.AddRange (widgets);
 		}
 		
+		protected void ChangeZOrder(Widget[] widgets, int delta)
+		{
+			int   n = widgets.Length;
+			int[] z = new int[n];
+			
+			//	Trie les widgets de manière à toujours obtenir le même comportement, indépendamment
+			//	de l'ordre dans lequel ils ont été sélectionnés.
+			
+			for (int i = 0; i < n; i++)
+			{
+				z[i] = widgets[i].ZOrder * delta;
+			}
+			
+			System.Array.Sort (z, widgets);
+			
+			for (int i = 0; i < n; i++)
+			{
+				int z_min = 0;
+				int z_max = widgets[i].Parent == null ? 1 : widgets[i].Parent.Children.Count;
+				
+				z[i] = System.Math.Max (System.Math.Min (widgets[i].ZOrder + delta, z_max-1), z_min);
+			}
+			
+			for (int i = 0; i < n; i++)
+			{
+				widgets[i].ZOrder = z[i];
+			}
+			
+			this.active_editor.GripsOverlay.ZOrder = 0;
+		}
 		
 		[Command ("CreateNewWindow")]			void CommandCreateNewWindow()
 		{
@@ -554,6 +626,7 @@ namespace Epsitec.Common.Designer
 			window.Show ();
 		}
 		
+		
 		[Command ("DeleteActiveSelection")]		void CommandDeleteActiveSelection()
 		{
 			System.Diagnostics.Debug.Assert (this.active_editor != null);
@@ -567,6 +640,48 @@ namespace Epsitec.Common.Designer
 				widget.Dispose ();
 			}
 		}
+		
+		
+		[Command ("ZTopActiveSelection")]		void CommandZTopActiveSelection()
+		{
+			System.Diagnostics.Debug.Assert (this.active_editor != null);
+			System.Diagnostics.Debug.Assert (this.active_editor.SelectedWidgets.Count > 0);
+			
+			Widget[] widgets = this.GetSelectedWidgets ();
+			
+			this.ChangeZOrder (widgets, -1000);
+		}
+		
+		[Command ("ZBottomActiveSelection")]	void CommandZBottomActiveSelection()
+		{
+			System.Diagnostics.Debug.Assert (this.active_editor != null);
+			System.Diagnostics.Debug.Assert (this.active_editor.SelectedWidgets.Count > 0);
+			
+			Widget[] widgets = this.GetSelectedWidgets ();
+			
+			this.ChangeZOrder (widgets, 1000);
+		}
+		
+		[Command ("ZUpActiveSelection")]		void CommandZUpActiveSelection()
+		{
+			System.Diagnostics.Debug.Assert (this.active_editor != null);
+			System.Diagnostics.Debug.Assert (this.active_editor.SelectedWidgets.Count > 0);
+			
+			Widget[] widgets = this.GetSelectedWidgets ();
+			
+			this.ChangeZOrder (widgets, -1);
+		}
+		
+		[Command ("ZDownActiveSelection")]		void CommandZDownActiveSelection()
+		{
+			System.Diagnostics.Debug.Assert (this.active_editor != null);
+			System.Diagnostics.Debug.Assert (this.active_editor.SelectedWidgets.Count > 0);
+			
+			Widget[] widgets = this.GetSelectedWidgets ();
+			
+			this.ChangeZOrder (widgets, 1);
+		}
+		
 		
 		[Command ("DeselectAll")]				void CommandDeselectAll()
 		{

@@ -82,6 +82,14 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
+		public Widgets.GripsOverlay				GripsOverlay
+		{
+			get
+			{
+				return this.grips_overlay;
+			}
+		}
+		
 		
 		#region ICommandDispatcherHost Members
 		public Support.CommandDispatcher		CommandDispatcher
