@@ -85,6 +85,21 @@ namespace Epsitec.Common.Support
 		
 		public const int					MaxRecursion = 50;
 		
+		public System.Xml.XmlDocument		XmlDocument
+		{
+			get
+			{
+				if (this.xmlroot == null)
+				{
+					System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+					doc.Load (new System.IO.StringReader ("<bundle></bundle>"));
+					this.xmlroot = doc.DocumentElement;
+				}
+				
+				return this.xmlroot.OwnerDocument;
+			}
+		}
+		
 		public bool							RefInclusionEnabled
 		{
 			get { return this.ref_inclusion; }
@@ -139,6 +154,8 @@ namespace Epsitec.Common.Support
 			temp[index] = field;
 			this.fields = temp;
 			
+			this.OnFieldsChanged ();
+			
 			return index;
 		}
 		
@@ -151,6 +168,8 @@ namespace Epsitec.Common.Support
 			this.fields.CopyTo (temp, 0);
 			fields.CopyTo (temp, index);
 			this.fields = temp;
+			
+			this.OnFieldsChanged ();
 			
 			return index;
 		}
@@ -306,6 +325,26 @@ namespace Epsitec.Common.Support
 			}
 			
 			return bundle_node;
+		}
+		
+		
+		public Field CreateEmptyField(ResourceFieldType type)
+		{
+			if (type != ResourceFieldType.Data)
+			{
+				throw new System.NotImplementedException (string.Format ("{0} support not implemented.", type));
+			}
+			
+			System.Xml.XmlDocument  doc  = this.XmlDocument;
+			System.Xml.XmlElement   elem = doc.CreateElement ("data");
+			System.Xml.XmlAttribute attr = doc.CreateAttribute ("name");
+			
+			elem.Attributes.Append (attr);
+			attr.Value = "?";
+			
+			Field field = new Field (this, elem);
+			
+			return field;
 		}
 		
 		
@@ -498,6 +537,14 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 		
+		
+		protected virtual void OnFieldsChanged()
+		{
+			if (this.FieldsChanged != null)
+			{
+				this.FieldsChanged (this);
+			}
+		}
 		
 		
 		#region Class FieldList
@@ -753,30 +800,40 @@ namespace Epsitec.Common.Support
 			
 			public void SetName(string name)
 			{
-				this.name = name;
-				this.xml.Attributes["name"].Value = name;
+				if (this.name != name)
+				{
+					this.name = name;
+					this.xml.Attributes["name"].Value = name;
+					this.parent.OnFieldsChanged ();
+				}
 			}
 			
 			public void SetStringValue(string value)
 			{
-				//	L'appelant doit s'assurer que la valeur passée en entrée est valide d'un point
-				//	de vue XML (balises équilibrées, etc.)
-				
-				this.type = ResourceFieldType.Data;
-				this.data = value;
-				
-				if (value.IndexOf ('<') < 0)
+				if ((this.type != ResourceFieldType.Data) ||
+					((string)this.data != value))
 				{
-					//	Il n'y a aucune balise <>, donc on peut utiliser le texte tel quel :
+					//	L'appelant doit s'assurer que la valeur passée en entrée est valide d'un point
+					//	de vue XML (balises équilibrées, etc.)
+				
+					this.type = ResourceFieldType.Data;
+					this.data = value;
+				
+					if (value.IndexOf ('<') < 0)
+					{
+						//	Il n'y a aucune balise <>, donc on peut utiliser le texte tel quel :
 					
-					this.xml.InnerXml = value;
-				}
-				else
-				{
-					//	Il y a des balises, il faut donc signaler que la valeur est du XML et
-					//	pas un texte simple :
+						this.xml.InnerXml = value;
+					}
+					else
+					{
+						//	Il y a des balises, il faut donc signaler que la valeur est du XML et
+						//	pas un texte simple :
 					
-					this.xml.InnerXml = "<xml>" + value + "</xml>";
+						this.xml.InnerXml = "<xml>" + value + "</xml>";
+					}
+					
+					this.parent.OnFieldsChanged ();
 				}
 			}
 			
@@ -907,6 +964,7 @@ namespace Epsitec.Common.Support
 		}
 		#endregion
 		
+		public event EventHandler			FieldsChanged;
 		
 		protected string					name;
 		protected System.Xml.XmlNode		xmlroot;

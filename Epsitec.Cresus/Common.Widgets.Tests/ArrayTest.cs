@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
@@ -260,10 +261,18 @@ namespace Epsitec.Common.Widgets
 		{
 			public void InsertRows(int row, int num)
 			{
+				if (this.StoreChanged != null)
+				{
+					this.StoreChanged (this);
+				}
 			}
 
 			public void RemoveRows(int row, int num)
 			{
+				if (this.StoreChanged != null)
+				{
+					this.StoreChanged (this);
+				}
 			}
 
 			public string GetCellText(int row, int column)
@@ -284,6 +293,8 @@ namespace Epsitec.Common.Widgets
 			public void SetCellText(int row, int column, string value)
 			{
 			}
+			
+			public event Support.EventHandler	StoreChanged;
 		}
 
 		
