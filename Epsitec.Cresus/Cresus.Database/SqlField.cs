@@ -357,12 +357,12 @@ namespace Epsitec.Cresus.Database
 			return field;
 		}
 		
-		public static SqlField CreateFunction(SqlFunction function)
+		public static SqlField CreateFunction(SqlFunction sql_function)
 		{
 			SqlField field	= new SqlField ();
 			
 			field.type		= SqlFieldType.Function;
-			field.value		= function;
+			field.value		= sql_function;
 
 			return field;
 		}
