@@ -398,7 +398,7 @@ namespace Epsitec.Common.Drawing
 
 		
 		
-		public class Converter : Epsitec.Common.Converters.AbstractStringConverter
+		public class Converter : Epsitec.Common.Types.AbstractStringConverter
 		{
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)
 			{
