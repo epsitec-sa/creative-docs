@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 12/02/2004
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
@@ -4308,7 +4308,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void UpdateChildrenLayout()
+		
+		protected void UpdateChildrenLayout()
 		{
 			if (this.IsLayoutSuspended)
 			{
@@ -4412,7 +4413,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void UpdateHasDockedChildren(Widget[] children)
+		protected void UpdateHasDockedChildren(Widget[] children)
 		{
 			//	Met à jour le flag interne qui indique s'il y a des widgets dans l'état
 			//	docked, ou non.
@@ -4434,7 +4435,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void UpdateMinMaxBasedOnDockedChildren(Widget[] children)
+		protected void UpdateMinMaxBasedOnDockedChildren(Widget[] children)
 		{
 			//	Recalcule les tailles minimales et maximales en se basant sur les enfants
 			//	contenus dans le widget.
@@ -4574,7 +4575,7 @@ namespace Epsitec.Common.Widgets
 			this.MaxSize = this.MapClientToParent (new Drawing.Size (max_width, max_height));
 		}
 		
-		protected virtual void UpdateDockedChildrenLayout(Widget[] children)
+		protected void UpdateDockedChildrenLayout(Widget[] children)
 		{
 			if (this.HasDockedChildren == false)
 			{
@@ -4908,6 +4909,7 @@ namespace Epsitec.Common.Widgets
 			this.PostProcessMessage (message, client_pos);
 		}
 		
+		
 		protected virtual void DispatchMessage(Message message, Drawing.Point pos)
 		{
 			if (this.IsVisibleFlagSet || message.IsKeyType)
@@ -5045,6 +5047,7 @@ namespace Epsitec.Common.Widgets
 		{
 			return this.ShortcutHandler (shortcut, true);
 		}
+		
 		
 		protected virtual bool ShortcutHandler(Shortcut shortcut, bool execute_focused)
 		{
