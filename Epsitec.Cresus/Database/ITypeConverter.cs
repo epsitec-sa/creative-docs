@@ -8,6 +8,15 @@ namespace Epsitec.Cresus.Database
 	public interface ITypeConverter
 	{
 		/// <summary>
+		/// Vérifie si le type brut spécifié est supporté par la base de données
+		/// sous-jacente. Le type <c>DbRawType.Guid</c> n'est par exemple pas supporté
+		/// par Firebird.
+		/// </summary>
+		/// <param name="type">type brut à analyser</param>
+		/// <returns><c>true</c> si le type est supporté de manière native</returns>
+		bool CheckNativeSupport(DbRawType type);
+		
+		/// <summary>
 		/// Analyse la donnée définie par l'interface IDataRecord et trouve le type
 		/// brut correspondant.
 		/// </summary>

@@ -73,12 +73,26 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert (height >= ascender-descender);
 		}
 		
+		[Test] public void CheckFontTextCharEndX()
+		{
+			Font font = Font.GetFont ("Tahoma", "Regular");
+			
+			Assertion.AssertNotNull (font);
+			
+			string   text  = "Hello";
+			double[] end_x = font.GetTextCharEndX (text);
+			double   width = font.GetTextAdvance (text);
+			
+			Assertion.Assert (end_x.Length == text.Length);
+			Assertion.Assert (end_x[end_x.Length-1] == width);
+		}
+		
 		[Test] public void CheckTextBreak()
 		{
 			Font   font = Font.GetFont ("Times New Roman", "Regular");
 			string text = "The quick brown     fox jumps over the lazy dog. Whatever, we just need a piece of long text to break apart.";
 			double width = 100;
-			TextBreak tb = new TextBreak (font, text, 12.0);
+			TextBreak tb = new TextBreak (font, text, 12.0, TextBreakMode.None);
 			
 			string break_text;
 			double break_width;
@@ -96,6 +110,7 @@ namespace Epsitec.Common.Tests
 				chunk[line_count++] = break_text;
 				
 				Assertion.AssertEquals (break_width, font.GetTextAdvance (break_text)*12.0);
+				Assertion.AssertEquals ((line_count < 6), tb.MoreText);
 			}
 			
 			Assertion.AssertEquals (6, line_count);
@@ -108,7 +123,7 @@ namespace Epsitec.Common.Tests
 			
 			tb.Dispose ();
 			
-			tb = new TextBreak (font, "absolutely   ", 12.0);
+			tb = new TextBreak (font, "absolutely   ", 12.0, TextBreakMode.None);
 			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width));
 			Assertion.AssertEquals ("", break_text);
 			Assertion.AssertEquals (0.0, break_width);
@@ -117,10 +132,28 @@ namespace Epsitec.Common.Tests
 			Assertion.AssertEquals (false, tb.GetNextBreak (55.0, out break_text, out break_width));
 			tb.Dispose ();
 			
-			tb = new TextBreak (font, "absolutely   ", 12.0);
+			tb = new TextBreak (font, "absolutely   ", 12.0, TextBreakMode.None);
 			Assertion.AssertEquals (true, tb.GetNextBreak (60.0, out break_text, out break_width));
 			Assertion.AssertEquals ("absolutely   ", break_text);
 			Assertion.AssertEquals (false, tb.GetNextBreak (60.0, out break_text, out break_width));
+			tb.Dispose ();
+			
+			tb = new TextBreak (font, "absolutely, really", 12.0, TextBreakMode.Split);
+			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width));
+			Assertion.AssertEquals ("absolute", break_text);
+			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width));
+			Assertion.AssertEquals ("ly,", break_text);
+			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width));
+			Assertion.AssertEquals ("really", break_text);
+			Assertion.AssertEquals (false, tb.GetNextBreak (40.0, out break_text, out break_width));
+			tb.Dispose ();
+			
+			tb = new TextBreak (font, "absolutely, really", 12.0, TextBreakMode.Ellipsis);
+			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width));
+			Assertion.AssertEquals ("absol\u2026", break_text);
+			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width));
+			Assertion.AssertEquals ("really", break_text);
+			Assertion.AssertEquals (false, tb.GetNextBreak (40.0, out break_text, out break_width));
 			tb.Dispose ();
 		}
 		

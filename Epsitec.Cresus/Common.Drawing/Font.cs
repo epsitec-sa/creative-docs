@@ -210,6 +210,18 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public double[] GetTextCharEndX(string text)
+		{
+			int      len     = text.Length;
+			double[] x_array = new double[len];
+			int      count   = Agg.Library.AggFontFaceGetTextCharEndXArray (this.handle, text, 0, x_array);
+			
+			System.Diagnostics.Debug.Assert (count == len);
+			
+			return x_array;
+		}
+		
+		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)

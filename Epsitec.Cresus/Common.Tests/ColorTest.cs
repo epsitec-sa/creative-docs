@@ -58,5 +58,17 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert (color.G == 0.0);
 			Assertion.Assert (color.B == 1.0);
 		}
+		
+		[Test] public void CheckFromNameAndHexa()
+		{
+			Color color_1 = Color.FromARGB (1, 1, 0, 0);
+			Color color_2 = Color.FromName ("red");
+			Color color_3 = Color.FromName ("#ff0000");
+			Color color_4 = Color.FromName ("#blabla");
+			
+			Assertion.AssertEquals (color_1, color_2);
+			Assertion.AssertEquals (color_1, color_3);
+			Assertion.AssertEquals (Color.Empty, color_4);
+		}
 	}
 }

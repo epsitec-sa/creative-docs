@@ -121,6 +121,12 @@ namespace Epsitec.Common.Drawing
 		
 		public static Color FromName(string name)
 		{
+			if ((name.Length > 1) &&
+				(name[0] == '#'))
+			{
+				return Color.FromHexa (name.Remove (0, 1));
+			}
+			
 			System.Drawing.Color color = System.Drawing.Color.FromName (name);
 			
 			if (color.IsEmpty)
@@ -130,8 +136,30 @@ namespace Epsitec.Common.Drawing
 			
 			return new Color (color);
 		}
-		
-		
+
+
+		// Conversion d'une chaîne "FF3300" en une couleur.
+		public static Color FromHexa(string hexa)
+		{
+			if (hexa.Length != 6)
+			{
+				return Color.Empty;
+			}
+			
+			try
+			{
+				byte r = System.Convert.ToByte (hexa.Substring (0, 2), 16);
+				byte g = System.Convert.ToByte (hexa.Substring (2, 2), 16);
+				byte b = System.Convert.ToByte (hexa.Substring (4, 2), 16);
+			
+				return new Color (r/255.0, g/255.0, b/255.0);
+			}
+			catch
+			{
+				return Color.Empty;
+			}
+		}
+				
 		
 		public override bool Equals(object obj)
 		{

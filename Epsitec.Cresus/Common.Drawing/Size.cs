@@ -67,6 +67,16 @@ namespace Epsitec.Common.Drawing
 			return System.String.Format ("{{Width={0}, Height={1}}}", this.width, this.height);
 		}
 		
+		public static Size operator +(Size a, Size b)
+		{
+			return new Size (a.Width + b.Width, a.Height + b.Height);
+		}
+		
+		public static Size operator -(Size a, Size b)
+		{
+			return new Size (a.Width - b.Width, a.Height - b.Height);
+		}
+		
 		public static bool operator ==(Size a, Size b)
 		{
 			return (a.width == b.width) && (a.height == b.height);

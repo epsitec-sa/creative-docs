@@ -56,9 +56,19 @@ namespace Epsitec.Common.Drawing
 		}
 
 		
+		public static Point operator +(Point a, Point b)
+		{
+			return new Point (a.x + b.x, a.y + b.y);
+		}
+		
 		public static Point operator +(Point a, Size b)
 		{
 			return new Point (a.x + b.Width, a.y + b.Height);
+		}
+		
+		public static Point operator -(Point a, Point b)
+		{
+			return new Point (a.x - b.x, a.y - b.y);
 		}
 		
 		public static Point operator -(Point a, Size b)

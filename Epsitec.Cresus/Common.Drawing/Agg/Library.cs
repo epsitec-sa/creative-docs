@@ -95,10 +95,13 @@ namespace Epsitec.Common.Drawing.Agg
 										internal extern static void		AggFontFaceGetTextBounds(System.IntPtr face, string text, int mode, out double x_min, out double y_min, out double x_max, out double y_max);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static double	AggFontFaceGetMetrics(System.IntPtr face, int id);
 		[DllImport ("AGG-Wrapper.dll", CharSet=CharSet.Unicode)]
+										internal extern static int		AggFontFaceGetTextCharEndXArray(System.IntPtr face, string text, int mode, double[] x_array);
+		[DllImport ("AGG-Wrapper.dll", CharSet=CharSet.Unicode)]
 										internal extern static IntPtr	AggFontFaceBreakNew(System.IntPtr face, string text, int mode);
 		[DllImport ("AGG-Wrapper.dll", CharSet=CharSet.Unicode)]
 										internal extern static string	AggFontFaceBreakIter(System.IntPtr context, ref double width);
 		[DllImport ("AGG-Wrapper.dll")]	internal extern static void		AggFontFaceBreakDelete(System.IntPtr context);
+		[DllImport ("AGG-Wrapper.dll")]	internal extern static bool		AggFontFaceBreakHasMore(System.IntPtr context);
 		
 		public void Dispose()
 		{
