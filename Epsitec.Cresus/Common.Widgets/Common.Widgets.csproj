@@ -392,6 +392,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Adorner\LookRound.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Adorner\LookXP.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

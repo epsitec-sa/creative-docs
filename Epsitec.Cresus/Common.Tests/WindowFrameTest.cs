@@ -141,9 +141,9 @@ namespace Epsitec.Common.Tests
 			scroller.Size = new Size(15, 180);
 			scroller.Range = 1.0;
 			scroller.Display = 0.1;
-			scroller.Position = 0.0;
-			scroller.ButtonStep = 0.01;
-			scroller.PageStep = 0.10;
+			scroller.Value = 0.0;
+			scroller.SmallChange = 0.01;
+			scroller.LargeChange = 0.10;
 			scroller.Parent = back;
 			scroller.Moved += new EventHandler(scroller_Moved);
 			
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Tests
 		{
 			Scroller scroller = sender as Scroller;
 			WindowFrame window = scroller.WindowFrame;
-			window.Alpha = scroller.Position / 2 + 0.5;
+			window.Alpha = scroller.Value / 2 + 0.5;
 		}
 
 		private void button_Clicked(object sender, MessageEventArgs e)

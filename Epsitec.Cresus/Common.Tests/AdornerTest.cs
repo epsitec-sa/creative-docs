@@ -95,9 +95,9 @@ namespace Epsitec.Common.Tests
 			scrollv.Size = new Size(15, 120);
 			scrollv.Range = 10;
 			scrollv.Display = 3;
-			scrollv.Position = 1;
-			scrollv.ButtonStep = 1;
-			scrollv.PageStep = 2;
+			scrollv.Value = 1;
+			scrollv.SmallChange = 1;
+			scrollv.LargeChange = 2;
 			scrollv.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(scrollv);
 
@@ -106,9 +106,9 @@ namespace Epsitec.Common.Tests
 			scrollh.Size = new Size(120, 15);
 			scrollh.Range = 10;
 			scrollh.Display = 7;
-			scrollh.Position = 1;
-			scrollh.ButtonStep = 1;
-			scrollh.PageStep = 2;
+			scrollh.Value = 1;
+			scrollh.SmallChange = 1;
+			scrollh.LargeChange = 2;
 			scrollh.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(scrollh);
 
@@ -400,9 +400,9 @@ namespace Epsitec.Common.Tests
 			scrollv.Size = new Size(15, inside.Height-20);
 			scrollv.Range = 10;
 			scrollv.Display = 3;
-			scrollv.Position = 1;
-			scrollv.ButtonStep = 1;
-			scrollv.PageStep = 2;
+			scrollv.Value = 1;
+			scrollv.SmallChange = 1;
+			scrollv.LargeChange = 2;
 			//scrollv.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			page2.Children.Add(scrollv);
 
@@ -965,9 +965,9 @@ namespace Epsitec.Common.Tests
 			scrollv.Size = new Size(15, inside.Height-20);
 			scrollv.Range = 10;
 			scrollv.Display = 3;
-			scrollv.Position = 1;
-			scrollv.ButtonStep = 1;
-			scrollv.PageStep = 2;
+			scrollv.Value = 1;
+			scrollv.SmallChange = 1;
+			scrollv.LargeChange = 2;
 			page2.Children.Add(scrollv);
 #endif
 

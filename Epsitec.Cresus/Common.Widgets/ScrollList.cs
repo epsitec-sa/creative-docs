@@ -242,7 +242,7 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque l'ascenseur a bougé.
 		private void HandleScroller(object sender)
 		{
-			this.FirstLine = (int)this.scroller.Position;
+			this.FirstLine = (int)this.scroller.Value;
 			//this.SetFocused(true);
 		}
 
@@ -349,9 +349,9 @@ namespace Epsitec.Common.Widgets
 				this.scroller.Show();
 				this.scroller.Range = total-this.visibleLines;
 				this.scroller.Display = this.scroller.Range*((double)this.visibleLines/total);
-				this.scroller.Position = this.firstLine;
-				this.scroller.ButtonStep = 1;
-				this.scroller.PageStep = this.visibleLines/2;
+				this.scroller.Value = this.firstLine;
+				this.scroller.SmallChange = 1;
+				this.scroller.LargeChange = this.visibleLines/2;
 			}
 
 			this.UpdateClientGeometry();

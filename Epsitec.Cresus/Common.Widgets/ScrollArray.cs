@@ -439,14 +439,14 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque l'ascenseur a bougé.
 		private void HandleScrollerV(object sender)
 		{
-			this.FirstRow = (int)System.Math.Floor(this.scrollerV.Position+0.5);
+			this.FirstRow = (int)System.Math.Floor(this.scrollerV.Value+0.5);
 			//this.SetFocused(true);
 		}
 
 		// Appelé lorsque l'ascenseur a bougé.
 		private void HandleScrollerH(object sender)
 		{
-			this.OffsetH = System.Math.Floor(this.scrollerH.Position);
+			this.OffsetH = System.Math.Floor(this.scrollerH.Value);
 			//this.SetFocused(true);
 		}
 
@@ -714,16 +714,16 @@ namespace Epsitec.Common.Widgets
 				this.scrollerV.SetEnabled(false);
 				this.scrollerV.Range = 1;
 				this.scrollerV.Display = 1;
-				this.scrollerV.Position = 0;
+				this.scrollerV.Value = 0;
 			}
 			else
 			{
 				this.scrollerV.SetEnabled(true);
 				this.scrollerV.Range = total-this.visibleRowsFull;
 				this.scrollerV.Display = this.scrollerV.Range*((double)this.visibleRowsFull/total);
-				this.scrollerV.Position = this.firstRow;
-				this.scrollerV.ButtonStep = 1;
-				this.scrollerV.PageStep = this.visibleRowsFull/2;
+				this.scrollerV.Value = this.firstRow;
+				this.scrollerV.SmallChange = 1;
+				this.scrollerV.LargeChange = this.visibleRowsFull/2;
 			}
 			this.UpdateTextlayouts();
 
@@ -734,16 +734,16 @@ namespace Epsitec.Common.Widgets
 				this.scrollerH.SetEnabled(false);
 				this.scrollerH.Range = 1;
 				this.scrollerH.Display = 1;
-				this.scrollerH.Position = 0;
+				this.scrollerH.Value = 0;
 			}
 			else
 			{
 				this.scrollerH.SetEnabled(true);
 				this.scrollerH.Range = width-this.rectInside.Width;
 				this.scrollerH.Display = this.rectInside.Width/width * this.scrollerH.Range;
-				this.scrollerH.Position = this.offsetH;
-				this.scrollerH.ButtonStep = 10;
-				this.scrollerH.PageStep = this.rectInside.Width/2;
+				this.scrollerH.Value = this.offsetH;
+				this.scrollerH.SmallChange = 10;
+				this.scrollerH.LargeChange = this.rectInside.Width/2;
 			}
 		}
 

@@ -378,7 +378,7 @@ namespace Epsitec.Common.Widgets
 
 				case (int)System.Windows.Forms.Keys.Escape:
 					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Escape "+this.Name);
-					this.CloseAll();  // TODO: pourquoi ça plante avec Esc ?
+					this.CloseAll();
 					break;
 			}
 		}
@@ -600,6 +600,19 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 
+		// Cherche dans quel item d'un menu est la souris.
+		protected MenuItem SearchItem(Drawing.Point mouse, Menu menu)
+		{
+			foreach ( MenuItem cell in menu.array )
+			{
+				Drawing.Point pos;
+				pos = this.MapScreenToClient(cell, mouse);
+				if ( cell.HitTest(pos) )  return cell;
+			}
+
+			return null;
+		}
+
 		// Case du menu cliquée.
 		private void HandleCellPressed(object sender, MessageEventArgs e)
 		{
@@ -635,11 +648,14 @@ namespace Epsitec.Common.Widgets
 			if ( this.menuDeveloped == TypeDeveloped.Close )  return;
 			WindowFrame window = sender as WindowFrame;
 
+			Drawing.Point	mouse;
+			Menu			menu;
+
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
-					Drawing.Point mouse = window.MapWindowToScreen(message.Cursor);
-					Menu menu = this.SearchMenu(mouse);
+					mouse = window.MapWindowToScreen(message.Cursor);
+					menu = this.SearchMenu(mouse);
 					if ( menu == null )
 					{
 						this.CloseAll();
@@ -652,25 +668,33 @@ namespace Epsitec.Common.Widgets
 							message.Swallowed = true;
 						}
 					}
-#if false
 					else
 					{
-						if ( menu.parentMenu != null )
+						MenuItem cell = this.SearchItem(mouse, menu);
+						if ( cell == null )
 						{
-							Menu sub = this;
-							while ( sub.submenu != null )  sub = sub.submenu;
-							sub.SetFocused(true);
-							
-							// On n'indique qu'un message est consommé que s'il concerne
-							// la partie client de la fenêtre...						
-							if ( !message.NonClient )
+							this.CloseAll();
+							message.Handled = true;
+							message.Swallowed = true;
+						}
+					}
+					break;
+
+				case MessageType.MouseUp:
+					mouse = window.MapWindowToScreen(message.Cursor);
+					menu = this.SearchMenu(mouse);
+					if ( menu != null )
+					{
+						MenuItem cell = this.SearchItem(mouse, menu);
+						if ( cell != null )
+						{
+							if ( cell.Submenu == null && !cell.Separator )
 							{
-								message.Handled = true;
-								message.Swallowed = true;
+								this.CloseAll();
+								// TODO: envoyer la commande ...
 							}
 						}
 					}
-#endif
 					break;
 			}
 		}

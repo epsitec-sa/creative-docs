@@ -606,15 +606,15 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque l'ascenseur vertical a bougé.
 		private void HandleScrollerV(object sender)
 		{
-			//this.OffsetV = System.Math.Floor(this.scrollerV.Range-this.scrollerV.Position+0.5);
-			this.OffsetV = System.Math.Floor(this.scrollerV.Position+0.5);
+			//this.OffsetV = System.Math.Floor(this.scrollerV.Range-this.scrollerV.Value+0.5);
+			this.OffsetV = System.Math.Floor(this.scrollerV.Value+0.5);
 			//this.SetFocused(true);
 		}
 
 		// Appelé lorsque l'ascenseur horizontal a bougé.
 		private void HandleScrollerH(object sender)
 		{
-			this.OffsetH = System.Math.Floor(this.scrollerH.Position+0.5);
+			this.OffsetH = System.Math.Floor(this.scrollerH.Value+0.5);
 			//this.SetFocused(true);
 		}
 
@@ -1300,16 +1300,16 @@ namespace Epsitec.Common.Widgets
 					this.scrollerV.SetEnabled(false);
 					this.scrollerV.Range = 1;
 					this.scrollerV.Display = 1;
-					this.scrollerV.Position = 0;
+					this.scrollerV.Value = 0;
 				}
 				else
 				{
 					this.scrollerV.SetEnabled(true);
 					this.scrollerV.Range = totalHeight-areaHeight;
 					this.scrollerV.Display = areaHeight/totalHeight * this.scrollerV.Range;
-					this.scrollerV.Position = this.offsetV;
-					this.scrollerV.ButtonStep = this.defHeight;
-					this.scrollerV.PageStep = areaHeight/2;
+					this.scrollerV.Value = this.offsetV;
+					this.scrollerV.SmallChange = this.defHeight;
+					this.scrollerV.LargeChange = areaHeight/2;
 				}
 				this.HandleScrollerV(this.scrollerV);  // update this.offsetV
 			}
@@ -1329,16 +1329,16 @@ namespace Epsitec.Common.Widgets
 					this.scrollerH.SetEnabled(false);
 					this.scrollerH.Range = 1;
 					this.scrollerH.Display = 1;
-					this.scrollerH.Position = 0;
+					this.scrollerH.Value = 0;
 				}
 				else
 				{
 					this.scrollerH.SetEnabled(true);
 					this.scrollerH.Range = totalWidth-areaWidth;
 					this.scrollerH.Display = areaWidth/totalWidth * this.scrollerH.Range;
-					this.scrollerH.Position = this.offsetH;
-					this.scrollerH.ButtonStep = this.defWidth;
-					this.scrollerH.PageStep = areaWidth/2;
+					this.scrollerH.Value = this.offsetH;
+					this.scrollerH.SmallChange = this.defWidth;
+					this.scrollerH.LargeChange = areaWidth/2;
 				}
 				this.HandleScrollerH(this.scrollerH);  // update this.offsetH
 			}

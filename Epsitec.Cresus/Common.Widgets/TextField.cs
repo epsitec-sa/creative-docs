@@ -624,7 +624,8 @@ namespace Epsitec.Common.Widgets
 			pos = this.MapClientToRoot(new Drawing.Point(0, -this.scrollList.Height));
 			pos = this.WindowFrame.MapWindowToScreen(pos);
 			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width, this.scrollList.Height);
-			this.comboWindow.WindowDeactivated += new System.EventHandler(this.HandleComboWindowDeactivated);
+			WindowFrame.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
+			WindowFrame.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
 			this.comboWindow.Root.Children.Add(this.scrollList);
 			this.comboWindow.AnimateShow(Animation.RollDown);
 
@@ -644,19 +645,57 @@ namespace Epsitec.Common.Widgets
 			this.SetFocused(true);
 
 			this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollListSelectedIndexChanged);
-			this.comboWindow.WindowDeactivated -= new System.EventHandler(this.HandleComboWindowDeactivated);
+			WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
+			WindowFrame.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
 			this.scrollList.Dispose();
 			this.scrollList = null;
 			this.comboWindow.Dispose();
 			this.comboWindow = null;
 		}
 
-		// Appelé lorsque la fenêtre de la liste combo est désactivée.
-		private void HandleComboWindowDeactivated(object sender, System.EventArgs e)
+		// Conversion d'une coordonnée écran -> widget.
+		protected Drawing.Point MapScreenToClient(Widget widget, Drawing.Point pos)
+		{
+			pos = widget.WindowFrame.MapScreenToWindow(pos);
+			pos = widget.MapRootToClient(pos);
+			return pos;
+		}
+
+		private void HandlerMessageFilter(object sender, Message message)
 		{
 			if ( this.scrollList == null )  return;
+			WindowFrame window = sender as WindowFrame;
+
+			switch ( message.Type )
+			{
+				case MessageType.MouseDown:
+					Drawing.Point mouse = window.MapWindowToScreen(message.Cursor);
+					Drawing.Point pos = this.MapScreenToClient(this.scrollList, mouse);
+					if ( !this.scrollList.HitTest(pos) )
+					{
+						this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollListSelectedIndexChanged);
+						WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
+						WindowFrame.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
+						this.scrollList.Dispose();
+						this.scrollList = null;
+						this.comboWindow.Dispose();
+						this.comboWindow = null;
+
+						if ( !message.NonClient )
+						{
+							message.Handled = true;
+							message.Swallowed = true;
+						}
+					}
+					break;
+			}
+		}
+
+		private void HandleApplicationDeactivated(object sender)
+		{
 			this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollListSelectedIndexChanged);
-			this.comboWindow.WindowDeactivated -= new System.EventHandler(this.HandleComboWindowDeactivated);
+			WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
+			WindowFrame.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
 			this.scrollList.Dispose();
 			this.scrollList = null;
 			this.comboWindow.Dispose();
