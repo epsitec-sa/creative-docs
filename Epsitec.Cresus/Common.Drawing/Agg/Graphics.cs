@@ -5,6 +5,11 @@ namespace Epsitec.Common.Drawing.Agg
 	/// </summary>
 	public class Graphics : Epsitec.Common.Drawing.Graphics
 	{
+		static Graphics()
+		{
+			Font.Initialise ();
+		}
+		
 		public Graphics()
 		{
 			this.pixmap     = new Pixmap ();

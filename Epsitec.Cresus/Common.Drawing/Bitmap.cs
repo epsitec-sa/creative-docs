@@ -179,6 +179,33 @@ namespace Epsitec.Common.Drawing
 			return bitmap;
 		}
 		
+		public static Bitmap FromManifestResource(string resource_name, System.Reflection.Assembly assembly)
+		{
+			using (System.IO.Stream stream = assembly.GetManifestResourceStream (resource_name))
+			{
+				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (stream);
+				return Bitmap.FromNativeBitmap (bitmap);
+			}
+		}
+		
+		public static Bitmap FromManifestResource(string resource_name, System.Reflection.Assembly assembly, Point origin)
+		{
+			using (System.IO.Stream stream = assembly.GetManifestResourceStream (resource_name))
+			{
+				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (stream);
+				return Bitmap.FromNativeBitmap (bitmap, origin);
+			}
+		}
+		
+		public static Bitmap FromManifestResource(string resource_name, System.Reflection.Assembly assembly, Point origin, Size size)
+		{
+			using (System.IO.Stream stream = assembly.GetManifestResourceStream (resource_name))
+			{
+				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (stream);
+				return Bitmap.FromNativeBitmap (bitmap, origin, size);
+			}
+		}
+		
 		public static Bitmap FromImageDisabled(Image image, Color background)
 		{
 			if (image == null)

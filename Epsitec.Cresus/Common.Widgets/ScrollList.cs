@@ -75,8 +75,6 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				System.Diagnostics.Debug.WriteLine("Dispose ScrollList " + this.Text);
-				
 				this.scroller.Moved -= new EventHandler(this.HandleScrollerMoved);
 			}
 			

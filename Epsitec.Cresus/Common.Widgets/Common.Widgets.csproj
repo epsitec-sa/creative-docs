@@ -447,6 +447,18 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Adorners\Resources\LookCeeBot.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Adorners\Resources\LookMetal.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Adorners\Resources\LookPlastic.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Helpers\IStringCollectionHost.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

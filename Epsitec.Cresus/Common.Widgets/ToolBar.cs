@@ -22,16 +22,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				System.Diagnostics.Debug.WriteLine("Dispose ToolBar " + this.Text);
-				
-#if false  // TODO: utile ?
-				for ( int i=0 ; i<this.array.Length ; i++ )
-				{
-					this.array[i].Dispose();
-					this.array[i] = null;
-				}
 				this.array = null;
-#endif
 			}
 			
 			base.Dispose(disposing);

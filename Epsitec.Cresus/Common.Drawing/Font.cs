@@ -263,8 +263,13 @@ namespace Epsitec.Common.Drawing
 		
 		public static void Initialise()
 		{
-			AntiGrain.Interface.Initialise ();
-			AntiGrain.Font.Initialise ();
+			if (Font.initialised == false)
+			{
+				Font.initialised = true;
+				
+				AntiGrain.Interface.Initialise ();
+				AntiGrain.Font.Initialise ();
+			}
 		}
 
 		static protected void SetupFonts()
@@ -456,6 +461,7 @@ namespace Epsitec.Common.Drawing
 		protected static System.Collections.Hashtable	hash;
 		protected static int							count;
 		protected static Font							default_font;
+		protected static bool							initialised = false;
 		
 		protected enum NameID
 		{

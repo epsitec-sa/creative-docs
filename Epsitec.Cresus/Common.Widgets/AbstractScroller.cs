@@ -37,8 +37,6 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				System.Diagnostics.Debug.WriteLine("Dispose Scroller " + this.Text);
-				
 				this.arrowUp.Engaged -= new EventHandler(this.HandleButton);
 				this.arrowDown.Engaged -= new EventHandler(this.HandleButton);
 				this.arrowUp.StillEngaged -= new EventHandler(this.HandleButton);

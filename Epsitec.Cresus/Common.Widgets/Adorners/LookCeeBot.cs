@@ -7,8 +7,8 @@ namespace Epsitec.Common.Widgets.Adorner
 	{
 		public LookCeeBot()
 		{
-			this.bitmap = Support.ImageProvider.Default.GetImage(@"file:..\..\lookCeeBot.png").BitmapImage;
-			RefreshColors();
+			this.bitmap = Drawing.Bitmap.FromManifestResource ("Epsitec.Common.Widgets.Adorners.Resources.LookCeeBot.png", this.GetType ().Assembly);
+			this.RefreshColors();
 		}
 
 		// Initialise les couleurs en fonction des réglages de Windows.

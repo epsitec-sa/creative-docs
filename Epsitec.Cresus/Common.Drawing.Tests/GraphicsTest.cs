@@ -104,7 +104,7 @@ namespace Epsitec.Common.Tests
 		{
 			WindowFrame window = new WindowFrame ();
 			
-			window.Text = "CheckImageRect";
+			window.Text = "CheckImageRectTIFF";
 			window.Root.PaintForeground += new PaintEventHandler(ImageRectTIFF_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();

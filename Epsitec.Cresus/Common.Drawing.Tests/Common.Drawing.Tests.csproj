@@ -3,7 +3,7 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{DD959763-7F9E-4170-ABEE-4CEE60C14468}"
+        ProjectGuid = "{D4EBA788-51BA-42BE-83AD-28F2A441E3A7}"
         SccProjectName = "SAK"
         SccLocalPath = "SAK"
         SccAuxPath = "SAK"
@@ -13,7 +13,7 @@
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "Common.Widgets.Tests"
+                AssemblyName = "Common.Drawing.Tests"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -22,7 +22,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "Epsitec.Common.Widgets.Tests"
+                RootNamespace = "Epsitec.Common.Drawing.Tests"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -71,17 +71,12 @@
                 <Reference
                     Name = "System"
                     AssemblyName = "System"
-                    HintPath = "c:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
-                    Name = "System.Drawing"
-                    AssemblyName = "System.Drawing"
-                    HintPath = "c:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
-                />
-                <Reference
-                    Name = "Common.Widgets"
-                    Project = "{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                    Name = "AntiGrain.NET"
+                    AssemblyName = "AntiGrain.NET"
+                    HintPath = "..\External\AntiGrain.NET.dll"
                 />
                 <Reference
                     Name = "Common.Drawing"
@@ -89,19 +84,24 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
+                    Name = "Common.Widgets"
+                    Project = "{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+                />
+                <Reference
                     Name = "System.Windows.Forms"
                     AssemblyName = "System.Windows.Forms"
-                    HintPath = "c:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
                 />
                 <Reference
                     Name = "nunit.framework"
                     AssemblyName = "nunit.framework"
                     HintPath = "..\External\nunit.framework.dll"
-                />
-                <Reference
-                    Name = "AntiGrain.NET"
-                    AssemblyName = "AntiGrain.NET"
-                    HintPath = "..\External\AntiGrain.NET.dll"
                 />
                 <Reference
                     Name = "Common.Support"
@@ -113,16 +113,6 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "AdornerFactoryTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "AdornerTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -133,17 +123,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "CustomWidgetTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "DrawingTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "FicheTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -163,32 +143,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "PaneTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "PathTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ScreenInfoTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SystemInformationTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "TextLayoutTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "TinyDataBase.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -198,19 +153,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "WidgetTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
+                    RelPath = "images\image1.tif"
+                    BuildAction = "Content"
                 />
                 <File
-                    RelPath = "WidgetTransformTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "WindowFrameTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
+                    RelPath = "images\test.png"
+                    BuildAction = "Content"
                 />
             </Include>
         </Files>

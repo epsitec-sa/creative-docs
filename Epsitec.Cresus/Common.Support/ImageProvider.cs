@@ -44,7 +44,24 @@ namespace Epsitec.Common.Support
 				//	TODO: vérifier le nom du fichier pour éviter de faire des bêtises ici
 				//	(pour améliorer la sécurité, mais ce n'est probablement pas un problème).
 				
-				Drawing.Image image = Drawing.Bitmap.FromFile (name.Remove (0, 5));
+				string file_name = name.Remove (0, 5);
+				Drawing.Image image = null;
+				
+				try
+				{
+					image = Drawing.Bitmap.FromFile (file_name);
+				}
+				catch
+				{
+					try
+					{
+						image = Drawing.Bitmap.FromFile (@"..\..\"+file_name);
+					}
+					catch
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Cannot open file '{0}'.", file_name));
+					}
+				}
 				
 				if (image != null)
 				{

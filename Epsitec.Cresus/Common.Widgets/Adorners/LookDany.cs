@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets.Adorner
 	{
 		public LookDany()
 		{
-			RefreshColors();
+			this.RefreshColors();
 		}
 
 		// Initialise les couleurs en fonction des réglages de Windows.

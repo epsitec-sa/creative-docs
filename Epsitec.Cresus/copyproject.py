@@ -98,6 +98,24 @@ class CopyProject:
 
         self.proj_count += 1
 
+    def patch_path_info(self, name):
+        f = open(name, 'r')
+        lines = f.readlines()
+        lines_to_remove = list()
+        f.close()
+
+        i = 0
+        while i < len(lines):
+            if lines[i].find('C:\\Documents and Settings\\Arnaud\\My Documents\\Visual Studio Projects\\') > -1:
+                lines[i] = lines[i].replace ('C:\\Documents and Settings\\Arnaud\\My Documents\\Visual Studio Projects\\', 'D:\\Cresus\\')
+            i += 1
+        
+        f = open(name, 'w')
+        f.writelines(lines)
+        f.close()
+
+        self.proj_count += 1
+
     def strip_solution(self, name):
         f = open(name, 'r')
         lines = f.readlines()
@@ -160,7 +178,8 @@ class CopyProject:
 
                     if name.endswith('.csproj'):
                         self.strip_scc_info(dst_name)
-
+                    if name.endswith('.csproj.user'):
+                        self.patch_path_info(dst_name)
                     if name.endswith('.sln'):
                         self.strip_solution(dst_name)
 
@@ -215,7 +234,7 @@ class DiffProject:
             new_data = f.read()
             f.close()
             if ref_data <> new_data:
-                print "Keeping " + new_file.replace (self.new_root, ".")
+                print "Update " + new_file.replace (self.new_root, ".")
                 self.diff.write ("  " + new_file.replace (self.new_root, ".") + '\n')
             else:
                 os.remove(new_file)

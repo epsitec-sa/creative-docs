@@ -46,8 +46,6 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				System.Diagnostics.Debug.WriteLine("Dispose TextField " + this.Text);
-				
 				if (TextField.blinking == this)
 				{
 					TextField.blinking = null;

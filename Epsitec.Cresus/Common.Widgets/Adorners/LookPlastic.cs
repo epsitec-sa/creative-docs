@@ -7,8 +7,8 @@ namespace Epsitec.Common.Widgets.Adorner
 	{
 		public LookPlastic()
 		{
-			this.bitmap = Support.ImageProvider.Default.GetImage(@"file:..\..\lookPlastic.png").BitmapImage;
-			RefreshColors();
+			this.bitmap = Drawing.Bitmap.FromManifestResource ("Epsitec.Common.Widgets.Adorners.Resources.LookPlastic.png", this.GetType ().Assembly);
+			this.RefreshColors();
 		}
 
 		// Initialise les couleurs en fonction des réglages de Windows.
