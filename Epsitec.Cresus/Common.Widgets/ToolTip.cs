@@ -1,9 +1,12 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe ToolTip implémente les "info bulles".
 	/// </summary>
-	public class ToolTip : Widget
+	[SuppressBundleSupport]
+	public class ToolTip : Widget, IComponent
 	{
 		public ToolTip()
 		{
@@ -15,7 +18,7 @@ namespace Epsitec.Common.Widgets
 			this.window.DisableMouseActivation();
 			this.SetEmbedder(this.window.Root);
 			this.window.Hide();
-
+			
 			this.timer = new Timer();
 			this.timer.TimeElapsed += new EventHandler(this.HandleTimerTimeElapsed);
 		}
@@ -24,18 +27,47 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
+				Widget[] widgets = new Widget[this.hash.Count];
+				this.hash.Keys.CopyTo (widgets, 0);
+				
+				foreach (Widget widget in widgets)
+				{
+					this.SetToolTip(widget, null);
+				}
+				
+				System.Diagnostics.Debug.Assert(this.hash.Count == 0);
+				
+				this.hash   = null;
+				this.widget = null;
+				this.owner  = null;
+				this.Parent = null;
+				
+				this.window.Dispose ();
+				this.window = null;
+				
 				this.timer.TimeElapsed -= new EventHandler(this.HandleTimerTimeElapsed);
 				this.timer.Dispose();
 				this.timer = null;
 			}
 			
 			base.Dispose(disposing);
+			
+			// Ne pas oublier, une fois que le dispose est terminé, de signaler encore
+			// que nous n'existons plus (c'est requis par IComponent).
+			
+			if ( disposing )
+			{
+				if ( this.Disposed != null )
+				{
+					this.Disposed (this, System.EventArgs.Empty);
+				}
+			}
 		}
 
 		// Utilisé par un widget pour spécifier son texte.
 		public void SetToolTip(Widget widget, string text)
 		{
-			if ( this.hash.Contains(widget) == false )
+			if ( this.hash.Contains(widget) )
 			{
 				if ( text == null )
 				{
@@ -45,11 +77,29 @@ namespace Epsitec.Common.Widgets
 					widget.Disposing -= new EventHandler(this.HandleWidgetDisposing);
 					return;
 				}
+			}
+			else
+			{
 				widget.Entered   += new MessageEventHandler(this.HandleWidgetEntered);
 				widget.Exited    += new MessageEventHandler(this.HandleWidgetExited);
 				widget.Disposing += new EventHandler(this.HandleWidgetDisposing);
 			}
-
+			
+			if ( this.owner == null )
+			{
+				this.owner = widget.Window;
+				
+				if ( this.owner != null )
+				{
+					// C'est la première fois que le widget auquel nous nous attachons
+					// possède une fenêtre valide. On va donc s'enregistrer auprès de
+					// la fenêtre en tant que IComponent; ça permet de garantir que
+					// lorsque la fenêtre est détruite, le ToolTip l'est aussi...
+					
+					this.owner.Components.Add(this);
+				}
+			}
+			
 			this.hash[widget] = text;
 		}
 
@@ -91,7 +141,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.SetToolTip(widget, null);
 		}
-
+		
 		private void MessageFilter(object sender, Message message)
 		{
 			if ( !this.isVisible )  return;  // pas encore visible ?
@@ -188,6 +238,13 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		#region IComponent Members
+		public event System.EventHandler Disposed;
+		#endregion
+
+		
+		
+		protected Window				owner;
 		protected Window				window;
 		protected bool					isVisible = false;
 		protected Timer					timer;
