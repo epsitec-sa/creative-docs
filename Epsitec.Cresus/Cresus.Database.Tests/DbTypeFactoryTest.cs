@@ -66,35 +66,35 @@ namespace Epsitec.Cresus.Database
 			DbType type = DbTypeFactory.NewType ("<type x='a'></type>");
 		}
 		
-		[Test] public void CheckConvertTypeToXml()
+		[Test] public void CheckSerialiseToXml()
 		{
 			DbType type;
 			string xml;
 			DbType temp;
 			
 			type = new DbType (DbSimpleType.Guid);
-			xml  = DbTypeFactory.ConvertTypeToXml (type);
+			xml  = DbTypeFactory.SerialiseToXml (type);
 			temp = DbTypeFactory.NewType (xml);
 			
 			System.Console.Out.WriteLine ("XML: " + xml);
 			Assertion.Assert (temp.GetType () == type.GetType ());
 			
 			type = new DbTypeEnum ();
-			xml  = DbTypeFactory.ConvertTypeToXml (type);
+			xml  = DbTypeFactory.SerialiseToXml (type);
 			temp = DbTypeFactory.NewType (xml);
 			
 			System.Console.Out.WriteLine ("XML: " + xml);
 			Assertion.Assert (temp.GetType () == type.GetType ());
 			
 			type = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int16));
-			xml  = DbTypeFactory.ConvertTypeToXml (type);
+			xml  = DbTypeFactory.SerialiseToXml (type);
 			temp = DbTypeFactory.NewType (xml);
 			
 			System.Console.Out.WriteLine ("XML: " + xml);
 			Assertion.Assert (temp.GetType () == type.GetType ());
 			
 			type = new DbTypeString (100);
-			xml  = DbTypeFactory.ConvertTypeToXml (type);
+			xml  = DbTypeFactory.SerialiseToXml (type);
 			temp = DbTypeFactory.NewType (xml);
 			
 			System.Console.Out.WriteLine ("XML: " + xml);
