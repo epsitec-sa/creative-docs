@@ -19,6 +19,7 @@ namespace Epsitec.Common.Support.Implementation
 		#region IResourceProvider Members
 		public abstract string Prefix		{ get; }
 		
+		public abstract void Setup(string application);
 		public virtual void SelectLocale(System.Globalization.CultureInfo culture)
 		{
 			this.culture = culture;
@@ -26,13 +27,16 @@ namespace Epsitec.Common.Support.Implementation
 			this.custom  = "." + Resources.CustomisedSuffix;
 		}
 		
+		
 		public virtual bool ValidateId(string id)
 		{
 			return (id != null) && (id != "") && (id.Length < 100);
 		}
 		
 		public abstract bool Contains(string id);
+		
 		public abstract byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level);
+		
 		public abstract void Create(string id, Epsitec.Common.Support.ResourceLevel level);
 		public abstract void Update(string id, Epsitec.Common.Support.ResourceLevel level, byte[] data);
 		public abstract void Remove(string id, Epsitec.Common.Support.ResourceLevel level);

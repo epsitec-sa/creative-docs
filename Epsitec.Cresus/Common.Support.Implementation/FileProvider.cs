@@ -92,6 +92,11 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
+		public override void Setup(string application)
+		{
+		}
+
+		
 		public override bool ValidateId(string id)
 		{
 			return base.ValidateId (id) && this.id_regex.IsMatch (id);
@@ -110,6 +115,7 @@ namespace Epsitec.Common.Support.Implementation
 			
 			return false;
 		}
+		
 		
 		public override byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level)
 		{

@@ -5,6 +5,7 @@ namespace Epsitec.Common.Support.Implementation
 {
 	using System.Globalization;
 	using System.Text.RegularExpressions;
+	using Cresus.Database;
 	
 	/// <summary>
 	/// La classe BaseProvider donne accès aux ressources stockées dans une base
@@ -15,6 +16,7 @@ namespace Epsitec.Common.Support.Implementation
 		public BaseProvider()
 		{
 		}
+		
 		
 		protected string GetRowNameFromId(string id, ResourceLevel level)
 		{
@@ -34,10 +36,28 @@ namespace Epsitec.Common.Support.Implementation
 			return null;
 		}
 		
+		protected static DbAccess GetDbAccess(string application)
+		{
+			string base_name = application + ".resdb";
+			return DbInfrastructure.CreateDbAccess (base_name);
+		}
 		
 		public override string			Prefix
 		{
 			get { return "base"; }
+		}
+		
+		
+		public override void Setup(string application)
+		{
+			//	Le nom de l'application est utile pour déterminer le nom de la
+			//	base de données à laquelle on va se connecter.
+			
+			//	TODO: il faut se connecter à la base de données (qui doit exister).
+#if false
+			this.dbi = new DbInfrastructure ();
+			this.dbi.AttachDatabase (BaseProvider.GetDbAccess (application));
+#endif
 		}
 		
 		
@@ -59,6 +79,7 @@ namespace Epsitec.Common.Support.Implementation
 			
 			return false;
 		}
+		
 		
 		public override byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level)
 		{
@@ -87,5 +108,7 @@ namespace Epsitec.Common.Support.Implementation
 			// TODO:  Add FileProvider.Remove implementation
 			throw new ResourceException ("Not implemented");
 		}
+		
+		protected DbInfrastructure		dbi;
 	}
 }
