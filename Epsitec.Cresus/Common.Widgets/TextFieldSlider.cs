@@ -3,13 +3,10 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe TextFieldSlider implémente la ligne éditable numérique avec slider.
 	/// </summary>
-	public class TextFieldSlider : Widget
+	public class TextFieldSlider : TextFieldUpDown
 	{
 		public TextFieldSlider()
 		{
-			this.field = new TextFieldUpDown(this);
-			this.field.TextChanged += new EventHandler(this.FieldTextChanged);
-
 			this.slider = new Slider(this);
 			this.slider.Frame = false;
 			this.slider.ValueChanged += new EventHandler(this.SliderValueChanged);
@@ -24,12 +21,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.field.TextChanged -= new EventHandler(this.FieldTextChanged);
 				this.slider.ValueChanged -= new EventHandler(this.SliderValueChanged);
-				
-				this.field.Dispose();
 				this.slider.Dispose();
-				this.field = null;
 				this.slider = null;
 			}
 			
@@ -37,71 +30,50 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		// Valeur numérique éditée.
-		public double Value
+		public override double Value
 		{
 			get
 			{
-				return this.editValue;
+				return base.Value;
 			}
 
 			set
 			{
-				if ( this.editValue != value )
-				{
-					this.editValue = value;
-					this.field.Value = value;
-					this.slider.Value = value;
-				}
+				base.Value = value;
+				this.slider.Value = value;
 			}
 		}
 
 		// Valeur numérique minimale possible.
-		public double MinRange
+		public override double MinRange
 		{
 			get
 			{
-				return this.minRange;
+				return base.MinRange;
 			}
 
 			set
 			{
-				this.minRange = value;
-				this.field.MinRange = value;
+				base.MinRange = value;
 				this.slider.MinRange = value;
 			}
 		}
 		
 		// Valeur numérique maximale possible.
-		public double MaxRange
+		public override double MaxRange
 		{
 			get
 			{
-				return this.maxRange;
+				return base.MaxRange;
 			}
 
 			set
 			{
-				this.maxRange = value;
-				this.field.MaxRange = value;
+				base.MaxRange = value;
 				this.slider.MaxRange = value;
 			}
 		}
 		
-		// Pas pour les boutons up/down.
-		public double Step
-		{
-			get
-			{
-				return this.step;
-			}
-
-			set
-			{
-				this.step = value;
-				this.field.Step = value;
-			}
-		}
-
 		// Couleur du slider.
 		public Drawing.Color Color
 		{
@@ -130,75 +102,37 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override double DefaultHeight
-		{
-			get
-			{
-				return this.DefaultFontHeight + 2*AbstractTextField.Margin;
-			}
-		}
-
 
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.field == null )  return;
+			if ( this.arrowUp == null )  return;
 
-			this.field.BottomMargin = this.sliderHeight-AbstractTextField.FrameMargin;
+			this.margins.Bottom = this.sliderHeight-AbstractTextField.FrameMargin;
 			
 			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-			this.field.Bounds = rect;
-			
-			rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			rect.Width -= System.Math.Floor(rect.Height*0.6)-1;
 			rect.Height = this.sliderHeight;
 			this.slider.Bounds = rect;
 		}
 
-		// Texte changé.
-		private void FieldTextChanged(object sender)
+		// Génère un événement pour dire que le texte a changé (ajout ou suppression).
+		protected override void OnTextChanged()
 		{
-			this.editValue = this.field.Value;
-			this.slider.Value = this.editValue;
-			this.OnTextChanged();
+			base.OnTextChanged();
+			this.slider.Value = base.Value;
 		}
 
 		// Slider bougé.
 		private void SliderValueChanged(object sender)
 		{
-			this.editValue = this.slider.Value;
-			this.field.Value = this.editValue;
+			base.Value = this.slider.Value;
 			this.OnTextChanged();
 		}
 
-		// Génère un événement pour dire que la valeur a changé.
-		protected virtual void OnTextChanged()
-		{
-			if ( this.TextChanged != null )  // qq'un écoute ?
-			{
-				this.TextChanged(this);
-			}
-		}
 
-		public event EventHandler TextChanged;
-
-
-		public override Drawing.Rectangle GetShapeBounds()
-		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-			rect.Inflate(adorner.GeometryTextFieldShapeBounds);
-			return rect;
-		}
-
-		
-		protected TextFieldUpDown				field;
 		protected Slider						slider;
-		protected double						editValue = -9999999;
-		protected double						minRange = 0;
-		protected double						maxRange = 100;
-		protected double						step = 1;
 		protected double						sliderHeight = 5;
 	}
 }

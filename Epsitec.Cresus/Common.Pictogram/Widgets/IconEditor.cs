@@ -316,17 +316,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			Drawing.Size size = icon.Size;
 			Drawing.Size area = icon.SizeArea;
 
-#if false
-			this.hScroller.Minimum = -size.Width;
-			this.hScroller.Maximum = size.Width*2 - size.Width/this.drawer.Zoom;
-			this.hScroller.Display = this.hScroller.Range/3/this.drawer.Zoom;
-			this.hScroller.Value   = -this.drawer.OriginX;
-
-			this.vScroller.Minimum = -size.Height;
-			this.vScroller.Maximum = size.Height*2 - size.Height/this.drawer.Zoom;
-			this.vScroller.Display = this.vScroller.Range/3/this.drawer.Zoom;
-			this.vScroller.Value   = -this.drawer.OriginY;
-#else
 			this.hScroller.Minimum = (size.Width-area.Width)/2;
 			this.hScroller.Maximum = (area.Width+this.hScroller.Minimum) - size.Width/this.drawer.Zoom;
 			this.hScroller.VisibleRangeRatio = (size.Width/area.Width)/this.drawer.Zoom;
@@ -338,7 +327,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.vScroller.VisibleRangeRatio = (size.Height/area.Height)/this.drawer.Zoom;
 			this.vScroller.Value   = -this.drawer.OriginY;
 			this.drawer.OriginY = -this.vScroller.Value;
-#endif
 		}
 
 		// Ajoute une icône.

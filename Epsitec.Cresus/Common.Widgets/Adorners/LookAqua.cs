@@ -354,17 +354,17 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
-					this.PaintImageButton(graphics, rect, 44);
+					this.PaintImageButton(graphics, rect, 40);
 				}
 				else
 				{
-					this.PaintImageButton(graphics, rect, 47);
+					this.PaintImageButton(graphics, rect, 43);
 				}
 
 				if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
-					(state&WidgetState.Entered) != 0 )   // bouton survolé ?
+					 (state&WidgetState.Entered) != 0 )   // bouton survolé ?
 				{
-					this.PaintImageButton(graphics, rect, 46);
+					this.PaintImageButton(graphics, rect, 42);
 				}
 			}
 			else if ( style == ButtonStyle.ToolItem )

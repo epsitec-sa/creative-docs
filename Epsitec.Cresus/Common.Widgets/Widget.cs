@@ -1212,7 +1212,7 @@ namespace Epsitec.Common.Widgets
 					this.DisposeTextLayout ();
 					this.Shortcut.Mnemonic = (char) 0;
 				}
-				else
+				else if (this.Text != value)
 				{
 					this.CreateTextLayout ();
 					this.ModifyTextLayout (value);

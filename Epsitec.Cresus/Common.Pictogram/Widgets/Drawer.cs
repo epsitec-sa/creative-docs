@@ -474,6 +474,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 				case "Outside":
 					this.OutsideSelection();
+					this.OnPanelChanged();
 					this.OnToolChanged();
 					this.OnInfoObjectChanged();
 					this.InvalidateAll();
@@ -824,8 +825,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.iconObjects.Hilite(null);
 
+			int nbSel = this.iconObjects.TotalSelected();
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
-			if ( globalMenu )
+			if ( globalMenu || nbSel == 0 )
 			{
 				this.MenuAddItem(list, "Deselect",     "file:images/deselect1.icon",     "Deselectionner tout");
 				this.MenuAddItem(list, "SelectAll",    "file:images/selectall1.icon",    "Tout selectionner");
@@ -843,7 +845,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			else
 			{
-				int nbSel = this.iconObjects.TotalSelected();
 				this.contextMenuPos = mouse;
 				this.iconObjects.DetectHandle(mouse, out this.contextMenuObject, out this.contextMenuRank);
 				if ( nbSel == 1 && this.contextMenuObject == null )
@@ -1006,21 +1007,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				if ( this.selectRect )
 				{
-					Drawing.Rectangle rSelect = new Drawing.Rectangle();
-					rSelect.Left   = this.selectRectP1.X;
-					rSelect.Right  = this.selectRectP2.X;
-					rSelect.Bottom = this.selectRectP1.Y;
-					rSelect.Top    = this.selectRectP2.Y;
-					rSelect.Normalise();
+					Drawing.Rectangle rSelect = new Drawing.Rectangle(this.selectRectP1, this.selectRectP2);
 					bbox.MergeWith(rSelect);
 
 					this.selectRectP2 = mouse;
 
-					rSelect.Left   = this.selectRectP1.X;
-					rSelect.Right  = this.selectRectP2.X;
-					rSelect.Bottom = this.selectRectP1.Y;
-					rSelect.Top    = this.selectRectP2.Y;
-					rSelect.Normalise();
+					rSelect = new Drawing.Rectangle(this.selectRectP1, this.selectRectP2);
 					bbox.MergeWith(rSelect);
 				}
 				else if ( this.moveObject != null )
@@ -1097,6 +1089,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			if ( this.selectRect )
 			{
+				this.selectRect = false;
 				double len = Drawing.Point.Distance(mouse, this.moveStart);
 				if ( isRight && len <= this.iconContext.MinimalSize )
 				{
@@ -1104,14 +1097,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 				}
 				else
 				{
-					Drawing.Rectangle rSelect = new Drawing.Rectangle();
-					rSelect.Left   = this.selectRectP1.X;
-					rSelect.Right  = this.selectRectP2.X;
-					rSelect.Bottom = this.selectRectP1.Y;
-					rSelect.Top    = this.selectRectP2.Y;
-					rSelect.Normalise();
+					Drawing.Rectangle rSelect = new Drawing.Rectangle(this.selectRectP1, this.selectRectP2);
 					this.Select(rSelect, isCtrl);  // sélectionne les objets dans le rectangle
-					this.selectRect = false;
 					this.OnInfoObjectChanged();
 					this.UndoMemorizeRemove();
 				}
@@ -1148,6 +1135,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			if ( isRight )  // avec le bouton de droite de la souris ?
 			{
+				this.InvalidateAll();
 				this.ContextMenu(mouse, globalMenu);
 			}
 
@@ -1389,6 +1377,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected void OutsideSelection()
 		{
 			this.rankLastCreated = -1;
+			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
+			this.iconObjects.GroupUpdate(ref bbox);
 			this.iconObjects.OutsideGroup();
 		}
 
@@ -1607,7 +1597,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected void InvalidateAll(Drawing.Rectangle bbox)
 		{
 			//?System.Diagnostics.Debug.WriteLine("InvalidateAll bbox");
-#if true
+#if false
 			if ( bbox.IsEmpty )  return;
 
 			bbox.BottomLeft = this.IconToScreen(bbox.BottomLeft);
@@ -1808,17 +1798,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 			// Dessine le rectangle de sélection.
 			if ( this.isEditable && this.selectRect )
 			{
-				Drawing.Rectangle rSelect = new Drawing.Rectangle();
-				rSelect.Left   = this.selectRectP1.X;
-				rSelect.Right  = this.selectRectP2.X;
-				rSelect.Bottom = this.selectRectP1.Y;
-				rSelect.Top    = this.selectRectP2.Y;
-				rSelect.Normalise();
-
+				Drawing.Rectangle rSelect = new Drawing.Rectangle(this.selectRectP1, this.selectRectP2);
 				graphics.LineWidth = 1.0/this.iconContext.ScaleX;
 				rSelect.Inflate(-0.5/this.iconContext.ScaleX, -0.5/this.iconContext.ScaleY);
 				graphics.AddRectangle(rSelect);
-				graphics.RenderSolid(Drawing.Color.FromBrightness(0.6));
+				graphics.RenderSolid(this.iconContext.HiliteColor);
 			}
 
 			// Dessine les contraintes.

@@ -116,19 +116,22 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Valeur numérique éditée.
-		public double Value
+		public virtual double Value
 		{
 			get
 			{
 				string text = this.Text;
 				double number = this.minRange;
-				try
+				if ( text != "" )
 				{
-					number = System.Convert.ToDouble(text);
-				}
-				catch ( System.Exception )
-				{
-					number = this.minRange;
+					try
+					{
+						number = System.Convert.ToDouble(text);
+					}
+					catch ( System.Exception )
+					{
+						number = this.minRange;
+					}
 				}
 				return number;
 			}
@@ -145,7 +148,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Valeur numérique minimale possible.
-		public double MinRange
+		public virtual double MinRange
 		{
 			get
 			{
@@ -159,7 +162,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		// Valeur numérique maximale possible.
-		public double MaxRange
+		public virtual double MaxRange
 		{
 			get
 			{
@@ -173,7 +176,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		// Pas pour les boutons up/down.
-		public double Step
+		public virtual double Step
 		{
 			get
 			{
