@@ -21,6 +21,10 @@ namespace Epsitec.Common.Widgets
 		{
 			this.grip_type  = GripType.None;
 			this.grip_color = Drawing.Color.FromRGB (1.0, 0.0, 0.0);
+			
+			//	Une poignée ne peut jamais obtenir le focus clavier.
+			
+			this.InternalState &= ~ InternalState.Focusable;
 		}
 		
 		public Grip(Widget embedder) : this()
