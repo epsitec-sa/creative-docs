@@ -284,6 +284,18 @@ namespace Epsitec.Common.Widgets
 			Assertion.Assert(!TextLayout.CheckSyntax("<x>", out offsetError));
 		}
 			
+		[Test] public void CheckTextBrBr()
+		{
+			Window window = new Window ();
+			window.Text = "CheckTextBrBr";
+			window.ClientSize = new Size (200, 100);
+			window.Root.DockMargins = new Margins (5, 5, 5, 5);
+			TextFieldMulti text = new TextFieldMulti ();
+			text.Dock = DockStyle.Fill;
+			text.Text = "1.<br/><br/>3.";
+			text.Parent = window.Root;
+			window.Show ();
+		}
 		
 		private void CheckPaint_Paint1(object sender, PaintEventArgs e)
 		{
