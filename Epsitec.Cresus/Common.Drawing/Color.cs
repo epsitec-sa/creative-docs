@@ -145,6 +145,11 @@ namespace Epsitec.Common.Drawing
 		}
 
 		
+		public static Color FromColor(Color color, double alpha)
+		{
+			return new Color (color.a * alpha, color.r, color.g, color.b);
+		}
+		
 		public static Color FromARGB(double a, double r, double g, double b)
 		{
 			return new Color (a, r, g, b);

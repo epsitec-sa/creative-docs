@@ -24,18 +24,32 @@ namespace Epsitec.Common.Widgets.Design
 			this.distance = Constraint.Infinite;
 			this.bounds   = Drawing.Rectangle.Empty;
 			this.priority = Priority.Low;
+			this.anchor   = AnchorStyles.None;
+		}
+		
+		public void Add (double coord, double model_coord, double x1, double y1, double x2, double y2)
+		{
+			this.Add (coord, model_coord, x1, y1, x2, y2, Priority.Low, AnchorStyles.None);
 		}
 		
 		public void Add (double coord, double model_coord, double x1, double y1, double x2, double y2, Priority priority)
 		{
-			double delta = coord - model_coord;
+			this.Add (coord, model_coord, x1, y1, x2, y2, priority, AnchorStyles.None);
+		}
+		
+		public void Add (double coord, double model_coord, double x1, double y1, double x2, double y2, Priority priority, AnchorStyles anchor_hint)
+		{
+			double delta  = coord - model_coord;
+			double weight = priority == Priority.High ? System.Math.Abs (delta * 0.8) : System.Math.Abs (delta);
 			
-			if (System.Math.Abs (delta) > this.filter_above)
+			if (weight > this.filter_above)
 			{
 				return;
 			}
 			
 			Drawing.Segment seg = new Drawing.Segment (new Drawing.Point (x1, y1), new Drawing.Point (x2, y2));
+			
+			this.anchor |= anchor_hint;
 			
 			if ((delta == this.distance) &&
 				(priority == this.priority))
@@ -58,7 +72,7 @@ namespace Epsitec.Common.Widgets.Design
 				this.segments = copy;
 				this.segments[0] = seg;
 			}
-			else if ((System.Math.Abs (delta) < System.Math.Abs (this.distance)) &&
+			else if ((weight < System.Math.Abs (this.distance)) &&
 				/**/ (priority >= this.priority))
 			{
 				this.priority = priority;
@@ -89,6 +103,15 @@ namespace Epsitec.Common.Widgets.Design
 		public Drawing.Segment[]		Segments
 		{
 			get { return this.segments; }
+		}
+		
+		public AnchorStyles				Anchor
+		{
+			get { return this.anchor; }
+		}
+		public bool						IsValid
+		{
+			get { return this.distance < Constraint.Infinite; }
 		}
 		
 		
@@ -145,6 +168,7 @@ namespace Epsitec.Common.Widgets.Design
 			
 			that.distance = this.distance;
 			that.bounds   = this.bounds;
+			that.anchor   = this.anchor;
 			that.segments = new Drawing.Segment[this.segments.Length];
 			
 			this.segments.CopyTo (that.segments, 0);
@@ -166,5 +190,6 @@ namespace Epsitec.Common.Widgets.Design
 		protected double				distance;
 		protected Drawing.Rectangle		bounds;
 		protected Drawing.Segment[]		segments;
+		protected AnchorStyles			anchor;
 	}
 }

@@ -86,13 +86,13 @@ namespace Epsitec.Common.Widgets.Design
 			if ((edges & Drawing.EdgeId.Left) != 0)
 			{
 				mx = model.Left + widget.DockMargins.Left + SmartGuide.root_margins.Left;
-				constraint.Add (xl, mx, mx, model.Bottom, mx, model.Top, Constraint.Priority.Low);
+				constraint.Add (xl, mx, mx, model.Bottom, mx, model.Top, Constraint.Priority.Low, AnchorStyles.Left);
 			}
 			
 			if ((edges & Drawing.EdgeId.Right) != 0)
 			{
-				mx = model.Right - widget.DockMargins.Right + SmartGuide.root_margins.Right;
-				constraint.Add (xr, mx, mx, model.Bottom, mx, model.Top, Constraint.Priority.Low);
+				mx = model.Right - widget.DockMargins.Right - SmartGuide.root_margins.Right;
+				constraint.Add (xr, mx, mx, model.Bottom, mx, model.Top, Constraint.Priority.Low, AnchorStyles.Right);
 			}
 			
 			Widget[] children = widget.Children.Widgets;
@@ -111,13 +111,13 @@ namespace Epsitec.Common.Widgets.Design
 					//	moindre mesure leur bord droit.
 					
 					mx = model.Left;
-					constraint.Add (xl, mx, mx, y1, mx, y2, Constraint.Priority.Low);
+					constraint.Add (xl, mx, mx, y1, mx, y2);
 					
 					if ((bounds.Bottom < model.Top) &&
 						(bounds.Top > model.Bottom))
 					{
 						mx = model.Right + SmartGuide.align_margins.Right;
-						constraint.Add (xl, mx, mx, y1, mx, y2, Constraint.Priority.Low);
+						constraint.Add (xl, mx, mx, y1, mx, y2);
 					}
 				}
 				
@@ -127,13 +127,13 @@ namespace Epsitec.Common.Widgets.Design
 					//	moindre mesure leur bord gauche.
 					
 					mx = model.Right;
-					constraint.Add (xr, mx, mx, y1, mx, y2, Constraint.Priority.Low);
+					constraint.Add (xr, mx, mx, y1, mx, y2);
 					
 					if ((bounds.Bottom < model.Top) &&
 						(bounds.Top > model.Bottom))
 					{
-						mx = model.Left + SmartGuide.align_margins.Left;
-						constraint.Add (xr, mx, mx, y1, mx, y2, Constraint.Priority.Low);
+						mx = model.Left - SmartGuide.align_margins.Left;
+						constraint.Add (xr, mx, mx, y1, mx, y2);
 					}
 				}
 			}
@@ -154,13 +154,13 @@ namespace Epsitec.Common.Widgets.Design
 			if ((edges & Drawing.EdgeId.Bottom) != 0)
 			{
 				my = model.Bottom + widget.DockMargins.Bottom + SmartGuide.root_margins.Bottom;
-				constraint.Add (y1, my, model.Left, my, model.Right, my, Constraint.Priority.Low);
+				constraint.Add (y1, my, model.Left, my, model.Right, my, Constraint.Priority.Low, AnchorStyles.Bottom);
 			}
 			
 			if ((edges & Drawing.EdgeId.Top) != 0)
 			{
-				my = model.Top - widget.DockMargins.Top + SmartGuide.root_margins.Top;
-				constraint.Add (y3, my, model.Left, my, model.Right, my, Constraint.Priority.Low);
+				my = model.Top - widget.DockMargins.Top - SmartGuide.root_margins.Top;
+				constraint.Add (y3, my, model.Left, my, model.Right, my, Constraint.Priority.Low, AnchorStyles.Top);
 			}
 			
 			Widget[] children = widget.Children.Widgets;
@@ -189,13 +189,13 @@ namespace Epsitec.Common.Widgets.Design
 					//	moindre mesure leur bord supérieur.
 					
 					my = model.Bottom;
-					constraint.Add (y1, my, x1, my, x2, my, Constraint.Priority.Low);
+					constraint.Add (y1, my, x1, my, x2, my);
 					
 					if ((bounds.Left < model.Right) &&
 						(bounds.Right > model.Left))
 					{
 						my = model.Top + SmartGuide.align_margins.Top;
-						constraint.Add (y1, my, x1, my, x2, my, Constraint.Priority.Low);
+						constraint.Add (y1, my, x1, my, x2, my);
 					}
 				}
 				
@@ -205,13 +205,13 @@ namespace Epsitec.Common.Widgets.Design
 					//	moindre mesure leur bord inférieur.
 					
 					my = model.Top;
-					constraint.Add (y3, my, x1, my, x2, my, Constraint.Priority.Low);
+					constraint.Add (y3, my, x1, my, x2, my);
 					
 					if ((bounds.Left < model.Right) &&
 						(bounds.Right > model.Left))
 					{
-						my = model.Bottom + SmartGuide.align_margins.Bottom;
-						constraint.Add (y3, my, x1, my, x2, my, Constraint.Priority.Low);
+						my = model.Bottom - SmartGuide.align_margins.Bottom;
+						constraint.Add (y3, my, x1, my, x2, my);
 					}
 				}
 			}

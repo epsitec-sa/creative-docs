@@ -265,10 +265,33 @@ namespace Epsitec.Common.Widgets
 				Support.ObjectBundler bundler = new Support.ObjectBundler ();
 				Drawing.Point         offset  = new Drawing.Point (this.widget_margins.Left, this.widget_margins.Bottom);
 				Widget                copy    = bundler.CopyObject (this.widget) as Widget;
+				AnchorStyles          anchor  = AnchorStyles.None;
+				
+				if (this.drop_cx.IsValid)
+				{
+					offset.X -= this.drop_cx.Distance;
+					anchor   |= this.drop_cx.Anchor;
+				}
+				
+				if (this.drop_cy.IsValid)
+				{
+					offset.Y -= this.drop_cy.Distance;
+					anchor   |= this.drop_cy.Anchor;
+				}
+				
+				if ((anchor & AnchorStyles.LeftAndRight) == 0)
+				{
+					anchor |= AnchorStyles.Left;
+				}
+				
+				if ((anchor & AnchorStyles.TopAndBottom) == 0)
+				{
+					anchor |= AnchorStyles.Top;
+				}
 				
 				copy.Location = this.drop_adorner.Widget.MapScreenToClient (this.DragLocation) + offset;
 				copy.Dock     = DockStyle.None;
-				copy.Anchor   = AnchorStyles.Left | AnchorStyles.Top;
+				copy.Anchor   = anchor;
 				
 				this.drop_adorner.Widget.Children.Add (copy);
 				this.drop_adorner.Widget = null;
