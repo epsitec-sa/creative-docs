@@ -121,5 +121,20 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals ("Settings", text_default);
 			Assertion.AssertEquals ("Réglages", text_merged);
 		}
+		[Test] public void CheckGetBundleIds()
+		{
+			string[] names_1 = Resources.GetBundleIds ("file:*");
+			string[] names_2 = Resources.GetBundleIds ("file:*", ResourceLevel.Localised);
+			
+			for (int i = 0; i < names_1.Length; i++)
+			{
+				System.Console.Out.WriteLine ("{0} : {1}", i, names_1[i]);
+			}
+			
+			for (int i = 0; i < names_2.Length; i++)
+			{
+				System.Console.Out.WriteLine ("{0} : {1}", i, names_2[i]);
+			}
+		}
 	}
 }

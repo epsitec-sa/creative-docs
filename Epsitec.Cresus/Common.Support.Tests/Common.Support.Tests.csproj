@@ -153,7 +153,11 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "resources\bitmap.resource"
+                    RelPath = "resources\bitmap.00.resource"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "resources\button.cancel.00.resource"
                     BuildAction = "None"
                 />
                 <File
@@ -161,35 +165,31 @@
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "resources\button.cancel.resource"
+                    RelPath = "resources\complex.00.resource"
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "resources\complex.resource"
+                    RelPath = "resources\icon.00.resource"
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "resources\icon.resource"
+                    RelPath = "resources\image.00.resource"
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "resources\image.resource"
+                    RelPath = "resources\recursive.00.resource"
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "resources\recursive.resource"
+                    RelPath = "resources\simple_window.00.resource"
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "resources\simple_window.resource"
+                    RelPath = "resources\strings.00.resource"
                     BuildAction = "None"
                 />
                 <File
                     RelPath = "resources\strings.fr.resource"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "resources\strings.resource"
                     BuildAction = "None"
                 />
             </Include>
