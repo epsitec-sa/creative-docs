@@ -822,7 +822,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected void OnTextDeleted()
+		protected virtual void OnTextDeleted()
 		{
 			this.OnTextChanged();
 
@@ -832,7 +832,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected void OnTextInserted()
+		protected virtual void OnTextInserted()
 		{
 			this.OnTextChanged();
 
@@ -842,7 +842,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected void OnTextEdited()
+		protected virtual void OnTextEdited()
 		{
 			if ( this.TextEdited != null )
 			{

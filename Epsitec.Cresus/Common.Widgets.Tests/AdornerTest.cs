@@ -193,6 +193,7 @@ namespace Epsitec.Common.Widgets
 			t1.Items.Add("red",   "Rouge");
 			t1.Items.Add("green", "Vert");
 			t1.Items.Add("blue",  "Bleu");
+			t1.ButtonShowCondition = ShowCondition.Always;
 
 			tb.Items.Add(t1);
 			tb.Items.Add(new IconSeparator());
@@ -413,6 +414,7 @@ namespace Epsitec.Common.Widgets
 			combo.AnchorMargins = new Margins(160, 0, 0, 220);
 			combo.TabIndex = 10;
 			combo.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			combo.ButtonShowCondition = ShowCondition.Always;
 			window.Root.Children.Add(combo);
 
 			TextField text = new TextField();
@@ -550,6 +552,7 @@ namespace Epsitec.Common.Widgets
 			combofix.AnchorMargins = new Margins(160, 0, 80, 0);
 			combofix.TabIndex = 2;
 			combofix.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			combofix.ButtonShowCondition = ShowCondition.Always;
 			page1.Children.Add(combofix);
 
 			// Crée l'onglet 2.

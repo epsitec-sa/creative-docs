@@ -207,7 +207,7 @@ namespace Epsitec.Common.Widgets
 			return base_rect;
 		}
 
-		public override Epsitec.Common.Drawing.Size GetBestFitSize()
+		public override Drawing.Size GetBestFitSize()
 		{
 			if ((this.TextLayout == null) ||
 				(this.Text.Length == 0))

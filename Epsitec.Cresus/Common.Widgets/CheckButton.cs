@@ -65,7 +65,7 @@ namespace Epsitec.Common.Widgets
 			return rect;
 		}
 		
-		public override Epsitec.Common.Drawing.Size GetBestFitSize()
+		public override Drawing.Size GetBestFitSize()
 		{
 			Drawing.Size size = this.TextLayout.SingleLineSize;
 			

@@ -113,6 +113,11 @@
         <Files>
             <Include>
                 <File
+                    RelPath = "AbstractPanel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
