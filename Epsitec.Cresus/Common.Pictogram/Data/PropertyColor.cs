@@ -17,15 +17,8 @@ namespace Epsitec.Common.Pictogram.Data
 		// Couleur de la propriété.
 		public Drawing.Color Color
 		{
-			get
-			{
-				return this.color;
-			}
-
-			set
-			{
-				this.color = value;
-			}
+			get { return this.color; }
+			set { this.color = value; }
 		}
 
 		// Effectue une copie de la propriété.

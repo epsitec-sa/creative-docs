@@ -12,19 +12,20 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 		}
 
-		// Type de la propriété.
+		// Valeur de la propriété.
 		[XmlAttribute]
 		public bool Bool
 		{
-			get
-			{
-				return this.boolValue;
-			}
+			get { return this.boolValue; }
+			set { this.boolValue = value; }
+		}
 
-			set
-			{
-				this.boolValue = value;
-			}
+		// Indique si un changement de cette propriété modifie la bbox de l'objet.
+		[XmlIgnore]
+		public override bool AlterBoundingBox
+		{
+			get { return ( this.type == PropertyType.PolyClose   ||
+						   this.type == PropertyType.RegularStar ); }
 		}
 
 		// Effectue une copie de la propriété.
