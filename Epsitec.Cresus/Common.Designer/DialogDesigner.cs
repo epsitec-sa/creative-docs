@@ -59,6 +59,24 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		public Script.IScriptSource				DialogScript
+		{
+			get
+			{
+				return this.dialog_script;
+			}
+			set
+			{
+				if (this.dialog_script != value)
+				{
+					this.DetachScriptDeveloper ();
+					this.dialog_script = value;
+					this.AttachScriptDeveloper ();
+					this.OnDialogScriptChanged ();
+				}
+			}
+		}
+		
 		public Window							DialogWindow
 		{
 			get
@@ -87,7 +105,6 @@ namespace Epsitec.Common.Designer
 				this.resource_name = value;
 			}
 		}
-		
 		
 		public void StartDesign()
 		{
@@ -140,6 +157,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		protected virtual void AttachScriptDeveloper()
+		{
+		}
+		
+		protected virtual void DetachScriptDeveloper()
+		{
+		}
+		
 		
 		protected virtual void OnDialogDataChanged()
 		{
@@ -157,6 +182,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		protected virtual void OnDialogScriptChanged()
+		{
+			if (this.DialogScriptChanged != null)
+			{
+				this.DialogScriptChanged (this);
+			}
+		}
+		
 		protected virtual void OnDisposed()
 		{
 			if (this.Disposed != null)
@@ -165,14 +198,18 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		
+		
 		public event Support.EventHandler		DialogDataChanged;
 		public event Support.EventHandler		DialogCommandsChanged;
+		public event Support.EventHandler		DialogScriptChanged;
 		public event Support.EventHandler		Disposed;
 		
 		private Application						application;
 		private Types.IDataGraph				dialog_data;
 		private Window							dialog_window;
 		private Support.CommandDispatcher		dialog_commands;
+		private Script.IScriptSource			dialog_script;
 		private string							resource_name;
 		
 		private const string					prop_dialog_designer = "$designer$dialog designer$";
