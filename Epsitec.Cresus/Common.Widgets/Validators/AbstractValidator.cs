@@ -81,12 +81,12 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		protected virtual void AttachWidget(Widget widget)
 		{
-			widget.SetValidator (this);
+			widget.AddValidator (this);
 		}
 		
 		protected virtual void DetachWidget(Widget widget)
 		{
-			widget.SetValidator (null);
+			widget.RemoveValidator (null);
 		}
 		
 		
