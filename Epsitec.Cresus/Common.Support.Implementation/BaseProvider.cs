@@ -21,10 +21,20 @@ namespace Epsitec.Common.Support.Implementation
 		
 		public static void CreateResourceDatabase(string application_name)
 		{
-			//	TODO: crée la base de données au moyen de DbInfrastructure.CreateDatabase,
-			//	puis remplit celle-ci avec les types et tables initiales, puis ferme la
-			//	connexion et retourne. Si on essaie de faire un CreateResourceDatabase
-			//	alors que la base existe déjà, une exception sera générée.
+			//	Crée une base de données pour stocker les ressources de l'application spécifiée.
+			//	Cette opération échoue si la base existe déjà et génère une exception.
+			
+			using (DbInfrastructure infrastructure = new DbInfrastructure ())
+			{
+				infrastructure.CreateDatabase (BaseProvider.GetDbAccess (application_name));
+				
+				using (DbTransaction transaction = infrastructure.BeginTransaction ())
+				{
+					BaseProvider.SetupInitialBase (infrastructure, transaction);
+					transaction.Commit ();
+					return;
+				}
+			}
 		}
 		
 		
@@ -74,7 +84,7 @@ namespace Epsitec.Common.Support.Implementation
 		
 		protected static DbAccess GetDbAccess(string application)
 		{
-			string base_name = application + ".resdb";
+			string base_name = application + "_resdb";
 			return DbInfrastructure.CreateDbAccess (base_name);
 		}
 		
@@ -90,11 +100,8 @@ namespace Epsitec.Common.Support.Implementation
 			//	Le nom de l'application est utile pour déterminer le nom de la
 			//	base de données à laquelle on va se connecter.
 			
-			//	TODO: il faut se connecter à la base de données (qui doit exister).
-#if false
 			this.dbi = new DbInfrastructure ();
 			this.dbi.AttachDatabase (BaseProvider.GetDbAccess (application));
-#endif
 		}
 		
 		public override void SelectLocale(System.Globalization.CultureInfo culture)
@@ -167,6 +174,32 @@ namespace Epsitec.Common.Support.Implementation
 			// TODO:  Add FileProvider.Remove implementation
 			throw new ResourceException ("Not implemented");
 		}
+		
+		
+		protected static void SetupInitialBase(DbInfrastructure infrastructure, DbTransaction transaction)
+		{
+			DbTable db_table = infrastructure.CreateDbTable ("Data", DbElementCat.UserDataManaged);
+			
+			DbType db_type_name  = infrastructure.CreateDbType ("Name", 80, false) as DbTypeString;
+			DbType db_type_level = infrastructure.CreateDbType ("Level", 4, false) as DbTypeString;
+			DbType db_type_type  = infrastructure.CreateDbType ("Type", 25, false) as DbTypeString;
+			DbType db_type_data  = infrastructure.CreateDbTypeByteArray ("Data");
+			
+			infrastructure.RegisterNewDbType (transaction, db_type_name);
+			infrastructure.RegisterNewDbType (transaction, db_type_level);
+			infrastructure.RegisterNewDbType (transaction, db_type_type);
+			infrastructure.RegisterNewDbType (transaction, db_type_data);
+			
+			DbColumn col1 = DbColumn.CreateUserDataColumn ("Name",  db_type_name,  Nullable.No);
+			DbColumn col2 = DbColumn.CreateUserDataColumn ("Level", db_type_level, Nullable.No);
+			DbColumn col3 = DbColumn.CreateUserDataColumn ("Type",  db_type_type,  Nullable.Yes);
+			DbColumn col4 = DbColumn.CreateUserDataColumn ("Data",  db_type_data,  Nullable.Yes);
+			
+			db_table.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4 });
+			
+			infrastructure.RegisterNewDbTable (transaction, db_table);
+		}
+		
 		
 		protected DbInfrastructure		dbi;
 		

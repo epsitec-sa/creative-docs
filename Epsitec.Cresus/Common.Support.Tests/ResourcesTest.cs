@@ -7,6 +7,14 @@ namespace Epsitec.Common.Support
 	{
 		[SetUp] public void SetUp()
 		{
+			try
+			{
+				Implementation.BaseProvider.CreateResourceDatabase ("test");
+			}
+			catch
+			{
+			}
+			
 			Resources.SetupProviders ("test");
 		}
 		
@@ -121,6 +129,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Settings", text_default);
 			Assert.AreEqual ("Réglages", text_merged);
 		}
+		
 		[Test] public void CheckGetBundleIds()
 		{
 			string[] names_1 = Resources.GetBundleIds ("file:*");

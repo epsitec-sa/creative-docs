@@ -81,12 +81,22 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
                     Name = "Cresus.Database"
                     Project = "{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Common.Types"
+                    Project = "{8960D1EA-3B82-49A1-9D44-F92F467209FF}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Cresus.Database.Implementation"
+                    Project = "{C757AD58-605D-4480-BC2E-03E8076368B2}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
