@@ -117,6 +117,19 @@ namespace Epsitec.Common.Drawing
 			get { return this.synthetic_mode; }
 		}
 		
+		public Transform				SyntheticTransform
+		{
+			get
+			{
+				switch (this.synthetic_mode)
+				{
+					case SyntheticFontMode.Oblique:
+						return new Transform (1, System.Math.Sin (Font.ObliqueAngle * System.Math.PI / 180.0), 0, 1, 0, 0);
+					default:
+						return new Transform ();
+				}
+			}
+		}
 		
 		public static double			ObliqueAngle
 		{
@@ -146,6 +159,14 @@ namespace Epsitec.Common.Drawing
 		
 		public Rectangle GetGlyphBounds(int glyph)
 		{
+			if (this.synthetic_mode == SyntheticFontMode.Oblique)
+			{
+				Path path = new Path ();
+				path.Append (this, glyph, this.SyntheticTransform);
+				
+				return path.ComputeBounds ();
+			}
+			
 			double x1, y1, x2, y2;
 			Agg.Library.AggFontFaceGetGlyphBounds (this.handle, glyph, out x1, out y1, out x2, out y2);
 			return new Rectangle (x1, y1, x2 - x1, y2 - y1);
@@ -153,6 +174,14 @@ namespace Epsitec.Common.Drawing
 		
 		public Rectangle GetCharBounds(int unicode)
 		{
+			if (this.synthetic_mode == SyntheticFontMode.Oblique)
+			{
+				Path path = new Path ();
+				path.Append (this, this.GetGlyphIndex (unicode), this.SyntheticTransform);
+				
+				return path.ComputeBounds ();
+			}
+			
 			double x1, y1, x2, y2;
 			Agg.Library.AggFontFaceGetCharBounds (this.handle, unicode, out x1, out y1, out x2, out y2);
 			return new Rectangle (x1, y1, x2 - x1, y2 - y1);
@@ -160,6 +189,21 @@ namespace Epsitec.Common.Drawing
 		
 		public Rectangle GetTextBounds(string text)
 		{
+			if (this.synthetic_mode == SyntheticFontMode.Oblique)
+			{
+				Path path = new Path ();
+				Transform transform = this.SyntheticTransform;
+				
+				foreach (char unicode in text)
+				{
+					int glyph = this.GetGlyphIndex (unicode);
+					path.Append (this, glyph, transform);
+					transform.TX = transform.TX + this.GetGlyphAdvance (glyph);
+				}
+				
+				return path.ComputeBounds ();
+			}
+			
 			double x1, y1, x2, y2;
 			Agg.Library.AggFontFaceGetTextBounds (this.handle, text, 0, out x1, out y1, out x2, out y2);
 			return new Rectangle (x1, y1, x2 - x1, y2 - y1);
@@ -193,7 +237,7 @@ namespace Epsitec.Common.Drawing
 				Font.array = new Font[n];
 				Font.hash = new System.Collections.Hashtable ();
 				
-				int j = 0;
+				int m = 0;
 				
 				for (int i = 0; i < n; i++)
 				{
@@ -202,12 +246,26 @@ namespace Epsitec.Common.Drawing
 					
 					if (Font.hash.ContainsKey (name) == false)
 					{
-						Font.array[j++] = font;
+						Font.array[m++] = font;
 						Font.hash[name] = font;
 					}
 				}
 				
-				Font.count = j;
+				Font[] array_compact = new Font[m];
+				
+				int j = 0;
+				
+				for (int i = 0; i < Font.array.Length; i++)
+				{
+					if (Font.array[i] != null)
+					{
+						array_compact[j++] = Font.array[i];
+					}
+				}
+				
+				Font.array = array_compact;
+				
+				System.Diagnostics.Debug.Assert (Font.array.Length == m);
 			}
 		}
 		
@@ -217,7 +275,7 @@ namespace Epsitec.Common.Drawing
 			get
 			{
 				Font.SetupFonts ();
-				return Font.count;
+				return Font.array.Length;
 			}
 		}
 		
@@ -226,7 +284,7 @@ namespace Epsitec.Common.Drawing
 			Font.SetupFonts ();
 			
 			if ((rank >= 0) &&
-				(rank < Font.count))
+				(rank < Font.array.Length))
 			{
 				return Font.array[rank];
 			}
@@ -304,14 +362,13 @@ namespace Epsitec.Common.Drawing
 						System.Diagnostics.Debug.Assert (syn_font.IsSynthetic);
 						System.Diagnostics.Debug.Assert (Font.hash.ContainsKey (syn_name) == false);
 						
-						int n = Font.count;
+						int n = Font.array.Length;
 						Font[] array_copy = new Font[n+1];
 						Font.array.CopyTo (array_copy, 0);
 						Font.array = array_copy;
 						
 						Font.array[n]       = syn_font;
 						Font.hash[syn_name] = syn_font;
-						Font.count          = n + 1;
 						
 						font = syn_font;
 					}

@@ -133,16 +133,18 @@ namespace Epsitec.Common.Drawing
 			
 			if (font.IsSynthetic)
 			{
-				Transform transform = new Transform (this.transform);
+				Transform font_transform = font.SyntheticTransform;
+				
+				font_transform.TX = x;
+				font_transform.TY = y;
 				
 				switch (font.SyntheticFontMode)
 				{
 					case SyntheticFontMode.Oblique:
-						transform.MultiplyBy (new Transform (1, System.Math.Sin (Font.ObliqueAngle * System.Math.PI / 180.0), 0, 1, x, y));
-						Agg.Library.AggRasterizerSetTransform (this.agg_ras, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY);
+						font_transform.MultiplyBy (this.transform);
+						Agg.Library.AggRasterizerSetTransform (this.agg_ras, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
 						Agg.Library.AggRasterizerAddGlyph(this.agg_ras, font.Handle, glyph, 0, 0, scale);
-						transform = this.transform;
-						Agg.Library.AggRasterizerSetTransform (this.agg_ras, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY);
+						Agg.Library.AggRasterizerSetTransform (this.agg_ras, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
 						return;
 					
 					default:

@@ -65,14 +65,17 @@ namespace Epsitec.Common.Drawing.Agg
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerDelete(System.IntPtr rasterizer);
 		
 		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathNew();
-		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathMoveTo(System.IntPtr path, double x, double y);
-		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathLineTo(System.IntPtr path, double x, double y);
-		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathCurve3(System.IntPtr path, double x_c, double y_c, double x, double y);
-		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathCurve4(System.IntPtr path, double x_c1, double y_c1, double x_c2, double y_c2, double x, double y);
-		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathClose(System.IntPtr path);
-		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathAddNewPath(System.IntPtr path);
-		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathRemoveAll(System.IntPtr path);
-		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathDelete(System.IntPtr path);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathMoveTo(System.IntPtr path, double x, double y);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathLineTo(System.IntPtr path, double x, double y);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathCurve3(System.IntPtr path, double x_c, double y_c, double x, double y);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathCurve4(System.IntPtr path, double x_c1, double y_c1, double x_c2, double y_c2, double x, double y);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathClose(System.IntPtr path);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathAddNewPath(System.IntPtr path);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathAppendGlyph(System.IntPtr path, System.IntPtr face, int glyph, double xx, double xy, double yx, double yy, double tx, double ty);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathAppendPath(System.IntPtr path, System.IntPtr path2, double xx, double xy, double yx, double yy, double tx, double ty);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathComputeBounds(System.IntPtr path, out double x1, out double y1, out double x2, out double y2);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathRemoveAll(System.IntPtr path);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathDelete(System.IntPtr path);
 		
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggFontInitialise();
 		[DllImport ("AGG-Wrapper.dll")] internal extern static int		AggFontGetFaceCount();

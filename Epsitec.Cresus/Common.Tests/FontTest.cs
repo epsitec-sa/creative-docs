@@ -130,14 +130,14 @@ namespace Epsitec.Common.Tests
 			
 			form.ClientSize = new System.Drawing.Size (460, 320);
 			form.Text = "CheckGlyphPaint";
-			form.Paint +=new System.Windows.Forms.PaintEventHandler(form_Paint);
+			form.Paint +=new System.Windows.Forms.PaintEventHandler(form_Paint1);
 			
-			this.global_pixmap = new Pixmap ();
-			this.global_pixmap.Size = form.ClientSize;
-			this.global_pixmap.Clear ();
+			this.global_pixmap_1 = new Pixmap ();
+			this.global_pixmap_1.Size = form.ClientSize;
+			this.global_pixmap_1.Clear ();
 			
 			Epsitec.Common.Drawing.Renderer.Solid renderer = new Common.Drawing.Renderer.Solid ();
-			renderer.Pixmap = this.global_pixmap;
+			renderer.Pixmap = this.global_pixmap_1;
 			renderer.Clear (Color.FromBrightness (1));
 			
 			Rasterizer rasterizer = new Rasterizer ();
@@ -203,22 +203,25 @@ namespace Epsitec.Common.Tests
 			
 			form.ClientSize = new System.Drawing.Size (460, 320);
 			form.Text = "CheckSyntheticGlyphPaint";
-			form.Paint +=new System.Windows.Forms.PaintEventHandler(form_Paint);
+			form.Paint +=new System.Windows.Forms.PaintEventHandler(form_Paint2);
 			
-			this.global_pixmap = new Pixmap ();
-			this.global_pixmap.Size = form.ClientSize;
-			this.global_pixmap.Clear ();
+			this.global_pixmap_2 = new Pixmap ();
+			this.global_pixmap_2.Size = form.ClientSize;
+			this.global_pixmap_2.Clear ();
 			
 			Epsitec.Common.Drawing.Renderer.Solid renderer = new Common.Drawing.Renderer.Solid ();
-			renderer.Pixmap = this.global_pixmap;
+			renderer.Pixmap = this.global_pixmap_2;
 			renderer.Clear (Color.FromBrightness (1));
 			
 			Rasterizer rasterizer = new Rasterizer ();
 			rasterizer.Gamma = 1.2;
+			rasterizer.Transform = Transform.FromScale (0.8, 0.8);
 			
-			Font font = Font.GetFont ("Tahoma", "Italic");
-			Path path = new Path ();
-			Path rect = new Path ();
+			Font font  = Font.GetFont ("Tahoma", "Italic");
+			Font font2 = Font.GetFont ("Tahoma", "Regular");
+			Path path  = new Path ();
+			Path path2 = new Path ();
+			Path rect  = new Path ();
 			
 			double x = 20;
 			double y = 80;
@@ -237,13 +240,15 @@ namespace Epsitec.Common.Tests
 				
 				rasterizer.AddGlyph (font, glyph, x, y, size);
 				
+				path2.Append (font2, glyph, x, y, size);
+				
 				path.MoveTo (x, 0);
 				path.LineTo (x, form.ClientSize.Height);
-			
+				
 				Rectangle r = font.GetGlyphBounds (glyph);
 				r.Scale (size);
 				r.Offset (x, y);
-			
+				
 				rect.MoveTo (r.Left,  r.Bottom);
 				rect.LineTo (r.Right, r.Bottom);
 				rect.LineTo (r.Right, r.Top);
@@ -259,6 +264,10 @@ namespace Epsitec.Common.Tests
 			renderer.Color = Color.FromBrightness (0);
 			rasterizer.Render (renderer);
 			
+			renderer.Color = Color.FromARGB (0.2, 0, 0, 0);
+			rasterizer.AddSurface (path2);
+			rasterizer.Render (renderer);
+			
 			renderer.Color = Color.FromRGB (0, 1, 0);
 			rasterizer.AddOutline (path, 1);
 			rasterizer.Render (renderer);
@@ -267,14 +276,22 @@ namespace Epsitec.Common.Tests
 			rasterizer.AddOutline (rect, 1);
 			rasterizer.Render (renderer);
 			
+			
+			
 			form.Show ();
 		}
 
-		private void form_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+		private void form_Paint1(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
-			this.global_pixmap.Paint (e.Graphics, e.ClipRectangle);
+			this.global_pixmap_1.Paint (e.Graphics, e.ClipRectangle);
 		}
 		
-		private Pixmap					global_pixmap;
+		private void form_Paint2(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			this.global_pixmap_2.Paint (e.Graphics, e.ClipRectangle);
+		}
+		
+		private Pixmap					global_pixmap_1;
+		private Pixmap					global_pixmap_2;
 	}
 }

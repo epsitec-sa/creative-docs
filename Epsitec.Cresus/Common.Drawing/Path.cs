@@ -69,6 +69,53 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public void Append(Path path)
+		{
+			this.Append (path, 1, 0, 0, 1, 0, 0);
+		}
+		
+		public void Append(Path path, Transform transform)
+		{
+			this.Append (path, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY);
+		}
+		
+		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty)
+		{
+			this.CreateOnTheFly ();
+			Agg.Library.AggPathAppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty);
+		}
+		
+		public void Append(Font font, int glyph, double x, double y, double size)
+		{
+			this.Append (font, glyph, size, 0, 0, size, x, y);
+		}
+		
+		public void Append(Font font, int glyph, Transform transform)
+		{
+			this.Append (font, glyph, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY);
+		}
+		
+		public void Append(Font font, int glyph, double xx, double xy, double yx, double yy, double tx, double ty)
+		{
+			this.CreateOnTheFly ();
+			Agg.Library.AggPathAppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty);
+		}
+		
+		
+		public void ComputeBounds(out double x1, out double y1, out double x2, out double y2)
+		{
+			this.CreateOnTheFly ();
+			Agg.Library.AggPathComputeBounds (this.agg_path, out x1, out y1, out x2, out y2);
+		}
+		
+		public Rectangle ComputeBounds()
+		{
+			double x1, y1, x2, y2;
+			this.ComputeBounds (out x1, out y1, out x2, out y2);
+			return new Rectangle (x1, y1, x2-x1, y2-y1);
+		}
+		
+		
 		
 		
 		public void Dispose()
