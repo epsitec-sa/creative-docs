@@ -1926,6 +1926,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public void ForceState(WidgetState state)
+		{
+			this.widget_state = state;
+		}
+		
 		
 		public void SetClientAngle(int angle)
 		{
