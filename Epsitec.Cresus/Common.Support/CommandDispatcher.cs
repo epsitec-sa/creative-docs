@@ -117,9 +117,9 @@ namespace Epsitec.Common.Support
 			//	succès; en cas d'interruption, il faudrait pouvoir ne pas exécuter les commandes
 			//	mises en attente, mais les supprimer.
 			
-			if (command.IndexOf ('&') >= 0)
+			if (command.IndexOf ("&&") >= 0)
 			{
-				string[] commands = System.Utilities.Split (command, '&');
+				string[] commands = System.Utilities.Split (command, "&&");
 				
 				for (int i = 0; i < commands.Length; i++)
 				{

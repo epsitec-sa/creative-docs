@@ -126,6 +126,13 @@ namespace System
 			Assert.AreEqual ("a", args[0]);
 			Assert.AreEqual ("<x arg='1;2'/>", args[1]);
 			Assert.AreEqual ("d", args[2]);
+
+			args = Utilities.Split ("a;- ;-;<x arg='1;-;2'/>;-;-;d", ";-;");
+			
+			Assert.AreEqual (3, args.Length);
+			Assert.AreEqual ("a;- ", args[0]);
+			Assert.AreEqual ("<x arg='1;-;2'/>", args[1]);
+			Assert.AreEqual ("-;d", args[2]);
 		}
 		
 		[Test] public void CheckStringSimplify()

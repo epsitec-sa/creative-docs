@@ -968,7 +968,7 @@ namespace Epsitec.Common.Designer
 				else
 				{
 					string question    = "The bundle has been modified.<br/><br/>Would you like to save it ?";
-					string command_yes = "SaveStringBundle (\""+name+"\") & CloseStringBundle (\""+name+"\")";
+					string command_yes = "SaveStringBundle (\""+name+"\") && CloseStringBundle (\""+name+"\")";
 					string command_no  = "CloseStringBundle (\""+name+"\")";
 					
 					Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel (Application.Current.Name, Common.Dialogs.Icon.Warning, question, command_yes, command_no, this.dispatcher);
