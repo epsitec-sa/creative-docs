@@ -2,12 +2,16 @@ namespace Epsitec.Common.Drawing
 {
 	public enum CapStyle
 	{
-		Butt, Square, Round
+		Butt   = 0,
+		Square = 1,
+		Round  = 2
 	}
 	
 	public enum JoinStyle
 	{
-		Miter, Round, Bevel
+		Miter = 0,
+		Round = 2,
+		Bevel = 3,
 	}
 	
 	public enum FillMode
