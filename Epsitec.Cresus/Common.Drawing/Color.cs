@@ -69,6 +69,11 @@ namespace Epsitec.Common.Drawing
 			get { return this.is_empty; }
 		}
 		
+		public bool						IsTransparent
+		{
+			get { return this.a == 0.0; }
+		}
+		
 		public bool						IsInRange
 		{
 			get
@@ -86,6 +91,15 @@ namespace Epsitec.Common.Drawing
 			{
 				Color c = new Color ();
 				c.is_empty = true;
+				return c;
+			}
+		}
+		
+		public static Color				Transparent
+		{
+			get
+			{
+				Color c = new Color (0.0, 0.0, 0.0, 0.0);
 				return c;
 			}
 		}

@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Database
 			
 			foreach (System.Type type in types_in_assembly)
 			{
-				if (type.Name.EndsWith ("AbstractionFactory"))
+				if (type.GetInterface ("IDbAbstractionFactory") != null)
 				{
 					System.Activator.CreateInstance (type);
 				}

@@ -3,7 +3,7 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{BA604F89-53C1-4228-AC76-5D5E68205029}"
+        ProjectGuid = "{D2ADDD9E-56DE-4285-B209-013A19D9DCDC}"
         SccProjectName = "SAK"
         SccLocalPath = "SAK"
         SccAuxPath = "SAK"
@@ -13,7 +13,7 @@
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "Cresus.DataLayer"
+                AssemblyName = "DataLayer.Tests"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -22,7 +22,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "Epsitec.Cresus.DataLayer"
+                RootNamespace = "Epsitec.Cresus.DataLayer.Tests"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -80,8 +80,18 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.Xml"
+                    AssemblyName = "System.XML"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
+                <Reference
+                    Name = "DataLayer"
+                    Project = "{BA604F89-53C1-4228-AC76-5D5E68205029}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "nunit.framework"
+                    AssemblyName = "nunit.framework"
+                    HintPath = "..\External\nunit.framework.dll"
                 />
             </References>
         </Build>
@@ -93,22 +103,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DataField.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DataRecord.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DataSet.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DataTable.cs"
+                    RelPath = "GeneralTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

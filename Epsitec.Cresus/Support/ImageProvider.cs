@@ -28,7 +28,15 @@ namespace Epsitec.Common.Support
 			
 			if (this.images.ContainsKey (name))
 			{
-				return this.images[name] as Drawing.Image;
+				System.WeakReference weak_ref = this.images[name] as System.WeakReference;
+				Drawing.Image image = weak_ref.Target as Drawing.Image;
+				
+				if (weak_ref.IsAlive)
+				{
+					return image;
+				}
+				
+				this.images.Remove (name);
 			}
 			
 			if (name.StartsWith ("file:"))
@@ -40,7 +48,7 @@ namespace Epsitec.Common.Support
 				
 				if (image != null)
 				{
-					this.images[name] = image;
+					this.images[name] = new System.WeakReference (image);
 				}
 				
 				return image;
@@ -88,7 +96,7 @@ namespace Epsitec.Common.Support
 				
 				if (image != null)
 				{
-					this.images[name] = image;
+					this.images[name] = new System.WeakReference (image);
 				}
 				
 				return image;

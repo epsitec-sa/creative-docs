@@ -4,11 +4,11 @@
 namespace Epsitec.Cresus.DataLayer
 {
 	/// <summary>
-	/// La classe DataSet stocke une collection de DataFields.
+	/// La classe DataField stocke une donnée unique.
 	/// </summary>
-	public class DataSet : DataRecord
+	public class DataField : DataRecord
 	{
-		public DataSet()
+		public DataField()
 		{
 		}
 	}

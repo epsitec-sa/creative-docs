@@ -1,5 +1,31 @@
 namespace Epsitec.Common.Widgets
 {
+	public class AnchorEventArgs : System.EventArgs
+	{
+		public AnchorEventArgs(double x, double y, double dx, double dy, int index)
+		{
+			this.rect  = new Drawing.Rectangle (x, y, dx, dy);
+			this.index = index;
+		}
+		
+		public Drawing.Rectangle			Bounds
+		{
+			get { return this.rect; }
+		}
+		
+		public int							Index
+		{
+			get { return this.index; }
+		}
+		
+		
+		private Drawing.Rectangle			rect;
+		private int							index;
+	}
+	
+	public delegate void AnchorEventHandler(object sender, AnchorEventArgs e);
+	
+	
 	/// <summary>
 	/// La classe TextLayout permet de stocker et d'afficher des contenus
 	/// riches (un sous-ensemble très restreint de HTML).
@@ -318,6 +344,12 @@ namespace Epsitec.Common.Widgets
 					double dy = image.Height;
 					double ix = pos.X+block.pos.X;
 					double iy = pos.Y+block.pos.Y+block.imageDescender;
+					
+					if ( block.anchor )
+					{
+						this.OnAnchor(new AnchorEventArgs (ix, iy, dx, dy, block.beginIndex));
+					}
+					
 					graphics.Align(ref ix, ref iy);
 					graphics.AddFilledRectangle(ix, iy, dx, dy);
 					Drawing.Transform t = new Drawing.Transform();
@@ -338,9 +370,18 @@ namespace Epsitec.Common.Widgets
 				{
 					color = uniqueColor;
 				}
-
+				
 				double x = pos.X+block.pos.X;
 				double y = pos.Y+block.pos.Y;
+				
+				if ( block.anchor )
+				{
+					double ascender  = block.font.Ascender * block.fontSize;
+					double descender = block.font.Descender * block.fontSize;
+					
+					this.OnAnchor(new AnchorEventArgs (x, y+descender, block.width, ascender-descender, block.beginIndex));
+				}
+
 				graphics.PaintText(x, y, block.text, block.font, block.fontSize, color);
 //				graphics.RenderSolid(color);
 
@@ -360,6 +401,18 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		public event AnchorEventHandler Anchor;
+		
+		
+		protected virtual void OnAnchor(AnchorEventArgs e)
+		{
+			if ( this.Anchor != null )
+			{
+				this.Anchor(this, e);
+			}
+		}
+		
 		
 		// Trouve l'index dans le texte interne qui correspond à la
 		// position indiquée. Retourne -1 en cas d'échec.
@@ -496,6 +549,11 @@ namespace Epsitec.Common.Widgets
 		public string DetectAnchor(Drawing.Point pos)
 		{
 			int index = this.DetectIndex(pos);
+			return this.FindAnchor(index);
+		}
+		
+		public string FindAnchor(int index)
+		{
 			if ( index < 0 )  return null;
 			int offset = this.FindOffsetFromIndex(index);
 			if ( offset < 0 )  return null;

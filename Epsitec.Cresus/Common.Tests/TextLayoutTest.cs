@@ -95,12 +95,29 @@ namespace Epsitec.Common.Tests
 			window.Root.Invalidate ();
 			window.Show();
 		}
+		
+		[Test] public void CheckAnchorAsStaticText()
+		{
+			WindowFrame window = new WindowFrame ();
+			window.Text = "CheckAnchorAsStaticText";
+			
+			window.ClientSize = new System.Drawing.Size (240, 180);
+			window.Root.DockMargins = new Margins (10, 10, 10, 10);
+			
+			StaticText text = new StaticText ();
+			text.Dock = DockStyle.Fill;
+			text.Text = @"abracadabra abracadabra<br/><a href=""x"">abc <img src=""file:..\..\icon.png"" width=""5"" height=""4""/> def</a><br/>abracadabra abracadabra <a href=""y"">bla bla bla&nbsp;!</a>";
+			text.Parent = window.Root;
+			text.BackColor = Color.FromRGB (1.0, 1.0, 1.0);
+			
+			window.Show ();
+		}
 
 		private void CheckImage_Paint1(object sender, PaintEventArgs e)
 		{
 			TextLayout layout = new TextLayout();
 
-			layout.Text = @"abracadabra abracadabra<br/><a href=""x"">abc <img src=""file:..\..\icon.png"" width=""5"" height=""4""/> def</a><br/>abracadabra abracadabra";
+			layout.Text = @"abracadabra abracadabra<br/><a href=""x"">abc <img src=""file:..\..\icon.png"" width=""5"" height=""4""/> def</a><br/>abracadabra abracadabra <a href=""y"">bla bla bla&nbsp;!</a>";
 			layout.Font = Font.GetFont("Tahoma", "Regular");
 			layout.FontSize = 15.0;
 			layout.Alignment = ContentAlignment.MiddleCenter;

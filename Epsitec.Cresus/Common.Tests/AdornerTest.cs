@@ -40,8 +40,9 @@ namespace Epsitec.Common.Tests
 			StaticText st = new StaticText();
 			st.Location = new Point(10, 265);
 			st.Width = 200;
-			st.Text = "Choix du <b>look</b> de l'<i>interface</i> :";
+			st.Text = @"Choix du <b>look</b> de l'<a href=""http://www.epsitec.ch"">interface</a> :";
 			st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			st.HyperTextClicked += new MessageEventHandler(st_HyperTextClicked);
 			window.Root.Children.Add(st);
 
 			CreateListLook(window.Root.Children, new Point(10, 195));
@@ -1210,5 +1211,11 @@ namespace Epsitec.Common.Tests
 
 
 		protected TabBook	tabBook;
+
+		private void st_HyperTextClicked(object sender, MessageEventArgs e)
+		{
+			Widget widget = sender as Widget;
+			System.Diagnostics.Process.Start ("IExplore.exe", widget.HyperText);
+		}
 	}
 }

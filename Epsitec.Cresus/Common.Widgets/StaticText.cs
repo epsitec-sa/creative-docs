@@ -8,6 +8,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public StaticText()
 		{
+			this.BackColor = Drawing.Color.Transparent;
 		}
 
 		// Retourne la hauteur standard.
@@ -43,6 +44,12 @@ namespace Epsitec.Common.Widgets
 			WidgetState       state = this.PaintState;
 			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
+			
+			if (this.BackColor.IsTransparent == false)
+			{
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.BackColor);
+			}
 			
 			adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state, dir);
 		}

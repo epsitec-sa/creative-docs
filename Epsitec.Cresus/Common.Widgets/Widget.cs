@@ -1072,6 +1072,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public string						HyperText
+		{
+			get
+			{
+				if (this.hyperText == null)
+				{
+					return null;
+				}
+				
+				return this.hyperText.Anchor;
+			}
+		}
 		
 		public event PaintEventHandler		PaintBackground;
 		public event PaintEventHandler		PaintForeground;
@@ -1085,6 +1097,8 @@ namespace Epsitec.Common.Widgets
 		public event MessageEventHandler	Entered;
 		public event MessageEventHandler	Exited;
 		public event EventHandler			ShortcutPressed;
+		public event EventHandler			HyperTextHot;
+		public event MessageEventHandler	HyperTextClicked;
 		
 		public event EventHandler			Focused;
 		public event EventHandler			Defocused;
@@ -2428,6 +2442,11 @@ namespace Epsitec.Common.Widgets
 			
 				try
 				{
+					if (this.hyperTextList != null)
+					{
+						this.hyperTextList.Clear ();
+					}
+					
 					PaintEventArgs local_paint_args = new PaintEventArgs (graphics, repaint);
 					
 					//	Peint l'arrière-plan du widget. En principe, tout va dans l'arrière plan, sauf
@@ -2606,6 +2625,47 @@ namespace Epsitec.Common.Widgets
 		protected virtual void PreProcessMessage(Message message, Drawing.Point pos)
 		{
 			//	...appelé avant que l'événement ne soit traité...
+			
+			if (message.IsMouseType)
+			{
+				bool reset = true;
+				
+				if (this.hyperTextList != null)
+				{
+					foreach (HyperTextInfo info in this.hyperTextList)
+					{
+						if (info.Bounds.Contains (pos))
+						{
+							this.SetHyperText (info);
+							reset = false;
+							break;
+						}
+					}
+				}
+				
+				if (reset)
+				{
+					this.SetHyperText (null);
+				}
+			}
+		}
+		
+		protected virtual void SetHyperText(HyperTextInfo info)
+		{
+			if (this.hyperText == null)
+			{
+				if (info == null)
+				{
+					return;
+				}
+			}
+			else if (this.hyperText.Equals (info))
+			{
+				return;
+			}
+			
+			this.hyperText = info;
+			this.OnHyperTextHot ();
 		}
 		
 		protected virtual void ProcessMessage(Message message, Drawing.Point pos)
@@ -2712,6 +2772,7 @@ namespace Epsitec.Common.Widgets
 				
 				this.textLayout.Font     = this.DefaultFont;
 				this.textLayout.FontSize = this.DefaultFontSize;
+				this.textLayout.Anchor  += new AnchorEventHandler (this.HandleTextLayoutAnchor);
 				
 				this.UpdateLayoutSize ();
 			}
@@ -2721,10 +2782,24 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.textLayout != null)
 			{
+				this.textLayout.Anchor -= new AnchorEventHandler (this.HandleTextLayoutAnchor);
 				this.textLayout = null;
 			}
 		}
 		
+		protected virtual void HandleTextLayoutAnchor(object sender, AnchorEventArgs e)
+		{
+			System.Diagnostics.Debug.Assert (sender == this.textLayout);
+			
+			HyperTextInfo info = new HyperTextInfo (this.textLayout, e.Bounds, e.Index);
+			
+			if (this.hyperTextList == null)
+			{
+				this.hyperTextList = new System.Collections.ArrayList ();
+			}
+			
+			this.hyperTextList.Add (info);
+		}
 		
 		protected virtual void OnPaintBackground(PaintEventArgs e)
 		{
@@ -2805,6 +2880,16 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnClicked(MessageEventArgs e)
 		{
+			if (this.hyperText != null)
+			{
+				this.OnHyperTextClicked (e);
+				
+				if (e.Message.Consumer != null)
+				{
+					return;
+				}
+			}
+			
 			if (this.Clicked != null)
 			{
 				if (e != null)
@@ -2873,6 +2958,32 @@ namespace Epsitec.Common.Widgets
 			if (this.ShortcutPressed != null)
 			{
 				this.ShortcutPressed (this);
+			}
+		}
+		
+		protected virtual void OnHyperTextHot()
+		{
+			if (this.hyperText == null)
+			{
+				this.MouseCursor.SetWindowCursor (this.WindowFrame);
+			}
+			else
+			{
+				MouseCursor.AsHand.SetWindowCursor (this.WindowFrame);
+			}
+			
+			if (this.HyperTextHot != null)
+			{
+				this.HyperTextHot (this);
+			}
+		}
+		
+		protected virtual void OnHyperTextClicked(MessageEventArgs e)
+		{
+			if (this.HyperTextClicked != null)
+			{
+				e.Message.Consumer = this;
+				this.HyperTextClicked (this, e);
 			}
 		}
 		
@@ -3274,6 +3385,7 @@ namespace Epsitec.Common.Widgets
 				this.height = height;
 			}
 			
+			
 			public double					OriginalWidth
 			{
 				get { return this.width; }
@@ -3284,37 +3396,102 @@ namespace Epsitec.Common.Widgets
 				get { return this.height; }
 			}
 			
+			
 			private double					width, height;
 		}
 		
+		protected class HyperTextInfo : System.ICloneable, System.IComparable
+		{
+			internal HyperTextInfo(TextLayout layout, Drawing.Rectangle bounds, int index)
+			{
+				this.layout = layout;
+				this.bounds = bounds;
+				this.index  = index;
+			}
+			
+			
+			#region ICloneable Members
+			public object Clone()
+			{
+				return new HyperTextInfo (this.layout, this.bounds, this.index);
+			}
+			#endregion
+
+			#region IComparable Members
+			public int CompareTo(object obj)
+			{
+				if (obj == null)
+				{
+					return 1;
+				}
+				
+				HyperTextInfo that = obj as HyperTextInfo;
+				
+				if ((that == null) || (that.layout != this.layout))
+				{
+					throw new System.ArgumentException ("Invalid argument");
+				}
+				
+				return this.index.CompareTo (that.index);
+			}
+			#endregion
+			
+			public override bool Equals(object obj)
+			{
+				return this.CompareTo (obj) == 0;
+			}
+		
+			public override int GetHashCode()
+			{
+				return this.index;
+			}
+			
+			
+			public Drawing.Rectangle		Bounds
+			{
+				get { return this.bounds; }
+			}
+			
+			public string					Anchor
+			{
+				get { return this.layout.FindAnchor (this.index); }
+			}
+			
+			
+			private TextLayout				layout;
+			private Drawing.Rectangle		bounds;
+			private int						index;
+		}
 		
 		
-		protected AnchorStyles				anchor;
-		protected DockStyle					dock;
-		protected Drawing.Margins			dockMargins;
-		protected Drawing.Color				backColor;
-		protected Drawing.Color				foreColor;
-		protected double					x1, y1, x2, y2;
-		protected Drawing.Size				minSize;
-		protected Drawing.Size				maxSize;
-		protected ClientInfo				clientInfo = new ClientInfo ();
+		protected AnchorStyles					anchor;
+		protected DockStyle						dock;
+		protected Drawing.Margins				dockMargins;
+		protected Drawing.Color					backColor;
+		protected Drawing.Color					foreColor;
+		protected double						x1, y1, x2, y2;
+		protected Drawing.Size					minSize;
+		protected Drawing.Size					maxSize;
+		protected ClientInfo					clientInfo = new ClientInfo ();
+		protected System.Collections.ArrayList	hyperTextList;
+		protected HyperTextInfo					hyperText;
 		
-		protected WidgetCollection			children;
-		protected Widget					parent;
-		protected string					name;
-		protected TextLayout				textLayout;
-		protected ContentAlignment			alignment;
-		protected LayoutInfo				layoutInfo;
-		protected InternalState				internalState;
-		protected WidgetState				widgetState;
-		protected int						suspendCounter;
-		protected int						tabIndex;
-		protected TabNavigationMode			tabNavigationMode;
-		protected Shortcut					shortcut;
-		protected double					defaultFontHeight;
-		protected MouseCursor				mouseCursor;
+		protected WidgetCollection				children;
+		protected Widget						parent;
+		protected string						name;
+		protected TextLayout					textLayout;
+		protected ContentAlignment				alignment;
+		protected LayoutInfo					layoutInfo;
+		protected InternalState					internalState;
+		protected WidgetState					widgetState;
+		protected int							suspendCounter;
+		protected int							tabIndex;
+		protected TabNavigationMode				tabNavigationMode;
+		protected Shortcut						shortcut;
+		protected double						defaultFontHeight;
+		protected MouseCursor					mouseCursor;
 		
-		static System.Collections.ArrayList	enteredWidgets = new System.Collections.ArrayList ();
-		static System.Collections.ArrayList	aliveWidgets = new System.Collections.ArrayList ();
+		static System.Collections.ArrayList		enteredWidgets = new System.Collections.ArrayList ();
+		static System.Collections.ArrayList		aliveWidgets = new System.Collections.ArrayList ();
 	}
 }
