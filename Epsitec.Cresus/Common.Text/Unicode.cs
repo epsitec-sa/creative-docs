@@ -924,6 +924,14 @@ namespace Epsitec.Common.Text
 							break;
 					}
 				}
+				
+				for (int i = 0; i < length; i++)
+				{
+					if (Unicode.Bits.GetCode (text[start+i]) == (int) Unicode.Code.HorizontalTab)
+					{
+						breaks[i] = Unicode.BreakInfo.HorizontalTab;
+					}
+				}
 			}
 			
 			

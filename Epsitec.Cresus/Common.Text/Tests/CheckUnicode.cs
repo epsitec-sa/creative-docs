@@ -33,6 +33,8 @@ namespace Epsitec.Common.Text.Tests
 			CheckUnicode.CheckText (analyzer, "100/000",		@"100/000");
 			
 			CheckUnicode.CheckText (analyzer, "abc \u2014 x \u2014 def", "abc *\u2014 x *\u2014 def");
+			
+			CheckUnicode.CheckText (analyzer, "abc\tdef",		@"abc\t|def");
 		}
 		
 		
@@ -47,7 +49,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			analyzer.GenerateBreaks (utf32_text, 0, utf32_text.Length, breaks);
 			
-			System.Diagnostics.Debug.WriteLine (CheckUnicode.GenerateBreakModel (plain_text, breaks));
+//-			System.Diagnostics.Debug.WriteLine (CheckUnicode.GenerateBreakModel (plain_text, breaks));
 			
 			Debug.Assert.IsTrue (CheckUnicode.GenerateBreakModel (plain_text, breaks) == expected);
 		}
@@ -79,6 +81,9 @@ namespace Epsitec.Common.Text.Tests
 						break;
 					case Unicode.BreakInfo.Optional:
 						buffer.Append ("*");
+						break;
+					case Unicode.BreakInfo.HorizontalTab:
+						buffer.Append ("|");
 						break;
 				}
 			}
