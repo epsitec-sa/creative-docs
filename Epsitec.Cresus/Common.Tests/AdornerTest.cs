@@ -251,8 +251,8 @@ namespace Epsitec.Common.Tests
 #if true
 			VMenu fileMenu = new VMenu();
 			fileMenu.Name = "0 (root menu)";
-			fileMenu.Items.Add(new MenuItem ("open", "open", "Ouvrir...", "Ctrl+O"));
-			fileMenu.Items.Add(new MenuItem ("save", "save", "Enregistrer...", "Ctrl+S"));
+			fileMenu.Items.Add(new MenuItem ("open", "file:..\\..\\open.png", "Ouvrir...", "Ctrl+O"));
+			fileMenu.Items.Add(new MenuItem ("save", "file:..\\..\\save.png", "Enregistrer...", "Ctrl+S"));
 			fileMenu.Items.Add(new MenuSeparator ());
 			fileMenu.Items.Add(new MenuItem ("opt1", "", "Options 1", ""));
 			fileMenu.Items.Add(new MenuItem ("opt2", "", "Options 2", ""));
@@ -266,8 +266,8 @@ namespace Epsitec.Common.Tests
 			optMenu1.Name = "1a";
 			optMenu1.Items.Add(new MenuItem ("set1A", "", "Reglages 1.A", ""));
 			optMenu1.Items.Add(new MenuItem ("set1B", "", "Reglages 1.B", ""));
-			optMenu1.Items.Add(new MenuItem ("print", "print", "Impression...", ""));
-			optMenu1.Items.Add(new MenuItem ("open",  "open", "Fichiers...", ""));
+			optMenu1.Items.Add(new MenuItem ("print", "file:..\\..\\print.png", "Impression...", ""));
+			optMenu1.Items.Add(new MenuItem ("open",  "file:..\\..\\open.png", "Fichiers...", ""));
 			optMenu1.AdjustSize();
 			fileMenu.Items[3].Submenu = optMenu1;
 
@@ -275,8 +275,8 @@ namespace Epsitec.Common.Tests
 			optMenu2.Name = "1b";
 			optMenu2.Items.Add(new MenuItem ("set2A", "", "Reglages 2.A", ""));
 			optMenu2.Items.Add(new MenuItem ("set2B", "", "Reglages 2.B", ""));
-			optMenu2.Items.Add(new MenuItem ("print", "print", "Impression...", ""));
-			optMenu2.Items.Add(new MenuItem ("open",  "open", "Fichiers...", ""));
+			optMenu2.Items.Add(new MenuItem ("print", "file:..\\..\\print.png", "Impression...", ""));
+			optMenu2.Items.Add(new MenuItem ("open",  "file:..\\..\\open.png", "Fichiers...", ""));
 			optMenu2.AdjustSize();
 			fileMenu.Items[4].Submenu = optMenu2;
 

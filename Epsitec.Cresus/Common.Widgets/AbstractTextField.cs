@@ -93,7 +93,7 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Diagnostics.Debug.WriteLine("Dispose TextField " + this.Text);
 				
-				TextField.Blinking -= new EventHandler(this.FlashCursor);
+				TextField.blinking = null;
 				
 				switch ( this.type )
 				{
@@ -516,28 +516,28 @@ namespace Epsitec.Common.Widgets
 		{
 			TextField.showCursor = !TextField.showCursor;
 			
-			if ( TextField.Blinking != null )
+			if ( TextField.blinking != null )
 			{
-				TextField.Blinking(null);
+				TextField.blinking.FlashCursor();
 			}
 		}
 		
 		protected override void OnFocused()
 		{
 			base.OnFocused();
-			TextField.Blinking += new EventHandler(this.FlashCursor);
+			TextField.blinking = this;
 			this.ResetCursor();
 		}
 
 		protected override void OnDefocused()
 		{
-			TextField.Blinking -= new EventHandler(this.FlashCursor);
+			TextField.blinking = null;
 			base.OnDefocused();
 		}
 
 		
 		// Fait clignoter le curseur.
-		protected void FlashCursor(object sender)
+		protected void FlashCursor()
 		{
 			this.Invalidate();
 		}
@@ -1346,6 +1346,6 @@ namespace Epsitec.Common.Widgets
 		protected static System.Windows.Forms.Timer	flashTimer = new System.Windows.Forms.Timer();
 		protected static bool					showCursor = true;
 		
-		protected static event EventHandler		Blinking;
+		protected static AbstractTextField		blinking;
 	}
 }

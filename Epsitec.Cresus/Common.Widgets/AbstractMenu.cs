@@ -834,10 +834,15 @@ namespace Epsitec.Common.Widgets
 
 			public int Add(object value)
 			{
-				int index = this.list.Add (value);
-				this.HandleInsert (value as MenuItem);
-				this.RenumberItems ();
-				return index;
+				if (value is MenuItem)
+				{
+					int index = this.list.Add (value);
+					this.HandleInsert (value as MenuItem);
+					this.RenumberItems ();
+					return index;
+				}
+				
+				throw new System.ArgumentException ("Expecting MenuItem, got " + value.GetType ().Name);
 			}
 
 			public bool IsFixedSize
