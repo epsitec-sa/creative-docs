@@ -27,6 +27,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconContext = new IconContext();
 			this.objectMemory = new ObjectMemory();
 
+			this.iconPrinter = new IconPrinter();
+			this.iconPrinter.IconObjects = this.iconObjects;
+
 			this.textRuler = new TextRuler(this);
 			this.textRuler.Changed += new EventHandler(this.HandleRulerChanged);
 
@@ -2588,6 +2591,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 		static public int totalObjectDraw = 0;
 
 
+		// Imprime l'icône.
+		public void Print(Dialogs.Print dp)
+		{
+			this.iconPrinter.Print(dp, this.iconContext);
+		}
+
+
 		// Génère un événement pour dire qu'il faut changer les panneaux.
 		protected virtual void OnPanelChanged()
 		{
@@ -2723,6 +2733,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		protected IconObjects			iconObjects;
 		protected IconContext			iconContext;
+		protected IconPrinter			iconPrinter;
 		protected AbstractObject		objectMemory;
 		protected AbstractObject		newObject;
 		protected Drawer				link = null;

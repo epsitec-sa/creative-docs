@@ -1032,7 +1032,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Dessine le texte le long de la courbe multiple.
-		protected void DrawTextCurve(Drawing.Graphics graphics, IconContext iconContext)
+		protected void DrawTextCurve(Drawing.IPaintPort graphics, IconContext iconContext)
 		{
 			if ( !this.AdvanceInit() )  return;
 
@@ -1051,40 +1051,52 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				int rank = this.advanceRank-1;
 
-				if ( this.edited && cursorFrom != cursorTo && rank >= cursorFrom && rank < cursorTo )
+				if ( graphics is Drawing.Graphics && this.edited && cursorFrom != cursorTo && rank >= cursorFrom && rank < cursorTo )
 				{
+					Drawing.Graphics g = graphics as Drawing.Graphics;
 					Drawing.Path path = new Drawing.Path();
 					path.MoveTo(pbl);
 					path.LineTo(pbr);
 					path.LineTo(ptr);
 					path.LineTo(ptl);
 					path.Close();
-					graphics.Rasterizer.AddSurface(path);
-					graphics.RenderSolid(IconContext.ColorSelectEdit);
+					g.Rasterizer.AddSurface(path);
+					g.RenderSolid(IconContext.ColorSelectEdit);
 				}
 
 				Drawing.Transform ot = graphics.Transform;
 				graphics.RotateTransformDeg(angle, pos.X, pos.Y);
-				graphics.AddText(pos.X, pos.Y, character, font, fontSize);
-				graphics.RenderSolid(iconContext.AdaptColor(fontColor));
+				if ( graphics is Drawing.Graphics )
+				{
+					Drawing.Graphics g = graphics as Drawing.Graphics;
+					g.AddText(pos.X, pos.Y, character, font, fontSize);
+					g.RenderSolid(iconContext.AdaptColor(fontColor));
+				}
+				else
+				{
+					graphics.Color = iconContext.AdaptColor(fontColor);
+					graphics.PaintText(pos.X, pos.Y, character, font, fontSize);
+				}
 				graphics.Transform = ot;
 
-				if ( this.edited && rank == this.textNavigator.Context.CursorTo )
+				if ( graphics is Drawing.Graphics && this.edited && rank == this.textNavigator.Context.CursorTo )
 				{
-					graphics.LineWidth = 1.0/iconContext.ScaleX;
-					graphics.AddLine(ptl, pbl);
-					graphics.RenderSolid(IconContext.ColorFrameEdit);
+					Drawing.Graphics g = graphics as Drawing.Graphics;
+					g.LineWidth = 1.0/iconContext.ScaleX;
+					g.AddLine(ptl, pbl);
+					g.RenderSolid(IconContext.ColorFrameEdit);
 				}
 				
 				lastTop    = ptr;
 				lastBottom = pbr;
 			}
 
-			if ( this.edited && this.advanceRank-1 == this.textNavigator.Context.CursorTo )
+			if ( graphics is Drawing.Graphics && this.edited && this.advanceRank-1 == this.textNavigator.Context.CursorTo )
 			{
-				graphics.LineWidth = 1.0/iconContext.ScaleX;
-				graphics.AddLine(lastTop, lastBottom);
-				graphics.RenderSolid(IconContext.ColorFrameEdit);
+				Drawing.Graphics g = graphics as Drawing.Graphics;
+				g.LineWidth = 1.0/iconContext.ScaleX;
+				g.AddLine(lastTop, lastBottom);
+				g.RenderSolid(IconContext.ColorFrameEdit);
 			}
 		}
 
@@ -1143,6 +1155,18 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Imprime l'objet.
+		public override void PrintGeometry(Printing.PrintPort port, IconContext iconContext, IconObjects iconObjects)
+		{
+			base.PrintGeometry(port, iconContext, iconObjects);
+
+			int total = this.TotalHandle;
+			if ( total < 6 )  return;
+
+			this.DrawTextCurve(port, iconContext);  // dessine le texte
+		}
+
+		
 		protected TextLayout				textLayout;
 		protected TextNavigator				textNavigator;
 

@@ -560,6 +560,16 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Définition de la couleur pour l'impression.
+		public bool PaintColor(Printing.PrintPort port, IconContext iconContext)
+		{
+			if ( !this.color1.IsOpaque )  return false;
+
+			port.Color = this.color1;
+			return true;
+		}
+
+		
 		protected GradientFill			fill;
 		protected Drawing.Color			color1;
 		protected Drawing.Color			color2;

@@ -46,6 +46,17 @@ namespace Epsitec.Common.Pictogram.Data
 			return new PanelColor(drawer);
 		}
 
+
+		// Définition de la couleur pour l'impression.
+		public bool PaintColor(Printing.PrintPort port, IconContext iconContext)
+		{
+			if ( !this.color.IsOpaque )  return false;
+
+			port.Color = this.color;
+			return true;
+		}
+
+
 		[XmlAttribute]
 		protected Drawing.Color			color = Drawing.Color.FromBrightness(0);
 	}

@@ -359,6 +359,50 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+		// Effectue un port.PaintOutline.
+		public void PaintOutline(Printing.PrintPort port, IconContext iconContext, Drawing.Path path)
+		{
+			if ( this.patternId == 0 )  // trait simple ?
+			{
+				port.LineWidth = this.width;
+				port.LineCap = this.cap;
+				port.LineJoin = this.join;
+				port.LineMiterLimit = this.limit;
+				port.PaintOutline(path);
+			}
+			else if ( this.patternId == -1 )  // traitillé ?
+			{
+				Drawing.DashedPath dp = new Drawing.DashedPath();
+				dp.DefaultZoom = iconContext.ScaleX;
+				dp.Append(path);
+
+				for ( int i=0 ; i<PropertyLine.DashMax ; i++ )
+				{
+					if ( this.dashGap[i] == 0.0 )  continue;
+					double pen = this.dashPen[i];
+					if ( pen == 0.0 )  pen = 0.00001;
+					dp.AddDash(pen, this.dashGap[i]);
+				}
+
+				port.LineWidth = this.width;
+				port.LineCap = this.cap;
+				port.LineJoin = this.join;
+				port.LineMiterLimit = this.limit;
+
+				using ( Drawing.Path temp = dp.GenerateDashedPath() )
+				{
+					port.PaintOutline(temp);
+				}
+			}
+			else	// trait à base de motif ?
+			{
+				port.LineWidth = this.PatternWidth;
+				port.LineCap = Drawing.CapStyle.Round;
+				port.LineJoin = Drawing.JoinStyle.Round;
+				port.PaintOutline(path);
+			}
+		}
+
 		// Cherche le pattern à utiliser d'après son identificateur.
 		static protected ObjectPattern SearchPattern(IconObjects iconObjects, int id)
 		{
