@@ -98,7 +98,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				for ( int j=0 ; j<2 ; j++ )
 				{
-					this.fieldType[j].TextChanged -= new EventHandler(this.HandleTypeChanged);
+					this.fieldType[j].SelectedIndexChanged -= new EventHandler(this.HandleTypeChanged);
 					this.fieldLength[j].TextChanged -= new EventHandler(this.HandleFieldChanged);
 					this.fieldEffect1[j].TextChanged -= new EventHandler(this.HandleFieldChanged);
 					this.fieldEffect2[j].TextChanged -= new EventHandler(this.HandleFieldChanged);
