@@ -25,7 +25,8 @@ namespace Epsitec.Common.Drawing
 		double GetTransformZoom();
 		void RestoreTransform(Transform transform);
 		void ScaleTransform(double sx, double sy, double cx, double cy);
-		void RotateTransform(double angle, double cx, double cy);
+		void RotateTransformDeg(double angle, double cx, double cy);
+		void RotateTransformRad(double angle, double cx, double cy);
 		void TranslateTransform(double ox, double oy);
 		void MergeTransform(Transform transform);
 		
