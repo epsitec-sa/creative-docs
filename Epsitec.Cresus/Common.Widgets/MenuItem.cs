@@ -265,6 +265,17 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		public static MenuItem CreateYesNo(string command, string text, string shortcut, string name)
+		{
+			MenuItem item = new MenuItem (command, "", text, shortcut, name);
+			
+			item.IconNameActiveNo  = "manifest:Epsitec.Common.Widgets.Images.ActiveNo.icon";
+			item.IconNameActiveYes = "manifest:Epsitec.Common.Widgets.Images.ActiveYes.icon";
+			
+			return item;
+		}
+		
+		
 		
 		protected override void OnTextChanged()
 		{
