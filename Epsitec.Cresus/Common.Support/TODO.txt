@@ -13,24 +13,14 @@ Ce qu'il reste à faire dans "Support"
 -	Il faut faire de même pour les attributs :
 	
 	o	BundleAttribute
+	o	CommandAttribute
 	o	SuppressBundleSupportAttribute
 	
-	et il faudrait ajouter un [AttributeUsage(...)] devant ces classes
-	de définition d'attributs. Il faut juste décider des bons attributs
-	utilisables :
-	
-	o	BundleAttribute s'applique uniquement à des propriétés.
-	o	SuppressBundleSupportAttribute s'applique à des classes.
-
 
 -	Dans ImageProvider.cs, ajouter une REGEX pour vérifier que le nom
 	de l'image (si le protocole file: est utilisé) ne contient que des
 	caractères valides (pas de \ ni de /, ni de ..).
 
-
--	La classe ResourceBundle n'est pas implémentée à 100%.
-	La méthode Merge ne marche correctement que pour les
-	strings.
 
 -	La classe ObjectBundler ne contient pas encore le code qui
 	énumère toutes les assemblies chargées et les analyse
@@ -66,7 +56,7 @@ traduites.
 
 Les colonnes dans une table "Data" sont les suivantes :
 
--	Clef (CR_ID, CR_REV, CR_STAT).
+-	Clef et statut (CR_ID, CR_REV, CR_STAT).
 -	Name (DbColumn.Name = "Name";), type DbTypeString, max=100
 -	Data (DbColumn.Name = "Data";), type DbType(DbSimpleType.ByteArray)
 	contenant des BLOBs binaires.
