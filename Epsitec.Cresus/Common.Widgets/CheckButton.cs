@@ -67,7 +67,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Size GetBestFitSize()
 		{
-			Drawing.Size size = this.TextLayout.SingleLineSize;
+			Drawing.Size size = (this.TextLayout == null) ? Drawing.Size.Empty : this.TextLayout.SingleLineSize;
 			
 			size.Width  = System.Math.Ceiling (size.Width + CheckButton.CheckWidth + 3);
 			size.Height = System.Math.Max (System.Math.Ceiling (size.Height), CheckButton.CheckHeight);

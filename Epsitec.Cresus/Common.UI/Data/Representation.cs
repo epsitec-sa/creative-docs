@@ -27,5 +27,7 @@ namespace Epsitec.Common.UI.Data
 		CheckList,
 		CheckRows,
 		CheckColumns,
+		
+		StatusLed,
 	}
 }

@@ -131,6 +131,15 @@ namespace Epsitec.Common.UI
 			Types.IDataConstraint   constraint = source.DataConstraint;
 			Binders.DataValueBinder binder     = new Binders.DataValueBinder (source);
 			
+			if (source.DataType.SystemType == typeof (bool))
+			{
+				Adapters.BooleanAdapter adapter = new Adapters.BooleanAdapter (binder);
+				
+				new Controllers.WidgetStateController (adapter, widget, source.Caption, source.DataType);
+				
+				return true;
+			}
+			
 			Types.IString str_type  = source.DataType as Types.IString;
 			Types.INum    num_type  = source.DataType as Types.INum;
 			Types.IEnum   enum_type = source.DataType as Types.IEnum;
@@ -242,6 +251,11 @@ namespace Epsitec.Common.UI
 				
 			Types.INamedType source_type = source.DataType;
 				
+			if (source_type.SystemType == typeof (bool))
+			{
+				return Data.Representation.StatusLed;
+			}
+			
 			if (source_type is Types.IString)
 			{
 				return Data.Representation.TextField;

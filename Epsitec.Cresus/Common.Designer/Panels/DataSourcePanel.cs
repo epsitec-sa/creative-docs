@@ -73,6 +73,7 @@ namespace Epsitec.Common.Designer.Panels
 			this.CreateDragSource (Representation.NumericUpDown, typeof (Button), @"<img src=""manifest:Epsitec.Common.Designer.Images.WidgetFieldUpDown.icon""/>", "2", 4+34*1, 133, 32, 32);
 			this.CreateDragSource (Representation.RadioList,     typeof (Button), @"<img src=""manifest:Epsitec.Common.Designer.Images.WidgetRadios.icon""/>", "3", 4+34*2, 133, 32, 32);
 			this.CreateDragSource (Representation.CheckColumns,  typeof (Button), @"<img src=""manifest:Epsitec.Common.Designer.Images.WidgetChecks.icon""/>", "4", 4+34*3, 133, 32, 32);
+			this.CreateDragSource (Representation.StatusLed,     typeof (Button), @"<img src=""manifest:Epsitec.Common.Designer.Images.WidgetChecks.icon""/>", "5", 4+34*4, 133, 32, 32);
 			
 			this.UpdateDragSources ();
 		}
@@ -176,6 +177,10 @@ namespace Epsitec.Common.Designer.Panels
 				
 				case "4":
 					widget = this.CreateDataWidget (Representation.CheckColumns);
+					break;
+				
+				case "5":
+					widget = this.CreateDataWidget (Representation.StatusLed);
 					break;
 			}
 			

@@ -1529,7 +1529,7 @@ namespace Epsitec.App.DocumentEditor
 		// Quitte l'application.
 		public void QuitApplication()
 		{
-			Window.Quit();
+			this.Window.Quit();
 		}
 
 

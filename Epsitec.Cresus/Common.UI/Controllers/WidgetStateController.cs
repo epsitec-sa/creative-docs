@@ -111,37 +111,49 @@ namespace Epsitec.Common.UI.Controllers
 		
 		public override void SyncFromAdapter(SyncReason reason)
 		{
-			Adapters.DecimalAdapter adapter = this.Adapter as Adapters.DecimalAdapter;
+			Adapters.DecimalAdapter dec_adapter  = this.Adapter as Adapters.DecimalAdapter;
+			Adapters.BooleanAdapter bool_adapter = this.Adapter as Adapters.BooleanAdapter;
 			
-			if ((adapter != null) &&
+			if ((dec_adapter != null) &&
 				(this.widget != null))
 			{
 				if (this.group != null)
 				{
-					this.group.ActiveIndex = (int) adapter.Value;
+					this.group.ActiveIndex = (int) dec_adapter.Value;
 				}
 				else
 				{
-					this.widget.ActiveState = (adapter.Value == 0) ? WidgetState.ActiveNo : WidgetState.ActiveYes;
+					this.widget.ActiveState = (dec_adapter.Value == 0) ? WidgetState.ActiveNo : WidgetState.ActiveYes;
 				}
+			}
+			if ((bool_adapter != null) &&
+				(this.widget != null))
+			{
+				this.widget.ActiveState = (bool_adapter.Value) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			}
 		}
 		
 		public override void SyncFromUI()
 		{
-			Adapters.DecimalAdapter adapter = this.Adapter as Adapters.DecimalAdapter;
+			Adapters.DecimalAdapter dec_adapter  = this.Adapter as Adapters.DecimalAdapter;
+			Adapters.BooleanAdapter bool_adapter = this.Adapter as Adapters.BooleanAdapter;
 			
-			if ((adapter != null) &&
+			if ((dec_adapter != null) &&
 				(this.widget != null))
 			{
 				if (this.group != null)
 				{
-					adapter.Value = this.group.ActiveIndex;
+					dec_adapter.Value = this.group.ActiveIndex;
 				}
 				else
 				{
-					adapter.Value = this.widget.IsActive ? 1 : 0;
+					dec_adapter.Value = this.widget.IsActive ? 1 : 0;
 				}
+			}
+			if ((bool_adapter != null) &&
+				(this.widget != null))
+			{
+				bool_adapter.Value = this.widget.IsActive;
 			}
 		}
 		

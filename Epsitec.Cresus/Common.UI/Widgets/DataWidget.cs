@@ -129,6 +129,9 @@ namespace Epsitec.Common.UI.Widgets
 					return (enum_type != null) && (enum_type.IsCustomizable == false);
 				case Data.Representation.ComboEditableList:
 					return (enum_type != null) && (enum_type.IsCustomizable == true);
+				
+				case Data.Representation.StatusLed:
+					return (type is Types.INum) || (enum_type != null);
 			}
 			
 			return false;
@@ -227,6 +230,10 @@ namespace Epsitec.Common.UI.Widgets
 				
 				case Data.Representation.CheckRows:
 					this.CreateUICheck (LayoutMode.Rows);
+					break;
+					
+				case Data.Representation.StatusLed:
+					this.CreateUIStatusLed ();
 					break;
 				
 				default:
@@ -441,6 +448,38 @@ namespace Epsitec.Common.UI.Widgets
 			}
 			
 			this.CreateUILayout ();
+		}
+		
+		protected virtual void CreateUIStatusLed()
+		{
+			this.widget_layout_mode = LayoutMode.None;
+			this.widget_container   = this;
+			
+			CheckButton button  = new CheckButton (this.widget_container);
+			StaticText  caption = null;
+			
+			if (this.has_caption)
+			{
+				caption = new StaticText (this.widget_container, this.source.Caption);
+				
+				caption.ResourceManager = this.ResourceManager;
+				caption.Text            = this.source.Caption;
+				caption.Anchor          = AnchorStyles.TopLeft;
+				caption.Width           = this.caption_width;
+				caption.AnchorMargins   = new Drawing.Margins (0, 0, 0, 0);
+			}
+			
+			button.TabIndex      = 1;
+			button.Anchor        = AnchorStyles.Top | AnchorStyles.LeftAndRight;
+			button.AnchorMargins = new Drawing.Margins (this.has_caption ? this.caption_width : 0, 0, 0, 0);
+			
+			Widget.BaseLineAlign (button, caption);
+			
+			this.DefineBestFitSize (this.caption_width + button.GetBestFitSize ().Width, button.MinSize.Height);
+			
+			this.MinSize = new Drawing.Size (this.caption_width + button.MinSize.Width, button.MinSize.Height);
+			
+			Engine.BindWidget (this.source, button);
 		}
 		
 		

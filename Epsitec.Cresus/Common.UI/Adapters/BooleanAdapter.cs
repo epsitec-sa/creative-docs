@@ -52,9 +52,14 @@ namespace Epsitec.Common.UI.Adapters
 		
 		protected override bool ConvertFromObject(object data)
 		{
-			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (this.binder.GetDataType ());
-			this.Value = System.Boolean.Parse (converter.ConvertToString (data));
-			return true;
+			if (data != null)
+			{
+				System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (this.binder.GetDataType ());
+				this.Value = System.Boolean.Parse (converter.ConvertToString (data));
+				return true;
+			}
+			
+			return false;
 		}
 		
 		
