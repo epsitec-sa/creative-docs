@@ -214,6 +214,7 @@ namespace Epsitec.Common.Drawing
 			
 			double x1, y1, x2, y2;
 			AntiGrain.Font.Face.GetTextBounds (this.handle, text, 0, out x1, out y1, out x2, out y2);
+			
 			return new Rectangle (x1, y1, x2 - x1, y2 - y1);
 		}
 		
