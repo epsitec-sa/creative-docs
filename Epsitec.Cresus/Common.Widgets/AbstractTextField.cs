@@ -59,7 +59,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		[Bundle ("ro")]			public bool		IsReadOnly
+		[Bundle]	public bool					IsReadOnly
 		{
 			get
 			{
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[Bundle ("SelOnFocus")]	public bool		AutoSelectOnFocus
+		[Bundle]	public bool					AutoSelectOnFocus
 		{
 			get { return this.autoSelectOnFocus; }
 			set { this.autoSelectOnFocus = value; }
