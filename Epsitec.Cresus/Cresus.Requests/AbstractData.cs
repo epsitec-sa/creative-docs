@@ -1,7 +1,7 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Cresus.Database.Requests
+namespace Epsitec.Cresus.Requests
 {
 	/// <summary>
 	/// La classe AbstractData définit les méthodes communes aux diverses
@@ -49,9 +49,9 @@ namespace Epsitec.Cresus.Database.Requests
 		
 		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-			info.AddValue ("TableName", this.table_name);
-			
 			base.GetObjectData (info, context);
+			
+			info.AddValue ("TableName", this.table_name);
 		}
 		#endregion
 		

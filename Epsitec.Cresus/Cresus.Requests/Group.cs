@@ -1,7 +1,7 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Cresus.Database.Requests
+namespace Epsitec.Cresus.Requests
 {
 	/// <summary>
 	/// La requête Group permet de regrouper un ensemble de requêtes qui sont
@@ -79,6 +79,8 @@ namespace Epsitec.Cresus.Database.Requests
 		
 		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
+			base.GetObjectData (info, context);
+			
 			object[] array = null;
 			int n = this.Count;
 			
@@ -89,8 +91,6 @@ namespace Epsitec.Cresus.Database.Requests
 			}
 			
 			info.AddValue ("RequestArray", array);
-			
-			base.GetObjectData (info, context);
 		}
 		#endregion
 		

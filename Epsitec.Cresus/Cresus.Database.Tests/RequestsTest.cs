@@ -80,12 +80,11 @@ namespace Epsitec.Cresus.Database
 			{
 				BinaryFormatter formatter = new BinaryFormatter ();
 				
-				Requests.Group            group = new Requests.Group ();
-				Requests.InsertStaticData req_1 = new Requests.InsertStaticData ();
-				Requests.InsertStaticData req_2 = new Requests.InsertStaticData ();
+				System.Data.DataTable table = RequestsTest.CreateSampleTable ();
 				
-				req_1.DefineTableName ("Table Abc");
-				req_2.DefineTableName ("Table Xyz");
+				Requests.Group            group = new Requests.Group ();
+				Requests.InsertStaticData req_1 = new Requests.InsertStaticData (table.Rows[0]);
+				Requests.InsertStaticData req_2 = new Requests.InsertStaticData (table.Rows[1]);
 				
 				group.Add (req_1);
 				group.Add (req_2);
@@ -106,11 +105,39 @@ namespace Epsitec.Cresus.Database
 				Requests.InsertStaticData req_1 = group[0] as Requests.InsertStaticData;
 				Requests.InsertStaticData req_2 = group[1] as Requests.InsertStaticData;
 				
-				Assertion.AssertEquals ("Table Abc", req_1.TableName);
-				Assertion.AssertEquals ("Table Xyz", req_2.TableName);
+				Assertion.AssertEquals ("DemoTable", req_1.TableName);
+				Assertion.AssertEquals ("DemoTable", req_2.TableName);
+				
+				Assertion.AssertEquals (1L, req_1.ColumnValues[0]);
+				Assertion.AssertEquals (2L, req_2.ColumnValues[0]);
+				
+				Assertion.AssertEquals ("Pierre Arnaud", req_1.ColumnValues[1]);
+				Assertion.AssertEquals ("Jérôme André",  req_2.ColumnValues[1]);
+				
+				Assertion.AssertEquals (1972, req_1.ColumnValues[2]);
+				Assertion.AssertEquals (1994, req_2.ColumnValues[2]);
 			}
+		}
+		
+		public static System.Data.DataTable CreateSampleTable()
+		{
+			System.Data.DataSet   set   = new System.Data.DataSet ();
+			System.Data.DataTable table = new System.Data.DataTable ("DemoTable");
 			
+			set.Tables.Add (table);
 			
+			System.Data.DataColumn col_1 = new System.Data.DataColumn ("ID", typeof (long));
+			System.Data.DataColumn col_2 = new System.Data.DataColumn ("Name", typeof (string));
+			System.Data.DataColumn col_3 = new System.Data.DataColumn ("Birth Year", typeof (int));
+			
+			table.Columns.Add (col_1);
+			table.Columns.Add (col_2);
+			table.Columns.Add (col_3);
+			
+			table.Rows.Add (new object[] { 1L, "Pierre Arnaud", 1972 });
+			table.Rows.Add (new object[] { 2L, "Jérôme André",  1994 });
+			
+			return table;
 		}
 	}
 }
