@@ -59,7 +59,8 @@ namespace Epsitec.Common.Support
 		
 		protected ResourceBundle(string name)
 		{
-			this.name   = name;
+			this.DefineName (name);
+			
 			this.fields = new Field[0];
 		}
 		
@@ -193,6 +194,14 @@ namespace Epsitec.Common.Support
 		
 		public void DefineName(string name)
 		{
+			if (name != null)
+			{
+				if (! RegexFactory.ResourceName.IsMatch (name))
+				{
+					throw new ResourceException (string.Format ("Name '{0}' is not a valid bundle name.", name));
+				}
+			}
+		
 			this.name = name;
 		}
 		
