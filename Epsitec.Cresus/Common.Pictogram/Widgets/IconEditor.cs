@@ -1281,9 +1281,48 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("QuitApplication")]
 		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.TestShowDialog ();
 			Window.Quit();
 		}
 
+		public enum AccessMode
+		{
+			[Types.Hide] None,
+			
+			Local, LAN, Internet
+		}
+		
+		[System.Flags]
+			public enum LoginOptions
+		{
+			None			= 0,
+			RememberUser	= 1,
+			AutoLogin		= 2,
+		}
+		
+		public void TestShowDialog()
+		{
+			Dialog dialog = new Dialog ("CheckLoad3WithData");
+			
+			UI.Data.Record record = new UI.Data.Record ("Rec", "dialog_with_data_strings");
+			
+			record.AddField ("UserName", "Test", new Types.StringType (), new Support.RegexConstraint (Support.PredefinedRegex.Alpha));
+			record.AddField ("UserAge",  10);
+			record.AddField ("AccessMode", AccessMode.Local);
+			record.AddField ("LoginOptions", LoginOptions.None);
+			
+			dialog.AddRule (record.Validator, "Ok;Apply");
+			
+			dialog.Load ("dialog_with_data");
+			dialog.Data = record;
+			dialog.StoreInitialData ();
+			
+			//	Ouvre le dialogue modal (ce qui bloque !)
+			
+			dialog.OpenDialog ();
+		}
+		
+		
 		[Command ("Mode")]
 		void CommandMode(CommandDispatcher dispatcher, CommandEventArgs e)
 		{

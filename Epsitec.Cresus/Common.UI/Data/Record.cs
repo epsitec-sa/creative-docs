@@ -294,6 +294,22 @@ namespace Epsitec.Common.UI.Data
 				
 				field.DefineCaption (Support.Resources.MakeTextRef (caption));
 				field.DefineDescription (Support.Resources.MakeTextRef (description));
+				
+				//	Traitement spécial des champs qui représentent des énumérations; pour ceux-ci, il faut
+				//	essayer d'affecter des valeurs 'caption' et 'description' pour chaque élément :
+				
+				Types.INamedType type = field.DataType;
+				
+				if (type is Types.EnumType)
+				{
+					Types.EnumType enum_type = type as Types.EnumType;
+					string         enum_id   = string.Concat (this.resource_prefix, "#Type.", enum_type.SystemType.Name);
+					
+					//	On va utiliser les strings du type "base:records#Type.EnumType.Xyz.capt" pour
+					//	définir par exemple 'caption' pour la valeur 'Xyz' du type 'EnumType'.
+					
+					enum_type.DefineTextsFromResources (enum_id);
+				}
 			}
 			
 			this.Add (field);

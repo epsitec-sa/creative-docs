@@ -94,7 +94,7 @@ namespace Epsitec.Common.Designer.Panels
 			column_0_edit_model.ButtonShowCondition = ShowCondition.WhenModified;
 			column_0_edit_model.DefocusAction       = DefocusAction.Modal;
 			
-			new Common.Widgets.Validators.RegexValidator (column_0_edit_model, Support.RegexFactory.ResourceName, false);
+			new Common.Widgets.Validators.RegexValidator (column_0_edit_model, Support.RegexFactory.ResourceFieldName, false);
 			new Common.Widgets.EditArray.UniqueValueValidator (column_0_edit_model, 0);
 			
 			this.edit_array.Columns[0].HeaderText = "Clef";

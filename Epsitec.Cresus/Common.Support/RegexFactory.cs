@@ -15,7 +15,10 @@ namespace Epsitec.Common.Support
 		
 		FileName,
 		PathName,
-		ResourceName,
+		
+		ResourceFullName,				//	"abc123#x.y3.z"
+		ResourceBundleName,				//	"abc"
+		ResourceFieldName,				//	"x.y3.z"
 		
 		DecimalNum
 	}
@@ -39,7 +42,9 @@ namespace Epsitec.Common.Support
 			RegexFactory.alpha_dot_name = new Regex (@"^[a-zA-Z_]([a-zA-Z0-9_]*((?![\.]$)(?<X>[\.])(?!\k<X>))*)*$", options);
 			RegexFactory.file_name      = new Regex (@"^[a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]([a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]*((?![\. ]$)(?<X>[\. ])(?!\k<X>))*)*$", options);
 			RegexFactory.path_name      = new Regex (@"^[a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]([a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]*((?![\.\/\ ]$)(?<X>[\.\/\ ])(?!\k<X>))*)*$", options);
-			RegexFactory.resource_name  = new Regex (@"^[a-zA-Z_](([a-zA-Z0-9_]*((?![\.\#]$)(?<X>[\.\#])(?!\k<X>))*)|(\[[0-9]+\]))*$", options);
+			RegexFactory.r_full_name    = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*" + @"(\#([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*)*" + @"(\[[0-9]{1,4}\])?" + @"$", options);
+			RegexFactory.r_bundle_name  = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*$", options);
+			RegexFactory.r_field_name   = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*$", options);
 			RegexFactory.decimal_num    = new Regex (@"^(\-|\+)?((\d{1,12}(\.\d{0,12})?0*)|(\d{0,12}\.(\d{0,12})?0*))$", options);
 		}
 		
@@ -107,13 +112,15 @@ namespace Epsitec.Common.Support
 		{
 			switch (regex)
 			{
-				case PredefinedRegex.Alpha:			return RegexFactory.AlphaName;
-				case PredefinedRegex.AlphaNum:		return RegexFactory.AlphaNumName;
-				case PredefinedRegex.AlphaNumDot:	return RegexFactory.AlphaNumDotName;
-				case PredefinedRegex.FileName:		return RegexFactory.FileName;
-				case PredefinedRegex.PathName:		return RegexFactory.PathName;
-				case PredefinedRegex.ResourceName:	return RegexFactory.ResourceName;
-				case PredefinedRegex.DecimalNum:	return RegexFactory.DecimalNum;
+				case PredefinedRegex.Alpha:					return RegexFactory.AlphaName;
+				case PredefinedRegex.AlphaNum:				return RegexFactory.AlphaNumName;
+				case PredefinedRegex.AlphaNumDot:			return RegexFactory.AlphaNumDotName;
+				case PredefinedRegex.FileName:				return RegexFactory.FileName;
+				case PredefinedRegex.PathName:				return RegexFactory.PathName;
+				case PredefinedRegex.ResourceFullName:		return RegexFactory.ResourceFullName;
+				case PredefinedRegex.ResourceBundleName:	return RegexFactory.ResourceBundleName;
+				case PredefinedRegex.ResourceFieldName:		return RegexFactory.ResourceFieldName;
+				case PredefinedRegex.DecimalNum:			return RegexFactory.DecimalNum;
 			}
 			
 			return null;
@@ -160,11 +167,27 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public static Regex						ResourceName
+		public static Regex						ResourceFullName
 		{
 			get
 			{
-				return RegexFactory.resource_name;
+				return RegexFactory.r_full_name;
+			}
+		}
+		
+		public static Regex						ResourceBundleName
+		{
+			get
+			{
+				return RegexFactory.r_bundle_name;
+			}
+		}
+		
+		public static Regex						ResourceFieldName
+		{
+			get
+			{
+				return RegexFactory.r_field_name;
 			}
 		}
 		
@@ -192,7 +215,9 @@ namespace Epsitec.Common.Support
 		private static Regex					alpha_dot_name;
 		private static Regex					file_name;
 		private static Regex					path_name;
-		private static Regex					resource_name;
+		private static Regex					r_full_name;
+		private static Regex					r_bundle_name;
+		private static Regex					r_field_name;
 		private static Regex					decimal_num;
 	}
 }

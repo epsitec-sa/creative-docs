@@ -53,6 +53,21 @@ namespace Epsitec.Common.Dialogs
 			dialog.OpenDialog ();
 		}
 		
+		public enum AccessMode
+		{
+			[Types.Hide] None,
+			
+			Local, LAN, Internet
+		}
+		
+		[System.Flags]
+		public enum LoginOptions
+		{
+			None			= 0,
+			RememberUser	= 1,
+			AutoLogin		= 2,
+		}
+		
 		[Test] public void CheckLoad3WithData()
 		{
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookPastel");
@@ -65,7 +80,8 @@ namespace Epsitec.Common.Dialogs
 			
 			record.AddField ("UserName", "Test", new Types.StringType (), new Support.RegexConstraint (Support.PredefinedRegex.Alpha));
 			record.AddField ("UserAge",  10);
-			record.AddField ("Representation", Representation.None);
+			record.AddField ("AccessMode", AccessMode.Local);
+			record.AddField ("LoginOptions", LoginOptions.None);
 			
 			record.FieldChanged += new Support.EventHandler (this.HandleFieldChanged);
 			
@@ -73,7 +89,7 @@ namespace Epsitec.Common.Dialogs
 			
 			Assertion.AssertEquals ("Test", record["UserName"].Value);
 			Assertion.AssertEquals (10, record["UserAge"].Value);
-			Assertion.AssertEquals (Representation.None, record["Representation"].Value);
+			Assertion.AssertEquals (AccessMode.Local, record["AccessMode"].Value);
 			
 //			ScriptWrapper script = new ScriptWrapper ();
 			

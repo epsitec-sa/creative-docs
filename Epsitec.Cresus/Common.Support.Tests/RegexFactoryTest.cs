@@ -204,30 +204,77 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (false, RegexFactory.FileName.IsMatch ("(x#y)"));
 		}
 		
-		[Test] public void CheckResourceName()
+		[Test] public void CheckResourceFullName()
 		{
-			Assert.AreEqual (true,  RegexFactory.ResourceName.IsMatch ("aAb"));
-			Assert.AreEqual (true,  RegexFactory.ResourceName.IsMatch ("a_b"));
-			Assert.AreEqual (true,  RegexFactory.ResourceName.IsMatch ("a1b"));
-			Assert.AreEqual (true,  RegexFactory.ResourceName.IsMatch ("_ab"));
-			Assert.AreEqual (false, RegexFactory.ResourceName.IsMatch ("1ab"));
-			Assert.AreEqual (true,  RegexFactory.ResourceName.IsMatch ("a.b"));
-			Assert.AreEqual (true,  RegexFactory.ResourceName.IsMatch ("a#b"));
-			Assert.AreEqual (true,  RegexFactory.ResourceName.IsMatch ("a#b[0]"));
-			Assert.AreEqual (false, RegexFactory.ResourceName.IsMatch ("a#b[x]"));
-			Assert.AreEqual (false, RegexFactory.ResourceName.IsMatch ("a#b[0]]"));
-			Assert.AreEqual (false, RegexFactory.ResourceName.IsMatch ("a.b."));
-			Assert.AreEqual (false, RegexFactory.ResourceName.IsMatch (".a.b"));
-			Assert.AreEqual (false, RegexFactory.ResourceName.IsMatch ("ab "));
-			Assert.AreEqual (false, RegexFactory.ResourceName.IsMatch ("a  b"));
-			Assert.AreEqual (false, RegexFactory.ResourceName.IsMatch ("a b"));
-			Assert.AreEqual (false, RegexFactory.ResourceName.IsMatch ("$(x-'\"y+z)!"));
-			Assert.AreEqual (false, RegexFactory.ResourceName.IsMatch ("(x---z)!"));
-			Assert.AreEqual (false, RegexFactory.ResourceName.IsMatch ("(x...z)!"));
-			Assert.AreEqual (false, RegexFactory.ResourceName.IsMatch ("(x/y)"));
-			Assert.AreEqual (false, RegexFactory.ResourceName.IsMatch ("(x\\y)"));
-			Assert.AreEqual (false, RegexFactory.ResourceName.IsMatch ("(x#y)"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFullName.IsMatch ("aAb"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFullName.IsMatch ("a_b"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFullName.IsMatch ("a1b"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFullName.IsMatch ("_ab"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("1ab"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFullName.IsMatch ("a.b"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFullName.IsMatch ("a.b.00"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFullName.IsMatch ("a#b"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFullName.IsMatch ("a#b[0]"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFullName.IsMatch ("a.x#b[0]"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFullName.IsMatch ("a#b.z[0]"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFullName.IsMatch ("a.x#b.z.y[1234]"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("a#b[x]"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("a#b[0]]"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("a.b."));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch (".a.b"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("ab "));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("a  b"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("a b"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("$(x-'\"y+z)!"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("(x---z)!"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("(x...z)!"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("(x/y)"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("(x\\y)"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("(x#y)"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("x---z"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("x...z"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("x/y"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("x\\y"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("a.#b"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("a#b."));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("a#b.[0]"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("a[]"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("a[12345]"));
+			Assert.AreEqual (false, RegexFactory.ResourceFullName.IsMatch ("a[1]#b"));
 		}
+		
+		[Test] public void CheckResourceBundleName()
+		{
+			Assert.AreEqual (true,  RegexFactory.ResourceBundleName.IsMatch ("aAb"));
+			Assert.AreEqual (true,  RegexFactory.ResourceBundleName.IsMatch ("a_b"));
+			Assert.AreEqual (true,  RegexFactory.ResourceBundleName.IsMatch ("a1b"));
+			Assert.AreEqual (true,  RegexFactory.ResourceBundleName.IsMatch ("_ab"));
+			Assert.AreEqual (false, RegexFactory.ResourceBundleName.IsMatch ("1ab"));
+			Assert.AreEqual (true,  RegexFactory.ResourceBundleName.IsMatch ("a.b"));
+			Assert.AreEqual (true,  RegexFactory.ResourceBundleName.IsMatch ("a.b.c"));
+			Assert.AreEqual (true,  RegexFactory.ResourceBundleName.IsMatch ("a.b.00"));
+			Assert.AreEqual (false, RegexFactory.ResourceBundleName.IsMatch ("a#b"));
+			Assert.AreEqual (false, RegexFactory.ResourceBundleName.IsMatch ("a[0]"));
+			Assert.AreEqual (false, RegexFactory.ResourceBundleName.IsMatch ("a.b."));
+			Assert.AreEqual (false, RegexFactory.ResourceBundleName.IsMatch (".a.b"));
+		}
+		
+		[Test] public void CheckResourceFieldName()
+		{
+			Assert.AreEqual (true,  RegexFactory.ResourceFieldName.IsMatch ("aAb"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFieldName.IsMatch ("a_b"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFieldName.IsMatch ("a1b"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFieldName.IsMatch ("_ab"));
+			Assert.AreEqual (false, RegexFactory.ResourceFieldName.IsMatch ("1ab"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFieldName.IsMatch ("a.b"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFieldName.IsMatch ("a.b.c"));
+			Assert.AreEqual (true,  RegexFactory.ResourceFieldName.IsMatch ("a.b.00"));
+			Assert.AreEqual (false, RegexFactory.ResourceFieldName.IsMatch ("a#b"));
+			Assert.AreEqual (false, RegexFactory.ResourceFieldName.IsMatch ("a[0]"));
+			Assert.AreEqual (false, RegexFactory.ResourceFieldName.IsMatch ("a.b."));
+			Assert.AreEqual (false, RegexFactory.ResourceFieldName.IsMatch (".a.b"));
+		}
+		
 		
 		
 		protected void DumpGroups(GroupCollection groups)

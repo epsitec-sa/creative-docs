@@ -382,7 +382,7 @@ namespace Epsitec.Common.Widgets
 			if (edit.InteractionMode == ScrollInteractionMode.Edition)
 			{
 				TextFieldEx col_0_text = edit.Columns[0].EditionWidget as TextFieldEx;
-				IValidator validator = new Validators.RegexValidator (col_0_text, Support.RegexFactory.ResourceName);
+				IValidator validator = new Validators.RegexValidator (col_0_text, Support.RegexFactory.ResourceBundleName);
 				col_0_text.EditionAccepted += new EventHandler(this.HandleColumnZeroEditionAccepted);
 				col_0_text.EditionRejected += new EventHandler(this.HandleColumnZeroEditionRejected);
 			}

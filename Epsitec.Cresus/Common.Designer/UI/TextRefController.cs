@@ -77,9 +77,9 @@ namespace Epsitec.Common.Designer.UI
 			this.combo_field.Name            = "Value_3";
 			this.combo_field.DefocusAction   = DefocusAction.AutoAcceptOrRejectEdition;
 			
-			IValidator field_validator_1 = new Common.Widgets.Validators.RegexValidator (this.combo_field, RegexFactory.ResourceName, false);
+			IValidator field_validator_1 = new Common.Widgets.Validators.RegexValidator (this.combo_field, RegexFactory.ResourceFieldName, false);
 			IValidator field_validator_2 = new CustomFieldValidator (this.combo_field, this);
-			IValidator bundle_validator  = new Common.Widgets.Validators.RegexValidator (this.combo_bundle, RegexFactory.ResourceName, false);
+			IValidator bundle_validator  = new Common.Widgets.Validators.RegexValidator (this.combo_bundle, RegexFactory.ResourceBundleName, false);
 			
 			this.combo_bundle.SelectedIndexChanged += new EventHandler (this.HandleComboBundleSelectedIndexChanged);
 			this.combo_field.SelectedIndexChanged  += new EventHandler (this.HandleComboFieldSelectedIndexChanged);

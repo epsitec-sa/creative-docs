@@ -220,7 +220,7 @@ namespace Epsitec.Common.Support
 		{
 			if (name != null)
 			{
-				if (! RegexFactory.ResourceName.IsMatch (name))
+				if (! RegexFactory.ResourceBundleName.IsMatch (name))
 				{
 					throw new ResourceException (string.Format ("Name '{0}' is not a valid bundle name.", name));
 				}

@@ -179,7 +179,7 @@ namespace Epsitec.Common.Support.Implementation
 				string full_name   = files[i];
 				string bundle_name = full_name.Substring (start, full_name.Length - strip);
 				
-				if (! RegexFactory.ResourceName.IsMatch (bundle_name))
+				if (! RegexFactory.ResourceBundleName.IsMatch (bundle_name))
 				{
 					continue;
 				}
