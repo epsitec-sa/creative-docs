@@ -21,24 +21,24 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldRadius = new TextFieldSlider(this);
-			this.fieldRadius.MinRange =  0;
-			this.fieldRadius.MaxRange = 10;
+			this.fieldRadius.MinValue =  0;
+			this.fieldRadius.MaxValue = 10;
 			this.fieldRadius.Step = 1;
 			this.fieldRadius.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldRadius.TabIndex = 2;
 			this.fieldRadius.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldOx = new TextFieldSlider(this);
-			this.fieldOx.MinRange = -10;
-			this.fieldOx.MaxRange =  10;
+			this.fieldOx.MinValue = -10;
+			this.fieldOx.MaxValue =  10;
 			this.fieldOx.Step = 1;
 			this.fieldOx.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldOx.TabIndex = 3;
 			this.fieldOx.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldOy = new TextFieldSlider(this);
-			this.fieldOy.MinRange = -10;
-			this.fieldOy.MaxRange =  10;
+			this.fieldOy.MinValue = -10;
+			this.fieldOy.MaxValue =  10;
 			this.fieldOy.Step = 1;
 			this.fieldOy.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldOy.TabIndex = 4;
@@ -95,9 +95,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( p == null )  return;
 
 			this.fieldColor.Color  = p.Color;
-			this.fieldRadius.Value = p.Radius;
-			this.fieldOx.Value     = p.Ox;
-			this.fieldOy.Value     = p.Oy;
+			this.fieldRadius.Value = (decimal) p.Radius;
+			this.fieldOx.Value     = (decimal) p.Ox;
+			this.fieldOy.Value     = (decimal) p.Oy;
 		}
 
 		// Widget -> propriété.
@@ -107,9 +107,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			base.GetProperty(p);
 
 			p.Color  = this.fieldColor.Color;
-			p.Radius = this.fieldRadius.Value;
-			p.Ox     = this.fieldOx.Value;
-			p.Oy     = this.fieldOy.Value;
+			p.Radius = (double) this.fieldRadius.Value;
+			p.Ox     = (double) this.fieldOx.Value;
+			p.Oy     = (double) this.fieldOy.Value;
 
 			return p;
 		}

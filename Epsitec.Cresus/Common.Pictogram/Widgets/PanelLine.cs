@@ -15,9 +15,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
 
 			this.field = new TextFieldSlider(this);
-			this.field.MinRange = 0;
-			this.field.MaxRange = 5;
-			this.field.Step = 0.5;
+			this.field.MinValue = 0;
+			this.field.MaxValue = 5;
+			this.field.Step = 0.5M;
+			this.field.Resolution = 0.1M;
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -81,7 +82,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			PropertyLine p = property as PropertyLine;
 			if ( p == null )  return;
 
-			this.field.Value = p.Width;
+			this.field.Value = (decimal) p.Width;
 
 			int sel = -1;
 			if ( p.Cap == Drawing.CapStyle.Round  )  sel = 0;
@@ -104,7 +105,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			PropertyLine p = new PropertyLine();
 			base.GetProperty(p);
 
-			p.Width = this.field.Value;
+			p.Width = (double) this.field.Value;
 
 			int sel = this.SelectButtonCap;
 			if ( sel == 0 )  p.Cap = Drawing.CapStyle.Round;

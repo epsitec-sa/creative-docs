@@ -5,12 +5,13 @@ namespace Epsitec.Common.Widgets
 	/// HScroller et VScroller.
 	/// </summary>
 	[Support.SuppressBundleSupport]
-	public abstract class AbstractScroller : Widget
+	public abstract class AbstractScroller : Widget, Helpers.IDragBehaviorHost
 	{
-		// Constructeur de l'ascenseur.
 		protected AbstractScroller(bool vertical)
 		{
-			this.vertical = vertical;
+			this.drag_behavior = new Helpers.DragBehavior (this, true, false);
+			
+			this.is_vertical = vertical;
 			
 			this.InternalState |= InternalState.AutoEngage;
 			this.InternalState |= InternalState.Engageable;
@@ -50,24 +51,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected override void OnStillEngaged()
-		{
-			base.OnStillEngaged ();
-			this.DelayPress ();
-		}
-
-		protected override void SetBounds(double x1, double y1, double x2, double y2)
-		{
-			double dx = x2-x1;
-			double dy = y2-y1;
-			
-			this.sizeOk = (dx >= this.MinSize.Width) && (dy >= this.MinSize.Height);
-			
-			base.SetBounds (x1, y1, x2, y2);
-		}
-
-
-		public bool IsInverted
+		public bool							IsInverted
 		{
 			// Inversion du fonctionnement.
 			// Ascenseur vertical:   false -> zéro en bas
@@ -77,21 +61,21 @@ namespace Epsitec.Common.Widgets
 			
 			get
 			{
-				return this.invert;
+				return this.is_inverted;
 			}
 
 			set
 			{
-				if (this.invert != value)
+				if (this.is_inverted != value)
 				{
-					this.invert = value;
+					this.is_inverted = value;
 					this.Invalidate();
 				}
 			}
 		}
 		
 		
-		public double Range
+		public double						Range
 		{
 			//	Hauteur totale représentée par l'ascenseur (unités quelconques).
 			
@@ -105,10 +89,11 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert (value >= 0);
 				
 				this.Maximum = this.Minimum + value;
+				this.UpdateInternalGeometry ();
 			}
 		}
 		
-		public double VisibleRangeRatio
+		public double						VisibleRangeRatio
 		{
 			//	Hauteur visible représentée par l'ascenseur (de 0 à 1).
 			
@@ -125,12 +110,13 @@ namespace Epsitec.Common.Widgets
 				if (this.display != value)
 				{
 					this.display = value;
+					this.UpdateInternalGeometry ();
 					this.Invalidate();
 				}
 			}
 		}
 
-		public double Minimum
+		public double						Minimum
 		{
 			get
 			{
@@ -141,12 +127,13 @@ namespace Epsitec.Common.Widgets
 				if (this.minimum != value)
 				{
 					this.minimum = value;
+					this.UpdateInternalGeometry ();
 					this.Invalidate ();
 				}
 			}
 		}
 		
-		public double Maximum
+		public double						Maximum
 		{
 			get
 			{
@@ -157,12 +144,13 @@ namespace Epsitec.Common.Widgets
 				if (this.maximum != value)
 				{
 					this.maximum = value;
+					this.UpdateInternalGeometry ();
 					this.Invalidate ();
 				}
 			}
 		}
 		
-		public double Value
+		public double						Value
 		{
 			// Valeur représentée par l'ascenseur (position).
 			get
@@ -185,13 +173,13 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.position )
 				{
 					this.position = value;
-					this.Invalidate();
 					this.OnValueChanged();
+					this.Invalidate();
 				}
 			}
 		}
 		
-		public double SmallChange
+		public double						SmallChange
 		{
 			// Valeur avancée par les boutons.
 			get
@@ -205,7 +193,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public double LargeChange
+		public double						LargeChange
 		{
 			// Valeur avancée en cliquant hors de la cabine.
 			get
@@ -220,318 +208,436 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public GlyphButton ArrowUp
+		protected Zone						HiliteZone
+		{
+			get
+			{
+				return this.hiliteZone;
+			}
+			set
+			{
+				if (this.hiliteZone != value)
+				{
+					this.hiliteZone = value;
+					this.UpdateInternalGeometry ();
+					this.Invalidate ();
+				}
+			}
+		}
+		
+		protected GlyphButton				ArrowUp
 		{
 			get { return this.arrowUp; }
 		}
 		
-		public GlyphButton ArrowDown
+		protected GlyphButton				ArrowDown
 		{
 			get { return this.arrowDown; }
 		}
 		
 		
-		// Met à jour la géométrie des boutons de l'ascenseur.
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
-
-			Drawing.Rectangle rect = this.Bounds;
-
-			if ( this.arrowUp != null )
-			{
-				if ( this.vertical )
-				{
-					Drawing.Rectangle aRect = new Drawing.Rectangle(0, rect.Height-rect.Width, rect.Width, rect.Width);
-					this.arrowUp.Bounds = aRect;
-					this.arrowUp.GlyphType = GlyphType.ArrowUp;
-				}
-				else
-				{
-					Drawing.Rectangle aRect = new Drawing.Rectangle(rect.Width-rect.Height, 0, rect.Height, rect.Height);
-					this.arrowUp.Bounds = aRect;
-					this.arrowUp.GlyphType = GlyphType.ArrowRight;
-				}
-			}
-			if ( this.arrowDown != null )
-			{
-				if ( this.vertical )
-				{
-					Drawing.Rectangle aRect = new Drawing.Rectangle(0, 0, rect.Width, rect.Width);
-					this.arrowDown.Bounds = aRect;
-					this.arrowDown.GlyphType = GlyphType.ArrowDown;
-				}
-				else
-				{
-					Drawing.Rectangle aRect = new Drawing.Rectangle(0, 0, rect.Height, rect.Height);
-					this.arrowDown.Bounds = aRect;
-					this.arrowDown.GlyphType = GlyphType.ArrowLeft;
-				}
-			}
+			this.UpdateGeometry ();
 		}
-
-
-		// Gestion d'un événement.
-		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		
+		protected virtual void UpdateGeometry()
 		{
-			if ( !this.sizeOk ) return;
-
-			switch ( message.Type )
+			if ((this.arrowDown == null) ||
+				(this.arrowUp == null))
 			{
-				case MessageType.MouseDown:
-					if ( this.Range > 0 && this.VisibleRangeRatio > 0 )
-					{
-						this.mouseDown = true;
-						this.BeginPress(this.vertical ? pos.Y : pos.X);
-					}
-					break;
-				
-				case MessageType.MouseMove:
-					if ( this.mouseDown )
-					{
-						this.MovePress(this.vertical ? pos.Y : pos.X);
-					}
-					break;
-
-				case MessageType.MouseUp:
-					if ( this.mouseDown )
-					{
-						this.EndPress(this.vertical ? pos.Y : pos.X);
-						this.mouseDown = false;
-					}
-					break;
+				return;
 			}
 			
-			message.Consumer = this;
-		}
-
-		// Appelé lorsque le bouton de la souris est pressé pour déplacer la cabine.
-		protected void BeginPress(double pos)
-		{
-			if ( this.vertical )
+			Drawing.Rectangle rect = this.Client.Bounds;
+			
+			double arrow_length = this.is_vertical ? rect.Width : rect.Height;
+			double total_length = this.is_vertical ? rect.Height : rect.Width;
+			
+			if (arrow_length * 2 > total_length - AbstractScroller.minimalThumb)
 			{
-				if ( pos < this.thumbRect.Bottom )
+				//	Les boutons occupent trop de place. Il faut donc les comprimer.
+				
+				arrow_length = System.Math.Floor ((total_length - AbstractScroller.minimalThumb) / 2);
+				
+				if (arrow_length < AbstractScroller.minimalArrow)
 				{
-					this.pageScroll = -this.pageStep;
-					this.DelayPress();
+					//	S'il n'y a plus assez de place pour afficher un bouton visible,
+					//	autant les cacher complètement !
+					
+					arrow_length = 0;
 				}
-				else if ( pos > this.thumbRect.Top )
-				{
-					this.pageScroll = this.pageStep;
-					this.DelayPress();
-				}
-				else
-				{
-					this.pageScroll = 0;
-					this.thumbOffset = pos-this.thumbRect.Bottom;
-				}
+			}
+			
+			if (this.is_vertical)
+			{
+				Drawing.Rectangle bounds;
+				
+				bounds = new Drawing.Rectangle (0, rect.Height - arrow_length, rect.Width, arrow_length);
+				
+				this.arrowUp.SetVisible (arrow_length > 0);
+				this.arrowUp.Bounds    = bounds;
+				this.arrowUp.GlyphType = GlyphType.ArrowUp;
+				
+				bounds = new Drawing.Rectangle (0, 0, rect.Width, arrow_length);
+				
+				this.arrowDown.SetVisible (arrow_length > 0);
+				this.arrowDown.Bounds    = bounds;
+				this.arrowDown.GlyphType = GlyphType.ArrowDown;
+				
+				rect.Bottom += arrow_length;
+				rect.Top    -= arrow_length;
 			}
 			else
 			{
-				if ( pos < this.thumbRect.Left )
+				Drawing.Rectangle bounds;
+				
+				bounds = new Drawing.Rectangle (rect.Width - arrow_length, 0, arrow_length, rect.Height);
+				
+				this.arrowUp.SetVisible (arrow_length > 0);
+				this.arrowUp.Bounds    = bounds;
+				this.arrowUp.GlyphType = GlyphType.ArrowRight;
+				
+				bounds = new Drawing.Rectangle (0, 0, arrow_length, rect.Height);
+				
+				this.arrowDown.SetVisible (arrow_length > 0);
+				this.arrowDown.Bounds    = bounds;
+				this.arrowDown.GlyphType = GlyphType.ArrowLeft;
+				
+				rect.Left  += arrow_length;
+				rect.Right -= arrow_length;
+			}
+			
+			this.sliderRect = rect;
+			this.UpdateInternalGeometry ();
+		}
+		
+		protected virtual void UpdateInternalGeometry()
+		{
+			Drawing.Rectangle slider_rect = this.sliderRect;
+			Drawing.Rectangle tab_rect    = Drawing.Rectangle.Empty;
+			Drawing.Rectangle thumb_rect  = Drawing.Rectangle.Empty;
+			
+			if ((this.Range > 0) && (this.VisibleRangeRatio > 0))
+			{
+				double pos = this.is_inverted ? this.Range - this.position : this.position;
+				
+				if (this.is_vertical)
 				{
-					this.pageScroll = -this.pageStep;
-					this.DelayPress();
-				}
-				else if ( pos > this.thumbRect.Right )
-				{
-					this.pageScroll = this.pageStep;
-					this.DelayPress();
+					double h = slider_rect.Height * this.VisibleRangeRatio;
+					h = System.Math.Max (h, AbstractScroller.minimalThumb);
+					h = System.Math.Min (h, slider_rect.Height);
+					double p = (pos/this.Range) * (slider_rect.Height-h);
+					
+					thumb_rect = slider_rect;
+					thumb_rect.Bottom += p;
+					thumb_rect.Height  = h;
+					
+					switch (this.HiliteZone)
+					{
+						case Zone.PageDown:
+							tab_rect     = slider_rect;
+							tab_rect.Top = thumb_rect.Bottom;
+							break;
+						case Zone.PageUp:
+							tab_rect        = slider_rect;
+							tab_rect.Bottom = thumb_rect.Top;
+							break;
+					}
 				}
 				else
 				{
-					this.pageScroll = 0;
-					this.thumbOffset = pos-this.thumbRect.Left;
+					double h = slider_rect.Width * this.VisibleRangeRatio;
+					h = System.Math.Max (h, AbstractScroller.minimalThumb);
+					h = System.Math.Min (h, slider_rect.Width);
+					double p = (pos/this.Range) * (slider_rect.Width-h);
+					
+					thumb_rect = slider_rect;
+					thumb_rect.Left += p;
+					thumb_rect.Width = h;
+					
+					switch (this.HiliteZone)
+					{
+						case Zone.PageDown:
+							tab_rect       = slider_rect;
+							tab_rect.Right = thumb_rect.Left;
+							break;
+						case Zone.PageUp:
+							tab_rect      = slider_rect;
+							tab_rect.Left = thumb_rect.Right;
+							break;
+					}
 				}
 			}
+			
+			this.thumbRect  = thumb_rect;
+			this.tabRect    = tab_rect;
 		}
 
-		// Appelé lorsque la souris est déplacée pour déplacer la cabine.
-		protected void MovePress(double pos)
+		
+		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			if ( this.pageScroll == 0 )
+			if (message.IsMouseType)
 			{
-				double offset;
-				double length;
-				
-				if ( this.vertical )
+				if (this.is_scrolling)
 				{
-					offset = pos-this.thumbOffset-this.sliderRect.Bottom;
-					length = this.sliderRect.Height-this.thumbRect.Height;
-				}
-				else
-				{
-					offset = pos-this.thumbOffset-this.sliderRect.Left;
-					length = this.sliderRect.Width-this.thumbRect.Width;
-				}
-				
-				if ( length > 0 )
-				{
-					double new_pos = offset / length;
-					
-					if ( this.invert )
+					if (message.Type == MessageType.MouseUp)
 					{
-						new_pos = 1.0 - new_pos;
+						this.is_scrolling = false;
+						message.Consumer = this;
 					}
 					
-					this.Value = new_pos * this.Range + this.Minimum;
+					return;
+				}
+				
+				if (! this.is_dragging)
+				{
+					this.HiliteZone = this.DetectZone (pos);
+					
+					if ((this.HiliteZone == Zone.PageDown) ||
+						(this.HiliteZone == Zone.PageUp))
+					{
+						if ((message.Type == MessageType.MouseDown) &&
+							(message.Button == MouseButtons.Left))
+						{
+							this.is_scrolling = true;
+							this.ScrollByPages ();
+							message.Consumer = this;
+							return;
+						}
+					}
+				}
+			}
+			
+			if (! this.is_scrolling)
+			{
+				if (this.drag_behavior.ProcessMessage (message, pos))
+				{
+					base.ProcessMessage (message, pos);
 				}
 			}
 		}
-
-		// Appelé lorsque la souris est maintenue pressée.
-		// TODO: appeler cette méthode régulièrement ...
-		protected void DelayPress()
+		
+		
+		protected Zone DetectZone(Drawing.Point pos)
 		{
-			System.Diagnostics.Debug.Assert (this.mouseDown);
-			
-			if ( this.pageScroll != 0 )
+			if (this.IsEnabled)
 			{
-				if ( this.invert )  this.Value -= this.pageScroll;
-				else                this.Value += this.pageScroll;
+				if (this.is_vertical)
+				{
+					if (pos.Y < this.thumbRect.Bottom)
+					{
+						return Zone.PageDown;
+					}
+					else if (pos.Y > this.thumbRect.Top)
+					{
+						return Zone.PageUp;
+					}
+					else
+					{
+						return Zone.Thumb;
+					}
+				}
+				else
+				{
+					if (pos.X < this.thumbRect.Left)
+					{
+						return Zone.PageDown;
+					}
+					else if (pos.X > this.thumbRect.Right)
+					{
+						return Zone.PageUp;
+					}
+					else
+					{
+						return Zone.Thumb;
+					}
+				}
+			}
+			
+			return Zone.None;
+		}
+
+		protected void ScrollByDragging(double pos)
+		{
+			double offset;
+			double length;
+			
+			if (this.is_vertical)
+			{
+				offset = pos-this.sliderRect.Bottom;
+				length = this.sliderRect.Height-this.thumbRect.Height;
+			}
+			else
+			{
+				offset = pos-this.sliderRect.Left;
+				length = this.sliderRect.Width-this.thumbRect.Width;
+			}
+			
+			if (length > 0)
+			{
+				double new_pos = offset / length;
+				
+				if (this.is_inverted)
+				{
+					new_pos = 1.0 - new_pos;
+				}
+				
+				this.Value = new_pos * this.Range + this.Minimum;
 			}
 		}
 
-		// Appelé lorsque le bouton de la souris est relâché pour déplacer la cabine.
-		protected void EndPress(double pos)
+		protected void ScrollByPages()
 		{
-			this.MovePress(pos);
-			this.pageScroll = 0;
+			switch (this.HiliteZone)
+			{
+				case Zone.PageUp:
+					this.Value += (this.is_inverted) ? -this.pageStep : this.pageStep;
+					break;
+				case Zone.PageDown:
+					this.Value += (this.is_inverted) ? this.pageStep : -this.pageStep;
+					break;
+			}
 		}
 
-		// Gestion d'un événement lorsqu'un bouton est pressé.
+		
 		private void HandleButton(object sender)
 		{
 			GlyphButton button = sender as GlyphButton;
 
 			if ( button == this.arrowUp )
 			{
-				if ( this.invert )  this.Value -= this.buttonStep;
-				else                this.Value += this.buttonStep;
+				if ( this.is_inverted )  this.Value -= this.buttonStep;
+				else                     this.Value += this.buttonStep;
 				this.Invalidate();
 			}
 			else if ( button == this.arrowDown )
 			{
-				if ( this.invert )  this.Value += this.buttonStep;
-				else                this.Value -= this.buttonStep;
+				if ( this.is_inverted )  this.Value += this.buttonStep;
+				else                     this.Value -= this.buttonStep;
 				this.Invalidate();
 			}
 		}
 
 
-		// Génère un événement pour dire que l'ascenseur a bougé.
-		protected virtual void OnValueChanged()
+		protected virtual  void OnValueChanged()
 		{
+			this.UpdateInternalGeometry ();
 			if ( this.ValueChanged != null )  // qq'un écoute ?
 			{
 				this.ValueChanged(this);
 			}
 		}
 
+		protected override void OnExited(MessageEventArgs e)
+		{
+			base.OnExited (e);
+			this.HiliteZone = Zone.None;
+		}
 
-		// Dessine l'ascenseur.
+		protected override void OnStillEngaged()
+		{
+			base.OnStillEngaged ();
+			this.ScrollByPages ();
+		}
+
+		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			if ( !this.sizeOk ) return;
-			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-
-			Drawing.Rectangle rect = this.Client.Bounds;
-			this.sliderRect = rect;
-			if ( this.vertical )
-			{
-				this.sliderRect.Inflate(0, -this.sliderRect.Width);
-			}
-			else
-			{
-				this.sliderRect.Inflate(-this.sliderRect.Height, 0);
-			}
-
-			Drawing.Rectangle tabRect = Drawing.Rectangle.Empty;
-
-			if ( this.Range > 0 && this.VisibleRangeRatio > 0 )
-			{
-				double pos = this.position;
-				if ( this.invert )  pos = this.Range-pos;
-
-				if ( this.vertical )
-				{
-					double h = this.sliderRect.Height*this.display;
-					if ( h < AbstractScroller.minimalThumb )  h = AbstractScroller.minimalThumb;
-					double p = (pos/this.Range)*(this.sliderRect.Height-h);
-					this.thumbRect = this.sliderRect;
-					this.thumbRect.Bottom += p;
-					this.thumbRect.Height = h;
-
-					if ( this.pageScroll < 0 )
-					{
-						tabRect = this.sliderRect;
-						tabRect.Top = this.thumbRect.Bottom;
-					}
-					if ( this.pageScroll > 0 )
-					{
-						tabRect = this.sliderRect;
-						tabRect.Bottom = this.thumbRect.Top;
-					}
-				}
-				else
-				{
-					double h = this.sliderRect.Width*this.display;
-					if ( h < AbstractScroller.minimalThumb )  h = AbstractScroller.minimalThumb;
-					double p = (pos/this.Range)*(this.sliderRect.Width-h);
-					this.thumbRect = this.sliderRect;
-					this.thumbRect.Left += p;
-					this.thumbRect.Width = h;
-
-					if ( this.pageScroll < 0 )
-					{
-						tabRect = this.sliderRect;
-						tabRect.Right = this.thumbRect.Left;
-					}
-					if ( this.pageScroll > 0 )
-					{
-						tabRect = this.sliderRect;
-						tabRect.Left = this.thumbRect.Right;
-					}
-				}
-			}
-
-			Widgets.Direction dir = this.vertical ? Direction.Up : Direction.Left;
-
+			
+			Widgets.Direction dir   = this.is_vertical ? Direction.Up : Direction.Left;
+			WidgetState       state = this.PaintState;
+			
 			// Dessine le fond.
-			adorner.PaintScrollerBackground(graphics, rect, this.thumbRect, tabRect, this.PaintState, dir);
+			adorner.PaintScrollerBackground (graphics, this.Client.Bounds, this.thumbRect, this.tabRect, state & ~WidgetState.Entered, dir);
 			
 			// Dessine la cabine.
-			if ( this.Range > 0 && this.VisibleRangeRatio > 0 && this.IsEnabled )
+			if (this.thumbRect.IsValid && this.IsEnabled)
 			{
-				rect = this.thumbRect;
+				Drawing.Rectangle rect = this.thumbRect;
 				graphics.Align(ref rect);
-				adorner.PaintScrollerHandle(graphics, rect, Drawing.Rectangle.Empty, this.PaintState&(~WidgetState.Engaged), dir);
+				
+				if (this.HiliteZone != Zone.Thumb)
+				{
+					state &= ~ WidgetState.Entered;
+					state &= ~ WidgetState.Engaged;
+				}
+				if (this.is_dragging)
+				{
+					state |= WidgetState.Engaged;
+					state |= WidgetState.Entered;
+				}
+				
+				adorner.PaintScrollerHandle(graphics, rect, this.tabRect, state, dir);
 			}
 		}
 
 
-		public event Support.EventHandler ValueChanged;
-
+		#region IDragBehaviorHost Members
+		Drawing.Point						Helpers.IDragBehaviorHost.DragLocation
+		{
+			get
+			{
+				return this.thumbRect.Location;
+			}
+		}
+		
+		
+		void Helpers.IDragBehaviorHost.OnDragBegin(Drawing.Point cursor)
+		{
+			this.is_dragging = true;
+			this.Invalidate ();
+		}
+		
+		void Helpers.IDragBehaviorHost.OnDragging(DragEventArgs e)
+		{
+			this.ScrollByDragging (this.is_vertical ? e.ToPoint.Y : e.ToPoint.X);
+		}
+		
+		void Helpers.IDragBehaviorHost.OnDragEnd()
+		{
+			this.is_dragging = false;
+			this.Invalidate ();
+		}
+		
+		
+		public event Support.EventHandler	ValueChanged;
+		#endregion
+		
+		#region Zone enumeration
+		protected enum Zone
+		{
+			None,
+			Thumb,
+			PageUp,
+			PageDown
+		}
+		#endregion
 		
 		protected static readonly double	defaultBreadth = 17;
 		protected static readonly double	minimalThumb = 8;
+		protected static readonly double	minimalArrow = 6;
 		
-		protected bool						vertical = true;
-		protected bool						sizeOk = false;
-		protected bool						invert = false;
-		protected double					minimum = 0.0;
-		protected double					maximum = 1.0;
-		protected double					display = 0.5;
-		protected double					position = 0;
-		protected double					buttonStep = 0.1;
-		protected double					pageStep = 0.2;
-		protected GlyphButton				arrowUp;
-		protected GlyphButton				arrowDown;
-		protected bool						mouseDown;
-		protected double					thumbOffset;
-		protected double					pageScroll;
-		protected Drawing.Rectangle			sliderRect;
-		protected Drawing.Rectangle			thumbRect;
+		private Helpers.DragBehavior		drag_behavior;
+		
+		private bool						is_vertical;
+		private bool						is_inverted;
+		private double						minimum = 0.0;
+		private double						maximum = 1.0;
+		private double						display = 0.5;
+		private double						position = 0;
+		private double						buttonStep = 0.1;
+		private double						pageStep = 0.2;
+		private GlyphButton					arrowUp;
+		private GlyphButton					arrowDown;
+		private bool						is_scrolling;
+		private bool						is_dragging;
+		private Drawing.Rectangle			sliderRect;
+		private Drawing.Rectangle			thumbRect;
+		private Drawing.Rectangle			tabRect;
+		
+		private Zone						hiliteZone;
 	}
 }

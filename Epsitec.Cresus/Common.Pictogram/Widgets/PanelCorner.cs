@@ -27,24 +27,24 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldRadius = new TextFieldSlider(this);
-			this.fieldRadius.MinRange = 0;
-			this.fieldRadius.MaxRange = 10;
+			this.fieldRadius.MinValue = 0;
+			this.fieldRadius.MaxValue = 10;
 			this.fieldRadius.Step = 1;
 			this.fieldRadius.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldRadius.TabIndex = 2;
 			this.fieldRadius.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldEffect1 = new TextFieldSlider(this);
-			this.fieldEffect1.MinRange = -100;
-			this.fieldEffect1.MaxRange = 200;
+			this.fieldEffect1.MinValue = -100;
+			this.fieldEffect1.MaxValue = 200;
 			this.fieldEffect1.Step = 5;
 			this.fieldEffect1.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldEffect1.TabIndex = 3;
 			this.fieldEffect1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldEffect2 = new TextFieldSlider(this);
-			this.fieldEffect2.MinRange = -100;
-			this.fieldEffect2.MaxRange = 200;
+			this.fieldEffect2.MinValue = -100;
+			this.fieldEffect2.MaxValue = 200;
 			this.fieldEffect2.Step = 5;
 			this.fieldEffect2.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldEffect2.TabIndex = 4;
@@ -103,9 +103,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( p == null )  return;
 
 			this.fieldType.SelectedIndex = PropertyCorner.ConvType(p.CornerType);
-			this.fieldRadius.Value  = p.Radius;
-			this.fieldEffect1.Value = p.Effect1*100;
-			this.fieldEffect2.Value = p.Effect2*100;
+			this.fieldRadius.Value  = (decimal) p.Radius;
+			this.fieldEffect1.Value = (decimal) p.Effect1*100;
+			this.fieldEffect2.Value = (decimal) p.Effect2*100;
 
 			this.EnableWidgets();
 		}
@@ -117,9 +117,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			base.GetProperty(p);
 
 			p.CornerType = PropertyCorner.ConvType(this.fieldType.SelectedIndex);
-			p.Radius  = this.fieldRadius.Value;
-			p.Effect1 = this.fieldEffect1.Value/100;
-			p.Effect2 = this.fieldEffect2.Value/100;
+			p.Radius  = (double) this.fieldRadius.Value;
+			p.Effect1 = (double) this.fieldEffect1.Value/100;
+			p.Effect2 = (double) this.fieldEffect2.Value/100;
 
 			return p;
 		}
@@ -134,10 +134,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			double effect2, min2, max2;
 			PropertyCorner.GetFieldsParam(type, out enableRadius, out enable1, out effect1, out min1, out max1, out enable2, out effect2, out min2, out max2);
 
-			this.fieldEffect1.MinRange = min1*100;
-			this.fieldEffect1.MaxRange = max1*100;
-			this.fieldEffect2.MinRange = min2*100;
-			this.fieldEffect2.MaxRange = max2*100;
+			this.fieldEffect1.MinValue = (decimal) min1*100;
+			this.fieldEffect1.MaxValue = (decimal) max1*100;
+			this.fieldEffect2.MinValue = (decimal) min2*100;
+			this.fieldEffect2.MaxValue = (decimal) max2*100;
 
 			this.fieldRadius.SetEnabled(this.extendedSize && enableRadius);
 			this.fieldEffect1.SetEnabled(this.extendedSize && enable1);
@@ -196,8 +196,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			double effect1, min1, max1;
 			double effect2, min2, max2;
 			PropertyCorner.GetFieldsParam(type, out enableRadius, out enable1, out effect1, out min1, out max1, out enable2, out effect2, out min2, out max2);
-			this.fieldEffect1.Value = effect1*100;
-			this.fieldEffect2.Value = effect2*100;
+			this.fieldEffect1.Value = (decimal) effect1*100;
+			this.fieldEffect2.Value = (decimal) effect2*100;
 
 			this.EnableWidgets();
 			this.OnChanged();

@@ -10,12 +10,45 @@ namespace Epsitec.Common.Widgets
 			this.slider = new Slider(this);
 			this.slider.HasFrame = false;
 			this.slider.ValueChanged += new Support.EventHandler(this.HandleSliderValueChanged);
+			
+			this.range.Changed += new System.EventHandler(this.HandleRangeChanged);
+			this.UpdateSliderRange();
 		}
 		
 		public TextFieldSlider(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
 		}
+		
+		
+		public Drawing.Color				Color
+		{
+			// Couleur du slider.
+			get
+			{
+				return this.slider.Color;
+			}
+
+			set
+			{
+				this.slider.Color = value;
+			}
+		}
+
+		public override Drawing.Color		BackColor
+		{
+			// Couleur de fond du slider.
+			get
+			{
+				return this.slider.BackColor;
+			}
+
+			set
+			{
+				this.slider.BackColor = value;
+			}
+		}
+		
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -29,65 +62,6 @@ namespace Epsitec.Common.Widgets
 			base.Dispose(disposing);
 		}
 		
-		// Valeur numérique minimale possible.
-		public override double MinRange
-		{
-			get
-			{
-				return base.MinRange;
-			}
-
-			set
-			{
-				base.MinRange = value;
-				this.slider.MinRange = value;
-			}
-		}
-		
-		// Valeur numérique maximale possible.
-		public override double MaxRange
-		{
-			get
-			{
-				return base.MaxRange;
-			}
-
-			set
-			{
-				base.MaxRange = value;
-				this.slider.MaxRange = value;
-			}
-		}
-		
-		// Couleur du slider.
-		public Drawing.Color Color
-		{
-			get
-			{
-				return this.slider.Color;
-			}
-
-			set
-			{
-				this.slider.Color = value;
-			}
-		}
-
-		// Couleur de fond du slider.
-		public override Drawing.Color BackColor
-		{
-			get
-			{
-				return this.slider.BackColor;
-			}
-
-			set
-			{
-				this.slider.BackColor = value;
-			}
-		}
-		
-
 		protected override void UpdateClientGeometry()
 		{
 			this.margins.Bottom = TextFieldSlider.sliderHeight-AbstractTextField.FrameMargin;
@@ -109,18 +83,31 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.Text != "")
 			{
-				this.slider.Value = this.Value;
+				this.slider.Value = (decimal) this.Value;
 			}
 		}
 
-		// Slider bougé.
+		
 		private void HandleSliderValueChanged(object sender)
 		{
 			this.Value = this.slider.Value;
 		}
+		
+		private void HandleRangeChanged(object sender, System.EventArgs e)
+		{
+			this.UpdateSliderRange();
+		}
+		
+		
+		protected virtual void UpdateSliderRange()
+		{
+			this.slider.MinValue   = this.MinValue;
+			this.slider.MaxValue   = this.MaxValue;
+			this.slider.Resolution = this.Resolution;
+		}
 
-
-		protected Slider						slider;
-		protected static readonly double		sliderHeight = 5;
+		
+		protected Slider					slider;
+		protected static readonly double	sliderHeight = 5;
 	}
 }

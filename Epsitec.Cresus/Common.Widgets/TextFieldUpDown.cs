@@ -3,11 +3,12 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe TextFieldUpDown implémente la ligne éditable numérique.
 	/// </summary>
-	public class TextFieldUpDown : AbstractTextField
+	public class TextFieldUpDown : AbstractTextField, INumValue
 	{
 		public TextFieldUpDown()
 		{
 			this.textStyle = TextFieldStyle.UpDown;
+			this.range = new Epsitec.Common.Converters.DecimalRange(0, 100, 1);
 
 			this.arrowUp = new GlyphButton(this);
 			this.arrowDown = new GlyphButton(this);
@@ -29,6 +30,119 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
+		
+		
+		#region INumValue Members
+		public virtual decimal				Value
+		{
+			get
+			{
+				string  text  = this.Text;
+				decimal value = this.DefaultValue;
+				
+				if (text != "")
+				{
+					try
+					{
+						value = System.Convert.ToDecimal (text);
+					}
+					catch
+					{
+						//	ignore l'erreur
+					}
+				}
+				
+				return value;
+			}
+			set
+			{
+				value = this.range.Constrain (value);
+				
+				if ((this.Text == "") ||
+					(this.Value != value))
+				{
+					this.Text = this.range.ConvertToString (value);
+					this.SelectAll ();
+				}
+			}
+		}
+
+		public decimal						MinValue
+		{
+			get
+			{
+				return this.range.Minimum;
+			}
+			set
+			{
+				this.range.Minimum = value;
+			}
+		}
+		
+		public decimal						MaxValue
+		{
+			get
+			{
+				return this.range.Maximum;
+			}
+			set
+			{
+				this.range.Maximum = value;
+			}
+		}
+
+		public decimal						Resolution
+		{
+			get
+			{
+				return this.range.Resolution;
+			}
+			set
+			{
+				if (this.range.Resolution != value)
+				{
+					this.range.Resolution = value;
+					this.Text = this.range.Constrain (this.Value).ToString ();
+					this.SelectAll ();
+				}
+			}
+		}
+
+		public decimal Range
+		{
+			get
+			{
+				return this.MaxValue - this.MinValue;
+			}
+		}
+		
+		public event Support.EventHandler		ValueChanged;
+		#endregion
+		
+		public virtual decimal					DefaultValue
+		{
+			get
+			{
+				return this.defaultValue;
+			}
+			set
+			{
+				this.defaultValue = value;
+			}
+		}
+		
+		public virtual decimal					Step
+		{
+			get
+			{
+				return this.step;
+			}
+			set
+			{
+				this.step = value;
+			}
+		}
+		
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -57,7 +171,7 @@ namespace Epsitec.Common.Widgets
 			this.margins.Right = width - AbstractTextField.FrameMargin;
 
 			if ( this.arrowUp   != null &&
-				 this.arrowDown != null )
+				this.arrowDown != null )
 			{
 				Drawing.Rectangle aRect = new Drawing.Rectangle();
 
@@ -74,13 +188,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			switch ( message.Type )
 			{
 				case MessageType.MouseWheel:
-					if ( message.Wheel > 0 )  this.IncrementValue(this.step);
-					if ( message.Wheel < 0 )  this.IncrementValue(-this.step);
+					if ( message.Wheel > 0 )  this.IncrementValue (1);
+					if ( message.Wheel < 0 )  this.IncrementValue (-1);
 					message.Consumer = this;
 					return;
 			}
@@ -93,11 +208,11 @@ namespace Epsitec.Common.Widgets
 			switch ( key )
 			{
 				case KeyCode.ArrowUp:
-					this.IncrementValue(this.step);
+					this.IncrementValue (1);
 					break;
 
 				case KeyCode.ArrowDown:
-					this.IncrementValue(-this.step);
+					this.IncrementValue (-1);
 					break;
 
 				default:
@@ -106,6 +221,7 @@ namespace Epsitec.Common.Widgets
 			
 			return true;
 		}
+		
 		
 		protected override void OnAdornerChanged()
 		{
@@ -119,7 +235,7 @@ namespace Epsitec.Common.Widgets
 			this.OnValueChanged();
 		}
 		
-		protected virtual void OnValueChanged()
+		protected virtual  void OnValueChanged()
 		{
 			if ( this.ValueChanged != null )  // qq'un écoute ?
 			{
@@ -127,107 +243,65 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
+		protected virtual void IncrementValue(decimal delta)
+		{
+			Converters.DecimalRange range = new Epsitec.Common.Converters.DecimalRange (this.MinValue, this.MaxValue, this.Step);
+			
+			decimal org_value   = this.Value;
+			decimal round_value = range.ConstrainToZero (org_value);
+			
+			if (org_value == round_value)
+			{
+				//	La valeur d'origine était déjà parfaitement alignée sur une frontière (step),
+				//	on peut donc simplement passer au pas suivant :
+				
+				round_value += delta * this.Step;
+			}
+			else
+			{
+				//	L'arrondi vers zéro suffit dans les cas suivants :
+				//
+				//	o  13 =>  10,  13 - 10 =>  10		org_value > 0, delta < 0
+				//	o -13 => -10, -13 + 10 => -10		org_value < 0, delta > 0
+				//
+				//	en supposant un pas de 10.
+				
+				if (((org_value < 0) && (delta > 0)) ||
+					((org_value > 0) && (delta < 0)))
+				{
+					//	La valeur arrondie fait l'affaire.
+				}
+				else
+				{
+					//	Il faut encore ajouter l'incrément.
+					
+					round_value += delta * this.Step;
+				}
+			}
+			
+			this.Value = round_value;
+		}
+		
+		
 		private void HandleButton(object sender)
 		{
-			GlyphButton button = sender as GlyphButton;
-
-			if ( button == this.arrowUp )
+			if (sender == this.arrowUp)
 			{
-				this.IncrementValue(this.step);
+				this.IncrementValue (1);
 			}
-			if ( button == this.arrowDown )
+			else if (sender == this.arrowDown)
 			{
-				this.IncrementValue(-this.step);
+				this.IncrementValue (-1);
 			}
 		}
 
-		protected void IncrementValue(double dir)
-		{
-			string text = this.Text;
-			double number;
-			try
-			{
-				number = System.Convert.ToDouble(text);
-			}
-			catch ( System.Exception )
-			{
-				return;
-			}
-
-			number += dir;
-			number = System.Math.Max(number, this.minRange);
-			number = System.Math.Min(number, this.maxRange);
-
-			this.Value = number;
-		}
-
-		// Valeur numérique éditée.
-		public virtual double Value
-		{
-			get
-			{
-				string text = this.Text;
-				double number = this.minRange;
-				
-				if ( text != "" )
-				{
-					try
-					{
-						number = System.Convert.ToDouble(text);
-					}
-					catch ( System.Exception )
-					{
-						number = this.minRange;
-					}
-				}
-				
-				return number;
-			}
-
-			set
-			{
-				if ( this.Value != value || this.Text == "" )
-				{
-					if ( value%1.0 == 0.0 )
-					{
-						this.Text = System.Convert.ToString(value);
-					}
-					else
-					{
-						this.Text = value.ToString("F2");
-					}
-					this.SelectAll();
-				}
-			}
-		}
-
-		// Valeur numérique minimale possible.
-		public virtual double MinRange
-		{
-			get { return this.minRange; }
-			set { this.minRange = value; }
-		}
 		
-		// Valeur numérique maximale possible.
-		public virtual double MaxRange
-		{
-			get { return this.maxRange; }
-			set { this.maxRange = value; }
-		}
-		
-		// Pas pour les boutons up/down.
-		public virtual double Step
-		{
-			get { return this.step; }
-			set { this.step = value; }
-		}
-		
-		public event Support.EventHandler		ValueChanged;
+		protected Converters.DecimalRange		range;
 		
 		protected GlyphButton					arrowUp;
 		protected GlyphButton					arrowDown;
-		protected double						minRange = 0;
-		protected double						maxRange = 100;
-		protected double						step = 1;
+		protected decimal						defaultValue = 0;
+		protected decimal						step = 1;
 	}
 }

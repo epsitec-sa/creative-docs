@@ -3,12 +3,11 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe Slider implémente un curseur de réglage.
 	/// </summary>
-	public class Slider : Widget, INumValue
+	public class Slider : Widget, INumValue, Helpers.IDragBehaviorHost
 	{
 		public Slider()
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			this.color = Drawing.Color.Empty;
+			this.drag_behavior = new Helpers.DragBehavior (this, true, true);
 		}
 		
 		public Slider(Widget embedder) : this()
@@ -50,6 +49,8 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				value = this.range.Constrain (value);
+				
 				if (this.value != value)
 				{
 					this.value = value;
@@ -107,83 +108,30 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler	ValueChanged;
 		#endregion
 		
-		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		#region IDragBehaviorHost Members
+		Drawing.Point						Helpers.IDragBehaviorHost.DragLocation
 		{
-			switch ( message.Type )
+			get
 			{
-				case MessageType.MouseDown:
-					this.mouseDown = true;
-					this.MouseDown(pos);
-					break;
-				
-				case MessageType.MouseMove:
-					if ( this.mouseDown )
-					{
-						this.MouseMove(pos);
-					}
-					break;
-
-				case MessageType.MouseUp:
-					if ( this.mouseDown )
-					{
-						this.MouseUp(pos);
-						this.mouseDown = false;
-					}
-					break;
-			}
-			
-			message.Consumer = this;
-		}
-
-		protected void MouseDown(Drawing.Point pos)
-		{
-			this.Value = this.Detect(pos);
-		}
-
-		protected void MouseMove(Drawing.Point pos)
-		{
-			this.Value = this.Detect(pos);
-		}
-
-		protected void MouseUp(Drawing.Point pos)
-		{
-			this.Value = this.Detect(pos);
-		}
-
-		protected decimal Detect(Drawing.Point pos)
-		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			double   width   = this.Client.Width;
-			double   left    = 0;
-			
-			width -= adorner.GeometrySliderLeftMargin;
-			width -= adorner.GeometrySliderRightMargin;
-			width -= this.margin;
-			
-			left  += adorner.GeometrySliderLeftMargin;
-			left  += this.margin;
-			
-			double offset  = (double) (pos.X - left);
-			double range   = (double) (this.Range);
-			double minimum = (double) (this.MinValue);
-			
-			if (width > 0)
-			{
-				return this.range.Constrain (minimum + offset * range / width);
-			}
-			
-			return this.MinValue;
-		}
-
-		protected virtual void OnValueChanged()
-		{
-			if ( this.ValueChanged != null )  // qq'un écoute ?
-			{
-				this.ValueChanged(this);
+				return new Drawing.Point (0, 0);
 			}
 		}
 
+		
+		void Helpers.IDragBehaviorHost.OnDragBegin(Drawing.Point cursor)
+		{
+		}
 
+		void Helpers.IDragBehaviorHost.OnDragging(DragEventArgs e)
+		{
+			this.Value = this.Detect (e.ToPoint);
+		}
+
+		void Helpers.IDragBehaviorHost.OnDragEnd()
+		{
+		}
+		#endregion
+		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
@@ -241,12 +189,54 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		{
+			if (this.drag_behavior.ProcessMessage (message, pos))
+			{
+				base.ProcessMessage (message, pos);
+			}
+		}
 		
+		
+		protected virtual decimal Detect(Drawing.Point pos)
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			double   width   = this.Client.Width;
+			double   left    = 0;
+			
+			width -= adorner.GeometrySliderLeftMargin;
+			width -= adorner.GeometrySliderRightMargin;
+			width -= this.margin;
+			
+			left  += adorner.GeometrySliderLeftMargin;
+			left  += this.margin;
+			
+			double offset  = (double) (pos.X - left);
+			double range   = (double) (this.Range);
+			double minimum = (double) (this.MinValue);
+			
+			if (width > 0)
+			{
+				return this.range.Constrain (minimum + offset * range / width);
+			}
+			
+			return this.MinValue;
+		}
+
+		protected virtual void OnValueChanged()
+		{
+			if ( this.ValueChanged != null )  // qq'un écoute ?
+			{
+				this.ValueChanged(this);
+			}
+		}
+
+		
+		private Helpers.DragBehavior		drag_behavior;
 		private decimal						value = 0;
 		private Converters.DecimalRange		range = new Epsitec.Common.Converters.DecimalRange (0, 100, 1);
-		protected Drawing.Color				color;
-		protected bool						mouseDown = false;
-		protected double					margin = 1;
-		protected bool						has_frame = true;
+		private Drawing.Color				color = Drawing.Color.Empty;
+		protected readonly double			margin = 1;
+		private bool						has_frame = true;
 	}
 }

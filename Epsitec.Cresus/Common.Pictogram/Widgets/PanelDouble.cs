@@ -45,10 +45,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			PropertyDouble p = property as PropertyDouble;
 			if ( p == null )  return;
 
-			this.field.Value    = p.Value;
-			this.field.MinRange = p.MinRange;
-			this.field.MaxRange = p.MaxRange;
-			this.field.Step     = p.Step;
+			this.field.Value    = (decimal) p.Value;
+			this.field.MinValue = (decimal) p.MinRange;
+			this.field.MaxValue = (decimal) p.MaxRange;
+			this.field.Step     = (decimal) p.Step;
 		}
 
 		// Widget -> propriété.
@@ -57,10 +57,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			PropertyDouble p = new PropertyDouble();
 			base.GetProperty(p);
 
-			p.Value    = this.field.Value;
-			p.MinRange = this.field.MinRange;
-			p.MaxRange = this.field.MaxRange;
-			p.Step     = this.field.Step;
+			p.Value    = (double) this.field.Value;
+			p.MinRange = (double) this.field.MinValue;
+			p.MaxRange = (double) this.field.MaxValue;
+			p.Step     = (double) this.field.Step;
 			return p;
 		}
 

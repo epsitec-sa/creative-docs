@@ -40,24 +40,24 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldColor2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldRepeat = new TextFieldSlider(this);
-			this.fieldRepeat.MinRange = 1;
-			this.fieldRepeat.MaxRange = 8;
+			this.fieldRepeat.MinValue = 1;
+			this.fieldRepeat.MaxValue = 8;
 			this.fieldRepeat.Step = 1;
 			this.fieldRepeat.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldRepeat.TabIndex = 4;
 			this.fieldRepeat.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldMiddle = new TextFieldSlider(this);
-			this.fieldMiddle.MinRange = -100;
-			this.fieldMiddle.MaxRange =  100;
+			this.fieldMiddle.MinValue = -100;
+			this.fieldMiddle.MaxValue =  100;
 			this.fieldMiddle.Step = 10;
 			this.fieldMiddle.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldMiddle.TabIndex = 5;
 			this.fieldMiddle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldSmooth = new TextFieldSlider(this);
-			this.fieldSmooth.MinRange =  0;
-			this.fieldSmooth.MaxRange = 10;
+			this.fieldSmooth.MinValue =  0;
+			this.fieldSmooth.MaxValue = 10;
 			this.fieldSmooth.Step = 1;
 			this.fieldSmooth.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldSmooth.TabIndex = 6;
@@ -135,9 +135,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			this.fieldColor1.Color = p.Color1;
 			this.fieldColor2.Color = p.Color2;
-			this.fieldRepeat.Value = p.Repeat;
-			this.fieldMiddle.Value = p.Middle*100;
-			this.fieldSmooth.Value = p.Smooth;
+			this.fieldRepeat.Value = (decimal) p.Repeat;
+			this.fieldMiddle.Value = (decimal) p.Middle*100;
+			this.fieldSmooth.Value = (decimal) p.Smooth;
 
 			this.angle = p.Angle;
 			this.cx    = p.Cx;
@@ -169,8 +169,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			p.Color1 = this.fieldColor1.Color;
 			p.Color2 = this.fieldColor2.Color;
 			p.Repeat = (int)this.fieldRepeat.Value;
-			p.Middle = this.fieldMiddle.Value/100;
-			p.Smooth = this.fieldSmooth.Value;
+			p.Middle = (double) this.fieldMiddle.Value/100;
+			p.Smooth = (double) this.fieldSmooth.Value;
 
 			p.Angle = this.angle;
 			p.Cx    = this.cx;

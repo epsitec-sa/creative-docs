@@ -411,10 +411,14 @@ namespace Epsitec.Common.Widgets
 			TextFieldUpDown tud = new TextFieldUpDown();
 			tud.Location = new Point(160, 160);
 			tud.Width = 45;
-			tud.Value = 50;
-			tud.MinRange = -100;
-			tud.MaxRange = 100;
-			tud.Step = 10;
+			
+			tud.Value        =   5.00M;
+			tud.DefaultValue =   0.00M;
+			tud.MinValue     = -10.00M;
+			tud.MaxValue     =  10.00M;
+			tud.Step         =   2.50M;
+			tud.Resolution   =   0.25M;
+			
 			tud.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			tud.TabIndex = 12;
 			tud.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -424,9 +428,10 @@ namespace Epsitec.Common.Widgets
 			slider.Location = new Point(215, 160);
 			slider.Width = 45;
 			slider.Value = 50;
-			slider.MinRange = -100;
-			slider.MaxRange = 100;
+			slider.MinValue = -100;
+			slider.MaxValue = 100;
 			slider.Step = 10;
+			slider.Resolution = 5;
 			slider.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			slider.TabIndex = 13;
 			slider.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

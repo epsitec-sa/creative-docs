@@ -15,8 +15,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
 
 			this.fieldNbFaces = new TextFieldSlider(this);
-			this.fieldNbFaces.MinRange = 3;
-			this.fieldNbFaces.MaxRange = 24;
+			this.fieldNbFaces.MinValue = 3;
+			this.fieldNbFaces.MaxValue = 24;
 			this.fieldNbFaces.Step = 1;
 			this.fieldNbFaces.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldNbFaces.TabIndex = 1;
@@ -29,8 +29,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.checkStar.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.fieldDeep = new TextFieldSlider(this);
-			this.fieldDeep.MinRange = 0;
-			this.fieldDeep.MaxRange = 100;
+			this.fieldDeep.MinValue = 0;
+			this.fieldDeep.MaxValue = 100;
 			this.fieldDeep.Step = 5;
 			this.fieldDeep.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldDeep.TabIndex = 3;
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			this.fieldNbFaces.Value = p.NbFaces;
 			this.checkStar.ActiveState = p.Star ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.fieldDeep.Value = p.Deep*100;
+			this.fieldDeep.Value = (decimal) p.Deep*100;
 
 			this.EnableWidgets();
 		}
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			p.NbFaces = (int)this.fieldNbFaces.Value;
 			p.Star = ( this.checkStar.ActiveState == WidgetState.ActiveYes );
-			p.Deep = this.fieldDeep.Value/100;
+			p.Deep = (double) this.fieldDeep.Value/100;
 
 			return p;
 		}
