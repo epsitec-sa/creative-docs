@@ -350,7 +350,10 @@ namespace Epsitec.Common.Widgets.Adorner
 				pos.X ++;
 				pos.Y --;
 			}
-			state &= ~WidgetState.Focused;
+			if ( style != ButtonStyle.Tab )
+			{
+				state &= ~WidgetState.Focused;
+			}
 			this.PaintGeneralTextLayout(graphics, pos, text, state, PaintTextStyle.Button, Drawing.Color.Empty);
 		}
 
@@ -1083,7 +1086,7 @@ namespace Epsitec.Common.Widgets.Adorner
 												 Drawing.Rectangle[] rects,
 												 WidgetState state)
 		{
-			for (int i = 0; i < rects.Length; i++)
+			for ( int i=0 ; i<rects.Length ; i++ )
 			{
 				if ( (state&WidgetState.Focused) != 0 )
 				{

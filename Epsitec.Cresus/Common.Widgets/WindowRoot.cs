@@ -69,23 +69,22 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public override void Invalidate()
-		{
-			System.Diagnostics.Debug.Assert (this.Parent == null);
-			
-			if (this.window != null)
-			{
-				this.window.MarkForRepaint (this.Bounds);
-			}
-		}
-		
 		public override void Invalidate(Drawing.Rectangle rect)
 		{
 			System.Diagnostics.Debug.Assert (this.Parent == null);
 			
 			if (this.window != null)
 			{
-				this.window.MarkForRepaint (this.MapClientToParent (rect));
+				if ((this.InternalState & InternalState.SyncPaint) != 0)
+				{
+					this.window.SynchronousRepaint ();
+					this.window.MarkForRepaint (this.MapClientToParent (rect));
+					this.window.SynchronousRepaint ();
+				}
+				else
+				{
+					this.window.MarkForRepaint (this.MapClientToParent (rect));
+				}
 			}
 		}
 		

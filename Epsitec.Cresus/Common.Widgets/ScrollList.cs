@@ -306,8 +306,8 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.MouseWheel:
-					if ( message.Wheel < 0 )  this.ProcessKeyDown(KeyCode.ArrowDown, false, false);
-					if ( message.Wheel > 0 )  this.ProcessKeyDown(KeyCode.ArrowUp, false, false);
+					if ( message.Wheel < 0 )  this.FirstVisibleLine ++;
+					if ( message.Wheel > 0 )  this.FirstVisibleLine --;
 					break;
 
 				case MessageType.KeyDown:
@@ -350,7 +350,6 @@ namespace Epsitec.Common.Widgets
 			// Gestion d'une touche pressée avec KeyDown dans la liste.
 			
 			int sel;
-
 			switch ( key )
 			{
 				case KeyCode.ArrowUp:
@@ -377,6 +376,7 @@ namespace Epsitec.Common.Widgets
 				case KeyCode.Space:
 					this.OnValidation();
 					break;
+
 				default:
 					return false;
 			}

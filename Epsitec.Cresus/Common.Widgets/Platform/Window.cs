@@ -707,7 +707,10 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal void SynchronousRepaint()
 		{
-			this.Update ();
+			if (this.dirty_rectangle.IsValid)
+			{
+				this.Update ();
+			}
 		}
 		
 		internal void SendQueueCommand()

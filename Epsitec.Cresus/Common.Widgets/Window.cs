@@ -199,6 +199,7 @@ namespace Epsitec.Common.Widgets
 					if (new_focus != null)
 					{
 						new_focus.SetFocused (true);
+						System.Diagnostics.Debug.WriteLine ("Focused : " + new_focus);
 					}
 				}
 			}

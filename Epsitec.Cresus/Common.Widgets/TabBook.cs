@@ -252,6 +252,8 @@ namespace Epsitec.Common.Widgets
 				if ( page.TabButton == button )
 				{
 					this.ActivePage = page;
+					this.SetFocused(true);
+					break;
 				}
 			}
 		}
@@ -326,11 +328,13 @@ namespace Epsitec.Common.Widgets
 				{
 					page.SetVisible(true);
 					page.TabButton.ActiveState = WidgetState.ActiveYes;
+					page.TabButton.InheritFocus = true;
 				}
 				else
 				{
 					page.SetVisible(false);
 					page.TabButton.ActiveState = WidgetState.ActiveNo;
+					page.TabButton.InheritFocus = false;
 				}
 			}
 		}
@@ -498,6 +502,51 @@ namespace Epsitec.Common.Widgets
 			adorner.PaintTabFrame(graphics, part, state, Direction.Down);
 		}
 		
+		
+		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
+		{
+			if ( message.Type == MessageType.KeyDown )
+			{
+				int dir = 0;
+				
+				switch ( message.KeyCode )
+				{
+					case KeyCode.ArrowLeft:
+						if ( this.IsFocused )
+						{
+							dir = -1;
+						}
+						break;
+					
+					case KeyCode.ArrowRight:
+						if ( this.IsFocused )
+						{
+							dir = 1;
+						}
+						break;
+						
+					case KeyCode.Tab:
+						if ( message.IsCtrlPressed )
+						{
+							dir = message.IsShiftPressed ? -1 : 1;
+						}
+						break;
+				}
+				
+				if ( dir != 0 )
+				{
+					int index = this.ActivePageIndex + dir;
+					index = System.Math.Min(index, this.items.Count - 1);
+					index = System.Math.Max(index, 0);
+					this.ActivePageIndex = index;
+					message.Consumer = this;
+					return;
+				}
+			}
+			
+			base.ProcessMessage(message, pos);
+		}
+
 
 		public override Drawing.Rectangle GetShapeBounds()
 		{

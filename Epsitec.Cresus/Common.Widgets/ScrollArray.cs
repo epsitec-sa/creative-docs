@@ -1338,6 +1338,12 @@ invalid:	row    = -1;
 					}
 					break;
 				
+				case MessageType.MouseWheel:
+					if ( message.Wheel < 0 )  this.FirstVisibleIndex ++;
+					if ( message.Wheel > 0 )  this.FirstVisibleIndex --;
+					message.Consumer = this;
+					break;
+
 				case MessageType.KeyDown:
 					if (this.ProcessKeyDown (message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed))
 					{
@@ -1843,12 +1849,14 @@ invalid:	row    = -1;
 				
 				int         row_line      = row + top;
 				int         num_add_lines = (this.edition_row == row_line)  ? this.edition_add_rows - delta : 0;
-				WidgetState widget_state  = state & WidgetState.Enabled;
+				WidgetState widget_state  = state & (WidgetState.Enabled | WidgetState.Focused);
+				WidgetState text_state    = state & (WidgetState.Enabled);
 				
 				if ((this.selected_row == row_line) &&
 					(this.edition_row < 0))
 				{
 					widget_state |= WidgetState.Selected;
+					text_state   |= WidgetState.Selected;
 				}
 				
 				if (this.edition_row == row_line)
@@ -1856,22 +1864,6 @@ invalid:	row    = -1;
 					pos.Y -= this.row_height * num_add_lines;
 					
 					adorner.PaintCellBackground (graphics, new Drawing.Rectangle (pos.X, pos.Y, right - pos.X, this.row_height * (num_add_lines + 1)), widget_state);
-#if false
-					pos.X += this.text_margin - System.Math.Floor (this.offset);
-					
-					for (int column = 0; column < this.max_columns; column++)
-					{
-						double end = pos.X + this.column_widths[column];
-						
-						if ((pos.X < local_clip.Right) &&
-							(end > local_clip.Left))
-						{
-							adorner.PaintGeneralTextLayout (graphics, pos, this.layouts[row, column], widget_state, PaintTextStyle.Array, this.BackColor);
-						}
-						
-						pos.X = end;
-					}
-#endif
 					n_rows -= num_add_lines;
 				}
 				else
@@ -1891,7 +1883,7 @@ invalid:	row    = -1;
 							
 							if (layout != null)
 							{
-								adorner.PaintGeneralTextLayout (graphics, pos + new Drawing.Point (0, 0.5), layout, widget_state, PaintTextStyle.Array, this.BackColor);
+								adorner.PaintGeneralTextLayout (graphics, pos + new Drawing.Point (0, 0.5), layout, text_state, PaintTextStyle.Array, this.BackColor);
 							}
 						}
 						

@@ -75,6 +75,9 @@ namespace Epsitec.Common.Widgets
 		PossibleContainer	= 0x01000000,		//	widget peut être la cible d'un drag & drop en mode édition
 		EditionEnabled		= 0x02000000,		//	widget peut être édité
 		
+		InheritFocus		= 0x10000000,
+		SyncPaint			= 0x20000000,		//	peinture synchrone
+		
 		DebugActive			= 0x80000000		//	widget marqué pour le debug
 	}
 	
@@ -648,7 +651,6 @@ namespace Epsitec.Common.Widgets
 			get { return (this.command != null); }
 		}
 		
-		
 		public virtual bool							IsEnabled
 		{
 			get
@@ -919,6 +921,25 @@ namespace Epsitec.Common.Widgets
 			get { return (this.internal_state & InternalState.AutoMnemonic) != 0; }
 		}
 		
+		public bool									InheritFocus
+		{
+			get
+			{
+				return (this.internal_state & InternalState.InheritFocus) != 0;
+			}
+			set
+			{
+				if (value)
+				{
+					this.internal_state |= InternalState.InheritFocus;
+				}
+				else
+				{
+					this.internal_state &= ~InternalState.InheritFocus;
+				}
+			}
+		}
+		
 		
 		protected InternalState						InternalState
 		{
@@ -929,7 +950,18 @@ namespace Epsitec.Common.Widgets
 		
 		public WidgetState							State
 		{
-			get { return this.widget_state; }
+			get
+			{
+				WidgetState state = this.widget_state;
+				
+				if ((this.InheritFocus) &&
+					(this.parent != null))
+				{
+					state |= this.parent.State & WidgetState.Focused;
+				}
+				
+				return state;
+			}
 		}
 		
 		public WidgetState							ActiveState
@@ -959,13 +991,13 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				WidgetState mask  = WidgetState.ActiveMask |
-					WidgetState.Focused |
-					WidgetState.Entered |
-					WidgetState.Engaged |
-					WidgetState.Selected |
-					WidgetState.Error;
+					/**/			WidgetState.Focused |
+					/**/			WidgetState.Entered |
+					/**/			WidgetState.Engaged |
+					/**/			WidgetState.Selected |
+					/**/			WidgetState.Error;
 				
-				WidgetState state = this.widget_state & mask;
+				WidgetState state = this.State & mask;
 				
 				if (this.IsEnabled)
 				{
@@ -1754,6 +1786,18 @@ namespace Epsitec.Common.Widgets
 		public virtual void SetCommandDispatcher(Support.CommandDispatcher dispatcher)
 		{
 			this.dispatcher = dispatcher;
+		}
+		
+		public virtual void SetSyncPaint(bool enabled)
+		{
+			if (enabled)
+			{
+				this.internal_state |= InternalState.SyncPaint;
+			}
+			else
+			{
+				this.internal_state &= ~InternalState.SyncPaint;
+			}
 		}
 		
 		
@@ -3234,7 +3278,9 @@ namespace Epsitec.Common.Widgets
 				
 				for (int i = 0; i < siblings.Length; i++)
 				{
-					if ((siblings[i].TabNavigation & mode) != 0)
+					if (((siblings[i].TabNavigation & mode) != 0) &&
+						(siblings[i].IsEnabled) &&
+						(siblings[i].IsVisible))
 					{
 						list.Add (siblings[i]);
 					}
