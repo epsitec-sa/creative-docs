@@ -10,18 +10,21 @@ namespace Epsitec.Cresus.Services
 	{
 		public static void CreateDatabase(Remoting.IOperatorService service, Remoting.IOperation operation, string database_name)
 		{
+			//	Crée une base de données locale à partir de la version comprimée personnalisée
+			//	générée par le serveur. Si une base existait déjà avec ce nom-là, elle sera tout
+			//	simplement supprimée.
+			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			Database.DbAccess         access = Database.DbInfrastructure.CreateDbAccess (database_name);
 			
 			access.Provider        = "FirebirdEmbedded";
 			access.CheckConnection = false;
 			
-			buffer.Append (Common.Support.Globals.Directories.UserAppData);
-			buffer.Append (System.IO.Path.DirectorySeparatorChar);
-			buffer.Append (database_name);
+			Database.IDbServiceTools  tools  = Database.DbFactory.FindDbAbstraction (access).ServiceTools;
+			Common.IO.TemporaryFile   temp   = new Common.IO.TemporaryFile ();
 			
-			string backup_path   = buffer.ToString () + ".gbk";
-			string database_path = buffer.ToString () + ".firebird";
+			string database_path = tools.GetDatabasePath ();
+			string backup_path   = temp.Path;
 			
 			try
 			{
@@ -31,8 +34,6 @@ namespace Epsitec.Cresus.Services
 			{
 				System.Diagnostics.Debug.WriteLine (ex.Message);
 			}
-			
-			Database.IDbServiceTools  tools  = Database.DbFactory.FindDbAbstraction (access).ServiceTools;
 			
 			Remoting.ClientIdentity client;
 			byte[] compressed_data;
@@ -70,6 +71,9 @@ namespace Epsitec.Cresus.Services
 			System.Diagnostics.Debug.WriteLine ("Restored backup.");
 			
 			RoamingClientTool.WaitForFileReadable (database_path, 20000);
+			
+			temp.Dispose ();
+			temp = null;
 			
 			//	Le fichier a été recréé sur le disque, en local, décomprimé.
 			

@@ -57,6 +57,11 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			restore.Execute();
 		}
+		
+		public string GetDatabasePath()
+		{
+			return this.fb.MakeDbFileName (this.fb.DbAccess);
+		}
 		#endregion
 		
 		private static void ServiceOutput(object sender, ServiceOutputEventArgs e)

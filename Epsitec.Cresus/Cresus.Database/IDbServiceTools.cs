@@ -11,5 +11,7 @@ namespace Epsitec.Cresus.Database
 	{
 		void Backup(string file_name);
 		void Restore(string file_name);
+		
+		string GetDatabasePath();
 	}
 }
