@@ -1,3 +1,4 @@
+#if false
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier
 
@@ -17,7 +18,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public static ResourceBundle Create(string name)
+		public static ResourceBundle Create(string name, string prefix, ResourceLevel level, int recursion)
 		{
 			return new ResourceBundleXmlDom (name);
 		}
@@ -200,3 +201,4 @@ namespace Epsitec.Common.Support
 		protected const int				MaxRecursion = 50;
 	}
 }
+#endif

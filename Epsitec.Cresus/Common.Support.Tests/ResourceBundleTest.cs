@@ -42,8 +42,8 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals (2, bundle.CountFields);
 			Assertion.AssertEquals ("a", names[0]);
 			Assertion.AssertEquals ("b", names[1]);
-			Assertion.AssertEquals ("A", bundle["a"]);
-			Assertion.Assert (bundle["b"] is ResourceBundle);
+			Assertion.AssertEquals ("A", bundle["a"].AsString);
+			Assertion.Assert (bundle["b"].Data is ResourceBundle);
 		}
 		
 		[Test] public void CheckCompileSubBundle()
@@ -61,15 +61,15 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals (2, bundle.CountFields);
 			Assertion.AssertEquals ("a", names[0]);
 			Assertion.AssertEquals ("b", names[1]);
-			Assertion.AssertEquals ("A0", bundle["a"]);
+			Assertion.AssertEquals ("A0", bundle["a"].AsString);
 			
-			Assertion.Assert (bundle["b"] is ResourceBundle);
+			Assertion.Assert (bundle["b"].Data is ResourceBundle);
 			
-			Assertion.AssertEquals (2, bundle.GetFieldBundle ("b").CountFields);
-			Assertion.AssertEquals ("A1", bundle.GetFieldBundle ("b")["a"]);
-			Assertion.AssertEquals ("B1", bundle.GetFieldBundle ("b")["b"]);
+			Assertion.AssertEquals (2, bundle["b"].AsBundle.CountFields);
+			Assertion.AssertEquals ("A1", bundle["b"].AsBundle["a"].AsString);
+			Assertion.AssertEquals ("B1", bundle["b"].AsBundle["b"].AsString);
 			Assertion.AssertEquals ("test", bundle.Name);
-			Assertion.AssertEquals ("test#b", bundle.GetFieldBundle ("b").Name);
+			Assertion.AssertEquals ("test#b", bundle["b"].AsBundle.Name);
 		}
 		
 		[Test] public void CheckCompileCDATA()
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Support
 			
 			Assertion.AssertEquals (1, bundle.CountFields);
 			Assertion.AssertEquals ("text", names[0]);
-			Assertion.AssertEquals ("Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.", bundle["text"]);
+			Assertion.AssertEquals ("Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.", bundle["text"].AsString);
 		}
 		
 		[Test] public void CheckCompileEmbeddedXml()
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Support
 			
 			Assertion.AssertEquals (1, bundle.CountFields);
 			Assertion.AssertEquals ("text", names[0]);
-			Assertion.AssertEquals ("Small <b>text</b> to <i>check</i> if embedded &lt;xml&gt; works.", bundle["text"]);
+			Assertion.AssertEquals ("Small <b>text</b> to <i>check</i> if embedded &lt;xml&gt; works.", bundle["text"].AsString);
 		}
 		
 		[Test] public void CheckCompileEscapes()
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Support
 			
 			Assertion.AssertEquals (1, bundle.CountFields);
 			Assertion.AssertEquals ("text", names[0]);
-			Assertion.AssertEquals ("<&>", bundle["text"]);
+			Assertion.AssertEquals ("<&>", bundle["text"].AsString);
 		}
 		
 		[Test] public void CheckCompileAndMerge()
@@ -136,10 +136,10 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals ("a", names[0]);
 			Assertion.AssertEquals ("b", names[1]);
 			Assertion.AssertEquals ("c", names[2]);
-			Assertion.AssertEquals ("X", bundle["a"]);
-			Assertion.AssertEquals ("B", bundle["b"]);
-			Assertion.AssertEquals ("C", bundle["c"]);
-			Assertion.AssertEquals (null, bundle["d"]);
+			Assertion.AssertEquals ("X", bundle["a"].AsString);
+			Assertion.AssertEquals ("B", bundle["b"].AsString);
+			Assertion.AssertEquals ("C", bundle["c"].AsString);
+			Assertion.Assert (bundle["d"].IsEmpty);
 		}
 		
 		[Test] [ExpectedException (typeof (System.Xml.XmlException))] public void CheckCompileEx1()
@@ -198,17 +198,17 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals ("b", names[1]);
 			Assertion.AssertEquals ("c", names[2]);
 			
-			System.Console.Out.WriteLine ("Referenced field 'b' contains '{0}'.", bundle["b"]);
-			System.Console.Out.WriteLine ("Referenced field 'c' contains '{0}'.", bundle["c"]);
+			System.Console.Out.WriteLine ("Referenced field 'b' contains '{0}'.", bundle["b"].AsString);
+			System.Console.Out.WriteLine ("Referenced field 'c' contains '{0}'.", bundle["c"].AsString);
 		}
 		
 		[Test] public void CheckCompileRefLevel2AutoPrefix()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create ("test", "file", ResourceLevel.Default, 0);
 			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='button.cancel#text'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
-			bundle.Compile (test_data, "file", ResourceLevel.Default);
+			bundle.Compile (test_data);
 			
 			string[] names = bundle.FieldNames;
 			
@@ -217,7 +217,7 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals (2, bundle.CountFields);
 			Assertion.AssertEquals ("a", names[0]);
 			Assertion.AssertEquals ("b", names[1]);
-			Assertion.AssertEquals ("Cancel", bundle["b"]);
+			Assertion.AssertEquals ("Cancel", bundle["b"].AsString);
 		}
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx1()
@@ -228,8 +228,8 @@ namespace Epsitec.Common.Support
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
 			
-			string value_a = bundle.GetFieldString ("a");
-			string value_b = bundle.GetFieldString ("b");
+			string value_a = bundle["a"].AsString;
+			string value_b = bundle["b"].AsString;
 		}
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx2()
@@ -240,8 +240,8 @@ namespace Epsitec.Common.Support
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
 			
-			string value_a = bundle.GetFieldString ("a");
-			string value_b = bundle.GetFieldString ("b");
+			string value_a = bundle["a"].AsString;
+			string value_b = bundle["b"].AsString;
 		}
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx3()
@@ -252,8 +252,8 @@ namespace Epsitec.Common.Support
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
 			
-			string value_a = bundle.GetFieldString ("a");
-			string value_b = bundle.GetFieldString ("b");
+			string value_a = bundle["a"].AsString;
+			string value_b = bundle["b"].AsString;
 		}
 		
 		private void CompileWithExceptionHandling(string test_string)

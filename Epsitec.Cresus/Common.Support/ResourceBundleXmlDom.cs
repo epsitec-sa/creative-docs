@@ -9,17 +9,131 @@ namespace Epsitec.Common.Support
 	/// Implémentation d'un ResourceBundle basé sur un stockage interne de
 	/// l'information sous forme XML DOM.
 	/// </summary>
-	public class ResourceBundleXmlDom : ResourceBundle
+	public class ResourceBundle
 	{
-		public ResourceBundleXmlDom(string name) : base(name)
+		public static ResourceBundle Create(string name, string prefix, ResourceLevel level, int recursion)
 		{
+			ResourceBundle bundle = new ResourceBundle (name);
+			
+			bundle.prefix = prefix;
+			bundle.level  = level;
+			bundle.depth  = recursion;
+			
+			return bundle;
+		}
+		
+		public static ResourceBundle Create(string name)
+		{
+			return ResourceBundle.Create (name, null, ResourceLevel.Merged, 0);
+		}
+		
+		
+		public static bool SplitTarget(string target, out string target_bundle, out string target_field)
+		{
+			int pos = target.IndexOf ("#");
+			
+			target_bundle = target;
+			target_field  = null;
+			
+			if (pos >= 0)
+			{
+				target_bundle = target.Substring (0, pos);
+				target_field  = target.Substring (pos+1);
+				
+				return true;
+			}
+			
+			return false;
+		}
+		
+		public static string ExtractName(string sort_name)
+		{
+			int pos = sort_name.IndexOf ('/');
+			
+			if (pos < 0)
+			{
+				throw new ResourceException (string.Format ("'{0}' is an invalid sort name", sort_name));
+			}
+			
+			return sort_name.Substring (pos+1);
+		}
+		
+		
+		public virtual Drawing.Image GetBitmap(string image_name)
+		{
+			string field_name = "i." + image_name;
+			
+			if (this.bitmap_cache == null)
+			{
+				if (this.GetFieldType ("image.data") != ResourceFieldType.Binary)
+				{
+					throw new ResourceException (string.Format ("Bundle does not contain image"));
+				}
+				
+				byte[] image_data = this["image.data"].AsBinary;
+				string image_args = this["image.size"].AsString;
+				
+				Drawing.Size size = Drawing.Size.Parse (image_args, System.Globalization.CultureInfo.InvariantCulture);
+				
+				this.bitmap_cache = Drawing.Bitmap.FromData (image_data, Drawing.Point.Empty, size);
+			}
+			
+			System.Diagnostics.Debug.Assert (this.bitmap_cache != null);
+			
+			if (this.Contains (field_name))
+			{
+				//	Une image est définie par un champ 'i.name' qui contient une chaîne composée
+				//	de 'x;y;dx;dy;ox;oy' définissant l'origine dans l'image mère, la taille et
+				//	l'offset de l'origine dans la sous-image. 'oy;oy' sont facultatifs.
+				
+				string[] args = this[field_name].AsString.Split (';', ':');
+				
+				if ((args.Length != 4) && (args.Length != 6))
+				{
+					throw new ResourceException (string.Format ("Invalid image specification for '{0}', {1} arguments", image_name, args.Length));
+				}
+				
+				Drawing.Point rect_pos = Drawing.Point.Parse (args[0] + ";" + args[1], System.Globalization.CultureInfo.InvariantCulture);
+				Drawing.Size  rect_siz = Drawing.Size.Parse (args[2] + ";" + args[3], System.Globalization.CultureInfo.InvariantCulture);
+				Drawing.Point origin   = Drawing.Point.Empty;
+				
+				if (args.Length >= 6)
+				{
+					origin = Drawing.Point.Parse (args[4] + ";" + args[5], System.Globalization.CultureInfo.InvariantCulture);
+				}
+				
+				return Drawing.Bitmap.FromLargerImage (this.bitmap_cache, new Drawing.Rectangle (rect_pos, rect_siz), origin);
+			}
+			
+			return null;
+		}
+		
+		
+		
+		protected ResourceBundle(string name)
+		{
+			this.name = name;
 			this.fields = new Field[0];
 		}
 		
-		public ResourceBundleXmlDom(ResourceBundleXmlDom parent, string name, System.Xml.XmlNode xmlroot) : this(name)
+		protected ResourceBundle(ResourceBundle parent, string name, System.Xml.XmlNode xmlroot) : this(name)
 		{
-			this.Compile (xmlroot, parent.prefix, parent.level, parent.depth + 1);
+			this.prefix = parent.prefix;
+			this.level  = parent.level;
+			this.depth  = parent.depth + 1;
+			
+			this.Compile (xmlroot);
 			this.Merge ();
+		}
+		
+		public string					Name
+		{
+			get { return this.name; }
+		}
+		
+		public bool						IsEmpty
+		{
+			get { return this.CountFields == 0; }
 		}
 		
 		public Field[]						Fields
@@ -30,7 +144,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public override int					CountFields
+		public int							CountFields
 		{
 			get
 			{
@@ -38,7 +152,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public override string[]			FieldNames
+		public string[]						FieldNames
 		{
 			get
 			{
@@ -53,7 +167,8 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public override object				this[string name]
+		
+		public Field						this[string name]
 		{
 			get
 			{
@@ -61,14 +176,15 @@ namespace Epsitec.Common.Support
 				
 				if (field != null)
 				{
-					return field.Data;
+					return field;
 				}
 				
-				return null;
+				return Field.Null;
 			}
 		}
 		
-		public override ResourceFieldType GetFieldType(string name)
+		
+		public ResourceFieldType GetFieldType(string name)
 		{
 			Field field = this.GetField (name);
 			
@@ -105,43 +221,15 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 		
-		public override bool Contains(string name)
+		public bool Contains(string name)
 		{
 			return this.GetField (name) != null;
 		}
 		
-		public override System.Collections.IList GetFieldBundleList(string name)
-		{
-			ArrayList list = this[name] as ArrayList;
-			ArrayList copy = (list == null) ? null : new ArrayList ();
-			
-			if (list != null)
-			{
-				foreach (Field field in list)
-				{
-					copy.Add (field.Data as ResourceBundle);
-				}
-			}
-			
-			return copy;
-		}
-		
-		public override ResourceBundle GetFieldBundleListItem(string name, int index)
-		{
-			ArrayList list = this[name] as ArrayList;
-			
-			if (list != null)
-			{
-				Field field = list[index] as Field;
-				return field.Data as ResourceBundle;
-			}
-			
-			return null;
-		}
 		
 		
 		
-		public override void Compile(byte[] data, string default_prefix, ResourceLevel level, int recursion)
+		public void Compile(byte[] data)
 		{
 			//	La compilation des données part du principe que le bundle XML est "well formed",
 			//	c'est-à-dire qu'il comprend un seul bloc à la racine (<bundle>..</bundle>), et
@@ -163,23 +251,17 @@ namespace Epsitec.Common.Support
 					stream.Close ();
 				}
 				
-				this.Compile (xmldoc.DocumentElement, default_prefix, level, recursion);
+				this.Compile (xmldoc.DocumentElement);
 				this.Merge ();
-				
-				this.xmldoc = xmldoc;
 			}
 		}
 		
-		public void Compile(System.Xml.XmlNode xmlroot, string default_prefix, ResourceLevel level, int recursion)
+		public void Compile(System.Xml.XmlNode xmlroot)
 		{
-			if (recursion > ResourceBundle.MaxRecursion)
+			if (this.depth > ResourceBundle.MaxRecursion)
 			{
 				throw new ResourceException (string.Format ("Bundle is too complex, giving up."));
 			}
-			
-			this.depth   = recursion;
-			this.prefix  = default_prefix;
-			this.level   = level;
 			
 			ArrayList list = new ArrayList ();
 			list.AddRange (this.fields);
@@ -235,7 +317,7 @@ namespace Epsitec.Common.Support
 						//	Cas particulier: on inclut des champs en provenance d'un bundle
 						//	référencé par un tag <ref>.
 						
-						ResourceBundleXmlDom bundle = this.ResolveRefBundle (node);
+						ResourceBundle bundle = this.ResolveRefBundle (node);
 						
 						if (unpack_bundle_ref)
 						{
@@ -258,7 +340,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		protected ResourceBundleXmlDom ResolveRefBundle(System.Xml.XmlNode node)
+		protected ResourceBundle ResolveRefBundle(System.Xml.XmlNode node)
 		{
 			string ref_target  = this.GetAttributeValue (node, "target");
 			string ref_type    = this.GetAttributeValue (node, "type");
@@ -278,7 +360,7 @@ namespace Epsitec.Common.Support
 				throw new ResourceException (string.Format ("<ref target='{0}'/> specifies type='{1}'.", ref_target, ref_type));
 			}
 			
-			ResourceBundleXmlDom bundle = Resources.GetBundle (target_bundle, this.level, this.depth + 1) as ResourceBundleXmlDom;
+			ResourceBundle bundle = Resources.GetBundle (target_bundle, this.level, this.depth + 1) as ResourceBundle;
 			
 			if (bundle == null)
 			{
@@ -308,7 +390,7 @@ namespace Epsitec.Common.Support
 				throw new ResourceException (string.Format ("<ref target='{0}'/> specifies type='{1}'.", ref_target, ref_type));
 			}
 			
-			ResourceBundleXmlDom bundle = Resources.GetBundle (target_bundle, this.level, this.depth + 1) as ResourceBundleXmlDom;
+			ResourceBundle bundle = Resources.GetBundle (target_bundle, this.level, this.depth + 1) as ResourceBundle;
 			
 			if (bundle == null)
 			{
@@ -371,17 +453,126 @@ namespace Epsitec.Common.Support
 			return target;
 		}
 		
+		public class FieldList : System.Collections.IList
+		{
+			internal FieldList(ArrayList list)
+			{
+				this.list = list;
+			}
+			
+			public Field this[int index]
+			{
+				get { return this.list[index] as Field; }
+			}
+			
+			#region IList Members
+			public bool IsReadOnly
+			{
+				get { return true; }
+			}
+
+			object System.Collections.IList.this[int index]
+			{
+				get { return this.list[index]; }
+				set { throw new ResourceException ("Fields in a list cannot be modified."); }
+			}
+
+			public void RemoveAt(int index)
+			{
+				throw new ResourceException ("Fields in a list cannot be removed.");
+			}
+
+			public void Insert(int index, object value)
+			{
+				throw new ResourceException ("Fields in a list cannot be inserted.");
+			}
+
+			public void Remove(object value)
+			{
+				throw new ResourceException ("Fields in a list cannot be removed.");
+			}
+
+			public bool Contains(object value)
+			{
+				return this.list.Contains (value);
+			}
+
+			public void Clear()
+			{
+				throw new ResourceException ("Fields in a list cannot be removed.");
+			}
+
+			public int IndexOf(object value)
+			{
+				return this.list.IndexOf (value);
+			}
+
+			public int Add(object value)
+			{
+				throw new ResourceException ("Fields in a list cannot be added.");
+			}
+
+			public bool IsFixedSize
+			{
+				get { return true; }
+			}
+			#endregion
+
+			#region ICollection Members
+			public bool IsSynchronized
+			{
+				get { return this.list.IsSynchronized; }
+			}
+
+			public int Count
+			{
+				get { return this.list.Count; }
+			}
+
+			public void CopyTo(System.Array array, int index)
+			{
+				this.list.CopyTo (array, index);
+			}
+
+			public object SyncRoot
+			{
+				get { return this.list.SyncRoot; }
+			}
+			#endregion
+
+			#region IEnumerable Members
+			public IEnumerator GetEnumerator()
+			{
+				return this.list.GetEnumerator ();
+			}
+			#endregion
+			
+			protected ArrayList				list;
+		}
 		
 		public class Field
 		{
-			public Field(ResourceBundleXmlDom parent, System.Xml.XmlNode xml)
+			public static Field				Null
+			{
+				get 
+				{
+					return new Field ();
+				}
+			}
+			
+			protected Field()
+			{
+				this.parent = null;
+			}
+			
+			public Field(ResourceBundle parent, System.Xml.XmlNode xml)
 			{
 				this.parent = parent;
 				this.name   = parent.GetAttributeValue (xml, "name");
 				this.xml    = xml;
 			}
 			
-			public Field(ResourceBundleXmlDom parent, ResourceBundleXmlDom bundle)
+			public Field(ResourceBundle parent, ResourceBundle bundle)
 			{
 				this.parent = parent;
 				this.name   = bundle.Name;
@@ -419,10 +610,89 @@ namespace Epsitec.Common.Support
 				get { return this.xml; }
 			}
 			
+			public bool						IsEmpty
+			{
+				get { return this.parent == null; }
+			}
+			
+			
+			public string					AsString
+			{
+				get
+				{
+					if (this.parent == null)
+					{
+						return null;
+					}
+					
+					if (this.Type == ResourceFieldType.Data)
+					{
+						return this.Data as string;
+					}
+					
+					throw new ResourceException (string.Format ("Cannot convert field '{0}' to string.", this.Name));
+				}
+			}
+			
+			public byte[]					AsBinary
+			{
+				get
+				{
+					if (this.parent == null)
+					{
+						return null;
+					}
+					
+					if (this.Type == ResourceFieldType.Binary)
+					{
+						return this.Data as byte[];
+					}
+					
+					throw new ResourceException (string.Format ("Cannot convert field '{0}' to binary.", this.Name));
+				}
+			}
+			
+			public ResourceBundle			AsBundle
+			{
+				get
+				{
+					if (this.parent == null)
+					{
+						return null;
+					}
+					
+					if (this.Type == ResourceFieldType.Bundle)
+					{
+						return this.Data as ResourceBundle;
+					}
+					
+					throw new ResourceException (string.Format ("Cannot convert field '{0}' to bundle.", this.Name));
+				}
+			}
+			
+			public FieldList				AsList
+			{
+				get
+				{
+					if (this.parent == null)
+					{
+						return null;
+					}
+					
+					if (this.Type == ResourceFieldType.List)
+					{
+						return new FieldList (this.Data as ArrayList);
+					}
+					
+					throw new ResourceException (string.Format ("Cannot convert field '{0}' to list.", this.Name));
+				}
+			}
+			
 			
 			protected void Compile()
 			{
-				if (this.type == ResourceFieldType.None)
+				if ((this.type == ResourceFieldType.None) &&
+					(this.xml != null))
 				{
 					switch (this.xml.Name)
 					{
@@ -452,7 +722,7 @@ namespace Epsitec.Common.Support
 			
 			protected void CompileBundle()
 			{
-				this.data = new ResourceBundleXmlDom (this.parent, this.parent.Name + "#" + this.Name, this.xml);
+				this.data = new ResourceBundle (this.parent, this.parent.Name + "#" + this.Name, this.xml);
 				this.type = ResourceFieldType.Bundle;
 			}
 			
@@ -534,21 +804,24 @@ namespace Epsitec.Common.Support
 			}
 			
 			
-			protected ResourceBundleXmlDom	parent;
+			protected ResourceBundle		parent;
 			protected string				name;
-			protected System.Xml.XmlNode	xml;
+			protected System.Xml.XmlNode	xml  = null;
 			protected object				data = null;
 			protected ResourceFieldType		type = ResourceFieldType.None;
 		}
 		
 		
 		
-		protected System.Xml.XmlDocument	xmldoc;
+		protected string					name;
 		protected System.Xml.XmlNode		xmlroot;
 		protected int						depth;
 		protected int						compile_count;
 		protected string					prefix;
 		protected ResourceLevel				level;
 		protected Field[]					fields;
+		
+		protected Drawing.Image			bitmap_cache;
+		protected const int					MaxRecursion = 50;
 	}
 }

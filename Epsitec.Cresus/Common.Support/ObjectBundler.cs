@@ -137,7 +137,7 @@ namespace Epsitec.Common.Support
 				return null;
 			}
 			
-			string name = bundle.GetFieldString ("class");
+			string name = bundle["class"].AsString;
 			
 			if (name == null)
 			{
@@ -269,7 +269,7 @@ namespace Epsitec.Common.Support
 				switch (bundle.GetFieldType (prop_name))
 				{
 					case ResourceFieldType.Bundle:
-						prop_info.SetValue (obj, this.CreateFromBundle (bundle.GetFieldBundle (prop_name)), null);
+						prop_info.SetValue (obj, this.CreateFromBundle (bundle[prop_name].AsBundle), null);
 						ok = true;
 						break;
 					
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Support
 						//	La valeur source trouvée dans le bundle est un texte. Il faut faire
 						//	en sorte que cette valeur puisse être affectée à la propriété.
 						
-						string str_value = bundle.GetFieldString (prop_name);
+						string str_value = bundle[prop_name].AsString;
 						
 						if ((str_value != null) && (str_value != ""))
 						{

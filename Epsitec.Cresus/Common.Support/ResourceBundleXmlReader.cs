@@ -1,3 +1,4 @@
+#if false
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier
 
@@ -680,3 +681,4 @@ namespace Epsitec.Common.Support
 		protected Hashtable				fields;
 	}
 }
+#endif

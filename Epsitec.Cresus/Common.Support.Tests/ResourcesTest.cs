@@ -58,7 +58,7 @@ namespace Epsitec.Common.Support
 			
 			foreach (string tag in bundle.FieldNames)
 			{
-				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag]);
+				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag].Data);
 			}
 			
 			bundle = Resources.GetBundle ("file:button.cancel", ResourceLevel.Default);
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Support
 			
 			foreach (string tag in bundle.FieldNames)
 			{
-				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag]);
+				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag].AsString);
 			}
 			
 			bundle = Resources.GetBundle ("file:button.cancel", ResourceLevel.Localised);
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Support
 			
 			foreach (string tag in bundle.FieldNames)
 			{
-				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag]);
+				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag].Data);
 			}
 		}
 		
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Support
 		{
 			ResourceBundle bundle = Resources.GetBundle ("file:recursive");
 			
-			string data = bundle.GetFieldString ("loop");
+			string data = bundle["loop"].AsString;
 		}
 		
 		[Test] public void CheckGetComplexBundle()
@@ -96,14 +96,14 @@ namespace Epsitec.Common.Support
 			Assertion.AssertNotNull (bundle);
 			Assertion.AssertEquals (ResourceFieldType.Data, bundle.GetFieldType ("class"));
 			Assertion.AssertEquals (ResourceFieldType.List, bundle.GetFieldType ("widgets"));
-			Assertion.AssertEquals (3, bundle.GetFieldBundleListLength ("widgets"));
-			Assertion.AssertEquals ("CheckButton", bundle.GetFieldBundleListItem ("widgets", 0)["class"]);
-			Assertion.AssertEquals ("RadioButton", bundle.GetFieldBundleListItem ("widgets", 1)["class"]);
-			Assertion.AssertEquals ("Button", bundle.GetFieldBundleListItem ("widgets", 2)["class"]);
+			Assertion.AssertEquals (3, bundle["widgets"].AsList.Count);
+			Assertion.AssertEquals ("CheckButton", bundle["widgets"].AsList[0].AsBundle["class"].AsString);
+			Assertion.AssertEquals ("RadioButton", bundle["widgets"].AsList[1].AsBundle["class"].AsString);
+			Assertion.AssertEquals ("Button",      bundle["widgets"].AsList[2].AsBundle["class"].AsString);
 			Assertion.AssertEquals ("file:complex", bundle.Name);
-			Assertion.AssertEquals ("file:complex#widgets[0]", bundle.GetFieldBundleListItem ("widgets", 0).Name);
-			Assertion.AssertEquals ("file:complex#widgets[1]", bundle.GetFieldBundleListItem ("widgets", 1).Name);
-			Assertion.AssertEquals ("file:button.cancel", bundle.GetFieldBundleListItem ("widgets", 2).Name);
+			Assertion.AssertEquals ("file:complex#widgets[0]", bundle["widgets"].AsList[0].AsBundle.Name);
+			Assertion.AssertEquals ("file:complex#widgets[1]", bundle["widgets"].AsList[1].AsBundle.Name);
+			Assertion.AssertEquals ("file:button.cancel",      bundle["widgets"].AsList[2].AsBundle.Name);
 		}
 	}
 }
