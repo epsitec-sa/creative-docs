@@ -176,19 +176,19 @@ namespace Epsitec.Common.Widgets
 			
 			Tag tag;
 			
-			tag = new Tag ("", "", "tag1");
+			tag = new Tag ("", "tag1");
 			tag.Bounds = new Drawing.Rectangle (10, 10, 10, 10);
 			tag.Parent = window.Root;
 			
-			tag = new Tag ("", "", "tag2");
+			tag = new Tag ("", "tag2");
 			tag.Bounds = new Drawing.Rectangle (10, 25, 15, 15);
 			tag.Parent = window.Root;
 			
-			tag = new Tag ("", "", "tag3");
+			tag = new Tag ("", "tag3");
 			tag.Bounds = new Drawing.Rectangle (10, 45, 20, 20);
 			tag.Parent = window.Root;
 			
-			tag = new Tag ("", "", "tag4");
+			tag = new Tag ("", "tag4");
 			tag.Bounds = new Drawing.Rectangle (10, 70, 25, 25);
 			tag.Parent = window.Root;
 			

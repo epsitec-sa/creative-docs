@@ -239,7 +239,7 @@ namespace Epsitec.Common.Widgets
 
 			CreateListLook(window.Root.Children, new Point(10, 195), tip);
 			
-			Tag tag = new Tag ("ExecuteTag", null, "TestTag");
+			Tag tag = new Tag ("ExecuteTag", "TestTag");
 			tag.Bounds = new Drawing.Rectangle (112, 240, 18, 18);
 			tag.Parent = window.Root;
 			tip.SetToolTip (tag, "Je suis un <i>smart tag</i> maison.");
