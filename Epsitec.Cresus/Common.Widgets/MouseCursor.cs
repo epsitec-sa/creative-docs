@@ -3,18 +3,66 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe MouseCursor décrit un curseur de souris.
 	/// </summary>
-	public class MouseCursor
+	public class MouseCursor : System.IDisposable
 	{
 		private MouseCursor(System.Windows.Forms.Cursor cursor)
 		{
 			this.cursor = cursor;
 		}
 		
+		~MouseCursor()
+		{
+			this.Dispose (false);
+		}
+		
+		public static MouseCursor FromImage(Drawing.Image image, int xhot, int yhot)
+		{
+			System.IntPtr     org_handle = image.BitmapImage.NativeBitmap.GetHicon ();
+			Win32Api.IconInfo icon_info;
+			
+			Win32Api.GetIconInfo (org_handle, out icon_info);
+			
+			icon_info.FlagIcon = 0;
+			icon_info.HotspotX = xhot;
+			icon_info.HotspotY = yhot;
+			
+			System.IntPtr new_handle = Win32Api.CreateIconIndirect (ref icon_info);
+			
+			MouseCursor cursor = new MouseCursor (new System.Windows.Forms.Cursor (new_handle));
+			
+			cursor.handle = new_handle;
+			
+			return cursor;
+		}
+		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		#endregion
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				//	Rien à faire...
+			}
+			
+			if (this.handle != System.IntPtr.Zero)
+			{
+				Win32Api.DestroyIcon (this.handle);
+				this.handle = System.IntPtr.Zero;
+			}
+		}
+
 		
 		internal System.Windows.Forms.Cursor GetPlatformCursor()
 		{
 			return this.cursor;
 		}
+		
 		
 		public static MouseCursor			Default
 		{
@@ -63,6 +111,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		private System.Windows.Forms.Cursor	cursor;
+		private System.IntPtr				handle;
 		
 		
 		private static MouseCursor			as_arrow   = new MouseCursor (System.Windows.Forms.Cursors.Arrow);
