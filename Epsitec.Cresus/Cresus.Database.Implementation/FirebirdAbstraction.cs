@@ -5,6 +5,7 @@ namespace Epsitec.Cresus.Database.Implementation
 {
 	using FirebirdSql.Data.Firebird;
 	using Epsitec.Cresus.Database;
+	using System.IO;
 	
 	/// <summary>
 	/// Implémentation de IDbAbstraction pour Firebird.
@@ -145,17 +146,6 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 		
-		public static string DirectoryPathOnly(string filename)
-		{
-			//	Retourne le nom du dossier en enlevant le nom du fichier
-
-			//	DD:	Cette routine est d'intérêt générale
-			//		elle devrait être dans Epsitec.Utilities ?
-			int	pos = filename.LastIndexOf (System.IO.Path.DirectorySeparatorChar);
-			if (pos < 0) return filename;
-			return filename.Substring (0, pos);
-		}
-
 		protected virtual void CreateDatabase(DbAccess db_access)
 		{
 			System.Diagnostics.Debug.Assert (db_access.Create);
@@ -166,7 +156,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			//	L'appel FbConnection.CreateDatabase ne sait pas créer le dossier si nécessaire
 			string filename = this.CreateDbFileName (db_access);
-			System.IO.Directory.CreateDirectory (FirebirdAbstraction.DirectoryPathOnly (filename));
+			System.IO.Directory.CreateDirectory (Path.GetDirectoryName (filename));
 
 			FbConnection.CreateDatabase (db_access.Server,
 				/**/					 FirebirdAbstraction.fb_port,
