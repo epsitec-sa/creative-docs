@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			buffer.Append ("Role=;");
 			buffer.Append ("Pooling=true;");
-			buffer.Append ("Connection Lifetime=60;");
+			buffer.Append ("Connection Lifetime=2;");
 			
 			return buffer.ToString ();
 		}
