@@ -160,6 +160,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		#endregion
 		
+		#region Private Enumerator Class
 		private class Enumerator : System.Collections.IEnumerator
 		{
 			public Enumerator(CursorTable table)
@@ -223,13 +224,12 @@ namespace Epsitec.Common.Text.Internal
 			}
 			#endregion
 			
-			
 			private Internal.Cursor[]			cursors;
 			private CursorTable					table;
 			private int							table_gen_id;
 			private int							index;
 		}
-
+		#endregion
 		
 		private Internal.Cursor[]				cursors;			//	1..n; prendre index tel quel (zéro = invalide)
 		private Internal.CursorId				free_cursor_id;

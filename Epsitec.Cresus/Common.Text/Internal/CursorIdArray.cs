@@ -9,6 +9,15 @@ namespace Epsitec.Common.Text.Internal
 	/// </summary>
 	internal struct CursorIdArray
 	{
+		public int								ElementCount
+		{
+			get
+			{
+				return this.length;
+			}
+		}
+		
+		
 		public void Add(Internal.CursorId id, int position)
 		{
 			//	Insère un élément pour représenter le curseur à la position
@@ -91,17 +100,18 @@ namespace Epsitec.Common.Text.Internal
 		public int GetCursorPosition(Internal.CursorId id)
 		{
 			Debug.Assert.IsTrue (this.Contains (id));
-			
 			return this.FindElementPosition (this.FindElement (id));
 		}
 		
-		
-		public int								ElementCount
+		public int GetCursorElement(Internal.CursorId id)
 		{
-			get
-			{
-				return this.length;
-			}
+			Debug.Assert.IsTrue (this.Contains (id));
+			return this.FindElementPosition (id);
+		}
+		
+		public int GetCursorElementBeforePosition(int position)
+		{
+			return this.FindElementBeforePosition (position);
 		}
 		
 		

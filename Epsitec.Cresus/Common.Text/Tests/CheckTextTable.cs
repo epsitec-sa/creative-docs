@@ -148,8 +148,8 @@ namespace Epsitec.Common.Text.Tests
 			/*
 			 *	Mesures sur bi-Xeon 1.7GHz :
 			 *
-			 *	Traversée --> 816ns / caractère
-			 *	Traversée <-- 758ns / caractère
+			 *	Traversée --> 810ns / caractère
+			 *	Traversée <-- 750ns / caractère
 			 */
 			
 			Internal.CursorId cursor_3_1 = table3.NewCursor ();
@@ -186,11 +186,12 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (0 == table3.GetCursorPosition (cursor_3_1));
 			Debug.Assert.IsTrue (0 == table3.GetCursorPosition (cursor_3_2));
 
+			
 			/*
 			 *	Mesures sur bi-Xeon 1.7GHz :
 			 *
-			 *	Traversée avec lecture --> 816ns / caractère
-			 *	Traversée avec lecture <-- 758ns / caractère
+			 *	Traversée avec lecture --> 1450ns / caractère
+			 *	Traversée avec lecture <-- 1350ns / caractère
 			 */
 			
 			ulong xxx = table3[cursor_3_1];

@@ -41,6 +41,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		
 		public Internal.CursorId NewCursor()
 		{
 			Internal.CursorId id     = this.cursors.NewCursor ();
@@ -64,16 +65,6 @@ namespace Epsitec.Common.Text.Internal
 			
 			this.text_chunks[cursor.TextChunkId-1].RemoveCursor (id);
 			this.cursors.RecycleCursor (id);
-		}
-		
-		public int GetCursorPosition(Internal.CursorId id)
-		{
-			Internal.Cursor cursor = this.cursors.ReadCursor (id);
-			
-			int offset = this.text_chunks[cursor.TextChunkId-1].GetCursorPosition (id);
-			int start  = this.FindTextChunkPosition (cursor.TextChunkId);
-			
-			return start + offset;
 		}
 		
 		public int MoveCursor(Internal.CursorId id, int distance)
@@ -182,6 +173,52 @@ namespace Epsitec.Common.Text.Internal
 			return 0;
 		}
 		
+		public CursorInfo[] FindCursors(int position, int length)
+		{
+			Internal.TextChunkId id = this.FindTextChunkId (position);
+			
+			int origin = this.FindTextChunkPosition (id);
+			int end    = System.Math.Min (position + length, this.text_length);
+			
+			int pos    = position;
+			int offset = position - origin;
+			int count  = 0;
+			
+			while (pos < end)
+			{
+				int n = this.text_chunks[id-1].GetCursorCount ();
+				int i = this.text_chunks[id-1].GetCursorIndexBeforePosition (offset);
+				
+				//	TODO: ......
+			}
+
+			//	TODO: ......
+			
+			return null;
+		}
+		
+		
+		public int GetCursorPosition(Internal.CursorId id)
+		{
+			Internal.Cursor cursor = this.cursors.ReadCursor (id);
+			
+			int offset = this.text_chunks[cursor.TextChunkId-1].GetCursorPosition (id);
+			int start  = this.FindTextChunkPosition (cursor.TextChunkId);
+			
+			return start + offset;
+		}
+		
+		public int GetCursorDistance(Internal.CursorId id_a, Internal.CursorId id_b)
+		{
+			//	Retourne la distance de la position du curseur 'a' à la position du curseur
+			//	'b' (dans les faits, calcule pos[b] - pos[a]).
+			
+			int pos_a = this.GetCursorPosition (id_a);
+			int pos_b = this.GetCursorPosition (id_b);
+			
+			return pos_b - pos_a;
+		}
+		
 		
 		public void InsertText(Internal.CursorId cursor_id, ulong[] text)
 		{
@@ -207,6 +244,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			this.text_length += text.Length;
 		}
+		
 		
 		public int ReadText(Internal.CursorId cursor_id, int length, ref ulong[] buffer)
 		{
@@ -245,6 +283,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			return read;
 		}
+		
 		
 		
 		internal void WriteRawText(System.IO.Stream stream)
@@ -355,6 +394,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			throw new System.InvalidOperationException ("Not a valid text stream.");
 		}
+		
 		
 		
 		private Internal.TextChunkId FindTextChunkId(int position)
@@ -468,6 +508,7 @@ namespace Epsitec.Common.Text.Internal
 				this.cursors.ModifyCursorTextChunkId (chunk.GetNthCursorId (i), 1);
 			}
 		}
+		
 		
 		
 		public const int						TextChunkIdealSize = 10000;

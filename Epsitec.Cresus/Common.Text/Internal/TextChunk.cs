@@ -313,6 +313,11 @@ namespace Epsitec.Common.Text.Internal
 			return this.cursors.ElementCount;
 		}
 		
+		public int GetCursorIndexBeforePosition(int position)
+		{
+			return this.cursors.GetCursorElementBeforePosition (position);
+		}
+		
 		public Internal.CursorId GetNthCursorId(int index)
 		{
 			return this.cursors.GetElementCursorId (index);
