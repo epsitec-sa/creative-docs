@@ -1,3 +1,6 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : en chantier
+
 using FirebirdSql.Data.Firebird;
 
 namespace Epsitec.Cresus.Database.Implementation
@@ -195,6 +198,11 @@ namespace Epsitec.Cresus.Database.Implementation
 		public bool ValidateName(string value)
 		{
 			return DbSqlStandard.ValidateName (value);
+		}
+		
+		public bool ValidateQualifiedName(string value)
+		{
+			return DbSqlStandard.ValidateQualifiedName (value);
 		}
 
 		public bool ValidateString(string value)
@@ -447,6 +455,30 @@ namespace Epsitec.Cresus.Database.Implementation
 		public void GetSqlParameters(System.Data.IDbCommand command, SqlFieldCollection fields)
 		{
 			// TODO:  Add FirebirdSqlBuilder.GetSqlParameters implementation
+#if false
+			FbCommand fb_command = command as FbCommand;
+			
+			for (int i = 0; i < fb_command.Parameters.Count; i++)
+			{
+				FbParameter param = fb_command.Parameters[i] as FbParameter;
+				
+				System.Diagnostics.Debug.Assert (param != null);
+				System.Diagnostics.Debug.WriteLine (param.ParameterName + ": " + param.FbDbType.ToString ());
+				
+				switch (param.Direction)
+				{
+					case System.Data.ParameterDirection.Input:
+						break;
+					
+					case System.Data.ParameterDirection.InputOutput:
+					case System.Data.ParameterDirection.Output:
+						break;
+					
+					case System.Data.ParameterDirection.ReturnValue:
+						break;
+				}
+			}
+#endif
 		}
 
 		public void SetSqlParameters(System.Data.IDbCommand command, SqlFieldCollection fields)

@@ -1,5 +1,5 @@
-using System.Text;
-
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : en chantier
 
 namespace Epsitec.Cresus.Database
 {
@@ -536,8 +536,7 @@ namespace Epsitec.Cresus.Database
 		protected decimal				min_value	=  0.0M;
 		protected decimal				max_value	= -1.0M;
 
-		// mémorise les valeurs déterminées selon Min et Max
-		protected int					digit_precision_auto;
-		protected int					digit_shift_auto;
+		protected int					digit_precision_auto;	//	cache les val. dét. selon Min et Max
+		protected int					digit_shift_auto;		//	cache les val. dét. selon Min et Max
 	}
 }

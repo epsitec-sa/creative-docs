@@ -35,7 +35,8 @@ A FAIRE
 -	Vérifier que FbTypeConverterTest teste bien correctement l'interface
 	IRawTypeConverter.
 
--	Compléter les méthodes de création de SqlField.
+-	Compléter les méthodes de création de SqlField, ainsi que la méthode
+	de validation.
 
 -	Ecrire la classe de test SqlFieldTest.
 
@@ -62,7 +63,7 @@ A FAIRE
 		
 		Il est vital que les noms de ces champs soient pleinement qualifiés
 		(ALIAS_TABLE.NOM_CHAMP) s'ils font référence à des colonnes de
-		tables. Cf. SqlFieldType.QualifiedName et SqlField.QualifyName ().
+		tables. Voir SqlFieldType.QualifiedName et DbSqlStandard.Qualif...
 	
 	Les méthodes d'ajout devraient permettre de :
 	
@@ -75,5 +76,10 @@ A FAIRE
 	
 	-	Spécifier les conditions (ce sont là uniquement des fonctions).
 
+-	Ecrire les tests pour les classes SqlFunction et SqlSelect.
 
-Je m'arrête là pour l'instant. La partie Db... -> Sql... viendra ensuite.
+-	Compléter DbSqlStandard et DbSqlStandardTest. En particulier les
+	méthodes SplitQualifiedName et ValidateQualifiedName.
+
+-	Terminer DbNumDef.
+

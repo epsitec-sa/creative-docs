@@ -1,7 +1,10 @@
-using FirebirdSql.Data.Firebird;
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 07/10/2003
 
 namespace Epsitec.Cresus.Database.Implementation
 {
+	using FirebirdSql.Data.Firebird;
+	
 	/// <summary>
 	/// La classe FirebirdTypeConverter implémente la conversion des types de
 	/// bruts pour Firebird.
@@ -11,6 +14,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		public FirebirdTypeConverter()
 		{
 		}
+		
 		
 		#region ITypeConverter Members
 
@@ -70,6 +74,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			public BooleanConverter()
 			{
 			}
+			
 			
 			#region IRawTypeConverter Members
 			
@@ -131,6 +136,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			public GuidConverter()
 			{
 			}
+			
 			
 			#region IRawTypeConverter Members
 

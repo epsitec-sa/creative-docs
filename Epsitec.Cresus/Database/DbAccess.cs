@@ -1,3 +1,6 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 07/10/2003
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -14,6 +17,7 @@ namespace Epsitec.Cresus.Database
 			this.LoginPassword	= login_pwd;
 			this.Create			= create;
 		}
+		
 		
 		public string						Provider;
 		public string						Database;

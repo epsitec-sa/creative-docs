@@ -1,3 +1,6 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 07/10/2003
+
 namespace Epsitec.Cresus.Database.Implementation
 {
 	using Epsitec.Cresus.Database;
@@ -11,7 +14,6 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			DbFactory.RegisterDbAbstraction (this);
 		}
-		
 		
 		#region IDbAbstractionFactory Members
 		public IDbAbstraction NewDbAbstraction(DbAccess db_access)
@@ -35,6 +37,6 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		#endregion
 		
-		protected FirebirdTypeConverter				type_converter = new FirebirdTypeConverter ();
+		protected FirebirdTypeConverter	type_converter = new FirebirdTypeConverter ();
 	}
 }

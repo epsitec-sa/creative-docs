@@ -1,8 +1,11 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 07/10/2003
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
 	/// La classe DbColumn décrit une colonne dans une table de la base de données.
-	/// Cette classe ressemble fortement à System.Data.DataColumn.
+	/// Cette classe ressemble dans l'esprit à System.Data.DataColumn.
 	/// </summary>
 	public class DbColumn
 	{

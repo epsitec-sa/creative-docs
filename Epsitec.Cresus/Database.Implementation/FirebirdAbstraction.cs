@@ -1,7 +1,9 @@
-using FirebirdSql.Data.Firebird;
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : en chantier
 
 namespace Epsitec.Cresus.Database.Implementation
 {
+	using FirebirdSql.Data.Firebird;
 	using Epsitec.Cresus.Database;
 	
 	/// <summary>
@@ -56,7 +58,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 		
 
-		public DbAccess								DbAccess
+		public DbAccess					DbAccess
 		{
 			get { return this.db_access; }
 		}
@@ -300,34 +302,6 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 		
 		#endregion
-
-#if false
-		public void GetSqlParameters(System.Data.IDbCommand command, SqlFieldCollection fields)
-		{
-			FbCommand fb_command = command as FbCommand;
-			
-			for (int i = 0; i < fb_command.Parameters.Count; i++)
-			{
-				FbParameter param = fb_command.Parameters[i] as FbParameter;
-				
-				System.Diagnostics.Debug.Assert (param != null);
-				System.Diagnostics.Debug.WriteLine (param.ParameterName + ": " + param.FbDbType.ToString ());
-				
-				switch (param.Direction)
-				{
-					case System.Data.ParameterDirection.Input:
-						break;
-					
-					case System.Data.ParameterDirection.InputOutput:
-					case System.Data.ParameterDirection.Output:
-						break;
-					
-					case System.Data.ParameterDirection.ReturnValue:
-						break;
-				}
-			}
-		}
-#endif
 		
 		#region IDisposable Members
 		public void Dispose()
@@ -337,18 +311,18 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 		#endregion
 		
-		private DbAccess							db_access;
-		private IDbAbstractionFactory				db_factory;
-		private FbConnection						db_connection;
-		private string								db_connection_string;
-		private FirebirdSqlBuilder					sql_builder;
+		private DbAccess				db_access;
+		private IDbAbstractionFactory	db_factory;
+		private FbConnection			db_connection;
+		private string					db_connection_string;
+		private FirebirdSqlBuilder		sql_builder;
 		
-		protected static int						fb_port				= 3050;
-		protected static byte						fb_dialect			= 3;
-		protected static short						fb_page_size		= 8192;
-		protected static string						fb_charset			= "UNICODE_FSS";
-		protected static string						fb_root_path		= @"C:\Program Files\Firebird15";
-		protected static string						fb_root_db_path		= @"C:\Program Files\Firebird15\Data\Epsitec";
-		protected static string						fb_db_extension		= ".firebird";
+		protected static int			fb_port				= 3050;
+		protected static byte			fb_dialect			= 3;
+		protected static short			fb_page_size		= 8192;
+		protected static string			fb_charset			= "UNICODE_FSS";
+		protected static string			fb_root_path		= @"C:\Program Files\Firebird15";
+		protected static string			fb_root_db_path		= @"C:\Program Files\Firebird15\Data\Epsitec";
+		protected static string			fb_db_extension		= ".firebird";
 	}
 }

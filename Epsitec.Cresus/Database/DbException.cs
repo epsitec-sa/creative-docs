@@ -1,3 +1,6 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 07/10/2003
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -21,12 +24,12 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public DbAccess								DbAccess
+		public DbAccess					DbAccess
 		{
 			get { return this.db_access; }
 		}
 		
 		
-		protected DbAccess							db_access;
+		protected DbAccess				db_access;
 	}
 }

@@ -1,5 +1,10 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 07/10/2003
+
 namespace Epsitec.Cresus.Database
 {
+	using System.Collections;
+	
 	/// <summary>
 	/// Summary description for InternalCollectionList.
 	/// </summary>
@@ -10,7 +15,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public override System.Collections.ArrayList	List
+		public override ArrayList	List
 		{
 			get { return this.list; }
 		}
@@ -38,6 +43,10 @@ namespace Epsitec.Cresus.Database
 		
 		public virtual int IndexOf(string name)
 		{
+			//	Cette méthode retourne toujours -1, car on ne sait pas comment chercher
+			//	selon un nom. Par contre, les classes qui héritent de InternalCollectionList
+			//	fournissent leur propre implémentation.
+			
 			return -1;
 		}
 		
@@ -47,6 +56,6 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected System.Collections.ArrayList	list	= new System.Collections.ArrayList ();
+		protected ArrayList	list		= new System.Collections.ArrayList ();
 	}
 }

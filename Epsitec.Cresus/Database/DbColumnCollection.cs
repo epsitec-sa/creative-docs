@@ -1,3 +1,6 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 07/10/2003
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -57,8 +60,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		
-		public virtual DbColumn							this[int index]
+		public virtual DbColumn			this[int index]
 		{
 			get
 			{
@@ -66,7 +68,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public virtual DbColumn							this[string column_name]
+		public virtual DbColumn			this[string column_name]
 		{
 			get
 			{

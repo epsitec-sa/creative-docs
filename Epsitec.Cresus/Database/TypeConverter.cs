@@ -1,3 +1,6 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 07/10/2003
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -138,18 +141,14 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		/// <summary>
-		/// Convertit un objet en provenance de ADO.NET en sa représentation équivalente
-		/// basée sur le type simplifié <c>simple_type</c> et la définition de son format
-		/// numérique. Cette méthode peut transformer une donnée numérique de manière
-		/// significative.
-		/// </summary>
-		/// <param name="value">objet brut fourni par ADO.NET</param>
-		/// <param name="simple_type">type simplifié attendu</param>
-		/// <param name="num_def">format numérique attendu</param>
-		/// <returns>objet converti</returns>
 		public static object ConvertToSimpleType(object value, DbSimpleType simple_type, DbNumDef num_def)
 		{
+			//	Convertit un objet en provenance de ADO.NET en sa représentation équivalente basée
+			//	sur le type simplifié 'simple_type' et la définition de son format numérique.
+			
+			//	Cette méthode peut transformer une donnée numérique de manière significative,
+			//	par exemple de Int64 à decimal.
+			
 			if (value == null)
 			{
 				return null;
@@ -219,17 +218,14 @@ namespace Epsitec.Cresus.Database
 			return null;
 		}
 		
-		/// <summary>
-		/// Convertit un objet basé sur le type simplifié <c>simple_type</c> et la définition
-		/// de son format numérique en un objet compatible avec ADO.NET. Cette méthode peut
-		/// transformer une donnée numérique de manière siginificative.
-		/// </summary>
-		/// <param name="value">objet de type simplifié</param>
-		/// <param name="simple_type">type de l'objet</param>
-		/// <param name="num_def">format numérique de l'objet</param>
-		/// <returns>objet converti</returns>
 		public static object ConvertFromSimpleType(object value, DbSimpleType simple_type, DbNumDef num_def)
 		{
+			//	Convertit un objet basé sur le type simplifié 'simple_type' et la définition de son
+			//	format numérique en un objet compatible avec ADO.NET.
+			
+			//	Cette méthode peut transformer une donnée numérique de manière siginificative,
+			//	par exemple de Int64 en decimal.
+			
 			if (value == null)
 			{
 				return null;
@@ -311,7 +307,6 @@ namespace Epsitec.Cresus.Database
 			
 			throw new DbFormatException (string.Format ("Invalid value format {0}, cannot convert to {1}", value.GetType ().ToString (), simple_type.ToString ()));
 		}
-		
 		
 		
 		public static System.IFormatProvider		CurrentFormatProvider

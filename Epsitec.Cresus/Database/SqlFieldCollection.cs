@@ -1,3 +1,6 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 07/10/2003
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -42,6 +45,7 @@ namespace Epsitec.Cresus.Database
 			return this.List.IndexOf (field);
 		}
 		
+		
 		public override int IndexOf(string field_alias)
 		{
 			for (int i = 0; i < this.List.Count; i++)
@@ -58,8 +62,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		
-		public virtual SqlField							this[int index]
+		public virtual SqlField			this[int index]
 		{
 			get
 			{
@@ -67,7 +70,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public virtual SqlField							this[string field_alias]
+		public virtual SqlField			this[string field_alias]
 		{
 			get
 			{

@@ -128,6 +128,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DbSqlStandardTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "FbTypeConverterTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

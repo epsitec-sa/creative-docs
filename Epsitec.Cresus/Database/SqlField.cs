@@ -1,3 +1,6 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : en chantier
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
@@ -16,15 +19,18 @@ namespace Epsitec.Cresus.Database
 
 		public SqlField(string name)
 		{
-			int dot_pos = name.IndexOf (".");
+			//	Comme on ne sait pas à priori si l'appelant passe un nom qualifié ou un nom
+			//	simple, on doit bien l'analyser. On utiliser l'analyse SQL générique, dans
+			//	l'espoir qu'aucune implémentation de SQL n'utilise d'autres règles pour
+			//	définir un nom qualifié.
 			
-			if (dot_pos < 0)
+			if (DbSqlStandard.ValidateQualifiedName (name))
 			{
-				this.type = SqlFieldType.Name;
+				this.type = SqlFieldType.QualifiedName;
 			}
 			else
 			{
-				this.type = SqlFieldType.QualifiedName;
+				this.type = SqlFieldType.Name;
 			}
 			
 			this.value = name;
@@ -41,10 +47,17 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public static string QualifyName(string qualifier, string name)
+		public bool Validate(ISqlValidator validator)
 		{
-			System.Diagnostics.Debug.Assert (name.Length > 0);
-			return qualifier + "." + name;
+			//	TODO: valide en fonction du validator et du type du SqlField.
+			
+			switch (this.Type)
+			{
+				case SqlFieldType.Name:				return validator.ValidateName (this.AsName);
+				case SqlFieldType.QualifiedName:	return validator.ValidateQualifiedName (this.AsQualifiedName);
+			}
+			
+			return false;
 		}
 		
 		
@@ -110,15 +123,12 @@ namespace Epsitec.Cresus.Database
 				}
 				if (this.type == SqlFieldType.QualifiedName)
 				{
-					string name = this.value as string;
-					int dot_pos = name.IndexOf (".");
+					string qualifier;
+					string name;
 					
-					if (dot_pos < 0)
-					{
-						return name;
-					}
+					DbSqlStandard.SplitQualifiedName (this.AsQualifiedName, out qualifier, out name);
 					
-					return name.Substring (dot_pos+1);
+					return name;
 				}
 				
 				return null;
