@@ -25,13 +25,13 @@ namespace Epsitec.Common.Widgets
 				this.buttons[i].Clicked += new MessageEventHandler(this.PanelLineClicked);
 			}
 
-			this.buttons[0].IconName = @"manifest:Epsitec.Common.NiceIcon/Images.capround.png";
-			this.buttons[1].IconName = @"manifest:Epsitec.Common.NiceIcon/Images.capsquare.png";
-			this.buttons[2].IconName = @"manifest:Epsitec.Common.NiceIcon/Images.capbutt.png";
+			this.buttons[0].IconName = @"file:images/capround1.icon";
+			this.buttons[1].IconName = @"file:images/capsquare1.icon";
+			this.buttons[2].IconName = @"file:images/capbutt1.icon";
 
-			this.buttons[3].IconName = @"manifest:Epsitec.Common.NiceIcon/Images.joinround.png";
-			this.buttons[4].IconName = @"manifest:Epsitec.Common.NiceIcon/Images.joinmiter.png";
-			this.buttons[5].IconName = @"manifest:Epsitec.Common.NiceIcon/Images.joinbevel.png";
+			this.buttons[3].IconName = @"file:images/joinround1.icon";
+			this.buttons[4].IconName = @"file:images/joinmiter1.icon";
+			this.buttons[5].IconName = @"file:images/joinbevel1.icon";
 
 			this.isNormalAndExtended = true;
 		}

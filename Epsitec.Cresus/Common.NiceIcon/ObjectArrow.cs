@@ -22,11 +22,16 @@ namespace Epsitec.Common.NiceIcon
 			this.AddProperty(lineColor);
 		}
 
+		protected override AbstractObject CreateNewObject()
+		{
+			return new ObjectArrow();
+		}
+
 
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"manifest:Epsitec.Common.NiceIcon/Images.arrow.png"; }
+			get { return @"file:images/arrow1.icon"; }
 		}
 
 

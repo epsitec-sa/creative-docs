@@ -21,13 +21,24 @@ namespace Epsitec.Common.NiceIcon
 		#region ICanvasEngine Members
 		public void GetSizeAndOrigin(byte[] data, out Drawing.Size size, out Drawing.Point origin)
 		{
-			size   = new Drawing.Size (20, 20);
-			origin = new Drawing.Point (0, 0);
+			size   = new Drawing.Size(20, 20);
+			origin = new Drawing.Point(0, 0);
+
+			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
+			{
+				IconObjects icon = new IconObjects();
+				
+				if ( icon.Read(stream) )
+				{
+					size   = icon.Size;
+					origin = icon.Origin;
+				}
+			}
 		}
 
 		public void Paint(Drawing.Graphics graphics, Drawing.Size size, byte[] data, bool disabled)
 		{
-			using (System.IO.MemoryStream stream = new System.IO.MemoryStream(data))
+			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
 			{
 				IconObjects icon = new IconObjects();
 				IconContext context = new IconContext();

@@ -30,11 +30,16 @@ namespace Epsitec.Common.NiceIcon
 			this.AddProperty(textFontOptical);
 		}
 
+		protected override AbstractObject CreateNewObject()
+		{
+			return new ObjectText();
+		}
+
 
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"manifest:Epsitec.Common.NiceIcon/Images.text.png"; }
+			get { return @"file:images/text1.icon"; }
 		}
 
 

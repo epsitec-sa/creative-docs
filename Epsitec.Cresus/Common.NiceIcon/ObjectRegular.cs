@@ -38,11 +38,16 @@ namespace Epsitec.Common.NiceIcon
 			this.AddProperty(regularShape);
 		}
 
+		protected override AbstractObject CreateNewObject()
+		{
+			return new ObjectRegular();
+		}
+
 
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"manifest:Epsitec.Common.NiceIcon/Images.regular.png"; }
+			get { return @"file:images/regular1.icon"; }
 		}
 
 

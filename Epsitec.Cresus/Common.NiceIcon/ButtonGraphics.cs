@@ -78,7 +78,8 @@ namespace Epsitec.Common.Widgets
 				Drawing.Transform save = graphics.SaveTransform();
 				this.iconContext.ScaleX = (this.Client.Width-2)/100;
 				this.iconContext.ScaleY = (this.Client.Height-2)/100;
-				graphics.ScaleTransform(this.iconContext.ScaleX, this.iconContext.ScaleY, 0.5, 2);
+				graphics.TranslateTransform(0.5, 0.5);
+				graphics.ScaleTransform(this.iconContext.ScaleX, this.iconContext.ScaleY, 0, 0);
 
 				this.iconObjects.DrawGeometry(graphics, this.iconContext);
 

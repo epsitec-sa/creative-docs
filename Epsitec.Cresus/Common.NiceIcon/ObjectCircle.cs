@@ -26,11 +26,16 @@ namespace Epsitec.Common.NiceIcon
 			this.AddProperty(fillGradient);
 		}
 
+		protected override AbstractObject CreateNewObject()
+		{
+			return new ObjectCircle();
+		}
+
 
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"manifest:Epsitec.Common.NiceIcon/Images.circle.png"; }
+			get { return @"file:images/circle1.icon"; }
 		}
 
 

@@ -30,11 +30,16 @@ namespace Epsitec.Common.NiceIcon
 			this.AddProperty(fillClose);
 		}
 
+		protected override AbstractObject CreateNewObject()
+		{
+			return new ObjectBezier();
+		}
+
 
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"manifest:Epsitec.Common.NiceIcon/Images.bezier.png"; }
+			get { return @"file:images/bezier1.icon"; }
 		}
 
 
@@ -187,7 +192,7 @@ namespace Epsitec.Common.NiceIcon
 
 				item = new ContextMenuItem();
 				item.Name = "handleAdd";
-				item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.add.png";
+				item.Icon = @"file:images/add1.icon";
 				item.Text = "Ajouter un point";
 				list.Add(item);
 			}
@@ -204,19 +209,19 @@ namespace Epsitec.Common.NiceIcon
 
 						item = new ContextMenuItem();
 						item.Name = "handleSym";
-						if ( type == HandleConstrainType.Symetric )  item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.check.png";
+						if ( type == HandleConstrainType.Symmetric )  item.Icon = @"file:images/check1.icon";
 						item.Text = "Symetrique";
 						list.Add(item);
 
 						item = new ContextMenuItem();
 						item.Name = "handleSmooth";
-						if ( type == HandleConstrainType.Smooth )  item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.check.png";
+						if ( type == HandleConstrainType.Smooth )  item.Icon = @"file:images/check1.icon";
 						item.Text = "Lisse";
 						list.Add(item);
 
 						item = new ContextMenuItem();
 						item.Name = "handleCorner";
-						if ( type == HandleConstrainType.Corner )  item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.check.png";
+						if ( type == HandleConstrainType.Corner )  item.Icon = @"file:images/check1.icon";
 						item.Text = "Anguleux";
 						list.Add(item);
 					}
@@ -229,13 +234,13 @@ namespace Epsitec.Common.NiceIcon
 
 						item = new ContextMenuItem();
 						item.Name = "handleSmooth";
-						if ( type == HandleConstrainType.Smooth )  item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.check.png";
+						if ( type == HandleConstrainType.Smooth )  item.Icon = @"file:images/check1.icon";
 						item.Text = "En ligne";
 						list.Add(item);
 
 						item = new ContextMenuItem();
 						item.Name = "handleCorner";
-						if ( type != HandleConstrainType.Smooth )  item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.check.png";
+						if ( type != HandleConstrainType.Smooth )  item.Icon = @"file:images/check1.icon";
 						item.Text = "Libre";
 						list.Add(item);
 					}
@@ -247,7 +252,7 @@ namespace Epsitec.Common.NiceIcon
 
 						item = new ContextMenuItem();
 						item.Name = "handleDelete";
-						item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.sub.png";
+						item.Icon = @"file:images/sub1.icon";
 						item.Text = "Enlever le point";
 						list.Add(item);
 					}
@@ -302,7 +307,7 @@ namespace Epsitec.Common.NiceIcon
 		// Passe le point en mode symétrique.
 		protected void ContextSym(int rank)
 		{
-			this.Handle(rank).ConstrainType = HandleConstrainType.Symetric;
+			this.Handle(rank).ConstrainType = HandleConstrainType.Symmetric;
 			this.MoveSecondary(rank, rank-1, rank+1, this.Handle(rank-1).Position);
 		}
 
@@ -364,8 +369,8 @@ namespace Epsitec.Common.NiceIcon
 				this.Handle(curr+2).Position = Drawing.Point.Scale(this.Handle(next+0).Position, pos, 1-t);
 
 				this.Handle(curr+1).ConstrainType = HandleConstrainType.Smooth;
-				if ( this.Handle(prev+1).ConstrainType == HandleConstrainType.Symetric )  this.Handle(prev+1).ConstrainType = HandleConstrainType.Smooth;
-				if ( this.Handle(next+1).ConstrainType == HandleConstrainType.Symetric )  this.Handle(next+1).ConstrainType = HandleConstrainType.Smooth;
+				if ( this.Handle(prev+1).ConstrainType == HandleConstrainType.Symmetric )  this.Handle(prev+1).ConstrainType = HandleConstrainType.Smooth;
+				if ( this.Handle(next+1).ConstrainType == HandleConstrainType.Symmetric )  this.Handle(next+1).ConstrainType = HandleConstrainType.Smooth;
 			}
 		}
 
@@ -478,7 +483,7 @@ namespace Epsitec.Common.NiceIcon
 			}
 			else	// courbe ?
 			{
-				if ( type == HandleConstrainType.Symetric )
+				if ( type == HandleConstrainType.Symmetric )
 				{
 					this.Handle(rankOpposite).Position = Drawing.Point.Symmetry(this.Handle(rankPrimary).Position, this.Handle(rankSecondary).Position);
 				}

@@ -26,11 +26,16 @@ namespace Epsitec.Common.NiceIcon
 			this.AddProperty(fillGradient);
 		}
 
+		protected override AbstractObject CreateNewObject()
+		{
+			return new ObjectEllipse();
+		}
+
 
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"manifest:Epsitec.Common.NiceIcon/Images.ellipse.png"; }
+			get { return @"file:images/ellipse1.icon"; }
 		}
 
 

@@ -551,25 +551,29 @@ namespace Epsitec.Common.Widgets
 
 			item = new ContextMenuItem();
 			item.Name = "delete";
-			item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.delete.png";
+			//item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.delete.png";
+			item.Icon = @"file:images/delete1.icon";
 			item.Text = "Supprimer";
 			list.Add(item);
 
 			item = new ContextMenuItem();
 			item.Name = "duplicate";
-			item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.duplicate.png";
+			//item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.duplicate.png";
+			item.Icon = @"file:images/duplicate1.icon";
 			item.Text = "Dupliquer";
 			list.Add(item);
 
 			item = new ContextMenuItem();
 			item.Name = "orderup";
-			item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.orderup.png";
+			//item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.orderup.png";
+			item.Icon = @"file:images/orderup1.icon";
 			item.Text = "Devant";
 			list.Add(item);
 
 			item = new ContextMenuItem();
 			item.Name = "orderdown";
-			item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.orderdown.png";
+			//item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.orderdown.png";
+			item.Icon = @"file:images/orderdown1.icon";
 			item.Text = "Derriere";
 			list.Add(item);
 
@@ -1127,6 +1131,7 @@ namespace Epsitec.Common.Widgets
 			last.Objects.CopyTo(this.objects);
 			this.selectedTool = last.SelectedTool;
 			this.OnAllChanged();
+			this.rankLastCreated = -1;
 			return true;
 		}
 
@@ -1237,7 +1242,8 @@ namespace Epsitec.Common.Widgets
 			Drawing.Transform save = graphics.SaveTransform();
 			this.iconContext.ScaleX = this.Client.Width/100;
 			this.iconContext.ScaleY = this.Client.Height/100;
-			graphics.ScaleTransform(this.iconContext.ScaleX, this.iconContext.ScaleY, 0.5, 0.5);
+			graphics.TranslateTransform(0.5, 0.5);
+			graphics.ScaleTransform(this.iconContext.ScaleX, this.iconContext.ScaleY, 0, 0);
 
 			// Dessine la grille magnétique.
 			if ( this.isEditable )

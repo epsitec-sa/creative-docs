@@ -172,6 +172,8 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckIconEditor()
 		{
+			Engine.Initialise();
+
 			//Widgets.Adorner.Factory.SetActive("LookDefault");
 			//Widgets.Adorner.Factory.SetActive("LookDany");
 			//Widgets.Adorner.Factory.SetActive("LookCeeBot");
@@ -187,6 +189,48 @@ namespace Epsitec.Common.Tests
 			editor.Size = window.ClientSize;
 			editor.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			window.Root.Children.Add(editor);
+
+			window.Show();
+		}
+
+		[Test] public void CheckIconButton()
+		{
+			Engine.Initialise();
+
+			Window window = new Window();
+			
+			window.ClientSize = new Drawing.Size(400, 300);
+			window.Text = "CheckIconButton";
+
+			IconButton button = new IconButton();
+			//button.IconName = @"file:images/new.png";
+			button.IconName = @"file:images/new1.icon";
+			button.Location = new Drawing.Point(160, 150);
+			button.Width = 24;
+			button.Height = 24;
+			button.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(button);
+
+			window.Show();
+		}
+
+		[Test] public void CheckButton()
+		{
+			Engine.Initialise();
+
+			Window window = new Window();
+			
+			window.ClientSize = new Drawing.Size(400, 300);
+			window.Text = "CheckButton";
+
+			Button button = new Button();
+			//button.IconName = @"<img src=""file:images/new.png""/>";
+			button.Text = @"<img src=""file:images/new1.icon""/>";
+			button.Location = new Drawing.Point(160, 150);
+			button.Width = 24;
+			button.Height = 24;
+			button.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(button);
 
 			window.Show();
 		}

@@ -30,11 +30,16 @@ namespace Epsitec.Common.NiceIcon
 			this.AddProperty(fillClose);
 		}
 
+		protected override AbstractObject CreateNewObject()
+		{
+			return new ObjectPoly();
+		}
+
 
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"manifest:Epsitec.Common.NiceIcon/Images.poly.png"; }
+			get { return @"file:images/poly1.icon"; }
 		}
 
 
@@ -103,7 +108,7 @@ namespace Epsitec.Common.NiceIcon
 
 				item = new ContextMenuItem();
 				item.Name = "handleAdd";
-				item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.add.png";
+				item.Icon = @"file:images/add1.icon";
 				item.Text = "Ajouter un point";
 				list.Add(item);
 			}
@@ -116,7 +121,7 @@ namespace Epsitec.Common.NiceIcon
 
 					item = new ContextMenuItem();
 					item.Name = "handleDelete";
-					item.Icon = @"manifest:Epsitec.Common.NiceIcon/Images.sub.png";
+					item.Icon = @"file:images/sub1.icon";
 					item.Text = "Enlever le point";
 					list.Add(item);
 				}

@@ -38,6 +38,34 @@ namespace Epsitec.Common.NiceIcon
 		{
 		}
 
+		// Taille préférentielle de l'icône en pixels.
+		public Drawing.Size Size
+		{
+			get
+			{
+				return this.size;
+			}
+
+			set
+			{
+				this.size = value;
+			}
+		}
+
+		// Origine de l'icône en pixels.
+		public Drawing.Point Origin
+		{
+			get
+			{
+				return this.origin;
+			}
+
+			set
+			{
+				this.origin = value;
+			}
+		}
+
 		// Liste des objets.
 		public System.Collections.ArrayList Objects
 		{
@@ -184,6 +212,8 @@ namespace Epsitec.Common.NiceIcon
 
 
 		[XmlAttribute]
+		protected Drawing.Size					size = new Drawing.Size(20, 20);
+		protected Drawing.Point					origin = new Drawing.Point(0, 0);
 		protected System.Collections.ArrayList	objects = new System.Collections.ArrayList();
 	}
 }

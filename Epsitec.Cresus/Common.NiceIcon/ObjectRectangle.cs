@@ -30,11 +30,16 @@ namespace Epsitec.Common.NiceIcon
 			this.AddProperty(roundRect);
 		}
 
+		protected override AbstractObject CreateNewObject()
+		{
+			return new ObjectRectangle();
+		}
+
 
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"manifest:Epsitec.Common.NiceIcon/Images.rectangle.png"; }
+			get { return @"file:images/rectangle1.icon"; }
 		}
 
 

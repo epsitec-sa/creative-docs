@@ -116,5 +116,10 @@ namespace Epsitec.Common.NiceIcon
 			textFontOptical.Add("Gras italique");
 			this.AddProperty(textFontOptical);
 		}
+
+		protected override AbstractObject CreateNewObject()
+		{
+			return new ObjectMemory();
+		}
 	}
 }

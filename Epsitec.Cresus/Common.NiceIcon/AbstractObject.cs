@@ -355,21 +355,13 @@ namespace Epsitec.Common.NiceIcon
 		}
 
 
+		// Crée une instance de l'objet.
+		protected abstract AbstractObject CreateNewObject();
+
 		// Effectue une copie de l'objet courant.
 		public bool DuplicateObject(ref AbstractObject newObject)
 		{
-			newObject = null;
-			if ( this is ObjectLine      )  newObject = new ObjectLine();
-			if ( this is ObjectArrow     )  newObject = new ObjectArrow();
-			if ( this is ObjectRectangle )  newObject = new ObjectRectangle();
-			if ( this is ObjectCircle    )  newObject = new ObjectCircle();
-			if ( this is ObjectEllipse   )  newObject = new ObjectEllipse();
-			if ( this is ObjectRegular   )  newObject = new ObjectRegular();
-			if ( this is ObjectPoly      )  newObject = new ObjectPoly();
-			if ( this is ObjectBezier    )  newObject = new ObjectBezier();
-			if ( this is ObjectText      )  newObject = new ObjectText();
-			if ( this == null )  return false;
-
+			newObject = this.CreateNewObject();
 			newObject.CreateProperties();
 			newObject.CloneObject(this);
 			return true;

@@ -13,7 +13,7 @@ namespace Epsitec.Common.NiceIcon
 
 	public enum HandleConstrainType
 	{
-		Symetric,		// symétrique
+		Symmetric,		// symétrique
 		Smooth,			// lisse
 		Corner,			// anguleux
 	}
@@ -187,7 +187,7 @@ namespace Epsitec.Common.NiceIcon
 		protected double				scaleY;
 
 		protected HandleType			type = HandleType.Primary;
-		protected HandleConstrainType	constrainType = HandleConstrainType.Symetric;
+		protected HandleConstrainType	constrainType = HandleConstrainType.Symmetric;
 
 		[XmlAttribute]
 		protected Drawing.Point			position = new Drawing.Point(0, 0);
