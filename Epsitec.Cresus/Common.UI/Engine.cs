@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA, 27/04/2004
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.UI
 {
@@ -8,9 +8,10 @@ namespace Epsitec.Common.UI
 	/// </summary>
 	public class Engine
 	{
-		public Engine()
+		private Engine()
 		{
 		}
+		
 		
 		public static void BindWidgets(Types.IDataGraph graph, Common.Widgets.Widget root)
 		{
@@ -25,6 +26,7 @@ namespace Epsitec.Common.UI
 			
 			root.WalkChildren (new Common.Widgets.WalkWidgetCallback (binder.Process));
 		}
+		
 		
 		#region WidgetBinder Class
 		private class WidgetBinder
@@ -81,6 +83,9 @@ namespace Epsitec.Common.UI
 			string           path   = x_path.Value;
 			Types.IDataValue source = graph.Navigate (path) as Types.IDataValue;
 			
+			//	NB: pour l'instant, on ne peut pas réaliser de binding sur un IDataFolder, mais uniquement
+			//	    sur un IDataValue. C'est contestable, et peut-être faudra-t-il un jour modifier cela.
+			
 			if (source == null)
 			{
 				throw new System.ArgumentException (string.Format ("Cannot bind widget; invalid path found in binding information ({0}).", path), "binding");
@@ -93,23 +98,25 @@ namespace Epsitec.Common.UI
 				throw new System.ArgumentException (string.Format ("Cannot bind widget; path ({0}) points to typeless data.", path), "binding");
 			}
 			
+			
+			Types.IDataConstraint   constraint = source.DataConstraint;
+			Binders.DataValueBinder binder     = new Binders.DataValueBinder (source);
+			
+			
 			if (type is Types.IString)
 			{
-				Types.IDataConstraint   constraint = source.DataConstraint;
-				Binders.DataValueBinder binder     = new Binders.DataValueBinder (source);
-				Adapters.StringAdapter  adapter    = new Adapters.StringAdapter (binder);
+				Adapters.StringAdapter adapter = new Adapters.StringAdapter (binder);
 				
 				new Controllers.WidgetTextController (adapter, widget, constraint);
 				
 				return;
 			}
 			
-			if (type is Types.INum)
+			Types.INum num_type = source.DataType as Types.INum;
+			
+			if (num_type != null)
 			{
-				Types.IDataConstraint   constraint = source.DataConstraint;
-				Types.INum              num_type   = source.DataType as Types.INum;
-				Binders.DataValueBinder binder     = new Binders.DataValueBinder (source);
-				Adapters.DecimalAdapter adapter    = new Adapters.DecimalAdapter (binder);
+				Adapters.DecimalAdapter adapter = new Adapters.DecimalAdapter (binder);
 				
 				//	Si le widget supporte l'interface INumValue, utilise la propriété Value
 				//	du widget pour échanger des données; sinon, part du principe que c'est
@@ -137,9 +144,7 @@ namespace Epsitec.Common.UI
 				//	liste des valeurs définies. Il faut donc utiliser une interface de
 				//	type 'texte' :
 				
-				Types.IDataConstraint   constraint = source.DataConstraint;
-				Binders.DataValueBinder binder     = new Binders.DataValueBinder (source);
-				Adapters.StringAdapter  adapter    = new Adapters.StringAdapter (binder);
+				Adapters.StringAdapter adapter = new Adapters.StringAdapter (binder);
 				
 				if (constraint == null)
 				{
@@ -160,8 +165,7 @@ namespace Epsitec.Common.UI
 			
 			if (enum_type != null)
 			{
-				Binders.DataValueBinder binder     = new Binders.DataValueBinder (source);
-				Adapters.DecimalAdapter adapter    = new Adapters.DecimalAdapter (binder);
+				Adapters.DecimalAdapter adapter = new Adapters.DecimalAdapter (binder);
 				
 				if (widget is Support.Data.INamedStringSelection)
 				{

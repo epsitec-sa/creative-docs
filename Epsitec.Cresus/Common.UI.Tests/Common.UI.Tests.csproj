@@ -113,12 +113,22 @@
                     Project = "{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Common.Drawing"
+                    Project = "{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
             <Include>
                 <File
                     RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DataWidgetTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
