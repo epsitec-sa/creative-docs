@@ -598,16 +598,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			Drawing.Graphics graphics = e.Graphics;
 			
-			if (this.hot_hilite_box.IsEmpty == false)
-			{
-				graphics.AddFilledRectangle (this.hot_hilite_box);
-				graphics.RenderSolid (Drawing.Color.FromARGB (0.5, 1, 0, 0));
-			}
-			if (this.hot_designer_rect.IsEmpty == false)
-			{
-				graphics.AddRectangle (this.hot_designer_rect);
-				graphics.RenderSolid (Drawing.Color.FromARGB (1.0, 1, 0, 0));
-			}
+			this.PaintDropShape (graphics);
+			this.PaintDragShape (graphics);
 			
 			double dy = this.root.Client.Height;
 			
@@ -628,6 +620,35 @@ namespace Epsitec.Common.Widgets.Layouts
 			System.Diagnostics.Debug.Assert (this.root == sender);
 			
 			e.Suppress |= this.ProcessMessage (e.Message);
+		}
+		
+		
+		
+		protected void PaintDropShape(Drawing.Graphics graphics)
+		{
+		}
+		
+		protected void PaintDragShape(Drawing.Graphics graphics)
+		{
+			if (this.hot_designer_rect.IsValid)
+			{
+				double x = this.hot_designer_rect.Left;
+				double y = this.hot_designer_rect.Top;
+				double w = 6;
+				
+				Drawing.Path path = new Drawing.Path ();
+				
+				path.MoveTo (x+6, y);
+				path.LineTo (x, y);
+				path.LineTo (x, y-w);
+				path.LineTo (x+6, y);
+				path.Close ();
+				
+				graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
+				graphics.Rasterizer.AddSurface (path);
+				graphics.AddRectangle (this.hot_designer_rect);
+				graphics.RenderSolid (Drawing.Color.FromARGB (1.0, 1, 0, 0));
+			}
 		}
 		
 		
@@ -758,13 +779,16 @@ namespace Epsitec.Common.Widgets.Layouts
 		protected void WidgetDraggingBegin(Drawing.Point mouse)
 		{
 			Widget select = this.widget_wrapper.Widget;
+			
 			Drawing.Point center = select.Bounds.Center;
+			Drawing.Point corner = new Drawing.Point (select.Bounds.Left, select.Bounds.Top);
 			
 			this.is_dragging_widget = true;
 			
-			this.hot_designer_origin  = mouse;
-			this.hot_designer_offset  = mouse - center;
-			this.hot_designer_columns = select.LayoutArg2 - select.LayoutArg1;
+			this.hot_designer_origin        = mouse;
+			this.hot_designer_center_offset = mouse - center;
+			this.hot_designer_corner_offset = mouse - corner;
+			this.hot_designer_columns       = select.LayoutArg2 - select.LayoutArg1;
 			
 			this.hot_designer_original_bounds = select.Bounds;
 			
@@ -797,19 +821,22 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		protected void WidgetDraggingMove(Drawing.Point mouse)
 		{
-			Drawing.Point     center    = mouse - this.hot_designer_offset;
+			Drawing.Point center = mouse - this.hot_designer_center_offset;
+			Drawing.Point corner = mouse - this.hot_designer_corner_offset;
+			
 			Drawing.Rectangle rect_drop = this.hot_designer_original_bounds;
 			Drawing.Rectangle rect_move = Drawing.Rectangle.Offset (this.hot_designer_original_bounds, mouse - this.hot_designer_origin);
 			
+			Drawing.Color color_src = Drawing.Color.Transparent;
+			
 			this.hot_designer_rect = rect_move;
-			this.hot_hilite_box    = Drawing.Rectangle.Empty;
 			this.hot_target_ok     = false;
 			this.line_gap_height   = 0;
 			this.line_gap_index    = -1;
 			
 			if (this.FindBestColumns (center.X, this.hot_designer_columns, out this.hot_designer_col1, out this.hot_designer_col2))
 			{
-				if (this.FindBestHotLine (center.Y, out this.hot_designer_line, out this.hot_designer_insert))
+				if (this.FindBestHotLine (corner.Y, out this.hot_designer_line, out this.hot_designer_insert))
 				{
 					if ((this.hot_designer_insert) ||
 						(this.IsHorizontalRangeEmpty (this.hot_designer_line, this.hot_designer_col1, this.hot_designer_col2, this.widget_dummy)))
@@ -833,30 +860,36 @@ namespace Epsitec.Common.Widgets.Layouts
 							this.hot_designer_insert = false;
 						}
 						
-						this.line_gap_index  = this.hot_designer_line;
-						this.line_gap_height = (this.hot_designer_insert) ? this.widget_dummy.Height : 0;
-						
 						double x1 = this.verticals[this.hot_designer_col1].x_live;
 						double x2 = this.verticals[this.hot_designer_col2].x_live;
-						double y2 = this.hot_lines[this.line_gap_index].y_live;
-						double y1 = y2 - this.widget_dummy.Height;
-						
-						if (this.hot_designer_insert == false)
-						{
-							//	Utilise la hauteur de la ligne en cours, sauf si c'est une ligne qui va être
-							//	créée suite à une insertion...
-							
-							System.Diagnostics.Debug.Assert (this.line_gap_index+1 < this.hot_lines.Length);
-							
-							y1 = this.hot_lines[this.line_gap_index+1].y_live;
-						}
-						
-						rect_drop = new Drawing.Rectangle (x1, y1, x2-x1, y2-y1);
+						double y2 = this.hot_lines[this.hot_designer_line].y_live;
+						double dy = this.widget_dummy.Height;
 						
 						if (this.hot_designer_insert)
 						{
-							double y = this.hot_lines[this.line_gap_index].y_live;
-							this.hot_hilite_box = new Drawing.Rectangle (0, y-1, this.root.Client.Width, 3);
+							this.line_gap_index  = this.hot_designer_line;
+							this.line_gap_height = dy;
+						}
+						else
+						{
+							//	Utilise la hauteur de la ligne en cours, sauf si c'est une ligne qui va être
+							//	créée suite à une insertion, ou si c'est la même ligne que celle où se
+							//	trouve l'original...
+							
+							int index = this.hot_designer_line+1;
+							
+							System.Diagnostics.Debug.Assert (index < this.hot_lines.Length);
+							
+							double y1 = this.hot_lines[index].y_live;
+							
+							dy = System.Math.Min (dy, y2-y1);
+						}
+						
+						rect_drop = new Drawing.Rectangle (x1, y2-dy, x2-x1, dy);
+						
+						if (rect_drop != this.widget_dummy.Bounds)
+						{
+							color_src = Drawing.Color.FromARGB (0.2, 1, 0, 0);
 						}
 						
 						this.hot_target_ok = true;
@@ -865,6 +898,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			
 			this.widget_wrapper.Widget.Bounds = rect_drop;
+			this.widget_dummy.BackColor = color_src;
 			
 			this.UpdateGeometry ();
 		}
@@ -944,7 +978,6 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.line_gap_height = 0;
 			
 			this.hot_designer_rect = Drawing.Rectangle.Empty;
-			this.hot_hilite_box = Drawing.Rectangle.Empty;
 			
 			this.Invalidate ();
 			this.Update ();
@@ -1108,11 +1141,13 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		protected bool FindBestHotLine(double y, out int line_index, out bool line_insert)
 		{
+			double m = 2;
+			y -= m+1;
+			
 			for (int i = 1; i < this.hot_lines.Length; i++)
 			{
 				double y1 = this.hot_lines[i-1].y_live;
 				double y2 = this.hot_lines[i].y_live;
-				double m  = 3;
 				
 				double y1_top = y1 + m;
 				double y1_bot = y1 - m;
@@ -1465,7 +1500,8 @@ namespace Epsitec.Common.Widgets.Layouts
 		protected bool					hot_designer;
 		protected Drawing.Point			hot_designer_origin;
 		protected Drawing.Rectangle		hot_designer_original_bounds;
-		protected Drawing.Point			hot_designer_offset;
+		protected Drawing.Point			hot_designer_center_offset;
+		protected Drawing.Point			hot_designer_corner_offset;
 		protected int					hot_designer_columns;
 		protected int					hot_designer_col1;
 		protected int					hot_designer_col2;
@@ -1474,8 +1510,6 @@ namespace Epsitec.Common.Widgets.Layouts
 		protected Drawing.Rectangle		hot_designer_rect;
 		protected bool					hot_target_ok;
 		protected Grid.Horizontal[]		hot_lines;
-		
-		protected Drawing.Rectangle		hot_hilite_box;
 		
 		protected Design.WidgetWrapper	widget_wrapper;
 		protected Widget				widget_dummy;

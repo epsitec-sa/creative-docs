@@ -43,6 +43,11 @@ namespace Epsitec.Common.Drawing
 			get { return (this.x2 <= this.x1) || (this.y2 <= this.y1); }
 		}
 		
+		public bool						IsValid
+		{
+			get { return (this.x2 > this.x1) && (this.y2 > this.y1); }
+		}
+		
 		public Point					Location
 		{
 			get { return new Point (this.x1, this.y1); }
