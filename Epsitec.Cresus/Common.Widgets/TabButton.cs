@@ -54,7 +54,6 @@ namespace Epsitec.Common.Widgets
 				Drawing.Size size = this.Client.Size;
 				size.Width -= 4;
 				this.TextLayout.LayoutSize = size;
-				this.TextLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 				pos.X += 2;
 				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, ButtonStyle.Tab);
 			}
