@@ -233,7 +233,7 @@ namespace Epsitec.Common.Pictogram.Data
 			center = (pbl+pbr+ptl+ptr)/4;
 			width  = System.Math.Min(Drawing.Point.Distance(pbl,pbr), Drawing.Point.Distance(ptl,ptr));
 			height = System.Math.Min(Drawing.Point.Distance(pbl,ptl), Drawing.Point.Distance(pbr,ptr));
-			angle  = Drawing.Point.ComputeAngleRad(pbl, pbr);
+			angle  = Drawing.Point.ComputeAngleDeg(pbl, pbr);
 		}
 
 		// Ouvre le bitmap de l'image si nécessaire.
@@ -350,8 +350,7 @@ namespace Epsitec.Common.Pictogram.Data
 					}
 
 					graphics.TranslateTransform(center.X, center.Y);
-
-					graphics.RotateTransformRad(angle, 0, 0);
+					graphics.RotateTransformDeg(angle, 0, 0);
 
 					double mirrorx = property.MirrorH ? -1 : 1;
 					double mirrory = property.MirrorV ? -1 : 1;
