@@ -96,11 +96,11 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public virtual void SetClipBox(double x1, double y1, double x2, double y2)
+		internal virtual void SetClipBox(double x1, double y1, double x2, double y2)
 		{
 		}
 		
-		public virtual void ResetClipBox()
+		internal virtual void ResetClipBox()
 		{
 		}
 		

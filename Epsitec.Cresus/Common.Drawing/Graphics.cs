@@ -81,6 +81,13 @@ namespace Epsitec.Common.Drawing
 			set { this.line_miter_limit = value; }
 		}
 
+		public Rectangle				ClipBounds
+		{
+			get
+			{
+				return this.SaveClippingRectangle ();
+			}
+		}
 		
 		
 		public virtual double PaintText(double x, double y, string text, Font font, double size, Color color)
@@ -331,6 +338,10 @@ namespace Epsitec.Common.Drawing
 		
 		
 		public virtual void SetClippingRectangle(double x, double y, double width, double height)
+		{
+		}
+		
+		public virtual void SetClippingRectangles(Drawing.Rectangle[] rectangles)
 		{
 		}
 		

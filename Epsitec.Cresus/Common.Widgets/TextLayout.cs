@@ -590,7 +590,7 @@ namespace Epsitec.Common.Widgets
 
 		// Retourne un tableau avec les rectangles englobant le texte
 		// spécifié par son début et sa fin. Il y a un rectangle par ligne.
-		public Drawing.Rectangle[] FindTextRange(int indexBegin, int indexEnd)
+		public Drawing.Rectangle[] FindTextRange(Drawing.Point pos, int indexBegin, int indexEnd)
 		{
 			if ( indexBegin >= indexEnd )  return new Drawing.Rectangle[0];
 
@@ -645,9 +645,15 @@ namespace Epsitec.Common.Widgets
 			{
 				list.Add(rect);
 			}
-
+			
 			Drawing.Rectangle[] rects = new Drawing.Rectangle[list.Count];
 			list.CopyTo(rects);
+			
+			for (int i = 0; i < rects.Length; i++)
+			{
+				rects[i].Offset (pos.X, pos.Y);
+			}
+					
 			return rects;
 		}
 		

@@ -33,21 +33,19 @@ namespace Epsitec.Common.Tests
 
 			Point pos = new Point(20, 20);
 
-			e.Graphics.RotateTransform (5, 0, 0);
+//?			e.Graphics.RotateTransform (5, 0, 0);
 			e.Graphics.ScaleTransform (1.2, 1.2, 0, 0);
 			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
 			e.Graphics.RenderSolid(Color.FromBrightness(1));
 
-//?			Rectangle[] rects = layout.FindTextRange(0, 97);
-			Rectangle[] rects = layout.FindTextRange(0, layout.Text.Length);
+			Rectangle[] rects = layout.FindTextRange(pos, 0, layout.Text.Length);
 			for ( int i=0 ; i<rects.Length ; i++ )
 			{
-				rects[i].Offset(pos);
+				e.Graphics.Align (ref rects[i]);
 				e.Graphics.AddFilledRectangle(rects[i].Left, rects[i].Bottom, rects[i].Width, rects[i].Height);
 				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
 			}
 
-//?			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.FromRGB(0,1,0));
 			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty);
 		}
 
@@ -246,7 +244,7 @@ namespace Epsitec.Common.Tests
 		{
 			TextLayout layout = this.NewTextLayout();
 			layout.Text = "<a href=\"x\">Link</a>";
-			Rectangle[] rects = layout.FindTextRange(0, 20);
+			Rectangle[] rects = layout.FindTextRange(new Drawing.Point (), 0, 20);
 			Assertion.AssertNotNull(rects);
 			Assertion.AssertEquals(1, rects.Length);
 			

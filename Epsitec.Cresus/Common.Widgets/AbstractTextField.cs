@@ -765,7 +765,7 @@ namespace Epsitec.Common.Widgets
 					rects[0] = rect;
 					rects[0].Inflate(-3, -3);
 					rects[0].Right -= button;
-					adorner.PaintTextSelectionBackground(graphics, new Drawing.Point (0, 0), rects);
+					adorner.PaintTextSelectionBackground(graphics, rects);
 					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
 					adorner.PaintFocusBox(graphics, rects[0]);
 				}
@@ -776,9 +776,23 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					Drawing.Rectangle[] rects = this.textLayout.FindTextRange(from, to);
-					adorner.PaintTextSelectionBackground(graphics, pos, rects);
-					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
+					Drawing.Rectangle[] rects = this.textLayout.FindTextRange(pos, from, to);
+					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~(WidgetState.Focused|WidgetState.Selected), dir);
+					
+					for (int i = 0; i < rects.Length; i++)
+					{
+						graphics.Align (ref rects[i]);
+					}
+					
+					adorner.PaintTextSelectionBackground(graphics, rects);
+					
+					for (int i = 0; i < rects.Length; i++)
+					{
+						rects[i] = this.MapClientToRoot (rects[i]);
+					}
+					
+					graphics.SetClippingRectangles(rects);
+					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, (state&~WidgetState.Focused) | WidgetState.Selected, dir);
 				}
 
 
@@ -792,7 +806,8 @@ namespace Epsitec.Common.Widgets
 					graphics.Align(ref x, ref y);
 					rCursor.Left = x;
 					rCursor.Right = x+1;
-					adorner.PaintTextCursor(graphics, pos, rCursor, visibleCursor);
+					rCursor.Offset (pos);
+					adorner.PaintTextCursor(graphics, rCursor, visibleCursor);
 				}
 			}
 			else

@@ -71,9 +71,9 @@ namespace Epsitec.Common.Widgets
 		 */
 		
 		void PaintFocusBox(Drawing.Graphics graphics, Drawing.Rectangle rect);
-		void PaintTextCursor(Drawing.Graphics graphics, Drawing.Point pos, Drawing.Rectangle rect, bool cursor_on);
-		void PaintTextSelectionBackground(Drawing.Graphics graphics, Drawing.Point pos, Drawing.Rectangle[] rect);
-		void PaintTextSelectionForeground(Drawing.Graphics graphics, Drawing.Point pos, Drawing.Rectangle[] rect);
+		void PaintTextCursor(Drawing.Graphics graphics, Drawing.Rectangle rect, bool cursor_on);
+		void PaintTextSelectionBackground(Drawing.Graphics graphics, Drawing.Rectangle[] rect);
+		void PaintTextSelectionForeground(Drawing.Graphics graphics, Drawing.Rectangle[] rect);
 		
 		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, Direction shadow);
 	}

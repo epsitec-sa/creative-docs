@@ -784,13 +784,11 @@ namespace Epsitec.Common.Widgets.Adorner
 
 		// Dessine le curseur du texte.
 		public void PaintTextCursor(Drawing.Graphics graphics,
-									Drawing.Point pos,
 									Drawing.Rectangle rect,
 									bool cursorOn)
 		{
 			if ( cursorOn )
 			{
-				rect.Offset(pos);
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.colorBlack);
 			}
@@ -798,18 +796,15 @@ namespace Epsitec.Common.Widgets.Adorner
 		
 		// Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 		public void PaintTextSelectionBackground(Drawing.Graphics graphics,
-												 Drawing.Point pos,
 												 Drawing.Rectangle[] rects)
 		{
-			foreach ( Drawing.Rectangle rect in rects )
+			for (int i = 0; i < rects.Length; i++)
 			{
-				rect.Offset(pos);
-				this.PaintImageButton(graphics, rect, 20);
+				this.PaintImageButton(graphics, rects[i], 20);
 			}
 		}
 
 		public void PaintTextSelectionForeground(Drawing.Graphics graphics,
-												 Drawing.Point pos,
 												 Drawing.Rectangle[] rects)
 		{
 		}

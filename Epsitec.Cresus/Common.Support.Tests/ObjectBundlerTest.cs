@@ -69,6 +69,8 @@ namespace Epsitec.Common.Support.Tests
 			if (ObjectBundlerTest.register_window_cancel)
 			{
 				CommandDispatcher.Default.Register ("my_window.cancel", new CommandEventHandler (this.HandleCommandCancel));
+				CommandDispatcher.Default.Register ("main_menu.quit", new CommandEventHandler (this.HandleCommandCancel));
+				
 				ObjectBundlerTest.register_window_cancel = false;
 			}
 		}

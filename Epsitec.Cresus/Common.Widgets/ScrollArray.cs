@@ -854,7 +854,7 @@ namespace Epsitec.Common.Widgets
 					rects[0].Right  = maxx;
 					rects[0].Bottom = pos.Y;
 					rects[0].Top    = pos.Y+this.rowHeight;
-					adorner.PaintTextSelectionBackground(graphics, new Drawing.Point(0,0), rects);
+					adorner.PaintTextSelectionBackground(graphics, rects);
 
 					widgetState |= WidgetState.Selected;
 				}

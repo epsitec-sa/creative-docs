@@ -65,13 +65,11 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (false, def.IsValid);
 		}
 
-		[Test] [Ignore("Assert in code, no exception thrown")] [ExpectedException (typeof (System.OverflowException))] public void CheckOverflowMax()
+/*		[Test] [Ignore("Assert in code, no exception thrown")] [ExpectedException (typeof (System.OverflowException))] public void CheckOverflowMax()
 		{
 			DbNumDef def = new DbNumDef ();
 			def.MaxValue = 1000000000000000000000000.0M;
-			// génère une exception
-			// une autre approche serait de rendre def.IsValid comme étant "false" ?
-		}		
+		}*/
 
 		[Test] public void CheckMinimumBitsInt()
 		{

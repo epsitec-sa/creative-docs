@@ -111,8 +111,26 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-
-
+		public void InfiniteClipping()
+		{
+			AntiGrain.Buffer.InfiniteClipping (this.agg_buffer);
+		}
+		
+		public void EmptyClipping()
+		{
+			AntiGrain.Buffer.EmptyClipping (this.agg_buffer);
+		}
+		
+		public void AddClipBox(double x1, double y1, double x2, double y2)
+		{
+			int cx1 = (int)(x1);
+			int cy1 = (int)(y1);
+			int cx2 = (int)(x2+0.9999);
+			int cy2 = (int)(y2+0.9999);
+			AntiGrain.Buffer.AddClipBox (this.agg_buffer, cx1, cy1, cx2, cy2);
+		}
+		
+		
 		public void Dispose()
 		{
 			this.Dispose (true);

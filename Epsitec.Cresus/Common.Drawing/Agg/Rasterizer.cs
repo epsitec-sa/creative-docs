@@ -30,7 +30,7 @@ namespace Epsitec.Common.Drawing.Agg
 		
 		
 		
-		public override void SetClipBox(double x1, double y1, double x2, double y2)
+		internal override void SetClipBox(double x1, double y1, double x2, double y2)
 		{
 			//	The clip box is specified in destination pixel coordinates (without any transform
 			//	matrix).
@@ -38,7 +38,7 @@ namespace Epsitec.Common.Drawing.Agg
 			AntiGrain.Rasterizer.SetClipBox (this.agg_ras, x1, y1, x2, y2);
 		}
 		
-		public override void ResetClipBox()
+		internal override void ResetClipBox()
 		{
 			this.CreateOnTheFly ();
 			AntiGrain.Rasterizer.ResetClipBox (this.agg_ras);

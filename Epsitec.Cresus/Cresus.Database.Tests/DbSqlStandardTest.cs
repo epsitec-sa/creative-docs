@@ -17,46 +17,71 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (false, DbSqlStandard.ValidateName (@"""ABC""ABC"""));
 		}
 		
-		[Test] [Ignore ("Not implemented")] public void CheckValidateString()
+		[Test] public void CheckValidateString()
 		{
-			//	TODO: à faire
+			Assertion.AssertEquals (true,  DbSqlStandard.ValidateString (@"'ABC_123'"));
+			Assertion.AssertEquals (false, DbSqlStandard.ValidateString (@"ABC-123"));
+			Assertion.AssertEquals (false, DbSqlStandard.ValidateString (@"'123'ABC'"));
+			Assertion.AssertEquals (true,  DbSqlStandard.ValidateString (@"'123''ABC'"));
 		}
 		
-		[Test] [Ignore ("Not implemented")] public void CheckValidateNumber()
+		[Test] public void CheckValidateNumber()
 		{
-			//	TODO: à faire
+			Assertion.AssertEquals (true,  DbSqlStandard.ValidateNumber (@"123"));
+			Assertion.AssertEquals (true,  DbSqlStandard.ValidateNumber (@"-123"));
+			Assertion.AssertEquals (false, DbSqlStandard.ValidateNumber (@"123_123"));
+			Assertion.AssertEquals (false, DbSqlStandard.ValidateNumber (@"A123"));
+			Assertion.AssertEquals (true,  DbSqlStandard.ValidateNumber (@"123.456"));
+			Assertion.AssertEquals (true,  DbSqlStandard.ValidateNumber (@"-123.4"));
+			Assertion.AssertEquals (false, DbSqlStandard.ValidateNumber (@"12.34.56"));
+			Assertion.AssertEquals (false, DbSqlStandard.ValidateNumber (@"12E3"));
 		}
 		
-		[Test] [Ignore ("Not implemented")] public void CheckValidateQualifiedName()
+		[Test] public void CheckValidateQualifiedName()
 		{
-			//	TODO: à faire
+			Assertion.AssertEquals (false, DbSqlStandard.ValidateQualifiedName (@"ABC_123"));
+			Assertion.AssertEquals (true,  DbSqlStandard.ValidateQualifiedName (@"AB.C123"));
+			Assertion.AssertEquals (false, DbSqlStandard.ValidateQualifiedName (@"123.ABC"));
+			Assertion.AssertEquals (false, DbSqlStandard.ValidateQualifiedName (@"AB.AB.AB"));
+			Assertion.AssertEquals (true,  DbSqlStandard.ValidateQualifiedName (@"""ABC.123"".XYZ"));
+			Assertion.AssertEquals (true,  DbSqlStandard.ValidateQualifiedName (@"ABC.""123.ABC"""));
+			Assertion.AssertEquals (true,  DbSqlStandard.ValidateQualifiedName (@"""AB.AB.AB"".AB"));
+			Assertion.AssertEquals (false, DbSqlStandard.ValidateQualifiedName (@"""ABC""ABC"".XY"));
 		}
 		
-		[Test] [Ignore ("Not implemented")] public void CheckConcatNames()
+		[Test] public void CheckConcatNames()
 		{
-			//	TODO: à faire
+			string	name;
+			name = DbSqlStandard.ConcatNames("ABC", "XYZ");
+			Assertion.AssertEquals ("ABCXYZ", name);
+			name = DbSqlStandard.ConcatNames("ABC", @"""XYZ""");
+			Assertion.AssertEquals (@"""ABCXYZ""", name);
+			name = DbSqlStandard.ConcatNames(@"""ABC""", "XYZ");
+			Assertion.AssertEquals (@"""ABCXYZ""", name);
 		}
 		
-		[Test] [Ignore ("Not implemented")] public void CheckConcatStrings()
+		[Test] public void CheckConcatStrings()
 		{
-			//	TODO: à faire
+			string name = DbSqlStandard.ConcatStrings("'ABC'", "'123'");
+			Assertion.AssertEquals ("'ABC123'", name);
 		}
 		
-		[Test] [Ignore ("Not implemented")] public void CheckQualifyName()
+		[Test] public void CheckQualifyName()
 		{
-			//	TODO: à faire
+			string name = DbSqlStandard.QualifyName ("ABC" , "XYZ");
+			Assertion.AssertEquals ("ABC.XYZ", name);
 		}
 		
 		[Test] public void CheckSplitQualifiedName()
 		{
 			string	qualifier, name;
-			DbSqlStandard.SplitQualifiedName("ABC.12", out qualifier, out name);
+			DbSqlStandard.SplitQualifiedName ("ABC.X12", out qualifier, out name);
 			Assertion.AssertEquals ("ABC", qualifier);
-			Assertion.AssertEquals ("12", name);
+			Assertion.AssertEquals ("X12", name);
 
-			DbSqlStandard.SplitQualifiedName("\"ABC.XY\".12", out qualifier, out name);
+			DbSqlStandard.SplitQualifiedName ("\"ABC.XY\".Y12", out qualifier, out name);
 			Assertion.AssertEquals ("\"ABC.XY\"", qualifier);
-			Assertion.AssertEquals (@"12", name);
+			Assertion.AssertEquals ("Y12", name);
 		}
 	}
 }

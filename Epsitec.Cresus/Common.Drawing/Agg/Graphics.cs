@@ -56,12 +56,7 @@ namespace Epsitec.Common.Drawing.Agg
 				x += this.transform.TX;
 				y += this.transform.TY;
 				
-				if (this.has_clip_rect)
-				{
-					return font.PaintPixelCache (this.pixmap, text, size, x, y, this.clip_x1, this.clip_y1, this.clip_x2, this.clip_y2, color);
-				}
-			
-				return font.PaintPixelCache (this.pixmap, text, size, x, y, 0, 0, this.pixmap.Size.Width-1, this.pixmap.Size.Height-1, color);
+				return font.PaintPixelCache (this.pixmap, text, size, x, y, color);
 			}
 			else
 			{
@@ -192,6 +187,35 @@ namespace Epsitec.Common.Drawing.Agg
 			this.clip_y2 = y2;
 			
 			this.rasterizer.SetClipBox (x1, y1, x2, y2);
+			this.pixmap.EmptyClipping ();
+			this.pixmap.AddClipBox (x1, y1, x2, y2);
+		}
+		
+		public override void SetClippingRectangles(Drawing.Rectangle[] rectangles)
+		{
+			if (rectangles.Length == 0)
+			{
+				return;
+			}
+			
+			Drawing.Rectangle clip = this.SaveClippingRectangle ();
+			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
+			
+			this.pixmap.EmptyClipping ();
+			
+			for (int i = 0; i < rectangles.Length; i++)
+			{
+				Drawing.Rectangle rect = Drawing.Rectangle.Intersection (rectangles[i], clip);
+				
+				if (!rect.IsEmpty)
+				{
+					this.pixmap.AddClipBox (rect.Left, rect.Bottom, rect.Right, rect.Top);
+					bbox = Drawing.Rectangle.Union (bbox, rect);
+				}
+			}
+			
+			this.has_clip_rect = true;
+			this.rasterizer.SetClipBox (bbox.Left, bbox.Bottom, bbox.Right, bbox.Top);
 		}
 		
 		public override Drawing.Rectangle SaveClippingRectangle()
@@ -220,12 +244,15 @@ namespace Epsitec.Common.Drawing.Agg
 				this.has_clip_rect = true;
 				
 				this.rasterizer.SetClipBox (this.clip_x1, this.clip_y1, this.clip_x2, this.clip_y2);
+				this.pixmap.EmptyClipping ();
+				this.pixmap.AddClipBox (this.clip_x1, this.clip_y1, this.clip_x2, this.clip_y2);
 			}
 		}
 		
 		public override void ResetClippingRectangle()
 		{
 			this.rasterizer.ResetClipBox ();
+			this.pixmap.InfiniteClipping ();
 			this.has_clip_rect = false;
 		}
 		

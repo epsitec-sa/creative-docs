@@ -13,9 +13,9 @@ namespace Epsitec.Common.Widgets
 		{
 			this.cmd_dispatcher = Support.CommandDispatcher.Default;
 			
-			this.window = new Platform.Window (this);
 			this.root   = new WindowRoot (this);
-			this.timer = new Timer ();
+			this.window = new Platform.Window (this);
+			this.timer  = new Timer ();
 			
 			this.root.Size = new Drawing.Size (this.window.ClientSize);
 			this.root.Name = "Root";
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Widgets
 				
 				Window target = weak_ref.Target as Window;
 				
-				if (target == null)
+				if ((target == null) || (target.IsDisposed))
 				{
 					Window.windows.RemoveAt (i);
 				}
@@ -187,6 +187,11 @@ namespace Epsitec.Common.Widgets
 		public bool							IsFrozen
 		{
 			get { return (this.window == null) || this.window.IsFrozen; }
+		}
+		
+		public bool							IsDisposed
+		{
+			get { return (this.window == null); }
 		}
 		
 		public bool							IsFocused
@@ -629,12 +634,18 @@ namespace Epsitec.Common.Widgets
 		
 		public void MarkForRepaint()
 		{
-			this.window.MarkForRepaint ();
+			if (this.window != null)
+			{
+				this.window.MarkForRepaint ();
+			}
 		}
 		
 		public void MarkForRepaint(Drawing.Rectangle rect)
 		{
-			this.window.MarkForRepaint (rect);
+			if (this.window != null)
+			{
+				this.window.MarkForRepaint (rect);
+			}
 		}
 		
 		

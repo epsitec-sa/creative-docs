@@ -517,7 +517,7 @@ namespace Epsitec.Common.Widgets
 					rects[0].Width  = this.Client.Width-2*ScrollList.Margin-this.rightMargin;
 					rects[0].Bottom = pos.Y;
 					rects[0].Height = this.lineHeight;
-					adorner.PaintTextSelectionBackground(graphics, new Drawing.Point(0,0), rects);
+					adorner.PaintTextSelectionBackground(graphics, rects);
 
 					color = Drawing.Color.FromName("ActiveCaptionText");
 					state |= WidgetState.Selected;

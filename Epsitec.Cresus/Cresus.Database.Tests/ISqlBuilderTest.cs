@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Database
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
 			command.Transaction = db_abstraction.BeginTransaction ();
-			sql_engine.Execute(command, sql_builder.CommandType);
+			sql_engine.Execute (command, sql_builder.CommandType);
 
 			command.Transaction.Commit ();
 			command.Transaction.Dispose ();
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Database
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
 			command.Transaction = db_abstraction.BeginTransaction ();
-			sql_engine.Execute(command, sql_builder.CommandType);
+			sql_engine.Execute (command, sql_builder.CommandType);
 
 			command.Transaction.Commit ();
 			command.Transaction.Dispose ();
@@ -202,13 +202,13 @@ namespace Epsitec.Cresus.Database
 			field.Alias = "StringDynamic";
 			fields.Add (field);
 			
-			sql_builder.InsertData("FbTestTable", fields);
+			sql_builder.InsertData ("FbTestTable", fields);
 			
 			System.Data.IDbCommand command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
 			command.Transaction = db_abstraction.BeginTransaction ();
-			sql_engine.Execute(command, sql_builder.CommandType);
+			sql_engine.Execute (command, sql_builder.CommandType);
 			
 			command.Transaction.Commit ();
 			command.Transaction.Dispose ();

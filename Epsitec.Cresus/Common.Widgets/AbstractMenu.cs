@@ -56,6 +56,24 @@ namespace Epsitec.Common.Widgets
 			get { return this.type == MenuType.Vertical; }
 		}
 
+		
+		protected override void BuildCommandName(System.Text.StringBuilder buffer)
+		{
+			if (this.parentMenu != null)
+			{
+				this.parentMenu.BuildCommandName (buffer);
+			}
+			int length = buffer.Length;
+			
+			if ((length > 0) &&
+				(buffer[length-1] != '.'))
+			{
+				buffer.Append (".");
+			}
+			
+			buffer.Append (this.Name);
+		}
+		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
@@ -293,6 +311,7 @@ namespace Epsitec.Common.Widgets
 
 				case KeyCode.Return:
 				case KeyCode.Space:
+					this.ValidateAndExecuteCommand();
 					break;
 
 				case KeyCode.Escape:
@@ -376,6 +395,25 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		protected void ValidateAndExecuteCommand()
+		{
+			AbstractMenu menu = AbstractMenu.menuLastLeaf;
+			
+			System.Diagnostics.Debug.Assert( menu != null );
+			
+			if ( menu.SelectedIndex >= 0 )
+			{
+				// L'utilisateur a sélectionné une commande dans un menu valide. On doit
+				// encore générer la commande ad hoc.
+				
+				MenuItem item = menu.Items[menu.SelectedIndex];
+				
+				item.ExecuteCommand ();
+			}
+			
+			this.CloseAll();
+		}
 
 		// Ferme complètement le menu et tous les sous-menus.
 		protected void CloseAll()
@@ -386,8 +424,13 @@ namespace Epsitec.Common.Widgets
 			root.CloseSubmenu();
 			root.SelectedIndex = -1;
 			
-			Window.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
+			// Il faut dés-enregistrer la même instance que celle qui avait été enregistrée
+			// au départ, sinon on se retrouve avec un filtre qui traîne...
+			
+			Window.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(AbstractMenu.menuFiltering.MessageFilter);
 			AbstractMenu.menuDeveloped = false;
+			AbstractMenu.menuFiltering = null;
+			AbstractMenu.menuLastLeaf  = null;
 		}
 
 		// Ouvre le sous-menu correspondant à un item.
@@ -443,13 +486,18 @@ namespace Epsitec.Common.Widgets
 			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
 			Window.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
-			this.window.Root.Children.Add(this.submenu);
-
+			
+			this.submenu.Parent = this.window.Root;
+			
 			Animation anim = Animation.None;
 			if ( this.IsVertical || !closed )  anim = Animation.FadeIn;
 			if ( forceQuick )  anim = Animation.None;
 			this.window.AnimateShow(anim);
 			this.submenu.SetFocused(true);
+			
+			// Prend note du dernier menu "feuille" actif.
+			AbstractMenu.menuLastLeaf = this.submenu;
+			
 			return true;
 		}
 
@@ -471,7 +519,13 @@ namespace Epsitec.Common.Widgets
 			this.window.Dispose();
 			this.window = null;
 			this.submenu = null;
-
+			
+			this.Window.MakeActive ();
+			
+			// Ce menu devient la dernière feuille de l'arbre des menus...
+			
+			AbstractMenu.menuLastLeaf = this;
+			
 			this.isActive = true;
 			this.SelectedIndex = this.SelectedIndex;
 			return true;
@@ -518,7 +572,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.parentMenu == null )
 				{
-					this.CloseAll();
+					this.ValidateAndExecuteCommand();
 				}
 				else
 				{
@@ -528,9 +582,15 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				Window.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
-				AbstractMenu.menuDeveloped = true;
+				if (AbstractMenu.menuDeveloped == false)
+				{
+					Window.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
+					AbstractMenu.menuDeveloped = true;
+					AbstractMenu.menuFiltering = this;
+				}
+				
 				MenuItem item = sender as MenuItem;
+				
 				this.parentMenu = null;
 				this.parentItem = null;
 				this.SetFocused(true);
@@ -540,7 +600,10 @@ namespace Epsitec.Common.Widgets
 
 		private void MessageFilter(object sender, Message message)
 		{
-			System.Diagnostics.Debug.Assert ( AbstractMenu.menuDeveloped );
+			if (!AbstractMenu.menuDeveloped)
+			{
+				System.Diagnostics.Debug.Assert ( AbstractMenu.menuDeveloped );
+			}
 			
 			Window window = sender as Window;
 
@@ -584,8 +647,7 @@ namespace Epsitec.Common.Widgets
 						{
 							if ( cell.Submenu == null && !cell.Separator )
 							{
-								this.CloseAll();
-								// TODO: envoyer la commande ...
+								this.ValidateAndExecuteCommand();
 							}
 						}
 					}
@@ -775,5 +837,7 @@ namespace Epsitec.Common.Widgets
 		protected MenuItem					delayedMenuItem;
 		
 		protected static bool				menuDeveloped;
+		protected static AbstractMenu		menuFiltering;
+		protected static AbstractMenu		menuLastLeaf;
 	}
 }

@@ -7,6 +7,7 @@
  <list name='widgets'>
   <bundle>									<!-- Définition du menu -->
    <field name='class'>HMenu</field>
+   <field name='name'>main_menu</field>
    <field name='dock'>Top</field>
    <list name='items'>
     <bundle>
@@ -19,11 +20,13 @@
         <field name='class'>MenuItem</field>
         <field name='text'>Ouvrir..</field>
         <field name='icon'>res:image#open</field>
+        <field name='name'>open</field>
        </bundle>
        <bundle>
         <field name='class'>MenuItem</field>
         <field name='text'>Enregistrer..</field>
         <field name='icon'>res:image#save</field>
+        <field name='name'>save</field>
        </bundle>
        <bundle>
         <field name='class'>MenuSeparator</field>
@@ -31,6 +34,7 @@
        <bundle>
         <field name='class'>MenuItem</field>
         <field name='text'>Quitter</field>
+        <field name='name'>quit</field>
        </bundle>
       </list>
      </bundle>
