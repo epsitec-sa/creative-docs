@@ -89,6 +89,8 @@ namespace Epsitec.Cresus.Requests
 				}
 			}
 			
+			System.Diagnostics.Debug.WriteLine ("Enqueued " + serialized_requests.Length + " serialized requests.");
+			
 			this.enqueue_event.Set ();
 		}
 		

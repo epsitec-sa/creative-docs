@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Remoting
 		public ClientIdentity(string name)
 		{
 			this.name      = name;
-			this.client_id = 0; //ClientIdentity.DefaultClientId;
+			this.client_id = ClientIdentity.DefaultClientId;
 		}
 		
 		public ClientIdentity(string name, int client_id)

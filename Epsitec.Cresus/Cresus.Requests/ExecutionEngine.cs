@@ -53,7 +53,9 @@ namespace Epsitec.Cresus.Requests
 				
 				request.Execute (this);
 				
+#if false
 				DbRichCommand.DebugDumpCommand (this.CurrentTransaction.SqlBuilder.Command);
+#endif
 				
 				this.infrastructure.ExecuteSilent (transaction);
 			}

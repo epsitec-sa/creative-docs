@@ -495,11 +495,22 @@ namespace Epsitec.Cresus.Database
 			
 			service.QueryRequestStates (new Remoting.ClientIdentity ("NUnit Test Client"), out states);
 			
-			System.Diagnostics.Debug.WriteLine ("Got " + states.Length + " states back from server :");
+			System.Diagnostics.Debug.WriteLine ("1/ Got " + states.Length + " states back from server :");
 			
 			for (int i = 0; i < states.Length; i++)
 			{
-				System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + states[i].State);
+				System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
+			}
+			
+			System.Threading.Thread.Sleep (500);
+			
+			service.QueryRequestStates (new Remoting.ClientIdentity ("NUnit Test Client"), out states);
+			
+			System.Diagnostics.Debug.WriteLine ("2/ Got " + states.Length + " states back from server :");
+			
+			for (int i = 0; i < states.Length; i++)
+			{
+				System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
 			}
 		}
 		
