@@ -214,15 +214,15 @@ namespace Epsitec.Cresus.UserInterface
 		}
 		
 		
-		protected virtual void HandleObjectUnbundled(object sender, object obj, ResourceBundle bundle)
+		protected virtual void HandleObjectUnbundled(object sender, BundlingEventArgs e)
 		{
 			//	Regarde si l'objet qui vient d'être re-généré contient une information de
 			//	binding pour les données. Si c'est le cas, on en prend note pour un traitement
 			//	ultérieur (si aucun data set n'est attaché), ou on le traite tout de suite.
 			
-			if (bundle.Contains (Tags.Binding))
+			if (e.Bundle.Contains (Tags.Binding))
 			{
-				string binding = bundle[Tags.Binding].AsString;
+				string binding = e.Bundle[Tags.Binding].AsString;
 				
 				if (binding != null)
 				{
@@ -234,17 +234,17 @@ namespace Epsitec.Cresus.UserInterface
 						
 						if (this.data_store != null)
 						{
-							this.CreateBinding (obj, bundle, bind_arg);
+							this.CreateBinding (e.Object, e.Bundle, bind_arg);
 						}
 						else
 						{
-							this.object_list.Add (obj);
+							this.object_list.Add (e.Object);
 						}
 					}
 				}
 				else
 				{
-					throw new System.FormatException (string.Format ("Bad binding information for class '{0}' in bundle '{1}': null.", obj.GetType ().ToString (), bundle.Name));
+					throw new System.FormatException (string.Format ("Bad binding information for class '{0}' in bundle '{1}': null.", e.Object.GetType ().ToString (), e.Bundle.Name));
 				}
 			}
 		}
