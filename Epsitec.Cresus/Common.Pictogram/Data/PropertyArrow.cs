@@ -359,6 +359,7 @@ namespace Epsitec.Common.Pictogram.Data
 			outline = false;
 			surface = false;
 			if ( this.arrowType[extremity] == ArrowType.Right )  return p1;
+			if ( System.Math.Abs(this.length[extremity]) < 0.0001 )  return p1;
 
 			Drawing.Point pp;
 			double len = this.length[extremity];
