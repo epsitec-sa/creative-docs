@@ -66,22 +66,36 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Drawing.Size (110, 110);
 			window.Root.BackColor = Drawing.Color.Transparent;
 			
-			Glass glass = new Glass ();
+			Magnifier glass = new Magnifier ();
 			
 			glass.Dock   = DockStyle.Fill;
 			glass.Parent = window.Root;
 			glass.SetFocused (true);
 			
-			glass.HotColorChanged += new Support.EventHandler (this.HandleGlassHotColorChanged);
+			glass.HotColorChanged += new Support.EventHandler (this.HandleMagnifierHotColorChanged);
 			
 			window.Show ();
 		}
 		
-		
-		
-		private class Glass : Widget
+		[Test] public void CheckMagnifier()
 		{
-			public Glass()
+			Tools.Magnifier magnifier = new Tools.Magnifier ();
+			
+			magnifier.Show ();
+		}
+		
+		[Test] public void CheckColorPicker()
+		{
+			Tools.Magnifier magnifier = new Tools.Magnifier ();
+			
+			magnifier.IsColorPicker = true;
+			magnifier.Show ();
+		}
+		
+		
+		private class Magnifier : Widget
+		{
+			public Magnifier()
 			{
 				this.bitmap = Drawing.Bitmap.FromNativeBitmap (11, 11);
 				this.scale  = 11;
@@ -185,7 +199,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			
-			public override bool AboutToLoseFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode)
+			protected override bool AboutToLoseFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode)
 			{
 				return false;
 			}
@@ -247,7 +261,10 @@ namespace Epsitec.Common.Widgets
 				
 				Drawing.Point pos = this.MapClientToScreen (new Drawing.Point (dx/2, dy/2));
 				
-				Win32Api.GrabScreen (bitmap, (int)(pos.X), (int)(ScreenInfo.GlobalArea.Height - pos.Y));
+				int pix_x = (int) (pos.X - this.bitmap.Width /2);
+				int pix_y = (int) (pos.Y - this.bitmap.Height/2);
+				
+				Win32Api.GrabScreen (bitmap, pix_x, pix_y);
 				
 				double sx = dx / this.bitmap.Width;
 				double sy = dy / this.bitmap.Height;
@@ -378,9 +395,9 @@ namespace Epsitec.Common.Widgets
 			private Timer						timer;
 		}
 
-		private void HandleGlassHotColorChanged(object sender)
+		private void HandleMagnifierHotColorChanged(object sender)
 		{
-			Glass glass = sender as Glass;
+			Magnifier glass = sender as Magnifier;
 			
 			System.Diagnostics.Debug.WriteLine ("Hot color: " + glass.HotColor.ToString ());
 		}
