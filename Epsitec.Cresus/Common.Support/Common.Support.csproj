@@ -183,6 +183,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MulticastValidator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ObjectBundler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -2026,11 +2026,28 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		internal void SetValidator(Support.IValidator value)
+		internal void AddValidator(Support.IValidator value)
 		{
-			if (this.validator != value)
+			this.validator = Support.MulticastValidator.Combine (this.validator, value);
+			this.OnValidatorChanged ();
+		}
+		
+		internal void RemoveValidator(Support.IValidator value)
+		{
+			if (this.validator != null)
 			{
-				this.validator = value;
+				Support.MulticastValidator mv = this.validator as Support.MulticastValidator;
+				
+				if (mv != null)
+				{
+					mv.Remove (value);
+					this.validator = Support.MulticastValidator.Simplify (mv);
+				}
+				else if (this.validator == value)
+				{
+					this.validator = null;
+				}
+				
 				this.OnValidatorChanged ();
 			}
 		}
