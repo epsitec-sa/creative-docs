@@ -123,6 +123,19 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public double GetBrightness()
+		{
+			//	Calcule la luminosité de la couleur.
+			
+			return this.r*0.30 + this.g*0.59 + this.b*0.11;
+		}
+		
+		public void GetHSV(out double h, out double s, out double v)
+		{
+			Color.ConvertRGBtoHSV (this.r, this.g, this.b, out h, out s, out v);
+		}
+
+		
 		public static Color FromARGB(double a, double r, double g, double b)
 		{
 			return new Color (a, r, g, b);
@@ -141,7 +154,7 @@ namespace Epsitec.Common.Drawing
 		public static Color FromHSV(double h, double s, double v)
 		{
 			double r,g,b;
-			Color.HSVtoRGB(h,s,v, out r, out g, out b);
+			Color.ConvertHSVtoRGB(h,s,v, out r, out g, out b);
 			return new Color(r, g, b);
 		}
 
@@ -163,10 +176,10 @@ namespace Epsitec.Common.Drawing
 			return new Color (color);
 		}
 
-
-		// Conversion d'une chaîne "FF3300" en une couleur.
 		public static Color FromHexa(string hexa)
 		{
+			// Conversion d'une chaîne "FF3300" en une couleur.
+			
 			if (hexa.Length != 6)
 			{
 				return Color.Empty;
@@ -186,17 +199,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-
-		public static void ToHSV(Color color, out double h, out double s, out double v)
-		{
-			Color.RGBtoHSV(color.r, color.g, color.b, out h, out s, out v);
-		}
-				
-		public void ToHSV(out double h, out double s, out double v)
-		{
-			Color.RGBtoHSV(this.r, this.g, this.b, out h, out s, out v);
-		}
-				
+		
 		
 		public override bool Equals(object obj)
 		{
@@ -258,11 +261,12 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		// H = [0..360]
-		// S = [0..1]
-		// V = [0..1]
-		public static void RGBtoHSV(double r, double g, double b, out double h, out double s, out double v)
+		public static void ConvertRGBtoHSV(double r, double g, double b, out double h, out double s, out double v)
 		{
+			// H = [0..360]
+			// S = [0..1]
+			// V = [0..1]
+			
 			double min = System.Math.Min(r,System.Math.Min(g,b));
 			v = System.Math.Max(r,System.Math.Max(g,b));
 			double delta = v-min;
@@ -292,7 +296,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public static void HSVtoRGB(double h, double s, double v, out double r, out double g, out double b)
+		public static void ConvertHSVtoRGB(double h, double s, double v, out double r, out double g, out double b)
 		{
 			r = g = b = v;
 			if ( s == 0 )  return;  // noir ?
