@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EpsitecPictogram xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Size Width="20" Height="20" />
+  <Origin X="0" Y="0" />
+  <StylesCollection>
+    <Styles />
+  </StylesCollection>
+  <Objects>
+    <Page Name="">
+      <Properties />
+      <Handles />
+      <Objects>
+        <Layer Name="" Type="Dimmed">
+          <Properties>
+            <ModColor Type="ModColor" StyleName="" StyleID="0" H="0" S="0" V="0" R="0" G="0" B="0" A="0" N="false" />
+          </Properties>
+          <Handles />
+          <Objects>
+            <Bezier>
+              <Properties>
+                <Line Type="LineMode" StyleName="" StyleID="0" Width="1" Cap="Round" Join="Miter" Limit="5" />
+                <Color Type="LineColor" StyleName="" StyleID="0">
+                  <Color R="0.25" G="0" B="1" A="1" />
+                </Color>
+                <Arrow Type="Arrow" StyleName="" StyleID="0" ArrowType1="Right" Length1="2" Effect11="0.5" Effect12="0.5" ArrowType2="Right" Length2="2" Effect21="0.5" Effect22="0.5" />
+                <Gradient Type="FillGradient" StyleName="" StyleID="0" Fill="None" Angle="0" Cx="0.5" Cy="0.5" Sx="1" Sy="1" Repeat="1" Middle="0" Smooth="0">
+                  <Color1 R="1" G="1" B="1" A="0" />
+                  <Color2 R="0.5" G="0.5" B="0.5" A="1" />
+                </Gradient>
+                <Bool Type="PolyClose" StyleName="" StyleID="0" Bool="false" />
+              </Properties>
+              <Handles>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="3.5" Y="7.5" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="5.5" Y="4.5" />
+                </Handle>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="7.5" Y="1.5" />
+                </Handle>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="11.5" Y="3.5" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="13.5" Y="4.5" />
+                </Handle>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="15.5" Y="5.5" />
+                </Handle>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="16.5" Y="6.5" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="18.5" Y="6.5" />
+                </Handle>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="20.5" Y="6.5" />
+                </Handle>
+              </Handles>
+            </Bezier>
+            <Polyline>
+              <Properties>
+                <Line Type="LineMode" StyleName="" StyleID="0" Width="0.8" Cap="Round" Join="Round" Limit="5" />
+                <Color Type="LineColor" StyleName="" StyleID="0">
+                  <Color R="0" G="0" B="0" A="1" />
+                </Color>
+                <Arrow Type="Arrow" StyleName="" StyleID="0" ArrowType1="Right" Length1="2" Effect11="0.5" Effect12="0.5" ArrowType2="Right" Length2="2" Effect21="0.5" Effect22="0.5" />
+                <Gradient Type="FillGradient" StyleName="" StyleID="0" Fill="None" Angle="0" Cx="0.5" Cy="0.5" Sx="1" Sy="1" Repeat="1" Middle="0" Smooth="0">
+                  <Color1 R="1" G="1" B="1" A="1" />
+                  <Color2 R="0.5" G="0.5" B="0.5" A="1" />
+                </Gradient>
+                <Bool Type="PolyClose" StyleName="" StyleID="0" Bool="true" />
+                <Corner Type="Corner" StyleName="" StyleID="0" CornerType="Right" Radius="2" Effect1="0.5" Effect2="0.5" />
+              </Properties>
+              <Handles>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="5.3579102878013778" Y="4.723623949440114" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="4.681611069424056" Y="7.6463999188264467" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="10.67221573878143" Y="17.243933752862858" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="14.271290926545099" Y="14.997457001853846" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="8.280686257187714" Y="5.3999231678174375" />
+                </Handle>
+              </Handles>
+            </Polyline>
+            <Polyline>
+              <Properties>
+                <Line Type="LineMode" StyleName="" StyleID="0" Width="0.8" Cap="Round" Join="Miter" Limit="5" />
+                <Color Type="LineColor" StyleName="" StyleID="0">
+                  <Color R="0.25" G="0" B="1" A="1" />
+                </Color>
+                <Arrow Type="Arrow" StyleName="" StyleID="0" ArrowType1="Right" Length1="2" Effect11="0.5" Effect12="0.5" ArrowType2="Right" Length2="2" Effect21="0.5" Effect22="0.5" />
+                <Gradient Type="FillGradient" StyleName="" StyleID="0" Fill="None" Angle="0" Cx="0.5" Cy="0.5" Sx="1" Sy="1" Repeat="1" Middle="0" Smooth="0">
+                  <Color1 R="0.25427395272548825" G="0" B="1" A="1" />
+                  <Color2 R="0.5" G="0.5" B="0.5" A="1" />
+                </Gradient>
+                <Bool Type="PolyClose" StyleName="" StyleID="0" Bool="true" />
+                <Corner Type="Corner" StyleName="" StyleID="0" CornerType="Right" Radius="2" Effect1="0.5" Effect2="0.5" />
+              </Properties>
+              <Handles>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="5.3616011558801571" Y="4.721483654461375" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="5.1356416149724353" Y="5.69562034193021" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="6.3357378433490039" Y="4.9474431953690949" />
+                </Handle>
+              </Handles>
+            </Polyline>
+          </Objects>
+        </Layer>
+      </Objects>
+    </Page>
+  </Objects>
+  <CurrentPage>0</CurrentPage>
+  <CurrentLayer>0</CurrentLayer>
+</EpsitecPictogram>

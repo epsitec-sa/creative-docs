@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EpsitecPictogram xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Size Width="20" Height="20" />
+  <Origin X="0" Y="0" />
+  <StylesCollection>
+    <Styles />
+  </StylesCollection>
+  <Objects>
+    <Page Name="">
+      <Properties />
+      <Handles />
+      <Objects>
+        <Layer Name="" Type="Dimmed">
+          <Properties>
+            <ModColor Type="ModColor" StyleName="" StyleID="0" H="0" S="0" V="0" R="0" G="0" B="0" A="0" N="false" />
+          </Properties>
+          <Handles />
+          <Objects>
+            <Circle>
+              <Properties>
+                <Line Type="LineMode" StyleName="" StyleID="0" Width="0.7" Cap="Round" Join="Round" Limit="5" />
+                <Color Type="LineColor" StyleName="" StyleID="0">
+                  <Color R="0" G="0" B="0" A="1" />
+                </Color>
+                <Gradient Type="FillGradient" StyleName="" StyleID="0" Fill="Circle" Angle="0" Cx="0.40194193243090792" Cy="0.598058067569092" Sx="1" Sy="1" Repeat="1" Middle="0" Smooth="0">
+                  <Color1 R="1" G="1" B="1" A="0.62745098039215685" />
+                  <Color2 R="0.35686274509803928" G="0.76862745098039242" B="1" A="0.62745098039215685" />
+                </Gradient>
+              </Properties>
+              <Handles>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="5.0682261208576991" Y="7.9142300194931785" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="8.6549707602339172" Y="7.9922027290448359" />
+                </Handle>
+              </Handles>
+            </Circle>
+            <Circle>
+              <Properties>
+                <Line Type="LineMode" StyleName="" StyleID="0" Width="0.7" Cap="Round" Join="Round" Limit="5" />
+                <Color Type="LineColor" StyleName="" StyleID="0">
+                  <Color R="0" G="0" B="0" A="1" />
+                </Color>
+                <Gradient Type="FillGradient" StyleName="" StyleID="0" Fill="Circle" Angle="0" Cx="0.40194193243090792" Cy="0.598058067569092" Sx="1" Sy="1" Repeat="1" Middle="0" Smooth="0">
+                  <Color1 R="1" G="1" B="1" A="0.62745098039215685" />
+                  <Color2 R="0.35686274509803928" G="0.76862745098039242" B="1" A="0.62745098039215685" />
+                </Gradient>
+              </Properties>
+              <Handles>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="13.20272904483431" Y="7.7446393762183217" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="16.78947368421052" Y="7.8226120857699808" />
+                </Handle>
+              </Handles>
+            </Circle>
+            <Line>
+              <Properties>
+                <Line Type="LineMode" StyleName="" StyleID="0" Width="0.9" Cap="Round" Join="Round" Limit="5" />
+                <Color Type="LineColor" StyleName="" StyleID="0">
+                  <Color R="0" G="0" B="0" A="1" />
+                </Color>
+                <Arrow Type="Arrow" StyleName="" StyleID="0" ArrowType1="Right" Length1="2" Effect11="0.5" Effect12="0.5" ArrowType2="Right" Length2="2" Effect21="0.5" Effect22="0.5" />
+              </Properties>
+              <Handles>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="3.4697855750487334" Y="14.269005847953217" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="7.329434697855751" Y="12.319688109161794" />
+                </Handle>
+              </Handles>
+            </Line>
+            <Line>
+              <Properties>
+                <Line Type="LineMode" StyleName="" StyleID="0" Width="0.9" Cap="Round" Join="Round" Limit="5" />
+                <Color Type="LineColor" StyleName="" StyleID="0">
+                  <Color R="0" G="0" B="0" A="1" />
+                </Color>
+                <Arrow Type="Arrow" StyleName="" StyleID="0" ArrowType1="Right" Length1="2" Effect11="0.5" Effect12="0.5" ArrowType2="Right" Length2="2" Effect21="0.5" Effect22="0.5" />
+              </Properties>
+              <Handles>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="10.760233918128657" Y="11.851851851851853" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="15.048732943469789" Y="14.463937621832358" />
+                </Handle>
+              </Handles>
+            </Line>
+            <Circle>
+              <Properties>
+                <Line Type="LineMode" StyleName="" StyleID="0" Width="0.9" Cap="Round" Join="Round" Limit="5" />
+                <Color Type="LineColor" StyleName="" StyleID="0">
+                  <Color R="0" G="0" B="0" A="1" />
+                </Color>
+                <Gradient Type="FillGradient" StyleName="" StyleID="0" Fill="None" Angle="0" Cx="0.40194193243090792" Cy="0.598058067569092" Sx="1" Sy="1" Repeat="1" Middle="0" Smooth="0">
+                  <Color1 R="1" G="1" B="1" A="0.62745098039215685" />
+                  <Color2 R="0.35686274509803928" G="0.76862745098039242" B="1" A="0.62745098039215685" />
+                </Gradient>
+              </Properties>
+              <Handles>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="5.8089668615984404" Y="6.9785575048732946" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="6.7446393762183243" Y="6.7836257309941521" />
+                </Handle>
+              </Handles>
+            </Circle>
+            <Circle>
+              <Properties>
+                <Line Type="LineMode" StyleName="" StyleID="0" Width="0.9" Cap="Round" Join="Round" Limit="5" />
+                <Color Type="LineColor" StyleName="" StyleID="0">
+                  <Color R="0" G="0" B="0" A="1" />
+                </Color>
+                <Gradient Type="FillGradient" StyleName="" StyleID="0" Fill="None" Angle="0" Cx="0.40194193243090792" Cy="0.598058067569092" Sx="1" Sy="1" Repeat="1" Middle="0" Smooth="0">
+                  <Color1 R="1" G="1" B="1" A="0.62745098039215685" />
+                  <Color2 R="0.35686274509803928" G="0.76862745098039242" B="1" A="0.62745098039215685" />
+                </Gradient>
+              </Properties>
+              <Handles>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="12.241715399610138" Y="6.9005847953216382" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="13.099415204678364" Y="6.4327485380116967" />
+                </Handle>
+              </Handles>
+            </Circle>
+          </Objects>
+        </Layer>
+      </Objects>
+    </Page>
+  </Objects>
+  <CurrentPage>0</CurrentPage>
+  <CurrentLayer>0</CurrentLayer>
+</EpsitecPictogram>
