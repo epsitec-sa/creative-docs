@@ -2498,7 +2498,13 @@ namespace Epsitec.Common.Document
 				return;
 			}
 			
-			System.Diagnostics.Debug.WriteLine("PaintBackgroundImplementation "+clipRect.ToString());
+			if ( clipRect.Right == 1 ||				// un pixel à gauche, ignore
+				 clipRect.Bottom == this.Height-1 )	// un pixel en haut, ignore
+			{
+				return;
+			}
+			
+			//?System.Diagnostics.Debug.WriteLine("PaintBackgroundImplementation "+clipRect.ToString());
 			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
 
 			if ( this.document.Type == DocumentType.Pictogram )

@@ -1123,12 +1123,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
 		{
-			System.Diagnostics.Debug.WriteLine ("WndProc: " + msg.Msg.ToString ("X4"));
-			
-			if (msg.Msg == Win32Const.WM_WINDOWPOSCHANGED)
-			{
-				System.Diagnostics.Debug.WriteLine ("WM_WINDOWPOSCHANGED");
-			}
+//			System.Diagnostics.Debug.WriteLine ("WndProc: " + msg.Msg.ToString ("X4"));
 			
 			if (msg.Msg == Win32Const.WM_APP_DISPOSE)
 			{
