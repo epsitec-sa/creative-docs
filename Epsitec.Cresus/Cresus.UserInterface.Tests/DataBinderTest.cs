@@ -52,7 +52,7 @@ namespace Epsitec.Common.Support.Tests
 			window.Show ();
 		}
 
-		private void HandleDataChanged(DataRecord sender, string path)
+		private void HandleDataChanged(AbstractRecord sender, string path)
 		{
 			System.Diagnostics.Debug.WriteLine ("Data changed: " + path);
 			

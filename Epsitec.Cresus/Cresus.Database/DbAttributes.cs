@@ -35,26 +35,7 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion		
 		
-		public void SetFromInitialisationList(params string[] list)
-		{
-			for (int i = 0; i < list.Length; i++)
-			{
-				string init = list[i];
-				int pos = init.IndexOf ('=');
-				
-				if (pos < 1)
-				{
-					throw new System.ArgumentException (string.Format ("Invalid attribute initialisation syntax in '{0}'.", init));
-				}
-				
-				string attr_name = init.Substring (0, pos);
-				string attr_data = init.Substring (pos+1);
-				
-				this.SetAttribute (attr_name, attr_data, null);
-			}
-		}
-		
-		
+		#region ToString override
 		public override string ToString()
 		{
 			string[] names = new string[this.attributes.Keys.Count];
@@ -79,7 +60,7 @@ namespace Epsitec.Cresus.Database
 			
 			return buffer.ToString ();
 		}
-
+		#endregion
 		
 		
 		public string[]							Names
@@ -101,12 +82,51 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public string GetAttribute(string name)
+		public string							this[string name]
+		{
+			get { return this.GetAttribute (name); }
+			set { this.SetAttribute (name, value); }
+		}
+		
+		public string							this[string name, Epsitec.Common.Support.ResourceLevel level]
+		{
+			get { return this.GetAttribute (name, level); }
+			set { this.SetAttribute (name, value, level); }
+		}
+		
+		public string							this[string name, string suffix]
+		{
+			get { return this.GetAttribute (name, suffix); }
+			set { this.SetAttribute (name, value, suffix); }
+		}
+		
+		
+		internal void SetFromInitialisationList(params string[] list)
+		{
+			for (int i = 0; i < list.Length; i++)
+			{
+				string init = list[i];
+				int pos = init.IndexOf ('=');
+				
+				if (pos < 1)
+				{
+					throw new System.ArgumentException (string.Format ("Invalid attribute initialisation syntax in '{0}'.", init));
+				}
+				
+				string attr_name = init.Substring (0, pos);
+				string attr_data = init.Substring (pos+1);
+				
+				this.SetAttribute (attr_name, attr_data, null);
+			}
+		}
+		
+		
+		internal string GetAttribute(string name)
 		{
 			return this.GetAttribute (name, ResourceLevel.Merged);
 		}
 		
-		public string GetAttribute(string name, ResourceLevel level)
+		internal string GetAttribute(string name, ResourceLevel level)
 		{
 			if (this.attributes == null)
 			{
@@ -143,13 +163,28 @@ namespace Epsitec.Cresus.Database
 			return (this.attributes.Contains (find)) ? this.attributes[find] as string : null;
 		}
 		
+		internal string GetAttribute(string name, string localisation_suffix)
+		{
+			if (this.attributes == null)
+			{
+				return null;
+			}
+			
+			if (localisation_suffix != null)
+			{
+				name = DbTools.BuildCompositeName (name, localisation_suffix);
+			}
+			
+			return (this.attributes.Contains (name)) ? this.attributes[name] as string : null;
+		}
 		
-		public void SetAttribute(string name, string value)
+		
+		internal void SetAttribute(string name, string value)
 		{
 			this.SetAttribute (name, value, "");
 		}
 		
-		public void SetAttribute(string name, string value, ResourceLevel level)
+		internal void SetAttribute(string name, string value, ResourceLevel level)
 		{
 			switch (level)
 			{
@@ -162,7 +197,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public void SetAttribute(string name, string value, string localisation_suffix)
+		internal void SetAttribute(string name, string value, string localisation_suffix)
 		{
 			if (this.attributes == null)
 			{
