@@ -188,6 +188,16 @@ namespace Epsitec.Common.Drawing
 		{
 			return (a.x != b.x) || (a.y != b.y);
 		}
+
+		public Point ScaleMul(Point a)
+		{
+			return new Point (this.x * a.x, this.y * a.y);
+		}
+		
+		public Point ScaleDiv(Point a)
+		{
+			return new Point (this.x / a.x, this.y / a.y);
+		}
 		
 		
 		public static double ComputeAngle(Point c, Point a)
