@@ -238,7 +238,7 @@ namespace Epsitec.Common.Drawing
 			Font   font = Font.GetFont ("Tahoma", "Regular");
 			double size = 10.6;
 			
-			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
+			e.Graphics.FillMode = FillMode.NonZero;
 			e.Graphics.LineWidth = 0.2;
 			ContentAlignment[] modes = new ContentAlignment[]
 				{
@@ -371,7 +371,7 @@ namespace Epsitec.Common.Drawing
 			Font   font = Font.GetFont ("Wingdings", "Normal");
 			double size = 48;
 			
-			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
+			e.Graphics.FillMode = FillMode.NonZero;
 			e.Graphics.LineWidth = 0.2;
 			
 			y -= size;
@@ -477,7 +477,7 @@ namespace Epsitec.Common.Drawing
 			path2.LineTo (295, 60);
 			path2.Close ();
 			
-			e.Graphics.Rasterizer.FillMode = FillMode.EvenOdd;
+			e.Graphics.FillMode = FillMode.EvenOdd;
 			e.Graphics.Rasterizer.AddSurface (path1);
 			e.Graphics.Rasterizer.AddSurface (path2);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
@@ -720,7 +720,7 @@ namespace Epsitec.Common.Drawing
 			path2.LineTo (295, 60);
 			path2.Close ();
 			
-			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
+			e.Graphics.FillMode = FillMode.NonZero;
 			e.Graphics.Rasterizer.AddSurface (path1);
 			e.Graphics.Rasterizer.AddSurface (path2);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
@@ -766,7 +766,7 @@ namespace Epsitec.Common.Drawing
 			path2.LineTo (295, 60);
 			path2.Close ();
 			
-			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
+			e.Graphics.FillMode = FillMode.NonZero;
 			e.Graphics.SetClippingRectangle (50, 50, root.Client.Width - 100, 50);
 			
 			e.Graphics.Rasterizer.AddSurface (path1);
@@ -827,7 +827,7 @@ namespace Epsitec.Common.Drawing
 			path2.LineTo (295, 60);
 			path2.Close ();
 			
-			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
+			e.Graphics.FillMode = FillMode.NonZero;
 			e.Graphics.Rasterizer.AddSurface (path1);
 			e.Graphics.Rasterizer.AddSurface (path2);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
@@ -895,7 +895,7 @@ namespace Epsitec.Common.Drawing
 			r[0]   = g[0]   = b[0]   = 1.0;
 			r[255] = g[255] = b[255] = 1.0;
 			
-			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
+			e.Graphics.FillMode = FillMode.NonZero;
 //			e.Graphics.AddFilledRectangle (0, cy+50, root.Client.Width, 10);
 //			e.Graphics.Rasterizer.AddSurface (path1);
 //			e.Graphics.Rasterizer.AddSurface (path2);
@@ -947,7 +947,7 @@ namespace Epsitec.Common.Drawing
 				a[i] = 1.0;
 			}
 			
-			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
+			e.Graphics.FillMode = FillMode.NonZero;
 			e.Graphics.Rasterizer.AddSurface (path1);
 			e.Graphics.GradientRenderer.Fill = Epsitec.Common.Drawing.GradientFill.Conic;
 			e.Graphics.GradientRenderer.SetParameters (0, 200);
@@ -981,7 +981,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.Rasterizer.AddOutline(path, 1);
 			//e.Graphics.RenderSolid(Color.FromBrightness(0));
 
-			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
+			e.Graphics.FillMode = FillMode.NonZero;
 			e.Graphics.GradientRenderer.SetColors(Color.FromRGB(1,0,0), Color.FromRGB(0,0,1));
 
 			Transform ot = e.Graphics.GradientRenderer.Transform;
@@ -1015,7 +1015,7 @@ namespace Epsitec.Common.Drawing
 			Font   font = Font.GetFont ("Arial Black", "Regular");
 			double size = 50;
 			
-			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
+			e.Graphics.FillMode = FillMode.NonZero;
 			Bitmap bitmap = Support.Resources.DefaultManager.GetImage (@"file:images/test.png").BitmapImage;
 			string text = "TOMATE";
 			

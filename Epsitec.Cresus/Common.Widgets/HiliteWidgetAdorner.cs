@@ -52,12 +52,12 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintDecoration(Drawing.Graphics graphics, Drawing.Rectangle repaint)
 		{
 			
-			Drawing.FillMode  old_fill_mode = graphics.Rasterizer.FillMode;
+			Drawing.FillMode  old_fill_mode = graphics.FillMode;
 			Drawing.Rectangle bounds        = this.HiliteBounds;
 			
 			if (bounds.IsValid)
 			{
-				graphics.Rasterizer.FillMode = Drawing.FillMode.EvenOdd;
+				graphics.FillMode = Drawing.FillMode.EvenOdd;
 				graphics.AddFilledRectangle (bounds);
 				graphics.AddFilledRectangle (Drawing.Rectangle.Inflate (bounds, -1, -1));
 				graphics.RenderSolid (Drawing.Color.FromColor (HiliteWidgetAdorner.FrameColor, 0.75));
@@ -68,12 +68,12 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.path.IsValid)
 			{
-				graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
+				graphics.FillMode = Drawing.FillMode.NonZero;
 				graphics.Rasterizer.AddOutline (this.path, 1.0, Drawing.CapStyle.Square, Drawing.JoinStyle.Miter);
 				graphics.RenderSolid (HiliteWidgetAdorner.HintColor);
 			}
 			
-			graphics.Rasterizer.FillMode = old_fill_mode;
+			graphics.FillMode = old_fill_mode;
 		}
 		
 		

@@ -303,7 +303,7 @@ namespace Epsitec.Common.Pictogram.Data
 					c2 = iconContext.AdaptColor(c2);
 				}
 
-				graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
+				graphics.FillMode = Drawing.FillMode.NonZero;
 
 				if ( this.repeat == 1 && this.middle == 0.0 )
 				{

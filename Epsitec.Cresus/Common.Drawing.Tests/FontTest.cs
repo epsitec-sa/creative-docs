@@ -354,7 +354,7 @@ namespace Epsitec.Common.Drawing
 			
 			path.Clear ();
 			
-			rasterizer.FillMode = FillMode.NonZero;
+//-			rasterizer.FillMode = FillMode.NonZero;
 			
 			foreach (char c in text)
 			{
@@ -433,7 +433,7 @@ namespace Epsitec.Common.Drawing
 			
 			string text = "ijfà";
 			
-			rasterizer.FillMode = FillMode.NonZero;
+//-			rasterizer.FillMode = FillMode.NonZero;
 			
 			foreach (char c in text)
 			{
@@ -525,7 +525,7 @@ namespace Epsitec.Common.Drawing
 				
 				string text = "tjfa";
 				
-				rasterizer.FillMode = FillMode.NonZero;
+//-				rasterizer.FillMode = FillMode.NonZero;
 				
 				foreach (char c in text)
 				{

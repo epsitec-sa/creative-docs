@@ -1524,7 +1524,7 @@ namespace Epsitec.Common.Widgets.Adorner
 								Drawing.Color topColor,
 								double angle)
 		{
-			graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
+			graphics.FillMode = Drawing.FillMode.NonZero;
 			graphics.GradientRenderer.Fill = Drawing.GradientFill.Y;
 			graphics.GradientRenderer.SetColors(bottomColor, topColor);
 			graphics.GradientRenderer.SetParameters(-100, 100);

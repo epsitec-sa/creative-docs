@@ -1446,7 +1446,7 @@ namespace Epsitec.Common.Widgets.Adorner
 								Drawing.Color bottomColor,
 								Drawing.Color topColor)
 		{
-			graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
+			graphics.FillMode = Drawing.FillMode.NonZero;
 			graphics.GradientRenderer.Fill = Drawing.GradientFill.Y;
 			graphics.GradientRenderer.SetColors(bottomColor, topColor);
 			graphics.GradientRenderer.SetParameters(-100, 100);

@@ -14,6 +14,7 @@ namespace Epsitec.Common.Drawing
 		double		LineMiterLimit	{ get; set; }
 		Color		Color			{ get; set; }
 		Transform	Transform		{ get; set; }
+		FillMode	FillMode		{ get; set; }
 		
 		void SetClippingRectangle(Rectangle rect);
 		void SetClippingRectangle(Point p, Size s);

@@ -450,7 +450,7 @@ namespace Epsitec.Common.Document.Properties
 					c2 = drawingContext.AdaptColor(c2);
 				}
 
-				graphics.Rasterizer.FillMode = FillMode.NonZero;
+				graphics.FillMode = FillMode.NonZero;
 
 				if ( this.repeat == 1 && this.middle == 0.0 )
 				{

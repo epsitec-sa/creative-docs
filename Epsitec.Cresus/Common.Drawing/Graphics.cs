@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -113,6 +113,17 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public FillMode						FillMode
+		{
+			get
+			{
+				return this.Rasterizer.FillMode;
+			}
+			set
+			{
+				this.Rasterizer.FillMode = value;
+			}
+		}
 		
 		public Drawing.Rasterizer			Rasterizer
 		{

@@ -288,7 +288,7 @@ namespace Epsitec.Common.Widgets
 						a[i] = 1.0;
 					}
 			
-					graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
+					graphics.FillMode = Drawing.FillMode.NonZero;
 					graphics.Rasterizer.AddSurface(path);
 					graphics.GradientRenderer.Fill = Drawing.GradientFill.Conic;
 					graphics.GradientRenderer.SetParameters(0, 250);
@@ -386,7 +386,7 @@ namespace Epsitec.Common.Widgets
 					path.LineTo(rect.Left, posy+0.5);
 					path.Close();
 			
-					graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
+					graphics.FillMode = Drawing.FillMode.NonZero;
 					graphics.Rasterizer.AddSurface(path);
 					graphics.GradientRenderer.Fill = Drawing.GradientFill.X;
 					graphics.GradientRenderer.SetParameters(rect.Left, rect.Right);

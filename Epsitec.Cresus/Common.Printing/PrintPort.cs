@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 21/03/2004
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Printing
 {
@@ -134,6 +134,18 @@ namespace Epsitec.Common.Printing
 						throw new System.FormatException (string.Format ("The color {0} is not compatible with the PrintPort.", value.ToString ()));
 					}
 				}
+			}
+		}
+		
+		public Drawing.FillMode					FillMode
+		{
+			get
+			{
+				return this.fill_mode;
+			}
+			set
+			{
+				this.fill_mode = value;
 			}
 		}
 		
@@ -302,7 +314,10 @@ namespace Epsitec.Common.Printing
 				(this.line_width > 0))
 			{
 				this.UpdatePen ();
-				this.graphics.DrawPath (this.pen, path.CreateSystemPath ());
+				
+				System.Drawing.Drawing2D.GraphicsPath gra_path = path.CreateSystemPath ();
+				gra_path.FillMode = this.fill_mode == Drawing.FillMode.EvenOdd ? System.Drawing.Drawing2D.FillMode.Alternate : System.Drawing.Drawing2D.FillMode.Winding;
+				this.graphics.DrawPath (this.pen, gra_path);
 			}
 		}
 		
@@ -311,7 +326,9 @@ namespace Epsitec.Common.Printing
 			if (path != null)
 			{
 				this.UpdateBrush ();
-				this.graphics.FillPath (this.brush, path.CreateSystemPath ());
+				System.Drawing.Drawing2D.GraphicsPath gra_path = path.CreateSystemPath ();
+				gra_path.FillMode = this.fill_mode == Drawing.FillMode.EvenOdd ? System.Drawing.Drawing2D.FillMode.Alternate : System.Drawing.Drawing2D.FillMode.Winding;
+				this.graphics.FillPath (this.brush, gra_path);
 			}
 		}
 		
@@ -663,5 +680,6 @@ namespace Epsitec.Common.Printing
 		protected Drawing.Color					color = Drawing.Color.FromRGB (0, 0, 0);
 		protected Drawing.Rectangle				clip = Drawing.Rectangle.Infinite;
 		protected Drawing.Transform				transform = new Drawing.Transform ();
+		protected Drawing.FillMode				fill_mode = Drawing.FillMode.NonZero;
 	}
 }
