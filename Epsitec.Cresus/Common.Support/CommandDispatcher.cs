@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier
+//	Responsable: Pierre ARNAUD
 
 using System.Text.RegularExpressions;
 
@@ -91,9 +91,49 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public bool								Aborted
+		{
+			get
+			{
+				return this.aborted;
+			}
+			set
+			{
+				this.aborted = value;
+			}
+		}
+		
 		
 		public void Dispatch(string command, object source)
 		{
+			this.aborted = false;
+			
+			//	TODO: il faudrait gérer un vrai petit langage ici; pour l'instant, on supporte
+			//	soit des commandes isolées, soit des commandes intercalées
+			
+			//	TODO: réfléchir au problème de commandes qui en génèrent d'autres qui demandent
+			//	une interaction avec l'utilisateur. Dans le cas idéal, il faudrait mettre en
+			//	attente les commandes jusqu'à ce que le commande interactive est terminée avec
+			//	succès; en cas d'interruption, il faudrait pouvoir ne pas exécuter les commandes
+			//	mises en attente, mais les supprimer.
+			
+			if (command.IndexOf ('&') >= 0)
+			{
+				string[] commands = System.Utilities.Split (command, '&');
+				
+				for (int i = 0; i < commands.Length; i++)
+				{
+					this.Dispatch (commands[i].Trim (), source);
+					
+					if (this.aborted)
+					{
+						break;
+					}
+				}
+				
+				return;
+			}
+			
 			//	Transmet la commande à ceux qui sont intéressés
 			
 			string   command_name     = CommandDispatcher.ExtractCommandName (command);
@@ -121,6 +161,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		
 		public void SynchroniseCommandStates()
 		{
 			//	Passe en revue tous les CommandStates connus et resynchronise ceux-ci. Afin d'éviter
@@ -135,6 +176,7 @@ namespace Epsitec.Common.Support
 				states[i].Synchronise ();
 			}
 		}
+		
 		
 		public CommandDispatcher.CommandState[] FindCommandStates(string command_name)
 		{
@@ -642,6 +684,7 @@ namespace Epsitec.Common.Support
 		protected System.Collections.ArrayList	validation_states = new System.Collections.ArrayList ();
 		protected string						dispatcher_name;
 		protected ValidationRule				validation_rules;
+		protected bool							aborted;
 		
 		static FindCommandStateCallback			find_command_state_callback;
 		static Regex							command_arg_regex;
