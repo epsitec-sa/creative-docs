@@ -1,10 +1,17 @@
+# -*- coding: cp1252 -*-
 #########################################################################
 # This Python script is used to copy the contents of the Epsitec.Cresus	#
-# solution to a clean folder and generate a ZIP file.					#
-#																		#
-# (C) Copyright 2003, Pierre ARNAUD, EPSITEC SA, Ch. du Fontenay 6,		#
-#					  CH-1400 Yverdon-les-Bains, Switzerland			#
+# solution to a clean folder and generate a ZIP file.			#
+#									#
+# (C) Copyright 2003, Denis DUMOULIN, thanks to :                     	#
+# (C) Copyright 2003, Pierre ARNAUD, EPSITEC SA, Ch. du Fontenay 6,	#
+#	              CH-1400 Yverdon-les-Bains, Switzerland		#
 #########################################################################
+
+# par rapport au script original, celui-ci ne crée par de dossier vide
+# dans le ZIP des différences.
+# par contre il n'enlève pas, dans la référence, les fichiers supprimés
+
 
 import os
 import os.path
@@ -14,11 +21,15 @@ import popen2
 import time
 import string
 import difflib
+import socket
 
 class CopyProject:
-    def __init__(self, src_root, dst_root):
+    def __init__(self, src_root, ref_root, delta_root, diff_file, history):
         self.src_root = src_root
-        self.dst_root = dst_root
+        self.ref_root = ref_root
+        self.delta_root = delta_root
+        self.diff = diff_file
+        self.history = history
 
         self.copy_ext = list()
 
@@ -41,9 +52,11 @@ class CopyProject:
         self.copy_ext.append('.vdproj')
 
         self.file_count = 0
+        self.mod_count = 0
         self.proj_count = 0
         self.sol_count = 0
         self.bad_count = 0
+        self.del_count = 0
 
     def current_time(self):
         return ''.join ((string.zfill(str (time.localtime(time.time()).tm_mday), 2), '/',
@@ -52,11 +65,10 @@ class CopyProject:
                          string.zfill(str (time.localtime(time.time()).tm_hour), 2), ':',
                          string.zfill(str (time.localtime(time.time()).tm_min), 2)))
     
-                         
 
     def log_history(self):
         try:
-            f = open (self.src_root + "\\history.log", 'rt')
+            f = open (self.src_root + self.history, 'rt')
             lines = f.readlines()
             revnum = 1
             for line in lines:
@@ -71,7 +83,7 @@ class CopyProject:
 
         new_line = self.current_time() + ' Rev ' + str(revnum) + '\n'
         lines.append (new_line)
-        f = open (self.src_root + "\\history.log", 'wt')
+        f = open (self.src_root + self.history, 'wt')
         f.writelines (lines)
         f.close()
         return revnum
@@ -98,7 +110,6 @@ class CopyProject:
         f.writelines(lines)
         f.close()
 
-        self.proj_count += 1
 
     def strip_scc_info_vdproj(self, name):
         f = open(name, 'r')
@@ -125,10 +136,15 @@ class CopyProject:
         f.close()
 
         i = 0
+        n = 0
         while i < len(lines):
-            if lines[i].find('C:\\Documents and Settings\\Arnaud\\My Documents\\Visual Studio Projects\\') > -1:
-                lines[i] = lines[i].replace ('C:\\Documents and Settings\\Arnaud\\My Documents\\Visual Studio Projects\\', 'D:\\Cresus\\')
+            if lines[i].find(self.src_root) > -1:
+                lines[i] = lines[i].replace (self.src_root, 'D:\\Cresus\\Epsitec.Cresus')
+                n += 1
             i += 1
+
+        if n > 0:
+            print 'remplaced directory in ' + name
         
         f = open(name, 'w')
         f.writelines(lines)
@@ -153,8 +169,6 @@ class CopyProject:
                     write=1
         f.close()
 
-        self.sol_count += 1
-
     def check_copy(self, name):
         for ext in self.copy_ext:
             if name.endswith(ext):
@@ -168,12 +182,18 @@ class CopyProject:
 
         return 0
 
+
     def copy_file(self, path, name, force_copy = 0):
         if path.find(self.src_root) > -1:
             src_path = path
             src_name = src_path + "\\" + name
-            dst_path = path.replace (self.src_root, self.dst_root)
-            dst_name = dst_path + "\\" + name
+            ref_path = path.replace (self.src_root, self.ref_root)
+            delta_path = path.replace (self.src_root, self.delta_root)
+            ref_name = ref_path + "\\" + name
+            delta_name = delta_path + "\\" + name
+
+            if os.path.isdir(ref_path) == 0:
+                os.makedirs(ref_path)
 
             if name == 'copy.info':
                 f = open(src_name, 'r')
@@ -183,37 +203,94 @@ class CopyProject:
                     if (file.strip().startswith('#') == 0) & (len(file.strip())>0):
                         self.copy_file(path, file.strip(), 1)
 
-            if os.path.isdir(src_name):
-                if os.path.isdir(dst_name) == 0:
-                    os.makedirs(dst_name)
-            else:
+            if os.path.isdir(src_name) == 0:
                 if force_copy | self.check_copy(src_name):
                     f = open(src_name, 'rb')
                     data = f.read()
                     f.close()
-                    f = open(dst_name, 'wb')
-                    f.write(data)
-                    f.truncate()
-                    f.close()
 
-                    if name.endswith('.csproj'):
-                        self.strip_scc_info_csproj(dst_name)
-                    if name.endswith('.vdproj'):
-                        self.strip_scc_info_vdproj(dst_name)
-                    if name.endswith('.csproj.user'):
-                        self.patch_path_info(dst_name)
-                    if name.endswith('.sln'):
-                        self.strip_solution(dst_name)
+                    to_update = 1
+                    s1 = "New "
+                    s2 = "\t(new)"
+                    if os.path.isfile(ref_name):
+                        s1 = "Update "
+                        s2 = ""
+                        f = open(ref_name, 'rb')
+                        data2 = f.read()
+                        f.close()
+                        if data == data2:
+                            to_update = 0
 
-                    shutil.copystat(src_name, dst_name)
-                    os.chmod(dst_name, 0777)
+                    if to_update > 0:
+                        print s1 + src_name.replace (self.src_root, ".")
+                        if self.diff:
+                            self.diff.write ("  " + src_name.replace (self.src_root, ".") + s2 + '\n')
+                        if os.path.isdir(delta_path) == 0:
+                            os.makedirs(delta_path)
+
+                        f = open(delta_name, 'wb')
+                        f.write(data)
+                        f.truncate()
+                        f.close()
+                        shutil.copystat(src_name, delta_name)
+                        os.chmod(delta_name, 0777)
+
+                        if name.endswith('.csproj'):
+                            self.strip_scc_info_csproj(delta_name)
+                        if name.endswith('.vdproj'):
+                            self.strip_scc_info_vdproj(delta_name)
+                        if name.endswith('.csproj.user'):
+                            self.patch_path_info(delta_name)
+                        if name.endswith('.sln'):
+                            self.strip_solution(delta_name)
+
+                        os.chmod(delta_name, 0777)
+
+                        f = open(ref_name, 'wb')
+                        f.write(data)
+                        f.truncate()
+                        f.close()
+
+                        shutil.copystat(src_name, ref_name)
+                        os.chmod(ref_name, 0777)
+                        self.mod_count += 1
 
                     self.file_count += 1
-                    
+                    if name.endswith('.sln'):
+                        self.sol_count += 1
+                    if name.endswith('.csproj'):
+                        self.proj_count += 1
+                   
                 else:
-                    if self.check_no_copy(dst_name) == 0:
-                        print "What to do with " + dst_name
+                    if self.check_no_copy(ref_name) == 0:
+                        print "What to do with " + ref_name
                         self.bad_count += 1
+        return 0
+
+    def delete_file(self, path, name):
+        if path.find(self.ref_root) > -1:
+            src_path = path.replace (self.ref_root, self.src_root)
+            src_name = src_path + "\\" + name
+            ref_path = path
+            delta_path = path.replace (self.ref_root, self.delta_root)
+            ref_name = ref_path + "\\" + name
+            delta_name = delta_path + "\\" + name + "~(deleted)"
+
+            if os.path.isdir(src_name) == 0:
+                if os.path.isfile(src_name) == 0:
+                    print "Delete " + ref_name.replace (self.ref_root, ".")
+                    if self.diff:
+                        self.diff.write ("  " + src_name.replace (self.src_root, ".") + "\t(del)\n")
+                    if os.path.isdir(delta_path) == 0:
+                        os.makedirs(delta_path)
+
+                    f = open(delta_name, 'wb')
+                    f.truncate()
+                    f.close()
+                    shutil.copystat(ref_name, delta_name)
+                    os.chmod(delta_name, 0777)
+                    os.remove(ref_name)
+                    self.del_count += 1
 
     def print_statistics(self):
         if self.sol_count > 1:
@@ -221,11 +298,17 @@ class CopyProject:
         else:
             plural_solutions = ''
         
-        print "Copied %(files)d files with %(proj)d projects in %(sol)d solution%(plurs)s" % {
+        print "Updated %(mods)d files among %(files)d for %(proj)d projects in %(sol)d solution%(plurs)s" % {
+            'mods': self.mod_count,
             'files': self.file_count,
             'proj':  self.proj_count,
             'sol':   self.sol_count,
             'plurs': plural_solutions }
+
+        if self.del_count:
+            print "Deleted %(delfiles)d files from references" % {
+                'delfiles': self.del_count }
+                
         
         if self.bad_count == 1:
             print "Failed to process 1 file"
@@ -236,97 +319,94 @@ class CopyProject:
             time.sleep(2)
 
 
-
-class DiffProject:
-    def __init__(self, new_root, ref_root, diff_file):
-        self.new_root = new_root
-        self.ref_root = ref_root
-        self.diff = diff_file
-
-    def diff_file(self, path, name):
-        new_path = path
-        ref_path = path.replace (self.new_root, self.ref_root)
-        new_file = new_path + "\\" + name
-        ref_file = ref_path + "\\" + name
-        if os.path.isfile(ref_file) & os.path.isfile(new_file):
-            f = open(ref_file, 'r')
-            ref_data = f.read()
-            f.close()
-            f = open(new_file, 'r')
-            new_data = f.read()
-            f.close()
-            if ref_data <> new_data:
-                print "Update " + new_file.replace (self.new_root, ".")
-                self.diff.write ("  " + new_file.replace (self.new_root, ".") + '\n')
-            else:
-                os.remove(new_file)
-        else:
-            if os.path.isfile(new_file):
-                print "New " + new_file.replace (self.new_root, ".")
-                self.diff.write ("  " + new_file.replace (self.new_root, ".") + '\t(new)\n')
-            
-
-
 def copy_analyse(arg, dirname, fnames):
     for name in fnames:
         arg.copy_file(dirname, name)
 
-
-def diff_analyse(arg, dirname, fnames):
+def delete_analyse(arg, dirname, fnames):
     for name in fnames:
-        arg.diff_file(dirname, name)
+        arg.delete_file(dirname, name)
 
-
-def do_it(src,dst,zip):
-
-    copy_project = CopyProject (src, dst + "\\temp")
-    rev = str(copy_project.log_history())
-
+def read_localisation_file():
     try:
-        shutil.rmtree(dst + "\\temp")
+        f = open ("loc-" + socket.gethostname() + ".txt", 'rt')
+        lines = f.readlines()
+        f.close
+        print 'Using configuration for machine ' + socket.gethostname() + '.'
+        return lines
+    except OSError, e:
+        print 'Machine dependent localisation file not found.'
+    
+    try:
+        f = open ("localisation.txt", 'rt')
+        lines = f.readlines()
+        f.close;
+        return lines
+    except OSError, e:
+        print   'Error, could not read file "localisation.txt"'
+        time.sleep (30)
+        sys.exit()
+
+
+def do_it():
+    lines = read_localisation_file()
+
+    src = lines[0].replace("\n", "")        # "F:\\Travail\\Cresus\\Epsitec.Cresus"
+    dst = lines[1].replace("\n", "")        # "C:\\Epsitec"
+    zip = lines[2].replace("\n", "")        # "Epsitec.Cresus-DD"
+    history = "\\" + lines[3].replace("\n", "")    # "history-dd.log"
+    wzzip = lines[4].replace("\n", "")      # 'c:\\Progra~1\\winzip\\wzzip'
+
+    diff_log = 0
+    try:
+        shutil.rmtree(dst + "\\ref-temp")
     except OSError, e:
         e = ''
-    
+        
+    if os.path.isdir(dst + "\\ref"):
+        shutil.copytree(dst + "\\ref", dst + "\\ref-temp")
+        diff_log = file (src + history, 'a')
+        diff_log.seek(0,2)
+
+    copy_project = CopyProject (src, dst + "\\ref-temp", dst + "\\delta", diff_log, history)
+    rev = str(copy_project.log_history())
+
     try:
         shutil.rmtree(dst + "\\delta")
     except OSError, e:
         e = ''
+    os.makedirs(dst + "\\delta")
 
-    print "Copying clean source tree..."
+    print "Updating references tree..."
     os.path.walk(src,copy_analyse,copy_project)
+
+    print "Removing deleted references..."
+    os.path.walk(dst+"\\ref-temp",delete_analyse,copy_project)
     copy_project.print_statistics()
 
-    shutil.copytree(dst+"\\temp", dst+"\\delta")
-
-    if os.path.isdir(dst+"\\ref"):
-        diff_log = file (src+"\\history.log", 'a')
-        diff_log.seek(0,2)
-        diff_project = DiffProject (dst + "\\delta", dst + "\\ref", diff_log)
-        os.path.walk(dst + "\\delta",diff_analyse,diff_project)
-        diff_log.write ("\n")
-        diff_log.close()
-        os.remove (dst + "\\delta\\history.log")
-        os.remove (dst + "\\temp\\history.log")
-        shutil.copy (src+"\\history.log", dst + "\\delta\\history.log")
-        shutil.copy (src+"\\history.log", dst + "\\temp\\history.log")
-    else:
-        diff_log = file (src+"\\history.log", 'a')
+    if diff_log == 0:
+        diff_log = file (src+history, 'a')
         diff_log.seek(0,2)
         diff_log.write ("  full copy\n")
-        diff_log.write ("\n")
-        diff_log.close ()
 
-    
-    print "Updating reference..."
+    diff_log.write ("\n")
+    diff_log.truncate()
+    diff_log.close ()
+    diff_log = 0
 
     try:
-        os.rename(dst+"\\ref", dst+"\\ref-old")
+        os.remove (dst + "\\delta" + history)
+    except OSError, e:
+        e = ''
+    try:
+        os.remove (dst + "\\ref-temp" + history)
     except OSError, e:
         e = ''
 
-    os.rename(dst+"\\temp", dst+"\\ref")
+    shutil.copy (src + history, dst + "\\delta" + history)
+    shutil.copy (src + history, dst + "\\ref-temp" + history)
 
-    zip = dst + '\\' + zip + '-' + rev + '.zip'
+    zip = dst + '\\' + zip + rev + '.zip'
 
     try:
         os.remove(zip)
@@ -335,51 +415,50 @@ def do_it(src,dst,zip):
 
     print "Zipping deltas..."
 
-    wzzip = 'c:\\Progra~1\\winzip\\wzzip'
     opt   = '-a -p -r'
     qzip  = '"' + zip + '"'
     what  = '"' + dst + '\\delta\\*.*"'
 
-    cmd   = wzzip+' '+opt+' '+qzip+' '+what
+    cmd   = wzzip + ' ' + opt + ' ' + qzip + ' ' + what
     
     print 'MEGABUILD.SET %ziprev%=' + rev
     print 'MEGABUILD.SET %zipfile%=' + zip
 
+    print 'cmd = ' + cmd
     r,w,e = popen2.popen3 (cmd)
     result = r.read()
     errors = e.read()
 
     if os.path.isfile(zip):
         print 'Created file '+zip
+        try:
+            print "Removing old references..."
+            shutil.rmtree(dst + "\\ref")
+        except OSError, e:
+            e = ''
+        try:
+            os.rename(dst+"\\ref-temp", dst+"\\ref")
+        except OSError, e:
+            e = ''
+        try:
+            print "Removing delta..."
+            shutil.rmtree(dst + "\\delta")
+        except OSError, e:
+            e = ''
     else:
         print 'error: ZIP file not created'
+        try:
+            print "Removing temp references..."
+            shutil.rmtree(dst + "\\ref-temp")
+        except OSError, e:
+            e = ''
+        print 'References not updated'
+        print 'Delta directory not deleted'
         time.sleep (2)
-
-    try:
-        print "Removing temporary data..."
-        shutil.rmtree(dst + "\\temp")
-    except OSError, e:
-        e = ''
-    
-    try:
-        print "Removing old reference..."
-        shutil.rmtree(dst + "\\ref-old")
-    except OSError, e:
-        e = ''
-    
-    try:
-        print "Removing delta..."
-        shutil.rmtree(dst + "\\delta")
-    except OSError, e:
-        e = ''
 
     print "Done."
 
 
-src = "C:\\Documents and Settings\\Arnaud\\My Documents\\Visual Studio Projects\\Epsitec.Cresus"
-dst = "C:\\Epsitec"
-zip = "Epsitec.Cresus"
-
 # run the script...
 
-do_it(src,dst,zip)
+do_it()
