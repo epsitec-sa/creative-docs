@@ -552,6 +552,28 @@ namespace Epsitec.Common.Widgets
 				return block.fontColor;
 			}
 		}
+		
+		public bool IsSelectionWaved(TextLayout.Context context)
+		{
+			JustifBlock block = this.SearchJustifBlock(context);
+			if ( block == null )  return false;
+			return block.wave;
+		}
+		
+		public bool IsSelectionWaved(int index)
+		{
+			return this.IsSelectionWaved(index, false);
+		}
+		
+		public bool IsSelectionWaved(int index, bool after)
+		{
+			TextLayout.Context context = new TextLayout.Context(this);
+			context.CursorAfter = after;
+			context.CursorFrom  = index;
+			context.CursorTo    = index;
+			return this.IsSelectionWaved(context);
+		}
+
 
 		public void SetSelectionFontColor(TextLayout.Context context, Drawing.Color color)
 		{
@@ -1745,6 +1767,11 @@ namespace Epsitec.Common.Widgets
 						italic = (s == "yes");
 					}
 				}
+				
+				if ( tag == Tag.EndOfText )
+				{
+					break;
+				}
 			}
 
 			return italic;
@@ -2783,12 +2810,12 @@ namespace Epsitec.Common.Widgets
 			{
 				beginOffset = endOffset;
 				
-				Tag      tag      = TextLayout.ParseTag(this.text, ref endOffset, out parameters);
-				FontItem fontItem = fontStack.Peek() as FontItem;
+				Tag tag = TextLayout.ParseTag(this.text, ref endOffset, out parameters);
 				
 				if ( tag == Tag.EndOfText )  break;
 				
 				bool processedTag = this.ProcessFormatTags(tag, fontStack, supplItem, parameters);
+				FontItem fontItem = fontStack.Peek() as FontItem;
 				
 				if ( tag != Tag.None || beginOffset == 0 )
 				{

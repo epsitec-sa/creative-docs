@@ -702,7 +702,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event Support.EventHandler			SelectedIndexChanged;
+		public event Support.EventHandler		SelectedIndexChanged;
 		#endregion
 		
 		public event Support.CancelEventHandler	OpeningCombo;

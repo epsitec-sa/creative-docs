@@ -430,6 +430,22 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public bool GetCursorPosition(out Drawing.Point p1, out Drawing.Point p2)
+		{
+			Drawing.Point pos = this.InnerTextBounds.Location - this.scrollOffset + new Drawing.Point(0, 1);
+			
+			if ( this.TextLayout.FindTextCursor(this.navigator.Context, out p1, out p2) )
+			{
+				p1 += pos;
+				p2 += pos;
+				
+				return true;
+			}
+			
+			return false;
+		}
+		
+		
 		public bool								SelectionBold
 		{
 			// Attribut typographique "gras" des caractères sélectionnés.
@@ -472,6 +488,15 @@ namespace Epsitec.Common.Widgets
 			{
 				this.TextLayout.SetSelectionUnderlined(this.navigator.Context, value);
 				this.OnTextChanged();
+			}
+		}
+
+		public bool								SelectionWaved
+		{
+			// Attribut typographique "ondulé" des caractères sélectionnés.
+			get
+			{
+				return this.TextLayout.IsSelectionWaved(this.navigator.Context);
 			}
 		}
 
