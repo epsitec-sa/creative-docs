@@ -239,7 +239,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			VMenu menu = this.Styles.CreateMenu(this.type, this.styleID);
 			menu.Host = this;
 			pos.X -= menu.Width;
-			menu.ShowContextMenu(this.Window, pos);
+			menu.ShowAsContextMenu(this.Window, pos);
 		}
 
 		// Génère un événement pour dire que la hauteur a changé.

@@ -566,7 +566,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			VMenu menu = this.panelPages.CreateMenu();
 			menu.Host = this;
 			pos.Y += menu.Height;
-			menu.ShowContextMenu(this.Window, pos);
+			menu.ShowAsContextMenu(this.Window, pos);
 		}
 
 		[Command ("SelectPage")]
@@ -602,7 +602,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			VMenu menu = this.panelLayers.CreateMenu();
 			menu.Host = this;
 			pos.X -= menu.Width;
-			menu.ShowContextMenu(this.Window, pos);
+			menu.ShowAsContextMenu(this.Window, pos);
 		}
 
 		[Command ("SelectLayer")]

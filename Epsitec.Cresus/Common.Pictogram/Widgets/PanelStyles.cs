@@ -531,7 +531,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.contextMenu.Items.Add(item);
 			}
 			this.contextMenu.AdjustSize();
-			this.contextMenu.ShowContextMenu(this.Window, pos);
+			this.contextMenu.ShowAsContextMenu(this.Window, pos);
 		}
 
 		// Crée un nouveau style.

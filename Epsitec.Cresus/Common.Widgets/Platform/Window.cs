@@ -1144,7 +1144,17 @@ namespace Epsitec.Common.Widgets.Platform
 				}
 				
 				Widgets.Window  w_window = Message.State.LastWindow;
-				Platform.Window p_window = (w_window == null) ? this : w_window.PlatformWindow;
+				Platform.Window p_window = (w_window != null) ? w_window.PlatformWindow : null;
+				
+				if (p_window == null)
+				{
+					p_window = this;
+				}
+				
+				if (p_window.IsDisposed)
+				{
+					return true;
+				}
 				
 				p_window.DispatchMessage (message);
 				

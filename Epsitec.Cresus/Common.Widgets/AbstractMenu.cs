@@ -1,5 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
+	using CommandDispatcher = Support.CommandDispatcher;
+	
 	public enum MenuType
 	{
 		Invalid,
@@ -42,17 +44,143 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		
-		public bool IsHorizontal
+		public bool								IsHorizontal
 		{
 			get { return this.type == MenuType.Horizontal; }
 		}
 
-		public bool IsVertical
+		public bool								IsVertical
 		{
 			get { return this.type == MenuType.Vertical; }
 		}
 
+		
+		public Support.ICommandDispatcherHost	Host
+		{
+			get { return this.host; }
+			set { this.host = value; }
+		}
+		
+		public override CommandDispatcher		CommandDispatcher
+		{
+			get
+			{
+				Support.ICommandDispatcherHost host = this.GetHost ();
+				
+				if (host != null)
+				{
+					return host.CommandDispatcher;
+				}
+				
+				return base.CommandDispatcher;
+			}
+		}
+		
+		public override double					DefaultHeight
+		{
+			get
+			{
+				return this.DefaultFontHeight + 6 + this.margin*2;
+			}
+		}
+
+		public Drawing.Rectangle				ParentRect
+		{
+			get
+			{
+				return this.parentRect;
+			}
+
+			set
+			{
+				this.parentRect = value;
+			}
+		}
+
+		public Drawing.Size						RequiredSize
+		{
+			// Donne les dimensions nécessaires pour tout le menu vertical.
+			get
+			{
+				double maxWidth = 0;
+				foreach ( MenuItem cell in this.items )
+				{
+					maxWidth = System.Math.Max(maxWidth, cell.IconWidth);
+				}
+				this.iconWidth = maxWidth;
+
+				Drawing.Size size = new Drawing.Size(0, 0);
+				foreach ( MenuItem cell in this.items )
+				{
+					cell.IconWidth = maxWidth;
+					Drawing.Size rs = cell.RequiredSize;
+					size.Width = System.Math.Max(size.Width, rs.Width);
+					size.Height += rs.Height;
+				}
+				size.Width  += this.shadow.Width  + this.margins.Width;
+				size.Height += this.shadow.Height + this.margins.Height;
+				return size;
+			}
+		}
+
+		
+		public MenuItemCollection				Items
+		{
+			get
+			{
+				return this.items;
+			}
+		}
+
+		public int								SelectedIndex
+		{
+			get
+			{
+				// Retourne la case sélectionnée dans un menu.
+				for (int i = 0; i < this.items.Count; i++)
+				{
+					if (this.items[i].ItemType != MenuItemType.Deselect)
+					{
+						return i;
+					}
+				}
+				return -1;
+			}
+			set
+			{
+				// Sélectionne une (et une seule) case dans un menu.
+				for (int i = 0; i < this.items.Count; i++)
+				{
+					if (i == value)
+					{
+						this.items[i].ItemType = this.isActive ? MenuItemType.Select : MenuItemType.Parent;
+					}
+					else
+					{
+						this.items[i].ItemType = MenuItemType.Deselect;
+					}
+				}
+			}
+		}
+		
+		
+		public static bool						IsMenuDeveloped
+		{
+			get { return AbstractMenu.menuDeveloped; }
+		}
+		
+		
+		#region Serialization support
+		protected override bool ShouldSerializeLocation()
+		{
+			return false;
+		}
+		
+		protected override bool ShouldSerializeSize()
+		{
+			return false;
+		}
+		#endregion
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -81,104 +209,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public Support.ICommandDispatcherHost Host
-		{
-			get { return this.host; }
-			set { this.host = value; }
-		}
-		
-		public static bool IsMenuDeveloped
-		{
-			get { return AbstractMenu.menuDeveloped; }
-		}
-		
-		
-		protected Support.ICommandDispatcherHost GetHost()
-		{
-			if (this.host != null)
-			{
-				return this.host;
-			}
-			if (this.parentMenu != null)
-			{
-				this.parentMenu.GetHost ();
-			}
-			if (this.Window != null)
-			{
-				return this.Window;
-			}
-			
-			return null;
-		}
-		
-		public override Support.CommandDispatcher CommandDispatcher
-		{
-			get
-			{
-				Support.ICommandDispatcherHost host = this.GetHost ();
-				
-				if (host != null)
-				{
-					return host.CommandDispatcher;
-				}
-				
-				return base.CommandDispatcher;
-			}
-		}
-		
-		// Retourne la hauteur standard d'un menu.
-		public override double DefaultHeight
-		{
-			get
-			{
-				return this.DefaultFontHeight + 6 + this.margin*2;
-			}
-		}
-
-		// Rectangle parent.
-		public Drawing.Rectangle ParentRect
-		{
-			get
-			{
-				return this.parentRect;
-			}
-
-			set
-			{
-				this.parentRect = value;
-			}
-		}
-
-		// Ajoute une case.
-		protected int InsertItem(string iconName, string mainText, string shortKey)
-		{
-			string   name = this.items.Count.ToString ();
-			MenuItem item = new MenuItem(name, iconName, mainText, shortKey);
-			return this.items.Add(item);
-		}
-
-		
-		public MenuItemCollection Items
-		{
-			get
-			{
-				return this.items;
-			}
-		}
-
-
-		#region Serialization support
-		protected override bool ShouldSerializeLocation()
-		{
-			return false;
-		}
-		
-		protected override bool ShouldSerializeSize()
-		{
-			return false;
-		}
-		#endregion
-		
 		
 		// Ajuste les dimensions du menu selon son contenu.
 		// Il faut appeler AdjustSize après avoir fini tous les InsertItem.
@@ -194,30 +224,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Donne les dimensions nécessaires pour tout le menu vertical.
-		protected Drawing.Size RequiredSize
-		{
-			get
-			{
-				double maxWidth = 0;
-				foreach ( MenuItem cell in this.items )
-				{
-					maxWidth = System.Math.Max(maxWidth, cell.IconWidth);
-				}
-				this.iconWidth = maxWidth;
 
-				Drawing.Size size = new Drawing.Size(0, 0);
-				foreach ( MenuItem cell in this.items )
-				{
-					cell.IconWidth = maxWidth;
-					Drawing.Size rs = cell.RequiredSize;
-					size.Width = System.Math.Max(size.Width, rs.Width);
-					size.Height += rs.Height;
-				}
-				size.Width  += this.shadow.Width  + this.margins.Width;
-				size.Height += this.shadow.Height + this.margins.Height;
-				return size;
-			}
+		// Ajoute une case.
+		protected int InsertItem(string iconName, string mainText, string shortKey)
+		{
+			string   name = this.items.Count.ToString ();
+			MenuItem item = new MenuItem(name, iconName, mainText, shortKey);
+			return this.items.Add(item);
 		}
 
 		// Met à jour si nécessaire.
@@ -278,6 +291,24 @@ namespace Epsitec.Common.Widgets
 			base.OnAdornerChanged();
 		}
 
+		protected Support.ICommandDispatcherHost GetHost()
+		{
+			if (this.host != null)
+			{
+				return this.host;
+			}
+			if (this.parentMenu != null)
+			{
+				this.parentMenu.GetHost ();
+			}
+			if (this.Window != null)
+			{
+				return this.Window;
+			}
+			
+			return null;
+		}
+		
 
 		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
@@ -372,13 +403,18 @@ namespace Epsitec.Common.Widgets
 					
 					if ( feel.TestSelectItemKey (message) )
 					{
-						this.ValidateAndExecuteCommand();
+						int sel = this.SelectedIndex;
+						
+						if ( this.items[sel].Submenu == null && !this.items[sel].Separator )
+						{
+							AbstractMenu.ValidateAndExecuteCommand();
+						}
 						break;
 					}
 					
 					if ( feel.TestCancelKey (message) )
 					{
-						this.CloseAll();
+						AbstractMenu.CloseAll();
 						break;
 					}
 					
@@ -433,42 +469,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public int SelectedIndex
-		{
-			get
-			{
-				// Retourne la case sélectionnée dans un menu.
-				for (int i = 0; i < this.items.Count; i++)
-				{
-					if (this.items[i].ItemType != MenuItemType.Deselect)
-					{
-						return i;
-					}
-				}
-				return -1;
-			}
-			set
-			{
-				// Sélectionne une (et une seule) case dans un menu.
-				for (int i = 0; i < this.items.Count; i++)
-				{
-					if (i == value)
-					{
-						this.items[i].ItemType = this.isActive ? MenuItemType.Select : MenuItemType.Parent;
-					}
-					else
-					{
-						this.items[i].ItemType = MenuItemType.Deselect;
-					}
-				}
-			}
-		}
-		
-		protected void ValidateAndExecuteCommand()
+		protected static void ValidateAndExecuteCommand()
 		{
 			AbstractMenu menu = AbstractMenu.menuLastLeaf;
 			
-			if ( menu == null )  menu = this;
+			if ( menu == null )  menu = AbstractMenu.RootMenu;
 			
 			if ( menu.SelectedIndex >= 0 )
 			{
@@ -480,29 +485,36 @@ namespace Epsitec.Common.Widgets
 				item.ExecuteCommand ();
 			}
 			
-			this.CloseAll();
+			AbstractMenu.CloseAll();
+		}
+		
+		protected static AbstractMenu			RootMenu
+		{
+			get
+			{
+				AbstractMenu root = AbstractMenu.menuRoot;
+				
+				while ( root.parentMenu != null )
+				{
+					root = root.parentMenu;
+				}
+				
+				return root;
+			}
 		}
 
 		// Ferme complètement le menu et tous les sous-menus.
-		protected void CloseAll()
+		protected static void CloseAll()
 		{
-			AbstractMenu root = this;
-			while ( root.parentMenu != null )  root = root.parentMenu;
-
+			AbstractMenu root = AbstractMenu.RootMenu;
+			
 			root.CloseSubmenu();
 			root.SelectedIndex = -1;
 			
 			// Il faut dés-enregistrer la même instance que celle qui avait été enregistrée
 			// au départ, sinon on se retrouve avec un filtre qui traîne...
 			
-			if (AbstractMenu.menuFiltering != null)
-			{
-				Window.MessageFilter -= new MessageHandler(AbstractMenu.menuFiltering.MessageFilter);
-				AbstractMenu.menuContextOpen = false;
-				AbstractMenu.menuDeveloped = false;
-				AbstractMenu.menuFiltering = null;
-				AbstractMenu.menuLastLeaf  = null;
-			}
+			AbstractMenu.UnregisterFilter ();
 		}
 
 		// Affiche un menu contextuel dont on spécifie le coin sup/gauche.
@@ -534,12 +546,8 @@ namespace Epsitec.Common.Widgets
 			}
 			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.Width, this.Height);
-			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
 			
-			Window.MessageFilter += new MessageHandler(this.MessageFilter);
-			AbstractMenu.menuContextOpen = true;
-			AbstractMenu.menuDeveloped = true;
-			AbstractMenu.menuFiltering = this;
+			AbstractMenu.RegisterFilter(this);
 
 			this.window.Root.Children.Add(this);
 			this.window.AnimateShow(Animation.FadeIn);
@@ -622,18 +630,15 @@ namespace Epsitec.Common.Widgets
 			}
 			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
-			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
 			
 			this.submenu.Parent = this.window.Root;
-			
+			AbstractMenu.RegisterFilter(this.submenu);
+			 
 			Animation anim = Animation.None;
 			if ( this.IsVertical || !closed )  anim = Animation.FadeIn;
 			if ( forceQuick )  anim = Animation.None;
 			this.window.AnimateShow(anim);
 			this.submenu.SetFocused(true);
-			
-			// Prend note du dernier menu "feuille" actif.
-			AbstractMenu.menuLastLeaf = this.submenu;
 			
 			return true;
 		}
@@ -647,14 +652,18 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.submenu != null )
 			{
+				if (AbstractMenu.menuRoot == this.submenu)
+				{
+					AbstractMenu.menuRoot = null;
+				}
+				
 				this.submenu.isActive = false;
-				this.submenu.CloseSubmenu();  // ferme les sous-menus (reccursif)
+				this.submenu.CloseSubmenu();  // ferme les sous-menus (recursif)
 				this.submenu.SelectedIndex = -1;
 				this.submenu.parentMenu = null;
 				this.submenu.parentItem = null;
 			}
 			
-			Window.ApplicationDeactivated -= new Support.EventHandler(this.HandleApplicationDeactivated);
 			this.window.Root.Children.Clear();
 			this.submenu = null;
 			
@@ -679,27 +688,27 @@ namespace Epsitec.Common.Widgets
 
 
 		// Cherche dans quel menu ou sous-menu est la souris.
-		protected AbstractMenu DetectMenu(Drawing.Point mouse)
+		protected static AbstractMenu DetectMenu(Drawing.Point mouse)
 		{
+			AbstractMenu menu = AbstractMenu.RootMenu;
 			Drawing.Point pos;
-			pos = this.MapScreenToParent(mouse);
-			if ( this.HitTest(pos) )  return this;
+			pos = menu.MapScreenToParent(mouse);
+			if ( menu.HitTest(pos) )  return menu;
 
-			AbstractMenu sub = this;
 			while ( true )
 			{
-				sub = sub.submenu;
-				if ( sub == null )  break;
+				menu = menu.submenu;
+				if ( menu == null )  break;
 
-				pos = sub.MapScreenToParent(mouse);
-				if ( sub.HitTest(pos) )  return sub;
+				pos = menu.MapScreenToParent(mouse);
+				if ( menu.HitTest(pos) )  return menu;
 			}
 
 			return null;
 		}
 
 		// Cherche dans quel item d'un menu est la souris.
-		protected MenuItem SearchItem(Drawing.Point mouse, AbstractMenu menu)
+		protected static MenuItem SearchItem(Drawing.Point mouse, AbstractMenu menu)
 		{
 			foreach ( MenuItem cell in menu.items )
 			{
@@ -718,7 +727,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.parentMenu == null )
 				{
-					this.ValidateAndExecuteCommand();
+					AbstractMenu.ValidateAndExecuteCommand();
 				}
 				else
 				{
@@ -728,13 +737,6 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				if (AbstractMenu.menuDeveloped == false)
-				{
-					Window.MessageFilter += new MessageHandler(this.MessageFilter);
-					AbstractMenu.menuDeveloped = true;
-					AbstractMenu.menuFiltering = this;
-				}
-				
 				MenuItem item = sender as MenuItem;
 				
 				this.parentMenu = null;
@@ -744,7 +746,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void MessageFilter(object sender, Message message)
+		private static void MessageFilter(object sender, Message message)
 		{
 			if (!AbstractMenu.menuDeveloped)
 			{
@@ -760,10 +762,10 @@ namespace Epsitec.Common.Widgets
 			{
 				case MessageType.MouseDown:
 					mouse = window.MapWindowToScreen(message.Cursor);
-					menu = this.DetectMenu(mouse);
+					menu = AbstractMenu.DetectMenu(mouse);
 					if ( menu == null )
 					{
-						this.CloseAll();
+						AbstractMenu.CloseAll();
 						
 						// On n'indique qu'un message est consommé que s'il concerne
 						// la partie client de la fenêtre...						
@@ -774,10 +776,10 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						MenuItem cell = this.SearchItem(mouse, menu);
+						MenuItem cell = AbstractMenu.SearchItem(mouse, menu);
 						if ( cell == null )
 						{
-							this.CloseAll();
+							AbstractMenu.CloseAll();
 							message.Swallowed = true;
 						}
 					}
@@ -785,15 +787,15 @@ namespace Epsitec.Common.Widgets
 
 				case MessageType.MouseUp:
 					mouse = window.MapWindowToScreen(message.Cursor);
-					menu = this.DetectMenu(mouse);
+					menu = AbstractMenu.DetectMenu(mouse);
 					if ( menu != null )
 					{
-						MenuItem cell = this.SearchItem(mouse, menu);
+						MenuItem cell = AbstractMenu.SearchItem(mouse, menu);
 						if ( cell != null )
 						{
 							if ( cell.Submenu == null && !cell.Separator )
 							{
-								this.ValidateAndExecuteCommand();
+								AbstractMenu.ValidateAndExecuteCommand();
 								message.Swallowed = true;
 							}
 						}
@@ -803,7 +805,7 @@ namespace Epsitec.Common.Widgets
 				case MessageType.MouseEnter:
 				case MessageType.MouseMove:
 					mouse = window.MapWindowToScreen(message.Cursor);
-					menu = this.DetectMenu(mouse);
+					menu = AbstractMenu.DetectMenu(mouse);
 					if ( menu == null )
 					{
 						message.Swallowed = true;
@@ -872,9 +874,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		private void HandleApplicationDeactivated(object sender)
+		private static void HandleApplicationDeactivated(object sender)
 		{
-			this.CloseAll();
+			AbstractMenu.CloseAll();
 		}
 
 		private void HandleTimerTimeElapsed(object sender)
@@ -898,8 +900,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
-		// Dessine le menu.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			System.Diagnostics.Debug.Assert (this.GetHost () != null, "No Host defined for menu.",
@@ -924,6 +924,35 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
+		private static void RegisterFilter(AbstractMenu root)
+		{
+			if (AbstractMenu.menuDeveloped == false)
+			{
+				Window.ApplicationDeactivated += new Support.EventHandler(AbstractMenu.HandleApplicationDeactivated);
+				Window.MessageFilter += new MessageHandler(AbstractMenu.MessageFilter);
+				AbstractMenu.menuDeveloped = true;
+				AbstractMenu.menuRoot      = root;
+				AbstractMenu.menuLastLeaf  = root;
+			}
+			else if (AbstractMenu.menuRoot == null)
+			{
+				AbstractMenu.menuRoot = root;
+			}
+		}
+		
+		private static void UnregisterFilter()
+		{
+			if (AbstractMenu.menuDeveloped)
+			{
+				Window.ApplicationDeactivated -= new Support.EventHandler(AbstractMenu.HandleApplicationDeactivated);
+				Window.MessageFilter -= new MessageHandler(AbstractMenu.MessageFilter);
+				AbstractMenu.menuDeveloped = false;
+				AbstractMenu.menuLastLeaf  = null;
+				AbstractMenu.menuRoot      = null;
+			}
+		}
+		
 		#region IWidgetCollectionHost Members
 		Helpers.WidgetCollection Helpers.IWidgetCollectionHost.GetWidgetCollection()
 		{
@@ -963,7 +992,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		
 		#region MenuItemCollection Class
 		public class MenuItemCollection : Helpers.WidgetCollection
 		{
@@ -992,8 +1020,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected MenuType							type;
 		protected bool								isDirty;
-		protected bool								isActive = true;  // dernier menu (feuille)
-		protected double							margin = 2;  // pour menu horizontal
+		protected bool								isActive = true;	// dernier menu (feuille)
+		protected double							margin = 2;			// pour menu horizontal
 		protected Drawing.Margins					margins = new Drawing.Margins(2,2,2,2);
 		protected Drawing.Margins					shadow  = new Drawing.Margins(0,0,0,0);
 		protected MenuItemCollection				items;
@@ -1007,9 +1035,8 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Rectangle					parentRect;
 		protected MenuItem							delayedMenuItem;
 		
-		protected static bool						menuDeveloped;
-		protected static bool						menuContextOpen;
-		protected static AbstractMenu				menuFiltering;
-		protected static AbstractMenu				menuLastLeaf;
+		private static bool							menuDeveloped;
+		private static AbstractMenu					menuLastLeaf;
+		private static AbstractMenu					menuRoot;
 	}
 }

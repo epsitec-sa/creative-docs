@@ -121,15 +121,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override bool ProcessKeyDown(Message message, Drawing.Point pos)
 		{
-			if ( this.IsReadOnly )
-			{
-				if ( message.KeyCode == KeyCode.ArrowUp || message.KeyCode == KeyCode.ArrowDown )
-				{
-					this.OpenCombo();
-					return true;
-				}
-			}
-			else
+			if ( this.OpenComboAfterKeyDown(message) == false )
 			{
 				switch ( message.KeyCode )
 				{
@@ -139,14 +131,30 @@ namespace Epsitec.Common.Widgets
 					default:
 						return base.ProcessKeyDown(message, pos);
 				}
-				return true;
+			}
+			
+			return true;
+		}
+		
+		protected virtual bool OpenComboAfterKeyDown(Message message)
+		{
+			if ( this.IsReadOnly )
+			{
+				IFeel feel = Feel.Factory.Active;
+				
+				if ( feel.TestComboOpenKey(message) )
+				{
+					this.OpenCombo();
+					return true;
+				}
 			}
 			
 			return false;
 		}
 		
+
 		
-		protected void Navigate(int dir)
+		protected virtual void Navigate(int dir)
 		{
 			if ( this.items.Count == 0 )
 			{
@@ -206,12 +214,17 @@ namespace Epsitec.Common.Widgets
 					
 					if ( feel.TestCancelKey(message) )
 					{
-						this.CloseCombo();
+						this.CloseCombo(false);
+						message.Swallowed = true;
+					}
+					if ( feel.TestAcceptKey(message) )
+					{
+						this.CloseCombo(true);
 						message.Swallowed = true;
 					}
 					if ( feel.TestNavigationKey(message) )
 					{
-						this.CloseCombo();
+						this.CloseCombo(true);
 						Message.DefineLastWindow (this.Window);
 					}
 					break;
@@ -221,7 +234,7 @@ namespace Epsitec.Common.Widgets
 					Drawing.Point pos = this.scrollList.MapScreenToClient(mouse);
 					if ( !this.scrollList.HitTest(pos) )
 					{
-						this.CloseCombo();
+						this.CloseCombo(false);
 						message.Swallowed = ! message.NonClient;
 					}
 					break;
@@ -306,7 +319,7 @@ namespace Epsitec.Common.Widgets
 			this.openText = this.Text;
 		}
 		
-		protected virtual void CloseCombo()
+		protected virtual void CloseCombo(bool accept)
 		{
 			this.scrollList.SelectionActivated -= new Support.EventHandler(this.HandleScrollListSelectionActivated);
 			this.scrollList.SelectedIndexChanged -= new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
@@ -327,6 +340,11 @@ namespace Epsitec.Common.Widgets
 			this.SelectAll();
 			this.SetFocused(true);
 			
+			if ( !accept )
+			{
+				this.Text = this.openText;
+			}
+			
 			if ( this.openText != this.Text )
 			{
 				this.OnSelectedIndexChanged();
@@ -345,7 +363,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleApplicationDeactivated(object sender)
 		{
-			this.CloseCombo();
+			this.CloseCombo(false);
 		}
 
 		
@@ -381,7 +399,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.SelectedIndex = sel;
 			this.SetFocused(true);
-			this.CloseCombo();
+			this.CloseCombo(true);
 		}
 		
 		protected virtual void ComboSelectedIndex(int sel)

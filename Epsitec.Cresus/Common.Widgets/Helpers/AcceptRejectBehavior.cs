@@ -9,7 +9,6 @@ namespace Epsitec.Common.Widgets.Helpers
 		public AcceptRejectBehavior(Widget host)
 		{
 			this.host = host;
-			this.CreateButtons ();
 		}
 		
 		
@@ -45,6 +44,14 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 		
+		public bool								IsAcceptEnabled
+		{
+			get
+			{
+				return this.is_accept_enabled;
+			}
+		}
+		
 		public string							InitialText
 		{
 			get
@@ -62,13 +69,21 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			this.is_visible = visible;
 			
-			this.button_accept.SetVisible (visible);
-			this.button_reject.SetVisible (visible);
+			if (this.button_accept != null)
+			{
+				this.button_accept.SetVisible (this.is_visible);
+				this.button_reject.SetVisible (this.is_visible);
+			}
 		}
 		
-		public void SetEnabledOk(bool enable_accept)
+		public void SetAcceptEnabled(bool enable_accept)
 		{
-			this.button_accept.SetEnabled (enable_accept);
+			this.is_accept_enabled = enable_accept;
+			
+			if (this.button_accept != null)
+			{
+				this.button_accept.SetEnabled (this.is_accept_enabled);
+			}
 		}
 		
 		
@@ -76,7 +91,8 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			AbstractTextField text = this.host as AbstractTextField;
 			
-			if (text != null)
+			if ((text != null) &&
+				(this.button_accept != null))
 			{
 				Drawing.Rectangle bounds = text.GetButtonBounds ();
 				Drawing.Rectangle rect_1 = bounds;
@@ -91,8 +107,11 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		
 		
-		protected void CreateButtons()
+		public void CreateButtons()
 		{
+			System.Diagnostics.Debug.Assert (this.button_accept == null);
+			System.Diagnostics.Debug.Assert (this.button_reject == null);
+			
 			this.button_accept = new GlyphButton(this.host);
 			this.button_reject = new GlyphButton(this.host);
 			
@@ -101,7 +120,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.button_accept.Name        = "Accept";
 			this.button_accept.GlyphShape  = GlyphShape.Validate;
 			this.button_accept.ButtonStyle = ButtonStyle.ExListMiddle;
-			this.button_accept.Clicked    += new MessageEventHandler(this.HandleButtonOkClicked);
+			this.button_accept.Clicked    += new MessageEventHandler(this.HandleButtonAcceptClicked);
 			this.button_accept.Shortcut    = feel.AcceptShortcut;
 			
 			this.button_reject.Name        = "Reject";
@@ -109,10 +128,13 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.button_reject.ButtonStyle = ButtonStyle.ExListRight;
 			this.button_reject.Clicked    += new MessageEventHandler(this.HandleButtonRejectClicked);
 			this.button_reject.Shortcut    = feel.CancelShortcut;
+			
+			this.SetVisible (this.is_visible);
+			this.SetAcceptEnabled (this.is_accept_enabled);
 		}
 		
 		
-		private void HandleButtonOkClicked(object sender, MessageEventArgs e)
+		private void HandleButtonAcceptClicked(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.Assert (sender == this.button_accept);
 			this.OnAcceptClicked ();
@@ -152,6 +174,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		protected GlyphButton					button_reject;
 		
 		protected bool							is_visible;
+		protected bool							is_accept_enabled = true;
 		protected string						initial_text;
 	}
 }

@@ -399,7 +399,7 @@ namespace Epsitec.Common.Designer.Widgets
 						
 						menu.Host = this;
 						menu.AdjustSize ();
-						menu.ShowContextMenu (this.Window, spos);
+						menu.ShowAsContextMenu (this.Window, spos);
 					}
 					
 					this.hot_widget = null;

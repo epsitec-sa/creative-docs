@@ -20,6 +20,7 @@ namespace Epsitec.Common.Widgets
 		public TextFieldExList()
 		{
 			this.accept_reject_behavior = new Helpers.AcceptRejectBehavior (this);
+			this.accept_reject_behavior.CreateButtons ();
 			
 			this.accept_reject_behavior.RejectClicked += new Support.EventHandler(this.HandleRejectClicked);
 			this.accept_reject_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptClicked);
@@ -141,6 +142,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		protected override bool ProcessMouseDown(Message message, Epsitec.Common.Drawing.Point pos)
 		{
 			this.SwitchToActiveEdition ();
@@ -149,7 +151,17 @@ namespace Epsitec.Common.Widgets
 		
 		protected override bool ProcessKeyDown(Message message, Epsitec.Common.Drawing.Point pos)
 		{
+			if ((this.mode == TextFieldExListMode.EditPassive) &&
+				(Feel.Factory.Active.TestComboOpenKey (message)))
+			{
+				//	L'utilisateur aimerait plutôt ouvrir la list déroulante que de commencer
+				//	l'édition du champ en cours :
+				
+				return base.ProcessKeyDown (message, pos);
+			}
+			
 			this.SwitchToActiveEdition ();
+			
 			return base.ProcessKeyDown (message, pos);
 		}
 
@@ -203,9 +215,7 @@ namespace Epsitec.Common.Widgets
 			if ((this.HasPlaceHolder) &&
 				(sel == 0))
 			{
-				this.StartPassiveEdition (this.PlaceHolder);
-				this.Focus ();
-				this.CloseCombo ();
+				this.CloseCombo (true);
 			}
 			else
 			{
@@ -224,16 +234,16 @@ namespace Epsitec.Common.Widgets
 			base.UpdateButtonGeometry ();
 		}
 
-		protected virtual void  UpdateButtonEnable()
+		protected virtual  void UpdateButtonEnable()
 		{
 			if ((this.accept_reject_behavior != null) &&
 				(this.mode == TextFieldExListMode.EditActive))
 			{
-				this.accept_reject_behavior.SetEnabledOk (this.IsValid);
+				this.accept_reject_behavior.SetAcceptEnabled (this.IsValid);
 			}
 		}
 		
-		protected virtual void UpdateButtonVisibility()
+		protected virtual  void UpdateButtonVisibility()
 		{
 			if (this.mode == TextFieldExListMode.EditActive)
 			{
@@ -248,7 +258,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void SwitchToState(TextFieldExListMode mode)
+		protected virtual  void SwitchToState(TextFieldExListMode mode)
 		{
 			if (this.mode != mode)
 			{
@@ -283,7 +293,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void OnEditionStarted()
+		protected virtual  void OnEditionStarted()
 		{
 			if (this.EditionStarted != null)
 			{
@@ -291,7 +301,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnEditionAccepted()
+		protected virtual  void OnEditionAccepted()
 		{
 			if (this.EditionAccepted != null)
 			{
@@ -299,7 +309,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnEditionRejected()
+		protected virtual  void OnEditionRejected()
 		{
 			if (this.EditionRejected != null)
 			{
@@ -326,14 +336,47 @@ namespace Epsitec.Common.Widgets
 			base.OpenCombo ();
 		}
 		
-		protected override void CloseCombo()
+		protected override void CloseCombo(bool accept)
 		{
-			base.CloseCombo ();
+			if ((this.HasPlaceHolder) &&
+				(accept) &&
+				(this.scrollList.SelectedIndex == 0))
+			{
+				this.StartPassiveEdition (this.PlaceHolder);
+				this.Focus ();
+			}
+			
+			base.CloseCombo (accept);
 			
 			if ((this.HasPlaceHolder) &&
 				(this.Text == this.PlaceHolder))
 			{
 				this.SwitchToState (TextFieldExListMode.EditPassive);
+			}
+		}
+
+		protected override bool OpenComboAfterKeyDown(Message message)
+		{
+			if (this.mode == TextFieldExListMode.Combo)
+			{
+				return base.OpenComboAfterKeyDown (message);
+			}
+			
+			if ((this.mode == TextFieldExListMode.EditPassive) &&
+                (Feel.Factory.Active.TestComboOpenKey (message)))
+			{
+				this.OpenCombo();
+				return true;
+			}
+			
+			return false;
+		}
+
+		protected override void Navigate(int dir)
+		{
+			if (this.mode != TextFieldExListMode.EditActive)
+			{
+				base.Navigate (dir);
 			}
 		}
 

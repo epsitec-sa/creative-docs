@@ -36,6 +36,7 @@ namespace Epsitec.Common.Widgets
 		public TextFieldEx()
 		{
 			this.accept_reject_behavior = new Helpers.AcceptRejectBehavior (this);
+			this.accept_reject_behavior.CreateButtons ();
 			
 			this.accept_reject_behavior.RejectClicked += new Support.EventHandler(this.HandleAcceptRejectRejectClicked);
 			this.accept_reject_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptRejectAcceptClicked);
@@ -253,7 +254,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.accept_reject_behavior != null)
 			{
-				this.accept_reject_behavior.SetEnabledOk (this.IsValid);
+				this.accept_reject_behavior.SetAcceptEnabled (this.IsValid);
 			}
 		}
 		
