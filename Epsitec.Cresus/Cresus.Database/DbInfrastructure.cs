@@ -89,13 +89,13 @@ namespace Epsitec.Cresus.Database
 				this.internal_tables.Add (this.ResolveDbTable (transaction, DbTable.TagRefDef));
 				this.internal_tables.Add (this.ResolveDbTable (transaction, DbTable.TagEnumValDef));
 			
-				this.internal_types.Add (this.ResolveDbType (transaction, "CR.KeyId"));
-				this.internal_types.Add (this.ResolveDbType (transaction, "CR.KeyRevision"));
-				this.internal_types.Add (this.ResolveDbType (transaction, "CR.KeyStatus"));
-				this.internal_types.Add (this.ResolveDbType (transaction, "CR.Name"));
-				this.internal_types.Add (this.ResolveDbType (transaction, "CR.Caption"));
-				this.internal_types.Add (this.ResolveDbType (transaction, "CR.Description"));
-				this.internal_types.Add (this.ResolveDbType (transaction, "CR.InfoXml"));
+				this.internal_types.Add (this.ResolveDbType (transaction, DbType.TagKeyId));
+				this.internal_types.Add (this.ResolveDbType (transaction, DbType.TagKeyRevision));
+				this.internal_types.Add (this.ResolveDbType (transaction, DbType.TagKeyStatus));
+				this.internal_types.Add (this.ResolveDbType (transaction, DbType.TagName));
+				this.internal_types.Add (this.ResolveDbType (transaction, DbType.TagCaption));
+				this.internal_types.Add (this.ResolveDbType (transaction, DbType.TagDescription));
+				this.internal_types.Add (this.ResolveDbType (transaction, DbType.TagInfoXml));
 				
 				transaction.Commit ();
 			}
@@ -296,17 +296,27 @@ namespace Epsitec.Cresus.Database
 			//	Crée la ou les colonnes nécessaires à la définition d'une référence à
 			//	une autre table.
 			
+			DbType type_id;
+			DbType type_rev;
+			
 			switch (match_mode)
 			{
 				case DbKeyMatchMode.SimpleId:
-					return new DbColumn[] { DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefSimpleId) };
+					type_id = this.internal_types[DbType.TagKeyId];
+					
+					return new DbColumn[] { DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefSimpleId, type_id) };
 				
 				case DbKeyMatchMode.LiveId:
-					return new DbColumn[] { DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefLiveId) };
+					type_id = this.internal_types[DbType.TagKeyId];
+					
+					return new DbColumn[] { DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefLiveId, type_id) };
 				
 				case DbKeyMatchMode.ExactIdRevision:
-					return new DbColumn[] { DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefTupleId),
-											DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefTupleRevision) };
+					type_id  = this.internal_types[DbType.TagKeyId];
+					type_rev = this.internal_types[DbType.TagKeyRevision];
+					
+					return new DbColumn[] { DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefTupleId, type_id),
+											DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefTupleRevision, type_rev) };
 			}
 			
 			return null;
@@ -458,11 +468,11 @@ namespace Epsitec.Cresus.Database
 		{
 			DbTable table = new DbTable (name);
 			
-			DbType type = this.internal_types["CR.KeyId"];
+			DbType type = this.internal_types[DbType.TagKeyId];
 			
-			DbColumn col_id   = new DbColumn (DbColumn.TagId,       this.internal_types["CR.KeyId"]);
-			DbColumn col_rev  = new DbColumn (DbColumn.TagRevision, this.internal_types["CR.KeyRevision"]);
-			DbColumn col_stat = new DbColumn (DbColumn.TagStatus,   this.internal_types["CR.KeyStatus"]);
+			DbColumn col_id   = new DbColumn (DbColumn.TagId,       this.internal_types[DbType.TagKeyId]);
+			DbColumn col_rev  = new DbColumn (DbColumn.TagRevision, this.internal_types[DbType.TagKeyRevision]);
+			DbColumn col_stat = new DbColumn (DbColumn.TagStatus,   this.internal_types[DbType.TagKeyStatus]);
 			
 			col_id.DefineCategory (DbElementCat.Internal);
 			col_id.DefineColumnClass (DbColumnClass.KeyId);
@@ -1646,9 +1656,9 @@ namespace Epsitec.Cresus.Database
 		{
 			//	Faut-il plutôt utiliser Int64 pour l'ID ???
 			
-			this.num_type_id       = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int32), Tags.Name + "=CR.KeyId");
-			this.num_type_revision = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int32), Tags.Name + "=CR.KeyRevision");
-			this.num_type_status   = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int32), Tags.Name + "=CR.KeyStatus");
+			this.num_type_id       = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int32), Tags.Name + "=" + DbType.TagKeyId);
+			this.num_type_revision = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int32), Tags.Name + "=" + DbType.TagKeyRevision);
+			this.num_type_status   = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int32), Tags.Name + "=" + DbType.TagKeyStatus);
 			
 			this.internal_types.Add (this.num_type_id);
 			this.internal_types.Add (this.num_type_revision);
@@ -1657,10 +1667,10 @@ namespace Epsitec.Cresus.Database
 		
 		protected void InitialiseStrTypes()
 		{
-			this.str_type_name        = new DbTypeString (DbColumn.MaxNameLength, false,		Tags.Name + "=CR.Name");
-			this.str_type_caption     = new DbTypeString (DbColumn.MaxCaptionLength, false,		Tags.Name + "=CR.Caption");
-			this.str_type_description = new DbTypeString (DbColumn.MaxDescriptionLength, false, Tags.Name + "=CR.Description");
-			this.str_type_info_xml    = new DbTypeString (DbColumn.MaxInfoXmlLength, false,		Tags.Name + "=CR.InfoXml");
+			this.str_type_name        = new DbTypeString (DbColumn.MaxNameLength, false,		Tags.Name + "=" + DbType.TagName);
+			this.str_type_caption     = new DbTypeString (DbColumn.MaxCaptionLength, false,		Tags.Name + "=" + DbType.TagCaption);
+			this.str_type_description = new DbTypeString (DbColumn.MaxDescriptionLength, false, Tags.Name + "=" + DbType.TagDescription);
+			this.str_type_info_xml    = new DbTypeString (DbColumn.MaxInfoXmlLength, false,		Tags.Name + "=" + DbType.TagInfoXml);
 			
 			this.internal_types.Add (this.str_type_name);
 			this.internal_types.Add (this.str_type_caption);

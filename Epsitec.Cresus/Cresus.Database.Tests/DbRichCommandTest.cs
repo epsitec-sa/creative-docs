@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.Database
 			DbTable db_table_a = infrastructure.CreateDbTable ("Personnes", DbElementCat.UserDataManaged);
 			DbTable db_table_b = infrastructure.CreateDbTable ("Domiciles", DbElementCat.UserDataManaged);
 			
-			DbType db_type_name = infrastructure.ResolveDbType (null, "CR.Name");
-			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR.KeyId");
-			DbType db_type_rev  = infrastructure.ResolveDbType (null, "CR.KeyRevision");
+			DbType db_type_name = infrastructure.ResolveDbType (null, "CR_Name");
+			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR_KeyId");
+			DbType db_type_rev  = infrastructure.ResolveDbType (null, "CR_KeyRevision");
 			
 			db_table_a.Columns.Add (new DbColumn ("Nom",      db_type_name, DbColumnClass.Data, DbElementCat.UserDataManaged));
 			db_table_a.Columns.Add (new DbColumn ("Prenom",   db_type_name, DbColumnClass.Data, DbElementCat.UserDataManaged));

@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Database
 			return new DbColumn (xml);
 		}
 
-		public static DbColumn NewRefColumn(string column_name, string target_table_name, DbColumnClass column_class)
+		public static DbColumn NewRefColumn(string column_name, string target_table_name, DbColumnClass column_class, DbType type)
 		{
 			return null;
 		}

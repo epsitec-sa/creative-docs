@@ -175,5 +175,19 @@ namespace Epsitec.Cresus.Database
 		protected DbAttributes			attributes;
 		protected DbSimpleType			simple_type;
 		protected DbKey					internal_type_key;
+		
+		internal const string			TagKeyId		= "CR_KeyId";
+		internal const string			TagKeyRevision	= "CR_KeyRevision";
+		internal const string			TagKeyStatus	= "CR_KeyStatus";
+		internal const string			TagName			= "CR_Name";
+		internal const string			TagCaption		= "CR_Caption";
+		internal const string			TagDescription	= "CR_Description";
+		internal const string			TagInfoXml		= "CR_InfoXml";
+
+		
+
+
+
+
 	}
 }

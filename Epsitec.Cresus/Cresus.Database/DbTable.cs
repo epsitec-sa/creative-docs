@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Database
 				for (int i = 0; i < n; i++)
 				{
 					DbColumn db_key   = this.PrimaryKeys[i];
-					string   key_name = db_key.Name;
+					string   key_name = db_key.CreateSqlName ();
 					
 					if (sql_table.Columns.IndexOf (key_name) < 0)
 					{

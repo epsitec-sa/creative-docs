@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Database
 				{
 					DbColumn db_column = db_table.Columns[c];
 					
-					string db_name_column  = db_column.Name;
+					string db_name_column  = db_column.CreateDisplayName ();
 					string ado_name_column = db_column.CreateSqlName ();
 					
 					mapping.ColumnMappings.Add (ado_name_column, db_name_column);

@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.Database
 					break;
 				
 				default:
-					throw new System.NotImplementedException (string.Format ("Support for {0} is not implemented.", category));
+					throw new System.NotImplementedException (string.Format ("Support for category {0} is not implemented.", category));
 			}
 			
 			DbSqlStandard.CreateSimpleSqlName (name, buffer);
@@ -248,6 +248,47 @@ namespace Epsitec.Cresus.Database
 			DbSqlStandard.CreateSimpleSqlName (name, buffer);
 			return buffer.ToString ();
 		}
+		
+		public static string CreateSimpleSqlName(string name, string prefix, string suffix)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append (prefix);
+			buffer.Append ('_');
+			DbSqlStandard.CreateSimpleSqlName (name, buffer);
+			buffer.Append ('_');
+			buffer.Append (suffix);
+			
+			return buffer.ToString ();
+		}
+		
+		public static string CreateSimpleSqlName(string name, DbElementCat category)
+		{
+			System.Text.StringBuilder buffer;
+			
+			switch (category)
+			{
+				case DbElementCat.Internal:
+					if ((DbSqlStandard.ValidateName (name)) &&
+						((name.StartsWith ("CR_") || name.StartsWith ("CREF_"))))
+					{
+						return name;
+					}
+					throw new DbException (DbAccess.Empty, string.Format ("'{0}' is an invalid internal name.", name));
+				
+				case DbElementCat.UserDataManaged:
+					buffer = new System.Text.StringBuilder ();
+					buffer.Append ("U_");
+					break;
+				
+				default:
+					throw new System.NotImplementedException (string.Format ("Support for category {0} is not implemented.", category));
+			}
+			
+			DbSqlStandard.CreateSimpleSqlName (name, buffer);
+			return buffer.ToString ();
+		}
+		
 		
 		protected static void CreateSimpleSqlName(string name, System.Text.StringBuilder buffer)
 		{
@@ -284,7 +325,6 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		
 		
 		
 		protected static Regex		regex_name;
