@@ -462,6 +462,17 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
+                <Folder RelPath = "Exceptions\" />
+                <File
+                    RelPath = "Requests\Base.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Requests\Group.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
                 <File
                     RelPath = "Settings\AbstractBase.cs"
                     SubType = "Code"

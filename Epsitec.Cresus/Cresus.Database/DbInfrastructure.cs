@@ -73,6 +73,23 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public Settings.Globals					GlobalSettings
+		{
+			get
+			{
+				return this.globals;
+			}
+		}
+		
+		public Settings.Locals					LocalSettings
+		{
+			get
+			{
+				return this.locals;
+			}
+		}
+		
+		
 		public void CreateDatabase(DbAccess db_access)
 		{
 			//	Crée une base de données avec les structures de gestion requises par Crésus
@@ -183,20 +200,6 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.StartUsingDatabase ();
-		}
-		
-		protected virtual void StartUsingDatabase()
-		{
-			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
-			{
-				this.globals = new Settings.Globals (this, transaction);
-				this.locals  = new Settings.Locals (this, transaction);
-				
-				this.client_id = this.locals.ClientId;
-				this.SetupLogger (transaction);
-				
-				transaction.Commit ();
-			}
 		}
 		
 		public void ReleaseConnection()
@@ -1557,6 +1560,21 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		protected virtual void StartUsingDatabase()
+		{
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				this.globals = new Settings.Globals (this, transaction);
+				this.locals  = new Settings.Locals (this, transaction);
+				
+				this.client_id = this.locals.ClientId;
+				this.SetupLogger (transaction);
+				
+				transaction.Commit ();
+			}
+		}
+		
+		
 		private void SetupLogger(DbTransaction transaction)
 		{
 			this.logger = new DbLogger ();

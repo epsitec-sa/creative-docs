@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Database
 			this.db_access = (DbAccess) info.GetValue ("db_access", typeof (DbAccess));
 		}
 		
-		void System.Runtime.Serialization.ISerializable.GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
 			info.AddValue ("db_access", this.db_access);
 			base.GetObjectData (info, context);
