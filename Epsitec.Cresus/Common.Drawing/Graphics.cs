@@ -221,6 +221,15 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public void Align(ref double x, ref double y)
+		{
+			this.transform.TransformDirect (ref x, ref y);
+			x = System.Math.Floor (x + 0.5);
+			y = System.Math.Floor (y + 0.5);
+			this.transform.TransformInverse (ref x, ref y);
+		}
+		
+		
 		public Transform SaveTransform()
 		{
 			return new Transform (this.transform);
