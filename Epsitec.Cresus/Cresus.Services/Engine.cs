@@ -8,7 +8,8 @@ using System.Runtime.Remoting.Channels.Http;
 namespace Epsitec.Cresus.Services
 {
 	/// <summary>
-	/// Summary description for Engine.
+	/// La classe Engine démarre les divers services (en mode serveur) ou donne
+	/// accès aux services distants via les mécanismes ".NET Remoting".
 	/// </summary>
 	public class Engine
 	{
@@ -65,7 +66,18 @@ namespace Epsitec.Cresus.Services
 		
 		private void StartServices()
 		{
+#if true
+			System.Collections.Hashtable setup = new System.Collections.Hashtable ();
+			
+			setup["port"] = this.port_number;
+			
+			SoapServerFormatterSinkProvider sink_provider = new SoapServerFormatterSinkProvider ();
+			sink_provider.TypeFilterLevel = System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+			
+			HttpChannel channel = new HttpChannel (setup, null, sink_provider);
+#else
 			HttpChannel channel = new HttpChannel (this.port_number);
+#endif
 			ChannelServices.RegisterChannel (channel);
 			
 			foreach (AbstractServiceEngine service in this.services)

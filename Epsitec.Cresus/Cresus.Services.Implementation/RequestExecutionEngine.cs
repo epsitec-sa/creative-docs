@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Services
 			this.execution_queue.Enqueue (data, ids);
 		}
 		
-		void IRequestExecutionService.QueryRequestStates(int client_id, out RequestState[] states)
+		void IRequestExecutionService.QueryRequestStates(Remoting.ClientIdentity client, out RequestState[] states)
 		{
 			//	Détermine l'état de toutes les requêtes soumises par le client
 			//	spécifié.
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Services
 			{
 				Database.DbKey key = new Database.DbKey (rows[i]);
 				
-				if (key.Id.ClientId == client_id)
+				if (key.Id.ClientId == client.ClientId)
 				{
 					list.Add (new RequestState (key.Id.Value, (int) this.execution_queue.GetRequestExecutionState (rows[i])));
 				}
@@ -118,12 +118,6 @@ namespace Epsitec.Cresus.Services
 					}
 				}
 			}
-		}
-		
-		void IRequestExecutionService.Ping(string text, out string reply)
-		{
-			System.Diagnostics.Debug.WriteLine ("Server got: " + text);
-			reply = System.DateTime.Now.ToLongTimeString ();
 		}
 		#endregion
 		

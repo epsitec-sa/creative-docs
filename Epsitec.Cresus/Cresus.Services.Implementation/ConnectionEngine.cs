@@ -14,14 +14,14 @@ namespace Epsitec.Cresus.Services
 		
 		
 		#region IConnectionService Members
-		public void CheckConnectivity(string client_id)
+		public void CheckConnectivity(Remoting.ClientIdentity client)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("ConnectionEngine: Client '{0}' checked for connectivity.", client_id));
+			System.Diagnostics.Debug.WriteLine (string.Format ("ConnectionEngine: Client '{0}' checked for connectivity.", client.Name));
 		}
 		
-		public void QueryAvailableServices(string client_id, out string[] service_names)
+		public void QueryAvailableServices(Remoting.ClientIdentity client, out string[] service_names)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("ConnectionEngine: Client '{0}' asked for available services.", client_id));
+			System.Diagnostics.Debug.WriteLine (string.Format ("ConnectionEngine: Client '{0}' asked for available services.", client.Name));
 			
 			System.Collections.Hashtable hash = this.engine.Services;
 			service_names = new string[hash.Count];

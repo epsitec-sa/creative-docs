@@ -146,6 +146,7 @@ namespace Epsitec.Cresus.Requests
 					System.Diagnostics.Debug.Assert (fields[i].Alias == table.Columns[Tags.ColumnRefLog].CreateSqlName ());
 					
 					fields[i].Overwrite (SqlField.CreateConstant (this.CurrentLogId.Value, DbKey.RawTypeForId));
+					fields[i].Alias = table.Columns[Tags.ColumnRefLog].CreateSqlName ();
 					
 					return;
 				}

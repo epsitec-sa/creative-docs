@@ -89,12 +89,27 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ClientIdentity.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IConnectionService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "IRequestExecutionService.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "RequestState.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SerializedRequest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
