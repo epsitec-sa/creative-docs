@@ -23,6 +23,49 @@ namespace Epsitec.Cresus.Support.Tests
 			Assertion.AssertEquals ("b", names[1]);
 		}
 		
+		[Test] public void CheckCompileRefBundle()
+		{
+			ResourceBundle bundle = new ResourceBundle ();
+			string test_string = "<bundle><a>A</a><b><ref t='file:button.cancel'/></b></bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
+			bundle.Compile (stream);
+			
+			string[] names = bundle.FieldNames;
+			
+			System.Array.Sort (names);
+			
+			Assertion.AssertEquals (2, bundle.CountFields);
+			Assertion.AssertEquals ("a", names[0]);
+			Assertion.AssertEquals ("b", names[1]);
+			Assertion.AssertEquals ("A", bundle["a"]);
+			Assertion.Assert (bundle["b"] is ResourceBundle);
+		}
+		
+		[Test] public void CheckCompileSubBundle()
+		{
+			ResourceBundle bundle = new ResourceBundle ();
+			string test_string = "<bundle><a>A0</a><b><bundle><a>A1</a><b>B1</b></bundle></b></bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
+			bundle.Compile (stream);
+			
+			string[] names = bundle.FieldNames;
+			
+			System.Array.Sort (names);
+			
+			Assertion.AssertEquals (2, bundle.CountFields);
+			Assertion.AssertEquals ("a", names[0]);
+			Assertion.AssertEquals ("b", names[1]);
+			Assertion.AssertEquals ("A0", bundle["a"]);
+			Assertion.Assert (bundle["b"] is ResourceBundle);
+			Assertion.AssertEquals (2, bundle.GetFieldBundle ("b").CountFields);
+			Assertion.AssertEquals ("A1", bundle.GetFieldBundle ("b")["a"]);
+			Assertion.AssertEquals ("B1", bundle.GetFieldBundle ("b")["b"]);
+		}
+		
 		[Test] public void CheckCompileCDATA()
 		{
 			ResourceBundle bundle = new ResourceBundle ();

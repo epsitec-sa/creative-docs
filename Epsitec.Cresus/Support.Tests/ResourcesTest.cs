@@ -74,5 +74,10 @@ namespace Epsitec.Cresus.Support.Tests
 				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag]);
 			}
 		}
+		
+		[Test] [ExpectedException (typeof (ResourceException))] public void CheckGetBundleRecursive()
+		{
+			ResourceBundle bundle = Resources.GetBundle ("file:recursive");
+		}
 	}
 }
