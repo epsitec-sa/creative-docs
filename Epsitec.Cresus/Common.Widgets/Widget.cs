@@ -252,6 +252,23 @@ namespace Epsitec.Common.Widgets
 			set;
 		}
 #endif
+		public bool							DebugActive
+		{
+			get { return (this.internal_state & InternalState.DebugActive) != 0; }
+			set
+			{
+				if (value)
+				{
+					this.internal_state |= InternalState.DebugActive;
+				}
+				else
+				{
+					this.internal_state &= ~ InternalState.DebugActive;
+				}
+			}
+		}
+		
+		
 		public virtual bool					IsEnabled
 		{
 			get
@@ -1541,6 +1558,11 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void PaintHandler(Drawing.Graphics graphics, Drawing.Rectangle repaint)
 		{
+			if (this.DebugActive)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}: clip {1}, widget {2}", this.Name, graphics.SaveClippingRectangle ().ToString (), this.MapClientToRoot (this.Client.Bounds).ToString ()));
+			}
+			
 			if (this.PaintCheckClipping (repaint))
 			{
 				Drawing.Rectangle bounds = this.GetPaintBounds ();
@@ -2026,6 +2048,8 @@ namespace Epsitec.Common.Widgets
 			AutoToggle			= 0x00080000,
 			AutoMnemonic		= 0x00100000,
 			AutoRepeatEngaged	= 0x00200000,
+			
+			DebugActive			= 0x40000000		//	widget marqué pour le debug
 		}
 		
 		[System.Flags] public enum TabNavigationMode

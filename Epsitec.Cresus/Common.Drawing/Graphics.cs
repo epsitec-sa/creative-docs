@@ -333,6 +333,19 @@ namespace Epsitec.Common.Drawing
 			this.has_clip_rect = false;
 		}
 		
+		public bool TestForEmptyClippingRectangle()
+		{
+			if (this.has_clip_rect)
+			{
+				if ((this.clip_x1 >= this.clip_x2) ||
+					(this.clip_y1 >= this.clip_y2))
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
 		
 		protected virtual void UpdateTransform()
 		{

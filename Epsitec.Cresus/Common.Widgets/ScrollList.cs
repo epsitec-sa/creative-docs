@@ -41,6 +41,11 @@ namespace Epsitec.Common.Widgets
 				return this.isComboList;
 			}
 		}
+		
+		public Scroller Scroller
+		{
+			get { return this.scroller; }
+		}
 
 
 		// Vide toute la liste.

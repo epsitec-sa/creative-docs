@@ -76,7 +76,6 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame ();
 			window.MakeFramelessWindow ();
 			window.Paint += new System.Windows.Forms.PaintEventHandler(window_Paint);
-			window.SizeChanged += new System.EventHandler(window_SizeChanged);
 			window.WindowActivated += new System.EventHandler(window_Activated);
 			window.WindowDeactivated += new System.EventHandler(window_Deactivated);
 			window.WindowBounds = new Rectangle (ox+10, oy+10, 24, 16);
@@ -102,11 +101,6 @@ namespace Epsitec.Common.Tests
 		{
 			System.Windows.Forms.Form window = sender as System.Windows.Forms.Form;
 			e.Graphics.FillRectangle (System.Drawing.Brushes.Red, window.ClientRectangle);
-		}
-
-		private void window_SizeChanged(object sender, System.EventArgs e)
-		{
-			System.Diagnostics.Debug.WriteLine ("Changed size of window: " + ((WindowFrame)sender).Size.ToString ());
 		}
 
 		private void window_Activated(object sender, System.EventArgs e)

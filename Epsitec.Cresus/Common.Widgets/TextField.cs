@@ -758,7 +758,7 @@ namespace Epsitec.Common.Widgets
 		// Gestion d'une touche pressée avec KeyPress dans le texte.
 		protected void ProcessKeyPress(int key)
 		{
-			if ( key >= 32 && key <= 255 )  // TODO: à vérifier ...
+			if ( key >= 32 )  // TODO: à vérifier ...
 			{
 				this.InsertCharacter((char)key);
 			}
@@ -767,33 +767,7 @@ namespace Epsitec.Common.Widgets
 		// Insère un caractère.
 		protected bool InsertCharacter(char character)
 		{
-			string ins;
-
-			switch ( character )
-			{
-				case '<':
-					ins = "&lt;";
-					break;
-				case '>':
-					ins = "&gt;";
-					break;
-				case '&':
-					ins = "&amp;";
-					break;
-				case '\"':
-					ins = "&quot;";
-					break;
-				case (char)160:
-					ins = "&nbsp;";
-					break;
-				case '\n':
-					ins = "<br/>";
-					break;
-				default:
-					ins = new string(character, 1);
-					break;
-			}
-			return InsertString(ins);
+			return InsertString(TextLayout.ConvertToTaggedText (character));
 		}
 
 		// Insère une chaîne correspondant à un caractère ou un tag (jamais plus).

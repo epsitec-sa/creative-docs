@@ -1022,6 +1022,11 @@ namespace Epsitec.Common.Widgets
 			return TextLayout.ConvertToTaggedText(text, false);
 		}
 		
+		public static string ConvertToTaggedText(char c)
+		{
+			return TextLayout.ConvertToTaggedText(new string (c, 1), false);
+		}
+		
 		// Convertit le texte simple en un texte compatible avec les tags. Supprime
 		// toute occurrence de "<", "&" et ">" dans le texte.
 		public static string ConvertToTaggedText(string text, bool autoMnemonic)
@@ -1050,32 +1055,20 @@ namespace Epsitec.Common.Widgets
 							buffer.Append("</m>");
 						}
 						pos ++;
+						continue;
 					}
-					else if ( text[pos] == '<' )
+					
+					switch ( text[pos] )
 					{
-						buffer.Append("&lt;");
-					}
-					else if ( text[pos] == '>' )
-					{
-						buffer.Append("&gt;");
-					}
-					else if ( text[pos] == '\"' )
-					{
-						buffer.Append("&quot;");
-					}
-					else if ( text[pos] == (char)160 )
-					{
-						buffer.Append("&nbsp;");
-					}
-					else if ( text[pos] == '\n' )
-					{
-						buffer.Append("<br/>");
-					}
-					else
-					{
-						buffer.Append(text[pos]);
+						case '<':		buffer.Append("&lt;");		break;
+						case '>':		buffer.Append("&gt;");		break;
+						case '\"':		buffer.Append("&quot;");	break;
+						case (char)160:	buffer.Append("&nbsp;");	break;
+						case '\n':		buffer.Append("<br/>");		break;
+						default:		buffer.Append(text[pos]);	break;
 					}
 				}
+				
 				return buffer.ToString();
 			}
 			else

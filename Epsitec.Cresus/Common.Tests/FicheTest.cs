@@ -212,8 +212,7 @@ namespace Epsitec.Common.Tests
 			this.db.SetFieldInRecord(record, 0, "Monsieur");
 			this.db.SetFieldInRecord(record, 1, "Walz");
 			this.db.SetFieldInRecord(record, 2, "Michael");
-			//this.db.SetFieldInRecord(record, 3, "EPFL-INF<br>LAP");  // TODO: plantée !
-			this.db.SetFieldInRecord(record, 3, "EPFL-INF");
+			this.db.SetFieldInRecord(record, 3, "EPFL-INF<br/>LAP");
 			this.db.SetFieldInRecord(record, 4, "1015");
 			this.db.SetFieldInRecord(record, 5, "Ecublens");
 			this.db.CreateRecord(record);
@@ -273,6 +272,12 @@ namespace Epsitec.Common.Tests
 			this.topPane.Children.Add(this.buttonSearch);
 
 			this.listCrit = new ScrollList();
+			
+			this.listCrit.Scroller.ArrowDown.Name = "Down";
+			this.listCrit.Scroller.ArrowDown.DebugActive = true;
+			this.listCrit.Scroller.ArrowUp.Name = "Up";
+			this.listCrit.Scroller.ArrowUp.DebugActive = true;
+			
 			this.topPane.Children.Add(this.listCrit);
 
 			this.table = new ScrollArray();

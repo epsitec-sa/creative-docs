@@ -151,7 +151,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-
+		
+		public ArrowButton ArrowUp
+		{
+			get { return this.arrowUp; }
+		}
+		
+		public ArrowButton ArrowDown
+		{
+			get { return this.arrowDown; }
+		}
+		
+		
 		// Met à jour la géométrie des boutons de l'ascenseur.
 		protected override void UpdateClientGeometry()
 		{
