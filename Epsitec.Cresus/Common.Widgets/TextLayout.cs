@@ -491,7 +491,8 @@ namespace Epsitec.Common.Widgets
 							}
 							else
 							{
-								double[] charsWidth = block.font.GetTextCharEndX(block.text);
+								double[] charsWidth;
+								block.font.GetTextCharEndX(block.text, out charsWidth);
 								double left = 0;
 								double right;
 								for ( int k=0 ; k<charsWidth.Length ; k++ )
@@ -554,7 +555,8 @@ namespace Epsitec.Common.Widgets
 							}
 							else
 							{
-								double[] charsWidth = block.font.GetTextCharEndX(block.text);
+								double[] charsWidth;
+								block.font.GetTextCharEndX(block.text, out charsWidth);
 								double left = 0;
 								double right;
 								for ( int k=0 ; k<charsWidth.Length ; k++ )
@@ -611,7 +613,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( index <= block.beginIndex )  return block.pos.X;
 			if ( index >  block.endIndex   )  return block.pos.X+block.width;
-			double[] charsWidth = block.font.GetTextCharEndX(block.text);
+			double[] charsWidth;
+			block.font.GetTextCharEndX(block.text, out charsWidth);
 			return block.pos.X+charsWidth[index-block.beginIndex-1]*block.fontSize;
 		}
 
