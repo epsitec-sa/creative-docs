@@ -105,6 +105,10 @@ namespace Epsitec.Common.Drawing.Null
 		{
 		}
 		
+		public override void MergeTransform(Transform transform)
+		{
+		}
+
 		public override Point ApplyTransformDirect(Point pt)
 		{
 			return pt;
