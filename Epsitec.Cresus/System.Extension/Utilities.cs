@@ -249,6 +249,88 @@ namespace System
 		}
 		
 		
+		public static int SkipXmlChars(string text, int n)
+		{
+			//	Saute le nombre de caractères "logiques" indiqué et retourne le nombre
+			//	de caractères réels dans 'text' qui ont été sautés.
+			
+			//	Une entité XML (par ex. "&quot;") compte comme 1 caractère, tout comme
+			//	les tags <br/>, <tab/> et <img>.
+			
+			int offset = 0;
+					
+			for (int i = 0; (i < n) && (offset < text.Length); i++)
+			{
+				while (text[offset] == '<')
+				{
+					int pos = text.IndexOf ('>', offset);
+					
+					if ((text.IndexOf ("<br/", offset, 1) == 0) ||
+						(text.IndexOf ("<br ", offset, 1) == 0) ||
+						(text.IndexOf ("<img ", offset, 1) == 0) ||
+						(text.IndexOf ("<tab/", offset, 1) == 0) ||
+						(text.IndexOf ("<tab ", offset, 1) == 0))
+					{
+						i++;
+					}
+					
+					System.Diagnostics.Debug.Assert (pos > 0);
+					
+					offset = pos + 1;
+					
+					if ((i >= n) || (offset >= text.Length))
+					{
+						return offset;
+					}
+				}
+						
+				Utilities.ParseCharOrXmlEntity (text, ref offset);
+			}
+			
+			return offset;
+		}
+		
+		public static int CountXmlChars(string text)
+		{
+			//	Compte le nombre de caractères "logiques" dans le texte.
+			
+			//	Une entité XML (par ex. "&quot;") compte comme 1 caractère, tout comme
+			//	les tags <br/>, <tab/> et <img>.
+			
+			int i      = 0;
+			int offset = 0;
+					
+			for (; offset < text.Length; i++)
+			{
+				while (text[offset] == '<')
+				{
+					int pos = text.IndexOf ('>', offset);
+					
+					if ((text.IndexOf ("<br/", offset, 1) == 0) ||
+						(text.IndexOf ("<br ", offset, 1) == 0) ||
+						(text.IndexOf ("<img ", offset, 1) == 0) ||
+						(text.IndexOf ("<tab/", offset, 1) == 0) ||
+						(text.IndexOf ("<tab ", offset, 1) == 0))
+					{
+						i++;
+					}
+					
+					System.Diagnostics.Debug.Assert (pos > 0);
+					
+					offset = pos + 1;
+					
+					if (offset >= text.Length)
+					{
+						return i;
+					}
+				}
+						
+				Utilities.ParseCharOrXmlEntity (text, ref offset);
+			}
+			
+			return i;
+		}
+		
 		public static char ParseCharOrXmlEntity(string text, ref int offset)
 		{
 			if (text[offset] == '&')
