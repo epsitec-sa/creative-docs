@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 10/10/2003
+//	Statut : en chantier/PA
 
 namespace Epsitec.Common.Support
 {

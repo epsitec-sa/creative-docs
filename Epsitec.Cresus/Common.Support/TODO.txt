@@ -2,6 +2,32 @@
 Ce qu'il reste à faire dans "Support"
 -------------------------------------
 
+-	Les exceptions (pas seulement celles définies dans Common.Support)
+	devraient toutes être marquées comme étant [Serializable] afin de
+	permettre leur utilisation dans des contextes de "remoting".
+	
+	Voir à ce sujet l'article :
+	
+	ms-help://MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/cpref/html/frlrfSystemExceptionClassctorTopic3.htm
+	
+-	Il faut faire de même pour les attributs :
+	
+	o	BundleAttribute
+	o	SuppressBundleSupportAttribute
+	
+	et il faudrait ajouter un [AttributeUsage(...)] devant ces classes
+	de définition d'attributs. Il faut juste décider des bons attributs
+	utilisables :
+	
+	o	BundleAttribute s'applique uniquement à des propriétés.
+	o	SuppressBundleSupportAttribute s'applique à des classes.
+
+
+-	Dans ImageProvider.cs, ajouter une REGEX pour vérifier que le nom
+	de l'image (si le protocole file: est utilisé) ne contient que des
+	caractères valides (pas de \ ni de /, ni de ..).
+
+
 -	La classe ResourceBundle n'est pas implémentée à 100%.
 	La méthode Merge ne marche correctement que pour les
 	strings.
@@ -10,4 +36,5 @@ Ce qu'il reste à faire dans "Support"
 	énumère toutes les assemblies chargées et les analyse
 	dynamiquement pour enregistrer tous les types qui implémentent
 	l'interface IBundleSupport.
+
 
