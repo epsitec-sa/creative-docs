@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 19/11/2003
 
 namespace Epsitec.Cresus.Database
@@ -103,17 +103,15 @@ namespace Epsitec.Cresus.Database
 		public static DbColumn NewColumn(string xml)
 		{
 			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
-			
 			doc.LoadXml (xml);
-			
 			return DbColumn.NewColumn (doc.DocumentElement);
 		}
 		
 		public static DbColumn NewColumn(System.Xml.XmlElement xml)
 		{
-			return new DbColumn (xml);
+			return (xml.Name == "null") ? null : new DbColumn (xml);
 		}
-
+		
 		public static DbColumn NewRefColumn(string column_name, string target_table_name, DbColumnClass column_class, DbType type)
 		{
 			System.Diagnostics.Debug.Assert (type != null);
@@ -127,18 +125,23 @@ namespace Epsitec.Cresus.Database
 			return column;
 		}
 		
-		public static string ConvertColumnToXml(DbColumn column)
+		public static string SerialiseToXml(DbColumn column, bool full)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			DbColumn.ConvertColumnToXml (buffer, column);
-			
+			DbColumn.SerialiseToXml (buffer, column, full);
 			return buffer.ToString ();
 		}
 		
-		public static void ConvertColumnToXml(System.Text.StringBuilder buffer, DbColumn column)
+		public static void SerialiseToXml(System.Text.StringBuilder buffer, DbColumn column, bool full)
 		{
-			column.SerialiseXmlDefinition (buffer);
+			if (column == null)
+			{
+				buffer.Append ("<null/>");
+			}
+			else
+			{
+				column.SerialiseXmlDefinition (buffer, full);
+			}
 		}
 		
 		
@@ -216,7 +219,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer)
+		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer, bool full)
 		{
 			buffer.Append (@"<col");
 			
@@ -264,14 +267,27 @@ namespace Epsitec.Cresus.Database
 				buffer.Append (@"""");
 			}
 			
-			buffer.Append (@"/>");
+			if (full)
+			{
+				DbKey.SerialiseToXmlAttributes (buffer, this.internal_column_key);
+				this.Attributes.SerialiseXmlAttributes (buffer);
+				buffer.Append (@">");
+				
+				DbTypeFactory.SerialiseToXml (buffer, this.type);
+				
+				buffer.Append (@"</col>");
+			}
+			else
+			{
+				buffer.Append (@"/>");
+			}
 		}
 		
 		protected void ProcessXmlDefinition(System.Xml.XmlElement xml)
 		{
 			if (xml.Name != "col")
 			{
-				throw new System.ArgumentException (string.Format ("Expected root element named <col>, but found <{0}>.", xml.Name));
+				throw new System.FormatException (string.Format ("Expected root element named <col>, but found <{0}>.", xml.Name));
 			}
 			
 			string arg_null   = xml.GetAttribute ("null");
@@ -294,6 +310,8 @@ namespace Epsitec.Cresus.Database
 			
 			this.column_class        = (DbColumnClass) column_class_code;
 			this.column_localisation = (DbColumnLocalisation) column_localisation_code;
+			this.internal_column_key = DbKey.DeserialiseFromXmlAttributes (xml);
+			this.Attributes.DeserialiseXmlAttributes (xml);
 		}
 		
 		
