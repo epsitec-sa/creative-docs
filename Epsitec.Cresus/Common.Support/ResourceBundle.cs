@@ -17,6 +17,11 @@ namespace Epsitec.Common.Support
 			return ResourceBundle.Create (name, null, ResourceLevel.Merged, 0);
 		}
 		
+		public static ResourceBundle Create(string name, ResourceLevel level)
+		{
+			return ResourceBundle.Create (name, null, level, 0);
+		}
+		
 		public static ResourceBundle Create(string name, string prefix, ResourceLevel level, int recursion)
 		{
 			ResourceBundle bundle = new ResourceBundle (name);

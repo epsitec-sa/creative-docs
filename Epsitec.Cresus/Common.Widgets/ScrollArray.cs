@@ -348,6 +348,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public double							FreeTableWidth
+		{
+			get
+			{
+				return this.table_bounds.Width - this.total_width;
+			}
+		}
+		
+		public double							TotalTableWidth
+		{
+			get
+			{
+				return this.total_width;
+			}
+		}
+		
 		
 		public int ToVirtualRow(int row)
 		{
@@ -417,6 +433,7 @@ namespace Epsitec.Common.Widgets
 			
 			return this.column_widths[column];
 		}
+		
 		
 		public double GetColumnOffset(int column)
 		{
