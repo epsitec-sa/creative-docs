@@ -785,17 +785,15 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine la géométrie de tous les objets.
 		public void DrawGeometry(Drawing.Graphics graphics,
 								 IconContext iconContext,
-								 Drawing.Color color,
 								 object adorner)
 		{
-			this.DrawGeometry(this.objects, graphics, color, adorner, iconContext, true);
+			this.DrawGeometry(this.objects, graphics, iconContext, adorner, true);
 		}
 
 		protected void DrawGeometry(System.Collections.ArrayList objects,
 									Drawing.Graphics graphics,
-									Drawing.Color color,
-									object adorner,
 									IconContext iconContext,
+									object adorner,
 									bool dimmed)
 		{
 			System.Collections.ArrayList root = this.CurrentGroup;
@@ -809,7 +807,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 				if ( obj.Objects != null )
 				{
-					this.DrawGeometry(obj.Objects, graphics, color, adorner, iconContext, dimmed);
+					this.DrawGeometry(obj.Objects, graphics, iconContext, adorner, dimmed);
 				}
 
 				if ( obj is ObjectGroup )

@@ -25,6 +25,12 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.adorner = value; }
 		}
 
+		public Drawing.GlyphPaintStyle GlyphPaintStyle
+		{
+			get { return this.glyphPaintStyle; }
+			set { this.glyphPaintStyle = value; }
+		}
+
 		public Drawing.Color UniqueColor
 		{
 			get { return this.uniqueColor; }
@@ -112,7 +118,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				if ( this.adorner != null )
 				{
-					this.adorner.AdaptDisabledTextColor(ref color, this.uniqueColor);
+					this.adorner.AdaptPictogramColor(ref color, this.glyphPaintStyle, this.uniqueColor);
 				}
 			}
 			if ( this.isDimmed )  // estompé (hors groupe) ?
@@ -215,22 +221,23 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		protected IAdorner			adorner;
-		protected Drawing.Color		uniqueColor;
-		protected double			scaleX = 1;
-		protected double			scaleY = 1;
-		protected double			zoom = 1;
-		protected double			originX = 0;
-		protected double			originY = 0;
-		protected bool				isEditable = false;
-		protected bool				isDimmed = false;
-		protected double			minimalSize = 3;
-		protected double			minimalWidth = 5;
-		protected double			closeMargin = 10;
-		protected double			hiliteSize = 6;
-		protected double			handleSize = 10;
-		protected bool				isCtrl = false;
-		protected Drawing.Point		constrainStarting;
-		protected ConstrainType		constrainType;
+		protected IAdorner					adorner;
+		protected Drawing.GlyphPaintStyle	glyphPaintStyle;
+		protected Drawing.Color				uniqueColor;
+		protected double					scaleX = 1;
+		protected double					scaleY = 1;
+		protected double					zoom = 1;
+		protected double					originX = 0;
+		protected double					originY = 0;
+		protected bool						isEditable = false;
+		protected bool						isDimmed = false;
+		protected double					minimalSize = 3;
+		protected double					minimalWidth = 5;
+		protected double					closeMargin = 10;
+		protected double					hiliteSize = 6;
+		protected double					handleSize = 10;
+		protected bool						isCtrl = false;
+		protected Drawing.Point				constrainStarting;
+		protected ConstrainType				constrainType;
 	}
 }

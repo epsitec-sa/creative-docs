@@ -51,15 +51,13 @@ namespace Epsitec.Common.Pictogram
 				if ( icon.Read(stream) )
 				{
 					context.Adorner = adorner;
+					context.GlyphPaintStyle = style;
 					context.UniqueColor = color;
 					context.ScaleX = size.Width / icon.Size.Width;
 					context.ScaleY = size.Height / icon.Size.Height;
 					graphics.ScaleTransform(context.ScaleX, context.ScaleY, 0, 0);
 					
-					//PA: il faudra modifier DrawGeometry pour tenir compte du style de peinture
-					// requis ici (GlyphPaintStyle).
-					
-					icon.DrawGeometry(graphics, context, color, adorner_object);
+					icon.DrawGeometry(graphics, context, adorner_object);
 				}
 			}
 		}

@@ -198,8 +198,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			
 			graphics.AddFilledRectangle(rect);
+#if false
 			Drawing.Color color = adorner.ColorWindow;
 			color = Drawing.Color.FromRGB(color.R*this.backgroundIntensity, color.G*this.backgroundIntensity, color.B*this.backgroundIntensity);
+#else
+			Drawing.Color color = Drawing.Color.FromARGB(1.0-this.backgroundIntensity, 0.5,0.5,0.5);
+#endif
 			graphics.RenderSolid(color);
 
 			if ( this.multi )
