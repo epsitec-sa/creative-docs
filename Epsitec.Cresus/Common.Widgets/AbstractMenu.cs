@@ -25,6 +25,7 @@ namespace Epsitec.Common.Widgets
 			this.timer.TimeElapsed += new Support.EventHandler(this.HandleTimerTimeElapsed);
 		}
 		
+		
 		#region Interface IBundleSupport
 		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
 		{
@@ -43,9 +44,37 @@ namespace Epsitec.Common.Widgets
 					MenuItem               item_widget = bundler.CreateFromBundle (item_bundle) as MenuItem;
 					
 					this.Items.Add (item_widget);
+					item_widget.SetEmbedder (this);
 				}
 				
 				this.AdjustSize ();
+			}
+		}
+		
+		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
+		{
+			base.SerializeToBundle (bundler, bundle);
+			
+			if (this.items.Count > 0)
+			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				
+				Widget[] widgets = new Widget[this.items.Count];
+				this.items.CopyTo (widgets, 0);
+				
+				for (int i = 0; i < widgets.Length; i++)
+				{
+					Support.ResourceBundle child_bundle = bundler.CreateEmptyBundle (widgets[i].BundleName);
+					bundler.FillBundleFromObject (child_bundle, widgets[i]);
+					list.Add (child_bundle);
+				}
+				
+				if (list.Count > 0)
+				{
+					Support.ResourceBundle.Field field = bundle.CreateField (Support.ResourceFieldType.List, list);
+					field.SetName ("items");
+					bundle.Add (field);
+				}
 			}
 		}
 		#endregion
@@ -175,6 +204,19 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		#region Serialization support
+		protected override bool ShouldSerializeLocation()
+		{
+			return false;
+		}
+		
+		protected override bool ShouldSerializeSize()
+		{
+			return false;
+		}
+		#endregion
+		
+		
 		// Ajuste les dimensions du menu selon son contenu.
 		// Il faut appeler AdjustSize après avoir fini tous les InsertItem.
 		public void AdjustSize()
