@@ -327,6 +327,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Timer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ToggleButton.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

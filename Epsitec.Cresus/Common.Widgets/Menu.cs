@@ -448,7 +448,7 @@ namespace Epsitec.Common.Widgets
 				MenuItem mi = this[i];
 				if ( i == rank )  // case sélectionnée ?
 				{
-					mi.ItemType = this.isActivated ? MenuItemType.Select : MenuItemType.Parent;
+					mi.ItemType = this.isActive ? MenuItemType.Select : MenuItemType.Parent;
 				}
 				else
 				{
@@ -466,7 +466,7 @@ namespace Epsitec.Common.Widgets
 				MenuItem mi = this[i];
 				if ( mi == item )  // case sélectionnée ?
 				{
-					mi.ItemType = this.isActivated ? MenuItemType.Select : MenuItemType.Parent;
+					mi.ItemType = this.isActive ? MenuItemType.Select : MenuItemType.Parent;
 				}
 				else
 				{
@@ -496,13 +496,14 @@ namespace Epsitec.Common.Widgets
 			if ( this.submenu == null )  return false;
 			System.Diagnostics.Debug.WriteLine("OpenSubmenu "+this.submenu.Name);
 
-			this.isActivated = false;
+			this.isActive = false;
 			this.SelectMenuItem(item);  // sélectionne la case parent
 
-			this.submenu.isActivated = true;
+			this.submenu.isActive = true;
 			this.submenu.SelectMenuItem(null);  // désélectionne tout
 			this.submenu.MenuDeveloped = TypeDeveloped.Delay;
 			this.submenu.parentMenu = this;
+			this.submenu.parentItem = item;
 
 			Drawing.Point pos = new Drawing.Point(0, 0);
 
@@ -553,9 +554,11 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.WriteLine("CloseSubmenu "+this.submenu.Name);
 			System.Diagnostics.Debug.Assert(this.window.Root.HasChildren);
 			
-			this.submenu.isActivated = false;
+			this.submenu.isActive = false;
 			this.submenu.CloseSubmenu();  // ferme les sous-menus (reccursif)
 			this.submenu.SelectMenuItem(null);
+			this.submenu.parentMenu = null;
+			this.submenu.parentItem = null;
 			
 			WindowFrame.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
 			this.window.Root.Children.Clear();
@@ -563,7 +566,7 @@ namespace Epsitec.Common.Widgets
 			this.window = null;
 			this.submenu = null;
 
-			this.isActivated = true;
+			this.isActive = true;
 			this.SelectMenuItem(this.RetSelectMenuItem());
 			return true;
 		}
@@ -616,6 +619,7 @@ namespace Epsitec.Common.Widgets
 				this.menuDeveloped = TypeDeveloped.Quick;
 				MenuItem item = (MenuItem)sender;
 				this.parentMenu = null;
+				this.parentItem = null;
 				this.SetFocused(true);
 				this.OpenSubmenu(item, false);
 			}
@@ -672,25 +676,57 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.menuDeveloped != TypeDeveloped.Close )
 			{
-				System.Diagnostics.Debug.WriteLine("HandleCellEntered "+this.Name+":"+item.MainText);
+				System.Diagnostics.Debug.WriteLine("HandleCellEntered "+this.Name+":"+item.MainText+", active="+this.isActive);
 				if ( this.type == MenuType.Horizontal )
 				{
 					this.OpenSubmenu(item, false);
 				}
 				else
 				{
-					this.delayedMenuItem = item;
-					this.timer.Delay = SystemInformation.MenuShowDelay / 1000.0;
-					this.timer.Start ();
-					// TODO: je suppose qu'il faut faire un this.timer.Stop() dans certains cas,
-					// etc... Je te laisse revoir ta logique !
+					if (this.submenu == null)
+					{
+						//	Il n'y a pas de sous-menu visible. Chaque fois que l'utilisateur arrive sur une
+						//	une autre ligne du menu, on remet à zéro le compteur.
+						
+						this.delayedMenuItem = item;
+						
+						this.timer.Suspend ();
+						this.timer.Delay = SystemInformation.MenuShowDelay / 1000.0;
+						this.timer.Start ();
+					}
+					else
+					{
+						//	Il y a un sous-menu visible. On démarre le timer une seule fois, lorsqu'une
+						//	nouvelle ligne est activée (c'est forcément une autre que celle qui a ouvert
+						//	le sous-menu), et on se rappelle de la ligne active.
+						//
+						//	Quand le temps est écoulé, on ouvre le sous-menu de la ligne active, pour
+						//	autant qu'il y en ait une (chaque fois que la souris sort d'une ligne, on
+						//	en prend note aussi).
+						//
+						//	Pour que ça marche, il faut aussi que lorsque la souris retourne dans le
+						//	sous-menu, ça active la bonne ligne dans le menu parent (voir OnEntered).
+						
+						this.delayedMenuItem = item;
+						
+						if (this.timer.State != TimerState.Running)
+						{
+							this.timer.Suspend ();
+							this.timer.Delay = SystemInformation.MenuShowDelay / 1000.0;
+							this.timer.Start ();
+						}
+					}
 				}
 			}
 		}
 		
 		private void HandleCellExited(object sender, MessageEventArgs e)
 		{
-			if ( this.isActivated )
+			MenuItem item = (MenuItem)sender;
+			System.Diagnostics.Debug.WriteLine("HandleCellExited "+this.Name+":"+item.MainText);
+			this.delayedMenuItem = null;
+			
+			if ( this.isActive )
 			{
 				this.SelectMenuItem(null);
 			}
@@ -705,7 +741,23 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleTimerTimeElapsed(object sender)
 		{
-			this.OpenSubmenu(this.delayedMenuItem, false);
+			if (this.delayedMenuItem != null)
+			{
+				this.OpenSubmenu(this.delayedMenuItem, false);
+			}
+		}
+
+		
+		protected override void OnEntered(MessageEventArgs e)
+		{
+			base.OnEntered (e);
+			
+			if (this.parentMenu != null)
+			{
+				this.parentMenu.SelectMenuItem (this.parentItem);
+				
+				//	TODO: faire de même avec les parents du parent, etc. ?
+			}
 		}
 
 
@@ -734,7 +786,7 @@ namespace Epsitec.Common.Widgets
 
 		protected MenuType				type;
 		protected bool					isDirty;
-		protected bool					isActivated = true;  // dernier menu (feuille)
+		protected bool					isActive = true;  // dernier menu (feuille)
 		protected double				margin = 2;
 		protected MenuItem[]			array;			// tableau des cases
 		protected int					totalUsed;
@@ -743,6 +795,7 @@ namespace Epsitec.Common.Widgets
 		protected Timer					timer;
 		protected Menu					submenu;
 		protected Menu					parentMenu;
+		protected MenuItem				parentItem;
 		protected double				iconWidth;
 		protected Drawing.Rectangle		parentRect;
 		protected MenuItem				delayedMenuItem;

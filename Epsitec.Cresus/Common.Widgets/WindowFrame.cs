@@ -1117,7 +1117,7 @@ namespace Epsitec.Common.Widgets
 				//	encore marqués comme IsEntered contiennent effectivement encore la souris. Si non,
 				//	on les retire de la liste en leur signalant qu'ils viennent de perdre la souris.
 				
-				Widget.UpdateEntered (message);
+				Widget.UpdateEntered (this, message);
 				
 				this.last_in_widget = this.DetectWidget (message.Cursor);
 			}
