@@ -239,6 +239,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		[Bundle ("dock_m")] public Drawing.Margins	DockMargins
+		{
+			get { return this.dock_margins; }
+			set
+			{
+				if (this.dock_margins != value)
+				{
+					this.dock_margins = value;
+					if (this.parent != null)
+					{
+						this.parent.UpdateChildrenLayout ();
+					}
+				}
+			}
+		}
+		
 		[Bundle ("lay_f")]	public LayoutFlags		LayoutFlags
 		{
 			get { return this.layout_flags; }
@@ -257,14 +273,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle ("dock_m")] public Drawing.Margins	DockMargins
+		[Bundle ("lay_m")]	public Drawing.Margins	LayoutMargins
 		{
-			get { return this.dockMargins; }
+			get { return this.layout_margins; }
 			set
 			{
-				if (this.dockMargins != value)
+				if (this.layout_margins != value)
 				{
-					this.dockMargins = value;
+					this.layout_margins = value;
 					if (this.parent != null)
 					{
 						this.parent.UpdateChildrenLayout ();
@@ -481,13 +497,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		protected virtual void HandleChildrenChanged()
 		{
 			this.internalState &= ~InternalState.ChildrenDocked;
 			
 			foreach (Widget child in this.Children)
 			{
-				if (child.Dock != DockStyle.None)
+				if ((child.Dock != DockStyle.None) &&
+					(child.Dock != DockStyle.Layout))
 				{
 					this.internalState |= InternalState.ChildrenDocked;
 					break;
@@ -502,6 +520,7 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate ();
 			this.OnChildrenChanged ();
 		}
+		
 		
 		public void SetClientAngle(int angle)
 		{
@@ -1189,6 +1208,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public event EventHandler			PreparePaint;
 		public event PaintEventHandler		PaintBackground;
 		public event PaintEventHandler		PaintForeground;
 		public event EventHandler			ChildrenChanged;
@@ -1204,6 +1224,9 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler			ShortcutPressed;
 		public event EventHandler			HypertextHot;
 		public event MessageEventHandler	HypertextClicked;
+		
+		public event MessageEventHandler	PreProcessing;
+		public event MessageEventHandler	PostProcessing;
 		
 		public event EventHandler			Focused;
 		public event EventHandler			Defocused;
@@ -1441,6 +1464,25 @@ namespace Epsitec.Common.Widgets
 			arg2 = this.layout_arg2;
 		}
 		
+		public virtual void SetPropagationModes(PropagationModes modes, bool on, bool propagate_to_children)
+		{
+			if (on)
+			{
+				this.propagation |= modes;
+			}
+			else
+			{
+				this.propagation &= ~modes;
+			}
+			
+			if (propagate_to_children && this.HasChildren)
+			{
+				for (int i = 0; i < this.children.Count; i++)
+				{
+					this.children[i].SetPropagationModes (modes, on, true);
+				}
+			}
+		}
 		
 		internal virtual void FireStillEngaged()
 		{
@@ -1948,6 +1990,31 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public bool IsAncestor(Widget widget)
+		{
+			if (this.parent == widget)
+			{
+				return true;
+			}
+			if (this.parent == null)
+			{
+				return false;
+			}
+			
+			return this.parent.IsAncestor (widget);
+		}
+		
+		public bool IsDescendant(Widget widget)
+		{
+			if (widget == null)
+			{
+				return false;
+			}
+			
+			return widget.IsAncestor (this);
+		}
+		
+		
 		public Widget			FindChild(Drawing.Point point)
 		{
 			return this.FindChild (point, ChildFindMode.SkipHidden);
@@ -2323,7 +2390,8 @@ namespace Epsitec.Common.Widgets
 			
 			foreach (Widget child in this.Children)
 			{
-				if (child.Dock == DockStyle.None)
+				if ((child.Dock == DockStyle.None) ||
+					(child.Dock == DockStyle.Layout))
 				{
 					//	Saute les widgets qui ne sont pas "docked", car leur taille n'est pas prise
 					//	en compte dans le calcul des minima/maxima.
@@ -2433,7 +2501,8 @@ namespace Epsitec.Common.Widgets
 			
 			foreach (Widget child in this.Children)
 			{
-				if (child.Dock == DockStyle.None)
+				if ((child.Dock == DockStyle.None) ||
+					(child.Dock == DockStyle.Layout))
 				{
 					//	Saute les widgets qui ne sont pas "docked", car ils doivent être
 					//	positionnés par d'autres moyens.
@@ -2580,6 +2649,8 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void PaintHandler(Drawing.Graphics graphics, Drawing.Rectangle repaint)
 		{
+			this.OnPreparePaint ();
+			
 			long cycles = Drawing.Agg.Library.Cycles;
 			
 			if (this.DebugActive)
@@ -2699,7 +2770,10 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Point client_pos = this.MapParentToClient (pos);
 			
-			this.PreProcessMessage (message, client_pos);
+			if (this.PreProcessMessage (message, client_pos) == false)
+			{
+				return;
+			}
 			
 			//	En premier lieu, si le message peut être transmis aux descendants de ce widget, passe
 			//	en revue ceux-ci dans l'ordre inverse de leur affichage (commence par le widget qui est
@@ -2807,9 +2881,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void PreProcessMessage(Message message, Drawing.Point pos)
+		protected virtual bool PreProcessMessage(Message message, Drawing.Point pos)
 		{
 			//	...appelé avant que l'événement ne soit traité...
+			
+			if (this.PreProcessing != null)
+			{
+				MessageEventArgs e = new MessageEventArgs (message, pos);
+				this.PreProcessing (this, e);
+				
+				if (e.Suppress)
+				{
+					return false;
+				}
+			}
 			
 			if (message.IsMouseType)
 			{
@@ -2833,6 +2918,8 @@ namespace Epsitec.Common.Widgets
 					this.SetHypertext (null);
 				}
 			}
+			
+			return true;
 		}
 		
 		protected virtual void SetHypertext(HypertextInfo info)
@@ -2858,9 +2945,22 @@ namespace Epsitec.Common.Widgets
 			//	...appelé pour traiter l'événement...
 		}
 		
-		protected virtual void PostProcessMessage(Message message, Drawing.Point pos)
+		protected virtual bool PostProcessMessage(Message message, Drawing.Point pos)
 		{
 			//	...appelé après que l'événement ait été traité...
+			
+			if (this.PostProcessing != null)
+			{
+				MessageEventArgs e = new MessageEventArgs (message, pos);
+				this.PostProcessing (this, e);
+				
+				if (e.Suppress)
+				{
+					return false;
+				}
+			}
+			
+			return true;
 		}
 		
 		
@@ -2986,6 +3086,14 @@ namespace Epsitec.Common.Widgets
 			this.hypertextList.Add (info);
 		}
 		
+		protected virtual void OnPreparePaint()
+		{
+			if (this.PreparePaint != null)
+			{
+				this.PreparePaint (this);
+			}
+		}
+		
 		protected virtual void OnPaintBackground(PaintEventArgs e)
 		{
 			if (this.PaintBackground != null)
@@ -3022,6 +3130,14 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnChildrenChanged()
 		{
+			if ((this.propagation & PropagationModes.UpChildrenChanged) != 0)
+			{
+				if (this.parent != null)
+				{
+					this.parent.OnChildrenChanged ();
+				}
+			}
+			
 			if (this.ChildrenChanged != null)
 			{
 				this.ChildrenChanged (this);
@@ -3030,6 +3146,17 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnParentChanged()
 		{
+			if ((this.propagation & PropagationModes.DownParentChanged) != 0)
+			{
+				if (this.HasChildren)
+				{
+					for (int i = 0; i < this.children.Count; i++)
+					{
+						this.children[i].OnParentChanged ();
+					}
+				}
+			}
+			
 			if (this.ParentChanged != null)
 			{
 				this.ParentChanged (this);
@@ -3291,6 +3418,15 @@ namespace Epsitec.Common.Widgets
 			
 			Command				= 0x40000000,		//	widget génère des commandes
 			DebugActive			= 0x80000000		//	widget marqué pour le debug
+		}
+		
+		[System.Flags] public enum PropagationModes : uint
+		{
+			None				= 0,
+			
+			UpChildrenChanged	= 0x00000001,		//	propage au parent: ChildrenChanged
+			
+			DownParentChanged	= 0x00010000,		//	propage aux enfants: ParentChanged
 		}
 		
 		[System.Flags] public enum TabNavigationMode
@@ -3667,11 +3803,17 @@ namespace Epsitec.Common.Widgets
 		
 		
 		protected AnchorStyles					anchor;
+		
 		protected DockStyle						dock;
-		protected Drawing.Margins				dockMargins;
+		protected Drawing.Margins				dock_margins;
+		
 		protected LayoutFlags					layout_flags;
 		protected byte							layout_arg1;
 		protected byte							layout_arg2;
+		protected Drawing.Margins				layout_margins;
+		
+		protected PropagationModes				propagation;
+		
 		protected Drawing.Color					backColor;
 		protected Drawing.Color					foreColor;
 		protected double						x1, y1, x2, y2;
