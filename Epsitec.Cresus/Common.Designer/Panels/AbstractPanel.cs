@@ -6,9 +6,9 @@ namespace Epsitec.Common.Designer.Panels
 	/// <summary>
 	/// La classe Panel est la base de tous les panneaux du designer.
 	/// </summary>
-	public abstract class Panel : Common.UI.AbstractPanel
+	public abstract class AbstractPanel : Common.UI.AbstractPanel
 	{
-		public Panel()
+		public AbstractPanel()
 		{
 		}
 	}

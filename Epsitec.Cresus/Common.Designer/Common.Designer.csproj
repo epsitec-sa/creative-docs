@@ -303,17 +303,12 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Panels\AbstractPalette.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Panels\AbstractPanel.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Panels\DataSourcePalette.cs"
+                    RelPath = "Panels\DataSourcePanel.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -328,12 +323,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Panels\WidgetAttributePalette.cs"
+                    RelPath = "Panels\WidgetAttributePanel.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Panels\WidgetSourcePalette.cs"
+                    RelPath = "Panels\WidgetSourcePanel.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Panels
 	/// La classe WidgetAttributePalette offre l'accès aux propriétés d'un
 	/// widget.
 	/// </summary>
-	public class WidgetAttributePanel : Panel
+	public class WidgetAttributePanel : AbstractPanel
 	{
 		public WidgetAttributePanel(Application application)
 		{

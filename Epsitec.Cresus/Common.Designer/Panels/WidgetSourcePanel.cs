@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Panels
 	/// La classe WidgetSourcePalette permet de remplir un panel servant de base à la
 	/// palette des widgets servant à la construction de la GUI.
 	/// </summary>
-	public class WidgetSourcePanel : Panel, IDropSource
+	public class WidgetSourcePanel : AbstractPanel, IDropSource
 	{
 		public WidgetSourcePanel()
 		{

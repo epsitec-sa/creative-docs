@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Panels
 	/// La classe DataSourcePalette permet de remplir un panel proposant une liste
 	/// des données utilisables avec DataWidget, pour la construction de la GUI.
 	/// </summary>
-	public class DataSourcePanel : Panel, IDropSource
+	public class DataSourcePanel : AbstractPanel, IDropSource
 	{
 		public DataSourcePanel()
 		{
