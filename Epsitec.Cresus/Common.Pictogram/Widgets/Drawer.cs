@@ -677,6 +677,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.Zoom = 1;
 			this.OriginX = 0;
 			this.OriginY = 0;
+			this.OnPanelChanged();
 			this.OnInfoObjectChanged();
 			this.OnCommandChanged();
 			this.InvalidateAll();

@@ -280,7 +280,9 @@ namespace Epsitec.Common.Pictogram.Data
 				graphics.Rasterizer.AddSurface(path);
 			}
 
-			if ( this.fill == GradientFill.None )  // uniforme ?
+			if ( this.fill == GradientFill.None     ||
+				 System.Math.Abs(this.sx) < 0.0001  ||
+				 System.Math.Abs(this.sy) < 0.0001  )  // uniforme ?
 			{
 				Drawing.Color c1 = this.color1;
 				if ( iconContext != null )
@@ -330,29 +332,12 @@ namespace Epsitec.Common.Pictogram.Data
 
 				if ( this.fill == GradientFill.Linear )
 				{
-#if false
-					graphics.GradientRenderer.Fill = Drawing.GradientFill.X;
-					Drawing.Point center = new Drawing.Point((bbox.Left+bbox.Right)/2, (bbox.Bottom+bbox.Top)/2);
-					double a = ((this.angle-90.0)*System.Math.PI/180);  // en radians
-					a = System.Math.Sin(a);
-					a = System.Math.Abs(a);
-					a = System.Math.Asin(a);
-					Drawing.Point p1 = Drawing.Transform.RotatePoint(center, a, new Drawing.Point(bbox.Right, center.Y));
-					Drawing.Point p2 = Drawing.Point.Projection(center, p1, new Drawing.Point(bbox.Right, bbox.Top));
-					double len = Drawing.Point.Distance(center, p2)*2;
-					graphics.GradientRenderer.SetParameters(0, len);
-					t.Translate(-len/2, 0);
-					t.Rotate(this.angle-90.0);
-					t.Scale(this.sx, this.sy);
-					t.Translate(center);
-#else
 					graphics.GradientRenderer.Fill = Drawing.GradientFill.Y;
 					Drawing.Point center = new Drawing.Point(bbox.Left+bbox.Width*this.cx, bbox.Bottom+bbox.Height*this.cy);
 					graphics.GradientRenderer.SetParameters(-100, 100);
 					t.Scale(bbox.Width/100/2*this.sx, bbox.Height/100/2*this.sy);
 					t.Translate(center);
 					t.Rotate(this.angle+180, center);
-#endif
 				}
 				else if ( this.fill == GradientFill.Circle )
 				{
