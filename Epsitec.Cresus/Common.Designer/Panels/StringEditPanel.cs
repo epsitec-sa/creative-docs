@@ -53,8 +53,8 @@ namespace Epsitec.Common.Designer.Panels
 			EditArray.Controller ctrl  = new EditArray.Controller (this.edit_array, "Table");
 			
 			this.edit_array.CommandDispatcher = new Support.CommandDispatcher ("StringEditTable", true);
-			this.edit_array.Bounds            = new Drawing.Rectangle (5, 65, dx - 10, dy - 70);
 			this.edit_array.Anchor            = AnchorStyles.All;
+			this.edit_array.AnchorMargins     = new Drawing.Margins (5, 5, 5, 65);
 			this.edit_array.ColumnCount       = 2;
 			this.edit_array.RowCount          = 0;
 			
@@ -73,14 +73,16 @@ namespace Epsitec.Common.Designer.Panels
 			StaticText     text_label = new StaticText (parent);
 			TextFieldMulti text_field = new TextFieldMulti (parent);
 			
-			text_label.Bounds = new Drawing.Rectangle (5, 50, dx - 10, 15);
-			text_label.Text   = "Co<m>m</m>mentaire :";
-			text_label.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
+			text_label.Height           = 15;
+			text_label.Text             = "Co<m>m</m>mentaire :";
+			text_label.Anchor           = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
+			text_label.AnchorMargins    = new Drawing.Margins (5, 5, 0, 50);
 			text_label.ShortcutPressed += new EventHandler (this.HandleCommentTextLabelShortcutPressed);
 			
-			text_field.Bounds        = new Drawing.Rectangle (5, 5, dx - 10, 44);
+			text_field.Height        = 44;
 			text_field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			text_field.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
+			text_field.AnchorMargins = new Drawing.Margins (5, 5, 0, 5);
 			text_field.TabIndex      = 1;
 			text_field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
