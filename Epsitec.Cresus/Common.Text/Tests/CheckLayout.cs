@@ -193,6 +193,15 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[1].Offset == 42);
 			Debug.Assert.IsTrue (breaks[2].Offset == 50);
 			
+			
+			OpenType.Font font;
+			double        font_size;
+			
+			story.Context.GetFont (story_text[0], out font, out font_size);
+			
+			Internal.StretchProfile profile = new Internal.StretchProfile ();
+			Internal.StretchProfile.Analyse (font, font_size, story_text, 0, 26, profile);
+			
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
 			status  = context.Fit (layout, ref breaks);
 			

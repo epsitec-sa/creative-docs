@@ -229,6 +229,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Internal\StretchProfile.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Internal\StyleTable.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -370,6 +375,11 @@
                 />
                 <File
                     RelPath = "Tests\CheckProperties.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Tests\CheckStretchProfile.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
