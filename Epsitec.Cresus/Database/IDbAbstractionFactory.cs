@@ -8,7 +8,6 @@ namespace Epsitec.Cresus.Database
 	{
 		string						ProviderName	{ get; }
 		ITypeConverter				TypeConverter	{ get; }
-		ISqlBuilder					SqlBuilder		{ get; }
 		
 		IDbAbstraction NewDbAbstraction(DbAccess db_access);
 	}

@@ -149,7 +149,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		static public void Initialise()
+		public static void Initialise()
 		{
 			Agg.Library.AggFontInitialise ();
 		}
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		static public int				Count
+		public static int				Count
 		{
 			get
 			{
@@ -193,7 +193,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		static public Font GetFont(int rank)
+		public static Font GetFont(int rank)
 		{
 			Font.SetupFonts ();
 			
@@ -206,12 +206,12 @@ namespace Epsitec.Common.Drawing
 			return null;
 		}
 		
-		static public Font GetFont(string face, string style)
+		public static Font GetFont(string face, string style)
 		{
 			return Font.GetFont (face, style, "");
 		}
 		
-		static public Font GetFont(string face, string style, string optical)
+		public static Font GetFont(string face, string style, string optical)
 		{
 			Font.SetupFonts ();
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();

@@ -8,19 +8,19 @@ Questions à régler
 	une colonne de type BLOB ?
 
  3.	Comment des chaînes String sont-elles stockées dans la base de
-	données (FireBird) si elles contiennent des caractères en dehors
+	données (Firebird) si elles contiennent des caractères en dehors
 	du jeu strictement 8-bit ?
 
  4.	En relation directe avec (3) étudier comment la directive CHARSET
-	doit être initialisée avec FireBird pour pouvoir stocker les infos
+	doit être initialisée avec Firebird pour pouvoir stocker les infos
 	en format UTF-8.
 
  5. Faut-il, en particulier, utiliser System.Text.Encoding pour
     transformer les chaînes .NET en UTF-8 et vice-versa lorsque l'on
-    communique avec FireBird, ou est-ce que le "provider ADO.NET"
+    communique avec Firebird, ou est-ce que le "provider ADO.NET"
     fait le travail à notre place ?
 
- 6. Est-ce que le type System.DateTime peut être utilisé avec FireBird ?
+ 6. Est-ce que le type System.DateTime peut être utilisé avec Firebird ?
     Combien de bits est-ce que cela prend ? Les données stockées dans la
     base sont-elles indépendantes du format de la date du système (un
     contre exemple serait un stockage ASCII de type jj-mm-aaaa hh:mm:ss) ?
@@ -28,12 +28,12 @@ Questions à régler
  7. ---
 
  8. Quelles sont les limites sur le type System.Decimal lorsqu'il est
-    utilisé avec FireBird ? Et pour System.Double ? Est-ce vraiment un
+    utilisé avec Firebird ? Et pour System.Double ? Est-ce vraiment un
     nombre réel 64-bit ?
 
  9. Implémenter TypeConverter.
 
-10. Implémenter FireBirdTypeConverter selon ITypeConverter. Utiliser
+10. Implémenter FirebirdTypeConverter selon ITypeConverter. Utiliser
     TypeConverter.AnalyseRawType, entre autres.
 
 11. Compléter les tests avec NUnit, vérifier que tout marche correcte-
@@ -44,10 +44,23 @@ Questions à régler
 	- OleDbAbstraction
 	- OleDbAbstractionFactory
 	
-	afin de vérifier si l'on peut accéder indifféremment à FireBird
+	afin de vérifier si l'on peut accéder indifféremment à Firebird
 	et à une base de données parlant OLE DB (ou autre).
 
 13. Définir ISqlBuilder
 
-14. Implémenter FireBirdSqlBuilder, OleDbSqlBuilder minimal.
+14. Implémenter FirebirdSqlBuilder, OleDbSqlBuilder minimal.
 
+
+Implémentation (suite)
+----------------------
+
+- Compléter DbColumnCollection (Add/AddRange/Remove/Contains/IndexOf/
+  Clear/this[])
+
+- Ecrire les tests pour DbTable, DbColumn, DbColumnCollection.
+
+- Implémenter FirebirdAbstraction.QueryTableNames et QueryTableSchema;
+  ces méthodes sont étroitement liées à une implémentation de ISqlBuilder
+  et il faudra voir si la classe FirebirdAbstraction implémente elle-
+  même ISqlBuilder, ou si elle délègue cette tâche à une classe annexe.

@@ -6,10 +6,14 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public interface IDbAbstraction
 	{
-		IDbAbstractionFactory		Factory		{ get; }
-		System.Data.IDbConnection	Connection	{ get; }
+		IDbAbstractionFactory		Factory			{ get; }
+		System.Data.IDbConnection	Connection		{ get; }
+		ISqlBuilder					SqlBuilder		{ get; }
 		
 		System.Data.IDbCommand NewDbCommand();
 		System.Data.IDataAdapter NewDataAdapter(System.Data.IDbCommand command);
+		
+		string[] QueryTableNames();
+		DbTable QueryTableSchema(string table_name);
 	}
 }

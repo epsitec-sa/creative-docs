@@ -3,11 +3,11 @@ namespace Epsitec.Cresus.Database.Implementation
 	using Epsitec.Cresus.Database;
 	
 	/// <summary>
-	/// Implémentation de IDbAbstractionFactory pour FireBird.
+	/// Implémentation de IDbAbstractionFactory pour Firebird.
 	/// </summary>
-	public class FireBirdAbstractionFactory : IDbAbstractionFactory
+	public class FirebirdAbstractionFactory : IDbAbstractionFactory
 	{
-		public FireBirdAbstractionFactory()
+		public FirebirdAbstractionFactory()
 		{
 			DbFactory.RegisterDbAbstraction (this);
 		}
@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		public string								ProviderName
 		{
-			get	{ return "FireBird"; }
+			get	{ return "Firebird"; }
 		}
 		
 		public ITypeConverter						TypeConverter
@@ -29,11 +29,6 @@ namespace Epsitec.Cresus.Database.Implementation
 			get { return null; }
 		}
 		
-		public ISqlBuilder							SqlBuilder
-		{
-			get { return null; }
-		}
-
 		#endregion
 	}
 }

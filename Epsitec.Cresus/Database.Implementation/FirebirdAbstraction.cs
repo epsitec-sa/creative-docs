@@ -3,11 +3,11 @@ namespace Epsitec.Cresus.Database.Implementation
 	using Epsitec.Cresus.Database;
 	
 	/// <summary>
-	/// Implémentation de IDbAbstraction pour FireBird.
+	/// Implémentation de IDbAbstraction pour Firebird.
 	/// </summary>
-	public class FireBirdAbstraction : IDbAbstraction, System.IDisposable
+	public class FirebirdAbstraction : IDbAbstraction, System.IDisposable
 	{
-		public FireBirdAbstraction(DbAccess db_access, IDbAbstractionFactory db_factory)
+		public FirebirdAbstraction(DbAccess db_access, IDbAbstractionFactory db_factory)
 		{
 			this.db_factory = db_factory;
 			this.db_connection = null;
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			throw new DbFactoryException ();
 		}
 
-		~FireBirdAbstraction()
+		~FirebirdAbstraction()
 		{
 			this.Dispose (false);
 		}
@@ -56,6 +56,11 @@ namespace Epsitec.Cresus.Database.Implementation
 			get { return this.db_connection; }
 		}
 		
+		public ISqlBuilder							SqlBuilder
+		{
+			get { return null; }
+		}
+
 		
 		public System.Data.IDbCommand NewDbCommand()
 		{
@@ -65,6 +70,23 @@ namespace Epsitec.Cresus.Database.Implementation
 		public System.Data.IDataAdapter NewDataAdapter(System.Data.IDbCommand command)
 		{
 			//	TODO: implémenter new DataAdapter(command)
+			return null;
+		}
+		
+		public string[] QueryTableNames()
+		{
+			//	TODO: rechercher les noms des tables connues (en filtrant éventuellement les
+			//	noms qui ne correspondent pas à des tables créées par Crésus, par exemple si
+			//	la base a des tables internes pour l'administration).
+			
+			return new string[0];
+		}
+		
+		public DbTable QueryTableSchema(string table_name)
+		{
+			//	TODO: trouver le schéma de la table (si elle existe). Si la table ne peut pas
+			//	être trouvée, on retourne simplement null.
+			
 			return null;
 		}
 		#endregion

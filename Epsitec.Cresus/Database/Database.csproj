@@ -98,6 +98,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DbColumn.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DbColumnCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DbFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -118,12 +128,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DbTable.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IDbAbstraction.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "IDbAbstractionFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "InternalCollectionBase.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

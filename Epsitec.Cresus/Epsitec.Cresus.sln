@@ -12,10 +12,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database.Test", "Database.T
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database.TestConsole", "Database.TestConsole\Database.TestConsole.csproj", "{15F8ADEB-112E-45A5-8BF9-6E51C2260969}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Widgets", "Common.Widgets\Common.Widgets.csproj", "{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -30,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Drawing", "Common.Dr
 EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 8
+		SccNumberOfProjects = 7
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -42,26 +38,22 @@ Global
 		SccLocalPath2 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection2 = Database.Test\\
-		SccProjectUniqueName3 = Database.TestConsole\\Database.TestConsole.csproj
+		SccProjectUniqueName3 = Database\\Database.csproj
 		SccLocalPath3 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection3 = Database.TestConsole\\
-		SccProjectUniqueName4 = Database\\Database.csproj
+		SccProjectFilePathRelativizedFromConnection3 = Database\\
+		SccProjectUniqueName4 = Common.Tests\\Common.Tests.csproj
 		SccLocalPath4 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection4 = Database\\
-		SccProjectUniqueName5 = Common.Tests\\Common.Tests.csproj
+		SccProjectFilePathRelativizedFromConnection4 = Common.Tests\\
+		SccProjectUniqueName5 = Common.Widgets\\Common.Widgets.csproj
 		SccLocalPath5 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection5 = Common.Tests\\
-		SccProjectUniqueName6 = Common.Widgets\\Common.Widgets.csproj
+		SccProjectFilePathRelativizedFromConnection5 = Common.Widgets\\
+		SccProjectUniqueName6 = Common.Drawing\\Common.Drawing.csproj
 		SccLocalPath6 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection6 = Common.Widgets\\
-		SccProjectUniqueName7 = Common.Drawing\\Common.Drawing.csproj
-		SccLocalPath7 = .
-		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection7 = Common.Drawing\\
+		SccProjectFilePathRelativizedFromConnection6 = Common.Drawing\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -80,10 +72,6 @@ Global
 		{065F982F-9739-426E-99C3-D7C1ED2E791C}.Debug.Build.0 = Debug|.NET
 		{065F982F-9739-426E-99C3-D7C1ED2E791C}.Release.ActiveCfg = Release|.NET
 		{065F982F-9739-426E-99C3-D7C1ED2E791C}.Release.Build.0 = Release|.NET
-		{15F8ADEB-112E-45A5-8BF9-6E51C2260969}.Debug.ActiveCfg = Debug|.NET
-		{15F8ADEB-112E-45A5-8BF9-6E51C2260969}.Debug.Build.0 = Debug|.NET
-		{15F8ADEB-112E-45A5-8BF9-6E51C2260969}.Release.ActiveCfg = Release|.NET
-		{15F8ADEB-112E-45A5-8BF9-6E51C2260969}.Release.Build.0 = Release|.NET
 		{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}.Debug.ActiveCfg = Debug|.NET
 		{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}.Debug.Build.0 = Debug|.NET
 		{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}.Release.ActiveCfg = Release|.NET

@@ -98,12 +98,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "FireBirdAbstraction.cs"
+                    RelPath = "FirebirdAbstraction.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "FireBirdAbstractionFactory.cs"
+                    RelPath = "FirebirdAbstractionFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

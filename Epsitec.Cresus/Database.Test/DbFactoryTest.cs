@@ -25,11 +25,11 @@ namespace Epsitec.Cresus.Database
 		{
 			DbAccess db_access = new DbAccess ();
 			
-			db_access.provider = "FireBird";
+			db_access.provider = "Firebird";
 			
 			IDbAbstraction db_abstraction = DbFactory.FindDbAbstraction (db_access);
 			
-			Assertion.AssertNotNull ("Could not find FireBird abstraction", db_abstraction);
+			Assertion.AssertNotNull ("Could not find Firebird abstraction", db_abstraction);
 		}
 		
 		[Test]
