@@ -13,79 +13,10 @@ namespace Epsitec.Common.Text.Styles
 		{
 		}
 		
-//		public SimpleStyle(System.Collections.ICollection components)
-//		{
-//			this.Initialise (components);
-//		}
-		
-		
-		public long 							Version
+		public SimpleStyle(System.Collections.ICollection properties)
 		{
-			get
-			{
-				if (this.version == 0)
-				{
-					this.Update ();
-				}
-				
-				return this.version;
-			}
+			this.Initialise (properties);
 		}
-		
-		public Properties.BaseProperty[]		Properties
-		{
-			get
-			{
-				return this.properties;
-			}
-		}
-		
-		
-		public void Invalidate()
-		{
-			this.version = 0;
-			this.ClearContentsSignature ();
-		}
-		
-		public bool Update()
-		{
-			//	Recalcule le numéro de version correspondant à ce style
-			//	en se basant sur les versions des propriétés.
-			
-			bool changed = false;
-			
-			//	Retourne true si une modification a eu lieu.
-			
-			if ((this.properties != null) &&
-				(this.properties.Length > 0))
-			{
-				long version = 0;
-				
-				for (int i = 0; i < this.properties.Length; i++)
-				{
-					version = System.Math.Max (version, this.properties[i].Version);
-				}
-				
-				if (this.version != version)
-				{
-					this.version = version;
-					this.ClearContentsSignature ();
-					
-					changed = true;
-				}
-			}
-			else if (this.version > 0)
-			{
-				this.version = 0;
-				this.ClearContentsSignature ();
-				
-				changed = true;
-			}
-			
-			return changed;
-		}
-		
-		
 		
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
@@ -207,7 +138,6 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		private long							version;
 		private Properties.BaseProperty[]		properties;
 	}
 }

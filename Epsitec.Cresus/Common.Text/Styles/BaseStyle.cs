@@ -6,12 +6,14 @@ namespace Epsitec.Common.Text.Styles
 	/// <summary>
 	/// Summary description for BaseStyle.
 	/// </summary>
-	public abstract class BaseStyle : IContentsSignature, IContentsSignatureUpdater, IContentsComparer
+	public abstract class BaseStyle : BasePropertyContainer, IContentsComparer
 	{
 		protected BaseStyle()
 		{
-			this.local_settings = null;
-			this.extra_settings = null;
+		}
+		
+		protected BaseStyle(System.Collections.ICollection properties) : base (properties)
+		{
 		}
 		
 		
@@ -27,14 +29,6 @@ namespace Epsitec.Common.Text.Styles
 			set
 			{
 				this.style_index = value;
-			}
-		}
-		
-		public int								CountUsers
-		{
-			get
-			{
-				return this.user_count;
 			}
 		}
 		
@@ -54,19 +48,6 @@ namespace Epsitec.Common.Text.Styles
 			}
 		}
 		
-		
-		
-		public void IncrementUserCount()
-		{
-			Debug.Assert.IsInBounds (this.user_count+1, 1, BaseStyle.MaxUserCount-1);
-			this.user_count++;
-		}
-		
-		public void DecrementUserCount()
-		{
-			Debug.Assert.IsInBounds (this.user_count, 1, BaseStyle.MaxUserCount-1);
-			this.user_count--;
-		}
 		
 		
 		public int FindSettings(Styles.LocalSettings settings)
@@ -358,47 +339,8 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		protected void ClearContentsSignature()
-		{
-			this.contents_signature = 0;
-		}
-		
-		
-		#region IContentsSignatureUpdater Members
-		public abstract void UpdateContentsSignature(IO.IChecksum checksum);
-		#endregion
-		
 		#region IContentsComparer Members
 		public abstract bool CompareEqualContents(object value);
-		#endregion
-		
-		#region IContentsSignature Members
-		public int GetContentsSignature()
-		{
-			//	Retourne la signature (CRC) correspondant au contenu du style.
-			//	La signature exclut les réglages et l'index.
-			
-			//	Si la signature n'existe pas, il faut la calculer; on ne fait
-			//	cela qu'à la demande, car le calcul de la signature peut être
-			//	relativement onéreux :
-			
-			if (this.contents_signature == 0)
-			{
-				IO.IChecksum checksum = IO.Checksum.CreateAdler32 ();
-				
-				this.UpdateContentsSignature (checksum);
-				
-				int signature = (int) checksum.Value;
-				
-				//	La signature calculée pourrait être nulle; dans ce cas, on
-				//	l'ajuste pour éviter d'interpréter cela comme une absence
-				//	de signature :
-				
-				this.contents_signature = (signature == 0) ? 1 : signature;
-			}
-			
-			return this.contents_signature;
-		}
 		#endregion
 		
 
@@ -406,8 +348,6 @@ namespace Epsitec.Common.Text.Styles
 		public const int						MaxUserCount = 1000*1000;
 		
 		private int								style_index;
-		private int								contents_signature;
-		private int								user_count;
 		
 		private Styles.LocalSettings[]			local_settings;		//	0..n valides; (prendre index-1 pour l'accès)
 		private Styles.ExtraSettings[]			extra_settings;		//	0..n valides; (prendre index-1 pour l'accès)

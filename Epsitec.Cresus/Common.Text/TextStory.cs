@@ -190,10 +190,10 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void ConvertToStyledText(string simple_text, System.Collections.ICollection attributes, out ulong[] styled_text)
+		public void ConvertToStyledText(string simple_text, System.Collections.ICollection properties, out ulong[] styled_text)
 		{
-			//	Génère un texte en lui appliquant les attributs (propriétés, réglages)
-			//	qui définissent des styles.
+			//	Génère un texte en lui appliquant les propriétés qui définissent
+			//	le style et les réglages associés.
 			
 			uint[] utf32;
 			
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Text
 			
 			//	Génère l'objet style correspondant aux attributs spécifiés :
 			
-			int length = attributes.Count;
+			int length = properties.Count;
 			
 			Properties.BaseProperty[] prop_mixed = new Properties.BaseProperty[length];
 			
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Text
 			System.Collections.ArrayList prop_local = new System.Collections.ArrayList ();
 			System.Collections.ArrayList prop_extra = new System.Collections.ArrayList ();
 			
-			attributes.CopyTo (prop_mixed, 0);
+			properties.CopyTo (prop_mixed, 0);
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -225,13 +225,19 @@ namespace Epsitec.Common.Text
 						prop_extra.Add (prop_mixed[i]);
 						break;
 					default:
-						throw new System.ArgumentException ("Invalid attribute type", "attributes");
+						throw new System.ArgumentException ("Invalid property type", "properties");
 				}
 			}
 			
 			//	TODO: générer 'style'
 			
+			Styles.SimpleStyle   search_style = new Styles.SimpleStyle (prop_style);
+			Styles.LocalSettings search_local = new Styles.LocalSettings (prop_local);
+			Styles.ExtraSettings search_extra = new Styles.ExtraSettings (prop_extra);
+			
 			ulong style = 0;
+			
+			this.style_list.StyleTable.Attach (ref style, search_style, search_local, search_extra);
 			
 			length      = utf32.Length;
 			styled_text = new ulong[length];

@@ -159,7 +159,10 @@ namespace Epsitec.Common.Text.Internal
 			
 			foreach (Styles.SimpleStyle style in this.styles)
 			{
-				changed |= style.Update ();
+				if (style.Update ())
+				{
+					changed = true;
+				}
 			}
 			
 			return changed;
@@ -228,7 +231,6 @@ namespace Epsitec.Common.Text.Internal
 			
 			return null;
 		}
-		
 		
 		
 		private void Add(Styles.SimpleStyle style)

@@ -12,6 +12,10 @@ namespace Epsitec.Common.Text.Styles
 		{
 		}
 		
+		public LocalSettings(System.Collections.ICollection properties) : base (properties)
+		{
+		}
+		
 		
 		public static bool CompareEqual(LocalSettings a, LocalSettings b)
 		{

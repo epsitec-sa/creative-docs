@@ -16,6 +16,15 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		internal Internal.StyleTable			StyleTable
+		{
+			get
+			{
+				return this.styles;
+			}
+		}
+		
+		
 		private Internal.StyleTable				styles;
 	}
 }

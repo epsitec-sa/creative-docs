@@ -9,10 +9,10 @@ namespace Epsitec.Common.Text.Properties
 	/// </summary>
 	public enum PropertyType
 	{
-		Invalid				= 0,
+		Invalid			= 0,			//	définition non valide
 		
-		Style				= 1,
-		LocalSetting		= 2,
-		ExtraSetting		= 3,
+		Style			= 1,			//	définition pour un style
+		LocalSetting	= 2,			//	définition pour un réglage local
+		ExtraSetting	= 3,			//	définition pour un réglage spécial
 	}
 }
