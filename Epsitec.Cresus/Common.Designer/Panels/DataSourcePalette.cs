@@ -69,18 +69,10 @@ namespace Epsitec.Common.Designer.Panels
 			
 			Common.UI.Engine.BindWidget (this.data_graph.Root, this.data_list);
 			
-			this.CreateDragSource (Representation.TextField,     typeof (Button), "[ 1 ]", "1", 4+34*0, 133, 32, 32);
-			this.CreateDragSource (Representation.NumericUpDown, typeof (Button), "[ 2 ]", "2", 4+34*1, 133, 32, 32);
-			this.CreateDragSource (Representation.RadioList,     typeof (Button), "[ 3 ]", "3", 4+34*2, 133, 32, 32);
-			this.CreateDragSource (Representation.CheckColumns,  typeof (Button), "[ 4 ]", "4", 4+34*3, 133, 32, 32);
-			
-			Button test = new Button (this.widget);
-			
-			test.Text          = "+";
-			test.Size          = new Drawing.Size (test.DefaultHeight, test.DefaultHeight);
-			test.Anchor        = AnchorStyles.BottomRight;
-			test.AnchorMargins = new Drawing.Margins (0, 4, 0, 4);
-			test.Clicked      += new MessageEventHandler(this.HandleTestClicked);
+			this.CreateDragSource (Representation.TextField,     typeof (Button), @"<img src=""manifest:Epsitec.Common.Designer.Images.WidgetField.icon""/>", "1", 4+34*0, 133, 32, 32);
+			this.CreateDragSource (Representation.NumericUpDown, typeof (Button), @"<img src=""manifest:Epsitec.Common.Designer.Images.WidgetFieldUpDown.icon""/>", "2", 4+34*1, 133, 32, 32);
+			this.CreateDragSource (Representation.RadioList,     typeof (Button), @"<img src=""manifest:Epsitec.Common.Designer.Images.WidgetRadios.icon""/>", "3", 4+34*2, 133, 32, 32);
+			this.CreateDragSource (Representation.CheckColumns,  typeof (Button), @"<img src=""manifest:Epsitec.Common.Designer.Images.WidgetChecks.icon""/>", "4", 4+34*3, 133, 32, 32);
 			
 			this.UpdateDragSources ();
 		}
@@ -220,16 +212,6 @@ namespace Epsitec.Common.Designer.Panels
 			this.active_drag_source = null;
 		}
 		
-		
-		private void HandleTestClicked(object sender, MessageEventArgs e)
-		{
-//			Common.UI.Data.Field field = new Common.UI.Data.Field ("Field"+this.data_graph.Count.ToString (), "Abc");
-			Common.UI.Data.Field field = new Common.UI.Data.Field ("Field"+this.data_graph.Count.ToString (), WindowStyles.CanMaximize | WindowStyles.CanMinimize);
-			
-			field.DefineCaption ("Field " + this.data_graph.Count.ToString ());
-			
-			this.data_graph.Add (field);
-		}
 		
 		private void HandleDataListSelectedIndexChanged(object sender)
 		{
