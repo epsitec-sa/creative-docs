@@ -27,15 +27,42 @@ namespace Epsitec.Common.Widgets
 		{
 			Window window = new Window ();
 			
-			DragSource  source = new DragSource ();
-			CheckButton button = new CheckButton ();
+			DragSource  source1 = new DragSource ();
+			DragSource  source2 = new DragSource ();
+			DragSource  source3 = new DragSource ();
+			DragSource  source4 = new DragSource ();
+			CheckButton button1 = new CheckButton ();
+			RadioButton button2 = new RadioButton ();
+			Button      button3 = new Button ();
+			TextField   textfld = new TextField ();
 			
-			button.Text = "choix";
-			button.Size = new Drawing.Size (80, 24);
+			button1.Text = "CheckBox";
+			button1.Size = new Drawing.Size (80, button1.DefaultHeight);
 			
-			source.Bounds = new Drawing.Rectangle (10, 10, 100, 30);
-			source.Parent = window.Root;
-			source.Widget = button;
+			button2.Text = "RadioButton";
+			button2.Size = new Drawing.Size (80, button2.DefaultHeight);
+			
+			button3.Text = "Button";
+			button3.Size = new Drawing.Size (80, button3.DefaultHeight);
+			
+			textfld.Text = "TextField";
+			textfld.Size = new Drawing.Size (80, textfld.DefaultHeight);
+			
+			source1.Bounds = new Drawing.Rectangle (10, 10, button1.Width, button1.Height);
+			source1.Parent = window.Root;
+			source1.Widget = button1;
+			
+			source2.Bounds = new Drawing.Rectangle (10, 40, button2.Width, button2.Height);
+			source2.Parent = window.Root;
+			source2.Widget = button2;
+			
+			source3.Bounds = new Drawing.Rectangle (10, 70, button3.Width, button3.Height);
+			source3.Parent = window.Root;
+			source3.Widget = button3;
+			
+			source4.Bounds = new Drawing.Rectangle (10, 100, textfld.Width, textfld.Height);
+			source4.Parent = window.Root;
+			source4.Widget = textfld;
 			
 			window.Text = "CheckDragSource";
 			window.Show ();

@@ -27,6 +27,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.Focusable;
+			this.InternalState &= ~InternalState.PossibleContainer;
 
 			double h = this.DefaultFontHeight+4;
 			this.defHeight = h;
