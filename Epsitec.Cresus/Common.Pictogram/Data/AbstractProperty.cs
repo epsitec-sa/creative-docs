@@ -16,9 +16,12 @@ namespace Epsitec.Common.Pictogram.Data
 		Arrow,				// extrémité des segments
 		Corner,				// coins des rectangles
 		Regular,			// définitions du polygone régulier
-		TextString,			// texte
-		TextFontName,		// police
-		TextFontOptical,	// police
+		BackColor,			// texte: couleur de fond
+		TextString,			// texte: chaîne
+		TextFont,			// texte: police
+		TextJustif,			// texte: justification
+		TextLine,			// texte: justification
+		Image,				// nom de l'image bitmap
 		ModColor,			// modification de couleur
 	}
 
@@ -45,9 +48,12 @@ namespace Epsitec.Common.Pictogram.Data
 				case PropertyType.Arrow:            property = new PropertyArrow();     break;
 				case PropertyType.Corner:           property = new PropertyCorner();    break;
 				case PropertyType.Regular:          property = new PropertyRegular();   break;
+				case PropertyType.BackColor:        property = new PropertyColor();     break;
 				case PropertyType.TextString:       property = new PropertyString();    break;
-				case PropertyType.TextFontName:     property = new PropertyCombo();     break;
-				case PropertyType.TextFontOptical:  property = new PropertyCombo();     break;
+				case PropertyType.TextFont:         property = new PropertyFont();      break;
+				case PropertyType.TextJustif:       property = new PropertyJustif();    break;
+				case PropertyType.TextLine:         property = new PropertyTextLine();  break;
+				case PropertyType.Image:            property = new PropertyImage();     break;
 				case PropertyType.ModColor:         property = new PropertyModColor();  break;
 			}
 			if ( property == null )  return null;
@@ -68,9 +74,12 @@ namespace Epsitec.Common.Pictogram.Data
 				case PropertyType.Arrow:            return "Arrow";
 				case PropertyType.Corner:           return "Corner";
 				case PropertyType.Regular:          return "Regular";
+				case PropertyType.BackColor:        return "BackColor";
 				case PropertyType.TextString:       return "TextString";
-				case PropertyType.TextFontName:     return "TextFontName";
-				case PropertyType.TextFontOptical:  return "TextFontOptical";
+				case PropertyType.TextFont:         return "TextFont";
+				case PropertyType.TextJustif:       return "TextJustif";
+				case PropertyType.TextLine:         return "TextLine";
+				case PropertyType.Image:            return "Image";
 				case PropertyType.ModColor:         return "ModColor";
 			}
 			return "";
@@ -89,9 +98,12 @@ namespace Epsitec.Common.Pictogram.Data
 				case "Arrow":            return PropertyType.Arrow;
 				case "Corner":           return PropertyType.Corner;
 				case "Regular":          return PropertyType.Regular;
+				case "BackColor":        return PropertyType.BackColor;
 				case "TextString":       return PropertyType.TextString;
-				case "TextFontName":     return PropertyType.TextFontName;
-				case "TextFontOptical":  return PropertyType.TextFontOptical;
+				case "TextFont":         return PropertyType.TextFont;
+				case "TextJustif":       return PropertyType.TextJustif;
+				case "TextLine":         return PropertyType.TextLine;
+				case "Image":            return PropertyType.Image;
 				case "ModColor":         return PropertyType.ModColor;
 
 			}
@@ -122,12 +134,60 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.styleID = value; }
 		}
 
+		// Intensité pour le fond du panneau.
+		[XmlIgnore]
+		public double BackgroundIntensity
+		{
+			get
+			{
+				switch ( this.type )
+				{
+					case PropertyType.LineColor:        return 0.85;
+					case PropertyType.LineMode:         return 0.85;
+					case PropertyType.FillGradient:     return 0.95;
+					case PropertyType.Shadow:           return 0.80;
+					case PropertyType.PolyClose:        return 0.90;
+					case PropertyType.Arrow:            return 0.85;
+					case PropertyType.Corner:           return 0.90;
+					case PropertyType.Regular:          return 0.90;
+					case PropertyType.BackColor:        return 0.80;
+					case PropertyType.TextString:       return 0.80;
+					case PropertyType.TextFont:         return 0.80;
+					case PropertyType.TextJustif:       return 0.80;
+					case PropertyType.TextLine:         return 0.80;
+					case PropertyType.Image:            return 0.90;
+					case PropertyType.ModColor:         return 0.95;
+				}
+				return 0.0;
+			}
+		}
+
 		// Nom de la propriété.
 		[XmlIgnore]
 		public string Text
 		{
-			get { return this.text; }
-			set { this.text = value; }
+			get
+			{
+				switch ( this.type )
+				{
+					case PropertyType.LineColor:        return "Couleur trait";
+					case PropertyType.LineMode:         return "Epaisseur trait";
+					case PropertyType.FillGradient:     return "Couleur intérieure";
+					case PropertyType.Shadow:           return "Ombre";
+					case PropertyType.PolyClose:        return "Contour fermé";
+					case PropertyType.Arrow:            return "Extrémités";
+					case PropertyType.Corner:           return "Coins";
+					case PropertyType.Regular:          return "Nombre de côtés";
+					case PropertyType.BackColor:        return "Couleur fond";
+					case PropertyType.TextString:       return "Texte";
+					case PropertyType.TextFont:         return "Police";
+					case PropertyType.TextJustif:       return "Mise en page";
+					case PropertyType.TextLine:         return "Position texte";
+					case PropertyType.Image:            return "Image";
+					case PropertyType.ModColor:         return "Transformation de couleur :";
+				}
+				return "";
+			}
 		}
 
 		// Nom de la propriété ou du style si c'en est un.
@@ -138,21 +198,13 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				if ( this.styleName == "" )
 				{
-					return this.text;
+					return this.Text;
 				}
 				else
 				{
 					return string.Format("<b>{0}</b>", this.styleName);
 				}
 			}
-		}
-
-		// Couleur de fond du panneau associé.
-		[XmlIgnore]
-		public double BackgroundIntensity
-		{
-			get { return this.backgroundIntensity; }
-			set { this.backgroundIntensity = value; }
 		}
 
 		// Mode de déploiement du panneau associé.
@@ -196,20 +248,11 @@ namespace Epsitec.Common.Pictogram.Data
 		// Effectue une copie de la propriété.
 		public virtual void CopyTo(AbstractProperty property)
 		{
-			this.CopyInfoTo(property);
+			property.type           = this.type;
+			property.multi          = this.multi;
 			property.styleName      = this.styleName;
 			property.styleID        = this.styleID;
 			property.editProperties = this.editProperties;
-		}
-
-		// Effectue une copie des informations de base de la propriété.
-		public virtual void CopyInfoTo(AbstractProperty property)
-		{
-			property.type                = this.type;
-			property.text                = this.text;
-			property.backgroundIntensity = this.backgroundIntensity;
-			property.extendedSize        = this.extendedSize;
-			property.multi               = this.multi;
 		}
 
 		// Compare deux propriétés.
@@ -287,15 +330,13 @@ namespace Epsitec.Common.Pictogram.Data
 		public event EventHandler Changed;
 
 
-		protected string						text;
-		protected double						backgroundIntensity;
-		protected bool							extendedSize = false;
-		protected bool							multi = false;
-		protected bool							editProperties = false;
-
-		protected PropertyType					type;
+		protected PropertyType					type = PropertyType.None;
 		protected string						styleName = "";
 		protected int							styleID = 0;
+		protected bool							multi = false;
+		protected bool							editProperties = false;
+		protected bool							extendedSize = false;
+
 		protected System.Collections.ArrayList	handles = new System.Collections.ArrayList();
 	}
 }

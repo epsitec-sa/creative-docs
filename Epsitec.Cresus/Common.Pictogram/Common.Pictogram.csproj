@@ -103,6 +103,11 @@
                     AssemblyName = "System.Data"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
                 />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -124,6 +129,11 @@
                 />
                 <File
                     RelPath = "Data\AbstractProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\ArrayCell.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -158,6 +168,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Data\ObjectArray.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Data\ObjectBezier.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -174,6 +189,11 @@
                 />
                 <File
                     RelPath = "Data\ObjectGroup.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\ObjectImage.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -213,7 +233,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Data\ObjectText.cs"
+                    RelPath = "Data\ObjectTextBox.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\ObjectTextLine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -248,7 +273,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Data\PropertyFont.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Data\PropertyGradient.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\PropertyImage.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\PropertyJustif.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -279,6 +319,11 @@
                 />
                 <File
                     RelPath = "Data\PropertyString.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\PropertyTextLine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -348,7 +393,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Widgets\PanelFont.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\PanelGradient.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\PanelImage.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\PanelJustif.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -394,6 +454,11 @@
                 />
                 <File
                     RelPath = "Widgets\PanelStyles.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\PanelTextLine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

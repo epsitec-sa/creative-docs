@@ -24,10 +24,14 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlArrayItem("Line",     Type=typeof(PropertyLine))]
 		[XmlArrayItem("List",     Type=typeof(PropertyList))]
 		[XmlArrayItem("Combo",    Type=typeof(PropertyCombo))]
+		[XmlArrayItem("Font",     Type=typeof(PropertyFont))]
+		[XmlArrayItem("Justif",   Type=typeof(PropertyJustif))]
+		[XmlArrayItem("TextLine", Type=typeof(PropertyTextLine))]
 		[XmlArrayItem("String",   Type=typeof(PropertyString))]
 		[XmlArrayItem("Arrow",    Type=typeof(PropertyArrow))]
 		[XmlArrayItem("Corner",   Type=typeof(PropertyCorner))]
 		[XmlArrayItem("Regular",  Type=typeof(PropertyRegular))]
+		[XmlArrayItem("Image",    Type=typeof(PropertyImage))]
 		[XmlArrayItem("ModColor", Type=typeof(PropertyModColor))]
 		public System.Collections.ArrayList Properties
 		{
@@ -52,7 +56,10 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlArrayItem("Polyline",  Type=typeof(ObjectPoly))]
 		[XmlArrayItem("Rectangle", Type=typeof(ObjectRectangle))]
 		[XmlArrayItem("Polygon",   Type=typeof(ObjectRegular))]
-		[XmlArrayItem("Text",      Type=typeof(ObjectText))]
+		[XmlArrayItem("TextLine",  Type=typeof(ObjectTextLine))]
+		[XmlArrayItem("TextBox",   Type=typeof(ObjectTextBox))]
+		[XmlArrayItem("Array",     Type=typeof(ObjectArray))]
+		[XmlArrayItem("Image",     Type=typeof(ObjectImage))]
 		public System.Collections.ArrayList Objects
 		{
 			get { return this.objects; }
@@ -148,7 +155,7 @@ namespace Epsitec.Common.Pictogram.Data
 			return -1;
 		}
 
-		// Début du déplacement une poignée.
+		// Début du déplacement d'une poignée.
 		public virtual void MoveHandleStarting(int rank, Drawing.Point pos, IconContext iconContext)
 		{
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
@@ -178,6 +185,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
 			{
 				iconContext.ConstrainSnapPos(ref pos);
+				iconContext.SnapGrid(ref pos);
 				this.Handle(rank).Position = pos;
 				this.dirtyBbox = true;
 			}
@@ -196,6 +204,44 @@ namespace Epsitec.Common.Pictogram.Data
 					index += count;
 				}
 				this.dirtyBbox = true;
+			}
+		}
+
+		// Déplace un coin tout en conservant une forme rectangulaire.
+		protected void MoveCorner(Drawing.Point pc, int corner, int left, int right, int opposite)
+		{
+			if ( AbstractObject.IsRectangular(this.Handle(0).Position, this.Handle(1).Position, this.Handle(2).Position, this.Handle(3).Position) )
+			{
+				this.Handle(corner).Position = pc;
+
+				Drawing.Point pl = this.Handle(left).Position;
+				Drawing.Point pr = this.Handle(right).Position;
+				Drawing.Point po = this.Handle(opposite).Position;
+
+				if ( pl == pr )
+				{
+					this.Handle(left ).Position = new Drawing.Point(pc.X, po.Y);
+					this.Handle(right).Position = new Drawing.Point(po.X, pc.Y);
+				}
+				else if ( pl == po )
+				{
+					this.Handle(right).Position = Drawing.Point.Projection(pr, po, pc);
+					this.Handle(left ).Position = po+(pc-this.Handle(right).Position);
+				}
+				else if ( pr == po )
+				{
+					this.Handle(left ).Position = Drawing.Point.Projection(pl, po, pc);
+					this.Handle(right).Position = po+(pc-this.Handle(left).Position);
+				}
+				else
+				{
+					this.Handle(left ).Position = Drawing.Point.Projection(pl, po, pc);
+					this.Handle(right).Position = Drawing.Point.Projection(pr, po, pc);
+				}
+			}
+			else
+			{
+				this.Handle(corner).Position = pc;
 			}
 		}
 
@@ -250,6 +296,38 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 			}
 			this.dirtyBbox = true;
+		}
+
+
+		// Début du déplacement pendant l'édition.
+		public virtual void MoveEditStarting(Drawing.Point pos, IconContext iconContext)
+		{
+		}
+
+		// Déplacement pendant l'édition.
+		public virtual void MoveEditProcess(Drawing.Point pos, IconContext iconContext)
+		{
+		}
+
+
+		// Détecte la cellule pointée par la souris.
+		public virtual int DetectCell(Drawing.Point pos)
+		{
+			return -1;
+		}
+
+		// Début du déplacement d'une cellule.
+		public virtual void MoveCellStarting(int rank, Drawing.Point pos,
+											 bool isShift, bool isCtrl, int downCount,
+											 IconContext iconContext)
+		{
+		}
+
+		// Déplace une cellule.
+		public virtual void MoveCellProcess(int rank, Drawing.Point pos,
+											bool isShift, bool isCtrl,
+											IconContext iconContext)
+		{
 		}
 
 
@@ -352,26 +430,33 @@ namespace Epsitec.Common.Pictogram.Data
 		// Sélectionne toutes les poignées de l'objet.
 		public void Select()
 		{
-			this.Select(true);
+			this.Select(true, false);
 		}
 
 		// Désélectionne toutes les poignées de l'objet.
 		public void Deselect()
 		{
-			this.Select(false);
+			this.Select(false, false);
 		}
 
 		// Sélectionne ou désélectionne toutes les poignées de l'objet.
-		public virtual void Select(bool select)
+		public void Select(bool select)
+		{
+			this.Select(select, false);
+		}
+
+		// Sélectionne ou désélectionne toutes les poignées de l'objet.
+		public virtual void Select(bool select, bool edit)
 		{
 			this.selected = select;
+			this.edited = edit;
 			this.globalSelected = false;
 
 			int total = this.TotalHandleProperties;
 			for ( int i=0 ; i<total ; i++ )
 			{
 				Handle handle = this.Handle(i);
-				handle.IsSelected = select;
+				handle.IsSelected = select && !edit;
 				handle.IsGlobalSelected = false;
 			}
 			this.dirtyBbox = true;
@@ -398,6 +483,7 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 			}
 			this.selected = ( sel > 0 );
+			this.edited = false;
 			this.globalSelected = false;
 		}
 
@@ -425,6 +511,26 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.globalSelected;
 		}
 
+		// Adapte une poignée à la sélection globale.
+		protected void GlobalHandleAdapt(int rank)
+		{
+			this.Handle(rank).IsGlobalSelected = this.globalSelected && this.Handle(rank).IsSelected;
+		}
+
+
+		// Indique si l'objet est éditable.
+		public virtual bool IsEditable()
+		{
+			return false;
+		}
+
+		// Indique si l'objet est en cours d'édition.
+		public bool IsEdited()
+		{
+			return this.edited;
+		}
+
+		
 		// Indique si les propriétés de l'objet sont en cours d'édition.
 		[XmlIgnore]
 		public bool EditProperties
@@ -469,6 +575,34 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			System.Diagnostics.Debug.Assert(this.properties[rank] != null);
 			return this.properties[rank] as AbstractProperty;
+		}
+
+		// Ajoute toutes les propriétés de l'objet dans une liste.
+		// Un type de propriété donné n'est qu'une fois dans la liste.
+		public virtual void PropertiesList(System.Collections.ArrayList list)
+		{
+			foreach ( AbstractProperty property in this.properties )
+			{
+				this.PropertyAllList(list, property);
+			}
+		}
+
+		// Ajoute intelligemment une propriété dans la liste.
+		protected void PropertyAllList(System.Collections.ArrayList list, AbstractProperty property)
+		{
+			AbstractProperty existing = property.Search(list);
+			if ( existing == null )  // pas trouvé dans la liste ?
+			{
+				property.Multi = false;
+				list.Add(property);
+			}
+			else	// déjà dans la liste ?
+			{
+				if ( !property.Compare(existing) )
+				{
+					existing.Multi = true;
+				}
+			}
 		}
 
 		// Donne une propriété de l'objet.
@@ -535,6 +669,27 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Donne une propriété de l'objet.
+		public PropertyFont PropertyFont(int rank)
+		{
+			System.Diagnostics.Debug.Assert(this.properties[rank] != null);
+			return this.properties[rank] as PropertyFont;
+		}
+
+		// Donne une propriété de l'objet.
+		public PropertyJustif PropertyJustif(int rank)
+		{
+			System.Diagnostics.Debug.Assert(this.properties[rank] != null);
+			return this.properties[rank] as PropertyJustif;
+		}
+
+		// Donne une propriété de l'objet.
+		public PropertyTextLine PropertyTextLine(int rank)
+		{
+			System.Diagnostics.Debug.Assert(this.properties[rank] != null);
+			return this.properties[rank] as PropertyTextLine;
+		}
+
+		// Donne une propriété de l'objet.
 		public PropertyArrow PropertyArrow(int rank)
 		{
 			System.Diagnostics.Debug.Assert(this.properties[rank] != null);
@@ -556,6 +711,13 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Donne une propriété de l'objet.
+		public PropertyImage PropertyImage(int rank)
+		{
+			System.Diagnostics.Debug.Assert(this.properties[rank] != null);
+			return this.properties[rank] as PropertyImage;
+		}
+
+		// Donne une propriété de l'objet.
 		public PropertyModColor PropertyModColor(int rank)
 		{
 			System.Diagnostics.Debug.Assert(this.properties[rank] != null);
@@ -563,7 +725,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Cherche une propriété d'après son type.
-		protected AbstractProperty SearchProperty(PropertyType type)
+		protected virtual AbstractProperty SearchProperty(PropertyType type)
 		{
 			foreach ( AbstractProperty property in this.properties )
 			{
@@ -573,7 +735,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Cherche si une propriété est liée à un style.
-		public bool IsLinkProperty(AbstractProperty property)
+		public virtual bool IsLinkProperty(AbstractProperty property)
 		{
 			if ( property.StyleID == 0 )  return false;
 			AbstractProperty actual = this.SearchProperty(property.Type);
@@ -581,21 +743,28 @@ namespace Epsitec.Common.Pictogram.Data
 			return ( actual.StyleID == property.StyleID );
 		}
 
-		// Retourne une propriété.
-		public AbstractProperty GetProperty(PropertyType type)
+		// Retourne une copie d'une propriété.
+		public virtual AbstractProperty GetProperty(PropertyType type)
 		{
 			AbstractProperty actual = this.SearchProperty(type);
 			if ( actual == null )  return null;
 
 			AbstractProperty copy = AbstractProperty.NewProperty(type);
 			if ( copy == null )  return null;
-
 			actual.CopyTo(copy);
 			return copy;
 		}
 
 		// Modifie une propriété.
-		public void SetProperty(AbstractProperty property)
+		public virtual void SetPropertyBase(AbstractProperty property)
+		{
+			AbstractProperty actual = this.SearchProperty(property.Type);
+			if ( actual == null )  return;
+			property.CopyTo(actual);
+		}
+
+		// Modifie une propriété.
+		public virtual void SetProperty(AbstractProperty property)
 		{
 			AbstractProperty actual = this.SearchProperty(property.Type);
 			if ( actual == null )
@@ -615,17 +784,38 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Modifie juste l'état "étendu" d'une propriété.
-		public void SetPropertyExtended(AbstractProperty property)
+		// Mémorise l'état étendu d'une propriété.
+		// Seul Drawer.objectMemory s'occupe de mémoriser cet état.
+		public void SetPropertyExtended(PropertyType type, bool extended)
 		{
-			AbstractProperty actual = this.SearchProperty(property.Type);
-			if ( actual == null )  return;
+			AbstractProperty property = this.SearchProperty(type);
+			if ( property == null )  return;
+			property.ExtendedSize = extended;
+		}
 
-			actual.ExtendedSize = property.ExtendedSize;
+		// Retourne l'état étendu d'une propriété.
+		// Seul Drawer.objectMemory s'occupe de mémoriser cet état.
+		public bool GetPropertyExtended(PropertyType type)
+		{
+			AbstractProperty property = this.SearchProperty(type);
+			if ( property == null )  return false;
+			return property.ExtendedSize;
+		}
+
+		// Initialise l'état étendu selon Drawer.objectMemory a toutes
+		// les propriétés de l'objet.
+		public void SetPropertyExtended(AbstractObject objectMemory)
+		{
+			foreach ( AbstractProperty property in this.properties )
+			{
+				AbstractProperty p = objectMemory.SearchProperty(property.Type);
+				if ( p == null )  continue;
+				property.ExtendedSize = p.ExtendedSize;
+			}
 		}
 
 		// Reprend toutes les propriétés d'un objet source.
-		public void CloneProperties(AbstractObject src)
+		public virtual void CloneProperties(AbstractObject src)
 		{
 			if ( src == null )  return;
 			foreach ( AbstractProperty property in this.properties )
@@ -636,15 +826,30 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Reprend toutes les informations des propriétés d'un objet source.
-		public void CloneInfoProperties(AbstractObject src)
+		// Adapte les styles de l'objet collé, qui peut provenir d'un autre fichier,
+		// donc d'une autre collection de styles. On se base sur le nom des styles
+		// (StyleName) pour faire la correspondance.
+		// Si on trouve un nom identique -> le style de l'objet collé est modifié
+		// en fonction du style existant.
+		// Si on ne trouve pas un nom identique -> on crée un nouveau style, en
+		// modifiant bien entendu l'identificateur (StyleID) de l'objet collé.
+		public virtual void PasteAdaptStyles(StylesCollection stylesCollection)
 		{
-			if ( src == null )  return;
-			foreach ( AbstractProperty property in this.properties )
+			int total = this.TotalProperty;
+			for ( int i=0 ; i<total ; i++ )
 			{
-				AbstractProperty p = src.SearchProperty(property.Type);
-				if ( p == null )  continue;
-				p.CopyInfoTo(property);
+				AbstractProperty property = this.Property(i);
+				if ( property == null )  break;
+
+				if ( property.StyleID == 0 )  continue;  // n'utilise pas un style ?
+
+				AbstractProperty style = stylesCollection.SearchProperty(property);
+				if ( style == null )
+				{
+					int rank = stylesCollection.AddProperty(property);
+					style = stylesCollection.GetProperty(rank);
+				}
+				style.CopyTo(property);
 			}
 		}
 
@@ -664,7 +869,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( all )
 			{
-				return rect.Contains(this.BoundingBox);
+				return rect.Contains(this.BoundingBoxGeom);
 			}
 			else
 			{
@@ -678,6 +883,13 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
+		// Détecte si la souris est sur l'objet pour l'éditer.
+		public virtual bool DetectEdit(Drawing.Point pos)
+		{
+			return false;
+		}
+
+
 		// Donne le contenu du menu contextuel.
 		public virtual void ContextMenu(System.Collections.ArrayList list, Drawing.Point pos, int handleRank)
 		{
@@ -736,6 +948,12 @@ namespace Epsitec.Common.Pictogram.Data
 			return false;
 		}
 
+		// Indique s'il faut sélectionner l'objet après sa création.
+		public virtual bool SelectAfterCreation()
+		{
+			return false;
+		}
+
 
 		// Crée une instance de l'objet.
 		protected abstract AbstractObject CreateNewObject();
@@ -765,6 +983,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.isHide         = src.isHide;
 			this.selected       = src.selected;
 			this.globalSelected = src.globalSelected;
+			this.edited         = src.edited;
 			this.editProperties = src.editProperties;
 			this.dirtyBbox      = src.dirtyBbox;
 			this.bboxThin       = src.bboxThin;
@@ -773,10 +992,21 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Retourne true si l'objet est complètement caché.
+		protected virtual bool IsFullHide(IconContext iconContext)
+		{
+			if ( this.isHide )  // objet caché ?
+			{
+				if ( !iconContext.HideHalfActive )  return true;
+				iconContext.IsDimmed = true;
+			}
+			return false;
+		}
+
 		// Dessine la géométrie de l'objet.
 		public virtual void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
 		{
-			if ( this.isHide )  return;
+			if ( this.IsFullHide(iconContext) )  return;
 
 			if ( iconContext.IsEditable )
 			{
@@ -787,7 +1017,7 @@ namespace Epsitec.Common.Pictogram.Data
 				this.closeMargin  = iconContext.CloseMargin;
 			}
 
-			if ( iconContext.IsDrawBox )
+			if ( iconContext.IsDrawBoxThin )
 			{
 				double initialWidth = graphics.LineWidth;
 				graphics.LineWidth = 1.0/iconContext.ScaleX;
@@ -795,8 +1025,24 @@ namespace Epsitec.Common.Pictogram.Data
 				graphics.AddRectangle(this.bboxThin);
 				graphics.RenderSolid(Drawing.Color.FromARGB(0.5, 0,1,1));
 
+				graphics.LineWidth = initialWidth;
+			}
+
+			if ( iconContext.IsDrawBoxGeom )
+			{
+				double initialWidth = graphics.LineWidth;
+				graphics.LineWidth = 1.0/iconContext.ScaleX;
+
 				graphics.AddRectangle(this.bboxGeom);
 				graphics.RenderSolid(Drawing.Color.FromARGB(0.5, 0,1,0));
+
+				graphics.LineWidth = initialWidth;
+			}
+
+			if ( iconContext.IsDrawBoxFull )
+			{
+				double initialWidth = graphics.LineWidth;
+				graphics.LineWidth = 1.0/iconContext.ScaleX;
 
 				graphics.AddRectangle(this.bboxFull);
 				graphics.RenderSolid(Drawing.Color.FromARGB(0.5, 1,1,0));
@@ -838,7 +1084,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Le tableau contient d'abord la propriété créée dans le constructeur,
 		// puis celle qui a été désérialisée. Il faut donc remplacer la 1ère par
 		// la 2ème, et détruire la 2ème.
-		public void ArrangeAfterRead()
+		public virtual void ArrangeAfterRead()
 		{
 			int total = this.properties.Count;
 			for ( int i=0 ; i<total ; i++ )
@@ -1109,6 +1355,7 @@ namespace Epsitec.Common.Pictogram.Data
 		protected double						minimalWidth;
 		protected double						closeMargin;
 		protected bool							selected = false;
+		protected bool							edited = false;
 		protected bool							globalSelected = false;
 		protected bool							editProperties = false;
 		protected bool							dirtyBbox = true;
