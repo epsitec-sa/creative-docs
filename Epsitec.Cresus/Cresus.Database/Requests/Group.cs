@@ -10,9 +10,9 @@ namespace Epsitec.Cresus.Database.Requests
 	
 	[System.Serializable]
 	
-	public class Group : Base, System.Runtime.Serialization.ISerializable, System.Collections.IEnumerable, System.Collections.ICollection
+	public class Group : Base, System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, System.Collections.IEnumerable, System.Collections.ICollection
 	{
-		public Group()
+		public Group() : base (Type.Group)
 		{
 		}
 		
@@ -64,30 +64,45 @@ namespace Epsitec.Cresus.Database.Requests
 		#region ISerializable Members
 		protected Group(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
-			System.Array array = info.GetValue ("RequestArray", typeof (System.Array)) as System.Array;
+			this.SetupType (Type.Group);
 			
-			if ((array != null) &&
-				(array.Length > 0))
-			{
-				this.requests = new System.Collections.ArrayList ();
-				this.requests.AddRange (array);
-			}
+			object[] array = info.GetValue ("RequestArray", typeof (object[])) as object[];
+			
+			System.Diagnostics.Debug.Assert ((array == null) || (array.Length > 0));
+			
+			//	Les références aux divers objets n'ont pas encore été désérialisées
+			//	et ne peuvent donc pas (encore) être insérées dans this.requests.
+			//	Voir aussi la méthode OnDeserialization.
+			
+			this.deserialization_array = array;
 		}
 		
 		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-			System.Array array = null;
+			object[] array = null;
 			int n = this.Count;
 			
 			if (n > 0)
 			{
-				array = new Requests.Base[n];
+				array = new object[n];
 				this.CopyTo (array, 0);
 			}
 			
 			info.AddValue ("RequestArray", array);
 			
 			base.GetObjectData (info, context);
+		}
+		#endregion
+		
+		#region IDeserializationCallback Members
+		public void OnDeserialization(object sender)
+		{
+			if ((deserialization_array != null) &&
+				(deserialization_array.Length > 0))
+			{
+				this.requests = new System.Collections.ArrayList ();
+				this.requests.AddRange (this.deserialization_array);
+			}
 		}
 		#endregion
 		
@@ -138,7 +153,7 @@ namespace Epsitec.Cresus.Database.Requests
 		}
 		#endregion
 		
-		
 		protected System.Collections.ArrayList	requests;
+		protected object[]						deserialization_array;
 	}
 }

@@ -11,8 +11,18 @@ namespace Epsitec.Cresus.Database.Requests
 	
 	public abstract class Base : System.Runtime.Serialization.ISerializable
 	{
-		protected Base()
+		protected Base(Type type)
 		{
+			this.SetupType (type);
+		}
+		
+		
+		public Type								Type
+		{
+			get
+			{
+				return this.type;
+			}
 		}
 		
 		
@@ -27,5 +37,14 @@ namespace Epsitec.Cresus.Database.Requests
 //-			info.AddValue ("db_access", this.db_access);
 		}
 		#endregion
+		
+		
+		protected void SetupType(Type type)
+		{
+			this.type = type;
+		}
+		
+		
+		private Type							type = Type.Unknown;
 	}
 }
