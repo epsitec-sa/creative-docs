@@ -146,7 +146,7 @@ namespace Epsitec.Common.Widgets
 				Drawing.Size dim = cell.Size;
 				Drawing.Point pos = new Drawing.Point();
 				pos.X = x;
-				pos.Y = (this.Height-dim.Height)/2;  // centré verticalement
+				pos.Y = System.Math.Floor((this.Height-dim.Height)/2);  // centré verticalement
 				cell.Location = pos;
 
 				x += dim.Width;
@@ -159,15 +159,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-			rect.Inflate(-0.5, -0.5);
-
-			graphics.AddLine(rect.Left, rect.Top, rect.Right, rect.Top);
-			graphics.AddLine(rect.Left, rect.Bottom, rect.Left, rect.Top);
-			graphics.RenderSolid(this.colorControlLightLight);
-
-			graphics.AddLine(rect.Left, rect.Bottom, rect.Right, rect.Bottom);
-			graphics.AddLine(rect.Right, rect.Bottom, rect.Right, rect.Top);
-			graphics.RenderSolid(this.colorControlDark);
+			adorner.PaintToolBackground(graphics, rect, WidgetState.None, Direction.None, Direction.None);
 		}
 
 

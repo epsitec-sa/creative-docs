@@ -512,7 +512,9 @@ namespace Epsitec.Common.Tests
 			
 			//	L'image fait 96 x 96 pixels
 			
-			e.Graphics.PaintImage (bitmap, new Rectangle (110,  10, 64, 32), new Rectangle (32, 32, 32, 32));
+			e.Graphics.PaintImage (bitmap, new Rectangle ( 10,  10,  40,  40), new Rectangle (32, 32, 32, 32));
+			e.Graphics.PaintImage (bitmap, new Rectangle ( 60,  10,  64,  64), new Rectangle (32, 32, 32, 32));
+			e.Graphics.PaintImage (bitmap, new Rectangle ( 10,  60, 100, 100), new Rectangle (32, 32, 32, 32));
 		}
 	}
 }

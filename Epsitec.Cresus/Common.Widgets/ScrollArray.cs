@@ -835,7 +835,6 @@ namespace Epsitec.Common.Widgets
 
 			// Dessine le tableau des textes.
 			this.Update();
-			Drawing.Color color;
 			Drawing.Point pos = new Drawing.Point(this.rectInside.Left, this.rectInside.Top-this.rowHeight);
 
 			double limit = this.widthTotal-this.offsetH+this.rectInside.Left+1;
@@ -845,7 +844,7 @@ namespace Epsitec.Common.Widgets
 			for ( int row=0 ; row<max ; row++ )
 			{
 				pos.X = this.margin;
-				color = Drawing.Color.Empty;
+				WidgetState widgetState = WidgetState.Enabled;
 
 				if ( row+this.firstRow == this.selectedRow )  // ligne sélectionnée ?
 				{
@@ -856,7 +855,7 @@ namespace Epsitec.Common.Widgets
 					rects[0].Top    = pos.Y+this.rowHeight;
 					adorner.PaintTextSelectionBackground(graphics, new Drawing.Point(0,0), rects);
 
-					color = Drawing.Color.FromName("ActiveCaptionText");
+					widgetState |= WidgetState.Selected;
 				}
 
 				pos.X += this.textMargin-System.Math.Floor(this.offsetH);
@@ -865,7 +864,7 @@ namespace Epsitec.Common.Widgets
 					double endx = pos.X+this.widthColumns[column];
 					if ( pos.X < localClip.Right && endx > localClip.Left )
 					{
-						this.textLayouts[row,column].Paint(pos, graphics, Drawing.Rectangle.Empty, color);
+						adorner.PaintGeneralTextLayout(graphics, pos, this.textLayouts[row,column], widgetState, Direction.None);
 					}
 					pos.X = endx;
 				}
@@ -876,6 +875,7 @@ namespace Epsitec.Common.Widgets
 			rect.Inflate(-0.5, -0.5);
 
 			graphics.LineWidth = 1;
+			Drawing.Color color;
 			color = Drawing.Color.FromRGB(0.9,0.9,0.9);  // gris-clair
 
 			// Dessine le rectangle englobant.

@@ -612,6 +612,11 @@ namespace Epsitec.Common.Widgets
 					this.menuDeveloped = TypeDeveloped.Close;
 					this.CloseSubmenu();
 				}
+				else
+				{
+					MenuItem item = (MenuItem)sender;
+					this.OpenSubmenu(item, false);
+				}
 			}
 			else
 			{
@@ -647,13 +652,14 @@ namespace Epsitec.Common.Widgets
 							message.Swallowed = true;
 						}
 					}
+#if false
 					else
 					{
 						if ( menu.parentMenu != null )
 						{
 							Menu sub = this;
 							while ( sub.submenu != null )  sub = sub.submenu;
-							sub.SetFocused(true);  // TODO: il faudrait pouvoir ignorer ce clic !!!
+							sub.SetFocused(true);
 							
 							// On n'indique qu'un message est consommé que s'il concerne
 							// la partie client de la fenêtre...						
@@ -664,6 +670,7 @@ namespace Epsitec.Common.Widgets
 							}
 						}
 					}
+#endif
 					break;
 			}
 		}
@@ -683,37 +690,35 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					if (this.submenu == null)
+					if ( this.submenu == null )
 					{
-						//	Il n'y a pas de sous-menu visible. Chaque fois que l'utilisateur arrive sur une
-						//	une autre ligne du menu, on remet à zéro le compteur.
-						
+						// Il n'y a pas de sous-menu visible. Chaque fois que l'utilisateur
+						// arrive sur une une autre ligne du menu, on remet à zéro le compteur.
 						this.delayedMenuItem = item;
 						
-						this.timer.Suspend ();
+						this.timer.Suspend();
 						this.timer.Delay = SystemInformation.MenuShowDelay / 1000.0;
-						this.timer.Start ();
+						this.timer.Start();
 					}
 					else
 					{
-						//	Il y a un sous-menu visible. On démarre le timer une seule fois, lorsqu'une
-						//	nouvelle ligne est activée (c'est forcément une autre que celle qui a ouvert
-						//	le sous-menu), et on se rappelle de la ligne active.
-						//
-						//	Quand le temps est écoulé, on ouvre le sous-menu de la ligne active, pour
-						//	autant qu'il y en ait une (chaque fois que la souris sort d'une ligne, on
-						//	en prend note aussi).
-						//
-						//	Pour que ça marche, il faut aussi que lorsque la souris retourne dans le
-						//	sous-menu, ça active la bonne ligne dans le menu parent (voir OnEntered).
-						
+						// Il y a un sous-menu visible. On démarre le timer une seule fois,
+						// lorsqu'une nouvelle ligne est activée (c'est forcément une autre
+						// que celle qui a ouvert le sous-menu), et on se rappelle de la ligne
+						// active.
+						// Quand le temps est écoulé, on ouvre le sous-menu de la ligne active,
+						// pour autant qu'il y en ait une (chaque fois que la souris sort d'une
+						// ligne, on en prend note aussi).
+						// Pour que ça marche, il faut aussi que lorsque la souris retourne
+						// dans le sous-menu, ça active la bonne ligne dans le menu parent
+						// (voir OnEntered).
 						this.delayedMenuItem = item;
 						
-						if (this.timer.State != TimerState.Running)
+						if ( this.timer.State != TimerState.Running )
 						{
-							this.timer.Suspend ();
+							this.timer.Suspend();
 							this.timer.Delay = SystemInformation.MenuShowDelay / 1000.0;
-							this.timer.Start ();
+							this.timer.Start();
 						}
 					}
 				}
@@ -741,7 +746,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleTimerTimeElapsed(object sender)
 		{
-			if (this.delayedMenuItem != null)
+			if ( this.delayedMenuItem != null )
 			{
 				this.OpenSubmenu(this.delayedMenuItem, false);
 			}
@@ -750,11 +755,11 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void OnEntered(MessageEventArgs e)
 		{
-			base.OnEntered (e);
+			base.OnEntered(e);
 			
-			if (this.parentMenu != null)
+			if ( this.parentMenu != null )
 			{
-				this.parentMenu.SelectMenuItem (this.parentItem);
+				this.parentMenu.SelectMenuItem(this.parentItem);
 				
 				//	TODO: faire de même avec les parents du parent, etc. ?
 			}

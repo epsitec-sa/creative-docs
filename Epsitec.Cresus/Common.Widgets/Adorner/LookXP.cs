@@ -702,6 +702,32 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 		}
 
+		// Dessine le fond d'une barre d'outil.
+		public void PaintToolBackground(Drawing.Graphics graphics,
+										Drawing.Rectangle rect,
+										WidgetState state,
+										Direction shadow,
+										Direction type)
+		{
+			rect.Inflate(-0.5, -0.5);
+
+			graphics.AddLine(rect.Left, rect.Top, rect.Right, rect.Top);
+			graphics.AddLine(rect.Left, rect.Bottom, rect.Left, rect.Top);
+			graphics.RenderSolid(this.colorControlLightLight);
+
+			graphics.AddLine(rect.Left, rect.Bottom, rect.Right, rect.Bottom);
+			graphics.AddLine(rect.Right, rect.Bottom, rect.Right, rect.Top);
+			graphics.RenderSolid(this.colorControlDark);
+		}
+
+		public void PaintToolForeground(Drawing.Graphics graphics,
+										Drawing.Rectangle rect,
+										WidgetState state,
+										Direction shadow,
+										Direction type)
+		{
+		}
+
 		// Dessine le fond d'un menu.
 		public void PaintMenuBackground(Drawing.Graphics graphics,
 										Drawing.Rectangle rect,
@@ -888,7 +914,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromName("ControlDark"));
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlDark);
 			}
 
 			if ( (state&WidgetState.Focused) != 0 )
