@@ -72,7 +72,15 @@ namespace Epsitec.Common.Designer.Panels
 			}
 			else
 			{
-				this.title.Text = string.Format (@"<font size=""120%""><b>Object Attributes</b><br/><i>{0}</i></font>", this.type.Name);
+				string         name           = this.type.Name;
+				IBundleSupport bundle_support = this.active as IBundleSupport;
+				
+				if (bundle_support != null)
+				{
+					name = bundle_support.PublicClassName;
+				}
+				
+				this.title.Text = string.Format (@"<font size=""120%""><b>Object Attributes</b><br/><i>{0}</i></font>", name);
 				
 				//	Il faut recréer les pages permettant d'éditer les diverses propriétés.
 				
@@ -132,6 +140,12 @@ namespace Epsitec.Common.Designer.Panels
 				}
 				
 				i++;
+			}
+			
+			if ((active_index < 0) &&
+				(this.book.Items.Count > 0))
+			{
+				active_index = 0;
 			}
 			
 			this.book.ActivePageIndex = active_index;
