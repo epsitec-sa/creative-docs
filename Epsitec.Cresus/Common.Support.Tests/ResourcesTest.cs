@@ -126,20 +126,54 @@ namespace Epsitec.Common.Support
 			string[] names_1 = Resources.GetBundleIds ("file:*");
 			string[] names_2 = Resources.GetBundleIds ("file:*", ResourceLevel.Localised);
 			string[] names_3 = Resources.GetBundleIds ("file:*", "String", ResourceLevel.Localised);
+			string[] names_4 = Resources.GetBundleIds ("file:*", ResourceLevel.All);
+			
+			System.Console.Out.WriteLine ("file:*");
 			
 			for (int i = 0; i < names_1.Length; i++)
 			{
-				System.Console.Out.WriteLine ("{0} : {1}", i, names_1[i]);
+				System.Console.Out.WriteLine (" {0} : {1}", i, names_1[i]);
 			}
+			
+			System.Console.Out.WriteLine ("file:*, level=localised");
 			
 			for (int i = 0; i < names_2.Length; i++)
 			{
-				System.Console.Out.WriteLine ("{0} : {1}", i, names_2[i]);
+				System.Console.Out.WriteLine (" {0} : {1}", i, names_2[i]);
 			}
+			
+			System.Console.Out.WriteLine ("file:*, type=String, level=localised");
 			
 			for (int i = 0; i < names_3.Length; i++)
 			{
-				System.Console.Out.WriteLine ("{0} : {1}", i, names_3[i]);
+				System.Console.Out.WriteLine (" {0} : {1}", i, names_3[i]);
+			}
+			
+			System.Console.Out.WriteLine ("file:*, level=all");
+			
+			for (int i = 0; i < names_4.Length; i++)
+			{
+				string clean  = Resources.StripSuffix (names_4[i]);
+				string suffix = Resources.ExtractSuffix (names_4[i]);
+				
+				ResourceLevel level;
+				System.Globalization.CultureInfo culture;
+				
+				Resources.MapFromSuffix (suffix, out level, out culture);
+				
+				string about = "default";
+				
+				switch (level)
+				{
+					case ResourceLevel.Localised:
+						about = "localised to " + culture.EnglishName;
+						break;
+					case ResourceLevel.Customised:
+						about = "customised for " + culture.EnglishName;
+						break;
+				}
+				
+				System.Console.Out.WriteLine (" {0} : {1} -> {2}, {3}, {4}", i, names_4[i], clean, suffix, about);
 			}
 		}
 	}

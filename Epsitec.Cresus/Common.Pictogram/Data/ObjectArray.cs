@@ -2188,7 +2188,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( edited && textNavigator.Context.CursorTo != -1 )
 			{
-				Drawing.Rectangle rect = textLayout.FindTextCursor(textNavigator.Context.CursorTo, out textNavigator.Context.CursorLine);
+				Drawing.Rectangle rect = textLayout.FindTextCursor(textNavigator.Context.CursorTo, textNavigator.Context.CursorAfter, out textNavigator.Context.CursorLine);
 				if ( !rect.IsEmpty )
 				{
 					textNavigator.Context.CursorPosX = (rect.Left+rect.Right)/2;

@@ -69,6 +69,7 @@ namespace Epsitec.Common.Support.Implementation
 				case ResourceLevel.Default:		return this.file_default;
 				case ResourceLevel.Localised:	return this.file_local;
 				case ResourceLevel.Customised:	return this.file_custom;
+				case ResourceLevel.All:			return this.file_all;
 			}
 			
 			return null;
@@ -89,9 +90,10 @@ namespace Epsitec.Common.Support.Implementation
 		{
 			base.SelectLocale (culture);
 			
-			this.file_default = "." + this.default_suffix + ".resource";
-			this.file_local   = "." + this.local_suffix   + ".resource";
-			this.file_custom  = "." + this.custom_suffix  + ".resource";
+			this.file_default = string.Concat (".", this.default_suffix, ".resource");
+			this.file_local   = string.Concat (".", this.local_suffix,   ".resource");
+			this.file_custom  = string.Concat (".", this.custom_suffix,  ".resource");
+			this.file_all     = ".resource";
 		}
 		
 		public override bool ValidateId(string id)
@@ -198,7 +200,6 @@ namespace Epsitec.Common.Support.Implementation
 		}
 
 		
-		
 		public override bool SetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, ResourceSetMode mode)
 		{
 			if (this.culture != culture)
@@ -247,11 +248,13 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
+		
 		protected string				path_prefix;
 		protected Regex					id_regex;
 		
 		protected string				file_default;
 		protected string				file_local;
 		protected string				file_custom;
+		protected string				file_all;
 	}
 }

@@ -601,6 +601,7 @@ namespace Epsitec.Common.Widgets
 			int from = System.Math.Min(context.CursorFrom, context.CursorTo);
 			int to   = System.Math.Max(context.CursorFrom, context.CursorTo);
 			int cursor = (move < 0) ? from : to;
+			if ( select )  cursor = context.CursorTo;
 			string simple = TextLayout.ConvertToSimpleText(this.Text);
 
 			if ( word )  // déplacement par mots ?

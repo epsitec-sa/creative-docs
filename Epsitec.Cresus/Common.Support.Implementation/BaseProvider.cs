@@ -31,31 +31,43 @@ namespace Epsitec.Common.Support.Implementation
 		{
 			if (this.ValidateId (id))
 			{
-				switch (level)
-				{
-					case ResourceLevel.Default:		return id;
-					case ResourceLevel.Localised:	return id;
-					case ResourceLevel.Customised:	return id;
-					
-					default:
-						throw new ResourceException (string.Format ("Invalid resource level {0} for resource '{1}'.", level, id));
-				}
+				return id;
 			}
 			
-			return null;
+			throw new ResourceException (string.Format ("Invalid resource id '{0}'.", id));
+		}
+		
+		protected string GetRowLevelFromId(string id, ResourceLevel level)
+		{
+			switch (level)
+			{
+				case ResourceLevel.Default:		break;
+				case ResourceLevel.Localised:	break;
+				case ResourceLevel.Customised:	break;
+				
+				default:
+					throw new ResourceException (string.Format ("Invalid resource level {0} for resource '{1}'.", level, id));
+			}
+			
+			string suffix;
+			Resources.MapToSuffix (level, this.culture, out suffix);
+			
+			return suffix;
 		}
 		
 		protected string GetTableNameFromId(string id, ResourceLevel level)
 		{
 			switch (level)
 			{
-				case ResourceLevel.Default:		return this.table_default;
-				case ResourceLevel.Localised:	return this.table_local;
-				case ResourceLevel.Customised:	return this.table_custom;
+				case ResourceLevel.Default:		break;
+				case ResourceLevel.Localised:	break;
+				case ResourceLevel.Customised:	break;
 				
 				default:
 					throw new ResourceException (string.Format ("Invalid resource level {0} for resource '{1}'.", level, id));
 			}
+			
+			return "Data";
 		}
 		
 		
@@ -87,10 +99,6 @@ namespace Epsitec.Common.Support.Implementation
 		public override void SelectLocale(System.Globalization.CultureInfo culture)
 		{
 			base.SelectLocale (culture);
-			
-			this.table_default = "Data_" + this.default_suffix;
-			this.table_local   = "Data_" + this.local_suffix;
-			this.table_custom  = "Data_" + this.custom_suffix;
 		}
 		
 		
@@ -161,8 +169,8 @@ namespace Epsitec.Common.Support.Implementation
 		
 		protected DbInfrastructure		dbi;
 		
-		protected string				table_default;
-		protected string				table_local;
-		protected string				table_custom;
+		protected string				column_default;
+		protected string				column_local;
+		protected string				column_custom;
 	}
 }
