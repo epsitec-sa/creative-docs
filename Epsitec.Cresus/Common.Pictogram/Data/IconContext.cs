@@ -205,7 +205,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( this.isDimmed )  // estompé (hors groupe) ?
 			{
 				double alpha = color.A;
-				double intensity = color.GetBrightness ();
+				double intensity = color.GetBrightness();
 				intensity = 0.5+(intensity-0.5)*0.05;  // diminue le contraste
 				intensity = System.Math.Min(intensity+0.1, 1.0);  // augmente l'intensité
 				color = Drawing.Color.FromBrightness(intensity);

@@ -642,12 +642,21 @@ namespace Epsitec.Common.Pictogram.Data
 				Drawing.Point s2 = this.Handle(i+3).Position;
 				Drawing.Point p2 = this.Handle(i+4).Position;
 
-				Drawing.Point pos = p1;
-				for ( double t=0.0 ; t<=1.0 ; t+=ObjectTextLine.step )
+				if ( this.Handle(i+2).Type == HandleType.Hide )  // droite ?
 				{
-					Drawing.Point next = Drawing.Point.Bezier(p1,s1,s2,p2, t);
-					length += Drawing.Point.Distance(pos, next);
-					pos = next;
+					length += Drawing.Point.Distance(p1,p2);
+				}
+				else	// courbe ?
+				{
+					Drawing.Point pos = p1;
+					int total = (int)(1.0/ObjectTextLine.step);
+					for ( int rank=1 ; rank<=total ; rank ++ )
+					{
+						double t = ObjectTextLine.step*rank;
+						Drawing.Point next = Drawing.Point.Bezier(p1,s1,s2,p2, t);
+						length += Drawing.Point.Distance(pos, next);
+						pos = next;
+					}
 				}
 				i += 3;  // courbe suivante
 			}
@@ -674,32 +683,47 @@ namespace Epsitec.Common.Pictogram.Data
 				Drawing.Point s1 = this.Handle(i+2).Position;
 				Drawing.Point s2 = this.Handle(i+3).Position;
 				Drawing.Point p2 = this.Handle(i+4).Position;
-				pos = Drawing.Point.Bezier(p1,s1,s2,p2, t);
 
-				double t1 = t;
-				double t2 = t;
-				double l1 = 0.0;
-				double l2 = 0.0;
-				Drawing.Point next1, next2;
-				next1 = pos;
-				while ( true )
+				if ( this.Handle(i+2).Type == HandleType.Hide )  // droite ?
 				{
-					t2 = System.Math.Min(t2+ObjectTextLine.step, 1.0);
-					next2 = Drawing.Point.Bezier(p1,s1,s2,p2, t2);  // segment suivant
-					l2 += Drawing.Point.Distance(next1, next2);
-					if ( l2 >= width )  // a-t-on trop avancé ?
+					double d = Drawing.Point.Distance(p1,p2);
+					double t2 = (t*d+width)/d;
+					if ( t2 <= 1.0 )
 					{
-						t = t1+(t2-t1)*(width-l1)/(l2-l1);  // approximation linéaire
-						pos = Drawing.Point.Move(next1, next2, width-l1);
+						t = t2;
+						pos = Drawing.Point.Scale(p1,p2, t);
 						return true;
 					}
-					if ( t2 >= 1.0 )  break;  // fin de cette portion de courbe ?
-					t1 = t2;
-					l1 = l2;
-					next1 = next2;
+					width -= (1.0-t)*d;
+				}
+				else	// courbe ?
+				{
+					pos = Drawing.Point.Bezier(p1,s1,s2,p2, t);
+					double t1 = t;
+					double t2 = t;
+					double l1 = 0.0;
+					double l2 = 0.0;
+					Drawing.Point next1, next2;
+					next1 = pos;
+					while ( true )
+					{
+						t2 = System.Math.Min(t2+ObjectTextLine.step, 1.0);
+						next2 = Drawing.Point.Bezier(p1,s1,s2,p2, t2);  // segment suivant
+						l2 += Drawing.Point.Distance(next1, next2);
+						if ( l2 >= width )  // a-t-on trop avancé ?
+						{
+							t = t1+(t2-t1)*(width-l1)/(l2-l1);  // approximation linéaire
+							pos = Drawing.Point.Move(next1, next2, width-l1);
+							return true;
+						}
+						if ( t2 >= 1.0 )  break;  // fin de cette portion de courbe ?
+						t1 = t2;
+						l1 = l2;
+						next1 = next2;
+					}
+					width -= l2;
 				}
 
-				width -= l2;
 				i += 3;  // portion de courbe suivante
 				if ( i >= this.handles.Count-3 )  // dernière portion dépassée ?
 				{

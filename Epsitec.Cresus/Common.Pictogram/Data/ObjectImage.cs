@@ -271,12 +271,23 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Pixmap.RawData data = new Drawing.Pixmap.RawData(this.imageDimmed);
 			using ( data )
 			{
+				Drawing.Color pixel;
+				double intensity;
+
 				for ( int y=0 ; y<data.Height ; y++ )
 				{
 					for ( int x=0 ; x<data.Width ; x++ )
 					{
-						Drawing.Color pixel = data[x,y];
-						data[x,y] = iconContext.AdaptColor(pixel);
+						pixel = data[x,y];
+
+						intensity = pixel.GetBrightness();
+						intensity = System.Math.Max(intensity*2.0-1.0, 0.0);
+						pixel.R = intensity;
+						pixel.G = intensity;
+						pixel.B = intensity;
+						pixel.A *= 0.2;  // très transparent
+
+						data[x,y] = pixel;
 					}
 				}
 			}
