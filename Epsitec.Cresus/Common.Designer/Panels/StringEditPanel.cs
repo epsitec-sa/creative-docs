@@ -49,7 +49,7 @@ namespace Epsitec.Common.Designer.Panels
 			EditArray.Controller ctrl  = new EditArray.Controller (this.edit_array, "Table");
 			
 			this.edit_array.CommandDispatcher = new Support.CommandDispatcher ("StringEditTable", true);
-			this.edit_array.Bounds            = new Drawing.Rectangle (5, 5, dx - 10, dy - 10);
+			this.edit_array.Bounds            = new Drawing.Rectangle (5, 65, dx - 10, dy - 70);
 			this.edit_array.Anchor            = AnchorStyles.All;
 			this.edit_array.ColumnCount       = 2;
 			this.edit_array.RowCount          = 0;
@@ -62,7 +62,22 @@ namespace Epsitec.Common.Designer.Panels
 			this.edit_array.TitleWidget = title;
 			this.edit_array.SearchCaption = @"<b>Recherche. </b><font size=""90%"">Tapez le texte à chercher ci-dessous&#160;:</font>";
 			
-			this.edit_array.DoubleClicked += new MessageEventHandler (this.HandleEditArrayDoubleClicked);
+			this.edit_array.SelectedIndexChanging += new EventHandler(this.HandleEditArraySelectedIndexChanging);
+			this.edit_array.SelectedIndexChanged  += new EventHandler(this.HandleEditArraySelectedIndexChanged);
+			this.edit_array.DoubleClicked         += new MessageEventHandler (this.HandleEditArrayDoubleClicked);
+			this.edit_array.TabIndex = 0;
+			
+			StaticText     text_label = new StaticText (parent);
+			TextFieldMulti text_field = new TextFieldMulti (parent);
+			
+			text_label.Bounds = new Drawing.Rectangle (5, 50, dx - 10, 15);
+			text_label.Text   = "Commentaire :";
+			text_label.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
+			
+			text_field.Bounds        = new Drawing.Rectangle (5, 5, dx - 10, 44);
+			text_field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			text_field.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
+			text_field.TabIndex      = 1;
 			
 			title.Caption = @"<font size=""120%"">Bundle.</font> Édition des données contenues dans la ressource.";
 			
@@ -72,6 +87,17 @@ namespace Epsitec.Common.Designer.Panels
 			
 			this.edit_array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+		}
+		
+		
+		private void HandleEditArraySelectedIndexChanging(object sender)
+		{
+			System.Diagnostics.Debug.WriteLine ("Sel.Changing " + this.edit_array.SelectedIndex);
+		}
+		
+		private void HandleEditArraySelectedIndexChanged(object sender)
+		{
+			System.Diagnostics.Debug.WriteLine ("Sel.Changed " + this.edit_array.SelectedIndex);
 		}
 		
 		private void HandleEditArrayDoubleClicked(object sender, MessageEventArgs e)

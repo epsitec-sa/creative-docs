@@ -417,7 +417,7 @@ namespace Epsitec.Common.Support
 			ResourceBundle bundle = ResourceBundle.Create ();
 			
 			string test_string = 
-				"<bundle name='test' type='String'>\r\n" +
+				"<bundle name='test' type='String' about='Simple description...'>\r\n" +
 				"  <data name='a'>A</data>\r\n" +
 				"  <data name='b'>\r\n" +
 				"    <xml>\r\n" + 
@@ -443,6 +443,7 @@ namespace Epsitec.Common.Support
 			
 			bundle.DefineName ("test");
 			bundle.DefineType ("String");
+			bundle.DefineAbout ("Simple description...");
 			
 			byte[] live_data = bundle.CreateXmlAsData ();
 			
@@ -454,6 +455,7 @@ namespace Epsitec.Common.Support
 			
 			Assertion.AssertEquals ("A", bundle[0].AsString);
 			Assertion.AssertEquals ("<b>B  B</b>", bundle[1].AsString);
+			Assertion.AssertEquals ("Simple description...", bundle.About);
 		}
 		
 		

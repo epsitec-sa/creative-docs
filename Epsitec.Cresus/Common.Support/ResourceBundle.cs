@@ -90,6 +90,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public string						About
+		{
+			get
+			{
+				return this.about;
+			}
+		}
+		
 		public ResourceLevel				ResourceLevel
 		{
 			get
@@ -210,6 +218,10 @@ namespace Epsitec.Common.Support
 			this.type = type;
 		}
 		
+		public void DefineAbout(string about)
+		{
+			this.about = about;
+		}
 		
 		public bool Contains(string name)
 		{
@@ -376,8 +388,9 @@ namespace Epsitec.Common.Support
 				throw new ResourceException (string.Format ("Bundle does not start with <bundle> tag (<{0}> is an unsupported root).", xmlroot.Name));
 			}
 			
-			System.Xml.XmlAttribute name_attr = xmlroot.Attributes["name"];
-			System.Xml.XmlAttribute type_attr = xmlroot.Attributes["type"];
+			System.Xml.XmlAttribute name_attr  = xmlroot.Attributes["name"];
+			System.Xml.XmlAttribute type_attr  = xmlroot.Attributes["type"];
+			System.Xml.XmlAttribute about_attr = xmlroot.Attributes["about"];
 			
 			if (name_attr != null)
 			{
@@ -390,6 +403,10 @@ namespace Epsitec.Common.Support
 			if (type_attr != null)
 			{
 				this.type = type_attr.Value;
+			}
+			if (about_attr != null)
+			{
+				this.about = about_attr.Value;
 			}
 			
 			ArrayList list = new ArrayList ();
@@ -445,9 +462,11 @@ namespace Epsitec.Common.Support
 			System.Xml.XmlElement   bundle_node = xmldoc.CreateElement ("bundle");
 			System.Xml.XmlAttribute name_attr   = xmldoc.CreateAttribute ("name");
 			System.Xml.XmlAttribute type_attr   = xmldoc.CreateAttribute ("type");
+			System.Xml.XmlAttribute about_attr  = xmldoc.CreateAttribute ("about");
 			
-			name_attr.Value = this.name;
-			type_attr.Value = this.type;
+			name_attr.Value  = this.name;
+			type_attr.Value  = this.type;
+			about_attr.Value = this.about;
 			
 			if (name_attr.Value != "")
 			{
@@ -456,6 +475,10 @@ namespace Epsitec.Common.Support
 			if (type_attr.Value != "")
 			{
 				bundle_node.Attributes.Append (type_attr);
+			}
+			if (about_attr.Value != "")
+			{
+				bundle_node.Attributes.Append (about_attr);
 			}
 			
 			for (int i = 0; i < this.fields.Length; i++)
@@ -1114,6 +1137,8 @@ namespace Epsitec.Common.Support
 		
 		protected string					name;
 		protected string					type;
+		protected string					about;
+		
 		protected System.Xml.XmlNode		xmlroot;
 		protected int						depth;
 		protected int						compile_count;
