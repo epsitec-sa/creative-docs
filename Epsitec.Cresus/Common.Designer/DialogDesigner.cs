@@ -59,7 +59,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		public Script.IScriptSource				DialogScript
+		public Script.ScriptWrapper				DialogScript
 		{
 			get
 			{
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Designer
 		private Types.IDataGraph				dialog_data;
 		private Window							dialog_window;
 		private Support.CommandDispatcher		dialog_commands;
-		private Script.IScriptSource			dialog_script;
+		private Script.ScriptWrapper			dialog_script;
 		private string							resource_name;
 		
 		private const string					prop_dialog_designer = "$designer$dialog designer$";
