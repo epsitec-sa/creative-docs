@@ -11,12 +11,13 @@ namespace Epsitec.Common.Pictogram.Data
 	[XmlRootAttribute("EpsitecPictogram")]
 
 	[
-	XmlInclude(typeof(ObjectArrow)),
 	XmlInclude(typeof(ObjectBezier)),
 	XmlInclude(typeof(ObjectCircle)),
 	XmlInclude(typeof(ObjectEllipse)),
 	XmlInclude(typeof(ObjectGroup)),
+	XmlInclude(typeof(ObjectLayer)),
 	XmlInclude(typeof(ObjectLine)),
+	XmlInclude(typeof(ObjectPage)),
 	XmlInclude(typeof(ObjectPoly)),
 	XmlInclude(typeof(ObjectRectangle)),
 	XmlInclude(typeof(ObjectRegular)),
@@ -31,7 +32,12 @@ namespace Epsitec.Common.Pictogram.Data
 	XmlInclude(typeof(PropertyShadow)),
 	XmlInclude(typeof(PropertyLine)),
 	XmlInclude(typeof(PropertyList)),
+	XmlInclude(typeof(PropertyCombo)),
 	XmlInclude(typeof(PropertyString)),
+	XmlInclude(typeof(PropertyArrow)),
+	XmlInclude(typeof(PropertyCorner)),
+	XmlInclude(typeof(PropertyRegular)),
+	XmlInclude(typeof(PropertyModColor)),
 	]
 
 	public class IconObjects
@@ -91,28 +97,29 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+		// Collection des styles.
+		public StylesCollection StylesCollection
+		{
+			get { return this.styles; }
+			set { this.styles = value; }
+		}
+		
 		// Liste des objets.
-		[XmlArrayItem("Arrow",     Type=typeof(ObjectArrow))]
 		[XmlArrayItem("Bezier",    Type=typeof(ObjectBezier))]
 		[XmlArrayItem("Circle",    Type=typeof(ObjectCircle))]
 		[XmlArrayItem("Ellipse",   Type=typeof(ObjectEllipse))]
 		[XmlArrayItem("Group",     Type=typeof(ObjectGroup))]
+		[XmlArrayItem("Layer",     Type=typeof(ObjectLayer))]
 		[XmlArrayItem("Line",      Type=typeof(ObjectLine))]
+		[XmlArrayItem("Page",      Type=typeof(ObjectPage))]
 		[XmlArrayItem("Polyline",  Type=typeof(ObjectPoly))]
 		[XmlArrayItem("Rectangle", Type=typeof(ObjectRectangle))]
 		[XmlArrayItem("Polygon",   Type=typeof(ObjectRegular))]
 		[XmlArrayItem("Text",      Type=typeof(ObjectText))]
 		public System.Collections.ArrayList Objects
 		{
-			get
-			{
-				return this.objects;
-			}
-
-			set
-			{
-				this.objects = value;
-			}
+			get { return this.objects; }
+			set { this.objects = value; }
 		}
 
 		public AbstractObject this[int index]
@@ -129,21 +136,22 @@ namespace Epsitec.Common.Pictogram.Data
 				this.CurrentGroup[index] = value;
 			}
 		}
-		
+
 		public int Count
 		{
 			get { return this.CurrentGroup.Count; }
 		}
 
-		public int InitialCount
-		{
-			get { return this.objects.Count; }
-		}
-
 		public void Clear()
 		{
 			this.objects.Clear();
-			this.roots.Clear();
+			ObjectPage  page  = new ObjectPage();
+			ObjectLayer layer = new ObjectLayer();
+			this.objects.Add(page);
+			page.Objects.Add(layer);
+			this.UsePageLayer(0, 0);
+
+			this.styles.ClearProperty();
 		}
 
 		public int Add(AbstractObject obj)
@@ -161,6 +169,30 @@ namespace Epsitec.Common.Pictogram.Data
 			AbstractObject obj = this.CurrentGroup[index] as AbstractObject;
 			if ( obj != null )  obj.Dispose();
 			this.CurrentGroup.RemoveAt(index);
+		}
+
+
+		// Retourne le nombre total d'objets.
+		public int TotalCount()
+		{
+			return this.TotalCount(this.objects);
+		}
+
+		protected int TotalCount(System.Collections.ArrayList objects)
+		{
+			int total = objects.Count;
+			int count = 0;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				count ++;
+
+				AbstractObject obj = objects[index] as AbstractObject;
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					count += this.TotalCount(obj.Objects);
+				}
+			}
+			return count;
 		}
 
 
@@ -230,6 +262,7 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+
 		// Modifie juste l'état "étendu" d'une propriété.
 		public void SetPropertyExtended(AbstractProperty property)
 		{
@@ -254,15 +287,32 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Modifie une propriété.
-		public void SetProperty(AbstractProperty property, ref Drawing.Rectangle bbox)
+		// Modifie une propriété des objets sélectionnés.
+		public void SetProperty(AbstractProperty property, ref Drawing.Rectangle bbox, bool changeStylesCollection)
 		{
-			this.SetProperty(this.CurrentGroup, property, ref bbox, false);
+			if ( property.StyleID == 0 )  // propriété indépendante ?
+			{
+				this.SetPropertyFree(this.CurrentGroup, property, ref bbox, false);
+			}
+			else	// propriété liée à un style ?
+			{
+				this.SetPropertyStyle(this.objects, property, ref bbox);
+
+				if ( changeStylesCollection )
+				{
+					this.styles.ChangeProperty(property);
+				}
+			}
 		}
 
-		protected void SetProperty(System.Collections.ArrayList objects, AbstractProperty property, ref Drawing.Rectangle bbox, bool all)
+		// Mets une propriété piquée avec la pipette aux objets sélectionnés.
+		public void SetPropertyPicker(AbstractProperty property, ref Drawing.Rectangle bbox)
 		{
-			bbox = Drawing.Rectangle.Empty;
+			this.SetPropertyFree(this.CurrentGroup, property, ref bbox, false);
+		}
+
+		protected void SetPropertyFree(System.Collections.ArrayList objects, AbstractProperty property, ref Drawing.Rectangle bbox, bool all)
+		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
@@ -273,15 +323,43 @@ namespace Epsitec.Common.Pictogram.Data
 				obj.SetProperty(property);
 				bbox.MergeWith(obj.BoundingBox);
 
+				ObjectGroup group = obj as ObjectGroup;
+				if ( group != null && group.Objects != null && group.Objects.Count > 0 )
+				{
+					this.SetPropertyFree(group.Objects, property, ref bbox, true);
+
+					Drawing.Rectangle gbox = this.RetBbox(group.Objects);
+					group.UpdateDim(gbox);
+					bbox.MergeWith(gbox);
+				}
+			}
+		}
+
+		protected void SetPropertyStyle(System.Collections.ArrayList objects, AbstractProperty property, ref Drawing.Rectangle bbox)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+
+				if ( obj.IsLinkProperty(property) )
+				{
+					bbox.MergeWith(obj.BoundingBox);
+					obj.SetProperty(property);
+					bbox.MergeWith(obj.BoundingBox);
+				}
+
 				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
-					this.SetProperty(obj.Objects, property, ref bbox, true);
+					this.SetPropertyStyle(obj.Objects, property, ref bbox);
 
-					Drawing.Rectangle gbox = this.RetBbox(obj.Objects);
-					obj.Handle(0).Position = gbox.BottomLeft;
-					obj.Handle(1).Position = gbox.TopRight;
-					obj.UpdateBoundingBox();
-					bbox.MergeWith(gbox);
+					ObjectGroup group = obj as ObjectGroup;
+					if ( group != null )
+					{
+						Drawing.Rectangle gbox = this.RetBbox(group.Objects);
+						group.UpdateDim(gbox);
+						bbox.MergeWith(gbox);
+					}
 				}
 			}
 		}
@@ -318,6 +396,89 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Libère les objets sélectionnés du style.
+		public void StyleFree(PropertyType type)
+		{
+			this.StyleFree(this.CurrentGroup, type, false);
+		}
+
+		protected void StyleFree(System.Collections.ArrayList objects, PropertyType type, bool all)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				if ( !all && !obj.IsSelected() )  continue;
+
+				AbstractProperty property = obj.GetProperty(type);
+				if ( property != null )
+				{
+					property.StyleName = "";
+					property.StyleID = 0;
+					obj.SetProperty(property);
+				}
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					this.StyleFree(obj.Objects, type, true);
+				}
+			}
+		}
+
+		// Libère tous les objets du style.
+		public void StyleFreeAll(AbstractProperty property)
+		{
+			this.StyleFreeAll(this.CurrentGroup, property);
+		}
+
+		protected void StyleFreeAll(System.Collections.ArrayList objects, AbstractProperty property)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				if ( !obj.IsLinkProperty(property) )  continue;
+
+				AbstractProperty objProp = obj.GetProperty(property.Type);
+				if ( objProp != null )
+				{
+					objProp.StyleName = "";
+					objProp.StyleID = 0;
+					obj.SetProperty(objProp);
+				}
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					this.StyleFreeAll(obj.Objects, property);
+				}
+			}
+		}
+
+
+		// Utilise un style donné.
+		public void StyleUse(AbstractProperty property)
+		{
+			this.StyleUse(this.CurrentGroup, property, false);
+		}
+
+		protected void StyleUse(System.Collections.ArrayList objects, AbstractProperty property, bool all)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				if ( !all && !obj.IsSelected() )  continue;
+
+				obj.SetProperty(property);
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					this.StyleUse(obj.Objects, property, true);
+				}
+			}
+		}
+
+
 		// Retourne la bounding box de tous les objets.
 		public Drawing.Rectangle RetBbox()
 		{
@@ -331,7 +492,7 @@ namespace Epsitec.Common.Pictogram.Data
 			for ( int index=0 ; index<total ; index++ )
 			{
 				AbstractObject obj = objects[index] as AbstractObject;
-				bbox.MergeWith(obj.BoundingBox);
+				bbox.MergeWith(obj.BoundingBoxGeom);
 			}
 			return bbox;
 		}
@@ -352,7 +513,7 @@ namespace Epsitec.Common.Pictogram.Data
 				AbstractObject obj = objects[index] as AbstractObject;
 				if ( !obj.IsSelected() )  continue;
 
-				bbox.MergeWith(obj.BoundingBox);
+				bbox.MergeWith(obj.BoundingBoxGeom);
 			}
 			return bbox;
 		}
@@ -434,40 +595,48 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Hilite un objet.
-		public void Hilite(AbstractObject item)
+		public void Hilite(AbstractObject item, ref Drawing.Rectangle bbox)
 		{
-			this.Hilite(this.CurrentGroup, item);
+			this.Hilite(this.CurrentGroup, item, ref bbox);
 		}
 
-		protected void Hilite(System.Collections.ArrayList objects, AbstractObject item)
+		protected void Hilite(System.Collections.ArrayList objects, AbstractObject item, ref Drawing.Rectangle bbox)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
 				AbstractObject obj = objects[index] as AbstractObject;
-				obj.IsHilite = (obj == item);
+				if ( obj.IsHilite != (obj == item) )
+				{
+					obj.IsHilite = (obj == item);
+					bbox.MergeWith(obj.BoundingBox);
+				}
 			}
 		}
 
 
 		// Hilite un objet en profondeur.
-		public void DeepHilite(AbstractObject item)
+		public void DeepHilite(AbstractObject item, ref Drawing.Rectangle bbox)
 		{
-			this.DeepHilite(this.CurrentGroup, item);
+			this.DeepHilite(this.CurrentGroup, item, ref bbox);
 		}
 
-		protected void DeepHilite(System.Collections.ArrayList objects, AbstractObject item)
+		protected void DeepHilite(System.Collections.ArrayList objects, AbstractObject item, ref Drawing.Rectangle bbox)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
 				AbstractObject obj = objects[index] as AbstractObject;
 
-				obj.IsHilite = (obj == item);
+				if ( obj.IsHilite != (obj == item) )
+				{
+					obj.IsHilite = (obj == item);
+					bbox.MergeWith(obj.BoundingBox);
+				}
 
 				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
-					this.DeepHilite(obj.Objects, item);
+					this.DeepHilite(obj.Objects, item, ref bbox);
 				}
 			}
 		}
@@ -562,18 +731,40 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Indique que tous les objets sélectionnés le sont globalement.
-		public void GlobalSelect()
+		public void GlobalSelect(bool global)
 		{
-			this.GlobalSelect(this.CurrentGroup);
+			this.GlobalSelect(this.CurrentGroup, global);
 		}
 
-		protected void GlobalSelect(System.Collections.ArrayList objects)
+		protected void GlobalSelect(System.Collections.ArrayList objects, bool global)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
 				AbstractObject obj = objects[index] as AbstractObject;
-				obj.GlobalSelect();
+				obj.GlobalSelect(global);
+			}
+		}
+
+
+		// Désélectionne tous les objets, dans toutes les pages et tous les calques.
+		public void DeselectAll()
+		{
+			this.DeselectAll(this.objects);
+		}
+
+		protected void DeselectAll(System.Collections.ArrayList objects)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				obj.Deselect();
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					this.DeselectAll(obj.Objects);
+				}
 			}
 		}
 
@@ -661,6 +852,94 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+		// Copie tous les objets sélectionnés dans le bloc-notes.
+		public void CopySelection()
+		{
+			this.clipboard.Clear();
+			this.CopySelection(this.CurrentGroup, this.clipboard, false);
+		}
+
+		protected void CopySelection(System.Collections.ArrayList objects,
+									 System.Collections.ArrayList dst,
+									 bool all)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				if ( !all && !obj.IsSelected() )  continue;
+
+				AbstractObject newObject = null;
+				if ( !obj.DuplicateObject(ref newObject) )  continue;
+				dst.Add(newObject);
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					this.CopySelection(obj.Objects, newObject.Objects, true);
+				}
+			}
+		}
+
+		// Colle tous les objets contenus dans le bloc-notes.
+		public void PasteSelection()
+		{
+			this.PasteSelection(this.clipboard, this.CurrentGroup, false);
+			this.StylesCollection.CollectionChanged();  // si PasteAdaptStyles a créé un nouveau style
+		}
+
+		protected void PasteSelection(System.Collections.ArrayList objects,
+									  System.Collections.ArrayList dst,
+									  bool all)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				if ( !all && !obj.IsSelected() )  continue;
+
+				AbstractObject newObject = null;
+				if ( !obj.DuplicateObject(ref newObject) )  continue;
+				dst.Add(newObject);
+				this.PasteAdaptStyles(newObject);  // adapte les styles
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					this.PasteSelection(obj.Objects, newObject.Objects, true);
+				}
+			}
+		}
+
+		// Adapte les styles de l'objet collé, qui peut provenir d'un autre fichier,
+		// donc d'une autre collection de styles. On se base sur le nom des styles
+		// (StyleName) pour faire la correspondance.
+		// Si on trouve un nom identique -> le style de l'objet collé est modifié
+		// en fonction du style existant.
+		// Si on ne trouve pas un nom identique -> on crée un nouveau style, en
+		// modifiant bien entendu l'identificateur (StyleID) de l'objet collé.
+		protected void PasteAdaptStyles(AbstractObject obj)
+		{
+			int total = obj.TotalProperty;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				AbstractProperty property = obj.Property(i);
+				if ( property.StyleID == 0 )  continue;  // n'utilise pas un style ?
+
+				AbstractProperty style = this.StylesCollection.SearchProperty(property);
+				if ( style == null )
+				{
+					int rank = this.StylesCollection.AddProperty(property);
+					style = this.StylesCollection.GetProperty(rank);
+				}
+				style.CopyTo(property);
+			}
+		}
+
+		// Indique si le bloc-notes est vide.
+		public bool IsEmptyClipboard()
+		{
+			return (this.clipboard.Count == 0);
+		}
+
 		// Change l'ordre de tous les objets sélectionnés.
 		public void OrderSelection(int dir)
 		{
@@ -713,7 +992,9 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( obj.IsSelected() )
 				{
 					extract.Add(obj);
+					obj.Deselect();
 					bbox.MergeWith(obj.BoundingBox);
+					obj.Select();
 				}
 			}
 
@@ -723,7 +1004,7 @@ namespace Epsitec.Common.Pictogram.Data
 			// Crée l'objet groupe.
 			ObjectGroup group = new ObjectGroup();
 			objects.Add(group);
-			group.SetBoundingBox(bbox);
+			group.UpdateDim(bbox);
 			group.Select();
 
 			// Remet les objets extraits dans le groupe.
@@ -782,12 +1063,10 @@ namespace Epsitec.Common.Pictogram.Data
 					AbstractObject obj = objects[index] as AbstractObject;
 					if ( obj.IsSelected() && obj is ObjectGroup )
 					{
-						Drawing.Point origin = obj.Origin;
 						int rank = index+1;
 						foreach ( AbstractObject inside in obj.Objects )
 						{
 							inside.Select();
-							inside.MoveAll(origin, true);
 							objects.Insert(rank++, inside);
 						}
 						objects.RemoveAt(index);
@@ -798,6 +1077,7 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 			while ( bDo );
 		}
+
 
 		// Déplace tous les objets sélectionnés.
 		public void MoveSelection(Drawing.Point move, ref Drawing.Rectangle bbox)
@@ -826,12 +1106,12 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Déplace globalement tous les objets sélectionnés.
-		public void MoveSelection(GlobalModifier modifier)
+		public void MoveSelection(GlobalModifierData initial, GlobalModifierData final, ref Drawing.Rectangle bbox)
 		{
-			this.MoveSelection(this.CurrentGroup, modifier, false);
+			this.MoveSelection(this.CurrentGroup, initial, final, ref bbox, false);
 		}
 
-		protected void MoveSelection(System.Collections.ArrayList objects, GlobalModifier modifier, bool all)
+		protected void MoveSelection(System.Collections.ArrayList objects, GlobalModifierData initial, GlobalModifierData final, ref Drawing.Rectangle bbox, bool all)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -839,28 +1119,154 @@ namespace Epsitec.Common.Pictogram.Data
 				AbstractObject obj = objects[index] as AbstractObject;
 				if ( !all && !obj.IsSelected() )  continue;
 
-				obj.MoveGlobal(modifier);
+				bbox.MergeWith(obj.BoundingBox);
+				obj.MoveGlobal(initial, final, all);
+				bbox.MergeWith(obj.BoundingBox);
 
 				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
-					this.MoveSelection(obj.Objects, modifier, true);
+					this.MoveSelection(obj.Objects, initial, final, ref bbox, true);
 				}
 			}
 		}
 
 
+		// Déplace une poignée d'un objet.
+		public void MoveHandleProcess(AbstractObject obj, int rank, Drawing.Point pos, IconContext iconContext, ref Drawing.Rectangle bbox)
+		{
+			bbox.MergeWith(obj.BoundingBox);
+			obj.MoveHandleProcess(rank, pos, iconContext);
+			bbox.MergeWith(obj.BoundingBox);
+
+			AbstractProperty property = obj.MoveHandleProperty(rank);
+			if ( property != null )
+			{
+				bool init = property.EditProperties;
+				property.EditProperties = false;
+				this.SetProperty(property, ref bbox, true);
+				property.EditProperties = init;
+			}
+		}
+
+
+		// Cache la sélection.
+		public void HideSelection()
+		{
+			this.HideObject(this.CurrentGroup, true, false, true);
+		}
+
+		// Cache ce qui n'est pas sélectionné.
+		public void HideRest()
+		{
+			this.HideObject(this.objects, false, true, true);
+		}
+
+		// Annule tous les objets cachés (montre tout).
+		public void HideCancel()
+		{
+			this.HideObject(this.objects, false, false, false);
+		}
+
+		// Cache un objet et tous ses fils.
+		protected void HideObject(AbstractObject obj, bool onlySelected, bool onlyDeselected, bool hide)
+		{
+			if ( !(obj is ObjectPage) && !(obj is ObjectLayer) )
+			{
+				if ( hide )
+				{
+					obj.Deselect();
+				}
+				else
+				{
+					obj.Select(obj.IsHide);
+				}
+				obj.IsHide = hide;
+			}
+
+			if ( obj.Objects != null && obj.Objects.Count > 0 )
+			{
+				this.HideObject(obj.Objects, onlySelected, onlyDeselected, hide);
+			}
+		}
+
+		protected void HideObject(System.Collections.ArrayList objects, bool onlySelected, bool onlyDeselected, bool hide)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+
+				if ( onlySelected )
+				{
+					if ( !obj.IsSelected() )  continue;
+				}
+				if ( onlyDeselected )
+				{
+					if ( obj.IsSelected() )  continue;
+				}
+
+				if ( !(obj is ObjectPage) && !(obj is ObjectLayer) )
+				{
+					if ( hide )
+					{
+						obj.Deselect();
+					}
+					else
+					{
+						obj.Select(obj.IsHide);
+					}
+					obj.IsHide = hide;
+				}
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					this.HideObject(obj.Objects, onlySelected, onlyDeselected, hide);
+				}
+			}
+		}
+
+		// Retourne le nombre d'objets cachés.
+		public int RetTotalHide()
+		{
+			return this.RetTotalHide(this.objects);
+		}
+
+		protected int RetTotalHide(System.Collections.ArrayList objects)
+		{
+			int count = 0;
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				if ( obj.IsHide )  count ++;
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					count += this.RetTotalHide(obj.Objects);
+				}
+			}
+			return count;
+		}
+
+		
 		// Dessine la géométrie de tous les objets.
 		public void DrawGeometry(Drawing.Graphics graphics,
 								 IconContext iconContext,
-								 object adorner)
+								 object adorner,
+								 Drawing.Rectangle clipRect,
+								 bool showAllLayers)
 		{
-			this.DrawGeometry(this.objects, graphics, iconContext, adorner, true);
+			if ( this.objects.Count == 0 )  return;
+			ObjectPage page = this.objects[this.currentPage] as ObjectPage;
+			this.DrawGeometry(page.Objects, graphics, iconContext, adorner, clipRect, showAllLayers, !showAllLayers);
 		}
 
 		protected void DrawGeometry(System.Collections.ArrayList objects,
 									Drawing.Graphics graphics,
 									IconContext iconContext,
 									object adorner,
+									Drawing.Rectangle clipRect,
+									bool showAllLayers,
 									bool dimmed)
 		{
 			System.Collections.ArrayList root = this.CurrentGroup;
@@ -871,10 +1277,36 @@ namespace Epsitec.Common.Pictogram.Data
 			for ( int index=0 ; index<total ; index++ )
 			{
 				AbstractObject obj = objects[index] as AbstractObject;
+				ObjectLayer layer = obj as ObjectLayer;
+
+				if ( layer == null && !obj.BoundingBox.IntersectsWith(clipRect) )  continue;
 
 				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
-					this.DrawGeometry(obj.Objects, graphics, iconContext, adorner, dimmed);
+					if ( layer != null )
+					{
+
+						PropertyModColor modColor = layer.PropertyModColor(0);
+						iconContext.modifyColor = new IconContext.ModifyColor(modColor.ModifyColor);
+
+						if ( layer.Actif || showAllLayers )
+						{
+							this.DrawGeometry(obj.Objects, graphics, iconContext, adorner, clipRect, showAllLayers, dimmed);
+						}
+						else
+						{
+							if ( layer.Type != LayerType.Hide )
+							{
+								bool newDimmed = dimmed;
+								if ( layer.Type == LayerType.Show )  newDimmed = false;
+								this.DrawGeometry(obj.Objects, graphics, iconContext, adorner, clipRect, showAllLayers, newDimmed);
+							}
+						}
+					}
+					else
+					{
+						this.DrawGeometry(obj.Objects, graphics, iconContext, adorner, clipRect, showAllLayers, dimmed);
+					}
 				}
 
 				if ( obj is ObjectGroup )
@@ -891,7 +1323,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine les poignées de tous les objets.
 		public void DrawHandle(Drawing.Graphics graphics, IconContext iconContext)
 		{
-			this.DrawHandle(this.objects, graphics, iconContext);
+			this.DrawHandle(this.CurrentGroup, graphics, iconContext);
 		}
 
 		protected void DrawHandle(System.Collections.ArrayList objects, Drawing.Graphics graphics, IconContext iconContext)
@@ -944,7 +1376,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Sort d'un groupe.
 		public void OutsideGroup()
 		{
-			if ( this.roots.Count == 0 )  return;
+			if ( this.roots.Count <= 2 )  return;
 			this.Select(null, false);
 			this.UpdateEditProperties();
 			AbstractObject obj = this.roots[this.roots.Count-1] as AbstractObject;
@@ -955,7 +1387,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Indique si on est à la racine.
 		public bool IsInitialGroup()
 		{
-			return ( this.roots.Count == 0 );
+			return ( this.roots.Count <= 2 );
 		}
 
 		// Retourne la racine courante.
@@ -976,24 +1408,259 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Adapte les dimensions du groupe en fonction du contenu.
+		// Adapte les dimensions de tous les groupes inclus.
 		public void GroupUpdate(ref Drawing.Rectangle bbox)
 		{
-			if ( this.roots.Count == 0 )  return;
-			for ( int i=this.roots.Count-1 ; i>=0 ; i-- )
+			this.GroupUpdate(this.CurrentGroup, ref bbox, false);
+		}
+
+		protected void GroupUpdate(System.Collections.ArrayList objects, ref Drawing.Rectangle bbox, bool all)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
 			{
-				AbstractObject group = this.roots[i] as AbstractObject;
-				if ( group.Objects == null || group.Objects.Count == 0 )  continue;
+				ObjectGroup group = objects[index] as ObjectGroup;
+				if ( group == null || (!all && !group.IsSelected()) )  continue;
+
+				if ( group.Objects != null && group.Objects.Count > 0 )
+				{
+					this.GroupUpdate(group.Objects, ref bbox, true);
+
+					Drawing.Rectangle actualBbox = group.BoundingBox;
+					Drawing.Rectangle newBbox = this.RetBbox(group.Objects);
+					group.UpdateDim(newBbox);
+
+					bbox.MergeWith(actualBbox);
+					bbox.MergeWith(newBbox);
+				}
+			}
+		}
+
+		// Adapte les dimensions de tous les groupes parents.
+		public void GroupUpdateParents(ref Drawing.Rectangle bbox)
+		{
+			if ( this.roots.Count <= 2 )  return;
+			for ( int i=this.roots.Count-1 ; i>=2 ; i-- )
+			{
+				ObjectGroup group = this.roots[i] as ObjectGroup;
+				if ( group == null || group.Objects == null || group.Objects.Count == 0 )  continue;
 
 				Drawing.Rectangle actualBbox = group.BoundingBox;
 				Drawing.Rectangle newBbox = this.RetBbox(group.Objects);
-				group.Handle(0).Position = newBbox.BottomLeft;
-				group.Handle(1).Position = newBbox.TopRight;
-				group.UpdateBoundingBox();
+				group.UpdateDim(newBbox);
 
 				bbox.MergeWith(actualBbox);
 				bbox.MergeWith(newBbox);
 			}
+		}
+
+
+		// Retourne le nombre total de pages.
+		public int TotalPages()
+		{
+			return this.objects.Count;
+		}
+
+		// Retourne le nombre total de calques dans la page courante.
+		public int TotalLayers()
+		{
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
+			ObjectPage page = this.roots[0] as ObjectPage;
+			System.Diagnostics.Debug.Assert(page != null);
+			return page.Objects.Count;
+		}
+
+		// Gestion de la page en cours.
+		public int CurrentPage
+		{
+			get
+			{
+				return this.currentPage;
+			}
+
+			set
+			{
+				if ( value != this.currentPage )
+				{
+					this.UsePageLayer(value, 0);
+				}
+			}
+		}
+
+		// Gestion du calque en cours.
+		public int CurrentLayer
+		{
+			get
+			{
+				return this.currentLayer;
+			}
+
+			set
+			{
+				if ( value != this.currentLayer )
+				{
+					this.UsePageLayer(this.currentPage, value);
+				}
+			}
+		}
+
+		// Utilise une page et un calque donné.
+		protected void UsePageLayer(int rankPage, int rankLayer)
+		{
+			this.roots.Clear();
+
+			System.Diagnostics.Debug.Assert(rankPage < this.objects.Count);
+			ObjectPage page = this.objects[rankPage] as ObjectPage;
+			System.Diagnostics.Debug.Assert(page != null);
+			this.roots.Add(page);
+
+			System.Diagnostics.Debug.Assert(rankLayer < page.Objects.Count);
+			ObjectLayer layer = page.Objects[rankLayer] as ObjectLayer;
+			System.Diagnostics.Debug.Assert(layer != null);
+			this.roots.Add(layer);
+
+			this.currentPage  = rankPage;
+			this.currentLayer = rankLayer;
+
+			int total = page.Objects.Count;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				layer = page.Objects[i] as ObjectLayer;
+				layer.Actif = (i == this.currentLayer);
+			}
+		}
+
+		// Donne une page.
+		public ObjectPage Page(int rank)
+		{
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
+			System.Diagnostics.Debug.Assert(rank < this.objects.Count);
+			return this.objects[rank] as ObjectPage;
+		}
+
+		// Donne un calque de la page courante.
+		public ObjectLayer Layer(int rank)
+		{
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
+			ObjectPage page = this.roots[0] as ObjectPage;
+			System.Diagnostics.Debug.Assert(rank < page.Objects.Count);
+			return page.Objects[rank] as ObjectLayer;
+		}
+
+		// Donne la transformation de couleur du calque courant.
+		public PropertyModColor LayerModColor()
+		{
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
+			ObjectLayer layer = this.roots[1] as ObjectLayer;
+			System.Diagnostics.Debug.Assert(layer != null);
+			return layer.PropertyModColor(0);
+		}
+
+		// Crée une nouvelle page (avec un calque) après le rang donné.
+		public void CreatePage(int rank, bool duplicate)
+		{
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
+			ObjectPage page = new ObjectPage();
+			this.objects.Insert(rank+1, page);
+
+			if ( duplicate )
+			{
+				this.DuplicateSelection(this.Page(rank).Objects, this.Page(rank+1).Objects, new Drawing.Point(0, 0), true);
+				ObjectPage srcPage = this.Page(rank);
+				if ( srcPage.Name == "" )
+				{
+					page.Name = "Copie";
+				}
+				else
+				{
+					page.Name = "Copie de " + srcPage.Name;
+				}
+			}
+			else
+			{
+				ObjectLayer layer = new ObjectLayer();
+				page.Objects.Add(layer);
+			}
+
+			this.UsePageLayer(rank+1, 0);
+		}
+
+		// Crée un nouveau calque dans la page courante après le rang donné.
+		public void CreateLayer(int rank, bool duplicate)
+		{
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
+			ObjectPage page = this.roots[0] as ObjectPage;
+			ObjectLayer layer = new ObjectLayer();
+			page.Objects.Insert(rank+1, layer);
+
+			if ( duplicate )
+			{
+				this.DuplicateSelection(this.Layer(rank).Objects, this.Layer(rank+1).Objects, new Drawing.Point(0, 0), true);
+				ObjectLayer srcLayer = this.Layer(rank);
+				if ( srcLayer.Name == "" )
+				{
+					layer.Name = "Copie";
+				}
+				else
+				{
+					layer.Name = "Copie de " + srcLayer.Name;
+				}
+			}
+
+			this.UsePageLayer(this.currentPage, rank+1);
+		}
+
+		// Supprime une page.
+		public void DeletePage(int rank)
+		{
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
+			System.Diagnostics.Debug.Assert(this.objects.Count > 1);
+			System.Diagnostics.Debug.Assert(rank < this.objects.Count);
+			this.objects.RemoveAt(rank);
+
+			if ( this.currentPage > this.objects.Count-1 )  this.currentPage = this.objects.Count-1;
+			this.roots[0] = this.objects[this.currentPage];
+
+			ObjectPage page = this.roots[0] as ObjectPage;
+			this.currentLayer = 0;
+			this.roots[1] = page.Objects[this.currentLayer];
+		}
+
+		// Supprime un calque.
+		public void DeleteLayer(int rank)
+		{
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
+			ObjectPage page = this.roots[0] as ObjectPage;
+			System.Diagnostics.Debug.Assert(page.Objects.Count > 1);
+			System.Diagnostics.Debug.Assert(rank < page.Objects.Count);
+			page.Objects.RemoveAt(rank);
+
+			this.currentLayer --;
+			if ( this.currentLayer < 0 )  this.currentLayer = 0;
+			this.roots[1] = page.Objects[this.currentLayer];
+		}
+
+		// Permute deux pages.
+		public void SwapPage(int rank1, int rank2)
+		{
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
+			System.Diagnostics.Debug.Assert(rank1 < this.objects.Count);
+			System.Diagnostics.Debug.Assert(rank2 < this.objects.Count);
+			ObjectPage temp = this.objects[rank1] as ObjectPage;
+			this.objects[rank1] = this.objects[rank2];
+			this.objects[rank2] = temp;
+		}
+
+		// Permute deux calques.
+		public void SwapLayer(int rank1, int rank2)
+		{
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
+			ObjectPage page = this.roots[0] as ObjectPage;
+			System.Diagnostics.Debug.Assert(rank1 < page.Objects.Count);
+			System.Diagnostics.Debug.Assert(rank2 < page.Objects.Count);
+			ObjectLayer temp = page.Objects[rank1] as ObjectLayer;
+			page.Objects[rank1] = page.Objects[rank2];
+			page.Objects[rank2] = temp;
 		}
 
 
@@ -1044,11 +1711,33 @@ namespace Epsitec.Common.Pictogram.Data
 				this.size = obj.size;
 				this.origin = obj.origin;
 
+				obj.styles.CopyTo(this.styles);
+				this.styles.InitNextID();
+				this.styles.CollectionChanged();
+
 				this.objects.Clear();
-				foreach ( AbstractObject src in obj.Objects )
+				if ( obj.objects.Count > 0 && obj.objects[0] is ObjectPage )
 				{
-					this.objects.Add(src);
+					foreach ( AbstractObject src in obj.Objects )
+					{
+						this.objects.Add(src);
+					}
 				}
+				else
+				{
+					ObjectPage  page  = new ObjectPage();
+					ObjectLayer layer = new ObjectLayer();
+					this.objects.Add(page);
+					page.Objects.Add(layer);
+
+					foreach ( AbstractObject src in obj.Objects )
+					{
+						layer.Objects.Add(src);
+					}
+				}
+				this.ArrangeAfterRead(this.objects);
+
+				this.UsePageLayer(0, 0);
 			}
 			catch ( System.Exception )
 			{
@@ -1057,12 +1746,30 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
+		protected void ArrangeAfterRead(System.Collections.ArrayList objects)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				obj.ArrangeAfterRead();
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					this.ArrangeAfterRead(obj.Objects);
+				}
+			}
+		}
+
 
 		protected Drawing.Size					size = new Drawing.Size(20, 20);
 		protected Drawing.Size					sizeArea = new Drawing.Size(20*3, 20*3);
 		protected Drawing.Point					origin = new Drawing.Point(0, 0);
+		protected StylesCollection				styles = new StylesCollection();
 		protected System.Collections.ArrayList	objects = new System.Collections.ArrayList();
-
 		protected System.Collections.ArrayList	roots = new System.Collections.ArrayList();
+		protected System.Collections.ArrayList	clipboard = new System.Collections.ArrayList();
+		protected int							currentPage = 0;
+		protected int							currentLayer = 0;
 	}
 }

@@ -13,11 +13,13 @@ namespace Epsitec.Common.Pictogram.Data
 		FillGradient,		// dégradé de remplissage
 		Shadow,				// ombre sous l'objet
 		PolyClose,			// mode de fermeture des polygones
+		Arrow,				// extrémité des segments
 		Corner,				// coins des rectangles
 		Regular,			// définitions du polygone régulier
 		TextString,			// texte
 		TextFontName,		// police
 		TextFontOptical,	// police
+		ModColor,			// modification de couleur
 	}
 
 	/// <summary>
@@ -40,15 +42,60 @@ namespace Epsitec.Common.Pictogram.Data
 				case PropertyType.FillGradient:     property = new PropertyGradient();  break;
 				case PropertyType.Shadow:           property = new PropertyShadow();    break;
 				case PropertyType.PolyClose:        property = new PropertyBool();      break;
+				case PropertyType.Arrow:            property = new PropertyArrow();     break;
 				case PropertyType.Corner:           property = new PropertyCorner();    break;
 				case PropertyType.Regular:          property = new PropertyRegular();   break;
 				case PropertyType.TextString:       property = new PropertyString();    break;
 				case PropertyType.TextFontName:     property = new PropertyCombo();     break;
 				case PropertyType.TextFontOptical:  property = new PropertyCombo();     break;
+				case PropertyType.ModColor:         property = new PropertyModColor();  break;
 			}
 			if ( property == null )  return null;
 			property.Type = type;
 			return property;
+		}
+
+		// Retourne le nom d'un type de propriété.
+		static public string TypeName(PropertyType type)
+		{
+			switch ( type )
+			{
+				case PropertyType.LineColor:        return "LineColor";
+				case PropertyType.LineMode:         return "LineMode";
+				case PropertyType.FillGradient:     return "FillGradient";
+				case PropertyType.Shadow:           return "Shadow";
+				case PropertyType.PolyClose:        return "PolyClose";
+				case PropertyType.Arrow:            return "Arrow";
+				case PropertyType.Corner:           return "Corner";
+				case PropertyType.Regular:          return "Regular";
+				case PropertyType.TextString:       return "TextString";
+				case PropertyType.TextFontName:     return "TextFontName";
+				case PropertyType.TextFontOptical:  return "TextFontOptical";
+				case PropertyType.ModColor:         return "ModColor";
+			}
+			return "";
+		}
+
+		// Retourne le type de propriété d'après son nom.
+		static public PropertyType TypeName(string typeName)
+		{
+			switch ( typeName )
+			{
+				case "LineColor":        return PropertyType.LineColor;
+				case "LineMode":         return PropertyType.LineMode;
+				case "FillGradient":     return PropertyType.FillGradient;
+				case "Shadow":           return PropertyType.Shadow;
+				case "PolyClose":        return PropertyType.PolyClose;
+				case "Arrow":            return PropertyType.Arrow;
+				case "Corner":           return PropertyType.Corner;
+				case "Regular":          return PropertyType.Regular;
+				case "TextString":       return PropertyType.TextString;
+				case "TextFontName":     return PropertyType.TextFontName;
+				case "TextFontOptical":  return PropertyType.TextFontOptical;
+				case "ModColor":         return PropertyType.ModColor;
+
+			}
+			return PropertyType.None;
 		}
 
 		// Type de la propriété.
@@ -59,12 +106,45 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.type = value; }
 		}
 
+		// Type de la propriété.
+		[XmlAttribute]
+		public string StyleName
+		{
+			get { return this.styleName; }
+			set { this.styleName = value; }
+		}
+
+		// Type de la propriété.
+		[XmlAttribute]
+		public int StyleID
+		{
+			get { return this.styleID; }
+			set { this.styleID = value; }
+		}
+
 		// Nom de la propriété.
 		[XmlIgnore]
 		public string Text
 		{
 			get { return this.text; }
 			set { this.text = value; }
+		}
+
+		// Nom de la propriété ou du style si c'en est un.
+		[XmlIgnore]
+		public string TextStyle
+		{
+			get
+			{
+				if ( this.styleName == "" )
+				{
+					return this.text;
+				}
+				else
+				{
+					return string.Format("<b>{0}</b>", this.styleName);
+				}
+			}
 		}
 
 		// Couleur de fond du panneau associé.
@@ -106,10 +186,19 @@ namespace Epsitec.Common.Pictogram.Data
 			get { return false; }
 		}
 
+		// Indique si cette propriété peut faire l'objet d'un style.
+		[XmlIgnore]
+		public virtual bool StyleAbility
+		{
+			get { return true; }
+		}
+
 		// Effectue une copie de la propriété.
 		public virtual void CopyTo(AbstractProperty property)
 		{
 			this.CopyInfoTo(property);
+			property.styleName      = this.styleName;
+			property.styleID        = this.styleID;
 			property.editProperties = this.editProperties;
 		}
 
@@ -126,7 +215,9 @@ namespace Epsitec.Common.Pictogram.Data
 		// Compare deux propriétés.
 		public virtual bool Compare(AbstractProperty property)
 		{
-			if ( property.type != this.type )  return false;
+			if ( property.type      != this.type      )  return false;
+			if ( property.styleName != this.styleName )  return false;
+			if ( property.styleID   != this.styleID   )  return false;
 			return true;
 		}
 
@@ -203,6 +294,8 @@ namespace Epsitec.Common.Pictogram.Data
 		protected bool							editProperties = false;
 
 		protected PropertyType					type;
+		protected string						styleName = "";
+		protected int							styleID = 0;
 		protected System.Collections.ArrayList	handles = new System.Collections.ArrayList();
 	}
 }

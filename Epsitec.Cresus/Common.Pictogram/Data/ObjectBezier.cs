@@ -9,10 +9,6 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ObjectBezier()
 		{
-		}
-
-		public override void CreateProperties()
-		{
 			PropertyLine lineMode = new PropertyLine();
 			lineMode.Type = PropertyType.LineMode;
 			this.AddProperty(lineMode);
@@ -39,13 +35,14 @@ namespace Epsitec.Common.Pictogram.Data
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return @"file:images/bezier1.icon"; }
+			get { return @"file:images/bezier.icon"; }
 		}
 
 
 		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
+			if ( this.isHide )  return false;
 			if ( this.DetectOutline(pos) != -1 )  return true;
 			if ( this.DetectFill(pos) )  return true;
 			return false;
@@ -107,22 +104,6 @@ namespace Epsitec.Common.Pictogram.Data
 				surf.AddLine(p1, p2);
 			}
 			return surf.IsInside();
-		}
-
-		// Détecte si l'objet est dans un rectangle.
-		public override bool Detect(Drawing.Rectangle rect, bool all)
-		{
-			if ( all )
-			{
-				Drawing.Rectangle fullBbox = this.BoundingBox;
-				double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
-				fullBbox.Inflate(width, width);
-				return rect.Contains(fullBbox);
-			}
-			else
-			{
-				return base.Detect(rect, all);
-			}
 		}
 
 		// Déplace tout l'objet.
@@ -203,7 +184,7 @@ namespace Epsitec.Common.Pictogram.Data
 				item = new ContextMenuItem();
 				item.Command = "Object";
 				item.Name = "HandleAdd";
-				item.Icon = @"file:images/add1.icon";
+				item.Icon = @"file:images/add.icon";
 				item.Text = "Ajouter un point";
 				list.Add(item);
 			}
@@ -221,8 +202,8 @@ namespace Epsitec.Common.Pictogram.Data
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleSym";
-						item.IconActiveNo = @"file:images/activeno1.icon";
-						item.IconActiveYes = @"file:images/activeyes1.icon";
+						item.IconActiveNo = @"file:images/activeno.icon";
+						item.IconActiveYes = @"file:images/activeyes.icon";
 						item.Active = ( type == HandleConstrainType.Symmetric );
 						item.Text = "Symetrique";
 						list.Add(item);
@@ -230,8 +211,8 @@ namespace Epsitec.Common.Pictogram.Data
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleSmooth";
-						item.IconActiveNo = @"file:images/activeno1.icon";
-						item.IconActiveYes = @"file:images/activeyes1.icon";
+						item.IconActiveNo = @"file:images/activeno.icon";
+						item.IconActiveYes = @"file:images/activeyes.icon";
 						item.Active = ( type == HandleConstrainType.Smooth );
 						item.Text = "Lisse";
 						list.Add(item);
@@ -239,8 +220,8 @@ namespace Epsitec.Common.Pictogram.Data
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleCorner";
-						item.IconActiveNo = @"file:images/activeno1.icon";
-						item.IconActiveYes = @"file:images/activeyes1.icon";
+						item.IconActiveNo = @"file:images/activeno.icon";
+						item.IconActiveYes = @"file:images/activeyes.icon";
 						item.Active = ( type == HandleConstrainType.Corner );
 						item.Text = "Anguleux";
 						list.Add(item);
@@ -255,8 +236,8 @@ namespace Epsitec.Common.Pictogram.Data
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleSmooth";
-						item.IconActiveNo = @"file:images/activeno1.icon";
-						item.IconActiveYes = @"file:images/activeyes1.icon";
+						item.IconActiveNo = @"file:images/activeno.icon";
+						item.IconActiveYes = @"file:images/activeyes.icon";
 						item.Active = ( type == HandleConstrainType.Smooth );
 						item.Text = "En ligne";
 						list.Add(item);
@@ -264,8 +245,8 @@ namespace Epsitec.Common.Pictogram.Data
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleCorner";
-						item.IconActiveNo = @"file:images/activeno1.icon";
-						item.IconActiveYes = @"file:images/activeyes1.icon";
+						item.IconActiveNo = @"file:images/activeno.icon";
+						item.IconActiveYes = @"file:images/activeyes.icon";
 						item.Active = ( type != HandleConstrainType.Smooth );
 						item.Text = "Libre";
 						list.Add(item);
@@ -279,7 +260,7 @@ namespace Epsitec.Common.Pictogram.Data
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleDelete";
-						item.Icon = @"file:images/sub1.icon";
+						item.Icon = @"file:images/sub.icon";
 						item.Text = "Enlever le point";
 						list.Add(item);
 					}
@@ -709,26 +690,49 @@ namespace Epsitec.Common.Pictogram.Data
 
 		
 		// Met à jour le rectangle englobant l'objet.
-		public override void UpdateBoundingBox()
+		protected override void UpdateBoundingBox()
 		{
-			this.bbox = Drawing.Rectangle.Empty;
+			this.bboxThin = Drawing.Rectangle.Empty;
+			this.bboxGeom = Drawing.Rectangle.Empty;
+			this.bboxFull = Drawing.Rectangle.Empty;
+			if ( this.TotalHandle < 3 )  return;
 
+			this.bboxThin = this.RealBoundingBox();
+
+			this.bboxGeom = this.bboxThin;
+			this.PropertyLine(0).InflateBoundingBox(ref this.bboxGeom);
+
+			this.bboxFull = this.FullBoundingBox();
+
+			this.bboxGeom.MergeWith(this.PropertyGradient(2).BoundingBoxGeom(this.bboxThin));
+			this.bboxFull.MergeWith(this.PropertyGradient(2).BoundingBoxFull(this.bboxThin));
+			this.bboxFull.MergeWith(this.bboxGeom);
+		}
+
+		// Calcule la bbox qui englobe l'objet et les poignées secondaires.
+		protected Drawing.Rectangle FullBoundingBox()
+		{
+			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 			int total = this.TotalHandle;
-			if ( total < 3 )  return;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				bbox.MergeWith(this.Handle(i).Position);
+			}
+			return bbox;
+		}
 
-			Drawing.Point p = this.Handle(1).Position;
-			this.bbox.Left   = p.X;
-			this.bbox.Right  = p.X;
-			this.bbox.Bottom = p.Y;
-			this.bbox.Top    = p.Y;
-
+		// Calcule la bbox qui englobe exactement l'objet géométrique.
+		protected Drawing.Rectangle RealBoundingBox()
+		{
+			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
+			int total = this.TotalHandle;
 			for ( int i=0 ; i<total-3 ; i+=3 )
 			{
 				Drawing.Point p1 = this.Handle(i+1).Position;
 				Drawing.Point s1 = this.Handle(i+2).Position;
 				Drawing.Point s2 = this.Handle(i+3).Position;
 				Drawing.Point p2 = this.Handle(i+4).Position;
-				this.BboxBezier(p1, s1, s2, p2);
+				ObjectBezier.BboxBezier(ref bbox, p1, s1, s2, p2);
 			}
 			if ( this.PropertyBool(3).Bool )  // fermé ?
 			{
@@ -736,24 +740,18 @@ namespace Epsitec.Common.Pictogram.Data
 				Drawing.Point s1 = this.Handle(total-1).Position;
 				Drawing.Point s2 = this.Handle(0).Position;
 				Drawing.Point p2 = this.Handle(1).Position;
-				this.BboxBezier(p1, s1, s2, p2);
+				ObjectBezier.BboxBezier(ref bbox, p1, s1, s2, p2);
 			}
-
-			double width = this.PropertyLine(0).Width/2.0;
-			this.bbox.Inflate(width, width);
+			return bbox;
 		}
 
 		// Ajoute un courbe de Bézier dans la bbox.
-		protected void BboxBezier(Drawing.Point p1, Drawing.Point s1, Drawing.Point s2, Drawing.Point p2)
+		static protected void BboxBezier(ref Drawing.Rectangle bbox, Drawing.Point p1, Drawing.Point s1, Drawing.Point s2, Drawing.Point p2)
 		{
 			double step = 1.0/10.0;  // nombre arbitraire de 10 subdivisions
 			for ( double t=0 ; t<=1.0 ; t+=step )
 			{
-				Drawing.Point a = Drawing.Point.Bezier(p1, s1, s2, p2, t);
-				this.bbox.Left   = System.Math.Min(this.bbox.Left,   a.X);
-				this.bbox.Right  = System.Math.Max(this.bbox.Right,  a.X);
-				this.bbox.Bottom = System.Math.Min(this.bbox.Bottom, a.Y);
-				this.bbox.Top    = System.Math.Max(this.bbox.Top,    a.Y);
+				bbox.MergeWith(Drawing.Point.Bezier(p1, s1, s2, p2, t));
 			}
 		}
 
@@ -786,15 +784,16 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
 		{
+			if ( this.isHide )  return;
 			base.DrawGeometry(graphics, iconContext);
 
 			int total = this.TotalHandle;
 			if ( total < 3 )  return;
 
 			Drawing.Path path = this.PathBuild();
-			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBox);
+			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBoxThin);
 
-			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
+			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
 
 			if ( this.IsHilite && iconContext.IsEditable )
@@ -805,7 +804,7 @@ namespace Epsitec.Common.Pictogram.Data
 					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 				}
 
-				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
+				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 

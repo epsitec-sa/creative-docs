@@ -8,6 +8,8 @@ namespace Epsitec.Common.Pictogram.Data
 		Normal,			// horizontal, vertical et 45 degrés
 		Square,			// uniquement 45 degrés
 		Line,			// uniquement horizontal et vertical
+		Scale,			// mise à l'échelle
+		Rotate,			// rotation
 	}
 
 	/// <summary>
@@ -67,6 +69,38 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.originY = value; }
 		}
 
+
+		// Présence de la grille magnétique.
+		public bool GridActive
+		{
+			get { return this.gridActive; }
+			set { this.gridActive = value; }
+		}
+
+		// Pas de la grille magnétique.
+		public Drawing.Point GridStep
+		{
+			get { return this.gridStep; }
+			set { this.gridStep = value; }
+		}
+
+		// Force un point sur la grille magnétique.
+		public void SnapGrid(ref Drawing.Point pos)
+		{
+			if ( !this.gridActive )  return;
+			pos = pos.GridAlign(new Drawing.Point(this.gridStep.X/2, this.gridStep.Y/2), this.gridStep);
+		}
+
+		// Force un point sur la grille magnétique.
+		public void SnapGrid(Drawing.Point origin, ref Drawing.Point pos)
+		{
+			if ( !this.gridActive )  return;
+			pos -= origin;
+			pos = pos.GridAlign(new Drawing.Point(0, 0), this.gridStep);
+			pos += origin;
+		}
+
+
 		// Indique si l'objet Drawer est éditable.
 		public bool IsEditable
 		{
@@ -79,6 +113,13 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			get { return this.isDimmed; }
 			set { this.isDimmed = value; }
+		}
+
+		// Indique s'il faut afficher les bbox.
+		public bool IsDrawBox
+		{
+			get { return this.isDrawBox; }
+			set { this.isDrawBox = value; }
 		}
 
 		// Taille minimale que doit avoir un objet à sa création.
@@ -111,16 +152,27 @@ namespace Epsitec.Common.Pictogram.Data
 			get { return this.handleSize/this.scaleX; }
 		}
 
+		// Marge à ajouter à la bbox lors du dessin, pour résoudre le cas des poignées
+		// qui débordent d'un objet avec un trait mince, et du mode Hilite qui augmente
+		// l'épaisseur lors du survol de la souris.
+		public double SelectMarginSize
+		{
+			get { return System.Math.Max(this.handleSize+4, this.hiliteSize)/this.scaleX/2; }
+		}
+
 		// Adapte une couleur en fonction de l'état de l'icône.
 		public Drawing.Color AdaptColor(Drawing.Color color)
 		{
-			if ( !this.uniqueColor.IsEmpty )  // desabled (n/b) ?
+			if ( this.modifyColor != null )
 			{
-				if ( this.adorner != null )
-				{
-					this.adorner.AdaptPictogramColor(ref color, this.glyphPaintStyle, this.uniqueColor);
-				}
+				this.modifyColor(ref color);
 			}
+
+			if ( this.adorner != null )
+			{
+				this.adorner.AdaptPictogramColor(ref color, this.glyphPaintStyle, this.uniqueColor);
+			}
+
 			if ( this.isDimmed )  // estompé (hors groupe) ?
 			{
 				double alpha = color.A;
@@ -130,8 +182,12 @@ namespace Epsitec.Common.Pictogram.Data
 				color = Drawing.Color.FromBrightness(intensity);
 				color.A = alpha*0.2;  // très transparent
 			}
+
 			return color;
 		}
+
+		public delegate void ModifyColor(ref Drawing.Color color);
+		public ModifyColor modifyColor;
 
 		// Couleur lorsqu'un objet est survolé par la souris.
 		public Drawing.Color HiliteOutlineColor
@@ -165,6 +221,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public void ConstrainFixStarting(Drawing.Point pos)
 		{
 			this.constrainStarting = pos;
+			this.constrainOrigin = pos;
 			this.constrainType = ConstrainType.Normal;
 		}
 
@@ -172,6 +229,15 @@ namespace Epsitec.Common.Pictogram.Data
 		public void ConstrainFixStarting(Drawing.Point pos, ConstrainType type)
 		{
 			this.constrainStarting = pos;
+			this.constrainOrigin = pos;
+			this.constrainType = type;
+		}
+
+		// Fixe le point initial pour les contraintes.
+		public void ConstrainFixStarting(Drawing.Point origin, Drawing.Point pos, ConstrainType type)
+		{
+			this.constrainStarting = pos;
+			this.constrainOrigin = origin;
 			this.constrainType = type;
 		}
 
@@ -209,6 +275,28 @@ namespace Epsitec.Common.Pictogram.Data
 					pos.Y = this.constrainStarting.Y;
 				}
 			}
+
+			if ( this.constrainType == ConstrainType.Scale )
+			{
+				double dist = Drawing.Point.Distance(this.constrainStarting, pos);
+				dist = System.Math.Min(dist/4, 10.0/this.scaleX);
+				Drawing.Point proj = Drawing.Point.Projection(this.constrainStarting, this.constrainOrigin, pos);
+				if ( Drawing.Point.Distance(proj, pos) < dist )
+				{
+					pos = proj;
+				}
+				else
+				{
+					if ( System.Math.Abs(pos.X-this.constrainStarting.X) < System.Math.Abs(pos.Y-this.constrainStarting.Y) )
+					{
+						pos.X = this.constrainStarting.X;
+					}
+					else
+					{
+						pos.Y = this.constrainStarting.Y;
+					}
+				}
+			}
 		}
 
 		// Enlève le point initial pour les contraintes.
@@ -217,12 +305,98 @@ namespace Epsitec.Common.Pictogram.Data
 			this.constrainType = ConstrainType.None;
 		}
 
-		// Donne le point de contrainte initial s'il est en vigeur.
-		public bool ConstrainGetStarting(out Drawing.Point pos, out ConstrainType type)
+		// Dessine les contraintes.
+		public void DrawConstrain(Drawing.Graphics graphics, Drawing.Size size)
 		{
-			pos = this.constrainStarting;
-			type = this.constrainType;
-			return ( this.constrainType != ConstrainType.None && this.isCtrl );
+			if ( this.constrainType == ConstrainType.None || !this.isCtrl )  return;
+
+			graphics.LineWidth = 1.0/this.scaleX;
+			Drawing.Point pos = this.constrainStarting;
+			ConstrainType type = this.constrainType;
+			double max = System.Math.Max(size.Width, size.Height);
+
+			if ( type == ConstrainType.Normal || type == ConstrainType.Line || type == ConstrainType.Scale )
+			{
+				graphics.AddLine(pos.X, -size.Height, pos.X, size.Height);
+				graphics.AddLine(-size.Width, pos.Y, size.Width, pos.Y);
+				graphics.RenderSolid(IconContext.ColorConstrain);
+			}
+
+			if ( type == ConstrainType.Normal || type == ConstrainType.Square )
+			{
+				Drawing.Point p1 = Drawing.Transform.RotatePoint(pos, System.Math.PI*0.25, pos+new Drawing.Point(max,0));
+				Drawing.Point p2 = Drawing.Transform.RotatePoint(pos, System.Math.PI*1.25, pos+new Drawing.Point(max,0));
+				graphics.AddLine(p1, p2);
+
+				p1 = Drawing.Transform.RotatePoint(pos, System.Math.PI*0.75, pos+new Drawing.Point(max,0));
+				p2 = Drawing.Transform.RotatePoint(pos, System.Math.PI*1.75, pos+new Drawing.Point(max,0));
+				graphics.AddLine(p1, p2);
+
+				graphics.RenderSolid(IconContext.ColorConstrain);
+			}
+
+			if ( this.constrainType == ConstrainType.Scale )
+			{
+				Drawing.Point p1 = Drawing.Point.Move(this.constrainStarting, this.constrainOrigin, max);
+				Drawing.Point p2 = Drawing.Point.Move(this.constrainOrigin, this.constrainStarting, max);
+				graphics.AddLine(p1, p2);
+				graphics.RenderSolid(IconContext.ColorConstrain);
+			}
+		}
+
+
+		// Retourne la couleur pour indiquer une sélection multiple.
+		static public Drawing.Color ColorMulti
+		{
+			get { return Drawing.Color.FromARGB(1.0, 1.0, 0.0, 0.0); }  // rouge
+		}
+
+		// Retourne la couleur pour indiquer un style.
+		static public Drawing.Color ColorStyle
+		{
+			get { return Drawing.Color.FromARGB(1.0, 0.0, 0.5, 1.0); }  // bleu
+		}
+
+		// Retourne la couleur pour indiquer un style.
+		static public Drawing.Color ColorStyleBack
+		{
+			get { return Drawing.Color.FromARGB(0.15, 0.0, 0.5, 1.0); }  // bleu
+		}
+
+		// Retourne la couleur du pourtour d'une poignée.
+		static public Drawing.Color ColorHandleOutline
+		{
+			get { return Drawing.Color.FromARGB(1.0, 0.0, 0.0, 0.0); }  // noir
+		}
+
+		// Retourne la couleur d'une poignée principale.
+		static public Drawing.Color ColorHandleMain
+		{
+			get { return Drawing.Color.FromARGB(1.0, 1.0, 0.0, 0.0); }  // rouge
+		}
+
+		// Retourne la couleur d'une poignée de début/fin.
+		static public Drawing.Color ColorHandleStart
+		{
+			get { return Drawing.Color.FromARGB(1.0, 0.0, 1.0, 0.0); }  // vert
+		}
+
+		// Retourne la couleur d'une poignée de propriété.
+		static public Drawing.Color ColorHandleProperty
+		{
+			get { return Drawing.Color.FromARGB(1.0, 0.0, 1.0, 1.0); }  // cyan
+		}
+
+		// Retourne la couleur d'une poignée de sélection globale.
+		static public Drawing.Color ColorHandleGlobal
+		{
+			get { return Drawing.Color.FromARGB(1.0, 1.0, 1.0, 1.0); }  // blanc
+		}
+
+		// Retourne la couleur pour dessiner une contrainte.
+		static public Drawing.Color ColorConstrain
+		{
+			get { return Drawing.Color.FromARGB(0.5, 1.0, 0.0, 0.0); }  // rouge
 		}
 
 
@@ -234,8 +408,11 @@ namespace Epsitec.Common.Pictogram.Data
 		protected double					zoom = 1;
 		protected double					originX = 0;
 		protected double					originY = 0;
+		protected bool						gridActive = false;
+		protected Drawing.Point				gridStep = new Drawing.Point(1, 1);
 		protected bool						isEditable = false;
 		protected bool						isDimmed = false;
+		protected bool						isDrawBox = false;
 		protected double					minimalSize = 3;
 		protected double					minimalWidth = 5;
 		protected double					closeMargin = 10;
@@ -243,6 +420,7 @@ namespace Epsitec.Common.Pictogram.Data
 		protected double					handleSize = 10;
 		protected bool						isCtrl = false;
 		protected Drawing.Point				constrainStarting;
+		protected Drawing.Point				constrainOrigin;
 		protected ConstrainType				constrainType;
 	}
 }

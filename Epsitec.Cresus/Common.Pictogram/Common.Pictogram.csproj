@@ -158,11 +158,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Data\ObjectArrow.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Data\ObjectBezier.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -183,12 +178,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Data\ObjectLayer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Data\ObjectLine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Data\ObjectMemory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\ObjectPage.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -209,6 +214,11 @@
                 />
                 <File
                     RelPath = "Data\ObjectText.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\PropertyArrow.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -253,6 +263,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Data\PropertyModColor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Data\PropertyRegular.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -264,6 +279,11 @@
                 />
                 <File
                     RelPath = "Data\PropertyString.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\StylesCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -298,6 +318,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Widgets\PanelArrow.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\PanelBool.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -328,12 +353,27 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Widgets\PanelLayers.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\PanelLine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Widgets\PanelList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\PanelModColor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\PanelPages.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -349,6 +389,11 @@
                 />
                 <File
                     RelPath = "Widgets\PanelString.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\PanelStyles.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

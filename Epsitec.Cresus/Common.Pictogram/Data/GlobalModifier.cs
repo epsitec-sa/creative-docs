@@ -12,8 +12,6 @@ namespace Epsitec.Common.Pictogram.Data
 			this.data = new GlobalModifierData();
 			this.data.Visible = false;
 
-			this.initial = new GlobalModifierData();
-
 			this.h1 = new Handle();
 			this.h2 = new Handle();
 			this.h3 = new Handle();
@@ -35,6 +33,13 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			get { return this.data; }
 			set { this.data = value; }
+		}
+
+		public GlobalModifierData CloneData()
+		{
+			GlobalModifierData copy = new GlobalModifierData();
+			this.data.CopyTo(copy);
+			return copy;
 		}
 
 		public bool Visible
@@ -85,17 +90,80 @@ namespace Epsitec.Common.Pictogram.Data
 			return false;
 		}
 
+		// Met en évidence la poignée survollée.
+		public void HiliteHandle(int rank, IconContext iconContext, ref Drawing.Rectangle bbox)
+		{
+			this.HiliteHandle(this.h1,     (rank==1), iconContext, ref bbox);
+			this.HiliteHandle(this.h2,     (rank==2), iconContext, ref bbox);
+			this.HiliteHandle(this.h3,     (rank==3), iconContext, ref bbox);
+			this.HiliteHandle(this.h4,     (rank==4), iconContext, ref bbox);
+			this.HiliteHandle(this.center, (rank==5), iconContext, ref bbox);
+			this.HiliteHandle(this.rotate, (rank==6), iconContext, ref bbox);
+		}
+
+		// Met en évidence une poignée.
+		protected void HiliteHandle(Handle handle, bool hilite, IconContext iconContext, ref Drawing.Rectangle bbox)
+		{
+			if ( handle.IsHilited == hilite )  return;
+			handle.IsHilited = hilite;
+			handle.BoundingBox(iconContext, ref bbox);
+		}
+
 		// Déplace tout le modificateur.
-		public void Move(Drawing.Point move)
+		public void MoveAll(Drawing.Point move)
 		{
 			this.data.P1 += move;
 			this.data.P2 += move;
+			this.UpdateHandle();
+		}
+
+		// Une poignée du modificateur sera déplacée.
+		public void MoveStarting(int rank, Drawing.Point pos, IconContext iconContext)
+		{
+			if ( rank == 0 )  // global ?
+			{
+				iconContext.ConstrainFixStarting(pos);
+			}
+			else if ( rank == 5 )  // center ?
+			{
+				iconContext.ConstrainFixStarting(this.Position(5), ConstrainType.Line);
+			}
+			else if ( rank == 6 )  // rotate ?
+			{
+				iconContext.ConstrainFixStarting(this.Position(5));
+			}
+			else
+			{
+				Drawing.Point origin = new Epsitec.Common.Drawing.Point(0, 0);
+				if ( rank == 1 )  origin = this.data.P2;  // inf/gauche ?
+				if ( rank == 2 )  origin = this.data.P1;  // sup/droite ?
+				if ( rank == 3 )  origin = this.data.P4;  // sup/gauche ?
+				if ( rank == 4 )  origin = this.data.P3;  // inf/droite ?
+				iconContext.ConstrainFixStarting(origin, this.Position(rank), ConstrainType.Scale);
+			}
+
+			this.moveStart = pos;
+			this.moveOffset = pos-this.Position(rank);
 		}
 
 		// Déplace une poignée du modificateur.
-		public void Move(int rank, Drawing.Point pos)
+		public void MoveProcess(int rank, Drawing.Point pos, IconContext iconContext)
 		{
-			this.data.CopyTo(this.initial);
+			if ( rank != 6 )  // pas rotate ?
+			{
+				iconContext.SnapGrid(this.moveStart, ref pos);
+			}
+
+			if ( rank == 0 )  // global ?
+			{
+				iconContext.ConstrainSnapPos(ref pos);
+				pos -= this.moveOffset;
+			}
+			else
+			{
+				pos -= this.moveOffset;
+				iconContext.ConstrainSnapPos(ref pos);
+			}
 
 			if ( rank == 0 )  // tout ?
 			{
@@ -138,20 +206,16 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateHandle();
 		}
 
-		// Transforme un point après un Move(rank, pos).
-		public Drawing.Point Transform(Drawing.Point pos)
+		// Retourne la bbox du modificateur.
+		public Drawing.Rectangle BoundingBox()
 		{
-			Drawing.Point f = (pos-this.initial.P1).ScaleDiv(this.initial.P2-this.initial.P1);
-			pos = f.ScaleMul(this.data.P2-this.data.P1)+this.data.P1;
+			Drawing.Rectangle bbox = new Drawing.Rectangle(this.data.P1, this.data.P2);
 
-			double rot = this.data.Angle-this.initial.Angle;
-			if ( rot != 0 )
-			{
-				rot = rot*System.Math.PI/180.0;  // en radians
-				pos = Drawing.Transform.RotatePoint(this.data.Center, rot, pos);
-			}
+			Drawing.Rectangle circle = new Drawing.Rectangle(this.data.Center, this.data.Center);
+			circle.Inflate(this.data.Radius);
+			bbox.MergeWith(circle);
 
-			return pos;
+			return bbox;
 		}
 
 		// Met à jour la position des poignées en fonction des données.
@@ -230,13 +294,14 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		protected GlobalModifierData	data;
-		protected GlobalModifierData	initial;
 		protected Handle				h1;
 		protected Handle				h2;
 		protected Handle				h3;
 		protected Handle				h4;
 		protected Handle				center;
 		protected Handle				rotate;
+		protected Drawing.Point			moveStart;
+		protected Drawing.Point			moveOffset;
 	}
 
 
@@ -353,6 +418,54 @@ namespace Epsitec.Common.Pictogram.Data
 			dest.center  = this.center;
 			dest.angle   = this.angle;
 		}
+
+		// Transforme un point.
+		static public Drawing.Point Transform(GlobalModifierData initial, GlobalModifierData final, Drawing.Point pos)
+		{
+			Drawing.Point f = (pos-initial.P1).ScaleDiv(initial.P2-initial.P1);
+			pos = f.ScaleMul(final.P2-final.P1)+final.P1;
+
+			double rot = final.Angle-initial.Angle;
+			if ( rot != 0 )
+			{
+				rot = rot*System.Math.PI/180.0;  // en radians
+				pos = Drawing.Transform.RotatePoint(final.Center, rot, pos);
+			}
+
+			return pos;
+		}
+
+#if false
+		// Déforme un point dans un quadrillatère quelconque.
+		// s0                       d0         d1
+		//  o----------o             o---------o
+		//  |          |     ---\    |          \
+		//  |          |     ---/    |           \
+		//  o----------o             o------------o
+		//             s2           d3            d2
+		static protected Drawing.Point Deform(Drawing.Point s0, Drawing.Point s2,
+											  Drawing.Point d0, Drawing.Point d1, Drawing.Point d2, Drawing.Point d3,
+											  Drawing.Point p)
+		{
+			Drawing.Point	q = new Epsitec.Common.Drawing.Point();
+			Drawing.Point	pp = new Epsitec.Common.Drawing.Point();
+
+			q.X = p.X - s0.X;
+			q.Y = p.Y - s0.Y;
+
+			pp.X  = d0.X;
+			pp.X += (d3.X-d0.X)/(s2.Y-s0.Y)*q.Y;
+			pp.X += (d1.X-d0.X)/(s2.X-s0.X)*q.X;
+			pp.X += (d2.X-d3.X-d1.X+d0.X)*q.X*q.Y/(s2.X-s0.X)/(s2.Y-s0.Y);
+
+			pp.Y  = d0.Y;
+			pp.Y += (d3.Y-d0.Y)/(s2.Y-s0.Y)*q.Y;
+			pp.Y += (d1.Y-d0.Y)/(s2.X-s0.X)*q.X;
+			pp.Y += (d2.Y-d3.Y-d1.Y+d0.Y)*q.X*q.Y/(s2.X-s0.X)/(s2.Y-s0.Y);
+
+			return pp;
+		}
+#endif
 
 		protected bool					visible;
 		protected Drawing.Point			p1;			// un coin quelconque

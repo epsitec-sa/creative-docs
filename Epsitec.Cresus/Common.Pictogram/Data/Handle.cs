@@ -34,75 +34,48 @@ namespace Epsitec.Common.Pictogram.Data
 		// Position de la poignée.
 		public Drawing.Point Position
 		{
-			get
-			{
-				return this.position;
-			}
-
-			set
-			{
-				this.position = value;
-			}
+			get { return this.position; }
+			set { this.position = value; }
 		}
 
 		// Type de la poignée.
 		[XmlAttribute]
 		public HandleType Type
 		{
-			get
-			{
-				return this.type;
-			}
-
-			set
-			{
-				this.type = value;
-			}
+			get { return this.type; }
+			set { this.type = value; }
 		}
 
 		// Type de la poignée.
 		[XmlAttribute]
 		public HandleConstrainType ConstrainType
 		{
-			get
-			{
-				return this.constrainType;
-			}
-
-			set
-			{
-				this.constrainType = value;
-			}
+			get { return this.constrainType; }
+			set { this.constrainType = value; }
 		}
 
 		// Etat "sélectionné" de la poignée.
 		[XmlIgnore]
 		public bool IsSelected
 		{
-			get
-			{
-				return this.isSelected;
-			}
+			get { return this.isSelected; }
+			set { this.isSelected = value; }
+		}
 
-			set
-			{
-				this.isSelected = value;
-			}
+		// Etat "survolé" de la poignée.
+		[XmlIgnore]
+		public bool IsHilited
+		{
+			get { return this.isHilited; }
+			set { this.isHilited = value; }
 		}
 
 		// Etat "sélectionné global" de la poignée.
 		[XmlIgnore]
 		public bool IsGlobalSelected
 		{
-			get
-			{
-				return this.isGlobalSelected;
-			}
-
-			set
-			{
-				this.isGlobalSelected = value;
-			}
+			get { return this.isGlobalSelected; }
+			set { this.isGlobalSelected = value; }
 		}
 
 
@@ -113,6 +86,7 @@ namespace Epsitec.Common.Pictogram.Data
 			dst.Type             = this.Type;
 			dst.ConstrainType    = this.ConstrainType;
 			dst.IsSelected       = this.IsSelected;
+			dst.IsHilited        = this.IsHilited;
 			dst.IsGlobalSelected = this.IsGlobalSelected;
 		}
 
@@ -128,6 +102,15 @@ namespace Epsitec.Common.Pictogram.Data
 			rect.Bottom = this.position.Y - this.handleSize/2 - 3.0/this.scaleY;
 			rect.Top    = this.position.Y + this.handleSize/2 + 1.0/this.scaleY;
 			return rect.Contains(pos);
+		}
+
+
+		// Tient compte de la bbox d'une poignée.
+		public void BoundingBox(IconContext iconContext, ref Drawing.Rectangle bbox)
+		{
+			Drawing.Rectangle rect = new Drawing.Rectangle(this.position, Drawing.Size.Empty);
+			//rect.Inflate(iconContext.HandleSize/2);  // inutile, fait par Drawer.InvalidateAll
+			bbox.MergeWith(rect);
 		}
 
 
@@ -158,11 +141,11 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( this.type == HandleType.Primary )
 				{
 					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(Drawing.Color.FromRGB(1,1,1));
+					graphics.RenderSolid(IconContext.ColorHandleGlobal);
 
-					rect.Inflate(-0.5/this.scaleX, -0.5/this.scaleY);
+					rect.Deflate(0.5/this.scaleX, 0.5/this.scaleY);
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(Drawing.Color.FromRGB(0,0,0));
+					graphics.RenderSolid(IconContext.ColorHandleOutline);
 				}
 			}
 			else
@@ -174,62 +157,79 @@ namespace Epsitec.Common.Pictogram.Data
 				rect.Top    = pos.Y+this.handleSize*0.5;
 				graphics.Align(ref rect);
 
+				Drawing.Color color;
+				if ( this.isHilited )
+				{
+					color = iconContext.HiliteOutlineColor;
+					color.A = 1.0;
+				}
+				else
+				{
+					switch ( this.type )
+					{
+						case HandleType.Starting:  color = IconContext.ColorHandleStart;     break;
+						case HandleType.Ending:    color = IconContext.ColorHandleStart;     break;
+						case HandleType.Property:  color = IconContext.ColorHandleProperty;  break;
+						default:                   color = IconContext.ColorHandleMain;      break;
+					}
+				}
+
 				if ( this.type == HandleType.Primary )
 				{
 					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(Drawing.Color.FromRGB(1,0,0));
+					graphics.RenderSolid(color);
 
-					rect.Inflate(-0.5/this.scaleX, -0.5/this.scaleY);
+					rect.Deflate(0.5/this.scaleX, 0.5/this.scaleY);
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(Drawing.Color.FromRGB(0,0,0));
+					graphics.RenderSolid(IconContext.ColorHandleOutline);
 				}
 
 				if ( this.type == HandleType.Secondary )
 				{
-					rect.Inflate(-2/this.scaleX, -2/this.scaleY);
+					rect.Deflate(2.0/this.scaleX, 2.0/this.scaleY);
 					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(Drawing.Color.FromRGB(1,0,0));
+					graphics.RenderSolid(color);
 
-					rect.Inflate(-0.5/this.scaleX, -0.5/this.scaleY);
+					rect.Deflate(0.5/this.scaleX, 0.5/this.scaleY);
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(Drawing.Color.FromRGB(0,0,0));
+					graphics.RenderSolid(IconContext.ColorHandleOutline);
 				}
 
 				if ( this.type == HandleType.Starting )
 				{
 					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(Drawing.Color.FromRGB(0,1,0));
+					graphics.RenderSolid(color);
 
-					rect.Inflate(-0.5/this.scaleX, -0.5/this.scaleY);
+					rect.Deflate(0.5/this.scaleX, 0.5/this.scaleY);
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(Drawing.Color.FromRGB(0,0,0));
+					graphics.RenderSolid(IconContext.ColorHandleOutline);
 				}
 
 				if ( this.type == HandleType.Ending )
 				{
 					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(Drawing.Color.FromRGB(0,1,0));
+					graphics.RenderSolid(color);
 
-					rect.Inflate(-0.5/this.scaleX, -0.5/this.scaleY);
+					rect.Deflate(0.5/this.scaleX, 0.5/this.scaleY);
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(Drawing.Color.FromRGB(0,0,0));
+					graphics.RenderSolid(IconContext.ColorHandleOutline);
 
-					rect.Inflate(2/this.scaleX, 2/this.scaleY);
+					rect.Inflate(2.0/this.scaleX, 2.0/this.scaleY);
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(Drawing.Color.FromRGB(1,0,0));
-					rect.Inflate(1/this.scaleX, 1/this.scaleY);
+					graphics.RenderSolid(color);
+					rect.Inflate(1.0/this.scaleX, 1.0/this.scaleY);
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(Drawing.Color.FromRGB(1,0,0));
+					graphics.RenderSolid(color);
 				}
 
 				if ( this.type == HandleType.Property )
 				{
 					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(Drawing.Color.FromRGB(0,1,1));
+					graphics.RenderSolid(color);
 
-					rect.Inflate(-0.5/this.scaleX, -0.5/this.scaleY);
+					rect.Deflate(0.5/this.scaleX, 0.5/this.scaleY);
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(Drawing.Color.FromRGB(0,0,0));
+					graphics.RenderSolid(IconContext.ColorHandleOutline);
 				}
 
 				if ( this.type == HandleType.Center )
@@ -241,21 +241,21 @@ namespace Epsitec.Common.Pictogram.Data
 
 					graphics.AddFilledRectangle(r1);
 					graphics.AddFilledRectangle(r2);
-					graphics.RenderSolid(Drawing.Color.FromRGB(0,0,0));
+					graphics.RenderSolid(IconContext.ColorHandleOutline);
 
-					r1.Inflate(-1.0/this.scaleX, -1.0/this.scaleY);
-					r2.Inflate(-1.0/this.scaleX, -1.0/this.scaleY);
+					r1.Deflate(1.0/this.scaleX, 1.0/this.scaleY);
+					r2.Deflate(1.0/this.scaleX, 1.0/this.scaleY);
 					graphics.AddFilledRectangle(r1);
 					graphics.AddFilledRectangle(r2);
-					graphics.RenderSolid(Drawing.Color.FromRGB(1,0,0));
+					graphics.RenderSolid(color);
 				}
 
 				if ( this.type == HandleType.Rotate )
 				{
 					rect.Inflate(0.5/this.scaleX, 0.5/this.scaleY);
-					this.PaintCircle(graphics, rect, Drawing.Color.FromRGB(0,0,0));
-					rect.Inflate(-1.0/this.scaleX, -1.0/this.scaleY);
-					this.PaintCircle(graphics, rect, Drawing.Color.FromRGB(1,0,0));
+					this.PaintCircle(graphics, rect, IconContext.ColorHandleOutline);
+					rect.Deflate(1.0/this.scaleX, 1.0/this.scaleY);
+					this.PaintCircle(graphics, rect, color);
 				}
 			}
 
@@ -283,6 +283,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		protected bool					isSelected = false;
+		protected bool					isHilited = false;
 		protected bool					isGlobalSelected = false;
 		protected double				handleSize;
 		protected double				scaleX;
