@@ -27,7 +27,6 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 
 			TabBook tabBook = this.Parent as TabBook;
@@ -39,17 +38,17 @@ namespace Epsitec.Common.Widgets
 			if ( this.ActiveState == WidgetState.ActiveYes )
 			{
 				rect.Bottom -= 2;
-				adorner.PaintTabAboveBackground(graphics, frameRect, rect, state, dir);
+				adorner.PaintTabAboveBackground(graphics, frameRect, rect, state, Direction.Up);
 				pos.Y += 1;
 			}
 			else
 			{
 				rect.Top -= 2;
-				adorner.PaintTabSunkenBackground(graphics, frameRect, rect, state, dir);
+				adorner.PaintTabSunkenBackground(graphics, frameRect, rect, state, Direction.Up);
 				pos.Y -= 1;
 			}
 
-			adorner.PaintButtonTextLayout(graphics, pos, this.textLayout, state, dir, ButtonStyle.Normal);
+			adorner.PaintButtonTextLayout(graphics, pos, this.textLayout, state, ButtonStyle.Normal);
 
 			graphics.RestoreClippingRectangle(saveClip);
 		}
