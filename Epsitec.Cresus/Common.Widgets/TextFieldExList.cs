@@ -4,7 +4,7 @@ namespace Epsitec.Common.Widgets
 {
 	public enum TextFieldExListMode
 	{
-		Undefined		= -1,
+		Undefined,
 		
 		Combo,
 		EditPassive,
@@ -276,7 +276,7 @@ namespace Epsitec.Common.Widgets
 			base.OnTextChanged ();
 			this.UpdateButtonEnable ();
 		}
-
+		
 		
 		protected virtual void OnEditionStarted()
 		{

@@ -376,7 +376,8 @@ namespace Epsitec.Common.Widgets
 							if ((message.Type == MessageType.MouseDown) &&
 								(message.ButtonDownCount == 1) &&
 								(message.IsLeftButton) &&
-								(row >= 0) && (row < this.max_rows))
+								(row >= 0) && (row < this.max_rows) &&
+								(this.CheckChangeSelectedIndexTo (row)))
 							{
 								//	L'utilisateur a cliqué dans une cellule de la table. On va faire en sorte
 								//	de changer la cellule active (repositionner les lignes éditables) :
@@ -405,6 +406,33 @@ namespace Epsitec.Common.Widgets
 			base.ProcessMessage (message, pos);
 		}
 
+		protected override bool CheckChangeSelectedIndexTo(int index)
+		{
+			if (base.CheckChangeSelectedIndexTo (index))
+			{
+				if (this.InteractionMode == ScrollInteractionMode.Edition)
+				{
+					int column = this.edit_line.FindFocusedColumn ();
+					
+					if ((column >= 0) &&
+						(column < this.max_columns))
+					{
+						Widget edition_widget = this.Columns[column].EditionWidget;
+						
+						if ((edition_widget != null) &&
+							(edition_widget.AcceptDefocus == false))
+						{
+							return false;
+						}
+					}
+				}
+				
+				return true;
+			}
+			
+			return false;
+		}
+		
 		protected override void PaintCellContents(int row_line, int column, Drawing.Graphics graphics, IAdorner adorner, Drawing.Point pos, WidgetState state, TextLayout layout)
 		{
 			if ((this.Columns[column].IsReadOnly) ||
@@ -472,7 +500,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
+		protected virtual  void OnEditWidgetsCreated()
+		{
+			if (this.EditWidgetsCreated != null)
+			{
+				this.EditWidgetsCreated (this);
+			}
+		}
 		
 		protected bool MoveEditionToLine(int offset)
 		{
@@ -483,7 +517,8 @@ namespace Epsitec.Common.Widgets
 				row = System.Math.Min (row, this.max_rows-1);
 				row = System.Math.Max (row, 0);
 				
-				if (this.SelectedIndex != row)
+				if ((this.SelectedIndex != row) &&
+					(this.CheckChangeSelectedIndexTo (row)))
 				{
 					this.SelectedIndex = row;
 					return true;
@@ -804,23 +839,43 @@ namespace Epsitec.Common.Widgets
 			public void AttachEditWidgets()
 			{
 				TextFieldStyle style = (this.host.InteractionMode == ScrollInteractionMode.Search ? TextFieldStyle.Normal : TextFieldStyle.Flat);
+				int created = 0;
 				
 				for (int i = 0; i < this.edit_widgets.Length; i++)
 				{
 					if (this.edit_widgets[i] == null)
 					{
-						System.Type type = this.host.Columns[i].EditionWidgetType;
+						Widget      model = this.host.Columns[i].EditionWidgetModel;
+						System.Type type  = this.host.Columns[i].EditionWidgetType;
 						
 						if (this.host.edition_add_rows > 0)
 						{
 							type = typeof (TextFieldMulti);
 						}
 						
+						if (this.host.InteractionMode == ScrollInteractionMode.Search)
+						{
+							type = typeof (TextField);
+						}
+						
 						this.edit_widgets[i] = System.Activator.CreateInstance (type, new object[] { this } ) as AbstractTextField;
 						this.edit_widgets[i].TextFieldStyle = style;
 						
+						if (model != null)
+						{
+							Support.ObjectBundler.Default.CopyObject (model, this.edit_widgets[i]);
+						}
+						
 						this.Attach (this.edit_widgets[i], i);
+						this.host.Columns[i].EditionWidget = this.edit_widgets[i];
+						
+						created++;
 					}
+				}
+				
+				if (created > 0)
+				{
+					this.host.OnEditWidgetsCreated ();
 				}
 			}
 			
@@ -1533,6 +1588,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		public event Support.EventHandler		EditTextChanged;
+		public event Support.EventHandler		EditWidgetsCreated;
 		
 		protected EditWidget					edit_line    = null;
 		protected Drawing.Rectangle				edit_bounds  = Drawing.Rectangle.Empty;

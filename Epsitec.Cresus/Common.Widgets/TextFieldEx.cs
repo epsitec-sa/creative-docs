@@ -2,6 +2,29 @@ using System;
 
 namespace Epsitec.Common.Widgets
 {
+	using BundleAttribute  = Support.BundleAttribute;
+	
+	public enum DefocusAction
+	{
+		None,
+		
+		AcceptEdition,
+		RejectEdition,
+		
+		ModalOrAccept,
+		ModalOrReject
+	}
+	
+	public enum ShowCondition
+	{
+		Always,
+		
+		WhenFocused,
+		WhenFocusedFlagSet,
+		
+		Never
+	}
+	
 	/// <summary>
 	/// La classe TextFieldEx implémente une variante de TextField, avec une fonction
 	/// pour accepter/annuler une édition.
@@ -15,7 +38,7 @@ namespace Epsitec.Common.Widgets
 			this.accept_reject_behavior.RejectClicked += new Support.EventHandler(this.HandleAcceptRejectRejectClicked);
 			this.accept_reject_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptRejectAcceptClicked);
 			
-			this.ShowAcceptReject (true);
+			this.UpdateButtonVisibility ();
 		}
 		
 		public TextFieldEx(Widget embedder) : this ()
@@ -23,6 +46,34 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder (embedder);
 		}
 		
+		
+		
+		[Bundle] public DefocusAction			DefocusAction
+		{
+			get
+			{
+				return this.defocus_action;
+			}
+			set
+			{
+				this.defocus_action = value;
+			}
+		}
+		
+		[Bundle] public ShowCondition			ButtonShowCondition
+		{
+			get
+			{
+				return this.button_show_condition;
+			}
+			set
+			{
+				if (this.button_show_condition != value)
+				{
+					this.button_show_condition = value;
+				}
+			}
+		}
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -62,6 +113,18 @@ namespace Epsitec.Common.Widgets
 			return base.ProcessKeyDown (message, pos);
 		}
 
+		protected override bool AboutToLoseFocus(Epsitec.Common.Widgets.Widget.TabNavigationDir dir, Epsitec.Common.Widgets.Widget.TabNavigationMode mode)
+		{
+			switch (this.DefocusAction)
+			{
+				case DefocusAction.ModalOrAccept:
+				case DefocusAction.ModalOrReject:
+					return this.IsValid;
+			}
+			
+			return base.AboutToLoseFocus (dir, mode);
+		}
+
 		protected override bool AboutToGetFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode, out Widget focus)
 		{
 			return base.AboutToGetFocus (dir, mode, out focus);
@@ -79,16 +142,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public void ShowAcceptReject(bool show)
-		{
-			if (this.show_buttons != show)
-			{
-				this.show_buttons = show;
-				this.SetAcceptRejectVisible (show);
-			}
-		}
-		
-		protected virtual void SetAcceptRejectVisible(bool show)
+		protected virtual void SetButtonVisibility(bool show)
 		{
 			if (this.accept_reject_behavior == null)
 			{
@@ -104,6 +158,28 @@ namespace Epsitec.Common.Widgets
 				this.UpdateTextLayout ();
 				this.UpdateMouseCursor (this.MapRootToClient (Message.State.LastPosition));
 			}
+		}
+		
+		protected virtual void UpdateButtonVisibility()
+		{
+			bool show = false;
+			
+			switch (this.ButtonShowCondition)
+			{
+				case ShowCondition.Always:
+					show = true;
+					break;
+				case ShowCondition.Never:
+					break;
+				case ShowCondition.WhenFocused:
+					show = this.IsFocused;
+					break;
+				case ShowCondition.WhenFocusedFlagSet:
+					show = this.IsFocusedFlagSet;
+					break;
+			}
+			
+			this.SetButtonVisibility (show);
 		}
 		
 		protected virtual void UpdateButtonEnable()
@@ -125,7 +201,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnFocusChanged ();
 			
-			this.SetAcceptRejectVisible (this.IsFocusedFlagSet && this.show_buttons);
+			this.UpdateButtonVisibility ();
 		}
 		
 		protected virtual void OnEditionAccepted()
@@ -162,6 +238,8 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		EditionRejected;
 		
 		protected bool							show_buttons;
+		protected ShowCondition					button_show_condition;
+		protected DefocusAction					defocus_action;
 		protected Helpers.AcceptRejectBehavior	accept_reject_behavior;
 	}
 }

@@ -1384,6 +1384,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool									AcceptDefocus
+		{
+			get
+			{
+				return this.InternalAboutToLoseFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive);
+			}
+		}
 		public bool									PossibleContainer
 		{
 			get { return ((this.internal_state & InternalState.PossibleContainer) != 0) && !this.IsFrozen; }

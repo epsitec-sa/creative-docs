@@ -1420,7 +1420,8 @@ invalid:	row    = -1;
 		{
 			int row, column;
 			
-			if (this.HitTestTable (pos, out row, out column))
+			if ((this.HitTestTable (pos, out row, out column)) &&
+				(this.CheckChangeSelectedIndexTo (row)))
 			{
 				this.SelectedIndex = row;
 			}
@@ -1452,13 +1453,21 @@ invalid:	row    = -1;
 			{
 				sel = System.Math.Max(sel, 0);
 				sel = System.Math.Min(sel, this.RowCount-1);
-				this.SelectedIndex = sel;
-				this.ShowSelected(ScrollShowMode.Extremity);
+				
+				if (this.CheckChangeSelectedIndexTo (sel))
+				{
+					this.SelectedIndex = sel;
+					this.ShowSelected(ScrollShowMode.Extremity);
+				}
 			}
 			
 			return true;
 		}
 
+		protected virtual  bool CheckChangeSelectedIndexTo(int index)
+		{
+			return true;
+		}
 		
 		protected override void UpdateClientGeometry()
 		{
@@ -2322,15 +2331,53 @@ invalid:	row    = -1;
 				}
 			}
 			
+			public Widget						EditionWidget
+			{
+				get
+				{
+					return this.edition_widget;
+				}
+				set
+				{
+					this.edition_widget = value;
+				}
+			}
+			
 			public System.Type					EditionWidgetType
 			{
 				get
 				{
+					if ((this.edition_widget_type == null) &&
+						(this.edition_widget_model != null))
+					{
+						return this.edition_widget_model.GetType ();
+					}
+					
 					return this.edition_widget_type;
 				}
 				set
 				{
 					this.edition_widget_type = value;
+				}
+			}
+			
+			public Widget						EditionWidgetModel
+			{
+				get
+				{
+					return this.edition_widget_model;
+				}
+				set
+				{
+					if (this.edition_widget_model != value)
+					{
+						this.edition_widget_model = value;
+						
+						if (value != null)
+						{
+							this.edition_widget_type = null;
+						}
+					}
 				}
 			}
 			
@@ -2399,6 +2446,8 @@ invalid:	row    = -1;
 			private HeaderButton				header_button;
 			private HeaderSlider				header_slider;
 			private System.Type					edition_widget_type;
+			private Widget						edition_widget_model;
+			private Widget						edition_widget;
 		}
 		#endregion
 		
