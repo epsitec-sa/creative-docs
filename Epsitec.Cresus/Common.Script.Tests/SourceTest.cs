@@ -153,8 +153,25 @@ namespace Epsitec.Common.Script
 			Source.Method method = source.Methods[1];
 			
 			panel.Widget.Parent = window.Root;
-			panel.Widget.Dock   = Widgets.DockStyle.Top;
+			panel.Widget.Dock   = Widgets.DockStyle.Fill;
 			panel.Method        = method;
+			
+			window.Show ();
+		}
+		
+		[Test] public void CheckDeveloper3()
+		{
+			Widgets.Window window = new Widgets.Window ();
+			
+			Developer.EditionController controller = new Developer.EditionController ();
+			
+			window.Text       = "CheckDeveloper3";
+			window.ClientSize = new Drawing.Size (600, 400);
+			
+			Source source = this.CreateSource (null);
+			
+			controller.Source = source;
+			controller.CreateWidgets (window.Root);
 			
 			window.Show ();
 		}
@@ -166,8 +183,8 @@ namespace Epsitec.Common.Script
 			Source.CodeSection[] code_2  = new Source.CodeSection[1];
 			Source.ParameterInfo[] par_2 = new Source.ParameterInfo[3];
 			
-			string code_1_source = "System.Diagnostics.Debug.WriteLine (\"Executing the 'Main' script. UserName set to '\" + this.UserName + \"'.\");\n";
-			string code_2_source = "System.Diagnostics.Debug.WriteLine (\"Executing the 'Mysterious' script. arg1=\" + arg1 + \", arg2=\" + arg2);\narg2 = arg2.ToUpper ();\narg3 = arg1 * 2;\nthis.UserName = arg2.ToLower ();\n";
+			string code_1_source = "System.Diagnostics.Debug.WriteLine (&quot;Executing the &apos;Main&apos; script. UserName set to &apos;&quot; + this.UserName + &quot;&apos;.&quot;);<br/>";
+			string code_2_source = "System.Diagnostics.Debug.WriteLine (&quot;Executing the &apos;Mysterious&apos; script. arg1=&quot; + arg1 + &quot;, arg2=&quot; + arg2);<br/>arg2 = arg2.ToUpper ();<br/>arg3 = arg1 * 2;<br/>this.UserName = arg2.ToLower ();<br/>";
 			
 			code_1[0]  = new Source.CodeSection (Source.CodeType.Local, code_1_source);
 			code_2[0]  = new Source.CodeSection (Source.CodeType.Local, code_2_source);

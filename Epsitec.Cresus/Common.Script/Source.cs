@@ -311,16 +311,18 @@ namespace Epsitec.Common.Script
 			{
 				System.Diagnostics.Debug.Assert (section.CodeType == CodeType.Local);
 				
-				buffer.Append ("// Section #");
-				buffer.Append (section_id++);
-				buffer.Append (", CodeType is ");
+				buffer.Append ("// $Section=");
+				buffer.Append (section_id.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append ("$, CodeType is ");
 				buffer.Append (section.CodeType);
 				buffer.Append ("\n");
+				
+				section_id++;
 				
 				switch (section.CodeType)
 				{
 					case CodeType.Local:
-						buffer.Append (section.Code);
+						buffer.Append (System.Utilities.XmlBreakToText (section.Code));
 						buffer.Append ("\n\n");
 						break;
 					case CodeType.Comment:
