@@ -1,5 +1,10 @@
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets.Tools
 {
+	using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
+	
 	/// <summary>
 	/// La classe Magnifier permet de gérer une loupe.
 	/// </summary>

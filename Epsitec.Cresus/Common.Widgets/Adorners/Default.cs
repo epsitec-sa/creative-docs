@@ -1019,8 +1019,8 @@ namespace Epsitec.Common.Widgets.Adorner
 				Drawing.Point p2 = new Drawing.Point(rect.Left+rect.Width/2, rect.Top);
 				graphics.Align(ref p1);
 				graphics.Align(ref p2);
-				p1.X -= 0.5;
-				p2.X -= 0.5;
+				p1.X -= 1.5;
+				p2.X -= 1.5;
 				graphics.AddLine(p1, p2);
 				graphics.RenderSolid(this.colorControlDark);
 
@@ -1035,8 +1035,8 @@ namespace Epsitec.Common.Widgets.Adorner
 				Drawing.Point p2 = new Drawing.Point(rect.Right, rect.Bottom+rect.Height/2);
 				graphics.Align(ref p1);
 				graphics.Align(ref p2);
-				p1.Y -= 0.5;
-				p2.Y -= 0.5;
+				p1.Y -= 1.5;
+				p2.Y -= 1.5;
 				graphics.AddLine(p1, p2);
 				graphics.RenderSolid(this.colorControlLightLight);
 

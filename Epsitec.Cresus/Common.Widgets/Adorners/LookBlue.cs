@@ -1032,6 +1032,9 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.AddLine(rect.Right, rect.Bottom-0.5, rect.Right, rect.Top+0.5);
 				graphics.AddLine(parentRect.Right-0.5, rect.Top, rect.Right+0.5, rect.Top);
 				graphics.RenderSolid(this.colorControlDark);
+
+				graphics.AddLine(rect.Left+1, rect.Top, parentRect.Right-1.5, rect.Top);
+				graphics.RenderSolid(this.colorCaptionLight);
 			}
 		}
 
@@ -1142,8 +1145,8 @@ namespace Epsitec.Common.Widgets.Adorner
 				Drawing.Point p2 = new Drawing.Point(rect.Left+rect.Width/2, rect.Top);
 				graphics.Align(ref p1);
 				graphics.Align(ref p2);
-				p1.X += 0.5;
-				p2.X += 0.5;
+				p1.X -= 0.5;
+				p2.X -= 0.5;
 				graphics.AddLine(p1, p2);
 			}
 			else
@@ -1152,8 +1155,8 @@ namespace Epsitec.Common.Widgets.Adorner
 				Drawing.Point p2 = new Drawing.Point(rect.Right, rect.Bottom+rect.Height/2);
 				graphics.Align(ref p1);
 				graphics.Align(ref p2);
-				p1.Y += 0.5;
-				p2.Y += 0.5;
+				p1.Y -= 0.5;
+				p2.Y -= 0.5;
 				graphics.AddLine(p1, p2);
 			}
 

@@ -1,8 +1,12 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
+	using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
+	using Win32Const = Epsitec.Common.Widgets.Platform.Win32Const;
+	
+	
 	public delegate void MessageHandler(object sender, Message message);
 	
 	/// <summary>

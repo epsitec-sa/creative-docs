@@ -9,15 +9,18 @@ namespace Epsitec.App.DocumentEditor.Installer
 	public class SerialInput : System.Windows.Forms.Form
 	{
 		private System.Windows.Forms.Label		label1;
+		private System.Windows.Forms.Label		label2;
+		private System.Windows.Forms.Label		label3;
+		private System.Windows.Forms.Label		label4;
 		private System.Windows.Forms.TextBox	text_a;
 		private System.Windows.Forms.TextBox	text_b;
 		private System.Windows.Forms.TextBox	text_c;
 		private System.Windows.Forms.TextBox	text_d;
 		private System.Windows.Forms.Button		button_ok;
 		private System.Windows.Forms.Button		button_cancel;
-		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.Label label4;
+
+		private string							serial_key;
+		private bool							serial_ok;
 		
 		private System.ComponentModel.Container components = null;
 		
@@ -39,6 +42,14 @@ namespace Epsitec.App.DocumentEditor.Installer
 			get
 			{
 				return this.serial_ok;
+			}
+		}
+		
+		public string							SerialKey
+		{
+			get
+			{
+				return this.serial_key;
 			}
 		}
 		
@@ -214,9 +225,6 @@ namespace Epsitec.App.DocumentEditor.Installer
 			this.serial_ok = false;
 			this.Close ();
 		}
-		
-		
-		private bool							serial_ok;
 
 		private void text_a_TextChanged(object sender, System.EventArgs e)
 		{
@@ -273,9 +281,9 @@ namespace Epsitec.App.DocumentEditor.Installer
 				int num_c = System.Int32.Parse (this.text_c.Text);
 				int num_d = this.text_d.Text.Length == 0 ? 0 : System.Int32.Parse (this.text_d.Text);
 				
-				string key = string.Format ("{0:00000}-{1:000000}-{2:0000}-{3:000000}", num_a, num_b, num_c, num_d);
+				this.serial_key = string.Format ("{0:00000}-{1:000000}-{2:0000}-{3:000000}", num_a, num_b, num_c, num_d);
 				
-				this.button_ok.Enabled = SerialAlgorithm.TestSerial (key);
+				this.button_ok.Enabled = SerialAlgorithm.TestSerial (this.serial_key);
 			}
 			catch
 			{
@@ -285,6 +293,9 @@ namespace Epsitec.App.DocumentEditor.Installer
 
 		private void SerialInput_Load(object sender, System.EventArgs e)
 		{
+			this.TopLevel = true;
+			this.TopMost  = true;
+			
 			this.text_a.Focus ();
 		}
 	}

@@ -1111,6 +1111,9 @@ namespace Epsitec.Common.Widgets.Adorner
 				{
 					graphics.RenderSolid(this.colorDisabled);
 				}
+
+				graphics.AddLine(rect.Left+1, rect.Top, parentRect.Right-1.5, rect.Top);
+				graphics.RenderSolid(this.colorWindow);
 			}
 		}
 
@@ -1140,8 +1143,7 @@ namespace Epsitec.Common.Widgets.Adorner
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.colorCaptionLight);
 
-						Drawing.Rectangle rInside;
-						rInside = rect;
+						Drawing.Rectangle rInside = rect;
 						rInside.Deflate(0.5);
 						graphics.AddRectangle(rInside);
 						graphics.RenderSolid(this.colorCaption);
@@ -1151,8 +1153,7 @@ namespace Epsitec.Common.Widgets.Adorner
 						graphics.AddFilledRectangle(rect);
 						graphics.RenderSolid(this.colorWindow);
 
-						Drawing.Rectangle rInside;
-						rInside = rect;
+						Drawing.Rectangle rInside = rect;
 						rInside.Deflate(0.5);
 						graphics.AddLine(rInside.Left, rInside.Bottom-0.5, rInside.Left, rInside.Top);
 						graphics.AddLine(rInside.Left, rInside.Top, rInside.Right, rInside.Top);
@@ -1226,8 +1227,8 @@ namespace Epsitec.Common.Widgets.Adorner
 				Drawing.Point p2 = new Drawing.Point(rect.Left+rect.Width/2, rect.Top);
 				graphics.Align(ref p1);
 				graphics.Align(ref p2);
-				p1.X += 0.5;
-				p2.X += 0.5;
+				p1.X -= 0.5;
+				p2.X -= 0.5;
 				graphics.AddLine(p1, p2);
 			}
 			else
@@ -1236,8 +1237,8 @@ namespace Epsitec.Common.Widgets.Adorner
 				Drawing.Point p2 = new Drawing.Point(rect.Right, rect.Bottom+rect.Height/2);
 				graphics.Align(ref p1);
 				graphics.Align(ref p2);
-				p1.Y += 0.5;
-				p2.Y += 0.5;
+				p1.Y -= 0.5;
+				p2.Y -= 0.5;
 				graphics.AddLine(p1, p2);
 			}
 

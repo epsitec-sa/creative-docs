@@ -5,6 +5,8 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
+	using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
+	
 	/// <summary>
 	/// La classe Window représente une fenêtre du système d'exploitation. Ce
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la

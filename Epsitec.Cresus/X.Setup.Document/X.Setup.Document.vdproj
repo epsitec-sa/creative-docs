@@ -1956,8 +1956,8 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Crésus Documents"
-        "ProductCode" = "8:{4DB49C0A-74EC-4686-A1E2-00FC4B9CF575}"
-        "PackageCode" = "8:{D4FEFB0A-45A6-411B-9D1D-9AA39771B592}"
+        "ProductCode" = "8:{C7FBD90F-26F5-466E-87C3-24DE2B4FDA38}"
+        "PackageCode" = "8:{BE635A3D-1800-4E1F-96AB-0DDA8B754BEA}"
         "UpgradeCode" = "8:{028E66AB-AF47-419F-A2DE-8EDC1BC9C240}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"

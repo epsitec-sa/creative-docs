@@ -1,15 +1,15 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Runtime.InteropServices;
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.Widgets.Platform
 {
 	/// <summary>
 	/// La classe Win32Api exporte quelques fonctions de l'API Win32 utilisées
 	/// par des couches très bas niveau.
 	/// </summary>
-	internal class Win32Api
+	public class Win32Api
 	{
 		[DllImport ("User32.dll")]	internal extern static int SetWindowLong(System.IntPtr handle, int index, int value);
 		[DllImport ("User32.dll")]	internal extern static int GetWindowLong(System.IntPtr handle, int index);
@@ -21,6 +21,9 @@ namespace Epsitec.Common.Widgets
 		[DllImport ("User32.dll")]	internal extern static bool PostMessage(System.IntPtr handle, int msg, System.IntPtr w_param, System.IntPtr l_param);
 		[DllImport ("User32.dll")]  internal extern static int GetWindowThreadProcessId(System.IntPtr handle, out int pid);		
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetWindow(System.IntPtr handle, int direction);
+		[DllImport ("User32.dll")]	internal extern static System.IntPtr FindWindow(string window_class, string window_title);
+		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetDesktopWindow();
+		[DllImport ("User32.dll")]	internal extern static bool GetGUIThreadInfo(int thread_id, out GUIThreadInfo info);
 		[DllImport ("User32.dll")]	internal extern static bool IsWindowVisible(System.IntPtr handle);
 		[DllImport ("User32.dll")]	internal extern static bool BringWindowToTop(System.IntPtr handle);
 		[DllImport ("User32.dll")]	internal extern static bool GetIconInfo(System.IntPtr handle, out IconInfo info);
@@ -35,7 +38,28 @@ namespace Epsitec.Common.Widgets
 		[DllImport ("GDI32.dll")]	internal extern static bool DeleteDC(System.IntPtr dc);
 		[DllImport ("GDI32.dll")]	internal extern static void SetStretchBltMode(System.IntPtr dc, int mode);
 		[DllImport ("GDI32.dll")]	internal extern static void StretchBlt(System.IntPtr dc, int x, int y, int dx, int dy, System.IntPtr src_dc, int src_x, int src_y, int src_dx, int src_dy, int rop);
-
+		
+		public class Win32HandleWrapper : System.Windows.Forms.IWin32Window
+		{
+			public Win32HandleWrapper(System.IntPtr handle)
+			{
+				this.handle = handle;
+			}
+			
+			
+			#region IWin32Window Members
+			public System.IntPtr				Handle
+			{
+				get
+				{
+					return this.handle;
+				}
+			}
+			#endregion
+			
+			private System.IntPtr				handle;
+		}
+		
 		[StructLayout(LayoutKind.Sequential, Pack=1)] public struct Point
 		{
 			public int X;
@@ -83,6 +107,19 @@ namespace Epsitec.Common.Widgets
 			public Point MaxPosition;
 			public Rect NormalPosition;
 
+		}
+
+		[StructLayout(LayoutKind.Sequential, Pack=1) ] public struct GUIThreadInfo
+		{
+			public int Size;
+			public int Flags;
+			public System.IntPtr ActiveWindow;
+			public System.IntPtr FocusWindow;
+			public System.IntPtr CaptureWindow;
+			public System.IntPtr MenuOwnerWindow;
+			public System.IntPtr MoveSizeWindow;
+			public System.IntPtr CaretWindow;
+			public Rect Caret;
 		}
 
 		
@@ -162,6 +199,7 @@ namespace Epsitec.Common.Widgets
 			return res;
 		}
 		
+		
 		public static void GrabScreen(Drawing.Image bitmap, int x, int y)
 		{
 			System.Drawing.Bitmap   native = bitmap.BitmapImage.NativeBitmap;
@@ -182,6 +220,17 @@ namespace Epsitec.Common.Widgets
 			Win32Api.ReleaseDC (System.IntPtr.Zero, desktop_dc);
 			gfx.Flush ();
 			gfx.Dispose ();
+		}
+		
+		public static System.IntPtr FindThreadActiveWindowHandle(int thread)
+		{
+			GUIThreadInfo info = new GUIThreadInfo ();
+			
+			info.Size = 48;
+			
+			Win32Api.GetGUIThreadInfo (thread, out info);
+			
+			return info.ActiveWindow;
 		}
 	}
 }
