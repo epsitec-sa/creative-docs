@@ -30,6 +30,17 @@ namespace Epsitec.Common.Drawing
 			//	assemblies .NET qui est faite lors de l'exécution avec NUnit).
 			
 			System.IntPtr result = Font.LoadLibrary ("AntiGrain.Win32.dll");
+			
+			if (result == System.IntPtr.Zero)
+			{
+				result = Font.LoadLibrary (@"..\..\AntiGrain.Win32.dll");
+			}
+			
+			if (result == System.IntPtr.Zero)
+			{
+				result = Font.LoadLibrary (@"..\..\..\External\AntiGrain.Win32.dll");
+			}
+			
 			System.Diagnostics.Debug.Assert (result != System.IntPtr.Zero);
 			
 			Font.Initialise ();

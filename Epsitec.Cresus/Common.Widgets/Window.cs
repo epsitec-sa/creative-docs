@@ -27,6 +27,10 @@ namespace Epsitec.Common.Widgets
 			Window.windows.Add (new System.WeakReference (this));
 		}
 		
+		public void Run()
+		{
+			System.Windows.Forms.Application.Run (this.window);
+		}
 		
 		public static void InvalidateAll()
 		{
