@@ -82,6 +82,10 @@ namespace Epsitec.Common.Support
 			{
 				return ResourceFieldType.Bundle;
 			}
+			if (data is byte[])
+			{
+				return ResourceFieldType.Binary;
+			}
 			if (data is System.Collections.IList)
 			{
 				return ResourceFieldType.BundleList;
@@ -93,6 +97,11 @@ namespace Epsitec.Common.Support
 		public string GetFieldString(string field)
 		{
 			return this[field] as string;
+		}
+		
+		public byte[] GetFieldBinary(string field)
+		{
+			return this[field] as byte[];
 		}
 		
 		public ResourceBundle GetFieldBundle(string field)
@@ -300,6 +309,7 @@ namespace Epsitec.Common.Support
 						{
 							if ((this.fields.Contains (element_name)) &&
 								((this.fields[element_name] is ResourceBundle) ||
+								 (this.fields[element_name] is byte[]) ||
 								 (this.fields[element_name] is System.Collections.IList)))
 							{
 								System.Diagnostics.Debug.Assert (buffer.Length == 0);
@@ -440,6 +450,7 @@ namespace Epsitec.Common.Support
 			//	courant (niveau 2).
 			
 			string target = reader.GetAttribute ("target");
+			string type   = reader.GetAttribute ("type");
 			
 			if (target == null)
 			{
@@ -468,6 +479,36 @@ namespace Epsitec.Common.Support
 			{
 				target_bundle = target.Substring (0, pos);
 				target_field  = target.Substring (pos+1);
+			}
+			
+			//	La cible peut avoir une spécification de type. La seule spécification actuellement
+			//	autorisée est "binary" qui indique que la cible n'est pas une ressource standard,
+			//	mais une ressource binaire dont il ne faut pas interpréter le contenu.
+			
+			if (type != null)
+			{
+				if (type == "binary")
+				{
+					if ((reader_depth == 2) &&
+						(element_name != null))
+					{
+						byte[] data = Resources.GetBinaryData (target_bundle, level);
+						
+						if (data == null)
+						{
+							throw new ResourceException (string.Format ("Binary target '{0}' cannot be resolved", target));
+						}
+						
+						this.AddBinaryField (element_name, data);
+						return;
+					}
+					
+					throw new ResourceException (string.Format ("Illegal reference to binary target '{0}' at depth {1}", target, reader_depth));
+				}
+				else
+				{
+					throw new ResourceException (string.Format ("Target '{0}' has unsupported type '{1}'", target, type));
+				}
 			}
 			
 			ResourceBundle bundle = Resources.GetBundle (target_bundle, level, recursion+1);
@@ -533,6 +574,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		
 		protected void AddChildBundle(string element_name, ResourceBundle child_bundle)
 		{
 			ResourceBundle current_bundle;
@@ -571,6 +613,13 @@ namespace Epsitec.Common.Support
 			current_list.AddRange (child_list);
 		}
 		
+		protected void AddBinaryField(string element_name, byte[] data)
+		{
+			System.Diagnostics.Debug.Assert (element_name != null);
+			System.Diagnostics.Debug.Assert (data != null);
+			
+			this.fields[element_name] = data;
+		}
 		
 		protected void Merge(ResourceBundle bundle)
 		{

@@ -137,6 +137,10 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "resources\bitmap.resource"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "resources\button.cancel.fr.resource"
                     BuildAction = "None"
                 />
@@ -146,6 +150,14 @@
                 />
                 <File
                     RelPath = "resources\complex.resource"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "resources\icon.resource"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "resources\image.resource"
                     BuildAction = "None"
                 />
                 <File

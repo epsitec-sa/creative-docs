@@ -185,6 +185,44 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public static byte[] GetBinaryData(string id, ResourceLevel level)
+		{
+			//	TODO: il faudrait peut-être rajouter un cache pour éviter de consulter
+			//	chaque fois le provider, lorsqu'une ressource est demandée.
+			
+			string resource_id;
+			byte[] data = null;
+			
+			IResourceProvider provider = Resources.FindProvider (id, out resource_id);
+			
+			if (provider != null)
+			{
+				switch (level)
+				{
+					case ResourceLevel.Merged:
+						data = provider.GetData (resource_id, ResourceLevel.Default);
+						if (data != null) break;
+						data = provider.GetData (resource_id, ResourceLevel.Localised);
+						if (data != null) break;
+						data = provider.GetData (resource_id, ResourceLevel.Customised);
+						if (data != null) break;
+						break;
+					
+					case ResourceLevel.Default:
+					case ResourceLevel.Localised:
+					case ResourceLevel.Customised:
+						data = provider.GetData (resource_id, level);
+						break;
+					
+					default:
+						throw new ResourceException (string.Format ("Invalid level {0} for resource '{1}'", level, id));
+				}
+			}
+			
+			return data;
+		}
+		
+		
 		public static void DebugDumpProviders()
 		{
 			for (int i = 0; i < Resources.providers.Length; i++)

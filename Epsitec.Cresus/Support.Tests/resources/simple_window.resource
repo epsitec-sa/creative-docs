@@ -3,6 +3,7 @@
  <field name='name'>my_window</field>
  <field name='text'>Ressource: démo</field>
  <field name='size'>240;280</field>
+ <field name='icon'><ref target='file:icon' type='binary'/></field>
  <list name='widgets'>
   <bundle>
    <field name='class'>CheckButton</field>
