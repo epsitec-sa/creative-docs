@@ -1507,7 +1507,7 @@ namespace Epsitec.Common.Widgets
 			arg2 = this.layout_arg2;
 		}
 		
-		public virtual void SetPropagationModes(PropagationModes modes, bool on, bool propagate_to_children)
+		public virtual void SetPropagationModes(PropagationModes modes, bool on, PropagationSetting propagation)
 		{
 			if (on)
 			{
@@ -1518,11 +1518,12 @@ namespace Epsitec.Common.Widgets
 				this.propagation &= ~modes;
 			}
 			
-			if (propagate_to_children && this.HasChildren)
+			if ((propagation == PropagationSetting.IncludeChildren) &&
+				(this.HasChildren))
 			{
 				for (int i = 0; i < this.children.Count; i++)
 				{
-					this.children[i].SetPropagationModes (modes, on, true);
+					this.children[i].SetPropagationModes (modes, on, propagation);
 				}
 			}
 		}
@@ -1689,6 +1690,18 @@ namespace Epsitec.Common.Widgets
 		public virtual Drawing.Rectangle GetClipBounds()
 		{
 			return this.GetShapeBounds ();
+		}
+		
+		public virtual Drawing.Rectangle GetClipStackBounds()
+		{
+			Drawing.Rectangle clip = this.GetClipBounds ();
+			
+			if (this.parent != null)
+			{
+				clip = Drawing.Rectangle.Intersection (clip, this.MapParentToClient (this.parent.GetClipStackBounds ()));
+			}
+			
+			return clip;
 		}
 		
 		public virtual void Invalidate()
@@ -3474,6 +3487,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
+		public enum PropagationSetting : byte
+		{
+			None			= 0,
+			IncludeChildren	= 1
+		}
 		
 		[System.Flags] public enum PropagationModes : uint
 		{
