@@ -159,6 +159,53 @@ namespace Epsitec.Cresus.Database
 				this.debug_display_data_set (this, table_name, data_table);
 			}
 			
+			foreach (System.Data.DataRow data_row in data_table.Rows)
+			{
+				long type_ref_id = long.Parse (data_row["C_TYPE"].ToString ());
+				this.ResolveType (new DbKey (type_ref_id));
+			}
+			
+			return null;
+		}
+		
+		public DbType ResolveType(DbKey type_ref)
+		{
+			SqlSelect query = new SqlSelect ();
+			
+			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TYPE", DbColumn.TagName));
+			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TYPE", DbColumn.TagInfoXml));
+//			query.Fields.Add ("E_ID",   SqlField.CreateName ("T_ENUM", DbColumn.TagId));
+//			query.Fields.Add ("E_NAME", SqlField.CreateName ("T_ENUM", DbColumn.TagName));
+			
+			query.Tables.Add ("T_TYPE", SqlField.CreateName (DbTable.TagTypeDef));
+//			query.Tables.Add ("T_ENUM", SqlField.CreateName (DbTable.TagEnumValDef));
+			
+			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName ("T_TYPE", DbColumn.TagId), SqlField.CreateConstant (type_ref.Id, DbRawType.Int64)));
+			
+			this.sql_builder.SelectData (query);
+			
+			System.Data.DataSet   data_set;
+			System.Data.DataTable data_table;
+			
+			this.ExecuteReturningData (out data_set);
+			
+			if (data_set.Tables.Count == 0)
+			{
+				//	La table n'existe pas (on n'a pas trouvé de description dans la base),
+				//	alors on retourne simplement null plutôt que de lever une exception.
+				
+				return null;
+			}
+			
+			System.Diagnostics.Debug.Assert (data_set.Tables.Count == 1);
+			
+			data_table = data_set.Tables[0];
+			
+			if (this.debug_display_data_set != null)
+			{
+				this.debug_display_data_set (this, "CR_TYPE_DEF("+type_ref.Id.ToString ()+")", data_table);
+			}
+			
 			return null;
 		}
 		

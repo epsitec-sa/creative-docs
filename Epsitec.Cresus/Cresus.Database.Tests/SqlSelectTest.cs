@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Database
 			//	défini la fonction JOB_COUNTRY <> 'England'
 			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareNotEqual, 
 													SqlField.CreateName("JOB_COUNTRY"),
-													SqlField.CreateConstant("'England'", DbRawType.String));
+													SqlField.CreateConstant("England", DbRawType.String));
 
 			sql_select.Conditions.Add(SqlField.CreateFunction(sql_func));
 

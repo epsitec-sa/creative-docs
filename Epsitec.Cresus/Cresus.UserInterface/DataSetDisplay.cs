@@ -1,3 +1,6 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 24/11/2003
+
 namespace Epsitec.Cresus.UserInterface.Debugging
 {
 	using Widgets = Epsitec.Common.Widgets;

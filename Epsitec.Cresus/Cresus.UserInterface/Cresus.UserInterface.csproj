@@ -133,17 +133,17 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DataSetDisplay.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "IBinder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Binders\Boolean.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Debugging\DataSetDisplay.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
