@@ -62,7 +62,7 @@ namespace Epsitec.Common.UI.Controllers
 		
 		public abstract void CreateUI(Widget panel);
 		public abstract void SyncFromUI();
-		public abstract void SyncFromAdapter();
+		public abstract void SyncFromAdapter(SyncReason reason);
 		
 		protected void Attach(Adapters.IAdapter adapter)
 		{
@@ -93,7 +93,7 @@ namespace Epsitec.Common.UI.Controllers
 		
 		protected virtual void OnAdapterDataChanged()
 		{
-			this.SyncFromAdapter ();
+			this.SyncFromAdapter (SyncReason.AdapterChanged);
 		}
 		
 		protected virtual void OnUIDataChanged()
@@ -104,7 +104,9 @@ namespace Epsitec.Common.UI.Controllers
 		
 		private void HandleAdapterValueChanged(object sender)
 		{
-			this.SyncFromAdapter ();
+			Adapters.IAdapter adapter = sender as Adapters.IAdapter;
+			
+			this.SyncFromAdapter (adapter.SyncReason);
 		}
 		
 		

@@ -123,6 +123,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "SyncReason.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Adapters\AbstractAdapter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

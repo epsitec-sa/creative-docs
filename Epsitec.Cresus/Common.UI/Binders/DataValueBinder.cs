@@ -110,12 +110,12 @@ namespace Epsitec.Common.UI.Binders
 		
 		protected virtual void OnSourceChanged()
 		{
-			this.SyncToAdapter ();
+			this.SyncToAdapter (SyncReason.SourceChanged);
 		}
 		
 		protected virtual void OnSourceValueChanged()
 		{
-			this.SyncToAdapter ();
+			this.SyncToAdapter (SyncReason.ValueChanged);
 		}
 		
 		

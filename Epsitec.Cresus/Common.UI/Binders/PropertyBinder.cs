@@ -173,7 +173,7 @@ namespace Epsitec.Common.UI.Binders
 		
 		protected virtual void OnSourceChanged()
 		{
-			this.SyncToAdapter ();
+			this.SyncToAdapter (SyncReason.SourceChanged);
 		}
 		
 		protected virtual void OnSourceTypeChanged()
@@ -182,7 +182,7 @@ namespace Epsitec.Common.UI.Binders
 		
 		protected virtual void OnPropertyChanged()
 		{
-			this.SyncToAdapter ();
+			this.SyncToAdapter (SyncReason.ValueChanged);
 		}
 		
 		
