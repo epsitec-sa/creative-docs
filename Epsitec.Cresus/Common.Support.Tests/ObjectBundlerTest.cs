@@ -5,6 +5,11 @@ namespace Epsitec.Common.Support.Tests
 	[TestFixture]
 	public class ObjectBundlerTest
 	{
+		[SetUp] public void SetUp()
+		{
+			Resources.SetupProviders ("test");
+		}
+		
 		[Test] public void CheckRegisterAssembly()
 		{
 			ObjectBundler.RegisterAssembly (typeof (Widgets.Widget).Assembly);
