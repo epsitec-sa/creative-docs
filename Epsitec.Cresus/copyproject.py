@@ -1,3 +1,11 @@
+#########################################################################
+# This Python script is used to copy the contents of the Epsitec.Cresus	#
+# solution to a clean folder and generate a ZIP file.					#
+#																		#
+# (C) Copyright 2003, Pierre ARNAUD, EPSITEC SA, Ch. du Fontenay 6,		#
+#					  CH-1400 Yverdon-les-Bains, Switzerland			#
+#########################################################################
+
 import os
 import os.path
 import shutil
