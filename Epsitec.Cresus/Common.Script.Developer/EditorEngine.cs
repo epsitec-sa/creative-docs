@@ -15,6 +15,7 @@ namespace Epsitec.Common.Script.Developer
 		{
 			Common.Widgets.Widget.Initialise ();
 			Common.Pictogram.Engine.Initialise ();
+			Common.Document.Engine.Initialise ();
 		}
 		
 		

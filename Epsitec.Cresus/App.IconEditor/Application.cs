@@ -44,6 +44,7 @@ namespace Epsitec.Icons
 		{
 			Widget.Initialise ();
 			Epsitec.Common.Pictogram.Engine.Initialise();
+			Epsitec.Common.Document.Engine.Initialise ();
 			Epsitec.Common.UI.Engine.Initialise ();
 			Application.application = new Application ();
 			Application.application.MainWindow.Run ();

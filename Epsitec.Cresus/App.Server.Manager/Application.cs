@@ -64,6 +64,7 @@ namespace Epsitec.Cresus.ServerManager
 		{
 			Epsitec.Common.UI.Engine.Initialise ();
 			Epsitec.Common.Pictogram.Engine.Initialise ();
+			Epsitec.Common.Document.Engine.Initialise ();
 			Epsitec.Common.Support.Resources.DefaultManager.SetupApplication ("ServerManager");
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookRoyale");
 			

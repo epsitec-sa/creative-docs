@@ -169,6 +169,11 @@
                     AssemblyName = "Adobe.AcrobatDistiller"
                     HintPath = "..\External\Adobe.AcrobatDistiller.dll"
                 />
+                <Reference
+                    Name = "Common.Document"
+                    Project = "{B324896E-2CDE-45B8-91CE-B476687EA384}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

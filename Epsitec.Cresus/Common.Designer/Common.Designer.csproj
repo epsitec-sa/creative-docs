@@ -134,6 +134,11 @@
                     Project = "{B2266071-EA0F-40E5-844F-98EE68A5A39C}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Common.Document"
+                    Project = "{B324896E-2CDE-45B8-91CE-B476687EA384}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

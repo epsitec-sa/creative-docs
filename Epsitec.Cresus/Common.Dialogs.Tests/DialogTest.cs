@@ -11,6 +11,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			Epsitec.Common.UI.Engine.Initialise ();
 			Epsitec.Common.Pictogram.Engine.Initialise ();
+			Epsitec.Common.Document.Engine.Initialise ();
 			
 			Support.Resources.DefaultManager.SetupApplication ("DialogTest");
 		}

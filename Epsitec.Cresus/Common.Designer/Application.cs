@@ -19,6 +19,7 @@ namespace Epsitec.Common.Designer
 		{
 			Epsitec.Common.Widgets.Widget.Initialise ();
 			Epsitec.Common.Pictogram.Engine.Initialise ();
+			Epsitec.Common.Document.Engine.Initialise ();
 			
 			ObjectBundler.RegisterAssembly (System.Reflection.Assembly.GetExecutingAssembly ());
 			

@@ -252,7 +252,7 @@ namespace Epsitec.Common.Support
 				}
 				
 				Drawing.Image image = Drawing.Bitmap.FromManifestResource (res_name, assembly);
-				image = Drawing.Bitmap.CopyImage (image);
+//				image = Drawing.Bitmap.CopyImage (image);
 				
 				System.Diagnostics.Debug.WriteLine ("Loaded image " + res_name + " from assembly " + assembly.GetName ());
 				

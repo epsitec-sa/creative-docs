@@ -8,6 +8,7 @@ namespace Epsitec.Common.Script
 		{
 			Common.Widgets.Widget.Initialise ();
 			Common.Pictogram.Engine.Initialise ();
+			Common.Document.Engine.Initialise ();
 			Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
 		}
 		
