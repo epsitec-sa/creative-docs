@@ -587,6 +587,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Design\Constraint.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Design\GripsOverlay.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
