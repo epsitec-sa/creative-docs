@@ -433,32 +433,32 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Exceptions\DbException.cs"
+                    RelPath = "Exceptions\GenericException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Exceptions\DbExistsException.cs"
+                    RelPath = "Exceptions\ExistsException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Exceptions\DbFactoryException.cs"
+                    RelPath = "Exceptions\FactoryException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Exceptions\DbFormatException.cs"
+                    RelPath = "Exceptions\FormatException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Exceptions\DbMissingTransactionException.cs"
+                    RelPath = "Exceptions\MissingTransactionException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Exceptions\DbSyntaxException.cs"
+                    RelPath = "Exceptions\SyntaxException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
