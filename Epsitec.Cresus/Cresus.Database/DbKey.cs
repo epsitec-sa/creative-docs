@@ -56,6 +56,9 @@ namespace Epsitec.Cresus.Database
 		
 		public override bool Equals(object obj)
 		{
+			//	Ne considère que Id et Revision pour la comparaison (et pour le
+			//	calcul d'une valeur de hachage).
+			
 			DbKey key = obj as DbKey;
 			
 			if (key == null)
@@ -63,12 +66,12 @@ namespace Epsitec.Cresus.Database
 				return false;
 			}
 			
-			return (key.id == this.id) && (key.revision == this.revision) && (key.raw_status == this.raw_status);
+			return (key.id == this.id) && (key.revision == this.revision);
 		}
 		
 		public override int GetHashCode()
 		{
-			return this.id.GetHashCode () ^ (this.revision) ^ (this.raw_status << 16);
+			return this.id.GetHashCode () ^ (this.revision);
 		}
 		
 		public override string ToString()

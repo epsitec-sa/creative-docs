@@ -34,7 +34,36 @@ namespace Epsitec.Cresus.Database
 			infrastructure.DebugDisplayDataSet = new CallbackDebugDisplayDataSet (this.DebugDisplay);
 			
 			DbTable db_table = infrastructure.ReadDbTableMeta ("CR_TABLE_DEF");
-			DbType  db_type  = infrastructure.ResolveType (new DbKey (8));
+			DbType  db_type1 = infrastructure.ResolveType (new DbKey (8));
+			DbType  db_type2 = infrastructure.ResolveType (new DbKey (8));
+			
+			Assertion.AssertEquals (db_type1, db_type2);
+			
+			DbTypeEnum db_type_enum = db_type1 as DbTypeEnum;
+			DbEnumValue[] enum_values = new DbEnumValue[db_type_enum.Count];
+			db_type_enum.CopyTo (enum_values, 0);
+			System.Array.Sort (enum_values, DbEnumValue.IdComparer);
+			System.Console.Out.WriteLine ("Sorted by Id :");
+			foreach (DbEnumValue v in enum_values)
+			{
+				System.Console.Out.Write (v.Name+" ");
+			}
+			System.Console.Out.WriteLine ();
+			System.Array.Sort (enum_values, DbEnumValue.NameComparer);
+			System.Console.Out.WriteLine ("Sorted by Name :");
+			foreach (DbEnumValue v in enum_values)
+			{
+				System.Console.Out.Write (v.Name+" ");
+			}
+			System.Console.Out.WriteLine ();
+			System.Array.Sort (enum_values, DbEnumValue.RankComparer);
+			System.Console.Out.WriteLine ("Sorted by Rank :");
+			foreach (DbEnumValue v in enum_values)
+			{
+				System.Console.Out.Write (v.Name+" ");
+			}
+			System.Console.Out.WriteLine ();
+			
 			
 			infrastructure.Dispose ();
 		}

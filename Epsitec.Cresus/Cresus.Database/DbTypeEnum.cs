@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.values.IsSynchronized;
+				return this.values == null ? false : this.values.IsSynchronized;
 			}
 		}
 
@@ -140,13 +140,16 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.values.Length;
+				return this.values == null ? 0 : this.values.Length;
 			}
 		}
 
 		public void CopyTo(System.Array array, int index)
 		{
-			this.values.CopyTo (array, index);
+			if (this.values != null)
+			{
+				this.values.CopyTo (array, index);
+			}
 		}
 
 		public object SyncRoot
