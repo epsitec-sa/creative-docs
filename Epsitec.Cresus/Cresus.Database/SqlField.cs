@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier, complété DD 2003.11.27
+//	Statut : en chantier, complété DD 2004.04.19, ajouté CreateJoin, AsJoin...
 
 namespace Epsitec.Cresus.Database
 {
@@ -152,6 +152,28 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public string					AsQualifier
+		{
+			get
+			{
+				if (this.type == SqlFieldType.Name)
+				{
+					throw new DbFormatException (string.Format ("{0} is not a qualified name.", this.AsName));
+				}
+				if (this.type == SqlFieldType.QualifiedName)
+				{
+					string qualifier;
+					string name;
+					
+					DbSqlStandard.SplitQualifiedName (this.AsQualifiedName, out qualifier, out name);
+					
+					return qualifier;
+				}
+				
+				return null;
+			}
+		}
+
 		public SqlAggregate				AsAggregate
 		{
 			get
@@ -185,6 +207,19 @@ namespace Epsitec.Cresus.Database
 				if (this.type == SqlFieldType.Function)
 				{
 					return this.value as SqlFunction;
+				}
+				
+				return null;
+			}
+		}
+
+		public SqlJoin					AsJoin
+		{
+			get
+			{
+				if (this.type == SqlFieldType.Join)
+				{
+					return this.value as SqlJoin;
 				}
 				
 				return null;
@@ -325,7 +360,8 @@ namespace Epsitec.Cresus.Database
 		
 		public static SqlField CreateName(string name)
 		{
-			if (DbSqlStandard.ValidateName (name))
+			if (DbSqlStandard.ValidateQualifiedName (name) ||
+				DbSqlStandard.ValidateName (name) )
 			{
 				return new SqlField (name);
 			}
@@ -375,6 +411,16 @@ namespace Epsitec.Cresus.Database
 			
 			field.type		= SqlFieldType.Function;
 			field.value		= sql_function;
+
+			return field;
+		}
+
+		public static SqlField CreateJoin(SqlJoin sql_join)
+		{
+			SqlField field	= new SqlField ();
+			
+			field.type		= SqlFieldType.Join;
+			field.value		= sql_join;
 
 			return field;
 		}
@@ -432,7 +478,8 @@ namespace Epsitec.Cresus.Database
 		Function,						//	fonction SQL (?)
 		Procedure,						//	procédure SQL (?)
 		
-		SubQuery						//	sous-requête
+		SubQuery,						//	sous-requête
+		Join							//	jointure
 	}
 	
 	public enum SqlFieldOrder

@@ -1,6 +1,6 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 07/10/2003
-//			 DD, 27/11/2003 (enlevé ToString)
+//			 DD, 19/04/2004	enlevé SqlFunctionType.JoinInner
 
 namespace Epsitec.Cresus.Database
 {
@@ -87,8 +87,8 @@ namespace Epsitec.Cresus.Database
 					case SqlFunctionType.LogicOr:
 						return 2;
 
-					case SqlFunctionType.JoinInner:
-						return 2;
+/*					case SqlFunctionType.JoinInner:
+						return 2;*/
 
 					case SqlFunctionType.Substring:
 						return 3;
@@ -157,9 +157,9 @@ namespace Epsitec.Cresus.Database
 		Upper,							//	UPPER(a)
 		Cast,							//	CAST(a AS b)
 		
-		//	Spécial, utilisé dans une condition SqlSelect pour générer une clause JOIN
+/*		//	Spécial, utilisé dans une condition SqlSelect pour générer une clause JOIN
 		
-		JoinInner,						//	A.a, B.b -> A INNER JOIN B ON A.a = B.b
+		JoinInner,						//	A.a, B.b -> A INNER JOIN B ON A.a = B.b */
 		
 		//	Equivalents :
 		
