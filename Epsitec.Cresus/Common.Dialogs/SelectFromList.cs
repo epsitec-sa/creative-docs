@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : en chantier/PA
+
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 
@@ -52,6 +55,7 @@ namespace Epsitec.Common.Dialogs
 			get { return 0; }
 		}
 		
+		
 		protected virtual void AddExtraWidgets(Widget body)
 		{
 		}
@@ -82,6 +86,7 @@ namespace Epsitec.Common.Dialogs
 			
 			return body;
 		}
+		
 		
 		private void HandleListDoubleClicked(object sender, MessageEventArgs e)
 		{

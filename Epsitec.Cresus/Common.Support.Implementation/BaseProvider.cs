@@ -134,7 +134,7 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public override string[] GetIds(string filter, ResourceLevel level, System.Globalization.CultureInfo culture)
+		public override string[] GetIds(string name_filter, string type_filter, ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
 			if (this.culture != culture)
 			{
