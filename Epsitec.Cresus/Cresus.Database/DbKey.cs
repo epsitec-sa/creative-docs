@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Database
 			long id;
 			
 			if ((Common.Types.Converter.Convert (value_id, out id)) &&
-				(id > 0))
+				(id >= 0))
 			{
 				int   revision;
 				short status;

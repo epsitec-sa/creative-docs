@@ -56,7 +56,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		[Test] public void CheckGetBundle()
+		[Test] public void CheckFileContains()
+		{
+			Assertion.Assert (Resources.Contains ("file:button.cancel"));
+		}
+		
+		[Test] public void CheckFileGetBundle()
 		{
 			ResourceBundle bundle;
 			
@@ -79,6 +84,63 @@ namespace Epsitec.Common.Support
 			}
 			
 			bundle = Resources.GetBundle ("file:button.cancel", ResourceLevel.Localised);
+			Assert.IsNotNull (bundle);
+			System.Console.Out.WriteLine ("Bundle with localised level only:");
+			
+			foreach (string tag in bundle.FieldNames)
+			{
+				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag].Data);
+			}
+		}
+		
+		[Test] public void CheckBase00Contains()
+		{
+			Assertion.Assert (Resources.Contains ("base:button.cancel"));
+		}
+		
+		[Test] public void CheckBase01SetBinaryData()
+		{
+			byte[] data = new byte[] { 1, 2, 3, 4, 5 };
+			
+			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Default, null, data, ResourceSetMode.Write);
+		}
+		
+		[Test] public void CheckBase02GetBinaryData()
+		{
+			byte[] data = Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Default, null);
+			
+			Assertion.AssertNotNull (data);
+			Assertion.AssertEquals (5, data.Length);
+			Assertion.AssertEquals (1, data[0]);
+			Assertion.AssertEquals (2, data[1]);
+			Assertion.AssertEquals (3, data[2]);
+			Assertion.AssertEquals (4, data[3]);
+			Assertion.AssertEquals (5, data[4]);
+		}
+		
+		[Test] public void CheckBase50GetBundle()
+		{
+			ResourceBundle bundle;
+			
+			bundle = Resources.GetBundle ("base:button.cancel");
+			Assert.IsNotNull (bundle);
+			System.Console.Out.WriteLine ("Bundle with merged levels:");
+			
+			foreach (string tag in bundle.FieldNames)
+			{
+				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag].Data);
+			}
+			
+			bundle = Resources.GetBundle ("base:button.cancel", ResourceLevel.Default);
+			Assert.IsNotNull (bundle);
+			System.Console.Out.WriteLine ("Bundle with default level only:");
+			
+			foreach (string tag in bundle.FieldNames)
+			{
+				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag].AsString);
+			}
+			
+			bundle = Resources.GetBundle ("base:button.cancel", ResourceLevel.Localised);
 			Assert.IsNotNull (bundle);
 			System.Console.Out.WriteLine ("Bundle with localised level only:");
 			

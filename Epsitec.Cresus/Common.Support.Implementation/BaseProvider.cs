@@ -19,6 +19,15 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
+		public override string				Prefix
+		{
+			get
+			{
+				return "base";
+			}
+		}
+		
+		
 		public static void CreateResourceDatabase(string application_name)
 		{
 			//	Crée une base de données pour stocker les ressources de l'application spécifiée.
@@ -78,7 +87,7 @@ namespace Epsitec.Common.Support.Implementation
 					throw new ResourceException (string.Format ("Invalid resource level {0} for resource '{1}'.", level, id));
 			}
 			
-			return "Data";
+			return BaseProvider.DataTableName;
 		}
 		
 		
@@ -89,12 +98,6 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public override string			Prefix
-		{
-			get { return "base"; }
-		}
-		
-		
 		public override void Setup(string application)
 		{
 			//	Le nom de l'application est utile pour déterminer le nom de la
@@ -102,6 +105,14 @@ namespace Epsitec.Common.Support.Implementation
 			
 			this.dbi = new DbInfrastructure ();
 			this.dbi.AttachDatabase (BaseProvider.GetDbAccess (application));
+			this.data_table = this.dbi.ResolveDbTable (null, BaseProvider.DataTableName);
+			
+			if (this.data_table == null)
+			{
+				throw new ResourceException ("Cannot find data table.");
+			}
+			
+			this.data_column_index = this.data_table.Columns["Data"].TableColumnIndex;
 		}
 		
 		public override void SelectLocale(System.Globalization.CultureInfo culture)
@@ -127,8 +138,22 @@ namespace Epsitec.Common.Support.Implementation
 				//	On valide toujours le nom avant, pour éviter des mauvaises surprises si
 				//	l'appelant est malicieux.
 				
-				//	TODO: vérifie si la ressource existe, en cherchant uniquement le niveau
-				//	ResourceLevel.Default.
+				string row_name   = this.GetRowNameFromId (id, ResourceLevel.Default);
+				string level_name = this.GetRowLevelFromId (id, ResourceLevel.Default);
+				
+				DbSelectCondition condition = new DbSelectCondition (this.dbi.TypeConverter);
+				
+				//	TODO: ajouter une condition sur CR_REV/CR_STAT
+				
+				condition.AddCondition (this.data_table.Columns["Name"], DbCompare.Equal, row_name);
+				condition.AddCondition (this.data_table.Columns["Level"], DbCompare.Equal, level_name);
+				
+				DbRichCommand command = DbRichCommand.CreateFromTable (this.dbi, null, this.data_table, condition);
+				
+				if (command.DataSet.Tables[0].Rows.Count > 0)
+				{
+					return true;
+				}
 			}
 			
 			return false;
@@ -142,11 +167,25 @@ namespace Epsitec.Common.Support.Implementation
 				this.SelectLocale (culture);
 			}
 			
-			string row_name = this.GetRowNameFromId (id, level);
+			string row_name   = this.GetRowNameFromId (id, level);
+			string level_name = this.GetRowLevelFromId (id, level);
 			
-			//	TODO: implémenter GetData.
+			DbSelectCondition condition = new DbSelectCondition (this.dbi.TypeConverter);
 			
-			throw new System.NotImplementedException ("GetData not implemented.");
+			//	TODO: ajouter une condition sur CR_REV/CR_STAT
+			
+			condition.AddCondition (this.data_table.Columns["Name"], DbCompare.Equal, row_name);
+			condition.AddCondition (this.data_table.Columns["Level"], DbCompare.Equal, level_name);
+			
+			DbRichCommand command = DbRichCommand.CreateFromTable (this.dbi, null, this.data_table, condition);
+			
+			if (command.DataSet.Tables[0].Rows.Count > 0)
+			{
+				byte[] data = (byte[]) command.DataSet.Tables[0].Rows[0][this.data_column_index];
+				return data;
+			}
+			
+			return null;
 		}
 		
 		
@@ -165,8 +204,64 @@ namespace Epsitec.Common.Support.Implementation
 		
 		public override bool SetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, ResourceSetMode mode)
 		{
-			// TODO:  Add FileProvider.Update implementation
-			throw new ResourceException ("Not implemented");
+			if (this.culture != culture)
+			{
+				this.SelectLocale (culture);
+			}
+			
+			string row_name   = this.GetRowNameFromId (id, level);
+			string level_name = this.GetRowLevelFromId (id, level);
+			
+			DbSelectCondition condition = new DbSelectCondition (this.dbi.TypeConverter);
+			
+			//	TODO: ajouter une condition sur CR_REV/CR_STAT
+			
+			condition.AddCondition (this.data_table.Columns["Name"], DbCompare.Equal, row_name);
+			condition.AddCondition (this.data_table.Columns["Level"], DbCompare.Equal, level_name);
+			
+			using (DbTransaction transaction = this.dbi.BeginTransaction ())
+			{
+				DbRichCommand command = DbRichCommand.CreateFromTable (this.dbi, transaction, this.data_table, condition);
+				
+				switch (mode)
+				{
+					case ResourceSetMode.CreateOnly:
+						if (command.DataSet.Tables[0].Rows.Count > 0)
+						{
+							throw new ResourceException (string.Format ("Resource {0} (level {1}) already exists.", id, level));
+						}
+						this.AddNewDataRow (command, transaction, row_name, level_name, data);
+						break;
+					
+					case ResourceSetMode.UpdateOnly:
+						if (command.DataSet.Tables[0].Rows.Count != 1)
+						{
+							throw new ResourceException (string.Format ("Resource {0} (level {1}) does not exist.", id, level));
+						}
+						this.UpdateDataRow (command, transaction, row_name, level_name, data);
+						break;
+					
+					case ResourceSetMode.Write:
+						if (command.DataSet.Tables[0].Rows.Count == 0)
+						{
+							this.AddNewDataRow (command, transaction, row_name, level_name, data);
+						}
+						else
+						{
+							this.UpdateDataRow (command, transaction, row_name, level_name, data);
+						}
+						break;
+					
+					default:
+						throw new System.ArgumentException (string.Format ("Mode {0} not supported.", mode), "mode");
+				}
+				
+				command.UpdateRealIds (transaction);
+				command.UpdateTables (transaction);
+				transaction.Commit ();
+			}
+			
+			return true;
 		}
 		
 		public override bool Remove(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture)
@@ -175,10 +270,37 @@ namespace Epsitec.Common.Support.Implementation
 			throw new ResourceException ("Not implemented");
 		}
 		
+		protected void AddNewDataRow(DbRichCommand command, DbTransaction transaction, string name, string level, byte[] data)
+		{
+			System.Data.DataRow row;
+
+			command.CreateNewRow (BaseProvider.DataTableName, out row);
+			
+			row.BeginEdit ();
+			row["Name"]  = name;
+			row["Level"] = level;
+			row["Data"]  = data;
+			row.EndEdit ();
+		}
+		
+		protected void UpdateDataRow(DbRichCommand command, DbTransaction transaction, string name, string level, byte[] data)
+		{
+			System.Data.DataRow row = command.DataSet.Tables[0].Rows[0];
+			
+			System.Diagnostics.Debug.Assert ((string)row["Name"] == name);
+			System.Diagnostics.Debug.Assert ((string)row["Level"] == level);
+			
+			row.BeginEdit ();
+			row["Data"]  = data;
+			row.EndEdit ();
+		}
 		
 		protected static void SetupInitialBase(DbInfrastructure infrastructure, DbTransaction transaction)
 		{
-			DbTable db_table = infrastructure.CreateDbTable ("Data", DbElementCat.UserDataManaged);
+			//	La base de données a été créée et elle est parfaitement vide. Il faut maintenant
+			//	définir les types et les tables de base :
+			
+			DbTable db_table = infrastructure.CreateDbTable (BaseProvider.DataTableName, DbElementCat.UserDataManaged);
 			
 			DbType db_type_name  = infrastructure.CreateDbType ("Name", 80, false) as DbTypeString;
 			DbType db_type_level = infrastructure.CreateDbType ("Level", 4, false) as DbTypeString;
@@ -200,11 +322,14 @@ namespace Epsitec.Common.Support.Implementation
 			infrastructure.RegisterNewDbTable (transaction, db_table);
 		}
 		
+		private const string				DataTableName = "Data";
 		
-		protected DbInfrastructure		dbi;
+		protected DbInfrastructure			dbi;
+		protected DbTable					data_table;
+		protected int						data_column_index;
 		
-		protected string				column_default;
-		protected string				column_local;
-		protected string				column_custom;
+		protected string					column_default;
+		protected string					column_local;
+		protected string					column_custom;
 	}
 }

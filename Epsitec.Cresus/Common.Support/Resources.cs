@@ -622,7 +622,16 @@ namespace Epsitec.Common.Support
 			ResourceLevel level   = bundle.ResourceLevel;
 			CultureInfo   culture = bundle.Culture;
 			string        id      = bundle.PrefixedName;
+			byte[]        data    = bundle.CreateXmlAsData ();
 			
+			if (Resources.SetBinaryData (id, level, culture, data, mode) == false)
+			{
+				throw new ResourceException (string.Format ("Could not store bundle '{0}'.", id));
+			}
+		}
+		
+		public static bool SetBinaryData(string id, ResourceLevel level, CultureInfo culture, byte[] data, ResourceSetMode mode)
+		{
 			if (culture == null)
 			{
 				culture = Resources.Culture;
@@ -642,15 +651,16 @@ namespace Epsitec.Common.Support
 			string resource_id;
 			
 			IResourceProvider provider = Resources.FindProvider (id, out resource_id);
-			byte[]            data     = bundle.CreateXmlAsData ();
 			
 			if (provider != null)
 			{
-				if (provider.SetData (resource_id, level, culture, data, mode) == false)
+				if (provider.SetData (resource_id, level, culture, data, mode))
 				{
-					throw new ResourceException (string.Format ("Could not store bundle '{0}'.", id));
+					return true;
 				}
 			}
+			
+			return false;
 		}
 		
 		public static void DebugDumpProviders()

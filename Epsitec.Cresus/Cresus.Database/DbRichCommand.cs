@@ -52,17 +52,27 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, Collections.DbTables tables)
+		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table)
 		{
-			return DbRichCommand.CreateFromTables (infrastructure, tables.Array);
+			return DbRichCommand.CreateFromTables (infrastructure, transaction, new DbTable[] { table }, new DbSelectCondition[] { null });
 		}
 		
-		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, params DbTable[] tables)
+		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table, DbSelectCondition condition)
 		{
-			return DbRichCommand.CreateFromTables (infrastructure, tables, new DbSelectCondition[tables.Length]);
+			return DbRichCommand.CreateFromTables (infrastructure, transaction, new DbTable[] { table }, new DbSelectCondition[] { condition });
 		}
-
-		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTable[] tables, DbSelectCondition[] conditions)
+		
+		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTransaction transaction, Collections.DbTables tables)
+		{
+			return DbRichCommand.CreateFromTables (infrastructure, transaction, tables.Array);
+		}
+		
+		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTransaction transaction, params DbTable[] tables)
+		{
+			return DbRichCommand.CreateFromTables (infrastructure, transaction, tables, new DbSelectCondition[tables.Length]);
+		}
+		
+		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTransaction transaction, DbTable[] tables, DbSelectCondition[] conditions)
 		{
 			System.Diagnostics.Debug.Assert (tables.Length == conditions.Length);
 			
@@ -96,7 +106,7 @@ namespace Epsitec.Cresus.Database
 				command.Tables.Add (table);
 			}
 			
-			infrastructure.Execute (null, command);
+			infrastructure.Execute (transaction, command);
 			
 			return command;
 		}

@@ -202,6 +202,25 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public int								TableColumnIndex
+		{
+			get
+			{
+				if (this.table != null)
+				{
+					int index = this.table.Columns.IndexOf (this);
+					
+					if (index >= 0)
+					{
+						return index;
+					}
+				}
+				
+				throw new System.InvalidOperationException ("Column not in valid table.");
+			}
+		}
+		
+		
 		public DbType							Type
 		{
 			get { return this.type; }

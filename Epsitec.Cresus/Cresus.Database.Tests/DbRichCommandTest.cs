@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals ("Ville", db_table_b.Columns[5].Name);
 			Assertion.AssertEquals (db_type_name.InternalKey, db_table_b.Columns[5].Type.InternalKey);
 			
-			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, db_table_a, db_table_b);
+			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, null, db_table_a, db_table_b);
 			
 			foreach (System.Data.DataRelation relation in command.DataSet.Relations)
 			{
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Database
 			System.Data.DataRow row_2;
 			System.Data.DataRow row_3;
 			
-			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, db_table_a, db_table_b);
+			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, null, db_table_a, db_table_b);
 			
 			command.CreateNewRow ("Personnes", out row_1); row_1["Nom"] = "Toto"; row_1["Prenom"] = "Foo";
 			command.CreateNewRow ("Personnes", out row_2); row_2["Nom"] = "Titi"; row_2["Prenom"] = "Bar";
