@@ -14,6 +14,12 @@ namespace Epsitec.Common.OpenType
 			this.offset = offset;
 		}
 		
+		public Tables(byte[] data, uint offset)
+		{
+			this.data   = data;
+			this.offset = (int) offset;
+		}
+		
 		
 		public byte[]							BaseData
 		{
@@ -176,6 +182,10 @@ namespace Epsitec.Common.OpenType
 		{
 		}
 		
+		public Table_head(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		{
+		}
+		
 		
 		public uint		TableVersion
 		{
@@ -324,6 +334,10 @@ namespace Epsitec.Common.OpenType
 		{
 		}
 		
+		public Table_glyf(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		{
+		}
+		
 		
 		public uint		NumContours
 		{
@@ -450,6 +464,10 @@ namespace Epsitec.Common.OpenType
 	public class Table_maxp : Tables
 	{
 		public Table_maxp(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		public Table_maxp(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -583,6 +601,9 @@ namespace Epsitec.Common.OpenType
 		{
 		}
 		
+		public Table_cmap(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		{
+		}
 		
 		public uint		TableVersion
 		{
@@ -881,6 +902,10 @@ namespace Epsitec.Common.OpenType
 		{
 		}
 		
+		public Table_name(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		{
+		}
+		
 		
 		public uint		FormatSelector
 		{
@@ -1059,6 +1084,9 @@ namespace Epsitec.Common.OpenType
 		{
 		}
 		
+		public Table_hhea(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		{
+		}
 		
 		public uint		TableVersion
 		{
@@ -1173,6 +1201,10 @@ namespace Epsitec.Common.OpenType
 		{
 		}
 		
+		public Table_hmtx(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		{
+		}
+		
 		
 		public uint GetAdvanceWidth(uint n)
 		{
@@ -1195,6 +1227,10 @@ namespace Epsitec.Common.OpenType
 		//	http://partners.adobe.com/public/developer/opentype/index_table_formats5.html
 		
 		public Table_GDEF(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		public Table_GDEF(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -1249,6 +1285,10 @@ namespace Epsitec.Common.OpenType
 		//	See http://www.microsoft.com/OpenType/OTSpec/featurelist.htm for 'liga' and others.
 		
 		public Table_GSUB(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		public Table_GSUB(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -1458,6 +1498,20 @@ namespace Epsitec.Common.OpenType
 			return null;
 		}
 		
+		public bool ContainsScript(string tag)
+		{
+			uint max  = this.ScriptCount;
+			
+			for (uint i = 0; i < max; i++)
+			{
+				if (this.GetScriptTag (i) == tag)
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
 	}
 	
 	public class ScriptTable : Tables
@@ -1601,6 +1655,11 @@ namespace Epsitec.Common.OpenType
 			return new FeatureTable (this.data, this.offset + (int) this.GetFeatureOffset (n));
 		}
 		
+		public TaggedFeatureTable GetTaggedFeatureTable(uint n)
+		{
+			return new TaggedFeatureTable (this.data, this.offset + (int) this.GetFeatureOffset (n), this.GetFeatureTag (n));
+		}
+		
 		public FeatureTable GetFeatureTable(string tag)
 		{
 			uint max  = this.FeatureCount;
@@ -1639,6 +1698,26 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
+	public class TaggedFeatureTable : FeatureTable
+	{
+		public TaggedFeatureTable(byte[] data, int offset, string tag) : base (data, offset)
+		{
+			this.tag = tag;
+		}
+		
+		
+		public string		Tag
+		{
+			get
+			{
+				return this.tag;
+			}
+		}
+		
+		
+		private string		tag;
+	}
+		
 	public class LookupListTable : Tables
 	{
 		public LookupListTable(byte[] data, int offset) : base (data, offset)
@@ -1706,6 +1785,21 @@ namespace Epsitec.Common.OpenType
 		public SubstSubTable GetSubTable(uint n)
 		{
 			return new SubstSubTable (this.data, this.offset + (int) this.GetSubTableOffset (n));
+		}
+		
+		public BaseSubstitution GetSubstitution(uint n)
+		{
+			int offset = this.offset + (int) this.GetSubTableOffset (n);
+			
+			switch (this.LookupType)
+			{
+				case 1: return new SingleSubstitution (this.data, offset);
+				case 4: return new LigatureSubstitution (this.data, offset);
+				case 6: return new ChainingContextSubstitution (this.data, offset);
+				
+				default:
+					throw new System.NotSupportedException ();
+			}
 		}
 	}
 	
@@ -1857,13 +1951,30 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class SingleSubst : SubstSubTable
+	public class BaseSubstitution : SubstSubTable
 	{
-		public SingleSubst(SubstSubTable sub) : base (sub.BaseData, sub.BaseOffset)
+		public BaseSubstitution(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
-		public SingleSubst(byte[] data, int offset) : base (data, offset)
+		
+		public virtual int ProcessSubstitution(uint[] glyphs, int offset, out uint[] substitution, out int[] glyph_starts)
+		{
+			substitution = null;
+			glyph_starts = null;
+			
+			return 0;
+		}
+	}
+		
+	
+	public class SingleSubstitution : BaseSubstitution
+	{
+		public SingleSubstitution(SubstSubTable sub) : base (sub.BaseData, sub.BaseOffset)
+		{
+		}
+		
+		public SingleSubstitution(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
@@ -1878,6 +1989,25 @@ namespace Epsitec.Common.OpenType
 				default:
 					throw new System.NotSupportedException ();
 			}
+		}
+		
+		
+		public override int ProcessSubstitution(uint[] glyphs, int offset, out uint[] substitution, out int[] glyph_starts)
+		{
+			int cov = this.Coverage.FindIndex (glyphs[offset]);
+			
+			if (cov >= 0)
+			{
+				substitution = new uint[1];
+				glyph_starts = new int[1];
+				
+				substitution[0] = this.FindSubstitution (glyphs[offset]);
+				glyph_starts[0] = offset;
+				
+				return 1;
+			}
+			
+			return base.ProcessSubstitution (glyphs, offset, out substitution, out glyph_starts);
 		}
 		
 		
@@ -1901,13 +2031,13 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class ChainingContextSubst : SubstSubTable
+	public class ChainingContextSubstitution : BaseSubstitution
 	{
-		public ChainingContextSubst(SubstSubTable sub) : base (sub.BaseData, sub.BaseOffset)
+		public ChainingContextSubstitution(SubstSubTable sub) : base (sub.BaseData, sub.BaseOffset)
 		{
 		}
 		
-		public ChainingContextSubst(byte[] data, int offset) : base (data, offset)
+		public ChainingContextSubstitution(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
@@ -1938,13 +2068,13 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class LigatureSubst : SubstSubTable
+	public class LigatureSubstitution : BaseSubstitution
 	{
-		public LigatureSubst(SubstSubTable sub) : base (sub.BaseData, sub.BaseOffset)
+		public LigatureSubstitution(SubstSubTable sub) : base (sub.BaseData, sub.BaseOffset)
 		{
 		}
 		
-		public LigatureSubst(byte[] data, int offset) : base (data, offset)
+		public LigatureSubstitution(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
@@ -1963,9 +2093,67 @@ namespace Epsitec.Common.OpenType
 			return this.ReadInt16 ((int)(6+n*2));
 		}
 		
+		private uint GetLigatureSetInfoCount(uint offset, uint n)
+		{
+			return this.ReadInt16 ((int)(offset+0));
+		}
+		
+		private uint GetLigatureSetInfoOffset(uint offset, uint info)
+		{
+			return this.ReadInt16 ((int)(offset+2+2*info));
+		}
+		
+		
 		public LigatureSet GetLigatureSet(uint n)
 		{
 			return new LigatureSet (this.data, this.offset + (int) this.GetLigatureSetOffset (n));
+		}
+		
+		
+		public override int ProcessSubstitution(uint[] glyphs, int offset, out uint[] substitution, out int[] glyph_starts)
+		{
+			int cov = this.Coverage.FindIndex (glyphs[offset]);
+			
+			if (cov >= 0)
+			{
+				uint max_set = this.LigatureSetCount;
+				
+				Debug.Assert.IsTrue (cov < max_set);
+				
+				uint set_offset = this.GetLigatureSetOffset ((uint)cov);
+				uint max_info   = this.GetLigatureSetInfoCount (set_offset, (uint)cov);
+				
+				for (uint j = 0; j < max_info; j++)
+				{
+					uint info_offset = this.GetLigatureSetInfoOffset (set_offset, j) + set_offset;
+					uint comp_count  = this.ReadInt16 ((int)(2+info_offset));
+					
+					for (uint k = 1; k < comp_count; k++)
+					{
+						uint comp_elem = this.ReadInt16 ((int)(2+info_offset+2*k));
+						
+						if (comp_elem != glyphs[offset+k])
+						{
+							goto try_next_in_set;
+						}
+					}
+					
+					//	Hit: input glyph sequence matched.
+					
+					substitution = new uint[1];
+					glyph_starts = new int[1];
+					
+					substitution[0] = this.ReadInt16 ((int)(0+info_offset));
+					glyph_starts[0] = offset;
+					
+					return (int)(comp_count);
+					
+				try_next_in_set:
+					continue;
+				}
+			}
+			
+			return base.ProcessSubstitution (glyphs, offset, out substitution, out glyph_starts);
 		}
 	}
 	
@@ -1976,7 +2164,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		LigatureCount
+		public uint		LigatureInfoCount
 		{
 			get
 			{
@@ -1985,20 +2173,20 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetLigatureOffset(uint n)
+		public uint GetLigatureInfoOffset(uint n)
 		{
 			return this.ReadInt16 ((int)(2+2*n));
 		}
 		
-		public Ligature GetLigature(uint n)
+		public LigatureInfo GetLigatureInfo(uint n)
 		{
-			return new Ligature (this.data, this.offset + (int) this.GetLigatureOffset (n));
+			return new LigatureInfo (this.data, this.offset + (int) this.GetLigatureInfoOffset (n));
 		}
 	}
 	
-	public class Ligature : Tables
+	public class LigatureInfo : Tables
 	{
-		public Ligature(byte[] data, int offset) : base (data, offset)
+		public LigatureInfo(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		

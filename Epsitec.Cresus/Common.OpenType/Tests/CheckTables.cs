@@ -14,6 +14,7 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			CheckTables.TestFeatureTable ();
 			CheckTables.TestArial ();
+			CheckTables.TestFont ();
 		}
 		
 		
@@ -138,8 +139,7 @@ namespace Epsitec.Common.OpenType.Tests
 			byte[] data = Platform.Win32.LoadFontData (font);
 			
 			TableDirectory td = new TableDirectory (data, 0);
-			TableEntry gsub_e = td.FindTable ("GSUB");
-			Table_GSUB gsub_t = new Table_GSUB (data, (int) gsub_e.Offset);
+			Table_GSUB gsub_t = new Table_GSUB (td.FindTable ("GSUB"));
 			
 			ScriptListTable  script_l  = gsub_t.ScriptListTable;
 			FeatureListTable feature_l = gsub_t.FeatureListTable;
@@ -182,7 +182,7 @@ namespace Epsitec.Common.OpenType.Tests
 					{
 						buffer.Append (";");
 						buffer.Append (script_t.GetLangSysTable (j).GetFeatureIndex (k));
-						referenced_features[(int) script_t.DefaultLangSysTable.GetFeatureIndex (k)] = true;
+						referenced_features[(int) script_t.GetLangSysTable (j).GetFeatureIndex (k)] = true;
 					}
 					
 					buffer.Append ("]");
@@ -256,7 +256,7 @@ namespace Epsitec.Common.OpenType.Tests
 						for (uint s = 0; s < lookup.SubTableCount; s++)
 						{
 							SubstSubTable base_subst = lookup.GetSubTable (s);
-							SingleSubst single_subst = new SingleSubst (base_subst);
+							SingleSubstitution single_subst = new SingleSubstitution (base_subst);
 							
 							uint[] covered = CheckTables.GetCoverageIndexes (single_subst.Coverage);
 							
@@ -273,7 +273,7 @@ namespace Epsitec.Common.OpenType.Tests
 						for (uint s = 0; s < lookup.SubTableCount; s++)
 						{
 							SubstSubTable base_subst = lookup.GetSubTable (s);
-							LigatureSubst liga_subst = new LigatureSubst (base_subst);
+							LigatureSubstitution liga_subst = new LigatureSubstitution (base_subst);
 							
 							uint[] covered = CheckTables.GetCoverageIndexes (liga_subst.Coverage);
 							
@@ -286,11 +286,11 @@ namespace Epsitec.Common.OpenType.Tests
 							{
 								LigatureSet liga_set = liga_subst.GetLigatureSet (j);
 								
-								for (uint k = 0; k < liga_set.LigatureCount; k++)
+								for (uint k = 0; k < liga_set.LigatureInfoCount; k++)
 								{
 									System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 									
-									Ligature ligature = liga_set.GetLigature (k);
+									LigatureInfo ligature = liga_set.GetLigatureInfo (k);
 									uint result_glyph = ligature.Glyph;
 									
 									buffer.Append ("  o ");
@@ -308,14 +308,30 @@ namespace Epsitec.Common.OpenType.Tests
 									System.Diagnostics.Debug.WriteLine (buffer.ToString ());
 								}
 							}
+							
+							uint[] glyphs = new uint[] { 143, 143, 139, 143, 143, 12, 143, 147, 157, 157, 25, 0, 0, 0 };
+							uint[] substitution;
+							int[]  starts;
+							int    offset;
+							
+							System.Diagnostics.Trace.WriteLine ("Starting ligature substitution:");
+							for (int zz = 0; zz < 1000000; zz++)
+							{
+								offset = liga_subst.ProcessSubstitution (glyphs, 0, out substitution, out starts);
+								offset = liga_subst.ProcessSubstitution (glyphs, 3, out substitution, out starts);
+								offset = liga_subst.ProcessSubstitution (glyphs, 5, out substitution, out starts);
+								offset = liga_subst.ProcessSubstitution (glyphs, 6, out substitution, out starts);
+								offset = liga_subst.ProcessSubstitution (glyphs, 8, out substitution, out starts);
+							}
+							System.Diagnostics.Trace.WriteLine ("Done.");
 						}
 					}
 					else if (lookup.LookupType == 6)
 					{
 						for (uint s = 0; s < lookup.SubTableCount; s++)
 						{
-							SubstSubTable        base_subst = lookup.GetSubTable (s);
-							ChainingContextSubst cctx_subst = new ChainingContextSubst (base_subst);
+							SubstSubTable base_subst = lookup.GetSubTable (s);
+							ChainingContextSubstitution cctx_subst = new ChainingContextSubstitution (base_subst);
 							
 							uint[] covered = CheckTables.GetCoverageIndexes (cctx_subst.Coverage);
 							
@@ -325,6 +341,36 @@ namespace Epsitec.Common.OpenType.Tests
 				}
 			}
 		}
+		
+		private static void TestFont()
+		{
+			string font_name_1 = "Palatino Linotype";
+			string font_name_2 = "Times New Roman";
+			
+			Font font_1 = new Font ();
+			Font font_2 = new Font ();
+			
+			font_1.Initialize (new TableDirectory (Platform.Win32.LoadFontData (font_name_1), 0));
+			font_2.Initialize (new TableDirectory (Platform.Win32.LoadFontData (font_name_2), 0));
+			
+			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_1.GetSupportedScripts ()));
+			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_2.GetSupportedScripts ()));
+			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_1.GetSupportedFeatures ()));
+			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_2.GetSupportedFeatures ()));
+			
+			font_1.SelectFeatures ("dlig", "liga");
+			
+			font_1.SelectScript ("latn", "ROM ");
+			font_2.SelectScript ("arab");
+			
+			font_1.SelectFeatures ("dlig", "liga");
+			
+			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_1.GetSupportedFeatures ()));
+			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_2.GetSupportedFeatures ()));
+			
+			font_2.SelectScript ("latn");
+		}
+		
 		
 		private static uint[] GetCoverageIndexes(Coverage coverage)
 		{
