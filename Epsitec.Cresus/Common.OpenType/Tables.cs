@@ -1220,6 +1220,7 @@ namespace Epsitec.Common.OpenType
 	public class Table_GDEF : Tables
 	{
 		//	http://partners.adobe.com/public/developer/opentype/index_table_formats5.html
+		//	http://www.microsoft.com/OpenType/OTSpec/gdef.htm
 		
 		public Table_GDEF(byte[] data, int offset) : base (data, offset)
 		{
@@ -1230,7 +1231,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public int		TableVersion
+		public int						TableVersion
 		{
 			get
 			{
@@ -1238,7 +1239,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public int		GlyphClassDefOffset
+		public int						GlyphClassDefOffset
 		{
 			get
 			{
@@ -1246,7 +1247,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public int		AttachListOffset
+		public int						AttachListOffset
 		{
 			get
 			{
@@ -1254,7 +1255,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public int		LigCaretListOffset
+		public int						LigatureCaretListOffset
 		{
 			get
 			{
@@ -1262,14 +1263,121 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public int		MarkAttachClassDefOffset
+		public int						MarkAttachClassDefOffset
 		{
 			get
 			{
 				return this.ReadInt16 (10);
 			}
 		}
+		
+		
+		public LigatureCaretListTable	LigatureCaretListTable
+		{
+			get
+			{
+				if (this.LigatureCaretListOffset > 0)
+				{
+					return new LigatureCaretListTable(this.data, this.offset + this.LigatureCaretListOffset);
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
 	}
+	
+	public class LigatureCaretListTable : Tables
+	{
+		public LigatureCaretListTable(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public int						CoverageOffset
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}
+		}
+		
+		public Coverage					Coverage
+		{
+			get
+			{
+				return new Coverage (this.data, this.offset + (int) this.CoverageOffset);
+			}
+		}
+		
+		public int						LigatureGlyphCount
+		{
+			get
+			{
+				return this.ReadInt16 (2);
+			}
+		}
+		
+		
+		public int GetLigatureGlyphOffset(int n)
+		{
+			return this.ReadInt16 ((int)(4+n*2));
+		}
+		
+		public LigatureGlyphTable GetLigatureGlyphTable(int n)
+		{
+			return new LigatureGlyphTable (this.data, this.offset + (int) this.GetLigatureGlyphOffset (n));
+		}
+	}
+	
+	public class LigatureGlyphTable : Tables
+	{
+		public LigatureGlyphTable(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public int						CaretCount
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}
+		}
+		
+		
+		public int GetCaretOffset(int n)
+		{
+			return this.ReadInt16 (2+2*n);
+		}
+		
+		public int GetCaretValueFormat(int n)
+		{
+			return this.ReadInt16 (this.GetCaretOffset (n) + 0);
+		}
+		
+		public int GetCaretCoordinateFmt1(int n)
+		{
+			return this.ReadInt16 (this.GetCaretOffset (n) + 2);
+		}
+		
+		public int GetCaretValuePointFmt2(int n)
+		{
+			return this.ReadInt16 (this.GetCaretOffset (n) + 2);
+		}
+		
+		public int GetCaretCoordinateFmt3(int n)
+		{
+			return this.ReadInt16 (this.GetCaretOffset (n) + 2);
+		}
+		
+		public int GetCaretDeviceTableFmt3(int n)
+		{
+			return this.ReadInt16 (this.GetCaretOffset (n) + 4);
+		}
+	}
+	
 	
 	public class Table_GSUB : Tables
 	{

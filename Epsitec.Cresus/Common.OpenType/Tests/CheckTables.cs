@@ -387,6 +387,30 @@ namespace Epsitec.Common.OpenType.Tests
 			double w1c = font_1.GetPositions (glyphs_1a, 10.0, 0.0, x_pos_1c);
 			double w2c = font_1.GetPositions (glyphs_1a, 10.0, 0.0, x_pos_2c);
 			
+			double x, y;
+			
+			font_1.HitTest (text, 10.0, 24, out x, out y);
+			font_2.HitTest (text, 10.0, 24, out x, out y);
+			
+			font_1.HitTest (text, 10.0, 0, out x, out y);
+			font_1.HitTest (text, 10.0, 1, out x, out y);
+			font_1.HitTest (text, 10.0, 2, out x, out y);
+			font_1.HitTest (text, 10.0, text.Length, out x, out y);
+			
+			int    pos;
+			double subpos;
+			
+			font_1.HitTest (text, 10.0,  0.0, 0.0, out pos, out subpos);
+			font_1.HitTest (text, 10.0,  2.0, 0.0, out pos, out subpos);
+			font_1.HitTest (text, 10.0,  4.0, 0.0, out pos, out subpos);
+			font_1.HitTest (text, 10.0,  6.0, 0.0, out pos, out subpos);
+			font_1.HitTest (text, 10.0,  8.0, 0.0, out pos, out subpos);
+			font_1.HitTest (text, 10.0, 10.0, 0.0, out pos, out subpos);
+			font_1.HitTest (text, 10.0, 12.0, 0.0, out pos, out subpos);
+			font_1.HitTest (text, 10.0, 14.0, 0.0, out pos, out subpos);
+			
+			font_1.HitTest (text, 10.0, x, y, out pos, out subpos);
+			
 			font_1.SelectFeatures ();
 			font_2.SelectFeatures ();
 			
