@@ -405,6 +405,31 @@ namespace Epsitec.Common.OpenType.Tests
 			ushort[] glyphs_1a = font_1.GenerateGlyphs (text);
 			ushort[] glyphs_2a = font_2.GenerateGlyphs (text);
 			
+			ushort[] glyphs_1aa;
+			ushort[] glyphs_2aa;
+			byte[] attrib_1aa = new byte[text.Length];
+			byte[] attrib_2aa = new byte[text.Length];
+			
+			for (int i = 0; i < text.Length; i++)
+			{
+				attrib_1aa[i] = (byte) (i+1);
+				attrib_2aa[i] = (byte) (i+1);
+			}
+			
+			font_1.GenerateGlyphs(text, out glyphs_1aa, attrib_1aa);
+			font_2.GenerateGlyphs(text, out glyphs_2aa, attrib_2aa);
+			
+			Debug.Assert.IsTrue (attrib_1aa[0] == 1);
+			Debug.Assert.IsTrue (attrib_1aa[1] == 3);
+			Debug.Assert.IsTrue (attrib_1aa[18] == 22);
+			Debug.Assert.IsTrue (attrib_1aa[19] == 23);
+			Debug.Assert.IsTrue (attrib_1aa[20] == 26);
+			
+			Debug.Assert.IsTrue (attrib_2aa[0] == 1);
+			Debug.Assert.IsTrue (attrib_2aa[1] == 2);
+			Debug.Assert.IsTrue (attrib_2aa[22] == 24);
+			Debug.Assert.IsTrue (attrib_2aa[23] == 26);
+			
 			double w1a = font_1.GetTotalWidth (glyphs_1a, 10.0);
 			double w2a = font_2.GetTotalWidth (glyphs_2a, 10.0);
 			
