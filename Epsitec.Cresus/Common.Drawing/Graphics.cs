@@ -229,6 +229,35 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public void SetClippingRectangle(double x, double y, double width, double height)
+		{
+			double x1 = x;
+			double y1 = y;
+			double x2 = x + width;
+			double y2 = y + height;
+			
+			this.transform.TransformInverse (ref x1, ref y1);
+			this.transform.TransformInverse (ref x2, ref y2);
+			
+			this.rasterizer.SetClipBox (x1, y1, x2, y2);
+		}
+		
+		public void SetClippingRectangle(Point p, Size s)
+		{
+			this.SetClippingRectangle (p.X, p.Y, s.Width, s.Height);
+		}
+		
+		public void SetClippingRectangle(Rectangle rect)
+		{
+			this.SetClippingRectangle (rect.X, rect.Y, rect.Width, rect.Height);
+		}
+		
+		public void ResetClippingRectangle()
+		{
+			this.rasterizer.ResetClipBox ();
+		}
+		
+		
 		protected virtual void UpdateTransform()
 		{
 			this.rasterizer.Transform = this.transform;

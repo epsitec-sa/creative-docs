@@ -84,6 +84,21 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public void SetClipBox(double x1, double y1, double x2, double y2)
+		{
+			//	The clip box is specified in destination pixel coordinates (without any transform
+			//	matrix).
+			this.CreateOnTheFly ();
+			Agg.Library.AggRasterizerSetClipBox (this.agg_ras, x1, y1, x2, y2);
+		}
+		
+		public void ResetClipBox()
+		{
+			this.CreateOnTheFly ();
+			Agg.Library.AggRasterizerResetClipBox (this.agg_ras);
+		}
+		
+		
 		public void AddSurface(Path path)
 		{
 			this.CreateOnTheFly ();

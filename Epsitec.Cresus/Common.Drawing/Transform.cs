@@ -122,6 +122,15 @@ namespace Epsitec.Common.Drawing
 			return pt;
 		}
 		
+		public void TransformDirect(ref double px, ref double py)
+		{
+			double x = px;
+			double y = py;
+			
+			px = this.xx * x + this.xy * y + this.tx;
+			py = this.yx * x + this.yy * y + this.ty;
+		}
+		
 		public Point TransformInverse(Point pt)
 		{
 			double det = this.xx * this.yy - this.xy * this.yx;
@@ -135,6 +144,19 @@ namespace Epsitec.Common.Drawing
 			pt.Y = (- this.yx * x + this.xx * y) / det;
 			
 			return pt;
+		}
+		
+		public void TransformInverse(ref double px, ref double py)
+		{
+			double det = this.xx * this.yy - this.xy * this.yx;
+			
+			System.Diagnostics.Debug.Assert (det != 0.0f);
+			
+			double x = px - this.tx;
+			double y = py - this.ty;
+			
+			px = (  this.yy * x - this.xy * y) / det;
+			py = (- this.yx * x + this.xx * y) / det;
 		}
 		
 		

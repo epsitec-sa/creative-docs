@@ -52,6 +52,8 @@ namespace Epsitec.Common.Drawing.Agg
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerFillingRule(System.IntPtr rasterizer, int mode);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerGamma(System.IntPtr rasterizer, double gamma);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerSetTransform(System.IntPtr rasterizer, double xx, double xy, double yx, double yy, double tx, double ty);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerSetClipBox(System.IntPtr rasterizer, double x1, double y1, double x2, double y2);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerResetClipBox(System.IntPtr rasterizer);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerAddPath(System.IntPtr rasterizer, System.IntPtr path, bool curves);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerAddGlyph(System.IntPtr rasterizer, System.IntPtr face, int glyph, double x, double y, double scale);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerAddPathStroke1(System.IntPtr rasterizer, System.IntPtr path, double width, bool curves);
