@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 01/04/2004
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
