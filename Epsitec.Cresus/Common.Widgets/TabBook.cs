@@ -598,7 +598,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected virtual void HandlePageRankChanged(object sender, System.EventArgs e)
+		protected virtual void HandlePageRankChanged(object sender)
 		{
 		}
 		
@@ -781,7 +781,7 @@ namespace Epsitec.Common.Widgets
 			
 			item.TabButton.Parent = this;
 			item.TabButton.Pressed += new MessageEventHandler(this.HandleTabButton);
-			item.RankChanged += new System.EventHandler(this.HandlePageRankChanged);
+			item.RankChanged += new Support.EventHandler(this.HandlePageRankChanged);
 			this.isRefreshNeeded = true;
 			
 			this.UpdateVisiblePages();
@@ -795,7 +795,7 @@ namespace Epsitec.Common.Widgets
 			int     index = item.Index;
 			
 			item.TabButton.Clicked -= new MessageEventHandler(this.HandleTabButton);
-			item.RankChanged       -= new System.EventHandler(this.HandlePageRankChanged);
+			item.RankChanged       -= new Support.EventHandler(this.HandlePageRankChanged);
 			
 			this.Children.Remove(item);
 			this.Children.Remove(item.TabButton);
