@@ -300,6 +300,7 @@ class CopyProject:
                     f.close()
                     shutil.copystat(ref_name, delta_name)
                     os.chmod(delta_name, 0777)
+                    self.mod_count += 1
 
                     if os.path.isdir(ref_name):
                         try:
