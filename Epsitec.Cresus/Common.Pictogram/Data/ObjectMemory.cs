@@ -91,11 +91,6 @@ namespace Epsitec.Common.Pictogram.Data
 			backColor.Color = Drawing.Color.FromBrightness(1.0);
 			this.AddProperty(backColor);
 
-			PropertyString textString = new PropertyString();
-			textString.Type = PropertyType.TextString;
-			textString.String = "";
-			this.AddProperty(textString);
-
 			PropertyFont textFont = new PropertyFont();
 			textFont.Type = PropertyType.TextFont;
 			textFont.FontName    = "Tahoma";

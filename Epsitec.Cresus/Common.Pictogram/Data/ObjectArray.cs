@@ -36,14 +36,6 @@ namespace Epsitec.Common.Pictogram.Data
 			backColor.Type = PropertyType.BackColor;
 			this.AddProperty(backColor);
 
-			PropertyString textString = new PropertyString();
-			textString.Type = PropertyType.TextString;
-			this.AddProperty(textString);
-
-			PropertyFont textFont = new PropertyFont();
-			textFont.Type = PropertyType.TextFont;
-			this.AddProperty(textFont);
-
 			PropertyJustif textJustif = new PropertyJustif();
 			textJustif.Type = PropertyType.TextJustif;
 			this.AddProperty(textJustif);
@@ -869,7 +861,7 @@ namespace Epsitec.Common.Pictogram.Data
 					ArrayCell newCell = this.NewCell();
 					ArrayCell actualCell = this.cells[isrc] as ArrayCell;
 					actualCell.CopyTo(newCell);
-					if ( !duplicate )  newCell.TextString.String = "";
+					if ( !duplicate )  newCell.Content = "";
 					this.cells.Insert(idst, newCell);
 					newCell.Selected = (r < this.rows);
 					actualCell.Selected = false;
@@ -896,7 +888,7 @@ namespace Epsitec.Common.Pictogram.Data
 					ArrayCell newCell = this.NewCell();
 					ArrayCell actualCell = this.cells[isrc] as ArrayCell;
 					actualCell.CopyTo(newCell);
-					if ( !duplicate )  newCell.TextString.String = "";
+					if ( !duplicate )  newCell.Content = "";
 					this.cells.Insert(idst, newCell);
 					newCell.Selected = (r < this.rows);
 					actualCell.Selected = false;
@@ -923,7 +915,7 @@ namespace Epsitec.Common.Pictogram.Data
 					ArrayCell newCell = this.NewCell();
 					ArrayCell actualCell = this.cells[isrc+shift] as ArrayCell;
 					actualCell.CopyTo(newCell);
-					if ( !duplicate )  newCell.TextString.String = "";
+					if ( !duplicate )  newCell.Content = "";
 					this.cells.Insert(idst, newCell);
 					shift ++;
 					newCell.Selected = (c < this.columns);
@@ -951,7 +943,7 @@ namespace Epsitec.Common.Pictogram.Data
 					ArrayCell newCell = this.NewCell();
 					ArrayCell actualCell = this.cells[isrc] as ArrayCell;
 					actualCell.CopyTo(newCell);
-					if ( !duplicate )  newCell.TextString.String = "";
+					if ( !duplicate )  newCell.Content = "";
 					this.cells.Insert(idst, newCell);
 					newCell.Selected = (c < this.columns);
 					actualCell.Selected = false;
@@ -1049,9 +1041,9 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				for ( int r=r1 ; r<=r2 ; r++ )
 				{
-					string text = this.Cell(c,r).TextString.String;
-					this.Cell(c,r).TextString.String = this.Cell(cc,r).TextString.String;
-					this.Cell(cc,r).TextString.String = text;
+					string text = this.Cell(c,r).Content;
+					this.Cell(c,r).Content = this.Cell(cc,r).Content;
+					this.Cell(cc,r).Content = text;
 				}
 				cc --;
 			}
@@ -1066,9 +1058,9 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				for ( int c=c1 ; c<=c2 ; c++ )
 				{
-					string text = this.Cell(c,r).TextString.String;
-					this.Cell(c,r).TextString.String = this.Cell(c,rr).TextString.String;
-					this.Cell(c,rr).TextString.String = text;
+					string text = this.Cell(c,r).Content;
+					this.Cell(c,r).Content = this.Cell(c,rr).Content;
+					this.Cell(c,rr).Content = text;
 				}
 				rr --;
 			}
@@ -1096,7 +1088,7 @@ namespace Epsitec.Common.Pictogram.Data
 					}
 					this.Cell(c,r).BackColor.Color = color;
 
-					this.Cell(c,r).TextFont.FontColor = Drawing.Color.FromBrightness(0.0);
+					//?this.Cell(c,r).TextFont.FontColor = Drawing.Color.FromBrightness(0.0);
 				}
 			}
 		}
@@ -1130,7 +1122,7 @@ namespace Epsitec.Common.Pictogram.Data
 					{
 						color = Drawing.Color.FromBrightness(0.0);
 					}
-					this.Cell(c,r).TextFont.FontColor = color;
+					//?this.Cell(c,r).TextFont.FontColor = color;
 				}
 			}
 		}
@@ -1150,7 +1142,7 @@ namespace Epsitec.Common.Pictogram.Data
 					else            color = Drawing.Color.FromBrightness(0.9);
 					this.Cell(c,r).BackColor.Color = color;
 
-					this.Cell(c,r).TextFont.FontColor = Drawing.Color.FromBrightness(0.0);
+					//?this.Cell(c,r).TextFont.FontColor = Drawing.Color.FromBrightness(0.0);
 				}
 			}
 		}
@@ -1170,7 +1162,7 @@ namespace Epsitec.Common.Pictogram.Data
 					else            color = Drawing.Color.FromRGB(1.0, 1.0, 0.9);  // jaune
 					this.Cell(c,r).BackColor.Color = color;
 
-					this.Cell(c,r).TextFont.FontColor = Drawing.Color.FromBrightness(0.0);
+					//?this.Cell(c,r).TextFont.FontColor = Drawing.Color.FromBrightness(0.0);
 				}
 			}
 		}
@@ -1228,7 +1220,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				for ( int r=r2 ; r>=r1 ; r-- )  // de haut en bas !
 				{
-					this.Cell(c,r).TextString.String = ObjectArray.Serie(arg, rank++);
+					this.Cell(c,r).Content = ObjectArray.Serie(arg, rank++);
 				}
 			}
 		}
@@ -1454,6 +1446,19 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
+		// Lie l'objet éditable à une règle.
+		public override void EditRulerLink(TextRuler ruler)
+		{
+			if ( this.cellToEdit == -1 )  return;
+			int c = this.cellToEdit%(this.columns+1);
+			int r = this.cellToEdit/(this.columns+1);
+
+			TextLayout textLayout = this.Cell(c,r).TextLayout;
+			TextNavigator textNavigator = this.Cell(c,r).TextNavigator;
+
+			ruler.AttachToText(textLayout, textNavigator);
+		}
+
 		
 		// Gestion d'un événement pendant l'édition.
 		public override bool EditProcessMessage(Message message, Drawing.Point pos)
@@ -1469,7 +1474,6 @@ namespace Epsitec.Common.Pictogram.Data
 			pos = transform.TransformInverse(pos);
 			if ( textNavigator.ProcessMessage(message, pos) )
 			{
-				this.Cell(c,r).TextString.String = textLayout.Text;
 				return true;
 			}
 			else
@@ -1775,14 +1779,8 @@ namespace Epsitec.Common.Pictogram.Data
 			cell.BackColor = new PropertyColor();
 			this.PropertyColor(3).CopyTo(cell.BackColor);
 
-			cell.TextString = new PropertyString();
-			this.PropertyString(4).CopyTo(cell.TextString);
-
-			cell.TextFont = new PropertyFont();
-			this.PropertyFont(5).CopyTo(cell.TextFont);
-
 			cell.TextJustif = new PropertyJustif();
-			this.PropertyJustif(6).CopyTo(cell.TextJustif);
+			this.PropertyJustif(4).CopyTo(cell.TextJustif);
 
 			return cell;
 		}
@@ -1792,6 +1790,8 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			ArrayCell cell = new ArrayCell();
 			cell.Selected = false;
+
+			cell.Content = model.Content;
 
 			cell.LeftLine = new PropertyLine();
 			model.LeftLine.CopyTo(cell.LeftLine);
@@ -1807,12 +1807,6 @@ namespace Epsitec.Common.Pictogram.Data
 
 			cell.BackColor = new PropertyColor();
 			model.BackColor.CopyTo(cell.BackColor);
-
-			cell.TextString = new PropertyString();
-			model.TextString.CopyTo(cell.TextString);
-
-			cell.TextFont = new PropertyFont();
-			model.TextFont.CopyTo(cell.TextFont);
 
 			cell.TextJustif = new PropertyJustif();
 			model.TextJustif.CopyTo(cell.TextJustif);
@@ -2064,12 +2058,6 @@ namespace Epsitec.Common.Pictogram.Data
 			return path;
 		}
 
-		// Retourne la fonte à utiliser.
-		protected Drawing.Font GetFont(int c, int r)
-		{
-			return this.Cell(c,r).TextFont.GetFont();
-		}
-
 		// Retourne les 4 coins d'une cellule en fonction de son orientation.
 		protected void CellCorners(int c, int r, out Drawing.Point pbl, out Drawing.Point pbr, out Drawing.Point ptl, out Drawing.Point ptr)
 		{
@@ -2105,15 +2093,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine le texte d'une cellule.
 		protected void DrawCellText(Drawing.Graphics graphics, IconContext iconContext, int c, int r)
 		{
-			if ( this.Cell(c,r).TextLayout == null )
-			{
-				this.Cell(c,r).TextLayout = new TextLayout();
-				this.Cell(c,r).TextNavigator = new TextNavigator(this.Cell(c,r).TextLayout);
-				this.Cell(c,r).TextLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
-			}
 			TextLayout textLayout = this.Cell(c,r).TextLayout;
-			textLayout.Text = this.Cell(c,r).TextString.String;
-
 			TextNavigator textNavigator = this.Cell(c,r).TextNavigator;
 
 			Drawing.Point p1, p2, p3, p4;
@@ -2124,9 +2104,6 @@ namespace Epsitec.Common.Pictogram.Data
 			size.Width  = Drawing.Point.Distance(p1,p2);
 			size.Height = Drawing.Point.Distance(p1,p3);
 			textLayout.LayoutSize = size;
-
-			textLayout.Font = this.GetFont(c,r);
-			textLayout.FontSize = this.Cell(c,r).TextFont.FontSize;
 
 			JustifVertical   jv = this.Cell(c,r).TextJustif.Vertical;
 			JustifHorizontal jh = this.Cell(c,r).TextJustif.Horizontal;
@@ -2182,8 +2159,7 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 
 			textLayout.ShowLineBreak = edited;
-			Drawing.Color color = iconContext.AdaptColor(this.Cell(c,r).TextFont.FontColor);
-			textLayout.Paint(new Drawing.Point(0,0), graphics, Drawing.Rectangle.Empty, color, Drawing.GlyphPaintStyle.Normal);
+			textLayout.Paint(new Drawing.Point(0,0), graphics);
 
 			if ( edited && textNavigator.Context.CursorTo != -1 )
 			{

@@ -1465,7 +1465,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Sort d'un groupe.
 		public void OutsideGroup()
 		{
-			if ( this.roots.Count <= 2 )  return;
+			if ( this.roots.Count <= 3 )  return;
 			this.Select(null, false, false);
 			AbstractObject obj = this.roots[this.roots.Count-1] as AbstractObject;
 			this.roots.RemoveAt(this.roots.Count-1);
@@ -1475,7 +1475,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Indique si on est à la racine.
 		public bool IsInitialGroup()
 		{
-			return ( this.roots.Count <= 2 );
+			return ( this.roots.Count <= 3 );
 		}
 
 		// Retourne la racine courante.
@@ -1527,8 +1527,8 @@ namespace Epsitec.Common.Pictogram.Data
 		// Adapte les dimensions de tous les groupes parents.
 		public void GroupUpdateParents(ref Drawing.Rectangle bbox)
 		{
-			if ( this.roots.Count <= 2 )  return;
-			for ( int i=this.roots.Count-1 ; i>=2 ; i-- )
+			if ( this.roots.Count <= 3 )  return;
+			for ( int i=this.roots.Count-1 ; i>=3 ; i-- )
 			{
 				ObjectGroup group = this.roots[i] as ObjectGroup;
 				if ( group == null || group.Objects == null || group.Objects.Count == 0 )  continue;

@@ -369,8 +369,6 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 
 			this.textLayout.ShowLineBreak = this.edited;
-			//?Drawing.Color color = iconContext.AdaptColor(this.PropertyFont(5).FontColor);
-			//?this.textLayout.Paint(new Drawing.Point(0,0), graphics, Drawing.Rectangle.Empty, color, Drawing.GlyphPaintStyle.Normal);
 			this.textLayout.Paint(new Drawing.Point(0,0), graphics);
 
 			if ( this.edited && this.textNavigator.Context.CursorTo != -1 )
