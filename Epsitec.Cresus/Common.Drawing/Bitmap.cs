@@ -491,6 +491,153 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public static ImageFormat MapFromMicrosoftImageFormat(System.Drawing.Imaging.ImageFormat format)
+		{
+			if (format == System.Drawing.Imaging.ImageFormat.Bmp)	return ImageFormat.Bmp;
+			if (format == System.Drawing.Imaging.ImageFormat.Gif)	return ImageFormat.Gif;
+			if (format == System.Drawing.Imaging.ImageFormat.Png)	return ImageFormat.Png;
+			if (format == System.Drawing.Imaging.ImageFormat.Tiff)	return ImageFormat.Tiff;
+			if (format == System.Drawing.Imaging.ImageFormat.Jpeg)	return ImageFormat.Jpeg;
+			if (format == System.Drawing.Imaging.ImageFormat.Exif)	return ImageFormat.Exif;
+			if (format == System.Drawing.Imaging.ImageFormat.Icon)	return ImageFormat.WindowsIcon;
+			if (format == System.Drawing.Imaging.ImageFormat.Emf)	return ImageFormat.WindowsEmf;
+			if (format == System.Drawing.Imaging.ImageFormat.Wmf)	return ImageFormat.WindowsWmf;
+			
+			return ImageFormat.Unknown;
+		}
+		
+		public static System.Drawing.Imaging.ImageFormat MapToMicrosoftImageFormat(ImageFormat format)
+		{
+			switch (format)
+			{
+				case ImageFormat.Bmp:			return System.Drawing.Imaging.ImageFormat.Bmp;
+				case ImageFormat.Gif:			return System.Drawing.Imaging.ImageFormat.Gif;
+				case ImageFormat.Png:			return System.Drawing.Imaging.ImageFormat.Png;
+				case ImageFormat.Tiff:			return System.Drawing.Imaging.ImageFormat.Tiff;
+				case ImageFormat.Jpeg:			return System.Drawing.Imaging.ImageFormat.Jpeg;
+				case ImageFormat.Exif:			return System.Drawing.Imaging.ImageFormat.Exif;
+				case ImageFormat.WindowsIcon:	return System.Drawing.Imaging.ImageFormat.Icon;
+				case ImageFormat.WindowsEmf:	return System.Drawing.Imaging.ImageFormat.Emf;
+				case ImageFormat.WindowsWmf:	return System.Drawing.Imaging.ImageFormat.Wmf;
+			}
+			
+			return null;
+		}
+		
+		public static System.Drawing.Imaging.ImageCodecInfo GetCodecInfo(ImageFormat format)
+		{
+			string mime = null;
+			
+			switch (format)
+			{
+				case ImageFormat.Bmp:	mime = "image/bmp";		break;
+				case ImageFormat.Gif:	mime = "image/gif";		break;
+				case ImageFormat.Png:	mime = "image/png";		break;
+				case ImageFormat.Tiff:	mime = "image/tiff";	break;
+				case ImageFormat.Jpeg:	mime = "image/jpeg";	break;
+			}
+			
+			if (mime == null)
+			{
+				return null;
+			}
+			
+			System.Drawing.Imaging.ImageCodecInfo[] encoders = System.Drawing.Imaging.ImageCodecInfo.GetImageEncoders ();
+			
+			for (int i = 0; i < encoders.Length; i++)
+			{
+				if (encoders[i].MimeType == mime)
+				{
+					return encoders[i];
+				}
+			}
+			
+			return null;
+		}
+		
+		public static string[] GetFilenameExtensions(ImageFormat format)
+		{
+			System.Drawing.Imaging.ImageCodecInfo info = Bitmap.GetCodecInfo (format);
+			
+			if (info != null)
+			{
+				return info.FilenameExtension.Split (';');
+			}
+			
+			return null;
+		}
+		
+		public byte[] Save(ImageFormat format, int depth, int quality, ImageCompression compression)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			if (format == ImageFormat.Jpeg)
+			{
+				System.Drawing.Imaging.Encoder          encoder   = System.Drawing.Imaging.Encoder.Quality;
+				System.Drawing.Imaging.EncoderParameter parameter = new System.Drawing.Imaging.EncoderParameter (encoder, (long)(quality));
+				
+				list.Add (parameter);
+			}
+			
+			if (format == ImageFormat.Tiff)
+			{
+				System.Drawing.Imaging.EncoderValue value = System.Drawing.Imaging.EncoderValue.CompressionNone;
+				
+				switch (compression)
+				{
+					case ImageCompression.Lzw:			value = System.Drawing.Imaging.EncoderValue.CompressionLZW;		break;
+					case ImageCompression.FaxGroup3:	value = System.Drawing.Imaging.EncoderValue.CompressionCCITT3;	break;
+					case ImageCompression.FaxGroup4:	value = System.Drawing.Imaging.EncoderValue.CompressionCCITT4;	break;
+					case ImageCompression.Rle:			value = System.Drawing.Imaging.EncoderValue.CompressionRle;		break;
+				}
+				
+				System.Drawing.Imaging.Encoder          encoder   = System.Drawing.Imaging.Encoder.Compression;
+				System.Drawing.Imaging.EncoderParameter parameter = new System.Drawing.Imaging.EncoderParameter (encoder, (long)(value));
+				
+				list.Add (parameter);
+			}
+			
+			if ((format == ImageFormat.Bmp) ||
+				(format == ImageFormat.Png) ||
+				(format == ImageFormat.Tiff))
+			{
+				System.Drawing.Imaging.Encoder          encoder   = System.Drawing.Imaging.Encoder.ColorDepth;
+				System.Drawing.Imaging.EncoderParameter parameter = new System.Drawing.Imaging.EncoderParameter (encoder, (long)(depth));
+				
+				list.Add (parameter);
+			}
+			
+			if (format == ImageFormat.WindowsIcon)
+			{
+				System.IO.MemoryStream stream = new System.IO.MemoryStream ();
+				System.Drawing.Icon icon = System.Drawing.Icon.FromHandle (this.NativeBitmap.GetHicon ());
+				icon.Save (stream);
+				stream.Close ();
+				icon.Dispose ();
+				
+				return stream.ToArray ();
+			}
+			
+			System.Drawing.Imaging.ImageCodecInfo    encoder_info    = Bitmap.GetCodecInfo (format);
+			System.Drawing.Imaging.EncoderParameters encoder_params  = new System.Drawing.Imaging.EncoderParameters (list.Count);
+			
+			for (int i = 0; i < list.Count; i++)
+			{
+				encoder_params.Param[i] = list[i] as System.Drawing.Imaging.EncoderParameter;
+			}
+			
+			if (encoder_info != null)
+			{
+				System.IO.MemoryStream stream = new System.IO.MemoryStream ();
+				this.NativeBitmap.Save (stream, encoder_info, encoder_params);
+				stream.Close ();
+				
+				return stream.ToArray ();
+			}
+			
+			return null;
+		}
+		
 		protected override void Dispose(bool disposing)
 		{
 			System.Diagnostics.Debug.Assert (this.is_disposed == false);
