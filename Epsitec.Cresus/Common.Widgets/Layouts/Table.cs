@@ -316,7 +316,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						}
 					}
 					
-					Drawing.Margins margins = widget.LayoutMargins;
+					Drawing.Margins margins = widget.DockMargins;
 					
 					double x1 = this.verticals[arg1].x_live + margins.Left;
 					double x2 = this.verticals[arg2].x_live - margins.Right;
@@ -447,7 +447,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				for (int j = 0; j < vertical.list.Count; j++)
 				{
 					Widget          widget  = vertical.list[j] as Widget;
-					Drawing.Margins margins = widget.LayoutMargins;
+					Drawing.Margins margins = widget.DockMargins;
 					
 					double next_x = widget.MinSize.Width + vertical.min_x + margins.Left + margins.Right;
 					int    next_i = widget.LayoutArg2 - widget.LayoutArg1 + i;
