@@ -122,6 +122,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		
 		public object ExecuteScalar(System.Data.IDbTransaction transaction)
 		{
 			int count = this.sql_builder.CommandCount;
@@ -129,6 +130,27 @@ namespace Epsitec.Cresus.Database
 			if (count < 1)
 			{
 				return null;
+			}
+			
+			if (transaction == null)
+			{
+				using (transaction = this.db_abstraction.BeginTransaction ())
+				{
+					object value;
+					
+					try
+					{
+						value = this.ExecuteScalar (transaction);
+					}
+					catch
+					{
+						transaction.Rollback ();
+						throw;
+					}
+					
+					transaction.Commit ();
+					return value;
+				}
 			}
 			
 			using (System.Data.IDbCommand command = this.sql_builder.Command)
@@ -284,8 +306,9 @@ namespace Epsitec.Cresus.Database
 				{
 					//	Cherche si une table avec ce nom existe dans la base.
 					
-//					if (this.CountMatchingNamedRows (DbTable.TagTableDef, table.CreateSqlName ()))
+					if (this.CountMatchingNamedRows (transaction, DbTable.TagTableDef, DbColumn.TagName, table.CreateSqlName ()) > 0)
 					{
+						throw new DbException (this.db_access, string.Format ("Table {0} already exists in database with name {1}.", table.Name, table.CreateSqlName ()));
 					}
 					
 					
@@ -302,6 +325,26 @@ namespace Epsitec.Cresus.Database
 				
 				transaction.Commit ();
 			}
+		}
+		
+		public int CountMatchingNamedRows(System.Data.IDbTransaction transaction, string table, string name_column, string value)
+		{
+			SqlSelect query = new SqlSelect ();
+			
+			//	Ce qui est propre à la table :
+			
+			query.Fields.Add ("N", new SqlAggregate (SqlAggregateType.Count, SqlField.CreateAll ()));
+			query.Tables.Add ("T", SqlField.CreateName (table));
+			
+			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (name_column), SqlField.CreateConstant (value, DbRawType.String)));
+			
+			this.sql_builder.SelectData (query);
+			
+			int count;
+			
+			Converter.Convert (this.ExecuteScalar (transaction), out count);
+			
+			return count;
 		}
 		
 		

@@ -44,6 +44,9 @@ namespace Epsitec.Cresus.Database
 			Assertion.Assert (table.InternalKey.Id == 3);
 			Assertion.Assert (table.Columns.Count == 7);
 			
+			Assertion.AssertEquals (0, infrastructure.CountMatchingNamedRows (null, "CR_COLUMN_DEF", "CR_NAME", DbSqlStandard.CreateSimpleSqlName ("MyColumn")));
+			Assertion.AssertEquals (4, infrastructure.CountMatchingNamedRows (null, "CR_COLUMN_DEF", "CR_NAME", "CR_INFO"));
+			
 			//	Vérifie que les statements UPDATE ... lors de la création ont bien passé,
 			//	puis vérifie aussi que l'incrément de l'ID fonctionne correctement.
 			

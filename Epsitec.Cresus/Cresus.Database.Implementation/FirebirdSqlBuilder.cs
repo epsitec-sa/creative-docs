@@ -459,6 +459,11 @@ namespace Epsitec.Cresus.Database.Implementation
 						this.AppendAlias (field);
 						this.buffer.Append (' ');
 						break;
+					case SqlFieldType.Aggregate:
+						this.buffer.Append (field.AsAggregate);
+						this.AppendAlias (field);
+						this.buffer.Append (' ');
+						break;
 					default:
 						this.ThrowError (string.Format ("Unsupported field {0} in SELECT.", field.AsName));
 						break;
