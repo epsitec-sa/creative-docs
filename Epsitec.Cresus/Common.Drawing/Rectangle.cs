@@ -560,6 +560,22 @@ namespace Epsitec.Common.Drawing
 			this.y2 = y2;
 		}
 		
+		public void RoundInflate()
+		{
+			this.x1 = System.Math.Floor (this.x1);
+			this.x2 = System.Math.Ceiling (this.x2);
+			this.y1 = System.Math.Floor (this.y1);
+			this.y2 = System.Math.Ceiling (this.y2);
+		}
+		
+		public void RoundDeflate()
+		{
+			this.x1 = System.Math.Ceiling (this.x1);
+			this.x2 = System.Math.Floor (this.x2);
+			this.y1 = System.Math.Ceiling (this.y1);
+			this.y2 = System.Math.Floor (this.y2);
+		}
+		
 		
 		public static Rectangle FromCorners(double x1, double y1, double x2, double y2)
 		{
