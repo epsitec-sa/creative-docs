@@ -1,4 +1,4 @@
-namespace Epsitec.Cresus.Widgets
+namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// 
@@ -28,7 +28,6 @@ namespace Epsitec.Cresus.Widgets
 			set;
 		}
 #endif
-		
 		
 		public float						Top
 		{
@@ -72,9 +71,35 @@ namespace Epsitec.Cresus.Widgets
 			set { this.SetBounds (this.x1, this.y1, this.x1 + value.Width, this.y1 + value.Height); }
 		}
 		
+		public float						Width
+		{
+			get { return this.x2 - this.x1; }
+			set { this.SetBounds (this.x1, this.y1, this.x1 + value, this.y2); }
+		}
+		
+		public float						Height
+		{
+			get { return this.y2 - this.y1; }
+			set { this.SetBounds (this.x1, this.y1, this.x2, this.y1 + value); }
+		}
+		
+		
 		public ClientInfo					Client
 		{
 			get { return this.client_info; }
+		}
+		
+		
+		public void SetClientAngle(int angle)
+		{
+			this.client_info.SetAngle (angle);
+			this.UpdateClientGeometry ();
+		}
+		
+		public void SetClientZoom(float zoom)
+		{
+			this.client_info.SetZoom (zoom);
+			this.UpdateClientGeometry ();
 		}
 		
 		
@@ -99,22 +124,21 @@ namespace Epsitec.Cresus.Widgets
 		{
 			get;
 		}
-		
+#endif
 		public bool							IsEnabled
 		{
-			get;
+			get { return true; }	//	TODO:
 		}
 		
 		public bool							IsFocused
 		{
-			get;
+			get { return true; }	//	TODO:
 		}
 		
 		public bool							IsVisible
 		{
-			get;
+			get { return true; }	//	TODO:
 		}
-#endif
 
 		
 		public WidgetCollection				Children
@@ -226,7 +250,7 @@ namespace Epsitec.Cresus.Widgets
 				}
 				else
 				{
-					this.Text = value;
+					this.text = value;
 				}
 			}
 		}
@@ -273,8 +297,10 @@ namespace Epsitec.Cresus.Widgets
 		
 		protected virtual Widget FindChild(System.Drawing.PointF point, ChildFindMode mode)
 		{
-			foreach (Widget widget in this.Children)
+			for (int i = 1; i <= this.Children.Count; i++)
 			{
+				Widget widget = this.Children[this.Children.Count - i] as Widget;
+				
 				if (mode != ChildFindMode.All)
 				{
 					if ((mode & ChildFindMode.SkipDisabled) != 0)
@@ -320,6 +346,106 @@ namespace Epsitec.Cresus.Widgets
 			
 			return false;
 		}
+
+		
+		public virtual System.Drawing.PointF MapParentToClient(System.Drawing.PointF point)
+		{
+			float x = point.X - this.x1;
+			float y = point.Y - this.y1;
+			
+			double angle = this.client_info.angle * System.Math.PI / 180.0;
+			float  zoom  = this.client_info.zoom;
+			
+			System.Diagnostics.Debug.Assert (zoom > 0.0f);
+			System.Diagnostics.Debug.Assert ((angle >= 0) && (angle < 360));
+			
+			if (angle != 0)
+			{
+				float sin = (float) System.Math.Sin (angle);
+				float cos = (float) System.Math.Cos (angle);
+				
+				x -= (this.x2 - this.x1) / 2;
+				y -= (this.y2 - this.y1) / 2;
+				
+				float xr = ( x * cos + y * sin) / zoom;
+				float yr = (-x * sin + y * cos) / zoom;
+				
+				x = xr + this.client_info.width / 2;
+				y = yr + this.client_info.height / 2;
+			}
+			else
+			{
+				x /= zoom;
+				y /= zoom;
+			}
+			
+			return new System.Drawing.PointF (x, y);
+		}
+		
+		public virtual System.Drawing.PointF MapClientToParent(System.Drawing.PointF point)
+		{
+			float x = point.X;
+			float y = point.Y;
+			
+			double angle = this.client_info.angle * System.Math.PI / 180.0;
+			float  zoom  = this.client_info.zoom;
+			
+			System.Diagnostics.Debug.Assert (zoom > 0.0f);
+			System.Diagnostics.Debug.Assert ((angle >= 0) && (angle < 360));
+			
+			if (angle != 0)
+			{
+				float sin = (float) System.Math.Sin (angle);
+				float cos = (float) System.Math.Cos (angle);
+				
+				x -= this.client_info.width / 2;
+				y -= this.client_info.height / 2;
+				
+				float xr = (x * cos - y * sin) * zoom;
+				float yr = (x * sin + y * cos) * zoom;
+				
+				x = xr + (this.x2 - this.x1) / 2;
+				y = yr + (this.y2 - this.y1) / 2;
+			}
+			else
+			{
+				x *= zoom;
+				y *= zoom;
+			}
+			
+			return new System.Drawing.PointF (x + this.x1, y + this.y1);
+		}
+
+		public virtual System.Drawing.PointF MapRootToClient(System.Drawing.PointF point)
+		{
+			Widget parent = this.Parent;
+			
+			//	Le plus simple est d'utiliser la récursion, afin de commencer la conversion depuis la
+			//	racine, puis d'enfant en enfant jusqu'au widget final.
+			
+			if (parent != null)
+			{
+				point = parent.MapRootToClient (point);
+			}
+			
+			return this.MapParentToClient (point);
+		}
+		
+		public virtual System.Drawing.PointF MapClientToRoot(System.Drawing.PointF point)
+		{
+			Widget iter = this;
+			
+			//	On a le choix entre une solution récursive et une solution itérative. La version
+			//	itérative devrait être un petit peu plus rapide ici.
+			
+			while (iter != null)
+			{
+				point = iter.MapClientToParent (point);
+				iter = iter.Parent;
+			}
+			
+			return point;
+		}
 		
 		
 		
@@ -347,8 +473,10 @@ namespace Epsitec.Cresus.Widgets
 			
 			try
 			{
-				float dx = this.x2 - this.x1;
-				float dy = this.y2 - this.y1;
+				float zoom = this.client_info.zoom;
+				
+				float dx = (this.x2 - this.x1) / zoom;
+				float dy = (this.y2 - this.y1) / zoom;
 				
 				switch (this.client_info.angle)
 				{
@@ -363,8 +491,9 @@ namespace Epsitec.Cresus.Widgets
 						break;
 					
 					default:
-						float cos = (float) System.Math.Cos (this.client_info.angle);
-						float sin = (float) System.Math.Sin (this.client_info.angle);
+						double angle = this.client_info.angle * System.Math.PI / 180.0;
+						float cos = (float) System.Math.Cos (angle);
+						float sin = (float) System.Math.Sin (angle);
 						this.client_info.SetSize (cos*cos*dx + sin*sin*dy, sin*sin*dx + cos*cos*dy);
 						break;
 				}
@@ -468,6 +597,7 @@ namespace Epsitec.Cresus.Widgets
 			TopAndBottom	= Top + Bottom,
 		}
 		
+		
 		public class ClientInfo
 		{
 			internal ClientInfo()
@@ -484,6 +614,12 @@ namespace Epsitec.Cresus.Widgets
 			{
 				angle = angle % 360;
 				this.angle = (angle < 0) ? (short) (angle + 360) : (short) (angle);
+			}
+			
+			internal void SetZoom(float zoom)
+			{
+				System.Diagnostics.Debug.Assert (zoom > 0.0f);
+				this.zoom = zoom;
 			}
 			
 			public float					Width
@@ -506,9 +642,15 @@ namespace Epsitec.Cresus.Widgets
 				get { return this.angle; }
 			}
 			
+			public float					Zoom
+			{
+				get { return this.zoom; }
+			}
+			
 			internal float					width	= 0.0f;
 			internal float					height	= 0.0f;
 			internal short					angle	= 0;
+			internal float					zoom	= 1.0f;
 		}
 		
 		public class WidgetCollection : System.Collections.IList
@@ -637,7 +779,6 @@ namespace Epsitec.Cresus.Widgets
 		protected class LayoutManager
 		{
 		}
-		
 		
 		protected class LayoutInfo
 		{
