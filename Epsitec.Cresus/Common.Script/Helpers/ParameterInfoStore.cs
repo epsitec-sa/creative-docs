@@ -14,15 +14,28 @@ namespace Epsitec.Common.Script.Helpers
 			this.hash_dir[Source.ParameterDirection.Out.ToString ()]   = Source.ParameterDirection.Out;
 			this.hash_dir[Source.ParameterDirection.InOut.ToString ()] = Source.ParameterDirection.InOut;
 			
+			Types.BooleanType type_boolean = new Types.BooleanType ();
 			Types.IntegerType type_int     = new Types.IntegerType ();
 			Types.DecimalType type_decimal = new Types.DecimalType ();
 			Types.StringType  type_string  = new Types.StringType ();
 			
+			this.hash_type[type_boolean.Name] = type_boolean;
 			this.hash_type[type_int.Name]     = type_int;
 			this.hash_type[type_decimal.Name] = type_decimal;
 			this.hash_type[type_string.Name]  = type_string;
 		}
 		
+		public ParameterInfoStore(Source.ParameterInfo[] infos) : this ()
+		{
+			this.SetContents (infos);
+		}
+		
+		
+		public void IncludeVoidType()
+		{
+			Types.VoidType type = Types.VoidType.Default;
+			this.hash_type[type.Name] = type;
+		}
 		
 		public void SetContents(Source.ParameterInfo[] infos)
 		{
@@ -39,6 +52,48 @@ namespace Epsitec.Common.Script.Helpers
 		}
 		
 		
+		public string GetNameFromType(Types.INamedType type)
+		{
+			return type == null ? "" : type.Name;
+		}
+		
+		public string GetNameFromDirection(Source.ParameterDirection direction)
+		{
+			return direction.ToString ();
+		}
+		
+		public Types.INamedType GetTypeFromName(string name)
+		{
+			return this.hash_type[name] as Types.INamedType;
+		}
+		
+		public Source.ParameterDirection GetDirectionFromName(string name)
+		{
+			if (this.hash_dir.Contains (name))
+			{
+				return (Source.ParameterDirection) this.hash_dir[name];
+			}
+			
+			return Source.ParameterDirection.None;
+		}
+		
+		public void FillTypeNames(System.Collections.IList list)
+		{
+			list.Add (this.GetNameFromType (new Types.BooleanType ()));
+			list.Add (this.GetNameFromType (new Types.IntegerType ()));
+			list.Add (this.GetNameFromType (new Types.DecimalType ()));
+			list.Add (this.GetNameFromType (new Types.StringType ()));
+		}
+		
+		public void FillDirectionNames(System.Collections.IList list)
+		{
+			list.Add (this.GetNameFromDirection (Source.ParameterDirection.In));
+			list.Add (this.GetNameFromDirection (Source.ParameterDirection.Out));
+			list.Add (this.GetNameFromDirection (Source.ParameterDirection.InOut));
+		}
+		
+		
+		#region ITextArrayStore Members
 		public void InsertRows(int row, int num)
 		{
 			this.changing++;
@@ -103,8 +158,8 @@ namespace Epsitec.Common.Script.Helpers
 			
 			Source.ParameterInfo info = this.list[row] as Source.ParameterInfo;
 			
-			string dir  = info.Direction.ToString ();
-			string type = info.Type.Name;
+			string dir  = this.GetNameFromDirection (info.Direction);
+			string type = this.GetNameFromType (info.Type);
 			string name = info.Name;
 			
 			switch (column)
@@ -114,8 +169,8 @@ namespace Epsitec.Common.Script.Helpers
 				case 2: name = value; break;
 			}
 			
-			info.DefineDirection ((Source.ParameterDirection) this.hash_dir[dir]);
-			info.DefineType ((Types.INamedType) this.hash_type[type]);
+			info.DefineDirection (this.GetDirectionFromName (dir));
+			info.DefineType (this.GetTypeFromName (type));
 			info.DefineName (name);
 			
 			this.changing--;
@@ -128,8 +183,8 @@ namespace Epsitec.Common.Script.Helpers
 			
 			switch (column)
 			{
-				case 0: return info.Direction.ToString ();
-				case 1: return info.Type == null ? "" : info.Type.Name;
+				case 0: return this.GetNameFromDirection (info.Direction);
+				case 1: return this.GetNameFromType (info.Type);
 				case 2: return info.Name == null ? "" : info.Name;
 			}
 			
@@ -202,9 +257,7 @@ namespace Epsitec.Common.Script.Helpers
 			
 			return false;
 		}
-		
-		
-		
+		#endregion
 		
 		protected virtual void OnStoreContentsChanged()
 		{
