@@ -152,11 +152,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ArrowButton.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -233,6 +228,11 @@
                 />
                 <File
                     RelPath = "FrameBox.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GlyphButton.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

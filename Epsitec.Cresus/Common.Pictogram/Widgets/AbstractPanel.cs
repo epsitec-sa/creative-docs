@@ -11,7 +11,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	{
 		public AbstractPanel()
 		{
-			this.extendedButton = new ArrowButton(this);
+			this.extendedButton = new GlyphButton(this);
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.GlyphType = GlyphType.ArrowDown;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected string					text;
 		protected bool						isNormalAndExtended = false;
 		protected double					extendedZoneWidth = 15;
-		protected ArrowButton				extendedButton;
+		protected GlyphButton				extendedButton;
 		protected bool						multi = false;
 	}
 }

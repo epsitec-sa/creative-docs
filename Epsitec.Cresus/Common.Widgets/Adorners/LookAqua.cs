@@ -301,19 +301,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				if ( dir == Direction.Down  )  margins.Top    = -10;
 				if ( dir == Direction.Up    )  margins.Bottom = -10;
 
-				if ( dir == Direction.Left || dir == Direction.Right )
-				{
-					if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
-						 (state&WidgetState.Entered) != 0 )   // bouton survolé ?
-					{
-						this.PaintImageButton(graphics, rect, 36, margins);
-					}
-					else
-					{
-						this.PaintImageButton(graphics, rect, 34, margins);
-					}
-				}
-				else
+				if ( dir == Direction.Up || dir == Direction.Down )
 				{
 					if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
 						 (state&WidgetState.Entered) != 0 )   // bouton survolé ?
@@ -323,6 +311,18 @@ namespace Epsitec.Common.Widgets.Adorner
 					else
 					{
 						this.PaintImageButton(graphics, rect, 35, margins);
+					}
+				}
+				else
+				{
+					if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
+						 (state&WidgetState.Entered) != 0 )   // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rect, 36, margins);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, 34, margins);
 					}
 				}
 			}

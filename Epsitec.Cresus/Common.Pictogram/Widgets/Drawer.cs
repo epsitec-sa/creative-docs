@@ -877,7 +877,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.MenuAddItem(list, "Deselect",     "file:images/deselect1.icon",     "Désélectionner tout");
 				this.MenuAddItem(list, "SelectAll",    "file:images/selectall1.icon",    "Tout sélectionner");
 				this.MenuAddItem(list, "SelectInvert", "file:images/selectinvert1.icon", "Inverser la sélection");
-				this.MenuAddItem(list, "SelectMode",   "file:images/selectmode1.icon",   "Sélection partielle");
 				this.MenuAddSep(list);
 				this.MenuAddItem(list, "ZoomMin",      "file:images/zoommin1.icon",      "Zoom minimal");
 				this.MenuAddItem(list, "ZoomDefault",  "file:images/zoomdefault1.icon",  "Zoom 100%");
@@ -887,6 +886,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.MenuAddItem(list, "ZoomAdd",      "file:images/zoomadd1.icon",      "Agrandissement");
 				this.MenuAddSep(list);
 				this.MenuAddItem(list, "Outside",      "file:images/outside1.icon",      "Sortir du groupe");
+				this.MenuAddItem(list, "SelectMode",   "file:images/selectmode1.icon",   "Sélection partielle");
 				this.MenuAddItem(list, "Grid",         "file:images/grid1.icon",         "Grille magnétique");
 			}
 			else

@@ -16,8 +16,8 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.Engageable;
 			this.InternalState |= InternalState.AutoRepeatEngaged;
 
-			this.arrowUp = new ArrowButton(this);
-			this.arrowDown = new ArrowButton(this);
+			this.arrowUp = new GlyphButton(this);
+			this.arrowDown = new GlyphButton(this);
 			this.arrowUp.GlyphType = GlyphType.ArrowUp;
 			this.arrowDown.GlyphType = GlyphType.ArrowDown;
 			this.arrowUp.ButtonStyle = ButtonStyle.Scroller;
@@ -220,12 +220,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public ArrowButton ArrowUp
+		public GlyphButton ArrowUp
 		{
 			get { return this.arrowUp; }
 		}
 		
-		public ArrowButton ArrowDown
+		public GlyphButton ArrowDown
 		{
 			get { return this.arrowDown; }
 		}
@@ -402,7 +402,7 @@ namespace Epsitec.Common.Widgets
 		// Gestion d'un événement lorsqu'un bouton est pressé.
 		private void HandleButton(object sender)
 		{
-			ArrowButton button = sender as ArrowButton;
+			GlyphButton button = sender as GlyphButton;
 
 			if ( button == this.arrowUp )
 			{
@@ -526,8 +526,8 @@ namespace Epsitec.Common.Widgets
 		protected double					position = 0;
 		protected double					buttonStep = 0.1;
 		protected double					pageStep = 0.2;
-		protected ArrowButton				arrowUp;
-		protected ArrowButton				arrowDown;
+		protected GlyphButton				arrowUp;
+		protected GlyphButton				arrowDown;
 		protected bool						mouseDown;
 		protected double					thumbOffset;
 		protected double					pageScroll;

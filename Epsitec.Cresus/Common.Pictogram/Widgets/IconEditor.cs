@@ -112,7 +112,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.MenuAdd(objMenu, @"file:images/deselect1.icon", "Deselect", "Désélectionner tout", "");
 			this.MenuAdd(objMenu, @"file:images/selectall1.icon", "SelectAll", "Tout sélectionner", "");
 			this.MenuAdd(objMenu, @"file:images/selectinvert1.icon", "SelectInvert", "Inverser la sélection", "");
-			this.MenuAdd(objMenu, @"file:images/selectmode1.icon", "SelectMode", "Sélection partielle", "");
 			this.MenuAdd(objMenu, @"", "", "", "");
 			this.MenuAdd(objMenu, @"file:images/orderup1.icon", "OrderUp", "Dessus", "");
 			this.MenuAdd(objMenu, @"file:images/orderdown1.icon", "OrderDown", "Dessous", "");
@@ -136,10 +135,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 			VMenu showMenu = new VMenu();
 			showMenu.Name = "Show";
 			showMenu.Host = this;
+			this.MenuAdd(showMenu, @"file:images/selectmode1.icon", "SelectMode", "Sélection partielle", "");
 			this.MenuAdd(showMenu, @"file:images/grid1.icon", "Grid", "Grille magnétique", "");
 			this.MenuAdd(showMenu, @"file:images/mode1.icon", "Mode", "Tableau des objets", "");
 			this.MenuAdd(showMenu, @"", "", "", "");
-			this.MenuAdd(showMenu, @"file:images/zoom1.icon", "", "Zoom", "");
+			this.MenuAdd(showMenu, @"file:images/zoommenu1.icon", "", "Zoom", "");
 			this.MenuAdd(showMenu, @"", "", "", "");
 			this.MenuAdd(showMenu, @"", "", "Apparence", "");
 			showMenu.AdjustSize();
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.MenuAdd(zoomMenu, @"file:images/zoomsub1.icon", "ZoomSub", "Réduction", "");
 			this.MenuAdd(zoomMenu, @"file:images/zoomadd1.icon", "ZoomAdd", "Agrandissement", "");
 			zoomMenu.AdjustSize();
-			showMenu.Items[3].Submenu = zoomMenu;
+			showMenu.Items[4].Submenu = zoomMenu;
 
 			VMenu lookMenu = new VMenu();
 			lookMenu.Name = "Look";
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.MenuAdd(lookMenu, @"y/n", "SelectLook (this.Name)", name, "", name);
 			}
 			lookMenu.AdjustSize();
-			showMenu.Items[5].Submenu = lookMenu;
+			showMenu.Items[6].Submenu = lookMenu;
 
 			VMenu helpMenu = new VMenu();
 			helpMenu.Name = "Help";
@@ -199,6 +199,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.HToolBarAdd(@"file:images/inside1.icon", "Inside", "Entrer dans le groupe");
 			this.HToolBarAdd(@"file:images/outside1.icon", "Outside", "Sortir du groupe");
 			this.HToolBarAdd("", "", "");
+			this.HToolBarAdd(@"file:images/selectmode1.icon", "SelectMode", "Sélection partielle");
 			this.HToolBarAdd(@"file:images/grid1.icon", "Grid", "Grille magnétique");
 			this.HToolBarAdd(@"file:images/mode1.icon", "Mode", "Tableau des objets");
 			this.HToolBarAdd("", "", "");
@@ -300,7 +301,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.InfoAdd(@"file:images/deselect1.icon", 0, "Deselect", "Désélectionner tout");
 			this.InfoAdd(@"file:images/selectall1.icon", 0, "SelectAll", "Tout sélectionner");
 			this.InfoAdd(@"file:images/selectinvert1.icon", 0, "SelectInvert", "Inverser la sélection");
-			this.InfoAdd(@"file:images/selectmode1.icon", 0, "SelectMode", "Sélection partielle");
 			this.InfoAdd("", 120, "StatusObject", "");
 			this.InfoAdd(@"file:images/zoommin1.icon", 0, "ZoomMin", "Zoom minimal");
 			this.InfoAdd(@"file:images/zoomdefault1.icon", 0, "ZoomDefault", "Zoom 100%");
