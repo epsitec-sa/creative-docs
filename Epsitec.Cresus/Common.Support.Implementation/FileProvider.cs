@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support.Implementation
 {
@@ -178,6 +178,11 @@ namespace Epsitec.Common.Support.Implementation
 			{
 				string full_name   = files[i];
 				string bundle_name = full_name.Substring (start, full_name.Length - strip);
+				
+				if (! RegexFactory.ResourceName.IsMatch (bundle_name))
+				{
+					continue;
+				}
 				
 				if ((type_filter != null) &&
 					(type_filter != "*"))

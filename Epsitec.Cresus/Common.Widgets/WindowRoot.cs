@@ -264,6 +264,11 @@ namespace Epsitec.Common.Widgets
 			this.HandleAdornerChanged ();
 		}
 		
+		internal void NotifyCultureChanged()
+		{
+			this.HandleCultureChanged ();
+		}
+		
 		
 		protected Window							window;
 		protected bool								is_ready;

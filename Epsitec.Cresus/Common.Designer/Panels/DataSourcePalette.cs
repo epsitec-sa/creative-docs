@@ -6,6 +6,8 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Designer.Panels
 {
+	using Representation = Epsitec.Common.UI.Data.Representation;
+	
 	/// <summary>
 	/// La classe DataSourcePalette permet de remplir un panel proposant une liste
 	/// des données utilisables avec DataWidget, pour la construction de la GUI.
@@ -38,6 +40,8 @@ namespace Epsitec.Common.Designer.Panels
 		{
 			this.data_graph.Clear ();
 			this.data_graph.AddGraph (data);
+			
+			this.UpdateDragSources ();
 		}
 		
 		
@@ -61,13 +65,14 @@ namespace Epsitec.Common.Designer.Panels
 			this.data_list.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 			this.data_list.AnchorMargins = new Drawing.Margins (4, 4, 4, 40);
 			this.data_list.AdjustHeight (ScrollAdjustMode.MoveBottom);
+			this.data_list.SelectedIndexChanged += new EventHandler (this.HandleDataListSelectedIndexChanged);
 			
 			Common.UI.Engine.BindWidget (this.data_graph.Root, this.data_list);
 			
-			this.CreateDragSource (typeof (Button), "[ 1 ]", "1", 4+34*0, 133, 32, 32);
-			this.CreateDragSource (typeof (Button), "[ 2 ]", "2", 4+34*1, 133, 32, 32);
-			this.CreateDragSource (typeof (Button), "[ 3 ]", "3", 4+34*2, 133, 32, 32);
-			this.CreateDragSource (typeof (Button), "[ 4 ]", "4", 4+34*3, 133, 32, 32);
+			this.CreateDragSource (Representation.TextField,     typeof (Button), "[ 1 ]", "1", 4+34*0, 133, 32, 32);
+			this.CreateDragSource (Representation.NumericUpDown, typeof (Button), "[ 2 ]", "2", 4+34*1, 133, 32, 32);
+			this.CreateDragSource (Representation.RadioList,     typeof (Button), "[ 3 ]", "3", 4+34*2, 133, 32, 32);
+			this.CreateDragSource (Representation.RadioColumns,  typeof (Button), "[ 4 ]", "4", 4+34*3, 133, 32, 32);
 			
 			Button test = new Button (this.widget);
 			
@@ -76,10 +81,12 @@ namespace Epsitec.Common.Designer.Panels
 			test.Anchor        = AnchorStyles.BottomRight;
 			test.AnchorMargins = new Drawing.Margins (0, 4, 0, 4);
 			test.Clicked      += new MessageEventHandler(this.HandleTestClicked);
+			
+			this.UpdateDragSources ();
 		}
 		
 		
-		protected void CreateDragSource(System.Type type, string text, string name, double x, double y, double dx, double dy)
+		protected void CreateDragSource(Representation representation, System.Type type, string text, string name, double x, double y, double dx, double dy)
 		{
 			Widget             widget = System.Activator.CreateInstance (type) as Widget;
 			Widgets.DragSource source = new Widgets.DragSource (this.widget);
@@ -95,9 +102,36 @@ namespace Epsitec.Common.Designer.Panels
 			source.DragBeginning += new Widgets.DragBeginningEventHandler (this.HandleSourceDragBeginning);
 			source.DragBegin     += new Support.EventHandler (this.HandleSourceDragBegin);
 			source.DragEnd       += new Support.EventHandler (this.HandleSourceDragEnd);
+			
+			this.drag_sources[representation] = source;
 		}
 		
-		protected Common.UI.Widgets.DataWidget CreateDataWidget (Common.UI.Data.Representation mode)
+		protected void UpdateDragSources()
+		{
+			Types.IDataValue data = null;
+			
+			if (this.data_list.SelectedIndex >= 0)
+			{
+				data = this.data_graph.Navigate (this.data_list.SelectedName) as Types.IDataValue;
+			}
+			
+			foreach (Representation mode in this.drag_sources.Keys)
+			{
+				Widget widget = this.drag_sources[mode] as Widget;
+				
+				if ((data != null) &&
+					(Common.UI.Widgets.DataWidget.CheckCompatibility (data, mode)))
+				{
+					widget.SetEnabled (true);
+				}
+				else
+				{
+					widget.SetEnabled (false);
+				}
+			}
+		}
+		
+		protected Common.UI.Widgets.DataWidget CreateDataWidget (Representation mode)
 		{
 			Common.UI.Widgets.DataWidget widget = new Common.UI.Widgets.DataWidget ();
 			
@@ -121,6 +155,7 @@ namespace Epsitec.Common.Designer.Panels
 			widget.Representation = mode;
 			widget.DataSource     = data;
 			widget.Size           = widget.GetBestFitSize ();
+			widget.BindingInfo    = Common.UI.Engine.CreateBindingDefinition (this.data_list.SelectedName);
 			
 			return widget;
 		}
@@ -134,19 +169,19 @@ namespace Epsitec.Common.Designer.Panels
 			switch (name)
 			{
 				case "1":
-					widget = this.CreateDataWidget (Common.UI.Data.Representation.TextField);
+					widget = this.CreateDataWidget (Representation.TextField);
 					break;
 				
 				case "2":
-					widget = this.CreateDataWidget (Common.UI.Data.Representation.NumericUpDown);
+					widget = this.CreateDataWidget (Representation.NumericUpDown);
 					break;
 				
 				case "3":
-					widget = this.CreateDataWidget (Common.UI.Data.Representation.RadioList);
+					widget = this.CreateDataWidget (Representation.RadioList);
 					break;
 				
 				case "4":
-					widget = this.CreateDataWidget (Common.UI.Data.Representation.RadioColumns);
+					widget = this.CreateDataWidget (Representation.RadioColumns);
 					break;
 			}
 			
@@ -194,6 +229,14 @@ namespace Epsitec.Common.Designer.Panels
 			this.data_graph.Add (field);
 		}
 		
+		private void HandleDataListSelectedIndexChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.data_list == sender);
+			
+			this.UpdateDragSources ();
+		}
+		
+		
 		
 		public event Support.EventHandler		DragBegin;
 		public event Support.EventHandler		DragEnd;
@@ -202,5 +245,6 @@ namespace Epsitec.Common.Designer.Panels
 		protected Widgets.DragSource			active_drag_source;
 		protected ScrollList					data_list;
 		protected Common.UI.Data.Record			data_graph;
+		protected System.Collections.Hashtable	drag_sources = new System.Collections.Hashtable ();
 	}
 }

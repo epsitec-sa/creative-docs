@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
@@ -66,6 +66,7 @@ namespace Epsitec.Common.Designer.Panels
 			EditArray.Header     title = new EditArray.Header (this.edit_array);
 			EditArray.Controller ctrl  = new EditArray.Controller (this.edit_array, "Table");
 			
+			this.edit_array.AutoResolveResRef = false;
 			this.edit_array.CommandDispatcher = new Support.CommandDispatcher ("StringEditTable", true);
 			this.edit_array.Anchor            = AnchorStyles.All;
 			this.edit_array.AnchorMargins     = new Drawing.Margins (4, 4, 4, 65);

@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 21/01/2004
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
@@ -1283,25 +1283,10 @@ namespace Epsitec.Common.Support
 				if ((this.type != ResourceFieldType.Data) ||
 					((string)this.data != value))
 				{
-					//	L'appelant doit s'assurer que la valeur passée en entrée est valide d'un point
-					//	de vue XML (balises équilibrées, etc.)
-				
 					this.type = ResourceFieldType.Data;
 					this.data = value;
-				
-					if (value.IndexOf ('<') < 0)
-					{
-						//	Il n'y a aucune balise <>, donc on peut utiliser le texte tel quel :
 					
-						this.xml.InnerXml = value;
-					}
-					else
-					{
-						//	Il y a des balises, il faut donc signaler que la valeur est du XML et
-						//	pas un texte simple :
-					
-						this.xml.InnerXml = "<xml>" + value + "</xml>";
-					}
+					this.xml.InnerText = value;
 					
 					this.parent.OnFieldsChanged ();
 				}

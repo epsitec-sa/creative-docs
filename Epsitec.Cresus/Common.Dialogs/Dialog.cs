@@ -37,7 +37,7 @@ namespace Epsitec.Common.Dialogs
 					}
 					else if (this.window != null)
 					{
-						UI.Engine.BindWidgets (this.data, this.window.Root);
+						this.UpdateWindowBindings ();
 					}
 				}
 			}
@@ -51,6 +51,31 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
+		public bool								IsReady
+		{
+			get
+			{
+				return (this.mode == InternalMode.Dialog);
+			}
+		}
+		
+		public bool								IsLoaded
+		{
+			get
+			{
+				return (this.mode != InternalMode.None);
+			}
+		}
+		
+		
+		public static IDialogDesignerFactory	DesignerFactory
+		{
+			get
+			{
+				Dialog.LoadDesignerFactory ();
+				return Dialog.factory;
+			}
+		}
 		
 		
 		public void Load(string full_name)
@@ -67,6 +92,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				this.designer = Dialog.CreateDesigner ();
 				this.window   = new Widgets.Window ();
+				this.mode     = InternalMode.Design;
 				
 				this.window.Root.Text = "&lt; à créer ... &gt;";
 				
@@ -85,22 +111,46 @@ namespace Epsitec.Common.Dialogs
 				System.Diagnostics.Debug.Assert (root != null);
 				
 				this.window = root.Window;
+				this.mode   = InternalMode.Dialog;
 				
-				if (this.data != null)
-				{
-					UI.Engine.BindWidgets (this.data, root);
-				}
+				this.UpdateWindowBindings ();
 			}
 		}
 		
 		
-		
-		public static IDialogDesignerFactory	DesignerFactory
+		public void ShowWindow()
 		{
-			get
+			if (this.IsReady)
 			{
-				Dialog.LoadDesignerFactory ();
-				return Dialog.factory;
+				this.window.Show ();
+			}
+		}
+		
+		public void ShowDialog()
+		{
+			if (this.IsReady)
+			{
+				this.window.ShowDialog ();
+			}
+		}
+		
+		public void Close()
+		{
+			if (this.IsReady)
+			{
+				this.window.Hide ();
+			}
+		}
+		
+		
+		protected virtual void UpdateWindowBindings()
+		{
+			if (this.window != null)
+			{
+				if (this.data != null)
+				{
+					UI.Engine.BindWidgets (this.data, this.window.Root);
+				}
 			}
 		}
 		
@@ -144,8 +194,17 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
+		protected enum InternalMode
+		{
+			None,
+			Design,
+			Dialog
+		}
+		
+		
 		private static IDialogDesignerFactory	factory;
 		
+		protected InternalMode					mode;
 		protected Types.IDataGraph				data;
 		protected Widgets.Window				window;
 		protected IDialogDesigner				designer;

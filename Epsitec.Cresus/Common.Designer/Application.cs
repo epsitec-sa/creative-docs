@@ -12,6 +12,14 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class Application : Support.ICommandDispatcherHost
 	{
+		static Application()
+		{
+			Epsitec.Common.Widgets.Widget.Initialise ();
+			Epsitec.Common.Pictogram.Engine.Initialise ();
+			
+			ObjectBundler.RegisterAssembly (System.Reflection.Assembly.GetExecutingAssembly ());
+		}
+		
 		public Application()
 		{
 			this.name = "Designer";
@@ -98,9 +106,6 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.WriteLine ("Initialising designer application object.");
 			
 			this.is_initialising = true;
-			
-			Epsitec.Common.Widgets.Widget.Initialise ();
-			Epsitec.Common.Pictogram.Engine.Initialise ();
 			
 			this.CreateMainWindow ();
 			this.RegisterCommands ();

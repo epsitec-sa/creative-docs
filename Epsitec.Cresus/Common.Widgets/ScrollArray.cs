@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 13/02/2004
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
@@ -1770,7 +1770,9 @@ invalid:	row    = -1;
 							this.layouts[row, column] = new TextLayout ();
 						}
 						
-						this.layouts[row, column].Text     = this[row + top, column];
+						string text = this[row + top, column];
+						
+						this.layouts[row, column].Text     = this.AutoResolveResRef ? Support.Resources.ResolveTextRef (text) : text;
 						this.layouts[row, column].Font     = this.DefaultFont;
 						this.layouts[row, column].FontSize = this.DefaultFontSize;
 					}

@@ -876,7 +876,8 @@ namespace Epsitec.Common.Widgets
 						
 						if (this.host.edition_add_rows > 0)
 						{
-							type = typeof (TextFieldMulti);
+							type  = typeof (TextFieldMulti);
+							style = TextFieldStyle.Multi;
 						}
 						
 						if (this.host.InteractionMode == ScrollInteractionMode.Search)

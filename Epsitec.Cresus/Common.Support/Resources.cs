@@ -1,5 +1,5 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
@@ -513,6 +513,41 @@ namespace Epsitec.Common.Support
 			}
 			
 			return data;
+		}
+		
+		
+		public static bool IsTextRef(string text)
+		{
+			if ((text != null) &&
+				(text.StartsWith ("[res:")) &&
+				(text.EndsWith ("]")))
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		
+		public static string CreateTextRef(string id)
+		{
+			return string.Concat ("[res:", id, "]");
+		}
+		
+		public static string ResolveTextRef(string text)
+		{
+			if (Resources.IsTextRef (text))
+			{
+				string res = Resources.GetText (text.Substring (5, text.Length-6));
+				
+				if (res == null)
+				{
+					res = string.Concat (@"<font color=""#ff0000"">", text, "</font>");
+				}
+				
+				return res;
+			}
+			
+			return text;
 		}
 		
 		

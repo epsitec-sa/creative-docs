@@ -24,11 +24,14 @@ namespace Epsitec.Common.Widgets
 		public AbstractTextField()
 		{
 			this.AutoEngage = false;
+			
 			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
 			this.InternalState |= InternalState.AutoDoubleClick;
 			this.InternalState |= InternalState.AutoRepeatEngaged;
+			
+			this.InternalState &= ~ InternalState.AutoResolveResRef;
 			
 			this.ResetCursor();
 			this.MouseCursor = MouseCursor.AsIBeam;

@@ -57,6 +57,7 @@ namespace Epsitec.Common.Widgets
 		AutoMnemonic		= 0x00100000,
 		AutoRepeatEngaged	= 0x00200000,
 		AutoDoubleClick		= 0x00400000,
+		AutoResolveResRef	= 0x00800000,		//	une référence à une ressource [res:...] est remplacée automatiquement
 		
 		PossibleContainer	= 0x01000000,		//	widget peut être la cible d'un drag & drop en mode édition
 		EditionEnabled		= 0x02000000,		//	widget peut être édité
@@ -133,6 +134,7 @@ namespace Epsitec.Common.Widgets
 			this.internal_state |= InternalState.Visible;
 			this.internal_state |= InternalState.AutoCapture;
 			this.internal_state |= InternalState.AutoMnemonic;
+			this.internal_state |= InternalState.AutoResolveResRef;
 			
 			this.widget_state   |= WidgetState.Enabled;
 			
@@ -1273,6 +1275,29 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool									AutoResolveResRef
+		{
+			get
+			{
+				return (this.internal_state & InternalState.AutoResolveResRef) != 0;
+			}
+			set
+			{
+				if (this.AutoResolveResRef != value)
+				{
+					if (value)
+					{
+						this.internal_state |= InternalState.AutoResolveResRef;
+					}
+					else
+					{
+						this.internal_state &= ~InternalState.AutoResolveResRef;
+					}
+				}
+			}
+		}
+		
+		
 		public bool									InheritFocus
 		{
 			get
@@ -1798,7 +1823,7 @@ namespace Epsitec.Common.Widgets
 					return "";
 				}
 				
-				string text = this.text_layout.Text;
+				string text = (Support.Resources.IsTextRef (this.text)) ? this.text : this.text_layout.Text;
 				
 				if (text == null)
 				{
@@ -1812,6 +1837,8 @@ namespace Epsitec.Common.Widgets
 			{
 				if ((value == null) || (value.Length == 0))
 				{
+					this.text = null;
+					
 					if (this.text_layout != null)
 					{
 						this.DisposeTextLayout ();
@@ -1820,13 +1847,24 @@ namespace Epsitec.Common.Widgets
 						this.Invalidate ();
 					}
 				}
-				else if (this.Text != value)
+				else
 				{
-					this.CreateTextLayout ();
-					this.ModifyTextLayout (value);
-					this.OnTextDefined ();
-					this.OnTextChanged ();
-					this.Invalidate ();
+					if (this.text_layout == null)
+					{
+						this.CreateTextLayout ();
+					}
+					
+					string text = this.AutoResolveResRef ? Support.Resources.ResolveTextRef (value) : value;
+					
+					if ((this.text_layout.Text != text) ||
+						(this.text != value))
+					{
+						this.ModifyText (value);
+						this.ModifyTextLayout (text);
+						this.OnTextDefined ();
+						this.OnTextChanged ();
+						this.Invalidate ();
+					}
 				}
 				
 				if (this.AutoMnemonic)
@@ -5200,6 +5238,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void ModifyText(string text)
+		{
+			this.text = text;
+		}
+		
 		protected virtual void ModifyTextLayout(string text)
 		{
 			if (this.text_layout != null)
@@ -5290,6 +5333,21 @@ namespace Epsitec.Common.Widgets
 			this.OnAdornerChanged ();
 		}
 		
+		protected void HandleCultureChanged()
+		{
+			if (Support.Resources.IsTextRef (this.text))
+			{
+				this.Text = this.text;
+			}
+			
+			foreach (Widget child in this.Children)
+			{
+				child.HandleCultureChanged ();
+			}
+			
+			this.OnCultureChanged ();
+		}
+		
 		protected void HandleTextLayoutAnchor(object sender, AnchorEventArgs e)
 		{
 			System.Diagnostics.Debug.Assert (sender == this.text_layout);
@@ -5376,6 +5434,14 @@ namespace Epsitec.Common.Widgets
 			if (this.AdornerChanged != null)
 			{
 				this.AdornerChanged (this);
+			}
+		}
+		
+		protected virtual void OnCultureChanged()
+		{
+			if (this.CultureChanged != null)
+			{
+				this.CultureChanged (this);
 			}
 		}
 		
@@ -5721,6 +5787,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			ChildrenChanged;
 		public event Support.EventHandler			ParentChanged;
 		public event Support.EventHandler			AdornerChanged;
+		public event Support.EventHandler			CultureChanged;
 		public event Support.EventHandler			LayoutChanged;
 		
 		public event Layouts.UpdateEventHandler		LayoutUpdate;
@@ -6301,6 +6368,7 @@ namespace Epsitec.Common.Widgets
 		private string							name;
 		private string							command;
 		private int								index = -1;
+		private string							text;
 		private TextLayout						text_layout;
 		private ContentAlignment				alignment;
 		private int								suspend_counter;

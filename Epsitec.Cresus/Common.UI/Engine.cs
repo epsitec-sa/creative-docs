@@ -258,5 +258,21 @@ namespace Epsitec.Common.UI
 				
 			return Data.Representation.None;
 		}
+		
+		
+		public static string CreateBindingDefinition(string path)
+		{
+			//	Produit le code XML qui permet de définir un "binding" avec une donnée
+			//	correspondant au chemin spécifié. C'est ce code XML qui sera consommé
+			//	par les méthodes BindWidget(...)
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append (@"<bind path=""");
+			buffer.Append (System.Utilities.TextToXml (path));
+			buffer.Append (@"""/>");
+			
+			return buffer.ToString ();
+		}
 	}
 }

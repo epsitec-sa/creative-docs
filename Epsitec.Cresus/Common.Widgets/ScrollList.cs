@@ -415,7 +415,10 @@ namespace Epsitec.Common.Widgets
 						this.textLayouts[i] = new TextLayout();
 						this.textLayouts[i].BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 					}
-					this.textLayouts[i].Text = this.items[i+this.firstLine];
+					
+					string text = this.items[i+this.firstLine];
+					
+					this.textLayouts[i].Text = this.AutoResolveResRef ? Support.Resources.ResolveTextRef (text) : text;
 					this.textLayouts[i].Font = this.DefaultFont;
 					this.textLayouts[i].FontSize = this.DefaultFontSize;
 					this.textLayouts[i].LayoutSize = new Drawing.Size(this.GetTextWidth(), this.lineHeight);

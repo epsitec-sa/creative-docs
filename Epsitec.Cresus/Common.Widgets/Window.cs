@@ -70,10 +70,17 @@ namespace Epsitec.Common.Widgets
 				{
 					WindowRoot root = target.Root;
 					
-					if (reason == InvalidateReason.AdornerChanged)
+					switch (reason)
 					{
-						root.NotifyAdornerChanged ();
+						case InvalidateReason.AdornerChanged:
+							root.NotifyAdornerChanged ();
+							break;
+						
+						case InvalidateReason.CultureChanged:
+							root.NotifyCultureChanged ();
+							break;
 					}
+					
 					
 					root.Invalidate ();
 					
@@ -1482,7 +1489,8 @@ namespace Epsitec.Common.Widgets
 		public enum InvalidateReason
 		{
 			Generic,
-			AdornerChanged
+			AdornerChanged,
+			CultureChanged
 		}
 		
 		

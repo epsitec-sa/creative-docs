@@ -138,6 +138,16 @@
                     Project = "{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Common.UI"
+                    Project = "{BDF75452-AAB1-4E62-82D5-AE23F35C6319}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Common.Types"
+                    Project = "{8960D1EA-3B82-49A1-9D44-F92F467209FF}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
