@@ -238,11 +238,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Widgets\ButtonGraphics.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Widgets\Drawer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
