@@ -103,7 +103,7 @@ namespace Epsitec.Common.Support
 		private static bool		register_window_cancel = true;
 		private Widgets.Window	test_window;
 		
-		private void HandleCommandCancel(object sender, CommandEventArgs e)
+		private void HandleCommandCancel(CommandDispatcher sender, CommandEventArgs e)
 		{
 			if (this.test_window != null)
 			{
