@@ -46,9 +46,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public override Drawing.Rectangle GetPaintBounds()
+		public override Drawing.Rectangle GetShapeBounds()
 		{
-			Drawing.Rectangle rect = base.GetPaintBounds();
+			Drawing.Rectangle rect = base.GetShapeBounds();
 			
 			if ( this.textLayout != null )
 			{
