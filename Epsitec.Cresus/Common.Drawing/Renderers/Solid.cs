@@ -31,7 +31,10 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		public void Clear(Color color)
 		{
-			this.Clear (color.R, color.G, color.B, color.A);
+			if (color.IsValid)
+			{
+				this.Clear (color.R, color.G, color.B, color.A);
+			}
 		}
 		
 		public void Clear(double r, double g, double b)
@@ -48,7 +51,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		{
 			if (color.IsEmpty)
 			{
-					this.SetColor (0, 0, 0, 0);
+				this.SetColor (0, 0, 0, 0);
 			}
 			else
 			{

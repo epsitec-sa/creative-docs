@@ -84,6 +84,11 @@ namespace Epsitec.Common.Drawing
 			get { return this.a == 0.0; }
 		}
 		
+		public bool						IsVisible
+		{
+			get { return !this.is_empty && (this.a != 0.0); }
+		}
+		
 		public bool						IsInRange
 		{
 			get
