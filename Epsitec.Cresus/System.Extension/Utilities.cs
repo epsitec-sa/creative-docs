@@ -191,8 +191,6 @@ namespace System
 			text = text.Replace (@">",  "&gt;");
 			text = text.Replace (@"""", "&quot;");
 			text = text.Replace (@"'",  "&apos;");
-			text = text.Replace ("\u00A0", "&#160;");
-			text = text.Replace ("\u2014", "&#8212;");
 			
 			return text;
 		}
@@ -231,11 +229,18 @@ namespace System
 					case "&amp;":	code = '&';			break;
 					case "&quot;":	code = '"';			break;
 					case "&apos;":	code = '\'';		break;
-					case "&#160;":	code = (char)160;	break;
-					case "&#8212;":	code = (char)8212;	break;
 					
 					default:
-						throw new System.FormatException (string.Format ("Unrecognized entity '{0}'.", entity));
+						if (entity.StartsWith ("&#"))
+						{
+							entity = entity.Substring (2, entity.Length - 3);
+							code   = (char) System.Int32.Parse (entity, System.Globalization.CultureInfo.InvariantCulture);
+						}
+						else
+						{
+							throw new System.FormatException (string.Format ("Unrecognized entity '{0}'.", entity));
+						}
+						break;
 				}
 				
 				offset += length;

@@ -172,7 +172,7 @@ namespace System
 		
 		[Test] public void CheckTextToXml()
 		{
-			Assertion.AssertEquals ("&lt;#&apos;&quot;&gt;&#160;&#8212;x", Utilities.TextToXml ("<#'\">\u00A0\u2014x"));
+			Assertion.AssertEquals ("&lt;#&apos;&quot;&gt;\u00A0\u2014x", Utilities.TextToXml ("<#'\">\u00A0\u2014x"));
 		}
 		
 		[Test] public void CheckXmlToText()
