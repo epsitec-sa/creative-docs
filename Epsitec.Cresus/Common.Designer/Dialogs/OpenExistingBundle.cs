@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : en chantier/PA
+
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using System.Globalization;
@@ -55,7 +58,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			
 			Support.ValidationRule rule = new ValidationRule ("name");
 			
-			rule.Validators.Add (new Widgets.Validators.SelectionValidator (this.list));
+			rule.Validators.Add (new Epsitec.Common.Widgets.Validators.SelectionValidator (this.list));
 			rule.CommandStates.Add ("ValidateDialog");
 			
 			this.private_dispatcher.Validators.Add (rule);
