@@ -36,35 +36,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				this.DetachPanel (this.panel);
-				
-				this.panel = null;
-				
-				this.h_scroller.ValueChanged -= new EventHandler (this.HandleHScrollerValueChanged);
-				this.v_scroller.ValueChanged -= new EventHandler (this.HandleVScrollerValueChanged);
-				
-				this.h_scroller.Dispose ();
-				this.v_scroller.Dispose ();
-				
-				this.h_scroller = null;
-				this.v_scroller = null;
-			}
-			
-			base.Dispose (disposing);
-		}
-
-		protected override void UpdateClientGeometry()
-		{
-			base.UpdateClientGeometry();
-			this.UpdateGeometry ();
-		}
-		
-		
-		
 		public Panel					Panel
 		{
 			get
@@ -90,6 +61,34 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 			}
+		}
+		
+		
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.DetachPanel (this.panel);
+				
+				this.panel = null;
+				
+				this.h_scroller.ValueChanged -= new EventHandler (this.HandleHScrollerValueChanged);
+				this.v_scroller.ValueChanged -= new EventHandler (this.HandleVScrollerValueChanged);
+				
+				this.h_scroller.Dispose ();
+				this.v_scroller.Dispose ();
+				
+				this.h_scroller = null;
+				this.v_scroller = null;
+			}
+			
+			base.Dispose (disposing);
+		}
+
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry();
+			this.UpdateGeometry ();
 		}
 		
 		
@@ -310,15 +309,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		
 		protected Panel					panel;
-		protected Drawing.Rectangle		panel_aperture;
-		protected Drawing.Size			panel_size;
-		protected Drawing.Point			panel_offset;
+		protected Drawing.Rectangle		panel_aperture;				//	ouverture par laquelle on voit le panel
+		protected Drawing.Size			panel_size;					//	taille du panel
+		protected Drawing.Point			panel_offset;				//	offset du panel, dérivé de la position des ascenceurs
 		
 		protected VScroller				v_scroller;
-		protected double				v_scroller_value;
+		protected double				v_scroller_value;			//	dernière position de l'ascenceur
 		protected HScroller				h_scroller;
-		protected double				h_scroller_value;
+		protected double				h_scroller_value;			//	dernière position de l'ascenceur
 		
 		protected const double			SmallScrollPixels  = 5;
 		protected const double			LargeScrollPercent = 50;
