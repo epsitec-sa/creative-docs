@@ -499,6 +499,15 @@ namespace Epsitec.Common.Widgets
 			get { return this.window; }
 		}
 		
+		public object							PlatformWindowObject
+		{
+			get
+			{
+				return this.window;
+			}
+		}
+		
+		
 		public Drawing.Point					WindowLocation
 		{
 			get { return this.window.WindowLocation; }
