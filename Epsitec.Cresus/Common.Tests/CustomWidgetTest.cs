@@ -38,6 +38,8 @@ namespace Epsitec.Common.Tests
 	{
 		public CustomWidget()
 		{
+			this.internal_state |= InternalState.AutoFocus;
+			this.internal_state |= InternalState.Focusable;
 		}
 		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
@@ -63,7 +65,10 @@ namespace Epsitec.Common.Tests
 			path.CurveTo (0, 0, 5, 0);
 			path.Close ();
 			
-			graphics.Solid.Color = Color.FromName ("White");
+			Color color_text = this.IsFocused ? Color.FromRGB (0.0, 0.0, 0.5) : Color.FromRGB (0.0, 0.0, 0.0);
+			Color color_back = this.IsFocused ? Color.FromRGB (0.8, 0.8, 1.0) : Color.FromRGB (1.0, 1.0, 1.0);
+			
+			graphics.Solid.Color = color_back;
 			graphics.Rasterizer.AddSurface (path);
 			graphics.RenderSolid ();
 			
@@ -73,7 +78,7 @@ namespace Epsitec.Common.Tests
 			Font   font = Font.GetFont ("Tahoma", "Regular");
 			double size = dy * 0.8;
 			
-			graphics.Solid.Color = Color.FromName ("Black");
+			graphics.Solid.Color = color_text;
 			graphics.AddText (x, y, this.Text, font, size);
 			graphics.Rasterizer.AddOutline (path, 0.6);
 			graphics.RenderSolid ();
@@ -90,17 +95,51 @@ namespace Epsitec.Common.Tests
 		
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			if (message.Type == MessageType.MouseEnter)
+			switch (message.Type)
 			{
-				this.highlight = true;
-				this.Invalidate ();
+				case MessageType.MouseEnter:
+					this.highlight = true;
+					this.Invalidate ();
+					break;
+				
+				case MessageType.MouseDown:
+					break;
+				
+				case MessageType.MouseUp:
+					break;
+				
+				case MessageType.MouseLeave:
+					this.Invalidate ();
+					this.highlight = false;
+					break;
+				
+				case MessageType.KeyPress:
+					System.Diagnostics.Debug.WriteLine ("Key pressed: " + message.KeyChar + " in " + this.Name);
+					
+					if (message.IsAltPressed)
+					{
+						return;
+					}
+					if ((message.IsCtrlPressed == false) &&
+						(message.KeyCode == 27))
+					{
+						this.SetFocus (false);
+					}
+					
+					break;
 			}
-			else if (message.Type == MessageType.MouseLeave)
-			{
-				this.Invalidate ();
-				this.highlight = false;
-			}
+			
+			message.Consumer = this;
 		}
+		
+		protected override bool ProcessShortcut(Shortcut shortcut)
+		{
+			System.Diagnostics.Debug.WriteLine ("Shortcut pressed: " + shortcut.ToString () + " in " + this.Name);
+			
+			return base.ProcessShortcut (shortcut);
+		}
+		
+		
 		
 		protected bool					highlight;
 	}

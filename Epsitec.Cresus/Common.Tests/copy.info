@@ -1,0 +1,9 @@
+# First of all, make sure that the folder exist
+
+bin\Debug
+bin\Release
+
+# Then, copy the DLL files
+
+bin\Debug\AGG-Wrapper.dll
+bin\Release\AGG-Wrapper.dll

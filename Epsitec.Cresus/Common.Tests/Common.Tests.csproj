@@ -105,7 +105,7 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
             </References>
@@ -121,6 +121,10 @@
                     RelPath = "ColorTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "copy.info"
+                    BuildAction = "None"
                 />
                 <File
                     RelPath = "CustomWidgetTest.cs"
