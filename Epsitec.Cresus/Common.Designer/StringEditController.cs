@@ -81,12 +81,27 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		
 		protected class Store : Support.Data.ITextArrayStore
 		{
 			public Store(StringEditController controller, ResourceBundle bundle)
 			{
 				this.bundle     = bundle;
 				this.controller = controller;
+				
+				this.bundle.FieldsChanged += new Epsitec.Common.Support.EventHandler (this.HandleBundleFieldsChanged);
+			}
+			
+			
+			private void HandleBundleFieldsChanged(object sender)
+			{
+				if (this.changing == 0)
+				{
+					if (this.StoreChanged != null)
+					{
+						this.StoreChanged (this);
+					}
+				}
 			}
 			
 			
@@ -94,6 +109,12 @@ namespace Epsitec.Common.Designer
 			public void InsertRows(int row, int num)
 			{
 				// TODO:  Add TextBundleArrayStore.InsertRows implementation
+				
+				if (row == this.CountBundleFields)
+				{
+					ResourceBundle.Field field = this.bundle.CreateEmptyField (ResourceFieldType.Data);
+					this.bundle.Add (field);
+				}
 			}
 			
 			public void RemoveRows(int row, int num)
@@ -103,6 +124,11 @@ namespace Epsitec.Common.Designer
 			
 			public string GetCellText(int row, int column)
 			{
+				if (row == this.CountBundleFields)
+				{
+					return "";
+				}
+				
 				ResourceBundle.Field field = this.bundle[row];
 				
 				switch (column)
@@ -118,16 +144,39 @@ namespace Epsitec.Common.Designer
 			
 			public void SetCellText(int row, int column, string value)
 			{
-				ResourceBundle.Field field = this.bundle[row];
-				
-				switch (column)
+				if (row == this.CountBundleFields)
 				{
-					case 0:
-						field.SetName (TextLayout.ConvertToSimpleText (value));
-						break;
-					case 1:
-						field.SetStringValue (value);
-						break;
+					switch (column)
+					{
+						case 0:
+							this.col_0_cache = value;
+							break;
+						case 1:
+							this.InsertRows (row, 1);
+							this.changing++;
+							this.SetCellText (row, 0, this.col_0_cache);
+							this.SetCellText (row, 1, value);
+							this.changing--;
+							break;
+					}
+				}
+				else
+				{
+					this.changing++;
+					
+					ResourceBundle.Field field = this.bundle[row];
+					
+					switch (column)
+					{
+						case 0:
+							field.SetName (TextLayout.ConvertToSimpleText (value));
+							break;
+						case 1:
+							field.SetStringValue (value);
+							break;
+					}
+					
+					this.changing--;
 				}
 			}
 			
@@ -140,6 +189,8 @@ namespace Epsitec.Common.Designer
 			{
 				return this.CountBundleFields + 1;
 			}
+			
+			public event Support.EventHandler	StoreChanged;
 			#endregion
 			
 			public int							CountBundleFields
@@ -158,6 +209,8 @@ namespace Epsitec.Common.Designer
 			
 			protected ResourceBundle			bundle;
 			protected StringEditController		controller;
+			protected string					col_0_cache;
+			protected int						changing;
 		}
 		
 		
@@ -198,15 +251,22 @@ namespace Epsitec.Common.Designer
 		
 		[Command ("CreateStringBundle")] void CommandCreateStringBundle(CommandDispatcher d, CommandEventArgs e)
 		{
-			if (e.CommandArgs.Length != 1)
+			if (e.CommandArgs.Length == 0)
+			{
+				Dialogs.BundleName dialog = new Dialogs.BundleName ("CreateStringBundle (\"{0}\")", this.dispatcher);
+				dialog.Show ();
+			}
+			else if (e.CommandArgs.Length == 1)
+			{
+				this.AttachNewBundle (e.CommandArgs[0], ResourceLevel.Default);
+				
+				this.tab_book.ActivePageIndex = this.bundles.Count - 1;
+				this.tab_book.Invalidate ();
+			}
+			else
 			{
 				throw new System.InvalidOperationException (string.Format ("Command {0} requires one argument.", e.CommandName));
 			}
-			
-			this.AttachNewBundle (e.CommandArgs[0], ResourceLevel.Default);
-			
-			this.tab_book.ActivePageIndex = this.bundles.Count - 1;
-			this.tab_book.Invalidate ();
 		}
 		
 		

@@ -15,6 +15,7 @@ namespace Epsitec.Common.Designer.Panels
 			this.store = store;
 		}
 		
+		
 		public EditArray						EditArray
 		{
 			get
@@ -52,6 +53,16 @@ namespace Epsitec.Common.Designer.Panels
 			this.edit_array.SetHeaderText (0, "Key");
 			this.edit_array.SetHeaderText (1, "Value");
 			this.edit_array.TextArrayStore = this.store;
+			
+			this.edit_array.DoubleClicked += new MessageEventHandler (this.HandleEditArrayDoubleClicked);
+		}
+		
+		private void HandleEditArrayDoubleClicked(object sender, MessageEventArgs e)
+		{
+			int row, column;
+			
+			this.edit_array.HitTestTable (e.Point, out row, out column);
+			this.edit_array.StartEdition (row, column);
 		}
 		
 		
