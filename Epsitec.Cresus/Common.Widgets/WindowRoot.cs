@@ -9,6 +9,7 @@ namespace Epsitec.Common.Widgets
 		protected WindowRoot()
 		{
 			this.InternalState |= InternalState.PossibleContainer;
+			this.InternalState |= InternalState.AutoDoubleClick;
 		}
 		
 		

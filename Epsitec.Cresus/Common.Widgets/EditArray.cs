@@ -57,9 +57,9 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void CancelEdition(bool finished)
 		{
-			if (this.EditionIndex > -1)
+			if (this.edit_active > -1)
 			{
-				string[] values = this.GetRowTexts (this.edition_row);
+				string[] values = this.GetRowTexts (this.edit_active);
 				
 				for (int i = 0; i < this.max_columns; i++)
 				{
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void ValidateEdition(bool finished)
 		{
-			if (this.EditionIndex > -1)
+			if (this.edit_active > -1)
 			{
 				string[] values = new string[this.edit_widgets.Length];
 				
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateScrollView ();
 			
-			Drawing.Rectangle bounds = this.GetRowBounds (this.edition_row);
+			Drawing.Rectangle bounds = this.GetRowBounds (this.EditionIndex);
 			
 			if ((this.edit_bounds != bounds) ||
 				(this.edit_offset != this.offset) ||
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Widgets
 					
 					for (int i = 0; i < this.max_columns; i++)
 					{
-						Drawing.Rectangle cell = this.GetUnclippedCellBounds (this.edition_row, i);
+						Drawing.Rectangle cell = this.GetUnclippedCellBounds (this.EditionIndex, i);
 						
 						if (cell.IsValid)
 						{
@@ -195,22 +195,22 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnEditionIndexChanged ();
 			
-			if (this.edition_row != this.edit_active)
+			if (this.EditionIndex != this.edit_active)
 			{
 				this.ValidateEdition (false);
-				this.edit_active = this.edition_row;
+				this.edit_active = this.EditionIndex;
 				this.ReloadEdition ();
 			}
 		}
 		
 		protected bool MoveEditionToLine(int offset)
 		{
-			int row = this.edition_row + offset;
+			int row = this.EditionIndex + offset;
 			
 			row = System.Math.Min (row, this.max_rows-1);
 			row = System.Math.Max (row, 0);
 			
-			if (this.edition_row != row)
+			if (this.EditionIndex != row)
 			{
 				this.EditionIndex = row;
 				return true;
@@ -224,13 +224,14 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget widget = sender as Widget;
 			
-			int row    = this.edition_row;
+			int row    = this.EditionIndex;
 			int column = widget.Index;
 			
 			this.ShowCell (ScrollArrayShowMode.Extremity, row, column);
 		}
 		
 		
+		[Support.SuppressBundleSupport]
 		protected class EditWidget : Widget
 		{
 			public EditWidget(EditArray host)

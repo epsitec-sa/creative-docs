@@ -70,9 +70,10 @@ namespace Epsitec.Common.Widgets
 		AutoToggle			= 0x00080000,
 		AutoMnemonic		= 0x00100000,
 		AutoRepeatEngaged	= 0x00200000,
+		AutoDoubleClick		= 0x00400000,
 		
 		PossibleContainer	= 0x01000000,		//	widget peut être la cible d'un drag & drop en mode édition
-		EditionDisabled		= 0x02000000,		//	widget ne peut en aucun cas être édité
+		EditionEnabled		= 0x02000000,		//	widget peut être édité
 		
 		DebugActive			= 0x80000000		//	widget marqué pour le debug
 	}
@@ -759,23 +760,35 @@ namespace Epsitec.Common.Widgets
 			get { return (this.internal_state & InternalState.Embedded) != 0; }
 		}
 		
-		public bool									IsEditionDisabled
+		public bool									IsEditionEnabled
 		{
 			get
 			{
-				return (this.internal_state & InternalState.EditionDisabled) != 0;
+				if ((this.internal_state & InternalState.EditionEnabled) != 0)
+				{
+					return true;
+				}
+				
+				if (this.parent != null)
+				{
+					return this.parent.IsEditionEnabled;
+				}
+				
+				return false;
 			}
 			set
 			{
-				if (this.IsEditionDisabled != value)
+				bool enabled = (this.internal_state & InternalState.EditionEnabled) != 0;
+				
+				if (enabled != value)
 				{
 					if (value)
 					{
-						this.internal_state |= InternalState.EditionDisabled;
+						this.internal_state |= InternalState.EditionEnabled;
 					}
 					else
 					{
-						this.internal_state &= ~InternalState.EditionDisabled;
+						this.internal_state &= ~InternalState.EditionEnabled;
 					}
 				}
 			}
@@ -3990,6 +4003,11 @@ namespace Epsitec.Common.Widgets
 						if (Message.State.IsSameWindowAsButtonDown == false)
 						{
 							return;
+						}
+						
+						if ((this.internal_state & InternalState.AutoDoubleClick) == 0)
+						{
+							Message.ResetButtonDownCounter ();
 						}
 						
 						//	Le bouton a été relâché. Ceci génère l'événement 'Released' pour signaler

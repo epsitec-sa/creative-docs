@@ -27,6 +27,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= InternalState.AutoDoubleClick;
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			
