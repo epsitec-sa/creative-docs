@@ -32,6 +32,13 @@ namespace Epsitec.Common.Widgets
 			//	contenu n'empiète pas sur le titre, ni sur le cadre...
 		}
 
+		public override Drawing.Rectangle GetShapeBounds()
+		{
+			Drawing.Rectangle rect = base.GetShapeBounds();
+			rect.Inflate(Widgets.Adorner.Factory.Active.GeometryGroupShapeBounds);
+			return rect;
+		}
+
 		// Dessine le texte.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{

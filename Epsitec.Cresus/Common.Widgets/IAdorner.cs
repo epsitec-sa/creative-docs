@@ -69,6 +69,9 @@ namespace Epsitec.Common.Widgets
 		void PaintSeparatorBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir, bool optional);
 		void PaintSeparatorForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir, bool optional);
 
+		void PaintPaneButtonBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir);
+		void PaintPaneButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir);
+
 		void PaintStatusBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintStatusForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintStatusItemBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
@@ -95,7 +98,11 @@ namespace Epsitec.Common.Widgets
 		Drawing.Color ColorControl { get; }
 		Drawing.Color ColorWindow { get; }
 		Drawing.Color ColorBorder { get; }
+		Drawing.Color ColorDisabled { get; }
 
+		Drawing.Margins GeometryMenuMargins { get; }
+		Drawing.Margins GeometryRadioShapeBounds { get; }
+		Drawing.Margins GeometryGroupShapeBounds { get; }
 		double GeometryComboRightMargin { get; }
 		double GeometryComboBottomMargin { get; }
 		double GeometryComboTopMargin { get; }
@@ -105,6 +112,10 @@ namespace Epsitec.Common.Widgets
 		double GeometryScrollerRightMargin { get; }
 		double GeometryScrollerBottomMargin { get; }
 		double GeometryScrollerTopMargin { get; }
+		double GeometryScrollListLeftMargin { get; }
+		double GeometryScrollListRightMargin { get; }
+		double GeometrySliderLeftMargin { get; }
+		double GeometrySliderRightMargin { get; }
 	}
 	
 	public enum Direction

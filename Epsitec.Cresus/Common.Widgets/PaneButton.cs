@@ -135,44 +135,10 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			WidgetState state = this.PaintState;
+			Direction dir = (this.paneButtonStyle == PaneButtonStyle.Vertical) ? Direction.Down : Direction.Right;
 
-			double x, y;
-			if ( this.paneButtonStyle == PaneButtonStyle.Vertical )
-			{
-				x = rect.Left+0.5;
-				graphics.AddLine(x, rect.Bottom, x, rect.Top);
-				graphics.RenderSolid(color[0]);
-
-				x = rect.Left+1.5;
-				graphics.AddLine(x, rect.Bottom, x, rect.Top);
-				graphics.RenderSolid(color[1]);
-
-				x = rect.Right-1.5;
-				graphics.AddLine(x, rect.Bottom, x, rect.Top);
-				graphics.RenderSolid(color[2]);
-
-				x = rect.Right-0.5;
-				graphics.AddLine(x, rect.Bottom, x, rect.Top);
-				graphics.RenderSolid(color[3]);
-			}
-			else
-			{
-				y = rect.Top-0.5;
-				graphics.AddLine(rect.Left, y, rect.Right, y);
-				graphics.RenderSolid(color[0]);
-
-				y = rect.Top-1.5;
-				graphics.AddLine(rect.Left, y, rect.Right, y);
-				graphics.RenderSolid(color[1]);
-
-				y = rect.Bottom+1.5;
-				graphics.AddLine(rect.Left, y, rect.Right, y);
-				graphics.RenderSolid(color[2]);
-
-				y = rect.Bottom+0.5;
-				graphics.AddLine(rect.Left, y, rect.Right, y);
-				graphics.RenderSolid(color[3]);
-			}
+			adorner.PaintPaneButtonBackground(graphics, rect, state, dir);
 		}
 		
 		public event MessageEventHandler	DragStarted;
