@@ -1071,23 +1071,24 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public void ExecuteSilent(DbTransaction transaction)
+		public int ExecuteSilent(DbTransaction transaction)
 		{
 			if (transaction == null)
 			{
 				using (transaction = this.BeginTransaction ())
 				{
-					this.ExecuteSilent (transaction, transaction.SqlBuilder);
+					int result = this.ExecuteSilent (transaction, transaction.SqlBuilder);
 					transaction.Commit ();
+					return result;
 				}
 			}
 			else
 			{
-				this.ExecuteSilent (transaction, transaction.SqlBuilder);
+				return this.ExecuteSilent (transaction, transaction.SqlBuilder);
 			}
 		}
 		
-		public void ExecuteSilent(DbTransaction transaction, ISqlBuilder builder)
+		public int ExecuteSilent(DbTransaction transaction, ISqlBuilder builder)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (builder != null);
@@ -1096,12 +1097,14 @@ namespace Epsitec.Cresus.Database
 			
 			if (count < 1)
 			{
-				return;
+				return 0;
 			}
 			
 			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
 			{
-				this.sql_engine.Execute (command, DbCommandType.Silent, count);
+				int result;
+				this.sql_engine.Execute (command, DbCommandType.Silent, count, out result);
+				return result;
 			}
 		}
 		

@@ -59,6 +59,8 @@ namespace Epsitec.Cresus.Requests
 				this.DefineCurrentLogId ();
 				this.DefineCurrentTransaction (transaction);
 				
+				this.expected_rows_changed = 0;
+				
 				request.Execute (this);
 				
 #if false
@@ -66,7 +68,12 @@ namespace Epsitec.Cresus.Requests
 				DbRichCommand.DebugDumpCommand (this.CurrentSqlBuilder.Command);
 #endif
 				
-				this.infrastructure.ExecuteSilent (transaction, this.CurrentSqlBuilder);
+				int rows_changed = this.infrastructure.ExecuteSilent (transaction, this.CurrentSqlBuilder);
+				
+				if (rows_changed != this.expected_rows_changed)
+				{
+					throw new Database.Exceptions.ConflictingException (string.Format ("Request execution expected to update {0} rows; updated {1} instead.", this.expected_rows_changed, rows_changed));
+				}
 			}
 			finally
 			{
@@ -96,6 +103,8 @@ namespace Epsitec.Cresus.Requests
 			
 			this.PrepareNewCommand ();
 			this.CurrentSqlBuilder.InsertData (table.CreateSqlName (), sql_fields);
+			
+			this.expected_rows_changed++;
 		}
 		
 		public void GenerateUpdateDataCommand(string table_name, string[] cond_columns, object[] cond_values, string[] data_columns, object[] data_values)
@@ -136,6 +145,8 @@ namespace Epsitec.Cresus.Requests
 			
 			this.PrepareNewCommand ();
 			this.CurrentSqlBuilder.UpdateData (table.CreateSqlName (), sql_data_fields, sql_cond_fields);
+			
+			this.expected_rows_changed++;
 		}
 		
 		
@@ -274,5 +285,6 @@ namespace Epsitec.Cresus.Requests
 		private DbTransaction					current_transaction;
 		private ISqlBuilder						current_builder;
 		private int								pending_commands;
+		private int								expected_rows_changed;
 	}
 }

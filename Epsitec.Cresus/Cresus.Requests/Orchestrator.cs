@@ -610,7 +610,10 @@ namespace Epsitec.Cresus.Requests
 			
 			//	Maintenant que le serveur n'a plus aucune trace de nos requêtes, on peut
 			//	marquer la requête actuelle comme Conflicting.
-			//
+			
+			//	TODO: demander une réplication "Pull" pour se remettre dans l'état avant
+			//	l'exécution de la requête en local.
+			
 			//	Si cette opération échoue, on se retrouve avec une requête dans l'état
 			//	ConflictingOnServer et aucune requêtes sur le serveur; ça peut être
 			//	une indication qu'il faut passer à Conflicting.

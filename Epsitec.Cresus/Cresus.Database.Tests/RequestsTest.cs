@@ -732,6 +732,12 @@ namespace Epsitec.Cresus.Database
 				data_row[4] = new System.DateTime (1885, 10, 7);
 				data_row.EndEdit ();
 				
+				data_row = table.Rows[0];
+				
+				data_row.BeginEdit ();
+				data_row[3] = "Toto";
+				data_row.EndEdit ();
+				
 #if true
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
@@ -751,7 +757,7 @@ namespace Epsitec.Cresus.Database
 				
 				System.Diagnostics.Debug.WriteLine ("Waiting for requests to be executed.");
 				
-				System.Threading.Thread.Sleep (5000);
+				System.Threading.Thread.Sleep (30000);
 				
 				orchestrator.Dispose ();
 			}

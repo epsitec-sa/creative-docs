@@ -2252,6 +2252,9 @@ validationSvc.Close();
 			This will be mapped to the .NET default encoding.
 			</remarks>
         </member>
+        <member name="F:FirebirdSql.Data.Firebird.FbCharset.Octets">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbCharset.xml" path="doc/enum[@name=&quot;FbCharset&quot;]/field[@name=&quot;Octets&quot;]/*"/>
+        </member>
         <member name="F:FirebirdSql.Data.Firebird.FbCharset.Ascii">
             <summary>
 			American Standard Code for Information Interchange.
@@ -6302,8 +6305,6 @@ public void ReadMyData(string myConnString)
         </member>
         <member name="F:FirebirdSql.Data.Firebird.FbDbType.Binary">
             <summary>
-			An array of data. This maps to an Array.
-			</summary><summary>
 			A stream of binary data (SQL_BLOB). This maps to an Array of type Byte.
 			</summary>
         </member>
@@ -6334,6 +6335,13 @@ public void ReadMyData(string myConnString)
 			Signed, approximate, numeric value with a binary precision 24 (SQL_FLOAT). 
 			This maps to Single.
 			</summary>
+        </member>
+        <member name="F:FirebirdSql.Data.Firebird.FbDbType.Guid">
+            <summary>
+				Globally unique identifier.
+			</summary><remarks>
+				Guid's should be used only with CHAR(16) fields with the OCTETS character set.
+			</remarks>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.FbDbType.Integer">
             <summary>
@@ -7282,13 +7290,6 @@ finally
             </summary>
             <param name="step">A <see cref="T:FirebirdSql.WizardFramework.WizardStep"/> object.</param>
             <returns>The zero-based index of the requested step.</returns>
-        </member>
-        <member name="M:FirebirdSql.WizardFramework.WizardStepCollection.Contains(FirebirdSql.WizardFramework.WizardStep)">
-            <summary>
-            Determines wheter an step is in the collection.
-            </summary>
-            <param name="step">An <see cref="T:FirebirdSql.WizardFramework.WizardStep"/> object.</param>
-            <returns><b>true</b> if the step exists; or <b>false</b> if not.</returns>
         </member>
         <member name="P:FirebirdSql.WizardFramework.WizardStepCollection.Item(System.Int32)">
             <summary>

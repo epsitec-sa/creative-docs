@@ -143,7 +143,10 @@ namespace Epsitec.Cresus.Requests
 		
 		public override void Execute(ExecutionEngine engine)
 		{
-			engine.GenerateUpdateDataCommand (this.TableName, this.col_names, this.col_org_values, this.col_names, this.col_cur_values);
+			if (this.col_names != null)
+			{
+				engine.GenerateUpdateDataCommand (this.TableName, this.col_names, this.col_org_values, this.col_names, this.col_cur_values);
+			}
 		}
 		
 		

@@ -171,6 +171,15 @@ namespace Epsitec.Cresus.Database
 			
 			infrastructure.Execute (transaction, command);
 			
+			foreach (System.Data.DataTable data_table in command.DataSet.Tables)
+			{
+				if (data_table.Columns[Tags.ColumnId].Unique == false)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Warning: Table {0} ID not unique, fixing.", data_table.TableName));
+					data_table.Columns[Tags.ColumnId].Unique = true;
+				}
+			}
+			
 			return command;
 		}
 		

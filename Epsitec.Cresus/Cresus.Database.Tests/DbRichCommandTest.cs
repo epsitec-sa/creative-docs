@@ -65,6 +65,11 @@ namespace Epsitec.Cresus.Database
 			infrastructure.Execute (null, command);
 			
 			System.Console.Out.WriteLine ("Tables : {0}", command.DataSet.Tables.Count);
+			
+			Assert.AreEqual (2, command.DataSet.Tables.Count);
+			Assert.IsTrue (command.DataSet.Tables["Personnes"].Columns[Tags.ColumnId].Unique);
+			Assert.IsTrue (command.DataSet.Tables["Domiciles"].Columns[Tags.ColumnId].Unique);
+			
 			foreach (System.Data.DataTable table in command.DataSet.Tables)
 			{
 				System.Console.Out.WriteLine ("Table {0} has {1} columns:", table.TableName, table.Columns.Count);

@@ -19,8 +19,10 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		
 		#region ISqlEngine Members
-		public void Execute(System.Data.IDbCommand command, DbCommandType type, int command_count)
+		public void Execute(System.Data.IDbCommand command, DbCommandType type, int command_count, out int result)
 		{
+			result = 0;
+			
 			switch (type)
 			{
 				case DbCommandType.Silent:
@@ -41,13 +43,13 @@ namespace Epsitec.Cresus.Database.Implementation
 					if (commands[i].Length > 0)
 					{
 						command.CommandText = commands[i];
-						command.ExecuteNonQuery ();
+						result += command.ExecuteNonQuery ();
 					}
 				}
 			}
 			else if (command_count > 0)
 			{
-				command.ExecuteNonQuery ();
+				result += command.ExecuteNonQuery ();
 			}
 			
 		}
@@ -88,11 +90,13 @@ namespace Epsitec.Cresus.Database.Implementation
 				return;
 			}
 			
+			int result;
+			
 			switch (type)
 			{
 				case DbCommandType.Silent:
 				case DbCommandType.NonQuery:
-					this.Execute (command, type, command_count);
+					this.Execute (command, type, command_count, out result);
 					data_set = null;
 					break;
 				

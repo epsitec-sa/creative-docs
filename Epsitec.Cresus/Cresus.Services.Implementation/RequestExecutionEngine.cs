@@ -164,7 +164,29 @@ namespace Epsitec.Cresus.Services
 		
 		void IRequestExecutionService.RemoveAllRequestStates(ClientIdentity client)
 		{
-			//	TODO: supprimer toutes les requêtes de ce client
+			lock (this.execution_queue)
+			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				System.Data.DataRow[]        rows = this.execution_queue.DateTimeSortedRows;
+				
+				System.Diagnostics.Debug.WriteLine ("RemoveAllRequestStates for client " + client.ToString ());
+				
+				for (int i = 0; i < rows.Length; i++)
+				{
+					Database.DbKey row_key   = new Database.DbKey (rows[i]);
+					ExecutionState row_state = this.execution_queue.GetRequestExecutionState (rows[i]);
+					
+					if (row_key.Id.ClientId == client.ClientId)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format (" - {0} in state {1}", row_key.Id.Value, row_state));
+						list.Add (rows[i]);
+					}
+				}
+				if (list.Count > 0)
+				{
+					this.execution_queue.RemoveRequests (list);
+				}
+			}
 		}
 		#endregion
 		
