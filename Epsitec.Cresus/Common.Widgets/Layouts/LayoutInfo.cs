@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : en chantier/PA
+
 namespace Epsitec.Common.Widgets.Layouts
 {
 	public class LayoutInfo
@@ -9,17 +12,17 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 		
 		
-		public double					OriginalWidth
+		public double							OriginalWidth
 		{
 			get { return this.width; }
 		}
 		
-		public double					OriginalHeight
+		public double							OriginalHeight
 		{
 			get { return this.height; }
 		}
 		
 		
-		private double					width, height;
+		private double							width, height;
 	}
 }

@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : en chantier/PA
+
 namespace Epsitec.Common.Widgets.Layouts
 {
 	public delegate void UpdateEventHandler(object sender, UpdateEventArgs e);
@@ -12,25 +15,25 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 		
 		
-		public Widget					Widget
+		public Widget							Widget
 		{
 			get { return this.widget; }
 		}
 		
-		public Widget[]					Children
+		public Widget[]							Children
 		{
 			get { return this.children; }
 		}
 		
-		public LayoutInfo				LayoutInfo
+		public LayoutInfo						LayoutInfo
 		{
 			get { return this.layout_info; }
 		}
 		
 		
-		private Widget					widget;
-		private Widget[]				children;
-		private LayoutInfo				layout_info;
+		private Widget							widget;
+		private Widget[]						children;
+		private LayoutInfo						layout_info;
 	}
 }
 
