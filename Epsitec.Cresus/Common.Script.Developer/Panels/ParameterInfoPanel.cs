@@ -9,7 +9,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 	/// <summary>
 	/// Summary description for ParameterInfoPanel.
 	/// </summary>
-	public class ParameterInfoPanel : Common.UI.AbstractPanel
+	public class ParameterInfoPanel : AbstractPanel
 	{
 		public ParameterInfoPanel()
 		{
@@ -34,12 +34,40 @@ namespace Epsitec.Common.Script.Developer.Panels
 			}
 			set
 			{
+				this.DetachStore ();
 				this.edit_store = new Helpers.ParameterInfoStore (value);
-				
+				this.AttachStore ();
+			}
+		}
+		
+		
+		internal EditArray						EditArray
+		{
+			get
+			{
+				return this.edit_array;
+			}
+		}
+		
+		
+		protected virtual void DetachStore()
+		{
+			if (this.edit_store != null)
+			{
+				this.edit_store.StoreContentsChanged -= new EventHandler(this.HandleEditStoreContentsChanged);
+			}
+		}
+		
+		protected virtual void AttachStore()
+		{
+			if (this.edit_store != null)
+			{
 				if (this.edit_array != null)
 				{
 					this.edit_array.TextArrayStore = this.edit_store;
 				}
+				
+				this.edit_store.StoreContentsChanged += new EventHandler(this.HandleEditStoreContentsChanged);
 			}
 		}
 		
@@ -115,6 +143,12 @@ namespace Epsitec.Common.Script.Developer.Panels
 			edit.TextArrayStore = this.edit_store;
 			
 			this.edit_array = edit;
+		}
+		
+		
+		private void HandleEditStoreContentsChanged(object sender)
+		{
+			this.IsModified = true;
 		}
 		
 		

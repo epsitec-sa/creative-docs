@@ -35,6 +35,7 @@ namespace Epsitec.Common.Script.Helpers
 		{
 			Types.VoidType type = Types.VoidType.Default;
 			this.hash_type[type.Name] = type;
+			this.includes_void = true;
 		}
 		
 		public void SetContents(Source.ParameterInfo[] infos)
@@ -79,6 +80,11 @@ namespace Epsitec.Common.Script.Helpers
 		
 		public void FillTypeNames(System.Collections.IList list)
 		{
+			if (this.includes_void)
+			{
+				list.Add (this.GetNameFromType (Types.VoidType.Default));
+			}
+			
 			list.Add (this.GetNameFromType (new Types.BooleanType ()));
 			list.Add (this.GetNameFromType (new Types.IntegerType ()));
 			list.Add (this.GetNameFromType (new Types.DecimalType ()));
@@ -275,6 +281,7 @@ namespace Epsitec.Common.Script.Helpers
 		
 		
 		private int								changing;
+		private bool							includes_void;
 		private System.Collections.ArrayList	list      = new System.Collections.ArrayList ();
 		private System.Collections.Hashtable	hash_dir  = new System.Collections.Hashtable ();
 		private System.Collections.Hashtable	hash_type = new System.Collections.Hashtable ();

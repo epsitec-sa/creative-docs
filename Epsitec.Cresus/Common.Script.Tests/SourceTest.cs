@@ -113,14 +113,14 @@ namespace Epsitec.Common.Script
 			
 		}
 		
-		[Test] public void CheckParameterInfoStoreDeveloper()
+		[Test] public void CheckDeveloper1()
 		{
 			Widgets.Window window = new Widgets.Window ();
 			
 			Developer.Panels.MethodProtoPanel   panel_1 = new Developer.Panels.MethodProtoPanel ();
 			Developer.Panels.ParameterInfoPanel panel_2 = new Developer.Panels.ParameterInfoPanel ();
 			
-			window.Text             = "CheckParameterInfoStore";
+			window.Text             = "CheckDeveloper1";
 			window.Root.DockPadding = new Drawing.Margins (4, 4, 8, 8);
 			window.ClientSize       = new Drawing.Size (8+200, 16+120);
 			
@@ -137,7 +137,26 @@ namespace Epsitec.Common.Script
 			panel_2.Widget.Dock   = Widgets.DockStyle.Fill;
 			
 			window.Show ();
+		}
+		
+		[Test] public void CheckDeveloper2()
+		{
+			Widgets.Window window = new Widgets.Window ();
 			
+			Developer.Panels.MethodEditionPanel panel = new Developer.Panels.MethodEditionPanel ();
+			
+			window.Text             = "CheckDeveloper2";
+			window.Root.DockPadding = new Drawing.Margins (4, 4, 8, 8);
+			window.ClientSize       = new Drawing.Size (8+panel.Size.Width, 16+panel.Size.Height);
+			
+			Source        source = this.CreateSource (null);
+			Source.Method method = source.Methods[1];
+			
+			panel.Widget.Parent = window.Root;
+			panel.Widget.Dock   = Widgets.DockStyle.Top;
+			panel.Method        = method;
+			
+			window.Show ();
 		}
 		
 		private Source CreateSource(Types.IDataValue[] values)

@@ -9,7 +9,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 	/// <summary>
 	/// Summary description for MethodProtoPanel.
 	/// </summary>
-	public class MethodProtoPanel : Common.UI.AbstractPanel
+	public class MethodProtoPanel : AbstractPanel
 	{
 		public MethodProtoPanel()
 		{
@@ -68,6 +68,15 @@ namespace Epsitec.Common.Script.Developer.Panels
 		}
 
 		
+		internal TextFieldExList				ComboName
+		{
+			get
+			{
+				return this.combo_name;
+			}
+		}
+		
+		
 		protected override void CreateWidgets(Widget parent)
 		{
 			this.combo_name = new TextFieldExList (parent);
@@ -98,6 +107,20 @@ namespace Epsitec.Common.Script.Developer.Panels
 			
 			Widget.BaseLineAlign (this.combo_name, label_1);
 			Widget.BaseLineAlign (this.combo_type, label_2);
+			
+			this.combo_name.TextChanged += new EventHandler (this.HandleComboNameTextChanged);
+			this.combo_type.TextChanged += new EventHandler (this.HandleComboTypeTextChanged);
+		}
+		
+		
+		private void HandleComboNameTextChanged(object sender)
+		{
+			this.IsModified = true;
+		}
+		
+		private void HandleComboTypeTextChanged(object sender)
+		{
+			this.IsModified = true;
 		}
 		
 		
