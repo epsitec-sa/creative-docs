@@ -89,6 +89,19 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected override void SetBounds(double x1, double y1, double x2, double y2)
+		{
+			double dx = x2 - x1;
+			double dy = y2 - y1;
+			
+			if (this.window != null)
+			{
+				this.window.ClientSize = new Drawing.Size (dx, dy);
+			}
+			
+			base.SetBounds (0, 0, dx, dy);
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
