@@ -7,7 +7,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldUpDown()
 		{
-			this.textStyle = TextFieldStyle.UpDown;
+			this.textFieldStyle = TextFieldStyle.UpDown;
+			this.TextNavigator.IsNumeric = true;
 			this.range = new Epsitec.Common.Converters.DecimalRange(0, 100, 1);
 
 			this.arrowUp = new GlyphButton(this);
@@ -40,11 +41,11 @@ namespace Epsitec.Common.Widgets
 				string  text  = this.Text;
 				decimal value = this.DefaultValue;
 				
-				if (text != "")
+				if ( text != "" )
 				{
 					try
 					{
-						value = System.Convert.ToDecimal (text);
+						value = System.Convert.ToDecimal(text);
 					}
 					catch
 					{
@@ -58,11 +59,10 @@ namespace Epsitec.Common.Widgets
 			{
 				value = this.range.Constrain (value);
 				
-				if ((this.Text == "") ||
-					(this.Value != value))
+				if ( this.Text == "" || this.Value != value )
 				{
-					this.Text = this.range.ConvertToString (value);
-					this.SelectAll ();
+					this.Text = this.range.ConvertToString(value);
+					this.SelectAll();
 				}
 			}
 		}
@@ -99,11 +99,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				if (this.range.Resolution != value)
+				if ( this.range.Resolution != value )
 				{
 					this.range.Resolution = value;
-					this.Text = this.range.Constrain (this.Value).ToString ();
-					this.SelectAll ();
+					this.Text = this.range.Constrain(this.Value).ToString();
+					this.SelectAll();
 				}
 			}
 		}
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.MaxValue - this.MinValue;
+				return this.MaxValue-this.MinValue;
 			}
 		}
 		
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Widgets
 			this.margins.Right = width - AbstractTextField.FrameMargin;
 
 			if ( this.arrowUp   != null &&
-				this.arrowDown != null )
+				 this.arrowDown != null )
 			{
 				Drawing.Rectangle aRect = new Drawing.Rectangle();
 
@@ -194,8 +194,8 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.MouseWheel:
-					if ( message.Wheel > 0 )  this.IncrementValue (1);
-					if ( message.Wheel < 0 )  this.IncrementValue (-1);
+					if ( message.Wheel > 0 )  this.IncrementValue(1);
+					if ( message.Wheel < 0 )  this.IncrementValue(-1);
 					message.Consumer = this;
 					return;
 			}
@@ -203,20 +203,20 @@ namespace Epsitec.Common.Widgets
 			base.ProcessMessage(message, pos);
 		}
 
-		protected override bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
+		protected override bool ProcessKeyDown(Message message, Drawing.Point pos)
 		{
-			switch ( key )
+			switch ( message.KeyCode )
 			{
 				case KeyCode.ArrowUp:
-					this.IncrementValue (1);
+					this.IncrementValue(1);
 					break;
 
 				case KeyCode.ArrowDown:
-					this.IncrementValue (-1);
+					this.IncrementValue(-1);
 					break;
 
 				default:
-					return base.ProcessKeyDown(key, isShiftPressed, isCtrlPressed);
+					return base.ProcessKeyDown(message, pos);
 			}
 			
 			return true;
@@ -248,51 +248,47 @@ namespace Epsitec.Common.Widgets
 		{
 			Converters.DecimalRange range = new Epsitec.Common.Converters.DecimalRange (this.MinValue, this.MaxValue, this.Step);
 			
-			decimal org_value   = this.Value;
-			decimal round_value = range.ConstrainToZero (org_value);
+			decimal orgValue   = this.Value;
+			decimal roundValue = range.ConstrainToZero(orgValue);
 			
-			if (org_value == round_value)
+			if ( orgValue == roundValue )
 			{
-				//	La valeur d'origine était déjà parfaitement alignée sur une frontière (step),
-				//	on peut donc simplement passer au pas suivant :
-				
-				round_value += delta * this.Step;
+				// La valeur d'origine était déjà parfaitement alignée sur une frontière (step),
+				// on peut donc simplement passer au pas suivant :
+				roundValue += delta * this.Step;
 			}
 			else
 			{
-				//	L'arrondi vers zéro suffit dans les cas suivants :
-				//
-				//	o  13 =>  10,  13 - 10 =>  10		org_value > 0, delta < 0
-				//	o -13 => -10, -13 + 10 => -10		org_value < 0, delta > 0
-				//
-				//	en supposant un pas de 10.
+				// L'arrondi vers zéro suffit dans les cas suivants :
+				//  o  13 =>  10,  13 - 10 =>  10   orgValue > 0, delta < 0
+				//  o -13 => -10, -13 + 10 => -10   orgValue < 0, delta > 0
+				// en supposant un pas de 10.
 				
-				if (((org_value < 0) && (delta > 0)) ||
-					((org_value > 0) && (delta < 0)))
+				if ( (orgValue < 0 && delta > 0) ||
+					 (orgValue > 0 && delta < 0) )
 				{
-					//	La valeur arrondie fait l'affaire.
+					// La valeur arrondie fait l'affaire.
 				}
 				else
 				{
-					//	Il faut encore ajouter l'incrément.
-					
-					round_value += delta * this.Step;
+					// Il faut encore ajouter l'incrément.
+					roundValue += delta * this.Step;
 				}
 			}
 			
-			this.Value = round_value;
+			this.Value = roundValue;
 		}
 		
 		
 		private void HandleButton(object sender)
 		{
-			if (sender == this.arrowUp)
+			if ( sender == this.arrowUp )
 			{
-				this.IncrementValue (1);
+				this.IncrementValue(1);
 			}
-			else if (sender == this.arrowDown)
+			else if ( sender == this.arrowDown )
 			{
-				this.IncrementValue (-1);
+				this.IncrementValue(-1);
 			}
 		}
 
