@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Statut : OK/PA, 22/03/2004
 
 namespace Epsitec.Common.Support
 {
@@ -9,6 +9,7 @@ namespace Epsitec.Common.Support
 	/// dans un bundle.
 	/// </summary>
 	
+	[System.Serializable]
 	[System.AttributeUsage (System.AttributeTargets.Property)]
 	
 	public class BundleAttribute : System.Attribute
