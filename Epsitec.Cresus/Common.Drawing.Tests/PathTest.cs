@@ -91,5 +91,33 @@ namespace Epsitec.Common.Tests
 			
 			System.Console.Out.WriteLine (path.ToString ());
 		}
+		
+		[Test] public void CheckComputeBounds()
+		{
+			Path path = new Path ();
+			Rectangle bounds;
+			
+			path.MoveTo (110, 110);
+			path.LineTo (110, 210);
+			path.LineTo (210, 160);
+			path.Close ();
+			
+			bounds = path.ComputeBounds ();
+			Assertion.AssertEquals (110, bounds.Left);
+			Assertion.AssertEquals (110, bounds.Bottom);
+			Assertion.AssertEquals (210, bounds.Right);
+			Assertion.AssertEquals (210, bounds.Top);
+			
+			path.MoveTo (120, 125);
+			path.LineTo (195, 160);
+			path.LineTo (120, 195);
+			path.Close ();
+			
+			bounds = path.ComputeBounds ();
+			Assertion.AssertEquals (110, bounds.Left);
+			Assertion.AssertEquals (110, bounds.Bottom);
+			Assertion.AssertEquals (210, bounds.Right);
+			Assertion.AssertEquals (210, bounds.Top);
+		}
 	}
 }
