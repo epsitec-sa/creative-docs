@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Remoting;
 
 namespace Epsitec.Cresus.Requests
 {
@@ -59,12 +60,35 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
+		public IRequestExecutionService			RemotingService
+		{
+			get
+			{
+				return this.service;
+			}
+		}
+		
+		public ClientIdentity					ClientIdentity
+		{
+			get
+			{
+				return this.client;
+			}
+		}
+		
 		public OrchestratorState				State
 		{
 			get
 			{
 				return this.state;
 			}
+		}
+		
+		
+		public void DefineRemotingService(IRequestExecutionService service, ClientIdentity client)
+		{
+			this.service = service;
+			this.client  = client;
 		}
 		
 		
@@ -90,6 +114,8 @@ namespace Epsitec.Cresus.Requests
 				
 				for (;;)
 				{
+					this.ChangeToState (this.execution_queue.HasConflicting ? OrchestratorState.Conflicting : OrchestratorState.Ready);
+					
 					int handle_index = Common.Support.Sync.Wait (wait_events);
 					
 					//	Tout événement autre que ceux liés à la queue provoque l'interruption
@@ -113,8 +139,25 @@ namespace Epsitec.Cresus.Requests
 					else
 					{
 						this.ChangeToState (OrchestratorState.Processing);
-						this.ProcessQueue ();
-						this.ChangeToState (this.execution_queue.HasConflicting ? OrchestratorState.Conflicting : OrchestratorState.Ready);
+						
+						if ((this.execution_queue.HasConflictResolved) ||
+							(this.execution_queue.HasPending))
+						{
+							this.ProcessReadyInQueue ();
+							continue;
+						}
+						
+						if ((this.service != null) &&
+							(this.execution_queue.IsRunningAsServer == false))
+						{
+							if (this.execution_queue.HasExecutedByClient)
+							{
+								//	Le client possède une série de requêtes exécutées localement que
+								//	l'on peut maintenant tenter d'envoyer au serveur.
+								
+								this.ProcessSendToServer ();
+							}
+						}
 					}
 				}
 			}
@@ -130,16 +173,7 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		protected void ChangeToState(OrchestratorState state)
-		{
-			if (this.state != state)
-			{
-				this.state = state;
-				this.OnStateChanged ();
-			}
-		}
-		
-		protected void ProcessQueue()
+		protected void ProcessReadyInQueue()
 		{
 			//	Passe en revue la queue à la recherche de requêtes en attente d'exécution.
 			
@@ -187,12 +221,14 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		
-		protected virtual void ProcessPendingRequest(System.Data.DataRow row, AbstractRequest request)
+		protected void ProcessPendingRequest(System.Data.DataRow row, AbstractRequest request)
 		{
 			//	Traite une requête dans l'état ExecuctionState.Pending ou ConflictResolved;
 			//	son exécution en local peut la faire passer dans l'état ExecutedByClient ou
 			//	Conflicting, en fonction de son succès ou non.
+			
+			DbKey  request_key = new DbKey (row);
+			DbId   request_id  = request_key.Id;
 			
 			DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database);
 			
@@ -219,7 +255,7 @@ namespace Epsitec.Cresus.Requests
 				transaction.Dispose ();
 			}
 			
-			this.OnRequestExecuted ();
+			this.OnRequestExecuted (request_id);
 			
 			if (conflict_detected)
 			{
@@ -227,7 +263,7 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		protected virtual void ProcessDetectedConflict(System.Data.DataRow row, AbstractRequest request)
+		protected void ProcessDetectedConflict(System.Data.DataRow row, AbstractRequest request)
 		{
 			//	Un conflit a été détecté lors de la tentative de mise à jour de la
 			//	requête. Note que la requête est en "conflit" sans pour autant mettre
@@ -238,7 +274,71 @@ namespace Epsitec.Cresus.Requests
 			this.execution_queue.SetRequestExecutionState (row, ExecutionState.Conflicting);
 		}
 		
-		protected virtual void ProcessShutdown()
+		protected void ProcessSendToServer()
+		{
+			//	Passe en revue la queue à la recherche de requêtes prêtes à être envoyées
+			//	au serveur. Dans l'implémentation actuelle, on envoie une requête à la
+			//	fois pour simplifier la détection des conflits.
+			
+			System.Data.DataRow[] rows = this.execution_queue.Rows;
+			
+			//	Prend note du nombre de lignes dans la queue; si des nouvelles lignes sont
+			//	rajoutées pendant notre exécution, on les ignore. Elles seront traitées au
+			//	prochain tour.
+			
+			int n = rows.Length;
+			
+			for (int i = 0; i < n; i++)
+			{
+				if (this.execution_queue.HasConflicting)
+				{
+					break;
+				}
+				
+				System.Data.DataRow row = rows[i];
+				
+				if (DbRichCommand.IsRowDeleted (row))
+				{
+					continue;
+				}
+				
+				ExecutionState  state   = this.execution_queue.GetRequestExecutionState (row);
+				AbstractRequest request = null;;
+				
+				switch (state)
+				{
+					case ExecutionState.ExecutedByClient:
+						request = this.execution_queue.GetRequest (row);
+						this.ProcessSendToServer (row, request);
+						break;
+					
+					default:
+						break;
+				}
+			}
+		}
+		
+		protected void ProcessSendToServer(System.Data.DataRow row, AbstractRequest request)
+		{
+			SerializedRequest[] requests = new SerializedRequest[1];
+			
+			DbKey  request_key = new DbKey (row);
+			DbId   request_id  = request_key.Id;
+			byte[] serialized  = Requests.AbstractRequest.SerializeToMemory (request);
+			
+			requests[0] = new Remoting.SerializedRequest (request_id, serialized);
+			
+			this.service.EnqueueRequest (this.client, requests);
+			
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
+			{
+				this.execution_queue.SetRequestExecutionState (row, ExecutionState.SentToServer);
+				this.execution_queue.SerializeToBase (transaction);
+				transaction.Commit ();
+			}
+		}
+		
+		protected void ProcessShutdown()
 		{
 			//	Avant l'arrêt planifié du processus, on s'empresse encore de mettre à jour
 			//	l'état de la queue dans la base de données (la queue possède un cache en
@@ -250,6 +350,16 @@ namespace Epsitec.Cresus.Requests
 			{
 				this.execution_queue.SerializeToBase (transaction);
 				transaction.Commit ();
+			}
+		}
+		
+		
+		protected void ChangeToState(OrchestratorState state)
+		{
+			if (this.state != state)
+			{
+				this.state = state;
+				this.OnStateChanged ();
 			}
 		}
 		
@@ -276,17 +386,18 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		protected virtual void OnRequestExecuted()
+		protected virtual void OnRequestExecuted(DbId request_id)
 		{
 			if (this.RequestExecuted != null)
 			{
-				this.RequestExecuted (this);
+				this.RequestExecuted (this, request_id);
 			}
 		}
 		
+		public delegate void RequestExecutedCallback(Orchestrator sender, DbId request_id);
 		
 		public event EventHandler				StateChanged;
-		public event EventHandler				RequestExecuted;
+		public event RequestExecutedCallback	RequestExecuted;
 		
 		
 		protected DbInfrastructure				infrastructure;
@@ -297,5 +408,8 @@ namespace Epsitec.Cresus.Requests
 		
 		System.Threading.Thread					worker_thread;
 		System.Threading.ManualResetEvent		abort_event;
+		
+		protected IRequestExecutionService		service;
+		protected ClientIdentity				client;
 	}
 }

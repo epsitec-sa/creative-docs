@@ -16,6 +16,9 @@ namespace Epsitec.Cresus.Services
 		{
 			this.orchestrator    = this.engine.Orchestrator;
 			this.execution_queue = this.orchestrator.ExecutionQueue;
+			this.client_changes  = new System.Collections.Hashtable ();
+			
+			this.orchestrator.RequestExecuted += new Orchestrator.RequestExecutedCallback (this.HandleOrchestratorRequestExecuted);
 			
 			System.Diagnostics.Debug.Assert (this.execution_queue.IsRunningAsServer);
 		}
@@ -58,6 +61,76 @@ namespace Epsitec.Cresus.Services
 		
 		void IRequestExecutionService.QueryRequestStates(Remoting.ClientIdentity client, out RequestState[] states)
 		{
+			this.InternalQueryRequestStates (client, out states);
+		}
+		
+		void IRequestExecutionService.QueryRequestStates(ClientIdentity client, ref int change_id, System.TimeSpan timeout, out RequestState[] states)
+		{
+			ClientChangeInfo info = this.GetClientChangeInfo (client.ClientId);
+			
+			info.WaitChange (change_id, timeout);
+			
+			change_id = info.ChangeId;
+			
+			this.InternalQueryRequestStates (client, out states);
+		}
+		
+		void IRequestExecutionService.ClearRequestStates(ClientIdentity client, RequestState[] states)
+		{
+			//	Supprime de la queue les requêtes dont l'état correspond à celui
+			//	décrit.
+			
+			System.Data.DataRow[] rows = this.execution_queue.Rows;
+			
+			for (int i = 0; i < rows.Length; i++)
+			{
+				if (Database.DbRichCommand.IsRowDeleted (rows[i]))
+				{
+					continue;
+				}
+				
+				Database.DbKey row_key   = new Database.DbKey (rows[i]);
+				ExecutionState row_state = this.execution_queue.GetRequestExecutionState (rows[i]);
+					
+				if (row_state == Requests.ExecutionState.ExecutedByClient)
+				{
+					row_state = Requests.ExecutionState.ExecutedByServer;
+				}
+				
+				for (int j = 0; j < states.Length; j++)
+				{
+					if ((states[j].Identifier == row_key.Id.Value) &&
+						(states[j].State == (int)row_state))
+					{
+						this.execution_queue.RemoveRequest (rows[i]);
+						
+						//	Si c'était le seul élément restant à supprimer de la table, on s'arrête
+						//	tout de suite.
+						
+						if (states.Length == 1)
+						{
+							return;
+						}
+						
+						//	Retire l'élément que l'on vient de supprimer de la liste des éléments
+						//	à supprimer :
+						
+						RequestState[] copy = new RequestState[states.Length-1];
+						
+						System.Array.Copy (states, 0, copy, 0, j);
+						System.Array.Copy (states, j+1, copy, j, states.Length-j-1);
+						
+						states = copy;
+						
+						break;
+					}
+				}
+			}
+		}
+		#endregion
+		
+		private void InternalQueryRequestStates(Remoting.ClientIdentity client, out RequestState[] states)
+		{
 			//	Détermine l'état de toutes les requêtes soumises par le client
 			//	spécifié.
 			
@@ -95,61 +168,138 @@ namespace Epsitec.Cresus.Services
 			list.CopyTo (states);
 		}
 		
-		void IRequestExecutionService.ClearRequestStates(ClientIdentity client, RequestState[] states)
+		private ClientChangeInfo GetClientChangeInfo(int client_id)
 		{
-			//	Supprime de la queue les requêtes dont l'état correspond à celui
-			//	décrit.
+			ClientChangeInfo info;
 			
-			System.Data.DataRow[] rows = this.execution_queue.Rows;
-			
-			for (int i = 0; i < rows.Length; i++)
+			lock (this.client_changes)
 			{
-				if (Database.DbRichCommand.IsRowDeleted (rows[i]))
+				if (this.client_changes.Contains (client_id))
 				{
-					continue;
+					info = this.client_changes[client_id] as ClientChangeInfo;
 				}
-				
-				Database.DbKey row_key   = new Database.DbKey (rows[i]);
-				ExecutionState row_state = this.execution_queue.GetRequestExecutionState (rows[i]);
+				else
+				{
+					info = new ClientChangeInfo (client_id);
+					this.client_changes[client_id] = info;
+				}
+			}
+			
+			return info;
+		}
+		
+		
+		private void HandleOrchestratorRequestExecuted(Orchestrator sender, Database.DbId request_id)
+		{
+			//	Une requête vient d'être exécutée par l'orchestrateur. Si un client
+			//	est en attente de modifications d'état de ses requêtes, il faut le
+			//	réveiller.
+			
+			ClientChangeInfo info = this.GetClientChangeInfo (request_id.ClientId);
+			
+			info.NotifyChange ();
+		}
+		
+		
+		#region ClienChangeInfo Class
+		private class ClientChangeInfo
+		{
+			public ClientChangeInfo(int client_id)
+			{
+				this.client_id = client_id;
+				this.change_id = 0;
+				this.monitor   = new object ();
+			}
+			
+			
+			public int							ClientId
+			{
+				get
+				{
+					return this.client_id;
+				}
+			}
+			
+			public int							ChangeId
+			{
+				get
+				{
+					return this.change_id;
+				}
+			}
+			
+			
+			public void NotifyChange()
+			{
+				lock (this.monitor)
+				{
+					int change = this.change_id + 1;
 					
-				if (row_state == Requests.ExecutionState.ExecutedByClient)
+					if (change > 999999999)
+					{
+						change = 1;
+					}
+					
+					this.change_id = change;
+					
+					System.Threading.Monitor.PulseAll (this.monitor);
+				}
+			}
+			
+			public void WaitChange(int change_id, System.TimeSpan timeout)
+			{
+				if (change_id != this.change_id)
 				{
-					row_state = Requests.ExecutionState.ExecutedByServer;
+					return;
 				}
 				
-				for (int j = 0; j < states.Length; j++)
+				bool infinite = (timeout.Ticks < 0);
+				
+				System.DateTime start_time = System.DateTime.Now;
+				System.DateTime stop_time  = start_time.Add (timeout);
+				
+				for (;;)
 				{
-					if ((states[j].Identifier == row_key.Id.Value) &&
-						(states[j].State == (int)row_state))
+					bool      got_event = false;
+					const int max_wait  = 30*1000;
+					
+					lock (this.monitor)
 					{
-						Database.DbRichCommand.KillRow (rows[i]);
-						
-						//	Si c'était le seul élément restant à supprimer de la table, on s'arrête
-						//	tout de suite.
-						
-						if (states.Length == 1)
+						if (change_id != this.change_id)
 						{
 							return;
 						}
-						
-						//	Retire l'élément que l'on vient de supprimer de la liste des éléments
-						//	à supprimer :
-						
-						RequestState[] copy = new RequestState[states.Length-1];
-						
-						System.Array.Copy (states, 0, copy, 0, j);
-						System.Array.Copy (states, j+1, copy, j, states.Length-j-1);
-						
-						states = copy;
-						
+						if (infinite)
+						{
+							got_event = System.Threading.Monitor.Wait (this.monitor, max_wait);
+						}
+						else
+						{
+							timeout = System.TimeSpan.FromTicks (System.Math.Min (stop_time.Ticks - System.DateTime.Now.Ticks, max_wait*10*1000L));
+							
+							if (timeout.Ticks > 0)
+							{
+								got_event = System.Threading.Monitor.Wait (this.monitor, timeout);
+							}
+						}
+					}
+					
+					if (got_event == false)
+					{
 						break;
 					}
 				}
 			}
+			
+			
+			private int							client_id;
+			private int							change_id;
+			private object						monitor;
 		}
 		#endregion
 		
 		private Orchestrator					orchestrator;
 		private ExecutionQueue					execution_queue;
+		private System.Collections.Hashtable	client_changes;
 	}
 }

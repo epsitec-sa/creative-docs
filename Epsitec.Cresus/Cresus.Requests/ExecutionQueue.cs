@@ -153,6 +153,7 @@ namespace Epsitec.Cresus.Requests
 				this.queue_data_table.Rows.Add (row);
 			}
 			
+			this.UpdateCounts ();
 			this.enqueue_event.Set ();
 		}
 		
@@ -181,8 +182,10 @@ namespace Epsitec.Cresus.Requests
 			
 			System.Diagnostics.Debug.WriteLine ("Enqueued " + serialized_requests.Length + " serialized requests.");
 			
+			this.UpdateCounts ();
 			this.enqueue_event.Set ();
 		}
+		
 		
 		public void ClearQueue()
 		{
@@ -221,6 +224,13 @@ namespace Epsitec.Cresus.Requests
 			row.EndEdit ();
 			
 			return row;
+		}
+		
+		public void RemoveRequest(System.Data.DataRow row)
+		{
+			Database.DbRichCommand.KillRow (row);
+			this.UpdateCounts ();
+			this.enqueue_event.Set ();
 		}
 		
 		public AbstractRequest GetRequest(System.Data.DataRow row)

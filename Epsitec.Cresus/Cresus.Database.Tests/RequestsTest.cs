@@ -615,22 +615,26 @@ namespace Epsitec.Cresus.Database
 			
 			Remoting.RequestState[] states;
 			
-			service.QueryRequestStates (client, out states);
+			int change_id = -1;
 			
-			System.Diagnostics.Debug.WriteLine ("1/ Got " + states.Length + " states back from server :");
-			
-			for (int i = 0; i < states.Length; i++)
+			for (;;)
 			{
-				System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
+				service.QueryRequestStates (client, ref change_id, System.TimeSpan.FromSeconds (1.0), out states);
+				System.Diagnostics.Debug.WriteLine ("1/ Got " + states.Length + " states back from server (change ID=" + change_id + ") :");
+				
+				for (int i = 0; i < states.Length; i++)
+				{
+					System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
+				}
+				
+				if (states[0].State != (int) Requests.ExecutionState.Pending)
+				{
+					break;
+				}
 			}
 			
-			System.Threading.Thread.Sleep (500);
-			
-			
-			
-			service.QueryRequestStates (client, out states);
-			
-			System.Diagnostics.Debug.WriteLine ("2/ Got " + states.Length + " states back from server :");
+			service.QueryRequestStates (client, ref change_id, System.TimeSpan.FromSeconds (1.0), out states);
+			System.Diagnostics.Debug.WriteLine ("2/ Got " + states.Length + " states back from server (change ID=" + change_id + ") :");
 			
 			for (int i = 0; i < states.Length; i++)
 			{
@@ -638,15 +642,21 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			service.ClearRequestStates (client, new Remoting.RequestState[] { states[0] });
-			service.QueryRequestStates (client, out states);
-			
-			System.Diagnostics.Debug.WriteLine ("3/ After clearing first state, got " + states.Length + " states back from server :");
+			service.QueryRequestStates (client, ref change_id, System.TimeSpan.FromSeconds (1.0), out states);
+			System.Diagnostics.Debug.WriteLine ("3/ After clearing first state, got " + states.Length + " states back from server (change ID=" + change_id + ") :");
 			
 			for (int i = 0; i < states.Length; i++)
 			{
 				System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
 			}
 			
+			service.QueryRequestStates (client, ref change_id, System.TimeSpan.FromSeconds (1.0), out states);
+			System.Diagnostics.Debug.WriteLine ("4/ Got " + states.Length + " states back from server (change ID=" + change_id + ") :");
+			
+			for (int i = 0; i < states.Length; i++)
+			{
+				System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
+			}
 		}
 		
 		[Test] [Ignore ("Temporary")] public void Check17OperatorClientLoop()
