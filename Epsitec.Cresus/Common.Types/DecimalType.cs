@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe DecimalType décrit divers types numériques natifs.
 	/// </summary>
-	public class DecimalType : INum
+	public class DecimalType : INum, IDataConstraint
 	{
 		public DecimalType()
 		{
@@ -67,6 +67,20 @@ namespace Epsitec.Common.Types
 			{
 				return null;
 			}
+		}
+		#endregion
+		
+		#region IDataConstraint Members
+		public bool CheckConstraint(object value)
+		{
+			if ((value is decimal) &&
+				(this.range != null))
+			{
+				decimal num = (decimal) value;
+				return this.range.Constrain (num) == num;
+			}
+			
+			return false;
 		}
 		#endregion
 		
