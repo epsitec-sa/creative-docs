@@ -4,12 +4,12 @@ namespace Epsitec.Common.Support
 {
 	[TestFixture] public class IOTest
 	{
-		[Test] public void CheckBZip2()
+		[Test] public void CheckBZip2Stream()
 		{
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
 			
 			System.IO.MemoryStream target = new System.IO.MemoryStream ();
-			System.IO.Stream   compressor = IO.CompressionStream.CreateBZip2 (target);
+			System.IO.Stream   compressor = IO.Compression.CreateBZip2Stream (target);
 			
 			compressor.Write (buffer, 0, buffer.Length);
 			compressor.Close ();
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Support
 			System.Console.Out.WriteLine ("Compressed size : {0} bytes, using BZIP2", length);
 			
 			System.IO.MemoryStream source = new System.IO.MemoryStream (data);
-			System.IO.Stream decompressor = IO.DecompressionStream.CreateAuto (source);
+			System.IO.Stream decompressor = IO.Decompression.CreateStream (source);
 			
 			byte[] read = new byte[buffer.Length];
 			
@@ -34,12 +34,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		[Test] public void CheckZip()
+		[Test] public void CheckZipStream()
 		{
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
 			
 			System.IO.MemoryStream target = new System.IO.MemoryStream ();
-			System.IO.Stream   compressor = IO.CompressionStream.CreateZip (target, "test");
+			System.IO.Stream   compressor = IO.Compression.CreateZipStream (target, "test");
 			
 			compressor.Write (buffer, 0, buffer.Length);
 			compressor.Close ();
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Support
 			System.Console.Out.WriteLine ("Compressed size : {0} bytes, using ZIP", length);
 			
 			System.IO.MemoryStream source = new System.IO.MemoryStream (data);
-			System.IO.Stream decompressor = IO.DecompressionStream.CreateAuto (source);
+			System.IO.Stream decompressor = IO.Decompression.CreateStream (source);
 			
 			byte[] read = new byte[buffer.Length];
 			
@@ -63,12 +63,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		[Test] public void CheckDeflateLevel1()
+		[Test] public void CheckDeflateStreamLevel1()
 		{
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
 			
 			System.IO.MemoryStream target = new System.IO.MemoryStream ();
-			System.IO.Stream   compressor = IO.CompressionStream.CreateDeflate (target, 1);
+			System.IO.Stream   compressor = IO.Compression.CreateDeflateStream (target, 1);
 			
 			compressor.Write (buffer, 0, buffer.Length);
 			compressor.Close ();
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Support
 			System.Console.Out.WriteLine ("Compressed size : {0} bytes, using DEFLATE-1", length);
 			
 			System.IO.MemoryStream source = new System.IO.MemoryStream (data);
-			System.IO.Stream decompressor = IO.DecompressionStream.CreateAuto (source);
+			System.IO.Stream decompressor = IO.Decompression.CreateStream (source);
 			
 			byte[] read = new byte[buffer.Length];
 			
@@ -92,12 +92,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		[Test] public void CheckDeflateLevel9()
+		[Test] public void CheckDeflateStreamLevel9()
 		{
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
 			
 			System.IO.MemoryStream target = new System.IO.MemoryStream ();
-			System.IO.Stream   compressor = IO.CompressionStream.CreateDeflate (target, 9);
+			System.IO.Stream   compressor = IO.Compression.CreateDeflateStream (target, 9);
 			
 			compressor.Write (buffer, 0, buffer.Length);
 			compressor.Close ();
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Support
 			System.Console.Out.WriteLine ("Compressed size : {0} bytes, using DEFLATE-9", length);
 			
 			System.IO.MemoryStream source = new System.IO.MemoryStream (data);
-			System.IO.Stream decompressor = IO.DecompressionStream.CreateAuto (source);
+			System.IO.Stream decompressor = IO.Decompression.CreateStream (source);
 			
 			byte[] read = new byte[buffer.Length];
 			
@@ -121,12 +121,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		[Test] public void CheckGZip()
+		[Test] public void CheckGZipStream()
 		{
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
 			
 			System.IO.MemoryStream target = new System.IO.MemoryStream ();
-			System.IO.Stream   compressor = IO.CompressionStream.CreateGZip (target);
+			System.IO.Stream   compressor = IO.Compression.CreateGZipStream (target);
 			
 			compressor.Write (buffer, 0, buffer.Length);
 			compressor.Close ();
@@ -137,7 +137,7 @@ namespace Epsitec.Common.Support
 			System.Console.Out.WriteLine ("Compressed size : {0} bytes, using GZIP", length);
 			
 			System.IO.MemoryStream source = new System.IO.MemoryStream (data);
-			System.IO.Stream decompressor = IO.DecompressionStream.CreateAuto (source);
+			System.IO.Stream decompressor = IO.Decompression.CreateStream (source);
 			
 			byte[] read = new byte[buffer.Length];
 			
