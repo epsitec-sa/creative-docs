@@ -476,11 +476,14 @@ namespace Epsitec.Common.Widgets
 			// Il faut dés-enregistrer la même instance que celle qui avait été enregistrée
 			// au départ, sinon on se retrouve avec un filtre qui traîne...
 			
-			Window.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(AbstractMenu.menuFiltering.MessageFilter);
-			AbstractMenu.menuContextOpen = false;
-			AbstractMenu.menuDeveloped = false;
-			AbstractMenu.menuFiltering = null;
-			AbstractMenu.menuLastLeaf  = null;
+			if (AbstractMenu.menuFiltering != null)
+			{
+				Window.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(AbstractMenu.menuFiltering.MessageFilter);
+				AbstractMenu.menuContextOpen = false;
+				AbstractMenu.menuDeveloped = false;
+				AbstractMenu.menuFiltering = null;
+				AbstractMenu.menuLastLeaf  = null;
+			}
 		}
 
 		// Affiche un menu contextuel dont on spécifie le coin sup/gauche.
@@ -593,6 +596,7 @@ namespace Epsitec.Common.Widgets
 			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
 			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
+			System.Diagnostics.Debug.WriteLine ("Registered HandleApplicationDeactivated");
 			
 			this.submenu.Parent = this.window.Root;
 			
@@ -625,6 +629,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			Window.ApplicationDeactivated -= new Support.EventHandler(this.HandleApplicationDeactivated);
+			System.Diagnostics.Debug.WriteLine ("Unregistered HandleApplicationDeactivated");
 			this.window.Root.Children.Clear();
 			this.submenu = null;
 			
@@ -841,6 +846,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleApplicationDeactivated(object sender)
 		{
+			System.Diagnostics.Debug.WriteLine ("ApplicationDeactivated");
 			// TODO: pourquoi ce n'est pas toujours appelé ?
 			this.CloseAll();
 		}

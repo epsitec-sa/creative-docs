@@ -589,6 +589,10 @@ namespace Epsitec.Common.Widgets
 					
 					if (this.window.IsActive)
 					{
+						//	Si la fenêtre est active au moment de sa destruction, Windows a tendance
+						//	à se comporter de manière étrange. On va donc se dépêcher d'activer une
+						//	autre fenêtre (le propriétaire fera l'affaire) :
+						
 						Platform.Window owner = this.window.Owner as Platform.Window;
 						
 						if (owner != null)

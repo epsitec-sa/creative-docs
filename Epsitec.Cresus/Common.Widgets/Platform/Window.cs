@@ -911,6 +911,14 @@ namespace Epsitec.Common.Widgets.Platform
 					}
 					
 					this.FindRootOwner ().FakeActivateOwned (active);
+					
+					if ((Window.is_app_active == false) &&
+						(active == true))
+					{
+						Window.is_app_active = true;
+						System.Diagnostics.Debug.WriteLine ("Fire ApplicationActivated (synthetic)");
+						this.widget_window.OnApplicationActivated ();
+					}
 					break;
 				
 				case Win32Const.WM_ACTIVATEAPP:
@@ -921,10 +929,12 @@ namespace Epsitec.Common.Widgets.Platform
 						Window.is_app_active = active;
 						if (active)
 						{
+							System.Diagnostics.Debug.WriteLine ("Fire ApplicationActivated");
 							this.widget_window.OnApplicationActivated ();
 						}
 						else
 						{
+							System.Diagnostics.Debug.WriteLine ("Fire ApplicationDeactivated");
 							this.widget_window.OnApplicationDeactivated ();
 						}
 					}
