@@ -398,7 +398,8 @@ namespace Epsitec.Common.Drawing
 		public abstract Transform SaveTransform();
 		public abstract void RestoreTransform(Transform transform);
 		public abstract void ScaleTransform(double sx, double sy, double cx, double cy);
-		public abstract void RotateTransform(double angle, double cx, double cy);
+		public abstract void RotateTransformDeg(double angle, double cx, double cy);
+		public abstract void RotateTransformRad(double angle, double cx, double cy);
 		public abstract void TranslateTransform(double ox, double oy);
 		public abstract void MergeTransform(Transform transform);
 		public abstract void SetClippingRectangle(double x, double y, double width, double height);
