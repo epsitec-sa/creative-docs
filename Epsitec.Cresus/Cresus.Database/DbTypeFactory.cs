@@ -16,14 +16,17 @@ namespace Epsitec.Cresus.Database
 		public static DbType NewType(string xml)
 		{
 			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
-			
 			doc.LoadXml (xml);
-			
 			return DbTypeFactory.NewType (doc.DocumentElement);
 		}
 		
 		public static DbType NewType(System.Xml.XmlElement xml)
 		{
+			if (xml.Name == "null")
+			{
+				return null;
+			}
+			
 			if (xml.Name != "type")
 			{
 				throw new System.FormatException (string.Format ("Expected root element named <type>, but found <{0}>.", xml.Name));
@@ -40,29 +43,31 @@ namespace Epsitec.Cresus.Database
 			
 			switch (type_class)
 			{
-				case "base":	type = new DbType (xml);		break;
-				case "enum":	type = new DbTypeEnum (xml);	break;
-				case "num":		type = new DbTypeNum (xml);		break;
-				case "str":		type = new DbTypeString (xml);	break;
+				case "base":	type = new DbType ();			break;
+				case "enum":	type = new DbTypeEnum ();		break;
+				case "num":		type = new DbTypeNum ();		break;
+				case "str":		type = new DbTypeString ();		break;
 				
 				default:
 					throw new System.FormatException (string.Format ("Unsupported value for <type class='{0}'>.", type_class));
-					
 			}
+			
+			int index = 0;
+			
+			type.DeserialiseXmlAttributes (xml);
+			type.DeserialiseXmlElements (xml.ChildNodes, ref index);
 			
 			return type;
 		}
 		
-		public static string SerialiseToXml(DbType type)
+		public static string SerialiseToXml(DbType type, bool full)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			DbTypeFactory.SerialiseToXml (buffer, type);
-			
+			DbTypeFactory.SerialiseToXml (buffer, type, full);
 			return buffer.ToString ();
 		}
 		
-		public static void SerialiseToXml(System.Text.StringBuilder buffer, DbType type)
+		public static void SerialiseToXml(System.Text.StringBuilder buffer, DbType type, bool full)
 		{
 			if (type != null)
 			{
@@ -96,9 +101,18 @@ namespace Epsitec.Cresus.Database
 				
 				//	Ajoute ce qui est propre à chaque classe...
 				
-				type.SerialiseXmlAttributes (buffer);
+				type.SerialiseXmlAttributes (buffer, full);
 				
-				buffer.Append (@"/>");
+				if (full)
+				{
+					buffer.Append (@">");
+					type.SerialiseXmlElements (buffer, true);
+					buffer.Append (@"</type>");
+				}
+				else
+				{
+					buffer.Append (@"/>");
+				}
 			}
 		}
 		

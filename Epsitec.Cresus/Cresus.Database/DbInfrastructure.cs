@@ -1199,7 +1199,7 @@ namespace Epsitec.Cresus.Database
 					DbTypeEnum type_enum = type as DbTypeEnum;
 					DbEnumValue[] values = this.LoadEnumValues (transaction, type_enum);
 					
-					type_enum.Initialise (values);
+					type_enum.DefineValues (values);
 				}
 				
 				types.Add (type);
@@ -1608,7 +1608,7 @@ namespace Epsitec.Cresus.Database
 			fields.Add (type_def.Columns[DbColumn.TagRevision]	.CreateSqlField (this.type_converter, type.InternalKey.Revision));
 			fields.Add (type_def.Columns[DbColumn.TagStatus]	.CreateSqlField (this.type_converter, type.InternalKey.RawStatus));
 			fields.Add (type_def.Columns[DbColumn.TagName]		.CreateSqlField (this.type_converter, type.Name));
-			fields.Add (type_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, DbTypeFactory.SerialiseToXml (type)));
+			fields.Add (type_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, DbTypeFactory.SerialiseToXml (type, false)));
 			
 			this.sql_builder.InsertData (type_def.CreateSqlName (), fields);
 			this.ExecuteSilent (transaction);
@@ -1627,7 +1627,7 @@ namespace Epsitec.Cresus.Database
 			fields.Add (enum_def.Columns[DbColumn.TagRevision]	.CreateSqlField (this.type_converter, value.InternalKey.Revision));
 			fields.Add (enum_def.Columns[DbColumn.TagStatus]	.CreateSqlField (this.type_converter, value.InternalKey.RawStatus));
 			fields.Add (enum_def.Columns[DbColumn.TagName]		.CreateSqlField (this.type_converter, value.Name));
-			fields.Add (enum_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, DbEnumValue.ConvertValueToXml (value, false)));
+			fields.Add (enum_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, DbEnumValue.SerialiseToXml (value, false)));
 			fields.Add (enum_def.Columns[DbColumn.TagRefType]	.CreateSqlField (this.type_converter, type.InternalKey.Id));
 			
 			this.sql_builder.InsertData (enum_def.CreateSqlName (), fields);

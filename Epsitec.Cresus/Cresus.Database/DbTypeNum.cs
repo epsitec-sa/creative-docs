@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public class DbTypeNum : DbType
 	{
-		protected DbTypeNum()
+		internal DbTypeNum() : base (DbSimpleType.Decimal)
 		{
 		}
 		
@@ -23,8 +23,35 @@ namespace Epsitec.Cresus.Database
 			this.num_def = num_def;
 		}
 		
-		public DbTypeNum(System.Xml.XmlElement xml) : base (DbSimpleType.Decimal)
+		
+		internal override void SerialiseXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{
+			if (this.num_def.InternalRawType != DbRawType.Unsupported)
+			{
+				buffer.Append (@" type=""");
+				buffer.Append (this.num_def.InternalRawType.ToString ());
+				buffer.Append (@"""");
+			}
+			else
+			{
+				buffer.Append (@" digits=""");
+				buffer.Append (this.num_def.DigitPrecision.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (@""" shift=""");
+				buffer.Append (this.num_def.DigitShift.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (@""" min=""");
+				buffer.Append (this.num_def.MinValue.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (@""" max=""");
+				buffer.Append (this.num_def.MaxValue.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (@"""");
+			}
+			
+			base.SerialiseXmlAttributes (buffer, full);
+		}
+		
+		internal override void DeserialiseXmlAttributes(System.Xml.XmlElement xml)
+		{
+			base.DeserialiseXmlAttributes (xml);
+			
 			string arg_digits = xml.GetAttribute ("digits");
 			string arg_shift  = xml.GetAttribute ("shift");
 			string arg_min    = xml.GetAttribute ("min");
@@ -51,29 +78,6 @@ namespace Epsitec.Cresus.Database
 				decimal max = System.Decimal.Parse (arg_max, System.Globalization.CultureInfo.InvariantCulture);
 				
 				this.num_def = new DbNumDef (digits, shift, min, max);
-			}
-		}
-		
-		
-		internal override void SerialiseXmlAttributes(System.Text.StringBuilder buffer)
-		{
-			if (this.num_def.InternalRawType != DbRawType.Unsupported)
-			{
-				buffer.Append (@" type=""");
-				buffer.Append (this.num_def.InternalRawType.ToString ());
-				buffer.Append (@"""");
-			}
-			else
-			{
-				buffer.Append (@" digits=""");
-				buffer.Append (this.num_def.DigitPrecision.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (@""" shift=""");
-				buffer.Append (this.num_def.DigitShift.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (@""" min=""");
-				buffer.Append (this.num_def.MinValue.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (@""" max=""");
-				buffer.Append (this.num_def.MaxValue.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (@"""");
 			}
 		}
 		

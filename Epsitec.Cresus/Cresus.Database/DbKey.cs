@@ -131,6 +131,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		
 		public static void SerialiseToXmlAttributes(System.Text.StringBuilder buffer, DbKey key)
 		{
 			if (key != null)

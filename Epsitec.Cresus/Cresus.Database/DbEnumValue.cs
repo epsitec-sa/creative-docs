@@ -34,20 +34,31 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public static DbEnumValue NewEnumValue(string xml)
+		public string						Name
 		{
-			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
-			
-			doc.LoadXml (xml);
-			
-			return DbEnumValue.NewEnumValue (doc.DocumentElement);
+			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
 		}
 		
-		public static DbEnumValue NewEnumValue(System.Xml.XmlElement xml)
+		public string						Caption
 		{
-			return new DbEnumValue (xml);
+			get { return this.Attributes[Tags.Caption]; }
 		}
-
+		
+		public string						Description
+		{
+			get { return this.Attributes[Tags.Description]; }
+		}
+		
+		public int							Rank
+		{
+			get { return this.rank; }
+		}
+		
+		public DbKey						InternalKey
+		{
+			get { return this.internal_key; }
+		}
+		
 		
 		public   void DefineAttributes(params string[] attributes)
 		{
@@ -70,33 +81,36 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public static DbEnumValue NewValue(string xml)
+		public static DbEnumValue NewEnumValue(string xml)
 		{
 			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
-			
 			doc.LoadXml (xml);
-			
-			return DbEnumValue.NewValue (doc.DocumentElement);
+			return DbEnumValue.NewEnumValue (doc.DocumentElement);
 		}
 		
-		public static DbEnumValue NewValue(System.Xml.XmlElement xml)
+		public static DbEnumValue NewEnumValue(System.Xml.XmlElement xml)
 		{
-			return new DbEnumValue (xml);
+			return (xml.Name == "null") ? null : new DbEnumValue (xml);
 		}
 
 		
-		public static string ConvertValueToXml(DbEnumValue value, bool full)
+		public static string SerialiseToXml(DbEnumValue value, bool full)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			DbEnumValue.ConvertValueToXml (buffer, value, full);
-			
+			DbEnumValue.SerialiseToXml (buffer, value, full);
 			return buffer.ToString ();
 		}
 		
-		public static void ConvertValueToXml(System.Text.StringBuilder buffer, DbEnumValue value, bool full)
+		public static void SerialiseToXml(System.Text.StringBuilder buffer, DbEnumValue value, bool full)
 		{
-			value.SerialiseXmlDefinition (buffer, full);
+			if (value == null)
+			{
+				buffer.Append ("<null/>");
+			}
+			else
+			{
+				value.SerialiseXmlDefinition (buffer, full);
+			}
 		}
 		
 		
@@ -133,33 +147,6 @@ namespace Epsitec.Cresus.Database
 			this.Attributes.DeserialiseXmlAttributes (xml);
 		}
 		
-		
-		public string						Name
-		{
-			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
-		}
-		
-		public string						Caption
-		{
-			get { return this.Attributes[Tags.Caption]; }
-		}
-		
-		public string						Description
-		{
-			get { return this.Attributes[Tags.Description]; }
-		}
-		
-		public int							Rank
-		{
-			get { return this.rank; }
-		}
-		
-		public DbKey						InternalKey
-		{
-			get { return this.internal_key; }
-		}
-		
-
 		
 		#region ICloneable Members
 		public object Clone()

@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public class DbTypeString : DbType
 	{
-		protected DbTypeString()
+		internal DbTypeString() : base (DbSimpleType.String)
 		{
 		}
 		
@@ -34,22 +34,8 @@ namespace Epsitec.Cresus.Database
 			this.is_fixed_length = is_fixed_length;
 		}
 		
-		public DbTypeString(System.Xml.XmlElement xml) : base (DbSimpleType.String)
-		{
-			string arg_length = xml.GetAttribute ("length");
-			string arg_fixed  = xml.GetAttribute ("fixed");
-			
-			if (arg_length.Length == 0)
-			{
-				throw new System.ArgumentException ("No length specification found.");
-			}
-			
-			this.length          = System.Int32.Parse (arg_length, System.Globalization.CultureInfo.InvariantCulture);
-			this.is_fixed_length = (arg_fixed == "1") ? true : false;
-		}
 		
-		
-		internal override void SerialiseXmlAttributes(System.Text.StringBuilder buffer)
+		internal override void SerialiseXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{
 			buffer.Append (@" length=""");
 			buffer.Append (this.length.ToString (System.Globalization.CultureInfo.InvariantCulture));
@@ -62,6 +48,24 @@ namespace Epsitec.Cresus.Database
 			{
 				buffer.Append (@"""");
 			}
+			
+			base.SerialiseXmlAttributes (buffer, full);
+		}
+		
+		internal override void DeserialiseXmlAttributes(System.Xml.XmlElement xml)
+		{
+			base.DeserialiseXmlAttributes (xml);
+			
+			string arg_length = xml.GetAttribute ("length");
+			string arg_fixed  = xml.GetAttribute ("fixed");
+			
+			if (arg_length.Length == 0)
+			{
+				throw new System.ArgumentException ("No length specification found.");
+			}
+			
+			this.length          = System.Int32.Parse (arg_length, System.Globalization.CultureInfo.InvariantCulture);
+			this.is_fixed_length = (arg_fixed == "1") ? true : false;
 		}
 		
 		

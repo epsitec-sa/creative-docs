@@ -18,11 +18,36 @@ namespace Epsitec.Cresus.Database
 		
 		public DbTypeEnum(System.Collections.ICollection values, params string[] attributes) : this (attributes)
 		{
-			this.Initialise (values);
+			this.DefineValues (values);
 		}
 		
-		public DbTypeEnum(System.Xml.XmlElement xml) : base (DbSimpleType.String)
+		
+		internal override void SerialiseXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{
+			buffer.Append (@" nmlen=""");
+			buffer.Append (this.max_name_length.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			buffer.Append (@"""");
+			
+			base.SerialiseXmlAttributes (buffer, full);
+		}
+		
+		internal override void SerialiseXmlElements(System.Text.StringBuilder buffer, bool full)
+		{
+			base.SerialiseXmlElements (buffer, full);
+			
+			if (this.values != null)
+			{
+				for (int i = 0; i < this.values.Length; i++)
+				{
+					DbEnumValue.SerialiseToXml (buffer, this.values[i], full);
+				}
+			}
+		}
+		
+		internal override void DeserialiseXmlAttributes(System.Xml.XmlElement xml)
+		{
+			base.DeserialiseXmlAttributes (xml);
+			
 			string arg_nmlen = xml.GetAttribute ("nmlen");
 			
 			if (arg_nmlen.Length > 0)
@@ -30,27 +55,33 @@ namespace Epsitec.Cresus.Database
 				this.max_name_length = System.Int32.Parse (arg_nmlen, System.Globalization.CultureInfo.InvariantCulture);
 			}
 		}
-		
-		
-		internal override void SerialiseXmlAttributes(System.Text.StringBuilder buffer)
+
+		internal override void DeserialiseXmlElements(System.Xml.XmlNodeList nodes, ref int index)
 		{
-			buffer.Append (@" nmlen=""");
-			buffer.Append (this.max_name_length.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			buffer.Append (@"""");
+			base.DeserialiseXmlElements (nodes, ref index);
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			while ((index < nodes.Count) && (nodes[index].Name == "enumval"))
+			{
+				System.Xml.XmlElement node = nodes[index++] as System.Xml.XmlElement;
+				list.Add (DbEnumValue.NewEnumValue (node));
+			}
+			
+			this.values = new DbEnumValue[list.Count];
+			list.CopyTo (this.values);
 		}
 		
 		
-		internal void Initialise(System.Collections.ICollection values)
+		internal void DefineValues(System.Collections.ICollection values)
 		{
-			this.EnsureTypeIsNotInitialised ();
-			
 			DbEnumValue[] temp = new DbEnumValue[values.Count];
 			values.CopyTo (temp, 0);
 			System.Array.Sort (temp, DbEnumValue.RankComparer);
 			
 			if (System.Utilities.CheckForDuplicates (temp, DbEnumValue.NameComparer))
 			{
-				throw new System.ArgumentException ("Duplicates found");
+				throw new System.ArgumentException ("Duplicates found.", "values");
 			}
 			
 			this.CopyValues (temp);
