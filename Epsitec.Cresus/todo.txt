@@ -1,0 +1,6 @@
+Localisations
+-------------
+
+- TextRuler
+- AbstractYesNoCancel
+- Dialog
