@@ -68,5 +68,51 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Drawing.Size (400, 300);
 			window.Show ();
 		}
+		
+		[Test] public void CheckScrollablePanel()
+		{
+			Window window = new Window ();
+			
+			window.Text = "PanelTest.CheckScrollablePanel";
+			window.ClientSize = new Drawing.Size (400, 300);
+			
+			ScrollablePanel panel = new ScrollablePanel ();
+			
+			panel.Parent = window.Root;
+			panel.Bounds = window.Root.Client.Bounds;
+			panel.Dock   = DockStyle.Fill;
+			panel.Panel.MinSize = panel.Client.Size;
+			
+			panel.SuspendLayout ();
+			
+			Button b1 = new Button ("Button 1");
+			Button b2 = new Button ("Button 2");
+			
+			b1.Location = new Drawing.Point (10, 20);
+			b2.Location = new Drawing.Point (b1.Right + 10, b1.Bottom);
+			
+			panel.Panel.Children.Add (b1);
+			b2.Parent = panel.Panel;
+			
+			Assertion.Assert (b1.Parent == panel.Panel);
+			Assertion.Assert (b2.Parent == panel.Panel);
+			Assertion.Assert (panel.Panel.Parent == panel);
+			Assertion.Assert (panel.Panel.Children.Count == 2);
+			
+			panel.ResumeLayout ();
+			
+			System.Console.Out.WriteLine ("Panel DesiredSize = {0}", panel.Panel.DesiredSize);
+			System.Console.Out.WriteLine ("Panel Bounds = {0}", panel.Panel.Bounds);
+			System.Console.Out.WriteLine ("Button Bounds = {0}, {1}", b1.Bounds, b2.Bounds);
+			System.Console.Out.WriteLine ("Button Bounds (root relative) = {0}, {1}", b1.MapClientToRoot (b1.Client.Bounds), b2.MapClientToRoot (b2.Client.Bounds));
+			
+			window.Show ();
+			window.SynchronousRepaint ();
+			
+			System.Console.Out.WriteLine ("Panel DesiredSize = {0}", panel.Panel.DesiredSize);
+			System.Console.Out.WriteLine ("Panel Bounds = {0}", panel.Panel.Bounds);
+			System.Console.Out.WriteLine ("Button Bounds = {0}, {1}", b1.Bounds, b2.Bounds);
+			System.Console.Out.WriteLine ("Button Bounds (root relative) = {0}, {1}", b1.MapClientToRoot (b1.Client.Bounds), b2.MapClientToRoot (b2.Client.Bounds));
+		}
 	}
 }

@@ -106,6 +106,8 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		protected void HandlePanelLayoutChanged(object sender)
 		{
+			System.Diagnostics.Debug.WriteLine ("PanelLayoutChanged called");
+			
 			System.Diagnostics.Debug.Assert (this.panel == sender);
 			
 			if (this.panel.Size != this.panel_size)
