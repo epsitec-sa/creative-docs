@@ -17,6 +17,15 @@ namespace Epsitec.Common.Document
 		// Retourne le rang du trait (0..1), ou -1.
 		public static int DetectOutlineRank(Path path, double width, Point pos)
 		{
+			Point p1,s1,s2,p2;
+			return Geometry.DetectOutlineRank(path, width, pos, out p1, out s1, out s2, out p2);
+		}
+
+		// Détecte sur quel trait d'un chemin est la souris.
+		// Retourne le rang du trait (0..1), ou -1.
+		public static int DetectOutlineRank(Path path, double width, Point pos,
+											out Point bp1, out Point bs1, out Point bs2, out Point bp2)
+		{
 			PathElement[] elements;
 			Point[] points;
 			path.GetElements(out elements, out points);
@@ -26,6 +35,10 @@ namespace Epsitec.Common.Document
 			Point p1 = new Point(0, 0);
 			Point p2 = new Point(0, 0);
 			Point p3 = new Point(0, 0);
+			bp1 = new Point(0, 0);
+			bs1 = new Point(0, 0);
+			bs2 = new Point(0, 0);
+			bp2 = new Point(0, 0);
 			int i = 0;
 			int rank = 0;
 			while ( i < elements.Length )
@@ -39,7 +52,14 @@ namespace Epsitec.Common.Document
 
 					case PathElement.LineTo:
 						p1 = points[i++];
-						if ( Point.DetectSegment(current,p1, pos, width) )  return rank;
+						if ( Point.DetectSegment(current,p1, pos, width) )
+						{
+							bp1 = current;
+							bs1 = current;
+							bs2 = p1;
+							bp2 = p1;
+							return rank;
+						}
 						rank ++;
 						current = p1;
 						break;
@@ -50,7 +70,14 @@ namespace Epsitec.Common.Document
 						p3 = points[i++];
 						p1 = Point.Scale(current, p1, 2.0/3.0);
 						p2 = Point.Scale(p3,      p2, 2.0/3.0);
-						if ( Point.DetectBezier(current,p1,p2,p3, pos, width) )  return rank;
+						if ( Point.DetectBezier(current,p1,p2,p3, pos, width) )
+						{
+							bp1 = current;
+							bs1 = p1;
+							bs2 = p2;
+							bp2 = p3;
+							return rank;
+						}
 						rank ++;
 						current = p3;
 						break;
@@ -59,7 +86,14 @@ namespace Epsitec.Common.Document
 						p1 = points[i++];
 						p2 = points[i++];
 						p3 = points[i++];
-						if ( Point.DetectBezier(current,p1,p2,p3, pos, width) )  return rank;
+						if ( Point.DetectBezier(current,p1,p2,p3, pos, width) )
+						{
+							bp1 = current;
+							bs1 = p1;
+							bs2 = p2;
+							bp2 = p3;
+							return rank;
+						}
 						rank ++;
 						current = p3;
 						break;
@@ -69,7 +103,14 @@ namespace Epsitec.Common.Document
 						{
 							if ( current != start )
 							{
-								if ( Point.DetectSegment(current,start, pos, width) )  return rank;
+								if ( Point.DetectSegment(current,start, pos, width) )
+								{
+									bp1 = current;
+									bs1 = current;
+									bs2 = start;
+									bp2 = start;
+									return rank;
+								}
 								rank ++;
 							}
 						}
@@ -355,6 +396,78 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		// Calcule le point d'intersection entre deux droites ab et cd.
+		// Utilise l'algorithme de Gauss-Jordan utilisé pour le calcul
+		// matriciel. Les calculs ont été spécialisés au cas simple de
+		// l'intersection de segments pour des questions de rapidité.
+		//
+		//		Q=BX-AX : T=BY-AY
+		//		R=CX-DX : U=CY-DY   matrice  [ Q R | S ]
+		//		S=CX-AX : V=CY-AY            [ T U | V ]
+		//
+		// Cette matrice représente les coefficients de l'équation
+		// vectorielle suivante :
+		//		AB*a + CD*b = AC
+		//
+		// La coordonnée du point "P" s'obtient par :
+		//		P = OA + a*AB
+		//
+		// ou encore :
+		//		P = OC + b*CD
+		//
+		// Traite les cas particuliers des segments confondus ou parallèles.
+		public static bool Intersect(Point a, Point b, Point c, Point d, out Point p)
+		{
+			double	q,r,s,t,u,v;
+
+			q = b.X-a.X;
+			r = c.X-d.X;
+			s = c.X-a.X;
+			t = b.Y-a.Y;
+			u = c.Y-d.Y;
+			v = c.Y-a.Y;
+
+			p = new Point(0,0);
+
+			if ( q == 0.0 )  // ab vertical ?
+			{
+				if ( r == 0.0 )  // cd vertical ?
+				{
+					return false;
+				}
+				else
+				{
+					p.X = ((d.X-c.X)*s/r)+c.X;
+					p.Y = ((d.Y-c.Y)*s/r)+c.Y;
+					return true;
+				}
+			}
+
+			if ( t != 0.0 )  // ab pas horizontal ?
+			{
+				u = u-(t*r)/q;
+				v = v-(t*s)/q;
+			}
+
+			if ( u == 0.0 )
+			{
+				return false;
+			}
+
+			p.X = ((d.X-c.X)*v/u)+c.X;
+			p.Y = ((d.Y-c.Y)*v/u)+c.Y;
+			return true;
+		}
+
+		// Teste si un point p est entre les points a et b du segment ab.
+		public static bool IsInside(Point a, Point b, Point p)
+		{
+			if ( p == a || p == b )  return true;
+			double length = Point.Distance(a,b);
+			return ( Point.Distance(a,p) <= length && Point.Distance(b,p) <= length );
+		}
+
+		
 		// Teste si l'objet est rectangulaire.
 		public static bool IsRectangular(Point p0, Point p1, Point p2, Point p3)
 		{

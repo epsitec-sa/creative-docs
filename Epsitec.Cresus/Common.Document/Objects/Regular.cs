@@ -68,6 +68,37 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Début du déplacement une poignée.
+		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
+		{
+			base.MoveHandleStarting(rank, pos, drawingContext);
+
+			if ( rank < this.handles.Count )  // poignée de l'objet ?
+			{
+				drawingContext.ConstrainFlush();
+
+				Handle handle = this.Handle(rank);
+				if ( handle.PropertyType == Properties.Type.None )
+				{
+					if ( rank == 0 )  // centre ?
+					{
+						drawingContext.ConstrainAddHV(this.Handle(0).Position);
+					}
+					if ( rank == 1 )  // extrémité ?
+					{
+						drawingContext.ConstrainAddCenter(this.Handle(0).Position);
+					}
+				}
+				else
+				{
+					Properties.Abstract property = this.Property(handle.PropertyType);
+					property.MoveHandleStarting(this, handle.PropertyRank, pos, drawingContext);
+				}
+
+				drawingContext.MagnetClearStarting();
+			}
+		}
+
 		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
@@ -102,8 +133,8 @@ namespace Epsitec.Common.Document.Objects
 		// Début de la création d'un objet.
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
-			drawingContext.ConstrainFixStarting(pos);
-			drawingContext.ConstrainFixType(ConstrainType.Normal);
+			drawingContext.ConstrainFlush();
+			drawingContext.ConstrainAddHV(pos);
 			this.HandleAdd(pos, HandleType.Primary);
 			this.HandleAdd(pos, HandleType.Primary);
 			this.isCreating = true;
@@ -130,6 +161,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
 			drawingContext.ConstrainDelStarting();
+			drawingContext.MagnetClearStarting();
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
 

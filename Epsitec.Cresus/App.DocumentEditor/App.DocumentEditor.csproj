@@ -599,6 +599,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\Magnet.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Merge.icon"
                     BuildAction = "EmbeddedResource"
                 />

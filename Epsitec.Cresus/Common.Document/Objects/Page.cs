@@ -1,4 +1,5 @@
 using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
 using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
@@ -194,7 +195,14 @@ namespace Epsitec.Common.Document.Objects
 
 			set
 			{
-				this.masterAutoStop = value;
+				if ( this.masterAutoStop != value )
+				{
+					this.InsertOpletType();
+					this.masterAutoStop = value;
+					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
+					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+					this.document.IsDirtySerialize = true;
+				}
 			}
 		}
 
@@ -208,7 +216,14 @@ namespace Epsitec.Common.Document.Objects
 
 			set
 			{
-				this.masterSpecific = value;
+				if ( this.masterSpecific != value )
+				{
+					this.InsertOpletType();
+					this.masterSpecific = value;
+					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
+					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+					this.document.IsDirtySerialize = true;
+				}
 			}
 		}
 
@@ -263,6 +278,47 @@ namespace Epsitec.Common.Document.Objects
 				this.guides.Add(guide);
 			}
 		}
+
+
+		#region Menu
+		// Construit le menu pour choisir une page.
+		public static VMenu CreateMenu(UndoableList pages, int currentPage, MessageEventHandler message)
+		{
+			int total = pages.Count;
+			bool slave = true;
+			VMenu menu = new VMenu();
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Objects.Page page = pages[i] as Objects.Page;
+
+				if ( i > 0 && slave != (page.MasterType == MasterType.Slave) )
+				{
+					menu.Items.Add(new MenuSeparator());
+				}
+
+				string name = string.Format("{0}: {1}", page.ShortName, page.Name);
+
+				string icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
+				if ( i == currentPage )
+				{
+					icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
+				}
+
+				MenuItem item = new MenuItem("PageSelect(this.Name)", icon, name, "", i.ToString());
+
+				if ( message != null )
+				{
+					item.Pressed += message;
+				}
+
+				menu.Items.Add(item);
+
+				slave = (page.MasterType == MasterType.Slave);
+			}
+			menu.AdjustSize();
+			return menu;
+		}
+		#endregion
 
 		
 		#region OpletType

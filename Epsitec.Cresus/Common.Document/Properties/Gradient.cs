@@ -1035,6 +1035,48 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		// Début du déplacement d'une poignée.
+		public override void MoveHandleStarting(Objects.Abstract obj, int rank, Point pos, DrawingContext drawingContext)
+		{
+			if ( this.fillType == GradientFillType.Hatch   ||
+				 this.fillType == GradientFillType.Dots    ||
+				 this.fillType == GradientFillType.Squares )
+			{
+				if ( rank == 0 )  // angle ?
+				{
+					Rectangle bbox = this.BoundingBoxHandlesGradient(obj);
+					drawingContext.ConstrainAddCenter(bbox.Center);
+				}
+
+				if ( rank == 1 )  // épaisseur ?
+				{
+				}
+
+				if ( rank == 2 )  // distance ?
+				{
+				}
+			}
+			else
+			{
+				if ( rank == 0 )  // centre ?
+				{
+					drawingContext.ConstrainAddHV(this.GetHandlePosition(obj, 0));
+				}
+
+				if ( rank == 1 )  // coin ?
+				{
+					Point center = this.GetHandlePosition(obj, 0);
+					drawingContext.ConstrainAddHV(center);
+					drawingContext.ConstrainAddLine(center, this.GetHandlePosition(obj, 1));
+				}
+
+				if ( rank == 2 )  // angle ?
+				{
+					drawingContext.ConstrainAddCenter(this.GetHandlePosition(obj, 0));
+				}
+			}
+		}
+
 		// Nombre de poignées.
 		public override int TotalHandle(Objects.Abstract obj)
 		{

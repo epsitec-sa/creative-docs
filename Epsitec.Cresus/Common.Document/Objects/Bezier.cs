@@ -408,7 +408,6 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			int prev = this.PrevRank(rank-1);
-			//?int next = rank-1;
 			int next = this.NextRank(prev);
 
 			if ( this.Handle(prev+2).Type == HandleType.Hide || this.Handle(next+0).Type == HandleType.Hide )
@@ -571,11 +570,58 @@ namespace Epsitec.Common.Document.Objects
 		// Début du déplacement une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
-			if ( rank < this.TotalMainHandle )
+			base.MoveHandleStarting(rank, pos, drawingContext);
+
+			if ( rank < this.handles.Count )  // poignée de l'objet ?
 			{
-				this.InsertOpletGeometry();
-				pos = this.Handle((rank/3)*3+1).Position;
-				drawingContext.ConstrainFixStarting(pos);
+				drawingContext.ConstrainFlush();
+
+				Handle handle = this.Handle(rank);
+				if ( handle.PropertyType == Properties.Type.None )
+				{
+					int prev = this.PrevRank(rank/3*3);
+					int next = this.NextRank(rank/3*3);
+
+					if ( rank%3 == 1 )  // poigné principale ?
+					{
+						if ( this.Handle(rank-1).Type == HandleType.Hide )
+						{
+							drawingContext.ConstrainAddLine(this.Handle(rank).Position, this.Handle(prev+1).Position);
+							drawingContext.ConstrainAddHV(this.Handle(prev+1).Position);
+						}
+
+						if ( this.Handle(rank+1).Type == HandleType.Hide )
+						{
+							drawingContext.ConstrainAddLine(this.Handle(rank).Position, this.Handle(next+1).Position);
+							drawingContext.ConstrainAddHV(this.Handle(next+1).Position);
+						}
+
+						drawingContext.ConstrainAddHV(this.Handle(rank).Position);
+					}
+					else	// poignée secondaire ?
+					{
+						pos = this.Handle((rank/3)*3+1).Position;
+						drawingContext.ConstrainAddLine(this.Handle(rank).Position, pos);
+						drawingContext.ConstrainAddHV(pos);
+
+						if ( rank%3 == 0 && this.Handle(rank+2).Type == HandleType.Hide )
+						{
+							drawingContext.ConstrainAddLine(this.Handle(rank+1).Position, this.Handle(next+1).Position);
+						}
+
+						if ( rank%3 == 2 && this.Handle(rank-2).Type == HandleType.Hide )
+						{
+							drawingContext.ConstrainAddLine(this.Handle(rank-1).Position, this.Handle(prev+1).Position);
+						}
+					}
+				}
+				else
+				{
+					Properties.Abstract property = this.Property(handle.PropertyType);
+					property.MoveHandleStarting(this, handle.PropertyRank, pos, drawingContext);
+				}
+
+				drawingContext.MagnetClearStarting();
 			}
 		}
 
@@ -653,8 +699,8 @@ namespace Epsitec.Common.Document.Objects
 		// Début de la création d'un objet.
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
-			drawingContext.ConstrainFixStarting(pos);
-			drawingContext.ConstrainFixType(ConstrainType.Normal);
+			drawingContext.ConstrainFlush();
+			drawingContext.ConstrainAddHV(pos);
 
 			this.isCreating = true;
 			bool ignore = false;
@@ -788,6 +834,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			drawingContext.ConstrainDelStarting();
+			drawingContext.MagnetClearStarting();
 			this.mouseDown = false;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}

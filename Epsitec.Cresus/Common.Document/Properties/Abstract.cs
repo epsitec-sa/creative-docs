@@ -434,6 +434,11 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		// Début du déplacement d'une poignée.
+		public virtual void MoveHandleStarting(Objects.Abstract obj, int rank, Point pos, DrawingContext drawingContext)
+		{
+		}
+
 		// Nombre de poignées.
 		public virtual int TotalHandle(Objects.Abstract obj)
 		{

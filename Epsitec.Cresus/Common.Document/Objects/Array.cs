@@ -1188,8 +1188,8 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.draftStep == 0 )  // choix taille d'une cellule ?
 			{
-				drawingContext.ConstrainFixStarting(pos);
-				drawingContext.ConstrainFixType(ConstrainType.Square);
+				drawingContext.ConstrainFlush();
+				drawingContext.ConstrainAddHV(pos);
 				this.HandleAdd(pos, HandleType.Primary);  // rang = 0
 				this.HandleAdd(pos, HandleType.Primary);  // rang = 1
 				this.document.Notifier.NotifyArea(this.BoundingBox);

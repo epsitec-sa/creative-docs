@@ -69,7 +69,7 @@ namespace Epsitec.Common.Drawing
 		internal static double GridAlign(double value, double offset, double step)
 		{
 			// Met une valeur sur la grille la plus proche.
-			if ( value < 0.0 )
+			if ( value+offset < 0.0 )
 			{
 				return (double)((int)((value+offset-step/2.0)/step)*step)-offset;
 			}

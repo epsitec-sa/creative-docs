@@ -37,24 +37,24 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.help = new TextFieldMulti(this.window.Root);
 				this.help.IsReadOnly = true;
-				this.help.Height = 90;
+				this.help.Height = 84;
 				this.help.Dock = DockStyle.Top;
 				this.help.DockMargins = new Margins(6, 6, 6, 0);
 
 				System.Text.StringBuilder b = new System.Text.StringBuilder();
 				string chip = "<list type=\"fix\" width=\"1.5\"/>";
 				b.Append(chip);
-				b.Append("Cette liste donne tous les calques qui seront imprimés pour la page choisie.<br/>");
+				b.Append("La liste ci-dessous montre tous les calques qui seront imprimés pour la page sélectionnée.<br/>");
 				b.Append(chip);
-				b.Append("Le calque le plus au fond est le dernier de la liste. C'est donc le premier imprimé.<br/>");
+				b.Append("Le calque qui se trouve au-dessus de tous les autres apparaît en premier dans la liste, puis vient le calque situé juste en dessous, etc. Le dernier calque est le premier imprimé.<br/>");
 				b.Append(chip);
-				b.Append("Si la page inclu une page modèle, celle-ci vient en fin de liste, tout au fond.<br/>");
+				b.Append("Si la page sélectionnée inclut des pages modèles contenant un calque unique, leur calque vient s'ajouter en fin de liste; ainsi, les calques des pages modèles apparaissent normalement derrière tous les autres calques de la page sélectionnée.<br/>");
 				b.Append(chip);
-				b.Append("Si la page modèle contient plusieurs calques, la première moitié (arrondie à l'unité supérieure) viendra au fond et le reste dessus.<br/>");
+				b.Append("Lorsqu'une page modèle contient plusieurs calques, une moitié de ceux-ci apparaîtra sous les calques de la page sélectionnée, l'autre dessus.<br/>");
 				b.Append(chip);
-				b.Append("Une page modèle peut inclure elle-même d'autres pages modèles, qui viendront dessous.");
+				b.Append("Une page modèle peut inclure elle-même d'autres pages modèles, dont les calques viendront se placer dessous, respectivement dessus.");
 				this.help.Text = b.ToString();
-				this.help.SetVisible(false);
+				this.help.SetVisible(true);
 
 				this.table = new CellTable(this.window.Root);
 				this.table.StyleH  = CellArrayStyle.ScrollNorm;
@@ -269,48 +269,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		// Construit le menu pour choisir une page.
-		public VMenu CreatePagesMenu()
-		{
-			UndoableList pages = this.editor.CurrentDocument.GetObjects;  // liste des pages
-			int total = pages.Count;
-			bool slave = true;
-			VMenu menu = new VMenu();
-			for ( int i=0 ; i<total ; i++ )
-			{
-				Objects.Page page = pages[i] as Objects.Page;
-
-				if ( i > 0 && slave != (page.MasterType == Objects.MasterType.Slave) )
-				{
-					menu.Items.Add(new MenuSeparator());
-				}
-
-				string name = string.Format("{0}: {1}", page.ShortName, page.Name);
-
-				string icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
-				if ( i == this.showedPage )
-				{
-					icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
-				}
-
-				MenuItem item = new MenuItem("PageStackSelect(this.Name)", icon, name, "", i.ToString());
-				item.Pressed += new MessageEventHandler(this.HandleMenuPressed);
-				menu.Items.Add(item);
-
-				slave = (page.MasterType == Objects.MasterType.Slave);
-			}
-			menu.AdjustSize();
-			return menu;
-		}
-
-		private void HandleMenuPressed(object sender, MessageEventArgs e)
-		{
-			MenuItem item = sender as MenuItem;
-			this.showedPage = System.Convert.ToInt32(item.Name);
-			this.UpdateTable();
-		}
-
-		
 		private void HandlePagePrevClicked(object sender, MessageEventArgs e)
 		{
 			this.showedPage --;
@@ -334,6 +292,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			menu.ShowAsContextMenu(button.Window, pos);
 		}
 
+		// Construit le menu pour choisir une page.
+		public VMenu CreatePagesMenu()
+		{
+			UndoableList pages = this.editor.CurrentDocument.GetObjects;  // liste des pages
+			MessageEventHandler message = new MessageEventHandler(this.HandleMenuPressed);
+			return Objects.Page.CreateMenu(pages, this.showedPage, message);
+		}
+
+		private void HandleMenuPressed(object sender, MessageEventArgs e)
+		{
+			MenuItem item = sender as MenuItem;
+			this.showedPage = System.Convert.ToInt32(item.Name);
+			this.UpdateTable();
+		}
+
+		
 		private void HandleButtonCurrentClicked(object sender, MessageEventArgs e)
 		{
 			this.showedPage = this.editor.CurrentDocument.Modifier.ActiveViewer.DrawingContext.CurrentPage;

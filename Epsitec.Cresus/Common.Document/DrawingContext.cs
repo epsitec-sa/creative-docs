@@ -4,16 +4,6 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document
 {
-	public enum ConstrainType
-	{
-		None,			// aucune
-		Normal,			// horizontal, vertical et 45 degrés
-		Square,			// uniquement 45 degrés
-		Line,			// uniquement horizontal et vertical
-		Scale,			// mise à l'échelle
-		Rotate,			// rotation
-	}
-
 	public enum LayerDrawingMode
 	{
 		ShowInactive,	// affiche normalement tous les calques
@@ -33,6 +23,7 @@ namespace Epsitec.Common.Document
 			this.viewer = viewer;
 			this.rootStack = new System.Collections.ArrayList();
 			this.masterPageList = new System.Collections.ArrayList();
+			this.magnetLayerList = new System.Collections.ArrayList();
 
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
@@ -46,6 +37,14 @@ namespace Epsitec.Common.Document
 				this.gridSubdiv = new Point(5.0, 5.0);
 				this.gridOffset = new Point(0.0, 0.0);
 			}
+
+			this.magnetLineMain   = new MagnetLine(this.document, this, MagnetLine.Type.Main);
+			this.magnetLineBegin  = new MagnetLine(this.document, this, MagnetLine.Type.Perp);
+			this.magnetLineEnd    = new MagnetLine(this.document, this, MagnetLine.Type.Perp);
+			this.magnetLineMiddle = new MagnetLine(this.document, this, MagnetLine.Type.Perp);
+			this.magnetLinePerp   = new MagnetLine(this.document, this, MagnetLine.Type.Perp);
+			this.magnetLineInter  = new MagnetLine(this.document, this, MagnetLine.Type.Inter);
+			this.magnetLineProj   = new MagnetLine(this.document, this, MagnetLine.Type.Proj);
 		}
 
 		public Viewer Viewer
@@ -629,41 +628,58 @@ namespace Epsitec.Common.Document
 		// Force un point sur la grille magnétique, si nécessaire.
 		public void SnapGrid(ref Point pos)
 		{
+			this.SnapGrid(ref pos, this.SnapGridOffset, Rectangle.Empty);
+		}
+
+		// Force un point sur la grille magnétique, si nécessaire.
+		public void SnapGrid(ref Point pos, Rectangle box)
+		{
+			this.SnapGrid(ref pos, this.SnapGridOffset, box);
+		}
+
+		// Force un point sur la grille magnétique, si nécessaire.
+		public void SnapGrid(ref Point pos, Point offset, Rectangle box)
+		{
 			bool snapX, snapY;
 
 			if ( !this.gridActive ^ this.isAlt )
 			{
-				this.SnapGuides(ref pos, out snapX, out snapY);
+				this.SnapGuides(ref pos, box, out snapX, out snapY);
 				return;
 			}
 
 			Point guidePos = pos;
-			this.SnapGuides(ref guidePos, out snapX, out snapY);
-			this.SnapGridForce(ref pos);
+			this.SnapGuides(ref guidePos, box, out snapX, out snapY);
+			this.SnapGridForce(ref pos, offset);
 
 			if ( snapX )  pos.X = guidePos.X;
 			if ( snapY )  pos.Y = guidePos.Y;
 		}
 
-		// Force un point sur la grille magnétique, si nécessaire.
-		public void SnapGrid(Point origin, ref Point pos)
-		{
-			if ( !this.gridActive || this.isAlt )  return;
-			pos -= origin;
-			pos = Point.GridAlign(pos, -this.gridOffset, this.gridStep);
-			pos += origin;
-		}
-
 		// Force un point sur la grille magnétique, toujours.
 		public void SnapGridForce(ref Point pos)
 		{
-			Point offset = new Point(0.0, 0.0);
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				offset = new Point(this.gridStep.X/2, this.gridStep.Y/2);
-			}
+			pos = Point.GridAlign(pos, this.SnapGridOffset, this.gridStep);
+		}
 
-			pos = Point.GridAlign(pos, offset-this.gridOffset, this.gridStep);
+		// Force un point sur la grille magnétique, toujours.
+		public void SnapGridForce(ref Point pos, Point offset)
+		{
+			pos = Point.GridAlign(pos, offset, this.gridStep);
+		}
+
+		// Retourne l'offset standard pour la grille magnétique.
+		protected Point SnapGridOffset
+		{
+			get
+			{
+				Point offset = new Point(0.0, 0.0);
+				if ( this.document.Type == DocumentType.Pictogram )
+				{
+					offset = new Point(this.gridStep.X/2, this.gridStep.Y/2);
+				}
+				return offset-this.gridOffset;
+			}
 		}
 		#endregion
 
@@ -793,7 +809,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Force un point sur un repère magnétique.
-		protected void SnapGuides(ref Point pos, out bool snapX, out bool snapY)
+		protected void SnapGuides(ref Point pos, Rectangle box, out bool snapX, out bool snapY)
 		{
 			snapX = false;
 			snapY = false;
@@ -805,16 +821,16 @@ namespace Epsitec.Common.Document
 			{
 				foreach ( Objects.Page masterPage in this.MasterPageList )
 				{
-					this.SnapGuides(masterPage.Guides, ref pos, ref snapX, ref snapY);
+					this.SnapGuides(masterPage.Guides, ref pos, box, ref snapX, ref snapY);
 				}
 			}
 
-			this.SnapGuides(page.Guides, ref pos, ref snapX, ref snapY);
-			this.SnapGuides(this.document.Settings.GuidesListGlobal, ref pos, ref snapX, ref snapY);
+			this.SnapGuides(page.Guides, ref pos, box, ref snapX, ref snapY);
+			this.SnapGuides(this.document.Settings.GuidesListGlobal, ref pos, box, ref snapX, ref snapY);
 		}
 
 		// Force un point sur un repère magnétique d'une liste.
-		protected void SnapGuides(UndoableList guides, ref Point pos, ref bool snapX, ref bool snapY)
+		protected void SnapGuides(UndoableList guides, ref Point pos, Rectangle box, ref bool snapX, ref bool snapY)
 		{
 			if ( snapX && snapY )  return;
 
@@ -822,24 +838,70 @@ namespace Epsitec.Common.Document
 			for ( int i=0 ; i<total ; i++ )
 			{
 				Settings.Guide guide = guides[i] as Settings.Guide;
+				double apos = guide.AbsolutePosition;
 
-				if ( !snapY && guide.IsHorizontal )  // repère horizontal ?
+				if ( guide.IsHorizontal )  // repère horizontal ?
 				{
-					double len = System.Math.Abs(pos.Y - guide.AbsolutePosition);
-					if ( len <= this.GuideMargin )
+					if ( !snapY && !box.IsEmpty )
 					{
-						pos.Y = guide.AbsolutePosition;
-						snapY = true;
+						double len = System.Math.Abs(box.Bottom - apos);
+						if ( len <= this.GuideMargin )
+						{
+							pos.Y += apos-box.Bottom;
+							snapY = true;
+						}
+					}
+
+					if ( !snapY && !box.IsEmpty )
+					{
+						double len = System.Math.Abs(box.Top - apos);
+						if ( len <= this.GuideMargin )
+						{
+							pos.Y += apos-box.Top;
+							snapY = true;
+						}
+					}
+
+					if ( !snapY )
+					{
+						double len = System.Math.Abs(pos.Y - apos);
+						if ( len <= this.GuideMargin )
+						{
+							pos.Y = apos;
+							snapY = true;
+						}
 					}
 				}
-
-				if ( !snapX && !guide.IsHorizontal )  // repère vertical ?
+				else	// repère vertical ?
 				{
-					double len = System.Math.Abs(pos.X - guide.AbsolutePosition);
-					if ( len <= this.GuideMargin )
+					if ( !snapX && !box.IsEmpty )
 					{
-						pos.X = guide.AbsolutePosition;
-						snapX = true;
+						double len = System.Math.Abs(box.Left - apos);
+						if ( len <= this.GuideMargin )
+						{
+							pos.X += apos-box.Left;
+							snapX = true;
+						}
+					}
+
+					if ( !snapX && !box.IsEmpty )
+					{
+						double len = System.Math.Abs(box.Right - apos);
+						if ( len <= this.GuideMargin )
+						{
+							pos.X += apos-box.Right;
+							snapX = true;
+						}
+					}
+
+					if ( !snapX )
+					{
+						double len = System.Math.Abs(pos.X - apos);
+						if ( len <= this.GuideMargin )
+						{
+							pos.X = apos;
+							snapX = true;
+						}
 					}
 				}
 			}
@@ -997,6 +1059,12 @@ namespace Epsitec.Common.Document
 			get { return this.guideMargin/this.ScaleX; }
 		}
 
+		// Marge magnétique des constructions.
+		public double MagnetMargin
+		{
+			get { return this.magnetMargin/this.ScaleX; }
+		}
+
 		// Taille supplémentaire lorsqu'un objet est survolé par la souris.
 		public double HiliteSize
 		{
@@ -1107,11 +1175,8 @@ namespace Epsitec.Common.Document
 				if ( this.isCtrl != value )
 				{
 					this.isCtrl = value;
-
-					if ( this.constrainType != ConstrainType.None )
-					{
-						this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-					}
+					this.ConstrainUpdateCtrl();
+					//?this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 				}
 			}
 		}
@@ -1131,147 +1196,483 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
-		#region Constrain
-		// Fixe le point initial pour les contraintes.
-		public void ConstrainFixStarting(Point pos)
-		{
-			this.constrainStarting = pos;
-			this.constrainOrigin = pos;
-		}
 
-		// Fixe le point initial pour les contraintes.
-		public void ConstrainFixStarting(Point origin, Point pos)
+		#region Magnet
+		// Action des lignes magnétiques.
+		public bool MagnetActive
 		{
-			this.constrainStarting = pos;
-			this.constrainOrigin = origin;
-		}
-
-		// Fixe le type des contraintes.
-		public void ConstrainFixType(ConstrainType type)
-		{
-			if ( this.constrainType != type )
+			get
 			{
-				this.constrainType = type;
+				return this.magnetActive;
+			}
 
-				if ( this.IsCtrl )
+			set
+			{
+				if ( this.magnetActive != value )
 				{
-					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+					this.magnetActive = value;
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifyMagnetChanged();
+						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
+					}
 				}
 			}
+		}
+
+		// Annule le point de départ.
+		public void MagnetClearStarting()
+		{
+			this.isMagnetStarting = false;
+		}
+
+		// Fixe le point de départ.
+		public void MagnetFixStarting(Point pos)
+		{
+			this.isMagnetStarting = true;
+			this.magnetStarting = pos;
 		}
 
 		// Retourne une position éventuellement contrainte.
-		public void ConstrainSnapPos(ref Point pos)
+		public void MagnetSnapPos(ref Point pos)
 		{
-			if ( this.constrainType == ConstrainType.None || !this.isCtrl )  return;
+			if ( !this.magnetActive )  return;
 
-			if ( this.constrainType == ConstrainType.Normal ||
-				 this.constrainType == ConstrainType.Rotate )
+			if ( this.isCtrl )
 			{
-				double angle = Point.ComputeAngleDeg(this.constrainStarting, pos);
-				double dist = Point.Distance(pos, this.constrainStarting);
-				angle = System.Math.Floor((angle+22.5)/45)*45;
-				pos = Transform.RotatePointDeg(this.constrainStarting, angle, this.constrainStarting+new Point(dist,0));
+				this.MagnetDelStarting();
+				return;
 			}
 
-			if ( this.constrainType == ConstrainType.Square )
+			if ( this.isMagnetStarting && this.magnetLineMain.IsUsed )
 			{
-				double angle = Point.ComputeAngleDeg(this.constrainStarting, pos);
-				double dist = Point.Distance(pos, this.constrainStarting);
-				angle += 45;
-				angle = System.Math.Floor((angle+45)/90)*90;
-				angle -= 45;
-				pos = Transform.RotatePointDeg(this.constrainStarting, angle, this.constrainStarting+new Point(dist,0));
-			}
-
-			if ( this.constrainType == ConstrainType.Line )
-			{
-				if ( System.Math.Abs(pos.X-this.constrainStarting.X) < System.Math.Abs(pos.Y-this.constrainStarting.Y) )
+				Point proj = this.magnetLineMain.Projection(this.magnetStarting);
+				if ( Point.Distance(proj, pos) <= this.MagnetMargin )
 				{
-					pos.X = this.constrainStarting.X;
-				}
-				else
-				{
-					pos.Y = this.constrainStarting.Y;
-				}
-			}
-
-			if ( this.constrainType == ConstrainType.Scale )
-			{
-				double dist = Point.Distance(this.constrainStarting, pos);
-				dist = System.Math.Min(dist/4, 10.0/this.ScaleX);
-				Point proj = Point.Projection(this.constrainStarting, this.constrainOrigin, pos);
-				if ( Point.Distance(proj, pos) < dist )
-				{
+					this.magnetLineProj.Initialise(proj, this.magnetStarting, false);
 					pos = proj;
+					return;
 				}
-				else
+			}
+			this.magnetLineProj.Clear();
+
+			double margin = this.MagnetMargin;
+
+			MagnetLine first  = null;
+			MagnetLine second = null;
+
+			if ( this.magnetLineMain.Detect(pos, margin) )
+			{
+				first = this.magnetLineMain;
+			}
+			else if ( this.magnetLineMain.Detect(pos, margin*3.0) )
+			{
+				Point proj = this.magnetLineMain.Projection(pos);
+				if ( !Geometry.IsInside(this.magnetLineMain.P1, this.magnetLineMain.P2, proj) )
 				{
-					if ( System.Math.Abs(pos.X-this.constrainStarting.X) < System.Math.Abs(pos.Y-this.constrainStarting.Y) )
+					first = this.magnetLineMain;
+				}
+			}
+
+			if ( first == null )
+			{
+				margin *= 3.0;
+			}
+
+			bool perp = false;
+
+			MagnetLine piston = null;
+			if ( this.magnetLineBegin.IsUsed  && this.magnetLineBegin.Infinite  )  piston = this.magnetLineBegin;
+			if ( this.magnetLineEnd.IsUsed    && this.magnetLineEnd.Infinite    )  piston = this.magnetLineEnd;
+			if ( this.magnetLineMiddle.IsUsed && this.magnetLineMiddle.Infinite )  piston = this.magnetLineMiddle;
+			if ( this.magnetLinePerp.IsUsed   && this.magnetLinePerp.Infinite   )  piston = this.magnetLinePerp;
+			if ( piston != null )
+			{
+				if ( piston.Detect(pos, margin) )
+				{
+					perp = true;
+					this.magnetLineBegin.Infinite  = (this.magnetLineBegin  == piston);
+					this.magnetLineEnd.Infinite    = (this.magnetLineEnd    == piston);
+					this.magnetLineMiddle.Infinite = (this.magnetLineMiddle == piston);
+					this.magnetLinePerp.Infinite   = (this.magnetLinePerp   == piston);
+					if ( first == null )  first  = piston;
+					else                  second = piston;
+				}
+			}
+
+			if ( !perp )
+			{
+				this.magnetLineBegin.Infinite = false;
+				if ( !perp && this.magnetLineBegin.Detect(pos, margin) )
+				{
+					perp = true;
+					this.magnetLineBegin.Infinite = true;
+					if ( first == null )  first  = this.magnetLineBegin;
+					else                  second = this.magnetLineBegin;
+				}
+
+				this.magnetLineEnd.Infinite = false;
+				if ( !perp && this.magnetLineEnd.Detect(pos, margin) )
+				{
+					perp = true;
+					this.magnetLineEnd.Infinite = true;
+					if ( first == null )  first  = this.magnetLineEnd;
+					else                  second = this.magnetLineEnd;
+				}
+
+				this.magnetLineMiddle.Infinite = false;
+				if ( !perp && this.magnetLineMiddle.Detect(pos, margin) )
+				{
+					perp = true;
+					this.magnetLineMiddle.Infinite = true;
+					if ( first == null )  first  = this.magnetLineMiddle;
+					else                  second = this.magnetLineMiddle;
+				}
+
+				this.magnetLinePerp.Infinite = false;
+				if ( !perp && this.magnetLinePerp.Detect(pos, margin) )
+				{
+					perp = true;
+					this.magnetLinePerp.Infinite = true;
+					if ( first == null )  first  = this.magnetLinePerp;
+					else                  second = this.magnetLinePerp;
+				}
+			}
+
+			if ( perp )
+			{
+				this.magnetLineInter.Clear();
+			}
+			else
+			{
+				if ( first != null && first.IsMain )
+				{
+					if ( this.magnetLineInter.Detect(pos, margin) )
 					{
-						pos.X = this.constrainStarting.X;
+						second = this.magnetLineInter;
+					}
+				}
+			}
+
+			if ( first == null )
+			{
+				Point p1, p2;
+				if ( this.document.Modifier.MagnetLayerDetect(pos, new Point(0,0), new Point(0,0), out p1, out p2) )
+				{
+					this.magnetLineMain.Initialise(p1, p2, true);
+					first = this.magnetLineMain;
+
+					// Ajoute le segment au départ.
+					Point pp1 = Point.Move(p1, p2, this.MagnetMargin);
+					Point pb1 = Transform.RotatePointDeg(p1,  90, pp1);
+					Point pb2 = Transform.RotatePointDeg(p1, -90, pp1);
+					this.magnetLineBegin.Initialise(pb1, pb2, false);
+
+					// Ajoute le segment à l'arrivée.
+					Point pp2 = Point.Move(p2, p1, this.MagnetMargin);
+					Point pe1 = Transform.RotatePointDeg(p2,  90, pp2);
+					Point pe2 = Transform.RotatePointDeg(p2, -90, pp2);
+					this.magnetLineEnd.Initialise(pe1, pe2, false);
+
+					if ( this.isMagnetStarting &&
+						 this.magnetLineMain.Detect(this.magnetStarting, 0.001) )
+					{
+						Point delta = Point.Move(p1, p2, this.MagnetMargin*2.0)-p1;
+						Point pi1 = new Point(this.magnetStarting.X-delta.Y, this.magnetStarting.Y+delta.X);
+						Point pi2 = new Point(this.magnetStarting.X+delta.Y, this.magnetStarting.Y-delta.X);
+						this.magnetLinePerp.Initialise(pi1, pi2, false);
+
+						this.magnetLineMiddle.Clear();
 					}
 					else
 					{
-						pos.Y = this.constrainStarting.Y;
+						// Ajoute le segment au milieu.
+						Point m = Point.Scale(p1, p2, 0.5);
+						Point n = Point.Move(m, p2, this.MagnetMargin);
+						Point pm1 = Transform.RotatePointDeg(m,  90, n);
+						Point pm2 = Transform.RotatePointDeg(m, -90, n);
+						this.magnetLineMiddle.Initialise(pm1, pm2, false);
+
+						this.magnetLinePerp.Clear();
 					}
 				}
+			}
+			else
+			{
+				if ( first.IsMain && second == null )
+				{
+					Point p1, p2;
+					if ( this.document.Modifier.MagnetLayerDetect(pos, this.magnetLineMain.P1, this.magnetLineMain.P2, out p1, out p2) )
+					{
+						Point inter;
+						if ( Geometry.Intersect(first.P1, first.P2, p1, p2, out inter) &&
+							Geometry.IsInside(p1, p2, inter) )
+						{
+							this.magnetLineInter.Initialise(p1, p2, false);
+							second = this.magnetLineInter;
+						}
+					}
+				}
+			}
+
+			if ( first == null )
+			{
+				this.magnetLineMain.Clear();
+				this.magnetLineBegin.Clear();
+				this.magnetLineEnd.Clear();
+				this.magnetLineMiddle.Clear();
+				this.magnetLinePerp.Clear();
+				this.magnetLineInter.Clear();
+			}
+			else
+			{
+				if ( second == null )
+				{
+					this.magnetLineInter.Clear();
+					pos = first.Projection(pos);
+					return;
+				}
+				else
+				{
+					Geometry.Intersect(first.P1, first.P2, second.P1, second.P2, out pos);
+					return;
+				}
+			}
+		}
+
+		// Enlève le point initial pour les lignes magnétiques.
+		public void MagnetDelStarting()
+		{
+			this.magnetLineMain.Clear();
+			this.magnetLineBegin.Clear();
+			this.magnetLineEnd.Clear();
+			this.magnetLineMiddle.Clear();
+			this.magnetLinePerp.Clear();
+			this.magnetLineInter.Clear();
+			this.magnetLineProj.Clear();
+		}
+
+		// Dessine les lignes magnétiques.
+		public void DrawMagnet(Graphics graphics, Size size)
+		{
+			if ( !this.magnetActive )  return;
+			if ( this.isCtrl )  return;
+
+			double max = System.Math.Max(size.Width, size.Height);
+			this.magnetLineMain.Draw(graphics, max);
+			this.magnetLineBegin.Draw(graphics, max);
+			this.magnetLineEnd.Draw(graphics, max);
+			this.magnetLineMiddle.Draw(graphics, max);
+			this.magnetLinePerp.Draw(graphics, max);
+			this.magnetLineInter.Draw(graphics, max);
+			this.magnetLineProj.Draw(graphics, max);
+		}
+		#endregion
+
+
+		#region Constrain
+		// Efface toutes les contraintes.
+		public void ConstrainFlush()
+		{
+			this.constrainList.Clear();
+		}
+
+		// Ajoute 4 contraintes pour former un rectangle HV.
+		// p1 et p2 sont 2 coins opposés quelconques du rectangle.
+		public void ConstrainAddRect(Point p1, Point p2)
+		{
+			Point p3 = new Point(p1.X, p2.Y);
+			Point p4 = new Point(p2.X, p1.Y);
+			this.ConstrainAddLine(p1, p3);
+			this.ConstrainAddLine(p3, p2);
+			this.ConstrainAddLine(p2, p4);
+			this.ConstrainAddLine(p4, p1);
+		}
+
+		// Ajoute des contraintes pour déplacer le sommet d'un rectangle.
+		public void ConstrainAddRect(Point corner, Point opp, Point left, Point right)
+		{
+			this.ConstrainAddLine(corner, opp);
+			this.ConstrainAddLine(corner, left);
+			this.ConstrainAddLine(corner, right);
+		}
+
+		// Ajoute un centre de rotation pour les contraintes, permettant des
+		// rotations multiples de 45 degrés.
+		public void ConstrainAddCenter(Point pos)
+		{
+			this.ConstrainAddHV(pos);
+			this.ConstrainAddHomo(pos);
+		}
+
+		// Ajoute une croix de zoom à 45 degrés pour les contraintes.
+		public void ConstrainAddHomo(Point pos)
+		{
+			this.ConstrainAddLine(pos, new Point(pos.X+1.0, pos.Y+1.0));
+			this.ConstrainAddLine(pos, new Point(pos.X+1.0, pos.Y-1.0));
+		}
+
+		// Ajoute une contrainte horizontale et verticale (+).
+		public void ConstrainAddHV(Point pos)
+		{
+			this.ConstrainAddHorizontal(pos.Y);
+			this.ConstrainAddVertical(pos.X);
+		}
+
+		// Ajoute une contrainte horizontale (-).
+		public void ConstrainAddHorizontal(double y)
+		{
+			this.ConstrainAddLine(new Point(0.0, y), new Point(1.0, y));
+		}
+
+		// Ajoute une contrainte verticale (|).
+		public void ConstrainAddVertical(double x)
+		{
+			this.ConstrainAddLine(new Point(x, 0.0), new Point(x, 1.0));
+		}
+
+		// Ajoute une contrainte quelconque.
+		public void ConstrainAddLine(Point p1, Point p2)
+		{
+			if ( p1 == p2 )  return;
+
+			MagnetLine line = new MagnetLine(this.document, this, MagnetLine.Type.Constrain);
+			line.Initialise(p1, p2, true, false);
+
+			foreach ( MagnetLine exist in this.constrainList )
+			{
+				if ( line.Compare(exist) )  return;
+			}
+
+			line.IsVisible = this.isCtrl;
+			this.constrainList.Add(line);
+		}
+
+		// Retourne une position éventuellement contrainte, en fonction du nombre
+		// quelconque de contraintes existantes.
+		public void ConstrainSnapPos(ref Point pos)
+		{
+			if ( !this.isCtrl )
+			{
+				this.MagnetSnapPos(ref pos);
+				return;
+			}
+
+			// Met toutes les lignes proches dans une table avec les distances
+			// respectives.
+			double margin = this.MagnetMargin*2.0;
+			int detect = 0;
+			MagnetLine[] table = new MagnetLine[10];
+			double[] dist = new double[10];
+			foreach ( MagnetLine line in this.constrainList )
+			{
+				double d = line.Distance(pos);
+				if ( d <= margin )
+				{
+					System.Diagnostics.Debug.Assert(detect<10, "Too many magnet constrain.");
+					table[detect] = line;
+					dist[detect++] = d;
+				}
+				line.Temp = false;
+			}
+			
+			bool snap = false;
+			if ( detect >= 2 )
+			{
+				// Trie les lignes détectées, afin d'avoir la plus proche en premier.
+				// Bubble sort peu efficace, mais c'est sans grande importance vu
+				// le petit nombre de lignes à trier (<10).
+				bool more;
+				do
+				{
+					more = false;
+					for ( int i=0 ; i<detect-1 ; i++ )
+					{
+						if ( dist[i] > dist[i+1] )
+						{
+							double t = dist[i];
+							dist[i] = dist[i+1];
+							dist[i+1] = t;
+
+							MagnetLine tl = table[i];
+							table[i] = table[i+1];
+							table[i+1] = tl;
+
+							more = true;
+						}
+					}
+				}
+				while ( more );
+
+				// Calcule l'intersection entre les 2 lignes les plus proches.
+				Point inter = pos;
+				if ( Geometry.Intersect(table[0].P1, table[0].P2, table[1].P1, table[1].P2, out inter) )
+				{
+					if ( Point.Distance(pos, inter) <= this.MagnetMargin )
+					{
+						pos = inter;
+						table[0].Temp = true;
+						table[1].Temp = true;
+						snap = true;
+
+						// S'il existe plus de 2 lignes faisant partie de
+						// l'intersection, on les ajoute ici (pour faire joli).
+						for ( int i=2 ; i<detect ; i++ )
+						{
+							if ( dist[i] <= margin && table[i].Distance(pos) < 0.0001 )
+							{
+								table[i].Temp = true;
+							}
+						}
+					}
+				}
+			}
+
+			// Si on n'a pas trouvé d'intersection, ajuste la position sur la
+			// ligne la plus proche (projection).
+			if ( !snap && detect >= 1 )
+			{
+				table[0].Snap(ref pos, margin);
+				table[0].Temp = true;
+			}
+
+			// Modifie la propriété FlyOver une seule fois, pour éviter de redessiner
+			// inutilement des grandes zones.
+			foreach ( MagnetLine line in this.constrainList )
+			{
+				line.FlyOver = line.Temp;
+			}
+		}
+
+		// Met à jour les contraintes en fonction de la touche Ctrl.
+		protected void ConstrainUpdateCtrl()
+		{
+			foreach ( MagnetLine line in this.constrainList )
+			{
+				line.IsVisible = this.isCtrl;
 			}
 		}
 
 		// Enlève le point initial pour les contraintes.
 		public void ConstrainDelStarting()
 		{
-			if ( this.constrainType == ConstrainType.None )  return;
-			this.constrainType = ConstrainType.None;
-
-			if ( this.IsCtrl )
+			foreach ( MagnetLine line in this.constrainList )
 			{
-				this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+				line.Clear();
 			}
 		}
 
 		// Dessine les contraintes.
 		public void DrawConstrain(Graphics graphics, Size size)
 		{
-			if ( this.constrainType == ConstrainType.None || !this.isCtrl )  return;
+			if ( !this.isCtrl )  return;
 
-			graphics.LineWidth = 1.0/this.ScaleX;
-			Point pos = this.constrainStarting;
-			ConstrainType type = this.constrainType;
 			double max = System.Math.Max(size.Width, size.Height);
-
-			if ( type == ConstrainType.Normal ||
-				type == ConstrainType.Rotate ||
-				type == ConstrainType.Line   ||
-				type == ConstrainType.Scale  )
+			foreach ( MagnetLine line in this.constrainList )
 			{
-				graphics.AddLine(pos.X, -size.Height, pos.X, size.Height);
-				graphics.AddLine(-size.Width, pos.Y, size.Width, pos.Y);
-				graphics.RenderSolid(DrawingContext.ColorConstrain);
-			}
-
-			if ( type == ConstrainType.Normal ||
-				type == ConstrainType.Rotate ||
-				type == ConstrainType.Square )
-			{
-				Point p1 = Transform.RotatePointDeg(pos, 180.0*0.25, pos+new Point(max,0));
-				Point p2 = Transform.RotatePointDeg(pos, 180.0*1.25, pos+new Point(max,0));
-				graphics.AddLine(p1, p2);
-
-				p1 = Transform.RotatePointDeg(pos, 180.0*0.75, pos+new Point(max,0));
-				p2 = Transform.RotatePointDeg(pos, 180.0*1.75, pos+new Point(max,0));
-				graphics.AddLine(p1, p2);
-
-				graphics.RenderSolid(DrawingContext.ColorConstrain);
-			}
-
-			if ( this.constrainType == ConstrainType.Scale )
-			{
-				Point p1 = Point.Move(this.constrainStarting, this.constrainOrigin, max);
-				Point p2 = Point.Move(this.constrainOrigin, this.constrainStarting, max);
-				graphics.AddLine(p1, p2);
-				graphics.RenderSolid(DrawingContext.ColorConstrain);
+				line.Draw(graphics, max);
 			}
 		}
 		#endregion
@@ -1559,10 +1960,23 @@ namespace Epsitec.Common.Document
 			get { return this.masterPageList; }
 		}
 
-		// Met à jour masterPageList après un changement de page.
+		// Donne la liste des calques magnétiques à utiliser.
+		public System.Collections.ArrayList MagnetLayerList
+		{
+			get { return this.magnetLayerList; }
+		}
+
+		// Met à jour masterPageList et magnetLayerList après un changement de page.
 		public void UpdateAfterPageChanged()
 		{
 			this.document.Modifier.ComputeMasterPageList(this.masterPageList, this.CurrentPage);
+			this.document.Modifier.ComputeMagnetLayerList(this.magnetLayerList, this.CurrentPage);
+		}
+
+		// Met à jour magnetLayerList après un changement de page.
+		public void UpdateAfterLayerChanged()
+		{
+			this.document.Modifier.ComputeMagnetLayerList(this.magnetLayerList, this.CurrentPage);
 		}
 		#endregion
 
@@ -1666,6 +2080,7 @@ namespace Epsitec.Common.Document
 		protected bool							guidesActive = true;
 		protected bool							guidesShow = true;
 		protected bool							guidesMouse = true;
+		protected bool							magnetActive = true;
 		protected bool							rulersShow = true;
 		protected bool							labelsShow = false;
 		protected bool							hideHalfActive = true;
@@ -1677,15 +2092,24 @@ namespace Epsitec.Common.Document
 		protected double						minimalWidth = 5;
 		protected double						closeMargin = 10;
 		protected double						guideMargin = 8;
+		protected double						magnetMargin = 6;
 		protected double						hiliteSize = 4;
 		protected double						handleSize = 8;
 		protected bool							isShift = false;
 		protected bool							isCtrl = false;
 		protected bool							isAlt = false;
-		protected Point							constrainStarting;
-		protected Point							constrainOrigin;
-		protected ConstrainType					constrainType;
+		protected System.Collections.ArrayList	constrainList = new System.Collections.ArrayList();
+		protected bool							isMagnetStarting = false;
+		protected Point							magnetStarting;
+		protected MagnetLine					magnetLineMain;
+		protected MagnetLine					magnetLineBegin;
+		protected MagnetLine					magnetLineEnd;
+		protected MagnetLine					magnetLineMiddle;
+		protected MagnetLine					magnetLinePerp;
+		protected MagnetLine					magnetLineInter;
+		protected MagnetLine					magnetLineProj;
 		protected System.Collections.ArrayList	rootStack;
 		protected System.Collections.ArrayList	masterPageList;
+		protected System.Collections.ArrayList	magnetLayerList;
 	}
 }

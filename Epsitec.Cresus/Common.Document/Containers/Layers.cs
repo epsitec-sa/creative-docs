@@ -85,6 +85,14 @@ namespace Epsitec.Common.Document.Containers
 			this.panelModColor.DockMargins = new Margins(0, 0, 5, 0);
 			this.panelModColor.Parent = this;
 
+			this.checkMagnet = new CheckButton(this);
+			this.checkMagnet.Text = "Objets pour les constructions magnétiques";
+			this.checkMagnet.TabIndex = 102;
+			this.checkMagnet.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			this.checkMagnet.Dock = DockStyle.Bottom;
+			this.checkMagnet.DockMargins = new Margins(0, 0, 5, 5);
+			this.checkMagnet.Clicked += new MessageEventHandler(this.HandleCheckMagnetClicked);
+
 			// --- Début panelMisc
 			this.panelMisc = new Widget(this);
 			this.panelMisc.Dock = DockStyle.Bottom;
@@ -177,6 +185,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.UpdateTable();
 			this.UpdateRadio();
+			this.UpdateMagnet();
 			this.UpdatePanel();
 		}
 
@@ -337,6 +346,7 @@ namespace Epsitec.Common.Document.Containers
 				if ( bt.ActiveState == WidgetState.ActiveMaybe )  type = Objects.LayerType.Dimmed;
 				layer.Type = type;
 
+				this.document.Notifier.NotifyMagnetChanged();
 				this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 				this.document.Modifier.OpletQueueValidateAction();
 			}
@@ -356,6 +366,7 @@ namespace Epsitec.Common.Document.Containers
 			this.extendedButton.GlyphShape = this.isExtended ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
 
 			this.panelMisc.SetVisible(this.isExtended);
+			this.checkMagnet.SetVisible(this.isExtended);
 			this.panelModColor.SetVisible(this.isExtended);
 		}
 
@@ -375,6 +386,8 @@ namespace Epsitec.Common.Document.Containers
 
 				layer.Print = print;
 
+				this.document.Notifier.NotifyPagesChanged();
+				this.document.Notifier.NotifyMagnetChanged();
 				this.document.Modifier.OpletQueueValidateAction();
 			}
 		}
@@ -412,10 +425,39 @@ namespace Epsitec.Common.Document.Containers
 					layer.Type = type;
 				}
 				this.UpdateTable();
+				this.document.Notifier.NotifyMagnetChanged();
 				this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 
 				this.document.Modifier.OpletQueueValidateAction();
 			}
+		}
+
+		// Le bouton "magnétique" a été cliqué.
+		private void HandleCheckMagnetClicked(object sender, MessageEventArgs e)
+		{
+			using ( this.document.Modifier.OpletQueueBeginAction() )
+			{
+				DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+				int sel = context.CurrentLayer;
+				Objects.Page page = context.RootObject(1) as Objects.Page;
+				Objects.Layer layer = page.Objects[sel] as Objects.Layer;
+				layer.Magnet = !layer.Magnet;
+
+				this.document.Notifier.NotifyMagnetChanged();
+				this.document.Notifier.NotifyPagesChanged();
+				this.document.Modifier.OpletQueueValidateAction();
+			}
+		}
+
+		// Met à jour le bouton "magnétique".
+		private void UpdateMagnet()
+		{
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			int sel = context.CurrentLayer;
+			Objects.Page page = context.RootObject(1) as Objects.Page;
+			Objects.Layer layer = page.Objects[sel] as Objects.Layer;
+
+			this.checkMagnet.ActiveState = layer.Magnet ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 		}
 
 
@@ -440,6 +482,7 @@ namespace Epsitec.Common.Document.Containers
 		protected RadioButton			radioShowPrint;
 		protected RadioButton			radioDimmedPrint;
 		protected RadioButton			radioHidePrint;
+		protected CheckButton			checkMagnet;
 		protected Panels.ModColor		panelModColor;
 		protected bool					isExtended = false;
 		protected bool					ignoreChanged = false;

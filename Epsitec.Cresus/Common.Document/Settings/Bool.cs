@@ -55,6 +55,10 @@ namespace Epsitec.Common.Document.Settings
 					this.text = "Affiche le nom des objets";
 					break;
 
+				case "MagnetActive":
+					this.text = "Constructions magnétiques";
+					break;
+
 				case "PrintCollate":
 					this.text = "Copies assemblées (1,2,3 - 1,2,3)";
 					break;
@@ -137,6 +141,9 @@ namespace Epsitec.Common.Document.Settings
 					case "LabelsShow":
 						return this.document.Modifier.ActiveViewer.DrawingContext.LabelsShow;
 
+					case "MagnetActive":
+						return this.document.Modifier.ActiveViewer.DrawingContext.MagnetActive;
+
 					case "PrintCollate":
 						return this.document.Settings.PrintInfo.Collate;
 
@@ -208,6 +215,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "LabelsShow":
 						this.document.Modifier.ActiveViewer.DrawingContext.LabelsShow = value;
+						break;
+
+					case "MagnetActive":
+						this.document.Modifier.ActiveViewer.DrawingContext.MagnetActive = value;
 						break;
 
 					case "PrintCollate":

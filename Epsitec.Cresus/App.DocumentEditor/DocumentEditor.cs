@@ -381,6 +381,7 @@ namespace Epsitec.App.DocumentEditor
 			showMenu.Host = this;
 			this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.Preview.icon", "Preview", "Comme imprimé", "");
 			this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.Grid.icon", "Grid", "Grille magnétique", "");
+			this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.Magnet.icon", "Magnet", "Constructions magnétiques", "");
 			if ( this.type != DocumentType.Pictogram )
 			{
 				this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.Rulers.icon", "Rulers", "Règles graduées", "");
@@ -530,6 +531,7 @@ namespace Epsitec.App.DocumentEditor
 			this.HToolBarAdd("", "", "");
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Preview.icon", "Preview", "Comme imprimé");
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Grid.icon", "Grid", "Grille magnétique");
+			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Magnet.icon", "Magnet", "Constructions magnétiques");
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Labels.icon", "Labels", "Noms des objets");
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Settings.icon", "Settings", "Réglages...");
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Infos.icon", "Infos", "Informations...");
@@ -874,7 +876,15 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 			lastMenu.AdjustSize();
-			this.fileMenu.Items[13].Submenu = lastMenu;
+
+			if ( this.type == DocumentType.Pictogram )
+			{
+				this.fileMenu.Items[11].Submenu = lastMenu;
+			}
+			else
+			{
+				this.fileMenu.Items[13].Submenu = lastMenu;
+			}
 		}
 		#endregion
 
@@ -1958,6 +1968,13 @@ namespace Epsitec.App.DocumentEditor
 			context.GridShow = context.GridActive;
 		}
 
+		[Command ("Magnet")]
+		void CommandMagnet(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			context.MagnetActive = !context.MagnetActive;
+		}
+
 		[Command ("Rulers")]
 		void CommandRulers(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -2536,33 +2553,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			UndoableList pages = this.CurrentDocument.GetObjects;  // liste des pages
-			int total = pages.Count;
-			bool slave = true;
-			VMenu menu = new VMenu();
-			for ( int i=0 ; i<total ; i++ )
-			{
-				Objects.Page page = pages[i] as Objects.Page;
-
-				if ( i > 0 && slave != (page.MasterType == Objects.MasterType.Slave) )
-				{
-					menu.Items.Add(new MenuSeparator());
-				}
-
-				string name = string.Format("{0}: {1}", page.ShortName, page.Name);
-
-				string icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
-				if ( i == context.CurrentPage )
-				{
-					icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
-				}
-
-				MenuItem item = new MenuItem("PageSelect(this.Name)", icon, name, "", i.ToString());
-				menu.Items.Add(item);
-
-				slave = (page.MasterType == Objects.MasterType.Slave);
-			}
-			menu.AdjustSize();
-			return menu;
+			return Objects.Page.CreateMenu(pages, context.CurrentPage, null);
 		}
 
 		// Construit le menu pour choisir un calque.
@@ -2571,34 +2562,7 @@ namespace Epsitec.App.DocumentEditor
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			Objects.Abstract page = context.RootObject(1);
 			UndoableList layers = page.Objects;  // liste des calques
-			int total = layers.Count;
-			VMenu menu = new VMenu();
-			for ( int i=0 ; i<total ; i++ )
-			{
-				int ii = total-i-1;
-				Objects.Layer layer = layers[ii] as Objects.Layer;
-
-				string name = "";
-				if ( layer.Name == "" )
-				{
-					name = string.Format("{0}: {1}", Objects.Layer.ShortName(ii), Objects.Layer.LayerPositionName(ii, total));
-				}
-				else
-				{
-					name = string.Format("{0}: {1}", Objects.Layer.ShortName(ii), layer.Name);
-				}
-
-				string icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
-				if ( ii == context.CurrentLayer )
-				{
-					icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
-				}
-
-				MenuItem item = new MenuItem("LayerSelect(this.Name)", icon, name, "", ii.ToString());
-				menu.Items.Add(item);
-			}
-			menu.AdjustSize();
-			return menu;
+			return Objects.Layer.CreateMenu(layers, context.CurrentLayer, null);
 		}
 
 
@@ -2679,6 +2643,7 @@ namespace Epsitec.App.DocumentEditor
 			this.zoomAddState = new CommandState("ZoomAdd", this.commandDispatcher, KeyCode.Add);
 			this.previewState = new CommandState("Preview", this.commandDispatcher);
 			this.gridState = new CommandState("Grid", this.commandDispatcher);
+			this.magnetState = new CommandState("Magnet", this.commandDispatcher);
 			this.rulersState = new CommandState("Rulers", this.commandDispatcher);
 			this.labelsState = new CommandState("Labels", this.commandDispatcher);
 
@@ -2702,8 +2667,8 @@ namespace Epsitec.App.DocumentEditor
 			this.debugBboxFullState = new CommandState("DebugBboxFull", this.commandDispatcher);
 			this.debugDirtyState = new CommandState("DebugDirty", this.commandDispatcher);
 
-			this.pagePrevState = new CommandState("PagePrev", this.commandDispatcher, KeyCode.PageDown);
-			this.pageNextState = new CommandState("PageNext", this.commandDispatcher, KeyCode.PageUp);
+			this.pagePrevState = new CommandState("PagePrev", this.commandDispatcher, KeyCode.PageUp);
+			this.pageNextState = new CommandState("PageNext", this.commandDispatcher, KeyCode.PageDown);
 			this.pageMenuState = new CommandState("PageMenu", this.commandDispatcher);
 			this.pageNewState = new CommandState("PageNew", this.commandDispatcher);
 			this.pageDuplicateState = new CommandState("PageDuplicate", this.commandDispatcher);
@@ -2764,6 +2729,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.LayerChanged     += new ObjectEventHandler(this.HandleLayerChanged);
 			this.CurrentDocument.Notifier.UndoRedoChanged  += new SimpleEventHandler(this.HandleUndoRedoChanged);
 			this.CurrentDocument.Notifier.GridChanged      += new SimpleEventHandler(this.HandleGridChanged);
+			this.CurrentDocument.Notifier.MagnetChanged    += new SimpleEventHandler(this.HandleMagnetChanged);
 			this.CurrentDocument.Notifier.PreviewChanged   += new SimpleEventHandler(this.HandlePreviewChanged);
 			this.CurrentDocument.Notifier.SettingsChanged  += new SimpleEventHandler(this.HandleSettingsChanged);
 			this.CurrentDocument.Notifier.GuidesChanged    += new SimpleEventHandler(this.HandleGuidesChanged);
@@ -3285,6 +3251,31 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
+		// Appelé par le document lorsque l'état des lignes magnétiques a changé.
+		private void HandleMagnetChanged()
+		{
+			if ( this.IsCurrentDocument )
+			{
+				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+				System.Collections.ArrayList layers = context.MagnetLayerList;
+				if ( layers.Count == 0 )
+				{
+					this.magnetState.Enabled = false;
+					this.magnetState.ActiveState = WidgetState.ActiveNo;
+				}
+				else
+				{
+					this.magnetState.Enabled = true;
+					this.magnetState.ActiveState = context.MagnetActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				}
+			}
+			else
+			{
+				this.magnetState.Enabled = false;
+				this.magnetState.ActiveState = WidgetState.ActiveNo;
+			}
+		}
+
 		// Appelé par le document lorsque l'état de l'aperçu a changé.
 		private void HandlePreviewChanged()
 		{
@@ -3770,6 +3761,7 @@ namespace Epsitec.App.DocumentEditor
 				this.HandleLayersChanged();
 				this.HandleUndoRedoChanged();
 				this.HandleGridChanged();
+				this.HandleMagnetChanged();
 				this.HandlePreviewChanged();
 				this.HandleSettingsChanged();
 				this.HandleGuidesChanged();
@@ -4055,6 +4047,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					zoomAddState;
 		protected CommandState					previewState;
 		protected CommandState					gridState;
+		protected CommandState					magnetState;
 		protected CommandState					rulersState;
 		protected CommandState					labelsState;
 		protected CommandState					arrayOutlineFrameState;

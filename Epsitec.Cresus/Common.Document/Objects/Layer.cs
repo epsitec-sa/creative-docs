@@ -1,4 +1,5 @@
 using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
 using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
@@ -60,6 +61,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					this.InsertOpletType();
 					this.layerType = value;
+					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterLayerChanged();
 					this.document.IsDirtySerialize = true;
 				}
 			}
@@ -83,6 +85,25 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		public bool Magnet
+		{
+			get
+			{
+				return this.magnet;
+			}
+			
+			set
+			{
+				if ( this.magnet != value )
+				{
+					this.InsertOpletType();
+					this.magnet = value;
+					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
+					this.document.IsDirtySerialize = true;
+				}
+			}
+		}
+
 
 		// Reprend toutes les caractéristiques d'un objet.
 		public override void CloneObject(Objects.Abstract src)
@@ -91,6 +112,7 @@ namespace Epsitec.Common.Document.Objects
 			Layer layer = src as Layer;
 			this.layerType = layer.layerType;
 			this.layerPrint = layer.layerPrint;
+			this.magnet = layer.magnet;
 		}
 
 
@@ -125,6 +147,48 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
+		#region Menu
+		// Construit le menu pour choisir un calque.
+		public static VMenu CreateMenu(UndoableList layers, int currentLayer, MessageEventHandler message)
+		{
+			int total = layers.Count;
+			VMenu menu = new VMenu();
+			for ( int i=0 ; i<total ; i++ )
+			{
+				int ii = total-i-1;
+				Objects.Layer layer = layers[ii] as Objects.Layer;
+
+				string name = "";
+				if ( layer.Name == "" )
+				{
+					name = string.Format("{0}: {1}", Layer.ShortName(ii), Layer.LayerPositionName(ii, total));
+				}
+				else
+				{
+					name = string.Format("{0}: {1}", Layer.ShortName(ii), layer.Name);
+				}
+
+				string icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
+				if ( ii == currentLayer )
+				{
+					icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
+				}
+
+				MenuItem item = new MenuItem("LayerSelect(this.Name)", icon, name, "", ii.ToString());
+
+				if ( message != null )
+				{
+					item.Pressed += message;
+				}
+
+				menu.Items.Add(item);
+			}
+			menu.AdjustSize();
+			return menu;
+		}
+		#endregion
+
+		
 		#region OpletType
 		// Ajoute un oplet pour mémoriser le type du calque.
 		protected void InsertOpletType()
@@ -142,6 +206,7 @@ namespace Epsitec.Common.Document.Objects
 				this.host = host;
 				this.layerType = host.layerType;
 				this.layerPrint = host.layerPrint;
+				this.magnet = host.magnet;
 			}
 
 			protected void Swap()
@@ -153,6 +218,8 @@ namespace Epsitec.Common.Document.Objects
 				LayerPrint prnt = host.layerPrint;
 				host.layerPrint = this.layerPrint;  // host.layerPrint <-> this.layerPrint
 				this.layerPrint = prnt;
+				
+				Misc.Swap(ref this.magnet, ref host.magnet);
 
 				this.host.document.Notifier.NotifyLayersChanged();
 				this.host.document.Notifier.NotifyArea(this.host.document.Modifier.ActiveViewer);
@@ -173,6 +240,7 @@ namespace Epsitec.Common.Document.Objects
 			protected Layer					host;
 			protected LayerType				layerType;
 			protected LayerPrint			layerPrint;
+			protected bool					magnet;
 		}
 		#endregion
 
@@ -188,6 +256,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( this.document.Type != DocumentType.Pictogram )
 			{
 				info.AddValue("LayerPrint", this.layerPrint);
+				info.AddValue("Magnet", this.magnet);
 			}
 		}
 
@@ -199,6 +268,11 @@ namespace Epsitec.Common.Document.Objects
 			if ( this.document.Type != DocumentType.Pictogram )
 			{
 				this.layerPrint = (LayerPrint) info.GetValue("LayerPrint", typeof(LayerPrint));
+
+				if ( this.document.IsRevisionGreaterOrEqual(1,0,15) )
+				{
+					this.magnet = info.GetBoolean("Magnet");
+				}
 			}
 		}
 		#endregion
@@ -206,5 +280,6 @@ namespace Epsitec.Common.Document.Objects
 		
 		protected LayerType			layerType = LayerType.Dimmed;
 		protected LayerPrint		layerPrint = LayerPrint.Show;
+		protected bool				magnet = false;
 	}
 }

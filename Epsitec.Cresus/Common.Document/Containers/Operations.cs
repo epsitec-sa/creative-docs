@@ -147,6 +147,7 @@ namespace Epsitec.Common.Document.Containers
 			field.Width = 50;
 			field.InternalMinValue = 1.0M;
 			field.InternalMaxValue = 2.0M;
+			field.DefaultValue = 1.0M;
 			field.Step = 0.1M;
 			field.Resolution = 0.01M;
 			field.InternalValue = 1.2M;

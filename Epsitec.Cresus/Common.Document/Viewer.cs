@@ -528,6 +528,8 @@ namespace Epsitec.Common.Document
 		#region CreateMouse
 		protected void CreateMouseDown(Point mouse)
 		{
+			this.drawingContext.MagnetClearStarting();
+			this.drawingContext.MagnetSnapPos(ref mouse);
 			this.drawingContext.SnapGrid(ref mouse);
 
 			if ( this.createRank == -1 )
@@ -557,6 +559,7 @@ namespace Epsitec.Common.Document
 		protected void CreateMouseMove(Point mouse)
 		{
 			this.ChangeMouseCursor(MouseCursorType.Pen);
+			this.drawingContext.MagnetSnapPos(ref mouse);
 			//this.drawingContext.SnapGrid(ref mouse);
 
 			if ( this.createRank == -1 )  return;
@@ -569,6 +572,7 @@ namespace Epsitec.Common.Document
 
 		protected void CreateMouseUp(Point mouse)
 		{
+			this.drawingContext.MagnetSnapPos(ref mouse);
 			//this.drawingContext.SnapGrid(ref mouse);
 
 			if ( this.createRank == -1 )  return;
@@ -674,8 +678,8 @@ namespace Epsitec.Common.Document
 			this.document.Modifier.OpletQueueBeginAction();
 			this.moveStart = mouse;
 			this.moveAccept = false;
-			this.drawingContext.ConstrainFixStarting(mouse);
-			this.drawingContext.ConstrainFixType(ConstrainType.None);
+			this.drawingContext.ConstrainFlush();
+			this.drawingContext.ConstrainAddHV(mouse);
 			this.Hilite(null);
 			this.selector.HiliteHandle(-1);
 			this.HiliteHandle(null, -1);
@@ -711,7 +715,6 @@ namespace Epsitec.Common.Document
 					this.moveOffset = mouse-obj.GetHandlePosition(rank);
 					this.moveObject.MoveHandleStarting(this.moveHandle, mouse, this.drawingContext);
 					this.HiliteHandle(this.moveObject, this.moveHandle);
-					this.drawingContext.ConstrainFixStarting(obj.GetHandlePosition(rank));
 					this.document.Modifier.FlushMoveAfterDuplicate();
 				}
 				else
@@ -822,8 +825,6 @@ namespace Epsitec.Common.Document
 				}
 				else if ( this.moveObject != null )
 				{
-					this.drawingContext.ConstrainFixType(ConstrainType.Normal);
-
 					if ( this.moveHandle != -1 )  // déplace une poignée ?
 					{
 						mouse -= this.moveOffset;
@@ -846,7 +847,9 @@ namespace Epsitec.Common.Document
 
 						if ( this.moveAccept )
 						{
-							this.drawingContext.SnapGrid(ref mouse);
+							Rectangle box = this.moveObject.BoundingBoxThin;
+							box.Offset(mouse-this.moveOffset);
+							this.drawingContext.SnapGrid(ref mouse, box);
 							this.MoveAllProcess(mouse-this.moveOffset);
 							this.moveOffset = mouse;
 						}
@@ -928,6 +931,7 @@ namespace Epsitec.Common.Document
 			}
 			else if ( this.moveGlobal != -1 )  // déplace le modificateur global ?
 			{
+				this.selector.MoveEnding(this.moveGlobal, mouse, this.drawingContext);
 				this.document.Modifier.GroupUpdateChildrens();
 				this.document.Modifier.GroupUpdateParents();
 				this.MoveGlobalEnding();
@@ -955,6 +959,7 @@ namespace Epsitec.Common.Document
 			}
 
 			this.drawingContext.ConstrainDelStarting();
+			this.drawingContext.MagnetDelStarting();
 			this.document.Modifier.OpletQueueValidateAction();
 
 			if ( isRight )  // avec le bouton de droite de la souris ?
@@ -1558,6 +1563,7 @@ namespace Epsitec.Common.Document
 		// Début du déplacement global de tous les objets sélectionnés.
 		public void MoveGlobalStarting()
 		{
+			this.selector.InitialBBoxThin = this.document.Modifier.SelectedBboxThin;
 			this.selector.FinalToInitialData();
 
 			Objects.Abstract layer = this.drawingContext.RootObject();
@@ -2716,6 +2722,7 @@ namespace Epsitec.Common.Document
 
 			// Dessine les contraintes.
 			this.drawingContext.DrawConstrain(graphics, this.document.Modifier.SizeArea);
+			this.drawingContext.DrawMagnet(graphics, this.document.Modifier.SizeArea);
 
 			graphics.Transform = save;
 			graphics.LineWidth = initialWidth;

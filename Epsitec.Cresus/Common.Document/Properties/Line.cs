@@ -629,27 +629,43 @@ namespace Epsitec.Common.Document.Properties
 			if ( this.width != 0.0 && gradient.IsVisible() )  return;
 			if ( path.IsEmpty )  return;
 
+			Drawing.Color color = Drawing.Color.FromBrightness(0);
+			if ( gradient.IsVisible() )
+			{
+				if ( gradient.Color1.A > 0 )
+				{
+					color = gradient.Color1;
+				}
+				else
+				{
+					color = gradient.Color2;
+				}
+			}
+			Line.DrawPathDash(graphics, drawingContext, path, 1.0, 0.0, 4.0, color);
+		}
+
+		// Dessine un traitillé simple (dash/gap) le long d'un chemin.
+		public static void DrawPathDash(Graphics graphics, DrawingContext drawingContext, Path path,
+										double width, double dash, double gap, Drawing.Color color)
+		{
+			if ( path.IsEmpty )  return;
+
 			DashedPath dp = new DashedPath();
 			dp.DefaultZoom = drawingContext.ScaleX;
 			dp.Append(path);
-			dp.AddDash(0.00001, 4.0/drawingContext.ScaleX);
+
+			dash /= drawingContext.ScaleX;
+			gap  /= drawingContext.ScaleX;
+			if ( dash == 0.0 )  // juste un point ?
+			{
+				dash = 0.00001;
+				gap -= dash;
+			}
+			dp.AddDash(dash, gap);
 
 			using ( Path temp = dp.GenerateDashedPath() )
 			{
-				graphics.Rasterizer.AddOutline(temp, 1.0/drawingContext.ScaleX, CapStyle.Square, JoinStyle.Round, 5.0);
-
-				Drawing.Color color = Drawing.Color.FromBrightness(0);
-				if ( gradient.IsVisible() )
-				{
-					if ( gradient.Color1.A > 0 )
-					{
-						color = gradient.Color1;
-					}
-					else
-					{
-						color = gradient.Color2;
-					}
-				}
+				graphics.Rasterizer.AddOutline(temp, width/drawingContext.ScaleX, CapStyle.Square, JoinStyle.Round, 5.0);
 				graphics.RenderSolid(color);
 			}
 		}

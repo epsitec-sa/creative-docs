@@ -262,10 +262,9 @@ namespace Epsitec.Common.Document.Objects
 		// Début du déplacement d'une poignée.
 		public virtual void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
-			if ( rank < this.handles.Count )  // poignée de l'objet ?
+			if ( rank < this.TotalMainHandle )  // poignée de l'objet, pas propriété ?
 			{
 				this.InsertOpletGeometry();
-				drawingContext.ConstrainFixStarting(pos);
 			}
 		}
 
@@ -299,6 +298,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
 			{
+				drawingContext.MagnetClearStarting();
 				this.document.Modifier.TextInfoModif = "";
 			}
 		}
@@ -927,6 +927,12 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
+		// Indique si l'objet est en cours de création.
+		public bool IsCreating
+		{
+			get { return this.isCreating; }
+		}
+
 		// Indique si l'objet est sélectionné.
 		public bool IsSelected
 		{
@@ -1520,7 +1526,9 @@ namespace Epsitec.Common.Document.Objects
 		// Début de la création d'un objet.
 		public virtual void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
-			drawingContext.ConstrainFixStarting(pos);
+			drawingContext.ConstrainFlush();
+			drawingContext.ConstrainAddHV(pos);
+			drawingContext.MagnetFixStarting(pos);
 		}
 
 		// Déplacement pendant la création d'un objet.
@@ -1533,6 +1541,7 @@ namespace Epsitec.Common.Document.Objects
 		public virtual void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
 			drawingContext.ConstrainDelStarting();
+			drawingContext.MagnetClearStarting();
 		}
 
 		// Indique si la création de l'objet est terminée.

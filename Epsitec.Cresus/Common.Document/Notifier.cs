@@ -54,6 +54,7 @@ namespace Epsitec.Common.Document
 			this.layersChanged = true;
 			this.undoRedoChanged = true;
 			this.gridChanged = true;
+			this.magnetChanged = true;
 			this.previewChanged = true;
 			this.settingsChanged = true;
 			this.guidesChanged = true;
@@ -196,6 +197,14 @@ namespace Epsitec.Common.Document
 		{
 			if ( !this.enable )  return;
 			this.gridChanged = true;
+			this.NotifyAsync();
+		}
+
+		// Indique que les commandes pour les lignes magnétiques ont changé.
+		public void NotifyMagnetChanged()
+		{
+			if ( !this.enable )  return;
+			this.magnetChanged = true;
 			this.NotifyAsync();
 		}
 
@@ -407,6 +416,12 @@ namespace Epsitec.Common.Document
 				this.gridChanged = false;
 			}
 
+			if ( this.magnetChanged )
+			{
+				this.OnMagnetChanged();
+				this.magnetChanged = false;
+			}
+
 			if ( this.previewChanged )
 			{
 				this.OnPreviewChanged();
@@ -592,6 +607,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnMagnetChanged()
+		{
+			if ( this.MagnetChanged != null )  // qq'un écoute ?
+			{
+				this.MagnetChanged();
+			}
+		}
+
 		protected void OnPreviewChanged()
 		{
 			if ( this.PreviewChanged != null )  // qq'un écoute ?
@@ -673,6 +696,7 @@ namespace Epsitec.Common.Document
 		public event ObjectEventHandler			LayerChanged;
 		public event SimpleEventHandler			UndoRedoChanged;
 		public event SimpleEventHandler			GridChanged;
+		public event SimpleEventHandler			MagnetChanged;
 		public event SimpleEventHandler			PreviewChanged;
 		public event SimpleEventHandler			SettingsChanged;
 		public event SimpleEventHandler			GuidesChanged;
@@ -701,6 +725,7 @@ namespace Epsitec.Common.Document
 		protected Objects.Abstract				layerObject;
 		protected bool							undoRedoChanged;
 		protected bool							gridChanged;
+		protected bool							magnetChanged;
 		protected bool							previewChanged;
 		protected bool							settingsChanged;
 		protected bool							guidesChanged;

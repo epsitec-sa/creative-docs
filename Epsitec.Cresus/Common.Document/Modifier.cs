@@ -133,10 +133,12 @@ namespace Epsitec.Common.Document
 						}
 					}
 
-					else if ( !IsTool )  // choix d'un objet à créer ?
+					else if ( !this.IsTool )  // choix d'un objet à créer ?
 					{
 						this.DeselectAll();
 					}
+
+					this.ActiveViewer.DrawingContext.MagnetDelStarting();
 
 					this.OpletQueueValidateAction();
 					this.document.Notifier.NotifyToolChanged();
@@ -458,7 +460,7 @@ namespace Epsitec.Common.Document
 			field.InternalMaxValue = 360.0M;
 			field.Step = 2.5M;
 			field.Resolution = 0.1M;
-			field.TextSuffix = "°";
+			field.TextSuffix = "\u00B0";  // symbole unicode "degré" (#176)
 		}
 
 		// Modifie tous les widgets de l'application reflétant des dimensions
@@ -916,6 +918,22 @@ namespace Epsitec.Common.Document
 				foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 				{
 					bbox.MergeWith(obj.BoundingBoxPartial);
+				}
+				return bbox;
+			}
+		}
+
+		// Retourne la bbox mince des objets sélectionnés.
+		public Rectangle SelectedBboxThin
+		{
+			get
+			{
+				Rectangle bbox = Rectangle.Empty;
+				DrawingContext context = this.ActiveViewer.DrawingContext;
+				Objects.Abstract layer = context.RootObject();
+				foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
+				{
+					bbox.MergeWith(obj.BoundingBoxThin);
 				}
 				return bbox;
 			}
@@ -3439,9 +3457,10 @@ namespace Epsitec.Common.Document
 
 			// Mets ensuite tous les calques de la page.
 			Objects.Page page = this.document.GetObjects[pageNumber] as Objects.Page;
-			int rl = 0;
+			int rl = -1;
 			foreach ( Objects.Layer layer in this.document.Flat(page) )
 			{
+				rl ++;
 				if ( layer.Print == Objects.LayerPrint.Hide )  continue;
 
 				PageStackInfos info = new PageStackInfos();
@@ -3451,7 +3470,6 @@ namespace Epsitec.Common.Document
 				info.LayerAutoName = Objects.Layer.LayerPositionName(rl, page.Objects.Count);
 				info.Master = false;
 				infos.Add(info);
-				rl ++;
 			}
 
 			// Mets finalement les derniers calques de toutes les pages maîtres.
@@ -3730,6 +3748,72 @@ namespace Epsitec.Common.Document
 				this.document.Notifier.NotifySelectionChanged();
 				this.document.Notifier.NotifyLayerChanged(layer);
 				this.OpletQueueValidateAction();
+			}
+		}
+		#endregion
+
+		#region MagnetLayer
+		// Détecte sur quel segment de droite est la souris.
+		public bool MagnetLayerDetect(Point pos, Point filterP1, Point filterP2,
+									  out Point p1, out Point p2)
+		{
+			double width = this.ActiveViewer.DrawingContext.MagnetMargin;
+			double min = 1000000.0;
+			p1 = new Point(0,0);
+			p2 = new Point(0,0);
+
+			System.Collections.ArrayList layers = this.ActiveViewer.DrawingContext.MagnetLayerList;
+			int total = layers.Count;
+			for ( int i=total-1 ; i>=0 ; i-- )
+			{
+				Objects.Layer layer = layers[i] as Objects.Layer;
+				foreach ( Objects.Abstract obj in this.document.FlatReverse(layer) )
+				{
+					if ( obj.IsSelected )  continue;
+					if ( obj.IsCreating )  continue;
+
+					Rectangle bbox = obj.BoundingBoxThin;
+					bbox.Inflate(width);
+					if ( !bbox.Contains(pos) )  continue;
+
+					for ( int rank=0 ; rank<100 ; rank++ )
+					{
+						Path path = obj.GetPath(rank);
+						if ( path == null )  break;
+
+						Point pp1, s1, s2, pp2;
+						if ( Geometry.DetectOutlineRank(path, width, pos, out pp1, out s1, out s2, out pp2) == -1 )  continue;
+						if ( pp1 == s1 && pp2 == s2 )  // segment de droite ?
+						{
+							if ( pp1 == filterP1 && pp2 == filterP2 )  continue;
+
+							Point p = Point.Projection(pp1, pp2, pos);
+							double dist = Point.Distance(p, pos);
+							if ( dist < min )
+							{
+								min = dist;
+								p1 = pp1;
+								p2 = pp2;
+							}
+						}
+					}
+				}
+			}
+
+			return ( min < 1000000.0 );
+		}
+
+		// Génère la liste des calques magnétiques à utiliser pour une page donnée.
+		public void ComputeMagnetLayerList(System.Collections.ArrayList magnetLayerList, int pageNumber)
+		{
+			magnetLayerList.Clear();
+			Objects.Page page = this.document.GetObjects[pageNumber] as Objects.Page;
+			foreach ( Objects.Layer layer in this.document.Flat(page) )
+			{
+				if ( layer.Magnet && layer.Type != Objects.LayerType.Hide )
+				{
+					magnetLayerList.Add(layer);
+				}
 			}
 		}
 		#endregion

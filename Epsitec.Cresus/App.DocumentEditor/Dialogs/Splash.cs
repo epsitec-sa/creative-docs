@@ -71,6 +71,31 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.DeleteWindowSplash();
 		}
 		
+		protected void DeleteWindowSplash()
+		{
+			if ( this.window == null )  return;
+
+#if true
+			this.window.WindowAnimationEnded += new Common.Support.EventHandler(this.HandleWindowAnimationEnded);
+			this.window.AnimateHide(Common.Widgets.Animation.FadeOut);
+
+			this.splashTimer.Stop();
+			this.splashTimer.TimeElapsed -= new EventHandler(this.HandleSplashTimerTimeElapsed);
+			this.splashTimer.Dispose();
+			this.splashTimer = null;
+#else
+			this.window.Hide();
+			this.window.Dispose();
+			this.window = null;
+			this.OnClosed();
+
+			this.splashTimer.Stop();
+			this.splashTimer.TimeElapsed -= new EventHandler(this.HandleSplashTimerTimeElapsed);
+			this.splashTimer.Dispose();
+			this.splashTimer = null;
+#endif
+		}
+
 		private void HandleWindowAnimationEnded(object sender)
 		{
 			if ( this.window == null )  return;
@@ -79,19 +104,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.window.Dispose();
 			this.window = null;
 			this.OnClosed();
-		}
-
-		protected void DeleteWindowSplash()
-		{
-			if ( this.window == null )  return;
-
-			this.window.WindowAnimationEnded += new Common.Support.EventHandler(this.HandleWindowAnimationEnded);
-			this.window.AnimateHide(Common.Widgets.Animation.FadeOut);
-
-			this.splashTimer.Stop();
-			this.splashTimer.TimeElapsed -= new EventHandler(this.HandleSplashTimerTimeElapsed);
-			this.splashTimer.Dispose();
-			this.splashTimer = null;
 		}
 
 

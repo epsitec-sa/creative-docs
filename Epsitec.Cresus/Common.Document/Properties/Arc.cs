@@ -92,6 +92,13 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		// Début du déplacement d'une poignée.
+		public override void MoveHandleStarting(Objects.Abstract obj, int rank, Point pos, DrawingContext drawingContext)
+		{
+			Point center = obj.Handle(0).Position;
+			drawingContext.ConstrainAddCenter(center);
+		}
+		
 		// Nombre de poignées.
 		public override int TotalHandle(Objects.Abstract obj)
 		{

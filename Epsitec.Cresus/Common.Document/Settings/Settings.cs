@@ -46,6 +46,7 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultBool("", "PreviewActive");
 			this.CreateDefaultBool("", "RulersShow");
 			this.CreateDefaultBool("", "LabelsShow");
+			this.CreateDefaultBool("", "MagnetActive");
 
 			this.CreateDefaultPoint("Settings", "DuplicateMove");
 			this.CreateDefaultBool("Settings", "RepeatDuplicateMove");

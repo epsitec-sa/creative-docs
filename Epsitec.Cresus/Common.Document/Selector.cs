@@ -24,6 +24,7 @@ namespace Epsitec.Common.Document
 			this.initialData = new SelectorData();
 			this.initialData.Visible = false;
 			this.initialData.Handles = false;
+			this.initialBBoxThin = Rectangle.Empty;
 
 			this.finalData = new SelectorData();
 			this.finalData.Visible = false;
@@ -73,6 +74,14 @@ namespace Epsitec.Common.Document
 					this.finalData.TypeInUse = value;
 					this.UpdateHandleVisible();
 				}
+			}
+		}
+
+		public Rectangle InitialBBoxThin
+		{
+			set
+			{
+				this.initialBBoxThin = value;
 			}
 		}
 
@@ -250,20 +259,18 @@ namespace Epsitec.Common.Document
 		{
 			this.OpletQueueInsert();
 
+			drawingContext.ConstrainFlush();
 			if ( rank == 0 )  // global ?
 			{
-				drawingContext.ConstrainFixStarting(pos);
-				drawingContext.ConstrainFixType(ConstrainType.Normal);
+				drawingContext.ConstrainAddHV(pos);
 			}
 			else if ( rank == 5 )  // center ?
 			{
-				drawingContext.ConstrainFixStarting(this.Position(5));
-				drawingContext.ConstrainFixType(ConstrainType.Line);
+				drawingContext.ConstrainAddHV(this.Position(5));
 			}
 			else if ( rank == 6 )  // rotate ?
 			{
-				drawingContext.ConstrainFixStarting(this.Position(5));
-				drawingContext.ConstrainFixType(ConstrainType.Rotate);
+				drawingContext.ConstrainAddCenter(this.Position(5));
 			}
 			else
 			{
@@ -272,10 +279,11 @@ namespace Epsitec.Common.Document
 				if ( rank == 2 )  origin = this.finalData.P1;  // sup/droite ?
 				if ( rank == 3 )  origin = this.finalData.P4;  // sup/gauche ?
 				if ( rank == 4 )  origin = this.finalData.P3;  // inf/droite ?
-				drawingContext.ConstrainFixStarting(origin, this.Position(rank));
-				drawingContext.ConstrainFixType(ConstrainType.Scale);
+				drawingContext.ConstrainAddHV(this.Position(rank));
+				drawingContext.ConstrainAddLine(this.Position(rank), origin);
 			}
 
+			this.MoveTextInfoModif(rank);
 			this.moveStart = pos;
 			this.moveOffset = pos-this.Position(rank);
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
@@ -288,7 +296,16 @@ namespace Epsitec.Common.Document
 
 			if ( rank != 6 )  // pas rotate ?
 			{
-				drawingContext.SnapGrid(this.moveStart, ref pos);
+				if ( this.initialBBoxThin.IsEmpty )
+				{
+					drawingContext.SnapGrid(ref pos);
+				}
+				else
+				{
+					Rectangle bbox = this.initialBBoxThin;
+					bbox.Offset(pos-this.moveStart);
+					drawingContext.SnapGrid(ref pos, -this.moveStart, bbox);
+				}
 			}
 
 			if ( rank == 0 )  // global ?
@@ -358,8 +375,52 @@ namespace Epsitec.Common.Document
 				this.finalData.Angle = Point.ComputeAngleDeg(this.finalData.Center, pos)-90;
 			}
 
+			this.MoveTextInfoModif(rank);
 			this.UpdateHandlePos();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+		}
+
+		// Fin du déplacement.
+		public void MoveEnding(int rank, Point pos, DrawingContext drawingContext)
+		{
+			this.document.Modifier.TextInfoModif = "";
+		}
+
+		// Génère le texte d'information.
+		protected void MoveTextInfoModif(int rank)
+		{
+			string text = "";
+
+			if ( rank == 0 )  // tout ?
+			{
+				double dx = this.finalData.P1.X - this.initialData.P1.X;
+				double dy = this.finalData.P1.Y - this.initialData.P1.Y;
+				text = string.Format("dx={0} dy={1}", this.document.Modifier.RealToString(dx), this.document.Modifier.RealToString(dy));
+			}
+			else if ( rank <= 4 )  // coin ?
+			{
+				double idx = this.initialData.P2.X - this.initialData.P1.X;
+				double idy = this.initialData.P2.Y - this.initialData.P1.Y;
+				double fdx = this.finalData.P2.X - this.finalData.P1.X;
+				double fdy = this.finalData.P2.Y - this.finalData.P1.Y;
+				double zx = (idx==0) ? 100.0 : fdx/idx*100.0;
+				double zy = (idy==0) ? 100.0 : fdy/idy*100.0;
+				text = string.Format("zoom x={0}% zoom y={1}%", zx.ToString("F1"), zy.ToString("F1"));
+			}
+			else if ( rank == 5 )  // center ?
+			{
+				double dx = this.finalData.Center.X - this.initialData.Center.X;
+				double dy = this.finalData.Center.Y - this.initialData.Center.Y;
+				text = string.Format("dx={0} dy={1}", this.document.Modifier.RealToString(dx), this.document.Modifier.RealToString(dy));
+			}
+			else if ( rank == 6 )  // rotate ?
+			{
+				double a = this.finalData.Angle;
+				if ( a < 0.0 )  a += 360.0;
+				text = string.Format("angle={0}\u00B0", this.document.Modifier.AngleToString(a));
+			}
+
+			this.document.Modifier.TextInfoModif = text;
 		}
 
 
@@ -884,5 +945,6 @@ namespace Epsitec.Common.Document
 		protected Objects.Handle	rotate;
 		protected Point				moveStart;
 		protected Point				moveOffset;
+		protected Rectangle			initialBBoxThin;
 	}
 }
