@@ -15,9 +15,9 @@ namespace Epsitec.Common.Pictogram
 		
 		public static void Initialise()
 		{
-			if (Engine.current == null)
+			if ( Engine.current == null )
 			{
-				Engine.current = new Engine ();
+				Engine.current = new Engine();
 			}
 		}
 		
@@ -50,17 +50,13 @@ namespace Epsitec.Common.Pictogram
 				
 				if ( icon.Read(stream) )
 				{
-					context.IsEnable = !disabled;
+					context.Adorner = adorner;
+					context.UniqueColor = color;
 					context.ScaleX = size.Width / icon.Size.Width;
 					context.ScaleY = size.Height / icon.Size.Height;
-					//context.ScaleX = 0.2;
-					//context.ScaleY = 0.2;
 					graphics.ScaleTransform(context.ScaleX, context.ScaleY, 0, 0);
 					
-					//	Daniel: je te laisse modifier DrawGeometry pour incorporer les deux arguments supplémentaires,
-					//	à savoir 'color' et 'adorner'...
-					
-					icon.DrawGeometry(graphics, context);
+					icon.DrawGeometry(graphics, context, color, adorner_object);
 				}
 			}
 		}
