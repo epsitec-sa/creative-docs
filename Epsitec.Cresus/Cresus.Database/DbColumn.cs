@@ -444,7 +444,7 @@ namespace Epsitec.Cresus.Database
 				//	Les colonnes "internes" doivent déjà avoir un nom valide et elles sont
 				//	traitées de manière spéciale ici :
 				
-				return DbSqlStandard.CreateSimpleSqlName (this.Name, DbElementCat.Internal);
+				return DbSqlStandard.MakeSimpleSqlName (this.Name, DbElementCat.Internal);
 			}
 			
 			string prefix;
@@ -452,7 +452,7 @@ namespace Epsitec.Cresus.Database
 			
 			switch (this.column_class)
 			{
-				case DbColumnClass.Data:		return DbSqlStandard.CreateSimpleSqlName (this.Name, this.Category);
+				case DbColumnClass.Data:		return DbSqlStandard.MakeSimpleSqlName (this.Name, this.Category);
 				case DbColumnClass.KeyId:		return Tags.ColumnId;
 				case DbColumnClass.KeyRevision:	return Tags.ColumnRevision;
 				case DbColumnClass.KeyStatus:	return Tags.ColumnStatus;
@@ -473,7 +473,7 @@ namespace Epsitec.Cresus.Database
 					throw new System.NotSupportedException (string.Format ("Column '{0}' column class not supported.", this.Name));
 			}
 			
-			return DbSqlStandard.CreateSimpleSqlName (this.Name, prefix, suffix);;
+			return DbSqlStandard.MakeSimpleSqlName (this.Name, prefix, suffix);;
 		}
 		
 		

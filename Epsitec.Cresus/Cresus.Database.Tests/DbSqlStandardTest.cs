@@ -88,8 +88,8 @@ namespace Epsitec.Cresus.Database
 		{
 			string nam1 = "test-x";
 			string nam2 = "CR_TEST";
-			string std1 = DbSqlStandard.CreateSqlTableName (nam1, DbElementCat.UserDataManaged, new DbKey (123));
-			string std2 = DbSqlStandard.CreateSqlTableName (nam2, DbElementCat.Internal, null);
+			string std1 = DbSqlStandard.MakeSqlTableName (nam1, DbElementCat.UserDataManaged, new DbKey (123));
+			string std2 = DbSqlStandard.MakeSqlTableName (nam2, DbElementCat.Internal, null);
 			
 			Assert.AreEqual ("U_TEST_X_123", std1);
 			Assert.AreEqual ("CR_TEST",      std2);
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Database
 		[Test] [ExpectedException (typeof (DbException))] public void CheckCreateSqlTableNameEx1()
 		{
 			string name = "test-x";
-			string std  = DbSqlStandard.CreateSqlTableName (name, DbElementCat.Internal, new DbKey (123));
+			string std  = DbSqlStandard.MakeSqlTableName (name, DbElementCat.Internal, new DbKey (123));
 			
 			Assert.AreEqual ("U_TEST_X_123", std);
 		}
