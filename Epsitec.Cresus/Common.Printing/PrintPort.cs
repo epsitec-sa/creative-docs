@@ -24,6 +24,9 @@ namespace Epsitec.Common.Printing
 			
 			this.transform = new Drawing.Transform ();
 			
+			this.graphics.SmoothingMode     = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+			this.graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+			
 			this.ResetTransform ();
 		}
 		
@@ -39,6 +42,9 @@ namespace Epsitec.Common.Printing
 			this.scale    = 1.0f;
 			
 			this.transform = new Drawing.Transform ();
+			
+			this.graphics.SmoothingMode     = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+			this.graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
 			
 			this.ResetTransform ();
 		}
@@ -307,9 +313,36 @@ namespace Epsitec.Common.Printing
 		
 		public double PaintText(double x, double y, string text, Drawing.Font font, double size)
 		{
+			return this.PaintText (x, y, text, font, size, true);
+		}
+		
+		public double PaintText(double x, double y, string text, Drawing.Font font, double size, bool use_platform_font)
+		{
+			int n = text.Length;
+			
+			if (n == 0)
+			{
+				return 0.0;
+			}
+			
 			this.UpdateBrush ();
 			
-			System.Drawing.Font os_font = font.GetOsFont (size);
+			System.Drawing.Font os_font = null;
+			
+			try
+			{
+				if (use_platform_font)
+				{
+					os_font = font.GetOsFont (size);
+				}
+			}
+			catch
+			{
+				System.Diagnostics.Debug.WriteLine ("Cannot access OS font " + font.FullName + ", emulating using Path.");
+				os_font = null;
+			}
+			
+			
 			
 			double width = 0;
 			
@@ -328,8 +361,6 @@ namespace Epsitec.Common.Printing
 				
 				font.GetGlyphsEndX (text, out glyph_x, out glyph, out glyph_n);
 				
-				int n = text.Length;
-				
 				System.Diagnostics.Debug.Assert (glyph_x.Length == n);
 				System.Diagnostics.Debug.Assert (glyph.Length == n);
 				System.Diagnostics.Debug.Assert (glyph_n.Length == n);
@@ -345,19 +376,46 @@ namespace Epsitec.Common.Printing
 				width = glyph_x[n-1] * size;
 				
 				this.PaintSurface (path);
+				path.Dispose ();
 			}
 			else
 			{
+				float adjust = 1f;
+				
+				if (true)
+				{
+					//	Algorithme méga-touille (brevet pas encore déposé) permettant de déterminer le facteur
+					//	de correction à appliquer entre la taille de la fonte déterminée via les tables OpenType
+					//	et AGG, et la taille que GDI+ utilise réellement :
+					
+					System.Drawing.StringFormat     format  = new System.Drawing.StringFormat (System.Drawing.StringFormat.GenericTypographic);
+					System.Drawing.RectangleF       rect    = new System.Drawing.RectangleF (0f, 0f, 1000000f, 1000000f);
+					System.Drawing.CharacterRange[] ranges  = { new System.Drawing.CharacterRange (10, 1) };
+					System.Drawing.Region[]         regions = new System.Drawing.Region[1];
+					
+					format.SetMeasurableCharacterRanges (ranges);
+					
+					regions = graphics.MeasureCharacterRanges ("AAAAAAAAAAAA", os_font, rect, format);
+					rect    = regions[0].GetBounds (graphics);
+					
+					double open_type_advance = font.GetCharAdvance ('A') * size;
+					double gdi_plus_advance  = rect.Width;
+					
+					adjust = (float) (open_type_advance / gdi_plus_advance);
+				}
+				
 				double[] end_x;
 				double   ox = 0;
 				
 				font.GetTextCharEndX (text, out end_x);
 				
+				System.Diagnostics.Debug.WriteLine ("adjust = " + adjust);
+				
 				y += font.Ascender * size;
 				
-				int n = text.Length;
-				
 				System.Diagnostics.Debug.Assert (end_x.Length == n);
+				
+				System.Drawing.Drawing2D.Matrix matrix = this.graphics.Transform;
 				
 				for (int i = 0; i < n; i++)
 				{
@@ -365,10 +423,9 @@ namespace Epsitec.Common.Printing
 					float ty = (float) (y);
 					
 					this.graphics.TranslateTransform (tx, ty);
-					this.graphics.ScaleTransform (1, -1);
-					this.graphics.DrawString (text.Substring (i, 1), os_font, this.brush, 0, 0);
-					this.graphics.ScaleTransform (1, -1);
-					this.graphics.TranslateTransform (-tx, -ty);
+					this.graphics.ScaleTransform (1.0f * adjust, -1.0f * adjust);
+					this.graphics.DrawString (text.Substring (i, 1), os_font, this.brush, 0, 0, System.Drawing.StringFormat.GenericTypographic);
+					this.graphics.Transform = matrix;
 					
 					x += (end_x[i]-ox) * size;
 					ox = end_x[i];

@@ -202,7 +202,8 @@ namespace Epsitec.Common.Dialogs
 			
 			public Printing.PrintEngineStatus PrintPage(Printing.PrintPort port)
 			{
-				Drawing.Font font = Drawing.Font.GetFont ("Arial", "Regular");
+				//?Drawing.Font font = Drawing.Font.GetFont ("Arial", "Regular");
+				Drawing.Font font = Drawing.Font.GetFont ("Tahoma", "Regular");
 				
 				port.LineWidth = 0.1;
 				port.Color     = Drawing.Color.FromRGB (0, 0, 0);
@@ -248,7 +249,9 @@ namespace Epsitec.Common.Dialogs
 		{
 			public static void TestDocument(Drawing.IPaintPort port)
 			{
+#if true
 				Drawing.Font font_1 = Drawing.Font.GetFont ("Tahoma", "Regular");
+				//?Drawing.Font font_1 = Drawing.Font.GetFont ("Arial", "Regular");
 				Drawing.Font font_2 = Drawing.Font.GetFont ("Times New Roman", "Regular");
 				Drawing.Font font_3 = Drawing.Font.GetFont ("Times New Roman", "Italic");
 				
@@ -310,13 +313,17 @@ namespace Epsitec.Common.Dialogs
 					
 					port.TranslateTransform (-180, 0);
 					
-					port.Color = Drawing.Color.FromRGB (0, 0, 0.5);
+					port.Color = Drawing.Color.FromRGB (0, 0, 0);
 					
 					double ox = 10;
 					
 					ox += port.PaintText (ox, 40, "Test document: ", font_1, 12);
 					ox += port.PaintText (ox, 40, " Times New Roman ", font_2, 12);
 					ox += port.PaintText (ox, 40, "Italic.", font_3, 12);
+
+					port.LineWidth = 0.2;
+					port.PaintOutline (Drawing.Path.FromLine ( 5, 40, 15, 40));
+					port.PaintOutline (Drawing.Path.FromLine (10, 35, 10, 45));
 					
 					if (i == 0)
 					{
@@ -324,6 +331,35 @@ namespace Epsitec.Common.Dialogs
 						port.SetClippingRectangle (40, 80, 160, 25);
 					}
 				}
+#else
+				Drawing.Font font_1 = Drawing.Font.GetFont ("Arial", "Regular");
+				Drawing.Font font_2 = Drawing.Font.GetFont ("Times New Roman", "Regular");
+				Drawing.Font font_3 = Drawing.Font.GetFont ("Times New Roman", "Italic");
+				
+				Printing.PrintPort pport = port as Printing.PrintPort;
+				
+				port.LineWidth = 0.2;
+				port.PaintOutline (Drawing.Path.FromLine (35, 40, 45, 40));
+				port.PaintOutline (Drawing.Path.FromLine (40, 35, 40, 45));
+				
+				port.Color = Drawing.Color.FromRGB (0, 0, 0);
+				pport.PaintText (40, 40, "A", font_1, 100.0, true);
+				port.Color = Drawing.Color.FromRGB (0, 1, 0);
+				pport.PaintText (40, 40, "X", font_2, 100.0, true);
+				port.Color = Drawing.Color.FromRGB (1, 1, 0);
+				pport.PaintText (40, 40, "Y", font_3, 100.0, true);
+				
+				port.Color = Drawing.Color.FromRGB (0, 0, 0);
+				port.PaintOutline (Drawing.Path.FromLine (35, 160, 45, 160));
+				port.PaintOutline (Drawing.Path.FromLine (40, 155, 40, 165));
+				
+				port.Color = Drawing.Color.FromRGB (0, 0, 0);
+				pport.PaintText (40, 160, "A", font_1, 100.0, false);
+				port.Color = Drawing.Color.FromRGB (0, 1, 0);
+				pport.PaintText (40, 160, "X", font_2, 100.0, false);
+				port.Color = Drawing.Color.FromRGB (1, 1, 0);
+				pport.PaintText (40, 160, "Y", font_3, 100.0, false);
+#endif
 			}
 			
 			public static void HandleFormPaintSmooth(object sender, System.Windows.Forms.PaintEventArgs e)
