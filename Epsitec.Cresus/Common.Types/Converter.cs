@@ -32,6 +32,84 @@ namespace Epsitec.Common.Types
 			return value;
 		}
 		
+
+		public static bool SafeConvert(object obj, out string value)
+		{
+			try
+			{
+				return Converter.Convert (obj, out value);
+			}
+			catch
+			{
+				value = null;
+				return false;
+			}
+		}
+		
+		public static bool SafeConvert(object obj, out bool value)
+		{
+			try
+			{
+				return Converter.Convert (obj, out value);
+			}
+			catch
+			{
+				value = false;
+				return false;
+			}
+		}
+		
+		public static bool SafeConvert(object obj, out int value)
+		{
+			try
+			{
+				return Converter.Convert (obj, out value);
+			}
+			catch
+			{
+				value = 0;
+				return false;
+			}
+		}
+		
+		public static bool SafeConvert(object obj, out long value)
+		{
+			try
+			{
+				return Converter.Convert (obj, out value);
+			}
+			catch
+			{
+				value = 0;
+				return false;
+			}
+		}
+		
+		public static bool SafeConvert(object obj, out decimal value)
+		{
+			try
+			{
+				return Converter.Convert (obj, out value);
+			}
+			catch
+			{
+				value = 0;
+				return false;
+			}
+		}
+		
+		public static bool SafeConvert(object obj, System.Type type, out System.Enum value)
+		{
+			try
+			{
+				return Converter.Convert (obj, type, out value);
+			}
+			catch
+			{
+				value = null;
+				return false;
+			}
+		}
 		
 		public static bool Convert(object obj, out string value)
 		{
