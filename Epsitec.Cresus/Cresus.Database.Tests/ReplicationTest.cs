@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] public void Check03DataCruncherPackColumnToArray()
+		[Test] public void Check02DataCruncherPackColumnToArray()
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
@@ -85,14 +85,14 @@ namespace Epsitec.Cresus.Database
 					bool[] null_array;
 					int    null_count;
 					
-					cruncher.PackColumnToArray (data, i, out array, out null_array, out null_count);
+					Replication.DataCruncher.PackColumnToArray (data, i, out array, out null_array, out null_count);
 					
 					System.Console.WriteLine ("Column {0}: type {1}, {2} rows, {3} are null.", i, array.GetType (), array.Length, null_count);
 				}			
 			}
 		}
 		
-		[Test] public void Check02DataCruncherUnpackColumnFromArray()
+		[Test] public void Check03DataCruncherUnpackColumnFromArray()
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
@@ -109,8 +109,8 @@ namespace Epsitec.Cresus.Database
 					bool[] null_array;
 					int    null_count;
 					
-					cruncher.PackColumnToArray (data, i, out array, out null_array, out null_count);
-					cruncher.UnpackColumnFromArray (store, i, data.Columns.Count, array, (null_count == 0) ? null : null_array);
+					Replication.DataCruncher.PackColumnToArray (data, i, out array, out null_array, out null_count);
+					Replication.DataCruncher.UnpackColumnFromArray (store, i, data.Columns.Count, array, (null_count == 0) ? null : null_array);
 				}
 				
 				for (int r = 0; r < data.Rows.Count; r++)
@@ -122,6 +122,124 @@ namespace Epsitec.Cresus.Database
 						
 						Assert.AreEqual (a, b, string.Format ("Row {0}, Column {1} mismatch: {2}, {3}", r, i, a, b));
 					}
+				}
+			}
+		}
+		[Test] public void Check04PackedTableData()
+		{
+			System.Data.DataTable table_a = new System.Data.DataTable ("A");
+			
+			table_a.Columns.Add ("C0", typeof (int));
+			table_a.Columns.Add ("C1", typeof (string));
+			table_a.Columns.Add ("C2", typeof (decimal));
+			table_a.Columns.Add ("C3", typeof (short));
+			
+			table_a.Columns["C0"].AllowDBNull = false;
+			table_a.Columns["C1"].AllowDBNull = true;
+			table_a.Columns["C2"].AllowDBNull = true;
+			table_a.Columns["C3"].AllowDBNull = true;
+			
+			table_a.Rows.Add (new object[] { 0, "Abc", 10.0M, System.DBNull.Value });
+			table_a.Rows.Add (new object[] { 1, "Def", 25.0M, System.DBNull.Value });
+			table_a.Rows.Add (new object[] { 2, null, 30.0M, System.DBNull.Value });
+			table_a.Rows.Add (new object[] { 3, "Xyz", System.DBNull.Value, System.DBNull.Value });
+			
+			System.Array a_0, a_1, a_2, a_3;
+			bool[] n_0, n_1, n_2, n_3;
+			
+			int count;
+			
+			Replication.DataCruncher.PackColumnToArray (table_a, 0, out a_0, out n_0, out count);
+			
+			Assert.AreEqual (0, count);
+			Assert.AreEqual (4, n_0.Length);
+			Assert.AreEqual (false, n_0[0]);
+			Assert.AreEqual (false, n_0[1]);
+			Assert.AreEqual (false, n_0[2]);
+			Assert.AreEqual (false, n_0[3]);
+			
+			Replication.DataCruncher.PackColumnToArray (table_a, 1, out a_1, out n_1, out count);
+			
+			Assert.AreEqual (1, count);
+			Assert.AreEqual (4, n_1.Length);
+			Assert.AreEqual (false, n_1[0]);
+			Assert.AreEqual (false, n_1[1]);
+			Assert.AreEqual (true,  n_1[2]);
+			Assert.AreEqual (false, n_1[3]);
+			
+			Replication.DataCruncher.PackColumnToArray (table_a, 2, out a_2, out n_2, out count);
+			
+			Assert.AreEqual (1, count);
+			Assert.AreEqual (4, n_2.Length);
+			Assert.AreEqual (false, n_2[0]);
+			Assert.AreEqual (false, n_2[1]);
+			Assert.AreEqual (false, n_2[2]);
+			Assert.AreEqual (true,  n_2[3]);
+			
+			Replication.DataCruncher.PackColumnToArray (table_a, 3, out a_3, out n_3, out count);
+			
+			Assert.AreEqual (4, count);
+			Assert.AreEqual (4, n_3.Length);
+			Assert.AreEqual (true, n_3[0]);
+			Assert.AreEqual (true, n_3[1]);
+			Assert.AreEqual (true, n_3[2]);
+			Assert.AreEqual (true, n_3[3]);
+			
+			table_a.Rows.Add (new object[] { 4, "G", 10.0M, System.DBNull.Value });
+			table_a.Rows.Add (new object[] { 5, "H", 25.0M, System.DBNull.Value });
+			table_a.Rows.Add (new object[] { 6, "I", 30.0M, System.DBNull.Value });
+			table_a.Rows.Add (new object[] { 7, System.DBNull.Value, 30.0M, System.DBNull.Value });
+			table_a.Rows.Add (new object[] { 8, "J", System.DBNull.Value, System.DBNull.Value });
+			
+			Replication.PackedTableData packed = Replication.PackedTableData.CreateFromTable (table_a);
+			
+			Assert.IsFalse (packed.HasNullValues (0));
+			Assert.IsTrue (packed.HasNullValues (1));
+			Assert.IsTrue (packed.HasNullValues (2));
+			Assert.IsTrue (packed.HasNullValues (3));
+			
+			Assert.IsTrue (packed.HasNonNullValues (0));
+			Assert.IsTrue (packed.HasNonNullValues (1));
+			Assert.IsTrue (packed.HasNonNullValues (2));
+			Assert.IsFalse (packed.HasNonNullValues (3));
+			
+			System.Data.DataTable table_b = table_a.Clone ();
+			
+			Assert.AreEqual (0, table_b.Rows.Count);
+			Assert.AreEqual (4, table_b.Columns.Count);
+			
+			packed.FillTable (table_b);
+			
+			Assert.AreEqual (9, table_b.Rows.Count);
+			
+			for (int i = 0; i < table_a.Rows.Count; i++)
+			{
+				for (int j = 0; j < table_a.Columns.Count; j++)
+				{
+					Assert.AreEqual (table_a.Rows[i][j], table_b.Rows[i][j], string.Format ("Mismatch for row {0}, column {1}", i, j));
+				}
+			}
+			
+			byte[] packed_bytes = Replication.DataCruncher.SerializeAndCompressToMemory (packed);
+			
+			System.Console.WriteLine ("Packed table has {0} bytes.", packed_bytes.Length);
+			
+			packed = Replication.DataCruncher.DeserializeAndDecompressFromMemory (packed_bytes) as Replication.PackedTableData;
+			
+			table_b = table_a.Clone ();
+			
+			Assert.AreEqual (0, table_b.Rows.Count);
+			Assert.AreEqual (4, table_b.Columns.Count);
+			
+			packed.FillTable (table_b);
+			
+			Assert.AreEqual (9, table_b.Rows.Count);
+			
+			for (int i = 0; i < table_a.Rows.Count; i++)
+			{
+				for (int j = 0; j < table_a.Columns.Count; j++)
+				{
+					Assert.AreEqual (table_a.Rows[i][j], table_b.Rows[i][j], string.Format ("Mismatch for row {0}, column {1}", i, j));
 				}
 			}
 		}

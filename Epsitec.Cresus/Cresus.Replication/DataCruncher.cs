@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Epsitec.Cresus.Replication
 {
@@ -40,7 +41,7 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
-		public void PackColumnToArray(System.Data.DataTable table, int column, out System.Array array, out bool[] null_values, out int null_count)
+		public static void PackColumnToArray(System.Data.DataTable table, int column, out System.Array array, out bool[] null_values, out int null_count)
 		{
 			//	Passe en revue une colonne de la table et remplit un tableau avec les
 			//	valeurs trouvées; le tableau utilise le type natif sous-jacent s'il fait
@@ -251,46 +252,171 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
-		public void UnpackColumnFromArray(object[][] table, int column, int column_count, System.Array array, bool[] null_values)
+		public static void UnpackColumnFromArray(object[][] values, int column, int column_count, System.Array array, bool[] null_values)
 		{
-			System.Diagnostics.Debug.Assert (table.Length == array.Length);
-			
-			int n = table.Length;
+			int n = values.Length;
 			
 			if ((null_values != null) &&
 				(null_values.Length > 0))
 			{
+				//	Il existe des indications pour savoir si une cellule contient un DBNull
+				//	ou non; utilise les informations disponibles :
+				
+				System.Diagnostics.Debug.Assert (array.Length == n);
+				
 				for (int i = 0; i < n; i++)
 				{
-					if (table[i] == null)
+					if (values[i] == null)
 					{
-						table[i] = new object[column_count];
+						values[i] = new object[column_count];
 					}
 					
 					if (null_values[i])
 					{
-						table[i][column] = System.DBNull.Value;
+						values[i][column] = System.DBNull.Value;
 					}
 					else
 					{
-						table[i][column] = array.GetValue (i);
+						values[i][column] = array.GetValue (i);
 					}
 				}
 			}
 			else
 			{
-				for (int i = 0; i < n; i++)
+				if ((array == null) ||
+					(array.Length == 0))
 				{
-					if (table[i] == null)
-					{
-						table[i] = new object[column_count];
-					}
+					//	Il n'y a ni indications au sujet des valeurs, ni au sujet de leur null-ité.
+					//	Cela signifie que toutes les lignes sont à initialiser à DBNull !
 					
-					table[i][column] = array.GetValue (i);
+					for (int i = 0; i < n; i++)
+					{
+						if (values[i] == null)
+						{
+							values[i] = new object[column_count];
+						}
+						
+						values[i][column] = System.DBNull.Value;
+					}
+				}
+				else
+				{
+					System.Diagnostics.Debug.Assert (array.Length == n);
+					
+					for (int i = 0; i < n; i++)
+					{
+						if (values[i] == null)
+						{
+							values[i] = new object[column_count];
+						}
+						
+						values[i][column] = array.GetValue (i);
+					}
 				}
 			}
 		}
 		
+		
+		public static void PackBooleanArray(bool[] values, out byte[] packed)
+		{
+			int n = values.Length;
+			
+			int n_full_bytes = n / 8;
+			int n_part_bits  = n - 8 * n_full_bytes;
+			int n_bytes      = (n_part_bits == 0) ? (n_full_bytes) : (n_full_bytes + 1);
+			
+			packed = new byte[n_bytes];
+			
+			for (int i = 0; i < n_full_bytes; i++)
+			{
+				byte value = 0;
+				
+				for (int bit = 0; bit < 8; bit++)
+				{
+					if (values[i*8+bit])
+					{
+						value |= (byte)(1 << bit);
+					}
+				}
+				
+				packed[i] = value;
+			}
+			
+			if (n_part_bits > 0)
+			{
+				byte value = 0;
+				
+				for (int bit = 0; bit < n_part_bits; bit++)
+				{
+					if (values[n_full_bytes*8 + bit])
+					{
+						value |= (byte)(1 << bit);
+					}
+				}
+				
+				packed[n_full_bytes] = value;
+			}
+		}
+		
+		public static void UnpackBooleanArray(byte[] packed, bool[] values)
+		{
+			int n = values.Length;
+			
+			int n_full_bytes = n / 8;
+			int n_part_bits  = n - 8 * n_full_bytes;
+			int n_bytes      = (n_part_bits == 0) ? (n_full_bytes) : (n_full_bytes + 1);
+			
+			System.Diagnostics.Debug.Assert (n_bytes == packed.Length);
+			
+			for (int i = 0; i < n_full_bytes; i++)
+			{
+				byte value = packed[i];
+				
+				for (int bit = 0; bit < 8; bit++)
+				{
+					values[i*8 + bit] = ((value & (1 << bit)) == 0) ? false : true;
+				}
+			}
+			
+			if (n_part_bits > 0)
+			{
+				byte value = packed[n_full_bytes];
+				
+				for (int bit = 0; bit < n_part_bits; bit++)
+				{
+					values[n_full_bytes*8 + bit] = ((value & (1 << bit)) == 0) ? false : true;
+				}
+			}
+		}
+		
+		
+		public static byte[] SerializeAndCompressToMemory(object o)
+		{
+			BinaryFormatter        formatter  = new BinaryFormatter ();
+			System.IO.MemoryStream memory     = new System.IO.MemoryStream ();
+			System.IO.Stream       compressed = Common.IO.Compression.CreateDeflateStream (memory, 9);
+			
+			formatter.Serialize (compressed, o);
+			
+			compressed.Close ();
+			memory.Close ();
+			
+			return memory.ToArray ();
+		}
+		
+		public static object DeserializeAndDecompressFromMemory(byte[] buffer)
+		{
+			BinaryFormatter        formatter    = new BinaryFormatter ();
+			System.IO.MemoryStream memory       = new System.IO.MemoryStream(buffer, 0, buffer.Length, false, false);
+			System.IO.Stream       decompressed = Common.IO.Decompression.CreateStream (memory);
+			
+			object o = formatter.Deserialize (decompressed);
+			
+			decompressed.Close ();
+			memory.Close ();
+			
+			return o;
+		}
 		
 		
 		private DbInfrastructure				infrastructure;
