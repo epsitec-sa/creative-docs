@@ -320,8 +320,9 @@ namespace Epsitec.Common.Widgets.Adorner
 					this.PaintImageButton(graphics, rInside, 3);
 				}
 			}
-			else if ( style == ButtonStyle.Combo ||
-					  style == ButtonStyle.Icon  )
+			else if ( style == ButtonStyle.Combo        ||
+					  style == ButtonStyle.Icon         ||
+					  style == ButtonStyle.HeaderSlider )
 			{
 				if ( (state&WidgetState.Enabled) != 0 )
 				{

@@ -324,10 +324,11 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.RenderSolid(this.colorControlDark);
 				}
 			}
-			else if ( style == ButtonStyle.Scroller ||
-					  style == ButtonStyle.Combo    ||
-					  style == ButtonStyle.UpDown   ||
-					  style == ButtonStyle.Icon     )
+			else if ( style == ButtonStyle.Scroller     ||
+					  style == ButtonStyle.Combo        ||
+					  style == ButtonStyle.UpDown       ||
+					  style == ButtonStyle.Icon         ||
+					  style == ButtonStyle.HeaderSlider )
 			{
 				Drawing.Path path = this.PathRoundRectangle(rect, 0.5, 0);
 				graphics.Rasterizer.AddSurface(path);
@@ -586,9 +587,7 @@ namespace Epsitec.Common.Widgets.Adorner
 								  Drawing.Rectangle titleRect,
 								  Widgets.WidgetState state)
 		{
-			Drawing.Rectangle rect = new Drawing.Rectangle();
-
-			rect = frameRect;
+			Drawing.Rectangle rect = frameRect;
 			rect.Deflate(0.5);
 			graphics.LineWidth = 1;
 			this.RectangleGroupBox(graphics, rect, titleRect.Left, titleRect.Right);
@@ -675,8 +674,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				graphics.RenderSolid(this.colorButton);
 
-				Drawing.Rectangle rHilite = new Drawing.Rectangle();
-				rHilite = titleRect;
+				Drawing.Rectangle rHilite = titleRect;
 				rHilite.Bottom = rHilite.Top-3;
 				Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, radius);
 				graphics.Rasterizer.AddSurface(pHilite);
@@ -717,8 +715,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 			{
-				Drawing.Rectangle rHilite = new Drawing.Rectangle();
-				rHilite = titleRect;
+				Drawing.Rectangle rHilite = titleRect;
 				rHilite.Bottom = rHilite.Top-3;
 				Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, radius);
 				graphics.Rasterizer.AddSurface(pHilite);
@@ -840,12 +837,14 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			if ( dir == Direction.Up )
 			{
+				graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
 				graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 				graphics.RenderSolid(this.colorCaption);
 			}
 
 			if ( dir == Direction.Left )
 			{
+				graphics.AddLine(rect.Left+0.5, rect.Bottom, rect.Left+0.5, rect.Top);
 				graphics.AddLine(rect.Right-0.5, rect.Bottom, rect.Right-0.5, rect.Top);
 				graphics.RenderSolid(this.colorCaption);
 			}
