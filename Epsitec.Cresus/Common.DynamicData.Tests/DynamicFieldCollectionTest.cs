@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using NUnit.Framework;
 
 namespace Epsitec.Common.DynamicData
@@ -90,6 +93,43 @@ namespace Epsitec.Common.DynamicData
 			Assertion.AssertEquals (1, cells[5].Column);
 		}
 		
+		[Test] public void Check04Changed()
+		{
+			this.changed_counter = 0;
+			
+			DynamicFieldCollection dfc = new DynamicFieldCollection ();
+			
+			dfc.Changed += new Support.EventHandler (this.ChangedEventHandler);
+			dfc.Clear ();
+			
+			Assertion.AssertEquals (0, this.changed_counter);
+			
+			IDynamicField field = new DynamicFieldAllInColumn (null);
+			
+			dfc.Add (field);
+			
+			Assertion.AssertEquals (1, this.changed_counter);
+			
+			dfc.Clear ();
+			
+			Assertion.AssertEquals (2, this.changed_counter);
+		}
+		
+		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void Check05AddEx()
+		{
+			DynamicFieldCollection dfc = new DynamicFieldCollection ();
+			
+			IDynamicField field = new DynamicFieldAllInColumn (null);
+			
+			dfc.Add (field);
+			dfc.Add (field);
+		}
+		
+		
+		private void ChangedEventHandler(object sender)
+		{
+			this.changed_counter++;
+		}
 		
 		private System.Data.DataTable CreateTable()
 		{
@@ -112,7 +152,7 @@ namespace Epsitec.Common.DynamicData
 		}
 
 		
-		
+		#region Support classes / various IDynamicField implementations
 		public class DynamicFieldOne : IDynamicField
 		{
 			public DynamicFieldOne(System.Data.DataRow row, System.Data.DataColumn column)
@@ -185,5 +225,8 @@ namespace Epsitec.Common.DynamicData
 			
 			System.Data.DataColumn			column;
 		}
+		#endregion
+		
+		private int								changed_counter;
 	}
 }

@@ -26,14 +26,22 @@ namespace Epsitec.Common.DynamicData
 		
 		public void Add(IDynamicField field)
 		{
+			if (this.list.Contains (field))
+			{
+				throw new System.InvalidOperationException ("Field already in collection.");
+			}
+			
 			this.list.Add (field);
 			this.OnChanged ();
 		}
 		
 		public void Clear()
 		{
-			this.list.Clear ();
-			this.OnChanged ();
+			if (this.list.Count > 0)
+			{
+				this.list.Clear ();
+				this.OnChanged ();
+			}
 		}
 		
 		

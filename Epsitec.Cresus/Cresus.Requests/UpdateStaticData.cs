@@ -146,6 +146,8 @@ namespace Epsitec.Cresus.Requests
 		{
 			this.SetupRequestType (RequestType.UpdateStaticData);
 			
+			System.Diagnostics.Debug.Assert (Epsitec.Common.Support.Serialization.Helper.FindElement (info, "ColNames"));
+			
 			this.col_names  = info.GetValue ("ColNames", typeof (string[])) as string[];
 			this.col_cur_values = info.GetValue ("ColCurValues", typeof (object[])) as object[];
 			this.col_org_values = info.GetValue ("ColOrgValues", typeof (object[])) as object[];

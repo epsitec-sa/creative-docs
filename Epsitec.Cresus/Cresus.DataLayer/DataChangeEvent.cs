@@ -1,6 +1,6 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 22/11/2003
-
+#if false
 namespace Epsitec.Cresus.DataLayer
 {
 	public class DataChangeEventArgs : System.EventArgs
@@ -29,3 +29,4 @@ namespace Epsitec.Cresus.DataLayer
 	
 	public delegate void DataChangeEventHandler(object sender, DataChangeEventArgs e);
 }
+#endif
