@@ -10,8 +10,9 @@ namespace Epsitec.Designer
 	/// </summary>
 	public class Application : Epsitec.Common.Designer.Application
 	{
-		public Application()
+		public Application(bool runs_as_plug_in)
 		{
+			this.runs_as_plug_in = runs_as_plug_in;
 			this.name = "Designer";
 			
 			Button button;
@@ -47,7 +48,16 @@ namespace Epsitec.Designer
 		#region Application Commands
 		[Command ("QuitDesigner")] void CommandQuitDesigner()
 		{
-			this.MainWindow.Quit ();
+			this.StringEditController.Window.Close ();
+			
+			if (this.runs_as_plug_in)
+			{
+				this.MainWindow.Close ();
+			}
+			else
+			{
+				this.MainWindow.Quit ();
+			}
 		}
 		#endregion
 		
@@ -56,9 +66,17 @@ namespace Epsitec.Designer
 		{
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
 			
-			Application.application = new Application ();
+			Application.application = new Application (false);
 			Application.application.MainWindow.Run ();
 		}
 		#endregion
+		
+		public static void StartAsPlugIn()
+		{
+			Application.application = new Application (true);
+		}
+		
+		
+		private bool							runs_as_plug_in;
 	}
 }
