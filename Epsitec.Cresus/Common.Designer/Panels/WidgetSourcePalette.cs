@@ -33,6 +33,11 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		#endregion
 		
+		
+		internal void NotifyActiveEditorChanged(Editors.WidgetEditor editor)
+		{
+		}
+		
 		protected override void CreateWidgets(Widget parent)
 		{
 			System.Diagnostics.Debug.Assert (this.widget == parent);

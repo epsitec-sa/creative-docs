@@ -35,6 +35,31 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
+		public Panels.DataSourcePalette			DataSourcePalette
+		{
+			get
+			{
+				return this.data_palette;
+			}
+		}
+		
+		public Panels.WidgetSourcePalette		WidgetSourcePalette
+		{
+			get
+			{
+				return this.widget_palette;
+			}
+		}
+		
+		public Panels.WidgetAttributePalette	WidgetAttributePalette
+		{
+			get
+			{
+				return this.attribute_palette;
+			}
+		}
+		
+		
 		public override void Initialise()
 		{
 			System.Diagnostics.Debug.Assert (this.is_initialised == false);
@@ -66,15 +91,52 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		public void ActivateEditor(Widget widget, bool restart_edition)
+		internal void NotifyActiveEditionWidgetChanged(Widget widget, bool restart_edition)
 		{
 			if (widget == null)
 			{
 				widget = this.active_editor.Root;
 			}
 			
-			this.attribute_palette.ActivateEditor (widget, restart_edition);
+			this.attribute_palette.NotifyActiveEditionWidgetChanged (widget, restart_edition);
 		}
+		
+		internal void CreateEditorForWindow(Window window)
+		{
+			window.Root.IsEditionEnabled = true;
+			window.PreventAutoClose      = true;
+			window.PreventAutoQuit       = true;
+			window.Owner                 = this.application.MainWindow;
+			
+			window.MakeFloatingWindow ();
+			
+			this.edit_window_list.Add (window);
+			this.editors = null;
+			
+			Editors.WidgetEditor editor   = new Editors.WidgetEditor (this);
+			DialogDesigner       designer = DialogDesigner.FromWindow (window);
+			
+			if (designer == null)
+			{
+				designer = new DialogDesigner (this.application);
+				
+				designer.DialogWindow = window;
+				designer.DialogData   = null;
+			}
+			
+			editor.DialogDesigner = designer;
+			editor.Root           = window.Root;
+			
+			editor.Selected   += new SelectionEventHandler (this.HandleEditorSelected);
+			editor.Deselected += new SelectionEventHandler (this.HandleEditorDeselected);
+			
+			editor.DragSelectionBegin += new EventHandler (this.HandleEditorDragSelectionBegin);
+			editor.DragSelectionEnd   += new EventHandler (this.HandleEditorDragSelectionEnd);
+			
+			window.WindowActivated += new Support.EventHandler (this.HandleEditWindowWindowActivated);
+			window.Show ();
+		}
+		
 		
 		
 		protected void CreateMainPanel()
@@ -219,32 +281,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		protected void CreateEditorForWindow(Window window)
-		{
-			window.Root.IsEditionEnabled = true;
-			window.PreventAutoClose      = true;
-			window.PreventAutoQuit       = true;
-			window.Owner                 = this.application.MainWindow;
-			
-			window.MakeFloatingWindow ();
-			
-			this.edit_window_list.Add (window);
-			this.editors = null;
-			
-			Editors.WidgetEditor editor = new Editors.WidgetEditor (this);
-			
-			editor.Root  = window.Root;
-			
-			editor.Selected   += new SelectionEventHandler (this.HandleEditorSelected);
-			editor.Deselected += new SelectionEventHandler (this.HandleEditorDeselected);
-			
-			editor.DragSelectionBegin += new EventHandler (this.HandleEditorDragSelectionBegin);
-			editor.DragSelectionEnd   += new EventHandler (this.HandleEditorDragSelectionEnd);
-			
-			window.WindowActivated += new Support.EventHandler (this.HandleEditWindowWindowActivated);
-			window.Show ();
-		}
-		
 		
 		private void HandleSourceDragBegin(object sender)
 		{
@@ -283,7 +319,7 @@ namespace Epsitec.Common.Designer
 				
 				editor.SelectedWidgets.Add (widget);
 				
-				this.ActivateEditor (widget, true);
+				this.NotifyActiveEditionWidgetChanged (widget, true);
 			}
 		}
 		
@@ -466,6 +502,13 @@ namespace Epsitec.Common.Designer
 				}
 				
 				this.UpdateCommandStates ();
+				
+				//	L'éditeur actif a changé; on doit donc aussi donner l'occasion aux diverses
+				//	sous-palettes de se modifier :
+				
+				this.widget_palette.NotifyActiveEditorChanged (this.active_editor);
+				this.data_palette.NotifyActiveEditorChanged (this.active_editor);
+				this.attribute_palette.NotifyActiveEditorChanged (this.active_editor);
 			}
 		}
 		

@@ -40,7 +40,7 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		
 		
-		public void ActivateEditor(Widget widget, bool restart_edition)
+		internal void NotifyActiveEditionWidgetChanged(Widget widget, bool restart_edition)
 		{
 			if (this.active == null)
 			{
@@ -73,6 +73,10 @@ namespace Epsitec.Common.Designer.Panels
 					}
 				}
 			}
+		}
+		
+		internal void NotifyActiveEditorChanged(Editors.WidgetEditor editor)
+		{
 		}
 		
 		

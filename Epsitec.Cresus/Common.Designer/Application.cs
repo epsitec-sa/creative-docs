@@ -14,6 +14,7 @@ namespace Epsitec.Common.Designer
 	{
 		public Application()
 		{
+			this.name = "Designer";
 			this.Initialise ();
 		}
 		
@@ -56,15 +57,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		public BundleEditController				BundleEditController
-		{
-			get
-			{
-				System.Diagnostics.Debug.Assert (this.is_initialised);
-				return this.bundle_edit_controller;
-			}
-		}
-		
 		public StringEditController				StringEditController
 		{
 			get
@@ -94,7 +86,8 @@ namespace Epsitec.Common.Designer
 			this.switcher_accept_handler = accept_handler;
 		}
 		
-		protected void Initialise()
+		
+		internal void Initialise()
 		{
 			if ((this.is_initialised) ||
 				(this.is_initialising))
@@ -102,10 +95,12 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 			
+			System.Diagnostics.Debug.WriteLine ("Initialising designer application object.");
+			
 			this.is_initialising = true;
 			
 			Epsitec.Common.Widgets.Widget.Initialise ();
-			Pictogram.Engine.Initialise ();
+			Epsitec.Common.Pictogram.Engine.Initialise ();
 			
 			this.CreateMainWindow ();
 			this.RegisterCommands ();
@@ -113,11 +108,9 @@ namespace Epsitec.Common.Designer
 			this.is_initialised  = true;
 			this.is_initialising = false;
 			
-			this.bundle_edit_controller = new BundleEditController (this);
 			this.interf_edit_controller = new InterfaceEditController (this);
 			this.string_edit_controller = new StringEditController (this);
 			
-			this.bundle_edit_controller.Initialise ();
 			this.interf_edit_controller.Initialise ();
 			this.string_edit_controller.Initialise ();
 			
@@ -138,6 +131,22 @@ namespace Epsitec.Common.Designer
 			
 			this.main_window.MakeFixedSizeWindow ();
 			this.main_window.ClientSize = new Drawing.Size (312, 704);
+		}
+		
+		internal void Kill()
+		{
+			this.main_window            = null;
+			this.string_edit_controller = null;
+			this.interf_edit_controller = null;
+			this.tool_bar               = null;
+			this.switcher               = null;
+			this.dispatcher             = null;
+			this.context_stack          = null;
+			
+			this.is_initialised  = false;
+			this.is_initialising = false;
+			
+			System.Diagnostics.Debug.WriteLine ("Killed designer application object.");
 		}
 		
 		
@@ -175,6 +184,8 @@ namespace Epsitec.Common.Designer
 			this.main_window.Name = "Designer";
 			this.main_window.ClientSize = new Drawing.Size (400, 300);
 			this.main_window.PreventAutoClose = true;
+			this.main_window.WindowClosed   += new EventHandler (this.HandleMainWindowClosed);
+			this.main_window.WindowDisposed += new EventHandler (this.HandleMainWindowDisposed);
 		}
 		
 		private void RegisterCommands()
@@ -239,6 +250,27 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
+		private void HandleMainWindowClosed(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.main_window == sender);
+			
+			this.Kill ();
+		}
+		
+		private void HandleMainWindowDisposed(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.main_window == sender);
+			System.Diagnostics.Debug.WriteLine ("Main window disposed.");
+			
+			this.Kill ();
+		}
+		
+		#region Application Commands
+		[Command ("QuitDesigner")]	void CommandQuitDesigner()
+		{
+			this.MainWindow.Close ();
+		}
+		#endregion
 		
 		protected enum PanelName
 		{
@@ -287,7 +319,6 @@ namespace Epsitec.Common.Designer
 		
 		protected StringEditController			string_edit_controller;
 		protected InterfaceEditController		interf_edit_controller;
-		protected BundleEditController			bundle_edit_controller;
 		
 		protected string						name;
 		
@@ -296,7 +327,5 @@ namespace Epsitec.Common.Designer
 		protected Support.EventHandler			switcher_accept_handler;
 		
 		private System.Collections.Stack		context_stack = new System.Collections.Stack ();
-		
-		protected static Application			application;
 	}
 }

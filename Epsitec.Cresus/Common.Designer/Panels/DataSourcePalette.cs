@@ -14,22 +14,8 @@ namespace Epsitec.Common.Designer.Panels
 	{
 		public DataSourcePalette()
 		{
-			Common.UI.Data.Record record = new Common.UI.Data.Record ();
-			
-			Common.UI.Data.Field field_a = new Common.UI.Data.Field ("a", "");
-			Common.UI.Data.Field field_b = new Common.UI.Data.Field ("b", 0);
-			Common.UI.Data.Field field_c = new Common.UI.Data.Field ("c", Common.UI.Data.Representation.None);
-			
-			field_a.DefineCaption ("Texte A");
-			field_b.DefineCaption ("Valeur B");
-			field_c.DefineCaption ("Enumération C");
-			
-			record.Add (field_a);
-			record.Add (field_b);
-			record.Add (field_c);
-			
 			this.size = new Drawing.Size (172+2*10, 145+2*10);
-			this.data_graph = record;
+			this.data_graph = new Common.UI.Data.Record ();
 		}
 		
 		
@@ -48,6 +34,24 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		#endregion
 		
+		public void DefineData(Types.IDataGraph data)
+		{
+			this.data_graph.Clear ();
+			this.data_graph.AddGraph (data);
+		}
+		
+		
+		internal void NotifyActiveEditorChanged(Editors.WidgetEditor editor)
+		{
+			this.DefineData (editor.DialogDesigner.DialogData);
+		}
+		
+		internal void NotifyDialogDataSourceChanged(Types.IDataGraph data)
+		{
+			this.DefineData (data);
+		}
+		
+		
 		protected override void CreateWidgets(Widget parent)
 		{
 			System.Diagnostics.Debug.Assert (this.widget == parent);
@@ -60,10 +64,10 @@ namespace Epsitec.Common.Designer.Panels
 			
 			Common.UI.Engine.BindWidget (this.data_graph.Root, this.data_list);
 			
-			this.CreateDragSource (typeof (Button), "[ 1 ]", "1", 10+34*0, 133, 32, 32);
-			this.CreateDragSource (typeof (Button), "[ 2 ]", "2", 10+34*1, 133, 32, 32);
-			this.CreateDragSource (typeof (Button), "[ 3 ]", "3", 10+34*2, 133, 32, 32);
-			this.CreateDragSource (typeof (Button), "[ 4 ]", "4", 10+34*3, 133, 32, 32);
+			this.CreateDragSource (typeof (Button), "[ 1 ]", "1", 4+34*0, 133, 32, 32);
+			this.CreateDragSource (typeof (Button), "[ 2 ]", "2", 4+34*1, 133, 32, 32);
+			this.CreateDragSource (typeof (Button), "[ 3 ]", "3", 4+34*2, 133, 32, 32);
+			this.CreateDragSource (typeof (Button), "[ 4 ]", "4", 4+34*3, 133, 32, 32);
 			
 			Button test = new Button (this.widget);
 			
@@ -73,6 +77,7 @@ namespace Epsitec.Common.Designer.Panels
 			test.AnchorMargins = new Drawing.Margins (0, 4, 0, 4);
 			test.Clicked      += new MessageEventHandler(this.HandleTestClicked);
 		}
+		
 		
 		protected void CreateDragSource(System.Type type, string text, string name, double x, double y, double dx, double dy)
 		{
@@ -119,6 +124,7 @@ namespace Epsitec.Common.Designer.Panels
 			
 			return widget;
 		}
+		
 		
 		private void HandleSourceDragBeginning(object sender, Widgets.DragBeginningEventArgs e)
 		{
@@ -181,10 +187,11 @@ namespace Epsitec.Common.Designer.Panels
 		
 		private void HandleTestClicked(object sender, MessageEventArgs e)
 		{
-			Common.UI.Data.Record record = this.data_graph as Common.UI.Data.Record;
-			Common.UI.Data.Field  field  = new Common.UI.Data.Field ("Field"+record.Count.ToString (), "");
+			Common.UI.Data.Field field = new Common.UI.Data.Field ("Field"+this.data_graph.Count.ToString (), "Abc");
 			
-			record.Add (field);
+			field.DefineCaption ("Field " + this.data_graph.Count.ToString ());
+			
+			this.data_graph.Add (field);
 		}
 		
 		
@@ -194,6 +201,6 @@ namespace Epsitec.Common.Designer.Panels
 		
 		protected Widgets.DragSource			active_drag_source;
 		protected ScrollList					data_list;
-		protected Types.IDataGraph				data_graph;
+		protected Common.UI.Data.Record			data_graph;
 	}
 }

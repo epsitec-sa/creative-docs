@@ -240,6 +240,16 @@ namespace Epsitec.Common.UI.Data
 		public event Support.EventHandler		Changed;
 		#endregion
 		
+		public static Field CreateFromValue(Types.IDataValue value)
+		{
+			Field field = new Field (value.Name, null, value.DataType, value.DataConstraint);
+			
+			field.DefineCaption (value.Caption);
+			field.DefineDescription (value.Description);
+			
+			return field;
+		}
+		
 		
 		protected virtual void OnChanged()
 		{

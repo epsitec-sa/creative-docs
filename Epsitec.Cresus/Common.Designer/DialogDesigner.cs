@@ -11,8 +11,18 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class DialogDesigner : Epsitec.Common.Dialogs.IDialogDesigner
 	{
-		public DialogDesigner()
+		public DialogDesigner(Application application)
 		{
+			this.application = application;
+		}
+		
+		
+		public Application						Application
+		{
+			get
+			{
+				return this.application;
+			}
 		}
 		
 		
@@ -28,6 +38,7 @@ namespace Epsitec.Common.Designer
 				if (this.dialog_data != value)
 				{
 					this.dialog_data = value;
+					this.OnDialogDataChanged ();
 				}
 			}
 		}
@@ -42,13 +53,21 @@ namespace Epsitec.Common.Designer
 			{
 				if (this.dialog_window != value)
 				{
+					this.DetachWindow ();
 					this.dialog_window = value;
+					this.AttachWindow ();
 				}
 			}
 		}
 		
 		public void StartDesign()
 		{
+			if (this.dialog_window != null)
+			{
+				this.application.Initialise ();
+				this.application.MainWindow.Show ();
+				this.application.InterfaceEditController.CreateEditorForWindow (this.dialog_window);
+			}
 		}
 		#endregion
 		
@@ -61,12 +80,49 @@ namespace Epsitec.Common.Designer
 		#endregion
 		
 		
+		public static DialogDesigner FromWindow(Window window)
+		{
+			return window == null ? null : window.GetProperty (DialogDesigner.prop_dialog_designer) as DialogDesigner;
+		}
+		
+		
 		protected virtual void Dispose(bool disposing)
 		{
 		}
 		
 		
+		protected virtual void AttachWindow()
+		{
+			if (this.dialog_window != null)
+			{
+				this.dialog_window.SetProperty (DialogDesigner.prop_dialog_designer, this);
+			}
+		}
+		
+		protected virtual void DetachWindow()
+		{
+			if (this.dialog_window != null)
+			{
+				this.dialog_window.ClearProperty (DialogDesigner.prop_dialog_designer);
+			}
+		}
+		
+		
+		protected virtual void OnDialogDataChanged()
+		{
+			if (this.DialogDataChanged != null)
+			{
+				this.DialogDataChanged (this);
+			}
+		}
+		
+		
+		public event Support.EventHandler		DialogDataChanged;
+		
+		private Application						application;
 		private Types.IDataGraph				dialog_data;
 		private Window							dialog_window;
+		
+		private const string					prop_dialog_designer = "$designer$dialog designer$";
 	}
 }

@@ -23,15 +23,55 @@ namespace Epsitec.Common.UI.Data
 		
 		public void AddRange(System.Collections.ICollection fields)
 		{
-			foreach (object field in fields)
+			if (fields.Count > 0)
 			{
-				if (!(field is Field))
+				foreach (object field in fields)
 				{
-					throw new System.ArgumentException ("Collection contains invalid field.", "fields");
+					if (!(field is Field))
+					{
+						throw new System.ArgumentException ("Collection contains invalid field.", "fields");
+					}
+				}
+				
+				this.list.AddRange (fields);
+				this.OnChanged ();
+			}
+		}
+		
+		public void AddGraph(Types.IDataGraph graph)
+		{
+			if ((graph == null) ||
+				(graph.Root == null))
+			{
+				return;
+			}
+			
+			int count = graph.Root.Count;
+			
+			if (count == 0)
+			{
+				return;
+			}
+			
+			Types.IDataItem[]            items = new Types.IDataItem[count];
+			System.Collections.ArrayList list  = new System.Collections.ArrayList ();
+			
+			graph.Root.CopyTo (items, 0);
+			
+			for (int i = 0; i < count; i++)
+			{
+				if (items[i].Classes == Types.DataItemClasses.Value)
+				{
+					list.Add (Field.CreateFromValue (items[i] as Types.IDataValue));
 				}
 			}
 			
-			this.list.AddRange (fields);
+			this.AddRange (list);
+		}
+		
+		public void Clear()
+		{
+			this.list.Clear ();
 			this.OnChanged ();
 		}
 		
@@ -90,12 +130,12 @@ namespace Epsitec.Common.UI.Data
 		#endregion
 		
 		#region IDataGraph Members
-		Types.IDataCollection Types.IDataGraph.Select(string query)
+		public Types.IDataCollection Select(string query)
 		{
 			return this.graph.Select (query);
 		}
 		
-		Types.IDataFolder						Types.IDataGraph.Root
+		public Types.IDataFolder						Root
 		{
 			get
 			{
@@ -103,7 +143,7 @@ namespace Epsitec.Common.UI.Data
 			}
 		}
 		
-		Types.IDataItem Types.IDataGraph.Navigate(string path)
+		public Types.IDataItem Navigate(string path)
 		{
 			return this.graph.Navigate (path);
 		}

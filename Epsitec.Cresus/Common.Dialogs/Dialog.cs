@@ -13,6 +13,18 @@ namespace Epsitec.Common.Dialogs
 		{
 		}
 		
+		
+		
+		public static IDialogDesignerFactory	DesignerFactory
+		{
+			get
+			{
+				Dialog.LoadDesignerFactory ();
+				return Dialog.factory;
+			}
+		}
+		
+		
 		public static bool LoadDesignerFactory()
 		{
 			if (Dialog.factory != null)
@@ -36,6 +48,19 @@ namespace Epsitec.Common.Dialogs
 			}
 			
 			return false;
+		}
+		
+		
+		public static IDialogDesigner CreateDesigner()
+		{
+			IDialogDesignerFactory factory = Dialog.DesignerFactory;
+			
+			if (factory != null)
+			{
+				return factory.CreateDialogDesigner ();
+			}
+			
+			return null;
 		}
 		
 		

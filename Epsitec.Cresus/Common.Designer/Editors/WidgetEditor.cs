@@ -101,6 +101,24 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
+		public DialogDesigner					DialogDesigner
+		{
+			get
+			{
+				return this.dialog_designer;
+			}
+			set
+			{
+				if (this.dialog_designer != value)
+				{
+					this.DetachDialogDesigner ();
+					this.dialog_designer = value;
+					this.AttachDialogDesigner ();
+					this.OnDialogDesignerChanged ();
+				}
+			}
+		}
+		
 		
 		#region ICommandDispatcherHost Members
 		public Support.CommandDispatcher		CommandDispatcher
@@ -179,6 +197,7 @@ namespace Epsitec.Common.Designer.Editors
 			this.is_dirty = false;
 		}
 		
+		
 		public static WidgetEditor FromWidget(Widget widget)
 		{
 			return widget == null ? null : WidgetEditor.FromWindow (widget.Window);
@@ -226,6 +245,23 @@ namespace Epsitec.Common.Designer.Editors
 			if (window != null)
 			{
 				window.ClearProperty (WidgetEditor.prop_widget_editor);
+			}
+		}
+		
+		protected virtual void AttachDialogDesigner()
+		{
+			if (this.dialog_designer != null)
+			{
+				this.dialog_designer.DialogDataChanged += new EventHandler(this.HandleDialogDesignerDialogDataChanged);
+			}
+		}
+		
+		protected virtual void DetachDialogDesigner()
+		{
+			if (this.dialog_designer != null)
+			{
+				this.dialog_designer.DialogDataChanged -= new EventHandler(this.HandleDialogDesignerDialogDataChanged);
+				this.dialog_designer = null;
 			}
 		}
 		
@@ -373,9 +409,16 @@ namespace Epsitec.Common.Designer.Editors
 						this.SelectedWidgets.Add (hot);
 					}
 					
-					this.interf_edit_controller.ActivateEditor (hot, false);
+					this.interf_edit_controller.NotifyActiveEditionWidgetChanged (hot, false);
 				}
 			}
+		}
+		
+		private void HandleDialogDesignerDialogDataChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.dialog_designer == sender);
+			
+			this.InterfaceEditController.DataSourcePalette.NotifyDialogDataSourceChanged (this.dialog_designer.DialogData);
 		}
 		
 		
@@ -456,6 +499,14 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
+		protected virtual void OnDialogDesignerChanged()
+		{
+			if (this.DialogDesignerChanged != null)
+			{
+				this.DialogDesignerChanged (this);
+			}
+		}
+		
 		
 		public event SelectionEventHandler		Selected;
 		public event SelectionEventHandler		Deselecting;
@@ -463,10 +514,12 @@ namespace Epsitec.Common.Designer.Editors
 		public event Support.EventHandler		ActiveEditorChanged;
 		public event Support.EventHandler		DragSelectionBegin;
 		public event Support.EventHandler		DragSelectionEnd;
+		public event Support.EventHandler		DialogDesignerChanged;
 		
 		
 		protected Support.CommandDispatcher		dispatcher;
 		protected InterfaceEditController		interf_edit_controller;
+		protected DialogDesigner				dialog_designer;
 		
 		protected Widget						hot_widget;
 		protected Widget						root;
@@ -479,6 +532,6 @@ namespace Epsitec.Common.Designer.Editors
 		protected Widgets.GripsOverlay			grips_overlay;
 		protected Widgets.TabOrderOverlay		tab_o_overlay;
 		
-		private const string					prop_widget_editor = "$widget editor$editor$";
+		private const string					prop_widget_editor = "$designer$editor$";
 	}
 }

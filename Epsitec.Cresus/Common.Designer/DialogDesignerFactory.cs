@@ -13,17 +13,16 @@ namespace Epsitec.Common.Designer
 	{
 		private DialogDesignerFactory()
 		{
+			this.application = new Application ();
 		}
 		
 		
 		#region IDialogDesignerFactory Members
 		public Epsitec.Common.Dialogs.IDialogDesigner CreateDialogDesigner()
 		{
-			// TODO:  Add DialogDesignerFactory.CreateDialogDesigner implementation
-			return null;
+			return new DialogDesigner (this.application);
 		}
 		#endregion
-		
 		
 		public static Epsitec.Common.Dialogs.IDialogDesignerFactory GetFactory()
 		{
@@ -37,5 +36,7 @@ namespace Epsitec.Common.Designer
 		
 		
 		private static DialogDesignerFactory	factory;
+		
+		private Application						application;
 	}
 }
