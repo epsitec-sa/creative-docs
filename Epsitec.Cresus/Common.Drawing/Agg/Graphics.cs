@@ -79,6 +79,35 @@ namespace Epsitec.Common.Drawing.Agg
 			}
 		}
 		
+		public override double PaintText(double x, double y, string text, Font font, double size, Color color, Font.ClassInfo[] infos)
+		{
+			//	TODO: déplacer ce code dans la librairie AGG; faire en sorte que ça marche aussi
+			//	si ClassId != ClassId.Space...
+			
+			for (int i = 0; i < infos.Length; i++)
+			{
+				if ((infos[i].Scale != 1.00) &&
+					(infos[i].ClassId == Font.ClassId.Space))
+				{
+					string[] texts = text.Split (new char[] { ' ', (char) 160 });
+					double space_w = font.GetCharAdvance (' ') * size * infos[i].Scale;
+					double total_w = 0;
+					
+					for (int j = 0; j < texts.Length; j++)
+					{
+						double w = this.PaintText (x, y, texts[j], font, size, color) + space_w;
+						
+						total_w += w;
+						x       += w;
+					}
+					
+					return total_w - space_w;
+				}
+			}
+			
+			return this.PaintText (x, y, text, font, size, color);
+		}
+		
 		
 		public override void   AddLine(double x1, double y1, double x2, double y2)
 		{
