@@ -92,8 +92,9 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				this.Window.EngagedWidget = this;
 				this.SimulatePressed();
+				this.SimulateReleased();
+				this.SimulateClicked();
 			}
 			
 			base.OnShortcutPressed();
