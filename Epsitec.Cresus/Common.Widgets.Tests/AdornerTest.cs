@@ -1566,7 +1566,7 @@ namespace Epsitec.Common.Widgets
 			Button button3 = new Button();
 #if true
 			button3.Dock = DockStyle.Fill;
-			p3.DockMargins = new Margins (10, 10, 10, 10);
+			p3.DockPadding = new Margins (10, 10, 10, 10);
 #else
 			button3.Location = new Point(10, 10);
 			button3.Width = p3.Width-20;

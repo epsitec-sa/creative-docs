@@ -119,7 +119,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Drawing.Size(400, 300);
 			window.Text = "CheckInteractive / ScrollArray";
-			window.Root.DockMargins = new Drawing.Margins (5, 5, 5, 5);
+			window.Root.DockPadding = new Drawing.Margins (5, 5, 5, 5);
 			
 			ScrollArray table = new ScrollArray();
 			
@@ -158,7 +158,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Drawing.Size(400, 300);
 			window.Text = "CheckEditArray";
-			window.Root.DockMargins = new Drawing.Margins (5, 5, 5, 5);
+			window.Root.DockPadding = new Drawing.Margins (5, 5, 5, 5);
 			
 			EditArray table = new EditArray();
 			
@@ -194,7 +194,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Drawing.Size(400, 300);
 			window.Text = "CheckEditArrayWithTextStore";
-			window.Root.DockMargins = new Drawing.Margins (5, 5, 5, 5);
+			window.Root.DockPadding = new Drawing.Margins (5, 5, 5, 5);
 			
 			EditArray table = new EditArray();
 			TextStore store = new TextStore ();
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Drawing.Size(400, 300);
 			window.Text = "CheckEditArraySearch";
-			window.Root.DockMargins = new Drawing.Margins (5, 5, 5, 5);
+			window.Root.DockPadding = new Drawing.Margins (5, 5, 5, 5);
 			
 			EditArray table = new EditArray();
 			
@@ -255,7 +255,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Drawing.Size(400, 300);
 			window.Text = "CheckEditArraySearchWithCaption";
-			window.Root.DockMargins = new Drawing.Margins (5, 5, 5, 5);
+			window.Root.DockPadding = new Drawing.Margins (5, 5, 5, 5);
 			
 			EditArray table = new EditArray();
 			
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Drawing.Size(400, 300);
 			window.Text = "CheckEditArraySearchWithToolBar";
-			window.Root.DockMargins = new Drawing.Margins (5, 5, 5, 5);
+			window.Root.DockPadding = new Drawing.Margins (5, 5, 5, 5);
 			
 			EditArray            table  = new EditArray();
 			EditArray.Header     header = new EditArray.Header (table);
