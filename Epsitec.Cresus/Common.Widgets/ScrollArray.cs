@@ -70,7 +70,33 @@ namespace Epsitec.Common.Widgets
 				if (this.text_provider_callback != value)
 				{
 					this.text_provider_callback = value;
+					this.text_array_store       = null;
+					
 					this.Clear ();
+				}
+			}
+		}
+		
+		public Support.Data.ITextArrayStore		TextArrayStore
+		{
+			get
+			{
+				return this.text_array_store;
+			}
+			set
+			{
+				if (this.text_array_store != value)
+				{
+					this.text_array_store       = value;
+					this.text_provider_callback = null;
+					
+					this.Clear ();
+					
+					if (this.text_array_store != null)
+					{
+						this.ColumnCount = this.text_array_store.GetColumnCount ();
+						this.RowCount    = this.text_array_store.GetRowCount ();
+					}
 				}
 			}
 		}
@@ -116,7 +142,8 @@ namespace Epsitec.Common.Widgets
 				{
 					this.max_rows = value;
 					
-					if (this.text_provider_callback == null)
+					if ((this.text_provider_callback == null) &&
+						(this.text_array_store == null))
 					{
 						//	Met à jour le nombre de lignes dans la table. Si la table est trop longue, on
 						//	va la tronquer; si elle est trop courte, on va l'allonger.
@@ -429,6 +456,10 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.text_provider_callback (row, column);
 			}
+			if (this.text_array_store != null)
+			{
+				return this.text_array_store.GetCellText (row, column);
+			}
 			
 			System.Collections.ArrayList line = this.text_array[row] as System.Collections.ArrayList;
 			
@@ -454,6 +485,13 @@ namespace Epsitec.Common.Widgets
 				for (int i = 0; i < this.max_columns; i++)
 				{
 					values[i] = this.text_provider_callback (row, i);
+				}
+			}
+			else if (this.text_array_store != null)
+			{
+				for (int i = 0; i < this.max_columns; i++)
+				{
+					values[i] = this.text_array_store.GetCellText (row, i);
 				}
 			}
 			else
@@ -492,6 +530,12 @@ namespace Epsitec.Common.Widgets
 			if (column < 0)
 			{
 				throw new System.ArgumentOutOfRangeException ("column", column, "Column out of range.");
+			}
+			
+			if (this.text_array_store != null)
+			{
+				this.text_array_store.SetCellText (row, column, value);
+				return;
 			}
 			
 			System.Diagnostics.Debug.Assert (this.text_array.Count == this.max_rows);
@@ -545,6 +589,16 @@ namespace Epsitec.Common.Widgets
 			if (values.Length > this.max_columns)
 			{
 				throw new System.ArgumentOutOfRangeException ("values", values, string.Format ("Too many values ({0}, expected {1}).", values.Length, this.max_columns));
+			}
+			
+			if (this.text_array_store != null)
+			{
+				for (int i = 0; i < this.max_columns; i++)
+				{
+					this.text_array_store.SetCellText (row, i, values[i]);
+				}
+				
+				return;
 			}
 			
 			System.Diagnostics.Debug.Assert (this.text_array.Count == this.max_rows);
@@ -738,7 +792,8 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Purge le contenu de la table, pour autant que l'on soit en mode FillText.
 			
-			if (this.text_provider_callback == null)
+			if ((this.text_provider_callback == null) &&
+				(this.text_array_store == null))
 			{
 				this.text_array.Clear ();
 			}
@@ -747,7 +802,6 @@ namespace Epsitec.Common.Widgets
 			this.first_virtvis_row = 0;
 			this.selected_row      = -1;
 			this.edition_row       = -1;
-			this.edition_add_rows  = 0;
 			
 			this.InvalidateContents ();
 		}
@@ -1559,15 +1613,7 @@ invalid:	row    = -1;
 							this.layouts[row, column] = new TextLayout ();
 						}
 						
-						if (this.text_provider_callback == null)
-						{
-							this.layouts[row, column].Text = this[row + top, column];
-						}
-						else
-						{
-							this.layouts[row, column].Text = this.text_provider_callback (row + top, column);
-						}
-						
+						this.layouts[row, column].Text     = this[row + top, column];
 						this.layouts[row, column].Font     = this.DefaultFont;
 						this.layouts[row, column].FontSize = this.DefaultFontSize;
 					}
@@ -1885,6 +1931,7 @@ invalid:	row    = -1;
 		
 		protected System.Collections.ArrayList	text_array			= new System.Collections.ArrayList ();
 		protected TextProviderCallback			text_provider_callback;
+		protected Support.Data.ITextArrayStore	text_array_store;
 		protected TextLayout[,]					layouts;
 		
 		protected double						def_width			= 100;
