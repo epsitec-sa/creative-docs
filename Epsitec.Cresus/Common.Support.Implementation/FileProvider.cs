@@ -10,7 +10,7 @@ namespace Epsitec.Common.Support.Implementation
 	/// La classe FileProvider donne accès aux ressources stockées dans des
 	/// fichiers.
 	/// </summary>
-	public class FileProvider : Epsitec.Common.Support.IResourceProvider
+	public class FileProvider : AbstractResourceProvider
 	{
 		public FileProvider()
 		{
@@ -55,46 +55,49 @@ namespace Epsitec.Common.Support.Implementation
 		{
 			if (this.ValidateId (id))
 			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				buffer.Append (this.path_prefix);
+				buffer.Append (id);
+				
 				switch (level)
 				{
 					case ResourceLevel.Default:
-						return this.path_prefix + id + ".resource";
+						break;
+					
 					case ResourceLevel.Localised:
-						return this.path_prefix + id + this.ext_local;
+						buffer.Append (this.suffix);
+						break;
+					
 					case ResourceLevel.Customised:
-						return this.path_prefix + id + Resources.CustomisedSuffix + ".resource";
+						buffer.Append (this.custom);
+						break;
+					
 					default:
-						throw new ResourceException ("Invalid resource level");
+						throw new ResourceException (string.Format ("Invalid resource level {0} for resource '{1}'.", level, id));
 				}
+				
+				buffer.Append (".resource");
+				
+				return buffer.ToString ();
 			}
 			
 			return null;
 		}
 		
 		
-		#region IResourceProvider Members
-		public string Prefix
+		public override string			Prefix
 		{
-			get
-			{
-				return "file";
-			}
+			get { return "file"; }
 		}
 		
 		
-		public void SelectLocale(System.Globalization.CultureInfo culture)
+		public override bool ValidateId(string id)
 		{
-			this.culture   = culture;
-			this.ext_local = "." + this.culture.TwoLetterISOLanguageName + ".resource";
+			return base.ValidateId (id) && this.id_regex.IsMatch (id);
 		}
 		
-		
-		public bool ValidateId(string id)
-		{
-			return (id != null) && (id != "") && (id.Length < 100) && this.id_regex.IsMatch (id);
-		}
-		
-		public bool Contains(string id)
+		public override bool Contains(string id)
 		{
 			if (this.ValidateId (id))
 			{
@@ -108,7 +111,7 @@ namespace Epsitec.Common.Support.Implementation
 			return false;
 		}
 		
-		public byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level)
+		public override byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level)
 		{
 			string path = this.GetPathFromId (id, level);
 			
@@ -133,28 +136,26 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public void Create(string id, Epsitec.Common.Support.ResourceLevel level)
+		public override void Create(string id, Epsitec.Common.Support.ResourceLevel level)
 		{
 			// TODO:  Add FileProvider.Create implementation
 			throw new ResourceException ("Not implemented");
 		}
 		
-		public void Update(string id, Epsitec.Common.Support.ResourceLevel level, byte[] data)
+		public override void Update(string id, Epsitec.Common.Support.ResourceLevel level, byte[] data)
 		{
 			// TODO:  Add FileProvider.Update implementation
 			throw new ResourceException ("Not implemented");
 		}
 		
-		public void Remove(string id, Epsitec.Common.Support.ResourceLevel level)
+		public override void Remove(string id, Epsitec.Common.Support.ResourceLevel level)
 		{
 			// TODO:  Add FileProvider.Remove implementation
 			throw new ResourceException ("Not implemented");
 		}
-		#endregion
+		
 		
 		protected string				path_prefix;
-		protected CultureInfo			culture;
 		protected Regex					id_regex;
-		protected string				ext_local;
 	}
 }

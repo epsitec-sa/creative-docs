@@ -34,7 +34,8 @@ namespace Epsitec.Common.Support
 			
 			foreach (System.Type type in types_in_assembly)
 			{
-				if (type.IsClass)
+				if ((type.IsClass) &&
+					(!type.IsAbstract))
 				{
 					if (type.GetInterface ("IResourceProvider") != null)
 					{
