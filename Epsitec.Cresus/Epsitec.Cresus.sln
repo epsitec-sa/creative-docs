@@ -56,9 +56,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Drawing.Platform", "
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Drawing.Tests", "Common.Drawing.Tests\Common.Drawing.Tests.csproj", "{D4EBA788-51BA-42BE-83AD-28F2A441E3A7}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 15
+		SccNumberOfProjects = 16
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -118,6 +122,10 @@ Global
 		SccLocalPath14 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection14 = System.Extension\\
+		SccProjectUniqueName15 = Common.Drawing.Tests\\Common.Drawing.Tests.csproj
+		SccLocalPath15 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection15 = Common.Drawing.Tests\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -180,6 +188,10 @@ Global
 		{0202C35E-E79E-43BE-9E35-1ACECB0BBE9B}.Debug.Build.0 = Debug|.NET
 		{0202C35E-E79E-43BE-9E35-1ACECB0BBE9B}.Release.ActiveCfg = Release|.NET
 		{0202C35E-E79E-43BE-9E35-1ACECB0BBE9B}.Release.Build.0 = Release|.NET
+		{D4EBA788-51BA-42BE-83AD-28F2A441E3A7}.Debug.ActiveCfg = Debug|.NET
+		{D4EBA788-51BA-42BE-83AD-28F2A441E3A7}.Debug.Build.0 = Debug|.NET
+		{D4EBA788-51BA-42BE-83AD-28F2A441E3A7}.Release.ActiveCfg = Release|.NET
+		{D4EBA788-51BA-42BE-83AD-28F2A441E3A7}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info

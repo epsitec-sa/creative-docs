@@ -77,6 +77,11 @@ namespace Epsitec.Common.Widgets
 			Widget.aliveWidgets.Add (new System.WeakReference (this));
 		}
 		
+		static Widget()
+		{
+			Drawing.Font.Initialise ();
+		}
+		
 		
 		#region Interface IDisposable
 		public void Dispose()

@@ -99,11 +99,6 @@
                     HintPath = "..\External\nunit.framework.dll"
                 />
                 <Reference
-                    Name = "AntiGrain.NET"
-                    AssemblyName = "AntiGrain.NET"
-                    HintPath = "..\External\AntiGrain.NET.dll"
-                />
-                <Reference
                     Name = "Common.Support"
                     Project = "{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
@@ -128,17 +123,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ColorTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "CustomWidgetTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DrawingTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -148,27 +133,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "FontTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "GraphicsTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "LibraryTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "PaneTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PathTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -189,11 +154,6 @@
                 />
                 <File
                     RelPath = "TinyDataBase.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "TransformTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
