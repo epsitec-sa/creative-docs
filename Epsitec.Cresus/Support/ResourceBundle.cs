@@ -297,6 +297,9 @@ namespace Epsitec.Common.Support
 						
 						if (name == "bundle")
 						{
+							ResourceBundle child_bundle;
+							string local_name;
+							
 							switch (reader_depth)
 							{
 								case 0:
@@ -304,10 +307,26 @@ namespace Epsitec.Common.Support
 									break;
 								
 								case 1:
-									//	Quelqu'un a voulu placer un sous-bundle directement dans le bundle.
-									//	Ce n'est pas permis, car ce serait un bundle anonyme !
+									local_name = reader.GetAttribute ("name");
 									
-									throw new ResourceException ("Sub-bundle in bundle cannot be anonymous");
+									if (local_name == null)
+									{
+										//	Quelqu'un a voulu placer un sous-bundle directement dans le bundle.
+										//	Ce n'est pas permis, car ce serait un bundle anonyme !
+										
+										throw new ResourceException ("Sub-bundle in bundle cannot be anonymous");
+									}
+									else
+									{
+										child_bundle = new ResourceBundle (string.Format ("{0}#{1}", this.name, local_name));
+										child_bundle.ParseXml (reader, default_prefix, level, 1, recursion+1);
+										this.AddChildBundle (local_name, child_bundle);
+									}
+									
+									//	Comme le ParseXml récursif a aussi consommé le </bundle>, on saute à
+									//	la suite sans changer le niveau d'imbrication.
+									
+									continue;
 								
 								case 2:
 									//	On vient de trouver un sous-bundle dans le bundle courant. Travaille
@@ -317,7 +336,7 @@ namespace Epsitec.Common.Support
 									
 									System.Diagnostics.Debug.Assert (element_name != null);
 									
-									ResourceBundle child_bundle = new ResourceBundle (string.Format ("{0}#{1}", this.name, element_name));
+									child_bundle = new ResourceBundle (string.Format ("{0}#{1}", this.name, element_name));
 									child_bundle.ParseXml (reader, default_prefix, level, 1, recursion+1);
 									this.AddChildBundle (element_name, child_bundle);
 									

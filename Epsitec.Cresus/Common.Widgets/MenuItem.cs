@@ -12,10 +12,8 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class MenuItem : AbstractButton
 	{
-		public MenuItem(MenuType type)
+		public MenuItem()
 		{
-			this.type = type;
-
 			this.internalState &= ~InternalState.AutoCapture;
 			this.internalState &= ~InternalState.AutoFocus;
 			this.internalState &= ~InternalState.AutoEngage;
@@ -32,6 +30,54 @@ namespace Epsitec.Common.Widgets
 			this.subIndicatorWidth = this.DefaultFontHeight;
 			this.colorControlDark = Drawing.Color.FromName("ControlDark");
 		}
+		
+		public MenuItem(string name, string text) : this()
+		{
+			this.Name     = name;
+			this.MainText = text;
+			this.onlyText = true;
+		}
+		
+		public MenuItem(string name, string icon, string text, string shortcut) : this()
+		{
+			this.Name     = name;
+			this.IconName = icon;
+			this.MainText = text;
+			this.ShortKey = shortcut;
+			this.onlyText = false;
+		}
+		
+		public MenuItem(string name, string icon, string text, string shortcut, AbstractMenu submenu) : this()
+		{
+			this.Name     = name;
+			this.IconName = icon;
+			this.MainText = text;
+			this.ShortKey = shortcut;
+			this.onlyText = false;
+			this.Submenu  = submenu;
+		}
+		
+		
+		internal void SetMenuType(MenuType type)
+		{
+			this.type = type;
+		}
+		
+		
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.submenu != null)
+				{
+					this.submenu.Dispose ();
+					this.submenu = null;
+				}
+			}
+			
+			base.Dispose (disposing);
+		}
+
 
 		// Type de la case.
 		public MenuItemType ItemType
@@ -58,11 +104,6 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.onlyText;
 			}
-
-			set
-			{
-				this.onlyText = value;
-			}
 		}
 
 		// Indique s'il s'agit d'une ligne de séparation horizontale.
@@ -72,15 +113,10 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.separator;
 			}
-
-			set
-			{
-				this.separator = value;
-			}
 		}
 
 		// Nom de l'icône affichée à gauche.
-		public string IconName
+		[ Support.Bundle ("icon") ] public string IconName
 		{
 			get
 			{
@@ -96,15 +132,16 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					this.icon.Text = @"<img src=""file:..\..\" + this.iconName + @".png""/>";
+					this.icon.Text = @"<img src=""" + this.iconName + @"""/>";
 				}
 				this.iconSize = this.icon.SingleLineSize();
+				this.separator = false;
 				this.AdjustSize(ref this.iconSize);
 			}
 		}
 
 		// Nom du texte principal affiché à droite de l'icône.
-		public string MainText
+		[ Support.Bundle ("text") ] public string MainText
 		{
 			get
 			{
@@ -114,13 +151,14 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.mainText.Text = value;
+				this.separator = false;
 				this.mainTextSize = this.mainText.SingleLineSize();
 				this.AdjustSize(ref this.mainTextSize);
 			}
 		}
 
 		// Nom du raccourci clavier affiché à droite.
-		public string ShortKey
+		[ Support.Bundle ("key") ] public string ShortKey
 		{
 			get
 			{
@@ -130,13 +168,14 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.shortKey.Text = value;
+				this.separator = false;
 				this.shortKeySize = this.shortKey.SingleLineSize();
 				this.AdjustSize(ref this.shortKeySize);
 			}
 		}
 
 		// Sous-menu éventuel associé à la case.
-		public AbstractMenu Submenu
+		[ Support.Bundle ("menu") ] public AbstractMenu Submenu
 		{
 			get
 			{
@@ -145,11 +184,24 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
+				this.separator = false;
 				this.submenu = value;
 			}
 		}
 
-
+		
+		internal int Index
+		{
+			get
+			{
+				return this.index;
+			}
+			set
+			{
+				this.index = value;
+			}
+		}
+		
 		// Ajuste des dimensions d'un TextLayout.
 		protected void AdjustSize(ref Drawing.Size size)
 		{
@@ -249,7 +301,7 @@ namespace Epsitec.Common.Widgets
 			}
 			adorner.PaintMenuItemBackground(graphics, rect, state, dir, this.type, iType);
 
-			if ( this.onlyText )
+			if ( this.onlyText || this.type == MenuType.Horizontal )
 			{
 				pos.X = (rect.Width-this.mainTextSize.Width)/2;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
@@ -294,7 +346,8 @@ namespace Epsitec.Common.Widgets
 
 		protected bool				onlyText = false;
 		protected bool				separator = false;
-		protected MenuType			type;
+		protected int				index;
+		protected MenuType			type = MenuType.Invalid;
 		protected MenuItemType		itemType = MenuItemType.Deselect;
 		protected double			marginHeader = 6;
 		protected double			marginItem = 2;

@@ -237,6 +237,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MenuSeparator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Message.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -251,6 +251,11 @@ namespace Epsitec.Common.Support
 				
 				switch (bundle.GetFieldType (prop_name))
 				{
+					case ResourceFieldType.Bundle:
+						prop_info.SetValue (obj, this.CreateFromBundle (bundle.GetFieldBundle (prop_name)), null);
+						ok = true;
+						break;
+					
 					case ResourceFieldType.String:
 						
 						//	La valeur source trouvée dans le bundle est une string. Il faut faire
