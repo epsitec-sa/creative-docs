@@ -1003,19 +1003,21 @@ namespace Epsitec.Common.Widgets
 				
 				this.host.EditArrayMode = EditArrayMode.Standard;
 				this.host.SetFocused (true);
+				this.host.ShowSelected (ScrollShowMode.Extremity);
 			}
 			
 			public virtual void StartEdition()
 			{
 				this.StartReadOnly ();
 				this.host.StartEdition (this.host.SelectedIndex, 0);
+				this.host.ShowEdition (ScrollShowMode.Extremity);
 			}
 			
 			public virtual void StartSearch()
 			{
 				this.StartReadOnly ();
 				this.host.StartSearch ();
-				
+				this.host.ShowSelected (ScrollShowMode.Extremity);
 			}
 			
 			public virtual void InsertBefore()
