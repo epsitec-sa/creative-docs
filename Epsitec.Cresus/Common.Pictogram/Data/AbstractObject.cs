@@ -16,6 +16,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 		}
 
+		[XmlArrayItem("Name",     Type=typeof(PropertyName))]
 		[XmlArrayItem("Bool",     Type=typeof(PropertyBool))]
 		[XmlArrayItem("Color",    Type=typeof(PropertyColor))]
 		[XmlArrayItem("Double",   Type=typeof(PropertyDouble))]
@@ -299,16 +300,16 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Début du déplacement pendant l'édition.
-		public virtual void MoveEditStarting(Drawing.Point pos, IconContext iconContext)
+		// Gestion d'un événement pendant l'édition.
+		public virtual bool EditProcessMessage(Message message, Drawing.Point pos)
 		{
+			return false;
 		}
 
-		// Déplacement pendant l'édition.
-		public virtual void MoveEditProcess(Drawing.Point pos, IconContext iconContext)
+		// Gestion d'un événement pendant l'édition.
+		public virtual void EditMouseDownMessage(Drawing.Point pos)
 		{
 		}
-
 
 		// Détecte la cellule pointée par la souris.
 		public virtual int DetectCell(Drawing.Point pos)
@@ -579,10 +580,11 @@ namespace Epsitec.Common.Pictogram.Data
 
 		// Ajoute toutes les propriétés de l'objet dans une liste.
 		// Un type de propriété donné n'est qu'une fois dans la liste.
-		public virtual void PropertiesList(System.Collections.ArrayList list)
+		public virtual void PropertiesList(System.Collections.ArrayList list, bool firstLevel)
 		{
 			foreach ( AbstractProperty property in this.properties )
 			{
+				if ( !firstLevel && property.Type == PropertyType.Name )  continue;
 				this.PropertyAllList(list, property);
 			}
 		}
@@ -853,6 +855,19 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+		// Adapte les propriétés de l'objet collé, pour empêcher d'utiliser un
+		// pattern dans un pattern.
+		public virtual void PasteAdaptProperties(bool isPatternPossible)
+		{
+			if ( isPatternPossible )  return;
+
+			PropertyLine line = this.SearchProperty(PropertyType.LineMode) as PropertyLine;
+			if ( line != null )
+			{
+				line.PatternId = 0;
+			}
+		}
+
 
 		// Détecte si la souris est sur un objet.
 		public virtual bool Detect(Drawing.Point pos)
@@ -954,6 +969,12 @@ namespace Epsitec.Common.Pictogram.Data
 			return false;
 		}
 
+		// Indique s'il faut éditer l'objet après sa création.
+		public virtual bool EditAfterCreation()
+		{
+			return false;
+		}
+
 
 		// Crée une instance de l'objet.
 		protected abstract AbstractObject CreateNewObject();
@@ -991,6 +1012,19 @@ namespace Epsitec.Common.Pictogram.Data
 			this.bboxFull       = src.bboxFull;
 		}
 
+		// Adapte un objet qui vient d'être copié.
+		public void DuplicateAdapt()
+		{
+			if ( this.properties.Count > 0 )
+			{
+				PropertyName name = this.properties[0] as PropertyName;
+				if ( name != null && name.String != "" )
+				{
+					name.String = Misc.CopyName(name.String);
+				}
+			}
+		}
+
 
 		// Retourne true si l'objet est complètement caché.
 		protected virtual bool IsFullHide(IconContext iconContext)
@@ -1004,7 +1038,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Dessine la géométrie de l'objet.
-		public virtual void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		public virtual void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
 			if ( this.IsFullHide(iconContext) )  return;
 

@@ -1,3 +1,4 @@
+using Epsitec.Common.Pictogram.Widgets;
 using Epsitec.Common.Widgets;
 using System.Xml.Serialization;
 using System.IO;
@@ -11,23 +12,25 @@ namespace Epsitec.Common.Pictogram.Data
 	[XmlRootAttribute("EpsitecPictogram")]
 
 	[
+	XmlInclude(typeof(ObjectArray)),
 	XmlInclude(typeof(ObjectBezier)),
 	XmlInclude(typeof(ObjectCircle)),
 	XmlInclude(typeof(ObjectEllipse)),
 	XmlInclude(typeof(ObjectGroup)),
+	XmlInclude(typeof(ObjectImage)),
 	XmlInclude(typeof(ObjectLayer)),
 	XmlInclude(typeof(ObjectLine)),
 	XmlInclude(typeof(ObjectPage)),
+	XmlInclude(typeof(ObjectPattern)),
 	XmlInclude(typeof(ObjectPoly)),
 	XmlInclude(typeof(ObjectRectangle)),
 	XmlInclude(typeof(ObjectRegular)),
-	XmlInclude(typeof(ObjectTextLine)),
 	XmlInclude(typeof(ObjectTextBox)),
-	XmlInclude(typeof(ObjectArray)),
-	XmlInclude(typeof(ObjectImage)),
+	XmlInclude(typeof(ObjectTextLine)),
 
 	XmlInclude(typeof(Handle)),
 
+	XmlInclude(typeof(PropertyName)),
 	XmlInclude(typeof(PropertyBool)),
 	XmlInclude(typeof(PropertyColor)),
 	XmlInclude(typeof(PropertyDouble)),
@@ -53,12 +56,24 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 		}
 
+		public Drawer Drawer
+		{
+			set { this.drawer = value; }
+		}
+
 		// Taille préférentielle de l'icône en pixels.
 		public Drawing.Size Size
 		{
 			get
 			{
-				return this.size;
+				if ( this.currentPattern == 0 )
+				{
+					return this.size;
+				}
+				else
+				{
+					return this.motifSize;
+				}
 			}
 
 			set
@@ -74,7 +89,14 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			get
 			{
-				return this.sizeArea;
+				if ( this.currentPattern == 0 )
+				{
+					return this.sizeArea;
+				}
+				else
+				{
+					return this.motifSizeArea;
+				}
 			}
 		}
 
@@ -83,10 +105,20 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			get
 			{
-				Drawing.Point origin = new Drawing.Point();
-				origin.X = -(this.sizeArea.Width-this.size.Width)/2;
-				origin.Y = -(this.sizeArea.Height-this.size.Height)/2;
-				return origin;
+				if ( this.currentPattern == 0 )
+				{
+					Drawing.Point origin = new Drawing.Point();
+					origin.X = -(this.sizeArea.Width-this.size.Width)/2;
+					origin.Y = -(this.sizeArea.Height-this.size.Height)/2;
+					return origin;
+				}
+				else
+				{
+					Drawing.Point origin = new Drawing.Point();
+					origin.X = -(this.motifSizeArea.Width-this.motifSize.Width)/2;
+					origin.Y = -(this.motifSizeArea.Height-this.motifSize.Height)/2;
+					return origin;
+				}
 			}
 		}
 
@@ -95,7 +127,14 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			get
 			{
-				return this.origin;
+				if ( this.currentPattern == 0 )
+				{
+					return this.origin;
+				}
+				else
+				{
+					return this.motifOrigin;
+				}
 			}
 
 			set
@@ -112,20 +151,21 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 		
 		// Liste des objets.
+		[XmlArrayItem("Array",     Type=typeof(ObjectArray))]
 		[XmlArrayItem("Bezier",    Type=typeof(ObjectBezier))]
 		[XmlArrayItem("Circle",    Type=typeof(ObjectCircle))]
 		[XmlArrayItem("Ellipse",   Type=typeof(ObjectEllipse))]
 		[XmlArrayItem("Group",     Type=typeof(ObjectGroup))]
+		[XmlArrayItem("Image",     Type=typeof(ObjectImage))]
 		[XmlArrayItem("Layer",     Type=typeof(ObjectLayer))]
 		[XmlArrayItem("Line",      Type=typeof(ObjectLine))]
 		[XmlArrayItem("Page",      Type=typeof(ObjectPage))]
+		[XmlArrayItem("Pattern",   Type=typeof(ObjectPattern))]
 		[XmlArrayItem("Polyline",  Type=typeof(ObjectPoly))]
 		[XmlArrayItem("Rectangle", Type=typeof(ObjectRectangle))]
 		[XmlArrayItem("Polygon",   Type=typeof(ObjectRegular))]
-		[XmlArrayItem("TextLine",  Type=typeof(ObjectTextLine))]
 		[XmlArrayItem("TextBox",   Type=typeof(ObjectTextBox))]
-		[XmlArrayItem("Array",     Type=typeof(ObjectArray))]
-		[XmlArrayItem("Image",     Type=typeof(ObjectImage))]
+		[XmlArrayItem("TextLine",  Type=typeof(ObjectTextLine))]
 		public System.Collections.ArrayList Objects
 		{
 			get { return this.objects; }
@@ -155,11 +195,14 @@ namespace Epsitec.Common.Pictogram.Data
 		public void Clear()
 		{
 			this.objects.Clear();
-			ObjectPage  page  = new ObjectPage();
-			ObjectLayer layer = new ObjectLayer();
-			this.objects.Add(page);
+			ObjectPattern pattern = new ObjectPattern();
+			ObjectPage    page    = new ObjectPage();
+			ObjectLayer   layer   = new ObjectLayer();
+			this.objects.Add(pattern);
+			pattern.Objects.Add(page);
 			page.Objects.Add(layer);
-			this.UsePageLayer(0, 0);
+			this.roots.Clear();
+			this.UsePatternPageLayer(0, 0, 0);
 
 			this.styles.ClearProperty();
 		}
@@ -242,7 +285,7 @@ namespace Epsitec.Common.Pictogram.Data
 				AbstractObject obj = objects[index] as AbstractObject;
 				if ( !all && !obj.IsSelected() )  continue;
 
-				obj.PropertiesList(list);
+				obj.PropertiesList(list, !all);
 
 				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
@@ -313,7 +356,8 @@ namespace Epsitec.Common.Pictogram.Data
 					}
 				}
 
-				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				if ( obj.Objects != null && obj.Objects.Count > 0 &&
+					 property.Type != PropertyType.Name           )
 				{
 					this.SetProperty(obj.Objects, property, ref bbox, deepAll);
 
@@ -350,7 +394,7 @@ namespace Epsitec.Common.Pictogram.Data
 					return property;
 				}
 
-				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				if ( obj.Objects != null && obj.Objects.Count > 0 && type != PropertyType.Name )
 				{
 					AbstractProperty p = this.GetProperty(obj.Objects, type, objectMemory, true);
 					if ( p != null )  return p;
@@ -840,6 +884,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 				AbstractObject newObject = null;
 				if ( !obj.DuplicateObject(ref newObject) )  continue;
+				newObject.DuplicateAdapt();
 				newObject.MoveAll(move, all);
 				dst.Add(newObject);
 
@@ -901,6 +946,7 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( !obj.DuplicateObject(ref newObject) )  continue;
 				dst.Add(newObject);
 				newObject.PasteAdaptStyles(this.StylesCollection);  // adapte les styles
+				newObject.PasteAdaptProperties(this.currentPattern == 0);
 
 				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
@@ -1051,6 +1097,40 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 			}
 			while ( bDo );
+		}
+
+		// Retourne le nom du premier groupe sélectionné rencontré.
+		public string GroupName()
+		{
+			System.Collections.ArrayList objects = this.CurrentGroup;
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				if ( !obj.IsSelected() )  continue;
+				if ( !(obj is ObjectGroup) )  continue;
+				PropertyName prop = obj.Properties[0] as PropertyName;
+				if ( prop == null )  continue;
+				return prop.String;
+			}
+			return "";
+		}
+
+		// Spécifie le nom du premier groupe sélectionné rencontré.
+		public void GroupName(string name)
+		{
+			System.Collections.ArrayList objects = this.CurrentGroup;
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				if ( !obj.IsSelected() )  continue;
+				if ( !(obj is ObjectGroup) )  continue;
+				PropertyName prop = obj.Properties[0] as PropertyName;
+				if ( prop == null )  continue;
+				prop.String = name;
+				return;
+			}
 		}
 
 
@@ -1227,22 +1307,26 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine la géométrie de tous les objets.
 		public void DrawGeometry(Drawing.Graphics graphics,
 								 IconContext iconContext,
+								 IconObjects iconObjects,
 								 object adorner,
 								 Drawing.Rectangle clipRect,
 								 bool showAllLayers)
 		{
 			if ( this.objects.Count == 0 )  return;
-			ObjectPage page = this.objects[this.currentPage] as ObjectPage;
-			this.DrawGeometry(page.Objects, graphics, iconContext, adorner, clipRect, showAllLayers, !showAllLayers);
+			ObjectPattern pattern = this.objects[this.currentPattern] as ObjectPattern;
+			if ( pattern.Objects.Count == 0 )  return;
+			ObjectPage page = pattern.Objects[this.currentPage] as ObjectPage;
+			this.DrawGeometry(page.Objects, graphics, iconContext, iconObjects, adorner, clipRect, showAllLayers, !showAllLayers);
 		}
 
-		protected void DrawGeometry(System.Collections.ArrayList objects,
-									Drawing.Graphics graphics,
-									IconContext iconContext,
-									object adorner,
-									Drawing.Rectangle clipRect,
-									bool showAllLayers,
-									bool dimmed)
+		public void DrawGeometry(System.Collections.ArrayList objects,
+								 Drawing.Graphics graphics,
+								 IconContext iconContext,
+								 IconObjects iconObjects,
+								 object adorner,
+								 Drawing.Rectangle clipRect,
+								 bool showAllLayers,
+								 bool dimmed)
 		{
 			System.Collections.ArrayList root = this.CurrentGroup;
 			if ( objects == root )  dimmed = false;
@@ -1266,7 +1350,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 						if ( layer.Actif || showAllLayers )
 						{
-							this.DrawGeometry(obj.Objects, graphics, iconContext, adorner, clipRect, showAllLayers, dimmed);
+							this.DrawGeometry(obj.Objects, graphics, iconContext, iconObjects, adorner, clipRect, showAllLayers, dimmed);
 						}
 						else
 						{
@@ -1274,13 +1358,13 @@ namespace Epsitec.Common.Pictogram.Data
 							{
 								bool newDimmed = dimmed;
 								if ( layer.Type == LayerType.Show )  newDimmed = false;
-								this.DrawGeometry(obj.Objects, graphics, iconContext, adorner, clipRect, showAllLayers, newDimmed);
+								this.DrawGeometry(obj.Objects, graphics, iconContext, iconObjects, adorner, clipRect, showAllLayers, newDimmed);
 							}
 						}
 					}
 					else
 					{
-						this.DrawGeometry(obj.Objects, graphics, iconContext, adorner, clipRect, showAllLayers, dimmed);
+						this.DrawGeometry(obj.Objects, graphics, iconContext, iconObjects, adorner, clipRect, showAllLayers, dimmed);
 					}
 				}
 
@@ -1290,7 +1374,7 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 
 				iconContext.IsDimmed = dimmed;
-				obj.DrawGeometry(graphics, iconContext);
+				obj.DrawGeometry(graphics, iconContext, iconObjects);
 			}
 		}
 
@@ -1429,19 +1513,46 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Retourne le nombre total de patterns.
+		public int TotalPatterns()
+		{
+			return this.objects.Count;
+		}
+
 		// Retourne le nombre total de pages.
 		public int TotalPages()
 		{
-			return this.objects.Count;
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			ObjectPattern pattern = this.roots[0] as ObjectPattern;
+			System.Diagnostics.Debug.Assert(pattern != null);
+			return pattern.Objects.Count;
 		}
 
 		// Retourne le nombre total de calques dans la page courante.
 		public int TotalLayers()
 		{
-			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
-			ObjectPage page = this.roots[0] as ObjectPage;
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			ObjectPage page = this.roots[1] as ObjectPage;
 			System.Diagnostics.Debug.Assert(page != null);
 			return page.Objects.Count;
+		}
+
+		// Gestion du pattern en cours.
+		[XmlIgnore]
+		public int CurrentPattern
+		{
+			get
+			{
+				return this.currentPattern;
+			}
+
+			set
+			{
+				if ( value != this.currentPattern )
+				{
+					this.UsePatternPageLayer(value, -1, -1);  // -1 = dernier calque utilisé
+				}
+			}
 		}
 
 		// Gestion de la page en cours.
@@ -1457,7 +1568,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				if ( value != this.currentPage )
 				{
-					this.UsePageLayer(value, -1);  // -1 = dernier calque utilisé
+					this.UsePatternPageLayer(this.currentPattern, value, -1);  // -1 = dernier calque utilisé
 				}
 			}
 		}
@@ -1475,27 +1586,52 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				if ( value != this.currentLayer )
 				{
-					this.UsePageLayer(this.currentPage, value);
+					this.UsePatternPageLayer(this.currentPattern, this.currentPage, value);
 				}
 			}
 		}
 
 		// Utilise une page et un calque donné.
-		protected void UsePageLayer(int rankPage, int rankLayer)
+		protected void UsePatternPageLayer(int rankPattern, int rankPage, int rankLayer)
 		{
-			ObjectPage	page;
-			ObjectLayer	layer;
+			ObjectPattern pattern;
+			ObjectPage	  page;
+			ObjectLayer	  layer;
 
-			if ( this.roots.Count >= 2 )
+			if ( this.roots.Count >= 3 )
 			{
-				page = this.objects[this.currentPage] as ObjectPage;
+				pattern = this.objects[this.currentPattern] as ObjectPattern;
+				pattern.CurrentPage = this.currentPage;
+				if ( this.drawer != null )
+				{
+					pattern.CurrentZoom    = this.drawer.Zoom;
+					pattern.CurrentOriginX = this.drawer.OriginX;
+					pattern.CurrentOriginY = this.drawer.OriginY;
+				}
+
+				page = pattern.Objects[this.currentPage] as ObjectPage;
 				page.CurrentLayer = this.currentLayer;
 			}
 
 			this.roots.Clear();
 
-			System.Diagnostics.Debug.Assert(rankPage < this.objects.Count);
-			page = this.objects[rankPage] as ObjectPage;
+			System.Diagnostics.Debug.Assert(rankPattern < this.objects.Count);
+			pattern = this.objects[rankPattern] as ObjectPattern;
+			System.Diagnostics.Debug.Assert(pattern != null);
+			this.roots.Add(pattern);
+
+			if ( rankPage == -1 )  // dernière page utilisée dans ce pattern ?
+			{
+				rankPage = pattern.CurrentPage;
+				if ( this.drawer != null )
+				{
+					this.drawer.Zoom    = pattern.CurrentZoom;
+					this.drawer.OriginX = pattern.CurrentOriginX;
+					this.drawer.OriginY = pattern.CurrentOriginY;
+				}
+			}
+			System.Diagnostics.Debug.Assert(rankPage < pattern.Objects.Count);
+			page = pattern.Objects[rankPage] as ObjectPage;
 			System.Diagnostics.Debug.Assert(page != null);
 			this.roots.Add(page);
 
@@ -1508,8 +1644,9 @@ namespace Epsitec.Common.Pictogram.Data
 			System.Diagnostics.Debug.Assert(layer != null);
 			this.roots.Add(layer);
 
-			this.currentPage  = rankPage;
-			this.currentLayer = rankLayer;
+			this.currentPattern = rankPattern;
+			this.currentPage    = rankPage;
+			this.currentLayer   = rankLayer;
 
 			int total = page.Objects.Count;
 			for ( int i=0 ; i<total ; i++ )
@@ -1519,19 +1656,28 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+		// Donne un pattern.
+		public ObjectPattern Pattern(int rank)
+		{
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			System.Diagnostics.Debug.Assert(rank < this.objects.Count);
+			return this.objects[rank] as ObjectPattern;
+		}
+
 		// Donne une page.
 		public ObjectPage Page(int rank)
 		{
-			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
-			System.Diagnostics.Debug.Assert(rank < this.objects.Count);
-			return this.objects[rank] as ObjectPage;
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			ObjectPattern pattern = this.roots[0] as ObjectPattern;
+			System.Diagnostics.Debug.Assert(rank < pattern.Objects.Count);
+			return pattern.Objects[rank] as ObjectPage;
 		}
 
 		// Donne un calque de la page courante.
 		public ObjectLayer Layer(int rank)
 		{
-			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
-			ObjectPage page = this.roots[0] as ObjectPage;
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			ObjectPage page = this.roots[1] as ObjectPage;
 			System.Diagnostics.Debug.Assert(rank < page.Objects.Count);
 			return page.Objects[rank] as ObjectLayer;
 		}
@@ -1539,31 +1685,59 @@ namespace Epsitec.Common.Pictogram.Data
 		// Donne la transformation de couleur du calque courant.
 		public PropertyModColor LayerModColor()
 		{
-			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
-			ObjectLayer layer = this.roots[1] as ObjectLayer;
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			ObjectLayer layer = this.roots[2] as ObjectLayer;
 			System.Diagnostics.Debug.Assert(layer != null);
 			return layer.PropertyModColor(0);
+		}
+
+		// Crée un nouveau pattern (avec une page et un calque) après le rang donné.
+		public void CreatePattern(int rank, bool duplicate)
+		{
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			ObjectPattern pattern = new ObjectPattern();
+
+			int id = 0;
+			for ( int i=0 ; i<this.objects.Count ; i++ )
+			{
+				ObjectPattern pat = this.objects[i] as ObjectPattern;
+				if ( id < pat.Id )  id = pat.Id;
+			}
+			pattern.Id = id+1;
+
+			this.objects.Insert(rank+1, pattern);
+
+			if ( duplicate )
+			{
+				this.DuplicateSelection(this.Pattern(rank).Objects, this.Pattern(rank+1).Objects, new Drawing.Point(0, 0), true);
+				ObjectPattern srcPattern = this.Pattern(rank);
+				pattern.Name = Misc.CopyName(srcPattern.Name);
+			}
+			else
+			{
+				ObjectPage page = new ObjectPage();
+				pattern.Objects.Add(page);
+
+				ObjectLayer layer = new ObjectLayer();
+				page.Objects.Add(layer);
+			}
+
+			this.UsePatternPageLayer(rank+1, 0, 0);
 		}
 
 		// Crée une nouvelle page (avec un calque) après le rang donné.
 		public void CreatePage(int rank, bool duplicate)
 		{
-			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			ObjectPattern pattern = this.roots[0] as ObjectPattern;
 			ObjectPage page = new ObjectPage();
-			this.objects.Insert(rank+1, page);
+			pattern.Objects.Insert(rank+1, page);
 
 			if ( duplicate )
 			{
 				this.DuplicateSelection(this.Page(rank).Objects, this.Page(rank+1).Objects, new Drawing.Point(0, 0), true);
 				ObjectPage srcPage = this.Page(rank);
-				if ( srcPage.Name == "" )
-				{
-					page.Name = "Copie";
-				}
-				else
-				{
-					page.Name = "Copie de " + srcPage.Name;
-				}
+				page.Name = Misc.CopyName(srcPage.Name);
 			}
 			else
 			{
@@ -1571,14 +1745,14 @@ namespace Epsitec.Common.Pictogram.Data
 				page.Objects.Add(layer);
 			}
 
-			this.UsePageLayer(rank+1, 0);
+			this.UsePatternPageLayer(this.currentPattern, rank+1, 0);
 		}
 
 		// Crée un nouveau calque dans la page courante après le rang donné.
 		public void CreateLayer(int rank, bool duplicate)
 		{
-			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
-			ObjectPage page = this.roots[0] as ObjectPage;
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			ObjectPage page = this.roots[1] as ObjectPage;
 			ObjectLayer layer = new ObjectLayer();
 			page.Objects.Insert(rank+1, layer);
 
@@ -1586,65 +1760,91 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				this.DuplicateSelection(this.Layer(rank).Objects, this.Layer(rank+1).Objects, new Drawing.Point(0, 0), true);
 				ObjectLayer srcLayer = this.Layer(rank);
-				if ( srcLayer.Name == "" )
-				{
-					layer.Name = "Copie";
-				}
-				else
-				{
-					layer.Name = "Copie de " + srcLayer.Name;
-				}
+				layer.Name = Misc.CopyName(srcLayer.Name);
 			}
 
-			this.UsePageLayer(this.currentPage, rank+1);
+			this.UsePatternPageLayer(this.currentPattern, this.currentPage, rank+1);
+		}
+
+		// Supprime un pattern.
+		public void DeletePattern(int rank)
+		{
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			System.Diagnostics.Debug.Assert(this.objects.Count > 1);
+			System.Diagnostics.Debug.Assert(rank < this.objects.Count);
+			this.objects.RemoveAt(rank);
+
+			if ( this.currentPattern > this.objects.Count-1 )  this.currentPattern = this.objects.Count-1;
+			this.roots[0] = this.objects[this.currentPattern];
+
+			ObjectPattern pattern = this.roots[0] as ObjectPattern;
+			this.currentPage = pattern.CurrentPage;
+			this.roots[1] = pattern.Objects[this.currentPage];
+
+			ObjectPage page = this.roots[1] as ObjectPage;
+			this.currentLayer = page.CurrentLayer;
+			this.roots[2] = page.Objects[this.currentLayer];
 		}
 
 		// Supprime une page.
 		public void DeletePage(int rank)
 		{
-			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
-			System.Diagnostics.Debug.Assert(this.objects.Count > 1);
-			System.Diagnostics.Debug.Assert(rank < this.objects.Count);
-			this.objects.RemoveAt(rank);
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			ObjectPattern pattern = this.roots[0] as ObjectPattern;
+			System.Diagnostics.Debug.Assert(pattern.Objects.Count > 1);
+			System.Diagnostics.Debug.Assert(rank < pattern.Objects.Count);
+			pattern.Objects.RemoveAt(rank);
 
-			if ( this.currentPage > this.objects.Count-1 )  this.currentPage = this.objects.Count-1;
-			this.roots[0] = this.objects[this.currentPage];
+			if ( this.currentPage > pattern.Objects.Count-1 )  this.currentPage = pattern.Objects.Count-1;
+			this.roots[1] = pattern.Objects[this.currentPage];
 
-			ObjectPage page = this.roots[0] as ObjectPage;
-			this.currentLayer = 0;
-			this.roots[1] = page.Objects[this.currentLayer];
+			ObjectPage page = this.roots[1] as ObjectPage;
+			this.currentLayer = page.CurrentLayer;
+			this.roots[2] = page.Objects[this.currentLayer];
 		}
 
 		// Supprime un calque.
 		public void DeleteLayer(int rank)
 		{
-			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
-			ObjectPage page = this.roots[0] as ObjectPage;
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			ObjectPage page = this.roots[1] as ObjectPage;
 			System.Diagnostics.Debug.Assert(page.Objects.Count > 1);
 			System.Diagnostics.Debug.Assert(rank < page.Objects.Count);
 			page.Objects.RemoveAt(rank);
 
 			this.currentLayer --;
 			if ( this.currentLayer < 0 )  this.currentLayer = 0;
-			this.roots[1] = page.Objects[this.currentLayer];
+			this.roots[2] = page.Objects[this.currentLayer];
+		}
+
+		// Permute deux patterns.
+		public void SwapPattern(int rank1, int rank2)
+		{
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			System.Diagnostics.Debug.Assert(rank1 < this.objects.Count);
+			System.Diagnostics.Debug.Assert(rank2 < this.objects.Count);
+			ObjectPattern temp = this.objects[rank1] as ObjectPattern;
+			this.objects[rank1] = this.objects[rank2];
+			this.objects[rank2] = temp;
 		}
 
 		// Permute deux pages.
 		public void SwapPage(int rank1, int rank2)
 		{
-			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
-			System.Diagnostics.Debug.Assert(rank1 < this.objects.Count);
-			System.Diagnostics.Debug.Assert(rank2 < this.objects.Count);
-			ObjectPage temp = this.objects[rank1] as ObjectPage;
-			this.objects[rank1] = this.objects[rank2];
-			this.objects[rank2] = temp;
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			ObjectPattern pattern = this.roots[0] as ObjectPattern;
+			System.Diagnostics.Debug.Assert(rank1 < pattern.Objects.Count);
+			System.Diagnostics.Debug.Assert(rank2 < pattern.Objects.Count);
+			ObjectPage temp = pattern.Objects[rank1] as ObjectPage;
+			pattern.Objects[rank1] = pattern.Objects[rank2];
+			pattern.Objects[rank2] = temp;
 		}
 
 		// Permute deux calques.
 		public void SwapLayer(int rank1, int rank2)
 		{
-			System.Diagnostics.Debug.Assert(this.roots.Count >= 2);
-			ObjectPage page = this.roots[0] as ObjectPage;
+			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
+			ObjectPage page = this.roots[1] as ObjectPage;
 			System.Diagnostics.Debug.Assert(rank1 < page.Objects.Count);
 			System.Diagnostics.Debug.Assert(rank2 < page.Objects.Count);
 			ObjectLayer temp = page.Objects[rank1] as ObjectLayer;
@@ -1705,18 +1905,30 @@ namespace Epsitec.Common.Pictogram.Data
 				this.styles.CollectionChanged();
 
 				this.objects.Clear();
-				if ( obj.objects.Count > 0 && obj.objects[0] is ObjectPage )
+				if ( obj.objects.Count > 0 && obj.objects[0] is ObjectPattern )
 				{
 					foreach ( AbstractObject src in obj.Objects )
 					{
 						this.objects.Add(src);
 					}
 				}
+				else if ( obj.objects.Count > 0 && obj.objects[0] is ObjectPage )
+				{
+					ObjectPattern pattern = new ObjectPattern();
+					this.objects.Add(pattern);
+
+					foreach ( AbstractObject src in obj.Objects )
+					{
+						pattern.Objects.Add(src);
+					}
+				}
 				else
 				{
-					ObjectPage  page  = new ObjectPage();
-					ObjectLayer layer = new ObjectLayer();
-					this.objects.Add(page);
+					ObjectPattern pattern = new ObjectPattern();
+					ObjectPage    page    = new ObjectPage();
+					ObjectLayer   layer   = new ObjectLayer();
+					this.objects.Add(pattern);
+					pattern.Objects.Add(page);
 					page.Objects.Add(layer);
 
 					foreach ( AbstractObject src in obj.Objects )
@@ -1726,7 +1938,7 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 				this.ArrangeAfterRead(this.objects);
 
-				this.UsePageLayer(0, 0);
+				this.UsePatternPageLayer(0, 0, 0);
 			}
 			catch ( System.Exception )
 			{
@@ -1751,13 +1963,18 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		protected Drawer						drawer;
 		protected Drawing.Size					size = new Drawing.Size(20, 20);
 		protected Drawing.Size					sizeArea = new Drawing.Size(20*3, 20*3);
 		protected Drawing.Point					origin = new Drawing.Point(0, 0);
+		protected Drawing.Size					motifSize = new Drawing.Size(10, 10);
+		protected Drawing.Size					motifSizeArea = new Drawing.Size(10*3, 10*3);
+		protected Drawing.Point					motifOrigin = new Drawing.Point(5, 5);
 		protected StylesCollection				styles = new StylesCollection();
 		protected System.Collections.ArrayList	objects = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	roots = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	clipboard = new System.Collections.ArrayList();
+		protected int							currentPattern = 0;
 		protected int							currentPage = 0;
 		protected int							currentLayer = 0;
 	}

@@ -8,6 +8,7 @@ namespace Epsitec.Common.Pictogram.Data
 	public enum PropertyType
 	{
 		None,				// aucune
+		Name,				// nom de l'objet
 		LineColor,			// couleur du trait
 		LineMode,			// mode du trait
 		FillGradient,		// dégradé de remplissage
@@ -40,6 +41,7 @@ namespace Epsitec.Common.Pictogram.Data
 			AbstractProperty property = null;
 			switch ( type )
 			{
+				case PropertyType.Name:             property = new PropertyName();      break;
 				case PropertyType.LineColor:        property = new PropertyColor();     break;
 				case PropertyType.LineMode:         property = new PropertyLine();      break;
 				case PropertyType.FillGradient:     property = new PropertyGradient();  break;
@@ -66,6 +68,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			switch ( type )
 			{
+				case PropertyType.Name:             return "Name";
 				case PropertyType.LineColor:        return "LineColor";
 				case PropertyType.LineMode:         return "LineMode";
 				case PropertyType.FillGradient:     return "FillGradient";
@@ -90,6 +93,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			switch ( typeName )
 			{
+				case "Name":             return PropertyType.Name;
 				case "LineColor":        return PropertyType.LineColor;
 				case "LineMode":         return PropertyType.LineMode;
 				case "FillGradient":     return PropertyType.FillGradient;
@@ -142,6 +146,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				switch ( this.type )
 				{
+					case PropertyType.Name:             return 0.70;
 					case PropertyType.LineColor:        return 0.85;
 					case PropertyType.LineMode:         return 0.85;
 					case PropertyType.FillGradient:     return 0.95;
@@ -170,6 +175,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				switch ( this.type )
 				{
+					case PropertyType.Name:             return "Nom";
 					case PropertyType.LineColor:        return "Couleur trait";
 					case PropertyType.LineMode:         return "Epaisseur trait";
 					case PropertyType.FillGradient:     return "Couleur intérieure";

@@ -434,6 +434,12 @@ namespace Epsitec.Common.Pictogram.Data
 			get { return Drawing.Color.FromARGB(1.0, 1.0, 0.0, 0.0); }  // rouge
 		}
 
+		// Retourne la couleur des sélections pendant l'édition.
+		static public Drawing.Color ColorSelectEdit
+		{
+			get { return Drawing.Color.FromARGB(1.0, 1.0, 1.0, 0.0); }  // jaune
+		}
+
 
 		protected IAdorner					adorner;
 		protected Drawing.GlyphPaintStyle	glyphPaintStyle;

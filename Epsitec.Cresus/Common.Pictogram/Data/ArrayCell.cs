@@ -27,6 +27,20 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		[XmlIgnore]
+		public TextNavigator TextNavigator
+		{
+			get { return this.textNavigator; }
+			set { this.textNavigator = value; }
+		}
+
+		[XmlIgnore]
+		public Drawing.Transform Transform
+		{
+			get { return this.transform; }
+			set { this.transform = value; }
+		}
+
+		[XmlIgnore]
 		public Drawing.Point BottomLeft
 		{
 			get { return this.bottomLeft; }
@@ -142,6 +156,8 @@ namespace Epsitec.Common.Pictogram.Data
 
 		protected bool					selected = false;
 		protected TextLayout			textLayout;
+		protected TextNavigator			textNavigator;
+		protected Drawing.Transform		transform;
 		protected Drawing.Point			bottomLeft;
 		protected Drawing.Point			bottomRight;
 		protected Drawing.Point			topLeft;

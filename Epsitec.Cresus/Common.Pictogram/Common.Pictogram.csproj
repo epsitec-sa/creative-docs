@@ -168,6 +168,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Data\Misc.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Data\ObjectArray.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -214,6 +219,11 @@
                 />
                 <File
                     RelPath = "Data\ObjectPage.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\ObjectPattern.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -304,6 +314,11 @@
                 />
                 <File
                     RelPath = "Data\PropertyModColor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\PropertyName.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -433,7 +448,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Widgets\PanelName.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\PanelPages.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\PanelPatterns.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
