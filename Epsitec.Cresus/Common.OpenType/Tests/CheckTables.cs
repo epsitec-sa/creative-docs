@@ -375,8 +375,20 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			string text = "Quelle fin affreuse, affligeant !";
 			
-			ushort[] glyphs_1 = font_1.GenerateGlyphs (text);
-			ushort[] glyphs_2 = font_2.GenerateGlyphs (text);
+			ushort[] glyphs_1a = font_1.GenerateGlyphs (text);
+			ushort[] glyphs_2a = font_2.GenerateGlyphs (text);
+			
+			double w1a = font_1.GetTotalWidth (glyphs_1a, 10.0);
+			double w2a = font_2.GetTotalWidth (glyphs_2a, 10.0);
+			
+			font_1.SelectFeatures ();
+			font_2.SelectFeatures ();
+			
+			ushort[] glyphs_1b = font_1.GenerateGlyphs (text);
+			ushort[] glyphs_2b = font_2.GenerateGlyphs (text);
+			
+			double w1b = font_1.GetTotalWidth (glyphs_1b, 10.0);
+			double w2b = font_2.GetTotalWidth (glyphs_2b, 10.0);
 		}
 		
 		

@@ -16,8 +16,13 @@ namespace Epsitec.Common.OpenType
 		public void Initialize(TableDirectory directory)
 		{
 			this.ot_directory = directory;
-			this.ot_GSUB      = new Table_GSUB (directory.FindTable ("GSUB"));
-			this.ot_cmap      = new Table_cmap (directory.FindTable ("cmap"));
+			
+			this.ot_GSUB = new Table_GSUB (directory.FindTable ("GSUB"));
+			this.ot_cmap = new Table_cmap (directory.FindTable ("cmap"));
+			this.ot_maxp = new Table_maxp (directory.FindTable ("maxp"));
+			this.ot_head = new Table_head (directory.FindTable ("head"));
+			this.ot_hhea = new Table_hhea (directory.FindTable ("hhea"));
+			this.ot_hmtx = new Table_hmtx (directory.FindTable ("hmtx"));
 			
 			this.ot_index_mapping = this.ot_cmap.FindFormatSubTable ();
 		}
@@ -25,64 +30,65 @@ namespace Epsitec.Common.OpenType
 		
 		public ushort[] GenerateGlyphs(string text)
 		{
-			int      count  = text.Length;
-			ushort[] glyphs = new ushort[count];
+			int      length = text.Length;
+			ushort[] glyphs = new ushort[length];
 			
-			for (int i = 0; i < count; i++)
+			for (int i = 0; i < length; i++)
 			{
 				glyphs[i] = this.ot_index_mapping.GetGlyphIndex (text[i]);
 			}
 			
-			//	Exécute les substitutions de glyphes en fonction des 'features'
-			//	sélectionnées :
-			
-			int        max_size = count + 16;
-			ushort[][] temp     = new ushort[2][];
-			
-		try_again:
-			
-			temp[0] = new ushort[max_size];
-			temp[1] = new ushort[max_size];
-			
-			try
-			{
-				ushort[] input  = glyphs;
-				ushort[] output = temp[0];
-				
-				int length = count;
-				int toggle = 1;
-				
-				if ((this.substitution_lookups != null) &&
-					(this.substitution_lookups.Length > 0))
-				{
-					for (int i = 0; i < this.substitution_lookups.Length; i++)
-					{
-						this.ApplySubstitutions (this.substitution_lookups[i], input, length, output, out length);
-						
-						input   = output;
-						output  = temp[toggle & 1];
-						toggle += 1;
-					}
-				}
-				
-				this.ApplyManualLigatureSubstitutions (input, length, output, out length);
-				
-				glyphs = new ushort[length];
-				
-				for (int i = 0; i < length; i++)
-				{
-					glyphs[i] = output[i];
-				}
-			}
-			catch (System.IndexOutOfRangeException)
-			{
-				max_size += max_size / 8;
-				goto try_again;
-			}
+			this.ApplySubstitutions (ref glyphs);
 			
 			return glyphs;
 		}
 		
+		public ushort[] GenerateGlyphs(ulong[] text, int start, int length)
+		{
+			ushort[] glyphs = new ushort[length];
+			
+			for (int i = 0; i < length; i++)
+			{
+				int code  = 0x001fffff & (int) text[start+i];
+				glyphs[i] = this.ot_index_mapping.GetGlyphIndex (code);
+			}
+			
+			this.ApplySubstitutions (ref glyphs);
+			
+			return glyphs;
+		}
+		
+		
+		public double GetTotalWidth(ushort[] glyphs, double size)
+		{
+			int num_glyph     = this.ot_maxp.NumGlyphs;
+			int num_h_metrics = this.ot_hhea.NumHMetrics;
+					
+			int advance = 0;
+			
+			for (int i = 0; i < glyphs.Length; i++)
+			{
+				ushort glyph = glyphs[i];
+				
+				if (glyph < num_glyph)
+				{
+					if (glyph < num_h_metrics)
+					{
+						advance += this.ot_hmtx.GetAdvanceWidth (glyph);
+					}
+					else
+					{
+						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
+					}
+				}
+			}
+			
+			return advance * size / this.ot_head.UnitsPerEm;
+		}
+		
+		public void GetPositions(ushort[] glyphs, double size)
+		{
+		}
 		
 		public void SelectScript(string script)
 		{
@@ -130,6 +136,15 @@ namespace Epsitec.Common.OpenType
 			for (int i = 0; i < features.Length; i++)
 			{
 				active_names[features[i]] = null;
+			}
+			
+			if (active_names.Contains ("liga"))
+			{
+				this.map_default_ligatures = true;
+			}
+			else
+			{
+				this.map_default_ligatures = false;
 			}
 			
 			if (this.script_required_feature != null)
@@ -279,6 +294,66 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
+		
+		protected void ApplySubstitutions(ref ushort[] glyphs)
+		{
+			int count = glyphs.Length;
+			
+			//	Exécute les substitutions de glyphes en fonction des 'features'
+			//	sélectionnées :
+			
+			int        max_size = count + 16;
+			ushort[][] temp     = new ushort[2][];
+			
+		try_again:
+			
+			temp[0] = new ushort[max_size];
+			temp[1] = new ushort[max_size];
+			
+			try
+			{
+				ushort[] input  = glyphs;
+				ushort[] output = temp[0];
+				
+				int length = count;
+				int toggle = 1;
+				
+				if ((this.substitution_lookups != null) &&
+					(this.substitution_lookups.Length > 0))
+				{
+					for (int i = 0; i < this.substitution_lookups.Length; i++)
+					{
+						this.ApplySubstitutions (this.substitution_lookups[i], input, length, output, out length);
+						
+						input   = output;
+						output  = temp[toggle & 1];
+						toggle += 1;
+					}
+				}
+				
+				if (this.map_default_ligatures)
+				{
+					this.ApplyManualLigatureSubstitutions (input, length, output, out length);
+				}
+				else
+				{
+					output = input;
+				}
+				
+				glyphs = new ushort[length];
+				
+				for (int i = 0; i < length; i++)
+				{
+					glyphs[i] = output[i];
+				}
+			}
+			catch (System.IndexOutOfRangeException)
+			{
+				max_size += max_size / 8;
+				goto try_again;
+			}
+		}
+		
 		protected void ApplyManualLigatureSubstitutions(ushort[] input_glyphs, int input_length, ushort[] output_glyphs, out int output_length)
 		{
 			int input_offset  = 0;
@@ -419,7 +494,13 @@ namespace Epsitec.Common.OpenType
 		private TableDirectory					ot_directory;
 		private Table_GSUB						ot_GSUB;
 		private Table_cmap						ot_cmap;
+		private Table_maxp						ot_maxp;
+		private Table_head						ot_head;
+		private Table_hhea						ot_hhea;
+		private Table_hmtx						ot_hmtx;
 		private IndexMappingTable				ot_index_mapping;
+		
+		private bool							map_default_ligatures;
 		
 		private TaggedFeatureTable				script_required_feature;
 		private TaggedFeatureTable[]			script_optional_features;
