@@ -72,6 +72,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return 80; }
 		}
+
+
+		public Drawing.Color				HiliteColor
+		{
+			get { return this.hiliteColor; }
+			set { this.hiliteColor = value; }
+		}
 		
 
 
@@ -683,12 +690,12 @@ namespace Epsitec.Common.Widgets
 		{
 			HeaderSlider slider = sender as HeaderSlider;
 			
-			this.is_dragging_slider = true;
-			this.saved_total_width  = 0;
+			this.isDraggingSlider = true;
+			this.savedTotalWidth = 0;
 			
 			for ( int i=0 ; i<this.maxColumns ; i++ )
 			{
-				this.saved_total_width += this.RetWidthColumn(i);
+				this.savedTotalWidth += this.RetWidthColumn(i);
 			}
 			
 			if ( slider.Style == HeaderSliderStyle.Left )
@@ -723,7 +730,7 @@ namespace Epsitec.Common.Widgets
 		{
 			HeaderSlider slider = sender as HeaderSlider;
 			
-			this.is_dragging_slider = false;
+			this.isDraggingSlider = false;
 			
 			if ( slider.Style == HeaderSliderStyle.Left )
 			{
@@ -789,7 +796,10 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.MouseEnter:
+					break;
+
 				case MessageType.MouseLeave:
+					this.ProcessMouseLeave();
 					break;
 				
 				case MessageType.MouseDown:
@@ -801,6 +811,10 @@ namespace Epsitec.Common.Widgets
 					if ( this.mouseDown )
 					{
 						this.ProcessMouse(pos, message.IsShiftPressed, message.IsCtrlPressed);
+					}
+					else
+					{
+						this.ProcessMouseMove(pos);
 					}
 					break;
 
@@ -899,6 +913,47 @@ namespace Epsitec.Common.Widgets
 
 				this.OnSelectionChanged();
 			}
+		}
+
+		// Appelé lorsque la souris ne survole plus rien.
+		protected void ProcessMouseLeave()
+		{
+			this.ProcessMouseFlyOver(-1, -1);
+		}
+
+		// Appelé lorsque la souris a bougé.
+		protected void ProcessMouseMove(Drawing.Point pos)
+		{
+			int row, column;
+			this.Detect(pos, out row, out column);  // détecte la cellule visée par la souris
+			this.ProcessMouseFlyOver(row, column);
+		}
+
+		// Indique la cellule survolée.
+		protected void ProcessMouseFlyOver(int row, int column)
+		{
+			if ( row != this.flyOverRow || column != this.flyOverColumn )
+			{
+				this.flyOverRow = row;
+				this.flyOverColumn = column;
+
+				this.OnFlyOverChanged();
+			}
+			else
+			{
+				this.flyOverRow = row;
+				this.flyOverColumn = column;
+			}
+		}
+
+		public int FlyOverRow
+		{
+			get { return this.flyOverRow; }
+		}
+
+		public int FlyOverColumn
+		{
+			get { return this.flyOverColumn; }
 		}
 
 		// Détecte dans quelle cellule est un point.
@@ -1007,7 +1062,10 @@ namespace Epsitec.Common.Widgets
 			{
 				this.SelectCell(column, row, state);
 			}
-			this.selectedRow = row;
+			if ( state )
+			{
+				this.selectedRow = row;
+			}
 		}
 
 		// Sélectionne toute une colonne.
@@ -1018,7 +1076,10 @@ namespace Epsitec.Common.Widgets
 			{
 				this.SelectCell(column, row, state);
 			}
-			this.selectedColumn = column;
+			if ( state )
+			{
+				this.selectedColumn = column;
+			}
 		}
 
 		// Sélectionne une cellule.
@@ -1074,6 +1135,15 @@ namespace Epsitec.Common.Widgets
 			if ( this.SortChanged != null )  // qq'un écoute ?
 			{
 				this.SortChanged(this);
+			}
+		}
+
+		// Génère un événement pour dire que la cellule survolée à changé.
+		protected virtual void OnFlyOverChanged()
+		{
+			if ( this.FlyOverChanged != null )  // qq'un écoute ?
+			{
+				this.FlyOverChanged(this);
 			}
 		}
 
@@ -1393,9 +1463,9 @@ namespace Epsitec.Common.Widgets
 				double areaWidth = this.Width-this.margins.Width-this.leftMargin-this.rightMargin;
 				double totalWidth = 0;
 				
-				if (this.is_dragging_slider)
+				if ( this.isDraggingSlider )
 				{
-					totalWidth = this.saved_total_width;
+					totalWidth = this.savedTotalWidth;
 				}
 				else
 				{
@@ -1821,6 +1891,7 @@ namespace Epsitec.Common.Widgets
 
 		public event Support.EventHandler SelectionChanged;
 		public event Support.EventHandler SortChanged;
+		public event Support.EventHandler FlyOverChanged;
 
 		protected bool							isDirty;
 		protected bool							isGrimy;
@@ -1865,9 +1936,12 @@ namespace Epsitec.Common.Widgets
 		protected int							dragRank;
 		protected double						dragPos;
 		protected double						dragDim;
+		protected int							flyOverRow = -1;
+		protected int							flyOverColumn = -1;
+		protected Drawing.Color					hiliteColor = Drawing.Color.Empty;
 		
-		protected bool							is_dragging_slider;
-		protected double						saved_total_width;
+		protected bool							isDraggingSlider;
+		protected double						savedTotalWidth;
 		
 		protected Cell							focusedCell;
 		protected Widget						focusedWidget;

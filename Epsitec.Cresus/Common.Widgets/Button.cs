@@ -2,6 +2,7 @@ namespace Epsitec.Common.Widgets
 {
 	public enum ButtonStyle
 	{
+		None,							// rien
 		Flat,							// pas de cadre, ni de relief
 		Normal,							// bouton normal
 		Scroller,						// bouton pour Scroller

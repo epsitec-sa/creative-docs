@@ -2168,7 +2168,8 @@ invalid:	row    = -1;
 					Drawing.Rectangle bounds = new Drawing.Rectangle (pos.X, pos.Y, right - pos.X, this.row_height);
 					
 					this.PaintRowBackground (row, row_line, graphics, adorner, bounds, widget_state);
-					this.PaintRowContents (row, row_line, graphics, adorner, bounds, text_state, local_clip);
+//					this.PaintRowContents (row, row_line, graphics, adorner, bounds, text_state, local_clip);
+					this.PaintRowContents (row, row_line, graphics, adorner, bounds, text_state, this.table_bounds);  // DR: correction du 12.10.04
 				}
 			}
 			

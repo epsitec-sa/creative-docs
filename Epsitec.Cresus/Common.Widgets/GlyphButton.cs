@@ -110,7 +110,11 @@ namespace Epsitec.Common.Widgets
 				case GlyphShape.ArrowRight:  dir = Direction.Right;  break;
 			}
 			
-			adorner.PaintButtonBackground(graphics, rect, this.PaintState, dir, this.buttonStyle);
+			if ( this.buttonStyle != ButtonStyle.None )
+			{
+				adorner.PaintButtonBackground(graphics, rect, this.PaintState, dir, this.buttonStyle);
+			}
+
 			adorner.PaintGlyph(graphics, rect, this.PaintState, this.shape, PaintTextStyle.Button);
 		}
 

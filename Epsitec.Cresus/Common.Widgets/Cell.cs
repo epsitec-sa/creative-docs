@@ -72,6 +72,24 @@ namespace Epsitec.Common.Widgets
 				return this.rankRow;
 			}
 		}
+
+
+		public bool						IsHilite
+		{
+			get
+			{
+				return this.isHilite;
+			}
+			
+			set
+			{
+				if ( this.isHilite != value )
+				{
+					this.isHilite = value;
+					this.Invalidate();
+				}
+			}
+		}
 		
 		
 		internal void SetArrayRank(AbstractCellArray array, int column, int row)
@@ -90,11 +108,18 @@ namespace Epsitec.Common.Widgets
 			WidgetState       state = this.PaintState;
 			
 			adorner.PaintCellBackground(graphics, rect, state);
+
+			if ( this.isHilite )
+			{
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.cellArray.HiliteColor);
+			}
 		}
 		
 		
 		protected AbstractCellArray		cellArray;
 		protected int					rankColumn;
 		protected int					rankRow;
+		protected bool					isHilite;
 	}
 }

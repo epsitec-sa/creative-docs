@@ -501,6 +501,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else if ( style == ButtonStyle.Icon )
 			{
+				bool large = (rect.Width > rect.Height*1.5);
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
 					if ( (state&WidgetState.Focused) != 0 )
@@ -510,17 +511,17 @@ namespace Epsitec.Common.Widgets.Adorner
 						graphics.RenderSolid(Drawing.Color.FromRGB(1.0, 0.0, 1.0));
 					}
 
-					this.PaintImageButton(graphics, rect, 40);
+					this.PaintImageButton(graphics, rect, large?0:40);
 				}
 				else
 				{
-					this.PaintImageButton(graphics, rect, 43);
+					this.PaintImageButton(graphics, rect, large?4:43);
 				}
 
 				if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
 					 (state&WidgetState.Entered) != 0 )   // bouton survolé ?
 				{
-					this.PaintImageButton(graphics, rect, 42);
+					this.PaintImageButton(graphics, rect, large?6:42);
 				}
 			}
 			else if ( style == ButtonStyle.ToolItem )
