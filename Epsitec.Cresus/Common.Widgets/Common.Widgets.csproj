@@ -317,11 +317,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Pane.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "PaneBook.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -358,11 +353,6 @@
                 />
                 <File
                     RelPath = "Scrollable.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ScrollablePanel.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -613,16 +603,6 @@
                 <File
                     RelPath = "Adorners\Resources\metal2.png"
                     BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Helpers\AbsPosLayoutEngine.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Helpers\AbstractLayoutEngine.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Helpers\CopyPasteBehavior.cs"
