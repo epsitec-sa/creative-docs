@@ -27,7 +27,7 @@ namespace Epsitec.Common.Script
 			string short_name = string.Format (System.Globalization.CultureInfo.InvariantCulture, "script_{0}_{1}", build_id, random_id);
 			string long_name  = string.Concat (short_name, ":", name);
 			
-			ICodeCompiler      compiler = Helpers.CompilerFactory.CreateCompiler ();
+			CodeDomProvider    compiler = Helpers.CompilerFactory.CreateCompiler ();
 			CompilerParameters options  = Helpers.CompilerFactory.CreateCompilerParameters (short_name);
 			CompilerResults    results  = compiler.CompileAssemblyFromSource (options, source);
 			

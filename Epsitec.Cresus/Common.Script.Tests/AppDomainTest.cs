@@ -13,11 +13,9 @@ namespace Epsitec.Common.Script
 		
 		[Test] public void CheckCompilerCreation()
 		{
-			Microsoft.CSharp.CSharpCodeProvider   provider = new Microsoft.CSharp.CSharpCodeProvider ();
-			System.CodeDom.Compiler.ICodeCompiler compiler = provider.CreateCompiler ();
+			System.CodeDom.Compiler.CodeDomProvider provider = new Microsoft.CSharp.CSharpCodeProvider ();
 			
 			Assert.IsNotNull (provider);
-			Assert.IsNotNull (compiler);
 		}
 		
 		[Test] public void CheckPaths()

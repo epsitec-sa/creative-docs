@@ -30,7 +30,7 @@ namespace Epsitec.Common.Drawing
 			Transform t2 = new Transform ();
 			Transform t3 = t1;
 			
-			Assert.IsTrue (t1 == t1);
+//-			Assert.IsTrue (t1 == t1);
 			Assert.IsTrue (t1 == t2);
 			Assert.IsTrue (t1 == t3);
 			

@@ -15,9 +15,9 @@ namespace Epsitec.Common.Script.Helpers
 		}
 		
 		
-		public static System.CodeDom.Compiler.ICodeCompiler CreateCompiler()
+		public static System.CodeDom.Compiler.CodeDomProvider CreateCompiler()
 		{
-			return CompilerFactory.provider.CreateCompiler ();
+			return CompilerFactory.provider;
 		}
 		
 		public static System.CodeDom.Compiler.CompilerParameters CreateCompilerParameters(string assembly_name)
