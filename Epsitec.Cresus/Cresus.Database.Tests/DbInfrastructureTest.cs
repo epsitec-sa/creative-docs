@@ -80,6 +80,53 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		[Test] public void CheckCreateDbType()
+		{
+			//	Ce test ne marche que pour une base qui est propre (i.e. qui vient d'être
+			//	créée par CheckCreateDatabase).
+			
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
+			{
+				DbEnumValue[] values = new DbEnumValue[3];
+				
+				values[0] = new DbEnumValue (1, "M");		values[0].DefineAttributes ("capt=Monsieur");
+				values[1] = new DbEnumValue (2, "Mme");		values[1].DefineAttributes ("capt=Madame");
+				values[2] = new DbEnumValue (3, "Mlle");	values[2].DefineAttributes ("capt=Mademoiselle");
+				
+				DbTypeString db_type_str  = infrastructure.CreateDbType ("Nom", 40, false) as DbTypeString;
+				DbTypeNum    db_type_num  = infrastructure.CreateDbType ("NUPO", new DbNumDef (4, 0, 1000, 9999)) as DbTypeNum;
+				DbTypeEnum   db_type_enum = infrastructure.CreateDbType ("Titre", values) as DbTypeEnum;
+				
+				infrastructure.RegisterNewDbType (null, db_type_str);
+				infrastructure.RegisterNewDbType (null, db_type_num);
+				infrastructure.RegisterNewDbType (null, db_type_enum);
+				
+				DbType db_type_1 = infrastructure.ResolveDbType (null, "Nom");
+				DbType db_type_2 = infrastructure.ResolveDbType (null, "NUPO");
+				DbType db_type_3 = infrastructure.ResolveDbType (null, "Titre");
+				
+				Assertion.AssertNotNull (db_type_1);
+				Assertion.AssertNotNull (db_type_2);
+				Assertion.AssertNotNull (db_type_3);
+				
+				Assertion.AssertEquals ("Nom",   db_type_1.Name);
+				Assertion.AssertEquals ("NUPO",  db_type_2.Name);
+				Assertion.AssertEquals ("Titre", db_type_3.Name);
+				
+				infrastructure.UnregisterDbType (null, db_type_1);
+				infrastructure.UnregisterDbType (null, db_type_2);
+				infrastructure.UnregisterDbType (null, db_type_3);
+				
+				db_type_1 = infrastructure.ResolveDbType (null, "Nom");
+				db_type_2 = infrastructure.ResolveDbType (null, "NUPO");
+				db_type_3 = infrastructure.ResolveDbType (null, "Titre");
+				
+				Assertion.AssertNull (db_type_1);
+				Assertion.AssertNull (db_type_2);
+				Assertion.AssertNull (db_type_3);
+			}
+		}
+		
 		[Test] public void CheckCreateDbTable()
 		{
 			//	Ce test ne marche que pour une base qui est propre (i.e. qui vient d'être
@@ -196,7 +243,7 @@ namespace Epsitec.Cresus.Database
 				infrastructure.RegisterNewDbTable (null, db_table);
 				
 				Assertion.AssertNotNull (infrastructure.ResolveDbTable (null, db_table.Name));
-				Assertion.AssertEquals (9L, db_table.InternalKey.Id);
+				Assertion.AssertEquals (12L, db_table.InternalKey.Id);
 				Assertion.AssertEquals (0, db_table.InternalKey.Revision);
 			}
 		}

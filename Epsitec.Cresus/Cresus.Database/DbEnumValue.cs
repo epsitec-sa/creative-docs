@@ -5,6 +5,7 @@ namespace Epsitec.Cresus.Database
 {
 	using Tags = Epsitec.Common.Support.Tags;
 	using ResourceLevel = Epsitec.Common.Support.ResourceLevel;
+	using Converter = Epsitec.Common.Support.Data.Converter;
 	
 	/// <summary>
 	/// La classe DbEnumValue représente exactement une valeur d'une énumération,
@@ -22,8 +23,81 @@ namespace Epsitec.Cresus.Database
 			this.attributes = new DbAttributes (attributes);
 		}
 		
+		public DbEnumValue(System.Xml.XmlElement xml)
+		{
+			this.ProcessXmlDefinition (xml);
+		}
 		
-		public string						Id
+		internal void DefineInternalKey(DbKey key)
+		{
+			if (this.internal_key == key)
+			{
+				return;
+			}
+			
+			if (this.internal_key != null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Enum Value '{0}' cannot change its internal key.", this.Name));
+			}
+			
+			this.internal_key = key.Clone () as DbKey;
+		}
+		
+		
+		public static DbEnumValue NewValue(string xml)
+		{
+			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+			
+			doc.LoadXml (xml);
+			
+			return DbEnumValue.NewValue (doc.DocumentElement);
+		}
+		
+		public static DbEnumValue NewValue(System.Xml.XmlElement xml)
+		{
+			return new DbEnumValue (xml);
+		}
+
+		
+		public static string ConvertValueToXml(DbEnumValue value)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			DbEnumValue.ConvertValueToXml (buffer, value);
+			
+			return buffer.ToString ();
+		}
+		
+		public static void ConvertValueToXml(System.Text.StringBuilder buffer, DbEnumValue value)
+		{
+			value.SerialiseXmlDefinition (buffer);
+		}
+		
+		
+		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer)
+		{
+			buffer.Append (@"<enumval");
+			if (this.rank != 0)
+			{
+				buffer.Append (@" rank=""");
+				buffer.Append (Converter.ToString (this.rank));
+				buffer.Append (@"""");
+			}
+			buffer.Append (@"/>");
+		}
+		
+		protected void ProcessXmlDefinition(System.Xml.XmlElement xml)
+		{
+			if (xml.Name != "enumval")
+			{
+				throw new System.ArgumentException (string.Format ("Expected root element named <enumval>, but found <{0}>.", xml.Name));
+			}
+			
+			Converter.Convert (xml.GetAttribute ("rank"), out this.rank);
+		}
+		
+		
+		protected string						Id
 		{
 			get { return this.Attributes[Tags.Id, ResourceLevel.Default]; }
 		}
@@ -55,48 +129,26 @@ namespace Epsitec.Cresus.Database
 				if (this.rank == -2)
 				{
 					//	Si 'rank' n'a jamais été initialisé, faisons-le maintenant en se
-					//	basant sur l'attributs 'sort'.
+					//	basant sur l'attribut contenant l'information XML.
 					
 					this.rank = -1;
-					this.ParseInformation (this.Information);
+					
+					System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+					doc.LoadXml (this.Information);
+					
+					this.ProcessXmlDefinition (doc.DocumentElement);
 				}
 				
 				return this.rank;
 			}
 		}
 		
-		
-		protected void ParseInformation(string xml)
+		public DbKey						InternalKey
 		{
-			if (xml == null)
-			{
-				return;
-			}
-			
-			//	L'information existe (sous forme XML). On va donc demander à .NET de
-			//	parser l'arbre XML.
-			
-			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
-			doc.LoadXml (xml);
-			
-			this.ParseInformation (doc.DocumentElement);
+			get { return this.internal_key; }
 		}
 		
-		protected virtual void ParseInformation(System.Xml.XmlElement xml)
-		{
-			if (xml.Name != "enumval")
-			{
-				throw new System.ArgumentException (string.Format ("Expected root element named <enumval>, but found <{0}>.", xml.Name));
-			}
-			
-			string arg_rank = xml.GetAttribute ("rank");
-			
-			if (arg_rank.Length > 0)
-			{
-				this.rank = System.Int32.Parse (arg_rank, System.Globalization.CultureInfo.InvariantCulture);
-			}
-		}
-		
+
 		
 		#region ICloneable Members
 		public virtual object Clone()
@@ -241,5 +293,6 @@ namespace Epsitec.Cresus.Database
 		
 		protected DbAttributes				attributes;
 		protected int						rank = -2;
+		protected DbKey						internal_key;
 	}
 }

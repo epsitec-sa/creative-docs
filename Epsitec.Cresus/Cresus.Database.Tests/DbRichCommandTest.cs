@@ -6,6 +6,9 @@ namespace Epsitec.Cresus.Database
 	{
 		[Test] public void CheckSelect()
 		{
+			//	Tout ceci est provisoire !!! Les structures SQL ne devraient pas être exposées, seulement
+			//	leur variante Db... neutre. Cela va certainement migrer dans DbInfrastructure.
+			
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			ISqlBuilder sql_builder = infrastructure.SqlBuilder;
 			ISqlEngine  sql_engine  = infrastructure.SqlEngine;
