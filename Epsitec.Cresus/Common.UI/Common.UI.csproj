@@ -118,6 +118,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Engine.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Adapters\AbstractAdapter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -149,6 +154,11 @@
                 />
                 <File
                     RelPath = "Binders\AbstractBinder.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Binders\DataValueBinder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -194,6 +204,11 @@
                 />
                 <File
                     RelPath = "Controllers\StringController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Controllers\WidgetTextController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
