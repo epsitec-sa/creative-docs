@@ -150,6 +150,44 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public object ConvertToInternalType(object data)
+		{
+			if (this.HasRawConverter)
+			{
+				data = this.RawConverter.ConvertToInternalType (data);
+			}
+			
+			return data;
+		}
+		
+		public object ConvertFromInternalType(object data)
+		{
+			if (this.HasRawConverter)
+			{
+				data = this.RawConverter.ConvertFromInternalType (data);
+			}
+			
+			return data;
+		}
+		
+		
+		public void ConvertToInternalType(ref object data)
+		{
+			if (this.HasRawConverter)
+			{
+				data = this.RawConverter.ConvertToInternalType (data);
+			}
+		}
+		
+		public void ConvertFromInternalType(ref object data)
+		{
+			if (this.HasRawConverter)
+			{
+				data = this.RawConverter.ConvertFromInternalType (data);
+			}
+		}
+		
+		
 		protected string						name				= null;
 		protected DbRawType						type				= DbRawType.Null;
 		protected bool							is_null_allowed		= false;

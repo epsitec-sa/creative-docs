@@ -231,6 +231,15 @@ namespace Epsitec.Cresus.Database
 			
 			DbSqlStandard.CreateSimpleSqlName (name, buffer);
 			
+			//	On limite la taille des noms de tables à 30 caractères maximum, car certaines bases
+			//	sont assez restrictives en la matière. Et comme on rajoute 18 digits (au plus), il
+			//	ne reste plus que 12 caractères effectifs pour le nom :
+			
+			if (buffer.Length > 30-18)
+			{
+				buffer.Length = 30-18;
+			}
+			
 			buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "_{0}", key.Id.Value);
 			
 			return buffer.ToString ();

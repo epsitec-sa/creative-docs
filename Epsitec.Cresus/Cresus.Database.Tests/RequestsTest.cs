@@ -229,6 +229,104 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		[Test] public void Check08ExecutionEngine()
+		{
+			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
+			Requests.ExecutionEngine engine = new Epsitec.Cresus.Requests.ExecutionEngine (infrastructure);
+			
+			Assertion.AssertEquals (0L, engine.CurrentLogId.Value);
+			Assertion.AssertEquals (null, engine.CurrentTransaction);
+			
+			infrastructure.Logger.CreateTemporaryEntry (null);
+			
+			DbType db_type_name = infrastructure.ResolveDbType (null, "Customer Name");
+			DbType db_type_date = infrastructure.ResolveDbType (null, "Birth Date");
+			
+			if (db_type_name == null)
+			{
+				db_type_name = infrastructure.CreateDbType ("Customer Name", 80, false);
+				infrastructure.RegisterNewDbType (null, db_type_name);
+			}
+			
+			if (db_type_date == null)
+			{
+				db_type_date = infrastructure.CreateDbTypeDateTime ("Birth Date");
+				infrastructure.RegisterNewDbType (null, db_type_date);
+			}
+			
+			DbTable db_table = infrastructure.CreateDbTable ("Simple Exec Table Test", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
+			
+			DbColumn db_col_1 = DbColumn.CreateUserDataColumn ("Name",       db_type_name, Nullable.No);
+			DbColumn db_col_2 = DbColumn.CreateUserDataColumn ("Birth Date", db_type_date, Nullable.Yes);
+			
+			db_table.Columns.AddRange (new DbColumn[] { db_col_1, db_col_2 });
+			
+			infrastructure.RegisterNewDbTable (null, db_table);
+			
+			DbColumn db_col_id   = db_table.Columns[0];
+			DbColumn db_col_stat = db_table.Columns[1];
+			
+			System.Data.DataSet   set   = new System.Data.DataSet ();
+			System.Data.DataTable table = new System.Data.DataTable (db_table.Name);
+			
+			set.Tables.Add (table);
+			
+			System.Data.DataColumn col_1 = new System.Data.DataColumn (db_col_id.Name, typeof (long));
+			System.Data.DataColumn col_2 = new System.Data.DataColumn (db_col_stat.Name, typeof (int));
+			System.Data.DataColumn col_3 = new System.Data.DataColumn (db_col_1.Name, typeof (string));
+			System.Data.DataColumn col_4 = new System.Data.DataColumn (db_col_2.Name, typeof (System.DateTime));
+			
+			col_1.Unique = true;
+			
+			table.Columns.Add (col_1);
+			table.Columns.Add (col_2);
+			table.Columns.Add (col_3);
+			table.Columns.Add (col_4);
+			
+			DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
+			
+			engine.SetUpExecution (transaction);
+			engine.GenerateInsertDataCommand (db_table.Name,
+				/**/						  new string[] { col_1.ColumnName, col_2.ColumnName, col_3.ColumnName, col_4.ColumnName },
+				/**/						  new object[] { 1L, 0, "Pierre Arnaud", new System.DateTime (1972, 2, 11) });
+			
+			System.Data.IDbCommand command = engine.GetCommand ();
+			
+			System.Console.Write ("Insert Data Command:\n  {0}", command.CommandText);
+			
+			foreach (System.Data.IDataParameter p in command.Parameters)
+			{
+				System.Console.WriteLine ("    {0} = {1}", p.ParameterName, p.Value);
+			}
+			
+			infrastructure.ExecuteSilent (transaction);
+			engine.CleanUpExecution ();
+			
+			engine.SetUpExecution (transaction);
+			engine.GenerateUpdateDataCommand (db_table.Name,
+				/**/						  new string[] { col_1.ColumnName },
+				/**/						  new object[] { 1L },
+				/**/						  new string[] { col_3.ColumnName, col_4.ColumnName },
+				/**/						  new object[] { "Pierre Arnaud-Roost", new System.DateTime (1940, 5, 20) });
+			
+			command = engine.GetCommand ();
+			
+			System.Console.Write ("Update Data Command:\n  {0}", command.CommandText);
+			
+			foreach (System.Data.IDataParameter p in command.Parameters)
+			{
+				System.Console.WriteLine ("    {0} = {1}", p.ParameterName, p.Value);
+			}
+			
+			infrastructure.ExecuteSilent (transaction);
+			engine.CleanUpExecution ();
+			
+			transaction.Commit ();
+			
+			infrastructure.UnregisterDbTable (null, db_table);
+		}
+		
+		
 		public static System.Data.DataTable CreateSampleTable()
 		{
 			System.Data.DataSet   set   = new System.Data.DataSet ();

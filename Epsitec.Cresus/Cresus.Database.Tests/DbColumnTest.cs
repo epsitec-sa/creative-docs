@@ -12,29 +12,29 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_c = new DbColumn ("C", DbSimpleType.String, 100, true);
 			DbColumn column_x = DbColumn.CreateColumn ("<col null='Y' idx='Y' uniq='N' cat='1'/>");
 			
-			Assert.AreEqual ("A", column_a.Name);
-			Assert.AreEqual (DbSimpleType.Decimal, column_a.SimpleType);
-			Assert.AreEqual (true, column_a.IsNullAllowed);
-			Assert.AreEqual (DbElementCat.Unknown, column_a.Category);
+			Assertion.AssertEquals ("A", column_a.Name);
+			Assertion.AssertEquals (DbSimpleType.Decimal, column_a.SimpleType);
+			Assertion.AssertEquals (true, column_a.IsNullAllowed);
+			Assertion.AssertEquals (DbElementCat.Unknown, column_a.Category);
 			
-			Assert.AreEqual ("B", column_b.Name);
-			Assert.AreEqual (DbSimpleType.Guid, column_b.SimpleType);
+			Assertion.AssertEquals ("B", column_b.Name);
+			Assertion.AssertEquals (DbSimpleType.Guid, column_b.SimpleType);
 			
-			Assert.AreEqual ("C", column_c.Name);
-			Assert.AreEqual (DbSimpleType.String, column_c.SimpleType);
-			Assert.AreEqual (100, column_c.Length);
-			Assert.AreEqual (true, column_c.IsFixedLength);
+			Assertion.AssertEquals ("C", column_c.Name);
+			Assertion.AssertEquals (DbSimpleType.String, column_c.SimpleType);
+			Assertion.AssertEquals (100, column_c.Length);
+			Assertion.AssertEquals (true, column_c.IsFixedLength);
 			
-			Assert.IsNotNull (column_x);
-			Assert.AreEqual (true,  column_x.IsNullAllowed);
-			Assert.AreEqual (true,  column_x.IsIndexed);
-			Assert.AreEqual (false, column_x.IsUnique);
-			Assert.AreEqual (DbElementCat.Internal, column_x.Category);
-			Assert.AreEqual (DbRevisionMode.Unknown, column_x.RevisionMode);
+			Assertion.AssertNotNull (column_x);
+			Assertion.AssertEquals (true,  column_x.IsNullAllowed);
+			Assertion.AssertEquals (true,  column_x.IsIndexed);
+			Assertion.AssertEquals (false, column_x.IsUnique);
+			Assertion.AssertEquals (DbElementCat.Internal, column_x.Category);
+			Assertion.AssertEquals (DbRevisionMode.Unknown, column_x.RevisionMode);
 			
 			column_a.DefineCategory (DbElementCat.Internal);
 			
-			Assert.AreEqual (DbElementCat.Internal, column_a.Category);
+			Assertion.AssertEquals (DbElementCat.Internal, column_a.Category);
 			
 			column_a.DefineCategory (DbElementCat.Internal);
 		}
@@ -43,17 +43,17 @@ namespace Epsitec.Cresus.Database
 		{
 			DbColumn column = new DbColumn ("A", DbSimpleType.ByteArray);
 			
-			Assert.AreEqual ("A", column.Name);
-			Assert.AreEqual (DbSimpleType.ByteArray, column.SimpleType);
+			Assertion.AssertEquals ("A", column.Name);
+			Assertion.AssertEquals (DbSimpleType.ByteArray, column.SimpleType);
 		}
 		
 		[Test] public void CheckNewDbColumnForeignKey()
 		{
 			DbColumn column_1 = DbColumn.CreateRefColumn ("A", "ParentTable", DbColumnClass.RefId, new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId)), Nullable.Yes);
 			
-			Assert.AreEqual ("A", column_1.Name);
-			Assert.AreEqual ("ParentTable", column_1.ParentTableName);
-			Assert.AreEqual ("CR_ID", column_1.ParentColumnName);
+			Assertion.AssertEquals ("A", column_1.Name);
+			Assertion.AssertEquals ("ParentTable", column_1.ParentTableName);
+			Assertion.AssertEquals ("CR_ID", column_1.ParentColumnName);
 		}
 		
 		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckNewDbColumnForeignKeyEx()
@@ -97,10 +97,10 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_c = new DbColumn ("C", DbSimpleType.Time);
 			DbColumn column_d = new DbColumn ("D", DbSimpleType.ByteArray);
 			
-			Assert.IsTrue (column_a.Type.GetType () == typeof (DbTypeNum));
-			Assert.IsTrue (column_b.Type.GetType () == typeof (DbTypeString));
-			Assert.IsTrue (column_c.Type.GetType () == typeof (DbType));
-			Assert.IsTrue (column_d.Type.GetType () == typeof (DbTypeByteArray));
+			Assertion.Assert (column_a.Type.GetType () == typeof (DbTypeNum));
+			Assertion.Assert (column_b.Type.GetType () == typeof (DbTypeString));
+			Assertion.Assert (column_c.Type.GetType () == typeof (DbType));
+			Assertion.Assert (column_d.Type.GetType () == typeof (DbTypeByteArray));
 		}
 		
 		[Test] public void CheckCreateSqlColumn()
@@ -123,30 +123,46 @@ namespace Epsitec.Cresus.Database
 			SqlColumn sql_c = column_c.CreateSqlColumn (type_converter);
 			SqlColumn sql_d = column_d.CreateSqlColumn (type_converter);
 			
-			Assert.AreEqual (DbRawType.SmallDecimal, sql_a.Type);
-			Assert.AreEqual ("U_A", sql_a.Name);
-			Assert.AreEqual (true, sql_a.IsNullAllowed);
+			Assertion.AssertEquals (DbRawType.SmallDecimal, sql_a.Type);
+			Assertion.AssertEquals ("U_A", sql_a.Name);
+			Assertion.AssertEquals (true, sql_a.IsNullAllowed);
 			
-			Assert.IsTrue (DbRawType.Guid != sql_b.Type);
-			Assert.AreEqual ("U_B", sql_b.Name);
-			Assert.AreEqual (false, sql_b.IsNullAllowed);
-			Assert.IsTrue (sql_b.HasRawConverter);
-			Assert.AreEqual (sql_b.RawConverter.InternalType, sql_b.Type);
-			Assert.AreEqual (sql_b.RawConverter.ExternalType, TypeConverter.MapToRawType (column_b.SimpleType, column_b.NumDef));
+			Assertion.Assert (DbRawType.Guid != sql_b.Type);
+			Assertion.AssertEquals ("U_B", sql_b.Name);
+			Assertion.AssertEquals (false, sql_b.IsNullAllowed);
+			Assertion.Assert (sql_b.HasRawConverter);
+			Assertion.AssertEquals (sql_b.RawConverter.InternalType, sql_b.Type);
+			Assertion.AssertEquals (sql_b.RawConverter.ExternalType, TypeConverter.MapToRawType (column_b.SimpleType, column_b.NumDef));
 			
-			Assert.AreEqual (DbRawType.String, sql_c.Type);
-			Assert.AreEqual ("U_C", sql_c.Name);
-			Assert.AreEqual (true, sql_c.IsFixedLength);
-			Assert.AreEqual (false, sql_c.IsNullAllowed);
-			Assert.AreEqual (false, sql_c.HasRawConverter);
+			Assertion.AssertEquals (DbRawType.String, sql_c.Type);
+			Assertion.AssertEquals ("U_C", sql_c.Name);
+			Assertion.AssertEquals (true, sql_c.IsFixedLength);
+			Assertion.AssertEquals (false, sql_c.IsNullAllowed);
+			Assertion.AssertEquals (false, sql_c.HasRawConverter);
 
-			Assert.AreEqual (DbRawType.ByteArray, sql_d.Type);
-			Assert.AreEqual ("U_D", sql_d.Name);
-			Assert.AreEqual (false, sql_d.IsNullAllowed);
-			Assert.AreEqual (false, sql_d.HasRawConverter);
+			Assertion.AssertEquals (DbRawType.ByteArray, sql_d.Type);
+			Assertion.AssertEquals ("U_D", sql_d.Name);
+			Assertion.AssertEquals (false, sql_d.IsNullAllowed);
+			Assertion.AssertEquals (false, sql_d.HasRawConverter);
 
 			System.Console.Out.WriteLine ("Column {0} raw type is {1}, length={2}, fixed={3}.", sql_b.Name, sql_b.Type, sql_b.Length, sql_b.IsFixedLength);
 			System.Console.Out.WriteLine ("Raw Converter between type {0} and {1}.", sql_b.RawConverter.InternalType, sql_b.RawConverter.ExternalType);
+			
+			object guid_object = new System.Guid (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+			
+			Assertion.Assert (guid_object is System.Guid);
+			
+			sql_b.ConvertToInternalType (ref guid_object);
+			
+			System.Console.Out.WriteLine ("Converted GUID object to string {0}.", guid_object);
+			
+			Assertion.Assert (guid_object is string);
+			
+			sql_b.ConvertFromInternalType (ref guid_object);
+			
+			Assertion.Assert (guid_object is System.Guid);
+			
+			System.Console.Out.WriteLine ("Converted string back to GUID {0}.", guid_object);
 		}
 	}
 }

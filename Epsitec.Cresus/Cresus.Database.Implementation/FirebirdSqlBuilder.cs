@@ -742,7 +742,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				
 				if (this.command_type != DbCommandType.None)
 				{
-					throw new Exceptions.GenericException (this.fb.DbAccess, "Previous command not cleared");
+					throw new Exceptions.GenericException (this.fb.DbAccess, "Previous command not cleared.");
 				}
 			}
 		}
@@ -805,6 +805,11 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		public void AppendMore()
 		{
+			if (this.expect_more)
+			{
+				throw new Exceptions.GenericException (this.fb.DbAccess, "AppendMore called twice.");
+			}
+			
 			this.expect_more = true;
 		}
 

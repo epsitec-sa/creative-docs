@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier, complété DD 2004.04.19, ajouté CreateJoin, AsJoin...
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
@@ -49,24 +49,42 @@ namespace Epsitec.Cresus.Database
 		
 		public SqlFieldType						Type
 		{
-			get { return this.type; }
+			get
+			{
+				return this.type;
+			}
 		}
 		
 		public DbRawType						RawType
 		{
-			get { return this.raw_type; }
+			get
+			{
+				return this.raw_type;
+			}
 		}
 		
 		public SqlFieldOrder					Order
 		{
-			get { return this.order; }
-			set { this.order = value; }
+			get
+			{
+				return this.order;
+			}
+			set
+			{
+				this.order = value;
+			}
 		}
 		
 		public string							Alias
 		{
-			get { return this.alias; }
-			set { this.alias = value; }
+			get
+			{
+				return this.alias;
+			}
+			set
+			{
+				this.alias = value;
+			}
 		}
 		
 		public object							Value
@@ -275,6 +293,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public void Overwrite(SqlField field)
+		{
+			this.type     = field.type;
+			this.order    = field.order;
+			this.raw_type = field.raw_type;
+			this.alias    = field.alias;
+			this.value    = field.value;
+		}
 		
 		public static SqlField CreateNull()
 		{

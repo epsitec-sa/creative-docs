@@ -534,6 +534,10 @@ namespace Epsitec.Cresus.Database
 		
 		public SqlField CreateSqlField(ITypeConverter type_converter, int value)
 		{
+			//	TODO: pas une bonne idée d'avoir ces méthodes de création qui ne tiennent
+			//	pas compte des types internes supportés par la base... c'est valable pour
+			//	toutes les variantes de CreateSqlField.
+			
 			SqlField field = SqlField.CreateConstant (value, DbRawType.Int32);
 			field.Alias = this.Name;
 			return field;
