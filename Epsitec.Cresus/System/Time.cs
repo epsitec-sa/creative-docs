@@ -154,11 +154,18 @@ namespace System
 		}
 		
 		
+		public override string ToString()
+		{
+			return string.Format ("{0:00}:{1:00}:{2:00}.{3:000}", this.Hour, this.Minute, this.Second, this.Millisecond);
+		}
+		
+		
+		
 		#region IComparable Members
 
 		public int CompareTo(object obj)
 		{
-			long this_ticks = 0;
+			long this_ticks = this.Ticks;
 			long that_ticks = 0;
 			
 			if (obj == null)

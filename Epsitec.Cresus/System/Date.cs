@@ -118,13 +118,25 @@ namespace System
 		{
 			return t1.Ticks == t2.Ticks;
 		}
+
+		
+		public override string ToString()
+		{
+			return this.date_time.ToString ("d");
+		}
+
+		public string ToString(System.IFormatProvider provider)
+		{
+			return this.date_time.ToString ("d", provider);
+		}
+		
 		
 		
 		#region IComparable Members
 		
 		public int CompareTo(object obj)
 		{
-			long this_ticks = 0;
+			long this_ticks = this.Ticks;
 			long that_ticks = 0;
 			
 			if (obj == null)

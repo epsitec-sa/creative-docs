@@ -98,6 +98,11 @@
                     AssemblyName = "nunit.framework"
                     HintPath = "..\External\nunit.framework.dll"
                 />
+                <Reference
+                    Name = "SystemExt"
+                    Project = "{10453A3B-CA2A-4D36-B634-78BA87AAAB26}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
@@ -114,6 +119,16 @@
                 />
                 <File
                     RelPath = "DbNumDefTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FbTypeConverterTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TypeConverterTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -157,8 +157,20 @@ namespace Epsitec.Common.Tests
 			combo.Name = "Combo";
 			combo.Location = new Point(160, 180);
 			combo.Size = new Size(100, 20);
-			combo.Text = "Lundi";
+			combo.Text = "Janvier";
 			combo.Cursor = combo.Text.Length;
+			combo.ComboAddText("Janvier");
+			combo.ComboAddText("Fevrier");
+			combo.ComboAddText("Mars");
+			combo.ComboAddText("Avril");
+			combo.ComboAddText("Mai");
+			combo.ComboAddText("Juin");
+			combo.ComboAddText("Juillet");
+			combo.ComboAddText("Aout");
+			combo.ComboAddText("Septembre");
+			combo.ComboAddText("Octobre");
+			combo.ComboAddText("Novembre");
+			combo.ComboAddText("Decembre");
 			combo.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(combo);
 #endif

@@ -226,6 +226,11 @@ namespace Epsitec.Common.Widgets
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
+			
+			if (this.lineHeight == 0)
+			{
+				return;		//	PA
+			}
 
 			Drawing.Rectangle rect = this.Bounds;
 			this.margin = 3;

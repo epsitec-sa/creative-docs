@@ -38,6 +38,8 @@ namespace Epsitec.Cresus.Database.Implementation
 				case DbRawType.LargeDecimal:
 				case DbRawType.String:
 				case DbRawType.ByteArray:
+				case DbRawType.Date:
+				case DbRawType.Time:
 				case DbRawType.DateTime:
 					return true;
 				

@@ -261,6 +261,26 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
+		// Vide toute la liste de la ComboBox.
+		public void ComboReset()
+		{
+			this.comboList.Clear();
+		}
+
+		// Ajoute un texte à la fin de la liste de la ComboBox.
+		public void ComboAddText(string text)
+		{
+			this.comboList.Add(text);
+		}
+
+		// Donne un texte de la liste de la ComboBox.
+		public string ComboGetText(int index)
+		{
+			if ( index < 0 || index >= this.comboList.Count )  return "";
+			return (string)this.comboList[index];
+		}
+
+		
 		// Met à jour la géométrie des boutons de l'ascenseur.
 		protected override void UpdateClientGeometry()
 		{
@@ -447,19 +467,27 @@ namespace Epsitec.Common.Widgets
 			pos.Y += this.Bottom;
 			this.scrollList.Location = pos;
 			this.scrollList.Size = new Drawing.Size(this.Client.Width, 70);
-			this.scrollList.AddText("Janvier");
-			this.scrollList.AddText("Fevrier");
-			this.scrollList.AddText("Mars");
-			this.scrollList.AddText("Avril");
-			this.scrollList.AddText("Mai");
-			this.scrollList.AddText("Juin");
-			this.scrollList.AddText("Juillet");
-			this.scrollList.AddText("Aout");
-			this.scrollList.AddText("Septembre");
-			this.scrollList.AddText("Octobre");
-			this.scrollList.AddText("Novembre");
-			this.scrollList.AddText("Decembre");
+			this.scrollList.Adjust(ScrollListAdjust.MoveDown);
+
+			foreach ( string text in this.comboList )
+			{
+				this.scrollList.AddText(text);
+			}
+
+			this.scrollList.SelectChanged += new EventHandler(this.HandleScrollList);
 			this.Parent.Children.Add(this.scrollList);
+		}
+
+		// Gestion d'un événement lorsque la scroll-liste est déplacée.
+		private void HandleScrollList(object sender)
+		{
+			int sel = this.scrollList.Select;
+			if ( sel == -1 )  return;
+			this.Text = this.scrollList.GetText(sel);
+			this.Invalidate();
+			this.scrollList.SelectChanged -= new EventHandler(this.HandleScrollList);
+			this.Parent.Children.Remove(this.scrollList);
+			this.scrollList.Dispose();
 		}
 
 		// Gestion d'un événement.
@@ -969,27 +997,28 @@ namespace Epsitec.Common.Widgets
 
 		public event EventHandler TextChanged;
 
-		protected TextFieldType				type = TextFieldType.SingleLine;
-		protected static readonly double	margin = 3;
-		protected double					leftMargin = 0;
-		protected double					rightMargin = 0;
-		protected Drawing.Size				realSize;
-		protected Drawing.Point				scrollOffset = new Drawing.Point(0, 0);
-		protected TextFieldStyle			textStyle;
-		protected int						cursorFrom = 0;
-		protected int						cursorTo = 0;
-		protected int						cursorLine;
-		protected double					cursorPosX;
-		protected bool						mouseDown = false;
-		protected double					minRange = 0;
-		protected double					maxRange = 100;
-		protected double					step = 1;
-		protected Scroller					scroller;
-		protected ArrowButton				arrowUp;
-		protected ArrowButton				arrowDown;
-		protected ScrollList				scrollList;
-		protected System.Timers.Timer		flashTimer;
-		protected bool						showCursor = true;
-		protected static readonly double	infinity = 1000000;
+		protected TextFieldType					type = TextFieldType.SingleLine;
+		protected static readonly double		margin = 3;
+		protected double						leftMargin = 0;
+		protected double						rightMargin = 0;
+		protected Drawing.Size					realSize;
+		protected Drawing.Point					scrollOffset = new Drawing.Point(0, 0);
+		protected TextFieldStyle				textStyle;
+		protected int							cursorFrom = 0;
+		protected int							cursorTo = 0;
+		protected int							cursorLine;
+		protected double						cursorPosX;
+		protected bool							mouseDown = false;
+		protected double						minRange = 0;
+		protected double						maxRange = 100;
+		protected double						step = 1;
+		protected Scroller						scroller;
+		protected ArrowButton					arrowUp;
+		protected ArrowButton					arrowDown;
+		protected ScrollList					scrollList;
+		protected System.Collections.ArrayList	comboList = new System.Collections.ArrayList();
+		protected System.Timers.Timer			flashTimer;
+		protected bool							showCursor = true;
+		protected static readonly double		infinity = 1000000;
 	}
 }

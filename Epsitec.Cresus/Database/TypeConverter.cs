@@ -18,13 +18,14 @@ namespace Epsitec.Cresus.Database
 			//	Remplit la table de correspondances entre les types natifs et les types
 			//	simplifiés. Cette table est utilisée par la méthode IsCompatibleToSimpleType
 			
-			TypeConverter.type_hash[typeof (bool)]   = DbSimpleType.Decimal;
-			TypeConverter.type_hash[typeof (byte)]   = DbSimpleType.Decimal;
-			TypeConverter.type_hash[typeof (short)]  = DbSimpleType.Decimal;
-			TypeConverter.type_hash[typeof (int)]    = DbSimpleType.Decimal;
-			TypeConverter.type_hash[typeof (long)]   = DbSimpleType.Decimal;
-			TypeConverter.type_hash[typeof (string)] = DbSimpleType.String;
-			TypeConverter.type_hash[typeof (byte[])] = DbSimpleType.ByteArray;
+			TypeConverter.type_hash[typeof (bool)]    = DbSimpleType.Decimal;
+			TypeConverter.type_hash[typeof (byte)]    = DbSimpleType.Decimal;
+			TypeConverter.type_hash[typeof (short)]   = DbSimpleType.Decimal;
+			TypeConverter.type_hash[typeof (int)]     = DbSimpleType.Decimal;
+			TypeConverter.type_hash[typeof (long)]    = DbSimpleType.Decimal;
+			TypeConverter.type_hash[typeof (decimal)] = DbSimpleType.Decimal;
+			TypeConverter.type_hash[typeof (string)]  = DbSimpleType.String;
+			TypeConverter.type_hash[typeof (byte[])]  = DbSimpleType.ByteArray;
 			
 			TypeConverter.type_hash[typeof (System.Date)]     = DbSimpleType.Date;
 			TypeConverter.type_hash[typeof (System.Time)]     = DbSimpleType.Time;

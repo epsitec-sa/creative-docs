@@ -2212,6 +2212,9 @@ namespace Epsitec.Common.Widgets
 			private void PreRemove(Widget widget)
 			{
 				System.Diagnostics.Debug.Assert (widget.parent == this.widget);
+				widget.SetFocused (false);
+				widget.SetEngaged (false);
+				widget.SetEntered (false);
 				widget.parent = null;
 			}
 			

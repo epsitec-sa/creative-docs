@@ -34,7 +34,7 @@ Questions à régler
 
  7. ---
 
- 8. --- Firebird support BIGINT qui est un entier 64 bits.
+ 8. --- Firebird supporte BIGINT qui est un entier 64 bits.
 
  9. Implémenter TypeConverter. Cela implique en particulier d'être
     capable de transformer des données brutes manipulées par ADO.NET
@@ -47,6 +47,8 @@ Questions à régler
     sont d'abord convertis en Int64 au moyen de DbNumDef.ConvertToInt64
     ce qui les ramène dans une plage 0..9 -> on peut utiliser des types
     de données plus petits dans la base.
+    
+    > C'est implémenté et testé, et ça marche.
 
 10. Implémenter FirebirdTypeConverter selon ITypeConverter. En principe,
     il suffit d'appeler les méthodes correspondantes de la classe
@@ -55,6 +57,9 @@ Questions à régler
     Les types comme Guid ne sont pas supportés par Firebird, alors on
     ne tente pas de les émuler avec des CHAR(n) pour le moment... La
     classe DbColumn va partager un Guid en deux Int64.
+    
+    > J'ai même rajouté un mécanisme standardisé pour ces conversions
+    > de bas niveau (IRawTypeConverter). C'est OK.
 
 11. Compléter les tests avec NUnit, vérifier que tout marche correcte-
 	ment.
