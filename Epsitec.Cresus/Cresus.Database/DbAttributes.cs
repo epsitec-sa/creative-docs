@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		internal void ProcessXmlAttributes(System.Xml.XmlElement xml)
+		internal void DeserialiseXmlAttributes(System.Xml.XmlElement xml)
 		{
 			foreach (System.Xml.XmlAttribute attr in xml.Attributes)
 			{

@@ -90,5 +90,54 @@ namespace Epsitec.Cresus.Database
 			
 			DbTypeEnum e_type = new DbTypeEnum (list);
 		}
+		
+		[Test] public void CheckDbKeyXml()
+		{
+			DbKey k0 = null;
+			DbKey k1 = new DbKey (1, 2, 3);
+			DbKey k2 = new DbKey ();
+			DbKey k3 = new DbKey (10);
+			
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				buffer.Append ("<test");
+				DbKey.SerialiseToXmlAttributes (buffer, k0);
+				buffer.Append ("/>");
+				System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+				doc.LoadXml (buffer.ToString ());
+				System.Xml.XmlElement  xml = doc.DocumentElement;
+				Assertion.AssertEquals (k0, DbKey.DeserialiseFromXmlAttributes (xml));
+			}
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				buffer.Append ("<test");
+				DbKey.SerialiseToXmlAttributes (buffer, k1);
+				buffer.Append ("/>");
+				System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+				doc.LoadXml (buffer.ToString ());
+				System.Xml.XmlElement  xml = doc.DocumentElement;
+				Assertion.AssertEquals (k1, DbKey.DeserialiseFromXmlAttributes (xml));
+			}
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				buffer.Append ("<test");
+				DbKey.SerialiseToXmlAttributes (buffer, k2);
+				buffer.Append ("/>");
+				System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+				doc.LoadXml (buffer.ToString ());
+				System.Xml.XmlElement  xml = doc.DocumentElement;
+				Assertion.AssertEquals (k2, DbKey.DeserialiseFromXmlAttributes (xml));
+			}
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				buffer.Append ("<test");
+				DbKey.SerialiseToXmlAttributes (buffer, k3);
+				buffer.Append ("/>");
+				System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+				doc.LoadXml (buffer.ToString ());
+				System.Xml.XmlElement  xml = doc.DocumentElement;
+				Assertion.AssertEquals (k3, DbKey.DeserialiseFromXmlAttributes (xml));
+			}
+		}
 	}
 }
