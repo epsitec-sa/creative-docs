@@ -672,11 +672,6 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Layouts\Abstract.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Layouts\Events.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
