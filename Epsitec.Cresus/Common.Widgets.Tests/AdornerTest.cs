@@ -41,7 +41,7 @@ namespace Epsitec.Common.Widgets
 		private Window CreateAdornerWidgets()
 		{
 			Pictogram.Engine.Initialise();
-			
+
 			Window window = new Window();
 			
 			window.ClientSize = new Size(600, 300);
@@ -77,11 +77,13 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(c, "Au secours !");
 
 			StaticText st = new StaticText();
-			st.Location = new Point(10, 265);
+			st.Location = new Point(10, 245);
 			st.Width = 150;
 			st.Text = @"Choix du <b>look</b> de l'<i>interface</i> :";
 			st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
 			window.Root.Children.Add(st);
+
+			CreateListLook(window.Root.Children, new Point(10, 175), tip);
 
 			StaticText link = new StaticText();
 			link.Location = new Point(360, 16);
@@ -90,8 +92,6 @@ namespace Epsitec.Common.Widgets
 			link.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
 			link.HypertextClicked += new MessageEventHandler(link_HypertextClicked);
 			window.Root.Children.Add(link);
-
-			CreateListLook(window.Root.Children, new Point(10, 195), tip);
 
 			CheckButton check = new CheckButton();
 			check.Location = new Point(10, 50);
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(scrollh, "Ascenseur horizontal");
 
 			TextFieldCombo combo = new TextFieldCombo();
-			combo.Location = new Point(160, 180);
+			combo.Location = new Point(160, 200);
 			combo.Width = 100;
 			combo.Text = "Janvier";
 			combo.Cursor = combo.Text.Length;
@@ -193,7 +193,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(combo);
 
 			TextField text = new TextField();
-			text.Location = new Point(160, 150);
+			text.Location = new Point(160, 170);
 			text.Width = 100;
 			text.Text = "Bonjour";
 			text.Cursor = text.Text.Length;
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(text);
 
 			TextFieldUpDown tud = new TextFieldUpDown();
-			tud.Location = new Point(160, 125);
+			tud.Location = new Point(160, 140);
 			tud.Width = 45;
 			tud.Value = 50;
 			tud.MinRange = -100;
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(tud);
 
 			TextFieldSlider slider = new TextFieldSlider();
-			slider.Location = new Point(215, 125);
+			slider.Location = new Point(215, 140);
 			slider.Width = 45;
 			slider.Value = 50;
 			slider.MinRange = -100;
@@ -221,14 +221,52 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(slider);
 
 			TextFieldMulti multi = new TextFieldMulti();
-			multi.Location = new Point(160, 70);
+			multi.Location = new Point(160, 80);
 			multi.Size = new Size(100, 50);
 			multi.Text = "Ceci est une petite phrase ridicule.<br/>Mais elle est assez longue pour faire des essais.";
 			multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(multi);
 
+			HToolBar tb = new HToolBar();
+			tb.Location = new Point(0, window.ClientSize.Height-tb.DefaultHeight);
+			tb.Width = window.ClientSize.Width;
+			tb.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
+			window.Root.Children.Add(tb);
+
+			tb.Items.Add(new IconButton(@"file:images/open1.icon"));
+			tb.Items.Add(new IconButton(@"file:images/save1.icon"));
+			tb.Items.Add(new IconSeparator());
+
+			TextFieldCombo t1 = new TextFieldCombo();
+			t1.Width = 70;
+			t1.Text = "Rouge";
+			t1.Items.Add("red",   "Rouge");
+			t1.Items.Add("green", "Vert");
+			t1.Items.Add("blue",  "Bleu");
+
+			tb.Items.Add(t1);
+			tb.Items.Add(new IconSeparator());
+			tb.Items.Add(new IconButton(@"file:images/cut1.icon"));
+			tb.Items.Add(new IconButton(@"file:images/copy1.icon"));
+			tb.Items.Add(new IconButton(@"file:images/paste1.icon"));
+
+			TabBook tab = new TabBook();
+			tab.TabBookStyle = TabBookStyle.Right;
+			tab.Location = new Point(280, 50);
+			tab.Size = new Size(300, 180);
+			tab.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(tab);
+
+			Rectangle inside = tab.Inside;
+
+			// Crée l'onglet 1.
+			TabPage page1 = new TabPage();
+			page1.Bounds = inside;
+			page1.TabTitle = "<m>P</m>remier";
+			tab.Items.Add(page1);
+
 			ScrollList sl = new ScrollList();
-			sl.Location = new Point(270, 70);
+			sl.Location = new Point(20, 10);
 			sl.Size = new Size(90, 100);
 			sl.AdjustHeight(ScrollListAdjust.MoveDown);
 			sl.Items.Add("Janvier");
@@ -245,27 +283,27 @@ namespace Epsitec.Common.Widgets
 			sl.Items.Add("Decembre");
 			sl.SelectedIndex = 5;  // sélectionne juin
 			sl.ShowSelectedLine(ScrollListShow.Middle);
-			sl.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			window.Root.Children.Add(sl);
+			sl.Anchor = AnchorStyles.TopAndBottom|AnchorStyles.Left;
+			page1.Children.Add(sl);
 			tip.SetToolTip(sl, "Choix du mois");
 
 			StaticText st2 = new StaticText();
-			st2.Location = new Point(160, 220+4);
+			st2.Location = new Point(160, 120);
 			st2.Width = 90;
 			st2.Text = "Non editable :";
 			st2.Anchor = AnchorStyles.Top|AnchorStyles.Left;
-			window.Root.Children.Add(st2);
+			page1.Children.Add(st2);
 
 			TextField textfix = new TextField();
-			textfix.Location = new Point(260, 220);
+			textfix.Location = new Point(160, 80);
 			textfix.Width = 100;
 			textfix.Text = "Texte fixe";
 			textfix.IsReadOnly = true;
 			textfix.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			window.Root.Children.Add(textfix);
+			page1.Children.Add(textfix);
 
 			TextFieldCombo combofix = new TextFieldCombo();
-			combofix.Location = new Point(370, 220);
+			combofix.Location = new Point(160, 50);
 			combofix.Width = 100;
 			combofix.Text = "Mardi";
 			combofix.IsReadOnly = true;
@@ -277,274 +315,79 @@ namespace Epsitec.Common.Widgets
 			combofix.Items.Add("Samedi");
 			combofix.Items.Add("Dimanche");
 			combofix.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			window.Root.Children.Add(combofix);
+			page1.Children.Add(combofix);
 
+			// Crée l'onglet 2.
+			TabPage page2 = new TabPage();
+			page2.Bounds = inside;
+			page2.TabTitle = "<m>D</m>euxieme";
+			tab.Items.Add(page2);
 
-			HToolBar tb = new HToolBar();
-			tb.Location = new Point(160, 260);
-			tb.Width = 300;
-			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			window.Root.Children.Add(tb);
+			CellTable table = new CellTable();
+			table.StyleH  = CellArrayStyle.ScrollNorm;
+			table.StyleH |= CellArrayStyle.Header;
+			table.StyleH |= CellArrayStyle.Separator;
+			table.StyleH |= CellArrayStyle.Mobile;
+			table.StyleH |= CellArrayStyle.Sort;
+			table.StyleV  = CellArrayStyle.ScrollNorm;
+			table.StyleV |= CellArrayStyle.Separator;
+			table.StyleV |= CellArrayStyle.SelectLine;
+			table.StyleV |= CellArrayStyle.SelectMulti;
+			table.StyleV |= CellArrayStyle.Sort;
+			table.Location = new Point(10, 10);
+			table.Size = new Size(inside.Width-20, inside.Height-20);
+			table.SetArraySize(5, 12);
 
-			tb.Items.Add (new IconButton (@"file:images/open1.icon"));
-			tb.Items.Add (new IconButton (@"file:images/save.png"));
-			tb.Items.Add (new IconSeparator());
+			table.SetHeaderTextH(0, "A");
+			table.SetHeaderTextH(1, "B");
+			table.SetHeaderTextH(2, "C");
+			table.SetHeaderTextH(3, "D");
+			table.SetHeaderTextH(4, "E");
 
-			TextFieldCombo t1 = new TextFieldCombo();
-			t1.Width = 70;
-			t1.Text = "Rouge";
-			t1.Items.Add("red",   "Rouge");
-			t1.Items.Add("green", "Vert");
-			t1.Items.Add("blue",  "Bleu");
+			for ( int y=0 ; y<12 ; y++ )
+			{
+				for ( int x=0 ; x<5 ; x++ )
+				{
+					table.SetWidthColumn(x, 60);
+					StaticText tx = new StaticText();
+					tx.Text = string.Format("L{0} C{1}", x+1, y+1);
+					tx.Alignment = ContentAlignment.MiddleLeft;
+					tx.Dock = Widgets.DockStyle.Fill;
+					table[x,y].Insert(tx);
+				}
+			}
+			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			page2.Children.Add(table);
 
-			tb.Items.Add(t1);
-			tb.Items.Add (new IconSeparator());
-			tb.Items.Add (new IconButton (@"file:images/cut.png"));
-			tb.Items.Add (new IconButton (@"file:images/copy.png"));
-			tb.Items.Add (new IconButton (@"file:images/paste.png"));
+			// Crée l'onglet 3.
+			TabPage page3 = new TabPage();
+			page3.Bounds = inside;
+			page3.TabTitle = "<m>T</m>roisieme";
+			tab.Items.Add(page3);
 
-#if true
-			VMenu fileMenu = new VMenu();
-			fileMenu.Name = "0 (root menu)";
-			fileMenu.Items.Add(new MenuItem ("open", @"file:images/open.png", "Ouvrir...", "Ctrl+O"));
-			fileMenu.Items.Add(new MenuItem ("save", @"file:images/save.png", "Enregistrer...", "Ctrl+S"));
-			fileMenu.Items.Add(new MenuSeparator ());
-			fileMenu.Items.Add(new MenuItem ("opt1", "", "Options 1", ""));
-			fileMenu.Items.Add(new MenuItem ("opt2", "", "Options 2", ""));
-			fileMenu.Items.Add (new MenuSeparator ());
-			fileMenu.Items.Add(new MenuItem ("quit", "", "Quitter", ""));
-			fileMenu.AdjustSize();
-			fileMenu.Location = new Point(370, 70);
-			window.Root.Children.Add(fileMenu);
+			// Crée l'onglet 4.
+			TabPage page4 = new TabPage();
+			page4.Bounds = inside;
+			page4.TabTitle = "<m>Q</m>uatrieme";
+			tab.Items.Add(page4);
 
-			VMenu optMenu1 = new VMenu();
-			optMenu1.Name = "1a";
-			optMenu1.Items.Add(new MenuItem ("set1A", "", "Reglages 1.A", ""));
-			optMenu1.Items.Add(new MenuItem ("set1B", "", "Reglages 1.B", ""));
-			optMenu1.Items.Add(new MenuItem ("print", @"file:images/print.png", "Impression...", ""));
-			optMenu1.Items.Add(new MenuItem ("open",  @"file:images/open.png", "Fichiers...", ""));
-			optMenu1.AdjustSize();
-			fileMenu.Items[3].Submenu = optMenu1;
+			// Crée l'onglet 5.
+			TabPage page5 = new TabPage();
+			page5.Bounds = inside;
+			page5.TabTitle = "<m>C</m>inquieme";
+			tab.Items.Add(page5);
 
-			VMenu optMenu2 = new VMenu();
-			optMenu2.Name = "1b";
-			optMenu2.Items.Add(new MenuItem ("set2A", "", "Reglages 2.A", ""));
-			optMenu2.Items.Add(new MenuItem ("set2B", "", "Reglages 2.B", ""));
-			optMenu2.Items.Add(new MenuItem ("print", @"file:images/print.png", "Impression...", ""));
-			optMenu2.Items.Add(new MenuItem ("open",  @"file:images/open.png", "Fichiers...", ""));
-			optMenu2.AdjustSize();
-			fileMenu.Items[4].Submenu = optMenu2;
+			// Crée l'onglet 6.
+			TabPage page6 = new TabPage();
+			page6.Bounds = inside;
+			page6.TabTitle = "<m>S</m>ixieme";
+			tab.Items.Add(page6);
 
-			VMenu setupMenu1A = new VMenu();
-			setupMenu1A.Name = "2a";
-			setupMenu1A.Items.Add(new MenuItem ("set1Aa", "", "Reglage 1.A.a", ""));
-			setupMenu1A.Items.Add(new MenuItem ("set1Ab", "", "Reglage 1.A.b", ""));
-			setupMenu1A.Items.Add(new MenuItem ("set1Ac", "", "Reglage 1.A.c", ""));
-			setupMenu1A.Items.Add(new MenuItem ("set1Ad", "", "Reglage 1.A.d", ""));
-			setupMenu1A.AdjustSize();
-			optMenu1.Items[0].Submenu = setupMenu1A;
-
-			VMenu setupMenu1B = new VMenu();
-			setupMenu1B.Name = "2b";
-			setupMenu1B.Items.Add(new MenuItem ("set1Ba", "", "Reglage 1.B.a", ""));
-			setupMenu1B.Items.Add(new MenuItem ("set1Bb", "", "Reglage 1.B.b", ""));
-			setupMenu1B.Items.Add(new MenuItem ("set1Bc", "", "Reglage 1.B.c", ""));
-			setupMenu1B.Items.Add(new MenuItem ("set1Bd", "", "Reglage 1.B.d", ""));
-			setupMenu1B.AdjustSize();
-			optMenu1.Items[1].Submenu = setupMenu1B;
-
-			VMenu setupMenu2A = new VMenu();
-			setupMenu2A.Name = "2c";
-			setupMenu2A.Items.Add(new MenuItem ("set2Aa", "", "Reglage 2.A.a", ""));
-			setupMenu2A.Items.Add(new MenuItem ("set2Ab", "", "Reglage 2.A.b", ""));
-			setupMenu2A.Items.Add(new MenuItem ("set2Ac", "", "Reglage 2.A.c", ""));
-			setupMenu2A.Items.Add(new MenuItem ("set2Ad", "", "Reglage 2.A.d", ""));
-			setupMenu2A.AdjustSize();
-			optMenu2.Items[0].Submenu = setupMenu2A;
-
-			VMenu setupMenu2B = new VMenu();
-			setupMenu2B.Name = "2d";
-			setupMenu2B.Items.Add(new MenuItem ("set2Ba", "", "Reglage 2.B.a", ""));
-			setupMenu2B.Items.Add(new MenuItem ("set2Bb", "", "Reglage 2.B.b", ""));
-			setupMenu2B.Items.Add(new MenuItem ("set2Bc", "", "Reglage 2.B.c", ""));
-			setupMenu2B.Items.Add(new MenuItem ("set2Bd", "", "Reglage 2.B.d", ""));
-			setupMenu2B.AdjustSize();
-			optMenu2.Items[1].Submenu = setupMenu2B;
-#endif
-
+			tab.ActivePage = page1;
 			window.FocusedWidget = a;
 
 			window.Show();
 			return window;
-		}
-
-		
-		[Test] public void CheckAdornerDisabled()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(600, 300);
-			window.Text = "CheckAdornerDisabled";
-
-			StaticText st = new StaticText();
-			st.SetClientZoom(2.0);
-			st.Location = new Point(10, 260);
-			st.Width = 500;
-			st.Height = 30;
-			st.Text = "Teste tous les widgets dans l'etat disabled !";
-			st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
-			st.SetEnabled(false);
-			window.Root.Children.Add(st);
-
-			CreateListLook(window.Root.Children, new Point(10, 180), null);
-
-			Button a = new Button();
-			a.Location = new Point(10, 10);
-			a.Width = 75;
-			a.Text = "O<m>K</m>";
-			a.SetEnabled(false);
-			window.Root.Children.Add(a);
-
-			CheckButton check = new CheckButton();
-			check.Location = new Point(10, 50);
-			check.Width = 100;
-			check.Text = "<m>C</m>ochez ici";
-			check.ActiveState = WidgetState.ActiveYes;
-			check.SetEnabled(false);
-			window.Root.Children.Add(check);
-
-			GroupBox box = new GroupBox();
-			box.Location = new Point(10, 80);
-			box.Size = new Size(100, 75);
-			box.Text = "Couleur";
-			box.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			box.SetEnabled(false);
-			window.Root.Children.Add(box);
-
-			RadioButton radio1 = new RadioButton();
-			radio1.Location = new Point(10, 40);
-			radio1.Width = 80;
-			radio1.Text = "<m>R</m>ouge";
-			radio1.ActiveState = WidgetState.ActiveYes;
-			radio1.Group = "RGB";
-			radio1.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			radio1.Clicked += new MessageEventHandler(this.HandleRadio);
-			box.Children.Add(radio1);
-
-			RadioButton radio2 = new RadioButton();
-			radio2.Location = new Point(10, 25);
-			radio2.Width = 80;
-			radio2.Text = "<m>V</m>ert";
-			radio2.Group = "RGB";
-			radio2.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			radio2.Clicked += new MessageEventHandler(this.HandleRadio);
-			box.Children.Add(radio2);
-
-			RadioButton radio3 = new RadioButton();
-			radio3.Location = new Point(10, 10);
-			radio3.Width = 80;
-			radio3.Text = "<m>B</m>leu";
-			radio3.Group = "RGB";
-			radio3.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			radio3.Clicked += new MessageEventHandler(this.HandleRadio);
-			box.Children.Add(radio3);
-
-			TextFieldCombo combo = new TextFieldCombo();
-			combo.Location = new Point(160, 180);
-			combo.Width = 100;
-			combo.Text = "Janvier";
-			combo.Cursor = combo.Text.Length;
-			combo.Items.Add("Janvier");
-			combo.Items.Add("Fevrier");
-			combo.Items.Add("Mars");
-			combo.Items.Add("Avril");
-			combo.Items.Add("Mai");
-			combo.Items.Add("Juin");
-			combo.Items.Add("Juillet");
-			combo.Items.Add("Aout");
-			combo.Items.Add("Septembre");
-			combo.Items.Add("Octobre");
-			combo.Items.Add("Novembre");
-			combo.Items.Add("Decembre");
-			combo.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			combo.SetEnabled(false);
-			window.Root.Children.Add(combo);
-
-			TextField text = new TextField();
-			text.Location = new Point(160, 150);
-			text.Width = 100;
-			text.Text = "Bonjour";
-			text.Cursor = text.Text.Length;
-			text.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			text.SetEnabled(false);
-			window.Root.Children.Add(text);
-
-			TextFieldUpDown tud = new TextFieldUpDown();
-			tud.Location = new Point(160, 125);
-			tud.Width = 50;
-			tud.Value = 50;
-			tud.MinRange = -100;
-			tud.MaxRange = 100;
-			tud.Step = 10;
-			tud.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			tud.SetEnabled(false);
-			window.Root.Children.Add(tud);
-
-			TextFieldMulti multi = new TextFieldMulti();
-			multi.Location = new Point(160, 70);
-			multi.Size = new Size(100, 50);
-			multi.Text = "Ceci est une petite phrase ridicule.<br/>Mais elle est assez longue pour faire des essais.";
-			multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			multi.SetEnabled(false);
-			window.Root.Children.Add(multi);
-
-			ScrollList sl = new ScrollList();
-			sl.Location = new Point(270, 70);
-			sl.Size = new Size(90, 100);
-			sl.AdjustHeight(ScrollListAdjust.MoveDown);
-			sl.Items.Add("Janvier");
-			sl.Items.Add("Fevrier");
-			sl.Items.Add("Mars <i>(A)</i>");
-			sl.Items.Add("Avril");
-			sl.Items.Add("Mai");
-			sl.Items.Add("Juin");
-			sl.Items.Add("Juillet <b>(B)</b>");
-			sl.Items.Add("Aout");
-			sl.Items.Add("Septembre");
-			sl.Items.Add("Octobre");
-			sl.Items.Add("Novembre");
-			sl.Items.Add("Decembre");
-			sl.SelectedIndex = 5;  // sélectionne juin
-			sl.ShowSelectedLine(ScrollListShow.Middle);
-			sl.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			sl.SetEnabled(false);
-			window.Root.Children.Add(sl);
-
-			HToolBar tb = new HToolBar();
-			tb.Location = new Point(160, 220);
-			tb.Width = 300;
-			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			window.Root.Children.Add(tb);
-
-			tb.Items.Add (new IconButton (@"file:images/open.png"));
-			tb.Items.Add (new IconButton (@"file:images/save.png"));
-			tb.Items.Add (new IconSeparator());
-			tb.Items.Add (new IconButton (@"file:images/cut.png"));
-			tb.Items.Add (new IconButton (@"file:images/copy.png"));
-			tb.Items.Add (new IconButton (@"file:images/paste.png"));
-			tb.Items[1].SetEnabled(false);
-
-			VMenu fileMenu = new VMenu();
-			fileMenu.Items.Add(new MenuItem ("open", @"file:images/open.png", "Ouvrir...", "Ctrl+O"));
-			fileMenu.Items.Add(new MenuItem ("save", @"file:images/save.png", "Enregistrer...", "Ctrl+S"));
-			fileMenu.Items.Add (new MenuSeparator ());
-			fileMenu.Items.Add(new MenuItem ("quit", "", "Quitter", ""));
-			fileMenu.AdjustSize();
-			fileMenu.Location = new Point(370, 70);
-			fileMenu.Items[1].SetEnabled(false);
-			window.Root.Children.Add(fileMenu);
-
-			window.Show();
 		}
 
 		

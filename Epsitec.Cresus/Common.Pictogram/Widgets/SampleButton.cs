@@ -76,10 +76,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 				if ( this.IsEnabled )
 				{
+					this.iconContext.GlyphPaintStyle = Drawing.GlyphPaintStyle.Normal;
 					this.iconContext.UniqueColor = Drawing.Color.Empty;
 				}
 				else
 				{
+					this.iconContext.GlyphPaintStyle = Drawing.GlyphPaintStyle.Disabled;
 					this.iconContext.UniqueColor = adorner.ColorDisabled;
 					if ( this.iconContext.UniqueColor.IsEmpty )
 					{
@@ -94,7 +96,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				graphics.TranslateTransform(1, 1);
 				graphics.ScaleTransform(this.iconContext.ScaleX, this.iconContext.ScaleY, 0, 0);
 
-				this.iconObjects.DrawGeometry(graphics, this.iconContext, Drawing.Color.Empty, adorner);
+				this.iconObjects.DrawGeometry(graphics, this.iconContext, adorner);
 
 				graphics.Transform = save;
 				graphics.LineWidth = initialWidth;
