@@ -144,27 +144,55 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public override string[] GetIds(string filter, ResourceLevel level, System.Globalization.CultureInfo culture)
+		public override string[] GetIds(string name_filter, string type_filter, ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
 			if (this.culture != culture)
 			{
 				this.SelectLocale (culture);
 			}
 			
-			filter = "*";
+			string file_filter = "*";
+			
+			//	TODO: utiliser name_filter pour filtrer les noms des fichiers
 			
 			string path   = this.path_prefix;
-			string search = filter + this.GetLevelSuffix (level);
+			string suffix = this.GetLevelSuffix (level);
+			string search = file_filter + suffix;
 			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			string[] files = System.IO.Directory.GetFiles (path, search);
 			
 			int start = path.Length;
-			int strip = search.Length - filter.Length + start;
+			int strip = suffix.Length + start;
 			
 			for (int i = 0; i < files.Length; i++)
 			{
-				files[i] = files[i].Substring (start, files[i].Length - strip);
+				string full_name   = files[i];
+				string bundle_name = full_name.Substring (start, full_name.Length - strip);
+				
+				if ((type_filter != null) &&
+					(type_filter != "*"))
+				{
+					ResourceBundle bundle = ResourceBundle.Create (bundle_name);
+					
+					bundle.RefInclusionEnabled = false;
+					bundle.AutoMergeEnabled    = false;
+					
+					bundle.Compile (this.GetData (bundle_name, ResourceLevel.Default, culture));
+					
+					if (type_filter != bundle.Type)
+					{
+						//	Saute ce bundle, car il n'est pas du type adéquat :
+						
+						continue;
+					}
+				}
+				
+				list.Add (bundle_name);
 			}
+			
+			files = new string[list.Count];
+			list.CopyTo (files);
 			
 			return files;
 		}
