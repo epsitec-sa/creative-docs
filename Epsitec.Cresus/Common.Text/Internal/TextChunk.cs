@@ -40,6 +40,38 @@ namespace Epsitec.Common.Text.Internal
 				
 				return this.text[position];
 			}
+			set
+			{
+				if ((position < 0) ||
+					(position >= this.length))
+				{
+					throw new System.ArgumentOutOfRangeException ("position", position, "Index out of range.");
+				}
+				
+				ulong m_old = Internal.CharMarker.GetMarker (this.text[position]);
+				ulong m_new = Internal.CharMarker.GetMarker (value);
+				
+				this.text[position] = value;
+				
+				if ((m_old != m_new) &&
+					(this.acc_markers_valid))
+				{
+					ulong m_clr = (m_old & ~m_new);
+					
+					if (m_clr != 0)
+					{
+						//	On a supprimé certains bits; comme c'était peut-être
+						//	les derniers, marque que l'accumulation actuelle doit
+						//	être recalculée :
+						
+						this.acc_markers_valid = false;
+					}
+					else
+					{
+						this.acc_markers |= m_new;
+					}
+				}
+			}
 		}
 		
 		

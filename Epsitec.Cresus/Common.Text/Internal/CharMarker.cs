@@ -15,10 +15,12 @@ namespace Epsitec.Common.Text.Internal
 			this.keys = new object[6];
 			this.bits = new ulong[6];
 			
+			ulong bit = 0x1 << CharMarker.MarkerShift;
+			
 			for (int i = 0; i < 6; i++)
 			{
 				this.keys[i] = null;
-				this.bits[i] = 0x04000000ul << i;
+				this.bits[i] = bit << i;
 			}
 		}
 		
@@ -51,6 +53,9 @@ namespace Epsitec.Common.Text.Internal
 		 *	- Les "unicode flags" et "unicode code" forment le caractère Unicode
 		 *	  à proprement dit.
 		 */
+		
+		public const ulong						MarkerMask  = 0x00000000FC000000ul;
+		public const int						MarkerShift = 26;
 		
 		public ulong							this[object key]
 		{
@@ -116,13 +121,18 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public static ulong GetMarker(ulong code)
+		{
+			return code & CharMarker.MarkerMask;
+		}
+		
 		public static bool SetMarkers(ulong marker, ulong[] text, int offset, int length)
 		{
 			//	Place le marqueur spécifié sur le fragment de texte et retourne
 			//	'true' si des modifications ont été apportées au texte.
 			
 			Debug.Assert.IsTrue (marker != 0);
-			Debug.Assert.IsTrue ((marker & 0xFFFFFFFF03FFFFFFul) == 0);
+			Debug.Assert.IsTrue ((marker & ~CharMarker.MarkerMask) == 0);
 			
 			ulong acc = marker;
 			int   end = offset + length;
@@ -142,7 +152,7 @@ namespace Epsitec.Common.Text.Internal
 			//	'true' si des modifications ont été apportées au texte.
 			
 			Debug.Assert.IsTrue (marker != 0);
-			Debug.Assert.IsTrue ((marker & 0xFFFFFFFF03FFFFFFul) == 0);
+			Debug.Assert.IsTrue ((marker & ~CharMarker.MarkerMask) == 0);
 			
 			ulong mask = ~marker;
 			ulong acc  = 0;
@@ -157,6 +167,25 @@ namespace Epsitec.Common.Text.Internal
 			return ((acc & marker) != 0) ? true : false;
 		}
 		
+		public static bool ClearAllMarkers(ulong[] text, int offset, int length)
+		{
+			//	Efface tous les marqueurs sur le fragment de texte et retourne
+			//	'true' si des modifications ont été apportées au texte.
+			
+			ulong all  = CharMarker.MarkerMask;
+			ulong mask = ~all;
+			ulong acc  = 0;
+			int   end  = offset + length;
+			
+			for (int i = offset; i < end; i++)
+			{
+				acc     |= text[i];
+				text[i] &= mask;
+			}
+			
+			return ((acc & all) != 0) ? true : false;
+		}
+		
 		
 		public static ulong Accumulate(ulong[] text, int offset, int length)
 		{
@@ -168,7 +197,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = offset; i < end; i++)
 			{
-				acc |= text[i] & 0x00000000FC000000UL;
+				acc |= text[i] & CharMarker.MarkerMask;
 			}
 			
 			return acc;

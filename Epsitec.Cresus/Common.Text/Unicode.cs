@@ -266,6 +266,12 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
+				if (Unicode.break_analyzer == null)
+				{
+					Unicode.break_analyzer = new BreakAnalyzer ();
+					Unicode.break_analyzer.LoadFile (@"..\..\..\LineBreak.txt");
+				}
+				
 				return Unicode.break_analyzer;
 			}
 		}

@@ -435,7 +435,6 @@ namespace Epsitec.Common.Text.Internal
 			this.cursors.InvalidatePositionCache ();
 		}
 		
-		
 		public void DeleteText(Internal.CursorId cursor_id, int length, out CursorInfo[] infos)
 		{
 			Internal.Cursor record = this.cursors.ReadCursor (cursor_id);
@@ -547,47 +546,37 @@ namespace Epsitec.Common.Text.Internal
 		
 		public int WriteText(Internal.CursorId cursor_id, int length, ulong[] buffer, int offset)
 		{
-			//	TODO: écrit le texte en mémoire
+			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
 			
-			return length;
-		}
-		
-		
-		internal void WriteRawText(System.IO.Stream stream)
-		{
-			byte[] header = new byte[8];
+			int index = chunk_id - 1;
+			int wrote = 0;
+			int pos   = this.text_chunks[index].GetCursorPosition (cursor_id);
 			
-			header[0] = (byte) ('T');
-			header[1] = (byte) ('X');
-			header[2] = (byte) ('T');
-			header[3] = (byte) ('1');
-			header[4] = (byte) ((this.text_length >> 24) & 0xff);
-			header[5] = (byte) ((this.text_length >> 16) & 0xff);
-			header[6] = (byte) ((this.text_length >>  8) & 0xff);
-			header[7] = (byte) ((this.text_length >>  0) & 0xff);
-			
-			stream.Write (header, 0, header.Length);
-			
-			//	Commence par déterminer la place qui sera nécessaire pour stocker
-			//	le plus gros morceau de texte :
-			
-			int max_size = 0;
-			
-			for (int i = 0; i < this.text_chunks.Length; i++)
+			while (wrote < length)
 			{
-				max_size = System.Math.Max (max_size, this.text_chunks[i].TextLength);
+				if (pos == this.text_chunks[index].TextLength)
+				{
+					index++;
+					
+					if (index == this.text_chunks.Length)
+					{
+						break;
+					}
+					
+					pos = 0;
+				}
+				else
+				{
+					this.text_chunks[index][pos] = buffer[wrote];
+					
+					wrote += 1;
+					pos   += 1;
+				}
 			}
 			
-			byte[] buffer = new byte[8*max_size];
-			
-			//	Extrait les données pour les envoyer vers le stream :
-			
-			for (int i = 0; i < this.text_chunks.Length; i++)
-			{
-				int count = this.text_chunks[i].GetRawText (buffer);
-				stream.Write (buffer, 0, count);
-			}
+			return wrote;
 		}
+		
 		
 		internal void ReadRawText(System.IO.Stream stream)
 		{
@@ -660,6 +649,42 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			throw new System.InvalidOperationException ("Not a valid text stream.");
+		}
+		
+		internal void WriteRawText(System.IO.Stream stream)
+		{
+			byte[] header = new byte[8];
+			
+			header[0] = (byte) ('T');
+			header[1] = (byte) ('X');
+			header[2] = (byte) ('T');
+			header[3] = (byte) ('1');
+			header[4] = (byte) ((this.text_length >> 24) & 0xff);
+			header[5] = (byte) ((this.text_length >> 16) & 0xff);
+			header[6] = (byte) ((this.text_length >>  8) & 0xff);
+			header[7] = (byte) ((this.text_length >>  0) & 0xff);
+			
+			stream.Write (header, 0, header.Length);
+			
+			//	Commence par déterminer la place qui sera nécessaire pour stocker
+			//	le plus gros morceau de texte :
+			
+			int max_size = 0;
+			
+			for (int i = 0; i < this.text_chunks.Length; i++)
+			{
+				max_size = System.Math.Max (max_size, this.text_chunks[i].TextLength);
+			}
+			
+			byte[] buffer = new byte[8*max_size];
+			
+			//	Extrait les données pour les envoyer vers le stream :
+			
+			for (int i = 0; i < this.text_chunks.Length; i++)
+			{
+				int count = this.text_chunks[i].GetRawText (buffer);
+				stream.Write (buffer, 0, count);
+			}
 		}
 		
 		

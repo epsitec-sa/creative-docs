@@ -13,28 +13,28 @@ namespace Epsitec.Common.Text
 		{
 			this.SetupTextStory ();
 			this.SetupOpletQueue (new Support.OpletQueue ());
-			this.SetupStyleList (new StyleList ());
+			this.SetupContext (new Context ());
 		}
 		
 		public TextStory(Support.OpletQueue oplet_queue)
 		{
 			this.SetupTextStory ();
 			this.SetupOpletQueue (oplet_queue);
-			this.SetupStyleList (new StyleList ());
+			this.SetupContext (new Context ());
 		}
 		
-		public TextStory(StyleList style_list)
+		public TextStory(Context context)
 		{
 			this.SetupTextStory ();
 			this.SetupOpletQueue (new Support.OpletQueue ());
-			this.SetupStyleList (style_list);
+			this.SetupContext (context);
 		}
 		
-		public TextStory(Support.OpletQueue oplet_queue, StyleList style_list)
+		public TextStory(Support.OpletQueue oplet_queue, Context context)
 		{
 			this.SetupTextStory ();
 			this.SetupOpletQueue (oplet_queue);
-			this.SetupStyleList (style_list);
+			this.SetupContext (context);
 		}
 		
 		
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.style_list;
+				return this.context.StyleList;
 			}
 		}
 		
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Text
 			//	Passe en revue tous les caractères et met à jour les compteurs
 			//	d'utilisation pour les styles associés :
 			
-			Internal.StyleTable styles = this.style_list.InternalStyleTable;
+			Internal.StyleTable styles = this.StyleList.InternalStyleTable;
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -340,7 +340,7 @@ namespace Epsitec.Common.Text
 			//	Attache le style et les réglages; réutilise de manière interne
 			//	un style existant, si possible :
 			
-			this.style_list.InternalStyleTable.Attach (ref style, search_style, search_local, search_extra);
+			this.StyleList.InternalStyleTable.Attach (ref style, search_style, search_local, search_extra);
 			
 			length      = utf32.Length;
 			styled_text = new ulong[length];
@@ -415,11 +415,11 @@ namespace Epsitec.Common.Text
 				//	informations dans le texte lui-même :
 				
 				Unicode.BreakInfo[] breaks = new Unicode.BreakInfo[to_pos - from_pos];
-				Unicode.DefaultBreakAnalyzer.GenerateBreaks (text, from_pos - begin_pos, to_pos - from_pos, breaks);
+				Unicode.DefaultBreakAnalyzer.GenerateBreaks (text, from_pos - pos_begin, to_pos - from_pos, breaks);
 				
 				for (int i = from_pos; i < to_pos; i++)
 				{
-					Unicode.Bits.SetBreakInfo (text[i-pos_begin], breaks[i-from_pos]);
+					Unicode.Bits.SetBreakInfo (ref text[i-pos_begin], breaks[i-from_pos]);
 				}
 				
 				//	Il faut encore mettre à jour le texte original :
@@ -446,7 +446,7 @@ namespace Epsitec.Common.Text
 				this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
 				this.text.ReadText (this.temp_cursor.CursorId, length, text);
 				
-				Internal.StyleTable styles = this.style_list.InternalStyleTable;
+				Internal.StyleTable styles = this.StyleList.InternalStyleTable;
 			
 				for (int i = 0; i < length; i++)
 				{
@@ -554,9 +554,9 @@ namespace Epsitec.Common.Text
 			this.oplet_queue = oplet_queue;
 		}
 		
-		private void SetupStyleList(StyleList style_list)
+		private void SetupContext(Context context)
 		{
-			this.style_list = style_list;
+			this.context = context;
 		}
 		
 		
@@ -786,7 +786,7 @@ namespace Epsitec.Common.Text
 		private ICursor							temp_cursor;
 		
 		private Support.OpletQueue				oplet_queue;
-		private StyleList						style_list;
+		private Context							context;
 		
 		private bool							debug_disable_oplet;
 	}
