@@ -36,7 +36,13 @@ namespace Epsitec.Common.Pictogram.Data
 			this.list.Add(text);
 		}
 
-		public string Get(int index)
+		// Détermine le nom de la propriété dans la liste (Lister).
+		public string GetListName()
+		{
+			return this.list[this.choice] as string;
+		}
+
+		public string GetName(int index)
 		{
 			return this.list[index] as string;
 		}
@@ -53,7 +59,7 @@ namespace Epsitec.Common.Pictogram.Data
 			p.Clear();
 			for ( int i=0 ; i<this.Count ; i++ )
 			{
-				p.Add(this.Get(i));
+				p.Add(this.GetName(i));
 			}
 		}
 

@@ -24,8 +24,7 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlIgnore]
 		public override bool AlterBoundingBox
 		{
-			get { return ( this.type == PropertyType.PolyClose   ||
-						   this.type == PropertyType.RegularStar ); }
+			get { return ( this.type == PropertyType.PolyClose ); }
 		}
 
 		// Effectue une copie de la propriété.

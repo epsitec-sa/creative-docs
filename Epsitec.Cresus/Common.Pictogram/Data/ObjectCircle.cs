@@ -59,7 +59,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Détecte si l'objet est dans un rectangle.
-		public override bool Detect(Drawing.Rectangle rect)
+		public override bool Detect(Drawing.Rectangle rect, bool all)
 		{
 			Drawing.Rectangle fullBbox = this.BoundingBox;
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
@@ -146,8 +146,14 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
+				if ( this.PropertyGradient(2).IsVisible() )
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
+				}
+
 				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
-				graphics.RenderSolid(iconContext.HiliteColor);
+				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}
 	}

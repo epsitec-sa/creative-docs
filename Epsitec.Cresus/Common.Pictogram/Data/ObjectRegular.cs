@@ -1,3 +1,4 @@
+using Epsitec.Common.Support;
 using System.Xml.Serialization;
 
 namespace Epsitec.Common.Pictogram.Data
@@ -25,22 +26,25 @@ namespace Epsitec.Common.Pictogram.Data
 			fillGradient.Type = PropertyType.FillGradient;
 			this.AddProperty(fillGradient);
 
-			PropertyDouble regularFaces = new PropertyDouble();
-			regularFaces.Type = PropertyType.RegularFaces;
-			this.AddProperty(regularFaces);
+			PropertyRegular regular = new PropertyRegular();
+			regular.Type = PropertyType.Regular;
+			regular.Changed += new EventHandler(this.HandleRegularChanged);
+			this.AddProperty(regular);
 
-			PropertyBool regularStar = new PropertyBool();
-			regularStar.Type = PropertyType.RegularStar;
-			this.AddProperty(regularStar);
-
-			PropertyDouble regularShape = new PropertyDouble();
-			regularShape.Type = PropertyType.RegularShape;
-			this.AddProperty(regularShape);
+			PropertyCorner corner = new PropertyCorner();
+			corner.Type = PropertyType.Corner;
+			this.AddProperty(corner);
 		}
 
 		protected override AbstractObject CreateNewObject()
 		{
 			return new ObjectRegular();
+		}
+
+		public override void Dispose()
+		{
+			if ( this.ExistProperty(3) )  this.PropertyRegular(3).Changed -= new EventHandler(this.HandleRegularChanged);
+			base.Dispose();
 		}
 
 
@@ -54,32 +58,65 @@ namespace Epsitec.Common.Pictogram.Data
 		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
-			int i=0;
-			Drawing.Point a;
-			Drawing.Point b;
-			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
-			while ( this.ComputeLine(i++, out a, out b) )
-			{
-				if ( Drawing.Point.Detect(a,b, pos, width) )  return true;
-			}
+			Drawing.Rectangle bbox = this.BoundingBox;
+			if ( !bbox.Contains(pos) )  return false;
 
-			if ( !this.PropertyGradient(2).IsVisible() )  return false;
-			InsideSurface surf = new InsideSurface(pos, i);
-			i = 0;
-			while ( this.ComputeLine(i++, out a, out b) )
+			Drawing.Path path = this.PathBuild();
+
+			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
+			if ( base.DetectOutline(path, width, pos) )  return true;
+			
+			if ( this.PropertyGradient(2).IsVisible() )
 			{
-				surf.AddLine(a,b);
+				path.Close();
+				if ( base.DetectFill(path, pos) )  return true;
 			}
-			return surf.IsInside();
+			return false;
 		}
 
 		// Détecte si l'objet est dans un rectangle.
-		public override bool Detect(Drawing.Rectangle rect)
+		public override bool Detect(Drawing.Rectangle rect, bool all)
 		{
 			Drawing.Rectangle fullBbox = this.BoundingBox;
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
 			fullBbox.Inflate(width, width);
 			return rect.Contains(fullBbox);
+		}
+
+
+		// Déplace une poignée.
+		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
+		{
+			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
+			{
+				base.MoveHandleProcess(rank, pos, iconContext);
+				return;
+			}
+
+			iconContext.ConstrainSnapPos(ref pos);
+
+			if ( rank < 2 )
+			{
+				this.Handle(rank).Position = pos;
+			}
+			else
+			{
+				double d1 = Drawing.Point.Distance(this.Handle(1).Position, this.Handle(0).Position);
+				double d2 = Drawing.Point.Distance(this.Handle(1).Position, pos);
+				this.PropertyRegular(3).Deep = d2/d1;
+			}
+			this.UpdateRegularHandle();
+			this.dirtyBbox = true;
+		}
+
+		// Indique si le déplacement d'une poignée doit se répercuter sur les propriétés.
+		public override bool IsMoveHandlePropertyChanged(int rank)
+		{
+			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
+			{
+				return base.IsMoveHandlePropertyChanged(rank);
+			}
+			return ( rank >= 2 );
 		}
 
 
@@ -116,6 +153,40 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		private void HandleRegularChanged(object sender)
+		{
+			this.UpdateRegularHandle();
+		}
+
+		// Met à jour la poignée pour la profondeur de l'étoile.
+		protected void UpdateRegularHandle()
+		{
+			if ( this.handles.Count < 2 )  return;
+			PropertyRegular reg = this.PropertyRegular(3);
+			if ( !reg.Star )  // polygone ?
+			{
+				if ( this.handles.Count > 2 )
+				{
+					this.HandleDelete(2);
+				}
+			}
+			else	// étoile ?
+			{
+				Drawing.Point pos = Drawing.Point.Scale(this.Handle(1).Position, this.Handle(0).Position, reg.Deep);
+
+				if ( this.handles.Count == 2 )
+				{
+					this.HandleAdd(pos, HandleType.Secondary);
+				}
+				else
+				{
+					this.Handle(2).Position = pos;
+				}
+				this.Handle(2).IsSelected = this.Handle(1).IsSelected;
+			}
+		}
+
+		
 		// Met à jour le rectangle englobant l'objet.
 		public override void UpdateBoundingBox()
 		{
@@ -128,21 +199,18 @@ namespace Epsitec.Common.Pictogram.Data
 		// Calcule une droite de l'objet.
 		protected bool ComputeLine(int i, out Drawing.Point a, out Drawing.Point b)
 		{
-			int total = (int)this.PropertyDouble(3).Value;
+			int total = this.PropertyRegular(3).NbFaces;
 			Drawing.Point center = this.Handle(0).Position;
 			Drawing.Point corner = this.Handle(1).Position;
 
 			a = new Drawing.Point(0, 0);
 			b = new Drawing.Point(0, 0);
 
-			if ( this.PropertyBool(4).Bool )  // étoile ?
+			if ( this.PropertyRegular(3).Star )  // étoile ?
 			{
 				if ( i >= total*2 )  return false;
 
-				Drawing.Point star = new Drawing.Point();
-				star.X = center.X + (corner.X-center.X)*(1-this.PropertyDouble(5).Value/100);
-				star.Y = center.Y + (corner.Y-center.Y)*(1-this.PropertyDouble(5).Value/100);
-
+				Drawing.Point star = center + (corner-center)*(1-this.PropertyRegular(3).Deep);
 				a = Drawing.Transform.RotatePoint(center, System.Math.PI*2*(i+0)/(total*2), (i%2==0) ? corner : star);
 				b = Drawing.Transform.RotatePoint(center, System.Math.PI*2*(i+1)/(total*2), (i%2==0) ? star : corner);
 				return true;
@@ -161,26 +229,16 @@ namespace Epsitec.Common.Pictogram.Data
 		protected Drawing.Path PathBuild()
 		{
 			Drawing.Path path = new Drawing.Path();
-			int total = (int)this.PropertyDouble(3).Value;
+			int total = this.PropertyRegular(3).NbFaces;
+			PropertyCorner corner = this.PropertyCorner(4);
 
-			Drawing.Point a;
-			Drawing.Point b;
-
-			if ( this.PropertyBool(4).Bool )  // étoile ?
+			if ( corner.CornerType == CornerType.Right )  // coins droits ?
 			{
-				for ( int i=0 ; i<total ; i++ )
-				{
-					this.ComputeLine(i*2, out a, out b);
-					if ( i == 0 )  path.MoveTo(a);
-					else           path.LineTo(a);
+				Drawing.Point a;
+				Drawing.Point b;
 
-					this.ComputeLine(i*2+1, out a, out b);
-					path.LineTo(a);
-				}
-				path.Close();
-			}
-			else	// polygone ?
-			{
+				if ( this.PropertyRegular(3).Star )  total *= 2;  // étoile ?
+
 				for ( int i=0 ; i<total ; i++ )
 				{
 					this.ComputeLine(i, out a, out b);
@@ -189,8 +247,38 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 				path.Close();
 			}
+			else	// coins quelconques ?
+			{
+				Drawing.Point p1;
+				Drawing.Point s;
+				Drawing.Point p2;
+
+				if ( this.PropertyRegular(3).Star )  total *= 2;  // étoile ?
+
+				for ( int i=0 ; i<total ; i++ )
+				{
+					int prev = i-1;  if ( prev < 0 )  prev = total-1;
+					this.ComputeLine(prev, out p1, out s);
+					this.ComputeLine(i, out s, out p2);
+					this.PathCorner(path, p1,s,p2, corner);
+				}
+				path.Close();
+			}
 
 			return path;
+		}
+
+		// Crée le chemin d'un coin.
+		protected void PathCorner(Drawing.Path path, Drawing.Point p1, Drawing.Point s, Drawing.Point p2, PropertyCorner corner)
+		{
+			double l1 = Drawing.Point.Distance(p1, s);
+			double l2 = Drawing.Point.Distance(p2, s);
+			double radius = System.Math.Min(corner.Radius, System.Math.Min(l1,l2)/2);
+			Drawing.Point c1 = Drawing.Point.Move(s, p1, radius);
+			Drawing.Point c2 = Drawing.Point.Move(s, p2, radius);
+			if ( path.IsEmpty )  path.MoveTo(c1);
+			else                 path.LineTo(c1);
+			corner.PathCorner(path, c1,s,c2, radius);
 		}
 
 		// Dessine l'objet.
@@ -198,7 +286,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			base.DrawGeometry(graphics, iconContext);
 
-			if ( this.TotalHandle != 2 )  return;
+			if ( this.TotalHandle < 2 )  return;
 
 			Drawing.Path path = this.PathBuild();
 			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBox);
@@ -208,8 +296,14 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
+				if ( this.PropertyGradient(2).IsVisible() )
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
+				}
+
 				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
-				graphics.RenderSolid(iconContext.HiliteColor);
+				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}
 	}

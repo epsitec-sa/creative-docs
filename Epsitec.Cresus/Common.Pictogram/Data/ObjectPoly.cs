@@ -28,6 +28,10 @@ namespace Epsitec.Common.Pictogram.Data
 			PropertyBool fillClose = new PropertyBool();
 			fillClose.Type = PropertyType.PolyClose;
 			this.AddProperty(fillClose);
+
+			PropertyCorner corner = new PropertyCorner();
+			corner.Type = PropertyType.Corner;
+			this.AddProperty(corner);
 		}
 
 		protected override AbstractObject CreateNewObject()
@@ -46,8 +50,19 @@ namespace Epsitec.Common.Pictogram.Data
 		// Détecte si la souris est sur l'objet.
 		public override bool Detect(Drawing.Point pos)
 		{
-			if ( this.DetectOutline(pos) != -1 )  return true;
-			if ( this.DetectFill(pos) )  return true;
+			Drawing.Rectangle bbox = this.BoundingBox;
+			if ( !bbox.Contains(pos) )  return false;
+
+			Drawing.Path path = this.PathBuild();
+
+			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
+			if ( base.DetectOutline(path, width, pos) )  return true;
+
+			if ( this.PropertyGradient(2).IsVisible() )
+			{
+				path.Close();
+				if ( base.DetectFill(path, pos) )  return true;
+			}
 			return false;
 		}
 
@@ -120,6 +135,29 @@ namespace Epsitec.Common.Pictogram.Data
 					item = new ContextMenuItem();
 					list.Add(item);  // séparateur
 
+					HandleConstrainType type = this.Handle(handleRank).ConstrainType;
+
+					item = new ContextMenuItem();
+					item.Command = "Object";
+					item.Name = "HandleSym";
+					item.IconActiveNo = @"file:images/activeno1.icon";
+					item.IconActiveYes = @"file:images/activeyes1.icon";
+					item.Active = ( type == HandleConstrainType.Symmetric );
+					item.Text = "Coin quelconque";
+					list.Add(item);
+
+					item = new ContextMenuItem();
+					item.Command = "Object";
+					item.Name = "HandleSimply";
+					item.IconActiveNo = @"file:images/activeno1.icon";
+					item.IconActiveYes = @"file:images/activeyes1.icon";
+					item.Active = ( type == HandleConstrainType.Simply );
+					item.Text = "Coin toujours droit";
+					list.Add(item);
+
+					item = new ContextMenuItem();
+					list.Add(item);  // séparateur
+
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "HandleDelete";
@@ -152,6 +190,16 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( cmd == "HandleDelete" )
 			{
 				this.HandleDelete(handleRank);
+			}
+
+			if ( cmd == "HandleSym" )
+			{
+				this.Handle(handleRank).ConstrainType = HandleConstrainType.Symmetric;
+			}
+
+			if ( cmd == "HandleSimply" )
+			{
+				this.Handle(handleRank).ConstrainType = HandleConstrainType.Simply;
 			}
 		}
 
@@ -307,18 +355,62 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			Drawing.Path path = new Drawing.Path();
 
-			int total = this.TotalHandle;
-			for ( int i=0 ; i<total ; i++ )
+			PropertyCorner corner = this.PropertyCorner(4);
+			if ( corner.CornerType == CornerType.Right )
 			{
-				if ( i == 0 )  path.MoveTo(this.Handle(i).Position);
-				else           path.LineTo(this.Handle(i).Position);
+				int total = this.TotalHandle;
+				for ( int i=0 ; i<total ; i++ )
+				{
+					if ( i == 0 )  path.MoveTo(this.Handle(i).Position);
+					else           path.LineTo(this.Handle(i).Position);
+				}
+				if ( this.PropertyBool(3).Bool && total > 2 )
+				{
+					path.LineTo(this.Handle(0).Position);
+					path.Close();
+				}
 			}
-			if ( this.PropertyBool(3).Bool && total > 2 )
+			else
 			{
-				path.LineTo(this.Handle(0).Position);
-				path.Close();
+				int total = this.TotalHandle;
+				for ( int i=0 ; i<total ; i++ )
+				{
+					int prev = i-1;  if ( prev < 0 )  prev = total-1;
+					int next = i+1;  if ( next >= total )  next = 0;
+					Drawing.Point p1 = this.Handle(prev).Position;
+					Drawing.Point s  = this.Handle(i).Position;
+					Drawing.Point p2 = this.Handle(next).Position;
+					bool simply = ( this.Handle(i).ConstrainType == HandleConstrainType.Simply );
+					this.PathCorner(path, p1,s,p2, corner, simply);
+				}
+				if ( this.PropertyBool(3).Bool && total > 2 )
+				{
+					path.Close();
+				}
 			}
+
 			return path;
+		}
+
+		// Crée le chemin d'un coin.
+		protected void PathCorner(Drawing.Path path, Drawing.Point p1, Drawing.Point s, Drawing.Point p2, PropertyCorner corner, bool simply)
+		{
+			if ( simply )
+			{
+				if ( path.IsEmpty )  path.MoveTo(s);
+				else                 path.LineTo(s);
+			}
+			else
+			{
+				double l1 = Drawing.Point.Distance(p1, s);
+				double l2 = Drawing.Point.Distance(p2, s);
+				double radius = System.Math.Min(corner.Radius, System.Math.Min(l1,l2)/2);
+				Drawing.Point c1 = Drawing.Point.Move(s, p1, radius);
+				Drawing.Point c2 = Drawing.Point.Move(s, p2, radius);
+				if ( path.IsEmpty )  path.MoveTo(c1);
+				else                 path.LineTo(c1);
+				corner.PathCorner(path, c1,s,c2, radius);
+			}
 		}
 
 		// Dessine l'objet.
@@ -336,8 +428,14 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
+				if ( this.PropertyGradient(2).IsVisible() )
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
+				}
+
 				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
-				graphics.RenderSolid(iconContext.HiliteColor);
+				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 
 			if ( this.tempLine != null )

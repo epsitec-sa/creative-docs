@@ -68,12 +68,19 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Détecte si l'objet est dans un rectangle.
-		public override bool Detect(Drawing.Rectangle rect)
+		public override bool Detect(Drawing.Rectangle rect, bool all)
 		{
-			Drawing.Rectangle fullBbox = this.BoundingBox;
-			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
-			fullBbox.Inflate(width, width);
-			return rect.Contains(fullBbox);
+			if ( all )
+			{
+				Drawing.Rectangle fullBbox = this.BoundingBox;
+				double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
+				fullBbox.Inflate(width, width);
+				return rect.Contains(fullBbox);
+			}
+			else
+			{
+				return base.Detect(rect, all);
+			}
 		}
 
 
@@ -114,17 +121,22 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Déplace tout l'objet.
-		public override void MoveAll(Drawing.Point move)
+		public override void MoveAll(Drawing.Point move, bool all)
 		{
-			this.Handle(0).Position += move;
-			this.Handle(1).Position += move;
-
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
+
+			if ( all || this.Handle(0).IsSelected || this.Handle(2).IsSelected )  p1.X += move.X;
+			if ( all || this.Handle(0).IsSelected || this.Handle(3).IsSelected )  p1.Y += move.Y;
+			if ( all || this.Handle(1).IsSelected || this.Handle(3).IsSelected )  p2.X += move.X;
+			if ( all || this.Handle(1).IsSelected || this.Handle(2).IsSelected )  p2.Y += move.Y;
+
+			this.Handle(0).Position = p1;
+			this.Handle(1).Position = p2;
 			this.Handle(2).Position = new Drawing.Point(p1.X, p2.Y);
 			this.Handle(3).Position = new Drawing.Point(p2.X, p1.Y);
 
-			this.bbox.Offset(move);
+			this.dirtyBbox = true;
 		}
 
 		
@@ -267,8 +279,14 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
+				if ( this.PropertyGradient(2).IsVisible() )
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
+				}
+
 				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
-				graphics.RenderSolid(iconContext.HiliteColor);
+				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}
 	}

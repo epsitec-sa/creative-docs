@@ -1,3 +1,4 @@
+using Epsitec.Common.Widgets;
 using System.Xml.Serialization;
 using System.IO;
 
@@ -157,6 +158,8 @@ namespace Epsitec.Common.Pictogram.Data
 
 		public void RemoveAt(int index)
 		{
+			AbstractObject obj = this.CurrentGroup[index] as AbstractObject;
+			if ( obj != null )  obj.Dispose();
 			this.CurrentGroup.RemoveAt(index);
 		}
 
@@ -519,25 +522,58 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Sélectionne tous les objets dans le rectangle.
-		public void Select(Drawing.Rectangle rect, bool add)
+		// all = true  -> toutes les poignées doivent être dans le rectangle
+		// all = false -> une seule poignée doit être dans le rectangle
+		public void Select(Drawing.Rectangle rect, bool add, bool all)
 		{
-			this.Select(this.CurrentGroup, rect, add);
+			this.Select(this.CurrentGroup, rect, add, all);
 		}
 
-		protected void Select(System.Collections.ArrayList objects, Drawing.Rectangle rect, bool add)
+		protected void Select(System.Collections.ArrayList objects, Drawing.Rectangle rect, bool add, bool all)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
 				AbstractObject obj = objects[index] as AbstractObject;
-				if ( obj.Detect(rect) )
+				if ( all )
 				{
-					obj.Select();
+					if ( obj.Detect(rect, all) )
+					{
+						obj.Select();
+					}
+					else
+					{
+						if ( !add )  obj.Deselect();
+					}
 				}
 				else
 				{
-					if ( !add )  obj.Deselect();
+					if ( obj.Detect(rect, all) )
+					{
+						obj.Select(rect);
+					}
+					else
+					{
+						obj.Deselect();
+					}
 				}
+			}
+		}
+
+
+		// Indique que tous les objets sélectionnés le sont globalement.
+		public void GlobalSelect()
+		{
+			this.GlobalSelect(this.CurrentGroup);
+		}
+
+		protected void GlobalSelect(System.Collections.ArrayList objects)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				obj.GlobalSelect();
 			}
 		}
 
@@ -613,7 +649,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 				AbstractObject newObject = null;
 				if ( !obj.DuplicateObject(ref newObject) )  continue;
-				newObject.MoveAll(move);
+				newObject.MoveAll(move, all);
 				dst.Add(newObject);
 
 				obj.Deselect();
@@ -751,7 +787,7 @@ namespace Epsitec.Common.Pictogram.Data
 						foreach ( AbstractObject inside in obj.Objects )
 						{
 							inside.Select();
-							inside.MoveAll(origin);
+							inside.MoveAll(origin, true);
 							objects.Insert(rank++, inside);
 						}
 						objects.RemoveAt(index);
@@ -778,12 +814,36 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( !all && !obj.IsSelected() )  continue;
 
 				bbox.MergeWith(obj.BoundingBox);
-				obj.MoveAll(move);
+				obj.MoveAll(move, all);
 				bbox.MergeWith(obj.BoundingBox);
 
 				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
 					this.MoveSelection(obj.Objects, move, ref bbox, true);
+				}
+			}
+		}
+
+
+		// Déplace globalement tous les objets sélectionnés.
+		public void MoveSelection(GlobalModifier modifier)
+		{
+			this.MoveSelection(this.CurrentGroup, modifier, false);
+		}
+
+		protected void MoveSelection(System.Collections.ArrayList objects, GlobalModifier modifier, bool all)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				if ( !all && !obj.IsSelected() )  continue;
+
+				obj.MoveGlobal(modifier);
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					this.MoveSelection(obj.Objects, modifier, true);
 				}
 			}
 		}
@@ -886,6 +946,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			if ( this.roots.Count == 0 )  return;
 			this.Select(null, false);
+			this.UpdateEditProperties();
 			AbstractObject obj = this.roots[this.roots.Count-1] as AbstractObject;
 			this.roots.RemoveAt(this.roots.Count-1);
 			this.Select(obj, false);

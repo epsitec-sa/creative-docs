@@ -134,12 +134,22 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Couleur lorsqu'un objet est survolé par la souris.
-		public Drawing.Color HiliteColor
+		public Drawing.Color HiliteOutlineColor
 		{
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
 				return Drawing.Color.FromColor(adorner.ColorCaption, 0.8);
+			}
+		}
+
+		// Couleur lorsqu'un objet est survolé par la souris.
+		public Drawing.Color HiliteSurfaceColor
+		{
+			get
+			{
+				IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
+				return Drawing.Color.FromColor(adorner.ColorCaption, 0.4);
 			}
 		}
 

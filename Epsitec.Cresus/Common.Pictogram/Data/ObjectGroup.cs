@@ -173,7 +173,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				path = this.PathRectangle(rect);
 				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(Drawing.Color.FromColor(iconContext.HiliteColor, 0.3));
+				graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 			}
 		}
 

@@ -110,7 +110,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
 				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
-				graphics.RenderSolid(iconContext.HiliteColor);
+				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}
 	}

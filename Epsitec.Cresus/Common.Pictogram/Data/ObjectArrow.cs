@@ -93,12 +93,12 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Déplace tout l'objet.
-		public override void MoveAll(Drawing.Point move)
+		public override void MoveAll(Drawing.Point move, bool all)
 		{
-			this.Handle(0).Position += move;
-			this.Handle(1).Position += move;
+			if ( all || this.Handle(0).IsSelected )  this.Handle(0).Position += move;
+			if ( all || this.Handle(1).IsSelected )  this.Handle(1).Position += move;
 			this.Handle(2).Position = this.ComputeExtremity(0);
-			this.bbox.Offset(move);
+			this.dirtyBbox = true;
 		}
 
 		
@@ -206,7 +206,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
 				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
-				graphics.RenderSolid(iconContext.HiliteColor);
+				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}
 

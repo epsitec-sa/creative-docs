@@ -110,12 +110,60 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Détecte si l'objet est dans un rectangle.
-		public override bool Detect(Drawing.Rectangle rect)
+		public override bool Detect(Drawing.Rectangle rect, bool all)
 		{
-			Drawing.Rectangle fullBbox = this.BoundingBox;
-			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
-			fullBbox.Inflate(width, width);
-			return rect.Contains(fullBbox);
+			if ( all )
+			{
+				Drawing.Rectangle fullBbox = this.BoundingBox;
+				double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
+				fullBbox.Inflate(width, width);
+				return rect.Contains(fullBbox);
+			}
+			else
+			{
+				return base.Detect(rect, all);
+			}
+		}
+
+		// Déplace tout l'objet.
+		public override void MoveAll(Drawing.Point move, bool all)
+		{
+			int total = this.TotalHandle;
+			for ( int i=0 ; i<total ; i+=3 )
+			{
+				if ( all || this.Handle(i+1).IsSelected )
+				{
+					this.Handle(i+0).Position += move;
+					this.Handle(i+1).Position += move;
+					this.Handle(i+2).Position += move;
+				}
+			}
+
+			this.dirtyBbox = true;
+		}
+
+		// Sélectionne toutes les poignées de l'objet dans un rectangle.
+		public override void Select(Drawing.Rectangle rect)
+		{
+			int total = this.TotalHandleProperties;
+			int sel = 0;
+			for ( int i=0 ; i<total ; i+=3 )
+			{
+				if ( rect.Contains(this.Handle(i+1).Position) )
+				{
+					this.Handle(i+0).IsSelected = true;
+					this.Handle(i+1).IsSelected = true;
+					this.Handle(i+2).IsSelected = true;
+					sel += 3;
+				}
+				else
+				{
+					this.Handle(i+0).IsSelected = false;
+					this.Handle(i+1).IsSelected = false;
+					this.Handle(i+2).IsSelected = false;
+				}
+			}
+			this.selected = ( sel > 0 );
 		}
 
 
@@ -743,8 +791,6 @@ namespace Epsitec.Common.Pictogram.Data
 			int total = this.TotalHandle;
 			if ( total < 3 )  return;
 
-			bool isSelected = this.IsSelected();
-
 			Drawing.Path path = this.PathBuild();
 			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBox);
 
@@ -753,11 +799,17 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
+				if ( this.PropertyGradient(2).IsVisible() )
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
+				}
+
 				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
-				graphics.RenderSolid(iconContext.HiliteColor);
+				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 
-			if ( isSelected && iconContext.IsEditable )
+			if ( this.IsSelected() && iconContext.IsEditable && !this.IsGlobalSelected() )
 			{
 				double initialWidth = graphics.LineWidth;
 				graphics.LineWidth = 1.0/iconContext.ScaleX;

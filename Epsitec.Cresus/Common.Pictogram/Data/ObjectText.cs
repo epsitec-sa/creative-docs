@@ -158,7 +158,7 @@ namespace Epsitec.Common.Pictogram.Data
 				path.LineTo(p2);
 
 				graphics.Rasterizer.AddOutline(path, this.lineWidth/this.scaleX);
-				graphics.RenderSolid(iconContext.HiliteColor);
+				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}
 

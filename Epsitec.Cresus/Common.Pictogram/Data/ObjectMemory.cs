@@ -30,7 +30,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			PropertyGradient fillGradient = new PropertyGradient();
 			fillGradient.Type = PropertyType.FillGradient;
-			fillGradient.Text = "Couleur interieure";
+			fillGradient.Text = "Couleur intérieure";
 			fillGradient.BackgroundIntensity = 0.95;
 			fillGradient.Fill   = GradientFill.None;
 			fillGradient.Color1 = Drawing.Color.FromBrightness(1.0);
@@ -59,47 +59,29 @@ namespace Epsitec.Common.Pictogram.Data
 
 			PropertyBool fillClose = new PropertyBool();
 			fillClose.Type = PropertyType.PolyClose;
-			fillClose.Text = "Contour ferme";
+			fillClose.Text = "Contour fermé";
 			fillClose.BackgroundIntensity = 0.90;
 			fillClose.Bool = false;
 			this.AddProperty(fillClose);
 
-			PropertyDouble roundRect = new PropertyDouble();
-			roundRect.Type = PropertyType.RoundRect;
-			roundRect.Text = "Rayon des coins";
-			roundRect.BackgroundIntensity = 0.90;
-			roundRect.Value = 0;
-			roundRect.MinRange = 0;
-			roundRect.MaxRange = 10;
-			roundRect.Step = 1;
-			this.AddProperty(roundRect);
+			PropertyCorner corner = new PropertyCorner();
+			corner.Type = PropertyType.Corner;
+			corner.Text = "Coins";
+			corner.BackgroundIntensity = 0.90;
+			corner.CornerType = CornerType.Right;
+			corner.Radius = 2.0;
+			corner.Effect1 = 0.5;
+			corner.Effect2 = 0.5;
+			this.AddProperty(corner);
 
-			PropertyDouble regularFaces = new PropertyDouble();
-			regularFaces.Type = PropertyType.RegularFaces;
-			regularFaces.Text = "Nombre de cotes";
-			regularFaces.BackgroundIntensity = 0.90;
-			regularFaces.Value = 6;
-			regularFaces.MinRange = 3;
-			regularFaces.MaxRange = 24;
-			regularFaces.Step = 1;
-			this.AddProperty(regularFaces);
-
-			PropertyBool regularStar = new PropertyBool();
-			regularStar.Type = PropertyType.RegularStar;
-			regularStar.Text = "Etoile";
-			regularStar.BackgroundIntensity = 0.90;
-			regularStar.Bool = false;
-			this.AddProperty(regularStar);
-
-			PropertyDouble regularShape = new PropertyDouble();
-			regularShape.Type = PropertyType.RegularShape;
-			regularShape.Text = "Renfoncement";
-			regularShape.BackgroundIntensity = 0.90;
-			regularShape.Value = 50;
-			regularShape.MinRange = 0;
-			regularShape.MaxRange = 100;
-			regularShape.Step = 5;
-			this.AddProperty(regularShape);
+			PropertyRegular regular = new PropertyRegular();
+			regular.Type = PropertyType.Regular;
+			regular.Text = "Nombre de côtés";
+			regular.BackgroundIntensity = 0.90;
+			regular.NbFaces = 6;
+			regular.Star = false;
+			regular.Deep = 0.5;
+			this.AddProperty(regular);
 
 			PropertyString textString = new PropertyString();
 			textString.Type = PropertyType.TextString;
