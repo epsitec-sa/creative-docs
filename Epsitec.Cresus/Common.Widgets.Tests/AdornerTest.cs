@@ -446,8 +446,8 @@ namespace Epsitec.Common.Widgets
 			
 			tud.Value        =   5.00M;
 			tud.DefaultValue =   0.00M;
-			tud.MinValue     = -10.00M;
-			tud.MaxValue     =  10.00M;
+			tud.MinValue     =  10.00M;
+			tud.MaxValue     = 100.00M;
 			tud.Step         =   2.50M;
 			tud.Resolution   =   0.25M;
 			

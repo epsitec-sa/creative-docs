@@ -60,6 +60,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				if ( this.Value == value )
+				{
+					return;
+				}
+				
 				value = this.range.Constrain (value);
 				
 				if ( this.Text == "" || this.Value != value )
@@ -111,8 +116,11 @@ namespace Epsitec.Common.Widgets
 				if ( this.range.Resolution != value )
 				{
 					this.range.Resolution = value;
-					this.Text = this.range.Constrain(this.Value).ToString();
-					this.SelectAll();
+					if ( this.Text != "" )
+					{
+						this.Text = this.range.Constrain(this.Value).ToString();
+						this.SelectAll();
+					}
 				}
 			}
 		}
