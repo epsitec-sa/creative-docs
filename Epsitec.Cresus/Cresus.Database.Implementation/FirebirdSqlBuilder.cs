@@ -1,6 +1,6 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier
-//	DD 27/11/2003	Ajouté la construction de la chaîne pour SqlFunction / SqlField en utilisant les paramètres
+//	DD 15/04/2004
 
 using FirebirdSql.Data.Firebird;
 
@@ -129,10 +129,6 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			this.buffer.Append (c);
 		}
-
-		//	TODO?	l'appel Append pourrait retourner le type de résultat fourni
-		//			void / nombre / chaîne / tableau d'une colonne, tableau de plusieurs colonnes
-		//			ce qui permettrait de controler le compatibilités entre les opérandes
 
 		protected void Append(SqlField field)
 		{
