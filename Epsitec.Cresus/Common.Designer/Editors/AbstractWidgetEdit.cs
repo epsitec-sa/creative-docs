@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer.Editors
 	/// <summary>
 	/// La classe AbstractWidgetEdit...
 	/// </summary>
-	public abstract class AbstractWidgetEdit
+	public abstract class AbstractWidgetEdit : Support.ICommandDispatcherHost
 	{
 		public AbstractWidgetEdit()
 		{
@@ -68,15 +68,45 @@ namespace Epsitec.Common.Designer.Editors
 		}
 		
 		
-		public void SetTabIndexEdition(bool enable)
+		#region ICommandDispatcherHost Members
+		public Support.CommandDispatcher		CommandDispatcher
+		{
+			get
+			{
+				return this.dispatcher;
+			}
+			set
+			{
+				if (this.dispatcher != value)
+				{
+					this.dispatcher = value;
+					this.OnCommandDispatcherChanged ();
+				}
+			}
+		}
+		#endregion
+		
+		
+		public void SetTabIndexEdition(bool enable, int index)
 		{
 			if (enable)
 			{
-				this.tab_o_overlay.RootWidget = this.panel;
+				this.tab_o_overlay.RootWidget     = this.panel;
+				this.tab_o_overlay.IsSetterActive = true;
+				this.tab_o_overlay.SetNextIndex (index);
 			}
 			else
 			{
-				this.tab_o_overlay.RootWidget = null;
+				this.tab_o_overlay.RootWidget     = null;
+				this.tab_o_overlay.IsSetterActive = false;
+			}
+		}
+		
+		public void SetTabIndexPicker(bool enable)
+		{
+			if (this.tab_o_overlay != null)
+			{
+				this.tab_o_overlay.IsPickerActive = enable;
 			}
 		}
 		
@@ -249,9 +279,21 @@ namespace Epsitec.Common.Designer.Editors
 		}
 		
 		
+		protected virtual void OnCommandDispatcherChanged()
+		{
+			if (this.tab_o_overlay != null)
+			{
+				this.tab_o_overlay.CommandDispatcher = this.CommandDispatcher;
+			}
+		}
+		
+		
 		public event SelectionEventHandler		Selected;
 		public event SelectionEventHandler		Deselecting;
 		public event SelectionEventHandler		Deselected;
+		
+		
+		protected Support.CommandDispatcher		dispatcher;
 		
 		protected Panel							panel;
 		protected Widget						hot_widget;

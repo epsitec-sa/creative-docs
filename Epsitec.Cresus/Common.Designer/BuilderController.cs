@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer
 	/// La classe BuilderController implémente la logique de l'application de design des
 	/// interfaces graphiques.
 	/// </summary>
-	public class BuilderController
+	public class BuilderController : Support.ICommandDispatcherHost
 	{
 		public BuilderController(Support.CommandDispatcher base_dispatcher)
 		{
@@ -39,6 +39,9 @@ namespace Epsitec.Common.Designer
 			//	Définit l'état initial des commandes :
 			
 			this.StateDeleteActiveSelection.Enabled = false;
+			this.StateSetTabIndexEdition.Enabled = false;
+			
+			this.UpdateTabIndexIcons ();
 			
 			this.is_initialised = true;
 		}
@@ -46,7 +49,17 @@ namespace Epsitec.Common.Designer
 		
 		public Support.CommandDispatcher		CommandDispatcher
 		{
-			get { return this.dispatcher; }
+			get
+			{
+				return this.dispatcher;
+			}
+			set
+			{
+				if (this.dispatcher != value)
+				{
+					throw new System.InvalidOperationException ("CommandDispatcher may not be changed.");
+				}
+			}
 		}
 		
 		public Window							CreationWindow
@@ -57,6 +70,23 @@ namespace Epsitec.Common.Designer
 		public Window							AttributeWindow
 		{
 			get { return this.attribute_window; }
+		}
+		
+		
+		public Editors.AbstractWidgetEdit[]		Editors
+		{
+			get
+			{
+				Editors.AbstractWidgetEdit[] editors = new Editors.AbstractWidgetEdit[this.edit_window_list.Count];
+				int i = 0;
+				
+				foreach (Window window in this.edit_window_list)
+				{
+					editors[i++] = this.FindEditor (window);
+				}
+				
+				return editors;
+			}
 		}
 		
 		
@@ -73,6 +103,14 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return CommandState.Find ("SetTabIndexEdition", this.dispatcher);
+			}
+		}
+		
+		public CommandState						StateSetTabIndexPicker
+		{
+			get
+			{
+				return CommandState.Find ("SetTabIndexPicker", this.dispatcher);
 			}
 		}
 		
@@ -99,6 +137,7 @@ namespace Epsitec.Common.Designer
 			
 			this.widget_palette = new Panels.WidgetSourcePalette ();
 			this.tool_bar       = new HToolBar ();
+			this.tool_tab_index = new TextFieldUpDown ();
 			
 			double dx = this.widget_palette.Size.Width;
 			double dy = this.widget_palette.Size.Height;
@@ -123,15 +162,29 @@ namespace Epsitec.Common.Designer
 			
 			//	Initialisation de la barre d'outils pour l'édition :
 			
+			this.tool_tab_index.Name       = "TabIndex";
+			this.tool_tab_index.Value      = 1;
+			this.tool_tab_index.MinValue   = 1;
+			this.tool_tab_index.MaxValue   = 9999;
+			this.tool_tab_index.Width      = 40;
+			this.tool_tab_index.DockSpacer = new Drawing.Margins (2, 0, 0, 0);
+			this.tool_tab_index.SetVisible (false);
+			
 			this.tool_bar.Items.Add (IconButton.CreateSimple ("CreateNewWindow", "file:images/new.icon"));
 			this.tool_bar.Items.Add (new IconSeparator ());
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("DeleteActiveSelection", "file:images/delete.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateToggle ("SetTabIndexEdition(this.IsActive)",	"file:images/numtabindex.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("StartTabIndexAtIndex(1)",			"file:images/numone.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateToggle ("SetTabIndexPicker(this.IsActive)",	"file:images/numpicker.icon"));
+			this.tool_bar.Items.Add (this.tool_tab_index);
 			this.tool_bar.Items.Add (new IconSeparator ());
-			this.tool_bar.Items.Add (IconButton.CreateToggle ("SetTabIndexEdition(this.IsActive)", "file:images/edit.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("DeleteActiveSelection", "file:images/delete.icon"));
 			
 			this.tool_bar.Size   = new Drawing.Size (dx, this.tool_bar.DefaultHeight);
 			this.tool_bar.Parent = root;
 			this.tool_bar.Dock   = DockStyle.Top;
+			
+			this.tool_tab_index.AutoFocus = true;
+			this.tool_tab_index.ValueChanged += new EventHandler (this.HandleToolTabIndexValueChanged);
 		}
 		
 		protected void CreateAttributeWindow()
@@ -263,6 +316,14 @@ namespace Epsitec.Common.Designer
 			this.SetActiveEditor (editor);
 			this.UpdateActiveWidget ();
 		}
+
+		private void HandleToolTabIndexValueChanged(object sender)
+		{
+			if (this.active_editor != null)
+			{
+				this.dispatcher.Dispatch (string.Format ("StartTabIndexAtIndex({0})", this.tool_tab_index.Value), this.tool_tab_index);
+			}
+		}
 		
 		
 		protected void UpdateSelectionState()
@@ -309,6 +370,19 @@ namespace Epsitec.Common.Designer
 			this.SetActiveWidget (widget);
 		}
 		
+		protected void UpdateTabIndexIcons()
+		{
+			bool enable = this.StateSetTabIndexEdition.ActiveState == WidgetState.ActiveYes;
+			
+			this.tool_bar.FindChild ("StartTabIndexAtIndex").SetVisible (enable);
+			this.tool_bar.FindChild ("SetTabIndexPicker").SetVisible (enable);
+			this.tool_bar.FindChild ("TabIndex").SetVisible (enable);
+			
+			this.tool_tab_index.Value = this.tool_tab_index_value;
+		}
+		
+		
+		
 		protected void SetActiveEditor(Editors.AbstractWidgetEdit editor)
 		{
 			//	Change d'éditeur actif. Si on change d'éditeur, on s'assure qu'aucune
@@ -327,6 +401,19 @@ namespace Epsitec.Common.Designer
 						editor.SelectedWidgets.Clear ();
 					}
 				}
+				
+				if (this.active_editor != null)
+				{
+					this.active_editor.CommandDispatcher = this.CommandDispatcher;
+					this.StateSetTabIndexEdition.Enabled = true;
+					
+					this.active_editor.SetTabIndexEdition (this.tool_tab_editor_active, this.tool_tab_index_value);
+					this.active_editor.SetTabIndexPicker (this.tool_tab_picker_active);
+				}
+				else
+				{
+					this.StateSetTabIndexEdition.Enabled = false;
+				}
 			}
 		}
 		
@@ -341,6 +428,44 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		protected void SetTabIndexEdition(bool enable)
+		{
+			if (this.tool_tab_editor_active != enable)
+			{
+				this.StateSetTabIndexEdition.ActiveState = enable ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.tool_tab_editor_active = enable;
+				
+				this.SetTabIndexEditors ();
+				this.SetTabIndexPicker (false);
+				this.UpdateTabIndexIcons ();
+			}
+		}
+		
+		protected void SetTabIndexEditors()
+		{
+			Editors.AbstractWidgetEdit[] editors = this.Editors;
+			
+			for (int i = 0; i < editors.Length; i++)
+			{
+				editors[i].SetTabIndexEdition (this.tool_tab_editor_active, this.tool_tab_index_value);
+			}
+		}
+		
+		protected void SetTabIndexPicker(bool enable)
+		{
+			if (this.tool_tab_picker_active != enable)
+			{
+				this.StateSetTabIndexPicker.ActiveState = enable ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.tool_tab_picker_active = enable;
+				
+				Editors.AbstractWidgetEdit[] editors = this.Editors;
+				
+				for (int i = 0; i < editors.Length; i++)
+				{
+					editors[i].SetTabIndexPicker (enable);
+				}
+			}
+		}
 		
 		
 		[Command ("CreateNewWindow")]			void CommandCreateNewWindow()
@@ -397,10 +522,35 @@ namespace Epsitec.Common.Designer
 		
 		[Command ("SetTabIndexEdition")]		void CommandSetTabIndexEdition(CommandDispatcher d, CommandEventArgs e)
 		{
-			bool enable = System.Boolean.Parse (e.CommandArgs[0]);
-			this.StateSetTabIndexEdition.ActiveState = enable ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.active_editor.SetTabIndexEdition (enable);
+			System.Diagnostics.Debug.Assert (this.active_editor != null);
+			
+			bool enable;
+			Converters.Converter.Convert (e.CommandArgs[0], out enable);
+			
+			this.SetTabIndexEdition (enable);
 		}
+		
+		[Command ("StartTabIndexAtIndex")]		void CommandStartTabIndexAtIndex(CommandDispatcher d, CommandEventArgs e)
+		{
+			Converters.Converter.Convert (e.CommandArgs[0], out this.tool_tab_index_value);
+			
+			this.SetTabIndexPicker (false);
+			this.UpdateTabIndexIcons ();
+			this.SetTabIndexEditors ();
+		}
+		
+		[Command ("SetTabIndexPicker")]			void CommandSetTabIndexPicker(CommandDispatcher d, CommandEventArgs e)
+		{
+			System.Diagnostics.Debug.Assert (this.active_editor != null);
+			
+			bool enable;
+			Converters.Converter.Convert (e.CommandArgs[0], out enable);
+			
+			this.active_editor.SelectedWidgets.Clear ();
+			this.SetTabIndexPicker (enable);
+			this.SetTabIndexEditors ();
+		}
+		
 		
 		
 		
@@ -410,6 +560,10 @@ namespace Epsitec.Common.Designer
 		protected Panels.WidgetSourcePalette	widget_palette;
 		protected Panels.WidgetAttributePalette	attribute_palette;
 		protected AbstractToolBar				tool_bar;
+		protected TextFieldUpDown				tool_tab_index;
+		protected int							tool_tab_index_value = 1;
+		protected bool							tool_tab_editor_active;
+		protected bool							tool_tab_picker_active;
 		
 		protected Window						creation_window;
 		protected Window						attribute_window;

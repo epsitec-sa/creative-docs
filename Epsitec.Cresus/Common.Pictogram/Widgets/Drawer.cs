@@ -321,11 +321,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				image = Support.ImageProvider.Default.GetImage(name);
 			}
-			double ox = image.Origin.X/image.Size.Width*24.0;
-			double oy = (1.0-image.Origin.Y/image.Size.Height)*24.0;
-			int ix = (int)System.Math.Floor(ox+0.5);
-			int iy = (int)System.Math.Floor(oy+0.5)-1;
-			this.MouseCursor = MouseCursor.FromImage(image, ix, iy);
+			
+			this.MouseCursor = MouseCursor.FromImage(image);
 		}
 
 
