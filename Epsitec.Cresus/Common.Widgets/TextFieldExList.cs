@@ -392,6 +392,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnTextChanged ();
 			this.UpdateButtonEnable ();
+			this.UpdateButtonVisibility ();
 		}
 		
 		
