@@ -7,14 +7,14 @@ namespace Epsitec.Cresus.Database
 	{
 		[Test] public void CheckBuildCompositeName()
 		{
-			Assertion.AssertEquals ("", DbTools.BuildCompositeName ());
-			Assertion.AssertEquals ("", DbTools.BuildCompositeName (""));
-			Assertion.AssertEquals ("a", DbTools.BuildCompositeName ("a"));
-			Assertion.AssertEquals ("a_b", DbTools.BuildCompositeName ("a", "b"));
-			Assertion.AssertEquals ("a_b_c", DbTools.BuildCompositeName ("a", "b", "c"));
-			Assertion.AssertEquals ("a__c", DbTools.BuildCompositeName ("a", "", "c"));
-			Assertion.AssertEquals ("a_b", DbTools.BuildCompositeName ("a", "b", ""));
-			Assertion.AssertEquals ("a", DbTools.BuildCompositeName ("a", "", ""));
+			Assert.AreEqual ("", DbTools.BuildCompositeName ());
+			Assert.AreEqual ("", DbTools.BuildCompositeName (""));
+			Assert.AreEqual ("a", DbTools.BuildCompositeName ("a"));
+			Assert.AreEqual ("a_b", DbTools.BuildCompositeName ("a", "b"));
+			Assert.AreEqual ("a_b_c", DbTools.BuildCompositeName ("a", "b", "c"));
+			Assert.AreEqual ("a__c", DbTools.BuildCompositeName ("a", "", "c"));
+			Assert.AreEqual ("a_b", DbTools.BuildCompositeName ("a", "b", ""));
+			Assert.AreEqual ("a", DbTools.BuildCompositeName ("a", "", ""));
 		}
 	}
 }
