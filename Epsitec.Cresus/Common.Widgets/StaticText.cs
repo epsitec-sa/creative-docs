@@ -11,11 +11,11 @@ namespace Epsitec.Common.Widgets
 			this.paintTextStyle = PaintTextStyle.StaticText;
 		}
 		
-		public StaticText(Widget embedder) : this()
+		public StaticText(Widget embedder) : this ()
 		{
 			this.SetEmbedder(embedder);
 		}
-		public StaticText(string text) : this()
+		public StaticText(string text) : this ()
 		{
 			this.Text = text;
 		}
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Widgets
 			// Retourne les dimensions minimales pour représenter le texte.
 			get
 			{
-				return this.TextLayout.SingleLineSize;
+				return this.MapClientToParent (this.TextLayout.SingleLineSize);
 			}
 		}
 		
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public PaintTextStyle PaintTextStyle
+		public PaintTextStyle						PaintTextStyle
 		{
 			get { return this.paintTextStyle; }
 			set { this.paintTextStyle = value; }
@@ -90,6 +90,42 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected PaintTextStyle		paintTextStyle;
+		protected PaintTextStyle					paintTextStyle;
+	}
+	
+	public class StaticTextSmall : StaticText
+	{
+		public StaticTextSmall()
+		{
+			this.Client.SetZoom (0.9);
+		}
+		
+		public StaticTextSmall(Widget embedder) : this ()
+		{
+			this.SetEmbedder (this);
+		}
+		
+		public StaticTextSmall(string text) : this ()
+		{
+			this.Text = text;
+		}
+	}
+	
+	public class StaticTextLarge : StaticText
+	{
+		public StaticTextLarge()
+		{
+			this.Client.SetZoom (1.25);
+		}
+		
+		public StaticTextLarge(Widget embedder) : this ()
+		{
+			this.SetEmbedder (this);
+		}
+		
+		public StaticTextLarge(string text) : this ()
+		{
+			this.Text = text;
+		}
 	}
 }
