@@ -1,12 +1,14 @@
 namespace Epsitec.Common.Widgets
 {
+	using BundleAttribute = Support.BundleAttribute;
+
 	public enum MenuItemType
 	{
 		Deselect,					// case désélectionnée
 		Select,						// case sélectionnée
 		Parent,						// case sélectionnée comme parent
 	}
-
+	
 	/// <summary>
 	/// La classe MenuItem représente une case dans un menu.
 	/// </summary>
@@ -26,12 +28,11 @@ namespace Epsitec.Common.Widgets
 			this.icon          = new TextLayout();
 			this.iconActiveNo  = new TextLayout();
 			this.iconActiveYes = new TextLayout();
-			this.mainText      = new TextLayout();
 			this.shortKey      = new TextLayout();
 			this.icon.Alignment          = Drawing.ContentAlignment.MiddleLeft;
 			this.iconActiveNo.Alignment  = Drawing.ContentAlignment.MiddleLeft;
 			this.iconActiveYes.Alignment = Drawing.ContentAlignment.MiddleLeft;
-			this.mainText.Alignment      = Drawing.ContentAlignment.MiddleLeft;
+			this.Alignment               = Drawing.ContentAlignment.MiddleLeft;
 			this.shortKey.Alignment      = Drawing.ContentAlignment.MiddleLeft;
 
 			this.subIndicatorWidth = this.DefaultFontHeight;
@@ -46,7 +47,7 @@ namespace Epsitec.Common.Widgets
 		public MenuItem(string command, string text) : this()
 		{
 			this.Command  = command;
-			this.MainText = text;
+			this.Text     = text;
 			this.onlyText = true;
 		}
 		
@@ -54,7 +55,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.Command  = command;
 			this.IconName = icon;
-			this.MainText = text;
+			this.Text     = text;
 			this.ShortKey = shortcut;
 			this.onlyText = false;
 		}
@@ -67,7 +68,7 @@ namespace Epsitec.Common.Widgets
 		public MenuItem(AbstractMenu submenu, string icon, string text, string shortcut) : this()
 		{
 			this.IconName = icon;
-			this.MainText = text;
+			this.Text     = text;
 			this.ShortKey = shortcut;
 			this.onlyText = false;
 			this.Submenu  = submenu;
@@ -137,7 +138,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Nom de l'icône affichée à gauche.
-		[ Support.Bundle ("icon") ] public string IconName
+		[Bundle ("Icon")]		public string IconName
 		{
 			get
 			{
@@ -162,7 +163,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Nom de l'icône affichée à gauche.
-		[ Support.Bundle ("iconNo") ] public string IconNameActiveNo
+		[Bundle ("IconNo")]		public string IconNameActiveNo
 		{
 			get
 			{
@@ -187,7 +188,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Nom de l'icône affichée à gauche.
-		[ Support.Bundle ("iconYes") ] public string IconNameActiveYes
+		[Bundle ("IconYes")]	public string IconNameActiveYes
 		{
 			get
 			{
@@ -211,25 +212,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Nom du texte principal affiché à droite de l'icône.
-		[ Support.Bundle ("text") ] public string MainText
-		{
-			get
-			{
-				return this.mainText.Text;
-			}
-
-			set
-			{
-				this.mainText.Text = value;
-				this.separator = false;
-				this.mainTextSize = this.mainText.SingleLineSize;
-				this.AdjustSize(ref this.mainTextSize);
-			}
-		}
-
 		// Nom du raccourci clavier affiché à droite.
-		[ Support.Bundle ("key") ] public string ShortKey
+		[Bundle]				public string ShortKey
 		{
 			get
 			{
@@ -246,7 +230,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Sous-menu éventuel associé à la case.
-		[ Support.Bundle ("menu") ] public AbstractMenu Submenu
+		[Bundle]				public AbstractMenu Submenu
 		{
 			get
 			{
@@ -269,6 +253,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		protected override void OnTextChanged()
+		{
+			base.OnTextChanged ();
+			
+			this.separator = false;
+			this.mainTextSize = this.TextLayout.SingleLineSize;
+			this.AdjustSize (ref this.mainTextSize);
+		}
+
 		// Ajuste des dimensions d'un TextLayout.
 		protected void AdjustSize(ref Drawing.Size size)
 		{
@@ -336,7 +329,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.onlyText )
 			{
-				if ( this.mainText != null )  this.mainText.LayoutSize = this.mainTextSize;
+				if ( this.TextLayout != null )  this.TextLayout.LayoutSize = this.mainTextSize;
 			}
 			else if ( this.separator )
 			{
@@ -346,7 +339,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.icon != null )  this.icon.LayoutSize = this.iconSize;
 				if ( this.iconActiveNo != null )  this.iconActiveNo.LayoutSize = this.iconSize;
 				if ( this.iconActiveYes != null )  this.iconActiveYes.LayoutSize = this.iconSize;
-				if ( this.mainText != null )  this.mainText.LayoutSize = this.mainTextSize;
+				if ( this.TextLayout != null )  this.TextLayout.LayoutSize = this.mainTextSize;
 				if ( this.shortKey != null )  this.shortKey.LayoutSize = this.shortKeySize;
 			}
 		}
@@ -371,7 +364,7 @@ namespace Epsitec.Common.Widgets
 			{
 				pos.X = (rect.Width-this.mainTextSize.Width)/2;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
-				adorner.PaintMenuItemTextLayout(graphics, pos, this.mainText, state, Direction.Up, this.type, iType);
+				adorner.PaintMenuItemTextLayout(graphics, pos, this.TextLayout, state, Direction.Up, this.type, iType);
 			}
 			else if ( this.separator )
 			{
@@ -412,7 +405,7 @@ namespace Epsitec.Common.Widgets
 
 				pos.X = this.marginItem*2+this.iconSize.Width;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
-				adorner.PaintMenuItemTextLayout(graphics, pos, this.mainText, state, Direction.Up, this.type, iType);
+				adorner.PaintMenuItemTextLayout(graphics, pos, this.TextLayout, state, Direction.Up, this.type, iType);
 
 				pos.X = rect.Width-this.subIndicatorWidth-this.shortKeySize.Width+this.marginItem;
 				pos.Y = (rect.Height-this.shortKeySize.Height)/2;
@@ -445,7 +438,6 @@ namespace Epsitec.Common.Widgets
 		protected TextLayout		icon;
 		protected TextLayout		iconActiveNo;
 		protected TextLayout		iconActiveYes;
-		protected TextLayout		mainText;
 		protected TextLayout		shortKey;
 		protected Drawing.Size		iconSize;
 		protected Drawing.Size		mainTextSize;
