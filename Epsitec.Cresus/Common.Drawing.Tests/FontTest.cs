@@ -266,7 +266,7 @@ namespace Epsitec.Common.Tests
 			path.MoveTo (0, y);
 			path.LineTo (form.ClientSize.Width, y);
 			
-			string text = "tjfa";
+			string text = "ijfa";
 			
 			rasterizer.FillMode = FillMode.NonZero;
 			

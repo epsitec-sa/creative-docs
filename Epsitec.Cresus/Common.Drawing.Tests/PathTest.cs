@@ -27,12 +27,24 @@ namespace Epsitec.Common.Tests
 			Rectangle r2 = p2.ComputeBounds ();
 			Rectangle r  = Rectangle.Union (r1, r2);
 			
+			System.Console.Out.WriteLine ("Path1:");
+			System.Console.Out.WriteLine (p1.ToString ());
+			System.Console.Out.WriteLine ("Path2:");
+			System.Console.Out.WriteLine (p2.ToString ());
+			
 			Path p = new Path ();
 			
 			p.Append (p1);
 			Assertion.AssertEquals (r1, p.ComputeBounds ());
 			
+			System.Console.Out.WriteLine ("Path: p1");
+			System.Console.Out.WriteLine (p.ToString ());
+			
 			p.Append (p2);
+			
+			System.Console.Out.WriteLine ("Path: p1 UNION p2");
+			System.Console.Out.WriteLine (p.ToString ());
+			
 			Assertion.AssertEquals (r, p.ComputeBounds ());
 		}
 		
@@ -45,6 +57,9 @@ namespace Epsitec.Common.Tests
 			
 			path.Append (font, glyph, 0, 0, 12.0);
 			
+			System.Console.Out.WriteLine ("Glyph path:");
+			System.Console.Out.WriteLine (path.ToString ());
+			
 			Rectangle rp = path.ComputeBounds ();
 			Rectangle rf = font.GetGlyphBounds (glyph);
 			
@@ -53,12 +68,24 @@ namespace Epsitec.Common.Tests
 			Assertion.AssertEquals (rp, rf);
 		}
 		
-		[Test] public void CheckGlyphPathToString()
+		[Test] public void CheckGlyphPathToStringTimes()
 		{
 			Font font = Font.GetFont ("Times New Roman", "Regular");
 			Path path = new Path ();
 			
 			int glyph = font.GetGlyphIndex ('a');
+			
+			path.Append (font, glyph, 0, 0, 100.0);
+			
+			System.Console.Out.WriteLine (path.ToString ());
+		}
+		
+		[Test] public void CheckGlyphPathToStringTahoma()
+		{
+			Font font = Font.GetFont ("Tahoma", "Regular");
+			Path path = new Path ();
+			
+			int glyph = font.GetGlyphIndex ('i');
 			
 			path.Append (font, glyph, 0, 0, 100.0);
 			
