@@ -13,7 +13,7 @@ namespace Epsitec.Common.Script.Glue
 		void SetEnableState(string name, bool mode);
 		bool GetEnableState(string name);
 		
-		bool ReadData(string name, out object value);
+		bool ReadData(string name, System.Type type, out object value);
 		bool WriteData(string name, object value);
 		
 		bool ExecuteCommand(string command);
