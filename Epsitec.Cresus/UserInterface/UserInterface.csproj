@@ -108,7 +108,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "BinderException.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BinderFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DataBinder.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IBinder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

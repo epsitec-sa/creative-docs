@@ -48,9 +48,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInterface", "UserInterf
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer.Tests", "DataLayer.Tests\DataLayer.Tests.csproj", "{D2ADDD9E-56DE-4285-B209-013A19D9DCDC}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 13
+		SccNumberOfProjects = 14
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -102,6 +106,10 @@ Global
 		SccLocalPath12 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection12 = UserInterface\\
+		SccProjectUniqueName13 = DataLayer.Tests\\DataLayer.Tests.csproj
+		SccLocalPath13 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection13 = DataLayer.Tests\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -156,6 +164,10 @@ Global
 		{5E8E51FA-AB4A-4E48-BD20-7796EDCA1B63}.Debug.Build.0 = Debug|.NET
 		{5E8E51FA-AB4A-4E48-BD20-7796EDCA1B63}.Release.ActiveCfg = Release|.NET
 		{5E8E51FA-AB4A-4E48-BD20-7796EDCA1B63}.Release.Build.0 = Release|.NET
+		{D2ADDD9E-56DE-4285-B209-013A19D9DCDC}.Debug.ActiveCfg = Debug|.NET
+		{D2ADDD9E-56DE-4285-B209-013A19D9DCDC}.Debug.Build.0 = Debug|.NET
+		{D2ADDD9E-56DE-4285-B209-013A19D9DCDC}.Release.ActiveCfg = Release|.NET
+		{D2ADDD9E-56DE-4285-B209-013A19D9DCDC}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info

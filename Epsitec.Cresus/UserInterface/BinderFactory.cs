@@ -36,12 +36,6 @@ namespace Epsitec.Cresus.UserInterface
 		}
 		
 		
-		public static IBinder FindBinder(string name)
-		{
-			System.Diagnostics.Debug.Assert (name != null);
-			return BinderFactory.binders[name] as IBinder;
-		}
-		
 		public static void RegisterBinder(IBinder binder)
 		{
 			System.Diagnostics.Debug.Assert (binder != null);
@@ -49,6 +43,23 @@ namespace Epsitec.Cresus.UserInterface
 			System.Diagnostics.Debug.Assert (BinderFactory.binders.ContainsKey (binder.Name) == false);
 			
 			BinderFactory.binders[binder.Name] = binder;
+		}
+		
+		
+		public static IBinder FindBinder(string name)
+		{
+			System.Diagnostics.Debug.Assert (name != null);
+			return BinderFactory.binders[name] as IBinder;
+		}
+		
+		public static IBinder FindBinder(DataLayer.DataType type)
+		{
+			if (type != null)
+			{
+				return BinderFactory.FindBinder (type.BinderName);
+			}
+			
+			return null;
 		}
 		
 		

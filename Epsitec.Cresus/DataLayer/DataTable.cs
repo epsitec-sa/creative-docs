@@ -10,6 +10,13 @@ namespace Epsitec.Cresus.DataLayer
 	{
 		public DataTable()
 		{
+			this.data_type = new DataType ();
+			this.data_type.Initialise (DataClass.Complex, null);
+		}
+		
+		public override bool					IsTable
+		{
+			get { return true; }
 		}
 	}
 }

@@ -11,5 +11,10 @@ namespace Epsitec.Cresus.DataLayer
 		public DataField()
 		{
 		}
+		
+		public override bool					IsField
+		{
+			get { return true; }
+		}
 	}
 }

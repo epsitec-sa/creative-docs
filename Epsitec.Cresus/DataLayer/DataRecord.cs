@@ -11,5 +11,53 @@ namespace Epsitec.Cresus.DataLayer
 		protected DataRecord()
 		{
 		}
+		
+		
+		public virtual bool						IsField
+		{
+			get { return false; }
+		}
+		
+		public virtual bool						IsSet
+		{
+			get { return false; }
+		}
+		
+		public virtual bool						IsTable
+		{
+			get { return false; }
+		}
+		
+		
+		public virtual DataType					DataType
+		{
+			get { return this.data_type; }
+		}
+		
+		
+		public virtual DataRecord FindRecord(string path)
+		{
+			return null;
+		}
+		
+		
+		protected virtual string SplitPath(string path, out string path_remaining)
+		{
+			System.Diagnostics.Debug.Assert (path != null);
+			
+			int pos = path.IndexOf ('.');
+			
+			if (pos < 0)
+			{
+				path_remaining = null;
+				return path;
+			}
+			
+			path_remaining = path.Substring (pos+1);
+			return path.Substring (0, pos);
+		}
+		
+		
+		protected DataType						data_type;
 	}
 }

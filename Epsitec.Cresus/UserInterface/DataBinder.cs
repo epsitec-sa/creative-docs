@@ -33,13 +33,13 @@ namespace Epsitec.Cresus.UserInterface
 		
 		public DataLayer.DataSet			DataSet
 		{
-			get { return this.data_set; }
+			get{ return this.root_data_set; }
 			set
 			{
-				if (this.data_set != value)
+				if (this.root_data_set != value)
 				{
 					this.Detach ();
-					this.data_set = value;
+					this.root_data_set = value;
 					this.Attach ();
 				}
 			}
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.UserInterface
 		
 		protected virtual void Attach()
 		{
-			if (this.data_set != null)
+			if (this.root_data_set != null)
 			{
 				//	S'il y a des objets qui n'ont pas été attachés (l'utilisateur
 				//	a appelé ObjectBundler.CreateFromBundle avant d'attacher le data
@@ -88,9 +88,9 @@ namespace Epsitec.Cresus.UserInterface
 		
 		protected virtual void Detach()
 		{
-			if (this.data_set != null)
+			if (this.root_data_set != null)
 			{
-				this.data_set = null;
+				this.root_data_set = null;
 			}		
 		}
 		
@@ -116,10 +116,28 @@ namespace Epsitec.Cresus.UserInterface
 		protected virtual void CreateBinding(object obj, string binding)
 		{
 			System.Diagnostics.Debug.Assert (this.CheckBindingName (binding));
+			System.Diagnostics.Debug.Assert (this.root_data_set != null);
 			
 			//	Etablit un lien entre l'objet qui appartient à l'interface graphique et
 			//	les données qui se trouvent dans le data set. La description du lien est
-			//	contenu dans 'binding'.
+			//	contenue dans 'binding'.
+			
+			DataLayer.DataRecord data_record = this.root_data_set.FindRecord (binding);
+			
+			if (data_record == null)
+			{
+				throw new BinderException (string.Format ("Cannot bind object {0} to data {1}", obj.GetType ().Name, binding));
+			}
+			
+			DataLayer.DataType data_type = data_record.DataType;
+			IBinder binder = BinderFactory.FindBinder (data_type);
+			
+			if (binder == null)
+			{
+				throw new BinderException (string.Format ("No binder for data {1} on object {0}", obj.GetType ().Name, binding));
+			}
+			
+			//	TODO: créer le lien au moyen du binder
 		}
 		
 		
@@ -135,7 +153,7 @@ namespace Epsitec.Cresus.UserInterface
 				
 				if (this.CheckBindingName (binding))
 				{
-					if (this.data_set != null)
+					if (this.root_data_set != null)
 					{
 						this.CreateBinding (obj, binding);
 					}
@@ -154,6 +172,6 @@ namespace Epsitec.Cresus.UserInterface
 		
 		protected ObjectBundler					object_bundler;
 		protected System.Collections.ArrayList	object_list;
-		protected DataLayer.DataSet				data_set;
+		protected DataLayer.DataSet				root_data_set;
 	}
 }
