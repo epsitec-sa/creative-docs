@@ -107,6 +107,11 @@ namespace Epsitec.Common.Widgets
 				
 				//	TODO: gère les commandes globales
 				
+				if (shortcut.KeyCode == KeyCode.Tab)
+				{
+					System.Diagnostics.Debug.WriteLine ("TAB pressed.");
+				}
+				
 				return false;
 			}
 			

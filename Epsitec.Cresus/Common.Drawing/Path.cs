@@ -32,12 +32,32 @@ namespace Epsitec.Common.Drawing
 			get { return ! this.is_empty; }
 		}
 		
+		public bool						IsCurrentPointValid
+		{
+			get { return this.has_current_point; }
+		}
+		
+		public Point					CurrentPoint
+		{
+			get
+			{
+				if (this.has_current_point)
+				{
+					return this.current_point;
+				}
+				
+				throw new System.InvalidOperationException ("No current point defined.");
+			}
+		}
+		
+		
 		
 		public void Clear()
 		{
 			this.CreateOnTheFly ();
 			this.has_curve = false;
 			this.is_empty  = true;
+			this.has_current_point = false;
 			AntiGrain.Path.RemoveAll (this.agg_path);
 		}
 		
@@ -50,6 +70,8 @@ namespace Epsitec.Common.Drawing
 		{
 			this.CreateOnTheFly ();
 			this.is_empty = false;
+			this.has_current_point = true;
+			this.current_point = new Point (x, y);
 			AntiGrain.Path.MoveTo (this.agg_path, x, y);
 		}
 		
@@ -62,6 +84,8 @@ namespace Epsitec.Common.Drawing
 		{
 			this.CreateOnTheFly ();
 			this.is_empty = false;
+			this.has_current_point = true;
+			this.current_point = new Point (x, y);
 			AntiGrain.Path.LineTo (this.agg_path, x, y);
 		}
 		
@@ -75,6 +99,8 @@ namespace Epsitec.Common.Drawing
 			this.CreateOnTheFly ();
 			this.is_empty  = false;
 			this.has_curve = true;
+			this.has_current_point = true;
+			this.current_point = new Point (x, y);
 			AntiGrain.Path.Curve4 (this.agg_path, x_c1, y_c1, x_c2, y_c2, x, y);
 		}
 		
@@ -88,6 +114,8 @@ namespace Epsitec.Common.Drawing
 			this.CreateOnTheFly ();
 			this.is_empty  = false;
 			this.has_curve = true;
+			this.has_current_point = true;
+			this.current_point = new Point (x, y);
 			AntiGrain.Path.Curve3 (this.agg_path, x_c, y_c, x, y);
 		}
 		
@@ -96,6 +124,7 @@ namespace Epsitec.Common.Drawing
 			if (! this.is_empty)
 			{
 				this.CreateOnTheFly ();
+				this.has_current_point = false;
 				AntiGrain.Path.Close (this.agg_path);
 			}
 		}
@@ -105,6 +134,7 @@ namespace Epsitec.Common.Drawing
 			if (! this.is_empty)
 			{
 				this.CreateOnTheFly ();
+				this.has_current_point = false;
 				AntiGrain.Path.AddNewPath (this.agg_path);
 			}
 		}
@@ -367,6 +397,8 @@ namespace Epsitec.Common.Drawing
 		private System.IntPtr			agg_path;
 		private bool					has_curve = false;
 		private bool					is_empty = true;
+		private Point					current_point = Point.Empty;
+		private bool					has_current_point = false;
 	}
 	
 	[System.Flags]
