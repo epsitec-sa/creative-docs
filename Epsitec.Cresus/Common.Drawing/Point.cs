@@ -1,3 +1,6 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Drawing
 {
 	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
@@ -52,14 +55,14 @@ namespace Epsitec.Common.Drawing
 			return new Size (this.x, this.y);
 		}
 		
-		public Point GridAlign(double offset, double step)
+		public static Point GridAlign(Point point, double offset, double step)
 		{
-			return new Point (Point.GridAlign (this.X, offset, step), Point.GridAlign (this.Y, offset, step));
+			return new Point (Point.GridAlign (point.X, offset, step), Point.GridAlign (point.Y, offset, step));
 		}
 		
-		public Point GridAlign(Point offset, Point step)
+		public static Point GridAlign(Point point, Point offset, Point step)
 		{
-			return new Point (Point.GridAlign (this.X, offset.X, step.X), Point.GridAlign (this.Y, offset.Y, step.Y));
+			return new Point (Point.GridAlign (point.X, offset.X, step.X), Point.GridAlign (point.Y, offset.Y, step.Y));
 		}
 		
 		
@@ -87,7 +90,12 @@ namespace Epsitec.Common.Drawing
 			
 			Point p = (Point) obj;
 			
-			return (p.x == this.x) && (p.y == this.y);
+			return Point.Equals (this, p);
+		}
+		
+		public static   bool Equals(Point a, Point b)
+		{
+			return (a.x == b.x) && (a.y == b.y);
 		}
 		
 		public override int GetHashCode()
@@ -189,14 +197,14 @@ namespace Epsitec.Common.Drawing
 			return (a.x != b.x) || (a.y != b.y);
 		}
 
-		public Point ScaleMul(Point a)
+		public static Point ScaleMul(Point a, Point b)
 		{
-			return new Point (this.x * a.x, this.y * a.y);
+			return new Point (a.x * b.x, a.y * b.y);
 		}
 		
-		public Point ScaleDiv(Point a)
+		public static Point ScaleDiv(Point a, Point b)
 		{
-			return new Point (this.x / a.x, this.y / a.y);
+			return new Point (a.x / b.x, a.y / b.y);
 		}
 		
 		
@@ -286,16 +294,16 @@ namespace Epsitec.Common.Drawing
 		}
 
 
-		public static bool Detect(Point a, Point b, Point p, double width)
+		public static bool DetectSegment(Point a, Point b, Point p, double width)
 		{
 			//	Détecte si le point P est sur un segment AB d'épaisseur 'width'.
 			
-			Rectangle rect = new Rectangle ();
+			double x_left   = System.Math.Min (a.X, b.X) - width;
+			double x_right  = System.Math.Max (a.X, b.X) + width;
+			double y_bottom = System.Math.Min (a.Y, b.Y) - width;
+			double y_top    = System.Math.Max (a.Y, b.Y) + width;
 			
-			rect.Left   = System.Math.Min (a.X, b.X) - width;
-			rect.Right  = System.Math.Max (a.X, b.X) + width;
-			rect.Bottom = System.Math.Min (a.Y, b.Y) - width;
-			rect.Top    = System.Math.Max (a.Y, b.Y) + width;
+			Rectangle rect = new Rectangle (x_left, y_bottom, x_right - x_left, y_top - y_bottom);
 			
 			if (rect.Contains (p))
 			{
@@ -308,7 +316,7 @@ namespace Epsitec.Common.Drawing
 			return false;
 		}
 
-		public static bool Detect(Point p1, Point s1, Point s2, Point p2, Point p, double width)
+		public static bool DetectBezier(Point p1, Point s1, Point s2, Point p2, Point p, double width)
 		{
 			//	Détecte si le point P est sur un segment de Bezier d'épaisseur 'width'.
 			
@@ -322,9 +330,9 @@ namespace Epsitec.Common.Drawing
 			{
 				t += dt;
 				
-				Point b = Point.Bezier (p1, s1, s2, p2, t);
+				Point b = Point.FromBezier (p1, s1, s2, p2, t);
 				
-				if (Point.Detect (a, b, p, width))
+				if (Point.DetectSegment (a, b, p, width))
 				{
 					return true;
 				}
@@ -335,7 +343,7 @@ namespace Epsitec.Common.Drawing
 			return false;
 		}
 
-		public static Point Bezier(Point p1, Point s1, Point s2, Point p2, double t)
+		public static Point FromBezier(Point p1, Point s1, Point s2, Point p2, double t)
 		{
 			//	Calcule un point sur une courbe de Bézier, en fonction du paramètre t (0..1).
 			//	Si t=0, on est sur p1.
@@ -350,7 +358,7 @@ namespace Epsitec.Common.Drawing
 							  p1.Y*t1 + s1.Y*t2 + s2.Y*t3 + p2.Y*t4);
 		}
 
-		public static double Bezier(Point p1, Point s1, Point s2, Point p2, Point p)
+		public static double FindBezierParameter(Point p1, Point s1, Point s2, Point p2, Point p)
 		{
 			//	Cherche la valeur de t (0..1) correspondant le mieux possible au nouveau point.
 			//	Il n'est pas obligatoire que le nouveau point soit sur la courbe
@@ -368,7 +376,7 @@ namespace Epsitec.Common.Drawing
 			{
 				t += dt;
 				
-				Point  b = Point.Bezier (p1, s1, s2, p2, t);
+				Point  b = Point.FromBezier (p1, s1, s2, p2, t);
 				double d = Point.Distance (b, p);  // d <- distance jusqu'au point
 				
 				if (d < min)
@@ -381,7 +389,8 @@ namespace Epsitec.Common.Drawing
 			return best_t;
 		}
 
-		public static bool Intersect(Point a, Point b, double y, out Point i)
+		
+		public static bool IntersectsWithHorizontal(Point a, Point b, double y, out Point i)
 		{
 			//	Calcule l'intersection I d'une droite AB avec une horizontale Y.
 			
@@ -400,6 +409,29 @@ namespace Epsitec.Common.Drawing
 			
 			i.X = a.X + (y-a.Y)*((b.X-a.X)/(b.Y-a.Y));
 			i.Y = y;
+			
+			return true;
+		}
+		
+		public static bool IntersectsWithVertical(Point a, Point b, double x, out Point i)
+		{
+			//	Calcule l'intersection I d'une droite AB avec une verticale X.
+			
+			i = a;
+			
+			if ((x < System.Math.Min (a.X, b.X)) ||
+				(x >= System.Math.Max (a.X, b.X)))
+			{
+				return false;
+			}
+			
+			if (a.X == b.X)
+			{
+				return true;
+			}
+			
+			i.X = x;
+			i.Y = a.Y + (x-a.X)*((b.Y-a.Y)/(b.X-a.X));
 			
 			return true;
 		}

@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
@@ -10,6 +13,7 @@ namespace Epsitec.Common.Drawing
 		CapStyle	LineCap			{ get; set; }
 		double		LineMiterLimit	{ get; set; }
 		Color		Color			{ get; set; }
+		Transform	Transform		{ get; set; }
 		
 		void SetClippingRectangle(Rectangle rect);
 		void SetClippingRectangle(Point p, Size s);
@@ -21,9 +25,6 @@ namespace Epsitec.Common.Drawing
 		
 		void Align(ref double x, ref double y);
 		
-		Transform SaveTransform();
-		double GetTransformZoom();
-		void RestoreTransform(Transform transform);
 		void ScaleTransform(double sx, double sy, double cx, double cy);
 		void RotateTransformDeg(double angle, double cx, double cy);
 		void RotateTransformRad(double angle, double cx, double cy);

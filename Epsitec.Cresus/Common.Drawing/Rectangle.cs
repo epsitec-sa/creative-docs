@@ -1,21 +1,11 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Drawing
 {
 	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
 	using XmlIgnore    = System.Xml.Serialization.XmlIgnoreAttribute;
 	
-	
-	/// <summary>
-	/// Définition des coins d'un rectangle.
-	/// </summary>
-	public enum VertexId
-	{
-		None = -1,
-		
-		BottomLeft,
-		BottomRight,
-		TopLeft,
-		TopRight,
-}
 	
 	/// <summary>
 	/// Définition des côtés d'un rectangle. Plusieurs côtés peuvent être
@@ -287,51 +277,6 @@ namespace Epsitec.Common.Drawing
 			this.y2  = y;
 		}
 		
-		public Point GetVertex(VertexId vertex)
-		{
-			switch (vertex)
-			{
-				case VertexId.BottomLeft:	return this.BottomLeft;
-				case VertexId.BottomRight:	return this.BottomRight;
-				case VertexId.TopLeft:		return this.TopLeft;
-				case VertexId.TopRight:		return this.TopRight;
-			}
-			
-			throw new System.ArgumentOutOfRangeException ("VertexId", vertex, "VertexId is out of range.");
-		}
-		
-		public void SetVertex(VertexId vertex, Point pos)
-		{
-			switch (vertex)
-			{
-				case VertexId.BottomLeft:	this.BottomLeft  = pos; return;
-				case VertexId.BottomRight:	this.BottomRight = pos; return;
-				case VertexId.TopLeft:		this.TopLeft     = pos; return;
-				case VertexId.TopRight:		this.TopRight    = pos; return;
-			}
-			
-			throw new System.ArgumentOutOfRangeException ("VertexId", vertex, "VertexId is out of range.");
-		}
-		
-		public void OffsetVertex(VertexId vertex, Point offset)
-		{
-			this.SetVertex (vertex, this.GetVertex (vertex) + offset);
-		}
-		
-		
-		public static GripId ConvertToGrip(VertexId vertex)
-		{
-			switch (vertex)
-			{
-				case VertexId.None:			return GripId.None;
-				case VertexId.BottomLeft:	return GripId.VertexBottomLeft;
-				case VertexId.BottomRight:	return GripId.VertexBottomRight;
-				case VertexId.TopLeft:		return GripId.VertexTopLeft;
-				case VertexId.TopRight:		return GripId.VertexTopRight;
-			}
-			
-			throw new System.ArgumentOutOfRangeException ("VertexId", vertex, "VertexId is out of range.");
-		}
 		
 		public static GripId ConvertToGrip(EdgeId edges)
 		{
@@ -351,20 +296,6 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			throw new System.ArgumentException (string.Format ("EdgeId {0} cannot be mapped to GripId.", edges), "edges");
-		}
-		
-		public static VertexId ConvertToVertex(GripId grip)
-		{
-			switch (grip)
-			{
-				case GripId.None:				return VertexId.None;
-				case GripId.VertexBottomLeft:	return VertexId.BottomLeft;
-				case GripId.VertexBottomRight:	return VertexId.BottomRight;
-				case GripId.VertexTopLeft:		return VertexId.TopLeft;
-				case GripId.VertexTopRight:		return VertexId.TopRight;
-			}
-			
-			throw new System.ArgumentOutOfRangeException ("GripId", grip, "GripId is out of range.");
 		}
 		
 		public static EdgeId ConvertToEdges(GripId grip)

@@ -1,28 +1,35 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Drawing
 {
-	public enum ContentAlignment
-	{
-		BottomLeft,
-		BottomCenter,
-		BottomRight,
-		
-		MiddleLeft,
-		MiddleCenter,
-		MiddleRight,
-		
-		TopLeft,
-		TopCenter,
-		TopRight
-	}
-	
 	/// <summary>
 	/// La classe Graphics encapsule le contexte graphique utilisé pour peindre.
 	/// </summary>
-	public abstract class Graphics : System.IDisposable, IPaintPort
+	public class Graphics : System.IDisposable, IPaintPort
 	{
-		protected Graphics()
+		static Graphics()
+		{
+			Font.Initialise ();
+		}
+		
+		public Graphics()
 		{
 			this.ResetLineStyle ();
+			
+			this.pixmap     = new Pixmap ();
+			this.rasterizer = new Common.Drawing.Rasterizer ();
+			this.transform  = new Transform ();
+			
+			this.solid_renderer    = new Common.Drawing.Renderers.Solid ();
+			this.image_renderer    = new Common.Drawing.Renderers.Image ();
+			this.gradient_renderer = new Common.Drawing.Renderers.Gradient ();
+			this.smooth_renderer   = new Common.Drawing.Renderers.Smooth (this);
+			
+			this.image_renderer.TransformUpdating    += new System.EventHandler (this.HandleTransformUpdating);
+			this.gradient_renderer.TransformUpdating += new System.EventHandler (this.HandleTransformUpdating);
+			
+			this.rasterizer.Gamma = 1.2;
 		}
 
 		~ Graphics()
@@ -31,10 +38,27 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public abstract void RenderSolid();
-		public abstract void RenderSolid(Color color);
-		public abstract void RenderImage();
-		public abstract void RenderGradient();
+		public void RenderSolid()
+		{
+			this.rasterizer.Render (this.solid_renderer);
+		}
+		
+		public void RenderSolid(Color color)
+		{
+			this.solid_renderer.Color = color;
+			this.rasterizer.Render (this.solid_renderer);
+		}
+		
+		public void RenderImage()
+		{
+			this.rasterizer.Render (this.image_renderer);
+		}
+		
+		public void RenderGradient()
+		{
+			this.rasterizer.Render (this.gradient_renderer);
+		}
+		
 		
 		public void ResetLineStyle()
 		{
@@ -90,23 +114,61 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		internal Transform					InternalTransform
+		public Drawing.Rasterizer			Rasterizer
 		{
-			get { return this.SaveTransform (); }
+			get { return this.rasterizer; }
 		}
 		
-		public abstract Rasterizer			Rasterizer		{ get; }
-		public abstract Transform			Transform		{ set; }
-		public abstract Pixmap				Pixmap			{ get; }
-		public abstract Renderers.Solid		SolidRenderer	{ get; }
-		public abstract Renderers.Image		ImageRenderer	{ get; }
-		public abstract Renderers.Gradient	GradientRenderer{ get; }
-		public abstract Renderers.Smooth	SmoothRenderer	{ get; }
+		public Drawing.Transform			Transform
+		{
+			get
+			{
+				return new Transform (this.transform);
+			}
+			set
+			{
+				this.transform.Reset (value);
+				this.rasterizer.Transform = this.transform;
+			}
+		}
 		
-		public abstract double PaintText(double x, double y, string text, Font font, double size);
-		public abstract double PaintText(double x, double y, string text, Font font, double size, Font.ClassInfo[] infos);
+		public Drawing.Pixmap				Pixmap
+		{
+			get { return this.pixmap; }
+		}
 		
-		public abstract Graphics CreateAlphaMask();
+		public Renderers.Solid				SolidRenderer
+		{
+			get { return this.solid_renderer; }
+		}
+		
+		public Renderers.Image				ImageRenderer
+		{
+			get { return this.image_renderer; }
+		}
+		
+		public Renderers.Gradient			GradientRenderer
+		{
+			get { return this.gradient_renderer; }
+		}
+		
+		public Renderers.Smooth				SmoothRenderer
+		{
+			get { return this.smooth_renderer; }
+		}
+		
+		
+		public Epsitec.Common.Drawing.Graphics CreateAlphaMask()
+		{
+			Graphics mask = new Graphics ();
+			
+			mask.SetPixmapSize (this.pixmap.Size.Width, this.pixmap.Size.Height);
+			mask.SolidRenderer.ClearARGB (0, 0, 0, 0);
+			mask.Transform = this.Transform;
+			
+			return mask;
+		}
+		
 		
 		public void PaintOutline(Path path)
 		{
@@ -120,7 +182,8 @@ namespace Epsitec.Common.Drawing
 			this.RenderSolid ();
 		}
 		
-		public void PaintText(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment align)
+		
+		public void   PaintText(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment align)
 		{
 			double text_width  = font.GetTextAdvance (text) * size;
 			double text_height = (font.Ascender - font.Descender) * size;
@@ -168,6 +231,53 @@ namespace Epsitec.Common.Drawing
 			
 			this.PaintText (x, y, text, font, size);
 		}
+		
+		public double PaintText(double x, double y, string text, Font font, double size)
+		{
+			if (this.transform.OnlyTranslate && ! font.IsSynthetic)
+			{
+				x += this.transform.TX;
+				y += this.transform.TY;
+				
+				return font.PaintPixelCache (this.pixmap, text, size, x, y, this.SolidRenderer.Color);
+			}
+			else
+			{
+				double advance = this.AddText (x, y, text, font, size);
+				this.RenderSolid ();
+				return advance;
+			}
+		}
+		
+		public double PaintText(double x, double y, string text, Font font, double size, Font.ClassInfo[] infos)
+		{
+			//	TODO: déplacer ce code dans la librairie AGG; faire en sorte que ça marche aussi
+			//	si ClassId != ClassId.Space...
+			
+			for (int i = 0; i < infos.Length; i++)
+			{
+				if ((infos[i].Scale != 1.00) &&
+					(infos[i].ClassId == Font.ClassId.Space))
+				{
+					string[] texts = text.Split (new char[] { ' ', (char) 160 });
+					double space_w = font.GetCharAdvance (' ') * size * infos[i].Scale;
+					double total_w = 0;
+					
+					for (int j = 0; j < texts.Length; j++)
+					{
+						double w = this.PaintText (x, y, texts[j], font, size) + space_w;
+						
+						total_w += w;
+						x       += w;
+					}
+					
+					return total_w - space_w;
+				}
+			}
+			
+			return this.PaintText (x, y, text, font, size);
+		}
+		
 		
 		public void PaintImage(Image bitmap, Rectangle fill)
 		{
@@ -260,9 +370,6 @@ namespace Epsitec.Common.Drawing
 			this.RenderImage ();
 			this.ImageRenderer.BitmapImage = null;
 		}
-		
-		public abstract Point ApplyTransformDirect(Point pt);
-		public abstract Point ApplyTransformInverse(Point pt);
 		
 		
 		public void AddLine(Point p1, Point p2)
@@ -359,29 +466,110 @@ namespace Epsitec.Common.Drawing
 			this.AddText (x, y, text, font, size);
 		}
 		
-		public double GetTransformZoom()
+		
+		public void   AddLine(double x1, double y1, double x2, double y2)
 		{
-			//	Détermine le zoom approximatif en vigueur dans la transformation actuelle.
-			//	Calcule la longueur d'un segment diagonal [1 1] après transformation pour
-			//	connaître ce zoom.
-			
-			Transform transform = this.SaveTransform ();
-			
-			double a = transform.XX + transform.XY;
-			double b = transform.YX + transform.YY;
-			
-			return System.Math.Sqrt ((a*a + b*b) / 2);
+			using (Path path = new Path ())
+			{
+				path.MoveTo (x1, y1);
+				path.LineTo (x2, y2);
+				
+				this.rasterizer.AddOutline (path, this.line_width, this.line_cap, this.line_join, this.line_miter_limit);
+			}
 		}
 		
+		public void   AddRectangle(double x, double y, double width, double height)
+		{
+			using (Path path = new Path ())
+			{
+				path.MoveTo (x, y);
+				path.LineTo (x+width, y);
+				path.LineTo (x+width, y+height);
+				path.LineTo (x, y+height);
+				path.Close ();
+				
+				this.rasterizer.AddOutline (path, this.line_width, this.line_cap, this.line_join, this.line_miter_limit);
+			}
+		}
 		
-		public abstract void AddLine(double x1, double y1, double x2, double y2);
-		public abstract void AddRectangle(double x, double y, double width, double height);
-		public abstract void AddCircle(double cx, double cy, double rx, double ry);
-		public abstract double AddText(double x, double y, string text, Font font, double size);
-		public abstract void AddFilledRectangle(double x, double y, double width, double height);
-		public abstract void AddFilledCircle(double cx, double cy, double rx, double ry);
-		public abstract void Align(ref double x, ref double y);
-		public abstract void Align(ref Drawing.Rectangle rect);
+		public void   AddCircle(double cx, double cy, double rx, double ry)
+		{
+			using (Path path = new Path ())
+			{
+				path.MoveTo (cx-rx, cy);
+				path.CurveTo (cx-rx*1.00, cy+ry*0.56, cx-rx*0.56, cy+ry*1.00, cx,    cy+ry);
+				path.CurveTo (cx+rx*0.56, cy+ry*1.00, cx+rx*1.00, cy+ry*0.56, cx+rx, cy);
+				path.CurveTo (cx+rx*1.00, cy-ry*0.56, cx+rx*0.56, cy-ry*1.00, cx,    cy-ry);
+				path.CurveTo (cx-rx*0.56, cy-ry*1.00, cx-rx*1.00, cy-ry*0.56, cx-rx, cy);
+				path.Close ();
+				
+				this.rasterizer.AddOutline (path, this.line_width, this.line_cap, this.line_join, this.line_miter_limit);
+			}
+		}
+		
+		public double AddText(double x, double y, string text, Font font, double size)
+		{
+			return this.rasterizer.AddText (font, text, x, y, size);
+		}
+		
+		public void   AddFilledRectangle(double x, double y, double width, double height)
+		{
+			using (Path path = new Path ())
+			{
+				path.MoveTo (x, y);
+				path.LineTo (x+width, y);
+				path.LineTo (x+width, y+height);
+				path.LineTo (x, y+height);
+				path.Close ();
+				
+				this.rasterizer.AddSurface (path);
+			}
+		}
+		
+		public void   AddFilledCircle(double cx, double cy, double rx, double ry)
+		{
+			using (Path path = new Path ())
+			{
+				path.MoveTo (cx-rx, cy);
+				path.CurveTo (cx-rx*1.00, cy+ry*0.56, cx-rx*0.56, cy+ry*1.00, cx,    cy+ry);
+				path.CurveTo (cx+rx*0.56, cy+ry*1.00, cx+rx*1.00, cy+ry*0.56, cx+rx, cy);
+				path.CurveTo (cx+rx*1.00, cy-ry*0.56, cx+rx*0.56, cy-ry*1.00, cx,    cy-ry);
+				path.CurveTo (cx-rx*0.56, cy-ry*1.00, cx-rx*1.00, cy-ry*0.56, cx-rx, cy);
+				path.Close ();
+				
+				this.rasterizer.AddSurface (path);
+			}
+		}
+		
+		public void Align(ref double x, ref double y)
+		{
+			this.transform.TransformDirect (ref x, ref y);
+			x = System.Math.Floor (x + 0.5);
+			y = System.Math.Floor (y + 0.5);
+			this.transform.TransformInverse (ref x, ref y);
+		}
+		
+		public void Align(ref Drawing.Rectangle rect)
+		{
+			double x1 = rect.Left;
+			double y1 = rect.Bottom;
+			double x2 = rect.Right;
+			double y2 = rect.Top;
+			
+			this.transform.TransformDirect (ref x1, ref y1);
+			this.transform.TransformDirect (ref x2, ref y2);
+			
+			x1 = System.Math.Floor (x1 + 0.5);
+			y1 = System.Math.Floor (y1 + 0.5);
+			x2 = System.Math.Floor (x2 + 0.5);
+			y2 = System.Math.Floor (y2 + 0.5);
+			
+			this.transform.TransformInverse (ref x1, ref y1);
+			this.transform.TransformInverse (ref x2, ref y2);
+			
+			rect = new Rectangle (x1, y1, x2-x1, y2-y1);
+		}
+		
 		
 		public void Align(ref Drawing.Point p)
 		{
@@ -395,19 +583,177 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public abstract Transform SaveTransform();
-		public abstract void RestoreTransform(Transform transform);
-		public abstract void ScaleTransform(double sx, double sy, double cx, double cy);
-		public abstract void RotateTransformDeg(double angle, double cx, double cy);
-		public abstract void RotateTransformRad(double angle, double cx, double cy);
-		public abstract void TranslateTransform(double ox, double oy);
-		public abstract void MergeTransform(Transform transform);
-		public abstract void SetClippingRectangle(double x, double y, double width, double height);
-		public abstract void SetClippingRectangles(Drawing.Rectangle[] rectangles);
-		public abstract Drawing.Rectangle SaveClippingRectangle();
-		public abstract void RestoreClippingRectangle(Drawing.Rectangle rect);
-		public abstract void ResetClippingRectangle();
-		public abstract bool TestForEmptyClippingRectangle();
+		public void ScaleTransform(double sx, double sy, double cx, double cy)
+		{
+			this.transform.MultiplyByPostfix (Drawing.Transform.FromScale (sx, sy, cx, cy));
+			this.UpdateTransform ();
+		}
+		
+		public void RotateTransformDeg(double angle, double cx, double cy)
+		{
+			this.transform.MultiplyByPostfix (Drawing.Transform.FromRotationDeg (angle, cx, cy));
+			this.UpdateTransform ();
+		}
+		
+		public void RotateTransformRad(double angle, double cx, double cy)
+		{
+			this.transform.MultiplyByPostfix (Drawing.Transform.FromRotationRad (angle, cx, cy));
+			this.UpdateTransform ();
+		}
+		
+		public void TranslateTransform(double ox, double oy)
+		{
+			this.transform.MultiplyByPostfix (Drawing.Transform.FromTranslation (ox, oy));
+			this.UpdateTransform ();
+		}
+		
+		public void MergeTransform(Transform transform)
+		{
+			this.transform.MultiplyByPostfix (transform);
+			this.UpdateTransform ();
+		}
+
+		public Point ApplyTransformDirect(Point pt)
+		{
+			return this.transform.TransformDirect (pt);
+		}
+		
+		public Point ApplyTransformInverse(Point pt)
+		{
+			return this.transform.TransformInverse (pt);
+		}
+		
+		protected void UpdateTransform()
+		{
+			this.rasterizer.Transform = this.transform;
+			
+			//	Lorsque la matrice de transformation change, il faut aussi mettre à jour les
+			//	transformations des renderers qui en ont...
+			
+			Transform t_image    = this.image_renderer.Transform;
+			Transform t_gradient = this.gradient_renderer.Transform;
+			
+			this.image_renderer.Transform    = t_image;
+			this.gradient_renderer.Transform = t_gradient;
+		}
+		
+		protected void HandleTransformUpdating(object sender, System.EventArgs e)
+		{
+			Renderers.ITransformProvider provider = sender as Renderers.ITransformProvider;
+			
+			if (provider != null)
+			{
+				provider.InternalTransform.MultiplyBy (this.transform);
+			}
+		}
+		
+		public void SetClippingRectangle(double x, double y, double width, double height)
+		{
+			double x1 = x;
+			double y1 = y;
+			double x2 = x + width;
+			double y2 = y + height;
+			
+			if (this.has_clip_rect)
+			{
+				x1 = System.Math.Max (x1, this.clip_x1);
+				x2 = System.Math.Min (x2, this.clip_x2);
+				y1 = System.Math.Max (y1, this.clip_y1);
+				y2 = System.Math.Min (y2, this.clip_y2);
+			}
+			else
+			{
+				this.has_clip_rect = true;
+			}
+			
+			this.clip_x1 = x1;
+			this.clip_y1 = y1;
+			this.clip_x2 = x2;
+			this.clip_y2 = y2;
+			
+			this.rasterizer.SetClipBox (x1, y1, x2, y2);
+			this.pixmap.EmptyClipping ();
+			this.pixmap.AddClipBox (x1, y1, x2, y2);
+		}
+		
+		public void SetClippingRectangles(Drawing.Rectangle[] rectangles)
+		{
+			if (rectangles.Length == 0)
+			{
+				return;
+			}
+			
+			Drawing.Rectangle clip = this.SaveClippingRectangle ();
+			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
+			
+			this.pixmap.EmptyClipping ();
+			
+			for (int i = 0; i < rectangles.Length; i++)
+			{
+				Drawing.Rectangle rect = Drawing.Rectangle.Intersection (rectangles[i], clip);
+				
+				if (!rect.IsEmpty)
+				{
+					this.pixmap.AddClipBox (rect.Left, rect.Bottom, rect.Right, rect.Top);
+					bbox = Drawing.Rectangle.Union (bbox, rect);
+				}
+			}
+			
+			this.has_clip_rect = true;
+			this.rasterizer.SetClipBox (bbox.Left, bbox.Bottom, bbox.Right, bbox.Top);
+		}
+		
+		public Drawing.Rectangle SaveClippingRectangle()
+		{
+			if (this.has_clip_rect)
+			{
+				return new Drawing.Rectangle (this.clip_x1, this.clip_y1, this.clip_x2-this.clip_x1, this.clip_y2-this.clip_y1);
+			}
+			
+			return Drawing.Rectangle.Infinite;
+		}
+		
+		public void RestoreClippingRectangle(Drawing.Rectangle rect)
+		{
+			if (rect == Drawing.Rectangle.Infinite)
+			{
+				this.ResetClippingRectangle ();
+			}
+			else
+			{
+				this.clip_x1 = rect.Left;
+				this.clip_y1 = rect.Bottom;
+				this.clip_x2 = rect.Right;
+				this.clip_y2 = rect.Top;
+				
+				this.has_clip_rect = true;
+				
+				this.rasterizer.SetClipBox (this.clip_x1, this.clip_y1, this.clip_x2, this.clip_y2);
+				this.pixmap.EmptyClipping ();
+				this.pixmap.AddClipBox (this.clip_x1, this.clip_y1, this.clip_x2, this.clip_y2);
+			}
+		}
+		
+		public void ResetClippingRectangle()
+		{
+			this.rasterizer.ResetClipBox ();
+			this.pixmap.InfiniteClipping ();
+			this.has_clip_rect = false;
+		}
+		
+		public bool TestForEmptyClippingRectangle()
+		{
+			if (this.has_clip_rect)
+			{
+				if ((this.clip_x1 >= this.clip_x2) ||
+					(this.clip_y1 >= this.clip_y2))
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
 		
 		public void SetClippingRectangle(Point p, Size s)
 		{
@@ -420,7 +766,29 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public abstract bool SetPixmapSize(int width, int height);
+		public bool SetPixmapSize(int width, int height)
+		{
+			if ((this.pixmap.Size.Width == width) &&
+				(this.pixmap.Size.Height == height))
+			{
+				return false;
+			}
+			
+			this.pixmap.Size = new System.Drawing.Size (width, height);
+			
+			this.solid_renderer.Pixmap    = null;
+			this.image_renderer.Pixmap	  = null;
+			this.gradient_renderer.Pixmap = null;
+			this.smooth_renderer.Pixmap   = null;
+			
+			this.solid_renderer.Pixmap    = this.pixmap;
+			this.image_renderer.Pixmap    = this.pixmap;
+			this.gradient_renderer.Pixmap = this.pixmap;
+			this.smooth_renderer.Pixmap   = this.pixmap;
+			
+			return true;
+		}
+		
 		
 		#region IDisposable Members
 		public void Dispose()
@@ -430,13 +798,66 @@ namespace Epsitec.Common.Drawing
 		}
 		#endregion
 		
-		protected abstract void Dispose(bool disposing);
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.pixmap != null)
+				{
+					this.pixmap.Dispose ();
+				}
+				if (this.rasterizer != null)
+				{
+					this.rasterizer.Dispose ();
+				}
+				if (this.solid_renderer != null)
+				{
+					this.solid_renderer.Pixmap = null;
+					this.solid_renderer.Dispose ();
+				}
+				if (this.image_renderer != null)
+				{
+					this.image_renderer.Pixmap = null;
+					this.image_renderer.Dispose ();
+				}
+				if (this.gradient_renderer != null)
+				{
+					this.gradient_renderer.Pixmap = null;
+					this.gradient_renderer.Dispose ();
+				}
+				if (this.smooth_renderer != null)
+				{
+					this.smooth_renderer.Pixmap = null;
+					this.smooth_renderer.Dispose ();
+				}
+				
+				this.pixmap            = null;
+				this.rasterizer        = null;
+				this.solid_renderer    = null;
+				this.image_renderer    = null;
+				this.gradient_renderer = null;
+				this.smooth_renderer   = null;
+			}
+		}
 		
-		protected const double				AlmostInfinite = 1000000000.0;
 		
-		protected double					line_width;
-		protected JoinStyle					line_join;
-		protected CapStyle					line_cap;
-		protected double					line_miter_limit;
+		private const double				AlmostInfinite = 1000000000.0;
+		
+		private double						line_width;
+		private JoinStyle					line_join;
+		private CapStyle					line_cap;
+		private double						line_miter_limit;
+		
+		private Pixmap						pixmap;
+		private Rasterizer					rasterizer;
+		private Transform					transform;
+		
+		private Renderers.Solid				solid_renderer;
+		private Renderers.Image				image_renderer;
+		private Renderers.Gradient			gradient_renderer;
+		private Renderers.Smooth			smooth_renderer;
+		
+		private double						clip_x1, clip_y1, clip_x2, clip_y2;
+		private bool						has_clip_rect;
 	}
 }
