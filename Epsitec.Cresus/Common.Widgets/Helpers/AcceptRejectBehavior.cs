@@ -118,13 +118,13 @@ namespace Epsitec.Common.Widgets.Helpers
 			IFeel feel = Feel.Factory.Active;
 			
 			this.button_accept.Name        = "Accept";
-			this.button_accept.GlyphShape  = GlyphShape.Validate;
+			this.button_accept.GlyphShape  = GlyphShape.Accept;
 			this.button_accept.ButtonStyle = ButtonStyle.ExListMiddle;
 			this.button_accept.Clicked    += new MessageEventHandler(this.HandleButtonAcceptClicked);
 			this.button_accept.Shortcut    = feel.AcceptShortcut;
 			
 			this.button_reject.Name        = "Reject";
-			this.button_reject.GlyphShape  = GlyphShape.Cancel;
+			this.button_reject.GlyphShape  = GlyphShape.Reject;
 			this.button_reject.ButtonStyle = ButtonStyle.ExListRight;
 			this.button_reject.Clicked    += new MessageEventHandler(this.HandleButtonRejectClicked);
 			this.button_reject.Shortcut    = feel.CancelShortcut;

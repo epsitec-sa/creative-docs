@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets.Helpers
 {
 	public class WidgetCollection : System.Collections.IList, System.IDisposable
@@ -8,7 +11,8 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.list = new System.Collections.ArrayList ();
 		}
 		
-		public Widget this[int index]
+		
+		public Widget							this[int index]
 		{
 			get
 			{
@@ -16,7 +20,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 		
-		public Widget this[string name]
+		public Widget							this[string name]
 		{
 			get
 			{
@@ -30,7 +34,6 @@ namespace Epsitec.Common.Widgets.Helpers
 				return null;
 			}
 		}
-		
 		
 		public bool								AutoEmbedding
 		{

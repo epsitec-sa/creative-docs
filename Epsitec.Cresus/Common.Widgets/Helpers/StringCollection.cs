@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets.Helpers
 {
 	public class StringCollection : System.Collections.IList, System.IDisposable
@@ -9,12 +12,33 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.names = new System.Collections.ArrayList ();
 		}
 		
+		
 		public string							this[int index]
 		{
 			get
 			{
 				if (index == -1) return null;
 				return this.list[index].ToString ();
+			}
+		}
+		
+		public object[]							Values
+		{
+			get
+			{
+				object[] values = new object[this.list.Count];
+				this.list.CopyTo (values);
+				return values;
+			}
+		}
+		
+		public string[]							Names
+		{
+			get
+			{
+				string[] names = new string[this.names.Count];
+				this.names.CopyTo (names);
+				return names;
 			}
 		}
 		

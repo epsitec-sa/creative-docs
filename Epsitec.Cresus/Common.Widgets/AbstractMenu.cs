@@ -9,6 +9,42 @@ namespace Epsitec.Common.Widgets
 		Horizontal
 	}
 	
+	public class MenuEventArgs : System.EventArgs
+	{
+		public MenuEventArgs()
+		{
+			this.root = AbstractMenu.RootMenu;
+		}
+		
+		
+		public MenuItem							MenuItem
+		{
+			get
+			{
+				return this.item;
+			}
+			set
+			{
+				this.item = value;
+			}
+		}
+		
+		public AbstractMenu						RootMenu
+		{
+			get
+			{
+				return this.root;
+			}
+		}
+		
+		
+		private MenuItem						item;
+		private AbstractMenu					root;
+	}
+	
+	public delegate void MenuEventHandler(object sender, MenuEventArgs e);
+	
+	
 	/// <summary>
 	/// La classe Menu représente un menu horizontal ou vertical.
 	/// </summary>
@@ -493,7 +529,7 @@ namespace Epsitec.Common.Widgets
 					
 					if ( feel.TestCancelKey (message) )
 					{
-						AbstractMenu.CloseAll();
+						AbstractMenu.Reject();
 						break;
 					}
 					
@@ -556,17 +592,24 @@ namespace Epsitec.Common.Widgets
 			
 			if ( menu == null )  menu = AbstractMenu.RootMenu;
 			
-			if ( menu.SelectedIndex >= 0 )
+			MenuEventArgs e = new MenuEventArgs();
+			
+			int index = menu.SelectedIndex;
+			
+			AbstractMenu.CloseAll();
+			
+			if ( index >= 0 )
 			{
 				// L'utilisateur a sélectionné une commande dans un menu valide. On doit
 				// encore générer la commande ad hoc.
 				
-				MenuItem item = menu.Items[menu.SelectedIndex];
+				MenuItem item = menu.Items[index];
 				
+				e.MenuItem = item;
+				
+				menu.OnAccepted(e);
 				item.ExecuteCommand ();
 			}
-			
-			AbstractMenu.CloseAll();
 		}
 		
 		protected static void CloseAll()
@@ -583,6 +626,16 @@ namespace Epsitec.Common.Widgets
 			AbstractMenu.UnregisterFilter();
 		}
 
+		protected static void Reject()
+		{
+			AbstractMenu root = AbstractMenu.RootMenu;
+			AbstractMenu.CloseAll();
+			
+			if (root != null)
+			{
+				root.OnRejected();
+			}
+		}
 		
 		private bool OpenSubmenu(MenuItem item, bool forceQuick)
 		{
@@ -770,7 +823,7 @@ namespace Epsitec.Common.Widgets
 					menu = AbstractMenu.DetectMenu(mouse);
 					if ( menu == null )
 					{
-						AbstractMenu.CloseAll();
+						AbstractMenu.Reject();
 						
 						// On n'indique qu'un message est consommé que s'il concerne
 						// la partie client de la fenêtre...						
@@ -784,7 +837,7 @@ namespace Epsitec.Common.Widgets
 						MenuItem cell = AbstractMenu.SearchItem(mouse, menu);
 						if ( cell == null )
 						{
-							AbstractMenu.CloseAll();
+							AbstractMenu.Reject();
 							message.Swallowed = true;
 						}
 					}
@@ -821,7 +874,7 @@ namespace Epsitec.Common.Widgets
 
 		private static void HandleApplicationDeactivated(object sender)
 		{
-			AbstractMenu.CloseAll();
+			AbstractMenu.Reject();
 		}
 
 		
@@ -1081,6 +1134,27 @@ namespace Epsitec.Common.Widgets
 		}
 
 		#endregion
+		
+		
+		protected virtual void OnAccepted(MenuEventArgs e)
+		{
+			if ( this.Accepted != null )
+			{
+				this.Accepted(this, e);
+			}
+		}
+		
+		protected virtual void OnRejected()
+		{
+			if ( this.Rejected != null )
+			{
+				this.Rejected(this);
+			}
+		}
+		
+		
+		public event MenuEventHandler				Accepted;
+		public event Support.EventHandler			Rejected;
 		
 		protected MenuType							type;
 		
