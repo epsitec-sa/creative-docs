@@ -302,12 +302,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "IO\CompressionStream.cs"
+                    RelPath = "IO\Compression.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "IO\DecompressionStream.cs"
+                    RelPath = "IO\Decompression.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
