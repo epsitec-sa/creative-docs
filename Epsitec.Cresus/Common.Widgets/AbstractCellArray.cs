@@ -41,12 +41,12 @@ namespace Epsitec.Common.Widgets
 			this.containerH = new Widget();
 			this.Children.Add(this.containerH);
 
-			this.scrollerV = new Scroller();
-			this.scrollerV.Invert = true;  // de haut en bas
+			this.scrollerV = new VScroller();
+			this.scrollerV.IsInverted = true;  // de haut en bas
 			this.scrollerV.Moved += new EventHandler(this.HandleScrollerV);
 			this.Children.Add(this.scrollerV);
 
-			this.scrollerH = new Scroller();
+			this.scrollerH = new HScroller();
 			this.scrollerH.Moved += new EventHandler(this.HandleScrollerH);
 			this.Children.Add(this.scrollerH);
 		}
@@ -62,6 +62,17 @@ namespace Epsitec.Common.Widgets
 			
 			base.Dispose(disposing);
 		}
+		
+		public override double				DefaultHeight
+		{
+			get { return 80; }
+		}
+		
+		public override double				DefaultWidth
+		{
+			get { return 80; }
+		}
+		
 
 
 		// Sytle pour l'en-tête supérieure et l'ascenseur horizontal.
@@ -1109,8 +1120,8 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect = this.Bounds;
 			Drawing.Rectangle iRect = new Drawing.Rectangle(this.margin, this.margin, rect.Width-this.margin*2, rect.Height-this.margin*2);
 
-			this.rightMargin  = this.showScrollerV ? Scroller.StandardWidth : 0;
-			this.bottomMargin = this.showScrollerH ? Scroller.StandardWidth : 0;
+			this.rightMargin  = this.showScrollerV ? this.scrollerV.Width : 0;
+			this.bottomMargin = this.showScrollerH ? this.scrollerH.Height : 0;
 
 			iRect.Left   += this.leftMargin;
 			iRect.Right  -= this.rightMargin;
@@ -1129,10 +1140,9 @@ namespace Epsitec.Common.Widgets
 			// Positionne l'ascenseur vertical.
 			if ( this.showScrollerV )
 			{
-				Drawing.Rectangle sRect = new Drawing.Rectangle();
-				sRect = iRect;
+				Drawing.Rectangle sRect = iRect;
 				sRect.Left  = sRect.Right;
-				sRect.Right = sRect.Left+Scroller.StandardWidth;
+				sRect.Right = sRect.Left+this.scrollerV.Width;
 				this.scrollerV.Bounds = sRect;
 				this.scrollerV.Show();
 			}
@@ -1144,10 +1154,9 @@ namespace Epsitec.Common.Widgets
 			// Positionne l'ascenseur horizontal.
 			if ( this.showScrollerH )
 			{
-				Drawing.Rectangle sRect = new Drawing.Rectangle();
-				sRect = iRect;
+				Drawing.Rectangle sRect = iRect;
 				sRect.Top    = sRect.Bottom;
-				sRect.Bottom = sRect.Top-Scroller.StandardWidth;
+				sRect.Bottom = sRect.Top-this.scrollerH.Height;
 				this.scrollerH.Bounds = sRect;
 				this.scrollerH.Show();
 			}

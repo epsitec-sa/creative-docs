@@ -90,7 +90,7 @@ namespace Epsitec.Common.Tests
 			radio3.Clicked += new MessageEventHandler(this.HandleRadio);
 			box.Children.Add(radio3);
 
-			Scroller scrollv = new Scroller();
+			Scroller scrollv = new VScroller();
 			scrollv.Location = new Point(120, 50);
 			scrollv.Size = new Size(15, 120);
 			scrollv.Range = 10;
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Tests
 			scrollv.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(scrollv);
 
-			Scroller scrollh = new Scroller();
+			Scroller scrollh = new HScroller();
 			scrollh.Location = new Point(140, 50);
 			scrollh.Size = new Size(120, 15);
 			scrollh.Range = 10;
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Tests
 			page2.TabTitle = "<m>D</m>euxieme";
 			tb.Add(page2);
 
-			Scroller scrollv = new Scroller();
+			Scroller scrollv = new VScroller();
 			scrollv.Name = "Scroller";
 			scrollv.Location = new Point(10, 10);
 			scrollv.Size = new Size(15, inside.Height-20);
@@ -959,7 +959,7 @@ namespace Epsitec.Common.Tests
 			tb.Add(page2);
 
 #if true
-			Scroller scrollv = new Scroller();
+			Scroller scrollv = new VScroller();
 			scrollv.Name = "Scroller";
 			scrollv.Location = new Point(10, 10);
 			scrollv.Size = new Size(15, inside.Height-20);

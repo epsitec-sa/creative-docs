@@ -197,6 +197,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "HScroller.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IAdorner.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -338,6 +343,11 @@
                 />
                 <File
                     RelPath = "ToolBar.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "VScroller.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

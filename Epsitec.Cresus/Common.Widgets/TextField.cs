@@ -542,7 +542,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.type != TextFieldType.MultiLine )  return;
 
-			this.scrollOffset.Y = this.scroller.Position-this.scroller.Range+TextField.infinity-this.realSize.Height;
+			this.scrollOffset.Y = this.scroller.Value-this.scroller.Range+TextField.infinity-this.realSize.Height;
 			this.Invalidate();
 		}
 
@@ -1208,16 +1208,16 @@ namespace Epsitec.Common.Widgets
 						this.scroller.SetEnabled(false);
 						this.scroller.Range = 1;
 						this.scroller.Display = 1;
-						this.scroller.Position = 0;
+						this.scroller.Value = 0;
 					}
 					else
 					{
 						this.scroller.SetEnabled(true);
 						this.scroller.Range = h-this.realSize.Height;
 						this.scroller.Display = this.realSize.Height/h * this.scroller.Range;
-						this.scroller.Position = this.scroller.Range - (TextField.infinity-offset);
-						this.scroller.ButtonStep = 20;
-						this.scroller.PageStep = this.realSize.Height/2;
+						this.scroller.Value = this.scroller.Range - (TextField.infinity-offset);
+						this.scroller.SmallChange = 20;
+						this.scroller.LargeChange = this.realSize.Height/2;
 					}
 				}
 			}

@@ -1,13 +1,16 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Scroller implémente un ascenseur.
+	/// La classe Scroller implémente la classe de base des ascenseurs
+	/// HScroller et VScroller.
 	/// </summary>
-	public class Scroller : Widget
+	public abstract class Scroller : Widget
 	{
 		// Constructeur de l'ascenseur.
-		public Scroller()
+		protected Scroller(bool vertical)
 		{
+			this.vertical = vertical;
+			
 			this.internalState |= InternalState.AutoEngage;
 			this.internalState |= InternalState.Engageable;
 			this.internalState |= InternalState.AutoRepeatEngaged;
@@ -51,14 +54,14 @@ namespace Epsitec.Common.Widgets
 			this.DelayPress ();
 		}
 
-
-		// Retourne la largeur standard d'un ascenseur.
-		public static double StandardWidth
+		protected override void SetBounds(double x1, double y1, double x2, double y2)
 		{
-			get
-			{
-				return Scroller.standardWidth;
-			}
+			double dx = x2-x1;
+			double dy = y2-y1;
+			
+			this.sizeOk = (dx >= this.MinSize.Width) && (dy >= this.MinSize.Height);
+			
+			base.SetBounds (x1, y1, x2, y2);
 		}
 
 
@@ -67,7 +70,7 @@ namespace Epsitec.Common.Widgets
 		// Ascenseur vertical:   true  -> zéro en haut
 		// Ascenseur horizontal: false -> zéro à gauche
 		// Ascenseur horizontal: true  -> zéro à droite
-		public bool Invert
+		public bool IsInverted
 		{
 			get
 			{
@@ -223,7 +226,6 @@ namespace Epsitec.Common.Widgets
 			base.UpdateClientGeometry();
 
 			Drawing.Rectangle rect = this.Bounds;
-			this.vertical = (rect.Height > rect.Width);
 
 			if ( this.arrowUp != null )
 			{
@@ -261,6 +263,8 @@ namespace Epsitec.Common.Widgets
 		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
+			if ( !this.sizeOk ) return;
+
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
@@ -295,12 +299,12 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.vertical )
 			{
-				if ( pos < this.cabRect.Bottom )
+				if ( pos < this.thumbRect.Bottom )
 				{
 					this.pageScroll = -this.pageStep;
 					this.DelayPress();
 				}
-				else if ( pos > this.cabRect.Top )
+				else if ( pos > this.thumbRect.Top )
 				{
 					this.pageScroll = this.pageStep;
 					this.DelayPress();
@@ -308,17 +312,17 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					this.pageScroll = 0;
-					this.cabOffset = pos-this.cabRect.Bottom;
+					this.thumbOffset = pos-this.thumbRect.Bottom;
 				}
 			}
 			else
 			{
-				if ( pos < this.cabRect.Left )
+				if ( pos < this.thumbRect.Left )
 				{
 					this.pageScroll = -this.pageStep;
 					this.DelayPress();
 				}
-				else if ( pos > this.cabRect.Right )
+				else if ( pos > this.thumbRect.Right )
 				{
 					this.pageScroll = this.pageStep;
 					this.DelayPress();
@@ -326,7 +330,7 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					this.pageScroll = 0;
-					this.cabOffset = pos-this.cabRect.Left;
+					this.thumbOffset = pos-this.thumbRect.Left;
 				}
 			}
 		}
@@ -339,11 +343,11 @@ namespace Epsitec.Common.Widgets
 				double p;
 				if ( this.vertical )
 				{
-					p = (pos-this.cabOffset-this.sliderRect.Bottom)*this.Range/(this.sliderRect.Height-this.cabRect.Height);
+					p = (pos-this.thumbOffset-this.sliderRect.Bottom)*this.Range/(this.sliderRect.Height-this.thumbRect.Height);
 				}
 				else
 				{
-					p = (pos-this.cabOffset-this.sliderRect.Left)*this.Range/(this.sliderRect.Width-this.cabRect.Width);
+					p = (pos-this.thumbOffset-this.sliderRect.Left)*this.Range/(this.sliderRect.Width-this.thumbRect.Width);
 				}
 				if ( this.invert )  p = this.Range-p;
 				this.Value = this.minimum + p;
@@ -403,6 +407,8 @@ namespace Epsitec.Common.Widgets
 		// Dessine l'ascenseur.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			if ( !this.sizeOk ) return;
+			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
@@ -426,41 +432,41 @@ namespace Epsitec.Common.Widgets
 				if ( this.vertical )
 				{
 					double h = this.sliderRect.Height*this.display/this.Range;
-					if ( h < Scroller.minimalCab )  h = Scroller.minimalCab;
+					if ( h < Scroller.minimalThumb )  h = Scroller.minimalThumb;
 					double p = (pos/this.Range)*(this.sliderRect.Height-h);
-					this.cabRect = this.sliderRect;
-					this.cabRect.Bottom += p;
-					this.cabRect.Height = h;
+					this.thumbRect = this.sliderRect;
+					this.thumbRect.Bottom += p;
+					this.thumbRect.Height = h;
 
 					if ( this.pageScroll < 0 )
 					{
 						tabRect = this.sliderRect;
-						tabRect.Top = this.cabRect.Bottom;
+						tabRect.Top = this.thumbRect.Bottom;
 					}
 					if ( this.pageScroll > 0 )
 					{
 						tabRect = this.sliderRect;
-						tabRect.Bottom = this.cabRect.Top;
+						tabRect.Bottom = this.thumbRect.Top;
 					}
 				}
 				else
 				{
 					double h = this.sliderRect.Width*this.display/this.Range;
-					if ( h < Scroller.minimalCab )  h = Scroller.minimalCab;
+					if ( h < Scroller.minimalThumb )  h = Scroller.minimalThumb;
 					double p = (pos/this.Range)*(this.sliderRect.Width-h);
-					this.cabRect = this.sliderRect;
-					this.cabRect.Left += p;
-					this.cabRect.Width = h;
+					this.thumbRect = this.sliderRect;
+					this.thumbRect.Left += p;
+					this.thumbRect.Width = h;
 
 					if ( this.pageScroll < 0 )
 					{
 						tabRect = this.sliderRect;
-						tabRect.Right = this.cabRect.Left;
+						tabRect.Right = this.thumbRect.Left;
 					}
 					if ( this.pageScroll > 0 )
 					{
 						tabRect = this.sliderRect;
-						tabRect.Left = this.cabRect.Right;
+						tabRect.Left = this.thumbRect.Right;
 					}
 				}
 			}
@@ -472,29 +478,32 @@ namespace Epsitec.Common.Widgets
 			if ( this.Range > 0 && this.Display > 0 && this.IsEnabled )
 			{
 				Widgets.Direction dir = this.vertical ? Direction.Up : Direction.Left;
-				adorner.PaintScrollerHandle(graphics, this.cabRect, Drawing.Rectangle.Empty, this.PaintState&(~WidgetState.Engaged), dir);
+				adorner.PaintScrollerHandle(graphics, this.thumbRect, Drawing.Rectangle.Empty, this.PaintState&(~WidgetState.Engaged), dir);
 			}
 		}
 
 
 		public event EventHandler Moved;
 
-		protected static double		standardWidth = 15;
-		protected static double		minimalCab = 8;
-		protected bool				vertical = true;
-		protected bool				invert = false;
-		protected double			minimum = 0.0;
-		protected double			maximum = 1.0;
-		protected double			display = 0.5;
-		protected double			position = 0;
-		protected double			buttonStep = 0.1;
-		protected double			pageStep = 0.2;
-		protected ArrowButton		arrowUp;
-		protected ArrowButton		arrowDown;
-		protected bool				mouseDown = false;
-		protected double			cabOffset = 0;
-		protected double			pageScroll = 0;
-		protected Drawing.Rectangle	sliderRect = new Drawing.Rectangle();
-		protected Drawing.Rectangle	cabRect = new Drawing.Rectangle();
+		
+		protected static readonly double	defaultBreadth = 15;
+		protected static readonly double	minimalThumb = 8;
+		
+		protected bool						vertical = true;
+		protected bool						sizeOk = false;
+		protected bool						invert = false;
+		protected double					minimum = 0.0;
+		protected double					maximum = 1.0;
+		protected double					display = 0.5;
+		protected double					position = 0;
+		protected double					buttonStep = 0.1;
+		protected double					pageStep = 0.2;
+		protected ArrowButton				arrowUp;
+		protected ArrowButton				arrowDown;
+		protected bool						mouseDown;
+		protected double					thumbOffset;
+		protected double					pageScroll;
+		protected Drawing.Rectangle			sliderRect;
+		protected Drawing.Rectangle			thumbRect;
 	}
 }

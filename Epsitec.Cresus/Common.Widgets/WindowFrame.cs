@@ -244,6 +244,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.engaged_widget != value)
 				{
+					System.Diagnostics.Debug.WriteLine ("Engage widget " + ((value == null) ? "NULL" : (value.GetType ().ToString () + " named " + value.Name)));
 					Widget old_engage = this.engaged_widget;
 					Widget new_engage = value;
 					

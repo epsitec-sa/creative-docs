@@ -31,8 +31,8 @@ namespace Epsitec.Common.Widgets
 
 			this.scrollListStyle = ScrollListStyle.Normal;
 			this.lineHeight = this.DefaultFontHeight+1;
-			this.scroller = new Scroller();
-			this.scroller.Invert = true;
+			this.scroller = new VScroller();
+			this.scroller.IsInverted = true;
 			this.scroller.Moved += new EventHandler(this.HandleScroller);
 			this.Children.Add(this.scroller);
 		}
@@ -395,9 +395,16 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				this.rightMargin = this.scroller.IsVisible ? Scroller.StandardWidth : 0;
-				Drawing.Rectangle aRect = new Drawing.Rectangle(this.margin+rect.Width-this.rightMargin, this.margin, this.rightMargin, rect.Height);
-				this.scroller.Bounds = aRect;
+				if ( this.scroller.IsVisible )
+				{
+					this.rightMargin = this.scroller.Width;
+					Drawing.Rectangle aRect = new Drawing.Rectangle(this.margin+rect.Width-this.rightMargin, this.margin, this.rightMargin, rect.Height);
+					this.scroller.Bounds = aRect;
+				}
+				else
+				{
+					this.rightMargin = 0;
+				}
 			}
 
 			this.UpdateTextlayouts();

@@ -129,7 +129,7 @@ namespace Epsitec.Common.Tests
 			back.SetClientZoom (zoom);
 			
 			Button button = new Button ();
-			Scroller scroller = new Scroller ();
+			Scroller scroller = new VScroller ();
 			
 			button.Location = new Point (10, 10);
 			button.Size     = new Size (60, 24);

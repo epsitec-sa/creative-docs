@@ -27,12 +27,12 @@ namespace Epsitec.Common.Widgets
 			this.header = new Widget();
 			this.Children.Add(this.header);
 
-			this.scrollerV = new Scroller();
-			this.scrollerV.Invert = true;
+			this.scrollerV = new VScroller();
+			this.scrollerV.IsInverted = true;
 			this.scrollerV.Moved += new EventHandler(this.HandleScrollerV);
 			this.Children.Add(this.scrollerV);
 
-			this.scrollerH = new Scroller();
+			this.scrollerH = new HScroller();
 			this.scrollerH.Moved += new EventHandler(this.HandleScrollerH);
 			this.Children.Add(this.scrollerH);
 
@@ -619,8 +619,8 @@ namespace Epsitec.Common.Widgets
 			this.isDirty = false;
 
 			this.topMargin = this.rowHeight;
-			this.rightMargin = Scroller.StandardWidth;
-			this.bottomMargin = Scroller.StandardWidth;
+			this.rightMargin = this.scrollerV.Width;
+			this.bottomMargin = this.scrollerH.Height;
 
 			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Width, this.Height);
 			rect.Inflate(-this.margin, -this.margin);
