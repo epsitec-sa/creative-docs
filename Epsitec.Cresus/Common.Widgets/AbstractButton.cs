@@ -60,7 +60,7 @@ namespace Epsitec.Common.Widgets
 						return;
 					}
 					
-					if ( message.KeyCode == KeyCode.Space &&
+					if ( Feel.Factory.Active.TestPressButtonKey(message) &&
 						 this.isKeyboardPressed == false  )
 					{
 						this.isKeyboardPressed = true;

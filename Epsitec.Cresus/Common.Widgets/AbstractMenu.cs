@@ -288,7 +288,7 @@ namespace Epsitec.Common.Widgets
 					if (message.IsAltPressed == false &&
 						message.IsCtrlPressed == false &&
 						message.IsShiftPressed == false &&
-						this.ProcessKeyDown(message.KeyCode))
+						this.ProcessKeyDown(message))
 					{
 						message.Consumer = this;
 					}
@@ -297,11 +297,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Gestion d'une touche pressée avec KeyDown dans le menu.
-		protected bool ProcessKeyDown(KeyCode key)
+		protected bool ProcessKeyDown(Message message)
 		{
 			AbstractMenu parent = this.parentMenu;
 			
-			switch ( key )
+			switch ( message.KeyCode )
 			{
 				case KeyCode.ArrowUp:
 					this.SelectOtherMenuItem(-1);
@@ -367,16 +367,21 @@ namespace Epsitec.Common.Widgets
 					}
 					break;
 
-				case KeyCode.Return:
-				case KeyCode.Space:
-					this.ValidateAndExecuteCommand();
-					break;
-
-				case KeyCode.Escape:
-					this.CloseAll();
-					break;
-				
 				default:
+					IFeel feel = Feel.Factory.Active;
+					
+					if ( feel.TestSelectItemKey (message) )
+					{
+						this.ValidateAndExecuteCommand();
+						break;
+					}
+					
+					if ( feel.TestCancelKey (message) )
+					{
+						this.CloseAll();
+						break;
+					}
+					
 					return false;
 			}
 			
