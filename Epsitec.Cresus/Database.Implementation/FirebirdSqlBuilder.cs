@@ -20,64 +20,25 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			if (this.command_cache == null)
 			{
-				this.command_cache = new FbCommand ();
-				//	TODO: ajouter le code pour remplir la commande
-			}
-		}
-		
-		#region ISqlBuilder Members
-
-		public bool								AutoClear
-		{
-			get { return this.auto_clear; }
-			set { this.auto_clear = value; }
-		}
-
-		public System.Data.IDbCommand			Command
-		{
-			get
-			{
-				if (this.auto_clear)
+				this.command_cache = this.fb.NewDbCommand () as FbCommand;
+				
+				int field_i = 0;
+				
+				foreach (SqlField field in this.command_params)
 				{
-					this.Clear ();
+					FbDbType    fb_type  = this.GetFbType (field.RawType);
+					string      fb_name    = string.Format (TypeConverter.InvariantFormatProvider, "@PARAM_{0}", field_i++);
+					FbParameter fb_param = new FbParameter (fb_name, fb_type);
+					
+					fb_param.Value = field.AsConstant;
+					
+					this.command_cache.Parameters.Add (fb_param);
 				}
 				
-				this.UpdateCommand ();
-				
-				return this.command_cache;
+				this.command_cache.CommandType = System.Data.CommandType.Text;
+				this.command_cache.CommandText = this.buffer.ToString ();
 			}
 		}
-
-		
-		public void Clear()
-		{
-			this.command_cache = null;
-			this.buffer = new System.Text.StringBuilder ();
-			this.command_params.Clear ();
-		}
-
-		
-		public bool ValidateName(string value)
-		{
-			return DbSqlStandard.ValidateName (value);
-		}
-
-		public bool ValidateString(string value)
-		{
-			return DbSqlStandard.ValidateString (value);
-		}
-
-		public bool ValidateNumber(string value)
-		{
-			return DbSqlStandard.ValidateNumber (value);
-		}
-
-		public void ThrowError(string message)
-		{
-			throw new DbSyntaxException (this.fb.DbAccess, message);
-		}
-		
-		
 		
 		protected string GetSqlType(SqlColumn column)
 		{
@@ -140,6 +101,86 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			return buffer.ToString ();
 		}
+		
+		protected FbDbType GetFbType(DbRawType raw_type)
+		{
+			switch (raw_type)
+			{
+				case DbRawType.Int16:			return FbDbType.SmallInt;
+				case DbRawType.Int32:			return FbDbType.Integer;
+				case DbRawType.Int64:			return FbDbType.BigInt;
+				case DbRawType.SmallDecimal:	return FbDbType.Decimal;
+				case DbRawType.LargeDecimal:	return FbDbType.Decimal;
+				case DbRawType.Time:			return FbDbType.Time;
+				case DbRawType.Date:			return FbDbType.Date;
+				case DbRawType.DateTime:		return FbDbType.TimeStamp;
+				case DbRawType.String:			return FbDbType.VarChar;
+				case DbRawType.ByteArray:		return FbDbType.LongVarBinary;
+			}
+			
+			this.ThrowError (string.Format (TypeConverter.InvariantFormatProvider, "Type {0} cannot be mapped to Firebird Type.", raw_type.ToString ()));
+			
+			//	code jamais atteint:
+			
+			throw null;
+		}
+		
+		
+		
+		
+		#region ISqlBuilder Members
+
+		public bool								AutoClear
+		{
+			get { return this.auto_clear; }
+			set { this.auto_clear = value; }
+		}
+
+		public System.Data.IDbCommand			Command
+		{
+			get
+			{
+				if (this.auto_clear)
+				{
+					this.Clear ();
+				}
+				
+				this.UpdateCommand ();
+				
+				return this.command_cache;
+			}
+		}
+
+		
+		public void Clear()
+		{
+			this.command_cache = null;
+			this.buffer = new System.Text.StringBuilder ();
+			this.command_params.Clear ();
+		}
+
+		
+		public bool ValidateName(string value)
+		{
+			return DbSqlStandard.ValidateName (value);
+		}
+
+		public bool ValidateString(string value)
+		{
+			return DbSqlStandard.ValidateString (value);
+		}
+
+		public bool ValidateNumber(string value)
+		{
+			return DbSqlStandard.ValidateNumber (value);
+		}
+
+		public void ThrowError(string message)
+		{
+			throw new DbSyntaxException (this.fb.DbAccess, message);
+		}
+		
+		
 		
 		
 		public void InsertTable(SqlTable table)
