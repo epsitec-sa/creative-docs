@@ -18,6 +18,9 @@ namespace Epsitec.Common.Widgets
 			this.h_scroller.Parent = this;
 			this.v_scroller.Parent = this;
 			
+			this.panel_container = new Widget (this);
+			this.panel_container.Parent = this;
+			
 			this.UpdateGeometry ();
 		}
 		
@@ -48,7 +51,7 @@ namespace Epsitec.Common.Widgets
 		protected void AttachPanel(Panel panel)
 		{
 			panel.LayoutChanged += new EventHandler (HandlePanelLayoutChanged);
-			panel.Parent = this;
+			panel.Parent = this.panel_container;
 		}
 		
 		protected void DetachPanel(Panel panel)
@@ -129,6 +132,7 @@ namespace Epsitec.Common.Widgets
 				break;
 			}
 			
+			this.panel_container.Bounds = new Drawing.Rectangle (0, margin_y, this.Client.Width - margin_x, this.Client.Height - margin_y);
 			this.panel.Location = new Drawing.Point (0, margin_y - delta_dy);
 			
 			this.h_scroller.SetVisible (margin_y > 0);
@@ -137,6 +141,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		protected Panel					panel;
+		protected Widget				panel_container;
 		protected Drawing.Size			panel_size;
 		protected VScroller				v_scroller;
 		protected HScroller				h_scroller;
