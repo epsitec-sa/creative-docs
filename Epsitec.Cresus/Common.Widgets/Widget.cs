@@ -422,6 +422,9 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				WidgetState active = this.widget_state & WidgetState.ActiveMask;
+				
+				System.Diagnostics.Debug.Assert ((value & WidgetState.ActiveMask) == value);
+				
 				if (active != value)
 				{
 					this.widget_state &= ~WidgetState.ActiveMask;
@@ -1380,7 +1383,7 @@ namespace Epsitec.Common.Widgets
 			if (this.text_layout != null)
 			{
 				this.text_layout.Alignment  = this.Alignment;
-				this.text_layout.LayoutSize = this.Size;
+				this.text_layout.LayoutSize = this.Client.Size;
 			}
 		}
 		

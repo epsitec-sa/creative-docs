@@ -30,7 +30,65 @@ namespace Epsitec.Common.Tests
 			a.Name = "A"; a.Location = new Point (x, 40); a.Size = new Size (80, 20); a.Text = "OK";	 a.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
 			b.Name = "B"; b.Location = new Point (x, 10); b.Size = new Size (80, 20); b.Text = "Cancel"; b.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
 			
+			a.Clicked += new MessageEventHandler(this.HandleWidgetClicked);
+			b.Clicked += new MessageEventHandler(this.HandleWidgetClicked);
+			a.Pressed += new MessageEventHandler(this.HandleWidgetPressed);
+			b.Pressed += new MessageEventHandler(this.HandleWidgetPressed);
+			a.Released += new MessageEventHandler(this.HandleWidgetReleased);
+			b.Released += new MessageEventHandler(this.HandleWidgetReleased);
+			a.Engaged += new System.EventHandler(this.HandleWidgetEngaged);
+			b.Engaged += new System.EventHandler(this.HandleWidgetEngaged);
+			a.Disengaged += new System.EventHandler(this.HandleWidgetDisengaged);
+			b.Disengaged += new System.EventHandler(this.HandleWidgetDisengaged);
+			a.StillEngaged += new System.EventHandler(this.HandleWidgetStillEngaged);
+			b.StillEngaged += new System.EventHandler(this.HandleWidgetStillEngaged);
+			
+			a.AutoRepeatEngaged = true;
+			b.AutoRepeatEngaged = false;
+			
 			window.Show ();
+		}
+
+		private void HandleWidgetClicked(object sender, MessageEventArgs e)
+		{
+			Widget widget = sender as Widget;
+			
+			System.Diagnostics.Debug.WriteLine ("Cliqué sur " + widget.Name + " avec le bouton " + e.Message.Button.ToString ());
+		}
+
+		private void HandleWidgetPressed(object sender, MessageEventArgs e)
+		{
+			Widget widget = sender as Widget;
+			
+			System.Diagnostics.Debug.WriteLine ("Souris pressée dans " + widget.Name + ", bouton " + e.Message.Button.ToString ());
+		}
+		
+		private void HandleWidgetReleased(object sender, MessageEventArgs e)
+		{
+			Widget widget = sender as Widget;
+			
+			System.Diagnostics.Debug.WriteLine ("Souris relâchée dans " + widget.Name + ", bouton " + e.Message.Button.ToString ());
+		}
+
+		private void HandleWidgetEngaged(object sender, System.EventArgs e)
+		{
+			Widget widget = sender as Widget;
+			
+			System.Diagnostics.Debug.WriteLine ("Pressé Widget " + widget.Name);
+		}
+
+		private void HandleWidgetDisengaged(object sender, System.EventArgs e)
+		{
+			Widget widget = sender as Widget;
+			
+			System.Diagnostics.Debug.WriteLine ("Relâché Widget  " + widget.Name);
+		}
+
+		private void HandleWidgetStillEngaged(object sender, System.EventArgs e)
+		{
+			Widget widget = sender as Widget;
+			
+			System.Diagnostics.Debug.WriteLine ("Toujours pressé Widget " + widget.Name);
 		}
 	}
 	

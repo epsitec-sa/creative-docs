@@ -156,6 +156,19 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 		}
 
+		public void PaintButtonTextLayout(Drawing.Graphics graphics,
+										  Drawing.Point pos,
+										  TextLayout text,
+										  WidgetState state,
+										  Direction shadow,
+										  ButtonStyle style)
+		{
+			//	TODO: gère state et style pour déterminer un éventuel offset
+			//	de la position d'affichage.
+			
+			this.PaintGeneralTextLayout (graphics, pos, text, state, shadow);
+		}
+		
 		public void PaintButtonForeground(Drawing.Graphics graphics,
 			Drawing.Rectangle rect,
 			Widgets.WidgetState state,
@@ -307,6 +320,14 @@ namespace Epsitec.Common.Widgets.Adorner
 
 		public void PaintTextSelectionForeground(Drawing.Graphics graphics,
 			Drawing.Rectangle[] rect)
+		{
+		}
+
+		public void PaintGeneralTextLayout(Drawing.Graphics graphics,
+			Drawing.Point pos,
+			TextLayout text,
+			WidgetState state,
+			Direction shadow)
 		{
 		}
 

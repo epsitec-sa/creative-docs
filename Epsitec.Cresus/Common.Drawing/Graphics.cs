@@ -138,10 +138,7 @@ namespace Epsitec.Common.Drawing
 		
 		public double AddText(double x, double y, string text, Font font, double size)
 		{
-			double width = this.rasterizer.AddText (font, text, x, y, size);
-			System.Diagnostics.Debug.WriteLine (">"+text+"< width="+width.ToString ());
-			
-			return width;
+			return this.rasterizer.AddText (font, text, x, y, size);
 		}
 		
 		public void AddFilledRectangle(double x, double y, double width, double height)

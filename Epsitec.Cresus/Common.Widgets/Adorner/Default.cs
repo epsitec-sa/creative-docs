@@ -172,6 +172,25 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 		}
 
+		public void PaintButtonTextLayout(Drawing.Graphics graphics,
+										  Drawing.Point pos,
+										  TextLayout text,
+										  WidgetState state,
+										  Direction shadow,
+										  ButtonStyle style)
+		{
+			//	TODO: gère state et style pour déterminer un éventuel offset
+			//	de la position d'affichage.
+			
+			if ((state & WidgetState.Engaged) != 0 )  // bouton pressé ?
+			{
+				pos.X ++;
+				pos.Y --;
+			}
+			
+			this.PaintGeneralTextLayout (graphics, pos, text, state, shadow);
+		}
+
 		public void PaintButtonForeground(Drawing.Graphics graphics,
 										  Drawing.Rectangle rect,
 										  Widgets.WidgetState state,
@@ -326,6 +345,31 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 		}
 
+		public void PaintGeneralTextLayout(Drawing.Graphics graphics,
+										   Drawing.Point pos,
+										   TextLayout text,
+										   WidgetState state,
+										   Direction shadow)
+		{
+			if ((state & WidgetState.Enabled) != 0)
+			{
+				text.Paint(pos, graphics);
+			}
+			else
+			{
+				double gamma = graphics.Rasterizer.Gamma;
+				
+				pos.X ++;
+				pos.Y --;
+				
+				graphics.Rasterizer.Gamma = 0.5;
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromName("ControlLightLight"));
+				graphics.Rasterizer.Gamma = gamma;
+				pos.X ++;
+				pos.Y ++;
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromName("ControlDark"));
+			}
+		}
 
 
 		// Retourne la direction opposée.

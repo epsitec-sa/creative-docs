@@ -10,11 +10,11 @@ namespace Epsitec.Cresus.Database
 		//	plusieurs commandes SQL. Le buffer interne est vraisemblablement
 		//	implémenté au moyen d'une instance de System.Text.StringBuilder.
 		//
-		//	Si AutoClear = true, la lecture de la propriété CommandString fera
-		//	aussi automatiquement un Clear.
+		//	Si AutoClear = true, la lecture de la propriété Command fera aussi
+		//	automatiquement un Clear.
 		
-		bool			AutoClear				{ get; set; }
-		string			CommandString			{ get; }
+		bool					AutoClear		{ get; set; }
+		System.Data.IDbCommand	Command			{ get; }
 		
 		void Clear();
 		
@@ -39,5 +39,9 @@ namespace Epsitec.Cresus.Database
 		void InsertData(string table_name, SqlFieldCollection fields);
 		void UpdateData(string table_name, SqlFieldCollection fields, SqlFieldCollection conditions);
 		void RemoveData(string table_name, SqlFieldCollection conditions);
+		
+		//	Création d'une requête d'exécution de procédure SQL :
+		
+		void ExecuteProcedure(string procedure_name, SqlFieldCollection fields);
 	}
 }

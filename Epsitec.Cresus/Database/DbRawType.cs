@@ -7,6 +7,7 @@ namespace Epsitec.Cresus.Database
 	public enum DbRawType
 	{
 		Unsupported,					//	type non supporté
+		Unknown = Unsupported,			//	type inconnu (= type non supporté)
 		Null,							//	type pas analysable, donnée absente
 		
 		Boolean,						//	1 bit

@@ -226,6 +226,7 @@ namespace Epsitec.Common.Widgets
 			this.dirty_rectangle = new Drawing.Rectangle (0, 0, width, height);
 		}
 		
+		
 		public virtual void MarkForRepaint(Drawing.Rectangle rect)
 		{
 			this.dirty_rectangle.MergeWith (rect);
@@ -237,7 +238,12 @@ namespace Epsitec.Common.Widgets
 			
 			this.Invalidate (new System.Drawing.Rectangle (x, y, width, height));
 		}
-
+		
+		public virtual void SynchronousRepaint()
+		{
+			this.Update ();
+		}
+		
 		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
 		{
@@ -353,6 +359,11 @@ namespace Epsitec.Common.Widgets
 		public virtual void PostProcessMessage(Message message)
 		{
 			Widget consumer = message.Consumer;
+			
+			if (message.Type == MessageType.KeyUp)
+			{
+				this.EngagedWidget = null;
+			}
 			
 			if (consumer != null)
 			{

@@ -25,6 +25,7 @@ namespace Epsitec.Common.Widgets
 		void PaintIcon(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, string icon);
 		
 		void PaintButtonBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, ButtonStyle style);
+		void PaintButtonTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, Direction shadow, ButtonStyle style);
 		void PaintButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, ButtonStyle style);
 		
 		void PaintTextFieldBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, TextFieldStyle style);
@@ -56,6 +57,8 @@ namespace Epsitec.Common.Widgets
 		void PaintTextCursor(Drawing.Graphics graphics, Drawing.Rectangle rect, bool cursor_on);
 		void PaintTextSelectionBackground(Drawing.Graphics graphics, Drawing.Rectangle[] rect);
 		void PaintTextSelectionForeground(Drawing.Graphics graphics, Drawing.Rectangle[] rect);
+		
+		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, Direction shadow);
 	}
 	
 	public enum Direction

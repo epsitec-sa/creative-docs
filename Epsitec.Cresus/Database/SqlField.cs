@@ -36,6 +36,11 @@ namespace Epsitec.Cresus.Database
 			get { return this.type; }
 		}
 		
+		public DbRawType				RawType
+		{
+			get { return this.raw_type; }
+		}
+		
 		public SqlFieldOrder			Order
 		{
 			get { return this.order; }
@@ -54,6 +59,20 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				if (this.type == SqlFieldType.Constant)
+				{
+					return this.value;
+				}
+				
+				return null;
+			}
+		}
+		
+		public object					AsParameter
+		{
+			get
+			{
+				if ((this.type == SqlFieldType.ParameterIn) ||
+					(this.type == SqlFieldType.ParameterOut))
 				{
 					return this.value;
 				}
@@ -141,6 +160,12 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public void SetParameterOutResult(object raw_value)
+		{
+			//	TODO: crée et initialise une instance de SqlField.
+		}
+		
+		
 		public static SqlField CreateNull()
 		{
 			SqlField field = new SqlField ();
@@ -159,7 +184,18 @@ namespace Epsitec.Cresus.Database
 			return field;
 		}
 		
-		public static SqlField CreateConstant(object raw_value)
+		public static SqlField CreateConstant(object raw_value, DbRawType raw_type)
+		{
+			//	TODO: crée et initialise une instance de SqlField.
+			return null;
+		}
+		
+		public static SqlField CreateParameterIn(object raw_value, DbRawType raw_type)
+		{
+			return SqlField.CreateConstant (raw_value, raw_type);
+		}
+		
+		public static SqlField CreateParameterOut(DbRawType raw_type)
 		{
 			//	TODO: crée et initialise une instance de SqlField.
 			return null;
@@ -223,6 +259,7 @@ namespace Epsitec.Cresus.Database
 		
 		protected SqlFieldType			type = SqlFieldType.Unsupported;
 		protected SqlFieldOrder			order = SqlFieldOrder.None;
+		protected DbRawType				raw_type = DbRawType.Unknown;
 		protected object				value = null;
 		protected string				alias = null;
 	}
@@ -233,9 +270,12 @@ namespace Epsitec.Cresus.Database
 		Unsupported,					//	champ non supporté (ou non défini)
 		
 		Null,							//	constante NULL
-		Constant,						//	constante (donnée compatible DbRawType)
 		All,							//	constante spéciale pour aggrégats: *
 		Default,						//	constante spéciale pour INSERT INTO...
+		Constant,						//	constante (donnée compatible DbRawType)
+		
+		ParameterIn = Constant,			//	paramètre en entrée = comme constante
+		ParameterOut,					//	paramètre en sortie
 		
 		Name,							//	nom (nom de colonne, nom de table, ...)
 		

@@ -149,6 +149,50 @@ table et un nom de colonne par champ à écrire. Le nom de la table est
 passé explicitement à l'appel ISqlBuilder.InsertData et les noms des
 champs sont extraits au moyen de SqlField.Alias.
 
+ISqlBuilder génère un objet System.Data.IDbCommand initialisé avec
+tout ce qu'il faut pour pouvoir exécuter la commande (obtenir un
+System.Data.IDataAdapter via IDbAbstraction.NewDataAdapter, par
+exemple).
+
+ISqlBuilder.Command doit savoir extraire les informations des
+SqlFieldCollection (InsertData, UpdateData) et si besoin créer
+des paramètres pour passer les données. On peut en effet imaginer
+un code du genre:
+
+	SqlFieldCollection fields = ...;
+	ISqlBuilder builder = ...;
+	...
+	fields.Add (SqlField.CreateParameterIn (data, DbRawType.ByteArray));
+	...
+	builder.InsertData ("T_TABLE", fields);
+	...
+
+ISqlBuilder générera probablement :
+
+	FbCommand command = ...;
+	...
+	command.Parameters.Add ("@P_1", FbType...);
+	command.Parameters[0].Value = data;
+	...
+
+ISqlBuilder permet aussi de créer des appels à des procédures SQL,
+mais je n'ai pas encore d'expérience dans ce domaine. Voici l'idée:
+
+- On crée des SqlFields qui définissent les paramètres qui seront
+  passés à la procédure SQL (in et out).
+  
+- On appelle ISqlBuilder.ExecuteProcedure pour générer le code SQL
+  et l'objet System.Data.IDbCommand avec les paramètres.
+
+- On exécute la commande, puis on demande à IDbAbstraction de nous
+  extraire les paramètres retournés en sortie dans une collection
+  de SqlFields. SqlField.AsParameter retourne alors la valeur...
+  
+  IDbAbstraction.ExtractSqlParameters va extraire les paramètres
+  de retour et remplir les instances de SqlField au moyen de la
+  méthode SqlField.SetParameterOutResult.
+
+
 Pour l'instant, ISqlBuilder ne supporte pas d'insertion à partir de
 données provenant directement d'une requête de type SELECT. Certaines
 base n'aiment pas cela, et on peut s'en passer au prix d'un "hop"

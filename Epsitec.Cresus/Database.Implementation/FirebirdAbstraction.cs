@@ -72,6 +72,12 @@ namespace Epsitec.Cresus.Database.Implementation
 			//	TODO: implémenter new DataAdapter(command)
 			return null;
 		}
+
+		public void ExtractSqlParameters(System.Data.IDbCommand command, SqlFieldCollection fields)
+		{
+			//	TODO: extraire les paramètres de retour de command et
+			//	copier leurs valeurs dans les champs correspondants.
+		}
 		#endregion
 		
 		#region IDisposable Members

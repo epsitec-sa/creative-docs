@@ -12,5 +12,7 @@ namespace Epsitec.Cresus.Database
 		
 		System.Data.IDbCommand NewDbCommand();
 		System.Data.IDataAdapter NewDataAdapter(System.Data.IDbCommand command);
+		
+		void ExtractSqlParameters(System.Data.IDbCommand command, SqlFieldCollection fields);
 	}
 }
