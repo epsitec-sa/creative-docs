@@ -149,6 +149,19 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public double					CaretSlope
+		{
+			get
+			{
+				if (this.synthetic_mode == SyntheticFontMode.Oblique)
+				{
+					return 90 - Font.DefaultObliqueAngle;
+				}
+				
+				return AntiGrain.Font.Face.GetCaretSlope (this.handle);
+			}
+		}
+		
 		
 		public int GetGlyphIndex(int unicode)
 		{
