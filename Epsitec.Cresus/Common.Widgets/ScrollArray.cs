@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 	///	La classe ScrollArray réalise une liste déroulante optimisée à deux dimensions,
 	///	ne pouvant contenir que des textes fixes.
 	/// </summary>
-	public class ScrollArray : Widget
+	public class ScrollArray : Widget, Support.IStringSelection
 	{
 		public ScrollArray()
 		{
@@ -125,6 +125,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public char								Separator
+		{
+			get
+			{
+				return this.separator;
+			}
+			set
+			{
+				this.separator = value;
+			}
+		}
 		
 		public int								ColumnCount
 		{
@@ -206,28 +217,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int								SelectedIndex
-		{
-			get
-			{
-				return this.selected_row;
-			}
-			set
-			{
-				if (value != -1)
-				{
-					value = System.Math.Max (value, 0);
-					value = System.Math.Min (value, this.max_rows);
-				}
-				if (value != this.selected_row)
-				{
-					this.selected_row = value;
-					this.RefreshContents ();
-					this.OnSelectedIndexChanged ();
-				}
-			}
-		}
-
 		public int								FirstVisibleIndex
 		{
 			get
@@ -1799,7 +1788,37 @@ invalid:	row    = -1;
 		}
 
 		
-
+		public int FindRow(string[] values)
+		{
+			int rows = this.RowCount;
+			int cols = System.Math.Min (values.Length, this.max_columns);
+			
+			for (int i = 0; i < rows; i++)
+			{
+				bool match = true;
+				
+				for (int j = 0; j < cols; j++)
+				{
+					if (values[j] != null)
+					{
+						if (! this[i,j].StartsWith (values[j]))
+						{
+							match = false;
+							break;
+						}
+					}
+				}
+				
+				if (match)
+				{
+					return i;
+				}
+			}
+			
+			return -1;
+		}
+		
+		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
 			base.PaintBackgroundImplementation (graphics, clip_rect);
@@ -1968,7 +1987,63 @@ invalid:	row    = -1;
 		}
 		
 		
+		#region	IStringSelection Members
+		public int								SelectedIndex
+		{
+			get
+			{
+				return this.selected_row;
+			}
+			set
+			{
+				if (value != -1)
+				{
+					value = System.Math.Max (value, 0);
+					value = System.Math.Min (value, this.max_rows);
+				}
+				if (value != this.selected_row)
+				{
+					this.selected_row = value;
+					this.RefreshContents ();
+					this.OnSelectedIndexChanged ();
+				}
+			}
+		}
+		
+		public string							SelectedItem
+		{
+			get
+			{
+				int row = this.SelectedIndex;
+				
+				if (row == -1)
+				{
+					return null;
+				}
+				
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				for (int i = 0; i < this.max_columns; i++)
+				{
+					if (i > 0)
+					{
+						buffer.Append (this.separator);
+					}
+					
+					buffer.Append (this[row, i]);
+				}
+				
+				return buffer.ToString ();
+			}
+			set
+			{
+				this.SelectedIndex = this.FindRow (value.Split (this.separator));
+			}
+		}
+		
 		public event Support.EventHandler		SelectedIndexChanged;
+		#endregion
+		
 		public event Support.EventHandler		EditionIndexChanged;
 		public event Support.EventHandler		ContentsChanged;
 		public event Support.EventHandler		SortChanged;
@@ -2026,5 +2101,6 @@ invalid:	row    = -1;
 		protected int							cache_dy;
 		protected int							cache_visible_rows;
 		protected int							cache_first_virtvis_row;
+		protected char							separator = ';';
 	}
 }

@@ -97,6 +97,20 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.DetachEditWidgets ();
+				
+				this.max_columns  = 0;
+				this.edit_widgets = null;
+			}
+			
+			base.Dispose (disposing);
+		}
+		
+		
 		protected override void UpdateColumnCount()
 		{
 			base.UpdateColumnCount ();
@@ -118,18 +132,61 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override void Dispose(bool disposing)
+		protected override void UpdateScrollView()
 		{
-			if (disposing)
-			{
-				this.DetachEditWidgets ();
-				
-				this.max_columns  = 0;
-				this.edit_widgets = null;
-			}
-			
-			base.Dispose (disposing);
+			base.UpdateScrollView ();
+			this.UpdateEditGeometry ();
 		}
+		
+		protected virtual  void UpdateEditGeometry()
+		{
+			//	Si la géométrie a changé, on met à jour la position des divers widgets utilisés
+			//	pour l'édition, ainsi que la géométrie du conteneur EditWidget :
+			
+			Drawing.Rectangle bounds = this.GetRowBounds (this.EditionIndex);
+			
+			if ((this.edit_bounds != bounds) ||
+				(this.edit_offset != this.offset) ||
+				(this.edit_width  != this.total_width))
+			{
+				this.edit_bounds = bounds;
+				this.edit_offset = this.offset;
+				this.edit_width  = this.total_width;
+				
+				if (this.edit_bounds.IsValid)
+				{
+					bounds.Deflate (1, 1, 0, -1);
+					
+					this.edit_line.Bounds = bounds;
+					this.edit_line.SetVisible (true);
+					
+					double max_x = bounds.Width;
+					
+					for (int i = 0; i < this.max_columns; i++)
+					{
+						Drawing.Rectangle cell = this.GetUnclippedCellBounds (this.EditionIndex, i);
+						
+						if (cell.IsValid)
+						{
+							cell.Offset (- this.edit_bounds.X, - this.edit_bounds.Y);
+							cell.Inflate (new Drawing.Margins (1, 0, 1, 0));
+							
+							this.edit_widgets[i].Bounds = cell;
+							this.edit_widgets[i].SetVisible (true);
+						}
+						else
+						{
+							this.edit_widgets[i].SetVisible (false);
+						}
+					}
+				}
+				else if (this.edit_line.IsVisible)
+				{
+					this.edit_line.SetVisible (false);
+				}
+			}
+		}
+		
 		
 		protected virtual void AttachEditWidgets()
 		{
@@ -170,54 +227,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected override void UpdateScrollView()
-		{
-			base.UpdateScrollView ();
-			
-			Drawing.Rectangle bounds = this.GetRowBounds (this.EditionIndex);
-			
-			if ((this.edit_bounds != bounds) ||
-				(this.edit_offset != this.offset) ||
-				(this.edit_width  != this.total_width))
-			{
-				this.edit_bounds = bounds;
-				this.edit_offset = this.offset;
-				this.edit_width  = this.total_width;
-				
-				if (this.edit_bounds.IsValid)
-				{
-					bounds.Inflate (new Drawing.Margins (-1, -1, 0, 1));
-					
-					this.edit_line.Bounds = bounds;
-					this.edit_line.SetVisible (true);
-					
-					double max_x = bounds.Width;
-					
-					for (int i = 0; i < this.max_columns; i++)
-					{
-						Drawing.Rectangle cell = this.GetUnclippedCellBounds (this.EditionIndex, i);
-						
-						if (cell.IsValid)
-						{
-							cell.Offset (- this.edit_bounds.X, - this.edit_bounds.Y);
-							cell.Inflate (new Drawing.Margins (1, 0, 1, 0));
-							
-							this.edit_widgets[i].Bounds = cell;
-							this.edit_widgets[i].SetVisible (true);
-						}
-						else
-						{
-							this.edit_widgets[i].SetVisible (false);
-						}
-					}
-				}
-				else if (this.edit_line.IsVisible)
-				{
-					this.edit_line.SetVisible (false);
-				}
-			}
-		}
-		
 		protected override void OnEditionIndexChanged()
 		{
 			base.OnEditionIndexChanged ();
@@ -229,6 +238,7 @@ namespace Epsitec.Common.Widgets
 				this.ReloadEdition ();
 			}
 		}
+		
 		
 		protected bool MoveEditionToLine(int offset)
 		{
@@ -258,8 +268,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		[Support.SuppressBundleSupport]
-		protected class EditWidget : Widget
+		#region EditWidget class
+		/// <summary>
+		/// La classe EditWidget est utilisée comme conteneur pour les widgets en cours
+		/// d'édition. C'est elle qui gère la navigation au moyen de TAB.
+		/// </summary>
+		[Support.SuppressBundleSupport] protected class EditWidget : Widget
 		{
 			public EditWidget(EditArray host)
 			{
@@ -319,11 +333,11 @@ namespace Epsitec.Common.Widgets
 				
 				base.ProcessMessage (message, pos);
 			}
-
+			
 			
 			protected EditArray					host;
 		}
-		
+		#endregion
 		
 		protected int							edit_active  = -1;
 		protected AbstractTextField[]			edit_widgets = new AbstractTextField[0];

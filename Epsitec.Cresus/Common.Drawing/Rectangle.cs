@@ -452,6 +452,17 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public void Inflate(double left, double right, double top, double bottom)
+		{
+			if (! this.IsEmpty)
+			{
+				this.x1 -= left;
+				this.x2 += right;
+				this.y1 -= bottom;
+				this.y2 += top;
+			}
+		}
+		
 		public void Deflate(Size s)
 		{
 			this.Deflate (s.Width, s.Height);
@@ -481,6 +492,17 @@ namespace Epsitec.Common.Drawing
 				this.x2 -= margins.Right;
 				this.y1 += margins.Bottom;
 				this.y2 -= margins.Top;
+			}
+		}
+		
+		public void Deflate(double left, double right, double top, double bottom)
+		{
+			if (! this.IsEmpty)
+			{
+				this.x1 += left;
+				this.x2 -= right;
+				this.y1 += bottom;
+				this.y2 -= top;
 			}
 		}
 		

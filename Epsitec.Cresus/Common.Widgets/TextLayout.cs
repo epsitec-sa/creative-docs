@@ -832,9 +832,8 @@ namespace Epsitec.Common.Widgets
 				int initial = offset;
 				while ( this.text[offset] != '&' )
 				{
+					if ( offset == 0 || initial-offset > 10 || this.text[offset-1] == ';' )  return 1;
 					offset --;
-					if ( initial-offset > 10 || this.text[offset] == ';' )  return 1;
-					if ( offset == 0 )  break;
 				}
 				return initial-offset+1;
 			}

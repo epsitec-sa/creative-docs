@@ -257,6 +257,48 @@ namespace Epsitec.Common.Widgets
 			window.Show();
 		}
 		
+		
+		[Test] public void CheckScrollArraySearch()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Drawing.Size(400, 300);
+			window.Text = "CheckScrollArraySearch";
+			window.Root.DockMargins = new Drawing.Margins (5, 5, 5, 5);
+			
+			ScrollArray table = new ScrollArray();
+			
+			table.Parent            = window.Root;
+			table.Dock              = DockStyle.Fill;
+			table.ColumnCount       = 5;
+			table.RowCount          = 100;
+			table.SelectedIndex     = 0;
+			
+			for (int x = 0 ; x < table.ColumnCount; x++)
+			{
+				table.SetHeaderText (x, string.Format ("C{0}", x));
+				table.SetColumnWidth (x, 80);
+			}
+			for (int y = 0; y < 100; y++)
+			{
+				table[y,0] = string.Format ("Val {0}.{1}", y/5, 0);
+				table[y,1] = string.Format ("Val {0}.{1}", y/5, y%5);
+				table[y,2] = string.Format ("Val {0}.{1}", y/5, "A");
+				table[y,3] = string.Format ("Val {0}.{1}", y/5, "B");
+				table[y,4] = string.Format ("Val {0}.{1}", y/5, "C");
+			}
+			
+			TextField field = new TextField ();
+			
+			field.Parent       = window.Root;
+			field.Dock         = DockStyle.Bottom;
+			field.TextChanged += new EventHandler (this.HandleCheckScrollArraySearchTextChanged);
+			field.SetProperty ("table", table);
+			
+			window.Show();
+		}
+		
+		
 		protected class TextStore : Support.Data.ITextArrayStore
 		{
 			public void InsertRows(int row, int num)
@@ -298,6 +340,13 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		
+		private void HandleCheckScrollArraySearchTextChanged(object sender)
+		{
+			TextField   field = sender as TextField;
+			ScrollArray table = field.GetProperty ("table") as ScrollArray;
+			table.SelectedItem = field.Text;
+		}
 		
 		private void HandleSelectedIndexChanged(object sender)
 		{
