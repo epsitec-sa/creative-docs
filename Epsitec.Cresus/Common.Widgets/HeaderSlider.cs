@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	}
 	
 	/// <summary>
-	/// La class HeaderSlider représente un bouton d'une en-tête de tableau,
+	/// La class HeaderSlider représente un bouton d'un en-tête de tableau,
 	/// permettant de modifier une largeur de colonne ou une hauteur de ligne.
 	/// </summary>
 	public class HeaderSlider : AbstractButton

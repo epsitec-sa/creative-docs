@@ -473,40 +473,22 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque le slider va être déplacé.
 		private void HandleSliderDragStarted(object sender, MessageEventArgs e)
 		{
-			foreach ( HeaderSlider slider in this.headerSlider )
-			{
-				if ( sender == slider )
-				{
-					DragStartedColumn(slider.Rank, e.Message.X);
-					return;
-				}
-			}
+			HeaderSlider slider = sender as HeaderSlider;
+			this.DragStartedColumn(slider.Rank, e.Point.X);
 		}
 
 		// Appelé lorsque le slider est déplacé.
 		private void HandleSliderDragMoved(object sender, MessageEventArgs e)
 		{
-			foreach ( HeaderSlider slider in this.headerSlider )
-			{
-				if ( sender == slider )
-				{
-					DragMovedColumn(slider.Rank, e.Message.X);
-					return;
-				}
-			}
+			HeaderSlider slider = sender as HeaderSlider;
+			this.DragMovedColumn(slider.Rank, e.Point.X);
 		}
 
 		// Appelé lorsque le slider est fini de déplacer.
 		private void HandleSliderDragEnded(object sender, MessageEventArgs e)
 		{
-			foreach ( HeaderSlider slider in this.headerSlider )
-			{
-				if ( sender == slider )
-				{
-					DragEndedColumn(slider.Rank, e.Message.X);
-					return;
-				}
-			}
+			HeaderSlider slider = sender as HeaderSlider;
+			this.DragEndedColumn(slider.Rank, e.Point.X);
 		}
 
 		// La largeur d'une colonne va être modifiée.
@@ -520,7 +502,8 @@ namespace Epsitec.Common.Widgets
 		// Modifie la largeur d'une colonne.
 		protected void DragMovedColumn(int column, double pos)
 		{
-			this.SetWidthColumn(this.dragRank, this.dragDim+(pos-this.dragPos));
+			double newWidth = this.RetWidthColumn(column) + pos-this.dragPos;
+			this.SetWidthColumn(this.dragRank, newWidth);
 			this.isDirty = true;
 			this.Invalidate();
 		}

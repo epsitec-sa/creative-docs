@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	}
 	
 	/// <summary>
-	/// La class HeaderButton représente un bouton d'une en-tête de tableau.
+	/// La class HeaderButton représente un bouton d'un en-tête de tableau.
 	/// </summary>
 	public class HeaderButton : AbstractButton
 	{

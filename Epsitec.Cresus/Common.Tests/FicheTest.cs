@@ -242,17 +242,26 @@ namespace Epsitec.Common.Tests
 		// Crée tous les widgets du layout.
 		protected void CreateLayout()
 		{
+			Widget root = new Widget ();
+			
+			root.SetClientAngle (0);
+			root.SetClientZoom (1.0);
+			root.Bounds = this.window.Root.Client.Bounds;
+			root.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+			
+			root.Parent = this.window.Root;
+			
 			this.pane = new Pane();
 			this.pane.PaneStyle = PaneStyle.LeftRight;
 			this.pane.DimensionChanged += new EventHandler(this.pane_DimensionChanged);
-			this.window.Root.Children.Add(this.pane);
+			this.pane.Parent = root;
 			this.leftPane = this.pane.RetPane(0);
 			this.rightPane = this.pane.RetPane(1);
 
 			this.subPane = new Pane();
 			this.subPane.PaneStyle = PaneStyle.BottomTop;
 			this.subPane.DimensionChanged += new EventHandler(this.pane_DimensionChanged);
-			this.window.Root.Children.Add(this.subPane);
+			this.subPane.Parent = root;
 			this.topPane = this.subPane.RetPane(1);
 			this.bottomPane = this.subPane.RetPane(0);
 
@@ -378,9 +387,9 @@ namespace Epsitec.Common.Tests
 
 		protected void ResizeLayout()
 		{
-			System.Drawing.Size windowDim = this.window.ClientSize;
-
 			if ( this.pane == null )  return;
+
+			Size windowDim = this.pane.Parent.Client.Size;
 
 			this.pane.Location = new Point(0, 0);
 			this.pane.Size = new Size(windowDim.Width, windowDim.Height);

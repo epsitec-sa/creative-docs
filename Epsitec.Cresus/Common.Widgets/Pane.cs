@@ -202,20 +202,46 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque le slider va être déplacé.
 		private void HandleSliderDragStarted(object sender, MessageEventArgs e)
 		{
+			Widget slider = sender as Widget;
+			Drawing.Point pos = slider.MapClientToParent (e.Point);
+			
+			switch ( this.paneStyle )
+			{
+				case PaneStyle.LeftRight:
+					this.sliderDragPos = pos.X;
+					this.sliderDragDim = this.panes[0].Width;
+					break;
+				case PaneStyle.BottomTop:
+					this.sliderDragPos = pos.Y;
+					this.sliderDragDim = this.panes[1].Height;
+					break;
+			}
 		}
 
 		// Appelé lorsque le slider est déplacé.
 		private void HandleSliderDragMoved(object sender, MessageEventArgs e)
 		{
-			if ( this.paneStyle == PaneStyle.LeftRight )
+			Widget slider = sender as Widget;
+			Drawing.Point pos = slider.MapClientToParent (e.Point);
+			
+			System.Diagnostics.Debug.Assert(this.panes.Length == 2);
+			
+			switch ( this.paneStyle )
 			{
-				this.SetDimension(0, e.Message.X);
+				case PaneStyle.LeftRight:
+					this.sliderDragDim += pos.X - this.sliderDragPos;
+					this.sliderDragPos  = pos.X;
+					this.SetDimension(0, this.sliderDragDim);
+					break;
+				
+				case PaneStyle.BottomTop:
+					this.sliderDragDim -= pos.Y - this.sliderDragPos;
+					this.sliderDragPos  = pos.Y;
+					this.SetDimension(1, this.sliderDragDim);
+					break;
 			}
-			if ( this.paneStyle == PaneStyle.BottomTop )
-			{
-				this.SetDimension(0, e.Message.Y);
-			}
-			OnDimensionChanged();
+			
+			this.OnDimensionChanged();
 		}
 
 		// Appelé lorsque le slider est fini de déplacer.
@@ -239,6 +265,8 @@ namespace Epsitec.Common.Widgets
 		protected Widget[]					panes;
 		protected PaneButton				slider;
 		protected double					sliderDim = 4;
+		protected double					sliderDragPos;
+		protected double					sliderDragDim;
 		protected double[]					minDimension = new double[2];
 		protected double[]					maxDimension = new double[2];
 	}
