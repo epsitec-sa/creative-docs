@@ -195,14 +195,27 @@ namespace Epsitec.Common.Support
 			CommandEventArgs e = new CommandEventArgs (source, command_name, command_args);
 			
 			EventSlot slot = this.event_handlers[command_name] as EventSlot;
+			int    handled = 0;
 			
 			if (slot != null)
 			{
 				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' fired.");
 				
-				slot.Fire (this, e);
+				if (slot.DispatchCommand (this, e))
+				{
+					handled++;
+				}
 			}
-			else
+			
+			foreach (ICommandDispatcher extra in this.extra_dispatchers)
+			{
+				if (extra.DispatchCommand (this, e))
+				{
+					handled++;
+				}
+			}
+			
+			if (handled == 0)
 			{
 				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' not handled.");
 			}
@@ -365,6 +378,16 @@ namespace Epsitec.Common.Support
 					this.event_handlers.Remove (command);
 				}
 			}
+		}
+		
+		public void RegisterExtraDispatcher(ICommandDispatcher extra)
+		{
+			this.extra_dispatchers.Add (extra);
+		}
+		
+		public void UnregisterExtraDispatcher(ICommandDispatcher extra)
+		{
+			this.extra_dispatchers.Remove (extra);
 		}
 		
 		
@@ -616,7 +639,7 @@ namespace Epsitec.Common.Support
 		#endregion
 		
 		#region EventSlot class
-		protected class EventSlot
+		protected class EventSlot : ICommandDispatcher
 		{
 			public EventSlot(string name)
 			{
@@ -637,12 +660,15 @@ namespace Epsitec.Common.Support
 			}
 			
 			
-			public void Fire(CommandDispatcher sender, CommandEventArgs e)
+			public bool DispatchCommand(CommandDispatcher sender, CommandEventArgs e)
 			{
 				if (this.command != null)
 				{
 					this.command (sender, e);
+					return true;
 				}
+				
+				return false;
 			}
 			
 			
@@ -744,6 +770,7 @@ namespace Epsitec.Common.Support
 		protected System.Collections.ArrayList	command_states    = new System.Collections.ArrayList ();
 		protected System.Collections.ArrayList	validation_states = new System.Collections.ArrayList ();
 		protected System.Collections.Stack		pending_commands  = new System.Collections.Stack ();
+		protected System.Collections.ArrayList	extra_dispatchers = new System.Collections.ArrayList ();
 		protected string						dispatcher_name;
 		protected ValidationRule				validation_rules;
 		protected bool							aborted;
