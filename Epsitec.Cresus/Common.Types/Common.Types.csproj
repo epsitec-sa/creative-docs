@@ -103,6 +103,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "BooleanType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DataGraph.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -169,6 +174,11 @@
                 />
                 <File
                     RelPath = "INamedType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IntegerlType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
