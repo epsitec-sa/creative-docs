@@ -127,6 +127,7 @@ namespace Epsitec.Common.Widgets
 			table.SelectedIndex     = 0;
 			table.EditionIndex      = 1;
 			table.EditionZoneHeight = 2;
+			table.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
 			
 			for (int x = 0 ; x < table.ColumnCount; x++)
 			{
@@ -142,6 +143,13 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			window.Show();
+		}
+
+		private void HandleSelectedIndexChanged(object sender)
+		{
+			ScrollArray table = sender as ScrollArray;
+			table.EditionIndex = table.SelectedIndex;
+			table.ShowSelected (ScrollArrayShowMode.Extremity);
 		}
 	}
 }

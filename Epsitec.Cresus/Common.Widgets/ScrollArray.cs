@@ -205,7 +205,33 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-
+		
+		public int								VisibleRowCount
+		{
+			get
+			{
+				this.Update ();
+				return this.n_visible_rows;
+			}
+		}
+		
+		public int								FullyVisibleRowCount
+		{
+			get
+			{
+				this.Update ();
+				return this.n_fully_visible_rows;
+			}
+		}
+		
+		public int								VirtualRowCount
+		{
+			get
+			{
+				return this.edition_row < 0 ? this.RowCount : this.RowCount + this.edition_add_rows;
+			}
+		}
+		
 		public int								SelectedIndex
 		{
 			get
@@ -219,7 +245,6 @@ namespace Epsitec.Common.Widgets
 					value = System.Math.Max (value, 0);
 					value = System.Math.Min (value, this.max_rows);
 				}
-
 				if (value != this.selected_row)
 				{
 					this.selected_row = value;
@@ -237,14 +262,55 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				int n = this.max_rows - this.n_fully_visible_rows;
+				int n = this.VirtualRowCount - this.n_fully_visible_rows;
+				value = this.ToVirtualRow (value);
 				value = System.Math.Max (value, 0);
 				value = System.Math.Min (value, System.Math.Max (n, 0));
+				value = this.FromVirtualRow (value);
 				
 				if (value != this.first_visible_row)
 				{
 					this.first_visible_row = value;
 					this.UpdateScrollers ();
+				}
+			}
+		}
+		
+		public int								EditionIndex
+		{
+			get
+			{
+				return this.edition_row;
+			}
+			set
+			{
+				if (value != -1)
+				{
+					value = System.Math.Max (value, 0);
+					value = System.Math.Min (value, this.max_rows);
+				}
+				if (this.edition_row != value)
+				{
+					this.edition_row = value;
+					this.InvalidateContents ();
+				}
+			}
+		}
+		
+		public int								EditionZoneHeight
+		{
+			get
+			{
+				return this.edition_add_rows + 1;
+			}
+			set
+			{
+				value--;
+				if (value < 0) value = 0;
+				
+				if (this.edition_add_rows != value)
+				{
+					this.edition_add_rows = value;
 				}
 			}
 		}
@@ -275,14 +341,59 @@ namespace Epsitec.Common.Widgets
 					return true;
 				}
 				
-				if ((this.selected_row >= this.first_visible_row) &&
-					(this.selected_row < this.first_visible_row + this.n_fully_visible_rows))
+				int row = this.ToVirtualRow (this.selected_row);
+				int top = this.ToVirtualRow (this.first_visible_row);
+				
+				if ((row >= top) &&
+					(row < top + this.n_fully_visible_rows))
 				{
 					return true;
 				}
 				
 				return false;
 			}
+		}
+		
+		
+		public int ToVirtualRow(int row)
+		{
+			if (this.edition_row < 0)
+			{
+				return row;
+			}
+			if (this.edition_row < row)
+			{
+				//	La ligne se trouve après la zone d'édition; il faut donc la décaler vers
+				//	le bas :
+				
+				return row + this.edition_add_rows;
+			}
+			
+			return row;
+		}
+		
+		public int FromVirtualRow(int row)
+		{
+			if (this.edition_row < 0)
+			{
+				return row;
+			}
+			if (this.edition_row + this.edition_add_rows < row)
+			{
+				//	La ligne se trouve après la zone d'édition; il faut donc la décaler vers
+				//	le haut :
+				
+				return row - this.edition_add_rows;
+			}
+			if (this.edition_row < row)
+			{
+				//	La ligne se trouve dans la zone d'édition; il faut donc retourner le début
+				//	de la zone d'édition :
+				
+				return this.edition_row;
+			}
+			
+			return row;
 		}
 		
 		
@@ -322,9 +433,12 @@ namespace Epsitec.Common.Widgets
 				this.text_array.Clear ();
 			}
 			
-			this.max_rows = 0;
+			this.max_rows          = 0;
 			this.first_visible_row = 0;
-			this.selected_row = -1;
+			this.selected_row      = -1;
+			this.edition_row       = -1;
+			this.edition_add_rows  = 0;
+			
 			this.InvalidateContents ();
 		}
 		
@@ -339,7 +453,7 @@ namespace Epsitec.Common.Widgets
 			this.is_dirty = true;
 			this.Invalidate ();
 		}
-
+		
 		
 		public void SetColumnAlignment(int column, Drawing.ContentAlignment alignment)
 		{
@@ -403,7 +517,7 @@ namespace Epsitec.Common.Widgets
 				this.OnSortChanged ();
 			}
 		}
-
+		
 		public bool GetSortingHeader(out int column, out SortMode mode)
 		{
 			for (int i = 0; i < this.max_columns; i++)
@@ -424,7 +538,7 @@ namespace Epsitec.Common.Widgets
 			
 			return false;
 		}
-
+		
 		
 		public void ShowSelected(ScrollArrayShowMode mode)
 		{
@@ -433,35 +547,39 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			int first  = this.first_visible_row;
+			int row    = this.ToVirtualRow (this.selected_row);
+			int top    = this.ToVirtualRow (this.first_visible_row);
+			int first  = top;
 			int num    = System.Math.Min (this.n_fully_visible_rows, this.max_rows);
-			int height = 1;
+			int height = (this.selected_row == this.edition_row) ? this.edition_add_rows+1 : 1;
 			
 			switch (mode)
 			{
 				case ScrollArrayShowMode.Extremity:
-					if (this.selected_row < this.first_visible_row)
+					
+					if (row < top)
 					{
-						//	La ligne était en-dessus du sommet de la liste :
+						//	La ligne était en-dessus du sommet de la liste. Utilise comme
+						//	sommet la ligne sélectionnée...
 						
-						first = this.selected_row;
+						first = row;
 					}
 					
-					if (this.selected_row > this.first_visible_row + this.n_fully_visible_rows - height)
+					if (row > top + this.n_fully_visible_rows - height)
 					{
 						//	La ligne était en-dessous du bas de la liste :
 						
-						first = this.selected_row - (this.n_fully_visible_rows - height);
+						first = row - (this.n_fully_visible_rows - height);
 					}
 					break;
 				
 				case ScrollArrayShowMode.Center:
-					first = System.Math.Min (this.selected_row + num / 2, this.max_rows - 1);
+					first = System.Math.Min (row + num / 2, this.max_rows - 1);
 					first = System.Math.Max (first - num + 1, 0);
 					break;
 			}
 
-			this.first_visible_row = first;
+			this.first_visible_row = this.FromVirtualRow (first);
 		}
 
 		
@@ -502,7 +620,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.Update ();
 			
-			double height = this.row_height * this.max_rows + this.frame_margins.Height + this.table_margins.Height;
+			double height = this.row_height * this.VirtualRowCount + this.frame_margins.Height + this.table_margins.Height;
 			double desire = height;
 			
 			height = System.Math.Max (height, min_height);
@@ -532,11 +650,39 @@ namespace Epsitec.Common.Widgets
 			
 			return true;
 		}
+		
+		public bool AdjustToRows(ScrollArrayAdjustMode mode, int count)
+		{
+			//	Ajuste la hauteur pour afficher exactement le nombre de lignes spécifié.
+			
+			this.Update ();
+			
+			double height = this.row_height * count + this.frame_margins.Height + this.table_margins.Height;
+			
+			if (height == this.Height)
+			{
+				return false;
+			}
+			
+			switch (mode)
+			{
+				case ScrollArrayAdjustMode.MoveUp:
+					this.Top    = this.Bottom + height;
+					break;
+				case ScrollArrayAdjustMode.MoveDown:
+					this.Bottom = this.Top - height;
+					break;
+			}
+			
+			this.Invalidate ();
+			return true;
+		}
 
 		
 		private void HandleVScrollerChanged(object sender)
 		{
-			this.FirstVisibleIndex = (int) System.Math.Floor (this.v_scroller.Value + 0.5);
+			int virtual_row = (int) System.Math.Floor (this.v_scroller.Value + 0.5);
+			this.FirstVisibleIndex = this.FromVirtualRow (virtual_row);
 		}
 
 		private void HandleHScrollerChanged(object sender)
@@ -646,6 +792,7 @@ namespace Epsitec.Common.Widgets
 			pos = this.Client.Height - pos;
 			
 			int line = (int) ((pos - this.frame_margins.Top - this.table_margins.Top) / this.row_height);
+			int top  = this.ToVirtualRow (this.first_visible_row);
 			
 			if ((line < 0) ||
 				(line >= this.n_visible_rows))
@@ -653,11 +800,11 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			line += this.first_visible_row;
+			line += top;
 			
 			if (line < this.max_rows)
 			{
-				this.SelectedIndex = line;
+				this.SelectedIndex = this.FromVirtualRow (line);
 			}
 		}
 
@@ -710,10 +857,9 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			this.is_dirty = false;
-			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-
+			
+			this.is_dirty      = false;
 			this.row_height    = this.DefaultFontHeight + 2;
 			this.frame_margins = adorner.GeometryArrayMargins;
 			this.table_margins = new Drawing.Margins (0, this.v_scroller.Width - 1, this.row_height, this.h_scroller.Height - 1);
@@ -844,7 +990,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Met à jour l'ascenseur vertical :
 			
-			int rows = this.max_rows;
+			int rows = this.VirtualRowCount;
 			
 			if ((rows <= this.n_fully_visible_rows) ||
 				(rows <= 0) ||
@@ -860,7 +1006,7 @@ namespace Epsitec.Common.Widgets
 				this.v_scroller.SetEnabled (true);
 				this.v_scroller.Range             = rows - this.n_fully_visible_rows;
 				this.v_scroller.VisibleRangeRatio = this.n_fully_visible_rows / (double) rows;
-				this.v_scroller.Value             = this.first_visible_row;
+				this.v_scroller.Value             = this.ToVirtualRow (this.first_visible_row);
 				this.v_scroller.SmallChange       = 1;
 				this.v_scroller.LargeChange       = this.n_fully_visible_rows / 2.0;
 			}
@@ -902,7 +1048,7 @@ namespace Epsitec.Common.Widgets
 			
 			int  max     = System.Math.Min (this.n_visible_rows, this.max_rows);
 			bool refresh = (max != this.cache_visible_rows) || (this.first_visible_row != this.cache_first_visible_row);
-
+			
 			this.cache_visible_rows      = max;
 			this.cache_first_visible_row = this.first_visible_row;
 			
@@ -1056,36 +1202,62 @@ namespace Epsitec.Common.Widgets
 			
 			this.Update ();
 			
-			Drawing.Point pos    = new Drawing.Point (this.table_bounds.Left, this.table_bounds.Top - this.row_height);
+			Drawing.Point pos    = new Drawing.Point (this.table_bounds.Left, this.table_bounds.Top);
 			double        limit  = this.total_width - this.offset + this.table_bounds.Left + 1;
 			double        right  = System.Math.Min (this.table_bounds.Right, limit);
 			int           n_rows = System.Math.Min (this.n_visible_rows, this.max_rows);
 			
 			for (int row = 0; row < n_rows; row++)
 			{
-				pos.X = this.table_bounds.Left;
+				pos.X  = this.table_bounds.Left;
+				pos.Y -= this.row_height;
 				
-				int         row_line     = this.first_visible_row + row;
-				WidgetState widget_state = (this.selected_row == row_line) ? WidgetState.Selected : WidgetState.Enabled;
+				int         row_line      = this.first_visible_row + row;
+				int         num_add_lines = (this.edition_row == row_line)  ? this.edition_add_rows : 0;
+				WidgetState widget_state  = (this.selected_row == row_line) ? WidgetState.Selected : WidgetState.Enabled;
 				
-				adorner.PaintCellBackground (graphics, new Drawing.Rectangle (pos.X, pos.Y, right - pos.X, this.row_height), widget_state);
-				
-				pos.X += this.text_margin - System.Math.Floor (this.offset);
-				
-				for (int column = 0; column < this.max_columns; column++)
+				if (this.edition_row == row_line)
 				{
-					double end = pos.X + this.column_widths[column];
+					pos.Y -= this.row_height * num_add_lines;
 					
-					if ((pos.X < local_clip.Right) &&
-						(end > local_clip.Left))
+					adorner.PaintCellBackground (graphics, new Drawing.Rectangle (pos.X, pos.Y, right - pos.X, this.row_height * (num_add_lines + 1)), widget_state);
+					
+					pos.X += this.text_margin - System.Math.Floor (this.offset);
+					
+					for (int column = 0; column < this.max_columns; column++)
 					{
-						adorner.PaintGeneralTextLayout (graphics, pos, this.layouts[row, column], widget_state, PaintTextStyle.Array, this.BackColor);
+						double end = pos.X + this.column_widths[column];
+						
+						if ((pos.X < local_clip.Right) &&
+							(end > local_clip.Left))
+						{
+							adorner.PaintGeneralTextLayout (graphics, pos, this.layouts[row, column], widget_state, PaintTextStyle.Array, this.BackColor);
+						}
+						
+						pos.X = end;
 					}
 					
-					pos.X = end;
+					n_rows -= this.edition_add_rows;
 				}
-				
-				pos.Y -= this.row_height;
+				else
+				{
+					adorner.PaintCellBackground (graphics, new Drawing.Rectangle (pos.X, pos.Y, right - pos.X, this.row_height), widget_state);
+					
+					pos.X += this.text_margin - System.Math.Floor (this.offset);
+					
+					for (int column = 0; column < this.max_columns; column++)
+					{
+						double end = pos.X + this.column_widths[column];
+						
+						if ((pos.X < local_clip.Right) &&
+							(end > local_clip.Left))
+						{
+							adorner.PaintGeneralTextLayout (graphics, pos, this.layouts[row, column], widget_state, PaintTextStyle.Array, this.BackColor);
+						}
+						
+						pos.X = end;
+					}
+				}
 			}
 			
 			rect = this.table_bounds;
@@ -1108,7 +1280,16 @@ namespace Epsitec.Common.Widgets
 				
 				for (int i = 0; i < n_rows; i++)
 				{
+					int row_line = this.first_visible_row + i;
+					
+					if (this.edition_row == row_line)
+					{
+						y      -= this.row_height * this.edition_add_rows;
+						n_rows -= this.edition_add_rows;
+					}
+					
 					y -= this.row_height;
+					
 					graphics.AddLine (x1, y, x2, y);
 					graphics.RenderSolid (color);
 				}
@@ -1160,35 +1341,41 @@ namespace Epsitec.Common.Widgets
 		
 		protected bool							is_dirty;
 		protected bool							is_header_dirty;
-		protected bool							is_mouse_down = false;
-		protected int							max_rows = 0;
-		protected int							max_columns = 0;
-		protected System.Collections.ArrayList	text_array = new System.Collections.ArrayList ();
-		protected TextProviderCallback			text_provider_callback = null;
+		protected bool							is_mouse_down;
+		
+		protected int							max_rows;
+		protected int							max_columns;
+		
+		protected System.Collections.ArrayList	text_array			= new System.Collections.ArrayList ();
+		protected TextProviderCallback			text_provider_callback;
 		protected TextLayout[,]					layouts;
-		protected double						def_width = 100;		//	largeur par défaut
-		protected double						min_width = 10;			//	largeur minimale
-		protected double[]						column_widths;			//	largeur des colonnes
-		protected double						total_width;			//	largeur totale
+		
+		protected double						def_width			= 100;
+		protected double						min_width			= 10;
+		protected double						total_width;
+		protected double[]						column_widths;
 		protected Drawing.ContentAlignment[]	column_alignments;
 		
-		protected Drawing.Margins				frame_margins;			//	marges du cadre
-		protected Drawing.Margins				table_margins;			//	marges de la table interne
-		protected double						text_margin = 2;
-		protected double						row_height = 16;
-		protected double						slider_dim = 6;
+		protected Drawing.Margins				frame_margins;				//	marges du cadre
+		protected Drawing.Margins				table_margins;				//	marges de la table interne
+		protected double						text_margin			= 2;
+		protected double						row_height			= 16;
+		protected double						slider_dim			= 6;
 		
-		private Drawing.Rectangle				table_bounds = new Drawing.Rectangle ();
-		protected Widget						header;		// père de l'en-tête horizontale
-		protected System.Collections.ArrayList	header_buttons = new System.Collections.ArrayList ();
-		protected System.Collections.ArrayList	header_sliders = new System.Collections.ArrayList ();
+		protected Drawing.Rectangle				table_bounds;
+		protected Widget						header;
+		protected System.Collections.ArrayList	header_buttons		= new System.Collections.ArrayList ();
+		protected System.Collections.ArrayList	header_sliders		= new System.Collections.ArrayList ();
 		protected VScroller						v_scroller;
 		protected HScroller						h_scroller;
 		protected int							n_visible_rows;
 		protected int							n_fully_visible_rows;
-		protected int							first_visible_row = 0;
-		protected int							selected_row = -1;
-		protected double						offset = 0;
+		protected int							first_visible_row;
+		protected double						offset;
+		protected int							selected_row		= -1;
+		
+		protected int							edition_row			= -1;
+		protected int							edition_add_rows	= 0;
 		
 		protected int							drag_index;
 		protected double						drag_pos;
