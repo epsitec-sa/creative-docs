@@ -13,7 +13,7 @@ namespace Epsitec.Common.Designer.Dialogs
 	public class OpenExistingBundle : Epsitec.Common.Dialogs.SelectFromList
 	{
 		public OpenExistingBundle(string command_template, CommandDispatcher command_dispatcher)
-			: base ("Ouvrir", "Ressource à ouvrir :", null, command_template, command_dispatcher)
+			: base ("Ouvrir", "Ressource à ouvrir :", null, command_template, command_dispatcher)	//	TODO: L10n
 		{
 			this.bundle_spec = new SubBundleSpec ();
 			this.bundle_spec.Changed += new EventHandler (this.HandleBundleSpecChanged);
@@ -28,8 +28,9 @@ namespace Epsitec.Common.Designer.Dialogs
 		public string[] GetAvailableNames()
 		{
 			string   name_filter = Resources.MakeFullName (this.bundle_spec.Prefix, "*");
-			string[] array       = Support.Resources.GetBundleIds (name_filter, this.bundle_spec.TypeFilter, this.bundle_spec.ResourceLevel, this.bundle_spec.CultureInfo);
-			return array;
+			string   type_filter = this.bundle_spec.TypeFilter;
+			
+			return Support.Resources.GetBundleIds (name_filter, type_filter, this.bundle_spec.ResourceLevel, this.bundle_spec.CultureInfo);
 		}
 		
 		

@@ -8,12 +8,12 @@ using System.Globalization;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// La classe BundleName présente un dialogue permettant de saisir le nom
-	/// d'un bundle à créer.
+	/// La classe InterfaceBundleName présente un dialogue permettant de saisir le nom
+	/// d'un bundle à créer pour réaliser un élément d'interface graphique.
 	/// </summary>
-	public class BundleName : Epsitec.Common.Dialogs.AbstractOkCancel
+	public class InterfaceBundleName : Epsitec.Common.Dialogs.AbstractOkCancel
 	{
-		public BundleName(string command_template, CommandDispatcher command_dispatcher) : base (title, command_template, command_dispatcher)
+		public InterfaceBundleName(string command_template, CommandDispatcher command_dispatcher) : base (title, command_template, command_dispatcher)
 		{
 		}
 		
@@ -22,12 +22,13 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			get
 			{
-				string[] values = new string[4];
+				string[] values = new string[5];
 				
 				values[0] = this.bundle_spec.Prefix;
 				values[1] = this.text.Text;
 				values[2] = this.bundle_spec.ResourceLevel.ToString ();
 				values[3] = this.bundle_spec.CultureInfo.TwoLetterISOLanguageName;
+				values[4] = Common.UI.InterfaceType.DialogWindow.ToString ();
 				
 				return values;
 			}
@@ -66,7 +67,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		
 		
 		
-		private const string					title = "Nouvelle ressource";	//	TODO: L10n
+		private const string					title = "Nouvelle interface";	//	TODO: L10n
 		
 		protected TextField						text;
 		protected SubBundleSpec					bundle_spec = new SubBundleSpec ();

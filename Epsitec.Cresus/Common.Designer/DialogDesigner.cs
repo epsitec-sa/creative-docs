@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer
 			{
 				this.application.Initialise ();
 				this.application.MainWindow.Show ();
-				this.application.InterfaceEditController.CreateEditorForWindow (this.dialog_window, this.resource_name);
+				this.application.InterfaceEditController.CreateEditorForWindow (this.dialog_window, this.resource_name, Common.UI.InterfaceType.DialogWindow);
 			}
 		}
 		#endregion

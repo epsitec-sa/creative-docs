@@ -233,7 +233,7 @@ namespace Epsitec.Common.Support
 		{
 			if (type != null)
 			{
-				if (! RegexFactory.AlphaName.IsMatch (type))
+				if (! RegexFactory.ResourceBundleName.IsMatch (type))
 				{
 					throw new ResourceException (string.Format ("Type '{0}' is not a valid type name.", type));
 				}

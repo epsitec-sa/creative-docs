@@ -204,6 +204,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Dialogs\InterfaceBundleName.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Dialogs\OpenExistingBundle.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

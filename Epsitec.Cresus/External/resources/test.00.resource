@@ -1,4 +1,4 @@
-<bundle name="test">
+<bundle name="test" type="Interface.DialogWindow">
   <data name="class">Window</data>
   <data name="WindowStyles">HasCloseButton, HasHelpButton</data>
   <data name="WindowType">Dialog</data>

@@ -187,6 +187,7 @@ namespace Epsitec.Common.Support.Implementation
 				if ((type_filter != null) &&
 					(type_filter != "*"))
 				{
+					System.Text.RegularExpressions.Regex type_regex = Support.RegexFactory.FromSimpleJoker (type_filter);
 					ResourceBundle bundle = ResourceBundle.Create (bundle_name);
 					
 					bundle.RefInclusionEnabled = false;
@@ -211,7 +212,7 @@ namespace Epsitec.Common.Support.Implementation
 						continue;
 					}
 					
-					if (type_filter != bundle.Type)
+					if (! type_regex.IsMatch (bundle.Type))
 					{
 						//	Saute ce bundle, car il n'est pas du type adéquat :
 						

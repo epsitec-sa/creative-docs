@@ -1,4 +1,4 @@
-<bundle name="dialog_with_data">
+<bundle name="dialog_with_data" type="Interface.DialogWindow">
   <data name="class">Window</data>
   <data name="WindowStyles">None</data>
   <data name="WindowType">Dialog</data>

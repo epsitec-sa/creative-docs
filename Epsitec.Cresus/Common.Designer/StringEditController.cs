@@ -1017,9 +1017,9 @@ namespace Epsitec.Common.Designer
 			}
 			else if (e.CommandArgs.Length == 1)
 			{
-				string         full_id = e.CommandArgs[0];
-				string         prefix  = Resources.ExtractPrefix (full_id);
-				string         name    = Resources.ExtractName (full_id);
+				string full_id = e.CommandArgs[0];
+				string prefix  = Resources.ExtractPrefix (full_id);
+				string name    = Resources.ExtractName (full_id);
 				
 				this.AttachExistingBundle (prefix, name);
 			}

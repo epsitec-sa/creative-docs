@@ -179,7 +179,7 @@ namespace Epsitec.Common.Designer
 		}
 		#endregion
 		
-		internal void CreateEditorForWindow(Window window, string resource_name)
+		internal void CreateEditorForWindow(Window window, string resource_name, Common.UI.InterfaceType interface_type)
 		{
 			//	Crée un éditeur pour la fenêtre spécifiée.
 			
@@ -200,11 +200,6 @@ namespace Epsitec.Common.Designer
 			
 			if (designer == null)
 			{
-				//	Comme c'est pour une fenêtre que l'on crée un designer, on va choisir
-				//	le type d'interface dialogue/fenêtre :
-				
-				Common.UI.InterfaceType interface_type = Common.UI.InterfaceType.DialogWindow;
-				
 				designer = new DialogDesigner (this.application, interface_type);
 				
 				designer.DialogWindow = window;
@@ -809,20 +804,25 @@ namespace Epsitec.Common.Designer
 		{
 			if (e.CommandArgs.Length == 0)
 			{
-				Dialogs.BundleName dialog = new Dialogs.BundleName ("CreateNewInterface (\"{0}\", \"{1}\")", this.dispatcher);
+				Dialogs.InterfaceBundleName dialog = new Dialogs.InterfaceBundleName ("CreateNewInterface (\"{0}\", \"{1}\", \"{4}\")", this.dispatcher);
 				dialog.Owner = this.main_panel.Window;
 				dialog.OpenDialog ();
 			}
-			else if (e.CommandArgs.Length == 2)
+			else if (e.CommandArgs.Length == 3)
 			{
 				string bundle_prefix = e.CommandArgs[0];
 				string bundle_name   = e.CommandArgs[1];
+				string int_type_name = e.CommandArgs[2];
+				
+				System.Enum interface_type;
+				
+				Types.Converter.Convert (int_type_name, typeof (Common.UI.InterfaceType), out interface_type);
 				
 				Window window = new Window ();
 				
 				window.ClientSize = new Drawing.Size (400, 300);
 				
-				this.CreateEditorForWindow (window, Support.Resources.MakeFullName (bundle_prefix, bundle_name));
+				this.CreateEditorForWindow (window, Support.Resources.MakeFullName (bundle_prefix, bundle_name), (Common.UI.InterfaceType) interface_type);
 			}
 			else
 			{
@@ -846,17 +846,42 @@ namespace Epsitec.Common.Designer
 			this.ReselectWidgets (selected);
 		}
 		
-		[Command ("OpenLoadInterface")]			void CommandOpenLoadInterface()
+		[Command ("OpenLoadInterface")]			void CommandOpenLoadInterface(CommandDispatcher d, CommandEventArgs e)
 		{
-			Support.ObjectBundler  bundler = new Support.ObjectBundler ();
-			Support.ResourceBundle bundle  = Support.Resources.GetBundle ("file:test");
-			
-			bundler.EnableMapping ();
-			
-			Widget root   = bundler.CreateFromBundle (bundle) as Widget;
-			Window window = root.Window;
-			
-			this.CreateEditorForWindow (window, bundle.PrefixedName);
+			if (e.CommandArgs.Length == 0)
+			{
+				Dialogs.OpenExistingBundle dialog = new Dialogs.OpenExistingBundle ("OpenLoadInterface (\"{0}\")", this.dispatcher);
+				dialog.SubBundleSpec.TypeFilter = "Interface.*";
+				dialog.Owner = this.main_panel.Window;
+				dialog.UpdateListContents ();
+				dialog.OpenDialog ();
+			}
+			else if (e.CommandArgs.Length == 1)
+			{
+				string full_id = e.CommandArgs[0];
+				
+				Support.ObjectBundler  bundler = new Support.ObjectBundler ();
+				Support.ResourceBundle bundle  = Support.Resources.GetBundle (full_id);
+				
+				bundler.EnableMapping ();
+				
+				Widget root   = bundler.CreateFromBundle (bundle) as Widget;
+				Window window = root.Window;
+				
+				System.Diagnostics.Debug.Assert (bundle.PrefixedName == full_id);
+				System.Diagnostics.Debug.Assert (bundle.Type.StartsWith ("Interface."));
+				
+				string      int_type_name  = bundle.Type.Substring ("Interface.".Length);
+				System.Enum interface_type;
+				
+				Types.Converter.Convert (int_type_name, typeof (Common.UI.InterfaceType), out interface_type);
+				
+				this.CreateEditorForWindow (window, bundle.PrefixedName, (Common.UI.InterfaceType) interface_type);
+			}
+			else
+			{
+				this.ThrowInvalidOperationException (e, 1);
+			}
 		}
 		
 		

@@ -219,6 +219,10 @@ namespace Epsitec.Common.Designer.Editors
 			bundler.SetupPrefix (res_prefix);
 			bundler.FillBundleFromObject (bundle, this.root);
 			
+			System.Diagnostics.Debug.Assert (this.interface_type != Common.UI.InterfaceType.Any);
+			
+			bundle.DefineType (string.Concat ("Interface.", this.interface_type.ToString ()));
+			
 			Resources.SetBundle (bundle, Support.ResourceSetMode.Write);
 //			bundle.CreateXmlDocument (false).Save (path);
 			
