@@ -20,13 +20,27 @@ namespace Epsitec.Common.Dialogs
 			this.dialog.ValidateNames = true;
 		}
 		
+		#region IDialog Members
 		public void Show()
 		{
 			this.dialog.Filter = this.Filters.FileDialogFilter;
 			this.dialog.FilterIndex = this.filter_index + 1;
-			this.dialog.ShowDialog ();
+			this.dialog.ShowDialog (this.owner == null ? null : this.owner.PlatformWindowObject as System.Windows.Forms.IWin32Window);
 			this.filter_index = this.dialog.FilterIndex - 1;
 		}
+		
+		public Common.Widgets.Window	Owner
+		{
+			get
+			{
+				return this.owner;
+			}
+			set
+			{
+				this.owner = value;
+			}
+		}
+		#endregion
 		
 		public string					DefaultExt
 		{
@@ -83,6 +97,7 @@ namespace Epsitec.Common.Dialogs
 		#endregion
 		
 		
+		Common.Widgets.Window					owner;
 		System.Windows.Forms.OpenFileDialog		dialog;
 		Helpers.FilterCollection				filters;
 		int										filter_index;

@@ -3,7 +3,7 @@ namespace Epsitec.Common.Dialogs
 	/// <summary>
 	/// La classe FileSave présente le dialogue pour enregistrer un fichier.
 	/// </summary>
-	public class FileSave : Helpers.IFilterCollectionHost
+	public class FileSave : Helpers.IFilterCollectionHost, IDialog
 	{
 		public FileSave()
 		{
@@ -21,13 +21,6 @@ namespace Epsitec.Common.Dialogs
 			this.dialog.ValidateNames = true;
 		}
 		
-		public void Show()
-		{
-			this.dialog.Filter = this.Filters.FileDialogFilter;
-			this.dialog.FilterIndex = this.filter_index + 1;
-			this.dialog.ShowDialog ();
-			this.filter_index = this.dialog.FilterIndex - 1;
-		}
 		
 		public string					DefaultExt
 		{
@@ -89,6 +82,28 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
+		#region IDialog Members
+		public void Show()
+		{
+			this.dialog.Filter = this.Filters.FileDialogFilter;
+			this.dialog.FilterIndex = this.filter_index + 1;
+			this.dialog.ShowDialog (this.owner == null ? null : this.owner.PlatformWindowObject as System.Windows.Forms.IWin32Window);
+			this.filter_index = this.dialog.FilterIndex - 1;
+		}
+		
+		public Common.Widgets.Window	Owner
+		{
+			get
+			{
+				return this.owner;
+			}
+			set
+			{
+				this.owner = value;
+			}
+		}
+		#endregion
+		
 		#region IFilterCollectionHost Members
 		public void FilterCollectionChanged()
 		{
@@ -97,6 +112,7 @@ namespace Epsitec.Common.Dialogs
 		#endregion
 		
 		
+		Common.Widgets.Window					owner;
 		System.Windows.Forms.SaveFileDialog 	dialog;
 		Helpers.FilterCollection				filters;
 		int										filter_index;
