@@ -696,12 +696,13 @@ namespace Epsitec.Common.Widgets
 			if ( this.undoQueue == null )  return;
 
 			Support.IOplet[] oplets = this.undoQueue.LastActionOplets;
-			if ( this.undoQueue.CanRedo == false &&
-				 oplets.Length == 1 &&
+			if ( !this.undoQueue.CanRedo     &&
+				 oplets.Length == 1          &&
 				 !this.context.UndoSeparator )
 			{
 				TextOplet lastOplet = oplets[0] as TextOplet;
 				if ( type != UndoType.AutonomusStyle &&
+					 lastOplet != null               &&
 					 lastOplet.Navigator == this     &&
 					 lastOplet.Type == type          )
 				{

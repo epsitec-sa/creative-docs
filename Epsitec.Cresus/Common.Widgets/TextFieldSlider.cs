@@ -70,8 +70,9 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.arrowUp == null )  return;
 
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Width -= System.Math.Floor(rect.Height*0.6)-1;
+			rect.Width -= System.Math.Floor(rect.Height*adorner.GeometryUpDownWidthFactor)-1;
 			rect.Height = TextFieldSlider.sliderHeight;
 			this.slider.Bounds = rect;
 		}

@@ -135,6 +135,7 @@ namespace Epsitec.Common.Widgets
 		double GeometryComboRightMargin { get; }
 		double GeometryComboBottomMargin { get; }
 		double GeometryComboTopMargin { get; }
+		double GeometryUpDownWidthFactor { get; }
 		double GeometryUpDownRightMargin { get; }
 		double GeometryUpDownBottomMargin { get; }
 		double GeometryUpDownTopMargin { get; }

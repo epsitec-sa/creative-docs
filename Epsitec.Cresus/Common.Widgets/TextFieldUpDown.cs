@@ -175,8 +175,9 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateClientGeometry();
 			
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			Drawing.Rectangle rect = this.Bounds;
-			double width = System.Math.Floor(rect.Height*0.6);
+			double width = System.Math.Floor(rect.Height*adorner.GeometryUpDownWidthFactor);
 			this.margins.Right = width - AbstractTextField.FrameMargin;
 
 			if ( this.arrowUp   != null &&
@@ -185,14 +186,14 @@ namespace Epsitec.Common.Widgets
 				Drawing.Rectangle aRect = new Drawing.Rectangle();
 
 				aRect.Left   = rect.Width-width;
-				aRect.Width  = width;
+				aRect.Width  = width-adorner.GeometryUpDownRightMargin;
 
-				aRect.Bottom = 0;
-				aRect.Height = System.Math.Floor(rect.Height/2)+1;
+				aRect.Bottom = adorner.GeometryUpDownBottomMargin;
+				aRect.Height = System.Math.Floor(rect.Height/2)+1-adorner.GeometryUpDownBottomMargin;
 				this.arrowDown.Bounds = aRect;
 
 				aRect.Bottom += aRect.Height-1;
-				aRect.Top    = rect.Height;
+				aRect.Top    = rect.Height-adorner.GeometryUpDownTopMargin;
 				this.arrowUp.Bounds = aRect;
 			}
 		}

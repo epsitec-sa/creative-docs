@@ -442,7 +442,9 @@ namespace Epsitec.Common.Widgets
 			rect.Right -= margin_x;
 			rect.Bottom += margin_y;
 			rect.Deflate (this.foregroundFrameMargins);
-			adorner.PaintGroupBox (graphics, rect, Drawing.Rectangle.Empty, state);
+			rect.Deflate (0.5);
+			graphics.AddRectangle (rect);
+			graphics.RenderSolid (adorner.ColorBorder);
 		}
 
 		

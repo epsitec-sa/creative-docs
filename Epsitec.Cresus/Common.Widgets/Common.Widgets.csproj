@@ -604,6 +604,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Adorners\LookRoyale.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Adorners\LookSimply.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -631,6 +636,10 @@
                 />
                 <File
                     RelPath = "Adorners\Resources\LookPlastic.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Adorners\Resources\LookRoyale.png"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
