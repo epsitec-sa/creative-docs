@@ -1132,7 +1132,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool									CanFocus
+		public virtual bool							CanFocus
 		{
 			get { return ((this.internal_state & InternalState.Focusable) != 0) && !this.IsFrozen; }
 		}

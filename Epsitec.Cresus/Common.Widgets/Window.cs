@@ -204,6 +204,12 @@ namespace Epsitec.Common.Widgets
 			this.window.MakeToolWindow ();
 		}
 		
+		public void MakeFloatingWindow()
+		{
+			this.window.MakeFloatingWindow ();
+		}
+		
+		
 		public void MakeActive()
 		{
 			if (! this.IsDisposed)
@@ -377,6 +383,14 @@ namespace Epsitec.Common.Widgets
 		public bool								IsFocused
 		{
 			get { return this.window.Focused; }
+		}
+		
+		public bool								IsToolWindow
+		{
+			get
+			{
+				return this.window.IsToolWindow;
+			}
 		}
 		
 		public double							Alpha
@@ -1241,7 +1255,9 @@ namespace Epsitec.Common.Widgets
 				if ((! message.Handled) &&
 					(this.owner != null))
 				{
-					this.owner.DispatchMessage (message);
+					//	Le message n'a pas été traité. Peut-être qu'il pourrait intéresser la fenêtre
+					//	parent; pour l'instant, on poubellise simplement l'événement, car le faire
+					//	remonter m'a causé passablement de surprises...
 				}
 			}
 			
