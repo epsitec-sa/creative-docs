@@ -229,6 +229,16 @@ namespace Epsitec.Common.Widgets.Tools
 					case MessageType.KeyDown:
 						switch (message.KeyCode)
 						{
+							case KeyCode.AlphaL:
+								this.is_rgb_lcd = ! this.is_rgb_lcd;
+								this.Invalidate ();
+								break;
+							
+							case KeyCode.AlphaM:
+								this.is_rgb_mono = ! this.is_rgb_mono;
+								this.Invalidate ();
+								break;
+							
 							case KeyCode.ArrowUp:
 								this.Window.WindowLocation += new Drawing.Point (0, 1);
 								this.Invalidate ();
@@ -347,13 +357,59 @@ namespace Epsitec.Common.Widgets.Tools
 					{
 						x = 0;
 						
-						for (int ix = 0; ix < nx; ix++)
+						if (this.is_rgb_lcd)
 						{
-							path = Drawing.Path.FromRectangle (x, dy-y-sy, sx+1, sy+1);
-							graphics.Color = raw[ix, iy];
-							graphics.PaintSurface (path);
-							path.Dispose ();
-							x += sx;
+							if (this.is_rgb_mono)
+							{
+								for (int ix = 0; ix < nx; ix++)
+								{
+									Drawing.Color sample = raw[ix, iy];
+									path = Drawing.Path.FromRectangle (x, dy-y-sy, sx/3+1, sy+1);
+									graphics.Color = Drawing.Color.FromBrightness (sample.R);
+									graphics.PaintSurface (path);
+									path.Dispose ();
+									path = Drawing.Path.FromRectangle (x+sx/3, dy-y-sy, sx/3+1, sy+1);
+									graphics.Color = Drawing.Color.FromBrightness (sample.G);
+									graphics.PaintSurface (path);
+									path.Dispose ();
+									path = Drawing.Path.FromRectangle (x+2*sx/3, dy-y-sy, sx/3+1, sy+1);
+									graphics.Color = Drawing.Color.FromBrightness (sample.B);
+									graphics.PaintSurface (path);
+									path.Dispose ();
+									x += sx;
+								}
+							}
+							else
+							{
+								for (int ix = 0; ix < nx; ix++)
+								{
+									Drawing.Color sample = raw[ix, iy];
+									path = Drawing.Path.FromRectangle (x, dy-y-sy, sx/3+1, sy+1);
+									graphics.Color = Drawing.Color.FromRGB (sample.R, 0, 0);
+									graphics.PaintSurface (path);
+									path.Dispose ();
+									path = Drawing.Path.FromRectangle (x+sx/3, dy-y-sy, sx/3+1, sy+1);
+									graphics.Color = Drawing.Color.FromRGB (0, sample.G, 0);
+									graphics.PaintSurface (path);
+									path.Dispose ();
+									path = Drawing.Path.FromRectangle (x+2*sx/3, dy-y-sy, sx/3+1, sy+1);
+									graphics.Color = Drawing.Color.FromRGB (0, 0, sample.B);
+									graphics.PaintSurface (path);
+									path.Dispose ();
+									x += sx;
+								}
+							}
+						}
+						else
+						{
+							for (int ix = 0; ix < nx; ix++)
+							{
+								path = Drawing.Path.FromRectangle (x, dy-y-sy, sx+1, sy+1);
+								graphics.Color = raw[ix, iy];
+								graphics.PaintSurface (path);
+								path.Dispose ();
+								x += sx;
+							}
 						}
 						y += sy;
 					}
@@ -455,6 +511,8 @@ namespace Epsitec.Common.Widgets.Tools
 			
 			private Magnifier					magnifier;
 			
+			private bool						is_rgb_lcd;
+			private bool						is_rgb_mono;
 			private bool						is_dragging;
 			private Drawing.Point				origin;
 			private double						mask_dx, mask_dy;

@@ -345,6 +345,7 @@ namespace Epsitec.Common.Drawing
 			
 			Transform transform = new Transform ();
 			
+#if true
 			Point vector_oo = new Point (0, 0); vector_oo = this.ApplyTransformDirect (vector_oo);
 			Point vector_ox = new Point (1, 0); vector_ox = this.ApplyTransformDirect (vector_ox) - vector_oo;
 			Point vector_oy = new Point (0, 1); vector_oy = this.ApplyTransformDirect (vector_oy) - vector_oo;
@@ -354,6 +355,10 @@ namespace Epsitec.Common.Drawing
 			
 			double sx = (ix2-ix1 <= 1) ? (Graphics.AlmostInfinite) : ((fill_width > 1)  ? (fill_width-1/fix_x)  / (ix2-ix1-1) : 1.0);
 			double sy = (iy2-iy1 <= 1) ? (Graphics.AlmostInfinite) : ((fill_height > 1) ? (fill_height-1/fix_y) / (iy2-iy1-1) : 1.0);
+#else
+			double sx = (ix2-ix1 < 1) ? (Graphics.AlmostInfinite) : ((fill_width > 1)  ? (fill_width)  / (ix2-ix1) : 1.0);
+			double sy = (iy2-iy1 < 1) ? (Graphics.AlmostInfinite) : ((fill_height > 1) ? (fill_height) / (iy2-iy1) : 1.0);
+#endif
 			
 			Drawing.Bitmap bmi = bitmap.BitmapImage;
 			

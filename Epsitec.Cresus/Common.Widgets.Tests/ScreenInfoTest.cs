@@ -88,6 +88,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Tools.Magnifier magnifier = new Tools.Magnifier ();
 			
+			magnifier.DisplayRadius = 110;
 			magnifier.IsColorPicker = true;
 			magnifier.Show ();
 		}
