@@ -1120,11 +1120,11 @@ namespace Epsitec.Common.Widgets
 							//	focus soient d'accord...
 							
 							if ((this.focused_widget == null) ||
-								(this.focused_widget.AboutToLoseFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive)))
+								(this.focused_widget.InternalAboutToLoseFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive)))
 							{
 								Widget focus;
 								
-								if (consumer.AboutToGetFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive, out focus))
+								if (consumer.InternalAboutToGetFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive, out focus))
 								{
 									this.FocusedWidget = focus;
 								}
