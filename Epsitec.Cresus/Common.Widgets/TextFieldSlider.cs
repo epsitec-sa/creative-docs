@@ -130,6 +130,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public override double DefaultHeight
+		{
+			get
+			{
+				return this.DefaultFontHeight + 2*AbstractTextField.Margin;
+			}
+		}
+
 
 		protected override void UpdateClientGeometry()
 		{
@@ -137,7 +145,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.field == null )  return;
 
-			this.field.BottomMargin = this.sliderHeight-1;
+			this.field.BottomMargin = this.sliderHeight-AbstractTextField.FrameMargin;
 			
 			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			this.field.Bounds = rect;

@@ -29,7 +29,7 @@ namespace Epsitec.Common.Widgets
 		
 		public AbstractTextField()
 		{
-			this.DockMargins = new Drawing.Margins(2, 2, 2, 2);
+			this.DockMargins = new Drawing.Margins(AbstractTextField.FrameMargin, AbstractTextField.FrameMargin, AbstractTextField.FrameMargin, AbstractTextField.FrameMargin);
 
 			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.AutoEngage;
@@ -91,6 +91,32 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public override Drawing.Point BaseLine
+		{
+			get
+			{
+				if (this.TextLayout != null)
+				{
+					return this.TextLayout.GetLineOrigin (0);
+				}
+				
+				return base.BaseLine;
+			}
+		}
+		
+		public virtual Drawing.Rectangle InnerBounds
+		{
+			get
+			{
+				Drawing.Rectangle rect = this.Client.Bounds;
+				
+				rect.Deflate(this.margins);
+				rect.Deflate(AbstractTextField.FrameMargin, AbstractTextField.FrameMargin);
+				
+				return rect;
+			}
+		}
+		
 		// Texte édité.
 		public override string Text
 		{
@@ -739,25 +765,23 @@ namespace Epsitec.Common.Widgets
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
-			Drawing.Rectangle rect   = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-			WidgetState       state  = this.PaintState;
-			Drawing.Point     pos    = new Drawing.Point(AbstractTextField.Margin, AbstractTextField.Margin);
-			double            button = (this.margins.Right == 0) ? 0 : (this.margins.Right + 1);
+			WidgetState   state = this.PaintState;
+			Drawing.Point pos   = new Drawing.Point(AbstractTextField.Margin, AbstractTextField.Margin);
 			
-			adorner.PaintTextFieldBackground(graphics, rect, state, this.textStyle, this.isReadOnly);
+			adorner.PaintTextFieldBackground(graphics, this.Client.Bounds, state, this.textStyle, this.isReadOnly);
 			
-			rect.Left   += this.margins.Left;
-			rect.Right  -= button;
-			rect.Bottom += this.margins.Bottom;
-			rect.Top    -= this.margins.Top;
 			pos -= this.scrollOffset;
-
+			
+			Drawing.Rectangle rInside = this.InnerBounds;
 			Drawing.Rectangle rSaveClip = graphics.SaveClippingRectangle();
-			Drawing.Rectangle rClip = rect;
-			rClip.Inflate(-2, -2);
+			Drawing.Rectangle rClip = rInside;
+			
 			rClip = this.MapClientToRoot(rClip);
 			graphics.SetClippingRectangle(rClip);
-
+			
+			graphics.AddFilledRectangle (rInside);
+			graphics.RenderSolid (Drawing.Color.FromRGB (1, 1, 0));
+			
 			if ( rClip.Height < 18 )	//	TODO: remplacer cette constante par qqch de plus adéquat...
 			{
 				pos.Y += 18-rClip.Height;  // remonte le texte si la hauteur est très petite
@@ -773,9 +797,8 @@ namespace Epsitec.Common.Widgets
 				if ( this.isCombo && this.isReadOnly )
 				{
 					Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
-					rects[0] = rect;
-					rects[0].Inflate(-3, -3);
-					//?rects[0].Right -= button;
+					rects[0] = rInside;
+					rects[0].Deflate(1, 1);
 					adorner.PaintTextSelectionBackground(graphics, rects);
 					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected);
 					adorner.PaintFocusBox(graphics, rects[0]);
@@ -834,8 +857,9 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler TextDeleted;
 		
 		
-		protected static readonly double		Margin = 4;
-		protected static readonly double		Infinity = 1000000;
+		internal static readonly double			Margin = 4;
+		internal static readonly double			FrameMargin = 2;
+		internal static readonly double			Infinity = 1000000;
 		
 		protected bool							isReadOnly = false;
 		protected bool							isCombo = false;
