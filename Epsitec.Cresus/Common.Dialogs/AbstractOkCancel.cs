@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 
@@ -17,7 +20,7 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
-		public abstract string[]					CommandArgs
+		public abstract string[]				CommandArgs
 		{
 			get;
 		}
@@ -30,15 +33,18 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
-		protected abstract Widget CreateBodyWidget();
 		
-		protected override void CreateWindow()
+		protected abstract Widget CreateBodyWidget();
+		protected override void   CreateWindow()
 		{
 			Widget body = this.CreateBodyWidget ();
-			Button button;
+			Button button1;
+			Button button2;
 			
 			double dx = body.Width;
 			double dy = body.Height;
+			
+			dx = System.Math.Max (dx, 2*75+3*8);
 			
 			this.window = new Window ();
 			
@@ -49,6 +55,7 @@ namespace Epsitec.Common.Dialogs
 			this.window.CommandDispatcher = this.private_dispatcher;
 			this.window.CommandDispatcher.RegisterController (this);
 			this.window.MakeFixedSizeWindow ();
+			this.window.MakeButtonlessWindow ();
 			this.window.MakeSecondaryWindow ();
 			
 			body.Parent          = this.window.Root;
@@ -56,21 +63,23 @@ namespace Epsitec.Common.Dialogs
 			body.TabIndex        = 1;
 			body.TabNavigation   = Widget.TabNavigationMode.ForwardTabPassive;
 			
-			button               = new Button (this.window.Root);
-			button.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 2*80 - 2*8, 16, 80, 24);
-			button.Text          = "OK";
-			button.Command       = "ValidateDialog";
-			button.TabIndex      = 2;
-			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			button.Shortcut      = Widgets.Feel.Factory.Active.AcceptShortcut;
+			button1               = new Button (this.window.Root);
+			button1.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 2*75 - 2*8, 16, 75, button1.Height);
+			button1.Text          = "OK";
+			button1.Command       = "ValidateDialog";
+			button1.TabIndex      = 2;
+			button1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			button1.Shortcut      = Widgets.Feel.Factory.Active.AcceptShortcut;
 			
-			button               = new Button (this.window.Root);
-			button.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 80 - 8, 16, 80, 24);
-			button.Text          = "Annuler";
-			button.Command       = "QuitDialog";
-			button.TabIndex      = 3;
-			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			button.Shortcut      = Widgets.Feel.Factory.Active.CancelShortcut;
+			button2               = new Button (this.window.Root);
+			button2.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 75 - 8, 16, 75, button2.Height);
+			button2.Text          = "Annuler";
+			button2.Command       = "QuitDialog";
+			button2.TabIndex      = 3;
+			button2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			button2.Shortcut      = Widgets.Feel.Factory.Active.CancelShortcut;
+			
+			AbstractDialog.LayoutButtons (this.window.Root.Width, button1, button2);
 			
 			this.window.FocusedWidget = body.FindTabWidget (Widget.TabNavigationDir.Forwards, Widget.TabNavigationMode.ActivateOnTab);
 		}
@@ -86,7 +95,6 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.Close ();
 		}
-		
 		
 		
 		protected string						dialog_title;
