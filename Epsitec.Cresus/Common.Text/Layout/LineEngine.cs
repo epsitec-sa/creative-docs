@@ -95,7 +95,8 @@ namespace Epsitec.Common.Text.Layout
 						//	Le mot se termine par un saut forcé (ou une marque de tabulation, ce qui				:
 						//	revient au même par rapport au traitement fait par le système de layout) :				:
 						
-						break;
+						result.Add (new Layout.Break (scratch.Offset, scratch.Advance, 0, 0, scratch.StretchProfile));
+						return Layout.Status.OkFitEnded;
 					}
 				}
 				else
@@ -108,12 +109,6 @@ namespace Epsitec.Common.Text.Layout
 					return Layout.Status.ErrorNeedMoreText;
 				}
 			}
-			
-			//	Le texte se termine par une fin forcée avant d'arriver dans la marge droite.						:
-			
-			result.Add (new Layout.Break (scratch.Offset, scratch.Advance, 0, 0, scratch.StretchProfile));
-			
-			return Layout.Status.OkFitEnded;
 			
 			//																										|
 stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------------------------------------'
@@ -263,8 +258,6 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				}
 				else
 				{
-					//	TODO: gérer les espaces qui dépassent de la ligne...
-					
 					profile = scratch.StretchProfile;
 					glyphs  = scratch.Font.GenerateGlyphs(text, offset, frag_length);
 					
@@ -294,10 +287,10 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					can_break = (run_length == text_length);
 					add_break = scratch.AddBreak && (scratch.WordBreakInfo == Unicode.BreakInfo.Optional);
 					
-					scratch.StretchProfile.Add (scratch.Font, scratch.FontSize, text, offset, frag_length);
+					profile.Add (scratch.Font, scratch.FontSize, text, offset, frag_length);
 				}
 				
-				if (scratch.Advance+scratch.TextWidth-scratch.StretchProfile.WidthEndSpace > scratch.FenceMaxX)
+				if (scratch.Advance+scratch.TextWidth-profile.WidthEndSpace > scratch.FenceMaxX)
 				{
 					//	Dépassé la marge de droite. Arrête immédiatement sans tenir compte
 					//	du résultat :
@@ -308,7 +301,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				if (can_break)
 				{
 					scratch.LastBreakOffset    = scratch.Offset + frag_length;
-					scratch.LastBreakAdvance   = scratch.Advance + scratch.TextWidth - scratch.StretchProfile.WidthEndSpace;
+					scratch.LastBreakAdvance   = scratch.Advance + scratch.TextWidth - profile.WidthEndSpace;
 					scratch.LastBreakPenalty   = break_penalty;
 					scratch.LastStretchProfile = new StretchProfile (profile);
 					
