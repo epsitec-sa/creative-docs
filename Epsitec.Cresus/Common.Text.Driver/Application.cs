@@ -10,6 +10,7 @@ namespace Epsitec.Common.Text.Driver
 	{
 		[System.STAThread] static void Main(string[] args)
 		{
+			Tests.CheckProperties.RunTests ();
 			Tests.CheckInternalCursor.RunTests ();
 			Tests.CheckInternalCursorTable.RunTests ();
 			Tests.CheckInternalCursorIdArray.RunTests ();
