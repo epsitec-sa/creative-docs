@@ -254,6 +254,20 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.RenderSolid(this.colorFrontDisabled);
 				}
 			}
+
+			if ( (state&WidgetState.ActiveMaybe) != 0 )  // 3ème état ?
+			{
+				rect.Deflate(3);
+				graphics.AddFilledRectangle(rect);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.RenderSolid(this.colorBlack);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorFrontDisabled);
+				}
+			}
 		}
 
 		// Dessine un bouton radio sans texte.

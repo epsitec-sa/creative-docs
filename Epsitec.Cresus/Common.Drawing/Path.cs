@@ -138,8 +138,8 @@ namespace Epsitec.Common.Drawing
 		public void ArcTo(Point c, Point p)
 		{
 			Point p1 = this.CurrentPoint;
-			Point s1 = Point.Scale (p1, c, 0.56);
-			Point s2 = Point.Scale (p, c, 0.56);
+			Point s1 = Point.Scale (p1, c, Path.Kappa);
+			Point s2 = Point.Scale (p, c, Path.Kappa);
 			this.CurveTo (s1, s2, p);
 		}
 		
@@ -156,18 +156,12 @@ namespace Epsitec.Common.Drawing
 		
 		public void ArcToDeg(double x, double y, double rx, double ry, double a1, double a2, bool ccw, double approximation_zoom)
 		{
-			a1 = Math.DegToRad (a1);
-			a2 = Math.DegToRad (a2);
-			
-			this.CreateOnTheFly ();
-			AntiGrain.Path.AppendArc (this.agg_path, x, y, rx, ry, a1, a2, ccw, approximation_zoom, true);
-			
-			double ex = x + System.Math.Cos (a2) * rx;
-			double ey = y + System.Math.Sin (a2) * ry;
-			
+			a1 = Math.DegToRad(a1);
+			a2 = Math.DegToRad(a2);
+
+			this.current_point = this.ArcBezierRad (x, y, rx, ry, a1, a2, ccw, true);
 			this.has_current_point = true;
-			this.current_point     = new Point (ex, ey);
-			this.is_empty          = false;
+			this.is_empty = false;
 		}
 		
 		public void ArcToRad(Point c, double rx, double ry, double a1, double a2, bool ccw)
@@ -182,15 +176,9 @@ namespace Epsitec.Common.Drawing
 		
 		public void ArcToRad(double x, double y, double rx, double ry, double a1, double a2, bool ccw, double approximation_zoom)
 		{
-			this.CreateOnTheFly ();
-			AntiGrain.Path.AppendArc (this.agg_path, x, y, rx, ry, a1, a2, ccw, approximation_zoom, true);
-			
-			double ex = x + System.Math.Cos (a2) * rx;
-			double ey = y + System.Math.Sin (a2) * ry;
-			
+			this.current_point = this.ArcBezierRad (x, y, rx, ry, a1, a2, ccw, true);
 			this.has_current_point = true;
-			this.current_point     = new Point (ex, ey);
-			this.is_empty          = false;
+			this.is_empty = false;
 		}
 		
 		public void ArcDeg(Point c, double rx, double ry, double a1, double a2, bool ccw)
@@ -205,18 +193,12 @@ namespace Epsitec.Common.Drawing
 		
 		public void ArcDeg(double x, double y, double rx, double ry, double a1, double a2, bool ccw, double approximation_zoom)
 		{
-			a1 = Math.DegToRad (a1);
-			a2 = Math.DegToRad (a2);
-			
-			this.CreateOnTheFly ();
-			AntiGrain.Path.AppendArc (this.agg_path, x, y, rx, ry, a1, a2, ccw, approximation_zoom, false);
-			
-			double ex = x + System.Math.Cos (a2) * rx;
-			double ey = y + System.Math.Sin (a2) * ry;
-			
+			a1 = Math.DegToRad(a1);
+			a2 = Math.DegToRad(a2);
+
+			this.current_point = this.ArcBezierRad (x, y, rx, ry, a1, a2, ccw, false);
 			this.has_current_point = true;
-			this.current_point     = new Point (ex, ey);
-			this.is_empty          = false;
+			this.is_empty = false;
 		}
 		
 		public void ArcRad(Point c, double rx, double ry, double a1, double a2, bool ccw)
@@ -231,16 +213,11 @@ namespace Epsitec.Common.Drawing
 		
 		public void ArcRad(double x, double y, double rx, double ry, double a1, double a2, bool ccw, double approximation_zoom)
 		{
-			this.CreateOnTheFly ();
-			AntiGrain.Path.AppendArc (this.agg_path, x, y, rx, ry, a1, a2, ccw, approximation_zoom, false);
-			
-			double ex = x + System.Math.Cos (a2) * rx;
-			double ey = y + System.Math.Sin (a2) * ry;
-			
+			this.current_point = this.ArcBezierRad (x, y, rx, ry, a1, a2, ccw, false);
 			this.has_current_point = true;
-			this.current_point     = new Point (ex, ey);
-			this.is_empty          = false;
+			this.is_empty = false;
 		}
+
 		
 		public void Close()
 		{
@@ -368,10 +345,10 @@ namespace Epsitec.Common.Drawing
 			Drawing.Path path = new Drawing.Path();
 			
 			path.MoveTo (cx-rx, cy);
-			path.CurveTo (cx-rx*1.00, cy+ry*0.56, cx-rx*0.56, cy+ry*1.00, cx,    cy+ry);
-			path.CurveTo (cx+rx*0.56, cy+ry*1.00, cx+rx*1.00, cy+ry*0.56, cx+rx, cy);
-			path.CurveTo (cx+rx*1.00, cy-ry*0.56, cx+rx*0.56, cy-ry*1.00, cx,    cy-ry);
-			path.CurveTo (cx-rx*0.56, cy-ry*1.00, cx-rx*1.00, cy-ry*0.56, cx-rx, cy);
+			path.CurveTo (cx-rx, cy+ry*Path.Kappa, cx-rx*Path.Kappa, cy+ry, cx, cy+ry);
+			path.CurveTo (cx+rx*Path.Kappa, cy+ry, cx+rx, cy+ry*Path.Kappa, cx+rx, cy);
+			path.CurveTo (cx+rx, cy-ry*Path.Kappa, cx+rx*Path.Kappa, cy-ry, cx, cy-ry);
+			path.CurveTo (cx-rx*Path.Kappa, cy-ry, cx-rx, cy-ry*Path.Kappa, cx-rx, cy);
 			path.Close ();
 			
 			this.Append (path, 0);
@@ -675,11 +652,136 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		protected Point ArcBezierRad(double cx, double cy, double rx, double ry, double a1, double a2, bool ccw, bool continue_path)
+		{
+			//	Génère un arc de cercle à l'aide d'un maximun de 4 courbes de Bézier.
+			//	Retourne le point d'arrivée.
+			
+			Point c = new Point (cx, cy);
+			Point r = new Point (rx, ry);
+			
+			//	Par défaut, le point d'arrivée est égal au point courant, si rien n'est
+			//	dessiné :
+			
+			Point p2 = this.current_point;
+			
+			a1 = Math.ClipAngleRad (a1);
+			a2 = Math.ClipAngleRad (a2);
+			
+			if (System.Math.Abs (a1-a2) < 0.0000001)
+			{
+				a2 = a1;
+			}
+			
+			if (ccw)
+			{
+				if (a2 <= a1)
+				{
+					a2 += System.Math.PI * 2.0;
+				}
+				
+				while (a1 < a2)
+				{
+					double aa = System.Math.Min (a1 + System.Math.PI/2.0, a2);
+					double k  = Path.GetArcBezierKappaRad (aa - a1);
+					
+					Point p1, s1, s2;
+					
+					Path.ArcBezierPSRad (a1, k,  ccw, out p1, out s1);
+					Path.ArcBezierPSRad (aa, k, !ccw, out p2, out s2);
+					
+					p1 = c + Point.ScaleMul (p1, r);
+					s1 = c + Point.ScaleMul (s1, r);
+					s2 = c + Point.ScaleMul (s2, r);
+					p2 = c + Point.ScaleMul (p2, r);
+
+					if (!continue_path)
+					{
+						continue_path = true;
+						this.MoveTo (p1);
+					}
+					
+					this.CurveTo (s1, s2, p2);
+					
+					a1 = aa;
+				}
+			}
+			else
+			{
+				if (a2 >= a1)
+				{
+					a2 -= System.Math.PI * 2.0;
+				}
+				
+				while (a1 > a2)
+				{
+					double aa = System.Math.Max (a1 - System.Math.PI/2.0, a2);
+					double k  = Path.GetArcBezierKappaRad (a1 - aa);
+					
+					Point p1, s1, s2;
+					
+					Path.ArcBezierPSRad (a1, k,  ccw, out p1, out s1);
+					Path.ArcBezierPSRad (aa, k, !ccw, out p2, out s2);
+					
+					p1 = c + Point.ScaleMul (p1, r);
+					s1 = c + Point.ScaleMul (s1, r);
+					s2 = c + Point.ScaleMul (s2, r);
+					p2 = c + Point.ScaleMul (p2, r);
+					
+					if (!continue_path)
+					{
+						continue_path = true;
+						this.MoveTo (p1);
+					}
+					this.CurveTo (s1, s2, p2);
+					
+					a1 = aa;
+				}
+			}
+			
+			return p2;
+		}
+
+		protected static void ArcBezierPSRad(double a, double k, bool ccw, out Point p, out Point s)
+		{
+			//	Calcule le point principal et le point secondaire d'un arc de Bézier
+			//	de rayon 1 et de centre (0;0).
+
+			p = new Point (System.Math.Cos (a), System.Math.Sin (a));
+			s = (ccw) ? new Point (p.X - System.Math.Sin(a)*k, p.Y + System.Math.Cos(a)*k)
+				/**/  : new Point (p.X + System.Math.Sin(a)*k, p.Y - System.Math.Cos(a)*k);
+		}
+
+		protected static double GetArcBezierKappaRad(double a)
+		{
+			//	Détermine le facteur kappa en fonction de l'angle (0..PI/2).
+			
+			double sin = System.Math.Sin (a/2.0);
+			double cos = System.Math.Cos (a/2.0);
+			
+			double dx = (4.0-4.0*cos)/3.0;
+			double dy = sin+(1.0-cos)*(cos-3.0)/(3.0*sin);
+			
+			return System.Math.Sqrt (dx*dx + dy*dy);
+		}
+
+		
+		//	Le paramètre kappa permet de calculer la position des points secondaires d'une courbe de Bézier
+		//	pour simuler un quart de cercle.
+		//
+		//	kappa = ((sqr(2)-1)/3)*4
+		//
+		//	Cf l'article http://www.whizkidtech.redprince.net/bezier/circle/
+		
+		protected const double					Kappa = 0.552284749828;
+		
+		
 		internal void InternalCreateNonEmpty()
 		{
 			this.CreateOnTheFly ();
 			this.is_empty = false;
 		}
+		
 		
 		protected System.IntPtr			agg_path;
 		protected double				default_zoom = 1.0;
