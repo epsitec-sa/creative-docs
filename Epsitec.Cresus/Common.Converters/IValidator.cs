@@ -9,9 +9,22 @@ namespace Epsitec.Common.Converters
 	/// </summary>
 	public interface IValidator
 	{
-		bool	IsValid				{ get; set; }
-		string	ErrorMessage		{ get; set; }
+		bool				IsValid				{ get; }
+		ValidationState		ValidationState		{ get; }
+		string				ErrorMessage		{ get; }
 		
 		void Validate();
+	}
+	
+	/// <summary>
+	/// L'énumération ValidationState représente les états possibles pour un
+	/// validateur.
+	/// </summary>
+	public enum ValidationState
+	{
+		Unknown,			//	état inconnu (non défini)
+		Ok,					//	état valide
+		Error,				//	état non valide
+		Dirty				//	état pas à jour => nécessite une validation
 	}
 }

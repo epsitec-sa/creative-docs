@@ -93,6 +93,11 @@
                     AssemblyName = "System.Windows.Forms"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
                 />
+                <Reference
+                    Name = "Common.Converters"
+                    Project = "{E8944309-DFF8-44E6-A5C0-F491BA97B9B5}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
@@ -173,6 +178,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IValidator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ObjectBundler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -220,6 +230,11 @@
                 <File
                     RelPath = "TODO.txt"
                     BuildAction = "Content"
+                />
+                <File
+                    RelPath = "ValidationRule.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Data\ITextArrayStore.cs"

@@ -60,6 +60,8 @@ namespace Epsitec.Common.Support
 				this.dispatcher_name = name;
 				CommandDispatcher.global_list.Add (this);
 			}
+			
+			this.validation_rules = new ValidationRule (this);
 		}
 		
 		
@@ -146,6 +148,12 @@ namespace Epsitec.Common.Support
 			list.CopyTo (states);
 			
 			return states;
+		}
+		
+		
+		public void ApplyValidationRules()
+		{
+			this.validation_rules.Validate ();
 		}
 		
 		
@@ -311,6 +319,7 @@ namespace Epsitec.Common.Support
 			return args;
 		}
 		
+		
 		protected void RegisterMethod(object controller, System.Reflection.MethodInfo info)
 		{
 			//	Ne parcourt que les attributs au niveau d'implémentation actuel (pas les classes dérivées,
@@ -398,7 +407,6 @@ namespace Epsitec.Common.Support
 				}
 			}
 		}
-		
 		
 		
 		#region EventRelay class
@@ -524,6 +532,7 @@ namespace Epsitec.Common.Support
 				get { return this.dispatcher; }
 			}
 			
+			public abstract bool				Enabled { get; set; }
 			
 			public abstract void Synchronise();
 			
@@ -551,7 +560,6 @@ namespace Epsitec.Common.Support
 		}
 		#endregion
 		
-		
 		public static CommandDispatcher			Default
 		{
 			get { return CommandDispatcher.default_dispatcher; }
@@ -560,7 +568,9 @@ namespace Epsitec.Common.Support
 		
 		protected System.Collections.Hashtable	event_handlers = new System.Collections.Hashtable ();
 		protected System.Collections.ArrayList	command_states = new System.Collections.ArrayList ();
+		protected System.Collections.ArrayList	validation_states = new System.Collections.ArrayList ();
 		protected string						dispatcher_name;
+		protected ValidationRule				validation_rules;
 		
 		static Regex							command_arg_regex;
 		static Regex							numeric_regex;
