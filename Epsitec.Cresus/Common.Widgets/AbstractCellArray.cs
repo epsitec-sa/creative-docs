@@ -1585,10 +1585,9 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
 			
 			// Dessine le cadre et le fond du tableau.
-			adorner.PaintArrayBackground(graphics, rect, state, dir);
+			adorner.PaintArrayBackground(graphics, rect, state);
 
 #if false
 			if ( this.showScrollerV && this.showScrollerH )
@@ -1612,7 +1611,7 @@ namespace Epsitec.Common.Widgets
 			rect.Inflate(-0.5, -0.5);
 
 			graphics.LineWidth = 1;
-			Drawing.Color color = adorner.GetColorBorder();
+			Drawing.Color color = adorner.ColorBorder;
 
 			// Dessine le rectangle englobant.
 			graphics.AddRectangle(rect);

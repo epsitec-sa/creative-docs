@@ -780,7 +780,6 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
 
 			this.Update();
 
@@ -791,7 +790,7 @@ namespace Epsitec.Common.Widgets
 				{
 					iw = this.iconWidth+3;
 				}
-				adorner.PaintMenuBackground(graphics, rect, state, dir, this.parentRect, iw);
+				adorner.PaintMenuBackground(graphics, rect, state, Direction.Down, this.parentRect, iw);
 			}
 		}
 
