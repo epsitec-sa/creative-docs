@@ -1048,6 +1048,8 @@ namespace Epsitec.Common.Document
 		public void SelectName(string name)
 		{
 			if ( name == "" )  return;
+			
+			System.Text.RegularExpressions.Regex regex = Support.RegexFactory.FromSimpleJoker(name);
 
 			using ( this.OpletQueueBeginAction() )
 			{
@@ -1071,7 +1073,7 @@ namespace Epsitec.Common.Document
 
 					if ( obj.IsSelected )
 					{
-						if ( objName != name )
+						if ( !regex.IsMatch(objName) )
 						{
 							obj.Deselect();
 							this.TotalSelected --;
@@ -1079,7 +1081,7 @@ namespace Epsitec.Common.Document
 					}
 					else
 					{
-						if ( objName == name )
+						if ( regex.IsMatch(objName) )
 						{
 							obj.Select();
 							this.TotalSelected ++;
