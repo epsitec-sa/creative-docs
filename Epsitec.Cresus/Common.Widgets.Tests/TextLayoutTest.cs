@@ -17,6 +17,17 @@ namespace Epsitec.Common.Widgets
 			window.Show();
 		}
 
+		[Test] public void CheckPaintJustif()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Size(300, 200);
+			window.Text = "CheckPaintJustif";
+			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_PaintJustif1);
+			window.Root.Invalidate();
+			window.Show();
+		}
+
 		[Test] public void CheckRectangle()
 		{
 			Window window = new Window();
@@ -69,6 +80,12 @@ namespace Epsitec.Common.Widgets
 			layout.DebugDumpJustif(System.Console.Out);
 
 			layout.Text = "Ceciestuntrèslongtextesansespacesjustepourvoir.";
+			layout.DebugDumpJustif(System.Console.Out);
+
+			layout.Text = "1.<br/><br/><b><i>3.</b></i><br/><br/>5.<br/><br/>";
+			layout.DebugDumpJustif(System.Console.Out);
+
+			layout.Text = "Juste quelques lignes terminées par un br.<br/>";
 			layout.DebugDumpJustif(System.Console.Out);
 		}
 
@@ -292,7 +309,8 @@ namespace Epsitec.Common.Widgets
 			window.Root.DockPadding = new Margins (5, 5, 5, 5);
 			TextFieldMulti text = new TextFieldMulti ();
 			text.Dock = DockStyle.Fill;
-			text.Text = "1.<br/><br/>3.";
+			//?text.Text = "1.<br/><br/>3.";
+			text.Text = "1.<br/><br/><b><i>3.</b></i><br/><br/>5.<br/><br/>";
 			text.Parent = window.Root;
 			window.Show ();
 		}
@@ -308,12 +326,39 @@ namespace Epsitec.Common.Widgets
 			layout.Font = Font.GetFont("Tahoma", "Regular");
 			layout.FontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleCenter;
+			//?layout.JustifMode = TextJustifMode.All;
 			layout.LayoutSize = new Size(200, 100);
 
 			Point pos = new Point(20, 20);
 
 			//?			e.Graphics.RotateTransform (5, 0, 0);
 			e.Graphics.ScaleTransform (1.2, 1.2, 0, 0);
+			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
+			e.Graphics.RenderSolid(Color.FromBrightness(1));
+
+			Rectangle[] rects = layout.FindTextRange(pos, 0, layout.Text.Length);
+			for ( int i=0 ; i<rects.Length ; i++ )
+			{
+				e.Graphics.Align (ref rects[i]);
+				e.Graphics.AddFilledRectangle(rects[i].Left, rects[i].Bottom, rects[i].Width, rects[i].Height);
+				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
+			}
+
+			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
+		}
+
+		private void CheckPaint_PaintJustif1(object sender, PaintEventArgs e)
+		{
+			TextLayout layout = new TextLayout();
+
+			layout.Text = @"Voilà une image <img src=""file:images/icon.png""/> simple, suivie d'une deuxième <img src=""file:images/icon.png""/> et une troisième <img src=""file:images/icon.png""/>.<br/><br/>On donnait ce jour-là un grand dîner, où, pour la première fois, je vis avec beaucoup d'étonnement le <w>maître d'hôtel</w> servir l'épée au côté et le chapeau sur la tête.";
+			layout.Font = Font.GetFont("Tahoma", "Regular");
+			layout.FontSize = 11.0;
+			layout.Alignment = ContentAlignment.MiddleLeft;
+			layout.JustifMode = TextJustifMode.AllButLast;
+			layout.LayoutSize = new Size(260, 150);
+
+			Point pos = new Point(20, 20);
 			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
 			e.Graphics.RenderSolid(Color.FromBrightness(1));
 

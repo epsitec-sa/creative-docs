@@ -23,10 +23,11 @@ namespace Epsitec.Common.Widgets
 	{
 		public AbstractTextField()
 		{
+			this.AutoEngage = false;
 			this.InternalState |= InternalState.AutoFocus;
-			this.InternalState |= InternalState.AutoEngage;
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= InternalState.AutoRepeatEngaged;
 			this.InternalState |= InternalState.AutoDoubleClick;
 			
 			this.ResetCursor();
@@ -419,9 +420,10 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
+			this.lastMousePos = pos;
+			pos = this.Client.Bounds.Constrain(pos);
 			pos.X -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
 			pos.Y -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
-			pos = this.Client.Bounds.Constrain(pos);
 			pos += this.scrollOffset;
 
 			switch ( message.Type )
@@ -445,6 +447,7 @@ namespace Epsitec.Common.Widgets
 				case MessageType.MouseMove:
 					if ( this.mouseDown )
 					{
+						this.EnableScroll(this.lastMousePos);
 						this.navigator.ProcessMessage(message, pos);
 						message.Consumer = this;
 					}
@@ -453,6 +456,7 @@ namespace Epsitec.Common.Widgets
 				case MessageType.MouseUp:
 					if ( this.mouseDown )
 					{
+						this.SetEngaged(false);
 						this.navigator.ProcessMessage(message, pos);
 						this.mouseDown = false;
 						message.Consumer = this;
@@ -479,6 +483,34 @@ namespace Epsitec.Common.Widgets
 		{
 			// Gestion d'une touche pressée avec KeyDown dans le texte.
 			return this.navigator.ProcessMessage(message, pos);
+		}
+
+		protected void EnableScroll(Drawing.Point pos)
+		{
+			this.scrollLeft   = ( pos.X <= this.Client.Bounds.Left   );
+			this.scrollRight  = ( pos.X >= this.Client.Bounds.Right  );
+			this.scrollBottom = ( pos.Y <= this.Client.Bounds.Bottom );
+			this.scrollTop    = ( pos.Y >= this.Client.Bounds.Top    );
+
+			if ( this.scrollLeft || this.scrollRight || this.scrollBottom || this.scrollTop )
+			{
+				this.SetEngaged(true);
+			}
+			else
+			{
+				this.SetEngaged(false);
+			}
+		}
+
+		protected override void OnStillEngaged()
+		{
+			base.OnStillEngaged();
+
+			double amplitude = 4;
+			if ( this.scrollLeft   )  this.ScrollHorizontal(-amplitude);
+			if ( this.scrollRight  )  this.ScrollHorizontal(amplitude);
+			if ( this.scrollBottom )  this.ScrollVertical(-amplitude);
+			if ( this.scrollTop    )  this.ScrollVertical(amplitude);
 		}
 
 
@@ -604,20 +636,43 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle cursor = this.TextLayout.FindTextCursor(this.navigator.Context.CursorTo, out this.navigator.Context.CursorLine);
 			this.navigator.Context.CursorPosX = (cursor.Left+cursor.Right)/2;
-
-			Drawing.Point end = this.TextLayout.FindTextEnd();
-			
-			this.CursorScrollTextEnd(end, cursor);
+			this.CursorScrollText(cursor);
 		}
 		
-		protected virtual void CursorScrollTextEnd(Drawing.Point end, Drawing.Rectangle cursor)
+		protected virtual void CursorScrollText(Drawing.Rectangle cursor)
 		{
+			Drawing.Point end = this.TextLayout.FindTextEnd();
 			double offset = cursor.Right;
 			offset += this.realSize.Width/2;
 			offset  = System.Math.Min(offset, end.X);
 			offset -= this.realSize.Width;
 			offset  = System.Math.Max(offset, 0);
 			this.scrollOffset.X = offset;
+		}
+
+		protected virtual void ScrollHorizontal(double dist)
+		{
+			// Décale le texte vers la droite (+) ou la gauche (-).
+			if ( this.textFieldStyle == TextFieldStyle.Multi )  return;
+
+			this.scrollOffset.X += dist;
+			Drawing.Point end = this.TextLayout.FindTextEnd();
+			double max = System.Math.Max(end.X-this.realSize.Width, 0.0);
+			this.scrollOffset.X = System.Math.Max(this.scrollOffset.X, 0.0);
+			this.scrollOffset.X = System.Math.Min(this.scrollOffset.X, max);
+			this.Invalidate();
+
+			Drawing.Point pos = this.lastMousePos;
+			pos = this.Client.Bounds.Constrain(pos);
+			pos.X -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
+			pos.Y -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
+			pos += this.scrollOffset;
+			this.navigator.MouseMoveMessage(pos);
+		}
+
+		protected virtual void ScrollVertical(double dist)
+		{
+			// Décale le texte vers le haut (+) ou le bas (-).
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
@@ -787,6 +842,11 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Size					realSize;
 		protected Drawing.Point					scrollOffset = new Drawing.Point();
 		protected bool							mouseDown = false;
+		protected bool							scrollLeft = false;
+		protected bool							scrollRight = false;
+		protected bool							scrollBottom = false;
+		protected bool							scrollTop = false;
+		protected Drawing.Point					lastMousePos;
 		
 		protected TextFieldStyle				textFieldStyle = TextFieldStyle.Normal;
 		

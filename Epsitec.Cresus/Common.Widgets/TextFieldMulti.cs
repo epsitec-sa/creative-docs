@@ -59,43 +59,70 @@ namespace Epsitec.Common.Widgets
 			base.OnAdornerChanged();
 		}
 
-		protected override void CursorScrollTextEnd(Drawing.Point end, Drawing.Rectangle cursor)
+		protected override void CursorScrollText(Drawing.Rectangle cursor)
 		{
+			Drawing.Point end = this.TextLayout.FindTextEnd();
 			double offset = cursor.Bottom;
 			offset -= this.realSize.Height/2;
 			offset  = System.Math.Max(offset, end.Y);
 			offset += this.realSize.Height;
 			offset  = System.Math.Min(offset, AbstractTextField.Infinity);
 			this.scrollOffset.Y = offset-this.realSize.Height;
-
-			if ( this.scroller != null )
-			{
-				double h = AbstractTextField.Infinity-end.Y;  // hauteur de tout le texte
-				if ( h <= this.realSize.Height || this.realSize.Height < 0 )
-				{
-					this.scroller.SetEnabled(false);
-					this.scroller.MaxValue          = 0;
-					this.scroller.VisibleRangeRatio = 0;
-					this.scroller.Value             = 0;
-				}
-				else
-				{
-					this.scroller.SetEnabled(true);
-					this.scroller.MaxValue          = (decimal) (h-this.realSize.Height);
-					this.scroller.VisibleRangeRatio = (decimal) (this.realSize.Height/h);
-					
-					decimal value = this.scroller.Range - (decimal) (AbstractTextField.Infinity-offset);
-					
-					if (value > this.scroller.Range) value = this.scroller.Range;
-					if (value < 0)                   value = 0;
-					
-					this.scroller.Value       = value;
-					this.scroller.SmallChange = 20;
-					this.scroller.LargeChange = (decimal) (this.realSize.Height/2.0);
-				}
-			}
+			this.UpdateScroller();
 		}
 		
+		protected override void ScrollVertical(double dist)
+		{
+			// Décale le texte vers le haut (+) ou le bas (-).
+			this.scrollOffset.Y += dist;
+			Drawing.Point end = this.TextLayout.FindTextEnd();
+			double min = System.Math.Min(end.Y, AbstractTextField.Infinity-this.realSize.Height);
+			double max = AbstractTextField.Infinity-this.realSize.Height;
+			this.scrollOffset.Y = System.Math.Max(this.scrollOffset.Y, min);
+			this.scrollOffset.Y = System.Math.Min(this.scrollOffset.Y, max);
+			this.Invalidate();
+			this.UpdateScroller();
+
+			Drawing.Point pos = this.lastMousePos;
+			pos.X -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
+			pos.Y -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
+			pos = this.Client.Bounds.Constrain(pos);
+			pos += this.scrollOffset;
+			this.TextNavigator.MouseMoveMessage(pos);
+		}
+
+		protected void UpdateScroller()
+		{
+			// Met à jour l'asceuseur en fonction de this.scrollOffset.
+			if ( this.scroller == null )  return;
+
+			Drawing.Point end = this.TextLayout.FindTextEnd();
+			double h = AbstractTextField.Infinity-end.Y;  // hauteur de tout le texte
+			if ( h <= this.realSize.Height || this.realSize.Height < 0 )
+			{
+				this.scroller.SetEnabled(false);
+				this.scroller.MaxValue          = 0;
+				this.scroller.VisibleRangeRatio = 0;
+				this.scroller.Value             = 0;
+			}
+			else
+			{
+				this.scroller.SetEnabled(true);
+				this.scroller.MaxValue          = (decimal) (h-this.realSize.Height);
+				this.scroller.VisibleRangeRatio = (decimal) (this.realSize.Height/h);
+				
+				double offset = this.scrollOffset.Y+this.realSize.Height;
+				decimal value = this.scroller.Range - (decimal) (AbstractTextField.Infinity-offset);
+				
+				if ( value > this.scroller.Range )  value = this.scroller.Range;
+				if ( value < 0 )                    value = 0;
+				
+				this.scroller.Value       = value;
+				this.scroller.SmallChange = 20;
+				this.scroller.LargeChange = (decimal) (this.realSize.Height/2.0);
+			}
+		}
+
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			switch ( message.Type )
