@@ -461,5 +461,150 @@ namespace Epsitec.Common.Widgets.Tools
 			
 			private Timer						timer;
 		}
+		
+		public class DragSource : Widget, Helpers.IDragBehaviorHost
+		{
+			public DragSource()
+			{
+				this.drag_behavior = new Helpers.DragBehavior (this);
+			}
+			
+			public DragSource(Widget embedder) : this ()
+			{
+				this.SetEmbedder (embedder);
+			}
+			
+			
+			public Drawing.Color				HotColor
+			{
+				get
+				{
+					return this.color;
+				}
+			}
+			
+			protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clip_rect)
+			{
+				double dx = this.Client.Width;
+				double dy = this.Client.Height;
+				double cx = dx / 2;
+				double cy = dy / 2;
+				
+				double r = System.Math.Min (cx, cy) - 1;
+				
+				graphics.AddFilledCircle (cx, cy, r);
+				graphics.RenderSolid (Drawing.Color.FromARGB (0.3, 0.3, 0.8, 1.0));
+				graphics.LineWidth = 0.5;
+				graphics.AddCircle (cx, cy, r);
+				
+				double sx = 5;
+				double sy = 5;
+				double ox = cx - sx/2 - 0.5;
+				double oy = cy - sy/2 - 0.5;
+				
+				using (Drawing.Path path = new Drawing.Path ())
+				{
+					path.MoveTo (ox+2, oy+0);
+					path.LineTo (ox+0, oy+0);
+					path.LineTo (ox+0, oy+2);
+					path.MoveTo (ox+0, oy+sy+1-2);
+					path.LineTo (ox+0, oy+sy+1-0);
+					path.LineTo (ox+2, oy+sy+1-0);
+					path.MoveTo (ox+sx+1-2, oy+sy+1-0);
+					path.LineTo (ox+sx+1-0, oy+sy+1-0);
+					path.LineTo (ox+sx+1-0, oy+sy+1-2);
+					path.MoveTo (ox+sx+1-0, oy+2);
+					path.LineTo (ox+sx+1-0, oy+0);
+					path.LineTo (ox+sx+1-2, oy+0);
+					
+					graphics.Rasterizer.AddOutline (path, 0.5);
+				}
+				
+				graphics.RenderSolid (Drawing.Color.FromRGB (0, 0, 0.7));
+			}
+			
+			protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
+			{
+				if (! this.drag_behavior.ProcessMessage (message, pos))
+				{
+					base.ProcessMessage (message, pos);
+				}
+			}
+			
+			
+			#region IDragBehaviorHost Members
+			public Drawing.Point				DragLocation
+			{
+				get
+				{
+					Drawing.Point pos = this.MapClientToScreen (new Drawing.Point (this.Client.Width / 2, this.Client.Height / 2));
+					
+					pos.X = pos.X - this.magnifier.zoom_window.ClientSize.Width  / 2 - 2;
+					pos.Y = pos.Y - this.magnifier.zoom_window.ClientSize.Height / 2 - 2;
+					
+					return pos;
+				}
+			}
+
+			public void OnDragBegin(Drawing.Point cursor)
+			{
+				if (this.magnifier == null)
+				{
+					this.magnifier = new Magnifier ();
+					this.magnifier.IsColorPicker = true;
+					this.magnifier.HotColorChanged += new Support.EventHandler (this.HandleMagnifierHotColorChanged);
+				}
+				
+				MouseCursor.Hide ();
+				
+				this.magnifier.zoom_window.WindowLocation = this.DragLocation;
+				this.magnifier.zoom_view.Invalidate ();
+				this.magnifier.Show ();
+				
+				this.is_sampling = true;
+			}
+
+			public void OnDragging(DragEventArgs e)
+			{
+				this.magnifier.zoom_window.WindowLocation = this.DragLocation + e.Offset;
+				this.magnifier.zoom_view.Invalidate ();
+			}
+
+			public void OnDragEnd()
+			{
+				this.is_sampling = false;
+				
+				this.magnifier.Hide ();
+				
+				MouseCursor.Show ();
+			}
+			#endregion
+			
+			private void HandleMagnifierHotColorChanged(object sender)
+			{
+				if (this.is_sampling)
+				{
+					this.color = this.magnifier.HotColor;
+					this.OnHotColorChanged ();
+				}
+			}
+			
+			protected virtual void OnHotColorChanged()
+			{
+				if (this.HotColorChanged != null)
+				{
+					this.HotColorChanged (this);
+				}
+			}
+			
+			
+			public event Support.EventHandler	HotColorChanged;
+			
+			
+			private bool						is_sampling;
+			private Helpers.DragBehavior		drag_behavior;
+			private Magnifier					magnifier;
+			private Drawing.Color				color = Drawing.Color.Empty;
+		}
 	}
 }
