@@ -313,11 +313,10 @@ namespace Epsitec.Common.Widgets
 			}
 			else if ( this.separator )
 			{
-				double x1 = this.marginItem*2+this.iconSize.Width;
-				double x2 = rect.Width-this.marginItem;
-				double y = System.Math.Floor(rect.Height/2)+0.5;
-				graphics.AddLine(x1, y, x2, y);
-				graphics.RenderSolid(this.colorControlDark);
+				Drawing.Rectangle inside = rect;
+				inside.Left  = this.marginItem*2+this.iconSize.Width;
+				inside.Right = rect.Width-this.marginItem;
+				adorner.PaintSeparatorBackground(graphics, inside, state, dir, Direction.Down, false);
 			}
 			else
 			{
