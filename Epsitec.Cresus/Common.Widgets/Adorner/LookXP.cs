@@ -1,11 +1,11 @@
 namespace Epsitec.Common.Widgets.Adorner
 {
 	/// <summary>
-	/// La classe Adorner.Default implémente le décorateur par défaut.
+	/// La classe Adorner.LookXP implémente le décorateur au look Windows-XP.
 	/// </summary>
-	public class Default : IAdorner
+	public class LookXP : IAdorner
 	{
-		public Default()
+		public LookXP()
 		{
 			RefreshColors();
 		}
@@ -23,42 +23,42 @@ namespace Epsitec.Common.Widgets.Adorner
 
 		// Dessine une flèche (dans un bouton d'ascenseur par exemple).
 		public void PaintArrow(Drawing.Graphics graphics,
-							   Drawing.Rectangle rect,
-							   Widgets.WidgetState state,
-							   Widgets.Direction shadow,
-							   Widgets.Direction dir)
+			Drawing.Rectangle rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow,
+			Widgets.Direction dir)
 		{
 			graphics.AddFilledRectangle(rect.Left, rect.Bottom, rect.Width, rect.Height);
 			graphics.RenderSolid(Drawing.Color.FromBrightness(1));
 		}
 
 		public void PaintCheck(Drawing.Graphics graphics,
-							   Drawing.Rectangle rect,
-							   Widgets.WidgetState state,
-							   Widgets.Direction shadow)
+			Drawing.Rectangle rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintRadio(Drawing.Graphics graphics,
-							   Drawing.Rectangle rect,
-							   Widgets.WidgetState state,
-							   Widgets.Direction shadow)
+			Drawing.Rectangle rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintIcon(Drawing.Graphics graphics,
-							  Drawing.Rectangle rect,
-							  Widgets.WidgetState state,
-							  Widgets.Direction shadow,
-							  string icon)
+			Drawing.Rectangle rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow,
+			string icon)
 		{
 		}
 
 		// Dessine un "L".
 		protected void PaintL(Drawing.Graphics graphics,
-							  Drawing.Rectangle rect,
-							  Drawing.Color color,
-							  Widgets.Direction dir)
+			Drawing.Rectangle rect,
+			Drawing.Color color,
+			Widgets.Direction dir)
 		{
 			Drawing.Point p1 = new Drawing.Point();
 			Drawing.Point p2 = new Drawing.Point();
@@ -122,10 +122,10 @@ namespace Epsitec.Common.Widgets.Adorner
 
 		// Dessine le fond d'un bouton rectangulaire.
 		public void PaintButtonBackground(Drawing.Graphics graphics,
-										  Drawing.Rectangle rect,
-										  Widgets.WidgetState state,
-										  Widgets.Direction shadow,
-										  Widgets.ButtonStyle style)
+			Drawing.Rectangle rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow,
+			Widgets.ButtonStyle style)
 		{
 			if ( style == ButtonStyle.Normal )
 			{
@@ -157,156 +157,156 @@ namespace Epsitec.Common.Widgets.Adorner
 		}
 
 		public void PaintButtonForeground(Drawing.Graphics graphics,
-										  Drawing.Rectangle rect,
-										  Widgets.WidgetState state,
-										  Widgets.Direction shadow,
-										  Widgets.ButtonStyle style)
+			Drawing.Rectangle rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow,
+			Widgets.ButtonStyle style)
 		{
 		}
 
 		public void PaintTextFieldBackground(Drawing.Graphics graphics,
-											 Drawing.Rectangle rect,
-											 Widgets.WidgetState state,
-											 Widgets.Direction shadow,
-											 Widgets.TextFieldStyle style)
+			Drawing.Rectangle rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow,
+			Widgets.TextFieldStyle style)
 		{
 		}
 
 		public void PaintTextFieldForeground(Drawing.Graphics graphics,
-											 Drawing.Rectangle rect,
-											 Widgets.WidgetState state,
-											 Widgets.Direction shadow,
-											 Widgets.TextFieldStyle style)
+			Drawing.Rectangle rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow,
+			Widgets.TextFieldStyle style)
 		{
 		}
 
 		public void PaintScrollerBackground(Drawing.Graphics graphics,
-											Drawing.Rectangle frame_rect,
-											Drawing.Rectangle tab_rect,
-											Widgets.WidgetState state,
-											Widgets.Direction shadow)
+			Drawing.Rectangle frame_rect,
+			Drawing.Rectangle tab_rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintScrollerHandle(Drawing.Graphics graphics,
-										Drawing.Rectangle frame_rect,
-										Drawing.Rectangle tab_rect,
-										Widgets.WidgetState state,
-										Widgets.Direction shadow)
+			Drawing.Rectangle frame_rect,
+			Drawing.Rectangle tab_rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintScrollerForeground(Drawing.Graphics graphics,
-											Drawing.Rectangle frame_rect,
-											Drawing.Rectangle tab_rect,
-											Widgets.WidgetState state,
-											Widgets.Direction shadow)
+			Drawing.Rectangle frame_rect,
+			Drawing.Rectangle tab_rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintGroupBox(Drawing.Graphics graphics,
-								  Drawing.Rectangle frame_rect,
-								  Drawing.Rectangle title_rect,
-								  Widgets.WidgetState state,
-								  Widgets.Direction shadow)
+			Drawing.Rectangle frame_rect,
+			Drawing.Rectangle title_rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintSepLine(Drawing.Graphics graphics,
-								 Drawing.Rectangle frame_rect,
-								 Drawing.Rectangle title_rect,
-								 Widgets.WidgetState state,
-								 Widgets.Direction shadow)
+			Drawing.Rectangle frame_rect,
+			Drawing.Rectangle title_rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintFrameTitleBackground(Drawing.Graphics graphics,
-											  Drawing.Rectangle rect,
-											  Drawing.Rectangle title_rect,
-											  Widgets.WidgetState state,
-											  Widgets.Direction shadow)
+			Drawing.Rectangle rect,
+			Drawing.Rectangle title_rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintFrameTitleForeground(Drawing.Graphics graphics,
-											  Drawing.Rectangle rect,
-											  Drawing.Rectangle title_rect,
-											  Widgets.WidgetState state,
-											  Widgets.Direction shadow)
+			Drawing.Rectangle rect,
+			Drawing.Rectangle title_rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintFrameBody(Drawing.Graphics graphics,
-								   Drawing.Rectangle rect,
-								   Widgets.WidgetState state,
-								   Widgets.Direction shadow)
+			Drawing.Rectangle rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintTabBand(Drawing.Graphics graphics,
-								 Drawing.Rectangle rect,
-								 Widgets.WidgetState state,
-								 Widgets.Direction shadow)
+			Drawing.Rectangle rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintTabFrame(Drawing.Graphics graphics,
-								  Drawing.Rectangle rect,
-								  Widgets.WidgetState state,
-								  Widgets.Direction shadow)
+			Drawing.Rectangle rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintTabAboveBackground(Drawing.Graphics graphics,
-											Drawing.Rectangle frame_rect,
-											Drawing.Rectangle title_rect,
-											Widgets.WidgetState state,
-											Widgets.Direction shadow)
+			Drawing.Rectangle frame_rect,
+			Drawing.Rectangle title_rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintTabAboveForeground(Drawing.Graphics graphics,
-											Drawing.Rectangle frame_rect,
-											Drawing.Rectangle title_rect,
-											Widgets.WidgetState state,
-											Widgets.Direction shadow)
+			Drawing.Rectangle frame_rect,
+			Drawing.Rectangle title_rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintTabSunkenBackground(Drawing.Graphics graphics,
-											 Drawing.Rectangle frame_rect,
-											 Drawing.Rectangle title_rect,
-											 Widgets.WidgetState state,
-											 Widgets.Direction shadow)
+			Drawing.Rectangle frame_rect,
+			Drawing.Rectangle title_rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintTabSunkenForeground(Drawing.Graphics graphics,
-											 Drawing.Rectangle frame_rect,
-											 Drawing.Rectangle title_rect,
-											 Widgets.WidgetState state,
-											 Widgets.Direction shadow)
+			Drawing.Rectangle frame_rect,
+			Drawing.Rectangle title_rect,
+			Widgets.WidgetState state,
+			Widgets.Direction shadow)
 		{
 		}
 
 		public void PaintFocusBox(Drawing.Graphics graphics,
-								  Drawing.Rectangle rect)
+			Drawing.Rectangle rect)
 		{
 		}
 
 		public void PaintTextCursor(Drawing.Graphics graphics,
-									Drawing.Rectangle rect,
-									bool cursor_on)
+			Drawing.Rectangle rect,
+			bool cursor_on)
 		{
 		}
 		
 		public void PaintTextSelectionBackground(Drawing.Graphics graphics,
-												 Drawing.Rectangle[] rect)
+			Drawing.Rectangle[] rect)
 		{
 		}
 
 		public void PaintTextSelectionForeground(Drawing.Graphics graphics,
-												 Drawing.Rectangle[] rect)
+			Drawing.Rectangle[] rect)
 		{
 		}
 
