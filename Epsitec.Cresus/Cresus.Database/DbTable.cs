@@ -1,13 +1,16 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 22/10/2003
+//	Statut : OK/PA, 26/10/2003
 
 namespace Epsitec.Cresus.Database
 {
+	using Tags = Epsitec.Common.Support.Tags;
+	using ResourceLevel = Epsitec.Common.Support.ResourceLevel;
+	
 	/// <summary>
 	/// La classe DbTable décrit la structure d'une table dans la base de données.
 	/// Cette classe ressemble dans l'esprit à System.Data.DataTable.
 	/// </summary>
-	public class DbTable
+	public class DbTable : IDbAttributesHost
 	{
 		public DbTable()
 		{
@@ -15,7 +18,7 @@ namespace Epsitec.Cresus.Database
 		
 		public DbTable(string name)
 		{
-			this.name = name;
+			this.Attributes.SetAttribute (Tags.Name, name);
 		}
 		
 		
@@ -34,6 +37,11 @@ namespace Epsitec.Cresus.Database
 			this.category = category;
 		}
 		
+		public void DefineAttributes(params string[] attributes)
+		{
+			this.attributes.SetFromInitialisationList (attributes);
+		}
+		
 		public void DefineInternalKey(DbKey key)
 		{
 			if (this.internal_table_key == key)
@@ -50,10 +58,29 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		#region IDbAttributesHost Members
+		public DbAttributes				Attributes
+		{
+			get
+			{
+				return this.attributes;
+			}
+		}
+		#endregion
+		
 		public string					Name
 		{
-			get { return this.name; }
-			set { this.name = value; }
+			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
+		}
+		
+		public string					Caption
+		{
+			get { return this.Attributes[Tags.Caption]; }
+		}
+		
+		public string					Description
+		{
+			get { return this.Attributes[Tags.Description]; }
 		}
 		
 		public DbColumnCollection		Columns
@@ -226,7 +253,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected string				name;
+		protected DbAttributes			attributes = new DbAttributes ();
 		protected DbColumnCollection	columns = new DbColumnCollection ();
 		protected DbColumnCollection	primary_key = null;
 		protected DbElementCat			category;

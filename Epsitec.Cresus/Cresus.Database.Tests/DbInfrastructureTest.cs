@@ -33,9 +33,21 @@ namespace Epsitec.Cresus.Database
 			infrastructure.AttachDatabase (db_access);
 			infrastructure.DisplayDataSet = new CallbackDisplayDataSet (this.DisplayDataSet);
 			
-			DbTable db_table = infrastructure.ReadDbTableMeta ("CR_TABLE_DEF");
-			DbType  db_type1 = infrastructure.ResolveType (new DbKey (8));
-			DbType  db_type2 = infrastructure.ResolveType (new DbKey (8));
+			DbTable db_table = infrastructure.ResolveDbTable ("CR_TABLE_DEF");
+			DbType  db_type1 = infrastructure.ResolveDbType (new DbKey (8));
+			DbType  db_type2 = infrastructure.ResolveDbType (new DbKey (8));
+			DbType  db_type3 = infrastructure.ResolveDbType ("CR.KeyId");
+			DbType  db_type4 = infrastructure.ResolveDbType ("CR.Name");
+			
+			System.Console.Out.WriteLine ("Table {0} has {1} columns:", db_table.Name, db_table.Columns.Count);
+			
+			for (int i = 0; i < db_table.Columns.Count; i++)
+			{
+				DbColumn column = db_table.Columns[i];
+				DbType   type   = column.Type;
+				
+				System.Console.Out.WriteLine ("{0}: {1}/{2} of type {3}.", i, column.Name, column.Caption, type.Name);
+			}
 			
 			Assertion.AssertEquals (db_type1, db_type2);
 			

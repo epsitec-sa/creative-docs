@@ -91,6 +91,13 @@ namespace Epsitec.Common.Support.Data
 				//	On va devoir faire un "Parse" coûteux...
 				
 				string text = obj as string;
+				
+				if (text == "")
+				{
+					value = 0;
+					return false;
+				}
+				
 				value = System.Decimal.Parse (text, System.Globalization.CultureInfo.InvariantCulture);
 				return true;
 			}

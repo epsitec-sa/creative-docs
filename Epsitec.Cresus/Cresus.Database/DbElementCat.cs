@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Database
 	/// L'énumération DbElementCat définit les catégories des éléments
 	/// (table, colonne) de la base.
 	/// </summary>
-	public enum DbElementCat
+	public enum DbElementCat : byte
 	{
 		Unsupported			= 0,	//	catégorie non supportée
 		Unknown = Unsupported,		//	catégorie inconnue (= non supportée)

@@ -5,6 +5,24 @@ namespace Epsitec.Cresus.Database
 {
 	using Tags = Epsitec.Common.Support.Tags;
 	using ResourceLevel = Epsitec.Common.Support.ResourceLevel;
+	using Converter = Epsitec.Common.Support.Data.Converter;
+	
+	public enum DbColumnLocalisation : byte
+	{
+		None			= 0,	//	n'est pas/ne peut pas être localisée
+		Default			= 1,	//	peut être localisée, elle contient les valeurs par défaut
+		Localised		= 2		//	est localisée pour une langue particulière
+	}
+	
+	public enum DbColumnClass : byte
+	{
+		Data			= 0,	//	contient des données
+		KeyId			= 1,	//	définit une clef (ID)
+		KeyRevision		= 2,	//	définit une clef (révision)
+		Ref				= 3,	//	définit une référence à une clef (ID, révision = 0)
+		RefId			= 4,	//	définit une référence à une clef (ID)
+		RefRevision		= 5		//	définit une référence à une clef (révision)
+	}
 	
 	/// <summary>
 	/// La classe DbColumn décrit une colonne dans une table de la base de données.
@@ -117,7 +135,8 @@ namespace Epsitec.Cresus.Database
 			this.attributes.SetFromInitialisationList (attributes);
 		}
 		
-		public void DefineInternalKey(DbKey key)
+		
+		internal void DefineInternalKey(DbKey key)
 		{
 			if (this.internal_column_key == key)
 			{
@@ -130,6 +149,16 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.internal_column_key = key.Clone () as DbKey;
+		}
+		
+		internal void DefineColumnLocalisation(DbColumnLocalisation column_localisation)
+		{
+			this.column_localisation = column_localisation;
+		}
+		
+		internal void DefineColumnClass(DbColumnClass column_class)
+		{
+			this.column_class = column_class;
 		}
 		
 		
@@ -161,6 +190,21 @@ namespace Epsitec.Cresus.Database
 				buffer.Append (@"""");
 			}
 			
+			if (this.column_class != DbColumnClass.Data)
+			{
+				buffer.Append (@" class=""");
+				buffer.Append (Converter.ToString ((int) this.column_class));
+				buffer.Append (@"""");
+			}
+			
+			if (this.column_localisation != DbColumnLocalisation.None)
+			{
+				int num = (int) this.column_localisation;
+				buffer.Append (@" local=""");
+				buffer.Append (Converter.ToString ((int) this.column_localisation));
+				buffer.Append (@"""");
+			}
+			
 			buffer.Append (@"/>");
 		}
 		
@@ -180,6 +224,15 @@ namespace Epsitec.Cresus.Database
 			this.is_unique       = (arg_unique == "1");
 			this.is_indexed      = (arg_index == "1");
 			this.category        = DbTools.ParseElementCategory (arg_cat);
+			
+			int column_class_code;
+			int column_localisation_code;
+			
+			Converter.Convert (xml.GetAttribute ("class"), out column_class_code);
+			Converter.Convert (xml.GetAttribute ("local"), out column_localisation_code);
+			
+			this.column_class        = (DbColumnClass) column_class_code;
+			this.column_localisation = (DbColumnLocalisation) column_localisation_code;
 		}
 		
 		
@@ -291,6 +344,17 @@ namespace Epsitec.Cresus.Database
 				
 				return true;
 			}
+		}
+		
+		
+		public DbColumnLocalisation		ColumnLocalisation
+		{
+			get { return this.column_localisation; }
+		}
+		
+		public DbColumnClass			ColumnClass
+		{
+			get { return this.column_class; }
 		}
 		
 		
@@ -459,6 +523,9 @@ namespace Epsitec.Cresus.Database
 		protected bool					is_indexed			= false;
 		protected DbElementCat			category;
 		protected DbKey					internal_column_key;
+		
+		protected DbColumnLocalisation	column_localisation;
+		protected DbColumnClass			column_class;
 		
 		
 		internal const string			TagId				= "CR_ID";

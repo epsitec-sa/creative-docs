@@ -105,18 +105,14 @@ namespace Epsitec.Cresus.Database
 		{
 			for (int i = 0; i < list.Length; i++)
 			{
-				string init = list[i];
-				int pos = init.IndexOf ('=');
+				string[] args = System.Utilities.Split (list[i], '=');
 				
-				if (pos < 1)
+				if (args.Length != 2)
 				{
-					throw new System.ArgumentException (string.Format ("Invalid attribute initialisation syntax in '{0}'.", init));
+					throw new System.ArgumentException (string.Format ("Invalid attribute initialisation syntax in '{0}'.", list[i]));
 				}
 				
-				string attr_name = init.Substring (0, pos);
-				string attr_data = init.Substring (pos+1);
-				
-				this.SetAttribute (attr_name, attr_data, null);
+				this.SetAttribute (args[0], args[1], null);
 			}
 		}
 		

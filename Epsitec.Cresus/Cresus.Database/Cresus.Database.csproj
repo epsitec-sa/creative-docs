@@ -338,6 +338,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Cache\DbTables.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Cache\DbTypes.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
