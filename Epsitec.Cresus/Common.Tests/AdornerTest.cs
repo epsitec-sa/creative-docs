@@ -14,6 +14,8 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size(600, 300);
 			window.Text = "CheckAdornerWidgets";
 
+			ToolTip tip = new ToolTip();
+
 			Button a = new Button();
 			a.Location = new Point(10, 10);
 			a.Width = 75;
@@ -21,6 +23,7 @@ namespace Epsitec.Common.Tests
 			a.ButtonStyle = ButtonStyle.DefaultActive;
 			a.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(a);
+			tip.SetToolTip(a, "C'est d'accord, tout baigne");
 
 			Button b = new Button();
 			b.Location = new Point(95, 10);
@@ -28,6 +31,7 @@ namespace Epsitec.Common.Tests
 			b.Text = "<m>A</m>nnuler";
 			b.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(b);
+			tip.SetToolTip(b, "Annule tout<br/>Deuxieme ligne, juste pour voir !");
 
 			Button c = new Button();
 			c.Location = new Point(95+150, 10);
@@ -36,6 +40,7 @@ namespace Epsitec.Common.Tests
 			c.SetEnabled(false);
 			c.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(c);
+			tip.SetToolTip(c, "Au secours !");
 
 			StaticText st = new StaticText();
 			st.Location = new Point(10, 265);
@@ -52,7 +57,7 @@ namespace Epsitec.Common.Tests
 			link.HyperTextClicked += new MessageEventHandler(link_HyperTextClicked);
 			window.Root.Children.Add(link);
 
-			CreateListLook(window.Root.Children, new Point(10, 195));
+			CreateListLook(window.Root.Children, new Point(10, 195), tip);
 
 			CheckButton check = new CheckButton();
 			check.Location = new Point(10, 50);
@@ -62,6 +67,7 @@ namespace Epsitec.Common.Tests
 			check.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			check.Clicked += new MessageEventHandler(this.HandleCheck);
 			window.Root.Children.Add(check);
+			tip.SetToolTip(check, "Juste pour voir");
 
 			GroupBox box = new GroupBox();
 			box.Location = new Point(10, 80);
@@ -79,6 +85,7 @@ namespace Epsitec.Common.Tests
 			radio1.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			radio1.Clicked += new MessageEventHandler(this.HandleRadio);
 			box.Children.Add(radio1);
+			tip.SetToolTip(radio1, "Couleur rouge");
 
 			RadioButton radio2 = new RadioButton();
 			radio2.Location = new Point(10, 25);
@@ -88,6 +95,7 @@ namespace Epsitec.Common.Tests
 			radio2.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			radio2.Clicked += new MessageEventHandler(this.HandleRadio);
 			box.Children.Add(radio2);
+			tip.SetToolTip(radio2, "Couleur verte");
 
 			RadioButton radio3 = new RadioButton();
 			radio3.Location = new Point(10, 10);
@@ -97,10 +105,11 @@ namespace Epsitec.Common.Tests
 			radio3.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			radio3.Clicked += new MessageEventHandler(this.HandleRadio);
 			box.Children.Add(radio3);
+			tip.SetToolTip(radio3, "Couleur bleue");
 
 			VScroller scrollv = new VScroller();
 			scrollv.Location = new Point(120, 50);
-			scrollv.Size = new Size(15, 120);
+			scrollv.Size = new Size(17, 120);
 			scrollv.Range = 10;
 			scrollv.Display = 3;
 			scrollv.Value = 1;
@@ -108,10 +117,11 @@ namespace Epsitec.Common.Tests
 			scrollv.LargeChange = 2;
 			scrollv.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(scrollv);
+			tip.SetToolTip(scrollv, "Ascenseur vertical");
 
 			HScroller scrollh = new HScroller();
 			scrollh.Location = new Point(140, 50);
-			scrollh.Size = new Size(120, 15);
+			scrollh.Size = new Size(120, 17);
 			scrollh.Range = 10;
 			scrollh.Display = 7;
 			scrollh.Value = 1;
@@ -119,6 +129,7 @@ namespace Epsitec.Common.Tests
 			scrollh.LargeChange = 2;
 			scrollh.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(scrollh);
+			tip.SetToolTip(scrollh, "Ascenseur horizontal");
 
 			TextFieldCombo combo = new TextFieldCombo();
 			combo.Location = new Point(160, 180);
@@ -176,22 +187,23 @@ namespace Epsitec.Common.Tests
 			sl.Location = new Point(270, 70);
 			sl.Size = new Size(90, 100);
 			sl.AdjustToMultiple(ScrollListAdjust.MoveDown);
-			sl.AddText("Janvier");
-			sl.AddText("Fevrier");
-			sl.AddText("Mars <i>(A)</i>");
-			sl.AddText("Avril");
-			sl.AddText("Mai");
-			sl.AddText("Juin");
-			sl.AddText("Juillet <b>(B)</b>");
-			sl.AddText("Aout");
-			sl.AddText("Septembre");
-			sl.AddText("Octobre");
-			sl.AddText("Novembre");
-			sl.AddText("Decembre");
+			sl.Items.Add("Janvier");
+			sl.Items.Add("Fevrier");
+			sl.Items.Add("Mars <i>(A)</i>");
+			sl.Items.Add("Avril");
+			sl.Items.Add("Mai");
+			sl.Items.Add("Juin");
+			sl.Items.Add("Juillet <b>(B)</b>");
+			sl.Items.Add("Aout");
+			sl.Items.Add("Septembre");
+			sl.Items.Add("Octobre");
+			sl.Items.Add("Novembre");
+			sl.Items.Add("Decembre");
 			sl.SelectedIndex = 5;  // sélectionne juin
 			if ( !sl.IsShowSelect() )  sl.ShowSelect(ScrollListShow.Middle);
 			sl.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(sl);
+			tip.SetToolTip(sl, "Choix du mois");
 
 			StaticText st2 = new StaticText();
 			st2.Location = new Point(160, 220+4);
@@ -231,8 +243,8 @@ namespace Epsitec.Common.Tests
 			window.Root.Children.Add(tb);
 
 			tb.SetSize(20);
-			tb.InsertIconButton("open");
-			tb.InsertIconButton("save");
+			tb.InsertIconButton("file:..\\..\\open.png");
+			tb.InsertIconButton("file:..\\..\\save.png");
 			tb.InsertSep(5);
 
 			TextFieldCombo t1 = new TextFieldCombo();
@@ -244,9 +256,9 @@ namespace Epsitec.Common.Tests
 
 			tb.Insert(t1);
 			tb.InsertSep(5);
-			tb.InsertIconButton("cut");
-			tb.InsertIconButton("copy");
-			tb.InsertIconButton("paste");
+			tb.InsertIconButton("file:..\\..\\cut.png");
+			tb.InsertIconButton("file:..\\..\\copy.png");
+			tb.InsertIconButton("file:..\\..\\paste.png");
 
 #if true
 			VMenu fileMenu = new VMenu();
@@ -436,7 +448,7 @@ namespace Epsitec.Common.Tests
 			VScroller scrollv = new VScroller();
 			scrollv.Name = "Scroller";
 			scrollv.Location = new Point(10, 10);
-			scrollv.Size = new Size(15, inside.Height-20);
+			scrollv.Size = new Size(17, inside.Height-20);
 			scrollv.Range = 10;
 			scrollv.Display = 3;
 			scrollv.Value = 1;
@@ -467,7 +479,7 @@ namespace Epsitec.Common.Tests
 			page4.TabTitle = "<m>L</m>ook";
 			tb.Add(page4);
 
-			CreateListLook(page4.Children, new Point(10, 95));
+			CreateListLook(page4.Children, new Point(10, 95), null);
 
 			StaticText link = new StaticText();
 			link.Name = "Link";
@@ -545,7 +557,7 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size(400, 300);
 			window.Text = "CheckAdornerCell1";
 
-			CreateListLook(window.Root.Children, new Point(10, 230));
+			CreateListLook(window.Root.Children, new Point(10, 230), null);
 
 			StaticText title = new StaticText();
 			title.Location = new Point(120, 245);
@@ -609,7 +621,7 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size(500, 300);
 			window.Text = "CheckAdornerCell2";
 
-			CreateListLook(window.Root.Children, new Point(10, 230));
+			CreateListLook(window.Root.Children, new Point(10, 230), null);
 
 			StaticText title = new StaticText();
 			title.Location = new Point(120, 245);
@@ -683,7 +695,7 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size(400, 300);
 			window.Text = "CheckAdornerCell3";
 
-			CreateListLook(window.Root.Children, new Point(10, 230));
+			CreateListLook(window.Root.Children, new Point(10, 230), null);
 
 			StaticText title = new StaticText();
 			title.Location = new Point(120, 245);
@@ -766,7 +778,7 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size(400, 300);
 			window.Text = "CheckAdornerScrollArray";
 
-			CreateListLook(window.Root.Children, new Point(10, 230));
+			CreateListLook(window.Root.Children, new Point(10, 230), null);
 
 			StaticText title = new StaticText();
 			title.Location = new Point(120, 245);
@@ -810,7 +822,7 @@ namespace Epsitec.Common.Tests
 
 		
 		// Crée la liste pour changer de look.
-		protected void CreateListLook(Widget.WidgetCollection collection, Point origine)
+		protected void CreateListLook(Widget.WidgetCollection collection, Point origine, ToolTip tooltip)
 		{
 			ScrollList sl = new ScrollList();
 			sl.Location = origine;
@@ -822,7 +834,7 @@ namespace Epsitec.Common.Tests
 			int sel = 0;
 			foreach ( string name in list )
 			{
-				sl.AddText(name);
+				sl.Items.Add(name);
 				if ( name == Widgets.Adorner.Factory.ActiveName )  sel = i;
 				i ++;
 			}
@@ -832,6 +844,11 @@ namespace Epsitec.Common.Tests
 			sl.Anchor = AnchorStyles.Top|AnchorStyles.Left;
 			sl.SelectedIndexChanged += new EventHandler(this.HandleLook);
 			collection.Add(sl);
+
+			if ( tooltip != null )
+			{
+				tooltip.SetToolTip(sl, "Choix du look de l'interface");
+			}
 		}
 
 		private void HandleLook(object sender)
@@ -1001,7 +1018,7 @@ namespace Epsitec.Common.Tests
 			VScroller scrollv = new VScroller();
 			scrollv.Name = "Scroller";
 			scrollv.Location = new Point(10, 10);
-			scrollv.Size = new Size(15, inside.Height-20);
+			scrollv.Size = new Size(17, inside.Height-20);
 			scrollv.Range = 10;
 			scrollv.Display = 3;
 			scrollv.Value = 1;
@@ -1095,7 +1112,7 @@ namespace Epsitec.Common.Tests
 			st.SetEnabled(false);
 			window.Root.Children.Add(st);
 
-			CreateListLook(window.Root.Children, new Point(10, 180));
+			CreateListLook(window.Root.Children, new Point(10, 180), null);
 
 			Button a = new Button();
 			a.Location = new Point(10, 10);
@@ -1201,18 +1218,18 @@ namespace Epsitec.Common.Tests
 			sl.Location = new Point(270, 70);
 			sl.Size = new Size(90, 100);
 			sl.AdjustToMultiple(ScrollListAdjust.MoveDown);
-			sl.AddText("Janvier");
-			sl.AddText("Fevrier");
-			sl.AddText("Mars <i>(A)</i>");
-			sl.AddText("Avril");
-			sl.AddText("Mai");
-			sl.AddText("Juin");
-			sl.AddText("Juillet <b>(B)</b>");
-			sl.AddText("Aout");
-			sl.AddText("Septembre");
-			sl.AddText("Octobre");
-			sl.AddText("Novembre");
-			sl.AddText("Decembre");
+			sl.Items.Add("Janvier");
+			sl.Items.Add("Fevrier");
+			sl.Items.Add("Mars <i>(A)</i>");
+			sl.Items.Add("Avril");
+			sl.Items.Add("Mai");
+			sl.Items.Add("Juin");
+			sl.Items.Add("Juillet <b>(B)</b>");
+			sl.Items.Add("Aout");
+			sl.Items.Add("Septembre");
+			sl.Items.Add("Octobre");
+			sl.Items.Add("Novembre");
+			sl.Items.Add("Decembre");
 			sl.SelectedIndex = 5;  // sélectionne juin
 			if ( !sl.IsShowSelect() )  sl.ShowSelect(ScrollListShow.Middle);
 			sl.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
@@ -1226,17 +1243,17 @@ namespace Epsitec.Common.Tests
 			window.Root.Children.Add(tb);
 
 			tb.SetSize(20);
-			tb.InsertIconButton("open");
-			tb.InsertIconButton("save");
+			tb.InsertIconButton("file:..\\..\\open.png");
+			tb.InsertIconButton("file:..\\..\\save.png");
 			tb.InsertSep(5);
-			tb.InsertIconButton("cut");
-			tb.InsertIconButton("copy");
-			tb.InsertIconButton("paste");
+			tb.InsertIconButton("file:..\\..\\cut.png");
+			tb.InsertIconButton("file:..\\..\\copy.png");
+			tb.InsertIconButton("file:..\\..\\paste.png");
 			tb[1].SetEnabled(false);
 
 			VMenu fileMenu = new VMenu();
-			fileMenu.Items.Add(new MenuItem ("open", "open", "Ouvrir...", "Ctrl+O"));
-			fileMenu.Items.Add(new MenuItem ("save", "save", "Enregistrer...", "Ctrl+S"));
+			fileMenu.Items.Add(new MenuItem ("open", "file:..\\..\\open.png", "Ouvrir...", "Ctrl+O"));
+			fileMenu.Items.Add(new MenuItem ("save", "file:..\\..\\save.png", "Enregistrer...", "Ctrl+S"));
 			fileMenu.Items.Add (new MenuSeparator ());
 			fileMenu.Items.Add(new MenuItem ("quit", "", "Quitter", ""));
 			fileMenu.AdjustSize();

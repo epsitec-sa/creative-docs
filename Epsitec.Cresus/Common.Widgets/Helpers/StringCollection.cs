@@ -2,9 +2,10 @@ namespace Epsitec.Common.Widgets.Helpers
 {
 	public class StringCollection : System.Collections.IList, System.IDisposable
 	{
-		public StringCollection()
+		public StringCollection(IStringCollectionHost host)
 		{
-			this.list  = new System.Collections.ArrayList ();
+			this.host = host;
+			this.list = new System.Collections.ArrayList ();
 		}
 		
 		public string							this[int index]
@@ -93,18 +94,21 @@ namespace Epsitec.Common.Widgets.Helpers
 			object item = this.list[index];
 			this.HandleRemove (item);
 			this.list.RemoveAt (index);
+			this.HandleChange ();
 		}
 
 		public void Insert(int index, object value)
 		{
 			this.list.Insert (index, value);
 			this.HandleInsert (value);
+			this.HandleChange ();
 		}
 
 		public void Remove(object value)
 		{
 			this.HandleRemove (value);
 			this.list.Remove (value);
+			this.HandleChange ();
 		}
 
 		public bool Contains(object value)
@@ -119,6 +123,7 @@ namespace Epsitec.Common.Widgets.Helpers
 				this.HandleRemove (item);
 			}
 			this.list.Clear ();
+			this.HandleChange ();
 		}
 
 		public int IndexOf(object value)
@@ -130,6 +135,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			int index = this.list.Add (value);
 			this.HandleInsert (value);
+			this.HandleChange ();
 			return index;
 		}
 
@@ -189,8 +195,16 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 		}
 		
+		protected virtual void HandleChange()
+		{
+			if (this.host != null)
+			{
+				this.host.StringCollectionChanged ();
+			}
+		}
 		
 		
+		private IStringCollectionHost			host;
 		private System.Collections.ArrayList	list;
 	}
 }

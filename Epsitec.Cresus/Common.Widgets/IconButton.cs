@@ -40,7 +40,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.iconName != value )
 				{
 					this.iconName = value;
-					this.Text = @"<img src=""file:..\..\" + this.iconName + @".png""/>";
+					this.Text = @"<img src=""" + this.iconName + @"""/>";
 				}
 			}
 		}

@@ -377,6 +377,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ToolTip.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "VMenu.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -448,6 +453,11 @@
                 />
                 <File
                     RelPath = "Adorner\LookXP.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Helpers\IStringCollectionHost.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

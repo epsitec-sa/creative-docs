@@ -486,7 +486,7 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler Moved;
 
 		
-		protected static readonly double	defaultBreadth = 15;
+		protected static readonly double	defaultBreadth = 17;
 		protected static readonly double	minimalThumb = 8;
 		
 		protected bool						vertical = true;

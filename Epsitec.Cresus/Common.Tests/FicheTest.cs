@@ -32,6 +32,7 @@ namespace Epsitec.Common.Tests
 		private void HandleWindowClosed(object sender, System.EventArgs e)
 		{
 			this.window = null;
+			this.tip = null;
 			this.menu = null;
 			this.toolBar = null;
 			this.pane= null;
@@ -273,6 +274,8 @@ namespace Epsitec.Common.Tests
 		{
 			Rectangle rect = this.window.Root.Client.Bounds;
 
+			this.tip = new ToolTip();
+
 			this.menu = new HMenu();
 			this.menu.Name = "base";
 			this.menu.Location = new Point(0, rect.Height-this.menu.DefaultHeight);
@@ -384,12 +387,12 @@ namespace Epsitec.Common.Tests
 			this.toolBar.Location = new Point(0, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
 			this.toolBar.Size = new Size(rect.Width, this.toolBar.DefaultHeight);
 			this.toolBar.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
-			this.toolBar.InsertIconButton("open");
-			this.toolBar.InsertIconButton("save");
+			this.toolBar.InsertIconButton("file:..\\..\\open.png");
+			this.toolBar.InsertIconButton("file:..\\..\\save.png");
 			this.toolBar.InsertSep(5);
-			this.toolBar.InsertIconButton("cut");
-			this.toolBar.InsertIconButton("copy");
-			this.toolBar.InsertIconButton("paste");
+			this.toolBar.InsertIconButton("file:..\\..\\cut.png");
+			this.toolBar.InsertIconButton("file:..\\..\\copy.png");
+			this.toolBar.InsertIconButton("file:..\\..\\paste.png");
 			this.toolBar.Parent = this.window.Root;
 
 			Widget root = new Widget();
@@ -423,11 +426,13 @@ namespace Epsitec.Common.Tests
 			this.editCrit.Text = "";
 			this.editCrit.TextInserted += new EventHandler(this.editCrit_TextInserted);
 			this.topPane.Children.Add(this.editCrit);
+			this.tip.SetToolTip(this.editCrit, "Elément cherché n'importe où");
 
 			this.buttonSearch = new Button();
 			this.buttonSearch.Text = "Chercher";
 			this.buttonSearch.Clicked += new MessageEventHandler(this.buttonSearch_Clicked);
 			this.topPane.Children.Add(this.buttonSearch);
+			this.tip.SetToolTip(this.buttonSearch, "Cherche la prochaine fiche");
 
 			this.listCrit = new ScrollList();
 			this.topPane.Children.Add(this.listCrit);
@@ -439,7 +444,7 @@ namespace Epsitec.Common.Tests
 			int sel = 0;
 			foreach ( string name in list )
 			{
-				this.listLook.AddText(name);
+				this.listLook.Items.Add(name);
 				if ( name == Widgets.Adorner.Factory.ActiveName )  sel = i;
 				i ++;
 			}
@@ -459,20 +464,23 @@ namespace Epsitec.Common.Tests
 			this.buttonCreate.Text = "Creer";
 			this.buttonCreate.Clicked += new MessageEventHandler(this.buttonCreate_Clicked);
 			this.rightPane.Children.Add(this.buttonCreate);
+			this.tip.SetToolTip(this.buttonCreate, "Crée une nouvelle fiche");
 
 			this.buttonDuplicate = new Button();
 			this.buttonDuplicate.Text = "Dupliquer";
 			this.buttonDuplicate.Clicked += new MessageEventHandler(this.buttonDuplicate_Clicked);
 			this.rightPane.Children.Add(this.buttonDuplicate);
+			this.tip.SetToolTip(this.buttonDuplicate, "Duplique une fiche existante");
 
 			this.buttonDelete = new Button();
 			this.buttonDelete.Text = "Supprimer";
 			this.buttonDelete.Clicked += new MessageEventHandler(this.buttonDelete_Clicked);
 			this.rightPane.Children.Add(this.buttonDelete);
+			this.tip.SetToolTip(this.buttonDelete, "Supprime une fiche");
 
 			this.staticTexts = new System.Collections.ArrayList();
 			this.textFields = new System.Collections.ArrayList();
-			this.listCrit.AddText("<i><b>Partout</b></i>");
+			this.listCrit.Items.Add("<i><b>Partout</b></i>");
 			this.listCrit.SelectedIndex = 0;
 			this.staticTexts.Clear();
 			this.textFields.Clear();
@@ -482,7 +490,7 @@ namespace Epsitec.Common.Tests
 				int fieldID = this.db.RetFieldID(x);
 				TinyDataBase.FieldDesc fd = this.db.RetFieldDesc(fieldID);
 
-				this.listCrit.AddText(fd.name);
+				this.listCrit.Items.Add(fd.name);
 
 				StaticText st = new StaticText();
 				st.Alignment = ContentAlignment.MiddleRight;
@@ -508,11 +516,13 @@ namespace Epsitec.Common.Tests
 			this.buttonValidate.Text = "Valider";
 			this.buttonValidate.Clicked += new MessageEventHandler(this.buttonValidate_Clicked);
 			this.rightPane.Children.Add(this.buttonValidate);
+			this.tip.SetToolTip(this.buttonValidate, "Valide la fiche en édition");
 
 			this.buttonCancel = new Button();
 			this.buttonCancel.Text = "Annuler";
 			this.buttonCancel.Clicked += new MessageEventHandler(this.buttonCancel_Clicked);
 			this.rightPane.Children.Add(this.buttonCancel);
+			this.tip.SetToolTip(this.buttonCancel, "Annule les modifications dans la fiche");
 
 			this.ResizeLayout();
 			this.UpdateButton();
@@ -606,11 +616,11 @@ namespace Epsitec.Common.Tests
 				int fieldID = this.db.RetFieldID(x);
 				TinyDataBase.FieldDesc fd = this.db.RetFieldDesc(fieldID);
 
-				double height = 6+defaultFontHeight*fd.lines;
+				double height = 8+defaultFontHeight*fd.lines;
 
 				StaticText st = (StaticText)this.staticTexts[x];
-				st.Location = new Point(0, posy-20);
-				st.Size = new Size(this.labelWidth-10, 20);
+				st.Location = new Point(0, posy-this.buttonHeight);
+				st.Size = new Size(this.labelWidth-10, this.buttonHeight);
 
 				AbstractTextField tf = this.textFields[x] as AbstractTextField;
 				tf.Location = new Point(this.labelWidth, posy-height);
@@ -1016,8 +1026,9 @@ namespace Epsitec.Common.Tests
 		protected double						listWidth = 460;
 		protected double						labelWidth = 120;
 		protected double						buttonWidth = 80;
-		protected double						buttonHeight = 20;
+		protected double						buttonHeight = 21;
 		protected WindowFrame					window;
+		protected ToolTip						tip;
 		protected HMenu							menu;
 		protected ToolBar						toolBar;
 		protected Pane							pane;

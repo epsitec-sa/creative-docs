@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class TextFieldCombo : AbstractTextField
 	{
-		public TextFieldCombo() : base(TextFieldType.Combo)
+		public TextFieldCombo()
 		{
 			this.items = new Helpers.StringCollection ();
 			
