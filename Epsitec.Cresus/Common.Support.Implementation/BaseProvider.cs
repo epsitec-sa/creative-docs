@@ -399,7 +399,7 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		private const string				DataTableName = "Data";
-		private const bool					UseRevisions  = false;
+		private const DbRevisionMode		UseRevisions  = DbRevisionMode.Disabled;
 		
 		protected DbInfrastructure			dbi;
 		protected DbTable					data_table;

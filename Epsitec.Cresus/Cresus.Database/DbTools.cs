@@ -55,7 +55,8 @@ namespace Epsitec.Cresus.Database
 			return (num == 0) ? "" : string.Join ("_", list, 0, num);
 		}
 		
-		public static DbElementCat ParseElementCategory(string text)
+		
+		public static DbElementCat   ParseElementCategory(string text)
 		{
 			if ((text == null) ||
 				(text.Length == 0))
@@ -68,6 +69,20 @@ namespace Epsitec.Cresus.Database
 			return (DbElementCat) cat;
 		}
 		
+		public static DbRevisionMode ParseRevisionMode(string text)
+		{
+			if ((text == null) ||
+				(text.Length == 0))
+			{
+				return DbRevisionMode.Unknown;
+			}
+			
+			int mode;
+			Converter.Convert (text, out mode);
+			return (DbRevisionMode) mode;
+		}
+		
+		
 		public static string ElementCategoryToString(DbElementCat cat)
 		{
 			if (cat == DbElementCat.Unknown)
@@ -76,6 +91,16 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			return Converter.ToString ((int) cat);
+		}
+		
+		public static string RevisionModeToString(DbRevisionMode mode)
+		{
+			if (mode == DbRevisionMode.Unknown)
+			{
+				return null;
+			}
+			
+			return Converter.ToString ((int) mode);
 		}
 	}
 }

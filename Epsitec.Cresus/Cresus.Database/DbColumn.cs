@@ -157,6 +157,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public DbKey							InternalKey
+		{
+			get { return this.internal_column_key; }
+		}
+		
 		
 		public string							ParentTableName
 		{
@@ -268,19 +273,15 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		
 		public DbElementCat						Category
 		{
 			get { return this.category; }
 		}
 		
-		public bool								UseRevisions
+		public DbRevisionMode					RevisionMode
 		{
-			get { return this.use_revisions; }
-		}
-		
-		public DbKey							InternalKey
-		{
-			get { return this.internal_column_key; }
+			get { return this.revision_mode; }
 		}
 		
 		
@@ -321,13 +322,7 @@ namespace Epsitec.Cresus.Database
 		
 		public void DefineCategory(DbElementCat category)
 		{
-			this.DefineCategory (category, this.use_revisions);
-		}
-		
-		public void DefineCategory(DbElementCat category, bool use_revisions)
-		{
-			if ((this.category == category) &&
-				(this.use_revisions == use_revisions))
+			if (this.category == category)
 			{
 				return;
 			}
@@ -337,8 +332,22 @@ namespace Epsitec.Cresus.Database
 				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new category.", this.Name));
 			}
 			
-			this.category      = category;
-			this.use_revisions = use_revisions;
+			this.category = category;
+		}
+		
+		public void DefineRevisionMode(DbRevisionMode revision_mode)
+		{
+			if (this.revision_mode == revision_mode)
+			{
+				return;
+			}
+			
+			if (this.revision_mode != DbRevisionMode.Unknown)
+			{
+				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot define a new revision mode.", this.Name));
+			}
+			
+			this.revision_mode = revision_mode;
 		}
 		
 		public void DefineAttributes(params string[] attributes)
@@ -673,17 +682,19 @@ namespace Epsitec.Cresus.Database
 				buffer.Append (@" pk=""Y""");
 			}
 			
-			if (this.use_revisions)
-			{
-				buffer.Append (@" revs=""Y""");
-			}
-			
 			string arg_cat = DbTools.ElementCategoryToString (this.category);
+			string arg_rev = DbTools.RevisionModeToString (this.revision_mode);
 			
 			if (arg_cat != null)
 			{
 				buffer.Append (@" cat=""");
 				buffer.Append (arg_cat);
+				buffer.Append (@"""");
+			}
+			if (arg_rev != null)
+			{
+				buffer.Append (@" rev=""");
+				buffer.Append (arg_rev);
 				buffer.Append (@"""");
 			}
 			
@@ -728,16 +739,18 @@ namespace Epsitec.Cresus.Database
 			string arg_null   = xml.GetAttribute ("null");
 			string arg_unique = xml.GetAttribute ("uniq");
 			string arg_index  = xml.GetAttribute ("idx");
-			string arg_cat    = xml.GetAttribute ("cat");
 			string arg_pk     = xml.GetAttribute ("pk");
-			string arg_revs   = xml.GetAttribute ("revs");
 			
 			this.is_null_allowed = (arg_null   == "Y");
 			this.is_unique       = (arg_unique == "Y");
 			this.is_indexed      = (arg_index  == "Y");
 			this.is_primary_key  = (arg_pk     == "Y");
-			this.use_revisions   = (arg_revs   == "Y");
-			this.category        = DbTools.ParseElementCategory (arg_cat);
+			
+			string arg_cat = xml.GetAttribute ("cat");
+			string arg_rev = xml.GetAttribute ("revs");
+			
+			this.category      = DbTools.ParseElementCategory (arg_cat);
+			this.revision_mode = DbTools.ParseRevisionMode (arg_rev);
 			
 			int column_class_code;
 			int column_localisation_code;
@@ -748,6 +761,7 @@ namespace Epsitec.Cresus.Database
 			this.column_class        = (DbColumnClass) column_class_code;
 			this.column_localisation = (DbColumnLocalisation) column_localisation_code;
 			this.internal_column_key = DbKey.DeserializeFromXmlAttributes (xml);
+			
 			this.Attributes.DeserializeXmlAttributes (xml);
 		}
 		
@@ -761,7 +775,7 @@ namespace Epsitec.Cresus.Database
 		protected bool							is_indexed;
 		protected bool							is_primary_key;
 		protected DbElementCat					category;
-		protected bool							use_revisions;
+		protected DbRevisionMode				revision_mode;
 		protected DbKey							internal_column_key;
 		
 		protected DbColumnLocalisation			column_localisation		= DbColumnLocalisation.None;

@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (true,  column_x.IsIndexed);
 			Assert.AreEqual (false, column_x.IsUnique);
 			Assert.AreEqual (DbElementCat.Internal, column_x.Category);
+			Assert.AreEqual (DbRevisionMode.Unknown, column_x.RevisionMode);
 			
 			column_a.DefineCategory (DbElementCat.Internal);
 			
@@ -76,13 +77,15 @@ namespace Epsitec.Cresus.Database
 			
 			column.IsIndexed = true;
 			column.DefineCategory (DbElementCat.UserDataManaged);
+			column.DefineRevisionMode (DbRevisionMode.Disabled);
 			
 			System.Console.Out.WriteLine ("XML/1: " + DbColumn.SerializeToXml (column, true));
 			
 			column = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.No);
 			
 			column.IsIndexed = false;
-			column.DefineCategory (DbElementCat.UserDataManaged, true);
+			column.DefineCategory (DbElementCat.UserDataManaged);
+			column.DefineRevisionMode (DbRevisionMode.Enabled);
 			
 			System.Console.Out.WriteLine ("XML/2: " + DbColumn.SerializeToXml (column, true));
 		}

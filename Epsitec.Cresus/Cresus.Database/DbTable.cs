@@ -125,9 +125,9 @@ namespace Epsitec.Cresus.Database
 			get { return this.category; }
 		}
 		
-		public bool								UseRevisions
+		public DbRevisionMode					RevisionMode
 		{
-			get { return this.use_revisions; }
+			get { return this.revision_mode; }
 		}
 		
 		public DbKey							InternalKey
@@ -138,13 +138,7 @@ namespace Epsitec.Cresus.Database
 		
 		public void DefineCategory(DbElementCat category)
 		{
-			this.DefineCategory (category, this.use_revisions);
-		}
-		
-		public void DefineCategory(DbElementCat category, bool use_revisions)
-		{
-			if ((this.category == category) &&
-				(this.use_revisions == use_revisions))
+			if (this.category == category)
 			{
 				return;
 			}
@@ -154,8 +148,22 @@ namespace Epsitec.Cresus.Database
 				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot define a new category.", this.Name));
 			}
 			
-			this.category      = category;
-			this.use_revisions = use_revisions;
+			this.category = category;
+		}
+		
+		public void DefineRevisionMode(DbRevisionMode revision_mode)
+		{
+			if (this.revision_mode == revision_mode)
+			{
+				return;
+			}
+			
+			if (this.revision_mode != DbRevisionMode.Unknown)
+			{
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot define a new revision mode.", this.Name));
+			}
+			
+			this.revision_mode = revision_mode;
 		}
 		
 		public void DefineAttributes(params string[] attributes)
@@ -322,6 +330,7 @@ namespace Epsitec.Cresus.Database
 			buffer.Append (@"<table");
 			
 			string arg_cat = DbTools.ElementCategoryToString (this.category);
+			string arg_rev = DbTools.RevisionModeToString (this.revision_mode);
 			
 			if (arg_cat != null)
 			{
@@ -329,10 +338,11 @@ namespace Epsitec.Cresus.Database
 				buffer.Append (arg_cat);
 				buffer.Append (@"""");
 			}
-			
-			if (this.use_revisions)
+			if (arg_rev != null)
 			{
-				buffer.Append (@" revs=""Y""");
+				buffer.Append (@" rev=""");
+				buffer.Append (arg_rev);
+				buffer.Append (@"""");
 			}
 			
 			if (full)
@@ -359,11 +369,11 @@ namespace Epsitec.Cresus.Database
 				throw new System.FormatException (string.Format ("Expected root element named <table>, but found <{0}>.", xml.Name));
 			}
 			
-			string arg_cat  = xml.GetAttribute ("cat");
-			string arg_revs = xml.GetAttribute ("revs");
+			string arg_cat = xml.GetAttribute ("cat");
+			string arg_rev = xml.GetAttribute ("rev");
 			
 			this.category      = DbTools.ParseElementCategory (arg_cat);
-			this.use_revisions = (arg_revs == "Y");
+			this.revision_mode = DbTools.ParseRevisionMode (arg_rev);
 			
 			this.internal_table_key = DbKey.DeserializeFromXmlAttributes (xml);
 			this.Attributes.DeserializeXmlAttributes (xml);
@@ -429,7 +439,7 @@ namespace Epsitec.Cresus.Database
 		protected Collections.DbColumns			columns;
 		protected Collections.DbColumns			primary_keys;
 		protected DbElementCat					category;
-		protected bool							use_revisions;
+		protected DbRevisionMode				revision_mode;
 		protected DbKey							internal_table_key;
 	}
 }

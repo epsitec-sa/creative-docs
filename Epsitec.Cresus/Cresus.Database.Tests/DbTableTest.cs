@@ -31,7 +31,8 @@ namespace Epsitec.Cresus.Database
 			column.IsIndexed = true;
 			column.DefineCategory (DbElementCat.UserDataManaged);
 			
-			table.DefineCategory (DbElementCat.UserDataManaged, true);
+			table.DefineCategory (DbElementCat.UserDataManaged);
+			table.DefineRevisionMode (DbRevisionMode.Enabled);
 			
 			table.PrimaryKeys.Add (column);
 			table.Columns.Add (column);
@@ -46,7 +47,7 @@ namespace Epsitec.Cresus.Database
 			
 			Assertion.AssertEquals (test, test.Columns["A"].Table);
 			Assertion.AssertEquals (DbElementCat.UserDataManaged, test.Category);
-			Assertion.AssertEquals (true, test.UseRevisions);
+			Assertion.AssertEquals (DbRevisionMode.Enabled, test.RevisionMode);
 			Assertion.AssertEquals ("Test", test.Name);
 			Assertion.AssertEquals (DbElementCat.UserDataManaged, test.Columns["A"].Category);
 		}

@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public DbTable   CreateDbTable(string name, DbElementCat category, bool use_revisions)
+		public DbTable   CreateDbTable(string name, DbElementCat category, DbRevisionMode revision_mode)
 		{
 			//	Crée la description d'une table qui ne contient que le strict minimum nécessaire au fonctionnement
 			//	de Crésus (tuple pour la clef primaire, statut). Il faudra compléter les colonnes en fonction des
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Database
 					throw new DbException (this.db_access, string.Format ("User may not create internal table. Table '{0}'.", name));
 				
 				case DbElementCat.UserDataManaged:
-					return this.CreateUserTable(name, use_revisions);
+					return this.CreateUserTable(name, revision_mode);
 				
 				default:
 					throw new DbException (this.db_access, string.Format ("Unsupported category {0} specified. Table '{1}'.", category, name));
@@ -588,8 +588,10 @@ namespace Epsitec.Cresus.Database
 		
 		
 		
-		internal DbTable CreateUserTable(string name, bool use_revisions)
+		internal DbTable CreateUserTable(string name, DbRevisionMode revision_mode)
 		{
+			System.Diagnostics.Debug.Assert (revision_mode != DbRevisionMode.Unknown);
+			
 			DbTable table = new DbTable (name);
 			
 			DbType type = this.internal_types[Tags.TypeKeyId];
@@ -603,7 +605,8 @@ namespace Epsitec.Cresus.Database
 			col_stat.DefineCategory (DbElementCat.Internal);
 			col_stat.DefineColumnClass (DbColumnClass.KeyStatus);
 			
-			table.DefineCategory (DbElementCat.UserDataManaged, use_revisions);
+			table.DefineCategory (DbElementCat.UserDataManaged);
+			table.DefineRevisionMode (revision_mode);
 			
 			table.Columns.Add (col_id);
 			table.Columns.Add (col_stat);
