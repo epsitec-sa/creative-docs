@@ -375,7 +375,7 @@ namespace Epsitec.Cresus.Database
 				transaction.Commit ();
 			}
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("A: Inserted {0}, Updated {1}.", command.ReplaceStatisticsInsertCount, command.ReplaceStatisticsUpdateCount));
+			System.Diagnostics.Debug.WriteLine (string.Format ("A: Inserted {0}, Updated {1}, Deleted {2}.", command.ReplaceStatisticsInsertCount, command.ReplaceStatisticsUpdateCount, command.ReplaceStatisticsDeleteCount));
 			
 			row = command.DataSet.Tables[0].Rows[1];
 			
@@ -389,12 +389,13 @@ namespace Epsitec.Cresus.Database
 				transaction.Commit ();
 			}
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("B: Inserted {0}, Updated {1}.", command.ReplaceStatisticsInsertCount, command.ReplaceStatisticsUpdateCount));
+			System.Diagnostics.Debug.WriteLine (string.Format ("B: Inserted {0}, Updated {1}, Deleted {2}.", command.ReplaceStatisticsInsertCount, command.ReplaceStatisticsUpdateCount, command.ReplaceStatisticsDeleteCount));
 			
 			command.DataSet.Tables[0].Rows.Clear ();
 			command.DataSet.Tables[0].Rows.Add (new object[] { 1000000000003L, 0, 123456L, "Walz", "Michael" });
-			command.DataSet.Tables[0].Rows.Add (new object[] { 1000000000004L, 0, 123456L, "Raboud", "Yves" });
-			command.DataSet.Tables[0].Rows.Add (new object[] { 1000000000100L, 0, 123456L, "Alleyn", "Christian" });
+			command.DataSet.Tables[0].Rows.Add (new object[] { 1000000000004L, 0, 123456L, "Rabout", "Yves" });
+			command.DataSet.Tables[0].Rows.Add (new object[] { 1000000010000L, 0, 123456L, "Alleyn", "Christian" });
+			command.DataSet.Tables[0].Rows.Add (new object[] { 1000000010001L, 0, 123456L, "Dieperink", "Alwin" });
 			
 			using (DbTransaction transaction = infrastructure.BeginTransaction ())
 			{
@@ -402,9 +403,35 @@ namespace Epsitec.Cresus.Database
 				transaction.Commit ();
 			}
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("C: Inserted {0}, Updated {1}.", command.ReplaceStatisticsInsertCount, command.ReplaceStatisticsUpdateCount));
+			System.Diagnostics.Debug.WriteLine (string.Format ("C: Inserted {0}, Updated {1}, Deleted {2}.", command.ReplaceStatisticsInsertCount, command.ReplaceStatisticsUpdateCount, command.ReplaceStatisticsDeleteCount));
+			
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
+			{
+				command.ReplaceTables (transaction);
+				transaction.Commit ();
+			}
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("D: Inserted {0}, Updated {1}, Deleted {2}.", command.ReplaceStatisticsInsertCount, command.ReplaceStatisticsUpdateCount, command.ReplaceStatisticsDeleteCount));
+			
+			command.DataSet.Tables[0].Rows[1].BeginEdit ();
+			command.DataSet.Tables[0].Rows[1]["Nom"] = "Raboud";
+			command.DataSet.Tables[0].Rows[1].EndEdit ();
+			command.DataSet.Tables[0].Rows[2].Delete ();
+			command.DataSet.Tables[0].Rows[3].Delete ();
+			
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
+			{
+				command.ReplaceTables (transaction);
+				transaction.Commit ();
+			}
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("E: Inserted {0}, Updated {1}, Deleted {2}.", command.ReplaceStatisticsInsertCount, command.ReplaceStatisticsUpdateCount, command.ReplaceStatisticsDeleteCount));
 			
 			infrastructure.Dispose ();
+			
+			Assert.AreEqual (2, command.ReplaceStatisticsInsertCount);
+			Assert.AreEqual (4, command.ReplaceStatisticsUpdateCount);
+			Assert.AreEqual (2, command.ReplaceStatisticsDeleteCount);
 		}
 		
 		[Test] public void Check99UnregisterDbTables()

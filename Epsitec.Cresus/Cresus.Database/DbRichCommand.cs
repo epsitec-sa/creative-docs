@@ -85,6 +85,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public int								ReplaceStatisticsDeleteCount
+		{
+			get
+			{
+				return this.stat_replace_delete_count;
+			}
+		}
+		
 		
 		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table)
 		{
@@ -262,6 +270,9 @@ namespace Epsitec.Cresus.Database
 		
 		public void ReplaceTables(DbTransaction transaction)
 		{
+			//	ATTENTION: Cette méthode ne gère pas les conflits; elle écrase les données
+			//	dans la base en fonction du contenu des tables du DataSet.
+			
 			if (this.is_read_only)
 			{
 				throw new Exceptions.ReadOnlyException (this.db_access);
@@ -279,109 +290,41 @@ namespace Epsitec.Cresus.Database
 			this.CheckValidState ();
 			this.CheckRowIds ();
 			
-			//	On ne touche à rien dans la table ! Le log ID par exemple est conservé
-			//	tel quel.
+			//	On ne touche à rien dans les tables ! Le log ID par exemple est conservé
+			//	tel quel. On va simplement exécuter "à la main" une série de UPDATE et
+			//	si besoin de INSERT.
 			
-			this.SetCommandTransaction (transaction);
-			
-			try
+			for (int i = 0; i < this.adapters.Length; i++)
 			{
-				for (int i = 0; i < this.adapters.Length; i++)
+				System.Data.DataTable data_table = this.data_set.Tables[i];
+				
+				int change_count = 0;
+				int delete_count = 0;
+				
+				for (int r = 0; r < data_table.Rows.Count; r++)
 				{
-					System.Data.DataTable table_data = this.data_set.Tables[i];
-					string                table_name = this.Tables[i].CreateSqlName ();
+					System.Data.DataRow data_row = data_table.Rows[r];
 					
-					//	...
-					
-					ISqlBuilder    builder   = transaction.Database.SqlBuilder;
-					ITypeConverter converter = this.infrastructure.TypeConverter;
-					
-					Collections.SqlFields sql_fields = new Collections.SqlFields ();
-					Collections.SqlFields sql_conds  = new Collections.SqlFields ();
-					
-					int col_count = this.Tables[i].Columns.Count;
-					int row_count = table_data.Rows.Count;
-					
-					SqlColumn[] sql_columns = new SqlColumn[col_count];
-					
-					for (int c = 0; c < col_count; c++)
+					switch (data_row.RowState)
 					{
-						DbColumn column = this.Tables[i].Columns[c];
-						sql_columns[c] = column.CreateSqlColumn (converter);
-						sql_fields.Add (column.CreateEmptySqlField (converter));
-					}
-					
-					SqlField field_id_name  = SqlField.CreateName (table_name, sql_columns[0].Name);
-					SqlField field_id_value = sql_fields[0];
-					
-					sql_conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, field_id_name, field_id_value));
-					
-					builder.Clear ();
-					builder.UpdateData (table_name, sql_fields, sql_conds);
-					
-					System.Data.IDbCommand update_command = builder.Command;
-					
-					int param_id_index = update_command.Parameters.Count - 1;
-					
-					builder.Clear ();
-					builder.InsertData (table_name, sql_fields);
-					
-					System.Data.IDbCommand insert_command = builder.Command;
-					
-					System.Diagnostics.Debug.Assert (insert_command.Parameters.Count + 1 == update_command.Parameters.Count);
-					
-					update_command.Transaction = transaction.Transaction;
-					insert_command.Transaction = transaction.Transaction;
-					
-					try
-					{
-						for (int r = 0; r < row_count; r++)
-						{
-							System.Data.DataRow row = table_data.Rows[r];
-							
-							for (int c = 0; c < col_count; c++)
-							{
-								object value = sql_columns[c].ConvertToInternalType (row[c]);
-								
-								builder.SetCommandParameterValue (update_command, c, value);
-								builder.SetCommandParameterValue (insert_command, c, value);
-							}
-							
-							builder.SetCommandParameterValue (update_command, param_id_index, sql_columns[0].ConvertToInternalType (row[0]));
-							
-							int update_count = update_command.ExecuteNonQuery ();
-							
-							if (update_count == 0)
-							{
-								int insert_count = insert_command.ExecuteNonQuery ();
-								
-								if (insert_count != 1)
-								{
-									throw new Exceptions.FormatException (string.Format ("Insert into table {0} produced {1} changes (ID = {2}). Expected exactly 1.", table_name, insert_count, insert_command.Parameters[0]));
-								}
-								
-								this.stat_replace_insert_count++;
-							}
-							else if (update_count == 1)
-							{
-								this.stat_replace_update_count++;
-							}
-							else
-							{
-								throw new Exceptions.FormatException (string.Format ("Update of table {0} produced {1} changes (ID = {2}). Expected 0 or 1.", table_name, update_count, update_command.Parameters[0]));
-							}
-						}
-					}
-					finally
-					{
-						update_command.Dispose ();
-						insert_command.Dispose ();
+						case System.Data.DataRowState.Added:
+						case System.Data.DataRowState.Modified:
+							change_count++;
+							break;
+						
+						case System.Data.DataRowState.Deleted:
+							delete_count++;
+							break;
 					}
 				}
-			}
-			finally
-			{
-				this.SetCommandTransaction (null);
+				
+				if ((change_count > 0) ||
+					(delete_count > 0))
+				{
+					this.ReplaceTable (transaction, data_table, this.Tables[i]);
+				}
+				
+				data_table.AcceptChanges ();
 			}
 		}
 		
@@ -701,6 +644,149 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		protected void ReplaceTable(DbTransaction transaction, System.Data.DataTable data_table, DbTable db_table)
+		{
+			string table_name = db_table.CreateSqlName ();
+			
+			IDbAbstraction database  = transaction.Database;
+			ISqlBuilder    builder   = database.SqlBuilder;
+			ITypeConverter converter = this.infrastructure.TypeConverter;
+			
+			Collections.SqlFields sql_fields = new Collections.SqlFields ();
+			Collections.SqlFields sql_conds  = new Collections.SqlFields ();
+			
+			int col_count = db_table.Columns.Count;
+			int row_count = data_table.Rows.Count;
+			
+			//	Crée pour chaque colonne de la table une représentation SQL et un
+			//	champ qui permettra de stocker la valeur :
+			
+			SqlColumn[] sql_columns = new SqlColumn[col_count];
+			
+			for (int c = 0; c < col_count; c++)
+			{
+				DbColumn column = db_table.Columns[c];
+				sql_columns[c] = column.CreateSqlColumn (converter);
+				sql_fields.Add (column.CreateEmptySqlField (converter));
+			}
+			
+			//	Crée la condition pour le UPDATE ... WHERE CR_ID = n
+			
+			SqlField field_id_name  = SqlField.CreateName (table_name, sql_columns[0].Name);
+			SqlField field_id_value = sql_fields[0];
+			
+			sql_conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, field_id_name, field_id_value));
+			
+			
+			//	Crée les commandes pour le UPDATE et pour le INSERT :
+			
+			System.Data.IDbCommand update_command;
+			System.Data.IDbCommand insert_command;
+			System.Data.IDbCommand delete_command;
+			
+			builder.Clear ();
+			builder.UpdateData (table_name, sql_fields, sql_conds);
+			
+			update_command = builder.Command;
+			
+			builder.Clear ();
+			builder.InsertData (table_name, sql_fields);
+			
+			insert_command = builder.Command;
+			
+			builder.Clear ();
+			builder.RemoveData (table_name, sql_conds);
+			
+			delete_command = builder.Command;
+			
+			update_command.Transaction = transaction.Transaction;
+			insert_command.Transaction = transaction.Transaction;
+			delete_command.Transaction = transaction.Transaction;
+			
+			int param_id_index = update_command.Parameters.Count - 1;
+			
+			try
+			{
+				//	Passe en revue toutes les lignes de la table :
+				
+				for (int r = 0; r < row_count; r++)
+				{
+					System.Data.DataRow row = data_table.Rows[r];
+					
+					if ((row.RowState != System.Data.DataRowState.Added) &&
+						(row.RowState != System.Data.DataRowState.Modified) &&
+						(row.RowState != System.Data.DataRowState.Deleted))
+					{
+						continue;
+					}
+					
+					if (row.RowState == System.Data.DataRowState.Deleted)
+					{
+						//	Supprime la ligne en question de la table; met juste à jour l'ID de
+						//	la ligne dans la commande avant d'exécuter celle-ci :
+						
+						int    count;
+						object value_id = sql_columns[0].ConvertToInternalType (row[0, System.Data.DataRowVersion.Original]);
+						
+						builder.SetCommandParameterValue (delete_command, 0, value_id);
+						count = delete_command.ExecuteNonQuery ();
+						
+						this.stat_replace_delete_count += count;
+					}
+					else
+					{
+						//	Met à jour la ligne en question dans la table. Tente d'abord un UPDATE
+						//	et en cas d'échec, recourt à INSERT.
+						//	Commence par mettre à jour tous les paramètres des deux commandes :
+						
+						int    count;
+						object value_id = sql_columns[0].ConvertToInternalType (row[0, System.Data.DataRowVersion.Current]);
+						
+						builder.SetCommandParameterValue (update_command, param_id_index, value_id);
+						
+						for (int c = 0; c < col_count; c++)
+						{
+							object value = sql_columns[c].ConvertToInternalType (row[c]);
+							
+							builder.SetCommandParameterValue (update_command, c, value);
+							builder.SetCommandParameterValue (insert_command, c, value);
+						}
+						
+						count = update_command.ExecuteNonQuery ();
+						
+						if (count == 0)
+						{
+							//	Le UPDATE n'a modifié aucune ligne dans la base de données; cela signifie que la
+							//	ligne n'était pas connue. On va donc procéder à son insertion :
+							
+							count = insert_command.ExecuteNonQuery ();
+							
+							if (count != 1)
+							{
+								throw new Exceptions.FormatException (string.Format ("Insert into table {0} produced {1} changes (ID = {2}). Expected exactly 1.", table_name, count, insert_command.Parameters[0]));
+							}
+							
+							this.stat_replace_insert_count++;
+						}
+						else if (count == 1)
+						{
+							this.stat_replace_update_count++;
+						}
+						else
+						{
+							throw new Exceptions.FormatException (string.Format ("Update of table {0} produced {1} changes (ID = {2}). Expected 0 or 1.", table_name, count, update_command.Parameters[0]));
+						}
+					}
+				}
+			}
+			finally
+			{
+				delete_command.Dispose ();
+				update_command.Dispose ();
+				insert_command.Dispose ();
+			}
+		}
+		
 		
 		public void InternalFillDataSet(DbAccess db_access, System.Data.IDbTransaction transaction, System.Data.IDbDataAdapter[] adapters)
 		{
@@ -819,5 +905,6 @@ namespace Epsitec.Cresus.Database
 		private bool							is_read_only;
 		private int								stat_replace_update_count;
 		private int								stat_replace_insert_count;
+		private int								stat_replace_delete_count;
 	}
 }
