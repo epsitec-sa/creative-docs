@@ -805,13 +805,29 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		[Command ("CreateNewInterface")]		void CommandCreateNewInterface()
+		[Command ("CreateNewInterface")]		void CommandCreateNewInterface(CommandDispatcher d, CommandEventArgs e)
 		{
-			Window window = new Window ();
-			
-			window.ClientSize = new Drawing.Size (400, 300);
-			
-			this.CreateEditorForWindow (window, null);
+			if (e.CommandArgs.Length == 0)
+			{
+				Dialogs.BundleName dialog = new Dialogs.BundleName ("CreateNewInterface (\"{0}\", \"{1}\")", this.dispatcher);
+				dialog.Owner = this.main_panel.Window;
+				dialog.OpenDialog ();
+			}
+			else if (e.CommandArgs.Length == 2)
+			{
+				string bundle_prefix = e.CommandArgs[0];
+				string bundle_name   = e.CommandArgs[1];
+				
+				Window window = new Window ();
+				
+				window.ClientSize = new Drawing.Size (400, 300);
+				
+				this.CreateEditorForWindow (window, Support.Resources.MakeFullName (bundle_prefix, bundle_name));
+			}
+			else
+			{
+				this.ThrowInvalidOperationException (e, 2);
+			}
 		}
 		
 		[Command ("SaveActiveInterface")]		void CommandSaveActiveInterface()
@@ -983,14 +999,20 @@ namespace Epsitec.Common.Designer
 			SaveActiveInterface,
 			
 			DeleteActiveSelection,
+			
 			ZTopActiveSelection,
 			ZBottomActiveSelection,
 			ZUpActiveSelection,
 			ZDownActiveSelection,
 			
+			DeselectAll,
+			ReselectActiveSelection,
+			
 			TabIndexSetter,
 			TabIndexPicker,
 			TabIndexResetSeq,
+			TabIndexStartSeq,
+			TabIndexDefine,
 		}
 
 

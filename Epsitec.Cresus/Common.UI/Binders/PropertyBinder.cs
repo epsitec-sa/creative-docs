@@ -41,6 +41,7 @@ namespace Epsitec.Common.UI.Binders
 					this.Detach ();
 					this.source_object = value;
 					this.UpdateSourceType ();
+					this.UpdatePropertyInfo ();
 					this.OnSourceChanged ();
 				}
 			}
@@ -111,7 +112,7 @@ namespace Epsitec.Common.UI.Binders
 		}
 		
 		
-		protected void UpdateSourceType()
+		private void UpdateSourceType()
 		{
 			System.Type type = this.source_object == null ? null : this.source_object.GetType ();
 			
@@ -119,11 +120,10 @@ namespace Epsitec.Common.UI.Binders
 			{
 				this.source_type = type;
 				this.OnSourceTypeChanged ();
-				this.UpdatePropertyInfo ();
 			}
 		}
 		
-		protected void UpdatePropertyInfo()
+		private void UpdatePropertyInfo()
 		{
 			if ((this.source_type != null) &&
 				(this.prop_name != null))

@@ -150,6 +150,7 @@ namespace Epsitec.Common.Drawing.Renderers
 			
 			this.agg_ren = AntiGrain.Renderer.Solid.New (pixmap.Handle);
 			this.pixmap  = pixmap;
+			this.color   = new Color ();
 		}
 		
 		protected void Detach()

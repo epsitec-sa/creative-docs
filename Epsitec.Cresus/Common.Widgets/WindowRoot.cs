@@ -152,6 +152,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.is_ready = true;
+			this.Invalidate ();
 		}
 		#endregion
 		

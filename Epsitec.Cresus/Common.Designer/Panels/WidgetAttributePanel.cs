@@ -166,6 +166,7 @@ namespace Epsitec.Common.Designer.Panels
 			foreach (Editors.AbstractPropEdit prop in this.props)
 			{
 				prop.ActiveObject = null;
+				prop.ActiveEditor = null;
 			}
 		}
 		
@@ -349,6 +350,7 @@ namespace Epsitec.Common.Designer.Panels
 			{
 				if (prop.GetType () == prop_type)
 				{
+					prop.ActiveEditor = this.active_editor;
 					prop.ActiveObject = this.active_object;
 					return;
 				}
@@ -360,8 +362,8 @@ namespace Epsitec.Common.Designer.Panels
 			
 			Editors.AbstractPropEdit new_prop = System.Activator.CreateInstance (prop_type, args) as Editors.AbstractPropEdit;
 			
-			new_prop.ActiveObject = this.active_object;
 			new_prop.ActiveEditor = this.active_editor;
+			new_prop.ActiveObject = this.active_object;
 			
 			this.props.Add (new_prop);
 		}
