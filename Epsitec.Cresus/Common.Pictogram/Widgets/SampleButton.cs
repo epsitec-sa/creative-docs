@@ -80,7 +80,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 				}
 				else
 				{
-					this.iconContext.UniqueColor = Drawing.Color.FromBrightness(0.6);
+					this.iconContext.UniqueColor = adorner.ColorDisabled;
+					if ( this.iconContext.UniqueColor.IsEmpty )
+					{
+						this.iconContext.UniqueColor = Drawing.Color.FromBrightness(0.6);
+					}
 				}
 
 				double initialWidth = graphics.LineWidth;
