@@ -178,35 +178,11 @@ namespace Epsitec.Common.Widgets
 			}
 
 			double angle = Drawing.Point.ComputeAngle(this.centerCircle, pos);
-			angle = ColorCircle.ClipAngle(angle-System.Math.PI/2);
+			angle = Epsitec.Common.Math.ClipAngle(angle-System.Math.PI/2);
 			h = angle/(System.Math.PI*2)*360;  // 0..360
 			return true;
 		}
 
-		protected static double ClipAngle(double angle)
-		{
-			// Retourne un angle normalisé, c'est-à-dire compris entre 0 et 2*PI.
-			
-			angle = angle % (System.Math.PI*2.0);
-			
-			if ( angle < 0.0 )
-			{
-				return System.Math.PI*2.0 + angle;
-			}
-			else
-			{
-				return angle;
-			}
-		}
-		
-		protected static double Clip(double n)
-		{
-			// Retourne la valeur normalisée |n| d'un nombre.
-			if ( n < 0.0 )  return 0.0;
-			if ( n > 1.0 )  return 1.0;
-			return n;
-		}
-		
 		
 		// Détecte la saturation et l'intensité dans le carré des couleurs.
 		protected bool DetectSV(Drawing.Point pos, bool restricted, ref double s, ref double v)
@@ -221,8 +197,8 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			s = ColorCircle.Clip((pos.X-this.rectSquare.Left)/this.rectSquare.Width);
-			v = ColorCircle.Clip((pos.Y-this.rectSquare.Bottom)/this.rectSquare.Height);
+			s = Epsitec.Common.Math.Clip((pos.X-this.rectSquare.Left)/this.rectSquare.Width);
+			v = Epsitec.Common.Math.Clip((pos.Y-this.rectSquare.Bottom)/this.rectSquare.Height);
 			return true;
 		}
 
