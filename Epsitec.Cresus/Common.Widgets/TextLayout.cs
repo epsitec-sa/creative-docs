@@ -1597,14 +1597,8 @@ namespace Epsitec.Common.Widgets
 							width = charsWidth[charsWidth.Length-1]*block.FontSize;
 						}
 
-						JustifLine line = (JustifLine)this.lines[block.IndexLine];
-						Drawing.Rectangle rect = new Drawing.Rectangle();
-						rect.Top    = pos.Y+block.Pos.Y+block.Font.Ascender*block.FontSize; //line.Ascender;
-						rect.Bottom = pos.Y+block.Pos.Y+block.Font.Descender*block.FontSize; //line.Descender;
-						rect.Left   = pos.X+block.Pos.X+width;
-						rect.Width  = rect.Height*0.5;
-						graphics.Color = color;
-						graphics.PaintSurface(this.PathLineBreak(rect));
+						string text = "\u00B6";  // caractère unicode 182
+						graphics.PaintText(x+width, y, text, block.Font, block.FontSize);
 					}
 				}
 			}
@@ -1715,23 +1709,6 @@ namespace Epsitec.Common.Widgets
 			return path;
 		}
 
-		protected Drawing.Path PathLineBreak(Drawing.Rectangle rect)
-		{
-			// Génère le chemin pour représenter un <br/>.
-			Drawing.Path path = new Drawing.Path();
-			path.MoveTo(rect.Left+rect.Width*0.00, rect.Bottom+rect.Height*0.30);
-			path.LineTo(rect.Left+rect.Width*0.60, rect.Bottom+rect.Height*0.00);
-			path.LineTo(rect.Left+rect.Width*0.40, rect.Bottom+rect.Height*0.25);
-			path.LineTo(rect.Left+rect.Width*1.00, rect.Bottom+rect.Height*0.25);
-			path.LineTo(rect.Left+rect.Width*1.00, rect.Bottom+rect.Height*0.70);
-			path.LineTo(rect.Left+rect.Width*0.80, rect.Bottom+rect.Height*0.70);
-			path.LineTo(rect.Left+rect.Width*0.80, rect.Bottom+rect.Height*0.35);
-			path.LineTo(rect.Left+rect.Width*0.40, rect.Bottom+rect.Height*0.35);
-			path.LineTo(rect.Left+rect.Width*0.60, rect.Bottom+rect.Height*0.60);
-			path.Close();
-			return path;
-		}
-		
 		protected Drawing.Path PathTab(Drawing.IPaintPort graphics, Drawing.Rectangle rect)
 		{
 			// Génère le chemin pour représenter un tabulateur.

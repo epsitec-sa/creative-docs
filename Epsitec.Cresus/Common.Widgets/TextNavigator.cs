@@ -61,11 +61,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				int cursorFrom = this.textLayout.FindOffsetFromIndex(this.context.CursorFrom);
-				int cursorTo   = this.textLayout.FindOffsetFromIndex(this.context.CursorTo);
+				int cursorFrom = System.Math.Min(this.context.CursorFrom, this.context.CursorTo);
+				int cursorTo   = System.Math.Max(this.context.CursorFrom, this.context.CursorTo);
 				
-				int from = System.Math.Min(cursorFrom, cursorTo);
-				int to   = System.Math.Max(cursorFrom, cursorTo);
+				int from = this.textLayout.FindOffsetFromIndex(cursorFrom, false);
+				int to   = this.textLayout.FindOffsetFromIndex(cursorTo, true);
 				
 				string text = this.textLayout.Text;
 				return text.Substring(from, to-from);

@@ -393,8 +393,20 @@ namespace Epsitec.Common.Widgets
 			ScreenInfo        info = ScreenInfo.Find(pos);
 			Drawing.Rectangle area = info.WorkingArea;
 			double            hMax = pos.Y-area.Bottom;
+
+			if ( hMax > this.scrollList.Height || hMax > 100 )  // assez de place pour dérouler contre le bas ?
+			{
+				this.scrollList.AdjustHeightToContent(ScrollAdjustMode.MoveTop, 40, hMax);
+				pos.X -= shadow.Left;
+				pos.Y -= this.scrollList.Height+shadow.Bottom;
+			}
+			else	// déroule contre le haut ?
+			{
+				pos = this.MapClientToScreen(new Drawing.Point(0, this.Height));
+				hMax = area.Top-pos.Y;
+				this.scrollList.AdjustHeightToContent(ScrollAdjustMode.MoveTop, 40, hMax);
+			}
 			
-			this.scrollList.AdjustHeightToContent(ScrollAdjustMode.MoveTop, 40, hMax);
 			this.scrollList.SelectedIndex = this.MapIndexToComboList(this.SelectedIndex);
 			this.scrollList.ShowSelected(ScrollShowMode.Center);
 			
@@ -408,9 +420,9 @@ namespace Epsitec.Common.Widgets
 				this.comboWindow.Alpha = adorner.AlphaVMenu;
 				this.comboWindow.Root.BackColor = Drawing.Color.Transparent;
 			}
-			pos = this.MapClientToScreen(new Drawing.Point(0, 0));
-			pos.X -= shadow.Left;
-			pos.Y -= this.scrollList.Height+shadow.Bottom;
+			//?pos = this.MapClientToScreen(new Drawing.Point(0, 0));
+			//?pos.X -= shadow.Left;
+			//?pos.Y -= this.scrollList.Height+shadow.Bottom;
 			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width+shadow.Width, this.scrollList.Height+shadow.Height);
 			this.scrollList.Location = new Drawing.Point(shadow.Left, shadow.Bottom);
 			this.scrollList.SelectedIndexChanged += new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
