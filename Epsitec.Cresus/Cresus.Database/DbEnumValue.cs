@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Database
 		
 		public string						Information
 		{
-			get { return this.Attributes[Tags.Information, ResourceLevel.Default]; }
+			get { return this.Attributes[Tags.InfoXml, ResourceLevel.Default]; }
 		}
 		
 		public string						Name
@@ -84,9 +84,9 @@ namespace Epsitec.Cresus.Database
 		
 		protected virtual void ParseInformation(System.Xml.XmlElement xml)
 		{
-			if (xml.Name != Tags.Information)
+			if (xml.Name != "enumval")
 			{
-				throw new System.ArgumentException (string.Format ("Expected root element named <{0}>, but found <{1}>.", Tags.Information, xml.Name));
+				throw new System.ArgumentException (string.Format ("Expected root element named <enumval>, but found <{0}>.", xml.Name));
 			}
 			
 			string arg_rank = xml.GetAttribute ("rank");
@@ -235,8 +235,6 @@ namespace Epsitec.Cresus.Database
 				return rx - ry;
 			}
 			#endregion
-			
-			private string					tag;
 		}
 		
 		

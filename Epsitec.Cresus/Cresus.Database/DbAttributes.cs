@@ -181,14 +181,14 @@ namespace Epsitec.Cresus.Database
 		
 		internal void SetAttribute(string name, string value)
 		{
-			this.SetAttribute (name, value, "");
+			this.SetAttribute (name, value, null);
 		}
 		
 		internal void SetAttribute(string name, string value, ResourceLevel level)
 		{
 			switch (level)
 			{
-				case ResourceLevel.Default:		this.SetAttribute (name, value, "");							break;
+				case ResourceLevel.Default:		this.SetAttribute (name, value, null);							break;
 				case ResourceLevel.Customised:	this.SetAttribute (name, value, Resources.CustomisedSuffix);	break;
 				case ResourceLevel.Localised:	this.SetAttribute (name, value, Resources.LocalisedSuffix);		break;
 				

@@ -174,14 +174,24 @@ namespace Epsitec.Cresus.Database
 		
 		public DbType ResolveType(DbKey type_ref)
 		{
+			//	Trouve le type corredpondant à une clef spécifique.
+			
 			lock (this.cache_db_types)
 			{
 				DbType type = this.cache_db_types[type_ref];
+				
 				if (type == null)
 				{
 					type = this.LoadType (type_ref);
-					this.cache_db_types[type_ref] = type;
+					
+					if (type != null)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", type.GetType ().Name, type.Name));
+						
+						this.cache_db_types[type_ref] = type;
+					}
 				}
+				
 				return type;
 			}
 		}
