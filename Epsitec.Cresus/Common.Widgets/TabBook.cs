@@ -120,6 +120,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public int ActivePageIndex
+		{
+			get
+			{
+				TabPage page = this.ActivePage;
+				return (page == null) ? -1 : page.Index;
+			}
+			set
+			{
+				TabPage page = (value < this.PageCount) ? this.Items[value] : null;
+				this.ActivePage = page;
+			}
+		}
+		
 		public TabPage ActivePage
 		{
 			get
