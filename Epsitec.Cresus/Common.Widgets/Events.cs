@@ -112,6 +112,8 @@ namespace Epsitec.Common.Widgets
 		{
 			this.p1 = p1;
 			this.p2 = p2;
+			
+			this.offset = p2 - p1;
 		}
 		
 		
@@ -127,11 +129,18 @@ namespace Epsitec.Common.Widgets
 		
 		public Drawing.Point				Offset
 		{
+			get { return this.offset; }
+			set { this.offset = value; }
+		}
+		
+		public Drawing.Point				InitialOffset
+		{
 			get { return this.p2 - this.p1; }
 		}
 		
 		
 		private Drawing.Point				p1;
 		private Drawing.Point				p2;
+		private Drawing.Point				offset;
 	}
 }
