@@ -163,12 +163,50 @@ namespace Epsitec.Common.Widgets
 			layout.DesiredHeight = 150;
 			layout.Invalidate ();
 			
-			window.ClientSize = new Drawing.Size (layout.CurrentWidth + 20, layout.CurrentHeight + 20);
+			StaticText frame = new StaticText ();
 			
-			wa.Parent   = window.Root;
-			wa.Location = new Drawing.Point (10, 10);
+			frame.Width     = layout.CurrentWidth + 50;
+			frame.Height    = layout.DesiredHeight + 50;
+			frame.Parent    = window.Root;
+			frame.Location  = new Drawing.Point (10, 10);
+			frame.BackColor = Drawing.Color.FromRGB (0, 0, 0.5);
+			
+			frame.Height = wa.Height + 8;
+			wa.Location  = new Drawing.Point (4, 4);
+			wa.Parent    = frame;
+			frame.Dock   = DockStyle.Fill;
+			
+			HScroller scroll = new HScroller ();
+			
+			scroll.Parent = window.Root;
+			scroll.Dock   = DockStyle.Bottom;
+			scroll.ValueChanged += new EventHandler (CheckDesignerScrollValueChanged);
+			scroll.Minimum = 0;
+			scroll.Maximum = 100;
+			scroll.Display = 70;
+			scroll.SmallChange = 10;
+			scroll.LargeChange = 25;
+			
+			this.views[scroll] = wa;
+			
+			window.ClientSize = new Drawing.Size (frame.Width + 20, frame.Height + 50);
+			
+			wa.SetClientZoom (1);
+			wa.SetClientAngle (0);
+			wa.SetClientOffset (0, 0);
 			
 			window.Show ();
+		}
+		
+		private System.Collections.Hashtable	views = new System.Collections.Hashtable ();
+		
+		private void CheckDesignerScrollValueChanged(object sender)
+		{
+			AbstractScroller scroller = sender as AbstractScroller;
+			Widget           surface  = this.views[scroller] as Widget;
+			
+			surface.SetClientOffset (-scroller.Value, 0);
+			surface.Invalidate ();
 		}
 	}
 }
