@@ -6,10 +6,31 @@ namespace Epsitec.Common.Script.Glue
 	/// <summary>
 	/// Summary description for AbstractScriptBase.
 	/// </summary>
-	public abstract class AbstractScriptBase
+	public abstract class AbstractScriptBase : System.MarshalByRefObject, Epsitec.Common.Script.Glue.IScript
 	{
 		public AbstractScriptBase()
 		{
 		}
+
+		
+		public IScriptHost					Host
+		{
+			get
+			{
+				return this.host;
+			}
+		}
+		
+		
+		public abstract bool Execute(string name);
+		
+		#region Remaining IScript Members
+		void Epsitec.Common.Script.Glue.IScript.SetScriptHost(IScriptHost host)
+		{
+			this.host = host;
+		}
+		#endregion
+		
+		private IScriptHost					host;
 	}
 }

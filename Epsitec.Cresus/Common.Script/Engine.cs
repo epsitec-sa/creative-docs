@@ -42,14 +42,19 @@ namespace Epsitec.Common.Script
 			}
 			
 			string dll_file_name = options.OutputAssembly;
+			string pdb_file_name = System.IO.Path.GetDirectoryName (dll_file_name) + System.IO.Path.DirectorySeparatorChar + System.IO.Path.GetFileNameWithoutExtension (dll_file_name) + ".pdb";
 			string assembly_name = results.CompiledAssembly.FullName;
 			
 			System.AppDomain domain = Helpers.AppDomainFactory.CreateAppDomain (name);
 			
+			script.DefineDllFileName (dll_file_name);
+			script.DefinePdbFileName (options.IncludeDebugInformation ? pdb_file_name : null);
 			script.DefineAppDomain (domain);
-			script.DefineScript (domain.CreateInstanceAndUnwrap (assembly_name, "Epsitec.Dynamic.Script.DynamicScript", null) as Glue.IScript);
 			
-//			System.IO.File.Delete (dll_file_name);
+			object       remote   = domain.CreateInstanceAndUnwrap (assembly_name, "Epsitec.Dynamic.Script.DynamicScript", null);
+			Glue.IScript i_script = remote as Glue.IScript;
+			
+			script.DefineScript (i_script);
 			
 			return script;
 		}

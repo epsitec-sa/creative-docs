@@ -6,7 +6,7 @@ namespace Epsitec.Common.Script
 	/// <summary>
 	/// Summary description for Script.
 	/// </summary>
-	public class Script : System.IDisposable
+	public class Script : System.MarshalByRefObject, System.IDisposable, Glue.IScriptHost
 	{
 		internal Script()
 		{
@@ -52,6 +52,42 @@ namespace Epsitec.Common.Script
 		}
 		#endregion
 		
+		#region IScriptHost Members
+		public string						Name
+		{
+			get
+			{
+				return this.domain.FriendlyName;
+			}
+		}
+		
+		
+		public bool ExecuteCommand(string command)
+		{
+			return false;
+		}
+		
+		public bool WriteData(string name, object value)
+		{
+			return false;
+		}
+		
+		public void SetEnableState(string name, bool mode)
+		{
+		}
+		
+		public bool ReadData(string name, out object value)
+		{
+			value = null;
+			return false;
+		}
+		
+		public bool GetEnableState(string name)
+		{
+			return false;
+		}
+		#endregion
+		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -60,6 +96,16 @@ namespace Epsitec.Common.Script
 				{
 					System.AppDomain.Unload (this.domain);
 					this.domain = null;
+				}
+				
+				if (this.dll_file_name != null)
+				{
+					System.IO.File.Delete (this.dll_file_name);
+				}
+				
+				if (this.pdb_file_name != null)
+				{
+					System.IO.File.Delete (this.pdb_file_name);
 				}
 			}
 		}
@@ -75,14 +121,27 @@ namespace Epsitec.Common.Script
 			this.domain = domain;
 		}
 		
+		internal void DefineDllFileName(string name)
+		{
+			this.dll_file_name = name;
+		}
+		
+		internal void DefinePdbFileName(string name)
+		{
+			this.pdb_file_name = name;
+		}
+		
 		internal void DefineScript(Glue.IScript script)
 		{
 			this.script = script;
+			this.script.SetScriptHost (this);
 		}
 		
 		
 		private string[]					errors = new string[0];
 		private System.AppDomain			domain;
 		private Glue.IScript				script;
+		private string						dll_file_name;
+		private string						pdb_file_name;
 	}
 }

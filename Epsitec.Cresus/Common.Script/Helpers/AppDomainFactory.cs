@@ -20,10 +20,10 @@ namespace Epsitec.Common.Script.Helpers
 			System.Security.Policy.Evidence evidence = new System.Security.Policy.Evidence (current.Evidence);
 			System.AppDomainSetup           setup    = new System.AppDomainSetup ();
 			
-			setup.ApplicationName       = "Epsitec.Common.Scripts";
-			setup.ShadowCopyFiles       = "true";
-			setup.ShadowCopyDirectories = Paths.DynamicCodeDirectory;
-			setup.ApplicationBase       = Paths.BaseDirectory;
+			setup.ApplicationName = "Epsitec.Common.Scripts";
+			setup.ShadowCopyFiles = "false";
+			setup.PrivateBinPath  = Paths.DynamicCodeDirectory;
+			setup.ApplicationBase = Paths.BaseDirectory;
 			
 			return System.AppDomain.CreateDomain (name, evidence, setup);;
 		}

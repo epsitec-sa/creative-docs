@@ -8,6 +8,8 @@ namespace Epsitec.Common.Script.Glue
 	/// </summary>
 	public interface IScriptHost
 	{
+		string	Name	{ get; }
+		
 		void SetEnableState(string name, bool mode);
 		bool GetEnableState(string name);
 		

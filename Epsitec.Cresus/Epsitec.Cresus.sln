@@ -119,12 +119,24 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.IO", "Common.IO\Comm
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Script", "Common.Script\Common.Script.csproj", "{6CFA7609-E5A8-4B9D-B174-BE1CC57A6954}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Script.Glue", "Common.Script.Glue\Common.Script.Glue.csproj", "{B2266071-EA0F-40E5-844F-98EE68A5A39C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Script.Tests", "Common.Script.Tests\Common.Script.Tests.csproj", "{F723801F-398D-4E6F-8467-D0ACC845CD2E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
 	EndGlobalSection
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 31
+		SccNumberOfProjects = 34
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -248,6 +260,18 @@ Global
 		SccLocalPath30 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection30 = Common.IO\\
+		SccProjectUniqueName31 = Common.Script\\Common.Script.csproj
+		SccLocalPath31 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection31 = Common.Script\\
+		SccProjectUniqueName32 = Common.Script.Glue\\Common.Script.Glue.csproj
+		SccLocalPath32 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection32 = Common.Script.Glue\\
+		SccProjectUniqueName33 = Common.Script.Tests\\Common.Script.Tests.csproj
+		SccLocalPath33 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection33 = Common.Script.Tests\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -372,6 +396,18 @@ Global
 		{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}.Debug.Build.0 = Debug|.NET
 		{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}.Release.ActiveCfg = Release|.NET
 		{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}.Release.Build.0 = Release|.NET
+		{6CFA7609-E5A8-4B9D-B174-BE1CC57A6954}.Debug.ActiveCfg = Debug|.NET
+		{6CFA7609-E5A8-4B9D-B174-BE1CC57A6954}.Debug.Build.0 = Debug|.NET
+		{6CFA7609-E5A8-4B9D-B174-BE1CC57A6954}.Release.ActiveCfg = Release|.NET
+		{6CFA7609-E5A8-4B9D-B174-BE1CC57A6954}.Release.Build.0 = Release|.NET
+		{B2266071-EA0F-40E5-844F-98EE68A5A39C}.Debug.ActiveCfg = Debug|.NET
+		{B2266071-EA0F-40E5-844F-98EE68A5A39C}.Debug.Build.0 = Debug|.NET
+		{B2266071-EA0F-40E5-844F-98EE68A5A39C}.Release.ActiveCfg = Release|.NET
+		{B2266071-EA0F-40E5-844F-98EE68A5A39C}.Release.Build.0 = Release|.NET
+		{F723801F-398D-4E6F-8467-D0ACC845CD2E}.Debug.ActiveCfg = Debug|.NET
+		{F723801F-398D-4E6F-8467-D0ACC845CD2E}.Debug.Build.0 = Debug|.NET
+		{F723801F-398D-4E6F-8467-D0ACC845CD2E}.Release.ActiveCfg = Release|.NET
+		{F723801F-398D-4E6F-8467-D0ACC845CD2E}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info

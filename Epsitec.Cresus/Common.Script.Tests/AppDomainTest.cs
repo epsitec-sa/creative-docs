@@ -28,14 +28,15 @@ namespace Epsitec.Common.Script
 		
 		[Test] public void TestEngineCompile()
 		{
-			string source = "namespace Epsitec.Dynamic.Script {\n" +
+			string source =
+				"namespace Epsitec.Dynamic.Script {\n" +
 				"public class DynamicScript : System.MarshalByRefObject, Epsitec.Common.Script.Glue.IScript\n" +
 				"{\n" +
 				"public DynamicScript() { System.Diagnostics.Debug.WriteLine(\"Instanciated Epsitec.Dynamic.Script.DynamicScript\"); }\n" +
+				"public void SetScriptHost(Epsitec.Common.Script.Glue.IScriptHost host) { System.Diagnostics.Debug.WriteLine(\"Host set to \" + host.Name); }\n" +
 				"public bool Execute(string name) { System.Diagnostics.Debug.WriteLine(\"Executing in Epsitec.Dynamic.Script.DynamicScript: \" + name); return true; }\n" +
 				"}\n" +
 				"}\n";
-			
 			
 			Engine engine = new Engine ();
 			Script script = engine.Compile (source);
@@ -60,13 +61,15 @@ namespace Epsitec.Common.Script
 			
 			Assert.IsNotNull (compiler);
 			
-			string source = "namespace X {\n" +
-							"public class T : System.MarshalByRefObject, Epsitec.Common.Script.Glue.IScript\n" +
-							"{\n" +
-							"public T() { System.Diagnostics.Debug.WriteLine(\"Instanciated X.T\"); }\n" +
-							"public bool Execute(string name) { System.Diagnostics.Debug.WriteLine(\"Executing in X.T: \" + name); return true; }\n" +
-							"}\n" +
-							"}\n";
+			string source =
+				"namespace X {\n" +
+				"public class T : System.MarshalByRefObject, Epsitec.Common.Script.Glue.IScript\n" +
+				"{\n" +
+				"public T() { System.Diagnostics.Debug.WriteLine(\"Instanciated X.T\"); }\n" +
+				"public void SetScriptHost(Epsitec.Common.Script.Glue.IScriptHost host) { System.Diagnostics.Debug.WriteLine(\"Host set to \" + host.Name); }\n" +
+				"public bool Execute(string name) { System.Diagnostics.Debug.WriteLine(\"Executing in X.T: \" + name); return true; }\n" +
+				"}\n" +
+				"}\n";
 			
 			System.CodeDom.Compiler.CompilerParameters options = Helpers.CompilerFactory.CreateCompilerParameters ("script_dynamic_x_0001");
 			System.CodeDom.Compiler.CompilerResults    results = compiler.CompileAssemblyFromSource (options, source);
@@ -87,8 +90,8 @@ namespace Epsitec.Common.Script
 			
 			System.IO.File.Delete (dynamic_path_name);
 			
-			script.Execute ("Hello !");
-			script.Execute ("Bye...");
+			script.Execute ("Hello.");
+			script.Execute ("Good bye.");
 			
 			System.AppDomain.Unload (domain);
 		}

@@ -8,6 +8,8 @@ namespace Epsitec.Common.Script.Glue
 	/// </summary>
 	public interface IScript
 	{
+		void SetScriptHost(IScriptHost host);
+		
 		bool Execute(string name/*, object[] in_args, object[] out_args*/);
 	}
 }
