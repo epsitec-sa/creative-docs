@@ -63,9 +63,9 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Rectangle bbox = this.BoundingBox;
 			if ( !bbox.Contains(pos) )  return false;
 
-			Drawing.Path path = this.PathBuild();
+			Drawing.Path path = this.PathBuild(null);
 
-			double width = System.Math.Max(this.PropertyLine(1).Width/2, this.minimalWidth);
+			double width = System.Math.Max(this.PropertyLine(1).PatternWidth/2, this.minimalWidth);
 			if ( AbstractObject.DetectOutline(path, width, pos) )  return true;
 			
 			if ( this.PropertyGradient(3).IsVisible() )
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( this.isHide )  return false;
 
 			Drawing.Rectangle fullBbox = this.BoundingBox;
-			double width = System.Math.Max(this.PropertyLine(1).Width/2, this.minimalWidth);
+			double width = System.Math.Max(this.PropertyLine(1).PatternWidth/2, this.minimalWidth);
 			fullBbox.Inflate(width, width);
 			return rect.Contains(fullBbox);
 		}
@@ -216,7 +216,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Met à jour le rectangle englobant l'objet.
 		protected override void UpdateBoundingBox()
 		{
-			Drawing.Path path = this.PathBuild();
+			Drawing.Path path = this.PathBuild(null);
 			this.bboxThin = path.ComputeBounds();
 
 			this.bboxGeom = this.bboxThin;
@@ -244,24 +244,34 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( i >= total*2 )  return false;
 
 				Drawing.Point star = center + (corner-center)*(1-this.PropertyRegular(4).Deep);
-				a = Drawing.Transform.RotatePointRad(center, System.Math.PI*2*(i+0)/(total*2), (i%2==0) ? corner : star);
-				b = Drawing.Transform.RotatePointRad(center, System.Math.PI*2*(i+1)/(total*2), (i%2==0) ? star : corner);
+				a = Drawing.Transform.RotatePointDeg(center, 360.0*(i+0)/(total*2), (i%2==0) ? corner : star);
+				b = Drawing.Transform.RotatePointDeg(center, 360.0*(i+1)/(total*2), (i%2==0) ? star : corner);
 				return true;
 			}
 			else	// polygone ?
 			{
 				if ( i >= total )  return false;
 
-				a = Drawing.Transform.RotatePointRad(center, System.Math.PI*2*(i+0)/total, corner);
-				b = Drawing.Transform.RotatePointRad(center, System.Math.PI*2*(i+1)/total, corner);
+				a = Drawing.Transform.RotatePointDeg(center, 360.0*(i+0)/total, corner);
+				b = Drawing.Transform.RotatePointDeg(center, 360.0*(i+1)/total, corner);
 				return true;
 			}
 		}
 
 		// Crée le chemin d'un polygone régulier.
-		protected Drawing.Path PathBuild()
+		protected Drawing.Path PathBuild(IconContext iconContext)
 		{
 			Drawing.Path path = new Drawing.Path();
+
+			if ( iconContext == null )
+			{
+				path.DefaultZoom = 10.0;
+			}
+			else
+			{
+				path.DefaultZoom = iconContext.ScaleX;
+			}
+
 			int total = this.PropertyRegular(4).NbFaces;
 			PropertyCorner corner = this.PropertyCorner(5);
 
@@ -322,7 +332,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( this.TotalHandle < 2 )  return;
 
-			Drawing.Path path = this.PathBuild();
+			Drawing.Path path = this.PathBuild(iconContext);
 			this.PropertyGradient(3).Render(graphics, iconContext, path, this.BoundingBoxThin);
 
 			this.PropertyLine(1).DrawPath(graphics, iconContext, iconObjects, path, this.PropertyColor(2).Color);
@@ -335,7 +345,7 @@ namespace Epsitec.Common.Pictogram.Data
 					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 				}
 
-				graphics.Rasterizer.AddOutline(path, this.PropertyLine(1).Width+iconContext.HiliteSize, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
+				this.PropertyLine(1).AddOutline(graphics, path, iconContext.HiliteSize);
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}

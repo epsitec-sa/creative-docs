@@ -382,9 +382,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			Drawing.Path path = this.PathBuild();
 			this.PropertyGradient(3).Render(graphics, iconContext, path, this.BoundingBoxThin);
-
-			graphics.Rasterizer.AddOutline(path, this.PropertyLine(1).Width, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
-			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(2).Color));
+			this.PropertyLine(1).DrawPath(graphics, iconContext, iconObjects, path, this.PropertyColor(2).Color);
 
 			if ( this.TotalHandle >= 4 )
 			{
@@ -405,7 +403,7 @@ namespace Epsitec.Common.Pictogram.Data
 						graphics.Rasterizer.AddSurface(path);
 						graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 					}
-					graphics.Rasterizer.AddOutline(path, this.PropertyLine(1).Width, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
+					this.PropertyLine(1).AddOutline(graphics, path, 0.0);
 					graphics.RenderSolid(iconContext.HiliteOutlineColor);
 				}
 			}

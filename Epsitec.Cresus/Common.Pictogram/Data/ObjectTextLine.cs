@@ -779,20 +779,20 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( justif.Offset > 0.0 )
 				{
 					pos = Drawing.Point.Move(p1, p2, font.Ascender*fs*justif.Offset);
-					pos = Drawing.Transform.RotatePointRad(p1, -System.Math.PI/2, pos);
+					pos = Drawing.Transform.RotatePointDeg(p1, -90, pos);
 				}
 
-				double angle = Drawing.Point.ComputeAngleRad(p1, p2);
+				double angle = Drawing.Point.ComputeAngleDeg(p1, p2);
 
 				Drawing.Rectangle gb = font.GetGlyphBounds(font.GetGlyphIndex(text[i]));
 				gb.Top    = font.Ascender;
 				gb.Bottom = font.Descender;
 				gb.Scale(fs);
 				gb.Offset(pos);
-				Drawing.Point pbl = Drawing.Transform.RotatePointRad(pos, angle, gb.BottomLeft);
-				Drawing.Point pbr = Drawing.Transform.RotatePointRad(pos, angle, gb.BottomRight);
-				Drawing.Point ptl = Drawing.Transform.RotatePointRad(pos, angle, gb.TopLeft);
-				Drawing.Point ptr = Drawing.Transform.RotatePointRad(pos, angle, gb.TopRight);
+				Drawing.Point pbl = Drawing.Transform.RotatePointDeg(pos, angle, gb.BottomLeft);
+				Drawing.Point pbr = Drawing.Transform.RotatePointDeg(pos, angle, gb.BottomRight);
+				Drawing.Point ptl = Drawing.Transform.RotatePointDeg(pos, angle, gb.TopLeft);
+				Drawing.Point ptr = Drawing.Transform.RotatePointDeg(pos, angle, gb.TopRight);
 
 				if ( i > 0 )
 				{
@@ -866,20 +866,20 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( justif.Offset > 0.0 )
 				{
 					pos = Drawing.Point.Move(p1, p2, font.Ascender*fs*justif.Offset);
-					pos = Drawing.Transform.RotatePointRad(p1, -System.Math.PI/2, pos);
+					pos = Drawing.Transform.RotatePointDeg(p1, -90, pos);
 				}
 
-				double angle = Drawing.Point.ComputeAngleRad(p1, p2);
+				double angle = Drawing.Point.ComputeAngleDeg(p1, p2);
 
 				Drawing.Rectangle gb = font.GetGlyphBounds(font.GetGlyphIndex(text[i]));
 				gb.Top    = font.Ascender;
 				gb.Bottom = font.Descender;
 				gb.Scale(fs);
 				gb.Offset(pos);
-				Drawing.Point pbl = Drawing.Transform.RotatePointRad(pos, angle, gb.BottomLeft);
-				Drawing.Point pbr = Drawing.Transform.RotatePointRad(pos, angle, gb.BottomRight);
-				Drawing.Point ptl = Drawing.Transform.RotatePointRad(pos, angle, gb.TopLeft);
-				Drawing.Point ptr = Drawing.Transform.RotatePointRad(pos, angle, gb.TopRight);
+				Drawing.Point pbl = Drawing.Transform.RotatePointDeg(pos, angle, gb.BottomLeft);
+				Drawing.Point pbr = Drawing.Transform.RotatePointDeg(pos, angle, gb.BottomRight);
+				Drawing.Point ptl = Drawing.Transform.RotatePointDeg(pos, angle, gb.TopLeft);
+				Drawing.Point ptr = Drawing.Transform.RotatePointDeg(pos, angle, gb.TopRight);
 
 				if ( i > 0 )
 				{
@@ -950,20 +950,20 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( justif.Offset > 0.0 )
 				{
 					pos = Drawing.Point.Move(p1, p2, font.Ascender*fs*justif.Offset);
-					pos = Drawing.Transform.RotatePointRad(p1, -System.Math.PI/2, pos);
+					pos = Drawing.Transform.RotatePointDeg(p1, -90, pos);
 				}
 
-				double angle = Drawing.Point.ComputeAngleRad(p1, p2);
+				double angle = Drawing.Point.ComputeAngleDeg(p1, p2);
 
 				Drawing.Rectangle gb = font.GetGlyphBounds(font.GetGlyphIndex(text[i]));
 				gb.Top    = font.Ascender;
 				gb.Bottom = font.Descender;
 				gb.Scale(fs);
 				gb.Offset(pos);
-				Drawing.Point pbl = Drawing.Transform.RotatePointRad(pos, angle, gb.BottomLeft);
-				Drawing.Point pbr = Drawing.Transform.RotatePointRad(pos, angle, gb.BottomRight);
-				Drawing.Point ptl = Drawing.Transform.RotatePointRad(pos, angle, gb.TopLeft);
-				Drawing.Point ptr = Drawing.Transform.RotatePointRad(pos, angle, gb.TopRight);
+				Drawing.Point pbl = Drawing.Transform.RotatePointDeg(pos, angle, gb.BottomLeft);
+				Drawing.Point pbr = Drawing.Transform.RotatePointDeg(pos, angle, gb.BottomRight);
+				Drawing.Point ptl = Drawing.Transform.RotatePointDeg(pos, angle, gb.TopLeft);
+				Drawing.Point ptr = Drawing.Transform.RotatePointDeg(pos, angle, gb.TopRight);
 
 				if ( i > 0 )
 				{
@@ -1038,7 +1038,7 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( justif.Offset > 0.0 )
 				{
 					pos = Drawing.Point.Move(p1, p2, font.Ascender*fs*justif.Offset);
-					pos = Drawing.Transform.RotatePointRad(p1, -System.Math.PI/2, pos);
+					pos = Drawing.Transform.RotatePointDeg(p1, -90, pos);
 				}
 
 				double angle = Drawing.Point.ComputeAngleDeg(p1, p2);
