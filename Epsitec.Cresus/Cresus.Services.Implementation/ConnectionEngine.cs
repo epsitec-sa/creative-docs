@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Services
 			System.Collections.Hashtable hash = this.engine.Services;
 			service_names = new string[hash.Count];
 			hash.Keys.CopyTo (service_names, 0);
+			System.Array.Sort (service_names);
 		}
 		#endregion
 	}

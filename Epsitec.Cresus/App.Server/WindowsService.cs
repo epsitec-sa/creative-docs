@@ -79,10 +79,9 @@ namespace Epsitec.Cresus.Server
 			this.infrastructure = this.GetDatabaseInfrastructure ();
 			
 			System.Diagnostics.Debug.Assert (this.infrastructure.LocalSettings.IsServer);
-			System.Diagnostics.Debug.Assert (this.infrastructure.LocalSettings.ClientId == 100);
+			System.Diagnostics.Debug.Assert (this.infrastructure.LocalSettings.ClientId == 1);
 			
-			this.orchestrator = new Epsitec.Cresus.Requests.Orchestrator (this.infrastructure);
-			this.engine       = new Epsitec.Cresus.Services.Engine (this.orchestrator, 1234);
+			this.engine = new Epsitec.Cresus.Services.Engine (this.infrastructure, 1234);
 			
 			System.Diagnostics.Debug.WriteLine ("Cresus Server: running.");
 		}
@@ -95,14 +94,13 @@ namespace Epsitec.Cresus.Server
 				
 				Common.Support.Globals.SignalAbort ();
 				
-				this.orchestrator.Dispose ();
+				this.engine.Dispose ();
 				this.infrastructure.Dispose ();
 				
 				System.Diagnostics.Debug.WriteLine ("Cresus Server: stopped.");
 				
-				this.infrastructure = null;
-				this.orchestrator   = null;
 				this.engine         = null;
+				this.infrastructure = null;
 			}
 		}
 		
@@ -156,7 +154,6 @@ namespace Epsitec.Cresus.Server
 		
 		
 		private Database.DbInfrastructure		infrastructure;
-		private Requests.Orchestrator			orchestrator;
 		private Services.Engine					engine;
 	}
 }

@@ -12,13 +12,14 @@ namespace Epsitec.Cresus.Services
 	/// La classe Engine démarre les divers services (en mode serveur) ou donne
 	/// accès aux services distants via les mécanismes ".NET Remoting".
 	/// </summary>
-	public class Engine
+	public class Engine : System.IDisposable
 	{
-		public Engine(Requests.Orchestrator orchestrator, int port_number)
+		public Engine(Database.DbInfrastructure infrastructure, int port_number)
 		{
-			this.orchestrator = orchestrator;
-			this.port_number  = port_number;
-			this.services     = new System.Collections.ArrayList ();
+			this.infrastructure = infrastructure;
+			this.orchestrator   = new Requests.Orchestrator (infrastructure);
+			this.port_number    = port_number;
+			this.services       = new System.Collections.ArrayList ();
 			
 			this.LoadServices ();
 			this.StartServices ();
@@ -29,7 +30,7 @@ namespace Epsitec.Cresus.Services
 		{
 			get
 			{
-				return this.orchestrator.Infrastructure;
+				return this.infrastructure;
 			}
 		}
 		
@@ -56,6 +57,14 @@ namespace Epsitec.Cresus.Services
 			}
 		}
 		
+		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (true);
+		}
+		#endregion
 		
 		private void LoadServices()
 		{
@@ -99,6 +108,32 @@ namespace Epsitec.Cresus.Services
 		}
 		
 		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.services.Count > 0)
+				{
+					AbstractServiceEngine[] array = new AbstractServiceEngine[this.services.Count];
+					this.services.CopyTo (array);
+					
+					for (int i = 0; i < array.Length; i++)
+					{
+						array[i].Dispose ();
+					}
+					
+					this.services.Clear ();
+				}
+				
+				if (this.orchestrator != null)
+				{
+					this.orchestrator.Dispose ();
+					this.orchestrator = null;
+				}
+			}
+		}
+		
+		
 		public static Remoting.IRequestExecutionService GetRemoteRequestExecutionService(string machine, int port)
 		{
 			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/RequestExecutionService.soap", machine, port);
@@ -130,6 +165,7 @@ namespace Epsitec.Cresus.Services
 		}
 		
 		
+		private Database.DbInfrastructure		infrastructure;
 		private int								port_number;
 		private Requests.Orchestrator			orchestrator;
 		private System.Collections.ArrayList	services;

@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Services
 	/// La classe AbstractService sert de base à toutes les classes implémentant des
 	/// services dans Crésus Réseau.
 	/// </summary>
-	public abstract class AbstractServiceEngine : System.MarshalByRefObject
+	public abstract class AbstractServiceEngine : System.MarshalByRefObject, System.IDisposable
 	{
 		protected AbstractServiceEngine(Engine engine, string service_name)
 		{
@@ -25,6 +25,14 @@ namespace Epsitec.Cresus.Services
 		}
 		
 		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		#endregion
+		
 		public override object InitializeLifetimeService()
 		{
 			//	En retournant null ici, on garantit que le service ne sera jamais
@@ -32,6 +40,11 @@ namespace Epsitec.Cresus.Services
 			//	de la table des objets joignables par "remoting").
 			
 			return null;
+		}
+		
+		
+		protected virtual void Dispose(bool disposing)
+		{
 		}
 		
 		protected void ThrowExceptionBasedOnStatus(Remoting.ProgressStatus status)

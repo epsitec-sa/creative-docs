@@ -11,6 +11,9 @@ namespace Epsitec.Common.Support
 	{
 		public static int Wait(params System.Threading.WaitHandle[] wait)
 		{
+			//	Retourne l'index de l'événement qui a reçu le signal. En cas de timeout,
+			//	retourne -1; en cas d'avortement, retourne 'n'.
+			
 			int n = wait.Length;
 			
 			System.Threading.WaitHandle[] handles = new System.Threading.WaitHandle[n + 1];
@@ -27,14 +30,6 @@ namespace Epsitec.Common.Support
 			if (handle_index >= 128)
 			{
 				handle_index -= 128;
-			}
-			
-			//	Tout événement autre que celui lié à la queue provoque l'interruption
-			//	du processus :
-			
-			if (handle_index == n)
-			{
-				throw new System.Threading.ThreadInterruptedException ("Globals.AbortEvent set");
 			}
 			
 			return handle_index;

@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Replication
 			this.queue_event.Set ();
 		}
 		
+		
 		#region IDisposable Members
 		public void Dispose()
 		{
@@ -94,7 +95,6 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
-		
 		protected void ProcessQueue()
 		{
 			for (;;)
@@ -124,13 +124,13 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
+		
 		protected virtual void ProcessQueueEntry(Job job)
 		{
 			//	TODO: traiter la requête...
 			
 			job.SignalReady ();
 		}
-		
 		
 		protected virtual void ProcessShutdown()
 		{
