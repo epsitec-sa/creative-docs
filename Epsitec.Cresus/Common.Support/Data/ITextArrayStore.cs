@@ -16,5 +16,7 @@ namespace Epsitec.Common.Support.Data
 		void SetCellText(int row, int column, string value);
 		void InsertRows(int row, int num);
 		void RemoveRows(int row, int num);
+		
+		event Epsitec.Common.Support.EventHandler StoreChanged;
 	}
 }

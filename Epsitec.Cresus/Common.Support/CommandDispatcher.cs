@@ -9,7 +9,7 @@ namespace Epsitec.Common.Support
 	/// La classe CommandDispatcher permet de gérer la distribution des
 	/// commandes de l'interface graphique vers les routines de traitement.
 	/// </summary>
-	public class CommandDispatcher
+	public class CommandDispatcher : System.IDisposable
 	{
 		static CommandDispatcher()
 		{
@@ -36,15 +36,30 @@ namespace Epsitec.Common.Support
 			
 			CommandDispatcher.command_arg_regex = new Regex (regex_1, options);
 			CommandDispatcher.numeric_regex     = new Regex (regex_2, options);
+			
+			CommandDispatcher.global_list = new System.Collections.ArrayList ();
+			CommandDispatcher.default_dispatcher = new CommandDispatcher ("default");
 		}
 		
-		public CommandDispatcher() : this ("anonymous")
+		public CommandDispatcher() : this ("anonymous", true)
 		{
 		}
 		
-		public CommandDispatcher(string name)
+		public CommandDispatcher(string name) : this (name, false)
 		{
-			this.dispatcher_name = name;
+		}
+		
+		public CommandDispatcher(string name, bool private_dispatcher)
+		{
+			if (private_dispatcher)
+			{
+				this.dispatcher_name = string.Format ("{0}_{1}", name, CommandDispatcher.generation++);
+			}
+			else
+			{
+				this.dispatcher_name = name;
+				CommandDispatcher.global_list.Add (this);
+			}
 		}
 		
 		
@@ -340,6 +355,26 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		#endregion
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (CommandDispatcher.global_list.Contains (this))
+				{
+					CommandDispatcher.global_list.Remove (this);
+				}
+			}
+		}
+		
+		
 		protected class EventRelay
 		{
 			public EventRelay(object controller, System.Reflection.MethodInfo method_info)
@@ -474,9 +509,11 @@ namespace Epsitec.Common.Support
 		protected System.Collections.ArrayList	command_states = new System.Collections.ArrayList ();
 		protected string						dispatcher_name;
 		
-		private static Regex					command_arg_regex;
-		private static Regex					numeric_regex;
-		private static System.Type				command_attr_type  = typeof (CommandAttribute);
-		private static CommandDispatcher		default_dispatcher = new CommandDispatcher ("default");
+		static Regex							command_arg_regex;
+		static Regex							numeric_regex;
+		static System.Type						command_attr_type  = typeof (CommandAttribute);
+		static CommandDispatcher				default_dispatcher;
+		static int								generation = 1;
+		static System.Collections.ArrayList		global_list;
 	}
 }
