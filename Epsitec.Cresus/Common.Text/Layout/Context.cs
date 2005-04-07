@@ -61,6 +61,14 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public ulong[]							Text
+		{
+			get
+			{
+				return this.text;
+			}
+		}
+		
 		public Text.Context						TextContext
 		{
 			get
@@ -436,6 +444,7 @@ restart:
 					case Layout.Status.OkTabReached:
 						
 						if ((continuation) &&
+							(this.frame != null) &&
 							(this.line_height > def_line_height))
 						{
 							//	Si on est en train de traiter une ligne avec des TABs et
@@ -694,6 +703,28 @@ restart:
 			}
 		}
 		
+		public void DefineAvailableWidth(double width)
+		{
+			this.line_width = width + this.mx_left + this.mx_right;
+		}
+		
+		public void SelectMargins(int paragraph_line_index)
+		{
+			ulong code = this.text[this.text_start + this.text_offset];
+			
+			Properties.MarginsProperty margins;
+			
+			this.text_context.GetMargins (code, out margins);
+			
+			if (margins != null)
+			{
+				this.mx_left  = paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody;
+				this.mx_right = paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody;
+				this.break_fence_before = margins.BreakFenceBefore;
+				this.break_fence_after  = margins.BreakFenceAfter;
+				this.enable_hyphenation = margins.EnableHyphenation;
+			}
+		}
 		
 		private void SelectLayoutEngine(int offset)
 		{

@@ -317,28 +317,38 @@ namespace Epsitec.Common.Text
 					case Layout.Status.OkTabReached:
 						
 						//	On vient de trouver une marque de tabulation. Il faut
-						//	d'abord l'analyser :
+						//	l'analyser et déterminer si elle peut être placée sur
+						//	la même ligne que le texte qui précède :
 						
 						layout.TextContext.GetTab (text[layout.TextOffset-1], out tab_property);
 						
 						Debug.Assert.IsNotNull (tab_property);
 						
-						if (tab_property.Disposition == 0.0)
+						double tab_x;
+						
+						TabStatus tab_status = this.MeasureTabTextWidth (layout, tab_property, line_count, out tab_x);
+						
+						System.Console.Out.WriteLine ("Suggested start for tabbed text: {0:0.00}, status: {1}", tab_x, tab_status);
+						
+						if (tab_status == TabStatus.ErrorNeedMoreText)
 						{
-							if (tab_property.Position > layout.X)
-							{
-								//	Le tabulateur gauche se trouve après la position actuelle et
-								//	il va donc occuper la même ligne que le texte qui précède.
-							}
-							else
-							{
-								//	Le tabulateur ne tient plus sur cette ligne. Force un passage
-								//	à la ligne.
-								
-								tab_new_line = true;
-							}
+							length = paragraph_start;
+							return;
+						}
+						else if (tab_status == TabStatus.ErrorNeedMoreRoom)
+						{
+							//	Le tabulateur ne tient plus sur cette ligne. Force un passage
+							//	à la ligne.
 							
-							layout.MoveTo (tab_property.Position, layout.TextOffset);
+							tab_new_line = true;
+							
+							layout.MoveTo (tab_x, layout.TextOffset);
+						}
+						else if (tab_status == TabStatus.Ok)
+						{
+							//	Le tabulateur occupe la même ligne que le texte qui précède.
+							
+							layout.MoveTo (tab_x, layout.TextOffset);
 						}
 						else
 						{
@@ -413,7 +423,7 @@ namespace Epsitec.Common.Text
 				
 				if (status == Layout.Status.OkTabReached)
 				{
-					line_start   = offset;
+					line_start = offset;
 					
 					if (tab_new_line)
 					{
@@ -461,6 +471,116 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		protected enum TabStatus
+		{
+			Ok,
+			ErrorNeedMoreText,
+			ErrorNeedMoreRoom,
+			ErrorCannotFit
+		}
+		
+		protected TabStatus MeasureTabTextWidth(Layout.Context layout, Properties.TabProperty tab_property, int line_count, out double advance)
+		{
+			advance = 0;
+			
+			double d = tab_property.Disposition;
+			
+			double x1 = layout.X;
+			double x2 = tab_property.Position;
+			double x3 = layout.LineWidth - layout.RightMargin;
+			
+			double x_before = x2 - x1;
+			double x_after  = x3 - x2;
+			
+			TabStatus              status  = TabStatus.Ok;
+			Layout.BreakCollection result  = new Layout.BreakCollection ();
+			Layout.Context         scratch = new Layout.Context (layout.TextContext, layout.Text, 0, null);
+			
+			scratch.ResetLineHeight ();
+			scratch.RecordAscender (layout.LineAscender);
+			scratch.RecordDescender (layout.LineDescender);
+			scratch.RecordLineHeight (layout.LineHeight);
+			
+			if ((x_before <= 0) ||
+				(x_after <= 0))
+			{
+				//	Tabulateur mal placé... Demande un saut de ligne ! Mais on
+				//	calcule encore au préalable la position qu'occupera le texte
+				//	tabulé sur la ligne suivante :
+				
+				scratch.SelectMargins (line_count);
+				
+				x1 = scratch.LeftMargin;
+				
+				x_before = x2 - x1;
+				x_after  = x3 - x2;
+				
+				status = TabStatus.ErrorNeedMoreRoom;
+			}
+			
+			double room;
+			double room_after;
+			double room_before;
+
+			
+			//	Détermine la place disponible entre le texte qui se trouve
+			//	avant le tabulateur et la marge droite, en tenant compte de
+			//	la manière dont le texte est disposé.
+			
+			if (d < 0.5)
+			{
+				double ratio = d / (1-d);				//	plutôt tabulateur aligné à gauche
+				
+				room_after  = x_after;
+				room_before = x_after * ratio;
+				
+				if (x_before < room_before)
+				{
+					room_before = x_before;
+					room_after  = x_before / ratio;
+				}
+			}
+			else
+			{
+				double ratio = (1-d) / d;				//	plutôt tabulateur aligné à droite
+				
+				room_before = x_before;
+				room_after  = x_before * ratio;
+				
+				if (x_after < room_after)
+				{
+					room_after  = x_after;
+					room_before = x_after / ratio;
+				}
+			}
+			
+			room = room_before + room_after;
+			
+			scratch.DefineAvailableWidth (room);
+			scratch.MoveTo (0, layout.TextOffset);
+			
+			Layout.Status fit_status = scratch.Fit (ref result, line_count, true);
+			
+			if (fit_status == Layout.Status.ErrorNeedMoreText)
+			{
+				return TabStatus.ErrorNeedMoreText;
+			}
+			
+			if ((fit_status == Layout.Status.Ok) ||
+				(fit_status == Layout.Status.OkFitEnded) ||
+				(fit_status == Layout.Status.OkTabReached))
+			{
+				//	TODO: sélectionner le résultat optimal
+				
+				double width = result[result.Count-1].Profile.TotalWidth;
+				
+				advance = x2 - d * width;
+				
+				return status;
+			}
+			
+			return TabStatus.ErrorCannotFit;
+		}
 		
 		protected double ComputePenalty(double space_penalty, double break_penalty)
 		{
