@@ -10,11 +10,11 @@ namespace Epsitec.Common.Text.Driver
 	{
 		[System.STAThread] static void Main(string[] args)
 		{
+			Tests.CheckSerializerSupport.RunTests ();
+			Tests.CheckTextFitter.RunTests ();
 			Tests.CheckLayout.RunTests ();
-			
 			Tests.CheckProperties.RunTests ();
 			Tests.CheckStretchProfile.RunTests ();
-			Tests.CheckTextFitter.RunTests ();
 			
 			OpenType.Tests.CheckTables.RunTests ();
 			
