@@ -13,6 +13,7 @@ namespace Epsitec.Common.Text.Tests
 			CheckTextFitter.TestSimpleTextFrame ();
 			CheckTextFitter.TestFitTabs1 ();
 			CheckTextFitter.TestFitTabs2 ();
+			CheckTextFitter.TestFitTabs3 ();
 			CheckTextFitter.TestFit ();
 		}
 		
@@ -330,6 +331,86 @@ namespace Epsitec.Common.Text.Tests
 			 *	Xyz blablabla blablabla 
 			 *	blablah blah.-------------
 			 *	--->T2, texte centré<---
+			 * 
+			 *	[vide]
+			 */
+			
+			story.MoveCursor (cursor, - story.TextLength);
+			
+			length = story.TextLength;
+			text   = new ulong[length];
+			
+			story.ReadText (cursor, length, text);
+			
+			
+			TextFitter      fitter = new TextFitter (story);
+			SimpleTextFrame frame  = new SimpleTextFrame (150, 600);
+			frame.PageNumber = 0;
+			fitter.FrameList.InsertAt (0, frame);
+			
+			fitter.GenerateAllMarks ();
+			
+			CursorInfo[] infos = story.TextTable.FindCursors (0, story.TextLength, Cursors.FitterCursor.Filter);
+			
+			foreach (CursorInfo info in infos)
+			{
+				Cursors.FitterCursor fitter_cursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
+				
+				System.Console.Out.WriteLine ("{0}:", story.GetCursorPosition (fitter_cursor));
+				
+				foreach (Cursors.FitterCursor.Element elem in fitter_cursor.Elements)
+				{
+					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineBaseX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
+				}
+			}
+			
+			ZeroRenderer renderer = new ZeroRenderer ();
+			
+			foreach (CursorInfo info in infos)
+			{
+				Cursors.FitterCursor fitter_cursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
+				fitter.RenderParagraph (fitter_cursor, renderer);
+				renderer.NewParagraph ();
+			}
+		}
+		
+		private static void TestFitTabs3()
+		{
+			TextStory story  = new TextStory ();
+			ICursor   cursor = new Cursors.SimpleCursor ();
+			
+			story.NewCursor (cursor);
+			
+			ulong[] text;
+			int     length;
+			
+			System.Collections.ArrayList properties_1 = new System.Collections.ArrayList ();
+			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
+			
+			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
+			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
+			properties_1.Add (new Properties.TabProperty (60, 0, null));
+			
+			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
+			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.FontSizeUnits.Points));
+			properties_2.Add (new Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
+			
+			story.ConvertToStyledText ("Text:\t", properties_1, out text);
+			story.InsertText (cursor, text);
+			
+			story.ConvertToStyledText ("T", properties_2, out text);
+			story.InsertText (cursor, text);
+			
+			story.ConvertToStyledText ("1\nXyz blablabla blablabla blablah blah.\tT2 et du texte pour la suite...\n", properties_1, out text);
+			story.InsertText (cursor, text);
+			
+			/*
+			 *	Text:->T1
+			 * 
+			 *	Xyz blablabla blablabla 
+			 *	blablah blah.->T2 et du
+			 *	texte pour la suite...
 			 * 
 			 *	[vide]
 			 */

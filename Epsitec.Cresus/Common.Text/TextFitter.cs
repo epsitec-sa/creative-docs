@@ -325,10 +325,11 @@ namespace Epsitec.Common.Text
 						Debug.Assert.IsNotNull (tab_property);
 						
 						double tab_x;
+						double tab_dx;
 						
-						TabStatus tab_status = this.MeasureTabTextWidth (layout, tab_property, line_count, out tab_x);
+						TabStatus tab_status = this.MeasureTabTextWidth (layout, tab_property, line_count, out tab_x, out tab_dx);
 						
-						System.Console.Out.WriteLine ("Suggested start for tabbed text: {0:0.00}, status: {1}", tab_x, tab_status);
+						System.Console.Out.WriteLine ("Suggested start for tabbed text: {0:0.00}, status: {1}, width: {2:0.00}", tab_x, tab_status, tab_dx);
 						
 						if (tab_status == TabStatus.ErrorNeedMoreText)
 						{
@@ -479,9 +480,10 @@ namespace Epsitec.Common.Text
 			ErrorCannotFit
 		}
 		
-		protected TabStatus MeasureTabTextWidth(Layout.Context layout, Properties.TabProperty tab_property, int line_count, out double advance)
+		protected TabStatus MeasureTabTextWidth(Layout.Context layout, Properties.TabProperty tab_property, int line_count, out double tab_x, out double width)
 		{
-			advance = 0;
+			tab_x = 0;
+			width = 0;
 			
 			double d = tab_property.Disposition;
 			
@@ -500,6 +502,9 @@ namespace Epsitec.Common.Text
 			scratch.RecordAscender (layout.LineAscender);
 			scratch.RecordDescender (layout.LineDescender);
 			scratch.RecordLineHeight (layout.LineHeight);
+			
+			Debug.Assert.IsTrue (layout.Disposition == 0);
+			Debug.Assert.IsTrue (layout.Justification == 0);
 			
 			if ((x_before <= 0) ||
 				(x_after <= 0))
@@ -572,9 +577,8 @@ namespace Epsitec.Common.Text
 			{
 				//	TODO: sélectionner le résultat optimal
 				
-				double width = result[result.Count-1].Profile.TotalWidth;
-				
-				advance = x2 - d * width;
+				width = result[result.Count-1].Profile.TotalWidth;
+				tab_x = x2 - d * width;
 				
 				return status;
 			}

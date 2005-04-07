@@ -15,6 +15,14 @@ namespace Epsitec.Common.Text.Layout
 		
 		public override Layout.Status Fit(Layout.Context context, ref Layout.BreakCollection result)
 		{
+			bool inhibit_tabs = false;
+			
+			if ((context.Disposition != 0) ||
+				(context.Justification != 0))
+			{
+				inhibit_tabs = true;
+			}
+			
 			FitScratch scratch = new FitScratch ();
 			
 			scratch.Offset    = context.TextOffset;
@@ -30,6 +38,12 @@ namespace Epsitec.Common.Text.Layout
 			{
 				if (context.GetNextWord (scratch.Offset, out scratch.Text, out scratch.TextLength, out scratch.WordBreakInfo))
 				{
+					if ((inhibit_tabs) &&
+						(scratch.WordBreakInfo == Unicode.BreakInfo.HorizontalTab))
+					{
+						scratch.WordBreakInfo = Unicode.BreakInfo.Optional;
+					}
+					
 					scratch.TextStart = 0;
 					
 					while (scratch.TextLength > 0)
