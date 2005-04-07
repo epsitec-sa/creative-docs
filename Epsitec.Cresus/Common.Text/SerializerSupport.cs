@@ -14,20 +14,36 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public static string[] Split(string text)
+		{
+			return text.Split ('/');
+		}
+		
 		public static string[] Split(string text, int pos, int length)
 		{
 			return text.Substring (pos, length).Split ('/');
 		}
 		
+		public static string Join(params string[] args)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			SerializerSupport.Join (buffer, args);
+			
+			return buffer.ToString ();
+		}
 		
 		public static void Join(System.Text.StringBuilder buffer, params string[] args)
 		{
 			Debug.Assert.IsTrue (args.Length > 0);
+			Debug.Assert.IsTrue (args[0].IndexOf ("/") == -1);
 			
 			buffer.Append (args[0]);
 			
 			for (int i = 1; i < args.Length; i++)
 			{
+				Debug.Assert.IsTrue (args[i].IndexOf ("/") == -1);
+				
 				buffer.Append ("/");
 				buffer.Append (args[i]);
 			}
@@ -44,8 +60,38 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
+				return SerializerSupport.Escape (value);
+			}
+		}
+		
+		private static string Escape(string value)
+		{
+			if (value.IndexOfAny (new char[] { '/', '\\', '[', ']' }) == -1)
+			{
 				return value;
 			}
+			
+			value = value.Replace ("\\", "\\\\");
+			value = value.Replace ("/", "\\:");
+			value = value.Replace ("[", "\\[");
+			value = value.Replace ("]", "\\]");
+			
+			return value;
+		}
+		
+		private static string Unescape(string value)
+		{
+			if (value.IndexOf ('\\') == -1)
+			{
+				return value;
+			}
+			
+			value = value.Replace ("\\]", "]");
+			value = value.Replace ("\\[", "[");
+			value = value.Replace ("\\:", "/");
+			value = value.Replace ("\\\\", "\\");
+			
+			return value;
 		}
 		
 		public static string SerializeDouble(double value)
@@ -74,7 +120,7 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				return value;
+				return SerializerSupport.Unescape (value);
 			}
 		}
 		

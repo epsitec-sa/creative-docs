@@ -16,6 +16,7 @@ namespace Epsitec.Common.Text.Properties
 		Styles,
 		Layout,
 		Margins,
+		Tab,
 		
 		Other			= 1000000,
 	}

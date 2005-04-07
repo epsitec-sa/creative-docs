@@ -369,6 +369,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\TabProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\WellKnownType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -430,6 +435,11 @@
                 />
                 <File
                     RelPath = "Tests\CheckProperties.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Tests\CheckSerializerSupport.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
