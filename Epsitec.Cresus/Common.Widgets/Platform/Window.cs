@@ -10,6 +10,29 @@ namespace Epsitec.Common.Widgets.Platform
 	/// </summary>
 	internal class Window : System.Windows.Forms.Form
 	{
+		static Window()
+		{
+			Microsoft.Win32.SystemEvents.UserPreferenceChanged += new Microsoft.Win32.UserPreferenceChangedEventHandler (Window.HandleSystemEventsUserPreferenceChanged);
+		}
+		
+		
+		private static void HandleSystemEventsUserPreferenceChanged(object sender, Microsoft.Win32.UserPreferenceChangedEventArgs e)
+		{
+			//	TODO: notifier d'autres classes du changement des préférences
+			
+			switch (e.Category)
+			{
+				case Microsoft.Win32.UserPreferenceCategory.Locale:
+					System.Threading.Thread.CurrentThread.CurrentCulture.ClearCachedData ();
+					System.Threading.Thread.CurrentThread.CurrentUICulture.ClearCachedData ();
+					break;
+				
+				default:
+					break;
+			}
+		}
+		
+		
 		private delegate void BoundsOffsetCallback(Drawing.Rectangle bounds, Drawing.Point offset);
 		private delegate void AnimatorCallback(Animator animator);
 		private delegate void DoubleCallback(double value);

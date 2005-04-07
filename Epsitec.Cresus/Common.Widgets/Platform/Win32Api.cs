@@ -33,6 +33,9 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("User32.dll")]	internal extern static bool GetWindowPlacement(System.IntPtr handle, out WindowPlacement placement);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr SetParent(System.IntPtr child, System.IntPtr parent);
 		[DllImport ("User32.dll")]	internal extern static bool IsIconic(System.IntPtr window);
+		[DllImport ("User32.dll")]  internal extern static int GetKeyNameText(int param, [System.Runtime.InteropServices.Out] System.Text.StringBuilder buffer, int size);
+		[DllImport ("User32.dll")]  internal extern static int MapVirtualKeyEx(int code, int map_type, System.IntPtr layout);
+		[DllImport ("User32.dll")]  internal extern static System.IntPtr GetKeyboardLayout(int thread_id);
 		
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr CreateCompatibleDC(System.IntPtr dc);
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr SelectObject(System.IntPtr dc, System.IntPtr handle_object);
@@ -40,6 +43,38 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("GDI32.dll")]	internal extern static bool DeleteDC(System.IntPtr dc);
 		[DllImport ("GDI32.dll")]	internal extern static void SetStretchBltMode(System.IntPtr dc, int mode);
 		[DllImport ("GDI32.dll")]	internal extern static void StretchBlt(System.IntPtr dc, int x, int y, int dx, int dy, System.IntPtr src_dc, int src_x, int src_y, int src_dx, int src_dy, int rop);
+		
+		internal static bool GetKeyName(KeyCode key, out string name)
+		{
+			int scan_code = Win32Api.MapVirtualKeyEx ((int)key, 0, Win32Api.GetKeyboardLayout (0));
+			
+			switch (key)
+			{
+				case KeyCode.Insert:
+				case KeyCode.Delete:
+				case KeyCode.Home:
+				case KeyCode.End:
+				case KeyCode.PageDown:
+				case KeyCode.PageUp:
+				case KeyCode.ArrowLeft:
+				case KeyCode.ArrowRight:
+				case KeyCode.ArrowUp:
+				case KeyCode.ArrowDown:
+					scan_code |= 0x0100;	//	ajoute 'extended bit'
+					break;
+			}
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Length = 100;
+			
+			bool ok = Win32Api.GetKeyNameText (scan_code << 16, buffer, 99) != 0;
+			
+			name = buffer.ToString ();
+			
+			return ok;
+		}
+		
 		
 		public class Win32HandleWrapper : System.Windows.Forms.IWin32Window
 		{
