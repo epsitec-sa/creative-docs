@@ -174,6 +174,18 @@ namespace Epsitec.Common.Text
 			this.get_margins_last_property      = property;
 		}
 		
+		public void GetTab(ulong code, out Properties.TabProperty property)
+		{
+			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			Styles.SimpleStyle style = this.style_list[code];
+			
+			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
+			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			
+			property = style[Properties.WellKnownType.Tab] as Properties.TabProperty;
+		}
+		
 		
 		#region Markers Class
 		public class Markers

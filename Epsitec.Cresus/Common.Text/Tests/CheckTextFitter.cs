@@ -236,6 +236,7 @@ namespace Epsitec.Common.Text.Tests
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.0, 15, 1, false));
+			properties_1.Add (new Properties.TabProperty (60, 0, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.FontSizeUnits.Points));
@@ -247,8 +248,19 @@ namespace Epsitec.Common.Text.Tests
 			story.ConvertToStyledText ("T", properties_2, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("1\nXyz.\n", properties_1, out text);
+			story.ConvertToStyledText ("1\nXyz blablabla blablabla blablah blah.\tT2 et du texte pour la suite...\n", properties_1, out text);
 			story.InsertText (cursor, text);
+			
+			/*
+			 *	Text:---->T1
+			 * 
+			 *	Xyz blablabla blablabla 
+			 *	blablah blah.-------------
+			 *	--------->T2 et du texte
+			 *	pour la suite...
+			 * 
+			 *	[vide]
+			 */
 			
 			story.MoveCursor (cursor, - story.TextLength);
 			
@@ -259,7 +271,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			
 			TextFitter      fitter = new TextFitter (story);
-			SimpleTextFrame frame  = new SimpleTextFrame (400, 600);
+			SimpleTextFrame frame  = new SimpleTextFrame (150, 600);
 			frame.PageNumber = 0;
 			fitter.FrameList.InsertAt (0, frame);
 			
@@ -275,7 +287,7 @@ namespace Epsitec.Common.Text.Tests
 				
 				foreach (Cursors.FitterCursor.Element elem in fitter_cursor.Elements)
 				{
-					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={2:0.00}, length={3}", elem.LineBaseX, elem.LineBaseY, elem.LineWidth, elem.Length);
+					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineBaseX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
 				}
 			}
 		}

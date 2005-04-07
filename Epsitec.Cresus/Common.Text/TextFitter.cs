@@ -264,11 +264,11 @@ namespace Epsitec.Common.Text
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			bool   continuation    = false;
+			bool continuation = false;
 			
-			int    def_line_count  = line_count;
-			int    def_line_start  = line_start;
-			int    def_list_count  = list.Count;
+			int def_line_count = line_count;
+			int def_line_start = line_start;
+			int def_list_count = list.Count;
 			
 			int    def_frame_index = layout.FrameIndex;
 			double def_frame_y     = layout.FrameY;
@@ -277,7 +277,10 @@ namespace Epsitec.Common.Text
 			
 			for (;;)
 			{
+				Properties.TabProperty tab_property;
 				Layout.Status status = layout.Fit (ref result, line_count, continuation);
+				
+				bool tab_new_line = false;
 				
 				this.frame_index = layout.FrameIndex;
 				this.frame_y     = layout.FrameY;
@@ -293,6 +296,7 @@ namespace Epsitec.Common.Text
 					
 					case Layout.Status.Ok:
 					case Layout.Status.OkFitEnded:
+						continuation = false;
 						break;
 					
 					case Layout.Status.RestartLayout:
@@ -311,6 +315,38 @@ namespace Epsitec.Common.Text
 						continue;
 					
 					case Layout.Status.OkTabReached:
+						
+						//	On vient de trouver une marque de tabulation. Il faut
+						//	d'abord l'analyser :
+						
+						layout.TextContext.GetTab (text[layout.TextOffset-1], out tab_property);
+						
+						Debug.Assert.IsNotNull (tab_property);
+						
+						if (tab_property.Disposition == 0.0)
+						{
+							if (tab_property.Position > layout.X)
+							{
+								//	Le tabulateur gauche se trouve après la position actuelle et
+								//	il va donc occuper la même ligne que le texte qui précède.
+							}
+							else
+							{
+								//	Le tabulateur ne tient plus sur cette ligne. Force un passage
+								//	à la ligne.
+								
+								tab_new_line = true;
+							}
+							
+							layout.MoveTo (tab_property.Position, layout.TextOffset);
+						}
+						else
+						{
+							throw new System.NotImplementedException ();
+						}
+						
+						continuation = true;
+						
 						break;
 					
 					default:
@@ -377,9 +413,16 @@ namespace Epsitec.Common.Text
 				
 				if (status == Layout.Status.OkTabReached)
 				{
-					continuation = true;
+					line_start   = offset;
 					
-					layout.SelectFrame (def_frame_index, def_frame_y);
+					if (tab_new_line)
+					{
+						line_count++;
+					}
+					else
+					{
+						layout.SelectFrame (def_frame_index, def_frame_y);
+					}
 				}
 				else
 				{
@@ -401,8 +444,6 @@ namespace Epsitec.Common.Text
 						line_start = offset;
 						line_count++;
 					}
-					
-					continuation    = false;
 					
 					def_line_count  = line_count;
 					def_line_start  = line_start;
