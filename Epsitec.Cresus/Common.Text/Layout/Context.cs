@@ -106,6 +106,14 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public double							StartX
+		{
+			get
+			{
+				return this.ox_start;
+			}
+		}
+		
 		public double							Y
 		{
 			get
@@ -282,10 +290,12 @@ namespace Epsitec.Common.Text.Layout
 		
 		public Layout.Status Fit(ref Layout.BreakCollection result, int paragraph_line_count)
 		{
-			return this.Fit (ref result, paragraph_line_count, 0, 0);
+			this.ResetLineHeight ();
+			
+			return this.Fit (ref result, paragraph_line_count, false);
 		}
 
-		public Layout.Status Fit(ref Layout.BreakCollection result, int paragraph_line_count, double initial_line_ascender, double initial_line_descender)
+		public Layout.Status Fit(ref Layout.BreakCollection result, int paragraph_line_count, bool continuation)
 		{
 			//	Détermine les points de découpe pour le texte, selon le contexte
 			//	courant.
@@ -295,11 +305,27 @@ namespace Epsitec.Common.Text.Layout
 				return Layout.Status.ErrorNeedMoreText;
 			}
 			
-			this.SelectLayoutEngine (this.text_offset);
-			this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
-			this.SelectLineHeight (this.text_offset, initial_line_ascender, initial_line_descender);
+			double initial_line_ascender  = this.LineAscender;
+			double initial_line_descender = this.LineDescender;
+			double initial_line_height    = this.LineHeight;
 			
-			this.ox             = this.mx_left;
+			this.SelectLayoutEngine (this.text_offset);
+			
+			if (continuation)
+			{
+				//	TODO: gérer la continuation...
+				
+				this.mx_left = this.ox;
+			}
+			else
+			{
+				this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
+				this.SelectLineHeight (this.text_offset, initial_line_height, initial_line_ascender, initial_line_descender);
+				
+				this.ox = this.mx_left;
+			}
+			
+			this.ox_start       = this.ox;
 			this.break_anywhere = false;
 			
 			Debug.Assert.IsNotNull (this.layout_engine);
@@ -319,8 +345,9 @@ namespace Epsitec.Common.Text.Layout
 			
 			this.text_profile = new StretchProfile ();
 			
-			double initial_line_height = 0;
-			double initial_line_width  = 0;
+			double def_line_height = 0;
+			double def_line_width  = 0;
+			
 restart:
 			int pass = 0;
 			
@@ -345,6 +372,16 @@ restart:
 						|| (dx < this.mx_left + this.mx_right)
 						|| (pass > 1))
 					{
+						if (continuation)
+						{
+							//	Cas spécial: il n'y a plus de place dans le ITextFrame,
+							//	mais nous n'avons pas commencé en début de ligne (suite
+							//	à un TAB, par exemple). Il faut que l'appelant relance
+							//	tout le processus depuis le début de la ligne.
+							
+							return Layout.Status.RestartLayout;
+						}
+						
 						//	Il n'y a plus de place dans le ITextFrame courant, passe au
 						//	suivant, s'il en reste encore un (ou plus)...
 						
@@ -358,7 +395,7 @@ restart:
 							this.SelectLayoutEngine (this.text_offset);
 							this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
 							this.SelectFrame (frame_index, 0);
-							this.SelectLineHeight (this.text_offset, initial_line_ascender, initial_line_descender);
+							this.SelectLineHeight (this.text_offset, initial_line_height, initial_line_ascender, initial_line_descender);
 							
 							goto restart;
 						}
@@ -377,11 +414,11 @@ restart:
 					this.line_width  = dx;
 					this.line_height = line_height;
 					
-					if ((initial_line_height == 0) &&
-						(initial_line_width == 0))
+					if ((def_line_height == 0) &&
+						(def_line_width == 0))
 					{
-						initial_line_height = this.line_height;
-						initial_line_width  = this.line_width;
+						def_line_height = this.line_height;
+						def_line_width  = this.line_width;
 					}
 				}
 				
@@ -397,14 +434,26 @@ restart:
 					case Layout.Status.Ok:
 					case Layout.Status.OkFitEnded:
 					case Layout.Status.OkTabReached:
+						
+						if ((continuation) &&
+							(this.line_height > def_line_height))
+						{
+							//	Si on est en train de traiter une ligne avec des TABs et
+							//	que la hauteur de la ligne a changé, il faut demander à
+							//	l'appellant de refaire une seconde passe complète de la
+							//	ligne :
+							
+							return Layout.Status.RestartLayout;
+						}
+						
 						if ((this.frame_list != null) &&
-							(this.line_height > initial_line_height))
+							(this.line_height > def_line_height))
 						{
 							//	Oups. On vient de réaliser un fit idéal, mais qui ne tient
 							//	pas dans l'espace alloué verticalement. Il faut forcer une
 							//	seconde passe :
 							
-							initial_line_height = this.line_height;
+							def_line_height = this.line_height;
 							result.Clear ();
 							this.break_anywhere = false;
 							pass = 0;
@@ -452,7 +501,7 @@ restart:
 			
 			this.SelectLayoutEngine (this.text_offset);
 			this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, is_last_line);
-			this.SelectLineHeight (this.text_offset, 0, 0);
+			this.SelectLineHeight (this.text_offset, 0, 0, 0);
 			
 			this.ox      = line_base_x;
 			this.oy_base = line_base_y;
@@ -520,6 +569,14 @@ restart:
 			this.layout_property = property;
 		}
 		
+		
+		public void ResetLineHeight()
+		{
+			this.oy_max = this.oy_base;
+			this.oy_min = this.oy_base;
+			
+			this.line_height = 0;
+		}
 		
 		public void RecordAscender(double value)
 		{
@@ -665,7 +722,7 @@ restart:
 			}
 		}
 		
-		private void SelectLineHeight(int offset, double ascender, double descender)
+		private void SelectLineHeight(int offset, double line_height, double ascender, double descender)
 		{
 			ulong code = this.text[this.text_start + offset];
 			
@@ -679,7 +736,7 @@ restart:
 				ascender  = System.Math.Max (ascender, font.GetAscender (font_size));
 				descender = System.Math.Min (descender, font.GetDescender (font_size));
 				
-				this.line_height = font_size * 1.2;
+				this.line_height = System.Math.Max (line_height, font_size * 1.2);
 			}
 			
 			this.oy_max = this.oy_base + ascender;
@@ -761,6 +818,7 @@ restart:
 		private int								left_to_right;
 		
 		private double							ox;
+		private double							ox_start;
 		private double							oy_base;
 		private double							oy_max;
 		private double							oy_min;

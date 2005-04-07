@@ -15,6 +15,7 @@ namespace Epsitec.Common.Text.Layout
 		OkTabReached,
 		
 		SwitchLayout,
+		RestartLayout,
 		
 		ErrorNeedMoreText,
 		ErrorNeedMoreRoom,

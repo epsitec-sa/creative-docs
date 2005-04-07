@@ -262,14 +262,22 @@ namespace Epsitec.Common.Text
 			int line_start      = 0;
 			int paragraph_start = 0;
 			
-			double line_ascender  = 0;
-			double line_descender = 0;
-			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			bool   continuation    = false;
+			
+			int    def_line_count  = line_count;
+			int    def_line_start  = line_start;
+			int    def_list_count  = list.Count;
+			
+			int    def_frame_index = layout.FrameIndex;
+			double def_frame_y     = layout.FrameY;
+			
+			layout.ResetLineHeight ();
 			
 			for (;;)
 			{
-				Layout.Status status = layout.Fit (ref result, line_count, line_ascender, line_descender);
+				Layout.Status status = layout.Fit (ref result, line_count, continuation);
 				
 				this.frame_index = layout.FrameIndex;
 				this.frame_y     = layout.FrameY;
@@ -285,6 +293,23 @@ namespace Epsitec.Common.Text
 					
 					case Layout.Status.Ok:
 					case Layout.Status.OkFitEnded:
+						break;
+					
+					case Layout.Status.RestartLayout:
+						
+						Debug.Assert.IsTrue (continuation);
+						
+						continuation = false;
+						line_count   = def_line_count;
+						line_start   = def_line_start;
+						
+						layout.MoveTo (0, line_start);
+						layout.SelectFrame (def_frame_index, def_frame_y);
+						
+						list.RemoveRange (def_list_count, list.Count - def_list_count);
+						
+						continue;
+					
 					case Layout.Status.OkTabReached:
 						break;
 					
@@ -339,9 +364,9 @@ namespace Epsitec.Common.Text
 				element.Length     = offset - line_start;
 				element.Profile    = profile;
 				element.FrameIndex = layout.FrameIndex;
-				element.LineBaseX  = layout.X;
+				element.LineBaseX  = layout.StartX;
 				element.LineBaseY  = layout.Y;
-				element.LineWidth  = layout.AvailableWidth;
+				element.LineWidth  = continuation ? result[result.Count-1].Profile.TotalWidth : layout.AvailableWidth;
 				
 				element.LineAscender  = layout.LineAscender;
 				element.LineDescender = layout.LineDescender;
@@ -350,25 +375,43 @@ namespace Epsitec.Common.Text
 				
 				layout.TextOffset = offset;
 				
-				if (status == Layout.Status.OkFitEnded)
+				if (status == Layout.Status.OkTabReached)
 				{
-					Cursors.FitterCursor mark = this.NewCursor ();
+					continuation = true;
 					
-					mark.AddRange (list);
-					list.Clear ();
-					
-					story.MoveCursor (mark, pos + paragraph_start);
-					
-					line_start      = offset;
-					paragraph_start = offset;
-					line_count      = 0;
+					layout.SelectFrame (def_frame_index, def_frame_y);
 				}
 				else
 				{
-					line_start = offset;
-					line_count++;
+					if (status == Layout.Status.OkFitEnded)
+					{
+						Cursors.FitterCursor mark = this.NewCursor ();
+						
+						mark.AddRange (list);
+						list.Clear ();
+						
+						story.MoveCursor (mark, pos + paragraph_start);
+						
+						line_start      = offset;
+						paragraph_start = offset;
+						line_count      = 0;
+					}
+					else
+					{
+						line_start = offset;
+						line_count++;
+					}
+					
+					continuation    = false;
+					
+					def_line_count  = line_count;
+					def_line_start  = line_start;
+					def_list_count  = list.Count;
+					
+					def_frame_index = layout.FrameIndex;
+					def_frame_y     = layout.FrameY;
 				}
-				
+
 				if (end_of_text)
 				{
 					length = paragraph_start;

@@ -91,6 +91,8 @@ namespace Epsitec.Common.Text.Layout
 						//	Le mot se termine par un saut forcé (ou une marque de tabulation, ce qui				:
 						//	revient au même par rapport au traitement fait par le système de layout) :				:
 						
+						context.MoveTo (scratch.Advance, scratch.Offset);
+						
 						result.Add (new Layout.Break (scratch.Offset, scratch.Advance, 0, 0, scratch.StretchProfile));
 						
 						return (scratch.WordBreakInfo == Unicode.BreakInfo.HorizontalTab) ? Layout.Status.OkTabReached : Layout.Status.OkFitEnded;
