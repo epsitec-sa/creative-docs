@@ -208,6 +208,20 @@ namespace Epsitec.Common.Tool.ResGenerator
 				buffer.Append (generator.Tabs);
 				buffer.Append ("\n");
 				
+				generator.BeginBlock ("public static string", "GetString(params string[] path)");
+				
+				buffer.Append (generator.Tabs);
+				buffer.Append (@"string field = string.Join (""."", path);");
+				buffer.Append ("\n");
+				buffer.Append (generator.Tabs);
+				buffer.Append (@"return _bundle[field].AsString;");
+				buffer.Append ("\n");
+				
+				generator.EndBlock ();
+				
+				buffer.Append (generator.Tabs);
+				buffer.Append ("\n");
+				
 				buffer.Append (generator.Tabs);
 				buffer.Append ("#region Internal Support Code\n");
 				
