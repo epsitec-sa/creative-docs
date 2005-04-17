@@ -2,7 +2,148 @@
 <!-- Ressources pour le projet App.DocumentEditor -->
 
 <bundle type="String">
-	<data name="Menu.File"   >Fichier</data>
-	<data name="Menu.Edition">Edition</data>
-	<data name="Menu.Objects">Objets</data>
+	<data name="Application.TitleDoc">Crésus Documents</data>
+	<data name="Application.TitlePic">Crésus Pictogrammes</data>
+	<data name="Application.TitleTxt">Crésus Textes</data>
+	<data name="Application.TitleShort">Crésus</data>
+	
+	<data name="Menu.Main.File">Fichier</data>
+	<data name="Menu.Main.Edit">Edition</data>
+	<data name="Menu.Main.Objects">Objets</data>
+	<data name="Menu.Main.Show">Affichage</data>
+	<data name="Menu.Main.Array">Tableau</data>
+	<data name="Menu.Main.Document">Document</data>
+	<data name="Menu.Main.Debug">Debug</data>
+	<data name="Menu.Main.Help">Aide</data>
+
+	<data name="Menu.Help.Key">Clé...</data>
+	<data name="Menu.Help.Update">Mise à jour...</data>
+	<data name="Menu.Help.About">A propos de...</data>
+
+	<data name="LastFiles.None">&lt;i&gt;Aucun&lt;/i&gt;</data>
+
+	<data name="Tooltip.TabBook.Close">Fermer le document</data>
+	<data name="Tooltip.Ruler.Drag">Tirer avec la souris pour créer un repère</data>
+
+	<data name="TabPage.Principal">Attributs</data>
+	<data name="TabPage.Styles">Styles</data>
+	<data name="TabPage.Autos">Auto</data>
+	<data name="TabPage.Pages">Pages</data>
+	<data name="TabPage.Layers">Calques</data>
+	<data name="TabPage.Operations">Op</data>
+
+	<data name="Status.Document.Format">Format {0}x{1}</data>
+	<data name="Status.Objects.Select">Sélection</data>
+	<data name="Status.Objects.Level">Niveau {0}</data>
+	<data name="Status.Modif.Default">Page: {0}  Calque: {1}</data>
+	<data name="Status.Zoom.Value">Zoom {0}%</data>
+
+	<data name="Dialog.Button.Close">Fermer</data>
+	<data name="Dialog.Button.OK">D'accord</data>
+	<data name="Dialog.Button.Cancel">Annuler</data>
+	<data name="Dialog.Button.Help">Aide</data>
+	<data name="Dialog.Tooltip.Close">Fermer ce dialogue</data>
+	<data name="Dialog.Tooltip.Help">Texte explicatif</data>
+	
+	<data name="Dialog.Save.Question1">Le fichier {0} a été modifié.</data>
+	<data name="Dialog.Save.Question2">Voulez-vous enregistrer les modifications ?</data>
+	<data name="Dialog.Warning.Text1">Les problèmes suivants ont été rencontrés:</data>
+	<data name="Dialog.Warning.Text2">Malgré ces problèmes, le fichier a été ouvert le mieux possible.</data>
+	<data name="Dialog.Warning.Text3">Son aspect est toutefois différent de ce qu'il devrait être.</data>
+	<data name="Dialog.Open.TitleDoc">Ouvrir un document</data>
+	<data name="Dialog.Open.TitleMod">Ouvrir un document modèle</data>
+	<data name="Dialog.Open.TitlePic">Ouvrir une icône</data>
+	<data name="Dialog.Open.TitleCol">Ouvrir une palette de couleurs</data>
+	<data name="Dialog.Save.TitleDoc">Enregistrer un document</data>
+	<data name="Dialog.Save.TitleMod">Enregistrer un document modèle</data>
+	<data name="Dialog.Save.TitlePic">Enregistrer une icône</data>
+	<data name="Dialog.Save.TitleCol">Enregistrer une palette de couleurs</data>
+	<data name="Dialog.FileDoc">Documents</data>
+	<data name="Dialog.FileMod">Documents modèles</data>
+	<data name="Dialog.FilePic">Icônes</data>
+	<data name="Dialog.FileCol">Palettes de couleurs</data>
+	<data name="Dialog.Export.Title">Exporter la page courante</data>
+
+	<data name="Dialog.About.Title">A propos de...</data>
+	<data name="Dialog.About.Link">http://www.epsitec.ch/cresus/documents/base-f.php</data>
+	<data name="Dialog.About.Web">www.epsitec.ch</data>
+	<data name="Dialog.About.Version">Version</data>
+	<data name="Dialog.About.Language">Langue: français</data>
+	<data name="Dialog.About.Key">Numéro de série</data>
+	<data name="Dialog.About.Copyright">© 2004-2005 EPSITEC SA, Daniel Roux, Pierre Arnaud</data>
+	<data name="Dialog.About.Demo">démo</data>
+	<data name="Dialog.About.Expired">échu</data>
+
+	<data name="Dialog.Export.Title">Exportation de {0}</data>
+	<data name="Dialog.Export.Button.OK">Exporter</data>
+	<data name="Dialog.Export.Button.Cancel">Annuler</data>
+	<data name="Dialog.Export.Tooltip.OK">Exporter l'image</data>
+	<data name="Dialog.Export.Tooltip.Cancel">Annuler l'exportation</data>
+
+	<data name="Dialog.Infos.Title">Informations</data>
+
+	<data name="Dialog.Key.Title">Clé...</data>
+	<data name="Dialog.Key.Label">Mode de fonctionnement :</data>
+	<data name="Dialog.Key.RadioDemo">Version démo</data>
+	<data name="Dialog.Key.RadioFull">Version complète</data>
+	<data name="Dialog.Key.Number">Numéro de la clé :</data>
+	<data name="Dialog.Key.Expired">Version échue</data>
+
+	<data name="Dialog.PageStack.Title">Structure de la page imprimée...</data>
+	<data name="Dialog.PageStack.Help1">La liste ci-dessous montre tous les calques qui seront imprimés pour la page sélectionnée.</data>
+	<data name="Dialog.PageStack.Help2">Le calque qui se trouve au-dessus de tous les autres apparaît en premier dans la liste, puis vient le calque situé juste en dessous, etc. Le dernier calque est le premier imprimé.</data>
+	<data name="Dialog.PageStack.Help3">Si la page sélectionnée inclut des pages modèles contenant un calque unique, leur calque vient s'ajouter en fin de liste; ainsi, les calques des pages modèles apparaissent normalement derrière tous les autres calques de la page sélectionnée.</data>
+	<data name="Dialog.PageStack.Help4">Lorsqu'une page modèle contient plusieurs calques, une moitié de ceux-ci apparaîtra sous les calques de la page sélectionnée, l'autre dessus.</data>
+	<data name="Dialog.PageStack.Help5">Une page modèle peut inclure elle-même d'autres pages modèles, dont les calques viendront se placer dessous, respectivement dessus.</data>
+	<data name="Dialog.PageStack.Button.Current">Page courante</data>
+	<data name="Dialog.PageStack.Tooltip.Current">Montre la page courante</data>
+	<data name="Dialog.PageStack.Page">Page</data>
+	<data name="Dialog.PageStack.Layer">Calque</data>
+
+	<data name="Dialog.Print.Title">Imprimer...</data>
+	<data name="Dialog.Print.TabPage.Printer">Imprimante</data>
+	<data name="Dialog.Print.TabPage.Param">Paramètres</data>
+	<data name="Dialog.Print.TabPage.Publisher">Pré-presse</data>
+	<data name="Dialog.Print.Button.OK">Imprimer</data>
+	<data name="Dialog.Print.Tooltip.OK">Imprimer le document</data>
+	<data name="Dialog.Print.Button.Cancel">Fermer</data>
+	<data name="Dialog.Print.Tooltip.Cancel">Fermer sans imprimmer</data>
+	
+	<data name="Dialog.Settings.Title">Réglages...</data>
+	<data name="Dialog.Settings.RadioGlobal">Global</data>
+	<data name="Dialog.Settings.RadioDocument">Document</data>
+	<data name="Dialog.Settings.Startup">Que faire au démarrage du logiciel ?</data>
+	<data name="Dialog.Settings.Mouse">Réglages de la souris</data>
+	<data name="Dialog.Settings.Screen">Réglages de l'écran</data>
+	<data name="Dialog.Settings.SplashScreen">Ecran initial</data>
+	<data name="Dialog.Settings.MouseWheel">Molette</data>
+	<data name="Dialog.Settings.MouseZoom">Grossissement</data>
+	<data name="Dialog.Settings.FineCursor">Curseur précis</data>
+	<data name="Dialog.Settings.Adorner">Aspect de l'interface</data>
+	<data name="Dialog.Settings.ScreenDpi">Résolution (dpi)</data>
+	<data name="Dialog.Settings.TabPage.Format">Format</data>
+	<data name="Dialog.Settings.TabPage.Grid">Grille</data>
+	<data name="Dialog.Settings.TabPage.Guides">Repères</data>
+	<data name="Dialog.Settings.TabPage.Move">Déplacements</data>
+	<data name="Dialog.Settings.TabPage.Misc">Divers</data>
+	
+	<data name="Dialog.Update.Title">Mise à jour...</data>
+	<data name="Dialog.Update.Version">Version &lt;b&gt;{0}&lt;/b&gt;    Langue: français</data>
+	<data name="Dialog.Update.Limit">Mises à jour gratuites jusqu'au &lt;b&gt;{0}&lt;/b&gt;</data>
+	<data name="Dialog.Update.Over">&lt;i&gt;Plus de mises à jour gratuites&lt;/i&gt;.</data>
+	<data name="Dialog.Update.BuyDemo">Vous pouvez acheter ce logiciel auprès de Epsitec SA.</data>
+	<data name="Dialog.Update.BuyFull">Vous pouvez obtenir une mise à jour auprès de Epsitec SA.</data>
+	<data name="Dialog.Update.Web1">Web:</data>
+	<data name="Dialog.Update.Web2">http://www.epsitec.ch/cresus/documents/download-f.php</data>
+	<data name="Dialog.Update.Web3">www.epsitec.ch</data>
+	<data name="Dialog.Update.Mail1">Mail:</data>
+	<data name="Dialog.Update.Mail2">mailto:epsitec@epsitec.ch</data>
+	<data name="Dialog.Update.Mail3">epsitec@epsitec.ch</data>
+	<data name="Dialog.Update.Address1">Poste:</data>
+	<data name="Dialog.Update.Address2">Epsitec SA, Mouette 5, CH-1092 Belmont</data>
+	<data name="Dialog.Update.Phone1">Tél:</data>
+	<data name="Dialog.Update.Phone2">021 728 44 83</data>
+	<data name="Dialog.Update.Fax1">Fax:</data>
+	<data name="Dialog.Update.Fax2">021 728 44 83</data>
+
 </bundle>
