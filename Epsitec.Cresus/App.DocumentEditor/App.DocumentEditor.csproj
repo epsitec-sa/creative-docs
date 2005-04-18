@@ -1051,6 +1051,10 @@
                     RelPath = "Resources\App\Strings.00.resource"
                     BuildAction = "Content"
                 />
+                <File
+                    RelPath = "Resources\App\Strings.en.resource"
+                    BuildAction = "Content"
+                />
             </Include>
         </Files>
     </CSHARP>

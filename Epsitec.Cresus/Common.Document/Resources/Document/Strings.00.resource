@@ -154,7 +154,7 @@
 	<data name="Container.Layers.Action.Down">Calque dessous</data>
 	<data name="Container.Layers.Action.Delete">Supprimer le calque</data>
 	<data name="Container.Layers.Action.ChangeShowOne">Changer la visibilité du calque</data>
-	<data name="Container.Layers.Action.ChangeShowAll">"Changer la visibilité des calques</data>
+	<data name="Container.Layers.Action.ChangeShowAll">Changer la visibilité des calques</data>
 	<data name="Container.Layers.Action.ChangePrint">Changer le mode d'impression du calque</data>
 	<data name="Container.Layers.Action.ChangeMagnet">Changer l'état du calque</data>
 
@@ -173,7 +173,7 @@
 	<data name="Container.Pages.Button.MasterNone">Appliquer à la demande</data>
 	<data name="Container.Pages.Button.MasterStop">Stopper à la prochaine page modèle</data>
 	<data name="Container.Pages.Button.MasterSpecific">Inclure cette page modèle</data>
-	<data name="Container.Pages.Header.Number">No</data>
+	<data name="Container.Pages.Header.Number">N°</data>
 	<data name="Container.Pages.Header.Name">Nom</data>
 	<data name="Container.Pages.Action.New">Nouvelle page &lt;b&gt;après&lt;/b&gt; la page courante</data>
 	<data name="Container.Pages.Action.Duplicate">Dupliquer la page</data>
@@ -224,15 +224,15 @@
 	<data name="Tool.Poly">Polygone quelconque</data>
 	<data name="Tool.Bezier">Courbes de Bézier</data>
 	<data name="Tool.Regular">Polygone régulier</data>
-	<data name="Tool.Surface">Surfaces 2d</data>
-	<data name="Tool.Volume">Volumes 3d</data>
+	<data name="Tool.Surface">Surfaces 2D</data>
+	<data name="Tool.Volume">Volumes 3D</data>
 	<data name="Tool.TextLine">Ligne de texte</data>
 	<data name="Tool.TextBox">Pavé de texte</data>
 	<data name="Tool.Array">Tableau</data>
 	<data name="Tool.Image">Image bitmap</data>
 	<data name="Tool.Dimension">Cote</data>
 
-	<data name="Object.Abstract.InfoLine">lg={0} a={1}</data>
+	<data name="Object.Abstract.InfoLine">lg={0} a={1}°</data>
 	<data name="Object.Abstract.InfoRectangle">dx={0} dy={1}</data>
 	<data name="Object.Abstract.InfoCircle">r={0}</data>
 
@@ -358,7 +358,7 @@
 	<data name="Panel.Image.Dialog.Title">Ouvrir une image</data>
 
 	<data name="File.Bitmap.All">Toutes les images</data>
-	<data name="File.Bitmap.BMP">Bitmap Window BMP</data>
+	<data name="File.Bitmap.BMP">Bitmap Windows BMP</data>
 	<data name="File.Bitmap.TIF">Tagged Image TIFF</data>
 	<data name="File.Bitmap.JPG">Image compressée JPEG</data>
 	<data name="File.Bitmap.PNG">Portable Network Graphics PNG</data>
@@ -449,7 +449,7 @@
 	<data name="Panel.Surface.Label.Factor">R{0}</data>
 	<data name="Panel.Surface.Label.Scalar">N{0}</data>
 	<data name="Panel.Surface.Label.Reset">R</data>
-	<data name="Panel.Surface.Tooltip.Type">Type de la surface 3d</data>
+	<data name="Panel.Surface.Tooltip.Type">Type de la surface 3D</data>
 	<data name="Panel.Surface.Tooltip.Reset">Reset (valeurs standards)</data>
 	<data name="Panel.Surface.Action.Reset">Réinitialisation de la surface</data>
 
@@ -457,7 +457,7 @@
 	<data name="Panel.TextLine.Tooltip.JustifHCenter">Justification centrée</data>
 	<data name="Panel.TextLine.Tooltip.JustifHRight">Justification à droite</data>
 	<data name="Panel.TextLine.Tooltip.JustifHStretch">Justification alignée</data>
-	<data name="Panel.TextLine.Tooltip.Offset">Offset perpendiculaire</data>
+	<data name="Panel.TextLine.Tooltip.Offset">Décalage perpendiculaire</data>
 	<data name="Panel.TextLine.Tooltip.Add">Espace intercaractère</data>
 	<data name="Panel.TextLine.Label.Offset">Oy</data>
 	<data name="Panel.TextLine.Label.Add">L</data>
@@ -483,8 +483,8 @@
 	<data name="Property.Abstract.Corner">Coins</data>
 	<data name="Property.Abstract.Regular">Nombre de côtés</data>
 	<data name="Property.Abstract.Arc">Arc</data>
-	<data name="Property.Abstract.Surface">Surface 2d</data>
-	<data name="Property.Abstract.Volume">Volume 3d</data>
+	<data name="Property.Abstract.Surface">Surface 2D</data>
+	<data name="Property.Abstract.Volume">Volume 3D</data>
 	<data name="Property.Abstract.BackColor">Couleur fond</data>
 	<data name="Property.Abstract.TextFont">Police</data>
 	<data name="Property.Abstract.TextJustif">Mise en page</data>
@@ -698,7 +698,6 @@
 	
 	<data name="Action.Grid">Grille magnétique</data>
 	<data name="Action.Preview">Comme imprimé</data>
-	<data name="Action.Grid">Grille magnétique</data>
 	<data name="Action.Magnet">Constructions magnétiques</data>
 	<data name="Action.Rulers">Règles graduées</data>
 	<data name="Action.Labels">Noms des objets</data>
@@ -727,7 +726,7 @@
 	<data name="Error.NoBitmap">Pas de bitmap.</data>
 	<data name="Error.Share">Impossible de distribuer les objets,&lt;br/%gt;car ils sont trop serrés.</data>
 	<data name="Error.Combine">Un ou plusieurs objets n'ont pas pu être combinés.</data>
-	<data name="Error.Uncombine">"Un ou plusieurs objets n'ont pas pu être scindés.</data>
+	<data name="Error.Uncombine">Un ou plusieurs objets n'ont pas pu être scindés.</data>
 	<data name="Error.ToBezier">Un ou plusieurs objets n'ont pas pu être convertis en courbes.</data>
 	<data name="Error.ToPoly">Un ou plusieurs objets n'ont pas pu être convertis en droites.</data>
 	<data name="Error.Fragment">Un ou plusieurs objets n'ont pas pu être fragmentés.</data>
