@@ -73,8 +73,8 @@
 	<data name="Dialog.Double.DimensionDecimal">Number of digits</data>
 
 	<data name="Dialog.Integer.DefaultUnit.Text">@@Unité de travail</data>
-	<data name="Dialog.Integer.DefaultUnit.Millimetre">Millimeters</data>
-	<data name="Dialog.Integer.DefaultUnit.Centimetre">Centimeters</data>
+	<data name="Dialog.Integer.DefaultUnit.Millimetre">Millimetres</data>
+	<data name="Dialog.Integer.DefaultUnit.Centimetre">Centimetres</data>
 	<data name="Dialog.Integer.DefaultUnit.Inch">Inches</data>
 	<data name="Dialog.Integer.PrintArea.Text">Print</data>
 	<data name="Dialog.Integer.PrintArea.All">All pages</data>

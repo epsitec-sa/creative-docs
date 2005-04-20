@@ -179,6 +179,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X.Tool.ResGenerator", "X.To
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Debug", "Common.Debug\Common.Debug.csproj", "{AF58270B-4B5C-49F7-81D8-723CFF122F2C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.OpenType", "Common.OpenType\Common.OpenType.csproj", "{7703436A-1D8D-46AA-BB44-699AE5EAAA2F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Text", "Common.Text\Common.Text.csproj", "{62F59974-6D79-4919-AAA0-10717A8D8514}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -361,6 +373,18 @@ Global
 		{3E741450-319E-49CF-BFEC-35BE01CE0AFD}.Debug.Build.0 = Debug|.NET
 		{3E741450-319E-49CF-BFEC-35BE01CE0AFD}.Release.ActiveCfg = Release|.NET
 		{3E741450-319E-49CF-BFEC-35BE01CE0AFD}.Release.Build.0 = Release|.NET
+		{AF58270B-4B5C-49F7-81D8-723CFF122F2C}.Debug.ActiveCfg = Debug|.NET
+		{AF58270B-4B5C-49F7-81D8-723CFF122F2C}.Debug.Build.0 = Debug|.NET
+		{AF58270B-4B5C-49F7-81D8-723CFF122F2C}.Release.ActiveCfg = Release|.NET
+		{AF58270B-4B5C-49F7-81D8-723CFF122F2C}.Release.Build.0 = Release|.NET
+		{7703436A-1D8D-46AA-BB44-699AE5EAAA2F}.Debug.ActiveCfg = Debug|.NET
+		{7703436A-1D8D-46AA-BB44-699AE5EAAA2F}.Debug.Build.0 = Debug|.NET
+		{7703436A-1D8D-46AA-BB44-699AE5EAAA2F}.Release.ActiveCfg = Release|.NET
+		{7703436A-1D8D-46AA-BB44-699AE5EAAA2F}.Release.Build.0 = Release|.NET
+		{62F59974-6D79-4919-AAA0-10717A8D8514}.Debug.ActiveCfg = Debug|.NET
+		{62F59974-6D79-4919-AAA0-10717A8D8514}.Debug.Build.0 = Debug|.NET
+		{62F59974-6D79-4919-AAA0-10717A8D8514}.Release.ActiveCfg = Release|.NET
+		{62F59974-6D79-4919-AAA0-10717A8D8514}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info
