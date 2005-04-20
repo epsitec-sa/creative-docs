@@ -25,7 +25,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
 				this.WindowInit("Print", 300, 350);
-				this.window.Text = "Imprimer...";
+				this.window.Text = Res.Strings.Dialog.Print.Title;
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowPrintCloseClicked);
@@ -39,17 +39,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				TabPage bookFormat = new TabPage();
 				bookFormat.Name = "Printer";
-				bookFormat.TabTitle = "Imprimante";
+				bookFormat.TabTitle = Res.Strings.Dialog.Print.TabPage.Printer;
 				bookDoc.Items.Add(bookFormat);
 
 				TabPage bookGrid = new TabPage();
 				bookGrid.Name = "Param";
-				bookGrid.TabTitle = "Paramètres";
+				bookGrid.TabTitle = Res.Strings.Dialog.Print.TabPage.Param;
 				bookDoc.Items.Add(bookGrid);
 
 				TabPage bookGuides = new TabPage();
 				bookGuides.Name = "Publisher";
-				bookGuides.TabTitle = "Pré-presse";
+				bookGuides.TabTitle = Res.Strings.Dialog.Print.TabPage.Publisher;
 				bookDoc.Items.Add(bookGuides);
 
 				bookDoc.ActivePage = bookFormat;
@@ -57,24 +57,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				// Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
 				buttonOk.Width = 75;
-				buttonOk.Text = "Imprimer";
+				buttonOk.Text = Res.Strings.Dialog.Print.Button.OK;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
 				buttonOk.AnchorMargins = new Margins(6, 0, 0, 6);
 				buttonOk.Clicked += new MessageEventHandler(this.HandlePrintButtonOkClicked);
 				buttonOk.TabIndex = 1000;
 				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonOk, "Imprimer le document");
+				ToolTip.Default.SetToolTip(buttonOk, Res.Strings.Dialog.Print.Tooltip.OK);
 
 				Button buttonCancel = new Button(this.window.Root);
 				buttonCancel.Width = 75;
-				buttonCancel.Text = "Fermer";
+				buttonCancel.Text = Res.Strings.Dialog.Print.Button.Cancel;
+				buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonCancel.Anchor = AnchorStyles.BottomLeft;
 				buttonCancel.AnchorMargins = new Margins(6+75+10, 0, 0, 6);
 				buttonCancel.Clicked += new MessageEventHandler(this.HandlePrintButtonCancelClicked);
 				buttonCancel.TabIndex = 1001;
 				buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonCancel, "Fermer sans imprimmer");
+				ToolTip.Default.SetToolTip(buttonCancel, Res.Strings.Dialog.Print.Tooltip.Cancel);
 			}
 
 			if ( this.editor.IsCurrentDocument )

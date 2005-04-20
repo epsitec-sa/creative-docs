@@ -25,7 +25,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
 				this.WindowInit("Update", 330, 210);
-				this.window.Text = "Mise à jour...";
+				this.window.Text = Res.Strings.Dialog.Update.Title;
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowUpdateCloseClicked);
@@ -50,27 +50,27 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				// Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.Width = 75;
-				buttonClose.Text = "Fermer";
+				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
 				buttonClose.AnchorMargins = new Margins(10, 0, 0, 10);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleUpdateButtonCloseClicked);
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonClose, "Fermer ce dialogue");
+				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 			}
 
-			this.version.Text = string.Format("Version <b>{0}</b>    Langue: français", About.GetVersion());
+			this.version.Text = string.Format(Res.Strings.Dialog.Update.Version, About.GetVersion());
 
 			if ( this.editor.InstallType == InstallType.Full )
 			{
 				string key = SerialAlgorithm.ReadSerial();
 				string date = SerialAlgorithm.GetExpirationDate(key).Subtract(new System.TimeSpan(1, 0, 0, 0)).ToShortDateString();
-				this.limit.Text = string.Format("Mises à jour gratuites jusqu'au <b>{0}</b>", date);
+				this.limit.Text = string.Format(Res.Strings.Dialog.Update.Limit, date);
 			}
 			else if ( this.editor.InstallType == InstallType.Expired )
 			{
-				this.limit.Text = "<i>Plus de mises à jour gratuites</i>.";
+				this.limit.Text = Res.Strings.Dialog.Update.Over;
 			}
 			else
 			{
@@ -81,23 +81,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			System.Text.StringBuilder b = new System.Text.StringBuilder();
 			if ( this.editor.InstallType == InstallType.Demo )
 			{
-				b.Append("Vous pouvez acheter ce logiciel auprès de Epsitec SA.<br/>");
+				b.Append(Res.Strings.Dialog.Update.BuyDemo);
+				b.Append("<br/>");
 			}
 			else
 			{
-				b.Append("Vous pouvez obtenir une mise à jour auprès de Epsitec SA.<br/>");
+				b.Append(Res.Strings.Dialog.Update.BuyFull);
+				b.Append("<br/>");
 			}
 			b.Append("<br/>");
 			b.Append(chip);
-			b.Append("Web:<tab/><a href=\"http://www.epsitec.ch/cresus/documents/download-f.php\">www.epsitec.ch</a><br/>");
+			b.Append(string.Format("{0}<tab/><a href=\"{1}\">{2}</a><br/>", Res.Strings.Dialog.Update.Web1, Res.Strings.Dialog.Update.Web2, Res.Strings.Dialog.Update.Web3));
 			b.Append(chip);
-			b.Append("Mail:<tab/><a href=\"mailto:epsitec@epsitec.ch\">epsitec@epsitec.ch</a><br/>");
+			b.Append(string.Format("{0}<tab/><a href=\"{1}\">{2}</a><br/>", Res.Strings.Dialog.Update.Mail1, Res.Strings.Dialog.Update.Mail2, Res.Strings.Dialog.Update.Mail3));
 			b.Append(chip);
-			b.Append("Poste:<tab/>Epsitec SA, Mouette 5, CH-1092 Belmont<br/>");
+			b.Append(string.Format("{0}<tab/>{1}<br/>", Res.Strings.Dialog.Update.Address1, Res.Strings.Dialog.Update.Address2));
 			b.Append(chip);
-			b.Append("Tél:<tab/>021 728 44 83<br/>");
+			b.Append(string.Format("{0}<tab/>{1}<br/>", Res.Strings.Dialog.Update.Phone1, Res.Strings.Dialog.Update.Phone2));
 			b.Append(chip);
-			b.Append("Fax:<tab/>021 728 44 83");
+			b.Append(string.Format("{0}<tab/>{1}", Res.Strings.Dialog.Update.Fax1, Res.Strings.Dialog.Update.Fax2));
 			this.buy.Text = b.ToString();
 			this.buy.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
 

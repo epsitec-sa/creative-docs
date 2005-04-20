@@ -37,24 +37,24 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				// Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
 				buttonOk.Width = 75;
-				buttonOk.Text = "Exporter";
+				buttonOk.Text = Res.Strings.Dialog.Export.Button.OK;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
 				buttonOk.AnchorMargins = new Margins(10, 0, 0, 10);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleExportButtonOkClicked);
 				buttonOk.TabIndex = 10;
 				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonOk, "Exporter l'image");
+				ToolTip.Default.SetToolTip(buttonOk, Res.Strings.Dialog.Export.Tooltip.OK);
 
 				Button buttonCancel = new Button(this.window.Root);
 				buttonCancel.Width = 75;
-				buttonCancel.Text = "Annuler";
+				buttonCancel.Text = Res.Strings.Dialog.Export.Button.Cancel;
 				buttonCancel.Anchor = AnchorStyles.BottomLeft;
 				buttonCancel.AnchorMargins = new Margins(10+75+10, 0, 0, 10);
 				buttonCancel.Clicked += new MessageEventHandler(this.HandleExportButtonCancelClicked);
 				buttonCancel.TabIndex = 11;
 				buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonCancel, "Annuler l'exportation");
+				ToolTip.Default.SetToolTip(buttonCancel, Res.Strings.Dialog.Export.Tooltip.Cancel);
 			}
 
 			if ( this.editor.IsCurrentDocument )
@@ -62,7 +62,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.editor.CurrentDocument.Dialogs.BuildExport(this.window);
 			}
 
-			this.window.Text = string.Format("Exportation de {0}", System.IO.Path.GetFileName(filename));
+			this.window.Text = string.Format(Res.Strings.Dialog.Export.Title, System.IO.Path.GetFileName(filename));
 			this.window.Show();
 		}
 

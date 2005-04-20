@@ -26,7 +26,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("Infos", 300, 250, true);
-				this.window.Text = "Informations";
+				this.window.Text = Res.Strings.Dialog.Infos.Title;
 				this.window.Owner = this.editor.Window;
 				this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowInfosCloseClicked);
@@ -42,14 +42,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				// Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.Width = 75;
-				buttonClose.Text = "Fermer";
+				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
 				buttonClose.AnchorMargins = new Margins(10, 0, 0, 10);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleInfosButtonCloseClicked);
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonClose, "Fermer ce dialogue");
+				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 			}
 
 			this.window.Show();

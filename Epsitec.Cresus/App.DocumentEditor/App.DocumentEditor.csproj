@@ -648,6 +648,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\Linked.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Magnet.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -800,6 +804,14 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\RadioNo.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\RadioYes.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Rectangle.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -844,10 +856,6 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\SelectorAdaptGradient.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "Images\SelectorAdaptLine.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -865,6 +873,22 @@
                 />
                 <File
                     RelPath = "Images\SelectorStretch.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SelectorStretchParallelH.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SelectorStretchParallelV.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SelectorStretchTrapezeH.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SelectorStretchTrapezeV.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -1049,10 +1073,6 @@
                 />
                 <File
                     RelPath = "Resources\App\Strings.00.resource"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Resources\App\Strings.en.resource"
                     BuildAction = "Content"
                 />
             </Include>

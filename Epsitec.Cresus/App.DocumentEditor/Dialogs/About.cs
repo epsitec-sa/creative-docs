@@ -25,7 +25,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
 				this.WindowInit("About", 400, 243);
-				this.window.Text = "A propos de...";
+				this.window.Text = Res.Strings.Dialog.About.Title;
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowAboutCloseClicked);
@@ -35,18 +35,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				// Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.Width = 75;
-				buttonClose.Text = "Fermer";
+				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
 				buttonClose.AnchorMargins = new Margins(10, 0, 0, 10);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleAboutButtonCloseClicked);
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonClose, "Fermer ce dialogue");
+				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 
 				StaticText www = new StaticText(this.window.Root);
 				www.Width = 100;
-				www.Text = "<a href=\"http://www.epsitec.ch/cresus/documents/base-f.php\">www.epsitec.ch</a><br/>";
+				www.Text = string.Format("<a href=\"{0}\">{1}</a><br/>", Res.Strings.Dialog.About.Link, Res.Strings.Dialog.About.Web);
 				www.Alignment = ContentAlignment.MiddleRight;
 				www.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
 				www.Anchor = AnchorStyles.BottomRight;
@@ -77,7 +77,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 			string version = About.GetVersion();
 			StaticText sv = new StaticText(parent);
-			sv.Text = string.Format("<font size=\"140%\"><b>Version {0}</b></font>    Langue: français", version);
+			sv.Text = string.Format("<font size=\"140%\"><b>{0} {1}</b></font>    {2}", Res.Strings.Dialog.About.Version, version, Res.Strings.Dialog.About.Language);
 			sv.Location = new Point(22, y+5+12*2);
 			sv.Size = new Size(270, 14);
 			sv.SetClientZoom(0.8);
@@ -86,14 +86,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( sk != null )
 			{
 				StaticText key = new StaticText(parent);
-				key.Text = string.Format("Numéro de série: {0}", sk);
+				key.Text = string.Format("{0}: {1}", Res.Strings.Dialog.About.Key, sk);
 				key.Location = new Point(22, y+5+12*1);
 				key.Size = new Size(270, 14);
 				key.SetClientZoom(0.8);
 			}
 
 			StaticText ep = new StaticText(parent);
-			ep.Text = "© 2004-2005 EPSITEC SA, Daniel Roux, Pierre Arnaud";
+			ep.Text = Res.Strings.Dialog.About.Copyright;
 			ep.Location = new Point(22, y+5+12*0);
 			ep.Size = new Size(270, 14);
 			ep.SetClientZoom(0.8);
@@ -101,7 +101,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( type == InstallType.Demo )
 			{
 				StaticText warning = new StaticText(parent);
-				warning.Text = "<b>démo</b>";
+				warning.Text = "<b>" + Res.Strings.Dialog.About.Demo + "</b>";
 				warning.Location = new Point(316, y+0);
 				warning.Size = new Size(84, 40);
 				warning.SetClientZoom(2.5);
@@ -110,7 +110,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( type == InstallType.Expired )
 			{
 				StaticText warning = new StaticText(parent);
-				warning.Text = "<b>échu</b>";
+				warning.Text = "<b>" + Res.Strings.Dialog.About.Expired + "</b>";
 				warning.Location = new Point(316, y+0);
 				warning.Size = new Size(84, 40);
 				warning.SetClientZoom(2.5);

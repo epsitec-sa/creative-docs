@@ -27,7 +27,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeToolWindow();
 				this.WindowInit("Settings", 300, 412);
-				this.window.Text = "Réglages";
+				this.window.Text = Res.Strings.Dialog.Settings.Title;
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowSettingsCloseClicked);
@@ -40,14 +40,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				// Crée les boutons radio.
 				RadioButton radio1 = new RadioButton(topPart);
 				radio1.Name = "RadioGlobal";
-				radio1.Text = "Global";
+				radio1.Text = Res.Strings.Dialog.Settings.RadioGlobal;
 				radio1.Width = 80;
 				radio1.Dock = DockStyle.Left;
 				radio1.Clicked += new MessageEventHandler(this.HandleRadioSettingsChanged);
 
 				RadioButton radio2 = new RadioButton(topPart);
 				radio2.Name = "RadioDocument";
-				radio2.Text = "Document";
+				radio2.Text = Res.Strings.Dialog.Settings.RadioDocument;
 				radio2.Width = 80;
 				radio2.Dock = DockStyle.Left;
 				radio2.ActiveState = WidgetState.ActiveYes;
@@ -65,7 +65,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				CheckButton check;
 				this.tabIndex = 0;
 
-				Common.Document.Dialogs.CreateTitle(global, "Que faire au démarrage du logiciel ?");
+				Common.Document.Dialogs.CreateTitle(global, Res.Strings.Dialog.Settings.Startup);
 
 				combo = this.CreateCombo(global, "FirstAction", "Action");
 				for ( int i=0 ; i<GlobalSettings.FirstActionCount ; i++ )
@@ -75,12 +75,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 				combo.SelectedIndex = GlobalSettings.FirstActionRank(this.globalSettings.FirstAction);
 
-				check = this.CreateCheck(global, "SplashScreen", "Ecran initial");
+				check = this.CreateCheck(global, "SplashScreen", Res.Strings.Dialog.Settings.SplashScreen);
 				check.ActiveState = this.globalSettings.SplashScreen ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 
-				Common.Document.Dialogs.CreateTitle(global, "Réglages de la souris");
+				Common.Document.Dialogs.CreateTitle(global, Res.Strings.Dialog.Settings.Mouse);
 
-				combo = this.CreateCombo(global, "MouseWheelAction", "Molette");
+				combo = this.CreateCombo(global, "MouseWheelAction", Res.Strings.Dialog.Settings.MouseWheel);
 				for ( int i=0 ; i<GlobalSettings.MouseWheelActionCount ; i++ )
 				{
 					Common.Document.Settings.MouseWheelAction action = GlobalSettings.MouseWheelActionType(i);
@@ -88,19 +88,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 				combo.SelectedIndex = GlobalSettings.MouseWheelActionRank(this.globalSettings.MouseWheelAction);
 
-				field = this.CreateField(global, "DefaultZoom", "Grossissement");
+				field = this.CreateField(global, "DefaultZoom", Res.Strings.Dialog.Settings.MouseZoom);
 				field.MinValue = 1.1M;
 				field.MaxValue = 4.0M;
 				field.Step = 0.1M;
 				field.Resolution = 0.1M;
 				field.Value = (decimal) this.globalSettings.DefaultZoom;
 
-				check = this.CreateCheck(global, "FineCursor", "Curseur précis");
+				check = this.CreateCheck(global, "FineCursor", Res.Strings.Dialog.Settings.FineCursor);
 				check.ActiveState = this.globalSettings.FineCursor ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 
-				Common.Document.Dialogs.CreateTitle(global, "Réglages de l'écran");
+				Common.Document.Dialogs.CreateTitle(global, Res.Strings.Dialog.Settings.Screen);
 
-				combo = this.CreateCombo(global, "Adorner", "Aspect de l'interface");
+				combo = this.CreateCombo(global, "Adorner", Res.Strings.Dialog.Settings.Adorner);
 				string[] list = Widgets.Adorner.Factory.AdornerNames;
 				int rank = 0;
 				foreach ( string name in list )
@@ -118,7 +118,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					rank++;
 				}
 
-				field = this.CreateField(global, "ScreenDpi", "Résolution (dpi)");
+				field = this.CreateField(global, "ScreenDpi", Res.Strings.Dialog.Settings.ScreenDpi);
 				field.MinValue = 30.0M;
 				field.MaxValue = 300.0M;
 				field.Step = 1.0M;
@@ -134,27 +134,27 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				TabPage bookFormat = new TabPage();
 				bookFormat.Name = "Format";
-				bookFormat.TabTitle = "Format";
+				bookFormat.TabTitle = Res.Strings.Dialog.Settings.TabPage.Format;
 				bookDoc.Items.Add(bookFormat);
 
 				TabPage bookGrid = new TabPage();
 				bookGrid.Name = "Grid";
-				bookGrid.TabTitle = "Grille";
+				bookGrid.TabTitle = Res.Strings.Dialog.Settings.TabPage.Grid;
 				bookDoc.Items.Add(bookGrid);
 
 				TabPage bookGuides = new TabPage();
 				bookGuides.Name = "Guides";
-				bookGuides.TabTitle = "Repères";
+				bookGuides.TabTitle = Res.Strings.Dialog.Settings.TabPage.Guides;
 				bookDoc.Items.Add(bookGuides);
 
 				TabPage bookMove = new TabPage();
 				bookMove.Name = "Move";
-				bookMove.TabTitle = "Déplacements";
+				bookMove.TabTitle = Res.Strings.Dialog.Settings.TabPage.Move;
 				bookDoc.Items.Add(bookMove);
 
 				TabPage bookMisc = new TabPage();
 				bookMisc.Name = "Misc";
-				bookMisc.TabTitle = "Divers";
+				bookMisc.TabTitle = Res.Strings.Dialog.Settings.TabPage.Misc;
 				bookDoc.Items.Add(bookMisc);
 
 				bookDoc.ActivePage = bookFormat;
@@ -162,14 +162,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				// Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.Width = 75;
-				buttonClose.Text = "Fermer";
+				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
 				buttonClose.AnchorMargins = new Margins(6, 0, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleSettingsButtonCloseClicked);
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonClose, "Fermer les réglages");
+				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 			}
 
 			if ( this.editor.IsCurrentDocument )

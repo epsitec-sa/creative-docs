@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!-- Ressources pour le projet App.DocumentEditor -->
 
 <bundle type="String">

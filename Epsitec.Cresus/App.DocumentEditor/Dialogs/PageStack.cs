@@ -27,7 +27,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("PageStack", 500, 300, true);
-				this.window.Text = "Structure de la page imprimée...";
+				this.window.Text = Res.Strings.Dialog.PageStack.Title;
 				this.window.Owner = this.editor.Window;
 				this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -44,15 +44,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				System.Text.StringBuilder b = new System.Text.StringBuilder();
 				string chip = "<list type=\"fix\" width=\"1.5\"/>";
 				b.Append(chip);
-				b.Append("La liste ci-dessous montre tous les calques qui seront imprimés pour la page sélectionnée.<br/>");
+				b.Append(Res.Strings.Dialog.PageStack.Help1);
+				b.Append("<br/>");
 				b.Append(chip);
-				b.Append("Le calque qui se trouve au-dessus de tous les autres apparaît en premier dans la liste, puis vient le calque situé juste en dessous, etc. Le dernier calque est le premier imprimé.<br/>");
+				b.Append(Res.Strings.Dialog.PageStack.Help2);
+				b.Append("<br/>");
 				b.Append(chip);
-				b.Append("Si la page sélectionnée inclut des pages modèles contenant un calque unique, leur calque vient s'ajouter en fin de liste; ainsi, les calques des pages modèles apparaissent normalement derrière tous les autres calques de la page sélectionnée.<br/>");
+				b.Append(Res.Strings.Dialog.PageStack.Help3);
+				b.Append("<br/>");
 				b.Append(chip);
-				b.Append("Lorsqu'une page modèle contient plusieurs calques, une moitié de ceux-ci apparaîtra sous les calques de la page sélectionnée, l'autre dessus.<br/>");
+				b.Append(Res.Strings.Dialog.PageStack.Help4);
+				b.Append("<br/>");
 				b.Append(chip);
-				b.Append("Une page modèle peut inclure elle-même d'autres pages modèles, dont les calques viendront se placer dessous, respectivement dessus.");
+				b.Append(Res.Strings.Dialog.PageStack.Help5);
 				this.help.Text = b.ToString();
 				this.help.SetVisible(true);
 
@@ -71,26 +75,26 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				double posx = 6;
 				Button buttonClose = new Button(this.window.Root);
 				buttonClose.Width = 75;
-				buttonClose.Text = "Fermer";
+				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
 				buttonClose.AnchorMargins = new Margins(posx, 0, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 				buttonClose.TabIndex = this.tabIndex++;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonClose, "Fermer ce dialogue");
+				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 
 				// Bouton d'aide.
 				posx += buttonClose.Width+6;
 				Button buttonHelp = new Button(this.window.Root);
 				buttonHelp.Width = 75;
-				buttonHelp.Text = "Aide";
+				buttonHelp.Text = Res.Strings.Dialog.Button.Help;
 				buttonHelp.Anchor = AnchorStyles.BottomLeft;
 				buttonHelp.AnchorMargins = new Margins(posx, 0, 0, 6);
 				buttonHelp.Clicked += new MessageEventHandler(this.HandleButtonHelpClicked);
 				buttonHelp.TabIndex = this.tabIndex++;
 				buttonHelp.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(buttonHelp, "Texte explicatif");
+				ToolTip.Default.SetToolTip(buttonHelp, Res.Strings.Dialog.Tooltip.Help);
 
 				double dim = buttonClose.Height;
 
@@ -104,7 +108,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.pagePrev.Clicked += new MessageEventHandler(this.HandlePagePrevClicked);
 				this.pagePrev.TabIndex = this.tabIndex++;
 				this.pagePrev.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(this.pagePrev, "Page précédente");
+				ToolTip.Default.SetToolTip(this.pagePrev, DocumentEditor.GetRes("Action.PagePrev"));
 
 				posx += pagePrev.Width+1;
 				this.pageMenu = new Button(this.window.Root);
@@ -115,7 +119,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.pageMenu.Clicked += new MessageEventHandler(this.HandlePageMenuClicked);
 				this.pageMenu.TabIndex = this.tabIndex++;
 				this.pageMenu.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(this.pageMenu, "Choix de la page");
+				ToolTip.Default.SetToolTip(this.pageMenu, DocumentEditor.GetRes("Action.PageMenu"));
 
 				posx += pageMenu.Width+1;
 				this.pageNext = new GlyphButton(this.window.Root);
@@ -127,19 +131,19 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.pageNext.Clicked += new MessageEventHandler(this.HandlePageNextClicked);
 				this.pageNext.TabIndex = this.tabIndex++;
 				this.pageNext.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(this.pageNext, "Page suivante");
+				ToolTip.Default.SetToolTip(this.pageNext, DocumentEditor.GetRes("Action.PageNext"));
 
 				// Bouton page courante.
 				posx += pageNext.Width+8;
 				this.buttonCurrent = new Button(this.window.Root);
 				this.buttonCurrent.Width = 100;
-				this.buttonCurrent.Text = "Page courante";
+				this.buttonCurrent.Text = Res.Strings.Dialog.PageStack.Button.Current;
 				this.buttonCurrent.Anchor = AnchorStyles.BottomLeft;
 				this.buttonCurrent.AnchorMargins = new Margins(posx, 0, 0, 6);
 				this.buttonCurrent.Clicked += new MessageEventHandler(this.HandleButtonCurrentClicked);
 				this.buttonCurrent.TabIndex = this.tabIndex++;
 				this.buttonCurrent.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(this.buttonCurrent, "Montre la page courante");
+				ToolTip.Default.SetToolTip(this.buttonCurrent, Res.Strings.Dialog.PageStack.Tooltip.Current);
 			}
 
 			this.showedPage = this.editor.CurrentDocument.Modifier.ActiveViewer.DrawingContext.CurrentPage;
@@ -200,9 +204,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.table.SetWidthColumn(4, 164);
 			}
 
-			this.table.SetHeaderTextH(0, "Page");
+			this.table.SetHeaderTextH(0, Res.Strings.Dialog.PageStack.Page);
 			this.table.SetHeaderTextH(1, "");
-			this.table.SetHeaderTextH(2, "Calque");
+			this.table.SetHeaderTextH(2, Res.Strings.Dialog.PageStack.Layer);
 			this.table.SetHeaderTextH(3, "");
 			this.table.SetHeaderTextH(4, "");
 

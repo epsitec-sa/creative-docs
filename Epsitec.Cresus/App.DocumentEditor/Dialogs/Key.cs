@@ -26,7 +26,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("Key", 275, 190);
-				this.window.Text = "Clé...";
+				this.window.Text = Res.Strings.Dialog.Key.Title;
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowKeyCloseClicked);
@@ -34,14 +34,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.tabIndex = 0;
 
 				StaticText label = new StaticText(this.window.Root);
-				label.Text = "Mode de fonctionnement :";
+				label.Text = Res.Strings.Dialog.Key.Label;
 				label.Dock = DockStyle.Top;
 				label.DockMargins = new Margins(10, 10, 10, 10);
 
 				this.radio1 = new RadioButton(this.window.Root);
 				this.radio1.Height = radio1.Height*1.2;
 				this.radio1.SetClientZoom(1.2);
-				this.radio1.Text = "Version démo";
+				this.radio1.Text = Res.Strings.Dialog.Key.RadioDemo;
 				this.radio1.Dock = DockStyle.Top;
 				this.radio1.DockMargins = new Margins(10, 10, 0, 0);
 				this.radio1.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);
@@ -51,7 +51,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.radio2 = new RadioButton(this.window.Root);
 				this.radio2.Height = radio2.Height*1.2;
 				this.radio2.SetClientZoom(1.2);
-				this.radio2.Text = "Version complète";
+				this.radio2.Text = Res.Strings.Dialog.Key.RadioFull;
 				this.radio2.Dock = DockStyle.Top;
 				this.radio2.DockMargins = new Margins(10, 10, 0, 0);
 				this.radio2.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);
@@ -59,7 +59,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.radio2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.keyLabel = new StaticText(this.window.Root);
-				this.keyLabel.Text = "Numéro de la clé :";
+				this.keyLabel.Text = Res.Strings.Dialog.Key.Number;
 				this.keyLabel.Dock = DockStyle.Top;
 				this.keyLabel.DockMargins = new Margins(10, 10, 20, 0);
 
@@ -118,7 +118,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				// Bouton OK.
 				this.buttonOK = new Button(this.window.Root);
 				this.buttonOK.Width = 75;
-				this.buttonOK.Text = "D'accord";
+				this.buttonOK.Text = Res.Strings.Dialog.Button.OK;
 				this.buttonOK.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonOK.Anchor = AnchorStyles.BottomLeft;
 				this.buttonOK.AnchorMargins = new Margins(10, 0, 0, 10);
@@ -129,7 +129,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				// Bouton annuler.
 				this.buttonCancel = new Button(this.window.Root);
 				this.buttonCancel.Width = 75;
-				this.buttonCancel.Text = "Annuler";
+				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
+				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Anchor = AnchorStyles.BottomLeft;
 				this.buttonCancel.AnchorMargins = new Margins(10+75+10, 0, 0, 10);
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleKeyButtonCancelClicked);
@@ -166,7 +167,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 					else
 					{
-						this.radio1.Text = "Version échue";
+						this.radio1.Text = Res.Strings.Dialog.Key.Expired;
 					}
 					this.demo = false;
 				}
