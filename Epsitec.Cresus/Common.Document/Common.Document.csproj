@@ -593,6 +593,10 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Resources\Document\Strings.en.resource"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "Settings\Abstract.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

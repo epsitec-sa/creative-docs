@@ -128,8 +128,12 @@ namespace Epsitec.Common.Tool.ResGenerator
 				for (int j = 0; j < fields.Length; j++)
 				{
 					string field = fields[j];
+					if (field.IndexOf ("Dialog.Print.PaperFormat.User") > -1)
+					{
+						System.Diagnostics.Debug.WriteLine ("Field found");
+					}
 					
-					while (field.StartsWith (prefix) == false)
+					while ((prefix != "") && (field.StartsWith (prefix + ".") == false))
 					{
 						//	Remonte d'un niveau dans la hiérarchie des classes.
 						

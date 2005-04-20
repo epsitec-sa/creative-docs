@@ -413,6 +413,7 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
+                <Folder RelPath = "Support\" />
                 <File
                     RelPath = "Tests\CheckInternalCursor.cs"
                     SubType = "Code"
