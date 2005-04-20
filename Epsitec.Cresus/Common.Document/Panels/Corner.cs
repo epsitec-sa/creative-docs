@@ -36,7 +36,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRadius.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldRadius.TabIndex = 2;
 			this.fieldRadius.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldRadius, "Rayon");
+			ToolTip.Default.SetToolTip(this.fieldRadius, Res.Strings.Panel.Corner.Tooltip.Radius);
 
 			this.fieldEffect1 = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldEffect1);
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldEffect1.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldEffect1.TabIndex = 3;
 			this.fieldEffect1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldEffect1, "Paramètre A");
+			ToolTip.Default.SetToolTip(this.fieldEffect1, Res.Strings.Panel.Corner.Tooltip.Effect1);
 
 			this.fieldEffect2 = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldEffect2);
@@ -58,18 +58,18 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldEffect2.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldEffect2.TabIndex = 4;
 			this.fieldEffect2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldEffect2, "Paramètre B");
+			ToolTip.Default.SetToolTip(this.fieldEffect2, Res.Strings.Panel.Corner.Tooltip.Effect2);
 
 			this.labelRadius = new StaticText(this);
-			this.labelRadius.Text = "R";
+			this.labelRadius.Text = Res.Strings.Panel.Corner.Label.Radius;
 			this.labelRadius.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelEffect1 = new StaticText(this);
-			this.labelEffect1.Text = "A";
+			this.labelEffect1.Text = Res.Strings.Panel.Corner.Label.Effect1;
 			this.labelEffect1.Alignment = ContentAlignment.MiddleRight;
 
 			this.labelEffect2 = new StaticText(this);
-			this.labelEffect2.Text = "B";
+			this.labelEffect2.Text = Res.Strings.Panel.Corner.Label.Effect2;
 			this.labelEffect2.Alignment = ContentAlignment.MiddleRight;
 
 			this.isNormalAndExtended = true;

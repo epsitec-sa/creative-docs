@@ -14,14 +14,13 @@ namespace Epsitec.Common.Document.Panels
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = ContentAlignment.MiddleLeft;
-			this.label.Text = "Nom du style";  // plantée dans font.cs avec ce texte !!!
-			//?this.label.Text = "Nom_du_style";
+			this.label.Text = Res.Strings.Panel.StyleName.Label.Name;
 
 			this.field = new TextField(this);
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.field, "Nom du style");
+			ToolTip.Default.SetToolTip(this.field, Res.Strings.Panel.StyleName.Tooltip.Name);
 		}
 		
 		protected override void Dispose(bool disposing)

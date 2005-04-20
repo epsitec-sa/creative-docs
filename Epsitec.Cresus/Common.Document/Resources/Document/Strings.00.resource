@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!-- Ressources pour le projet Common.Document -->
 
 <bundle type="String">
@@ -34,6 +34,7 @@
 	<data name="Dialog.Print.Range.From">Pages de</data>
 	<data name="Dialog.Print.Range.To">à</data>
 	<data name="Dialog.Print.Range.Current">Page courante</data>
+	<data name="Dialog.Print.Format.User">Personnalisé</data>
 	
 	<data name="Dialog.Export.Param">Paramètres pour l'image à exporter</data>
 	
@@ -65,7 +66,17 @@
 	<data name="Dialog.Double.PrintDebord">Débord</data>
 	<data name="Dialog.Double.ImageDpi">Résolution (dpi)</data>
 	<data name="Dialog.Double.ImageQuality">Qualité de l'image</data>
+	<data name="Dialog.Double.ImageQuality1">Qualité minimale, taille faible</data>
+	<data name="Dialog.Double.ImageQuality2">Basse qualité, taille faible</data>
+	<data name="Dialog.Double.ImageQuality3">Qualité moyenne, taille standard</data>
+	<data name="Dialog.Double.ImageQuality4">Bonne qualité, taille importante</data>
+	<data name="Dialog.Double.ImageQuality5">Qualité maximale, taille importante</data>
 	<data name="Dialog.Double.ImageAA">Anti-crénelage</data>
+	<data name="Dialog.Double.ImageAA1">Escaliers importants (tout ou rien)</data>
+	<data name="Dialog.Double.ImageAA2">Escaliers prononcés</data>
+	<data name="Dialog.Double.ImageAA3">Adoucissement moyen</data>
+	<data name="Dialog.Double.ImageAA4">Adoucissement important</data>
+	<data name="Dialog.Double.ImageAA5">Adoucissement maximal (standard)</data>
 	<data name="Dialog.Double.ArrowMoveMul">Multiplicateur si Shift</data>
 	<data name="Dialog.Double.ArrowMoveDiv">Diviseur si Ctrl</data>
 	<data name="Dialog.Double.ToLinePrecision">Précision</data>
@@ -120,16 +131,6 @@
 	<data name="Container.Guides.RadioPage">Page courante</data>
 	<data name="Container.Guides.Header.Type">Type</data>
 	<data name="Container.Guides.Header.Position">Position</data>
-	<data name="Container.Guides.Action.NewH">Nouveau repère horizontal</data>
-	<data name="Container.Guides.Action.NewV">Nouveau repère vertical</data>
-	<data name="Container.Guides.Action.Duplicate">Dupliquer le repère</data>
-	<data name="Container.Guides.Action.Xfer">Repère global &amp;lt;-&amp;gt; page courante</data>
-	<data name="Container.Guides.Action.Up">Repère avant</data>
-	<data name="Container.Guides.Action.Down">Repère après</data>
-	<data name="Container.Guides.Action.Delete">Supprimer le repère</data>
-	<data name="Container.Guides.Action.Select">Sélectionner un repère</data>
-	<data name="Container.Guides.Action.ChangeType">Changer le type d'un repère</data>
-	<data name="Container.Guides.Action.ChangePosition">Changer la position d'un repère</data>
 	<data name="Container.Guides.Undefined">&lt;i&gt;indéfini &lt;/i&gt;</data>
 
 	<data name="Container.Layers.Button.Magnet">Objets pour les constructions magnétiques</data>
@@ -145,18 +146,6 @@
 	<data name="Container.Layers.Button.PrintHide">Cacher</data>
 	<data name="Container.Layers.Header.Position">Position</data>
 	<data name="Container.Layers.Header.Name">Nom</data>
-	<data name="Container.Layers.Action.New">Nouveau calque &lt;b&gt;dessus&lt;/b&gt; le calque courant</data>
-	<data name="Container.Layers.Action.Duplicate">Dupliquer le calque</data>
-	<data name="Container.Layers.Action.NewSel">Sélection dans un nouveau calque</data>
-	<data name="Container.Layers.Action.MergeUp">Fusionne avec le calque dessus</data>
-	<data name="Container.Layers.Action.MergeDown">Fusionne avec le calque dessous</data>
-	<data name="Container.Layers.Action.Up">Calque dessus</data>
-	<data name="Container.Layers.Action.Down">Calque dessous</data>
-	<data name="Container.Layers.Action.Delete">Supprimer le calque</data>
-	<data name="Container.Layers.Action.ChangeShowOne">Changer la visibilité du calque</data>
-	<data name="Container.Layers.Action.ChangeShowAll">Changer la visibilité des calques</data>
-	<data name="Container.Layers.Action.ChangePrint">Changer le mode d'impression du calque</data>
-	<data name="Container.Layers.Action.ChangeMagnet">Changer l'état du calque</data>
 
 	<data name="Container.Pages.Button.Slave">Page normale</data>
 	<data name="Container.Pages.Button.Master">Page modèle</data>
@@ -175,37 +164,26 @@
 	<data name="Container.Pages.Button.MasterSpecific">Inclure cette page modèle</data>
 	<data name="Container.Pages.Header.Number">N°</data>
 	<data name="Container.Pages.Header.Name">Nom</data>
-	<data name="Container.Pages.Action.New">Nouvelle page &lt;b&gt;après&lt;/b&gt; la page courante</data>
-	<data name="Container.Pages.Action.Duplicate">Dupliquer la page</data>
-	<data name="Container.Pages.Action.Up">Page avant</data>
-	<data name="Container.Pages.Action.Down">Page après</data>
-	<data name="Container.Pages.Action.Delete">Supprimer la page</data>
-	<data name="Container.Pages.Action.Change">Changer l'état de la page</data>
 
 	<data name="Container.Principal.Button.Detail">Détails</data>
-	<data name="Container.Principal.Action.Auto">Sélection automatique</data>
-	<data name="Container.Principal.Action.Individual">Sélectionne les objets individuellement</data>
-	<data name="Container.Principal.Action.Zoom">Déplacement, agrandissement et rotation</data>
-	<data name="Container.Principal.Action.Stretch">Déformation</data>
-	<data name="Container.Principal.Action.StretchType">Type de déformation</data>
-	<data name="Container.Principal.Action.Total">Sélection totale requise</data>
-	<data name="Container.Principal.Action.Partial">Sélection partielle autorisée</data>
-	<data name="Container.Principal.Action.AdaptLine">Adapte les traits</data>
-	<data name="Container.Principal.Action.AdaptText">Adapte les textes</data>
-	<data name="Container.Principal.Action.SelName">Nom de l'objet à sélectionner</data>
-	<data name="Container.Principal.Action.SelGo">Sélectionner</data>
-	<data name="Container.Principal.Action.SelGoHelp">Sélectionne l'objet selon le nom</data>
+	<data name="Container.Principal.Button.Auto">Sélection automatique</data>
+	<data name="Container.Principal.Button.Individual">Sélectionne les objets individuellement</data>
+	<data name="Container.Principal.Button.Zoom">Déplacement, agrandissement et rotation</data>
+	<data name="Container.Principal.Button.Stretch">Déformation</data>
+	<data name="Container.Principal.Button.StretchType">Type de déformation</data>
+	<data name="Container.Principal.Button.Total">Sélection totale requise</data>
+	<data name="Container.Principal.Button.Partial">Sélection partielle autorisée</data>
+	<data name="Container.Principal.Button.AdaptLine">Adapte les traits</data>
+	<data name="Container.Principal.Button.AdaptText">Adapte les textes</data>
+	<data name="Container.Principal.Button.SelName">Nom de l'objet à sélectionner</data>
+	<data name="Container.Principal.Button.SelGo">Sélectionner</data>
+	<data name="Container.Principal.Button.SelGoHelp">Sélectionne l'objet selon le nom</data>
 	<data name="Container.Principal.Menu.Stretch.Free">Déformation libre</data>
 	<data name="Container.Principal.Menu.Stretch.TrapezeH">Déformation en trapèze horizontal</data>
 	<data name="Container.Principal.Menu.Stretch.TrapezeV">Déformation en trapèze vertical</data>
 	<data name="Container.Principal.Menu.Stretch.ParallelH">Déformation en parallélogramme horizontal</data>
 	<data name="Container.Principal.Menu.Stretch.ParallelV">Déformation en parallélogramme vertical</data>
 
-	<data name="Container.Styles.Action.New">Nouveau style</data>
-	<data name="Container.Styles.Action.Duplicate">Dupliquer le style</data>
-	<data name="Container.Styles.Action.Up">Style plus haut</data>
-	<data name="Container.Styles.Action.Down">Style plus bas</data>
-	<data name="Container.Styles.Action.Delete">Supprimer le style</data>
 	<data name="Container.Styles.Header.Type">Type</data>
 	<data name="Container.Styles.Header.Name">Nom</data>
 	<data name="Container.Styles.Header.Total">Nb</data>
@@ -232,7 +210,7 @@
 	<data name="Tool.Image">Image bitmap</data>
 	<data name="Tool.Dimension">Cote</data>
 
-	<data name="Object.Abstract.InfoLine">lg={0} a={1}°</data>
+	<data name="Object.Abstract.InfoLine">lg={0} a={1}</data>
 	<data name="Object.Abstract.InfoRectangle">dx={0} dy={1}</data>
 	<data name="Object.Abstract.InfoCircle">r={0}</data>
 
@@ -264,7 +242,6 @@
 
 	<data name="Panel.Abstract.Extend">Etend ou réduit le panneau</data>
 	<data name="Panel.Abstract.Styles">Styles</data>
-	<data name="Panel.Action.Change">Changement de l'attribut &quot;{0}&quot;</data>
 
 	<data name="Panel.Arc.Tooltip.Full">Complet</data>
 	<data name="Panel.Arc.Tooltip.Open">Arc ouvert</data>
@@ -451,7 +428,6 @@
 	<data name="Panel.Surface.Label.Reset">R</data>
 	<data name="Panel.Surface.Tooltip.Type">Type de la surface 3D</data>
 	<data name="Panel.Surface.Tooltip.Reset">Reset (valeurs standards)</data>
-	<data name="Panel.Surface.Action.Reset">Réinitialisation de la surface</data>
 
 	<data name="Panel.TextLine.Tooltip.JustifHLeft">Justification à gauche</data>
 	<data name="Panel.TextLine.Tooltip.JustifHCenter">Justification centrée</data>
@@ -589,22 +565,54 @@
 	<data name="Action.OrderDownAll">Arrière-plan</data>
 	
 	<data name="Action.OperationMain">Opération</data>
+	<data name="Action.MoveMain">Déplacament</data>
+	<data name="Action.MoveValueX">Valeur du déplacement horizontal</data>
+	<data name="Action.MoveValueY">Valeur du déplacement vertical</data>
+	<data name="Action.MoveLeft">Déplacament à gauche</data>
+	<data name="Action.MoveRight">Déplacament à droite</data>
+	<data name="Action.MoveDown">Déplacament en bas</data>
+	<data name="Action.MoveUp">Déplacament en haut</data>
+	<data name="Action.Move">Déplacement {0};{1}</data>
+	<data name="Action.RotateMain">Rotation</data>
 	<data name="Action.Rotate90">Quart de tour à gauche</data>
 	<data name="Action.Rotate180">Demi-tour</data>
 	<data name="Action.Rotate270">Quart de tour à droite</data>
-	<data name="Action.ZoomMul2">Agrandissement ×2</data>
-	<data name="Action.ZoomDiv2">Réduction ÷2</data>
-	<data name="Action.Move">Déplacement {0};{1}</data>
+	<data name="Action.RotateValue">Angle de rotation en degrés</data>
+	<data name="Action.RotateFreeCCW">Rotation anti-horaire</data>
+	<data name="Action.RotateFreeCW">Rotation horaire</data>
 	<data name="Action.Rotate">Rotation {0}</data>
+	<data name="Action.MirrorMain">Miroir</data>
 	<data name="Action.MirrorH">Miroir horizontal</data>
 	<data name="Action.MirrorV">Miroir vertical</data>
+	<data name="Action.ZoomMain">Réduction et agrandissement</data>
+	<data name="Action.ZoomMul2">Agrandissement ×2</data>
+	<data name="Action.ZoomDiv2">Réduction ÷2</data>
+	<data name="Action.ZoomValue">Facteur d'agrandissement/réduction</data>
+	<data name="Action.ZoomFreeP">Agrandissement</data>
+	<data name="Action.ZoomFreeM">Réduction</data>
 	<data name="Action.ZoomP">Agrandissement {0}%</data>
 	<data name="Action.ZoomM">Réduction {0}%</data>
-	<data name="Action.GridAlign">Alignement sur la grille</data>
 	<data name="Action.Align">Alignement</data>
+	<data name="Action.AlignGrid">Alignement sur la grille magnétique</data>
+	<data name="Action.AlignLeft">Alignement à gauche</data>
+	<data name="Action.AlignCenterX">Alignement centré horizontalement</data>
+	<data name="Action.AlignRight">Alignement à droite</data>
+	<data name="Action.AlignTop">Alignement en haut</data>
+	<data name="Action.AlignCenterY">Alignement centré verticalement</data>
+	<data name="Action.AlignBottom">Alignement en bas</data>
 	<data name="Action.Share">Distribution</data>
-	<data name="Action.Space">Distribution espacée</data>
+	<data name="Action.ShareSpaceX">Distribution espacée horizontalement</data>
+	<data name="Action.ShareLeft">Distribution sur la gauche</data>
+	<data name="Action.ShareCenterX">Distribution centrée horizontalement</data>
+	<data name="Action.ShareRight">Distribution sur la droite</data>
+	<data name="Action.ShareSpaceY">Distribution espacée verticalement</data>
+	<data name="Action.ShareTop">Distribution sur le haut</data>
+	<data name="Action.ShareCenterY">Distribution centrée verticalement</data>
+	<data name="Action.ShareBottom">Distribution sur le bas</data>
+	<data name="Action.ShareSpace">Distribution espacée</data>
 	<data name="Action.Adjust">Ajustement</data>
+	<data name="Action.AdjustWidth">Largeurs identiques</data>
+	<data name="Action.AdjustHeight">Hauteurs identiques</data>
 	
 	<data name="Action.GroupMain">Groupe</data>
 	<data name="Action.Merge">Fusionner dans le groupe</data>
@@ -635,6 +643,7 @@
 	
 	<data name="Action.PageChange">Changer de page</data>
 	<data name="Action.PageNew">Nouvelle page</data>
+	<data name="Action.PageNewLong">Nouvelle page &lt;b&gt;après&lt;/b&gt; la page courante</data>
 	<data name="Action.PageDuplicate">Dupliquer la page</data>
 	<data name="Action.PageDelete">Supprimer la page</data>
 	<data name="Action.PageSwap">Permuter deux pages</data>
@@ -645,13 +654,17 @@
 	<data name="Action.PagePrev">Page précédente</data>
 	<data name="Action.PageMenu">Choix d'une page</data>
 	<data name="Action.PageNext">Page suivante</data>
+	<data name="Action.PageChange">Changer l'état de la page</data>
 	
 	<data name="Action.LayerChange">Changer de calque</data>
 	<data name="Action.LayerNew">Nouveau calque</data>
+	<data name="Action.LayerNewLong">Nouveau calque &lt;b&gt;dessus&lt;/b&gt; le calque courant</data>
 	<data name="Action.LayerNewSel">Sélection dans un nouveau calque</data>
 	<data name="Action.LayerDuplicate">Dupliquer le calque</data>
 	<data name="Action.LayerDelete">Supprimer le calque</data>
 	<data name="Action.LayerMerge">Fusionner les calques</data>
+	<data name="Action.LayerMergeUp">Fusionne avec le calque dessus</data>
+	<data name="Action.LayerMergeDown">Fusionne avec le calque dessous</data>
 	<data name="Action.LayerSwap">Permuter deux calques</data>
 	<data name="Action.LayerName">Renommer le calque</data>
 	<data name="Action.LayerUp">Monter le calque</data>
@@ -659,14 +672,33 @@
 	<data name="Action.LayerNext">Calque suivant</data>
 	<data name="Action.LayerMenu">Choix d'un calque</data>
 	<data name="Action.LayerPrev">Calque précédent</data>
+	<data name="Action.LayerChangeShowOne">Changer la visibilité du calque</data>
+	<data name="Action.LayerChangeShowAll">Changer la visibilité des calques</data>
+	<data name="Action.LayerChangePrint">Changer le mode d'impression du calque</data>
+	<data name="Action.LayerChangeMagnet">Changer l'état du calque</data>
 	
-	<data name="Action.StyleMake">Nouveau style</data>
+	<data name="Action.StyleNew">Nouveau style</data>
 	<data name="Action.StyleFree">Libérer un style</data>
 	<data name="Action.StyleUse">Utiliser un style</data>
 	<data name="Action.StyleCreate">Créer un style</data>
 	<data name="Action.StyleDuplicate">Dupliquer un style</data>
+	<data name="Action.StyleUp">Style plus haut</data>
+	<data name="Action.StyleDown">Style plus bas</data>
 	<data name="Action.StyleDelete">Supprimer un style</data>
 	<data name="Action.StyleSwap">Permuter deux styles</data>
+	
+	<data name="Action.GuideNewH">Nouveau repère horizontal</data>
+	<data name="Action.GuideNewV">Nouveau repère vertical</data>
+	<data name="Action.GuideDuplicate">Dupliquer le repère</data>
+	<data name="Action.GuideXfer">Repère global &amp;lt;-&amp;gt; page courante</data>
+	<data name="Action.GuideUp">Repère avant</data>
+	<data name="Action.GuideDown">Repère après</data>
+	<data name="Action.GuideDelete">Supprimer le repère</data>
+	<data name="Action.GuideSelect">Sélectionner un repère</data>
+	<data name="Action.GuideChangeType">Changer le type d'un repère</data>
+	<data name="Action.GuideChangePosition">Changer la position d'un repère</data>
+
+	<data name="Action.PropertyChange">Changement de l'attribut &quot;{0}&quot;</data>
 	<data name="Action.PickerProperty">Style selon la pipette</data>
 	<data name="Action.ObjectCreate">Création d'un objet &quot;{0}&quot;</data>
 	<data name="Action.Select">Sélection</data>
@@ -685,6 +717,7 @@
 	<data name="Action.Picker">Pipette</data>
 	<data name="Action.SelectMode">Mode de sélection</data>
 	<data name="Action.StretchType">Type de déformation</data>
+	<data name="Action.SurfaceReset">Réinitialisation de la surface</data>
 	
 	<data name="Action.ZoomMin">Zoom minimal</data>
 	<data name="Action.ZoomPage">Zoom pleine page</data>
@@ -721,6 +754,13 @@
 	<data name="Menu.Zoom.Current">actuel</data>
 	<data name="Style.Name">Style {0}</data>
 	
+	<data name="Page.ShortName.Default">{0}</data>
+	<data name="Page.ShortName.Model">M{0}</data>
+	<data name="Layer.PositionName.Unique">Unique</data>
+	<data name="Layer.PositionName.Front">Dessus</data>
+	<data name="Layer.PositionName.Middle">Fond+{0}</data>
+	<data name="Layer.PositionName.Back">Fond</data>
+
 	<data name="Error.BadFile">Type de fichier incorrect.</data>
 	<data name="Error.BadImage">Format d'image inconnu.</data>
 	<data name="Error.NoBitmap">Pas de bitmap.</data>

@@ -54,8 +54,8 @@ namespace Epsitec.Common.Document
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
-			ZoomMenu.Add(list, zoomPage, "pleine page");
-			ZoomMenu.Add(list, currentZoom, "actuel");
+			ZoomMenu.Add(list, zoomPage, Res.Strings.Menu.Zoom.Page);
+			ZoomMenu.Add(list, currentZoom, Res.Strings.Menu.Zoom.Current);
 
 			ZoomMenu.Add(list,   10);
 			ZoomMenu.Add(list,   20);
@@ -93,10 +93,10 @@ namespace Epsitec.Common.Document
 
 				string name = zm.text;
 
-				string icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
+				string icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
 				if ( zm.Equal(currentZoom) )
 				{
-					icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
+					icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
 					name = Misc.Bold(name);
 				}
 

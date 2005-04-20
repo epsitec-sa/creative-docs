@@ -271,30 +271,30 @@ namespace Epsitec.Common.Document.Properties
 		{
 			switch ( type )
 			{
-				case Type.Name:           return "Nom";
-				case Type.LineColor:      return "Couleur trait";
-				case Type.LineMode:       return "Epaisseur trait";
-				case Type.LineDimension:  return "Epaisseur supports";
-				case Type.FillGradient:   return "Couleur intérieure";
-				case Type.FillGradientVT: return "Couleur couvercle";
-				case Type.FillGradientVL: return "Couleur flanc gauche";
-				case Type.FillGradientVR: return "Couleur flanc droit";
-				case Type.Shadow:         return "Ombre";
-				case Type.PolyClose:      return "Contour fermé";
-				case Type.Arrow:          return "Extrémités";
-				case Type.DimensionArrow: return "Extrém. cote";
-				case Type.Dimension:      return "Cote";
-				case Type.Corner:         return "Coins";
-				case Type.Regular:        return "Nombre de côtés";
-				case Type.Arc:            return "Arc";
-				case Type.Surface:        return "Surface 2d";
-				case Type.Volume:         return "Volume 3d";
-				case Type.BackColor:      return "Couleur fond";
-				case Type.TextFont:       return "Police";
-				case Type.TextJustif:     return "Mise en page";
-				case Type.TextLine:       return "Position texte";
-				case Type.Image:          return "Image";
-				case Type.ModColor:       return "Couleur calque";
+				case Type.Name:           return Res.Strings.Property.Abstract.Name;
+				case Type.LineColor:      return Res.Strings.Property.Abstract.LineColor;
+				case Type.LineMode:       return Res.Strings.Property.Abstract.LineMode;
+				case Type.LineDimension:  return Res.Strings.Property.Abstract.LineDimension;
+				case Type.FillGradient:   return Res.Strings.Property.Abstract.FillGradient;
+				case Type.FillGradientVT: return Res.Strings.Property.Abstract.FillGradientVT;
+				case Type.FillGradientVL: return Res.Strings.Property.Abstract.FillGradientVL;
+				case Type.FillGradientVR: return Res.Strings.Property.Abstract.FillGradientVR;
+				case Type.Shadow:         return Res.Strings.Property.Abstract.Shadow;
+				case Type.PolyClose:      return Res.Strings.Property.Abstract.PolyClose;
+				case Type.Arrow:          return Res.Strings.Property.Abstract.Arrow;
+				case Type.DimensionArrow: return Res.Strings.Property.Abstract.DimensionArrow;
+				case Type.Dimension:      return Res.Strings.Property.Abstract.Dimension;
+				case Type.Corner:         return Res.Strings.Property.Abstract.Corner;
+				case Type.Regular:        return Res.Strings.Property.Abstract.Regular;
+				case Type.Arc:            return Res.Strings.Property.Abstract.Arc;
+				case Type.Surface:        return Res.Strings.Property.Abstract.Surface;
+				case Type.Volume:         return Res.Strings.Property.Abstract.Volume;
+				case Type.BackColor:      return Res.Strings.Property.Abstract.BackColor;
+				case Type.TextFont:       return Res.Strings.Property.Abstract.TextFont;
+				case Type.TextJustif:     return Res.Strings.Property.Abstract.TextJustif;
+				case Type.TextLine:       return Res.Strings.Property.Abstract.TextLine;
+				case Type.Image:          return Res.Strings.Property.Abstract.Image;
+				case Type.ModColor:       return Res.Strings.Property.Abstract.ModColor;
 			}
 			return "";
 		}
@@ -306,7 +306,7 @@ namespace Epsitec.Common.Document.Properties
 			{
 				if ( this.isStyle )
 				{
-					return string.Format("<b>{0}</b>", this.styleName);
+					return Misc.Bold(this.styleName);
 				}
 				else
 				{

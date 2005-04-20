@@ -29,7 +29,7 @@ namespace Epsitec.Common.Document
 
 			if ( filename == "" )
 			{
-				name += "<i>sans titre</i>";
+				name += Res.Strings.Misc.NoTitle;
 			}
 			else
 			{
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Document
 
 			if ( filename == "" )
 			{
-				name += "<i>sans titre</i>";
+				name += Res.Strings.Misc.NoTitle;
 			}
 			else
 			{
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Document
 		// "Copie (2) de Bidon" ->  "Copie (3) de Bidon"
 		static public string CopyName(string name)
 		{
-			return Misc.CopyName(name, "Copie", "de");
+			return Misc.CopyName(name, Res.Strings.Misc.Copy, Res.Strings.Misc.CopyOf);
 		}
 
 		// Retourne la copie d'un nom.

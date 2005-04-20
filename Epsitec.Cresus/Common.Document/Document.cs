@@ -246,7 +246,7 @@ namespace Epsitec.Common.Document
 				{
 					if ( this.modifier != null && this.notifier != null )
 					{
-						this.modifier.OpletQueueBeginAction("Taille du document", "ChangeDocSize");
+						this.modifier.OpletQueueBeginAction(Res.Strings.Action.DocumentSize, "ChangeDocSize");
 						this.modifier.InsertOpletSize();
 						this.size = value;
 						this.IsDirtySerialize = true;
@@ -422,7 +422,7 @@ namespace Epsitec.Common.Document
 			IOType type = Document.ReadIdentifier(stream);
 			if ( type == IOType.Unknow )
 			{
-				return "Type de fichier incorrect.";
+				return Res.Strings.Error.BadFile;
 			}
 
 			// Initialise la variable statique utilisée par VersionDeserializationBinder.
@@ -1430,6 +1430,15 @@ namespace Epsitec.Common.Document
 			protected int				parent;
 		}
 		#endregion
+
+		#region Ressources
+		// Retourne une ressource string d'après son nom.
+		public static string GetRes(string name)
+		{
+			return Res.Strings.GetString(name);
+		}
+		#endregion
+
 
 
 		protected DocumentType					type;

@@ -178,23 +178,23 @@ namespace Epsitec.Common.Document.Properties
 			string name = "";
 			switch ( type )
 			{
-				case SurfaceType.ParallelT:  name = "Parallélogramme 1";  break;
-				case SurfaceType.ParallelB:  name = "Parallélogramme 2";  break;
-				case SurfaceType.ParallelL:  name = "Parallélogramme 3";  break;
-				case SurfaceType.ParallelR:  name = "Parallélogramme 4";  break;
-				case SurfaceType.TrapezeT:   name = "Trapèze 1";          break;
-				case SurfaceType.TrapezeB:   name = "Trapèze 2";          break;
-				case SurfaceType.TrapezeL:   name = "Trapèze 3";          break;
-				case SurfaceType.TrapezeR:   name = "Trapèze 4";          break;
-				case SurfaceType.QuadriL:    name = "Losange";            break;
-				case SurfaceType.QuadriP:    name = "Paral. incliné";     break;
-				case SurfaceType.QuadriC:    name = "Cerf-volant";        break;
-				case SurfaceType.QuadriX:    name = "Quadrilatère";       break;
-				case SurfaceType.Grid:       name = "Grille";             break;
-				case SurfaceType.Pattern:    name = "Damier";             break;
-				case SurfaceType.Ring:       name = "Anneau";             break;
-				case SurfaceType.SpiralCW:   name = "Spirale 1";          break;
-				case SurfaceType.SpiralCCW:  name = "Spirale 2";          break;
+				case SurfaceType.ParallelT:  name = Res.Strings.Property.Surface.ParallelT;  break;
+				case SurfaceType.ParallelB:  name = Res.Strings.Property.Surface.ParallelB;  break;
+				case SurfaceType.ParallelL:  name = Res.Strings.Property.Surface.ParallelL;  break;
+				case SurfaceType.ParallelR:  name = Res.Strings.Property.Surface.ParallelR;  break;
+				case SurfaceType.TrapezeT:   name = Res.Strings.Property.Surface.TrapezeT;   break;
+				case SurfaceType.TrapezeB:   name = Res.Strings.Property.Surface.TrapezeB;   break;
+				case SurfaceType.TrapezeL:   name = Res.Strings.Property.Surface.TrapezeL;   break;
+				case SurfaceType.TrapezeR:   name = Res.Strings.Property.Surface.TrapezeR;   break;
+				case SurfaceType.QuadriL:    name = Res.Strings.Property.Surface.QuadriL;    break;
+				case SurfaceType.QuadriP:    name = Res.Strings.Property.Surface.QuadriP;    break;
+				case SurfaceType.QuadriC:    name = Res.Strings.Property.Surface.QuadriC;    break;
+				case SurfaceType.QuadriX:    name = Res.Strings.Property.Surface.QuadriX;    break;
+				case SurfaceType.Grid:       name = Res.Strings.Property.Surface.Grid;       break;
+				case SurfaceType.Pattern:    name = Res.Strings.Property.Surface.Pattern;    break;
+				case SurfaceType.Ring:       name = Res.Strings.Property.Surface.Ring;       break;
+				case SurfaceType.SpiralCW:   name = Res.Strings.Property.Surface.SpiralCW;   break;
+				case SurfaceType.SpiralCCW:  name = Res.Strings.Property.Surface.SpiralCCW;  break;
 			}
 			return name;
 		}

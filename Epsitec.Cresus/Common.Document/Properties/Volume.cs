@@ -155,10 +155,10 @@ namespace Epsitec.Common.Document.Properties
 			string name = "";
 			switch ( type )
 			{
-				case VolumeType.BoxClose:  name = "Boîte fermée";   break;
-				case VolumeType.BoxOpen:   name = "Boîte ouverte";  break;
-				case VolumeType.Pyramid:   name = "Pyramide";       break;
-				case VolumeType.Cylinder:  name = "Cylindre";       break;
+				case VolumeType.BoxClose:  name = Res.Strings.Property.Volume.BoxClose;  break;
+				case VolumeType.BoxOpen:   name = Res.Strings.Property.Volume.BoxOpen;   break;
+				case VolumeType.Pyramid:   name = Res.Strings.Property.Volume.Pyramid;   break;
+				case VolumeType.Cylinder:  name = Res.Strings.Property.Volume.Cylinder;  break;
 			}
 			return name;
 		}

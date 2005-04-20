@@ -327,16 +327,16 @@ namespace Epsitec.Common.Document.Properties
 			string name = "";
 			switch ( type )
 			{
-				case ArrowType.Right:          name = "Rien";              break;
-				case ArrowType.ArrowSimply:    name = "Flèche simple";     break;
-				case ArrowType.ArrowFantasy1:  name = "Flèche fantaisie";  break;
-				case ArrowType.ArrowCurve1:    name = "Flèche courbe 1";   break;
-				case ArrowType.ArrowCurve2:    name = "Flèche courbe 2";   break;
-				case ArrowType.ArrowOutline:   name = "Flèche filaire";    break;
-				case ArrowType.Slash:          name = "Barre oblique";     break;
-				case ArrowType.Dot:            name = "Point";             break;
-				case ArrowType.Square:         name = "Carré";             break;
-				case ArrowType.Diamond:        name = "Losange";           break;
+				case ArrowType.Right:          name = Res.Strings.Property.Arrow.Right;          break;
+				case ArrowType.ArrowSimply:    name = Res.Strings.Property.Arrow.ArrowSimply;    break;
+				case ArrowType.ArrowFantasy1:  name = Res.Strings.Property.Arrow.ArrowFantasy1;  break;
+				case ArrowType.ArrowCurve1:    name = Res.Strings.Property.Arrow.ArrowCurve1;    break;
+				case ArrowType.ArrowCurve2:    name = Res.Strings.Property.Arrow.ArrowCurve1;    break;
+				case ArrowType.ArrowOutline:   name = Res.Strings.Property.Arrow.ArrowOutline;   break;
+				case ArrowType.Slash:          name = Res.Strings.Property.Arrow.Slash;          break;
+				case ArrowType.Dot:            name = Res.Strings.Property.Arrow.Dot;            break;
+				case ArrowType.Square:         name = Res.Strings.Property.Arrow.Square;         break;
+				case ArrowType.Diamond:        name = Res.Strings.Property.Arrow.Diamond;        break;
 			}
 			return name;
 		}
@@ -547,11 +547,12 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le chemin à l'extrémité p1, et retourne pp1, le remplaçant de p1.
 		public Point PathExtremity(Path path, int extremity,
 								   double width, CapStyle cap,
-								   Point p1, Point p2,
+								   Point p1, Point p2, bool simplify,
 								   out bool outline, out bool surface)
 		{
 			outline = false;
 			surface = false;
+			if ( simplify )  return p1;
 			if ( this.arrowType[extremity] == ArrowType.Right )  return p1;
 			if ( System.Math.Abs(this.length[extremity]) < 0.0001 )  return p1;
 

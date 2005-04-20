@@ -14,19 +14,19 @@ namespace Epsitec.Common.Document.Panels
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = ContentAlignment.MiddleLeft;
-			this.label.Text = "Transformation de couleur :";
+			this.label.Text = Res.Strings.Panel.ModColor.Label.Title;
 
 			this.labelArray = new StaticText[7];
 			for ( int i=0 ; i<7 ; i++ )
 			{
 				this.labelArray[i] = new StaticText(this);
-				if ( i == 0 )  this.labelArray[i].Text = "T";
-				if ( i == 1 )  this.labelArray[i].Text = "S";
-				if ( i == 2 )  this.labelArray[i].Text = "L";
-				if ( i == 3 )  this.labelArray[i].Text = "R";
-				if ( i == 4 )  this.labelArray[i].Text = "V";
-				if ( i == 5 )  this.labelArray[i].Text = "B";
-				if ( i == 6 )  this.labelArray[i].Text = "A";
+				if ( i == 0 )  this.labelArray[i].Text = Res.Strings.Panel.ModColor.Label.H;
+				if ( i == 1 )  this.labelArray[i].Text = Res.Strings.Panel.ModColor.Label.S;
+				if ( i == 2 )  this.labelArray[i].Text = Res.Strings.Panel.ModColor.Label.V;
+				if ( i == 3 )  this.labelArray[i].Text = Res.Strings.Panel.ModColor.Label.R;
+				if ( i == 4 )  this.labelArray[i].Text = Res.Strings.Panel.ModColor.Label.G;
+				if ( i == 5 )  this.labelArray[i].Text = Res.Strings.Panel.ModColor.Label.B;
+				if ( i == 6 )  this.labelArray[i].Text = Res.Strings.Panel.ModColor.Label.A;
 				this.labelArray[i].Alignment = ContentAlignment.MiddleCenter;
 			}
 
@@ -59,34 +59,34 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldArray[4].Color = Drawing.Color.FromRGB(0,1,0);
 			this.fieldArray[5].Color = Drawing.Color.FromRGB(0,0,1);
 			this.fieldArray[6].Color = Drawing.Color.FromRGB(0.5,0.5,0.5);
-			ToolTip.Default.SetToolTip(this.fieldArray[0], "Teinte");
-			ToolTip.Default.SetToolTip(this.fieldArray[1], "Saturation");
-			ToolTip.Default.SetToolTip(this.fieldArray[2], "Luminosité");
-			ToolTip.Default.SetToolTip(this.fieldArray[3], "Rouge");
-			ToolTip.Default.SetToolTip(this.fieldArray[4], "Vert");
-			ToolTip.Default.SetToolTip(this.fieldArray[5], "Bleu");
-			ToolTip.Default.SetToolTip(this.fieldArray[6], "Alpha (transparence)");
+			ToolTip.Default.SetToolTip(this.fieldArray[0], Res.Strings.Panel.ModColor.Tooltip.H);
+			ToolTip.Default.SetToolTip(this.fieldArray[1], Res.Strings.Panel.ModColor.Tooltip.S);
+			ToolTip.Default.SetToolTip(this.fieldArray[2], Res.Strings.Panel.ModColor.Tooltip.V);
+			ToolTip.Default.SetToolTip(this.fieldArray[3], Res.Strings.Panel.ModColor.Tooltip.R);
+			ToolTip.Default.SetToolTip(this.fieldArray[4], Res.Strings.Panel.ModColor.Tooltip.G);
+			ToolTip.Default.SetToolTip(this.fieldArray[5], Res.Strings.Panel.ModColor.Tooltip.B);
+			ToolTip.Default.SetToolTip(this.fieldArray[6], Res.Strings.Panel.ModColor.Tooltip.A);
 
 			this.negativ = new CheckButton(this);
-			this.negativ.Text = "Négatif";
+			this.negativ.Text = Res.Strings.Panel.ModColor.Label.Negativ;
 			this.negativ.TabIndex = 10;
 			this.negativ.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.negativ.ActiveStateChanged += new EventHandler(this.HandleNegativChanged);
-			ToolTip.Default.SetToolTip(this.negativ, "Couleurs inversées");
+			ToolTip.Default.SetToolTip(this.negativ, Res.Strings.Panel.ModColor.Tooltip.Negativ);
 
 			this.draft = new Button(this);
-			this.draft.Text = "C";
+			this.draft.Text = Res.Strings.Panel.ModColor.Label.Draft;
 			this.draft.TabIndex = 11;
 			this.draft.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.draft.Clicked += new MessageEventHandler(this.HandleDraft);
-			ToolTip.Default.SetToolTip(this.draft, "Traits de construction");
+			ToolTip.Default.SetToolTip(this.draft, Res.Strings.Panel.ModColor.Tooltip.Draft);
 
 			this.reset = new Button(this);
-			this.reset.Text = "R";
+			this.reset.Text = Res.Strings.Panel.ModColor.Label.Reset;
 			this.reset.TabIndex = 12;
 			this.reset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.reset.Clicked += new MessageEventHandler(this.HandleReset);
-			ToolTip.Default.SetToolTip(this.reset, "Reset (valeurs standards)");
+			ToolTip.Default.SetToolTip(this.reset, Res.Strings.Panel.ModColor.Tooltip.Reset);
 
 			this.isNormalAndExtended = true;
 		}

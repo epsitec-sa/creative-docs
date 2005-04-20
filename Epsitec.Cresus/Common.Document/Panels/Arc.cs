@@ -28,31 +28,31 @@ namespace Epsitec.Common.Document.Panels
 			this.buttons[1].IconName = "manifest:Epsitec.App.DocumentEditor.Images.ArcOpen.icon";
 			this.buttons[2].IconName = "manifest:Epsitec.App.DocumentEditor.Images.ArcClose.icon";
 			this.buttons[3].IconName = "manifest:Epsitec.App.DocumentEditor.Images.ArcPie.icon";
-			ToolTip.Default.SetToolTip(this.buttons[0], "Ellipse complète");
-			ToolTip.Default.SetToolTip(this.buttons[1], "Arc ouvert");
-			ToolTip.Default.SetToolTip(this.buttons[2], "Arc fermé");
-			ToolTip.Default.SetToolTip(this.buttons[3], "Camembert");
+			ToolTip.Default.SetToolTip(this.buttons[0], Res.Strings.Panel.Arc.Tooltip.Full);
+			ToolTip.Default.SetToolTip(this.buttons[1], Res.Strings.Panel.Arc.Tooltip.Open);
+			ToolTip.Default.SetToolTip(this.buttons[2], Res.Strings.Panel.Arc.Tooltip.Close);
+			ToolTip.Default.SetToolTip(this.buttons[3], Res.Strings.Panel.Arc.Tooltip.Pie);
 
 			this.fieldStarting = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldStarting);
 			this.fieldStarting.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldStarting.TabIndex = 20;
 			this.fieldStarting.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldStarting, "Angle initial");
+			ToolTip.Default.SetToolTip(this.fieldStarting, Res.Strings.Panel.Arc.Tooltip.Initial);
 
 			this.fieldEnding = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldEnding);
 			this.fieldEnding.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldEnding.TabIndex = 21;
 			this.fieldEnding.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldEnding, "Angle final");
+			ToolTip.Default.SetToolTip(this.fieldEnding, Res.Strings.Panel.Arc.Tooltip.Final);
 
 			this.labelStarting = new StaticText(this);
-			this.labelStarting.Text = "a1";
+			this.labelStarting.Text = Res.Strings.Panel.Arc.Label.Initial;
 			this.labelStarting.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelEnding = new StaticText(this);
-			this.labelEnding.Text = "a2";
+			this.labelEnding.Text = Res.Strings.Panel.Arc.Label.Final;
 			this.labelEnding.Alignment = ContentAlignment.MiddleCenter;
 
 			this.isNormalAndExtended = true;

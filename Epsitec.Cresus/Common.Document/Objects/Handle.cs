@@ -236,7 +236,7 @@ namespace Epsitec.Common.Document.Objects
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			double scaleX     = context.ScaleX;
 			double scaleY     = context.ScaleY;
-			double handleSize = context.HandleSize;
+			double handleSize = context.HandleSize*2.0;
 
 			if ( this.type == HandleType.Secondary ||
 				 this.type == HandleType.Bezier    )

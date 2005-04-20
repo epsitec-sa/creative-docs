@@ -12,6 +12,15 @@ namespace Epsitec.Common.Document
 		Stretcher,		// déformation
 	}
 
+	public enum SelectorTypeStretch
+	{
+		Free,			// libre
+		TrapezeH,		// trapèze horizontal
+		TrapezeV,		// trapèze vertical
+		ParallelH,		// parallélogramme horizontal
+		ParallelV,		// parallélogramme vertical
+	}
+
 	/// <summary>
 	/// La classe Selector permet de modifier une sélection d'objets.
 	/// </summary>
@@ -72,6 +81,24 @@ namespace Epsitec.Common.Document
 				{
 					this.OpletQueueInsert();
 					this.finalData.TypeInUse = value;
+					this.UpdateHandleVisible();
+				}
+			}
+		}
+
+		public SelectorTypeStretch TypeStretch
+		{
+			get
+			{
+				return this.finalData.TypeStretch;
+			}
+
+			set
+			{
+				if ( this.finalData.TypeStretch != value )
+				{
+					this.OpletQueueInsert();
+					this.finalData.TypeStretch = value;
 					this.UpdateHandleVisible();
 				}
 			}
@@ -235,8 +262,12 @@ namespace Epsitec.Common.Document
 
 				if ( global )
 				{
-					Rectangle rect = new Rectangle(h1.Position, h2.Position);
-					if ( rect.Contains(mouse) )  { rank = 0;  return true; }
+					InsideSurface s = new InsideSurface(mouse, 4);
+					s.AddLine(h1.Position, h3.Position);
+					s.AddLine(h3.Position, h2.Position);
+					s.AddLine(h2.Position, h4.Position);
+					s.AddLine(h4.Position, h1.Position);
+					if ( s.IsInside() )  { rank = 0;  return true; }
 				}
 			}
 			rank = -1;
@@ -373,43 +404,21 @@ namespace Epsitec.Common.Document
 				this.document.Modifier.FlushMoveAfterDuplicate();
 			}
 
-			if ( rank == 1 )  // inf/gauche ?
+			if ( rank >= 1 && rank <= 4 )  // coin ?
 			{
-				Point initial = this.finalData.P1;
-				this.finalData.P1 = pos;
-				if ( !this.IsCorrectGeometry() )
-				{
-					this.finalData.P1 = initial;
-				}
-			}
+				Point initialP1 = this.finalData.P1;
+				Point initialP2 = this.finalData.P2;
+				Point initialP3 = this.finalData.P3;
+				Point initialP4 = this.finalData.P4;
 
-			if ( rank == 2 )  // sup/droite ?
-			{
-				Point initial = this.finalData.P2;
-				this.finalData.P2 = pos;
-				if ( !this.IsCorrectGeometry() )
-				{
-					this.finalData.P2 = initial;
-				}
-			}
+				this.MoveCorner(rank, pos);
 
-			if ( rank == 3 )  // sup/gauche ?
-			{
-				Point initial = this.finalData.P3;
-				this.finalData.P3 = pos;
 				if ( !this.IsCorrectGeometry() )
 				{
-					this.finalData.P3 = initial;
-				}
-			}
-
-			if ( rank == 4 )  // inf/droite ?
-			{
-				Point initial = this.finalData.P4;
-				this.finalData.P4 = pos;
-				if ( !this.IsCorrectGeometry() )
-				{
-					this.finalData.P4 = initial;
+					this.finalData.P1 = initialP1;
+					this.finalData.P2 = initialP2;
+					this.finalData.P3 = initialP3;
+					this.finalData.P4 = initialP4;
 				}
 			}
 
@@ -426,6 +435,78 @@ namespace Epsitec.Common.Document
 			this.MoveTextInfoModif(rank);
 			this.UpdateHandlePos();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+		}
+
+		// Déplace un coin.
+		protected void MoveCorner(int rank, Point pos)
+		{
+			Point move = pos-this.finalData.GetCorner(rank);
+			this.finalData.SetCorner(rank, pos);
+
+			if ( this.finalData.TypeInUse != SelectorType.Stretcher )  return;
+			if ( this.finalData.TypeStretch == SelectorTypeStretch.Free )  return;
+
+			int rankH = Selector.CornerH(rank);
+			int rankV = Selector.CornerV(rank);
+			int rankO = Selector.CornerO(rank);
+
+			if ( this.finalData.TypeStretch == SelectorTypeStretch.ParallelH )
+			{
+				this.finalData.SetCorner(rankH, this.finalData.GetCorner(rankH)+move);
+			}
+
+			if ( this.finalData.TypeStretch == SelectorTypeStretch.ParallelV )
+			{
+				this.finalData.SetCorner(rankV, this.finalData.GetCorner(rankV)+move);
+			}
+
+			if ( this.finalData.TypeStretch == SelectorTypeStretch.TrapezeH )
+			{
+				move.X = -move.X;
+				this.finalData.SetCorner(rankH, this.finalData.GetCorner(rankH)+move);
+			}
+
+			if ( this.finalData.TypeStretch == SelectorTypeStretch.TrapezeV )
+			{
+				move.Y = -move.Y;
+				this.finalData.SetCorner(rankV, this.finalData.GetCorner(rankV)+move);
+			}
+		}
+
+		protected static int CornerH(int rank)
+		{
+			switch ( rank )
+			{
+				case 1:  return 4;  // inf/gauche ?
+				case 2:  return 3;  // sup/droite ?
+				case 3:  return 2;  // sup/gauche ?
+				case 4:  return 1;  // inf/droite ?
+			}
+			return -1;
+		}
+
+		protected static int CornerV(int rank)
+		{
+			switch ( rank )
+			{
+				case 1:  return 3;  // inf/gauche ?
+				case 2:  return 4;  // sup/droite ?
+				case 3:  return 1;  // sup/gauche ?
+				case 4:  return 2;  // inf/droite ?
+			}
+			return -1;
+		}
+
+		protected static int CornerO(int rank)
+		{
+			switch ( rank )
+			{
+				case 1:  return 2;  // inf/gauche ?
+				case 2:  return 1;  // sup/droite ?
+				case 3:  return 4;  // sup/gauche ?
+				case 4:  return 3;  // inf/droite ?
+			}
+			return -1;
 		}
 
 		// Fin du déplacement.
@@ -876,6 +957,7 @@ namespace Epsitec.Common.Document
 			{
 				this.typeChoice = SelectorType.Auto;
 				this.typeInUse = SelectorType.Zoomer;
+				this.TypeStretch = SelectorTypeStretch.Free;
 				this.center.X = 0.5;
 				this.center.Y = 0.5;
 				this.angle = 0.0;
@@ -891,6 +973,12 @@ namespace Epsitec.Common.Document
 			{
 				get { return this.typeInUse; }
 				set { this.typeInUse = value; }
+			}
+
+			public SelectorTypeStretch TypeStretch
+			{
+				get { return this.typeStretch; }
+				set { this.typeStretch = value; }
 			}
 
 			public bool Visible
@@ -913,6 +1001,29 @@ namespace Epsitec.Common.Document
 					rect.MergeWith(this.p3);
 					rect.MergeWith(this.p4);
 					return rect;
+				}
+			}
+
+			public Point GetCorner(int rank)
+			{
+				switch ( rank )
+				{
+					case 1:  return this.p1;
+					case 2:  return this.p2;
+					case 3:  return this.p3;
+					case 4:  return this.p4;
+				}
+				return new Point(0.0, 0.0);
+			}
+
+			public void SetCorner(int rank, Point pos)
+			{
+				switch ( rank )
+				{
+					case 1:  this.P1 = pos;  break;
+					case 2:  this.P2 = pos;  break;
+					case 3:  this.P3 = pos;  break;
+					case 4:  this.P4 = pos;  break;
 				}
 			}
 
@@ -1041,16 +1152,17 @@ namespace Epsitec.Common.Document
 
 			public void CopyTo(SelectorData dest)
 			{
-				dest.typeChoice = this.typeChoice;
-				dest.typeInUse  = this.typeInUse;
-				dest.visible    = this.visible;
-				dest.handles    = this.handles;
-				dest.p1         = this.p1;
-				dest.p2         = this.p2;
-				dest.p3         = this.p3;
-				dest.p4         = this.p4;
-				dest.center     = this.center;
-				dest.angle      = this.angle;
+				dest.typeChoice  = this.typeChoice;
+				dest.typeInUse   = this.typeInUse;
+				dest.typeStretch = this.typeStretch;
+				dest.visible     = this.visible;
+				dest.handles     = this.handles;
+				dest.p1          = this.p1;
+				dest.p2          = this.p2;
+				dest.p3          = this.p3;
+				dest.p4          = this.p4;
+				dest.center      = this.center;
+				dest.angle       = this.angle;
 			}
 
 			public void Swap(SelectorData dest)
@@ -1062,6 +1174,10 @@ namespace Epsitec.Common.Document
 				SelectorType tu = dest.typeInUse;
 				dest.typeInUse = this.typeInUse;
 				this.typeInUse = tu;
+
+				SelectorTypeStretch ts = dest.typeStretch;
+				dest.typeStretch = this.typeStretch;
+				this.typeStretch = ts;
 
 				Misc.Swap(ref dest.visible, ref this.visible);
 				Misc.Swap(ref dest.handles, ref this.handles);
@@ -1076,6 +1192,7 @@ namespace Epsitec.Common.Document
 
 			protected SelectorType			typeChoice;
 			protected SelectorType			typeInUse;
+			protected SelectorTypeStretch	typeStretch;
 			protected bool					visible;
 			protected bool					handles;
 			protected Point					p1;			// un coin quelconque

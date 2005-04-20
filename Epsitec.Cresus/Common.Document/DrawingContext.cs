@@ -1697,6 +1697,31 @@ namespace Epsitec.Common.Document
 			return snap;
 		}
 
+		// Modifie les contraintes suite à la pression de la touche espace.
+		public void ConstrainSpacePressed()
+		{
+			int visible = 0;
+			foreach ( MagnetLine line in this.constrainList )
+			{
+				if ( line.IsVisible )  visible ++;
+			}
+
+			if ( visible == this.constrainList.Count )  // toutes les lignes visibles ?
+			{
+				foreach ( MagnetLine line in this.constrainList )
+				{
+					line.IsVisible = line.FlyOver;  // ne garde que les lignes actives
+				}
+			}
+			else	// pas toutes les lignes visibles ?
+			{
+				foreach ( MagnetLine line in this.constrainList )
+				{
+					line.IsVisible = true;  // remontre toutes les lignes
+				}
+			}
+		}
+
 		// Met à jour les contraintes en fonction de la touche Ctrl.
 		protected void ConstrainUpdateCtrl()
 		{
@@ -1949,7 +1974,7 @@ namespace Epsitec.Common.Document
 					}
 					else
 					{
-						this.document.Modifier.OpletQueueBeginAction("Changer de page");
+						this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.PageChange);
 						this.document.Modifier.InitiateChangingPage();
 						this.document.Modifier.TerminateChangingPage(newPage);
 						this.document.Modifier.OpletQueueValidateAction();
@@ -1989,7 +2014,7 @@ namespace Epsitec.Common.Document
 					}
 					else
 					{
-						this.document.Modifier.OpletQueueBeginAction("Changer de calque");
+						this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.LayerChange);
 						this.document.Modifier.InitiateChangingLayer();
 						this.document.Modifier.TerminateChangingLayer(newLayer);
 						this.document.Modifier.OpletQueueValidateAction();

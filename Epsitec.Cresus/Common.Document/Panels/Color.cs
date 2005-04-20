@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Panels
 			this.field.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.field, "Couleur");
+			ToolTip.Default.SetToolTip(this.field, Res.Strings.Panel.Color.Tooltip.Main);
 		}
 		
 		protected override void Dispose(bool disposing)

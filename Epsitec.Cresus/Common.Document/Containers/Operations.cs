@@ -15,67 +15,67 @@ namespace Epsitec.Common.Document.Containers
 			this.tabIndex = 0;
 
 			// Déplacement.
-			this.CreateHeader(ref this.boxMove, ref this.toolBarMove, "Déplacements");
-			this.CreateFieldMove(this.toolBarMove, ref this.fieldMoveH, "Valeur du déplacement horizontal");
-			this.CreateButton(this.toolBarMove, ref this.buttonMoveHi, "OperMoveHi", "Déplacement à gauche", new MessageEventHandler(this.HandleButtonMoveHi));
-			this.CreateButton(this.toolBarMove, ref this.buttonMoveH,  "OperMoveH",  "Déplacement à droite", new MessageEventHandler(this.HandleButtonMoveH));
+			this.CreateHeader(ref this.boxMove, ref this.toolBarMove, Res.Strings.Action.MoveMain);
+			this.CreateFieldMove(this.toolBarMove, ref this.fieldMoveH, Res.Strings.Action.MoveValueX);
+			this.CreateButton(this.toolBarMove, ref this.buttonMoveHi, "OperMoveHi", Res.Strings.Action.MoveLeft,  new MessageEventHandler(this.HandleButtonMoveHi));
+			this.CreateButton(this.toolBarMove, ref this.buttonMoveH,  "OperMoveH",  Res.Strings.Action.MoveRight, new MessageEventHandler(this.HandleButtonMoveH));
 			this.CreateSeparator(this.toolBarMove);
-			this.CreateFieldMove(this.toolBarMove, ref this.fieldMoveV, "Valeur du déplacement vertical");
-			this.CreateButton(this.toolBarMove, ref this.buttonMoveVi, "OperMoveVi", "Déplacement en bas",  new MessageEventHandler(this.HandleButtonMoveVi));
-			this.CreateButton(this.toolBarMove, ref this.buttonMoveV,  "OperMoveV",  "Déplacement en haut", new MessageEventHandler(this.HandleButtonMoveV));
+			this.CreateFieldMove(this.toolBarMove, ref this.fieldMoveV, Res.Strings.Action.MoveValueY);
+			this.CreateButton(this.toolBarMove, ref this.buttonMoveVi, "OperMoveVi", Res.Strings.Action.MoveDown, new MessageEventHandler(this.HandleButtonMoveVi));
+			this.CreateButton(this.toolBarMove, ref this.buttonMoveV,  "OperMoveV",  Res.Strings.Action.MoveUp,   new MessageEventHandler(this.HandleButtonMoveV));
 
 			// Rotation.
-			this.CreateHeader(ref this.boxRot, ref this.toolBarRot, "Rotations");
-			this.CreateButton(this.toolBarRot, ref this.buttonRotate90,  "OperRot90",  "Quart de tour à gauche", new MessageEventHandler(this.HandleButtonRotate90));
-			this.CreateButton(this.toolBarRot, ref this.buttonRotate180, "OperRot180", "Demi-tour",              new MessageEventHandler(this.HandleButtonRotate180));
-			this.CreateButton(this.toolBarRot, ref this.buttonRotate270, "OperRot270", "Quart de tour à droite", new MessageEventHandler(this.HandleButtonRotate270));
+			this.CreateHeader(ref this.boxRot, ref this.toolBarRot, Res.Strings.Action.RotateMain);
+			this.CreateButton(this.toolBarRot, ref this.buttonRotate90,  "OperRot90",  Res.Strings.Action.Rotate90,  new MessageEventHandler(this.HandleButtonRotate90));
+			this.CreateButton(this.toolBarRot, ref this.buttonRotate180, "OperRot180", Res.Strings.Action.Rotate180, new MessageEventHandler(this.HandleButtonRotate180));
+			this.CreateButton(this.toolBarRot, ref this.buttonRotate270, "OperRot270", Res.Strings.Action.Rotate270, new MessageEventHandler(this.HandleButtonRotate270));
 			this.CreateSeparator(this.toolBarRot);
-			this.CreateFieldRot(this.toolBarRot, ref this.fieldRotate, "Angle de rotation en degrés");
-			this.CreateButton(this.toolBarRot, ref this.buttonRotate,  "OperRot",  "Rotation anti-horaire", new MessageEventHandler(this.HandleButtonRotate));
-			this.CreateButton(this.toolBarRot, ref this.buttonRotatei, "OperRoti", "Rotation horaire",      new MessageEventHandler(this.HandleButtonRotatei));
+			this.CreateFieldRot(this.toolBarRot, ref this.fieldRotate, Res.Strings.Action.RotateValue);
+			this.CreateButton(this.toolBarRot, ref this.buttonRotate,  "OperRot",  Res.Strings.Action.RotateFreeCCW, new MessageEventHandler(this.HandleButtonRotate));
+			this.CreateButton(this.toolBarRot, ref this.buttonRotatei, "OperRoti", Res.Strings.Action.RotateFreeCW,  new MessageEventHandler(this.HandleButtonRotatei));
 
 			// Miroir.
-			this.CreateHeader(ref this.boxMirror, ref this.toolBarMirror, "Miroirs");
-			this.CreateButton(this.toolBarMirror, ref this.buttonMirrorH, "OperMirrorH", "Miroir horizontal", new MessageEventHandler(this.HandleButtonMirrorH));
-			this.CreateButton(this.toolBarMirror, ref this.buttonMirrorV, "OperMirrorV", "Miroir vertical",   new MessageEventHandler(this.HandleButtonMirrorV));
+			this.CreateHeader(ref this.boxMirror, ref this.toolBarMirror, Res.Strings.Action.MirrorMain);
+			this.CreateButton(this.toolBarMirror, ref this.buttonMirrorH, "OperMirrorH", Res.Strings.Action.MirrorH, new MessageEventHandler(this.HandleButtonMirrorH));
+			this.CreateButton(this.toolBarMirror, ref this.buttonMirrorV, "OperMirrorV", Res.Strings.Action.MirrorV, new MessageEventHandler(this.HandleButtonMirrorV));
 
 			// Zoom.
-			this.CreateHeader(ref this.boxZoom, ref this.toolBarZoom, "Réductions et agrandissements");
-			this.CreateButton(this.toolBarZoom, ref this.buttonZoomDiv2, "OperZoomDiv2", "Réduction \u00F72",      new MessageEventHandler(this.HandleButtonZoomDiv2));
-			this.CreateButton(this.toolBarZoom, ref this.buttonZoomMul2, "OperZoomMul2", "Agrandissement \u00D72", new MessageEventHandler(this.HandleButtonZoomMul2));
+			this.CreateHeader(ref this.boxZoom, ref this.toolBarZoom, Res.Strings.Action.ZoomMain);
+			this.CreateButton(this.toolBarZoom, ref this.buttonZoomDiv2, "OperZoomDiv2", Res.Strings.Action.ZoomDiv2, new MessageEventHandler(this.HandleButtonZoomDiv2));
+			this.CreateButton(this.toolBarZoom, ref this.buttonZoomMul2, "OperZoomMul2", Res.Strings.Action.ZoomMul2, new MessageEventHandler(this.HandleButtonZoomMul2));
 			this.CreateSeparator(this.toolBarZoom);
-			this.CreateFieldZoom(this.toolBarZoom, ref this.fieldZoom, "Facteur d'agrandissement/réduction");
-			this.CreateButton(this.toolBarZoom, ref this.buttonZoomi, "OperZoomi", "Réduction",     new MessageEventHandler(this.HandleButtonZoomi));
-			this.CreateButton(this.toolBarZoom, ref this.buttonZoom,  "OperZoom", "Agrandissement", new MessageEventHandler(this.HandleButtonZoom));
+			this.CreateFieldZoom(this.toolBarZoom, ref this.fieldZoom, Res.Strings.Action.ZoomValue);
+			this.CreateButton(this.toolBarZoom, ref this.buttonZoomi, "OperZoomi", Res.Strings.Action.ZoomFreeM, new MessageEventHandler(this.HandleButtonZoomi));
+			this.CreateButton(this.toolBarZoom, ref this.buttonZoom,  "OperZoom",  Res.Strings.Action.ZoomFreeP, new MessageEventHandler(this.HandleButtonZoom));
 
 			// Alignement.
-			this.CreateHeader(ref this.boxAlign, ref this.toolBarAlign, "Alignements");
-			this.CreateButton(this.toolBarAlign, ref this.buttonAlignGrid,    "AlignGrid",    "Alignement sur la grille magnétique", new MessageEventHandler(this.HandleButtonAlignGrid));
+			this.CreateHeader(ref this.boxAlign, ref this.toolBarAlign, Res.Strings.Action.Align);
+			this.CreateButton(this.toolBarAlign, ref this.buttonAlignGrid,    "AlignGrid",    Res.Strings.Action.AlignGrid,    new MessageEventHandler(this.HandleButtonAlignGrid));
 			this.CreateSeparator(this.toolBarAlign);
-			this.CreateButton(this.toolBarAlign, ref this.buttonAlignLeft,    "AlignLeft",    "Alignement à gauche",                 new MessageEventHandler(this.HandleButtonAlignLeft));
-			this.CreateButton(this.toolBarAlign, ref this.buttonAlignCenterX, "AlignCenterX", "Alignement centré horizontalement",   new MessageEventHandler(this.HandleButtonAlignCenterX));
-			this.CreateButton(this.toolBarAlign, ref this.buttonAlignRight,   "AlignRight",   "Alignement à droite",                 new MessageEventHandler(this.HandleButtonAlignRight));
+			this.CreateButton(this.toolBarAlign, ref this.buttonAlignLeft,    "AlignLeft",    Res.Strings.Action.AlignLeft,    new MessageEventHandler(this.HandleButtonAlignLeft));
+			this.CreateButton(this.toolBarAlign, ref this.buttonAlignCenterX, "AlignCenterX", Res.Strings.Action.AlignCenterX, new MessageEventHandler(this.HandleButtonAlignCenterX));
+			this.CreateButton(this.toolBarAlign, ref this.buttonAlignRight,   "AlignRight",   Res.Strings.Action.AlignRight,   new MessageEventHandler(this.HandleButtonAlignRight));
 			this.CreateSeparator(this.toolBarAlign);
-			this.CreateButton(this.toolBarAlign, ref this.buttonAlignTop,     "AlignTop",     "Alignement en haut",                  new MessageEventHandler(this.HandleButtonAlignTop));
-			this.CreateButton(this.toolBarAlign, ref this.buttonAlignCenterY, "AlignCenterY", "Alignement centré verticalement",     new MessageEventHandler(this.HandleButtonAlignCenterY));
-			this.CreateButton(this.toolBarAlign, ref this.buttonAlignBottom,  "AlignBottom",  "Alignement en bas",                   new MessageEventHandler(this.HandleButtonAlignBottom));
+			this.CreateButton(this.toolBarAlign, ref this.buttonAlignTop,     "AlignTop",     Res.Strings.Action.AlignTop,     new MessageEventHandler(this.HandleButtonAlignTop));
+			this.CreateButton(this.toolBarAlign, ref this.buttonAlignCenterY, "AlignCenterY", Res.Strings.Action.AlignCenterY, new MessageEventHandler(this.HandleButtonAlignCenterY));
+			this.CreateButton(this.toolBarAlign, ref this.buttonAlignBottom,  "AlignBottom",  Res.Strings.Action.AlignBottom,  new MessageEventHandler(this.HandleButtonAlignBottom));
 
 			// Distribution.
-			this.CreateHeader(ref this.boxShare, ref this.toolBarShare, "Distributions");
-			this.CreateButton(this.toolBarShare, ref this.buttonShareSpaceX,  "ShareSpaceX",  "Distribution espacée horizontalement", new MessageEventHandler(this.HandleButtonShareSpaceX));
-			this.CreateButton(this.toolBarShare, ref this.buttonShareLeft,    "ShareLeft",    "Distribution sur la gauche",           new MessageEventHandler(this.HandleButtonShareLeft));
-			this.CreateButton(this.toolBarShare, ref this.buttonShareCenterX, "ShareCenterX", "Distribution centrée horizontalement", new MessageEventHandler(this.HandleButtonShareCenterX));
-			this.CreateButton(this.toolBarShare, ref this.buttonShareRight,   "ShareRight",   "Distribution sur la droite",           new MessageEventHandler(this.HandleButtonShareRight));
+			this.CreateHeader(ref this.boxShare, ref this.toolBarShare, Res.Strings.Action.Share);
+			this.CreateButton(this.toolBarShare, ref this.buttonShareSpaceX,  "ShareSpaceX",  Res.Strings.Action.ShareSpaceX,  new MessageEventHandler(this.HandleButtonShareSpaceX));
+			this.CreateButton(this.toolBarShare, ref this.buttonShareLeft,    "ShareLeft",    Res.Strings.Action.ShareLeft,    new MessageEventHandler(this.HandleButtonShareLeft));
+			this.CreateButton(this.toolBarShare, ref this.buttonShareCenterX, "ShareCenterX", Res.Strings.Action.ShareCenterX, new MessageEventHandler(this.HandleButtonShareCenterX));
+			this.CreateButton(this.toolBarShare, ref this.buttonShareRight,   "ShareRight",   Res.Strings.Action.ShareRight,   new MessageEventHandler(this.HandleButtonShareRight));
 			this.CreateSeparator(this.toolBarShare);
-			this.CreateButton(this.toolBarShare, ref this.buttonShareSpaceY,  "ShareSpaceX",  "Distribution espacée verticalement",   new MessageEventHandler(this.HandleButtonShareSpaceY));
-			this.CreateButton(this.toolBarShare, ref this.buttonShareTop,     "ShareTop",     "Distribution sur le haut",             new MessageEventHandler(this.HandleButtonShareTop));
-			this.CreateButton(this.toolBarShare, ref this.buttonShareCenterY, "ShareCenterX", "Distribution centrée verticalement",   new MessageEventHandler(this.HandleButtonShareCenterY));
-			this.CreateButton(this.toolBarShare, ref this.buttonShareBottom,  "ShareBottom",  "Distribution sur le bas",              new MessageEventHandler(this.HandleButtonShareBottom));
+			this.CreateButton(this.toolBarShare, ref this.buttonShareSpaceY,  "ShareSpaceY",  Res.Strings.Action.ShareSpaceY,  new MessageEventHandler(this.HandleButtonShareSpaceY));
+			this.CreateButton(this.toolBarShare, ref this.buttonShareTop,     "ShareTop",     Res.Strings.Action.ShareTop,     new MessageEventHandler(this.HandleButtonShareTop));
+			this.CreateButton(this.toolBarShare, ref this.buttonShareCenterY, "ShareCenterY", Res.Strings.Action.ShareCenterY, new MessageEventHandler(this.HandleButtonShareCenterY));
+			this.CreateButton(this.toolBarShare, ref this.buttonShareBottom,  "ShareBottom",  Res.Strings.Action.ShareBottom,  new MessageEventHandler(this.HandleButtonShareBottom));
 
 			// Ajustements.
-			this.CreateHeader(ref this.boxAdjust, ref this.toolBarAdjust, "Ajustements");
-			this.CreateButton(this.toolBarAdjust, ref this.buttonAdjustWidth,  "AdjustWidth",  "Largeurs identiques",  new MessageEventHandler(this.HandleButtonAdjustWidth));
-			this.CreateButton(this.toolBarAdjust, ref this.buttonAdjustHeight, "AdjustHeight", "Hauteurs identiques",  new MessageEventHandler(this.HandleButtonAdjustHeight));
+			this.CreateHeader(ref this.boxAdjust, ref this.toolBarAdjust, Res.Strings.Action.Adjust);
+			this.CreateButton(this.toolBarAdjust, ref this.buttonAdjustWidth,  "AdjustWidth",  Res.Strings.Action.AdjustWidth,  new MessageEventHandler(this.HandleButtonAdjustWidth));
+			this.CreateButton(this.toolBarAdjust, ref this.buttonAdjustHeight, "AdjustHeight", Res.Strings.Action.AdjustHeight, new MessageEventHandler(this.HandleButtonAdjustHeight));
 		}
 
 		// Crée l'en-tête d'un groupe.

@@ -19,31 +19,31 @@ namespace Epsitec.Common.Document.Containers
 
 			this.buttonNew = new IconButton("PageNew", "manifest:Epsitec.App.DocumentEditor.Images.PageNew.icon");
 			this.toolBar.Items.Add(this.buttonNew);
-			ToolTip.Default.SetToolTip(this.buttonNew, "Nouvelle page <b>après</b> la page courante");
+			ToolTip.Default.SetToolTip(this.buttonNew, Res.Strings.Action.PageNewLong);
 			this.Synchro(this.buttonNew);
 
 			this.buttonDuplicate = new IconButton("PageDuplicate", "manifest:Epsitec.App.DocumentEditor.Images.DuplicateItem.icon");
 			this.toolBar.Items.Add(this.buttonDuplicate);
-			ToolTip.Default.SetToolTip(this.buttonDuplicate, "Dupliquer la page");
+			ToolTip.Default.SetToolTip(this.buttonDuplicate, Res.Strings.Action.PageDuplicate);
 			this.Synchro(this.buttonDuplicate);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonUp = new IconButton("PageUp", "manifest:Epsitec.App.DocumentEditor.Images.Up.icon");
 			this.toolBar.Items.Add(this.buttonUp);
-			ToolTip.Default.SetToolTip(this.buttonUp, "Page avant");
+			ToolTip.Default.SetToolTip(this.buttonUp, Res.Strings.Action.PageUp);
 			this.Synchro(this.buttonUp);
 
 			this.buttonDown = new IconButton("PageDown", "manifest:Epsitec.App.DocumentEditor.Images.Down.icon");
 			this.toolBar.Items.Add(this.buttonDown);
-			ToolTip.Default.SetToolTip(this.buttonDown, "Page après");
+			ToolTip.Default.SetToolTip(this.buttonDown, Res.Strings.Action.PageDown);
 			this.Synchro(this.buttonDown);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonDelete = new IconButton("PageDelete", "manifest:Epsitec.App.DocumentEditor.Images.DeleteItem.icon");
 			this.toolBar.Items.Add(this.buttonDelete);
-			ToolTip.Default.SetToolTip(this.buttonDelete, "Supprimer la page");
+			ToolTip.Default.SetToolTip(this.buttonDelete, Res.Strings.Action.PageDelete);
 			this.Synchro(this.buttonDelete);
 
 			this.table = new CellTable(this);
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonPageStack.Dock = DockStyle.Bottom;
 			this.buttonPageStack.DockMargins = new Margins(0, 0, 0, 0);
 			this.buttonPageStack.Command = "PageStack";
-			this.buttonPageStack.Text = "Structure de la page...";
+			this.buttonPageStack.Text = Res.Strings.Container.Pages.Button.PageStack;
 
 			
 			this.panelMisc = new Widget(this);
@@ -76,36 +76,36 @@ namespace Epsitec.Common.Document.Containers
 			this.radioMasterGroup.Dock = DockStyle.Bottom;
 			this.radioMasterGroup.DockMargins = new Margins(0, 0, 0, 4);
 			this.radioMasterGroup.Height = 130;
-			this.radioMasterGroup.Text = "Destination :";
+			this.radioMasterGroup.Text = Res.Strings.Container.Pages.Button.MasterGroup;
 
 			this.radioAll = new RadioButton(this.radioMasterGroup);
 			this.radioAll.Dock = DockStyle.Top;
 			this.radioAll.DockMargins = new Margins(10, 10, 5, 0);
-			this.radioAll.Text = "Appliquer à toutes les pages";
+			this.radioAll.Text = Res.Strings.Container.Pages.Button.MasterAll;
 			this.radioAll.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 			this.radioOdd = new RadioButton(this.radioMasterGroup);
 			this.radioOdd.Dock = DockStyle.Top;
 			this.radioOdd.DockMargins = new Margins(10, 10, 0, 0);
-			this.radioOdd.Text = "Appliquer aux pages impaires";
+			this.radioOdd.Text = Res.Strings.Container.Pages.Button.MasterOdd;
 			this.radioOdd.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 			this.radioEven = new RadioButton(this.radioMasterGroup);
 			this.radioEven.Dock = DockStyle.Top;
 			this.radioEven.DockMargins = new Margins(10, 10, 0, 0);
-			this.radioEven.Text = "Appliquer aux pages paires";
+			this.radioEven.Text = Res.Strings.Container.Pages.Button.MasterEven;
 			this.radioEven.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 			this.radioNone = new RadioButton(this.radioMasterGroup);
 			this.radioNone.Dock = DockStyle.Top;
 			this.radioNone.DockMargins = new Margins(10, 10, 0, 0);
-			this.radioNone.Text = "Appliquer à la demande";
+			this.radioNone.Text = Res.Strings.Container.Pages.Button.MasterNone;
 			this.radioNone.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 			this.checkAutoStop = new CheckButton(this.radioMasterGroup);
 			this.checkAutoStop.Dock = DockStyle.Top;
 			this.checkAutoStop.DockMargins = new Margins(10, 10, 4, 0);
-			this.checkAutoStop.Text = "Stopper à la prochaine page modèle";
+			this.checkAutoStop.Text = Res.Strings.Container.Pages.Button.MasterStop;
 			this.checkAutoStop.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 
 			this.specificGroup = new Widget(this.radioMasterGroup);
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Document.Containers
 			this.checkSpecific.Width = 160;
 			this.checkSpecific.Dock = DockStyle.Left;
 			this.checkSpecific.DockMargins = new Margins(0, 0, 0, 0);
-			this.checkSpecific.Text = "Inclure cette page modèle";
+			this.checkSpecific.Text = Res.Strings.Container.Pages.Button.MasterSpecific;
 			this.checkSpecific.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 
 			this.specificMasterPage = new TextFieldCombo(this.specificGroup);
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioSlaveGroup.Dock = DockStyle.Bottom;
 			this.radioSlaveGroup.DockMargins = new Margins(0, 0, 0, 4);
 			this.radioSlaveGroup.Height = 130;
-			this.radioSlaveGroup.Text = "Inclure les pages modèles ?";
+			this.radioSlaveGroup.Text = Res.Strings.Container.Pages.Button.SlaveGroup;
 
 			this.radioGroupLeft = new Widget(this.radioSlaveGroup);
 			this.radioGroupLeft.Dock = DockStyle.Left;
@@ -143,25 +143,25 @@ namespace Epsitec.Common.Document.Containers
 			this.radioNever = new RadioButton(this.radioGroupLeft);
 			this.radioNever.Dock = DockStyle.Top;
 			this.radioNever.DockMargins = new Margins(10, 0, 0, 0);
-			this.radioNever.Text = "Non";
+			this.radioNever.Text = Res.Strings.Container.Pages.Button.SlaveNever;
 			this.radioNever.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 			this.radioDefault = new RadioButton(this.radioGroupLeft);
 			this.radioDefault.Dock = DockStyle.Top;
 			this.radioDefault.DockMargins = new Margins(10, 0, 0, 0);
-			this.radioDefault.Text = "Oui";
+			this.radioDefault.Text = Res.Strings.Container.Pages.Button.SlaveDefault;
 			this.radioDefault.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 			this.radioSpecific = new RadioButton(this.radioGroupLeft);
 			this.radioSpecific.Dock = DockStyle.Top;
 			this.radioSpecific.DockMargins = new Margins(10, 0, 0, 0);
-			this.radioSpecific.Text = "Inclure cette page modèle";
+			this.radioSpecific.Text = Res.Strings.Container.Pages.Button.SlaveSpecific;
 			this.radioSpecific.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 			this.checkGuides = new CheckButton(this.radioGroupLeft);
 			this.checkGuides.Dock = DockStyle.Top;
 			this.checkGuides.DockMargins = new Margins(10, 0, 4, 0);
-			this.checkGuides.Text = "Inclure les repères";
+			this.checkGuides.Text = Res.Strings.Container.Pages.Button.SlaveGuides;
 			this.checkGuides.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 
 			this.radioGroupRight = new Widget(this.radioSlaveGroup);
@@ -186,14 +186,14 @@ namespace Epsitec.Common.Document.Containers
 			this.radioSlave.Width = 100;
 			this.radioSlave.Dock = DockStyle.Left;
 			this.radioSlave.DockMargins = new Margins(10, 10, 0, 0);
-			this.radioSlave.Text = "Page normale";
+			this.radioSlave.Text = Res.Strings.Container.Pages.Button.Slave;
 			this.radioSlave.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 			this.radioMaster = new RadioButton(this.radioGroup);
 			this.radioMaster.Width = 100;
 			this.radioMaster.Dock = DockStyle.Left;
 			this.radioMaster.DockMargins = new Margins(10, 10, 0, 0);
-			this.radioMaster.Text = "Page modèle";
+			this.radioMaster.Text = Res.Strings.Container.Pages.Button.Master;
 			this.radioMaster.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 			// --- Fin panelMisc
 			
@@ -203,7 +203,7 @@ namespace Epsitec.Common.Document.Containers
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.extendedButton, "Etend ou réduit le panneau");
+			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Dialog.Button.More);
 			
 			this.panelPageName = new Panels.PageName(this.document);
 			this.panelPageName.IsExtendedSize = false;
@@ -257,8 +257,8 @@ namespace Epsitec.Common.Document.Containers
 				this.table.SetWidthColumn(1, 172);
 			}
 
-			this.table.SetHeaderTextH(0, "No");
-			this.table.SetHeaderTextH(1, "Nom");
+			this.table.SetHeaderTextH(0, Res.Strings.Container.Pages.Header.Number);
+			this.table.SetHeaderTextH(1, Res.Strings.Container.Pages.Header.Name);
 
 			UndoableList doc = this.document.GetObjects;
 			for ( int i=0 ; i<rows ; i++ )
@@ -383,7 +383,7 @@ namespace Epsitec.Common.Document.Containers
 		// Un bouton radio a été cliqué.
 		private void HandleRadioClicked(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.OpletQueueBeginAction("Changer l'état de la page");
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.PageChange);
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
@@ -435,7 +435,7 @@ namespace Epsitec.Common.Document.Containers
 		// Un bouton à cocher a été cliqué.
 		private void HandleCheckClicked(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.OpletQueueBeginAction("Changer l'état de la page");
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.PageChange);
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
@@ -494,7 +494,7 @@ namespace Epsitec.Common.Document.Containers
 				Objects.Page page = doc[i] as Objects.Page;
 				if ( page.ShortName == field.Text )
 				{
-					this.document.Modifier.OpletQueueBeginAction("Changer l'état de la page");
+					this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.PageChange);
 					Objects.Page currentPage = context.RootObject(1) as Objects.Page;
 					currentPage.MasterPageToUse = page;
 					this.document.Notifier.NotifyPagesChanged();

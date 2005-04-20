@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!-- Ressources pour le projet Common.Document -->
 
 <bundle type="String">
@@ -34,6 +34,7 @@
 	<data name="Dialog.Print.Range.From">Pages from</data>
 	<data name="Dialog.Print.Range.To">to</data>
 	<data name="Dialog.Print.Range.Current">Current page</data>
+	<data name="Dialog.Print.Format.User">@@Personnalisé</data>
 	
 	<data name="Dialog.Export.Param">Image export settings</data>
 	
@@ -65,7 +66,17 @@
 	<data name="Dialog.Double.PrintDebord">@@Débord</data>
 	<data name="Dialog.Double.ImageDpi">Resolution (dpi)</data>
 	<data name="Dialog.Double.ImageQuality">Image quality</data>
+	<data name="Dialog.Double.ImageQuality1">@@Qualité minimale, taille faible</data>
+	<data name="Dialog.Double.ImageQuality2">@@Basse qualité, taille faible</data>
+	<data name="Dialog.Double.ImageQuality3">@@Qualité moyenne, taille standard</data>
+	<data name="Dialog.Double.ImageQuality4">@@Bonne qualité, taille importante</data>
+	<data name="Dialog.Double.ImageQuality5">@@Qualité maximale, taille importante</data>
 	<data name="Dialog.Double.ImageAA">Anti-aliasing</data>
+	<data name="Dialog.Double.ImageAA1">@@Escaliers importants (tout ou rien)</data>
+	<data name="Dialog.Double.ImageAA2">@@Escaliers prononcés</data>
+	<data name="Dialog.Double.ImageAA3">@@Adoucissement moyen</data>
+	<data name="Dialog.Double.ImageAA4">@@Adoucissement important</data>
+	<data name="Dialog.Double.ImageAA5">@@Adoucissement maximal (standard)</data>
 	<data name="Dialog.Double.ArrowMoveMul">Multiply by/Shift</data>
 	<data name="Dialog.Double.ArrowMoveDiv">Divide by/Ctrl</data>
 	<data name="Dialog.Double.ToLinePrecision">Precision</data>
@@ -73,8 +84,8 @@
 	<data name="Dialog.Double.DimensionDecimal">Number of digits</data>
 
 	<data name="Dialog.Integer.DefaultUnit.Text">@@Unité de travail</data>
-	<data name="Dialog.Integer.DefaultUnit.Millimetre">Millimetres</data>
-	<data name="Dialog.Integer.DefaultUnit.Centimetre">Centimetres</data>
+	<data name="Dialog.Integer.DefaultUnit.Millimetre">Millimeters</data>
+	<data name="Dialog.Integer.DefaultUnit.Centimetre">Centimeters</data>
 	<data name="Dialog.Integer.DefaultUnit.Inch">Inches</data>
 	<data name="Dialog.Integer.PrintArea.Text">Print</data>
 	<data name="Dialog.Integer.PrintArea.All">All pages</data>
@@ -120,16 +131,6 @@
 	<data name="Container.Guides.RadioPage">Current page</data>
 	<data name="Container.Guides.Header.Type">Type</data>
 	<data name="Container.Guides.Header.Position">Position</data>
-	<data name="Container.Guides.Action.NewH">New horizontal guide</data>
-	<data name="Container.Guides.Action.NewV">New vertical guide</data>
-	<data name="Container.Guides.Action.Duplicate">Duplicate guide</data>
-	<data name="Container.Guides.Action.Xfer">Global guide &amp;lt;-&amp;gt; current page</data>
-	<data name="Container.Guides.Action.Up">Guide before</data>
-	<data name="Container.Guides.Action.Down">Guide after</data>
-	<data name="Container.Guides.Action.Delete">Delete guide</data>
-	<data name="Container.Guides.Action.Select">Select guide</data>
-	<data name="Container.Guides.Action.ChangeType">Change guide type</data>
-	<data name="Container.Guides.Action.ChangePosition">Change guide position</data>
 	<data name="Container.Guides.Undefined">&lt;i&gt;undefined &lt;/i&gt;</data>
 
 	<data name="Container.Layers.Button.Magnet">Objects for magnetic construction</data>
@@ -145,18 +146,6 @@
 	<data name="Container.Layers.Button.PrintHide">Hide</data>
 	<data name="Container.Layers.Header.Position">Position</data>
 	<data name="Container.Layers.Header.Name">Name</data>
-	<data name="Container.Layers.Action.New">New layer &lt;b&gt;above&lt;/b&gt; current layer</data>
-	<data name="Container.Layers.Action.Duplicate">Duplicate layer</data>
-	<data name="Container.Layers.Action.NewSel">New layer containing selection</data>
-	<data name="Container.Layers.Action.MergeUp">Merge with layer above</data>
-	<data name="Container.Layers.Action.MergeDown">Merge with layer below</data>
-	<data name="Container.Layers.Action.Up">Layer above</data>
-	<data name="Container.Layers.Action.Down">Layer below</data>
-	<data name="Container.Layers.Action.Delete">Delete layer</data>
-	<data name="Container.Layers.Action.ChangeShowOne">Change visibility of layer</data>
-	<data name="Container.Layers.Action.ChangeShowAll">Change visibility of all layers</data>
-	<data name="Container.Layers.Action.ChangePrint">Change layer printing mode</data>
-	<data name="Container.Layers.Action.ChangeMagnet">Change layer state</data>
 
 	<data name="Container.Pages.Button.Slave">Plain page</data>
 	<data name="Container.Pages.Button.Master">Template page</data>
@@ -175,37 +164,26 @@
 	<data name="Container.Pages.Button.MasterSpecific">Include this template</data>
 	<data name="Container.Pages.Header.Number">#</data>
 	<data name="Container.Pages.Header.Name">Name</data>
-	<data name="Container.Pages.Action.New">New page &lt;b&gt;after&lt;/b&gt; current page</data>
-	<data name="Container.Pages.Action.Duplicate">Duplicate page</data>
-	<data name="Container.Pages.Action.Up">Page before</data>
-	<data name="Container.Pages.Action.Down">Page after</data>
-	<data name="Container.Pages.Action.Delete">Delete page</data>
-	<data name="Container.Pages.Action.Change">Change page state</data>
 
 	<data name="Container.Principal.Button.Detail">Details</data>
-	<data name="Container.Principal.Action.Auto">Automatic selection</data>
-	<data name="Container.Principal.Action.Individual">Select objects individually</data>
-	<data name="Container.Principal.Action.Zoom">Move, scale and rotate</data>
-	<data name="Container.Principal.Action.Stretch">Stretch</data>
-	<data name="Container.Principal.Action.StretchType">Stretch type</data>
-	<data name="Container.Principal.Action.Total">Full selection required</data>
-	<data name="Container.Principal.Action.Partial">Partial selection enabled</data>
-	<data name="Container.Principal.Action.AdaptLine">Fit line widths</data>
-	<data name="Container.Principal.Action.AdaptText">Fit text sizes</data>
-	<data name="Container.Principal.Action.SelName">Name of object to select</data>
-	<data name="Container.Principal.Action.SelGo">Select</data>
-	<data name="Container.Principal.Action.SelGoHelp">Select object by its name</data>
+	<data name="Container.Principal.Button.Auto">Automatic selection</data>
+	<data name="Container.Principal.Button.Individual">Select objects individually</data>
+	<data name="Container.Principal.Button.Zoom">Move, scale and rotate</data>
+	<data name="Container.Principal.Button.Stretch">Stretch</data>
+	<data name="Container.Principal.Button.StretchType">Stretch type</data>
+	<data name="Container.Principal.Button.Total">Full selection required</data>
+	<data name="Container.Principal.Button.Partial">Partial selection enabled</data>
+	<data name="Container.Principal.Button.AdaptLine">Fit line widths</data>
+	<data name="Container.Principal.Button.AdaptText">Fit text sizes</data>
+	<data name="Container.Principal.Button.SelName">Name of object to select</data>
+	<data name="Container.Principal.Button.SelGo">Select</data>
+	<data name="Container.Principal.Button.SelGoHelp">Select object by its name</data>
 	<data name="Container.Principal.Menu.Stretch.Free">Free form deformation</data>
 	<data name="Container.Principal.Menu.Stretch.TrapezeH">Horizontal trapezoid deformation</data>
 	<data name="Container.Principal.Menu.Stretch.TrapezeV">Vertical trapezoid deformation</data>
 	<data name="Container.Principal.Menu.Stretch.ParallelH">Horizontal parallelogram deformation</data>
 	<data name="Container.Principal.Menu.Stretch.ParallelV">Vertical parallelogram deformation</data>
 
-	<data name="Container.Styles.Action.New">New style</data>
-	<data name="Container.Styles.Action.Duplicate">Duplicate style</data>
-	<data name="Container.Styles.Action.Up">Move style up</data>
-	<data name="Container.Styles.Action.Down">Move style down</data>
-	<data name="Container.Styles.Action.Delete">Delete style</data>
 	<data name="Container.Styles.Header.Type">Type</data>
 	<data name="Container.Styles.Header.Name">Name</data>
 	<data name="Container.Styles.Header.Total">#</data>
@@ -232,7 +210,7 @@
 	<data name="Tool.Image">Bitmap image</data>
 	<data name="Tool.Dimension">Dimension</data>
 
-	<data name="Object.Abstract.InfoLine">ln={0} a={1}°</data>
+	<data name="Object.Abstract.InfoLine">ln={0} a={1}</data>
 	<data name="Object.Abstract.InfoRectangle">dx={0} dy={1}</data>
 	<data name="Object.Abstract.InfoCircle">r={0}</data>
 
@@ -264,7 +242,6 @@
 
 	<data name="Panel.Abstract.Extend">Expand/collapse pannel</data>
 	<data name="Panel.Abstract.Styles">Styles</data>
-	<data name="Panel.Action.Change">Change attribute &quot;{0}&quot;</data>
 
 	<data name="Panel.Arc.Tooltip.Full">Full</data>
 	<data name="Panel.Arc.Tooltip.Open">Open arc</data>
@@ -451,7 +428,6 @@
 	<data name="Panel.Surface.Label.Reset">R</data>
 	<data name="Panel.Surface.Tooltip.Type">3D surface type</data>
 	<data name="Panel.Surface.Tooltip.Reset">Reset (default values)</data>
-	<data name="Panel.Surface.Action.Reset">Reset surface</data>
 
 	<data name="Panel.TextLine.Tooltip.JustifHLeft">Left aligned</data>
 	<data name="Panel.TextLine.Tooltip.JustifHCenter">Centered</data>
@@ -589,22 +565,54 @@
 	<data name="Action.OrderDownAll">Send to back</data>
 	
 	<data name="Action.OperationMain">Operation</data>
+	<data name="Action.MoveMain">@@Déplacament</data>
+	<data name="Action.MoveValueX">@@Valeur du déplacement horizontal</data>
+	<data name="Action.MoveValueY">@@Valeur du déplacement vertical</data>
+	<data name="Action.MoveLeft">@@Déplacament à gauche</data>
+	<data name="Action.MoveRight">@@Déplacament à droite</data>
+	<data name="Action.MoveDown">@@Déplacament en bas</data>
+	<data name="Action.MoveUp">@@Déplacament en haut</data>
+	<data name="Action.Move">Move by {0};{1}</data>
+	<data name="Action.RotateMain">@@Rotation</data>
 	<data name="Action.Rotate90">90° to the left (CCW)</data>
 	<data name="Action.Rotate180">180°</data>
 	<data name="Action.Rotate270">90° to the right (CW)</data>
-	<data name="Action.ZoomMul2">Scale up ×2</data>
-	<data name="Action.ZoomDiv2">Scale down ÷2</data>
-	<data name="Action.Move">Move by {0};{1}</data>
+	<data name="Action.RotateValue">@@Angle de rotation en degrés</data>
+	<data name="Action.RotateFreeCCW">@@Rotation anti-horaire</data>
+	<data name="Action.RotateFreeCW">@@Rotation horaire</data>
 	<data name="Action.Rotate">Rotate by {0}</data>
+	<data name="Action.MirrorMain">@@Miroir</data>
 	<data name="Action.MirrorH">Flip horizontally</data>
 	<data name="Action.MirrorV">Flip vertically</data>
+	<data name="Action.ZoomMain">@@Réduction et agrandissement</data>
+	<data name="Action.ZoomMul2">Scale up ×2</data>
+	<data name="Action.ZoomDiv2">Scale down ÷2</data>
+	<data name="Action.ZoomValue">@@Facteur d'agrandissement/réduction</data>
+	<data name="Action.ZoomFreeP">@@Agrandissement</data>
+	<data name="Action.ZoomFreeM">@@Réduction</data>
 	<data name="Action.ZoomP">Scale up by {0}%</data>
 	<data name="Action.ZoomM">Scale down by {0}%</data>
-	<data name="Action.GridAlign">Fit to grid</data>
 	<data name="Action.Align">Align</data>
+	<data name="Action.AlignGrid">Fit to grid</data>
+	<data name="Action.AlignLeft">@@Alignement à gauche</data>
+	<data name="Action.AlignCenterX">@@Alignement centré horizontalement</data>
+	<data name="Action.AlignRight">@@Alignement à droite</data>
+	<data name="Action.AlignTop">@@Alignement en haut</data>
+	<data name="Action.AlignCenterY">@@Alignement centré verticalement</data>
+	<data name="Action.AlignBottom">@@Alignement en bas</data>
 	<data name="Action.Share">@@Distribute</data>
-	<data name="Action.Space">@@Space evenly</data>
+	<data name="Action.ShareSpaceX">@@Distribution espacée horizontalement</data>
+	<data name="Action.ShareLeft">@@Distribution sur la gauche</data>
+	<data name="Action.ShareCenterX">@@Distribution centrée horizontalement</data>
+	<data name="Action.ShareRight">@@Distribution sur la droite</data>
+	<data name="Action.ShareSpaceY">@@Distribution espacée verticalement</data>
+	<data name="Action.ShareTop">@@Distribution sur le haut</data>
+	<data name="Action.ShareCenterY">@@Distribution centrée verticalement</data>
+	<data name="Action.ShareBottom">@@Distribution sur le bas</data>
+	<data name="Action.ShareSpace">@@Space evenly</data>
 	<data name="Action.Adjust">Adjust</data>
+	<data name="Action.AdjustWidth">@@Largeurs identiques</data>
+	<data name="Action.AdjustHeight">@@Hauteurs identiques</data>
 	
 	<data name="Action.GroupMain">Group</data>
 	<data name="Action.Merge">Merge into the group</data>
@@ -635,6 +643,7 @@
 	
 	<data name="Action.PageChange">Switch pages</data>
 	<data name="Action.PageNew">New page</data>
+	<data name="Action.PageNewLong">New page &lt;b&gt;after&lt;/b&gt; current page</data>
 	<data name="Action.PageDuplicate">Duplicate page</data>
 	<data name="Action.PageDelete">Delete page</data>
 	<data name="Action.PageSwap">Swap pages</data>
@@ -645,28 +654,51 @@
 	<data name="Action.PagePrev">Previous page</data>
 	<data name="Action.PageMenu">Select page</data>
 	<data name="Action.PageNext">Next page</data>
+	<data name="Action.PageChange">Change page state</data>
 	
 	<data name="Action.LayerChange">Switch layers</data>
 	<data name="Action.LayerNew">New layer</data>
+	<data name="Action.LayerNewLong">New layer &lt;b&gt;above&lt;/b&gt; current layer</data>
 	<data name="Action.LayerNewSel">New layer containing selection</data>
 	<data name="Action.LayerDuplicate">Duplicate layer</data>
 	<data name="Action.LayerDelete">Delete layer</data>
 	<data name="Action.LayerMerge">Merge layers</data>
+	<data name="Action.LayerMergeUp">Merge with layer above</data>
+	<data name="Action.LayerMergeDown">Merge with layer below</data>
 	<data name="Action.LayerSwap">Swap layers</data>
 	<data name="Action.LayerName">Rename layer</data>
-	<data name="Action.LayerUp">Move layer up one level</data>
-	<data name="Action.LayerDown">Move layer down one level</data>
+	<data name="Action.LayerUp">Layer above</data>
+	<data name="Action.LayerDown">Layer below</data>
 	<data name="Action.LayerNext">Next layer</data>
 	<data name="Action.LayerMenu">Select layer</data>
 	<data name="Action.LayerPrev">Previous layer</data>
+	<data name="Action.LayerChangeShowOne">Change visibility of layer</data>
+	<data name="Action.LayerChangeShowAll">Change visibility of all layers</data>
+	<data name="Action.LayerChangePrint">Change layer printing mode</data>
+	<data name="Action.LayerChangeMagnet">Change layer state</data>
 	
-	<data name="Action.StyleMake">New style</data>
+	<data name="Action.StyleNew">New style</data>
 	<data name="Action.StyleFree">Free style</data>
 	<data name="Action.StyleUse">Use style</data>
 	<data name="Action.StyleCreate">Create style</data>
 	<data name="Action.StyleDuplicate">Duplicate style</data>
+	<data name="Action.StyleUp">Move style up</data>
+	<data name="Action.StyleDown">Move style down</data>
 	<data name="Action.StyleDelete">Delete style</data>
 	<data name="Action.StyleSwap">Swap styles</data>
+	
+	<data name="Action.GuideNewH">New horizontal guide</data>
+	<data name="Action.GuideNewV">New vertical guide</data>
+	<data name="Action.GuideDuplicate">Duplicate guide</data>
+	<data name="Action.GuideXfer">Global guide &amp;lt;-&amp;gt; current page</data>
+	<data name="Action.GuideUp">Guide before</data>
+	<data name="Action.GuideDown">Guide after</data>
+	<data name="Action.GuideDelete">Delete guide</data>
+	<data name="Action.GuideSelect">Select guide</data>
+	<data name="Action.GuideChangeType">Change guide type</data>
+	<data name="Action.GuideChangePosition">Change guide position</data>
+	
+	<data name="Action.PropertyChange">Change attribute &quot;{0}&quot;</data>
 	<data name="Action.PickerProperty">Style from pipette</data>
 	<data name="Action.ObjectCreate">Create object &quot;{0}&quot;</data>
 	<data name="Action.Select">Select</data>
@@ -685,6 +717,7 @@
 	<data name="Action.Picker">Pipette</data>
 	<data name="Action.SelectMode">Selection mode</data>
 	<data name="Action.StretchType">Stretch type</data>
+	<data name="Action.SurfaceReset">Reset surface</data>
 	
 	<data name="Action.ZoomMin">Zoom to minimum</data>
 	<data name="Action.ZoomPage">Zoom to full page</data>
@@ -721,6 +754,13 @@
 	<data name="Menu.Zoom.Current">current</data>
 	<data name="Style.Name">Style {0}</data>
 	
+	<data name="Page.ShortName.Default">{0}</data>
+	<data name="Page.ShortName.Model">T{0}</data>
+	<data name="Layer.PositionName.Unique">@@Unique</data>
+	<data name="Layer.PositionName.Front">@@Dessus</data>
+	<data name="Layer.PositionName.Middle">@@Fond+{0}</data>
+	<data name="Layer.PositionName.Back">@@Fond</data>
+
 	<data name="Error.BadFile">Incorrect file type.</data>
 	<data name="Error.BadImage">Unrecognized image format.</data>
 	<data name="Error.NoBitmap">No bitmap.</data>

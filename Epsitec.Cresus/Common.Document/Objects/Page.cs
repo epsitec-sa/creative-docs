@@ -85,7 +85,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Nom court automatique de la page ("Pn" ou "Mn").
+		// Nom court automatique de la page ("n" ou "Mn").
 		public string ShortName
 		{
 			get
@@ -298,10 +298,10 @@ namespace Epsitec.Common.Document.Objects
 
 				string name = string.Format("{0}: {1}", page.ShortName, page.Name);
 
-				string icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
+				string icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
 				if ( i == currentPage )
 				{
-					icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
+					icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
 					name = Misc.Bold(name);
 				}
 

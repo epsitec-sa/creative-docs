@@ -19,31 +19,31 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonNew = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.StyleNew.icon");
 			this.buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNew);
 			this.toolBar.Items.Add(this.buttonNew);
-			ToolTip.Default.SetToolTip(this.buttonNew, "Nouveau style");
+			ToolTip.Default.SetToolTip(this.buttonNew, Res.Strings.Action.StyleNew);
 
 			this.buttonDuplicate = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.DuplicateItem.icon");
 			this.buttonDuplicate.Clicked += new MessageEventHandler(this.HandleButtonDuplicate);
 			this.toolBar.Items.Add(this.buttonDuplicate);
-			ToolTip.Default.SetToolTip(this.buttonDuplicate, "Dupliquer le style");
+			ToolTip.Default.SetToolTip(this.buttonDuplicate, Res.Strings.Action.StyleDuplicate);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonUp = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Up.icon");
 			this.buttonUp.Clicked += new MessageEventHandler(this.HandleButtonUp);
 			this.toolBar.Items.Add(this.buttonUp);
-			ToolTip.Default.SetToolTip(this.buttonUp, "Style plus haut");
+			ToolTip.Default.SetToolTip(this.buttonUp, Res.Strings.Action.StyleUp);
 
 			this.buttonDown = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Down.icon");
 			this.buttonDown.Clicked += new MessageEventHandler(this.HandleButtonDown);
 			this.toolBar.Items.Add(this.buttonDown);
-			ToolTip.Default.SetToolTip(this.buttonDown, "Style plus bas");
+			ToolTip.Default.SetToolTip(this.buttonDown, Res.Strings.Action.StyleDown);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonDelete = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.DeleteItem.icon");
 			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDelete);
 			this.toolBar.Items.Add(this.buttonDelete);
-			ToolTip.Default.SetToolTip(this.buttonDelete, "Supprimer le style");
+			ToolTip.Default.SetToolTip(this.buttonDelete, Res.Strings.Action.StyleDelete);
 
 			this.table = new CellTable(this);
 			this.table.Dock = DockStyle.Fill;
@@ -147,9 +147,9 @@ namespace Epsitec.Common.Document.Containers
 			}
 
 			this.table.SetHeaderTextH(0, "");
-			this.table.SetHeaderTextH(1, "Type");
-			this.table.SetHeaderTextH(2, "Nom");
-			this.table.SetHeaderTextH(3, "Nb");
+			this.table.SetHeaderTextH(1, Res.Strings.Container.Styles.Header.Type);
+			this.table.SetHeaderTextH(2, Res.Strings.Container.Styles.Header.Name);
+			this.table.SetHeaderTextH(3, Res.Strings.Container.Styles.Header.Total);
 
 			for ( int i=0 ; i<rows ; i++ )
 			{

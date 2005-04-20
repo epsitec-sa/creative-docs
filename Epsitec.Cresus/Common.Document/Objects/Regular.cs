@@ -53,7 +53,7 @@ namespace Epsitec.Common.Document.Objects
 			Drawing.Rectangle bbox = this.BoundingBox;
 			if ( !bbox.Contains(pos) )  return false;
 
-			Path path = this.PathBuild(null);
+			Path path = this.PathBuild(null, false);
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			double width = System.Math.Max(this.PropertyLineMode.Width/2, context.MinimalWidth);
@@ -182,7 +182,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.handles.Count < 2 )  return;
 
-			Path path = this.PathBuild(null);
+			Path path = this.PathBuild(null, false);
 
 			Path[] paths = new Path[1];
 			paths[0] = path;
@@ -247,7 +247,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Crée le chemin d'un polygone régulier.
-		protected Path PathBuild(DrawingContext drawingContext)
+		protected Path PathBuild(DrawingContext drawingContext, bool simplify)
 		{
 			Path path = new Path();
 			path.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);;
@@ -255,7 +255,7 @@ namespace Epsitec.Common.Document.Objects
 			int total = this.PropertyRegular.NbFaces;
 			Properties.Corner corner = this.PropertyCorner;
 
-			if ( corner.CornerType == Properties.CornerType.Right )  // coins droits ?
+			if ( corner.CornerType == Properties.CornerType.Right || simplify )  // coins droits ?
 			{
 				Point a;
 				Point b;
@@ -311,7 +311,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.TotalHandle < 2 )  return;
 
-			Path path = this.PathBuild(drawingContext);
+			Path path = this.PathBuild(drawingContext, false);
 			this.surfaceAnchor.LineUse = false;
 			this.PropertyFillGradient.RenderSurface(graphics, drawingContext, path, this.surfaceAnchor);
 
@@ -343,7 +343,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.TotalHandle < 2 )  return;
 
-			Path path = this.PathBuild(drawingContext);
+			Path path = this.PathBuild(drawingContext, false);
 
 			if ( this.PropertyFillGradient.PaintColor(port, drawingContext) )
 			{
@@ -357,11 +357,18 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Retourne le chemin géométrique de l'objet pour les constructions
+		// magnétiques.
+		public override Path GetMagnetPath()
+		{
+			return this.PathBuild(null, true);
+		}
+
 		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)
 		{
 			if ( rank > 0 )  return null;
-			return this.PathBuild(null);
+			return this.PathBuild(null, false);
 		}
 
 

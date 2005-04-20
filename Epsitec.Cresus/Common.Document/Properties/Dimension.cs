@@ -36,8 +36,8 @@ namespace Epsitec.Common.Document.Properties
 			this.addLength = 50.0;
 			this.outLength = 20.0;
 			this.fontOffset = 0.4;
-			this.prefix = " ";
-			this.postfix = " mm ";
+			this.prefix = Res.Strings.Property.Dimension.Prefix;
+			this.postfix = Res.Strings.Property.Dimension.Postfix;
 			this.rotateText = false;
 		}
 

@@ -32,14 +32,14 @@ namespace Epsitec.Common.Document.Panels
 			this.fontName.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontName.TabIndex = 1;
 			this.fontName.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fontName, "Police du texte par défaut");
+			ToolTip.Default.SetToolTip(this.fontName, Res.Strings.Panel.Font.Tooltip.Name);
 
 			this.fontSize = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealFontSize(this.fontSize);
 			this.fontSize.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontSize.TabIndex = 3;
 			this.fontSize.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fontSize, "Taille du texte par défaut");
+			ToolTip.Default.SetToolTip(this.fontSize, Res.Strings.Panel.Font.Tooltip.Size);
 
 			this.fontColor = new ColorSample(this);
 			this.fontColor.PossibleSource = true;
@@ -47,10 +47,10 @@ namespace Epsitec.Common.Document.Panels
 			this.fontColor.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.fontColor.TabIndex = 4;
 			this.fontColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fontColor, "Couleur du texte par défaut");
+			ToolTip.Default.SetToolTip(this.fontColor, Res.Strings.Panel.Font.Tooltip.Color);
 
 			this.labelColor = new StaticText(this);
-			this.labelColor.Text = "Couleur";
+			this.labelColor.Text = Res.Strings.Panel.Font.Label.Color;
 			this.labelColor.Alignment = ContentAlignment.MiddleLeft;
 
 			this.isNormalAndExtended = true;

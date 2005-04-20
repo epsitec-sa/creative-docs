@@ -264,8 +264,8 @@ namespace Epsitec.Common.Document.Objects
 			Point p2 = this.Handle(1).Position;
 			double w = this.PropertyLineMode.Width;
 			CapStyle cap = this.PropertyLineMode.Cap;
-			Point pp1 = this.PropertyArrow.PathExtremity(pathStart, 0, w,cap, p1,p2, out outlineStart, out surfaceStart);
-			Point pp2 = this.PropertyArrow.PathExtremity(pathEnd,   1, w,cap, p2,p1, out outlineEnd,   out surfaceEnd);
+			Point pp1 = this.PropertyArrow.PathExtremity(pathStart, 0, w,cap, p1,p2, false, out outlineStart, out surfaceStart);
+			Point pp2 = this.PropertyArrow.PathExtremity(pathEnd,   1, w,cap, p2,p1, false, out outlineEnd,   out surfaceEnd);
 
 			pathLine.MoveTo(pp1);
 			pathLine.LineTo(pp2);
@@ -394,6 +394,18 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+
+		// Retourne le chemin géométrique de l'objet pour les constructions
+		// magnétiques.
+		public override Path GetMagnetPath()
+		{
+			Path path = new Path();
+
+			path.MoveTo(this.Handle(0).Position);
+			path.LineTo(this.Handle(1).Position);
+
+			return path;
+		}
 
 		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)

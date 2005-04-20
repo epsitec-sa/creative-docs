@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateSelectorPanel();
 
 			this.detailButton = new CheckButton();
-			this.detailButton.Text = "Détails";
+			this.detailButton.Text = Res.Strings.Container.Principal.Button.Detail;
 			this.detailButton.Dock = DockStyle.Top;
 			this.detailButton.DockMargins = new Margins(0, 0, 5, 5);
 			this.detailButton.TabIndex = 1;
@@ -58,6 +58,25 @@ namespace Epsitec.Common.Document.Containers
 			base.Dispose(disposing);
 		}
 
+		// Donne la toolbar pour les sélections.
+		public HToolBar SelectorToolBar
+		{
+			get
+			{
+				return this.selectorToolBar;
+			}
+		}
+
+		// Met à jour le bouton de stretch.
+		public void UpdateSelectorStretch()
+		{
+			IconButton button = this.selectorToolBar.FindChild("SelectorStretch") as IconButton;
+			if ( button == null )  return;
+
+			SelectorTypeStretch type = this.document.Modifier.ActiveViewer.SelectorTypeStretch;
+			button.IconName = Principal.GetSelectorTypeStretchIcon(type);
+		}
+
 		// Crée la toolbar pour les sélections.
 		protected void CreateSelectorToolBar()
 		{
@@ -70,46 +89,56 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorAuto = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorAuto.icon");
 			this.selectorToolBar.Items.Add(this.selectorAuto);
 			this.selectorAuto.Command = "SelectorAuto";
-			ToolTip.Default.SetToolTip(this.selectorAuto, "Sélection automatique");
+			ToolTip.Default.SetToolTip(this.selectorAuto, Res.Strings.Container.Principal.Button.Auto);
 			
 			this.selectorIndividual = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorIndividual.icon");
 			this.selectorToolBar.Items.Add(this.selectorIndividual);
 			this.selectorIndividual.Command = "SelectorIndividual";
-			ToolTip.Default.SetToolTip(this.selectorIndividual, "Sélectionne les objets individuellement");
+			ToolTip.Default.SetToolTip(this.selectorIndividual, Res.Strings.Container.Principal.Button.Individual);
 			
 			this.selectorZoom = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorZoom.icon");
 			this.selectorToolBar.Items.Add(this.selectorZoom);
 			this.selectorZoom.Command = "SelectorZoom";
-			ToolTip.Default.SetToolTip(this.selectorZoom, "Déplacement, agrandissement et rotation");
+			ToolTip.Default.SetToolTip(this.selectorZoom, Res.Strings.Container.Principal.Button.Zoom);
 			
 			this.selectorStretch = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorStretch.icon");
 			this.selectorToolBar.Items.Add(this.selectorStretch);
 			this.selectorStretch.Command = "SelectorStretch";
-			ToolTip.Default.SetToolTip(this.selectorStretch, "Déformation");
+			this.selectorStretch.Name = "SelectorStretch";
+			ToolTip.Default.SetToolTip(this.selectorStretch, Res.Strings.Container.Principal.Button.Stretch);
+
+			GlyphButton selectorStretchType = new GlyphButton("SelectorStretchType");
+			selectorStretchType.Name = "SelectorStretchType";
+			selectorStretchType.GlyphShape = GlyphShape.ArrowDown;
+			selectorStretchType.ButtonStyle = ButtonStyle.ToolItem;
+			selectorStretchType.Width = 14;
+			selectorStretchType.DockMargins = new Margins(-1, 0, 0, 0);
+			ToolTip.Default.SetToolTip(selectorStretchType, Res.Strings.Container.Principal.Button.StretchType);
+			this.selectorToolBar.Items.Add(selectorStretchType);
 
 			this.selectorToolBar.Items.Add(new IconSeparator());
 			
 			this.selectorTotal = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectTotal.icon");
 			this.selectorToolBar.Items.Add(this.selectorTotal);
 			this.selectorTotal.Command = "SelectTotal";
-			ToolTip.Default.SetToolTip(this.selectorTotal, "Sélection totale requise");
+			ToolTip.Default.SetToolTip(this.selectorTotal, Res.Strings.Container.Principal.Button.Total);
 			
 			this.selectorPartial = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectPartial.icon");
 			this.selectorToolBar.Items.Add(this.selectorPartial);
 			this.selectorPartial.Command = "SelectPartial";
-			ToolTip.Default.SetToolTip(this.selectorPartial, "Sélection partielle autorisée");
+			ToolTip.Default.SetToolTip(this.selectorPartial, Res.Strings.Container.Principal.Button.Partial);
 
 			this.selectorToolBar.Items.Add(new IconSeparator());
 			
 			this.selectorAdaptLine = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorAdaptLine.icon");
 			this.selectorToolBar.Items.Add(this.selectorAdaptLine);
 			this.selectorAdaptLine.Command = "SelectorAdaptLine";
-			ToolTip.Default.SetToolTip(this.selectorAdaptLine, "Adapte les traits");
+			ToolTip.Default.SetToolTip(this.selectorAdaptLine, Res.Strings.Container.Principal.Button.AdaptLine);
 			
 			this.selectorAdaptText = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorAdaptText.icon");
 			this.selectorToolBar.Items.Add(this.selectorAdaptText);
 			this.selectorAdaptText.Command = "SelectorAdaptText";
-			ToolTip.Default.SetToolTip(this.selectorAdaptText, "Adapte les textes");
+			ToolTip.Default.SetToolTip(this.selectorAdaptText, Res.Strings.Container.Principal.Button.AdaptText);
 		}
 
 		// Crée le panneau pour les sélections.
@@ -126,15 +155,15 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorName.TextChanged += new EventHandler(this.HandleSelectorNameChanged);
 			this.selectorName.OpeningCombo += new CancelEventHandler(this.HandleSelectorNameOpeningCombo);
 			this.selectorName.ClosedCombo += new EventHandler(this.HandleSelectorNameClosedCombo);
-			ToolTip.Default.SetToolTip(this.selectorName, "Nom de l'objet à sélectionner");
+			ToolTip.Default.SetToolTip(this.selectorName, Res.Strings.Container.Principal.Button.SelName);
 
 			this.selectorGo = new Button(this.selectorPanel);
-			this.selectorGo.Text = "Sélectionner";
+			this.selectorGo.Text = Res.Strings.Container.Principal.Button.SelGo;
 			this.selectorGo.Width = 80;
 			this.selectorGo.Dock = DockStyle.Left;
 			this.selectorGo.DockMargins = new Margins(3, 0, 0, 0);
 			this.selectorGo.Pressed += new MessageEventHandler(this.HandleSelectorGo);
-			ToolTip.Default.SetToolTip(this.selectorGo, "Sélectionne l'objet selon le nom");
+			ToolTip.Default.SetToolTip(this.selectorGo, Res.Strings.Container.Principal.Button.SelGoHelp);
 
 			this.UpdateSelectorGo();
 		}
@@ -441,6 +470,51 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleSelectorGo(object sender, MessageEventArgs e)
 		{
 			this.document.Modifier.SelectName(this.selectorName.Text);
+		}
+
+
+		// Construit le menu des types de stretch.
+		public VMenu CreateStretchTypeMenu(MessageEventHandler message)
+		{
+			VMenu menu = new VMenu();
+
+			this.CreateStretchTypeMenu(menu, message, SelectorTypeStretch.Free, Res.Strings.Container.Principal.Menu.Stretch.Free);
+			menu.Items.Add(new MenuSeparator());
+			this.CreateStretchTypeMenu(menu, message, SelectorTypeStretch.TrapezeH, Res.Strings.Container.Principal.Menu.Stretch.TrapezeH);
+			this.CreateStretchTypeMenu(menu, message, SelectorTypeStretch.TrapezeV, Res.Strings.Container.Principal.Menu.Stretch.TrapezeV);
+			menu.Items.Add(new MenuSeparator());
+			this.CreateStretchTypeMenu(menu, message, SelectorTypeStretch.ParallelH, Res.Strings.Container.Principal.Menu.Stretch.ParallelH);
+			this.CreateStretchTypeMenu(menu, message, SelectorTypeStretch.ParallelV, Res.Strings.Container.Principal.Menu.Stretch.ParallelV);
+
+			menu.AdjustSize();
+			return menu;
+		}
+
+		// Crée une case du menu des actions à refaire/annuler.
+		protected void CreateStretchTypeMenu(VMenu menu, MessageEventHandler message,
+											 SelectorTypeStretch type, string text)
+		{
+			string icon = Principal.GetSelectorTypeStretchIcon(type);
+			string name = ((int)type).ToString();
+			MenuItem item = new MenuItem("SelectorStretchTypeDo(this.Name)", icon, text, "", name);
+
+			if ( message != null )
+			{
+				item.Pressed += message;
+			}
+
+			menu.Items.Add(item);
+		}
+
+		// Retourne l'icône à utiliser pour un type de déformation.
+		protected static string GetSelectorTypeStretchIcon(SelectorTypeStretch type)
+		{
+			if ( type == SelectorTypeStretch.Free      )  return "manifest:Epsitec.App.DocumentEditor.Images.SelectorStretch.icon";
+			if ( type == SelectorTypeStretch.ParallelH )  return "manifest:Epsitec.App.DocumentEditor.Images.SelectorStretchParallelH.icon";
+			if ( type == SelectorTypeStretch.ParallelV )  return "manifest:Epsitec.App.DocumentEditor.Images.SelectorStretchParallelV.icon";
+			if ( type == SelectorTypeStretch.TrapezeH  )  return "manifest:Epsitec.App.DocumentEditor.Images.SelectorStretchTrapezeH.icon";
+			if ( type == SelectorTypeStretch.TrapezeV  )  return "manifest:Epsitec.App.DocumentEditor.Images.SelectorStretchTrapezeV.icon";
+			return "";
 		}
 
 

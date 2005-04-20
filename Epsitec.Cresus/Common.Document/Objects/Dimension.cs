@@ -356,14 +356,16 @@ namespace Epsitec.Common.Document.Objects
 			this.creatingPhase ++;
 
 			drawingContext.MagnetClearStarting();
-			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
 		}
 
 		// Indique si la création de l'objet est terminée.
 		public override bool CreateIsEnding(DrawingContext drawingContext)
 		{
-			if ( this.creatingPhase < 2 )  return false;
+			if ( this.creatingPhase < 2 )
+			{
+				return !this.CreateIsExist(drawingContext);
+			}
 
 			this.isCreating = false;
 			this.document.Modifier.TextInfoModif = "";
@@ -523,8 +525,8 @@ namespace Epsitec.Common.Document.Objects
 			Point p2 = this.Handle(1).Position;
 			double w = this.PropertyLineMode.Width;
 			CapStyle cap = this.PropertyLineMode.Cap;
-			Point pp1 = this.PropertyDimensionArrow.PathExtremity(pathStart, 0, w,cap, p1,p2, out outlineStart, out surfaceStart);
-			Point pp2 = this.PropertyDimensionArrow.PathExtremity(pathEnd,   1, w,cap, p2,p1, out outlineEnd,   out surfaceEnd);
+			Point pp1 = this.PropertyDimensionArrow.PathExtremity(pathStart, 0, w,cap, p1,p2, false, out outlineStart, out surfaceStart);
+			Point pp2 = this.PropertyDimensionArrow.PathExtremity(pathEnd,   1, w,cap, p2,p1, false, out outlineEnd,   out surfaceEnd);
 			double length = Point.Distance(pp1, pp2);
 
 			Properties.DimensionJustif cj = dimension.DimensionJustif;
@@ -614,8 +616,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				pathStart = new Path();
 				pathEnd   = new Path();
-				pp1 = this.PropertyDimensionArrow.PathExtremity(pathStart, 0, w,cap, p1,Point.Scale(p1,p2,-1), out outlineStart, out surfaceStart);
-				pp2 = this.PropertyDimensionArrow.PathExtremity(pathEnd,   1, w,cap, p2,Point.Scale(p2,p1,-1), out outlineEnd,   out surfaceEnd);
+				pp1 = this.PropertyDimensionArrow.PathExtremity(pathStart, 0, w,cap, p1,Point.Scale(p1,p2,-1), false, out outlineStart, out surfaceStart);
+				pp2 = this.PropertyDimensionArrow.PathExtremity(pathEnd,   1, w,cap, p2,Point.Scale(p2,p1,-1), false, out outlineEnd,   out surfaceEnd);
 				double lex1 = Point.Distance(p1, pp1);
 				double lex2 = Point.Distance(p2, pp2);
 
@@ -842,6 +844,24 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+
+		// Retourne le chemin géométrique de l'objet pour les constructions
+		// magnétiques.
+		public override Path GetMagnetPath()
+		{
+			Path path = new Path();
+
+			path.MoveTo(this.Handle(0).Position);
+			path.LineTo(this.Handle(1).Position);
+
+			path.MoveTo(this.Handle(0).Position);
+			path.LineTo(this.Handle(2).Position);
+
+			path.MoveTo(this.Handle(1).Position);
+			path.LineTo(this.Handle(3).Position);
+
+			return path;
+		}
 
 		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)

@@ -24,21 +24,21 @@ namespace Epsitec.Common.Document.Settings
 			switch ( this.name )
 			{
 				case "DefaultUnit":
-					this.text = "Unité de travail";
+					this.text = Res.Strings.Dialog.Integer.DefaultUnit.Text;
 					this.minValue = 0;
 					this.maxValue = 100;
 					this.step = 1;
 					break;
 
 				case "PrintArea":
-					this.text = "Imprimer";
+					this.text = Res.Strings.Dialog.Integer.PrintArea.Text;
 					this.minValue = 0;
 					this.maxValue = 100;
 					this.step = 1;
 					break;
 
 				case "PrintCentring":
-					this.text = "Position dans la page";
+					this.text = Res.Strings.Dialog.Integer.PrintCentring.Text;
 					this.conditionName = "PrintAutoZoom";
 					this.conditionState = true;
 					this.minValue = 0;
@@ -47,14 +47,14 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "ImageDepth":
-					this.text = "Nombre de couleurs";
+					this.text = Res.Strings.Dialog.Integer.ImageDepth.Text;
 					this.minValue = 0;
 					this.maxValue = 100;
 					this.step = 1;
 					break;
 
 				case "ImageCompression":
-					this.text = "Type de compression";
+					this.text = Res.Strings.Dialog.Integer.ImageCompression.Text;
 					this.minValue = 0;
 					this.maxValue = 100;
 					this.step = 1;
@@ -174,46 +174,46 @@ namespace Epsitec.Common.Document.Settings
 			{
 				case "DefaultUnit":
 					RealUnitType unit = (RealUnitType) type;
-					if ( unit == RealUnitType.DimensionMillimeter )  return "Millimètres";
-					if ( unit == RealUnitType.DimensionCentimeter )  return "Centimètres";
-					if ( unit == RealUnitType.DimensionInch       )  return "Pouces";
+					if ( unit == RealUnitType.DimensionMillimeter )  return Res.Strings.Dialog.Integer.DefaultUnit.Millimeter;
+					if ( unit == RealUnitType.DimensionCentimeter )  return Res.Strings.Dialog.Integer.DefaultUnit.Centimeter;
+					if ( unit == RealUnitType.DimensionInch       )  return Res.Strings.Dialog.Integer.DefaultUnit.Inch;
 					break;
 
 				case "PrintArea":
 					PrintArea pa = (PrintArea) type;
-					if ( pa == PrintArea.All  )  return "Toutes les pages";
-					if ( pa == PrintArea.Even )  return "Les pages paires";
-					if ( pa == PrintArea.Odd  )  return "Les pages impaires";
+					if ( pa == PrintArea.All  )  return Res.Strings.Dialog.Integer.PrintArea.All;
+					if ( pa == PrintArea.Even )  return Res.Strings.Dialog.Integer.PrintArea.Even;
+					if ( pa == PrintArea.Odd  )  return Res.Strings.Dialog.Integer.PrintArea.Odd;
 					break;
 
 				case "PrintCentring":
 					PrintCentring pc = (PrintCentring) type;
-					if ( pc == PrintCentring.BottomLeft   )  return "Calé en bas à gauche";
-					if ( pc == PrintCentring.BottomCenter )  return "Centré en bas";
-					if ( pc == PrintCentring.BottomRight  )  return "Calé en bas à droite";
-					if ( pc == PrintCentring.MiddleLeft   )  return "Centré à gauche";
-					if ( pc == PrintCentring.MiddleCenter )  return "Centré";
-					if ( pc == PrintCentring.MiddleRight  )  return "Centré à droite";
-					if ( pc == PrintCentring.TopLeft      )  return "Calé en haut à gauche";
-					if ( pc == PrintCentring.TopCenter    )  return "Centré en haut";
-					if ( pc == PrintCentring.TopRight     )  return "Calé en haut à droite";
+					if ( pc == PrintCentring.BottomLeft   )  return Res.Strings.Dialog.Integer.PrintCentring.BottomLeft;
+					if ( pc == PrintCentring.BottomCenter )  return Res.Strings.Dialog.Integer.PrintCentring.BottomCenter;
+					if ( pc == PrintCentring.BottomRight  )  return Res.Strings.Dialog.Integer.PrintCentring.BottomRight;
+					if ( pc == PrintCentring.MiddleLeft   )  return Res.Strings.Dialog.Integer.PrintCentring.MiddleLeft;
+					if ( pc == PrintCentring.MiddleCenter )  return Res.Strings.Dialog.Integer.PrintCentring.MiddleCenter;
+					if ( pc == PrintCentring.MiddleRight  )  return Res.Strings.Dialog.Integer.PrintCentring.MiddleRight;
+					if ( pc == PrintCentring.TopLeft      )  return Res.Strings.Dialog.Integer.PrintCentring.TopLeft;
+					if ( pc == PrintCentring.TopCenter    )  return Res.Strings.Dialog.Integer.PrintCentring.TopCenter;
+					if ( pc == PrintCentring.TopRight     )  return Res.Strings.Dialog.Integer.PrintCentring.TopRight;
 					break;
 
 				case "ImageDepth":
-					if ( type ==  2 )  return "Noir et blanc (1 bit)";
-					if ( type ==  8 )  return "256 (8 bits)";
-					if ( type == 16 )  return "65'000 (16 bits)";
-					if ( type == 24 )  return "16 millions (24 bits)";
-					if ( type == 32 )  return "Avec transparence (32 bits)";
+					if ( type ==  2 )  return Res.Strings.Dialog.Integer.ImageDepth.Bit2;
+					if ( type ==  8 )  return Res.Strings.Dialog.Integer.ImageDepth.Bit8;
+					if ( type == 16 )  return Res.Strings.Dialog.Integer.ImageDepth.Bit16;
+					if ( type == 24 )  return Res.Strings.Dialog.Integer.ImageDepth.Bit24;
+					if ( type == 32 )  return Res.Strings.Dialog.Integer.ImageDepth.Bit32;
 					break;
 
 				case "ImageCompression":
 					ImageCompression ic = (ImageCompression) type;
-					if ( ic == ImageCompression.None      )  return "Aucune";
-					if ( ic == ImageCompression.Lzw       )  return "LZW";
-					if ( ic == ImageCompression.Rle       )  return "RLE";
-					if ( ic == ImageCompression.FaxGroup3 )  return "Fax Group 3";
-					if ( ic == ImageCompression.FaxGroup4 )  return "Fax Group 4";
+					if ( ic == ImageCompression.None      )  return Res.Strings.Dialog.Integer.ImageCompression.None;
+					if ( ic == ImageCompression.Lzw       )  return Res.Strings.Dialog.Integer.ImageCompression.Lzw;
+					if ( ic == ImageCompression.Rle       )  return Res.Strings.Dialog.Integer.ImageCompression.Rle;
+					if ( ic == ImageCompression.FaxGroup3 )  return Res.Strings.Dialog.Integer.ImageCompression.FaxGroup3;
+					if ( ic == ImageCompression.FaxGroup4 )  return Res.Strings.Dialog.Integer.ImageCompression.FaxGroup4;
 					break;
 			}
 			return "";

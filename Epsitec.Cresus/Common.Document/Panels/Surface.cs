@@ -27,14 +27,14 @@ namespace Epsitec.Common.Document.Panels
 			this.surfaceType.TextChanged += new EventHandler(this.HandleTypeChanged);
 			this.surfaceType.TabIndex = 1;
 			this.surfaceType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.surfaceType, "Type de la surface 3d");
+			ToolTip.Default.SetToolTip(this.surfaceType, Res.Strings.Panel.Surface.Tooltip.Type);
 
 			this.labelFactor = new StaticText[4];
 			this.fieldFactor = new TextFieldReal[4];
 			for ( int i=0 ; i<4 ; i++ )
 			{
 				this.labelFactor[i] = new StaticText(this);
-				this.labelFactor[i].Text = string.Format("R{0}", i+1);
+				this.labelFactor[i].Text = string.Format(Res.Strings.Panel.Surface.Label.Factor, i+1);
 
 				this.fieldFactor[i] = new TextFieldReal(this);
 				this.document.Modifier.AdaptTextFieldRealPercent(this.fieldFactor[i]);
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Document.Panels
 			for ( int i=0 ; i<2 ; i++ )
 			{
 				this.labelScalar[i] = new StaticText(this);
-				this.labelScalar[i].Text = string.Format("N{0}", i+1);
+				this.labelScalar[i].Text = string.Format(Res.Strings.Panel.Surface.Label.Scalar, i+1);
 
 				this.fieldScalar[i] = new TextFieldReal(this);
 				this.document.Modifier.AdaptTextFieldRealScalar(this.fieldScalar[i]);
@@ -61,11 +61,11 @@ namespace Epsitec.Common.Document.Panels
 			}
 
 			this.resetButton = new Button(this);
-			this.resetButton.Text = "R";
+			this.resetButton.Text = Res.Strings.Panel.Surface.Label.Reset;
 			this.resetButton.Clicked += new MessageEventHandler(this.HandleResetButton);
 			this.resetButton.TabIndex = 100;
 			this.resetButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.resetButton, "Reset (valeurs standards)");
+			ToolTip.Default.SetToolTip(this.resetButton, Res.Strings.Panel.Surface.Tooltip.Reset);
 
 			this.isNormalAndExtended = true;
 		}
@@ -267,7 +267,7 @@ namespace Epsitec.Common.Document.Panels
 		// Le bouton "reset" a été cliqué.
 		private void HandleResetButton(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.OpletQueueBeginAction("Réinitialisation de la surface");
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.SurfaceReset);
 			Properties.Surface p = this.property as Properties.Surface;
 			p.Reset();
 			this.document.Modifier.OpletQueueValidateAction();

@@ -173,21 +173,21 @@ namespace Epsitec.Common.Document.Properties
 			string name = "";
 			switch ( type )
 			{
-				case CornerType.Right:      name = "Droit";           break;
-				case CornerType.Round:      name = "Arrondi";         break;
-				case CornerType.Bevel:      name = "Biseau";          break;
-				case CornerType.Line31:     name = "Droites 3.1";     break;
-				case CornerType.Line41:     name = "Droites 4.1";     break;
-				case CornerType.Line42:     name = "Droites 4.2";     break;
-				case CornerType.Line51:     name = "Droites 5.1";     break;
-				case CornerType.Line61:     name = "Droites 6.1";     break;
-				case CornerType.Line62:     name = "Droites 6.2";     break;
-				case CornerType.Curve21:    name = "Courbes 2.1";     break;
-				case CornerType.Curve22:    name = "Courbes 2.2";     break;
-				case CornerType.Curve31:    name = "Courbes 3.1";     break;
-				case CornerType.Fantasy51:  name = "Fantaisies 5.1";  break;
-				case CornerType.Fantasy61:  name = "Fantaisies 6.1";  break;
-				case CornerType.Fantasy62:  name = "Fantaisies 6.2";  break;
+				case CornerType.Right:      name = Res.Strings.Property.Corner.Right;      break;
+				case CornerType.Round:      name = Res.Strings.Property.Corner.Round;      break;
+				case CornerType.Bevel:      name = Res.Strings.Property.Corner.Bevel;      break;
+				case CornerType.Line31:     name = Res.Strings.Property.Corner.Line31;     break;
+				case CornerType.Line41:     name = Res.Strings.Property.Corner.Line41;     break;
+				case CornerType.Line42:     name = Res.Strings.Property.Corner.Line42;     break;
+				case CornerType.Line51:     name = Res.Strings.Property.Corner.Line51;     break;
+				case CornerType.Line61:     name = Res.Strings.Property.Corner.Line61;     break;
+				case CornerType.Line62:     name = Res.Strings.Property.Corner.Line62;     break;
+				case CornerType.Curve21:    name = Res.Strings.Property.Corner.Curve21;    break;
+				case CornerType.Curve22:    name = Res.Strings.Property.Corner.Curve22;    break;
+				case CornerType.Curve31:    name = Res.Strings.Property.Corner.Curve31;    break;
+				case CornerType.Fantasy51:  name = Res.Strings.Property.Corner.Fantasy51;  break;
+				case CornerType.Fantasy61:  name = Res.Strings.Property.Corner.Fantasy61;  break;
+				case CornerType.Fantasy62:  name = Res.Strings.Property.Corner.Fantasy62;  break;
 			}
 			return name;
 		}

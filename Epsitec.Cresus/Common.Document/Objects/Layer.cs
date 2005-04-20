@@ -121,21 +121,21 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( total == 1 )
 			{
-				return "Unique";
+				return Res.Strings.Layer.PositionName.Unique;
 			}
 			else
 			{
 				if ( rank == 0 )
 				{
-					return "Fond";
+					return Res.Strings.Layer.PositionName.Back;
 				}
 				else if ( rank < total-1 )
 				{
-					return string.Format("Fond+{0}", rank.ToString());
+					return string.Format(Res.Strings.Layer.PositionName.Middle, rank.ToString());
 				}
 				else
 				{
-					return "Dessus";
+					return Res.Strings.Layer.PositionName.Front;
 				}
 			}
 		}
@@ -168,10 +168,10 @@ namespace Epsitec.Common.Document.Objects
 					name = string.Format("{0}: {1}", Layer.ShortName(ii), layer.Name);
 				}
 
-				string icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
+				string icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
 				if ( ii == currentLayer )
 				{
-					icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
+					icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
 					name = Misc.Bold(name);
 				}
 

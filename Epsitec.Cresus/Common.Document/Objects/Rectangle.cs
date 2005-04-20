@@ -52,7 +52,7 @@ namespace Epsitec.Common.Document.Objects
 			Drawing.Rectangle bbox = this.BoundingBox;
 			if ( !bbox.Contains(pos) )  return false;
 
-			Path path = this.PathBuild(null);
+			Path path = this.PathBuild(null, false);
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			double width = System.Math.Max(this.PropertyLineMode.Width/2, context.MinimalWidth);
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.handles.Count < 2 )  return;
 
-			Path path = this.PathBuild(null);
+			Path path = this.PathBuild(null, false);
 
 			Path[] paths = new Path[1];
 			paths[0] = path;
@@ -203,7 +203,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Crée le chemin de l'objet.
-		protected Path PathBuild(DrawingContext drawingContext)
+		protected Path PathBuild(DrawingContext drawingContext, bool simplify)
 		{
 			Point p1 = this.Handle(0).Position;
 			Point p2 = new Point();
@@ -224,11 +224,11 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			Properties.Corner corner = this.PropertyCorner;
-			return this.PathCornerRectangle(drawingContext, p1, p2, p3, p4, corner);
+			return this.PathCornerRectangle(drawingContext, p1, p2, p3, p4, corner, simplify);
 		}
 
 		// Crée le chemin d'un rectangle à coins quelconques.
-		protected Path PathCornerRectangle(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4, Properties.Corner corner)
+		protected Path PathCornerRectangle(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4, Properties.Corner corner, bool simplify)
 		{
 			double d12 = Point.Distance(p1, p2);
 			double d23 = Point.Distance(p2, p3);
@@ -236,11 +236,12 @@ namespace Epsitec.Common.Document.Objects
 			double d41 = Point.Distance(p4, p1);
 			double min = System.Math.Min(System.Math.Min(d12, d23), System.Math.Min(d34, d41));
 			double radius = System.Math.Min(corner.Radius, min/2);
+			if ( simplify )  radius = 0.0;
 
 			Path path = new Path();
 			path.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
 
-			if ( corner.CornerType == Properties.CornerType.Right || radius == 0 )
+			if ( corner.CornerType == Properties.CornerType.Right || radius == 0.0 )
 			{
 				path.MoveTo(p1);
 				path.LineTo(p2);
@@ -285,7 +286,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.TotalHandle < 2 )  return;
 
-			Path path = this.PathBuild(drawingContext);
+			Path path = this.PathBuild(drawingContext, false);
 			this.surfaceAnchor.LineUse = false;
 			this.PropertyFillGradient.RenderSurface(graphics, drawingContext, path, this.surfaceAnchor);
 			this.surfaceAnchor.LineUse = true;
@@ -316,7 +317,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.TotalHandle < 2 )  return;
 
-			Path path = this.PathBuild(drawingContext);
+			Path path = this.PathBuild(drawingContext, false);
 
 			if ( this.PropertyFillGradient.PaintColor(port, drawingContext) )
 			{
@@ -330,11 +331,18 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Retourne le chemin géométrique de l'objet pour les constructions
+		// magnétiques.
+		public override Path GetMagnetPath()
+		{
+			return this.PathBuild(null, true);
+		}
+
 		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)
 		{
 			if ( rank > 0 )  return null;
-			return this.PathBuild(null);
+			return this.PathBuild(null, false);
 		}
 
 

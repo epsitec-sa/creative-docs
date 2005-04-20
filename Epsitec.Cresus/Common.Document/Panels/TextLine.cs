@@ -28,10 +28,10 @@ namespace Epsitec.Common.Document.Panels
 			this.buttons[1].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHCenter.icon";
 			this.buttons[2].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHRight.icon";
 			this.buttons[3].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHStretch.icon";
-			ToolTip.Default.SetToolTip(this.buttons[0], "Justification à gauche");
-			ToolTip.Default.SetToolTip(this.buttons[1], "Justification centrée");
-			ToolTip.Default.SetToolTip(this.buttons[2], "Justification à droite");
-			ToolTip.Default.SetToolTip(this.buttons[3], "Justification alignée");
+			ToolTip.Default.SetToolTip(this.buttons[0], Res.Strings.Panel.TextLine.Tooltip.JustifHLeft);
+			ToolTip.Default.SetToolTip(this.buttons[1], Res.Strings.Panel.TextLine.Tooltip.JustifHCenter);
+			ToolTip.Default.SetToolTip(this.buttons[2], Res.Strings.Panel.TextLine.Tooltip.JustifHRight);
+			ToolTip.Default.SetToolTip(this.buttons[3], Res.Strings.Panel.TextLine.Tooltip.JustifHStretch);
 
 			this.fieldOffset = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldOffset);
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldOffset.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldOffset.TabIndex = 20;
 			this.fieldOffset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldOffset, "Offset perpendiculaire");
+			ToolTip.Default.SetToolTip(this.fieldOffset, Res.Strings.Panel.TextLine.Tooltip.Offset);
 
 			this.fieldAdd = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldAdd);
@@ -53,14 +53,14 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldAdd.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldAdd.TabIndex = 21;
 			this.fieldAdd.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldAdd, "Espace intercaractère");
+			ToolTip.Default.SetToolTip(this.fieldAdd, Res.Strings.Panel.TextLine.Tooltip.Add);
 
 			this.labelOffset = new StaticText(this);
-			this.labelOffset.Text = "Oy";
+			this.labelOffset.Text = Res.Strings.Panel.TextLine.Label.Offset;
 			this.labelOffset.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelAdd = new StaticText(this);
-			this.labelAdd.Text = "L";
+			this.labelAdd.Text = Res.Strings.Panel.TextLine.Label.Add;
 			this.labelAdd.Alignment = ContentAlignment.MiddleCenter;
 
 			this.isNormalAndExtended = true;

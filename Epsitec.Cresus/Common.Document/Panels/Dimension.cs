@@ -27,18 +27,18 @@ namespace Epsitec.Common.Document.Panels
 			this.buttons[0].IconName = "manifest:Epsitec.App.DocumentEditor.Images.DimensionAuto.icon";
 			this.buttons[1].IconName = "manifest:Epsitec.App.DocumentEditor.Images.DimensionInside.icon";
 			this.buttons[2].IconName = "manifest:Epsitec.App.DocumentEditor.Images.DimensionOutside.icon";
-			ToolTip.Default.SetToolTip(this.buttons[0], "Cote automatique");
-			ToolTip.Default.SetToolTip(this.buttons[1], "Cote intérieure");
-			ToolTip.Default.SetToolTip(this.buttons[2], "Cote extérieure");
+			ToolTip.Default.SetToolTip(this.buttons[0], Res.Strings.Panel.Dimension.Tooltip.Auto);
+			ToolTip.Default.SetToolTip(this.buttons[1], Res.Strings.Panel.Dimension.Tooltip.Inside);
+			ToolTip.Default.SetToolTip(this.buttons[2], Res.Strings.Panel.Dimension.Tooltip.Outside);
 
 			this.buttons[3].IconName = "manifest:Epsitec.App.DocumentEditor.Images.DimensionCenterOrLeft.icon";
 			this.buttons[4].IconName = "manifest:Epsitec.App.DocumentEditor.Images.DimensionCenterOrRight.icon";
 			this.buttons[5].IconName = "manifest:Epsitec.App.DocumentEditor.Images.DimensionLeft.icon";
 			this.buttons[6].IconName = "manifest:Epsitec.App.DocumentEditor.Images.DimensionRight.icon";
-			ToolTip.Default.SetToolTip(this.buttons[3], "Texte centré (ou à gauche)");
-			ToolTip.Default.SetToolTip(this.buttons[4], "Texte centré (ou à droite)");
-			ToolTip.Default.SetToolTip(this.buttons[5], "Texte à gauche");
-			ToolTip.Default.SetToolTip(this.buttons[6], "Texte à droite");
+			ToolTip.Default.SetToolTip(this.buttons[3], Res.Strings.Panel.Dimension.Tooltip.CenterOrLeft);
+			ToolTip.Default.SetToolTip(this.buttons[4], Res.Strings.Panel.Dimension.Tooltip.CenterOrRight);
+			ToolTip.Default.SetToolTip(this.buttons[5], Res.Strings.Panel.Dimension.Tooltip.Left);
+			ToolTip.Default.SetToolTip(this.buttons[6], Res.Strings.Panel.Dimension.Tooltip.Right);
 
 			this.addLength = new TextFieldReal(this);
 			this.addLength.FactorMinRange = 0.0M;
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Document.Panels
 			this.addLength.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.addLength.TabIndex = 10;
 			this.addLength.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.addLength, "Débordement des traits de support");
+			ToolTip.Default.SetToolTip(this.addLength, Res.Strings.Panel.Dimension.Tooltip.AddLength);
 
 			this.outLength = new TextFieldReal(this);
 			this.outLength.FactorMinRange = 0.0M;
@@ -58,14 +58,14 @@ namespace Epsitec.Common.Document.Panels
 			this.outLength.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.outLength.TabIndex = 11;
 			this.outLength.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.outLength, "Longueur si cote extérieure");
+			ToolTip.Default.SetToolTip(this.outLength, Res.Strings.Panel.Dimension.Tooltip.OutLength);
 
 			this.rotateText = new IconButton(this);
 			this.rotateText.Clicked += new MessageEventHandler(this.HandleRotateTextClicked);
 			this.rotateText.TabIndex = 12;
 			this.rotateText.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.rotateText.IconName = "manifest:Epsitec.App.DocumentEditor.Images.DimensionRotateText.icon";
-			ToolTip.Default.SetToolTip(this.rotateText, "Texte inversé");
+			ToolTip.Default.SetToolTip(this.rotateText, Res.Strings.Panel.Dimension.Tooltip.RotateText);
 
 			this.fontOffset = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fontOffset);
@@ -76,38 +76,38 @@ namespace Epsitec.Common.Document.Panels
 			this.fontOffset.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontOffset.TabIndex = 13;
 			this.fontOffset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fontOffset, "Décalage vertical du texte");
+			ToolTip.Default.SetToolTip(this.fontOffset, Res.Strings.Panel.Dimension.Tooltip.FontOffset);
 
 			this.prefix = new TextField(this);
 			this.prefix.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.prefix.TabIndex = 14;
 			this.prefix.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.prefix, "Préfixe");
+			ToolTip.Default.SetToolTip(this.prefix, Res.Strings.Panel.Dimension.Tooltip.Prefix);
 
 			this.postfix = new TextField(this);
 			this.postfix.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.postfix.TabIndex = 15;
 			this.postfix.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.postfix, "Postfixe (unité)");
+			ToolTip.Default.SetToolTip(this.postfix, Res.Strings.Panel.Dimension.Tooltip.Postfix);
 
 			this.labelAddLength = new StaticText(this);
-			this.labelAddLength.Text = "L";
+			this.labelAddLength.Text = Res.Strings.Panel.Dimension.Label.AddLength;
 			this.labelAddLength.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelOutLength = new StaticText(this);
-			this.labelOutLength.Text = "E";
+			this.labelOutLength.Text = Res.Strings.Panel.Dimension.Label.OutLength;
 			this.labelOutLength.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelFontOffset = new StaticText(this);
-			this.labelFontOffset.Text = "T";
+			this.labelFontOffset.Text = Res.Strings.Panel.Dimension.Label.FontOffset;
 			this.labelFontOffset.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelPrefix = new StaticText(this);
-			this.labelPrefix.Text = "&lt;";
+			this.labelPrefix.Text = Res.Strings.Panel.Dimension.Label.Prefix;
 			this.labelPrefix.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelPostfix = new StaticText(this);
-			this.labelPostfix.Text = "&gt;";
+			this.labelPostfix.Text = Res.Strings.Panel.Dimension.Label.Postfix;
 			this.labelPostfix.Alignment = ContentAlignment.MiddleCenter;
 
 			this.isNormalAndExtended = true;

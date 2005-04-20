@@ -25,7 +25,7 @@ namespace Epsitec.Common.Document.Settings
 			switch ( this.name )
 			{
 				case "OutsideArea":
-					this.text = "Zone hors page";
+					this.text = Res.Strings.Dialog.Double.OutsideArea;
 					this.factorMinValue = 0.0;
 					this.factorMaxValue = 1.0;
 					this.factorResolution = 1.0;
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "PrintCopies":
-					this.text = "Nombre de copies";
+					this.text = Res.Strings.Dialog.Double.PrintCopies;
 					this.integer = true;
 					this.factorMinValue = 1.0;
 					this.factorMaxValue = 100.0;
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "PrintDpi":
-					this.text = "Résolution (dpi)";
+					this.text = Res.Strings.Dialog.Double.PrintDpi;
 					this.conditionName = "PrintDraft";
 					this.conditionState = true;
 					this.integer = true;
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "PrintMargins":
-					this.text = "Marges de centrage";
+					this.text = Res.Strings.Dialog.Double.PrintMargins;
 					this.conditionName = "PrintAutoZoom";
 					this.conditionState = true;
 					this.factorMinValue = 0.0;
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "PrintDebord":
-					this.text = "Débord";
+					this.text = Res.Strings.Dialog.Double.PrintDebord;
 					this.conditionName = "PrintAutoZoom";
 					this.conditionState = true;
 					this.factorMinValue = 0.0;
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "ImageDpi":
-					this.text = "Résolution (dpi)";
+					this.text = Res.Strings.Dialog.Double.ImageDpi;
 					this.integer = true;
 					this.info = true;
 					this.factorMinValue = 10.0;
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "ImageQuality":
-					this.text = "Qualité de l'image";
+					this.text = Res.Strings.Dialog.Double.ImageQuality;
 					this.integer = true;
 					this.info = true;
 					this.factorMinValue = 0.0;
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "ImageAA":
-					this.text = "Anti-crénelage";
+					this.text = Res.Strings.Dialog.Double.ImageAA;
 					this.integer = true;
 					this.info = true;
 					this.factorMinValue = 0.0;
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "ArrowMoveMul":
-					this.text = "Multiplicateur si Shift";
+					this.text = Res.Strings.Dialog.Double.ArrowMoveMul;
 					this.integer = true;
 					this.factorMinValue = 1.1;
 					this.factorMaxValue = 20.0;
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "ArrowMoveDiv":
-					this.text = "Diviseur si Ctrl";
+					this.text = Res.Strings.Dialog.Double.ArrowMoveDiv;
 					this.integer = true;
 					this.factorMinValue = 1.1;
 					this.factorMaxValue = 20.0;
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "ToLinePrecision":
-					this.text = "Précision";
+					this.text = Res.Strings.Dialog.Double.ToLinePrecision;
 					this.integer = true;
 					this.factorMinValue = 0.0;
 					this.factorMaxValue = 100.0;
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "DimensionScale":
-					this.text = "Echelle";
+					this.text = Res.Strings.Dialog.Double.DimensionScale;
 					this.integer = true;
 					this.factorMinValue = 1.0;
 					this.factorMaxValue = 10000.0;
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "DimensionDecimal":
-					this.text = "Nombre de décimales";
+					this.text = Res.Strings.Dialog.Double.DimensionDecimal;
 					this.integer = true;
 					this.factorMinValue = 0.0;
 					this.factorMaxValue = 4.0;
@@ -344,23 +344,23 @@ namespace Epsitec.Common.Document.Settings
 				double quality = this.document.Printer.ImageQuality;
 				if ( quality == 0.0 )
 				{
-					text = "Qualité minimale, taille faible";
+					text = Res.Strings.Dialog.Double.ImageQuality1;
 				}
 				else if ( quality < 0.3 )
 				{
-					text = "Basse qualité, taille faible";
+					text = Res.Strings.Dialog.Double.ImageQuality2;
 				}
 				else if ( quality < 0.7 )
 				{
-					text = "Qualité moyenne, taille standard";
+					text = Res.Strings.Dialog.Double.ImageQuality3;
 				}
 				else if ( quality < 1.0 )
 				{
-					text = "Bonne qualité, taille importante";
+					text = Res.Strings.Dialog.Double.ImageQuality4;
 				}
 				else
 				{
-					text = "Qualité maximale, taille importante";
+					text = Res.Strings.Dialog.Double.ImageQuality5;
 				}
 			}
 
@@ -369,23 +369,23 @@ namespace Epsitec.Common.Document.Settings
 				double aa = this.document.Printer.ImageAA;
 				if ( aa == 0.0 )
 				{
-					text = "Escaliers importants (tout ou rien)";
+					text = Res.Strings.Dialog.Double.ImageAA1;
 				}
 				else if ( aa < 0.3 )
 				{
-					text = "Escaliers prononcés";
+					text = Res.Strings.Dialog.Double.ImageAA2;
 				}
 				else if ( aa < 0.7 )
 				{
-					text = "Adoucissement moyen";
+					text = Res.Strings.Dialog.Double.ImageAA3;
 				}
 				else if ( aa < 1.0 )
 				{
-					text = "Adoucissement important";
+					text = Res.Strings.Dialog.Double.ImageAA4;
 				}
 				else
 				{
-					text = "Adoucissement maximal (standard)";
+					text = Res.Strings.Dialog.Double.ImageAA5;
 				}
 			}
 

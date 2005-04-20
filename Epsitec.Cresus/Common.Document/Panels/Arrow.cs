@@ -47,7 +47,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldLength[j].ValueChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldLength[j].TabIndex = index++;
 				this.fieldLength[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(this.fieldLength[j], "Longueur");
+				ToolTip.Default.SetToolTip(this.fieldLength[j], Res.Strings.Panel.Arrow.Tooltip.Length);
 
 				this.fieldEffect1[j] = new TextFieldReal(this);
 				this.document.Modifier.AdaptTextFieldRealScalar(this.fieldEffect1[j]);
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldEffect1[j].ValueChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldEffect1[j].TabIndex = index++;
 				this.fieldEffect1[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(this.fieldEffect1[j], "Paramètre A");
+				ToolTip.Default.SetToolTip(this.fieldEffect1[j], Res.Strings.Panel.Arrow.Tooltip.Effect1);
 
 				this.fieldEffect2[j] = new TextFieldReal(this);
 				this.document.Modifier.AdaptTextFieldRealScalar(this.fieldEffect2[j]);
@@ -67,18 +67,18 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldEffect2[j].ValueChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldEffect2[j].TabIndex = index++;
 				this.fieldEffect2[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				ToolTip.Default.SetToolTip(this.fieldEffect2[j], "Paramètre B");
+				ToolTip.Default.SetToolTip(this.fieldEffect2[j], Res.Strings.Panel.Arrow.Tooltip.Effect2);
 
 				this.labelLength[j] = new StaticText(this);
-				this.labelLength[j].Text = "L";
+				this.labelLength[j].Text = Res.Strings.Panel.Arrow.Label.Length;
 				this.labelLength[j].Alignment = ContentAlignment.MiddleCenter;
 
 				this.labelEffect1[j] = new StaticText(this);
-				this.labelEffect1[j].Text = "A";
+				this.labelEffect1[j].Text = Res.Strings.Panel.Arrow.Label.Effect1;
 				this.labelEffect1[j].Alignment = ContentAlignment.MiddleRight;
 
 				this.labelEffect2[j] = new StaticText(this);
-				this.labelEffect2[j].Text = "B";
+				this.labelEffect2[j].Text = Res.Strings.Panel.Arrow.Label.Effect2;
 				this.labelEffect2[j].Alignment = ContentAlignment.MiddleRight;
 			}
 
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Panels
 			this.swapArrow = new IconButton(this);
 			this.swapArrow.IconName = "manifest:Epsitec.App.DocumentEditor.Images.SwapData.icon";
 			this.swapArrow.Clicked += new MessageEventHandler(this.HandleSwapArrowClicked);
-			ToolTip.Default.SetToolTip(this.swapArrow, "Permute les extrémités");
+			ToolTip.Default.SetToolTip(this.swapArrow, Res.Strings.Panel.Arrow.Tooltip.Swap);
 
 			this.isNormalAndExtended = true;
 		}

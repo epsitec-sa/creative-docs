@@ -19,48 +19,48 @@ namespace Epsitec.Common.Document.Containers
 
 			this.buttonNew = new IconButton("LayerNew", "manifest:Epsitec.App.DocumentEditor.Images.LayerNew.icon");
 			this.toolBar.Items.Add(this.buttonNew);
-			ToolTip.Default.SetToolTip(this.buttonNew, "Nouveau calque <b>dessus</b> le calque courant");
+			ToolTip.Default.SetToolTip(this.buttonNew, Res.Strings.Action.LayerNewLong);
 			this.Synchro(this.buttonNew);
 
 			this.buttonDuplicate = new IconButton("LayerDuplicate", "manifest:Epsitec.App.DocumentEditor.Images.DuplicateItem.icon");
 			this.toolBar.Items.Add(this.buttonDuplicate);
-			ToolTip.Default.SetToolTip(this.buttonDuplicate, "Dupliquer le calque");
+			ToolTip.Default.SetToolTip(this.buttonDuplicate, Res.Strings.Action.LayerDuplicate);
 			this.Synchro(this.buttonDuplicate);
 
 			this.buttonNewSel = new IconButton("LayerNewSel", "manifest:Epsitec.App.DocumentEditor.Images.LayerNewSel.icon");
 			this.toolBar.Items.Add(this.buttonNewSel);
-			ToolTip.Default.SetToolTip(this.buttonNewSel, "Sélection dans un nouveau calque");
+			ToolTip.Default.SetToolTip(this.buttonNewSel, Res.Strings.Action.LayerNewSel);
 			this.Synchro(this.buttonNewSel);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonMergeUp = new IconButton("LayerMergeUp", "manifest:Epsitec.App.DocumentEditor.Images.LayerMergeUp.icon");
 			this.toolBar.Items.Add(this.buttonMergeUp);
-			ToolTip.Default.SetToolTip(this.buttonMergeUp, "Fusionne avec le calque dessus");
+			ToolTip.Default.SetToolTip(this.buttonMergeUp, Res.Strings.Action.LayerMergeUp);
 			this.Synchro(this.buttonMergeUp);
 
 			this.buttonMergeDown = new IconButton("LayerMergeDown", "manifest:Epsitec.App.DocumentEditor.Images.LayerMergeDown.icon");
 			this.toolBar.Items.Add(this.buttonMergeDown);
-			ToolTip.Default.SetToolTip(this.buttonMergeDown, "Fusionne avec le calque dessous");
+			ToolTip.Default.SetToolTip(this.buttonMergeDown, Res.Strings.Action.LayerMergeDown);
 			this.Synchro(this.buttonMergeDown);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonUp = new IconButton("LayerUp", "manifest:Epsitec.App.DocumentEditor.Images.Up.icon");
 			this.toolBar.Items.Add(this.buttonUp);
-			ToolTip.Default.SetToolTip(this.buttonUp, "Calque dessus");
+			ToolTip.Default.SetToolTip(this.buttonUp, Res.Strings.Action.LayerUp);
 			this.Synchro(this.buttonUp);
 
 			this.buttonDown = new IconButton("LayerDown", "manifest:Epsitec.App.DocumentEditor.Images.Down.icon");
 			this.toolBar.Items.Add(this.buttonDown);
-			ToolTip.Default.SetToolTip(this.buttonDown, "Calque dessous");
+			ToolTip.Default.SetToolTip(this.buttonDown, Res.Strings.Action.LayerDown);
 			this.Synchro(this.buttonDown);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonDelete = new IconButton("LayerDelete", "manifest:Epsitec.App.DocumentEditor.Images.DeleteItem.icon");
 			this.toolBar.Items.Add(this.buttonDelete);
-			ToolTip.Default.SetToolTip(this.buttonDelete, "Supprimer le calque");
+			ToolTip.Default.SetToolTip(this.buttonDelete, Res.Strings.Action.LayerDelete);
 			this.Synchro(this.buttonDelete);
 
 			this.table = new CellTable(this);
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Document.Containers
 			this.panelModColor.Parent = this;
 
 			this.checkMagnet = new CheckButton(this);
-			this.checkMagnet.Text = "Objets pour les constructions magnétiques";
+			this.checkMagnet.Text = Res.Strings.Container.Layers.Button.Magnet;
 			this.checkMagnet.TabIndex = 102;
 			this.checkMagnet.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			this.checkMagnet.Dock = DockStyle.Bottom;
@@ -108,47 +108,47 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonShow = new Button(this.panelButton);
 			this.buttonShow.Dock = DockStyle.Top;
 			this.buttonShow.DockMargins = new Margins(0, 0, 0, 0);
-			this.buttonShow.Text = "Afficher tous";
+			this.buttonShow.Text = Res.Strings.Container.Layers.Button.Show;
 			this.buttonShow.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-			ToolTip.Default.SetToolTip(this.buttonShow, "Afficher normalement tous les calques");
+			ToolTip.Default.SetToolTip(this.buttonShow, Res.Strings.Container.Layers.Button.HelpShow);
 
 			this.buttonDimmed = new Button(this.panelButton);
 			this.buttonDimmed.Dock = DockStyle.Top;
 			this.buttonDimmed.DockMargins = new Margins(0, 0, 0, 0);
-			this.buttonDimmed.Text = "Estomper les autres";
+			this.buttonDimmed.Text = Res.Strings.Container.Layers.Button.Dimmed;
 			this.buttonDimmed.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-			ToolTip.Default.SetToolTip(this.buttonDimmed, "Afficher estompé les autres calques");
+			ToolTip.Default.SetToolTip(this.buttonDimmed, Res.Strings.Container.Layers.Button.HelpDimmed);
 
 			this.buttonHide = new Button(this.panelButton);
 			this.buttonHide.Dock = DockStyle.Top;
 			this.buttonHide.DockMargins = new Margins(0, 0, 0, 0);
-			this.buttonHide.Text = "Cacher les autres";
+			this.buttonHide.Text = Res.Strings.Container.Layers.Button.Hide;
 			this.buttonHide.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-			ToolTip.Default.SetToolTip(this.buttonHide, "Cacher les autres calques");
+			ToolTip.Default.SetToolTip(this.buttonHide, Res.Strings.Container.Layers.Button.HelpHide);
 
 			this.radioGroupPrint = new GroupBox(this.panelMisc);
 			this.radioGroupPrint.Dock = DockStyle.Right;
 			this.radioGroupPrint.DockMargins = new Margins(0, 0, 0, 4);
 			this.radioGroupPrint.Width = 106;
 			this.radioGroupPrint.Height = this.panelMisc.Height;
-			this.radioGroupPrint.Text = "Si impression :";
+			this.radioGroupPrint.Text = Res.Strings.Container.Layers.Button.PrintGroup;
 
 			this.radioShowPrint = new RadioButton(this.radioGroupPrint);
 			this.radioShowPrint.Dock = DockStyle.Top;
 			this.radioShowPrint.DockMargins = new Margins(10, 10, 0, 0);
-			this.radioShowPrint.Text = "Imprimer";
+			this.radioShowPrint.Text = Res.Strings.Container.Layers.Button.PrintShow;
 			this.radioShowPrint.Clicked += new MessageEventHandler(this.HandleRadioPrintClicked);
 
 			this.radioDimmedPrint = new RadioButton(this.radioGroupPrint);
 			this.radioDimmedPrint.Dock = DockStyle.Top;
 			this.radioDimmedPrint.DockMargins = new Margins(10, 10, 0, 0);
-			this.radioDimmedPrint.Text = "Estomper";
+			this.radioDimmedPrint.Text = Res.Strings.Container.Layers.Button.PrintDimmed;
 			this.radioDimmedPrint.Clicked += new MessageEventHandler(this.HandleRadioPrintClicked);
 
 			this.radioHidePrint = new RadioButton(this.radioGroupPrint);
 			this.radioHidePrint.Dock = DockStyle.Top;
 			this.radioHidePrint.DockMargins = new Margins(10, 10, 0, 0);
-			this.radioHidePrint.Text = "Cacher";
+			this.radioHidePrint.Text = Res.Strings.Container.Layers.Button.PrintHide;
 			this.radioHidePrint.Clicked += new MessageEventHandler(this.HandleRadioPrintClicked);
 			// --- Fin panelMisc
 			
@@ -158,7 +158,7 @@ namespace Epsitec.Common.Document.Containers
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.extendedButton, "Etend ou réduit le panneau");
+			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Dialog.Button.More);
 			
 			this.panelLayerName = new Panels.LayerName(this.document);
 			this.panelLayerName.IsExtendedSize = false;
@@ -224,8 +224,8 @@ namespace Epsitec.Common.Document.Containers
 			}
 
 			this.table.SetHeaderTextH(0, "");
-			this.table.SetHeaderTextH(1, "Position");
-			this.table.SetHeaderTextH(2, "Nom");
+			this.table.SetHeaderTextH(1, Res.Strings.Container.Layers.Header.Position);
+			this.table.SetHeaderTextH(2, Res.Strings.Container.Layers.Header.Name);
 			this.table.SetHeaderTextH(3, "");
 
 			Objects.Page page = context.RootObject(1) as Objects.Page;
@@ -338,7 +338,7 @@ namespace Epsitec.Common.Document.Containers
 			Objects.Page page = context.RootObject(1) as Objects.Page;
 			Objects.Layer layer = page.Objects[sel] as Objects.Layer;
 
-			using ( this.document.Modifier.OpletQueueBeginAction("Changer la visibilité du calque") )
+			using ( this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.LayerChangeShowOne) )
 			{
 				Objects.LayerType type = Objects.LayerType.None;
 				if ( bt.ActiveState == WidgetState.ActiveYes   )  type = Objects.LayerType.Show;
@@ -373,7 +373,7 @@ namespace Epsitec.Common.Document.Containers
 		// Un bouton radio a été cliqué.
 		private void HandleRadioPrintClicked(object sender, MessageEventArgs e)
 		{
-			using ( this.document.Modifier.OpletQueueBeginAction("Changer le mode d'impression du calque") )
+			using ( this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.LayerChangePrint) )
 			{
 				DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 				Objects.LayerPrint print = Objects.LayerPrint.None;
@@ -410,7 +410,7 @@ namespace Epsitec.Common.Document.Containers
 		// Un bouton a été cliqué.
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			using ( this.document.Modifier.OpletQueueBeginAction("Changer la visibilité des calques") )
+			using ( this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.LayerChangeShowAll) )
 			{
 				DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 				Objects.LayerType type = Objects.LayerType.None;
@@ -435,7 +435,7 @@ namespace Epsitec.Common.Document.Containers
 		// Le bouton "magnétique" a été cliqué.
 		private void HandleCheckMagnetClicked(object sender, MessageEventArgs e)
 		{
-			using ( this.document.Modifier.OpletQueueBeginAction("Changer l'état du calque") )
+			using ( this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.LayerChangeMagnet) )
 			{
 				DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 				int sel = context.CurrentLayer;

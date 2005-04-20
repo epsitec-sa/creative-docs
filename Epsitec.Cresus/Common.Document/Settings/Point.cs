@@ -24,8 +24,8 @@ namespace Epsitec.Common.Document.Settings
 			switch ( this.name )
 			{
 				case "PageSize":
-					this.textX = "Largeur";
-					this.textY = "Hauteur";
+					this.textX = Res.Strings.Dialog.Point.PageSizeX;
+					this.textY = Res.Strings.Dialog.Point.PageSizeY;
 					this.factorMinValue = 0.01;  // 10mm
 					this.factorMaxValue = 1.0;
 					if ( this.document.Type != DocumentType.Pictogram )
@@ -35,39 +35,39 @@ namespace Epsitec.Common.Document.Settings
 					break;
 
 				case "GridStep":
-					this.textX = "Pas horizontal";
-					this.textY = "Pas vertical";
+					this.textX = Res.Strings.Dialog.Point.GridStepX;
+					this.textY = Res.Strings.Dialog.Point.GridStepY;
 					this.factorMinValue = 0.0001;  // 0.1mm
 					this.factorMaxValue = 0.1;  // 100mm
 					this.doubler = true;
 					break;
 
 				case "GridSubdiv":
-					this.textX = "Subdivisions horizontales";
-					this.textY = "Subdivisions verticales";
+					this.textX = Res.Strings.Dialog.Point.GridSubdivX;
+					this.textY = Res.Strings.Dialog.Point.GridSubdivY;
 					this.integer = true;
 					this.factorMinValue = 1.0;
 					this.factorMaxValue = 10.0;
 					break;
 
 				case "GridOffset":
-					this.textX = "Décalage horizontal";
-					this.textY = "Décalage vertical";
+					this.textX = Res.Strings.Dialog.Point.GridOffsetX;
+					this.textY = Res.Strings.Dialog.Point.GridOffsetY;
 					this.factorMinValue = -0.1;
 					this.factorMaxValue = 0.1;
 					this.factorStep = 0.5;
 					break;
 
 				case "DuplicateMove":
-					this.textX = "Déplacement à droite";
-					this.textY = "Déplacement en haut";
+					this.textX = Res.Strings.Dialog.Point.DuplicateMoveX;
+					this.textY = Res.Strings.Dialog.Point.DuplicateMoveY;
 					this.link = false;
 					this.doubler = true;
 					break;
 
 				case "ArrowMove":
-					this.textX = "Déplacement horizontal";
-					this.textY = "Déplacement vertical";
+					this.textX = Res.Strings.Dialog.Point.ArrowMoveX;
+					this.textY = Res.Strings.Dialog.Point.ArrowMoveY;
 					this.link = true;
 					this.factorMinValue = 0.0;
 					this.doubler = true;

@@ -60,7 +60,7 @@ namespace Epsitec.Common.Document.Objects
 			this.PathBuild(null,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine);
+						   out pathLine, false);
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			double width = System.Math.Max(this.PropertyLineMode.Width/2, context.MinimalWidth);
@@ -187,7 +187,7 @@ namespace Epsitec.Common.Document.Objects
 				item.Command = "Object";
 				item.Name = "HandleAdd";
 				item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.Add.icon";
-				item.Text = "Ajouter un point";
+				item.Text = Res.Strings.Object.Poly.Menu.HandleAdd;
 				list.Add(item);
 			}
 			else
@@ -202,29 +202,41 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "HandleSym";
-					item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
-					item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
+					item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
+					item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
 					item.Active = ( type == HandleConstrainType.Symmetric );
-					item.Text = "Coin quelconque";
+					item.Text = Res.Strings.Object.Poly.Menu.HandleSym;
 					list.Add(item);
 
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "HandleSimply";
-					item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
-					item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
+					item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
+					item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
 					item.Active = ( type == HandleConstrainType.Simply );
-					item.Text = "Coin toujours droit";
+					item.Text = Res.Strings.Object.Poly.Menu.HandleSimply;
 					list.Add(item);
 
 					item = new ContextMenuItem();
 					list.Add(item);  // séparateur
 
+					if ( !this.PropertyPolyClose.BoolValue &&
+						 (this.Handle(handleRank).Type == HandleType.Starting ||
+						  this.Handle(this.NextRank(handleRank)).Type == HandleType.Starting) )
+					{
+						item = new ContextMenuItem();
+						item.Command = "Object";
+						item.Name = "HandleContinue";
+						item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.Add.icon";
+						item.Text = Res.Strings.Object.Poly.Menu.HandleContinue;
+						list.Add(item);
+					}
+
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "HandleDelete";
 					item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.Sub.icon";
-					item.Text = "Enlever le point";
+					item.Text = Res.Strings.Object.Poly.Menu.HandleDelete;
 					list.Add(item);
 				}
 			}
@@ -246,6 +258,36 @@ namespace Epsitec.Common.Document.Objects
 				handle.Type = HandleType.Primary;
 				handle.IsVisible = true;
 				this.HandleInsert(rank+1, handle);
+				this.HandlePropertiesUpdate();
+			}
+
+			if ( cmd == "HandleContinue" )
+			{
+				HandleType type = this.Handle(handleRank).Type;
+				this.Handle(handleRank).Type = HandleType.Primary;
+
+				int ins, prev1, prev2;
+				if ( type == HandleType.Starting )  // insère au début ?
+				{
+					ins   = handleRank;
+					prev1 = handleRank;
+					prev2 = handleRank+1;
+				}
+				else	// insère à la fin ?
+				{
+					ins   = handleRank+1;
+					prev1 = handleRank;
+					prev2 = handleRank-1;
+				}
+
+				double d = 20.0/this.document.Modifier.ActiveViewer.DrawingContext.ScaleX;
+				pos = Point.Move(this.Handle(prev1).Position, this.Handle(prev2).Position, -d);
+
+				Handle handle = new Handle(this.document);
+				handle.Position = pos;
+				handle.Type = type;
+				handle.IsVisible = true;
+				this.HandleInsert(ins, handle);
 				this.HandlePropertiesUpdate();
 			}
 
@@ -288,7 +330,7 @@ namespace Epsitec.Common.Document.Objects
 			this.PathBuild(null,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine);
+						   out pathLine, false);
 
 			corner.CornerType = type;
 			this.document.Modifier.OpletQueueEnable = true;
@@ -445,17 +487,19 @@ namespace Epsitec.Common.Document.Objects
 				Point p1, p2;
 				if ( this.mouseDown )
 				{
+					if ( this.TotalHandle < 2 )  return;
 					p1 = this.Handle(this.TotalHandle-2).Position;
 					p2 = this.Handle(this.TotalHandle-1).Position;
 				}
 				else
 				{
+					if ( this.TotalHandle < 1 )  return;
 					p1 = this.Handle(this.TotalHandle-1).Position;
 					p2 = mouse;
 				}
 				double len = Point.Distance(p1, p2);
 				double angle = Point.ComputeAngleDeg(p1, p2);
-				string text = string.Format("lg={0} a={1}\u00B0", this.document.Modifier.RealToString(len), angle.ToString("F1"));
+				string text = string.Format(Res.Strings.Object.Poly.Info1, this.document.Modifier.RealToString(len), angle.ToString("F1"));
 				this.document.Modifier.TextInfoModif = text;
 			}
 			else
@@ -473,7 +517,7 @@ namespace Epsitec.Common.Document.Objects
 				double len2 = Point.Distance(p2, p3);
 				double angle1 = Point.ComputeAngleDeg(p1, p2);
 				double angle2 = Point.ComputeAngleDeg(p3, p2);
-				string text = string.Format("lg={0} a={2}  |  lg={1} a={3}", this.document.Modifier.RealToString(len1), this.document.Modifier.RealToString(len2), this.document.Modifier.AngleToString(angle1), this.document.Modifier.AngleToString(angle2));
+				string text = string.Format(Res.Strings.Object.Poly.Info2, this.document.Modifier.RealToString(len1), this.document.Modifier.RealToString(len2), this.document.Modifier.AngleToString(angle1), this.document.Modifier.AngleToString(angle2));
 				this.document.Modifier.TextInfoModif = text;
 			}
 		}
@@ -485,14 +529,14 @@ namespace Epsitec.Common.Document.Objects
 			{
 				cmd  = "Object";
 				name = "CreateEnding";
-				text = "Terminer la création";
+				text = Res.Strings.Object.Poly.Button.CreateEnding;
 				return true;
 			}
 			if ( rank == 1 )
 			{
 				cmd  = "Object";
 				name = "CreateAndSelect";
-				text = "Terminer et sélectionner";
+				text = Res.Strings.Object.Poly.Button.CreateAndSelect;
 				return true;
 			}
 			return base.CreateAction(rank, out cmd, out name, out text);
@@ -528,7 +572,7 @@ namespace Epsitec.Common.Document.Objects
 			this.PathBuild(null,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine);
+						   out pathLine, false);
 
 			Path pathTemp = null;
 			if ( this.tempLineExist )
@@ -574,7 +618,7 @@ namespace Epsitec.Common.Document.Objects
 		protected void PathBuild(DrawingContext drawingContext,
 								 out Path pathStart, out bool outlineStart, out bool surfaceStart,
 								 out Path pathEnd,   out bool outlineEnd,   out bool surfaceEnd,
-								 out Path pathLine)
+								 out Path pathLine, bool simplify)
 		{
 			pathStart = new Path();
 			pathEnd   = new Path();
@@ -600,14 +644,14 @@ namespace Epsitec.Common.Document.Objects
 			CapStyle cap = this.PropertyLineMode.Cap;
 			p1 = this.Handle(0).Position;
 			p2 = this.Handle(1).Position;
-			pp1 = this.PropertyArrow.PathExtremity(pathStart, 0, w,cap, p1,p2, out outlineStart, out surfaceStart);
+			pp1 = this.PropertyArrow.PathExtremity(pathStart, 0, w,cap, p1,p2, simplify, out outlineStart, out surfaceStart);
 			p1 = this.Handle(total-1).Position;
 			p2 = this.Handle(total-2).Position;
-			pp2 = this.PropertyArrow.PathExtremity(pathEnd,   1, w,cap, p1,p2, out outlineEnd,   out surfaceEnd);
+			pp2 = this.PropertyArrow.PathExtremity(pathEnd,   1, w,cap, p1,p2, simplify, out outlineEnd,   out surfaceEnd);
 
 			bool close = ( this.PropertyPolyClose.BoolValue && total > 2 );
 			Properties.Corner corner = this.PropertyCorner;
-			if ( corner.CornerType == Properties.CornerType.Right )  // coins droits ?
+			if ( corner.CornerType == Properties.CornerType.Right || simplify )  // coins droits ?
 			{
 				int first = 0;
 				for ( int i=0 ; i<total ; i++ )
@@ -790,7 +834,7 @@ namespace Epsitec.Common.Document.Objects
 			this.PathBuild(drawingContext,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine);
+						   out pathLine, false);
 
 			this.surfaceAnchor.LineUse = false;
 			this.PropertyFillGradient.RenderSurface(graphics, drawingContext, pathLine, this.surfaceAnchor);
@@ -893,7 +937,7 @@ namespace Epsitec.Common.Document.Objects
 			this.PathBuild(drawingContext,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine);
+						   out pathLine, false);
 
 			if ( this.PropertyFillGradient.PaintColor(port, drawingContext) )
 			{
@@ -926,6 +970,21 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region CreateFromPath
+		// Retourne le chemin géométrique de l'objet pour les constructions
+		// magnétiques.
+		public override Path GetMagnetPath()
+		{
+			Path pathStart;  bool outlineStart, surfaceStart;
+			Path pathEnd;    bool outlineEnd,   surfaceEnd;
+			Path pathLine;
+			this.PathBuild(null,
+						   out pathStart, out outlineStart, out surfaceStart,
+						   out pathEnd,   out outlineEnd,   out surfaceEnd,
+						   out pathLine, true);
+
+			return pathLine;
+		}
+
 		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)
 		{
@@ -936,7 +995,7 @@ namespace Epsitec.Common.Document.Objects
 			this.PathBuild(null,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine);
+						   out pathLine, false);
 
 			if ( outlineStart || surfaceStart )
 			{

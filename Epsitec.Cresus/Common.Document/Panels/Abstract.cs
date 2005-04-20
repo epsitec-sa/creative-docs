@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Panels
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 			this.extendedButton.TabIndex = 0;
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.extendedButton, "Etend ou réduit le panneau");
+			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Panel.Abstract.Extend);
 
 			this.stylesButton = new GlyphButton(this);
 			this.stylesButton.ButtonStyle = ButtonStyle.Icon;
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Panels
 			this.stylesButton.Clicked += new MessageEventHandler(this.StylesButtonClicked);
 			this.stylesButton.TabIndex = 1000;
 			this.stylesButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.stylesButton, "Styles");
+			ToolTip.Default.SetToolTip(this.stylesButton, Res.Strings.Panel.Abstract.Styles);
 
 			this.colorBlack = Drawing.Color.FromName("WindowFrame");
 			this.UpdateButtons();
@@ -284,7 +284,7 @@ namespace Epsitec.Common.Document.Panels
 			if ( this.ignoreChanged )  return;
 
 			int id = (int) this.property.Type;
-			string name = string.Format("Changement de l'attribut \"{0}\"", Properties.Abstract.Text(this.property.Type));
+			string name = string.Format(Res.Strings.Action.PropertyChange, Properties.Abstract.Text(this.property.Type));
 			this.document.Modifier.OpletQueueBeginAction(name, "ChangeProperty", id);
 			this.WidgetsToProperty();
 			this.document.Modifier.OpletQueueValidateAction();

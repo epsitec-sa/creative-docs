@@ -70,12 +70,12 @@ namespace Epsitec.Common.Document
 				this.tabIndex = 0;
 				if ( this.document.Type == DocumentType.Pictogram )
 				{
-					Dialogs.CreateTitle(container, "Dimensions d'un pictogramme");
+					Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.SizePic);
 					this.CreatePoint(container, "PageSize");
 				}
 				else
 				{
-					Dialogs.CreateTitle(container, "Dimensions d'une page");
+					Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.SizeDoc);
 					this.CreatePaper(container);
 					this.CreatePoint(container, "PageSize");
 					this.CreateDouble(container, "OutsideArea");
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, "Grille magnétique");
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Grid);
 				this.CreateBool(container, "GridActive");
 				this.CreateBool(container, "GridShow");
 				Dialogs.CreateSeparator(container);
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, "Repères magnétiques");
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Magnet);
 				this.CreateBool(container, "GuidesActive");
 				this.CreateBool(container, "GuidesShow");
 				this.CreateBool(container, "GuidesMouse");
@@ -125,11 +125,11 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, "Déplacement lorsqu'un objet est dupliqué");
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.DuplicateMove);
 				this.CreatePoint(container, "DuplicateMove");
 				this.CreateBool(container, "RepeatDuplicateMove");
 
-				Dialogs.CreateTitle(container, "Déplacements avec les touches flèches");
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.ArrowMove);
 				this.CreatePoint(container, "ArrowMove");
 				this.CreateDouble(container, "ArrowMoveMul");
 				this.CreateDouble(container, "ArrowMoveDiv");
@@ -142,11 +142,11 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, "Valeurs des cotes");
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.Dimension);
 				this.CreateDouble(container, "DimensionScale");
 				this.CreateDouble(container, "DimensionDecimal");
 
-				Dialogs.CreateTitle(container, "Convertir en droites et opérations booléennes");
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Settings.ToLinePrecision);
 				this.CreateDouble(container, "ToLinePrecision");
 				Dialogs.CreateSeparator(container);
 			}
@@ -198,14 +198,14 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 				
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, "Choix de l'imprimante");
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Printer);
 				this.CreatePrinter(container, "PrintName");
 
-				Dialogs.CreateTitle(container, "Etendue");
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Area);
 				this.CreateRange(container, "PrintRange");
 				this.CreateCombo(container, "PrintArea");
 
-				Dialogs.CreateTitle(container, "Tirage");
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Copies);
 				this.CreateDouble(container, "PrintCopies");
 				this.CreateBool(container, "PrintCollate");
 				this.CreateBool(container, "PrintReverse");
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 				
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, "Paramètres pour l'impression");
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Param);
 				this.CreateBool(container, "PrintAutoLandscape");
 				this.CreateBool(container, "PrintDraft");
 				this.CreateBool(container, "PrintPerfectJoin");
@@ -228,7 +228,7 @@ namespace Epsitec.Common.Document
 				this.CreateDouble(container, "PrintDpi");
 				this.CreateBool(container, "PrintAA");
 
-				Dialogs.CreateTitle(container, "Fichier");
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.File);
 				this.CreateBool(container, "PrintToFile");
 				this.CreateFilename(container, "PrintFilename");
 				Dialogs.CreateSeparator(container);
@@ -240,7 +240,7 @@ namespace Epsitec.Common.Document
 				container.Dock = DockStyle.Fill;
 				
 				this.tabIndex = 0;
-				Dialogs.CreateTitle(container, "Réglages pré-presse");
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Publisher);
 				this.CreateBool(container, "PrintAutoZoom");
 				this.CreateCombo(container, "PrintCentring");
 				this.CreateDouble(container, "PrintMargins");
@@ -289,7 +289,7 @@ namespace Epsitec.Common.Document
 
 				this.tabIndex = 0;
 
-				Dialogs.CreateTitle(container, "Paramètres pour l'image à exporter");
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Export.Param);
 				this.CreateDouble(container, "ImageDpi");
 				this.CreateCombo(container, "ImageDepth");
 				this.CreateCombo(container, "ImageCompression");
@@ -651,13 +651,14 @@ namespace Epsitec.Common.Document
 			check.Width = 45;
 			check.Height = container.Height;
 			check.Name = sPoint.Name;
-			check.Text = "Liés";
+			check.Text = @"<img src=""manifest:Epsitec.App.DocumentEditor.Images.Linked.icon""/>";
 			check.ActiveState = sPoint.Link ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			check.TabIndex = this.tabIndex++;
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			check.Dock = DockStyle.Left;
 			check.DockMargins = new Margins(-3, 0, 0, 0);
 			check.ActiveStateChanged += new EventHandler(this.HandleCheckPointActiveStateChanged);
+			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Point.Link);
 			this.WidgetsTableAdd(check, ".Link");
 
 			if ( sPoint.Doubler )
@@ -924,7 +925,7 @@ namespace Epsitec.Common.Document
 
 			Button button = new Button(container);
 			button.Name = sString.Name;
-			button.Text = "Parcourir...";
+			button.Text = Res.Strings.Dialog.Button.Browse;
 			button.Width = 80;
 			button.Dock = DockStyle.Left;
 			button.DockMargins = new Margins(3, 0, 0, 0);
@@ -950,8 +951,8 @@ namespace Epsitec.Common.Document
 		{
 			Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
 			dialog.FileName = this.document.Settings.PrintInfo.PrintFilename;
-			dialog.Title = "Impression dans un fichier";
-			dialog.Filters.Add("prn", "Fichier d'impression", "*.prn");
+			dialog.Title = Res.Strings.Dialog.Print.ToFile.Title;
+			dialog.Filters.Add("prn", Res.Strings.Dialog.Print.ToFile.Type, "*.prn");
 			dialog.PromptForOverwriting = true;
 			dialog.Owner = this.windowPrint;
 			dialog.OpenDialog();
@@ -974,15 +975,15 @@ namespace Epsitec.Common.Document
 			container.DockMargins = new Margins(10, 10, 0, 0);
 
 			StaticText text = new StaticText(container);
-			text.Text = "Orientation";
+			text.Text = Res.Strings.Dialog.Print.Paper.Direction;
 			text.Width = 120;
 			text.Dock = DockStyle.Left;
 			text.DockMargins = new Margins(0, 0, 0, 0);
 
 			RadioButton radio = new RadioButton(container);
-			radio.Width = 70;
+			radio.Width = 65;
 			radio.Name = "PaperFormat.Portrait";
-			radio.Text = "Portrait";
+			radio.Text = Res.Strings.Dialog.Print.Paper.Portrait;
 			radio.Clicked += new MessageEventHandler(this.HandlePaperActiveStateChanged);
 			radio.TabIndex = this.tabIndex++;
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -991,9 +992,9 @@ namespace Epsitec.Common.Document
 			this.WidgetsTableAdd(radio, "");
 			
 			radio = new RadioButton(container);
-			radio.Width = 70;
+			radio.Width = 75;
 			radio.Name = "PaperFormat.Landscape";
-			radio.Text = "Paysage";
+			radio.Text = Res.Strings.Dialog.Print.Paper.Landscape;
 			radio.Clicked += new MessageEventHandler(this.HandlePaperActiveStateChanged);
 			radio.TabIndex = this.tabIndex++;
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -1007,7 +1008,7 @@ namespace Epsitec.Common.Document
 			container.DockMargins = new Margins(10, 10, 0, 5);
 
 			text = new StaticText(container);
-			text.Text = "Papier";
+			text.Text = Res.Strings.Dialog.Print.Paper.PaperList;
 			text.Width = 120;
 			text.Dock = DockStyle.Left;
 			text.DockMargins = new Margins(0, 0, 0, 0);
@@ -1017,13 +1018,13 @@ namespace Epsitec.Common.Document
 			field.IsReadOnly = true;
 			field.Name = "PaperFormat";
 
-			field.Items.Add("Personnalisée");
+			field.Items.Add(Res.Strings.Dialog.Print.Format.User);
 			field.Items.Add("Diapositive");
 			field.Items.Add("Lettre US");
-			field.Items.Add("Légal");
+			field.Items.Add("Legal");
 			field.Items.Add("Tabloïd");
 			field.Items.Add("Formulaire/Demi");
-			field.Items.Add("Exécutive US");
+			field.Items.Add("Executive US");
 			field.Items.Add("Listing");
 			field.Items.Add("Affiche");
 			field.Items.Add("A1");
@@ -1218,7 +1219,7 @@ namespace Epsitec.Common.Document
 
 			Button button = new Button(container);
 			button.Name = sString.Name;
-			button.Text = "Propriétés...";
+			button.Text = Res.Strings.Dialog.Button.Properties;
 			button.Width = 80;
 			button.Dock = DockStyle.Left;
 			button.DockMargins = new Margins(3, 0, 0, 0);
@@ -1298,7 +1299,7 @@ namespace Epsitec.Common.Document
 			TextFieldReal field;
 
 			radio = new RadioButton(parent);
-			radio.Text = "Toutes les pages";
+			radio.Text = Res.Strings.Dialog.Print.Range.All;
 			radio.Height = 20;
 			radio.Width = 100;
 			radio.Name = sRange.Name;
@@ -1318,9 +1319,9 @@ namespace Epsitec.Common.Document
 			container.DockMargins = new Margins(10, 10, 0, 0);
 
 			radio = new RadioButton(container);
-			radio.Text = "Pages de";
+			radio.Text = Res.Strings.Dialog.Print.Range.From;
 			radio.Height = 20;
-			radio.Width = 75;
+			radio.Width = 85;
 			radio.Name = sRange.Name;
 			radio.ActiveState = (sRange.PrintRange == Settings.PrintRange.FromTo) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			radio.TabIndex = this.tabIndex++;
@@ -1347,7 +1348,7 @@ namespace Epsitec.Common.Document
 			this.WidgetsTableAdd(field, ".From");
 
 			StaticText text = new StaticText(container);
-			text.Text = "à";
+			text.Text = Res.Strings.Dialog.Print.Range.To;
 			text.Alignment = ContentAlignment.MiddleCenter;
 			text.Height = 20;
 			text.Width = 30;
@@ -1372,7 +1373,7 @@ namespace Epsitec.Common.Document
 			// fin from-to
 
 			radio = new RadioButton(parent);
-			radio.Text = "Page courante";
+			radio.Text = Res.Strings.Dialog.Print.Range.Current;
 			radio.Height = 20;
 			radio.Width = 100;
 			radio.Name = sRange.Name;

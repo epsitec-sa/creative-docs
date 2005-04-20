@@ -76,7 +76,7 @@ namespace Epsitec.Common.Document
 					}
 
 					bool isCreate = this.opletCreate;
-					string name = string.Format("Choix de l'outil \"{0}\"", this.ToolName(value));
+					string name = string.Format(Res.Strings.Action.ChangeTool, this.ToolName(value));
 					this.OpletQueueBeginAction(name);
 					this.InsertOpletTool();
 
@@ -182,28 +182,28 @@ namespace Epsitec.Common.Document
 		{
 			switch ( tool )
 			{
-				case "Select":  return "Sélectionner";
-				case "Global":  return "Rectangle de sélection";
-				case "Edit":  return "Editer";
-				case "Zoom":  return "Loupe";
-				case "Hand":  return "Main";
-				case "Picker":  return "Pipette";
-				case "HotSpot":  return "Point chaud";
+				case "Select":  return Res.Strings.Tool.Select;
+				case "Global":  return Res.Strings.Tool.Global;
+				case "Edit":  return Res.Strings.Tool.Edit;
+				case "Zoom":  return Res.Strings.Tool.Zoom;
+				case "Hand":  return Res.Strings.Tool.Hand;
+				case "Picker":  return Res.Strings.Tool.Picker;
+				case "HotSpot":  return Res.Strings.Tool.HotSpot;
 
-				case "ObjectLine":  return "Segment de ligne";
-				case "ObjectRectangle":  return "Rectangle";
-				case "ObjectCircle":  return "Cercle";
-				case "ObjectEllipse":  return "Ellipse";
-				case "ObjectPoly":  return "Polygone quelconque";
-				case "ObjectBezier":  return "Courbes de Bézier";
-				case "ObjectRegular":  return "Polygone régulier";
-				case "ObjectSurface":  return "Surfaces 2d";
-				case "ObjectVolume":  return "Volumes 3d";
-				case "ObjectTextLine":  return "Ligne de texte";
-				case "ObjectTextBox":  return "Pavé de texte";
-				case "ObjectArray":  return "Tableau";
-				case "ObjectImage":  return "Image bitmap";
-				case "ObjectDimension":  return "Cote";
+				case "ObjectLine":  return Res.Strings.Tool.Line;
+				case "ObjectRectangle":  return Res.Strings.Tool.Rectangle;
+				case "ObjectCircle":  return Res.Strings.Tool.Circle;
+				case "ObjectEllipse":  return Res.Strings.Tool.Ellipse;
+				case "ObjectPoly":  return Res.Strings.Tool.Poly;
+				case "ObjectBezier":  return Res.Strings.Tool.Bezier;
+				case "ObjectRegular":  return Res.Strings.Tool.Regular;
+				case "ObjectSurface":  return Res.Strings.Tool.Surface;
+				case "ObjectVolume":  return Res.Strings.Tool.Volume;
+				case "ObjectTextLine":  return Res.Strings.Tool.TextLine;
+				case "ObjectTextBox":  return Res.Strings.Tool.TextBox;
+				case "ObjectArray":  return Res.Strings.Tool.Array;
+				case "ObjectImage":  return Res.Strings.Tool.Image;
+				case "ObjectDimension":  return Res.Strings.Tool.Dimension;
 			}
 
 			return "?";
@@ -281,7 +281,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.outsideArea != value )
 				{
-					this.OpletQueueBeginAction("Zone hors page", "ChangeDocSize");
+					this.OpletQueueBeginAction(Res.Strings.Action.OutsideArea, "ChangeDocSize");
 					this.InsertOpletSize();
 					this.outsideArea = value;
 					this.document.Notifier.NotifyOriginChanged();
@@ -817,51 +817,60 @@ namespace Epsitec.Common.Document
 			string t1 = "<font size=\"120%\"><b>";
 			string t2 = " :</b></font><br/><br/>";
 			string chip = "<list type=\"fix\" width=\"1.5\"/>";
+			string br = "<br/>";
 			string info;
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
 			if ( fonts || images )
 			{
-				builder.Append(string.Format("{0}Résumé{1}", t1, t2));
+				builder.Append(string.Format(Res.Strings.Statistic.Summary, t1, t2));
 			}
 
 			if ( fonts || images )
 			{
-				info = string.Format("{0}Nom complet: {1}<br/>", chip, Misc.FullName(this.document.Filename, this.document.IsDirtySerialize));
+				info = string.Format(Res.Strings.Statistic.Filename, chip, Misc.FullName(this.document.Filename, this.document.IsDirtySerialize));
 				builder.Append(info);
+				builder.Append(br);
 			}
 			else
 			{
 				if ( this.document.Filename != "" )
 				{
-					info = string.Format("{0}Nom complet: {1}<br/>", chip, Misc.FullName(this.document.Filename, this.document.IsDirtySerialize));
+					info = string.Format(Res.Strings.Statistic.Filename, chip, Misc.FullName(this.document.Filename, this.document.IsDirtySerialize));
 					builder.Append(info);
+					builder.Append(br);
 				}
 			}
 			
-			info = string.Format("{0}Dimensions: {1}x{2}<br/>", chip, this.RealToString(this.document.Size.Width), this.RealToString(this.document.Size.Height));
+			info = string.Format(Res.Strings.Statistic.Size, chip, this.RealToString(this.document.Size.Width), this.RealToString(this.document.Size.Height));
 			builder.Append(info);
+			builder.Append(br);
 			
-			info = string.Format("{0}Nombre de pages: {1}<br/>", chip, this.StatisticTotalPages());
+			info = string.Format(Res.Strings.Statistic.Pages, chip, this.StatisticTotalPages());
 			builder.Append(info);
+			builder.Append(br);
 			
-			info = string.Format("{0}Nombre de calques: {1}<br/>", chip, this.StatisticTotalLayers());
+			info = string.Format(Res.Strings.Statistic.Layers, chip, this.StatisticTotalLayers());
 			builder.Append(info);
+			builder.Append(br);
 			
-			info = string.Format("{0}Nombre d'objets: {1}<br/>", chip, this.StatisticTotalObjects());
+			info = string.Format(Res.Strings.Statistic.Objects, chip, this.StatisticTotalObjects());
 			builder.Append(info);
+			builder.Append(br);
 
-			info = string.Format("{0}Objets dégradés ou transparents: {1}<br/>", chip, this.StatisticTotalComplex());
+			info = string.Format(Res.Strings.Statistic.Gradients, chip, this.StatisticTotalComplex());
 			builder.Append(info);
+			builder.Append(br);
 
 			if ( fonts )
 			{
-				builder.Append(string.Format("<br/>{0}Polices utilisées{1}", t1, t2));
+				builder.Append(br);
+				builder.Append(string.Format(Res.Strings.Statistic.Fonts, t1, t2));
 				System.Collections.ArrayList list = this.StatisticFonts();
 				if ( list.Count == 0 )
 				{
-					info = string.Format("{0}{1}<br/>", chip, "<i>Aucune</i>");
+					info = string.Format("{0}{1}<br/>", chip, Res.Strings.Statistic.None);
 					builder.Append(info);
 				}
 				else
@@ -876,11 +885,12 @@ namespace Epsitec.Common.Document
 
 			if ( images )
 			{
-				builder.Append(string.Format("<br/>{0}Images utilisées{1}", t1, t2));
+				builder.Append(br);
+				builder.Append(string.Format(Res.Strings.Statistic.Images, t1, t2));
 				System.Collections.ArrayList list = this.StatisticImages();
 				if ( list.Count == 0 )
 				{
-					info = string.Format("{0}{1}<br/>", chip, "<i>Aucune</i>");
+					info = string.Format("{0}{1}<br/>", chip, Res.Strings.Statistic.None);
 					builder.Append(info);
 				}
 				else
@@ -1057,7 +1067,7 @@ namespace Epsitec.Common.Document
 		// Désélectionne tous les objets.
 		public void DeselectAll()
 		{
-			using ( this.OpletQueueBeginAction("Tout désélectionner") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.DeselectAll) )
 			{
 				this.ActiveViewer.CreateEnding(false);
 				if ( this.TotalSelected > 0 )
@@ -1080,7 +1090,7 @@ namespace Epsitec.Common.Document
 		// Sélectionne tous les objets.
 		public void SelectAll()
 		{
-			using ( this.OpletQueueBeginAction("Tout sélectionner") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.SelectAll) )
 			{
 				this.ActiveViewer.CreateEnding(false);
 
@@ -1108,7 +1118,7 @@ namespace Epsitec.Common.Document
 		// Inverse la sélection.
 		public void InvertSelection()
 		{
-			using ( this.OpletQueueBeginAction("Inverser la sélection") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.SelectInvert) )
 			{
 				this.ActiveViewer.CreateEnding(false);
 
@@ -1170,7 +1180,7 @@ namespace Epsitec.Common.Document
 			
 			System.Text.RegularExpressions.Regex regex = Support.RegexFactory.FromSimpleJoker(name);
 
-			string nm = string.Format("Sélection par nom \"{0}\"", name);
+			string nm = string.Format(Res.Strings.Action.SelectName, name);
 			using ( this.OpletQueueBeginAction(nm) )
 			{
 				this.ActiveViewer.CreateEnding(false);
@@ -1238,7 +1248,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				using ( this.OpletQueueBeginAction("Supprimer") )
+				using ( this.OpletQueueBeginAction(Res.Strings.Action.Delete) )
 				{
 					bool bDo = false;
 					do
@@ -1429,7 +1439,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Dupliquer") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.Duplicate) )
 			{
 				this.Tool = "Select";
 				DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -1459,7 +1469,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Couper") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.Cut) )
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract layer = context.RootObject();
@@ -1484,7 +1494,7 @@ namespace Epsitec.Common.Document
 
 			if ( this.ActiveViewer.IsCreating )  return;
 
-			using ( this.OpletQueueBeginAction("Copier") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.Copy) )
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract layer = context.RootObject();
@@ -1509,7 +1519,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Coller") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.Paste) )
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract layer = context.RootObject();
@@ -1777,7 +1787,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("En avant") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.OrderUpOne) )
 			{
 				this.OrderOneSelection(1);
 				this.document.Notifier.NotifySelectionChanged();
@@ -1792,7 +1802,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("En arrière") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.OrderDownOne) )
 			{
 				this.OrderOneSelection(-1);
 				this.document.Notifier.NotifySelectionChanged();
@@ -1807,7 +1817,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Premier plan") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.OrderUpAll) )
 			{
 				this.OrderAllSelection(1);
 				this.document.Notifier.NotifySelectionChanged();
@@ -1822,7 +1832,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Arrière-plan") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.OrderDownAll) )
 			{
 				this.OrderAllSelection(-1);
 				this.document.Notifier.NotifySelectionChanged();
@@ -1967,7 +1977,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			string name = string.Format("Déplacement {0};{1}", this.RealToString(move.X), this.RealToString(move.Y));
+			string name = string.Format(Res.Strings.Action.Move, this.RealToString(move.X), this.RealToString(move.Y));
 			this.PrepareOper(name);
 			this.ActiveViewer.Selector.OperMove(move);
 			this.TerminateOper();
@@ -1977,7 +1987,7 @@ namespace Epsitec.Common.Document
 		public void MoveSelection(Point move)
 		{
 			if ( this.tool == "Edit" )  return;
-			string name = string.Format("Déplacement {0};{1}", this.RealToString(move.X), this.RealToString(move.Y));
+			string name = string.Format(Res.Strings.Action.Move, this.RealToString(move.X), this.RealToString(move.Y));
 			this.PrepareOper(name);
 			this.ActiveViewer.Selector.OperMove(move);
 			this.TerminateOper();
@@ -1987,7 +1997,7 @@ namespace Epsitec.Common.Document
 		public void RotateSelection(double angle)
 		{
 			if ( this.tool == "Edit" )  return;
-			string name = string.Format("Rotation {0}", this.AngleToString(angle));
+			string name = string.Format(Res.Strings.Action.Rotate, this.AngleToString(angle));
 			this.PrepareOper(name);
 			this.ActiveViewer.Selector.OperRotate(angle);
 			this.TerminateOper();
@@ -1997,7 +2007,7 @@ namespace Epsitec.Common.Document
 		public void MirrorSelection(bool horizontal)
 		{
 			if ( this.tool == "Edit" )  return;
-			string name = horizontal ? "Miroir horizontal" : "Miroir vertical";
+			string name = horizontal ? Res.Strings.Action.MirrorH : Res.Strings.Action.MirrorV;
 			this.PrepareOper(name);
 			this.ActiveViewer.Selector.OperMirror(horizontal);
 			this.TerminateOper();
@@ -2010,11 +2020,11 @@ namespace Epsitec.Common.Document
 			string name = "";
 			if ( scale > 1.0 )
 			{
-				name = string.Format("Agrandissement {0}%", (scale*100.0).ToString("F1"));
+				name = string.Format(Res.Strings.Action.ZoomP, (scale*100.0).ToString("F1"));
 			}
 			else
 			{
-				name = string.Format("Réduction {0}%", (scale*100.0).ToString("F1"));
+				name = string.Format(Res.Strings.Action.ZoomM, (scale*100.0).ToString("F1"));
 			}
 			this.PrepareOper(name);
 			this.ActiveViewer.Selector.OperZoom(scale);
@@ -2065,7 +2075,7 @@ namespace Epsitec.Common.Document
 		// Aligne sur la grille tous les objets sélectionnés.
 		public void AlignGridSelection()
 		{
-			this.OpletQueueBeginAction("Alignement sur la grille");
+			this.OpletQueueBeginAction(Res.Strings.Action.AlignGrid);
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
@@ -2078,7 +2088,7 @@ namespace Epsitec.Common.Document
 		// Aligne tous les objets sélectionnés.
 		public void AlignSelection(int dir, bool horizontal)
 		{
-			this.OpletQueueBeginAction("Alignement");
+			this.OpletQueueBeginAction(Res.Strings.Action.Align);
 			Rectangle globalBox = this.SelectedBbox;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
@@ -2133,12 +2143,12 @@ namespace Epsitec.Common.Document
 			if ( ( horizontal && globalBox.Width  <= 0.0) ||
 				 (!horizontal && globalBox.Height <= 0.0) )
 			{
-				string message = "Impossible de distribuer les objets,<br/>car ils sont trop serrés.";
+				string message = Res.Strings.Error.Share;
 				this.ActiveViewer.DialogError(message);
 				return;
 			}
 
-			this.OpletQueueBeginAction("Distribution");
+			this.OpletQueueBeginAction(Res.Strings.Action.Share);
 			int total = list.Count;
 			for ( int i=1 ; i<total-1 ; i++ )
 			{
@@ -2179,12 +2189,12 @@ namespace Epsitec.Common.Document
 			if ( ( horizontal && space.Width  <= 0.0) ||
 				 (!horizontal && space.Height <= 0.0) )
 			{
-				string message = "Impossible de distribuer les objets,<br/>car ils sont trop serrés.";
+				string message = Res.Strings.Error.Share;
 				this.ActiveViewer.DialogError(message);
 				return;
 			}
 
-			this.OpletQueueBeginAction("Distribution espacée");
+			this.OpletQueueBeginAction(Res.Strings.Action.ShareSpace);
 			for ( int i=1 ; i<total-1 ; i++ )
 			{
 				ShareObject so = list[i] as ShareObject;
@@ -2301,7 +2311,7 @@ namespace Epsitec.Common.Document
 		// Ajuste tous les objets sélectionnés.
 		public void AdjustSelection(bool horizontal)
 		{
-			this.OpletQueueBeginAction("Ajustement");
+			this.OpletQueueBeginAction(Res.Strings.Action.Adjust);
 			Rectangle globalBox = this.SelectedBbox;
 			Selector selector = new Selector(this.document);
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -2342,7 +2352,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Fusionner dans le groupe") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.Merge) )
 			{
 				this.Ungroup();
 				this.Group();
@@ -2358,7 +2368,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Extraire du groupe") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.Extract) )
 			{
 				this.Extract();
 				this.document.Notifier.NotifySelectionChanged();
@@ -2373,7 +2383,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Associer en un groupe") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.Group) )
 			{
 				this.Group();
 				this.document.Notifier.NotifySelectionChanged();
@@ -2388,7 +2398,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Dissocier le groupe") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.Ungroup) )
 			{
 				this.Ungroup();
 				this.ActiveViewer.UpdateSelector();
@@ -2500,7 +2510,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 
-			using ( this.OpletQueueBeginAction("Entrer dans le groupe") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.Inside) )
 			{
 				Objects.Abstract group = this.RetOnlySelectedObject();
 				if ( group != null && group is Objects.Group )
@@ -2525,7 +2535,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 
-			using ( this.OpletQueueBeginAction("Sortir du groupe") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.Outside) )
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				if ( !context.RootStackIsBase )
@@ -2621,7 +2631,7 @@ namespace Epsitec.Common.Document
 		public void CombineSelection()
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.OpletQueueBeginAction("Combiner");
+			this.OpletQueueBeginAction(Res.Strings.Action.Combine);
 			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
@@ -2671,7 +2681,7 @@ namespace Epsitec.Common.Document
 
 			if ( error )
 			{
-				string message = "Un ou plusieurs objets n'ont pas pu être combinés.";
+				string message = Res.Strings.Error.Combine;
 				this.ActiveViewer.DialogError(message);
 			}
 		}
@@ -2680,7 +2690,7 @@ namespace Epsitec.Common.Document
 		public void UncombineSelection()
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.OpletQueueBeginAction("Scinder");
+			this.OpletQueueBeginAction(Res.Strings.Action.Uncombine);
 			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
@@ -2740,7 +2750,7 @@ namespace Epsitec.Common.Document
 
 			if ( error )
 			{
-				string message = "Un ou plusieurs objets n'ont pas pu être scindés.";
+				string message = Res.Strings.Error.Uncombine;
 				this.ActiveViewer.DialogError(message);
 			}
 		}
@@ -2749,7 +2759,7 @@ namespace Epsitec.Common.Document
 		public void ToBezierSelection()
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.OpletQueueBeginAction("Convertir en courbes");
+			this.OpletQueueBeginAction(Res.Strings.Action.ToBezier);
 			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
@@ -2796,7 +2806,7 @@ namespace Epsitec.Common.Document
 
 			if ( error )
 			{
-				string message = "Un ou plusieurs objets n'ont pas pu être convertis en courbes.";
+				string message = Res.Strings.Error.ToBezier;
 				this.ActiveViewer.DialogError(message);
 			}
 		}
@@ -2807,7 +2817,7 @@ namespace Epsitec.Common.Document
 			double precision = this.ToLinePrecision*0.19+0.01;  // 0.01 .. 0.2
 
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.OpletQueueBeginAction("Convertir en droites");
+			this.OpletQueueBeginAction(Res.Strings.Action.ToPoly);
 			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
@@ -2861,7 +2871,7 @@ namespace Epsitec.Common.Document
 
 			if ( error )
 			{
-				string message = "Un ou plusieurs objets n'ont pas pu être convertis en droites.";
+				string message = Res.Strings.Error.ToPoly;
 				this.ActiveViewer.DialogError(message);
 			}
 		}
@@ -2870,7 +2880,7 @@ namespace Epsitec.Common.Document
 		public void ToSimplestSelection()
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.OpletQueueBeginAction("Simplifier");
+			this.OpletQueueBeginAction(Res.Strings.Action.ToSimplest);
 			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
@@ -2919,7 +2929,7 @@ namespace Epsitec.Common.Document
 
 			if ( error )
 			{
-				string message = "Un ou plusieurs objets n'ont pas pu être convertis en courbes.";
+				string message = Res.Strings.Error.ToBezier;
 				this.ActiveViewer.DialogError(message);
 			}
 		}
@@ -2928,7 +2938,7 @@ namespace Epsitec.Common.Document
 		public void FragmentSelection()
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.OpletQueueBeginAction("Fragmenter");
+			this.OpletQueueBeginAction(Res.Strings.Action.Fragment);
 			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
@@ -2953,7 +2963,7 @@ namespace Epsitec.Common.Document
 
 			if ( error )
 			{
-				string message = "Un ou plusieurs objets n'ont pas pu être fragmentés.";
+				string message = Res.Strings.Error.Fragment;
 				this.ActiveViewer.DialogError(message);
 			}
 		}
@@ -3097,7 +3107,7 @@ namespace Epsitec.Common.Document
 			double precision = this.ToLinePrecision*0.19+0.01;  // 0.01 .. 0.2
 
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.OpletQueueBeginAction("Opération booléenne");
+			this.OpletQueueBeginAction(Res.Strings.Action.BooleanMain);
 			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Path pathResult = new Path();
@@ -3171,7 +3181,7 @@ namespace Epsitec.Common.Document
 
 			if ( error )
 			{
-				string message = "Opération impossible.";
+				string message = Res.Strings.Error.Boolean;
 				this.ActiveViewer.DialogError(message);
 			}
 		}
@@ -3184,7 +3194,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 
-			using ( this.OpletQueueBeginAction("Cacher la sélection") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.HideSel) )
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract layer = context.RootObject();
@@ -3212,7 +3222,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 
-			using ( this.OpletQueueBeginAction("Cacher le reste") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.HideRest) )
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract layer = context.RootObject();
@@ -3252,7 +3262,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 
-			using ( this.OpletQueueBeginAction("Montrer tout") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.HideCancel) )
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract page = context.RootObject(1);
@@ -3300,7 +3310,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Nouvelle page") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageNew) )
 			{
 				this.InitiateChangingPage();
 
@@ -3332,7 +3342,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Dupliquer la page") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageDuplicate) )
 			{
 				this.InitiateChangingPage();
 
@@ -3375,7 +3385,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Supprimer la page") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageDelete) )
 			{
 				this.DeselectAll();
 
@@ -3408,7 +3418,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Permuter deux pages") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageSwap) )
 			{
 				UndoableList list = this.document.GetObjects;  // liste des pages
 				rank1 = System.Math.Max(rank1, 0);
@@ -3450,7 +3460,7 @@ namespace Epsitec.Common.Document
 		public void PageName(int rank, string name)
 		{
 			this.document.IsDirtySerialize = true;
-			using ( this.OpletQueueBeginAction("Renommer la page", "ChangePageName") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageName, "ChangePageName") )
 			{
 				UndoableList pages = this.document.GetObjects;
 				Objects.Page page = pages[rank] as Objects.Page;
@@ -3531,13 +3541,13 @@ namespace Epsitec.Common.Document
 				{
 					page.Rank = slaveNumber;
 					slaveNumber ++;
-					page.ShortName = string.Format("{0}", slaveNumber.ToString());
+					page.ShortName = string.Format(Res.Strings.Page.ShortName.Default, slaveNumber.ToString());
 				}
 				else
 				{
 					page.Rank = masterNumber;
 					masterNumber ++;
-					page.ShortName = string.Format("M{0}", masterNumber.ToString());
+					page.ShortName = string.Format(Res.Strings.Page.ShortName.Model, masterNumber.ToString());
 				}
 			}
 		}
@@ -3746,7 +3756,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Nouveau calque") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerNew) )
 			{
 				this.DeselectAll();
 
@@ -3774,7 +3784,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Sélection dans un nouveau calque") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerNewSel) )
 			{
 				// Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
@@ -3786,7 +3796,7 @@ namespace Epsitec.Common.Document
 				Objects.Layer layer = new Objects.Layer(this.document, null);
 				if ( name == "" )
 				{
-					layer.Name = Misc.CopyName(srcLayer.Name, "Extrait", "de");
+					layer.Name = Misc.CopyName(srcLayer.Name, Res.Strings.Misc.Extract, Res.Strings.Misc.ExtractOf);
 				}
 				else
 				{
@@ -3814,7 +3824,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Dupliquer le calque") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerDuplicate) )
 			{
 				this.DeselectAll();
 
@@ -3855,7 +3865,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Supprimer le calque") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerDelete) )
 			{
 				this.DeselectAll();
 
@@ -3886,7 +3896,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Fusionner les calques") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerMerge) )
 			{
 				// Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
@@ -3933,7 +3943,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Permuter deux calques") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerSwap) )
 			{
 				// Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
@@ -3967,7 +3977,7 @@ namespace Epsitec.Common.Document
 		public void LayerName(int rank, string name)
 		{
 			this.document.IsDirtySerialize = true;
-			using ( this.OpletQueueBeginAction("Renommer le calque", "ChangeLayerName") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerName, "ChangeLayerName") )
 			{
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
 				Objects.Layer layer = list[rank] as Objects.Layer;
@@ -4004,25 +4014,22 @@ namespace Epsitec.Common.Document
 					bbox.Inflate(width);
 					if ( !bbox.Contains(pos) )  continue;
 
-					for ( int rank=0 ; rank<100 ; rank++ )
+					Path path = obj.GetMagnetPath();
+					if ( path == null )  continue;
+
+					Point pp1, s1, s2, pp2;
+					if ( Geometry.DetectOutlineRank(path, width, pos, out pp1, out s1, out s2, out pp2) == -1 )  continue;
+					if ( pp1 == s1 && pp2 == s2 )  // segment de droite ?
 					{
-						Path path = obj.GetPath(rank);
-						if ( path == null )  break;
+						if ( pp1 == filterP1 && pp2 == filterP2 )  continue;
 
-						Point pp1, s1, s2, pp2;
-						if ( Geometry.DetectOutlineRank(path, width, pos, out pp1, out s1, out s2, out pp2) == -1 )  continue;
-						if ( pp1 == s1 && pp2 == s2 )  // segment de droite ?
+						Point p = Point.Projection(pp1, pp2, pos);
+						double dist = Point.Distance(p, pos);
+						if ( dist < min )
 						{
-							if ( pp1 == filterP1 && pp2 == filterP2 )  continue;
-
-							Point p = Point.Projection(pp1, pp2, pos);
-							double dist = Point.Distance(p, pos);
-							if ( dist < min )
-							{
-								min = dist;
-								p1 = pp1;
-								p2 = pp2;
-							}
+							min = dist;
+							p1 = pp1;
+							p2 = pp2;
 						}
 					}
 				}
@@ -4036,12 +4043,15 @@ namespace Epsitec.Common.Document
 		{
 			magnetLayerList.Clear();
 			Objects.Page page = this.document.GetObjects[pageNumber] as Objects.Page;
+			int rank = 0;
+			int cl = this.ActiveViewer.DrawingContext.CurrentLayer;
 			foreach ( Objects.Layer layer in this.document.Flat(page) )
 			{
-				if ( layer.Magnet && layer.Type != Objects.LayerType.Hide )
+				if ( layer.Magnet && (layer.Type != Objects.LayerType.Hide || cl == rank) )
 				{
 					magnetLayerList.Add(layer);
 				}
+				rank ++;
 			}
 		}
 		#endregion
@@ -4399,14 +4409,14 @@ namespace Epsitec.Common.Document
 
 			if ( isAuto )
 			{
-				item = new MenuItem("StyleMake", "manifest:Epsitec.App.DocumentEditor.Images.StyleMake.icon", "Créer un nouveau style", "");
+				item = new MenuItem("StyleMake", "manifest:Epsitec.App.DocumentEditor.Images.StyleMake.icon", Res.Strings.Menu.Style.Make, "");
 				item.Pressed += new MessageEventHandler(this.HandleMenuPressed);
 				menu.Items.Add(item);
 			}
 
 			if ( isStyle )
 			{
-				item = new MenuItem("StyleFree", "manifest:Epsitec.App.DocumentEditor.Images.StyleFree.icon", "Rendre indépendant du style", "");
+				item = new MenuItem("StyleFree", "manifest:Epsitec.App.DocumentEditor.Images.StyleFree.icon", Res.Strings.Menu.Style.Free, "");
 				item.Pressed += new MessageEventHandler(this.HandleMenuPressed);
 				menu.Items.Add(item);
 			}
@@ -4424,10 +4434,10 @@ namespace Epsitec.Common.Document
 					first = false;
 				}
 
-				string icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
+				string icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
 				if ( property == original )
 				{
-					icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
+					icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
 				}
 
 				item = new MenuItem("StyleUse", icon, property.StyleName, "", i.ToString());
@@ -4468,7 +4478,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.IsTool )  // propriétés des objets sélectionnés ?
 			{
-				using ( this.OpletQueueBeginAction("Nouveau style") )
+				using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleNew) )
 				{
 					if ( property.IsMulti )
 					{
@@ -4503,7 +4513,7 @@ namespace Epsitec.Common.Document
 			}
 			else	// propriété de objectMemory ?
 			{
-				using ( this.OpletQueueBeginAction("Nouveau style") )
+				using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleNew) )
 				{
 					Properties.Abstract style = Properties.Abstract.NewProperty(this.document, property.Type);
 					property.CopyTo(style);
@@ -4531,7 +4541,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.IsTool )  // propriétés des objets sélectionnés ?
 			{
-				using ( this.OpletQueueBeginAction("Libérer un style") )
+				using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleFree) )
 				{
 					DrawingContext context = this.ActiveViewer.DrawingContext;
 					Objects.Abstract layer = context.RootObject();
@@ -4548,7 +4558,7 @@ namespace Epsitec.Common.Document
 			}
 			else	// propriété de objectMemory ?
 			{
-				using ( this.OpletQueueBeginAction("Libérer un style") )
+				using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleFree) )
 				{
 					Properties.Abstract free = Properties.Abstract.NewProperty(this.document, property.Type);
 					property.CopyTo(free);
@@ -4569,7 +4579,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.IsTool )  // propriétés des objets sélectionnés ?
 			{
-				using ( this.OpletQueueBeginAction("Utiliser un style") )
+				using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleUse) )
 				{
 					DrawingContext context = this.ActiveViewer.DrawingContext;
 					Objects.Abstract layer = context.RootObject();
@@ -4610,7 +4620,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Créer un style") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleCreate) )
 			{
 				UndoableList list = this.document.PropertiesStyle;
 				rank = System.Math.Max(rank, 0);
@@ -4634,7 +4644,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Dupliquer un style") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleDuplicate) )
 			{
 				UndoableList list = this.document.PropertiesStyle;
 				rank = System.Math.Max(rank, 0);
@@ -4660,7 +4670,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Supprimer un style") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleDelete) )
 			{
 				UndoableList list = this.document.PropertiesStyle;
 				rank = System.Math.Max(rank, 0);
@@ -4691,7 +4701,7 @@ namespace Epsitec.Common.Document
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction("Permuter deux styles") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleSwap) )
 			{
 				UndoableList list = this.document.PropertiesStyle;
 				rank1 = System.Math.Max(rank1, 0);
@@ -4719,7 +4729,7 @@ namespace Epsitec.Common.Document
 			Properties.Abstract src = model.Property(dst.Type);
 			if ( src == null )  return;
 
-			using ( this.OpletQueueBeginAction("Style selon la pipette") )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.PickerProperty) )
 			{
 				dst.PickerProperty(src);
 				this.OpletQueueValidateAction();
@@ -4730,7 +4740,7 @@ namespace Epsitec.Common.Document
 		// Donne le prochain nom unique de style.
 		protected string GetNextStyleName()
 		{
-			return string.Format("Style {0}", this.GetNextUniqueStyleId());
+			return string.Format(Res.Strings.Style.Name, this.GetNextUniqueStyleId());
 		}
 		#endregion
 

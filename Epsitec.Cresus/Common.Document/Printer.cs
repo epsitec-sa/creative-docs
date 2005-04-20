@@ -1043,7 +1043,7 @@ namespace Epsitec.Common.Document
 
 			if ( format == ImageFormat.Unknown )
 			{
-				return "Format d'image inconnu";
+				return Res.Strings.Error.BadImage;
 			}
 
 			Graphics gfx = new Graphics();
@@ -1084,7 +1084,7 @@ namespace Epsitec.Common.Document
 			}
 
 			Bitmap bitmap = Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;
-			if ( bitmap == null )  return "Pas de bitmap";
+			if ( bitmap == null )  return Res.Strings.Error.NoBitmap;
 
 			try
 			{

@@ -14,13 +14,13 @@ namespace Epsitec.Common.Document.Panels
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = ContentAlignment.MiddleLeft;
-			this.label.Text = "Nom du calque";
+			this.label.Text = Res.Strings.Panel.LayerName.Label.Name;
 
 			this.field = new TextField(this);
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.field, "Nom du calque");
+			ToolTip.Default.SetToolTip(this.field, Res.Strings.Panel.LayerName.Tooltip.Name);
 		}
 		
 		protected override void Dispose(bool disposing)

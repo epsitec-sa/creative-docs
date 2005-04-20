@@ -693,6 +693,14 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Retourne le chemin géométrique de l'objet pour les constructions
+		// magnétiques.
+		public override Path GetMagnetPath()
+		{
+			return this.PathBuild();
+		}
+
+
 		#region Serialization
 		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)

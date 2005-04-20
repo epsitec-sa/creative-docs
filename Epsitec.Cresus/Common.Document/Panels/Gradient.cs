@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Panels
 			this.nothingButton.TabIndex = 1;
 			this.nothingButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.nothingButton.IconName = "manifest:Epsitec.App.DocumentEditor.Images.Nothing.icon";
-			ToolTip.Default.SetToolTip(this.nothingButton, "Aucune couleur");
+			ToolTip.Default.SetToolTip(this.nothingButton, Res.Strings.Panel.Gradient.Tooltip.Nothing);
 
 			this.fieldColor1 = new ColorSample(this);
 			this.fieldColor1.PossibleSource = true;
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldColor1.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.fieldColor1.TabIndex = 2;
 			this.fieldColor1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldColor1, "Couleur 1");
+			ToolTip.Default.SetToolTip(this.fieldColor1, Res.Strings.Panel.Gradient.Tooltip.Color1);
 
 			this.fieldColor2 = new ColorSample(this);
 			this.fieldColor2.PossibleSource = true;
@@ -36,29 +36,29 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldColor2.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.fieldColor2.TabIndex = 3;
 			this.fieldColor2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldColor2, "Couleur 2");
+			ToolTip.Default.SetToolTip(this.fieldColor2, Res.Strings.Panel.Gradient.Tooltip.Color2);
 
 			this.listFill = new TextFieldCombo(this);
 			this.listFill.IsReadOnly = true;
-			this.listFill.Items.Add("Uniforme");
-			this.listFill.Items.Add("Linéaire");
-			this.listFill.Items.Add("Concentrique");
-			this.listFill.Items.Add("Diamant");
-			this.listFill.Items.Add("Cônique");
-			this.listFill.Items.Add("Hachures");
-			this.listFill.Items.Add("Points");
-			this.listFill.Items.Add("Carrés");
+			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.None);
+			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.Linear);
+			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.Circle);
+			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.Diamond);
+			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.Conic);
+			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.Hatch);
+			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.Dots);
+			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.Squares);
 			this.listFill.SelectedIndexChanged += new EventHandler(this.HandleListChanged);
 			this.listFill.TabIndex = 4;
 			this.listFill.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.listFill, "Type du remplissage");
+			ToolTip.Default.SetToolTip(this.listFill, Res.Strings.Panel.Gradient.Tooltip.Type);
 
 			this.reset = new Button(this);
-			this.reset.Text = "R";
+			this.reset.Text = Res.Strings.Panel.Gradient.Button.Reset;
 			this.reset.TabIndex = 5;
 			this.reset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.reset.Clicked += new MessageEventHandler(this.HandleReset);
-			ToolTip.Default.SetToolTip(this.reset, "Reset (valeurs standards)");
+			ToolTip.Default.SetToolTip(this.reset, Res.Strings.Panel.Gradient.Tooltip.Reset);
 
 			this.fieldAngle = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldAngle);
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldAngle.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldAngle.TabIndex = 6;
 			this.fieldAngle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldAngle, "Angle");
+			ToolTip.Default.SetToolTip(this.fieldAngle, Res.Strings.Panel.Gradient.Tooltip.Angle);
 
 			this.radioHatchRank = new RadioButton[Properties.Gradient.HatchMax];
 			for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
@@ -78,8 +78,8 @@ namespace Epsitec.Common.Document.Panels
 				this.radioHatchRank[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 			this.radioHatchRank[Properties.Gradient.HatchMax-1].Text = ":";
-			ToolTip.Default.SetToolTip(this.radioHatchRank[0], "1er trait");
-			ToolTip.Default.SetToolTip(this.radioHatchRank[1], "2ème trait");
+			ToolTip.Default.SetToolTip(this.radioHatchRank[0], Res.Strings.Panel.Gradient.Tooltip.Hatch1);
+			ToolTip.Default.SetToolTip(this.radioHatchRank[1], Res.Strings.Panel.Gradient.Tooltip.Hatch2);
 			this.RadioSelected = 0;
 
 			this.fieldRepeat = new TextFieldReal(this);
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRepeat.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldRepeat.TabIndex = 20;
 			this.fieldRepeat.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldRepeat, "Nombre de répétitions");
+			ToolTip.Default.SetToolTip(this.fieldRepeat, Res.Strings.Panel.Gradient.Tooltip.Repeat);
 
 			this.fieldMiddle = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldMiddle);
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMiddle.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldMiddle.TabIndex = 21;
 			this.fieldMiddle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldMiddle, "Couleur médiane");
+			ToolTip.Default.SetToolTip(this.fieldMiddle, Res.Strings.Panel.Gradient.Tooltip.Middle);
 
 			this.fieldSmooth = new TextFieldReal(this);
 			this.fieldSmooth.FactorMinRange = 0.0M;
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldSmooth.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldSmooth.TabIndex = 22;
 			this.fieldSmooth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldSmooth, "Flou");
+			ToolTip.Default.SetToolTip(this.fieldSmooth, Res.Strings.Panel.Gradient.Tooltip.Smooth);
 
 			this.fieldHatchAngle = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldHatchAngle);
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldHatchAngle.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldHatchAngle.TabIndex = 23;
 			this.fieldHatchAngle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldHatchAngle, "Angle");
+			ToolTip.Default.SetToolTip(this.fieldHatchAngle, Res.Strings.Panel.Gradient.Tooltip.HatchAngle);
 
 			this.fieldHatchWidth = new TextFieldReal(this);
 			this.fieldHatchWidth.FactorMinRange = 0.0M;
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldHatchWidth.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldHatchWidth.TabIndex = 24;
 			this.fieldHatchWidth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldHatchWidth, "Epaisseur");
+			ToolTip.Default.SetToolTip(this.fieldHatchWidth, Res.Strings.Panel.Gradient.Tooltip.HatchWidth);
 
 			this.fieldHatchDistance = new TextFieldReal(this);
 			this.fieldHatchDistance.FactorMinRange = 0.0M;
@@ -139,40 +139,40 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldHatchDistance.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldHatchDistance.TabIndex = 25;
 			this.fieldHatchDistance.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldHatchDistance, "Distance");
+			ToolTip.Default.SetToolTip(this.fieldHatchDistance, Res.Strings.Panel.Gradient.Tooltip.HatchDistance);
 			
 			this.labelAngle = new StaticText(this);
-			this.labelAngle.Text = "a";
+			this.labelAngle.Text = Res.Strings.Panel.Gradient.Label.Angle;
 			this.labelAngle.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelRepeat = new StaticText(this);
-			this.labelRepeat.Text = "n";
+			this.labelRepeat.Text = Res.Strings.Panel.Gradient.Label.Repeat;
 			this.labelRepeat.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelMiddle = new StaticText(this);
-			this.labelMiddle.Text = "M";
+			this.labelMiddle.Text = Res.Strings.Panel.Gradient.Label.Middle;
 			this.labelMiddle.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelSmooth = new StaticText(this);
-			this.labelSmooth.Text = "F";
+			this.labelSmooth.Text = Res.Strings.Panel.Gradient.Label.Smooth;
 			this.labelSmooth.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelHatchAngle = new StaticText(this);
-			this.labelHatchAngle.Text = "a";
+			this.labelHatchAngle.Text = Res.Strings.Panel.Gradient.Label.HatchAngle;
 			this.labelHatchAngle.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelHatchWidth = new StaticText(this);
-			this.labelHatchWidth.Text = "e";
+			this.labelHatchWidth.Text = Res.Strings.Panel.Gradient.Label.HatchWidth;
 			this.labelHatchWidth.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelHatchDistance = new StaticText(this);
-			this.labelHatchDistance.Text = "d";
+			this.labelHatchDistance.Text = Res.Strings.Panel.Gradient.Label.HatchDistance;
 			this.labelHatchDistance.Alignment = ContentAlignment.MiddleCenter;
 
 			this.swapColor = new IconButton(this);
 			this.swapColor.IconName = "manifest:Epsitec.App.DocumentEditor.Images.SwapDataV.icon";
 			this.swapColor.Clicked += new MessageEventHandler(this.HandleSwapColorClicked);
-			ToolTip.Default.SetToolTip(this.swapColor, "Permute les 2 couleurs");
+			ToolTip.Default.SetToolTip(this.swapColor, Res.Strings.Panel.Gradient.Tooltip.Swap);
 
 			this.isNormalAndExtended = true;
 		}

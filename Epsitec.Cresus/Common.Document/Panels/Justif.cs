@@ -29,27 +29,27 @@ namespace Epsitec.Common.Document.Panels
 			this.buttons[2].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHRight.icon";
 			this.buttons[3].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHJustif.icon";
 			this.buttons[4].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHAll.icon";
-			ToolTip.Default.SetToolTip(this.buttons[0], "Justification à gauche");
-			ToolTip.Default.SetToolTip(this.buttons[1], "Justification centrée");
-			ToolTip.Default.SetToolTip(this.buttons[2], "Justification à droite");
-			ToolTip.Default.SetToolTip(this.buttons[3], "Justification alignée, sauf dernière ligne");
-			ToolTip.Default.SetToolTip(this.buttons[4], "Justification alignée, y compris dernière ligne");
+			ToolTip.Default.SetToolTip(this.buttons[0], Res.Strings.Panel.Justif.Tooltip.JustifHLeft);
+			ToolTip.Default.SetToolTip(this.buttons[1], Res.Strings.Panel.Justif.Tooltip.JustifHCenter);
+			ToolTip.Default.SetToolTip(this.buttons[2], Res.Strings.Panel.Justif.Tooltip.JustifHRight);
+			ToolTip.Default.SetToolTip(this.buttons[3], Res.Strings.Panel.Justif.Tooltip.JustifHJustif);
+			ToolTip.Default.SetToolTip(this.buttons[4], Res.Strings.Panel.Justif.Tooltip.JustifHAll);
 
 			this.buttons[5].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifVTop.icon";
 			this.buttons[6].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifVCenter.icon";
 			this.buttons[7].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifVBottom.icon";
-			ToolTip.Default.SetToolTip(this.buttons[5], "En haut");
-			ToolTip.Default.SetToolTip(this.buttons[6], "Centré verticalement");
-			ToolTip.Default.SetToolTip(this.buttons[7], "En bas");
+			ToolTip.Default.SetToolTip(this.buttons[5], Res.Strings.Panel.Justif.Tooltip.JustifVTop);
+			ToolTip.Default.SetToolTip(this.buttons[6], Res.Strings.Panel.Justif.Tooltip.JustifVCenter);
+			ToolTip.Default.SetToolTip(this.buttons[7], Res.Strings.Panel.Justif.Tooltip.JustifVBottom);
 
 			this.buttons[8].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifOLR.icon";
 			this.buttons[9].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifOBT.icon";
 			this.buttons[10].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifORL.icon";
 			this.buttons[11].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifOTB.icon";
-			ToolTip.Default.SetToolTip(this.buttons[8], "Orientation normale");
-			ToolTip.Default.SetToolTip(this.buttons[9], "Orientation de bas en haut");
-			ToolTip.Default.SetToolTip(this.buttons[10], "Orientation de droite à gauche");
-			ToolTip.Default.SetToolTip(this.buttons[11], "Orientation de haut en bas");
+			ToolTip.Default.SetToolTip(this.buttons[8], Res.Strings.Panel.Justif.Tooltip.JustifOLR);
+			ToolTip.Default.SetToolTip(this.buttons[9], Res.Strings.Panel.Justif.Tooltip.JustifOBT);
+			ToolTip.Default.SetToolTip(this.buttons[10], Res.Strings.Panel.Justif.Tooltip.JustifORL);
+			ToolTip.Default.SetToolTip(this.buttons[11], Res.Strings.Panel.Justif.Tooltip.JustifOTB);
 
 			this.fieldMarginH = new TextFieldReal(this);
 			this.fieldMarginH.FactorMinRange = 0.0M;
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMarginH.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldMarginH.TabIndex = 20;
 			this.fieldMarginH.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldMarginH, "Marges gauche et droite");
+			ToolTip.Default.SetToolTip(this.fieldMarginH, Res.Strings.Panel.Justif.Tooltip.MarginH);
 
 			this.fieldMarginV = new TextFieldReal(this);
 			this.fieldMarginV.FactorMinRange = 0.0M;
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMarginV.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldMarginV.TabIndex = 21;
 			this.fieldMarginV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldMarginV, "Marges sup/inf");
+			ToolTip.Default.SetToolTip(this.fieldMarginV, Res.Strings.Panel.Justif.Tooltip.MarginV);
 
 			this.fieldOffsetV = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldOffsetV);
@@ -79,18 +79,18 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldOffsetV.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldOffsetV.TabIndex = 22;
 			this.fieldOffsetV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldOffsetV, "Décalage vertical");
+			ToolTip.Default.SetToolTip(this.fieldOffsetV, Res.Strings.Panel.Justif.Tooltip.OffsetV);
 
 			this.labelMarginH = new StaticText(this);
-			this.labelMarginH.Text = "Mx";
+			this.labelMarginH.Text = Res.Strings.Panel.Justif.Label.MarginH;
 			this.labelMarginH.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelMarginV = new StaticText(this);
-			this.labelMarginV.Text = "My";
+			this.labelMarginV.Text = Res.Strings.Panel.Justif.Label.MarginV;
 			this.labelMarginV.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelOffsetV = new StaticText(this);
-			this.labelOffsetV.Text = "Oy";
+			this.labelOffsetV.Text = Res.Strings.Panel.Justif.Label.OffsetV;
 			this.labelOffsetV.Alignment = ContentAlignment.MiddleCenter;
 
 			this.isNormalAndExtended = true;

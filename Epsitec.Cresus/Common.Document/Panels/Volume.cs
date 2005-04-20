@@ -27,10 +27,10 @@ namespace Epsitec.Common.Document.Panels
 			this.volumeType.TextChanged += new EventHandler(this.HandleTypeChanged);
 			this.volumeType.TabIndex = 1;
 			this.volumeType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.volumeType, Res.Strings.ToolTip.Volume3DType);
+			ToolTip.Default.SetToolTip(this.volumeType, Res.Strings.Panel.Volume.ToolTip.Type);
 
 			this.labelRapport = new StaticText(this);
-			this.labelRapport.Text = "Point milieu";
+			this.labelRapport.Text = Res.Strings.Panel.Volume.Label.Rapport;
 
 			this.fieldRapport = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealPercent(this.fieldRapport);
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRapport.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.labelLeft = new StaticText(this);
-			this.labelLeft.Text = "Angle gauche";
+			this.labelLeft.Text = Res.Strings.Panel.Volume.Label.Left;
 
 			this.fieldLeft = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldLeft);
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldLeft.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.labelRight = new StaticText(this);
-			this.labelRight.Text = "Angle droite";
+			this.labelRight.Text = Res.Strings.Panel.Volume.Label.Right;
 
 			this.fieldRight = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldRight);

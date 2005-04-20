@@ -333,11 +333,21 @@ namespace Epsitec.Common.Document.Objects
 		public virtual int DetectHandle(Point pos)
 		{
 			int total = this.TotalHandle;
-			for ( int i=total-1 ; i>=0 ; i-- )
+			double min = 1000000.0;
+			int rank = -1;
+			for ( int i=0 ; i<total ; i++ )
 			{
-				if ( this.Handle(i).Detect(pos) )  return i;
+				if ( this.Handle(i).Detect(pos) )
+				{
+					double distance = Point.Distance(this.Handle(i).Position, pos);
+					if ( distance < min )
+					{
+						min = distance;
+						rank = i;
+					}
+				}
 			}
-			return -1;
+			return rank;
 		}
 
 		// Début du déplacement d'une poignée.
@@ -535,7 +545,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			double angle = Point.ComputeAngleDeg(this.Handle(0).Position, this.Handle(1).Position);
-			string text = string.Format("lg={0} a={1}", this.document.Modifier.RealToString(len), this.document.Modifier.AngleToString(angle));
+			string text = string.Format(Res.Strings.Object.Abstract.InfoLine, this.document.Modifier.RealToString(len), this.document.Modifier.AngleToString(angle));
 			this.document.Modifier.TextInfoModif = text;
 		}
 
@@ -571,7 +581,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else
 			{
-				string text = string.Format("dx={0} dy={1}", this.document.Modifier.RealToString(width), this.document.Modifier.RealToString(height));
+				string text = string.Format(Res.Strings.Object.Abstract.InfoRectangle, this.document.Modifier.RealToString(width), this.document.Modifier.RealToString(height));
 				this.document.Modifier.TextInfoModif = text;
 			}
 		}
@@ -580,7 +590,7 @@ namespace Epsitec.Common.Document.Objects
 		protected void TextInfoModifCircle()
 		{
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
-			string text = string.Format("r={0}", this.document.Modifier.RealToString(len));
+			string text = string.Format(Res.Strings.Object.Abstract.InfoCircle, this.document.Modifier.RealToString(len));
 			this.document.Modifier.TextInfoModif = text;
 		}
 
@@ -2017,6 +2027,16 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Modifier.ActiveViewer.AutoScroll(move);
 		}
 
+
+		// Retourne le chemin géométrique de l'objet pour les constructions
+		// magnétiques. Généralement, ce chemin est identique à celui rendu
+		// par GetPath, mais certains objets peuvent retourner un chemin plus
+		// simple (comme Line, Poly, TextLine, TextBox et Dimension).
+		// L'idée est d'ignorer les propriétés Corner et Arrow, par exemple.
+		public virtual Path GetMagnetPath()
+		{
+			return this.GetPath(0);
+		}
 
 		// Retourne le chemin géométrique de l'objet.
 		public virtual Path GetPath(int rank)

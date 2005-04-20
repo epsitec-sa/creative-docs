@@ -19,7 +19,7 @@ namespace Epsitec.Common.Document.Panels
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.field, "Nom de l'objet");
+			ToolTip.Default.SetToolTip(this.field, Res.Strings.Panel.Name.Tooltip.Title);
 		}
 		
 		protected override void Dispose(bool disposing)

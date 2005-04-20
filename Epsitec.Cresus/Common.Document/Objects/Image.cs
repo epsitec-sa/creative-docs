@@ -487,6 +487,15 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Retourne le chemin géométrique de l'objet pour les constructions
+		// magnétiques.
+		public override Path GetMagnetPath()
+		{
+			Path path = this.PathBuildSurface();
+			return path;
+		}
+
+
 		#region Serialization
 		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -506,7 +515,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( pi == null )  return;
 			if ( !System.IO.File.Exists(pi.Filename) )
 			{
-				string message = string.Format("Le fichier <b>{0}</b> n'existe pas.", pi.Filename);
+				string message = string.Format(Res.Strings.Object.Image.Error, pi.Filename);
 				if ( !warnings.Contains(message) )
 				{
 					warnings.Add(message);

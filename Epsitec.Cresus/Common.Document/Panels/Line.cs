@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Panels
 			this.nothingButton.TabIndex = 1;
 			this.nothingButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.nothingButton.IconName = "manifest:Epsitec.App.DocumentEditor.Images.Nothing.icon";
-			ToolTip.Default.SetToolTip(this.nothingButton, "Aucun trait");
+			ToolTip.Default.SetToolTip(this.nothingButton, Res.Strings.Panel.Line.Tooltip.Nothing);
 
 			this.field = new TextFieldReal(this);
 			this.field.FactorMinRange = 0.0M;
@@ -30,22 +30,22 @@ namespace Epsitec.Common.Document.Panels
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 2;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.field, "Epaisseur du trait");
+			ToolTip.Default.SetToolTip(this.field, Res.Strings.Panel.Line.Tooltip.Width);
 
 			this.dashType = new TextFieldCombo(this);
 			this.dashType.IsReadOnly = true;
-			this.dashType.Items.Add("Plein");
-			this.dashType.Items.Add("Traitillé");
-			this.dashType.Items.Add("Traitillé serré");
-			this.dashType.Items.Add("Traitillé étendu");
-			this.dashType.Items.Add("Pointillé");
-			this.dashType.Items.Add("Trait-pointillé");
-			this.dashType.Items.Add("Trait-point-pointillé");
-			this.dashType.Items.Add("Sur mesure");
+			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.Full);
+			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.Lines);
+			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.CompactedLines);
+			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.ExtendedLines);
+			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.Dots);
+			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.LinesDots);
+			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.LinesDotsDots);
+			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.User);
 			this.dashType.SelectedIndexChanged += new EventHandler(this.HandleListChanged);
 			this.dashType.TabIndex = 3;
 			this.dashType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.dashType, "Type du trait");
+			ToolTip.Default.SetToolTip(this.dashType, Res.Strings.Panel.Line.Tooltip.Type);
 
 			this.buttons = new IconButton[6];
 			for ( int i=0 ; i<6 ; i++ )
@@ -59,16 +59,16 @@ namespace Epsitec.Common.Document.Panels
 			this.buttons[0].IconName = "manifest:Epsitec.App.DocumentEditor.Images.CapRound.icon";
 			this.buttons[1].IconName = "manifest:Epsitec.App.DocumentEditor.Images.CapSquare.icon";
 			this.buttons[2].IconName = "manifest:Epsitec.App.DocumentEditor.Images.CapButt.icon";
-			ToolTip.Default.SetToolTip(this.buttons[0], "Extrémité ronde");
-			ToolTip.Default.SetToolTip(this.buttons[1], "Extrémité carrée");
-			ToolTip.Default.SetToolTip(this.buttons[2], "Extrémité tronquée");
+			ToolTip.Default.SetToolTip(this.buttons[0], Res.Strings.Panel.Line.Tooltip.CapRound);
+			ToolTip.Default.SetToolTip(this.buttons[1], Res.Strings.Panel.Line.Tooltip.CapSquare);
+			ToolTip.Default.SetToolTip(this.buttons[2], Res.Strings.Panel.Line.Tooltip.CapButt);
 
 			this.buttons[3].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JoinRound.icon";
 			this.buttons[4].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JoinMiter.icon";
 			this.buttons[5].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JoinBevel.icon";
-			ToolTip.Default.SetToolTip(this.buttons[3], "Jointure ronde");
-			ToolTip.Default.SetToolTip(this.buttons[4], "Jointure pointue");
-			ToolTip.Default.SetToolTip(this.buttons[5], "Jointure tronquée");
+			ToolTip.Default.SetToolTip(this.buttons[3], Res.Strings.Panel.Line.Tooltip.JoinRound);
+			ToolTip.Default.SetToolTip(this.buttons[4], Res.Strings.Panel.Line.Tooltip.JoinMiter);
+			ToolTip.Default.SetToolTip(this.buttons[5], Res.Strings.Panel.Line.Tooltip.JoinBevel);
 
 			this.radioDashRank = new RadioButton[Properties.Line.DashMax];
 			for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
@@ -79,9 +79,9 @@ namespace Epsitec.Common.Document.Panels
 				this.radioDashRank[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 			this.radioDashRank[Properties.Line.DashMax-1].Text = ":";
-			ToolTip.Default.SetToolTip(this.radioDashRank[0], "1er couple trait/trou");
-			ToolTip.Default.SetToolTip(this.radioDashRank[1], "2ème couple trait/trou");
-			ToolTip.Default.SetToolTip(this.radioDashRank[2], "3ème couple trait/trou");
+			ToolTip.Default.SetToolTip(this.radioDashRank[0], Res.Strings.Panel.Line.Tooltip.Dash1);
+			ToolTip.Default.SetToolTip(this.radioDashRank[1], Res.Strings.Panel.Line.Tooltip.Dash2);
+			ToolTip.Default.SetToolTip(this.radioDashRank[2], Res.Strings.Panel.Line.Tooltip.Dash3);
 			this.RadioSelected = 0;
 
 			this.fieldStandardLength = new TextFieldReal(this);
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldStandardLength.ValueChanged += new EventHandler(this.HandleDashChanged);
 			this.fieldStandardLength.TabIndex = 20;
 			this.fieldStandardLength.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldStandardLength, "Longueur du motif");
+			ToolTip.Default.SetToolTip(this.fieldStandardLength, Res.Strings.Panel.Line.Tooltip.DashLength);
 
 			this.fieldDashPen = new TextFieldReal(this);
 			this.fieldDashPen.FactorMinRange = 0.0M;
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDashPen.ValueChanged += new EventHandler(this.HandleDashChanged);
 			this.fieldDashPen.TabIndex = 21;
 			this.fieldDashPen.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldDashPen, "Longueur du trait");
+			ToolTip.Default.SetToolTip(this.fieldDashPen, Res.Strings.Panel.Line.Tooltip.DashPen);
 
 			this.fieldDashGap = new TextFieldReal(this);
 			this.fieldDashGap.FactorMinRange = 0.0M;
@@ -112,18 +112,18 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDashGap.ValueChanged += new EventHandler(this.HandleDashChanged);
 			this.fieldDashGap.TabIndex = 22;
 			this.fieldDashGap.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fieldDashGap, "Longueur du trou");
+			ToolTip.Default.SetToolTip(this.fieldDashGap, Res.Strings.Panel.Line.Tooltip.DashGap);
 
 			this.labelStandardLength = new StaticText(this);
-			this.labelStandardLength.Text = "L";
+			this.labelStandardLength.Text = Res.Strings.Panel.Line.Label.DashLength;
 			this.labelStandardLength.Alignment = ContentAlignment.MiddleRight;
 
 			this.labelDashPen = new StaticText(this);
-			this.labelDashPen.Text = "P";
+			this.labelDashPen.Text = Res.Strings.Panel.Line.Label.DashPen;
 			this.labelDashPen.Alignment = ContentAlignment.MiddleRight;
 
 			this.labelDashGap = new StaticText(this);
-			this.labelDashGap.Text = "V";
+			this.labelDashGap.Text = Res.Strings.Panel.Line.Label.DashGap;
 			this.labelDashGap.Alignment = ContentAlignment.MiddleRight;
 
 			this.isNormalAndExtended = true;

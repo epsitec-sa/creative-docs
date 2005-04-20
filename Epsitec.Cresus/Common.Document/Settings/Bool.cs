@@ -24,89 +24,89 @@ namespace Epsitec.Common.Document.Settings
 			switch ( this.name )
 			{
 				case "GridActive":
-					this.text = "Grille active";
+					this.text = Res.Strings.Dialog.Bool.GridActive;
 					break;
 
 				case "GridShow":
-					this.text = "Grille visible";
+					this.text = Res.Strings.Dialog.Bool.GridShow;
 					break;
 
 				case "GuidesActive":
-					this.text = "Repères actifs";
+					this.text = Res.Strings.Dialog.Bool.GuidesActive;
 					break;
 
 				case "GuidesShow":
-					this.text = "Repères visibles";
+					this.text = Res.Strings.Dialog.Bool.GuidesShow;
 					break;
 
 				case "GuidesMouse":
-					this.text = "Déplacements avec la souris";
+					this.text = Res.Strings.Dialog.Bool.GuidesMouse;
 					break;
 
 				case "PreviewActive":
-					this.text = "Comme imprimé";
+					this.text = Res.Strings.Dialog.Bool.PreviewActive;
 					break;
 
 				case "RulersShow":
-					this.text = "Règles visibles";
+					this.text = Res.Strings.Dialog.Bool.RulersShow;
 					break;
 
 				case "LabelsShow":
-					this.text = "Affiche le nom des objets";
+					this.text = Res.Strings.Dialog.Bool.LabelsShow;
 					break;
 
 				case "MagnetActive":
-					this.text = "Constructions magnétiques";
+					this.text = Res.Strings.Dialog.Bool.MagnetActive;
 					break;
 
 				case "PrintCollate":
-					this.text = "Copies assemblées (1,2,3 - 1,2,3)";
+					this.text = Res.Strings.Dialog.Bool.PrintCollate;
 					break;
 
 				case "PrintReverse":
-					this.text = "Ordre inversé";
+					this.text = Res.Strings.Dialog.Bool.PrintReverse;
 					break;
 
 				case "PrintToFile":
-					this.text = "Imprimer dans un fichier";
+					this.text = Res.Strings.Dialog.Bool.PrintToFile;
 					break;
 
 				case "PrintDraft":
-					this.text = "Brouillon (pas de dégradé ni de transparence)";
+					this.text = Res.Strings.Dialog.Bool.PrintDraft;
 					break;
 
 				case "PrintAutoLandscape":
-					this.text = "Portrait/paysage automatique";
+					this.text = Res.Strings.Dialog.Bool.PrintAutoLandscape;
 					break;
 
 				case "PrintAutoZoom":
-					this.text = "Adapter l'impression à la taille de la page";
+					this.text = Res.Strings.Dialog.Bool.PrintAutoZoom;
 					break;
 
 				case "PrintAA":
-					this.text = "Anti-crénelage (pour imprimante couleur)";
+					this.text = Res.Strings.Dialog.Bool.PrintAA;
 					break;
 
 				case "PrintPerfectJoin":
-					this.text = "Jointures parfaites (entre les zones d'une page)";
+					this.text = Res.Strings.Dialog.Bool.PrintPerfectJoin;
 					this.conditionName = "PrintDraft";
 					this.conditionState = true;
 					break;
 
 				case "PrintTarget":
-					this.text = "Traits de coupe (hors de la page)";
+					this.text = Res.Strings.Dialog.Bool.PrintTarget;
 					this.conditionName = "PrintAutoZoom";
 					this.conditionState = true;
 					break;
 
 				case "PrintDebugArea":
-					this.text = "Imprime les zones détectées (debug)";
+					this.text = Res.Strings.Dialog.Bool.PrintDebugArea;
 					this.conditionName = "PrintDraft";
 					this.conditionState = true;
 					break;
 
 				case "RepeatDuplicateMove":
-					this.text = "Duplique avec répétition du dernier déplacement";
+					this.text = Res.Strings.Dialog.Bool.RepeatDuplicateMove;
 					break;
 			}
 		}

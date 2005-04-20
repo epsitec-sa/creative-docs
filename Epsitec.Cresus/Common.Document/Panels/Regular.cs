@@ -25,7 +25,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldNbFaces.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.checkStar = new CheckButton(this);
-			this.checkStar.Text = "Etoile";
+			this.checkStar.Text = Res.Strings.Panel.Regular.Label.Star;
 			this.checkStar.ActiveStateChanged += new EventHandler(this.HandleCheckChanged);
 			this.checkStar.TabIndex = 2;
 			this.checkStar.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDeep.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.labelDeep = new StaticText(this);
-			this.labelDeep.Text = "Renfoncement";
+			this.labelDeep.Text = Res.Strings.Panel.Regular.Label.Deep;
 			this.labelDeep.Alignment = ContentAlignment.MiddleCenter;
 
 			this.isNormalAndExtended = true;
