@@ -134,6 +134,11 @@
                     Project = "{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Common.Text"
+                    Project = "{62F59974-6D79-4919-AAA0-10717A8D8514}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
@@ -215,6 +220,11 @@
                 />
                 <File
                     RelPath = "SerializationTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TextTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
