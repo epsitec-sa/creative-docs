@@ -104,6 +104,11 @@
                     AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
+                <Reference
+                    Name = "System.Extension"
+                    Project = "{10453A3B-CA2A-4D36-B634-78BA87AAAB26}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
@@ -413,7 +418,11 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
-                <Folder RelPath = "Support\" />
+                <File
+                    RelPath = "Support\SimpleHtmlParser.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
                 <File
                     RelPath = "Tests\CheckInternalCursor.cs"
                     SubType = "Code"
@@ -441,6 +450,11 @@
                 />
                 <File
                     RelPath = "Tests\CheckSerializerSupport.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Tests\CheckSimpleHtmlParser.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

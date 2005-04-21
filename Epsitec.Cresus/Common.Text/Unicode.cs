@@ -970,6 +970,10 @@ namespace Epsitec.Common.Text
 					case "ID": return Unicode.BreakClass.ID_Ideographic;
 					case "AI": return Unicode.BreakClass.AI_AmbiguousAlphabeticOrIdeographic;
 					case "SA": return Unicode.BreakClass.SA_ComplexContextSouthEastAsian;
+					
+					case "JL": case "JV": case "JT":	//	Jamo, 4.1.0
+					case "H2": case "H3":				//	Hangul, 4.1.0
+						return Unicode.BreakClass.ID_Ideographic;
 				}
 			
 				throw new System.ArgumentOutOfRangeException ("token", token, "Invalid token");

@@ -12,11 +12,11 @@ namespace Epsitec.Common.Text
 		public TextStory()
 		{
 			this.SetupTextStory ();
-			this.SetupOpletQueue (new Support.OpletQueue ());
+			this.SetupOpletQueue (new Common.Support.OpletQueue ());
 			this.SetupContext (new Context ());
 		}
 		
-		public TextStory(Support.OpletQueue oplet_queue)
+		public TextStory(Common.Support.OpletQueue oplet_queue)
 		{
 			this.SetupTextStory ();
 			this.SetupOpletQueue (oplet_queue);
@@ -26,11 +26,11 @@ namespace Epsitec.Common.Text
 		public TextStory(Context context)
 		{
 			this.SetupTextStory ();
-			this.SetupOpletQueue (new Support.OpletQueue ());
+			this.SetupOpletQueue (new Common.Support.OpletQueue ());
 			this.SetupContext (context);
 		}
 		
-		public TextStory(Support.OpletQueue oplet_queue, Context context)
+		public TextStory(Common.Support.OpletQueue oplet_queue, Context context)
 		{
 			this.SetupTextStory ();
 			this.SetupOpletQueue (oplet_queue);
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		public Support.OpletQueue				OpletQueue
+		public Common.Support.OpletQueue		OpletQueue
 		{
 			get
 			{
@@ -309,7 +309,7 @@ namespace Epsitec.Common.Text
 		
 		public void ConvertToStyledText(string simple_text, TextStyle text_style, System.Collections.ICollection properties, out ulong[] styled_text)
 		{
-			TextStyle[] text_styles = { text_style };
+			TextStyle[] text_styles = (text_style == null) ? new TextStyle[0] : new TextStyle[] { text_style };
 			
 			this.ConvertToStyledText (simple_text, text_styles, properties, out styled_text);
 		}
@@ -427,7 +427,7 @@ namespace Epsitec.Common.Text
 		
 		
 		
-		private void InternalAddOplet(Support.IOplet oplet)
+		private void InternalAddOplet(Common.Support.IOplet oplet)
 		{
 			if ((this.debug_disable_oplet == false) &&
 				(this.oplet_queue != null))
@@ -658,7 +658,7 @@ namespace Epsitec.Common.Text
 			this.text.InsertText (this.temp_cursor.CursorId, new ulong[] { 0ul });
 		}
 		
-		private void SetupOpletQueue(Support.OpletQueue oplet_queue)
+		private void SetupOpletQueue(Common.Support.OpletQueue oplet_queue)
 		{
 			this.oplet_queue = oplet_queue;
 		}
@@ -670,7 +670,7 @@ namespace Epsitec.Common.Text
 		
 		
 		#region Abstract BaseOplet Class
-		protected abstract class BaseOplet : Support.AbstractOplet
+		protected abstract class BaseOplet : Common.Support.AbstractOplet
 		{
 			protected BaseOplet(TextStory story)
 			{
@@ -692,7 +692,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			
-			public override Support.IOplet Undo()
+			public override Common.Support.IOplet Undo()
 			{
 				this.story.InternalSaveCursorPositions (this.position, this.length, out this.cursors);
 				
@@ -711,7 +711,7 @@ namespace Epsitec.Common.Text
 				return this;
 			}
 			
-			public override Support.IOplet Redo()
+			public override Common.Support.IOplet Redo()
 			{
 				int undo_start = this.story.text_length + 1;
 				int undo_end   = undo_start + this.story.undo_length;
@@ -777,7 +777,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			
-			public override Support.IOplet Undo()
+			public override Common.Support.IOplet Undo()
 			{
 				int undo_start = this.story.text_length + 1;
 				int undo_end   = undo_start + this.story.undo_length;
@@ -795,7 +795,7 @@ namespace Epsitec.Common.Text
 				return this;
 			}
 			
-			public override Support.IOplet Redo()
+			public override Common.Support.IOplet Redo()
 			{
 				this.story.InternalSaveCursorPositions (this.position, this.length, out this.cursors);
 				
@@ -861,18 +861,18 @@ namespace Epsitec.Common.Text
 			}
 			
 			
-			public override Support.IOplet Undo()
+			public override Common.Support.IOplet Undo()
 			{
 				return this.Swap ();
 			}
 			
-			public override Support.IOplet Redo()
+			public override Common.Support.IOplet Redo()
 			{
 				return this.Swap ();
 			}
 			
 			
-			private Support.IOplet Swap()
+			private Common.Support.IOplet Swap()
 			{
 				int old_pos = this.position;
 				int new_pos = this.story.text.GetCursorPosition (this.cursor.CursorId);
@@ -896,7 +896,7 @@ namespace Epsitec.Common.Text
 		private int								undo_length;		//	texte dans la zone undo
 		private ICursor							temp_cursor;
 		
-		private Support.OpletQueue				oplet_queue;
+		private Common.Support.OpletQueue		oplet_queue;
 		private Context							context;
 		
 		private bool							debug_disable_oplet;
