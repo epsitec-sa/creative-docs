@@ -183,7 +183,7 @@ namespace Epsitec.Common.Text
 			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
 			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
 			
-			property = style[Properties.WellKnownType.Tab] as Properties.TabProperty;
+			property = extra_settings[Properties.WellKnownType.Tab] as Properties.TabProperty;
 		}
 		
 		

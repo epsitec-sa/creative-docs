@@ -208,7 +208,28 @@ namespace Epsitec.Common.Text.Support
 		{
 			ulong[] styled_text;
 			
-			this.story.ConvertToStyledText (text, this.style, this.properties, out styled_text);
+			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+			Element[] elements = new Element[this.stack.Count];
+			
+			this.stack.CopyTo (elements, 0);
+			
+			foreach (Element element in elements)
+			{
+				switch (element.Tag)
+				{
+					case "b":
+					case "i":
+					case "u":
+					case "w":
+					case "m":
+					case "font":
+					case "a":
+					case "list":
+						break;
+				}
+			}
+			
+			this.story.ConvertToStyledText (text, this.style, properties, out styled_text);
 			this.story.InsertText (this.cursor, styled_text);
 		}
 		
@@ -217,7 +238,6 @@ namespace Epsitec.Common.Text.Support
 		private ICursor							cursor;
 		private TextStyle						style;
 		private System.Text.StringBuilder		buffer			= new System.Text.StringBuilder ();
-		private System.Collections.ArrayList	properties		= new System.Collections.ArrayList ();
 		private System.Collections.Stack		stack			= new System.Collections.Stack ();
 		
 		private int								tab_count;
