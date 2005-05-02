@@ -1851,6 +1851,7 @@ namespace Epsitec.App.DocumentEditor
 				using ( Stream stream = File.OpenRead(filename) )
 				{
 					SoapFormatter formatter = new SoapFormatter();
+					formatter.Binder = new VersionDeserializationBinder();
 					ColorCollection cc = (ColorCollection) formatter.Deserialize(stream);
 					cc.CopyTo(this.CurrentDocument.GlobalSettings.ColorCollection);
 				}
@@ -4218,12 +4219,6 @@ namespace Epsitec.App.DocumentEditor
 			{
 				using ( Stream stream = File.OpenRead(this.GlobalSettingsFilename) )
 				{
-					// Initialise la variable statique utilisée par VersionDeserializationBinder.
-					// Exemple de contenu:
-					// "Common.Document, Version=1.0.1777.18519, Culture=neutral, PublicKeyToken=7344997cc606b490"
-					System.Reflection.Assembly ass = System.Reflection.Assembly.GetAssembly(typeof(GlobalSettings));
-					DocumentEditor.AssemblyFullName = ass.FullName;
-
 					SoapFormatter formatter = new SoapFormatter();
 					formatter.Binder = new VersionDeserializationBinder();
 
@@ -4246,6 +4241,11 @@ namespace Epsitec.App.DocumentEditor
 
 		sealed class VersionDeserializationBinder : SerializationBinder 
 		{
+			public VersionDeserializationBinder()
+			{
+				this.loadedAssemblies = System.AppDomain.CurrentDomain.GetAssemblies();
+			}
+			
 			// Retourne un type correspondant à l'application courante, afin
 			// d'accepter de désérialiser un fichier généré par une application
 			// ayant un autre numéro de révision.
@@ -4254,12 +4254,37 @@ namespace Epsitec.App.DocumentEditor
 			public override System.Type BindToType(string assemblyName, string typeName) 
 			{
 				System.Type typeToDeserialize;
-				typeToDeserialize = System.Type.GetType(string.Format("{0}, {1}", typeName, DocumentEditor.AssemblyFullName));
+				
+				// Premier essai: trouve le type exact correspondant à ce qui est
+				// demandé par la désérialisation :
+				
+				typeToDeserialize = System.Type.GetType(string.Concat(typeName, ", ", assemblyName));
+				
+				// Second essai: trouve le type équivalent dans l'assembly avec la
+				// version courante, plutôt que celle avec la version spécifiée :
+				
+				if ( typeToDeserialize == null )
+				{
+					string prefix = assemblyName.Substring(0, assemblyName.IndexOf(" "));
+					
+					for (int i = 0; i < this.loadedAssemblies.Length; i++)
+					{
+						if ( this.loadedAssemblies[i].FullName.StartsWith(prefix) )
+						{
+							typeToDeserialize = System.Type.GetType(string.Concat(typeName, ", ", this.loadedAssemblies[i].FullName));
+							break;
+						}
+					}
+				}
+				
+				System.Diagnostics.Debug.Assert(typeToDeserialize != null);
+				
 				return typeToDeserialize;
 			}
+			
+			
+			private System.Reflection.Assembly[] loadedAssemblies;
 		}
-
-		protected static string AssemblyFullName = "";
 
 		// Ecrit le fichier des réglages de l'application.
 		protected bool WritedGlobalSettings()
