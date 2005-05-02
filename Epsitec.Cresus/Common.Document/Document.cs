@@ -425,12 +425,6 @@ namespace Epsitec.Common.Document
 				return Res.Strings.Error.BadFile;
 			}
 
-			// Initialise la variable statique utilisée par VersionDeserializationBinder.
-			// Exemple de contenu:
-			// "Common.Document, Version=1.0.1777.18519, Culture=neutral, PublicKeyToken=7344997cc606b490"
-			System.Reflection.Assembly ass = System.Reflection.Assembly.GetAssembly(this.GetType());
-			Document.AssemblyFullName = ass.FullName;
-
 			// Initialise la variable statique permettant à tous les constructeurs
 			// de connaître le pointeur au document.
 			Document.ReadDocument = this;
@@ -539,6 +533,11 @@ namespace Epsitec.Common.Document
 
 		sealed class VersionDeserializationBinder : SerializationBinder 
 		{
+			public VersionDeserializationBinder()
+			{
+				this.loadedAssemblies = System.AppDomain.CurrentDomain.GetAssemblies();
+			}
+			
 			// Retourne un type correspondant à l'application courante, afin
 			// d'accepter de désérialiser un fichier généré par une application
 			// ayant un autre numéro de révision.
@@ -557,33 +556,59 @@ namespace Epsitec.Common.Document
 						i += 8;
 						j = assemblyName.IndexOf(".", i);
 						v = assemblyName.Substring(i, j-i);
-						long r1 = System.Int64.Parse(v);
+						long r1 = System.Int64.Parse(v, System.Globalization.CultureInfo.InvariantCulture);
 
 						i = j+1;
 						j = assemblyName.IndexOf(".", i);
 						v = assemblyName.Substring(i, j-i);
-						long r2 = System.Int64.Parse(v);
+						long r2 = System.Int64.Parse(v, System.Globalization.CultureInfo.InvariantCulture);
 
 						i = j+1;
 						j = assemblyName.IndexOf(".", i);
 						v = assemblyName.Substring(i, j-i);
-						long r3 = System.Int64.Parse(v);
+						long r3 = System.Int64.Parse(v, System.Globalization.CultureInfo.InvariantCulture);
 
 						Document.ReadRevision = (r1<<32) + (r2<<16) + r3;
 					}
 				}
 
 				System.Type typeToDeserialize;
-				typeToDeserialize = System.Type.GetType(string.Format("{0}, {1}", typeName, Document.AssemblyFullName));
+				
+				// Premier essai: trouve le type exact correspondant à ce qui est
+				// demandé par la désérialisation :
+				
+				typeToDeserialize = System.Type.GetType(string.Concat(typeName, ", ", assemblyName));
+				
+				// Second essai: trouve le type équivalent dans l'assembly avec la
+				// version courante, plutôt que celle avec la version spécifiée :
+				
+				if ( typeToDeserialize == null )
+				{
+					string prefix = assemblyName.Substring(0, assemblyName.IndexOf(" "));
+					
+					for (int i = 0; i < this.loadedAssemblies.Length; i++)
+					{
+						if ( this.loadedAssemblies[i].FullName.StartsWith(prefix) )
+						{
+							typeToDeserialize = System.Type.GetType(string.Concat(typeName, ", ", this.loadedAssemblies[i].FullName));
+							break;
+						}
+					}
+				}
+				
+				System.Diagnostics.Debug.Assert(typeToDeserialize != null);
+				
 				return typeToDeserialize;
 			}
+			
+			
+			private System.Reflection.Assembly[] loadedAssemblies;
 		}
 
 		// Utilisé par les constructeurs de désérialisation du genre:
 		// protected Toto(SerializationInfo info, StreamingContext context)
 		public static Document ReadDocument = null;
 		public static long ReadRevision = 0;
-		protected static string AssemblyFullName = "";
 
 		// Adapte tous les objets après une désérialisation.
 		protected void ReadFinalize()
