@@ -335,7 +335,7 @@ namespace Epsitec.Common.Document.Objects
 			int total = this.TotalHandle;
 			double min = 1000000.0;
 			int rank = -1;
-			for ( int i=0 ; i<total ; i++ )
+			for ( int i=total-1 ; i>=0 ; i-- )
 			{
 				if ( this.Handle(i).Detect(pos) )
 				{

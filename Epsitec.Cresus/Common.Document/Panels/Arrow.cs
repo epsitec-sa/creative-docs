@@ -173,6 +173,8 @@ namespace Epsitec.Common.Document.Panels
 		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
+			Properties.Arrow p = this.property as Properties.Arrow;
+
 			// Initialise les min/max en fonction du type choisi.
 			for ( int j=0 ; j<2 ; j++ )
 			{
@@ -180,7 +182,7 @@ namespace Epsitec.Common.Document.Panels
 				bool enableRadius, enable1, enable2;
 				double effect1, min1, max1;
 				double effect2, min2, max2;
-				Properties.Arrow.GetFieldsParam(type, out enableRadius, out enable1, out effect1, out min1, out max1, out enable2, out effect2, out min2, out max2);
+				p.GetFieldsParam(type, out enableRadius, out enable1, out effect1, out min1, out max1, out enable2, out effect2, out min2, out max2);
 
 				this.fieldEffect1[j].InternalMinValue = (decimal) min1*100;
 				this.fieldEffect1[j].InternalMaxValue = (decimal) max1*100;
@@ -262,22 +264,47 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldType[1].SelectedIndex = this.fieldType[0].SelectedIndex;
 			}
 
+			Properties.Arrow p = this.property as Properties.Arrow;
+
+			Properties.ArrowType[] iType = new Properties.ArrowType[2];
+			for ( int j=0 ; j<2 ; j++ )
+			{
+				iType[j] = p.GetArrowType(j);
+			}
+
 			for ( int j=0 ; j<2 ; j++ )
 			{
 				if ( this.isExtendedSize && sender != this.fieldType[j] )  continue;
 
-				// Met les valeurs par défaut correspondant au type choisi.
 				Properties.ArrowType type = Properties.Arrow.ConvType(this.fieldType[j].SelectedIndex);
+
+				double val = (double) this.fieldLength[j].InternalValue;
+				val /= Arrow.TypeFactor(iType[j]);
+				val *= Arrow.TypeFactor(type);
+				this.fieldLength[j].InternalValue = (decimal) val;
+
+				// Met les valeurs par défaut correspondant au type choisi.
 				bool enableRadius, enable1, enable2;
 				double effect1, min1, max1;
 				double effect2, min2, max2;
-				Properties.Arrow.GetFieldsParam(type, out enableRadius, out enable1, out effect1, out min1, out max1, out enable2, out effect2, out min2, out max2);
+				p.GetFieldsParam(type, out enableRadius, out enable1, out effect1, out min1, out max1, out enable2, out effect2, out min2, out max2);
 				this.fieldEffect1[j].InternalValue = (decimal) effect1*100;
 				this.fieldEffect2[j].InternalValue = (decimal) effect2*100;
 			}
 
 			this.EnableWidgets();
 			this.OnChanged();
+		}
+
+		// Retourne le facteur de réduction selon le type de flèche.
+		// L'idée est de réduire les points par rapport aux flèches.
+		protected static double TypeFactor(Properties.ArrowType type)
+		{
+			if ( type == Properties.ArrowType.Slash   )  return 0.5;
+			if ( type == Properties.ArrowType.Dot     )  return 0.5;
+			if ( type == Properties.ArrowType.Square  )  return 0.5;
+			if ( type == Properties.ArrowType.Diamond )  return 0.5;
+			return 1.0;
 		}
 
 		// Un champ a été changé.

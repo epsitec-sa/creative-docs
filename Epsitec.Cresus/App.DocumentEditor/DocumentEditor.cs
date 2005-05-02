@@ -2287,6 +2287,14 @@ namespace Epsitec.App.DocumentEditor
 			menu.Host = this;
 			menu.Accepted += new MenuEventHandler(this.HandleStretchTypeMenuAccepted);
 			menu.Rejected += new EventHandler(this.HandleStretchTypeMenuRejected);
+
+			ScreenInfo si = ScreenInfo.Find(pos);
+			Drawing.Rectangle wa = si.WorkingArea;
+			if ( pos.X+menu.Width > wa.Right )
+			{
+				pos.X = wa.Right-menu.Width;
+			}
+			
 			menu.ShowAsContextMenu(this.Window, pos);
 			this.WidgetStretchTypeMenuEngaged(true, true);
 		}

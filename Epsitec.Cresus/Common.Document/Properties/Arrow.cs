@@ -69,8 +69,8 @@ namespace Epsitec.Common.Document.Properties
 
 				this.effect1[0] = 0.5;
 				this.effect1[1] = 0.5;
-				this.effect2[0] = 0.5;
-				this.effect2[1] = 0.5;
+				this.effect2[0] = 1.0;
+				this.effect2[1] = 1.0;
 			}
 		}
 
@@ -331,7 +331,7 @@ namespace Epsitec.Common.Document.Properties
 				case ArrowType.ArrowSimply:    name = Res.Strings.Property.Arrow.ArrowSimply;    break;
 				case ArrowType.ArrowFantasy1:  name = Res.Strings.Property.Arrow.ArrowFantasy1;  break;
 				case ArrowType.ArrowCurve1:    name = Res.Strings.Property.Arrow.ArrowCurve1;    break;
-				case ArrowType.ArrowCurve2:    name = Res.Strings.Property.Arrow.ArrowCurve1;    break;
+				case ArrowType.ArrowCurve2:    name = Res.Strings.Property.Arrow.ArrowCurve2;    break;
 				case ArrowType.ArrowOutline:   name = Res.Strings.Property.Arrow.ArrowOutline;   break;
 				case ArrowType.Slash:          name = Res.Strings.Property.Arrow.Slash;          break;
 				case ArrowType.Dot:            name = Res.Strings.Property.Arrow.Dot;            break;
@@ -342,9 +342,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Retourne les valeurs par défaut et les min/max pour un type donné.
-		public static void GetFieldsParam(ArrowType type, out bool enableLength,
-										  out bool enable1, out double effect1, out double min1, out double max1,
-										  out bool enable2, out double effect2, out double min2, out double max2)
+		public void GetFieldsParam(ArrowType type, out bool enableLength,
+								   out bool enable1, out double effect1, out double min1, out double max1,
+								   out bool enable2, out double effect2, out double min2, out double max2)
 		{
 			enableLength = true;
 			enable1 = true;  effect1 = 0.50;  min1 = 0.00;  max1 = 2.00;
@@ -358,8 +358,16 @@ namespace Epsitec.Common.Document.Properties
 					enable2 = false;  effect2 = 0.50;  min2 = 0.00;  max2 = 2.00;  break;
 
 				case ArrowType.ArrowSimply:
-					enable1 = true;   effect1 = 0.50;  min1 = 0.20;  max1 = 2.00;
-					enable2 = true;   effect2 = 1.00;  min2 = 0.50;  max2 = 1.00;  break;
+					if ( this.type == Type.DimensionArrow )
+					{
+						enable1 = true;   effect1 = 0.20;  min1 = 0.20;  max1 = 2.00;
+						enable2 = true;   effect2 = 1.00;  min2 = 0.50;  max2 = 1.00;  break;
+					}
+					else
+					{
+						enable1 = true;   effect1 = 0.50;  min1 = 0.20;  max1 = 2.00;
+						enable2 = true;   effect2 = 1.00;  min2 = 0.50;  max2 = 1.00;  break;
+					}
 
 				case ArrowType.ArrowFantasy1:
 					enable1 = true;   effect1 = 1.00;  min1 = 0.50;  max1 = 2.00;

@@ -298,7 +298,7 @@
 	<data name="Panel.Gradient.Tooltip.Color1">Couleur 1</data>
 	<data name="Panel.Gradient.Tooltip.Color2">Couleur 2</data>
 	<data name="Panel.Gradient.Tooltip.Type">Type du remplissage</data>
-	<data name="Panel.Gradient.Tooltip.Reset">Reset (valeurs standards)"</data>
+	<data name="Panel.Gradient.Tooltip.Reset">Reset (valeurs standard)</data>
 	<data name="Panel.Gradient.Tooltip.Angle">Angle</data>
 	<data name="Panel.Gradient.Tooltip.Hatch1">1er trait</data>
 	<data name="Panel.Gradient.Tooltip.Hatch2">2ème trait</data>
@@ -320,7 +320,7 @@
 	<data name="Panel.Gradient.Combo.Linear">Linéaire</data>
 	<data name="Panel.Gradient.Combo.Circle">Concentrique</data>
 	<data name="Panel.Gradient.Combo.Diamond">Diamant</data>
-	<data name="Panel.Gradient.Combo.Conic">Cônique</data>
+	<data name="Panel.Gradient.Combo.Conic">Conique</data>
 	<data name="Panel.Gradient.Combo.Hatch">Hachures</data>
 	<data name="Panel.Gradient.Combo.Dots">Points</data>
 	<data name="Panel.Gradient.Combo.Squares">Carrés</data>

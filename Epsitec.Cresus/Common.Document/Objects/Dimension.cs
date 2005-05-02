@@ -287,8 +287,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				drawingContext.ConstrainFlush();
 				drawingContext.ConstrainAddHV(pos);
-				this.HandleAdd(pos, HandleType.Primary);
-				this.HandleAdd(pos, HandleType.Primary);
+				this.HandleAdd(pos, HandleType.Primary);  // poignée 0
+				this.HandleAdd(pos, HandleType.Primary);  // poignée 1
 			}
 			drawingContext.MagnetFixStarting(pos);
 			this.isCreating = true;
@@ -308,16 +308,10 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.creatingPhase == 1 )
 			{
-#if false
-				this.Handle(3).Position = pos;
-				this.Handle(2).Position = this.Handle(0).Position+(this.Handle(3).Position-this.Handle(1).Position);
-#else
-				double d = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
-				this.Handle(1).Position = Point.Projection(this.Handle(1).Position, this.Handle(0).Position, pos);
-				this.Handle(3).Position = pos;
-				this.Handle(0).Position = Point.Move(this.Handle(1).Position, this.Handle(0).Position, d);
-				this.Handle(2).Position = this.Handle(0).Position+(this.Handle(3).Position-this.Handle(1).Position);
-#endif
+				Point p = Point.Projection(this.Handle(2).Position, this.Handle(3).Position, pos);
+				this.Handle(0).Position = this.Handle(2).Position+pos-p;
+				this.Handle(1).Position = this.Handle(3).Position+pos-p;
+				this.Handle(4).Position = Point.Scale(this.Handle(0).Position, this.Handle(1).Position, 0.5);
 			}
 
 			this.SetDirtyBbox();
@@ -335,22 +329,19 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.Handle(1).Position = pos;
 
-				this.HandleAdd(pos, HandleType.Secondary);
-				this.HandleAdd(pos, HandleType.Secondary);
-				this.HandleAdd(pos, HandleType.Secondary);
+				this.HandleAdd(pos, HandleType.Secondary);  // poignée 2
+				this.HandleAdd(pos, HandleType.Secondary);  // poignée 3
+				this.HandleAdd(pos, HandleType.Secondary);  // poignée 4
 
-				Point p1 = this.Handle(1).Position;
-				Point p0 = this.Handle(0).Position;
+				this.Handle(2).Position = this.Handle(0).Position;
+				this.Handle(3).Position = this.Handle(1).Position;
+				this.Handle(4).Position = Point.Scale(this.Handle(0).Position, this.Handle(1).Position, 0.5);
+
+				drawingContext.ConstrainDelStarting();
 				drawingContext.ConstrainFlush();
-				drawingContext.ConstrainAddHV(p1);
-				drawingContext.ConstrainAddLine(p1, new Point(p1.X+p1.Y-p0.Y, p1.Y+p0.X-p1.X));
 			}
 			else if ( this.creatingPhase == 1 )
 			{
-				this.Handle(3).Position = pos;
-				this.Handle(2).Position = this.Handle(0).Position+(this.Handle(3).Position-this.Handle(1).Position);
-				this.Handle(4).Position = Point.Scale(this.Handle(0).Position, this.Handle(1).Position, 0.5);
-
 				drawingContext.ConstrainDelStarting();
 			}
 			this.creatingPhase ++;
@@ -680,11 +671,17 @@ namespace Epsitec.Common.Document.Objects
 				Point s1 = this.Handle(2).Position;
 				Point s2 = this.Handle(3).Position;
 
-				pathSupport.MoveTo(Point.Move(p1, s1, -dimension.AddLength));
-				pathSupport.LineTo(s1);
+				if ( !Geometry.Compare(s1, p1) )
+				{
+					pathSupport.MoveTo(Point.Move(p1, s1, -dimension.AddLength));
+					pathSupport.LineTo(s1);
+				}
 
-				pathSupport.MoveTo(Point.Move(p2, s2, -dimension.AddLength));
-				pathSupport.LineTo(s2);
+				if ( !Geometry.Compare(s2, p2) )
+				{
+					pathSupport.MoveTo(Point.Move(p2, s2, -dimension.AddLength));
+					pathSupport.LineTo(s2);
+				}
 			}
 
 			double angle = Point.ComputeAngleDeg(this.Handle(0).Position, this.Handle(1).Position);
