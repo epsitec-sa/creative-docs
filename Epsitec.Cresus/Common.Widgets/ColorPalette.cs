@@ -287,8 +287,8 @@ namespace Epsitec.Common.Widgets
 			menu.Items.Add(new MenuItem("NewPaletteDark",    "", "Palette foncée",      ""));
 			menu.Items.Add(new MenuItem("NewPaletteGray",    "", "Palette monochrome",  ""));
 			menu.Items.Add(new MenuSeparator());
-			menu.Items.Add(new MenuItem("OpenPalette", "", "Ouvrir palette...",      ""));
-			menu.Items.Add(new MenuItem("SavePalette", "", "Enregistrer palette...", ""));
+			menu.Items.Add(new MenuItem("OpenPalette", "", Res.Strings.ColorPalette.OpenPalette, ""));
+			menu.Items.Add(new MenuItem("SavePalette", "", Res.Strings.ColorPalette.SavePalette, ""));
 			menu.AdjustSize();
 
 			Drawing.Point pos = button.MapClientToScreen(new Drawing.Point(0, button.Height));

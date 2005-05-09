@@ -193,6 +193,9 @@ namespace Epsitec.Common.Widgets
 		static Widget()
 		{
 			Drawing.Font.Initialise ();
+			
+//-			Res.Initialise (typeof (Widget), "Default");
+			
 			Support.ImageProvider.Initialise ();
 			Widgets.CommandState.Initialise ();
 			

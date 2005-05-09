@@ -384,6 +384,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Res.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ScreenInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -822,6 +827,14 @@
                     RelPath = "Platform\WindowList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Resources\Strings.00.resource"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Resources\Strings.en.resource"
+                    BuildAction = "Content"
                 />
                 <File
                     RelPath = "Tools\Magnifier.cs"
