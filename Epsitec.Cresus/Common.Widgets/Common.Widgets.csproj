@@ -830,11 +830,11 @@
                 />
                 <File
                     RelPath = "Resources\Common.Widgets\Strings.00.resource"
-                    BuildAction = "None"
+                    BuildAction = "Content"
                 />
                 <File
                     RelPath = "Resources\Common.Widgets\Strings.en.resource"
-                    BuildAction = "None"
+                    BuildAction = "Content"
                 />
                 <File
                     RelPath = "Tools\Magnifier.cs"
