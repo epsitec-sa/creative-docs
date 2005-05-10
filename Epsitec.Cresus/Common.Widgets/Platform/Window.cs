@@ -1096,7 +1096,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal int MapToWinFormsY(double y)
 		{
-			return System.Windows.Forms.SystemInformation.VirtualScreen.Height - (int) System.Math.Floor (y + 0.5);
+			return (int) ScreenInfo.PrimaryHeight - (int) System.Math.Floor (y + 0.5);
 		}
 		
 		internal int MapToWinFormsWidth(double width)
@@ -1117,7 +1117,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal double MapFromWinFormsY(int y)
 		{
-			return System.Windows.Forms.SystemInformation.VirtualScreen.Height - y;
+			return ScreenInfo.PrimaryHeight - y;
 		}
 		
 		internal double MapFromWinFormsWidth(int width)

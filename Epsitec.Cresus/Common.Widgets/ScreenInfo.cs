@@ -1,3 +1,6 @@
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -5,6 +8,15 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class ScreenInfo
 	{
+		public static double				PrimaryHeight
+		{
+			get
+			{
+				return System.Windows.Forms.SystemInformation.PrimaryMonitorSize.Height;
+			}
+		}
+		
+		
 		/// <summary>
 		/// Retourne le rectangle correspondant à l'écran par rapport à la surface
 		/// de travail globale.
@@ -14,7 +26,7 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				int ox = this.screen.Bounds.Left;
-				int oy = System.Windows.Forms.SystemInformation.VirtualScreen.Height - this.screen.Bounds.Bottom;
+				int oy = (int) ScreenInfo.PrimaryHeight - this.screen.Bounds.Bottom;
 				int dx = this.screen.Bounds.Width;
 				int dy = this.screen.Bounds.Height;
 				
@@ -32,7 +44,7 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				int ox = this.screen.WorkingArea.Left;
-				int oy = System.Windows.Forms.SystemInformation.VirtualScreen.Height - this.screen.WorkingArea.Bottom;
+				int oy = (int) ScreenInfo.PrimaryHeight - this.screen.WorkingArea.Bottom;
 				int dx = this.screen.WorkingArea.Width;
 				int dy = this.screen.WorkingArea.Height;
 				
@@ -75,7 +87,7 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				int ox = System.Windows.Forms.SystemInformation.VirtualScreen.Left;
-				int oy = System.Windows.Forms.SystemInformation.VirtualScreen.Height - System.Windows.Forms.SystemInformation.VirtualScreen.Bottom;
+				int oy = (int) ScreenInfo.PrimaryHeight - System.Windows.Forms.SystemInformation.VirtualScreen.Bottom;
 				int dx = System.Windows.Forms.SystemInformation.VirtualScreen.Width;
 				int dy = System.Windows.Forms.SystemInformation.VirtualScreen.Height;
 				
@@ -114,7 +126,7 @@ namespace Epsitec.Common.Widgets
 		public static ScreenInfo Find(Drawing.Point point)
 		{
 			int ox = (int)(point.X + 0.5);
-			int oy = System.Windows.Forms.SystemInformation.VirtualScreen.Height - (int)(point.Y + 0.5);
+			int oy = (int)(ScreenInfo.PrimaryHeight) - (int)(point.Y + 0.5);
 			
 			System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromPoint (new System.Drawing.Point (ox, oy));
 			return screen == null ? null : new ScreenInfo (screen);
@@ -128,7 +140,7 @@ namespace Epsitec.Common.Widgets
 		public static ScreenInfo Find(Drawing.Rectangle rect)
 		{
 			int ox = (int)(rect.Left + 0.5);
-			int oy = System.Windows.Forms.SystemInformation.VirtualScreen.Height - (int)(rect.Top + 0.5);
+			int oy = (int)(ScreenInfo.PrimaryHeight) - (int)(rect.Top + 0.5);
 			int dx = (int)(rect.Width + 0.5);
 			int dy = (int)(rect.Height + 0.5);
 			
