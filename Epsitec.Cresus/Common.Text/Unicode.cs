@@ -289,8 +289,20 @@ namespace Epsitec.Common.Text
 			{
 				if (Unicode.break_analyzer == null)
 				{
-					Unicode.break_analyzer = new BreakAnalyzer ();
-					Unicode.break_analyzer.LoadFile (@"..\..\..\LineBreak.txt");
+					System.Type                host_type = typeof (Common.Drawing.TextBreak);
+					System.Reflection.Assembly assembly  = host_type.Assembly;
+					
+					using (System.IO.Stream stream = assembly.GetManifestResourceStream ("Epsitec.Common.Drawing.Resources.LineBreak.compressed"))
+					{
+						using (System.IO.Stream data = Common.IO.Decompression.CreateStream (stream))
+						{
+							using (System.IO.StreamReader reader = new System.IO.StreamReader (data, System.Text.Encoding.ASCII))
+							{
+								Unicode.break_analyzer = new BreakAnalyzer ();
+								Unicode.break_analyzer.LoadFile (reader);
+							}
+						}
+					}
 				}
 				
 				return Unicode.break_analyzer;

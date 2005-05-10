@@ -35,6 +35,11 @@ namespace Epsitec.Common.Text.Cursors
 				return CursorAttachment.Temporary;
 			}
 		}
+		
+		
+		public virtual void Clear()
+		{
+		}
 		#endregion
 		
 		private Internal.CursorId				cursor_id;

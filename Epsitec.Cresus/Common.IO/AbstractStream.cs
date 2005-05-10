@@ -97,8 +97,11 @@ namespace Epsitec.Common.IO
 		
 		public override void Close()
 		{
-			this.stream.Close ();
-			this.stream = null;
+			if (this.stream != null)
+			{
+				this.stream.Close ();
+				this.stream = null;
+			}
 		}
 
 		public override void Flush()

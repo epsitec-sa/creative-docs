@@ -81,6 +81,13 @@ namespace Epsitec.Common.Text.Cursors
 		}
 		
 		
+		public override void Clear()
+		{
+			base.Clear ();
+			this.elements = null;
+		}
+
+		
 		public void AddRange(System.Collections.IList values)
 		{
 			int n = values.Count;

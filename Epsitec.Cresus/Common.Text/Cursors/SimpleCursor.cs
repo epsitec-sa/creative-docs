@@ -33,6 +33,11 @@ namespace Epsitec.Common.Text.Cursors
 				return CursorAttachment.Floating;
 			}
 		}
+		
+		
+		public virtual void Clear()
+		{
+		}
 		#endregion
 		
 		private Internal.CursorId				cursor_id;

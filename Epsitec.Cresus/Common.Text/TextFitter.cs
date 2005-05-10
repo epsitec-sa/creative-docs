@@ -625,6 +625,8 @@ namespace Epsitec.Common.Text
 			
 			this.story.RecycleCursor (cursor);
 			
+			cursor.Clear ();
+			
 			this.free_cursors.Push (cursor);
 		}
 		

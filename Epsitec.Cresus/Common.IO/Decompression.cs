@@ -121,9 +121,7 @@ namespace Epsitec.Common.IO
 				byte[] buffer = new byte[10000];
 				int n = decompressor.Read (buffer, 0, buffer.Length);
 					
-				total += n;
-					
-				if (n < buffer.Length)
+				if (n == 0)
 				{
 					data = new byte[total];
 					int copy_to = 0;
@@ -134,13 +132,17 @@ namespace Epsitec.Common.IO
 						copy_to += chunk.Length;
 					}
 					
-					for (int i = 0; i < n; i++)
-					{
-						data[copy_to+i] = buffer[i];
-					}
-					
 					list.Clear ();
 					break;
+				}
+				
+				total += n;
+					
+				if (n < buffer.Length)
+				{
+					byte[] temp = new byte[n];
+					System.Array.Copy (buffer, 0, temp, 0, n);
+					buffer = temp;
 				}
 				
 				list.Add (buffer);
