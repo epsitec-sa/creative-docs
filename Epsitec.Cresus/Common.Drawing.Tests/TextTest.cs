@@ -94,9 +94,11 @@ namespace Epsitec.Common.Drawing
 			{
 				this.story  = new TextStory ();
 				this.fitter = new TextFitter (this.story);
-				this.frame  = new SimpleTextFrame (this.Client.Width, this.Client.Height);
+				this.frame1 = new SimpleTextFrame (this.Client.Width / 2, this.Client.Height);
+				this.frame2 = new SimpleTextFrame (this.Client.Width / 2, this.Client.Height);
 				
-				this.fitter.FrameList.InsertAt (0, this.frame);
+				this.fitter.FrameList.InsertAt (0, this.frame1);
+				this.fitter.FrameList.InsertAt (1, this.frame2);
 			}
 			
 			
@@ -120,10 +122,15 @@ namespace Epsitec.Common.Drawing
 			{
 				base.OnSizeChanged ();
 				
-				if (this.frame != null)
+				if ((this.frame1 != null) &&
+					(this.frame2 != null))
 				{
-					this.frame.Width  = this.Client.Width;
-					this.frame.Height = this.Client.Height;
+					this.frame1.Width  = this.Client.Width / 2;
+					this.frame1.Height = this.Client.Height;
+					
+					this.frame2.Width  = this.Client.Width / 2;
+					this.frame2.Height = this.Client.Height;
+					this.frame2.X      = this.frame1.Width + this.frame1.X;
 					
 					this.fitter.ClearAllMarks ();
 					this.fitter.GenerateAllMarks ();
@@ -138,7 +145,8 @@ namespace Epsitec.Common.Drawing
 				System.Diagnostics.Debug.WriteLine ("Paint called.");
 				
 				this.graphics = graphics;
-				this.fitter.RenderTextFrame (this.frame, this);
+				this.fitter.RenderTextFrame (this.frame1, this);
+				this.fitter.RenderTextFrame (this.frame2, this);
 				this.graphics = null;
 				
 				System.Diagnostics.Debug.WriteLine ("Paint done.");
@@ -148,7 +156,7 @@ namespace Epsitec.Common.Drawing
 			#region ITextRenderer Members
 			public bool IsFrameAreaVisible(ITextFrame frame, double x, double y, double width, double height)
 			{
-				return this.frame == frame;
+				return true;
 			}
 			
 			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
@@ -176,7 +184,7 @@ namespace Epsitec.Common.Drawing
 			
 			private TextStory					story;
 			private TextFitter					fitter;
-			private SimpleTextFrame				frame;
+			private SimpleTextFrame				frame1, frame2;
 			private Graphics					graphics;
 		}
 	}

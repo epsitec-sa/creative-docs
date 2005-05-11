@@ -466,7 +466,9 @@ restart:
 							result.Clear ();
 							this.break_anywhere = false;
 							pass = 0;
-							break;
+							
+							snapshot.Restore (this);
+							continue;
 						}
 						
 						return status;
@@ -481,13 +483,14 @@ restart:
 					case Layout.Status.ErrorCannotFit:
 						this.break_anywhere = true;
 						pass++;
-						break;
+						snapshot.Restore (this, false);
+						continue;
 					
 					default:
-						throw new System.InvalidOperationException ();
+						break;
 				}
 				
-				snapshot.Restore (this);
+				throw new System.InvalidOperationException ();
 			}
 			
 			Debug.Assert.IsTrue (result.Count == 0);
@@ -808,6 +811,11 @@ restart:
 			
 			public void Restore(Context context)
 			{
+				this.Restore (context, true);
+			}
+			
+			public void Restore(Context context, bool restore_frame)
+			{
 				double ascender  = context.oy_max - context.oy_base;
 				double descender = context.oy_min - context.oy_base;
 				
@@ -820,7 +828,14 @@ restart:
 				context.oy_max  = this.oy_base + ascender;
 				context.oy_min  = this.oy_base + descender;
 				
-				context.SelectFrame (this.frame_index, this.frame_y);
+				if (restore_frame)
+				{
+					context.SelectFrame (this.frame_index, this.frame_y);
+				}
+				else
+				{
+					context.SelectFrame (context.frame_index, this.frame_y);
+				}
 			}
 			
 			

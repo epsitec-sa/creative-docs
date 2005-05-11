@@ -198,6 +198,13 @@ namespace Epsitec.Common.Text
 					
 					method (cursor, pos, ref length);
 					
+					if (length < 0)
+					{
+						//	Avortement demandé par la méthode de traitement.
+						
+						break;
+					}
+					
 					this.story.MoveCursor (cursor, length);
 					pos += length;
 				}
@@ -286,6 +293,7 @@ namespace Epsitec.Common.Text
 				Layout.Status status = layout.Fit (ref result, line_count, continuation);
 				
 				bool tab_new_line = false;
+				bool end_of_text  = false;
 				
 				this.frame_index = layout.FrameIndex;
 				this.frame_y     = layout.FrameY;
@@ -369,18 +377,22 @@ namespace Epsitec.Common.Text
 						
 						break;
 					
+					case Layout.Status.ErrorNeedMoreRoom:
+						end_of_text = true;
+						break;
+					
 					default:
-						throw new System.InvalidOperationException ("Invalid layout status received.");
+						throw new System.InvalidOperationException (string.Format ("Invalid layout status received: {0}.", status));
 				}
 				
 				//	Le système de layout propose un certain nombre de points de découpe
 				//	possibles pour la ligne. Il faut maintenant déterminer lequel est le
 				//	meilleur.
 				
-				int offset;
+				int offset   = line_start;
 				int n_breaks = result.Count;
 				
-				Layout.StretchProfile profile;
+				Layout.StretchProfile profile = null;
 				
 				if (n_breaks > 1)
 				{
@@ -401,33 +413,34 @@ namespace Epsitec.Common.Text
 					offset  = result[p_index].Offset;
 					profile = result[p_index].Profile;
 				}
-				else
+				else if (n_breaks == 1)
 				{
 					offset  = result[0].Offset;
 					profile = result[0].Profile;
 				}
 				
-				Cursors.FitterCursor.Element element = new Cursors.FitterCursor.Element ();
-				
-				bool end_of_text = false;
-				
-				if (pos + offset > story.TextLength)
+				if (n_breaks > 0)
 				{
-					offset     -= 1;
-					end_of_text = true;
+					Cursors.FitterCursor.Element element = new Cursors.FitterCursor.Element ();
+					
+					if (pos + offset > story.TextLength)
+					{
+						offset     -= 1;
+						end_of_text = true;
+					}
+					
+					element.Length     = offset - line_start;
+					element.Profile    = profile;
+					element.FrameIndex = layout.FrameIndex;
+					element.LineBaseX  = layout.StartX;
+					element.LineBaseY  = layout.Y;
+					element.LineWidth  = continuation ? result[result.Count-1].Profile.TotalWidth : layout.AvailableWidth;
+					
+					element.LineAscender  = layout.LineAscender;
+					element.LineDescender = layout.LineDescender;
+					
+					list.Add (element);
 				}
-				
-				element.Length     = offset - line_start;
-				element.Profile    = profile;
-				element.FrameIndex = layout.FrameIndex;
-				element.LineBaseX  = layout.StartX;
-				element.LineBaseY  = layout.Y;
-				element.LineWidth  = continuation ? result[result.Count-1].Profile.TotalWidth : layout.AvailableWidth;
-				
-				element.LineAscender  = layout.LineAscender;
-				element.LineDescender = layout.LineDescender;
-				
-				list.Add (element);
 				
 				layout.TextOffset = offset;
 				
@@ -446,18 +459,24 @@ namespace Epsitec.Common.Text
 				}
 				else
 				{
-					if (status == Layout.Status.OkFitEnded)
+					if ((status == Layout.Status.OkFitEnded) ||
+						(end_of_text))
 					{
-						Cursors.FitterCursor mark = this.NewCursor ();
+						Debug.Assert.IsTrue ((list.Count > 0) || (end_of_text));
 						
-						mark.AddRange (list);
-						list.Clear ();
-						
-						story.MoveCursor (mark, pos + paragraph_start);
-						
-						line_start      = offset;
-						paragraph_start = offset;
-						line_count      = 0;
+						if (list.Count > 0)
+						{
+							Cursors.FitterCursor mark = this.NewCursor ();
+							
+							mark.AddRange (list);
+							list.Clear ();
+							
+							story.MoveCursor (mark, pos + paragraph_start);
+							
+							line_start      = offset;
+							paragraph_start = offset;
+							line_count      = 0;
+						}
 					}
 					else
 					{
@@ -475,7 +494,7 @@ namespace Epsitec.Common.Text
 
 				if (end_of_text)
 				{
-					length = paragraph_start;
+					length = -1;
 					return;
 				}
 			}
