@@ -22,20 +22,63 @@ namespace Epsitec.Common.Drawing
 			painter.Dock   = DockStyle.Fill;
 			
 			
-			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+			ICursor cursor = new Text.Cursors.SimpleCursor ();
+			painter.TextStory.NewCursor (cursor);
 			
+			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+			ulong[] text;
+			string words;
+			
+			properties.Clear ();
 			properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
 			properties.Add (new Text.Properties.MarginsProperty (100, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
 			
-			ulong[] text;
-			string  words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite.\n";
+			words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite.\n_________________\n";
 			
-			ICursor cursor = new Text.Cursors.SimpleCursor ();
-			
-			painter.TextStory.NewCursor (cursor);
 			painter.TextStory.ConvertToStyledText (words, properties, out text);
 			painter.TextStory.InsertText (cursor, text);
+			
+			
+			properties.Clear ();
+			properties.Add (new Text.Properties.FontProperty ("Palatino Linotype", "Regular"));
+			properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+			properties.Add (new Text.Properties.MarginsProperty (100, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
+			
+			painter.TextStory.ConvertToStyledText (words, properties, out text);
+			painter.TextStory.InsertText (cursor, text);
+			
+			
+			properties.Clear ();
+			properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
+			properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+			properties.Add (new Text.Properties.MarginsProperty (0, 20, 0, 0, 1.0, 1.0, 0.0, 15, 1, false));
+			
+			painter.TextStory.ConvertToStyledText (words, properties, out text);
+			painter.TextStory.InsertText (cursor, text);
+			
+			
+			properties.Clear ();
+			properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
+			properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+			properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.5, 15, 1, false));
+			
+			painter.TextStory.ConvertToStyledText (words, properties, out text);
+			painter.TextStory.InsertText (cursor, text);
+			
+			
+			properties.Clear ();
+			properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
+			properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+			properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.4, 0.0, 1.0, 15, 1, false));
+			
+			painter.TextStory.ConvertToStyledText (words, properties, out text);
+			painter.TextStory.InsertText (cursor, text);
+			
+			
+			
+			
+			
 			painter.TextStory.RecycleCursor (cursor);
 			
 			painter.NotifyTextChanged ();
@@ -90,10 +133,14 @@ namespace Epsitec.Common.Drawing
 			protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
 			{
 				graphics.AddFilledRectangle (0, 0, this.Width, this.Height);
-				graphics.RenderSolid (Color.FromName ("White"));
+				graphics.RenderSolid (Drawing.Color.FromBrightness (1.0));
 				
 				System.Diagnostics.Debug.WriteLine ("Paint called.");
+				
+				this.graphics = graphics;
 				this.fitter.RenderTextFrame (this.frame, this);
+				this.graphics = null;
+				
 				System.Diagnostics.Debug.WriteLine ("Paint done.");
 			}
 			
@@ -108,6 +155,18 @@ namespace Epsitec.Common.Drawing
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("Font: {0} {1}pt", font.FontIdentity.FullName, size));
 				System.Diagnostics.Debug.WriteLine (string.Format ("Glyphs: {0} starting at {1}:{2}", glyphs.Length, x[0], y[0]));
+				
+				Drawing.Font drawing_font = Drawing.Font.GetFont (font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+				
+				if (drawing_font != null)
+				{
+					for (int i = 0; i < glyphs.Length; i++)
+					{
+						this.graphics.Rasterizer.AddGlyph (drawing_font, glyphs[i], x[i], y[i], size);
+					}
+				}
+				
+				this.graphics.RenderSolid (Drawing.Color.FromBrightness (0));
 			}
 			#endregion
 			
@@ -115,6 +174,7 @@ namespace Epsitec.Common.Drawing
 			private TextStory					story;
 			private TextFitter					fitter;
 			private SimpleTextFrame				frame;
+			private Graphics					graphics;
 		}
 	}
 }
