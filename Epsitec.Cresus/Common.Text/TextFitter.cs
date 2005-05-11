@@ -265,6 +265,7 @@ namespace Epsitec.Common.Text
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
 			bool continuation = false;
+			bool reset_line_h = true;
 			
 			int def_line_count = line_count;
 			int def_line_start = line_start;
@@ -273,10 +274,14 @@ namespace Epsitec.Common.Text
 			int    def_frame_index = layout.FrameIndex;
 			double def_frame_y     = layout.FrameY;
 			
-			layout.ResetLineHeight ();
-			
 			for (;;)
 			{
+				if (reset_line_h)
+				{
+					layout.ResetLineHeight ();
+					reset_line_h = false;
+				}
+				
 				Properties.TabProperty tab_property;
 				Layout.Status status = layout.Fit (ref result, line_count, continuation);
 				
@@ -295,8 +300,12 @@ namespace Epsitec.Common.Text
 						throw new System.InvalidOperationException ("Cannot fit.");
 					
 					case Layout.Status.Ok:
+						continuation = false;
+						break;
+					
 					case Layout.Status.OkFitEnded:
 						continuation = false;
+						reset_line_h = true;
 						break;
 					
 					case Layout.Status.RestartLayout:

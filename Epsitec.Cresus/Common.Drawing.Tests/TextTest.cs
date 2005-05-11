@@ -42,7 +42,7 @@ namespace Epsitec.Common.Drawing
 			
 			properties.Clear ();
 			properties.Add (new Text.Properties.FontProperty ("Palatino Linotype", "Regular"));
-			properties.Add (new Text.Properties.FontSizeProperty (18.0, Text.Properties.FontSizeUnits.Points));
+			properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.FontSizeUnits.Points));
 			properties.Add (new Text.Properties.MarginsProperty (40, 10, 10, 10, 1.0, 0.0, 0.0, 15, 1, false));
 			
 			painter.TextStory.ConvertToStyledText (words, properties, out text);
