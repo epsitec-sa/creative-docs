@@ -96,6 +96,28 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public static ushort[] GenerateGlyphs (OpenType.Font font, ulong[] text, int offset, int length)
+		{
+			ushort[] glyphs = font.GenerateGlyphs (text, offset, length);
+			
+			BaseEngine.FilterControlCodes (text, offset, length, glyphs);
+			
+			return glyphs;
+		}
+		
+		public static void FilterControlCodes (ulong[] text, int offset, int length, ushort[] glyphs)
+		{
+			Unicode.BreakAnalyzer analyzer = Unicode.DefaultBreakAnalyzer;
+			
+			for (int i = 0; i < length; i++)
+			{
+				if (analyzer.IsControl (Unicode.Bits.GetCode (text[offset+i])))
+				{
+					glyphs[i] = 0xffff;
+				}
+			}
+		}
+		
 		#region IDisposable Members
 		public void Dispose()
 		{

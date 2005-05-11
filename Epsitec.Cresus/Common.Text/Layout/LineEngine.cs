@@ -248,7 +248,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				if (frag_length < run_length)
 				{
 					//	Produit la césure manuellement (il faudrait faire mieux pour gérer
-					//	correctement des langues comme le norvégien ou l'ancien allemand
+					//	correctement des langues comme le suédois ou l'ancien allemand
 					//	qui peuvent provoquer le dédoublement de certains caractères) :
 					
 					int   len = frag_length + 1;
@@ -256,7 +256,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					ulong old = text[end];
 					text[end] = hyphen;
 					
-					glyphs    = scratch.Font.GenerateGlyphs (text, offset, len);
+					glyphs    = BaseEngine.GenerateGlyphs (scratch.Font, text, offset, len);
 					can_break = true;
 					add_break = true;
 					profile   = new StretchProfile (scratch.StretchProfile);
@@ -270,7 +270,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				else
 				{
 					profile = scratch.StretchProfile;
-					glyphs  = scratch.Font.GenerateGlyphs(text, offset, frag_length);
+					glyphs  = BaseEngine.GenerateGlyphs (scratch.Font, text, offset, frag_length);
 					
 					scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize);
 					
@@ -360,12 +360,14 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				attributes[end] = Unicode.BreakAnalyzer.GetStretchClass (hyphen);
 				
 				font.GenerateGlyphs (text, offset, length, out glyphs, attributes);
+				BaseEngine.FilterControlCodes (text, offset, length, glyphs);
 				
 				text[end] = old;
 			}
 			else
 			{
 				font.GenerateGlyphs (text, offset, length, out glyphs, attributes);
+				BaseEngine.FilterControlCodes (text, offset, length, glyphs);
 			}
 			
 			//	Détermine les mises à l'échelle des divers glyphes, selon leur

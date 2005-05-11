@@ -499,6 +499,51 @@ namespace Epsitec.Common.Text
 				return this.IsSpace (this[code]);
 			}
 			
+			public bool IsControl(int code)
+			{
+				switch ((Unicode.Code)code)
+				{
+					case Unicode.Code.Invalid:
+						throw new System.ArgumentException ("Invalid Unicode code.");
+					
+					case Unicode.Code.CarriageReturn:
+					case Unicode.Code.LineFeed:
+					case Unicode.Code.NextLine:
+					case Unicode.Code.VerticalTab:
+						throw new System.ArgumentException ("Deprecated Unicode code.");
+					
+					case Unicode.Code.LineSeparator:
+					case Unicode.Code.PageSeparator:
+					case Unicode.Code.ParagraphSeparator:
+						break;
+					
+					case Unicode.Code.HorizontalTab:
+						break;
+					
+					case Unicode.Code.LeftToRightEmbedding:
+					case Unicode.Code.LeftToRightMark:
+					case Unicode.Code.LeftToRightOverride:
+					case Unicode.Code.RightToLeftEmbedding:
+					case Unicode.Code.RightToLeftMark:
+					case Unicode.Code.RightToLeftOverride:
+					case Unicode.Code.PopDirectionalFormatting:
+						break;
+					
+					case Unicode.Code.StartOfGuardedArea:
+					case Unicode.Code.EndOfGuardedArea:
+						break;
+					
+					case Unicode.Code.StartOfText:
+					case Unicode.Code.EndOfText:
+						break;
+					
+					default:
+						return false;
+				}
+				
+				return true;
+			}
+			
 			
 			public static StretchClass GetStretchClass(int code)
 			{

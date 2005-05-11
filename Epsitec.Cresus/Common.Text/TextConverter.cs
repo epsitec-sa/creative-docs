@@ -37,6 +37,20 @@ namespace Epsitec.Common.Text
 					break;
 				}
 				
+				if (c == '\r')
+				{
+					//	On vient de tomber sur un CR qui doit être filtré du texte
+					//	car il n'est pas considéré comme valide en aval. Il faut
+					//	donc traiter tout le texte comme un texte complexe :
+					
+					TextConverter.ConvertFromComplexString (text, i, ref result);
+					break;
+				}
+				else if (c == '\n')
+				{
+					c = (char) Unicode.Code.ParagraphSeparator;
+				}
+				
 				result[i] = c;
 			}
 		}
@@ -59,6 +73,20 @@ namespace Epsitec.Common.Text
 					
 					TextConverter.ConvertFromComplexString (text, i, ref result);
 					break;
+				}
+				
+				if (c == '\r')
+				{
+					//	On vient de tomber sur un CR qui doit être filtré du texte
+					//	car il n'est pas considéré comme valide en aval. Il faut
+					//	donc traiter tout le texte comme un texte complexe :
+					
+					TextConverter.ConvertFromComplexString (text, i, ref result);
+					break;
+				}
+				else if (c == '\n')
+				{
+					c = (char) Unicode.Code.ParagraphSeparator;
 				}
 				
 				result[i] = c;
@@ -214,6 +242,16 @@ namespace Epsitec.Common.Text
 				{
 					throw new Unicode.IllegalCodeException ();
 				}
+				else if (c == '\r')
+				{
+					//	Saut le caractère dans la source...
+					
+					continue;
+				}
+				else if (c == '\n')
+				{
+					code = (char) Unicode.Code.ParagraphSeparator;
+				}
 				
 				result[index++] = code;
 			}
@@ -276,6 +314,16 @@ namespace Epsitec.Common.Text
 					/**/ (c <= Unicode.SurrogateHighMax))
 				{
 					throw new Unicode.IllegalCodeException ();
+				}
+				else if (c == '\r')
+				{
+					//	Saut le caractère dans la source...
+					
+					continue;
+				}
+				else if (c == '\n')
+				{
+					code = (char) Unicode.Code.ParagraphSeparator;
 				}
 				
 				result[index++] = code;

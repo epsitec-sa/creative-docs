@@ -14,7 +14,7 @@ namespace Epsitec.Common.Drawing
 			Window  window  = new Window ();
 			Painter painter = new Painter ();
 			
-			window.ClientSize     = new Size (500, 400);
+			window.ClientSize     = new Size (500, 600);
 			window.WindowLocation = ScreenInfo.Find (new Point (10, 10)).WorkingArea.TopLeft + new Point (100, -100 - window.WindowSize.Height);
 			window.Text           = "TextTest/CheckPainting";
 			
@@ -42,8 +42,8 @@ namespace Epsitec.Common.Drawing
 			
 			properties.Clear ();
 			properties.Add (new Text.Properties.FontProperty ("Palatino Linotype", "Regular"));
-			properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
-			properties.Add (new Text.Properties.MarginsProperty (100, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
+			properties.Add (new Text.Properties.FontSizeProperty (18.0, Text.Properties.FontSizeUnits.Points));
+			properties.Add (new Text.Properties.MarginsProperty (40, 10, 10, 10, 1.0, 0.0, 0.0, 15, 1, false));
 			
 			painter.TextStory.ConvertToStyledText (words, properties, out text);
 			painter.TextStory.InsertText (cursor, text);
@@ -162,7 +162,10 @@ namespace Epsitec.Common.Drawing
 				{
 					for (int i = 0; i < glyphs.Length; i++)
 					{
-						this.graphics.Rasterizer.AddGlyph (drawing_font, glyphs[i], x[i], y[i], size);
+						if (glyphs[i] < 0xffff)
+						{
+							this.graphics.Rasterizer.AddGlyph (drawing_font, glyphs[i], x[i], y[i], size);
+						}
 					}
 				}
 				

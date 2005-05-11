@@ -179,6 +179,11 @@ namespace Epsitec.Common.OpenType
 			
 			public int GetGlyphWidth(int glyph)
 			{
+				if (glyph >= 0xffff)
+				{
+					return 0;
+				}
+				
 				int block = glyph / 64;
 				int index = glyph % 64;
 				

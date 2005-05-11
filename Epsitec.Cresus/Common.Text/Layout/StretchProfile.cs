@@ -228,6 +228,7 @@ namespace Epsitec.Common.Text.Layout
 			}
 			
 			font.GenerateGlyphs (text, offset, length, out glyphs, attributes);
+			BaseEngine.FilterControlCodes (text, offset, length, glyphs);
 			
 			int      count = glyphs.Length;
 			double[] x_pos = new double[count];
