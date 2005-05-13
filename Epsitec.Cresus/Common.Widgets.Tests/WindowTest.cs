@@ -468,6 +468,7 @@ namespace Epsitec.Common.Widgets
 			window.Show ();
 		}
 		
+		
 		private class MyController
 		{
 			[Command ("Open")]		public void CommandOpen()
@@ -498,6 +499,35 @@ namespace Epsitec.Common.Widgets
 			window.Show ();
 		}
 		
+		[Test] public void CheckAlphaWindow()
+		{
+			Window     window = new Window ();
+			StaticText text   = new StaticText ();
+			Button     button = new Button ();
+			
+			window.Text = "Layered";
+			window.Root.BackColor = Color.Transparent;
+			window.MakeFramelessWindow ();
+			window.MakeLayeredWindow ();
+			window.Alpha = 0.75;
+			window.WindowBounds = new Rectangle (ScreenInfo.GlobalArea.Left+50, 200, 200, 200);
+			
+			button.Parent = window.Root;
+			button.Bounds = new Rectangle (10, 10, 80, 24);
+			button.Text   = "Test";
+			button.Clicked += new MessageEventHandler(AlphaTestButtonClicked);
+			
+			window.WindowLocation = new Point (3840 + 20, 1000);
+			
+			window.Show ();
+			Window.PumpEvents ();
+			
+			text.Parent = window.Root;
+			text.Dock   = DockStyle.Top;
+			text.Text   = window.DebugWindowHandle + "  <font color=\"white\">" + window.DebugWindowHandle + "</font>";
+			
+			window.Root.Invalidate ();
+		}
 		
 		private void Root_Clicked(object sender, MessageEventArgs e)
 		{
@@ -566,6 +596,11 @@ namespace Epsitec.Common.Widgets
 //			window.WindowSize = new Drawing.Size (200, 80);
 //			window.Show ();
 //			window.Run ();
-//		}
+		//		}
+
+		private void AlphaTestButtonClicked(object sender, MessageEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine ("Button clicked.");
+		}
 	}
 }

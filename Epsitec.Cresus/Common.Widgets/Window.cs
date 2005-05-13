@@ -691,6 +691,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public string							DebugWindowHandle
+		{
+			get
+			{
+				return this.window == null ? "<null>" : this.window.Handle.ToInt64 ().ToString ("X");
+			}
+		}
+		
 		
 		public Drawing.Rectangle				PlatformBounds
 		{
