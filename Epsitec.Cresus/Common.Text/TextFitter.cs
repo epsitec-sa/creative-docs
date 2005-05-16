@@ -189,7 +189,10 @@ namespace Epsitec.Common.Text
 					//	ITextFrame liés à ce TextFitter).
 					
 					int max    = this.story.TextLength;
-					int length = System.Math.Min (max - pos, 10000);
+					int step   = 10000;
+					
+				again:
+					int length = System.Math.Min (max - pos, step);
 					
 					if (length <= 0)
 					{
@@ -197,6 +200,19 @@ namespace Epsitec.Common.Text
 					}
 					
 					method (cursor, pos, ref length);
+					
+					if (length == 0)
+					{
+						//	La méthode de traitement n'a rien pu faire avec le texte passé
+						//	en entrée, vraisemblablement parce que le paragraphe mesure plus
+						//	de 'step' caractères. Il faut donc augmenter cette limite et
+						//	tenter un nouvel essai.
+						
+						Debug.Assert.IsTrue (length < max-pos);
+						
+						step += 10000;
+						goto again;
+					}
 					
 					if (length < 0)
 					{
