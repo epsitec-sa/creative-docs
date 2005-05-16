@@ -94,8 +94,8 @@ namespace Epsitec.Common.Drawing
 			{
 				this.story  = new TextStory ();
 				this.fitter = new TextFitter (this.story);
-				this.frame1 = new SimpleTextFrame (this.Client.Width / 2, this.Client.Height);
-				this.frame2 = new SimpleTextFrame (this.Client.Width / 2, this.Client.Height);
+				this.frame1 = new SimpleTextFrame (this.Client.Width / 3, this.Client.Height);
+				this.frame2 = new SimpleTextFrame (this.Client.Width - this.frame1.Width, this.Client.Height);
 				
 				this.fitter.FrameList.InsertAt (0, this.frame1);
 				this.fitter.FrameList.InsertAt (1, this.frame2);
@@ -125,10 +125,10 @@ namespace Epsitec.Common.Drawing
 				if ((this.frame1 != null) &&
 					(this.frame2 != null))
 				{
-					this.frame1.Width  = this.Client.Width / 2;
+					this.frame1.Width  = this.Client.Width / 3;
 					this.frame1.Height = this.Client.Height;
 					
-					this.frame2.Width  = this.Client.Width / 2;
+					this.frame2.Width  = this.Client.Width - this.frame1.Width;
 					this.frame2.Height = this.Client.Height;
 					this.frame2.X      = this.frame1.Width + this.frame1.X;
 					

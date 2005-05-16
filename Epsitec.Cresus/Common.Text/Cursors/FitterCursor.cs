@@ -13,14 +13,6 @@ namespace Epsitec.Common.Text.Cursors
 		}
 		
 		
-		public static CursorInfo.Filter			Filter
-		{
-			get
-			{
-				return new CursorInfo.Filter (FitterCursor.FilterCallback);
-			}
-		}
-		
 		public FitterCursor.Element[]			Elements
 		{
 			get
@@ -77,6 +69,15 @@ namespace Epsitec.Common.Text.Cursors
 				}
 				
 				return result;
+			}
+		}
+		
+		
+		public static CursorInfo.Filter			Filter
+		{
+			get
+			{
+				return new CursorInfo.Filter (FitterCursor.FilterCallback);
 			}
 		}
 		

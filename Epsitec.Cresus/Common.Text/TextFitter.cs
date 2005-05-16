@@ -152,7 +152,7 @@ namespace Epsitec.Common.Text
 					break;
 				}
 				
-				this.RenderParagraph (cursor, renderer);
+				this.RenderParagraphInTextFrame (cursor, renderer, frame);
 				
 				//	Trouve le curseur du paragraphe suivant :
 				
@@ -225,7 +225,7 @@ namespace Epsitec.Common.Text
 			for (int i = 0; i < cursors.Length; i++)
 			{
 				ICursor cursor = this.story.TextTable.GetCursorInstance (cursors[i].CursorId);
-				this.RecycleCursor (cursor);
+				this.RecycleFitterCursor (cursor);
 			}
 		}
 		
@@ -425,6 +425,8 @@ namespace Epsitec.Common.Text
 					
 					if (pos + offset > story.TextLength)
 					{
+						Debug.Assert.IsTrue (status == Layout.Status.OkFitEnded);
+						
 						offset     -= 1;
 						end_of_text = true;
 					}
@@ -466,7 +468,7 @@ namespace Epsitec.Common.Text
 						
 						if (list.Count > 0)
 						{
-							Cursors.FitterCursor mark = this.NewCursor ();
+							Cursors.FitterCursor mark = this.NewFitterCursor ();
 							
 							mark.AddRange (list);
 							list.Clear ();
@@ -620,7 +622,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected Cursors.FitterCursor NewCursor()
+		protected Cursors.FitterCursor NewFitterCursor()
 		{
 			//	Retourne un curseur tout neuf (ou reprend un curseur qui a été
 			//	recyclé précédemment, pour éviter de devoir en allouer à tour
@@ -643,7 +645,7 @@ namespace Epsitec.Common.Text
 			return cursor;
 		}
 		
-		protected void RecycleCursor(ICursor cursor)
+		protected void RecycleFitterCursor(ICursor cursor)
 		{
 			//	Recycle le curseur passé en entrée. Il est simplement placé
 			//	dans la pile des curseurs disponibles.

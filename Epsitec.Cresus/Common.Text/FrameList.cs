@@ -156,6 +156,6 @@ namespace Epsitec.Common.Text
 		
 		private TextFitter						fitter;
 		private System.Collections.ArrayList	frames;
-		private System.Collections.Hashtable	cursor_map;
+		private System.Collections.Hashtable	cursor_map;		//	cache: ITextFrame --> FitterCursor
 	}
 }
