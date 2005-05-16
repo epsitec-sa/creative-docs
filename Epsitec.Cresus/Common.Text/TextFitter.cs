@@ -540,27 +540,6 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		protected int ComputeParagraphLength(ulong[] text, int offset)
-		{
-			Unicode.BreakAnalyzer analyzer = Unicode.DefaultBreakAnalyzer;
-			
-			for (int i = offset; i < text.Length; i++)
-			{
-				int code = Unicode.Bits.GetCode (text[i]);
-				
-				if (code == (int) Unicode.Code.EndOfText)
-				{
-					return i - offset;
-				}
-				
-				if (analyzer.IsBreak (code))
-				{
-					return i - offset + 1;
-				}
-			}
-			
-			return -1;
-		}
 		
 		protected enum TabStatus
 		{
@@ -679,6 +658,32 @@ namespace Epsitec.Common.Text
 		protected double ComputePenalty(double space_penalty, double break_penalty)
 		{
 			return space_penalty + break_penalty;
+		}
+		
+		protected int ComputeParagraphLength(ulong[] text, int offset)
+		{
+			//	Détermine la longueur du paragraphe dans le texte passé en entrée, en
+			//	commençant à l'offset indiqué. Une marque de fin de texte ne fait pas
+			//	partie du paragraphe, alors qu'une marque de fin de paragraphe si.
+			
+			Unicode.BreakAnalyzer analyzer = Unicode.DefaultBreakAnalyzer;
+			
+			for (int i = offset; i < text.Length; i++)
+			{
+				int code = Unicode.Bits.GetCode (text[i]);
+				
+				if (code == (int) Unicode.Code.EndOfText)
+				{
+					return i - offset;
+				}
+				
+				if (analyzer.IsBreak (code))
+				{
+					return i - offset + 1;
+				}
+			}
+			
+			return -1;
 		}
 		
 		
