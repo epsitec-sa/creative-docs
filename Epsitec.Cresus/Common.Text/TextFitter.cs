@@ -477,24 +477,46 @@ namespace Epsitec.Common.Text
 				}
 				else
 				{
-					if ((status == Layout.Status.OkFitEnded) ||
-						(end_of_text))
+					if (status == Layout.Status.ErrorNeedMoreRoom)
 					{
-						Debug.Assert.IsTrue ((list.Count > 0) || (end_of_text));
+						//	Le paragraphe a été tronqué, car il n'y a plus assez de place dans
+						//	les ITextFrame pour y placer le texte. Il faut générer un Element
+						//	décrivant la fin du paragraphe :
 						
-						if (list.Count > 0)
+						Cursors.FitterCursor.Element element = new Cursors.FitterCursor.Element ();
+						
+						int paragraph_length = this.ComputeParagraphLength (text, line_start);
+						
+						if (paragraph_length < 0)
 						{
-							Cursors.FitterCursor mark = this.NewFitterCursor ();
+							//	La fin du paragraphe n'a pas pu être trouvée; demande à l'appelant
+							//	une nouvelle passe avec plus de texte.
 							
-							mark.AddRange (list);
-							list.Clear ();
-							
-							story.MoveCursor (mark, pos + paragraph_start);
-							
-							line_start      = offset;
-							paragraph_start = offset;
-							line_count      = 0;
+							length = paragraph_start;
+							return;
 						}
+						
+						element.Length     = paragraph_length;
+						element.FrameIndex = -1;
+						
+						list.Add (element);
+					}
+					
+					if ((status == Layout.Status.OkFitEnded) ||
+						(status == Layout.Status.ErrorNeedMoreRoom))
+					{
+						Debug.Assert.IsTrue (list.Count > 0);
+						
+						Cursors.FitterCursor mark = this.NewFitterCursor ();
+						
+						mark.AddRange (list);
+						list.Clear ();
+						
+						story.MoveCursor (mark, pos + paragraph_start);
+						
+						line_start      = offset;
+						paragraph_start = offset;
+						line_count      = 0;
 					}
 					else
 					{
@@ -516,6 +538,28 @@ namespace Epsitec.Common.Text
 					return;
 				}
 			}
+		}
+		
+		protected int ComputeParagraphLength(ulong[] text, int offset)
+		{
+			Unicode.BreakAnalyzer analyzer = Unicode.DefaultBreakAnalyzer;
+			
+			for (int i = offset; i < text.Length; i++)
+			{
+				int code = Unicode.Bits.GetCode (text[i]);
+				
+				if (code == (int) Unicode.Code.EndOfText)
+				{
+					return i - offset;
+				}
+				
+				if (analyzer.IsBreak (code))
+				{
+					return i - offset + 1;
+				}
+			}
+			
+			return -1;
 		}
 		
 		protected enum TabStatus

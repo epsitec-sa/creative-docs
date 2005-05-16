@@ -544,6 +544,33 @@ namespace Epsitec.Common.Text
 				return true;
 			}
 			
+			public bool IsBreak(int code)
+			{
+				switch ((Unicode.Code)code)
+				{
+					case Unicode.Code.Invalid:
+						throw new System.ArgumentException ("Invalid Unicode code.");
+					
+					case Unicode.Code.CarriageReturn:
+					case Unicode.Code.LineFeed:
+					case Unicode.Code.NextLine:
+					case Unicode.Code.VerticalTab:
+						throw new System.ArgumentException ("Deprecated Unicode code.");
+					
+					case Unicode.Code.LineSeparator:
+					case Unicode.Code.PageSeparator:
+					case Unicode.Code.ParagraphSeparator:
+						break;
+					
+					case Unicode.Code.EndOfText:
+						break;
+					
+					default:
+						return false;
+				}
+				
+				return true;
+			}
 			
 			public static StretchClass GetStretchClass(int code)
 			{
