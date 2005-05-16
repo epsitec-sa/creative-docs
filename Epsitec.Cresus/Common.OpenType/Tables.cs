@@ -1247,6 +1247,266 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
+	public class Table_kern : Tables
+	{
+		public Table_kern(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		public Table_kern(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		{
+		}
+		
+		
+		public int		TableVersion
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}		
+		}
+		
+		public int		Count
+		{
+			get
+			{
+				return this.ReadInt16 (2);
+			}		
+		}
+		
+		
+		public KerningTable	GetKerningTable(int n)
+		{
+			if ((n >= 0) &&
+				(n < this.Count))
+			{
+				int offset = 4;
+				
+				for (int i = 0; i < n; i++)
+				{
+					offset += this.ReadInt16 (offset + 2);
+				}
+				
+				return new KerningTable (this.data, this.offset + offset);
+			}
+			
+			return null;
+		}
+	}
+	
+	public class KerningTable : Tables
+	{
+		public KerningTable(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public int		TableVersion
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}
+		}
+		
+		public int		Length
+		{
+			get
+			{
+				return this.ReadInt16 (2);
+			}
+		}
+		
+		public int		Coverage
+		{
+			get
+			{
+				return this.ReadInt16 (4);
+			}
+		}
+		
+		public bool		IsHorizontal
+		{
+			get
+			{
+				return (this.Coverage & 0x0001) == 0x0001;
+			}
+		}
+		
+		public bool		HasMinimumValues
+		{
+			get
+			{
+				return (this.Coverage & 0x0002) == 0x0002;
+			}
+		}
+		
+		public bool		IsCrossStream
+		{
+			get
+			{
+				return (this.Coverage & 0x0004) == 0x0004;
+			}
+		}
+		
+		public bool		IsOverride
+		{
+			get
+			{
+				return (this.Coverage & 0x0008) == 0x0008;
+			}
+		}
+				
+		public int		SubtableFormat
+		{
+			get
+			{
+				return (this.Coverage & 0xff00) >> 8;
+			}
+		}
+		
+		
+		public KerningTableFormat0	Format0Subtable
+		{
+			get
+			{
+				if (this.SubtableFormat == 0)
+				{
+					return new KerningTableFormat0 (this.data, this.offset);
+				}
+				
+				return null;
+			}
+		}
+	}
+	
+	public class KerningTableFormat0 : KerningTable
+	{
+		public KerningTableFormat0(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public int		PairCount
+		{
+			get
+			{
+				return this.ReadInt16 (6);
+			}
+		}
+		
+		public int		SearchRange
+		{
+			get
+			{
+				return this.ReadInt16 (8);
+			}
+		}
+		
+		public int		EntrySelector
+		{
+			get
+			{
+				return this.ReadInt16 (10);
+			}
+		}
+		
+		public int		RangeShift
+		{
+			get
+			{
+				return this.ReadInt16 (12);
+			}
+		}
+		
+		
+		public int GetLeftGlyph(int n)
+		{
+			return this.ReadInt16 (14+n*6);
+		}
+		
+		public int GetRightGlyph(int n)
+		{
+			return this.ReadInt16 (16+n*6);
+		}
+		
+		
+		public uint GetLeftRightCombined(int n)
+		{
+			return (uint) this.ReadInt32 (14+n*6);
+		}
+		
+		public int GetKernValue(int n)
+		{
+			return this.ReadInt16 (18+n*6);
+		}
+		
+		public bool FindKernValue(int left, int right, out int value)
+		{
+			uint combined = (uint)(left << 16) | (uint)(right & 0xffff);
+			
+			int range = this.SearchRange;
+			int index = this.EntrySelector;
+			int count = this.PairCount;
+			int pow_2 = range;
+			int fence = count * 6;
+			
+			for (int i = 0; ; i++)
+			{
+				uint test = this.GetLeftRightCombined (range / 6);
+				
+				if (test == combined)
+				{
+					value = this.GetKernValue (range / 6);
+					return true;
+				}
+				
+				if (i >= index)
+				{
+					if (range == 6)
+					{
+						test = this.GetLeftRightCombined (0);
+					
+						if (test == combined)
+						{
+							value = this.GetKernValue (0);
+							return true;
+						}
+					}
+					
+					break;
+				}
+				
+				pow_2 >>= 1;
+				
+				if (test > combined)
+				{
+					range -= pow_2;
+				}
+				else
+				{
+					range += pow_2;
+					
+					while (range >= fence)
+					{
+						pow_2 >>= 1;
+						range  -= pow_2;
+						
+						if (++i >= index)
+						{
+							value = 0;
+							return false;
+						}
+					}
+				}
+			}
+			
+			value = 0;
+			return false;
+		}
+	}
+	
+	
 	public class Table_GDEF : Tables
 	{
 		//	http://partners.adobe.com/public/developer/opentype/index_table_formats5.html

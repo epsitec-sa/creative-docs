@@ -208,6 +208,11 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "OpenTypeTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "PathTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

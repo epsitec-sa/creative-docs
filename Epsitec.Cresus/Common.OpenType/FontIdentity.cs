@@ -177,6 +177,7 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 			
+			
 			public int GetGlyphWidth(int glyph)
 			{
 				if (glyph >= 0xffff)
