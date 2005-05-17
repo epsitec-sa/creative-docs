@@ -21,43 +21,7 @@ namespace Epsitec.Common.OpenType.Tests
 				string font_face  = font.InvariantFaceName;
 				string font_style = font.InvariantStyleName;
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0}/{1} ({2}/{3}) weight={5}, italic={6} ---> {4}", font_face, font_style, font.LocaleFaceName, font.LocaleStyleName, font.FullName, font.FontWeight, font.FontIsItalic));
-				
-				FontData font_data = font.FontData;
-				TableEntry entry   = (font_data == null ? null : font_data["kern"]);
-				Table_kern kerning = (entry == null ? null : new Table_kern (entry));
-				
-				if (kerning != null)
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("+++ {0} {1} contains kerning information; v={2}, n={3}", font_face, font_style, kerning.TableVersion, kerning.Count));
-					
-					for (int i = 0; i < kerning.Count; i++)
-					{
-						KerningTable        k_table   = kerning.GetKerningTable (i);
-						KerningTableFormat0 k_table_0 = k_table.Format0Subtable;
-						
-						if (k_table_0 == null)
-						{
-							System.Diagnostics.Debug.WriteLine (string.Format ("    {0}: unsupported format {1}.", i, k_table.SubtableFormat));
-						}
-						else
-						{
-							System.Diagnostics.Debug.WriteLine (string.Format ("    {0}: {1} entries ({2}/{3}/{4}).", i, k_table_0.PairCount, k_table_0.SearchRange, k_table_0.EntrySelector, k_table_0.RangeShift));
-							
-							int p_count = k_table_0.PairCount;
-							
-							for (int j = 0; j < p_count; j++)
-							{
-								int g_left  = k_table_0.GetLeftGlyph (j);
-								int g_right = k_table_0.GetRightGlyph (j);
-								int k_value;
-								
-								Debug.Assert.IsTrue (k_table_0.FindKernValue (g_left, g_right, out k_value));
-								Debug.Assert.IsTrue (k_table_0.GetKernValue (j) == k_value);
-							}
-						}
-					}
-				}
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}/{1} ({2}/{3})\n    weight={5}, italic={6}, kerning={7}\n    {4}", font_face, font_style, font.LocaleFaceName, font.LocaleStyleName, font.FullName, font.FontWeight, font.FontIsItalic, CheckTables.TestKerningInformation (font)));
 			}
 			
 			Font         arial    = collection.CreateFont ("Arial Unicode MS");
@@ -83,6 +47,57 @@ namespace Epsitec.Common.OpenType.Tests
 			CheckTables.TestFont ();
 		}
 		
+		private static bool TestKerningInformation(FontIdentity font)
+		{
+			string font_face  = font.InvariantFaceName;
+			string font_style = font.InvariantStyleName;
+			
+			FontData font_data = font.FontData;
+			
+			if (font_data == null)
+			{
+				return false;
+			}
+			
+			TableEntry entry   = font_data["kern"];
+			
+			if (entry == null)
+			{
+				return false;
+			}
+			
+			Table_kern kerning = new Table_kern (entry);
+			
+			for (int i = 0; i < kerning.Count; i++)
+			{
+				KerningTable        k_table   = kerning.GetKerningTable (i);
+				KerningTableFormat0 k_table_0 = k_table.Format0Subtable;
+				
+				if (k_table_0 == null)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("    {0}: unsupported format {1}.", i, k_table.SubtableFormat));
+				}
+				else
+				{
+					int p_count = k_table_0.PairCount;
+					int k_value;
+					
+					for (int j = 0; j < p_count; j++)
+					{
+						int g_left  = k_table_0.GetLeftGlyph (j);
+						int g_right = k_table_0.GetRightGlyph (j);
+						
+						Debug.Assert.IsTrue (k_table_0.FindKernValue (g_left, g_right, out k_value));
+						Debug.Assert.IsTrue (k_table_0.GetKernValue (j) == k_value);
+					}
+					
+					Debug.Assert.IsFalse (k_table_0.FindKernValue (0, 0, out k_value));
+					Debug.Assert.IsFalse (k_table_0.FindKernValue (0xfff, 0xfff, out k_value));
+				}
+			}
+			
+			return true;
+		}
 		
 		private static void TestArial()
 		{

@@ -18,6 +18,7 @@ namespace Epsitec.Common.IO
 		void Update(byte[] buffer, int offset, int length);
 		
 		void UpdateValue(string value);
+		void UpdateValue(string[] values);
 		void UpdateValue(int value);
 		void UpdateValue(short value);
 		void UpdateValue(double value);

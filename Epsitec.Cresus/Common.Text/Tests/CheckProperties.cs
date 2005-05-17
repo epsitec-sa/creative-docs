@@ -30,9 +30,9 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (font_ac.FaceName == "Arial");
 			Debug.Assert.IsTrue (font_ac.StyleName == "Roman");
 			
-			Debug.Assert.IsTrue (font_a.ToString () == "Futura/Roman");
-			Debug.Assert.IsTrue (font_b.ToString () == "[null]/Heavy");
-			Debug.Assert.IsTrue (font_c.ToString () == "Arial/[null]");
+			Debug.Assert.IsTrue (font_a.ToString () == "Futura/Roman/[null]");
+			Debug.Assert.IsTrue (font_b.ToString () == "[null]/Heavy/[null]");
+			Debug.Assert.IsTrue (font_c.ToString () == "Arial/[null]/[null]");
 		}
 		
 		private static void TestFontSize()

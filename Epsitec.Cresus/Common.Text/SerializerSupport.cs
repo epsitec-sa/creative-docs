@@ -64,6 +64,25 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public static string SerializeStringArray(string[] value)
+		{
+			if (value == null)
+			{
+				return "[null]";
+			}
+			else
+			{
+				string[] array = new string[value.Length];
+				
+				for (int i = 0; i < value.Length; i++)
+				{
+					array[i] = SerializerSupport.Escape (value[i]);
+				}
+				
+				return SerializerSupport.Escape (SerializerSupport.Join (array));
+			}
+		}
+		
 		private static string Escape(string value)
 		{
 			if (value.IndexOfAny (new char[] { '/', '\\', '[', ']' }) == -1)
@@ -86,12 +105,35 @@ namespace Epsitec.Common.Text
 				return value;
 			}
 			
-			value = value.Replace ("\\]", "]");
-			value = value.Replace ("\\[", "[");
-			value = value.Replace ("\\:", "/");
-			value = value.Replace ("\\\\", "\\");
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			return value;
+			for (int i = 0; i < value.Length; i++)
+			{
+				char c = value[i];
+				
+				if (c == '\\')
+				{
+					if (i == value.Length-1)
+					{
+						throw new System.ArgumentException ("Invalid truncated escape sequence.");
+					}
+					
+					switch (value[++i])
+					{
+						case ']':		c = ']';	break;
+						case '[':		c = '[';	break;
+						case ':':		c = '/';	break;
+						case '\\':		c = '\\';	break;
+						
+						default:
+							throw new System.ArgumentException ("Invalid escape sequence.");
+					}
+				}
+				
+				buffer.Append (c);
+			}
+			
+			return buffer.ToString ();
 		}
 		
 		public static string SerializeDouble(double value)
@@ -121,6 +163,25 @@ namespace Epsitec.Common.Text
 			else
 			{
 				return SerializerSupport.Unescape (value);
+			}
+		}
+		
+		public static string[] DeserializeStringArray(string value)
+		{
+			if (value == "[null]")
+			{
+				return null;
+			}
+			else
+			{
+				string[] array = SerializerSupport.Split (SerializerSupport.Unescape (value));
+				
+				for (int i = 0; i < array.Length; i++)
+				{
+					array[i] = SerializerSupport.Unescape (array[i]);
+				}
+				
+				return array;
 			}
 		}
 		

@@ -77,6 +77,17 @@ namespace Epsitec.Common.IO
 				}
 			}
 			
+			public void UpdateValue(string[] values)
+			{
+				if (values != null)
+				{
+					foreach (string s in values)
+					{
+						this.UpdateValue (s);
+					}
+				}
+			}
+			
 			public void UpdateValue(int value)
 			{
 				this.buffer[0] = (byte) (value >> 24);

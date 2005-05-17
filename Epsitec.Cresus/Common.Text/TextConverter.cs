@@ -334,7 +334,7 @@ namespace Epsitec.Common.Text
 				ulong[] old_result = result;
 				ulong[] new_result = new ulong[index];
 				
-				System.Buffer.BlockCopy (old_result, 0, new_result, 0, index*4);
+				System.Buffer.BlockCopy (old_result, 0, new_result, 0, index*8);
 				
 				result = new_result;
 			}

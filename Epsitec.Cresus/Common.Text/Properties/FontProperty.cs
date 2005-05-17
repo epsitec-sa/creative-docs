@@ -68,12 +68,29 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public string[]							Features
+		{
+			get
+			{
+				return this.features;
+			}
+			set
+			{
+				if (! Types.Comparer.Equal (this.features, value))
+				{
+					this.features = value.Clone () as string[];
+					this.Invalidate ();
+				}
+			}
+		}
+		
 		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
 				/**/				SerializerSupport.SerializeString (this.face_name),
-				/**/				SerializerSupport.SerializeString (this.style_name));
+				/**/				SerializerSupport.SerializeString (this.style_name),
+				/**/				SerializerSupport.SerializeStringArray (this.features));
 		}
 		
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
@@ -84,6 +101,7 @@ namespace Epsitec.Common.Text.Properties
 			
 			this.face_name  = SerializerSupport.DeserializeString (args[0]);
 			this.style_name = SerializerSupport.DeserializeString (args[1]);
+			this.features   = SerializerSupport.DeserializeStringArray (args[2]);
 		}
 		
 		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
@@ -94,6 +112,8 @@ namespace Epsitec.Common.Text.Properties
 			FontProperty b = property as FontProperty;
 			FontProperty c = new FontProperty (b.FaceName == null ? a.FaceName : b.FaceName, b.StyleName == null ? a.StyleName : b.StyleName);
 			
+			//	TODO: gérer 'features'
+			
 			c.DefineVersion (System.Math.Max (a.Version, b.Version));
 			
 			return c;
@@ -103,6 +123,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			checksum.UpdateValue (this.face_name);
 			checksum.UpdateValue (this.style_name);
+			checksum.UpdateValue (this.features);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -114,12 +135,14 @@ namespace Epsitec.Common.Text.Properties
 		private static bool CompareEqualContents(FontProperty a, FontProperty b)
 		{
 			return a.face_name == b.face_name
-				&& a.style_name == b.style_name;
+				&& a.style_name == b.style_name
+				&& Types.Comparer.Equal (a.features, b.features);
 		}
 		
 		
 		private string							face_name;
 		private string							style_name;
+		private string[]						features;
 	}
 	
 	public enum FontStyle : byte

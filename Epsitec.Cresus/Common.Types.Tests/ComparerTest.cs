@@ -25,7 +25,7 @@ namespace Epsitec.Common.Types
 			
 			b = buffer.ToString ();
 			
-			Assert.IsTrue (a != b);
+			Assert.IsFalse (a == b);
 			Assert.IsTrue ((string)a == (string)b);
 			Assert.IsTrue (a.Equals (b));
 		}
@@ -50,6 +50,23 @@ namespace Epsitec.Common.Types
 			b = buffer.ToString ();
 			
 			Assert.IsTrue (Comparer.Equal (a, b));
+			
+			a = new string[] { "a", "b" };
+			b = new string[] { "a", "b" };
+			
+			Assert.IsFalse (System.Object.Equals (a, b));
+			Assert.IsTrue (Comparer.Equal (a, b));
+			
+			a = new string[2,2] { { "1", "2" }, { "3", "4" } };
+			b = new string[2,2] { { "1", "2" }, { "3", "4" } };
+			
+			Assert.IsFalse (System.Object.Equals (a, b));
+			Assert.IsTrue (Comparer.Equal (a, b));
+			
+			a = new string[2,2] { { "1", "2" }, { "3", "4" } };
+			b = new string[2,3] { { "1", "2", "X" }, { "3", "4", "Y" } };
+			
+			Assert.IsFalse (Comparer.Equal (a, b));
 		}
 	}
 }

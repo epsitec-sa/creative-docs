@@ -100,6 +100,15 @@ namespace Epsitec.Common.Text
 				this.font_cache[font_full] = font;
 			}
 			
+			if (font_p.Features == null)
+			{
+				font.SelectFeatures ();
+			}
+			else
+			{
+				font.SelectFeatures (font_p.Features);
+			}
+			
 			this.get_font_last_style_version = current_style_version;
 			this.get_font_last_code          = code;
 			this.get_font_last_font          = font;

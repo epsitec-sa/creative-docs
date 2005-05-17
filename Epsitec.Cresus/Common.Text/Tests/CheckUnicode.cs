@@ -10,11 +10,7 @@ namespace Epsitec.Common.Text.Tests
 	{
 		public static void RunTests()
 		{
-			Unicode.BreakAnalyzer analyzer = new Unicode.BreakAnalyzer ();
-			
-			System.Diagnostics.Debug.Write ("Loading line break information.");
-			analyzer.LoadFile (@"..\..\..\LineBreak.txt");
-			System.Diagnostics.Debug.Write ("Done.");
+			Unicode.BreakAnalyzer analyzer = Unicode.DefaultBreakAnalyzer;
 			
 			CheckUnicode.CheckText (analyzer, "ABC",			@"ABC");
 			CheckUnicode.CheckText (analyzer, "AB C",			@"AB *C");
@@ -23,9 +19,9 @@ namespace Epsitec.Common.Text.Tests
 			CheckUnicode.CheckText (analyzer, "AB :  C",		@"AB :  *C");
 			CheckUnicode.CheckText (analyzer, "AB\nC",			@"AB\n#C");
 			CheckUnicode.CheckText (analyzer, "AB  \u000c"+"C", "AB  \u000c"+"#C");
-			CheckUnicode.CheckText (analyzer, "AB  \r  \nC",	@"AB  \r#  \n#C");
-			CheckUnicode.CheckText (analyzer, "AB  \n\r  \nC",	@"AB  \n#\r#  \n#C");
-			CheckUnicode.CheckText (analyzer, "AB  \r\n  \nC",	@"AB  \r\n#  \n#C");
+			CheckUnicode.CheckText (analyzer, "AB  \u2028  \nC",	@"AB  \r#  \n#C");
+			CheckUnicode.CheckText (analyzer, "AB  \u2029\u2028  \nC",	@"AB  \n#\r#  \n#C");
+//-			CheckUnicode.CheckText (analyzer, "AB  \r\n  \nC",	@"AB  \r\n#  \n#C");
 			CheckUnicode.CheckText (analyzer, "readme.txt",		@"readme.*txt");
 			CheckUnicode.CheckText (analyzer, "100.000",		@"100.000");
 			CheckUnicode.CheckText (analyzer, "100,000",		@"100,000");
@@ -64,7 +60,9 @@ namespace Epsitec.Common.Text.Tests
 				
 				switch (c)
 				{
+					case '\u2028':
 					case '\r':	buffer.Append (@"\r");	break;
+					case '\u2029':
 					case '\n':	buffer.Append (@"\n");	break;
 					case '\t':	buffer.Append (@"\t");	break;
 					case '\\':	buffer.Append (@"\\");	break;

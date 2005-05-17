@@ -37,6 +37,8 @@ namespace Epsitec.Common.OpenType
 		
 		internal void Initialize(FontData font_data)
 		{
+			TableEntry entry;
+			
 			this.font_data = font_data;
 			
 			this.ot_GSUB = new Table_GSUB (this.font_data["GSUB"]);
@@ -46,6 +48,19 @@ namespace Epsitec.Common.OpenType
 			this.ot_head = new Table_head (this.font_data["head"]);
 			this.ot_hhea = new Table_hhea (this.font_data["hhea"]);
 			this.ot_hmtx = new Table_hmtx (this.font_data["hmtx"]);
+			
+			entry = this.font_data["kern"];
+			
+			if (entry != null)
+			{
+				Table_kern ot_kern = new Table_kern (entry);
+				
+				if ((ot_kern.Count > 0) &&
+					(ot_kern.GetKerningTable (0).SubtableFormat == 0))
+				{
+					this.ot_kern_fmt_0 = ot_kern.GetKerningTable (0).Format0Subtable;
+				}
+			}
 			
 			this.ot_index_mapping = this.ot_cmap.FindFormatSubTable ();
 		}
@@ -190,8 +205,9 @@ namespace Epsitec.Common.OpenType
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
 			
-			double scale   = size / this.ot_head.UnitsPerEm;
-			int    advance = 0;
+			double scale      = size / this.ot_head.UnitsPerEm;
+			int    advance    = 0;
+			ushort prev_glyph = 0xffff;
 			
 			for (int i = 0; i < glyphs.Length; i++)
 			{
@@ -208,6 +224,8 @@ namespace Epsitec.Common.OpenType
 						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
 					}
 				}
+				
+				this.ApplyKerningInformation (glyph, ref prev_glyph, ref advance, num_glyph);
 			}
 			
 			return advance * scale;
@@ -220,8 +238,9 @@ namespace Epsitec.Common.OpenType
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
 			
-			double scale   = size / this.ot_head.UnitsPerEm;
-			int    advance = 0;
+			double scale      = size / this.ot_head.UnitsPerEm;
+			int    advance    = 0;
+			ushort prev_glyph = 0xffff;
 			
 			for (int i = 0; i < glyphs.Length; i++)
 			{
@@ -240,6 +259,8 @@ namespace Epsitec.Common.OpenType
 						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
 					}
 				}
+				
+				this.ApplyKerningInformation (glyph, ref prev_glyph, ref advance, num_glyph);
 			}
 			
 			return advance * scale;
@@ -252,8 +273,9 @@ namespace Epsitec.Common.OpenType
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
 			
-			double scale   = size / this.ot_head.UnitsPerEm;
-			double advance = 0;
+			double scale      = size / this.ot_head.UnitsPerEm;
+			double advance    = 0;
+			ushort prev_glyph = 0xffff;
 			
 			for (int i = 0; i < glyphs.Length; i++)
 			{
@@ -272,6 +294,13 @@ namespace Epsitec.Common.OpenType
 						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1) * x_scale[i] * scale;
 					}
 				}
+				
+				int int_advance = 0;
+				
+				if (this.ApplyKerningInformation (glyph, ref prev_glyph, ref int_advance, num_glyph))
+				{
+					advance += int_advance * x_scale[i] * scale;
+				}
 			}
 			
 			return advance;
@@ -284,8 +313,9 @@ namespace Epsitec.Common.OpenType
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
 			
-			double scale   = size / this.ot_head.UnitsPerEm;
-			int    advance = 0;
+			double scale      = size / this.ot_head.UnitsPerEm;
+			int    advance    = 0;
+			ushort prev_glyph = 0xffff;
 			
 			for (int i = 0; i < glyphs.Length; i++)
 			{
@@ -305,6 +335,8 @@ namespace Epsitec.Common.OpenType
 						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
 					}
 				}
+				
+				this.ApplyKerningInformation (glyph, ref prev_glyph, ref advance, num_glyph);
 			}
 			
 			return advance * scale;
@@ -444,6 +476,15 @@ namespace Epsitec.Common.OpenType
 			else
 			{
 				this.map_default_ligatures = false;
+			}
+			
+			if (active_names.Contains ("kern"))
+			{
+				this.use_kerning = true;
+			}
+			else
+			{
+				this.use_kerning = false;
 			}
 			
 			if (this.script_required_feature != null)
@@ -902,6 +943,27 @@ namespace Epsitec.Common.OpenType
 			output_length = output_offset;
 		}
 		
+		private bool ApplyKerningInformation(ushort glyph, ref ushort prev_glyph, ref int advance, int num_glyph)
+		{
+			int adjust;
+			
+			if ((this.use_kerning) &&
+				(glyph < num_glyph) &&
+				(prev_glyph < num_glyph) &&
+				(this.ot_kern_fmt_0 != null) &&
+				(this.ot_kern_fmt_0.FindKernValue (prev_glyph, glyph, out adjust)))
+			{
+				advance += adjust;
+				prev_glyph = glyph;
+				return true;
+			}
+			else
+			{
+				prev_glyph = glyph;
+				return false;
+			}
+		}
+		
 		
 		private bool HitTest(ushort[] glyphs, int[] gl_map, double size, int pos, out double x, out double y)
 		{
@@ -912,8 +974,9 @@ namespace Epsitec.Common.OpenType
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
 			
-			int advance  = 0;
-			int distance = 0;
+			int    advance    = 0;
+			int    distance   = 0;
+			ushort prev_glyph = 0xffff;
 			
 			for (int i = 0; i < glyphs.Length; i++)
 			{
@@ -954,6 +1017,8 @@ namespace Epsitec.Common.OpenType
 				
 				distance += 1;
 				distance += gl_map[i];
+				
+				this.ApplyKerningInformation (glyph, ref prev_glyph, ref advance, num_glyph);
 			}
 			
 			x = advance * scale;
@@ -1127,6 +1192,7 @@ namespace Epsitec.Common.OpenType
 		private Table_head						ot_head;
 		private Table_hhea						ot_hhea;
 		private Table_hmtx						ot_hmtx;
+		private KerningTableFormat0				ot_kern_fmt_0;
 		private IndexMappingTable				ot_index_mapping;
 		
 		private string							active_script;
@@ -1134,6 +1200,7 @@ namespace Epsitec.Common.OpenType
 		private string							active_features;
 		
 		private bool							map_default_ligatures;
+		private bool							use_kerning;
 		private bool							use_system_glyph_size;
 		
 		private TaggedFeatureTable				script_required_feature;

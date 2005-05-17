@@ -1438,7 +1438,7 @@ namespace Epsitec.Common.OpenType
 		
 		public int GetKernValue(int n)
 		{
-			return this.ReadInt16 (18+n*6);
+			return (short) this.ReadInt16 (18+n*6);
 		}
 		
 		public bool FindKernValue(int left, int right, out int value)
