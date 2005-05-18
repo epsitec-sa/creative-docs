@@ -56,7 +56,7 @@ namespace Epsitec.Common.Widgets
 			this.buttonOption.GlyphShape = GlyphShape.ArrowLeft;
 			this.buttonOption.ButtonStyle = ButtonStyle.Normal;
 			this.buttonOption.Clicked += new MessageEventHandler(this.HandleButtonOptionClicked);
-			ToolTip.Default.SetToolTip(this.buttonOption, "Options");
+			ToolTip.Default.SetToolTip(this.buttonOption, Res.Strings.ColorPalette.Options);
 		}
 		
 		public ColorPalette(Widget embedder) : this()
@@ -281,11 +281,11 @@ namespace Epsitec.Common.Widgets
 
 			VMenu menu = new VMenu();
 			menu.Host = this;
-			menu.Items.Add(new MenuItem("NewPaletteDefault", "", "Palette standard",    ""));
-			menu.Items.Add(new MenuItem("NewPaletteRainbow", "", "Palette arc-en-ciel", ""));
-			menu.Items.Add(new MenuItem("NewPaletteLight",   "", "Palette pastel",      ""));
-			menu.Items.Add(new MenuItem("NewPaletteDark",    "", "Palette foncée",      ""));
-			menu.Items.Add(new MenuItem("NewPaletteGray",    "", "Palette monochrome",  ""));
+			menu.Items.Add(new MenuItem("NewPaletteDefault", "", Res.Strings.ColorPalette.PaletteDefault, ""));
+			menu.Items.Add(new MenuItem("NewPaletteRainbow", "", Res.Strings.ColorPalette.PaletteRainbow, ""));
+			menu.Items.Add(new MenuItem("NewPaletteLight",   "", Res.Strings.ColorPalette.PaletteLight,   ""));
+			menu.Items.Add(new MenuItem("NewPaletteDark",    "", Res.Strings.ColorPalette.PaletteDark,    ""));
+			menu.Items.Add(new MenuItem("NewPaletteGray",    "", Res.Strings.ColorPalette.PaletteGray,    ""));
 			menu.Items.Add(new MenuSeparator());
 			menu.Items.Add(new MenuItem("OpenPalette", "", Res.Strings.ColorPalette.OpenPalette, ""));
 			menu.Items.Add(new MenuItem("SavePalette", "", Res.Strings.ColorPalette.SavePalette, ""));

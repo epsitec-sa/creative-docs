@@ -57,30 +57,30 @@ namespace Epsitec.Common.Widgets
 			this.fields[1].Color = Drawing.Color.FromRGB(0,1,0);
 			this.fields[2].Color = Drawing.Color.FromRGB(0,0,1);
 			this.fields[3].Color = Drawing.Color.FromRGB(0.5,0.5,0.5);
-			ToolTip.Default.SetToolTip(this.fields[0], "Rouge");
-			ToolTip.Default.SetToolTip(this.fields[1], "Vert");
-			ToolTip.Default.SetToolTip(this.fields[2], "Bleu");
-			ToolTip.Default.SetToolTip(this.fields[3], "Alpha (transparence)");
+			ToolTip.Default.SetToolTip(this.fields[0], Res.Strings.ColorSelector.LongRed);
+			ToolTip.Default.SetToolTip(this.fields[1], Res.Strings.ColorSelector.LongGreen);
+			ToolTip.Default.SetToolTip(this.fields[2], Res.Strings.ColorSelector.LongBlue);
+			ToolTip.Default.SetToolTip(this.fields[3], Res.Strings.ColorSelector.LongAlpha);
 
 			this.fields[4].Color = Drawing.Color.FromRGB(0,0,0);
 			this.fields[4].BackColor = Drawing.Color.FromRGB(0.5,0.5,0.5);
-			ToolTip.Default.SetToolTip(this.fields[4], "Teinte");
+			ToolTip.Default.SetToolTip(this.fields[4], Res.Strings.ColorSelector.LongHue);
 
 			this.fields[5].Color = Drawing.Color.FromRGB(0,0,0);
 			this.fields[5].BackColor = Drawing.Color.FromRGB(1,1,1);
-			ToolTip.Default.SetToolTip(this.fields[5], "Saturation");
+			ToolTip.Default.SetToolTip(this.fields[5], Res.Strings.ColorSelector.LongSaturation);
 			
 			this.fields[6].Color = Drawing.Color.FromRGB(1,1,1);
 			this.fields[6].BackColor = Drawing.Color.FromRGB(0,0,0);
-			ToolTip.Default.SetToolTip(this.fields[6], "Luminosité");
+			ToolTip.Default.SetToolTip(this.fields[6], Res.Strings.ColorSelector.LongValue);
 
-			this.labels[0].Text = "R";
-			this.labels[1].Text = "V";
-			this.labels[2].Text = "B";
-			this.labels[3].Text = "A";
-			this.labels[4].Text = "T";
-			this.labels[5].Text = "S";
-			this.labels[6].Text = "L";
+			this.labels[0].Text = Res.Strings.ColorSelector.ShortRed;
+			this.labels[1].Text = Res.Strings.ColorSelector.ShortGreen;
+			this.labels[2].Text = Res.Strings.ColorSelector.ShortBlue;
+			this.labels[3].Text = Res.Strings.ColorSelector.ShortAlpha;
+			this.labels[4].Text = Res.Strings.ColorSelector.ShortHue;
+			this.labels[5].Text = Res.Strings.ColorSelector.ShortSaturation;
+			this.labels[6].Text = Res.Strings.ColorSelector.ShortValue;
 
 			this.circle = new ColorWheel(this);
 			this.circle.Changed += new Support.EventHandler(this.HandleCircleChanged);
@@ -92,13 +92,13 @@ namespace Epsitec.Common.Widgets
 
 			this.picker = new Tools.Magnifier.DragSource(this);
 			this.picker.HotColorChanged += new Support.EventHandler(this.HandlePickerHotColorChanged);
-			ToolTip.Default.SetToolTip(this.picker, "Pipette-loupe");
+			ToolTip.Default.SetToolTip(this.picker, Res.Strings.ColorSelector.Picker);
 
 			this.buttonClose = new GlyphButton(this);
 			this.buttonClose.GlyphShape = GlyphShape.Close;
 			this.buttonClose.ButtonStyle = ButtonStyle.Normal;
 			this.buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-			ToolTip.Default.SetToolTip(this.buttonClose, "Fermer ce panneau");
+			ToolTip.Default.SetToolTip(this.buttonClose, Res.Strings.ColorSelector.Close);
 		}
 		
 		public ColorSelector(Widget embedder) : this()

@@ -722,14 +722,14 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			string name = "Modification du texte";
+			string name = Res.Strings.TextNavigator.Action.Modify;
 			switch ( type )
 			{
-				case UndoType.Insert:           name = "Insertion de caractères";  break;
-				case UndoType.Delete:           name = "Suppression de caractères";  break;
+				case UndoType.Insert:           name = Res.Strings.TextNavigator.Action.Insert;  break;
+				case UndoType.Delete:           name = Res.Strings.TextNavigator.Action.Delete;  break;
 				case UndoType.AutonomusStyle:
-				case UndoType.CascadableStyle:  name = "Changement de style du texte";  break;
-				case UndoType.Tab:              name = "Modification d'un tabulateur";  break;
+				case UndoType.CascadableStyle:  name = Res.Strings.TextNavigator.Action.Style;   break;
+				case UndoType.Tab:              name = Res.Strings.TextNavigator.Action.Tab;     break;
 			}
 
 			using ( this.undoQueue.BeginAction(name) )

@@ -714,24 +714,24 @@ namespace Epsitec.Common.Widgets
 
 			mi = new MenuItem();
 			mi.Name = "Cut";
-			mi.Text = "Couper";
+			mi.Text = Res.Strings.AbstractTextField.Menu.Cut;
 			mi.SetEnabled(sel);
 			this.contextMenu.Items.Add(mi);
 
 			mi = new MenuItem();
 			mi.Name = "Copy";
-			mi.Text = "Copier";
+			mi.Text = Res.Strings.AbstractTextField.Menu.Copy;
 			mi.SetEnabled(sel);
 			this.contextMenu.Items.Add(mi);
 
 			mi = new MenuItem();
 			mi.Name = "Paste";
-			mi.Text = "Coller";
+			mi.Text = Res.Strings.AbstractTextField.Menu.Paste;
 			this.contextMenu.Items.Add(mi);
 
 			mi = new MenuItem();
 			mi.Name = "Erase";
-			mi.Text = "Supprimer";
+			mi.Text = Res.Strings.AbstractTextField.Menu.Erase;
 			mi.SetEnabled(sel);
 			this.contextMenu.Items.Add(mi);
 
@@ -739,7 +739,7 @@ namespace Epsitec.Common.Widgets
 
 			mi = new MenuItem();
 			mi.Name = "SelectAll";
-			mi.Text = "Sélectionner tout";
+			mi.Text = Res.Strings.AbstractTextField.Menu.SelectAll;
 			this.contextMenu.Items.Add(mi);
 
 			this.contextMenu.AdjustSize();

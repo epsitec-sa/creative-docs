@@ -1247,15 +1247,15 @@ namespace Epsitec.Common.Widgets
 					AbstractToolBar toolbar = header.ToolBar;
 					
 					toolbar.SuspendLayout ();
-					toolbar.Items.Add (this.CreateIconButton ("StartReadOnly", "manifest:Epsitec.Common.Widgets.Images.TableReadOnly.icon", "Consultation uniquement"));
-					toolbar.Items.Add (this.CreateIconButton ("StartEdition",  "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",  "Modifie les données", KeyCode.FuncF2));
-					toolbar.Items.Add (this.CreateIconButton ("StartSearch",   "manifest:Epsitec.Common.Widgets.Images.TableSearch.icon",   "Démarre une recherche", KeyCode.ModifierControl | KeyCode.AlphaF));
+					toolbar.Items.Add (this.CreateIconButton ("StartReadOnly", "manifest:Epsitec.Common.Widgets.Images.TableReadOnly.icon", Res.Strings.EditArray.StartReadOnly));
+					toolbar.Items.Add (this.CreateIconButton ("StartEdition",  "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",  Res.Strings.EditArray.StartEdition, KeyCode.FuncF2));
+					toolbar.Items.Add (this.CreateIconButton ("StartSearch",   "manifest:Epsitec.Common.Widgets.Images.TableSearch.icon",   Res.Strings.EditArray.StartSearch, KeyCode.ModifierControl | KeyCode.AlphaF));
 					toolbar.Items.Add (new IconSeparator ());
-					toolbar.Items.Add (this.CreateIconButton ("InsertBefore",  "manifest:Epsitec.Common.Widgets.Images.InsertBeforeCell.icon", "Insère une ligne avant"));
-					toolbar.Items.Add (this.CreateIconButton ("InsertAfter",   "manifest:Epsitec.Common.Widgets.Images.InsertAfterCell.icon",  "Insère une ligne après"));
-					toolbar.Items.Add (this.CreateIconButton ("Delete",        "manifest:Epsitec.Common.Widgets.Images.DeleteCell.icon",       "Supprime une ligne", KeyCode.Delete));
-					toolbar.Items.Add (this.CreateIconButton ("MoveUp",        "manifest:Epsitec.Common.Widgets.Images.MoveUpCell.icon",       "Déplace la ligne vers le haut"));
-					toolbar.Items.Add (this.CreateIconButton ("MoveDown",      "manifest:Epsitec.Common.Widgets.Images.MoveDownCell.icon",     "Déplace la ligne vers le bas"));
+					toolbar.Items.Add (this.CreateIconButton ("InsertBefore",  "manifest:Epsitec.Common.Widgets.Images.InsertBeforeCell.icon", Res.Strings.EditArray.InsertBefore));
+					toolbar.Items.Add (this.CreateIconButton ("InsertAfter",   "manifest:Epsitec.Common.Widgets.Images.InsertAfterCell.icon",  Res.Strings.EditArray.InsertAfter));
+					toolbar.Items.Add (this.CreateIconButton ("Delete",        "manifest:Epsitec.Common.Widgets.Images.DeleteCell.icon",       Res.Strings.EditArray.Delete, KeyCode.Delete));
+					toolbar.Items.Add (this.CreateIconButton ("MoveUp",        "manifest:Epsitec.Common.Widgets.Images.MoveUpCell.icon",       Res.Strings.EditArray.MoveUp));
+					toolbar.Items.Add (this.CreateIconButton ("MoveDown",      "manifest:Epsitec.Common.Widgets.Images.MoveDownCell.icon",     Res.Strings.EditArray.MoveDown));
 					toolbar.ResumeLayout ();
 				}
 				

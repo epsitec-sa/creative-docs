@@ -22,14 +22,14 @@ namespace Epsitec.Common.Widgets
 			this.buttonTab = new GlyphButton(this);
 			this.buttonTab.AutoFocus = false;
 			this.buttonTab.Clicked += new MessageEventHandler(this.HandleButtonTabClicked);
-			ToolTip.Default.SetToolTip(this.buttonTab, "Choix du type de tabulateur");
+			ToolTip.Default.SetToolTip(this.buttonTab, Res.Strings.TextRuler.Tab);
 
 			this.fieldFontName = new TextFieldCombo(this);
 			this.fieldFontName.AutoFocus = false;
 			this.fieldFontName.IsReadOnly = true;
 			this.UpdateFieldFontName();
 			this.fieldFontName.SelectedIndexChanged += new Support.EventHandler(this.HandleFieldFontNameChanged);
-			ToolTip.Default.SetToolTip(this.fieldFontName, "Police de caractères");
+			ToolTip.Default.SetToolTip(this.fieldFontName, Res.Strings.TextRuler.FontName);
 
 			this.fieldFontScale = new TextFieldUpDown(this);
 			this.fieldFontScale.AutoFocus = false;
@@ -39,52 +39,52 @@ namespace Epsitec.Common.Widgets
 			this.fieldFontScale.Resolution = 1.0M;
 			this.fieldFontScale.TextSuffix = "%";
 			this.fieldFontScale.ValueChanged += new Support.EventHandler(this.HandleFieldFontScaleChanged);
-			ToolTip.Default.SetToolTip(this.fieldFontScale, "Taille en pourcents");
+			ToolTip.Default.SetToolTip(this.fieldFontScale, Res.Strings.TextRuler.FontSize);
 
 			this.buttonBold = new IconButton(this);
 			this.buttonBold.AutoFocus = false;
-			this.buttonBold.Text = "<b>G</b>";
+			this.buttonBold.Text = Res.Strings.TextRuler.ButtonBold;
 			this.buttonBold.Clicked += new MessageEventHandler(this.HandleButtonBoldClicked);
-			ToolTip.Default.SetToolTip(this.buttonBold, "Gras");
+			ToolTip.Default.SetToolTip(this.buttonBold, Res.Strings.TextRuler.Bold);
 
 			this.buttonItalic = new IconButton(this);
 			this.buttonItalic.AutoFocus = false;
-			this.buttonItalic.Text = "<i>I</i>";
+			this.buttonItalic.Text = Res.Strings.TextRuler.ButtonItalic;
 			this.buttonItalic.Clicked += new MessageEventHandler(this.HandleButtonItalicClicked);
-			ToolTip.Default.SetToolTip(this.buttonItalic, "Italique");
+			ToolTip.Default.SetToolTip(this.buttonItalic, Res.Strings.TextRuler.Italic);
 
 			this.buttonUnderlined = new IconButton(this);
 			this.buttonUnderlined.AutoFocus = false;
-			this.buttonUnderlined.Text = "<u>S</u>";
+			this.buttonUnderlined.Text = Res.Strings.TextRuler.ButtonUnderlined;
 			this.buttonUnderlined.Clicked += new MessageEventHandler(this.HandleButtonUnderlinedClicked);
-			ToolTip.Default.SetToolTip(this.buttonUnderlined, "Souligné");
+			ToolTip.Default.SetToolTip(this.buttonUnderlined, Res.Strings.TextRuler.Underlined);
 
 			this.fieldFontColor = new TextFieldCombo(this);
 			this.fieldFontColor.AutoFocus = false;
 			this.fieldFontColor.IsReadOnly = true;
-			this.fieldFontColor.Items.Add("Par défaut...");
-			this.fieldFontColor.Items.Add("Noir");
-			this.fieldFontColor.Items.Add("Rouge");
-			this.fieldFontColor.Items.Add("Bleu");
-			this.fieldFontColor.Items.Add("Magenta");
-			this.fieldFontColor.Items.Add("Vert");
-			this.fieldFontColor.Items.Add("Cyan");
-			this.fieldFontColor.Items.Add("Jaune");
-			this.fieldFontColor.Items.Add("Blanc");
+			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Default);
+			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Black);
+			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Red);
+			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Blue);
+			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Purple);
+			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Green);
+			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Cyan);
+			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Yellow);
+			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.White);
 			this.fieldFontColor.SelectedIndexChanged += new Support.EventHandler(this.HandleFieldFontColorChanged);
-			ToolTip.Default.SetToolTip(this.fieldFontColor, "Couleur");
+			ToolTip.Default.SetToolTip(this.fieldFontColor, Res.Strings.TextRuler.Color.List);
 
 			this.buttonListNum = new IconButton(this);
 			this.buttonListNum.AutoFocus = false;
 			this.buttonListNum.IconName = @"manifest:Epsitec.Common.Widgets.Images.RulerListNum.icon";
 			this.buttonListNum.Clicked += new MessageEventHandler(this.HandleButtonListNumClicked);
-			ToolTip.Default.SetToolTip(this.buttonListNum, "Numérotation");
+			ToolTip.Default.SetToolTip(this.buttonListNum, Res.Strings.TextRuler.ListNum);
 
 			this.buttonListFix = new IconButton(this);
 			this.buttonListFix.AutoFocus = false;
 			this.buttonListFix.IconName = @"manifest:Epsitec.Common.Widgets.Images.RulerListFix.icon";
 			this.buttonListFix.Clicked += new MessageEventHandler(this.HandleButtonListFixClicked);
-			ToolTip.Default.SetToolTip(this.buttonListFix, "Puces");
+			ToolTip.Default.SetToolTip(this.buttonListFix, Res.Strings.TextRuler.ListFix);
 
 			this.manualToolTip = new ToolTip();
 			this.manualToolTip.Behaviour = ToolTipBehaviour.Manual;
@@ -688,11 +688,11 @@ namespace Epsitec.Common.Widgets
 			if ( this.DetectTabZone(pos) )
 			{
 				double value = this.ScreenToTab(pos.X);
-				text = string.Format("{0} {1}", (value/this.ppm).ToString("F2"), "mm");
+				text = string.Format("{0} {1}", (value/this.ppm).ToString("F2"), Res.Strings.TextRuler.Tooltip.Unit);
 			}
 			else
 			{
-				text = "Supprimé";
+				text = Res.Strings.TextRuler.Tooltip.Deleted;
 			}
 			return text;
 		}
@@ -1200,7 +1200,7 @@ namespace Epsitec.Common.Widgets
 		protected void UpdateFieldFontName()
 		{
 			this.fieldFontName.Items.Clear();
-			this.fieldFontName.Items.Add("Par défaut...");
+			this.fieldFontName.Items.Add(Res.Strings.TextRuler.FontDefault);
 
 			if ( this.allFonts )
 			{
