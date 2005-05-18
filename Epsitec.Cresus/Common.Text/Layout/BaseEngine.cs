@@ -98,24 +98,30 @@ namespace Epsitec.Common.Text.Layout
 		
 		public static ushort[] GenerateGlyphs (OpenType.Font font, ulong[] text, int offset, int length)
 		{
-			ushort[] glyphs = font.GenerateGlyphs (text, offset, length);
+			ushort[] glyphs;
 			
-			BaseEngine.FilterControlCodes (text, offset, length, glyphs);
+			BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, null);
 			
 			return glyphs;
 		}
 		
-		public static void FilterControlCodes (ulong[] text, int offset, int length, ushort[] glyphs)
+		public static void GenerateGlyphs(OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, byte[] attributes)
 		{
+			ulong[] temp = new ulong[length];
+			
+			System.Buffer.BlockCopy (text, offset * 8, temp, 0, length * 8);
+			
 			Unicode.BreakAnalyzer analyzer = Unicode.DefaultBreakAnalyzer;
 			
 			for (int i = 0; i < length; i++)
 			{
-				if (analyzer.IsControl (Unicode.Bits.GetCode (text[offset+i])))
+				if (analyzer.IsControl (Unicode.Bits.GetCode (temp[i])))
 				{
-					glyphs[i] = 0xffff;
+					temp[i] &= ~ Unicode.Bits.CodeMask;
 				}
 			}
+			
+			font.GenerateGlyphs (temp, offset, length, out glyphs, attributes);
 		}
 		
 		#region IDisposable Members

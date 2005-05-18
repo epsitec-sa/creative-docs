@@ -28,20 +28,27 @@ namespace Epsitec.Common.Drawing
 			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 			ulong[] text;
 			string words;
+			string[] features = new string[] { /*"kern", "dlig", "liga"*/ };
 			
+			Text.Properties.FontProperty fp;
 			properties.Clear ();
-			properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
+			fp = new Text.Properties.FontProperty ("Arial", "Regular");
+			fp.Features = features;
+			
+			properties.Add (fp);
 			properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
 			properties.Add (new Text.Properties.MarginsProperty (100, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
 			
-			words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite.\n_________________\n";
+			words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n___________\n";
 			
 			painter.TextStory.ConvertToStyledText (words, properties, out text);
 			painter.TextStory.InsertText (cursor, text);
 			
-			
 			properties.Clear ();
-			properties.Add (new Text.Properties.FontProperty ("Palatino Linotype", "Regular"));
+			fp = new Text.Properties.FontProperty ("Palatino Linotype", "Regular");
+			fp.Features = features;
+			
+			properties.Add (fp);
 			properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.FontSizeUnits.Points));
 			properties.Add (new Text.Properties.MarginsProperty (40, 10, 10, 10, 1.0, 0.0, 0.0, 15, 1, false));
 			
@@ -50,7 +57,10 @@ namespace Epsitec.Common.Drawing
 			
 			
 			properties.Clear ();
-			properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
+			fp = new Text.Properties.FontProperty ("Arial", "Regular");
+			fp.Features = features;
+			
+			properties.Add (fp);
 			properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
 			properties.Add (new Text.Properties.MarginsProperty (0, 20, 0, 0, 1.0, 1.0, 0.0, 15, 1, false));
 			

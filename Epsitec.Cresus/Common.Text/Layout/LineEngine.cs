@@ -359,15 +359,13 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				text[end]       = hyphen;
 				attributes[end] = Unicode.BreakAnalyzer.GetStretchClass (hyphen);
 				
-				font.GenerateGlyphs (text, offset, length, out glyphs, attributes);
-				BaseEngine.FilterControlCodes (text, offset, length, glyphs);
+				BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, attributes);
 				
 				text[end] = old;
 			}
 			else
 			{
-				font.GenerateGlyphs (text, offset, length, out glyphs, attributes);
-				BaseEngine.FilterControlCodes (text, offset, length, glyphs);
+				BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, attributes);
 			}
 			
 			//	Détermine les mises à l'échelle des divers glyphes, selon leur

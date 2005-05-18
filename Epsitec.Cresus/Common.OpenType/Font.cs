@@ -144,15 +144,18 @@ namespace Epsitec.Common.OpenType
 			
 			length = glyphs.Length;
 			
-			int src = 0;
-			int dst = 0;
-			
-			for (int i = 0; i < length; i++)
+			if (attributes != null)
 			{
-				attributes[dst] = attributes[src];
+				int src = 0;
+				int dst = 0;
 				
-				dst += 1;
-				src += gl_map[i] + 1;
+				for (int i = 0; i < length; i++)
+				{
+					attributes[dst] = attributes[src];
+					
+					dst += 1;
+					src += gl_map[i] + 1;
+				}
 			}
 		}
 		
@@ -212,6 +215,12 @@ namespace Epsitec.Common.OpenType
 			for (int i = 0; i < glyphs.Length; i++)
 			{
 				ushort glyph = glyphs[i];
+				int    delta;
+				
+				if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+				{
+					advance += delta;
+				}
 				
 				if (glyph < num_glyph)
 				{
@@ -224,8 +233,6 @@ namespace Epsitec.Common.OpenType
 						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
 					}
 				}
-				
-				this.ApplyKerningInformation (glyph, ref prev_glyph, ref advance, num_glyph);
 			}
 			
 			return advance * scale;
@@ -245,6 +252,12 @@ namespace Epsitec.Common.OpenType
 			for (int i = 0; i < glyphs.Length; i++)
 			{
 				ushort glyph = glyphs[i];
+				int    delta;
+				
+				if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+				{
+					advance  += delta;
+				}
 				
 				x_pos[i] = ox + advance * scale;
 				
@@ -259,8 +272,6 @@ namespace Epsitec.Common.OpenType
 						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
 					}
 				}
-				
-				this.ApplyKerningInformation (glyph, ref prev_glyph, ref advance, num_glyph);
 			}
 			
 			return advance * scale;
@@ -280,6 +291,12 @@ namespace Epsitec.Common.OpenType
 			for (int i = 0; i < glyphs.Length; i++)
 			{
 				ushort glyph = glyphs[i];
+				int    delta;
+				
+				if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+				{
+					advance  += delta * x_scale[i] * scale;
+				}
 				
 				x_pos[i] = ox + advance;
 				
@@ -293,13 +310,6 @@ namespace Epsitec.Common.OpenType
 					{
 						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1) * x_scale[i] * scale;
 					}
-				}
-				
-				int int_advance = 0;
-				
-				if (this.ApplyKerningInformation (glyph, ref prev_glyph, ref int_advance, num_glyph))
-				{
-					advance += int_advance * x_scale[i] * scale;
 				}
 			}
 			
@@ -320,6 +330,12 @@ namespace Epsitec.Common.OpenType
 			for (int i = 0; i < glyphs.Length; i++)
 			{
 				ushort glyph = glyphs[i];
+				int    delta;
+				
+				if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+				{
+					advance  += delta;
+				}
 				
 				x_pos[i] = ox + advance * scale;
 				y_pos[i] = oy;
@@ -335,8 +351,6 @@ namespace Epsitec.Common.OpenType
 						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
 					}
 				}
-				
-				this.ApplyKerningInformation (glyph, ref prev_glyph, ref advance, num_glyph);
 			}
 			
 			return advance * scale;
@@ -943,22 +957,20 @@ namespace Epsitec.Common.OpenType
 			output_length = output_offset;
 		}
 		
-		private bool ApplyKerningInformation(ushort glyph, ref ushort prev_glyph, ref int advance, int num_glyph)
+		private bool ApplyKerningInformation(ushort glyph, ref ushort prev_glyph, int num_glyph, out int delta)
 		{
-			int adjust;
-			
 			if ((this.use_kerning) &&
 				(glyph < num_glyph) &&
 				(prev_glyph < num_glyph) &&
 				(this.ot_kern_fmt_0 != null) &&
-				(this.ot_kern_fmt_0.FindKernValue (prev_glyph, glyph, out adjust)))
+				(this.ot_kern_fmt_0.FindKernValue (prev_glyph, glyph, out delta)))
 			{
-				advance += adjust;
 				prev_glyph = glyph;
 				return true;
 			}
 			else
 			{
+				delta      = 0;
 				prev_glyph = glyph;
 				return false;
 			}
@@ -981,6 +993,12 @@ namespace Epsitec.Common.OpenType
 			for (int i = 0; i < glyphs.Length; i++)
 			{
 				ushort glyph = glyphs[i];
+				int    delta;
+				
+				if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+				{
+					advance += delta;
+				}
 				
 				if ((distance <= pos) &&
 					(distance+gl_map[i] >= pos))
@@ -1017,8 +1035,6 @@ namespace Epsitec.Common.OpenType
 				
 				distance += 1;
 				distance += gl_map[i];
-				
-				this.ApplyKerningInformation (glyph, ref prev_glyph, ref advance, num_glyph);
 			}
 			
 			x = advance * scale;

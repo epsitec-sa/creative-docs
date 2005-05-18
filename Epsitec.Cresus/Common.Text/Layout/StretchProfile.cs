@@ -227,8 +227,7 @@ namespace Epsitec.Common.Text.Layout
 				attributes[i] = (byte) Unicode.BreakAnalyzer.GetStretchClass (Unicode.Bits.GetCode (text[i]));
 			}
 			
-			font.GenerateGlyphs (text, offset, length, out glyphs, attributes);
-			BaseEngine.FilterControlCodes (text, offset, length, glyphs);
+			BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, attributes);
 			
 			int      count = glyphs.Length;
 			double[] x_pos = new double[count];

@@ -729,7 +729,14 @@ namespace Epsitec.Common.OpenType
 		
 		public override ushort GetGlyphIndex(int n)
 		{
-			return (ushort) this.ReadInt8 (6+n);
+			if (n == 0)
+			{
+				return 0xffff;
+			}
+			else
+			{
+				return (ushort) this.ReadInt8 (6+n);
+			}
 		}
 	}
 	
@@ -783,6 +790,11 @@ namespace Epsitec.Common.OpenType
 		
 		public override ushort GetGlyphIndex(int n)
 		{
+			if (n == 0)
+			{
+				return 0xffff;
+			}
+			
 			int code = (int) n;
 			
 			int max = (int) this.SegCountX2;
@@ -865,6 +877,11 @@ namespace Epsitec.Common.OpenType
 		
 		public override ushort GetGlyphIndex(int n)
 		{
+			if (n == 0)
+			{
+				return 0xffff;
+			}
+			
 			int code = (int) n;
 			
 			int max = (int) this.NumGroups;
