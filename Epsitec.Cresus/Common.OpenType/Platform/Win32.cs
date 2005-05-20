@@ -1,3 +1,6 @@
+//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -34,6 +37,16 @@ namespace Epsitec.Common.OpenType.Platform
 			public int			A; 
 			public int			B; 
 			public int			C; 
+		}
+		#endregion
+		
+		#region Win32 Rect Structure
+		[StructLayout(LayoutKind.Sequential, Pack=1)] public struct Rect
+		{
+			public int Left;
+			public int Top;
+			public int Right;
+			public int Bottom;
 		}
 		#endregion
 		
@@ -158,7 +171,18 @@ namespace Epsitec.Common.OpenType.Platform
 		[DllImport ("user32.dll")] static extern void ReleaseDC(IntPtr hwnd, IntPtr hdc);
 		[DllImport ("gdi32.dll")] static extern bool GetCharABCWidthsI(IntPtr hdc, int first, int count, [In] ushort[] indices, [Out] ABC [] buffer);
 		[DllImport ("gdi32.dll", CharSet=CharSet.Unicode)] static extern bool GetTextMetrics(IntPtr hdc, [Out] TextMetric buffer);
+		[DllImport ("gdi32.dll", CharSet=CharSet.Unicode)] static extern bool ExtTextOut(IntPtr hdc, int x, int y, int options, [In, MarshalAs(UnmanagedType.LPStruct)] Rect rect, [In] ushort[] text, int count, [In] int[] dx);
+		[DllImport ("gdi32.dll", CharSet=CharSet.Unicode)] static extern bool ExtTextOut(IntPtr hdc, int x, int y, int options, System.IntPtr rect, [In] ushort[] text, int count, [In] int[] dx);
 		#endregion
+		
+		[Flags] public enum ExtTextOutOptions
+		{
+			Grayed		= 0x0001,
+			Opaque		= 0x0002,
+			Clipped		= 0x0004,
+			GlyphIndex	= 0x0010,
+			PairDxDy	= 0x2000
+		}
 		
 		#region Win32 Callback Procedures
 		delegate int EnumFontFamExProc(EnumLogFontEx log_font_ex, NewTextMetricEx text_metrics, int font_type, IntPtr lParam);
@@ -361,6 +385,46 @@ namespace Epsitec.Common.OpenType.Platform
 		}
 		#endregion
 		
+		
+		public static void ExtendedTextOut(IntPtr hdc, ushort[] glyphs, double[] x, double[] y)
+		{
+			int[]    pairs = new int[glyphs.Length * 2];
+			ushort[] text  = new ushort[glyphs.Length];
+			int      count = 0;
+			
+			int ox = (int) x[0];
+			int oy = (int) y[0];
+			
+			int last_x = ox;
+			int last_y = oy;
+			
+			for (int i = 0; i < glyphs.Length; i++)
+			{
+				ushort glyph = glyphs[i];
+				
+				if (glyph != 0xffff)
+				{
+					text[count] = glyph;
+					
+					if (i > 0)
+					{
+						int xx = (int) x[i];
+						int yy = (int) y[i];
+						
+						pairs[2*count-2+0] = xx - last_x;
+						pairs[2*count-2+1] = yy - last_y;
+					}
+					
+					count++;
+				}
+			}
+			
+			pairs[2*count-2+0] = 0;
+			pairs[2*count-2+1] = 0;
+			
+			Win32.ExtTextOut (hdc, ox, oy, (int)(ExtTextOutOptions.GlyphIndex | ExtTextOutOptions.PairDxDy), System.IntPtr.Zero, text, count, pairs);
+		}
+		
 		public static string[] GetFontFamilies()
 		{
 			Win32.LogFont log_font = new Win32.LogFont ();
@@ -466,6 +530,31 @@ namespace Epsitec.Common.OpenType.Platform
 				}
 				
 				return false;
+			}
+		}
+		
+		public static bool FillFontHeights(Platform.IFontHandle font, out int height, out int ascent, out int descent, out int internal_leading, out int external_leading)
+		{
+			height  = 0;
+			ascent  = 0;
+			descent = 0;
+			
+			internal_leading = 0;
+			external_leading = 0;
+			
+			using (TempDC dc = new TempDC (font.Handle))
+			{
+				TextMetric metric = new TextMetric ();
+				Win32.GetTextMetrics (dc.Handle, metric);
+				
+				height  = metric.tmHeight;
+				ascent  = metric.tmAscent;
+				descent = metric.tmDescent;
+				
+				internal_leading = metric.tmInternalLeading;
+				external_leading = metric.tmExternalLeading;
+				
+				return true;
 			}
 		}
 		

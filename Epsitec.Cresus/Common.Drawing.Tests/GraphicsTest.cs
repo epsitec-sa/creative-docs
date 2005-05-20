@@ -1156,6 +1156,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.PaintText ( 10, 10, string.Format ("{0} dpi", bitmap_1.DpiX), font, 12);
 			e.Graphics.PaintText (210, 10, string.Format ("{0} dpi", bitmap_2.DpiX), font, 12);
 		}
+		
 		private void Special4Fill_PaintForeground(object sender, PaintEventArgs e)
 		{
 			WindowRoot root = sender as WindowRoot;

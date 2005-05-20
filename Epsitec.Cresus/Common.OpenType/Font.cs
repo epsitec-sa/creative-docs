@@ -618,18 +618,46 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public System.IntPtr GetFontHandle(double size)
+		{
+			if (this.use_system_glyph_size)
+			{
+				FontIdentity.SizeInfo info = this.identity.GetSizeInfo ((int)(size + 0.5));
+				return info.Handle.Handle;
+			}
+			
+			return System.IntPtr.Zero;
+		}
+		
+		
 		public double GetAscender(double size)
 		{
-			double scale = size / this.ot_head.UnitsPerEm;
-			
-			return this.ot_hhea.MacAscender * scale;
+			if (this.use_system_glyph_size)
+			{
+				FontIdentity.SizeInfo info = this.identity.GetSizeInfo ((int)(size + 0.5));
+				return info.Ascender;
+			}
+			else
+			{
+				double scale = size / this.ot_head.UnitsPerEm;
+				
+				return this.ot_hhea.MacAscender * scale;
+			}
 		}
 		
 		public double GetDescender(double size)
 		{
-			double scale = size / this.ot_head.UnitsPerEm;
-			
-			return this.ot_hhea.MacDescender * scale;
+			if (this.use_system_glyph_size)
+			{
+				FontIdentity.SizeInfo info = this.identity.GetSizeInfo ((int)(size + 0.5));
+				return info.Descender;
+			}
+			else
+			{
+				double scale = size / this.ot_head.UnitsPerEm;
+				
+				return this.ot_hhea.MacDescender * scale;
+			}
 		}
 		
 		

@@ -158,6 +158,8 @@ namespace Epsitec.Common.OpenType
 				this.point_size   = size;
 				this.font_handle  = handle;
 				this.glyph_widths = new int[4][];
+				
+				Platform.Win32.FillFontHeights (handle, out this.height, out this.ascender, out this.descender, out this.int_leading, out this.ext_leading);
 			}
 			
 			
@@ -174,6 +176,30 @@ namespace Epsitec.Common.OpenType
 				get
 				{
 					return this.point_size;
+				}
+			}
+			
+			public int							Ascender
+			{
+				get
+				{
+					return this.ascender;
+				}
+			}
+			
+			public int							Descender
+			{
+				get
+				{
+					return this.descender;
+				}
+			}
+			
+			public int							Height
+			{
+				get
+				{
+					return this.height;
 				}
 			}
 			
@@ -215,6 +241,11 @@ namespace Epsitec.Common.OpenType
 			int									point_size;
 			Platform.IFontHandle				font_handle;
 			int[][]								glyph_widths;
+			int									height;
+			int									ascender;
+			int									descender;
+			int									int_leading;
+			int									ext_leading;
 		}
 		#endregion
 		

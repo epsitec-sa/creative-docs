@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -785,7 +785,8 @@ namespace Epsitec.Common.Drawing
 		public bool SetPixmapSize(int width, int height)
 		{
 			if ((this.pixmap.Size.Width == width) &&
-				(this.pixmap.Size.Height == height))
+				(this.pixmap.Size.Height == height) &&
+				(this.pixmap.IsOSBitmap == false))
 			{
 				return false;
 			}

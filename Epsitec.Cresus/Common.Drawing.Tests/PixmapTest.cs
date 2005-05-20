@@ -5,6 +5,132 @@ namespace Epsitec.Common.Drawing
 {
 	[TestFixture] public class PixmapTest
 	{
+		[Test] public void CheckPixmapNew()
+		{
+			Pixmap pixmap = new Pixmap ();
+			
+			pixmap.Size = new System.Drawing.Size (200, 100);
+			
+			int width;
+			int height;
+			int stride;
+			
+			System.Drawing.Imaging.PixelFormat format;
+			System.IntPtr scan0;
+			
+			pixmap.GetMemoryLayout (out width, out height, out stride, out format, out scan0);
+			
+			Assert.AreEqual (200, width);
+			Assert.AreEqual (100, height);
+			Assert.AreEqual (800, stride);
+			Assert.AreEqual (System.Drawing.Imaging.PixelFormat.Format32bppPArgb, format);
+			Assert.IsFalse (scan0 == System.IntPtr.Zero);
+			Assert.IsTrue (pixmap.GetMemoryBitmapHandle () == System.IntPtr.Zero);
+			
+			pixmap.Dispose ();
+		}
+		
+		[Test] public void CheckPixmapNewOSBitmap()
+		{
+			Pixmap pixmap = new Pixmap ();
+			System.IntPtr dc = System.IntPtr.Zero;
+			
+			pixmap.CreateOSBitmap (new System.Drawing.Size (200, 100), dc);
+			
+			int width;
+			int height;
+			int stride;
+			
+			System.Drawing.Imaging.PixelFormat format;
+			System.IntPtr scan0;
+			
+			pixmap.GetMemoryLayout (out width, out height, out stride, out format, out scan0);
+			
+			Assert.AreEqual (200, width);
+			Assert.AreEqual (100, height);
+			Assert.AreEqual (800, stride);
+			Assert.AreEqual (System.Drawing.Imaging.PixelFormat.Format32bppPArgb, format);
+			Assert.IsFalse (scan0 == System.IntPtr.Zero);
+			Assert.IsFalse (pixmap.GetMemoryBitmapHandle () == System.IntPtr.Zero);
+			
+			pixmap.Dispose ();
+		}
+		
+		[Test] public void CheckPixmapPaintInOSBitmap()
+		{
+			Graphics graphics = new Graphics ();
+			Pixmap   pixmap   = graphics.Pixmap;
+			
+			pixmap.CreateOSBitmap (new System.Drawing.Size (200, 100), System.IntPtr.Zero);
+			graphics.SetPixmapSize (200, 100);
+			
+			int width;
+			int height;
+			int stride;
+			
+			System.Drawing.Imaging.PixelFormat format;
+			System.IntPtr scan0;
+			
+			pixmap.GetMemoryLayout (out width, out height, out stride, out format, out scan0);
+			
+			Assert.AreEqual (200, width);
+			Assert.AreEqual (100, height);
+			Assert.AreEqual (800, stride);
+			Assert.AreEqual (System.Drawing.Imaging.PixelFormat.Format32bppPArgb, format);
+			Assert.IsFalse (scan0 == System.IntPtr.Zero);
+			Assert.IsFalse (pixmap.GetMemoryBitmapHandle () == System.IntPtr.Zero);
+			
+			//	Bitmap sélectionné dans le DC : on peut peindre ici...
+			
+			OpenType.FontCollection font_collection = new OpenType.FontCollection ();
+			font_collection.Initialize ();
+			
+			OpenType.Font font = font_collection.CreateFont ("Palatino Linotype", "Regular");
+			double        size = 24.0;
+			
+			font.SelectFontManager ("System");
+			font.SelectFeatures ("liga", "dlig");
+			
+			System.IntPtr hfont  = font.GetFontHandle (size);
+			ushort[]      glyphs = font.GenerateGlyphs ("Quelle affiche!");
+			
+//-			graphics.AddText (10, 10, "Quelle affiche!", Font.GetFont (font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName), size);
+//-			graphics.RenderSolid (Color.FromName ("Red"));
+			
+			int x  = 10;
+			int y1 = (100-10);
+			int y2 = (100-40);
+			
+			int[]    deltas = new int[glyphs.Length];
+			double[] x_pos  = new double[glyphs.Length];
+			
+			font.GetPositions (glyphs, size, 0.0, x_pos);
+			
+			for (int i = 0; i < deltas.Length-1; i++)
+			{
+				deltas[i] = (int) (x_pos[i+1] - x_pos[i+0]);
+			}
+			
+			AntiGrain.Buffer.DrawGlyphs (pixmap.Handle, hfont, x, y1 - (int) font.GetAscender (size), glyphs, null, glyphs.Length, 0x000000);
+			AntiGrain.Buffer.DrawGlyphs (pixmap.Handle, hfont, x, y2 - (int) font.GetAscender (size), glyphs, deltas, glyphs.Length, 0xFF0000);
+			
+			Bitmap image = Bitmap.FromPixmap (pixmap) as Bitmap;
+			byte[] data  = image.Save (ImageFormat.Bmp, 32, 1, ImageCompression.None);
+			
+			using (System.IO.FileStream stream = new System.IO.FileStream ("os-bitmap-32.bmp", System.IO.FileMode.OpenOrCreate))
+			{
+				stream.Write (data, 0, data.Length);
+			}
+			
+			pixmap.Dispose ();
+		}
+		
+		[System.Runtime.InteropServices.DllImport ("GDI32.dll")] static extern int SetBkMode(System.IntPtr hdc, int mode);
+		[System.Runtime.InteropServices.DllImport ("GDI32.dll")] static extern bool ExtTextOut(System.IntPtr hdc, int x, int y, int options, System.IntPtr rect, [System.Runtime.InteropServices.In] ushort[] text, int count, [System.Runtime.InteropServices.In] int[] dx);
+		[System.Runtime.InteropServices.DllImport ("GDI32.dll")] extern static System.IntPtr CreateCompatibleDC(System.IntPtr hdc);
+		[System.Runtime.InteropServices.DllImport ("GDI32.dll")] extern static bool DeleteDC(System.IntPtr hdc);
+		[System.Runtime.InteropServices.DllImport ("GDI32.dll")] extern static System.IntPtr SelectObject(System.IntPtr hdc, System.IntPtr gdi_object);
+		
 		[Test] public void CheckPixmapCopy()
 		{
 			Graphics cache = new Graphics ();

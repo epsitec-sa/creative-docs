@@ -1,3 +1,6 @@
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Drawing
 {
 	using PixelFormat = System.Drawing.Imaging.PixelFormat;
@@ -41,9 +44,34 @@ namespace Epsitec.Common.Drawing
 		
 		public System.IntPtr					Handle
 		{
-			get { return this.agg_buffer; }
+			get
+			{
+				return this.agg_buffer;
+			}
 		}
 		
+		public bool								IsOSBitmap
+		{
+			get
+			{
+				return this.is_os_bitmap;
+			}
+		}
+		
+		
+		public void CreateOSBitmap(System.Drawing.Size size, System.IntPtr display_context)
+		{
+			if ((this.size.IsEmpty) &&
+				(this.agg_buffer == System.IntPtr.Zero))
+			{
+				this.agg_buffer   = AntiGrain.Buffer.New (display_context, size.Width, size.Height, 32);
+				this.size         = size;
+				this.is_os_bitmap = true;
+				return;
+			}
+			
+			throw new System.InvalidOperationException ("Cannot re-create bitmap.");
+		}
 		
 		public void Clear()
 		{
@@ -128,6 +156,11 @@ namespace Epsitec.Common.Drawing
 		{
 			format = System.Drawing.Imaging.PixelFormat.Format32bppPArgb;
 			AntiGrain.Buffer.GetMemoryLayout (this.agg_buffer, out width, out height, out stride, out scan0);
+		}
+		
+		public System.IntPtr GetMemoryBitmapHandle()
+		{
+			return AntiGrain.Buffer.GetMemoryBitmapHandle (this.agg_buffer);
 		}
 		
 		public void InfiniteClipping()
@@ -410,5 +443,6 @@ namespace Epsitec.Common.Drawing
 		
 		protected System.IntPtr					agg_buffer;
 		protected System.Drawing.Size			size;
+		protected bool							is_os_bitmap;
 	}
 }
