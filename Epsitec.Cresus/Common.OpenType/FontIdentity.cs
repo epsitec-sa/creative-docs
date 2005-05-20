@@ -66,7 +66,7 @@ namespace Epsitec.Common.OpenType
 				{
 					if (this.font_data == null)
 					{
-						byte[] data = Platform.Win32.LoadFontData (this.record);
+						byte[] data = Platform.Neutral.LoadFontData (this.record);
 						
 						this.font_data = data == null ? null : new FontData (data);
 					}
@@ -80,7 +80,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return Platform.Win32.GetFontWeight (this.record);
+				return Platform.Neutral.GetFontWeight (this.record);
 			}
 		}
 		
@@ -88,7 +88,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return Platform.Win32.GetFontItalic (this.record) != 0;
+				return Platform.Neutral.GetFontItalic (this.record) != 0;
 			}
 		}
 		
@@ -120,7 +120,7 @@ namespace Epsitec.Common.OpenType
 				
 				if (this.font_sizes.Contains (size) == false)
 				{
-					this.font_sizes[size] = new SizeInfo (size, Platform.Win32.GetFontHandle (this.record, size));
+					this.font_sizes[size] = new SizeInfo (size, Platform.Neutral.GetFontHandle (this.record, size));
 				}
 			}
 			
@@ -159,7 +159,7 @@ namespace Epsitec.Common.OpenType
 				this.font_handle  = handle;
 				this.glyph_widths = new int[4][];
 				
-				Platform.Win32.FillFontHeights (handle, out this.height, out this.ascender, out this.descender, out this.int_leading, out this.ext_leading);
+				Platform.Neutral.FillFontHeights (handle, out this.height, out this.ascender, out this.descender, out this.int_leading, out this.ext_leading);
 			}
 			
 			
@@ -214,7 +214,7 @@ namespace Epsitec.Common.OpenType
 				int block = glyph / 64;
 				int index = glyph % 64;
 				
-				if (block > this.glyph_widths.Length)
+				if (block >= this.glyph_widths.Length)
 				{
 					int[][] old_widths = this.glyph_widths;
 					int[][] new_widths = new int[block+1][];
@@ -231,7 +231,7 @@ namespace Epsitec.Common.OpenType
 				{
 					this.glyph_widths[block] = new int[64];
 					
-					Platform.Win32.FillFontWidths (this.font_handle, block*64, 64, this.glyph_widths[block], null, null);
+					Platform.Neutral.FillFontWidths (this.font_handle, block*64, 64, this.glyph_widths[block], null, null);
 				}
 				
 				return this.glyph_widths[block][index];

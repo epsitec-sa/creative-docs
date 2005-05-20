@@ -334,9 +334,12 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			//	Détermine la font qu'il faudra utiliser pour le fragment de texte
 			//	dont il faut faire le rendu :
 			
+			Drawing.Color color = Drawing.Color.FromBrightness (0);
 			OpenType.Font font;
 			double        font_size;
 			context.TextContext.GetFont (text[offset], out font, out font_size);
+			
+			//	TODO: déterminer la couleur du texte
 			
 			//	Génère les glyphes et les informations relatives à l'extensibilité
 			//	pour le fragment de texte :
@@ -403,7 +406,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			//	Demande à ITextRenderer de faire le rendu avec les positions que
 			//	nous venons de déterminer :
 			
-			renderer.Render (context.Frame, font, font_size, glyphs, x_pos, y_pos, x_scale, null);
+			renderer.Render (context.Frame, font, font_size, color, glyphs, x_pos, y_pos, x_scale, null);
 		}
 		
 		

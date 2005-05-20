@@ -33,10 +33,10 @@ namespace Epsitec.Common.OpenType.Tests
 			{
 				ushort[] glyphs = arial.GenerateGlyphs ("Affiche un petit texte pour vérifier le bon fonctionnement du calcul des largeurs.");
 				
-				arial.SelectFontManager ("System");
+				arial.SelectFontManager (FontManagerType.System);
 				double system = arial.GetTotalWidth (glyphs, size);
 				
-				arial.SelectFontManager ("OpenType");
+				arial.SelectFontManager (FontManagerType.OpenType);
 				double perfect = arial.GetTotalWidth (glyphs, size);
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("{0}, size {4}, text width is {1}, perfect is {2}, delta is {3:0.00}%", arial_id.FullName, system, perfect, 100*system/perfect-100, size));
@@ -102,7 +102,7 @@ namespace Epsitec.Common.OpenType.Tests
 		private static void TestArial()
 		{
 			string font = "Arial Unicode MS";
-			byte[] data = Platform.Win32.LoadFontData (font, "Normal");
+			byte[] data = Platform.Neutral.LoadFontData (font, "Normal");
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Loaded font {0}: length {1}", font, data.Length));
 			
@@ -217,7 +217,7 @@ namespace Epsitec.Common.OpenType.Tests
 		private static void TestFeatureTable()
 		{
 			string font = "Palatino Linotype";
-			byte[] data = Platform.Win32.LoadFontData (font, "Normal");
+			byte[] data = Platform.Neutral.LoadFontData (font, "Normal");
 			
 			TableDirectory td = new TableDirectory (data, 0);
 			Table_GSUB gsub_t = new Table_GSUB (td.FindTable ("GSUB"));
@@ -433,8 +433,8 @@ namespace Epsitec.Common.OpenType.Tests
 			Font font_1 = new Font ();
 			Font font_2 = new Font ();
 			
-			font_1.Initialize (new FontData (Platform.Win32.LoadFontData (font_name_1, "Normal")));
-			font_2.Initialize (new FontData (Platform.Win32.LoadFontData (font_name_2, "Normal")));
+			font_1.Initialize (new FontData (Platform.Neutral.LoadFontData (font_name_1, "Normal")));
+			font_2.Initialize (new FontData (Platform.Neutral.LoadFontData (font_name_2, "Normal")));
 			
 			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_1.GetSupportedScripts ()));
 			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_2.GetSupportedScripts ()));

@@ -6,8 +6,13 @@ using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.OpenType.Platform
 {
-	public class Win32
+	internal sealed class Win32
 	{
+		private Win32()
+		{
+		}
+		
+		
 		#region Win32 LogFont Structure
 		[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Unicode)] public class LogFont
 		{ 
@@ -55,96 +60,97 @@ namespace Epsitec.Common.OpenType.Platform
 		{ 
 			public const int LF_FACESIZE = 32;
 			public const int LF_FULLFACESIZE = 64;
-			public int			lfHeight; 
-			public int			lfWidth; 
-			public int			lfEscapement; 
-			public int			lfOrientation; 
-			public int			lfWeight; 
-			public byte			lfItalic; 
-			public byte			lfUnderline; 
-			public byte			lfStrikeOut; 
-			public byte			lfCharSet; 
-			public byte			lfOutPrecision; 
-			public byte			lfClipPrecision; 
-			public byte			lfQuality; 
-			public byte			lfPitchAndFamily;
+			
+			public int				lfHeight		 = 0;
+			public int				lfWidth			 = 0;
+			public int				lfEscapement	 = 0;
+			public int				lfOrientation	 = 0;
+			public int				lfWeight		 = 0;
+			public byte				lfItalic		 = 0;
+			public byte				lfUnderline		 = 0;
+			public byte				lfStrikeOut		 = 0;
+			public byte				lfCharSet		 = 0;
+			public byte				lfOutPrecision	 = 0;
+			public byte				lfClipPrecision	 = 0;
+			public byte				lfQuality		 = 0;
+			public byte				lfPitchAndFamily = 0;
 			
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst=LF_FACESIZE)]
-			public string		lfFaceName; 
+			public string			lfFaceName		= null; 
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst=LF_FULLFACESIZE)]
-			public string		elfFullName;
+			public string			elfFullName		= null;
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst=LF_FACESIZE)]
-			public string		elfStyle; 
+			public string			elfStyle		= null; 
 			[MarshalAs(UnmanagedType.ByValTStr, SizeConst=LF_FACESIZE)]
-			public string		elfScript; 
+			public string			elfScript		= null; 
 		}
 		#endregion
 		
 		#region Win32 TextMetric Structure
 		[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Unicode)] public class TextMetric
 		{ 
-			public int			tmHeight; 
-			public int			tmAscent; 
-			public int			tmDescent;
-			public int			tmInternalLeading;
-			public int			tmExternalLeading;
-			public int			tmAveCharWidth;
-			public int			tmMaxCharWidth;
-			public int			tmWeight;
-			public int			tmOverhang;
-			public int			tmDigitizedAspectX;
-			public int			tmDigitizedAspectY;
-			public char			tmFirstChar;
-			public char			tmLastChar;
-			public char			tmDefaultChar;
-			public char			tmBreakChar;
-			public byte			tmItalic;
-			public byte			tmUnderlined;
-			public byte			tmStruckOut;
-			public byte			tmPitchAndFamily;
-			public byte			tmCharSet;
-			public byte			tmReserved_1;
-			public byte			tmReserved_2;
-			public byte			tmReserved_3;
+			public int				tmHeight			= 0;
+			public int				tmAscent			= 0;
+			public int				tmDescent			= 0;
+			public int				tmInternalLeading	= 0;
+			public int				tmExternalLeading	= 0;
+			public int				tmAveCharWidth		= 0;
+			public int				tmMaxCharWidth		= 0;
+			public int				tmWeight			= 0;
+			public int				tmOverhang			= 0;
+			public int				tmDigitizedAspectX	= 0;
+			public int				tmDigitizedAspectY	= 0;
+			public char				tmFirstChar			= '\0';
+			public char				tmLastChar			= '\0';
+			public char				tmDefaultChar		= '\0';
+			public char				tmBreakChar			= '\0';
+			public byte				tmItalic			= 0;
+			public byte				tmUnderlined		= 0;
+			public byte				tmStruckOut			= 0;
+			public byte				tmPitchAndFamily	= 0;
+			public byte				tmCharSet			= 0;
+			public byte				tmReserved_1		= 0;
+			public byte				tmReserved_2		= 0;
+			public byte				tmReserved_3		= 0;
 		}
 		#endregion
 		
 		#region Win32 NewTextMetricEx Structure
 		[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Unicode)] public class NewTextMetricEx
 		{ 
-			public int			tmHeight; 
-			public int			tmAscent; 
-			public int			tmDescent;
-			public int			tmInternalLeading;
-			public int			tmExternalLeading;
-			public int			tmAveCharWidth;
-			public int			tmMaxCharWidth;
-			public int			tmWeight;
-			public int			tmOverhang;
-			public int			tmDigitizedAspectX;
-			public int			tmDigitizedAspectY;
-			public char			tmFirstChar;
-			public char			tmLastChar;
-			public char			tmDefaultChar;
-			public char			tmBreakChar;
-			public byte			tmItalic;
-			public byte			tmUnderlined;
-			public byte			tmStruckOut;
-			public byte			tmPitchAndFamily;
-			public byte			tmCharSet;
-			public byte			tmReserved_1;
-			public byte			tmReserved_2;
-			public byte			tmReserved_3;
-			public int			ntmFlags;
-			public int			ntmSizeEM;
-			public int			ntmCellHeight;
-			public int			ntmAvgWidth;
-			public uint			fsUsb_0;
-			public uint			fsUsb_1;
-			public uint			fsUsb_2;
-			public uint			fsUsb_3;
-			public uint			fsCsb_0;
-			public uint			fsCsb_1;
+			public int				tmHeight			= 0;
+			public int				tmAscent			= 0;
+			public int				tmDescent			= 0;
+			public int				tmInternalLeading	= 0;
+			public int				tmExternalLeading	= 0;
+			public int				tmAveCharWidth		= 0;
+			public int				tmMaxCharWidth		= 0;
+			public int				tmWeight			= 0;
+			public int				tmOverhang			= 0;
+			public int				tmDigitizedAspectX	= 0;
+			public int				tmDigitizedAspectY	= 0;
+			public char				tmFirstChar			= '\0';
+			public char				tmLastChar			= '\0';
+			public char				tmDefaultChar		= '\0';
+			public char				tmBreakChar			= '\0';
+			public byte				tmItalic			= 0;
+			public byte				tmUnderlined		= 0;
+			public byte				tmStruckOut			= 0;
+			public byte				tmPitchAndFamily	= 0;
+			public byte				tmCharSet			= 0;
+			public byte				tmReserved_1		= 0;
+			public byte				tmReserved_2		= 0;
+			public byte				tmReserved_3		= 0;
+			public int				ntmFlags			= 0;
+			public int				ntmSizeEM			= 0;
+			public int				ntmCellHeight		= 0;
+			public int				ntmAvgWidth			= 0;
+			public uint				fsUsb_0				= 0;
+			public uint				fsUsb_1				= 0;
+			public uint				fsUsb_2				= 0;
+			public uint				fsUsb_3				= 0;
+			public uint				fsCsb_0				= 0;
+			public uint				fsCsb_1				= 0;
 			
 			public class Flags
 			{
@@ -175,6 +181,7 @@ namespace Epsitec.Common.OpenType.Platform
 		[DllImport ("gdi32.dll", CharSet=CharSet.Unicode)] static extern bool ExtTextOut(IntPtr hdc, int x, int y, int options, System.IntPtr rect, [In] ushort[] text, int count, [In] int[] dx);
 		#endregion
 		
+		#region ExtTextOutOptions
 		[Flags] public enum ExtTextOutOptions
 		{
 			Grayed		= 0x0001,
@@ -183,6 +190,7 @@ namespace Epsitec.Common.OpenType.Platform
 			GlyphIndex	= 0x0010,
 			PairDxDy	= 0x2000
 		}
+		#endregion
 		
 		#region Win32 Callback Procedures
 		delegate int EnumFontFamExProc(EnumLogFontEx log_font_ex, NewTextMetricEx text_metrics, int font_type, IntPtr lParam);
@@ -229,7 +237,7 @@ namespace Epsitec.Common.OpenType.Platform
 		#endregion
 		
 		#region FontHandle Class
-		internal sealed class FontHandle : IFontHandle
+		internal sealed class FontHandle : Platform.IFontHandle
 		{
 			internal FontHandle(System.IntPtr handle)
 			{
@@ -385,45 +393,6 @@ namespace Epsitec.Common.OpenType.Platform
 		}
 		#endregion
 		
-		
-		public static void ExtendedTextOut(IntPtr hdc, ushort[] glyphs, double[] x, double[] y)
-		{
-			int[]    pairs = new int[glyphs.Length * 2];
-			ushort[] text  = new ushort[glyphs.Length];
-			int      count = 0;
-			
-			int ox = (int) x[0];
-			int oy = (int) y[0];
-			
-			int last_x = ox;
-			int last_y = oy;
-			
-			for (int i = 0; i < glyphs.Length; i++)
-			{
-				ushort glyph = glyphs[i];
-				
-				if (glyph != 0xffff)
-				{
-					text[count] = glyph;
-					
-					if (i > 0)
-					{
-						int xx = (int) x[i];
-						int yy = (int) y[i];
-						
-						pairs[2*count-2+0] = xx - last_x;
-						pairs[2*count-2+1] = yy - last_y;
-					}
-					
-					count++;
-				}
-			}
-			
-			pairs[2*count-2+0] = 0;
-			pairs[2*count-2+1] = 0;
-			
-			Win32.ExtTextOut (hdc, ox, oy, (int)(ExtTextOutOptions.GlyphIndex | ExtTextOutOptions.PairDxDy), System.IntPtr.Zero, text, count, pairs);
-		}
 		
 		public static string[] GetFontFamilies()
 		{
@@ -615,12 +584,12 @@ namespace Epsitec.Common.OpenType.Platform
 			return Win32.LoadFontDataNameTable (Win32.GetFontSystemDescription (family, style));
 		}
 		
-		public static byte[] LoadFontDataNameTable(object system_description)
+		private static byte[] LoadFontDataNameTable(object system_description)
 		{
 			return Win32.LoadFontDataNameTable (system_description as LogFont);
 		}
 		
-		public static byte[] LoadFontDataNameTable(LogFont lf) 
+		private static byte[] LoadFontDataNameTable(LogFont lf) 
 		{
 			byte[]        data = null;
 			System.IntPtr font = Win32.CreateFontIndirect (lf);

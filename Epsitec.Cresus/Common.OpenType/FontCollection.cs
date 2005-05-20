@@ -27,17 +27,17 @@ namespace Epsitec.Common.OpenType
 		
 		public void Initialize()
 		{
-			this.families = Platform.Win32.GetFontFamilies ();
+			this.families = Platform.Neutral.GetFontFamilies ();
 			
 			foreach (string family in this.families)
 			{
-				string[] styles = Platform.Win32.GetFontStyles (family);
+				string[] styles = Platform.Neutral.GetFontStyles (family);
 				
 				foreach (string style in styles)
 				{
-					Table_name name_t = new Table_name (Platform.Win32.LoadFontDataNameTable (family, style), 0);
+					Table_name name_t = new Table_name (Platform.Neutral.LoadFontDataNameTable (family, style), 0);
 					
-					object record    = Platform.Win32.GetFontSystemDescription (family, style);
+					object record    = Platform.Neutral.GetFontSystemDescription (family, style);
 					string full_name = name_t.GetFullFontName ();
 					
 					if ((record != null) &&

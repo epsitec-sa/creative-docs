@@ -61,7 +61,7 @@ namespace Epsitec.Common.Drawing
 			Graphics graphics = new Graphics ();
 			Pixmap   pixmap   = graphics.Pixmap;
 			
-			pixmap.CreateOSBitmap (new System.Drawing.Size (200, 100), System.IntPtr.Zero);
+			graphics.CreateOSBitmap ();
 			graphics.SetPixmapSize (200, 100);
 			
 			int width;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Drawing
 			OpenType.Font font = font_collection.CreateFont ("Palatino Linotype", "Regular");
 			double        size = 24.0;
 			
-			font.SelectFontManager ("System");
+			font.SelectFontManager (OpenType.FontManagerType.System);
 			font.SelectFeatures ("liga", "dlig");
 			
 			System.IntPtr hfont  = font.GetFontHandle (size);

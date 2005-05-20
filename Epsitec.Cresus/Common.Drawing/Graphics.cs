@@ -169,6 +169,16 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public void CreateOSBitmap()
+		{
+			this.pixmap.CreateOSBitmap (new System.Drawing.Size (8, 8), System.IntPtr.Zero);
+			
+			this.solid_renderer.Pixmap    = this.pixmap;
+			this.image_renderer.Pixmap    = this.pixmap;
+			this.gradient_renderer.Pixmap = this.pixmap;
+			this.smooth_renderer.Pixmap   = this.pixmap;
+		}
+		
 		public Epsitec.Common.Drawing.Graphics CreateAlphaMask()
 		{
 			Graphics mask = new Graphics ();
@@ -785,8 +795,7 @@ namespace Epsitec.Common.Drawing
 		public bool SetPixmapSize(int width, int height)
 		{
 			if ((this.pixmap.Size.Width == width) &&
-				(this.pixmap.Size.Height == height) &&
-				(this.pixmap.IsOSBitmap == false))
+				(this.pixmap.Size.Height == height))
 			{
 				return false;
 			}

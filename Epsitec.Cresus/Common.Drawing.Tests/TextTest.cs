@@ -28,7 +28,7 @@ namespace Epsitec.Common.Drawing
 			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 			ulong[] text;
 			string words;
-			string[] features = new string[] { /*"kern", "dlig", "liga"*/ };
+			string[] features = new string[] { "Mgr=System" /*"kern", "dlig", "liga"*/ };
 			
 			Text.Properties.FontProperty fp;
 			properties.Clear ();
@@ -169,25 +169,32 @@ namespace Epsitec.Common.Drawing
 				return true;
 			}
 			
-			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("Font: {0} {1}pt", font.FontIdentity.FullName, size));
 				System.Diagnostics.Debug.WriteLine (string.Format ("Glyphs: {0} starting at {1}:{2}", glyphs.Length, x[0], y[0]));
 				
-				Drawing.Font drawing_font = Drawing.Font.GetFont (font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
-				
-				if (drawing_font != null)
+				if (font.FontManagerType == OpenType.FontManagerType.System)
 				{
-					for (int i = 0; i < glyphs.Length; i++)
+					Drawing.NativeTextRenderer.Draw (this.graphics.Pixmap, font, size, glyphs, x, y, color);
+				}
+				else
+				{
+					Drawing.Font drawing_font = Drawing.Font.GetFont (font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+					
+					if (drawing_font != null)
 					{
-						if (glyphs[i] < 0xffff)
+						for (int i = 0; i < glyphs.Length; i++)
 						{
-							this.graphics.Rasterizer.AddGlyph (drawing_font, glyphs[i], x[i], y[i], size);
+							if (glyphs[i] < 0xffff)
+							{
+								this.graphics.Rasterizer.AddGlyph (drawing_font, glyphs[i], x[i], y[i], size);
+							}
 						}
 					}
+					
+					this.graphics.RenderSolid (color);
 				}
-				
-				this.graphics.RenderSolid (Drawing.Color.FromBrightness (0));
 			}
 			#endregion
 			

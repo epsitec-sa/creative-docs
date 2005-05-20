@@ -53,6 +53,7 @@ namespace Epsitec.Common.Widgets.Platform
 			this.WindowStyles = WindowStyles.CanResize | WindowStyles.HasCloseButton;
 			
 			this.graphics = new Epsitec.Common.Drawing.Graphics ();
+			this.graphics.CreateOSBitmap ();
 			
 			Window.DummyHandleEater (this.Handle);
 			

@@ -86,7 +86,7 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
             </References>
@@ -119,6 +119,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "FontManagerType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Support.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -130,6 +135,11 @@
                 />
                 <File
                     RelPath = "Platform\IFontHandle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Platform\Neutral.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

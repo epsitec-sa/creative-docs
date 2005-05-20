@@ -20,6 +20,14 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public FontManagerType					FontManagerType
+		{
+			get
+			{
+				return this.use_system_glyph_size ? FontManagerType.System : FontManagerType.OpenType;
+			}
+		}
+		
 		public FontIdentity						FontIdentity
 		{
 			get
@@ -501,6 +509,15 @@ namespace Epsitec.Common.OpenType
 				this.use_kerning = false;
 			}
 			
+			if (active_names.Contains ("Mgr=System"))
+			{
+				this.SelectFontManager (FontManagerType.System);
+			}
+			else if (active_names.Contains ("Mgr=OpenType"))
+			{
+				this.SelectFontManager (FontManagerType.OpenType);
+			}
+			
 			if (this.script_required_feature != null)
 			{
 				active_features.Add (this.script_required_feature);
@@ -535,15 +552,15 @@ namespace Epsitec.Common.OpenType
 			this.GenerateSubstitutionLookups (active_features);
 		}
 		
-		public void SelectFontManager(string manager)
+		public void SelectFontManager(FontManagerType manager)
 		{
 			switch (manager)
 			{
-				case "OpenType":
+				case FontManagerType.OpenType:
 					this.use_system_glyph_size = false;
 					break;
 				
-				case "System":
+				case FontManagerType.System:
 					this.use_system_glyph_size = true;
 					break;
 			}
@@ -752,9 +769,9 @@ namespace Epsitec.Common.OpenType
 			int        max_size = count + 16;
 			ushort[][] temp     = new ushort[2][];
 			
-		try_again:
+			try_again:
 			
-			temp[0] = new ushort[max_size];
+				temp[0] = new ushort[max_size];
 			temp[1] = new ushort[max_size];
 			
 			try
