@@ -588,6 +588,16 @@ restart:
 			double glue_width = would_be_width - clipped_width;
 			int    glue_count = System.Math.Max (1, this.text_profile.TotalCount - 1);
 			
+			if (glue_width > 0)
+			{
+				int glyph_count;
+				this.layout_engine.CountGlyphs (this, end - this.text_offset, out glyph_count);
+				glyph_count = System.Math.Max (1, glyph_count - 1 - this.text_profile.CountEndSpace);
+				System.Diagnostics.Debug.WriteLine ("Glue count before: " + glue_count.ToString () + ", after: " + glyph_count.ToString ());
+				
+				glue_count = glyph_count;
+			}
+			
 			this.text_glue = glue_width / glue_count;
 			
 			for (;;)

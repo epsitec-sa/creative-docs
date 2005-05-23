@@ -48,6 +48,12 @@ namespace Epsitec.Common.Text.Layout
 			return Layout.Status.Ok;
 		}
 		
+		public virtual Layout.Status CountGlyphs(Layout.Context context, int length, out int count)
+		{
+			count = 0;
+			return Layout.Status.Ok;
+		}
+		
 		
 		public int GetRunLength(ulong[] text, int start, int length)
 		{

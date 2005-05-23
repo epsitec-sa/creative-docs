@@ -181,7 +181,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 						return Layout.Status.SwitchLayout;
 					}
 					
-					this.RenderRun (context, renderer, ref ox, oy, text, offset, run_length);
+					this.RenderRun (context, renderer, ref ox, oy, text, offset, run_length, length == run_length);
 					
 					//	Avance au morceau suivant :
 					
@@ -201,6 +201,55 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			//	Nous avons atteint la fin du texte spécifiée par l'appelant. La ligne
 			//	a donc été "rendue" avec succès.
+			
+			return Layout.Status.Ok;
+		}
+		
+		public override Layout.Status CountGlyphs(Layout.Context context, int length, out int count)
+		{
+			count = 0;
+			
+			ulong[] text;
+			
+			if (context.GetTextCopy (context.TextOffset, out text, ref length))
+			{
+				int offset = 0;
+				
+				while (length > 0)
+				{
+					//	Détermine la prochaine tranche de caractères contigus utilisant
+					//	exactement le même style :
+					
+					int run_length = this.GetRunLength (text, offset, length);
+					
+					Layout.BaseEngine         engine;
+					Properties.LayoutProperty layout;
+					
+					context.TextContext.GetLayoutEngine (text[offset], out engine, out layout);
+					
+					if ((engine != this) ||
+						(layout != context.LayoutProperty))
+					{
+						throw new System.NotImplementedException ("Engine change not supported in LineEngine.CountGlyphs.");
+					}
+					
+					count += this.CountGlyphsInRun (context, text, offset, run_length, length == run_length);
+					
+					//	Avance au morceau suivant :
+					
+					offset += run_length;
+					length -= run_length;
+				}
+			}
+			else
+			{
+				//	Il n'y a plus aucun résultat disponible, sans pour autant que
+				//	l'on ait atteint la fin du paragraphe; abandonne.
+				
+				//	Ceci est une erreur fatale dans ce contexte.
+				
+				return Layout.Status.ErrorNeedMoreText;
+			}
 			
 			return Layout.Status.Ok;
 		}
@@ -329,7 +378,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			return false;
 		}
 
-		private void RenderRun(Layout.Context context, ITextRenderer renderer, ref double ox, double oy, ulong[] text, int offset, int length)
+		private void RenderRun(Layout.Context context, ITextRenderer renderer, ref double ox, double oy, ulong[] text, int offset, int length, bool last_run)
 		{
 			//	Détermine la fonte qu'il faudra utiliser pour le fragment de texte
 			//	dont il faut faire le rendu :
@@ -345,8 +394,9 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			//	Gérer l'étirement des glyphes en fonction de la fonte sélectionnée :
 			
 			StretchProfile.Scales scales = context.TextStretchScales;
+			double                glue   = context.TextStretchGlue;
 			
-			if (context.TextStretchGlue > 0)
+			if (glue > 0)
 			{
 				font.PushActiveFeatures ();
 				font.DisableActiveFeatures ("liga", "dlig");
@@ -355,17 +405,19 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			//	Génère les glyphes et les informations relatives à l'extensibilité
 			//	pour le fragment de texte :
 			
-			ulong    hyphen     = font.GetHyphen ();
 			ushort[] glyphs     = null;
 			byte[]   attributes = new byte[length+10];
 			
 			Unicode.BreakAnalyzer.GetStretchClass (text, offset, length, attributes);
 			
-			if (context.EnableHyphenation) // TODO: tirer au clair, où doit-on ajouter la césure ???
+			if ((last_run) &&
+				(context.EnableHyphenation)) // TODO: tirer au clair, où doit-on ajouter la césure ???
 			{
 				//	Produit la césure manuellement (il faudrait faire mieux pour gérer
-				//	correctement des langues comme le norvégien ou l'ancien allemand
+				//	correctement des langues comme le suédois ou l'ancien allemand
 				//	qui peuvent provoquer le dédoublement de certains caractères) :
+				
+				ulong hyphen = font.GetHyphen ();
 				
 				int   end = offset + length;
 				ulong old = text[end];
@@ -382,6 +434,11 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, attributes);
 			}
 			
+			if (glue > 0)
+			{
+				font.PopActiveFeatures ();
+			}
+			
 			//	Détermine les mises à l'échelle des divers glyphes, selon leur
 			//	classe d'élasticité :
 			
@@ -393,8 +450,6 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			double[] y_pos   = new double[n];
 			
 			this.GenerateXScale (attributes, scales, x_scale);
-			
-			double glue = context.TextStretchGlue;
 			
 			for (int i = 0; i < n; i++)
 			{
@@ -410,11 +465,71 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			//	nous venons de déterminer :
 			
 			renderer.Render (context.Frame, font, font_size, color, glyphs, x_pos, y_pos, x_scale, null);
+		}
+		
+		private int CountGlyphsInRun(Layout.Context context, ulong[] text, int offset, int length, bool last_run)
+		{
+			OpenType.Font font;
+			double        font_size;
 			
-			if (context.TextStretchGlue > 0)
+			context.TextContext.GetFont (text[offset], out font, out font_size);
+			
+			double glue = context.TextStretchGlue;
+			
+			if (glue > 0)
+			{
+				font.PushActiveFeatures ();
+				font.DisableActiveFeatures ("liga", "dlig");
+			}
+			
+			//	Génère les glyphes et les informations relatives à l'extensibilité
+			//	pour le fragment de texte :
+			
+			ushort[] glyphs     = null;
+			byte[]   attributes = new byte[length+10];
+			
+			Unicode.BreakAnalyzer.GetStretchClass (text, offset, length, attributes);
+			
+			if ((last_run) &&
+				(context.EnableHyphenation)) // TODO: tirer au clair, où doit-on ajouter la césure ???
+			{
+				//	Produit la césure manuellement (il faudrait faire mieux pour gérer
+				//	correctement des langues comme le suédois ou l'ancien allemand
+				//	qui peuvent provoquer le dédoublement de certains caractères) :
+				
+				ulong hyphen = font.GetHyphen ();
+				
+				int   end = offset + length;
+				ulong old = text[end];
+				
+				text[end]       = hyphen;
+				attributes[end] = Unicode.BreakAnalyzer.GetStretchClass (hyphen);
+				
+				BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, attributes);
+				
+				text[end] = old;
+			}
+			else
+			{
+				BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, attributes);
+			}
+			
+			if (glue > 0)
 			{
 				font.PopActiveFeatures ();
 			}
+			
+			int count = 0;
+			
+			for (int i = 0; i < glyphs.Length; i++)
+			{
+				if (glyphs[i] != 0xffff)
+				{
+					count++;
+				}
+			}
+			
+			return count;
 		}
 		
 		
