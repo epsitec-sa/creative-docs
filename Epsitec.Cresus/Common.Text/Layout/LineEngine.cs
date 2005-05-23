@@ -205,10 +205,8 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			return Layout.Status.Ok;
 		}
 		
-		public override Layout.Status CountGlyphs(Layout.Context context, int length, out int count)
+		public override Layout.Status CountGlyphs(Layout.Context context, int length, StretchProfile profile)
 		{
-			count = 0;
-			
 			ulong[] text;
 			
 			if (context.GetTextCopy (context.TextOffset, out text, ref length))
@@ -233,7 +231,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 						throw new System.NotImplementedException ("Engine change not supported in LineEngine.CountGlyphs.");
 					}
 					
-					count += this.CountGlyphsInRun (context, text, offset, run_length, length == run_length);
+					this.CountGlyphsInRun (context, text, offset, run_length, length == run_length, profile);
 					
 					//	Avance au morceau suivant :
 					
@@ -467,7 +465,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			renderer.Render (context.Frame, font, font_size, color, glyphs, x_pos, y_pos, x_scale, null);
 		}
 		
-		private int CountGlyphsInRun(Layout.Context context, ulong[] text, int offset, int length, bool last_run)
+		private void CountGlyphsInRun(Layout.Context context, ulong[] text, int offset, int length, bool last_run, StretchProfile profile)
 		{
 			OpenType.Font font;
 			double        font_size;
@@ -506,30 +504,20 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				attributes[end] = Unicode.BreakAnalyzer.GetStretchClass (hyphen);
 				
 				BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, attributes);
+				profile.Add (font, font_size, text, offset, length);
 				
 				text[end] = old;
 			}
 			else
 			{
 				BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, attributes);
+				profile.Add (font, font_size, text, offset, length);
 			}
 			
 			if (glue > 0)
 			{
 				font.PopActiveFeatures ();
 			}
-			
-			int count = 0;
-			
-			for (int i = 0; i < glyphs.Length; i++)
-			{
-				if (glyphs[i] != 0xffff)
-				{
-					count++;
-				}
-			}
-			
-			return count;
 		}
 		
 		

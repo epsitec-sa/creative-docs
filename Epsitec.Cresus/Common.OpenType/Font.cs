@@ -668,7 +668,8 @@ namespace Epsitec.Common.OpenType
 		{
 			if (this.saved_features_stack != null)
 			{
-				this.SelectFeatures (this.saved_features_stack.Pop () as string);
+				string features = this.saved_features_stack.Pop () as string;
+				this.SelectFeatures (features.Split ('/'));
 			}
 		}
 		
