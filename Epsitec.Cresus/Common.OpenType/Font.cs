@@ -520,10 +520,26 @@ namespace Epsitec.Common.OpenType
 		
 		public void SelectFeatures(params string[] features)
 		{
-			string collapsed_features = string.Join ("/", features);
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			for (int i = 0; i < features.Length; i++)
+			{
+				if ((features[i] != null) &&
+					(features[i].Length > 0))
+				{
+					if (buffer.Length > 0)
+					{
+						buffer.Append ("/");
+					}
+					
+					buffer.Append (features[i]);
+				}
+			}
+			
+			string collapsed_features = buffer.ToString ();
 			
 			if ((this.active_features == collapsed_features) &&
-				(this.substitution_lookups != null))
+				((this.substitution_lookups != null) || (this.ot_GSUB == null)))
 			{
 				return;
 			}
@@ -614,6 +630,45 @@ namespace Epsitec.Common.OpenType
 				case FontManagerType.System:
 					this.use_system_glyph_size = true;
 					break;
+			}
+		}
+		
+		
+		public void PushActiveFeatures()
+		{
+			if (this.saved_features_stack == null)
+			{
+				this.saved_features_stack = new System.Collections.Stack ();
+			}
+			
+			this.saved_features_stack.Push (this.active_features);
+		}
+		
+		public void DisableActiveFeatures(params string[] features)
+		{
+			string active  = this.active_features;
+			int    changes = 0;
+			
+			foreach (string feature in features)
+			{
+				if (active.IndexOf (feature) != -1)
+				{
+					active = active.Replace (feature, "");
+					changes++;
+				}
+			}
+			
+			if (changes > 0)
+			{
+				this.SelectFeatures (active.Split ('/'));
+			}
+		}
+		
+		public void PopActiveFeatures()
+		{
+			if (this.saved_features_stack != null)
+			{
+				this.SelectFeatures (this.saved_features_stack.Pop () as string);
 			}
 		}
 		
@@ -1320,5 +1375,7 @@ namespace Epsitec.Common.OpenType
 		private TaggedFeatureTable				script_required_feature;
 		private TaggedFeatureTable[]			script_optional_features;
 		private BaseSubstitution[]				substitution_lookups;
+		
+		private System.Collections.Stack		saved_features_stack;
 	}
 }

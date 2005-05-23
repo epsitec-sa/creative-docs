@@ -346,10 +346,10 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			StretchProfile.Scales scales = context.TextStretchScales;
 			
-			//	TODO: ...
+			if (context.TextStretchGlue > 0)
 			{
-				//	La fonte est trop étirée pour pouvoir supporter l'emploi
-				//	de ligatures.
+				font.PushActiveFeatures ();
+				font.DisableActiveFeatures ("liga", "dlig");
 			}
 			
 			//	Génère les glyphes et les informations relatives à l'extensibilité
@@ -410,7 +410,13 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			//	nous venons de déterminer :
 			
 			renderer.Render (context.Frame, font, font_size, color, glyphs, x_pos, y_pos, x_scale, null);
+			
+			if (context.TextStretchGlue > 0)
+			{
+				font.PopActiveFeatures ();
+			}
 		}
+		
 		
 		private int GenerateXScale(byte[] attributes, StretchProfile.Scales scales, double[] x_scale)
 		{
@@ -432,6 +438,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			return kashida_count;
 		}
+		
 		
 		private struct FitScratch
 		{
