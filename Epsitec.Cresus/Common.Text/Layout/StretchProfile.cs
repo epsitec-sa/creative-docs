@@ -113,6 +113,14 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public int								TotalCount
+		{
+			get
+			{
+				return this.CountNoStretch + this.CountCharacter + this.CountSpace + this.CountKashida;
+			}
+		}
+		
 		public double							TotalWidth
 		{
 			get
@@ -235,10 +243,16 @@ namespace Epsitec.Common.Text.Layout
 			
 			for (int i = 0; i < count-1; i++)
 			{
-				this.Add ((Unicode.StretchClass) attributes[i], x_pos[i+1] - x_pos[i]);
+				if (glyphs[i] != 0xffff)
+				{
+					this.Add ((Unicode.StretchClass) attributes[i], x_pos[i+1] - x_pos[i]);
+				}
 			}
 			
-			this.Add ((Unicode.StretchClass) attributes[count-1], x_end - x_pos[count-1]);
+			if (glyphs[count-1] != 0xffff)
+			{
+				this.Add ((Unicode.StretchClass) attributes[count-1], x_end - x_pos[count-1]);
+			}
 		}
 		
 		
@@ -365,6 +379,40 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public override string ToString()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append ("{");
+			buffer.Append ("NoStretch=");
+			buffer.Append (this.CountNoStretch);
+			buffer.Append (":");
+			buffer.Append (this.WidthNoStretch);
+			buffer.Append ("/Character=");
+			buffer.Append (this.CountCharacter);
+			buffer.Append (":");
+			buffer.Append (this.WidthCharacter);
+			buffer.Append ("/Space=");
+			buffer.Append (this.CountSpace);
+			buffer.Append (":");
+			buffer.Append (this.WidthSpace);
+			buffer.Append ("/Kashida=");
+			buffer.Append (this.CountKashida);
+			buffer.Append (":");
+			buffer.Append (this.WidthKashida);
+			buffer.Append ("/EndSpace=");
+			buffer.Append (this.CountEndSpace);
+			buffer.Append (":");
+			buffer.Append (this.WidthEndSpace);
+			buffer.Append ("/Total=");
+			buffer.Append (this.TotalCount);
+			buffer.Append (":");
+			buffer.Append (this.TotalWidth);
+			buffer.Append ("}");
+			
+			return buffer.ToString ();
+		}
+
 		
 		/// <summary>
 		/// La structure Scales permet de définir les échelles pour un 'stretch'

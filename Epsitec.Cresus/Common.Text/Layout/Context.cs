@@ -105,6 +105,22 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public double							TextStretchDelta
+		{
+			get
+			{
+				return this.text_delta;
+			}
+		}
+		
+		public double							TextStretchGlue
+		{
+			get
+			{
+				return this.text_glue;
+			}
+		}
+		
 		
 		public double							X
 		{
@@ -460,7 +476,7 @@ restart:
 						{
 							//	Oups. On vient de réaliser un fit idéal, mais qui ne tient
 							//	pas dans l'espace alloué verticalement. Il faut forcer une
-							//	seconde passe :
+							//	nouvelle passe :
 							
 							def_line_height = this.line_height;
 							result.Clear ();
@@ -533,7 +549,8 @@ restart:
 			
 			this.ox += space * this.disposition;
 			
-			profile.ComputeScales (line_width - space, out this.text_scales);
+			this.text_delta = line_width - space;
+			this.text_profile.ComputeScales (this.text_delta, out this.text_scales);
 			
 			int               end            = this.text_offset + length;
 			Unicode.BreakInfo end_break_info = Unicode.Bits.GetBreakInfo (this.text[this.text_start + end - 1]);
@@ -549,6 +566,29 @@ restart:
 					this.enable_hyphenation = false;
 					break;
 			}
+			
+			
+			//	Détermine si le contenu de la ligne peut être représenté avec les
+			//	facteurs d'étirement calculés dans la phase de 'fit'. En cas de
+			//	problèmes, on peut introduire des cales ('glue') entre les carac-
+			//	tères et modifier la gestion des substitutions de glyphes :
+			
+			double would_be_character_width  = this.text_profile.WidthCharacter * this.text_scales.ScaleCharacter;
+			double would_be_no_stretch_width = this.text_profile.WidthNoStretch * this.text_scales.ScaleNoStretch;
+			
+			this.text_scales.ScaleCharacter = System.Math.Min (1.10, this.text_scales.ScaleCharacter);
+			this.text_scales.ScaleNoStretch = System.Math.Min (1.05, this.text_scales.ScaleNoStretch);
+			
+			double clipped_character_width  = this.text_profile.WidthCharacter * this.text_scales.ScaleCharacter;
+			double clipped_no_stretch_width = this.text_profile.WidthNoStretch * this.text_scales.ScaleNoStretch;
+			
+			double would_be_width = would_be_character_width + would_be_no_stretch_width;
+			double clipped_width  = clipped_character_width  + clipped_no_stretch_width;
+			
+			double glue_width = would_be_width - clipped_width;
+			int    glue_count = System.Math.Max (1, this.text_profile.TotalCount - 1);
+			
+			this.text_glue = glue_width / glue_count;
 			
 			for (;;)
 			{
@@ -855,6 +895,8 @@ restart:
 		private int								text_offset;
 		private StretchProfile					text_profile;
 		private StretchProfile.Scales			text_scales;
+		private double							text_delta;
+		private double							text_glue;
 		
 		private FrameList						frame_list;
 		private int								frame_index = -1;

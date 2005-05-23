@@ -337,9 +337,20 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			Drawing.Color color = Drawing.Color.FromBrightness (0);
 			OpenType.Font font;
 			double        font_size;
+			
 			context.TextContext.GetFont (text[offset], out font, out font_size);
 			
 			//	TODO: déterminer la couleur du texte
+			
+			//	Gérer l'étirement des glyphes en fonction de la fonte sélectionnée :
+			
+			StretchProfile.Scales scales = context.TextStretchScales;
+			
+			//	TODO: ...
+			{
+				//	La fonte est trop étirée pour pouvoir supporter l'emploi
+				//	de ligatures.
+			}
 			
 			//	Génère les glyphes et les informations relatives à l'extensibilité
 			//	pour le fragment de texte :
@@ -374,34 +385,26 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			//	Détermine les mises à l'échelle des divers glyphes, selon leur
 			//	classe d'élasticité :
 			
-			StretchProfile.Scales scales = context.TextStretchScales;
-			
 			int n = glyphs.Length;
 			
 			double[] x_scale = new double[n];
 			double[] x_pos   = new double[n];
+			double[] x_glue  = new double[n];
 			double[] y_pos   = new double[n];
+			
+			this.GenerateXScale (attributes, scales, x_scale);
+			
+			double glue = context.TextStretchGlue;
 			
 			for (int i = 0; i < n; i++)
 			{
-				switch ((Unicode.StretchClass) attributes[i])
-				{
-					case Unicode.StretchClass.NoStretch:		x_scale[i] = scales.ScaleNoStretch;	break;
-					case Unicode.StretchClass.Character:		x_scale[i] = scales.ScaleCharacter;	break;
-					case Unicode.StretchClass.CharacterSpace:	x_scale[i] = scales.ScaleCharacter;	break;
-					case Unicode.StretchClass.Space:			x_scale[i] = scales.ScaleSpace;		break;
-					case Unicode.StretchClass.Kashida:			x_scale[i] = scales.ScaleKashida;	break;
-					
-					default:
-						throw new System.InvalidOperationException ();
-				}
-				
-				y_pos[i] = oy;
+				y_pos[i]  = oy;
+				x_glue[i] = glue;
 			}
 			
 			//	Détermine la position horizontale de chaque glyphe :
 			
-			ox += font.GetPositions (glyphs, font_size, ox, x_pos, x_scale);
+			ox += font.GetPositions (glyphs, font_size, ox, x_pos, x_scale, x_glue);
 			
 			//	Demande à ITextRenderer de faire le rendu avec les positions que
 			//	nous venons de déterminer :
@@ -409,7 +412,26 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			renderer.Render (context.Frame, font, font_size, color, glyphs, x_pos, y_pos, x_scale, null);
 		}
 		
-		
+		private int GenerateXScale(byte[] attributes, StretchProfile.Scales scales, double[] x_scale)
+		{
+			int kashida_count = 0;
+			
+			for (int i = 0; i < x_scale.Length; i++)
+			{
+				Unicode.StretchClass stretch = (Unicode.StretchClass) attributes[i];
+				
+				switch (stretch)
+				{
+					case Unicode.StretchClass.NoStretch:		x_scale[i] = scales.ScaleNoStretch;							break;
+					case Unicode.StretchClass.Character:		x_scale[i] = scales.ScaleCharacter;							break;
+					case Unicode.StretchClass.CharacterSpace:	x_scale[i] = scales.ScaleCharacter;							break;
+					case Unicode.StretchClass.Space:			x_scale[i] = scales.ScaleSpace;								break;
+					case Unicode.StretchClass.Kashida:			x_scale[i] = scales.ScaleKashida;		kashida_count++;	break;
+				}
+			}
+			
+			return kashida_count;
+		}
 		
 		private struct FitScratch
 		{
