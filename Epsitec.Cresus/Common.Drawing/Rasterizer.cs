@@ -189,6 +189,30 @@ namespace Epsitec.Common.Drawing
 			AntiGrain.Rasterizer.AddGlyph(this.agg_ras, font.Handle, glyph, x, y, scale);
 		}
 		
+		public void AddGlyph(Font font, int glyph, double x, double y, double scale, double sx, double sy)
+		{
+			if ((sx == 1.0) &&
+				(sy == 1.0))
+			{
+				this.AddGlyph (font, glyph, x, y, scale);
+			}
+			else
+			{
+				this.CreateOnTheFly ();
+				
+				Transform font_transform = font.SyntheticTransform;
+				
+				font_transform.TX = x;
+				font_transform.TY = y;
+				font_transform.MultiplyBy (this.transform);
+				font_transform.MultiplyByPostfix (Transform.FromScale (sx, sy));
+				
+				AntiGrain.Rasterizer.SetTransform (this.agg_ras, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
+				AntiGrain.Rasterizer.AddGlyph(this.agg_ras, font.Handle, glyph, 0, 0, scale);
+				AntiGrain.Rasterizer.SetTransform (this.agg_ras, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
+			}
+		}
+		
 		public double AddText(Font font, string text, double x, double y, double scale)
 		{
 			this.CreateOnTheFly ();

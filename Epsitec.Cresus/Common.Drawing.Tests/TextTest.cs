@@ -125,7 +125,7 @@ namespace Epsitec.Common.Drawing
 						{
 							if (glyphs[i] < 0xffff)
 							{
-								this.graphics.Rasterizer.AddGlyph (drawing_font, glyphs[i], x[i], y[i], size);
+								this.graphics.Rasterizer.AddGlyph (drawing_font, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
 							}
 						}
 					}
