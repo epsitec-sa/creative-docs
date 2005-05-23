@@ -10,9 +10,7 @@ namespace Epsitec.Common.Text
 	{
 		public TextFitter(TextStory story)
 		{
-			this.story        = story;
-			this.cursors      = new System.Collections.ArrayList ();
-			this.free_cursors = new System.Collections.Stack ();
+			this.TextStory = story;
 			
 			this.frame_list      = new FrameList (this);
 			this.page_collection = new DefaultPageCollection ();
@@ -24,6 +22,15 @@ namespace Epsitec.Common.Text
 			get
 			{
 				return this.story;
+			}
+			set
+			{
+				if (this.story != value)
+				{
+					this.story        = value;
+					this.cursors      = new System.Collections.ArrayList ();
+					this.free_cursors = new System.Collections.Stack ();
+				}
 			}
 		}
 		

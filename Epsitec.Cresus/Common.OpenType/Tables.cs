@@ -152,6 +152,7 @@ namespace Epsitec.Common.OpenType
 		{
 			return new TableEntry (this.data, this.offset + 16*n + 12);
 		}
+		
 		public TableEntry FindTable(string name)
 		{
 			int n = (int) this.NumTables;
@@ -1309,6 +1310,17 @@ namespace Epsitec.Common.OpenType
 			
 			return null;
 		}
+		
+		
+		public static Table_kern Create(TableEntry entry)
+		{
+			if (entry == null)
+			{
+				return null;
+			}
+			
+			return new Table_kern (entry);
+		}
 	}
 	
 	public class KerningTable : Tables
@@ -1593,6 +1605,17 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 		}
+		
+		
+		public static Table_GDEF Create(TableEntry entry)
+		{
+			if (entry == null)
+			{
+				return null;
+			}
+			
+			return new Table_GDEF (entry);
+		}
 	}
 	
 	public class LigatureCaretListTable : Tables
@@ -1852,6 +1875,16 @@ namespace Epsitec.Common.OpenType
 			return features;
 		}
 		
+		
+		public static Table_GSUB Create(TableEntry entry)
+		{
+			if (entry == null)
+			{
+				return null;
+			}
+			
+			return new Table_GSUB (entry);
+		}
 	}
 	
 	public class ScriptListTable : Tables

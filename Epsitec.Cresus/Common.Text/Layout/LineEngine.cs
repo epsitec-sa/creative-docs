@@ -331,7 +331,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 
 		private void RenderRun(Layout.Context context, ITextRenderer renderer, ref double ox, double oy, ulong[] text, int offset, int length)
 		{
-			//	Détermine la font qu'il faudra utiliser pour le fragment de texte
+			//	Détermine la fonte qu'il faudra utiliser pour le fragment de texte
 			//	dont il faut faire le rendu :
 			
 			Drawing.Color color = Drawing.Color.FromBrightness (0);

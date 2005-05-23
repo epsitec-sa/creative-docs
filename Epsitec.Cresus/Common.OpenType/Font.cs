@@ -45,29 +45,23 @@ namespace Epsitec.Common.OpenType
 		
 		internal void Initialize(FontData font_data)
 		{
-			TableEntry entry;
-			
 			this.font_data = font_data;
 			
-			this.ot_GSUB = new Table_GSUB (this.font_data["GSUB"]);
-			this.ot_GDEF = new Table_GDEF (this.font_data["GDEF"]);
+			this.ot_GSUB = Table_GSUB.Create (this.font_data["GSUB"]);
+			this.ot_GDEF = Table_GDEF.Create (this.font_data["GDEF"]);
 			this.ot_cmap = new Table_cmap (this.font_data["cmap"]);
 			this.ot_maxp = new Table_maxp (this.font_data["maxp"]);
 			this.ot_head = new Table_head (this.font_data["head"]);
 			this.ot_hhea = new Table_hhea (this.font_data["hhea"]);
 			this.ot_hmtx = new Table_hmtx (this.font_data["hmtx"]);
 			
-			entry = this.font_data["kern"];
+			Table_kern ot_kern = Table_kern.Create (this.font_data["kern"]);
 			
-			if (entry != null)
+			if ((ot_kern != null) &&
+				(ot_kern.Count > 0) &&
+				(ot_kern.GetKerningTable (0).SubtableFormat == 0))
 			{
-				Table_kern ot_kern = new Table_kern (entry);
-				
-				if ((ot_kern.Count > 0) &&
-					(ot_kern.GetKerningTable (0).SubtableFormat == 0))
-				{
-					this.ot_kern_fmt_0 = ot_kern.GetKerningTable (0).Format0Subtable;
-				}
+				this.ot_kern_fmt_0 = ot_kern.GetKerningTable (0).Format0Subtable;
 			}
 			
 			this.ot_index_mapping = this.ot_cmap.FindFormatSubTable ();
@@ -248,7 +242,20 @@ namespace Epsitec.Common.OpenType
 		
 		public double GetPositions(ushort[] glyphs, double size, double ox, double[] x_pos)
 		{
-			//	TODO: gérer use_system_glyph_size
+			if (this.use_system_glyph_size)
+			{
+				FontIdentity.SizeInfo info = this.identity.GetSizeInfo ((int)(size + 0.5));
+				
+				int width = 0;
+				
+				for (int i = 0; i < glyphs.Length; i++)
+				{
+					x_pos[i] = ox + width;
+					width   += info.GetGlyphWidth (glyphs[i]);
+				}
+				
+				return width;
+			}
 			
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
@@ -287,7 +294,20 @@ namespace Epsitec.Common.OpenType
 		
 		public double GetPositions(ushort[] glyphs, double size, double ox, double[] x_pos, double[] x_scale)
 		{
-			//	TODO: gérer use_system_glyph_size
+			if (this.use_system_glyph_size)
+			{
+				FontIdentity.SizeInfo info = this.identity.GetSizeInfo ((int)(size + 0.5));
+				
+				int width = 0;
+				
+				for (int i = 0; i < glyphs.Length; i++)
+				{
+					x_pos[i] = ox + width;
+					width   += (int)(info.GetGlyphWidth (glyphs[i]) * x_scale[i] + 0.5);
+				}
+				
+				return width;
+			}
 			
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
@@ -303,7 +323,7 @@ namespace Epsitec.Common.OpenType
 				
 				if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
 				{
-					advance  += delta * x_scale[i] * scale;
+					advance += delta * x_scale[i] * scale;
 				}
 				
 				x_pos[i] = ox + advance;
@@ -326,7 +346,21 @@ namespace Epsitec.Common.OpenType
 		
 		public double GetPositions(ushort[] glyphs, double size, double ox, double oy, double[] x_pos, double[] y_pos)
 		{
-			//	TODO: gérer use_system_glyph_size
+			if (this.use_system_glyph_size)
+			{
+				FontIdentity.SizeInfo info = this.identity.GetSizeInfo ((int)(size + 0.5));
+				
+				int width = 0;
+				
+				for (int i = 0; i < glyphs.Length; i++)
+				{
+					x_pos[i] = ox + width;
+					y_pos[i] = oy;
+					width   += info.GetGlyphWidth (glyphs[i]);
+				}
+				
+				return width;
+			}
 			
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
@@ -440,7 +474,8 @@ namespace Epsitec.Common.OpenType
 			this.active_script   = script;
 			this.active_language = language;
 			
-			if (this.ot_GSUB.ScriptListTable.ContainsScript (script))
+			if ((this.ot_GSUB != null) &&
+				(this.ot_GSUB.ScriptListTable.ContainsScript (script)))
 			{
 				int   required_feature  = this.ot_GSUB.GetRequiredFeatureIndex (script, language);
 				int[] optional_features = this.ot_GSUB.GetFeatureIndexes (script, language);
@@ -482,7 +517,7 @@ namespace Epsitec.Common.OpenType
 			
 			this.active_features = collapsed_features;
 			
-			FeatureListTable             feature_list    = this.ot_GSUB.FeatureListTable;
+			FeatureListTable             feature_list    = this.ot_GSUB == null ? null : this.ot_GSUB.FeatureListTable;
 			System.Collections.ArrayList active_features = new System.Collections.ArrayList ();
 			System.Collections.Hashtable active_names    = new System.Collections.Hashtable ();
 			
@@ -525,7 +560,7 @@ namespace Epsitec.Common.OpenType
 			
 			if (this.script_optional_features == null)
 			{
-				int n = feature_list.FeatureCount;
+				int n = feature_list == null ? 0 : feature_list.FeatureCount;
 				
 				for (int i = 0; i < n; i++)
 				{
@@ -549,7 +584,10 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 			
-			this.GenerateSubstitutionLookups (active_features);
+			if (this.ot_GSUB != null)
+			{
+				this.GenerateSubstitutionLookups (active_features);
+			}
 		}
 		
 		public void SelectFontManager(FontManagerType manager)
@@ -571,8 +609,8 @@ namespace Epsitec.Common.OpenType
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			ScriptListTable script_list = this.ot_GSUB.ScriptListTable;
-			int n = script_list.ScriptCount;
+			ScriptListTable script_list = this.ot_GSUB == null ? null : this.ot_GSUB.ScriptListTable;
+			int n = script_list == null ? 0 : script_list.ScriptCount;
 			
 			for (int i = 0; i < n; i++)
 			{
@@ -604,10 +642,10 @@ namespace Epsitec.Common.OpenType
 		{
 			if (this.script_optional_features == null)
 			{
-				FeatureListTable feature_list = this.ot_GSUB.FeatureListTable;
+				FeatureListTable feature_list = this.ot_GSUB == null ? null : this.ot_GSUB.FeatureListTable;
 				System.Collections.Hashtable hash = new System.Collections.Hashtable ();
 				
-				int n = feature_list.FeatureCount;
+				int n = feature_list == null ? 0 : feature_list.FeatureCount;
 				
 				for (int i = 0; i < n; i++)
 				{
@@ -716,6 +754,8 @@ namespace Epsitec.Common.OpenType
 		
 		private void GenerateSubstitutionLookups(System.Collections.ICollection feature_tables)
 		{
+			System.Diagnostics.Debug.Assert (this.ot_GSUB != null);
+			
 			System.Collections.ArrayList lookup_indexes = new System.Collections.ArrayList ();
 			
 			foreach (FeatureTable feature_table in feature_tables)
@@ -1165,7 +1205,7 @@ namespace Epsitec.Common.OpenType
 			
 			double scale = size / this.ot_head.UnitsPerEm;
 			
-			LigatureCaretListTable caret_list = this.ot_GDEF.LigatureCaretListTable;
+			LigatureCaretListTable caret_list = this.ot_GDEF == null ? null : this.ot_GDEF.LigatureCaretListTable;
 			
 			if (caret_list != null)
 			{
