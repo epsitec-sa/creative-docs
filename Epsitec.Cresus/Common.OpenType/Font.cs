@@ -292,7 +292,7 @@ namespace Epsitec.Common.OpenType
 			return advance * scale;
 		}
 		
-		public double GetPositions(ushort[] glyphs, double size, double ox, double[] x_pos, double[] x_scale)
+		public double GetPositions(ushort[] glyphs, double size, double ox, double[] x_pos, double[] x_scale, double[] x_space)
 		{
 			if (this.use_system_glyph_size)
 			{
@@ -455,6 +455,33 @@ namespace Epsitec.Common.OpenType
 			this.MapToGlyphs (text, start, length, out glyphs, out gl_map);
 			
 			return this.HitTest (glyphs, gl_map, size, x, y, out pos, out subpos);
+		}
+		
+		
+		public FontScalingMode GetFontScalingMode(double scale, out double use_scale)
+		{
+			FontScalingMode mode = FontScalingMode.Transparent;
+			
+			use_scale = scale;
+			
+			if (this.use_system_glyph_size)
+			{
+				mode     |= FontScalingMode.PreventStretching;
+				use_scale = 1.0;
+			}
+			
+			if (scale > 1.1)
+			{
+				if (! this.use_system_glyph_size)
+				{
+					use_scale = 1.1;
+				}
+				
+				mode |= FontScalingMode.PreventLigatures;
+				mode |= FontScalingMode.PreventStretching;
+			}
+			
+			return mode;
 		}
 		
 		
