@@ -48,7 +48,7 @@ namespace Epsitec.Common.Text.Layout
 			return Layout.Status.Ok;
 		}
 		
-		public virtual Layout.Status CountGlyphs(Layout.Context context, int length, StretchProfile profile)
+		public virtual Layout.Status FillProfile(Layout.Context context, int length, StretchProfile profile)
 		{
 			return Layout.Status.Ok;
 		}

@@ -594,7 +594,7 @@ restart:
 			{
 				int glyph_count;
 				StretchProfile glyph_profile = new StretchProfile ();
-				this.layout_engine.CountGlyphs (this, end - this.text_offset, glyph_profile);
+				this.layout_engine.FillProfile (this, end - this.text_offset, glyph_profile);
 				glyph_count = glyph_profile.TotalCount;
 				glyph_count = System.Math.Max (1, glyph_count - 1);
 				System.Diagnostics.Debug.WriteLine ("Glue count before: " + glue_count.ToString () + ", after: " + glyph_count.ToString ());

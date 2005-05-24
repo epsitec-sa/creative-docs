@@ -205,7 +205,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			return Layout.Status.Ok;
 		}
 		
-		public override Layout.Status CountGlyphs(Layout.Context context, int length, StretchProfile profile)
+		public override Layout.Status FillProfile(Layout.Context context, int length, StretchProfile profile)
 		{
 			ulong[] text;
 			
@@ -228,10 +228,10 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					if ((engine != this) ||
 						(layout != context.LayoutProperty))
 					{
-						throw new System.NotImplementedException ("Engine change not supported in LineEngine.CountGlyphs.");
+						throw new System.NotImplementedException ("Engine change not supported in LineEngine.FillProfile.");
 					}
 					
-					this.CountGlyphsInRun (context, text, offset, run_length, length == run_length, profile);
+					this.FillProfileWithRun (context, text, offset, run_length, length == run_length, profile);
 					
 					//	Avance au morceau suivant :
 					
@@ -381,13 +381,12 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			//	Détermine la fonte qu'il faudra utiliser pour le fragment de texte
 			//	dont il faut faire le rendu :
 			
-			Drawing.Color color = Drawing.Color.FromBrightness (0);
+			Drawing.Color color;
 			OpenType.Font font;
 			double        font_size;
 			
 			context.TextContext.GetFont (text[offset], out font, out font_size);
-			
-			//	TODO: déterminer la couleur du texte
+			context.TextContext.GetColor (text[offset], out color);
 			
 			//	Gérer l'étirement des glyphes en fonction de la fonte sélectionnée :
 			
@@ -465,7 +464,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			renderer.Render (context.Frame, font, font_size, color, glyphs, x_pos, y_pos, x_scale, null);
 		}
 		
-		private void CountGlyphsInRun(Layout.Context context, ulong[] text, int offset, int length, bool last_run, StretchProfile profile)
+		private void FillProfileWithRun(Layout.Context context, ulong[] text, int offset, int length, bool last_run, StretchProfile profile)
 		{
 			OpenType.Font font;
 			double        font_size;

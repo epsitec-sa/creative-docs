@@ -115,6 +115,41 @@ namespace Epsitec.Common.Text
 			this.get_font_last_font_size     = font_size;
 		}
 		
+		public void GetColor(ulong code, out Drawing.Color color)
+		{
+			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			long current_style_version = this.style_list.InternalStyleTable.Version;
+			
+			if ((this.get_color_last_style_version == current_style_version) &&
+				(this.get_color_last_code == code))
+			{
+				color = this.get_color_last_color;
+				
+				return;
+			}
+			
+			Styles.SimpleStyle style = this.style_list[code];
+			
+			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
+			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			
+			Properties.ColorProperty color_p = style[Properties.WellKnownType.Color] as Properties.ColorProperty;
+			
+			if (color_p == null)
+			{
+				color = Drawing.Color.Empty;
+			}
+			else
+			{
+				color = color_p.TextColor;
+			}
+			
+			this.get_color_last_style_version = current_style_version;
+			this.get_color_last_code          = code;
+			this.get_color_last_color         = color;
+		}
+		
 		public void GetLayoutEngine(ulong code, out Layout.BaseEngine engine, out Properties.LayoutProperty property)
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
@@ -249,6 +284,10 @@ namespace Epsitec.Common.Text
 		private ulong							get_font_last_code;
 		private OpenType.Font					get_font_last_font;
 		private double							get_font_last_font_size;
+		
+		private long							get_color_last_style_version;
+		private ulong							get_color_last_code;
+		private Drawing.Color					get_color_last_color;
 		
 		private long							get_layout_last_style_version;
 		private ulong							get_layout_last_code;

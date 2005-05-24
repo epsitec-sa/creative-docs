@@ -204,6 +204,7 @@ namespace Epsitec.Common.Drawing
 				properties.Add (fp);
 				properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
 				properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, 0.0, 0.0, 0.0, 15, 1, false));
+				properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 				
 				words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
 				
@@ -217,6 +218,7 @@ namespace Epsitec.Common.Drawing
 				properties.Add (fp);
 				properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.FontSizeUnits.Points));
 				properties.Add (new Text.Properties.MarginsProperty (10, 10, 10, 10, 1.0, 0.0, 0.0, 15, 1, false));
+				properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Blue")));
 				
 				this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 				this.painter.TextStory.InsertText (cursor, text);
@@ -229,6 +231,7 @@ namespace Epsitec.Common.Drawing
 				properties.Add (fp);
 				properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
 				properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 1.0, 0.0, 15, 1, false));
+				properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 				
 				this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 				this.painter.TextStory.InsertText (cursor, text);
@@ -240,6 +243,7 @@ namespace Epsitec.Common.Drawing
 				properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
 				properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
 				properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.5, 15, 1, false));
+				properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 				
 				this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 				this.painter.TextStory.InsertText (cursor, text);
@@ -249,6 +253,7 @@ namespace Epsitec.Common.Drawing
 				properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
 				properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
 				properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.4, 0.0, 1.0, 15, 1, false));
+				properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 				
 				this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 				this.painter.TextStory.InsertText (cursor, text);

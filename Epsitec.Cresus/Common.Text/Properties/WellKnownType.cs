@@ -12,6 +12,7 @@ namespace Epsitec.Common.Text.Properties
 	{
 		Font			= 1,
 		FontSize,
+		Color,
 		
 		Styles,
 		Layout,
