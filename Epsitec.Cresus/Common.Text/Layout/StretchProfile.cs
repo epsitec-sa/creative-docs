@@ -255,6 +255,26 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public void Add(OpenType.Font font, double size, ushort[] glyphs, byte[] stretch_class_attributes)
+		{
+			int      count = glyphs.Length;
+			double[] x_pos = new double[count];
+			double   x_end = font.GetPositions (glyphs, size, 0, x_pos);
+			
+			for (int i = 0; i < count-1; i++)
+			{
+				if (glyphs[i] != 0xffff)
+				{
+					this.Add ((Unicode.StretchClass) stretch_class_attributes[i], x_pos[i+1] - x_pos[i]);
+				}
+			}
+			
+			if (glyphs[count-1] != 0xffff)
+			{
+				this.Add ((Unicode.StretchClass) stretch_class_attributes[count-1], x_end - x_pos[count-1]);
+			}
+		}
+		
 		
 		public double ComputePenalty(double width, double fence_before, double fence_after)
 		{

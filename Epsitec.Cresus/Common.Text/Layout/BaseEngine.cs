@@ -126,7 +126,30 @@ namespace Epsitec.Common.Text.Layout
 				}
 			}
 			
-			font.GenerateGlyphs (temp, offset, length, out glyphs, attributes);
+			font.GenerateGlyphs (temp, 0, length, out glyphs, attributes);
+		}
+		
+		public static void GenerateGlyphsAndStretchClassAttributes(OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, out byte[] attributes)
+		{
+			ulong[] temp = new ulong[length];
+			
+			System.Buffer.BlockCopy (text, offset * 8, temp, 0, length * 8);
+			
+			Unicode.BreakAnalyzer analyzer = Unicode.DefaultBreakAnalyzer;
+			
+			attributes = new byte[length];
+			
+			for (int i = 0; i < length; i++)
+			{
+				attributes[i] = (byte) Unicode.BreakAnalyzer.GetStretchClass (Unicode.Bits.GetCode (text[i]));
+				
+				if (analyzer.IsControl (Unicode.Bits.GetCode (temp[i])))
+				{
+					temp[i] &= ~ Unicode.Bits.CodeMask;
+				}
+			}
+			
+			font.GenerateGlyphs (temp, 0, length, out glyphs, attributes);
 		}
 		
 		#region IDisposable Members

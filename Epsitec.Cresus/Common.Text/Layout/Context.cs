@@ -585,29 +585,30 @@ restart:
 			double would_be_width = would_be_character_width + would_be_no_stretch_width;
 			double clipped_width  = clipped_character_width  + clipped_no_stretch_width;
 			
-			double glue_width = would_be_width - clipped_width;
-			int    glue_count = System.Math.Max (1, this.text_profile.TotalCount - 1);
-			
-			this.text_glue = glue_width / glue_count;
-			
-			if (glue_width > 0)
+			if (would_be_width > clipped_width)
 			{
-				int glyph_count;
-				StretchProfile glyph_profile = new StretchProfile ();
-				this.layout_engine.FillProfile (this, end - this.text_offset, glyph_profile);
-				glyph_count = glyph_profile.TotalCount;
-				glyph_count = System.Math.Max (1, glyph_count - 1);
-				System.Diagnostics.Debug.WriteLine ("Glue count before: " + glue_count.ToString () + ", after: " + glyph_count.ToString ());
-				
-				clipped_character_width  = glyph_profile.WidthCharacter * this.text_scales.ScaleCharacter;
-				clipped_no_stretch_width = glyph_profile.WidthNoStretch * this.text_scales.ScaleNoStretch;
-				
-				clipped_width  = clipped_character_width  + clipped_no_stretch_width;
-				
-				glue_width = would_be_width - clipped_width;
-				glue_count = glyph_count;
+				int            glue_count   = System.Math.Max (1, this.text_profile.TotalCount - 1);
+				double         glue_width   = would_be_width - clipped_width;
+				StretchProfile glue_profile = new StretchProfile ();
 				
 				this.text_glue = glue_width / glue_count;
+				
+				this.layout_engine.FillProfile (this, end - this.text_offset, glue_profile);
+				
+				glue_count = glue_profile.TotalCount;
+				glue_count = System.Math.Max (1, glue_count - 1);
+				
+				clipped_character_width  = glue_profile.WidthCharacter * this.text_scales.ScaleCharacter;
+				clipped_no_stretch_width = glue_profile.WidthNoStretch * this.text_scales.ScaleNoStretch;
+				
+				clipped_width = clipped_character_width + clipped_no_stretch_width;
+				glue_width    = would_be_width - clipped_width;
+				
+				this.text_glue = glue_width / glue_count;
+			}
+			else
+			{
+				this.text_glue = 0;
 			}
 			
 			for (;;)

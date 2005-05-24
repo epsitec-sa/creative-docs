@@ -50,6 +50,7 @@ namespace Epsitec.Common.Drawing
 			NativeTextRenderer.ExtendedTextOut (pixmap, font_handle, (int) (box_y - oy - hy), glyphs, start, length-start, x, win32_color);
 		}
 		
+		
 		private static void ExtendedTextOut(Pixmap pixmap, System.IntPtr font_handle, int oy, ushort[] glyphs, int offset, int length, double[] x, uint color)
 		{
 			int[]    dx_array = new int[length];

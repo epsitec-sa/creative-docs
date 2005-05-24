@@ -289,6 +289,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				
 				ulong    hyphen = scratch.Font.GetHyphen ();
 				ushort[] glyphs;
+				byte[]   attr;
 				bool     can_break;
 				bool     add_break;
 				
@@ -298,26 +299,23 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					//	correctement des langues comme le suédois ou l'ancien allemand
 					//	qui peuvent provoquer le dédoublement de certains caractères) :
 					
-					int   len = frag_length + 1;
-					int   end = offset + frag_length;
-					ulong old = text[end];
-					text[end] = hyphen;
+					ulong[] temp = this.GetHyphenatedText (text, offset, frag_length, hyphen);
 					
-					glyphs    = BaseEngine.GenerateGlyphs (scratch.Font, text, offset, len);
+					BaseEngine.GenerateGlyphsAndStretchClassAttributes (scratch.Font, temp, 0, frag_length + 1, out glyphs, out attr);
+					
 					can_break = true;
 					add_break = true;
 					profile   = new StretchProfile (scratch.StretchProfile);
 					
-					profile.Add (scratch.Font, scratch.FontSize, text, offset, len);
-					
-					text[end] = old;
+					profile.Add (scratch.Font, scratch.FontSize, glyphs, attr);
 					
 					scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize);
 				}
 				else
 				{
 					profile = scratch.StretchProfile;
-					glyphs  = BaseEngine.GenerateGlyphs (scratch.Font, text, offset, frag_length);
+					
+					BaseEngine.GenerateGlyphsAndStretchClassAttributes (scratch.Font, text, offset, frag_length, out glyphs, out attr);
 					
 					scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize);
 					
@@ -345,7 +343,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					can_break = (run_length == text_length);
 					add_break = scratch.AddBreak && (scratch.WordBreakInfo == Unicode.BreakInfo.Optional);
 					
-					profile.Add (scratch.Font, scratch.FontSize, text, offset, frag_length);
+					profile.Add (scratch.Font, scratch.FontSize, glyphs, attr);
 				}
 				
 				if (scratch.Advance+scratch.TextWidth-profile.WidthEndSpace > scratch.FenceMaxX)
@@ -414,17 +412,12 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				//	correctement des langues comme le suédois ou l'ancien allemand
 				//	qui peuvent provoquer le dédoublement de certains caractères) :
 				
-				ulong hyphen = font.GetHyphen ();
+				ulong[] temp = this.GetHyphenatedText (text, offset, length, font.GetHyphen ());
+				int     end  = temp.Length - 1;
 				
-				int   end = offset + length;
-				ulong old = text[end];
+				attributes[end] = Unicode.BreakAnalyzer.GetStretchClass (temp[end]);
 				
-				text[end]       = hyphen;
-				attributes[end] = Unicode.BreakAnalyzer.GetStretchClass (hyphen);
-				
-				BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, attributes);
-				
-				text[end] = old;
+				BaseEngine.GenerateGlyphs (font, temp, 0, length+1, out glyphs, attributes);
 			}
 			else
 			{
@@ -464,6 +457,17 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			renderer.Render (context.Frame, font, font_size, color, glyphs, x_pos, y_pos, x_scale, null);
 		}
 		
+		private ulong[] GetHyphenatedText(ulong[] text, int offset, int length, ulong hyphen)
+		{
+			ulong[] copy = new ulong[length+1];
+			
+			System.Buffer.BlockCopy (text, offset * 8, copy, 0, length * 8);
+			
+			copy[length] = hyphen;
+			
+			return copy;
+		}
+		
 		private void FillProfileWithRun(Layout.Context context, ulong[] text, int offset, int length, bool last_run, StretchProfile profile)
 		{
 			OpenType.Font font;
@@ -482,11 +486,6 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			//	Génère les glyphes et les informations relatives à l'extensibilité
 			//	pour le fragment de texte :
 			
-			ushort[] glyphs     = null;
-			byte[]   attributes = new byte[length+10];
-			
-			Unicode.BreakAnalyzer.GetStretchClass (text, offset, length, attributes);
-			
 			if ((last_run) &&
 				(context.EnableHyphenation)) // TODO: tirer au clair, où doit-on ajouter la césure ???
 			{
@@ -494,22 +493,12 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				//	correctement des langues comme le suédois ou l'ancien allemand
 				//	qui peuvent provoquer le dédoublement de certains caractères) :
 				
-				ulong hyphen = font.GetHyphen ();
+				ulong[] temp = this.GetHyphenatedText (text, offset, length, font.GetHyphen ());
 				
-				int   end = offset + length;
-				ulong old = text[end];
-				
-				text[end]       = hyphen;
-				attributes[end] = Unicode.BreakAnalyzer.GetStretchClass (hyphen);
-				
-				BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, attributes);
-				profile.Add (font, font_size, text, offset, length);
-				
-				text[end] = old;
+				profile.Add (font, font_size, temp, 0, length + 1);
 			}
 			else
 			{
-				BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, attributes);
 				profile.Add (font, font_size, text, offset, length);
 			}
 			
