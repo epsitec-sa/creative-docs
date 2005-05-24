@@ -142,6 +142,16 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 
+		[Test] public void CheckLineCaps()
+		{
+			Window window = new Window ();
+			
+			window.Text = "CheckLineCaps";
+			window.Root.PaintForeground += new PaintEventHandler(LineCaps_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+
 		[Test] public void CheckGradient1()
 		{
 			Window window = new Window ();
@@ -836,6 +846,55 @@ namespace Epsitec.Common.Drawing
 			
 			e.Graphics.AddText (0, cy + 10, root.Client.Width, 20, "The quick brown fox jumps over the lazy dog !", font, 12, ContentAlignment.BottomCenter);
 			e.Graphics.RenderSolid (Color.FromRGB (0, 0, 0.4));
+		}
+		
+		private void LineCaps_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double dx = root.Client.Width;
+			double dy = root.Client.Height;
+			
+			double y;
+			
+			y = 25;
+			
+			e.Graphics.LineCap = CapStyle.Round;
+			e.Graphics.LineWidth = 40;
+			
+			e.Graphics.AddLine (25, y, dx - 25, y);
+			e.Graphics.RenderSolid (Color.FromBrightness (0));
+			
+			e.Graphics.LineCap = CapStyle.Round;
+			e.Graphics.LineWidth = 2;
+			e.Graphics.AddLine (25, y, dx - 25, y);
+			e.Graphics.RenderSolid (Color.FromBrightness (1));
+			
+			y = 75;
+			
+			e.Graphics.LineCap = CapStyle.Square;
+			e.Graphics.LineWidth = 40;
+			
+			e.Graphics.AddLine (25, y, dx - 25, y);
+			e.Graphics.RenderSolid (Color.FromBrightness (0));
+			
+			e.Graphics.LineCap = CapStyle.Round;
+			e.Graphics.LineWidth = 2;
+			e.Graphics.AddLine (25, y, dx - 25, y);
+			e.Graphics.RenderSolid (Color.FromBrightness (1));
+			
+			y = 125;
+			
+			e.Graphics.LineCap = CapStyle.Butt;
+			e.Graphics.LineWidth = 40;
+			
+			e.Graphics.AddLine (25, y, dx - 25, y);
+			e.Graphics.RenderSolid (Color.FromBrightness (0));
+			
+			e.Graphics.LineCap = CapStyle.Round;
+			e.Graphics.LineWidth = 2;
+			e.Graphics.AddLine (25, y, dx - 25, y);
+			e.Graphics.RenderSolid (Color.FromBrightness (1));
 		}
 		
 		private void Gradient1_PaintForeground(object sender, PaintEventArgs e)

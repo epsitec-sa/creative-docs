@@ -282,6 +282,8 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.IsEnabled )
 			{
+				graphics.LineCap = Drawing.CapStyle.Round;
+				
 				graphics.AddLine(rect.Left+0.5, rect.Bottom+0.5, rect.Right-0.5, rect.Top-0.5);
 				graphics.AddLine(rect.Left+0.5, rect.Top-0.5, rect.Right-0.5, rect.Bottom+0.5);
 				graphics.RenderSolid(adorner.ColorBorder);
