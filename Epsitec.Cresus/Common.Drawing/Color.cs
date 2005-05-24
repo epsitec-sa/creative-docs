@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -311,7 +311,17 @@ namespace Epsitec.Common.Drawing
 			throw new System.ArgumentException (string.Format ("Invalid color specification ({0}).", value));
 		}
 		
-
+		public static string ToString(Color color, System.Globalization.CultureInfo culture)
+		{
+			if (color.A == 1.0)
+			{
+				return string.Format ("{0};{1};{2}", color.R, color.G, color.B);
+			}
+			else
+			{
+				return string.Format ("{0};{1};{2};{3}", color.A, color.R, color.G, color.B);
+			}
+		}
 		
 		public static bool operator==(Color a, Color b)
 		{
@@ -420,15 +430,7 @@ namespace Epsitec.Common.Drawing
 			
 			public override string ToString(object value, System.Globalization.CultureInfo culture)
 			{
-				Color color = (Color) value;
-				if (color.A == 1.0)
-				{
-					return string.Format ("{0};{1};{2}", color.R, color.G, color.B);
-				}
-				else
-				{
-					return string.Format ("{0};{1};{2};{3}", color.A, color.R, color.G, color.B);
-				}
+				return Color.ToString ((Color) value, culture);
 			}
 		}
 		
