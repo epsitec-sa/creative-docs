@@ -13,6 +13,8 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (@"[null]"     == SerializerSupport.SerializeString (null));
 			Debug.Assert.IsTrue (@"\[\]\:x\\y" == SerializerSupport.SerializeString (@"[]/x\y"));
 			Debug.Assert.IsTrue (@"a\:b\\:c"   == SerializerSupport.SerializeStringArray (new string[] { "a", "b/c"}));
+			Debug.Assert.IsTrue (@"[null]"     == SerializerSupport.SerializeStringArray (null));
+			Debug.Assert.IsTrue (@"[empty]"    == SerializerSupport.SerializeStringArray (new string[] { }));
 			
 			Debug.Assert.IsTrue (@"[NaN]" == SerializerSupport.SerializeDouble (System.Double.NaN));
 			Debug.Assert.IsTrue (@"10"    == SerializerSupport.SerializeDouble (10));
@@ -39,6 +41,8 @@ namespace Epsitec.Common.Text.Tests
 			string[] array2 = new string[] { "a", "b/c"};
 			
 			Debug.Assert.IsTrue (Types.Comparer.Equal (array1, array2));
+			Debug.Assert.IsNull (SerializerSupport.DeserializeStringArray ("[null]"));
+			Debug.Assert.IsTrue (SerializerSupport.DeserializeStringArray ("[empty]").Length == 0);
 		}
 	}
 }

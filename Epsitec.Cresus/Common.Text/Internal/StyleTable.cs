@@ -190,16 +190,19 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public Styles.SimpleStyle GetStyle(ulong code)
+		public Styles.SimpleStyle GetStyleFromIndex(int index)
 		{
-			int index = Internal.CharMarker.GetStyleIndex (code);
-			
 			if (index == 0)
 			{
 				return null;
 			}
 			
 			return this.styles[index-1] as Styles.SimpleStyle;
+		}
+		
+		public Styles.SimpleStyle GetStyle(ulong code)
+		{
+			return this.GetStyleFromIndex (Internal.CharMarker.GetStyleIndex (code));
 		}
 		
 		public Styles.LocalSettings GetLocalSettings(ulong code)

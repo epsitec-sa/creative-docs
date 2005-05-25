@@ -70,6 +70,10 @@ namespace Epsitec.Common.Text
 			{
 				return "[null]";
 			}
+			else if (value.Length == 0)
+			{
+				return "[empty]";
+			}
 			else
 			{
 				string[] array = new string[value.Length];
@@ -171,6 +175,10 @@ namespace Epsitec.Common.Text
 			if (value == "[null]")
 			{
 				return null;
+			}
+			else if (value == "[empty]")
+			{
+				return new string[0];
 			}
 			else
 			{

@@ -10,6 +10,13 @@ namespace Epsitec.Common.Drawing
 			Font.Initialise ();
 		}
 		
+		[Test] public void CheckGetUnicodeName()
+		{
+			System.Console.Out.WriteLine ("% --> {0}", TextBreak.GetUnicodeName ('%'));
+			System.Console.Out.WriteLine ("¼ --> {0}", TextBreak.GetUnicodeName ('¼'));
+			System.Console.Out.WriteLine ("ç --> {0}", TextBreak.GetUnicodeName ('ç'));
+		}
+		
 		[Test] /*[Ignore ("too slow") ]*/ public void CheckInit()
 		{
 			int n = Font.Count;

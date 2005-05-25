@@ -74,6 +74,12 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		internal Styles.SimpleStyle GetStyleFromIndex(int index)
+		{
+			return this.internal_styles.GetStyleFromIndex (index);
+		}
+		
+		
 		private void Attach(TextStyle style)
 		{
 			string name = style.Name;

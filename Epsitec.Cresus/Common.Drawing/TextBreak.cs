@@ -220,6 +220,12 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public static string GetUnicodeName(int code)
+		{
+			return AntiGrain.TextBreak.GetUnicodeName (code);
+		}
+		
+		
 		public class XRun
 		{
 			// Décrit une portion de texte d'une longueur quelconque utilisant

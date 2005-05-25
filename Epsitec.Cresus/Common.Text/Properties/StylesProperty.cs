@@ -89,33 +89,30 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
+			string[] names = new string[this.styles.Length];
+			
 			for (int i = 0; i < this.styles.Length; i++)
 			{
-				if (i > 0)
-				{
-					buffer.Append (';');
-				}
-				
-				buffer.Append (this.styles[i].Name);
+				names[i] = this.styles[i].Name;
 			}
+			
+			SerializerSupport.Join (buffer,
+				/**/				SerializerSupport.SerializeStringArray (names));
 		}
 		
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
-			string[] args = text.Substring (pos, length).Split (';');
+			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			if (args[0].Length > 0)
+			Debug.Assert.IsTrue (args.Length == 1);
+			
+			string[] names = SerializerSupport.DeserializeStringArray (args[0]);
+			
+			this.styles = new TextStyle[names.Length];
+			
+			for (int i = 0; i < names.Length; i++)
 			{
-				this.styles = new TextStyle[args.Length];
-				
-				for (int i = 0; i < args.Length; i++)
-				{
-					this.styles[i] = context.StyleList.GetTextStyle (args[i]);
-				}
-			}
-			else
-			{
-				this.styles = new TextStyle[0];
+				this.styles[i] = context.StyleList.GetTextStyle (names[i]);
 			}
 		}
 

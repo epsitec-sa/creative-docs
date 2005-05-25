@@ -97,7 +97,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 2);
+			Debug.Assert.IsTrue (args.Length == 3);
 			
 			this.face_name  = SerializerSupport.DeserializeString (args[0]);
 			this.style_name = SerializerSupport.DeserializeString (args[1]);

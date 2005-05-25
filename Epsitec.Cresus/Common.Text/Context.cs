@@ -65,12 +65,11 @@ namespace Epsitec.Common.Text
 		
 		public void GetFont(ulong code, out OpenType.Font font, out double font_size)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
-			
+			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
 			long current_style_version = this.style_list.InternalStyleTable.Version;
 			
 			if ((this.get_font_last_style_version == current_style_version) &&
-				(this.get_font_last_code == code))
+				(this.get_font_last_style_index   == current_style_index))
 			{
 				font      = this.get_font_last_font;
 				font_size = this.get_font_last_font_size;
@@ -78,10 +77,7 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			Styles.SimpleStyle style = this.style_list[code];
-			
-			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
-			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
 			
 			Properties.FontProperty     font_p      = style[Properties.WellKnownType.Font] as Properties.FontProperty;
 			Properties.FontSizeProperty font_size_p = style[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
@@ -110,7 +106,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.get_font_last_style_version = current_style_version;
-			this.get_font_last_code          = code;
+			this.get_font_last_style_index   = current_style_index;
 			this.get_font_last_font          = font;
 			this.get_font_last_font_size     = font_size;
 		}
@@ -152,12 +148,11 @@ namespace Epsitec.Common.Text
 		
 		public void GetLayoutEngine(ulong code, out Layout.BaseEngine engine, out Properties.LayoutProperty property)
 		{
-			code = Internal.CharMarker.ExtractStyleAndSettings (code);
-			
+			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
 			long current_style_version = this.style_list.InternalStyleTable.Version;
 			
 			if ((this.get_layout_last_style_version == current_style_version) &&
-				(this.get_layout_last_code == code))
+				(this.get_layout_last_style_index   == current_style_index))
 			{
 				engine   = this.get_layout_last_engine;
 				property = this.get_layout_last_property;
@@ -165,10 +160,7 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			Styles.SimpleStyle style = this.style_list[code];
-			
-			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
-			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
 			
 			property = style[Properties.WellKnownType.Layout] as Properties.LayoutProperty;
 			
@@ -187,7 +179,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.get_layout_last_style_version = current_style_version;
-			this.get_layout_last_code          = code;
+			this.get_layout_last_style_index   = current_style_index;
 			this.get_layout_last_property      = property;
 			this.get_layout_last_engine        = engine;
 		}
@@ -281,7 +273,7 @@ namespace Epsitec.Common.Text
 		private System.Collections.Hashtable	font_cache;
 		
 		private long							get_font_last_style_version;
-		private ulong							get_font_last_code;
+		private int								get_font_last_style_index;
 		private OpenType.Font					get_font_last_font;
 		private double							get_font_last_font_size;
 		
@@ -290,7 +282,7 @@ namespace Epsitec.Common.Text
 		private Drawing.Color					get_color_last_color;
 		
 		private long							get_layout_last_style_version;
-		private ulong							get_layout_last_code;
+		private int								get_layout_last_style_index;
 		private Properties.LayoutProperty		get_layout_last_property;
 		private Layout.BaseEngine				get_layout_last_engine;
 		
