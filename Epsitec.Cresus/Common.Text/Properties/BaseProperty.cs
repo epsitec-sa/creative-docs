@@ -31,6 +31,14 @@ namespace Epsitec.Common.Text.Properties
 			get;
 		}
 		
+		public virtual CombinationMode			CombinationMode
+		{
+			get
+			{
+				return CombinationMode.Combine;
+			}
+		}
+		
 		
 		public void Invalidate()
 		{

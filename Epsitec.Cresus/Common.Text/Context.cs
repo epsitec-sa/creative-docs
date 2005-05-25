@@ -127,10 +127,9 @@ namespace Epsitec.Common.Text
 			
 			Styles.SimpleStyle style = this.style_list[code];
 			
-			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
 			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
 			
-			Properties.ColorProperty color_p = style[Properties.WellKnownType.Color] as Properties.ColorProperty;
+			Properties.ColorProperty color_p = extra_settings[Properties.WellKnownType.Color] as Properties.ColorProperty;
 			
 			if (color_p == null)
 			{

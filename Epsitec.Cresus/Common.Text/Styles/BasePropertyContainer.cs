@@ -202,6 +202,60 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
+		public Properties.BaseProperty[] FindProperties(System.Type type)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			if (this.properties != null)
+			{
+				for (int i = 0; i < this.properties.Length; i++)
+				{
+					if (this.properties[i].GetType () == type)
+					{
+						list.Add (this.properties[i]);
+					}
+				}
+			}
+			
+			Properties.BaseProperty[] props = new Properties.BaseProperty[list.Count];
+			list.CopyTo (props);
+			
+			return props;
+		}
+		
+		public Properties.BaseProperty[] FindProperties(Properties.WellKnownType type)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			if (this.properties != null)
+			{
+				for (int i = 0; i < this.properties.Length; i++)
+				{
+					Properties.WellKnownType found = this.properties[i].WellKnownType;
+					
+					//	On peut s'arrêter dès que l'on trouve une propriété avec
+					//	un WellKnownType plus grand que celui recherché, car la
+					//	table est triée :
+					
+					if (found > type)
+					{
+						break;
+					}
+					
+					if (found == type)
+					{
+						list.Add (this.properties[i]);
+					}
+				}
+			}
+			
+			Properties.BaseProperty[] props = new Properties.BaseProperty[list.Count];
+			list.CopyTo (props);
+			
+			return props;
+		}
+		
+		
 		public Styles.BasePropertyContainer.Accumulator StartAccumulation()
 		{
 			return new Styles.BasePropertyContainer.Accumulator (this);

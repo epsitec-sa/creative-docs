@@ -152,6 +152,11 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public static string SerializeEnum(System.Enum value)
+		{
+			return value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+		}
+		
 		public static string SerializeBoolean(bool value)
 		{
 			return value ? "[true]" : "[false]";
@@ -203,6 +208,11 @@ namespace Epsitec.Common.Text
 			{
 				return double.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
 			}
+		}
+		
+		public static object DeserializeEnum(System.Type type, string value)
+		{
+			return System.Enum.Parse (type, value);
 		}
 		
 		public static bool DeserializeBoolean(string value)

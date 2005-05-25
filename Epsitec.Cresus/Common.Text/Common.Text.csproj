@@ -354,12 +354,27 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\CombinationMode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\FontProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Properties\FontSizeProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\FontSizeUnits.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\FontSizeUnitsTools.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -385,6 +400,11 @@
                 />
                 <File
                     RelPath = "Properties\TabProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\UnderlineProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

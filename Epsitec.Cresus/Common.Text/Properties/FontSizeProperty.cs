@@ -85,8 +85,8 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				this.size.ToString (System.Globalization.CultureInfo.InvariantCulture),
-				/**/				this.units.ToString ());
+				/**/				SerializerSupport.SerializeDouble (this.size),
+				/**/				SerializerSupport.SerializeEnum (this.units));
 		}
 
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
@@ -95,8 +95,8 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 2);
 			
-			double        size  = System.Double.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture);
-			FontSizeUnits units = (FontSizeUnits) System.Enum.Parse (typeof (FontSizeUnits), args[1]);
+			double        size  = SerializerSupport.DeserializeDouble (args[0]);
+			FontSizeUnits units = (FontSizeUnits) SerializerSupport.DeserializeEnum (typeof (FontSizeUnits), args[1]);
 			
 			this.size  = size;
 			this.units = units;
@@ -110,31 +110,7 @@ namespace Epsitec.Common.Text.Properties
 			FontSizeProperty b = property as FontSizeProperty;
 			FontSizeProperty c = new FontSizeProperty ();
 			
-			switch (b.Units)
-			{
-				case FontSizeUnits.Percent:				//	xxx * Percent --> xxx
-					c.Units = a.Units;
-					c.Size  = a.Size * b.Size / 100.0;
-					break;
-				
-				case FontSizeUnits.Points:				//	Points --> Points (écrase)
-					c.Units = b.Units;
-					c.Size  = b.Size;
-					break;
-				
-				case FontSizeUnits.DeltaPoints:			//	(Delta)Points + DeltaPoints --> (Delta)Points, sinon erreur
-					if ((a.Units != FontSizeUnits.Points) &&
-						(a.Units != FontSizeUnits.DeltaPoints))
-					{
-						throw new System.InvalidOperationException ("Invalid units combination.");
-					}
-					c.Units = a.Units;
-					c.Size  = a.Size + b.Size;
-					break;
-				
-				default:
-					throw new System.InvalidOperationException ("Unsupported units.");
-			}
+			FontSizeUnitsTools.Combine (a.size, a.units, b.size, b.units, out c.size, out c.units);
 			
 			c.DefineVersion (System.Math.Max (a.Version, b.Version));
 			
@@ -163,12 +139,5 @@ namespace Epsitec.Common.Text.Properties
 		
 		private double							size;
 		private FontSizeUnits					units;
-	}
-	
-	public enum FontSizeUnits : byte
-	{
-		Points,
-		DeltaPoints,
-		Percent,
 	}
 }

@@ -19,6 +19,8 @@ namespace Epsitec.Common.Text.Properties
 		Margins,
 		Tab,
 		
+		Underline,
+		
 		Other			= 1000000,
 	}
 }
