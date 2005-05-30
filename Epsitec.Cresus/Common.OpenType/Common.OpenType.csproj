@@ -124,6 +124,26 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "FontNumeralAlignment.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FontNumeralStyle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FontStyle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "FontWeight.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Support.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

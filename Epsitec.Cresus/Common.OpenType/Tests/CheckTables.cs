@@ -21,7 +21,7 @@ namespace Epsitec.Common.OpenType.Tests
 				string font_face  = font.InvariantFaceName;
 				string font_style = font.InvariantStyleName;
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0}/{1} ({2}/{3})\n    weight={5}, italic={6}, kerning={7}\n    {4}", font_face, font_style, font.LocaleFaceName, font.LocaleStyleName, font.FullName, font.FontWeight, font.FontIsItalic, CheckTables.TestKerningInformation (font)));
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}/{1} ({2}/{3})\n    weight={5}, italic={6}, kerning={7}\n    {4}", font_face, font_style, font.LocaleFaceName, font.LocaleStyleName, font.FullName, font.FontWeight, font.FontStyle, CheckTables.TestKerningInformation (font)));
 			}
 			
 			Font         arial    = collection.CreateFont ("Arial Unicode MS");

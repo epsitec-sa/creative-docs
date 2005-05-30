@@ -76,19 +76,35 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public int								FontWeight
+		public FontWeight						FontWeight
 		{
 			get
 			{
-				return Platform.Neutral.GetFontWeight (this.record);
+				return (FontWeight) Platform.Neutral.GetFontWeight (this.record);
 			}
 		}
 		
-		public bool								FontIsItalic
+		public FontStyle						FontStyle
 		{
 			get
 			{
-				return Platform.Neutral.GetFontItalic (this.record) != 0;
+				if (Platform.Neutral.GetFontItalic (this.record) == 0)
+				{
+					return FontStyle.Normal;
+				}
+				
+				string name = this.InvariantStyleName.ToLower (System.Globalization.CultureInfo.InvariantCulture);
+				
+				if ((name.IndexOf ("italic") != -1) ||
+					(name.IndexOf ("cursive") != -1) ||
+					(name.IndexOf ("kursiv") != -1))
+				{
+					return FontStyle.Italic;
+				}
+				else
+				{
+					return FontStyle.Oblique;
+				}
 			}
 		}
 		
