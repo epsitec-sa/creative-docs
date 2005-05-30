@@ -44,6 +44,7 @@ namespace Epsitec.App.DocumentEditor
 												WindowStyles.CanMaximize |
 												WindowStyles.HasCloseButton;
 
+			//this.mainWindow.Root.SetClientZoom(2.0);
 			this.mainWindow.Name = "Application";  // utilisé pour générer "QuitApplication" !
 			this.mainWindow.PreventAutoClose = true;
 			this.mainWindow.IsValidDropTarget = true;

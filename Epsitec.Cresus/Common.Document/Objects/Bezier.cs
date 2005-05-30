@@ -1042,7 +1042,7 @@ namespace Epsitec.Common.Document.Objects
 			Point p2 = this.Handle(r2).Position;
 			double len = Point.Distance(p1, p2);
 			double angle = Point.ComputeAngleDeg(p1, p2);
-			string text = string.Format(Res.Strings.Object.Bezier.Info, this.document.Modifier.RealToString(len), angle.ToString("F1"));
+			string text = string.Format(Res.Strings.Object.Bezier.Info, this.document.Modifier.RealToString(len), this.document.Modifier.AngleToString(angle));
 			this.document.Modifier.TextInfoModif = text;
 		}
 

@@ -1,4 +1,5 @@
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document
 {
@@ -7,6 +8,59 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class Misc
 	{
+		// Ajoute la liste des fontes dans la liste d'un TextFieldCombo.
+		static public void AddFontList(TextFieldCombo combo, bool all)
+		{
+			Font.FaceInfo[] list = Font.Faces;
+			foreach ( Font.FaceInfo info in list )
+			{
+				if ( all || info.IsLatin )
+				{
+					combo.Items.Add(info.Name);
+				}
+			}
+		}
+
+		// Donne une fonte d'après son nom.
+		static public Font GetFont(string fontName)
+		{
+			Font font = Font.GetFont(fontName, "Regular");
+
+			if ( font == null )
+			{
+				font = Font.GetFontFallback(fontName);
+			}
+			
+			return font;
+		}
+
+		// Retourne le nom d'un caractère Unicode.
+		static public string GetUnicodeName(int code)
+		{
+			if ( code == 0 )  return "";
+
+			string text = TextBreak.GetUnicodeName(code);
+
+			bool minus = false;
+			for( int i=0 ; i<text.Length ; i++ )
+			{
+				if ( text[i] >= 'a' && text[i] <= 'z' )
+				{
+					minus = true;  // contient une lettre minuscule
+					break;
+				}
+			}
+
+			if ( !minus )  // aucune minuscule dans le texte ?
+			{
+				// Première lettre en majuscule, le reste en minuscules.
+				text = string.Format("{0}{1}", text.Substring(0, 1).ToUpper(), text.Substring(1, text.Length-1).ToLower());
+			}
+
+			return text;
+		}
+
+
 		// Retourne le texte en gras.
 		static public string Bold(string text)
 		{

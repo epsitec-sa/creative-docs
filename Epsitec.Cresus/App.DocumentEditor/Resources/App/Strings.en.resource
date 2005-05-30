@@ -74,7 +74,8 @@
 	<data name="Dialog.About.Demo">demo</data>
 	<data name="Dialog.About.Expired">expired</data>
 
-	<data name="Dialog.Export.Title">Exporting {0}</data>
+	<data name="Dialog.Export.Title1">Exporting</data>
+	<data name="Dialog.Export.Title2">Exporting {0}</data>
 	<data name="Dialog.Export.Button.OK">Export</data>
 	<data name="Dialog.Export.Button.Cancel">Cancel</data>
 	<data name="Dialog.Export.Tooltip.OK">Export image</data>

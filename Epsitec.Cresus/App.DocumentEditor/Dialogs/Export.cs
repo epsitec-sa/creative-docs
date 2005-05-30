@@ -62,7 +62,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.editor.CurrentDocument.Dialogs.BuildExport(this.window);
 			}
 
-			this.window.Text = string.Format(Res.Strings.Dialog.Export.Title, System.IO.Path.GetFileName(filename));
+			this.window.Text = string.Format(Res.Strings.Dialog.Export.Title2, System.IO.Path.GetFileName(filename));
 			this.window.Show();
 		}
 

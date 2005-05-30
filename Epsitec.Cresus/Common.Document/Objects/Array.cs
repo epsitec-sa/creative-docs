@@ -1745,7 +1745,7 @@ namespace Epsitec.Common.Document.Objects
 			Point p0 = this.Handle(0).Position;
 			Point p1 = new Point(p0.X+this.draftCellWidth, p0.Y+this.draftCellHeight);
 			string text = string.Format(" {0} x {1} ", this.DraftColumns(), this.DraftRows());
-			Font font = Font.GetFont("Tahoma", "Regular");
+			Font font = Misc.GetFont("Tahoma");
 			double ta = font.GetTextAdvance(text);
 			double fa = font.Ascender;
 			double rapport = ta/fa;

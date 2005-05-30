@@ -74,12 +74,31 @@
 	<data name="Dialog.About.Demo">démo</data>
 	<data name="Dialog.About.Expired">échu</data>
 
-	<data name="Dialog.Export.Title">Exportation de {0}</data>
+	<data name="Dialog.Export.Title1">Exportation</data>
+	<data name="Dialog.Export.Title2">Exportation de {0}</data>
 	<data name="Dialog.Export.Button.OK">Exporter</data>
 	<data name="Dialog.Export.Button.Cancel">Annuler</data>
 	<data name="Dialog.Export.Tooltip.OK">Exporter l'image</data>
 	<data name="Dialog.Export.Tooltip.Cancel">Annuler l'exportation</data>
 
+	<data name="Dialog.Glyphs.Title">Caractères spéciaux</data>
+	<data name="Dialog.Glyphs.TabPage.List">Listes partielles</data>
+	<data name="Dialog.Glyphs.TabPage.Array">Tableaux complets</data>
+	<data name="Dialog.Glyphs.Button.Insert">Insérer</data>
+	<data name="Dialog.Glyphs.Tooltip.Insert">Insérer dans le texte</data>
+	<data name="Dialog.Glyphs.Tooltip.ArrayMinus">Aperçu plus petit</data>
+	<data name="Dialog.Glyphs.Tooltip.ArrayPlus">Aperçu plus grand</data>
+	<data name="Dialog.Glyphs.Tooltip.CurrentFont">Récupérer la police en cours</data>
+	<data name="Dialog.Glyphs.Font">Police</data>
+	<data name="Dialog.Glyphs.Family.List">Famille</data>
+	<data name="Dialog.Glyphs.Family.Typo">Typographie</data>
+	<data name="Dialog.Glyphs.Family.Space">Espaces</data>
+	<data name="Dialog.Glyphs.Family.Business">Commercial</data>
+	<data name="Dialog.Glyphs.Family.Math">Mathématique</data>
+	<data name="Dialog.Glyphs.Family.GreekLower">Lettres grecques minuscules</data>
+	<data name="Dialog.Glyphs.Family.GreekUpper">Lettres grecques majuscules</data>
+	<data name="Dialog.Glyphs.Family.Symbol">Symboles</data>
+	
 	<data name="Dialog.Infos.Title">Informations</data>
 
 	<data name="Dialog.Key.Title">Clé...</data>

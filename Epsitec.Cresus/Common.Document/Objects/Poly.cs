@@ -499,7 +499,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 				double len = Point.Distance(p1, p2);
 				double angle = Point.ComputeAngleDeg(p1, p2);
-				string text = string.Format(Res.Strings.Object.Poly.Info1, this.document.Modifier.RealToString(len), angle.ToString("F1"));
+				string text = string.Format(Res.Strings.Object.Poly.Info1, this.document.Modifier.RealToString(len), this.document.Modifier.AngleToString(angle));
 				this.document.Modifier.TextInfoModif = text;
 			}
 			else

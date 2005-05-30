@@ -316,6 +316,25 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
+		#region Glyphs
+		// Peuple le dialogue des informations.
+		public void BuildGlyphs(Window window)
+		{
+			if ( this.windowGlyphs == null )
+			{
+				this.windowGlyphs = window;
+			}
+
+			this.UpdateGlyphs();
+		}
+
+		// Met à jour le dialogue des informations.
+		public void UpdateGlyphs()
+		{
+			if ( this.windowGlyphs == null || !this.windowGlyphs.IsVisible )  return;
+		}
+		#endregion
+
 
 		#region WidgetTitle
 		// Crée un widget de titre pour un onglet.
@@ -1517,20 +1536,20 @@ namespace Epsitec.Common.Document
 			if ( this.windowSettings != null )
 			{
 				Widget parent = this.windowSettings.Root.FindChild("BookDocument");
-				this.DeleteContainer(parent, "Format");
-				this.DeleteContainer(parent, "Grid");
-				this.DeleteContainer(parent, "Guides");
-				this.DeleteContainer(parent, "Move");
-				this.DeleteContainer(parent, "Misc");
+				this.DeletePage(parent, "Format");
+				this.DeletePage(parent, "Grid");
+				this.DeletePage(parent, "Guides");
+				this.DeletePage(parent, "Move");
+				this.DeletePage(parent, "Misc");
 				this.windowSettings = null;
 			}
 
 			if ( this.windowPrint != null )
 			{
 				Widget parent = this.windowPrint.Root.FindChild("Book");
-				this.DeleteContainer(parent, "Printer");
-				this.DeleteContainer(parent, "Param");
-				this.DeleteContainer(parent, "Publisher");
+				this.DeletePage(parent, "Printer");
+				this.DeletePage(parent, "Param");
+				this.DeletePage(parent, "Publisher");
 				this.windowPrint = null;
 			}
 
@@ -1544,7 +1563,7 @@ namespace Epsitec.Common.Document
 			this.widgetsTable.Clear();
 		}
 
-		protected void DeleteContainer(Widget parent, string name)
+		protected void DeletePage(Widget parent, string name)
 		{
 			Widget container = parent.FindChild(name);
 			if ( container != null )
@@ -1554,6 +1573,15 @@ namespace Epsitec.Common.Document
 				{
 					page.Dispose();
 				}
+			}
+		}
+
+		protected void DeleteContainer(Widget parent, string name)
+		{
+			Widget container = parent.FindChild(name);
+			if ( container != null )
+			{
+				container.Dispose();
 			}
 		}
 
@@ -1686,6 +1714,7 @@ namespace Epsitec.Common.Document
 		protected Window						windowSettings;
 		protected Window						windowPrint;
 		protected Window						windowExport;
+		protected Window						windowGlyphs;
 		protected Containers.Guides				containerGuides;
 		protected System.Collections.Hashtable	widgetsTable;
 		protected bool							ignoreChanged = false;

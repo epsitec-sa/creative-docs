@@ -193,6 +193,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Dialogs\GlyphArray.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Dialogs\Glyphs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Dialogs\Infos.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -489,6 +499,10 @@
                 />
                 <File
                     RelPath = "Images\Global.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Glyphs.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

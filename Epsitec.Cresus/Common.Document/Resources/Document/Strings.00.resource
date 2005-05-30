@@ -210,7 +210,7 @@
 	<data name="Tool.Image">Image bitmap</data>
 	<data name="Tool.Dimension">Cote</data>
 
-	<data name="Object.Abstract.InfoLine">lg={0} a={1}</data>
+	<data name="Object.Abstract.InfoLine">lg={0} α={1}</data>
 	<data name="Object.Abstract.InfoRectangle">dx={0} dy={1}</data>
 	<data name="Object.Abstract.InfoCircle">r={0}</data>
 
@@ -224,7 +224,7 @@
 	<data name="Object.Bezier.Menu.HandleFree">Libre</data>
 	<data name="Object.Bezier.Menu.HandleContinue">Prolonger le trait</data>
 	<data name="Object.Bezier.Menu.HandleDelete">Enlever le point</data>
-	<data name="Object.Bezier.Info">lg={0} a={1}°</data>
+	<data name="Object.Bezier.Info">lg={0} α={1}</data>
 	<data name="Object.Bezier.Button.CreateEnding">Terminer la création</data>
 	<data name="Object.Bezier.Button.CreateAndSelect">Terminer et sélectionner</data>
 
@@ -233,8 +233,8 @@
 	<data name="Object.Poly.Menu.HandleSimply">Coin toujours droit</data>
 	<data name="Object.Poly.Menu.HandleContinue">Prolonger le trait</data>
 	<data name="Object.Poly.Menu.HandleDelete">Enlever le point</data>
-	<data name="Object.Poly.Info1">lg={0} a={1}°</data>
-	<data name="Object.Poly.Info2">lg={0} a={2}  |  lg={1} a={3}</data>
+	<data name="Object.Poly.Info1">lg={0} α={1}</data>
+	<data name="Object.Poly.Info2">lg={0} α={2}  |  lg={1} α={3}</data>
 	<data name="Object.Poly.Button.CreateEnding">Terminer la création</data>
 	<data name="Object.Poly.Button.CreateAndSelect">Terminer et sélectionner</data>
 
@@ -298,7 +298,7 @@
 	<data name="Panel.Gradient.Tooltip.Color1">Couleur 1</data>
 	<data name="Panel.Gradient.Tooltip.Color2">Couleur 2</data>
 	<data name="Panel.Gradient.Tooltip.Type">Type du remplissage</data>
-	<data name="Panel.Gradient.Tooltip.Reset">Reset (valeurs standard)</data>
+	<data name="Panel.Gradient.Tooltip.Reset">Reset (valeurs standards)</data>
 	<data name="Panel.Gradient.Tooltip.Angle">Angle</data>
 	<data name="Panel.Gradient.Tooltip.Hatch1">1er trait</data>
 	<data name="Panel.Gradient.Tooltip.Hatch2">2ème trait</data>
@@ -309,11 +309,11 @@
 	<data name="Panel.Gradient.Tooltip.HatchWidth">Epaisseur</data>
 	<data name="Panel.Gradient.Tooltip.HatchDistance">Distance</data>
 	<data name="Panel.Gradient.Tooltip.Swap">Permute les 2 couleurs</data>
-	<data name="Panel.Gradient.Label.Angle">a</data>
+	<data name="Panel.Gradient.Label.Angle">α</data>
 	<data name="Panel.Gradient.Label.Repeat">n</data>
 	<data name="Panel.Gradient.Label.Middle">M</data>
 	<data name="Panel.Gradient.Label.Smooth">F</data>
-	<data name="Panel.Gradient.Label.HatchAngle">a</data>
+	<data name="Panel.Gradient.Label.HatchAngle">α</data>
 	<data name="Panel.Gradient.Label.HatchWidth">e</data>
 	<data name="Panel.Gradient.Label.HatchDistance">d</data>
 	<data name="Panel.Gradient.Combo.None">Uniforme</data>
@@ -403,7 +403,7 @@
 	<data name="Panel.ModColor.Label.R">R</data>
 	<data name="Panel.ModColor.Label.G">V</data>
 	<data name="Panel.ModColor.Label.B">B</data>
-	<data name="Panel.ModColor.Label.A">A</data>
+	<data name="Panel.ModColor.Label.A">α</data>
 	<data name="Panel.ModColor.Label.Negativ">Négatif</data>
 	<data name="Panel.ModColor.Label.Draft">C</data>
 	<data name="Panel.ModColor.Label.Reset">R</data>
@@ -565,13 +565,13 @@
 	<data name="Action.OrderDownAll">Arrière-plan</data>
 	
 	<data name="Action.OperationMain">Opération</data>
-	<data name="Action.MoveMain">Déplacament</data>
+	<data name="Action.MoveMain">Déplacement</data>
 	<data name="Action.MoveValueX">Valeur du déplacement horizontal</data>
 	<data name="Action.MoveValueY">Valeur du déplacement vertical</data>
-	<data name="Action.MoveLeft">Déplacament à gauche</data>
-	<data name="Action.MoveRight">Déplacament à droite</data>
-	<data name="Action.MoveDown">Déplacament en bas</data>
-	<data name="Action.MoveUp">Déplacament en haut</data>
+	<data name="Action.MoveLeft">Déplacement à gauche</data>
+	<data name="Action.MoveRight">Déplacement à droite</data>
+	<data name="Action.MoveDown">Déplacement en bas</data>
+	<data name="Action.MoveUp">Déplacement en haut</data>
 	<data name="Action.Move">Déplacement {0};{1}</data>
 	<data name="Action.RotateMain">Rotation</data>
 	<data name="Action.Rotate90">Quart de tour à gauche</data>
@@ -637,6 +637,8 @@
 	<data name="Action.BooleanFrontMinus">Avant moins arrières</data>
 	<data name="Action.BooleanBackMinus">Arrière moins avants</data>
 	
+	<data name="Action.Glyphs">Caractères spéciaux...</data>
+
 	<data name="Action.HideSel">Cacher la sélection</data>
 	<data name="Action.HideRest">Cacher le reste</data>
 	<data name="Action.HideCancel">Montrer tout</data>

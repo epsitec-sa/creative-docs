@@ -485,8 +485,10 @@ namespace Epsitec.Common.Document.Objects
 		// Crée le chemin d'une spirale.
 		protected Path PathSpiral(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
+#if false  // système utilisé dans les version <= 1.0.19
 			Properties.Surface pf = this.PropertySurface;
 			int n = pf.GetScalar(0);
+			double step = 1.0/(n*4+1);
 
 			Point p12 = Point.Scale(p1,p2, 0.5);
 			Point p23 = Point.Scale(p2,p3, 0.5);
@@ -497,10 +499,8 @@ namespace Epsitec.Common.Document.Objects
 			Path path = new Path();
 			path.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
 
-			Point current = p12;
 			path.MoveTo(p12);
 
-			double step = 1.0/(n*4+1);
 			double r = 0.0;
 			for ( int i=0 ; i<n ; i++ )
 			{
@@ -511,6 +511,65 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			return path;
+#endif
+#if false  // spirales d'Archimèdes de référence (avec des droites)
+			Properties.Surface pf = this.PropertySurface;
+			int n = pf.GetScalar(0);
+			double exp = pf.GetFactor(2);
+
+			Path path = new Path();
+			path.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+
+			path.MoveTo(this.PlacePointToQuadri(new Point(0.0, 1.0), p1, p2, p3, p4));
+
+			for ( double angle=5.0 ; angle<=360.0*n ; angle+=5.0 )
+			{
+				Point p = Transform.RotatePointDeg(-angle, new Point(0.0, 1.0));
+				double d = angle/(360.0*n);
+				d = this.Expo(d, exp);
+				p = Point.Move(p, new Point(0.0, 0.0), d);
+				p = this.PlacePointToQuadri(p, p1, p2, p3, p4);
+				path.LineTo(p);
+			}
+
+			return path;
+#endif
+#if true  // nouveau système qui approxime les spirales d'Archimèdes
+			Properties.Surface pf = this.PropertySurface;
+			int n = pf.GetScalar(0);
+			double exp = pf.GetFactor(2);
+			double impact = pf.GetFactor(3);
+
+			Path path = new Path();
+			path.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+
+			path.MoveTo(this.PlacePointToQuadri(new Point(0.0, 1.0), p1, p2, p3, p4));
+
+			double angle = 0.0;
+			do
+			{
+				angle += 45.0;
+				Point a = Transform.RotatePointDeg(-angle, new Point(0.0, 1.0));
+				double r = angle/(360.0*n);
+				r = this.Expo(r, exp);
+				r = (1.0-r*impact)*1.4142 + 1.0/(40.0*n);  // 40.0 = empyrique !
+				a = Point.Move(new Point(0.0, 0.0), a, r);
+				a = this.PlacePointToQuadri(a, p1, p2, p3, p4);
+
+				angle += 45.0;
+				Point b = Transform.RotatePointDeg(-angle, new Point(0.0, 1.0));
+				r = angle/(360.0*n);
+				r = this.Expo(r, exp);
+				r = 1.0-r*impact;
+				b = Point.Move(new Point(0.0, 0.0), b, r);
+				b = this.PlacePointToQuadri(b, p1, p2, p3, p4);
+
+				path.ArcTo(a, b);
+			}
+			while ( angle < 360.0*n );
+
+			return path;
+#endif
 		}
 
 		// Dégraisse un quadrilatère quelconque.
@@ -554,6 +613,18 @@ namespace Epsitec.Common.Document.Objects
 			Point b = Point.Scale(d, a, r2);
 			Point c = Point.Scale(next, center, r2);
 			path.ArcTo(b, c);
+		}
+
+		// Place un point du système de coordonnées -1..1 dans le système défini
+		// par le quadrilatère p1;p2;p3;p4.
+		protected Point PlacePointToQuadri(Point p, Point p1, Point p2, Point p3, Point p4)
+		{
+			p.X = p.X*0.5 + 0.5;
+			p.Y = p.Y*0.5 + 0.5;  // 0..1
+
+			Point p12 = Point.Scale(p1, p2, p.X);
+			Point p43 = Point.Scale(p4, p3, p.X);
+			return Point.Scale(p43, p12, p.Y);
 		}
 
 		protected double Expo(double value, double factor)

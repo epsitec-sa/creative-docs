@@ -26,7 +26,7 @@ namespace Epsitec.Common.Document.Panels
 			}
 			else
 			{
-				Font.AddFontList(this.fontName);
+				Misc.AddFontList(this.fontName, false);
 			}
 			//?this.fontName.SelectedIndexChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontName.TextChanged += new EventHandler(this.HandleFieldChanged);
@@ -232,19 +232,6 @@ namespace Epsitec.Common.Document.Panels
 			}
 
 			this.OnChanged();
-		}
-
-
-		protected static void AddFontList(TextFieldCombo combo)
-		{
-			Drawing.Font.FaceInfo[] list = Drawing.Font.Faces;
-			foreach ( Drawing.Font.FaceInfo info in list )
-			{
-				if ( info.IsLatin )
-				{
-					combo.Items.Add(info.Name);
-				}
-			}
 		}
 
 

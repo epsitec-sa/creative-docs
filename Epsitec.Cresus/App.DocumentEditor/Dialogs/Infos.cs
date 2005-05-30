@@ -37,7 +37,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				multi.IsReadOnly = true;
 				multi.MaxChar = 10000;
 				multi.Dock = DockStyle.Fill;
-				multi.DockMargins = new Margins(10, 10, 10, 40);
+				multi.DockMargins = new Margins(6, 6, 6, 34);
 
 				// Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
@@ -45,7 +45,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonClose.Anchor = AnchorStyles.BottomLeft;
-				buttonClose.AnchorMargins = new Margins(10, 0, 0, 10);
+				buttonClose.AnchorMargins = new Margins(6, 0, 0, 6);
 				buttonClose.Clicked += new MessageEventHandler(this.HandleInfosButtonCloseClicked);
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

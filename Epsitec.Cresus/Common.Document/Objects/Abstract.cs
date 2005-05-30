@@ -648,6 +648,18 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
+		// Insère un glyphe dans le pavé en édition.
+		public virtual bool EditInsertGlyph(string text)
+		{
+			return false;
+		}
+
+		// Donne la fonte actullement utilisée.
+		public virtual string EditGetFontName()
+		{
+			return "";
+		}
+
 		// Donne la zone contenant le curseur d'édition.
 		public virtual Drawing.Rectangle EditCursorBox
 		{
@@ -1895,7 +1907,7 @@ namespace Epsitec.Common.Document.Objects
 
 			string s = name.String;
 			Point pos = bbox.TopLeft;
-			Font font = Font.GetFont("Tahoma", "Regular");
+			Font font = Misc.GetFont("Tahoma");
 			double fs = 9.5/drawingContext.ScaleX;
 			double ta = font.GetTextAdvance(s)*fs;
 			double fa = font.Ascender*fs;

@@ -1047,6 +1047,34 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 
+		// Insère un glyphe dans le pavé en édition.
+		public bool EditInsertGlyph(string text)
+		{
+			Objects.Abstract editObject = this.RetEditObject();
+			if ( editObject == null )  return false;
+
+			return editObject.EditInsertGlyph(text);
+		}
+
+		// Donne la fonte actullement utilisée.
+		public string EditGetFontName()
+		{
+			Objects.Abstract editObject = this.RetEditObject();
+			if ( editObject == null )
+			{
+				return this.objectMemoryText.PropertyTextFont.FontName;
+			}
+
+			string fontName = editObject.EditGetFontName();
+
+			if ( fontName == "" )
+			{
+				fontName = editObject.PropertyTextFont.FontName;
+			}
+
+			return fontName;
+		}
+
 		// Retourne le seul objet en édition.
 		public Objects.Abstract RetEditObject()
 		{

@@ -59,6 +59,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.dlgAbout     = new Dialogs.About(this);
 			this.dlgExport    = new Dialogs.Export(this);
+			this.dlgGlyphs    = new Dialogs.Glyphs(this);
 			this.dlgInfos     = new Dialogs.Infos(this);
 			this.dlgKey       = new Dialogs.Key(this);
 			this.dlgPageStack = new Dialogs.PageStack(this);
@@ -67,6 +68,7 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgSplash    = new Dialogs.Splash(this);
 			this.dlgUpdate    = new Dialogs.Update(this);
 
+			this.dlgGlyphs.Closed    += new EventHandler(this.HandleDlgClosed);
 			this.dlgInfos.Closed     += new EventHandler(this.HandleDlgClosed);
 			this.dlgPageStack.Closed += new EventHandler(this.HandleDlgClosed);
 			this.dlgSettings.Closed  += new EventHandler(this.HandleDlgClosed);
@@ -459,6 +461,7 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Settings.icon", "Settings", DocumentEditor.GetRes("Action.Settings"), DocumentEditor.GetShortCut(this.settingsState));
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Infos.icon", "Infos", DocumentEditor.GetRes("Action.Infos"), DocumentEditor.GetShortCut(this.infosState));
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.PageStack.icon", "PageStack", DocumentEditor.GetRes("Action.PageStack"), DocumentEditor.GetShortCut(this.pageStackState));
+			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Glyphs.icon", "Glyphs", DocumentEditor.GetRes("Action.Glyphs"), DocumentEditor.GetShortCut(this.glyphsState));
 			this.MenuAdd(docMenu, "", "", "", "");
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.PageNew.icon", "PageNew", DocumentEditor.GetRes("Action.PageNew"), DocumentEditor.GetShortCut(this.pageNewState));
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Up.icon", "PageUp", DocumentEditor.GetRes("Action.PageUp"), DocumentEditor.GetShortCut(this.pageUpState));
@@ -548,6 +551,7 @@ namespace Epsitec.App.DocumentEditor
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Labels.icon", "Labels", DocumentEditor.GetRes("Action.Labels"));
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Settings.icon", "Settings", DocumentEditor.GetRes("Action.Settings"));
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Infos.icon", "Infos", DocumentEditor.GetRes("Action.Infos"));
+			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Glyphs.icon", "Glyphs", DocumentEditor.GetRes("Action.Glyphs"));
 			this.HToolBarAdd("", "", "");
 			if ( this.useArray )
 			{
@@ -1034,6 +1038,11 @@ namespace Epsitec.App.DocumentEditor
 		// Un dialogue a été fermé.
 		private void HandleDlgClosed(object sender)
 		{
+			if ( sender == this.dlgGlyphs )
+			{
+				this.glyphsState.ActiveState = WidgetState.ActiveNo;
+			}
+
 			if ( sender == this.dlgInfos )
 			{
 				this.infosState.ActiveState = WidgetState.ActiveNo;
@@ -1736,7 +1745,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 			dialog.FileName = this.CurrentDocument.ExportFilename;
-			dialog.Title = Res.Strings.Dialog.Export.Title;
+			dialog.Title = Res.Strings.Dialog.Export.Title1;
 			dialog.Filters.Add("bmp", DocumentEditor.GetRes("File.Bitmap.BMP"), "*.bmp");
 			dialog.Filters.Add("tif", DocumentEditor.GetRes("File.Bitmap.TIF"), "*.tif; *.tiff");
 			dialog.Filters.Add("jpg", DocumentEditor.GetRes("File.Bitmap.JPG"), "*.jpg; *.jpeg");
@@ -1765,6 +1774,23 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgExport.Show(this.CurrentDocument.ExportFilename);
 		}
 		
+		[Command ("Glyphs")]
+		void CommandGlyphs(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.dlgSplash.Hide();
+
+			if ( this.glyphsState.ActiveState == WidgetState.ActiveNo )
+			{
+				this.dlgGlyphs.Show();
+				this.glyphsState.ActiveState = WidgetState.ActiveYes;
+			}
+			else
+			{
+				this.dlgGlyphs.Hide();
+				this.glyphsState.ActiveState = WidgetState.ActiveNo;
+			}
+		}
+
 		#region PaletteIO
 		[Command ("NewPaletteDefault")]
 		void CommandNewPaletteDefault()
@@ -2900,6 +2926,7 @@ namespace Epsitec.App.DocumentEditor
 			this.prevDocState = new CommandState("PrevDocument", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.ModifierShift|KeyCode.FuncF6);
 			this.printState = new CommandState("Print", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaP);
 			this.exportState = new CommandState("Export", this.commandDispatcher);
+			this.glyphsState = new CommandState("Glyphs", this.commandDispatcher);
 			this.deleteState = new CommandState("Delete", this.commandDispatcher, KeyCode.Delete);
 			this.duplicateState = new CommandState("Duplicate", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaD);
 			this.cutState = new CommandState("Cut", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaX);
@@ -3073,6 +3100,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.printState.Enabled = true;
 				this.exportState.Enabled = true;
+				this.glyphsState.Enabled = true;
 				this.infosState.Enabled = true;
 				this.pageStackState.Enabled = true;
 
@@ -3083,6 +3111,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.printState.Enabled = false;
 				this.exportState.Enabled = false;
+				this.glyphsState.Enabled = false;
 				this.infosState.Enabled = false;
 				this.pageStackState.Enabled = false;
 			}
@@ -4197,6 +4226,7 @@ namespace Epsitec.App.DocumentEditor
 		protected void PrepareOpenDocument()
 		{
 			this.dlgExport.Rebuild();
+			this.dlgGlyphs.Rebuild();
 			this.dlgInfos.Rebuild();
 			this.dlgPrint.Rebuild();
 			this.dlgSettings.Rebuild();
@@ -4294,6 +4324,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.dlgAbout.Save();
 			this.dlgExport.Save();
+			this.dlgGlyphs.Save();
 			this.dlgInfos.Save();
 			this.dlgKey.Save();
 			this.dlgPageStack.Save();
@@ -4412,6 +4443,7 @@ namespace Epsitec.App.DocumentEditor
 
 		protected Dialogs.About					dlgAbout;
 		protected Dialogs.Export				dlgExport;
+		protected Dialogs.Glyphs				dlgGlyphs;
 		protected Dialogs.Infos					dlgInfos;
 		protected Dialogs.Key					dlgKey;
 		protected Dialogs.PageStack				dlgPageStack;
@@ -4453,6 +4485,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					prevDocState;
 		protected CommandState					printState;
 		protected CommandState					exportState;
+		protected CommandState					glyphsState;
 		protected CommandState					deleteState;
 		protected CommandState					duplicateState;
 		protected CommandState					cutState;

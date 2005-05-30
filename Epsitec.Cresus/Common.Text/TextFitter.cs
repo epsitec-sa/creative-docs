@@ -582,8 +582,8 @@ namespace Epsitec.Common.Text
 			scratch.RecordDescender (layout.LineDescender);
 			scratch.RecordLineHeight (layout.LineHeight);
 			
-			Debug.Assert.IsTrue (layout.Disposition == 0);
-			Debug.Assert.IsTrue (layout.Justification == 0);
+//-			Debug.Assert.IsTrue (layout.Disposition == 0);
+//-			Debug.Assert.IsTrue (layout.Justification == 0);
 			
 			if ((x_before <= 0) ||
 				(x_after <= 0))

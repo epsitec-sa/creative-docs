@@ -362,6 +362,29 @@ namespace Epsitec.Common.Drawing
 					
 					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur aligné à gauche dans un paragraphe justifié.\tTab6; enfin du texte pour la suite...\n\n", properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
+					
+					properties_1.Clear ();
+					properties_2.Clear ();
+					
+					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
+					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 1.0, 15, 1, false));
+					properties_1.Add (new Text.Properties.TabProperty (tab, 0.0, null));
+					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					
+					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
+					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 1.0, 15, 1, false));
+					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
+					
+					this.painter.TextStory.ConvertToStyledText ("Test:\t", properties_1, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					this.painter.TextStory.ConvertToStyledText ("Tab7", properties_2, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur aligné à gauche dans un paragraphe aligné à droite.\tTab8; enfin du texte pour la suite...\n\n", properties_1, out text);
+					this.painter.TextStory.InsertText (cursor, text);
 				}
 				
 				this.painter.TextStory.RecycleCursor (cursor);

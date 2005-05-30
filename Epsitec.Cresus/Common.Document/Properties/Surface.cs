@@ -220,7 +220,7 @@ namespace Epsitec.Common.Document.Properties
 				case SurfaceType.Grid:
 				case SurfaceType.Pattern:  return (rank == 2 || rank == 3);
 				case SurfaceType.SpiralCW:
-				case SurfaceType.SpiralCCW:  return (rank == 2);
+				case SurfaceType.SpiralCCW:  return (rank == 2 || rank == 3);
 			}
 			return false;
 		}
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Document.Properties
 				case SurfaceType.Grid:
 				case SurfaceType.Pattern:    return (rank == 2 || rank == 3);
 				case SurfaceType.SpiralCW:
-				case SurfaceType.SpiralCCW:  return (rank == 2);
+				case SurfaceType.SpiralCCW:  return (rank == 2 || rank == 3);
 			}
 			return false;
 		}
@@ -383,6 +383,7 @@ namespace Epsitec.Common.Document.Properties
 				case SurfaceType.SpiralCCW:
 					this.scalars[0] = 5;
 					this.factors[2] = 0.5;
+					this.factors[3] = 1.0;
 					break;
 			}
 		}
@@ -581,6 +582,12 @@ namespace Epsitec.Common.Document.Properties
 			this.surfaceType = (SurfaceType) info.GetValue("SurfaceType", typeof(SurfaceType));
 			this.factors = (double[]) info.GetValue("Factors", typeof(double[]));
 			this.scalars = (int[]) info.GetValue("Scalars", typeof(int[]));
+
+			if ( (this.surfaceType == SurfaceType.SpiralCW || this.surfaceType == SurfaceType.SpiralCCW) &&
+				 !this.document.IsRevisionGreaterOrEqual(1,0,20) )
+			{
+				this.factors[3] = 1.0;
+			}
 		}
 		#endregion
 

@@ -210,7 +210,7 @@
 	<data name="Tool.Image">Bitmap image</data>
 	<data name="Tool.Dimension">Dimension</data>
 
-	<data name="Object.Abstract.InfoLine">ln={0} a={1}</data>
+	<data name="Object.Abstract.InfoLine">ln={0} α={1}</data>
 	<data name="Object.Abstract.InfoRectangle">dx={0} dy={1}</data>
 	<data name="Object.Abstract.InfoCircle">r={0}</data>
 
@@ -224,7 +224,7 @@
 	<data name="Object.Bezier.Menu.HandleFree">Free</data>
 	<data name="Object.Bezier.Menu.HandleContinue">Prolong the line</data>
 	<data name="Object.Bezier.Menu.HandleDelete">Remove point</data>
-	<data name="Object.Bezier.Info">ln={0} a={1}°</data>
+	<data name="Object.Bezier.Info">ln={0} α={1}</data>
 	<data name="Object.Bezier.Button.CreateEnding">Finish creation</data>
 	<data name="Object.Bezier.Button.CreateAndSelect">Finish and select</data>
 
@@ -233,8 +233,8 @@
 	<data name="Object.Poly.Menu.HandleSimply">Orthogonal corner</data>
 	<data name="Object.Poly.Menu.HandleContinue">Prolong the line</data>
 	<data name="Object.Poly.Menu.HandleDelete">Remove point</data>
-	<data name="Object.Poly.Info1">ln={0} a={1}°</data>
-	<data name="Object.Poly.Info2">ln={0} a={2}  |  ln={1} a={3}</data>
+	<data name="Object.Poly.Info1">ln={0} α={1}</data>
+	<data name="Object.Poly.Info2">ln={0} α={2}  |  ln={1} α={3}</data>
 	<data name="Object.Poly.Button.CreateEnding">Finish creation</data>
 	<data name="Object.Poly.Button.CreateAndSelect">Finish and select</data>
 
@@ -309,11 +309,11 @@
 	<data name="Panel.Gradient.Tooltip.HatchWidth">Width</data>
 	<data name="Panel.Gradient.Tooltip.HatchDistance">Distance</data>
 	<data name="Panel.Gradient.Tooltip.Swap">Swap colors</data>
-	<data name="Panel.Gradient.Label.Angle">a</data>
+	<data name="Panel.Gradient.Label.Angle">α</data>
 	<data name="Panel.Gradient.Label.Repeat">#</data>
 	<data name="Panel.Gradient.Label.Middle">M</data>
 	<data name="Panel.Gradient.Label.Smooth">B</data>
-	<data name="Panel.Gradient.Label.HatchAngle">a</data>
+	<data name="Panel.Gradient.Label.HatchAngle">α</data>
 	<data name="Panel.Gradient.Label.HatchWidth">w</data>
 	<data name="Panel.Gradient.Label.HatchDistance">d</data>
 	<data name="Panel.Gradient.Combo.None">Uniform</data>
@@ -403,7 +403,7 @@
 	<data name="Panel.ModColor.Label.R">R</data>
 	<data name="Panel.ModColor.Label.G">G</data>
 	<data name="Panel.ModColor.Label.B">B</data>
-	<data name="Panel.ModColor.Label.A">A</data>
+	<data name="Panel.ModColor.Label.A">α</data>
 	<data name="Panel.ModColor.Label.Negativ">Negative</data>
 	<data name="Panel.ModColor.Label.Draft">D</data>
 	<data name="Panel.ModColor.Label.Reset">R</data>

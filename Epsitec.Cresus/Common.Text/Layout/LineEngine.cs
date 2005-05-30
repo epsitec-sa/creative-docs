@@ -20,7 +20,7 @@ namespace Epsitec.Common.Text.Layout
 			if ((context.Disposition != 0) ||
 				(context.Justification != 0))
 			{
-				inhibit_tabs = true;
+//				inhibit_tabs = true;
 			}
 			
 			FitScratch scratch = new FitScratch ();
