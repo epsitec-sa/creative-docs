@@ -18,6 +18,13 @@ namespace Epsitec.Common.Text.Properties
 			this.style_name = style;
 		}
 		
+		public FontProperty(string face, string style, string[] features)
+		{
+			this.face_name  = face;
+			this.style_name = style;
+			this.features   = features.Clone () as string[];
+		}
+		
 		
 		public override WellKnownType			WellKnownType
 		{

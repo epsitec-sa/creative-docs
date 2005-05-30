@@ -100,6 +100,25 @@ namespace Epsitec.Common.Drawing
 				this.graphics = null;
 				
 				System.Diagnostics.Debug.WriteLine ("Paint done.");
+				
+				double ox1 = 60;
+				double oy1 = 0;
+				double ox2 = 60;
+				double oy2 = -1000;
+					
+				this.frame1.MapToView (ref ox1, ref oy1);
+				this.frame1.MapToView (ref ox2, ref oy2);
+				
+				graphics.LineWidth = 0.25;
+				graphics.AddLine (ox1, oy1, ox2, oy2);
+				graphics.RenderSolid (Drawing.Color.FromName ("Blue"));
+				
+				ox1 = this.frame1.Width;
+				ox2 = ox1;
+				
+				graphics.LineWidth = 0.75;
+				graphics.AddLine (ox1, oy1, ox2, oy2);
+				graphics.RenderSolid (Drawing.Color.FromName ("Blue"));
 			}
 			
 			
@@ -159,26 +178,36 @@ namespace Epsitec.Common.Drawing
 				this.window.MakeToolWindow ();
 				this.window.MakeButtonlessWindow ();
 				
-				StaticText  st1 = new StaticText ();
-				CheckButton cb1 = new CheckButton ();
-				CheckButton cb2 = new CheckButton ();
-				CheckButton cb3 = new CheckButton ();
-				CheckButton cb4 = new CheckButton ();
+				StaticText  st1 = new StaticText (this.window.Root);
+				CheckButton cb1 = new CheckButton (this.window.Root);
+				CheckButton cb2 = new CheckButton (this.window.Root);
+				CheckButton cb3 = new CheckButton (this.window.Root);
+				CheckButton cb4 = new CheckButton (this.window.Root);
+				RadioButton rb1 = new RadioButton (this.window.Root, "g1", 0);
+				RadioButton rb2 = new RadioButton (this.window.Root, "g1", 1);
 				
-				st1.Parent = this.window.Root;	st1.Dock = DockStyle.Top;	st1.DockMargins = new Margins (4, 4, 4, 4);
-				cb1.Parent = this.window.Root;	cb1.Dock = DockStyle.Top;	cb1.DockMargins = new Margins (4, 4, 4, 0);
-				cb2.Parent = this.window.Root;	cb2.Dock = DockStyle.Top;	cb2.DockMargins = new Margins (4, 4, 0, 0);
-				cb3.Parent = this.window.Root;	cb3.Dock = DockStyle.Top;	cb3.DockMargins = new Margins (4, 4, 0, 0);
-				cb4.Parent = this.window.Root;	cb4.Dock = DockStyle.Top;	cb4.DockMargins = new Margins (4, 4, 0, 0);
+				RadioButton.Activate (this.window.Root, "g1", 0);
 				
-				st1.Text   = "Réglages pour le rendu du pavé de texte :";
+				st1.Dock = DockStyle.Top; st1.DockMargins = new Margins (4, 4, 4, 4);
+				cb1.Dock = DockStyle.Top; cb1.DockMargins = new Margins (4, 4, 4, 0);
+				cb2.Dock = DockStyle.Top; cb2.DockMargins = new Margins (4, 4, 0, 0);
+				cb3.Dock = DockStyle.Top; cb3.DockMargins = new Margins (4, 4, 0, 0);
+				cb4.Dock = DockStyle.Top; cb4.DockMargins = new Margins (4, 4, 0, 0);
 				
-				cb1.Name   = "liga";		cb1.Text = "ligatures simples";		cb1.ActiveStateChanged += new Support.EventHandler(this.HandleCheckButtonActiveStateChanged);
-				cb2.Name   = "dlig";		cb2.Text = "ligatures avancées";	cb2.ActiveStateChanged += new Support.EventHandler(this.HandleCheckButtonActiveStateChanged);
-				cb3.Name   = "kern";		cb3.Text = "crénage";				cb3.ActiveStateChanged += new Support.EventHandler(this.HandleCheckButtonActiveStateChanged);
-				cb4.Name   = "Mgr=System";	cb4.Text = "utilise GDI";			cb4.ActiveStateChanged += new Support.EventHandler(this.HandleCheckButtonActiveStateChanged);
+				rb1.Dock = DockStyle.Top; rb1.DockMargins = new Margins (4, 4, 4, 0);
+				rb2.Dock = DockStyle.Top; rb2.DockMargins = new Margins (4, 4, 0, 0);
 				
-				this.window.ClientSize = new Size (240, 90);
+				st1.Text = "Réglages pour le rendu du pavé de texte :";
+				
+				cb1.Name = "liga";			cb1.Text = "ligatures simples";		cb1.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButtonActiveStateChanged);
+				cb2.Name = "dlig";			cb2.Text = "ligatures avancées";	cb2.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButtonActiveStateChanged);
+				cb3.Name = "kern";			cb3.Text = "crénage";				cb3.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButtonActiveStateChanged);
+				cb4.Name = "Mgr=System";	cb4.Text = "utilise GDI";			cb4.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButtonActiveStateChanged);
+				
+				rb1.Text = "paragraphes avec diverses justifications";			rb1.ActiveStateChanged += new Support.EventHandler (this.HandleRadioButtonActiveStateChanged);
+				rb2.Text = "paragraphes avec tabulateurs";						rb2.ActiveStateChanged += new Support.EventHandler (this.HandleRadioButtonActiveStateChanged);
+				
+				this.window.ClientSize = new Size (260, 120);
 				this.window.Owner      = owner;
 				
 				this.window.Show ();
@@ -191,72 +220,150 @@ namespace Epsitec.Common.Drawing
 				ICursor cursor = new Text.Cursors.SimpleCursor ();
 				this.painter.TextStory.NewCursor (cursor);
 				
-				System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 				ulong[] text;
 				string words;
 				
+				if (this.active_test == 0)
+				{
+					System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+					
+					Text.Properties.FontProperty fp;
+					properties.Clear ();
+					fp = new Text.Properties.FontProperty ("Arial", "Regular");
+					fp.Features = this.features;
+					
+					properties.Add (fp);
+					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, 0.0, 0.0, 0.0, 15, 1, false));
+					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					
+					words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
+					
+					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					properties.Clear ();
+					fp = new Text.Properties.FontProperty ("Palatino Linotype", "Regular");
+					fp.Features = this.features;
+					
+					properties.Add (fp);
+					properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.FontSizeUnits.Points));
+					properties.Add (new Text.Properties.MarginsProperty (10, 10, 10, 10, 1.0, 0.0, 0.0, 15, 1, false));
+					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Blue")));
+					
+					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					
+					properties.Clear ();
+					fp = new Text.Properties.FontProperty ("Times New Roman", "Italic");
+					fp.Features = this.features;
+					
+					properties.Add (fp);
+					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 1.0, 0.0, 15, 1, false));
+					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
+					
+					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					
+					properties.Clear ();
+					fp = new Text.Properties.FontProperty ("Arial", "Regular");
+					fp.Features = this.features;
+					properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
+					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.5, 15, 1, false));
+					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					
+					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					
+					properties.Clear ();
+					properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
+					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.4, 0.0, 1.0, 15, 1, false));
+					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					
+					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+				}
 				
-				Text.Properties.FontProperty fp;
-				properties.Clear ();
-				fp = new Text.Properties.FontProperty ("Arial", "Regular");
-				fp.Features = this.features;
+				if (this.active_test == 1)
+				{
+					double tab = 60;
+
+					System.Collections.ArrayList properties_1 = new System.Collections.ArrayList ();
+					System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
+					
+					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
+					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.0, 15, 1, false));
+					properties_1.Add (new Text.Properties.TabProperty (tab, 0, null));
+					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					
+					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
+					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.0, 15, 1, false));
+					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
+					
+					this.painter.TextStory.ConvertToStyledText ("Test:\t", properties_1, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					this.painter.TextStory.ConvertToStyledText ("Tab1", properties_2, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur aligné à gauche.\tTab2; enfin du texte pour la suite...\n\n", properties_1, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					properties_1.Clear ();
+					properties_2.Clear ();
+					
+					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
+					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.0, 15, 1, false));
+					properties_1.Add (new Text.Properties.TabProperty (tab, 0.5, null));
+					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					
+					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
+					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.0, 15, 1, false));
+					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
+					
+					this.painter.TextStory.ConvertToStyledText ("Test:\t", properties_1, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					this.painter.TextStory.ConvertToStyledText ("Tab3", properties_2, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur centré.\tTab4; enfin du texte pour la suite...\n\n", properties_1, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					properties_1.Clear ();
+					properties_2.Clear ();
+					
+					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
+					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
+					properties_1.Add (new Text.Properties.TabProperty (tab, 0.0, null));
+					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					
+					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
+					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
+					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
+					
+					this.painter.TextStory.ConvertToStyledText ("Test:\t", properties_1, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					this.painter.TextStory.ConvertToStyledText ("Tab5", properties_2, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur aligné à gauche dans un paragraphe justifié.\tTab6; enfin du texte pour la suite...\n\n", properties_1, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+				}
 				
-				properties.Add (fp);
-				properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
-				properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, 0.0, 0.0, 0.0, 15, 1, false));
-				properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
-				
-				words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
-				
-				this.painter.TextStory.ConvertToStyledText (words, properties, out text);
-				this.painter.TextStory.InsertText (cursor, text);
-				
-				properties.Clear ();
-				fp = new Text.Properties.FontProperty ("Palatino Linotype", "Regular");
-				fp.Features = this.features;
-				
-				properties.Add (fp);
-				properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.FontSizeUnits.Points));
-				properties.Add (new Text.Properties.MarginsProperty (10, 10, 10, 10, 1.0, 0.0, 0.0, 15, 1, false));
-				properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Blue")));
-				
-				this.painter.TextStory.ConvertToStyledText (words, properties, out text);
-				this.painter.TextStory.InsertText (cursor, text);
-				
-				
-				properties.Clear ();
-				fp = new Text.Properties.FontProperty ("Times New Roman", "Italic");
-				fp.Features = this.features;
-				
-				properties.Add (fp);
-				properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
-				properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 1.0, 0.0, 15, 1, false));
-				properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
-				
-				this.painter.TextStory.ConvertToStyledText (words, properties, out text);
-				this.painter.TextStory.InsertText (cursor, text);
-				
-				
-				properties.Clear ();
-				fp = new Text.Properties.FontProperty ("Arial", "Regular");
-				fp.Features = this.features;
-				properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
-				properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
-				properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.5, 15, 1, false));
-				properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
-				
-				this.painter.TextStory.ConvertToStyledText (words, properties, out text);
-				this.painter.TextStory.InsertText (cursor, text);
-				
-				
-				properties.Clear ();
-				properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
-				properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
-				properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.4, 0.0, 1.0, 15, 1, false));
-				properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
-				
-				this.painter.TextStory.ConvertToStyledText (words, properties, out text);
-				this.painter.TextStory.InsertText (cursor, text);
 				this.painter.TextStory.RecycleCursor (cursor);
 				
 				this.painter.NotifyTextChanged ();
@@ -266,6 +373,7 @@ namespace Epsitec.Common.Drawing
 			private Painter						painter;
 			private Window						window;
 			private string[]					features;
+			private int							active_test;
 
 			private void HandleCheckButtonActiveStateChanged(object sender)
 			{
@@ -295,6 +403,16 @@ namespace Epsitec.Common.Drawing
 				System.Diagnostics.Debug.WriteLine ("Features: " + f);
 				
 				this.GenerateText ();
+			}
+			private void HandleRadioButtonActiveStateChanged(object sender)
+			{
+				RadioButton rb = sender as RadioButton;
+				
+				if (rb.IsActive)
+				{
+					this.active_test = rb.Index;
+					this.GenerateText ();
+				}
 			}
 		}
 	}

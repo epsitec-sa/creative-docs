@@ -360,6 +360,9 @@ namespace Epsitec.Common.Text
 						//	l'analyser et déterminer si elle peut être placée sur
 						//	la même ligne que le texte qui précède :
 						
+						System.Diagnostics.Debug.Assert (layout.TextOffset >= 0);
+						System.Diagnostics.Debug.Assert (layout.TextOffset <= text.Length);
+						
 						layout.TextContext.GetTab (text[layout.TextOffset-1], out tab_property);
 						
 						Debug.Assert.IsNotNull (tab_property);
