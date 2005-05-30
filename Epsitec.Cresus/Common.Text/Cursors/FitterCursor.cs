@@ -243,6 +243,18 @@ namespace Epsitec.Common.Text.Cursors
 				}
 			}
 			
+			public bool							IsTabulation
+			{
+				get
+				{
+					return this.is_tabulation;
+				}
+				set
+				{
+					this.is_tabulation = value;
+				}
+			}
+			
 			
 			private ushort						length;
 			private Layout.StretchProfile		profile;
@@ -252,6 +264,7 @@ namespace Epsitec.Common.Text.Cursors
 			private double						line_width;
 			private double						line_ascender;
 			private double						line_descender;
+			private bool						is_tabulation;
 		}
 		#endregion
 		

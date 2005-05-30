@@ -130,8 +130,11 @@ namespace Epsitec.Common.Text
 						
 						if (renderer.IsFrameAreaVisible (layout.Frame, ox, oy+desc, width, asc+desc))
 						{
+							bool is_tab  = (i > 0) ? c.Elements[i-1].IsTabulation : false;
+							bool is_last = i == n-1;
+							
 							Layout.StretchProfile profile = c.Elements[i].Profile;
-							layout.RenderLine (renderer, profile, count, ox, oy, width, i, i == n-1);
+							layout.RenderLine (renderer, profile, count, ox, oy, width, i, is_tab, is_last);
 						}
 					}
 				}
@@ -370,7 +373,7 @@ namespace Epsitec.Common.Text
 						double tab_x;
 						double tab_dx;
 						
-						TabStatus tab_status = this.MeasureTabTextWidth (layout, tab_property, line_count, out tab_x, out tab_dx);
+						TabStatus tab_status = this.MeasureTabTextWidth (layout, tab_property, line_count, false, out tab_x, out tab_dx);
 						
 						System.Console.Out.WriteLine ("Suggested start for tabbed text: {0:0.00}, status: {1}, width: {2:0.00}", tab_x, tab_status, tab_dx);
 						
@@ -457,15 +460,15 @@ namespace Epsitec.Common.Text
 						end_of_text = true;
 					}
 					
-					element.Length     = offset - line_start;
-					element.Profile    = profile;
-					element.FrameIndex = layout.FrameIndex;
-					element.LineBaseX  = layout.StartX;
-					element.LineBaseY  = layout.Y;
-					element.LineWidth  = continuation ? result[result.Count-1].Profile.TotalWidth : layout.AvailableWidth;
-					
+					element.Length        = offset - line_start;
+					element.Profile       = profile;
+					element.FrameIndex    = layout.FrameIndex;
+					element.LineBaseX     = layout.StartX;
+					element.LineBaseY     = layout.Y;
+					element.LineWidth     = continuation ? result[result.Count-1].Profile.TotalWidth : layout.AvailableWidth;
 					element.LineAscender  = layout.LineAscender;
 					element.LineDescender = layout.LineDescender;
+					element.IsTabulation  = status == Layout.Status.OkTabReached;
 					
 					list.Add (element);
 				}
@@ -559,7 +562,7 @@ namespace Epsitec.Common.Text
 			ErrorCannotFit
 		}
 		
-		protected TabStatus MeasureTabTextWidth(Layout.Context layout, Properties.TabProperty tab_property, int line_count, out double tab_x, out double width)
+		protected TabStatus MeasureTabTextWidth(Layout.Context layout, Properties.TabProperty tab_property, int line_count, bool start_of_line, out double tab_x, out double width)
 		{
 			tab_x = 0;
 			width = 0;
@@ -650,8 +653,7 @@ namespace Epsitec.Common.Text
 				return TabStatus.ErrorNeedMoreText;
 			}
 			
-			if ((fit_status == Layout.Status.Ok) ||
-				(fit_status == Layout.Status.OkFitEnded) ||
+			if ((fit_status == Layout.Status.OkFitEnded) ||
 				(fit_status == Layout.Status.OkTabReached))
 			{
 				//	TODO: sélectionner le résultat optimal
@@ -660,6 +662,24 @@ namespace Epsitec.Common.Text
 				tab_x = x2 - d * width;
 				
 				return status;
+			}
+			
+			if (fit_status == Layout.Status.Ok)
+			{
+				if ((d == 0.0) ||
+					(start_of_line))
+				{
+					//	TODO: sélectionner le résultat optimal
+					
+					width = result[result.Count-1].Profile.TotalWidth;
+					tab_x = x2 - d * width;
+					
+					return status;
+				}
+				else
+				{
+					return TabStatus.ErrorNeedMoreRoom;
+				}
 			}
 			
 			return TabStatus.ErrorCannotFit;

@@ -517,7 +517,7 @@ restart:
 		}
 		
 		
-		public void RenderLine(ITextRenderer renderer, Layout.StretchProfile profile, int length, double line_base_x, double line_base_y, double line_width, int paragraph_line_count, bool is_last_line)
+		public void RenderLine(ITextRenderer renderer, Layout.StretchProfile profile, int length, double line_base_x, double line_base_y, double line_width, int paragraph_line_count, bool is_tab, bool is_last_line)
 		{
 			//	Réalise le rendu de la ligne, en appelant les divers moteurs de
 			//	layout associés au texte.
@@ -547,7 +547,10 @@ restart:
 			space  = line_width - profile.TotalWidth;
 			space *= 1.0 - this.justification;
 			
-			this.ox += space * this.disposition;
+			if (! is_tab)
+			{
+				this.ox += space * this.disposition;
+			}
 			
 			this.text_delta = line_width - space;
 			this.text_profile.ComputeScales (this.text_delta, out this.text_scales);
