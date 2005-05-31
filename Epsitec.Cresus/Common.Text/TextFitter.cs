@@ -131,12 +131,7 @@ namespace Epsitec.Common.Text
 						if (renderer.IsFrameAreaVisible (layout.Frame, ox, oy+desc, width, asc+desc))
 						{
 							bool is_tab  = (i > 0) ? c.Elements[i-1].IsTabulation : false;
-							bool is_last = i == n-1;
-							
-							if (c.Elements[i].IsTabulation)
-							{
-								is_last = true;
-							}
+							bool is_last = (i == n-1) || (c.Elements[i].IsTabulation);
 							
 							Layout.StretchProfile profile = c.Elements[i].Profile;
 							layout.RenderLine (renderer, profile, count, ox, oy, width, i, is_tab, is_last);
@@ -321,6 +316,8 @@ namespace Epsitec.Common.Text
 				}
 				
 				Properties.TabProperty tab_property;
+				TextFitter.TabStatus   tab_status;
+				
 				Layout.Status status = layout.Fit (ref result, line_count, continuation);
 				
 				bool tab_new_line = false;
@@ -378,9 +375,7 @@ namespace Epsitec.Common.Text
 						double tab_x;
 						double tab_dx;
 						
-						TabStatus tab_status = this.MeasureTabTextWidth (layout, tab_property, line_count, false, out tab_x, out tab_dx);
-						
-						System.Console.Out.WriteLine ("Suggested start for tabbed text: {0:0.00}, status: {1}, width: {2:0.00}", tab_x, tab_status, tab_dx);
+						tab_status = this.MeasureTabTextWidth (layout, tab_property, line_count, false, out tab_x, out tab_dx);
 						
 						if (tab_status == TabStatus.ErrorNeedMoreText)
 						{
@@ -393,8 +388,20 @@ namespace Epsitec.Common.Text
 							//	à la ligne.
 							
 							tab_new_line = true;
+							tab_status   = this.MeasureTabTextWidth (layout, tab_property, line_count, true, out tab_x, out tab_dx);
 							
-							layout.MoveTo (tab_x, layout.TextOffset);
+							if (tab_status == TabStatus.ErrorNeedMoreRoom)
+							{
+								//	Même sur une ligne nouvelle, il n'y a pas la place pour
+								//	positionner le texte selon les besoins du tabulateur;
+								//	on le cale simplement sur la marge :
+								
+								layout.MoveTo (layout.LeftMargin, layout.TextOffset);
+							}
+							else
+							{
+								layout.MoveTo (tab_x, layout.TextOffset);
+							}
 						}
 						else if (tab_status == TabStatus.Ok)
 						{
@@ -574,7 +581,7 @@ namespace Epsitec.Common.Text
 			
 			double d = tab_property.Disposition;
 			
-			double x1 = layout.X;
+			double x1 = start_of_line ? layout.LeftMargin : layout.X;
 			double x2 = tab_property.Position;
 			double x3 = layout.LineWidth - layout.RightMargin;
 			
@@ -679,10 +686,14 @@ namespace Epsitec.Common.Text
 					width = result[result.Count-1].Profile.TotalWidth;
 					tab_x = x2 - d * width;
 					
-					return status;
+					return (d > 0) ? TabStatus.ErrorNeedMoreRoom : status;
 				}
 				else
 				{
+					//	On n'arrive pas à placer le texte du tabulateur sur la
+					//	ligne en cours; il faut donc demander un passage à la
+					//	ligne suivante :
+					
 					return TabStatus.ErrorNeedMoreRoom;
 				}
 			}
