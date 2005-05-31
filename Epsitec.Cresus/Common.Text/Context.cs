@@ -145,6 +145,30 @@ namespace Epsitec.Common.Text
 			this.get_color_last_color         = color;
 		}
 		
+		public void GetLanguage(ulong code, out Properties.LanguageProperty property)
+		{
+			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			long current_style_version = this.style_list.InternalStyleTable.Version;
+			
+			if ((this.get_language_last_style_version == current_style_version) &&
+				(this.get_language_last_code == code))
+			{
+				property = this.get_language_last_property;
+				
+				return;
+			}
+			
+			Styles.SimpleStyle   style          = this.style_list[code];
+			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			
+			property = extra_settings[Properties.WellKnownType.Language] as Properties.LanguageProperty;
+			
+			this.get_language_last_style_version = current_style_version;
+			this.get_language_last_code          = code;
+			this.get_language_last_property      = property;
+		}
+		
 		public void GetLayoutEngine(ulong code, out Layout.BaseEngine engine, out Properties.LayoutProperty property)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
@@ -279,6 +303,10 @@ namespace Epsitec.Common.Text
 		private long							get_color_last_style_version;
 		private ulong							get_color_last_code;
 		private Drawing.Color					get_color_last_color;
+		
+		private long							get_language_last_style_version;
+		private ulong							get_language_last_code;
+		private Properties.LanguageProperty		get_language_last_property;
 		
 		private long							get_layout_last_style_version;
 		private int								get_layout_last_style_index;

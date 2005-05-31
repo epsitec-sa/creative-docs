@@ -20,6 +20,7 @@ namespace Epsitec.Common.Text.Properties
 		Tab,
 		
 		Underline,
+		Language,
 		
 		Other			= 1000000,
 	}

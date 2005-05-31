@@ -132,7 +132,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(FontSizeProperty a, FontSizeProperty b)
 		{
-			return a.size == b.size
+			return NumberSupport.Equal (a.size, b.size)
 				&& a.units == b.units;
 		}
 		

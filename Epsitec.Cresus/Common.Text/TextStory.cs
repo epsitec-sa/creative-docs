@@ -524,14 +524,15 @@ namespace Epsitec.Common.Text
 				//	Demande une analyse du passage considéré et recopie les
 				//	informations dans le texte lui-même :
 				
-//				Unicode.BreakInfo[] breaks = new Unicode.BreakInfo[to_pos - from_pos];
-//				Unicode.DefaultBreakAnalyzer.GenerateBreaks (text, from_pos - area_begin, to_pos - from_pos, breaks);
-//				Unicode.Bits.SetBreakInfo (text, from_pos - area_begin, breaks);
-				Unicode.BreakInfo[] breaks = new Unicode.BreakInfo[word_end - word_begin];
-				Unicode.DefaultBreakAnalyzer.GenerateBreaks (text, word_begin - area_begin, word_end - word_begin, breaks);
-				Unicode.Bits.SetBreakInfo (text, word_begin - area_begin, breaks);
+				int text_offset = word_begin - area_begin;
+				int text_length = word_end - word_begin;
 				
-				Internal.CharMarker.SetMarkers (this.context.Marker.RequiresSpellChecking, text, word_begin - area_begin, word_end - word_begin);
+				Unicode.BreakInfo[] breaks = new Unicode.BreakInfo[text_length];
+				Unicode.DefaultBreakAnalyzer.GenerateBreaks (text, text_offset, text_length, breaks);
+				LanguageEngine.GenerateHyphens (this.context, text, text_offset, text_length, breaks);
+				Unicode.Bits.SetBreakInfo (text, text_offset, breaks);
+				
+				Internal.CharMarker.SetMarkers (this.context.Marker.RequiresSpellChecking, text, text_offset, text_length);
 				
 				this.text.WriteText (this.temp_cursor.CursorId, area_end - area_begin, text);
 			}

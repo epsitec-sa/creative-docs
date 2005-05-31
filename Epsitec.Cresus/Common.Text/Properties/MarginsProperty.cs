@@ -308,16 +308,16 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(MarginsProperty a, MarginsProperty b)
 		{
-			if ((a.left_margin_first_line  == b.left_margin_first_line) &&
-				(a.left_margin_body        == b.left_margin_body) &&
-				(a.right_margin_first_line == b.right_margin_first_line) &&
-				(a.right_margin_body       == b.right_margin_body) &&
-				(a.justification_body      == b.justification_body) &&
-				(a.justification_last_line == b.justification_last_line) &&
-				(a.disposition             == b.disposition) &&
-				(a.break_fence_before      == b.break_fence_before) &&
-				(a.break_fence_after       == b.break_fence_after) &&
-				(a.enable_hyphenation      == b.enable_hyphenation))
+			if ((NumberSupport.Equal (a.left_margin_first_line,  b.left_margin_first_line)) &&
+				(NumberSupport.Equal (a.left_margin_body,        b.left_margin_body)) &&
+				(NumberSupport.Equal (a.right_margin_first_line, b.right_margin_first_line)) &&
+				(NumberSupport.Equal (a.right_margin_body,       b.right_margin_body)) &&
+				(NumberSupport.Equal (a.justification_body,      b.justification_body)) &&
+				(NumberSupport.Equal (a.justification_last_line, b.justification_last_line)) &&
+				(NumberSupport.Equal (a.disposition,             b.disposition)) &&
+				(NumberSupport.Equal (a.break_fence_before,      b.break_fence_before)) &&
+				(NumberSupport.Equal (a.break_fence_after,       b.break_fence_after)) &&
+				(a.enable_hyphenation == b.enable_hyphenation))
 			{
 				return true;
 			}

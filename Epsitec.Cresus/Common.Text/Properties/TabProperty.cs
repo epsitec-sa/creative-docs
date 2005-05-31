@@ -138,14 +138,9 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(TabProperty a, TabProperty b)
 		{
-			if ((a.position     == b.position) &&
-				(a.disposition  == b.disposition) &&
-				(a.docking_mark == b.docking_mark))
-			{
-				return true;
-			}
-			
-			return false;
+			return NumberSupport.Equal (a.position, b.position)
+				&& NumberSupport.Equal (a.disposition, b.disposition)
+				&& a.docking_mark == b.docking_mark;
 		}
 		
 		

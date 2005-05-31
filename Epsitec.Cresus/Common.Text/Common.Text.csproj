@@ -189,6 +189,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "LanguageEngine.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "LayoutList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -375,6 +380,11 @@
                 />
                 <File
                     RelPath = "Properties\FontSizeUnitsTools.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\LanguageProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
