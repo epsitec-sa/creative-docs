@@ -81,9 +81,12 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 			
-			dx_array[count-1] = 0;
-			
-			AntiGrain.Buffer.DrawGlyphs (pixmap.Handle, font_handle, ox, oy, text, dx_array, count, color);
+			if (count > 0)
+			{
+				dx_array[count-1] = 0;
+				
+				AntiGrain.Buffer.DrawGlyphs (pixmap.Handle, font_handle, ox, oy, text, dx_array, count, color);
+			}
 		}
 	}
 }

@@ -465,7 +465,7 @@ namespace Epsitec.Common.Text
 					element.FrameIndex    = layout.FrameIndex;
 					element.LineBaseX     = layout.StartX;
 					element.LineBaseY     = layout.Y;
-					element.LineWidth     = continuation ? result[result.Count-1].Profile.TotalWidth : layout.AvailableWidth;
+					element.LineWidth     = (continuation && !tab_new_line) ? result[result.Count-1].Profile.TotalWidth : layout.AvailableWidth;
 					element.LineAscender  = layout.LineAscender;
 					element.LineDescender = layout.LineDescender;
 					element.IsTabulation  = status == Layout.Status.OkTabReached;
