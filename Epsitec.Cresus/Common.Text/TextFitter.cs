@@ -133,6 +133,11 @@ namespace Epsitec.Common.Text
 							bool is_tab  = (i > 0) ? c.Elements[i-1].IsTabulation : false;
 							bool is_last = i == n-1;
 							
+							if (c.Elements[i].IsTabulation)
+							{
+								is_last = true;
+							}
+							
 							Layout.StretchProfile profile = c.Elements[i].Profile;
 							layout.RenderLine (renderer, profile, count, ox, oy, width, i, is_tab, is_last);
 						}
