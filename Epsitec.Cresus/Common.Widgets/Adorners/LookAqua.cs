@@ -49,6 +49,25 @@ namespace Epsitec.Common.Widgets.Adorner
 							   GlyphShape type,
 							   PaintTextStyle style)
 		{
+			if ( type == GlyphShape.ResizeKnob )
+			{
+				Drawing.Point p = rect.BottomRight;
+
+				graphics.AddLine(p.X-11.5, p.Y+1.5, p.X-1.5, p.Y+11.5);
+				graphics.AddLine(p.X-10.5, p.Y+1.5, p.X-1.5, p.Y+10.5);
+				graphics.AddLine(p.X- 7.5, p.Y+1.5, p.X-1.5, p.Y+ 7.5);
+				graphics.AddLine(p.X- 6.5, p.Y+1.5, p.X-1.5, p.Y+ 6.5);
+				graphics.AddLine(p.X- 3.5, p.Y+1.5, p.X-1.5, p.Y+ 3.5);
+				graphics.AddLine(p.X- 2.5, p.Y+1.5, p.X-1.5, p.Y+ 2.5);
+				graphics.RenderSolid(Drawing.Color.FromBrightness(1.0));
+
+				graphics.AddLine(p.X-12.5, p.Y+1.5, p.X-1.5, p.Y+12.5);
+				graphics.AddLine(p.X- 8.5, p.Y+1.5, p.X-1.5, p.Y+ 8.5);
+				graphics.AddLine(p.X- 4.5, p.Y+1.5, p.X-1.5, p.Y+ 4.5);
+				graphics.RenderSolid(Drawing.Color.FromRGB(this.colorWindow.R-0.2, this.colorWindow.G-0.2, this.colorWindow.B-0.2));
+				return;
+			}
+
 			if ( rect.Width > rect.Height )
 			{
 				rect.Left += (rect.Width-rect.Height)/2;

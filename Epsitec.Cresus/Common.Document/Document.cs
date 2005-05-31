@@ -531,11 +531,10 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		sealed class VersionDeserializationBinder : SerializationBinder 
+		sealed class VersionDeserializationBinder : Common.IO.GenericDeserializationBinder
 		{
 			public VersionDeserializationBinder()
 			{
-				this.loadedAssemblies = System.AppDomain.CurrentDomain.GetAssemblies();
 			}
 			
 			// Retourne un type correspondant à l'application courante, afin
@@ -572,37 +571,8 @@ namespace Epsitec.Common.Document
 					}
 				}
 
-				System.Type typeToDeserialize;
-				
-				// Premier essai: trouve le type exact correspondant à ce qui est
-				// demandé par la désérialisation :
-				
-				typeToDeserialize = System.Type.GetType(string.Concat(typeName, ", ", assemblyName));
-				
-				// Second essai: trouve le type équivalent dans l'assembly avec la
-				// version courante, plutôt que celle avec la version spécifiée :
-				
-				if ( typeToDeserialize == null )
-				{
-					string prefix = assemblyName.Substring(0, assemblyName.IndexOf(" "));
-					
-					for (int i = 0; i < this.loadedAssemblies.Length; i++)
-					{
-						if ( this.loadedAssemblies[i].FullName.StartsWith(prefix) )
-						{
-							typeToDeserialize = System.Type.GetType(string.Concat(typeName, ", ", this.loadedAssemblies[i].FullName));
-							break;
-						}
-					}
-				}
-				
-				System.Diagnostics.Debug.Assert(typeToDeserialize != null);
-				
-				return typeToDeserialize;
+				return base.BindToType(assemblyName, typeName);
 			}
-			
-			
-			private System.Reflection.Assembly[] loadedAssemblies;
 		}
 
 		// Utilisé par les constructeurs de désérialisation du genre:

@@ -26,6 +26,8 @@ namespace Epsitec.App.DocumentEditor
 			this.type = type;
 			this.useArray = false;
 
+			this.SizeChanged += new EventHandler(this.HandleSizeChanged);
+
 			if ( this.type == DocumentType.Pictogram )
 			{
 				this.installType = InstallType.Full;
@@ -143,6 +145,12 @@ namespace Epsitec.App.DocumentEditor
 				this.UseDocument(-1);
 				this.UpdateCloseCommand();
 			}
+		}
+
+		private void HandleSizeChanged(object sender)
+		{
+			if ( this.resize == null || this.Window == null )  return;
+			this.resize.SetEnabled(!this.Window.IsFullScreen);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -563,6 +571,8 @@ namespace Epsitec.App.DocumentEditor
 
 			this.info = new StatusBar(this);
 			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
+			this.info.AnchorMargins = new Margins(0, 22-5, 0, 0);
+
 			this.InfoAdd("", 120, "StatusDocument", "");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.Deselect.icon", 0, "Deselect", DocumentEditor.GetRes("Action.DeselectAll"));
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.SelectAll.icon", 0, "SelectAll", DocumentEditor.GetRes("Action.SelectAll"));
@@ -592,6 +602,19 @@ namespace Epsitec.App.DocumentEditor
 
 			this.InfoAdd("", 110, "StatusMouse", "");
 			this.InfoAdd("", 250, "StatusModif", "");
+
+			StatusBar infoMisc = new StatusBar(this);
+			infoMisc.Width = 22;
+			infoMisc.Anchor = AnchorStyles.BottomRight;
+			infoMisc.AnchorMargins = new Margins(0, 0, 0, 0);
+
+			IconSeparator sep = new IconSeparator(infoMisc);
+			sep.Height = infoMisc.Height-1.0;
+			sep.Anchor = AnchorStyles.BottomLeft;
+
+			this.resize = new ResizeKnob(infoMisc);
+			this.resize.Anchor = AnchorStyles.BottomRight;
+			ToolTip.Default.SetToolTip(this.resize, Res.Strings.Dialog.Tooltip.Resize);
 
 			this.vToolBar = new VToolBar(this);
 			this.vToolBar.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
@@ -4269,51 +4292,11 @@ namespace Epsitec.App.DocumentEditor
 			return true;
 		}
 
-		sealed class VersionDeserializationBinder : SerializationBinder 
+		sealed class VersionDeserializationBinder : Common.IO.GenericDeserializationBinder
 		{
 			public VersionDeserializationBinder()
 			{
-				this.loadedAssemblies = System.AppDomain.CurrentDomain.GetAssemblies();
 			}
-			
-			// Retourne un type correspondant à l'application courante, afin
-			// d'accepter de désérialiser un fichier généré par une application
-			// ayant un autre numéro de révision.
-			// Application courante: Version=1.0.1777.18519
-			// Version dans le fichier: Version=1.0.1777.11504
-			public override System.Type BindToType(string assemblyName, string typeName) 
-			{
-				System.Type typeToDeserialize;
-				
-				// Premier essai: trouve le type exact correspondant à ce qui est
-				// demandé par la désérialisation :
-				
-				typeToDeserialize = System.Type.GetType(string.Concat(typeName, ", ", assemblyName));
-				
-				// Second essai: trouve le type équivalent dans l'assembly avec la
-				// version courante, plutôt que celle avec la version spécifiée :
-				
-				if ( typeToDeserialize == null )
-				{
-					string prefix = assemblyName.Substring(0, assemblyName.IndexOf(" "));
-					
-					for (int i = 0; i < this.loadedAssemblies.Length; i++)
-					{
-						if ( this.loadedAssemblies[i].FullName.StartsWith(prefix) )
-						{
-							typeToDeserialize = System.Type.GetType(string.Concat(typeName, ", ", this.loadedAssemblies[i].FullName));
-							break;
-						}
-					}
-				}
-				
-				System.Diagnostics.Debug.Assert(typeToDeserialize != null);
-				
-				return typeToDeserialize;
-			}
-			
-			
-			private System.Reflection.Assembly[] loadedAssemblies;
 		}
 
 		// Ecrit le fichier des réglages de l'application.
@@ -4436,6 +4419,7 @@ namespace Epsitec.App.DocumentEditor
 		protected HToolBar						hToolBar;
 		protected VToolBar						vToolBar;
 		protected StatusBar						info;
+		protected ResizeKnob					resize;
 		protected TabBook						bookDocuments;
 		protected double						panelsWidth = 247;
 		protected bool							ignoreChange;

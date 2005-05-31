@@ -167,14 +167,94 @@ namespace Epsitec.Common.Widgets
 			get { return MouseCursor.as_cross; }
 		}
 		
+		public static MouseCursor			AsWait
+		{
+			get { return MouseCursor.as_wait; }
+		}
+		
+		public static MouseCursor			AsHelp
+		{
+			get { return MouseCursor.as_help; }
+		}
+		
+		public static MouseCursor			AsNo
+		{
+			get { return MouseCursor.as_no; }
+		}
+		
+		public static MouseCursor			AsNoHMove
+		{
+			get { return MouseCursor.as_no_h_move; }
+		}
+		
+		public static MouseCursor			AsNoVMove
+		{
+			get { return MouseCursor.as_no_v_move; }
+		}
+		
+		public static MouseCursor			AsPanEast
+		{
+			get { return MouseCursor.as_pan_east; }
+		}
+		
+		public static MouseCursor			AsPanNE
+		{
+			get { return MouseCursor.as_pan_ne; }
+		}
+		
+		public static MouseCursor			AsPanNorth
+		{
+			get { return MouseCursor.as_pan_north; }
+		}
+		
+		public static MouseCursor			AsPanNW
+		{
+			get { return MouseCursor.as_pan_nw; }
+		}
+		
+		public static MouseCursor			AsPanSE
+		{
+			get { return MouseCursor.as_pan_se; }
+		}
+		
+		public static MouseCursor			AsPanSouth
+		{
+			get { return MouseCursor.as_pan_south; }
+		}
+		
+		public static MouseCursor			AsPanSW
+		{
+			get { return MouseCursor.as_pan_sw; }
+		}
+		
+		public static MouseCursor			AsPanWest
+		{
+			get { return MouseCursor.as_pan_west; }
+		}
+		
 		public static MouseCursor			AsSizeAll
 		{
 			get { return MouseCursor.as_size_all; }
 		}
 		
-		public static MouseCursor			AsWait
+		public static MouseCursor			AsSizeNESW
 		{
-			get { return MouseCursor.as_wait; }
+			get { return MouseCursor.as_size_nesw; }
+		}
+		
+		public static MouseCursor			AsSizeNS
+		{
+			get { return MouseCursor.as_size_ns; }
+		}
+		
+		public static MouseCursor			AsSizeNWSE
+		{
+			get { return MouseCursor.as_size_nwse; }
+		}
+		
+		public static MouseCursor			AsSizeWE
+		{
+			get { return MouseCursor.as_size_we; }
 		}
 		
 		
@@ -182,13 +262,29 @@ namespace Epsitec.Common.Widgets
 		private System.IntPtr				handle;
 		
 		
-		private static MouseCursor			as_arrow   = new MouseCursor (System.Windows.Forms.Cursors.Arrow);
-		private static MouseCursor			as_hand    = new MouseCursor (System.Windows.Forms.Cursors.Hand);
-		private static MouseCursor			as_I_beam  = new MouseCursor (System.Windows.Forms.Cursors.IBeam);
-		private static MouseCursor			as_h_split = new MouseCursor (System.Windows.Forms.Cursors.HSplit);
-		private static MouseCursor			as_v_split = new MouseCursor (System.Windows.Forms.Cursors.VSplit);
-		private static MouseCursor			as_cross    = new MouseCursor (System.Windows.Forms.Cursors.Cross);
-		private static MouseCursor			as_size_all = new MouseCursor (System.Windows.Forms.Cursors.SizeAll);
-		private static MouseCursor			as_wait    = new MouseCursor (System.Windows.Forms.Cursors.WaitCursor);
+		private static MouseCursor			as_arrow     = new MouseCursor (System.Windows.Forms.Cursors.Arrow);
+		private static MouseCursor			as_hand      = new MouseCursor (System.Windows.Forms.Cursors.Hand);
+		private static MouseCursor			as_I_beam    = new MouseCursor (System.Windows.Forms.Cursors.IBeam);
+		private static MouseCursor			as_h_split   = new MouseCursor (System.Windows.Forms.Cursors.HSplit);
+		private static MouseCursor			as_v_split   = new MouseCursor (System.Windows.Forms.Cursors.VSplit);
+		private static MouseCursor			as_cross     = new MouseCursor (System.Windows.Forms.Cursors.Cross);
+		private static MouseCursor			as_wait      = new MouseCursor (System.Windows.Forms.Cursors.WaitCursor);
+		private static MouseCursor			as_help      = new MouseCursor (System.Windows.Forms.Cursors.Help);
+		private static MouseCursor			as_no        = new MouseCursor (System.Windows.Forms.Cursors.No);
+		private static MouseCursor			as_no_h_move = new MouseCursor (System.Windows.Forms.Cursors.NoMoveHoriz);
+		private static MouseCursor			as_no_v_move = new MouseCursor (System.Windows.Forms.Cursors.NoMoveVert);
+		private static MouseCursor			as_pan_east  = new MouseCursor (System.Windows.Forms.Cursors.PanEast);
+		private static MouseCursor			as_pan_ne    = new MouseCursor (System.Windows.Forms.Cursors.PanNE);
+		private static MouseCursor			as_pan_north = new MouseCursor (System.Windows.Forms.Cursors.PanNorth);
+		private static MouseCursor			as_pan_nw    = new MouseCursor (System.Windows.Forms.Cursors.PanNW);
+		private static MouseCursor			as_pan_se    = new MouseCursor (System.Windows.Forms.Cursors.PanSE);
+		private static MouseCursor			as_pan_south = new MouseCursor (System.Windows.Forms.Cursors.PanSouth);
+		private static MouseCursor			as_pan_sw    = new MouseCursor (System.Windows.Forms.Cursors.PanSW);
+		private static MouseCursor			as_pan_west  = new MouseCursor (System.Windows.Forms.Cursors.PanWest);
+		private static MouseCursor			as_size_all  = new MouseCursor (System.Windows.Forms.Cursors.SizeAll);
+		private static MouseCursor			as_size_nesw = new MouseCursor (System.Windows.Forms.Cursors.SizeNESW);
+		private static MouseCursor			as_size_ns   = new MouseCursor (System.Windows.Forms.Cursors.SizeNS);
+		private static MouseCursor			as_size_nwse = new MouseCursor (System.Windows.Forms.Cursors.SizeNWSE);
+		private static MouseCursor			as_size_we   = new MouseCursor (System.Windows.Forms.Cursors.SizeWE);
 	}
 }

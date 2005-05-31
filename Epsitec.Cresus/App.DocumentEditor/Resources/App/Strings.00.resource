@@ -44,6 +44,7 @@
 	<data name="Dialog.Button.Help">Aide</data>
 	<data name="Dialog.Tooltip.Close">Fermer ce dialogue</data>
 	<data name="Dialog.Tooltip.Help">Texte explicatif</data>
+	<data name="Dialog.Tooltip.Resize">Redimensionner la fenêtre</data>
 	
 	<data name="Dialog.Save.Question1">Le fichier {0} a été modifié.</data>
 	<data name="Dialog.Save.Question2">Voulez-vous enregistrer les modifications ?</data>

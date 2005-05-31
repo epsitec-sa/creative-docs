@@ -39,6 +39,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.MinSize = new Size(200, 200);
 
+				ResizeKnob resize = new ResizeKnob(this.window.Root);
+				resize.Anchor = AnchorStyles.BottomRight;
+				resize.AnchorMargins = new Margins(0, 0, 0, 0);
+				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
+
 				// Crée les onglets.
 				this.book = new TabBook(this.window.Root);
 				this.book.Arrows = TabBookArrows.Right;

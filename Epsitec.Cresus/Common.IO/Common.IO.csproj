@@ -119,6 +119,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "GenericDeserializationBinder.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IChecksum.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

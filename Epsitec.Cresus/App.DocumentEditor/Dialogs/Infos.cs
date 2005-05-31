@@ -32,6 +32,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowInfosCloseClicked);
 				this.window.Root.MinSize = new Size(160, 100);
 
+				ResizeKnob resize = new ResizeKnob(this.window.Root);
+				resize.Anchor = AnchorStyles.BottomRight;
+				resize.AnchorMargins = new Margins(0, 0, 0, 0);
+				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
+
 				TextFieldMulti multi = new TextFieldMulti(this.window.Root);
 				multi.Name = "Infos";
 				multi.IsReadOnly = true;

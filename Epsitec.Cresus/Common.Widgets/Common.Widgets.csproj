@@ -389,6 +389,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ResizeKnob.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ScreenInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

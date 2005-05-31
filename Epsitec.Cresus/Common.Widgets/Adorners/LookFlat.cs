@@ -50,6 +50,30 @@ namespace Epsitec.Common.Widgets.Adorner
 							   GlyphShape type,
 							   PaintTextStyle style)
 		{
+			if ( type == GlyphShape.ResizeKnob )
+			{
+				Drawing.Point p = rect.BottomRight;
+
+				graphics.AddFilledRectangle(p.X-1, p.Y+1, -2, 2);
+				graphics.AddFilledRectangle(p.X-5, p.Y+1, -2, 2);
+				graphics.AddFilledRectangle(p.X-9, p.Y+1, -2, 2);
+				graphics.AddFilledRectangle(p.X-1, p.Y+5, -2, 2);
+				graphics.AddFilledRectangle(p.X-5, p.Y+5, -2, 2);
+				graphics.AddFilledRectangle(p.X-1, p.Y+9, -2, 2);
+				graphics.RenderSolid(Drawing.Color.FromBrightness(1.0));
+
+				p.X -= 1.0;
+				p.Y += 1.0;
+				graphics.AddFilledRectangle(p.X-1, p.Y+1, -2, 2);
+				graphics.AddFilledRectangle(p.X-5, p.Y+1, -2, 2);
+				graphics.AddFilledRectangle(p.X-9, p.Y+1, -2, 2);
+				graphics.AddFilledRectangle(p.X-1, p.Y+5, -2, 2);
+				graphics.AddFilledRectangle(p.X-5, p.Y+5, -2, 2);
+				graphics.AddFilledRectangle(p.X-1, p.Y+9, -2, 2);
+				graphics.RenderSolid(this.colorControlDark);
+				return;
+			}
+
 			if ( rect.Width > rect.Height )
 			{
 				rect.Left += (rect.Width-rect.Height)/2;

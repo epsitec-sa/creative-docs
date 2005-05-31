@@ -24,6 +24,7 @@ namespace Epsitec.Common.Widgets
 		TabCenter,
 		TabDecimal,
 		TabIndent,
+		ResizeKnob,
 	}
 	
 	/// <summary>
