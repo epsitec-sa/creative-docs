@@ -290,6 +290,18 @@ namespace Epsitec.Common.Drawing
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
+					
+					
+					words = "Une phrase contenant un \"non\u2011breaking hyphen\" mais aussi un \"soft\u2010hyphen\" au milieu du mot \"Merk\u00ADwürdig\". Voici une césure mongloienne au milieu du mot \"Abra\u1806cadabra\".";
+					
+					properties.Clear ();
+					properties.Add (new Text.Properties.FontProperty ("Verdana", "Regular"));
+					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.FontSizeUnits.Points));
+					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, true));
+					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					
+					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
 				}
 				
 				if (this.active_test == 1)
@@ -349,9 +361,10 @@ namespace Epsitec.Common.Drawing
 					
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
 					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
-					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
+					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, true));
 					properties_1.Add (new Text.Properties.TabProperty (tab, 0.0, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					properties_1.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
 					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));

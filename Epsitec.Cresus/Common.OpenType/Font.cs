@@ -76,7 +76,7 @@ namespace Epsitec.Common.OpenType
 			
 			for (int i = 0; i < length; i++)
 			{
-				glyphs[i] = this.ot_index_mapping.GetGlyphIndex (text[i]);
+				glyphs[i] = this.GetGlyphIndex (text[i]);
 			}
 			
 			this.ApplySubstitutions (ref glyphs, ref gl_map);
@@ -92,7 +92,7 @@ namespace Epsitec.Common.OpenType
 			for (int i = 0; i < length; i++)
 			{
 				int code  = 0x001fffff & (int) text[start+i];
-				glyphs[i] = this.ot_index_mapping.GetGlyphIndex (code);
+				glyphs[i] = this.GetGlyphIndex (code);
 			}
 			
 			this.ApplySubstitutions (ref glyphs, ref gl_map);
@@ -110,7 +110,7 @@ namespace Epsitec.Common.OpenType
 			
 			for (int i = 0; i < length; i++)
 			{
-				glyphs[i] = this.ot_index_mapping.GetGlyphIndex (text[i]);
+				glyphs[i] = this.GetGlyphIndex (text[i]);
 			}
 			
 			this.ApplySubstitutions (ref glyphs, ref gl_map);
@@ -139,7 +139,7 @@ namespace Epsitec.Common.OpenType
 			for (int i = 0; i < length; i++)
 			{
 				int code  = 0x001fffff & (int) text[start+i];
-				glyphs[i] = this.ot_index_mapping.GetGlyphIndex (code);
+				glyphs[i] = this.GetGlyphIndex (code);
 			}
 			
 			this.ApplySubstitutions (ref glyphs, ref gl_map);
@@ -171,7 +171,7 @@ namespace Epsitec.Common.OpenType
 			for (int i = 0; i < length; i++)
 			{
 				int code  = 0x001fffff & (int) text[start+i];
-				glyphs[i] = this.ot_index_mapping.GetGlyphIndex (code);
+				glyphs[i] = this.GetGlyphIndex (code);
 			}
 			
 			this.ApplySubstitutions (ref glyphs, ref gl_map);
@@ -791,6 +791,27 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public ushort GetGlyphIndex(int code)
+		{
+			ushort glyph = this.ot_index_mapping.GetGlyphIndex (code);
+			
+			if (glyph == 0x0000)
+			{
+				switch (code)
+				{
+					case 0x2010:		//	Hyphen
+					case 0x2011:		//	Non Breaking Hyphen
+					case 0x00AD:		//	Soft Hyphen
+					case 0x1806:		//	Mongolian Todo Hyphen
+						glyph = this.ot_index_mapping.GetGlyphIndex ('-');
+						break;
+				}
+			}
+			
+			return glyph;
+		}
+		
+		
 		private void MapToGlyphs(string text, out ushort[] glyphs, out int[] gl_map)
 		{
 			int length = text.Length;
@@ -800,7 +821,7 @@ namespace Epsitec.Common.OpenType
 			
 			for (int i = 0; i < length; i++)
 			{
-				glyphs[i] = this.ot_index_mapping.GetGlyphIndex (text[i]);
+				glyphs[i] = this.GetGlyphIndex (text[i]);
 			}
 			
 			this.ApplySubstitutions (ref glyphs, ref gl_map);
@@ -814,7 +835,7 @@ namespace Epsitec.Common.OpenType
 			for (int i = 0; i < length; i++)
 			{
 				int code  = 0x001fffff & (int) text[start+i];
-				glyphs[i] = this.ot_index_mapping.GetGlyphIndex (code);
+				glyphs[i] = this.GetGlyphIndex (code);
 			}
 			
 			this.ApplySubstitutions (ref glyphs, ref gl_map);

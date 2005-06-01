@@ -120,7 +120,19 @@ namespace Epsitec.Common.Text.Layout
 			
 			for (int i = 0; i < length; i++)
 			{
-				if (analyzer.IsControl (Unicode.Bits.GetCode (temp[i])))
+				int code = Unicode.Bits.GetCode (temp[i]);
+				
+				if (analyzer.IsControl (code))
+				{
+					temp[i] &= ~ Unicode.Bits.CodeMask;
+				}
+				else if ((code == (int) Unicode.Code.SoftHyphen) &&
+					/**/ (i+1 < length))
+				{
+					temp[i] &= ~ Unicode.Bits.CodeMask;
+				}
+				else if ((code == (int) Unicode.Code.MongolianTodoHyphen) &&
+					/**/ (i != 0))
 				{
 					temp[i] &= ~ Unicode.Bits.CodeMask;
 				}
@@ -141,9 +153,21 @@ namespace Epsitec.Common.Text.Layout
 			
 			for (int i = 0; i < length; i++)
 			{
-				attributes[i] = (byte) Unicode.BreakAnalyzer.GetStretchClass (Unicode.Bits.GetCode (text[i]));
+				attributes[i] = (byte) Unicode.BreakAnalyzer.GetStretchClass (Unicode.Bits.GetCode (temp[i]));
 				
-				if (analyzer.IsControl (Unicode.Bits.GetCode (temp[i])))
+				int code = Unicode.Bits.GetCode (temp[i]);
+				
+				if (analyzer.IsControl (code))
+				{
+					temp[i] &= ~ Unicode.Bits.CodeMask;
+				}
+				else if ((code == (int) Unicode.Code.SoftHyphen) &&
+					/**/ (i+1 < length))
+				{
+					temp[i] &= ~ Unicode.Bits.CodeMask;
+				}
+				else if ((code == (int) Unicode.Code.MongolianTodoHyphen) &&
+					/**/ (i != 0))
 				{
 					temp[i] &= ~ Unicode.Bits.CodeMask;
 				}

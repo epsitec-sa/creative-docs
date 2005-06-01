@@ -197,6 +197,8 @@ namespace Epsitec.Common.Text
 			
 			HyphenMinus				= 0x002D,
 			SoftHyphen				= 0x00AD,
+			ArmenianHyphen			= 0x058A,		//	same as SoftHyphen, but with different shape
+			MongolianTodoHyphen		= 0x1806,		//	same as SoftHyphen, but at beginning of next line
 			
 			Hyphen					= 0x2010,
 			NonBreakingHyphen		= 0x2011,
