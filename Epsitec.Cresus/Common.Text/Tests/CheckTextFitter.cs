@@ -548,6 +548,10 @@ namespace Epsitec.Common.Text.Tests
 				return true;
 			}
 			
+			public void RenderBegin(Layout.Context context)
+			{
+			}
+			
 			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 			{
 				for (int i = 0; i < glyphs.Length; i++)
@@ -578,6 +582,10 @@ namespace Epsitec.Common.Text.Tests
 					}
 				}
 			}
+			
+			public void RenderEnd(Layout.Context context)
+			{
+			}
 			#endregion
 
 			private System.Text.StringBuilder	buffer;
@@ -602,7 +610,15 @@ namespace Epsitec.Common.Text.Tests
 				return true;
 			}
 			
+			public void RenderBegin(Layout.Context context)
+			{
+			}
+			
 			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+			{
+			}
+			
+			public void RenderEnd(Layout.Context context)
 			{
 			}
 			#endregion

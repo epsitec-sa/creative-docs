@@ -105,19 +105,19 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		public double							TextStretchDelta
-		{
-			get
-			{
-				return this.text_delta;
-			}
-		}
-		
 		public double							TextStretchGlue
 		{
 			get
 			{
 				return this.text_glue;
+			}
+		}
+		
+		public double							TextWidth
+		{
+			get
+			{
+				return this.text_width;
 			}
 		}
 		
@@ -552,8 +552,9 @@ restart:
 				this.ox += space * this.disposition;
 			}
 			
-			this.text_delta = line_width - space;
-			this.text_profile.ComputeScales (this.text_delta, out this.text_scales);
+			this.text_width = line_width - space;
+			
+			this.text_profile.ComputeScales (this.text_width, out this.text_scales);
 			
 			int               end            = this.text_offset + length;
 			Unicode.BreakInfo end_break_info = Unicode.Bits.GetBreakInfo (this.text[this.text_start + end - 1]);
@@ -614,6 +615,8 @@ restart:
 				this.text_glue = 0;
 			}
 			
+			renderer.RenderBegin (this);
+			
 			for (;;)
 			{
 				Layout.Status status = this.layout_engine.Render (this, renderer, end - this.text_offset);
@@ -621,6 +624,7 @@ restart:
 				switch (status)
 				{
 					case Layout.Status.Ok:
+						renderer.RenderEnd (this);
 						return;
 					
 					case Layout.Status.SwitchLayout:
@@ -919,7 +923,7 @@ restart:
 		private int								text_offset;
 		private StretchProfile					text_profile;
 		private StretchProfile.Scales			text_scales;
-		private double							text_delta;
+		private double							text_width;
 		private double							text_glue;
 		
 		private FrameList						frame_list;

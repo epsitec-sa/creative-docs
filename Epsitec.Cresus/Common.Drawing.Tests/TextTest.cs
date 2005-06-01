@@ -128,6 +128,19 @@ namespace Epsitec.Common.Drawing
 				return true;
 			}
 			
+			public void RenderBegin(Text.Layout.Context context)
+			{
+				ITextFrame frame = context.Frame;
+				
+				double ox = context.X;
+				double oy = context.Y;
+				double dx = context.TextWidth;
+				
+				this.graphics.LineWidth = 0.3;
+				this.graphics.AddLine (ox, oy, ox + dx, oy);
+				this.graphics.RenderSolid (Drawing.Color.FromName ("Green"));
+			}
+			
 			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 			{
 				if (font.FontManagerType == OpenType.FontManagerType.System)
@@ -151,6 +164,10 @@ namespace Epsitec.Common.Drawing
 					
 					this.graphics.RenderSolid (color);
 				}
+			}
+			
+			public void RenderEnd(Text.Layout.Context context)
+			{
 			}
 			#endregion
 			

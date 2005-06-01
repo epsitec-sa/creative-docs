@@ -4,12 +4,15 @@
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// Summary description for ITextRenderer.
+	/// L'interface ITextRenderer permet d'abstraire le code nécessaire au rendu
+	/// du texte (que ce soit à l'écran ou sous une autre représentation).
 	/// </summary>
 	public interface ITextRenderer
 	{
 		bool IsFrameAreaVisible(ITextFrame frame, double x, double y, double width, double height);
 		
+		void RenderBegin(Layout.Context context);
 		void Render(ITextFrame frame, OpenType.Font font, double size, Drawing.Color color, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy);
+		void RenderEnd(Layout.Context context);
 	}
 }
