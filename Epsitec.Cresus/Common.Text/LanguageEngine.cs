@@ -46,7 +46,7 @@ namespace Epsitec.Common.Text
 					{
 						//	Traite la tranche qui vient de se terminer.
 						
-						LanguageEngine.GenerateHyphensForRun (context, text, offset + run_start, run_length, run_locale, breaks);
+						LanguageEngine.GenerateHyphensForRun (context, text, offset + run_start, run_length, run_locale, run_start, breaks);
 					}
 					
 					run_start  = i;
@@ -62,32 +62,41 @@ namespace Epsitec.Common.Text
 			{
 				//	Traite la tranche finale.
 				
-				LanguageEngine.GenerateHyphensForRun (context, text, offset + run_start, run_length, run_locale, breaks);
+				LanguageEngine.GenerateHyphensForRun (context, text, offset + run_start, run_length, run_locale, run_start, breaks);
 			}
 		}
 		
-		private static void GenerateHyphensForRun(Context context, ulong[] text, int offset, int length, string locale, Unicode.BreakInfo[] breaks)
+		private static void GenerateHyphensForRun(Context context, ulong[] text, int text_offset, int length, string locale, int break_offset, Unicode.BreakInfo[] breaks)
 		{
 			if (length < 1)
 			{
 				return;
 			}
 			
-			System.Text.StringBuilder word = new System.Text.StringBuilder (length);
-			
-			for (int i = 0; i < length; i++)
+			if ((locale.StartsWith ("fr")) ||
+				(locale.StartsWith ("FR")))
 			{
-				int code = Unicode.Bits.GetCode (text[offset + i]);
+				System.Text.StringBuilder word = new System.Text.StringBuilder (length);
 				
-				if (code > 0xffff)
+				for (int i = 0; i < length; i++)
 				{
-					code = 0xffff;
+					int code = Unicode.Bits.GetCode (text[text_offset + i]);
+					
+					if (code > 0xffff)
+					{
+						code = 0xffff;
+					}
+					
+					word.Append ((char) code);
 				}
 				
-				word.Append ((char) code);
+				short[] break_pos = Drawing.TextBreak.GetHyphenationPositions (word.ToString ());
+				
+				foreach (short pos in break_pos)
+				{
+					breaks[break_offset + pos - 1] = Unicode.BreakInfo.HyphenateGoodChoice;
+				}
 			}
-			
-			System.Diagnostics.Debug.WriteLine ("<" + word.ToString () + ">");
 		}
 	}
 }

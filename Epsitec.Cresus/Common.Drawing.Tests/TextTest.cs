@@ -234,7 +234,7 @@ namespace Epsitec.Common.Drawing
 					
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, 0.0, 0.0, 0.0, 15, 1, false));
+					properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, 0.0, 0.0, 0.0, 15, 1, true));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
 					
@@ -249,8 +249,9 @@ namespace Epsitec.Common.Drawing
 					
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.FontSizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (10, 10, 10, 10, 1.0, 0.0, 0.0, 15, 1, false));
+					properties.Add (new Text.Properties.MarginsProperty (10, 10, 10, 10, 1.0, 0.0, 0.0, 15, 1, true));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Blue")));
+					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
