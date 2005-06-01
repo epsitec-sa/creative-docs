@@ -169,6 +169,30 @@ namespace Epsitec.Common.Text
 			this.get_language_last_property      = property;
 		}
 		
+		public void GetLeading(ulong code, out Properties.LeadingProperty property)
+		{
+			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			long current_style_version = this.style_list.InternalStyleTable.Version;
+			
+			if ((this.get_leading_last_style_version == current_style_version) &&
+				(this.get_leading_last_code == code))
+			{
+				property = this.get_leading_last_property;
+				
+				return;
+			}
+			
+			Styles.SimpleStyle   style          = this.style_list[code];
+			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			
+			property = extra_settings[Properties.WellKnownType.Leading] as Properties.LeadingProperty;
+			
+			this.get_leading_last_style_version = current_style_version;
+			this.get_leading_last_code          = code;
+			this.get_leading_last_property      = property;
+		}
+		
 		public void GetLayoutEngine(ulong code, out Layout.BaseEngine engine, out Properties.LayoutProperty property)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
@@ -307,6 +331,10 @@ namespace Epsitec.Common.Text
 		private long							get_language_last_style_version;
 		private ulong							get_language_last_code;
 		private Properties.LanguageProperty		get_language_last_property;
+		
+		private long							get_leading_last_style_version;
+		private ulong							get_leading_last_code;
+		private Properties.LeadingProperty		get_leading_last_property;
 		
 		private long							get_layout_last_style_version;
 		private int								get_layout_last_style_index;

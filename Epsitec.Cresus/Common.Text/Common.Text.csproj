@@ -384,6 +384,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\LeadingMode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\LeadingProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -12,12 +12,14 @@ namespace Epsitec.Common.Text.Properties
 		{
 			this.value = double.NaN;
 			this.units = SizeUnits.None;
+			this.mode  = LeadingMode.Free;
 		}
 		
-		public LeadingProperty(double value, SizeUnits units) : this ()
+		public LeadingProperty(double value, SizeUnits units, LeadingMode mode) : this ()
 		{
 			this.value = value;
 			this.units = units;
+			this.mode  = mode;
 		}
 		
 		
@@ -36,6 +38,7 @@ namespace Epsitec.Common.Text.Properties
 				return PropertyType.Style;
 			}
 		}
+		
 		
 		public double							Value
 		{
@@ -69,25 +72,44 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public LeadingMode						Mode
+		{
+			get
+			{
+				return this.mode;
+			}
+			set
+			{
+				if (this.mode != value)
+				{
+					this.mode = value;
+					this.Invalidate ();
+				}
+			}
+		}
+		
 		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
 				/**/				SerializerSupport.SerializeDouble (this.value),
-				/**/				SerializerSupport.SerializeSizeUnits (this.units));
+				/**/				SerializerSupport.SerializeSizeUnits (this.units),
+				/**/				SerializerSupport.SerializeEnum (this.mode));
 		}
 		
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 2);
+			Debug.Assert.IsTrue (args.Length == 3);
 			
-			double    value = SerializerSupport.DeserializeDouble (args[0]);
-			SizeUnits units = SerializerSupport.DeserializeSizeUnits (args[1]);
+			double      value = SerializerSupport.DeserializeDouble (args[0]);
+			SizeUnits   units = SerializerSupport.DeserializeSizeUnits (args[1]);
+			LeadingMode mode  = (LeadingMode) SerializerSupport.DeserializeEnum (typeof (LeadingMode), args[2]);
 			
 			this.value = value;
 			this.units = units;
+			this.mode  = mode;
 		}
 		
 		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
@@ -100,6 +122,8 @@ namespace Epsitec.Common.Text.Properties
 			
 			UnitsTools.Combine (a.value, a.units, b.value, b.units, out c.value, out c.units);
 			
+			c.mode = b.mode == LeadingMode.Undefined ? a.mode : b.mode;
+			
 			return c;
 		}
 		
@@ -107,6 +131,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			checksum.UpdateValue (this.value);
 			checksum.UpdateValue ((int) this.units);
+			checksum.UpdateValue ((int) this.mode);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -118,11 +143,13 @@ namespace Epsitec.Common.Text.Properties
 		private static bool CompareEqualContents(LeadingProperty a, LeadingProperty b)
 		{
 			return NumberSupport.Equal (a.value,  b.value)
-				&& a.units == b.units;
+				&& a.units == b.units
+				&& a.mode  == b.mode;
 		}
 		
 		
 		private double							value;
 		private SizeUnits						units;
+		private LeadingMode						mode;
 	}
 }
