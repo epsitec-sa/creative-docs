@@ -76,7 +76,7 @@ namespace Epsitec.Common.Text.Tests
 			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties.Add (new Properties.FontSizeProperty (24.0, Properties.FontSizeUnits.Points));
+			properties.Add (new Properties.FontSizeProperty (24.0, Properties.SizeUnits.Points));
 			properties.Add (new Properties.MarginsProperty (200, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
 			
 			string[] words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite.\n".Split (' ');
@@ -237,12 +237,12 @@ namespace Epsitec.Common.Text.Tests
 			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
 			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.0, 15, 1, false));
 			properties_1.Add (new Properties.TabProperty (60, 0, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
-			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.FontSizeUnits.Points));
+			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
 			properties_2.Add (new Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.0, 15, 1, false));
 			
 			story.ConvertToStyledText ("Text:\t", properties_1, out text);
@@ -309,12 +309,12 @@ namespace Epsitec.Common.Text.Tests
 			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
 			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.0, 15, 1, false));
 			properties_1.Add (new Properties.TabProperty (60, 0.5, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
-			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.FontSizeUnits.Points));
+			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
 			properties_2.Add (new Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.0, 15, 1, false));
 			
 			story.ConvertToStyledText ("Text:\t", properties_1, out text);
@@ -389,12 +389,12 @@ namespace Epsitec.Common.Text.Tests
 			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
 			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
 			properties_1.Add (new Properties.TabProperty (60, 0, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
-			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.FontSizeUnits.Points));
+			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
 			properties_2.Add (new Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
 			
 			story.ConvertToStyledText ("Text:\t", properties_1, out text);
@@ -460,12 +460,12 @@ namespace Epsitec.Common.Text.Tests
 			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
 			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.0, 15, 1, false));
 			properties_1.Add (new Properties.TabProperty (60, 0, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
-			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.FontSizeUnits.Points));
+			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
 			properties_2.Add (new Properties.MarginsProperty (60, 60, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
 			
 			story.ConvertToStyledText ("Text:\t", properties_1, out text);

@@ -4,7 +4,10 @@
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// Summary description for MarginsProperty.
+	/// La classe MarginsProperty définit les marges gauche/droite d'un bloc de
+	/// texte, ainsi que sa justification (0 = aucune, 1 = 100%), son centrage
+	/// (0 = aligné à gauche, 0.5 = centré, 1 = aligné à droite) et les réglages
+	/// liés à la césure.
 	/// </summary>
 	public class MarginsProperty : BaseProperty
 	{

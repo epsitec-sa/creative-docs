@@ -14,7 +14,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public UnderlineProperty(double position, FontSizeUnits position_units, double thickness, FontSizeUnits thickness_units, string line_style)
+		public UnderlineProperty(double position, SizeUnits position_units, double thickness, SizeUnits thickness_units, string line_style)
 		{
 			this.position_units  = position_units;
 			this.thickness_units = thickness_units;
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public FontSizeUnits					PositionUnits
+		public SizeUnits						PositionUnits
 		{
 			get
 			{
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		public FontSizeUnits					ThicknessUnits
+		public SizeUnits						ThicknessUnits
 		{
 			get
 			{
@@ -86,8 +86,8 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeEnum (this.position_units),
-				/**/				SerializerSupport.SerializeEnum (this.thickness_units),
+				/**/				SerializerSupport.SerializeSizeUnits (this.position_units),
+				/**/				SerializerSupport.SerializeSizeUnits (this.thickness_units),
 				/**/				SerializerSupport.SerializeDouble (this.position),
 				/**/				SerializerSupport.SerializeDouble (this.thickness),
 				/**/				SerializerSupport.SerializeString (this.line_style));
@@ -99,11 +99,11 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 5);
 			
-			FontSizeUnits position_units  = (FontSizeUnits) SerializerSupport.DeserializeEnum (typeof (FontSizeUnits), args[0]);
-			FontSizeUnits thickness_units = (FontSizeUnits) SerializerSupport.DeserializeEnum (typeof (FontSizeUnits), args[1]);
-			double        position        = SerializerSupport.DeserializeDouble (args[2]);
-			double        thickness       = SerializerSupport.DeserializeDouble (args[3]);
-			string        line_style      = SerializerSupport.DeserializeString (args[4]);
+			SizeUnits position_units  = SerializerSupport.DeserializeSizeUnits (args[0]);
+			SizeUnits thickness_units = SerializerSupport.DeserializeSizeUnits (args[1]);
+			double    position        = SerializerSupport.DeserializeDouble (args[2]);
+			double    thickness       = SerializerSupport.DeserializeDouble (args[3]);
+			string    line_style      = SerializerSupport.DeserializeString (args[4]);
 			
 			this.position_units  = position_units;
 			this.thickness_units = thickness_units;
@@ -146,8 +146,8 @@ namespace Epsitec.Common.Text.Properties
 		
 		
 		
-		private FontSizeUnits					position_units;
-		private FontSizeUnits					thickness_units;
+		private SizeUnits						position_units;
+		private SizeUnits						thickness_units;
 		
 		private double							position;
 		private double							thickness;

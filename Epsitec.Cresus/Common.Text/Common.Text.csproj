@@ -374,16 +374,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Properties\FontSizeUnits.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Properties\FontSizeUnitsTools.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Properties\LanguageProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -394,12 +384,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\LeadingProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\MarginsProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Properties\PropertyType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\SizeUnits.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -415,6 +415,11 @@
                 />
                 <File
                     RelPath = "Properties\UnderlineProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\UnitsTools.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

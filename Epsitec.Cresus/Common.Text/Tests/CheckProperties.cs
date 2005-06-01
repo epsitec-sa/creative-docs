@@ -37,10 +37,10 @@ namespace Epsitec.Common.Text.Tests
 		
 		private static void TestFontSize()
 		{
-			Properties.FontSizeProperty font_size_a = new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points);
-			Properties.FontSizeProperty font_size_b = new Properties.FontSizeProperty (50.0, Properties.FontSizeUnits.Percent);
-			Properties.FontSizeProperty font_size_c = new Properties.FontSizeProperty (-2.0, Properties.FontSizeUnits.DeltaPoints);
-			Properties.FontSizeProperty font_size_d = new Properties.FontSizeProperty (200.0, Properties.FontSizeUnits.Percent);
+			Properties.FontSizeProperty font_size_a = new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points);
+			Properties.FontSizeProperty font_size_b = new Properties.FontSizeProperty (50.0, Properties.SizeUnits.Percent);
+			Properties.FontSizeProperty font_size_c = new Properties.FontSizeProperty (-2.0, Properties.SizeUnits.DeltaPoints);
+			Properties.FontSizeProperty font_size_d = new Properties.FontSizeProperty (200.0, Properties.SizeUnits.Percent);
 			
 			Properties.FontSizeProperty font_size_ab = font_size_a.GetCombination (font_size_b) as Properties.FontSizeProperty;
 			Properties.FontSizeProperty font_size_ba = font_size_b.GetCombination (font_size_a) as Properties.FontSizeProperty;
@@ -94,8 +94,8 @@ namespace Epsitec.Common.Text.Tests
 		
 		private static void Ex1()
 		{
-			Properties.FontSizeProperty a = new Properties.FontSizeProperty (80.0, Properties.FontSizeUnits.Percent);
-			Properties.FontSizeProperty b = new Properties.FontSizeProperty (-5.0, Properties.FontSizeUnits.DeltaPoints);
+			Properties.FontSizeProperty a = new Properties.FontSizeProperty (80.0, Properties.SizeUnits.Percent);
+			Properties.FontSizeProperty b = new Properties.FontSizeProperty (-5.0, Properties.SizeUnits.DeltaPoints);
 			
 			a.GetCombination (b);
 		}

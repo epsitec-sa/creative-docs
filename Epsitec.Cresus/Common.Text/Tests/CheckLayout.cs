@@ -30,7 +30,7 @@ namespace Epsitec.Common.Text.Tests
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties.Add (new Properties.MarginsProperty (40, 0, 0, 0, 1.0, 0.0, 0.0, 0.0, 0.0, false));
 			
 			story.ConvertToStyledText ("Affiche juste quelques mots pour ", properties, out styled_text);	// 33
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Text.Tests
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Bold"));
-			properties.Add (new Properties.FontSizeProperty (16.0, Properties.FontSizeUnits.Points));
+			properties.Add (new Properties.FontSizeProperty (16.0, Properties.SizeUnits.Points));
 			properties.Add (new Properties.MarginsProperty (40, 0, 0, 0, 1.0, 0.0, 0.0, 0.0, 0.0, false));
 			
 			story.ConvertToStyledText ("voir", properties, out styled_text);								// 37
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Text.Tests
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties.Add (new Properties.MarginsProperty (40, 0, 0, 0, 1.0, 0.0, 0.0, 0.0, 0.0, false));
 			
 			story.ConvertToStyledText (" comment l'algorithme de "
@@ -193,7 +193,7 @@ namespace Epsitec.Common.Text.Tests
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
 			story.ConvertToStyledText ("Affiche quelques mots pour ", properties, out styled_text);
 			story.InsertText (cursor, styled_text);
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Text.Tests
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Bold"));
-			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
 			story.ConvertToStyledText ("voir", properties, out styled_text);
 			story.InsertText (cursor, styled_text);
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Text.Tests
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
 			story.ConvertToStyledText ("\u00A0"+"comment l'algorithme se débrouille.", properties, out styled_text);
 			story.InsertText (cursor, styled_text);
@@ -275,7 +275,7 @@ namespace Epsitec.Common.Text.Tests
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
 			story.ConvertToStyledText ("\n", properties, out styled_text);
 			story.InsertText (cursor, styled_text);
@@ -322,7 +322,7 @@ namespace Epsitec.Common.Text.Tests
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
 			story.ConvertToStyledText ("Affiche quelques mots pour ", properties, out styled_text);
 			story.InsertText (cursor, styled_text);
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Text.Tests
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Bold"));
-			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
 			story.ConvertToStyledText ("essayer", properties, out styled_text);
 			story.InsertText (cursor, styled_text);
@@ -338,7 +338,7 @@ namespace Epsitec.Common.Text.Tests
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
 			story.ConvertToStyledText (" l'algo-rithme.\n", properties, out styled_text);
 			story.InsertText (cursor, styled_text);
@@ -405,7 +405,7 @@ namespace Epsitec.Common.Text.Tests
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
 			story.ConvertToStyledText ("Essai tout simple. XXXXXXXXXX", properties, out styled_text);
 			story.InsertText (cursor, styled_text);

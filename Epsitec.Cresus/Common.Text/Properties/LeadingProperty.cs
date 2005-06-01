@@ -4,17 +4,19 @@
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// Summary description for FontSizeProperty.
+	/// Summary description for LeadingProperty.
 	/// </summary>
-	public class FontSizeProperty : BaseProperty
+	public class LeadingProperty : BaseProperty
 	{
-		public FontSizeProperty()
+		public LeadingProperty()
 		{
+			this.value = double.NaN;
+			this.units = SizeUnits.None;
 		}
 		
-		public FontSizeProperty(double size, SizeUnits units)
+		public LeadingProperty(double value, SizeUnits units) : this ()
 		{
-			this.size  = size;
+			this.value = value;
 			this.units = units;
 		}
 		
@@ -23,7 +25,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return WellKnownType.FontSize;
+				return WellKnownType.Leading;
 			}
 		}
 		
@@ -35,33 +37,19 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		
-		public double							Size
+		public double							Value
 		{
 			get
 			{
-				return this.size;
+				return this.value;
 			}
 			set
 			{
-				if (NumberSupport.Different (this.size, value))
+				if (NumberSupport.Different (this.value, value))
 				{
-					this.size = value;
+					this.value = value;
 					this.Invalidate ();
 				}
-			}
-		}
-		
-		public double							PointSize
-		{
-			get
-			{
-				if (UnitsTools.IsAbsoluteSize (this.units))
-				{
-					return UnitsTools.ConvertToPoints (this.size, this.units);
-				}
-				
-				throw new System.InvalidOperationException ();
 			}
 		}
 		
@@ -85,59 +73,56 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeDouble (this.size),
+				/**/				SerializerSupport.SerializeDouble (this.value),
 				/**/				SerializerSupport.SerializeSizeUnits (this.units));
 		}
-
+		
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
 			Debug.Assert.IsTrue (args.Length == 2);
 			
-			double    size  = SerializerSupport.DeserializeDouble (args[0]);
+			double    value = SerializerSupport.DeserializeDouble (args[0]);
 			SizeUnits units = SerializerSupport.DeserializeSizeUnits (args[1]);
 			
-			this.size  = size;
+			this.value = value;
 			this.units = units;
 		}
-
+		
 		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
 		{
-			Debug.Assert.IsTrue (property is Properties.FontSizeProperty);
+			Debug.Assert.IsTrue (property is Properties.LeadingProperty);
 			
-			FontSizeProperty a = this;
-			FontSizeProperty b = property as FontSizeProperty;
-			FontSizeProperty c = new FontSizeProperty ();
+			LeadingProperty a = this;
+			LeadingProperty b = property as LeadingProperty;
+			LeadingProperty c = new LeadingProperty ();
 			
-			UnitsTools.Combine (a.size, a.units, b.size, b.units, out c.size, out c.units);
-			
-			c.DefineVersion (System.Math.Max (a.Version, b.Version));
+			UnitsTools.Combine (a.value, a.units, b.value, b.units, out c.value, out c.units);
 			
 			return c;
 		}
-
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.size);
+			checksum.UpdateValue (this.value);
 			checksum.UpdateValue ((int) this.units);
 		}
 		
 		public override bool CompareEqualContents(object value)
 		{
-			return FontSizeProperty.CompareEqualContents (this, value as FontSizeProperty);
+			return LeadingProperty.CompareEqualContents (this, value as LeadingProperty);
 		}
 		
 		
-		private static bool CompareEqualContents(FontSizeProperty a, FontSizeProperty b)
+		private static bool CompareEqualContents(LeadingProperty a, LeadingProperty b)
 		{
-			return NumberSupport.Equal (a.size, b.size)
+			return NumberSupport.Equal (a.value,  b.value)
 				&& a.units == b.units;
 		}
 		
 		
-		private double							size;
+		private double							value;
 		private SizeUnits						units;
 	}
 }

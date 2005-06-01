@@ -250,7 +250,7 @@ namespace Epsitec.Common.Drawing
 					fp.Features = this.features;
 					
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, 0.0, 0.0, 0.0, 15, 1, true));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
@@ -265,7 +265,7 @@ namespace Epsitec.Common.Drawing
 					fp.Features = this.features;
 					
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.FontSizeUnits.Points));
+					properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (10, 10, 10, 10, 1.0, 0.0, 0.0, 15, 1, true));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Blue")));
 					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
@@ -279,7 +279,7 @@ namespace Epsitec.Common.Drawing
 					fp.Features = this.features;
 					
 					properties.Add (fp);
-					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 1.0, 0.0, 15, 1, false));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
@@ -291,7 +291,7 @@ namespace Epsitec.Common.Drawing
 					fp = new Text.Properties.FontProperty ("Arial", "Regular");
 					fp.Features = this.features;
 					properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
-					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.5, 15, 1, false));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
@@ -301,7 +301,7 @@ namespace Epsitec.Common.Drawing
 					
 					properties.Clear ();
 					properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
-					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.4, 0.0, 1.0, 15, 1, false));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
@@ -313,7 +313,7 @@ namespace Epsitec.Common.Drawing
 					
 					properties.Clear ();
 					properties.Add (new Text.Properties.FontProperty ("Verdana", "Regular"));
-					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.FontSizeUnits.Points));
+					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, true));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
@@ -329,13 +329,13 @@ namespace Epsitec.Common.Drawing
 					System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
 #if true
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
-					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.0, 15, 1, false));
 					properties_1.Add (new Text.Properties.TabProperty (tab, 0, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
-					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.0, 15, 1, false));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
@@ -353,13 +353,13 @@ namespace Epsitec.Common.Drawing
 					properties_2.Clear ();
 					
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
-					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.0, 15, 1, false));
 					properties_1.Add (new Text.Properties.TabProperty (tab, 0.5, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
-					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 0.0, 15, 1, false));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
@@ -377,14 +377,14 @@ namespace Epsitec.Common.Drawing
 					properties_2.Clear ();
 					
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
-					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, true));
 					properties_1.Add (new Text.Properties.TabProperty (tab, 0.0, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties_1.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
-					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
@@ -403,13 +403,13 @@ namespace Epsitec.Common.Drawing
 					properties_2.Clear ();
 					
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
-					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 1.0, 15, 1, false));
 					properties_1.Add (new Text.Properties.TabProperty (tab, 0.0, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
-					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 1.0, 15, 1, false));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
@@ -427,13 +427,13 @@ namespace Epsitec.Common.Drawing
 					properties_2.Clear ();
 					
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
-					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 0.0, 0.0, 1.0, 15, 1, false));
 					properties_1.Add (new Text.Properties.TabProperty (tab, 0.5, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
-					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.FontSizeUnits.Points));
+					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 0.0, 1.0, 15, 1, false));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					

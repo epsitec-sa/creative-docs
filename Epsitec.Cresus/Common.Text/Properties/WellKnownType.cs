@@ -17,6 +17,7 @@ namespace Epsitec.Common.Text.Properties
 		Styles,
 		Layout,
 		Margins,
+		Leading,
 		Tab,
 		
 		Underline,

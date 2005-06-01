@@ -25,7 +25,7 @@ namespace Epsitec.Common.Text.Tests
 			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
 			story.ConvertToStyledText ("Affiche", properties, out text);
 			

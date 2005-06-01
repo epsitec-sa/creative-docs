@@ -24,6 +24,7 @@ namespace Epsitec.Common.Text
 			return text.Substring (pos, length).Split ('/');
 		}
 		
+		
 		public static string Join(params string[] args)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -87,59 +88,6 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		private static string Escape(string value)
-		{
-			if (value.IndexOfAny (new char[] { '/', '\\', '[', ']' }) == -1)
-			{
-				return value;
-			}
-			
-			value = value.Replace ("\\", "\\\\");
-			value = value.Replace ("/", "\\:");
-			value = value.Replace ("[", "\\[");
-			value = value.Replace ("]", "\\]");
-			
-			return value;
-		}
-		
-		private static string Unescape(string value)
-		{
-			if (value.IndexOf ('\\') == -1)
-			{
-				return value;
-			}
-			
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			for (int i = 0; i < value.Length; i++)
-			{
-				char c = value[i];
-				
-				if (c == '\\')
-				{
-					if (i == value.Length-1)
-					{
-						throw new System.ArgumentException ("Invalid truncated escape sequence.");
-					}
-					
-					switch (value[++i])
-					{
-						case ']':		c = ']';	break;
-						case '[':		c = '[';	break;
-						case ':':		c = '/';	break;
-						case '\\':		c = '\\';	break;
-						
-						default:
-							throw new System.ArgumentException ("Invalid escape sequence.");
-					}
-				}
-				
-				buffer.Append (c);
-			}
-			
-			return buffer.ToString ();
-		}
-		
 		public static string SerializeDouble(double value)
 		{
 			if (double.IsNaN (value))
@@ -160,6 +108,11 @@ namespace Epsitec.Common.Text
 		public static string SerializeBoolean(bool value)
 		{
 			return value ? "[true]" : "[false]";
+		}
+		
+		public static string SerializeSizeUnits(Properties.SizeUnits value)
+		{
+			return Properties.UnitsTools.SerializeSizeUnits (value);
 		}
 		
 		
@@ -228,5 +181,66 @@ namespace Epsitec.Common.Text
 			
 			throw new System.FormatException (string.Format ("'{0}' is not a boolean", value));
 		}
+		
+		public static Properties.SizeUnits DeserializeSizeUnits(string value)
+		{
+			return Properties.UnitsTools.DeserializeSizeUnits (value);
+		}
+		
+		
+		
+		private static string Escape(string value)
+		{
+			if (value.IndexOfAny (new char[] { '/', '\\', '[', ']' }) == -1)
+			{
+				return value;
+			}
+			
+			value = value.Replace ("\\", "\\\\");
+			value = value.Replace ("/", "\\:");
+			value = value.Replace ("[", "\\[");
+			value = value.Replace ("]", "\\]");
+			
+			return value;
+		}
+		
+		private static string Unescape(string value)
+		{
+			if (value.IndexOf ('\\') == -1)
+			{
+				return value;
+			}
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			for (int i = 0; i < value.Length; i++)
+			{
+				char c = value[i];
+				
+				if (c == '\\')
+				{
+					if (i == value.Length-1)
+					{
+						throw new System.ArgumentException ("Invalid truncated escape sequence.");
+					}
+					
+					switch (value[++i])
+					{
+						case ']':		c = ']';	break;
+						case '[':		c = '[';	break;
+						case ':':		c = '/';	break;
+						case '\\':		c = '\\';	break;
+						
+						default:
+							throw new System.ArgumentException ("Invalid escape sequence.");
+					}
+				}
+				
+				buffer.Append (c);
+			}
+			
+			return buffer.ToString ();
+		}
+		
 	}
 }
