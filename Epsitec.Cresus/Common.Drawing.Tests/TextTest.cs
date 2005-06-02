@@ -251,7 +251,7 @@ namespace Epsitec.Common.Drawing
 					
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, true));
+					properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
 					properties.Add (new Text.Properties.LeadingProperty (10.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.Free));
@@ -267,7 +267,7 @@ namespace Epsitec.Common.Drawing
 					
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (10, 10, 10, 10, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, true));
+					properties.Add (new Text.Properties.MarginsProperty (10, 10, 10, 10, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Blue")));
 					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
 					properties.Add (new Text.Properties.LeadingProperty (24.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.AlignAll));
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Drawing
 					
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 1.0, 0.0, 15, 1, false));
+					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 1.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					properties.Add (new Text.Properties.LeadingProperty (4.0, Text.Properties.SizeUnits.Millimeters, Text.Properties.LeadingMode.AlignFirst));
 					
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Drawing
 					fp.Features = this.features;
 					properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, false));
+					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, Text.Properties.ThreeState.False));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
@@ -305,7 +305,7 @@ namespace Epsitec.Common.Drawing
 					properties.Clear ();
 					properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.4, 0.0, 1.0, 15, 1, false));
+					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.4, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
@@ -317,7 +317,7 @@ namespace Epsitec.Common.Drawing
 					properties.Clear ();
 					properties.Add (new Text.Properties.FontProperty ("Verdana", "Regular"));
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, true));
+					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
@@ -333,13 +333,13 @@ namespace Epsitec.Common.Drawing
 #if true
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
 					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, false));
+					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_1.Add (new Text.Properties.TabProperty (tab, 0, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
 					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, false));
+					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
 					this.painter.TextStory.ConvertToStyledText ("Test:\t", properties_1, out text);
@@ -357,13 +357,13 @@ namespace Epsitec.Common.Drawing
 					
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
 					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, false));
+					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_1.Add (new Text.Properties.TabProperty (tab, 0.5, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
 					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, false));
+					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
 					this.painter.TextStory.ConvertToStyledText ("Test:\t", properties_1, out text);
@@ -381,14 +381,14 @@ namespace Epsitec.Common.Drawing
 					
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
 					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, true));
+					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 					properties_1.Add (new Text.Properties.TabProperty (tab, 0.0, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties_1.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
 					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, false));
+					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
 					this.painter.TextStory.ConvertToStyledText ("Test:\t", properties_1, out text);
@@ -407,13 +407,13 @@ namespace Epsitec.Common.Drawing
 					
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
 					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, false));
+					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_1.Add (new Text.Properties.TabProperty (tab, 0.0, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
 					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 1.0, 15, 1, false));
+					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
 					this.painter.TextStory.ConvertToStyledText ("Test:\t", properties_1, out text);
@@ -431,13 +431,13 @@ namespace Epsitec.Common.Drawing
 					
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
 					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, false));
+					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_1.Add (new Text.Properties.TabProperty (tab, 0.5, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
 					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 1.0, 15, 1, false));
+					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
 					this.painter.TextStory.ConvertToStyledText ("Test:\t", properties_1, out text);

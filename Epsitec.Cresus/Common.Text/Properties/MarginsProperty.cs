@@ -25,7 +25,7 @@ namespace Epsitec.Common.Text.Properties
 			this.units = units;
 		}
 		
-		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body, SizeUnits units, double justification_body, double justification_last_line, double disposition, double break_fence_before, double break_fence_after, bool enable_hyphenation)
+		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body, SizeUnits units, double justification_body, double justification_last_line, double disposition, double break_fence_before, double break_fence_after, ThreeState enable_hyphenation)
 		{
 			this.left_margin_first_line  = left_margin_first_line;
 			this.left_margin_body        = left_margin_body;
@@ -221,7 +221,7 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		public bool								EnableHyphenation
+		public ThreeState						EnableHyphenation
 		{
 			get
 			{
@@ -251,7 +251,7 @@ namespace Epsitec.Common.Text.Properties
 				/**/				SerializerSupport.SerializeDouble (this.disposition),
 				/**/				SerializerSupport.SerializeDouble (this.break_fence_before),
 				/**/				SerializerSupport.SerializeDouble (this.break_fence_after),
-				/**/				SerializerSupport.SerializeBoolean (this.enable_hyphenation));
+				/**/				SerializerSupport.SerializeThreeState (this.enable_hyphenation));
 		}
 		
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
@@ -260,17 +260,17 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 11);
 			
-			double    left_margin_first_line  = SerializerSupport.DeserializeDouble (args[0]);
-			double    left_margin_body        = SerializerSupport.DeserializeDouble (args[1]);
-			double    right_margin_first_line = SerializerSupport.DeserializeDouble (args[2]);
-			double    right_margin_body       = SerializerSupport.DeserializeDouble (args[3]);
-			SizeUnits units                   = SerializerSupport.DeserializeSizeUnits (args[4]);
-			double    justification_body      = SerializerSupport.DeserializeDouble (args[5]);
-			double    justification_last_line = SerializerSupport.DeserializeDouble (args[6]);
-			double    disposition             = SerializerSupport.DeserializeDouble (args[7]);
-			double    break_fence_before      = SerializerSupport.DeserializeDouble (args[8]);
-			double    break_fence_after       = SerializerSupport.DeserializeDouble (args[9]);
-			bool      enable_hyphenation      = SerializerSupport.DeserializeBoolean (args[10]);
+			double     left_margin_first_line  = SerializerSupport.DeserializeDouble (args[0]);
+			double     left_margin_body        = SerializerSupport.DeserializeDouble (args[1]);
+			double     right_margin_first_line = SerializerSupport.DeserializeDouble (args[2]);
+			double     right_margin_body       = SerializerSupport.DeserializeDouble (args[3]);
+			SizeUnits  units                   = SerializerSupport.DeserializeSizeUnits (args[4]);
+			double     justification_body      = SerializerSupport.DeserializeDouble (args[5]);
+			double     justification_last_line = SerializerSupport.DeserializeDouble (args[6]);
+			double     disposition             = SerializerSupport.DeserializeDouble (args[7]);
+			double     break_fence_before      = SerializerSupport.DeserializeDouble (args[8]);
+			double     break_fence_after       = SerializerSupport.DeserializeDouble (args[9]);
+			ThreeState enable_hyphenation      = SerializerSupport.DeserializeThreeState (args[10]);
 			
 			this.left_margin_first_line  = left_margin_first_line;
 			this.left_margin_body        = left_margin_body;
@@ -293,17 +293,29 @@ namespace Epsitec.Common.Text.Properties
 			MarginsProperty b = property as MarginsProperty;
 			MarginsProperty c = new MarginsProperty ();
 			
-			c.left_margin_first_line  = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.left_margin_first_line, a.units, b.units),  b.left_margin_first_line);
-			c.left_margin_body        = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.left_margin_body, a.units, b.units),        b.left_margin_body);
-			c.right_margin_first_line = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.right_margin_first_line, a.units, b.units), b.right_margin_first_line);
-			c.right_margin_body       = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.right_margin_body, a.units, b.units),       b.right_margin_body);
-			c.units                   = b.units;
+			if (b.units != SizeUnits.None)
+			{
+				c.left_margin_first_line  = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.left_margin_first_line, a.units, b.units),  b.left_margin_first_line);
+				c.left_margin_body        = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.left_margin_body, a.units, b.units),        b.left_margin_body);
+				c.right_margin_first_line = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.right_margin_first_line, a.units, b.units), b.right_margin_first_line);
+				c.right_margin_body       = NumberSupport.Combine (UnitsTools.ConvertToSizeUnits (a.right_margin_body, a.units, b.units),       b.right_margin_body);
+				c.units                   = b.units;
+			}
+			else
+			{
+				c.left_margin_first_line  = a.left_margin_first_line;
+				c.left_margin_body        = a.left_margin_body;
+				c.right_margin_first_line = a.right_margin_first_line;
+				c.right_margin_body       = a.right_margin_body;
+				c.units                   = a.units;
+			}
+			
 			c.justification_body      = NumberSupport.Combine (a.justification_body,      b.justification_body);
 			c.justification_last_line = NumberSupport.Combine (a.justification_last_line, b.justification_last_line);
 			c.disposition             = NumberSupport.Combine (a.disposition,             b.disposition);
 			c.break_fence_before      = NumberSupport.Combine (a.break_fence_before,      b.break_fence_before);
 			c.break_fence_after       = NumberSupport.Combine (a.break_fence_after,       b.break_fence_after);
-			c.enable_hyphenation      = a.enable_hyphenation | b.enable_hyphenation;
+			c.enable_hyphenation      = b.enable_hyphenation == ThreeState.Undefined ? a.enable_hyphenation : b.enable_hyphenation;
 			
 			return c;
 		}
@@ -320,7 +332,7 @@ namespace Epsitec.Common.Text.Properties
 			checksum.UpdateValue (this.disposition);
 			checksum.UpdateValue (this.break_fence_before);
 			checksum.UpdateValue (this.break_fence_after);
-			checksum.UpdateValue (this.enable_hyphenation);
+			checksum.UpdateValue ((int) this.enable_hyphenation);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -355,7 +367,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		private SizeUnits						units;
 		
-		private bool							enable_hyphenation;
+		private ThreeState						enable_hyphenation;
 		
 		private double							justification_body;			//	0.0 = pas de justification, 1.0 = justification pleine
 		private double							justification_last_line;

@@ -88,6 +88,11 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public static string SerializeInt(int value)
+		{
+			return value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+		}
+		
 		public static string SerializeDouble(double value)
 		{
 			if (double.IsNaN (value))
@@ -108,6 +113,18 @@ namespace Epsitec.Common.Text
 		public static string SerializeBoolean(bool value)
 		{
 			return value ? "[true]" : "[false]";
+		}
+		
+		public static string SerializeThreeState(Properties.ThreeState value)
+		{
+			switch (value)
+			{
+				case Properties.ThreeState.Undefined:	return "[?]";
+				case Properties.ThreeState.True:		return "[true]";
+				case Properties.ThreeState.False:		return "[false]";
+			}
+			
+			throw new System.ArgumentException ();
 		}
 		
 		public static string SerializeSizeUnits(Properties.SizeUnits value)
@@ -163,6 +180,11 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public static int DeserializeInt(string value)
+		{
+			return int.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
+		}
+		
 		public static object DeserializeEnum(System.Type type, string value)
 		{
 			return System.Enum.Parse (type, value);
@@ -180,6 +202,18 @@ namespace Epsitec.Common.Text
 			}
 			
 			throw new System.FormatException (string.Format ("'{0}' is not a boolean", value));
+		}
+		
+		public static Properties.ThreeState DeserializeThreeState(string value)
+		{
+			switch (value)
+			{
+				case "[true]":		return Properties.ThreeState.True;
+				case "[false]":		return Properties.ThreeState.False;
+				case "[?]":			return Properties.ThreeState.Undefined;
+			}
+			
+			throw new System.FormatException (string.Format ("'{0}' is not ThreeState", value));
 		}
 		
 		public static Properties.SizeUnits DeserializeSizeUnits(string value)

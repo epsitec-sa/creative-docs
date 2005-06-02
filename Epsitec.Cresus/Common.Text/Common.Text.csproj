@@ -414,12 +414,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\StartParagraphMode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\StylesProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Properties\TabProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\ThreeState.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
