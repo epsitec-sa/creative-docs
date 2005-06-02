@@ -19,7 +19,15 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.GetName (NameId.FontFamily);
+				string face  = this.GetName (NameId.FontFamily);
+				string style = this.LocaleStyleName;
+				
+				if (face.EndsWith (style))
+				{
+					face = face.Substring (0, face.Length - style.Length).Trim ();
+				}
+				
+				return face;
 			}
 		}
 		
@@ -36,7 +44,15 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.GetName (NameId.FontFamily, 1033);
+				string face  = this.GetName (NameId.FontFamily, 1033);
+				string style = this.InvariantStyleName;
+				
+				if (face.EndsWith (style))
+				{
+					face = face.Substring (0, face.Length - style.Length).Trim ();
+				}
+				
+				return face;
 			}
 		}
 		

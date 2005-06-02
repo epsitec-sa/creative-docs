@@ -4,7 +4,9 @@
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// Summary description for LeadingProperty.
+	/// La propriété LeadingProperty définit l'interligne (leading = bandes de
+	/// plomb qui se rajoutaient entre les lignes de caractères), l'alignement
+	/// sur une grille et les espacements avant/après un paragraphe.
 	/// </summary>
 	public class LeadingProperty : BaseProperty
 	{

@@ -374,6 +374,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\KeepProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\LanguageProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

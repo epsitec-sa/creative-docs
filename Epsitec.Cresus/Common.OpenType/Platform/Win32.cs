@@ -568,7 +568,34 @@ namespace Epsitec.Common.OpenType.Platform
 					if (length > 0)
 					{
 						data = new byte[length];
-						Win32.GetFontData (dc.Handle, table, 0, data, length);
+						
+						int count = System.Math.Min (100*1024, length);
+						
+						if (count == length)
+						{
+							Win32.GetFontData (dc.Handle, table, 0, data, length);
+						}
+						else
+						{
+							int    offset = 0;
+							byte[] temp   = new byte[count];
+							
+							for (;;)
+							{
+								count = System.Math.Min (length, offset + temp.Length) - offset;
+								
+								if (count == 0)
+								{
+									break;
+								}
+								
+								Win32.GetFontData (dc.Handle, table, offset, temp, count);
+								
+								System.Buffer.BlockCopy (temp, 0, data, offset, count);
+								
+								offset += count;
+							}
+						}
 					}
 				}
 				

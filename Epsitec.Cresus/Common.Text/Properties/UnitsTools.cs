@@ -205,6 +205,10 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return value;
 			}
+			if (double.IsNaN (value))
+			{
+				return double.NaN;
+			}
 			
 			switch (to_units)
 			{

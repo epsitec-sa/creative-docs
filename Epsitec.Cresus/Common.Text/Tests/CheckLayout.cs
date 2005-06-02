@@ -31,7 +31,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties.Add (new Properties.MarginsProperty (40, 0, 0, 0, 1.0, 0.0, 0.0, 0.0, 0.0, false));
+			properties.Add (new Properties.MarginsProperty (40, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 0.0, 0.0, false));
 			
 			story.ConvertToStyledText ("Affiche juste quelques mots pour ", properties, out styled_text);	// 33
 			story.InsertText (cursor, styled_text);
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties.Add (new Properties.FontSizeProperty (16.0, Properties.SizeUnits.Points));
-			properties.Add (new Properties.MarginsProperty (40, 0, 0, 0, 1.0, 0.0, 0.0, 0.0, 0.0, false));
+			properties.Add (new Properties.MarginsProperty (40, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 0.0, 0.0, false));
 			
 			story.ConvertToStyledText ("voir", properties, out styled_text);								// 37
 			story.InsertText (cursor, styled_text);
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties.Add (new Properties.MarginsProperty (40, 0, 0, 0, 1.0, 0.0, 0.0, 0.0, 0.0, false));
+			properties.Add (new Properties.MarginsProperty (40, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 0.0, 0.0, false));
 			
 			story.ConvertToStyledText (" comment l'algorithme de "
 				/**/				 + "découpe des lignes se débrouille "

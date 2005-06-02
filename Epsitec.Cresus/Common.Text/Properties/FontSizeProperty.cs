@@ -8,7 +8,7 @@ namespace Epsitec.Common.Text.Properties
 	/// </summary>
 	public class FontSizeProperty : BaseProperty
 	{
-		public FontSizeProperty()
+		public FontSizeProperty() : this (double.NaN, SizeUnits.None)
 		{
 		}
 		
