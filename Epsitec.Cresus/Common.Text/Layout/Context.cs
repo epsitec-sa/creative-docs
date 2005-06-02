@@ -385,14 +385,14 @@ restart:
 				
 				if (this.frame != null)
 				{
-					double line_ascender  = this.oy_max - this.oy_base;
-					double line_descender = this.oy_min - this.oy_base;
-					double line_height    = this.line_height;
+					double line_ascender  = this.LineAscender;
+					double line_descender = this.LineDescender;
+					double line_height    = this.LineHeight;
 					
 					double ox, oy, dx;
 					double next_frame_y;
 					
-					while ((this.frame.ConstrainLineBox (this.frame_y, line_ascender, line_descender, line_height, out ox, out oy, out dx, out next_frame_y) == false)
+					while ((! this.frame.ConstrainLineBox (this.frame_y, line_ascender, line_descender, line_height, out ox, out oy, out dx, out next_frame_y))
 						|| (dx < this.mx_left + this.mx_right)
 						|| (pass > 1))
 					{
@@ -831,14 +831,34 @@ restart:
 			OpenType.Font font;
 			double        font_size;
 			
+			Properties.LeadingProperty leading_property;
+			
 			this.text_context.GetFont (code, out font, out font_size);
+			this.text_context.GetLeading (code, out leading_property);
 			
 			if (font != null)
 			{
 				ascender  = System.Math.Max (ascender, font.GetAscender (font_size));
 				descender = System.Math.Min (descender, font.GetDescender (font_size));
 				
-				this.line_height = System.Math.Max (line_height, font_size * 1.2);
+				double auto_scale = 1.2;
+				double leading    = System.Math.Max (line_height, font_size * auto_scale);
+				
+				if ((leading_property != null) &&
+					(! double.IsNaN (leading_property.Value)))
+				{
+					if (leading_property.Units == Properties.SizeUnits.Percent)
+					{
+						leading *= leading_property.Value;
+					}
+					else
+					{
+						leading = leading_property.PointValue;
+					}
+				}
+				
+				this.line_height = leading;
+				this.line_align  = leading_property == null ? Properties.LeadingMode.Free : leading_property.Mode;
 			}
 			
 			this.oy_max = this.oy_base + ascender;
@@ -940,6 +960,7 @@ restart:
 		private double							oy_min;
 		private double							line_height;
 		private double							line_width;
+		private Properties.LeadingMode			line_align;
 		private double							mx_left;
 		private double							mx_right;
 		

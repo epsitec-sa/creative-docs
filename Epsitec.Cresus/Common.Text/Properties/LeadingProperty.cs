@@ -56,6 +56,19 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public double							PointValue
+		{
+			get
+			{
+				if (UnitsTools.IsAbsoluteSize (this.units))
+				{
+					return UnitsTools.ConvertToPoints (this.value, this.units);
+				}
+				
+				throw new System.InvalidOperationException ();
+			}
+		}
+		
 		public SizeUnits						Units
 		{
 			get

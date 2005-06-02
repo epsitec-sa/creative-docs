@@ -99,6 +99,15 @@ namespace Epsitec.Common.Text
 		
 		public bool ConstrainLineBox(double y_dist, double ascender, double descender, double height, out double ox, out double oy, out double width, out double next_y_dist)
 		{
+			//	A partir d'une position suggérée :
+			//
+			//	  - distance verticale depuis le sommet du cadre,
+			//	  - hauteurs au-dessus/en-dessous de la ligne de base,
+			//	  - hauteur de la ligne y compris interligne,
+			//
+			//	détermine la position exacte de la ligne ainsi que la largeur
+			//	disponible et la position suggérée pour la prochaine ligne.
+			
 			double line_dy = height;
 			double text_dy = ascender - descender;
 			double leading = line_dy - text_dy;
