@@ -86,7 +86,7 @@ namespace Epsitec.Common.Text
 			string font_style = font_p.StyleName;
 			string font_full  = string.Concat (font_face, "/", font_style);
 			
-			font_size  = font_size_p.PointSize;
+			font_size  = font_size_p.SizeInPoints;
 			
 			font = this.font_cache[font_full] as OpenType.Font;
 			

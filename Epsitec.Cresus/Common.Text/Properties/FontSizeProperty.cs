@@ -52,7 +52,7 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		public double							PointSize
+		public double							SizeInPoints
 		{
 			get
 			{

@@ -393,7 +393,19 @@ restart:
 					double ox, oy, dx;
 					double next_frame_y;
 					
-					while ((! this.frame.ConstrainLineBox (this.frame_y, line_ascender, line_descender, line_height, this.line_leading, this.line_sync_to_grid, out ox, out oy, out dx, out next_frame_y))
+					oy = this.frame_y;
+					
+					if ((paragraph_line_count == 0) &&
+						(this.frame_y < 0))
+					{
+						//	A la première ligne du paragraphe, on ajoute l'espace "avant"
+						//	tel que défini par la propriété de "leading". Mais on n'ajoute
+						//	pas cet espace en sommet de frame.
+						
+						oy -= this.line_space_before;
+					}
+					
+					while ((! this.frame.ConstrainLineBox (oy, line_ascender, line_descender, line_height, this.line_leading, this.line_sync_to_grid, out ox, out oy, out dx, out next_frame_y))
 						|| (dx < this.mx_left + this.mx_right)
 						|| (pass > 1))
 					{
@@ -414,7 +426,7 @@ restart:
 						
 						if (frame_index < this.frame_list.Count)
 						{
-							//	Reprend avec un autre cadre. On reprend tout à zéro depuis
+							//	Reprend avec un autre frame. On reprend tout à zéro depuis
 							//	ici :
 							
 							this.SelectLayoutEngine (this.text_offset);
@@ -848,21 +860,31 @@ restart:
 				double auto_scale = 1.2;
 				double leading    = font_size * auto_scale;
 				
-				if ((leading_property != null) &&
-					(! double.IsNaN (leading_property.Value)))
+				if (leading_property != null)
 				{
-					if (leading_property.Units == Properties.SizeUnits.Percent)
+					if (! double.IsNaN (leading_property.Leading))
 					{
-						leading *= leading_property.Value;
+						if (leading_property.LeadingUnits == Properties.SizeUnits.Percent)
+						{
+							leading *= leading_property.Leading;
+						}
+						else
+						{
+							leading = leading_property.LeadingInPoints;
+						}
 					}
-					else
-					{
-						leading = leading_property.PointValue;
-					}
+					
+					this.line_space_before = double.IsNaN (leading_property.SpaceBefore) ? 0 : leading_property.SpaceBeforeInPoints;
+					this.line_space_after  = double.IsNaN (leading_property.SpaceAfter)  ? 0 : leading_property.SpaceAfterInPoints;
+				}
+				else
+				{
+					this.line_space_before = 0;
+					this.line_space_after  = 0;
 				}
 				
 				this.line_leading = leading;
-				this.line_align   = leading_property == null ? Properties.LeadingMode.Free : leading_property.Mode;
+				this.line_align   = leading_property == null ? Properties.LeadingMode.Free : leading_property.LeadingMode;
 				this.line_height  = System.Math.Max (line_height, leading);
 			}
 			
@@ -992,6 +1014,8 @@ restart:
 		private double							line_leading;
 		private Properties.LeadingMode			line_align;
 		private bool							line_sync_to_grid;
+		private double							line_space_before;
+		private double							line_space_after;
 		private double							mx_left;
 		private double							mx_right;
 		
