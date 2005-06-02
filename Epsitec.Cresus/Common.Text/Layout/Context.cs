@@ -791,11 +791,12 @@ restart:
 			
 			if (margins != null)
 			{
-				this.mx_left  = paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody;
-				this.mx_right = paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody;
-				this.break_fence_before = margins.BreakFenceBefore;
-				this.break_fence_after  = margins.BreakFenceAfter;
-				this.enable_hyphenation = margins.EnableHyphenation;
+				this.mx_left  = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
+				this.mx_right = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
+				
+				this.break_fence_before = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceBefore, margins.Units);
+				this.break_fence_after  = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceAfter, margins.Units);
+				this.enable_hyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
 			}
 		}
 		
@@ -815,14 +816,15 @@ restart:
 			
 			if (margins != null)
 			{
-				this.mx_left  = paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody;
-				this.mx_right = paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody;
+				this.mx_left  = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
+				this.mx_right = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
 				
-				this.justification      = is_last_line ? margins.JustificationLastLine : margins.JustificationBody;
-				this.disposition        = margins.Disposition;
-				this.break_fence_before = margins.BreakFenceBefore;
-				this.break_fence_after  = margins.BreakFenceAfter;
-				this.enable_hyphenation = margins.EnableHyphenation;
+				this.justification = is_last_line ? margins.JustificationLastLine : margins.JustificationBody;
+				this.disposition   = margins.Disposition;
+				
+				this.break_fence_before = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceBefore, margins.Units);
+				this.break_fence_after  = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceAfter, margins.Units);
+				this.enable_hyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
 			}
 		}
 		
