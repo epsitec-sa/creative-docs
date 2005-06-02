@@ -37,8 +37,8 @@ namespace Epsitec.Common.Drawing
 			{
 				this.story  = new TextStory ();
 				this.fitter = new TextFitter (this.story);
-				this.frame1 = new SimpleTextFrame (this.Client.Width / 3, this.Client.Height);
-				this.frame2 = new SimpleTextFrame (this.Client.Width - this.frame1.Width, this.Client.Height);
+				this.frame1 = new SimpleTextFrame (this.Client.Width / 3, this.Client.Height, 32);
+				this.frame2 = new SimpleTextFrame (this.Client.Width - this.frame1.Width, this.Client.Height, 32);
 				
 				this.fitter.FrameList.InsertAt (0, this.frame1);
 				this.fitter.FrameList.InsertAt (1, this.frame2);
@@ -254,6 +254,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, 0.0, 0.0, 0.0, 15, 1, true));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
+					properties.Add (new Text.Properties.LeadingProperty (10.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.Free));
 					
 					words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
 					
@@ -269,6 +270,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.MarginsProperty (10, 10, 10, 10, 1.0, 0.0, 0.0, 15, 1, true));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Blue")));
 					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
+					properties.Add (new Text.Properties.LeadingProperty (24.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.AlignAll));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -282,7 +284,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, 1.0, 1.0, 0.0, 15, 1, false));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
-					properties.Add (new Text.Properties.LeadingProperty (20.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.Free));
+					properties.Add (new Text.Properties.LeadingProperty (4.0, Text.Properties.SizeUnits.Millimeters, Text.Properties.LeadingMode.AlignFirst));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);

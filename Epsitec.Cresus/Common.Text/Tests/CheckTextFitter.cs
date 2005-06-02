@@ -39,27 +39,27 @@ namespace Epsitec.Common.Text.Tests
 			double ox, oy, width;
 			bool ok;
 			
-			ok = frame.ConstrainLineBox (y, asc, desc, height, out ox, out oy, out width, out y);
+			ok = frame.ConstrainLineBox (y, asc, desc, height, height, false, out ox, out oy, out width, out y);
 			
 			Debug.Assert.IsTrue (ok);
 			Debug.Assert.IsTrue (oy == -11);
 			
-			ok = frame.ConstrainLineBox (y, asc, desc, height, out ox, out oy, out width, out y);
+			ok = frame.ConstrainLineBox (y, asc, desc, height, height, false, out ox, out oy, out width, out y);
 			
 			Debug.Assert.IsTrue (ok);
 			Debug.Assert.IsTrue (oy == -25);
 			
-			ok = frame.ConstrainLineBox (y, asc, desc, height, out ox, out oy, out width, out y);
+			ok = frame.ConstrainLineBox (y, asc, desc, height, height, false, out ox, out oy, out width, out y);
 						
 			Debug.Assert.IsTrue (ok);
 			Debug.Assert.IsTrue (oy == -39);
 			
-			ok = frame.ConstrainLineBox (y, asc, desc, height, out ox, out oy, out width, out y);
+			ok = frame.ConstrainLineBox (y, asc, desc, height, height, false, out ox, out oy, out width, out y);
 			
 			Debug.Assert.IsFalse (ok);
 			Debug.Assert.IsTrue (oy == -53);
 			
-			ok = frame.ConstrainLineBox (y, asc, desc, height, out ox, out oy, out width, out y);
+			ok = frame.ConstrainLineBox (y, asc, desc, height, height, false, out ox, out oy, out width, out y);
 			
 			Debug.Assert.IsFalse (ok);
 			Debug.Assert.IsTrue (oy == -53);

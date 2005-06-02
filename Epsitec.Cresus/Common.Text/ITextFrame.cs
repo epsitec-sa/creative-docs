@@ -12,7 +12,7 @@ namespace Epsitec.Common.Text
 		int		PageNumber		{ get; set; }
 		
 		
-		bool ConstrainLineBox(double y_dist, double ascender, double descender, double height, out double ox, out double oy, out double width, out double next_y_dist);
+		bool ConstrainLineBox(double y_dist, double ascender, double descender, double height, double leading, bool sync_to_grid, out double ox, out double oy, out double width, out double next_y_dist);
 		
 		void MapToView(ref double x, ref double y);
 		void MapFromView(ref double x, ref double y);

@@ -344,7 +344,8 @@ namespace Epsitec.Common.Text.Layout
 			else
 			{
 				this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
-				this.SelectLineHeight (this.text_offset, initial_line_height, initial_line_ascender, initial_line_descender);
+				this.SelectLineHeightAndLeading (this.text_offset, initial_line_height, initial_line_ascender, initial_line_descender);
+				this.SelectVerticalAlignment (paragraph_line_count);
 				
 				this.ox = this.mx_left;
 			}
@@ -392,7 +393,7 @@ restart:
 					double ox, oy, dx;
 					double next_frame_y;
 					
-					while ((! this.frame.ConstrainLineBox (this.frame_y, line_ascender, line_descender, line_height, out ox, out oy, out dx, out next_frame_y))
+					while ((! this.frame.ConstrainLineBox (this.frame_y, line_ascender, line_descender, line_height, this.line_leading, this.line_sync_to_grid, out ox, out oy, out dx, out next_frame_y))
 						|| (dx < this.mx_left + this.mx_right)
 						|| (pass > 1))
 					{
@@ -419,7 +420,8 @@ restart:
 							this.SelectLayoutEngine (this.text_offset);
 							this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
 							this.SelectFrame (frame_index, 0);
-							this.SelectLineHeight (this.text_offset, initial_line_height, initial_line_ascender, initial_line_descender);
+							this.SelectLineHeightAndLeading (this.text_offset, initial_line_height, initial_line_ascender, initial_line_descender);
+							this.SelectVerticalAlignment (paragraph_line_count);
 							
 							goto restart;
 						}
@@ -529,7 +531,7 @@ restart:
 			
 			this.SelectLayoutEngine (this.text_offset);
 			this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, is_last_line);
-			this.SelectLineHeight (this.text_offset, 0, 0, 0);
+			this.SelectLineHeightAndLeading (this.text_offset, 0, 0, 0);
 			
 			this.ox      = line_base_x;
 			this.oy_base = line_base_y;
@@ -824,7 +826,7 @@ restart:
 			}
 		}
 		
-		private void SelectLineHeight(int offset, double line_height, double ascender, double descender)
+		private void SelectLineHeightAndLeading(int offset, double line_height, double ascender, double descender)
 		{
 			ulong code = this.text[this.text_start + offset];
 			
@@ -842,7 +844,7 @@ restart:
 				descender = System.Math.Min (descender, font.GetDescender (font_size));
 				
 				double auto_scale = 1.2;
-				double leading    = System.Math.Max (line_height, font_size * auto_scale);
+				double leading    = font_size * auto_scale;
 				
 				if ((leading_property != null) &&
 					(! double.IsNaN (leading_property.Value)))
@@ -857,12 +859,37 @@ restart:
 					}
 				}
 				
-				this.line_height = leading;
-				this.line_align  = leading_property == null ? Properties.LeadingMode.Free : leading_property.Mode;
+				this.line_leading = leading;
+				this.line_align   = leading_property == null ? Properties.LeadingMode.Free : leading_property.Mode;
+				this.line_height  = System.Math.Max (line_height, leading);
 			}
 			
 			this.oy_max = this.oy_base + ascender;
 			this.oy_min = this.oy_base + descender;
+		}
+		
+		private void SelectVerticalAlignment(int paragraph_line_index)
+		{
+			switch (this.line_align)
+			{
+				case Properties.LeadingMode.AlignFirst:
+					if ((paragraph_line_index == 0) ||
+						(this.frame_y == 0))
+					{
+						this.line_sync_to_grid = true;
+						return;
+					}
+					break;
+				
+				case Properties.LeadingMode.AlignAll:
+					this.line_sync_to_grid = true;
+					return;
+				
+				default:
+					break;
+			}
+			
+			this.line_sync_to_grid = false;
 		}
 		
 		
@@ -960,7 +987,9 @@ restart:
 		private double							oy_min;
 		private double							line_height;
 		private double							line_width;
+		private double							line_leading;
 		private Properties.LeadingMode			line_align;
+		private bool							line_sync_to_grid;
 		private double							mx_left;
 		private double							mx_right;
 		

@@ -337,6 +337,7 @@ namespace Epsitec.Common.Text
 					
 					case Layout.Status.Ok:
 						continuation = false;
+						reset_line_h = true;
 						break;
 					
 					case Layout.Status.OkFitEnded:
