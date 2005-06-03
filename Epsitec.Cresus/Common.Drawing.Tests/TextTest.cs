@@ -274,7 +274,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Blue")));
 					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
 					properties.Add (new Text.Properties.LeadingProperty (24.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.AlignAll));
-					properties.Add (new Text.Properties.KeepProperty (3, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.True));
+					properties.Add (new Text.Properties.KeepProperty (3, 2, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.True));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);

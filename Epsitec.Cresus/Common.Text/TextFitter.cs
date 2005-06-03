@@ -297,9 +297,12 @@ namespace Epsitec.Common.Text
 			layout.LineSkipBefore            = this.line_skip_before;
 			layout.KeepWithPreviousParagraph = this.keep_with_prev;
 			
-			int line_count      = 0;
-			int line_start      = 0;
 			int paragraph_start = 0;
+			
+restart_paragraph_layout:
+			
+			int line_count = 0;
+			int line_start = paragraph_start;
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
@@ -355,7 +358,14 @@ namespace Epsitec.Common.Text
 						layout.KeepWithPreviousParagraph = this.keep_with_prev;
 						break;
 					
-					case Layout.Status.RestartLayout:
+					case Layout.Status.RestartParagraphLayout:
+						layout.MoveTo (0, paragraph_start);
+						goto restart_paragraph_layout;
+					
+					case Layout.Status.RewindParagraphAndRestartLayout:
+						break;
+					
+					case Layout.Status.RestartLineLayout:
 						
 						Debug.Assert.IsTrue (continuation);
 						

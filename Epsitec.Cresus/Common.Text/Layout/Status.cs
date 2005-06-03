@@ -15,7 +15,11 @@ namespace Epsitec.Common.Text.Layout
 		OkTabReached,
 		
 		SwitchLayout,
-		RestartLayout,
+		
+		RestartLineLayout,					//	relance le layout de la ligne en cours
+		RestartParagraphLayout,				//	relance le layout du paragraphe entier
+		
+		RewindParagraphAndRestartLayout,	//	remonte au paragraphe précédent et relance
 		
 		ErrorNeedMoreText,
 		ErrorNeedMoreRoom,

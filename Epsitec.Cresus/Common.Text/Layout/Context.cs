@@ -302,10 +302,6 @@ namespace Epsitec.Common.Text.Layout
 			set
 			{
 				this.keep_with_prev_para = value;
-				if (value)
-				{
-					System.Diagnostics.Debug.WriteLine ("Caller asking for keep with previous.");
-				}
 			}
 		}
 		
@@ -465,6 +461,13 @@ restart:
 						//	de paragraphe !
 						
 						System.Diagnostics.Debug.WriteLine ("Paragraph: apply keep start lines rule.");
+						
+						this.SelectFrame (frame_index, 0);
+						
+						this.frame_first_line = 0;
+						this.fence_line_count = 0;
+						
+						return Layout.Status.RestartParagraphLayout;
 					}
 					if ((paragraph_line_count == 0) &&
 						(this.keep_with_prev_para) &&
@@ -475,6 +478,10 @@ restart:
 						//	précède immédiatement (récursivement)
 						
 						System.Diagnostics.Debug.WriteLine ("Paragraph: apply keep with previous rule.");
+						
+//						this.fence_line_count = 0;
+//						
+//						return Layout.Status.RewindParagraphAndRestartLayout;
 					}
 					
 					
@@ -486,7 +493,12 @@ restart:
 					this.SelectLineHeightAndLeading (this.text_offset, initial_line_height, initial_line_ascender, initial_line_descender);
 					this.SelectVerticalAlignment (paragraph_line_count);
 					
-					snapshot.FixFrame (this.frame_index, this.frame_y);
+					//	Prend note du nouveau frame de référence et de la position dans
+					//	le paragraphe au sommet du frame :
+					
+					this.frame_first_line = paragraph_line_count;
+					
+					snapshot.FixFrame (this.frame_index, this.frame_y, this.frame_first_line);
 				}
 				else
 				{
@@ -541,7 +553,7 @@ restart:
 							//	à un TAB, par exemple). Il faut que l'appelant relance
 							//	tout le processus depuis le début de la ligne.
 							
-							return Layout.Status.RestartLayout;
+							return Layout.Status.RestartLineLayout;
 						}
 						
 						//	Il n'y a plus de place dans le ITextFrame courant, passe au
@@ -591,7 +603,7 @@ restart:
 							//	l'appellant de refaire une seconde passe complète de la
 							//	ligne :
 							
-							return Layout.Status.RestartLayout;
+							return Layout.Status.RestartLineLayout;
 						}
 						
 						if ((this.frame_list != null) &&
@@ -608,6 +620,26 @@ restart:
 							
 							snapshot.Restore (this);
 							continue;
+						}
+						
+						if ((status == Layout.Status.OkFitEnded) &&
+							(this.frame != null) &&
+							(this.frame_first_line > 0) &&
+							(paragraph_line_count - this.frame_first_line + 1 < this.keep_end_lines))
+						{
+							//	Les lignes qui constituent cette fin de paragraphe se trouvent
+							//	seules dans un frame et il y en a moins que le minimum requis.
+							
+							this.fence_line_count = paragraph_line_count + 1 - this.keep_end_lines;
+							
+							System.Diagnostics.Debug.WriteLine ("Paragraph: apply keep end lines rule : " + this.fence_line_count.ToString ());
+							
+//-							return Layout.Status.RestartParagraphLayout;
+						}
+						
+						if (status == Layout.Status.OkFitEnded)
+						{
+							this.frame_first_line = 0;
 						}
 						
 						return status;
@@ -895,6 +927,8 @@ restart:
 				this.frame       = this.frame_list[this.frame_index];
 				this.frame_y     = y;
 			}
+			
+			this.frame_first_line = 0;
 		}
 		
 		public void DefineAvailableWidth(double width)
@@ -1215,8 +1249,9 @@ restart:
 				this.ox            = context.ox;
 				this.oy_base       = context.oy_base;
 				
-				this.frame_index   = context.frame_index;
-				this.frame_y       = context.frame_y;
+				this.frame_index      = context.frame_index;
+				this.frame_y          = context.frame_y;
+				this.frame_first_line = context.frame_first_line;
 			}
 			
 			
@@ -1247,12 +1282,15 @@ restart:
 				{
 					context.SelectFrame (context.frame_index, this.frame_y);
 				}
+				
+				context.frame_first_line = this.frame_first_line;
 			}
 			
-			public void FixFrame(int frame_index, double frame_y)
+			public void FixFrame(int frame_index, double frame_y, int frame_first_line)
 			{
-				this.frame_index = frame_index;
-				this.frame_y     = frame_y;
+				this.frame_index      = frame_index;
+				this.frame_y          = frame_y;
+				this.frame_first_line = frame_first_line;
 			}
 			
 			
@@ -1262,6 +1300,7 @@ restart:
 			private double						ox, oy_base;
 			private int							frame_index;
 			private double						frame_y;
+			private int							frame_first_line;
 		}
 		#endregion
 		
@@ -1279,6 +1318,7 @@ restart:
 		private int								frame_index = -1;
 		private ITextFrame						frame;
 		private double							frame_y;
+		private int								frame_first_line;
 		
 		private int								left_to_right;
 		
@@ -1302,6 +1342,8 @@ restart:
 		private int								keep_end_lines;
 		private bool							keep_with_prev_para;
 		private bool							keep_with_next_para;
+		
+		private int								fence_line_count;
 		
 		private double							mx_left;
 		private double							mx_right;
