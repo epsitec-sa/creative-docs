@@ -383,6 +383,7 @@ namespace Epsitec.Common.Text.Layout
 				this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
 				this.SelectLineHeightAndLeading (this.text_offset, initial_line_height, initial_line_ascender, initial_line_descender);
 				this.SelectVerticalAlignment (paragraph_line_count);
+				this.SelectKeep (this.text_offset);
 				
 				this.ox = this.mx_left;
 			}
@@ -410,7 +411,42 @@ namespace Epsitec.Common.Text.Layout
 			double def_line_height = 0;
 			double def_line_width  = 0;
 			
-restart:
+			int frame_index = this.frame_index;
+			
+restart:	
+			if ((paragraph_line_count == 0) &&
+				(!continuation))
+			{
+				//	Sélectionne le frame qui convient pour ce paragraphe (selon
+				//	les réglages de la propriété Keep.ParagraphStartMode) :
+				
+				this.UpdateFrameIndex (ref frame_index, this.frame_y == 0, this.para_start_mode);
+			}	
+			
+			if (frame_index != this.frame_index)
+			{
+				if ((frame_index < this.frame_list.Count) &&
+					(frame_index > -1))
+				{
+					//	Reprend avec un autre frame. On reprend tout à zéro depuis ici :
+					
+					this.SelectLayoutEngine (this.text_offset);
+					this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
+					this.SelectFrame (frame_index, 0);
+					this.SelectLineHeightAndLeading (this.text_offset, initial_line_height, initial_line_ascender, initial_line_descender);
+					this.SelectVerticalAlignment (paragraph_line_count);
+					
+					snapshot.FixFrame (this.frame_index, this.frame_y);
+				}
+				else
+				{
+					//	Il n'y a plus de ITextFrame ! On s'arrête donc immédiatement
+					//	avec une erreur.
+					
+					return Layout.Status.ErrorNeedMoreRoom;
+				}
+			}
+			
 			int pass = 0;
 			
 			for (;;)
@@ -433,7 +469,7 @@ restart:
 					oy = this.frame_y;
 					
 					if ((paragraph_line_count == 0) &&
-						(this.frame_y < 0) &&
+						(this.frame_y != 0) &&
 						(! continuation))
 					{
 						//	A la première ligne du paragraphe, on ajoute l'espace "avant"
@@ -461,26 +497,10 @@ restart:
 						//	Il n'y a plus de place dans le ITextFrame courant, passe au
 						//	suivant, s'il en reste encore un (ou plus)...
 						
-						int frame_index = this.frame_index + 1;
+						frame_index  = this.frame_index + 1;
+						this.frame_y = 0;
 						
-						if (frame_index < this.frame_list.Count)
-						{
-							//	Reprend avec un autre frame. On reprend tout à zéro depuis
-							//	ici :
-							
-							this.SelectLayoutEngine (this.text_offset);
-							this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
-							this.SelectFrame (frame_index, 0);
-							this.SelectLineHeightAndLeading (this.text_offset, initial_line_height, initial_line_ascender, initial_line_descender);
-							this.SelectVerticalAlignment (paragraph_line_count);
-							
-							goto restart;
-						}
-						
-						//	Il n'y a plus de ITextFrame ! On s'arrête donc immédiatement
-						//	avec une erreur.
-						
-						return Layout.Status.ErrorNeedMoreRoom;
+						goto restart;
 					}
 					
 					this.ox          = ox + this.mx_left;
@@ -851,6 +871,7 @@ restart:
 			}
 		}
 		
+		
 		private void SelectLayoutEngine(int offset)
 		{
 			ulong code = this.text[this.text_start + offset];
@@ -876,6 +897,24 @@ restart:
 				this.break_fence_before = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceBefore, margins.Units);
 				this.break_fence_after  = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceAfter, margins.Units);
 				this.enable_hyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
+			}
+		}
+		
+		private void SelectKeep(int offset)
+		{
+			ulong code = this.text[this.text_start + offset];
+			
+			Properties.KeepProperty keep;
+			
+			this.text_context.GetKeep (code, out keep);
+			
+			if (keep != null)
+			{
+				this.para_start_mode = keep.ParagraphStartMode;
+			}
+			else
+			{
+				this.para_start_mode = Properties.ParagraphStartMode.Anywhere;
 			}
 		}
 		
@@ -971,6 +1010,137 @@ restart:
 		}
 		
 		
+		private void UpdateFrameIndex(ref int frame_index, bool is_top_of_frame, Properties.ParagraphStartMode para_start_mode)
+		{
+			//	Un paragraphe peut imposer des contraintes quant à sa position dans
+			//	un frame (début de frame, frame en début de page/page paire/page
+			//	impaire).
+			
+			switch (para_start_mode)
+			{
+				case Properties.ParagraphStartMode.NewFrame:
+					if (! is_top_of_frame)
+					{
+						frame_index++;
+					}
+					break;
+				
+				case Properties.ParagraphStartMode.NewPage:
+					if ((this.IsFirstFrameInPage (frame_index)) &&
+						(is_top_of_frame))
+					{
+						//	OK : déjà au début d'une page.
+					}
+					else
+					{
+						frame_index++;
+						
+						while ((frame_index < this.frame_list.Count)
+							&& (this.IsFirstFrameInPage (frame_index) == false))
+						{
+							frame_index++;
+						}
+					}
+					break;
+				
+				case Properties.ParagraphStartMode.NewEvenPage:
+					if ((this.IsFirstFrameInPage (frame_index)) &&
+						(this.IsFrameInEvenPage (frame_index)) &&
+						(is_top_of_frame))
+					{
+						//	OK : déjà au début d'une page paire.
+					}
+					else
+					{
+						frame_index++;
+						
+						while ((frame_index < this.frame_list.Count)
+							&& ((this.IsFrameInEvenPage (frame_index) == false) || (this.IsFirstFrameInPage (frame_index) == false)))
+						{
+							frame_index++;
+						}
+					}
+					break;
+				
+				case Properties.ParagraphStartMode.NewOddPage:
+					if ((this.IsFirstFrameInPage (frame_index)) &&
+						(this.IsFrameInOddPage (frame_index)) &&
+						(is_top_of_frame))
+					{
+						//	OK : déjà au début d'une page impaire.
+					}
+					else
+					{
+						frame_index++;
+						
+						while ((frame_index < this.frame_list.Count)
+							&& ((this.IsFrameInOddPage (frame_index) == false) || (this.IsFirstFrameInPage (frame_index) == false)))
+						{
+							frame_index++;
+						}
+					}
+					break;
+			}
+		}
+		
+		
+		private bool IsFirstFrameInPage(int frame_index)
+		{
+			if (frame_index == 0)
+			{
+				return true;
+			}
+			
+			if ((frame_index > 0) &&
+				(frame_index < this.frame_list.Count))
+			{
+				ITextFrame frame_a = this.frame_list[frame_index-1];
+				ITextFrame frame_b = this.frame_list[frame_index];
+				
+				System.Diagnostics.Debug.Assert (frame_a != null);
+				System.Diagnostics.Debug.Assert (frame_b != null);
+				
+				return frame_a.PageNumber != frame_b.PageNumber;
+			}
+			
+			return false;
+		}
+		
+		private bool IsFrameInEvenPage(int frame_index)
+		{
+			if ((frame_index > -1) &&
+				(frame_index < this.frame_list.Count))
+			{
+				ITextFrame frame = this.frame_list[frame_index];
+				
+				System.Diagnostics.Debug.Assert (frame != null);
+				
+				int page = frame.PageNumber;
+				
+				return (page > 0) && ((page & 0x1) == 0);
+			}
+			
+			return false;
+		}
+		
+		private bool IsFrameInOddPage(int frame_index)
+		{
+			if ((frame_index > -1) &&
+				(frame_index < this.frame_list.Count))
+			{
+				ITextFrame frame = this.frame_list[frame_index];
+				
+				System.Diagnostics.Debug.Assert (frame != null);
+				
+				int page = frame.PageNumber;
+				
+				return (page > 0) && ((page & 0x1) == 0x1);
+			}
+			
+			return false;
+		}
+		
+		
 		#region Snapshot Class
 		private class Snapshot
 		{
@@ -1016,6 +1186,12 @@ restart:
 				}
 			}
 			
+			public void FixFrame(int frame_index, double frame_y)
+			{
+				this.frame_index = frame_index;
+				this.frame_y     = frame_y;
+			}
+			
 			
 			private Snapshot					snapshot;
 			private int							text_offset;
@@ -1048,6 +1224,7 @@ restart:
 		private double							oy_base;
 		private double							oy_max;
 		private double							oy_min;
+		
 		private double							line_height;
 		private double							line_width;
 		private double							line_leading;
@@ -1056,6 +1233,9 @@ restart:
 		private double							line_skip_before;
 		private double							line_space_before;
 		private double							line_space_after;
+		
+		private Properties.ParagraphStartMode	para_start_mode;
+		
 		private double							mx_left;
 		private double							mx_right;
 		

@@ -40,6 +40,9 @@ namespace Epsitec.Common.Drawing
 				this.frame1 = new SimpleTextFrame (this.Client.Width / 3, this.Client.Height, 32);
 				this.frame2 = new SimpleTextFrame (this.Client.Width - this.frame1.Width, this.Client.Height, 32);
 				
+				this.frame1.PageNumber = 1;
+				this.frame2.PageNumber = 1;
+				
 				this.fitter.FrameList.InsertAt (0, this.frame1);
 				this.fitter.FrameList.InsertAt (1, this.frame2);
 			}
@@ -271,6 +274,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Blue")));
 					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
 					properties.Add (new Text.Properties.LeadingProperty (24.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.AlignAll));
+					properties.Add (new Text.Properties.KeepProperty (1, 1, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);

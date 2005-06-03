@@ -12,12 +12,12 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public KeepProperty(int start_lines, int end_lines, StartParagraphMode mode, ThreeState with_next_paragraph)
+		public KeepProperty(int start_lines, int end_lines, ParagraphStartMode mode, ThreeState with_next_paragraph)
 		{
 			this.start_lines  = start_lines;
 			this.end_lines    = end_lines;
 			
-			this.start_paragraph_mode = mode;
+			this.paragraph_start_mode = mode;
 			this.with_next_paragraph  = with_next_paragraph;
 		}
 		
@@ -71,17 +71,17 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		public StartParagraphMode				StartParagraphMode
+		public ParagraphStartMode				ParagraphStartMode
 		{
 			get
 			{
-				return this.start_paragraph_mode;
+				return this.paragraph_start_mode;
 			}
 			set
 			{
-				if (this.start_paragraph_mode != value)
+				if (this.paragraph_start_mode != value)
 				{
-					this.start_paragraph_mode = value;
+					this.paragraph_start_mode = value;
 					this.Invalidate ();
 				}
 			}
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Text.Properties
 			SerializerSupport.Join (buffer,
 				/**/				SerializerSupport.SerializeInt (this.start_lines),
 				/**/				SerializerSupport.SerializeInt (this.end_lines),
-				/**/				SerializerSupport.SerializeEnum (this.start_paragraph_mode),
+				/**/				SerializerSupport.SerializeEnum (this.paragraph_start_mode),
 				/**/				SerializerSupport.SerializeThreeState (this.with_next_paragraph));
 		}
 		
@@ -121,12 +121,12 @@ namespace Epsitec.Common.Text.Properties
 			int start_lines = SerializerSupport.DeserializeInt (args[0]);
 			int end_lines   = SerializerSupport.DeserializeInt (args[1]);
 			
-			StartParagraphMode start_paragraph_mode = (StartParagraphMode) SerializerSupport.DeserializeEnum (typeof (StartParagraphMode), args[2]);
+			ParagraphStartMode paragraph_start_mode = (ParagraphStartMode) SerializerSupport.DeserializeEnum (typeof (ParagraphStartMode), args[2]);
 			ThreeState         with_next_paragraph  = SerializerSupport.DeserializeThreeState (args[3]);
 			
 			this.start_lines          = start_lines;
 			this.end_lines            = end_lines;
-			this.start_paragraph_mode = start_paragraph_mode;
+			this.paragraph_start_mode = paragraph_start_mode;
 			this.with_next_paragraph  = with_next_paragraph;
 		}
 		
@@ -141,7 +141,7 @@ namespace Epsitec.Common.Text.Properties
 			c.start_lines = b.start_lines == 0 ? a.start_lines : b.start_lines;
 			c.end_lines   = b.end_lines == 0   ? a.end_lines   : b.end_lines;
 			
-			c.start_paragraph_mode = b.start_paragraph_mode == StartParagraphMode.Undefined ? a.start_paragraph_mode : b.start_paragraph_mode;
+			c.paragraph_start_mode = b.paragraph_start_mode == ParagraphStartMode.Undefined ? a.paragraph_start_mode : b.paragraph_start_mode;
 			c.with_next_paragraph  = b.with_next_paragraph == ThreeState.Undefined ? a.with_next_paragraph : b.with_next_paragraph;
 			
 			return c;
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			checksum.UpdateValue (this.start_lines);
 			checksum.UpdateValue (this.end_lines);
-			checksum.UpdateValue ((int) this.start_paragraph_mode);
+			checksum.UpdateValue ((int) this.paragraph_start_mode);
 			checksum.UpdateValue ((int) this.with_next_paragraph);
 		}
 		
@@ -165,7 +165,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			return a.start_lines == b.start_lines
 				&& a.end_lines   == b.end_lines
-				&& a.start_paragraph_mode == b.start_paragraph_mode
+				&& a.paragraph_start_mode == b.paragraph_start_mode
 				&& a.with_next_paragraph  == b.with_next_paragraph;
 		}
 		
@@ -173,7 +173,7 @@ namespace Epsitec.Common.Text.Properties
 		private int								start_lines;
 		private int								end_lines;
 		
-		private StartParagraphMode				start_paragraph_mode;
+		private ParagraphStartMode				paragraph_start_mode;
 		private ThreeState						with_next_paragraph;
 	}
 }
