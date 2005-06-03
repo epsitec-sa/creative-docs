@@ -307,6 +307,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.4, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.Free));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);

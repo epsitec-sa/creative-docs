@@ -260,6 +260,43 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public double							LineSkipBefore
+		{
+			//	Ne pas confondre LineSpaceBefore qui provient de LeadingProperty
+			//	et LineSkipBefore qui est la valeur imposée par le TextFitter en
+			//	début de paragraphe, à cause d'une fin de paragraphe précédente.
+			
+			get
+			{
+				return this.line_skip_before;
+			}
+			set
+			{
+				this.line_skip_before = value;
+			}
+		}
+		
+		public double							LineSpaceBefore
+		{
+			get
+			{
+				return this.line_space_before;
+			}
+		}
+		
+		public double							LineSpaceAfter
+		{
+			get
+			{
+				if (this.line_space_after != 0)
+				{
+					System.Diagnostics.Debug.WriteLine ("Space after: " + this.line_space_after);
+				}
+				return this.line_space_after;
+			}
+		}
+		
+
 		public double							AvailableWidth
 		{
 			get
@@ -396,13 +433,15 @@ restart:
 					oy = this.frame_y;
 					
 					if ((paragraph_line_count == 0) &&
-						(this.frame_y < 0))
+						(this.frame_y < 0) &&
+						(! continuation))
 					{
 						//	A la première ligne du paragraphe, on ajoute l'espace "avant"
 						//	tel que défini par la propriété de "leading". Mais on n'ajoute
 						//	pas cet espace en sommet de frame.
 						
 						oy -= this.line_space_before;
+						oy -= this.line_skip_before;
 					}
 					
 					while ((! this.frame.ConstrainLineBox (oy, line_ascender, line_descender, line_height, this.line_leading, this.line_sync_to_grid, out ox, out oy, out dx, out next_frame_y))
@@ -1014,6 +1053,7 @@ restart:
 		private double							line_leading;
 		private Properties.LeadingMode			line_align;
 		private bool							line_sync_to_grid;
+		private double							line_skip_before;
 		private double							line_space_before;
 		private double							line_space_after;
 		private double							mx_left;
