@@ -79,6 +79,7 @@ namespace Epsitec.Common.Text
 			this.frame_y     = 0;
 			
 			this.line_skip_before = 0;
+			this.keep_with_prev   = false;
 			
 			this.Process (new Execute (this.ExecuteGenerate));
 			
@@ -293,7 +294,8 @@ namespace Epsitec.Common.Text
 			
 			layout.SelectFrame (this.frame_index, this.frame_y);
 			
-			layout.LineSkipBefore = this.line_skip_before;
+			layout.LineSkipBefore            = this.line_skip_before;
+			layout.KeepWithPreviousParagraph = this.keep_with_prev;
 			
 			int line_count      = 0;
 			int line_start      = 0;
@@ -348,7 +350,9 @@ namespace Epsitec.Common.Text
 						continuation = false;
 						reset_line_h = true;
 						this.line_skip_before = layout.LineSpaceAfter;
-						layout.LineSkipBefore = layout.LineSpaceAfter;
+						this.keep_with_prev   = layout.KeepWithNextParagraph;
+						layout.LineSkipBefore            = this.line_skip_before;
+						layout.KeepWithPreviousParagraph = this.keep_with_prev;
 						break;
 					
 					case Layout.Status.RestartLayout:
@@ -790,6 +794,7 @@ namespace Epsitec.Common.Text
 		private double							frame_y;
 		
 		private double							line_skip_before;
+		private bool							keep_with_prev;
 		
 		private IPageCollection					page_collection;
 	}

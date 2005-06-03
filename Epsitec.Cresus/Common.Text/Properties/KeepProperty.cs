@@ -12,12 +12,13 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public KeepProperty(int start_lines, int end_lines, ParagraphStartMode mode, ThreeState with_next_paragraph)
+		public KeepProperty(int start_lines, int end_lines, ParagraphStartMode mode, ThreeState with_prev_paragraph, ThreeState with_next_paragraph)
 		{
 			this.start_lines  = start_lines;
 			this.end_lines    = end_lines;
 			
 			this.paragraph_start_mode = mode;
+			this.with_prev_paragraph  = with_prev_paragraph;
 			this.with_next_paragraph  = with_next_paragraph;
 		}
 		
@@ -87,7 +88,8 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		public ThreeState						WithNextParagraph
+		
+		public ThreeState						KeepWithNextParagraph
 		{
 			get
 			{
@@ -102,6 +104,21 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public ThreeState						KeepWithPreviousParagraph
+		{
+			get
+			{
+				return this.with_prev_paragraph;
+			}
+			set
+			{
+				if (this.with_prev_paragraph != value)
+				{
+					this.with_prev_paragraph = value;
+				}
+			}
+		}
+		
 		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
@@ -109,25 +126,28 @@ namespace Epsitec.Common.Text.Properties
 				/**/				SerializerSupport.SerializeInt (this.start_lines),
 				/**/				SerializerSupport.SerializeInt (this.end_lines),
 				/**/				SerializerSupport.SerializeEnum (this.paragraph_start_mode),
-				/**/				SerializerSupport.SerializeThreeState (this.with_next_paragraph));
+				/**/				SerializerSupport.SerializeThreeState (this.with_next_paragraph),
+				/**/				SerializerSupport.SerializeThreeState (this.with_prev_paragraph));
 		}
 		
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 4);
+			Debug.Assert.IsTrue (args.Length == 5);
 			
 			int start_lines = SerializerSupport.DeserializeInt (args[0]);
 			int end_lines   = SerializerSupport.DeserializeInt (args[1]);
 			
 			ParagraphStartMode paragraph_start_mode = (ParagraphStartMode) SerializerSupport.DeserializeEnum (typeof (ParagraphStartMode), args[2]);
 			ThreeState         with_next_paragraph  = SerializerSupport.DeserializeThreeState (args[3]);
+			ThreeState         with_prev_paragraph  = SerializerSupport.DeserializeThreeState (args[4]);
 			
 			this.start_lines          = start_lines;
 			this.end_lines            = end_lines;
 			this.paragraph_start_mode = paragraph_start_mode;
 			this.with_next_paragraph  = with_next_paragraph;
+			this.with_prev_paragraph  = with_prev_paragraph;
 		}
 		
 		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
@@ -143,6 +163,7 @@ namespace Epsitec.Common.Text.Properties
 			
 			c.paragraph_start_mode = b.paragraph_start_mode == ParagraphStartMode.Undefined ? a.paragraph_start_mode : b.paragraph_start_mode;
 			c.with_next_paragraph  = b.with_next_paragraph == ThreeState.Undefined ? a.with_next_paragraph : b.with_next_paragraph;
+			c.with_prev_paragraph  = b.with_prev_paragraph == ThreeState.Undefined ? a.with_prev_paragraph : b.with_prev_paragraph;
 			
 			return c;
 		}
@@ -153,6 +174,7 @@ namespace Epsitec.Common.Text.Properties
 			checksum.UpdateValue (this.end_lines);
 			checksum.UpdateValue ((int) this.paragraph_start_mode);
 			checksum.UpdateValue ((int) this.with_next_paragraph);
+			checksum.UpdateValue ((int) this.with_prev_paragraph);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -166,7 +188,8 @@ namespace Epsitec.Common.Text.Properties
 			return a.start_lines == b.start_lines
 				&& a.end_lines   == b.end_lines
 				&& a.paragraph_start_mode == b.paragraph_start_mode
-				&& a.with_next_paragraph  == b.with_next_paragraph;
+				&& a.with_next_paragraph  == b.with_next_paragraph
+				&& a.with_prev_paragraph  == b.with_prev_paragraph;
 		}
 		
 		
@@ -175,5 +198,6 @@ namespace Epsitec.Common.Text.Properties
 		
 		private ParagraphStartMode				paragraph_start_mode;
 		private ThreeState						with_next_paragraph;
+		private ThreeState						with_prev_paragraph;
 	}
 }

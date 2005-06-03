@@ -288,15 +288,40 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				if (this.line_space_after != 0)
-				{
-					System.Diagnostics.Debug.WriteLine ("Space after: " + this.line_space_after);
-				}
 				return this.line_space_after;
 			}
 		}
 		
-
+		
+		public bool								KeepWithPreviousParagraph
+		{
+			get
+			{
+				return this.keep_with_prev_para;
+			}
+			set
+			{
+				this.keep_with_prev_para = value;
+				if (value)
+				{
+					System.Diagnostics.Debug.WriteLine ("Caller asking for keep with previous.");
+				}
+			}
+		}
+		
+		public bool								KeepWithNextParagraph
+		{
+			get
+			{
+				return this.keep_with_next_para;
+			}
+			set
+			{
+				this.keep_with_next_para = value;
+			}
+		}
+		
+		
 		public double							AvailableWidth
 		{
 			get
@@ -414,21 +439,46 @@ namespace Epsitec.Common.Text.Layout
 			int frame_index = this.frame_index;
 			
 restart:	
-			if ((paragraph_line_count == 0) &&
-				(!continuation))
+			if (! continuation)
 			{
-				//	Sélectionne le frame qui convient pour ce paragraphe (selon
-				//	les réglages de la propriété Keep.ParagraphStartMode) :
-				
-				this.UpdateFrameIndex (ref frame_index, this.frame_y == 0, this.para_start_mode);
-			}	
+				if (paragraph_line_count == 0)
+				{
+					//	Sélectionne le frame qui convient pour ce paragraphe (selon
+					//	les réglages de la propriété Keep.ParagraphStartMode) :
+					
+					this.UpdateFrameIndex (ref frame_index, this.frame_y == 0, this.para_start_mode);
+				}
+			}
 			
 			if (frame_index != this.frame_index)
 			{
 				if ((frame_index < this.frame_list.Count) &&
 					(frame_index > -1))
 				{
-					//	Reprend avec un autre frame. On reprend tout à zéro depuis ici :
+					//	Reprend avec un autre frame. Vérifions d'abord si ce changement
+					//	de frame est permis ici :
+					
+					if ((paragraph_line_count < this.keep_start_lines) &&
+						(paragraph_line_count > 0))
+					{
+						//	Il n'y a pas assez de lignes de texte consécutives en début
+						//	de paragraphe !
+						
+						System.Diagnostics.Debug.WriteLine ("Paragraph: apply keep start lines rule.");
+					}
+					if ((paragraph_line_count == 0) &&
+						(this.keep_with_prev_para) &&
+						(this.para_start_mode == Properties.ParagraphStartMode.Anywhere))
+					{
+						//	Le paragraphe ne peut pas être dissocié de celui qui précède.
+						//	Un changement de frame ici va affecter le paragraphe qui
+						//	précède immédiatement (récursivement)
+						
+						System.Diagnostics.Debug.WriteLine ("Paragraph: apply keep with previous rule.");
+					}
+					
+					
+					//	On reprend tout à zéro depuis ici :
 					
 					this.SelectLayoutEngine (this.text_offset);
 					this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
@@ -910,11 +960,24 @@ restart:
 			
 			if (keep != null)
 			{
-				this.para_start_mode = keep.ParagraphStartMode;
+				this.para_start_mode  = keep.ParagraphStartMode;
+				this.keep_start_lines = System.Math.Max (1, keep.StartLines);
+				this.keep_end_lines   = System.Math.Max (1, keep.EndLines);
+				
+				//	Le TextFitter peut forcer un 'keep with previous paragraph' basé
+				//	sur les informations relatives au paragraphe précédent; on doit
+				//	donc conserver l'état 'keep_with_prev_para = true'...
+				
+				this.keep_with_prev_para |= keep.KeepWithPreviousParagraph == Properties.ThreeState.True;
+				this.keep_with_next_para  = keep.KeepWithNextParagraph == Properties.ThreeState.True;
 			}
 			else
 			{
-				this.para_start_mode = Properties.ParagraphStartMode.Anywhere;
+				this.para_start_mode     = Properties.ParagraphStartMode.Anywhere;
+				this.keep_start_lines    = 1;
+				this.keep_end_lines      = 1;
+				
+				this.keep_with_next_para = false;
 			}
 		}
 		
@@ -1235,6 +1298,10 @@ restart:
 		private double							line_space_after;
 		
 		private Properties.ParagraphStartMode	para_start_mode;
+		private int								keep_start_lines;
+		private int								keep_end_lines;
+		private bool							keep_with_prev_para;
+		private bool							keep_with_next_para;
 		
 		private double							mx_left;
 		private double							mx_right;
