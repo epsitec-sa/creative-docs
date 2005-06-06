@@ -478,6 +478,15 @@ restart:
 						
 						System.Diagnostics.Debug.WriteLine ("Paragraph: apply keep start lines rule.");
 						
+						if (this.keep_with_prev_para)
+						{
+							System.Diagnostics.Debug.WriteLine ("++++++++++++ apply keep with previous rule.");
+							
+							this.fence_line_count = 0;
+							
+							return Layout.Status.RewindParagraphAndRestartLayout;
+						}
+						
 						this.SelectFrame (frame_index, 0);
 						
 						this.frame_first_line = 0;
