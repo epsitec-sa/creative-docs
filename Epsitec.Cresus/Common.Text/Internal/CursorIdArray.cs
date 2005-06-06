@@ -340,9 +340,17 @@ namespace Epsitec.Common.Text.Internal
 				
 				if (position <= 0)
 				{
+					//	NB: s'il n'y a aucun élément ou que le premier élément est
+					//	déjà placé après la position à considérer, i = 0 et cela
+					//	implique que l'on va retourner -1 :
+					
 					return i-1;
 				}
 			}
+			
+			//	Tous les éléments décrivent des curseurs placés avant la position
+			//	à considérer; on va donc retourner le dernier élément (c'est le
+			//	plus proche de la position) :
 			
 			return this.length-1;
 		}

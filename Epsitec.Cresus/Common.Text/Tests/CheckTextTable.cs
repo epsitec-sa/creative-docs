@@ -24,6 +24,19 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_2) == 3);
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_3) == 0);
 			
+			CursorInfo[] info_x_0 = table.FindCursorsBefore (5);
+			CursorInfo[] info_x_1 = table.FindCursorsBefore (3);
+			CursorInfo[] info_x_2 = table.FindCursorsBefore (2);
+			CursorInfo[] info_x_3 = table.FindCursorsBefore (0);
+			
+			Debug.Assert.IsTrue (info_x_0.Length == 1);
+			Debug.Assert.IsTrue (info_x_1.Length == 1);
+			Debug.Assert.IsTrue (info_x_2.Length == 1);
+			Debug.Assert.IsTrue (info_x_3.Length == 0);
+			
+			Debug.Assert.IsTrue (info_x_0[0].Position == 0);
+			Debug.Assert.IsTrue (info_x_0[0].CursorId == cursor_3);
+			
 			ulong[] text = new ulong[6000];
 			
 			Debug.Assert.IsTrue (table.ReadText (cursor_1, 10, text) == 0);
@@ -86,6 +99,25 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 4);
 			Debug.Assert.IsTrue (table.TextLength == 5);
 			
+			info_x_0 = table.FindCursorsBefore (5);
+			info_x_1 = table.FindCursorsBefore (4);
+			info_x_2 = table.FindCursorsBefore (3);
+			info_x_3 = table.FindCursorsBefore (2);
+			
+			Debug.Assert.IsTrue (info_x_0.Length == 1);
+			Debug.Assert.IsTrue (info_x_1.Length == 1);
+			Debug.Assert.IsTrue (info_x_2.Length == 1);
+			Debug.Assert.IsTrue (info_x_3.Length == 1);
+			
+			Debug.Assert.IsTrue (info_x_0[0].Position == 4);
+			Debug.Assert.IsTrue (info_x_0[0].CursorId == cursor_1);
+			Debug.Assert.IsTrue (info_x_1[0].Position == 3);
+			Debug.Assert.IsTrue (info_x_1[0].CursorId == cursor_3);
+			Debug.Assert.IsTrue (info_x_2[0].Position == 1);
+			Debug.Assert.IsTrue (info_x_2[0].CursorId == cursor_2);
+			Debug.Assert.IsTrue (info_x_3[0].Position == 1);
+			Debug.Assert.IsTrue (info_x_3[0].CursorId == cursor_2);
+			
 			CursorInfo[] c_infos_1;
 			CursorInfo[] c_infos_2;
 			CursorInfo[] c_infos_3;
@@ -110,6 +142,20 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (table.TextLength == 2);
 			Debug.Assert.IsNull (c_infos_2);
 			
+			table.MoveCursor (cursor_1, -1);
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 1);
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_2) == 1);
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_3) == 2);
+			
+			info_x_0 = table.FindCursorsBefore (2);
+			
+			Debug.Assert.IsTrue (info_x_0.Length == 2);
+			
+			Debug.Assert.IsTrue (info_x_0[0].Position == 1);
+			Debug.Assert.IsTrue (info_x_0[1].Position == 1);
+			Debug.Assert.IsTrue (info_x_0[0].CursorId == cursor_1);
+			Debug.Assert.IsTrue (info_x_0[1].CursorId == cursor_2);
+			
 			table.DeleteText (cursor_2, 1, out c_infos_3);
 			
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_2) == 1);
@@ -125,7 +171,6 @@ namespace Epsitec.Common.Text.Tests
 //			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 0);
 //			Debug.Assert.IsTrue (table.TextLength == 0);
 //			Debug.Assert.IsNull (c_infos_4);
-			
 			
 			Internal.TextTable table1 = new Internal.TextTable ();
 			Internal.TextTable table2 = new Internal.TextTable ();

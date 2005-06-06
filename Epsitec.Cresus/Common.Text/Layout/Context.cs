@@ -495,9 +495,9 @@ restart:
 						
 						System.Diagnostics.Debug.WriteLine ("Paragraph: apply keep with previous rule.");
 						
-//						this.fence_line_count = 0;
-//						
-//						return Layout.Status.RewindParagraphAndRestartLayout;
+						this.fence_line_count = 0;
+						
+						return Layout.Status.RewindParagraphAndRestartLayout;
 					}
 					
 					

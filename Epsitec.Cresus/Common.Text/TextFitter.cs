@@ -185,8 +185,8 @@ namespace Epsitec.Common.Text
 		
 		protected void Process(Execute method)
 		{
-			//	Exécute une méthode pour chaque tout le texte, en procédant par
-			//	tranches (exécution itérative).
+			//	Exécute une méthode pour tout le texte, en procédant par tranches
+			//	(exécution itérative).
 			
 			int pos = 0;
 			
@@ -201,18 +201,28 @@ namespace Epsitec.Common.Text
 					//	TODO: lock et détection d'altérations du texte (et de la liste des
 					//	ITextFrame liés à ce TextFitter).
 					
-					int max    = this.story.TextLength;
-					int step   = 10000;
+					int max  = this.story.TextLength;
+					int step = 10000;
 					
 				again:
-					int length = System.Math.Min (max - pos, step);
+					int  length = System.Math.Min (max - pos, step);
+					bool restart;
 					
 					if (length <= 0)
 					{
 						break;
 					}
 					
-					method (cursor, pos, ref length);
+					method (cursor, pos, ref length, out restart);
+					
+					if (restart)
+					{
+						//	Si la méthode a demandé une seconde chance, il se peut que
+						//	le curseur ait été déplacé; il faut donc resynchroniser la
+						//	position :
+						
+						pos = this.story.GetCursorPosition (cursor);
+					}
 					
 					if (length == 0)
 					{
@@ -224,6 +234,11 @@ namespace Epsitec.Common.Text
 						Debug.Assert.IsTrue (length < max-pos);
 						
 						step += 10000;
+						goto again;
+					}
+					
+					if (restart)
+					{
 						goto again;
 					}
 					
@@ -244,7 +259,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		protected void ExecuteClear(Cursors.TempCursor temp_cursor, int pos, ref int length)
+		protected void ExecuteClear(Cursors.TempCursor temp_cursor, int pos, ref int length, out bool restart)
 		{
 			//	Supprime les marques de découpe de lignes représentées par des
 			//	curseurs (instances de Cursors.FitterCursor).
@@ -256,9 +271,11 @@ namespace Epsitec.Common.Text
 				ICursor cursor = this.story.TextTable.GetCursorInstance (cursors[i].CursorId);
 				this.RecycleFitterCursor (cursor);
 			}
+			
+			restart = false;
 		}
 		
-		protected void ExecuteGenerate(Cursors.TempCursor cursor, int pos, ref int length)
+		protected void ExecuteGenerate(Cursors.TempCursor cursor, int pos, ref int length, out bool restart)
 		{
 			//	Génère les marques de découpe de lignes et insère les curseurs
 			//	correspondants.
@@ -288,6 +305,8 @@ namespace Epsitec.Common.Text
 				
 				text[length] = code;
 			}
+			
+			restart = false;
 			
 			Layout.Context         layout = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
 			Layout.BreakCollection result = new Layout.BreakCollection ();
@@ -374,6 +393,13 @@ restart_paragraph_layout:
 						goto restart_paragraph_layout;
 					
 					case Layout.Status.RewindParagraphAndRestartLayout:
+						
+						//	Retourne en arrière, jusqu'au début du paragraphe qui précède
+						//	le paragraphe actuel, puis relance l'opération au complet.
+						
+						this.RewindToPreviousParagraph (cursor);
+						restart = true;
+						
 						break;
 					
 					case Layout.Status.RestartLineLayout:
@@ -600,6 +626,13 @@ restart_paragraph_layout:
 		}
 		
 		
+		protected void RewindToPreviousParagraph(Cursors.TempCursor cursor)
+		{
+			//	TODO: trouver le FitterCursor précédent, reculer le curseur jusqu'à sa
+			//	position et supprimer le FitterCursor.
+		}
+		
+		
 		protected enum TabStatus
 		{
 			Ok,
@@ -806,7 +839,7 @@ restart_paragraph_layout:
 		}
 		
 		
-		protected delegate void Execute(Cursors.TempCursor cursor, int pos, ref int length);
+		protected delegate void Execute(Cursors.TempCursor cursor, int pos, ref int length, out bool restart);
 		
 		private TextStory						story;
 		private System.Collections.ArrayList	cursors;

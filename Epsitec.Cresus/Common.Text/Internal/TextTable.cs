@@ -195,6 +195,86 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public CursorInfo[] FindCursorsBefore(int position)
+		{
+			//	Trouve les curseurs qui se trouvent avant la position indiquée.
+			//	Retourne le premier curseur trouvé (s'il y en a plusieurs au même
+			//	endroit, on les retourne tous en bloc).
+			
+			if (position > this.text_length)
+			{
+				position = this.text_length;
+			}
+			else if (position < 0)
+			{
+				return new CursorInfo[0];
+			}
+			
+			for (;;)
+			{
+				int id     = this.FindTextChunkId (position);
+				int origin = this.FindTextChunkPosition (id);
+				
+				int i_id  = id - 1;
+				int i_off = position - origin;
+				
+				Internal.TextChunk chunk = this.text_chunks[i_id];
+				
+				int cursor_index = chunk.GetCursorIndexBeforePosition (i_off);
+				
+				if (cursor_index < 0)
+				{
+					if (position == origin)
+					{
+						break;
+					}
+					
+					position = origin;
+				}
+				else
+				{
+					//	Trouvé un curseur placé avant la position indiquée. C'est
+					//	le dernier d'un paquet s'il y en a plusieurs qui pointent
+					//	au même endroit.
+					
+					CursorId cursor_id  = chunk.GetNthCursorId (cursor_index);
+					int      cursor_pos = this.GetCursorPosition (cursor_id);
+					
+					int count = 1;
+					
+					for (int i = 1; i <= cursor_index; i++)
+					{
+						CursorId cursor_id_i  = chunk.GetNthCursorId (cursor_index - i);
+						int      cursor_pos_i = this.GetCursorPosition (cursor_id_i);
+						
+						if (cursor_pos_i != cursor_pos)
+						{
+							break;
+						}
+						
+						count++;
+					}
+					
+					CursorInfo[] result = new CursorInfo[count];
+					
+					result[0] = new CursorInfo (cursor_id, cursor_pos);
+					
+					for (int i = 1; i < count; i++)
+					{
+						CursorId cursor_id_i  = chunk.GetNthCursorId (cursor_index - i);
+						int      cursor_pos_i = this.GetCursorPosition (cursor_id_i);
+						
+						result[i] = new CursorInfo (cursor_id_i, cursor_pos_i);
+					}
+					
+					return result;
+				}
+			}
+			
+			return new CursorInfo[0];
+		}
+		
+		
 		public CursorInfo[] FindCursors(int position, int length)
 		{
 			return this.FindCursors (position, length, null);
