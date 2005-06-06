@@ -293,6 +293,18 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public int								FenceLineCount
+		{
+			get
+			{
+				return this.fence_line_count;
+			}
+			set
+			{
+				this.fence_line_count = value;
+			}
+		}
+		
 		public bool								KeepWithPreviousParagraph
 		{
 			get
@@ -443,6 +455,10 @@ restart:
 					//	les réglages de la propriété Keep.ParagraphStartMode) :
 					
 					this.UpdateFrameIndex (ref frame_index, this.frame_y == 0, this.para_start_mode);
+				}
+				else if (paragraph_line_count == this.fence_line_count)
+				{
+					frame_index++;
 				}
 			}
 			
@@ -632,14 +648,15 @@ restart:
 							
 							this.fence_line_count = paragraph_line_count + 1 - this.keep_end_lines;
 							
-							System.Diagnostics.Debug.WriteLine ("Paragraph: apply keep end lines rule : " + this.fence_line_count.ToString ());
+							System.Diagnostics.Debug.WriteLine (string.Format ("Paragraph: apply keep end lines rule; para.l.count={0}, keep={1} fence={2}", paragraph_line_count, this.keep_end_lines, this.fence_line_count));
 							
-//-							return Layout.Status.RestartParagraphLayout;
+							return Layout.Status.RestartParagraphLayout;
 						}
 						
 						if (status == Layout.Status.OkFitEnded)
 						{
 							this.frame_first_line = 0;
+							this.fence_line_count = 0;
 						}
 						
 						return status;
@@ -1330,7 +1347,7 @@ restart:
 		private int								frame_index = -1;
 		private ITextFrame						frame;
 		private double							frame_y;
-		private int								frame_first_line;
+		private int								frame_first_line;			//	# première ligne du paragraphe dans ce frame
 		
 		private int								left_to_right;
 		
@@ -1356,7 +1373,7 @@ restart:
 		private bool							keep_with_prev_para;
 		private bool							keep_with_next_para;
 		
-		private int								fence_line_count;
+		private int								fence_line_count;			//	# ligne du paragraphe où forcer un saut de frame
 		
 		private double							mx_left;
 		private double							mx_right;

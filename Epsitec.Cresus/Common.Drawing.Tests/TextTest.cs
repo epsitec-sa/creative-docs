@@ -35,9 +35,11 @@ namespace Epsitec.Common.Drawing
 		{
 			public Painter()
 			{
+				this.frame_ratio = 1.0/3.0;
+				
 				this.story  = new TextStory ();
 				this.fitter = new TextFitter (this.story);
-				this.frame1 = new SimpleTextFrame (this.Client.Width / 3, this.Client.Height, 32);
+				this.frame1 = new SimpleTextFrame (this.Client.Width * this.frame_ratio, this.Client.Height, 32);
 				this.frame2 = new SimpleTextFrame (this.Client.Width - this.frame1.Width, this.Client.Height, 32);
 				
 				this.frame1.PageNumber = 1;
@@ -53,6 +55,23 @@ namespace Epsitec.Common.Drawing
 				get
 				{
 					return this.story;
+				}
+			}
+			
+			public double						FrameRatio
+			{
+				get
+				{
+					return this.frame_ratio;
+				}
+				set
+				{
+					if (this.frame_ratio != value)
+					{
+						this.frame_ratio = value;
+						this.UpdateFrameSizes ();
+						this.Invalidate ();
+					}
 				}
 			}
 			
@@ -76,20 +95,13 @@ namespace Epsitec.Common.Drawing
 				base.OnSizeChanged ();
 				
 				if ((this.frame1 != null) &&
-					(this.frame2 != null))
+					(this.frame2 != null) &&
+					(this.frame_ratio != 0))
 				{
-					this.frame1.Width  = this.Client.Width / 3;
-					this.frame1.Height = this.Client.Height;
-					
-					this.frame2.Width  = this.Client.Width - this.frame1.Width;
-					this.frame2.Height = this.Client.Height;
-					this.frame2.X      = this.frame1.Width + this.frame1.X;
-					
-					this.fitter.ClearAllMarks ();
-					this.fitter.GenerateAllMarks ();
+					this.UpdateFrameSizes ();
 				}
 			}
-
+			
 			protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
 			{
 				graphics.AddFilledRectangle (0, 0, this.Width, this.Height);
@@ -122,6 +134,20 @@ namespace Epsitec.Common.Drawing
 				graphics.LineWidth = 0.75;
 				graphics.AddLine (ox1, oy1, ox2, oy2);
 				graphics.RenderSolid (Drawing.Color.FromName ("Blue"));
+			}
+			
+			
+			private void UpdateFrameSizes()
+			{
+				this.frame1.Width  = this.Client.Width * this.frame_ratio;
+				this.frame1.Height = this.Client.Height;
+					
+				this.frame2.Width  = this.Client.Width - this.frame1.Width;
+				this.frame2.Height = this.Client.Height;
+				this.frame2.X      = this.frame1.Width + this.frame1.X;
+					
+				this.fitter.ClearAllMarks ();
+				this.fitter.GenerateAllMarks ();
 			}
 			
 			
@@ -177,6 +203,7 @@ namespace Epsitec.Common.Drawing
 			private TextStory					story;
 			private TextFitter					fitter;
 			private SimpleTextFrame				frame1, frame2;
+			private double						frame_ratio;
 			private Graphics					graphics;
 		}
 		
@@ -205,6 +232,7 @@ namespace Epsitec.Common.Drawing
 				CheckButton cb4 = new CheckButton (this.window.Root);
 				RadioButton rb1 = new RadioButton (this.window.Root, "g1", 0);
 				RadioButton rb2 = new RadioButton (this.window.Root, "g1", 1);
+				CheckButton cb5 = new CheckButton (this.window.Root);
 				
 				RadioButton.Activate (this.window.Root, "g1", 0);
 				
@@ -217,6 +245,8 @@ namespace Epsitec.Common.Drawing
 				rb1.Dock = DockStyle.Top; rb1.DockMargins = new Margins (4, 4, 4, 0);
 				rb2.Dock = DockStyle.Top; rb2.DockMargins = new Margins (4, 4, 0, 0);
 				
+				cb5.Dock = DockStyle.Top; cb5.DockMargins = new Margins (4, 4, 4, 0);
+				
 				st1.Text = "Réglages pour le rendu du pavé de texte :";
 				
 				cb1.Name = "liga";			cb1.Text = "ligatures simples";		cb1.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButtonActiveStateChanged);
@@ -227,7 +257,9 @@ namespace Epsitec.Common.Drawing
 				rb1.Text = "paragraphes avec diverses justifications";			rb1.ActiveStateChanged += new Support.EventHandler (this.HandleRadioButtonActiveStateChanged);
 				rb2.Text = "paragraphes avec tabulateurs";						rb2.ActiveStateChanged += new Support.EventHandler (this.HandleRadioButtonActiveStateChanged);
 				
-				this.window.ClientSize = new Size (260, 120);
+				cb5.Name = "equal frames";	cb5.Text = "2 colonnes égales";		cb5.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButton5ActiveStateChanged);
+				
+				this.window.ClientSize = new Size (260, 150);
 				this.window.Owner      = owner;
 				
 				this.window.Show ();
@@ -274,7 +306,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Blue")));
 					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
 					properties.Add (new Text.Properties.LeadingProperty (24.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.AlignAll));
-					properties.Add (new Text.Properties.KeepProperty (3, 2, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.True));
+					properties.Add (new Text.Properties.KeepProperty (3, 2, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -289,6 +321,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 1.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					properties.Add (new Text.Properties.LeadingProperty (4.0, Text.Properties.SizeUnits.Millimeters, Text.Properties.LeadingMode.AlignFirst));
+					properties.Add (new Text.Properties.KeepProperty (3, 3, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -332,21 +365,23 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
+#if false
 					int glyph = 1;
+					string symbol = "Symbol"; //"ZapfDingbats BT";
 					
 					while (glyph < 205)
 					{
 						for (int i = 0; (i < 15) && (glyph < 205); i++)
 						{
 							properties.Clear ();
-							fp = new Text.Properties.FontProperty ("ZapfDingbats BT", "Regular");
+							fp = new Text.Properties.FontProperty (symbol, "Regular");
 							fp.Features = this.features;
 							properties.Add (fp);
 							properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.SizeUnits.Points));
 							properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 							properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 							properties.Add (new Text.Properties.LeadingProperty (28.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.Free));
-							properties.Add (new Text.Properties.OpenTypeProperty ("ZapfDingbats BT", glyph++));
+							properties.Add (new Text.Properties.OpenTypeProperty (symbol, glyph++));
 							
 							this.painter.TextStory.ConvertToStyledText ("X", properties, out text);
 							this.painter.TextStory.InsertText (cursor, text);
@@ -364,6 +399,7 @@ namespace Epsitec.Common.Drawing
 						this.painter.TextStory.ConvertToStyledText ("\n", properties, out text);
 						this.painter.TextStory.InsertText (cursor, text);
 					}
+#endif
 				}
 				
 				if (this.active_test == 1)
@@ -533,6 +569,21 @@ namespace Epsitec.Common.Drawing
 				
 				this.GenerateText ();
 			}
+			
+			private void HandleCheckButton5ActiveStateChanged(object sender)
+			{
+				CheckButton cb = sender as CheckButton;
+				
+				if (cb.IsActive)
+				{
+					this.painter.FrameRatio = 1.0 / 2.0;
+				}
+				else
+				{
+					this.painter.FrameRatio = 1.0 / 3.0;
+				}
+			}
+			
 			private void HandleRadioButtonActiveStateChanged(object sender)
 			{
 				RadioButton rb = sender as RadioButton;

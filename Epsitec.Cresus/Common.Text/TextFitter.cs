@@ -297,21 +297,23 @@ namespace Epsitec.Common.Text
 			layout.LineSkipBefore            = this.line_skip_before;
 			layout.KeepWithPreviousParagraph = this.keep_with_prev;
 			
-			int paragraph_start = 0;
+			int    paragraph_start_offset      = 0;
+			int    paragraph_start_frame_index = layout.FrameIndex;;
+			double paragraph_start_frame_y     = layout.FrameY;
 			
 restart_paragraph_layout:
 			
-			int line_count = 0;
-			int line_start = paragraph_start;
+			int line_count        = 0;
+			int line_start_offset = paragraph_start_offset;
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
 			bool continuation = false;
 			bool reset_line_h = true;
 			
-			int def_line_count = line_count;
-			int def_line_start = line_start;
-			int def_list_count = list.Count;
+			int def_line_count        = line_count;
+			int def_line_start_offset = line_start_offset;
+			int def_list_count        = list.Count;
 			
 			int    def_frame_index = layout.FrameIndex;
 			double def_frame_y     = layout.FrameY;
@@ -338,7 +340,7 @@ restart_paragraph_layout:
 				switch (status)
 				{
 					case Layout.Status.ErrorNeedMoreText:
-						length = paragraph_start;
+						length = paragraph_start_offset;
 						return;
 					
 					case Layout.Status.ErrorCannotFit:
@@ -359,7 +361,16 @@ restart_paragraph_layout:
 						break;
 					
 					case Layout.Status.RestartParagraphLayout:
-						layout.MoveTo (0, paragraph_start);
+						
+						if (layout.FenceLineCount > 0)
+						{
+							//	Il faut se replacer dans le frame correspondant au début
+							//	du paragraphe en cours :
+							
+							layout.SelectFrame (paragraph_start_frame_index, paragraph_start_frame_y);
+						}
+						
+						layout.MoveTo (0, paragraph_start_offset);
 						goto restart_paragraph_layout;
 					
 					case Layout.Status.RewindParagraphAndRestartLayout:
@@ -369,11 +380,11 @@ restart_paragraph_layout:
 						
 						Debug.Assert.IsTrue (continuation);
 						
-						continuation = false;
-						line_count   = def_line_count;
-						line_start   = def_line_start;
+						continuation      = false;
+						line_count        = def_line_count;
+						line_start_offset = def_line_start_offset;
 						
-						layout.MoveTo (0, line_start);
+						layout.MoveTo (0, line_start_offset);
 						layout.SelectFrame (def_frame_index, def_frame_y);
 						
 						list.RemoveRange (def_list_count, list.Count - def_list_count);
@@ -400,7 +411,7 @@ restart_paragraph_layout:
 						
 						if (tab_status == TabStatus.ErrorNeedMoreText)
 						{
-							length = paragraph_start;
+							length = paragraph_start_offset;
 							return;
 						}
 						else if (tab_status == TabStatus.ErrorNeedMoreRoom)
@@ -451,7 +462,7 @@ restart_paragraph_layout:
 				//	possibles pour la ligne. Il faut maintenant déterminer lequel est le
 				//	meilleur.
 				
-				int offset   = line_start;
+				int offset   = line_start_offset;
 				int n_breaks = result.Count;
 				
 				Layout.StretchProfile profile = null;
@@ -493,7 +504,7 @@ restart_paragraph_layout:
 						end_of_text = true;
 					}
 					
-					element.Length        = offset - line_start;
+					element.Length        = offset - line_start_offset;
 					element.Profile       = profile;
 					element.FrameIndex    = layout.FrameIndex;
 					element.LineBaseX     = layout.StartX;
@@ -510,7 +521,7 @@ restart_paragraph_layout:
 				
 				if (status == Layout.Status.OkTabReached)
 				{
-					line_start = offset;
+					line_start_offset = offset;
 					
 					if (tab_new_line)
 					{
@@ -531,14 +542,14 @@ restart_paragraph_layout:
 						
 						Cursors.FitterCursor.Element element = new Cursors.FitterCursor.Element ();
 						
-						int paragraph_length = this.ComputeParagraphLength (text, line_start);
+						int paragraph_length = this.ComputeParagraphLength (text, line_start_offset);
 						
 						if (paragraph_length < 0)
 						{
 							//	La fin du paragraphe n'a pas pu être trouvée; demande à l'appelant
 							//	une nouvelle passe avec plus de texte.
 							
-							length = paragraph_start;
+							length = paragraph_start_offset;
 							return;
 						}
 						
@@ -558,21 +569,23 @@ restart_paragraph_layout:
 						mark.AddRange (list);
 						list.Clear ();
 						
-						story.MoveCursor (mark, pos + paragraph_start);
+						story.MoveCursor (mark, pos + paragraph_start_offset);
 						
-						line_start      = offset;
-						paragraph_start = offset;
-						line_count      = 0;
+						line_start_offset           = offset;
+						paragraph_start_offset      = offset;
+						paragraph_start_frame_index = layout.FrameIndex;
+						paragraph_start_frame_y     = layout.FrameY;
+						line_count                  = 0;
 					}
 					else
 					{
-						line_start = offset;
+						line_start_offset = offset;
 						line_count++;
 					}
 					
-					def_line_count  = line_count;
-					def_line_start  = line_start;
-					def_list_count  = list.Count;
+					def_line_count        = line_count;
+					def_line_start_offset = line_start_offset;
+					def_list_count        = list.Count;
 					
 					def_frame_index = layout.FrameIndex;
 					def_frame_y     = layout.FrameY;
