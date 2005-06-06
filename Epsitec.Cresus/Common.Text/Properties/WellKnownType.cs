@@ -24,6 +24,8 @@ namespace Epsitec.Common.Text.Properties
 		Underline,
 		Language,
 		
+		OpenType,
+		
 		Other			= 1000000,
 	}
 }

@@ -29,6 +29,15 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public override CombinationMode			CombinationMode
+		{
+			get
+			{
+				return CombinationMode.Invalid;
+			}
+		}
+		
+		
 		public string							EngineName
 		{
 			get

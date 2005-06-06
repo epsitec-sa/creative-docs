@@ -17,7 +17,9 @@ namespace Epsitec.Common.Text
 		#region Bits Class
 		public class Bits
 		{
-			public const ulong	CodeMask		= 0x001FFFFF;
+			public const ulong	CodeMask		= 0x001fffff;
+			public const ulong	FullCodeMask	= 0x00ffffff;
+			
 			public const ulong	CombiningFlag	= 0x00200000;
 			public const ulong	ReorderingFlag	= 0x00400000;
 			public const ulong	SpecialCodeFlag	= 0x00800000;

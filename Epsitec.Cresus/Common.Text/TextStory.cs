@@ -416,6 +416,13 @@ namespace Epsitec.Common.Text
 			
 			this.StyleList.InternalStyleTable.Attach (ref style, search_style, search_local, search_extra);
 			
+			if ((style_acc.RequiresSpecialCodeProcessing) ||
+				(local_acc.RequiresSpecialCodeProcessing) ||
+				(extra_acc.RequiresSpecialCodeProcessing))
+			{
+				Unicode.Bits.SetSpecialCodeFlag (ref style, true);
+			}
+			
 			length      = utf32.Length;
 			styled_text = new ulong[length];
 			

@@ -39,6 +39,14 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public virtual bool						RequiresSpecialCodeProcessing
+		{
+			get
+			{
+				return false;
+			}
+		}
+		
 		
 		public void Invalidate()
 		{

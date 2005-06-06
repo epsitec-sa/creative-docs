@@ -404,6 +404,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\OpenTypeProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\ParagraphStartMode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

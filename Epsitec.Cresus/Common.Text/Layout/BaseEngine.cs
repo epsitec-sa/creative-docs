@@ -124,17 +124,17 @@ namespace Epsitec.Common.Text.Layout
 				
 				if (analyzer.IsControl (code))
 				{
-					temp[i] &= ~ Unicode.Bits.CodeMask;
+					temp[i] &= ~ Unicode.Bits.FullCodeMask;
 				}
 				else if ((code == (int) Unicode.Code.SoftHyphen) &&
 					/**/ (i+1 < length))
 				{
-					temp[i] &= ~ Unicode.Bits.CodeMask;
+					temp[i] &= ~ Unicode.Bits.FullCodeMask;
 				}
 				else if ((code == (int) Unicode.Code.MongolianTodoHyphen) &&
 					/**/ (i != 0))
 				{
-					temp[i] &= ~ Unicode.Bits.CodeMask;
+					temp[i] &= ~ Unicode.Bits.FullCodeMask;
 				}
 			}
 			
@@ -159,17 +159,17 @@ namespace Epsitec.Common.Text.Layout
 				
 				if (analyzer.IsControl (code))
 				{
-					temp[i] &= ~ Unicode.Bits.CodeMask;
+					temp[i] &= ~ Unicode.Bits.FullCodeMask;
 				}
 				else if ((code == (int) Unicode.Code.SoftHyphen) &&
 					/**/ (i+1 < length))
 				{
-					temp[i] &= ~ Unicode.Bits.CodeMask;
+					temp[i] &= ~ Unicode.Bits.FullCodeMask;
 				}
 				else if ((code == (int) Unicode.Code.MongolianTodoHyphen) &&
 					/**/ (i != 0))
 				{
-					temp[i] &= ~ Unicode.Bits.CodeMask;
+					temp[i] &= ~ Unicode.Bits.FullCodeMask;
 				}
 			}
 			

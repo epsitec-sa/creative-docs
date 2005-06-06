@@ -266,8 +266,18 @@ namespace Epsitec.Common.Text.Styles
 		{
 			public Accumulator(Styles.BasePropertyContainer host)
 			{
-				this.host = host;
-				this.hash = new System.Collections.Hashtable ();
+				this.host    = host;
+				this.hash    = new System.Collections.Hashtable ();
+				this.special = false;
+			}
+			
+			
+			public bool							RequiresSpecialCodeProcessing
+			{
+				get
+				{
+					return this.special;
+				}
 			}
 			
 			
@@ -309,6 +319,11 @@ namespace Epsitec.Common.Text.Styles
 					this.hash[type] = property;
 				}
 				
+				if (! this.special)
+				{
+					this.special = property.RequiresSpecialCodeProcessing;
+				}
+				
 				return this;
 			}
 			
@@ -324,6 +339,7 @@ namespace Epsitec.Common.Text.Styles
 			
 			Styles.BasePropertyContainer		host;
 			System.Collections.Hashtable		hash;
+			bool								special;
 		}
 		
 		

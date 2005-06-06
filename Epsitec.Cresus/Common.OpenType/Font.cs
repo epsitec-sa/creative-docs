@@ -91,8 +91,10 @@ namespace Epsitec.Common.OpenType
 			
 			for (int i = 0; i < length; i++)
 			{
-				int code  = 0x001fffff & (int) text[start+i];
-				glyphs[i] = this.GetGlyphIndex (code);
+				ulong bits = text[start+i];
+				int   code = Font.UnicodeMask & (int) bits;
+				
+				glyphs[i] = (bits & Font.TransparentGlyphFlag) == 0 ? this.GetGlyphIndex (code) : (ushort) code;
 			}
 			
 			this.ApplySubstitutions (ref glyphs, ref gl_map);
@@ -138,8 +140,10 @@ namespace Epsitec.Common.OpenType
 			
 			for (int i = 0; i < length; i++)
 			{
-				int code  = 0x001fffff & (int) text[start+i];
-				glyphs[i] = this.GetGlyphIndex (code);
+				ulong bits = text[start+i];
+				int   code = Font.UnicodeMask & (int) bits;
+				
+				glyphs[i] = (bits & Font.TransparentGlyphFlag) == 0 ? this.GetGlyphIndex (code) : (ushort) code;
 			}
 			
 			this.ApplySubstitutions (ref glyphs, ref gl_map);
@@ -170,8 +174,10 @@ namespace Epsitec.Common.OpenType
 			
 			for (int i = 0; i < length; i++)
 			{
-				int code  = 0x001fffff & (int) text[start+i];
-				glyphs[i] = this.GetGlyphIndex (code);
+				ulong bits = text[start+i];
+				int   code = Font.UnicodeMask & (int) bits;
+				
+				glyphs[i] = (bits & Font.TransparentGlyphFlag) == 0 ? this.GetGlyphIndex (code) : (ushort) code;
 			}
 			
 			this.ApplySubstitutions (ref glyphs, ref gl_map);
@@ -834,8 +840,10 @@ namespace Epsitec.Common.OpenType
 			
 			for (int i = 0; i < length; i++)
 			{
-				int code  = 0x001fffff & (int) text[start+i];
-				glyphs[i] = this.GetGlyphIndex (code);
+				ulong bits = text[start+i];
+				int   code = Font.UnicodeMask & (int) bits;
+				
+				glyphs[i] = (bits & Font.TransparentGlyphFlag) == 0 ? this.GetGlyphIndex (code) : (ushort) code;
 			}
 			
 			this.ApplySubstitutions (ref glyphs, ref gl_map);
@@ -1372,6 +1380,8 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		private const int						UnicodeMask				= 0x001fffff;
+		private const int						TransparentGlyphFlag	= 0x00800000;
 		
 		private FontIdentity					identity;
 		private FontData						font_data;

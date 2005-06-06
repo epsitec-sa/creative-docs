@@ -63,6 +63,29 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void GetFont(string name, out OpenType.Font font)
+		{
+			if (this.get_font_cache_name == name)
+			{
+				font = this.get_font_cache_font;
+				return;
+			}
+			
+			OpenType.FontIdentity id = this.font_collection[name];
+			
+			if (id == null)
+			{
+				font = null;
+			}
+			else
+			{
+				this.CreateOrGetFontFromCache (id.InvariantFaceName, id.InvariantStyleName, out font);
+			}
+			
+			this.get_font_cache_name = name;
+			this.get_font_cache_font = font;
+		}
+		
 		public void GetFont(ulong code, out OpenType.Font font, out double font_size)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
@@ -82,19 +105,9 @@ namespace Epsitec.Common.Text
 			Properties.FontProperty     font_p      = style[Properties.WellKnownType.Font] as Properties.FontProperty;
 			Properties.FontSizeProperty font_size_p = style[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
 			
-			string font_face  = font_p.FaceName;
-			string font_style = font_p.StyleName;
-			string font_full  = string.Concat (font_face, "/", font_style);
+			font_size = font_size_p.SizeInPoints;
 			
-			font_size  = font_size_p.SizeInPoints;
-			
-			font = this.font_cache[font_full] as OpenType.Font;
-			
-			if (font == null)
-			{
-				font = this.font_collection.CreateFont (font_face, font_style);
-				this.font_cache[font_full] = font;
-			}
+			this.CreateOrGetFontFromCache (font_p.FaceName, font_p.StyleName, out font);
 			
 			if (font_p.Features == null)
 			{
@@ -330,6 +343,19 @@ namespace Epsitec.Common.Text
 			this.layout_list.NewEngine ("*", typeof (Layout.LineEngine));
 		}
 		
+		private void CreateOrGetFontFromCache(string font_face, string font_style, out OpenType.Font font)
+		{
+			string font_full = string.Concat (font_face, "/", font_style);
+			
+			font = this.font_cache[font_full] as OpenType.Font;
+			
+			if (font == null)
+			{
+				font = this.font_collection.CreateFont (font_face, font_style);
+				this.font_cache[font_full] = font;
+			}
+		}
+		
 		
 		private StyleList						style_list;
 		private LayoutList						layout_list;
@@ -343,6 +369,9 @@ namespace Epsitec.Common.Text
 		private int								get_font_last_style_index;
 		private OpenType.Font					get_font_last_font;
 		private double							get_font_last_font_size;
+		
+		private string							get_font_cache_name;
+		private OpenType.Font					get_font_cache_font;
 		
 		private long							get_color_last_style_version;
 		private ulong							get_color_last_code;
