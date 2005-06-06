@@ -99,6 +99,26 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 4);
 			Debug.Assert.IsTrue (table.TextLength == 5);
 			
+			info_x_0 = table.FindNextCursor (cursor_2, null);
+			info_x_1 = table.FindNextCursor (cursor_3, null);
+			info_x_2 = table.FindNextCursor (cursor_1, null);
+			
+			Debug.Assert.IsTrue (info_x_0.Length == 1);
+			Debug.Assert.IsTrue (info_x_1.Length == 1);
+			Debug.Assert.IsTrue (info_x_2.Length == 0);
+			Debug.Assert.IsTrue (info_x_0[0].CursorId == cursor_3);
+			Debug.Assert.IsTrue (info_x_1[0].CursorId == cursor_1);
+			
+			info_x_0 = table.FindPrevCursor (cursor_2, null);
+			info_x_1 = table.FindPrevCursor (cursor_3, null);
+			info_x_2 = table.FindPrevCursor (cursor_1, null);
+			
+			Debug.Assert.IsTrue (info_x_0.Length == 0);
+			Debug.Assert.IsTrue (info_x_1.Length == 1);
+			Debug.Assert.IsTrue (info_x_2.Length == 1);
+			Debug.Assert.IsTrue (info_x_1[0].CursorId == cursor_2);
+			Debug.Assert.IsTrue (info_x_2[0].CursorId == cursor_3);
+			
 			info_x_0 = table.FindCursorsBefore (5);
 			info_x_1 = table.FindCursorsBefore (4);
 			info_x_2 = table.FindCursorsBefore (3);
@@ -141,6 +161,17 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 2);
 			Debug.Assert.IsTrue (table.TextLength == 2);
 			Debug.Assert.IsNull (c_infos_2);
+			
+			info_x_0 = table.FindPrevCursor (cursor_2, null);
+			info_x_1 = table.FindPrevCursor (cursor_3, null);
+			info_x_2 = table.FindPrevCursor (cursor_1, null);
+			
+			Debug.Assert.IsTrue (info_x_0.Length == 0);
+			Debug.Assert.IsTrue (info_x_1.Length == 1);
+			Debug.Assert.IsTrue (info_x_2.Length == 1);
+			Debug.Assert.IsTrue (info_x_1[0].CursorId == cursor_2);
+			Debug.Assert.IsTrue (info_x_2[0].CursorId == cursor_3);
+			
 			
 			table.MoveCursor (cursor_1, -1);
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 1);
