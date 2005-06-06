@@ -20,9 +20,10 @@ namespace Epsitec.Common.Text
 			public const ulong	CodeMask		= 0x001FFFFF;
 			public const ulong	CombiningFlag	= 0x00200000;
 			public const ulong	ReorderingFlag	= 0x00400000;
+			public const ulong	SpecialCodeFlag	= 0x00800000;
 			
-			public const ulong	InfoMask		= 0x03800000;
-			public const int	InfoShift		= 23;
+			public const ulong	InfoMask		= 0x07000000;
+			public const int	InfoShift		= 24;
 			
 			
 			public static int  GetCode(ulong value)
@@ -73,6 +74,24 @@ namespace Epsitec.Common.Text
 				else
 				{
 					value = value & ~Bits.ReorderingFlag;
+				}
+			}
+			
+			
+			public static bool GetSpecialCodeFlag(ulong value)
+			{
+				return (value & Bits.SpecialCodeFlag) != 0;
+			}
+			
+			public static void SetSpecialCodeFlag(ref ulong value, bool flag)
+			{
+				if (flag)
+				{
+					value = value | Bits.SpecialCodeFlag;
+				}
+				else
+				{
+					value = value & ~Bits.SpecialCodeFlag;
 				}
 			}
 			

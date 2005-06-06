@@ -48,11 +48,11 @@ namespace Epsitec.Common.Text.Tests
 			Properties.FontSizeProperty font_size_cb = font_size_c.GetCombination (font_size_b) as Properties.FontSizeProperty;
 			Properties.FontSizeProperty font_size_bd = font_size_b.GetCombination (font_size_d) as Properties.FontSizeProperty;
 			
-			Debug.Assert.IsTrue (font_size_ab.ToString () == "6/Points");
-			Debug.Assert.IsTrue (font_size_ba.ToString () == "12/Points");
-			Debug.Assert.IsTrue (font_size_ac.ToString () == "10/Points");
-			Debug.Assert.IsTrue (font_size_cb.ToString () == "-1/DeltaPoints");
-			Debug.Assert.IsTrue (font_size_bd.ToString () == "100/Percent");
+			Debug.Assert.IsTrue (font_size_ab.ToString () == "6/pt");
+			Debug.Assert.IsTrue (font_size_ba.ToString () == "12/pt");
+			Debug.Assert.IsTrue (font_size_ac.ToString () == "10/pt");
+			Debug.Assert.IsTrue (font_size_cb.ToString () == "-1/+pt");
+			Debug.Assert.IsTrue (font_size_bd.ToString () == "100/%");
 			
 			Debug.Expect.Exception (new Debug.Method (Ex1), typeof (System.InvalidOperationException));
 		}
@@ -65,6 +65,7 @@ namespace Epsitec.Common.Text.Tests
 			Properties.MarginsProperty margins_c = margins_a.GetCombination (margins_b) as Properties.MarginsProperty;
 			Properties.MarginsProperty margins_d = margins_b.GetCombination (margins_a) as Properties.MarginsProperty;
 			
+			margins_a.Units = Properties.SizeUnits.Points;
 			margins_a.LeftMarginBody  = 10;
 			margins_a.RightMarginBody = 10;
 			
@@ -87,8 +88,8 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (margins_f.LeftMarginBody      == 10.0);
 			Debug.Assert.IsTrue (margins_f.RightMarginBody     == 10.0);
 			
-			Debug.Assert.IsTrue (margins_a.ToString () == "[NaN]/10/[NaN]/10/0/0/0/0/0/[false]");
-			Debug.Assert.IsTrue (margins_b.ToString () == "15/20/0/0/0/0/0/0/0/[false]");
+			Debug.Assert.IsTrue (margins_a.ToString () == "[NaN]/10/[NaN]/10/pt/0/0/0/0/0/[?]");
+			Debug.Assert.IsTrue (margins_b.ToString () == "15/20/0/0/pt/0/0/0/0/0/[false]");
 		}
 		
 		

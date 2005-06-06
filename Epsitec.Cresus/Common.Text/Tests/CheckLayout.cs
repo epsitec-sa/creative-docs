@@ -362,8 +362,8 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[0].Offset == 35);
 			Debug.Assert.IsTrue (breaks[1].Offset == 42);
 			Debug.Assert.IsTrue (breaks[2].Offset == 50);
-			Debug.Assert.IsTrue (System.Math.Round (breaks[0].SpacePenalty) == 68);
-			Debug.Assert.IsTrue (System.Math.Round (breaks[1].SpacePenalty) == 46);
+			Debug.Assert.IsTrue (System.Math.Round (breaks[0].SpacePenalty) == 70);
+			Debug.Assert.IsTrue (System.Math.Round (breaks[1].SpacePenalty) == 38);
 			Debug.Assert.IsTrue (System.Math.Round (breaks[2].SpacePenalty) == 0);
 			
 			

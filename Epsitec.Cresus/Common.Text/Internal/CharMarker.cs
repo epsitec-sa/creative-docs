@@ -6,18 +6,18 @@ namespace Epsitec.Common.Text.Internal
 	/// <summary>
 	/// La classe CharMarker gère l'attribution des marqueurs temporaires
 	/// associés au texte; ces marqueurs sont stockés comme des fanions aux
-	/// bits 24..31 de chaque caractère.
+	/// bits 27..31 de chaque caractère.
 	/// </summary>
 	internal sealed class CharMarker : System.Collections.IEnumerable
 	{
 		public CharMarker()
 		{
-			this.keys = new object[6];
-			this.bits = new ulong[6];
+			this.keys = new object[5];
+			this.bits = new ulong[5];
 			
 			ulong bit = 0x1 << CharMarker.MarkerShift;
 			
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < 5; i++)
 			{
 				this.keys[i] = null;
 				this.bits[i] = bit << i;
@@ -28,14 +28,14 @@ namespace Epsitec.Common.Text.Internal
 		/*
 		 *	Structure d'un caractère en mémoire :
 		 *
-		 *	[bbbb bbb][c:cccc cc][dd:dddd dddd:dddd dddd]:[mmmm mm][ss:s][xx][y yyyy:yyyy yyyy:yyyy yyyy]
+		 *	[bbbb bbb][c:cccc cc][dd:dddd dddd:dddd dddd]:[mmmm m][sss]:[xxx][y yyyy:yyyy yyyy:yyyy yyyy]
 		 *
 		 *	- 63..57 : b,  7-bit, "extra index"			1..100
 		 *	- 56..50 : c,  7-bit, "local index"			1..100
 		 *	- 49..32 : d, 18-bit, "style index"			1..250'000
-		 *	- 31..26 : m,  6-bit, "markers"
-		 *  - 25..23 : s,  3-bit, "line break status"
-		 *  - 22..21 : x,  2-bit, "unicode flags"
+		 *	- 31..27 : m,  6-bit, "markers"
+		 *  - 26..24 : s,  3-bit, "line break status"
+		 *  - 23..21 : x,  3-bit, "unicode & misc. flags"
 		 *	- 20...0 : y, 21-bit, "unicode code"
 		 *
 		 *	- Le "extra index" pointe (au sein du style) sur un descripteur qui
@@ -50,12 +50,14 @@ namespace Epsitec.Common.Text.Internal
 		 *	- Les "markers" sont des bits de marquage temporaire (gérés par la
 		 *	  class CharMarker).
 		 *
-		 *	- Les "unicode flags" et "unicode code" forment le caractère Unicode
-		 *	  à proprement dit.
+		 *	- Les "unicode & misc. flags" encodent des propriétés du caractère
+		 *	  Unicode. Leur manipulation incombe à la classe Unicode.Bits.
+		 * 
+		 *	- Le "unicode code" forme le caractère Unicode à proprement dit.
 		 */
 		
-		public const ulong						MarkerMask  = 0x00000000FC000000ul;
-		public const int						MarkerShift = 26;
+		public const ulong						MarkerMask  = 0x00000000F8000000ul;
+		public const int						MarkerShift = 27;
 		
 		public ulong							this[object key]
 		{

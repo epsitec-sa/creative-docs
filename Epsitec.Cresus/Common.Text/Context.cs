@@ -162,7 +162,7 @@ namespace Epsitec.Common.Text
 			Styles.SimpleStyle   style          = this.style_list[code];
 			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
 			
-			property = extra_settings[Properties.WellKnownType.Language] as Properties.LanguageProperty;
+			property = extra_settings == null ? null : extra_settings[Properties.WellKnownType.Language] as Properties.LanguageProperty;
 			
 			this.get_language_last_style_version = current_style_version;
 			this.get_language_last_code          = code;

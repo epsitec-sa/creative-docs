@@ -828,6 +828,11 @@ restart:
 			if (value > this.line_height)
 			{
 				this.line_height = value;
+				
+				if (this.auto_leading)
+				{
+					this.line_leading = System.Math.Max (this.line_height, this.line_leading);
+				}
 			}
 		}
 		
@@ -1037,7 +1042,11 @@ restart:
 				
 				if (leading_property != null)
 				{
-					if (! double.IsNaN (leading_property.Leading))
+					if (double.IsNaN (leading_property.Leading))
+					{
+						//	Pas d'interligne spécifié : utilise l'interligne automatique.
+					}
+					else
 					{
 						if (leading_property.LeadingUnits == Properties.SizeUnits.Percent)
 						{
@@ -1047,6 +1056,8 @@ restart:
 						{
 							leading = leading_property.LeadingInPoints;
 						}
+						
+						auto_scale = 0;
 					}
 					
 					this.line_space_before = double.IsNaN (leading_property.SpaceBefore) ? 0 : leading_property.SpaceBeforeInPoints;
@@ -1058,6 +1069,7 @@ restart:
 					this.line_space_after  = 0;
 				}
 				
+				this.auto_leading = auto_scale != 0;
 				this.line_leading = leading;
 				this.line_align   = leading_property == null ? Properties.LeadingMode.Free : leading_property.LeadingMode;
 				this.line_height  = System.Math.Max (line_height, leading);
@@ -1331,6 +1343,7 @@ restart:
 		private double							line_height;
 		private double							line_width;
 		private double							line_leading;
+		private bool							auto_leading;
 		private Properties.LeadingMode			line_align;
 		private bool							line_sync_to_grid;
 		private double							line_skip_before;
