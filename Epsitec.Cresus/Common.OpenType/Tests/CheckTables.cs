@@ -18,6 +18,15 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			foreach (FontIdentity font in collection)
 			{
+//				string p_family = font.GetName (OpenType.NameId.PreferredFamily);
+//				string p_sub_f  = font.GetName (OpenType.NameId.PreferredSubfamily);
+//				
+//				if ((p_family != null) ||
+//					(p_sub_f != null))
+//				{
+//					System.Diagnostics.Debug.WriteLine ("La fonte " + font.FullName + " a des infos préférées.");
+//				}
+				
 				string font_face  = font.InvariantFaceName;
 				string font_style = font.InvariantStyleName;
 				

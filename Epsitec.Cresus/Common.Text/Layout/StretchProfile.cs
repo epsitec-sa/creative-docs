@@ -225,7 +225,7 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		public void Add(OpenType.Font font, double size, ulong[] text, int offset, int length)
+		public void Add(Text.Context context, OpenType.Font font, double size, ulong[] text, int offset, int length)
 		{
 			ushort[] glyphs;
 			byte[]   attributes = new byte[length];
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Text.Layout
 				attributes[i] = (byte) Unicode.BreakAnalyzer.GetStretchClass (Unicode.Bits.GetCode (text[i]));
 			}
 			
-			BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, attributes);
+			BaseEngine.GenerateGlyphs (context, font, text, offset, length, out glyphs, attributes);
 			
 			int      count = glyphs.Length;
 			double[] x_pos = new double[count];

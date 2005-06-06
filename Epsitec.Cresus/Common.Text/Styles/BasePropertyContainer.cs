@@ -202,6 +202,23 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
+		public int GetGlyphForSpecialCode(ulong code)
+		{
+			if (this.properties != null)
+			{
+				for (int i = 0; i < this.properties.Length; i++)
+				{
+					if (this.properties[i].RequiresSpecialCodeProcessing)
+					{
+						return properties[i].GetGlyphForSpecialCode (code);
+					}
+				}
+			}
+			
+			return -1;
+		}
+		
+		
 		public Properties.BaseProperty[] FindProperties(System.Type type)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();

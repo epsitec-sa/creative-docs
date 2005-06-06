@@ -319,6 +319,8 @@ namespace Epsitec.Common.OpenType.Platform
 				string name  = log_font_ex.lfFaceName;
 				int    flags = text_metrics.ntmFlags;
 				
+//				System.Diagnostics.Debug.WriteLine (string.Format ("{0} : {1:X8}/{2}/{3}", name, flags, log_font_ex.lfOutPrecision, log_font_ex.elfScript));
+				
 				if ((name.Length > 0) &&
 					(name[0] != '@') &&
 					(log_font_ex.lfOutPrecision == 3) &&
@@ -327,11 +329,12 @@ namespace Epsitec.Common.OpenType.Platform
 					//	Pour le moment, ne conserve que les fontes OpenType purement
 					//	TrueType (on ne sait pas que faire des fontes PostScript).
 					
-					if (((NewTextMetricEx.Flags.TrueType & flags) != 0)/* ||
-						((NewTextMetricEx.Flags.PostScript & flags) != 0)*/)
+					if (((NewTextMetricEx.Flags.TrueType & flags) != 0) ||
+						((NewTextMetricEx.Flags.PostScript & flags) == 0))
 					{
 						if (this.names.Contains (name) == false)
 						{
+//							System.Diagnostics.Debug.WriteLine (string.Format ("{0} : {1:X8}/{2}/{3}", name, flags, log_font_ex.lfOutPrecision, log_font_ex.elfScript));
 							this.names[name] = name;
 						}
 					}

@@ -63,6 +63,33 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public int GetGlyphForSpecialCode(ulong code)
+		{
+			System.Diagnostics.Debug.Assert (Unicode.Bits.GetSpecialCodeFlag (code));
+			
+			ulong stripped_code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			Styles.SimpleStyle   style          = this.style_list[stripped_code];
+			Styles.LocalSettings local_settings = style.GetLocalSettings (stripped_code);
+			Styles.ExtraSettings extra_settings = style.GetExtraSettings (stripped_code);
+			
+			int glyph = -1;
+			
+			if (local_settings != null)
+			{
+				glyph = local_settings.GetGlyphForSpecialCode (code);
+			}
+			
+			if ((glyph == -1) &&
+				(extra_settings != null))
+			{
+				glyph = extra_settings.GetGlyphForSpecialCode (code);
+			}
+			
+			return glyph;
+		}
+		
+		
 		public void GetFont(string name, out OpenType.Font font)
 		{
 			if (this.get_font_cache_name == name)

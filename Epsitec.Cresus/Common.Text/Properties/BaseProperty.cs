@@ -60,6 +60,11 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public virtual int GetGlyphForSpecialCode(ulong code)
+		{
+			return -1;
+		}
+		
 		public abstract Properties.BaseProperty GetCombination(Properties.BaseProperty property);
 		
 		#region IContentsSignatureUpdater Members

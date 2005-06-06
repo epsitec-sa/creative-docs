@@ -218,12 +218,12 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static int GetLocalIndex(ulong code)
 		{
-			return (int)((code >> 50) & 0x000000000000003Ful);
+			return (int)((code >> 50) & 0x000000000000007Ful);
 		}
 		
 		public static int GetExtraIndex(ulong code)
 		{
-			return (int)((code >> 57) & 0x000000000000003Ful);
+			return (int)((code >> 57) & 0x000000000000007Ful);
 		}
 		
 		

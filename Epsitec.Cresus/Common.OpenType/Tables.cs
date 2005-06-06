@@ -985,7 +985,7 @@ namespace Epsitec.Common.OpenType
 			int plat_id = (int) platform;
 			
 			int o_platform_id   = 6;
-			int o_encoding_id   = 8;
+//			int o_encoding_id   = 8;
 			int o_language_id   = 10;
 			int o_name_id       = 12;
 			int o_string_length = 14;
@@ -994,7 +994,7 @@ namespace Epsitec.Common.OpenType
 			for (int i = 0; i < num; i++)
 			{
 				if ((this.ReadInt16 (i*12 + o_platform_id) == plat_id) &&
-					(this.ReadInt16 (i*12 + o_encoding_id) == 0) &&
+/*					(this.ReadInt16 (i*12 + o_encoding_id) == 0) && */
 					(this.ReadInt16 (i*12 + o_language_id) == lang_id) &&
 					(this.ReadInt16 (i*12 + o_name_id)     == name_id))
 				{
@@ -1024,7 +1024,7 @@ namespace Epsitec.Common.OpenType
 			int plat_id = (int) platform;
 			
 			int o_platform_id   = 6;
-			int o_encoding_id   = 8;
+//			int o_encoding_id   = 8;
 			int o_language_id   = 10;
 			int o_name_id       = 12;
 			int o_string_length = 14;
@@ -1033,7 +1033,7 @@ namespace Epsitec.Common.OpenType
 			for (int i = 0; i < num; i++)
 			{
 				if ((this.ReadInt16 (i*12 + o_platform_id) == plat_id) &&
-					((this.ReadInt16 (i*12 + o_encoding_id) == 1) || (plat_id == 0)) &&
+/*					((this.ReadInt16 (i*12 + o_encoding_id) == 1) || (plat_id == 0)) && */
 					(this.ReadInt16 (i*12 + o_language_id) == lang_id) &&
 					(this.ReadInt16 (i*12 + o_name_id)     == name_id))
 				{
@@ -1110,10 +1110,10 @@ namespace Epsitec.Common.OpenType
 		License,
 		LicenseURL,
 		Reserved_0,
-		PreferredFamily,
-		PreferredSubfamily,
+		PreferredFamily,		//	Arial (for "Arial Narrow", "Arial" and "Arial Black")
+		PreferredSubfamily,		//	Black Italic (for "Arial Black Italic")
 		Mac_CompatibleFull,
-		SampleText,
+		SampleText,				//	"The quick brown fox..."
 		PostScriptCID,
 	}
 	#endregion
@@ -1479,6 +1479,22 @@ namespace Epsitec.Common.OpenType
 			int count = this.PairCount;
 			int pow_2 = range;
 			int fence = count * 6;
+			
+			if (range == fence)
+			{
+				//	The OpenType specification says that 'range' is defined as :
+				//
+				//		"The largest power of two less than or equal to the value of nPairs,
+				//		multiplied by the size in bytes of an entry in the table".
+				//
+				//	http://www.microsoft.com/OpenType/OTSpec/kern.htm
+				//
+				//	In case nPairs (= PairCount) is a power of two itself, then we won't
+				//	start at the right place with our bisection; adjust the position in
+				//	order to start right in the middle :
+				
+				range = ((range / 2) / 6) * 6;
+			}
 			
 			for (int i = 0; ; i++)
 			{

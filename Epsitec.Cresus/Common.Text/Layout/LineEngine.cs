@@ -301,7 +301,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					
 					ulong[] temp = this.GetHyphenatedText (text, offset, frag_length, hyphen);
 					
-					BaseEngine.GenerateGlyphsAndStretchClassAttributes (scratch.Font, temp, 0, frag_length + 1, out glyphs, out attr);
+					BaseEngine.GenerateGlyphsAndStretchClassAttributes (context.TextContext, scratch.Font, temp, 0, frag_length + 1, out glyphs, out attr);
 					
 					can_break = true;
 					add_break = true;
@@ -315,7 +315,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				{
 					profile = scratch.StretchProfile;
 					
-					BaseEngine.GenerateGlyphsAndStretchClassAttributes (scratch.Font, text, offset, frag_length, out glyphs, out attr);
+					BaseEngine.GenerateGlyphsAndStretchClassAttributes (context.TextContext, scratch.Font, text, offset, frag_length, out glyphs, out attr);
 					
 					scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize);
 					
@@ -417,11 +417,11 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				
 				attributes[end] = Unicode.BreakAnalyzer.GetStretchClass (temp[end]);
 				
-				BaseEngine.GenerateGlyphs (font, temp, 0, length+1, out glyphs, attributes);
+				BaseEngine.GenerateGlyphs (context.TextContext, font, temp, 0, length+1, out glyphs, attributes);
 			}
 			else
 			{
-				BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, attributes);
+				BaseEngine.GenerateGlyphs (context.TextContext, font, text, offset, length, out glyphs, attributes);
 			}
 			
 			if (glue > 0)
@@ -495,11 +495,11 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				
 				ulong[] temp = this.GetHyphenatedText (text, offset, length, font.GetHyphen ());
 				
-				profile.Add (font, font_size, temp, 0, length + 1);
+				profile.Add (context.TextContext, font, font_size, temp, 0, length + 1);
 			}
 			else
 			{
-				profile.Add (font, font_size, text, offset, length);
+				profile.Add (context.TextContext, font, font_size, text, offset, length);
 			}
 			
 			if (glue > 0)

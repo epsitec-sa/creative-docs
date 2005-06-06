@@ -101,16 +101,16 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public static ushort[] GenerateGlyphs (OpenType.Font font, ulong[] text, int offset, int length)
+		public static ushort[] GenerateGlyphs (Text.Context context, OpenType.Font font, ulong[] text, int offset, int length)
 		{
 			ushort[] glyphs;
 			
-			BaseEngine.GenerateGlyphs (font, text, offset, length, out glyphs, null);
+			BaseEngine.GenerateGlyphs (context, font, text, offset, length, out glyphs, null);
 			
 			return glyphs;
 		}
 		
-		public static void GenerateGlyphs(OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, byte[] attributes)
+		public static void GenerateGlyphs(Text.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, byte[] attributes)
 		{
 			ulong[] temp = new ulong[length];
 			
@@ -120,9 +120,14 @@ namespace Epsitec.Common.Text.Layout
 			
 			for (int i = 0; i < length; i++)
 			{
-				int code = Unicode.Bits.GetCode (temp[i]);
+				ulong bits = temp[i];
+				int   code = Unicode.Bits.GetCode (bits);
 				
-				if (analyzer.IsControl (code))
+				if (Unicode.Bits.GetSpecialCodeFlag (bits))
+				{
+					temp[i] = (ulong) (context.GetGlyphForSpecialCode (bits) | (int) Unicode.Bits.SpecialCodeFlag);
+				}
+				else if (analyzer.IsControl (code))
 				{
 					temp[i] &= ~ Unicode.Bits.FullCodeMask;
 				}
@@ -141,7 +146,7 @@ namespace Epsitec.Common.Text.Layout
 			font.GenerateGlyphs (temp, 0, length, out glyphs, attributes);
 		}
 		
-		public static void GenerateGlyphsAndStretchClassAttributes(OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, out byte[] attributes)
+		public static void GenerateGlyphsAndStretchClassAttributes(Text.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, out byte[] attributes)
 		{
 			ulong[] temp = new ulong[length];
 			
@@ -153,11 +158,16 @@ namespace Epsitec.Common.Text.Layout
 			
 			for (int i = 0; i < length; i++)
 			{
-				attributes[i] = (byte) Unicode.BreakAnalyzer.GetStretchClass (Unicode.Bits.GetCode (temp[i]));
+				ulong bits = temp[i];
+				int   code = Unicode.Bits.GetCode (bits);
 				
-				int code = Unicode.Bits.GetCode (temp[i]);
+				attributes[i] = (byte) Unicode.BreakAnalyzer.GetStretchClass (code);
 				
-				if (analyzer.IsControl (code))
+				if (Unicode.Bits.GetSpecialCodeFlag (bits))
+				{
+					temp[i] = (ulong) (context.GetGlyphForSpecialCode (bits) | (int) Unicode.Bits.SpecialCodeFlag);
+				}
+				else if (analyzer.IsControl (code))
 				{
 					temp[i] &= ~ Unicode.Bits.FullCodeMask;
 				}

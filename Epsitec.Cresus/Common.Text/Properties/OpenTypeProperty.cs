@@ -70,6 +70,12 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public override int GetGlyphForSpecialCode(ulong code)
+		{
+			return this.glyph_index;
+		}
+		
+		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,

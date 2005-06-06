@@ -297,7 +297,7 @@ namespace Epsitec.Common.Drawing
 					properties.Clear ();
 					fp = new Text.Properties.FontProperty ("Arial", "Regular");
 					fp.Features = this.features;
-					properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
+					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, Text.Properties.ThreeState.False));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
@@ -307,7 +307,9 @@ namespace Epsitec.Common.Drawing
 					
 					
 					properties.Clear ();
-					properties.Add (new Text.Properties.FontProperty ("Arial", "Regular"));
+					fp = new Text.Properties.FontProperty ("Arial", "Regular");
+					fp.Features = this.features;
+					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.4, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
@@ -317,16 +319,51 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					
-					words = "Une phrase contenant un \"non\u2011breaking hyphen\" mais aussi un \"soft\u2010hyphen\" au milieu du mot \"Merk\u00ADwürdig\". Voici une césure mongloienne au milieu du mot \"Abra\u1806cadabra\".";
+					words = "Une phrase contenant un \"non\u2011breaking hyphen\" mais aussi un \"soft\u2010hyphen\" au milieu du mot \"Merk\u00ADwürdig\". Voici une césure mongloienne au milieu du mot \"Abra\u1806cadabra\".\n";
 					
 					properties.Clear ();
-					properties.Add (new Text.Properties.FontProperty ("Verdana", "Regular"));
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
+					fp.Features = this.features;
+					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
+					
+					int glyph = 1;
+					
+					while (glyph < 205)
+					{
+						for (int i = 0; (i < 15) && (glyph < 205); i++)
+						{
+							properties.Clear ();
+							fp = new Text.Properties.FontProperty ("ZapfDingbats BT", "Regular");
+							fp.Features = this.features;
+							properties.Add (fp);
+							properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.SizeUnits.Points));
+							properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
+							properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+							properties.Add (new Text.Properties.LeadingProperty (28.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.Free));
+							properties.Add (new Text.Properties.OpenTypeProperty ("ZapfDingbats BT", glyph++));
+							
+							this.painter.TextStory.ConvertToStyledText ("X", properties, out text);
+							this.painter.TextStory.InsertText (cursor, text);
+						}
+						
+						properties.Clear ();
+						fp = new Text.Properties.FontProperty ("Verdana", "Regular");
+						fp.Features = this.features;
+						properties.Add (fp);
+						properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
+						properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
+						properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+						properties.Add (new Text.Properties.LeadingProperty (16.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.Free));
+							
+						this.painter.TextStory.ConvertToStyledText ("\n", properties, out text);
+						this.painter.TextStory.InsertText (cursor, text);
+					}
 				}
 				
 				if (this.active_test == 1)

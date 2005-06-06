@@ -799,6 +799,12 @@ namespace Epsitec.Common.OpenType
 		
 		public ushort GetGlyphIndex(int code)
 		{
+			if ((code == 0) ||
+				(this.ot_index_mapping == null))
+			{
+				return 0xffff;
+			}
+			
 			ushort glyph = this.ot_index_mapping.GetGlyphIndex (code);
 			
 			if (glyph == 0x0000)
@@ -958,6 +964,18 @@ namespace Epsitec.Common.OpenType
 		
 		private void ApplyManualLigatureSubstitutions(ushort[] input_glyphs, int input_length, ushort[] output_glyphs, out int output_length, ref int[] gl_map)
 		{
+			if (this.ot_index_mapping == null)
+			{
+				for (int i = 0; i < input_length; i++)
+				{
+					output_glyphs[i] = input_glyphs[i];
+				}
+				
+				output_length = input_length;
+				
+				return;
+			}
+			
 			int input_offset  = 0;
 			int output_offset = 0;
 			

@@ -19,8 +19,13 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				string face  = this.GetName (NameId.FontFamily);
+				string face  = this.GetName (NameId.PreferredFamily);
 				string style = this.LocaleStyleName;
+				
+				if (face == null)
+				{
+					face = this.GetName (NameId.FontFamily);
+				}
 				
 				if (face.EndsWith (style))
 				{
@@ -35,7 +40,14 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.GetName (NameId.FontSubfamily);
+				string name = this.GetName (NameId.PreferredSubfamily);
+				
+				if (name == null)
+				{
+					name = this.GetName (NameId.FontSubfamily);
+				}
+				
+				return name;
 			}
 		}
 		
@@ -44,8 +56,13 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				string face  = this.GetName (NameId.FontFamily, 1033);
+				string face  = this.GetName (NameId.PreferredFamily, 1033);
 				string style = this.InvariantStyleName;
+				
+				if (face == null)
+				{
+					face = this.GetName (NameId.FontFamily, 1033);
+				}
 				
 				if (face.EndsWith (style))
 				{
@@ -60,7 +77,14 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.GetName (NameId.FontSubfamily, 1033);
+				string name = this.GetName (NameId.PreferredSubfamily, 1033);
+				
+				if (name == null)
+				{
+					name = this.GetName (NameId.FontSubfamily, 1033);
+				}
+				
+				return name;
 			}
 		}
 		
@@ -300,7 +324,7 @@ namespace Epsitec.Common.OpenType
 			
 			if (name == null)
 			{
-				name = this.ot_name.GetLatinName (locale_id, id, PlatformId.Microsoft);
+				name = this.ot_name.GetLatinName (0, id, PlatformId.Macintosh);
 			}
 			
 			return name;
