@@ -667,8 +667,6 @@ restart_paragraph_layout:
 			//	début du paragraphe :
 			
 			this.RecycleFitterCursor (para_1);
-			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Rewinding. Paragraph has {0} lines; skip={1}; fence={4}; frame={2}, y={3}", para_line_count, this.line_skip_before, this.frame_index, this.frame_y, this.line_fence));
 		}
 		
 		

@@ -476,21 +476,15 @@ restart:
 						//	Il n'y a pas assez de lignes de texte consécutives en début
 						//	de paragraphe !
 						
-						System.Diagnostics.Debug.WriteLine ("Paragraph: apply keep start lines rule.");
+						this.fence_line_count = -1;
+						this.frame_first_line = 0;
 						
 						if (this.keep_with_prev_para)
 						{
-							System.Diagnostics.Debug.WriteLine ("++++++++++ apply keep with previous rule.");
-							
-							this.fence_line_count = -1;
-							
 							return Layout.Status.RewindParagraphAndRestartLayout;
 						}
 						
 						this.SelectFrame (frame_index, 0);
-						
-						this.frame_first_line = 0;
-						this.fence_line_count = -1;
 						
 						return Layout.Status.RestartParagraphLayout;
 					}
@@ -501,8 +495,6 @@ restart:
 						//	Le paragraphe ne peut pas être dissocié de celui qui précède.
 						//	Un changement de frame ici va affecter le paragraphe qui
 						//	précède immédiatement (récursivement)
-						
-						System.Diagnostics.Debug.WriteLine ("Paragraph: apply keep with previous rule.");
 						
 						this.fence_line_count = -1;
 						
@@ -590,11 +582,6 @@ restart:
 						goto restart;
 					}
 					
-					if (paragraph_line_count == 0)
-					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("Starting paragraph at y={0}", oy));
-					}
-					
 					this.ox          = ox + this.mx_left;
 					this.oy_base     = oy;
 					this.oy_max      = oy + line_ascender;
@@ -661,8 +648,6 @@ restart:
 							//	seules dans un frame et il y en a moins que le minimum requis.
 							
 							this.fence_line_count = paragraph_line_count + 1 - this.keep_end_lines;
-							
-							System.Diagnostics.Debug.WriteLine (string.Format ("Paragraph: apply keep end lines rule; para.l.count={0}, keep={1} fence={2}", paragraph_line_count, this.keep_end_lines, this.fence_line_count));
 							
 							return Layout.Status.RestartParagraphLayout;
 						}
