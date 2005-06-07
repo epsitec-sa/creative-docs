@@ -295,7 +295,7 @@ namespace Epsitec.Common.Drawing
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
-#if false					
+#if true
 					properties.Clear ();
 					fp = new Text.Properties.FontProperty ("Palatino Linotype", "Regular");
 					fp.Features = this.features;

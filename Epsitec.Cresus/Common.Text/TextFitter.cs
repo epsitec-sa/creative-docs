@@ -202,7 +202,7 @@ namespace Epsitec.Common.Text
 					//	ITextFrame liés à ce TextFitter).
 					
 					int max  = this.story.TextLength;
-					int step = 100;//00;
+					int step = 10000;
 					
 				again:
 					int  length = System.Math.Min (max - pos, step);
@@ -234,8 +234,7 @@ namespace Epsitec.Common.Text
 						
 						Debug.Assert.IsTrue (length < max-pos);
 						
-						step += 10;//000;
-						System.Diagnostics.Debug.WriteLine ("Grow to " + step + " and restart at pos " + pos + "...");
+						step += 10000;
 						goto again;
 					}
 					
@@ -356,6 +355,8 @@ restart_paragraph_layout:
 				switch (status)
 				{
 					case Layout.Status.ErrorNeedMoreText:
+						this.frame_index = paragraph_start_frame_index;
+						this.frame_y     = paragraph_start_frame_y;
 						length = paragraph_start_offset;
 						return;
 					
