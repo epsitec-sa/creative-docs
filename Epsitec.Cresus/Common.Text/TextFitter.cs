@@ -202,7 +202,7 @@ namespace Epsitec.Common.Text
 					//	ITextFrame liés à ce TextFitter).
 					
 					int max  = this.story.TextLength;
-					int step = 10000;
+					int step = 100;//00;
 					
 				again:
 					int  length = System.Math.Min (max - pos, step);
@@ -222,6 +222,7 @@ namespace Epsitec.Common.Text
 						//	position :
 						
 						pos = this.story.GetCursorPosition (cursor);
+						goto again;
 					}
 					
 					if (length == 0)
@@ -233,12 +234,8 @@ namespace Epsitec.Common.Text
 						
 						Debug.Assert.IsTrue (length < max-pos);
 						
-						step += 10000;
-						goto again;
-					}
-					
-					if (restart)
-					{
+						step += 10;//000;
+						System.Diagnostics.Debug.WriteLine ("Grow to " + step + " and restart at pos " + pos + "...");
 						goto again;
 					}
 					
@@ -397,10 +394,12 @@ restart_paragraph_layout:
 						//	Retourne en arrière, jusqu'au début du paragraphe qui précède
 						//	le paragraphe actuel, puis relance l'opération au complet.
 						
-						this.RewindToPreviousParagraph (cursor);
-						restart = true;
+						this.RewindToPreviousParagraph (cursor, pos, paragraph_start_offset);
 						
-						break;
+						restart = true;
+						length  = 0;
+						
+						return;
 					
 					case Layout.Status.RestartLineLayout:
 						
@@ -626,10 +625,21 @@ restart_paragraph_layout:
 		}
 		
 		
-		protected void RewindToPreviousParagraph(Cursors.TempCursor cursor)
+		protected void RewindToPreviousParagraph(Cursors.TempCursor cursor, int position, int offset)
 		{
 			//	TODO: trouver le FitterCursor précédent, reculer le curseur jusqu'à sa
 			//	position et supprimer le FitterCursor.
+			
+			CursorInfo[] info = this.story.TextTable.FindCursorsBefore (position + offset, Cursors.FitterCursor.Filter);
+			
+			Debug.Assert.IsTrue (info.Length == 1);
+			
+			ICursor cursor_instance = this.story.TextTable.GetCursorInstance (info[0].CursorId);
+			Cursors.FitterCursor fitter = cursor_instance as Cursors.FitterCursor;
+			
+			System.Diagnostics.Debug.WriteLine ("Fitter cursor précédent: length=" + fitter.ParagraphLength);
+			
+			this.story.MoveCursor (cursor, offset - fitter.ParagraphLength);
 		}
 		
 		
