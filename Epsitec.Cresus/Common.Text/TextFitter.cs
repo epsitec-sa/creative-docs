@@ -79,6 +79,7 @@ namespace Epsitec.Common.Text
 			this.frame_y     = 0;
 			
 			this.line_skip_before = 0;
+			this.line_fence       = -1;
 			this.keep_with_prev   = false;
 			
 			this.Process (new Execute (this.ExecuteGenerate));
@@ -311,6 +312,7 @@ namespace Epsitec.Common.Text
 			
 			layout.LineSkipBefore            = this.line_skip_before;
 			layout.KeepWithPreviousParagraph = this.keep_with_prev;
+			layout.FenceLineCount            = this.line_fence;
 			
 			int    paragraph_start_offset      = 0;
 			int    paragraph_start_frame_index = layout.FrameIndex;;
@@ -369,12 +371,17 @@ restart_paragraph_layout:
 						break;
 					
 					case Layout.Status.OkFitEnded:
+						
 						continuation = false;
 						reset_line_h = true;
+						
 						this.line_skip_before = layout.LineSpaceAfter;
 						this.keep_with_prev   = layout.KeepWithNextParagraph;
+						this.line_fence       = -1;
+						
 						layout.LineSkipBefore            = this.line_skip_before;
 						layout.KeepWithPreviousParagraph = this.keep_with_prev;
+						
 						break;
 					
 					case Layout.Status.RestartParagraphLayout:
@@ -593,6 +600,7 @@ restart_paragraph_layout:
 						Cursors.FitterCursor mark = this.NewFitterCursor ();
 						
 						mark.AddRange (list);
+						mark.DefineParagraphY (paragraph_start_frame_y);
 						list.Clear ();
 						
 						story.MoveCursor (mark, pos + paragraph_start_offset);
@@ -628,19 +636,89 @@ restart_paragraph_layout:
 		
 		protected void RewindToPreviousParagraph(Cursors.TempCursor cursor, int position, int offset)
 		{
-			//	TODO: trouver le FitterCursor précédent, reculer le curseur jusqu'à sa
-			//	position et supprimer le FitterCursor.
+			Cursors.FitterCursor para_1 = this.GetPreviousFitterCursor (position + offset);
+			Cursors.FitterCursor para_2 = this.GetPreviousFitterCursor (para_1);
 			
-			CursorInfo[] info = this.story.TextTable.FindCursorsBefore (position + offset, Cursors.FitterCursor.Filter);
+			Properties.KeepProperty    keep_1 = this.GetKeepProperty (para_1);
+			Properties.KeepProperty    keep_2 = this.GetKeepProperty (para_2);
+			Properties.LeadingProperty lead_2 = this.GetLeadingProperty (para_2);
 			
-			Debug.Assert.IsTrue (info.Length == 1);
+			Debug.Assert.IsNotNull (para_1);
 			
-			ICursor cursor_instance = this.story.TextTable.GetCursorInstance (info[0].CursorId);
-			Cursors.FitterCursor fitter = cursor_instance as Cursors.FitterCursor;
+			bool keep_1_with_prev = (keep_1 == null) ? false : (keep_1.KeepWithPreviousParagraph == Properties.ThreeState.True);
+			bool keep_2_with_next = (keep_2 == null) ? false : (keep_2.KeepWithNextParagraph == Properties.ThreeState.True);
 			
-			System.Diagnostics.Debug.WriteLine ("Fitter cursor précédent: length=" + fitter.ParagraphLength);
+			Cursors.FitterCursor.Element[] elems = para_1.Elements;
 			
-			this.story.MoveCursor (cursor, offset - fitter.ParagraphLength);
+			int para_line_count = elems.Length;
+			int para_last_line  = para_line_count - 1;
+			int para_length     = para_1.ParagraphLength;
+			
+			this.line_skip_before = ((lead_2 == null) || (double.IsNaN (lead_2.SpaceAfter))) ? 0 : lead_2.SpaceAfterInPoints;
+			this.line_fence       = para_last_line;
+			this.keep_with_prev   = keep_1_with_prev || keep_2_with_next;
+			
+			this.frame_index = elems[0].FrameIndex;
+			this.frame_y     = para_1.ParagraphY;
+			
+			this.story.MoveCursor (cursor, offset - para_length);
+			
+			//	Il faut encore supprimer le curseur correspondant à la marque de
+			//	début du paragraphe :
+			
+			this.RecycleFitterCursor (para_1);
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Rewinding. Paragraph has {0} lines; skip={1}; fence={4}; frame={2}, y={3}", para_line_count, this.line_skip_before, this.frame_index, this.frame_y, this.line_fence));
+		}
+		
+		
+		private Cursors.FitterCursor GetPreviousFitterCursor(int position)
+		{
+			CursorInfo[] info = this.story.TextTable.FindCursorsBefore (position, Cursors.FitterCursor.Filter);
+			
+			if (info.Length < 1)
+			{
+				return null;
+			}
+			
+			return this.story.TextTable.GetCursorInstance (info[0].CursorId) as Cursors.FitterCursor;
+		}
+		
+		private Cursors.FitterCursor GetPreviousFitterCursor(ICursor cursor)
+		{
+			return (cursor == null) ? null : this.GetPreviousFitterCursor (this.story.GetCursorPosition (cursor));
+		}
+		
+		private Properties.KeepProperty GetKeepProperty(ICursor cursor)
+		{
+			if (cursor == null)
+			{
+				return null;
+			}
+			
+			Properties.KeepProperty keep = null;
+			ulong[]                 text = new ulong[1];
+			
+			this.story.ReadText (cursor, 1, text);
+			this.story.TextContext.GetKeep (text[0], out keep);
+			
+			return keep;
+		}
+		
+		private Properties.LeadingProperty GetLeadingProperty(ICursor cursor)
+		{
+			if (cursor == null)
+			{
+				return null;
+			}
+			
+			Properties.LeadingProperty leading = null;
+			ulong[]                    text    = new ulong[1];
+			
+			this.story.ReadText (cursor, 1, text);
+			this.story.TextContext.GetLeading (text[0], out leading);
+			
+			return leading;
 		}
 		
 		
@@ -861,6 +939,7 @@ restart_paragraph_layout:
 		private double							frame_y;
 		
 		private double							line_skip_before;
+		private int								line_fence;
 		private bool							keep_with_prev;
 		
 		private IPageCollection					page_collection;

@@ -449,16 +449,16 @@ namespace Epsitec.Common.Text.Layout
 restart:	
 			if (! continuation)
 			{
+				if (paragraph_line_count == this.fence_line_count)
+				{
+					frame_index++;
+				}
 				if (paragraph_line_count == 0)
 				{
 					//	Sélectionne le frame qui convient pour ce paragraphe (selon
 					//	les réglages de la propriété Keep.ParagraphStartMode) :
 					
 					this.UpdateFrameIndex (ref frame_index, this.frame_y == 0, this.para_start_mode);
-				}
-				else if (paragraph_line_count == this.fence_line_count)
-				{
-					frame_index++;
 				}
 			}
 			
@@ -480,9 +480,9 @@ restart:
 						
 						if (this.keep_with_prev_para)
 						{
-							System.Diagnostics.Debug.WriteLine ("++++++++++++ apply keep with previous rule.");
+							System.Diagnostics.Debug.WriteLine ("++++++++++ apply keep with previous rule.");
 							
-							this.fence_line_count = 0;
+							this.fence_line_count = -1;
 							
 							return Layout.Status.RewindParagraphAndRestartLayout;
 						}
@@ -490,7 +490,7 @@ restart:
 						this.SelectFrame (frame_index, 0);
 						
 						this.frame_first_line = 0;
-						this.fence_line_count = 0;
+						this.fence_line_count = -1;
 						
 						return Layout.Status.RestartParagraphLayout;
 					}
@@ -504,7 +504,7 @@ restart:
 						
 						System.Diagnostics.Debug.WriteLine ("Paragraph: apply keep with previous rule.");
 						
-						this.fence_line_count = 0;
+						this.fence_line_count = -1;
 						
 						return Layout.Status.RewindParagraphAndRestartLayout;
 					}
@@ -590,6 +590,11 @@ restart:
 						goto restart;
 					}
 					
+					if (paragraph_line_count == 0)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Starting paragraph at y={0}", oy));
+					}
+					
 					this.ox          = ox + this.mx_left;
 					this.oy_base     = oy;
 					this.oy_max      = oy + line_ascender;
@@ -665,7 +670,7 @@ restart:
 						if (status == Layout.Status.OkFitEnded)
 						{
 							this.frame_first_line = 0;
-							this.fence_line_count = 0;
+							this.fence_line_count = -1;
 						}
 						
 						return status;
@@ -1382,7 +1387,7 @@ restart:
 		private bool							keep_with_prev_para;
 		private bool							keep_with_next_para;
 		
-		private int								fence_line_count;			//	# ligne du paragraphe où forcer un saut de frame
+		private int								fence_line_count = -1;		//	# ligne du paragraphe où forcer un saut de frame
 		
 		private double							mx_left;
 		private double							mx_right;

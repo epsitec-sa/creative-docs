@@ -36,6 +36,14 @@ namespace Epsitec.Common.Text.Cursors
 			}
 		}
 		
+		public double							ParagraphY
+		{
+			get
+			{
+				return this.paragraph_y;
+			}
+		}
+		
 		public int[]							TextFrameIndexes
 		{
 			get
@@ -88,6 +96,11 @@ namespace Epsitec.Common.Text.Cursors
 			this.elements = null;
 		}
 
+		
+		public void DefineParagraphY(double y)
+		{
+			this.paragraph_y = y;
+		}
 		
 		public void AddRange(System.Collections.IList values)
 		{
@@ -307,5 +320,6 @@ namespace Epsitec.Common.Text.Cursors
 		
 		
 		private Element[]						elements;
+		private double							paragraph_y;
 	}
 }

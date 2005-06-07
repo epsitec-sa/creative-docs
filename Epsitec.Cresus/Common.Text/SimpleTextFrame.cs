@@ -148,7 +148,7 @@ namespace Epsitec.Common.Text
 				//	et vont vers des valeurs négatives, plus on descend. L'arrondi doit
 				//	donc toujours se faire vers une valeur plus basse :
 				
-				oy = System.Math.Floor (oy / this.grid_step) * this.grid_step;
+				oy = System.Math.Floor ((oy + 0.5) / this.grid_step) * this.grid_step;
 				
 				y_top  = oy + ascender + filler / 2;
 				y_bot  = y_top - line_dy;
