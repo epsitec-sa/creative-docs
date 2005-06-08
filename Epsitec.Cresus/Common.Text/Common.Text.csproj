@@ -349,7 +349,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Layout\UnderlineRun.cs"
+                    RelPath = "Layout\UnderlineRecord.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -548,7 +548,11 @@ namespace Epsitec.Common.Text.Tests
 				return true;
 			}
 			
-			public void RenderBegin(Layout.Context context)
+			public void RenderBeginParagraph(Layout.Context context)
+			{
+			}
+			
+			public void RenderBeginLine(Layout.Context context)
 			{
 			}
 			
@@ -583,7 +587,11 @@ namespace Epsitec.Common.Text.Tests
 				}
 			}
 			
-			public void RenderEnd(Layout.Context context)
+			public void RenderEndLine(Layout.Context context)
+			{
+			}
+			
+			public void RenderEndParagraph(Layout.Context context)
 			{
 			}
 			#endregion
@@ -610,7 +618,11 @@ namespace Epsitec.Common.Text.Tests
 				return true;
 			}
 			
-			public void RenderBegin(Layout.Context context)
+			public void RenderBeginParagraph(Layout.Context context)
+			{
+			}
+			
+			public void RenderBeginLine(Layout.Context context)
 			{
 			}
 			
@@ -618,7 +630,11 @@ namespace Epsitec.Common.Text.Tests
 			{
 			}
 			
-			public void RenderEnd(Layout.Context context)
+			public void RenderEndLine(Layout.Context context)
+			{
+			}
+			
+			public void RenderEndParagraph(Layout.Context context)
 			{
 			}
 			#endregion

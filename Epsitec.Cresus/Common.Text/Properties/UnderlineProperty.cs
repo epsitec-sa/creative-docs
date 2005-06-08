@@ -171,9 +171,9 @@ namespace Epsitec.Common.Text.Properties
 		private static bool CompareEqualContents(UnderlineProperty a, UnderlineProperty b)
 		{
 			return a.position_units  == b.position_units
+				&& NumberSupport.Equal (a.position, b.position)
 				&& a.thickness_units == b.thickness_units
-				&& a.position   == b.position
-				&& a.thickness  == b.thickness
+				&& NumberSupport.Equal (a.thickness, b.thickness)
 				&& a.line_class == b.line_class
 				&& a.line_style == b.line_style;
 		}

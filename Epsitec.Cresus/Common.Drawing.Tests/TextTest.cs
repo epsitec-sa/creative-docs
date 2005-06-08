@@ -157,7 +157,11 @@ namespace Epsitec.Common.Drawing
 				return true;
 			}
 			
-			public void RenderBegin(Text.Layout.Context context)
+			public void RenderBeginParagraph(Text.Layout.Context context)
+			{
+			}
+			
+			public void RenderBeginLine(Text.Layout.Context context)
 			{
 				ITextFrame frame = context.Frame;
 				
@@ -195,8 +199,40 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 			
-			public void RenderEnd(Text.Layout.Context context)
+			public void RenderEndLine(Text.Layout.Context context)
 			{
+			}
+			
+			public void RenderEndParagraph(Text.Layout.Context context)
+			{
+				Text.Layout.UnderlineRecord[] records = context.UnderlineRecords;
+				
+				double x1 = 0;
+				double y1 = 0;
+				
+				string color = "Yellow";
+				
+				if (records.Length > 0)
+				{
+					for (int i = 0; i < records.Length; i++)
+					{
+						if ((records[i].Type == Common.Text.Layout.UnderlineRecord.RecordType.LineEnd) ||
+							(records[i].Underlines.Length == 0))
+						{
+							this.graphics.LineWidth = 1.0;
+							this.graphics.AddLine (x1, y1, records[i].X, records[i].Y + records[i].Descender * 0.8);
+							this.graphics.RenderSolid (Drawing.Color.FromName (color));
+						}
+						
+						x1 = records[i].X;
+						y1 = records[i].Y + records[i].Descender * 0.8;
+						
+						if (records[i].Underlines.Length > 0)
+						{
+							color = records[i].Underlines[0].LineStyle;
+						}
+					}
+				}
 			}
 			#endregion
 			
@@ -363,6 +399,69 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					
+					//	Un texte avec quelque passages soulignés...
+					
+					double just = 1.0;
+					double disp = 0.0;
+					
+					properties.Clear ();
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
+					fp.Features = this.features;
+					properties.Add (fp);
+					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
+					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
+					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					
+					this.painter.TextStory.ConvertToStyledText ("Un texte avec quelques ", properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					properties.Clear ();
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
+					fp.Features = this.features;
+					properties.Add (fp);
+					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
+					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
+					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					properties.Add (new Text.Properties.UnderlineProperty (double.NaN, Text.Properties.SizeUnits.None, double.NaN, Text.Properties.SizeUnits.None, "underline", "Black"));
+					
+					this.painter.TextStory.ConvertToStyledText ("passages soulignés", properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					properties.Clear ();
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
+					fp.Features = this.features;
+					properties.Add (fp);
+					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
+					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
+					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					
+					this.painter.TextStory.ConvertToStyledText (" permettant de tester le fonctionnement des divers ", properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					properties.Clear ();
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
+					fp.Features = this.features;
+					properties.Add (fp);
+					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
+					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
+					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					properties.Add (new Text.Properties.UnderlineProperty (double.NaN, Text.Properties.SizeUnits.None, double.NaN, Text.Properties.SizeUnits.None, "wave", "Red"));
+					
+					this.painter.TextStory.ConvertToStyledText ("algoritmes", properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					properties.Clear ();
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
+					fp.Features = this.features;
+					properties.Add (fp);
+					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
+					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
+					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					
+					this.painter.TextStory.ConvertToStyledText ("...\n", properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 #endif
 #if false

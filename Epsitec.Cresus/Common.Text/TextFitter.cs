@@ -110,6 +110,8 @@ namespace Epsitec.Common.Text
 			
 			Layout.Context layout = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
 			
+			renderer.RenderBeginParagraph (layout);
+			
 			int n = c.Elements.Length;
 			
 			for (int i = 0; i < n; i++)
@@ -137,6 +139,11 @@ namespace Epsitec.Common.Text
 						bool is_last = (i == n-1) || (c.Elements[i].IsTabulation);
 						
 						Layout.StretchProfile profile = c.Elements[i].Profile;
+						
+						layout.Y             = oy;
+						layout.LineAscender  = asc;
+						layout.LineDescender = desc;
+						
 						layout.RenderLine (renderer, profile, count, ox, oy, width, i, is_tab, is_last);
 					}
 					else
@@ -147,6 +154,8 @@ namespace Epsitec.Common.Text
 				
 				layout.TextOffset += count;
 			}
+			
+			renderer.RenderEndParagraph (layout);
 		}
 		
 		public void RenderTextFrame(ITextFrame frame, ITextRenderer renderer)
@@ -542,7 +551,7 @@ restart_paragraph_layout:
 					element.Length        = offset - line_start_offset;
 					element.Profile       = profile;
 					element.FrameIndex    = layout.FrameIndex;
-					element.LineBaseX     = layout.StartX;
+					element.LineBaseX     = layout.LineBeginX;
 					element.LineBaseY     = layout.Y;
 					element.LineWidth     = (continuation && !tab_new_line) ? result[result.Count-1].Profile.TotalWidth : layout.AvailableWidth;
 					element.LineAscender  = layout.LineAscender;

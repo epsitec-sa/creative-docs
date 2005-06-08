@@ -153,8 +153,6 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			double  oy = context.Y;
 			ulong[] text;
 			
-			Properties.UnderlineProperty[] underlines = context.UnderlineProperties;
-			
 			if (context.GetTextCopy (context.TextOffset, out text, ref length))
 			{
 				int offset = 0;
@@ -170,6 +168,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					Properties.LayoutProperty layout;
 					
 					context.TextContext.GetLayoutEngine (text[offset], out engine, out layout);
+					context.UpdateUnderlineProperties (offset, ox, true);
 					
 					if ((engine != this) ||
 						(layout != context.LayoutProperty))
@@ -203,6 +202,8 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			//	Nous avons atteint la fin du texte spécifiée par l'appelant. La ligne
 			//	a donc été "rendue" avec succès.
+			
+			context.MoveTo (ox, context.TextOffset + length);
 			
 			return Layout.Status.Ok;
 		}

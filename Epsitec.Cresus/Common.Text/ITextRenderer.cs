@@ -11,8 +11,10 @@ namespace Epsitec.Common.Text
 	{
 		bool IsFrameAreaVisible(ITextFrame frame, double x, double y, double width, double height);
 		
-		void RenderBegin(Layout.Context context);
+		void RenderBeginParagraph(Layout.Context context);
+		void RenderBeginLine(Layout.Context context);
 		void Render(ITextFrame frame, OpenType.Font font, double size, Drawing.Color color, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy);
-		void RenderEnd(Layout.Context context);
+		void RenderEndLine(Layout.Context context);
+		void RenderEndParagraph(Layout.Context context);
 	}
 }

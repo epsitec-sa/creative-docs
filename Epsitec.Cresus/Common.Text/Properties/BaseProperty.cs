@@ -116,12 +116,22 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return true;
 			}
-			if (a.properties.Length != b.properties.Length)
+			if (((a == null) && (b.Length == 0)) ||
+				((b == null) && (a.Length == 0)))
+			{
+				return true;
+			}
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+			if (a.Length != b.Length)
 			{
 				return false;
 			}
 			
-			int n = a.properties.Length;
+			int n = a.Length;
 			
 			for (int i = 0; i < n; i++)
 			{
@@ -142,6 +152,58 @@ namespace Epsitec.Common.Text.Properties
 			{
 				Properties.BaseProperty pa = a[i];
 				Properties.BaseProperty pb = b[i];
+				
+				if (pa.CompareEqualContents (pb) == false)
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
+		public static bool CompareEqualContents(System.Collections.IList a, System.Collections.IList b)
+		{
+			if (a == b)
+			{
+				return true;
+			}
+			if (((a == null) && (b.Count == 0)) ||
+				((b == null) && (a.Count == 0)))
+			{
+				return true;
+			}
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+			if (a.Count != b.Count)
+			{
+				return false;
+			}
+			
+			int n = a.Count;
+			
+			for (int i = 0; i < n; i++)
+			{
+				Properties.BaseProperty pa = a[i] as Properties.BaseProperty;
+				Properties.BaseProperty pb = b[i] as Properties.BaseProperty;
+				
+				if (pa.GetType () != pb.GetType ())
+				{
+					return false;
+				}
+				if (pa.GetContentsSignature () != pb.GetContentsSignature ())
+				{
+					return false;
+				}
+			}
+			
+			for (int i = 0; i < n; i++)
+			{
+				Properties.BaseProperty pa = a[i] as Properties.BaseProperty;
+				Properties.BaseProperty pb = b[i] as Properties.BaseProperty;
 				
 				if (pa.CompareEqualContents (pb) == false)
 				{
