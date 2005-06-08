@@ -354,6 +354,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\AlignMode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\BaseProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -390,11 +395,6 @@
                 />
                 <File
                     RelPath = "Properties\LayoutProperty.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Properties\LeadingMode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

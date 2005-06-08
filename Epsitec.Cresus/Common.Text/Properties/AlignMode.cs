@@ -4,15 +4,14 @@
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// L'énumération LeadingMode définit les modes utilisés pour synchroniser
+	/// L'énumération AlignMode définit les modes utilisés pour synchroniser
 	/// l'interligne avec une grille globale.
 	/// </summary>
-	public enum LeadingMode
+	public enum AlignMode
 	{
 		Undefined,					//	non défini
 		
-		Free,						//	alignment libre
-		
+		AlignNone,					//	sans alignment
 		AlignFirst,					//	aligne la première ligne du paragraphe
 		AlignAll,					//	aligne toutes les lignes du paragraphe
 	}

@@ -548,11 +548,11 @@ namespace Epsitec.Common.Text.Tests
 				return true;
 			}
 			
-			public void RenderBeginParagraph(Layout.Context context)
+			public void RenderStartParagraph(Layout.Context context)
 			{
 			}
 			
-			public void RenderBeginLine(Layout.Context context)
+			public void RenderStartLine(Layout.Context context)
 			{
 			}
 			
@@ -618,11 +618,11 @@ namespace Epsitec.Common.Text.Tests
 				return true;
 			}
 			
-			public void RenderBeginParagraph(Layout.Context context)
+			public void RenderStartParagraph(Layout.Context context)
 			{
 			}
 			
-			public void RenderBeginLine(Layout.Context context)
+			public void RenderStartLine(Layout.Context context)
 			{
 			}
 			

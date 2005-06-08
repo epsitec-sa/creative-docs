@@ -130,11 +130,11 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		public double							LineBeginX
+		public double							LineStartX
 		{
 			get
 			{
-				return this.ox_line_begin;
+				return this.ox_line_start;
 			}
 		}
 		
@@ -469,7 +469,7 @@ namespace Epsitec.Common.Text.Layout
 				this.ox = this.mx_left;
 			}
 			
-			this.ox_line_begin  = this.ox;
+			this.ox_line_start  = this.ox;
 			this.break_anywhere = false;
 			
 			Debug.Assert.IsNotNull (this.layout_engine);
@@ -883,7 +883,7 @@ restart:
 				this.text_glue = 0;
 			}
 			
-			renderer.RenderBeginLine (this);
+			renderer.RenderStartLine (this);
 			
 			if ((this.underline_properties != null) &&
 				(this.underline_properties.Count > 0))
@@ -1211,7 +1211,7 @@ restart:
 				
 				this.auto_leading = auto_scale != 0;
 				this.line_leading = leading;
-				this.line_align   = leading_property == null ? Properties.LeadingMode.Free : leading_property.LeadingMode;
+				this.line_align   = leading_property == null ? Properties.AlignMode.AlignNone : leading_property.AlignMode;
 				this.line_height  = System.Math.Max (line_height, leading);
 			}
 			
@@ -1223,7 +1223,7 @@ restart:
 		{
 			switch (this.line_align)
 			{
-				case Properties.LeadingMode.AlignFirst:
+				case Properties.AlignMode.AlignFirst:
 					if ((paragraph_line_index == 0) ||
 						(this.frame_y == 0))
 					{
@@ -1232,7 +1232,7 @@ restart:
 					}
 					break;
 				
-				case Properties.LeadingMode.AlignAll:
+				case Properties.AlignMode.AlignAll:
 					this.line_sync_to_grid = true;
 					return;
 				
@@ -1475,7 +1475,7 @@ restart:
 		private int								left_to_right;
 		
 		private double							ox;
-		private double							ox_line_begin;
+		private double							ox_line_start;
 		private double							oy_base;
 		private double							oy_max;
 		private double							oy_min;
@@ -1484,7 +1484,7 @@ restart:
 		private double							line_width;
 		private double							line_leading;
 		private bool							auto_leading;
-		private Properties.LeadingMode			line_align;
+		private Properties.AlignMode			line_align;
 		private bool							line_sync_to_grid;
 		private double							line_skip_before;
 		private double							line_space_before;

@@ -10,15 +10,15 @@ namespace Epsitec.Common.Text.Properties
 	/// </summary>
 	public class LeadingProperty : BaseProperty
 	{
-		public LeadingProperty() : this (double.NaN, SizeUnits.None, LeadingMode.Free)
+		public LeadingProperty() : this (double.NaN, SizeUnits.None, AlignMode.AlignNone)
 		{
 		}
 		
-		public LeadingProperty(double leading, SizeUnits leading_units, LeadingMode leading_mode)
+		public LeadingProperty(double leading, SizeUnits leading_units, AlignMode align_mode)
 		{
 			this.leading       = leading;
 			this.leading_units = leading_units;
-			this.leading_mode  = leading_mode;
+			this.align_mode    = align_mode;
 			
 			this.space_before = double.NaN;
 			this.space_after  = double.NaN;
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Text.Properties
 			this.space_after_units  = SizeUnits.None;
 		}
 		
-		public LeadingProperty(double leading, SizeUnits leading_units, double space_before, SizeUnits space_before_units, double space_after, SizeUnits space_after_units, LeadingMode leading_mode)
+		public LeadingProperty(double leading, SizeUnits leading_units, double space_before, SizeUnits space_before_units, double space_after, SizeUnits space_after_units, AlignMode align_mode)
 		{
 			this.leading      = leading;
 			this.space_before = space_before;
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Text.Properties
 			this.space_before_units = space_before_units;
 			this.space_after_units  = space_after_units;
 			
-			this.leading_mode = leading_mode;
+			this.align_mode = align_mode;
 		}
 		
 		
@@ -196,17 +196,17 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public LeadingMode						LeadingMode
+		public AlignMode						AlignMode
 		{
 			get
 			{
-				return this.leading_mode;
+				return this.align_mode;
 			}
 			set
 			{
-				if (this.leading_mode != value)
+				if (this.align_mode != value)
 				{
-					this.leading_mode = value;
+					this.align_mode = value;
 					this.Invalidate ();
 				}
 			}
@@ -222,7 +222,7 @@ namespace Epsitec.Common.Text.Properties
 				/**/				SerializerSupport.SerializeSizeUnits (this.leading_units),
 				/**/				SerializerSupport.SerializeSizeUnits (this.space_before_units),
 				/**/				SerializerSupport.SerializeSizeUnits (this.space_after_units),
-				/**/				SerializerSupport.SerializeEnum (this.leading_mode));
+				/**/				SerializerSupport.SerializeEnum (this.align_mode));
 		}
 		
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
@@ -231,25 +231,25 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 7);
 			
-			double      leading       = SerializerSupport.DeserializeDouble (args[0]);
-			double      space_before  = SerializerSupport.DeserializeDouble (args[1]);
-			double      space_after   = SerializerSupport.DeserializeDouble (args[2]);
+			double    leading       = SerializerSupport.DeserializeDouble (args[0]);
+			double    space_before  = SerializerSupport.DeserializeDouble (args[1]);
+			double    space_after   = SerializerSupport.DeserializeDouble (args[2]);
 			
-			SizeUnits   leading_units      = SerializerSupport.DeserializeSizeUnits (args[3]);
-			SizeUnits   space_before_units = SerializerSupport.DeserializeSizeUnits (args[4]);
-			SizeUnits   space_after_units  = SerializerSupport.DeserializeSizeUnits (args[5]);
+			SizeUnits leading_units      = SerializerSupport.DeserializeSizeUnits (args[3]);
+			SizeUnits space_before_units = SerializerSupport.DeserializeSizeUnits (args[4]);
+			SizeUnits space_after_units  = SerializerSupport.DeserializeSizeUnits (args[5]);
 			
-			LeadingMode leading_mode = (LeadingMode) SerializerSupport.DeserializeEnum (typeof (LeadingMode), args[6]);
+			AlignMode align_mode = (AlignMode) SerializerSupport.DeserializeEnum (typeof (AlignMode), args[6]);
 			
-			this.leading       = leading;
-			this.space_before  = space_before;
-			this.space_after   = space_after;
+			this.leading      = leading;
+			this.space_before = space_before;
+			this.space_after  = space_after;
 			
 			this.leading_units      = leading_units;
 			this.space_before_units = space_before_units;
 			this.space_after_units  = space_after_units;
 			
-			this.leading_mode  = leading_mode;
+			this.align_mode   = align_mode;
 		}
 		
 		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
@@ -264,7 +264,7 @@ namespace Epsitec.Common.Text.Properties
 			UnitsTools.Combine (a.space_before, a.space_before_units, b.space_before, b.space_before_units, out c.space_before, out c.space_before_units);
 			UnitsTools.Combine (a.space_after,  a.space_after_units,  b.space_after,  b.space_after_units,  out c.space_after,  out c.space_after_units);
 			
-			c.leading_mode = b.leading_mode == LeadingMode.Undefined ? a.leading_mode : b.leading_mode;
+			c.align_mode = b.align_mode == AlignMode.Undefined ? a.align_mode : b.align_mode;
 			
 			return c;
 		}
@@ -277,7 +277,7 @@ namespace Epsitec.Common.Text.Properties
 			checksum.UpdateValue ((int) this.leading_units);
 			checksum.UpdateValue ((int) this.space_before_units);
 			checksum.UpdateValue ((int) this.space_after_units);
-			checksum.UpdateValue ((int) this.leading_mode);
+			checksum.UpdateValue ((int) this.align_mode);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Text.Properties
 				&& a.leading_units      == b.leading_units
 				&& a.space_before_units == b.space_before_units
 				&& a.space_after_units  == b.space_after_units
-				&& a.leading_mode       == b.leading_mode;
+				&& a.align_mode         == b.align_mode;
 		}
 		
 		
@@ -307,6 +307,6 @@ namespace Epsitec.Common.Text.Properties
 		private double							space_after;
 		private SizeUnits						space_after_units;
 		
-		private LeadingMode						leading_mode;
+		private AlignMode						align_mode;
 	}
 }

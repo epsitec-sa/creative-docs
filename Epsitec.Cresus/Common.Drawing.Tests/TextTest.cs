@@ -157,11 +157,11 @@ namespace Epsitec.Common.Drawing
 				return true;
 			}
 			
-			public void RenderBeginParagraph(Text.Layout.Context context)
+			public void RenderStartParagraph(Text.Layout.Context context)
 			{
 			}
 			
-			public void RenderBeginLine(Text.Layout.Context context)
+			public void RenderStartLine(Text.Layout.Context context)
 			{
 				ITextFrame frame = context.Frame;
 				
@@ -209,6 +209,9 @@ namespace Epsitec.Common.Drawing
 				
 				double x1 = 0;
 				double y1 = 0;
+				
+				//	Dans ce test, la couleur est stockée directement comme LineStyle pour la propriété
+				//	"underline".
 				
 				string color = "Yellow";
 				
@@ -325,7 +328,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
-					properties.Add (new Text.Properties.LeadingProperty (10.0, Text.Properties.SizeUnits.Points, 15.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.Free));
+					properties.Add (new Text.Properties.LeadingProperty (10.0, Text.Properties.SizeUnits.Points, 15.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.AlignNone));
 					
 					words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
 					
@@ -341,7 +344,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.MarginsProperty (10, 10, 10, 10, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Blue")));
 					properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
-					properties.Add (new Text.Properties.LeadingProperty (24.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.AlignAll));
+					properties.Add (new Text.Properties.LeadingProperty (24.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.AlignAll));
 					properties.Add (new Text.Properties.KeepProperty (3, 2, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
 					
 					this.painter.TextStory.ConvertToStyledText (words + "Titre sur deux lignes pour voir\n", properties, out text);
@@ -356,7 +359,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 1.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
-					properties.Add (new Text.Properties.LeadingProperty (4.0, Text.Properties.SizeUnits.Millimeters, 1.0, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.AlignFirst));
+					properties.Add (new Text.Properties.LeadingProperty (4.0, Text.Properties.SizeUnits.Millimeters, 1.0, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.AlignFirst));
 					properties.Add (new Text.Properties.KeepProperty (3, 3, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.True, Text.Properties.ThreeState.False));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
@@ -382,7 +385,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.4, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
-					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.Free));
+					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.AlignNone));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -479,7 +482,7 @@ namespace Epsitec.Common.Drawing
 							properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.SizeUnits.Points));
 							properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 							properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
-							properties.Add (new Text.Properties.LeadingProperty (28.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.Free));
+							properties.Add (new Text.Properties.LeadingProperty (28.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.AlignNone));
 							properties.Add (new Text.Properties.OpenTypeProperty (symbol, glyph++));
 							
 							this.painter.TextStory.ConvertToStyledText ("X", properties, out text);
@@ -493,7 +496,7 @@ namespace Epsitec.Common.Drawing
 						properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 						properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 						properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
-						properties.Add (new Text.Properties.LeadingProperty (16.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.LeadingMode.Free));
+						properties.Add (new Text.Properties.LeadingProperty (16.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.AlignNone));
 							
 						this.painter.TextStory.ConvertToStyledText ("\n", properties, out text);
 						this.painter.TextStory.InsertText (cursor, text);

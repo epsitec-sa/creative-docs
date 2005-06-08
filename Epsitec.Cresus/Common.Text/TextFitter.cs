@@ -110,7 +110,7 @@ namespace Epsitec.Common.Text
 			
 			Layout.Context layout = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
 			
-			renderer.RenderBeginParagraph (layout);
+			renderer.RenderStartParagraph (layout);
 			
 			int n = c.Elements.Length;
 			
@@ -551,7 +551,7 @@ restart_paragraph_layout:
 					element.Length        = offset - line_start_offset;
 					element.Profile       = profile;
 					element.FrameIndex    = layout.FrameIndex;
-					element.LineBaseX     = layout.LineBeginX;
+					element.LineBaseX     = layout.LineStartX;
 					element.LineBaseY     = layout.Y;
 					element.LineWidth     = (continuation && !tab_new_line) ? result[result.Count-1].Profile.TotalWidth : layout.AvailableWidth;
 					element.LineAscender  = layout.LineAscender;
