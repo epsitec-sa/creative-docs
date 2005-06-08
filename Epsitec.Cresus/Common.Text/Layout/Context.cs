@@ -489,12 +489,12 @@ namespace Epsitec.Common.Text.Layout
 			
 			this.text_profile = new StretchProfile ();
 			
-			double def_line_height = 0;
-			double def_line_width  = 0;
-			
 			int frame_index = this.frame_index;
 			
 restart:	
+			double def_line_height = 0;
+			double def_line_width  = 0;
+			
 			if (! continuation)
 			{
 				if (paragraph_line_count == this.fence_line_count)
