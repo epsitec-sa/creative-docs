@@ -391,7 +391,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					
-					words = "Une phrase contenant un \"non\u2011breaking hyphen\" mais aussi un \"soft\u2010hyphen\" au milieu du mot \"Merk\u00ADwürdig\". Voici une césure mongloienne au milieu du mot \"Abra\u1806cadabra\".\n";
+					words = "Une phrase contenant un \"non\u2011breaking hyphen\" mais aussi un \"soft\u2010hyphen\" au milieu du mot \"Merk\u00ADwürdig\". Voici une césure mongloienne au milieu du mot \"Abra\u1806cadabra\". <\uFFFC>\n";
 					
 					properties.Clear ();
 					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
@@ -497,7 +497,7 @@ namespace Epsitec.Common.Drawing
 						properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 						properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 						properties.Add (new Text.Properties.LeadingProperty (16.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
-							
+						
 						this.painter.TextStory.ConvertToStyledText ("\n", properties, out text);
 						this.painter.TextStory.InsertText (cursor, text);
 					}

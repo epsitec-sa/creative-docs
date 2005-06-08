@@ -61,8 +61,18 @@ namespace Epsitec.Common.Text.Layout
 			
 			ulong code = Internal.CharMarker.ExtractStyleAndSettings (text[start]);
 			
+			if (Unicode.Bits.GetCode (text[start]) == (int) Unicode.Code.ObjectReplacement)
+			{
+				return 1;
+			}
+			
 			for (int i = 1; i < length; i++)
 			{
+				if (Unicode.Bits.GetCode (text[start+i]) == (int) Unicode.Code.ObjectReplacement)
+				{
+					return i;
+				}
+				
 				if (Internal.CharMarker.ExtractStyleAndSettings (text[start+i]) != code)
 				{
 					return i;
@@ -185,6 +195,7 @@ namespace Epsitec.Common.Text.Layout
 			
 			font.GenerateGlyphs (temp, 0, length, out glyphs, attributes);
 		}
+		
 		
 		#region IDisposable Members
 		public void Dispose()

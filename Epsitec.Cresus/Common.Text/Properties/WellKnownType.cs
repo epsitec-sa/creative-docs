@@ -20,6 +20,7 @@ namespace Epsitec.Common.Text.Properties
 		Leading,
 		Keep,
 		Tab,
+		Image,
 		
 		Underline,
 		Language,

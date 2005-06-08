@@ -4,7 +4,8 @@
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// Summary description for ColorProperty.
+	/// La classe ColorProperty définit la couleur à appliquer au corps
+	/// du texte.
 	/// </summary>
 	public class ColorProperty : BaseProperty
 	{

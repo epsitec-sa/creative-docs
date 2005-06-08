@@ -169,6 +169,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IGlyphRenderer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IPageCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -380,6 +385,11 @@
                 />
                 <File
                     RelPath = "Properties\FontSizeProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\ImageProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

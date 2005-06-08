@@ -90,6 +90,37 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void DefineResource(string name, IGlyphRenderer renderer)
+		{
+			if (this.resources == null)
+			{
+				this.resources = new System.Collections.Hashtable ();
+			}
+			
+			this.resources[name] = renderer;
+		}
+		
+		public void RemoveResource(string name)
+		{
+			if ((this.resources != null) &&
+				(this.resources.Contains (name)))
+			{
+				this.resources.Remove (name);
+			}
+		}
+		
+		
+		public IGlyphRenderer FindResource(string name)
+		{
+			if (this.resources != null)
+			{
+				return this.resources[name] as IGlyphRenderer;
+			}
+			
+			return null;
+		}
+		
+		
 		public void GetFont(string name, out OpenType.Font font)
 		{
 			if (this.get_font_cache_name == name)
@@ -426,6 +457,8 @@ namespace Epsitec.Common.Text
 		
 		private OpenType.FontCollection			font_collection;
 		private System.Collections.Hashtable	font_cache;
+		
+		private System.Collections.Hashtable	resources;
 		
 		private long							get_font_last_style_version;
 		private int								get_font_last_style_index;
