@@ -11,8 +11,8 @@ namespace Epsitec.Common.Text.Properties
 	{
 		Undefined,					//	non défini
 		
-		AlignNone,					//	sans alignment
-		AlignFirst,					//	aligne la première ligne du paragraphe
-		AlignAll,					//	aligne toutes les lignes du paragraphe
+		None,						//	sans alignment
+		First,						//	aligne la première ligne du paragraphe
+		All,						//	aligne toutes les lignes du paragraphe
 	}
 }

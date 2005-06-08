@@ -1211,7 +1211,7 @@ restart:
 				
 				this.auto_leading = auto_scale != 0;
 				this.line_leading = leading;
-				this.line_align   = leading_property == null ? Properties.AlignMode.AlignNone : leading_property.AlignMode;
+				this.line_align   = leading_property == null ? Properties.AlignMode.None : leading_property.AlignMode;
 				this.line_height  = System.Math.Max (line_height, leading);
 			}
 			
@@ -1223,7 +1223,7 @@ restart:
 		{
 			switch (this.line_align)
 			{
-				case Properties.AlignMode.AlignFirst:
+				case Properties.AlignMode.First:
 					if ((paragraph_line_index == 0) ||
 						(this.frame_y == 0))
 					{
@@ -1232,7 +1232,7 @@ restart:
 					}
 					break;
 				
-				case Properties.AlignMode.AlignAll:
+				case Properties.AlignMode.All:
 					this.line_sync_to_grid = true;
 					return;
 				

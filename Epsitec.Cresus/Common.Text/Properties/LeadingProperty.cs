@@ -10,7 +10,7 @@ namespace Epsitec.Common.Text.Properties
 	/// </summary>
 	public class LeadingProperty : BaseProperty
 	{
-		public LeadingProperty() : this (double.NaN, SizeUnits.None, AlignMode.AlignNone)
+		public LeadingProperty() : this (double.NaN, SizeUnits.None, AlignMode.None)
 		{
 		}
 		
