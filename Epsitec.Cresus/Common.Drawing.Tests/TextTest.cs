@@ -31,7 +31,7 @@ namespace Epsitec.Common.Drawing
 		
 		
 		
-		private class Painter : Widget, ITextRenderer
+		public class Painter : Widget, ITextRenderer
 		{
 			public Painter()
 			{
@@ -72,6 +72,14 @@ namespace Epsitec.Common.Drawing
 						this.UpdateFrameSizes ();
 						this.Invalidate ();
 					}
+				}
+			}
+			
+			public Graphics						Graphics
+			{
+				get
+				{
+					return this.graphics;
 				}
 			}
 			
@@ -391,7 +399,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					
-					words = "Une phrase contenant un \"non\u2011breaking hyphen\" mais aussi un \"soft\u2010hyphen\" au milieu du mot \"Merk\u00ADwürdig\". Voici une césure mongloienne au milieu du mot \"Abra\u1806cadabra\". <\uFFFC>\n";
+					words = "Une phrase contenant un \"non\u2011breaking hyphen\" mais aussi un \"soft\u2010hyphen\" au milieu du mot \"Merk\u00ADwürdig\". Voici une césure mongloienne au milieu du mot \"Abra\u1806cadabra\".\n";
 					
 					properties.Clear ();
 					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
@@ -400,10 +408,25 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
+					this.painter.TextStory.ConvertToStyledText (">", properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					this.painter.TextStory.TextContext.DefineResource ("image1", new ImageRenderer (this.painter));
+					
+					properties.Add (new Text.Properties.ImageProperty ("image1", this.painter.TextStory.TextContext));
+					
+					this.painter.TextStory.ConvertToStyledText ("\uFFFC", properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					properties.RemoveAt (properties.Count-1);
+					
+					this.painter.TextStory.ConvertToStyledText ("<\n", properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
 					
 					//	Un texte avec quelque passages soulignés...
 					
@@ -696,6 +719,42 @@ namespace Epsitec.Common.Drawing
 					this.GenerateText ();
 				}
 			}
+		}
+
+		public class ImageRenderer : Text.IGlyphRenderer
+		{
+			public ImageRenderer(Painter painter)
+			{
+				this.painter = painter;
+			}
+			
+			
+			#region IGlyphRenderer Members
+			public bool GetGeometry(out double ascender, out double descender, out double advance, out double x1, out double x2)
+			{
+				System.Diagnostics.Debug.WriteLine ("ImageRenderer.GetGeometry called.");
+				
+				ascender  =  40;
+				descender = -20;
+				advance   = 100;
+				x1        =   0;
+				x2        = 100;
+				
+				return true;
+			}
+			
+			public void RenderGlyph(ITextFrame frame, double x, double y)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("ImageRenderer.RenderGlyph called at {0}:{1}", x, y));
+				
+				Graphics graphics = this.painter.Graphics;
+				
+				graphics.AddFilledRectangle (x, y - 20, 100, 60);
+				graphics.RenderSolid (Drawing.Color.FromRGB (0, 1.0, 0.5));
+			}
+			#endregion
+			
+			private Painter						painter;
 		}
 	}
 }

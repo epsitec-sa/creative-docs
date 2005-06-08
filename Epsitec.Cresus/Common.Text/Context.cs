@@ -89,7 +89,6 @@ namespace Epsitec.Common.Text
 			return glyph;
 		}
 		
-		
 		public void DefineResource(string name, IGlyphRenderer renderer)
 		{
 			if (this.resources == null)
@@ -395,6 +394,22 @@ namespace Epsitec.Common.Text
 			property = extra_settings[Properties.WellKnownType.Tab] as Properties.TabProperty;
 		}
 		
+		public void GetImage(ulong code, out Properties.ImageProperty property)
+		{
+			ulong stripped_code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			Styles.SimpleStyle   style          = this.style_list[stripped_code];
+			Styles.LocalSettings local_settings = style.GetLocalSettings (stripped_code);
+			
+			if (local_settings != null)
+			{
+				property = local_settings[Properties.WellKnownType.Image] as Properties.ImageProperty;
+			}
+			else
+			{
+				property = null;
+			}
+		}
 		
 		#region Markers Class
 		public class Markers

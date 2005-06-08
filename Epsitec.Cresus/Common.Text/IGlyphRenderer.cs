@@ -10,5 +10,6 @@ namespace Epsitec.Common.Text
 	public interface IGlyphRenderer
 	{
 		bool GetGeometry(out double ascender, out double descender, out double advance, out double x1, out double x2);
+		void RenderGlyph(ITextFrame frame, double x, double y);
 	}
 }

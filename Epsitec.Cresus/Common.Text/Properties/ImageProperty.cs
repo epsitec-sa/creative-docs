@@ -18,6 +18,11 @@ namespace Epsitec.Common.Text.Properties
 			this.image_name = image_name;
 		}
 		
+		public ImageProperty(string image_name, Context context) : this (image_name)
+		{
+			this.SetupImageRenderer (context);
+		}
+		
 		
 		public override WellKnownType			WellKnownType
 		{
@@ -119,6 +124,14 @@ namespace Epsitec.Common.Text.Properties
 			}
 			
 			return this.image_renderer.GetGeometry (out ascender, out descender, out advance, out x1, out x2);
+		}
+		
+		public void RenderGlyph(ITextFrame frame, double x, double y)
+		{
+			if (this.image_renderer != null)
+			{
+				this.image_renderer.RenderGlyph (frame, x, y);
+			}
 		}
 		#endregion
 		

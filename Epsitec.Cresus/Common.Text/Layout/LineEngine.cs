@@ -276,6 +276,39 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			int text_length = scratch.TextLength;
 			int frag_length = 0;
 			
+			if ((run_length == 1) &&
+				(Unicode.Bits.GetCode (text[offset]) == (int) Unicode.Code.ObjectReplacement))
+			{
+				System.Diagnostics.Debug.WriteLine ("FitRun processing ObjectReplacement code");
+				
+				Properties.ImageProperty image;
+				profile = scratch.StretchProfile;
+				
+				context.TextContext.GetImage (text[offset], out image);
+				
+				double ascender;
+				double descender;
+				double advance;
+				double x1, x2;
+				
+				image.GetGeometry (out ascender, out descender, out advance, out x1, out x2);
+				
+				context.RecordAscender (ascender);
+				context.RecordDescender (descender);
+				context.RecordLineHeight (ascender - descender);
+				
+				scratch.TextWidth = advance;
+				
+				profile.Add (Unicode.StretchClass.NoStretch, advance);
+				
+				if (scratch.Advance+scratch.TextWidth > scratch.FenceMaxX)
+				{
+					return true;
+				}
+				
+				return false;
+			}
+			
 			while (frag_length < run_length)
 			{
 				double break_penalty;
@@ -379,6 +412,29 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 
 		private void RenderRun(Layout.Context context, ITextRenderer renderer, ref double ox, double oy, ulong[] text, int offset, int length, bool last_run)
 		{
+			if ((length == 1) &&
+				(Unicode.Bits.GetCode (text[offset]) == (int) Unicode.Code.ObjectReplacement))
+			{
+				System.Diagnostics.Debug.WriteLine ("RenderRun processing ObjectReplacement code");
+				
+				Properties.ImageProperty image;
+				
+				context.TextContext.GetImage (text[offset], out image);
+				
+				double ascender;
+				double descender;
+				double advance;
+				double x1, x2;
+				
+				image.GetGeometry (out ascender, out descender, out advance, out x1, out x2);
+				image.RenderGlyph (context.Frame, ox, oy);
+				
+				ox += advance;
+				
+				return;
+			}
+			
+			
 			//	Détermine la fonte qu'il faudra utiliser pour le fragment de texte
 			//	dont il faut faire le rendu :
 			
