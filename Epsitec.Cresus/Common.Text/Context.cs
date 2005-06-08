@@ -253,6 +253,41 @@ namespace Epsitec.Common.Text
 			this.get_keep_last_property      = property;
 		}
 		
+		public void GetUnderlines(ulong code, System.Collections.ArrayList properties)
+		{
+			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			long current_style_version = this.style_list.InternalStyleTable.Version;
+			
+			if ((this.get_underlines_last_style_version != current_style_version) ||
+				(this.get_underlines_last_code != code))
+			{
+				Styles.SimpleStyle style = this.style_list[code];
+				
+				Properties.BaseProperty[] base_props = null;
+				Styles.ExtraSettings  extra_settings = style.GetExtraSettings (code);
+				
+				if (extra_settings != null)
+				{
+					base_props = extra_settings.FindProperties (Properties.WellKnownType.Underline);
+					
+					System.Array.Sort (base_props, Properties.UnderlineProperty.Comparer);
+				}
+				
+				this.get_underlines_last_style_version = current_style_version;
+				this.get_underlines_last_code          = code;
+				this.get_underlines_last_properties    = base_props;
+			}
+			
+			properties.Clear ();
+			
+			if ((this.get_underlines_last_properties != null) &&
+				(this.get_underlines_last_properties.Length > 0))
+			{
+				properties.AddRange (this.get_underlines_last_properties);
+			}
+		}
+		
 		public void GetLayoutEngine(ulong code, out Layout.BaseEngine engine, out Properties.LayoutProperty property)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
@@ -415,6 +450,10 @@ namespace Epsitec.Common.Text
 		private long							get_keep_last_style_version;
 		private int								get_keep_last_style_index;
 		private Properties.KeepProperty			get_keep_last_property;
+		
+		private long							get_underlines_last_style_version;
+		private ulong							get_underlines_last_code;
+		private Properties.BaseProperty[]		get_underlines_last_properties;
 		
 		private long							get_layout_last_style_version;
 		private int								get_layout_last_style_index;

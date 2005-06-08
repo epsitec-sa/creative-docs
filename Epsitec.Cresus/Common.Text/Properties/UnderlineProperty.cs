@@ -14,14 +14,18 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public UnderlineProperty(double position, SizeUnits position_units, double thickness, SizeUnits thickness_units, string line_style)
+		public UnderlineProperty(double position, SizeUnits position_units, double thickness, SizeUnits thickness_units, string line_class, string line_style)
 		{
 			this.position_units  = position_units;
+			this.position        = position;
 			this.thickness_units = thickness_units;
+			this.thickness       = thickness;
 			
-			this.position   = this.position;
-			this.thickness  = this.thickness;
+			this.line_class = line_class;
 			this.line_style = line_style;
+			
+			System.Diagnostics.Debug.Assert (UnitsTools.IsAbsoluteSize (this.position_units)  || this.position_units == SizeUnits.None);
+			System.Diagnostics.Debug.Assert (UnitsTools.IsAbsoluteSize (this.thickness_units) || this.thickness_units == SizeUnits.None);
 		}
 		
 		
@@ -38,6 +42,14 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return PropertyType.ExtraSetting;
+			}
+		}
+		
+		public override CombinationMode			CombinationMode
+		{
+			get
+			{
+				return CombinationMode.Accumulate;
 			}
 		}
 		
@@ -74,11 +86,28 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public string							LineClass
+		{
+			get
+			{
+				return this.line_class;
+			}
+		}
+		
 		public string							LineStyle
 		{
 			get
 			{
 				return this.line_style;
+			}
+		}
+		
+		
+		public static System.Collections.IComparer	Comparer
+		{
+			get
+			{
+				return new UnderlineComparer ();
 			}
 		}
 		
@@ -90,6 +119,7 @@ namespace Epsitec.Common.Text.Properties
 				/**/				SerializerSupport.SerializeSizeUnits (this.thickness_units),
 				/**/				SerializerSupport.SerializeDouble (this.position),
 				/**/				SerializerSupport.SerializeDouble (this.thickness),
+				/**/				SerializerSupport.SerializeString (this.line_class),
 				/**/				SerializerSupport.SerializeString (this.line_style));
 		}
 
@@ -97,13 +127,14 @@ namespace Epsitec.Common.Text.Properties
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 5);
+			Debug.Assert.IsTrue (args.Length == 6);
 			
 			SizeUnits position_units  = SerializerSupport.DeserializeSizeUnits (args[0]);
 			SizeUnits thickness_units = SerializerSupport.DeserializeSizeUnits (args[1]);
 			double    position        = SerializerSupport.DeserializeDouble (args[2]);
 			double    thickness       = SerializerSupport.DeserializeDouble (args[3]);
-			string    line_style      = SerializerSupport.DeserializeString (args[4]);
+			string    line_class      = SerializerSupport.DeserializeString (args[4]);
+			string    line_style      = SerializerSupport.DeserializeString (args[5]);
 			
 			this.position_units  = position_units;
 			this.thickness_units = thickness_units;
@@ -111,6 +142,7 @@ namespace Epsitec.Common.Text.Properties
 			this.position   = position;
 			this.thickness  = thickness;
 			
+			this.line_class = line_class;
 			this.line_style = line_style;
 		}
 		
@@ -126,6 +158,7 @@ namespace Epsitec.Common.Text.Properties
 			checksum.UpdateValue ((int) this.thickness_units);
 			checksum.UpdateValue (this.position);
 			checksum.UpdateValue (this.thickness);
+			checksum.UpdateValue (this.line_class);
 			checksum.UpdateValue (this.line_style);
 		}
 		
@@ -141,17 +174,59 @@ namespace Epsitec.Common.Text.Properties
 				&& a.thickness_units == b.thickness_units
 				&& a.position   == b.position
 				&& a.thickness  == b.thickness
+				&& a.line_class == b.line_class
 				&& a.line_style == b.line_style;
 		}
 		
 		
+		#region UnderlineComparer Class
+		private class UnderlineComparer : System.Collections.IComparer
+		{
+			#region IComparer Members
+			public int Compare(object x, object y)
+			{
+				Properties.UnderlineProperty px = x as Properties.UnderlineProperty;
+				Properties.UnderlineProperty py = y as Properties.UnderlineProperty;
+				
+				int result;
+				
+				result = string.Compare (px.line_class, py.line_class);
+				
+				if (result == 0)
+				{
+					result = string.Compare (px.line_style, py.line_style);
+					
+					if (result == 0)
+					{
+						double xv = UnitsTools.ConvertToSizeUnits (px.position, px.position_units, SizeUnits.Points);
+						double yv = UnitsTools.ConvertToSizeUnits (py.position, py.position_units, SizeUnits.Points);
+						
+						result = NumberSupport.Compare (xv, yv);
+						
+						if (result == 0)
+						{
+							xv = UnitsTools.ConvertToSizeUnits (px.thickness, px.thickness_units, SizeUnits.Points);
+							yv = UnitsTools.ConvertToSizeUnits (py.thickness, py.thickness_units, SizeUnits.Points);
+						
+							result = NumberSupport.Compare (xv, yv);
+						}
+					}
+				}
+				
+				return result;
+			}
+			#endregion
+		}
+		#endregion
+		
 		
 		private SizeUnits						position_units;
-		private SizeUnits						thickness_units;
-		
 		private double							position;
+		
+		private SizeUnits						thickness_units;
 		private double							thickness;
 		
+		private string							line_class;
 		private string							line_style;
 	}
 }

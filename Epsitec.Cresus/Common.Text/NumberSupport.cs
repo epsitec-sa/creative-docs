@@ -60,5 +60,30 @@ namespace Epsitec.Common.Text
 			
 			return true;
 		}
+		
+		public static int Compare(double a, double b)
+		{
+			if (a == b)
+			{
+				return 0;
+			}
+			
+			if (double.IsNaN (a) &&
+				double.IsNaN (b))
+			{
+				return 0;
+			}
+			
+			if (double.IsNaN (a))
+			{
+				return -1;
+			}
+			if (double.IsNaN (b))
+			{
+				return 1;
+			}
+			
+			return (a < b) ? -1 : 1;
+		}
 	}
 }

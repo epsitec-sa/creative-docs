@@ -13,6 +13,7 @@ namespace Epsitec.Common.Text.Tests
 			CheckProperties.TestFont ();
 			CheckProperties.TestFontSize ();
 			CheckProperties.TestMargins ();
+			CheckProperties.TestUnderlines ();
 		}
 
 		
@@ -92,6 +93,37 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (margins_b.ToString () == "15/20/0/0/pt/0/0/0/0/0/[false]");
 		}
 		
+		private static void TestUnderlines()
+		{
+			TextStory story = new TextStory ();
+			
+			ulong[] text;
+			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+			
+			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			properties.Add (new Properties.UnderlineProperty (double.NaN, Properties.SizeUnits.None, double.NaN, Properties.SizeUnits.None, "underline", "-"));
+			properties.Add (new Properties.UnderlineProperty (double.NaN, Properties.SizeUnits.None, double.NaN, Properties.SizeUnits.None, "underline", "color=red"));
+			properties.Add (new Properties.UnderlineProperty (double.NaN, Properties.SizeUnits.None, double.NaN, Properties.SizeUnits.None, "frame", "backcolor=yellow;color=black"));
+			properties.Add (new Properties.UnderlineProperty (double.NaN, Properties.SizeUnits.None, 2.0, Properties.SizeUnits.Points, "underline", "color=red"));
+			
+			story.ConvertToStyledText ("Abc", properties, out text);
+			
+			System.Collections.ArrayList underlines = new System.Collections.ArrayList ();
+			
+			story.TextContext.GetUnderlines (text[0], underlines);
+			
+			Debug.Assert.IsTrue (underlines.Count == 4);
+			
+			underlines.Sort (Properties.UnderlineProperty.Comparer);
+			
+			Debug.Assert.IsTrue ((underlines[0] as Properties.UnderlineProperty).LineStyle == "backcolor=yellow;color=black");
+			Debug.Assert.IsTrue ((underlines[1] as Properties.UnderlineProperty).LineStyle == "-");
+			Debug.Assert.IsTrue ((underlines[2] as Properties.UnderlineProperty).LineStyle == "color=red");
+			Debug.Assert.IsTrue ((underlines[3] as Properties.UnderlineProperty).LineStyle == "color=red");
+			Debug.Assert.IsTrue ((underlines[2] as Properties.UnderlineProperty).ThicknessUnits == Properties.SizeUnits.None);
+			Debug.Assert.IsTrue ((underlines[3] as Properties.UnderlineProperty).ThicknessUnits == Properties.SizeUnits.Points);
+		}
 		
 		private static void Ex1()
 		{

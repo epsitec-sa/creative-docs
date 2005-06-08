@@ -324,16 +324,28 @@ namespace Epsitec.Common.Text.Styles
 			{
 				System.Type type = property.GetType ();
 				
-				if (this.hash.Contains (type))
+				if (property.CombinationMode == Properties.CombinationMode.Accumulate)
 				{
-					Properties.BaseProperty base_prop = this.hash[type] as Properties.BaseProperty;
-					Properties.BaseProperty comb_prop = base_prop.GetCombination (property);
+					if (this.list == null)
+					{
+						this.list = new System.Collections.ArrayList ();
+					}
 					
-					this.hash[type] = comb_prop;
+					this.list.Add (property);
 				}
 				else
 				{
-					this.hash[type] = property;
+					if (this.hash.Contains (type))
+					{
+						Properties.BaseProperty base_prop = this.hash[type] as Properties.BaseProperty;
+						Properties.BaseProperty comb_prop = base_prop.GetCombination (property);
+						
+						this.hash[type] = comb_prop;
+					}
+					else
+					{
+						this.hash[type] = property;
+					}
 				}
 				
 				if (! this.special)
@@ -347,15 +359,25 @@ namespace Epsitec.Common.Text.Styles
 			
 			public void Done()
 			{
-				this.host.Initialise (this.hash.Values);
+				if (this.list != null)
+				{
+					this.list.AddRange (this.hash.Values);
+					this.host.Initialise (this.list);
+				}
+				else
+				{
+					this.host.Initialise (this.hash.Values);
+				}
 				
 				this.host = null;
 				this.hash = null;
+				this.list = null;
 			}
 			
 			
 			Styles.BasePropertyContainer		host;
 			System.Collections.Hashtable		hash;
+			System.Collections.ArrayList		list;
 			bool								special;
 		}
 		

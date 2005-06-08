@@ -122,24 +122,26 @@ namespace Epsitec.Common.Text
 				if ((frame == null) ||
 					(layout.Frame == frame))
 				{
-					if (count > 0)
+					double ox    = c.Elements[i].LineBaseX;
+					double oy    = c.Elements[i].LineBaseY;
+					double width = c.Elements[i].LineWidth;
+					double asc   = c.Elements[i].LineAscender;
+					double desc  = c.Elements[i].LineDescender;
+					
+					layout.Frame.MapToView (ref ox, ref oy);
+					
+					if ((count > 0) &&
+						(renderer.IsFrameAreaVisible (layout.Frame, ox, oy+desc, width, asc+desc)))
 					{
-						double ox    = c.Elements[i].LineBaseX;
-						double oy    = c.Elements[i].LineBaseY;
-						double width = c.Elements[i].LineWidth;
-						double asc   = c.Elements[i].LineAscender;
-						double desc  = c.Elements[i].LineDescender;
+						bool is_tab  = (i > 0) ? c.Elements[i-1].IsTabulation : false;
+						bool is_last = (i == n-1) || (c.Elements[i].IsTabulation);
 						
-						layout.Frame.MapToView (ref ox, ref oy);
-						
-						if (renderer.IsFrameAreaVisible (layout.Frame, ox, oy+desc, width, asc+desc))
-						{
-							bool is_tab  = (i > 0) ? c.Elements[i-1].IsTabulation : false;
-							bool is_last = (i == n-1) || (c.Elements[i].IsTabulation);
-							
-							Layout.StretchProfile profile = c.Elements[i].Profile;
-							layout.RenderLine (renderer, profile, count, ox, oy, width, i, is_tab, is_last);
-						}
+						Layout.StretchProfile profile = c.Elements[i].Profile;
+						layout.RenderLine (renderer, profile, count, ox, oy, width, i, is_tab, is_last);
+					}
+					else
+					{
+						layout.InvisibleLine (renderer, count, ox, oy);
 					}
 				}
 				

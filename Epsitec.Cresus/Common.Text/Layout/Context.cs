@@ -381,6 +381,19 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public Properties.UnderlineProperty[]	UnderlineProperties
+		{
+			get
+			{
+				Properties.UnderlineProperty[] properties = new Properties.UnderlineProperty[this.underline_properties.Count];
+				
+				this.underline_properties.CopyTo (properties);
+				
+				return properties;
+			}
+		}
+		
+		
 		
 		public Layout.Status Fit(ref Layout.BreakCollection result, int paragraph_line_count)
 		{
@@ -688,6 +701,22 @@ restart:
 		}
 		
 		
+		public void InvisibleLine(ITextRenderer renderer, int length, double line_base_x, double line_base_y)
+		{
+			//	Appelé lorsqu'une ligne ne doit pas être affichée parce qu'elle
+			//	est entièrement hors du frame.
+			
+			Debug.Assert.IsNotNull (this.text);
+			Debug.Assert.IsTrue (this.text_start + this.text_offset + length <= this.text.Length);
+			
+			if (length > 0)
+			{
+				ulong code = this.text[this.text_offset + length - 1];
+				
+				this.text_context.GetUnderlines (code, this.underline_properties);
+			}
+		}
+		
 		public void RenderLine(ITextRenderer renderer, Layout.StretchProfile profile, int length, double line_base_x, double line_base_y, double line_width, int paragraph_line_count, bool is_tab, bool is_last_line)
 		{
 			//	Réalise le rendu de la ligne, en appelant les divers moteurs de
@@ -796,6 +825,7 @@ restart:
 				{
 					case Layout.Status.Ok:
 						renderer.RenderEnd (this);
+						this.text_context.GetUnderlines (this.text[this.text_offset + length - 1], this.underline_properties);
 						return;
 					
 					case Layout.Status.SwitchLayout:
@@ -1392,5 +1422,7 @@ restart:
 		private Snapshot						snapshot;
 		
 		private ulong[]							buffer;
+		
+		private System.Collections.ArrayList	underline_properties = new System.Collections.ArrayList ();
 	}
 }

@@ -153,6 +153,8 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			double  oy = context.Y;
 			ulong[] text;
 			
+			Properties.UnderlineProperty[] underlines = context.UnderlineProperties;
+			
 			if (context.GetTextCopy (context.TextOffset, out text, ref length))
 			{
 				int offset = 0;
