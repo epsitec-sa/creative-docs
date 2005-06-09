@@ -408,10 +408,10 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, Text.Properties.ThreeState.True));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
-					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 10.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
-//					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
-//					this.painter.TextStory.InsertText (cursor, text);
+					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
 					
 					Text.Context   context      = this.painter.TextStory.TextContext;
 					Text.StyleList style_list   = context.StyleList;
@@ -741,7 +741,7 @@ namespace Epsitec.Common.Drawing
 			#region IGlyphRenderer Members
 			public bool GetGeometry(out double ascender, out double descender, out double advance, out double x1, out double x2)
 			{
-				System.Diagnostics.Debug.WriteLine ("ImageRenderer.GetGeometry called.");
+//				System.Diagnostics.Debug.WriteLine ("ImageRenderer.GetGeometry called.");
 				
 				ascender  =  40;
 				descender = -20;
@@ -754,7 +754,7 @@ namespace Epsitec.Common.Drawing
 			
 			public void RenderGlyph(ITextFrame frame, double x, double y)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("ImageRenderer.RenderGlyph called at {0}:{1}", x, y));
+//				System.Diagnostics.Debug.WriteLine (string.Format ("ImageRenderer.RenderGlyph called at {0}:{1}", x, y));
 				
 				Graphics graphics = this.painter.Graphics;
 				

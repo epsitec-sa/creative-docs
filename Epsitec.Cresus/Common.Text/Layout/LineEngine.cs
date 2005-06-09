@@ -283,8 +283,6 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			if ((run_length == 1) &&
 				(Unicode.Bits.GetCode (text[offset]) == (int) Unicode.Code.ObjectReplacement))
 			{
-				System.Diagnostics.Debug.WriteLine ("FitRun processing ObjectReplacement code");
-				
 				Properties.ImageProperty image;
 				profile = scratch.StretchProfile;
 				
@@ -430,8 +428,6 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			if ((length == 1) &&
 				(Unicode.Bits.GetCode (text[offset]) == (int) Unicode.Code.ObjectReplacement))
 			{
-				System.Diagnostics.Debug.WriteLine ("RenderRun processing ObjectReplacement code");
-				
 				Properties.ImageProperty image;
 				
 				context.TextContext.GetImage (text[offset], out image);
