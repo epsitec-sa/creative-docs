@@ -14,6 +14,7 @@ namespace Epsitec.Common.Text.Tests
 			CheckProperties.TestFontSize ();
 			CheckProperties.TestMargins ();
 			CheckProperties.TestUnderlines ();
+			CheckProperties.TestSerialization ();
 		}
 
 		
@@ -123,6 +124,43 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue ((underlines[3] as Properties.UnderlineProperty).LineStyle == "color=red");
 			Debug.Assert.IsTrue ((underlines[2] as Properties.UnderlineProperty).ThicknessUnits == Properties.SizeUnits.None);
 			Debug.Assert.IsTrue ((underlines[3] as Properties.UnderlineProperty).ThicknessUnits == Properties.SizeUnits.Points);
+		}
+		
+		private static void TestSerialization()
+		{
+			Properties.FontProperty     p1 = new Properties.FontProperty ("Futura", "Roman");
+			Properties.FontSizeProperty p2 = new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points);
+			Properties.MarginsProperty  p3 = new Properties.MarginsProperty (15.0, 20.0, 0.0, 0.0, Properties.SizeUnits.Points, 0, 0, 0, 0, 0, Properties.ThreeState.False);
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			int end1, end2, end3;
+			
+			Properties.BaseProperty.SerializeToText (buffer, p1);	end1 = buffer.Length;
+			Properties.BaseProperty.SerializeToText (buffer, p2);	end2 = buffer.Length;
+			Properties.BaseProperty.SerializeToText (buffer, p3);	end3 = buffer.Length;
+			
+			Properties.BaseProperty p;
+			
+			Properties.FontProperty     p1x;
+			Properties.FontSizeProperty p2x;
+			Properties.MarginsProperty  p3x;
+			
+			Properties.BaseProperty.DeserializeFromText (null, buffer.ToString (),    0, end1,        out p); p1x = p as Properties.FontProperty;
+			Properties.BaseProperty.DeserializeFromText (null, buffer.ToString (), end1, end2 - end1, out p); p2x = p as Properties.FontSizeProperty;
+			Properties.BaseProperty.DeserializeFromText (null, buffer.ToString (), end2, end3 - end2, out p); p3x = p as Properties.MarginsProperty;
+			
+			Debug.Assert.IsNotNull (p1x);
+			Debug.Assert.IsNotNull (p2x);
+			Debug.Assert.IsNotNull (p3x);
+			
+			Debug.Assert.IsTrue (p1.FaceName == p1x.FaceName);
+			Debug.Assert.IsTrue (p1.StyleName == p1x.StyleName);
+			
+			Debug.Assert.IsTrue (p2.Size == p2x.Size);
+			Debug.Assert.IsTrue (p2.Units == p2x.Units);
+			
+			Debug.Assert.IsTrue (p3.EnableHyphenation == p3x.EnableHyphenation);
 		}
 		
 		private static void Ex1()

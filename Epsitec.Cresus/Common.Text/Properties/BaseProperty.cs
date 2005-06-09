@@ -215,6 +215,46 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public static void SerializeToText(System.Text.StringBuilder buffer, BaseProperty property)
+		{
+			Debug.Assert.IsNotNull (property);
+			
+			string type_name = property.GetType ().Name;
+			string prop_name = type_name.Substring (0, type_name.Length - 8);
+			
+			Debug.Assert.IsTrue (property.WellKnownType.ToString () == prop_name);
+			
+			buffer.Append ("{");
+			buffer.Append (prop_name);
+			buffer.Append (":");
+			
+			property.SerializeToText (buffer);
+			
+			buffer.Append ("}");
+		}
+		
+		public static void DeserializeFromText(Context context, string text, int pos, int length, out BaseProperty property)
+		{
+			Debug.Assert.IsTrue (text[pos+0] == '{');
+			Debug.Assert.IsTrue (text[pos+length-1] == '}');
+			
+			int sep_pos = text.IndexOf (':', pos, length);
+			int end_pos = pos + length;
+			
+			Debug.Assert.IsTrue (sep_pos > pos);
+			
+			string prop_name = text.Substring (pos+1, sep_pos - pos - 1);
+			string type_name = string.Concat ("Epsitec.Common.Text.Properties.", prop_name, "Property");
+			
+			System.Runtime.Remoting.ObjectHandle handle = System.Activator.CreateInstance (typeof (BaseProperty).Assembly.FullName, type_name);
+			
+			property = handle.Unwrap () as BaseProperty;
+			
+			sep_pos++;
+			
+			property.DeserializeFromText (context, text, sep_pos, end_pos - sep_pos - 1);
+		}
+		
 		protected void DefineVersion(long version)
 		{
 			this.version = version;

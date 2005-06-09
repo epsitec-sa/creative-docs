@@ -296,6 +296,115 @@ namespace Epsitec.Common.Text
 			return buffer.ToString ();
 		}
 		
+		public string GetDebugStyledText(ulong[] text)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			ulong prev = Internal.CharMarker.ExtractStyleAndSettings (text[0]);
+			
+			int start = 0;
+			int count = 1;
+			
+			for (int i = 1; i < text.Length; i++)
+			{
+				ulong code = Internal.CharMarker.ExtractStyleAndSettings (text[i]);
+				
+				if (code == prev)
+				{
+					count++;
+					continue;
+				}
+				
+				this.GenerateDebugStyledTextForRun (text, prev, start, count, buffer);
+				
+				prev  = code;
+				start = i;
+				count = 1;
+			}
+			
+			this.GenerateDebugStyledTextForRun (text, prev, start, count, buffer);
+			
+			return buffer.ToString ();
+		}
+		
+		private void GenerateDebugStyledTextForRun(ulong[] text, ulong code, int offset, int length, System.Text.StringBuilder buffer)
+		{
+			if (length == 0)
+			{
+				return;
+			}
+			
+			buffer.Append ("[");
+			
+			for (int i = 0; i < length; i++)
+			{
+				buffer.Append ((char) Unicode.Bits.GetCode (text[offset+i]));
+			}
+			
+			buffer.Append ("]\n    ");
+			
+			Internal.StyleTable styles = this.StyleList.InternalStyleTable;
+			
+			Styles.SimpleStyle   style = styles.GetStyle (code);
+			Styles.LocalSettings local = styles.GetLocalSettings (code);
+			Styles.ExtraSettings extra = styles.GetExtraSettings (code);
+			
+			int n = 0;
+			
+			if (style != null)
+			{
+				foreach (Properties.BaseProperty property in style)
+				{
+					if (n > 0) buffer.Append (", ");
+					buffer.Append ("S=");
+					buffer.Append (property.WellKnownType.ToString ());
+					n++;
+				}
+			}
+			
+			if (local != null)
+			{
+				foreach (Properties.BaseProperty property in local)
+				{
+					if (n > 0) buffer.Append (", ");
+					buffer.Append ("L=");
+					buffer.Append (property.WellKnownType.ToString ());
+					n++;
+				}
+			}
+			
+			if (extra != null)
+			{
+				foreach (Properties.BaseProperty property in extra)
+				{
+					if (n > 0) buffer.Append (", ");
+					buffer.Append ("E=");
+					buffer.Append (property.WellKnownType.ToString ());
+					n++;
+				}
+			}
+			
+			n = 0;
+			
+			if (style != null)
+			{
+				foreach (Properties.BaseProperty property in style)
+				{
+					switch (property.WellKnownType)
+					{
+						case Properties.WellKnownType.Styles:
+						case Properties.WellKnownType.Properties:
+							buffer.Append (n == 0 ? "\n    " : ", ");
+							Properties.BaseProperty.SerializeToText (buffer, property);
+							n++;
+							break;
+					}
+				}
+			}
+			
+			buffer.Append ("\n");
+		}
+		
 		
 		public void ConvertToStyledText(string simple_text, TextStyle text_style, out ulong[] styled_text)
 		{

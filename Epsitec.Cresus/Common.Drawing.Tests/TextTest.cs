@@ -408,24 +408,27 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, Text.Properties.ThreeState.True));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
-					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 10.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
-					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+//					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+//					this.painter.TextStory.InsertText (cursor, text);
+					
+					Text.Context   context      = this.painter.TextStory.TextContext;
+					Text.StyleList style_list   = context.StyleList;
+					Text.TextStyle style_normal = style_list.NewTextStyle ("Normal", properties);
+					
+					this.painter.TextStory.ConvertToStyledText ("Un petit texte juste avant l'image >", style_normal, null, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText (">", properties, out text);
+					context.DefineResource ("image1", new ImageRenderer (this.painter));
+					
+					properties.Clear ();
+					properties.Add (new Text.Properties.ImageProperty ("image1", context));
+					
+					this.painter.TextStory.ConvertToStyledText ("\uFFFC", style_normal, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.TextContext.DefineResource ("image1", new ImageRenderer (this.painter));
-					
-					properties.Add (new Text.Properties.ImageProperty ("image1", this.painter.TextStory.TextContext));
-					
-					this.painter.TextStory.ConvertToStyledText ("\uFFFC", properties, out text);
-					this.painter.TextStory.InsertText (cursor, text);
-					
-					properties.RemoveAt (properties.Count-1);
-					
-					this.painter.TextStory.ConvertToStyledText ("<\n", properties, out text);
+					this.painter.TextStory.ConvertToStyledText ("< et la suite juste après, pour voir ce que ça donne dans un paragraphe.\n", style_normal, null, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					//	Un texte avec quelque passages soulignés...
@@ -525,6 +528,12 @@ namespace Epsitec.Common.Drawing
 						this.painter.TextStory.InsertText (cursor, text);
 					}
 #endif
+					
+					this.painter.TextStory.MoveCursor (cursor, - this.painter.TextStory.TextLength);
+					text = new ulong[this.painter.TextStory.TextLength];
+					this.painter.TextStory.ReadText (cursor, text.Length, text);
+					
+					System.Diagnostics.Debug.Write (this.painter.TextStory.GetDebugStyledText (text));
 				}
 				
 				if (this.active_test == 1)

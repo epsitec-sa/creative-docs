@@ -74,6 +74,10 @@ namespace Epsitec.Common.Text.Layout
 							//	Change de moteur de layout. Il faut par conséquent mémoriser où on
 							//	s'arrête pour que le suivant sache où reprendre :
 							
+							context.RecordAscender (scratch.Ascender);
+							context.RecordDescender (scratch.Descender);
+							context.RecordLineHeight (scratch.LineHeight);
+							
 							context.MoveTo (scratch.Advance, scratch.Offset);
 							context.SwitchLayoutEngine (engine, layout);
 							
@@ -81,10 +85,6 @@ namespace Epsitec.Common.Text.Layout
 							
 							return Layout.Status.SwitchLayout;
 						}
-						
-						context.RecordAscender (scratch.Font.GetAscender (scratch.FontSize));
-						context.RecordDescender (scratch.Font.GetDescender (scratch.FontSize));
-						context.RecordLineHeight (scratch.FontSize * 1.2);
 						
 						if (this.FitRun (context, ref scratch, ref result))
 						{
@@ -104,6 +104,10 @@ namespace Epsitec.Common.Text.Layout
 					{
 						//	Le mot se termine par un saut forcé (ou une marque de tabulation, ce qui				:
 						//	revient au même par rapport au traitement fait par le système de layout) :				:
+						
+						context.RecordAscender (scratch.Ascender);
+						context.RecordDescender (scratch.Descender);
+						context.RecordLineHeight (scratch.LineHeight);
 						
 						context.MoveTo (scratch.Advance, scratch.Offset);
 						
@@ -293,10 +297,6 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				
 				image.GetGeometry (out ascender, out descender, out advance, out x1, out x2);
 				
-				context.RecordAscender (ascender);
-				context.RecordDescender (descender);
-				context.RecordLineHeight (ascender - descender);
-				
 				scratch.TextWidth = advance;
 				
 				profile.Add (Unicode.StretchClass.NoStretch, advance);
@@ -306,8 +306,16 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					return true;
 				}
 				
+				scratch.RecordAscender (ascender);
+				scratch.RecordDescender (descender);
+				scratch.RecordLineHeight (ascender - descender);
+				
 				return false;
 			}
+			
+			scratch.RecordAscender (scratch.Font.GetAscender (scratch.FontSize));
+			scratch.RecordDescender (scratch.Font.GetDescender (scratch.FontSize));
+			scratch.RecordLineHeight (scratch.FontSize * 1.2);
 			
 			while (frag_length < run_length)
 			{
@@ -392,6 +400,13 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				
 				if (can_break)
 				{
+					context.RecordAscender (scratch.Ascender);
+					context.RecordDescender (scratch.Descender);
+					context.RecordLineHeight (scratch.LineHeight);
+					
+					//	TODO: il faudrait enregistrer les hauteurs de la ligne avec l'information
+					//	Layout.Break si on voulait faire les choses correctement ici !
+					
 					scratch.LastBreakOffset    = scratch.Offset + frag_length;
 					scratch.LastBreakAdvance   = scratch.Advance + scratch.TextWidth - profile.WidthEndSpace;
 					scratch.LastBreakPenalty   = break_penalty;
@@ -592,6 +607,31 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 		
 		private struct FitScratch
 		{
+			public void RecordAscender(double value)
+			{
+				if (value > this.Ascender)
+				{
+					this.Ascender = value;
+				}
+			}
+			
+			public void RecordDescender(double value)
+			{
+				if (value < this.Descender)
+				{
+					this.Descender = value;
+				}
+			}
+			
+			public void RecordLineHeight(double value)
+			{
+				if (value > this.LineHeight)
+				{
+					this.LineHeight = value;
+				}
+			}
+
+			
 			public int							Offset;
 			public double						Advance;
 			public StretchProfile				StretchProfile;
@@ -610,6 +650,10 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			public double						FenceMinX;
 			public double						FenceMaxX;
+			
+			public double						Ascender;
+			public double						Descender;
+			public double						LineHeight;
 			
 			public Unicode.BreakInfo			WordBreakInfo;
 			

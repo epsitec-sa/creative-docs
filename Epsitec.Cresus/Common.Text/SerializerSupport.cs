@@ -225,15 +225,21 @@ namespace Epsitec.Common.Text
 		
 		private static string Escape(string value)
 		{
-			if (value.IndexOfAny (new char[] { '/', '\\', '[', ']' }) == -1)
+			if (value.IndexOfAny (new char[] { '\\', '[', ']', '{', '}', '/', '|', ':', '<', '>' }) == -1)
 			{
 				return value;
 			}
 			
-			value = value.Replace ("\\", "\\\\");
-			value = value.Replace ("/", "\\:");
-			value = value.Replace ("[", "\\[");
-			value = value.Replace ("]", "\\]");
+			value = value.Replace ("\\", "\\0");
+			value = value.Replace ("[",  "\\1");
+			value = value.Replace ("]",  "\\2");
+			value = value.Replace ("{",  "\\3");
+			value = value.Replace ("}",  "\\4");
+			value = value.Replace ("/",  "\\5");
+			value = value.Replace ("|",  "\\6");
+			value = value.Replace (":",  "\\7");
+			value = value.Replace ("<",  "\\8");
+			value = value.Replace (">",  "\\9");
 			
 			return value;
 		}
@@ -260,10 +266,16 @@ namespace Epsitec.Common.Text
 					
 					switch (value[++i])
 					{
-						case ']':		c = ']';	break;
-						case '[':		c = '[';	break;
-						case ':':		c = '/';	break;
-						case '\\':		c = '\\';	break;
+						case '0':		c = '\\';	break;
+						case '1':		c = '[';	break;
+						case '2':		c = ']';	break;
+						case '3':		c = '{';	break;
+						case '4':		c = '}';	break;
+						case '5':		c = '/';	break;
+						case '6':		c = '|';	break;
+						case '7':		c = ':';	break;
+						case '8':		c = '<';	break;
+						case '9':		c = '>';	break;
 						
 						default:
 							throw new System.ArgumentException ("Invalid escape sequence.");

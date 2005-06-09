@@ -11,8 +11,8 @@ namespace Epsitec.Common.Text.Tests
 		public static void RunTests()
 		{
 			Debug.Assert.IsTrue (@"[null]"     == SerializerSupport.SerializeString (null));
-			Debug.Assert.IsTrue (@"\[\]\:x\\y" == SerializerSupport.SerializeString (@"[]/x\y"));
-			Debug.Assert.IsTrue (@"a\:b\\:c"   == SerializerSupport.SerializeStringArray (new string[] { "a", "b/c"}));
+			Debug.Assert.IsTrue (@"\1\2\5x\0y" == SerializerSupport.SerializeString (@"[]/x\y"));
+			Debug.Assert.IsTrue (@"a\5b\05c"   == SerializerSupport.SerializeStringArray (new string[] { "a", "b/c"}));
 			Debug.Assert.IsTrue (@"[null]"     == SerializerSupport.SerializeStringArray (null));
 			Debug.Assert.IsTrue (@"[empty]"    == SerializerSupport.SerializeStringArray (new string[] { }));
 			
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (SerializerSupport.DeserializeBoolean ("[true]"));
 			Debug.Assert.IsFalse (SerializerSupport.DeserializeBoolean ("[false]"));
 			
-			string[] array1 = SerializerSupport.DeserializeStringArray (@"a\:b\\:c");
+			string[] array1 = SerializerSupport.DeserializeStringArray (@"a\5b\05c");
 			string[] array2 = new string[] { "a", "b/c"};
 			
 			Debug.Assert.IsTrue (Types.Comparer.Equal (array1, array2));

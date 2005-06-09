@@ -31,7 +31,7 @@ namespace Epsitec.Common.Text.Properties
 			for (int i = 0; i < properties.Count; i++)
 			{
 				buffer.Length = 0;
-				props[i].SerializeToText (buffer);
+				BaseProperty.SerializeToText (buffer, props[i]);
 				
 				this.serialized_properties[i] = buffer.ToString ();
 			}
