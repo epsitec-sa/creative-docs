@@ -1016,6 +1016,7 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
+		public delegate bool CodeCallback(ulong code);
 		
 		private Internal.TextTable				text;
 		private int								text_length;		//	texte dans la zone texte

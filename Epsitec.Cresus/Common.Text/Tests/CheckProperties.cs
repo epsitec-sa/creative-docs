@@ -15,6 +15,7 @@ namespace Epsitec.Common.Text.Tests
 			CheckProperties.TestMargins ();
 			CheckProperties.TestUnderlines ();
 			CheckProperties.TestSerialization ();
+			CheckProperties.TestGenerators ();
 		}
 
 		
@@ -161,6 +162,78 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (p2.Units == p2x.Units);
 			
 			Debug.Assert.IsTrue (p3.EnableHyphenation == p3x.EnableHyphenation);
+		}
+		
+		private static void TestGenerators()
+		{
+			TextStory          story  = new TextStory ();
+			Cursors.TempCursor cursor = new Cursors.TempCursor ();
+			
+			story.NewCursor (cursor);
+			
+			ulong[] text;
+			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+			
+			properties.Add (new Properties.FontProperty ("Verdana", "Regular"));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			
+			TextStyle style = story.TextContext.StyleList.NewTextStyle ("Normal", properties);
+			
+			story.ConvertToStyledText ("Texte ", style, null, out text);				//	6
+			story.InsertText (cursor, text);
+			
+			properties.Clear ();
+			properties.Add (new Properties.GeneratorProperty ("G1", 0));
+			story.ConvertToStyledText ("généré", style, properties, out text);			//	12
+			story.InsertText (cursor, text);
+			
+			story.ConvertToStyledText (" automatiquement ", style, null, out text);		//	29
+			story.InsertText (cursor, text);
+			
+			properties.Clear ();
+			properties.Add (new Properties.GeneratorProperty ("G1", 0));
+			story.ConvertToStyledText ("[1]", style, properties, out text);				//	32
+			story.InsertText (cursor, text);
+			
+			properties.Clear ();
+			properties.Add (new Properties.GeneratorProperty ("G1", 0));
+			story.ConvertToStyledText ("[2]", style, properties, out text);				//	35
+			story.InsertText (cursor, text);
+			
+			story.ConvertToStyledText ("...\n", style, null, out text);
+			story.InsertText (cursor, text);
+			
+			text = new ulong[story.TextLength];
+			story.SetCursorPosition (cursor, 0);
+			story.ReadText (cursor, text.Length, text);
+			
+			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
+			
+			Cursors.GeneratorCursor[] cursors = Internal.GeneratorEnumerator.CreateCursors (story, "G1");
+			
+			Debug.Assert.IsTrue (cursors.Length == 3);
+			Debug.Assert.IsTrue (story.GetCursorPosition (cursors[0]) == 6);
+			Debug.Assert.IsTrue (story.GetCursorPosition (cursors[1]) == 29);
+			Debug.Assert.IsTrue (story.GetCursorPosition (cursors[2]) == 32);
+			
+			properties.Clear ();
+			properties.Add (new Properties.GeneratorProperty ("G1", 0));
+			story.ConvertToStyledText ("[1]", style, properties, out text);				//	3
+			story.InsertText (cursor, text);
+			
+			properties.Clear ();
+			properties.Add (new Properties.GeneratorProperty ("G1", 0));
+			story.ConvertToStyledText ("[2]", style, properties, out text);				//	6
+			story.InsertText (cursor, text);
+			
+			cursors = Internal.GeneratorEnumerator.CreateCursors (story, "G1");
+			
+			Debug.Assert.IsTrue (cursors.Length == 5);
+			Debug.Assert.IsTrue (story.GetCursorPosition (cursors[0]) == 0);
+			Debug.Assert.IsTrue (story.GetCursorPosition (cursors[1]) == 3);
+			Debug.Assert.IsTrue (story.GetCursorPosition (cursors[2]) == 6+6);
+			Debug.Assert.IsTrue (story.GetCursorPosition (cursors[3]) == 29+6);
+			Debug.Assert.IsTrue (story.GetCursorPosition (cursors[4]) == 32+6);
 		}
 		
 		private static void Ex1()

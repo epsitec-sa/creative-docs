@@ -34,7 +34,7 @@ namespace Epsitec.Common.Text
 		
 		public static void Change()
 		{
-			StyleVersion.current++;
+			System.Threading.Interlocked.Increment (ref StyleVersion.current);
 			StyleVersion.time = System.DateTime.Now;
 		}
 		

@@ -60,6 +60,18 @@ namespace Epsitec.Common.Text.Internal
 			return id;
 		}
 		
+		public Internal.CursorId NewCursor(ICursor cursor, Internal.CursorId model_id)
+		{
+			//	TODO: optimiser la création d'un curseur au même endroit
+			//	qu'un autre.
+			
+			Internal.CursorId id = this.NewCursor (cursor);
+			
+			this.SetCursorPosition (id, this.GetCursorPosition (model_id));
+			
+			return id;
+		}
+		
 		public void RecycleCursor(Internal.CursorId id)
 		{
 			Internal.Cursor record = this.cursors.ReadCursor (id);
@@ -705,6 +717,118 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			return read;
+		}
+		
+		
+		public int TraverseText(Internal.CursorId cursor_id, int length, TextStory.CodeCallback callback)
+		{
+			//	Traverse le texte en commençant à partir de la position du
+			//	curseur.
+			//
+			//	Dès que le callback retourne 'true', on arrête et on retourne
+			//	le nombre de caractères qui ont été traversés avec succès.
+			//
+			//	Retourne -1 si le callback n'a jamais retourné 'true'.
+			
+			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
+			
+			int index = chunk_id - 1;
+			int count = 0;
+			int pos   = this.text_chunks[index].GetCursorPosition (cursor_id);
+			
+			while (count < length)
+			{
+				if (pos == this.text_chunks[index].TextLength)
+				{
+					index++;
+					
+					if (index == this.text_chunks.Length)
+					{
+						break;
+					}
+					
+					pos = 0;
+				}
+				else
+				{
+					ulong code = this.text_chunks[index][pos];
+					
+					if (callback (code))
+					{
+						return count;
+					}
+					
+					count += 1;
+					pos   += 1;
+				}
+			}
+			
+			return -1;
+		}
+		
+		public int GetRunLength(Internal.CursorId cursor_id, int length)
+		{
+			ulong code;
+			ulong next;
+			
+			return this.GetRunLength (cursor_id, length, out code, out next);
+		}
+		
+		public int GetRunLength(Internal.CursorId cursor_id, int length, out ulong code, out ulong next)
+		{
+			//	Trouve la longueur de texte qui utilise exactement le même
+			//	style que celui utilisé à la position de départ.
+			//
+			//	- 'code' correspond au code du style du morceau de texte mesuré
+			//	- 'next' correspond au code du style du prochain morceau de texte
+			//
+			//	Si on atteint la fin du texte, on aura 'next' = 'code'.
+			
+			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
+			
+			code = 0;
+			next = 0;
+			
+			int index = chunk_id - 1;
+			int count = 0;
+			int pos   = this.text_chunks[index].GetCursorPosition (cursor_id);
+			
+			while (count < length)
+			{
+				if (pos == this.text_chunks[index].TextLength)
+				{
+					index++;
+					
+					if (index == this.text_chunks.Length)
+					{
+						break;
+					}
+					
+					pos = 0;
+				}
+				else
+				{
+					if (count == 0)
+					{
+						code = Internal.CharMarker.ExtractStyleAndSettings (this.text_chunks[index][pos]);
+						next = code;
+					}
+					else
+					{
+						next = Internal.CharMarker.ExtractStyleAndSettings (this.text_chunks[index][pos]);
+						
+						if (code != next)
+						{
+							return count;
+						}
+					}
+					
+					count += 1;
+					pos   += 1;
+				}
+			}
+			
+			return count;
 		}
 		
 		

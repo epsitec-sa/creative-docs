@@ -10,24 +10,26 @@ namespace Epsitec.Common.Text.Properties
 	/// </summary>
 	public enum WellKnownType
 	{
-		Font			= 1,
-		FontSize,
-		Color,
+		Font			= 1,			//	style
+		FontSize,						//	style
 		
-		Styles,
-		Properties,
+		Keep,							//	style
+		Layout,							//	style
+		Leading,						//	style
+		Margins,						//	style
 		
-		Layout,
-		Margins,
-		Leading,
-		Keep,
-		Tab,
-		Image,
+		Properties,						//	style
+		Styles,							//	style
 		
-		Underline,
-		Language,
+		Color,							//	extra
+		Underline,						//	extra
 		
-		OpenType,
+		Tab,							//	extra
+		Generator,						//	extra
+		Language,						//	extra
+		
+		OpenType,						//	local
+		Image,							//	local
 		
 		Other			= 1000000,
 	}

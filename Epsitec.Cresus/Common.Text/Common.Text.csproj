@@ -259,6 +259,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Cursors\GeneratorCursor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Cursors\SimpleCursor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -295,6 +300,11 @@
                 />
                 <File
                     RelPath = "Internal\CursorTable.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Internal\GeneratorEnumerator.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -385,6 +395,11 @@
                 />
                 <File
                     RelPath = "Properties\FontSizeProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\GeneratorProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

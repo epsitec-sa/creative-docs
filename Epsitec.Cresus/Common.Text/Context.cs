@@ -411,6 +411,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
 		#region Markers Class
 		public class Markers
 		{
