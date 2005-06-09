@@ -316,14 +316,14 @@ namespace Epsitec.Common.Text
 		
 		public void ConvertToStyledText(string simple_text, System.Collections.ICollection text_styles, System.Collections.ICollection properties, out ulong[] styled_text)
 		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
 			if ((text_styles != null) &&
 				(text_styles.Count > 0))
 			{
 				//	Les diverses propriétés des styles passés en entrée sont
 				//	d'abord extraites et ajoutées dans la liste complète des
 				//	propriétés :
-				
-				System.Collections.ArrayList list = new System.Collections.ArrayList ();
 				
 				foreach (TextStyle style in text_styles)
 				{
@@ -339,28 +339,38 @@ namespace Epsitec.Common.Text
 						
 						if (property.WellKnownType != Properties.WellKnownType.Styles)
 						{
-							list.Add (style[i]);
+							list.Add (property);
+						}
+						else
+						{
+							//	TODO: gérer les styles cascadés en faisant une descente récursive
+							//	dans les propriétés correspondantes.
 						}
 					}
 				}
 				
-				//	Les propriétés "manuelles" viennent s'ajouter à la fin de la
-				//	liste, après les propriétés du/des styles :
+				//	Crée une propriété StylesProperty qui résume les styles dont
+				//	les propriétés viennent d'être mises à plat ci-dessus :
 				
 				list.Add (new Properties.StylesProperty (text_styles));
-				
-				if ((properties != null) &&
-					(properties.Count > 0))
-				{
-					list.AddRange (properties);
-				}
-				
-				this.ConvertToStyledText (simple_text, list, out styled_text);
 			}
-			else
+			
+			if ((properties != null) &&
+				(properties.Count > 0))
 			{
-				this.ConvertToStyledText (simple_text, properties, out styled_text);
+				//	Les propriétés "manuelles" viennent s'ajouter à la fin de la
+				//	liste, après les propriétés du/des styles.
+				
+				list.AddRange (properties);
+				
+				//	Prend note (sous une forme sérialisée) de toutes ces propriétés
+				//	additionnelles. Sans PropertiesProperty, il serait impossible de
+				//	reconstituer les propriétés "manuelles" dans certains cas.
+				
+				list.Add (new Properties.PropertiesProperty (properties));
 			}
+			
+			this.ConvertToStyledText (simple_text, list, out styled_text);
 		}
 		
 		public void ConvertToStyledText(string simple_text, System.Collections.ICollection properties, out ulong[] styled_text)
@@ -568,27 +578,26 @@ namespace Epsitec.Common.Text
 				for (int i = 0; i < length; i++)
 				{
 					ulong code = text[i];
-				
+					
 					Styles.SimpleStyle   style = styles.GetStyle (code);
 					Styles.LocalSettings local = styles.GetLocalSettings (code);
 					Styles.ExtraSettings extra = styles.GetExtraSettings (code);
-				
+					
 					if (style != null)
 					{
 						style.DecrementUserCount ();
 					}
-				
+					
 					if (local != null)
 					{
 						local.DecrementUserCount ();
 					}
-				
+					
 					if (extra != null)
 					{
 						extra.DecrementUserCount ();
 					}
 				}
-			
 			}
 			
 			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);

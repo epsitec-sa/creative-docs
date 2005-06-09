@@ -15,6 +15,8 @@ namespace Epsitec.Common.Text.Properties
 		Color,
 		
 		Styles,
+		Properties,
+		
 		Layout,
 		Margins,
 		Leading,

@@ -128,6 +128,8 @@ namespace Epsitec.Common.Text.Properties
 			StylesProperty b = property as StylesProperty;
 			StylesProperty c = new StylesProperty ();
 			
+			//	TODO: gérer les doublets
+			
 			c.styles = new TextStyle[a.styles.Length + b.styles.Length];
 			
 			a.styles.CopyTo (c.styles, 0);
