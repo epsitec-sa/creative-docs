@@ -29,7 +29,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public ICursor							Cursor
+		public Cursors.TempCursor				Cursor
 		{
 			get
 			{
@@ -87,27 +87,40 @@ namespace Epsitec.Common.Text.Internal
 					continue;
 				}
 				
-				Styles.SimpleStyle   style = this.style_list[code];
-				Styles.ExtraSettings extra = style.GetExtraSettings (code);
+				Properties.GeneratorProperty generator = this.GetGeneratorProperty (code);
 				
-				if (extra != null)
+				if (generator != null)
 				{
-					Properties.BaseProperty[] properties = extra.FindProperties (Properties.WellKnownType.Generator);
-					
-					foreach (Properties.GeneratorProperty generator in properties)
-					{
-						//	On vient de trouver un générateur qui correspond à ce
-						//	que nous rechercons :
-						
-						if (generator.Generator == this.generator)
-						{
-							return true;
-						}
-					}
+					return true;
 				}
 				
 				this.failure_cache[code] = this.generator;
 			}
+		}
+		
+		
+		public Properties.GeneratorProperty GetGeneratorProperty(ulong code)
+		{
+			Styles.SimpleStyle   style = this.style_list[code];
+			Styles.ExtraSettings extra = style.GetExtraSettings (code);
+				
+			if (extra != null)
+			{
+				Properties.BaseProperty[] properties = extra.FindProperties (Properties.WellKnownType.Generator);
+					
+				foreach (Properties.GeneratorProperty generator in properties)
+				{
+					//	On vient de trouver un générateur qui correspond à ce
+					//	que nous rechercons :
+						
+					if (generator.Generator == this.generator)
+					{
+						return generator;
+					}
+				}
+			}
+			
+			return null;
 		}
 		
 		

@@ -241,6 +241,36 @@ namespace Epsitec.Common.Text
 			this.UpdateTextBreakInformation (position, 0);
 		}
 		
+		
+		internal void ReplaceText(ICursor cursor, int length, ulong[] text)
+		{
+			int position = this.text.GetCursorPosition (cursor.CursorId);
+			
+			this.InternalReplaceText (position, length, text);
+			
+			this.text_length -= length;
+			this.text_length += text.Length;
+			
+			this.UpdateTextBreakInformation (position, length);
+		}
+		
+		internal void ReplaceText(ICursor cursor, int length, string simple_text)
+		{
+			int position = this.text.GetCursorPosition (cursor.CursorId);
+			
+			uint[] utf32;
+			
+			TextConverter.ConvertFromString (simple_text, out utf32);
+			
+			this.InternalReplaceText (position, length, utf32);
+			
+			this.text_length -= length;
+			this.text_length += utf32.Length;
+			
+			this.UpdateTextBreakInformation (position, length);
+		}
+		
+		
 		public int ReadText(ICursor cursor, int length, ulong[] buffer)
 		{
 			return this.ReadText (cursor, 0, length, buffer);
@@ -326,6 +356,7 @@ namespace Epsitec.Common.Text
 			
 			return buffer.ToString ();
 		}
+		
 		
 		private void GenerateDebugStyledTextForRun(ulong[] text, ulong code, int offset, int length, System.Text.StringBuilder buffer)
 		{
@@ -711,6 +742,64 @@ namespace Epsitec.Common.Text
 			
 			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
 			this.text.DeleteText (this.temp_cursor.CursorId, length, out infos);
+		}
+		
+		protected void InternalReplaceText(int position, int length, ulong[] text)
+		{
+			//	Remplace du texte sans gestion du undo/redo ni mise à jour des
+			//	longueurs respectives de 'text area' et 'undo area', ni gestion
+			//	des curseurs.
+			
+			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
+			
+			ulong[] data = new ulong[length];
+			int     read = this.text.ReadText (this.temp_cursor.CursorId, length, data);
+			
+			Debug.Assert.IsTrue (read == length);
+			
+			CursorInfo[] infos;
+			
+			this.InternalDeleteText (position, length, out infos, false);
+			this.InternalInsertText (position, text);
+			
+			if ((infos != null) &&
+				(infos.Length > 0))
+			{
+				this.InternalRestoreCursorPositions (infos, 0);
+			}
+		}
+		
+		protected void InternalReplaceText(int position, int length, uint[] utf32)
+		{
+			//	Remplace du texte sans gestion du undo/redo ni mise à jour des
+			//	longueurs respectives de 'text area' et 'undo area', ni gestion
+			//	des curseurs.
+			
+			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
+			
+			ulong[] text = new ulong[utf32.Length];
+			ulong[] data = new ulong[length];
+			int     read = this.text.ReadText (this.temp_cursor.CursorId, length, data);
+			
+			Debug.Assert.IsTrue (read == length);
+			
+			ulong code = (~ Unicode.Bits.FullCodeMask) & data[0];
+			
+			for (int i = 0; i < text.Length; i++)
+			{
+				text[i] = code | utf32[i];
+			}
+			
+			CursorInfo[] infos;
+			
+			this.InternalDeleteText (position, length, out infos, false);
+			this.InternalInsertText (position, text);
+			
+			if ((infos != null) &&
+				(infos.Length > 0))
+			{
+				this.InternalRestoreCursorPositions (infos, 0);
+			}
 		}
 		
 		protected void InternalMoveText(int from_pos, int to_pos, int length)

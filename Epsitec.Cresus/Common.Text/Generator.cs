@@ -98,6 +98,78 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void UpdateAllFields(TextStory story, System.Globalization.CultureInfo culture)
+		{
+			TextProcessor    processor = new TextProcessor (story);
+			Generator.Series series    = this.NewSeries (culture);
+			TextUpdater      updater   = new TextUpdater (story, this, series);
+			
+			processor.Process (new TextProcessor.Iterator (updater.Iterate));
+		}
+		
+		
+		class TextUpdater
+		{
+			public TextUpdater(TextStory story, Generator generator, Generator.Series series)
+			{
+				this.story      = story;
+				this.context    = story.TextContext;
+				this.text       = story.TextTable;
+				this.generator  = generator;
+				this.series     = series;
+				this.enumerator = new Internal.GeneratorEnumerator (story, this.generator.Name);
+			}
+			
+			
+			public void Iterate(out TextProcessor.Status status)
+			{
+				if (this.enumerator.MoveNext ())
+				{
+					Properties.GeneratorProperty property;
+					
+					Cursors.TempCursor cursor = this.enumerator.Cursor;
+					Internal.CursorId  id     = cursor.CursorId;
+					int                pos    = this.text.GetCursorPosition (id);
+					
+					if (pos < this.story.TextLength)
+					{
+						ulong code = this.text.ReadChar (id);
+						
+						//	Retrouve la propriété associée à notre générateur, ce
+						//	qui permet ensuite de déterminer la longueur du texte
+						//	à remplacer :
+						
+						property = this.enumerator.GetGeneratorProperty (code);
+						
+						System.Diagnostics.Debug.Assert (property != null);
+						System.Diagnostics.Debug.Assert (property.Generator == this.generator.Name);
+						
+						int    length = this.context.GetTextEndDistance (this.story, cursor, property);
+						string text   = this.series.GetNextText (property.Level);
+						
+						System.Diagnostics.Debug.Assert (length > 0);
+						System.Diagnostics.Debug.Assert (text.Length > 0);
+						
+						this.story.ReplaceText (cursor, length, text);
+						
+						status = TextProcessor.Status.Continue;
+						return;
+					}
+				}
+				
+				status = TextProcessor.Status.Abort;
+			}
+			
+			
+			private TextStory					story;
+			private Context						context;
+			private Internal.TextTable			text;
+			private Generator					generator;
+			private Generator.Series			series;
+			Internal.GeneratorEnumerator		enumerator;
+		}
+		
+		
 		#region Series Class
 		public class Series
 		{
@@ -313,6 +385,17 @@ namespace Epsitec.Common.Text
 					throw new System.NotSupportedException (string.Format ("SequenceType {0} not supported", type));
 			}
 		}
+		
+		public static Generator.Sequence CreateSequence(SequenceType type, string prefix, string suffix)
+		{
+			Generator.Sequence sequence = Generator.CreateSequence (type);
+			
+			sequence.Prefix = prefix;
+			sequence.Suffix = suffix;
+			
+			return sequence;
+		}
+		
 		
 		public static void SerializeToText(System.Text.StringBuilder buffer, Sequence sequence)
 		{

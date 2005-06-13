@@ -95,7 +95,31 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void Process(Iterator method)
+		{
+			Status status;
+			
+			for (;;)
+			{
+				method (out status);
+				
+				switch (status)
+				{
+					case Status.Abort:
+						return;
+					
+					case Status.Continue:
+						break;
+					
+					default:
+						throw new System.InvalidOperationException ();
+				}
+			}
+		}
+		
+		
 		public delegate void Executor(Cursors.TempCursor cursor, int pos, ref int length, out Status status);
+		public delegate void Iterator(out Status status);
 		
 		public enum Status
 		{

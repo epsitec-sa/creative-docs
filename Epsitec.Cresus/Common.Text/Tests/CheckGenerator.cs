@@ -10,6 +10,12 @@ namespace Epsitec.Common.Text.Tests
 	{
 		public static void RunTests()
 		{
+			CheckGenerator.TestGenerator ();
+			CheckGenerator.TestTextStory ();
+		}
+		
+		private static void TestGenerator()
+		{
 			Generator generator = new Generator ("Test");
 			
 			Generator.Sequence s_num = Generator.CreateSequence (Generator.SequenceType.Numeric);
@@ -53,6 +59,87 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue ("2.1.c)" == series.GetNextText (2));
 			Debug.Assert.IsTrue ("3." == series.GetNextText (0));
 			Debug.Assert.IsTrue ("3.1.a)1.1.1." == series.GetNextText (5));
+		}
+		
+		private static void TestTextStory()
+		{
+			TextStory story  = new TextStory ();
+			ICursor   cursor = new Cursors.SimpleCursor ();
+			
+			story.NewCursor (cursor);
+			
+			ulong[] text;
+			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+			
+			properties.Add (new Properties.FontProperty ("Verdana", "Regular"));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			
+			TextStyle style = story.TextContext.StyleList.NewTextStyle ("Normal", properties);
+			
+			Properties.GeneratorProperty g1_a = new Properties.GeneratorProperty ("G1", 0);
+			Properties.GeneratorProperty g1_b = new Properties.GeneratorProperty ("G1", 0);
+			Properties.GeneratorProperty g1_c = new Properties.GeneratorProperty ("G1", 1);
+			Properties.GeneratorProperty g1_d = new Properties.GeneratorProperty ("G1", 2);
+			Properties.GeneratorProperty g1_e = new Properties.GeneratorProperty ("G1", 1);
+			
+			properties.Clear (); properties.Add (g1_a);
+			
+			story.ConvertToStyledText ("X", style, properties, out text);
+			story.InsertText (cursor, text);
+			
+			story.ConvertToStyledText ("Chapitre premier\n", style, null, out text);
+			story.InsertText (cursor, text);
+			
+			properties.Clear (); properties.Add (g1_b);
+			
+			story.ConvertToStyledText ("X", style, properties, out text);
+			story.InsertText (cursor, text);
+			
+			story.ConvertToStyledText ("Chapitre second\n", style, null, out text);
+			story.InsertText (cursor, text);
+			
+			properties.Clear (); properties.Add (g1_c);
+			
+			story.ConvertToStyledText ("X", style, properties, out text);
+			story.InsertText (cursor, text);
+			
+			story.ConvertToStyledText ("Introduction\n", style, null, out text);
+			story.InsertText (cursor, text);
+			
+			properties.Clear (); properties.Add (g1_d);
+			
+			story.ConvertToStyledText ("X", style, properties, out text);
+			story.InsertText (cursor, text);
+			
+			story.ConvertToStyledText ("Plan\n", style, null, out text);
+			story.InsertText (cursor, text);
+			
+			properties.Clear (); properties.Add (g1_e);
+			
+			story.ConvertToStyledText ("X", style, properties, out text);
+			story.InsertText (cursor, text);
+			
+			story.ConvertToStyledText ("Blabla...\n", style, null, out text);
+			story.InsertText (cursor, text);
+			
+			text = new ulong[story.TextLength];
+			story.SetCursorPosition (cursor, 0);
+			story.ReadText (cursor, story.TextLength, text);
+			
+			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
+			
+			Generator generator = story.TextContext.GeneratorList.NewGenerator ("G1");
+			
+			generator.Add (Generator.CreateSequence (Generator.SequenceType.Numeric, "", "."));
+			generator.Add (Generator.CreateSequence (Generator.SequenceType.Numeric, "", "."));
+			generator.Add (Generator.CreateSequence (Generator.SequenceType.Alphabetic));
+			generator.UpdateAllFields (story, System.Globalization.CultureInfo.CurrentCulture);
+			
+			text = new ulong[story.TextLength];
+			story.SetCursorPosition (cursor, 0);
+			story.ReadText (cursor, story.TextLength, text);
+			
+			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
 		}
 	}
 }
