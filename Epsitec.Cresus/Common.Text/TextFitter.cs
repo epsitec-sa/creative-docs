@@ -4,7 +4,9 @@
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// Summary description for TextFitter.
+	/// La classe TextFitter s'occupe de la mise en page du texte au
+	/// moyen des méthodes ClearAllMarks/GenerateAllMarks et du rendu
+	/// du texte grâce aux méthodes RenderXxx.
 	/// </summary>
 	public class TextFitter
 	{
@@ -69,7 +71,8 @@ namespace Epsitec.Common.Text
 		
 		public void ClearAllMarks()
 		{
-			this.Process (new Execute (this.ExecuteClear));
+			TextProcessor processor = new TextProcessor (this.story);
+			processor.Process (new TextProcessor.Executor (this.ExecuteClear));
 			this.frame_list.ClearCursorMap ();
 		}
 		
@@ -82,7 +85,8 @@ namespace Epsitec.Common.Text
 			this.line_fence       = -1;
 			this.keep_with_prev   = false;
 			
-			this.Process (new Execute (this.ExecuteGenerate));
+			TextProcessor processor = new TextProcessor (this.story);
+			processor.Process (new TextProcessor.Executor (this.ExecuteGenerate));
 			
 			this.frame_list.ClearCursorMap ();
 		}
@@ -195,79 +199,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected void Process(Execute method)
-		{
-			//	Exécute une méthode pour tout le texte, en procédant par tranches
-			//	(exécution itérative).
-			
-			int pos = 0;
-			
-			Cursors.TempCursor cursor = new Cursors.TempCursor ();
-			
-			this.story.NewCursor (cursor);
-			
-			try
-			{
-				for (;;)
-				{
-					//	TODO: lock et détection d'altérations du texte (et de la liste des
-					//	ITextFrame liés à ce TextFitter).
-					
-					int max  = this.story.TextLength;
-					int step = 10000;
-					
-				again:
-					int  length = System.Math.Min (max - pos, step);
-					bool restart;
-					
-					if (length <= 0)
-					{
-						break;
-					}
-					
-					method (cursor, pos, ref length, out restart);
-					
-					if (restart)
-					{
-						//	Si la méthode a demandé une seconde chance, il se peut que
-						//	le curseur ait été déplacé; il faut donc resynchroniser la
-						//	position :
-						
-						pos = this.story.GetCursorPosition (cursor);
-						goto again;
-					}
-					
-					if (length == 0)
-					{
-						//	La méthode de traitement n'a rien pu faire avec le texte passé
-						//	en entrée, vraisemblablement parce que le paragraphe mesure plus
-						//	de 'step' caractères. Il faut donc augmenter cette limite et
-						//	tenter un nouvel essai.
-						
-						Debug.Assert.IsTrue (length < max-pos);
-						
-						step += 10000;
-						goto again;
-					}
-					
-					if (length < 0)
-					{
-						//	Avortement demandé par la méthode de traitement.
-						
-						break;
-					}
-					
-					this.story.MoveCursor (cursor, length);
-					pos += length;
-				}
-			}
-			finally
-			{
-				this.story.RecycleCursor (cursor);
-			}
-		}
-		
-		protected void ExecuteClear(Cursors.TempCursor temp_cursor, int pos, ref int length, out bool restart)
+		protected void ExecuteClear(Cursors.TempCursor temp_cursor, int pos, ref int length, out TextProcessor.Status status)
 		{
 			//	Supprime les marques de découpe de lignes représentées par des
 			//	curseurs (instances de Cursors.FitterCursor).
@@ -280,10 +212,10 @@ namespace Epsitec.Common.Text
 				this.RecycleFitterCursor (cursor);
 			}
 			
-			restart = false;
+			status = TextProcessor.Status.Continue;
 		}
 		
-		protected void ExecuteGenerate(Cursors.TempCursor cursor, int pos, ref int length, out bool restart)
+		protected void ExecuteGenerate(Cursors.TempCursor cursor, int pos, ref int length, out TextProcessor.Status status)
 		{
 			//	Génère les marques de découpe de lignes et insère les curseurs
 			//	correspondants.
@@ -313,8 +245,6 @@ namespace Epsitec.Common.Text
 				
 				text[length] = code;
 			}
-			
-			restart = false;
 			
 			Layout.Context         layout = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
 			Layout.BreakCollection result = new Layout.BreakCollection ();
@@ -357,7 +287,7 @@ restart_paragraph_layout:
 				Properties.TabProperty tab_property;
 				TextFitter.TabStatus   tab_status;
 				
-				Layout.Status status = layout.Fit (ref result, line_count, continuation);
+				Layout.Status layout_status = layout.Fit (ref result, line_count, continuation);
 				
 				bool tab_new_line = false;
 				bool end_of_text  = false;
@@ -365,12 +295,13 @@ restart_paragraph_layout:
 				this.frame_index = layout.FrameIndex;
 				this.frame_y     = layout.FrameY;
 				
-				switch (status)
+				switch (layout_status)
 				{
 					case Layout.Status.ErrorNeedMoreText:
 						this.frame_index = paragraph_start_frame_index;
 						this.frame_y     = paragraph_start_frame_y;
 						length = paragraph_start_offset;
+						status = TextProcessor.Status.Continue;
 						return;
 					
 					case Layout.Status.ErrorCannotFit:
@@ -413,10 +344,8 @@ restart_paragraph_layout:
 						//	Retourne en arrière, jusqu'au début du paragraphe qui précède
 						//	le paragraphe actuel, puis relance l'opération au complet.
 						
-						this.RewindToPreviousParagraph (cursor, pos, paragraph_start_offset);
-						
-						restart = true;
-						length  = 0;
+						length  = this.RewindToPreviousParagraph (cursor, pos, paragraph_start_offset);
+						status  = TextProcessor.Status.Continue;
 						
 						return;
 					
@@ -456,6 +385,7 @@ restart_paragraph_layout:
 						if (tab_status == TabStatus.ErrorNeedMoreText)
 						{
 							length = paragraph_start_offset;
+							status = TextProcessor.Status.Continue;
 							return;
 						}
 						else if (tab_status == TabStatus.ErrorNeedMoreRoom)
@@ -499,7 +429,7 @@ restart_paragraph_layout:
 						break;
 					
 					default:
-						throw new System.InvalidOperationException (string.Format ("Invalid layout status received: {0}.", status));
+						throw new System.InvalidOperationException (string.Format ("Invalid layout status received: {0}.", layout_status));
 				}
 				
 				//	Le système de layout propose un certain nombre de points de découpe
@@ -542,7 +472,7 @@ restart_paragraph_layout:
 					
 					if (pos + offset > story.TextLength)
 					{
-						Debug.Assert.IsTrue (status == Layout.Status.OkFitEnded);
+						Debug.Assert.IsTrue (layout_status == Layout.Status.OkFitEnded);
 						
 						offset     -= 1;
 						end_of_text = true;
@@ -556,14 +486,14 @@ restart_paragraph_layout:
 					element.LineWidth     = (continuation && !tab_new_line) ? result[result.Count-1].Profile.TotalWidth : layout.AvailableWidth;
 					element.LineAscender  = layout.LineAscender;
 					element.LineDescender = layout.LineDescender;
-					element.IsTabulation  = status == Layout.Status.OkTabReached;
+					element.IsTabulation  = layout_status == Layout.Status.OkTabReached;
 					
 					list.Add (element);
 				}
 				
 				layout.TextOffset = offset;
 				
-				if (status == Layout.Status.OkTabReached)
+				if (layout_status == Layout.Status.OkTabReached)
 				{
 					line_start_offset = offset;
 					
@@ -578,7 +508,7 @@ restart_paragraph_layout:
 				}
 				else
 				{
-					if (status == Layout.Status.ErrorNeedMoreRoom)
+					if (layout_status == Layout.Status.ErrorNeedMoreRoom)
 					{
 						//	Le paragraphe a été tronqué, car il n'y a plus assez de place dans
 						//	les ITextFrame pour y placer le texte. Il faut générer un Element
@@ -594,6 +524,7 @@ restart_paragraph_layout:
 							//	une nouvelle passe avec plus de texte.
 							
 							length = paragraph_start_offset;
+							status = TextProcessor.Status.Continue;
 							return;
 						}
 						
@@ -603,8 +534,8 @@ restart_paragraph_layout:
 						list.Add (element);
 					}
 					
-					if ((status == Layout.Status.OkFitEnded) ||
-						(status == Layout.Status.ErrorNeedMoreRoom))
+					if ((layout_status == Layout.Status.OkFitEnded) ||
+						(layout_status == Layout.Status.ErrorNeedMoreRoom))
 					{
 						Debug.Assert.IsTrue (list.Count > 0);
 						
@@ -639,13 +570,14 @@ restart_paragraph_layout:
 				if (end_of_text)
 				{
 					length = -1;
+					status = TextProcessor.Status.Abort;
 					return;
 				}
 			}
 		}
 		
 		
-		protected void RewindToPreviousParagraph(Cursors.TempCursor cursor, int position, int offset)
+		protected int RewindToPreviousParagraph(Cursors.TempCursor cursor, int position, int offset)
 		{
 			Cursors.FitterCursor para_1 = this.GetPreviousFitterCursor (position + offset);
 			Cursors.FitterCursor para_2 = this.GetPreviousFitterCursor (para_1);
@@ -672,12 +604,14 @@ restart_paragraph_layout:
 			this.frame_index = elems[0].FrameIndex;
 			this.frame_y     = para_1.ParagraphY;
 			
-			this.story.MoveCursor (cursor, offset - para_length);
+			int distance = offset - para_length;
 			
 			//	Il faut encore supprimer le curseur correspondant à la marque de
 			//	début du paragraphe :
 			
 			this.RecycleFitterCursor (para_1);
+			
+			return distance;
 		}
 		
 		
@@ -936,8 +870,6 @@ restart_paragraph_layout:
 			this.free_cursors.Push (cursor);
 		}
 		
-		
-		protected delegate void Execute(Cursors.TempCursor cursor, int pos, ref int length, out bool restart);
 		
 		private TextStory						story;
 		private System.Collections.ArrayList	cursors;
