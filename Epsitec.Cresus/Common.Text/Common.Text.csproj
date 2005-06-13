@@ -149,6 +149,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Generator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IContentsComparer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -325,6 +330,16 @@
                 />
                 <File
                     RelPath = "Internal\TextTable.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Internal\Sequences\AlphabeticSequence.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Internal\Sequences\NumericSequence.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
