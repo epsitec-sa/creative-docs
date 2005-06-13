@@ -133,7 +133,17 @@ namespace Epsitec.Common.Text.Tests
 			generator.Add (Generator.CreateSequence (Generator.SequenceType.Numeric, "", "."));
 			generator.Add (Generator.CreateSequence (Generator.SequenceType.Numeric, "", "."));
 			generator.Add (Generator.CreateSequence (Generator.SequenceType.Alphabetic));
-			generator.UpdateAllFields (story, System.Globalization.CultureInfo.CurrentCulture);
+			
+			int count1 = generator.UpdateAllFields (story, System.Globalization.CultureInfo.CurrentCulture);
+			int count2 = generator.UpdateAllFields (story, System.Globalization.CultureInfo.CurrentCulture);
+			
+			generator.StartVector = new int[] { 8, 12 };
+			
+			int count3 = generator.UpdateAllFields (story, System.Globalization.CultureInfo.CurrentCulture);
+			
+			Debug.Assert.IsTrue (count1 == 5);
+			Debug.Assert.IsTrue (count2 == 0);
+			Debug.Assert.IsTrue (count3 == 5);
 			
 			text = new ulong[story.TextLength];
 			story.SetCursorPosition (cursor, 0);

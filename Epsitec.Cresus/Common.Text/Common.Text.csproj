@@ -124,6 +124,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "AutoText.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AutoTextList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Context.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -395,6 +405,11 @@
                 />
                 <File
                     RelPath = "Properties\AlignMode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\AutoTextProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -242,19 +242,24 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		internal void ReplaceText(ICursor cursor, int length, ulong[] text)
+		internal bool ReplaceText(ICursor cursor, int length, ulong[] text)
 		{
+			//	Remplace le texte sans mettre à jour les informations de undo
+			//	et de redo. Retourne true si une modification a eu lieu.
+			
 			int position = this.text.GetCursorPosition (cursor.CursorId);
 			
-			this.InternalReplaceText (position, length, text);
+			bool changed = this.InternalReplaceText (position, length, text);
 			
 			this.text_length -= length;
 			this.text_length += text.Length;
 			
 			this.UpdateTextBreakInformation (position, length);
+			
+			return changed;
 		}
 		
-		internal void ReplaceText(ICursor cursor, int length, string simple_text)
+		internal bool ReplaceText(ICursor cursor, int length, string simple_text)
 		{
 			int position = this.text.GetCursorPosition (cursor.CursorId);
 			
@@ -262,12 +267,14 @@ namespace Epsitec.Common.Text
 			
 			TextConverter.ConvertFromString (simple_text, out utf32);
 			
-			this.InternalReplaceText (position, length, utf32);
+			bool changed = this.InternalReplaceText (position, length, utf32);
 			
 			this.text_length -= length;
 			this.text_length += utf32.Length;
 			
 			this.UpdateTextBreakInformation (position, length);
+			
+			return changed;
 		}
 		
 		
@@ -583,7 +590,6 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		
 		private void InternalAddOplet(Common.Support.IOplet oplet)
 		{
 			if ((this.debug_disable_oplet == false) &&
@@ -744,7 +750,7 @@ namespace Epsitec.Common.Text
 			this.text.DeleteText (this.temp_cursor.CursorId, length, out infos);
 		}
 		
-		protected void InternalReplaceText(int position, int length, ulong[] text)
+		protected bool InternalReplaceText(int position, int length, ulong[] text)
 		{
 			//	Remplace du texte sans gestion du undo/redo ni mise à jour des
 			//	longueurs respectives de 'text area' et 'undo area', ni gestion
@@ -767,9 +773,27 @@ namespace Epsitec.Common.Text
 			{
 				this.InternalRestoreCursorPositions (infos, 0);
 			}
+			
+			if (data.Length != text.Length)
+			{
+				return true;
+			}
+			
+			for (int i = 0; i < data.Length; i++)
+			{
+				ulong a = data[i] & ~Unicode.Bits.InfoMask;
+				ulong b = text[i] & ~Unicode.Bits.InfoMask;
+				
+				if (a != b)
+				{
+					return true;
+				}
+			}
+			
+			return false;
 		}
 		
-		protected void InternalReplaceText(int position, int length, uint[] utf32)
+		protected bool InternalReplaceText(int position, int length, uint[] utf32)
 		{
 			//	Remplace du texte sans gestion du undo/redo ni mise à jour des
 			//	longueurs respectives de 'text area' et 'undo area', ni gestion
@@ -800,6 +824,24 @@ namespace Epsitec.Common.Text
 			{
 				this.InternalRestoreCursorPositions (infos, 0);
 			}
+			
+			if (data.Length != text.Length)
+			{
+				return true;
+			}
+			
+			for (int i = 0; i < data.Length; i++)
+			{
+				ulong a = data[i] & ~Unicode.Bits.InfoMask;
+				ulong b = text[i] & ~Unicode.Bits.InfoMask;
+				
+				if (a != b)
+				{
+					return true;
+				}
+			}
+			
+			return false;
 		}
 		
 		protected void InternalMoveText(int from_pos, int to_pos, int length)

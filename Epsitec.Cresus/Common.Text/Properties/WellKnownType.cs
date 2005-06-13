@@ -24,9 +24,10 @@ namespace Epsitec.Common.Text.Properties
 		Color,							//	extra
 		Underline,						//	extra
 		
-		Tab,							//	extra
+		AutoText,						//	extra
 		Generator,						//	extra
 		Language,						//	extra
+		Tab,							//	extra
 		
 		OpenType,						//	local
 		Image,							//	local

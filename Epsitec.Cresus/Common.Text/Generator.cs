@@ -100,13 +100,15 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void UpdateAllFields(TextStory story, System.Globalization.CultureInfo culture)
+		public int UpdateAllFields(TextStory story, System.Globalization.CultureInfo culture)
 		{
 			TextProcessor    processor = new TextProcessor (story);
 			Generator.Series series    = this.NewSeries (culture);
 			TextUpdater      updater   = new TextUpdater (story, this, series);
 			
 			processor.Process (new TextProcessor.Iterator (updater.Iterate));
+			
+			return updater.ChangeCount;
 		}
 		
 		
@@ -123,6 +125,14 @@ namespace Epsitec.Common.Text
 				this.enumerator = new GeneratorEnumerator (story, this.generator.Name);
 			}
 			
+			
+			public int							ChangeCount
+			{
+				get
+				{
+					return this.count;
+				}
+			}
 			
 			public void Iterate(out TextProcessor.Status status)
 			{
@@ -153,7 +163,13 @@ namespace Epsitec.Common.Text
 						System.Diagnostics.Debug.Assert (length > 0);
 						System.Diagnostics.Debug.Assert (text.Length > 0);
 						
-						this.story.ReplaceText (cursor, length, text);
+						//	Compte combien de textes ont été modifiés pendant cette
+						//	opération :
+						
+						if (this.story.ReplaceText (cursor, length, text))
+						{
+							this.count++;
+						}
 						
 						status = TextProcessor.Status.Continue;
 						return;
@@ -170,6 +186,7 @@ namespace Epsitec.Common.Text
 			private Generator					generator;
 			private Generator.Series			series;
 			private GeneratorEnumerator			enumerator;
+			private int							count;
 		}
 		#endregion
 		
