@@ -3,6 +3,8 @@
 
 namespace Epsitec.Common.Text
 {
+	using GeneratorEnumerator = Internal.GeneratorEnumerator;
+	
 	/// <summary>
 	/// La classe Generator gère les générateurs de texte automatique.
 	/// </summary>
@@ -108,6 +110,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		#region TextUpdater Class
 		class TextUpdater
 		{
 			public TextUpdater(TextStory story, Generator generator, Generator.Series series)
@@ -117,7 +120,7 @@ namespace Epsitec.Common.Text
 				this.text       = story.TextTable;
 				this.generator  = generator;
 				this.series     = series;
-				this.enumerator = new Internal.GeneratorEnumerator (story, this.generator.Name);
+				this.enumerator = new GeneratorEnumerator (story, this.generator.Name);
 			}
 			
 			
@@ -166,9 +169,9 @@ namespace Epsitec.Common.Text
 			private Internal.TextTable			text;
 			private Generator					generator;
 			private Generator.Series			series;
-			Internal.GeneratorEnumerator		enumerator;
+			private GeneratorEnumerator			enumerator;
 		}
-		
+		#endregion
 		
 		#region Series Class
 		public class Series

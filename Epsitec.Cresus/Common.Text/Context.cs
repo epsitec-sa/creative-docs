@@ -487,6 +487,26 @@ namespace Epsitec.Common.Text
 			return false;
 		}
 		
+		public bool ContainsProperty(TextStory story, ICursor cursor, int offset, Properties.WellKnownType well_known_type, Properties.PropertyType property_type)
+		{
+			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
+			
+			if (code != 0)
+			{
+				code = Internal.CharMarker.ExtractStyleAndSettings (code);
+				
+				Styles.SimpleStyle style = this.style_list[code];
+				
+				if ((style != null) &&
+					(style.Contains (code, well_known_type, property_type)))
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
 		
 		#region TextFinder Class
 		private class TextFinder

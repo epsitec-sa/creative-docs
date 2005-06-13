@@ -72,6 +72,28 @@ namespace Epsitec.Common.Text.Styles
 			return (search != null) && search.Contains (property);
 		}
 		
+		public bool Contains(ulong code, Properties.WellKnownType well_known_type, Properties.PropertyType property_type)
+		{
+			BasePropertyContainer search = null;
+			
+			switch (property_type)
+			{
+				case Properties.PropertyType.Style:
+					search = this;
+					break;
+						
+				case Properties.PropertyType.LocalSetting:
+					search = this.GetLocalSettings (code);
+					break;
+					
+				case Properties.PropertyType.ExtraSetting:
+					search = this.GetExtraSettings (code);
+					break;
+			}
+			
+			return (search != null) && search.Contains (well_known_type);
+		}
+		
 		
 		public int FindSettings(Styles.LocalSettings settings)
 		{
