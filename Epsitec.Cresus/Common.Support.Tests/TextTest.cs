@@ -5,6 +5,11 @@ namespace Epsitec.Common.Support
 	[TestFixture]
 	public class TextTest
 	{
+		[Test] public void CheckGenerator()
+		{
+			Common.Text.Tests.CheckGenerator.RunTests ();
+		}
+		
 		[Test] public void CheckInternalCursor()
 		{
 			Common.Text.Tests.CheckInternalCursor.RunTests ();

@@ -544,6 +544,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Tests\CheckGenerator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Tests\CheckInternalCursor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

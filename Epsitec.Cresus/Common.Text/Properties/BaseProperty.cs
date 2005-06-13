@@ -217,12 +217,13 @@ namespace Epsitec.Common.Text.Properties
 		
 		public static void SerializeToText(System.Text.StringBuilder buffer, BaseProperty property)
 		{
-			Debug.Assert.IsNotNull (property);
+			System.Diagnostics.Debug.Assert (property != null);
 			
 			string type_name = property.GetType ().Name;
-			string prop_name = type_name.Substring (0, type_name.Length - 8);
+			string prop_name = type_name.Substring (0, type_name.Length - 8);	//	"XxxProperty" --> "Xxx"
 			
-			Debug.Assert.IsTrue (property.WellKnownType.ToString () == prop_name);
+			System.Diagnostics.Debug.Assert (property.WellKnownType.ToString () == prop_name);
+			System.Diagnostics.Debug.Assert (type_name.Substring (prop_name.Length) == "Property");
 			
 			buffer.Append ("{");
 			buffer.Append (prop_name);
@@ -235,13 +236,13 @@ namespace Epsitec.Common.Text.Properties
 		
 		public static void DeserializeFromText(Context context, string text, int pos, int length, out BaseProperty property)
 		{
-			Debug.Assert.IsTrue (text[pos+0] == '{');
-			Debug.Assert.IsTrue (text[pos+length-1] == '}');
+			System.Diagnostics.Debug.Assert (text[pos+0] == '{');
+			System.Diagnostics.Debug.Assert (text[pos+length-1] == '}');
 			
 			int sep_pos = text.IndexOf (':', pos, length);
 			int end_pos = pos + length;
 			
-			Debug.Assert.IsTrue (sep_pos > pos);
+			System.Diagnostics.Debug.Assert (sep_pos > pos);
 			
 			string prop_name = text.Substring (pos+1, sep_pos - pos - 1);
 			string type_name = string.Concat ("Epsitec.Common.Text.Properties.", prop_name, "Property");

@@ -127,7 +127,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 6);
+			System.Diagnostics.Debug.Assert (args.Length == 6);
 			
 			SizeUnits position_units  = SerializerSupport.DeserializeSizeUnits (args[0]);
 			SizeUnits thickness_units = SerializerSupport.DeserializeSizeUnits (args[1]);

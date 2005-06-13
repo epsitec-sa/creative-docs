@@ -13,9 +13,18 @@ namespace Epsitec.Common.Text.Internal.Sequences
 		}
 		
 		
+		public override Generator.SequenceType	WellKnownType
+		{
+			get
+			{
+				return Generator.SequenceType.Numeric;
+			}
+		}
+		
+		
 		protected override string GetRawText(int rank, System.Globalization.CultureInfo culture)
 		{
-			return string.Format (culture, "{0}", rank + 1);
+			return string.Format (culture, "{0}", rank);
 		}
 	}
 }

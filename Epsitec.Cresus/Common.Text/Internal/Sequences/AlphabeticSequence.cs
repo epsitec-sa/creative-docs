@@ -18,17 +18,36 @@ namespace Epsitec.Common.Text.Internal.Sequences
 		}
 		
 		
+		public override Generator.SequenceType	WellKnownType
+		{
+			get
+			{
+				return Generator.SequenceType.Alphabetic;
+			}
+		}
+		
+		
 		protected override string GetRawText(int rank, System.Globalization.CultureInfo culture)
 		{
-			if ((rank <= 0) ||
-				(rank >= this.alphabet.Length))
+			if ((rank < 1) ||
+				(rank > this.alphabet.Length))
 			{
 				return "?";
 			}
 			
-			return string.Format (culture, "{0}", this.alphabet[rank]);
+			return string.Format (culture, "{0}", this.alphabet[rank-1]);
 		}
 		
+		protected override string GetSetupArgument()
+		{
+			return this.alphabet;
+		}
+		
+		protected override void Setup(string argument)
+		{
+			this.alphabet = alphabet;
+		}
+
 		
 		private string							alphabet;
 	}
