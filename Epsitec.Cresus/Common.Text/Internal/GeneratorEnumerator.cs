@@ -170,6 +170,7 @@ namespace Epsitec.Common.Text.Internal
 			return cursors;
 		}
 		
+		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)

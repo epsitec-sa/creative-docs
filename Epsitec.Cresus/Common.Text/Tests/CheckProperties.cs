@@ -16,6 +16,8 @@ namespace Epsitec.Common.Text.Tests
 			CheckProperties.TestUnderlines ();
 			CheckProperties.TestSerialization ();
 			CheckProperties.TestGenerators ();
+			CheckProperties.TestTraverseText ();
+			CheckProperties.TestGetTextDistance ();
 		}
 
 		
@@ -234,6 +236,125 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursors[2]) == 6+6);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursors[3]) == 29+6);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursors[4]) == 32+6);
+		}
+		
+		private static void TestTraverseText()
+		{
+			TextStory          story  = new TextStory ();
+			Cursors.TempCursor cursor = new Cursors.TempCursor ();
+			
+			story.NewCursor (cursor);
+			
+			ulong[] text;
+			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+			
+			properties.Add (new Properties.FontProperty ("Verdana", "Regular"));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			
+			TextStyle style = story.TextContext.StyleList.NewTextStyle ("Normal", properties);
+			
+			story.ConvertToStyledText ("1234567890", style, null, out text);
+			story.InsertText (cursor, text);
+			
+			Traverser traverser = new Traverser ();
+			
+			TextStory.CodeCallback cb_false = new TextStory.CodeCallback (traverser.TestFalse);
+			TextStory.CodeCallback cb_true  = new TextStory.CodeCallback (traverser.TestTrue);
+			
+			story.SetCursorPosition (cursor, 5);
+			
+			Debug.Assert.IsTrue (-1 == story.TextTable.TraverseText (cursor.CursorId, 5, cb_false));
+			Debug.Assert.IsTrue (0  == story.TextTable.TraverseText (cursor.CursorId, 5, cb_true));
+			Debug.Assert.IsTrue (-1 == story.TextTable.TraverseText (cursor.CursorId, -5, cb_false));
+			Debug.Assert.IsTrue (0  == story.TextTable.TraverseText (cursor.CursorId, -5, cb_true));
+		}
+		
+		private class Traverser
+		{
+			public bool TestTrue(ulong code)
+			{
+				return true;
+			}
+			
+			public bool TestFalse(ulong code)
+			{
+				return false;
+			}
+		}
+		
+		private static void TestGetTextDistance()
+		{
+			TextStory          story  = new TextStory ();
+			Cursors.TempCursor cursor = new Cursors.TempCursor ();
+			
+			story.NewCursor (cursor);
+			
+			ulong[] text;
+			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+			
+			properties.Add (new Properties.FontProperty ("Verdana", "Regular"));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			
+			TextStyle style = story.TextContext.StyleList.NewTextStyle ("Normal", properties);
+			
+			story.ConvertToStyledText ("Abc", style, null, out text);
+			story.InsertText (cursor, text);
+			
+			Properties.GeneratorProperty g1_a = new Properties.GeneratorProperty ("G1", 0);
+			Properties.GeneratorProperty g1_b = new Properties.GeneratorProperty ("G1", 0);
+			
+			properties.Clear (); properties.Add (g1_a);
+			
+			story.ConvertToStyledText ("Def", style, properties, out text);
+			story.InsertText (cursor, text);
+			
+			properties.Clear (); properties.Add (g1_b);
+			
+			story.ConvertToStyledText ("Ghi", style, properties, out text);
+			story.InsertText (cursor, text);
+			
+			story.ConvertToStyledText ("Klm", style, null, out text);
+			story.InsertText (cursor, text);
+			
+			story.SetCursorPosition (cursor, 0);
+			
+			Debug.Assert.IsTrue ('A' == (char) Unicode.Bits.GetCode (story.TextTable.ReadChar (cursor.CursorId, 0)));
+			Debug.Assert.IsTrue ('b' == (char) Unicode.Bits.GetCode (story.TextTable.ReadChar (cursor.CursorId, 1)));
+			Debug.Assert.IsTrue ('c' == (char) Unicode.Bits.GetCode (story.TextTable.ReadChar (cursor.CursorId, 2)));
+			
+			Debug.Assert.IsFalse (story.TextContext.ContainsProperty (story, cursor, 0, g1_a));
+			Debug.Assert.IsTrue (story.TextContext.ContainsProperty (story, cursor, 3, g1_a));
+			
+			story.SetCursorPosition (cursor, 3);
+			
+			Debug.Assert.IsTrue ('A' == (char) Unicode.Bits.GetCode (story.TextTable.ReadChar (cursor.CursorId, -3)));
+			Debug.Assert.IsTrue ('b' == (char) Unicode.Bits.GetCode (story.TextTable.ReadChar (cursor.CursorId, -2)));
+			Debug.Assert.IsTrue ('c' == (char) Unicode.Bits.GetCode (story.TextTable.ReadChar (cursor.CursorId, -1)));
+			
+			Debug.Assert.IsFalse (story.TextContext.ContainsProperty (story, cursor, -1, g1_a));
+			Debug.Assert.IsTrue (story.TextContext.ContainsProperty (story, cursor, 0, g1_a));
+			Debug.Assert.IsTrue (story.TextContext.ContainsProperty (story, cursor, 3, g1_b));
+			
+			Context context = story.TextContext;
+			
+			Debug.Assert.IsTrue (0 == context.GetTextStartDistance (story, cursor, g1_a));
+			Debug.Assert.IsTrue (3 == context.GetTextEndDistance (story, cursor, g1_a));
+			Debug.Assert.IsTrue (-1 == context.GetTextEndDistance (story, cursor, g1_b));
+			
+			story.SetCursorPosition (cursor, 4);
+			
+			Debug.Assert.IsTrue (1 == context.GetTextStartDistance (story, cursor, g1_a));
+			Debug.Assert.IsTrue (2 == context.GetTextEndDistance (story, cursor, g1_a));
+			
+			story.SetCursorPosition (cursor, 5);
+			
+			Debug.Assert.IsTrue (2 == context.GetTextStartDistance (story, cursor, g1_a));
+			Debug.Assert.IsTrue (1 == context.GetTextEndDistance (story, cursor, g1_a));
+			
+			story.SetCursorPosition (cursor, 6);
+			
+			Debug.Assert.IsTrue (-1 == context.GetTextStartDistance (story, cursor, g1_a));
+			Debug.Assert.IsTrue (-1 == context.GetTextEndDistance (story, cursor, g1_a));
 		}
 		
 		private static void Ex1()

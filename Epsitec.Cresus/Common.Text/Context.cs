@@ -412,6 +412,121 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public int GetTextStartDistance(TextStory story, ICursor cursor, Properties.BaseProperty property)
+		{
+			//	Trouve le début du texte marqué avec la propriété indiquée; retourne
+			//	la distance parcourue (-1 en cas d'erreur).
+			//
+			//	Si le curseur se trouve au début du texte marqué, retourne 0.
+			
+			if (this.ContainsProperty (story, cursor, 0, property))
+			{
+				Internal.TextTable text   = story.TextTable;
+				TextFinder         finder = new TextFinder (this, property);
+				
+				int distance = story.GetCursorPosition (cursor);
+				int traverse = text.TraverseText (cursor.CursorId, - distance, finder.Callback);
+				
+				return traverse == -1 ? distance : traverse;
+			}
+			
+			return -1;
+		}
+		
+		public int GetTextEndDistance(TextStory story, ICursor cursor, Properties.BaseProperty property)
+		{
+			//	Trouve la fin du texte marqué avec la propriété indiquée; retourne
+			//	la distance parcourue (-1 en cas d'erreur).
+			
+			if (this.ContainsProperty (story, cursor, 0, property))
+			{
+				Internal.TextTable text   = story.TextTable;
+				TextFinder         finder = new TextFinder (this, property);
+				
+				int distance = story.TextLength - story.GetCursorPosition (cursor);
+				int traverse = text.TraverseText (cursor.CursorId, distance, finder.Callback);
+				
+				return traverse == -1 ? distance : traverse;
+			}
+			
+			return -1;
+		}
+		
+		
+		public bool ContainsProperty(TextStory story, ICursor cursor, Properties.BaseProperty property)
+		{
+			return this.ContainsProperty (story, cursor, 0, property);
+		}
+		
+		public bool ContainsProperty(TextStory story, ICursor cursor, int offset, Properties.BaseProperty property)
+		{
+			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
+			
+			if (code != 0)
+			{
+				code = Internal.CharMarker.ExtractStyleAndSettings (code);
+				
+				Styles.SimpleStyle style = this.style_list[code];
+				
+				if ((style != null) &&
+					(style.Contains (code, property)))
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		
+		#region TextFinder Class
+		private class TextFinder
+		{
+			public TextFinder(Context context, Properties.BaseProperty property)
+			{
+				this.context  = context;
+				this.property = property;
+				this.code     = code;
+			}
+			
+			
+			public TextStory.CodeCallback		Callback
+			{
+				get
+				{
+					return new TextStory.CodeCallback (this.Find);
+				}
+			}
+			
+			
+			public bool Find(ulong code)
+			{
+				code = Internal.CharMarker.ExtractStyleAndSettings (code);
+				
+				if (code == this.code)
+				{
+					return false;
+				}
+				
+				this.code = code;
+				
+				Styles.SimpleStyle style = this.context.style_list[code];
+				
+				if (style.Contains (this.code, this.property))
+				{
+					return false;
+				}
+				
+				return true;
+			}
+			
+			
+			private Context						context;
+			private Properties.BaseProperty		property;
+			private ulong						code;
+		}
+		#endregion
+		
 		#region Markers Class
 		public class Markers
 		{

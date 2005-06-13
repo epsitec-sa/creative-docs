@@ -243,12 +243,12 @@ namespace Epsitec.Common.Text
 		
 		public int ReadText(ICursor cursor, int length, ulong[] buffer)
 		{
-			return this.ReadText (cursor, length, buffer, 0);
+			return this.ReadText (cursor, 0, length, buffer);
 		}
 		
-		public int ReadText(ICursor cursor, int length, ulong[] buffer, int offset)
+		public int ReadText(ICursor cursor, int offset, int length, ulong[] buffer)
 		{
-			return this.text.ReadText (cursor.CursorId, length, buffer, offset);
+			return this.text.ReadText (cursor.CursorId, offset, length, buffer);
 		}
 		
 		public void ChangeMarkers(ICursor cursor, int length, ulong marker, bool set)
@@ -725,7 +725,7 @@ namespace Epsitec.Common.Text
 			this.text.SetCursorPosition (this.temp_cursor.CursorId, from_pos);
 			
 			ulong[] data = new ulong[length];
-			int     read = this.text.ReadText (this.temp_cursor.CursorId, length, data, 0);
+			int     read = this.text.ReadText (this.temp_cursor.CursorId, length, data);
 			
 			Debug.Assert.IsTrue (read == length);
 			

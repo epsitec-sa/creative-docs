@@ -35,7 +35,7 @@ namespace Epsitec.Common.Text.Internal
 			get
 			{
 				ulong[] buffer = { 0 };
-				this.ReadText (cursor_id, 1, buffer, 0);
+				this.ReadText (cursor_id, 1, buffer);
 				return buffer[0];
 			}
 		}
@@ -681,18 +681,100 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public int ReadText(Internal.CursorId cursor_id, int length, ulong[] buffer)
+		public ulong ReadChar(Internal.CursorId cursor_id)
 		{
-			return this.ReadText (cursor_id, length, buffer, 0);
+			ulong[] buffer = new ulong[1];
+			int     length = 1;
+			
+			length = this.ReadText (cursor_id, length, buffer);
+			
+			if (length != 1)
+			{
+				return 0;
+			}
+			
+			return buffer[0];
 		}
 		
-		public int ReadText(Internal.CursorId cursor_id, int length, ulong[] buffer, int offset)
+		public ulong ReadChar(Internal.CursorId cursor_id, int offset)
+		{
+			ulong[] buffer = new ulong[1];
+			int     length = 1;
+			
+			length = this.ReadText (cursor_id, offset, length, buffer);
+			
+			if (length != 1)
+			{
+				return 0;
+			}
+			
+			return buffer[0];
+		}
+		
+		
+		public int ReadText(Internal.CursorId cursor_id, int length, ulong[] buffer)
+		{
+			return this.ReadText (cursor_id, 0, length, buffer);
+		}
+		
+		public int ReadText(Internal.CursorId cursor_id, int offset, int length, ulong[] buffer)
 		{
 			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
 			
 			int index = chunk_id - 1;
 			int read  = 0;
 			int pos   = this.text_chunks[index].GetCursorPosition (cursor_id);
+			
+			if (offset > 0)
+			{
+				while (read < offset)
+				{
+					if (pos == this.text_chunks[index].TextLength)
+					{
+						index++;
+						
+						if (index == this.text_chunks.Length)
+						{
+							return 0;
+						}
+						
+						pos = 0;
+					}
+					else
+					{
+						read += 1;
+						pos  += 1;
+					}
+				}
+				
+				read   = 0;
+				offset = 0;
+			}
+			else if (offset < 0)
+			{
+				while (read > offset)
+				{
+					if (pos == 0)
+					{
+						index--;
+						
+						if (index < 0)
+						{
+							return 0;
+						}
+						
+						pos = this.text_chunks[index].TextLength;
+					}
+					else
+					{
+						read -= 1;
+						pos  -= 1;
+					}
+				}
+				
+				read   = 0;
+				offset = 0;
+			}
 			
 			while (read < length)
 			{
@@ -720,13 +802,20 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public int TraverseText(Internal.CursorId cursor_id, int length, TextStory.CodeCallback callback)
+		public int TraverseText(Internal.CursorId cursor_id, int distance, TextStory.CodeCallback callback)
 		{
 			//	Traverse le texte en commençant à partir de la position du
-			//	curseur.
+			//	curseur. La distance indique combien de caractères parcourir
+			//	au plus; si elle est négative, le parcours se fait en marche
+			//	arrière.
+			//
+			//	En marche avant, on considère l'élément sous le curseur comme
+			//	premier élément; en marche arrière, on considère l'élément qui
+			//	précède immédiatement le curseur comme premier élément.
 			//
 			//	Dès que le callback retourne 'true', on arrête et on retourne
-			//	le nombre de caractères qui ont été traversés avec succès.
+			//	le nombre de caractères qui ont été traversés avec succès
+			//	(résultat positif en cas de succès).
 			//
 			//	Retourne -1 si le callback n'a jamais retourné 'true'.
 			
@@ -736,30 +825,66 @@ namespace Epsitec.Common.Text.Internal
 			int count = 0;
 			int pos   = this.text_chunks[index].GetCursorPosition (cursor_id);
 			
-			while (count < length)
+			if (distance > 0)
 			{
-				if (pos == this.text_chunks[index].TextLength)
+				int length = distance;
+				
+				while (count < length)
 				{
-					index++;
-					
-					if (index == this.text_chunks.Length)
+					if (pos == this.text_chunks[index].TextLength)
 					{
-						break;
+						index++;
+						
+						if (index == this.text_chunks.Length)
+						{
+							break;
+						}
+						
+						pos = 0;
 					}
-					
-					pos = 0;
+					else
+					{
+						ulong code = this.text_chunks[index][pos];
+						
+						if (callback (code))
+						{
+							return count;
+						}
+						
+						count += 1;
+						pos   += 1;
+					}
 				}
-				else
+			}
+			else if (distance < 0)
+			{
+				int length = - distance;
+				
+				while (count < length)
 				{
-					ulong code = this.text_chunks[index][pos];
-					
-					if (callback (code))
+					if (pos == 0)
 					{
-						return count;
+						index--;
+						
+						if (index < 0)
+						{
+							break;
+						}
+						
+						pos = this.text_chunks[index].TextLength;
 					}
-					
-					count += 1;
-					pos   += 1;
+					else
+					{
+						count += 1;
+						pos   -= 1;
+						
+						ulong code = this.text_chunks[index][pos];
+						
+						if (callback (code))
+						{
+							return count - 1;
+						}
+					}
 				}
 			}
 			
@@ -869,11 +994,13 @@ namespace Epsitec.Common.Text.Internal
 		
 		public int WriteText(Internal.CursorId cursor_id, int length, ulong[] buffer)
 		{
-			return this.WriteText (cursor_id, length, buffer, 0);
+			return this.WriteText (cursor_id, 0, length, buffer);
 		}
 		
-		public int WriteText(Internal.CursorId cursor_id, int length, ulong[] buffer, int offset)
+		public int WriteText(Internal.CursorId cursor_id, int offset, int length, ulong[] buffer)
 		{
+			System.Diagnostics.Debug.Assert (offset == 0);
+			
 			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
 			
 			int index = chunk_id - 1;

@@ -219,6 +219,45 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
+		public bool Contains(Properties.BaseProperty property)
+		{
+			if (this.properties == null)
+			{
+				return false;
+			}
+			
+			Properties.WellKnownType search = property.WellKnownType;
+			
+			for (int i = 0; i < this.properties.Length; i++)
+			{
+				Properties.WellKnownType found = this.properties[i].WellKnownType;
+				
+				if (found == search)
+				{
+					//	Trouvé une propriété du même type. Il faut encore vérifier
+					//	que le contenu coïncide :
+					
+					if ((property.GetContentsSignature () == this.properties[i].GetContentsSignature ()) &&
+						(property.CompareEqualContents (this.properties[i])))
+					{
+						return true;
+					}
+				}
+				
+				//	On peut s'arrêter dès que l'on trouve une propriété avec
+				//	un WellKnownType plus grand que celui recherché, car la
+				//	table est triée :
+				
+				if (found > search)
+				{
+					break;
+				}
+			}
+			
+			return false;
+		}
+		
+		
 		public Properties.BaseProperty[] FindProperties(System.Type type)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
