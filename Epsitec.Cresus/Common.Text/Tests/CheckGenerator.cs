@@ -10,7 +10,7 @@ namespace Epsitec.Common.Text.Tests
 	{
 		public static void RunTests()
 		{
-			Generator generator = new Generator ();
+			Generator generator = new Generator ("Test");
 			
 			Generator.Sequence s_num = Generator.CreateSequence (Generator.SequenceType.Numeric);
 			Generator.Sequence s_alf = Generator.CreateSequence (Generator.SequenceType.Alphabetic);
@@ -39,6 +39,20 @@ namespace Epsitec.Common.Text.Tests
 			int[] ranks = new int[] { 1, 10, 3, 2, 3, 4 };
 			
 			Debug.Assert.IsTrue ("1.10.c)2.3.4." == generator.GenerateText (ranks, System.Globalization.CultureInfo.CurrentCulture));
+			
+			Generator.Series series;
+			generator.StartVector = null;
+			
+			series = generator.NewSeries (System.Globalization.CultureInfo.CurrentCulture);
+			
+			Debug.Assert.IsTrue ("1." == series.GetNextText (0));
+			Debug.Assert.IsTrue ("2." == series.GetNextText (0));
+			Debug.Assert.IsTrue ("2.1." == series.GetNextText (1));
+			Debug.Assert.IsTrue ("2.1.a)1." == series.GetNextText (3));
+			Debug.Assert.IsTrue ("2.1.b)" == series.GetNextText (2));
+			Debug.Assert.IsTrue ("2.1.c)" == series.GetNextText (2));
+			Debug.Assert.IsTrue ("3." == series.GetNextText (0));
+			Debug.Assert.IsTrue ("3.1.a)1.1.1." == series.GetNextText (5));
 		}
 	}
 }

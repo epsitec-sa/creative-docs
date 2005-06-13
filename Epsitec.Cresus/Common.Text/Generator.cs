@@ -6,12 +6,21 @@ namespace Epsitec.Common.Text
 	/// <summary>
 	/// La classe Generator gère les générateurs de texte automatique.
 	/// </summary>
-	public class Generator
+	public sealed class Generator
 	{
-		public Generator()
+		internal Generator(string name)
 		{
+			this.name = name;
 		}
 		
+		
+		public string							Name
+		{
+			get
+			{
+				return this.name;
+			}
+		}
 		
 		public Generator.Sequence[]				Sequences
 		{
@@ -20,6 +29,25 @@ namespace Epsitec.Common.Text
 				Sequence[] value = new Sequence[this.sequences.Count];
 				this.sequences.CopyTo (value);
 				return value;
+			}
+		}
+		
+		public int[]							StartVector
+		{
+			get
+			{
+				return this.start_vector == null ? new int[0] : this.start_vector.Clone () as int[];
+			}
+			set
+			{
+				if (value == null)
+				{
+					this.start_vector = null;
+				}
+				else if (! Types.Comparer.Equal (this.start_vector, value))
+				{
+					this.start_vector = value.Clone () as int[];
+				}
 			}
 		}
 		
@@ -37,6 +65,14 @@ namespace Epsitec.Common.Text
 		
 		public string GenerateText(int[] ranks, System.Globalization.CultureInfo culture)
 		{
+			return this.GenerateText (ranks, ranks.Length, culture);
+		}
+		
+		public string GenerateText(int[] ranks, int max_level_count, System.Globalization.CultureInfo culture)
+		{
+			System.Diagnostics.Debug.Assert (max_level_count > 0);
+			System.Diagnostics.Debug.Assert (max_level_count <= ranks.Length);
+			
 			if (this.sequences.Count == 0)
 			{
 				throw new System.InvalidOperationException ();
@@ -44,7 +80,7 @@ namespace Epsitec.Common.Text
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			for (int i = 0; i < ranks.Length; i++)
+			for (int i = 0; i < max_level_count; i++)
 			{
 				int      index    = System.Math.Min (i, this.sequences.Count - 1);
 				Sequence sequence = this.sequences[index] as Sequence;
@@ -55,6 +91,94 @@ namespace Epsitec.Common.Text
 			return buffer.ToString ();
 		}
 		
+		
+		public Generator.Series NewSeries(System.Globalization.CultureInfo culture)
+		{
+			return new Series (this, culture);
+		}
+		
+		
+		#region Series Class
+		public class Series
+		{
+			public Series(Generator generator, System.Globalization.CultureInfo culture)
+			{
+				this.generator = generator;
+				this.vector    = generator.StartVector;	//	clone modifiable
+				this.level     = -1;
+				this.culture   = culture;
+			}
+			
+			
+			public string GetNextText(int level)
+			{
+				this.GrowToLevel (level);
+				
+				if (this.level == -1)
+				{
+					//	Première génération de texte. Utilise le vecteur de
+					//	départ.
+				}
+				else if (this.level < level)
+				{
+					//	On doit générer plus de niveaux que précédemment; il
+					//	faut donc mettre à zéro les nouveaux niveaux :
+					
+					for (int i = this.level + 1; i <= level; i++)
+					{
+						this.vector[i] = 1;
+					}
+				}
+				else if (this.level > level)
+				{
+					//	On repasse au niveau supérieur. Il faut incrémenter le
+					//	dernier numéro actif :
+					
+					this.vector[level]++;
+				}
+				else
+				{
+					//	On reste au même niveau; il faut aussi incrémenter le
+					//	dernier numéro actif :
+					
+					this.vector[level]++;
+				}
+				
+				string text = this.generator.GenerateText (this.vector, level + 1, this.culture);
+				
+				this.level = level;
+				
+				return text;
+			}
+			
+			
+			private void GrowToLevel(int level)
+			{
+				if (level >= this.vector.Length)
+				{
+					int   size = level + 1;
+					int[] copy = new int[size];
+					
+					for (int i = 0; i < this.vector.Length; i++)
+					{
+						copy[i] = this.vector[i];
+					}
+					for (int i = this.vector.Length; i < size; i++)
+					{
+						copy[i] = 1;
+					}
+					
+					this.vector = copy;
+				}
+			}
+			
+			
+			private Generator					generator;
+			private int							level;
+			private int[]						vector;
+			System.Globalization.CultureInfo	culture;
+		}
+		#endregion
 		
 		#region Sequence Class
 		public abstract class Sequence : ISerializableAsText
@@ -230,13 +354,16 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		#region Casing Enumeration
 		public enum Casing
 		{
 			Default,
 			Lower,
 			Upper
 		}
+		#endregion
 		
+		#region SequenceType Enumeration
 		public enum SequenceType
 		{
 			None,
@@ -244,8 +371,10 @@ namespace Epsitec.Common.Text
 			Alphabetic,
 			Numeric
 		}
-		
+		#endregion
 		
 		private System.Collections.ArrayList	sequences = new System.Collections.ArrayList ();
+		private string							name;
+		private int[]							start_vector;
 	}
 }

@@ -12,6 +12,7 @@ namespace Epsitec.Common.Types
 		{
 		}
 		
+		
 		public static bool Equal(object a, object b)
 		{
 			//	Compare deux objets. Pour les tableaux, compare leur contenu; c'est
@@ -34,69 +35,116 @@ namespace Epsitec.Common.Types
 				System.Array a_array = a as System.Array;
 				System.Array b_array = b as System.Array;
 				
-				if ((b_array == null) ||
-					(a_array.Rank != b_array.Rank))
+				return Comparer.Equal (a_array, b_array);
+			}
+			
+			return a.Equals (b);
+		}
+		
+		public static bool Equal(System.Array a, System.Array b)
+		{
+			//	Compare deux tableaux d'objets : l'égalité est définie par le
+			//	contenu des tableaux.
+			
+			if (a == b)
+			{
+				return true;
+			}
+			
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+			
+			if (a.Rank != b.Rank)
+			{
+				return false;
+			}
+			
+			for (int r = 0; r < a.Rank; r++)
+			{
+				if (a.GetLength (r) != b.GetLength (r))
 				{
 					return false;
 				}
-				
-				for (int r = 0; r < a_array.Rank; r++)
-				{
-					if (a_array.GetLength (r) != b_array.GetLength (r))
+			}
+			
+			switch (a.Rank)
+			{
+				case 1:
+					for (int i = 0; i < a.GetLength (0); i++)
 					{
-						return false;
-					}
-				}
-				
-				switch (a_array.Rank)
-				{
-					case 1:
-						for (int i = 0; i < a_array.GetLength (0); i++)
+						if (! Comparer.Equal (a.GetValue (i), b.GetValue (i)))
 						{
-							if (! Comparer.Equal (a_array.GetValue (i), b_array.GetValue (i)))
+							return false;
+						}
+					}
+					break;
+				
+				case 2:
+					for (int i = 0; i < a.GetLength (0); i++)
+					{
+						for (int j = 0; j < a.GetLength (1); j++)
+						{
+							if (! Comparer.Equal (a.GetValue (i, j), b.GetValue (i, j)))
 							{
 								return false;
 							}
 						}
-						break;
-					
-					case 2:
-						for (int i = 0; i < a_array.GetLength (0); i++)
+					}
+					break;
+				
+				case 3:
+					for (int i = 0; i < a.GetLength (0); i++)
+					{
+						for (int j = 0; j < a.GetLength (1); j++)
 						{
-							for (int j = 0; j < a_array.GetLength (1); j++)
+							for (int k = 0; k < a.GetLength (2); k++)
 							{
-								if (! Comparer.Equal (a_array.GetValue (i, j), b_array.GetValue (i, j)))
+								if (! Comparer.Equal (a.GetValue (i, j, k), b.GetValue (i, j, k)))
 								{
 									return false;
 								}
 							}
 						}
-						break;
-					
-					case 3:
-						for (int i = 0; i < a_array.GetLength (0); i++)
-						{
-							for (int j = 0; j < a_array.GetLength (1); j++)
-							{
-								for (int k = 0; k < a_array.GetLength (2); k++)
-								{
-									if (! Comparer.Equal (a_array.GetValue (i, j, k), b_array.GetValue (i, j, k)))
-									{
-										return false;
-									}
-								}
-							}
-						}
-						break;
-					
-					default:
-						throw new System.ArgumentException ("Invalid rank for arrays.");
-				}
+					}
+					break;
 				
-				return true;
+				default:
+					throw new System.ArgumentException ("Invalid rank for arrays.");
 			}
 			
-			return a.Equals (b);
+			return true;
+		}
+		public static bool Equal(int[] a, int[] b)
+		{
+			//	Version optimisée pour comparer des tableaux à une dimension de
+			//	nombres entiers.
+			
+			if (a == b)
+			{
+				return true;
+			}
+			if ((a == null) ||
+				(b == null) ||
+				(a.Length != b.Length))
+			{
+				return false;
+			}
+			
+			System.Diagnostics.Debug.Assert (a.Rank == 1);
+			System.Diagnostics.Debug.Assert (b.Rank == 1);
+			
+			for (int i = 0; i < a.Length; i++)
+			{
+				if (a[i] != b[i])
+				{
+					return false;
+				}
+			}
+			
+			return true;
 		}
 	}
 }

@@ -15,7 +15,7 @@ namespace Epsitec.Common.Text.Tests
 			CheckProperties.TestMargins ();
 			CheckProperties.TestUnderlines ();
 			CheckProperties.TestSerialization ();
-			CheckProperties.TestGenerators ();
+			CheckProperties.TestGeneratorProperties ();
 			CheckProperties.TestTraverseText ();
 			CheckProperties.TestGetTextDistance ();
 		}
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (p3.EnableHyphenation == p3x.EnableHyphenation);
 		}
 		
-		private static void TestGenerators()
+		private static void TestGeneratorProperties()
 		{
 			TextStory          story  = new TextStory ();
 			Cursors.TempCursor cursor = new Cursors.TempCursor ();

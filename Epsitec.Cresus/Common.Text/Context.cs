@@ -11,9 +11,10 @@ namespace Epsitec.Common.Text
 	{
 		public Context()
 		{
-			this.style_list  = new StyleList ();
-			this.layout_list = new LayoutList (this);
-			this.char_marker = new Internal.CharMarker ();
+			this.style_list     = new StyleList ();
+			this.layout_list    = new LayoutList (this);
+			this.generator_list = new GeneratorList (this);
+			this.char_marker    = new Internal.CharMarker ();
 			
 			this.char_marker.Add (Context.Markers.TagSelected);
 			this.char_marker.Add (Context.Markers.TagRequiresSpellChecking);
@@ -42,6 +43,14 @@ namespace Epsitec.Common.Text
 			get
 			{
 				return this.layout_list;
+			}
+		}
+		
+		public GeneratorList					GeneratorList
+		{
+			get
+			{
+				return this.generator_list;
 			}
 		}
 		
@@ -583,6 +592,7 @@ namespace Epsitec.Common.Text
 		
 		private StyleList						style_list;
 		private LayoutList						layout_list;
+		private GeneratorList					generator_list;
 		private Internal.CharMarker				char_marker;
 		private Markers							markers;
 		
