@@ -129,6 +129,11 @@ namespace Epsitec.Common.Text
 		
 		public void MoveCursor(ICursor cursor, int distance)
 		{
+			if (distance == 0)
+			{
+				return;
+			}
+			
 			if (cursor.Attachment == CursorAttachment.Temporary)
 			{
 				this.text.MoveCursor (cursor.CursorId, distance);
@@ -186,6 +191,18 @@ namespace Epsitec.Common.Text
 			//	Passe en revue tous les caractères et met à jour les compteurs
 			//	d'utilisation pour les styles associés :
 			
+			this.IncrementUserCount (text, length);
+			
+			this.text.InsertText (cursor.CursorId, text);
+			this.text_length += length;
+			
+			this.InternalAddOplet (new TextInsertOplet (this, position, length));
+			
+			this.UpdateTextBreakInformation (position, length);
+		}
+		
+		private void IncrementUserCount(ulong[] text, int length)
+		{
 			Internal.StyleTable styles = this.StyleList.InternalStyleTable;
 			
 			for (int i = 0; i < length; i++)
@@ -196,28 +213,10 @@ namespace Epsitec.Common.Text
 				Styles.LocalSettings local = styles.GetLocalSettings (code);
 				Styles.ExtraSettings extra = styles.GetExtraSettings (code);
 				
-				if (style != null)
-				{
-					style.IncrementUserCount ();
-				}
-				
-				if (local != null)
-				{
-					local.IncrementUserCount ();
-				}
-				
-				if (extra != null)
-				{
-					extra.IncrementUserCount ();
-				}
+				if (style != null) style.IncrementUserCount ();
+				if (local != null) local.IncrementUserCount ();
+				if (extra != null) extra.IncrementUserCount ();
 			}
-			
-			this.text.InsertText (cursor.CursorId, text);
-			this.text_length += length;
-			
-			this.InternalAddOplet (new TextInsertOplet (this, position, length));
-			
-			this.UpdateTextBreakInformation (position, length);
 		}
 		
 		public void DeleteText(ICursor cursor, int length)
@@ -246,6 +245,10 @@ namespace Epsitec.Common.Text
 		{
 			//	Remplace le texte sans mettre à jour les informations de undo
 			//	et de redo. Retourne true si une modification a eu lieu.
+			
+			//	Le texte de remplacement n'a pas besoin d'avoir la même longueur
+			//	que le texte qui est remplacé (contrairement à WriteText qui se
+			//	contente d'écraser le texte sur place).
 			
 			int position = this.text.GetCursorPosition (cursor.CursorId);
 			
@@ -288,8 +291,64 @@ namespace Epsitec.Common.Text
 			return this.text.ReadText (cursor.CursorId, offset, length, buffer);
 		}
 		
+		
+		public int WriteText(ICursor cursor, ulong[] new_text)
+		{
+			return this.WriteText (cursor, 0, new_text);
+		}
+		
+		public int WriteText(ICursor cursor, int offset, ulong[] new_text)
+		{
+			//	Remplace du texte existant par un nouveau texte; cette opération
+			//	écrase l'ancien texte, lequel est remplacé caractère par caractère.
+			
+			//	Comparer avec ReplaceText qui peut travailler avec des longueurs
+			//	différentes.
+			
+			int length  = new_text.Length;
+			int changes = 0;
+			
+			Internal.StyleTable styles   = this.StyleList.InternalStyleTable;
+			ulong[]             old_text = new ulong[length];
+			
+			this.text.ReadText (cursor.CursorId, offset, length, old_text);
+			
+			//	Y a-t-il vraiment des modifications ?
+			
+			for (int i = 0; i < length; i++)
+			{
+				if (old_text[i] != new_text[i])
+				{
+					changes++;
+				}
+			}
+			
+			//	S'il n'y a aucune modification dans le texte, il n'y pas non plus
+			//	lieu de faire quoi que ce soit :
+			
+			if (changes == 0)
+			{
+				return length;
+			}
+			
+			
+			this.IncrementUserCount (new_text, length);
+			
+			//	TODO: rendre cette opération annulable !
+			
+			int position = this.text.GetCursorPosition (cursor.CursorId) + offset;
+			int written  = this.text.WriteText (cursor.CursorId, offset, length, new_text);
+			
+			this.UpdateTextBreakInformation (position, length);
+			
+			return written;
+		}
+		
+		
 		public void ChangeMarkers(ICursor cursor, int length, ulong marker, bool set)
 		{
+			//	Cette opération n'est pas annulable :
+			
 			this.text.ChangeMarkers (cursor.CursorId, length, marker, set);
 		}
 		

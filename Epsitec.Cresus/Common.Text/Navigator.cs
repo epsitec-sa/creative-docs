@@ -51,6 +51,16 @@ namespace Epsitec.Common.Text
 			return (offset == -1) ? -distance : -offset;
 		}
 		
+		public static int GetParagraphEndOffset(TextStory story, ICursor cursor)
+		{
+			TextStory.CodeCallback callback = new TextStory.CodeCallback (Navigator.IsParagraphSeparator);
+			
+			int distance = story.TextLength - story.GetCursorPosition (cursor);
+			int offset   = story.TextTable.TraverseText (cursor.CursorId, distance, callback);
+			
+			return (offset == -1) ? distance : offset;
+		}
+		
 		
 		public static bool GetParagraphStyles(TextStory story, ICursor cursor, int offset, out TextStyle[] styles)
 		{
@@ -156,6 +166,23 @@ namespace Epsitec.Common.Text
 				story.ConvertToStyledText ("\u2029", paragraph_styles, paragraph_properties, out text);
 				story.InsertText (cursor, text);
 			}
+		}
+		
+		public static void SetParagraphStylesAndProperties(TextStory story, ICursor cursor, TextStyle[] styles, Properties.BaseProperty[] properties)
+		{
+			int offset_start = Navigator.GetParagraphStartOffset (story, cursor);
+			int offset_end   = Navigator.GetParagraphEndOffset (story, cursor);
+			
+			int length = offset_end - offset_start;
+			
+			ulong[] text = new ulong[length];
+			ulong[] copy = new ulong[length];
+			
+			story.ReadText (cursor, offset_start, length, text);
+			
+			//	...
+			
+			story.WriteText (cursor, offset_start, copy);
 		}
 	}
 }

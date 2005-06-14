@@ -26,6 +26,8 @@ namespace Epsitec.Common.Text
 		
 		public virtual void GenerateText(TextStory story, ICursor cursor)
 		{
+			Navigator.StartParagraphIfNeeded (story, cursor);
+
 		}
 		
 		

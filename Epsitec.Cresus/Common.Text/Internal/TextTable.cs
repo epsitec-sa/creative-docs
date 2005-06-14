@@ -725,55 +725,9 @@ namespace Epsitec.Common.Text.Internal
 			int read  = 0;
 			int pos   = this.text_chunks[index].GetCursorPosition (cursor_id);
 			
-			if (offset > 0)
+			if (this.AdjustByOffset (ref index, ref pos, offset) == false)
 			{
-				while (read < offset)
-				{
-					if (pos == this.text_chunks[index].TextLength)
-					{
-						index++;
-						
-						if (index == this.text_chunks.Length)
-						{
-							return 0;
-						}
-						
-						pos = 0;
-					}
-					else
-					{
-						read += 1;
-						pos  += 1;
-					}
-				}
-				
-				read   = 0;
-				offset = 0;
-			}
-			else if (offset < 0)
-			{
-				while (read > offset)
-				{
-					if (pos == 0)
-					{
-						index--;
-						
-						if (index < 0)
-						{
-							return 0;
-						}
-						
-						pos = this.text_chunks[index].TextLength;
-					}
-					else
-					{
-						read -= 1;
-						pos  -= 1;
-					}
-				}
-				
-				read   = 0;
-				offset = 0;
+				return 0;
 			}
 			
 			while (read < length)
@@ -891,6 +845,7 @@ namespace Epsitec.Common.Text.Internal
 			return -1;
 		}
 		
+		
 		public int GetRunLength(Internal.CursorId cursor_id, int length)
 		{
 			ulong code;
@@ -900,6 +855,11 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		public int GetRunLength(Internal.CursorId cursor_id, int length, out ulong code, out ulong next)
+		{
+			return this.GetRunLength (cursor_id, 0, length, out code, out next);
+		}
+		
+		public int GetRunLength(Internal.CursorId cursor_id, int offset, int length, out ulong code, out ulong next)
 		{
 			//	Trouve la longueur de texte qui utilise exactement le même
 			//	style que celui utilisé à la position de départ.
@@ -917,6 +877,11 @@ namespace Epsitec.Common.Text.Internal
 			int index = chunk_id - 1;
 			int count = 0;
 			int pos   = this.text_chunks[index].GetCursorPosition (cursor_id);
+			
+			if (this.AdjustByOffset (ref index, ref pos, offset) == false)
+			{
+				return 0;
+			}
 			
 			while (count < length)
 			{
@@ -992,6 +957,7 @@ namespace Epsitec.Common.Text.Internal
 			return changed;
 		}
 		
+		
 		public int WriteText(Internal.CursorId cursor_id, int length, ulong[] buffer)
 		{
 			return this.WriteText (cursor_id, 0, length, buffer);
@@ -999,13 +965,16 @@ namespace Epsitec.Common.Text.Internal
 		
 		public int WriteText(Internal.CursorId cursor_id, int offset, int length, ulong[] buffer)
 		{
-			System.Diagnostics.Debug.Assert (offset == 0);
-			
 			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
 			
 			int index = chunk_id - 1;
 			int wrote = 0;
 			int pos   = this.text_chunks[index].GetCursorPosition (cursor_id);
+			
+			if (this.AdjustByOffset (ref index, ref pos, offset) == false)
+			{
+				return 0;
+			}
 			
 			while (wrote < length)
 			{
@@ -1142,6 +1111,58 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
+		
+		private bool AdjustByOffset(ref int index, ref int pos, int offset)
+		{
+			int read = 0;
+			
+			if (offset > 0)
+			{
+				while (read < offset)
+				{
+					if (pos == this.text_chunks[index].TextLength)
+					{
+						index++;
+						
+						if (index == this.text_chunks.Length)
+						{
+							return false;
+						}
+						
+						pos = 0;
+					}
+					else
+					{
+						read += 1;
+						pos  += 1;
+					}
+				}
+			}
+			else if (offset < 0)
+			{
+				while (read > offset)
+				{
+					if (pos == 0)
+					{
+						index--;
+						
+						if (index < 0)
+						{
+							return false;
+						}
+						
+						pos = this.text_chunks[index].TextLength;
+					}
+					else
+					{
+						read -= 1;
+						pos  -= 1;
+					}
+				}
+			}
+			
+			return true;
+		}
 		
 		
 		private Internal.TextChunkId FindTextChunkId(int position)
