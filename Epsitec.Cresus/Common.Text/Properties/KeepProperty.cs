@@ -4,7 +4,9 @@
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// Summary description for KeepProperty.
+	/// La propriété KeepProperty détermine comment un paragraphe se comporte
+	/// par rapport aux autres (paragraphes liés) et comment les veuves et les
+	/// orphelines sont gérées.
 	/// </summary>
 	public class KeepProperty : BaseProperty
 	{
@@ -36,6 +38,14 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return PropertyType.Style;
+			}
+		}
+		
+		public override bool					RequiresUniformParagraph
+		{
+			get
+			{
+				return true;
 			}
 		}
 		

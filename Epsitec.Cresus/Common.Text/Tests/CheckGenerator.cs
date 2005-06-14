@@ -4,7 +4,8 @@
 namespace Epsitec.Common.Text.Tests
 {
 	/// <summary>
-	/// Summary description for CheckUnicode.
+	/// La batterie de tests CheckGenerator vérifie le bon fonctionnement des
+	/// générateurs.
 	/// </summary>
 	public sealed class CheckGenerator
 	{

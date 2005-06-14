@@ -30,6 +30,11 @@ namespace Epsitec.Common.Support
 			Common.Text.Tests.CheckLayout.RunTests ();
 		}
 		
+		[Test] public void CheckNavigator()
+		{
+			Common.Text.Tests.CheckNavigator.RunTests ();
+		}
+		
 		[Test] public void CheckProperties()
 		{
 			Common.Text.Tests.CheckProperties.RunTests ();

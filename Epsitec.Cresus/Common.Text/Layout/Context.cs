@@ -1182,7 +1182,8 @@ restart:
 				
 				if (leading_property != null)
 				{
-					if (double.IsNaN (leading_property.Leading))
+					if ((double.IsNaN (leading_property.Leading)) ||
+						(leading_property.Leading == 0))
 					{
 						//	Pas d'interligne spécifié : utilise l'interligne automatique.
 					}

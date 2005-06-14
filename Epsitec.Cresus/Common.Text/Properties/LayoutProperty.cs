@@ -4,7 +4,8 @@
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// Summary description for LayoutProperty.
+	/// La classe LayoutProperty décrit quel moteur de layout utiliser pour
+	/// un fragment de texte.
 	/// </summary>
 	public class LayoutProperty : BaseProperty
 	{

@@ -30,7 +30,12 @@ namespace Epsitec.Common.Text.Properties
 			
 			for (int i = 0; i < properties.Count; i++)
 			{
+				char flag = props[i].RequiresUniformParagraph ? 'P' : 'X';
+				
 				buffer.Length = 0;
+				buffer.Append (flag);
+				buffer.Append ('.');
+				
 				BaseProperty.SerializeToText (buffer, props[i]);
 				
 				this.serialized_properties[i] = buffer.ToString ();
@@ -61,6 +66,60 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.serialized_properties.Clone () as string[];
 			}
+		}
+		
+		public string[]							SerializedUniformParagraphProperties
+		{
+			get
+			{
+				int count = 0;
+				int index = 0;
+				
+				for (int i = 0; i < this.serialized_properties.Length; i++)
+				{
+					if (this.serialized_properties[i][0] == 'P')
+					{
+						count++;
+					}
+				}
+				
+				string[] copy = new string[count];
+				
+				for (int i = 0; i < this.serialized_properties.Length; i++)
+				{
+					if (this.serialized_properties[i][0] == 'P')
+					{
+						copy[index++] = this.serialized_properties[i];
+						
+						if (index == count)
+						{
+							break;
+						}
+					}
+				}
+				
+				return copy;
+			}
+		}
+		
+		
+		public static BaseProperty[] DeserializeProperties(Context context, string[] serialized_properties)
+		{
+			BaseProperty[] properties = new BaseProperty[serialized_properties.Length];
+			
+			for (int i = 0; i < properties.Length; i++)
+			{
+				properties[i] = PropertiesProperty.DeserializeProperty (context, serialized_properties[i]);
+			}
+			
+			return properties;
+		}
+		
+		public static BaseProperty DeserializeProperty(Context context, string serialized_property)
+		{
+			BaseProperty property;
+			BaseProperty.DeserializeFromText (context, serialized_property, 2, serialized_property.Length-2, out property);
+			return property;
 		}
 		
 		
