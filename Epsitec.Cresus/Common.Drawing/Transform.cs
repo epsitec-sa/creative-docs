@@ -642,14 +642,14 @@ namespace Epsitec.Common.Drawing
 			
 			if ((oa != null) && (ob != null))
 			{
-				if (!Transform.Equal (a.XX, b.XX) ||
-					!Transform.Equal (a.XY, b.XY) ||
-					!Transform.Equal (a.YX, b.YX) ||
-					!Transform.Equal (a.YY, b.YY) ||
-					!Transform.Equal (a.TX, b.TX) ||
-					!Transform.Equal (a.TY, b.TY))
+				if (Transform.Equal (a.XX, b.XX) &&
+					Transform.Equal (a.XY, b.XY) &&
+					Transform.Equal (a.YX, b.YX) &&
+					Transform.Equal (a.YY, b.YY) &&
+					Transform.Equal (a.TX, b.TX) &&
+					Transform.Equal (a.TY, b.TY))
 				{
-					return true;
+					return false;
 				}
 			}
 			
