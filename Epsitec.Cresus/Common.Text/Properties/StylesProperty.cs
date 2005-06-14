@@ -91,9 +91,13 @@ namespace Epsitec.Common.Text.Properties
 		{
 			string[] names = new string[this.styles.Length];
 			
+			//	Les styles sont définis par un nom et une classe d'appartenance
+			//	(par exemple "Default" et TextStyleClass.Paragraph). Il faut
+			//	conserver les deux en cas de sérialisation.
+			
 			for (int i = 0; i < this.styles.Length; i++)
 			{
-				names[i] = this.styles[i].Name;
+				names[i] = StyleList.GetFullName (this.styles[i].Name, this.styles[i].TextStyleClass);
 			}
 			
 			SerializerSupport.Join (buffer,
@@ -112,7 +116,12 @@ namespace Epsitec.Common.Text.Properties
 			
 			for (int i = 0; i < names.Length; i++)
 			{
-				this.styles[i] = context.StyleList.GetTextStyle (names[i]);
+				TextStyleClass text_style_class;
+				string         name;
+				
+				StyleList.SplitFullName (names[i], out name, out text_style_class);
+				
+				this.styles[i] = context.StyleList.GetTextStyle (name, text_style_class);
 			}
 		}
 
@@ -181,7 +190,8 @@ namespace Epsitec.Common.Text.Properties
 			
 			for (int i = 0; i < n; i++)
 			{
-				if (a[i].GetContentsSignature () != b[i].GetContentsSignature ())
+				if ((a[i].GetContentsSignature () != b[i].GetContentsSignature ()) ||
+					(a[i].Name != b[i].Name))
 				{
 					return false;
 				}

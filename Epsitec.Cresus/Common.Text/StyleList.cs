@@ -35,19 +35,29 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		
-		public TextStyle NewTextStyle(string name)
+		internal int							StyleCount
 		{
-			TextStyle style = new TextStyle (name);
+			get
+			{
+				System.Diagnostics.Debug.Assert (this.text_style_list.Count == this.text_style_hash.Count);
+				
+				return this.text_style_list.Count;
+			}
+		}
+		
+		
+		public TextStyle NewTextStyle(string name, TextStyleClass text_style_class)
+		{
+			TextStyle style = new TextStyle (name, text_style_class);
 			
 			this.Attach (style);
 			
 			return style;
 		}
 		
-		public TextStyle NewTextStyle(string name, System.Collections.ICollection properties)
+		public TextStyle NewTextStyle(string name, TextStyleClass text_style_class, System.Collections.ICollection properties)
 		{
-			TextStyle style = new TextStyle (name, properties);
+			TextStyle style = new TextStyle (name, text_style_class, properties);
 			
 			this.Attach (style);
 			
@@ -61,11 +71,13 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public TextStyle GetTextStyle(string name)
+		public TextStyle GetTextStyle(string name, TextStyleClass text_style_class)
 		{
-			if (this.text_style_hash.Contains (name))
+			string full_name = StyleList.GetFullName (name, text_style_class);
+			
+			if (this.text_style_hash.Contains (full_name))
 			{
-				return this.text_style_hash[name] as TextStyle;
+				return this.text_style_hash[full_name] as TextStyle;
 			}
 			else
 			{
@@ -80,31 +92,74 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		internal static string GetFullName(string name, TextStyleClass text_style_class)
+		{
+			switch (text_style_class)
+			{
+				case TextStyleClass.Abstract:	return string.Concat ("A.", name);
+				case TextStyleClass.Paragraph:	return string.Concat ("P.", name);
+				case TextStyleClass.Text:		return string.Concat ("T.", name);
+				case TextStyleClass.Character:	return string.Concat ("C.", name);
+				
+				default:
+					throw new System.ArgumentException ();
+			}
+		}
+		
+		internal static void SplitFullName(string full_name, out string name, out TextStyleClass text_style_class)
+		{
+			if ((full_name.Length < 2) ||
+				(full_name[1] != '.'))
+			{
+				throw new System.ArgumentException ();
+			}
+			
+			char prefix = full_name[0];
+			
+			switch (prefix)
+			{
+				case 'A': text_style_class = TextStyleClass.Abstract;	break;
+				case 'P': text_style_class = TextStyleClass.Paragraph;	break;
+				case 'T': text_style_class = TextStyleClass.Text;		break;
+				case 'C': text_style_class = TextStyleClass.Character;	break;
+				
+				default:
+					throw new System.ArgumentException ();
+			}
+			
+			name = full_name.Substring (2);
+		}
+		
+		
 		private void Attach(TextStyle style)
 		{
-			string name = style.Name;
-
-			if (this.text_style_hash.Contains (name))
+			string         name             = style.Name;
+			TextStyleClass text_style_class = style.TextStyleClass;
+			string         full_name        = StyleList.GetFullName (name, text_style_class);
+			
+			if (this.text_style_hash.Contains (full_name))
 			{
-				throw new System.ArgumentException (string.Format ("TextStyle named {0} already exists", name), "style");
+				throw new System.ArgumentException (string.Format ("TextStyle named {0} ({1}) already exists", name, text_style_class), "style");
 			}
 			
 			this.text_style_list.Add (style);
-			this.text_style_hash[name] = style;
+			this.text_style_hash[full_name] = style;
 		}
 		
 		private void Detach(TextStyle style)
 		{
-			string name = style.Name;
-
-			if (this.text_style_hash.Contains (name))
+			string         name             = style.Name;
+			TextStyleClass text_style_class = style.TextStyleClass;
+			string         full_name        = StyleList.GetFullName (name, text_style_class);
+			
+			if (this.text_style_hash.Contains (full_name))
 			{
 				this.text_style_list.Remove (style);
-				this.text_style_hash.Remove (name);
+				this.text_style_hash.Remove (full_name);
 			}
 			else
 			{
-				throw new System.ArgumentException (string.Format ("TextStyle named {0} does not exist", name), "style");
+				throw new System.ArgumentException (string.Format ("TextStyle named {0} ({1}) does not exist", name, text_style_class), "style");
 			}
 		}
 		

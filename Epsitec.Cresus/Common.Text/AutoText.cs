@@ -7,7 +7,7 @@ namespace Epsitec.Common.Text
 	/// La classe AutoText gère les textes automatiques (texte riches avec des
 	/// propriétés), tels que les listes à puces.
 	/// </summary>
-	public sealed class AutoText
+	public class AutoText
 	{
 		public AutoText(string name)
 		{
@@ -21,6 +21,11 @@ namespace Epsitec.Common.Text
 			{
 				return this.name;
 			}
+		}
+		
+		
+		public virtual void GenerateText(TextStory story, ICursor cursor)
+		{
 		}
 		
 		

@@ -224,6 +224,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Navigator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "NumberSupport.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -270,6 +275,11 @@
                 />
                 <File
                     RelPath = "TextStyle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TextStyleClass.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

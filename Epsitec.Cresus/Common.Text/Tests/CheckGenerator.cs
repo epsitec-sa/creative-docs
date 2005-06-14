@@ -74,7 +74,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontProperty ("Verdana", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
-			TextStyle style = story.TextContext.StyleList.NewTextStyle ("Normal", properties);
+			TextStyle style = story.TextContext.StyleList.NewTextStyle ("Normal", TextStyleClass.Paragraph, properties);
 			
 			Properties.GeneratorProperty g1_a = new Properties.GeneratorProperty ("G1", 0);
 			Properties.GeneratorProperty g1_b = new Properties.GeneratorProperty ("G1", 0);

@@ -33,6 +33,11 @@ namespace Epsitec.Common.Text
 				return (int) (value & Bits.CodeMask);
 			}
 			
+			public static Code GetUnicodeCode(ulong value)
+			{
+				return (Code) (value & Bits.CodeMask);
+			}
+			
 			public static void SetCode(ref ulong value, int code)
 			{
 				if ((code < 0) || (code > 0x0010FFFF))
@@ -144,6 +149,8 @@ namespace Epsitec.Common.Text
 		#region Code, BreakInfo and BreakClass Enumerations
 		public enum Code
 		{
+			Null					= 0x0000,
+			
 			StartOfText				= 0x0002,		//	start of inserted text
 			EndOfText				= 0x0003,		//	end of inserted text
 			StartOfGuardedArea		= 0x0096,
