@@ -365,7 +365,7 @@ namespace Epsitec.Common.Dialogs
 				{
 					port.Color     = Drawing.Color.FromRGB (0, 0, 0);
 					port.LineCap   = Drawing.CapStyle.Square;
-					port.LineJoin  = Drawing.JoinStyle.Miter;
+					port.LineJoin  = Drawing.JoinStyle.MiterRevert;
 					port.LineWidth = 1.5;
 					
 					port.PaintOutline (path);
@@ -376,7 +376,7 @@ namespace Epsitec.Common.Dialogs
 					
 					port.Color     = Drawing.Color.FromRGB (0, 0, 0);
 					port.LineCap   = Drawing.CapStyle.Square;
-					port.LineJoin  = Drawing.JoinStyle.Miter;
+					port.LineJoin  = Drawing.JoinStyle.MiterRevert;
 					port.LineWidth = 0.5;
 					
 					port.PaintOutline (path);
@@ -401,7 +401,7 @@ namespace Epsitec.Common.Dialogs
 					
 					port.Color     = Drawing.Color.FromRGB (1, 0, 0);
 					port.LineCap   = Drawing.CapStyle.Square;
-					port.LineJoin  = Drawing.JoinStyle.Miter;
+					port.LineJoin  = Drawing.JoinStyle.MiterRevert;
 					port.LineWidth = 1.0;
 					
 					port.PaintOutline (path);

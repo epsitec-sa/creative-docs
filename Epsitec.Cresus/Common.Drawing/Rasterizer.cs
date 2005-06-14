@@ -13,6 +13,7 @@ namespace Epsitec.Common.Drawing
 	public enum JoinStyle
 	{
 		Miter = 0,
+		MiterRevert = 1,
 		Round = 2,
 		Bevel = 3,
 	}

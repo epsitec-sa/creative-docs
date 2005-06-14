@@ -496,7 +496,7 @@ namespace Epsitec.Common.Document.Properties
 		// Retourne la valeur d'engraissement pour la bbox.
 		public double InflateBoundingBoxFactor()
 		{
-			if ( this.join == JoinStyle.Miter )
+			if ( this.join == JoinStyle.MiterRevert )
 			{
 				return this.limit;
 			}

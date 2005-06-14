@@ -415,7 +415,7 @@ namespace Epsitec.Common.Drawing
 					
 					Text.Context   context      = this.painter.TextStory.TextContext;
 					Text.StyleList style_list   = context.StyleList;
-					Text.TextStyle style_normal = style_list.NewTextStyle ("Normal", properties);
+					Text.TextStyle style_normal = style_list.NewTextStyle ("Normal", Text.TextStyleClass.Paragraph, properties);
 					
 					this.painter.TextStory.ConvertToStyledText ("Un petit texte juste avant l'image >", style_normal, null, out text);
 					this.painter.TextStory.InsertText (cursor, text);

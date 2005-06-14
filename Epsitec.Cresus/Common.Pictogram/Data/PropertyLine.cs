@@ -326,7 +326,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			if ( this.patternId <= 0 )  // trait simple ou traitillé ?
 			{
-				if ( this.join == Drawing.JoinStyle.Miter )
+				if ( this.join == Drawing.JoinStyle.MiterRevert )
 				{
 					bbox.Inflate(this.width*0.5*this.limit);
 				}

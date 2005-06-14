@@ -630,6 +630,7 @@ namespace Epsitec.Common.Printing
 						this.pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Bevel;
 						break;
 					case Drawing.JoinStyle.Miter:
+					case Drawing.JoinStyle.MiterRevert:
 						this.pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Miter;
 						break;
 					case Drawing.JoinStyle.Round:

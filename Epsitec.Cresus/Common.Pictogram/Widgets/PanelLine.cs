@@ -317,9 +317,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.SelectButtonCap = sel;
 
 			sel = -1;
-			if ( p.Join == Drawing.JoinStyle.Round )  sel = 0;
-			if ( p.Join == Drawing.JoinStyle.Miter )  sel = 1;
-			if ( p.Join == Drawing.JoinStyle.Bevel )  sel = 2;
+			if ( p.Join == Drawing.JoinStyle.Round       )  sel = 0;
+			if ( p.Join == Drawing.JoinStyle.MiterRevert )  sel = 1;
+			if ( p.Join == Drawing.JoinStyle.Bevel       )  sel = 2;
 			this.SelectButtonJoin = sel;
 
 			this.rndMove.ActiveState  = p.RndMove  ? WidgetState.ActiveYes : WidgetState.ActiveNo;
@@ -362,7 +362,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			sel = this.SelectButtonJoin;
 			if ( sel == 0 )  p.Join = Drawing.JoinStyle.Round;
-			if ( sel == 1 )  p.Join = Drawing.JoinStyle.Miter;
+			if ( sel == 1 )  p.Join = Drawing.JoinStyle.MiterRevert;
 			if ( sel == 2 )  p.Join = Drawing.JoinStyle.Bevel;
 
 			p.RndMove  = (this.rndMove.ActiveState  == WidgetState.ActiveYes);

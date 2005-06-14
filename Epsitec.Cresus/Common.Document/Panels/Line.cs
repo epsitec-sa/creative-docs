@@ -205,9 +205,9 @@ namespace Epsitec.Common.Document.Panels
 			this.SelectButtonCap = sel;
 
 			sel = -1;
-			if ( p.Join == JoinStyle.Round )  sel = 0;
-			if ( p.Join == JoinStyle.Miter )  sel = 1;
-			if ( p.Join == JoinStyle.Bevel )  sel = 2;
+			if ( p.Join == JoinStyle.Round       )  sel = 0;
+			if ( p.Join == JoinStyle.MiterRevert )  sel = 1;
+			if ( p.Join == JoinStyle.Bevel       )  sel = 2;
 			this.SelectButtonJoin = sel;
 
 			this.DashToWidget();
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Document.Panels
 
 			sel = this.SelectButtonJoin;
 			if ( sel == 0 )  p.Join = JoinStyle.Round;
-			if ( sel == 1 )  p.Join = JoinStyle.Miter;
+			if ( sel == 1 )  p.Join = JoinStyle.MiterRevert;
 			if ( sel == 2 )  p.Join = JoinStyle.Bevel;
 
 			Properties.StandardDashType newType = this.SelectDash;
