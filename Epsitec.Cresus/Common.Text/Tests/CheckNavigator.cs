@@ -105,6 +105,34 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (Navigator.GetParagraphProperties (story, cursor, 5, out props));
 			Debug.Assert.IsTrue (props.Length == 0);
+			
+			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == 0);
+			
+			story.SetCursorPosition (cursor, 10);
+			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == -10);
+			
+			story.SetCursorPosition (cursor, 21);
+			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == 0);
+			
+			story.SetCursorPosition (cursor, 40);
+			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == -8);
+			
+			story.SetCursorPosition (cursor, 26);
+			Navigator.StartParagraphIfNeeded (story, cursor);
+			
+			text = new ulong[story.TextLength];
+			story.SetCursorPosition (cursor, 0);
+			story.ReadText (cursor, story.TextLength, text);
+			
+			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
+			
+			Navigator.StartParagraphIfNeeded (story, cursor);
+			
+			text = new ulong[story.TextLength];
+			story.SetCursorPosition (cursor, 0);
+			story.ReadText (cursor, story.TextLength, text);
+			
+			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
 		}
 	}
 }

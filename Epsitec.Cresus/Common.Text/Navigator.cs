@@ -35,6 +35,22 @@ namespace Epsitec.Common.Text
 			return false;
 		}
 		
+		public static bool IsParagraphSeparator(ulong code)
+		{
+			return Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (code));
+		}
+		
+		
+		public static int GetParagraphStartOffset(TextStory story, ICursor cursor)
+		{
+			TextStory.CodeCallback callback = new TextStory.CodeCallback (Navigator.IsParagraphSeparator);
+			
+			int distance = story.GetCursorPosition (cursor);
+			int offset   = story.TextTable.TraverseText (cursor.CursorId, - distance, callback);
+			
+			return (offset == -1) ? -distance : -offset;
+		}
+		
 		
 		public static bool GetParagraphStyles(TextStory story, ICursor cursor, int offset, out TextStyle[] styles)
 		{
@@ -112,6 +128,34 @@ namespace Epsitec.Common.Text
 			}
 			
 			return true;
+		}
+		
+		
+		public static void StartParagraphIfNeeded(TextStory story, ICursor cursor)
+		{
+			if (Navigator.IsParagraphStart (story, cursor, 0))
+			{
+				return;
+			}
+			
+			//	Ajoute une fin de paragraphe au point d'insertion courant, afin
+			//	de remplir la condition :
+			
+			int offset = Navigator.GetParagraphStartOffset (story, cursor);
+			
+			TextStyle[]               paragraph_styles;
+			Properties.BaseProperty[] paragraph_properties;
+			
+			if ((Navigator.GetParagraphStyles (story, cursor, offset, out paragraph_styles)) &&
+				(Navigator.GetParagraphProperties (story, cursor, offset, out paragraph_properties)))
+			{
+				ulong[] text;
+				
+				//	Insère un saut de paragraphe :
+				
+				story.ConvertToStyledText ("\u2029", paragraph_styles, paragraph_properties, out text);
+				story.InsertText (cursor, text);
+			}
 		}
 	}
 }
