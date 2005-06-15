@@ -5,6 +5,7 @@
 	<data name="Application.TitleDoc">Crésus Documents</data>
 	<data name="Application.TitlePic">Crésus Pictogrammes</data>
 	<data name="Application.TitleTxt">Crésus Textes</data>
+	<data name="Application.TitleSlide">Crésus Présentations</data>
 	<data name="Application.TitleShort">Crésus</data>
 	
 	<data name="Menu.Main.File">Fichier</data>
@@ -54,14 +55,17 @@
 	<data name="Dialog.Open.TitleDoc">Ouvrir un document</data>
 	<data name="Dialog.Open.TitleMod">Ouvrir un document modèle</data>
 	<data name="Dialog.Open.TitlePic">Ouvrir une icône</data>
+	<data name="Dialog.Open.TitleSlide">Ouvrir une présentation</data>
 	<data name="Dialog.Open.TitleCol">Ouvrir une palette de couleurs</data>
 	<data name="Dialog.Save.TitleDoc">Enregistrer un document</data>
 	<data name="Dialog.Save.TitleMod">Enregistrer un document modèle</data>
 	<data name="Dialog.Save.TitlePic">Enregistrer une icône</data>
+	<data name="Dialog.Save.TitleSlide">Enregistrer une présentation</data>
 	<data name="Dialog.Save.TitleCol">Enregistrer une palette de couleurs</data>
 	<data name="Dialog.FileDoc">Documents</data>
 	<data name="Dialog.FileMod">Documents modèles</data>
 	<data name="Dialog.FilePic">Icônes</data>
+	<data name="Dialog.FileSlide">Présentation</data>
 	<data name="Dialog.FileCol">Palettes de couleurs</data>
 	<data name="Dialog.Export.Title">Exporter la page courante</data>
 

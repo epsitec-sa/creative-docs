@@ -12,6 +12,7 @@ namespace Epsitec.Common.Document
 		Graphic,		// document graphique
 		Pictogram,		// icône
 		Text,			// document texte
+		Slideshow,		// présentation (à la PowerPoint)
 	}
 
 	public enum DocumentMode
@@ -422,7 +423,8 @@ namespace Epsitec.Common.Document
 					if ( err == "" )
 					{
 						if ( Misc.IsExtension(filename, ".crdoc") ||
-							 Misc.IsExtension(filename, ".icon")  )
+							 Misc.IsExtension(filename, ".icon")  ||
+							 Misc.IsExtension(filename, ".slideshow") )
 						{
 							this.Filename = filename;
 							this.globalSettings.LastFilenameAdd(filename);
@@ -682,7 +684,8 @@ namespace Epsitec.Common.Document
 			}
 
 			if ( Misc.IsExtension(filename, ".crdoc") ||
-				 Misc.IsExtension(filename, ".icon")  )
+				 Misc.IsExtension(filename, ".icon")  ||
+				 Misc.IsExtension(filename, ".slideshow") )
 			{
 				this.Filename = filename;
 				this.IsDirtySerialize = false;

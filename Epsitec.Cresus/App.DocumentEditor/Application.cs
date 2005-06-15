@@ -29,6 +29,7 @@ namespace Epsitec.App.DocumentEditor
 			Epsitec.Common.Document.Engine.Initialise();
 			//Application.application = new Application(DocumentType.Pictogram);
 			Application.application = new Application(DocumentType.Graphic);
+			//Application.application = new Application(DocumentType.Slideshow);
 			Application.application.MainWindow.Run();
 		}
 		#endregion
@@ -77,6 +78,10 @@ namespace Epsitec.App.DocumentEditor
 
 				case DocumentType.Text:
 					this.mainWindow.Text = Res.Strings.Application.TitleTxt;
+					break;
+
+				case DocumentType.Slideshow:
+					this.mainWindow.Text = Res.Strings.Application.TitleSlide;
 					break;
 
 				default:
@@ -174,13 +179,16 @@ namespace Epsitec.App.DocumentEditor
 		{
 			get
 			{
-				if ( this.editor.Type == DocumentType.Pictogram )
+				switch ( this.editor.Type )
 				{
-					return ".icon";
-				}
-				else
-				{
-					return ".crdoc";
+					case DocumentType.Pictogram:
+						return ".icon";
+					
+					case DocumentType.Slideshow:
+						return ".slideshow";
+					
+					default:
+						return ".crdoc";
 				}
 			}
 		}
