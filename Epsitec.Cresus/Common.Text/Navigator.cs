@@ -158,6 +158,24 @@ namespace Epsitec.Common.Text
 			//	Ajoute une fin de paragraphe au point d'insertion courant, afin
 			//	de remplir la condition :
 			
+			Navigator.Insert (story, cursor, Unicode.Code.ParagraphSeparator, null, null);
+		}
+		
+		public static void Insert(TextStory story, ICursor cursor, Unicode.Code code, System.Collections.ICollection styles, System.Collections.ICollection properties)
+		{
+			uint[] utf32 = new uint[] { (uint) code };
+			Navigator.Insert (story, cursor, utf32, styles, properties);
+		}
+		
+		public static void Insert(TextStory story, ICursor cursor, string simple_text, System.Collections.ICollection styles, System.Collections.ICollection properties)
+		{
+			uint[] utf32;
+			TextConverter.ConvertFromString (simple_text, out utf32);
+			Navigator.Insert (story, cursor, utf32, styles, properties);
+		}
+		
+		public static void Insert(TextStory story, ICursor cursor, uint[] utf32, System.Collections.ICollection styles, System.Collections.ICollection properties)
+		{
 			int offset = Navigator.GetParagraphStartOffset (story, cursor);
 			
 			TextStyle[] paragraph_styles;
@@ -166,11 +184,18 @@ namespace Epsitec.Common.Text
 			if ((Navigator.GetParagraphStyles (story, cursor, offset, out paragraph_styles)) &&
 				(Navigator.GetParagraphProperties (story, cursor, offset, out paragraph_properties)))
 			{
+				System.Collections.ArrayList all_styles     = new System.Collections.ArrayList ();
+				System.Collections.ArrayList all_properties = new System.Collections.ArrayList ();
+				
+				all_styles.AddRange (paragraph_styles);
+				all_properties.AddRange (paragraph_properties);
+				
+				if (styles != null) all_styles.AddRange (styles);
+				if (properties != null) all_properties.AddRange (properties);
+				
 				ulong[] text;
 				
-				//	Insère un saut de paragraphe :
-				
-				story.ConvertToStyledText ("\u2029", paragraph_styles, paragraph_properties, out text);
+				story.ConvertToStyledText (utf32, story.FlattenStylesAndProperties (all_styles, all_properties), out text);
 				story.InsertText (cursor, text);
 			}
 		}

@@ -8,7 +8,7 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public abstract class ParagraphManager : IParagraphManager
 	{
-		public ParagraphManager(string name)
+		public ParagraphManager()
 		{
 		}
 		
@@ -17,7 +17,15 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.GetType ().Name;
+				string name    = this.GetType ().Name;
+				string manager = "Manager";
+				
+				if (name.EndsWith (manager))
+				{
+					return name.Substring (0, name.Length - manager.Length);
+				}
+				
+				return name;
 			}
 		}
 		

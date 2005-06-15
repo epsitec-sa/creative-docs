@@ -136,13 +136,19 @@ namespace Epsitec.Common.Text.Tests
 			story.SetCursorPosition (cursor, 26);
 			Navigator.StartParagraphIfNeeded (story, cursor);
 			
+			Debug.Assert.IsTrue (story.TextLength == 49);
+			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 27);
+			
 			text = new ulong[story.TextLength];
 			story.SetCursorPosition (cursor, 0);
 			story.ReadText (cursor, story.TextLength, text);
 			
 			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
 			
+			story.SetCursorPosition (cursor, 27);
 			Navigator.StartParagraphIfNeeded (story, cursor);
+			
+			Debug.Assert.IsTrue (story.TextLength == 49);
 			
 			text = new ulong[story.TextLength];
 			story.SetCursorPosition (cursor, 0);

@@ -108,6 +108,7 @@ namespace Epsitec.Common.Text.Properties
 			this.docking_mark = SerializerSupport.DeserializeString (args[2]);
 		}
 		
+		
 		public override Property GetCombination(Property property)
 		{
 			Debug.Assert.IsTrue (property is Properties.TabProperty);
@@ -122,6 +123,7 @@ namespace Epsitec.Common.Text.Properties
 			
 			return c;
 		}
+		
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{

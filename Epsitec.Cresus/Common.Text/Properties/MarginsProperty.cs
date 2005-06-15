@@ -293,6 +293,7 @@ namespace Epsitec.Common.Text.Properties
 			this.enable_hyphenation      = enable_hyphenation;
 		}
 		
+		
 		public override Property GetCombination(Property property)
 		{
 			Debug.Assert.IsTrue (property is Properties.MarginsProperty);
@@ -327,6 +328,7 @@ namespace Epsitec.Common.Text.Properties
 			
 			return c;
 		}
+		
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{

@@ -110,6 +110,19 @@ namespace Epsitec.Common.Text
 		public abstract void DeserializeFromText(Context context, string text, int pos, int length);
 		#endregion
 		
+		public string SerializeToText()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			this.SerializeToText (buffer);
+			return buffer.ToString ();
+		}
+		
+		public void DeserializeFromText(Context context, string text)
+		{
+			this.DeserializeFromText (context, text, 0, text.Length);
+		}
+		
+		
 		public override string ToString()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -242,6 +255,11 @@ namespace Epsitec.Common.Text
 			buffer.Append ("}");
 		}
 		
+		public static void DeserializeFromText(Context context, string text, out Property property)
+		{
+			Property.DeserializeFromText (context, text, 0, text.Length, out property);
+		}
+		
 		public static void DeserializeFromText(Context context, string text, int pos, int length, out Property property)
 		{
 			System.Diagnostics.Debug.Assert (text[pos+0] == '{');
@@ -263,6 +281,7 @@ namespace Epsitec.Common.Text
 			
 			property.DeserializeFromText (context, text, sep_pos, end_pos - sep_pos - 1);
 		}
+		
 		
 		protected void DefineVersion(long version)
 		{

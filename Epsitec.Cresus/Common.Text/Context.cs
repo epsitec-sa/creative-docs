@@ -63,6 +63,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public System.Globalization.CultureInfo	Culture
+		{
+			get
+			{
+				return System.Globalization.CultureInfo.CurrentCulture;
+			}
+		}
+		
 		
 		public Context.Markers					Marker
 		{

@@ -15,10 +15,9 @@ namespace Epsitec.Common.Text.Properties
 			this.unique_id = System.Threading.Interlocked.Increment (ref AutoTextProperty.next_unique_id);
 		}
 		
-		public AutoTextProperty(string source, string parameter) : this ()
+		public AutoTextProperty(string tag) : this ()
 		{
-			this.source    = source;
-			this.parameter = parameter;
+			this.tag = tag;
 		}
 		
 		
@@ -47,19 +46,11 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public string							Source
+		public string							Tag
 		{
 			get
 			{
-				return this.source;
-			}
-		}
-		
-		public string							Parameter
-		{
-			get
-			{
-				return this.parameter;
+				return this.tag;
 			}
 		}
 		
@@ -80,21 +71,18 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeString (this.source),
-				/**/				SerializerSupport.SerializeString (this.parameter));
+				/**/				SerializerSupport.SerializeString (this.tag));
 		}
 
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 2);
+			System.Diagnostics.Debug.Assert (args.Length == 1);
 			
-			string source    = SerializerSupport.DeserializeString (args[0]);
-			string parameter = SerializerSupport.DeserializeString (args[1]);
+			string tag = SerializerSupport.DeserializeString (args[0]);
 			
-			this.source    = source;
-			this.parameter = parameter;
+			this.tag = tag;
 		}
 		
 		public override Property GetCombination(Property property)
@@ -105,8 +93,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.source);
-			checksum.UpdateValue (this.parameter);
+			checksum.UpdateValue (this.tag);
 			checksum.UpdateValue (this.unique_id);
 		}
 		
@@ -118,8 +105,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(AutoTextProperty a, AutoTextProperty b)
 		{
-			return a.source == b.source
-				&& a.parameter == b.parameter
+			return a.tag == b.tag
 				&& a.unique_id == b.unique_id;
 		}
 		
@@ -127,8 +113,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static long						next_unique_id;
 		
-		private string							source;
-		private string							parameter;
+		private string							tag;
 		private readonly long					unique_id;
 	}
 }
