@@ -504,6 +504,93 @@ namespace Epsitec.Common.Text
 		
 		public void ConvertToStyledText(string simple_text, System.Collections.ICollection text_styles, System.Collections.ICollection properties, out ulong[] styled_text)
 		{
+			this.ConvertToStyledText (simple_text, this.FlattenStylesAndProperties (text_styles, properties), out styled_text);
+		}
+		
+		public void ConvertToStyledText(string simple_text, System.Collections.ICollection properties, out ulong[] styled_text)
+		{
+			uint[] utf32;
+			
+			TextConverter.ConvertFromString (simple_text, out utf32);
+			
+			this.ConvertToStyledText (utf32, properties, out styled_text);
+		}
+		
+		public void ConvertToStyledText(uint[] utf32, System.Collections.ICollection properties, out ulong[] styled_text)
+		{
+			ulong style;
+			int   length = utf32.Length;
+			
+			this.ConvertToStyledText (properties, out style);
+			
+			styled_text = new ulong[length];
+			
+			for (int i = 0; i < length; i++)
+			{
+				styled_text[i] = utf32[i] | style;
+			}
+		}
+		
+		public void ConvertToStyledText(System.Collections.ICollection properties, out ulong style)
+		{
+			//	Trie les propriétés selon leur type; certaines vont servir à
+			//	définir le style, d'autres à définir les réglages locaux et
+			//	spéciaux :
+			
+			int length = properties == null ? 0 : properties.Count;
+			
+			Properties.BaseProperty[] prop_mixed = new Properties.BaseProperty[length];
+			
+			Styles.SimpleStyle   search_style = new Styles.SimpleStyle ();
+			Styles.LocalSettings search_local = new Styles.LocalSettings ();
+			Styles.ExtraSettings search_extra = new Styles.ExtraSettings ();
+			
+			Styles.BasePropertyContainer.Accumulator style_acc = search_style.StartAccumulation ();
+			Styles.BasePropertyContainer.Accumulator local_acc = search_local.StartAccumulation ();
+			Styles.BasePropertyContainer.Accumulator extra_acc = search_extra.StartAccumulation ();
+			
+			if (length > 0)
+			{
+				properties.CopyTo (prop_mixed, 0);
+			}
+			
+			for (int i = 0; i < length; i++)
+			{
+				switch (prop_mixed[i].PropertyType)
+				{
+					case Properties.PropertyType.Style:			style_acc.Accumulate (prop_mixed[i]); break;
+					case Properties.PropertyType.LocalSetting:	local_acc.Accumulate (prop_mixed[i]); break;
+					case Properties.PropertyType.ExtraSetting:	extra_acc.Accumulate (prop_mixed[i]); break;
+					
+					default:
+						throw new System.ArgumentException ("Invalid property type", "properties");
+				}
+			}
+			
+			//	Génère le style et les réglages en fonction des propriétés :
+			
+			style_acc.Done ();
+			local_acc.Done ();
+			extra_acc.Done ();
+			
+			style = 0;
+			
+			//	Attache le style et les réglages; réutilise de manière interne
+			//	un style existant, si possible :
+			
+			this.StyleList.InternalStyleTable.Attach (ref style, search_style, search_local, search_extra);
+			
+			if ((style_acc.RequiresSpecialCodeProcessing) ||
+				(local_acc.RequiresSpecialCodeProcessing) ||
+				(extra_acc.RequiresSpecialCodeProcessing))
+			{
+				Unicode.Bits.SetSpecialCodeFlag (ref style, true);
+			}
+		}
+		
+		
+		public System.Collections.ArrayList FlattenStylesAndProperties(System.Collections.ICollection text_styles, System.Collections.ICollection properties)
+		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
 			if ((text_styles != null) &&
@@ -558,76 +645,7 @@ namespace Epsitec.Common.Text
 				list.Add (new Properties.PropertiesProperty (properties));
 			}
 			
-			this.ConvertToStyledText (simple_text, list, out styled_text);
-		}
-		
-		public void ConvertToStyledText(string simple_text, System.Collections.ICollection properties, out ulong[] styled_text)
-		{
-			uint[] utf32;
-			
-			TextConverter.ConvertFromString (simple_text, out utf32);
-			
-			//	Trie les propriétés selon leur type; certaines vont servir à
-			//	définir le style, d'autres à définir les réglages locaux et
-			//	spéciaux :
-			
-			int length = properties == null ? 0 : properties.Count;
-			
-			Properties.BaseProperty[] prop_mixed = new Properties.BaseProperty[length];
-			
-			Styles.SimpleStyle   search_style = new Styles.SimpleStyle ();
-			Styles.LocalSettings search_local = new Styles.LocalSettings ();
-			Styles.ExtraSettings search_extra = new Styles.ExtraSettings ();
-			
-			Styles.BasePropertyContainer.Accumulator style_acc = search_style.StartAccumulation ();
-			Styles.BasePropertyContainer.Accumulator local_acc = search_local.StartAccumulation ();
-			Styles.BasePropertyContainer.Accumulator extra_acc = search_extra.StartAccumulation ();
-			
-			if (length > 0)
-			{
-				properties.CopyTo (prop_mixed, 0);
-			}
-			
-			for (int i = 0; i < length; i++)
-			{
-				switch (prop_mixed[i].PropertyType)
-				{
-					case Properties.PropertyType.Style:			style_acc.Accumulate (prop_mixed[i]); break;
-					case Properties.PropertyType.LocalSetting:	local_acc.Accumulate (prop_mixed[i]); break;
-					case Properties.PropertyType.ExtraSetting:	extra_acc.Accumulate (prop_mixed[i]); break;
-					
-					default:
-						throw new System.ArgumentException ("Invalid property type", "properties");
-				}
-			}
-			
-			//	Génère le style et les réglages en fonction des propriétés :
-			
-			style_acc.Done ();
-			local_acc.Done ();
-			extra_acc.Done ();
-			
-			ulong style = 0;
-			
-			//	Attache le style et les réglages; réutilise de manière interne
-			//	un style existant, si possible :
-			
-			this.StyleList.InternalStyleTable.Attach (ref style, search_style, search_local, search_extra);
-			
-			if ((style_acc.RequiresSpecialCodeProcessing) ||
-				(local_acc.RequiresSpecialCodeProcessing) ||
-				(extra_acc.RequiresSpecialCodeProcessing))
-			{
-				Unicode.Bits.SetSpecialCodeFlag (ref style, true);
-			}
-			
-			length      = utf32.Length;
-			styled_text = new ulong[length];
-			
-			for (int i = 0; i < length; i++)
-			{
-				styled_text[i] = utf32[i] | style;
-			}
+			return list;
 		}
 		
 		
@@ -666,6 +684,7 @@ namespace Epsitec.Common.Text
 				if (extra != null) extra.DecrementUserCount ();
 			}
 		}
+		
 		
 		private void InternalAddOplet(Common.Support.IOplet oplet)
 		{

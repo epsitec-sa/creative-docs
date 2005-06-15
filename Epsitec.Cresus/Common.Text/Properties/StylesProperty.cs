@@ -87,6 +87,51 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public int								CountStyles
+		{
+			get
+			{
+				return this.styles.Length;
+			}
+		}
+		
+		public int								CountParagraphStyles
+		{
+			get
+			{
+				int count = 0;
+				
+				for (int i = 0; i < this.styles.Length; i++)
+				{
+					if (this.styles[i].TextStyleClass == TextStyleClass.Paragraph)
+					{
+						count++;
+					}
+				}
+				
+				return count;
+			}
+		}
+		
+		public int								CountOtherStyles
+		{
+			get
+			{
+				int count = 0;
+				
+				for (int i = 0; i < this.styles.Length; i++)
+				{
+					if (this.styles[i].TextStyleClass != TextStyleClass.Paragraph)
+					{
+						count++;
+					}
+				}
+				
+				return count;
+			}
+		}
+		
+		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			string[] names = new string[this.styles.Length];

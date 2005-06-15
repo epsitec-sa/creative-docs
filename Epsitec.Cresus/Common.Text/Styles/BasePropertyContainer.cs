@@ -341,6 +341,18 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
+		public void Flatten(System.Collections.ArrayList list)
+		{
+			if (this.properties != null)
+			{
+				for (int i = 0; i < this.properties.Length; i++)
+				{
+					list.Add (this.properties[i]);
+				}
+			}
+		}
+		
+		
 		public Styles.BasePropertyContainer.Accumulator StartAccumulation()
 		{
 			return new Styles.BasePropertyContainer.Accumulator (this);

@@ -23,23 +23,11 @@ namespace Epsitec.Common.Text.Properties
 		{
 			this.serialized_properties = new string[properties.Count];
 			
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			BaseProperty[]            props  = new BaseProperty[properties.Count];
+			BaseProperty[] props  = new BaseProperty[properties.Count];
 			
 			properties.CopyTo (props, 0);
 			
-			for (int i = 0; i < properties.Count; i++)
-			{
-				char flag = props[i].RequiresUniformParagraph ? 'P' : 'X';
-				
-				buffer.Length = 0;
-				buffer.Append (flag);
-				buffer.Append ('.');
-				
-				BaseProperty.SerializeToText (buffer, props[i]);
-				
-				this.serialized_properties[i] = buffer.ToString ();
-			}
+			this.serialized_properties = PropertiesProperty.SerializeProperties (props);
 		}
 		
 		
@@ -102,9 +90,76 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public string[]							SerializedOtherProperties
+		{
+			get
+			{
+				int count = 0;
+				int index = 0;
+				
+				for (int i = 0; i < this.serialized_properties.Length; i++)
+				{
+					if (this.serialized_properties[i][0] != 'P')
+					{
+						count++;
+					}
+				}
+				
+				string[] copy = new string[count];
+				
+				for (int i = 0; i < this.serialized_properties.Length; i++)
+				{
+					if (this.serialized_properties[i][0] != 'P')
+					{
+						copy[index++] = this.serialized_properties[i];
+						
+						if (index == count)
+						{
+							break;
+						}
+					}
+				}
+				
+				return copy;
+			}
+		}
+		
+		
+		public static string[] SerializeProperties(BaseProperty[] properties)
+		{
+			if ((properties == null) ||
+				(properties.Length == 0))
+			{
+				return new string[0];
+			}
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			string[]   serialized_properties = new string[properties.Length];
+			
+			for (int i = 0; i < properties.Length; i++)
+			{
+				char flag = properties[i].RequiresUniformParagraph ? 'P' : 'X';
+				
+				buffer.Length = 0;
+				buffer.Append (flag);
+				buffer.Append ('.');
+				
+				BaseProperty.SerializeToText (buffer, properties[i]);
+				
+				serialized_properties[i] = buffer.ToString ();
+			}
+			
+			return serialized_properties;
+		}
 		
 		public static BaseProperty[] DeserializeProperties(Context context, string[] serialized_properties)
 		{
+			if ((serialized_properties == null) ||
+				(serialized_properties.Length == 0))
+			{
+				return new BaseProperty[0];
+			}
+			
 			BaseProperty[] properties = new BaseProperty[serialized_properties.Length];
 			
 			for (int i = 0; i < properties.Length; i++)

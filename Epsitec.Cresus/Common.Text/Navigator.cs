@@ -43,6 +43,10 @@ namespace Epsitec.Common.Text
 		
 		public static int GetParagraphStartOffset(TextStory story, ICursor cursor)
 		{
+			//	Retourne l'offset au début du paragraphe. L'offset est négatif
+			//	ou nul, dans tous les cas, et correspond à une distance relative
+			//	entre la position courante et le premier caractère du paragraphe.
+			
 			TextStory.CodeCallback callback = new TextStory.CodeCallback (Navigator.IsParagraphSeparator);
 			
 			int distance = story.GetCursorPosition (cursor);
@@ -51,14 +55,17 @@ namespace Epsitec.Common.Text
 			return (offset == -1) ? -distance : -offset;
 		}
 		
-		public static int GetParagraphEndOffset(TextStory story, ICursor cursor)
+		public static int GetParagraphEndLength(TextStory story, ICursor cursor)
 		{
+			//	Retourne la longueur du paragraph depuis la position courante
+			//	jusqu'à sa fin, y compris le caractère de terminaison.
+			
 			TextStory.CodeCallback callback = new TextStory.CodeCallback (Navigator.IsParagraphSeparator);
 			
 			int distance = story.TextLength - story.GetCursorPosition (cursor);
 			int offset   = story.TextTable.TraverseText (cursor.CursorId, distance, callback);
 			
-			return (offset == -1) ? distance : offset;
+			return (offset == -1) ? distance : offset+1;
 		}
 		
 		
@@ -168,21 +175,107 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public static void SetParagraphStylesAndProperties(TextStory story, ICursor cursor, System.Collections.ICollection styles, System.Collections.ICollection properties)
+		{
+			TextStyle[]               s_array = new TextStyle[styles == null ? 0 : styles.Count];
+			Properties.BaseProperty[] p_array = new Properties.BaseProperty[properties == null ? 0 : properties.Count];
+			
+			if (styles != null) styles.CopyTo (s_array, 0);
+			if (properties != null) properties.CopyTo (p_array, 0);
+			
+			Navigator.SetParagraphStylesAndProperties (story, cursor, s_array, p_array);
+		}
+		
 		public static void SetParagraphStylesAndProperties(TextStory story, ICursor cursor, TextStyle[] styles, Properties.BaseProperty[] properties)
 		{
 			int offset_start = Navigator.GetParagraphStartOffset (story, cursor);
-			int offset_end   = Navigator.GetParagraphEndOffset (story, cursor);
+			int offset_end   = Navigator.GetParagraphEndLength (story, cursor);
 			
 			int length = offset_end - offset_start;
 			
 			ulong[] text = new ulong[length];
-			ulong[] copy = new ulong[length];
 			
 			story.ReadText (cursor, offset_start, length, text);
 			
-			//	...
+			ulong code  = 0;
+			int   start = 0;
+			int   count = 0;
 			
-			story.WriteText (cursor, offset_start, copy);
+			for (int i = 0; i < length; i++)
+			{
+				ulong next = Internal.CharMarker.ExtractStyleAndSettings (text[i]);
+				
+				if (code != next)
+				{
+					Navigator.SetParagraphStylesAndProperties (story, text, code, start, count, styles, properties);
+					
+					start = i;
+					count = 1;
+					code  = next;
+				}
+				else
+				{
+					count++;
+				}
+			}
+			
+			Navigator.SetParagraphStylesAndProperties (story, text, code, start, count, styles, properties);
+			
+			story.WriteText (cursor, offset_start, text);
+		}
+		
+		private static void SetParagraphStylesAndProperties(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] paragraph_styles, Properties.BaseProperty[] paragraph_properties)
+		{
+			if (length == 0)
+			{
+				return;
+			}
+			
+			Styles.SimpleStyle            simple = story.TextContext.StyleList[code];
+			Properties.StylesProperty     s_prop = simple[Properties.WellKnownType.Styles] as Properties.StylesProperty;
+			Properties.PropertiesProperty p_prop = simple[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
+			
+			string[]       serialized_other_properties = (p_prop == null) ? null : p_prop.SerializedOtherProperties;
+			Properties.BaseProperty[] other_properties = Properties.PropertiesProperty.DeserializeProperties (story.TextContext, serialized_other_properties);
+			
+			//	Crée la table des styles à utiliser en retirant les anciens styles
+			//	de paragraphe et en insérant les nouveaux à la place :
+			
+			TextStyle[] old_styles = s_prop.Styles;
+			TextStyle[] new_styles = new TextStyle[paragraph_styles.Length + s_prop.CountOtherStyles];
+			
+			System.Array.Copy (paragraph_styles, 0, new_styles, 0, paragraph_styles.Length);
+			
+			int index = paragraph_styles.Length;
+			
+			for (int i = 0; i < old_styles.Length; i++)
+			{
+				if (old_styles[i].TextStyleClass != TextStyleClass.Paragraph)
+				{
+					new_styles[index++] = old_styles[i];
+				}
+			}
+			
+			System.Diagnostics.Debug.Assert (index == new_styles.Length);
+			
+			//	Crée la table des propriétés à utiliser :
+			
+			Properties.BaseProperty[] new_properties = new Properties.BaseProperty[paragraph_properties.Length + other_properties.Length];
+			
+			System.Array.Copy (paragraph_properties, 0, new_properties, 0, paragraph_properties.Length);
+			System.Array.Copy (other_properties, 0, new_properties, paragraph_properties.Length, other_properties.Length);
+			
+			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (new_styles, new_properties);
+			
+			ulong style_bits;
+			
+			story.ConvertToStyledText (flat, out style_bits);
+			
+			for (int i = 0; i < length; i++)
+			{
+				text[offset+i] &= ~ Internal.CharMarker.StyleAndSettingsMask;
+				text[offset+i] |= style_bits;
+			}
 		}
 	}
 }

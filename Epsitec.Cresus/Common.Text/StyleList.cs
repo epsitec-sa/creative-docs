@@ -92,6 +92,21 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		internal Properties.BaseProperty[] Flatten(ulong code)
+		{
+			Styles.SimpleStyle style = this[code];
+			
+			if (style != null)
+			{
+				return style.Flatten (code);
+			}
+			else
+			{
+				return new Properties.BaseProperty[0];
+			}
+		}
+		
+		
 		internal static string GetFullName(string name, TextStyleClass text_style_class)
 		{
 			switch (text_style_class)

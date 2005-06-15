@@ -349,6 +349,25 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
+		public Properties.BaseProperty[] Flatten(ulong code)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			ExtraSettings extra = this.GetExtraSettings (code);
+			LocalSettings local = this.GetLocalSettings (code);
+			
+			this.Flatten (list);
+			
+			if (extra != null) extra.Flatten (list);
+			if (local != null) local.Flatten (list);
+			
+			Properties.BaseProperty[] props = new Properties.BaseProperty[list.Count];
+			list.CopyTo (props);
+			
+			return props;
+		}
+		
+		
 		public static bool CompareEqual(Styles.BaseStyle a, Styles.BaseStyle b)
 		{
 			//	Détermine si les deux styles ont le même contenu. Utilise le

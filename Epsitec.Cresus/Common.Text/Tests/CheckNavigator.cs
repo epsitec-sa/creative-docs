@@ -65,6 +65,22 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (story.TextLength == 48);
 			
+			story.SetCursorPosition (cursor, 0);
+			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == 0);
+			Debug.Assert.IsTrue (Navigator.GetParagraphEndLength (story, cursor) == 21);
+			
+			story.SetCursorPosition (cursor, 10);
+			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == -10);
+			Debug.Assert.IsTrue (Navigator.GetParagraphEndLength (story, cursor) == 11);
+			
+			story.SetCursorPosition (cursor, 30);
+			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == -9);
+			Debug.Assert.IsTrue (Navigator.GetParagraphEndLength (story, cursor) == 2);
+			
+			story.SetCursorPosition (cursor, 48);
+			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == 0);
+			Debug.Assert.IsTrue (Navigator.GetParagraphEndLength (story, cursor) == 0);
+			
 			text = new ulong[story.TextLength];
 			story.SetCursorPosition (cursor, 0);
 			story.ReadText (cursor, story.TextLength, text);
@@ -127,6 +143,19 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
 			
 			Navigator.StartParagraphIfNeeded (story, cursor);
+			
+			text = new ulong[story.TextLength];
+			story.SetCursorPosition (cursor, 0);
+			story.ReadText (cursor, story.TextLength, text);
+			
+			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
+			
+			properties.Clear ();
+			properties.Add (new Properties.LeadingProperty (0.0, Properties.SizeUnits.Points, Properties.AlignMode.Undefined));
+			properties.Add (new Properties.MarginsProperty (10.0, 10.0, Properties.SizeUnits.Millimeters));
+			
+			story.SetCursorPosition (cursor, 2);
+			Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style2 }, properties);
 			
 			text = new ulong[story.TextLength];
 			story.SetCursorPosition (cursor, 0);
