@@ -6,26 +6,23 @@ namespace Epsitec.Common.Text
 	/// <summary>
 	/// La classe ParagraphManager ...
 	/// </summary>
-	public abstract class ParagraphManager
+	public abstract class ParagraphManager : IParagraphManager
 	{
 		public ParagraphManager(string name)
 		{
-			this.name = name;
 		}
 		
 		
-		public string							Name
+		public virtual string					Name
 		{
 			get
 			{
-				return this.name;
+				return this.GetType ().Name;
 			}
 		}
 		
 		
-		public abstract void GenerateText(TextStory story, ICursor cursor);
-		
-		
-		private string							name;
+		public abstract void AttachToParagraph(TextStory story, ICursor cursor, string[] parameters);
+		public abstract void DetachFromParagraph(TextStory story, ICursor cursor, string[] parameters);
 	}
 }

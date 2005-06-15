@@ -12,19 +12,23 @@ namespace Epsitec.Common.Text
 		{
 			this.context  = context;
 			this.managers = new System.Collections.Hashtable ();
+			
+			//	Ajoute les gestionnaires de paragraphes connus :
+			
+			this.RegisterTrustedAssembly (this.GetType ().Assembly);
 		}
 		
 		
-		public ParagraphManager					this[string name]
+		public IParagraphManager				this[string name]
 		{
 			get
 			{
-				return this.managers[name] as ParagraphManager;
+				return this.managers[name] as IParagraphManager;
 			}
 		}
 		
 		
-		public void AddParagraphManager(ParagraphManager manager)
+		public void AddParagraphManager(IParagraphManager manager)
 		{
 			string name = manager.Name;
 			
@@ -33,7 +37,7 @@ namespace Epsitec.Common.Text
 			this.managers[name] = manager;
 		}
 		
-		public void RemoveParagraphManager(ParagraphManager manager)
+		public void RemoveParagraphManager(IParagraphManager manager)
 		{
 			string name = manager.Name;
 			
@@ -42,6 +46,24 @@ namespace Epsitec.Common.Text
 			this.managers.Remove (name);
 		}
 		
+		
+		
+		private void RegisterTrustedAssembly(System.Reflection.Assembly assembly)
+		{
+			System.Type[] assembly_types = assembly.GetTypes ();
+			
+			foreach (System.Type type in assembly_types)
+			{
+				if ((type.IsClass) &&
+					(!type.IsAbstract))
+				{
+					if (type.GetInterface ("IParagraphManager") != null)
+					{
+						this.AddParagraphManager (System.Activator.CreateInstance (type, true) as IParagraphManager);
+					}
+				}
+			}
+		}
 		
 		
 		private Text.Context					context;

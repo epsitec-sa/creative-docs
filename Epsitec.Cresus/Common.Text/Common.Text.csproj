@@ -189,6 +189,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IParagraphManager.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ISerializableAsText.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
