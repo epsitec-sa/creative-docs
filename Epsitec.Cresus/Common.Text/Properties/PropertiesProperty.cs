@@ -7,7 +7,7 @@ namespace Epsitec.Common.Text.Properties
 	/// La classe PropertiesProperty contient une liste de propriétés sérialisées
 	/// qui doivent s'appliquer au texte.
 	/// </summary>
-	public class PropertiesProperty : BaseProperty
+	public class PropertiesProperty : Property
 	{
 		public PropertiesProperty()
 		{
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			this.serialized_properties = new string[properties.Count];
 			
-			BaseProperty[] props  = new BaseProperty[properties.Count];
+			Property[] props  = new Property[properties.Count];
 			
 			properties.CopyTo (props, 0);
 			
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public static string[] SerializeProperties(BaseProperty[] properties)
+		public static string[] SerializeProperties(Property[] properties)
 		{
 			if ((properties == null) ||
 				(properties.Length == 0))
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Text.Properties
 				buffer.Append (flag);
 				buffer.Append ('.');
 				
-				BaseProperty.SerializeToText (buffer, properties[i]);
+				Property.SerializeToText (buffer, properties[i]);
 				
 				serialized_properties[i] = buffer.ToString ();
 			}
@@ -152,15 +152,15 @@ namespace Epsitec.Common.Text.Properties
 			return serialized_properties;
 		}
 		
-		public static BaseProperty[] DeserializeProperties(Context context, string[] serialized_properties)
+		public static Property[] DeserializeProperties(Context context, string[] serialized_properties)
 		{
 			if ((serialized_properties == null) ||
 				(serialized_properties.Length == 0))
 			{
-				return new BaseProperty[0];
+				return new Property[0];
 			}
 			
-			BaseProperty[] properties = new BaseProperty[serialized_properties.Length];
+			Property[] properties = new Property[serialized_properties.Length];
 			
 			for (int i = 0; i < properties.Length; i++)
 			{
@@ -170,10 +170,10 @@ namespace Epsitec.Common.Text.Properties
 			return properties;
 		}
 		
-		public static BaseProperty DeserializeProperty(Context context, string serialized_property)
+		public static Property DeserializeProperty(Context context, string serialized_property)
 		{
-			BaseProperty property;
-			BaseProperty.DeserializeFromText (context, serialized_property, 2, serialized_property.Length-2, out property);
+			Property property;
+			Property.DeserializeFromText (context, serialized_property, 2, serialized_property.Length-2, out property);
 			return property;
 		}
 		
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Text.Properties
 			this.serialized_properties = serialized_properties;
 		}
 
-		public override BaseProperty GetCombination(BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			//	Produit une propriété qui est le résultat de la combinaison de
 			//	la propriété actuelle avec celle passée en entrée (qui vient

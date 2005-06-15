@@ -106,7 +106,7 @@ namespace Epsitec.Common.Text.Internal
 				
 			if (extra != null)
 			{
-				Properties.BaseProperty[] properties = extra.FindProperties (Properties.WellKnownType.Generator);
+				Property[] properties = extra.FindProperties (Properties.WellKnownType.Generator);
 					
 				foreach (Properties.GeneratorProperty generator in properties)
 				{

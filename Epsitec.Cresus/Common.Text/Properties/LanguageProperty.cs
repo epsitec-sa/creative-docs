@@ -7,7 +7,7 @@ namespace Epsitec.Common.Text.Properties
 	/// La classe LanguageProperty définit la langue utilisée pour un fragment
 	/// de texte.
 	/// </summary>
-	public class LanguageProperty : BaseProperty
+	public class LanguageProperty : Property
 	{
 		public LanguageProperty()
 		{
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Text.Properties
 			this.hyphenation = hyphenation;
 		}
 		
-		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			Debug.Assert.IsTrue (property is Properties.LanguageProperty);
 			

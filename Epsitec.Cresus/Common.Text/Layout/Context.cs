@@ -745,7 +745,7 @@ restart:
 			
 			this.text_context.GetUnderlines (this.text[offset], current);
 			
-			if (! Properties.BaseProperty.CompareEqualContents (previous, current))
+			if (! Property.CompareEqualContents (previous, current))
 			{
 				//	Enregistre le changement d'état de soulignement.
 				

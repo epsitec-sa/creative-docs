@@ -7,7 +7,7 @@ namespace Epsitec.Common.Text.Styles
 	/// La classe BaseSettings sert de base pour les réglages, en particulier
 	/// LocalSettings et ExtraSettings.
 	/// </summary>
-	public abstract class BaseSettings : BasePropertyContainer, IContentsComparer
+	public abstract class BaseSettings : PropertyContainer, IContentsComparer
 	{
 		protected BaseSettings()
 		{

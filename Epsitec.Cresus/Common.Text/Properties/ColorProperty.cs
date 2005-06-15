@@ -7,7 +7,7 @@ namespace Epsitec.Common.Text.Properties
 	/// La classe ColorProperty définit la couleur à appliquer au corps
 	/// du texte.
 	/// </summary>
-	public class ColorProperty : BaseProperty
+	public class ColorProperty : Property
 	{
 		public ColorProperty()
 		{
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Text.Properties
 			this.text_color = text_color;
 		}
 
-		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			Debug.Assert.IsTrue (property is Properties.ColorProperty);
 			

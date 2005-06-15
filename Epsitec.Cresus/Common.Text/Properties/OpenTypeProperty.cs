@@ -7,7 +7,7 @@ namespace Epsitec.Common.Text.Properties
 	/// La classe OpenTypeProperty donne accès aux glyphes supplémentaires d'une
 	/// fonte OpenType (variantes, etc.)
 	/// </summary>
-	public class OpenTypeProperty : BaseProperty
+	public class OpenTypeProperty : Property
 	{
 		public OpenTypeProperty()
 		{
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Text.Properties
 			this.glyph_index = glyph_index;
 		}
 		
-		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			throw new System.InvalidOperationException ("Cannot combine OpenType properties.");
 		}

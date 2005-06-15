@@ -7,7 +7,7 @@ namespace Epsitec.Common.Text
 	/// La classe TextStyle définit un style de texte de haut niveau. Il s'agit
 	/// d'une collection de propriétés.
 	/// </summary>
-	public sealed class TextStyle : Styles.BasePropertyContainer, IContentsComparer
+	public sealed class TextStyle : Styles.PropertyContainer, IContentsComparer
 	{
 		internal TextStyle(string name, TextStyleClass text_style_class)
 		{
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Text
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			foreach (Properties.BaseProperty property in this)
+			foreach (Property property in this)
 			{
 				buffer.Append (property.GetType ().Name);
 				buffer.Append (":");
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Text
 		public static bool CompareEqualContents(TextStyle a, TextStyle b)
 		{
 			if ((a.text_style_class == b.text_style_class) &&
-				(Styles.BasePropertyContainer.CompareEqualContents (a, b)))
+				(Styles.PropertyContainer.CompareEqualContents (a, b)))
 			{
 				//	Ignore le nom dans la comparaison du contenu. C'est voulu !
 				

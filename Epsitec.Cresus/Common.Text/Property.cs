@@ -1,20 +1,19 @@
 //	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-#if false
-namespace Epsitec.Common.Text.Properties
+namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe BaseProperty sert de base aux diverses propriétés.
+	/// La classe Property sert de base aux diverses propriétés.
 	/// </summary>
-	public abstract class BaseProperty : IContentsSignature, IContentsSignatureUpdater, IContentsComparer, ISerializableAsText
+	public abstract class Property : IContentsSignature, IContentsSignatureUpdater, IContentsComparer, ISerializableAsText
 	{
-		protected BaseProperty()
+		protected Property()
 		{
 		}
 		
 		
-		public virtual long 					Version
+		public virtual long 						Version
 		{
 			get
 			{
@@ -22,25 +21,25 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		public abstract WellKnownType			WellKnownType
+		public abstract Properties.WellKnownType	WellKnownType
 		{
 			get;
 		}
 		
-		public abstract PropertyType			PropertyType
+		public abstract Properties.PropertyType		PropertyType
 		{
 			get;
 		}
 		
-		public virtual CombinationMode			CombinationMode
+		public virtual Properties.CombinationMode	CombinationMode
 		{
 			get
 			{
-				return CombinationMode.Combine;
+				return Properties.CombinationMode.Combine;
 			}
 		}
 		
-		public virtual bool						RequiresSpecialCodeProcessing
+		public virtual bool							RequiresSpecialCodeProcessing
 		{
 			get
 			{
@@ -48,7 +47,7 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		public virtual bool						RequiresUniformParagraph
+		public virtual bool							RequiresUniformParagraph
 		{
 			get
 			{
@@ -74,7 +73,7 @@ namespace Epsitec.Common.Text.Properties
 			return -1;
 		}
 		
-		public abstract Properties.BaseProperty GetCombination(Properties.BaseProperty property);
+		public abstract Property GetCombination(Property property);
 		
 		#region IContentsSignatureUpdater Members
 		public abstract void UpdateContentsSignature(IO.IChecksum checksum);
@@ -119,7 +118,7 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public static bool CompareEqualContents(Properties.BaseProperty[] a, Properties.BaseProperty[] b)
+		public static bool CompareEqualContents(Property[] a, Property[] b)
 		{
 			if (a == b)
 			{
@@ -144,8 +143,8 @@ namespace Epsitec.Common.Text.Properties
 			
 			for (int i = 0; i < n; i++)
 			{
-				Properties.BaseProperty pa = a[i];
-				Properties.BaseProperty pb = b[i];
+				Property pa = a[i];
+				Property pb = b[i];
 				
 				if (pa.GetType () != pb.GetType ())
 				{
@@ -159,8 +158,8 @@ namespace Epsitec.Common.Text.Properties
 			
 			for (int i = 0; i < n; i++)
 			{
-				Properties.BaseProperty pa = a[i];
-				Properties.BaseProperty pb = b[i];
+				Property pa = a[i];
+				Property pb = b[i];
 				
 				if (pa.CompareEqualContents (pb) == false)
 				{
@@ -196,8 +195,8 @@ namespace Epsitec.Common.Text.Properties
 			
 			for (int i = 0; i < n; i++)
 			{
-				Properties.BaseProperty pa = a[i] as Properties.BaseProperty;
-				Properties.BaseProperty pb = b[i] as Properties.BaseProperty;
+				Property pa = a[i] as Property;
+				Property pb = b[i] as Property;
 				
 				if (pa.GetType () != pb.GetType ())
 				{
@@ -211,8 +210,8 @@ namespace Epsitec.Common.Text.Properties
 			
 			for (int i = 0; i < n; i++)
 			{
-				Properties.BaseProperty pa = a[i] as Properties.BaseProperty;
-				Properties.BaseProperty pb = b[i] as Properties.BaseProperty;
+				Property pa = a[i] as Property;
+				Property pb = b[i] as Property;
 				
 				if (pa.CompareEqualContents (pb) == false)
 				{
@@ -224,7 +223,7 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public static void SerializeToText(System.Text.StringBuilder buffer, BaseProperty property)
+		public static void SerializeToText(System.Text.StringBuilder buffer, Property property)
 		{
 			System.Diagnostics.Debug.Assert (property != null);
 			
@@ -243,7 +242,7 @@ namespace Epsitec.Common.Text.Properties
 			buffer.Append ("}");
 		}
 		
-		public static void DeserializeFromText(Context context, string text, int pos, int length, out BaseProperty property)
+		public static void DeserializeFromText(Context context, string text, int pos, int length, out Property property)
 		{
 			System.Diagnostics.Debug.Assert (text[pos+0] == '{');
 			System.Diagnostics.Debug.Assert (text[pos+length-1] == '}');
@@ -256,9 +255,9 @@ namespace Epsitec.Common.Text.Properties
 			string prop_name = text.Substring (pos+1, sep_pos - pos - 1);
 			string type_name = string.Concat ("Epsitec.Common.Text.Properties.", prop_name, "Property");
 			
-			System.Runtime.Remoting.ObjectHandle handle = System.Activator.CreateInstance (typeof (BaseProperty).Assembly.FullName, type_name);
+			System.Runtime.Remoting.ObjectHandle handle = System.Activator.CreateInstance (typeof (Property).Assembly.FullName, type_name);
 			
-			property = handle.Unwrap () as BaseProperty;
+			property = handle.Unwrap () as Property;
 			
 			sep_pos++;
 			
@@ -275,4 +274,3 @@ namespace Epsitec.Common.Text.Properties
 		private long							version;
 	}
 }
-#endif

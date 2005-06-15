@@ -115,7 +115,7 @@ namespace Epsitec.Common.Text
 			return true;
 		}
 		
-		public static bool GetParagraphProperties(TextStory story, ICursor cursor, int offset, out Properties.BaseProperty[] properties)
+		public static bool GetParagraphProperties(TextStory story, ICursor cursor, int offset, out Property[] properties)
 		{
 			//	Retourne les propriétés attachées au paragraphe de la position
 			//	indiquée, en excluant les propriétés dérivées à partir des
@@ -160,8 +160,8 @@ namespace Epsitec.Common.Text
 			
 			int offset = Navigator.GetParagraphStartOffset (story, cursor);
 			
-			TextStyle[]               paragraph_styles;
-			Properties.BaseProperty[] paragraph_properties;
+			TextStyle[] paragraph_styles;
+			Property[]  paragraph_properties;
 			
 			if ((Navigator.GetParagraphStyles (story, cursor, offset, out paragraph_styles)) &&
 				(Navigator.GetParagraphProperties (story, cursor, offset, out paragraph_properties)))
@@ -177,8 +177,8 @@ namespace Epsitec.Common.Text
 		
 		public static void SetParagraphStylesAndProperties(TextStory story, ICursor cursor, System.Collections.ICollection styles, System.Collections.ICollection properties)
 		{
-			TextStyle[]               s_array = new TextStyle[styles == null ? 0 : styles.Count];
-			Properties.BaseProperty[] p_array = new Properties.BaseProperty[properties == null ? 0 : properties.Count];
+			TextStyle[] s_array = new TextStyle[styles == null ? 0 : styles.Count];
+			Property[]  p_array = new Property[properties == null ? 0 : properties.Count];
 			
 			if (styles != null) styles.CopyTo (s_array, 0);
 			if (properties != null) properties.CopyTo (p_array, 0);
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Text
 			Navigator.SetParagraphStylesAndProperties (story, cursor, s_array, p_array);
 		}
 		
-		public static void SetParagraphStylesAndProperties(TextStory story, ICursor cursor, TextStyle[] styles, Properties.BaseProperty[] properties)
+		public static void SetParagraphStylesAndProperties(TextStory story, ICursor cursor, TextStyle[] styles, Property[] properties)
 		{
 			int offset_start = Navigator.GetParagraphStartOffset (story, cursor);
 			int offset_end   = Navigator.GetParagraphEndLength (story, cursor);
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Text
 			story.WriteText (cursor, offset_start, text);
 		}
 		
-		private static void SetParagraphStylesAndProperties(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] paragraph_styles, Properties.BaseProperty[] paragraph_properties)
+		private static void SetParagraphStylesAndProperties(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] paragraph_styles, Property[] paragraph_properties)
 		{
 			if (length == 0)
 			{
@@ -235,8 +235,8 @@ namespace Epsitec.Common.Text
 			Properties.StylesProperty     s_prop = simple[Properties.WellKnownType.Styles] as Properties.StylesProperty;
 			Properties.PropertiesProperty p_prop = simple[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
 			
-			string[]       serialized_other_properties = (p_prop == null) ? null : p_prop.SerializedOtherProperties;
-			Properties.BaseProperty[] other_properties = Properties.PropertiesProperty.DeserializeProperties (story.TextContext, serialized_other_properties);
+			string[]   serialized_other_properties = (p_prop == null) ? null : p_prop.SerializedOtherProperties;
+			Property[] other_properties = Properties.PropertiesProperty.DeserializeProperties (story.TextContext, serialized_other_properties);
 			
 			//	Crée la table des styles à utiliser en retirant les anciens styles
 			//	de paragraphe et en insérant les nouveaux à la place :
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Text
 			
 			//	Crée la table des propriétés à utiliser :
 			
-			Properties.BaseProperty[] new_properties = new Properties.BaseProperty[paragraph_properties.Length + other_properties.Length];
+			Property[] new_properties = new Property[paragraph_properties.Length + other_properties.Length];
 			
 			System.Array.Copy (paragraph_properties, 0, new_properties, 0, paragraph_properties.Length);
 			System.Array.Copy (other_properties, 0, new_properties, paragraph_properties.Length, other_properties.Length);

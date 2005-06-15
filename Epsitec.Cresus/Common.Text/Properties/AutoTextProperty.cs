@@ -8,7 +8,7 @@ namespace Epsitec.Common.Text.Properties
 	/// généré automatiquement (avec styles particuliers); comparer avec
 	/// GeneratorProperty qui génère aussi du texte.
 	/// </summary>
-	public class AutoTextProperty : BaseProperty
+	public class AutoTextProperty : Property
 	{
 		public AutoTextProperty()
 		{
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Text.Properties
 			this.parameter = parameter;
 		}
 		
-		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			throw new System.NotImplementedException ();
 		}

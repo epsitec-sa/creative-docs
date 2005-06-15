@@ -97,7 +97,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue  (Navigator.IsParagraphEnd (story, cursor, 20));
 			
 			TextStyle[] styles;
-			Properties.BaseProperty[] props;
+			Property[] props;
 			
 			Debug.Assert.IsTrue (Navigator.GetParagraphStyles (story, cursor, 0, out styles));
 			Debug.Assert.IsTrue (styles.Length == 1);

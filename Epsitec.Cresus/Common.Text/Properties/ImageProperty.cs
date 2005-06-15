@@ -7,7 +7,7 @@ namespace Epsitec.Common.Text.Properties
 	/// La propriété ImageProperty décrit quelle image associer avec un
 	/// caractère Unicode ObjectReplacement (uFFFC).
 	/// </summary>
-	public class ImageProperty : BaseProperty, IGlyphRenderer
+	public class ImageProperty : Property, IGlyphRenderer
 	{
 		public ImageProperty()
 		{
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			throw new System.NotImplementedException ();
 		}

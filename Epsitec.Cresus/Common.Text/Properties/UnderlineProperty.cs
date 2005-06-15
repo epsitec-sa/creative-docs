@@ -8,7 +8,7 @@ namespace Epsitec.Common.Text.Properties
 	/// soulignement du texte, mais aussi à d'autres décorations (biffé,
 	/// encadré, surligné, etc.)
 	/// </summary>
-	public class UnderlineProperty : BaseProperty
+	public class UnderlineProperty : Property
 	{
 		public UnderlineProperty()
 		{
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Text.Properties
 			this.line_style = line_style;
 		}
 		
-		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			throw new System.NotImplementedException ();
 		}

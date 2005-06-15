@@ -7,7 +7,7 @@ namespace Epsitec.Common.Text.Properties
 	/// La classe StylesProperty contient une liste de styles (cascadés)
 	/// qui doivent s'appliquer au texte.
 	/// </summary>
-	public class StylesProperty : BaseProperty
+	public class StylesProperty : Property
 	{
 		public StylesProperty()
 		{
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 
-		public override BaseProperty GetCombination(BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			//	Produit une propriété qui est le résultat de la combinaison de
 			//	la propriété actuelle avec celle passée en entrée (qui vient

@@ -9,7 +9,7 @@ namespace Epsitec.Common.Text.Properties
 	/// (0 = aligné à gauche, 0.5 = centré, 1 = aligné à droite) et les réglages
 	/// liés à la césure.
 	/// </summary>
-	public class MarginsProperty : BaseProperty
+	public class MarginsProperty : Property
 	{
 		public MarginsProperty() : this (double.NaN, double.NaN, SizeUnits.None)
 		{
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Text.Properties
 			this.enable_hyphenation      = enable_hyphenation;
 		}
 		
-		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			Debug.Assert.IsTrue (property is Properties.MarginsProperty);
 			

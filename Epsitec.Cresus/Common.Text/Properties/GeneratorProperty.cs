@@ -7,7 +7,7 @@ namespace Epsitec.Common.Text.Properties
 	/// La classe GeneratorProperty définit un lien entre un fragment de texte
 	/// et un générateur (qui produit du texte "automatique").
 	/// </summary>
-	public class GeneratorProperty : BaseProperty
+	public class GeneratorProperty : Property
 	{
 		public GeneratorProperty()
 		{
@@ -105,7 +105,7 @@ namespace Epsitec.Common.Text.Properties
 			this.level     = level;
 		}
 		
-		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			throw new System.NotImplementedException ();
 		}

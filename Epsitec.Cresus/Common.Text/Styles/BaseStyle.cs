@@ -4,9 +4,9 @@
 namespace Epsitec.Common.Text.Styles
 {
 	/// <summary>
-	/// Summary description for BaseStyle.
+	/// La classe BaseStyle sert de base à SimpleStyle.
 	/// </summary>
-	public abstract class BaseStyle : BasePropertyContainer, IContentsComparer
+	public abstract class BaseStyle : PropertyContainer, IContentsComparer
 	{
 		protected BaseStyle()
 		{
@@ -50,9 +50,9 @@ namespace Epsitec.Common.Text.Styles
 		
 		
 		
-		public bool Contains(ulong code, Properties.BaseProperty property)
+		public bool Contains(ulong code, Property property)
 		{
-			BasePropertyContainer search = null;
+			PropertyContainer search = null;
 			
 			switch (property.PropertyType)
 			{
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Text.Styles
 		
 		public bool Contains(ulong code, Properties.WellKnownType well_known_type, Properties.PropertyType property_type)
 		{
-			BasePropertyContainer search = null;
+			PropertyContainer search = null;
 			
 			switch (property_type)
 			{
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		public Properties.BaseProperty[] Flatten(ulong code)
+		public Property[] Flatten(ulong code)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
@@ -361,7 +361,7 @@ namespace Epsitec.Common.Text.Styles
 			if (extra != null) extra.Flatten (list);
 			if (local != null) local.Flatten (list);
 			
-			Properties.BaseProperty[] props = new Properties.BaseProperty[list.Count];
+			Property[] props = new Property[list.Count];
 			list.CopyTo (props);
 			
 			return props;

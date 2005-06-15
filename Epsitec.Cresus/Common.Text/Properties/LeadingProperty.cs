@@ -8,7 +8,7 @@ namespace Epsitec.Common.Text.Properties
 	/// plomb qui se rajoutaient entre les lignes de caractères), l'alignement
 	/// sur une grille et les espacements avant/après un paragraphe.
 	/// </summary>
-	public class LeadingProperty : BaseProperty
+	public class LeadingProperty : Property
 	{
 		public LeadingProperty() : this (double.NaN, SizeUnits.None, AlignMode.None)
 		{
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Text.Properties
 			this.align_mode   = align_mode;
 		}
 		
-		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			Debug.Assert.IsTrue (property is Properties.LeadingProperty);
 			

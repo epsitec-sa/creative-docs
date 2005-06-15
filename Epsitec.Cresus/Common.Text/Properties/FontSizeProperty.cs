@@ -4,9 +4,9 @@
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// Summary description for FontSizeProperty.
+	/// La classe FontSizeProperty décrit une taille de fonte.
 	/// </summary>
-	public class FontSizeProperty : BaseProperty
+	public class FontSizeProperty : Property
 	{
 		public FontSizeProperty() : this (double.NaN, SizeUnits.None)
 		{
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Text.Properties
 			this.units = units;
 		}
 
-		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			Debug.Assert.IsTrue (property is Properties.FontSizeProperty);
 			

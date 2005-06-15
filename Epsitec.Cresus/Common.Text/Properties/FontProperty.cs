@@ -4,9 +4,9 @@
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// Summary description for FontProperty.
+	/// La classe FontProperty décrit une fonte (famille + style).
 	/// </summary>
-	public class FontProperty : BaseProperty
+	public class FontProperty : Property
 	{
 		public FontProperty()
 		{
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Text.Properties
 			this.features   = SerializerSupport.DeserializeStringArray (args[2]);
 		}
 		
-		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			Debug.Assert.IsTrue (property is Properties.FontProperty);
 			

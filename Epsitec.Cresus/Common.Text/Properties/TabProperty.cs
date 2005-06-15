@@ -4,9 +4,9 @@
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// Summary description for TabProperty.
+	/// La classe TabProperty décrit une tabulation.
 	/// </summary>
-	public class TabProperty : BaseProperty
+	public class TabProperty : Property
 	{
 		public TabProperty()
 		{
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Text.Properties
 			this.docking_mark = SerializerSupport.DeserializeString (args[2]);
 		}
 		
-		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			Debug.Assert.IsTrue (property is Properties.TabProperty);
 			

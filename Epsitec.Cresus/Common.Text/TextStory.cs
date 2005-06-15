@@ -432,7 +432,7 @@ namespace Epsitec.Common.Text
 			
 			if (style != null)
 			{
-				foreach (Properties.BaseProperty property in style)
+				foreach (Property property in style)
 				{
 					if (n > 0) buffer.Append (", ");
 					buffer.Append ("S=");
@@ -443,7 +443,7 @@ namespace Epsitec.Common.Text
 			
 			if (local != null)
 			{
-				foreach (Properties.BaseProperty property in local)
+				foreach (Property property in local)
 				{
 					if (n > 0) buffer.Append (", ");
 					buffer.Append ("L=");
@@ -454,7 +454,7 @@ namespace Epsitec.Common.Text
 			
 			if (extra != null)
 			{
-				foreach (Properties.BaseProperty property in extra)
+				foreach (Property property in extra)
 				{
 					if (n > 0) buffer.Append (", ");
 					buffer.Append ("E=");
@@ -467,14 +467,14 @@ namespace Epsitec.Common.Text
 			
 			if (style != null)
 			{
-				foreach (Properties.BaseProperty property in style)
+				foreach (Property property in style)
 				{
 					switch (property.WellKnownType)
 					{
 						case Properties.WellKnownType.Styles:
 						case Properties.WellKnownType.Properties:
 							buffer.Append (n == 0 ? "\n    " : ", ");
-							Properties.BaseProperty.SerializeToText (buffer, property);
+							Property.SerializeToText (buffer, property);
 							n++;
 							break;
 					}
@@ -539,15 +539,15 @@ namespace Epsitec.Common.Text
 			
 			int length = properties == null ? 0 : properties.Count;
 			
-			Properties.BaseProperty[] prop_mixed = new Properties.BaseProperty[length];
+			Property[] prop_mixed = new Property[length];
 			
 			Styles.SimpleStyle   search_style = new Styles.SimpleStyle ();
 			Styles.LocalSettings search_local = new Styles.LocalSettings ();
 			Styles.ExtraSettings search_extra = new Styles.ExtraSettings ();
 			
-			Styles.BasePropertyContainer.Accumulator style_acc = search_style.StartAccumulation ();
-			Styles.BasePropertyContainer.Accumulator local_acc = search_local.StartAccumulation ();
-			Styles.BasePropertyContainer.Accumulator extra_acc = search_extra.StartAccumulation ();
+			Styles.PropertyContainer.Accumulator style_acc = search_style.StartAccumulation ();
+			Styles.PropertyContainer.Accumulator local_acc = search_local.StartAccumulation ();
+			Styles.PropertyContainer.Accumulator extra_acc = search_extra.StartAccumulation ();
 			
 			if (length > 0)
 			{
@@ -610,7 +610,7 @@ namespace Epsitec.Common.Text
 					
 					for (int i = 0; i < n; i++)
 					{
-						Properties.BaseProperty property = style[i];
+						Property property = style[i];
 						
 						if (property.WellKnownType != Properties.WellKnownType.Styles)
 						{

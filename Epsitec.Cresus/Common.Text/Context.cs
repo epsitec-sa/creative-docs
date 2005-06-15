@@ -303,8 +303,8 @@ namespace Epsitec.Common.Text
 			{
 				Styles.SimpleStyle style = this.style_list[code];
 				
-				Properties.BaseProperty[] base_props = null;
-				Styles.ExtraSettings  extra_settings = style.GetExtraSettings (code);
+				Property[]           base_props     = null;
+				Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
 				
 				if (extra_settings != null)
 				{
@@ -421,7 +421,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public int GetTextStartDistance(TextStory story, ICursor cursor, Properties.BaseProperty property)
+		public int GetTextStartDistance(TextStory story, ICursor cursor, Property property)
 		{
 			//	Trouve le début du texte marqué avec la propriété indiquée; retourne
 			//	la distance parcourue (-1 en cas d'erreur).
@@ -442,7 +442,7 @@ namespace Epsitec.Common.Text
 			return -1;
 		}
 		
-		public int GetTextEndDistance(TextStory story, ICursor cursor, Properties.BaseProperty property)
+		public int GetTextEndDistance(TextStory story, ICursor cursor, Property property)
 		{
 			//	Trouve la fin du texte marqué avec la propriété indiquée; retourne
 			//	la distance parcourue (-1 en cas d'erreur).
@@ -462,12 +462,12 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public bool ContainsProperty(TextStory story, ICursor cursor, Properties.BaseProperty property)
+		public bool ContainsProperty(TextStory story, ICursor cursor, Property property)
 		{
 			return this.ContainsProperty (story, cursor, 0, property);
 		}
 		
-		public bool ContainsProperty(TextStory story, ICursor cursor, int offset, Properties.BaseProperty property)
+		public bool ContainsProperty(TextStory story, ICursor cursor, int offset, Property property)
 		{
 			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
 			
@@ -511,7 +511,7 @@ namespace Epsitec.Common.Text
 		#region TextFinder Class
 		private class TextFinder
 		{
-			public TextFinder(Context context, Properties.BaseProperty property)
+			public TextFinder(Context context, Property property)
 			{
 				this.context  = context;
 				this.property = property;
@@ -551,7 +551,7 @@ namespace Epsitec.Common.Text
 			
 			
 			private Context						context;
-			private Properties.BaseProperty		property;
+			private Property					property;
 			private ulong						code;
 		}
 		#endregion
@@ -647,7 +647,7 @@ namespace Epsitec.Common.Text
 		
 		private long							get_underlines_last_style_version;
 		private ulong							get_underlines_last_code;
-		private Properties.BaseProperty[]		get_underlines_last_properties;
+		private Property[]						get_underlines_last_properties;
 		
 		private long							get_layout_last_style_version;
 		private int								get_layout_last_style_index;

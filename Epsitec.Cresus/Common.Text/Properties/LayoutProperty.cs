@@ -7,7 +7,7 @@ namespace Epsitec.Common.Text.Properties
 	/// La classe LayoutProperty décrit quel moteur de layout utiliser pour
 	/// un fragment de texte.
 	/// </summary>
-	public class LayoutProperty : BaseProperty
+	public class LayoutProperty : Property
 	{
 		public LayoutProperty()
 		{
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Text.Properties
 			this.engine_name = SerializerSupport.DeserializeString (text.Substring (pos, length));
 		}
 		
-		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			throw new System.InvalidOperationException ("Cannot combine layouts.");
 		}

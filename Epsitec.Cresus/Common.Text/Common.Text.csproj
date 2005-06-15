@@ -234,6 +234,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Property.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "SerializerSupport.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -539,11 +544,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Styles\BasePropertyContainer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Styles\BaseSettings.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -560,6 +560,11 @@
                 />
                 <File
                     RelPath = "Styles\LocalSettings.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Styles\PropertyContainer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

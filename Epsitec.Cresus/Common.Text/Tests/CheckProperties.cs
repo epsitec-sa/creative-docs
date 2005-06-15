@@ -139,19 +139,19 @@ namespace Epsitec.Common.Text.Tests
 			
 			int end1, end2, end3;
 			
-			Properties.BaseProperty.SerializeToText (buffer, p1);	end1 = buffer.Length;
-			Properties.BaseProperty.SerializeToText (buffer, p2);	end2 = buffer.Length;
-			Properties.BaseProperty.SerializeToText (buffer, p3);	end3 = buffer.Length;
+			Property.SerializeToText (buffer, p1);	end1 = buffer.Length;
+			Property.SerializeToText (buffer, p2);	end2 = buffer.Length;
+			Property.SerializeToText (buffer, p3);	end3 = buffer.Length;
 			
-			Properties.BaseProperty p;
+			Property p;
 			
 			Properties.FontProperty     p1x;
 			Properties.FontSizeProperty p2x;
 			Properties.MarginsProperty  p3x;
 			
-			Properties.BaseProperty.DeserializeFromText (null, buffer.ToString (),    0, end1,        out p); p1x = p as Properties.FontProperty;
-			Properties.BaseProperty.DeserializeFromText (null, buffer.ToString (), end1, end2 - end1, out p); p2x = p as Properties.FontSizeProperty;
-			Properties.BaseProperty.DeserializeFromText (null, buffer.ToString (), end2, end3 - end2, out p); p3x = p as Properties.MarginsProperty;
+			Property.DeserializeFromText (null, buffer.ToString (),    0, end1,        out p); p1x = p as Properties.FontProperty;
+			Property.DeserializeFromText (null, buffer.ToString (), end1, end2 - end1, out p); p2x = p as Properties.FontSizeProperty;
+			Property.DeserializeFromText (null, buffer.ToString (), end2, end3 - end2, out p); p3x = p as Properties.MarginsProperty;
 			
 			Debug.Assert.IsNotNull (p1x);
 			Debug.Assert.IsNotNull (p2x);

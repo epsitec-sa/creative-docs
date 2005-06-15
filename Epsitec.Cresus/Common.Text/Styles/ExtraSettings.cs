@@ -59,7 +59,7 @@ namespace Epsitec.Common.Text.Styles
 		
 		public override bool CompareEqualContents(object value)
 		{
-			return Styles.BasePropertyContainer.CompareEqualContents (this, value as Styles.ExtraSettings);
+			return Styles.PropertyContainer.CompareEqualContents (this, value as Styles.ExtraSettings);
 		}
 	}
 }

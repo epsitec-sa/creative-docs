@@ -4,22 +4,23 @@
 namespace Epsitec.Common.Text.Styles
 {
 	/// <summary>
-	/// Summary description for BasePropertyContainer.
+	/// La classe PropertyContainer contient une série de propriétés de type
+	/// Property.
 	/// </summary>
-	public abstract class BasePropertyContainer : IContentsSignature, IContentsSignatureUpdater, System.Collections.IEnumerable
+	public abstract class PropertyContainer : IContentsSignature, IContentsSignatureUpdater, System.Collections.IEnumerable
 	{
-		public BasePropertyContainer()
+		public PropertyContainer()
 		{
 		}
 		
-		public BasePropertyContainer(System.Collections.ICollection properties)
+		public PropertyContainer(System.Collections.ICollection properties)
 		{
 			this.Initialise (properties);
 		}
 		
 		
 		
-		public Properties.BaseProperty			this[int index]
+		public Property							this[int index]
 		{
 			get
 			{
@@ -32,7 +33,7 @@ namespace Epsitec.Common.Text.Styles
 			}
 		}
 		
-		public Properties.BaseProperty			this[System.Type type]
+		public Property							this[System.Type type]
 		{
 			get
 			{
@@ -53,7 +54,7 @@ namespace Epsitec.Common.Text.Styles
 			}
 		}
 		
-		public Properties.BaseProperty			this[Properties.WellKnownType type]
+		public Property							this[Properties.WellKnownType type]
 		{
 			get
 			{
@@ -148,7 +149,7 @@ namespace Epsitec.Common.Text.Styles
 			//	valeur WellKnownType plus faible, ce qui les place en tête du
 			//	tableau et accélère la recherche.
 			
-			this.properties = new Properties.BaseProperty[properties.Count];
+			this.properties = new Property[properties.Count];
 			properties.CopyTo (this.properties, 0);
 			
 			System.Array.Sort (this.properties, new PropertyComparer ());
@@ -219,7 +220,7 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		public bool Contains(Properties.BaseProperty property)
+		public bool Contains(Property property)
 		{
 			if (this.properties == null)
 			{
@@ -287,7 +288,7 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		public Properties.BaseProperty[] FindProperties(System.Type type)
+		public Property[] FindProperties(System.Type type)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
@@ -302,13 +303,13 @@ namespace Epsitec.Common.Text.Styles
 				}
 			}
 			
-			Properties.BaseProperty[] props = new Properties.BaseProperty[list.Count];
+			Property[] props = new Property[list.Count];
 			list.CopyTo (props);
 			
 			return props;
 		}
 		
-		public Properties.BaseProperty[] FindProperties(Properties.WellKnownType type)
+		public Property[] FindProperties(Properties.WellKnownType type)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
@@ -334,7 +335,7 @@ namespace Epsitec.Common.Text.Styles
 				}
 			}
 			
-			Properties.BaseProperty[] props = new Properties.BaseProperty[list.Count];
+			Property[] props = new Property[list.Count];
 			list.CopyTo (props);
 			
 			return props;
@@ -353,15 +354,15 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		public Styles.BasePropertyContainer.Accumulator StartAccumulation()
+		public Styles.PropertyContainer.Accumulator StartAccumulation()
 		{
-			return new Styles.BasePropertyContainer.Accumulator (this);
+			return new Styles.PropertyContainer.Accumulator (this);
 		}
 		
 		
 		public class Accumulator
 		{
-			public Accumulator(Styles.BasePropertyContainer host)
+			public Accumulator(Styles.PropertyContainer host)
 			{
 				this.host    = host;
 				this.hash    = new System.Collections.Hashtable ();
@@ -380,7 +381,7 @@ namespace Epsitec.Common.Text.Styles
 			
 			public Accumulator Accumulate(System.Collections.IEnumerable source)
 			{
-				foreach (Properties.BaseProperty property in source)
+				foreach (Property property in source)
 				{
 					this.Accumulate (property);
 				}
@@ -388,7 +389,7 @@ namespace Epsitec.Common.Text.Styles
 				return this;
 			}
 			
-			public Accumulator Accumulate(Styles.BasePropertyContainer source)
+			public Accumulator Accumulate(Styles.PropertyContainer source)
 			{
 				int n = source.CountProperties;
 				
@@ -400,7 +401,7 @@ namespace Epsitec.Common.Text.Styles
 				return this;
 			}
 			
-			public Accumulator Accumulate(Properties.BaseProperty property)
+			public Accumulator Accumulate(Property property)
 			{
 				System.Type type = property.GetType ();
 				
@@ -417,8 +418,8 @@ namespace Epsitec.Common.Text.Styles
 				{
 					if (this.hash.Contains (type))
 					{
-						Properties.BaseProperty base_prop = this.hash[type] as Properties.BaseProperty;
-						Properties.BaseProperty comb_prop = base_prop.GetCombination (property);
+						Property base_prop = this.hash[type] as Property;
+						Property comb_prop = base_prop.GetCombination (property);
 						
 						this.hash[type] = comb_prop;
 					}
@@ -455,7 +456,7 @@ namespace Epsitec.Common.Text.Styles
 			}
 			
 			
-			Styles.BasePropertyContainer		host;
+			Styles.PropertyContainer			host;
 			System.Collections.Hashtable		hash;
 			System.Collections.ArrayList		list;
 			bool								special;
@@ -521,7 +522,7 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		public static bool CompareEqualContents(Styles.BasePropertyContainer a, Styles.BasePropertyContainer b)
+		public static bool CompareEqualContents(Styles.PropertyContainer a, Styles.PropertyContainer b)
 		{
 			if (a.properties == b.properties)
 			{
@@ -541,8 +542,8 @@ namespace Epsitec.Common.Text.Styles
 			
 			for (int i = 0; i < n; i++)
 			{
-				Properties.BaseProperty pa = a.properties[i];
-				Properties.BaseProperty pb = b.properties[i];
+				Property pa = a.properties[i];
+				Property pb = b.properties[i];
 				
 				if (pa.GetType () != pb.GetType ())
 				{
@@ -556,8 +557,8 @@ namespace Epsitec.Common.Text.Styles
 			
 			for (int i = 0; i < n; i++)
 			{
-				Properties.BaseProperty pa = a.properties[i];
-				Properties.BaseProperty pb = b.properties[i];
+				Property pa = a.properties[i];
+				Property pb = b.properties[i];
 				
 				if (pa.CompareEqualContents (pb) == false)
 				{
@@ -575,8 +576,8 @@ namespace Epsitec.Common.Text.Styles
 			#region IComparer Members
 			public int Compare(object x, object y)
 			{
-				Properties.BaseProperty px = x as Properties.BaseProperty;
-				Properties.BaseProperty py = y as Properties.BaseProperty;
+				Property px = x as Property;
+				Property py = y as Property;
 				
 				Properties.WellKnownType wpx = px.WellKnownType;
 				Properties.WellKnownType wpy = py.WellKnownType;
@@ -607,7 +608,7 @@ namespace Epsitec.Common.Text.Styles
 		private long							version;
 		private int								contents_signature;
 		
-		private Properties.BaseProperty[]		properties;
+		private Property[]						properties;
 		private int								user_count;
 	}
 }

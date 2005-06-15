@@ -8,7 +8,7 @@ namespace Epsitec.Common.Text.Properties
 	/// par rapport aux autres (paragraphes liés) et comment les veuves et les
 	/// orphelines sont gérées.
 	/// </summary>
-	public class KeepProperty : BaseProperty
+	public class KeepProperty : Property
 	{
 		public KeepProperty()
 		{
@@ -160,7 +160,7 @@ namespace Epsitec.Common.Text.Properties
 			this.with_prev_paragraph  = with_prev_paragraph;
 		}
 		
-		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
+		public override Property GetCombination(Property property)
 		{
 			Debug.Assert.IsTrue (property is Properties.KeepProperty);
 			

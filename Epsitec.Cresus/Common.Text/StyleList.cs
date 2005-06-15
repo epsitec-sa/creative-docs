@@ -92,7 +92,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		internal Properties.BaseProperty[] Flatten(ulong code)
+		internal Property[] Flatten(ulong code)
 		{
 			Styles.SimpleStyle style = this[code];
 			
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				return new Properties.BaseProperty[0];
+				return new Property[0];
 			}
 		}
 		
