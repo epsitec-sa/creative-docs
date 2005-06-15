@@ -273,8 +273,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.colorCaption);
+					this.PaintImageButton(graphics, rect, 13);
 				}
 				else
 				{
@@ -380,7 +379,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 				{
-					this.PaintCircle(graphics, rInside, this.colorCaption);
+					this.PaintImageButton(graphics, rInside, 14);
 				}
 				else
 				{
@@ -1765,7 +1764,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			icon.Top    = 256-32*(rank/8);
 			icon.Bottom = icon.Top-32;
 
-			if ( rank ==  8 || rank ==  9 || rank == 10 ||
+			if ( rank ==  8 || rank ==  9 || rank == 10 || rank == 13 || rank == 14 ||
 				 rank == 16 || rank == 17 || rank == 21 || rank == 22 )
 			{
 				this.PaintImageButton1(graphics, rect, icon);

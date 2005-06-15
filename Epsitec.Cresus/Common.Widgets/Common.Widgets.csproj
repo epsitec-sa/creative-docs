@@ -634,6 +634,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Adorners\LookDraft.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Adorners\LookFlat.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -664,6 +669,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Adorners\LookRusty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Adorners\LookSimply.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -679,6 +689,10 @@
                 />
                 <File
                     RelPath = "Adorners\Resources\LookCeeBot.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Adorners\Resources\LookDraft.png"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -698,11 +712,23 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Adorners\Resources\LookRusty.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Adorners\Resources\metal1.png"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Adorners\Resources\metal2.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Adorners\Resources\metal3.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Adorners\Resources\paper1.png"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

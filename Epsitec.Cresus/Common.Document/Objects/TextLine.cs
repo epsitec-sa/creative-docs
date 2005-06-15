@@ -1563,17 +1563,26 @@ namespace Epsitec.Common.Document.Objects
 				{
 					Transform ot = port.Transform;
 					port.RotateTransformDeg(angle, pos.X, pos.Y);
+
 					if ( port is Graphics )
 					{
 						Graphics graphics = port as Graphics;
 						graphics.AddText(pos.X, pos.Y, character, font, fontSize);
 						graphics.RenderSolid(drawingContext.AdaptColor(fontColor));
 					}
-					else
+					
+					if ( port is Common.Printing.PrintPort )
 					{
 						port.Color = drawingContext.AdaptColor(fontColor);
 						port.PaintText(pos.X, pos.Y, character, font, fontSize);
 					}
+					
+					if ( port is PDFPort )
+					{
+						port.Color = drawingContext.AdaptColor(fontColor);
+						port.PaintText(pos.X, pos.Y, character, font, fontSize);
+					}
+					
 					port.Transform = ot;
 				}
 
@@ -1680,8 +1689,15 @@ namespace Epsitec.Common.Document.Objects
 		{
 			base.PrintGeometry(port, drawingContext);
 
-			int total = this.TotalHandle;
-			if ( total < 6 )  return;
+			if ( this.TotalHandle < 6 )  return;
+
+			this.DrawTextCurve(port, drawingContext);  // dessine le texte
+		}
+
+		// Exporte en PDF la géométrie de l'objet.
+		public override void ExportPDF(PDFPort port, DrawingContext drawingContext)
+		{
+			if ( this.TotalHandle < 6 )  return;
 
 			this.DrawTextCurve(port, drawingContext);  // dessine le texte
 		}

@@ -601,6 +601,44 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Exporte en PDF la géométrie de l'objet.
+		public override void ExportPDF(PDFPort port, DrawingContext drawingContext)
+		{
+			if ( this.TotalHandle < 2 )  return;
+
+			Paths paths = this.PathBuild(drawingContext);
+
+			Properties.Line     lineMode  = this.PropertyLineMode;
+			Properties.Gradient lineColor = this.PropertyLineColor;
+
+			for ( int i=0 ; i<paths.Count ; i++ )
+			{
+				Path path = paths.Get(i);
+				if ( path == null )  continue;
+				Properties.Gradient fillColor = paths.PropertySurface(i);
+				if ( fillColor == null )  continue;
+
+				if ( fillColor.IsVisible() )
+				{
+					fillColor.ExportPDF(port, drawingContext);
+					port.PaintSurface(path);
+				}
+			}
+
+			if ( lineMode.IsVisible() && lineColor.IsVisible() )
+			{
+				for ( int i=0 ; i<paths.Count ; i++ )
+				{
+					Path path = paths.Get(i);
+					if ( path == null )  continue;
+
+					lineMode.ExportPDF(port, drawingContext);
+					lineColor.ExportPDF(port, drawingContext);
+					port.PaintOutline(path);
+				}
+			}
+		}
+
 
 		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)

@@ -67,6 +67,8 @@ namespace Epsitec.Common.Document
 			this.exportDirectory = "";
 			this.exportFilename = "";
 			this.exportFilter = 0;
+			this.exportPDFDirectory = "";
+			this.exportPDFFilename = "";
 			this.isSurfaceRotation = false;
 			this.surfaceRotationAngle = 0.0;
 
@@ -75,11 +77,12 @@ namespace Epsitec.Common.Document
 			if ( this.mode == DocumentMode.Modify    ||
 				 this.mode == DocumentMode.Clipboard )
 			{
-				this.modifier = new Modifier(this);
-				this.notifier = new Notifier(this);
-				this.dialogs  = new Dialogs(this);
-				this.settings = new Settings.Settings(this);
-				this.printer  = new Printer(this);
+				this.modifier  = new Modifier(this);
+				this.notifier  = new Notifier(this);
+				this.dialogs   = new Dialogs(this);
+				this.settings  = new Settings.Settings(this);
+				this.printer   = new Printer(this);
+				this.exportPDF = new ExportPDF(this);
 			}
 
 			if ( this.mode == DocumentMode.Clipboard )
@@ -353,6 +356,34 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Nom du dossier d'exportation associé.
+		public string ExportPDFDirectory
+		{
+			get
+			{
+				return this.exportPDFDirectory;
+			}
+
+			set
+			{
+				this.exportPDFDirectory = value;
+			}
+		}
+
+		// Nom du fichier (sans dossier) d'exportation associé.
+		public string ExportPDFFilename
+		{
+			get
+			{
+				return this.exportPDFFilename;
+			}
+
+			set
+			{
+				this.exportPDFFilename = value;
+			}
+		}
+
 		// Indique si la sérialisation est nécessaire.
 		public bool IsDirtySerialize
 		{
@@ -497,6 +528,8 @@ namespace Epsitec.Common.Document
 				this.exportDirectory = doc.exportDirectory;
 				this.exportFilename = doc.exportFilename;
 				this.exportFilter = doc.exportFilter;
+				this.exportPDFDirectory = doc.exportPDFDirectory;
+				this.exportPDFFilename = doc.exportPDFFilename;
 
 				if ( this.Modifier != null && doc.readObjectMemory != null )
 				{
@@ -713,6 +746,7 @@ namespace Epsitec.Common.Document
 				info.AddValue("Settings", this.settings);
 				info.AddValue("ExportFilename", this.exportFilename);
 				info.AddValue("ExportFilter", this.exportFilter);
+				info.AddValue("ExportPDFFilename", this.exportPDFFilename);
 
 				info.AddValue("ObjectMemory", this.modifier.ObjectMemory);
 				info.AddValue("ObjectMemoryText", this.modifier.ObjectMemoryText);
@@ -753,6 +787,17 @@ namespace Epsitec.Common.Document
 					this.exportDirectory = "";
 					this.exportFilename = "";
 					this.exportFilter = 0;
+				}
+
+				if ( this.IsRevisionGreaterOrEqual(1,0,21) )
+				{
+					this.exportPDFDirectory = "";
+					this.exportPDFFilename = info.GetString("ExportPDFFilename");
+				}
+				else
+				{
+					this.exportPDFDirectory = "";
+					this.exportPDFFilename = "";
 				}
 
 				if ( this.IsRevisionGreaterOrEqual(1,0,7) )
@@ -946,6 +991,15 @@ namespace Epsitec.Common.Document
 			this.Modifier.DeselectAll();
 
 			return this.printer.Export(filename);
+		}
+
+		// Exporte le document.
+		public string ExportPDF(string filename)
+		{
+			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
+			this.Modifier.DeselectAll();
+
+			return this.exportPDF.Export(filename);
 		}
 
 
@@ -1449,6 +1503,8 @@ namespace Epsitec.Common.Document
 		protected string						exportDirectory;
 		protected string						exportFilename;
 		protected int							exportFilter;
+		protected string						exportPDFDirectory;
+		protected string						exportPDFFilename;
 		protected bool							isDirtySerialize;
 		protected UndoableList					objects;
 		protected UndoableList					propertiesAuto;
@@ -1459,6 +1515,7 @@ namespace Epsitec.Common.Document
 		protected Notifier						notifier;
 		protected Printer						printer;
 		protected Common.Dialogs.Print			printDialog;
+		protected ExportPDF						exportPDF;
 		protected Dialogs						dialogs;
 		protected string						ioDirectory;
 		protected System.Collections.ArrayList	readWarnings;

@@ -61,6 +61,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.dlgAbout     = new Dialogs.About(this);
 			this.dlgExport    = new Dialogs.Export(this);
+			this.dlgExportPDF = new Dialogs.ExportPDF(this);
 			this.dlgGlyphs    = new Dialogs.Glyphs(this);
 			this.dlgInfos     = new Dialogs.Infos(this);
 			this.dlgKey       = new Dialogs.Key(this);
@@ -276,6 +277,7 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(fileMenu, "", "", "", "");
 			this.MenuAdd(fileMenu, "manifest:Epsitec.App.DocumentEditor.Images.Print.icon", "Print", DocumentEditor.GetRes("Action.Print"), DocumentEditor.GetShortCut(this.printState));
 			this.MenuAdd(fileMenu, "manifest:Epsitec.App.DocumentEditor.Images.Export.icon", "Export", DocumentEditor.GetRes("Action.Export"), DocumentEditor.GetShortCut(this.exportState));
+			this.MenuAdd(fileMenu, "", "ExportPDF", DocumentEditor.GetRes("Action.ExportPDF"), DocumentEditor.GetShortCut(this.exportPDFState));
 			this.MenuAdd(fileMenu, "", "", "", "");
 			this.MenuAdd(fileMenu, "", "", DocumentEditor.GetRes("Action.LastFiles"), "");
 			this.MenuAdd(fileMenu, "", "", "", "");
@@ -351,7 +353,7 @@ namespace Epsitec.App.DocumentEditor
 			groupMenu.Host = this;
 			this.MenuAdd(groupMenu, "manifest:Epsitec.App.DocumentEditor.Images.Group.icon", "Group", DocumentEditor.GetRes("Action.Group"), DocumentEditor.GetShortCut(this.groupState));
 			this.MenuAdd(groupMenu, "manifest:Epsitec.App.DocumentEditor.Images.Merge.icon", "Merge", DocumentEditor.GetRes("Action.Merge"), DocumentEditor.GetShortCut(this.mergeState));
-			this.MenuAdd(groupMenu, "manifest:Epsitec.App.DocumentEditor.Images.Extract.icon", "Extract", DocumentEditor.GetRes("Action.Extract"), DocumentEditor.GetShortCut(this.exportState));
+			this.MenuAdd(groupMenu, "manifest:Epsitec.App.DocumentEditor.Images.Extract.icon", "Extract", DocumentEditor.GetRes("Action.Extract"), DocumentEditor.GetShortCut(this.extractState));
 			this.MenuAdd(groupMenu, "manifest:Epsitec.App.DocumentEditor.Images.Ungroup.icon", "Ungroup", DocumentEditor.GetRes("Action.Ungroup"), DocumentEditor.GetShortCut(this.ungroupState));
 			this.MenuAdd(groupMenu, "", "", "", "");
 			this.MenuAdd(groupMenu, "manifest:Epsitec.App.DocumentEditor.Images.Inside.icon", "Inside", DocumentEditor.GetRes("Action.Inside"), DocumentEditor.GetShortCut(this.insideState));
@@ -944,11 +946,11 @@ namespace Epsitec.App.DocumentEditor
 
 			if ( this.type == DocumentType.Pictogram )
 			{
-				this.fileMenu.Items[11].Submenu = lastMenu;
+				this.fileMenu.Items[12].Submenu = lastMenu;
 			}
 			else
 			{
-				this.fileMenu.Items[13].Submenu = lastMenu;
+				this.fileMenu.Items[14].Submenu = lastMenu;
 			}
 		}
 		#endregion
@@ -1744,6 +1746,44 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgPrint.Show();
 		}
 		
+		[Command ("ExportPDF")]
+		void CommandExportPDF(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.dlgSplash.Hide();
+
+			Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
+			
+			if ( this.CurrentDocument.ExportPDFDirectory == "" )
+			{
+				if ( this.CurrentDocument.Filename == "" )
+				{
+					dialog.InitialDirectory = this.globalSettings.InitialDirectory;
+				}
+				else
+				{
+					dialog.InitialDirectory = System.IO.Path.GetDirectoryName(this.CurrentDocument.Filename);
+				}
+			}
+			else
+			{
+				dialog.InitialDirectory = this.CurrentDocument.ExportPDFDirectory;
+			}
+
+			dialog.FileName = this.CurrentDocument.ExportPDFFilename;
+			dialog.Title = Res.Strings.Dialog.ExportPDF.Title1;
+			dialog.Filters.Add("pdf", DocumentEditor.GetRes("File.Vector.PDF"), "*.pdf");
+			dialog.FilterIndex = 0;
+			dialog.PromptForOverwriting = true;
+			dialog.Owner = this.Window;
+			dialog.OpenDialog();
+			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return;
+
+			this.CurrentDocument.ExportPDFDirectory = System.IO.Path.GetDirectoryName(dialog.FileName);
+			this.CurrentDocument.ExportPDFFilename = System.IO.Path.GetFileName(dialog.FileName);
+
+			this.dlgExportPDF.Show(this.CurrentDocument.ExportPDFFilename);
+		}
+
 		[Command ("Export")]
 		void CommandExport(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -2948,6 +2988,7 @@ namespace Epsitec.App.DocumentEditor
 			this.nextDocState = new CommandState("NextDocument", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.FuncF6);
 			this.prevDocState = new CommandState("PrevDocument", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.ModifierShift|KeyCode.FuncF6);
 			this.printState = new CommandState("Print", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaP);
+			this.exportPDFState = new CommandState("ExportPDF", this.commandDispatcher);
 			this.exportState = new CommandState("Export", this.commandDispatcher);
 			this.glyphsState = new CommandState("Glyphs", this.commandDispatcher);
 			this.deleteState = new CommandState("Delete", this.commandDispatcher, KeyCode.Delete);
@@ -3122,6 +3163,7 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.IsCurrentDocument )
 			{
 				this.printState.Enabled = true;
+				this.exportPDFState.Enabled = true;
 				this.exportState.Enabled = true;
 				this.glyphsState.Enabled = true;
 				this.infosState.Enabled = true;
@@ -3133,6 +3175,7 @@ namespace Epsitec.App.DocumentEditor
 			else
 			{
 				this.printState.Enabled = false;
+				this.exportPDFState.Enabled = false;
 				this.exportState.Enabled = false;
 				this.glyphsState.Enabled = false;
 				this.infosState.Enabled = false;
@@ -3546,6 +3589,7 @@ namespace Epsitec.App.DocumentEditor
 
 				this.dlgPageStack.Update();
 				this.dlgPrint.UpdatePages();
+				this.dlgExportPDF.UpdatePages();
 				this.HandleModifChanged();
 			}
 			else
@@ -4249,6 +4293,7 @@ namespace Epsitec.App.DocumentEditor
 		protected void PrepareOpenDocument()
 		{
 			this.dlgExport.Rebuild();
+			this.dlgExportPDF.Rebuild();
 			this.dlgGlyphs.Rebuild();
 			this.dlgInfos.Rebuild();
 			this.dlgPrint.Rebuild();
@@ -4307,6 +4352,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.dlgAbout.Save();
 			this.dlgExport.Save();
+			this.dlgExportPDF.Save();
 			this.dlgGlyphs.Save();
 			this.dlgInfos.Save();
 			this.dlgKey.Save();
@@ -4427,6 +4473,7 @@ namespace Epsitec.App.DocumentEditor
 
 		protected Dialogs.About					dlgAbout;
 		protected Dialogs.Export				dlgExport;
+		protected Dialogs.ExportPDF				dlgExportPDF;
 		protected Dialogs.Glyphs				dlgGlyphs;
 		protected Dialogs.Infos					dlgInfos;
 		protected Dialogs.Key					dlgKey;
@@ -4468,6 +4515,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					nextDocState;
 		protected CommandState					prevDocState;
 		protected CommandState					printState;
+		protected CommandState					exportPDFState;
 		protected CommandState					exportState;
 		protected CommandState					glyphsState;
 		protected CommandState					deleteState;

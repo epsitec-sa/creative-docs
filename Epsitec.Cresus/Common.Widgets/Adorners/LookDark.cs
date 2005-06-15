@@ -257,7 +257,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 			{
-				graphics.RenderSolid(this.colorControl);
+				graphics.RenderSolid(this.colorControlLightLight);
 			}
 			else
 			{
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 			{
-				this.PaintCircle(graphics, rInside, this.colorControl);
+				this.PaintCircle(graphics, rInside, this.colorControlLightLight);
 			}
 			else
 			{

@@ -2001,6 +2001,11 @@ namespace Epsitec.Common.Document.Objects
 		{
 		}
 
+		// Exporte en PDF la géométrie de l'objet.
+		public virtual void ExportPDF(PDFPort port, DrawingContext drawingContext)
+		{
+		}
+
 
 		// Calcule le scroll éventuel nécessaire pour rendre le cursur visible.
 		protected void ComputeAutoScroll(Point c1, Point c2)

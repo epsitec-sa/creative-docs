@@ -706,6 +706,36 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Exporte en PDF la géométrie de l'objet.
+		public override void ExportPDF(PDFPort port, DrawingContext drawingContext)
+		{
+			if ( this.TotalHandle < 2 )  return;
+
+			Path path = this.PathBuild();
+
+			Properties.Line     lineMode  = this.PropertyLineMode;
+			Properties.Gradient lineColor = this.PropertyLineColor;
+			Properties.Gradient fillColor = this.PropertyFillGradient;
+
+			if ( fillColor.IsVisible() )
+			{
+				fillColor.ExportPDF(port, drawingContext);
+				port.PaintSurface(path);
+			}
+
+			if ( lineMode.IsVisible() && lineColor.IsVisible() )
+			{
+				lineMode.ExportPDF(port, drawingContext);
+				lineColor.ExportPDF(port, drawingContext);
+				port.PaintOutline(path);
+			}
+
+			if ( this.TotalHandle >= 4 )
+			{
+				this.DrawText(port, drawingContext);  // dessine le texte
+			}
+		}
+
 
 		// Retourne le chemin géométrique de l'objet pour les constructions
 		// magnétiques.

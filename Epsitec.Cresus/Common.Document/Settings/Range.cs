@@ -26,6 +26,10 @@ namespace Epsitec.Common.Document.Settings
 				case "PrintRange":
 					this.text = "";
 					break;
+
+				case "ExportPDFRange":
+					this.text = "";
+					break;
 			}
 		}
 
@@ -37,6 +41,9 @@ namespace Epsitec.Common.Document.Settings
 				{
 					case "PrintRange":
 						return this.document.Settings.PrintInfo.PrintRange;
+
+					case "ExportPDFRange":
+						return this.document.Settings.ExportPDFInfo.PageRange;
 				}
 
 				return 0;
@@ -48,6 +55,10 @@ namespace Epsitec.Common.Document.Settings
 				{
 					case "PrintRange":
 						this.document.Settings.PrintInfo.PrintRange = value;
+						break;
+
+					case "ExportPDFRange":
+						this.document.Settings.ExportPDFInfo.PageRange = value;
 						break;
 				}
 			}
@@ -61,6 +72,9 @@ namespace Epsitec.Common.Document.Settings
 				{
 					case "PrintRange":
 						return this.document.Settings.PrintInfo.PrintFrom;
+
+					case "ExportPDFRange":
+						return this.document.Settings.ExportPDFInfo.PageFrom;
 				}
 
 				return 0;
@@ -72,6 +86,10 @@ namespace Epsitec.Common.Document.Settings
 				{
 					case "PrintRange":
 						this.document.Settings.PrintInfo.PrintFrom = value;
+						break;
+
+					case "ExportPDFRange":
+						this.document.Settings.ExportPDFInfo.PageFrom = value;
 						break;
 				}
 			}
@@ -85,6 +103,9 @@ namespace Epsitec.Common.Document.Settings
 				{
 					case "PrintRange":
 						return this.document.Settings.PrintInfo.PrintTo;
+
+					case "ExportPDFRange":
+						return this.document.Settings.ExportPDFInfo.PageTo;
 				}
 
 				return 0;
@@ -97,6 +118,10 @@ namespace Epsitec.Common.Document.Settings
 					case "PrintRange":
 						this.document.Settings.PrintInfo.PrintTo = value;
 						break;
+
+					case "ExportPDFRange":
+						this.document.Settings.ExportPDFInfo.PageTo = value;
+						break;
 				}
 			}
 		}
@@ -108,6 +133,7 @@ namespace Epsitec.Common.Document.Settings
 				switch ( this.name )
 				{
 					case "PrintRange":
+					case "ExportPDFRange":
 						return 1;
 				}
 
@@ -122,6 +148,7 @@ namespace Epsitec.Common.Document.Settings
 				switch ( this.name )
 				{
 					case "PrintRange":
+					case "ExportPDFRange":
 						return System.Math.Max(1, this.document.Modifier.PrintableTotalPages());
 				}
 

@@ -159,6 +159,10 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRadius.SetEnabled(this.isExtendedSize && enableRadius);
 			this.fieldEffect1.SetEnabled(this.isExtendedSize && enable1);
 			this.fieldEffect2.SetEnabled(this.isExtendedSize && enable2);
+
+			this.labelRadius.SetEnabled(this.isExtendedSize && enableRadius);
+			this.labelEffect1.SetEnabled(this.isExtendedSize && enable1);
+			this.labelEffect2.SetEnabled(this.isExtendedSize && enable2);
 		}
 
 		// Met à jour la géométrie.

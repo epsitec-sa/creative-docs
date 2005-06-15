@@ -38,6 +38,8 @@
 	
 	<data name="Dialog.Export.Param">Paramètres pour l'image à exporter</data>
 	
+	<data name="Dialog.ExportPDF.Param">Paramètres pour le document à publier</data>
+	
 	<data name="Dialog.Bool.GridActive">Grille active</data>
 	<data name="Dialog.Bool.GridShow">Grille visible</data>
 	<data name="Dialog.Bool.GuidesActive">Repères actifs</data>
@@ -340,6 +342,7 @@
 	<data name="File.Bitmap.JPG">Image compressée JPEG</data>
 	<data name="File.Bitmap.PNG">Portable Network Graphics PNG</data>
 	<data name="File.Bitmap.GIF">Graphics Interchange Format GIF</data>
+	<data name="File.Vector.PDF">Fichiers PDF</data>
 
 	<data name="Panel.Justif.Tooltip.JustifHLeft">Justification à gauche</data>
 	<data name="Panel.Justif.Tooltip.JustifHCenter">Justification centrée</data>
@@ -536,7 +539,8 @@
 	<data name="Action.SaveAs">Enregistrer sous...</data>
 	<data name="Action.SaveModel">Enregistrer modèle...</data>
 	<data name="Action.Print">Imprimer...</data>
-	<data name="Action.Export">Exporter...</data>
+	<data name="Action.ExportPDF">Publier au format PDF...</data>
+	<data name="Action.Export">Exporter une image...</data>
 	<data name="Action.LastFiles">Fichiers récents</data>
 	<data name="Action.Quit">Quitter</data>
 

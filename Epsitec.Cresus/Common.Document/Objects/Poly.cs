@@ -968,6 +968,67 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Exporte en PDF la géométrie de l'objet.
+		public override void ExportPDF(PDFPort port, DrawingContext drawingContext)
+		{
+			if ( this.TotalHandle < 1 )  return;
+
+			Path pathStart;  bool outlineStart, surfaceStart;
+			Path pathEnd;    bool outlineEnd,   surfaceEnd;
+			Path pathLine;
+			this.PathBuild(drawingContext,
+						   out pathStart, out outlineStart, out surfaceStart,
+						   out pathEnd,   out outlineEnd,   out surfaceEnd,
+						   out pathLine, false);
+
+			Properties.Line     lineMode  = this.PropertyLineMode;
+			Properties.Gradient lineColor = this.PropertyLineColor;
+			Properties.Gradient fillColor = this.PropertyFillGradient;
+
+			// Dessine la surface.
+			if ( fillColor.IsVisible() )
+			{
+				fillColor.ExportPDF(port, drawingContext);
+				port.PaintSurface(pathLine);
+			}
+
+			// Dessine les surfaces aux extrémités.
+			if ( lineColor.IsVisible() )
+			{
+				if ( surfaceStart || surfaceEnd )
+				{
+					lineColor.ExportPDF(port, drawingContext);
+
+					if ( surfaceStart )
+					{
+						port.PaintSurface(pathStart);
+					}
+					if ( surfaceEnd )
+					{
+						port.PaintSurface(pathEnd);
+					}
+				}
+			}
+
+			// Dessine le trait et les extrémités.
+			if ( lineMode.IsVisible() && lineColor.IsVisible() )
+			{
+				lineMode.ExportPDF(port, drawingContext);
+				lineColor.ExportPDF(port, drawingContext);
+
+				if ( outlineStart )
+				{
+					port.PaintOutline(pathStart);
+				}
+				if ( outlineEnd )
+				{
+					port.PaintOutline(pathEnd);
+				}
+
+				port.PaintOutline(pathLine);
+			}
+		}
+
 
 		#region CreateFromPath
 		// Retourne le chemin géométrique de l'objet pour les constructions

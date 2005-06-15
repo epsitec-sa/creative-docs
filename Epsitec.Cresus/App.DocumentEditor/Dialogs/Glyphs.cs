@@ -78,7 +78,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.family.TabIndex = tabIndex++;
 				this.family.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Typo);
-				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Space);
+				if ( !this.limitedVersion )
+				{
+					this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Space);
+				}
 				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Business);
 				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Math);
 				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.GreekLower);
@@ -113,7 +116,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.font.IsReadOnly = true;
 				this.font.TabIndex = tabIndex++;
 				this.font.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				Misc.AddFontList(this.font, true);
+				Misc.AddFontList(this.font, !this.limitedVersion);
 				this.font.Text = this.fontName;
 				if ( this.font.SelectedIndex < 0 )
 				{
@@ -244,13 +247,25 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		// Donne la liste des caractères Unicode d'une famille.
 		protected int[] UnicodeList(int family)
 		{
-			if ( family == 0 )  return UnicodeTypo;
-			if ( family == 1 )  return UnicodeSpace;
-			if ( family == 2 )  return UnicodeBusiness;
-			if ( family == 3 )  return UnicodeMath;
-			if ( family == 4 )  return UnicodeGreekLower;
-			if ( family == 5 )  return UnicodeGreekUpper;
-			if ( family == 6 )  return UnicodeForm;
+			if ( this.limitedVersion )
+			{
+				if ( family == 0 )  return UnicodeTypo;
+				if ( family == 1 )  return UnicodeBusiness;
+				if ( family == 2 )  return UnicodeMath;
+				if ( family == 3 )  return UnicodeGreekLower;
+				if ( family == 4 )  return UnicodeGreekUpper;
+				if ( family == 5 )  return UnicodeForm;
+			}
+			else
+			{
+				if ( family == 0 )  return UnicodeTypo;
+				if ( family == 1 )  return UnicodeSpace;
+				if ( family == 2 )  return UnicodeBusiness;
+				if ( family == 3 )  return UnicodeMath;
+				if ( family == 4 )  return UnicodeGreekLower;
+				if ( family == 5 )  return UnicodeGreekUpper;
+				if ( family == 6 )  return UnicodeForm;
+			}
 			return null;
 		}
 
@@ -532,6 +547,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		protected bool				limitedVersion = true;
 		protected string			fontName;
 		protected readonly int		maxFamiliy = 10;
 		protected int[]				listSelectedIndex;

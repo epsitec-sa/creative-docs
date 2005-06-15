@@ -394,6 +394,59 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Exporte en PDF la géométrie de l'objet.
+		public override void ExportPDF(PDFPort port, DrawingContext drawingContext)
+		{
+			if ( this.TotalHandle < 2 )  return;
+
+			Path pathStart;  bool outlineStart, surfaceStart;
+			Path pathEnd;    bool outlineEnd,   surfaceEnd;
+			Path pathLine;
+			this.PathBuild(drawingContext,
+						   out pathStart, out outlineStart, out surfaceStart,
+						   out pathEnd,   out outlineEnd,   out surfaceEnd,
+						   out pathLine);
+
+			Properties.Line     lineMode  = this.PropertyLineMode;
+			Properties.Gradient lineColor = this.PropertyLineColor;
+
+			// Dessine les surfaces aux extrémités.
+			if ( lineColor.IsVisible() )
+			{
+				if ( surfaceStart || surfaceEnd )
+				{
+					lineColor.ExportPDF(port, drawingContext);
+
+					if ( surfaceStart )
+					{
+						port.PaintSurface(pathStart);
+					}
+					if ( surfaceEnd )
+					{
+						port.PaintSurface(pathEnd);
+					}
+				}
+			}
+
+			// Dessine le trait et les extrémités.
+			if ( lineMode.IsVisible() && lineColor.IsVisible() )
+			{
+				lineMode.ExportPDF(port, drawingContext);
+				lineColor.ExportPDF(port, drawingContext);
+
+				if ( outlineStart )
+				{
+					port.PaintOutline(pathStart);
+				}
+				if ( outlineEnd )
+				{
+					port.PaintOutline(pathEnd);
+				}
+
+				port.PaintOutline(pathLine);
+			}
+		}
+
 
 		// Retourne le chemin géométrique de l'objet pour les constructions
 		// magnétiques.

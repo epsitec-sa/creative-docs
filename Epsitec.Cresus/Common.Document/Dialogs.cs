@@ -22,6 +22,7 @@ namespace Epsitec.Common.Document
 			this.UpdateSettings(false);
 			this.UpdatePrint(false);
 			this.UpdateExport(false);
+			this.UpdateExportPDF(false);
 		}
 
 
@@ -313,6 +314,50 @@ namespace Epsitec.Common.Document
 			this.UpdateCombo("ImageDepth");
 			this.UpdateCombo("ImageCompression");
 			this.UpdateDouble("ImageQuality");
+		}
+		#endregion
+
+		#region ExportPDF
+		// Peuple le dialogue des exportations.
+		public void BuildExportPDF(Window window)
+		{
+			if ( this.windowExportPDF == null )
+			{
+				this.windowExportPDF = window;
+
+				Widget parent = this.windowExportPDF.Root.FindChild("Panel");
+				Panel container = new Panel(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+
+				this.tabIndex = 0;
+
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Area);
+				this.CreateRange(container, "ExportPDFRange");
+				Dialogs.CreateSeparator(container);
+			}
+
+			this.UpdateExportPDF(true);
+		}
+
+		// Appelé lorsque les réglages ont changé.
+		protected void UpdateExportPDF(bool force)
+		{
+			if ( !force )
+			{
+				if ( this.windowExportPDF == null || !this.windowExportPDF.IsVisible )  return;
+			}
+
+			this.UpdateDialogSettings("ExportPDF");
+			this.UpdateRangeField("ExportPDFRange");
+		}
+
+		// Appelé lorsque les pages ont changé.
+		public void UpdateExportPDFPages()
+		{
+			if ( this.windowExportPDF == null || !this.windowExportPDF.IsVisible )  return;
+
+			this.UpdateRangeField("ExportPDFRange");
 		}
 		#endregion
 
@@ -1560,6 +1605,13 @@ namespace Epsitec.Common.Document
 				this.windowExport = null;
 			}
 
+			if ( this.windowExportPDF != null )
+			{
+				Widget parent = this.windowExportPDF.Root.FindChild("Panel");
+				this.DeleteContainer(parent, "Container");
+				this.windowExportPDF = null;
+			}
+
 			this.widgetsTable.Clear();
 		}
 
@@ -1714,6 +1766,7 @@ namespace Epsitec.Common.Document
 		protected Window						windowSettings;
 		protected Window						windowPrint;
 		protected Window						windowExport;
+		protected Window						windowExportPDF;
 		protected Window						windowGlyphs;
 		protected Containers.Guides				containerGuides;
 		protected System.Collections.Hashtable	widgetsTable;

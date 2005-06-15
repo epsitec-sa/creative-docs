@@ -1327,6 +1327,12 @@ namespace Epsitec.Common.Document.Properties
 			return true;
 		}
 
+		// Exporte en PDF la propriété.
+		public void ExportPDF(PDFPort port, DrawingContext drawingContext)
+		{
+			port.Color = drawingContext.AdaptColor(this.color1);
+		}
+
 		
 		#region Serialization
 		// Sérialise la propriété.

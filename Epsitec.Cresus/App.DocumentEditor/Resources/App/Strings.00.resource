@@ -82,6 +82,13 @@
 	<data name="Dialog.Export.Tooltip.OK">Exporter l'image</data>
 	<data name="Dialog.Export.Tooltip.Cancel">Annuler l'exportation</data>
 
+	<data name="Dialog.ExportPDF.Title1">Publication au format PDF</data>
+	<data name="Dialog.ExportPDF.Title2">Publication de {0}</data>
+	<data name="Dialog.ExportPDF.Button.OK">Publier</data>
+	<data name="Dialog.ExportPDF.Button.Cancel">Annuler</data>
+	<data name="Dialog.ExportPDF.Tooltip.OK">Publier au format PDF</data>
+	<data name="Dialog.ExportPDF.Tooltip.Cancel">Annuler la publication</data>
+
 	<data name="Dialog.Glyphs.Title">Caractères spéciaux</data>
 	<data name="Dialog.Glyphs.TabPage.List">Listes partielles</data>
 	<data name="Dialog.Glyphs.TabPage.Array">Tableaux complets</data>

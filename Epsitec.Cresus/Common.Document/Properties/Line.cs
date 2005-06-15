@@ -126,6 +126,15 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		protected JoinStyle EffectiveJoin
+		{
+			get
+			{
+				if ( this.join == JoinStyle.Miter )  return JoinStyle.MiterRevert;
+				return this.join;
+			}
+		}
+
 		public double Limit
 		{
 			get
@@ -441,6 +450,12 @@ namespace Epsitec.Common.Document.Properties
 			get { return true; }
 		}
 
+		// Indique si le trait est visible.
+		public bool IsVisible()
+		{
+			return ( this.width != 0.0 );
+		}
+
 		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
@@ -496,7 +511,7 @@ namespace Epsitec.Common.Document.Properties
 		// Retourne la valeur d'engraissement pour la bbox.
 		public double InflateBoundingBoxFactor()
 		{
-			if ( this.join == JoinStyle.MiterRevert )
+			if ( this.join == JoinStyle.Miter )
 			{
 				return this.limit;
 			}
@@ -549,7 +564,7 @@ namespace Epsitec.Common.Document.Properties
 		// Effectue un graphics.Rasterizer.AddOutline.
 		public void AddOutline(Graphics graphics, Path path, double addWidth)
 		{
-			graphics.Rasterizer.AddOutline(path, this.width+addWidth, this.cap, this.join, this.limit);
+			graphics.Rasterizer.AddOutline(path, this.width+addWidth, this.cap, this.EffectiveJoin, this.limit);
 		}
 
 		// Effectue un port.PaintOutline.
@@ -571,7 +586,7 @@ namespace Epsitec.Common.Document.Properties
 
 				port.LineWidth = this.width;
 				port.LineCap = this.cap;
-				port.LineJoin = this.join;
+				port.LineJoin = this.EffectiveJoin;
 				port.LineMiterLimit = this.limit;
 
 				using ( Path temp = dp.GenerateDashedPath() )
@@ -583,7 +598,7 @@ namespace Epsitec.Common.Document.Properties
 			{
 				port.LineWidth = this.width;
 				port.LineCap = this.cap;
-				port.LineJoin = this.join;
+				port.LineJoin = this.EffectiveJoin;
 				port.LineMiterLimit = this.limit;
 				port.PaintOutline(path);
 			}
@@ -611,13 +626,13 @@ namespace Epsitec.Common.Document.Properties
 
 				using ( Path temp = dp.GenerateDashedPath() )
 				{
-					graphics.Rasterizer.AddOutline(temp, this.width, this.cap, this.join, this.limit);
+					graphics.Rasterizer.AddOutline(temp, this.width, this.cap, this.EffectiveJoin, this.limit);
 					graphics.RenderSolid(drawingContext.AdaptColor(color));
 				}
 			}
 			else	// trait continu ?
 			{
-				graphics.Rasterizer.AddOutline(path, this.width, this.cap, this.join, this.limit);
+				graphics.Rasterizer.AddOutline(path, this.width, this.cap, this.EffectiveJoin, this.limit);
 				graphics.RenderSolid(drawingContext.AdaptColor(color));
 			}
 		}
@@ -644,12 +659,12 @@ namespace Epsitec.Common.Document.Properties
 
 				using ( Path temp = dp.GenerateDashedPath() )
 				{
-					gradient.RenderOutline(graphics, drawingContext, temp, this.width, this.cap, this.join, this.limit, sa);
+					gradient.RenderOutline(graphics, drawingContext, temp, this.width, this.cap, this.EffectiveJoin, this.limit, sa);
 				}
 			}
 			else	// trait continu ?
 			{
-				gradient.RenderOutline(graphics, drawingContext, path, this.width, this.cap, this.join, this.limit, sa);
+				gradient.RenderOutline(graphics, drawingContext, path, this.width, this.cap, this.EffectiveJoin, this.limit, sa);
 			}
 		}
 
@@ -712,6 +727,20 @@ namespace Epsitec.Common.Document.Properties
 				graphics.Rasterizer.AddOutline(temp, width/drawingContext.ScaleX, CapStyle.Square, JoinStyle.Round, 5.0);
 				graphics.RenderSolid(color);
 			}
+		}
+
+		// Exporte en PDF la propriété.
+		public void ExportPDF(PDFPort port, DrawingContext drawingContext)
+		{
+			port.LineWidth = this.width;
+			port.LineCap = this.cap;
+			port.LineJoin = this.join;
+			port.LineDash = this.dash;
+			port.LineDashPen1 = this.dashPen[0];
+			port.LineDashGap1 = this.dashGap[0];
+			port.LineDashPen2 = this.dashPen[1];
+			port.LineDashGap2 = this.dashGap[1];
+			port.LineMiterLimit = this.limit;
 		}
 
 

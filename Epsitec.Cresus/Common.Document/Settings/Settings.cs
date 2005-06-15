@@ -21,6 +21,7 @@ namespace Epsitec.Common.Document.Settings
 			this.guides = new UndoableList(this.document, UndoableListType.Guides);
 
 			this.printInfo = new PrintInfo(document);
+			this.exportPDFInfo = new ExportPDFInfo(document);
 		}
 
 		// Crée tous les réglages par défaut, si nécessaire.
@@ -83,6 +84,8 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultInteger("Export", "ImageCompression");
 			this.CreateDefaultDouble("Export", "ImageQuality");
 			this.CreateDefaultDouble("Export", "ImageAA");
+
+			this.CreateDefaultRange("ExportPDF", "ExportPDFRange");
 		}
 
 		protected void CreateDefaultBool(string dialog, string name)
@@ -171,6 +174,12 @@ namespace Epsitec.Common.Document.Settings
 		public PrintInfo PrintInfo
 		{
 			get { return this.printInfo; }
+		}
+
+		// Donne les réglages de la publication PDF.
+		public ExportPDFInfo ExportPDFInfo
+		{
+			get { return this.exportPDFInfo; }
 		}
 
 		// Remets tous les réglages par défaut.
@@ -357,6 +366,7 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("GlobalGuides", this.globalGuides);
 			info.AddValue("GuidesList", this.guides);
 			info.AddValue("PrintInfo", this.printInfo);
+			info.AddValue("ExportPDFInfo", this.exportPDFInfo);
 		}
 
 		// Constructeur qui désérialise les réglages.
@@ -375,6 +385,15 @@ namespace Epsitec.Common.Document.Settings
 			{
 				this.globalGuides = true;
 			}
+
+			if ( this.document.IsRevisionGreaterOrEqual(1,0,21) )
+			{
+				this.exportPDFInfo = (ExportPDFInfo) info.GetValue("ExportPDFInfo", typeof(ExportPDFInfo));
+			}
+			else
+			{
+				this.exportPDFInfo = new ExportPDFInfo(this.document);
+			}
 		}
 
 		// Adapte l'objet après une désérialisation.
@@ -391,5 +410,6 @@ namespace Epsitec.Common.Document.Settings
 		protected bool							globalGuides;
 		protected UndoableList					guides;
 		protected PrintInfo						printInfo;
+		protected ExportPDFInfo					exportPDFInfo;
 	}
 }

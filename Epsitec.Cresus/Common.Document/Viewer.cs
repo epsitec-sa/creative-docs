@@ -57,7 +57,7 @@ namespace Epsitec.Common.Document
 			this.zoomer = new Selector(this.document);
 			this.mousePos = new Point(0,0);
 			this.mousePosValid = false;
-			this.mouseDown = false;
+			this.mouseDragging = false;
 			this.RedrawAreaFlush();
 
 			this.textRuler = new TextRuler(this);
@@ -154,8 +154,8 @@ namespace Epsitec.Common.Document
 		// Effectue éventuellement un scroll si la souris est proche des bords.
 		protected void HandleTimeElapsed(object sender)
 		{
-			if ( this.mouseDown && this.zoomShift )  return;
-			if ( this.mouseDown && this.guideInteractive != -1 )  return;
+			if ( this.mouseDragging && this.zoomShift )  return;
+			if ( this.mouseDragging && this.guideInteractive != -1 )  return;
 
 			Point mouse = this.mousePosWidget;
 
@@ -272,7 +272,7 @@ namespace Epsitec.Common.Document
 					this.document.IsDirtySerialize = true;
 					this.AutoScrollTimerStart(message);
 					this.ProcessMouseDown(message, pos);
-					this.mouseDown = true;
+					this.mouseDragging = true;
 					break;
 				
 				case MessageType.MouseMove:
@@ -280,11 +280,11 @@ namespace Epsitec.Common.Document
 					break;
 
 				case MessageType.MouseUp:
-					if ( this.mouseDown )
+					if ( this.mouseDragging )
 					{
 						this.AutoScrollTimerStop();
 						this.ProcessMouseUp(message, pos);
-						this.mouseDown = false;
+						this.mouseDragging = false;
 						this.ProcessMouseMove(message, pos);
 					}
 					break;
@@ -806,7 +806,7 @@ namespace Epsitec.Common.Document
 			this.HiliteHandle(null, -1);
 			this.selector.HiliteHandle(-1);
 
-			if ( this.mouseDown )  // bouton souris pressé ?
+			if ( this.mouseDragging )  // bouton souris pressé ?
 			{
 				// Duplique le ou les objets sélectionnés ?
 				if ( this.ctrlDown && !this.ctrlDuplicate &&
@@ -1085,7 +1085,7 @@ namespace Epsitec.Common.Document
 		{
 			this.ChangeMouseCursor(MouseCursorType.IBeam);
 
-			if ( this.mouseDown )  // bouton souris pressé ?
+			if ( this.mouseDragging )  // bouton souris pressé ?
 			{
 				this.EditProcessMessage(message, mouse);
 			}
@@ -1146,7 +1146,7 @@ namespace Epsitec.Common.Document
 		{
 			this.ChangeMouseCursor(MouseCursorType.Zoom);
 
-			if ( this.mouseDown )
+			if ( this.mouseDragging )
 			{
 				if ( this.zoomShift )
 				{
@@ -1225,7 +1225,7 @@ namespace Epsitec.Common.Document
 		{
 			this.ChangeMouseCursor(MouseCursorType.Hand);
 
-			if ( this.mouseDown )
+			if ( this.mouseDragging )
 			{
 				mouse.X += this.drawingContext.OriginX;
 				mouse.Y += this.drawingContext.OriginY;
@@ -1318,7 +1318,7 @@ namespace Epsitec.Common.Document
 		{
 			this.ChangeMouseCursor(MouseCursorType.Finger);
 
-			if ( this.mouseDown )
+			if ( this.mouseDragging )
 			{
 				this.drawingContext.SnapGrid(ref mouse);
 				this.document.HotSpot = mouse;
@@ -2142,11 +2142,11 @@ namespace Epsitec.Common.Document
 				 this.mouseCursorType == MouseCursorType.ArrowPlus   ||
 				 this.mouseCursorType == MouseCursorType.ArrowGlobal )
 			{
-				if ( message.IsCtrlPressed && !this.mouseDown )
+				if ( message.IsCtrlPressed && !this.mouseDragging )
 				{
 					this.ChangeMouseCursor(MouseCursorType.ArrowDup);
 				}
-				else if ( message.IsShiftPressed && !this.mouseDown )
+				else if ( message.IsShiftPressed && !this.mouseDragging )
 				{
 					this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
 				}
@@ -2167,11 +2167,11 @@ namespace Epsitec.Common.Document
 				 this.mouseCursorType == MouseCursorType.FingerDup  ||
 				 this.mouseCursorType == MouseCursorType.FingerPlus )
 			{
-				if ( message.IsCtrlPressed && !this.mouseDown )
+				if ( message.IsCtrlPressed && !this.mouseDragging )
 				{
 					this.ChangeMouseCursor(MouseCursorType.FingerDup);
 				}
-				else if ( message.IsShiftPressed && !this.mouseDown )
+				else if ( message.IsShiftPressed && !this.mouseDragging )
 				{
 					this.ChangeMouseCursor(MouseCursorType.FingerPlus);
 				}
@@ -2186,9 +2186,9 @@ namespace Epsitec.Common.Document
 				 this.mouseCursorType == MouseCursorType.ZoomShift     ||
 				 this.mouseCursorType == MouseCursorType.ZoomShiftCtrl )
 			{
-				if ( message.IsShiftPressed || (this.mouseDown && this.zoomShift) )
+				if ( message.IsShiftPressed || (this.mouseDragging && this.zoomShift) )
 				{
-					if ( message.IsCtrlPressed || (this.mouseDown && this.zoomCtrl) )
+					if ( message.IsCtrlPressed || (this.mouseDragging && this.zoomCtrl) )
 					{
 						this.ChangeMouseCursor(MouseCursorType.ZoomShiftCtrl);
 					}
@@ -2413,7 +2413,7 @@ namespace Epsitec.Common.Document
 			this.guideInteractive = this.document.Settings.GuidesAdd(guide);
 			this.document.Dialogs.SelectGuide(this.guideInteractive);
 			this.guideCreate = true;
-			this.mouseDown = true;
+			this.mouseDragging = true;
 			this.ChangeMouseCursor(horizontal ? MouseCursorType.HSplit : MouseCursorType.VSplit);
 		}
 
@@ -3035,7 +3035,7 @@ namespace Epsitec.Common.Document
 		protected Point							mousePosWidget;
 		protected Point							mousePos;
 		protected bool							mousePosValid = false;
-		protected bool							mouseDown;
+		protected bool							mouseDragging;
 		protected Point							handMouseStart;
 		protected Point							moveStart;
 		protected Point							moveOffset;

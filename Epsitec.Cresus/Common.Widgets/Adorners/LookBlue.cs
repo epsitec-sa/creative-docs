@@ -260,7 +260,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.AddFilledRectangle(rect);
 			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 			{
-				graphics.RenderSolid(this.colorControl);
+				graphics.RenderSolid(this.colorControlLight);
 			}
 			else
 			{
@@ -344,7 +344,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 			{
-				this.PaintCircle(graphics, rInside, this.colorControl);
+				this.PaintCircle(graphics, rInside, this.colorControlLight);
 			}
 			else
 			{
