@@ -18,6 +18,8 @@ namespace Epsitec.Common.Text.Properties
 		Leading,						//	style
 		Margins,						//	style
 		
+		ManagedParagraph,				//	style
+		
 		Properties,						//	style
 		Styles,							//	style
 		

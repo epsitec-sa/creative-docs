@@ -124,16 +124,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "AutoText.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "AutoTextList.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Context.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -230,6 +220,16 @@
                 />
                 <File
                     RelPath = "NumberSupport.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ParagraphManager.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ParagraphManagerList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -480,6 +480,11 @@
                 />
                 <File
                     RelPath = "Properties\LeadingProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\ManagedParagraphProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

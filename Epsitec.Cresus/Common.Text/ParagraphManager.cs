@@ -4,12 +4,11 @@
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe AutoText gère les textes automatiques (texte riches avec des
-	/// propriétés), tels que les listes à puces.
+	/// La classe ParagraphManager ...
 	/// </summary>
-	public class AutoText
+	public abstract class ParagraphManager
 	{
-		public AutoText(string name)
+		public ParagraphManager(string name)
 		{
 			this.name = name;
 		}
@@ -24,11 +23,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public virtual void GenerateText(TextStory story, ICursor cursor)
-		{
-			Navigator.StartParagraphIfNeeded (story, cursor);
-
-		}
+		public abstract void GenerateText(TextStory story, ICursor cursor);
 		
 		
 		private string							name;

@@ -70,20 +70,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.styles.Clone () as TextStyle[];
 			}
-			set
-			{
-				if (value == null)
-				{
-					value = new TextStyle[0];
-				}
-				
-				if (StylesProperty.CompareEqualContents (this.styles, value) == false)
-				{
-					this.styles = new TextStyle[value.Length];
-					value.CopyTo (this.styles, 0);
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		

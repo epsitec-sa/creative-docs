@@ -146,5 +146,35 @@ namespace Epsitec.Common.Types
 			
 			return true;
 		}
+		
+		public static bool Equal(string[] a, string[] b)
+		{
+			//	Version optimisée pour comparer des tableaux à une dimension de
+			//	nombres entiers.
+			
+			if (a == b)
+			{
+				return true;
+			}
+			if ((a == null) ||
+				(b == null) ||
+				(a.Length != b.Length))
+			{
+				return false;
+			}
+			
+			System.Diagnostics.Debug.Assert (a.Rank == 1);
+			System.Diagnostics.Debug.Assert (b.Rank == 1);
+			
+			for (int i = 0; i < a.Length; i++)
+			{
+				if (a[i] != b[i])
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
 	}
 }

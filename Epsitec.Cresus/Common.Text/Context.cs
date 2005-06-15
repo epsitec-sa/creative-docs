@@ -14,6 +14,7 @@ namespace Epsitec.Common.Text
 			this.style_list     = new StyleList ();
 			this.layout_list    = new LayoutList (this);
 			this.generator_list = new GeneratorList (this);
+			this.p_manager_list = new ParagraphManagerList (this);
 			this.char_marker    = new Internal.CharMarker ();
 			
 			this.char_marker.Add (Context.Markers.TagSelected);
@@ -51,6 +52,14 @@ namespace Epsitec.Common.Text
 			get
 			{
 				return this.generator_list;
+			}
+		}
+		
+		public ParagraphManagerList				ParagraphManagerList
+		{
+			get
+			{
+				return this.p_manager_list;
 			}
 		}
 		
@@ -613,6 +622,7 @@ namespace Epsitec.Common.Text
 		private StyleList						style_list;
 		private LayoutList						layout_list;
 		private GeneratorList					generator_list;
+		private ParagraphManagerList			p_manager_list;
 		private Internal.CharMarker				char_marker;
 		private Markers							markers;
 		

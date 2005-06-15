@@ -175,6 +175,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
 		public static void SetParagraphStylesAndProperties(TextStory story, ICursor cursor, System.Collections.ICollection styles, System.Collections.ICollection properties)
 		{
 			TextStyle[] s_array = new TextStyle[styles == null ? 0 : styles.Count];
@@ -223,6 +224,7 @@ namespace Epsitec.Common.Text
 			
 			story.WriteText (cursor, offset_start, text);
 		}
+		
 		
 		private static void SetParagraphStylesAndProperties(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] paragraph_styles, Property[] paragraph_properties)
 		{
