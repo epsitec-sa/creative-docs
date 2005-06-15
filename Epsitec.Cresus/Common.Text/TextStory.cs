@@ -201,24 +201,6 @@ namespace Epsitec.Common.Text
 			this.UpdateTextBreakInformation (position, length);
 		}
 		
-		private void IncrementUserCount(ulong[] text, int length)
-		{
-			Internal.StyleTable styles = this.StyleList.InternalStyleTable;
-			
-			for (int i = 0; i < length; i++)
-			{
-				ulong code = text[i];
-				
-				Styles.SimpleStyle   style = styles.GetStyle (code);
-				Styles.LocalSettings local = styles.GetLocalSettings (code);
-				Styles.ExtraSettings extra = styles.GetExtraSettings (code);
-				
-				if (style != null) style.IncrementUserCount ();
-				if (local != null) local.IncrementUserCount ();
-				if (extra != null) extra.IncrementUserCount ();
-			}
-		}
-		
 		public void DeleteText(ICursor cursor, int length)
 		{
 			int position = this.text.GetCursorPosition (cursor.CursorId);
@@ -334,10 +316,10 @@ namespace Epsitec.Common.Text
 			
 			this.IncrementUserCount (new_text, length);
 			
-			//	TODO: rendre cette opération annulable !
-			
 			int position = this.text.GetCursorPosition (cursor.CursorId) + offset;
 			int written  = this.text.WriteText (cursor.CursorId, offset, length, new_text);
+			
+			this.InternalAddOplet (new TextChangeOplet (this, position, length, old_text));
 			
 			this.UpdateTextBreakInformation (position, length);
 			
@@ -649,6 +631,42 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		private void IncrementUserCount(ulong[] text, int length)
+		{
+			Internal.StyleTable styles = this.StyleList.InternalStyleTable;
+			
+			for (int i = 0; i < length; i++)
+			{
+				ulong code = text[i];
+				
+				Styles.SimpleStyle   style = styles.GetStyle (code);
+				Styles.LocalSettings local = styles.GetLocalSettings (code);
+				Styles.ExtraSettings extra = styles.GetExtraSettings (code);
+				
+				if (style != null) style.IncrementUserCount ();
+				if (local != null) local.IncrementUserCount ();
+				if (extra != null) extra.IncrementUserCount ();
+			}
+		}
+		
+		private void DecrementUserCount(ulong[] text, int length)
+		{
+			Internal.StyleTable styles = this.StyleList.InternalStyleTable;
+			
+			for (int i = 0; i < length; i++)
+			{
+				ulong code = text[i];
+				
+				Styles.SimpleStyle   style = styles.GetStyle (code);
+				Styles.LocalSettings local = styles.GetLocalSettings (code);
+				Styles.ExtraSettings extra = styles.GetExtraSettings (code);
+				
+				if (style != null) style.DecrementUserCount ();
+				if (local != null) local.DecrementUserCount ();
+				if (extra != null) extra.DecrementUserCount ();
+			}
+		}
+		
 		private void InternalAddOplet(Common.Support.IOplet oplet)
 		{
 			if ((this.debug_disable_oplet == false) &&
@@ -661,6 +679,10 @@ namespace Epsitec.Common.Text
 					this.oplet_queue.Insert (oplet);
 					this.oplet_queue.ValidateAction ();
 				}
+			}
+			else
+			{
+				oplet.Dispose ();
 			}
 		}
 		
@@ -677,7 +699,7 @@ namespace Epsitec.Common.Text
 				this.text_change_mark = position;
 			}
 			
-			Debug.Assert.IsTrue (position <= this.TextLength);
+			System.Diagnostics.Debug.Assert (position <= this.TextLength);
 			
 			int area_begin = System.Math.Max (0, position - 20);
 			int area_end   = System.Math.Min (position + length + 20, this.text_length);
@@ -737,11 +759,11 @@ namespace Epsitec.Common.Text
 					}
 				}
 				
-				Debug.Assert.IsTrue (from_pos <= position);
-				Debug.Assert.IsTrue (to_pos >= position + length);
+				System.Diagnostics.Debug.Assert (from_pos <= position);
+				System.Diagnostics.Debug.Assert (to_pos >= position + length);
 				
-				Debug.Assert.IsTrue (word_begin >= from_pos);
-				Debug.Assert.IsTrue (word_end <= to_pos);
+				System.Diagnostics.Debug.Assert (word_begin >= from_pos);
+				System.Diagnostics.Debug.Assert (word_end <= to_pos);
 				
 				//	Demande une analyse du passage considéré et recopie les
 				//	informations dans le texte lui-même :
@@ -760,8 +782,16 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		protected void InternalInsertText(int position, ulong[] text)
+		protected void InternalInsertText(int position, ulong[] text, bool book_keeping)
 		{
+			if (book_keeping)
+			{
+				//	Passe en revue tous les caractères et met à jour les compteurs
+				//	d'utilisation pour les styles associés :
+				
+				this.IncrementUserCount (text, text.Length);
+			}
+			
 			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
 			this.text.InsertText (this.temp_cursor.CursorId, text);
 		}
@@ -778,31 +808,7 @@ namespace Epsitec.Common.Text
 				this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
 				this.text.ReadText (this.temp_cursor.CursorId, length, text);
 				
-				Internal.StyleTable styles = this.StyleList.InternalStyleTable;
-			
-				for (int i = 0; i < length; i++)
-				{
-					ulong code = text[i];
-					
-					Styles.SimpleStyle   style = styles.GetStyle (code);
-					Styles.LocalSettings local = styles.GetLocalSettings (code);
-					Styles.ExtraSettings extra = styles.GetExtraSettings (code);
-					
-					if (style != null)
-					{
-						style.DecrementUserCount ();
-					}
-					
-					if (local != null)
-					{
-						local.DecrementUserCount ();
-					}
-					
-					if (extra != null)
-					{
-						extra.DecrementUserCount ();
-					}
-				}
+				this.DecrementUserCount (text, length);
 			}
 			
 			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
@@ -820,12 +826,12 @@ namespace Epsitec.Common.Text
 			ulong[] data = new ulong[length];
 			int     read = this.text.ReadText (this.temp_cursor.CursorId, length, data);
 			
-			Debug.Assert.IsTrue (read == length);
+			System.Diagnostics.Debug.Assert (read == length);
 			
 			CursorInfo[] infos;
 			
 			this.InternalDeleteText (position, length, out infos, false);
-			this.InternalInsertText (position, text);
+			this.InternalInsertText (position, text, false);
 			
 			if ((infos != null) &&
 				(infos.Length > 0))
@@ -864,7 +870,7 @@ namespace Epsitec.Common.Text
 			ulong[] data = new ulong[length];
 			int     read = this.text.ReadText (this.temp_cursor.CursorId, length, data);
 			
-			Debug.Assert.IsTrue (read == length);
+			System.Diagnostics.Debug.Assert (read == length);
 			
 			ulong code = (~ Unicode.Bits.FullCodeMask) & data[0];
 			
@@ -876,7 +882,7 @@ namespace Epsitec.Common.Text
 			CursorInfo[] infos;
 			
 			this.InternalDeleteText (position, length, out infos, false);
-			this.InternalInsertText (position, text);
+			this.InternalInsertText (position, text, false);
 			
 			if ((infos != null) &&
 				(infos.Length > 0))
@@ -917,12 +923,12 @@ namespace Epsitec.Common.Text
 			ulong[] data = new ulong[length];
 			int     read = this.text.ReadText (this.temp_cursor.CursorId, length, data);
 			
-			Debug.Assert.IsTrue (read == length);
+			System.Diagnostics.Debug.Assert (read == length);
 			
 			CursorInfo[] infos;
 			
 			this.InternalDeleteText (from_pos, length, out infos, false);
-			this.InternalInsertText (to_pos, data);
+			this.InternalInsertText (to_pos, data, false);
 			
 			if ((infos != null) &&
 				(infos.Length > 0))
@@ -935,6 +941,30 @@ namespace Epsitec.Common.Text
 				
 				this.InternalRestoreCursorPositions (infos, to_pos - from_pos);
 			}
+		}
+		
+		protected void InternalReadText(int position, ulong[] buffer)
+		{
+			//	Lit le texte à la position donnée.
+			
+			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
+			
+			int length = buffer.Length;
+			int read   = this.text.ReadText (this.temp_cursor.CursorId, length, buffer);
+			
+			System.Diagnostics.Debug.Assert (read == length);
+		}
+		
+		protected void InternalWriteText(int position, ulong[] text)
+		{
+			//	Ecrit le texte à la position donnée.
+			
+			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
+			
+			int length  = text.Length;
+			int written = this.text.WriteText (this.temp_cursor.CursorId, length, text);
+			
+			System.Diagnostics.Debug.Assert (written == length);
 		}
 		
 		protected void InternalSaveCursorPositions(int position, int length, out CursorInfo[] infos)
@@ -1012,7 +1042,7 @@ namespace Epsitec.Common.Text
 			{
 				this.story.InternalSaveCursorPositions (this.position, this.length, out this.cursors);
 				
-				Debug.Assert.IsNotNull (this.cursors);
+				System.Diagnostics.Debug.Assert (this.cursors != null);
 				
 				int undo_start = this.story.text_length + 1;
 				int undo_end   = undo_start + this.story.undo_length;
@@ -1053,7 +1083,7 @@ namespace Epsitec.Common.Text
 				//	est dans l'état "redoable", il faudra supprimer le texte de
 				//	la "undo area".
 				
-				Debug.Assert.IsTrue (this.length > 0);
+				System.Diagnostics.Debug.Assert (this.length > 0);
 				
 				if (this.cursors != null)
 				{
@@ -1115,7 +1145,7 @@ namespace Epsitec.Common.Text
 			{
 				this.story.InternalSaveCursorPositions (this.position, this.length, out this.cursors);
 				
-				Debug.Assert.IsNotNull (this.cursors);
+				System.Diagnostics.Debug.Assert (this.cursors != null);
 				
 				int undo_start = this.story.text_length + 1;
 				int undo_end   = undo_start + this.story.undo_length;
@@ -1138,7 +1168,7 @@ namespace Epsitec.Common.Text
 				//	est dans l'état "undoable", il faudra supprimer le texte de
 				//	la "undo area".
 				
-				Debug.Assert.IsTrue (this.length > 0);
+				System.Diagnostics.Debug.Assert (this.length > 0);
 				
 				if (this.cursors != null)
 				{
@@ -1164,6 +1194,71 @@ namespace Epsitec.Common.Text
 			private int							position;
 			private int							length;
 			private CursorInfo[]				cursors;
+		}
+		#endregion
+		
+		#region TextChangeOplet Class
+		protected class TextChangeOplet : BaseOplet
+		{
+			public TextChangeOplet(TextStory story, int position, int length, ulong[] old_text) : base (story)
+			{
+				this.position = position;
+				this.length   = length;
+				this.text     = old_text;
+			}
+			
+			
+			public override Common.Support.IOplet Undo()
+			{
+				ulong[] old_text = new ulong[this.length];
+				ulong[] new_text = this.text;
+				
+				this.story.InternalReadText (this.position, old_text);
+				this.story.InternalWriteText (this.position, new_text);
+				
+				this.text = old_text;
+				
+				this.story.UpdateTextBreakInformation (this.position, this.length);
+				
+				return this;
+			}
+			
+			public override Common.Support.IOplet Redo()
+			{
+				ulong[] old_text = new ulong[this.length];
+				ulong[] new_text = this.text;
+				
+				this.story.InternalReadText (this.position, old_text);
+				this.story.InternalWriteText (this.position, new_text);
+				
+				this.text = old_text;
+				
+				this.story.UpdateTextBreakInformation (this.position, 0);
+				
+				return this;
+			}
+			
+			
+			public override void Dispose()
+			{
+				//	Lorsque l'on supprime une information permettant de refaire
+				//	ou défaire une modification, il suffit de mettre à jour les
+				//	compteurs d'utilisation des styles.
+				
+				System.Diagnostics.Debug.Assert (this.length > 0);
+				
+				this.story.DecrementUserCount (this.text, this.length);
+				
+				this.text   = null;
+				this.length = 0;
+				
+				base.Dispose ();
+			}
+			
+			
+			private int							position;
+			private int							length;
+			private ulong[]						text;
 		}
 		#endregion
 		

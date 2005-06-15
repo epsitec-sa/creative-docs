@@ -13,6 +13,7 @@ namespace Epsitec.Common.Text.Tests
 			CheckTextStory.TestStyles ();
 			CheckTextStory.TestInsertUndoRedo ();
 			CheckTextStory.TestDeleteUndoRedo ();
+			CheckTextStory.TestWriteUndoRedo ();
 			CheckTextStory.TestBreaks ();
 		}
 
@@ -290,6 +291,64 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Trace.WriteLine ("Redone delete DE.");
 			System.Diagnostics.Trace.WriteLine ("  Text: " + story.GetDebugText ());
 			System.Diagnostics.Trace.WriteLine ("  Undo: " + story.GetDebugUndo ());
+		}
+		
+		private static void TestWriteUndoRedo()
+		{
+			TextStory story = new TextStory ();
+			
+			ICursor cursor   = new Cursors.SimpleCursor ();
+			ICursor cursor_x = new Cursors.SimpleCursor ();
+			ICursor cursor_y = new Cursors.SimpleCursor ();
+			ICursor cursor_z = new Cursors.SimpleCursor ();
+			
+			story.NewCursor (cursor);
+			
+			ulong[] text = { 65ul, 66ul, 67ul, 68ul, 69ul, 70ul };
+			
+			story.InsertText (cursor, text);
+			story.OpletQueue.PurgeUndo ();
+			
+			Debug.Assert.IsTrue (story.TextLength == 6);
+			Debug.Assert.IsTrue (story.UndoLength == 0);
+			Debug.Assert.IsFalse (story.OpletQueue.CanUndo);
+			Debug.Assert.IsFalse (story.OpletQueue.CanRedo);
+			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 6);
+			
+			Debug.Assert.IsTrue (story.GetDebugText () == "ABCDEF");
+			
+			story.MoveCursor (cursor, -3);
+			story.WriteText (cursor, new ulong[] { 48ul, 49ul });
+			
+			Debug.Assert.IsTrue (story.TextLength == 6);
+			Debug.Assert.IsTrue (story.UndoLength == 0);
+			Debug.Assert.IsTrue (story.OpletQueue.CanUndo);
+			Debug.Assert.IsFalse (story.OpletQueue.CanRedo);
+			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 3);
+			
+			Debug.Assert.IsTrue (story.GetDebugText () == "ABC01F");
+			
+			story.OpletQueue.UndoAction ();
+			
+			Debug.Assert.IsTrue (story.TextLength == 6);
+			Debug.Assert.IsTrue (story.UndoLength == 0);
+			Debug.Assert.IsTrue (story.OpletQueue.CanUndo);
+			Debug.Assert.IsTrue (story.OpletQueue.CanRedo);
+			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 3);
+			
+			Debug.Assert.IsTrue (story.GetDebugText () == "ABCDEF");
+			
+			story.OpletQueue.RedoAction ();
+			
+			Debug.Assert.IsTrue (story.TextLength == 6);
+			Debug.Assert.IsTrue (story.UndoLength == 0);
+			Debug.Assert.IsTrue (story.OpletQueue.CanUndo);
+			Debug.Assert.IsFalse (story.OpletQueue.CanRedo);
+			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 3);
+			
+			Debug.Assert.IsTrue (story.GetDebugText () == "ABC01F");
+			
+			story.OpletQueue.PurgeUndo ();
 		}
 		
 		private static void TestBreaks()
