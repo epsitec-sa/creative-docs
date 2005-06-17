@@ -12,7 +12,10 @@ namespace Epsitec.Common.Text.Properties
 	{
 		public AutoTextProperty()
 		{
-			this.unique_id = System.Threading.Interlocked.Increment (ref AutoTextProperty.next_unique_id);
+			lock (AutoTextProperty.unique_id_lock)
+			{
+				this.unique_id = AutoTextProperty.next_unique_id++;
+			}
 		}
 		
 		public AutoTextProperty(string tag) : this ()
@@ -71,18 +74,29 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeString (this.tag));
+				/**/				SerializerSupport.SerializeString (this.tag),
+				/**/				SerializerSupport.SerializeLong (this.unique_id));
 		}
 
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			System.Diagnostics.Debug.Assert (args.Length == 1);
+			System.Diagnostics.Debug.Assert (args.Length == 2);
 			
-			string tag = SerializerSupport.DeserializeString (args[0]);
+			string tag       = SerializerSupport.DeserializeString (args[0]);
+			long   unique_id = SerializerSupport.DeserializeLong (args[1]);
 			
-			this.tag = tag;
+			this.tag       = tag;
+			this.unique_id = unique_id;
+			
+			lock (AutoTextProperty.unique_id_lock)
+			{
+				if (AutoTextProperty.next_unique_id <= this.unique_id)
+				{
+					AutoTextProperty.next_unique_id = this.unique_id + 1;
+				}
+			}
 		}
 		
 		public override Property GetCombination(Property property)
@@ -131,8 +145,9 @@ namespace Epsitec.Common.Text.Properties
 		
 		
 		private static long						next_unique_id;
+		private static object					unique_id_lock = new object ();
 		
 		private string							tag;
-		private readonly long					unique_id;
+		private long							unique_id;
 	}
 }

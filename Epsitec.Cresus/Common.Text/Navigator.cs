@@ -80,7 +80,7 @@ namespace Epsitec.Common.Text
 			int distance = story.TextLength - story.GetCursorPosition (cursor);
 			int offset   = story.TextTable.TraverseText (cursor.CursorId, distance, callback);
 			
-			return (offset == -1) ? distance : offset+1;
+			return (offset == -1) ? distance : offset;
 		}
 		
 		

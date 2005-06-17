@@ -54,6 +54,8 @@ namespace Epsitec.Common.Text.Tests
 			story.ConvertToStyledText ("Xyz\n", style1, null, out text);
 			story.InsertText (cursor, text);
 			
+			Debug.Assert.IsTrue (story.TextLength == 4);
+
 			story.SetCursorPosition (cursor, 0);
 			Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style2 }, null);
 			
@@ -71,12 +73,31 @@ namespace Epsitec.Common.Text.Tests
 			mp = Properties.ManagedParagraphProperty.Find (flattened, "ItemList");
 			
 			story.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (story, cursor, mp);
+			Debug.Assert.IsTrue (story.TextLength == 1+2+1+4);
 			
 			text = new ulong[story.TextLength];
 			story.SetCursorPosition (cursor, 0);
 			story.ReadText (cursor, story.TextLength, text);
 			
 			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
+			
+			//	Supprime la liste à puces :
+			
+			story.SetCursorPosition (cursor, 0);
+			
+			Navigator.GetFlattenedProperties (story, cursor, 0, out flattened);
+			mp = Properties.ManagedParagraphProperty.Find (flattened, "ItemList");
+			
+			Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style1 }, null);
+			story.TextContext.ParagraphManagerList["ItemList"].DetachFromParagraph (story, cursor, mp);
+			
+			text = new ulong[story.TextLength];
+			story.SetCursorPosition (cursor, 0);
+			story.ReadText (cursor, story.TextLength, text);
+			
+			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
+			
+			Debug.Assert.IsTrue (story.TextLength == 4);
 		}
 	}
 }

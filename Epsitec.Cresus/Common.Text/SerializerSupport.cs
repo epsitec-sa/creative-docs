@@ -93,6 +93,11 @@ namespace Epsitec.Common.Text
 			return value.ToString (System.Globalization.CultureInfo.InvariantCulture);
 		}
 		
+		public static string SerializeLong(long value)
+		{
+			return value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+		}
+		
 		public static string SerializeDouble(double value)
 		{
 			if (double.IsNaN (value))
@@ -183,6 +188,11 @@ namespace Epsitec.Common.Text
 		public static int DeserializeInt(string value)
 		{
 			return int.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
+		}
+		
+		public static long DeserializeLong(string value)
+		{
+			return long.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
 		}
 		
 		public static object DeserializeEnum(System.Type type, string value)

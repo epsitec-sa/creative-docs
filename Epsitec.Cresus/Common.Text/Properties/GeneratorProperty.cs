@@ -11,7 +11,10 @@ namespace Epsitec.Common.Text.Properties
 	{
 		public GeneratorProperty()
 		{
-			this.unique_id = System.Threading.Interlocked.Increment (ref GeneratorProperty.next_unique_id);
+			lock (GeneratorProperty.unique_id_lock)
+			{
+				this.unique_id = GeneratorProperty.next_unique_id++;
+			}
 		}
 		
 		public GeneratorProperty(string generator, int level) : this ()
@@ -89,20 +92,31 @@ namespace Epsitec.Common.Text.Properties
 		{
 			SerializerSupport.Join (buffer,
 				/**/				SerializerSupport.SerializeString (this.generator),
-				/**/				SerializerSupport.SerializeInt (this.level));
+				/**/				SerializerSupport.SerializeInt (this.level),
+				/**/				SerializerSupport.SerializeLong (this.unique_id));
 		}
 
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 2);
+			Debug.Assert.IsTrue (args.Length == 3);
 			
 			string generator = SerializerSupport.DeserializeString (args[0]);
 			int    level     = SerializerSupport.DeserializeInt (args[1]);
+			long   unique_id = SerializerSupport.DeserializeLong (args[2]);
 			
 			this.generator = generator;
 			this.level     = level;
+			this.unique_id = unique_id;
+			
+			lock (GeneratorProperty.unique_id_lock)
+			{
+				if (GeneratorProperty.next_unique_id <= this.unique_id)
+				{
+					GeneratorProperty.next_unique_id = this.unique_id + 1;
+				}
+			}
 		}
 		
 		public override Property GetCombination(Property property)
@@ -171,9 +185,10 @@ namespace Epsitec.Common.Text.Properties
 		#endregion
 		
 		private static long						next_unique_id;
+		private static object					unique_id_lock = new object ();
 		
 		private string							generator;
 		private int								level;
-		private readonly long					unique_id;
+		private long							unique_id;
 	}
 }
