@@ -30,7 +30,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public abstract void AttachToParagraph(TextStory story, ICursor cursor, string[] parameters);
-		public abstract void DetachFromParagraph(TextStory story, ICursor cursor, string[] parameters);
+		public abstract void AttachToParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property);
+		public abstract void DetachFromParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property);
 	}
 }

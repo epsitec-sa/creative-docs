@@ -28,7 +28,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties.Add (new Properties.LeadingProperty (14.0, Properties.SizeUnits.Points, Properties.AlignMode.None));
 			
-			TextStyle style1 = story.TextContext.StyleList.NewTextStyle ("Normal", TextStyleClass.Paragraph, properties);
+			TextStyle style1 = story.StyleList.NewTextStyle ("Normal", TextStyleClass.Paragraph, properties);
 			
 			properties.Clear ();
 			properties.Add (new Properties.FontProperty ("Arial", "Bold"));
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.LeadingProperty (0, Properties.SizeUnits.Points, Properties.AlignMode.First));
 			properties.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Blue")));
 			
-			TextStyle style2 = story.TextContext.StyleList.NewTextStyle ("Titre", TextStyleClass.Paragraph, properties);
+			TextStyle style2 = story.StyleList.NewTextStyle ("Titre", TextStyleClass.Paragraph, properties);
 			
 			properties.Clear ();
 			properties.Add (new Properties.UnderlineProperty ());

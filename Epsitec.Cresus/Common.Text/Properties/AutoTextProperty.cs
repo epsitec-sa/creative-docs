@@ -103,6 +103,25 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public static AutoTextProperty Find(Property[] properties, string tag)
+		{
+			foreach (Property property in properties)
+			{
+				if (property.WellKnownType == WellKnownType.AutoText)
+				{
+					AutoTextProperty auto_text = property as AutoTextProperty;
+					
+					if (auto_text.Tag == tag)
+					{
+						return auto_text;
+					}
+				}
+			}
+			
+			return null;
+		}
+		
+		
 		private static bool CompareEqualContents(AutoTextProperty a, AutoTextProperty b)
 		{
 			return a.tag == b.tag

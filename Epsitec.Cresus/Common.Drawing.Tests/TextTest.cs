@@ -689,6 +689,76 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur centré dans un paragraphe aligné à droite.\tTab-10 centré...\n\n", properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 #endif
+					properties_1.Clear ();
+					properties_1.Add (new Text.Properties.FontProperty ("Verdana", "Regular"));
+					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
+					properties_1.Add (new Text.Properties.LeadingProperty (14.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties_1.Add (new Text.Properties.MarginsProperty (5.0, 5.0, 5.0, 5.0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, Text.Properties.ThreeState.True));
+					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					
+					Text.TextStyle style1 = this.painter.TextStory.StyleList.NewTextStyle ("Normal", Text.TextStyleClass.Paragraph, properties_1);
+					
+					Text.Generator generator = this.painter.TextStory.TextContext.GeneratorList.NewGenerator ("liste");
+					
+					generator.Add (Text.Generator.CreateSequence (Text.Generator.SequenceType.Alphabetic, "", ")"));
+					
+					Text.ParagraphManagers.ItemListManager.Parameters items = new Text.ParagraphManagers.ItemListManager.Parameters ();
+					
+					items.Generator = generator;
+					items.TabItem   = new Text.Properties.TabProperty (10.0, 0.0, null);
+					items.TabBody   = new Text.Properties.TabProperty (tab, 0.0, null);
+					
+					properties_1.Clear ();
+					properties_1.Add (new Text.Properties.ManagedParagraphProperty ("ItemList", items.Save ()));
+					properties_1.Add (new Text.Properties.MarginsProperty (0, tab, double.NaN, double.NaN, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, Text.Properties.ThreeState.Undefined));
+					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Navy")));
+					
+					Text.TextStyle style2 = this.painter.TextStory.StyleList.NewTextStyle ("Puces", Text.TextStyleClass.Paragraph, properties_1);
+					
+					words = "Voici une liste à puces pour faire un test.\n";
+					
+					this.painter.TextStory.ConvertToStyledText (words, style1, null, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					this.painter.TextStory.MoveCursor (cursor, - words.Length);
+					Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
+					
+					Text.Properties.ManagedParagraphProperty mp;
+					Text.Property[] flattened;
+					
+					Text.Navigator.GetFlattenedProperties (this.painter.TextStory, cursor, 0, out flattened);
+					mp = Text.Properties.ManagedParagraphProperty.Find (flattened, "ItemList");
+					
+					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
+					this.painter.TextStory.MoveCursor (cursor, words.Length);
+					
+					words = "Second élément.\nTexte intercalaire.\n";
+					
+					this.painter.TextStory.ConvertToStyledText (words, style1, null, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					this.painter.TextStory.MoveCursor (cursor, - words.Length);
+					Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
+					
+					Text.Navigator.GetFlattenedProperties (this.painter.TextStory, cursor, 0, out flattened);
+					mp = Text.Properties.ManagedParagraphProperty.Find (flattened, "ItemList");
+					
+					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
+					this.painter.TextStory.MoveCursor (cursor, words.Length);
+					
+					words = "Dernier élément pour terminer.\nFin du texte.\n";
+					
+					this.painter.TextStory.ConvertToStyledText (words, style1, null, out text);
+					this.painter.TextStory.InsertText (cursor, text);
+					
+					this.painter.TextStory.MoveCursor (cursor, - words.Length);
+					Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
+					
+					Text.Navigator.GetFlattenedProperties (this.painter.TextStory, cursor, 0, out flattened);
+					mp = Text.Properties.ManagedParagraphProperty.Find (flattened, "ItemList");
+					
+					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
+					this.painter.TextStory.MoveCursor (cursor, words.Length);
 				}
 				
 				this.painter.TextStory.RecycleCursor (cursor);

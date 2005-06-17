@@ -35,6 +35,11 @@ namespace Epsitec.Common.Support
 			Common.Text.Tests.CheckNavigator.RunTests ();
 		}
 		
+		[Test] public void CheckParagraphManager()
+		{
+			Common.Text.Tests.CheckParagraphManager.RunTests ();
+		}
+		
 		[Test] public void CheckProperties()
 		{
 			Common.Text.Tests.CheckProperties.RunTests ();

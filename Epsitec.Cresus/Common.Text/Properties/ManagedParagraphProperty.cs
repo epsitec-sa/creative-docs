@@ -100,6 +100,25 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public static ManagedParagraphProperty Find(Property[] properties, string name)
+		{
+			foreach (Property property in properties)
+			{
+				if (property.WellKnownType == WellKnownType.ManagedParagraph)
+				{
+					ManagedParagraphProperty managed = property as ManagedParagraphProperty;
+					
+					if (managed.ManagerName == name)
+					{
+						return managed;
+					}
+				}
+			}
+			
+			return null;
+		}
+		
+		
 		private static bool CompareEqualContents(ManagedParagraphProperty a, ManagedParagraphProperty b)
 		{
 			return a.manager_name == b.manager_name

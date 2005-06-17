@@ -16,14 +16,17 @@ namespace Epsitec.Common.Text.ParagraphManagers
 		}
 		
 		
-		public override void AttachToParagraph(TextStory story, ICursor cursor, string[] parameters)
+		public override void AttachToParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property)
 		{
 			Context context = story.TextContext;
 			
-			Parameters p = new Parameters (context, parameters);
+			Parameters p = new Parameters (context, property.ManagerParameters);
+			
+			//	Le curseur est positionné au début (brut) du paragraphe, juste
+			//	après la fin du paragraphe précédent.
 			
 			System.Diagnostics.Debug.Assert (Navigator.IsParagraphStart (story, cursor, 0));
-			System.Diagnostics.Debug.Assert (context.ContainsProperty (story, cursor, 0, Properties.WellKnownType.ManagedParagraph, Properties.PropertyType.Style));
+			System.Diagnostics.Debug.Assert (context.ContainsProperty (story, cursor, 0, property));
 			
 			Properties.AutoTextProperty  auto_text_prop = new Properties.AutoTextProperty (this.Name);
 			Properties.GeneratorProperty generator_prop = new Properties.GeneratorProperty (p.Generator.Name, 0);
@@ -37,17 +40,45 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			Navigator.Insert (story, cursor, Unicode.Code.HorizontalTab, null, props_1);
 			Navigator.Insert (story, cursor, "X", null, props_2);
 			Navigator.Insert (story, cursor, Unicode.Code.HorizontalTab, null, props_3);
-
+			
 			p.Generator.UpdateAllFields (story, context.Culture);
 		}
 		
-		public override void DetachFromParagraph(TextStory story, ICursor cursor, string[] parameters)
+		public override void DetachFromParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property)
 		{
+			Context context = story.TextContext;
+			
+			Parameters p = new Parameters (context, property.ManagerParameters);
+			
+			//	Le curseur est positionné au début (brut) du paragraphe, juste
+			//	après la fin du paragraphe précédent; il est donc placé avant le
+			//	morceau de texte automatique que nous gérons.
+			
+			System.Diagnostics.Debug.Assert (Navigator.IsParagraphStart (story, cursor, 0));
+			System.Diagnostics.Debug.Assert (context.ContainsProperty (story, cursor, 0, property) == false);
+			
+			Property[] flattened_properties;
+			
+			Navigator.GetFlattenedProperties (story, cursor, 0, out flattened_properties);
+			
+			System.Diagnostics.Debug.Assert (flattened_properties != null);
+			
+			Properties.AutoTextProperty auto_text_prop = Properties.AutoTextProperty.Find (flattened_properties, this.Name);
+			
+			int length = Navigator.GetRunLength (story, cursor, auto_text_prop);
+			
+			story.DeleteText (cursor, length);
+			
+			p.Generator.UpdateAllFields (story, context.Culture);
 		}
 		
 		
 		public class Parameters
 		{
+			public Parameters()
+			{
+			}
+			
 			public Parameters(Context context, params string[] parameters)
 			{
 				this.Load (context, parameters);

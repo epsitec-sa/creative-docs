@@ -18,7 +18,7 @@ namespace Epsitec.Common.Text
 		//
 		//	NB: Le curseur pointe toujours au début du paragraphe.
 		
-		void AttachToParagraph(TextStory story, ICursor cursor, string[] parameters);
-		void DetachFromParagraph(TextStory story, ICursor cursor, string[] parameters);
+		void AttachToParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property);
+		void DetachFromParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property);
 	}
 }

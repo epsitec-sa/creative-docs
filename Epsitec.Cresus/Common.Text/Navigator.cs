@@ -57,7 +57,7 @@ namespace Epsitec.Common.Text
 		
 		public static int GetParagraphEndLength(TextStory story, ICursor cursor)
 		{
-			//	Retourne la longueur du paragraph depuis la position courante
+			//	Retourne la longueur du paragraphe depuis la position courante
 			//	jusqu'à sa fin, y compris le caractère de terminaison.
 			
 			TextStory.CodeCallback callback = new TextStory.CodeCallback (Navigator.IsParagraphSeparator);
@@ -68,6 +68,40 @@ namespace Epsitec.Common.Text
 			return (offset == -1) ? distance : offset+1;
 		}
 		
+		
+		public static int GetRunLength(TextStory story, ICursor cursor, Property property)
+		{
+			//	Retourne la longueur du texte auquel est appliquée la propriété
+			//	passée en entrée.
+			
+			Navigator.PropertyFinder finder = new PropertyFinder (story.StyleList, property, story.TextTable.ReadChar (cursor.CursorId));
+			TextStory.CodeCallback callback = new TextStory.CodeCallback (finder.MissingProperty);
+			
+			int distance = story.TextLength - story.GetCursorPosition (cursor);
+			int offset   = story.TextTable.TraverseText (cursor.CursorId, distance, callback);
+			
+			return (offset == -1) ? distance : offset+1;
+		}
+		
+		
+		public static bool GetFlattenedProperties(TextStory story, ICursor cursor, int offset, out Property[] properties)
+		{
+			//	Retourne toutes les propriétés (fusionnées, telles que stockées
+			//	dans le texte) pour la position indiquée.
+			
+			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
+			
+			if (code == 0)
+			{
+				properties = null;
+				return false;
+			}
+			else
+			{
+				properties = story.StyleList[code].Flatten (code);
+				return true;
+			}
+		}
 		
 		public static bool GetParagraphStyles(TextStory story, ICursor cursor, int offset, out TextStyle[] styles)
 		{
@@ -82,7 +116,7 @@ namespace Epsitec.Common.Text
 				return false;
 			}
 			
-			Styles.SimpleStyle        simple_style    = story.TextContext.StyleList[code];
+			Styles.SimpleStyle        simple_style    = story.StyleList[code];
 			Properties.StylesProperty styles_property = simple_style[Properties.WellKnownType.Styles] as Properties.StylesProperty;
 			TextStyle[]               all_styles      = styles_property.Styles;
 			
@@ -129,7 +163,7 @@ namespace Epsitec.Common.Text
 				return false;
 			}
 			
-			Styles.SimpleStyle            simple_style   = story.TextContext.StyleList[code];
+			Styles.SimpleStyle            simple_style   = story.StyleList[code];
 			Properties.PropertiesProperty props_property = simple_style[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
 			
 			if (props_property == null)
@@ -214,6 +248,9 @@ namespace Epsitec.Common.Text
 		
 		public static void SetParagraphStylesAndProperties(TextStory story, ICursor cursor, TextStyle[] styles, Property[] properties)
 		{
+			if (styles == null)     styles = new TextStyle[0];
+			if (properties == null) properties = new Property[0];
+			
 			int offset_start = Navigator.GetParagraphStartOffset (story, cursor);
 			int offset_end   = Navigator.GetParagraphEndLength (story, cursor);
 			
@@ -258,7 +295,7 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			Styles.SimpleStyle            simple = story.TextContext.StyleList[code];
+			Styles.SimpleStyle            simple = story.StyleList[code];
 			Properties.StylesProperty     s_prop = simple[Properties.WellKnownType.Styles] as Properties.StylesProperty;
 			Properties.PropertiesProperty p_prop = simple[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
 			
@@ -303,6 +340,43 @@ namespace Epsitec.Common.Text
 				text[offset+i] &= ~ Internal.CharMarker.StyleAndSettingsMask;
 				text[offset+i] |= style_bits;
 			}
+		}
+		
+		
+		private class PropertyFinder
+		{
+			public PropertyFinder(StyleList styles, Property property, ulong code)
+			{
+				this.styles   = styles;
+				this.property = property;
+				this.code     = Internal.CharMarker.ExtractStyleAndSettings (code);
+			}
+			
+			
+			public bool MissingProperty(ulong code)
+			{
+				code = Internal.CharMarker.ExtractStyleAndSettings (code);
+				
+				if (this.code == code)
+				{
+					return false;
+				}
+				
+				if (this.styles[code].Contains (code, this.property))
+				{
+					this.code = code;	//	propriété trouvée, continue...
+					return false;
+				}
+				else
+				{
+					return true;		//	propriété manquante, arrête ici
+				}
+			}
+			
+			
+			private StyleList					styles;
+			private Property					property;
+			private ulong						code;
 		}
 	}
 }
