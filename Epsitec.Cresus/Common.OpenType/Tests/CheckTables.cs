@@ -479,8 +479,8 @@ namespace Epsitec.Common.OpenType.Tests
 				attrib_2aa[i] = (byte) (i+1);
 			}
 			
-			font_1.GenerateGlyphs(text, out glyphs_1aa, attrib_1aa);
-			font_2.GenerateGlyphs(text, out glyphs_2aa, attrib_2aa);
+			font_1.GenerateGlyphs(text, out glyphs_1aa, ref attrib_1aa);
+			font_2.GenerateGlyphs(text, out glyphs_2aa, ref attrib_2aa);
 			
 			Debug.Assert.IsTrue (attrib_1aa[0] == 1);
 			Debug.Assert.IsTrue (attrib_1aa[1] == 3);

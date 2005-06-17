@@ -102,10 +102,11 @@ namespace Epsitec.Common.OpenType
 			return glyphs;
 		}
 		
-		public void GenerateGlyphs(string text, out ushort[] glyphs, byte[] attributes)
+		public void GenerateGlyphs(string text, out ushort[] glyphs, ref byte[] attributes)
 		{
 			int   length = text.Length;
 			int[] gl_map;
+			int   count;
 			
 			glyphs = new ushort[length];
 			gl_map = new int[length];
@@ -117,43 +118,16 @@ namespace Epsitec.Common.OpenType
 			
 			this.ApplySubstitutions (ref glyphs, ref gl_map);
 			
-			length = glyphs.Length;
-			
-			int src = 0;
-			int dst = 0;
-			
-			for (int i = 0; i < length; i++)
-			{
-				attributes[dst] = attributes[src];
-				
-				dst += 1;
-				src += gl_map[i] + 1;
-			}
-		}
-		
-		public void GenerateGlyphs(ulong[] text, int start, int length, out ushort[] glyphs, byte[] attributes)
-		{
-			int[] gl_map;
-			
-			glyphs = new ushort[length];
-			gl_map = new int[length];
-			
-			for (int i = 0; i < length; i++)
-			{
-				ulong bits = text[start+i];
-				int   code = Font.UnicodeMask & (int) bits;
-				
-				glyphs[i] = (bits & Font.TransparentGlyphFlag) == 0 ? this.GetGlyphIndex (code) : (ushort) code;
-			}
-			
-			this.ApplySubstitutions (ref glyphs, ref gl_map);
-			
-			length = glyphs.Length;
-			
 			if (attributes != null)
 			{
+				length = glyphs.Length;
+				count  = attributes.Length;
+				
 				int src = 0;
 				int dst = 0;
+				
+				//	TODO: gérer le cas où il y a plus de glyphes en sortie qu'il n'y a de
+				//	place dans la table des attributs.
 				
 				for (int i = 0; i < length; i++)
 				{
@@ -162,12 +136,17 @@ namespace Epsitec.Common.OpenType
 					dst += 1;
 					src += gl_map[i] + 1;
 				}
+				while (src < count)
+				{
+					attributes[dst++] = attributes[src++];
+				}
 			}
 		}
 		
-		public void GenerateGlyphs(ulong[] text, int start, int length, out ushort[] glyphs, short[] attributes)
+		public void GenerateGlyphs(ulong[] text, int start, int length, out ushort[] glyphs, ref byte[] attributes)
 		{
 			int[] gl_map;
+			int   count;
 			
 			glyphs = new ushort[length];
 			gl_map = new int[length];
@@ -182,17 +161,71 @@ namespace Epsitec.Common.OpenType
 			
 			this.ApplySubstitutions (ref glyphs, ref gl_map);
 			
-			length = glyphs.Length;
+			if (attributes != null)
+			{
+				length = glyphs.Length;
+				count  = attributes.Length;
+				
+				int src = 0;
+				int dst = 0;
+				
+				//	TODO: gérer le cas où il y a plus de glyphes en sortie qu'il n'y a de
+				//	place dans la table des attributs.
+				
+				for (int i = 0; i < length; i++)
+				{
+					attributes[dst] = attributes[src];
+					
+					dst += 1;
+					src += gl_map[i] + 1;
+				}
+				while (src < count)
+				{
+					attributes[dst++] = attributes[src++];
+				}
+			}
+		}
+		
+		public void GenerateGlyphs(ulong[] text, int start, int length, out ushort[] glyphs, ref short[] attributes)
+		{
+			int[] gl_map;
+			int   count;
 			
-			int src = 0;
-			int dst = 0;
+			glyphs = new ushort[length];
+			gl_map = new int[length];
 			
 			for (int i = 0; i < length; i++)
 			{
-				attributes[dst] = attributes[src];
+				ulong bits = text[start+i];
+				int   code = Font.UnicodeMask & (int) bits;
 				
-				dst += 1;
-				src += gl_map[i] + 1;
+				glyphs[i] = (bits & Font.TransparentGlyphFlag) == 0 ? this.GetGlyphIndex (code) : (ushort) code;
+			}
+			
+			this.ApplySubstitutions (ref glyphs, ref gl_map);
+			
+			if (attributes != null)
+			{
+				length = glyphs.Length;
+				count  = attributes.Length;
+				
+				int src = 0;
+				int dst = 0;
+				
+				//	TODO: gérer le cas où il y a plus de glyphes en sortie qu'il n'y a de
+				//	place dans la table des attributs.
+				
+				for (int i = 0; i < length; i++)
+				{
+					attributes[dst] = attributes[src];
+					
+					dst += 1;
+					src += gl_map[i] + 1;
+				}
+				while (src < count)
+				{
+					attributes[dst++] = attributes[src++];
+				}
 			}
 		}
 		

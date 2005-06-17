@@ -114,13 +114,15 @@ namespace Epsitec.Common.Text.Layout
 		public static ushort[] GenerateGlyphs (Text.Context context, OpenType.Font font, ulong[] text, int offset, int length)
 		{
 			ushort[] glyphs;
+			byte[]   attributes = null;
 			
-			BaseEngine.GenerateGlyphs (context, font, text, offset, length, out glyphs, null);
+			BaseEngine.GenerateGlyphs (context, font, text, offset, length, out glyphs, ref attributes);
 			
 			return glyphs;
 		}
 		
-		public static void GenerateGlyphs(Text.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, byte[] attributes)
+		
+		public static void GenerateGlyphs(Text.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, ref byte[] attributes)
 		{
 			ulong[] temp = new ulong[length];
 			
@@ -153,8 +155,45 @@ namespace Epsitec.Common.Text.Layout
 				}
 			}
 			
-			font.GenerateGlyphs (temp, 0, length, out glyphs, attributes);
+			font.GenerateGlyphs (temp, 0, length, out glyphs, ref attributes);
 		}
+		
+		public static void GenerateGlyphs(Text.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, ref short[] attributes)
+		{
+			ulong[] temp = new ulong[length];
+			
+			System.Buffer.BlockCopy (text, offset * 8, temp, 0, length * 8);
+			
+			Unicode.BreakAnalyzer analyzer = Unicode.DefaultBreakAnalyzer;
+			
+			for (int i = 0; i < length; i++)
+			{
+				ulong bits = temp[i];
+				int   code = Unicode.Bits.GetCode (bits);
+				
+				if (Unicode.Bits.GetSpecialCodeFlag (bits))
+				{
+					temp[i] = (ulong) (context.GetGlyphForSpecialCode (bits) | (int) Unicode.Bits.SpecialCodeFlag);
+				}
+				else if (analyzer.IsControl (code))
+				{
+					temp[i] &= ~ Unicode.Bits.FullCodeMask;
+				}
+				else if ((code == (int) Unicode.Code.SoftHyphen) &&
+					/**/ (i+1 < length))
+				{
+					temp[i] &= ~ Unicode.Bits.FullCodeMask;
+				}
+				else if ((code == (int) Unicode.Code.MongolianTodoHyphen) &&
+					/**/ (i != 0))
+				{
+					temp[i] &= ~ Unicode.Bits.FullCodeMask;
+				}
+			}
+			
+			font.GenerateGlyphs (temp, 0, length, out glyphs, ref attributes);
+		}
+		
 		
 		public static void GenerateGlyphsAndStretchClassAttributes(Text.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, out byte[] attributes)
 		{
@@ -193,7 +232,7 @@ namespace Epsitec.Common.Text.Layout
 				}
 			}
 			
-			font.GenerateGlyphs (temp, 0, length, out glyphs, attributes);
+			font.GenerateGlyphs (temp, 0, length, out glyphs, ref attributes);
 		}
 		
 		

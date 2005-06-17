@@ -14,6 +14,7 @@ namespace Epsitec.Common.Text.Tests
 			CheckLayout.TestLineEngineWithFrame ();
 			CheckLayout.TestLineEngineWithHyphens ();
 			CheckLayout.TestLineEngineWithSpaces ();
+			CheckLayout.TestTextToGlyphMapping ();
 		}
 		
 		
@@ -447,6 +448,93 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[0].Offset == 23);
 			Debug.Assert.IsTrue (breaks[0].Advance > 94.03);
 			Debug.Assert.IsTrue (breaks[0].Advance < 94.04);
+		}
+		
+		private static void TestTextToGlyphMapping()
+		{
+			ulong[]  text   = new ulong[] { 'A', 'f', 'f', 'i', 'c', 'h', 'e' };
+			ushort[] glyphs = new ushort[] { 1, 100, 60, 65, 62 };
+			short[]  map    = new short[] { 0, 1, 4, 5, 6, 7 };
+			
+			Layout.TextToGlyphMapping mapping = new Layout.TextToGlyphMapping (text, 0, text.Length, glyphs, map);
+			
+			int[]    c;
+			ushort[] g;
+			
+			mapping.GetNextMapping (out c, out g);
+			
+			Debug.Assert.IsTrue (c.Length == 1);
+			Debug.Assert.IsTrue (c[0] == 'A');
+			Debug.Assert.IsTrue (g.Length == 1);
+			Debug.Assert.IsTrue (g[0] == 1);
+			
+			mapping.GetNextMapping (out c, out g);
+			
+			Debug.Assert.IsTrue (c.Length == 3);
+			Debug.Assert.IsTrue (c[0] == 'f');
+			Debug.Assert.IsTrue (c[1] == 'f');
+			Debug.Assert.IsTrue (c[2] == 'i');
+			Debug.Assert.IsTrue (g.Length == 1);
+			Debug.Assert.IsTrue (g[0] == 100);
+			
+			mapping.GetNextMapping (out c, out g);
+			
+			Debug.Assert.IsTrue (c.Length == 1);
+			Debug.Assert.IsTrue (c[0] == 'c');
+			Debug.Assert.IsTrue (g.Length == 1);
+			Debug.Assert.IsTrue (g[0] == 60);
+			
+			mapping.GetNextMapping (out c, out g);
+			
+			Debug.Assert.IsTrue (c.Length == 1);
+			Debug.Assert.IsTrue (c[0] == 'h');
+			Debug.Assert.IsTrue (g.Length == 1);
+			Debug.Assert.IsTrue (g[0] == 65);
+			
+			mapping.GetNextMapping (out c, out g);
+			
+			Debug.Assert.IsTrue (c.Length == 1);
+			Debug.Assert.IsTrue (c[0] == 'e');
+			Debug.Assert.IsTrue (g.Length == 1);
+			Debug.Assert.IsTrue (g[0] == 62);
+			
+			mapping.GetNextMapping (out c, out g);
+			
+			Debug.Assert.IsNull (c);
+			Debug.Assert.IsNull (g);
+			
+			text   = new ulong[] { 'a', 'é', 'x' };
+			glyphs = new ushort[] { 1, 5, 100, 20 };
+			map    = new short[] { 0, 1, 1, 2, 3 };
+			
+			mapping = new Layout.TextToGlyphMapping (text, 0, text.Length, glyphs, map);
+			
+			mapping.GetNextMapping (out c, out g);
+			
+			Debug.Assert.IsTrue (c.Length == 1);
+			Debug.Assert.IsTrue (c[0] == 'a');
+			Debug.Assert.IsTrue (g.Length == 1);
+			Debug.Assert.IsTrue (g[0] == 1);
+			
+			mapping.GetNextMapping (out c, out g);
+			
+			Debug.Assert.IsTrue (c.Length == 1);
+			Debug.Assert.IsTrue (c[0] == 'é');
+			Debug.Assert.IsTrue (g.Length == 2);
+			Debug.Assert.IsTrue (g[0] == 5);
+			Debug.Assert.IsTrue (g[1] == 100);
+			
+			mapping.GetNextMapping (out c, out g);
+			
+			Debug.Assert.IsTrue (c.Length == 1);
+			Debug.Assert.IsTrue (c[0] == 'x');
+			Debug.Assert.IsTrue (g.Length == 1);
+			Debug.Assert.IsTrue (g[0] == 20);
+			
+			mapping.GetNextMapping (out c, out g);
+			
+			Debug.Assert.IsNull (c);
+			Debug.Assert.IsNull (g);
 		}
 	}
 }

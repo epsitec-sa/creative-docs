@@ -470,13 +470,15 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			//	Génère les glyphes et les informations relatives à l'extensibilité
 			//	pour le fragment de texte :
 			
+			TextToGlyphMapping mapping = null;
+			
 			ushort[] glyphs     = null;
 			byte[]   attributes = new byte[length+10];
 			
 			Unicode.BreakAnalyzer.GetStretchClass (text, offset, length, attributes);
 			
 			if ((last_run) &&
-				(context.EnableHyphenation)) // TODO: tirer au clair, où doit-on ajouter la césure ???
+				(context.EnableHyphenation))
 			{
 				//	Produit la césure manuellement (il faudrait faire mieux pour gérer
 				//	correctement des langues comme le suédois ou l'ancien allemand
@@ -487,11 +489,44 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				
 				attributes[end] = Unicode.BreakAnalyzer.GetStretchClass (temp[end]);
 				
-				BaseEngine.GenerateGlyphs (context.TextContext, font, temp, 0, length+1, out glyphs, attributes);
+				BaseEngine.GenerateGlyphs (context.TextContext, font, temp, 0, length+1, out glyphs, ref attributes);
+				
+				if (context.RendererNeedsTextAndGlyphs)
+				{
+					int     num = length+1;
+					short[] map = new short[num+1];
+					
+					for (int i = 0; i < num-1; i++)
+					{
+						map[i] = (short) i;
+					}
+					
+					map[num-1] = map[num-2];				//	considère que le tiret ne compte pas
+					map[num-0] = (short) (map[num-2] + 1);
+					
+					BaseEngine.GenerateGlyphs (context.TextContext, font, temp, 0, length+1, out glyphs, ref map);
+					
+					mapping = new TextToGlyphMapping (text, offset, length, glyphs, map);
+				}
 			}
 			else
 			{
-				BaseEngine.GenerateGlyphs (context.TextContext, font, text, offset, length, out glyphs, attributes);
+				BaseEngine.GenerateGlyphs (context.TextContext, font, text, offset, length, out glyphs, ref attributes);
+				
+				if (context.RendererNeedsTextAndGlyphs)
+				{
+					int     num = length;
+					short[] map = new short[num+1];
+					
+					for (int i = 0; i < map.Length; i++)
+					{
+						map[i] = (short) i;
+					}
+					
+					BaseEngine.GenerateGlyphs (context.TextContext, font, text, offset, length, out glyphs, ref map);
+					
+					mapping = new TextToGlyphMapping (text, offset, length, glyphs, map);
+				}
 			}
 			
 			if (glue > 0)
@@ -524,7 +559,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			//	Demande à ITextRenderer de faire le rendu avec les positions que
 			//	nous venons de déterminer :
 			
-			renderer.Render (context.Frame, font, font_size, color, glyphs, x_pos, y_pos, x_scale, null);
+			renderer.Render (context.Frame, font, font_size, color, mapping, glyphs, x_pos, y_pos, x_scale, null);
 		}
 		
 		private ulong[] GetHyphenatedText(ulong[] text, int offset, int length, ulong hyphen)
@@ -557,7 +592,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			//	pour le fragment de texte :
 			
 			if ((last_run) &&
-				(context.EnableHyphenation)) // TODO: tirer au clair, où doit-on ajouter la césure ???
+				(context.EnableHyphenation))
 			{
 				//	Produit la césure manuellement (il faudrait faire mieux pour gérer
 				//	correctement des langues comme le suédois ou l'ancien allemand

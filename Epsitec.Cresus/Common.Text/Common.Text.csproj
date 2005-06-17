@@ -419,6 +419,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Layout\TextToGlyphMapping.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Layout\UnderlineRecord.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

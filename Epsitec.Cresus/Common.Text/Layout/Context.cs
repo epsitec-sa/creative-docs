@@ -342,6 +342,19 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public bool								RendererNeedsTextAndGlyphs
+		{
+			get
+			{
+				return this.renderer_needs_text_and_glyphs;
+			}
+			set
+			{
+				this.renderer_needs_text_and_glyphs = value;
+			}
+		}
+		
+		
 		public double							AvailableWidth
 		{
 			get
@@ -1510,6 +1523,8 @@ restart:
 		
 		private bool							enable_hyphenation;
 		private bool							break_anywhere;
+		
+		private bool							renderer_needs_text_and_glyphs;
 		
 		private Layout.BaseEngine				layout_engine;
 		private Properties.LayoutProperty		layout_property;

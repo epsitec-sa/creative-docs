@@ -180,10 +180,38 @@ namespace Epsitec.Common.Drawing
 				this.graphics.LineWidth = 0.3;
 				this.graphics.AddLine (ox, oy, ox + dx, oy);
 				this.graphics.RenderSolid (Drawing.Color.FromName ("Green"));
+				
+				context.RendererNeedsTextAndGlyphs = true;
 			}
 			
-			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 			{
+				System.Diagnostics.Debug.Assert (mapping != null);
+				
+				//	Vérifions d'abord que le mapping du texte vers les glyphes est
+				//	correct et correspond à quelque chose de valide :
+				
+				int offset = 0;
+				
+				int[]    c_array;
+				ushort[] g_array;
+				
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				while (mapping.GetNextMapping (out c_array, out g_array))
+				{
+					for (int i = 0; i < g_array.Length; i++)
+					{
+						System.Diagnostics.Debug.Assert (g_array[i] == glyphs[offset++]);
+					}
+					for (int i = 0; i < c_array.Length; i++)
+					{
+						buffer.Append ((char)(c_array[i]));
+					}
+				}
+				
+//-				System.Diagnostics.Debug.WriteLine (buffer.ToString ());
+				
 				if (font.FontManagerType == OpenType.FontManagerType.System)
 				{
 					Drawing.NativeTextRenderer.Draw (this.graphics.Pixmap, font, size, glyphs, x, y, color);
