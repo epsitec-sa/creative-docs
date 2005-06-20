@@ -783,7 +783,7 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Effectue le rendu d'une zone quelconque hachurée.
-		public void RenderHatch(Graphics graphics, DrawingContext drawingContext, Path path, SurfaceAnchor sa)
+		protected void RenderHatch(Graphics graphics, DrawingContext drawingContext, Path path, SurfaceAnchor sa)
 		{
 			Drawing.Color initialColor = graphics.Color;
 
@@ -836,7 +836,7 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Effectue le rendu d'une zone quelconque de points.
-		public void RenderDots(Graphics graphics, DrawingContext drawingContext, Path path, SurfaceAnchor sa)
+		protected void RenderDots(Graphics graphics, DrawingContext drawingContext, Path path, SurfaceAnchor sa)
 		{
 			Drawing.Color initialColor = graphics.Color;
 
@@ -898,7 +898,7 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Effectue le rendu d'une zone quelconque de carrés.
-		public void RenderSquares(Graphics graphics, DrawingContext drawingContext, Path path, SurfaceAnchor sa)
+		protected void RenderSquares(Graphics graphics, DrawingContext drawingContext, Path path, SurfaceAnchor sa)
 		{
 			Drawing.Color initialColor = graphics.Color;
 
@@ -1323,14 +1323,48 @@ namespace Epsitec.Common.Document.Properties
 		{
 			if ( !this.color1.IsOpaque )  return false;
 
-			port.Color = this.color1;
+			port.Color = drawingContext.AdaptColor(this.color1);
 			return true;
 		}
 
 		// Exporte en PDF la propriété.
-		public void ExportPDF(PDFPort port, DrawingContext drawingContext)
+		public void ExportPDF(PDF.Port port, DrawingContext drawingContext, Objects.Abstract obj)
 		{
-			port.Color = drawingContext.AdaptColor(this.color1);
+			if ( this.fillType == GradientFillType.Hatch )
+			{
+				Drawing.Color color = drawingContext.AdaptColor(this.color1);
+				int pattern = port.SearchPattern(obj, this);
+				port.SetColoredPattern(color, pattern);
+			}
+			else
+			{
+				port.Color = drawingContext.AdaptColor(this.color1);
+			}
+		}
+
+		// Indique si la propriété utilise un pattern.
+		public override bool IsPatternPDF
+		{
+			get
+			{
+				if ( this.fillType == GradientFillType.Hatch )  return true;
+				return false;
+			}
+		}
+
+		// Crée le pattern et retourne sa taille.
+		public override Size CreatePatternPDF(PDF.Port port)
+		{
+			System.Diagnostics.Debug.Assert(this.IsPatternPDF);
+
+			Path path = new Path();
+			path.MoveTo(0, 0);
+			path.LineTo(100, 100);
+
+			port.LineWidth = 5;
+			port.PaintOutline(path);
+
+			return new Size(100, 100);
 		}
 
 		

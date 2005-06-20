@@ -149,17 +149,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Drawer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DrawingContext.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Engine.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ExportPDF.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -195,11 +195,6 @@
                 />
                 <File
                     RelPath = "Notifier.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "PDFPort.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -500,6 +495,26 @@
                 />
                 <File
                     RelPath = "Panels\Volume.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PDF\Export.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PDF\Pattern.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PDF\Port.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PDF\Writer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

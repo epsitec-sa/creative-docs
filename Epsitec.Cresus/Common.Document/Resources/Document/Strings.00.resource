@@ -17,6 +17,12 @@
 	<data name="Dialog.Settings.ArrowMove">Déplacements avec les touches flèches</data>
 	<data name="Dialog.Settings.Dimension">Valeurs des cotes</data>
 	<data name="Dialog.Settings.ToLinePrecision">Convertir en droites et opérations booléennes</data>
+	<data name="Dialog.Settings.FirstAction.Nothing">Rien</data>
+	<data name="Dialog.Settings.FirstAction.OpenNewDocument">Ouvrir un document vide</data>
+	<data name="Dialog.Settings.FirstAction.OpenLastFile">Ouvrir le dernier document</data>
+	<data name="Dialog.Settings.FirstAction.OpenLastFiles">Ouvrir les derniers documents</data>
+	<data name="Dialog.Settings.MouseWheelAction.Zoom">Loupe</data>
+	<data name="Dialog.Settings.MouseWheelAction.VScroll">Défilement vertical</data>
 	
 	<data name="Dialog.Print.Printer">Choix de l'imprimante</data>
 	<data name="Dialog.Print.Area">Etendue</data>

@@ -1577,7 +1577,7 @@ namespace Epsitec.Common.Document.Objects
 						port.PaintText(pos.X, pos.Y, character, font, fontSize);
 					}
 					
-					if ( port is PDFPort )
+					if ( port is PDF.Port )
 					{
 						port.Color = drawingContext.AdaptColor(fontColor);
 						port.PaintText(pos.X, pos.Y, character, font, fontSize);
@@ -1695,7 +1695,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Exporte en PDF la géométrie de l'objet.
-		public override void ExportPDF(PDFPort port, DrawingContext drawingContext)
+		public override void ExportPDF(PDF.Port port, DrawingContext drawingContext)
 		{
 			if ( this.TotalHandle < 6 )  return;
 

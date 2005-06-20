@@ -369,6 +369,21 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		// Indique si la propriété utilise un pattern.
+		public virtual bool IsPatternPDF
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		// Crée le pattern et retourne sa taille.
+		public virtual Size CreatePatternPDF(PDF.Port port)
+		{
+			return Size.Empty;
+		}
+
 
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public virtual bool AlterBoundingBox

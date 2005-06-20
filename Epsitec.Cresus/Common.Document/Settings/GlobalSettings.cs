@@ -384,10 +384,10 @@ namespace Epsitec.Common.Document.Settings
 		{
 			switch ( action )
 			{
-				case FirstAction.Nothing:          return "Rien";
-				case FirstAction.OpenNewDocument:  return "Ouvrir un document vide";
-				case FirstAction.OpenLastFile:     return "Ouvrir le dernier document";
-				case FirstAction.OpenLastFiles:    return "Ouvrir les derniers documents";
+				case FirstAction.Nothing:          return Res.Strings.Dialog.Settings.FirstAction.Nothing;
+				case FirstAction.OpenNewDocument:  return Res.Strings.Dialog.Settings.FirstAction.OpenNewDocument;
+				case FirstAction.OpenLastFile:     return Res.Strings.Dialog.Settings.FirstAction.OpenLastFile;
+				case FirstAction.OpenLastFiles:    return Res.Strings.Dialog.Settings.FirstAction.OpenLastFiles;
 			}
 			return "?";
 		}
@@ -424,8 +424,8 @@ namespace Epsitec.Common.Document.Settings
 		{
 			switch ( action )
 			{
-				case MouseWheelAction.Zoom:     return "Loupe";
-				case MouseWheelAction.VScroll:  return "Défilement vertical";
+				case MouseWheelAction.Zoom:     return Res.Strings.Dialog.Settings.MouseWheelAction.Zoom;
+				case MouseWheelAction.VScroll:  return Res.Strings.Dialog.Settings.MouseWheelAction.VScroll;
 			}
 			return "?";
 		}

@@ -249,6 +249,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Shape.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Size.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

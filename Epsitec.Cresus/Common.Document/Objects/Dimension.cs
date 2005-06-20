@@ -842,7 +842,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Exporte en PDF la géométrie de l'objet.
-		public override void ExportPDF(PDFPort port, DrawingContext drawingContext)
+		public override void ExportPDF(PDF.Port port, DrawingContext drawingContext)
 		{
 			if ( this.TotalHandle < 2 )  return;
 
@@ -865,7 +865,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if ( surfaceStart || surfaceEnd )
 				{
-					lineColor.ExportPDF(port, drawingContext);
+					lineColor.ExportPDF(port, drawingContext, this);
 
 					if ( surfaceStart )
 					{
@@ -881,8 +881,8 @@ namespace Epsitec.Common.Document.Objects
 			// Dessine le trait et les extrémités.
 			if ( lineMode.IsVisible() && lineColor.IsVisible() )
 			{
-				lineMode.ExportPDF(port, drawingContext);
-				lineColor.ExportPDF(port, drawingContext);
+				lineMode.ExportPDF(port, drawingContext, this);
+				lineColor.ExportPDF(port, drawingContext, this);
 
 				if ( outlineStart )
 				{
@@ -899,8 +899,8 @@ namespace Epsitec.Common.Document.Objects
 			// Dessine les supports.
 			if ( supportMode.IsVisible() && lineColor.IsVisible() )
 			{
-				supportMode.ExportPDF(port, drawingContext);
-				lineColor.ExportPDF(port, drawingContext);
+				supportMode.ExportPDF(port, drawingContext, this);
+				lineColor.ExportPDF(port, drawingContext, this);
 				port.PaintOutline(pathSupport);
 			}
 

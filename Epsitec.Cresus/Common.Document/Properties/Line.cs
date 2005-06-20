@@ -730,16 +730,19 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Exporte en PDF la propriété.
-		public void ExportPDF(PDFPort port, DrawingContext drawingContext)
+		public void ExportPDF(PDF.Port port, DrawingContext drawingContext, Objects.Abstract obj)
 		{
-			port.LineWidth = this.width;
+			if ( this.dash )  // traitillé ?
+			{
+				port.SetLineDash(this.width, this.dashPen[0], this.dashGap[0], this.dashPen[1], this.dashGap[1]);
+			}
+			else	// trait continu ?
+			{
+				port.LineWidth = this.width;
+			}
+
 			port.LineCap = this.cap;
 			port.LineJoin = this.join;
-			port.LineDash = this.dash;
-			port.LineDashPen1 = this.dashPen[0];
-			port.LineDashGap1 = this.dashGap[0];
-			port.LineDashPen2 = this.dashPen[1];
-			port.LineDashGap2 = this.dashGap[1];
 			port.LineMiterLimit = this.limit;
 		}
 

@@ -12,7 +12,6 @@ namespace Epsitec.Common.Document
 		Graphic,		// document graphique
 		Pictogram,		// icône
 		Text,			// document texte
-		Slideshow,		// présentation (à la PowerPoint)
 	}
 
 	public enum DocumentMode
@@ -83,7 +82,7 @@ namespace Epsitec.Common.Document
 				this.dialogs   = new Dialogs(this);
 				this.settings  = new Settings.Settings(this);
 				this.printer   = new Printer(this);
-				this.exportPDF = new ExportPDF(this);
+				this.exportPDF = new PDF.Export(this);
 			}
 
 			if ( this.mode == DocumentMode.Clipboard )
@@ -423,8 +422,7 @@ namespace Epsitec.Common.Document
 					if ( err == "" )
 					{
 						if ( Misc.IsExtension(filename, ".crdoc") ||
-							 Misc.IsExtension(filename, ".icon")  ||
-							 Misc.IsExtension(filename, ".slideshow") )
+							 Misc.IsExtension(filename, ".icon")  )
 						{
 							this.Filename = filename;
 							this.globalSettings.LastFilenameAdd(filename);
@@ -684,8 +682,7 @@ namespace Epsitec.Common.Document
 			}
 
 			if ( Misc.IsExtension(filename, ".crdoc") ||
-				 Misc.IsExtension(filename, ".icon")  ||
-				 Misc.IsExtension(filename, ".slideshow") )
+				 Misc.IsExtension(filename, ".icon")  )
 			{
 				this.Filename = filename;
 				this.IsDirtySerialize = false;
@@ -1002,7 +999,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
 
-			return this.exportPDF.Export(filename);
+			return this.exportPDF.FileExport(filename);
 		}
 
 
@@ -1518,7 +1515,7 @@ namespace Epsitec.Common.Document
 		protected Notifier						notifier;
 		protected Printer						printer;
 		protected Common.Dialogs.Print			printDialog;
-		protected ExportPDF						exportPDF;
+		protected PDF.Export					exportPDF;
 		protected Dialogs						dialogs;
 		protected string						ioDirectory;
 		protected System.Collections.ArrayList	readWarnings;

@@ -2002,8 +2002,42 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Exporte en PDF la géométrie de l'objet.
-		public virtual void ExportPDF(PDFPort port, DrawingContext drawingContext)
+		public virtual void ExportPDF(PDF.Port port, DrawingContext drawingContext)
 		{
+		}
+
+		// Donne la liste des propriétés qui utilisent des patterns.
+		public System.Collections.ArrayList GetPattensPDF()
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+
+			foreach ( Properties.Abstract property in this.properties )
+			{
+				if ( property.IsPatternPDF )
+				{
+					list.Add(property);
+				}
+			}
+			return list;
+		}
+
+		// Crée le pattern et retourne sa taille.
+		public Size CreatePatternPDF(int rank, PDF.Port port)
+		{
+			int i = 0;
+			foreach ( Properties.Abstract property in this.properties )
+			{
+				if ( property.IsPatternPDF )
+				{
+					if ( i == rank )
+					{
+						return property.CreatePatternPDF(port);
+					}
+
+					i ++;
+				}
+			}
+			return Size.Empty;
 		}
 
 

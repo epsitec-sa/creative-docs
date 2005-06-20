@@ -602,7 +602,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Exporte en PDF la géométrie de l'objet.
-		public override void ExportPDF(PDFPort port, DrawingContext drawingContext)
+		public override void ExportPDF(PDF.Port port, DrawingContext drawingContext)
 		{
 			if ( this.TotalHandle < 2 )  return;
 
@@ -620,7 +620,7 @@ namespace Epsitec.Common.Document.Objects
 
 				if ( fillColor.IsVisible() )
 				{
-					fillColor.ExportPDF(port, drawingContext);
+					fillColor.ExportPDF(port, drawingContext, this);
 					port.PaintSurface(path);
 				}
 			}
@@ -632,8 +632,8 @@ namespace Epsitec.Common.Document.Objects
 					Path path = paths.Get(i);
 					if ( path == null )  continue;
 
-					lineMode.ExportPDF(port, drawingContext);
-					lineColor.ExportPDF(port, drawingContext);
+					lineMode.ExportPDF(port, drawingContext, this);
+					lineColor.ExportPDF(port, drawingContext, this);
 					port.PaintOutline(path);
 				}
 			}

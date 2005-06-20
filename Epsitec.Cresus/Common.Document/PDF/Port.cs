@@ -1,18 +1,20 @@
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Document
+namespace Epsitec.Common.Document.PDF
 {
 	/// <summary>
-	/// La classe PDFPort permet d'exporter en PDF des éléments graphiques simples.
+	/// La classe Port permet d'exporter en PDF des éléments graphiques simples.
 	/// </summary>
-	public class PDFPort : IPaintPort
+	public class Port : IPaintPort
 	{
-		public PDFPort()
+		public Port(System.Collections.ArrayList patternList)
 		{
+			this.patternList = patternList;
 			this.Init();
 		}
 		
 		
+		// Spécifie un trait continu.
 		public double LineWidth
 		{
 			get { return this.lineWidth; }
@@ -22,6 +24,42 @@ namespace Epsitec.Common.Document
 				this.lineWidth = value;
 				this.lineDash = false;
 			}
+		}
+
+		// Spécifie un traitillé.
+		public void SetLineDash(double width, double pen1, double gap1, double pen2, double gap2)
+		{
+			this.lineWidth = width;
+			this.lineDash = true;
+			this.lineDashPen1 = pen1;
+			this.lineDashGap1 = gap1;
+			this.lineDashPen2 = pen2;
+			this.lineDashGap2 = gap2;
+		}
+		
+		public bool LineDash
+		{
+			get { return this.lineDash; }
+		}
+		
+		public double LineDashPen1
+		{
+			get { return this.lineDashPen1; }
+		}
+		
+		public double LineDashGap1
+		{
+			get { return this.lineDashGap1; }
+		}
+		
+		public double LineDashPen2
+		{
+			get { return this.lineDashPen2; }
+		}
+		
+		public double LineDashGap2
+		{
+			get { return this.lineDashGap2; }
 		}
 		
 		public JoinStyle LineJoin
@@ -36,37 +74,6 @@ namespace Epsitec.Common.Document
 			set { this.lineCap = value; }
 		}
 		
-		// Doit être appelé après LineWidth !
-		public bool LineDash
-		{
-			get { return this.lineDash; }
-			set { this.lineDash = value; }
-		}
-		
-		public double LineDashPen1
-		{
-			get { return this.lineDashPen1; }
-			set { this.lineDashPen1 = value; }
-		}
-		
-		public double LineDashGap1
-		{
-			get { return this.lineDashGap1; }
-			set { this.lineDashGap1 = value; }
-		}
-		
-		public double LineDashPen2
-		{
-			get { return this.lineDashPen2; }
-			set { this.lineDashPen2 = value; }
-		}
-		
-		public double LineDashGap2
-		{
-			get { return this.lineDashGap2; }
-			set { this.lineDashGap2 = value; }
-		}
-		
 		public double LineMiterLimit
 		{
 			get { return this.lineMiterLimit; }
@@ -76,7 +83,18 @@ namespace Epsitec.Common.Document
 		public Color Color
 		{
 			get { return this.color; }
-			set { this.color = value; }
+
+			set
+			{
+				this.color = value;
+				this.pattern = -1;
+			}
+		}
+		
+		public void SetColoredPattern(Color color, int pattern)
+		{
+			this.color = color;
+			this.pattern = pattern;
 		}
 		
 		public FillMode FillMode
@@ -284,7 +302,7 @@ namespace Epsitec.Common.Document
 		
 		public void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY, double imageWidth, double imageHeight)
 		{
-			System.Diagnostics.Debug.WriteLine("PDFPort.PaintImage not supported");
+			System.Diagnostics.Debug.WriteLine("PDF.Port.PaintImage not supported");
 		}
 		#endregion
 		
@@ -320,30 +338,53 @@ namespace Epsitec.Common.Document
 			this.currentLimit = -1.0;
 			this.currentStrokeColor = Color.Empty;
 			this.currentFillColor = Color.Empty;
+			this.currentPattern = -1;
 			this.currentTransform = new Transform();
 		}
 
 		// Spécifie la couleur de trait.
 		protected void SetStrokeColor(Color color)
 		{
-			if ( this.currentStrokeColor != color )
+			if ( this.currentStrokeColor != color || this.currentPattern != pattern )
 			{
 				this.currentStrokeColor = color;
+				this.currentPattern = pattern;
 
-				this.PutColor(color);
-				this.PutCommand("RG ");
+				if ( pattern == -1 )
+				{
+					this.PutColor(color);
+					this.PutCommand("RG ");
+				}
+				else
+				{
+					this.PutCommand("/Cs cs ");
+					this.PutColor(color);
+					this.PutCommand(Export.ShortNamePattern(pattern));
+					this.PutCommand("SCN ");
+				}
 			}
 		}
 
 		// Spécifie la couleur de surface.
 		protected void SetFillColor(Color color)
 		{
-			if ( this.currentFillColor != color )
+			if ( this.currentFillColor != color || this.currentPattern != pattern )
 			{
 				this.currentFillColor = color;
+				this.currentPattern = pattern;
 
-				this.PutColor(color);
-				this.PutCommand("rg ");
+				if ( pattern == -1 )
+				{
+					this.PutColor(color);
+					this.PutCommand("rg ");
+				}
+				else
+				{
+					this.PutCommand("/Cs cs ");
+					this.PutColor(color);
+					this.PutCommand(Export.ShortNamePattern(pattern));
+					this.PutCommand("scn ");
+				}
 			}
 		}
 
@@ -447,10 +488,10 @@ namespace Epsitec.Common.Document
 				t.MultiplyByPostfix(transform);
 
 				// Attention: l'angle est inversé en PDF !
-				this.PutValue(t.XX, 3);
-				this.PutValue(-t.XY, 3);
-				this.PutValue(-t.YX, 3);
-				this.PutValue(t.YY, 3);
+				this.PutValue(t.XX, 4);
+				this.PutValue(-t.XY, 4);
+				this.PutValue(-t.YX, 4);
+				this.PutValue(t.YY, 4);
 				this.PutDistance(t.TX);
 				this.PutDistance(t.TY);
 				this.PutCommand("cm ");
@@ -543,24 +584,22 @@ namespace Epsitec.Common.Document
 		// Met une distance.
 		protected void PutDistance(double num)
 		{
-			this.PutValue(num*7.2/25.4, 2);  // dixièmes de millimètres -> 72ème de pouce
+			this.stringBuilder.Append(Port.StringDistance(num));
+			this.stringBuilder.Append(" ");
 		}
 
 		// Met une valeur.
 		protected void PutValue(double num, int decimals)
 		{
-			if ( decimals == 1 )
-			{
-				this.stringBuilder.Append(string.Format("{0:0.#} ", num));
-			}
-			else if ( decimals == 2 )
-			{
-				this.stringBuilder.Append(string.Format("{0:0.##} ", num));
-			}
-			else
-			{
-				this.stringBuilder.Append(string.Format("{0:0.###} ", num));
-			}
+			this.stringBuilder.Append(Port.StringValue(num, decimals));
+			this.stringBuilder.Append(" ");
+		}
+
+		// Met un entier.
+		protected void PutInt(int num)
+		{
+			this.stringBuilder.Append(num.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			this.stringBuilder.Append(" ");
 		}
 
 		// Met une fin de ligne.
@@ -583,7 +622,53 @@ namespace Epsitec.Common.Document
 			this.stringBuilder.Append(cmd);
 		}
 
-		
+
+		// Met une distance.
+		public static string StringDistance(double num)
+		{
+			return Port.StringValue(num*7.2/25.4, 2);  // dixièmes de millimètres -> 72ème de pouce
+		}
+
+		// Met une valeur.
+		public static string StringValue(double num, int decimals)
+		{
+			if ( decimals == 1 )
+			{
+				return string.Format("{0:0.#}", num);
+			}
+			else if ( decimals == 2 )
+			{
+				return string.Format("{0:0.##}", num);
+			}
+			else if ( decimals == 3 )
+			{
+				return string.Format("{0:0.###}", num);
+			}
+			else
+			{
+				return string.Format("{0:0.####}", num);
+			}
+		}
+
+
+		// Cherche le pattern à utiliser pour un objet et une propriété.
+		public int SearchPattern(Objects.Abstract obj, Properties.Abstract property)
+		{
+			if ( this.patternList == null )  return -1;
+
+			foreach ( Pattern pattern in this.patternList )
+			{
+				if ( pattern.Object == obj && pattern.Property == property )
+				{
+					return pattern.Id;
+				}
+			}
+			return 1;
+		}
+
+
+		protected System.Collections.ArrayList	patternList;
+
 		protected double						lineWidth = 1.0;
 		protected JoinStyle						lineJoin = JoinStyle.MiterRevert;
 		protected CapStyle						lineCap = CapStyle.Square;
@@ -594,12 +679,14 @@ namespace Epsitec.Common.Document
 		protected double						lineDashGap2 = 0.0;
 		protected double						lineMiterLimit = 5.0;
 		protected Color							color = Color.FromRGB(0, 0, 0);
+		protected int							pattern = -1;
 		protected Transform						transform = new Transform();
 		protected FillMode						fillMode = FillMode.NonZero;
 
 		protected System.Text.StringBuilder		stringBuilder;
 		protected Color							currentStrokeColor;
 		protected Color							currentFillColor;
+		protected int							currentPattern;
 		protected double						currentWidth;
 		protected CapStyle						currentCap;
 		protected JoinStyle						currentJoin;

@@ -1144,23 +1144,6 @@ namespace Epsitec.App.DocumentEditor
 			base.UpdateClientGeometry();
 		}
 
-		
-		// Passe en plein écran (en trichant)
-		private void SwitchToFullScreen()
-		{
-			this.Window.MakeFramelessWindow ();
-			this.Window.WindowBounds = ScreenInfo.AllScreens[0].Bounds;
-			
-			foreach ( Widget widget in this.Window.Root.Children )
-			{
-				widget.Hide ();
-			}
-			
-			this.CurrentDocument.Modifier.ActiveViewer.Parent = this.Window.Root;
-			this.CurrentDocument.Modifier.ActiveViewer.Dock   = DockStyle.Fill;
-			this.CurrentDocument.Modifier.ActiveViewer.Show ();
-		}
-		
 
 		[Command ("ToolSelect")]
 		void CommandToolSelect(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -1310,6 +1293,7 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
+		
 		#region IO
 		// Affiche le dialogue pour demander s'il faut enregistrer le
 		// document modifié, avant de passer à un autre document.
@@ -1425,11 +1409,6 @@ namespace Epsitec.App.DocumentEditor
 			{
 				dialog.Title = Res.Strings.Dialog.Open.TitleDoc;
 				dialog.Filters.Add("crdoc", Res.Strings.Dialog.FileDoc, "*.crdoc");
-			}
-			else if ( this.type == DocumentType.Slideshow )
-			{
-				dialog.Title = Res.Strings.Dialog.Open.TitleSlide;
-				dialog.Filters.Add("slideshow", Res.Strings.Dialog.FileSlide, "*.slideshow");
 			}
 			else
 			{
@@ -1556,11 +1535,6 @@ namespace Epsitec.App.DocumentEditor
 				{
 					dialog.Title = Res.Strings.Dialog.Save.TitleDoc;
 					dialog.Filters.Add("crdoc", Res.Strings.Dialog.FileDoc, "*.crdoc");
-				}
-				else if ( this.type == DocumentType.Slideshow )
-				{
-					dialog.Title = Res.Strings.Dialog.Save.TitleSlide;
-					dialog.Filters.Add("slideshow", Res.Strings.Dialog.FileSlide, "*.slideshow");
 				}
 				else
 				{
@@ -2323,11 +2297,6 @@ namespace Epsitec.App.DocumentEditor
 		{
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			context.PreviewActive = !context.PreviewActive;
-			
-			if ( this.type == DocumentType.Slideshow )
-			{
-				this.SwitchToFullScreen ();
-			}
 		}
 
 		[Command ("Deselect")]
