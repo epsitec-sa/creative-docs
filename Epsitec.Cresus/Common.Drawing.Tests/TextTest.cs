@@ -383,9 +383,13 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.LeadingProperty (24.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.All));
 					properties.Add (new Text.Properties.KeepProperty (3, 2, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
 					
-					this.painter.TextStory.ConvertToStyledText (words + "Titre sur deux lignes pour voir\n", properties, out text);
+					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
+					properties.Add (new Text.Properties.FontKernProperty (4, Text.Properties.SizeUnits.Points));
+					
+					this.painter.TextStory.ConvertToStyledText ("Titre sur deux lignes pour voir\n", properties, out text);
+					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
 					fp = new Text.Properties.FontProperty ("Times New Roman", "Italic");

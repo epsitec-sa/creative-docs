@@ -66,7 +66,7 @@ namespace Epsitec.Common.Text.Layout
 						Properties.LayoutProperty layout;
 						
 						context.TextContext.GetFont (code, out scratch.Font, out scratch.FontSize);
-						context.TextContext.GetFontOffset (code, out scratch.FontOffset);
+						context.TextContext.GetFontOffsets (code, out scratch.FontBaseline, out scratch.FontAdvance);
 						context.TextContext.GetLayoutEngine (code, out engine, out layout);
 						
 						if ((engine != this) ||
@@ -312,8 +312,8 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				return false;
 			}
 			
-			scratch.RecordAscender (scratch.Font.GetAscender (scratch.FontSize) + scratch.FontOffset);
-			scratch.RecordDescender (scratch.Font.GetDescender (scratch.FontSize) + scratch.FontOffset);
+			scratch.RecordAscender (scratch.Font.GetAscender (scratch.FontSize) + scratch.FontBaseline);
+			scratch.RecordDescender (scratch.Font.GetDescender (scratch.FontSize) + scratch.FontBaseline);
 			scratch.RecordLineHeight (scratch.FontSize * 1.2);
 			
 			while (frag_length < run_length)
@@ -350,9 +350,9 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					add_break = true;
 					profile   = new StretchProfile (scratch.StretchProfile);
 					
-					profile.Add (scratch.Font, scratch.FontSize, glyphs, attr);
+					profile.Add (scratch.Font, scratch.FontSize, glyphs, attr, scratch.FontAdvance);
 					
-					scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize);
+					scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize) + glyphs.Length * scratch.FontAdvance;
 				}
 				else
 				{
@@ -360,7 +360,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					
 					BaseEngine.GenerateGlyphsAndStretchClassAttributes (context.TextContext, scratch.Font, text, offset, frag_length, out glyphs, out attr);
 					
-					scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize);
+					scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize) + glyphs.Length * scratch.FontAdvance;
 					
 					if ((scratch.Advance+scratch.TextWidth > scratch.FenceMinX) &&
 						(scratch.AddBreak == false))
@@ -386,7 +386,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					can_break = (run_length == text_length);
 					add_break = scratch.AddBreak && (scratch.WordBreakInfo == Unicode.BreakInfo.Optional);
 					
-					profile.Add (scratch.Font, scratch.FontSize, glyphs, attr);
+					profile.Add (scratch.Font, scratch.FontSize, glyphs, attr, scratch.FontAdvance);
 				}
 				
 				if (scratch.Advance+scratch.TextWidth-profile.WidthEndSpace > scratch.FenceMaxX)
@@ -453,10 +453,11 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			Drawing.Color color;
 			OpenType.Font font;
 			double        font_size;
-			double        font_offset;
+			double        font_baseline;
+			double        font_advance;
 			
 			context.TextContext.GetFont (text[offset], out font, out font_size);
-			context.TextContext.GetFontOffset (text[offset], out font_offset);
+			context.TextContext.GetFontOffsets (text[offset], out font_baseline, out font_advance);
 			context.TextContext.GetColor (text[offset], out color);
 			
 			//	Gérer l'étirement des glyphes en fonction de la fonte sélectionnée :
@@ -551,8 +552,8 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			for (int i = 0; i < n; i++)
 			{
-				y_pos[i]  = oy + font_offset;
-				x_glue[i] = glue;
+				y_pos[i]  = oy + font_baseline;
+				x_glue[i] = glue + font_advance;
 			}
 			
 			//	Détermine la position horizontale de chaque glyphe :
@@ -695,7 +696,8 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			public OpenType.Font				Font;
 			public double						FontSize;
-			public double						FontOffset;
+			public double						FontBaseline;
+			public double						FontAdvance;
 		}
 	}
 }

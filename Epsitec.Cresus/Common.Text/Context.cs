@@ -207,7 +207,7 @@ namespace Epsitec.Common.Text
 			this.get_font_last_font_size     = font_size;
 		}
 		
-		public void GetFontOffset(ulong code, out double baseline_offset)
+		public void GetFontOffsets(ulong code, out double baseline_offset, out double advance_offset)
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
@@ -216,7 +216,8 @@ namespace Epsitec.Common.Text
 			if ((this.get_font_offset_last_style_version == current_style_version) &&
 				(this.get_font_offset_last_code == code))
 			{
-				baseline_offset = this.get_font_offset_last_value;
+				baseline_offset = this.get_font_offset_last_baseline_offset;
+				advance_offset  = this.get_font_offset_last_advance_offset;
 				
 				return;
 			}
@@ -237,28 +238,31 @@ namespace Epsitec.Common.Text
 			Styles.SimpleStyle   style          = this.style_list.GetStyleFromIndex (current_style_index);
 			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
 			
-			if (local_settings == null)
-			{
-				baseline_offset = 0;
-			}
-			else
+			advance_offset  = 0;
+			baseline_offset = 0;
+			
+			if (local_settings != null)
 			{
 				Properties.FontOffsetProperty font_offset_p = local_settings[Properties.WellKnownType.FontOffset] as Properties.FontOffsetProperty;
+				Properties.FontKernProperty   font_kern_p   = local_settings[Properties.WellKnownType.FontKern] as Properties.FontKernProperty;
 				
-				if (font_offset_p == null)
-				{
-					baseline_offset = 0;
-				}
-				else
+				if (font_offset_p != null)
 				{
 					double ascender = this.get_font_last_font.GetAscender (this.get_font_last_font_size);
 					baseline_offset = font_offset_p.GetOffsetInPoints (ascender);
 				}
+				
+				if (font_kern_p != null)
+				{
+					double em_size = this.get_font_last_font_size;
+					advance_offset = font_kern_p.GetOffsetInPoints (em_size);
+				}
 			}
 			
-			this.get_font_offset_last_style_version = current_style_version;
-			this.get_font_offset_last_code          = code;
-			this.get_font_offset_last_value         = baseline_offset;
+			this.get_font_offset_last_style_version   = current_style_version;
+			this.get_font_offset_last_code            = code;
+			this.get_font_offset_last_baseline_offset = baseline_offset;
+			this.get_font_offset_last_advance_offset  = advance_offset;
 		}
 		
 		public void GetColor(ulong code, out Drawing.Color color)
@@ -703,7 +707,8 @@ namespace Epsitec.Common.Text
 		
 		private long							get_font_offset_last_style_version;
 		private ulong							get_font_offset_last_code;
-		private double							get_font_offset_last_value;
+		private double							get_font_offset_last_baseline_offset;
+		private double							get_font_offset_last_advance_offset;
 		
 		private long							get_color_last_style_version;
 		private ulong							get_color_last_code;
