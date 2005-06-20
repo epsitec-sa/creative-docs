@@ -66,20 +66,20 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (story.TextLength == 48);
 			
 			story.SetCursorPosition (cursor, 0);
-			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == 0);
-			Debug.Assert.IsTrue (Navigator.GetParagraphEndLength (story, cursor) == 21);
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphStartOffset (story, cursor) == 0);
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphEndLength (story, cursor) == 21);
 			
 			story.SetCursorPosition (cursor, 10);
-			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == -10);
-			Debug.Assert.IsTrue (Navigator.GetParagraphEndLength (story, cursor) == 11);
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphStartOffset (story, cursor) == -10);
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphEndLength (story, cursor) == 11);
 			
 			story.SetCursorPosition (cursor, 30);
-			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == -9);
-			Debug.Assert.IsTrue (Navigator.GetParagraphEndLength (story, cursor) == 2);
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphStartOffset (story, cursor) == -9);
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphEndLength (story, cursor) == 2);
 			
 			story.SetCursorPosition (cursor, 48);
-			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == 0);
-			Debug.Assert.IsTrue (Navigator.GetParagraphEndLength (story, cursor) == 0);
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphStartOffset (story, cursor) == 0);
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphEndLength (story, cursor) == 0);
 			
 			text = new ulong[story.TextLength];
 			story.SetCursorPosition (cursor, 0);
@@ -87,54 +87,54 @@ namespace Epsitec.Common.Text.Tests
 			
 			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
 			
-			Debug.Assert.IsTrue  (Navigator.IsParagraphStart (story, cursor, 0));
-			Debug.Assert.IsTrue  (Navigator.IsParagraphStart (story, cursor, 21));
-			Debug.Assert.IsTrue  (Navigator.IsParagraphStart (story, cursor, 41));
-			Debug.Assert.IsFalse (Navigator.IsParagraphStart (story, cursor, 3));
+			Debug.Assert.IsTrue  (Internal.Navigator.IsParagraphStart (story, cursor, 0));
+			Debug.Assert.IsTrue  (Internal.Navigator.IsParagraphStart (story, cursor, 21));
+			Debug.Assert.IsTrue  (Internal.Navigator.IsParagraphStart (story, cursor, 41));
+			Debug.Assert.IsFalse (Internal.Navigator.IsParagraphStart (story, cursor, 3));
 			
-			Debug.Assert.IsFalse (Navigator.IsParagraphEnd (story, cursor, 0));
-			Debug.Assert.IsFalse (Navigator.IsParagraphEnd (story, cursor, 4));
-			Debug.Assert.IsTrue  (Navigator.IsParagraphEnd (story, cursor, 20));
+			Debug.Assert.IsFalse (Internal.Navigator.IsParagraphEnd (story, cursor, 0));
+			Debug.Assert.IsFalse (Internal.Navigator.IsParagraphEnd (story, cursor, 4));
+			Debug.Assert.IsTrue  (Internal.Navigator.IsParagraphEnd (story, cursor, 20));
 			
 			TextStyle[] styles;
 			Property[] props;
 			
-			Debug.Assert.IsTrue (Navigator.GetParagraphStyles (story, cursor, 0, out styles));
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphStyles (story, cursor, 0, out styles));
 			Debug.Assert.IsTrue (styles.Length == 1);
 			Debug.Assert.IsTrue (styles[0].Name == "Normal");
 			
-			Debug.Assert.IsTrue (Navigator.GetParagraphStyles (story, cursor, 45, out styles));
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphStyles (story, cursor, 45, out styles));
 			Debug.Assert.IsTrue (styles.Length == 1);
 			Debug.Assert.IsTrue (styles[0].Name == "Titre");
 			
-			Debug.Assert.IsTrue (Navigator.GetParagraphStyles (story, cursor, 0, out styles));
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphStyles (story, cursor, 0, out styles));
 			Debug.Assert.IsTrue (styles.Length == 1);
 			Debug.Assert.IsTrue (styles[0].Name == "Normal");
 			
-			Debug.Assert.IsTrue (Navigator.GetParagraphProperties (story, cursor, 0, out props));
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphProperties (story, cursor, 0, out props));
 			Debug.Assert.IsTrue (props.Length == 0);
 			
-			Debug.Assert.IsTrue (Navigator.GetParagraphProperties (story, cursor, 40, out props));
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphProperties (story, cursor, 40, out props));
 			Debug.Assert.IsTrue (props.Length == 2);
 			Debug.Assert.IsTrue (props[0].WellKnownType == Properties.WellKnownType.Leading);
 			Debug.Assert.IsTrue (props[1].WellKnownType == Properties.WellKnownType.Margins);
 			
-			Debug.Assert.IsTrue (Navigator.GetParagraphProperties (story, cursor, 5, out props));
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphProperties (story, cursor, 5, out props));
 			Debug.Assert.IsTrue (props.Length == 0);
 			
-			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == 0);
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphStartOffset (story, cursor) == 0);
 			
 			story.SetCursorPosition (cursor, 10);
-			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == -10);
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphStartOffset (story, cursor) == -10);
 			
 			story.SetCursorPosition (cursor, 21);
-			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == 0);
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphStartOffset (story, cursor) == 0);
 			
 			story.SetCursorPosition (cursor, 40);
-			Debug.Assert.IsTrue (Navigator.GetParagraphStartOffset (story, cursor) == -8);
+			Debug.Assert.IsTrue (Internal.Navigator.GetParagraphStartOffset (story, cursor) == -8);
 			
 			story.SetCursorPosition (cursor, 26);
-			Navigator.StartParagraphIfNeeded (story, cursor);
+			Internal.Navigator.StartParagraphIfNeeded (story, cursor);
 			
 			Debug.Assert.IsTrue (story.TextLength == 49);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 27);
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
 			
 			story.SetCursorPosition (cursor, 27);
-			Navigator.StartParagraphIfNeeded (story, cursor);
+			Internal.Navigator.StartParagraphIfNeeded (story, cursor);
 			
 			Debug.Assert.IsTrue (story.TextLength == 49);
 			
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.MarginsProperty (10.0, 10.0, Properties.SizeUnits.Millimeters));
 			
 			story.SetCursorPosition (cursor, 2);
-			Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style2 }, properties);
+			Internal.Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style2 }, properties);
 			
 			text = new ulong[story.TextLength];
 			story.SetCursorPosition (cursor, 0);

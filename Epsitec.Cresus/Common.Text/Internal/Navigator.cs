@@ -1,7 +1,7 @@
 //	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Common.Text
+namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
 	/// La classe Navigator gère les déplacements au sein d'un texte.

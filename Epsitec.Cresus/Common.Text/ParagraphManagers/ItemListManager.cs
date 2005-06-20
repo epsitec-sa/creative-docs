@@ -25,7 +25,7 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			//	Le curseur est positionné au début (brut) du paragraphe, juste
 			//	après la fin du paragraphe précédent.
 			
-			System.Diagnostics.Debug.Assert (Navigator.IsParagraphStart (story, cursor, 0));
+			System.Diagnostics.Debug.Assert (Internal.Navigator.IsParagraphStart (story, cursor, 0));
 			System.Diagnostics.Debug.Assert (context.ContainsProperty (story, cursor, 0, property));
 			
 			Properties.AutoTextProperty  auto_text_prop = new Properties.AutoTextProperty (this.Name);
@@ -37,9 +37,9 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			Property[] props_2 = new Property[] { auto_text_prop, generator_prop };
 			Property[] props_3 = new Property[] { auto_text_prop, tab_body_prop };
 			
-			Navigator.Insert (story, cursor, Unicode.Code.HorizontalTab, null, props_1);
-			Navigator.Insert (story, cursor, "X", null, props_2);
-			Navigator.Insert (story, cursor, Unicode.Code.HorizontalTab, null, props_3);
+			Internal.Navigator.Insert (story, cursor, Unicode.Code.HorizontalTab, null, props_1);
+			Internal.Navigator.Insert (story, cursor, "X", null, props_2);
+			Internal.Navigator.Insert (story, cursor, Unicode.Code.HorizontalTab, null, props_3);
 			
 			p.Generator.UpdateAllFields (story, context.Culture);
 		}
@@ -54,18 +54,18 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			//	après la fin du paragraphe précédent; il est donc placé avant le
 			//	morceau de texte automatique que nous gérons.
 			
-			System.Diagnostics.Debug.Assert (Navigator.IsParagraphStart (story, cursor, 0));
+			System.Diagnostics.Debug.Assert (Internal.Navigator.IsParagraphStart (story, cursor, 0));
 			System.Diagnostics.Debug.Assert (context.ContainsProperty (story, cursor, 0, property) == false);
 			
 			Property[] flattened_properties;
 			
-			Navigator.GetFlattenedProperties (story, cursor, 0, out flattened_properties);
+			Internal.Navigator.GetFlattenedProperties (story, cursor, 0, out flattened_properties);
 			
 			System.Diagnostics.Debug.Assert (flattened_properties != null);
 			
 			Properties.AutoTextProperty auto_text_prop = Properties.AutoTextProperty.Find (flattened_properties, this.Name);
 			
-			int length = Navigator.GetRunLength (story, cursor, auto_text_prop);
+			int length = Internal.Navigator.GetRunLength (story, cursor, auto_text_prop);
 			
 			story.DeleteText (cursor, length);
 			

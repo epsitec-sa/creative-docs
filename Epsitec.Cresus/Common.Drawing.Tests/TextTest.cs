@@ -789,8 +789,10 @@ namespace Epsitec.Common.Drawing
 					items.TabItem   = new Text.Properties.TabProperty (10.0, 0.0, null);
 					items.TabBody   = new Text.Properties.TabProperty (tab, 0.0, null);
 					
+					Text.Properties.ManagedParagraphProperty mp = new Text.Properties.ManagedParagraphProperty ("ItemList", items.Save ());
+					
 					properties_1.Clear ();
-					properties_1.Add (new Text.Properties.ManagedParagraphProperty ("ItemList", items.Save ()));
+					properties_1.Add (mp);
 					properties_1.Add (new Text.Properties.MarginsProperty (0, tab, double.NaN, double.NaN, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, Text.Properties.ThreeState.Undefined));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Navy")));
 					
@@ -802,13 +804,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					this.painter.TextStory.MoveCursor (cursor, - words.Length);
-					Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
-					
-					Text.Properties.ManagedParagraphProperty mp;
-					Text.Property[] flattened;
-					
-					Text.Navigator.GetFlattenedProperties (this.painter.TextStory, cursor, 0, out flattened);
-					mp = Text.Properties.ManagedParagraphProperty.Find (flattened, "ItemList");
+					Text.Internal.Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
 					
 					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
 					this.painter.TextStory.MoveCursor (cursor, words.Length);
@@ -819,10 +815,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					this.painter.TextStory.MoveCursor (cursor, - words.Length);
-					Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
-					
-					Text.Navigator.GetFlattenedProperties (this.painter.TextStory, cursor, 0, out flattened);
-					mp = Text.Properties.ManagedParagraphProperty.Find (flattened, "ItemList");
+					Text.Internal.Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
 					
 					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
 					this.painter.TextStory.MoveCursor (cursor, words.Length);
@@ -833,10 +826,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					this.painter.TextStory.MoveCursor (cursor, - words.Length);
-					Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
-					
-					Text.Navigator.GetFlattenedProperties (this.painter.TextStory, cursor, 0, out flattened);
-					mp = Text.Properties.ManagedParagraphProperty.Find (flattened, "ItemList");
+					Text.Internal.Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
 					
 					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
 					this.painter.TextStory.MoveCursor (cursor, words.Length);

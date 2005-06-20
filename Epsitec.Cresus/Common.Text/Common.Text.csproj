@@ -219,11 +219,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Navigator.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "NumberSupport.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -350,6 +345,11 @@
                 />
                 <File
                     RelPath = "Internal\GeneratorEnumerator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Internal\Navigator.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
