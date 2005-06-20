@@ -529,6 +529,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\MetaProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\OpenTypeProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

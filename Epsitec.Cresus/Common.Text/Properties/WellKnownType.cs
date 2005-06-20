@@ -25,8 +25,9 @@ namespace Epsitec.Common.Text.Properties
 		Styles,							//	style
 		
 		Color,							//	extra
-		Underline,						//	extra
 		Link,							//	extra
+		Meta,							//	extra
+		Underline,						//	extra
 		
 		AutoText,						//	extra
 		Generator,						//	extra

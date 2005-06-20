@@ -14,6 +14,7 @@ namespace Epsitec.Common.Text.Tests
 			CheckProperties.TestFontSize ();
 			CheckProperties.TestMargins ();
 			CheckProperties.TestUnderlines ();
+			CheckProperties.TestMetas ();
 			CheckProperties.TestSerialization ();
 			CheckProperties.TestGeneratorProperties ();
 			CheckProperties.TestTraverseText ();
@@ -124,8 +125,8 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (underlines.Length == 4);
 			Debug.Assert.IsTrue (links.Length == 2);
 			
-			System.Array.Sort (underlines, Properties.UnderlineProperty.Comparer);
-			System.Array.Sort (links, Properties.LinkProperty.Comparer);
+//			System.Array.Sort (underlines, Properties.UnderlineProperty.Comparer);
+//			System.Array.Sort (links, Properties.LinkProperty.Comparer);
 			
 			Debug.Assert.IsTrue (underlines[0].LineStyle == "backcolor=yellow;color=black");
 			Debug.Assert.IsTrue (underlines[1].LineStyle == "-");
@@ -136,6 +137,36 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (links[0].Link == "http://www.epsitec.ch");
 			Debug.Assert.IsTrue (links[1].Link == "mailto:epsitec@epsitec.ch");
+		}
+		
+		private static void TestMetas()
+		{
+			TextStory story = new TextStory ();
+			
+			ulong[] text;
+			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+			
+			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			properties.Add (new Properties.MetaProperty ("x", "foo"));
+			properties.Add (new Properties.MetaProperty ("x", "bar"));
+			properties.Add (new Properties.MetaProperty ("Comment", "Hello :-)"));
+			
+			story.ConvertToStyledText ("Abc", properties, out text);
+			
+			Properties.MetaProperty[] metas;
+			
+			story.TextContext.GetMetas (text[0], out metas);
+			
+			Debug.Assert.IsTrue (metas.Length == 3);
+			
+			Debug.Assert.IsTrue (metas[0].MetaType == "Comment");
+			Debug.Assert.IsTrue (metas[1].MetaType == "x");
+			Debug.Assert.IsTrue (metas[2].MetaType == "x");
+			
+			Debug.Assert.IsTrue (metas[0].MetaData == "Hello :-)");
+			Debug.Assert.IsTrue (metas[1].MetaData == "bar");
+			Debug.Assert.IsTrue (metas[2].MetaData == "foo");
 		}
 		
 		private static void TestSerialization()
