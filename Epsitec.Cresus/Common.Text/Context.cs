@@ -72,6 +72,18 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public TextStyle						DefaultStyle
+		{
+			get
+			{
+				return this.default_style;
+			}
+			set
+			{
+				this.default_style = value;
+			}
+		}
+		
 		
 		public Context.Markers					Marker
 		{
@@ -847,6 +859,7 @@ namespace Epsitec.Common.Text
 		private Internal.CharMarker				char_marker;
 		private Markers							markers;
 		private System.Collections.Hashtable	conditions;
+		private TextStyle						default_style;
 		
 		private OpenType.FontCollection			font_collection;
 		private System.Collections.Hashtable	font_cache;

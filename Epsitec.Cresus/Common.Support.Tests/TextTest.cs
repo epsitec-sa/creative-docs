@@ -79,5 +79,57 @@ namespace Epsitec.Common.Support
 		{
 			Common.Text.Tests.CheckUnicode.RunTests ();
 		}
+		
+		[Test] public void CheckTextNavigator()
+		{
+			Text.TextStory     story     = new Text.TextStory ();
+			Text.TextNavigator navigator = new Text.TextNavigator (story);
+			
+			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+			
+			properties.Add (new Text.Properties.FontProperty ("Verdana", "Regular"));
+			properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
+			
+			Text.TextStyle default_style = story.StyleList.NewTextStyle ("Default", Text.TextStyleClass.Paragraph, properties);
+			
+			story.TextContext.DefaultStyle = default_style;
+			
+			Assert.AreEqual (0, navigator.TextLength);
+			Assert.AreEqual (0, navigator.CursorPosition);
+			
+			navigator.Insert ("abc\ndef");
+			
+			Assert.AreEqual (7, navigator.TextLength);
+			Assert.AreEqual (7, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
+			
+			Assert.AreEqual (0, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 0);
+			
+			Assert.AreEqual (0, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 0);
+			
+			Assert.AreEqual (3, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 0);
+			
+			Assert.AreEqual (3, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 1);
+			
+			Assert.AreEqual (7, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 1);
+			
+			Assert.AreEqual (0, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 1);
+			navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 0);
+			
+			Assert.AreEqual (4, navigator.CursorPosition);
+		}
 	}
 }

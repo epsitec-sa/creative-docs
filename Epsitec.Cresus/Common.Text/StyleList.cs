@@ -19,11 +19,31 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public TextStyle						this[string name, TextStyleClass text_style_class]
+		{
+			get
+			{
+				return this.GetTextStyle (name, text_style_class);
+			}
+		}
+		
+		
+		#region Internal Properties
 		internal Internal.StyleTable			InternalStyleTable
 		{
 			get
 			{
 				return this.internal_styles;
+			}
+		}
+		
+		internal int							InternalStyleCount
+		{
+			get
+			{
+				System.Diagnostics.Debug.Assert (this.text_style_list.Count == this.text_style_hash.Count);
+				
+				return this.text_style_list.Count;
 			}
 		}
 		
@@ -34,17 +54,7 @@ namespace Epsitec.Common.Text
 				return this.internal_styles.GetStyle (code);
 			}
 		}
-		
-		internal int							StyleCount
-		{
-			get
-			{
-				System.Diagnostics.Debug.Assert (this.text_style_list.Count == this.text_style_hash.Count);
-				
-				return this.text_style_list.Count;
-			}
-		}
-		
+		#endregion
 		
 		public TextStyle NewTextStyle(string name, TextStyleClass text_style_class)
 		{
@@ -86,6 +96,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		#region Internal Methods
 		internal Styles.SimpleStyle GetStyleFromIndex(int index)
 		{
 			return this.internal_styles.GetStyleFromIndex (index);
@@ -144,7 +155,7 @@ namespace Epsitec.Common.Text
 			
 			name = full_name.Substring (2);
 		}
-		
+		#endregion
 		
 		private void Attach(TextStyle style)
 		{

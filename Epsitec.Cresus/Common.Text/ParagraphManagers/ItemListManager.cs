@@ -65,7 +65,7 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			
 			Properties.AutoTextProperty auto_text_prop = Properties.AutoTextProperty.Find (flattened_properties, this.Name);
 			
-			int length = Internal.Navigator.GetRunLength (story, cursor, auto_text_prop);
+			int length = Internal.Navigator.GetRunEndLength (story, cursor, auto_text_prop);
 			
 			story.DeleteText (cursor, length);
 			

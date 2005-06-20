@@ -40,6 +40,38 @@ namespace Epsitec.Common.Text.Internal
 			return Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (code));
 		}
 		
+		public static bool IsWordSeparator(Unicode.Code code)
+		{
+			if ((int) code > 65535)
+			{
+				return false;
+			}
+			
+			//	TODO: améliorer cette liste... UNICODE doit certainement avoir pensé
+			//	à la question.
+			
+			switch ((char) code)
+			{
+				case ' ':
+				case '!':
+				case '\"':
+				case '#':	case '$':	case '%':	case '&':
+				case '(':	case ')':	case '*':	case '+':
+				case ',':	case '-':	case '.':	case ':':	case ';':
+				case '/':	case '<':	case '=':	case '>':	case '?':
+				case '[':	case '\\':	case ']':
+				case '{':	case '|':	case '}':
+					return true;
+			}
+			
+			return Navigator.IsParagraphSeparator (code);
+		}
+		
+		public static bool IsWordSeparator(ulong code)
+		{
+			return Navigator.IsWordSeparator (Unicode.Bits.GetUnicodeCode (code));
+		}
+		
 		
 		public static int GetParagraphStartOffset(TextStory story, ICursor cursor)
 		{
@@ -69,7 +101,21 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public static int GetRunLength(TextStory story, ICursor cursor, Property property)
+		public static int GetRunStartOffset(TextStory story, ICursor cursor, Property property)
+		{
+			//	Retourne l'offset au début du texte auquel est appliquée la
+			//	propriété passée en entrée.
+			
+			Navigator.PropertyFinder finder = new PropertyFinder (story.StyleList, property, story.TextTable.ReadChar (cursor.CursorId));
+			TextStory.CodeCallback callback = new TextStory.CodeCallback (finder.MissingProperty);
+			
+			int distance = story.GetCursorPosition (cursor);
+			int offset   = story.TextTable.TraverseText (cursor.CursorId, - distance, callback);
+			
+			return (offset == -1) ? -distance : -offset;
+		}
+		
+		public static int GetRunEndLength(TextStory story, ICursor cursor, Property property)
 		{
 			//	Retourne la longueur du texte auquel est appliquée la propriété
 			//	passée en entrée.
@@ -102,6 +148,7 @@ namespace Epsitec.Common.Text.Internal
 				return true;
 			}
 		}
+		
 		
 		public static bool GetParagraphStyles(TextStory story, ICursor cursor, int offset, out TextStyle[] styles)
 		{
@@ -176,6 +223,52 @@ namespace Epsitec.Common.Text.Internal
 				string[] serialized = props_property.SerializedUniformParagraphProperties;
 				
 				properties = Properties.PropertiesProperty.DeserializeProperties (context, serialized);
+			}
+			
+			return true;
+		}
+		
+		
+		public static bool GetStyles(TextStory story, ICursor cursor, int offset, System.Collections.ArrayList styles)
+		{
+			//	Retourne les styles attachés à la position indiquée.
+			
+			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
+			
+			if (code == 0)
+			{
+				return false;
+			}
+			
+			Styles.SimpleStyle        simple_style    = story.StyleList[code];
+			Properties.StylesProperty styles_property = simple_style[Properties.WellKnownType.Styles] as Properties.StylesProperty;
+			
+			styles.AddRange (styles_property.Styles);
+			
+			return true;
+		}
+		
+		public static bool GetProperties(TextStory story, ICursor cursor, int offset, System.Collections.ArrayList properties)
+		{
+			//	Retourne les propriétés attachées à la position indiquée, en
+			//	excluant les propriétés dérivées à partir des styles.
+			
+			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
+			
+			if (code == 0)
+			{
+				return false;
+			}
+			
+			Styles.SimpleStyle            simple_style   = story.StyleList[code];
+			Properties.PropertiesProperty props_property = simple_style[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
+			
+			if (props_property != null)
+			{
+				Context  context    = story.TextContext;
+				string[] serialized = props_property.SerializedUniformParagraphProperties;
+				
+				properties.AddRange (Properties.PropertiesProperty.DeserializeProperties (context, serialized));
 			}
 			
 			return true;
