@@ -13,6 +13,7 @@ namespace Epsitec.Common.Text.Properties
 		Font			= 1,			//	style
 		FontSize,						//	style
 		
+		Conditional,					//	style
 		Keep,							//	style
 		Layout,							//	style
 		Leading,						//	style

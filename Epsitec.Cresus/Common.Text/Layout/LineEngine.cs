@@ -59,8 +59,19 @@ namespace Epsitec.Common.Text.Layout
 						//	exactement le même style :
 						
 						scratch.RunLength = this.GetRunLength (scratch.Text, scratch.TextStart, scratch.TextLength);
+						scratch.TextWidth = 0;
 						
 						ulong code = scratch.Text[scratch.TextStart];
+						
+						if (! context.TextContext.TestConditions (code))
+						{
+							if (scratch.TextLength <= scratch.RunLength)
+							{
+								scratch.WordBreakInfo = Unicode.BreakInfo.No;
+							}
+							
+							goto advance_next;
+						}
 						
 						Layout.BaseEngine         engine;
 						Properties.LayoutProperty layout;
@@ -94,6 +105,7 @@ namespace Epsitec.Common.Text.Layout
 						//																							|
 						//	Avance au morceau suivant :																:
 						
+advance_next:
 						scratch.Advance    += scratch.TextWidth;
 						scratch.Offset     += scratch.RunLength;
 						scratch.TextStart  += scratch.RunLength;
@@ -169,6 +181,11 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					
 					int run_length = this.GetRunLength (text, offset, length);
 					
+					if (! context.TextContext.TestConditions (text[offset]))
+					{
+						goto advance_next;
+					}
+					
 					Layout.BaseEngine         engine;
 					Properties.LayoutProperty layout;
 					
@@ -190,7 +207,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					this.RenderRun (context, renderer, ref ox, oy, text, offset, run_length, length == run_length);
 					
 					//	Avance au morceau suivant :
-					
+advance_next:		
 					offset += run_length;
 					length -= run_length;
 				}

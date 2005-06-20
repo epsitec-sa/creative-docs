@@ -16,6 +16,7 @@ namespace Epsitec.Common.Text
 			this.generator_list = new GeneratorList (this);
 			this.p_manager_list = new ParagraphManagerList (this);
 			this.char_marker    = new Internal.CharMarker ();
+			this.conditions     = new System.Collections.Hashtable ();
 			
 			this.char_marker.Add (Context.Markers.TagSelected);
 			this.char_marker.Add (Context.Markers.TagRequiresSpellChecking);
@@ -132,6 +133,17 @@ namespace Epsitec.Common.Text
 			{
 				this.resources.Remove (name);
 			}
+		}
+		
+		
+		public void SetCondition(string name)
+		{
+			this.conditions[name] = this;
+		}
+		
+		public void ClearCondition(string name)
+		{
+			this.conditions.Remove (name);
 		}
 		
 		
@@ -321,6 +333,64 @@ namespace Epsitec.Common.Text
 			this.get_language_last_style_version = current_style_version;
 			this.get_language_last_code          = code;
 			this.get_language_last_property      = property;
+		}
+		
+		public bool TestConditions(ulong code)
+		{
+			Properties.ConditionalProperty[] properties;
+			bool summary;
+			
+			this.GetConditions (code, out properties, out summary);
+			
+			return summary;
+		}
+		
+		public void GetConditions(ulong code, out Properties.ConditionalProperty[] properties, out bool summary)
+		{
+			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
+			long current_style_version = this.style_list.InternalStyleTable.Version;
+			
+			if ((this.get_condition_last_style_version != current_style_version) ||
+				(this.get_condition_last_style_index   != current_style_index))
+			{
+				Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
+				
+				Property[] props = style.FindProperties (Properties.WellKnownType.Conditional);
+				
+				this.get_condition_last_style_version = current_style_version;
+				this.get_condition_last_style_index   = current_style_index;
+				this.get_condition_last_properties    = props;
+				
+				bool ok = true;
+				
+				foreach (Properties.ConditionalProperty condition_p in props)
+				{
+					bool is_true = this.conditions.Contains (condition_p.Condition);
+					bool show_if = condition_p.ShowIfTrue;
+					
+					if ((show_if && !is_true) ||
+						(!show_if && is_true))
+					{
+						ok = false;
+						break;
+					}
+				}
+				
+				this.get_condition_last_summary = ok;
+			}
+			
+			if (this.get_condition_last_properties.Length > 0)
+			{
+				summary    = this.get_condition_last_summary;
+				properties = new Properties.ConditionalProperty[this.get_condition_last_properties.Length];
+				
+				this.get_condition_last_properties.CopyTo (properties, 0);
+			}
+			else
+			{
+				summary    = true;
+				properties = null;
+			}
 		}
 		
 		public void GetLeading(ulong code, out Properties.LeadingProperty property)
@@ -691,6 +761,7 @@ namespace Epsitec.Common.Text
 		private ParagraphManagerList			p_manager_list;
 		private Internal.CharMarker				char_marker;
 		private Markers							markers;
+		private System.Collections.Hashtable	conditions;
 		
 		private OpenType.FontCollection			font_collection;
 		private System.Collections.Hashtable	font_cache;
@@ -717,6 +788,11 @@ namespace Epsitec.Common.Text
 		private long							get_language_last_style_version;
 		private ulong							get_language_last_code;
 		private Properties.LanguageProperty		get_language_last_property;
+		
+		private long							get_condition_last_style_version;
+		private int								get_condition_last_style_index;
+		private Property[]						get_condition_last_properties;
+		private bool							get_condition_last_summary;
 		
 		private long							get_leading_last_style_version;
 		private int								get_leading_last_style_index;

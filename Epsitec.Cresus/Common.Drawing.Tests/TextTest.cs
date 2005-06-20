@@ -75,6 +75,23 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 			
+			public bool							Condition
+			{
+				get
+				{
+					return this.condition;
+				}
+				set
+				{
+					if (this.condition != value)
+					{
+						this.condition = value;
+						this.UpdateTextLayout ();
+						this.Invalidate ();
+					}
+				}
+			}
+			
 			public Graphics						Graphics
 			{
 				get
@@ -280,6 +297,7 @@ namespace Epsitec.Common.Drawing
 			private SimpleTextFrame				frame1, frame2;
 			private double						frame_ratio;
 			private Graphics					graphics;
+			private bool						condition;
 		}
 		
 		private class Controller
@@ -308,6 +326,7 @@ namespace Epsitec.Common.Drawing
 				RadioButton rb1 = new RadioButton (this.window.Root, "g1", 0);
 				RadioButton rb2 = new RadioButton (this.window.Root, "g1", 1);
 				CheckButton cb5 = new CheckButton (this.window.Root);
+				CheckButton cb6 = new CheckButton (this.window.Root);
 				
 				RadioButton.Activate (this.window.Root, "g1", 0);
 				
@@ -321,6 +340,7 @@ namespace Epsitec.Common.Drawing
 				rb2.Dock = DockStyle.Top; rb2.DockMargins = new Margins (4, 4, 0, 0);
 				
 				cb5.Dock = DockStyle.Top; cb5.DockMargins = new Margins (4, 4, 4, 0);
+				cb6.Dock = DockStyle.Top; cb6.DockMargins = new Margins (4, 4, 0, 0);
 				
 				st1.Text = "Réglages pour le rendu du pavé de texte :";
 				
@@ -332,9 +352,10 @@ namespace Epsitec.Common.Drawing
 				rb1.Text = "paragraphes avec diverses justifications";			rb1.ActiveStateChanged += new Support.EventHandler (this.HandleRadioButtonActiveStateChanged);
 				rb2.Text = "paragraphes avec tabulateurs";						rb2.ActiveStateChanged += new Support.EventHandler (this.HandleRadioButtonActiveStateChanged);
 				
-				cb5.Name = "equal frames";	cb5.Text = "2 colonnes égales";		cb5.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButton5ActiveStateChanged);
+				cb5.Name = "equal frames";	cb5.Text = "2 colonnes égales";				cb5.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButton5ActiveStateChanged);
+				cb6.Name = "condition true";cb6.Text = "affiche texte conditionnel";	cb6.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButton6ActiveStateChanged);
 				
-				this.window.ClientSize = new Size (260, 150);
+				this.window.ClientSize = new Size (260, 180);
 				this.window.Owner      = owner;
 				
 				this.window.Show ();
@@ -413,6 +434,16 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, Text.Properties.ThreeState.False));
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					properties.Add (new Text.Properties.ConditionalProperty ("ShowTitle", true));
+					
+					if (this.painter.Condition)
+					{
+						this.painter.TextStory.TextContext.SetCondition ("ShowTitle");
+					}
+					else
+					{
+						this.painter.TextStory.TextContext.ClearCondition ("ShowTitle");
+					}
 					
 					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
@@ -864,6 +895,14 @@ namespace Epsitec.Common.Drawing
 				{
 					this.painter.FrameRatio = 1.0 / 3.0;
 				}
+			}
+			
+			private void HandleCheckButton6ActiveStateChanged(object sender)
+			{
+				CheckButton cb = sender as CheckButton;
+				
+				this.painter.Condition = cb.IsActive;
+				this.GenerateText ();
 			}
 			
 			private void HandleRadioButtonActiveStateChanged(object sender)
