@@ -620,7 +620,16 @@ restart:
 						oy -= this.line_skip_before;
 					}
 					
-					while ((! this.frame.ConstrainLineBox (oy, line_ascender, line_descender, line_height, this.line_leading, this.line_sync_to_grid, out ox, out oy, out dx, out next_frame_y))
+					double leading = this.line_leading;
+					
+//					if ((this.auto_leading) &&
+//						(leading < line_ascender-line_descender))
+//					{
+//						leading = line_ascender - line_descender;
+//						System.Diagnostics.Debug.WriteLine ("Adjust leading to " + leading.ToString ());
+//					}
+					
+					while ((! this.frame.ConstrainLineBox (oy, line_ascender, line_descender, line_height, leading, this.line_sync_to_grid, out ox, out oy, out dx, out next_frame_y))
 						|| (dx < this.mx_left + this.mx_right)
 						|| (pass > 1))
 					{

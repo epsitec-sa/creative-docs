@@ -459,6 +459,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\FontOffsetProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\FontProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

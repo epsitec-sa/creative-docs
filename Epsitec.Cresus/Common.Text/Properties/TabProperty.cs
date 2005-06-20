@@ -8,16 +8,21 @@ namespace Epsitec.Common.Text.Properties
 	/// </summary>
 	public class TabProperty : Property
 	{
-		public TabProperty()
+		public TabProperty() : this (0, SizeUnits.Points, 0, null)
 		{
-			this.position     = 0.0;
-			this.disposition  = 0.0;
-			this.docking_mark = null;
 		}
 		
-		public TabProperty(double position, double disposition, string docking_mark) : this ()
+		public TabProperty(double position, double disposition, string docking_mark) : this (position, SizeUnits.Points, disposition, docking_mark)
 		{
+		}
+		
+		public TabProperty(double position, SizeUnits units, double disposition, string docking_mark)
+		{
+			System.Diagnostics.Debug.Assert (double.IsNaN (position) == false);
+			System.Diagnostics.Debug.Assert (UnitsTools.IsAbsoluteSize (units));
+			
 			this.position     = position;
+			this.units        = units;
 			this.disposition  = disposition;
 			this.docking_mark = docking_mark;
 		}
@@ -39,6 +44,14 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public override CombinationMode			CombinationMode
+		{
+			get
+			{
+				return CombinationMode.Invalid;
+			}
+		}
+
 		
 		public double							Position
 		{
@@ -53,6 +66,22 @@ namespace Epsitec.Common.Text.Properties
 					this.position = value;
 					this.Invalidate ();
 				}
+			}
+		}
+		
+		public double							PositionInPoints
+		{
+			get
+			{
+				return UnitsTools.ConvertToPoints (this.position, this.units);
+			}
+		}
+		
+		public SizeUnits						Units
+		{
+			get
+			{
+				return this.units;
 			}
 		}
 		
@@ -93,6 +122,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			SerializerSupport.Join (buffer,
 				/**/				SerializerSupport.SerializeDouble (this.position),
+				/**/				SerializerSupport.SerializeSizeUnits (this.units),
 				/**/				SerializerSupport.SerializeDouble (this.disposition),
 				/**/				SerializerSupport.SerializeString (this.docking_mark));
 		}
@@ -101,33 +131,30 @@ namespace Epsitec.Common.Text.Properties
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 3);
+			Debug.Assert.IsTrue (args.Length == 4);
 			
-			this.position     = SerializerSupport.DeserializeDouble (args[0]);
-			this.disposition  = SerializerSupport.DeserializeDouble (args[1]);
-			this.docking_mark = SerializerSupport.DeserializeString (args[2]);
+			double    position     = SerializerSupport.DeserializeDouble (args[0]);
+			SizeUnits units        = SerializerSupport.DeserializeSizeUnits (args[1]);
+			double    disposition  = SerializerSupport.DeserializeDouble (args[2]);
+			string    docking_mark = SerializerSupport.DeserializeString (args[3]);
+			
+			this.position     = position;
+			this.units        = units;
+			this.disposition  = disposition;
+			this.docking_mark = docking_mark;
 		}
 		
 		
 		public override Property GetCombination(Property property)
 		{
-			Debug.Assert.IsTrue (property is Properties.TabProperty);
-			
-			TabProperty a = this;
-			TabProperty b = property as TabProperty;
-			TabProperty c = new TabProperty ();
-			
-			c.position     = NumberSupport.Combine (a.position, b.position);
-			c.disposition  = NumberSupport.Combine (a.disposition, b.disposition);
-			c.docking_mark = b.docking_mark;
-			
-			return c;
+			throw new System.InvalidOperationException ();
 		}
 		
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
 			checksum.UpdateValue (this.position);
+			checksum.UpdateValue ((int) this.units);
 			checksum.UpdateValue (this.disposition);
 			checksum.UpdateValue (this.docking_mark);
 		}
@@ -141,12 +168,14 @@ namespace Epsitec.Common.Text.Properties
 		private static bool CompareEqualContents(TabProperty a, TabProperty b)
 		{
 			return NumberSupport.Equal (a.position, b.position)
+				&& a.units == b.units
 				&& NumberSupport.Equal (a.disposition, b.disposition)
 				&& a.docking_mark == b.docking_mark;
 		}
 		
 		
 		private double							position;
+		private SizeUnits						units;
 		private double							disposition;				//	0.0 = aligné à gauche, 0.5 = centré, 1.0 = aligné à droite
 		private string							docking_mark;				//	"." = aligne sur le point décimal
 	}

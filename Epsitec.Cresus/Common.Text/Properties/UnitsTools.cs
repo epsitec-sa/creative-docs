@@ -118,6 +118,18 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public static bool IsScale(SizeUnits units)
+		{
+			switch (units)
+			{
+				case SizeUnits.Percent:
+					return true;
+				
+				default:
+					return false;
+			}
+		}
+		
 		
 		public static string ConvertToName(SizeUnits units)
 		{
@@ -196,6 +208,18 @@ namespace Epsitec.Common.Text.Properties
 				
 				default:
 					throw new System.InvalidOperationException (string.Format ("Cannot convert from {0} to {1}.", units, SizeUnits.Inches));
+			}
+		}
+		
+		public static double ConvertToScale(double value, SizeUnits units)
+		{
+			switch (units)
+			{
+				case SizeUnits.Percent:
+					return value / 100.0;
+				
+				default:
+					throw new System.InvalidOperationException (string.Format ("Cannot convert from {0} to {1}.", units, SizeUnits.Percent));
 			}
 		}
 		

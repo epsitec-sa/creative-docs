@@ -139,7 +139,7 @@ namespace Epsitec.Common.Text.Layout
 				{
 					temp[i] = (ulong) (context.GetGlyphForSpecialCode (bits) | (int) Unicode.Bits.SpecialCodeFlag);
 				}
-				else if (analyzer.IsControl (code))
+				else if (analyzer.IsControl (code) || analyzer.IsZeroWidth (code))
 				{
 					temp[i] &= ~ Unicode.Bits.FullCodeMask;
 				}
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Text.Layout
 				{
 					temp[i] = (ulong) (context.GetGlyphForSpecialCode (bits) | (int) Unicode.Bits.SpecialCodeFlag);
 				}
-				else if (analyzer.IsControl (code))
+				else if (analyzer.IsControl (code) || analyzer.IsZeroWidth (code))
 				{
 					temp[i] &= ~ Unicode.Bits.FullCodeMask;
 				}
@@ -216,7 +216,7 @@ namespace Epsitec.Common.Text.Layout
 				{
 					temp[i] = (ulong) (context.GetGlyphForSpecialCode (bits) | (int) Unicode.Bits.SpecialCodeFlag);
 				}
-				else if (analyzer.IsControl (code))
+				else if (analyzer.IsControl (code) || analyzer.IsZeroWidth (code))
 				{
 					temp[i] &= ~ Unicode.Bits.FullCodeMask;
 				}

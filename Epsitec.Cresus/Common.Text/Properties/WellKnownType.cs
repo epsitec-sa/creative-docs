@@ -31,6 +31,7 @@ namespace Epsitec.Common.Text.Properties
 		Language,						//	extra
 		Tab,							//	extra
 		
+		FontOffset,						//	local
 		OpenType,						//	local
 		Image,							//	local
 		

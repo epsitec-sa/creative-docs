@@ -681,7 +681,7 @@ restart_paragraph_layout:
 			double d = tab_property.Disposition;
 			
 			double x1 = start_of_line ? layout.LeftMargin : layout.X;
-			double x2 = tab_property.Position;
+			double x2 = tab_property.PositionInPoints;
 			double x3 = layout.LineWidth - layout.RightMargin;
 			
 			double x_before = x2 - x1;

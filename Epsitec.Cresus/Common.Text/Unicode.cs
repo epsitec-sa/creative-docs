@@ -529,6 +529,28 @@ namespace Epsitec.Common.Text
 				return this.IsSpace (this[code]);
 			}
 			
+			public bool IsZeroWidth(int code)
+			{
+				switch ((Unicode.Code)code)
+				{
+					case Unicode.Code.Invalid:
+						throw new System.ArgumentException ("Invalid Unicode code.");
+					
+					case Unicode.Code.ZeroWidthJoiner:
+					case Unicode.Code.ZeroWidthNonJoiner:
+					case Unicode.Code.ZeroWidthSpace:
+					case Unicode.Code.WordJoiner:
+					case Unicode.Code.InvisibleSeparator:
+					case Unicode.Code.InvisibleTimes:
+						break;
+					
+					default:
+						return false;
+				}
+				
+				return true;
+			}
+			
 			public bool IsControl(int code)
 			{
 				switch ((Unicode.Code)code)

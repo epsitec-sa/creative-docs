@@ -66,6 +66,7 @@ namespace Epsitec.Common.Text.Layout
 						Properties.LayoutProperty layout;
 						
 						context.TextContext.GetFont (code, out scratch.Font, out scratch.FontSize);
+						context.TextContext.GetFontOffset (code, out scratch.FontOffset);
 						context.TextContext.GetLayoutEngine (code, out engine, out layout);
 						
 						if ((engine != this) ||
@@ -76,7 +77,7 @@ namespace Epsitec.Common.Text.Layout
 							
 							context.RecordAscender (scratch.Ascender);
 							context.RecordDescender (scratch.Descender);
-							context.RecordLineHeight (scratch.LineHeight);
+							context.RecordLineHeight (System.Math.Max (scratch.LineHeight, scratch.Ascender - scratch.Descender));
 							
 							context.MoveTo (scratch.Advance, scratch.Offset);
 							context.SwitchLayoutEngine (engine, layout);
@@ -107,7 +108,7 @@ namespace Epsitec.Common.Text.Layout
 						
 						context.RecordAscender (scratch.Ascender);
 						context.RecordDescender (scratch.Descender);
-						context.RecordLineHeight (scratch.LineHeight);
+						context.RecordLineHeight (System.Math.Max (scratch.LineHeight, scratch.Ascender - scratch.Descender));
 						
 						context.MoveTo (scratch.Advance, scratch.Offset);
 						
@@ -311,8 +312,8 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				return false;
 			}
 			
-			scratch.RecordAscender (scratch.Font.GetAscender (scratch.FontSize));
-			scratch.RecordDescender (scratch.Font.GetDescender (scratch.FontSize));
+			scratch.RecordAscender (scratch.Font.GetAscender (scratch.FontSize) + scratch.FontOffset);
+			scratch.RecordDescender (scratch.Font.GetDescender (scratch.FontSize) + scratch.FontOffset);
 			scratch.RecordLineHeight (scratch.FontSize * 1.2);
 			
 			while (frag_length < run_length)
@@ -400,7 +401,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				{
 					context.RecordAscender (scratch.Ascender);
 					context.RecordDescender (scratch.Descender);
-					context.RecordLineHeight (scratch.LineHeight);
+					context.RecordLineHeight (System.Math.Max (scratch.LineHeight, scratch.Ascender - scratch.Descender));
 					
 					//	TODO: il faudrait enregistrer les hauteurs de la ligne avec l'information
 					//	Layout.Break si on voulait faire les choses correctement ici !
@@ -452,8 +453,10 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			Drawing.Color color;
 			OpenType.Font font;
 			double        font_size;
+			double        font_offset;
 			
 			context.TextContext.GetFont (text[offset], out font, out font_size);
+			context.TextContext.GetFontOffset (text[offset], out font_offset);
 			context.TextContext.GetColor (text[offset], out color);
 			
 			//	Gérer l'étirement des glyphes en fonction de la fonte sélectionnée :
@@ -548,7 +551,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			for (int i = 0; i < n; i++)
 			{
-				y_pos[i]  = oy;
+				y_pos[i]  = oy + font_offset;
 				x_glue[i] = glue;
 			}
 			
@@ -692,6 +695,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			public OpenType.Font				Font;
 			public double						FontSize;
+			public double						FontOffset;
 		}
 	}
 }
