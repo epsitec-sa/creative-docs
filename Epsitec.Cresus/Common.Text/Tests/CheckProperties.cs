@@ -110,23 +110,32 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.UnderlineProperty (double.NaN, Properties.SizeUnits.None, double.NaN, Properties.SizeUnits.None, "underline", "color=red"));
 			properties.Add (new Properties.UnderlineProperty (double.NaN, Properties.SizeUnits.None, double.NaN, Properties.SizeUnits.None, "frame", "backcolor=yellow;color=black"));
 			properties.Add (new Properties.UnderlineProperty (double.NaN, Properties.SizeUnits.None, 2.0, Properties.SizeUnits.Points, "underline", "color=red"));
+			properties.Add (new Properties.LinkProperty ("http://www.epsitec.ch"));
+			properties.Add (new Properties.LinkProperty ("mailto:epsitec@epsitec.ch"));
 			
 			story.ConvertToStyledText ("Abc", properties, out text);
 			
-			System.Collections.ArrayList underlines = new System.Collections.ArrayList ();
+			Properties.UnderlineProperty[] underlines;
+			Properties.LinkProperty[]      links;
 			
-			story.TextContext.GetUnderlines (text[0], underlines);
+			story.TextContext.GetUnderlines (text[0], out underlines);
+			story.TextContext.GetLinks (text[0], out links);
 			
-			Debug.Assert.IsTrue (underlines.Count == 4);
+			Debug.Assert.IsTrue (underlines.Length == 4);
+			Debug.Assert.IsTrue (links.Length == 2);
 			
-			underlines.Sort (Properties.UnderlineProperty.Comparer);
+			System.Array.Sort (underlines, Properties.UnderlineProperty.Comparer);
+			System.Array.Sort (links, Properties.LinkProperty.Comparer);
 			
-			Debug.Assert.IsTrue ((underlines[0] as Properties.UnderlineProperty).LineStyle == "backcolor=yellow;color=black");
-			Debug.Assert.IsTrue ((underlines[1] as Properties.UnderlineProperty).LineStyle == "-");
-			Debug.Assert.IsTrue ((underlines[2] as Properties.UnderlineProperty).LineStyle == "color=red");
-			Debug.Assert.IsTrue ((underlines[3] as Properties.UnderlineProperty).LineStyle == "color=red");
-			Debug.Assert.IsTrue ((underlines[2] as Properties.UnderlineProperty).ThicknessUnits == Properties.SizeUnits.None);
-			Debug.Assert.IsTrue ((underlines[3] as Properties.UnderlineProperty).ThicknessUnits == Properties.SizeUnits.Points);
+			Debug.Assert.IsTrue (underlines[0].LineStyle == "backcolor=yellow;color=black");
+			Debug.Assert.IsTrue (underlines[1].LineStyle == "-");
+			Debug.Assert.IsTrue (underlines[2].LineStyle == "color=red");
+			Debug.Assert.IsTrue (underlines[3].LineStyle == "color=red");
+			Debug.Assert.IsTrue (underlines[2].ThicknessUnits == Properties.SizeUnits.None);
+			Debug.Assert.IsTrue (underlines[3].ThicknessUnits == Properties.SizeUnits.Points);
+			
+			Debug.Assert.IsTrue (links[0].Link == "http://www.epsitec.ch");
+			Debug.Assert.IsTrue (links[1].Link == "mailto:epsitec@epsitec.ch");
 		}
 		
 		private static void TestSerialization()

@@ -411,14 +411,14 @@ namespace Epsitec.Common.Text.Layout
 			get
 			{
 				if ((this.underline_properties == null) ||
-					(this.underline_properties.Count == 0))
+					(this.underline_properties.Length == 0))
 				{
 					return new Properties.UnderlineProperty[0];
 				}
 				
-				Properties.UnderlineProperty[] properties = new Properties.UnderlineProperty[this.underline_properties.Count];
+				Properties.UnderlineProperty[] properties = new Properties.UnderlineProperty[this.underline_properties.Length];
 				
-				this.underline_properties.CopyTo (properties);
+				this.underline_properties.CopyTo (properties, 0);
 				
 				return properties;
 			}
@@ -751,12 +751,12 @@ restart:
 		
 		public void UpdateUnderlineProperties(int offset, double ox, bool is_visible)
 		{
-			System.Collections.ArrayList current  = new System.Collections.ArrayList ();
-			System.Collections.ArrayList previous = this.underline_properties;
+			Properties.UnderlineProperty[] current;
+			Properties.UnderlineProperty[] previous = this.underline_properties;
 			
 			offset += this.text_offset;
 			
-			this.text_context.GetUnderlines (this.text[offset], current);
+			this.text_context.GetUnderlines (this.text[offset], out current);
 			
 			if (! Property.CompareEqualContents (previous, current))
 			{
@@ -899,7 +899,7 @@ restart:
 			renderer.RenderStartLine (this);
 			
 			if ((this.underline_properties != null) &&
-				(this.underline_properties.Count > 0))
+				(this.underline_properties.Length > 0))
 			{
 				int offset = this.TextOffset;
 				
@@ -921,7 +921,7 @@ restart:
 						renderer.RenderEndLine (this);
 						
 						if ((this.underline_properties != null) &&
-							(this.underline_properties.Count > 0))
+							(this.underline_properties.Length > 0))
 						{
 							int offset = this.TextOffset;
 							
@@ -1533,7 +1533,7 @@ restart:
 		
 		private ulong[]							buffer;
 		
-		private System.Collections.ArrayList	underline_properties;
+		private Properties.UnderlineProperty[]	underline_properties;
 		private System.Collections.ArrayList	underline_records;
 	}
 }

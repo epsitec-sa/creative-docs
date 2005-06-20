@@ -437,7 +437,7 @@ namespace Epsitec.Common.Text
 			this.get_keep_last_property      = property;
 		}
 		
-		public void GetUnderlines(ulong code, System.Collections.ArrayList properties)
+		public void GetUnderlines(ulong code, out Properties.UnderlineProperty[] properties)
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
@@ -463,12 +463,57 @@ namespace Epsitec.Common.Text
 				this.get_underlines_last_properties    = base_props;
 			}
 			
-			properties.Clear ();
-			
 			if ((this.get_underlines_last_properties != null) &&
 				(this.get_underlines_last_properties.Length > 0))
 			{
-				properties.AddRange (this.get_underlines_last_properties);
+				int count = this.get_underlines_last_properties.Length;
+				
+				properties = new Properties.UnderlineProperty[count];
+				this.get_underlines_last_properties.CopyTo (properties, 0);
+			}
+			else
+			{
+				properties = null;
+			}
+		}
+		
+		public void GetLinks(ulong code, out Properties.LinkProperty[] properties)
+		{
+			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			long current_style_version = this.style_list.InternalStyleTable.Version;
+			
+			if ((this.get_links_last_style_version != current_style_version) ||
+				(this.get_links_last_code != code))
+			{
+				Styles.SimpleStyle style = this.style_list[code];
+				
+				Property[]           base_props     = null;
+				Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+				
+				if (extra_settings != null)
+				{
+					base_props = extra_settings.FindProperties (Properties.WellKnownType.Link);
+					
+					System.Array.Sort (base_props, Properties.LinkProperty.Comparer);
+				}
+				
+				this.get_links_last_style_version = current_style_version;
+				this.get_links_last_code          = code;
+				this.get_links_last_properties    = base_props;
+			}
+			
+			if ((this.get_links_last_properties != null) &&
+				(this.get_links_last_properties.Length > 0))
+			{
+				int count = this.get_links_last_properties.Length;
+				
+				properties = new Properties.LinkProperty[count];
+				this.get_links_last_properties.CopyTo (properties, 0);
+			}
+			else
+			{
+				properties = null;
 			}
 		}
 		
@@ -805,6 +850,10 @@ namespace Epsitec.Common.Text
 		private long							get_underlines_last_style_version;
 		private ulong							get_underlines_last_code;
 		private Property[]						get_underlines_last_properties;
+		
+		private long							get_links_last_style_version;
+		private ulong							get_links_last_code;
+		private Property[]						get_links_last_properties;
 		
 		private long							get_layout_last_style_version;
 		private int								get_layout_last_style_index;

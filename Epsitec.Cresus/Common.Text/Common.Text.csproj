@@ -514,6 +514,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\LinkProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\ManagedParagraphProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

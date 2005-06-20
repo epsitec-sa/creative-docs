@@ -12,11 +12,16 @@ namespace Epsitec.Common.Text.Layout
 		public UnderlineRecord(RecordType record_type, int text_offset, System.Collections.ICollection underlines,
 			/**/			   double x, double y, double ascender, double descender, int frame_index, bool is_visible)
 		{
+			int count = underlines == null ? 0 : underlines.Count;
+			
 			this.record_type = record_type;
 			this.text_offset = text_offset;
-			this.underlines  = new Properties.UnderlineProperty[underlines.Count];
+			this.underlines  = new Properties.UnderlineProperty[count];
 			
-			underlines.CopyTo (this.underlines, 0);
+			if (underlines != null)
+			{
+				underlines.CopyTo (this.underlines, 0);
+			}
 			
 			this.x = x;
 			this.y = y;
