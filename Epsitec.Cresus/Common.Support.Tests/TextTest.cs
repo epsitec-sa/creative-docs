@@ -130,6 +130,38 @@ namespace Epsitec.Common.Support
 			navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 0);
 			
 			Assert.AreEqual (4, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.PreviousCharacter, 1);
+			Assert.AreEqual (3, navigator.CursorPosition);
+			
+			navigator.Insert (" xyz   qrs");
+			Assert.AreEqual (13, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 0);
+			Assert.AreEqual (13, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.WordStart, 0);
+			Assert.AreEqual (10, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.WordStart, 0);
+			Assert.AreEqual (10, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.WordStart, 1);
+			Assert.AreEqual (4, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 0);
+			Assert.AreEqual (4, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.PreviousCharacter, 2);
+			Assert.AreEqual (2, navigator.CursorPosition);
+			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 0);
+			Assert.AreEqual (4, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
+			Assert.AreEqual (10, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
+			Assert.AreEqual (13, navigator.CursorPosition);
 		}
 	}
 }

@@ -114,10 +114,12 @@ namespace Epsitec.Common.Text
 					break;
 				
 				case Target.WordStart:
+					this.MoveCursor (count, -1, new MoveCallback (this.IsWordStart));
 					direction = -1;
 					break;
 				
 				case Target.WordEnd:
+					this.MoveCursor (count, 1, new MoveCallback (this.IsWordEnd));
 					direction = 1;
 					break;
 			}
@@ -283,6 +285,29 @@ namespace Epsitec.Common.Text
 		protected virtual bool IsParagraphEnd(int offset)
 		{
 			return Internal.Navigator.IsParagraphEnd (this.story, this.cursor, offset);
+		}
+		
+		protected virtual bool IsWordStart(int offset)
+		{
+			return Internal.Navigator.IsWordStart (this.story, this.cursor, offset);
+		}
+		
+		protected virtual bool IsWordEnd(int offset)
+		{
+			//	Si nous sommes à la fin d'un paragraphe ou d'une ligne, nous
+			//	sommes déjà à une fin de mot...
+			
+			//	TODO: gérer fins de lignes
+			
+			if (Internal.Navigator.IsParagraphEnd (this.story, this.cursor, offset))
+			{
+				return true;
+			}
+			
+			//	On détermine que la fin d'un mot est la même chose que le début
+			//	du mot suivant :
+			
+			return Internal.Navigator.IsWordStart (this.story, this.cursor, offset);
 		}
 		
 		

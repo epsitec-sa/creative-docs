@@ -40,6 +40,45 @@ namespace Epsitec.Common.Text.Internal
 			return Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (code));
 		}
 		
+		
+		public static bool IsWordStart(TextStory story, ICursor cursor, int offset)
+		{
+			Unicode.Code code_0 = Unicode.Bits.GetUnicodeCode (story.TextTable.ReadChar (cursor.CursorId, offset));
+			Unicode.Code code_1 = Unicode.Bits.GetUnicodeCode (story.TextTable.ReadChar (cursor.CursorId, offset - 1));
+			
+			if (code_1 == Unicode.Code.Null)
+			{
+				return true;
+			}
+			
+			if (! Navigator.IsWordSeparator (code_0) &&
+				Navigator.IsWordSeparator (code_1))
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		
+		public static bool IsWordEnd(TextStory story, ICursor cursor, int offset)
+		{
+			Unicode.Code code_0 = Unicode.Bits.GetUnicodeCode (story.TextTable.ReadChar (cursor.CursorId, offset));
+			Unicode.Code code_1 = Unicode.Bits.GetUnicodeCode (story.TextTable.ReadChar (cursor.CursorId, offset - 1));
+			
+			if (code_0 == Unicode.Code.Null)
+			{
+				return true;
+			}
+			
+			if (Navigator.IsWordSeparator (code_0) &&
+				! Navigator.IsWordSeparator (code_1))
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		
 		public static bool IsWordSeparator(Unicode.Code code)
 		{
 			if ((int) code > 65535)
