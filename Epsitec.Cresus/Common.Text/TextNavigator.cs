@@ -305,7 +305,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			//	On détermine que la fin d'un mot est la même chose que le début
-			//	du mot suivant :
+			//	du mot suivant, pour la navigation :
 			
 			return Internal.Navigator.IsWordStart (this.story, this.cursor, offset);
 		}
