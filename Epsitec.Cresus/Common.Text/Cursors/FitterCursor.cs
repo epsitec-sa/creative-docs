@@ -13,6 +13,14 @@ namespace Epsitec.Common.Text.Cursors
 		}
 		
 		
+		public int								LineCount
+		{
+			get
+			{
+				return this.elements.Length;
+			}
+		}
+		
 		public FitterCursor.Element[]			Elements
 		{
 			get
@@ -154,6 +162,22 @@ namespace Epsitec.Common.Text.Cursors
 		{
 			FilterFrame filter = new FilterFrame (frame_index);
 			return new CursorInfo.Filter (filter.FilterCallback);
+		}
+		
+		
+		internal int[] GetLineStartPositions(Internal.TextTable text)
+		{
+			int   count = this.elements.Length + 1;
+			int[] pos   = new int[count];
+			
+			pos[0] = text.GetCursorPosition (this.CursorId);
+			
+			for (int i = 1; i < count; i++)
+			{
+				pos[i] = pos[i-1] + this.elements[i-1].Length;
+			}
+			
+			return pos;
 		}
 		
 		

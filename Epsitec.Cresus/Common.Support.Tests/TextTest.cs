@@ -82,13 +82,18 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckTextNavigator()
 		{
-			Text.TextStory     story     = new Text.TextStory ();
-			Text.TextNavigator navigator = new Text.TextNavigator (story);
+			Text.TextStory       story  = new Text.TextStory ();
+			Text.TextFitter      fitter = new Text.TextFitter (story);
+			Text.SimpleTextFrame frame  = new Text.SimpleTextFrame (100, 1000);
+			
+			fitter.FrameList.Add (frame);
+			
+			Text.TextNavigator navigator = new Text.TextNavigator (story, fitter);
 			
 			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Text.Properties.FontProperty ("Verdana", "Regular"));
-			properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
+			properties.Add (new Text.Properties.FontSizeProperty (14.0, Text.Properties.SizeUnits.Points));
 			
 			Text.TextStyle default_style = story.StyleList.NewTextStyle ("Default", Text.TextStyleClass.Paragraph, properties);
 			
@@ -162,6 +167,34 @@ namespace Epsitec.Common.Support
 			
 			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
 			Assert.AreEqual (13, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
+			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 0);
+			navigator.Insert (". " + "Just for fun, " + "some more " + "text in order           " + "to be able to " + "test the line " + "navigation " + "algorithm.");
+			
+			fitter.ClearAllMarks ();
+			fitter.GenerateAllMarks ();
+			
+			int para_count;
+			int line_count;
+			
+			fitter.GetStatistics (out para_count, out line_count);
+			
+			Assert.AreEqual (2, para_count);
+			Assert.AreEqual (9, line_count);
+			Assert.AreEqual (116, navigator.TextLength);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
+			
+			Assert.IsTrue (navigator.IsLineStart (0));
+			Assert.IsTrue (navigator.IsLineStart (15));
+			Assert.IsTrue (navigator.IsLineStart (29));
+			Assert.IsTrue (navigator.IsLineStart (39));
+			Assert.IsTrue (navigator.IsLineStart (63));
+			Assert.IsTrue (navigator.IsLineStart (77));
+			Assert.IsTrue (navigator.IsLineStart (91));
+			Assert.IsTrue (navigator.IsLineStart (102));
+			Assert.IsTrue (navigator.IsLineStart (113));
 		}
 	}
 }

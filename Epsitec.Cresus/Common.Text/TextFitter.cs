@@ -199,6 +199,23 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void GetStatistics(out int paragraph_count, out int line_count)
+		{
+			paragraph_count = 0;
+			line_count      = 0;
+			
+			CursorInfo[] infos = this.story.TextTable.FindCursors (0, this.story.TextLength, Cursors.FitterCursor.Filter);
+			
+			for (int i = 0; i < infos.Length; i++)
+			{
+				Cursors.FitterCursor cursor = this.story.TextTable.GetCursorInstance (infos[i].CursorId) as Cursors.FitterCursor;
+				
+				paragraph_count += 1;
+				line_count      += cursor.LineCount;
+			}
+		}
+		
+		
 		protected void ExecuteClear(Cursors.TempCursor temp_cursor, int pos, ref int length, out TextProcessor.Status status)
 		{
 			//	Supprime les marques de découpe de lignes représentées par des

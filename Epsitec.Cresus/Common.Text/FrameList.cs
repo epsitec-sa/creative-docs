@@ -82,15 +82,16 @@ namespace Epsitec.Common.Text
 			//	à trouver :
 			
 			TextStory          story  = this.TextFitter.TextStory;
+			Internal.TextTable text   = story.TextTable;
 			int                length = story.TextLength;
 			CursorInfo.Filter  filter = Cursors.FitterCursor.GetFrameFilter (index);
-			CursorInfo[]       infos  = this.fitter.TextStory.TextTable.FindCursors (0, length, filter, true);
+			CursorInfo[]       infos  = text.FindCursors (0, length, filter, true);
 			
 			Debug.Assert.IsInBounds (index, 0, this.frames.Count-1);
 			
 			if (infos.Length == 1)
 			{
-				Cursors.FitterCursor cursor = story.TextTable.GetCursorInstance (infos[0].CursorId) as Cursors.FitterCursor;
+				Cursors.FitterCursor cursor = text.GetCursorInstance (infos[0].CursorId) as Cursors.FitterCursor;
 				
 				this.cursor_map[frame] = cursor;
 				return cursor;
@@ -107,6 +108,12 @@ namespace Epsitec.Common.Text
 			}
 			
 			return this.FindFirstCursor (this.IndexOf (frame));
+		}
+		
+		
+		public void Add(ITextFrame frame)
+		{
+			this.InsertAt (this.frames.Count, frame);
 		}
 		
 		

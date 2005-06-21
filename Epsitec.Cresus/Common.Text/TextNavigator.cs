@@ -9,9 +9,15 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public class TextNavigator : System.IDisposable
 	{
-		public TextNavigator(TextStory story)
+		public TextNavigator(TextStory story) : this (story, null)
+		{
+			this.fitter = new TextFitter (this.story);
+		}
+		
+		public TextNavigator(TextStory story, TextFitter fitter)
 		{
 			this.story  = story;
+			this.fitter = fitter;
 			this.cursor = new Cursors.SimpleCursor ();
 			
 			this.story.NewCursor (this.cursor);
@@ -310,6 +316,48 @@ namespace Epsitec.Common.Text
 			return Internal.Navigator.IsWordStart (this.story, this.cursor, offset);
 		}
 		
+		public virtual bool IsLineStart(int offset)
+		{
+			if (this.IsParagraphStart (offset))
+			{
+				return true;
+			}
+			
+			offset += this.story.GetCursorPosition (this.cursor);
+			
+			Internal.TextTable text   = this.story.TextTable;
+			CursorInfo.Filter  filter = Cursors.FitterCursor.Filter;
+			CursorInfo[]       infos  = text.FindCursorsBefore (offset + 1, filter);
+			
+			if (infos.Length > 0)
+			{
+				for (int i = 0; i < infos.Length; i++)
+				{
+					Cursors.FitterCursor cursor = text.GetCursorInstance (infos[i].CursorId) as Cursors.FitterCursor;
+					
+					//	Vérifie où il y a des débuts de lignes dans le paragraphe mis
+					//	en page. La dernière position correspond à la fin du paragraphe
+					//	et doit donc être ignorée :
+					
+					int[] positions = cursor.GetLineStartPositions (text);
+					
+					for (int j = 0; j < positions.Length - 1; j++)
+					{
+						if (positions[j] == offset)
+						{
+							return true;
+						}
+						if (positions[j] > offset)
+						{
+							break;
+						}
+					}
+				}
+			}
+			
+			return false;
+		}
+		
 		
 		protected virtual void Dispose(bool disposing)
 		{
@@ -409,6 +457,7 @@ namespace Epsitec.Common.Text
 		
 		
 		private TextStory						story;
+		private TextFitter						fitter;
 		private Cursors.SimpleCursor			cursor;
 		
 		private TextStyle[]						current_styles;
