@@ -277,16 +277,27 @@ namespace Epsitec.Common.Text.Internal
 					
 					//	Filtre le résultat, si nécessaire :
 					
-					if (filter != null)
-					{
-						result = this.FilterCursors (result, filter);
-					}
-					
-					//	S'il y a des résultats (après avoir appliqué le filtre), on
-					//	s'arrête là :
-					
 					if (result.Length > 0)
 					{
+						if (filter != null)
+						{
+							result = this.FilterCursors (result, filter);
+							
+							if (result.Length == 0)
+							{
+								if (position == origin)
+								{
+									break;
+								}
+								
+								position = cursor_pos;
+								continue;
+							}
+						}
+						
+						//	Il y a des résultats (après avoir appliqué le filtre);
+						//	on s'arrête là :
+						
 						return result;
 					}
 				}

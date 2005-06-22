@@ -112,6 +112,82 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public static bool IsLineStart(TextStory story, TextFitter fitter, ICursor cursor, int offset)
+		{
+			offset += story.GetCursorPosition (cursor);
+			
+			Internal.TextTable text   = story.TextTable;
+			CursorInfo.Filter  filter = Cursors.FitterCursor.Filter;
+			CursorInfo[]       infos  = text.FindCursorsBefore (offset + 1, filter);
+			
+			if (infos.Length > 0)
+			{
+				for (int i = 0; i < infos.Length; i++)
+				{
+					Cursors.FitterCursor fitter_cursor = text.GetCursorInstance (infos[i].CursorId) as Cursors.FitterCursor;
+					
+					//	Vérifie où il y a des débuts de lignes dans le paragraphe mis
+					//	en page. La dernière position correspond à la fin du paragraphe
+					//	et doit donc être ignorée :
+					
+					int[] positions = fitter_cursor.GetLineStartPositions (text);
+					
+					for (int j = 0; j < positions.Length - 1; j++)
+					{
+						if (positions[j] == offset)
+						{
+							return true;
+						}
+						if (positions[j] > offset)
+						{
+							break;
+						}
+					}
+				}
+			}
+			
+			return false;
+		}
+		
+		public static bool IsLineEnd(TextStory story, TextFitter fitter, ICursor cursor, int offset)
+		{
+			offset += story.GetCursorPosition (cursor);
+			
+			Internal.TextTable text   = story.TextTable;
+			CursorInfo.Filter  filter = Cursors.FitterCursor.Filter;
+			CursorInfo[]       infos  = text.FindCursorsBefore (offset + 1, filter);
+			
+			if (infos.Length > 0)
+			{
+				for (int i = 0; i < infos.Length; i++)
+				{
+					Cursors.FitterCursor fitter_cursor = text.GetCursorInstance (infos[i].CursorId) as Cursors.FitterCursor;
+					
+					//	Vérifie où il y a des débuts de lignes dans le paragraphe mis
+					//	en page. La première position correspond au début du paragraphe
+					//	et n'est donc pas une fin de ligne, par contre tous les autres
+					//	débuts de lignes correspondent à la fin de la ligne précédente :
+					
+					int[] positions = fitter_cursor.GetLineStartPositions (text);
+					
+					for (int j = 1; j < positions.Length; j++)
+					{
+						if (positions[j] == offset)
+						{
+							return true;
+						}
+						if (positions[j] > offset)
+						{
+							break;
+						}
+					}
+				}
+			}
+			
+			return false;
+		}
+		
+		
 		public static int GetParagraphStartOffset(TextStory story, ICursor cursor)
 		{
 			//	Retourne l'offset au début du paragraphe. L'offset est négatif

@@ -112,10 +112,12 @@ namespace Epsitec.Common.Text
 					break;
 				
 				case Target.LineStart:
+					this.MoveCursor (count, -1, new MoveCallback (this.IsLineStart));
 					direction = -1;
 					break;
 				
 				case Target.LineEnd:
+					this.MoveCursor (count, 1, new MoveCallback (this.IsLineEnd));
 					direction = 1;
 					break;
 				
@@ -252,6 +254,10 @@ namespace Epsitec.Common.Text
 							break;
 						}
 					}
+					else if ((i == 0) && (count > 0))
+					{
+						count--;
+					}
 					
 					moved++;
 				}
@@ -268,6 +274,10 @@ namespace Epsitec.Common.Text
 						{
 							break;
 						}
+					}
+					else if ((i == 0) && (count > 0))
+					{
+						count--;
 					}
 					
 					moved--;
@@ -316,43 +326,31 @@ namespace Epsitec.Common.Text
 			return Internal.Navigator.IsWordStart (this.story, this.cursor, offset);
 		}
 		
-		public virtual bool IsLineStart(int offset)
+		protected virtual bool IsLineStart(int offset)
 		{
 			if (this.IsParagraphStart (offset))
 			{
 				return true;
 			}
 			
-			offset += this.story.GetCursorPosition (this.cursor);
-			
-			Internal.TextTable text   = this.story.TextTable;
-			CursorInfo.Filter  filter = Cursors.FitterCursor.Filter;
-			CursorInfo[]       infos  = text.FindCursorsBefore (offset + 1, filter);
-			
-			if (infos.Length > 0)
+			if (Internal.Navigator.IsLineStart (this.story, this.fitter, this.cursor, offset))
 			{
-				for (int i = 0; i < infos.Length; i++)
-				{
-					Cursors.FitterCursor cursor = text.GetCursorInstance (infos[i].CursorId) as Cursors.FitterCursor;
-					
-					//	Vérifie où il y a des débuts de lignes dans le paragraphe mis
-					//	en page. La dernière position correspond à la fin du paragraphe
-					//	et doit donc être ignorée :
-					
-					int[] positions = cursor.GetLineStartPositions (text);
-					
-					for (int j = 0; j < positions.Length - 1; j++)
-					{
-						if (positions[j] == offset)
-						{
-							return true;
-						}
-						if (positions[j] > offset)
-						{
-							break;
-						}
-					}
-				}
+				return true;
+			}
+			
+			return false;
+		}
+		
+		protected virtual bool IsLineEnd(int offset)
+		{
+			if (this.IsParagraphEnd (offset))
+			{
+				return true;
+			}
+			
+			if (Internal.Navigator.IsLineEnd (this.story, this.fitter, this.cursor, offset))
+			{
+				return true;
 			}
 			
 			return false;

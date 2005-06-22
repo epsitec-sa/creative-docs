@@ -103,37 +103,37 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (0, navigator.CursorPosition);
 			
 			navigator.Insert ("abc\ndef");
-			
 			Assert.AreEqual (7, navigator.TextLength);
 			Assert.AreEqual (7, navigator.CursorPosition);
 			
 			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
-			
 			Assert.AreEqual (0, navigator.CursorPosition);
 			
 			navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 0);
-			
 			Assert.AreEqual (0, navigator.CursorPosition);
 			
 			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 0);
-			
 			Assert.AreEqual (3, navigator.CursorPosition);
 			
 			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 0);
+			Assert.AreEqual (3, navigator.CursorPosition);
 			
+			navigator.MoveTo (Text.TextNavigator.Target.PreviousCharacter, 2);
+			Assert.AreEqual (1, navigator.CursorPosition);
+			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 1);
 			Assert.AreEqual (3, navigator.CursorPosition);
 			
 			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 1);
-			
 			Assert.AreEqual (7, navigator.CursorPosition);
 			
-			navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 1);
-			
+			navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 2);
 			Assert.AreEqual (0, navigator.CursorPosition);
 			
 			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 1);
+			Assert.AreEqual (3, navigator.CursorPosition);
+			navigator.MoveTo (Text.TextNavigator.Target.NextCharacter, 1);
+			Assert.AreEqual (4, navigator.CursorPosition);
 			navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 0);
-			
 			Assert.AreEqual (4, navigator.CursorPosition);
 			
 			navigator.MoveTo (Text.TextNavigator.Target.PreviousCharacter, 1);
@@ -162,6 +162,11 @@ namespace Epsitec.Common.Support
 			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 0);
 			Assert.AreEqual (4, navigator.CursorPosition);
 			
+			navigator.MoveTo (Text.TextNavigator.Target.PreviousCharacter, 2);
+			Assert.AreEqual (2, navigator.CursorPosition);
+			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
+			Assert.AreEqual (4, navigator.CursorPosition);
+			
 			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
 			Assert.AreEqual (10, navigator.CursorPosition);
 			
@@ -184,17 +189,34 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (9, line_count);
 			Assert.AreEqual (116, navigator.TextLength);
 			
-			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
+			Text.Cursors.SimpleCursor cursor = new Text.Cursors.SimpleCursor ();
+			story.NewCursor (cursor);
 			
-			Assert.IsTrue (navigator.IsLineStart (0));
-			Assert.IsTrue (navigator.IsLineStart (15));
-			Assert.IsTrue (navigator.IsLineStart (29));
-			Assert.IsTrue (navigator.IsLineStart (39));
-			Assert.IsTrue (navigator.IsLineStart (63));
-			Assert.IsTrue (navigator.IsLineStart (77));
-			Assert.IsTrue (navigator.IsLineStart (91));
-			Assert.IsTrue (navigator.IsLineStart (102));
-			Assert.IsTrue (navigator.IsLineStart (113));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 0));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 15));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 29));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 39));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 63));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 77));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 91));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 102));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 113));
+			
+			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
+			navigator.MoveTo (Text.TextNavigator.Target.LineEnd, 0);
+			navigator.MoveTo (Text.TextNavigator.Target.LineEnd, 0);
+			
+			Assert.AreEqual (15, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
+			navigator.MoveTo (Text.TextNavigator.Target.LineEnd, 1);
+			
+			Assert.AreEqual (15, navigator.CursorPosition);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
+			navigator.MoveTo (Text.TextNavigator.Target.LineEnd, 5);
+			
+			Assert.AreEqual (77, navigator.CursorPosition);
 		}
 	}
 }
