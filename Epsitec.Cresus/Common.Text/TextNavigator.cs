@@ -72,7 +72,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.story.GetCursorPosition (this.cursor);
+				return this.story.GetCursorPosition (this.ActiveCursor);
 			}
 		}
 		
@@ -81,6 +81,30 @@ namespace Epsitec.Common.Text
 			get
 			{
 				return this.current_direction;
+			}
+		}
+		
+		public bool								IsSelectionActive
+		{
+			get
+			{
+				return this.active_selection_cursor == null ? false : true;
+			}
+		}
+		
+		
+		protected ICursor						ActiveCursor
+		{
+			get
+			{
+				if (this.active_selection_cursor != null)
+				{
+					return this.active_selection_cursor;
+				}
+				else
+				{
+					return this.cursor;
+				}
 			}
 		}
 		
@@ -127,12 +151,12 @@ namespace Epsitec.Common.Text
 					break;
 				
 				case Target.TextStart:
-					this.story.SetCursorPosition (this.cursor, 0);
+					this.story.SetCursorPosition (this.ActiveCursor, 0);
 					direction = -1;
 					break;
 				
 				case Target.TextEnd:
-					this.story.SetCursorPosition (this.cursor, this.TextLength);
+					this.story.SetCursorPosition (this.ActiveCursor, this.TextLength);
 					direction = 1;
 					break;
 					
@@ -172,13 +196,46 @@ namespace Epsitec.Common.Text
 			if ((old_pos != new_pos) ||
 				(direction != this.current_direction))
 			{
-				this.UpdateCurrentStylesAndProperties (direction);
+				if (this.IsSelectionActive)
+				{
+					this.UpdateSelectionMarkers ();
+				}
+				else
+				{
+					this.UpdateCurrentStylesAndProperties (direction);
+				}
+				
 				this.OnCursorMoved ();
 			}
 		}
 		
 		
-		public void Deselect()
+		public void StartSelection()
+		{
+			System.Diagnostics.Debug.Assert (! this.IsSelectionActive);
+			
+			Cursors.SelectionCursor c1 = this.NewSelectionCursor ();
+			Cursors.SelectionCursor c2 = this.NewSelectionCursor ();
+			
+			this.selection_cursors.Add (c1);
+			this.selection_cursors.Add (c2);
+			
+			int position = this.story.GetCursorPosition (this.cursor);
+			
+			this.story.SetCursorPosition (c1, position);
+			this.story.SetCursorPosition (c2, position);
+			
+			this.active_selection_cursor = c2;
+		}
+		
+		public void EndSelection()
+		{
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive);
+			
+			this.active_selection_cursor = null;
+		}
+		
+		public void ClearSelection()
 		{
 			//	Désélectionne tout le texte.
 			
@@ -186,11 +243,13 @@ namespace Epsitec.Common.Text
 			{
 				foreach (Cursors.SelectionCursor cursor in this.selection_cursors)
 				{
-					this.story.RecycleCursor (cursor);
+					this.RecycleSelectionCursor (cursor);
 				}
 				
 				this.selection_cursors.Clear ();
 				this.selection_cursors = null;
+				
+				this.active_selection_cursor = null;
 				
 				this.UpdateSelectionMarkers ();
 			}
@@ -267,7 +326,7 @@ namespace Epsitec.Common.Text
 			
 			while (moved < count)
 			{
-				int pos = this.story.GetCursorPosition (this.cursor);
+				int pos = this.story.GetCursorPosition (this.ActiveCursor);
 				
 				if ((direction > 0) &&
 					(pos == this.story.TextLength))
@@ -284,9 +343,9 @@ namespace Epsitec.Common.Text
 				//	l'on n'a pas atterri dans un fragment de texte marqué comme
 				//	étant un texte automatique ou un texte produit par un générateur.
 				
-				this.story.MoveCursor (this.cursor, direction);
+				this.story.MoveCursor (this.ActiveCursor, direction);
 				
-				ulong code = text_table.ReadChar (this.cursor.CursorId);
+				ulong code = text_table.ReadChar (this.ActiveCursor.CursorId);
 				
 				Styles.SimpleStyle simple_style = style_list[code];
 				
@@ -299,13 +358,13 @@ namespace Epsitec.Common.Text
 					this.SkipOverProperty (property, direction);
 					
 					if ((direction < 0) &&
-						(this.story.GetCursorPosition (this.cursor) == 0))
+						(this.story.GetCursorPosition (this.ActiveCursor) == 0))
 					{
 						//	Arrivé au début du texte en ayant sauté par-dessus un texte
 						//	automatique; on n'a pas le droit de laisser le curseur ici,
 						//	alors on le remet à sa position initiale et on s'arrête...
 						
-						this.story.SetCursorPosition (this.cursor, pos);
+						this.story.SetCursorPosition (this.ActiveCursor, pos);
 						break;
 					}
 					
@@ -334,7 +393,7 @@ namespace Epsitec.Common.Text
 		protected virtual bool MoveCursor(int count, int direction, MoveCallback callback)
 		{
 			int moved = 0;
-			int pos   = this.story.GetCursorPosition (this.cursor);
+			int pos   = this.story.GetCursorPosition (this.ActiveCursor);
 			
 			Context            context    = this.TextContext;
 			Internal.TextTable text_table = this.story.TextTable;
@@ -388,7 +447,7 @@ namespace Epsitec.Common.Text
 			
 			if (moved != 0)
 			{
-				this.story.MoveCursor (this.cursor, moved);
+				this.story.MoveCursor (this.ActiveCursor, moved);
 			}
 			
 			return moved != 0;
@@ -397,17 +456,17 @@ namespace Epsitec.Common.Text
 		
 		protected virtual bool IsParagraphStart(int offset)
 		{
-			return Internal.Navigator.IsParagraphStart (this.story, this.cursor, offset);
+			return Internal.Navigator.IsParagraphStart (this.story, this.ActiveCursor, offset);
 		}
 		
 		protected virtual bool IsParagraphEnd(int offset)
 		{
-			return Internal.Navigator.IsParagraphEnd (this.story, this.cursor, offset);
+			return Internal.Navigator.IsParagraphEnd (this.story, this.ActiveCursor, offset);
 		}
 		
 		protected virtual bool IsWordStart(int offset)
 		{
-			return Internal.Navigator.IsWordStart (this.story, this.cursor, offset);
+			return Internal.Navigator.IsWordStart (this.story, this.ActiveCursor, offset);
 		}
 		
 		protected virtual bool IsWordEnd(int offset)
@@ -417,7 +476,7 @@ namespace Epsitec.Common.Text
 			
 			//	TODO: gérer fins de lignes
 			
-			if (Internal.Navigator.IsParagraphEnd (this.story, this.cursor, offset))
+			if (Internal.Navigator.IsParagraphEnd (this.story, this.ActiveCursor, offset))
 			{
 				return true;
 			}
@@ -425,7 +484,7 @@ namespace Epsitec.Common.Text
 			//	On détermine que la fin d'un mot est la même chose que le début
 			//	du mot suivant, pour la navigation :
 			
-			return Internal.Navigator.IsWordStart (this.story, this.cursor, offset);
+			return Internal.Navigator.IsWordStart (this.story, this.ActiveCursor, offset);
 		}
 		
 		protected virtual bool IsLineStart(int offset)
@@ -435,7 +494,7 @@ namespace Epsitec.Common.Text
 				return true;
 			}
 			
-			if (Internal.Navigator.IsLineStart (this.story, this.fitter, this.cursor, offset))
+			if (Internal.Navigator.IsLineStart (this.story, this.fitter, this.ActiveCursor, offset))
 			{
 				return true;
 			}
@@ -450,7 +509,7 @@ namespace Epsitec.Common.Text
 				return true;
 			}
 			
-			if (Internal.Navigator.IsLineEnd (this.story, this.fitter, this.cursor, offset))
+			if (Internal.Navigator.IsLineEnd (this.story, this.fitter, this.ActiveCursor, offset))
 			{
 				return true;
 			}
@@ -465,6 +524,7 @@ namespace Epsitec.Common.Text
 			{
 				if (this.story != null)
 				{
+					this.ClearSelection ();
 					this.story.RecycleCursor (this.cursor);
 					
 					this.story  = null;
@@ -472,6 +532,7 @@ namespace Epsitec.Common.Text
 				}
 			}
 		}
+		
 		
 		protected virtual void SkipOverProperty(Property property, int direction)
 		{
@@ -483,16 +544,55 @@ namespace Epsitec.Common.Text
 			{
 				//	La distance au début de la tranche de texte va de 0 à -n.
 				
-				int distance = Internal.Navigator.GetRunStartOffset (this.story, this.cursor, property);
-				this.story.MoveCursor (this.cursor, distance);
+				int distance = Internal.Navigator.GetRunStartOffset (this.story, this.ActiveCursor, property);
+				this.story.MoveCursor (this.ActiveCursor, distance);
 			}
 			else if (direction > 0)
 			{
 				//	La distance à la fin de la tranche de texte va de 1 à n.
 				
-				int distance = Internal.Navigator.GetRunEndLength (this.story, this.cursor, property);
-				this.story.MoveCursor (this.cursor, distance);
+				int distance = Internal.Navigator.GetRunEndLength (this.story, this.ActiveCursor, property);
+				this.story.MoveCursor (this.ActiveCursor, distance);
 			}
+		}
+		
+		
+		protected Cursors.SelectionCursor NewSelectionCursor()
+		{
+			//	Retourne un curseur utilisable pour une sélection. S'il existe
+			//	encore des zombies, on les retourne à la vie plutôt que de
+			//	créer de nouveaux curseurs.
+			
+			if (this.selection_cursors == null)
+			{
+				this.selection_cursors = new System.Collections.ArrayList ();
+			}
+			
+			if (this.zombie_cursors == null)
+			{
+				this.zombie_cursors = new System.Collections.Stack ();
+			}
+			
+			Cursors.SelectionCursor cursor;
+			
+			if (this.zombie_cursors.Count > 0)
+			{
+				cursor = this.zombie_cursors.Pop () as Cursors.SelectionCursor;
+			}
+			else
+			{
+				cursor = new Cursors.SelectionCursor ();
+			}
+			
+			this.story.NewCursor (cursor);
+			
+			return cursor;
+		}
+		
+		protected void RecycleSelectionCursor(Cursors.SelectionCursor cursor)
+		{
+			this.story.RecycleCursor (cursor);
+			this.zombie_cursors.Push (cursor);
 		}
 		
 		
@@ -510,11 +610,11 @@ namespace Epsitec.Common.Text
 				//	En marche arrière, on utilise le style du caractère courant, alors
 				//	qu'en marche avant, on utilise le style du caractère précédent :
 				
-				int pos    = this.story.GetCursorPosition (this.cursor);
+				int pos    = this.story.GetCursorPosition (this.ActiveCursor);
 				int offset = ((pos > 0) && (direction > 0)) ? -1 : 0;
 				
-				Internal.Navigator.GetStyles (this.story, this.cursor, offset, styles);
-				Internal.Navigator.GetProperties (this.story, this.cursor, offset, properties);
+				Internal.Navigator.GetStyles (this.story, this.ActiveCursor, offset, styles);
+				Internal.Navigator.GetProperties (this.story, this.ActiveCursor, offset, properties);
 			}
 			
 			int n_styles     = styles.Count;
@@ -591,7 +691,9 @@ namespace Epsitec.Common.Text
 		private TextStory						story;
 		private TextFitter						fitter;
 		private Cursors.SimpleCursor			cursor;
+		private Cursors.SelectionCursor			active_selection_cursor;
 		private System.Collections.ArrayList	selection_cursors;
+		private System.Collections.Stack		zombie_cursors;
 		
 		private TextStyle[]						current_styles;
 		private Property[]						current_properties;

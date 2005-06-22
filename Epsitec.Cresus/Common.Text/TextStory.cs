@@ -3,6 +3,9 @@
 
 namespace Epsitec.Common.Text
 {
+	using OpletEventHandler = Epsitec.Common.Support.OpletEventHandler;
+	using OpletEventArgs	= Epsitec.Common.Support.OpletEventArgs;
+	
 	/// <summary>
 	/// La classe TextStory représente un texte complet, avec tous ses attributs
 	/// typographiques, ses curseurs, sa gestion du undo, etc.
@@ -1055,12 +1058,43 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		private void NotifyUndoExecuted(BaseOplet oplet)
+		{
+			this.OnOpletExecuted (new OpletEventArgs (oplet, Common.Support.OpletEvent.UndoExecuted));
+		}
+		
+		private void NotifyRedoExecuted(BaseOplet oplet)
+		{
+			this.OnOpletExecuted (new OpletEventArgs (oplet, Common.Support.OpletEvent.RedoExecuted));
+		}
+		
+		
+		protected virtual void OnOpletExecuted(OpletEventArgs e)
+		{
+			if (this.OpletExecuted != null)
+			{
+				this.OpletExecuted (this, e);
+			}
+		}
+		
 		#region Abstract BaseOplet Class
 		protected abstract class BaseOplet : Common.Support.AbstractOplet
 		{
 			protected BaseOplet(TextStory story)
 			{
 				this.story = story;
+			}
+			
+			
+			
+			protected void NotifyUndoExecuted()
+			{
+				this.story.NotifyUndoExecuted (this);
+			}
+			
+			protected void NotifyRedoExecuted()
+			{
+				this.story.NotifyRedoExecuted (this);
 			}
 			
 			
@@ -1093,6 +1127,7 @@ namespace Epsitec.Common.Text
 				this.story.undo_length += this.length;
 				
 				this.story.UpdateTextBreakInformation (this.position, 0);
+				this.NotifyUndoExecuted ();
 				
 				return this;
 			}
@@ -1111,6 +1146,7 @@ namespace Epsitec.Common.Text
 				this.story.InternalRestoreCursorPositions (this.cursors, 0);
 				
 				this.cursors = null;
+				this.NotifyRedoExecuted ();
 				
 				return this;
 			}
@@ -1177,6 +1213,7 @@ namespace Epsitec.Common.Text
 				this.story.InternalRestoreCursorPositions (this.cursors, 0);
 				
 				this.cursors = null;
+				this.NotifyUndoExecuted ();
 				
 				return this;
 			}
@@ -1196,6 +1233,7 @@ namespace Epsitec.Common.Text
 				this.story.undo_length += this.length;
 				
 				this.story.UpdateTextBreakInformation (this.position, 0);
+				this.NotifyRedoExecuted ();
 				
 				return this;
 			}
@@ -1259,6 +1297,7 @@ namespace Epsitec.Common.Text
 				this.text = old_text;
 				
 				this.story.UpdateTextBreakInformation (this.position, this.length);
+				this.NotifyUndoExecuted ();
 				
 				return this;
 			}
@@ -1274,6 +1313,7 @@ namespace Epsitec.Common.Text
 				this.text = old_text;
 				
 				this.story.UpdateTextBreakInformation (this.position, 0);
+				this.NotifyRedoExecuted ();
 				
 				return this;
 			}
@@ -1314,12 +1354,16 @@ namespace Epsitec.Common.Text
 			
 			public override Common.Support.IOplet Undo()
 			{
-				return this.Swap ();
+				Common.Support.IOplet oplet = this.Swap ();
+				this.NotifyUndoExecuted ();
+				return oplet;
 			}
 			
 			public override Common.Support.IOplet Redo()
 			{
-				return this.Swap ();
+				Common.Support.IOplet oplet = this.Swap ();
+				this.NotifyRedoExecuted ();
+				return oplet;
 			}
 			
 			
@@ -1353,12 +1397,16 @@ namespace Epsitec.Common.Text
 			
 			public override Common.Support.IOplet Undo()
 			{
-				return this.Swap ();
+				Common.Support.IOplet oplet = this.Swap ();
+				this.NotifyUndoExecuted ();
+				return oplet;
 			}
 			
 			public override Common.Support.IOplet Redo()
 			{
-				return this.Swap ();
+				Common.Support.IOplet oplet = this.Swap ();
+				this.NotifyRedoExecuted ();
+				return oplet;
 			}
 			
 			
@@ -1386,6 +1434,10 @@ namespace Epsitec.Common.Text
 		#endregion
 		
 		public delegate bool CodeCallback(ulong code);
+		
+		
+		public event OpletEventHandler			OpletExecuted;
+		
 		
 		private Internal.TextTable				text;
 		private int								text_length;		//	texte dans la zone texte
