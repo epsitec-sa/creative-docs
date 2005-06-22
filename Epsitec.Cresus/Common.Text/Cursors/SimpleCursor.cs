@@ -14,6 +14,12 @@ namespace Epsitec.Common.Text.Cursors
 		}
 		
 		
+		public static System.Collections.IComparer GetPositionComparer(TextStory story)
+		{
+			return new PositionComparer (story);
+		}
+		
+		
 		#region ICursor Members
 		public int								CursorId
 		{
@@ -26,7 +32,8 @@ namespace Epsitec.Common.Text.Cursors
 				this.cursor_id = value;
 			}
 		}
-		public CursorAttachment					Attachment
+		
+		public virtual CursorAttachment			Attachment
 		{
 			get
 			{
@@ -37,6 +44,34 @@ namespace Epsitec.Common.Text.Cursors
 		
 		public virtual void Clear()
 		{
+		}
+		#endregion
+		
+		#region PositionComparer Class
+		private class PositionComparer : System.Collections.IComparer
+		{
+			public PositionComparer(TextStory story)
+			{
+				this.story = story;
+			}
+			
+			#region IComparer Members
+			public int Compare(object x, object y)
+			{
+				ICursor cx = x as ICursor;
+				ICursor cy = y as ICursor;
+				
+				int px = story.GetCursorPosition (cx);
+				int py = story.GetCursorPosition (cy);
+				
+				if (px < py) return -1;
+				if (px > py) return 1;
+				
+				return 0;
+			}
+			#endregion
+			
+			private TextStory					story;
 		}
 		#endregion
 		

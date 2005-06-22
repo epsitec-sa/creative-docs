@@ -18,10 +18,10 @@ namespace Epsitec.Common.Text
 			this.char_marker    = new Internal.CharMarker ();
 			this.conditions     = new System.Collections.Hashtable ();
 			
-			this.char_marker.Add (Context.Markers.TagSelected);
-			this.char_marker.Add (Context.Markers.TagRequiresSpellChecking);
+			this.char_marker.Add (Context.DefaultMarkers.TagSelected);
+			this.char_marker.Add (Context.DefaultMarkers.TagRequiresSpellChecking);
 			
-			this.markers = new Context.Markers (this.char_marker);
+			this.markers = new Context.DefaultMarkers (this.char_marker);
 			 
 			this.font_collection = new OpenType.FontCollection ();
 			this.font_collection.Initialize ();
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public Context.Markers					Marker
+		public Context.DefaultMarkers			Markers
 		{
 			get
 			{
@@ -798,13 +798,13 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
-		#region Markers Class
-		public class Markers
+		#region DefaultMarkers Class
+		public class DefaultMarkers
 		{
-			internal Markers(Internal.CharMarker marker)
+			internal DefaultMarkers(Internal.CharMarker marker)
 			{
-				this.requires_spell_checking = marker[Markers.TagRequiresSpellChecking];
-				this.selected                = marker[Markers.TagSelected];
+				this.requires_spell_checking = marker[DefaultMarkers.TagRequiresSpellChecking];
+				this.selected                = marker[DefaultMarkers.TagSelected];
 			}
 			
 			
@@ -857,7 +857,7 @@ namespace Epsitec.Common.Text
 		private GeneratorList					generator_list;
 		private ParagraphManagerList			p_manager_list;
 		private Internal.CharMarker				char_marker;
-		private Markers							markers;
+		private DefaultMarkers					markers;
 		private System.Collections.Hashtable	conditions;
 		private TextStyle						default_style;
 		

@@ -381,7 +381,7 @@ namespace Epsitec.Common.Text.Tests
 				System.Diagnostics.Debug.WriteLine (string.Format ("{0:00}: {1}, {2}", i, buffer[i].ToString ("X8"), Unicode.Bits.GetBreakInfo (buffer[i])));
 			}
 			
-			story.ChangeMarkers (cursor, text_1.Length, story.TextContext.Marker.RequiresSpellChecking, false);
+			story.ChangeMarkers (cursor, text_1.Length, story.TextContext.Markers.RequiresSpellChecking, false);
 			story.ReadText (cursor, text_1.Length, buffer);
 			
 			for (int i = 0; i < buffer.Length; i++)
@@ -401,7 +401,7 @@ namespace Epsitec.Common.Text.Tests
 				System.Diagnostics.Debug.WriteLine (string.Format ("{0:00}: {1}, {2}", i, buffer[i].ToString ("X8"), Unicode.Bits.GetBreakInfo (buffer[i])));
 			}
 			
-			story.ChangeMarkers (cursor, text_1.Length, story.TextContext.Marker.RequiresSpellChecking, false);
+			story.ChangeMarkers (cursor, text_1.Length, story.TextContext.Markers.RequiresSpellChecking, false);
 			story.ReadText (cursor, text_1.Length, buffer);
 			
 			for (int i = 0; i < buffer.Length; i++)

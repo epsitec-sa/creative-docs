@@ -123,7 +123,7 @@ namespace Epsitec.Common.Text
 			
 			if (cursor.Attachment != CursorAttachment.Temporary)
 			{
-				this.InternalAddOplet (new CursorMoveOplet (this, cursor, 0));
+				this.InternalAddOplet (new CursorNewRecycleOplet (this, cursor, -1));
 			}
 		}
 		
@@ -159,7 +159,14 @@ namespace Epsitec.Common.Text
 			//	prudence, car les mécanismes de Undo/Redo doivent pouvoir y
 			//	faire référence en tout temps via ICursor.
 			
+			int pos = this.GetCursorPosition (cursor);
+			
 			this.text.RecycleCursor (cursor.CursorId);
+			
+			if (cursor.Attachment != CursorAttachment.Temporary)
+			{
+				this.InternalAddOplet (new CursorNewRecycleOplet (this, cursor, pos));
+			}
 		}
 		
 		
@@ -327,11 +334,25 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void ChangeMarkers(ICursor cursor, int length, ulong marker, bool set)
+		public int ChangeAllMarkers(ulong marker, bool set)
 		{
-			//	Cette opération n'est pas annulable :
+			//	Cette opération n'est pas annulable.
 			
-			this.text.ChangeMarkers (cursor.CursorId, length, marker, set);
+			this.text.SetCursorPosition (this.temp_cursor.CursorId, 0);
+			
+			return this.ChangeMarkers (this.temp_cursor, this.TextLength, marker, set);
+		}
+		
+		public int ChangeMarkers(ICursor cursor, int length, ulong marker, bool set)
+		{
+			//	Modifie les marqueurs associés à une tranche de texte; voir aussi
+			//	Text.Context.Marker pour des marqueurs "standard".
+			//
+			//	Retourne le nombre de caractères modifiés.
+			//
+			//	Cette opération n'est pas annulable.
+			
+			return this.text.ChangeMarkers (cursor.CursorId, length, marker, set);
 		}
 		
 		
@@ -795,7 +816,7 @@ namespace Epsitec.Common.Text
 				LanguageEngine.GenerateHyphens (this.context, text, text_offset, text_length, breaks);
 				Unicode.Bits.SetBreakInfo (text, text_offset, breaks);
 				
-				Internal.CharMarker.SetMarkers (this.context.Marker.RequiresSpellChecking, text, text_offset, text_length);
+				Internal.CharMarker.SetMarkers (this.context.Markers.RequiresSpellChecking, text, text_offset, text_length);
 				
 				this.text.WriteText (this.temp_cursor.CursorId, area_end - area_begin, text);
 			}
@@ -1313,7 +1334,51 @@ namespace Epsitec.Common.Text
 				
 				return this;
 			}
-
+			
+			
+			private int							position;
+			private ICursor						cursor;
+		}
+		#endregion
+		
+		#region CursorNewRecycleOplet Class
+		protected class CursorNewRecycleOplet : BaseOplet
+		{
+			public CursorNewRecycleOplet(TextStory story, ICursor cursor, int position) : base (story)
+			{
+				this.cursor   = cursor;
+				this.position = position;
+			}
+			
+			
+			public override Common.Support.IOplet Undo()
+			{
+				return this.Swap ();
+			}
+			
+			public override Common.Support.IOplet Redo()
+			{
+				return this.Swap ();
+			}
+			
+			
+			private Common.Support.IOplet Swap()
+			{
+				if (this.position == -1)
+				{
+					this.position = this.story.text.GetCursorPosition (this.cursor.CursorId);
+					this.story.text.RecycleCursor (this.cursor.CursorId);
+				}
+				else
+				{
+					this.story.text.NewCursor (this.cursor);
+					this.story.text.MoveCursor (this.cursor.CursorId, this.position);
+					this.position = -1;
+				}
+				
+				return this;
+			}
+			
 			
 			private int							position;
 			private ICursor						cursor;

@@ -178,6 +178,25 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void Deselect()
+		{
+			//	Désélectionne tout le texte.
+			
+			if (this.selection_cursors != null)
+			{
+				foreach (Cursors.SelectionCursor cursor in this.selection_cursors)
+				{
+					this.story.RecycleCursor (cursor);
+				}
+				
+				this.selection_cursors.Clear ();
+				this.selection_cursors = null;
+				
+				this.UpdateSelectionMarkers ();
+			}
+		}
+		
+		
 		public void SetStyle(TextStyle style)
 		{
 			TextStyle[] styles     = new TextStyle[1];
@@ -476,6 +495,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
 		protected virtual void UpdateCurrentStylesAndProperties(int direction)
 		{
 			System.Collections.ArrayList styles     = new System.Collections.ArrayList ();
@@ -508,6 +528,35 @@ namespace Epsitec.Common.Text
 			properties.CopyTo (this.current_properties);
 		}
 		
+		protected virtual void UpdateSelectionMarkers()
+		{
+			//	Met à jour les marques de sélection dans le texte. On va opérer
+			//	en deux passes; d'abord on les enlève toutes, ensuite on génère
+			//	celles comprises entre deux marques de sélection.
+			
+			ulong marker = this.TextContext.Markers.Selected;
+			
+			this.story.ChangeAllMarkers (marker, false);
+			
+			if (this.selection_cursors != null)
+			{
+				this.selection_cursors.Sort (Cursors.SimpleCursor.GetPositionComparer (this.story));
+				
+				System.Diagnostics.Debug.Assert ((this.selection_cursors.Count % 2) == 0);
+				
+				for (int i = 0; i < this.selection_cursors.Count; i += 2)
+				{
+					ICursor c1 = this.selection_cursors[i+0] as ICursor;
+					ICursor c2 = this.selection_cursors[i+1] as ICursor;
+					
+					int p1 = this.story.GetCursorPosition (c1);
+					int p2 = this.story.GetCursorPosition (c2);
+					
+					this.story.ChangeMarkers (c1, p2-p1, marker, true);
+				}
+			}
+		}
+
 		
 		protected virtual void OnCursorMoved()
 		{
@@ -542,6 +591,7 @@ namespace Epsitec.Common.Text
 		private TextStory						story;
 		private TextFitter						fitter;
 		private Cursors.SimpleCursor			cursor;
+		private System.Collections.ArrayList	selection_cursors;
 		
 		private TextStyle[]						current_styles;
 		private Property[]						current_properties;
