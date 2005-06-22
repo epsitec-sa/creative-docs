@@ -63,9 +63,10 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Debug.WriteLine ("Before SetParagraphStylesAndProperties (style2) :");
 			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
 			
-			story.SetCursorPosition (cursor, 0);
-			Internal.Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style2 }, null);
+			//	Crée la liste à puces :
 			
+			story.SetCursorPosition (cursor, 2);
+			Internal.Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style2 }, null);
 			
 			Properties.ManagedParagraphProperty[] mpp;
 			
@@ -83,8 +84,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			//	Supprime la liste à puces :
 			
-			story.SetCursorPosition (cursor, 0);
-			
+			story.SetCursorPosition (cursor, 1);
 			Internal.Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style1 }, null);
 			
 			Debug.Assert.IsTrue (Internal.Navigator.GetManagedParagraphProperties (story, cursor, 0, out mpp));

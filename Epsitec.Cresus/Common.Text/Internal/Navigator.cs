@@ -315,8 +315,10 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		public static void HandleManagedParagraphPropertiesChange(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty[] old_properties, Properties.ManagedParagraphProperty[] new_properties)
+		public static void HandleManagedParagraphPropertiesChange(TextStory story, ICursor cursor, int offset, Properties.ManagedParagraphProperty[] old_properties, Properties.ManagedParagraphProperty[] new_properties)
 		{
+			System.Diagnostics.Debug.Assert (Navigator.IsParagraphStart (story, cursor, offset));
+			
 			int n_old = old_properties == null ? 0 : old_properties.Length;
 			int n_new = new_properties == null ? 0 : new_properties.Length;
 			
@@ -325,6 +327,26 @@ namespace Epsitec.Common.Text.Internal
 			{
 				return;
 			}
+			
+			if (offset != 0)
+			{
+				Cursors.TempCursor temp_cursor = new Cursors.TempCursor ();
+				story.NewCursor (temp_cursor);
+				
+				try
+				{
+					Navigator.HandleManagedParagraphPropertiesChange (story, temp_cursor, 0, old_properties, new_properties);
+				}
+				finally
+				{
+					story.RecycleCursor (temp_cursor);
+				}
+				
+				return;
+			}
+			
+			System.Diagnostics.Debug.Assert (offset == 0);
+			System.Diagnostics.Debug.Assert (Navigator.IsParagraphStart (story, cursor, 0));
 			
 			ParagraphManagerList list = story.TextContext.ParagraphManagerList;
 			
@@ -603,7 +625,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			story.WriteText (cursor, offset_start, text);
 			
-			Navigator.HandleManagedParagraphPropertiesChange (story, cursor, old_props, new_props);
+			Navigator.HandleManagedParagraphPropertiesChange (story, cursor, offset_start, old_props, new_props);
 		}
 		
 		
