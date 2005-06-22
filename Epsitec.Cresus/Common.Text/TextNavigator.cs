@@ -145,6 +145,55 @@ namespace Epsitec.Common.Text
 			this.story.InsertText (this.cursor, styled_text);
 		}
 		
+		public void Delete()
+		{
+			//	Supprime le contenu de la sélection (pour autant qu'il y en ait
+			//	une qui soit définie).
+			
+			if (this.selection_cursors != null)
+			{
+				Internal.TextTable text = this.story.TextTable;
+				
+				this.InternalNewOpletBeforeClear ();
+				
+				for (int i = 0; i < this.selection_cursors.Count; i += 2)
+				{
+					//	Traite les tranches dans l'ordre, en les détruisant les
+					//	unes après les autres.
+					
+					ICursor c1 = this.selection_cursors[i+0] as ICursor;
+					ICursor c2 = this.selection_cursors[i+1] as ICursor;
+					
+					int p1 = text.GetCursorPosition (c1.CursorId);
+					int p2 = text.GetCursorPosition (c2.CursorId);
+					
+					if (p1 > p2)
+					{
+						ICursor cc = c1;
+						int     pp = p1;
+						
+						p1 = p2;	c1 = c2;
+						p2 = pp;	c2 = cc;
+					}
+					
+					if (i+2 == this.selection_cursors.Count)
+					{
+						//	C'est la dernière tranche. Il faut positionner le curseur
+						//	de travail au début de la zone et hériter des styles actifs
+						//	à cet endroit :
+						
+						this.story.SetCursorPosition (this.cursor, p1);
+						this.UpdateCurrentStylesAndProperties (0);
+					}
+					
+					this.story.DeleteText (c1, p2-p1);
+				}
+				
+				this.InternalClearSelection ();
+				this.UpdateSelectionMarkers ();
+			}
+		}
+		
 		public void MoveTo(Target target, int count)
 		{
 			System.Diagnostics.Debug.Assert (count >= 0);
@@ -154,12 +203,12 @@ namespace Epsitec.Common.Text
 			
 			switch (target)
 			{
-				case Target.NextCharacter:
+				case Target.CharacterNext:
 					this.MoveCursor (count);
 					direction = 1;
 					break;
 				
-				case Target.PreviousCharacter:
+				case Target.CharacterPrevious:
 					this.MoveCursor (-count);
 					direction = -1;
 					break;
@@ -258,13 +307,7 @@ namespace Epsitec.Common.Text
 				//	Prend note de la position des curseurs de sélection pour
 				//	pouvoir restaurer la sélection en cas de UNDO :
 				
-				using (this.story.OpletQueue.BeginAction ())
-				{
-					int[] positions = this.GetSelectionCursorPositions ();
-					this.story.OpletQueue.Insert (new ClearSelectionOplet (this, positions));
-					this.story.OpletQueue.ValidateAction ();
-				}
-				
+				this.InternalNewOpletBeforeClear ();
 				this.InternalClearSelection ();
 				this.UpdateSelectionMarkers ();
 			}
@@ -589,6 +632,16 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		private void InternalNewOpletBeforeClear()
+		{
+			using (this.story.OpletQueue.BeginAction ())
+			{
+				int[] positions = this.GetSelectionCursorPositions ();
+				this.story.OpletQueue.Insert (new ClearSelectionOplet (this, positions));
+				this.story.OpletQueue.ValidateAction ();
+			}
+		}
+		
 		private void InternalClearSelection()
 		{
 			if (this.selection_cursors != null)
@@ -814,8 +867,8 @@ namespace Epsitec.Common.Text
 		{
 			None,
 			
-			NextCharacter,
-			PreviousCharacter,
+			CharacterNext,
+			CharacterPrevious,
 			
 			TextStart,
 			TextEnd,

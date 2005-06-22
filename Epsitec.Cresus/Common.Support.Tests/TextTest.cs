@@ -118,7 +118,7 @@ namespace Epsitec.Common.Support
 			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 0);
 			Assert.AreEqual (3, navigator.CursorPosition);
 			
-			navigator.MoveTo (Text.TextNavigator.Target.PreviousCharacter, 2);
+			navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 2);
 			Assert.AreEqual (1, navigator.CursorPosition);
 			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 1);
 			Assert.AreEqual (3, navigator.CursorPosition);
@@ -131,12 +131,12 @@ namespace Epsitec.Common.Support
 			
 			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 1);
 			Assert.AreEqual (3, navigator.CursorPosition);
-			navigator.MoveTo (Text.TextNavigator.Target.NextCharacter, 1);
+			navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);
 			Assert.AreEqual (4, navigator.CursorPosition);
 			navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 0);
 			Assert.AreEqual (4, navigator.CursorPosition);
 			
-			navigator.MoveTo (Text.TextNavigator.Target.PreviousCharacter, 1);
+			navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);
 			Assert.AreEqual (3, navigator.CursorPosition);
 			
 			navigator.Insert (" xyz   qrs");
@@ -157,12 +157,12 @@ namespace Epsitec.Common.Support
 			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 0);
 			Assert.AreEqual (4, navigator.CursorPosition);
 			
-			navigator.MoveTo (Text.TextNavigator.Target.PreviousCharacter, 2);
+			navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 2);
 			Assert.AreEqual (2, navigator.CursorPosition);
 			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 0);
 			Assert.AreEqual (4, navigator.CursorPosition);
 			
-			navigator.MoveTo (Text.TextNavigator.Target.PreviousCharacter, 2);
+			navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 2);
 			Assert.AreEqual (2, navigator.CursorPosition);
 			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
 			Assert.AreEqual (4, navigator.CursorPosition);
@@ -272,13 +272,24 @@ namespace Epsitec.Common.Support
 			
 			navigator.StartSelection ();
 			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
+			navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);
 			navigator.EndSelection ();
 			
 			texts = navigator.GetSelectedTexts ();
 			
 			Assert.AreEqual (2, texts.Length);
 			Assert.AreEqual ("xyz   ", texts[0]);
-			Assert.AreEqual ("def", texts[1]);
+			Assert.AreEqual ("de", texts[1]);
+			
+			navigator.Delete ();
+			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
+			navigator.StartSelection ();
+			navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 0);
+			navigator.EndSelection ();
+			
+			texts = navigator.GetSelectedTexts ();
+			
+			System.Diagnostics.Debug.WriteLine (texts[0]);
 		}
 	}
 }
