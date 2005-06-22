@@ -7,7 +7,7 @@ namespace Epsitec.Common.Text.Cursors
 	/// La classe SelectionCursor décrit un curseur tout simple (il ne stocke que
 	/// l'identificateur interne du curseur utilisé dans TextStory).
 	/// </summary>
-	public class SelectionCursor : SimpleCursor
+	public class SelectionCursor : TempCursor
 	{
 		public SelectionCursor()
 		{

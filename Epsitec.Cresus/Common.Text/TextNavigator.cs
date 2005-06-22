@@ -3,6 +3,9 @@
 
 namespace Epsitec.Common.Text
 {
+	using OpletEventHandler = Epsitec.Common.Support.OpletEventHandler;
+	using OpletEventArgs	= Epsitec.Common.Support.OpletEventArgs;
+	
 	/// <summary>
 	/// La classe TextNavigator permet de manipuler un TextStory en vue de son
 	/// édition.
@@ -21,6 +24,8 @@ namespace Epsitec.Common.Text
 			this.cursor = new Cursors.SimpleCursor ();
 			
 			this.story.NewCursor (this.cursor);
+			
+			this.story.OpletExecuted += new OpletEventHandler (this.HandleStoryOpletExecuted);
 		}
 		
 		
@@ -241,16 +246,13 @@ namespace Epsitec.Common.Text
 			
 			if (this.selection_cursors != null)
 			{
-				foreach (Cursors.SelectionCursor cursor in this.selection_cursors)
-				{
-					this.RecycleSelectionCursor (cursor);
-				}
+				//	Prend note de la position des curseurs de sélection pour
+				//	pouvoir restaurer la sélection en cas de UNDO :
 				
-				this.selection_cursors.Clear ();
-				this.selection_cursors = null;
+				int[] positions = this.GetSelectionCursorPositions ();
+				this.story.OpletQueue.Insert (new ClearSelectionOplet (this, positions));
 				
-				this.active_selection_cursor = null;
-				
+				this.InternalClearSelection ();
 				this.UpdateSelectionMarkers ();
 			}
 		}
@@ -524,12 +526,51 @@ namespace Epsitec.Common.Text
 			{
 				if (this.story != null)
 				{
-					this.ClearSelection ();
+					this.InternalClearSelection ();
+					this.UpdateSelectionMarkers ();
+					
+					this.story.OpletExecuted -= new OpletEventHandler (this.HandleStoryOpletExecuted);
 					this.story.RecycleCursor (this.cursor);
 					
 					this.story  = null;
 					this.cursor = null;
 				}
+			}
+		}
+		
+		
+		private void InternalClearSelection()
+		{
+			if (this.selection_cursors != null)
+			{
+				foreach (Cursors.SelectionCursor cursor in this.selection_cursors)
+				{
+					this.RecycleSelectionCursor (cursor);
+				}
+				
+				this.selection_cursors.Clear ();
+				this.selection_cursors = null;
+				
+				this.active_selection_cursor = null;
+			}
+		}
+		
+		private void InternalDefineSelection(int[] positions)
+		{
+			this.InternalClearSelection ();
+			
+			System.Diagnostics.Debug.Assert ((positions.Length % 2) == 0);
+			
+			for (int i = 0; i < positions.Length; i += 2)
+			{
+				Cursors.SelectionCursor c1 = this.NewSelectionCursor ();
+				Cursors.SelectionCursor c2 = this.NewSelectionCursor ();
+				
+				this.selection_cursors.Add (c1);
+				this.selection_cursors.Add (c2);
+				
+				this.story.SetCursorPosition (c1, positions[i+0]);
+				this.story.SetCursorPosition (c2, positions[i+1]);
 			}
 		}
 		
@@ -568,21 +609,7 @@ namespace Epsitec.Common.Text
 				this.selection_cursors = new System.Collections.ArrayList ();
 			}
 			
-			if (this.zombie_cursors == null)
-			{
-				this.zombie_cursors = new System.Collections.Stack ();
-			}
-			
-			Cursors.SelectionCursor cursor;
-			
-			if (this.zombie_cursors.Count > 0)
-			{
-				cursor = this.zombie_cursors.Pop () as Cursors.SelectionCursor;
-			}
-			else
-			{
-				cursor = new Cursors.SelectionCursor ();
-			}
+			Cursors.SelectionCursor cursor = new Cursors.SelectionCursor ();
 			
 			this.story.NewCursor (cursor);
 			
@@ -592,7 +619,6 @@ namespace Epsitec.Common.Text
 		protected void RecycleSelectionCursor(Cursors.SelectionCursor cursor)
 		{
 			this.story.RecycleCursor (cursor);
-			this.zombie_cursors.Push (cursor);
 		}
 		
 		
@@ -638,23 +664,43 @@ namespace Epsitec.Common.Text
 			
 			this.story.ChangeAllMarkers (marker, false);
 			
-			if (this.selection_cursors != null)
+			int[] positions = this.GetSelectionCursorPositions ();
+			
+			for (int i = 0; i < positions.Length; i += 2)
 			{
-				this.selection_cursors.Sort (Cursors.SimpleCursor.GetPositionComparer (this.story));
+				int p1 = positions[i+0];
+				int p2 = positions[i+1];
 				
-				System.Diagnostics.Debug.Assert ((this.selection_cursors.Count % 2) == 0);
-				
-				for (int i = 0; i < this.selection_cursors.Count; i += 2)
-				{
-					ICursor c1 = this.selection_cursors[i+0] as ICursor;
-					ICursor c2 = this.selection_cursors[i+1] as ICursor;
-					
-					int p1 = this.story.GetCursorPosition (c1);
-					int p2 = this.story.GetCursorPosition (c2);
-					
-					this.story.ChangeMarkers (c1, p2-p1, marker, true);
-				}
+				this.story.ChangeMarkers (p1, p2-p1, marker, true);
 			}
+		}
+		
+		
+		private int[] GetSelectionCursorPositions()
+		{
+			int[] positions;
+			
+			if (this.selection_cursors == null)
+			{
+				positions = new int[0];
+			}
+			else
+			{
+				positions = new int[this.selection_cursors.Count];
+				
+				for (int i = 0; i < this.selection_cursors.Count; i++)
+				{
+					ICursor cursor = this.selection_cursors[i] as ICursor;
+					
+					positions[i] = this.story.GetCursorPosition (cursor);
+				}
+				
+				System.Array.Sort (positions);
+			}
+			
+			System.Diagnostics.Debug.Assert ((positions.Length % 2) == 0);
+			
+			return positions;
 		}
 
 		
@@ -662,6 +708,56 @@ namespace Epsitec.Common.Text
 		{
 		}
 		
+		
+		private void HandleStoryOpletExecuted(object sender, OpletEventArgs e)
+		{
+			System.Diagnostics.Debug.Assert (this.story == sender);
+			
+			TextStory.BaseCursorOplet cursor_oplet = e.Oplet as TextStory.BaseCursorOplet;
+			
+			if (cursor_oplet != null)
+			{
+				//	TODO: ..gérer undo/redo des new/recycle de SelectionCursor
+			}
+		}
+		
+		
+		#region ClearSelectionOplet Class
+		protected class ClearSelectionOplet : Common.Support.AbstractOplet
+		{
+			public ClearSelectionOplet(TextNavigator navigator, int[] positions)
+			{
+				this.navigator = navigator;
+				this.positions = positions;
+			}
+			
+			
+			public override Epsitec.Common.Support.IOplet Undo()
+			{
+				this.navigator.InternalDefineSelection (this.positions);
+				this.navigator.UpdateSelectionMarkers ();
+				
+				return this;
+			}
+			
+			public override Epsitec.Common.Support.IOplet Redo()
+			{
+				this.navigator.InternalClearSelection ();
+				this.navigator.UpdateSelectionMarkers ();
+				
+				return this;
+			}
+			
+			public override void Dispose()
+			{
+				base.Dispose ();
+			}
+			
+			
+			private TextNavigator				navigator;
+			private int[]						positions;
+		}
+		#endregion
 		
 		#region Target Enumeration
 		public enum Target
@@ -693,7 +789,6 @@ namespace Epsitec.Common.Text
 		private Cursors.SimpleCursor			cursor;
 		private Cursors.SelectionCursor			active_selection_cursor;
 		private System.Collections.ArrayList	selection_cursors;
-		private System.Collections.Stack		zombie_cursors;
 		
 		private TextStyle[]						current_styles;
 		private Property[]						current_properties;

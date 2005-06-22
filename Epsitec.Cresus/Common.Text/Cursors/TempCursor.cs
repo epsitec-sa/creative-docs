@@ -28,7 +28,7 @@ namespace Epsitec.Common.Text.Cursors
 			}
 		}
 		
-		public CursorAttachment					Attachment
+		public virtual CursorAttachment			Attachment
 		{
 			get
 			{

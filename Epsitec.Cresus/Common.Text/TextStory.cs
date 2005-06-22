@@ -346,6 +346,12 @@ namespace Epsitec.Common.Text
 			return this.ChangeMarkers (this.temp_cursor, this.TextLength, marker, set);
 		}
 		
+		public int ChangeMarkers(int position, int length, ulong marker, bool set)
+		{
+			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
+			return this.ChangeMarkers (this.temp_cursor, length, marker, set);
+		}
+		
 		public int ChangeMarkers(ICursor cursor, int length, ulong marker, bool set)
 		{
 			//	Modifie les marqueurs associés à une tranche de texte; voir aussi
@@ -1077,8 +1083,9 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
 		#region Abstract BaseOplet Class
-		protected abstract class BaseOplet : Common.Support.AbstractOplet
+		internal abstract class BaseOplet : Common.Support.AbstractOplet
 		{
 			protected BaseOplet(TextStory story)
 			{
@@ -1102,8 +1109,30 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
+		#region Abstract BaseCursorOplet Class
+		internal abstract class BaseCursorOplet : BaseOplet
+		{
+			public BaseCursorOplet(TextStory story, ICursor cursor) : base (story)
+			{
+				this.cursor = cursor;
+			}
+			
+			
+			public ICursor						Cursor
+			{
+				get
+				{
+					return this.cursor;
+				}
+			}
+			
+			
+			protected readonly ICursor			cursor;
+		}
+		#endregion
+		
 		#region TextInsertOplet Class
-		protected class TextInsertOplet : BaseOplet
+		internal class TextInsertOplet : BaseOplet
 		{
 			public TextInsertOplet(TextStory story, int position, int length) : base (story)
 			{
@@ -1189,7 +1218,7 @@ namespace Epsitec.Common.Text
 		#endregion
 		
 		#region TextDeleteOplet Class
-		protected class TextDeleteOplet : BaseOplet
+		internal class TextDeleteOplet : BaseOplet
 		{
 			public TextDeleteOplet(TextStory story, int position, int length, CursorInfo[] cursors) : base (story)
 			{
@@ -1276,7 +1305,7 @@ namespace Epsitec.Common.Text
 		#endregion
 		
 		#region TextChangeOplet Class
-		protected class TextChangeOplet : BaseOplet
+		internal class TextChangeOplet : BaseOplet
 		{
 			public TextChangeOplet(TextStory story, int position, int length, ulong[] old_text) : base (story)
 			{
@@ -1343,11 +1372,10 @@ namespace Epsitec.Common.Text
 		#endregion
 		
 		#region CursorMoveOplet Class
-		protected class CursorMoveOplet : BaseOplet
+		internal class CursorMoveOplet : BaseCursorOplet
 		{
-			public CursorMoveOplet(TextStory story, ICursor cursor, int position) : base (story)
+			public CursorMoveOplet(TextStory story, ICursor cursor, int position) : base (story, cursor)
 			{
-				this.cursor   = cursor;
 				this.position = position;
 			}
 			
@@ -1381,16 +1409,14 @@ namespace Epsitec.Common.Text
 			
 			
 			private int							position;
-			private ICursor						cursor;
 		}
 		#endregion
 		
 		#region CursorNewRecycleOplet Class
-		protected class CursorNewRecycleOplet : BaseOplet
+		internal class CursorNewRecycleOplet : BaseCursorOplet
 		{
-			public CursorNewRecycleOplet(TextStory story, ICursor cursor, int position) : base (story)
+			public CursorNewRecycleOplet(TextStory story, ICursor cursor, int position) : base (story, cursor)
 			{
-				this.cursor   = cursor;
 				this.position = position;
 			}
 			
@@ -1429,7 +1455,6 @@ namespace Epsitec.Common.Text
 			
 			
 			private int							position;
-			private ICursor						cursor;
 		}
 		#endregion
 		
