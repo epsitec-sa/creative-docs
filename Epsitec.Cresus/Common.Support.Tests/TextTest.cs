@@ -203,20 +203,28 @@ namespace Epsitec.Common.Support
 			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 113));
 			
 			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
+			Assert.AreEqual (-1, navigator.CursorDirection);
 			navigator.MoveTo (Text.TextNavigator.Target.LineEnd, 0);
 			navigator.MoveTo (Text.TextNavigator.Target.LineEnd, 0);
-			
 			Assert.AreEqual (15, navigator.CursorPosition);
+			Assert.AreEqual (1, navigator.CursorDirection);
 			
 			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
 			navigator.MoveTo (Text.TextNavigator.Target.LineEnd, 1);
-			
 			Assert.AreEqual (15, navigator.CursorPosition);
 			
 			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
 			navigator.MoveTo (Text.TextNavigator.Target.LineEnd, 5);
-			
 			Assert.AreEqual (77, navigator.CursorPosition);
+			Assert.AreEqual (1, navigator.CursorDirection);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.LineStart, 0);
+			Assert.AreEqual (77, navigator.CursorPosition);
+			Assert.AreEqual (-1, navigator.CursorDirection);
+			
+			navigator.MoveTo (Text.TextNavigator.Target.LineStart, 2);
+			Assert.AreEqual (39, navigator.CursorPosition);
+			Assert.AreEqual (-1, navigator.CursorDirection);
 		}
 	}
 }

@@ -48,6 +48,13 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public int								CursorDirection
+		{
+			get
+			{
+				return this.current_direction;
+			}
+		}
 		
 		
 		#region IDisposable Members
@@ -134,7 +141,8 @@ namespace Epsitec.Common.Text
 			
 			int new_pos = this.CursorPosition;
 			
-			if (old_pos != new_pos)
+			if ((old_pos != new_pos) ||
+				(direction != this.current_direction))
 			{
 				this.UpdateCurrentStylesAndProperties (direction);
 				this.OnCursorMoved ();
