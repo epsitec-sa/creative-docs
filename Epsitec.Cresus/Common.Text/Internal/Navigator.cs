@@ -250,8 +250,11 @@ namespace Epsitec.Common.Text.Internal
 			//	Retourne toutes les propriétés (fusionnées, telles que stockées
 			//	dans le texte) pour la position indiquée.
 			
-			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
-			
+			return Navigator.GetFlattenedProperties (story, story.TextTable.ReadChar (cursor.CursorId, offset), out properties);
+		}
+		
+		public static bool GetFlattenedProperties(TextStory story, ulong code, out Property[] properties)
+		{
 			if (code == 0)
 			{
 				properties = null;
@@ -290,9 +293,14 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool GetManagedParagraphProperties(TextStory story, ICursor cursor, int offset, out Properties.ManagedParagraphProperty[] properties)
 		{
+			return Navigator.GetManagedParagraphProperties (story, story.TextTable.ReadChar (cursor.CursorId, offset), out properties);
+		}
+		
+		public static bool GetManagedParagraphProperties(TextStory story, ulong code, out Properties.ManagedParagraphProperty[] properties)
+		{
 			Property[] props;
 			
-			if (Navigator.GetFlattenedProperties (story, cursor, offset, out props))
+			if (Navigator.GetFlattenedProperties (story, code, out props))
 			{
 				properties = Properties.ManagedParagraphProperty.FilterManagedParagraphProperties (props);
 				
@@ -307,7 +315,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		public static void HandleManagedParagraphPropertiesChange(TextStory story, ICursor cursor, int offset, Properties.ManagedParagraphProperty[] old_properties, Properties.ManagedParagraphProperty[] new_properties)
+		public static void HandleManagedParagraphPropertiesChange(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty[] old_properties, Properties.ManagedParagraphProperty[] new_properties)
 		{
 			int n_old = old_properties == null ? 0 : old_properties.Length;
 			int n_new = new_properties == null ? 0 : new_properties.Length;
@@ -317,6 +325,8 @@ namespace Epsitec.Common.Text.Internal
 			{
 				return;
 			}
+			
+			ParagraphManagerList list = story.TextContext.ParagraphManagerList;
 			
 			for (int i = 0; i < n_old; i++)
 			{
@@ -331,7 +341,7 @@ namespace Epsitec.Common.Text.Internal
 				//	Cette ancienne propriété n'a pas d'équivalent dans la liste des
 				//	nouvelles propriétés.
 				
-				//	TODO: détacher l'ancienne propriété
+				list[old_properties[i].ManagerName].DetachFromParagraph (story, cursor, old_properties[i]);
 				
 			next_old:
 				continue;
@@ -350,7 +360,7 @@ namespace Epsitec.Common.Text.Internal
 				//	Cette nouvelle propriété n'a pas d'équivalent dans la liste des
 				//	anciennes propriétés.
 				
-				//	TODO: attacher la nouvelle propriété
+				list[new_properties[i].ManagerName].AttachToParagraph (story, cursor, new_properties[i]);
 				
 			next_old:
 				continue;
@@ -561,6 +571,11 @@ namespace Epsitec.Common.Text.Internal
 			
 			story.ReadText (cursor, offset_start, length, text);
 			
+			Properties.ManagedParagraphProperty[] old_props;
+			Properties.ManagedParagraphProperty[] new_props;
+			
+			Navigator.GetManagedParagraphProperties (story, text[0], out old_props);
+			
 			ulong code  = 0;
 			int   start = 0;
 			int   count = 0;
@@ -584,10 +599,11 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			Navigator.SetParagraphStylesAndProperties (story, text, code, start, count, styles, properties);
+			Navigator.GetManagedParagraphProperties (story, text[0], out new_props);
 			
 			story.WriteText (cursor, offset_start, text);
 			
-			//	TODO: gérer le changement de propriétés ManagedParagraphProperty.
+			Navigator.HandleManagedParagraphPropertiesChange (story, cursor, old_props, new_props);
 		}
 		
 		

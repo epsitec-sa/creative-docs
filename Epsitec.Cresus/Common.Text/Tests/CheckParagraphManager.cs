@@ -56,24 +56,18 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (story.TextLength == 4);
 
-			story.SetCursorPosition (cursor, 0);
-			Internal.Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style2 }, null);
-			
 			text = new ulong[story.TextLength];
 			story.SetCursorPosition (cursor, 0);
 			story.ReadText (cursor, story.TextLength, text);
 			
+			System.Diagnostics.Debug.WriteLine ("Before SetParagraphStylesAndProperties (style2) :");
 			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
 			
+			story.SetCursorPosition (cursor, 0);
+			Internal.Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style2 }, null);
 			
-			Properties.ManagedParagraphProperty mp;
+			
 			Properties.ManagedParagraphProperty[] mpp;
-			Property[] flattened;
-			
-			Internal.Navigator.GetFlattenedProperties (story, cursor, 0, out flattened);
-			mp = Properties.ManagedParagraphProperty.Find (flattened, "ItemList");
-			
-			story.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (story, cursor, mp);
 			
 			Debug.Assert.IsTrue (story.TextLength == 1+2+1+4);
 			Debug.Assert.IsTrue (Internal.Navigator.GetManagedParagraphProperties (story, cursor, 0, out mpp));
@@ -84,26 +78,23 @@ namespace Epsitec.Common.Text.Tests
 			story.SetCursorPosition (cursor, 0);
 			story.ReadText (cursor, story.TextLength, text);
 			
+			System.Diagnostics.Debug.WriteLine ("After SetParagraphStylesAndProperties (style2) :");
 			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
 			
 			//	Supprime la liste à puces :
 			
 			story.SetCursorPosition (cursor, 0);
 			
-			Internal.Navigator.GetFlattenedProperties (story, cursor, 0, out flattened);
-			mp = Properties.ManagedParagraphProperty.Find (flattened, "ItemList");
-			
 			Internal.Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style1 }, null);
 			
 			Debug.Assert.IsTrue (Internal.Navigator.GetManagedParagraphProperties (story, cursor, 0, out mpp));
 			Debug.Assert.IsTrue (mpp.Length == 0);
 			
-			story.TextContext.ParagraphManagerList["ItemList"].DetachFromParagraph (story, cursor, mp);
-			
 			text = new ulong[story.TextLength];
 			story.SetCursorPosition (cursor, 0);
 			story.ReadText (cursor, story.TextLength, text);
 			
+			System.Diagnostics.Debug.WriteLine ("After SetParagraphStylesAndProperties (style1) :");
 			System.Diagnostics.Debug.WriteLine (story.GetDebugStyledText (text));
 			
 			Debug.Assert.IsTrue (story.TextLength == 4);
