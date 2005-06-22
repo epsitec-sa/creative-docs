@@ -270,8 +270,12 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
 		public string[] GetSelectedTexts()
 		{
+			//	Retourne les textes sélectionnés, bruts, sans aucun formatage.
+			//	S'il n'y en a pas, retourne un tableau vide.
+			
 			string[] texts;
 			
 			if (this.selection_cursors == null)

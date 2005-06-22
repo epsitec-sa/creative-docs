@@ -261,6 +261,24 @@ namespace Epsitec.Common.Support
 			texts = navigator.GetSelectedTexts ();
 			
 			Assert.AreEqual (0, texts.Length);
+			
+			navigator.StartSelection ();
+			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
+			Assert.AreEqual (10, navigator.CursorPosition);
+			navigator.EndSelection ();
+			
+			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 2);
+			navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 1);
+			
+			navigator.StartSelection ();
+			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
+			navigator.EndSelection ();
+			
+			texts = navigator.GetSelectedTexts ();
+			
+			Assert.AreEqual (2, texts.Length);
+			Assert.AreEqual ("xyz   ", texts[0]);
+			Assert.AreEqual ("def", texts[1]);
 		}
 	}
 }
