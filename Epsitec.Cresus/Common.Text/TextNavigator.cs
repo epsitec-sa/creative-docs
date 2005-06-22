@@ -98,6 +98,15 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public Common.Support.OpletQueue		OpletQueue
+		{
+			get
+			{
+				return this.story.OpletQueue;
+			}
+		}
+		
+		
 		protected ICursor						ActiveCursor
 		{
 			get
@@ -249,12 +258,49 @@ namespace Epsitec.Common.Text
 				//	Prend note de la position des curseurs de sélection pour
 				//	pouvoir restaurer la sélection en cas de UNDO :
 				
-				int[] positions = this.GetSelectionCursorPositions ();
-				this.story.OpletQueue.Insert (new ClearSelectionOplet (this, positions));
+				using (this.story.OpletQueue.BeginAction ())
+				{
+					int[] positions = this.GetSelectionCursorPositions ();
+					this.story.OpletQueue.Insert (new ClearSelectionOplet (this, positions));
+					this.story.OpletQueue.ValidateAction ();
+				}
 				
 				this.InternalClearSelection ();
 				this.UpdateSelectionMarkers ();
 			}
+		}
+		
+		public string[] GetSelectedTexts()
+		{
+			string[] texts;
+			
+			if (this.selection_cursors == null)
+			{
+				texts = new string[0];
+			}
+			else
+			{
+				int[] positions = this.GetSelectionCursorPositions ();
+				
+				texts = new string[positions.Length / 2];
+				
+				for (int i = 0; i < positions.Length; i += 2)
+				{
+					int p1 = positions[i+0];
+					int p2 = positions[i+1];
+					
+					string  text;
+					ulong[] buffer = new ulong[p2-p1];
+					
+					this.story.ReadText (p1, p2-p1, buffer);
+					
+					TextConverter.ConvertToString (buffer, out text);
+					
+					texts[i/2] = text;
+				}
+			}
+			
+			return texts;
 		}
 		
 		

@@ -180,15 +180,22 @@ namespace Epsitec.Common.Text
 		
 		public void SetCursorPosition(ICursor cursor, int position)
 		{
-			int old_pos = this.GetCursorPosition (cursor);
-			
-			this.text.SetCursorPosition (cursor.CursorId, position);
-			
-			int new_pos = this.GetCursorPosition (cursor);
-			
-			if (old_pos != new_pos)
+			if (cursor.Attachment == CursorAttachment.Temporary)
 			{
-				this.InternalAddOplet (new CursorMoveOplet (this, cursor, old_pos));
+				this.text.SetCursorPosition (cursor.CursorId, position);
+			}
+			else
+			{
+				int old_pos = this.GetCursorPosition (cursor);
+				
+				this.text.SetCursorPosition (cursor.CursorId, position);
+				
+				int new_pos = this.GetCursorPosition (cursor);
+				
+				if (old_pos != new_pos)
+				{
+					this.InternalAddOplet (new CursorMoveOplet (this, cursor, old_pos));
+				}
 			}
 		}
 		
@@ -272,6 +279,12 @@ namespace Epsitec.Common.Text
 			return changed;
 		}
 		
+		
+		public int ReadText(int position, int length, ulong[] buffer)
+		{
+			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
+			return this.ReadText (this.temp_cursor, 0, length, buffer);
+		}
 		
 		public int ReadText(ICursor cursor, int length, ulong[] buffer)
 		{
