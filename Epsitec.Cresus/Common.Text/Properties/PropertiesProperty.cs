@@ -231,6 +231,38 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public static Property[] RemovePropertiesProperties(System.Collections.ICollection properties)
+		{
+			//	Supprime les propriétés PropertiesProprty de la liste.
+			
+			int count = 0;
+			
+			foreach (Property property in properties)
+			{
+				if (! (property is PropertiesProperty))
+				{
+					count++;
+				}
+			}
+			
+			Property[] filtered = new Property[count];
+			
+			int index = 0;
+			
+			foreach (Property property in properties)
+			{
+				if (! (property is PropertiesProperty))
+				{
+					filtered[index++] = property;
+				}
+			}
+			
+			System.Diagnostics.Debug.Assert (index == count);
+			
+			return filtered;
+		}
+		
+		
 		private static bool CompareEqualContents(PropertiesProperty a, PropertiesProperty b)
 		{
 			return Types.Comparer.Equal (a.serialized_properties, b.serialized_properties);

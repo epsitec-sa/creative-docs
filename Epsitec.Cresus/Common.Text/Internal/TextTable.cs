@@ -285,10 +285,15 @@ namespace Epsitec.Common.Text.Internal
 							
 							if (result.Length == 0)
 							{
+								//	Arrivé au début sans rien n'avoir trouvé ?
+								
 								if (position == origin)
 								{
 									break;
 								}
+								
+								//	Il faut continuer la recherche à partir de la
+								//	position courante.
 								
 								position = cursor_pos;
 								continue;

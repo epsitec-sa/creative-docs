@@ -162,6 +162,8 @@ namespace Epsitec.Common.Text.Tests
 			
 			story.SetCursorPosition (cursor, 2);
 			Internal.Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style2 }, properties);
+			Internal.Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style1, style2 }, properties);
+			Internal.Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style2 }, properties);
 			
 			text = new ulong[story.TextLength];
 			story.SetCursorPosition (cursor, 0);

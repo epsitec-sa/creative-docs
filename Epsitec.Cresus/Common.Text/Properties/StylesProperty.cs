@@ -194,6 +194,38 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public static Property[] RemoveStylesProperties(System.Collections.ICollection properties)
+		{
+			//	Supprime les propriétés StylesProprty de la liste.
+			
+			int count = 0;
+			
+			foreach (Property property in properties)
+			{
+				if (! (property is StylesProperty))
+				{
+					count++;
+				}
+			}
+			
+			Property[] filtered = new Property[count];
+			
+			int index = 0;
+			
+			foreach (Property property in properties)
+			{
+				if (! (property is StylesProperty))
+				{
+					filtered[index++] = property;
+				}
+			}
+			
+			System.Diagnostics.Debug.Assert (index == count);
+			
+			return filtered;
+		}
+		
+		
 		private static bool CompareEqualContents(StylesProperty a, StylesProperty b)
 		{
 			return StylesProperty.CompareEqualContents (a.styles, b.styles);

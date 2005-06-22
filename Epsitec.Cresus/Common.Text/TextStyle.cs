@@ -80,24 +80,6 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
-		public static bool CompareEqualContents(TextStyle a, TextStyle b)
-		{
-			if ((a.text_style_class == b.text_style_class) &&
-				(Styles.PropertyContainer.CompareEqualContents (a, b)))
-			{
-				//	Ignore le nom dans la comparaison du contenu. C'est voulu !
-				
-				//	TODO: compléter
-				
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		
-		
 		#region TextStyleComparer Class
 		private class TextStyleComparer : System.Collections.IComparer
 		{
@@ -121,6 +103,60 @@ namespace Epsitec.Common.Text
 			#endregion
 		}
 		#endregion
+		
+		public static bool CompareEqualContents(TextStyle a, TextStyle b)
+		{
+			if ((a.text_style_class == b.text_style_class) &&
+				(Styles.PropertyContainer.CompareEqualContents (a, b)))
+			{
+				//	Ignore le nom dans la comparaison du contenu. C'est voulu !
+				
+				//	TODO: compléter
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		
+		public static TextStyle[] FilterStyles(System.Collections.ICollection styles, params TextStyleClass[] text_style_classes)
+		{
+			int count = 0;
+			
+			foreach (TextStyle style in styles)
+			{
+				for (int i = 0; i < text_style_classes.Length; i++)
+				{
+					if (style.TextStyleClass == text_style_classes[i])
+					{
+						count++;
+						break;
+					}
+				}
+			}
+			
+			TextStyle[] filtered = new TextStyle[count];
+			
+			int index = 0;
+			
+			foreach (TextStyle style in styles)
+			{
+				for (int i = 0; i < text_style_classes.Length; i++)
+				{
+					if (style.TextStyleClass == text_style_classes[i])
+					{
+						filtered[index++] = style;
+						break;
+					}
+				}
+			}
+			
+			return filtered;
+		}
+		
 		
 		private string							name;
 		private TextStyleClass					text_style_class;

@@ -8,8 +8,9 @@ namespace Epsitec.Common.Text.Cursors
 	/// </summary>
 	public class FitterCursor : Cursors.TempCursor
 	{
-		public FitterCursor()
+		public FitterCursor(TextFitter fitter)
 		{
+			this.fitter = fitter;
 		}
 		
 		
@@ -88,6 +89,13 @@ namespace Epsitec.Common.Text.Cursors
 			}
 		}
 		
+		public TextFitter						TextFitter
+		{
+			get
+			{
+				return this.fitter;
+			}
+		}
 		
 		public static CursorInfo.Filter			Filter
 		{
@@ -100,6 +108,9 @@ namespace Epsitec.Common.Text.Cursors
 		
 		public override void Clear()
 		{
+			//	Efface les informations liées au curseur, mais se souvient du
+			//	fitter attaché...
+			
 			base.Clear ();
 			this.elements = null;
 		}
@@ -161,6 +172,12 @@ namespace Epsitec.Common.Text.Cursors
 		public static CursorInfo.Filter GetFrameFilter(int frame_index)
 		{
 			FilterFrame filter = new FilterFrame (frame_index);
+			return new CursorInfo.Filter (filter.FilterCallback);
+		}
+		
+		public static CursorInfo.Filter GetFitterFilter(TextFitter fitter)
+		{
+			FilterFitter filter = new FilterFitter (fitter);
 			return new CursorInfo.Filter (filter.FilterCallback);
 		}
 		
@@ -337,6 +354,32 @@ namespace Epsitec.Common.Text.Cursors
 		}
 		#endregion
 		
+		#region FilterFitter Class
+		private class FilterFitter
+		{
+			public FilterFitter(TextFitter text_fitter)
+			{
+				this.text_fitter = text_fitter;
+			}
+			
+			
+			public bool FilterCallback(ICursor cursor, int position)
+			{
+				Cursors.FitterCursor fitter = cursor as Cursors.FitterCursor;
+				
+				if (fitter != null)
+				{
+					return fitter.TextFitter == this.text_fitter;
+				}
+				
+				return false;
+			}
+			
+			
+			private TextFitter					text_fitter;
+		}
+		#endregion
+		
 		private static bool FilterCallback(ICursor cursor, int position)
 		{
 			return cursor is Cursors.FitterCursor;
@@ -345,5 +388,6 @@ namespace Epsitec.Common.Text.Cursors
 		
 		private Element[]						elements;
 		private double							paragraph_y;
+		private TextFitter						fitter;
 	}
 }

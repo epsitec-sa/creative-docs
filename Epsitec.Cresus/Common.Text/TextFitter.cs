@@ -863,7 +863,7 @@ restart_paragraph_layout:
 			}
 			else
 			{
-				cursor = new Cursors.FitterCursor ();
+				cursor = new Cursors.FitterCursor (this);
 				this.cursors.Add (cursor);
 			}
 			

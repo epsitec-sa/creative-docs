@@ -117,7 +117,7 @@ namespace Epsitec.Common.Text.Internal
 			offset += story.GetCursorPosition (cursor);
 			
 			Internal.TextTable text   = story.TextTable;
-			CursorInfo.Filter  filter = Cursors.FitterCursor.Filter;
+			CursorInfo.Filter  filter = Cursors.FitterCursor.GetFitterFilter (fitter);
 			CursorInfo[]       infos  = text.FindCursorsBefore (offset + 1, filter);
 			
 			if (infos.Length > 0)
@@ -154,7 +154,7 @@ namespace Epsitec.Common.Text.Internal
 			offset += story.GetCursorPosition (cursor);
 			
 			Internal.TextTable text   = story.TextTable;
-			CursorInfo.Filter  filter = Cursors.FitterCursor.Filter;
+			CursorInfo.Filter  filter = Cursors.FitterCursor.GetFitterFilter (fitter);
 			CursorInfo[]       infos  = text.FindCursorsBefore (offset + 1, filter);
 			
 			if (infos.Length > 0)
@@ -264,6 +264,99 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
+		public static bool GetFlattenedPropertiesExcludingStylesAndProperties(TextStory story, ICursor cursor, int offset, out Property[] properties)
+		{
+			//	Retourne toutes les propriétés (fusionnées, telles que stockées
+			//	dans le texte) pour la position indiquée.
+			
+			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
+			
+			if (code == 0)
+			{
+				properties = null;
+				return false;
+			}
+			else
+			{
+				properties = story.StyleList[code].Flatten (code);
+				
+				properties = Properties.StylesProperty.RemoveStylesProperties (properties);
+				properties = Properties.PropertiesProperty.RemovePropertiesProperties (properties);
+				
+				return true;
+			}
+		}
+		
+		
+		public static bool GetManagedParagraphProperties(TextStory story, ICursor cursor, int offset, out Properties.ManagedParagraphProperty[] properties)
+		{
+			Property[] props;
+			
+			if (Navigator.GetFlattenedProperties (story, cursor, offset, out props))
+			{
+				properties = Properties.ManagedParagraphProperty.FilterManagedParagraphProperties (props);
+				
+				System.Array.Sort (properties, Properties.ManagedParagraphProperty.Comparer);
+				
+				return true;
+			}
+			else
+			{
+				properties = null;
+				return false;
+			}
+		}
+		
+		public static void HandleManagedParagraphPropertiesChange(TextStory story, ICursor cursor, int offset, Properties.ManagedParagraphProperty[] old_properties, Properties.ManagedParagraphProperty[] new_properties)
+		{
+			int n_old = old_properties == null ? 0 : old_properties.Length;
+			int n_new = new_properties == null ? 0 : new_properties.Length;
+			
+			if ((n_new == 0) &&
+				(n_old == 0))
+			{
+				return;
+			}
+			
+			for (int i = 0; i < n_old; i++)
+			{
+				for (int j = 0; j < n_new; j++)
+				{
+					if (Property.CompareEqualContents (old_properties[i], new_properties[j]))
+					{
+						goto next_old;
+					}
+				}
+				
+				//	Cette ancienne propriété n'a pas d'équivalent dans la liste des
+				//	nouvelles propriétés.
+				
+				//	TODO: détacher l'ancienne propriété
+				
+			next_old:
+				continue;
+			}
+			
+			for (int i = 0; i < n_new; i++)
+			{
+				for (int j = 0; j < n_old; j++)
+				{
+					if (Property.CompareEqualContents (new_properties[i], old_properties[j]))
+					{
+						goto next_old;
+					}
+				}
+				
+				//	Cette nouvelle propriété n'a pas d'équivalent dans la liste des
+				//	anciennes propriétés.
+				
+				//	TODO: attacher la nouvelle propriété
+				
+			next_old:
+				continue;
+			}
+		}
+		
 		
 		public static bool GetParagraphStyles(TextStory story, ICursor cursor, int offset, out TextStyle[] styles)
 		{
@@ -330,7 +423,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			if (props_property == null)
 			{
-				properties = new Properties.PropertiesProperty[0];
+				properties = new Property[0];
 			}
 			else
 			{
@@ -493,6 +586,8 @@ namespace Epsitec.Common.Text.Internal
 			Navigator.SetParagraphStylesAndProperties (story, text, code, start, count, styles, properties);
 			
 			story.WriteText (cursor, offset_start, text);
+			
+			//	TODO: gérer le changement de propriétés ManagedParagraphProperty.
 		}
 		
 		
@@ -506,6 +601,9 @@ namespace Epsitec.Common.Text.Internal
 			Styles.SimpleStyle            simple = story.StyleList[code];
 			Properties.StylesProperty     s_prop = simple[Properties.WellKnownType.Styles] as Properties.StylesProperty;
 			Properties.PropertiesProperty p_prop = simple[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
+			
+			//	Récupère uniquement les propriétés qui ne s'appliquent pas au paragraphe
+			//	dans son ensemble :
 			
 			string[]   serialized_other_properties = (p_prop == null) ? null : p_prop.SerializedOtherProperties;
 			Property[] other_properties = Properties.PropertiesProperty.DeserializeProperties (story.TextContext, serialized_other_properties);

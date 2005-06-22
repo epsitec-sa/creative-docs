@@ -61,6 +61,15 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public static System.Collections.IComparer	Comparer
+		{
+			get
+			{
+				return new ManagedParagraphComparer ();
+			}
+		}
+		
+		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
@@ -118,6 +127,35 @@ namespace Epsitec.Common.Text.Properties
 			return null;
 		}
 		
+		public static ManagedParagraphProperty[] FilterManagedParagraphProperties(System.Collections.ICollection properties)
+		{
+			int count = 0;
+			
+			foreach (Property property in properties)
+			{
+				if (property is ManagedParagraphProperty)
+				{
+					count++;
+				}
+			}
+			
+			ManagedParagraphProperty[] filtered = new ManagedParagraphProperty[count];
+			
+			int index = 0;
+			
+			foreach (Property property in properties)
+			{
+				if (property is ManagedParagraphProperty)
+				{
+					filtered[index++] = property as ManagedParagraphProperty;
+				}
+			}
+			
+			System.Diagnostics.Debug.Assert (index == count);
+			
+			return filtered;
+		}
+		
 		
 		private static bool CompareEqualContents(ManagedParagraphProperty a, ManagedParagraphProperty b)
 		{
@@ -126,6 +164,27 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		#region ManagedParagraphComparer Class
+		private class ManagedParagraphComparer : System.Collections.IComparer
+		{
+			#region IComparer Members
+			public int Compare(object x, object y)
+			{
+				Properties.ManagedParagraphProperty px = x as Properties.ManagedParagraphProperty;
+				Properties.ManagedParagraphProperty py = y as Properties.ManagedParagraphProperty;
+				
+				int result = string.Compare (px.manager_name, py.manager_name);
+				
+				if (result == 0)
+				{
+					//	TODO: comparer les paramètres...
+				}
+				
+				return result;
+			}
+			#endregion
+		}
+		#endregion
 		
 		private string							manager_name;
 		private string[]						manager_parameters;

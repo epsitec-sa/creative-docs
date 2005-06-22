@@ -40,6 +40,34 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public TextStyle[]						TextStyles
+		{
+			get
+			{
+				if ((this.current_styles == null) ||
+					(this.current_properties == null))
+				{
+					this.UpdateCurrentStylesAndProperties (0);
+				}
+				
+				return this.current_styles.Clone () as TextStyle[];
+			}
+		}
+		
+		public Property[]						TextProperties
+		{
+			get
+			{
+				if ((this.current_styles == null) ||
+					(this.current_properties == null))
+				{
+					this.UpdateCurrentStylesAndProperties (0);
+				}
+				
+				return this.current_properties.Clone () as Property[];
+			}
+		}
+		
 		public int								CursorPosition
 		{
 			get
@@ -147,6 +175,53 @@ namespace Epsitec.Common.Text
 				this.UpdateCurrentStylesAndProperties (direction);
 				this.OnCursorMoved ();
 			}
+		}
+		
+		
+		public void SetStyle(TextStyle style)
+		{
+			TextStyle[] styles     = new TextStyle[1];
+			Property[]  properties = new Property[0];
+			
+			this.SetStyles (styles, properties);
+		}
+		
+		public void SetStyle(TextStyle style, params Property[] properties)
+		{
+			TextStyle[] styles = new TextStyle[1];
+			
+			this.SetStyles (styles, properties);
+		}
+		
+		public void SetStyles(System.Collections.ICollection styles, System.Collections.ICollection properties)
+		{
+			TextStyle[] s_array = new TextStyle[styles == null ? 0 : styles.Count];
+			Property[]  p_array = new Property[properties == null ? 0 : properties.Count];
+			
+			if (styles != null) styles.CopyTo (s_array, 0);
+			if (properties != null) properties.CopyTo (p_array, 0);
+			
+			this.SetStyles (s_array, p_array);
+		}
+		
+		public void SetStyles(TextStyle[] styles, Property[] properties)
+		{
+			//	Change les styles et propriétés attachées à la position courante,
+			//	ce qui va peut-être modifier les propriétés du paragraphe. En cas
+			//	de sélection, la gestion est plus compliquée.
+			
+			//	TODO: gérer la sélection
+			
+			Property[] paragraph_properties = Property.FilterUniformParagraphProperties (properties);
+			Property[] character_properties = Property.FilterOtherProperties (properties);
+			
+			TextStyle[] paragraph_styles = TextStyle.FilterStyles (styles, TextStyleClass.Paragraph);
+			TextStyle[] character_styles = TextStyle.FilterStyles (styles, TextStyleClass.Text, TextStyleClass.Character);
+			
+			Internal.Navigator.SetParagraphStylesAndProperties (this.story, this.cursor, paragraph_styles, paragraph_properties);
+			
+			this.current_styles     = styles.Clone () as TextStyle[];
+			this.current_properties = properties.Clone () as Property[];
 		}
 		
 		
@@ -439,6 +514,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		#region Target Enumeration
 		public enum Target
 		{
 			None,
@@ -458,6 +534,7 @@ namespace Epsitec.Common.Text
 			WordStart,
 			WordEnd,
 		}
+		#endregion
 		
 		protected delegate bool MoveCallback(int offset);
 		

@@ -131,6 +131,22 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public static bool CompareEqualContents(Property a, Property b)
+		{
+			if (a == b)
+			{
+				return true;
+			}
+			
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+			
+			return a.CompareEqualContents (b);
+		}
+		
 		public static bool CompareEqualContents(Property[] a, Property[] b)
 		{
 			if (a == b)
@@ -280,6 +296,65 @@ namespace Epsitec.Common.Text
 			sep_pos++;
 			
 			property.DeserializeFromText (context, text, sep_pos, end_pos - sep_pos - 1);
+		}
+		
+		
+		public static Property[] FilterUniformParagraphProperties(System.Collections.ICollection properties)
+		{
+			int count = 0;
+			
+			foreach (Property property in properties)
+			{
+				if (property.RequiresUniformParagraph)
+				{
+					count++;
+				}
+			}
+			
+			Property[] filtered = new Property[count];
+			
+			int index = 0;
+			
+			foreach (Property property in properties)
+			{
+				if (property.RequiresUniformParagraph)
+				{
+					filtered[index++] = property;
+				}
+			}
+			
+			System.Diagnostics.Debug.Assert (index == count);
+			
+			return filtered;
+		}
+		
+		public static Property[] FilterOtherProperties(System.Collections.ICollection properties)
+		{
+			int count = 0;
+			
+			foreach (Property property in properties)
+			{
+				if (! property.RequiresUniformParagraph)
+				{
+					count++;
+				}
+			}
+			
+			Property[] filtered = new Property[count];
+			
+			int index = 0;
+			
+			foreach (Property property in properties)
+			{
+				if (! property.RequiresUniformParagraph)
+				{
+					filtered[index++] = property;
+				}
+			}
+			
+			System.Diagnostics.Debug.Assert (index == count);
+			
+			return filtered;
 		}
 		
 		

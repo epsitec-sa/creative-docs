@@ -67,13 +67,18 @@ namespace Epsitec.Common.Text.Tests
 			
 			
 			Properties.ManagedParagraphProperty mp;
+			Properties.ManagedParagraphProperty[] mpp;
 			Property[] flattened;
 			
 			Internal.Navigator.GetFlattenedProperties (story, cursor, 0, out flattened);
 			mp = Properties.ManagedParagraphProperty.Find (flattened, "ItemList");
 			
 			story.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (story, cursor, mp);
+			
 			Debug.Assert.IsTrue (story.TextLength == 1+2+1+4);
+			Debug.Assert.IsTrue (Internal.Navigator.GetManagedParagraphProperties (story, cursor, 0, out mpp));
+			Debug.Assert.IsTrue (mpp.Length == 1);
+			Debug.Assert.IsTrue (mpp[0].ManagerName == "ItemList");
 			
 			text = new ulong[story.TextLength];
 			story.SetCursorPosition (cursor, 0);
@@ -89,6 +94,10 @@ namespace Epsitec.Common.Text.Tests
 			mp = Properties.ManagedParagraphProperty.Find (flattened, "ItemList");
 			
 			Internal.Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style1 }, null);
+			
+			Debug.Assert.IsTrue (Internal.Navigator.GetManagedParagraphProperties (story, cursor, 0, out mpp));
+			Debug.Assert.IsTrue (mpp.Length == 0);
+			
 			story.TextContext.ParagraphManagerList["ItemList"].DetachFromParagraph (story, cursor, mp);
 			
 			text = new ulong[story.TextLength];
