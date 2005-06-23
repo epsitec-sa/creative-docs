@@ -259,8 +259,18 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (10, navigator.CursorPosition);
 			navigator.EndSelection ();
 			
+			Assert.AreEqual (4, navigator.CursorPosition);
+			Assert.AreEqual (1, navigator.CursorDirection);
+			
 			navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 2);
+			
+			Assert.AreEqual (116, navigator.CursorPosition);
+			Assert.AreEqual (1, navigator.CursorDirection);
+			
 			navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 1);
+			
+			Assert.AreEqual (113, navigator.CursorPosition);
+			Assert.AreEqual (-1, navigator.CursorDirection);
 			
 			navigator.StartSelection ();
 			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
@@ -277,6 +287,10 @@ namespace Epsitec.Common.Support
 			//	disjointes :
 			
 			navigator.Delete ();
+			
+			Assert.AreEqual (107, navigator.CursorPosition);		//	supprimé 6 caractères avant 2ème sélection..
+			Assert.AreEqual (0, navigator.CursorDirection);			//	..ce qui explique le passage de 113 à 107.
+			
 			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
 			navigator.StartSelection ();
 			navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 0);
@@ -292,6 +306,19 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (2, texts.Length);
 			Assert.AreEqual ("xyz   ", texts[0]);
 			Assert.AreEqual ("de", texts[1]);
+			
+			Assert.AreEqual (113, navigator.CursorPosition);
+			Assert.AreEqual (-1, navigator.CursorDirection);
+			
+			navigator.OpletQueue.UndoAction ();		//	MoveTo
+			
+			Assert.AreEqual (116, navigator.CursorPosition);
+			Assert.AreEqual (1, navigator.CursorDirection);
+			
+			navigator.OpletQueue.UndoAction ();		//	MoveTo
+			
+			Assert.AreEqual (4, navigator.CursorPosition);
+			Assert.AreEqual (1, navigator.CursorDirection);
 		}
 		
 		[Test] public void CheckTextStory()

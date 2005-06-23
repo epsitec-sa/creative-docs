@@ -122,6 +122,8 @@ namespace Epsitec.Common.Text.Internal
 			
 			if (infos.Length > 0)
 			{
+				System.Diagnostics.Debug.Assert (infos.Length == 1);
+				
 				for (int i = 0; i < infos.Length; i++)
 				{
 					Cursors.FitterCursor fitter_cursor = text.GetCursorInstance (infos[i].CursorId) as Cursors.FitterCursor;

@@ -216,6 +216,75 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public bool GetCursorGeometry(ICursor cursor, out ITextFrame frame, out double x, out double y, out int paragraph_line, out int line_character)
+		{
+			int position  = this.story.GetCursorPosition (cursor);
+			int direction = this.story.GetCursorDirection (cursor);
+			
+			Internal.TextTable text   = this.story.TextTable;
+			CursorInfo.Filter  filter = Cursors.FitterCursor.GetFitterFilter (this);
+			CursorInfo[]       infos  = text.FindCursorsBefore (position + 1, filter);
+			
+			if (infos.Length > 0)
+			{
+				System.Diagnostics.Debug.Assert (infos.Length == 1);
+				
+				Cursors.FitterCursor fitter_cursor   = text.GetCursorInstance (infos[0].CursorId) as Cursors.FitterCursor;
+				int                  paragraph_start = text.GetCursorPosition (infos[0].CursorId);
+				int                  line_start      = paragraph_start;
+				
+				System.Diagnostics.Debug.Assert (paragraph_start + fitter_cursor.ParagraphLength >= position);
+				
+				Cursors.FitterCursor.Element[] elements = fitter_cursor.Elements;
+				
+				//	Détermine dans quelle ligne du paragraphe se trouve le curseur :
+				
+				for (int i = 0; i < elements.Length; i++)
+				{
+					int line_length = elements[i].Length;
+					int line_end    = line_start + line_length;
+					
+					if ((position >= line_start) &&
+						((position < line_end) || ((position == line_end) && (direction >= 0))))
+					{
+						//	Le curseur se trouve dans la ligne en cours d'analyse.
+						//	On tient compte de la direction de déplacement pour
+						//	déterminer le curseur se trouve à la fin de la ligne
+						//	en cours ou au début de la ligne suivante.
+						
+						frame = this.FrameList[elements[i].FrameIndex];
+						
+						x = elements[i].LineBaseX;
+						y = elements[i].LineBaseY;
+						
+						paragraph_line = i;
+						line_character = position - line_start;
+						
+						return true;
+					}
+					
+					line_start = line_end;
+					
+					if (line_start > position)
+					{
+						break;
+					}
+				}
+			}
+			
+			frame = null;
+			
+			x = 0;
+			y = 0;
+			
+			paragraph_line = 0;
+			line_character = 0;
+			
+			return false;
+		}
+		
+		
+		
 		protected void ExecuteClear(Cursors.TempCursor temp_cursor, int pos, ref int length, out TextProcessor.Status status)
 		{
 			//	Supprime les marques de découpe de lignes représentées par des

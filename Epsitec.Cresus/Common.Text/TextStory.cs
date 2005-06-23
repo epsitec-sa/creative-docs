@@ -183,12 +183,12 @@ namespace Epsitec.Common.Text
 		
 		public int GetCursorPosition(ICursor cursor)
 		{
-			return this.text.GetCursorPosition (cursor.CursorId);
+			return cursor == null ? -1 : this.text.GetCursorPosition (cursor.CursorId);
 		}
 		
 		public int GetCursorDirection(ICursor cursor)
 		{
-			return this.text.GetCursorDirection (cursor.CursorId);
+			return cursor == null ? 0 : cursor.Direction;
 		}
 		
 		public void SetCursorPosition(ICursor cursor, int position)
@@ -255,7 +255,8 @@ namespace Epsitec.Common.Text
 		
 		public void DeleteText(ICursor cursor, int length)
 		{
-			int position = this.text.GetCursorPosition (cursor.CursorId);
+			int position  = this.text.GetCursorPosition (cursor.CursorId);
+			int direction = this.text.GetCursorDirection (cursor.CursorId);
 			
 			CursorInfo[] cursors;
 			
@@ -269,7 +270,19 @@ namespace Epsitec.Common.Text
 			this.text_length -= length;
 			this.undo_length += length;
 			
-			this.InternalAddOplet (new TextDeleteOplet (this, position, length, cursors));
+			if (cursor.Attachment == CursorAttachment.Temporary)
+			{
+				this.InternalAddOplet (new TextDeleteOplet (this, position, length, cursors));
+			}
+			else
+			{
+				this.InternalAddOplet (new TextDeleteOplet (this, position, length, cursors, cursor, direction));
+				
+				if (direction != 1)
+				{
+					cursor.Direction = 1;
+				}
+			}
 			
 			this.UpdateTextBreakInformation (position, 0);
 		}
@@ -1158,8 +1171,14 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
+		internal interface ICursorOplet
+		{
+			ICursor			Cursor		{ get; }
+			CursorInfo[]	CursorInfos	{ get; }
+		}
+		
 		#region Abstract BaseCursorOplet Class
-		internal abstract class BaseCursorOplet : BaseOplet
+		internal abstract class BaseCursorOplet : BaseOplet, ICursorOplet
 		{
 			public BaseCursorOplet(TextStory story, ICursor cursor) : base (story)
 			{
@@ -1167,6 +1186,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			
+			#region ICursorOplet Members
 			public ICursor						Cursor
 			{
 				get
@@ -1175,13 +1195,21 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			public virtual CursorInfo[]			CursorInfos
+			{
+				get
+				{
+					return null;
+				}
+			}
+			#endregion
 			
 			protected readonly ICursor			cursor;
 		}
 		#endregion
 		
 		#region TextInsertOplet Class
-		internal class TextInsertOplet : BaseOplet
+		internal class TextInsertOplet : BaseOplet, ICursorOplet
 		{
 			public TextInsertOplet(TextStory story, int position, int length) : base (story)
 			{
@@ -1258,6 +1286,24 @@ namespace Epsitec.Common.Text
 			}
 			
 			
+			#region ICursorOplet Members
+			public ICursor						Cursor
+			{
+				get
+				{
+					return this.cursor;
+				}
+			}
+			
+			public CursorInfo[]					CursorInfos
+			{
+				get
+				{
+					return this.cursors;
+				}
+			}
+			#endregion
+			
 			public override void Dispose()
 			{
 				//	Lorsque l'on supprime une information permettant d'annuler
@@ -1288,7 +1334,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			
-			private ICursor						cursor;
+			private readonly ICursor			cursor;
 			
 			private int							position;
 			private int							direction;
@@ -1299,7 +1345,7 @@ namespace Epsitec.Common.Text
 		#endregion
 		
 		#region TextDeleteOplet Class
-		internal class TextDeleteOplet : BaseOplet
+		internal class TextDeleteOplet : BaseOplet, ICursorOplet
 		{
 			public TextDeleteOplet(TextStory story, int position, int length, CursorInfo[] cursors) : base (story)
 			{
@@ -1308,6 +1354,11 @@ namespace Epsitec.Common.Text
 				this.cursors  = cursors;
 			}
 			
+			public TextDeleteOplet(TextStory story, int position, int length, CursorInfo[] cursors, ICursor cursor, int direction) : this (story, position, length, cursors)
+			{
+				this.cursor    = cursor;
+				this.direction = direction;
+			}
 			
 			public override Common.Support.IOplet Undo()
 			{
@@ -1321,6 +1372,16 @@ namespace Epsitec.Common.Text
 				
 				this.story.UpdateTextBreakInformation (this.position, this.length);
 				this.story.InternalRestoreCursorPositions (this.cursors, 0);
+				
+				if (this.cursor != null)
+				{
+					int new_dir = this.story.text.GetCursorDirection (this.cursor.CursorId);
+					int old_dir = this.direction;
+					
+					this.story.text.SetCursorDirection (this.cursor.CursorId, old_dir);
+					
+					this.direction = new_dir;
+				}
 				
 				this.cursors = null;
 				this.NotifyUndoExecuted ();
@@ -1342,12 +1403,42 @@ namespace Epsitec.Common.Text
 				this.story.text_length -= this.length;
 				this.story.undo_length += this.length;
 				
+				if (this.cursor != null)
+				{
+					int new_dir = this.story.text.GetCursorDirection (this.cursor.CursorId);
+					int old_dir = this.direction;
+					
+					this.story.text.SetCursorDirection (this.cursor.CursorId, old_dir);
+					
+					this.direction = new_dir;
+					
+					System.Diagnostics.Debug.Assert (this.story.text.GetCursorPosition (this.cursor.CursorId) == this.position);
+				}
+				
 				this.story.UpdateTextBreakInformation (this.position, 0);
 				this.NotifyRedoExecuted ();
 				
 				return this;
 			}
 			
+			
+			#region ICursorOplet Members
+			public ICursor						Cursor
+			{
+				get
+				{
+					return this.cursor;
+				}
+			}
+			
+			public CursorInfo[]					CursorInfos
+			{
+				get
+				{
+					return this.cursors;
+				}
+			}
+			#endregion
 			
 			public override void Dispose()
 			{
@@ -1379,7 +1470,10 @@ namespace Epsitec.Common.Text
 			}
 			
 			
+			private readonly ICursor			cursor;
+			
 			private int							position;
+			private int							direction;
 			private int							length;
 			private CursorInfo[]				cursors;
 		}

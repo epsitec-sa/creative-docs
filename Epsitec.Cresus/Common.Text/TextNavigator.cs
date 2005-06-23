@@ -337,10 +337,19 @@ namespace Epsitec.Common.Text
 					int p1 = positions[i+0];
 					int p2 = positions[i+1];
 					
+					ICursor c1 = this.selection_cursors[i+0] as ICursor;
+					ICursor c2 = this.selection_cursors[i+1] as ICursor;
+					
+					if (p1 > p2)
+					{
+						int     pp = p1; p1 = p2; p2 = pp;
+						ICursor cc = c1; c1 = c2; c2 = cc;
+					}
+					
 					string  text;
 					ulong[] buffer = new ulong[p2-p1];
 					
-					this.story.ReadText (p1, p2-p1, buffer);
+					this.story.ReadText (c1, p2-p1, buffer);
 					
 					TextConverter.ConvertToString (buffer, out text);
 					
@@ -746,12 +755,12 @@ namespace Epsitec.Common.Text
 				//	En marche arrière, on utilise le style du caractère courant, alors
 				//	qu'en marche avant, on utilise le style du caractère précédent :
 				
-				int pos    = this.CursorPosition;
-				int dir    = this.CursorDirection;
+				int pos    = this.story.GetCursorPosition (this.cursor);
+				int dir    = this.story.GetCursorDirection (this.cursor);
 				int offset = ((pos > 0) && (dir > 0)) ? -1 : 0;
 				
-				Internal.Navigator.GetStyles (this.story, this.ActiveCursor, offset, styles);
-				Internal.Navigator.GetProperties (this.story, this.ActiveCursor, offset, properties);
+				Internal.Navigator.GetStyles (this.story, this.cursor, offset, styles);
+				Internal.Navigator.GetProperties (this.story, this.cursor, offset, properties);
 			}
 			
 			int n_styles     = styles.Count;
@@ -781,6 +790,11 @@ namespace Epsitec.Common.Text
 				int p1 = positions[i+0];
 				int p2 = positions[i+1];
 				
+				if (p1 > p2)
+				{
+					int pp = p1; p1 = p2; p2 = pp;
+				}
+					
 				this.story.ChangeMarkers (p1, p2-p1, marker, true);
 			}
 		}
@@ -804,8 +818,6 @@ namespace Epsitec.Common.Text
 					
 					positions[i] = this.story.GetCursorPosition (cursor);
 				}
-				
-				System.Array.Sort (positions);
 			}
 			
 			System.Diagnostics.Debug.Assert ((positions.Length % 2) == 0);
@@ -823,11 +835,12 @@ namespace Epsitec.Common.Text
 		{
 			System.Diagnostics.Debug.Assert (this.story == sender);
 			
-			TextStory.BaseCursorOplet cursor_oplet = e.Oplet as TextStory.BaseCursorOplet;
+			TextStory.ICursorOplet cursor_oplet = e.Oplet as TextStory.ICursorOplet;
 			
-			if (cursor_oplet != null)
+			if ((cursor_oplet != null) &&
+				(cursor_oplet.Cursor == this.cursor))
 			{
-				//	TODO: ..gérer undo/redo des new/recycle de SelectionCursor
+				this.UpdateCurrentStylesAndProperties ();
 			}
 		}
 		

@@ -11,11 +11,12 @@ namespace Epsitec.Common.Text.Tests
 		public static void RunTests()
 		{
 //			CheckTextFitter.TestSimpleTextFrame ();
+//			CheckTextFitter.TestFit ();
 //			CheckTextFitter.TestFitTabs1 ();
 //			CheckTextFitter.TestFitTabs2 ();
 //			CheckTextFitter.TestFitTabs3 ();
-			CheckTextFitter.TestFitTabs4 ();
-//			CheckTextFitter.TestFit ();
+//			CheckTextFitter.TestFitTabs4 ();
+			CheckTextFitter.TestCursorGeometry ();
 		}
 		
 		
@@ -77,6 +78,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (24.0, Properties.SizeUnits.Points));
+			properties.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties.Add (new Properties.MarginsProperty (200, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
 			string[] words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite.\n".Split (' ');
@@ -238,11 +240,13 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			properties_1.Add (new Properties.TabProperty (60, 0, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
+			properties_2.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_2.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
 			story.ConvertToStyledText ("Text:\t", properties_1, out text);
@@ -310,11 +314,13 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			properties_1.Add (new Properties.TabProperty (60, 0.5, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
+			properties_2.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_2.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
 			story.ConvertToStyledText ("Text:\t", properties_1, out text);
@@ -390,11 +396,13 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			properties_1.Add (new Properties.TabProperty (60, 0, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
+			properties_2.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_2.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
 			story.ConvertToStyledText ("Text:\t", properties_1, out text);
@@ -461,11 +469,13 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			properties_1.Add (new Properties.TabProperty (60, 0, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
+			properties_2.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_2.Add (new Properties.MarginsProperty (60, 60, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
 			story.ConvertToStyledText ("Text:\t", properties_1, out text);
@@ -521,6 +531,101 @@ namespace Epsitec.Common.Text.Tests
 				}
 			}
 		}
+		
+		private static void TestCursorGeometry()
+		{
+			TextStory story  = new TextStory ();
+			ICursor   cursor = new Cursors.SimpleCursor ();
+			
+			story.NewCursor (cursor);
+			
+			ulong[] text;
+			
+			System.Collections.ArrayList properties_1 = new System.Collections.ArrayList ();
+			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
+			
+			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
+			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
+			properties_1.Add (new Properties.TabProperty (60, 0, null));
+			
+			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
+			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
+			properties_2.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties_2.Add (new Properties.MarginsProperty (60, 60, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
+			
+			story.ConvertToStyledText ("Text:\t", properties_1, out text);
+			story.InsertText (cursor, text);
+			
+			story.ConvertToStyledText ("Tout un paragraphe indenté (comme si le tabulateur se comportait comme un indentateur).\n", properties_2, out text);
+			story.InsertText (cursor, text);
+			
+			story.ConvertToStyledText ("Xyz\n", properties_1, out text);
+			story.InsertText (cursor, text);
+			
+			/*
+			 *	Text:---->Tout un 
+			 *			  paragraphe 
+			 *			  indenté 
+			 *			  (comme si le 
+			 *			  tabulateur se 
+			 *			  comportait 
+			 *			  comme un 
+			 *			  indentateur).
+			 * 
+			 *  Xyz
+			 *
+			 *	[vide]
+			 */
+			
+			story.SetCursorPosition (cursor, 0);
+			
+			TextFitter      fitter = new TextFitter (story);
+			SimpleTextFrame frame  = new SimpleTextFrame (150, 600);
+			frame.PageNumber = 0;
+			fitter.FrameList.InsertAt (0, frame);
+			
+			ITextFrame c_frame;
+			double cx, cy;
+			int c_line, c_char;
+			
+			fitter.GenerateAllMarks ();
+			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
+			
+			Debug.Assert.IsTrue (c_frame == frame);
+			Debug.Assert.IsTrue (c_line == 0);
+			Debug.Assert.IsTrue (c_char == 0);
+			
+			story.SetCursorPosition (cursor, 6, 1);
+			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
+			
+			Debug.Assert.IsTrue (c_frame == frame);
+			Debug.Assert.IsTrue (c_line == 0);
+			Debug.Assert.IsTrue (c_char == 6);
+			
+			story.SetCursorPosition (cursor, 14, 1);
+			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
+			
+			Debug.Assert.IsTrue (c_frame == frame);
+			Debug.Assert.IsTrue (c_line == 0);
+			Debug.Assert.IsTrue (c_char == 14);
+			
+			story.SetCursorPosition (cursor, 15, 1);
+			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
+			
+			Debug.Assert.IsTrue (c_frame == frame);
+			Debug.Assert.IsTrue (c_line == 1);
+			Debug.Assert.IsTrue (c_char == 1);
+			
+			story.SetCursorPosition (cursor, 14, -1);
+			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
+			
+			Debug.Assert.IsTrue (c_frame == frame);
+			Debug.Assert.IsTrue (c_line == 1);
+			Debug.Assert.IsTrue (c_char == 0);
+		}
+		
 		
 		#region Renderer Classes
 		private class Renderer : Text.ITextRenderer

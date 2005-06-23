@@ -85,12 +85,12 @@ namespace Epsitec.Common.Text.Tests
 			
 			story.InsertText (cursor, text_def);
 			
-			Debug.Assert.IsTrue (cursor.Direction == 1);
 			Debug.Assert.IsTrue (story.TextLength == 6);
 			Debug.Assert.IsTrue (story.UndoLength == 0);
 			Debug.Assert.IsTrue (story.OpletQueue.CanUndo);
 			Debug.Assert.IsFalse (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 6);
+			Debug.Assert.IsTrue (story.GetCursorDirection (cursor) == 1);
 			
 			System.Diagnostics.Trace.WriteLine ("Insert DEF.");
 			System.Diagnostics.Trace.WriteLine ("  Text: " + story.GetDebugText ());
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (story.OpletQueue.CanUndo);
 			Debug.Assert.IsTrue (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 3);
-			Debug.Assert.IsTrue (cursor.Direction == 1);
+			Debug.Assert.IsTrue (story.GetCursorDirection (cursor) == 1);
 			
 			System.Diagnostics.Trace.WriteLine ("Undone DEF.");
 			System.Diagnostics.Trace.WriteLine ("  Text: " + story.GetDebugText ());
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsFalse (story.OpletQueue.CanUndo);
 			Debug.Assert.IsTrue (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 0);
-			Debug.Assert.IsTrue (cursor.Direction == 0);
+			Debug.Assert.IsTrue (story.GetCursorDirection (cursor) == 0);
 			
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_x) == 0);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_y) == 0);
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (story.OpletQueue.CanUndo);
 			Debug.Assert.IsTrue (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 3);
-			Debug.Assert.IsTrue (cursor.Direction == 1);
+			Debug.Assert.IsTrue (story.GetCursorDirection (cursor) == 1);
 						
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_x) == 2);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_y) == 3);
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsFalse (story.OpletQueue.CanUndo);
 			Debug.Assert.IsFalse (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 6);
-			Debug.Assert.IsTrue (cursor.Direction == 1);
+			Debug.Assert.IsTrue (story.GetCursorDirection (cursor) == 1);
 			
 			System.Diagnostics.Trace.WriteLine ("Starting with ABCDEF.");
 			System.Diagnostics.Trace.WriteLine ("  Text: " + story.GetDebugText ());
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Text.Tests
 			story.MoveCursor (cursor, -3);
 			
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 3);
-			Debug.Assert.IsTrue (cursor.Direction == -1);
+			Debug.Assert.IsTrue (story.GetCursorDirection (cursor) == -1);
 			
 			story.DeleteText (cursor, 2);
 			
@@ -244,7 +244,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (story.OpletQueue.CanUndo);
 			Debug.Assert.IsFalse (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 3);
-			Debug.Assert.IsTrue (cursor.Direction == -1);
+			Debug.Assert.IsTrue (story.GetCursorDirection (cursor) == 1);
 			
 			System.Diagnostics.Trace.WriteLine ("Deleted DE.");
 			System.Diagnostics.Trace.WriteLine ("  Text: " + story.GetDebugText ());
@@ -261,7 +261,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (story.OpletQueue.CanUndo);
 			Debug.Assert.IsTrue (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 3);
-			Debug.Assert.IsTrue (cursor.Direction == -1);
+			Debug.Assert.IsTrue (story.GetCursorDirection (cursor) == -1);
 			
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_x) == 2);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_y) == 3);
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsFalse (story.OpletQueue.CanUndo);
 			Debug.Assert.IsTrue (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 6);
-			Debug.Assert.IsTrue (cursor.Direction == 1);
+			Debug.Assert.IsTrue (story.GetCursorDirection (cursor) == 1);
 			
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_x) == 2);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_y) == 3);
