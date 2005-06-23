@@ -193,6 +193,11 @@ namespace Epsitec.Common.Text
 			this.get_font_cache_font = font;
 		}
 		
+		public void GetFont(Properties.FontProperty property, out OpenType.Font font)
+		{
+			this.CreateOrGetFontFromCache (property.FaceName, property.StyleName, out font);
+		}
+		
 		public void GetFont(ulong code, out OpenType.Font font, out double font_size)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);

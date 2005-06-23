@@ -823,6 +823,14 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
+		public double GetCaretAngle()
+		{
+			double dx = this.ot_hhea.CaretSlopeRun;
+			double dy = this.ot_hhea.CaretSlopeRise;
+			
+			return System.Math.Atan2 (dy, dx);
+		}
+		
 		
 		public ulong GetHyphen()
 		{

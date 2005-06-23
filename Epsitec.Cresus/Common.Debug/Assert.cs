@@ -43,6 +43,14 @@ namespace Epsitec.Common.Debug
 			}
 		}
 		
+		public static void IsInBounds(double value, double min, double max)
+		{
+			if ((value < min) || (value > max))
+			{
+				throw new AssertFailedException (string.Format ("Value {0} out of bounds [{1}..{2}].", value, min, max));
+			}
+		}
+		
 		
 		public static void IsTrue(bool condition)
 		{

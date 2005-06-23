@@ -184,6 +184,9 @@ namespace Epsitec.Common.Text
 			//	numéro de ligne dans le paragraphe et numéro de caractère dans la
 			//	ligne.
 			
+			//	NB: La position verticale est toujours alignée sur la ligne de base
+			//		de la fonte, sans tenir compte d'un éventuel offset vertical.
+			
 			int position  = this.story.GetCursorPosition (cursor);
 			int direction = this.story.GetCursorDirection (cursor);
 			
@@ -693,6 +696,7 @@ restart_paragraph_layout:
 			Layout.Context            layout   = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
 			Internal.GeometryRenderer renderer = new Internal.GeometryRenderer ();
 			
+			layout.DisableFontBaselineOffset  = true;
 			layout.RendererNeedsTextAndGlyphs = true;
 			
 			this.RenderElement (renderer, frame, elements, i, layout);
@@ -706,12 +710,13 @@ restart_paragraph_layout:
 			}
 			else
 			{
+				//	Pas d'élément trouvé : on prend la ligne de base comme
+				//	référence :
+				
 				x = elements[i].LineBaseX;
 				y = elements[i].LineBaseY;
 				
 				frame.MapToView (ref x, ref y);
-				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Missing geometry element for position {0} (offset {1}).", position, cursor_offset));
 			}
 		}
 		

@@ -547,6 +547,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			Properties.FontProperty font_regular = new Properties.FontProperty ("Arial", "Regular");
 			Properties.FontProperty font_bold    = new Properties.FontProperty ("Arial", "Bold");
+			Properties.FontProperty font_italic  = new Properties.FontProperty ("Arial", "Italic");
 			
 			font_regular.Features = new string[] { "liga" };
 			
@@ -561,7 +562,7 @@ namespace Epsitec.Common.Text.Tests
 			properties_2.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_2.Add (new Properties.MarginsProperty (60, 60, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
-			properties_3.Add (font_regular);
+			properties_3.Add (font_italic);
 			properties_3.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_3.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_3.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, Properties.ThreeState.False));
@@ -572,7 +573,11 @@ namespace Epsitec.Common.Text.Tests
 			story.ConvertToStyledText ("Tout un paragraphe indenté (comme si le tabulateur se comportait comme un indentateur).\n", properties_2, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("fin\n", properties_3, out text);
+			Text.TextStyle default_style = story.StyleList.NewTextStyle ("Default", Text.TextStyleClass.Paragraph, properties_3);
+			
+			story.TextContext.DefaultStyle = default_style;
+			
+			story.ConvertToStyledText ("fin\n", default_style, out text);
 			story.InsertText (cursor, text);
 			
 			/*
@@ -661,28 +666,25 @@ namespace Epsitec.Common.Text.Tests
 			story.SetCursorPosition (cursor, 98, -1);
 			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
 			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, c_line, c_char));
-			System.Diagnostics.Debug.WriteLine ("");
 			
 			Debug.Assert.IsTrue (c_line == 0);
 			Debug.Assert.IsTrue (c_char == 0);
 			
-			for (int p = 0; p <= story.TextLength; p++)
-			{
-				story.SetCursorPosition (cursor, p, 1);
-				fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
-				
-				System.Diagnostics.Debug.WriteLine (string.Format ("{4:000} -- Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, c_line, c_char, p));
-			}
+			TextNavigator navigator = new TextNavigator (story, fitter);
 			
-			System.Diagnostics.Debug.WriteLine ("");
+			double ascender;
+			double descender;
+			double angle;
 			
-			for (int p = 0; p <= story.TextLength; p++)
-			{
-				story.SetCursorPosition (cursor, p, -1);
-				fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
-				
-				System.Diagnostics.Debug.WriteLine (string.Format ("{4:000} -- Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, c_line, c_char, p));
-			}
+			
+			navigator.MoveTo (TextNavigator.Target.TextEnd, 0);
+			navigator.GetCursorGeometry (out c_frame, out cx, out cy, out ascender, out descender, out angle);
+			
+			Debug.Assert.IsInBounds (ascender,  10.863, 10.864);
+			Debug.Assert.IsInBounds (descender, -2.543, -2.542);
+			Debug.Assert.IsInBounds (angle,      1.361,  1.362);
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, ascender={2}, descender={3}, angle={4}", cx, cy, ascender, descender, angle));
 		}
 		
 		

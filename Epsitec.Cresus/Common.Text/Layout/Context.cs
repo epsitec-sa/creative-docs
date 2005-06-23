@@ -354,6 +354,18 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public bool								DisableFontBaselineOffset
+		{
+			get
+			{
+				return this.disable_font_baseline_offset;
+			}
+			set
+			{
+				this.disable_font_baseline_offset = value;
+			}
+		}
+		
 		
 		public double							AvailableWidth
 		{
@@ -1526,6 +1538,7 @@ restart:
 		private bool							break_anywhere;
 		
 		private bool							renderer_needs_text_and_glyphs;
+		private bool							disable_font_baseline_offset;
 		
 		private Layout.BaseEngine				layout_engine;
 		private Properties.LayoutProperty		layout_property;

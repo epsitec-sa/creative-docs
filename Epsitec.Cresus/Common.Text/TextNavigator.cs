@@ -408,6 +408,92 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void GetCursorGeometry(out ITextFrame frame, out double cx, out double cy, out double ascender, out double descender, out double angle)
+		{
+			int para_line;
+			int line_char;
+			
+			this.fitter.GetCursorGeometry (this.ActiveCursor, out frame, out cx, out cy, out para_line, out line_char);
+			
+			System.Collections.ArrayList properties = this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties);
+			
+			if ((this.CursorPosition == this.story.TextLength) &&
+				(para_line == 0) &&
+				(line_char == 0))
+			{
+				//	Cas particulier : le curseur se trouve tout seul en fin de pavé,
+				//	sans aucun autre caractère dans la ligne.
+				
+				Properties.MarginsProperty margins = null;
+				
+				foreach (Property property in properties)
+				{
+					if (property is Properties.MarginsProperty)
+					{
+						margins = property as Properties.MarginsProperty;
+						break;
+					}
+				}
+				
+				double ox;
+				double oy;
+				double width;
+				double next_y;
+				
+				frame.MapFromView (ref cx, ref cy);
+				frame.ConstrainLineBox (cy, 0, 0, 0, 0, false, out ox, out oy, out width, out next_y);
+				
+				double mx1 = margins.LeftMarginFirstLine;
+				double mx2 = margins.RightMarginFirstLine;
+				double disposition = margins.Disposition;
+				
+				width -= mx1;
+				width -= mx2;
+				
+				cx += mx1;
+				cx += width * disposition;
+				
+				frame.MapToView (ref cx, ref cy);
+			}
+			
+			Properties.FontProperty       font = null;
+			Properties.FontSizeProperty   font_size = null;
+			Properties.FontOffsetProperty font_offset = null;
+			
+			foreach (Property property in properties)
+			{
+				if (property is Properties.FontProperty)
+				{
+					font = property as Properties.FontProperty;
+				}
+				else if (property is Properties.FontSizeProperty)
+				{
+					font_size = property as Properties.FontSizeProperty;
+				}
+				else if (property is Properties.FontOffsetProperty)
+				{
+					font_offset = property as Properties.FontOffsetProperty;
+				}
+			}
+			
+			OpenType.Font ot_font;
+			double        pt_size = font_size.SizeInPoints;
+			
+			this.story.TextContext.GetFont (font, out ot_font);
+			
+			ascender  = ot_font.GetAscender (pt_size);
+			descender = ot_font.GetDescender (pt_size);
+			angle     = ot_font.GetCaretAngle ();
+			
+			if (font_offset != null)
+			{
+				frame.MapFromView (ref cx, ref cy);
+				cy += font_offset.Offset;
+				frame.MapToView (ref cx, ref cy);
+			}
+		}
+		
+		
 		protected virtual bool MoveCursor(int distance)
 		{
 			int count;

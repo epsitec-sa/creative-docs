@@ -477,6 +477,15 @@ advance_next:
 			context.TextContext.GetFontOffsets (text[offset], out font_baseline, out font_advance);
 			context.TextContext.GetColor (text[offset], out color);
 			
+			//	Si l'appelant a désactivé le décalage vertical de la ligne de base
+			//	(par ex. pour déterminer la position du curseur), on en tient compte
+			//	ici :
+			
+			if (context.DisableFontBaselineOffset)
+			{
+				font_baseline = 0;
+			}
+			
 			//	Gérer l'étirement des glyphes en fonction de la fonte sélectionnée :
 			
 			StretchProfile.Scales scales = context.TextStretchScales;
