@@ -36,6 +36,18 @@ namespace Epsitec.Common.Text.Cursors
 			}
 		}
 		
+		public int								Direction
+		{
+			get
+			{
+				return 0;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert (value == 0);
+			}
+		}
+		
 		
 		public virtual void Clear()
 		{

@@ -65,26 +65,14 @@ namespace Epsitec.Common.Support
 			Common.Text.Tests.CheckTextFitter.RunTests ();
 		}
 		
-		[Test] public void CheckTextStory()
-		{
-			Common.Text.Tests.CheckTextStory.RunTests ();
-		}
-		
-		[Test] public void CheckTextTable()
-		{
-			Common.Text.Tests.CheckTextTable.RunTests ();
-		}
-		
-		[Test] public void CheckUnicode()
-		{
-			Common.Text.Tests.CheckUnicode.RunTests ();
-		}
-		
 		[Test] public void CheckTextNavigator()
 		{
 			Text.TextStory       story  = new Text.TextStory ();
 			Text.TextFitter      fitter = new Text.TextFitter (story);
 			Text.SimpleTextFrame frame  = new Text.SimpleTextFrame (100, 1000);
+			
+			Text.Cursors.SimpleCursor cursor;
+			string[] texts;
 			
 			fitter.FrameList.Add (frame);
 			
@@ -189,7 +177,10 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (9, line_count);
 			Assert.AreEqual (116, navigator.TextLength);
 			
-			Text.Cursors.SimpleCursor cursor = new Text.Cursors.SimpleCursor ();
+			//	Vérifie le bon fonctionnement de la détection des débuts et des
+			//	fins de lignes, basée sur les informations du fitter :
+			
+			cursor = new Text.Cursors.SimpleCursor ();
 			story.NewCursor (cursor);
 			
 			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 0));
@@ -226,6 +217,9 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (39, navigator.CursorPosition);
 			Assert.AreEqual (-1, navigator.CursorDirection);
 			
+			
+			//	Vérifie le bon fonctionnement de la sélection du texte :
+			
 			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
 			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
 			Assert.AreEqual (4, navigator.CursorPosition);
@@ -236,31 +230,29 @@ namespace Epsitec.Common.Support
 			navigator.EndSelection ();
 			Assert.AreEqual (4, navigator.CursorPosition);
 			
-			string[] texts;
-			
 			texts = navigator.GetSelectedTexts ();
-			
 			Assert.AreEqual (1, texts.Length);
 			Assert.AreEqual ("xyz   ", texts[0]);
 			
 			navigator.ClearSelection ();
 			
 			texts = navigator.GetSelectedTexts ();
-			
 			Assert.AreEqual (0, texts.Length);
 			
-			navigator.OpletQueue.UndoAction ();
+			navigator.OpletQueue.UndoAction ();		//	Undo deselect
 			
 			texts = navigator.GetSelectedTexts ();
-			
 			Assert.AreEqual (1, texts.Length);
 			Assert.AreEqual ("xyz   ", texts[0]);
 			
-			navigator.OpletQueue.RedoAction ();
+			navigator.OpletQueue.RedoAction ();		//	Redo deselect
 			
 			texts = navigator.GetSelectedTexts ();
-			
 			Assert.AreEqual (0, texts.Length);
+			
+			
+			//	Vérifie le bon fonctionnement de sélection disjointes en prenant
+			//	deux mots distants dans le texte :
 			
 			navigator.StartSelection ();
 			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
@@ -276,10 +268,13 @@ namespace Epsitec.Common.Support
 			navigator.EndSelection ();
 			
 			texts = navigator.GetSelectedTexts ();
-			
 			Assert.AreEqual (2, texts.Length);
 			Assert.AreEqual ("xyz   ", texts[0]);
 			Assert.AreEqual ("de", texts[1]);
+			
+			
+			//	Vérifie le bon fonctionnement de destructions de sélections
+			//	disjointes :
 			
 			navigator.Delete ();
 			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
@@ -288,8 +283,31 @@ namespace Epsitec.Common.Support
 			navigator.EndSelection ();
 			
 			texts = navigator.GetSelectedTexts ();
+			Assert.IsTrue (texts[0].EndsWith ("algorithm." + "\u2029" + "f"));
 			
-			System.Diagnostics.Debug.WriteLine (texts[0]);
+			navigator.OpletQueue.UndoAction ();		//	MoveTo
+			navigator.OpletQueue.UndoAction ();		//	Delete + deselect
+			
+			texts = navigator.GetSelectedTexts ();
+			Assert.AreEqual (2, texts.Length);
+			Assert.AreEqual ("xyz   ", texts[0]);
+			Assert.AreEqual ("de", texts[1]);
 		}
+		
+		[Test] public void CheckTextStory()
+		{
+			Common.Text.Tests.CheckTextStory.RunTests ();
+		}
+		
+		[Test] public void CheckTextTable()
+		{
+			Common.Text.Tests.CheckTextTable.RunTests ();
+		}
+		
+		[Test] public void CheckUnicode()
+		{
+			Common.Text.Tests.CheckUnicode.RunTests ();
+		}
+		
 	}
 }

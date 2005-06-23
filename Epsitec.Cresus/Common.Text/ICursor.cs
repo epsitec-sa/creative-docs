@@ -10,6 +10,7 @@ namespace Epsitec.Common.Text
 	{
 		int					CursorId			{ get; set; }
 		CursorAttachment	Attachment			{ get; }
+		int					Direction			{ get; set; }
 		
 		void Clear();
 	}

@@ -52,7 +52,7 @@ namespace Epsitec.Common.Text
 				if ((this.current_styles == null) ||
 					(this.current_properties == null))
 				{
-					this.UpdateCurrentStylesAndProperties (0);
+					this.UpdateCurrentStylesAndProperties ();
 				}
 				
 				return this.current_styles.Clone () as TextStyle[];
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Text
 				if ((this.current_styles == null) ||
 					(this.current_properties == null))
 				{
-					this.UpdateCurrentStylesAndProperties (0);
+					this.UpdateCurrentStylesAndProperties ();
 				}
 				
 				return this.current_properties.Clone () as Property[];
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.current_direction;
+				return this.story.GetCursorDirection (this.ActiveCursor);
 			}
 		}
 		
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Text
 			if ((this.current_styles == null) ||
 				(this.current_properties == null))
 			{
-				this.UpdateCurrentStylesAndProperties (0);
+				this.UpdateCurrentStylesAndProperties ();
 			}
 			
 			this.story.ConvertToStyledText (text, this.current_styles, this.current_properties, out styled_text);
@@ -154,39 +154,44 @@ namespace Epsitec.Common.Text
 			{
 				Internal.TextTable text = this.story.TextTable;
 				
-				this.InternalNewOpletBeforeClear ();
-				
-				for (int i = 0; i < this.selection_cursors.Count; i += 2)
+				using (this.story.OpletQueue.BeginAction ())
 				{
-					//	Traite les tranches dans l'ordre, en les détruisant les
-					//	unes après les autres.
+					this.InternalInsertSelectionOplet ();
 					
-					ICursor c1 = this.selection_cursors[i+0] as ICursor;
-					ICursor c2 = this.selection_cursors[i+1] as ICursor;
-					
-					int p1 = text.GetCursorPosition (c1.CursorId);
-					int p2 = text.GetCursorPosition (c2.CursorId);
-					
-					if (p1 > p2)
+					for (int i = 0; i < this.selection_cursors.Count; i += 2)
 					{
-						ICursor cc = c1;
-						int     pp = p1;
+						//	Traite les tranches dans l'ordre, en les détruisant les
+						//	unes après les autres.
 						
-						p1 = p2;	c1 = c2;
-						p2 = pp;	c2 = cc;
+						ICursor c1 = this.selection_cursors[i+0] as ICursor;
+						ICursor c2 = this.selection_cursors[i+1] as ICursor;
+						
+						int p1 = text.GetCursorPosition (c1.CursorId);
+						int p2 = text.GetCursorPosition (c2.CursorId);
+						
+						if (p1 > p2)
+						{
+							ICursor cc = c1;
+							int     pp = p1;
+							
+							p1 = p2;	c1 = c2;
+							p2 = pp;	c2 = cc;
+						}
+						
+						if (i+2 == this.selection_cursors.Count)
+						{
+							//	C'est la dernière tranche. Il faut positionner le curseur
+							//	de travail au début de la zone et hériter des styles actifs
+							//	à cet endroit :
+							
+							this.story.SetCursorPosition (this.cursor, p1, 0);
+							this.UpdateCurrentStylesAndProperties ();
+						}
+						
+						this.story.DeleteText (c1, p2-p1);
 					}
 					
-					if (i+2 == this.selection_cursors.Count)
-					{
-						//	C'est la dernière tranche. Il faut positionner le curseur
-						//	de travail au début de la zone et hériter des styles actifs
-						//	à cet endroit :
-						
-						this.story.SetCursorPosition (this.cursor, p1);
-						this.UpdateCurrentStylesAndProperties (0);
-					}
-					
-					this.story.DeleteText (c1, p2-p1);
+					this.story.OpletQueue.ValidateAction ();
 				}
 				
 				this.InternalClearSelection ();
@@ -198,66 +203,57 @@ namespace Epsitec.Common.Text
 		{
 			System.Diagnostics.Debug.Assert (count >= 0);
 			
-			int old_pos   = this.CursorPosition;
-			int direction = 0;
+			int old_pos = this.CursorPosition;
+			int old_dir = this.CursorDirection;
 			
 			switch (target)
 			{
 				case Target.CharacterNext:
 					this.MoveCursor (count);
-					direction = 1;
 					break;
 				
 				case Target.CharacterPrevious:
 					this.MoveCursor (-count);
-					direction = -1;
 					break;
 				
 				case Target.TextStart:
-					this.story.SetCursorPosition (this.ActiveCursor, 0);
-					direction = -1;
+					this.story.SetCursorPosition (this.ActiveCursor, 0, -1);
 					break;
 				
 				case Target.TextEnd:
-					this.story.SetCursorPosition (this.ActiveCursor, this.TextLength);
-					direction = 1;
+					this.story.SetCursorPosition (this.ActiveCursor, this.TextLength, 1);
 					break;
 					
 				case Target.ParagraphStart:
 					this.MoveCursor (count, -1, new MoveCallback (this.IsParagraphStart));
-					direction = -1;
 					break;
 				
 				case Target.ParagraphEnd:
 					this.MoveCursor (count, 1, new MoveCallback (this.IsParagraphEnd));
-					direction = 1;
 					break;
 				
 				case Target.LineStart:
 					this.MoveCursor (count, -1, new MoveCallback (this.IsLineStart));
-					direction = -1;
 					break;
 				
 				case Target.LineEnd:
 					this.MoveCursor (count, 1, new MoveCallback (this.IsLineEnd));
-					direction = 1;
 					break;
 				
 				case Target.WordStart:
 					this.MoveCursor (count, -1, new MoveCallback (this.IsWordStart));
-					direction = -1;
 					break;
 				
 				case Target.WordEnd:
 					this.MoveCursor (count, 1, new MoveCallback (this.IsWordEnd));
-					direction = 1;
 					break;
 			}
 			
 			int new_pos = this.CursorPosition;
+			int new_dir = this.CursorDirection;
 			
 			if ((old_pos != new_pos) ||
-				(direction != this.current_direction))
+				(old_dir != new_dir))
 			{
 				if (this.IsSelectionActive)
 				{
@@ -265,7 +261,7 @@ namespace Epsitec.Common.Text
 				}
 				else
 				{
-					this.UpdateCurrentStylesAndProperties (direction);
+					this.UpdateCurrentStylesAndProperties ();
 				}
 				
 				this.OnCursorMoved ();
@@ -307,7 +303,12 @@ namespace Epsitec.Common.Text
 				//	Prend note de la position des curseurs de sélection pour
 				//	pouvoir restaurer la sélection en cas de UNDO :
 				
-				this.InternalNewOpletBeforeClear ();
+				using (this.story.OpletQueue.BeginAction ())
+				{
+					this.InternalInsertSelectionOplet ();
+					this.story.OpletQueue.ValidateAction ();
+				}
+				
 				this.InternalClearSelection ();
 				this.UpdateSelectionMarkers ();
 			}
@@ -438,6 +439,8 @@ namespace Epsitec.Common.Text
 				//	l'on n'a pas atterri dans un fragment de texte marqué comme
 				//	étant un texte automatique ou un texte produit par un générateur.
 				
+				//	TODO: utiliser un curseur temporaire pour les déplacements
+				
 				this.story.MoveCursor (this.ActiveCursor, direction);
 				
 				ulong code = text_table.ReadChar (this.ActiveCursor.CursorId);
@@ -459,7 +462,7 @@ namespace Epsitec.Common.Text
 						//	automatique; on n'a pas le droit de laisser le curseur ici,
 						//	alors on le remet à sa position initiale et on s'arrête...
 						
-						this.story.SetCursorPosition (this.ActiveCursor, pos);
+						this.story.SetCursorPosition (this.ActiveCursor, pos, -1);
 						break;
 					}
 					
@@ -487,8 +490,9 @@ namespace Epsitec.Common.Text
 		
 		protected virtual bool MoveCursor(int count, int direction, MoveCallback callback)
 		{
-			int moved = 0;
-			int pos   = this.story.GetCursorPosition (this.ActiveCursor);
+			int moved   = 0;
+			int old_pos = this.CursorPosition;
+			int old_dir = this.CursorDirection;
 			
 			Context            context    = this.TextContext;
 			Internal.TextTable text_table = this.story.TextTable;
@@ -499,7 +503,7 @@ namespace Epsitec.Common.Text
 			
 			if (direction > 0)
 			{
-				int max = this.story.TextLength - pos;
+				int max = this.story.TextLength - old_pos;
 				
 				for (int i = 0; i < max; i++)
 				{
@@ -520,7 +524,7 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				int max = pos;
+				int max = old_pos;
 				
 				for (int i = 0; i < max; i++)
 				{
@@ -540,12 +544,19 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			if (moved != 0)
-			{
-				this.story.MoveCursor (this.ActiveCursor, moved);
-			}
+			int new_pos = old_pos + moved;
+			int new_dir = direction;
 			
-			return moved != 0;
+			if ((new_pos != old_pos) ||
+				(new_dir != old_dir))
+			{
+				this.story.SetCursorPosition (this.ActiveCursor, new_pos, new_dir);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		
 		
@@ -632,14 +643,10 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		private void InternalNewOpletBeforeClear()
+		private void InternalInsertSelectionOplet()
 		{
-			using (this.story.OpletQueue.BeginAction ())
-			{
-				int[] positions = this.GetSelectionCursorPositions ();
-				this.story.OpletQueue.Insert (new ClearSelectionOplet (this, positions));
-				this.story.OpletQueue.ValidateAction ();
-			}
+			int[] positions = this.GetSelectionCursorPositions ();
+			this.story.OpletQueue.Insert (new ClearSelectionOplet (this, positions));
 		}
 		
 		private void InternalClearSelection()
@@ -725,7 +732,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected virtual void UpdateCurrentStylesAndProperties(int direction)
+		protected virtual void UpdateCurrentStylesAndProperties()
 		{
 			System.Collections.ArrayList styles     = new System.Collections.ArrayList ();
 			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
@@ -739,8 +746,9 @@ namespace Epsitec.Common.Text
 				//	En marche arrière, on utilise le style du caractère courant, alors
 				//	qu'en marche avant, on utilise le style du caractère précédent :
 				
-				int pos    = this.story.GetCursorPosition (this.ActiveCursor);
-				int offset = ((pos > 0) && (direction > 0)) ? -1 : 0;
+				int pos    = this.CursorPosition;
+				int dir    = this.CursorDirection;
+				int offset = ((pos > 0) && (dir > 0)) ? -1 : 0;
 				
 				Internal.Navigator.GetStyles (this.story, this.ActiveCursor, offset, styles);
 				Internal.Navigator.GetProperties (this.story, this.ActiveCursor, offset, properties);
@@ -751,7 +759,6 @@ namespace Epsitec.Common.Text
 			
 			this.current_styles     = new TextStyle[n_styles];
 			this.current_properties = new Property[n_properties];
-			this.current_direction  = direction;
 			
 			styles.CopyTo (this.current_styles);
 			properties.CopyTo (this.current_properties);
@@ -895,6 +902,5 @@ namespace Epsitec.Common.Text
 		
 		private TextStyle[]						current_styles;
 		private Property[]						current_properties;
-		private int								current_direction;
 	}
 }

@@ -41,9 +41,22 @@ namespace Epsitec.Common.Text.Cursors
 			}
 		}
 		
+		public int								Direction
+		{
+			get
+			{
+				return this.direction;
+			}
+			set
+			{
+				this.direction = value;
+			}
+		}
+		
 		
 		public virtual void Clear()
 		{
+			this.direction = 0;
 		}
 		#endregion
 		
@@ -76,5 +89,6 @@ namespace Epsitec.Common.Text.Cursors
 		#endregion
 		
 		private Internal.CursorId				cursor_id;
+		private int								direction;
 	}
 }

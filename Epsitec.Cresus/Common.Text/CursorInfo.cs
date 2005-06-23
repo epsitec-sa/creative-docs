@@ -11,10 +11,11 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public struct CursorInfo
 	{
-		public CursorInfo(int id, int position)
+		public CursorInfo(int id, int position, int direction)
 		{
-			this.id       = id;
-			this.position = position;
+			this.id        = id;
+			this.position  = position;
+			this.direction = direction;
 		}
 		
 		
@@ -34,6 +35,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public int							Direction
+		{
+			get
+			{
+				return this.direction;
+			}
+		}
+		
 		
 		public static readonly IComparer	PositionComparer = new PrivatePositionComparer ();
 		public static readonly IComparer	CursorIdComparer = new PrivateCursorIdComparer ();
@@ -49,7 +58,12 @@ namespace Epsitec.Common.Text
 				CursorInfo info_x = (CursorInfo) x;
 				CursorInfo info_y = (CursorInfo) y;
 				
-				return info_y.position - info_x.position;
+				if (info_x.position == info_y.position)
+				{
+					return info_x.direction - info_y.direction;
+				}
+				
+				return info_x.position - info_y.position;
 			}
 			#endregion
 		}
@@ -62,7 +76,7 @@ namespace Epsitec.Common.Text
 				CursorInfo info_x = (CursorInfo) x;
 				CursorInfo info_y = (CursorInfo) y;
 				
-				return info_y.id - info_x.id;
+				return info_x.id - info_y.id;
 			}
 			#endregion
 		}
@@ -70,5 +84,6 @@ namespace Epsitec.Common.Text
 		
 		private int							id;
 		private int							position;
+		private int							direction;
 	}
 }

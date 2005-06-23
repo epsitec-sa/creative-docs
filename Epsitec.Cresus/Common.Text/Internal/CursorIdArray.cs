@@ -217,7 +217,7 @@ namespace Epsitec.Common.Text.Internal
 					//	ce qui permet à l'appelant de générer les informations pour
 					//	l'annulation :
 					
-					list.Add (new CursorInfo (this.elements[index_at].id, pos_abs));
+					list.Add (new CursorInfo (this.elements[index_at].id, pos_abs, 0));
 				}
 				
 				//	Déplace le curseur au début de la tranche supprimée :

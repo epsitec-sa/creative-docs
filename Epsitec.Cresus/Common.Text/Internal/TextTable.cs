@@ -80,6 +80,7 @@ namespace Epsitec.Common.Text.Internal
 			this.cursors.RecycleCursor (id);
 		}
 		
+		
 		public int MoveCursor(Internal.CursorId id, int distance)
 		{
 			Internal.Cursor record = this.cursors.ReadCursor (id);
@@ -196,10 +197,22 @@ namespace Epsitec.Common.Text.Internal
 			return 0;
 		}
 		
+		
 		public void SetCursorPosition(Internal.CursorId id, int position)
 		{
 			this.MoveCursor (id, position - this.GetCursorPosition (id));
 		}
+		
+		public void SetCursorDirection(Internal.CursorId id, int direction)
+		{
+			ICursor cursor = this.GetCursorInstance (id);
+			
+			if (cursor != null)
+			{
+				cursor.Direction = direction;
+			}
+		}
+		
 		
 		public ICursor GetCursorInstance(Internal.CursorId id)
 		{
@@ -265,14 +278,14 @@ namespace Epsitec.Common.Text.Internal
 					
 					CursorInfo[] result = new CursorInfo[count];
 					
-					result[0] = new CursorInfo (cursor_id, cursor_pos);
+					result[0] = new CursorInfo (cursor_id, cursor_pos, this.GetCursorDirection (cursor_id));
 					
 					for (int i = 1; i < count; i++)
 					{
 						CursorId cursor_id_i  = chunk.GetNthCursorId (cursor_index - i);
 						int      cursor_pos_i = this.GetCursorPosition (cursor_id_i);
 						
-						result[i] = new CursorInfo (cursor_id_i, cursor_pos_i);
+						result[i] = new CursorInfo (cursor_id_i, cursor_pos_i, this.GetCursorDirection (cursor_id_i));
 					}
 					
 					//	Filtre le résultat, si nécessaire :
@@ -371,16 +384,16 @@ namespace Epsitec.Common.Text.Internal
 					
 					if (j >= i)
 					{
+						Internal.CursorId cursor_id       = chunk.GetNthCursorId (j);
+						ICursor           cursor_instance = this.cursors.GetCursorInstance (cursor_id);
+						
 						if (filter != null)
 						{
-							Internal.CursorId cursor_id = chunk.GetNthCursorId (j);
-							ICursor cursor_instance = this.cursors.GetCursorInstance (cursor_id);
-							
 							if (filter (cursor_instance, i_pos))
 							{
 								if (find_only_first)
 								{
-									return new CursorInfo[] { new CursorInfo (cursor_id, i_pos) };
+									return new CursorInfo[] { new CursorInfo (cursor_id, i_pos, cursor_instance == null ? 0 : cursor_instance.Direction) };
 								}
 								
 								i_num++;
@@ -390,7 +403,7 @@ namespace Epsitec.Common.Text.Internal
 						{
 							if (find_only_first)
 							{
-								return new CursorInfo[] { new CursorInfo (chunk.GetNthCursorId (j), i_pos) };
+								return new CursorInfo[] { new CursorInfo (cursor_id, i_pos, cursor_instance == null ? 0 : cursor_instance.Direction) };
 							}
 							
 							i_num++;
@@ -445,20 +458,20 @@ namespace Epsitec.Common.Text.Internal
 					
 					if (j >= i)
 					{
+						Internal.CursorId cursor_id       = chunk.GetNthCursorId (j);
+						ICursor           cursor_instance = this.cursors.GetCursorInstance (cursor_id);
+						
 						if (filter != null)
 						{
-							Internal.CursorId cursor_id = chunk.GetNthCursorId (j);
-							ICursor cursor_instance = this.cursors.GetCursorInstance (cursor_id);
-							
 							if (filter (cursor_instance, i_pos))
 							{
-								infos[i_num] = new CursorInfo (cursor_id, i_pos);
+								infos[i_num] = new CursorInfo (cursor_id, i_pos, cursor_instance == null ? 0 : cursor_instance.Direction);
 								i_num++;
 							}
 						}
 						else
 						{
-							infos[i_num] = new CursorInfo (chunk.GetNthCursorId (j), i_pos);
+							infos[i_num] = new CursorInfo (cursor_id, i_pos, cursor_instance == null ? 0 : cursor_instance.Direction);
 							i_num++;
 						}
 					}
@@ -593,6 +606,13 @@ namespace Epsitec.Common.Text.Internal
 			return pos;
 		}
 		
+		public int GetCursorDirection(Internal.CursorId id)
+		{
+			ICursor cursor = this.GetCursorInstance (id);
+			
+			return (cursor == null) ? 0 : cursor.Direction;
+		}
+		
 		public int GetCursorDistance(Internal.CursorId id_a, Internal.CursorId id_b)
 		{
 			//	Retourne la distance de la position du curseur 'a' à la position du curseur
@@ -666,7 +686,15 @@ namespace Epsitec.Common.Text.Internal
 						list = new System.Collections.ArrayList ();
 					}
 					
-					list.AddRange (infos);
+					//	Conserve les informations au sujet des curseurs affectés par la
+					//	suppression du texte (cursor, position et direction) :
+					
+					for (int i = 0; i < infos.Length; i++)
+					{
+						ICursor i_cursor = this.cursors.GetCursorInstance (infos[i].CursorId);
+						
+						list.Add (new CursorInfo (infos[i].CursorId, infos[i].Position, i_cursor.Direction));
+					}
 				}
 				
 				if (size > 0)

@@ -26,6 +26,30 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (c3.CursorState == Internal.CursorState.Allocated);
 			Debug.Assert.IsTrue (c4.CursorState == Internal.CursorState.Allocated);
 			Debug.Assert.IsTrue (c5.CursorState == Internal.CursorState.Copied);
+			
+			CursorInfo[] infos = new CursorInfo[4];
+			
+			infos[0] = new CursorInfo (0, 10, 0);
+			infos[1] = new CursorInfo (5, 10, 1);
+			infos[2] = new CursorInfo (3, 10, -1);
+			infos[3] = new CursorInfo (8, 8, 1);
+			
+			System.Array.Sort (infos, CursorInfo.PositionComparer);
+			
+			Debug.Assert.IsTrue (infos[0].Position == 8);
+			Debug.Assert.IsTrue (infos[1].Position == 10);
+			Debug.Assert.IsTrue (infos[2].Position == 10);
+			Debug.Assert.IsTrue (infos[3].Position == 10);
+			Debug.Assert.IsTrue (infos[1].Direction == -1);
+			Debug.Assert.IsTrue (infos[2].Direction == 0);
+			Debug.Assert.IsTrue (infos[3].Direction == 1);
+			
+			System.Array.Sort (infos, CursorInfo.CursorIdComparer);
+			
+			Debug.Assert.IsTrue (infos[0].CursorId == 0);
+			Debug.Assert.IsTrue (infos[1].CursorId == 3);
+			Debug.Assert.IsTrue (infos[2].CursorId == 5);
+			Debug.Assert.IsTrue (infos[3].CursorId == 8);
 		}
 		
 		
