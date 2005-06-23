@@ -80,11 +80,6 @@ namespace Epsitec.Common.Text.Internal
 				
 				double ax = dx / map_char.Length;
 				
-				if (map_char.Length > 1)
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("Ligature with {0} characters, dx={1}", map_char.Length, dx));
-				}
-				
 				for (int i = 0; i < map_char.Length; i++)
 				{
 					this.items.Add (new Element (frame, font, size, map_char[i], ox, oy));

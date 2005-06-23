@@ -837,8 +837,9 @@ restart:
 			
 			this.text_profile.ComputeScales (this.text_width, out this.text_scales);
 			
-			int               end            = this.text_offset + length - this.text_profile.CountEndSpace;
-			Unicode.BreakInfo end_break_info = Unicode.Bits.GetBreakInfo (this.text[this.text_start + end - 1]);
+			int               end             = this.text_offset + length;
+			int               end_space_count = this.text_profile.CountEndSpace;
+			Unicode.BreakInfo end_break_info  = Unicode.Bits.GetBreakInfo (this.text[this.text_start + end - 1]);
 			
 			switch (end_break_info)
 			{
@@ -878,7 +879,7 @@ restart:
 				
 				this.text_glue = glue_width / glue_count;
 				
-				this.layout_engine.FillProfile (this, end - this.text_offset, glue_profile);
+				this.layout_engine.FillProfile (this, end - this.text_offset - end_space_count, glue_profile);
 				
 				glue_count = glue_profile.TotalCount;
 				glue_count = System.Math.Max (1, glue_count - 1);

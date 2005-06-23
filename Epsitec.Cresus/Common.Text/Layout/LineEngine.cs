@@ -498,6 +498,9 @@ advance_next:
 			
 			Unicode.BreakAnalyzer.GetStretchClass (text, offset, length, attributes);
 			
+//			int    space_count = context.TextStretchProfile.CountEndSpace;
+//			double space_width = context.TextStretchProfile.WidthEndSpace;
+			
 			if ((last_run) &&
 				(context.EnableHyphenation))
 			{
@@ -585,6 +588,7 @@ advance_next:
 			
 			renderer.Render (context.Frame, font, font_size, color, mapping, glyphs, x_pos, y_pos, x_scale, null);
 		}
+		
 		
 		private ulong[] GetHyphenatedText(ulong[] text, int offset, int length, ulong hyphen)
 		{

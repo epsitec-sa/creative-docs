@@ -124,73 +124,6 @@ namespace Epsitec.Common.Text
 			renderer.RenderEndParagraph (layout);
 		}
 		
-		private void GetCursorGeometry(int position, int cursor_offset, Cursors.FitterCursor.Element[] elements, int i, ref double x, ref double y)
-		{
-			ITextFrame frame  = this.FrameList[elements[i].FrameIndex];
-			int        length = elements[i].Length;
-			ulong[]    text   = new ulong[length];
-			
-			this.story.ReadText (position, length, text);
-			
-			Layout.Context            layout   = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
-			Internal.GeometryRenderer renderer = new Internal.GeometryRenderer ();
-			
-			layout.RendererNeedsTextAndGlyphs = true;
-			
-			this.RenderElement (renderer, frame, elements, i, layout);
-			
-			Internal.GeometryRenderer.Element item = renderer[cursor_offset];
-			
-			if (item != null)
-			{
-				x = item.X;
-				y = item.Y;
-			}
-		}
-		
-		private void RenderElement(ITextRenderer renderer, ITextFrame frame, Cursors.FitterCursor.Element[] elements, int i, Layout.Context layout)
-		{
-			int last_i = elements.Length - 1;
-			int index  = elements[i].FrameIndex;
-			int length = elements[i].Length;
-			
-			layout.SelectFrame (index, 0);
-			
-			if ((frame == null) ||
-				(layout.Frame == frame))
-			{
-				double ox    = elements[i].LineBaseX;
-				double oy    = elements[i].LineBaseY;
-				double width = elements[i].LineWidth;
-				double asc   = elements[i].LineAscender;
-				double desc  = elements[i].LineDescender;
-				
-				layout.Frame.MapToView (ref ox, ref oy);
-				
-				if ((length > 0) &&
-					(renderer.IsFrameAreaVisible (layout.Frame, ox, oy+desc, width, asc+desc)))
-				{
-					bool is_tab  = (i > 0) ? elements[i-1].IsTabulation : false;
-					bool is_last = (i == last_i) || (elements[i].IsTabulation);
-					
-					Layout.StretchProfile profile = elements[i].Profile;
-					
-					layout.Y             = oy;
-					layout.LineAscender  = asc;
-					layout.LineDescender = desc;
-					
-					layout.RenderLine (renderer, profile, length, ox, oy, width, i, is_tab, is_last);
-				}
-				else
-				{
-					layout.InvisibleLine (renderer, length, ox, oy);
-				}
-			}
-			
-			layout.TextOffset += length;
-		}
-		
-		
 		public void RenderTextFrame(ITextFrame frame, ITextRenderer renderer)
 		{
 			int index = this.frame_list.IndexOf (frame);
@@ -247,6 +180,10 @@ namespace Epsitec.Common.Text
 		
 		public bool GetCursorGeometry(ICursor cursor, out ITextFrame frame, out double x, out double y, out int paragraph_line, out int line_character)
 		{
+			//	Détermine où se trouve le curseur spécifié : frame, position [x;y],
+			//	numéro de ligne dans le paragraphe et numéro de caractère dans la
+			//	ligne.
+			
 			int position  = this.story.GetCursorPosition (cursor);
 			int direction = this.story.GetCursorDirection (cursor);
 			
@@ -277,7 +214,7 @@ namespace Epsitec.Common.Text
 					int line_end    = line_start + line_length;
 					
 					if ((position >= line_start) &&
-						((position < line_end) || ((position == line_end) && (direction >= 0) && (! elements[i].IsTabulation))))
+						((position < line_end) || ((position == line_end) && (direction >= 0) && (! elements[i].IsTabulation)) || ((position == line_end) && (line_length == 0))))
 					{
 						//	Le curseur se trouve dans la ligne en cours d'analyse.
 						//	On tient compte de la direction de déplacement pour
@@ -329,7 +266,7 @@ namespace Epsitec.Common.Text
 		
 		
 		
-		protected void ExecuteClear(Cursors.TempCursor temp_cursor, int pos, ref int length, out TextProcessor.Status status)
+		private void ExecuteClear(Cursors.TempCursor temp_cursor, int pos, ref int length, out TextProcessor.Status status)
 		{
 			//	Supprime les marques de découpe de lignes représentées par des
 			//	curseurs (instances de Cursors.FitterCursor).
@@ -345,7 +282,7 @@ namespace Epsitec.Common.Text
 			status = TextProcessor.Status.Continue;
 		}
 		
-		protected void ExecuteGenerate(Cursors.TempCursor cursor, int pos, ref int length, out TextProcessor.Status status)
+		private void ExecuteGenerate(Cursors.TempCursor cursor, int pos, ref int length, out TextProcessor.Status status)
 		{
 			//	Génère les marques de découpe de lignes et insère les curseurs
 			//	correspondants.
@@ -707,7 +644,7 @@ restart_paragraph_layout:
 		}
 		
 		
-		protected int RewindToPreviousParagraph(Cursors.TempCursor cursor, int position, int offset)
+		private int RewindToPreviousParagraph(Cursors.TempCursor cursor, int position, int offset)
 		{
 			Cursors.FitterCursor para_1 = this.GetPreviousFitterCursor (position + offset);
 			Cursors.FitterCursor para_2 = this.GetPreviousFitterCursor (para_1);
@@ -742,6 +679,82 @@ restart_paragraph_layout:
 			this.RecycleFitterCursor (para_1);
 			
 			return distance;
+		}
+		
+		
+		private void GetCursorGeometry(int position, int cursor_offset, Cursors.FitterCursor.Element[] elements, int i, ref double x, ref double y)
+		{
+			ITextFrame frame  = this.FrameList[elements[i].FrameIndex];
+			int        length = elements[i].Length;
+			ulong[]    text   = new ulong[length];
+			
+			this.story.ReadText (position, length, text);
+			
+			Layout.Context            layout   = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
+			Internal.GeometryRenderer renderer = new Internal.GeometryRenderer ();
+			
+			layout.RendererNeedsTextAndGlyphs = true;
+			
+			this.RenderElement (renderer, frame, elements, i, layout);
+			
+			Internal.GeometryRenderer.Element item = renderer[cursor_offset];
+			
+			if (item != null)
+			{
+				x = item.X;
+				y = item.Y;
+			}
+			else
+			{
+				x = elements[i].LineBaseX;
+				y = elements[i].LineBaseY;
+				
+				frame.MapToView (ref x, ref y);
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("Missing geometry element for position {0} (offset {1}).", position, cursor_offset));
+			}
+		}
+		
+		private void RenderElement(ITextRenderer renderer, ITextFrame frame, Cursors.FitterCursor.Element[] elements, int i, Layout.Context layout)
+		{
+			int last_i = elements.Length - 1;
+			int index  = elements[i].FrameIndex;
+			int length = elements[i].Length;
+			
+			layout.SelectFrame (index, 0);
+			
+			if ((frame == null) ||
+				(layout.Frame == frame))
+			{
+				double ox    = elements[i].LineBaseX;
+				double oy    = elements[i].LineBaseY;
+				double width = elements[i].LineWidth;
+				double asc   = elements[i].LineAscender;
+				double desc  = elements[i].LineDescender;
+				
+				layout.Frame.MapToView (ref ox, ref oy);
+				
+				if ((length > 0) &&
+					(renderer.IsFrameAreaVisible (layout.Frame, ox, oy+desc, width, asc+desc)))
+				{
+					bool is_tab  = (i > 0) ? elements[i-1].IsTabulation : false;
+					bool is_last = (i == last_i) || (elements[i].IsTabulation);
+					
+					Layout.StretchProfile profile = elements[i].Profile;
+					
+					layout.Y             = oy;
+					layout.LineAscender  = asc;
+					layout.LineDescender = desc;
+					
+					layout.RenderLine (renderer, profile, length, ox, oy, width, i, is_tab, is_last);
+				}
+				else
+				{
+					layout.InvisibleLine (renderer, length, ox, oy);
+				}
+			}
+			
+			layout.TextOffset += length;
 		}
 		
 		
@@ -795,7 +808,7 @@ restart_paragraph_layout:
 		}
 		
 		
-		protected enum TabStatus
+		private enum TabStatus
 		{
 			Ok,
 			ErrorNeedMoreText,
@@ -803,7 +816,7 @@ restart_paragraph_layout:
 			ErrorCannotFit
 		}
 		
-		protected TabStatus MeasureTabTextWidth(Layout.Context layout, Properties.TabProperty tab_property, int line_count, bool start_of_line, out double tab_x, out double width)
+		private TabStatus MeasureTabTextWidth(Layout.Context layout, Properties.TabProperty tab_property, int line_count, bool start_of_line, out double tab_x, out double width)
 		{
 			tab_x = 0;
 			width = 0;
@@ -930,12 +943,12 @@ restart_paragraph_layout:
 			return TabStatus.ErrorCannotFit;
 		}
 		
-		protected double ComputePenalty(double space_penalty, double break_penalty)
+		private double ComputePenalty(double space_penalty, double break_penalty)
 		{
 			return space_penalty + break_penalty;
 		}
 		
-		protected int ComputeParagraphLength(ulong[] text, int offset)
+		private int ComputeParagraphLength(ulong[] text, int offset)
 		{
 			//	Détermine la longueur du paragraphe dans le texte passé en entrée, en
 			//	commençant à l'offset indiqué. Une marque de fin de texte ne fait pas
@@ -962,7 +975,7 @@ restart_paragraph_layout:
 		}
 		
 		
-		protected Cursors.FitterCursor NewFitterCursor()
+		private Cursors.FitterCursor NewFitterCursor()
 		{
 			//	Retourne un curseur tout neuf (ou reprend un curseur qui a été
 			//	recyclé précédemment, pour éviter de devoir en allouer à tour
@@ -985,7 +998,7 @@ restart_paragraph_layout:
 			return cursor;
 		}
 		
-		protected void RecycleFitterCursor(ICursor cursor)
+		private void RecycleFitterCursor(ICursor cursor)
 		{
 			//	Recycle le curseur passé en entrée. Il est simplement placé
 			//	dans la pile des curseurs disponibles.
