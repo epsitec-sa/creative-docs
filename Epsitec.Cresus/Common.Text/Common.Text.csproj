@@ -359,6 +359,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Internal\GeometryRenderer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Internal\Navigator.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

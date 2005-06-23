@@ -561,9 +561,9 @@ advance_next:
 			int n = glyphs.Length;
 			
 			double[] x_scale = new double[n];
-			double[] x_pos   = new double[n];
 			double[] x_glue  = new double[n];
-			double[] y_pos   = new double[n];
+			double[] x_pos   = new double[n+1];		//	un élément de plus pour permettre de..
+			double[] y_pos   = new double[n];		//	..calculer la largeur du dernier glyphe
 			
 			this.GenerateXScale (attributes, scales, x_scale);
 			
@@ -575,7 +575,10 @@ advance_next:
 			
 			//	Détermine la position horizontale de chaque glyphe :
 			
-			ox += font.GetPositions (glyphs, font_size, ox, x_pos, x_scale, x_glue);
+			double dx = font.GetPositions (glyphs, font_size, ox, x_pos, x_scale, x_glue);
+			
+			ox      += dx;
+			x_pos[n] = x_pos[0] + dx;
 			
 			//	Demande à ITextRenderer de faire le rendu avec les positions que
 			//	nous venons de déterminer :

@@ -97,70 +97,99 @@ namespace Epsitec.Common.Text
 			this.RenderParagraphInTextFrame (cursor, renderer, null);
 		}
 		
-		public void RenderParagraphInTextFrame(ICursor cursor, ITextRenderer renderer, ITextFrame frame)
+		public void RenderParagraphInTextFrame(ICursor fitter_cursor, ITextRenderer renderer, ITextFrame frame)
 		{
-			Cursors.FitterCursor c = cursor as Cursors.FitterCursor;
+			Cursors.FitterCursor cursor = fitter_cursor as Cursors.FitterCursor;
 			
-			if (c == null)
+			if (cursor == null)
 			{
-				throw new System.ArgumentException ("Not a valid FitterCursor.", "cursor");
+				throw new System.ArgumentException ("Not a valid FitterCursor.", "fitter_cursor");
 			}
 			
-			ulong[] text;
-			int length = c.ParagraphLength;
+			int     length = cursor.ParagraphLength;
+			ulong[] text   = new ulong[length];
 			
-			text   = new ulong[length];
-			length = this.story.ReadText (c, length, text);
+			this.story.ReadText (cursor, length, text);
 			
-			Layout.Context layout = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
+			Layout.Context                 layout   = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
+			Cursors.FitterCursor.Element[] elements = cursor.Elements;
 			
 			renderer.RenderStartParagraph (layout);
 			
-			int n = c.Elements.Length;
-			
-			for (int i = 0; i < n; i++)
+			for (int i = 0; i < elements.Length; i++)
 			{
-				int index = c.Elements[i].FrameIndex;
-				int count = c.Elements[i].Length;
-				
-				layout.SelectFrame (index, 0);
-				
-				if ((frame == null) ||
-					(layout.Frame == frame))
-				{
-					double ox    = c.Elements[i].LineBaseX;
-					double oy    = c.Elements[i].LineBaseY;
-					double width = c.Elements[i].LineWidth;
-					double asc   = c.Elements[i].LineAscender;
-					double desc  = c.Elements[i].LineDescender;
-					
-					layout.Frame.MapToView (ref ox, ref oy);
-					
-					if ((count > 0) &&
-						(renderer.IsFrameAreaVisible (layout.Frame, ox, oy+desc, width, asc+desc)))
-					{
-						bool is_tab  = (i > 0) ? c.Elements[i-1].IsTabulation : false;
-						bool is_last = (i == n-1) || (c.Elements[i].IsTabulation);
-						
-						Layout.StretchProfile profile = c.Elements[i].Profile;
-						
-						layout.Y             = oy;
-						layout.LineAscender  = asc;
-						layout.LineDescender = desc;
-						
-						layout.RenderLine (renderer, profile, count, ox, oy, width, i, is_tab, is_last);
-					}
-					else
-					{
-						layout.InvisibleLine (renderer, count, ox, oy);
-					}
-				}
-				
-				layout.TextOffset += count;
+				this.RenderElement (renderer, frame, elements, i, layout);
 			}
 			
 			renderer.RenderEndParagraph (layout);
 		}
+		
+		private void GetCursorGeometry(int position, int cursor_offset, Cursors.FitterCursor.Element[] elements, int i, ref double x, ref double y)
+		{
+			ITextFrame frame  = this.FrameList[elements[i].FrameIndex];
+			int        length = elements[i].Length;
+			ulong[]    text   = new ulong[length];
+			
+			this.story.ReadText (position, length, text);
+			
+			Layout.Context            layout   = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
+			Internal.GeometryRenderer renderer = new Internal.GeometryRenderer ();
+			
+			layout.RendererNeedsTextAndGlyphs = true;
+			
+			this.RenderElement (renderer, frame, elements, i, layout);
+			
+			Internal.GeometryRenderer.Element item = renderer[cursor_offset];
+			
+			if (item != null)
+			{
+				x = item.X;
+				y = item.Y;
+			}
+		}
+		
+		private void RenderElement(ITextRenderer renderer, ITextFrame frame, Cursors.FitterCursor.Element[] elements, int i, Layout.Context layout)
+		{
+			int last_i = elements.Length - 1;
+			int index  = elements[i].FrameIndex;
+			int length = elements[i].Length;
+			
+			layout.SelectFrame (index, 0);
+			
+			if ((frame == null) ||
+				(layout.Frame == frame))
+			{
+				double ox    = elements[i].LineBaseX;
+				double oy    = elements[i].LineBaseY;
+				double width = elements[i].LineWidth;
+				double asc   = elements[i].LineAscender;
+				double desc  = elements[i].LineDescender;
+				
+				layout.Frame.MapToView (ref ox, ref oy);
+				
+				if ((length > 0) &&
+					(renderer.IsFrameAreaVisible (layout.Frame, ox, oy+desc, width, asc+desc)))
+				{
+					bool is_tab  = (i > 0) ? elements[i-1].IsTabulation : false;
+					bool is_last = (i == last_i) || (elements[i].IsTabulation);
+					
+					Layout.StretchProfile profile = elements[i].Profile;
+					
+					layout.Y             = oy;
+					layout.LineAscender  = asc;
+					layout.LineDescender = desc;
+					
+					layout.RenderLine (renderer, profile, length, ox, oy, width, i, is_tab, is_last);
+				}
+				else
+				{
+					layout.InvisibleLine (renderer, length, ox, oy);
+				}
+			}
+			
+			layout.TextOffset += length;
+		}
+		
 		
 		public void RenderTextFrame(ITextFrame frame, ITextRenderer renderer)
 		{
@@ -229,9 +258,12 @@ namespace Epsitec.Common.Text
 			{
 				System.Diagnostics.Debug.Assert (infos.Length == 1);
 				
-				Cursors.FitterCursor fitter_cursor   = text.GetCursorInstance (infos[0].CursorId) as Cursors.FitterCursor;
-				int                  paragraph_start = text.GetCursorPosition (infos[0].CursorId);
-				int                  line_start      = paragraph_start;
+				Cursors.FitterCursor fitter_cursor = text.GetCursorInstance (infos[0].CursorId) as Cursors.FitterCursor;
+				
+				int paragraph_start = text.GetCursorPosition (infos[0].CursorId);
+				int line_start      = paragraph_start;
+				int tab_count       = 0;
+				int tab_char_count  = 0;
 				
 				System.Diagnostics.Debug.Assert (paragraph_start + fitter_cursor.ParagraphLength >= position);
 				
@@ -245,7 +277,7 @@ namespace Epsitec.Common.Text
 					int line_end    = line_start + line_length;
 					
 					if ((position >= line_start) &&
-						((position < line_end) || ((position == line_end) && (direction >= 0))))
+						((position < line_end) || ((position == line_end) && (direction >= 0) && (! elements[i].IsTabulation))))
 					{
 						//	Le curseur se trouve dans la ligne en cours d'analyse.
 						//	On tient compte de la direction de déplacement pour
@@ -257,10 +289,22 @@ namespace Epsitec.Common.Text
 						x = elements[i].LineBaseX;
 						y = elements[i].LineBaseY;
 						
-						paragraph_line = i;
-						line_character = position - line_start;
+						paragraph_line = i - tab_count;
+						line_character = position - line_start + tab_char_count;
+						
+						this.GetCursorGeometry (line_start, position - line_start, elements, i, ref x, ref y);
 						
 						return true;
+					}
+					
+					if (elements[i].IsTabulation)
+					{
+						tab_char_count += line_length;
+						tab_count++;
+					}
+					else
+					{
+						tab_char_count = 0;
 					}
 					
 					line_start = line_end;

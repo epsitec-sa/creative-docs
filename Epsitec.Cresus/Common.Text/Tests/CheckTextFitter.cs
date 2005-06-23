@@ -544,13 +544,18 @@ namespace Epsitec.Common.Text.Tests
 			System.Collections.ArrayList properties_1 = new System.Collections.ArrayList ();
 			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
 			
-			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
+			Properties.FontProperty font_regular = new Properties.FontProperty ("Arial", "Regular");
+			Properties.FontProperty font_bold    = new Properties.FontProperty ("Arial", "Bold");
+			
+			font_regular.Features = new string[] { "liga" };
+			
+			properties_1.Add (font_regular);
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			properties_1.Add (new Properties.TabProperty (60, 0, null));
 			
-			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
+			properties_2.Add (font_bold);
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
 			properties_2.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_2.Add (new Properties.MarginsProperty (60, 60, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
@@ -561,7 +566,7 @@ namespace Epsitec.Common.Text.Tests
 			story.ConvertToStyledText ("Tout un paragraphe indenté (comme si le tabulateur se comportait comme un indentateur).\n", properties_2, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("Xyz\n", properties_1, out text);
+			story.ConvertToStyledText ("fin\n", properties_1, out text);
 			story.InsertText (cursor, text);
 			
 			/*
@@ -574,7 +579,7 @@ namespace Epsitec.Common.Text.Tests
 			 *			  comme un 
 			 *			  indentateur).
 			 * 
-			 *  Xyz
+			 *  fin
 			 *
 			 *	[vide]
 			 */
@@ -593,12 +598,16 @@ namespace Epsitec.Common.Text.Tests
 			fitter.GenerateAllMarks ();
 			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
 			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0}:{1}, line {2}, column {3}", cx, cy, c_line, c_char));
+			
 			Debug.Assert.IsTrue (c_frame == frame);
 			Debug.Assert.IsTrue (c_line == 0);
 			Debug.Assert.IsTrue (c_char == 0);
 			
 			story.SetCursorPosition (cursor, 6, 1);
 			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0}:{1}, line {2}, column {3}", cx, cy, c_line, c_char));
 			
 			Debug.Assert.IsTrue (c_frame == frame);
 			Debug.Assert.IsTrue (c_line == 0);
@@ -607,12 +616,16 @@ namespace Epsitec.Common.Text.Tests
 			story.SetCursorPosition (cursor, 14, 1);
 			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
 			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0}:{1}, line {2}, column {3}", cx, cy, c_line, c_char));
+			
 			Debug.Assert.IsTrue (c_frame == frame);
 			Debug.Assert.IsTrue (c_line == 0);
 			Debug.Assert.IsTrue (c_char == 14);
 			
 			story.SetCursorPosition (cursor, 15, 1);
 			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0}:{1}, line {2}, column {3}", cx, cy, c_line, c_char));
 			
 			Debug.Assert.IsTrue (c_frame == frame);
 			Debug.Assert.IsTrue (c_line == 1);
@@ -621,9 +634,19 @@ namespace Epsitec.Common.Text.Tests
 			story.SetCursorPosition (cursor, 14, -1);
 			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
 			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0}:{1}, line {2}, column {3}", cx, cy, c_line, c_char));
+			
 			Debug.Assert.IsTrue (c_frame == frame);
 			Debug.Assert.IsTrue (c_line == 1);
 			Debug.Assert.IsTrue (c_char == 0);
+			
+			for (int p = 0; p <= story.TextLength; p++)
+			{
+				story.SetCursorPosition (cursor, p, 1);
+				fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("{4:000} -- Cursor at {0}:{1}, line {2}, column {3}", cx, cy, c_line, c_char, p));
+			}
 		}
 		
 		

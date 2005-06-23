@@ -11,7 +11,7 @@ namespace Epsitec.Common.Text.Layout
 	{
 		public TextToGlyphMapping(ulong[] text, int offset, int length, ushort[] glyphs, short[] map)
 		{
-			System.Diagnostics.Debug.Assert (glyphs.Length + 1 == map.Length);
+			System.Diagnostics.Debug.Assert (glyphs.Length < map.Length);
 			
 			this.text   = new int[length];
 			this.glyphs = glyphs;
