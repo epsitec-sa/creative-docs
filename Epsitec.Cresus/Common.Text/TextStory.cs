@@ -146,9 +146,15 @@ namespace Epsitec.Common.Text
 				int old_pos = this.text.GetCursorPosition (cursor.CursorId);
 				int old_dir = this.text.GetCursorDirection (cursor.CursorId);
 				
-				this.text.MoveCursor (cursor.CursorId, distance);
+				int direction = (distance > 0) ? 1 : (distance < 0) ? -1 : 0;
 				
-				int new_pos = this.GetCursorPosition (cursor);
+				this.text.MoveCursor (cursor.CursorId, distance);
+				this.text.SetCursorDirection (cursor.CursorId, direction);
+				
+				int new_pos = this.text.GetCursorPosition (cursor.CursorId);
+				int new_dir = this.text.GetCursorDirection (cursor.CursorId);
+				
+				System.Diagnostics.Debug.Assert (new_dir == direction);
 				
 				if (old_pos != new_pos)
 				{
@@ -218,10 +224,9 @@ namespace Epsitec.Common.Text
 		
 		public void InsertText(ICursor cursor, ulong[] text)
 		{
-			System.Diagnostics.Debug.Assert (cursor.Attachment != CursorAttachment.Temporary);
-			
-			int position = this.text.GetCursorPosition (cursor.CursorId);
-			int length   = text.Length;
+			int position  = this.text.GetCursorPosition (cursor.CursorId);
+			int direction = this.text.GetCursorDirection (cursor.CursorId);
+			int length    = text.Length;
 			
 			//	Passe en revue tous les caractères et met à jour les compteurs
 			//	d'utilisation pour les styles associés :
@@ -231,7 +236,19 @@ namespace Epsitec.Common.Text
 			this.text.InsertText (cursor.CursorId, text);
 			this.text_length += length;
 			
-			this.InternalAddOplet (new TextInsertOplet (this, position, length));
+			if (cursor.Attachment == CursorAttachment.Temporary)
+			{
+				this.InternalAddOplet (new TextInsertOplet (this, position, length));
+			}
+			else
+			{
+				this.InternalAddOplet (new TextInsertOplet (this, position, length, cursor, direction));
+				
+				if (direction != 1)
+				{
+					cursor.Direction = 1;
+				}
+			}
 			
 			this.UpdateTextBreakInformation (position, length);
 		}
@@ -1172,6 +1189,12 @@ namespace Epsitec.Common.Text
 				this.length   = length;
 			}
 			
+			public TextInsertOplet(TextStory story, int position, int length, ICursor cursor, int direction) : this (story, position, length)
+			{
+				this.cursor    = cursor;
+				this.direction = direction;
+			}
+			
 			
 			public override Common.Support.IOplet Undo()
 			{
@@ -1186,6 +1209,18 @@ namespace Epsitec.Common.Text
 				
 				this.story.text_length -= this.length;
 				this.story.undo_length += this.length;
+				
+				if (this.cursor != null)
+				{
+					int new_dir = this.story.text.GetCursorDirection (this.cursor.CursorId);
+					int old_dir = this.direction;
+					
+					this.story.text.SetCursorDirection (this.cursor.CursorId, old_dir);
+					
+					this.direction = new_dir;
+					
+					System.Diagnostics.Debug.Assert (this.story.text.GetCursorPosition (this.cursor.CursorId) == this.position);
+				}
 				
 				this.story.UpdateTextBreakInformation (this.position, 0);
 				this.NotifyUndoExecuted ();
@@ -1205,6 +1240,16 @@ namespace Epsitec.Common.Text
 				
 				this.story.UpdateTextBreakInformation (this.position, this.length);
 				this.story.InternalRestoreCursorPositions (this.cursors, 0);
+				
+				if (this.cursor != null)
+				{
+					int new_dir = this.story.text.GetCursorDirection (this.cursor.CursorId);
+					int old_dir = this.direction;
+					
+					this.story.text.SetCursorDirection (this.cursor.CursorId, old_dir);
+					
+					this.direction = new_dir;
+				}
 				
 				this.cursors = null;
 				this.NotifyRedoExecuted ();
@@ -1243,8 +1288,12 @@ namespace Epsitec.Common.Text
 			}
 			
 			
+			private ICursor						cursor;
+			
 			private int							position;
+			private int							direction;
 			private int							length;
+			
 			private CursorInfo[]				cursors;
 		}
 		#endregion

@@ -67,9 +67,12 @@ namespace Epsitec.Common.Text.Tests
 			ulong[] text_abc = { 65ul, 66ul, 67ul };
 			ulong[] text_def = { 68ul, 69ul, 70ul };
 			
+			Debug.Assert.IsTrue (cursor.Direction == 0);
+			
 			story.OpletQueue.PurgeUndo ();
 			story.InsertText (cursor, text_abc);
 			
+			Debug.Assert.IsTrue (cursor.Direction == 1);
 			Debug.Assert.IsTrue (story.TextLength == 3);
 			Debug.Assert.IsTrue (story.UndoLength == 0);
 			Debug.Assert.IsTrue (story.OpletQueue.CanUndo);
@@ -82,6 +85,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			story.InsertText (cursor, text_def);
 			
+			Debug.Assert.IsTrue (cursor.Direction == 1);
 			Debug.Assert.IsTrue (story.TextLength == 6);
 			Debug.Assert.IsTrue (story.UndoLength == 0);
 			Debug.Assert.IsTrue (story.OpletQueue.CanUndo);
@@ -98,9 +102,9 @@ namespace Epsitec.Common.Text.Tests
 			story.NewCursor (cursor_y);
 			story.NewCursor (cursor_z);
 			
-			story.MoveCursor (cursor_x, 2);
-			story.MoveCursor (cursor_y, 3);
-			story.MoveCursor (cursor_z, 4);
+			story.SetCursorPosition (cursor_x, 2, 0);
+			story.SetCursorPosition (cursor_y, 3, -1);
+			story.SetCursorPosition (cursor_z, 4, 1);
 			
 			story.DebugDisableOpletQueue = false;
 			
@@ -111,6 +115,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (story.OpletQueue.CanUndo);
 			Debug.Assert.IsTrue (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 3);
+			Debug.Assert.IsTrue (cursor.Direction == 1);
 			
 			System.Diagnostics.Trace.WriteLine ("Undone DEF.");
 			System.Diagnostics.Trace.WriteLine ("  Text: " + story.GetDebugText ());
@@ -119,7 +124,10 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_x) == 2);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_y) == 3);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_z) == 3);
-			
+			Debug.Assert.IsTrue (cursor_x.Direction == 0);
+			Debug.Assert.IsTrue (cursor_y.Direction == -1);
+			Debug.Assert.IsTrue (cursor_z.Direction == 1);
+						
 			story.OpletQueue.UndoAction ();
 			
 			Debug.Assert.IsTrue (story.TextLength == 0);
@@ -127,10 +135,14 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsFalse (story.OpletQueue.CanUndo);
 			Debug.Assert.IsTrue (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 0);
+			Debug.Assert.IsTrue (cursor.Direction == 0);
 			
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_x) == 0);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_y) == 0);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_z) == 0);
+			Debug.Assert.IsTrue (cursor_x.Direction == 0);
+			Debug.Assert.IsTrue (cursor_y.Direction == -1);
+			Debug.Assert.IsTrue (cursor_z.Direction == 1);
 			
 			System.Diagnostics.Trace.WriteLine ("Undone ABC.");
 			System.Diagnostics.Trace.WriteLine ("  Text: " + story.GetDebugText ());
@@ -143,10 +155,14 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (story.OpletQueue.CanUndo);
 			Debug.Assert.IsTrue (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 3);
-			
+			Debug.Assert.IsTrue (cursor.Direction == 1);
+						
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_x) == 2);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_y) == 3);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_z) == 3);
+			Debug.Assert.IsTrue (cursor_x.Direction == 0);
+			Debug.Assert.IsTrue (cursor_y.Direction == -1);
+			Debug.Assert.IsTrue (cursor_z.Direction == 1);
 			
 			System.Diagnostics.Trace.WriteLine ("Redone ABC.");
 			System.Diagnostics.Trace.WriteLine ("  Text: " + story.GetDebugText ());
@@ -198,6 +214,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsFalse (story.OpletQueue.CanUndo);
 			Debug.Assert.IsFalse (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 6);
+			Debug.Assert.IsTrue (cursor.Direction == 1);
 			
 			System.Diagnostics.Trace.WriteLine ("Starting with ABCDEF.");
 			System.Diagnostics.Trace.WriteLine ("  Text: " + story.GetDebugText ());
@@ -216,6 +233,10 @@ namespace Epsitec.Common.Text.Tests
 			story.DebugDisableOpletQueue = false;
 			
 			story.MoveCursor (cursor, -3);
+			
+			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 3);
+			Debug.Assert.IsTrue (cursor.Direction == -1);
+			
 			story.DeleteText (cursor, 2);
 			
 			Debug.Assert.IsTrue (story.TextLength == 4);
@@ -223,6 +244,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (story.OpletQueue.CanUndo);
 			Debug.Assert.IsFalse (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 3);
+			Debug.Assert.IsTrue (cursor.Direction == -1);
 			
 			System.Diagnostics.Trace.WriteLine ("Deleted DE.");
 			System.Diagnostics.Trace.WriteLine ("  Text: " + story.GetDebugText ());
@@ -239,6 +261,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (story.OpletQueue.CanUndo);
 			Debug.Assert.IsTrue (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 3);
+			Debug.Assert.IsTrue (cursor.Direction == -1);
 			
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_x) == 2);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_y) == 3);
@@ -255,6 +278,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsFalse (story.OpletQueue.CanUndo);
 			Debug.Assert.IsTrue (story.OpletQueue.CanRedo);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor) == 6);
+			Debug.Assert.IsTrue (cursor.Direction == 1);
 			
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_x) == 2);
 			Debug.Assert.IsTrue (story.GetCursorPosition (cursor_y) == 3);
