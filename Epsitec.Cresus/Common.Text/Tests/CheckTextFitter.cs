@@ -722,7 +722,7 @@ namespace Epsitec.Common.Text.Tests
 			{
 			}
 			
-			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
 			{
 				for (int i = 0; i < glyphs.Length; i++)
 				{
@@ -751,6 +751,10 @@ namespace Epsitec.Common.Text.Tests
 						this.buffer.Length = 0;
 					}
 				}
+			}
+			
+			public void Render(ITextFrame frame, IGlyphRenderer glyph_renderer, Drawing.Color color, double x, double y, bool is_last_run)
+			{
 			}
 			
 			public void RenderEndLine(Layout.Context context)
@@ -792,7 +796,11 @@ namespace Epsitec.Common.Text.Tests
 			{
 			}
 			
-			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
+			{
+			}
+			
+			public void Render(ITextFrame frame, IGlyphRenderer glyph_renderer, Drawing.Color color, double x, double y, bool is_last_run)
 			{
 			}
 			

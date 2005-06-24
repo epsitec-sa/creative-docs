@@ -441,8 +441,11 @@ advance_next:
 			return false;
 		}
 
-		private void RenderRun(Layout.Context context, ITextRenderer renderer, ref double ox, double oy, ulong[] text, int offset, int length, bool last_run)
+		private void RenderRun(Layout.Context context, ITextRenderer renderer, ref double ox, double oy, ulong[] text, int offset, int length, bool is_last_run)
 		{
+			Drawing.Color color;
+			context.TextContext.GetColor (text[offset], out color);
+			
 			if ((length == 1) &&
 				(Unicode.Bits.GetCode (text[offset]) == (int) Unicode.Code.ObjectReplacement))
 			{
@@ -456,7 +459,9 @@ advance_next:
 				double x1, x2;
 				
 				image.GetGeometry (out ascender, out descender, out advance, out x1, out x2);
-				image.RenderGlyph (context.Frame, ox, oy);
+//-				image.RenderGlyph (context.Frame, ox, oy);
+				
+				renderer.Render (context.Frame, image, color, ox, oy, is_last_run);
 				
 				ox += advance;
 				
@@ -467,7 +472,6 @@ advance_next:
 			//	Détermine la fonte qu'il faudra utiliser pour le fragment de texte
 			//	dont il faut faire le rendu :
 			
-			Drawing.Color color;
 			OpenType.Font font;
 			double        font_size;
 			double        font_baseline;
@@ -475,7 +479,6 @@ advance_next:
 			
 			context.TextContext.GetFont (text[offset], out font, out font_size);
 			context.TextContext.GetFontOffsets (text[offset], out font_baseline, out font_advance);
-			context.TextContext.GetColor (text[offset], out color);
 			
 			//	Si l'appelant a désactivé le décalage vertical de la ligne de base
 			//	(par ex. pour déterminer la position du curseur), on en tient compte
@@ -510,7 +513,7 @@ advance_next:
 //			int    space_count = context.TextStretchProfile.CountEndSpace;
 //			double space_width = context.TextStretchProfile.WidthEndSpace;
 			
-			if ((last_run) &&
+			if ((is_last_run) &&
 				(context.EnableHyphenation))
 			{
 				//	Produit la césure manuellement (il faudrait faire mieux pour gérer
@@ -595,7 +598,7 @@ advance_next:
 			//	Demande à ITextRenderer de faire le rendu avec les positions que
 			//	nous venons de déterminer :
 			
-			renderer.Render (context.Frame, font, font_size, color, mapping, glyphs, x_pos, y_pos, x_scale, null);
+			renderer.Render (context.Frame, font, font_size, color, mapping, glyphs, x_pos, y_pos, x_scale, null, is_last_run);
 		}
 		
 		
@@ -610,7 +613,7 @@ advance_next:
 			return copy;
 		}
 		
-		private void FillProfileWithRun(Layout.Context context, ulong[] text, int offset, int length, bool last_run, StretchProfile profile)
+		private void FillProfileWithRun(Layout.Context context, ulong[] text, int offset, int length, bool is_last_run, StretchProfile profile)
 		{
 			OpenType.Font font;
 			double        font_size;
@@ -628,7 +631,7 @@ advance_next:
 			//	Génère les glyphes et les informations relatives à l'extensibilité
 			//	pour le fragment de texte :
 			
-			if ((last_run) &&
+			if ((is_last_run) &&
 				(context.EnableHyphenation))
 			{
 				//	Produit la césure manuellement (il faudrait faire mieux pour gérer

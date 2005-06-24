@@ -92,6 +92,22 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 			
+			public bool							ShowCursors
+			{
+				get
+				{
+					return this.show_cursors;
+				}
+				set
+				{
+					if (this.show_cursors != value)
+					{
+						this.show_cursors = value;
+						this.Invalidate ();
+					}
+				}
+			}
+			
 			public Graphics						Graphics
 			{
 				get
@@ -159,6 +175,46 @@ namespace Epsitec.Common.Drawing
 				graphics.LineWidth = 0.75;
 				graphics.AddLine (ox1, oy1, ox2, oy2);
 				graphics.RenderSolid (Drawing.Color.FromName ("Blue"));
+				
+				if (this.show_cursors)
+				{
+					System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+					
+					properties.Add (new Text.Properties.FontProperty ("Verdana", "Regular"));
+					properties.Add (new Text.Properties.FontSizeProperty (16.0, Common.Text.Properties.SizeUnits.Points));
+					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Common.Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, Common.Text.Properties.ThreeState.True));
+					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Common.Text.Properties.SizeUnits.None, 5.0, Common.Text.Properties.SizeUnits.Points, 5.0, Common.Text.Properties.SizeUnits.Points, Common.Text.Properties.AlignMode.None));
+					
+					Text.StyleList style_list    = this.story.TextContext.StyleList;
+					Text.TextStyle style_default = style_list.NewTextStyle ("Default", Common.Text.TextStyleClass.Paragraph, properties);
+					
+					this.story.TextContext.DefaultStyle = style_default;
+					
+					Text.TextNavigator navigator = new Text.TextNavigator (this.story, this.fitter);
+					
+					Common.Text.ITextFrame frame;
+					double cx, cy, ascender, descender, angle;
+					
+					for (int i = 0; i < this.story.TextLength; i++)
+					{
+						navigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle);
+						
+//-						System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1:0.00}:{2:0.00}", i, cx, cy));
+						
+						navigator.MoveTo (Common.Text.TextNavigator.Target.CharacterNext, 1);
+						
+						double dx = System.Math.Cos (angle) * (ascender - descender);
+						double dy = System.Math.Sin (angle) * (ascender - descender);
+						
+						cx += System.Math.Cos (angle) * (descender);
+						cy += System.Math.Sin (angle) * (descender);
+						
+						graphics.AddLine (cx, cy, cx+dx, cy+dy);
+					}
+					
+					graphics.RenderSolid (Drawing.Color.FromName ("Green"));
+				}
 			}
 			
 			
@@ -201,7 +257,7 @@ namespace Epsitec.Common.Drawing
 				context.RendererNeedsTextAndGlyphs = true;
 			}
 			
-			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
 			{
 				System.Diagnostics.Debug.Assert (mapping != null);
 				
@@ -252,6 +308,11 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 			
+			public void Render(ITextFrame frame, IGlyphRenderer glyph_renderer, Drawing.Color color, double x, double y, bool is_last_run)
+			{
+				glyph_renderer.RenderGlyph (frame, x, y);
+			}
+			
 			public void RenderEndLine(Text.Layout.Context context)
 			{
 			}
@@ -298,6 +359,7 @@ namespace Epsitec.Common.Drawing
 			private double						frame_ratio;
 			private Graphics					graphics;
 			private bool						condition;
+			private bool						show_cursors;
 		}
 		
 		private class Controller
@@ -327,6 +389,7 @@ namespace Epsitec.Common.Drawing
 				RadioButton rb2 = new RadioButton (this.window.Root, "g1", 1);
 				CheckButton cb5 = new CheckButton (this.window.Root);
 				CheckButton cb6 = new CheckButton (this.window.Root);
+				CheckButton cb7 = new CheckButton (this.window.Root);
 				
 				RadioButton.Activate (this.window.Root, "g1", 0);
 				
@@ -341,6 +404,7 @@ namespace Epsitec.Common.Drawing
 				
 				cb5.Dock = DockStyle.Top; cb5.DockMargins = new Margins (4, 4, 4, 0);
 				cb6.Dock = DockStyle.Top; cb6.DockMargins = new Margins (4, 4, 0, 0);
+				cb7.Dock = DockStyle.Top; cb7.DockMargins = new Margins (4, 4, 0, 0);
 				
 				st1.Text = "Réglages pour le rendu du pavé de texte :";
 				
@@ -354,6 +418,7 @@ namespace Epsitec.Common.Drawing
 				
 				cb5.Name = "equal frames";	cb5.Text = "2 colonnes égales";				cb5.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButton5ActiveStateChanged);
 				cb6.Name = "condition true";cb6.Text = "affiche texte conditionnel";	cb6.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButton6ActiveStateChanged);
+				cb7.Name = "cursors";		cb7.Text = "affiche la pos. des curseurs";	cb7.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButton7ActiveStateChanged);
 				
 				this.window.ClientSize = new Size (260, 180);
 				this.window.Owner      = owner;
@@ -370,6 +435,8 @@ namespace Epsitec.Common.Drawing
 				
 				ulong[] text;
 				string words;
+				
+				TextStyle[] no_styles = new TextStyle[0];
 				
 				if (this.active_test == 0)
 				{
@@ -389,7 +456,7 @@ namespace Epsitec.Common.Drawing
 					
 					words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
 					
-					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+					this.painter.TextStory.ConvertToStyledText (words, no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 #if true
 					properties.Clear ();
@@ -404,12 +471,12 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.LeadingProperty (24.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.All));
 					properties.Add (new Text.Properties.KeepProperty (3, 2, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.False, Text.Properties.ThreeState.False));
 					
-					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+					this.painter.TextStory.ConvertToStyledText (words, no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Add (new Text.Properties.FontKernProperty (4, Text.Properties.SizeUnits.Points));
 					
-					this.painter.TextStory.ConvertToStyledText ("Titre sur deux lignes pour voir\n", properties, out text);
+					this.painter.TextStory.ConvertToStyledText ("Titre sur deux lignes pour voir\n", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
@@ -423,7 +490,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.LeadingProperty (4.0, Text.Properties.SizeUnits.Millimeters, 1.0, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.First));
 					properties.Add (new Text.Properties.KeepProperty (3, 3, Text.Properties.ParagraphStartMode.Anywhere, Text.Properties.ThreeState.True, Text.Properties.ThreeState.False));
 					
-					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+					this.painter.TextStory.ConvertToStyledText (words, no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					
@@ -445,7 +512,7 @@ namespace Epsitec.Common.Drawing
 						this.painter.TextStory.TextContext.ClearCondition ("ShowTitle");
 					}
 					
-					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+					this.painter.TextStory.ConvertToStyledText (words, no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					
@@ -458,7 +525,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
-					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+					this.painter.TextStory.ConvertToStyledText (words, no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					
@@ -473,7 +540,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
-					this.painter.TextStory.ConvertToStyledText (words, properties, out text);
+					this.painter.TextStory.ConvertToStyledText (words, no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					Text.Context   context      = this.painter.TextStory.TextContext;
@@ -508,7 +575,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
-					this.painter.TextStory.ConvertToStyledText ("Un texte avec quelques ", properties, out text);
+					this.painter.TextStory.ConvertToStyledText ("Un texte avec quelques ", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
@@ -521,7 +588,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.UnderlineProperty (double.NaN, Text.Properties.SizeUnits.None, double.NaN, Text.Properties.SizeUnits.None, "underline", "Black"));
 					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
-					this.painter.TextStory.ConvertToStyledText ("passages soulignés", properties, out text);
+					this.painter.TextStory.ConvertToStyledText ("passages soulignés", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
@@ -533,7 +600,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
-					this.painter.TextStory.ConvertToStyledText (" permettant de tester", properties, out text);
+					this.painter.TextStory.ConvertToStyledText (" permettant de tester", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
@@ -547,7 +614,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.FontOffsetProperty (80, Text.Properties.SizeUnits.Percent));	//	 80% de l'ascender à 75% de Verdana 16pt
 					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
-					this.painter.TextStory.ConvertToStyledText ("(a)", properties, out text);
+					this.painter.TextStory.ConvertToStyledText ("(a)", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
@@ -559,7 +626,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
-					this.painter.TextStory.ConvertToStyledText (" le fonctionnement des divers ", properties, out text);
+					this.painter.TextStory.ConvertToStyledText (" le fonctionnement des divers ", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
@@ -572,7 +639,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.UnderlineProperty (double.NaN, Text.Properties.SizeUnits.None, double.NaN, Text.Properties.SizeUnits.None, "wave", "Red"));
 					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
-					this.painter.TextStory.ConvertToStyledText ("algoritmes", properties, out text);
+					this.painter.TextStory.ConvertToStyledText ("algoritmes", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
@@ -587,7 +654,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.FontOffsetProperty (80, Text.Properties.SizeUnits.Percent));	//	 80% de l'ascender à 75% de Verdana 16pt
 					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
-					this.painter.TextStory.ConvertToStyledText ("\u2060(b)", properties, out text);
+					this.painter.TextStory.ConvertToStyledText ("\u2060(b)", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
@@ -599,7 +666,7 @@ namespace Epsitec.Common.Drawing
 					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Text.Properties.SizeUnits.None, 5.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
-					this.painter.TextStory.ConvertToStyledText ("...\n", properties, out text);
+					this.painter.TextStory.ConvertToStyledText ("...\n", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 #endif
 #if false
@@ -620,7 +687,7 @@ namespace Epsitec.Common.Drawing
 							properties.Add (new Text.Properties.LeadingProperty (28.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 							properties.Add (new Text.Properties.OpenTypeProperty (symbol, glyph++));
 							
-							this.painter.TextStory.ConvertToStyledText ("X", properties, out text);
+							this.painter.TextStory.ConvertToStyledText ("X", no_styles, properties, out text);
 							this.painter.TextStory.InsertText (cursor, text);
 						}
 						
@@ -633,7 +700,7 @@ namespace Epsitec.Common.Drawing
 						properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 						properties.Add (new Text.Properties.LeadingProperty (16.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 						
-						this.painter.TextStory.ConvertToStyledText ("\n", properties, out text);
+						this.painter.TextStory.ConvertToStyledText ("\n", no_styles, properties, out text);
 						this.painter.TextStory.InsertText (cursor, text);
 					}
 #endif
@@ -663,13 +730,13 @@ namespace Epsitec.Common.Drawing
 					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
-					this.painter.TextStory.ConvertToStyledText ("Test:\t", properties_1, out text);
+					this.painter.TextStory.ConvertToStyledText ("Test:\t", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("Tab1", properties_2, out text);
+					this.painter.TextStory.ConvertToStyledText ("Tab1", no_styles, properties_2, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur aligné à gauche.\tTab2; enfin du texte pour la suite...\n\n", properties_1, out text);
+					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur aligné à gauche.\tTab2; enfin du texte pour la suite...\n\n", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 #endif
 #if true
@@ -687,13 +754,13 @@ namespace Epsitec.Common.Drawing
 					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
-					this.painter.TextStory.ConvertToStyledText ("Test:\t", properties_1, out text);
+					this.painter.TextStory.ConvertToStyledText ("Test:\t", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("Tab3", properties_2, out text);
+					this.painter.TextStory.ConvertToStyledText ("Tab3", no_styles, properties_2, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur centré.\tTab4; enfin du texte pour la suite...\n\n", properties_1, out text);
+					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur centré.\tTab4; enfin du texte pour la suite...\n\n", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 #endif
 #if true
@@ -712,15 +779,15 @@ namespace Epsitec.Common.Drawing
 					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
-					this.painter.TextStory.ConvertToStyledText ("Test:\t", properties_1, out text);
+					this.painter.TextStory.ConvertToStyledText ("Test:\t", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("Tab5", properties_2, out text);
+					this.painter.TextStory.ConvertToStyledText ("Tab5", no_styles, properties_2, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur aligné à gauche dans un paragraphe justifié."
 						+ "\tTab6-a; enfin du texte pour la suite..."
-						+ "\tTab6-b; et aussi pour afficher la fin.\n\n", properties_1, out text);
+						+ "\tTab6-b; et aussi pour afficher la fin.\n\n", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties_1.Clear ();
@@ -737,13 +804,13 @@ namespace Epsitec.Common.Drawing
 					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
-					this.painter.TextStory.ConvertToStyledText ("Test:\t", properties_1, out text);
+					this.painter.TextStory.ConvertToStyledText ("Test:\t", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("Tab7", properties_2, out text);
+					this.painter.TextStory.ConvertToStyledText ("Tab7", no_styles, properties_2, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur aligné à gauche dans un paragraphe aligné à droite.\tTab8; enfin du texte pour la suite...\n\n", properties_1, out text);
+					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur aligné à gauche dans un paragraphe aligné à droite.\tTab8; enfin du texte pour la suite...\n\n", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 #endif
 #if true
@@ -761,13 +828,13 @@ namespace Epsitec.Common.Drawing
 					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
 					
-					this.painter.TextStory.ConvertToStyledText ("Test:\t", properties_1, out text);
+					this.painter.TextStory.ConvertToStyledText ("Test:\t", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("Tab9", properties_2, out text);
+					this.painter.TextStory.ConvertToStyledText ("Tab9", no_styles, properties_2, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur centré dans un paragraphe aligné à droite.\tTab-10 centré...\n\n", properties_1, out text);
+					this.painter.TextStory.ConvertToStyledText ("...\nCet exemple utilise un tabulateur centré dans un paragraphe aligné à droite.\tTab-10 centré...\n\n", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 #endif
 					properties_1.Clear ();
@@ -893,6 +960,13 @@ namespace Epsitec.Common.Drawing
 				
 				this.painter.Condition = cb.IsActive;
 				this.GenerateText ();
+			}
+			
+			private void HandleCheckButton7ActiveStateChanged(object sender)
+			{
+				CheckButton cb = sender as CheckButton;
+				
+				this.painter.ShowCursors = cb.IsActive;
 			}
 			
 			private void HandleRadioButtonActiveStateChanged(object sender)

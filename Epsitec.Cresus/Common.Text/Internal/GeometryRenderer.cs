@@ -54,7 +54,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 		}
 		
-		public void Render(ITextFrame frame, OpenType.Font font, double size, Drawing.Color color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+		public void Render(ITextFrame frame, OpenType.Font font, double size, Drawing.Color color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
 		{
 			System.Diagnostics.Debug.Assert (frame != null);
 			System.Diagnostics.Debug.Assert (font != null);
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			while (mapping.GetNextMapping (out map_char, out map_glyphs))
 			{
-				System.Diagnostics.Debug.Assert (map_glyphs.Length == 1);
+//-				System.Diagnostics.Debug.Assert (map_glyphs.Length == 1);
 				
 				double ox = x[glyph_index];
 				double dx = x[glyph_index+1] - ox;
@@ -90,7 +90,24 @@ namespace Epsitec.Common.Text.Internal
 				glyph_index++;
 			}
 			
-			this.items.Add (new Element (frame, font, size, 0, x[glyph_index], y[glyph_index-1]));
+			if (is_last_run)
+			{
+				this.items.Add (new Element (frame, font, size, 0, x[glyph_index], y[glyph_index-1]));
+			}
+		}
+		
+		public void Render(ITextFrame frame, IGlyphRenderer glyph_renderer, Drawing.Color color, double x, double y, bool is_last_run)
+		{
+			this.items.Add (new Element (frame, null, 0, 0, x, y));
+			
+			if (is_last_run)
+			{
+				double ascender, descender, advance, x1, x2;
+				
+				glyph_renderer.GetGeometry (out ascender, out descender, out advance, out x1, out x2);
+				
+				this.items.Add (new Element (frame, null, 0, 0, x + advance, y));
+			}
 		}
 		
 		public void RenderEndLine(Layout.Context context)

@@ -410,12 +410,18 @@ namespace Epsitec.Common.Text
 		
 		public void GetCursorGeometry(out ITextFrame frame, out double cx, out double cy, out double ascender, out double descender, out double angle)
 		{
+			this.UpdateCurrentStylesAndProperties ();
+			
 			int para_line;
 			int line_char;
 			
 			this.fitter.GetCursorGeometry (this.ActiveCursor, out frame, out cx, out cy, out para_line, out line_char);
 			
-			System.Collections.ArrayList properties = this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties);
+			Styles.PropertyContainer.Accumulator accumulator = new Styles.PropertyContainer.Accumulator ();
+			
+			accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
+			
+			Property[] properties = accumulator.AccumulatedProperties;
 			
 			if ((this.CursorPosition == this.story.TextLength) &&
 				(para_line == 0) &&
@@ -426,11 +432,11 @@ namespace Epsitec.Common.Text
 				
 				Properties.MarginsProperty margins = null;
 				
-				foreach (Property property in properties)
+				for (int i = 0; i < properties.Length; i++)
 				{
-					if (property is Properties.MarginsProperty)
+					if (properties[i] is Properties.MarginsProperty)
 					{
-						margins = property as Properties.MarginsProperty;
+						margins = properties[i] as Properties.MarginsProperty;
 						break;
 					}
 				}
@@ -460,19 +466,19 @@ namespace Epsitec.Common.Text
 			Properties.FontSizeProperty   font_size = null;
 			Properties.FontOffsetProperty font_offset = null;
 			
-			foreach (Property property in properties)
+			for (int i = 0; i < properties.Length; i++)
 			{
-				if (property is Properties.FontProperty)
+				if (properties[i] is Properties.FontProperty)
 				{
-					font = property as Properties.FontProperty;
+					font = properties[i] as Properties.FontProperty;
 				}
-				else if (property is Properties.FontSizeProperty)
+				else if (properties[i] is Properties.FontSizeProperty)
 				{
-					font_size = property as Properties.FontSizeProperty;
+					font_size = properties[i] as Properties.FontSizeProperty;
 				}
-				else if (property is Properties.FontOffsetProperty)
+				else if (properties[i] is Properties.FontOffsetProperty)
 				{
-					font_offset = property as Properties.FontOffsetProperty;
+					font_offset = properties[i] as Properties.FontOffsetProperty;
 				}
 			}
 			
@@ -488,7 +494,7 @@ namespace Epsitec.Common.Text
 			if (font_offset != null)
 			{
 				frame.MapFromView (ref cx, ref cy);
-				cy += font_offset.Offset;
+				cy += font_offset.GetOffsetInPoints (pt_size);
 				frame.MapToView (ref cx, ref cy);
 			}
 		}
@@ -539,6 +545,11 @@ namespace Epsitec.Common.Text
 				this.story.MoveCursor (this.ActiveCursor, direction);
 				
 				ulong code = text_table.ReadChar (this.ActiveCursor.CursorId);
+				
+				if (code == 0)
+				{
+					break;
+				}
 				
 				Styles.SimpleStyle simple_style = style_list[code];
 				

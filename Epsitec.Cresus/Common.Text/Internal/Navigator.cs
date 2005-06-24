@@ -485,7 +485,10 @@ namespace Epsitec.Common.Text.Internal
 			Styles.SimpleStyle        simple_style    = story.StyleList[code];
 			Properties.StylesProperty styles_property = simple_style[Properties.WellKnownType.Styles] as Properties.StylesProperty;
 			
-			styles.AddRange (styles_property.Styles);
+			if (styles_property != null)
+			{
+				styles.AddRange (styles_property.Styles);
+			}
 			
 			return true;
 		}
@@ -508,7 +511,7 @@ namespace Epsitec.Common.Text.Internal
 			if (props_property != null)
 			{
 				Context  context    = story.TextContext;
-				string[] serialized = props_property.SerializedUniformParagraphProperties;
+				string[] serialized = props_property.SerializedProperties;
 				
 				properties.AddRange (Properties.PropertiesProperty.DeserializeProperties (context, serialized));
 			}

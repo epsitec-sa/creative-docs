@@ -362,6 +362,10 @@ namespace Epsitec.Common.Text.Styles
 		
 		public class Accumulator
 		{
+			public Accumulator() : this (null)
+			{
+			}
+			
 			public Accumulator(Styles.PropertyContainer host)
 			{
 				this.host    = host;
@@ -375,6 +379,22 @@ namespace Epsitec.Common.Text.Styles
 				get
 				{
 					return this.special;
+				}
+			}
+			
+			public Property[]					AccumulatedProperties
+			{
+				get
+				{
+					System.Collections.ArrayList list = new System.Collections.ArrayList ();
+					
+					if (this.list != null) list.AddRange (this.list);
+					if (this.hash != null) list.AddRange (this.hash.Values);
+					
+					Property[] properties = new Property[list.Count];
+					list.CopyTo (properties);
+					
+					return properties;
 				}
 			}
 			
@@ -440,14 +460,17 @@ namespace Epsitec.Common.Text.Styles
 			
 			public void Done()
 			{
-				if (this.list != null)
+				if (this.host != null)
 				{
-					this.list.AddRange (this.hash.Values);
-					this.host.Initialise (this.list);
-				}
-				else
-				{
-					this.host.Initialise (this.hash.Values);
+					if (this.list != null)
+					{
+						this.list.AddRange (this.hash.Values);
+						this.host.Initialise (this.list);
+					}
+					else
+					{
+						this.host.Initialise (this.hash.Values);
+					}
 				}
 				
 				this.host = null;
