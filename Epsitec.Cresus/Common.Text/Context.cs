@@ -352,6 +352,58 @@ namespace Epsitec.Common.Text
 			this.get_language_last_property      = property;
 		}
 		
+		public bool GetAutoText(ulong code, out Properties.AutoTextProperty property)
+		{
+			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			long current_style_version = this.style_list.InternalStyleTable.Version;
+			
+			if ((this.get_auto_text_last_style_version == current_style_version) &&
+				(this.get_auto_text_last_code == code))
+			{
+				property = this.get_auto_text_last_property;
+				
+				return property != null;
+			}
+			
+			Styles.SimpleStyle   style          = this.style_list[code];
+			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			
+			property = extra_settings == null ? null : extra_settings[Properties.WellKnownType.AutoText] as Properties.AutoTextProperty;
+			
+			this.get_auto_text_last_style_version = current_style_version;
+			this.get_auto_text_last_code          = code;
+			this.get_auto_text_last_property      = property;
+			
+			return property != null;
+		}
+		
+		public bool GetGenerator(ulong code, out Properties.GeneratorProperty property)
+		{
+			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			long current_style_version = this.style_list.InternalStyleTable.Version;
+			
+			if ((this.get_generator_last_style_version == current_style_version) &&
+				(this.get_generator_last_code == code))
+			{
+				property = this.get_generator_last_property;
+				
+				return property != null;
+			}
+			
+			Styles.SimpleStyle   style          = this.style_list[code];
+			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			
+			property = extra_settings == null ? null : extra_settings[Properties.WellKnownType.Generator] as Properties.GeneratorProperty;
+			
+			this.get_generator_last_style_version = current_style_version;
+			this.get_generator_last_code          = code;
+			this.get_generator_last_property      = property;
+			
+			return property != null;
+		}
+		
 		public bool TestConditions(ulong code)
 		{
 			Properties.ConditionalProperty[] properties;
@@ -891,6 +943,14 @@ namespace Epsitec.Common.Text
 		private long							get_language_last_style_version;
 		private ulong							get_language_last_code;
 		private Properties.LanguageProperty		get_language_last_property;
+		
+		private long							get_auto_text_last_style_version;
+		private ulong							get_auto_text_last_code;
+		private Properties.AutoTextProperty		get_auto_text_last_property;
+		
+		private long							get_generator_last_style_version;
+		private ulong							get_generator_last_code;
+		private Properties.GeneratorProperty	get_generator_last_property;
 		
 		private long							get_condition_last_style_version;
 		private int								get_condition_last_style_index;

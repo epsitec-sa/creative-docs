@@ -459,7 +459,9 @@ advance_next:
 				double x1, x2;
 				
 				image.GetGeometry (out ascender, out descender, out advance, out x1, out x2);
-//-				image.RenderGlyph (context.Frame, ox, oy);
+				
+				//	Le rendu réel est fait par le renderer, ce qui lui permet d'appliquer
+				//	éventuellement des modifications :
 				
 				renderer.Render (context.Frame, image, color, ox, oy, is_last_run);
 				

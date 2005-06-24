@@ -72,7 +72,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			while (mapping.GetNextMapping (out map_char, out map_glyphs))
 			{
-//-				System.Diagnostics.Debug.Assert (map_glyphs.Length == 1);
+				System.Diagnostics.Debug.Assert ((map_glyphs.Length == 1) || (is_last_run));
 				
 				double ox = x[glyph_index];
 				double dx = x[glyph_index+1] - ox;
