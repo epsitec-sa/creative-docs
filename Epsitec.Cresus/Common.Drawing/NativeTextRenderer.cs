@@ -69,7 +69,7 @@ namespace Epsitec.Common.Drawing
 				{
 					text[count] = glyph;
 					
-					if (i > 0)
+					if (count > 0)
 					{
 						int xx = (int) x[offset+i];
 						
