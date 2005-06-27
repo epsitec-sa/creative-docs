@@ -521,7 +521,7 @@ namespace Epsitec.Common.OpenType.Platform
 				
 				height  = metric.tmHeight;
 				ascent  = metric.tmAscent;
-				descent = metric.tmDescent;
+				descent = - metric.tmDescent;
 				
 				internal_leading = metric.tmInternalLeading;
 				external_leading = metric.tmExternalLeading;
