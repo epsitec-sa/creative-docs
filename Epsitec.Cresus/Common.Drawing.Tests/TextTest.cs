@@ -180,18 +180,21 @@ namespace Epsitec.Common.Drawing
 				{
 					this.story.DebugDisableOpletQueue = true;
 					
-					System.Collections.ArrayList properties = new System.Collections.ArrayList ();
-					
-					properties.Add (new Text.Properties.FontProperty ("Verdana", "Regular"));
-					properties.Add (new Text.Properties.FontSizeProperty (16.0, Common.Text.Properties.SizeUnits.Points));
-					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Common.Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, Common.Text.Properties.ThreeState.True));
-					properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
-					properties.Add (new Text.Properties.LeadingProperty (double.NaN, Common.Text.Properties.SizeUnits.None, 5.0, Common.Text.Properties.SizeUnits.Points, 5.0, Common.Text.Properties.SizeUnits.Points, Common.Text.Properties.AlignMode.None));
-					
-					Text.StyleList style_list    = this.story.TextContext.StyleList;
-					Text.TextStyle style_default = style_list.NewTextStyle ("Default", Common.Text.TextStyleClass.Paragraph, properties);
-					
-					this.story.TextContext.DefaultStyle = style_default;
+					if (this.story.TextContext.StyleList["Default", Common.Text.TextStyleClass.Paragraph] == null)
+					{
+						System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+						
+						properties.Add (new Text.Properties.FontProperty ("Verdana", "Italic"));
+						properties.Add (new Text.Properties.FontSizeProperty (32.0, Common.Text.Properties.SizeUnits.Points));
+						properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Common.Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, Common.Text.Properties.ThreeState.True));
+						properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+						properties.Add (new Text.Properties.LeadingProperty (double.NaN, Common.Text.Properties.SizeUnits.None, 5.0, Common.Text.Properties.SizeUnits.Points, 5.0, Common.Text.Properties.SizeUnits.Points, Common.Text.Properties.AlignMode.None));
+						
+						Text.StyleList style_list    = this.story.TextContext.StyleList;
+						Text.TextStyle style_default = style_list.NewTextStyle ("Default", Common.Text.TextStyleClass.Paragraph, properties);
+						
+						this.story.TextContext.DefaultStyle = style_default;
+					}
 					
 					Text.TextNavigator navigator = new Text.TextNavigator (this.story, this.fitter);
 					
