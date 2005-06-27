@@ -63,6 +63,11 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public override Property EmptyClone()
+		{
+			return new LinkProperty ();
+		}
+		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,

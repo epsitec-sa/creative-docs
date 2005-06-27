@@ -125,6 +125,11 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public override Property EmptyClone()
+		{
+			return new PropertiesProperty ();
+		}
+		
 		public static string[] SerializeProperties(Property[] properties)
 		{
 			if ((properties == null) ||

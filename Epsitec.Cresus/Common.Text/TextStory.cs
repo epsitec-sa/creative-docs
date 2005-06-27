@@ -107,7 +107,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		internal bool							DebugDisableOpletQueue
+		public bool								DebugDisableOpletQueue
 		{
 			get
 			{
@@ -156,7 +156,8 @@ namespace Epsitec.Common.Text
 				
 				System.Diagnostics.Debug.Assert (new_dir == direction);
 				
-				if (old_pos != new_pos)
+				if ((old_pos != new_pos) &&
+					(this.debug_disable_oplet == false))
 				{
 					this.InternalAddOplet (new CursorMoveOplet (this, cursor, old_pos, old_dir));
 				}

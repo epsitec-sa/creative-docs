@@ -74,6 +74,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		public abstract Property GetCombination(Property property);
+		public abstract Property EmptyClone();
 		
 		#region IContentsSignatureUpdater Members
 		public abstract void UpdateContentsSignature(IO.IChecksum checksum);
@@ -287,11 +288,25 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (sep_pos > pos);
 			
 			string prop_name = text.Substring (pos+1, sep_pos - pos - 1);
-			string type_name = string.Concat ("Epsitec.Common.Text.Properties.", prop_name, "Property");
 			
-			System.Runtime.Remoting.ObjectHandle handle = System.Activator.CreateInstance (typeof (Property).Assembly.FullName, type_name);
+			Property template = Property.templates[prop_name] as Property;
 			
-			property = handle.Unwrap () as Property;
+			if (template == null)
+			{
+				//	Nous n'avons pas encore de propriété modèle que l'on puisse
+				//	clôner; il faut donc l'instancier dynamiquement :
+				
+				string type_name = string.Concat ("Epsitec.Common.Text.Properties.", prop_name, "Property");
+				
+				System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly ();
+				System.Type                type     = assembly.GetType (type_name);
+				
+				template = System.Activator.CreateInstance (type) as Property;
+				
+				Property.templates[prop_name] = template;
+			}
+			
+			property = template.EmptyClone ();
 			
 			sep_pos++;
 			
@@ -366,5 +381,7 @@ namespace Epsitec.Common.Text
 		
 		private int								contents_signature;
 		private long							version;
+		
+		static System.Collections.Hashtable		templates = new System.Collections.Hashtable ();
 	}
 }

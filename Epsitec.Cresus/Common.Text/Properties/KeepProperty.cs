@@ -130,6 +130,11 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public override Property EmptyClone()
+		{
+			return new KeepProperty ();
+		}
+		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,

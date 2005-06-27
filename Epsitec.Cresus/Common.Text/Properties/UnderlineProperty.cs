@@ -112,6 +112,12 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public override Property EmptyClone()
+		{
+			return new UnderlineProperty ();
+		}
+		
+		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,

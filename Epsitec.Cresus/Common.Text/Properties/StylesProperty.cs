@@ -118,6 +118,11 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public override Property EmptyClone()
+		{
+			return new StylesProperty ();
+		}
+		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			string[] names = new string[this.styles.Length];

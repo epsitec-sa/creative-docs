@@ -471,55 +471,6 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public static bool GetStyles(TextStory story, ICursor cursor, int offset, System.Collections.ArrayList styles)
-		{
-			//	Retourne les styles attachés à la position indiquée.
-			
-			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
-			
-			if (code == 0)
-			{
-				return false;
-			}
-			
-			Styles.SimpleStyle        simple_style    = story.StyleList[code];
-			Properties.StylesProperty styles_property = simple_style[Properties.WellKnownType.Styles] as Properties.StylesProperty;
-			
-			if (styles_property != null)
-			{
-				styles.AddRange (styles_property.Styles);
-			}
-			
-			return true;
-		}
-		
-		public static bool GetProperties(TextStory story, ICursor cursor, int offset, System.Collections.ArrayList properties)
-		{
-			//	Retourne les propriétés attachées à la position indiquée, en
-			//	excluant les propriétés dérivées à partir des styles.
-			
-			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
-			
-			if (code == 0)
-			{
-				return false;
-			}
-			
-			Styles.SimpleStyle            simple_style   = story.StyleList[code];
-			Properties.PropertiesProperty props_property = simple_style[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
-			
-			if (props_property != null)
-			{
-				Context  context    = story.TextContext;
-				string[] serialized = props_property.SerializedProperties;
-				
-				properties.AddRange (Properties.PropertiesProperty.DeserializeProperties (context, serialized));
-			}
-			
-			return true;
-		}
-		
-		
 		public static void StartParagraphIfNeeded(TextStory story, ICursor cursor)
 		{
 			if (Navigator.IsParagraphStart (story, cursor, 0))

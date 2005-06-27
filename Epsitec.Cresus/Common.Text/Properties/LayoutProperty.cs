@@ -56,6 +56,11 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public override Property EmptyClone()
+		{
+			return new LayoutProperty ();
+		}
+		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			buffer.Append (SerializerSupport.SerializeString (this.engine_name));

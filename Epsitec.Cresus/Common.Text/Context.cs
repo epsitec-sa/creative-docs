@@ -462,6 +462,64 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public void GetProperties(ulong code, out Property[] properties)
+		{
+			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
+			long current_style_version = this.style_list.InternalStyleTable.Version;
+			
+			if ((this.get_properties_last_style_version != current_style_version) ||
+				(this.get_properties_last_style_index   != current_style_index))
+			{
+				Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
+				
+				Properties.PropertiesProperty props = style[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
+				
+				if (props == null)
+				{
+					this.get_properties_last_properties = new Property[0];
+				}
+				else
+				{
+					string[] serialized = props.SerializedProperties;
+					
+					if (serialized.Length > 0)
+					{
+						this.get_properties_last_properties = Properties.PropertiesProperty.DeserializeProperties (this, serialized);
+					}
+					else
+					{
+						this.get_properties_last_properties = new Property[0];
+					}
+				}
+				
+				this.get_properties_last_style_version = current_style_version;
+				this.get_properties_last_style_index   = current_style_index;
+			}
+			
+			properties = new Property[this.get_properties_last_properties.Length];
+			this.get_properties_last_properties.CopyTo (properties, 0);
+		}
+		
+		public void GetStyles(ulong code, out TextStyle[] styles)
+		{
+			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
+			long current_style_version = this.style_list.InternalStyleTable.Version;
+			
+			if ((this.get_styles_last_style_version != current_style_version) ||
+				(this.get_styles_last_style_index   != current_style_index))
+			{
+				Styles.SimpleStyle        style = this.style_list.GetStyleFromIndex (current_style_index);
+				Properties.StylesProperty props = style[Properties.WellKnownType.Styles] as Properties.StylesProperty;
+				
+				this.get_styles_last_styles        = (props == null) ? new TextStyle[0] : props.Styles;
+				this.get_styles_last_style_version = current_style_version;
+				this.get_styles_last_style_index   = current_style_index;
+			}
+			
+			styles = new TextStyle[this.get_styles_last_styles.Length];
+			this.get_styles_last_styles.CopyTo (styles, 0);
+		}
+		
 		public void GetLeading(ulong code, out Properties.LeadingProperty property)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
@@ -956,6 +1014,14 @@ namespace Epsitec.Common.Text
 		private int								get_condition_last_style_index;
 		private Property[]						get_condition_last_properties;
 		private bool							get_condition_last_summary;
+		
+		private long							get_properties_last_style_version;
+		private int								get_properties_last_style_index;
+		private Property[]						get_properties_last_properties;
+		
+		private long							get_styles_last_style_version;
+		private int								get_styles_last_style_index;
+		private TextStyle[]						get_styles_last_styles;
 		
 		private long							get_leading_last_style_version;
 		private int								get_leading_last_style_index;

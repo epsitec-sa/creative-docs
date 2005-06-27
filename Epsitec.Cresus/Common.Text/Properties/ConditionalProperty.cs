@@ -45,7 +45,6 @@ namespace Epsitec.Common.Text.Properties
 		}
 
 		
-		
 		public string							Condition
 		{
 			get
@@ -62,6 +61,11 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		
+		public override Property EmptyClone()
+		{
+			return new ConditionalProperty ();
+		}
 		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
