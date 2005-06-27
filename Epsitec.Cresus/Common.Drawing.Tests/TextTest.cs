@@ -178,6 +178,8 @@ namespace Epsitec.Common.Drawing
 				
 				if (this.show_cursors)
 				{
+					this.story.DebugDisableOpletQueue = true;
+					
 					System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 					
 					properties.Add (new Text.Properties.FontProperty ("Verdana", "Regular"));
@@ -198,21 +200,20 @@ namespace Epsitec.Common.Drawing
 					
 					System.Diagnostics.Debug.WriteLine ("Show cursors: start...");
 					
-					for (int i = 0; i < this.story.TextLength; i++)
+					for (int i = 0; i < this.story.TextLength-1; i++)
 					{
-						navigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle);
-						
-						//-						System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1:0.00}:{2:0.00}", i, cx, cy));
+						if (navigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle))
+						{
+							double dx = System.Math.Cos (angle) * (ascender - descender);
+							double dy = System.Math.Sin (angle) * (ascender - descender);
+							
+							cx += System.Math.Cos (angle) * (descender);
+							cy += System.Math.Sin (angle) * (descender);
+							
+							graphics.AddLine (cx, cy, cx+dx, cy+dy);
+						}
 						
 						navigator.MoveTo (Common.Text.TextNavigator.Target.CharacterNext, 1);
-						
-						double dx = System.Math.Cos (angle) * (ascender - descender);
-						double dy = System.Math.Sin (angle) * (ascender - descender);
-						
-						cx += System.Math.Cos (angle) * (descender);
-						cy += System.Math.Sin (angle) * (descender);
-						
-						graphics.AddLine (cx, cy, cx+dx, cy+dy);
 					}
 					
 					System.Diagnostics.Debug.WriteLine ("Show cursors: done...");
@@ -221,12 +222,10 @@ namespace Epsitec.Common.Drawing
 					navigator.MoveTo (Common.Text.TextNavigator.Target.TextStart, 0);
 					
 					System.Diagnostics.Debug.WriteLine ("Navigate through text: start...");
-					
-					for (int i = 0; i < this.story.TextLength; i++)
+					for (int i = 0; i < story.TextLength; i++)
 					{
 						navigator.MoveTo (Common.Text.TextNavigator.Target.CharacterNext, 1);
 					}
-					
 					System.Diagnostics.Debug.WriteLine ("Navigate through text: done...");
 					
 					graphics.RenderSolid (Drawing.Color.FromName ("Green"));

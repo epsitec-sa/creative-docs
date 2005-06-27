@@ -733,6 +733,19 @@ restart:
 						
 						return status;
 					
+					case Layout.Status.OkHiddenFitEnded:
+						
+						//	Arrivé à la fin d'un paragraphe entièrement vide; il n'a pas de
+						//	contenu visible, mais il fait quand-même avancer la position dans
+						//	le texte...
+						
+						{
+							int offset = this.text_offset;
+							snapshot.Restore (this);
+							this.text_offset = offset;
+						}
+						return status;
+					
 					case Layout.Status.ErrorNeedMoreText:
 						snapshot.Restore (this);
 						return status;

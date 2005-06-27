@@ -34,6 +34,9 @@ namespace Epsitec.Common.Text.Layout
 			scratch.WordBreakInfo  = Unicode.BreakInfo.No;
 			scratch.StretchProfile = new StretchProfile ();
 			
+			bool has_visible_text = false;
+			bool has_hidden_text  = false;
+			
 			for (;;)
 			{
 				if (context.GetNextWord (scratch.Offset, out scratch.Text, out scratch.TextLength, out scratch.WordBreakInfo))
@@ -67,11 +70,24 @@ namespace Epsitec.Common.Text.Layout
 						{
 							if (scratch.TextLength <= scratch.RunLength)
 							{
-								scratch.WordBreakInfo = Unicode.BreakInfo.No;
+								//	Si on touche à la fin de la ligne (point de découpe atteint) et que
+								//	la ligne contient du texte visible, considère le texte caché comme
+								//	étant insécable. Ceci permet d'assurer qu'une zone de texte cachée
+								//	à cheval entre deux paragraphes ne détecte pas la fin du premier
+								//	paragraphe.
+								
+								if (has_visible_text)
+								{
+									scratch.WordBreakInfo = Unicode.BreakInfo.No;
+								}
 							}
+							
+							has_hidden_text = true;
 							
 							goto advance_next;
 						}
+						
+						has_visible_text = true;
 						
 						Layout.BaseEngine         engine;
 						Properties.LayoutProperty layout;
@@ -118,13 +134,28 @@ advance_next:
 						//	Le mot se termine par un saut forcé (ou une marque de tabulation, ce qui				:
 						//	revient au même par rapport au traitement fait par le système de layout) :				:
 						
-						context.RecordAscender (scratch.Ascender);
-						context.RecordDescender (scratch.Descender);
-						context.RecordLineHeight (System.Math.Max (scratch.LineHeight, scratch.Ascender - scratch.Descender));
-						
 						context.MoveTo (scratch.Advance, scratch.Offset);
 						
-						result.Add (new Layout.Break (scratch.Offset, scratch.Advance, 0, 0, scratch.StretchProfile));
+						if (has_visible_text)
+						{
+							context.RecordAscender (scratch.Ascender);
+							context.RecordDescender (scratch.Descender);
+							context.RecordLineHeight (System.Math.Max (scratch.LineHeight, scratch.Ascender - scratch.Descender));
+							
+							result.Add (new Layout.Break (scratch.Offset, scratch.Advance, 0, 0, scratch.StretchProfile));
+						}
+						else if (has_hidden_text)
+						{
+							//	Aucun texte visible; uniquement du texte invisible.
+							
+							return Layout.Status.OkHiddenFitEnded;
+						}
+						else
+						{
+							throw new System.InvalidOperationException ("Neither visible nor hidden text found");
+						}
+						
+						context.MoveTo (scratch.Advance, scratch.Offset);
 						
 						return (scratch.WordBreakInfo == Unicode.BreakInfo.HorizontalTab) ? Layout.Status.OkTabReached : Layout.Status.OkFitEnded;
 					}

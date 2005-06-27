@@ -23,7 +23,10 @@ namespace Epsitec.Common.Text
 			this.fitter = fitter;
 			this.cursor = new Cursors.SimpleCursor ();
 			
+			this.temp_cursor = new Cursors.TempCursor ();
+			
 			this.story.NewCursor (this.cursor);
+			this.story.NewCursor (this.temp_cursor);
 			
 			this.story.OpletExecuted += new OpletEventHandler (this.HandleStoryOpletExecuted);
 		}
@@ -107,7 +110,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected ICursor						ActiveCursor
+		public ICursor							ActiveCursor
 		{
 			get
 			{
@@ -408,94 +411,108 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void GetCursorGeometry(out ITextFrame frame, out double cx, out double cy, out double ascender, out double descender, out double angle)
+		public bool GetCursorGeometry(out ITextFrame frame, out double cx, out double cy, out double ascender, out double descender, out double angle)
 		{
 			this.UpdateCurrentStylesAndProperties ();
 			
 			int para_line;
 			int line_char;
 			
-			this.fitter.GetCursorGeometry (this.ActiveCursor, out frame, out cx, out cy, out para_line, out line_char);
-			
-			Styles.PropertyContainer.Accumulator accumulator = new Styles.PropertyContainer.Accumulator ();
-			
-			accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
-			
-			Property[] properties = accumulator.AccumulatedProperties;
-			
-			if ((this.CursorPosition == this.story.TextLength) &&
-				(para_line == 0) &&
-				(line_char == 0))
+			if (this.fitter.GetCursorGeometry (this.ActiveCursor, out frame, out cx, out cy, out para_line, out line_char))
 			{
-				//	Cas particulier : le curseur se trouve tout seul en fin de pavé,
-				//	sans aucun autre caractère dans la ligne.
+				Styles.PropertyContainer.Accumulator accumulator = new Styles.PropertyContainer.Accumulator ();
 				
-				Properties.MarginsProperty margins = null;
+				accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
+				
+				Property[] properties = accumulator.AccumulatedProperties;
+				
+				if ((this.CursorPosition == this.story.TextLength) &&
+					(para_line == 0) &&
+					(line_char == 0))
+				{
+					//	Cas particulier : le curseur se trouve tout seul en fin de pavé,
+					//	sans aucun autre caractère dans la ligne.
+					
+					Properties.MarginsProperty margins = null;
+					
+					for (int i = 0; i < properties.Length; i++)
+					{
+						if (properties[i] is Properties.MarginsProperty)
+						{
+							margins = properties[i] as Properties.MarginsProperty;
+							break;
+						}
+					}
+					
+					double ox;
+					double oy;
+					double width;
+					double next_y;
+					
+					frame.MapFromView (ref cx, ref cy);
+					frame.ConstrainLineBox (cy, 0, 0, 0, 0, false, out ox, out oy, out width, out next_y);
+					
+					double mx1 = margins.LeftMarginFirstLine;
+					double mx2 = margins.RightMarginFirstLine;
+					double disposition = margins.Disposition;
+					
+					width -= mx1;
+					width -= mx2;
+					
+					cx += mx1;
+					cx += width * disposition;
+					
+					frame.MapToView (ref cx, ref cy);
+				}
+				
+				Properties.FontProperty       font = null;
+				Properties.FontSizeProperty   font_size = null;
+				Properties.FontOffsetProperty font_offset = null;
 				
 				for (int i = 0; i < properties.Length; i++)
 				{
-					if (properties[i] is Properties.MarginsProperty)
+					if (properties[i] is Properties.FontProperty)
 					{
-						margins = properties[i] as Properties.MarginsProperty;
-						break;
+						font = properties[i] as Properties.FontProperty;
+					}
+					else if (properties[i] is Properties.FontSizeProperty)
+					{
+						font_size = properties[i] as Properties.FontSizeProperty;
+					}
+					else if (properties[i] is Properties.FontOffsetProperty)
+					{
+						font_offset = properties[i] as Properties.FontOffsetProperty;
 					}
 				}
 				
-				double ox;
-				double oy;
-				double width;
-				double next_y;
+				OpenType.Font ot_font;
+				double        pt_size = font_size.SizeInPoints;
 				
-				frame.MapFromView (ref cx, ref cy);
-				frame.ConstrainLineBox (cy, 0, 0, 0, 0, false, out ox, out oy, out width, out next_y);
+				this.story.TextContext.GetFont (font, out ot_font);
 				
-				double mx1 = margins.LeftMarginFirstLine;
-				double mx2 = margins.RightMarginFirstLine;
-				double disposition = margins.Disposition;
+				ascender  = ot_font.GetAscender (pt_size);
+				descender = ot_font.GetDescender (pt_size);
+				angle     = ot_font.GetCaretAngle ();
 				
-				width -= mx1;
-				width -= mx2;
+				if (font_offset != null)
+				{
+					frame.MapFromView (ref cx, ref cy);
+					cy += font_offset.GetOffsetInPoints (pt_size);
+					frame.MapToView (ref cx, ref cy);
+				}
 				
-				cx += mx1;
-				cx += width * disposition;
-				
-				frame.MapToView (ref cx, ref cy);
+				return true;
 			}
-			
-			Properties.FontProperty       font = null;
-			Properties.FontSizeProperty   font_size = null;
-			Properties.FontOffsetProperty font_offset = null;
-			
-			for (int i = 0; i < properties.Length; i++)
+			else
 			{
-				if (properties[i] is Properties.FontProperty)
-				{
-					font = properties[i] as Properties.FontProperty;
-				}
-				else if (properties[i] is Properties.FontSizeProperty)
-				{
-					font_size = properties[i] as Properties.FontSizeProperty;
-				}
-				else if (properties[i] is Properties.FontOffsetProperty)
-				{
-					font_offset = properties[i] as Properties.FontOffsetProperty;
-				}
-			}
-			
-			OpenType.Font ot_font;
-			double        pt_size = font_size.SizeInPoints;
-			
-			this.story.TextContext.GetFont (font, out ot_font);
-			
-			ascender  = ot_font.GetAscender (pt_size);
-			descender = ot_font.GetDescender (pt_size);
-			angle     = ot_font.GetCaretAngle ();
-			
-			if (font_offset != null)
-			{
-				frame.MapFromView (ref cx, ref cy);
-				cy += font_offset.GetOffsetInPoints (pt_size);
-				frame.MapToView (ref cx, ref cy);
+				cx = 0;
+				cy = 0;
+				
+				ascender  = 0;
+				descender = 0;
+				angle     = 0;
+				
+				return false;
 			}
 		}
 		
@@ -521,10 +538,12 @@ namespace Epsitec.Common.Text
 			Internal.TextTable text_table = this.story.TextTable;
 			StyleList          style_list = context.StyleList;
 			
+			int pos = this.story.GetCursorPosition (this.ActiveCursor);
+			
+			this.story.SetCursorPosition (this.temp_cursor, pos);
+			
 			while (moved < count)
 			{
-				int pos = this.story.GetCursorPosition (this.ActiveCursor);
-				
 				if ((direction > 0) &&
 					(pos == this.story.TextLength))
 				{
@@ -540,9 +559,9 @@ namespace Epsitec.Common.Text
 				//	l'on n'a pas atterri dans un fragment de texte marqué comme
 				//	étant un texte automatique ou un texte produit par un générateur.
 				
-				//	TODO: utiliser un curseur temporaire pour les déplacements
+				System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == pos);
 				
-				this.story.MoveCursor (this.ActiveCursor, direction);
+				this.story.MoveCursor (this.temp_cursor, direction);
 				
 				ulong code = text_table.ReadChar (this.ActiveCursor.CursorId);
 				
@@ -551,18 +570,23 @@ namespace Epsitec.Common.Text
 					break;
 				}
 				
-				Styles.SimpleStyle simple_style = style_list[code];
+				//	Gère le déplacement par-dessus des sections AutoText/Generator
+				//	qui nécessitent des traitements particuliers :
 				
-				if (simple_style.Contains (code, Properties.WellKnownType.AutoText, Properties.PropertyType.ExtraSetting))
+				Properties.AutoTextProperty  auto_text_property;
+				Properties.GeneratorProperty generator_property;
+				
+				if (context.GetAutoText (code, out auto_text_property))
 				{
-					System.Diagnostics.Debug.Assert (simple_style.FindProperties (Properties.WellKnownType.AutoText).Length == 1);
+					int skip = this.SkipOverProperty (auto_text_property, direction);
 					
-					Property property = simple_style[Properties.WellKnownType.AutoText];
+					pos += skip;
 					
-					this.SkipOverProperty (property, direction);
+					this.story.MoveCursor (this.temp_cursor, skip);
 					
+					//	TODO: extraire ce code d'ici ...
 					if ((direction < 0) &&
-						(this.story.GetCursorPosition (this.ActiveCursor) == 0))
+						(pos == 0))
 					{
 						//	Arrivé au début du texte en ayant sauté par-dessus un texte
 						//	automatique; on n'a pas le droit de laisser le curseur ici,
@@ -573,22 +597,42 @@ namespace Epsitec.Common.Text
 					}
 					
 					//	Ne compte pas un texte automatique comme 'caractère sauté'.
-					
-					continue;
 				}
-				else if (simple_style.Contains (code, Properties.WellKnownType.Generator, Properties.PropertyType.ExtraSetting))
+				else if (context.GetGenerator (code, out generator_property))
 				{
-					System.Diagnostics.Debug.Assert (simple_style.FindProperties (Properties.WellKnownType.Generator).Length == 1);
-					
-					Property property = simple_style[Properties.WellKnownType.Generator];
-					
-					this.SkipOverProperty (property, direction);
+					int skip = this.SkipOverProperty (generator_property, direction);
 					
 					//	Un texte produit par un générateur compte comme un caractère
 					//	unique.
+					
+					pos   += skip;
+					moved += 1;
 				}
-				
-				moved++;
+				else
+				{
+					pos   += direction;
+					moved += 1;
+				}
+			}
+			
+			if ((moved > 0) &&
+				(direction > 0))
+			{
+				if ((Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, 0)) ||
+					(Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0)))
+				{
+					//	Si nous avons atteint la fin d'une ligne de texte en marche avant,
+					//	on prétend que l'on se trouve au début de la ligne suivante; si on
+					//	est arrivé au début d'un paragraphe, considère qu'on est au début
+					//	de la ligne :
+					
+					direction = -1;
+				}
+			}
+			
+			if (moved > 0)
+			{
+				this.story.SetCursorPosition (this.ActiveCursor, pos, direction);
 			}
 			
 			return moved > 0;
@@ -741,9 +785,11 @@ namespace Epsitec.Common.Text
 					
 					this.story.OpletExecuted -= new OpletEventHandler (this.HandleStoryOpletExecuted);
 					this.story.RecycleCursor (this.cursor);
+					this.story.RecycleCursor (this.temp_cursor);
 					
 					this.story  = null;
 					this.cursor = null;
+					this.temp_cursor = null;
 				}
 			}
 		}
@@ -791,26 +837,28 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected virtual void SkipOverProperty(Property property, int direction)
+		protected virtual int SkipOverProperty(Property property, int direction)
 		{
 			//	Saute la propriété, en marche avant ou en marche arrière. En cas
 			//	de marche avant, on s'arrête après la tranche. En cas de marche
 			//	arrière, on s'arrête juste au début de la tranche.
+			//
+			//	Retourne la distance à parcourir.
 			
 			if (direction < 0)
 			{
 				//	La distance au début de la tranche de texte va de 0 à -n.
 				
-				int distance = Internal.Navigator.GetRunStartOffset (this.story, this.ActiveCursor, property);
-				this.story.MoveCursor (this.ActiveCursor, distance);
+				return Internal.Navigator.GetRunStartOffset (this.story, this.ActiveCursor, property);
 			}
 			else if (direction > 0)
 			{
 				//	La distance à la fin de la tranche de texte va de 1 à n.
 				
-				int distance = Internal.Navigator.GetRunEndLength (this.story, this.ActiveCursor, property);
-				this.story.MoveCursor (this.ActiveCursor, distance);
+				return Internal.Navigator.GetRunEndLength (this.story, this.ActiveCursor, property);
 			}
+			
+			return 0;
 		}
 		
 		
@@ -838,14 +886,15 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected virtual void UpdateCurrentStylesAndProperties()
+		public virtual void UpdateCurrentStylesAndProperties()
 		{
-			System.Collections.ArrayList styles     = new System.Collections.ArrayList ();
-			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+			TextStyle[] styles;
+			Property[]  properties;
 			
 			if (this.TextLength == 0)
 			{
-				styles.Add (this.TextContext.DefaultStyle);
+				styles     = new TextStyle[] { this.TextContext.DefaultStyle };
+				properties = new Property[0];
 			}
 			else
 			{
@@ -856,18 +905,14 @@ namespace Epsitec.Common.Text
 				int dir    = this.story.GetCursorDirection (this.cursor);
 				int offset = ((pos > 0) && (dir > 0)) ? -1 : 0;
 				
-				Internal.Navigator.GetStyles (this.story, this.cursor, offset, styles);
-				Internal.Navigator.GetProperties (this.story, this.cursor, offset, properties);
+				ulong code = this.story.TextTable.ReadChar (this.cursor.CursorId, offset);
+				
+				this.TextContext.GetStyles (code, out styles);
+				this.TextContext.GetProperties (code, out properties);
 			}
 			
-			int n_styles     = styles.Count;
-			int n_properties = properties.Count;
-			
-			this.current_styles     = new TextStyle[n_styles];
-			this.current_properties = new Property[n_properties];
-			
-			styles.CopyTo (this.current_styles);
-			properties.CopyTo (this.current_properties);
+			this.current_styles     = styles;
+			this.current_properties = properties;
 		}
 		
 		protected virtual void UpdateSelectionMarkers()
@@ -1007,6 +1052,7 @@ namespace Epsitec.Common.Text
 		private TextStory						story;
 		private TextFitter						fitter;
 		private Cursors.SimpleCursor			cursor;
+		private Cursors.TempCursor				temp_cursor;
 		private Cursors.SelectionCursor			active_selection_cursor;
 		private System.Collections.ArrayList	selection_cursors;
 		

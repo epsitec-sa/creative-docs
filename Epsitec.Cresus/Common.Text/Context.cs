@@ -472,7 +472,7 @@ namespace Epsitec.Common.Text
 			{
 				Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
 				
-				Properties.PropertiesProperty props = style[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
+				Properties.PropertiesProperty props = style == null ? null : style[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
 				
 				if (props == null)
 				{
@@ -509,7 +509,7 @@ namespace Epsitec.Common.Text
 				(this.get_styles_last_style_index   != current_style_index))
 			{
 				Styles.SimpleStyle        style = this.style_list.GetStyleFromIndex (current_style_index);
-				Properties.StylesProperty props = style[Properties.WellKnownType.Styles] as Properties.StylesProperty;
+				Properties.StylesProperty props = style == null ? null : style[Properties.WellKnownType.Styles] as Properties.StylesProperty;
 				
 				this.get_styles_last_styles        = (props == null) ? new TextStyle[0] : props.Styles;
 				this.get_styles_last_style_version = current_style_version;

@@ -205,53 +205,59 @@ namespace Epsitec.Common.Text
 				int tab_count       = 0;
 				int tab_char_count  = 0;
 				
-				System.Diagnostics.Debug.Assert (paragraph_start + fitter_cursor.ParagraphLength >= position);
-				
-				Cursors.FitterCursor.Element[] elements = fitter_cursor.Elements;
-				
-				//	Détermine dans quelle ligne du paragraphe se trouve le curseur :
-				
-				for (int i = 0; i < elements.Length; i++)
+				if (paragraph_start + fitter_cursor.ParagraphLength < position)
 				{
-					int line_length = elements[i].Length;
-					int line_end    = line_start + line_length;
+					//	Le curseur se trouve dans une tranche de texte qui n'appartient
+					//	à aucun paragraphe.
+				}
+				else
+				{
+					Cursors.FitterCursor.Element[] elements = fitter_cursor.Elements;
 					
-					if ((position >= line_start) &&
-						((position < line_end) || ((position == line_end) && (direction >= 0) && (! elements[i].IsTabulation)) || ((position == line_end) && (line_length == 0))))
-					{
-						//	Le curseur se trouve dans la ligne en cours d'analyse.
-						//	On tient compte de la direction de déplacement pour
-						//	déterminer le curseur se trouve à la fin de la ligne
-						//	en cours ou au début de la ligne suivante.
-						
-						frame = this.FrameList[elements[i].FrameIndex];
-						
-						x = elements[i].LineBaseX;
-						y = elements[i].LineBaseY;
-						
-						paragraph_line = i - tab_count;
-						line_character = position - line_start + tab_char_count;
-						
-						this.GetCursorGeometry (line_start, position - line_start, elements, i, ref x, ref y);
-						
-						return true;
-					}
+					//	Détermine dans quelle ligne du paragraphe se trouve le curseur :
 					
-					if (elements[i].IsTabulation)
+					for (int i = 0; i < elements.Length; i++)
 					{
-						tab_char_count += line_length;
-						tab_count++;
-					}
-					else
-					{
-						tab_char_count = 0;
-					}
-					
-					line_start = line_end;
-					
-					if (line_start > position)
-					{
-						break;
+						int line_length = elements[i].Length;
+						int line_end    = line_start + line_length;
+						
+						if ((position >= line_start) &&
+							((position < line_end) || ((position == line_end) && (direction >= 0) && (! elements[i].IsTabulation)) || ((position == line_end) && (line_length == 0))))
+						{
+							//	Le curseur se trouve dans la ligne en cours d'analyse.
+							//	On tient compte de la direction de déplacement pour
+							//	déterminer le curseur se trouve à la fin de la ligne
+							//	en cours ou au début de la ligne suivante.
+							
+							frame = this.FrameList[elements[i].FrameIndex];
+							
+							x = elements[i].LineBaseX;
+							y = elements[i].LineBaseY;
+							
+							paragraph_line = i - tab_count;
+							line_character = position - line_start + tab_char_count;
+							
+							this.GetCursorGeometry (line_start, position - line_start, elements, i, ref x, ref y);
+							
+							return true;
+						}
+						
+						if (elements[i].IsTabulation)
+						{
+							tab_char_count += line_length;
+							tab_count++;
+						}
+						else
+						{
+							tab_char_count = 0;
+						}
+						
+						line_start = line_end;
+						
+						if (line_start > position)
+						{
+							break;
+						}
 					}
 				}
 			}
@@ -393,6 +399,13 @@ restart_paragraph_layout:
 						
 						layout.LineSkipBefore            = this.line_skip_before;
 						layout.KeepWithPreviousParagraph = this.keep_with_prev;
+						
+						break;
+					
+					case Layout.Status.OkHiddenFitEnded:
+						
+						continuation = false;
+						reset_line_h = true;
 						
 						break;
 					
@@ -561,7 +574,14 @@ restart_paragraph_layout:
 					list.Add (element);
 				}
 				
-				layout.TextOffset = offset;
+				if (layout_status == Layout.Status.OkHiddenFitEnded)
+				{
+					offset = layout.TextOffset;
+				}
+				else
+				{
+					layout.TextOffset = offset;
+				}
 				
 				if (layout_status == Layout.Status.OkTabReached)
 				{
@@ -607,7 +627,7 @@ restart_paragraph_layout:
 					if ((layout_status == Layout.Status.OkFitEnded) ||
 						(layout_status == Layout.Status.ErrorNeedMoreRoom))
 					{
-						Debug.Assert.IsTrue (list.Count > 0);
+						System.Diagnostics.Debug.Assert (list.Count > 0);
 						
 						Cursors.FitterCursor mark = this.NewFitterCursor ();
 						
@@ -616,7 +636,12 @@ restart_paragraph_layout:
 						list.Clear ();
 						
 						story.MoveCursor (mark, pos + paragraph_start_offset);
-						
+					}
+					
+					if ((layout_status == Layout.Status.OkFitEnded) ||
+						(layout_status == Layout.Status.OkHiddenFitEnded) ||
+						(layout_status == Layout.Status.ErrorNeedMoreRoom))
+					{
 						line_start_offset           = offset;
 						paragraph_start_offset      = offset;
 						paragraph_start_frame_index = layout.FrameIndex;
