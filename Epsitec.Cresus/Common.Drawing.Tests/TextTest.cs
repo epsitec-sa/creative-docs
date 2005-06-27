@@ -200,8 +200,13 @@ namespace Epsitec.Common.Drawing
 					
 					System.Diagnostics.Debug.WriteLine ("Show cursors: start...");
 					
-					for (int i = 0; i < this.story.TextLength-1; i++)
+					for (int i = -1; i < this.story.TextLength; i++)
 					{
+						if (i >= 0)
+						{
+							navigator.MoveTo (Common.Text.TextNavigator.Target.CharacterNext, 1);
+						}
+						
 						if (navigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle))
 						{
 							double dx = System.Math.Cos (angle) * (ascender - descender);
@@ -212,21 +217,12 @@ namespace Epsitec.Common.Drawing
 							
 							graphics.AddLine (cx, cy, cx+dx, cy+dy);
 						}
-						
-						navigator.MoveTo (Common.Text.TextNavigator.Target.CharacterNext, 1);
 					}
 					
 					System.Diagnostics.Debug.WriteLine ("Show cursors: done...");
 					System.Diagnostics.Debug.WriteLine (string.Format ("{0} characters in text.", this.story.TextLength));
 					
-					navigator.MoveTo (Common.Text.TextNavigator.Target.TextStart, 0);
-					
-					System.Diagnostics.Debug.WriteLine ("Navigate through text: start...");
-					for (int i = 0; i < story.TextLength; i++)
-					{
-						navigator.MoveTo (Common.Text.TextNavigator.Target.CharacterNext, 1);
-					}
-					System.Diagnostics.Debug.WriteLine ("Navigate through text: done...");
+					navigator.Dispose ();
 					
 					graphics.RenderSolid (Drawing.Color.FromName ("Green"));
 				}

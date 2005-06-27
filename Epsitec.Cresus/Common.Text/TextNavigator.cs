@@ -567,6 +567,14 @@ namespace Epsitec.Common.Text
 				
 				if (code == 0)
 				{
+					System.Diagnostics.Debug.Assert (pos+1 == this.story.TextLength);
+					System.Diagnostics.Debug.Assert (direction == 1);
+					
+					System.Diagnostics.Debug.WriteLine ("Reached the end of the text.");
+					
+					moved += 1;
+					pos   += 1;
+					
 					break;
 				}
 				
@@ -907,8 +915,16 @@ namespace Epsitec.Common.Text
 				
 				ulong code = this.story.TextTable.ReadChar (this.cursor.CursorId, offset);
 				
-				this.TextContext.GetStyles (code, out styles);
-				this.TextContext.GetProperties (code, out properties);
+				if (code == 0)
+				{
+					styles     = new TextStyle[] { this.TextContext.DefaultStyle };
+					properties = new Property[0];
+				}
+				else
+				{
+					this.TextContext.GetStyles (code, out styles);
+					this.TextContext.GetProperties (code, out properties);
+				}
 			}
 			
 			this.current_styles     = styles;
