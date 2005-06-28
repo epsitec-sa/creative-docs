@@ -358,18 +358,18 @@ namespace Epsitec.Common.Text.Tests
 			
 			story.SetCursorPosition (cursor, 0);
 			
-			Debug.Assert.IsTrue ('A' == (char) Unicode.Bits.GetCode (story.TextTable.ReadChar (cursor.CursorId, 0)));
-			Debug.Assert.IsTrue ('b' == (char) Unicode.Bits.GetCode (story.TextTable.ReadChar (cursor.CursorId, 1)));
-			Debug.Assert.IsTrue ('c' == (char) Unicode.Bits.GetCode (story.TextTable.ReadChar (cursor.CursorId, 2)));
+			Debug.Assert.IsTrue ('A' == (char) Unicode.Bits.GetCode (story.ReadChar (cursor, 0)));
+			Debug.Assert.IsTrue ('b' == (char) Unicode.Bits.GetCode (story.ReadChar (cursor, 1)));
+			Debug.Assert.IsTrue ('c' == (char) Unicode.Bits.GetCode (story.ReadChar (cursor, 2)));
 			
 			Debug.Assert.IsFalse (story.TextContext.ContainsProperty (story, cursor, 0, g1_a));
 			Debug.Assert.IsTrue (story.TextContext.ContainsProperty (story, cursor, 3, g1_a));
 			
 			story.SetCursorPosition (cursor, 3);
 			
-			Debug.Assert.IsTrue ('A' == (char) Unicode.Bits.GetCode (story.TextTable.ReadChar (cursor.CursorId, -3)));
-			Debug.Assert.IsTrue ('b' == (char) Unicode.Bits.GetCode (story.TextTable.ReadChar (cursor.CursorId, -2)));
-			Debug.Assert.IsTrue ('c' == (char) Unicode.Bits.GetCode (story.TextTable.ReadChar (cursor.CursorId, -1)));
+			Debug.Assert.IsTrue ('A' == (char) Unicode.Bits.GetCode (story.ReadChar (cursor, -3)));
+			Debug.Assert.IsTrue ('b' == (char) Unicode.Bits.GetCode (story.ReadChar (cursor, -2)));
+			Debug.Assert.IsTrue ('c' == (char) Unicode.Bits.GetCode (story.ReadChar (cursor, -1)));
 			
 			Debug.Assert.IsFalse (story.TextContext.ContainsProperty (story, cursor, -1, g1_a));
 			Debug.Assert.IsTrue (story.TextContext.ContainsProperty (story, cursor, 0, g1_a));

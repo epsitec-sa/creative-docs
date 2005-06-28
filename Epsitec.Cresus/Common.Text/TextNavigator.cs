@@ -209,55 +209,78 @@ namespace Epsitec.Common.Text
 			int old_pos = this.CursorPosition;
 			int old_dir = this.CursorDirection;
 			
+			int new_pos;
+			int new_dir;
+			
 			switch (target)
 			{
 				case Target.CharacterNext:
-					this.MoveCursor (count);
+					this.MoveCursor (count, out new_pos, out new_dir);
 					break;
 				
 				case Target.CharacterPrevious:
-					this.MoveCursor (-count);
+					this.MoveCursor (-count, out new_pos, out new_dir);
 					break;
 				
 				case Target.TextStart:
-					this.story.SetCursorPosition (this.ActiveCursor, 0, -1);
+					new_pos = 0;
+					new_dir = -1;
 					break;
 				
 				case Target.TextEnd:
-					this.story.SetCursorPosition (this.ActiveCursor, this.TextLength, 1);
+					new_pos = this.TextLength;
+					new_dir = 1;
 					break;
 					
 				case Target.ParagraphStart:
-					this.MoveCursor (count, -1, new MoveCallback (this.IsParagraphStart));
+					this.MoveCursor (count, -1, new MoveCallback (this.IsParagraphStart), out new_pos, out new_dir);
 					break;
 				
 				case Target.ParagraphEnd:
-					this.MoveCursor (count, 1, new MoveCallback (this.IsParagraphEnd));
+					this.MoveCursor (count, 1, new MoveCallback (this.IsParagraphEnd), out new_pos, out new_dir);
 					break;
 				
 				case Target.LineStart:
-					this.MoveCursor (count, -1, new MoveCallback (this.IsLineStart));
+					this.MoveCursor (count, -1, new MoveCallback (this.IsLineStart), out new_pos, out new_dir);
 					break;
 				
 				case Target.LineEnd:
-					this.MoveCursor (count, 1, new MoveCallback (this.IsLineEnd));
+					this.MoveCursor (count, 1, new MoveCallback (this.IsLineEnd), out new_pos, out new_dir);
 					break;
 				
 				case Target.WordStart:
-					this.MoveCursor (count, -1, new MoveCallback (this.IsWordStart));
+					this.MoveCursor (count, -1, new MoveCallback (this.IsWordStart), out new_pos, out new_dir);
 					break;
 				
 				case Target.WordEnd:
-					this.MoveCursor (count, 1, new MoveCallback (this.IsWordEnd));
+					this.MoveCursor (count, 1, new MoveCallback (this.IsWordEnd), out new_pos, out new_dir);
 					break;
+					
+				default:
+					throw new System.NotSupportedException (string.Format ("Target {0} not supported", target));
 			}
-			
-			int new_pos = this.CursorPosition;
-			int new_dir = this.CursorDirection;
 			
 			if ((old_pos != new_pos) ||
 				(old_dir != new_dir))
 			{
+				if (Internal.Navigator.IsParagraphStart (this.story, this.ActiveCursor, 0))
+				{
+					//	Le curseur n'a pas le droit de se trouver en début de paragraphe
+					//	si celui-ci commence par du texte automatique, car on n'a pas le
+					//	droit d'insérer de texte avant celui-ci.
+					
+					this.SkipOverAutoText (ref new_pos, ref new_dir);
+				}
+				
+				//	Déplace le curseur "officiel" une seule fois. Ceci permet d'éviter
+				//	qu'un appel à MoveTo provoque plusieurs enregistrements dans l'oplet
+				//	queue active :
+				
+				this.story.SetCursorPosition (this.ActiveCursor, new_pos, new_dir);
+				
+				//	Met encore à jour les marques de sélection ou les informations de
+				//	format associées au curseur :
+				
 				if (this.IsSelectionActive)
 				{
 					this.UpdateSelectionMarkers ();
@@ -517,7 +540,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected virtual bool MoveCursor(int distance)
+		protected virtual bool MoveCursor(int distance, out int new_pos, out int new_dir)
 		{
 			int count;
 			int direction;
@@ -563,7 +586,7 @@ namespace Epsitec.Common.Text
 				
 				this.story.MoveCursor (this.temp_cursor, direction);
 				
-				ulong code = text_table.ReadChar (this.temp_cursor.CursorId);
+				ulong code = this.story.ReadChar (this.temp_cursor);
 				
 				if (code == 0)
 				{
@@ -588,23 +611,13 @@ namespace Epsitec.Common.Text
 				{
 					int skip = this.SkipOverProperty (auto_text_property, direction);
 					
-					pos += skip;
+					//	Un texte automatique compte comme zéro caractère dans nos
+					//	déplacements.
 					
 					this.story.MoveCursor (this.temp_cursor, skip);
 					
-					//	TODO: extraire ce code d'ici ...
-					if ((direction < 0) &&
-						(pos == 0))
-					{
-						//	Arrivé au début du texte en ayant sauté par-dessus un texte
-						//	automatique; on n'a pas le droit de laisser le curseur ici,
-						//	alors on le remet à sa position initiale et on s'arrête...
-						
-						this.story.SetCursorPosition (this.ActiveCursor, pos, -1);
-						break;
-					}
-					
-					//	Ne compte pas un texte automatique comme 'caractère sauté'.
+					pos   += skip;
+					moved += 0;
 				}
 				else if (context.GetGenerator (code, out generator_property))
 				{
@@ -612,6 +625,8 @@ namespace Epsitec.Common.Text
 					
 					//	Un texte produit par un générateur compte comme un caractère
 					//	unique.
+					
+					this.story.MoveCursor (this.temp_cursor, skip);
 					
 					pos   += skip;
 					moved += 1;
@@ -638,15 +653,13 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			if (moved > 0)
-			{
-				this.story.SetCursorPosition (this.ActiveCursor, pos, direction);
-			}
+			new_pos = pos;
+			new_dir = direction;
 			
 			return moved > 0;
 		}
 		
-		protected virtual bool MoveCursor(int count, int direction, MoveCallback callback)
+		protected virtual bool MoveCursor(int count, int direction, MoveCallback callback, out int new_pos, out int new_dir)
 		{
 			int moved   = 0;
 			int old_pos = this.CursorPosition;
@@ -702,13 +715,12 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			int new_pos = old_pos + moved;
-			int new_dir = direction;
+			new_pos = old_pos + moved;
+			new_dir = direction;
 			
 			if ((new_pos != old_pos) ||
 				(new_dir != old_dir))
 			{
-				this.story.SetCursorPosition (this.ActiveCursor, new_pos, new_dir);
 				return true;
 			}
 			else
@@ -869,6 +881,37 @@ namespace Epsitec.Common.Text
 			return 0;
 		}
 		
+		protected virtual void SkipOverAutoText(ref int pos, ref int dir)
+		{
+			for (;;)
+			{
+				this.story.SetCursorPosition (this.temp_cursor, pos);
+				
+				ulong code = this.story.ReadChar (this.temp_cursor);
+				
+				if (code == 0)
+				{
+					return;
+				}
+					
+				//	Gère le déplacement par-dessus la section AutoText, s'il y en a
+				//	une :
+				
+				Properties.AutoTextProperty  property;
+				
+				if (! this.TextContext.GetAutoText (code, out property))
+				{
+					break;
+				}
+				
+				System.Diagnostics.Debug.Assert (property != null);
+				System.Diagnostics.Debug.Assert (property.Tag != null);
+				
+				pos += this.SkipOverProperty (property, 1);
+				dir  = -1;
+			}
+		}
+		
 		
 		protected Cursors.SelectionCursor NewSelectionCursor()
 		{
@@ -913,7 +956,7 @@ namespace Epsitec.Common.Text
 				int dir    = this.story.GetCursorDirection (this.cursor);
 				int offset = ((pos > 0) && (dir > 0)) ? -1 : 0;
 				
-				ulong code = this.story.TextTable.ReadChar (this.cursor.CursorId, offset);
+				ulong code = this.story.ReadChar (this.cursor, offset);
 				
 				if (code == 0)
 				{

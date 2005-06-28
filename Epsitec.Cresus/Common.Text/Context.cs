@@ -826,7 +826,7 @@ namespace Epsitec.Common.Text
 		
 		public bool ContainsProperty(TextStory story, ICursor cursor, int offset, Property property)
 		{
-			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
+			ulong code = story.ReadChar (cursor, offset);
 			
 			if (code != 0)
 			{
@@ -846,7 +846,7 @@ namespace Epsitec.Common.Text
 		
 		public bool ContainsProperty(TextStory story, ICursor cursor, int offset, Properties.WellKnownType well_known_type, Properties.PropertyType property_type)
 		{
-			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
+			ulong code = story.ReadChar (cursor, offset);
 			
 			if (code != 0)
 			{

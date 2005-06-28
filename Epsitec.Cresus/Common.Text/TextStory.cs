@@ -346,6 +346,17 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public ulong ReadChar(ICursor cursor)
+		{
+			return this.text.ReadChar (cursor.CursorId);
+		}
+		
+		public ulong ReadChar(ICursor cursor, int offset)
+		{
+			return this.text.ReadChar (cursor.CursorId, offset);
+		}
+		
+		
 		public int WriteText(ICursor cursor, ulong[] new_text)
 		{
 			return this.WriteText (cursor, 0, new_text);

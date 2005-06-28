@@ -10,14 +10,14 @@ namespace Epsitec.Common.Text.Internal
 	{
 		public static bool IsParagraphStart(TextStory story, ICursor cursor, int offset)
 		{
-			Unicode.Code code = Unicode.Bits.GetUnicodeCode (story.TextTable.ReadChar (cursor.CursorId, offset - 1));
+			Unicode.Code code = Unicode.Bits.GetUnicodeCode (story.ReadChar (cursor, offset - 1));
 			
 			return (code == Unicode.Code.Null) || Navigator.IsParagraphSeparator (code);
 		}
 		
 		public static bool IsParagraphEnd(TextStory story, ICursor cursor, int offset)
 		{
-			Unicode.Code code = Unicode.Bits.GetUnicodeCode (story.TextTable.ReadChar (cursor.CursorId, offset));
+			Unicode.Code code = Unicode.Bits.GetUnicodeCode (story.ReadChar (cursor, offset));
 			
 			return Navigator.IsParagraphSeparator (code);
 		}
@@ -43,8 +43,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool IsWordStart(TextStory story, ICursor cursor, int offset)
 		{
-			Unicode.Code code_0 = Unicode.Bits.GetUnicodeCode (story.TextTable.ReadChar (cursor.CursorId, offset));
-			Unicode.Code code_1 = Unicode.Bits.GetUnicodeCode (story.TextTable.ReadChar (cursor.CursorId, offset - 1));
+			Unicode.Code code_0 = Unicode.Bits.GetUnicodeCode (story.ReadChar (cursor, offset));
+			Unicode.Code code_1 = Unicode.Bits.GetUnicodeCode (story.ReadChar (cursor, offset - 1));
 			
 			if (code_1 == Unicode.Code.Null)
 			{
@@ -62,8 +62,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool IsWordEnd(TextStory story, ICursor cursor, int offset)
 		{
-			Unicode.Code code_0 = Unicode.Bits.GetUnicodeCode (story.TextTable.ReadChar (cursor.CursorId, offset));
-			Unicode.Code code_1 = Unicode.Bits.GetUnicodeCode (story.TextTable.ReadChar (cursor.CursorId, offset - 1));
+			Unicode.Code code_0 = Unicode.Bits.GetUnicodeCode (story.ReadChar (cursor, offset));
+			Unicode.Code code_1 = Unicode.Bits.GetUnicodeCode (story.ReadChar (cursor, offset - 1));
 			
 			if (code_0 == Unicode.Code.Null)
 			{
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Text.Internal
 			//	Retourne l'offset au début du texte auquel est appliquée la
 			//	propriété passée en entrée.
 			
-			Navigator.PropertyFinder finder = new PropertyFinder (story.StyleList, property, story.TextTable.ReadChar (cursor.CursorId));
+			Navigator.PropertyFinder finder = new PropertyFinder (story.StyleList, property, story.ReadChar (cursor));
 			TextStory.CodeCallback callback = new TextStory.CodeCallback (finder.MissingProperty);
 			
 			int distance = story.GetCursorPosition (cursor);
@@ -237,7 +237,7 @@ namespace Epsitec.Common.Text.Internal
 			//	Retourne la longueur du texte auquel est appliquée la propriété
 			//	passée en entrée.
 			
-			Navigator.PropertyFinder finder = new PropertyFinder (story.StyleList, property, story.TextTable.ReadChar (cursor.CursorId));
+			Navigator.PropertyFinder finder = new PropertyFinder (story.StyleList, property, story.ReadChar (cursor));
 			TextStory.CodeCallback callback = new TextStory.CodeCallback (finder.MissingProperty);
 			
 			int distance = story.TextLength - story.GetCursorPosition (cursor);
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Text.Internal
 			//	Retourne toutes les propriétés (fusionnées, telles que stockées
 			//	dans le texte) pour la position indiquée.
 			
-			return Navigator.GetFlattenedProperties (story, story.TextTable.ReadChar (cursor.CursorId, offset), out properties);
+			return Navigator.GetFlattenedProperties (story, story.ReadChar (cursor, offset), out properties);
 		}
 		
 		public static bool GetFlattenedProperties(TextStory story, ulong code, out Property[] properties)
@@ -274,7 +274,7 @@ namespace Epsitec.Common.Text.Internal
 			//	Retourne toutes les propriétés (fusionnées, telles que stockées
 			//	dans le texte) pour la position indiquée.
 			
-			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
+			ulong code = story.ReadChar (cursor, offset);
 			
 			if (code == 0)
 			{
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool GetManagedParagraphProperties(TextStory story, ICursor cursor, int offset, out Properties.ManagedParagraphProperty[] properties)
 		{
-			return Navigator.GetManagedParagraphProperties (story, story.TextTable.ReadChar (cursor.CursorId, offset), out properties);
+			return Navigator.GetManagedParagraphProperties (story, story.ReadChar (cursor, offset), out properties);
 		}
 		
 		public static bool GetManagedParagraphProperties(TextStory story, ulong code, out Properties.ManagedParagraphProperty[] properties)
@@ -397,7 +397,7 @@ namespace Epsitec.Common.Text.Internal
 			//	Retourne les styles de paragraphe attachés au paragraphe à la
 			//	position indiquée.
 			
-			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
+			ulong code = story.ReadChar (cursor, offset);
 			
 			if (code == 0)
 			{
@@ -444,7 +444,7 @@ namespace Epsitec.Common.Text.Internal
 			//	indiquée, en excluant les propriétés dérivées à partir des
 			//	styles.
 			
-			ulong code = story.TextTable.ReadChar (cursor.CursorId, offset);
+			ulong code = story.ReadChar (cursor, offset);
 			
 			if (code == 0)
 			{
