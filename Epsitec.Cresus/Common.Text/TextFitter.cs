@@ -456,6 +456,19 @@ restart_paragraph_layout:
 						System.Diagnostics.Debug.Assert (layout.TextOffset >= 0);
 						System.Diagnostics.Debug.Assert (layout.TextOffset <= text.Length);
 						
+						//	Si le système de layout change de frame en cours de route,
+						//	cela implique que la ligne était vide et que l'on doit con-
+						//	sidérer le début de frame comme notre nouvelle référence.
+						
+						if (def_frame_index != this.frame_index)
+						{
+							def_frame_index = this.frame_index;
+							def_frame_y     = 0;
+						}
+						
+						def_frame_index = this.frame_index;
+						def_frame_y     = layout.FrameYLine;
+						
 						layout.TextContext.GetTab (text[layout.TextOffset-1], out tab_property);
 						
 						Debug.Assert.IsNotNull (tab_property);
@@ -590,6 +603,13 @@ restart_paragraph_layout:
 					if (tab_new_line)
 					{
 						line_count++;
+						
+						def_line_count        = line_count;
+						def_line_start_offset = line_start_offset;
+						def_list_count        = list.Count;
+					
+						def_frame_index = layout.FrameIndex;
+						def_frame_y     = layout.FrameY;
 					}
 					else
 					{

@@ -417,6 +417,17 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public double							FrameYLine
+		{
+			get
+			{
+				//	Retourne la position Y de la ligne dans le frame, alors que FrameY retourne
+				//	la prochaine position Y à utiliser...
+				
+				return this.frame_y_line;
+			}
+		}
+		
 		
 		public Properties.UnderlineProperty[]	UnderlineProperties
 		{
@@ -630,6 +641,12 @@ restart:
 						
 						oy -= this.line_space_before;
 						oy -= this.line_skip_before;
+						
+						this.frame_y_line = this.frame_y - this.line_space_before - this.line_skip_before;
+					}
+					else
+					{
+						this.frame_y_line = this.frame_y;
 					}
 					
 					while ((! this.frame.ConstrainLineBox (oy, line_ascender, line_descender, line_height, this.line_leading, this.line_sync_to_grid, out ox, out oy, out dx, out next_frame_y))
@@ -649,19 +666,20 @@ restart:
 						//	Il n'y a plus de place dans le ITextFrame courant, passe au
 						//	suivant, s'il en reste encore un (ou plus)...
 						
-						frame_index  = this.frame_index + 1;
-						this.frame_y = 0;
+						frame_index       = this.frame_index + 1;
+						this.frame_y      = 0;
+						this.frame_y_line = 0;
 						
 						goto restart;
 					}
 					
-					this.ox          = ox + this.mx_left;
-					this.oy_base     = oy;
-					this.oy_max      = oy + line_ascender;
-					this.oy_min      = oy + line_descender;
-					this.frame_y     = next_frame_y;
-					this.line_width  = dx;
-					this.line_height = line_height;
+					this.ox           = ox + this.mx_left;
+					this.oy_base      = oy;
+					this.oy_max       = oy + line_ascender;
+					this.oy_min       = oy + line_descender;
+					this.frame_y      = next_frame_y;
+					this.line_width   = dx;
+					this.line_height  = line_height;
 					
 					if ((def_line_height == 0) &&
 						(def_line_width == 0))
@@ -1101,15 +1119,17 @@ restart:
 		{
 			if (frame_index == -1)
 			{
-				this.frame_index = -1;
-				this.frame       = null;
-				this.frame_y     = 0;
+				this.frame_index  = -1;
+				this.frame        = null;
+				this.frame_y      = 0;
+				this.frame_y_line = 0;
 			}
 			else
 			{
-				this.frame_index = frame_index;
-				this.frame       = this.frame_list[this.frame_index];
-				this.frame_y     = y;
+				this.frame_index  = frame_index;
+				this.frame        = this.frame_list[this.frame_index];
+				this.frame_y      = y;
+				this.frame_y_line = y;
 			}
 			
 			this.frame_first_line = 0;
@@ -1510,6 +1530,7 @@ restart:
 		private int								frame_index = -1;
 		private ITextFrame						frame;
 		private double							frame_y;
+		private double							frame_y_line;
 		private int								frame_first_line;			//	# première ligne du paragraphe dans ce frame
 		
 		private int								left_to_right;

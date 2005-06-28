@@ -746,13 +746,15 @@ namespace Epsitec.Common.Drawing
 					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_1.Add (new Text.Properties.TabProperty (tab, 0, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+					properties_1.Add (new Text.Properties.LeadingProperty (18.0, Text.Properties.SizeUnits.Points, 10.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
 					properties_2.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_2.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
 					properties_2.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Red")));
+					properties_2.Add (new Text.Properties.LeadingProperty (18.0, Text.Properties.SizeUnits.Points, 10.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
-					this.painter.TextStory.ConvertToStyledText ("Test:\t", no_styles, properties_1, out text);
+					this.painter.TextStory.ConvertToStyledText ("Tabulateurs en folie\nTest:\t", no_styles, properties_1, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					this.painter.TextStory.ConvertToStyledText ("Tab1", no_styles, properties_2, out text);
@@ -862,7 +864,7 @@ namespace Epsitec.Common.Drawing
 					properties_1.Clear ();
 					properties_1.Add (new Text.Properties.FontProperty ("Verdana", "Regular"));
 					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
-					properties_1.Add (new Text.Properties.LeadingProperty (14.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+					properties_1.Add (new Text.Properties.LeadingProperty (18.0, Text.Properties.SizeUnits.Points, 10.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					properties_1.Add (new Text.Properties.MarginsProperty (5.0, 5.0, 5.0, 5.0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 5, Text.Properties.ThreeState.True));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
