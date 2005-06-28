@@ -396,6 +396,12 @@ namespace Epsitec.Common.Document.Properties
 		{
 		}
 
+		// Indique si la propriété est visible.
+		public virtual bool IsVisible
+		{
+			get { return true; }
+		}
+
 
 		// Indique si cette propriété peut faire l'objet d'un style.
 		public static bool StyleAbility(Type type)

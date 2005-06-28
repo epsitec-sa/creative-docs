@@ -632,7 +632,7 @@ namespace Epsitec.Common.Document
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
 					if ( obj.IsHide )  continue;  // objet caché ?
-					obj.PrintGeometry(port, drawingContext);
+					obj.DrawGeometry(port, drawingContext);
 				}
 			}
 
@@ -676,7 +676,7 @@ namespace Epsitec.Common.Document
 						}
 						else
 						{
-							obj.PrintGeometry(port, drawingContext);
+							obj.DrawGeometry(port, drawingContext);
 						}
 					}
 					else
@@ -694,7 +694,7 @@ namespace Epsitec.Common.Document
 						}
 						else
 						{
-							obj.PrintGeometry(port, drawingContext);
+							obj.DrawGeometry(port, drawingContext);
 						}
 					}
 				}

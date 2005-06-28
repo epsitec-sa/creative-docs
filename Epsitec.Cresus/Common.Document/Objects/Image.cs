@@ -42,18 +42,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Détecte si la souris est sur l'objet.
-		public override bool Detect(Point pos)
-		{
-			if ( this.isHide )  return false;
-
-			Drawing.Rectangle bbox = this.BoundingBox;
-			if ( !bbox.Contains(pos) )  return false;
-
-			return Geometry.DetectSurface(this.PathBuildSurface(), pos);
-		}
-
-
 		// Début du déplacement d'une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
@@ -166,17 +154,44 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Met à jour le rectangle englobant l'objet.
-		protected override void UpdateBoundingBox()
+		// Constuit les formes de l'objet.
+		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
 		{
-			Path path = this.PathBuildSurface();
-			this.bboxThin = path.ComputeBounds();
+			Path pathImage = this.PathBuildImage();
+			Path pathSurface = this.PathBuildSurface();
+			Path pathOutline = this.PathBuildOutline();
 
-			path = this.PathBuildImage();
-			this.bboxThin.MergeWith(path.ComputeBounds());
+			int totalShapes = 4;
 
-			this.bboxGeom = this.bboxThin;
-			this.bboxFull = this.bboxThin;
+			Shape[] shapes = new Shape[totalShapes];
+			int i = 0;
+			
+			// Trait du rectangle.
+			shapes[i] = new Shape();
+			shapes[i].Path = pathOutline;
+			shapes[i].Type = Type.Stroke;
+			i ++;
+
+			// Image bitmap.
+			shapes[i] = new Shape();
+			shapes[i].SetImageObject(this);
+			i ++;
+
+			// Rectangle complet pour bbox et détection.
+			shapes[i] = new Shape();
+			shapes[i].Path = pathSurface;
+			shapes[i].Type = Type.Surface;
+			shapes[i].Aspect = Aspect.InvisibleBox;
+			i ++;
+
+			// Rectangle complet pour bbox et détection.
+			shapes[i] = new Shape();
+			shapes[i].Path = pathImage;
+			shapes[i].Type = Type.Surface;
+			shapes[i].Aspect = Aspect.InvisibleBox;
+			i ++;
+
+			return shapes;
 		}
 
 		// Crée le chemin de l'objet pour dessiner la surface exacte de l'image.
@@ -344,101 +359,9 @@ namespace Epsitec.Common.Document.Objects
 #endif
 		}
 
-		// Dessine l'objet.
-		public override void DrawGeometry(Graphics graphics, DrawingContext drawingContext)
+		// Dessine l'image.
+		public override void DrawImage(IPaintPort port, DrawingContext drawingContext)
 		{
-			base.DrawGeometry(graphics, drawingContext);
-
-			if ( this.TotalHandle < 2 )  return;
-
-			Path path;
-
-			if ( this.TotalHandle == 2 )  // construction ?
-			{
-				path = this.PathBuildSurface();
-				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(drawingContext.HiliteSurfaceColor);
-
-				path = this.PathBuildOutline();
-				graphics.Rasterizer.AddOutline(path, 1.0/drawingContext.ScaleX);
-				graphics.RenderSolid(drawingContext.HiliteOutlineColor);
-
-				return;
-			}
-
-			this.OpenBitmapOriginal();
-			this.OpenBitmapDimmed(drawingContext);
-
-			Drawing.Image image = drawingContext.IsDimmed ? this.imageDimmed : this.imageOriginal;
-			if ( image == null )
-			{
-				path = this.PathBuildOutline();
-				graphics.Rasterizer.AddOutline(path, 1.0/drawingContext.ScaleX);
-				graphics.RenderSolid(Color.FromBrightness(0.5));
-			}
-			else
-			{
-				Transform ot = graphics.Transform;
-
-				Point center;
-				double width, height, angle;
-				this.ImageGeometry(out center, out width, out height, out angle);
-
-				if ( width > 0 && height > 0 )
-				{
-					Properties.Image property = this.PropertyImage;
-
-					if ( property.Homo )  // conserve les proportions ?
-					{
-						double rapport = image.Height/image.Width;
-						if ( rapport < height/width )  height = width*rapport;
-						else                           width  = height/rapport;
-					}
-
-					graphics.TranslateTransform(center.X, center.Y);
-					graphics.RotateTransformDeg(angle, 0, 0);
-
-					double mirrorx = property.MirrorH ? -1 : 1;
-					double mirrory = property.MirrorV ? -1 : 1;
-					graphics.ScaleTransform(mirrorx, mirrory, 0, 0);
-
-					Drawing.Rectangle rect = new Drawing.Rectangle(-width/2, -height/2, width, height);
-					graphics.PaintImage(image, rect);
-				}
-
-				graphics.Transform = ot;
-			}
-
-			if ( this.selected )
-			{
-				path = this.PathBuildOutline();
-				graphics.Rasterizer.AddOutline(path, 1.0/drawingContext.ScaleX);
-				graphics.RenderSolid(Color.FromBrightness(0.5));
-
-				path = new Path();
-				path.MoveTo(this.Handle(0).Position);
-				path.LineTo(this.Handle(3).Position);
-				graphics.Rasterizer.AddOutline(path, 3.0/drawingContext.ScaleX);
-				graphics.RenderSolid(Color.FromBrightness(0.5));
-			}
-
-			if ( this.IsHilite && drawingContext.IsActive )
-			{
-				path = this.PathBuildSurface();
-				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(drawingContext.HiliteSurfaceColor);
-
-				path = this.PathBuildOutline();
-				graphics.Rasterizer.AddOutline(path, 1.0/drawingContext.ScaleX);
-				graphics.RenderSolid(drawingContext.HiliteOutlineColor);
-			}
-		}
-
-		// Imprime l'objet.
-		public override void PrintGeometry(Printing.PrintPort port, DrawingContext drawingContext)
-		{
-			base.PrintGeometry(port, drawingContext);
-
 			if ( this.TotalHandle < 2 )  return;
 
 			this.OpenBitmapOriginal();
@@ -448,8 +371,8 @@ namespace Epsitec.Common.Document.Objects
 			if ( image == null )
 			{
 				Path path = this.PathBuildOutline();
-				port.LineWidth = 1.0/drawingContext.ScaleX;
 				port.Color = Color.FromBrightness(0.5);
+				port.LineWidth = 1.0/drawingContext.ScaleX;
 				port.PaintOutline(path);
 			}
 			else

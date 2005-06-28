@@ -45,56 +45,14 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Détecte si la souris est sur l'objet.
-		public override bool Detect(Point pos)
-		{
-			if ( this.isHide )  return false;
-
-			Drawing.Rectangle bbox = this.BoundingBox;
-			if ( !bbox.Contains(pos) )  return false;
-
-			Path pathStart;  bool outlineStart, surfaceStart;
-			Path pathEnd;    bool outlineEnd,   surfaceEnd;
-			Path pathLine;
-			this.PathBuild(null,
-						   out pathStart, out outlineStart, out surfaceStart,
-						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine, false);
-
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			double width = System.Math.Max(this.PropertyLineMode.Width/2, context.MinimalWidth);
-			
-			if (                 Geometry.DetectOutline(pathLine,  width, pos) )  return true;
-			if ( outlineStart && Geometry.DetectOutline(pathStart, width, pos) )  return true;
-			if ( outlineEnd   && Geometry.DetectOutline(pathEnd,   width, pos) )  return true;
-
-			if ( surfaceStart && Geometry.DetectSurface(pathStart, pos) )  return true;
-			if ( surfaceEnd   && Geometry.DetectSurface(pathEnd,   pos) )  return true;
-
-			if ( this.PropertyFillGradient.IsVisible() )
-			{
-				pathLine.Close();
-				if ( Geometry.DetectSurface(pathLine, pos) )  return true;
-			}
-
-			return false;
-		}
-
 		// Détecte si la souris est sur le pourtour de l'objet.
-		// Retourne le rank de la poignée de départ, ou -1
+		// Retourne le rang de la poignée de départ, ou -1
 		protected int DetectOutline(Point pos)
 		{
-			Path pathStart;  bool outlineStart, surfaceStart;
-			Path pathEnd;    bool outlineEnd,   surfaceEnd;
-			Path pathLine;
-			this.PathBuild(null,
-						   out pathStart, out outlineStart, out surfaceStart,
-						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine, false);
-
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			double width = System.Math.Max(this.PropertyLineMode.Width/2, context.MinimalWidth);
-			int rank = Geometry.DetectOutlineRank(pathLine, width, pos);
+
+			Shape[] shapes = this.ShapesBuild(context, false);
+			int rank = context.Drawer.DetectOutline(pos, context, shapes);
 			if ( rank != -1 )  rank *= 3;
 			return rank;
 		}
@@ -1067,50 +1025,105 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
-		// Met à jour le rectangle englobant l'objet.
-		protected override void UpdateBoundingBox()
+		// Constuit les formes de l'objet.
+		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
 		{
-			if ( this.TotalMainHandle < 3 )  return;
-
-			Path pathStart;  bool outlineStart, surfaceStart;
-			Path pathEnd;    bool outlineEnd,   surfaceEnd;
-			Path pathLine;
-			this.PathBuild(null,
+			Path pathStart, pathEnd, pathLine;
+			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
+			this.PathBuild(drawingContext,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine, false);
+						   out pathLine, simplify);
 
-			Path[] paths = new Path[3];
-			paths[0] = pathLine;
-			paths[1] = pathStart;
-			paths[2] = pathEnd;
-
-			bool[] lineModes = new bool[3];
-			lineModes[0] = true;
-			lineModes[1] = outlineStart;
-			lineModes[2] = outlineEnd;
-
-			bool[] lineColors = new bool[3];
-			lineColors[0] = true;
-			lineColors[1] = surfaceStart;
-			lineColors[2] = surfaceEnd;
-
-			bool[] fillGradients = new bool[3];
-			fillGradients[0] = true;
-			fillGradients[1] = false;
-			fillGradients[2] = false;
-
-			this.ComputeBoundingBox(paths, lineModes, lineColors, fillGradients);
-
-			this.InflateBoundingBox(this.Handle(1).Position, false);
-			this.InflateBoundingBox(this.Handle(this.TotalMainHandle-2).Position, false);
-
-			int total = this.TotalMainHandle;
-			for ( int i=0 ; i<total ; i++ )
+			int totalShapes = 2;
+			if ( surfaceStart )  totalShapes ++;
+			if ( surfaceEnd   )  totalShapes ++;
+			if ( outlineStart )  totalShapes ++;
+			if ( outlineEnd   )  totalShapes ++;
+			
+			bool support = false;
+			if ( (this.IsSelected || this.isCreating) &&
+				 drawingContext != null && drawingContext.IsActive &&
+				 !this.IsGlobalSelected )
 			{
-				if ( i%3 == 1 )  continue;  // poignée principale ?
-				this.InflateBoundingBox(this.Handle(i).Position, true);
+				support = true;
+				totalShapes ++;
 			}
+
+			Shape[] shapes = new Shape[totalShapes];
+			int i = 0;
+			
+			// Forme de la surface principale.
+			shapes[i] = new Shape();
+			shapes[i].Path = pathLine;
+			shapes[i].SetPropertySurface(this.PropertyFillGradient);
+			i ++;
+
+			// Forme du chemin principal.
+			shapes[i] = new Shape();
+			shapes[i].Path = pathLine;
+			shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+			i ++;
+
+			// Forme de la surface de départ.
+			if ( surfaceStart )
+			{
+				shapes[i] = new Shape();
+				shapes[i].Path = pathStart;
+				shapes[i].SetPropertySurface(this.PropertyLineColor);
+				i ++;
+			}
+
+			// Forme de la surface d'arrivée.
+			if ( surfaceEnd )
+			{
+				shapes[i] = new Shape();
+				shapes[i].Path = pathEnd;
+				shapes[i].SetPropertySurface(this.PropertyLineColor);
+				i ++;
+			}
+
+			// Forme du chemin de départ.
+			if ( outlineStart )
+			{
+				shapes[i] = new Shape();
+				shapes[i].Path = pathStart;
+				shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+				i ++;
+			}
+
+			// Forme du chemin d'arrivée.
+			if ( outlineEnd )
+			{
+				shapes[i] = new Shape();
+				shapes[i].Path = pathEnd;
+				shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+				i ++;
+			}
+
+			// Forme des traits de support pour les poignées secondaires.
+			if ( support )
+			{
+				Path pathSupport = new Path();
+				int total = this.TotalMainHandle;
+				for ( int j=0 ; j<total ; j+=3 )
+				{
+					if ( !this.Handle(j+1).IsVisible )  continue;
+					pathSupport.MoveTo(this.Handle(j+1).Position);
+					pathSupport.LineTo(this.Handle(j+0).Position);
+					pathSupport.MoveTo(this.Handle(j+1).Position);
+					pathSupport.LineTo(this.Handle(j+2).Position);
+				}
+
+				shapes[i] = new Shape();
+				shapes[i].Path = pathSupport;
+				shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].Aspect = Aspect.Support;
+				shapes[i].IsVisible = true;
+				i ++;
+			}
+
+			return shapes;
 		}
 
 		// Calcule les points de la droite à une extrémité de la courbe.
@@ -1209,239 +1222,14 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Dessine l'objet.
-		public override void DrawGeometry(Graphics graphics, DrawingContext drawingContext)
-		{
-			base.DrawGeometry(graphics, drawingContext);
-
-			int total = this.TotalMainHandle;
-			if ( total < 3 )  return;
-
-			Path pathStart;  bool outlineStart, surfaceStart;
-			Path pathEnd;    bool outlineEnd,   surfaceEnd;
-			Path pathLine;
-			this.PathBuild(drawingContext,
-						   out pathStart, out outlineStart, out surfaceStart,
-						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine, false);
-
-			graphics.FillMode = FillMode.EvenOdd;
-			this.surfaceAnchor.LineUse = false;
-			this.PropertyFillGradient.RenderSurface(graphics, drawingContext, pathLine, this.surfaceAnchor);
-			graphics.FillMode = FillMode.NonZero;
-
-			if ( outlineStart )
-			{
-				this.surfaceAnchor.LineUse = true;
-				this.PropertyLineMode.DrawPath(graphics, drawingContext, pathStart, this.PropertyLineColor, this.surfaceAnchor);
-			}
-			if ( surfaceStart )
-			{
-				this.surfaceAnchor.LineUse = false;
-				this.PropertyLineColor.RenderSurface(graphics, drawingContext, pathStart, this.surfaceAnchor);
-			}
-
-			if ( outlineEnd )
-			{
-				this.surfaceAnchor.LineUse = true;
-				this.PropertyLineMode.DrawPath(graphics, drawingContext, pathEnd, this.PropertyLineColor, this.surfaceAnchor);
-			}
-			if ( surfaceEnd )
-			{
-				this.surfaceAnchor.LineUse = false;
-				this.PropertyLineColor.RenderSurface(graphics, drawingContext, pathEnd, this.surfaceAnchor);
-			}
-
-			this.surfaceAnchor.LineUse = true;
-			this.PropertyLineMode.DrawPath(graphics, drawingContext, pathLine, this.PropertyLineColor, this.surfaceAnchor);
-
-			if ( this.IsHilite && drawingContext.IsActive )
-			{
-				if ( this.PropertyFillGradient.IsVisible() )
-				{
-					graphics.Rasterizer.AddSurface(pathLine);
-					graphics.FillMode = FillMode.EvenOdd;
-					graphics.RenderSolid(drawingContext.HiliteSurfaceColor);
-					graphics.FillMode = FillMode.NonZero;
-				}
-
-				if ( outlineStart )
-				{
-					this.PropertyLineMode.AddOutline(graphics, pathStart, drawingContext.HiliteSize);
-					graphics.RenderSolid(drawingContext.HiliteOutlineColor);
-				}
-				if ( surfaceStart )
-				{
-					graphics.Rasterizer.AddSurface(pathStart);
-					graphics.RenderSolid(drawingContext.HiliteOutlineColor);
-				}
-
-				if ( outlineEnd )
-				{
-					this.PropertyLineMode.AddOutline(graphics, pathEnd, drawingContext.HiliteSize);
-					graphics.RenderSolid(drawingContext.HiliteOutlineColor);
-				}
-				if ( surfaceEnd )
-				{
-					graphics.Rasterizer.AddSurface(pathEnd);
-					graphics.RenderSolid(drawingContext.HiliteOutlineColor);
-				}
-
-				this.PropertyLineMode.AddOutline(graphics, pathLine, drawingContext.HiliteSize);
-				graphics.RenderSolid(drawingContext.HiliteOutlineColor);
-			}
-
-			if ( (this.IsSelected || this.isCreating) &&
-				 drawingContext.IsActive &&
-				 !this.IsGlobalSelected )
-			{
-				double initialWidth = graphics.LineWidth;
-				graphics.LineWidth = 1.0/drawingContext.ScaleX;
-
-				for ( int i=0 ; i<total ; i+=3 )
-				{
-					if ( !this.Handle(i+1).IsVisible )  continue;
-					graphics.AddLine(this.Handle(i+0).Position, this.Handle(i+1).Position);
-					graphics.AddLine(this.Handle(i+1).Position, this.Handle(i+2).Position);
-				}
-				graphics.RenderSolid(Color.FromBrightness(0.6));
-
-				graphics.LineWidth = initialWidth;
-			}
-
-			if ( this.IsDrawDash(drawingContext) )
-			{
-				this.PropertyLineMode.DrawPathDash(graphics, drawingContext, pathLine, this.PropertyLineColor);
-
-				if ( outlineStart )
-				{
-					this.PropertyLineMode.DrawPathDash(graphics, drawingContext, pathStart, this.PropertyLineColor);
-				}
-
-				if ( outlineEnd )
-				{
-					this.PropertyLineMode.DrawPathDash(graphics, drawingContext, pathEnd, this.PropertyLineColor);
-				}
-			}
-		}
-
-		// Imprime l'objet.
-		public override void PrintGeometry(Printing.PrintPort port, DrawingContext drawingContext)
-		{
-			base.PrintGeometry(port, drawingContext);
-
-			int total = this.TotalMainHandle;
-			if ( total < 3 )  return;
-
-			Path pathStart;  bool outlineStart, surfaceStart;
-			Path pathEnd;    bool outlineEnd,   surfaceEnd;
-			Path pathLine;
-			this.PathBuild(drawingContext,
-						   out pathStart, out outlineStart, out surfaceStart,
-						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine, false);
-
-			if ( this.PropertyFillGradient.PaintColor(port, drawingContext) )
-			{
-				port.FillMode = FillMode.EvenOdd;
-				port.PaintSurface(pathLine);
-				port.FillMode = FillMode.NonZero;
-			}
-
-			if ( this.PropertyLineColor.PaintColor(port, drawingContext) )
-			{
-				if ( outlineStart )
-				{
-					this.PropertyLineMode.PaintOutline(port, drawingContext, pathStart);
-				}
-				if ( surfaceStart )
-				{
-					port.PaintSurface(pathStart);
-				}
-
-				if ( outlineEnd )
-				{
-					this.PropertyLineMode.PaintOutline(port, drawingContext, pathEnd);
-				}
-				if ( surfaceEnd )
-				{
-					port.PaintSurface(pathEnd);
-				}
-
-				this.PropertyLineMode.PaintOutline(port, drawingContext, pathLine);
-			}
-		}
-
-		// Exporte en PDF la géométrie de l'objet.
-		public override void ExportPDF(PDF.Port port, DrawingContext drawingContext)
-		{
-			if ( this.TotalMainHandle < 3 )  return;
-
-			Path pathStart;  bool outlineStart, surfaceStart;
-			Path pathEnd;    bool outlineEnd,   surfaceEnd;
-			Path pathLine;
-			this.PathBuild(drawingContext,
-						   out pathStart, out outlineStart, out surfaceStart,
-						   out pathEnd,   out outlineEnd,   out surfaceEnd,
-						   out pathLine, false);
-
-			Properties.Line     lineMode  = this.PropertyLineMode;
-			Properties.Gradient lineColor = this.PropertyLineColor;
-			Properties.Gradient fillColor = this.PropertyFillGradient;
-
-			// Dessine la surface.
-			if ( fillColor.IsVisible() )
-			{
-				fillColor.ExportPDF(port, drawingContext, this);
-				port.PaintSurface(pathLine);
-			}
-
-			// Dessine les surfaces aux extrémités.
-			if ( lineColor.IsVisible() )
-			{
-				if ( surfaceStart || surfaceEnd )
-				{
-					lineColor.ExportPDF(port, drawingContext, this);
-
-					if ( surfaceStart )
-					{
-						port.PaintSurface(pathStart);
-					}
-					if ( surfaceEnd )
-					{
-						port.PaintSurface(pathEnd);
-					}
-				}
-			}
-
-			// Dessine le trait et les extrémités.
-			if ( lineMode.IsVisible() && lineColor.IsVisible() )
-			{
-				lineMode.ExportPDF(port, drawingContext, this);
-				lineColor.ExportPDF(port, drawingContext, this);
-
-				if ( outlineStart )
-				{
-					port.PaintOutline(pathStart);
-				}
-				if ( outlineEnd )
-				{
-					port.PaintOutline(pathEnd);
-				}
-
-				port.PaintOutline(pathLine);
-			}
-		}
-
 
 		#region CreateFromPath
 		// Retourne le chemin géométrique de l'objet pour les constructions
 		// magnétiques.
 		public override Path GetMagnetPath()
 		{
-			Path pathStart;  bool outlineStart, surfaceStart;
-			Path pathEnd;    bool outlineEnd,   surfaceEnd;
-			Path pathLine;
+			Path pathStart, pathEnd, pathLine;
+			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
 			this.PathBuild(null,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
@@ -1454,9 +1242,8 @@ namespace Epsitec.Common.Document.Objects
 		public override Path GetPath(int rank)
 		{
 			if ( rank > 0 )  return null;
-			Path pathStart;  bool outlineStart, surfaceStart;
-			Path pathEnd;    bool outlineEnd,   surfaceEnd;
-			Path pathLine;
+			Path pathStart, pathEnd, pathLine;
+			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
 			this.PathBuild(null,
 						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,

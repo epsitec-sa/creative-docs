@@ -88,7 +88,6 @@ namespace Epsitec.Common.Document.Objects
 				case "ObjectTextLine":   obj = new TextLine(document, model);   break;
 				case "ObjectTextBox":    obj = new TextBox(document, model);    break;
 				case "ObjectImage":      obj = new Image(document, model);      break;
-				case "ObjectArray":      obj = new Array(document, model);      break;
 				case "ObjectDimension":  obj = new Dimension(document, model);  break;
 			}
 			System.Diagnostics.Debug.Assert(obj != null);
@@ -854,60 +853,63 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Constuit les formes de l'objet.
+		protected virtual Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
+		{
+			return null;
+		}
+
 		// Calcule le rectangle englobant l'objet. Chaque objet se charge de
 		// ce calcul, selon sa géométrie, l'épaisseur de son trait, etc.
 		// Il faut calculer :
 		//	this.bboxThin  boîte selon la géométrie de l'objet, sans les traits
 		//	this.bboxGeom  boîte selon la géométrie de l'objet, avec les traits
 		//	this.bboxFull  boîte complète lorsque l'objet est sélectionné
-		protected virtual void UpdateBoundingBox()
+		protected void UpdateBoundingBox()
 		{
+			Shape[] shapes = this.ShapesBuild(null, false);
+			this.ComputeBoundingBox(shapes);
+
+			for ( int i=0 ; i<this.TotalHandle ; i++ )
+			{
+				this.InflateBoundingBox(this.Handle(i).Position, true);
+			}
 		}
 
-		// Calcule toutes les bbox de l'objet en fonction des propriétés.
-		protected void ComputeBoundingBox(Path[] paths, bool[] lineModes, bool[] lineColors, bool[] fillGradients)
+		// Calcule toutes les bbox de l'objet en fonction des formes.
+		protected void ComputeBoundingBox(params Shape[] shapes)
 		{
-			Properties.Line     line    = this.PropertyLineMode;
-			Properties.Gradient outline = this.PropertyLineColor;
-			Properties.Gradient surface = this.PropertyFillGradient;
-			this.ComputeBoundingBox(paths, lineModes, lineColors, fillGradients, line, outline, surface);
-		}
-
-		// Calcule toutes les bbox de l'objet en fonction des propriétés.
-		protected void ComputeBoundingBox(Path[] paths, bool[] lineModes, bool[] lineColors, bool[] fillGradients,
-										  Properties.Line line,
-										  Properties.Gradient outline,
-										  Properties.Gradient surface)
-		{
-			System.Diagnostics.Debug.Assert(paths.Length == lineModes.Length);
-			System.Diagnostics.Debug.Assert(paths.Length == lineColors.Length);
-			System.Diagnostics.Debug.Assert(paths.Length == fillGradients.Length);
-
 			this.bboxThin = Drawing.Rectangle.Empty;
 			this.bboxGeom = Drawing.Rectangle.Empty;
-			for ( int i=0 ; i<paths.Length ; i++ )
-			{
-				if ( paths[i] == null )  continue;
 
-				Drawing.Rectangle bbox = Geometry.ComputeBoundingBox(paths[i]);
+			foreach ( Shape shape in shapes )
+			{
+				if ( shape == null || shape.Path == null )
+				{
+					continue;
+				}
+				
+				if ( shape.Aspect != Aspect.Normal       &&
+					 shape.Aspect != Aspect.InvisibleBox )
+				{
+					continue;
+				}
+
+				Drawing.Rectangle bbox = Geometry.ComputeBoundingBox(shape.Path);
 				this.bboxThin.MergeWith(bbox);
 
 				double width1 = 0.0;
 				double width2 = 0.0;
 
-				if ( lineColors[i] && outline != null )
+				if ( shape.Type == Type.Stroke )
 				{
-					width1 += outline.InflateBoundingBoxWidth();
-				}
-				if ( lineModes[i] && line != null )
-				{
-					width1 += line.InflateBoundingBoxWidth();
-					width1 *= line.InflateBoundingBoxFactor();
+					width1 = Properties.Line.FatShape(shape);
 				}
 
-				if ( fillGradients[i] && surface != null )
+				if ( shape.PropertySurface is Properties.Gradient )
 				{
-					width2 += surface.InflateBoundingBoxWidth();
+					Properties.Gradient surface = shape.PropertySurface as Properties.Gradient;
+					width2 = surface.InflateBoundingBoxWidth();
 				}
 
 				double width = System.Math.Max(width1, width2);
@@ -919,16 +921,22 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( !this.document.IsSurfaceRotation )
 			{
-				if ( outline != null )
+				foreach ( Shape shape in shapes )
 				{
-					this.surfaceAnchor.LineUse = true;
-					outline.InflateBoundingBox(this.surfaceAnchor, ref this.bboxFull);
-				}
+					if ( shape == null )  continue;
+					if ( shape.Aspect != Aspect.Normal )  continue;
 
-				if ( surface != null )
-				{
-					this.surfaceAnchor.LineUse = false;
-					surface.InflateBoundingBox(this.surfaceAnchor, ref this.bboxFull);
+					if ( shape.Type == Type.Surface && shape.PropertySurface != null )
+					{
+						this.surfaceAnchor.LineUse = false;
+						shape.PropertySurface.InflateBoundingBox(this.surfaceAnchor, ref this.bboxFull);
+					}
+
+					if ( shape.Type == Type.Stroke && shape.PropertyStroke != null )
+					{
+						this.surfaceAnchor.LineUse = true;
+						shape.PropertyStroke.InflateBoundingBox(this.surfaceAnchor, ref this.bboxFull);
+					}
 				}
 			}
 		}
@@ -1669,9 +1677,18 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Détecte si la souris est sur un objet.
-		public virtual bool Detect(Point pos)
+		public bool Detect(Point pos)
 		{
-			return false;
+			if ( this.isHide )  return false;
+
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+
+			Drawing.Rectangle bbox = this.BoundingBox;
+			bbox.Inflate(context.MinimalWidth);
+			if ( !bbox.Contains(pos) )  return false;
+
+			Shape[] shapes = this.ShapesBuild(context, false);
+			return context.Drawer.Detect(pos, context, shapes);
 		}
 
 		// Détecte si l'objet est dans un rectangle.
@@ -1851,43 +1868,81 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Dessine la géométrie de l'objet.
-		public virtual void DrawGeometry(Graphics graphics, DrawingContext drawingContext)
+		public void DrawGeometry(IPaintPort port, DrawingContext drawingContext)
 		{
 			// Un objet ne doit jamais être sélectionné ET caché !
 			System.Diagnostics.Debug.Assert(!this.selected || !this.isHide);
 
-			if ( drawingContext.IsDrawBoxThin )
+			// Dessine les formes.
+			Shape[] shapes = this.ShapesBuild(drawingContext, false);
+			if ( shapes != null )
 			{
-				double initialWidth = graphics.LineWidth;
-				graphics.LineWidth = 1.0/drawingContext.ScaleX;
+				drawingContext.Drawer.DrawShapes(port, drawingContext, this, shapes);
 
-				graphics.AddRectangle(this.BoundingBoxThin);
-				graphics.RenderSolid(Color.FromARGB(0.5, 0,1,1));
+				if ( port is Graphics )
+				{
+					if ( this.IsHilite && drawingContext.IsActive )
+					{
+						Shape.Hilited(shapes);
+						drawingContext.Drawer.DrawShapes(port, drawingContext, this, shapes);
+					}
 
-				graphics.LineWidth = initialWidth;
+					if ( this.IsOverDash(drawingContext) )
+					{
+						Shape.OverDashed(shapes);
+						drawingContext.Drawer.DrawShapes(port, drawingContext, this, shapes);
+					}
+				}
 			}
 
-			if ( drawingContext.IsDrawBoxGeom )
+			if ( port is Graphics )
 			{
-				double initialWidth = graphics.LineWidth;
-				graphics.LineWidth = 1.0/drawingContext.ScaleX;
+				Graphics graphics = port as Graphics;
 
-				graphics.AddRectangle(this.BoundingBoxGeom);
-				graphics.RenderSolid(Color.FromARGB(0.5, 0,1,0));
+				// Dessine les bbox en mode debug.
+				if ( drawingContext.IsDrawBoxThin )
+				{
+					double initialWidth = graphics.LineWidth;
+					graphics.LineWidth = 1.0/drawingContext.ScaleX;
 
-				graphics.LineWidth = initialWidth;
+					graphics.AddRectangle(this.BoundingBoxThin);
+					graphics.RenderSolid(Color.FromARGB(0.5, 0,1,1));
+
+					graphics.LineWidth = initialWidth;
+				}
+
+				if ( drawingContext.IsDrawBoxGeom )
+				{
+					double initialWidth = graphics.LineWidth;
+					graphics.LineWidth = 1.0/drawingContext.ScaleX;
+
+					graphics.AddRectangle(this.BoundingBoxGeom);
+					graphics.RenderSolid(Color.FromARGB(0.5, 0,1,0));
+
+					graphics.LineWidth = initialWidth;
+				}
+
+				if ( drawingContext.IsDrawBoxFull )
+				{
+					double initialWidth = graphics.LineWidth;
+					graphics.LineWidth = 1.0/drawingContext.ScaleX;
+
+					graphics.AddRectangle(this.BoundingBoxFull);
+					graphics.RenderSolid(Color.FromARGB(0.5, 1,1,0));
+
+					graphics.LineWidth = initialWidth;
+				}
 			}
+		}
 
-			if ( drawingContext.IsDrawBoxFull )
-			{
-				double initialWidth = graphics.LineWidth;
-				graphics.LineWidth = 1.0/drawingContext.ScaleX;
+		// Dessine le texte.
+		public virtual void DrawText(IPaintPort port, DrawingContext drawingContext)
+		{
+		}
 
-				graphics.AddRectangle(this.BoundingBoxFull);
-				graphics.RenderSolid(Color.FromARGB(0.5, 1,1,0));
-
-				graphics.LineWidth = initialWidth;
-			}
+		// Dessine l'image.
+		public virtual void DrawImage(IPaintPort port, DrawingContext drawingContext)
+		{
 		}
 
 		// Dessine le nom de l'objet.
@@ -1975,8 +2030,8 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Indique s'il faut dessiner le traitillé lorsqu'il n'y a pas de trait.
-		protected bool IsDrawDash(DrawingContext context)
+		// Indique s'il faut dessiner le pointillé forcé lorsqu'il n'y a pas de trait.
+		protected bool IsOverDash(DrawingContext context)
 		{
 			if ( !context.IsActive )
 			{
@@ -1994,16 +2049,6 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			return false;
-		}
-
-		// Imprime la géométrie de l'objet.
-		public virtual void PrintGeometry(Printing.PrintPort port, DrawingContext drawingContext)
-		{
-		}
-
-		// Exporte en PDF la géométrie de l'objet.
-		public virtual void ExportPDF(PDF.Port port, DrawingContext drawingContext)
-		{
 		}
 
 		// Donne la liste des propriétés qui utilisent des patterns.

@@ -126,7 +126,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		protected JoinStyle EffectiveJoin
+		public JoinStyle EffectiveJoin
 		{
 			get
 			{
@@ -451,9 +451,12 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Indique si le trait est visible.
-		public bool IsVisible()
+		public override bool IsVisible
 		{
-			return ( this.width != 0.0 );
+			get
+			{
+				return ( this.width != 0.0 );
+			}
 		}
 
 		// Effectue une copie de la propriété.
@@ -502,27 +505,23 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Retourne la valeur d'engraissement pour la bbox.
-		public double InflateBoundingBoxWidth()
+		// Retourne l'engraissement approximatif pour une bbox.
+		public static double FatShape(Shape shape)
 		{
-			return this.width*0.5;
-		}
+			if ( shape.PropertyStroke == null )  return 0.0;
 
-		// Retourne la valeur d'engraissement pour la bbox.
-		public double InflateBoundingBoxFactor()
-		{
-			if ( this.join == JoinStyle.Miter )
+			double value = shape.PropertyStroke.Width*0.5;
+
+			if ( shape.PropertyStroke.Join == JoinStyle.Miter )
 			{
-				return this.limit;
+				value *= shape.PropertyStroke.Limit;
 			}
-			else if ( this.cap == CapStyle.Square )
+			else if ( shape.PropertyStroke.Cap == CapStyle.Square )
 			{
-				return 1.415;  // augmente de racine de 2
+				value *= 1.415;  // augmente de racine de 2
 			}
-			else
-			{
-				return 1.0;
-			}
+			
+			return value;
 		}
 
 
@@ -561,115 +560,8 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		
-		// Effectue un graphics.Rasterizer.AddOutline.
-		public void AddOutline(Graphics graphics, Path path, double addWidth)
-		{
-			graphics.Rasterizer.AddOutline(path, this.width+addWidth, this.cap, this.EffectiveJoin, this.limit);
-		}
-
-		// Effectue un port.PaintOutline.
-		public void PaintOutline(Printing.PrintPort port, DrawingContext drawingContext, Path path)
-		{
-			if ( this.dash )  // traitillé ?
-			{
-				DashedPath dp = new DashedPath();
-				dp.DefaultZoom = drawingContext.ScaleX;
-				dp.Append(path);
-
-				for ( int i=0 ; i<Line.DashMax ; i++ )
-				{
-					if ( this.dashGap[i] == 0.0 )  continue;
-					double pen, gap;
-					this.GetPenGap(i, true, out pen, out gap);
-					dp.AddDash(pen, gap);
-				}
-
-				port.LineWidth = this.width;
-				port.LineCap = this.cap;
-				port.LineJoin = this.EffectiveJoin;
-				port.LineMiterLimit = this.limit;
-
-				using ( Path temp = dp.GenerateDashedPath() )
-				{
-					port.PaintOutline(temp);
-				}
-			}
-			else	// trait continu ?
-			{
-				port.LineWidth = this.width;
-				port.LineCap = this.cap;
-				port.LineJoin = this.EffectiveJoin;
-				port.LineMiterLimit = this.limit;
-				port.PaintOutline(path);
-			}
-		}
-
-		// Dessine le trait le long d'un chemin.
-		public void DrawPath(Graphics graphics, DrawingContext drawingContext, Path path, Drawing.Color color)
-		{
-			if ( this.width == 0.0 )  return;
-			if ( path.IsEmpty )  return;
-
-			if ( this.dash )  // traitillé ?
-			{
-				DashedPath dp = new DashedPath();
-				dp.DefaultZoom = drawingContext.ScaleX;
-				dp.Append(path);
-
-				for ( int i=0 ; i<Line.DashMax ; i++ )
-				{
-					if ( this.dashGap[i] == 0.0 )  continue;
-					double pen, gap;
-					this.GetPenGap(i, false, out pen, out gap);
-					dp.AddDash(pen, gap);
-				}
-
-				using ( Path temp = dp.GenerateDashedPath() )
-				{
-					graphics.Rasterizer.AddOutline(temp, this.width, this.cap, this.EffectiveJoin, this.limit);
-					graphics.RenderSolid(drawingContext.AdaptColor(color));
-				}
-			}
-			else	// trait continu ?
-			{
-				graphics.Rasterizer.AddOutline(path, this.width, this.cap, this.EffectiveJoin, this.limit);
-				graphics.RenderSolid(drawingContext.AdaptColor(color));
-			}
-		}
-
-		// Dessine le trait le long d'un chemin.
-		public void DrawPath(Graphics graphics, DrawingContext drawingContext, Path path, Properties.Gradient gradient, SurfaceAnchor sa)
-		{
-			if ( this.width == 0.0 )  return;
-			if ( path.IsEmpty )  return;
-
-			if ( this.dash )  // traitillé ?
-			{
-				DashedPath dp = new DashedPath();
-				dp.DefaultZoom = drawingContext.ScaleX;
-				dp.Append(path);
-
-				for ( int i=0 ; i<Line.DashMax ; i++ )
-				{
-					if ( this.dashGap[i] == 0.0 )  continue;
-					double pen, gap;
-					this.GetPenGap(i, false, out pen, out gap);
-					dp.AddDash(pen, gap);
-				}
-
-				using ( Path temp = dp.GenerateDashedPath() )
-				{
-					gradient.RenderOutline(graphics, drawingContext, temp, this.width, this.cap, this.EffectiveJoin, this.limit, sa);
-				}
-			}
-			else	// trait continu ?
-			{
-				gradient.RenderOutline(graphics, drawingContext, path, this.width, this.cap, this.EffectiveJoin, this.limit, sa);
-			}
-		}
-
 		// Donne les valeurs trait/trou d'un traitillé.
-		protected void GetPenGap(int i, bool printing, out double pen, out double gap)
+		public void GetPenGap(int i, bool printing, out double pen, out double gap)
 		{
 			pen = this.dashPen[i];
 			gap = this.dashGap[i];
@@ -679,53 +571,6 @@ namespace Epsitec.Common.Document.Properties
 				double min = printing ? 0.5 : 0.00001;
 				pen += min;
 				gap -= min;
-			}
-		}
-
-		// Dessine le traitillé le long d'un chemin, lorsque le trait n'existe pas.
-		public void DrawPathDash(Graphics graphics, DrawingContext drawingContext, Path path, Properties.Gradient gradient)
-		{
-			if ( this.width != 0.0 && gradient.IsVisible() )  return;
-			if ( path.IsEmpty )  return;
-
-			Drawing.Color color = Drawing.Color.FromBrightness(0);
-			if ( gradient.IsVisible() )
-			{
-				if ( gradient.Color1.A > 0 )
-				{
-					color = gradient.Color1;
-				}
-				else
-				{
-					color = gradient.Color2;
-				}
-			}
-			Line.DrawPathDash(graphics, drawingContext, path, 1.0, 0.0, 4.0, color);
-		}
-
-		// Dessine un traitillé simple (dash/gap) le long d'un chemin.
-		public static void DrawPathDash(Graphics graphics, DrawingContext drawingContext, Path path,
-										double width, double dash, double gap, Drawing.Color color)
-		{
-			if ( path.IsEmpty )  return;
-
-			DashedPath dp = new DashedPath();
-			dp.DefaultZoom = drawingContext.ScaleX;
-			dp.Append(path);
-
-			dash /= drawingContext.ScaleX;
-			gap  /= drawingContext.ScaleX;
-			if ( dash == 0.0 )  // juste un point ?
-			{
-				dash = 0.00001;
-				gap -= dash;
-			}
-			dp.AddDash(dash, gap);
-
-			using ( Path temp = dp.GenerateDashedPath() )
-			{
-				graphics.Rasterizer.AddOutline(temp, width/drawingContext.ScaleX, CapStyle.Square, JoinStyle.Round, 5.0);
-				graphics.RenderSolid(color);
 			}
 		}
 

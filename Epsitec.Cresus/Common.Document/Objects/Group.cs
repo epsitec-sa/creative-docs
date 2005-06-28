@@ -35,20 +35,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Détecte si la souris est sur l'objet.
-		public override bool Detect(Point pos)
-		{
-			if ( this.isHide )  return false;
-
-			InsideSurface inside = new InsideSurface(pos, 4);
-			inside.AddLine(this.Handle(0).Position, this.Handle(2).Position);
-			inside.AddLine(this.Handle(2).Position, this.Handle(1).Position);
-			inside.AddLine(this.Handle(1).Position, this.Handle(3).Position);
-			inside.AddLine(this.Handle(3).Position, this.Handle(0).Position);
-			return inside.IsInside();
-		}
-
-
 		// Début du déplacement une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
@@ -177,55 +163,68 @@ namespace Epsitec.Common.Document.Objects
 			this.dirtyBbox = false;
 		}
 
-		// Met à jour le rectangle englobant l'objet.
-		protected override void UpdateBoundingBox()
+		// Constuit les formes de l'objet.
+		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
 		{
-			if ( this.handles.Count < 4 )  return;
+			Path pathCorners = null;
 
-			this.bboxGeom = Drawing.Rectangle.Empty;
-			this.bboxGeom.MergeWith(this.Handle(0).Position);
-			this.bboxGeom.MergeWith(this.Handle(1).Position);
-			this.bboxGeom.MergeWith(this.Handle(2).Position);
-			this.bboxGeom.MergeWith(this.Handle(3).Position);
-
-			if ( !this.minimalBBox.IsEmpty )
+			if ( drawingContext != null &&
+				 drawingContext.IsActive &&
+				 !drawingContext.IsDimmed &&
+				 !drawingContext.PreviewActive )
 			{
-				double dx = this.minimalBBox.Width-this.bboxGeom.Width;
-				if ( dx > 0 )
-				{
-					this.bboxGeom.Left  -= dx/2;
-					this.bboxGeom.Right += dx/2;
-				}
-
-				double dy = this.minimalBBox.Height-this.bboxGeom.Height;
-				if ( dy > 0 )
-				{
-					this.bboxGeom.Bottom -= dy/2;
-					this.bboxGeom.Top    += dy/2;
-				}
-
-				this.minimalBBox = Size.Empty;
+				pathCorners = this.PathCorners();
 			}
 
-			this.bboxFull = this.bboxGeom;
-			this.bboxThin = this.bboxGeom;
+			int totalShapes = 1;
+			if ( pathCorners != null )  totalShapes ++;
+
+			Shape[] shapes = new Shape[totalShapes];
+			int i = 0;
+			
+			if ( pathCorners != null )
+			{
+				shapes[i] = new Shape();
+				shapes[i].Path = pathCorners;
+				shapes[i].Type = Type.Stroke;
+				i ++;
+			}
+
+			shapes[i] = new Shape();
+			shapes[i].Path = this.PathRectangle();
+			shapes[i].Type = Type.Surface;
+			shapes[i].Aspect = Aspect.InvisibleBox;
+			i ++;
+
+			return shapes;
 		}
 
 		// Crée le chemin d'un rectangle.
-		protected Path PathRectangle(Point p1, Point p2, Point p3, Point p4)
+		protected Path PathRectangle()
 		{
+			Point p1 = this.Handle(0).Position;
+			Point p2 = this.Handle(2).Position;
+			Point p3 = this.Handle(1).Position;
+			Point p4 = this.Handle(3).Position;
+
 			Path path = new Path();
 			path.MoveTo(p1);
 			path.LineTo(p2);
 			path.LineTo(p3);
 			path.LineTo(p4);
 			path.Close();
+
 			return path;
 		}
 
 		// Crée le chemin des coins d'un rectangle.
-		protected Path PathCorners(Point p1, Point p2, Point p3, Point p4)
+		protected Path PathCorners()
 		{
+			Point p1 = this.Handle(0).Position;
+			Point p2 = this.Handle(2).Position;
+			Point p3 = this.Handle(1).Position;
+			Point p4 = this.Handle(3).Position;
+
 			double d12 = Point.Distance(p1, p2)*0.25;
 			double d23 = Point.Distance(p2, p3)*0.25;
 			double d34 = Point.Distance(p3, p4)*0.25;
@@ -250,37 +249,6 @@ namespace Epsitec.Common.Document.Objects
 			path.LineTo(Point.Move(p4, p1, d41));
 
 			return path;
-		}
-
-		// Dessine l'objet.
-		public override void DrawGeometry(Graphics graphics, DrawingContext drawingContext)
-		{
-			base.DrawGeometry(graphics, drawingContext);
-
-			if ( this.TotalHandle < 2 )  return;
-			if ( !drawingContext.IsActive || drawingContext.IsDimmed )  return;
-
-			Point p1 = this.Handle(0).Position;
-			Point p2 = this.Handle(2).Position;
-			Point p3 = this.Handle(1).Position;
-			Point p4 = this.Handle(3).Position;
-			Path path = this.PathCorners(p1, p2, p3, p4);
-
-			if ( !drawingContext.PreviewActive )
-			{
-				Color color = Color.FromBrightness(0.7);
-				if ( this.IsSelected )  color = Color.FromRGB(1,0,0);
-
-				graphics.Rasterizer.AddOutline(path, 1.0/drawingContext.ScaleX);
-				graphics.RenderSolid(color);
-			}
-
-			if ( this.IsHilite )
-			{
-				path = this.PathRectangle(p1, p2, p3, p4);
-				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(drawingContext.HiliteSurfaceColor);
-			}
 		}
 
 

@@ -83,20 +83,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
-		// Détecte si la souris est sur l'objet.
-		public override bool Detect(Point pos)
-		{
-			if ( this.isHide )  return false;
-
-			Drawing.Rectangle bbox = this.BoundingBox;
-			if ( !bbox.Contains(pos) )  return false;
-
-			Path path = this.PathBuild();
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			if ( Geometry.DetectOutline(path, context.MinimalWidth, pos) )  return true;
-			return this.DetectTextCurve(pos);
-		}
-
 		// Détecte si l'objet est dans un rectangle.
 		// all = true  -> toutes les poignées doivent être dans le rectangle
 		// all = false -> une seule poignée doit être dans le rectangle
@@ -118,9 +104,10 @@ namespace Epsitec.Common.Document.Objects
 		// Retourne le rank de la poignée de départ, ou -1
 		protected int DetectOutline(Point pos)
 		{
-			Path path = this.PathBuild();
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int rank = Geometry.DetectOutlineRank(path, context.MinimalWidth, pos);
+
+			Shape[] shapes = this.ShapesBuild(context, false);
+			int rank = context.Drawer.DetectOutline(pos, context, shapes);
 			if ( rank != -1 )  rank *= 3;
 			return rank;
 		}
@@ -133,9 +120,10 @@ namespace Epsitec.Common.Document.Objects
 			Drawing.Rectangle bbox = this.BoundingBox;
 			if ( !bbox.Contains(pos) )  return false;
 
-			Path path = this.PathBuild();
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			if ( Geometry.DetectOutline(path, context.MinimalWidth, pos) )  return true;
+			Shape[] shapes = this.ShapesBuild(context, false);
+			if ( context.Drawer.DetectOutline(pos, context, shapes) != -1 )  return true;
+
 			return this.DetectTextCurve(pos);
 		}
 
@@ -1041,18 +1029,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
-		// Met à jour le rectangle englobant l'objet.
-		protected override void UpdateBoundingBox()
-		{
-			Path path = this.PathBuild();
-			this.bboxThin = Geometry.ComputeBoundingBox(path);
-			this.BboxTextCurve(ref this.bboxThin);
-
-			this.bboxGeom = this.bboxThin;
-			this.bboxFull = this.bboxThin;
-			this.bboxFull.MergeWith(this.FullBoundingBox());
-		}
-
 		// Calcule la bbox qui englobe l'objet et les poignées secondaires.
 		protected Drawing.Rectangle FullBoundingBox()
 		{
@@ -1063,6 +1039,88 @@ namespace Epsitec.Common.Document.Objects
 				bbox.MergeWith(this.Handle(i).Position);
 			}
 			return bbox;
+		}
+
+		// Constuit les formes de l'objet.
+		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
+		{
+			Path pathLine = this.PathBuild();
+			Path pathHilite = null;
+			Path pathSupport = null;
+			Path pathBbox = this.HiliteTextCurve();
+
+			if ( this.IsHilite &&
+				 drawingContext != null &&
+				 drawingContext.IsActive &&
+				 !this.edited )
+			{
+				pathHilite = pathBbox;
+			}
+
+			if ( this.IsSelected &&
+				 drawingContext != null &&
+				 drawingContext.IsActive &&
+				 !this.IsGlobalSelected &&
+				 !this.edited )
+			{
+				pathSupport = new Path();
+				int total = this.TotalMainHandle;
+				for ( int j=0 ; j<total ; j+=3 )
+				{
+					if ( !this.Handle(j+1).IsVisible )  continue;
+					pathSupport.MoveTo(this.Handle(j+1).Position);
+					pathSupport.LineTo(this.Handle(j+0).Position);
+					pathSupport.MoveTo(this.Handle(j+1).Position);
+					pathSupport.LineTo(this.Handle(j+2).Position);
+				}
+			}
+
+			int totalShapes = 3;
+			if ( pathHilite  != null )  totalShapes ++;
+			if ( pathSupport != null )  totalShapes ++;
+
+			Shape[] shapes = new Shape[totalShapes];
+			int i = 0;
+			
+			// Rectangles des caractères survolés.
+			if ( pathHilite != null )
+			{
+				shapes[i] = new Shape();
+				shapes[i].Path = pathHilite;
+				shapes[i].Type = Type.Surface;
+				shapes[i].Aspect = Aspect.Hilited;
+				i ++;
+			}
+			
+			// Chemin pointillé.
+			shapes[i] = new Shape();
+			shapes[i].Path = pathLine;
+			shapes[i].Type = Type.Stroke;
+			i ++;
+
+			// Caractères du texte.
+			shapes[i] = new Shape();
+			shapes[i].SetTextObject(this);
+			i ++;
+
+			// Traits de support si chemin courbe.
+			if ( pathSupport != null )
+			{
+				shapes[i] = new Shape();
+				shapes[i].Path = pathSupport;
+				shapes[i].Type = Type.Stroke;
+				shapes[i].Aspect = Aspect.Support;
+				i ++;
+			}
+
+			// Rectangles des caractères pour bbox et détection.
+			shapes[i] = new Shape();
+			shapes[i].Path = pathBbox;
+			shapes[i].Type = Type.Surface;
+			shapes[i].Aspect = Aspect.InvisibleBox;
+			i ++;
+
+			return shapes;
 		}
 
 		// Crée le chemin de l'objet.
@@ -1446,10 +1504,12 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Dessine le texte le long de la courbe multiple.
-		protected void HiliteTextCurve(Graphics graphics, DrawingContext drawingContext)
+		// Donne le chemin du texte le long de la courbe multiple.
+		protected Path HiliteTextCurve()
 		{
-			if ( !this.AdvanceInit() )  return;
+			if ( !this.AdvanceInit() )  return null;
+
+			Path path = new Path();
 
 			string	character;
 			Font	font;
@@ -1459,15 +1519,14 @@ namespace Epsitec.Common.Document.Objects
 			double	angle;
 			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
 			{
-				Path path = new Path();
 				path.MoveTo(pbl);
 				path.LineTo(pbr);
 				path.LineTo(ptr);
 				path.LineTo(ptl);
 				path.Close();
-				graphics.Rasterizer.AddSurface(path);
 			}
-			graphics.RenderSolid(drawingContext.HiliteSurfaceColor);
+
+			return path;
 		}
 
 		// Construit le chemin réel d'un seul caractère.
@@ -1505,7 +1564,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Dessine le texte le long de la courbe multiple.
-		protected void DrawTextCurve(IPaintPort port, DrawingContext drawingContext)
+		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
 		{
 			this.cursorBox = Drawing.Rectangle.Empty;
 			this.selectBox = Drawing.Rectangle.Empty;
@@ -1630,79 +1689,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Dessine l'objet.
-		public override void DrawGeometry(Graphics graphics, DrawingContext drawingContext)
-		{
-			base.DrawGeometry(graphics, drawingContext);
 
-			int total = this.TotalHandle;
-			if ( total < 6 )  return;
-
-			Path path = this.PathBuild();
-
-			if ( this.IsHilite && drawingContext.IsActive && !this.edited )
-			{
-				this.HiliteTextCurve(graphics, drawingContext);
-			}
-
-			if ( this.edited && drawingContext.IsActive )  // en cours d'édition ?
-			{
-				graphics.Rasterizer.AddOutline(path, 2.0/drawingContext.ScaleX);
-				graphics.RenderSolid(DrawingContext.ColorFrameEdit);
-			}
-			else
-			{
-				if ( this.IsHilite && drawingContext.IsActive )
-				{
-					graphics.Rasterizer.AddOutline(path, drawingContext.HiliteSize);
-					graphics.RenderSolid(drawingContext.HiliteOutlineColor);
-				}
-			}
-
-			this.DrawTextCurve(graphics, drawingContext);  // dessine le texte
-
-			if ( (this.IsSelected || this.textLayout.Text == "") && drawingContext.IsActive )
-			{
-				graphics.Rasterizer.AddOutline(path, 1.0/drawingContext.ScaleX);
-				graphics.RenderSolid(Color.FromBrightness(0.6));
-			}
-
-			if ( this.IsSelected && drawingContext.IsActive && !this.IsGlobalSelected && !this.edited )
-			{
-				double initialWidth = graphics.LineWidth;
-				graphics.LineWidth = 1.0/drawingContext.ScaleX;
-
-				for ( int i=0 ; i<total ; i+=3 )
-				{
-					graphics.AddLine(this.Handle(i+0).Position, this.Handle(i+1).Position);
-					graphics.AddLine(this.Handle(i+1).Position, this.Handle(i+2).Position);
-					graphics.RenderSolid(Color.FromBrightness(0.6));
-				}
-
-				graphics.LineWidth = initialWidth;
-			}
-		}
-
-
-		// Imprime l'objet.
-		public override void PrintGeometry(Printing.PrintPort port, DrawingContext drawingContext)
-		{
-			base.PrintGeometry(port, drawingContext);
-
-			if ( this.TotalHandle < 6 )  return;
-
-			this.DrawTextCurve(port, drawingContext);  // dessine le texte
-		}
-
-		// Exporte en PDF la géométrie de l'objet.
-		public override void ExportPDF(PDF.Port port, DrawingContext drawingContext)
-		{
-			if ( this.TotalHandle < 6 )  return;
-
-			this.DrawTextCurve(port, drawingContext);  // dessine le texte
-		}
-
-		
 		private void HandleTextChanged(object sender)
 		{
 			this.SetDirtyBbox();

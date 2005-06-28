@@ -44,30 +44,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Détecte si la souris est sur l'objet.
-		public override bool Detect(Point pos)
-		{
-			if ( this.isHide )  return false;
-
-			Drawing.Rectangle bbox = this.BoundingBox;
-			if ( !bbox.Contains(pos) )  return false;
-
-			Path surface, outline;
-			this.PathBuild(null, out surface, out outline);
-
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			double width = System.Math.Max(this.PropertyLineMode.Width/2, context.MinimalWidth);
-			if ( Geometry.DetectOutline(outline, width, pos) )  return true;
-			
-			if ( this.PropertyFillGradient.IsVisible() )
-			{
-				if ( Geometry.DetectSurface(surface, pos) )  return true;
-			}
-			
-			return false;
-		}
-
-
 		// Début du déplacement d'une poignée.
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
@@ -173,39 +149,24 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		
-		// Met à jour le rectangle englobant l'objet.
-		protected override void UpdateBoundingBox()
+		// Constuit les formes de l'objet.
+		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
 		{
-			if ( this.handles.Count < 2 )  return;
-
 			Path surface, outline;
 			this.PathBuild(null, out surface, out outline);
+			Shape[] shapes = new Shape[2];
 
-			Path[] paths = new Path[2];
-			paths[0] = outline;
-			paths[1] = surface;
+			// Forme de la surface.
+			shapes[0] = new Shape();
+			shapes[0].Path = surface;
+			shapes[0].SetPropertySurface(this.PropertyFillGradient);
 
-			bool[] lineModes = new bool[2];
-			lineModes[0] = true;
-			lineModes[1] = false;
+			// Forme du chemin.
+			shapes[1] = new Shape();
+			shapes[1].Path = outline;
+			shapes[1].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
 
-			bool[] lineColors = new bool[2];
-			lineColors[0] = true;
-			lineColors[1] = false;
-
-			bool[] fillGradients = new bool[2];
-			fillGradients[0] = false;
-			fillGradients[1] = true;
-
-			this.ComputeBoundingBox(paths, lineModes, lineColors, fillGradients);
-
-			if ( this.TotalHandle >= 4 )
-			{
-				this.InflateBoundingBox(this.Handle(0).Position, false);
-				this.InflateBoundingBox(this.Handle(1).Position, false);
-				this.InflateBoundingBox(this.Handle(2).Position, false);
-				this.InflateBoundingBox(this.Handle(3).Position, false);
-			}
+			return shapes;
 		}
 
 		// Crée les chemins de l'objet.
@@ -640,87 +601,6 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			return value;
-		}
-
-
-		// Dessine l'objet.
-		public override void DrawGeometry(Graphics graphics, DrawingContext drawingContext)
-		{
-			base.DrawGeometry(graphics, drawingContext);
-
-			if ( this.TotalHandle < 2 )  return;
-
-			Path surface, outline;
-			this.PathBuild(null, out surface, out outline);
-
-			this.surfaceAnchor.LineUse = false;
-			this.PropertyFillGradient.RenderSurface(graphics, drawingContext, surface, this.surfaceAnchor);
-			this.surfaceAnchor.LineUse = true;
-			this.PropertyLineMode.DrawPath(graphics, drawingContext, outline, this.PropertyLineColor, this.surfaceAnchor);
-
-			if ( this.IsHilite && drawingContext.IsActive )
-			{
-				if ( this.PropertyFillGradient.IsVisible() )
-				{
-					graphics.Rasterizer.AddSurface(surface);
-					graphics.RenderSolid(drawingContext.HiliteSurfaceColor);
-				}
-
-				this.PropertyLineMode.AddOutline(graphics, outline, drawingContext.HiliteSize);
-				graphics.RenderSolid(drawingContext.HiliteOutlineColor);
-			}
-
-			if ( this.IsDrawDash(drawingContext) )
-			{
-				this.PropertyLineMode.DrawPathDash(graphics, drawingContext, outline, this.PropertyLineColor);
-			}
-		}
-
-		// Imprime l'objet.
-		public override void PrintGeometry(Printing.PrintPort port, DrawingContext drawingContext)
-		{
-			base.PrintGeometry(port, drawingContext);
-
-			if ( this.TotalHandle < 2 )  return;
-
-			Path surface, outline;
-			this.PathBuild(null, out surface, out outline);
-
-			if ( this.PropertyFillGradient.PaintColor(port, drawingContext) )
-			{
-				port.PaintSurface(surface);
-			}
-
-			if ( this.PropertyLineColor.PaintColor(port, drawingContext) )
-			{
-				this.PropertyLineMode.PaintOutline(port, drawingContext, outline);
-			}
-		}
-
-		// Exporte en PDF la géométrie de l'objet.
-		public override void ExportPDF(PDF.Port port, DrawingContext drawingContext)
-		{
-			if ( this.TotalHandle < 2 )  return;
-
-			Path surface, outline;
-			this.PathBuild(null, out surface, out outline);
-
-			Properties.Line     lineMode  = this.PropertyLineMode;
-			Properties.Gradient lineColor = this.PropertyLineColor;
-			Properties.Gradient fillColor = this.PropertyFillGradient;
-
-			if ( fillColor.IsVisible() )
-			{
-				fillColor.ExportPDF(port, drawingContext, this);
-				port.PaintSurface(surface);
-			}
-
-			if ( lineMode.IsVisible() && lineColor.IsVisible() )
-			{
-				lineMode.ExportPDF(port, drawingContext, this);
-				lineColor.ExportPDF(port, drawingContext, this);
-				port.PaintOutline(outline);
-			}
 		}
 
 

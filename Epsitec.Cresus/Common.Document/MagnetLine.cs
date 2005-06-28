@@ -318,7 +318,7 @@ namespace Epsitec.Common.Document
 					Path path = new Path();
 					path.MoveTo(pp1);
 					path.LineTo(pp2);
-					Properties.Line.DrawPathDash(graphics, context, path, 1.0, 0.0, 3.0, DrawingContext.ColorConstrain);
+					Drawer.DrawPathDash(graphics, context, path, 1.0, 0.0, 3.0, DrawingContext.ColorConstrain);
 				}
 			}
 
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Document
 				{
 					Path path = new Path();
 					path.AppendCircle(p1, Point.Distance(p1,p2));
-					Properties.Line.DrawPathDash(graphics, context, path, 1.0, 0.0, 3.0, DrawingContext.ColorConstrain);
+					Drawer.DrawPathDash(graphics, context, path, 1.0, 0.0, 3.0, DrawingContext.ColorConstrain);
 				}
 			}
 
@@ -359,7 +359,7 @@ namespace Epsitec.Common.Document
 					Path path = new Path();
 					path.MoveTo(pp1);
 					path.LineTo(pp2);
-					Properties.Line.DrawPathDash(graphics, context, path, 1.0, 0.0, 3.0, DrawingContext.ColorConstrain);
+					Drawer.DrawPathDash(graphics, context, path, 1.0, 0.0, 3.0, DrawingContext.ColorConstrain);
 				}
 
 				graphics.LineWidth = 1.0/this.context.ScaleX;
@@ -372,7 +372,7 @@ namespace Epsitec.Common.Document
 				Path path = new Path();
 				path.MoveTo(pp1);
 				path.LineTo(pp2);
-				Properties.Line.DrawPathDash(graphics, context, path, 2.0, 4.0, 4.0, DrawingContext.ColorConstrain);
+				Drawer.DrawPathDash(graphics, context, path, 2.0, 4.0, 4.0, DrawingContext.ColorConstrain);
 			}
 
 			if ( this.type == Type.Proj )  // projection ?

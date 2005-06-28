@@ -75,35 +75,10 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Détecte si la souris est sur l'objet.
-		public override bool Detect(Point pos)
-		{
-			if ( this.isHide )  return false;
-
-			Drawing.Rectangle bbox = this.BoundingBox;
-			if ( !bbox.Contains(pos) )  return false;
-
-			Path path = this.PathBuild();
-
-			double width = this.PropertyLineMode.Width/2;
-			if ( width > 0 && Geometry.DetectOutline(path, width, pos) )  return true;
-			
-			if ( Geometry.DetectSurface(path, pos) )  return true;
-
-			return false;
-		}
-
-
 		// Détecte si la souris est sur l'objet pour l'éditer.
 		public override bool DetectEdit(Point pos)
 		{
-			if ( this.isHide )  return false;
-
-			Drawing.Rectangle bbox = this.BoundingBox;
-			if ( !bbox.Contains(pos) )  return false;
-
-			Path path = this.PathBuild();
-			return Geometry.DetectSurface(path, pos);
+			return this.Detect(pos);
 		}
 
 
@@ -440,34 +415,39 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Met à jour le rectangle englobant l'objet.
-		protected override void UpdateBoundingBox()
+		// Constuit les formes de l'objet.
+		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
 		{
-			if ( this.handles.Count < 2 )  return;
-
 			Path path = this.PathBuild();
 
-			Path[] paths = new Path[1];
-			paths[0] = path;
+			Shape[] shapes = new Shape[4];
+			int i = 0;
+			
+			// Forme de la surface.
+			shapes[i] = new Shape();
+			shapes[i].Path = path;
+			shapes[i].SetPropertySurface(this.PropertyFillGradient);
+			i ++;
 
-			bool[] lineModes = new bool[1];
-			lineModes[0] = true;
+			// Trait du rectangle.
+			shapes[i] = new Shape();
+			shapes[i].Path = path;
+			shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+			i ++;
 
-			bool[] lineColors = new bool[1];
-			lineColors[0] = true;
+			// Caractères du texte.
+			shapes[i] = new Shape();
+			shapes[i].SetTextObject(this);
+			i ++;
 
-			bool[] fillGradients = new bool[1];
-			fillGradients[0] = true;
+			// Rectangle complet pour bbox et détection.
+			shapes[i] = new Shape();
+			shapes[i].Path = path;
+			shapes[i].Type = Type.Surface;
+			shapes[i].Aspect = Aspect.InvisibleBox;
+			i ++;
 
-			this.ComputeBoundingBox(paths, lineModes, lineColors, fillGradients);
-
-			if ( this.TotalHandle >= 4 )
-			{
-				this.InflateBoundingBox(this.Handle(0).Position, false);
-				this.InflateBoundingBox(this.Handle(1).Position, false);
-				this.InflateBoundingBox(this.Handle(2).Position, false);
-				this.InflateBoundingBox(this.Handle(3).Position, false);
-			}
+			return shapes;
 		}
 
 		// Crée le chemin de l'objet.
@@ -501,8 +481,10 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Dessine le texte du pavé.
-		protected void DrawText(IPaintPort port, DrawingContext drawingContext)
+		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
 		{
+			if ( this.handles.Count < 4 )  return;
+
 			this.cursorBox = Drawing.Rectangle.Empty;
 			this.selectBox = Drawing.Rectangle.Empty;
 
@@ -553,24 +535,24 @@ namespace Epsitec.Common.Document.Objects
 			{
 				     if ( jh == Properties.JustifHorizontal.Center )  this.textLayout.Alignment = ContentAlignment.TopCenter;
 				else if ( jh == Properties.JustifHorizontal.Right  )  this.textLayout.Alignment = ContentAlignment.TopRight;
-				else                                       this.textLayout.Alignment = ContentAlignment.TopLeft;
+				else                                                  this.textLayout.Alignment = ContentAlignment.TopLeft;
 			}
 			if ( jv == Properties.JustifVertical.Center )
 			{
 				     if ( jh == Properties.JustifHorizontal.Center )  this.textLayout.Alignment = ContentAlignment.MiddleCenter;
 				else if ( jh == Properties.JustifHorizontal.Right  )  this.textLayout.Alignment = ContentAlignment.MiddleRight;
-				else                                       this.textLayout.Alignment = ContentAlignment.MiddleLeft;
+				else                                                  this.textLayout.Alignment = ContentAlignment.MiddleLeft;
 			}
 			if ( jv == Properties.JustifVertical.Bottom )
 			{
 				     if ( jh == Properties.JustifHorizontal.Center )  this.textLayout.Alignment = ContentAlignment.BottomCenter;
 				else if ( jh == Properties.JustifHorizontal.Right  )  this.textLayout.Alignment = ContentAlignment.BottomRight;
-				else                                       this.textLayout.Alignment = ContentAlignment.BottomLeft;
+				else                                                  this.textLayout.Alignment = ContentAlignment.BottomLeft;
 			}
 
 			     if ( jh == Properties.JustifHorizontal.Justif )  this.textLayout.JustifMode = TextJustifMode.AllButLast;
 			else if ( jh == Properties.JustifHorizontal.All    )  this.textLayout.JustifMode = TextJustifMode.All;
-			else                                       this.textLayout.JustifMode = TextJustifMode.NoLine;
+			else                                                  this.textLayout.JustifMode = TextJustifMode.NoLine;
 
 			Transform ot = port.Transform;
 
@@ -608,7 +590,7 @@ namespace Epsitec.Common.Document.Objects
 
 			this.textLayout.ShowLineBreak = this.edited;
 			this.textLayout.ShowTab       = this.edited;
-			this.textLayout.Paint(new Point(0,0), port);
+			this.textLayout.Paint(new Point(0,0), port);  // dessine le texte
 
 			if ( port is Graphics &&
 				 this.edited &&
@@ -635,105 +617,6 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			port.Transform = ot;
-		}
-
-		// Dessine l'objet.
-		public override void DrawGeometry(Graphics graphics, DrawingContext drawingContext)
-		{
-			base.DrawGeometry(graphics, drawingContext);
-
-			if ( this.TotalHandle < 2 )  return;
-
-			Path path = this.PathBuild();
-			this.surfaceAnchor.LineUse = false;
-			this.PropertyFillGradient.RenderSurface(graphics, drawingContext, path, this.surfaceAnchor);
-			this.surfaceAnchor.LineUse = true;
-			this.PropertyLineMode.DrawPath(graphics, drawingContext, path, this.PropertyLineColor, this.surfaceAnchor);
-
-			if ( this.edited && drawingContext.IsActive )  // en cours d'édition ?
-			{
-				graphics.Rasterizer.AddOutline(path, 2.0/drawingContext.ScaleX);
-				graphics.RenderSolid(DrawingContext.ColorFrameEdit);
-			}
-
-			if ( this.TotalHandle >= 4 )
-			{
-				this.DrawText(graphics, drawingContext);
-			}
-
-			if ( !this.edited || !drawingContext.IsActive )  // pas en cours d'édition ?
-			{
-				if ( this.IsSelected || this.isCreating )
-				{
-					this.PropertyLineMode.DrawPathDash(graphics, drawingContext, path, this.PropertyLineColor);
-				}
-
-				if ( this.IsHilite && drawingContext.IsActive )
-				{
-					if ( !this.edited )
-					{
-						graphics.Rasterizer.AddSurface(path);
-						graphics.RenderSolid(drawingContext.HiliteSurfaceColor);
-					}
-					this.PropertyLineMode.AddOutline(graphics, path, drawingContext.HiliteSize);
-					graphics.RenderSolid(drawingContext.HiliteOutlineColor);
-				}
-			}
-		}
-
-		// Imprime l'objet.
-		public override void PrintGeometry(Printing.PrintPort port, DrawingContext drawingContext)
-		{
-			base.PrintGeometry(port, drawingContext);
-
-			if ( this.TotalHandle < 2 )  return;
-
-			Path path = this.PathBuild();
-
-			if ( this.PropertyFillGradient.PaintColor(port, drawingContext) )
-			{
-				port.PaintSurface(path);
-			}
-
-			if ( this.PropertyLineColor.PaintColor(port, drawingContext) )
-			{
-				this.PropertyLineMode.PaintOutline(port, drawingContext, path);
-			}
-
-			if ( this.TotalHandle >= 4 )
-			{
-				this.DrawText(port, drawingContext);
-			}
-		}
-
-		// Exporte en PDF la géométrie de l'objet.
-		public override void ExportPDF(PDF.Port port, DrawingContext drawingContext)
-		{
-			if ( this.TotalHandle < 2 )  return;
-
-			Path path = this.PathBuild();
-
-			Properties.Line     lineMode  = this.PropertyLineMode;
-			Properties.Gradient lineColor = this.PropertyLineColor;
-			Properties.Gradient fillColor = this.PropertyFillGradient;
-
-			if ( fillColor.IsVisible() )
-			{
-				fillColor.ExportPDF(port, drawingContext, this);
-				port.PaintSurface(path);
-			}
-
-			if ( lineMode.IsVisible() && lineColor.IsVisible() )
-			{
-				lineMode.ExportPDF(port, drawingContext, this);
-				lineColor.ExportPDF(port, drawingContext, this);
-				port.PaintOutline(path);
-			}
-
-			if ( this.TotalHandle >= 4 )
-			{
-				this.DrawText(port, drawingContext);  // dessine le texte
-			}
 		}
 
 

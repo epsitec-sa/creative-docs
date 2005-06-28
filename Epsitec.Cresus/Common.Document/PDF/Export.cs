@@ -150,7 +150,7 @@ namespace Epsitec.Common.Document.PDF
 					{
 						if ( obj.IsHide )  continue;  // objet caché ?
 
-						obj.ExportPDF(this.port, drawingContext);
+						obj.DrawGeometry(this.port, drawingContext);
 					}
 				}
 

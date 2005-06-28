@@ -418,6 +418,7 @@ namespace Epsitec.App.DocumentEditor
 			showMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = showMenu;
 
+#if false
 			if ( this.useArray )
 			{
 				VMenu arrayMenu = new VMenu();
@@ -464,6 +465,7 @@ namespace Epsitec.App.DocumentEditor
 				arrayLookMenu.AdjustSize();
 				arrayMenu.Items[4].Submenu = arrayLookMenu;
 			}
+#endif
 
 			VMenu docMenu = new VMenu();
 			docMenu.Name = "Document";

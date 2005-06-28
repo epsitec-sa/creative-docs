@@ -21,6 +21,7 @@ namespace Epsitec.Common.Document
 		{
 			this.document = document;
 			this.viewer = viewer;
+			this.drawer = new Drawer(this.document);
 			this.rootStack = new System.Collections.ArrayList();
 			this.masterPageList = new System.Collections.ArrayList();
 			this.magnetLayerList = new System.Collections.ArrayList();
@@ -50,6 +51,11 @@ namespace Epsitec.Common.Document
 		public Viewer Viewer
 		{
 			get { return this.viewer; }
+		}
+
+		public Drawer Drawer
+		{
+			get { return this.drawer; }
 		}
 
 		public IAdorner Adorner
@@ -2139,6 +2145,7 @@ namespace Epsitec.Common.Document
 
 		protected Document						document;
 		protected Viewer						viewer;
+		protected Drawer						drawer;
 		protected Size							containerSize;
 		protected IAdorner						adorner;
 		protected GlyphPaintStyle				glyphPaintStyle;

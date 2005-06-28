@@ -169,6 +169,7 @@ namespace Epsitec.Common.Document
 			Point p1 = new Point(0, 0);
 			Point p2 = new Point(0, 0);
 			Point p3 = new Point(0, 0);
+			bool closed = false;
 			i = 0;
 			while ( i < elements.Length )
 			{
@@ -207,11 +208,18 @@ namespace Epsitec.Common.Document
 						if ( (elements[i] & PathElement.FlagClose) != 0 )
 						{
 							surf.AddLine(current, start);
+							closed = true;
 						}
 						i ++;
 						break;
 				}
 			}
+
+			if ( !closed )
+			{
+				surf.AddLine(current, start);
+			}
+
 			return surf.IsInside();
 		}
 
