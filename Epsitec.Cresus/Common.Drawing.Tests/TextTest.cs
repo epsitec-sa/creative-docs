@@ -58,6 +58,14 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 			
+			public TextFitter					TextFitter
+			{
+				get
+				{
+					return this.fitter;
+				}
+			}
+			
 			public double						FrameRatio
 			{
 				get
@@ -884,11 +892,12 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.ConvertToStyledText (words, style1, null, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					this.painter.TextStory.MoveCursor (cursor, - words.Length);
-					Text.Internal.Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
+					Text.TextNavigator navigator = new Epsitec.Common.Text.TextNavigator (this.painter.TextStory, this.painter.TextFitter);
 					
-					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
-					this.painter.TextStory.MoveCursor (cursor, words.Length);
+					navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 1);
+					navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);	//	juste après le point final
+					navigator.SetStyles (new Text.TextStyle[] { style1, style2 }, new Text.Property[] { });
+					navigator.Dispose ();
 					
 					words = "Second élément.\nTexte intercalaire.\n";
 					
@@ -898,7 +907,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.MoveCursor (cursor, - words.Length);
 					Text.Internal.Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
 					
-					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
+//-					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
 					this.painter.TextStory.MoveCursor (cursor, words.Length);
 					
 					words = "Dernier élément pour terminer.\nFin du texte.\n";
@@ -909,7 +918,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.MoveCursor (cursor, - words.Length);
 					Text.Internal.Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
 					
-					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
+//-					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
 					this.painter.TextStory.MoveCursor (cursor, words.Length);
 				}
 				

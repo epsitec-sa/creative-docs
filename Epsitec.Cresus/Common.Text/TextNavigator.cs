@@ -419,6 +419,9 @@ namespace Epsitec.Common.Text
 			//	ce qui va peut-être modifier les propriétés du paragraphe. En cas
 			//	de sélection, la gestion est plus compliquée.
 			
+			System.Diagnostics.Debug.Assert (styles != null);
+			System.Diagnostics.Debug.Assert (properties != null);
+			
 			//	TODO: gérer la sélection
 			
 			Property[] paragraph_properties = Property.FilterUniformParagraphProperties (properties);
@@ -427,7 +430,15 @@ namespace Epsitec.Common.Text
 			TextStyle[] paragraph_styles = TextStyle.FilterStyles (styles, TextStyleClass.Paragraph);
 			TextStyle[] character_styles = TextStyle.FilterStyles (styles, TextStyleClass.Text, TextStyleClass.Character);
 			
-			Internal.Navigator.SetParagraphStylesAndProperties (this.story, this.cursor, paragraph_styles, paragraph_properties);
+			//	Pour modifier le style d'un paragraphe, il faut se placer au début
+			//	du paragraphe :
+			
+			int pos   = this.story.GetCursorPosition (this.cursor);
+			int start = Internal.Navigator.GetParagraphStartOffset (this.story, this.temp_cursor);
+			
+			this.story.SetCursorPosition (this.temp_cursor, pos + start);
+			
+			Internal.Navigator.SetParagraphStylesAndProperties (this.story, this.temp_cursor, paragraph_styles, paragraph_properties);
 			
 			this.current_styles     = styles.Clone () as TextStyle[];
 			this.current_properties = properties.Clone () as Property[];
