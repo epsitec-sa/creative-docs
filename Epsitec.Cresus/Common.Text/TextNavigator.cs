@@ -563,7 +563,7 @@ namespace Epsitec.Common.Text
 				
 				this.story.MoveCursor (this.temp_cursor, direction);
 				
-				ulong code = text_table.ReadChar (this.ActiveCursor.CursorId);
+				ulong code = text_table.ReadChar (this.temp_cursor.CursorId);
 				
 				if (code == 0)
 				{
