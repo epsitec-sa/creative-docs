@@ -263,7 +263,7 @@ namespace Epsitec.Common.Text
 			if ((old_pos != new_pos) ||
 				(old_dir != new_dir))
 			{
-				if (Internal.Navigator.IsParagraphStart (this.story, this.ActiveCursor, 0))
+				if (Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0))
 				{
 					//	Le curseur n'a pas le droit de se trouver en début de paragraphe
 					//	si celui-ci commence par du texte automatique, car on n'a pas le
@@ -595,9 +595,18 @@ namespace Epsitec.Common.Text
 				
 				System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == pos);
 				
-				this.story.MoveCursor (this.temp_cursor, direction);
+				ulong code;
 				
-				ulong code = this.story.ReadChar (this.temp_cursor);
+				if (direction > 0)
+				{
+					code = this.story.ReadChar (this.temp_cursor);
+					this.story.MoveCursor (this.temp_cursor, direction);
+				}
+				else
+				{
+					this.story.MoveCursor (this.temp_cursor, direction);
+					code = this.story.ReadChar (this.temp_cursor);
+				}
 				
 				if (code == 0)
 				{
@@ -618,9 +627,11 @@ namespace Epsitec.Common.Text
 				Properties.AutoTextProperty  auto_text_property;
 				Properties.GeneratorProperty generator_property;
 				
+				pos += direction;
+				
 				if (context.GetAutoText (code, out auto_text_property))
 				{
-					int skip = this.SkipOverProperty (auto_text_property, direction);
+					int skip = this.SkipOverProperty (this.temp_cursor, auto_text_property, direction);
 					
 					//	Un texte automatique compte comme zéro caractère dans nos
 					//	déplacements.
@@ -632,7 +643,7 @@ namespace Epsitec.Common.Text
 				}
 				else if (context.GetGenerator (code, out generator_property))
 				{
-					int skip = this.SkipOverProperty (generator_property, direction);
+					int skip = this.SkipOverProperty (this.temp_cursor, generator_property, direction);
 					
 					//	Un texte produit par un générateur compte comme un caractère
 					//	unique.
@@ -644,7 +655,6 @@ namespace Epsitec.Common.Text
 				}
 				else
 				{
-					pos   += direction;
 					moved += 1;
 				}
 			}
@@ -682,6 +692,8 @@ namespace Epsitec.Common.Text
 			
 			System.Diagnostics.Debug.Assert (count >= 0);
 			System.Diagnostics.Debug.Assert ((direction == -1) || (direction == 1));
+			
+			this.story.SetCursorPosition (this.temp_cursor, old_pos);
 			
 			if (direction > 0)
 			{
@@ -743,17 +755,17 @@ namespace Epsitec.Common.Text
 		
 		protected virtual bool IsParagraphStart(int offset)
 		{
-			return Internal.Navigator.IsParagraphStart (this.story, this.ActiveCursor, offset);
+			return Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, offset);
 		}
 		
 		protected virtual bool IsParagraphEnd(int offset)
 		{
-			return Internal.Navigator.IsParagraphEnd (this.story, this.ActiveCursor, offset);
+			return Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, offset);
 		}
 		
 		protected virtual bool IsWordStart(int offset)
 		{
-			return Internal.Navigator.IsWordStart (this.story, this.ActiveCursor, offset);
+			return Internal.Navigator.IsWordStart (this.story, this.temp_cursor, offset);
 		}
 		
 		protected virtual bool IsWordEnd(int offset)
@@ -763,7 +775,7 @@ namespace Epsitec.Common.Text
 			
 			//	TODO: gérer fins de lignes
 			
-			if (Internal.Navigator.IsParagraphEnd (this.story, this.ActiveCursor, offset))
+			if (Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, offset))
 			{
 				return true;
 			}
@@ -771,7 +783,7 @@ namespace Epsitec.Common.Text
 			//	On détermine que la fin d'un mot est la même chose que le début
 			//	du mot suivant, pour la navigation :
 			
-			return Internal.Navigator.IsWordStart (this.story, this.ActiveCursor, offset);
+			return Internal.Navigator.IsWordStart (this.story, this.temp_cursor, offset);
 		}
 		
 		protected virtual bool IsLineStart(int offset)
@@ -781,7 +793,7 @@ namespace Epsitec.Common.Text
 				return true;
 			}
 			
-			if (Internal.Navigator.IsLineStart (this.story, this.fitter, this.ActiveCursor, offset))
+			if (Internal.Navigator.IsLineStart (this.story, this.fitter, this.temp_cursor, offset))
 			{
 				return true;
 			}
@@ -796,7 +808,7 @@ namespace Epsitec.Common.Text
 				return true;
 			}
 			
-			if (Internal.Navigator.IsLineEnd (this.story, this.fitter, this.ActiveCursor, offset))
+			if (Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, offset))
 			{
 				return true;
 			}
@@ -868,7 +880,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected virtual int SkipOverProperty(Property property, int direction)
+		protected virtual int SkipOverProperty(ICursor cursor, Property property, int direction)
 		{
 			//	Saute la propriété, en marche avant ou en marche arrière. En cas
 			//	de marche avant, on s'arrête après la tranche. En cas de marche
@@ -880,13 +892,13 @@ namespace Epsitec.Common.Text
 			{
 				//	La distance au début de la tranche de texte va de 0 à -n.
 				
-				return Internal.Navigator.GetRunStartOffset (this.story, this.ActiveCursor, property);
+				return Internal.Navigator.GetRunStartOffset (this.story, cursor, property);
 			}
 			else if (direction > 0)
 			{
 				//	La distance à la fin de la tranche de texte va de 1 à n.
 				
-				return Internal.Navigator.GetRunEndLength (this.story, this.ActiveCursor, property);
+				return Internal.Navigator.GetRunEndLength (this.story, cursor, property);
 			}
 			
 			return 0;
@@ -918,7 +930,7 @@ namespace Epsitec.Common.Text
 				System.Diagnostics.Debug.Assert (property != null);
 				System.Diagnostics.Debug.Assert (property.Tag != null);
 				
-				pos += this.SkipOverProperty (property, 1);
+				pos += this.SkipOverProperty (this.temp_cursor, property, 1);
 				dir  = -1;
 			}
 		}

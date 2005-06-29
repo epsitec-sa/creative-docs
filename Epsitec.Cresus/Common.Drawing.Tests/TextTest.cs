@@ -211,9 +211,9 @@ namespace Epsitec.Common.Drawing
 					
 					System.Diagnostics.Debug.WriteLine ("Show cursors: start...");
 					
-					for (int i = -1; i < this.story.TextLength; i++)
+					for (int i = 0; ; i++)
 					{
-						if (i >= 0)
+						if (i > 0)
 						{
 							navigator.MoveTo (Common.Text.TextNavigator.Target.CharacterNext, 1);
 						}
@@ -227,6 +227,11 @@ namespace Epsitec.Common.Drawing
 							cy += System.Math.Sin (angle) * (descender);
 							
 							graphics.AddLine (cx, cy, cx+dx, cy+dy);
+						}
+						
+						if (navigator.CursorPosition == this.story.TextLength)
+						{
+							break;
 						}
 					}
 					
