@@ -918,8 +918,9 @@ namespace Epsitec.Common.Text
 		{
 			internal DefaultMarkers(Internal.CharMarker marker)
 			{
-				this.requires_spell_checking = marker[DefaultMarkers.TagRequiresSpellChecking];
 				this.selected                = marker[DefaultMarkers.TagSelected];
+				this.requires_spell_checking = marker[DefaultMarkers.TagRequiresSpellChecking];
+				this.spell_checking_error    = marker[DefaultMarkers.TagSpellCheckingError];
 			}
 			
 			
@@ -939,12 +940,22 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			public ulong						SpellCheckingError
+			{
+				get
+				{
+					return this.spell_checking_error;
+				}
+			}
+			
 			
 			private ulong						selected;
 			private ulong						requires_spell_checking;
+			private ulong						spell_checking_error;
 			
 			public static string				TagSelected					= "Selected";
 			public static string				TagRequiresSpellChecking	= "RequiresSpellChecking";
+			public static string				TagSpellCheckingError		= "SpellCheckingError";
 		}
 		#endregion
 		

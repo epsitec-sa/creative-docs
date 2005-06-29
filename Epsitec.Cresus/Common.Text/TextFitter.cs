@@ -220,6 +220,12 @@ namespace Epsitec.Common.Text
 					{
 						int line_length = elements[i].Length;
 						int line_end    = line_start + line_length;
+						int frame_index = elements[i].FrameIndex;
+						
+						if (frame_index < 0)
+						{
+							break;
+						}
 						
 						if ((position >= line_start) &&
 							((position < line_end) || ((position == line_end) && (direction >= 0) && (! elements[i].IsTabulation)) || ((position == line_end) && (line_length == 0))))
@@ -229,7 +235,7 @@ namespace Epsitec.Common.Text
 							//	déterminer le curseur se trouve à la fin de la ligne
 							//	en cours ou au début de la ligne suivante.
 							
-							frame = this.FrameList[elements[i].FrameIndex];
+							frame = this.FrameList[frame_index];
 							
 							x = elements[i].LineBaseX;
 							y = elements[i].LineBaseY;
