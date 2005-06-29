@@ -20,6 +20,7 @@ namespace Epsitec.Common.Text
 			
 			this.char_marker.Add (Context.DefaultMarkers.TagSelected);
 			this.char_marker.Add (Context.DefaultMarkers.TagRequiresSpellChecking);
+			this.char_marker.Add (Context.DefaultMarkers.TagSpellCheckingError);
 			
 			this.markers = new Context.DefaultMarkers (this.char_marker);
 			 
