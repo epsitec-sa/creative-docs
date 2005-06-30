@@ -545,6 +545,15 @@ namespace Epsitec.Common.Text.Internal
 			
 			int length = offset_end - offset_start;
 			
+			if (length == 0)
+			{
+				//	Cas particulier : l'appelant essaie de modifier le style du paragraphe
+				//	en fin de texte, alors que le paragraphe a une longueur nulle (donc il
+				//	n'existe pas encore en tant que tel).
+				
+				return;
+			}
+			
 			ulong[] text = new ulong[length];
 			
 			story.ReadText (cursor, offset_start, length, text);

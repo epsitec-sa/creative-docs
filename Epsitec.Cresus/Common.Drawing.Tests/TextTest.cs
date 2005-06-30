@@ -906,6 +906,8 @@ namespace Epsitec.Common.Drawing
 					navigator.SetStyles (new Text.TextStyle[] { style1, style2 }, new Text.Property[] { });
 					navigator.Insert ("..\nComplément 1.\nComplément 2.");
 					navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);		//	fin du texte
+					navigator.SetStyles (new Text.TextStyle[] { style1 }, new Text.Property[] { });
+					navigator.Insert ("Texte normal.\n");
 					navigator.Dispose ();
 					
 					words = "Second élément.\nTexte intercalaire.\n";

@@ -60,6 +60,8 @@ namespace Epsitec.Common.Drawing
 			Transform t4 = Transform.FromRotationDeg (60, new Point (20, 10));
 			Transform t5 = Transform.FromRotationDeg (- 60);
 			Transform t6 = Transform.FromRotationDeg (- 60, new Point (20, 10));
+			Transform t7 = Transform.FromRotationDeg (90);
+			Transform t8 = Transform.FromRotationDeg (- 90);
 			
 			Transform t;
 			
@@ -80,6 +82,12 @@ namespace Epsitec.Common.Drawing
 			Point pt = t3.TransformDirect (new Point (1, 3));
 			
 			Assert.IsTrue (Transform.Equal (pt, new Point (2.366025f, 2.098076f)));
+
+			Point pt1 = t7.TransformDirect (new Point (1, 0));
+			Point pt2 = t8.TransformDirect (new Point (1, 0));
+			
+			Assert.IsTrue (Transform.Equal (pt1, new Point (0, 1)));
+			Assert.IsTrue (Transform.Equal (pt2, new Point (0, -1)));
 		}
 		
 		[Test] public void CheckScale()
