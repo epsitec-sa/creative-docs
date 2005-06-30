@@ -845,6 +845,7 @@ namespace Epsitec.Common.Text
 			int  pos    = this.story.GetCursorPosition (cursor);
 			int  start  = pos;
 			int  end    = pos + length;
+			int  fence  = end;
 			bool fix_up = false;
 			
 			for (int i = 0; i < length; i++)
@@ -904,9 +905,31 @@ namespace Epsitec.Common.Text
 				this.MergeRanges (ranges, new Range (start, end - start));
 			}
 			
+			if (! fix_up)
+			{
+				//	Le premier paragraphe est sélectionné dans son entier. Cela
+				//	implique que si la fin de la sélection arrive au début d'un
+				//	paragraphe contenant du texte automatique, il faut déplacer
+				//	la fin après la fin du paragraphe précédent (sinon on supprime
+				//	du texte automatique qu'il faudrait conserver).
+				
+				this.story.SetCursorPosition (this.temp_cursor, fence);
+				
+				if (this.SkipOverAutoText (ref fence, -1))
+				{
+					System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == start);
+					System.Diagnostics.Debug.Assert (this.IsParagraphStart (0));
+				}
+			}
+			
 			while (ranges.Count > 0)
 			{
 				Range range = ranges.Pop () as Range;
+				
+				if (range.End > fence)
+				{
+					range.End = fence;
+				}
 				
 				this.story.SetCursorPosition (this.temp_cursor, range.Start);
 				this.story.DeleteText (this.temp_cursor, range.Length);
@@ -926,6 +949,7 @@ namespace Epsitec.Common.Text
 				Internal.Navigator.SetParagraphStylesAndProperties (this.story, this.temp_cursor, styles, props);
 			}
 		}
+		
 		
 		private class Range
 		{
