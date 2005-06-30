@@ -863,7 +863,7 @@ namespace Epsitec.Common.Text
 					if (this.SkipOverAutoText (ref start, -1))
 					{
 						//	Le début de la tranche à détruire ne contenait pas le
-						//	text automatique. Nous devons étendre la sélection pour
+						//	texte automatique. Nous devons étendre la sélection pour
 						//	englober le texte automatique.
 						
 						System.Diagnostics.Debug.Assert (count == 1);
@@ -1181,9 +1181,9 @@ namespace Epsitec.Common.Text
 			{
 				while (pos >= 0)
 				{
-					this.story.SetCursorPosition (this.temp_cursor, pos-1);
+					this.story.SetCursorPosition (this.temp_cursor, pos);
 					
-					ulong code = this.story.ReadChar (this.temp_cursor);
+					ulong code = this.story.ReadChar (this.temp_cursor, -1);
 					
 					//	Gère le déplacement par-dessus la section AutoText, s'il y en a
 					//	une :
@@ -1198,7 +1198,7 @@ namespace Epsitec.Common.Text
 					System.Diagnostics.Debug.Assert (property != null);
 					System.Diagnostics.Debug.Assert (property.Tag != null);
 					
-					pos += this.SkipOverProperty (this.temp_cursor, property, -1) - 1;
+					pos += this.SkipOverProperty (this.temp_cursor, property, -1);
 					hit  = true;
 				}
 			}
