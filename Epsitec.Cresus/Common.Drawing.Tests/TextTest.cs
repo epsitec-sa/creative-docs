@@ -501,7 +501,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.ConvertToStyledText (words, no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					properties.Add (new Text.Properties.FontKernProperty (4, Text.Properties.SizeUnits.Points));
+					properties.Add (new Text.Properties.FontKernProperty (8, Text.Properties.SizeUnits.Points));
 					
 					this.painter.TextStory.ConvertToStyledText ("Titre sur deux lignes pour voir\n", no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);

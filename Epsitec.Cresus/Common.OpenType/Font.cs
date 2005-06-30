@@ -331,7 +331,7 @@ namespace Epsitec.Common.OpenType
 			return advance * scale;
 		}
 		
-		public double GetPositions(ushort[] glyphs, double size, double ox, double[] x_pos, double[] x_scale, double[] x_glue)
+		public double GetPositions(ushort[] glyphs, double size, double ox, double[] x_pos, double[] x_scale, double[] x_adjust, double[] x_glue)
 		{
 			if (this.use_system_glyph_size)
 			{
@@ -343,13 +343,15 @@ namespace Epsitec.Common.OpenType
 				{
 					x_pos[i] = ox + width;
 					
+					double adjust = (x_adjust == null) ? 0 : x_adjust[i];
+					
 					if (x_glue == null)
 					{
-						width += (int)(info.GetGlyphWidth (glyphs[i]) * x_scale[i] + 0.5);
+						width += (int)((info.GetGlyphWidth (glyphs[i]) + adjust) * x_scale[i] + 0.5);
 					}
 					else
 					{
-						width += (int)(info.GetGlyphWidth (glyphs[i]) * x_scale[i] + x_glue[i] + 0.5);
+						width += (int)((info.GetGlyphWidth (glyphs[i]) + adjust) * x_scale[i] + x_glue[i] + 0.5);
 					}
 				}
 				
@@ -385,6 +387,11 @@ namespace Epsitec.Common.OpenType
 					{
 						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1) * x_scale[i] * scale;
 					}
+				}
+				
+				if (x_adjust != null)
+				{
+					advance += x_adjust[i] * x_scale[i];
 				}
 				
 				if (x_glue != null)

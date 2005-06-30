@@ -610,20 +610,41 @@ advance_next:
 			
 			double[] x_scale = new double[n];
 			double[] x_glue  = new double[n];
+			double[] x_adj   = new double[n];
 			double[] x_pos   = new double[n+1];		//	un élément de plus pour permettre de..
 			double[] y_pos   = new double[n];		//	..calculer la largeur du dernier glyphe
 			
-			this.GenerateXScale (attributes, scales, x_scale);
+			int skip_glue_at = n;
+			
+			if (is_last_run)
+			{
+				skip_glue_at -= 1;
+				
+				while ((skip_glue_at > 0) && (glyphs[skip_glue_at] == 0xffff))
+				{
+					skip_glue_at--;
+				}
+				
+				skip_glue_at -= context.TextStretchProfile.CountEndSpace;
+			}
+			
+			this.GenerateXScale (attributes, scales, x_scale, skip_glue_at + 1);
 			
 			for (int i = 0; i < n; i++)
 			{
+				if (i == skip_glue_at)
+				{
+					glue = 0;
+				}
+				
 				y_pos[i]  = oy + font_baseline;
-				x_glue[i] = glue + font_advance;
+				x_glue[i] = glue;
+				x_adj[i]  = font_advance;
 			}
 			
 			//	Détermine la position horizontale de chaque glyphe :
 			
-			double dx = font.GetPositions (glyphs, font_size, ox, x_pos, x_scale, x_glue);
+			double dx = font.GetPositions (glyphs, font_size, ox, x_pos, x_scale, x_adj, x_glue);
 			
 			ox      += dx;
 			x_pos[n] = x_pos[0] + dx;
@@ -687,7 +708,7 @@ advance_next:
 		}
 		
 		
-		private int GenerateXScale(byte[] attributes, StretchProfile.Scales scales, double[] x_scale)
+		private int GenerateXScale(byte[] attributes, StretchProfile.Scales scales, double[] x_scale, int fence)
 		{
 			int kashida_count = 0;
 			
@@ -702,6 +723,11 @@ advance_next:
 					case Unicode.StretchClass.CharacterSpace:	x_scale[i] = scales.ScaleCharacter;							break;
 					case Unicode.StretchClass.Space:			x_scale[i] = scales.ScaleSpace;								break;
 					case Unicode.StretchClass.Kashida:			x_scale[i] = scales.ScaleKashida;		kashida_count++;	break;
+				}
+				
+				if (i >= fence)
+				{
+					x_scale[i] = 1.0;
 				}
 			}
 			
