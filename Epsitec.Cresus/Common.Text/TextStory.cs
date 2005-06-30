@@ -81,20 +81,33 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		
-		public int								TextChangeMark
+		public long								Version
 		{
 			get
 			{
-				return this.text_change_mark;
+				return this.text.Version;
 			}
 		}
 		
-		public long								TextChangeVersion
+		
+		//	Les marques de changement qui sont activées dans le texte à la moindre
+		//	modification sont toujours situées dans une plage comprise entre 'start'
+		//	et 'end'. La version permet de savoir quand les marques ont changé pour
+		//	la dernière fois.
+		
+		public int								TextChangeMarkStart
 		{
 			get
 			{
-				return this.text_change_version;
+				return this.text_change_mark_start;
+			}
+		}
+		
+		public int								TextChangeMarkEnd
+		{
+			get
+			{
+				return this.text_change_mark_start;
 			}
 		}
 		
@@ -440,8 +453,8 @@ namespace Epsitec.Common.Text
 		
 		public void ResetTextChangeMarkPosition()
 		{
-			this.text_change_mark     = this.TextLength;
-			this.text_change_version += 1;
+			this.text_change_mark_start = this.TextLength;
+			this.text_change_mark_end   = 0;
 		}
 		
 		
@@ -814,34 +827,27 @@ namespace Epsitec.Common.Text
 			//	Met à jour l'information relative à la coupure des lignes autour
 			//	du passage modifié.
 			
-			this.text_change_version += 1;
-			
-			if (position < this.text_change_mark)
-			{
-				this.text_change_mark = position;
-			}
-			
 			System.Diagnostics.Debug.Assert (position <= this.TextLength);
 			
-			int area_begin = System.Math.Max (0, position - 20);
+			int area_start = System.Math.Max (0, position - 20);
 			int area_end   = System.Math.Min (position + length + 20, this.text_length);
 			
-			if (area_end > area_begin)
+			if (area_end > area_start)
 			{
-				ulong[] text = new ulong[area_end - area_begin];
+				ulong[] text = new ulong[area_end - area_start];
 				
-				this.text.SetCursorPosition (this.temp_cursor.CursorId, area_begin);
-				this.text.ReadText (this.temp_cursor.CursorId, area_end - area_begin, text);
+				this.text.SetCursorPosition (this.temp_cursor.CursorId, area_start);
+				this.text.ReadText (this.temp_cursor.CursorId, area_end - area_start, text);
 				
 				//	S'il y a des sauts de lignes "forcés" dans le texte avant et
 				//	après le passage modifié, on recadre la fenêtre :
 				
-				int from_pos = area_begin;
+				int from_pos = area_start;
 				int to_pos   = area_end;
 				
-				for (int i = position - 1; i >= area_begin; i--)
+				for (int i = position - 1; i >= area_start; i--)
 				{
-					if (Unicode.Bits.GetBreakInfo (text[i - area_begin]) == Unicode.BreakInfo.Yes)
+					if (Unicode.Bits.GetBreakInfo (text[i - area_start]) == Unicode.BreakInfo.Yes)
 					{
 						from_pos = i + 1;
 						break;
@@ -850,7 +856,7 @@ namespace Epsitec.Common.Text
 				
 				for (int i = position + length; i < area_end; i++)
 				{
-					if (Unicode.Bits.GetBreakInfo (text[i - area_begin]) == Unicode.BreakInfo.Yes)
+					if (Unicode.Bits.GetBreakInfo (text[i - area_start]) == Unicode.BreakInfo.Yes)
 					{
 						to_pos = i;
 						break;
@@ -860,21 +866,21 @@ namespace Epsitec.Common.Text
 				//	Cherche les frontières de mots les plus proches, avant/après le
 				//	passage considéré :
 				
-				int word_begin = from_pos;
+				int word_start = from_pos;
 				int word_end   = to_pos;
 				
 				for (int i = position - 2; i >= from_pos; i--)
 				{
-					if (Unicode.Bits.GetBreakInfo (text[i - area_begin]) == Unicode.BreakInfo.Optional)
+					if (Unicode.Bits.GetBreakInfo (text[i - area_start]) == Unicode.BreakInfo.Optional)
 					{
-						word_begin = i + 1;
+						word_start = i + 1;
 						break;
 					}
 				}
 				
 				for (int i = position + length; i < to_pos; i++)
 				{
-					if (Unicode.Bits.GetBreakInfo (text[i - area_begin]) == Unicode.BreakInfo.Optional)
+					if (Unicode.Bits.GetBreakInfo (text[i - area_start]) == Unicode.BreakInfo.Optional)
 					{
 						word_end = i;
 						break;
@@ -884,14 +890,14 @@ namespace Epsitec.Common.Text
 				System.Diagnostics.Debug.Assert (from_pos <= position);
 				System.Diagnostics.Debug.Assert (to_pos >= position + length);
 				
-				System.Diagnostics.Debug.Assert (word_begin >= from_pos);
+				System.Diagnostics.Debug.Assert (word_start >= from_pos);
 				System.Diagnostics.Debug.Assert (word_end <= to_pos);
 				
 				//	Demande une analyse du passage considéré et recopie les
 				//	informations dans le texte lui-même :
 				
-				int text_offset = word_begin - area_begin;
-				int text_length = word_end - word_begin;
+				int text_offset = word_start - area_start;
+				int text_length = word_end - word_start;
 				
 				Unicode.BreakInfo[] breaks = new Unicode.BreakInfo[text_length];
 				Unicode.DefaultBreakAnalyzer.GenerateBreaks (text, text_offset, text_length, breaks);
@@ -900,7 +906,19 @@ namespace Epsitec.Common.Text
 				
 				Internal.CharMarker.SetMarkers (this.context.Markers.RequiresSpellChecking, text, text_offset, text_length);
 				
-				this.text.WriteText (this.temp_cursor.CursorId, area_end - area_begin, text);
+				this.text.WriteText (this.temp_cursor.CursorId, area_end - area_start, text);
+				
+				//	Agrandit la plage dans laquelle il y a eu des modifications signalées
+				//	par des marques telles que RequiresSpellChecking :
+				
+				if (word_start < this.text_change_mark_start)
+				{
+					this.text_change_mark_start = position;
+				}
+				if (word_end > this.text_change_mark_end)
+				{
+					this.text_change_mark_end = word_end;
+				}
 			}
 		}
 		
@@ -1675,7 +1693,7 @@ namespace Epsitec.Common.Text
 		
 		private bool							debug_disable_oplet;
 		
-		private int								text_change_mark;
-		private long							text_change_version;
+		private int								text_change_mark_start;
+		private int								text_change_mark_end;
 	}
 }

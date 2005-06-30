@@ -15,31 +15,45 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public static long						Current
+		public static StyleVersion				Default
 		{
 			get
 			{
-				return StyleVersion.current;
-			}
-		}
-		
-		public static System.DateTime			LastModificationTime
-		{
-			get
-			{
-				return StyleVersion.time;
+				return StyleVersion.default_instance;
 			}
 		}
 		
 		
-		public static void Change()
+		public long								Current
 		{
-			System.Threading.Interlocked.Increment (ref StyleVersion.current);
-			StyleVersion.time = System.DateTime.Now;
+			get
+			{
+				return this.current;
+			}
+		}
+		
+		public System.DateTime					LastModificationTime
+		{
+			get
+			{
+				return this.time;
+			}
 		}
 		
 		
-		private static long						current = 1;
-		private static System.DateTime			time = System.DateTime.Now;
+		public long Change()
+		{
+			//	Il faut appeler cette méthode chaque fois que la valeur d'une
+			//	propriété est modifiée (c'est fait par Property.Invalidate).
+			
+			System.Threading.Interlocked.Increment (ref this.current);
+			this.time = System.DateTime.Now;
+			return this.current;
+		}
+		
+		private static StyleVersion				default_instance = new StyleVersion ();
+		
+		private long							current	= 1;
+		private System.DateTime					time	= System.DateTime.Now;
 	}
 }

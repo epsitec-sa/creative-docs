@@ -17,6 +17,11 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
+				if (this.version == 0)
+				{
+					this.version = StyleVersion.Default.Current;
+				}
+				
 				return this.version;
 			}
 		}
@@ -58,13 +63,13 @@ namespace Epsitec.Common.Text
 		
 		public void Invalidate()
 		{
+			if (this.version != 0)
+			{
+				StyleVersion.Default.Change ();
+			}
+			
 			this.contents_signature = 0;
 			this.version            = 0;
-		}
-		
-		public void UpdateVersion()
-		{
-			this.version = StyleVersion.Current;
 		}
 		
 		

@@ -40,6 +40,13 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
+		public long								Version
+		{
+			get
+			{
+				return this.version;
+			}
+		}
 		
 		
 		public Internal.CursorId NewCursor(ICursor cursor)
@@ -648,6 +655,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			this.text_length += text.Length;
+			this.version++;
 			
 			this.cursors.InvalidatePositionCache ();
 		}
@@ -720,6 +728,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			this.text_length -= count;
+			this.version++;
 			
 			this.cursors.InvalidatePositionCache ();
 		}
@@ -970,9 +979,10 @@ namespace Epsitec.Common.Text.Internal
 		{
 			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
 			
-			int index   = chunk_id - 1;
-			int changed = 0;
-			int pos     = this.text_chunks[index].GetCursorPosition (cursor_id);
+			int  index    = chunk_id - 1;
+			int  changed  = 0;
+			int  pos      = this.text_chunks[index].GetCursorPosition (cursor_id);
+			bool modified = false;
 			
 			while (changed < length)
 			{
@@ -991,11 +1001,16 @@ namespace Epsitec.Common.Text.Internal
 				{
 					int count = System.Math.Min (length - changed, this.text_chunks[index].TextLength);
 					
-					this.text_chunks[index].ChangeMarkers (marker, pos, count, set);
+					modified |= this.text_chunks[index].ChangeMarkers (marker, pos, count, set);
 					
 					changed += count;
 					pos     += count;
 				}
+			}
+			
+			if (modified)
+			{
+				this.version++;
 			}
 			
 			return changed;
@@ -1011,9 +1026,10 @@ namespace Epsitec.Common.Text.Internal
 		{
 			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
 			
-			int index = chunk_id - 1;
-			int wrote = 0;
-			int pos   = this.text_chunks[index].GetCursorPosition (cursor_id);
+			int  index    = chunk_id - 1;
+			int  wrote    = 0;
+			int  pos      = this.text_chunks[index].GetCursorPosition (cursor_id);
+			bool modified = false;
 			
 			if (this.AdjustByOffset (ref index, ref pos, offset) == false)
 			{
@@ -1035,11 +1051,20 @@ namespace Epsitec.Common.Text.Internal
 				}
 				else
 				{
-					this.text_chunks[index][pos] = buffer[wrote];
+					if (this.text_chunks[index][pos] != buffer[wrote])
+					{
+						this.text_chunks[index][pos] = buffer[wrote];
+						modified = true;
+					}
 					
 					wrote += 1;
 					pos   += 1;
 				}
+			}
+			
+			if (modified)
+			{
+				this.version++;
 			}
 			
 			return wrote;
@@ -1048,6 +1073,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		internal void ReadRawText(System.IO.Stream stream)
 		{
+			//	Remplit une table de texte en lisant un texte brut à partir d'un stream.
+			
 			if ((this.text_length > 0) ||
 				(this.text_chunks.Length > 1) ||
 				(this.cursors.CursorCount > 0))
@@ -1112,6 +1139,7 @@ namespace Epsitec.Common.Text.Internal
 						this.text_chunks[i].SetRawText (buffer, 0, read);
 					}
 					
+					this.version++;
 					return;
 				}
 			}
@@ -1330,5 +1358,6 @@ namespace Epsitec.Common.Text.Internal
 		private Internal.TextChunk[]			text_chunks;		//	0..n valides; (prendre index-1 pour l'accès)
 		private int								text_length;
 		private Internal.CursorTable			cursors;
+		private long							version;
 	}
 }

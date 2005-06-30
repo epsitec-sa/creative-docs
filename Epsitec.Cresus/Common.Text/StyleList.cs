@@ -19,6 +19,23 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public long								Version
+		{
+			get
+			{
+				return this.StyleVersion.Current;
+			}
+		}
+		
+		public StyleVersion						StyleVersion
+		{
+			get
+			{
+				return Text.StyleVersion.Default;
+			}
+		}
+		
+		
 		public TextStyle						this[string name, TextStyleClass text_style_class]
 		{
 			get

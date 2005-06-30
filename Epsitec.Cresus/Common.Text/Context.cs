@@ -202,7 +202,7 @@ namespace Epsitec.Common.Text
 		public void GetFont(ulong code, out OpenType.Font font, out double font_size)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_font_last_style_version == current_style_version) &&
 				(this.get_font_last_style_index   == current_style_index))
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Text
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_font_offset_last_style_version == current_style_version) &&
 				(this.get_font_offset_last_code == code))
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Text
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_color_last_style_version == current_style_version) &&
 				(this.get_color_last_code == code))
@@ -333,7 +333,7 @@ namespace Epsitec.Common.Text
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_language_last_style_version == current_style_version) &&
 				(this.get_language_last_code == code))
@@ -344,7 +344,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			Styles.SimpleStyle   style          = this.style_list[code];
-			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			Styles.ExtraSettings extra_settings = style == null ? null : style.GetExtraSettings (code);
 			
 			property = extra_settings == null ? null : extra_settings[Properties.WellKnownType.Language] as Properties.LanguageProperty;
 			
@@ -357,7 +357,7 @@ namespace Epsitec.Common.Text
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_auto_text_last_style_version == current_style_version) &&
 				(this.get_auto_text_last_code == code))
@@ -383,7 +383,7 @@ namespace Epsitec.Common.Text
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_generator_last_style_version == current_style_version) &&
 				(this.get_generator_last_code == code))
@@ -418,7 +418,7 @@ namespace Epsitec.Common.Text
 		public void GetConditions(ulong code, out Properties.ConditionalProperty[] properties, out bool summary)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_condition_last_style_version != current_style_version) ||
 				(this.get_condition_last_style_index   != current_style_index))
@@ -466,7 +466,7 @@ namespace Epsitec.Common.Text
 		public void GetProperties(ulong code, out Property[] properties)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_properties_last_style_version != current_style_version) ||
 				(this.get_properties_last_style_index   != current_style_index))
@@ -504,7 +504,7 @@ namespace Epsitec.Common.Text
 		public void GetStyles(ulong code, out TextStyle[] styles)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_styles_last_style_version != current_style_version) ||
 				(this.get_styles_last_style_index   != current_style_index))
@@ -524,7 +524,7 @@ namespace Epsitec.Common.Text
 		public void GetLeading(ulong code, out Properties.LeadingProperty property)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_leading_last_style_version == current_style_version) &&
 				(this.get_leading_last_style_index   == current_style_index))
@@ -546,7 +546,7 @@ namespace Epsitec.Common.Text
 		public void GetKeep(ulong code, out Properties.KeepProperty property)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_keep_last_style_version == current_style_version) &&
 				(this.get_keep_last_style_index   == current_style_index))
@@ -569,7 +569,7 @@ namespace Epsitec.Common.Text
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_underlines_last_style_version != current_style_version) ||
 				(this.get_underlines_last_code != code))
@@ -609,7 +609,7 @@ namespace Epsitec.Common.Text
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_links_last_style_version != current_style_version) ||
 				(this.get_links_last_code != code))
@@ -649,7 +649,7 @@ namespace Epsitec.Common.Text
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_metas_last_style_version != current_style_version) ||
 				(this.get_metas_last_code != code))
@@ -688,7 +688,7 @@ namespace Epsitec.Common.Text
 		public void GetLayoutEngine(ulong code, out Layout.BaseEngine engine, out Properties.LayoutProperty property)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_layout_last_style_version == current_style_version) &&
 				(this.get_layout_last_style_index   == current_style_index))
@@ -727,7 +727,7 @@ namespace Epsitec.Common.Text
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
-			long current_style_version = this.style_list.InternalStyleTable.Version;
+			long current_style_version = this.style_list.Version;
 			
 			if ((this.get_margins_last_style_version == current_style_version) &&
 				(this.get_margins_last_code == code))
