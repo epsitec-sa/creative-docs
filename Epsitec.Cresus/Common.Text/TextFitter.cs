@@ -8,7 +8,7 @@ namespace Epsitec.Common.Text
 	/// moyen des méthodes ClearAllMarks/GenerateAllMarks et du rendu
 	/// du texte grâce aux méthodes RenderXxx.
 	/// </summary>
-	public class TextFitter
+	public sealed class TextFitter
 	{
 		public TextFitter(TextStory story)
 		{
@@ -16,8 +16,18 @@ namespace Epsitec.Common.Text
 			
 			this.frame_list      = new FrameList (this);
 			this.page_collection = new DefaultPageCollection ();
+			
+			this.geometry_cache_version = new TextVersion (this);
 		}
 		
+		
+		public long								Version
+		{
+			get
+			{
+				return this.version;
+			}
+		}
 		
 		public TextStory						TextStory
 		{
@@ -73,7 +83,9 @@ namespace Epsitec.Common.Text
 		{
 			TextProcessor processor = new TextProcessor (this.story);
 			processor.Process (new TextProcessor.Executor (this.ExecuteClear));
+			
 			this.frame_list.ClearCursorMap ();
+			this.Invalidate ();
 		}
 		
 		public void GenerateAllMarks()
@@ -89,6 +101,7 @@ namespace Epsitec.Common.Text
 			processor.Process (new TextProcessor.Executor (this.ExecuteGenerate));
 			
 			this.frame_list.ClearCursorMap ();
+			this.Invalidate ();
 		}
 		
 		
@@ -283,6 +296,12 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		
+		private void Invalidate()
+		{
+			this.version++;
+			this.geometry_cache_renderer = null;
+		}
 		
 		private void ExecuteClear(Cursors.TempCursor temp_cursor, int pos, ref int length, out TextProcessor.Status status)
 		{
@@ -745,17 +764,32 @@ restart_paragraph_layout:
 			int        length = elements[i].Length;
 			ulong[]    text   = new ulong[length];
 			
-			this.story.ReadText (position, length, text);
+			//	Pour éviter de redemander à chaque fois au geometry renderer de produire
+			//	les informations de position des caractères, on utilise un cache ici :
 			
-			Layout.Context            layout   = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
-			Internal.GeometryRenderer renderer = new Internal.GeometryRenderer ();
+			if ((this.geometry_cache_version.HasAnythingChanged) ||
+				(this.geometry_cache_start != position))
+			{
+				this.geometry_cache_version.Update ();
+				
+				this.story.ReadText (position, length, text);
+				
+				Layout.Context            layout   = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
+				Internal.GeometryRenderer renderer = new Internal.GeometryRenderer ();
+				
+				layout.DisableFontBaselineOffset  = true;
+				layout.RendererNeedsTextAndGlyphs = true;
+				
+				this.RenderElement (renderer, frame, elements, i, layout);
+				
+				this.geometry_cache_renderer = renderer;
+				this.geometry_cache_start    = position;
+			}
 			
-			layout.DisableFontBaselineOffset  = true;
-			layout.RendererNeedsTextAndGlyphs = true;
+			System.Diagnostics.Debug.Assert (this.geometry_cache_renderer != null);
+			System.Diagnostics.Debug.Assert (this.geometry_cache_version.HasFitterChanged == false);
 			
-			this.RenderElement (renderer, frame, elements, i, layout);
-			
-			Internal.GeometryRenderer.Element item = renderer[cursor_offset];
+			Internal.GeometryRenderer.Element item = this.geometry_cache_renderer[cursor_offset];
 			
 			if (item != null)
 			{
@@ -1073,6 +1107,8 @@ restart_paragraph_layout:
 		}
 		
 		
+		private long							version;
+		
 		private TextStory						story;
 		private System.Collections.ArrayList	cursors;
 		private System.Collections.Stack		free_cursors;
@@ -1086,5 +1122,9 @@ restart_paragraph_layout:
 		private bool							keep_with_prev;
 		
 		private IPageCollection					page_collection;
+		
+		private TextVersion						geometry_cache_version;
+		private int								geometry_cache_start;
+		private Internal.GeometryRenderer		geometry_cache_renderer;
 	}
 }

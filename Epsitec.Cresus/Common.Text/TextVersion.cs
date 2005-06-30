@@ -12,13 +12,18 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public sealed class TextVersion
 	{
-		public TextVersion(TextStory story) : this (story, null)
+		public TextVersion(TextStory story) : this (story, null, null)
 		{
 		}
 		
-		public TextVersion(TextStory story, object argument)
+		public TextVersion(TextFitter fitter) : this (fitter.TextStory, fitter, null)
+		{
+		}
+		
+		public TextVersion(TextStory story, TextFitter fitter, object argument)
 		{
 			this.story    = story;
+			this.fitter   = fitter;
 			this.argument = argument;
 		}
 		
@@ -39,11 +44,21 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public bool								HasFitterChanged
+		{
+			get
+			{
+				long version = this.fitter == null ? 0 : this.fitter.Version;
+				
+				return this.fitter_version != version;
+			}
+		}
+		
 		public bool								HasAnythingChanged
 		{
 			get
 			{
-				return this.HasTextChanged || this.HasStyleChanged;
+				return this.HasTextChanged || this.HasStyleChanged || this.HasFitterChanged;
 			}
 		}
 		
@@ -67,21 +82,26 @@ namespace Epsitec.Common.Text
 		
 		public void Update()
 		{
-			long text_version  = this.story.Version;
-			long style_version = this.story.TextContext.StyleList.Version;
+			long text_version   = this.story.Version;
+			long style_version  = this.story.TextContext.StyleList.Version;
+			long fitter_version = this.fitter == null ? 0 : this.fitter.Version;
 			
-			if (this.HasTextChanged)
+			if (this.text_version != text_version)
 			{
 				this.OnTextChanged ();
 			}
-			
-			if (this.HasStyleChanged)
+			if (this.style_version != style_version)
 			{
 				this.OnStyleChanged ();
 			}
+			if (this.fitter_version != fitter_version)
+			{
+				this.OnFitterChanged ();
+			}
 			
-			this.text_version  = text_version;
-			this.style_version = style_version;
+			this.text_version   = text_version;
+			this.style_version  = style_version;
+			this.fitter_version = fitter_version;
 		}
 		
 		
@@ -101,14 +121,25 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		private void OnFitterChanged()
+		{
+			if (this.FitterChanged != null)
+			{
+				this.FitterChanged (this);
+			}
+		}
+		
 		
 		public event VersionChangedEventHandler	TextChanged;
 		public event VersionChangedEventHandler	StyleChanged;
+		public event VersionChangedEventHandler	FitterChanged;
 		
 		private TextStory						story;
+		private TextFitter						fitter;
 		private object							argument;
 		
 		private long							text_version;
 		private long							style_version;
+		private long							fitter_version;
 	}
 }
