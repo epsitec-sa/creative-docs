@@ -906,7 +906,7 @@ namespace Epsitec.Common.Drawing
 					navigator.SetStyles (new Text.TextStyle[] { style1, style2 }, new Text.Property[] { });
 					navigator.Insert ("..\nComplément 1.\nComplément 2.");
 					navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);		//	fin du texte
-					navigator.SetStyles (new Text.TextStyle[] { style1 }, new Text.Property[] { });
+					navigator.SetStyle (style1);
 					navigator.Insert ("Texte normal.\n");
 					navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 1);		//	juste avant "Texte normal.\n"
 					navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 2);	//	juste avant le "." de la ligne précédente
@@ -915,35 +915,34 @@ namespace Epsitec.Common.Drawing
 					navigator.EndSelection ();
 					navigator.Delete ();
 					navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 1);
-//@					navigator.SetStyles (new Text.TextStyle[] { style1 }, new Text.Property[] { });
+					navigator.SetStyle (style1);
 					navigator.Insert ("aaa\nbbb\n");
-					navigator.Insert ("c");
-//					navigator.Insert ("\n");
-//					navigator.SetStyle (style1);
-//					navigator.Insert ("Texte intercalaire.\n");
+					navigator.Insert ("ccc");
+					navigator.SetStyles (new Text.TextStyle[] { style1, style2 }, new Text.Property[] { });
+					navigator.Insert ("\n");
+					navigator.Insert ("ddd\neee\nfff\n");
+					navigator.SetStyle (style1);
+					navigator.Insert ("Texte final.\n");
+					navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 5);		//	au début de "ccc"
+					navigator.StartSelection ();
+					navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 2);	//	après "bb" et avant "b\n"
+//-					navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 4);	//	avant "bbb\n"
+					navigator.EndSelection ();
+					navigator.Delete ();
+					navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 0);		//	après "ccc"
+					navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);		//	entre "e)" et "ddd"
+					navigator.StartSelection ();
+					navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 0);		//	après "ddd" (sans la marque de fin de paragraphe)
+					navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);		//	y compris le "\n"
+					navigator.EndSelection ();
+					navigator.Delete ();
+//					this.painter.TextStory.OpletQueue.UndoAction ();					//	remet 'ddd' tel quel
+//					this.painter.TextStory.OpletQueue.UndoAction ();					//	annule move
+//					this.painter.TextStory.OpletQueue.UndoAction ();					//	annule move
+//					this.painter.TextStory.OpletQueue.UndoAction ();					//	remet 'bbb' tel quel
 					navigator.Dispose ();
 					
-//					words = "Second élément.\nTexte intercalaire.\n";
-//					
-//					this.painter.TextStory.ConvertToStyledText (words, style1, null, out text);
-//					this.painter.TextStory.InsertText (cursor, text);
-//					
-//					this.painter.TextStory.MoveCursor (cursor, - words.Length);
-//					Text.Internal.Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
-//					
-////-					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
-//					this.painter.TextStory.MoveCursor (cursor, words.Length);
-					
-//					words = "Dernier élément pour terminer.\nFin du texte.\n";
-//					
-//					this.painter.TextStory.ConvertToStyledText (words, style1, null, out text);
-//					this.painter.TextStory.InsertText (cursor, text);
-//					
-//					this.painter.TextStory.MoveCursor (cursor, - words.Length);
-//					Text.Internal.Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
-//					
-////-					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
-//					this.painter.TextStory.MoveCursor (cursor, words.Length);
+					generator.UpdateAllFields (this.painter.TextStory, System.Globalization.CultureInfo.CurrentCulture);
 				}
 				
 				this.painter.TextStory.RecycleCursor (cursor);
