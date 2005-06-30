@@ -904,7 +904,7 @@ namespace Epsitec.Common.Drawing
 					navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 1);
 					navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);	//	juste après le point final
 					navigator.SetStyles (new Text.TextStyle[] { style1, style2 }, new Text.Property[] { });
-					navigator.Insert ("..\nComplément.");
+					navigator.Insert ("..\nComplément 1.\nComplément 2.");
 					navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);		//	fin du texte
 					navigator.Dispose ();
 					

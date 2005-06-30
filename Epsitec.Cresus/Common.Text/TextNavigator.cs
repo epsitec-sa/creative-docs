@@ -1114,7 +1114,7 @@ namespace Epsitec.Common.Text
 		{
 			bool hit = false;
 			
-			if (direction > 1)
+			if (direction > 0)
 			{
 				for (;;)
 				{
@@ -1144,7 +1144,7 @@ namespace Epsitec.Common.Text
 					hit  = true;
 				}
 			}
-			else if (direction < 1)
+			else if (direction < 0)
 			{
 				while (pos >= 0)
 				{
