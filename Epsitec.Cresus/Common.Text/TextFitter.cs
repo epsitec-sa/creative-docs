@@ -228,7 +228,10 @@ namespace Epsitec.Common.Text
 						}
 						
 						if ((position >= line_start) &&
-							((position < line_end) || ((position == line_end) && (direction >= 0) && (! elements[i].IsTabulation)) || ((position == line_end) && (line_length == 0))))
+							(  (position < line_end)
+							|| ((position == line_end) && (direction >= 0) && (! elements[i].IsTabulation))
+							|| ((position == line_end) && (line_length == 0))
+							|| ((position == line_end) && (line_end == this.story.TextLength)) ))
 						{
 							//	Le curseur se trouve dans la ligne en cours d'analyse.
 							//	On tient compte de la direction de déplacement pour

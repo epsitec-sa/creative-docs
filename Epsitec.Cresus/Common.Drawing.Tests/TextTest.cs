@@ -229,7 +229,7 @@ namespace Epsitec.Common.Drawing
 							graphics.AddLine (cx, cy, cx+dx, cy+dy);
 						}
 						
-						if (navigator.CursorPosition == this.story.TextLength)
+						if (navigator.CursorPosition >= this.story.TextLength)
 						{
 							break;
 						}
@@ -908,29 +908,42 @@ namespace Epsitec.Common.Drawing
 					navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);		//	fin du texte
 					navigator.SetStyles (new Text.TextStyle[] { style1 }, new Text.Property[] { });
 					navigator.Insert ("Texte normal.\n");
+					navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 1);		//	juste avant "Texte normal.\n"
+					navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 2);	//	juste avant le "." de la ligne précédente
+					navigator.StartSelection ();
+					navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 3);		//	sélectionne ".\nT"
+					navigator.EndSelection ();
+					navigator.Delete ();
+					navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 1);
+//@					navigator.SetStyles (new Text.TextStyle[] { style1 }, new Text.Property[] { });
+					navigator.Insert ("aaa\nbbb\n");
+					navigator.Insert ("c");
+//					navigator.Insert ("\n");
+//					navigator.SetStyle (style1);
+//					navigator.Insert ("Texte intercalaire.\n");
 					navigator.Dispose ();
 					
-					words = "Second élément.\nTexte intercalaire.\n";
+//					words = "Second élément.\nTexte intercalaire.\n";
+//					
+//					this.painter.TextStory.ConvertToStyledText (words, style1, null, out text);
+//					this.painter.TextStory.InsertText (cursor, text);
+//					
+//					this.painter.TextStory.MoveCursor (cursor, - words.Length);
+//					Text.Internal.Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
+//					
+////-					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
+//					this.painter.TextStory.MoveCursor (cursor, words.Length);
 					
-					this.painter.TextStory.ConvertToStyledText (words, style1, null, out text);
-					this.painter.TextStory.InsertText (cursor, text);
-					
-					this.painter.TextStory.MoveCursor (cursor, - words.Length);
-					Text.Internal.Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
-					
-//-					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
-					this.painter.TextStory.MoveCursor (cursor, words.Length);
-					
-					words = "Dernier élément pour terminer.\nFin du texte.\n";
-					
-					this.painter.TextStory.ConvertToStyledText (words, style1, null, out text);
-					this.painter.TextStory.InsertText (cursor, text);
-					
-					this.painter.TextStory.MoveCursor (cursor, - words.Length);
-					Text.Internal.Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
-					
-//-					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
-					this.painter.TextStory.MoveCursor (cursor, words.Length);
+//					words = "Dernier élément pour terminer.\nFin du texte.\n";
+//					
+//					this.painter.TextStory.ConvertToStyledText (words, style1, null, out text);
+//					this.painter.TextStory.InsertText (cursor, text);
+//					
+//					this.painter.TextStory.MoveCursor (cursor, - words.Length);
+//					Text.Internal.Navigator.SetParagraphStylesAndProperties (this.painter.TextStory, cursor, new Text.TextStyle[] { style1, style2 }, null);
+//					
+////-					this.painter.TextStory.TextContext.ParagraphManagerList["ItemList"].AttachToParagraph (this.painter.TextStory, cursor, mp);
+//					this.painter.TextStory.MoveCursor (cursor, words.Length);
 				}
 				
 				this.painter.TextStory.RecycleCursor (cursor);

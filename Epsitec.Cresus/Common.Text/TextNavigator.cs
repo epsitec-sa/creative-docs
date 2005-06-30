@@ -144,7 +144,15 @@ namespace Epsitec.Common.Text
 				this.UpdateCurrentStylesAndProperties ();
 			}
 			
+			System.Collections.Stack starts = new System.Collections.Stack ();
+			
 			int pos = this.story.GetCursorPosition (this.cursor);
+			
+			if ((pos == this.story.TextLength) &&
+				(Internal.Navigator.IsParagraphStart (this.story, this.cursor, 0)))
+			{
+				starts.Push (pos);
+			}
 			
 			this.story.ConvertToStyledText (text, this.current_styles, this.current_properties, out styled_text);
 			this.story.InsertText (this.cursor, styled_text);
@@ -172,13 +180,19 @@ namespace Epsitec.Common.Text
 			{
 				System.Diagnostics.Debug.WriteLine ("Found managed paragraph property.");
 				
-				System.Collections.Stack starts = new System.Collections.Stack ();
-				
 				for (int i = 0; i < styled_text.Length; i++)
 				{
 					if (Internal.Navigator.IsParagraphSeparator (styled_text[i]))
 					{
-						starts.Push (pos + i + 1);
+						//	Ne génère pas un changement de style de paragraphe si le texte se
+						//	termine par un paragraphe vide.
+						
+						int start = pos + i + 1;
+						
+						if (start < this.story.TextLength)
+						{
+							starts.Push (pos + i + 1);
+						}
 					}
 				}
 				
@@ -445,7 +459,7 @@ namespace Epsitec.Common.Text
 		
 		public void SetStyle(TextStyle style)
 		{
-			TextStyle[] styles     = new TextStyle[1];
+			TextStyle[] styles     = new TextStyle[] { style };
 			Property[]  properties = new Property[0];
 			
 			this.SetStyles (styles, properties);
@@ -489,7 +503,10 @@ namespace Epsitec.Common.Text
 			//	Pour modifier le style d'un paragraphe, il faut se placer au début
 			//	du paragraphe :
 			
-			int pos   = this.story.GetCursorPosition (this.cursor);
+			int pos = this.story.GetCursorPosition (this.cursor);
+			
+			this.story.SetCursorPosition (this.temp_cursor, pos);
+			
 			int start = Internal.Navigator.GetParagraphStartOffset (this.story, this.temp_cursor);
 			
 			this.story.SetCursorPosition (this.temp_cursor, pos + start);
@@ -824,10 +841,11 @@ namespace Epsitec.Common.Text
 			
 			//	Vérifie si le texte contient une marque de fin de paragraphe :
 			
-			int count  = 0;
-			int pos    = this.story.GetCursorPosition (cursor);
-			int start  = pos;
-			int end    = pos + length;
+			int  count  = 0;
+			int  pos    = this.story.GetCursorPosition (cursor);
+			int  start  = pos;
+			int  end    = pos + length;
+			bool fix_up = false;
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -869,7 +887,8 @@ namespace Epsitec.Common.Text
 						
 						System.Diagnostics.Debug.Assert (count == 1);
 						
-						range = new Range (start, pos+i - start + 1);
+						range  = new Range (start, pos+i - start + 1);
+						fix_up = true;
 					}
 					
 					this.MergeRanges (ranges, range);
@@ -891,6 +910,20 @@ namespace Epsitec.Common.Text
 				
 				this.story.SetCursorPosition (this.temp_cursor, range.Start);
 				this.story.DeleteText (this.temp_cursor, range.Length);
+			}
+			
+			if (fix_up)
+			{
+				TextStyle[] styles;
+				Property[]  props;
+				
+				Internal.Navigator.GetParagraphStyles (this.story, this.temp_cursor, -1, out styles);
+				Internal.Navigator.GetParagraphProperties (this.story, this.temp_cursor, -1, out props);
+				
+				if (styles == null) styles = new TextStyle[0];
+				if (props == null)  props  = new Property[0];
+				
+				Internal.Navigator.SetParagraphStylesAndProperties (this.story, this.temp_cursor, styles, props);
 			}
 		}
 		
@@ -1203,7 +1236,22 @@ namespace Epsitec.Common.Text
 			TextStyle[] styles;
 			Property[]  properties;
 			
-			if (this.TextLength == 0)
+			//	En marche arrière, on utilise le style du caractère courant, alors
+			//	qu'en marche avant, on utilise le style du caractère précédent :
+			
+			int pos    = this.story.GetCursorPosition (this.cursor);
+			int dir    = this.story.GetCursorDirection (this.cursor);
+			int offset = ((pos > 0) && (dir > 0)) ? -1 : 0;
+			
+			if ((pos > 0) &&
+				(pos == this.TextLength))
+			{
+				offset = -1;
+			}
+			
+			ulong code = this.story.ReadChar (this.cursor, offset);
+			
+			if (code == 0)
 			{
 				if (this.TextContext.DefaultStyle != null)
 				{
@@ -1218,33 +1266,8 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				//	En marche arrière, on utilise le style du caractère courant, alors
-				//	qu'en marche avant, on utilise le style du caractère précédent :
-				
-				int pos    = this.story.GetCursorPosition (this.cursor);
-				int dir    = this.story.GetCursorDirection (this.cursor);
-				int offset = ((pos > 0) && (dir > 0)) ? -1 : 0;
-				
-				ulong code = this.story.ReadChar (this.cursor, offset);
-				
-				if (code == 0)
-				{
-					if (this.TextContext.DefaultStyle != null)
-					{
-						styles     = new TextStyle[] { this.TextContext.DefaultStyle };
-						properties = new Property[0];
-					}
-					else
-					{
-						styles     = new TextStyle[0];
-						properties = new Property[0];
-					}
-				}
-				else
-				{
-					this.TextContext.GetStyles (code, out styles);
-					this.TextContext.GetProperties (code, out properties);
-				}
+				this.TextContext.GetStyles (code, out styles);
+				this.TextContext.GetProperties (code, out properties);
 			}
 			
 			this.current_styles      = styles;
