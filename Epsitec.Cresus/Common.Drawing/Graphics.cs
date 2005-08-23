@@ -374,8 +374,8 @@ namespace Epsitec.Common.Drawing
 			double fix_x = System.Math.Sqrt (vector_ox.X * vector_ox.X + vector_ox.Y * vector_ox.Y);
 			double fix_y = System.Math.Sqrt (vector_oy.X * vector_oy.X + vector_oy.Y * vector_oy.Y);
 			
-			double sx = (ix2-ix1 <= 1) ? (Graphics.AlmostInfinite) : ((fill_width > 1)  ? (fill_width-1/fix_x)  / (ix2-ix1-1) : 1.0);
-			double sy = (iy2-iy1 <= 1) ? (Graphics.AlmostInfinite) : ((fill_height > 1) ? (fill_height-1/fix_y) / (iy2-iy1-1) : 1.0);
+			double sx = (ix2-ix1 <= 1) ? (Graphics.AlmostInfinite) : ((fill_width  > 1/fix_x) ? (fill_width-1/fix_x)  / (ix2-ix1-1) : 1.0);
+			double sy = (iy2-iy1 <= 1) ? (Graphics.AlmostInfinite) : ((fill_height > 1/fix_y) ? (fill_height-1/fix_y) / (iy2-iy1-1) : 1.0);
 #else
 			double sx = (ix2-ix1 < 1) ? (Graphics.AlmostInfinite) : ((fill_width > 1)  ? (fill_width)  / (ix2-ix1) : 1.0);
 			double sy = (iy2-iy1 < 1) ? (Graphics.AlmostInfinite) : ((fill_height > 1) ? (fill_height) / (iy2-iy1) : 1.0);
