@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return "manifest:Epsitec.App.DocumentEditor.Images.Image.icon"; }
+			get { return Misc.Icon("ObjectImage"); }
 		}
 
 
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Constuit les formes de l'objet.
-		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
+		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			Path pathImage = this.PathBuildImage();
 			Path pathSurface = this.PathBuildSurface();
@@ -296,7 +296,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Ouvre le bitmap de l'image si nécessaire.
-		protected void OpenBitmapOriginal()
+		protected void OpenBitmapOriginal(IPaintPort port)
 		{
 			Properties.Image image = this.PropertyImage;
 			if ( image.Filename == "" )
@@ -307,19 +307,32 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else
 			{
-				if ( image.Reload || image.Filename != this.filename )
+				if ( port is PDF.Port )  // exportation PDF ?
 				{
-					this.filename = image.Filename;
-					try
-					{
-						this.imageOriginal = Drawing.Bitmap.FromFile(this.filename);
-					}
-					catch
-					{
-						this.imageOriginal = null;
-					}
+					// Ne crée pas un nouveau Drawing.Image, mais utilise celui
+					// qui est associé au PDF.ImageSurface.
+					PDF.Port pdfPort = port as PDF.Port;
+					PDF.ImageSurface surface = pdfPort.SearchImageSurface(image.Filename);
+					System.Diagnostics.Debug.Assert(surface != null);
+					this.imageOriginal = surface.DrawingImage;
 					this.imageDimmed = null;
-					image.Reload = false;
+				}
+				else
+				{
+					if ( image.Reload || image.Filename != this.filename )
+					{
+						this.filename = image.Filename;
+						try
+						{
+							this.imageOriginal = Drawing.Bitmap.FromFile(this.filename);
+						}
+						catch
+						{
+							this.imageOriginal = null;
+						}
+						this.imageDimmed = null;
+						image.Reload = false;
+					}
 				}
 			}
 		}
@@ -364,7 +377,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.TotalHandle < 2 )  return;
 
-			this.OpenBitmapOriginal();
+			this.OpenBitmapOriginal(port);
 			this.OpenBitmapDimmed(drawingContext);
 
 			Drawing.Image image = drawingContext.IsDimmed ? this.imageDimmed : this.imageOriginal;
@@ -394,6 +407,7 @@ namespace Epsitec.Common.Document.Objects
 						else                           width  = height/rapport;
 					}
 
+#if false
 					port.TranslateTransform(center.X, center.Y);
 					port.RotateTransformDeg(angle, 0, 0);
 
@@ -403,6 +417,20 @@ namespace Epsitec.Common.Document.Objects
 
 					Drawing.Rectangle rect = new Drawing.Rectangle(-width/2, -height/2, width, height);
 					port.PaintImage(image, rect);
+#endif
+#if true
+					port.TranslateTransform(center.X-width/2, center.Y-height/2);
+					port.RotateTransformDeg(angle, width/2, height/2);
+					port.TranslateTransform(width/2, height/2);
+					double sx = property.MirrorH ? -width  : width;
+					double sy = property.MirrorV ? -height : height;
+					port.ScaleTransform(sx, sy, 0.0, 0.0);
+					port.TranslateTransform(-0.5, -0.5);
+
+					Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, 1.0, 1.0);  // TODO: pourquoi ça ne marche pas ?
+					//Drawing.Rectangle rect = new Drawing.Rectangle(0.0, 0.0, 1.00000001, 1.00000001);
+					port.PaintImage(image, rect);
+#endif
 				}
 
 				port.Transform = ot;

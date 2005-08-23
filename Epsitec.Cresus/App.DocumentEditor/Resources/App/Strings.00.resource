@@ -75,19 +75,23 @@
 	<data name="Dialog.About.Demo">démo</data>
 	<data name="Dialog.About.Expired">échu</data>
 
-	<data name="Dialog.Export.Title1">Exportation</data>
-	<data name="Dialog.Export.Title2">Exportation de {0}</data>
+	<data name="Dialog.Export.Title1">Exporter un document</data>
+	<data name="Dialog.Export.Title2">Exporter {0}</data>
 	<data name="Dialog.Export.Button.OK">Exporter</data>
 	<data name="Dialog.Export.Button.Cancel">Annuler</data>
 	<data name="Dialog.Export.Tooltip.OK">Exporter l'image</data>
 	<data name="Dialog.Export.Tooltip.Cancel">Annuler l'exportation</data>
 
-	<data name="Dialog.ExportPDF.Title1">Publication au format PDF</data>
-	<data name="Dialog.ExportPDF.Title2">Publication de {0}</data>
-	<data name="Dialog.ExportPDF.Button.OK">Publier</data>
+	<data name="Dialog.ExportPDF.Title1">Exporter au format PDF</data>
+	<data name="Dialog.ExportPDF.Title2">Exporter {0}</data>
+	<data name="Dialog.ExportPDF.Button.OK">Exporter</data>
 	<data name="Dialog.ExportPDF.Button.Cancel">Annuler</data>
-	<data name="Dialog.ExportPDF.Tooltip.OK">Publier au format PDF</data>
-	<data name="Dialog.ExportPDF.Tooltip.Cancel">Annuler la publication</data>
+	<data name="Dialog.ExportPDF.Tooltip.OK">Exporter au format PDF</data>
+	<data name="Dialog.ExportPDF.Tooltip.Cancel">Annuler l'exporation</data>
+	<data name="Dialog.ExportPDF.TabPage.Generic">Général</data>
+	<data name="Dialog.ExportPDF.TabPage.Color">Couleurs</data>
+	<data name="Dialog.ExportPDF.TabPage.Image">Images</data>
+	<data name="Dialog.ExportPDF.TabPage.Publisher">Pré-presse</data>
 
 	<data name="Dialog.Glyphs.Title">Caractères spéciaux</data>
 	<data name="Dialog.Glyphs.TabPage.List">Listes partielles</data>

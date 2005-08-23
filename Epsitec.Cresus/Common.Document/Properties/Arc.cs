@@ -85,6 +85,46 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+#if false
+		// Donne le petit texte pour les échantillons.
+		public override string SampleText
+		{
+			get
+			{
+				string a1 = this.document.Modifier.AngleToString(this.startingAngle);
+				string a2 = this.document.Modifier.AngleToString(this.endingAngle);
+				return string.Format("{0} - {1}", a1, a2);
+			}
+		}
+#endif
+
+		// Retourne le nom d'un type donné.
+		public static string GetName(ArcType type)
+		{
+			string name = "";
+			switch ( type )
+			{
+				case ArcType.Full:   name = Res.Strings.Property.Arc.Full;   break;
+				case ArcType.Open:   name = Res.Strings.Property.Arc.Open;   break;
+				case ArcType.Close:  name = Res.Strings.Property.Arc.Close;  break;
+				case ArcType.Pie:    name = Res.Strings.Property.Arc.Pie;    break;
+			}
+			return name;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(ArcType type)
+		{
+			switch ( type )
+			{
+				case ArcType.Full:   return "ArcFull";
+				case ArcType.Open:   return "ArcOpen";
+				case ArcType.Close:  return "ArcClose";
+				case ArcType.Pie:    return "ArcPie";
+			}
+			return "";
+		}
+
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
@@ -189,6 +229,50 @@ namespace Epsitec.Common.Document.Properties
 
 			base.SetHandlePosition(obj, rank, pos);
 		}
+
+
+		// Crée le chemin d'une ellipse inscrite dans un rectangle.
+		public Path PathEllipse(Rectangle rect)
+		{
+			Stretcher stretcher = new Stretcher();
+			stretcher.InitialRectangle = rect;
+			stretcher.FinalBottomLeft = rect.BottomLeft;
+			stretcher.FinalBottomRight = rect.BottomRight;
+			stretcher.FinalTopLeft = rect.TopLeft;
+			stretcher.FinalTopRight = rect.TopRight;
+
+			Point center = rect.Center;
+
+			Path path = new Path();
+
+			double a1, a2;
+			if ( this.ArcType == Properties.ArcType.Full )
+			{
+				a1 =   0.0;
+				a2 = 360.0;
+			}
+			else
+			{
+				a1 = this.StartingAngle;
+				a2 = this.EndingAngle;
+			}
+			if ( a1 != a2 )
+			{
+				Geometry.ArcBezierDeg(path, stretcher, center, rect.Width/2.0, rect.Height/2.0, a1, a2, true, false);
+			}
+
+			if ( this.ArcType == Properties.ArcType.Close )
+			{
+				path.Close();
+			}
+			if ( this.ArcType == Properties.ArcType.Pie )
+			{
+				path.LineTo(stretcher.Transform(center));
+				path.Close();
+			}
+
+			return path;
+		}
 		
 		
 		// Effectue une copie de la propriété.
@@ -217,6 +301,7 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Arc(document);
 		}
 

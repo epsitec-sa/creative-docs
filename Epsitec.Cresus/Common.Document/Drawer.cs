@@ -3,7 +3,8 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document
 {
 	/// <summary>
-	/// La classe Drawer contient le dessinateur universel.
+	/// La classe Drawer contient le dessinateur universel, pour dessiner sur
+	/// l'écran ou dans un bitmap avec AGG, pour imprimer ou pour exporter en PDF.
 	/// </summary>
 	public class Drawer
 	{
@@ -18,13 +19,41 @@ namespace Epsitec.Common.Document
 							   Objects.Abstract obj,
 							   params Shape[] shapes)
 		{
+			FillMode iMode = port.FillMode;
+
+#if false
+			for ( int i=0 ; i<shapes.Length ; i++ )
+			{
+				Shape shape = shapes[i];
+				if ( shape == null )  continue;
+
+				shape.IsLinkWithNext = false;
+
+				if ( i < shapes.Length-1 )
+				{
+					Shape next = shapes[i+1];
+					if ( next == null )  continue;
+
+					if ( shape.PropertySurface == next.PropertySurface &&
+						 shape.Aspect == next.Aspect )
+					{
+						shape.IsLinkWithNext = true;
+					}
+				}
+			}
+#endif
+
 			foreach ( Shape shape in shapes )
 			{
 				if ( shape == null || shape.Aspect == Aspect.InvisibleBox )  continue;
 
+				port.FillMode = shape.FillMode;
+
 				if ( shape.Type == Type.Surface )
 				{
 					if ( !shape.IsVisible || shape.Path.IsEmpty )  continue;
+
+					obj.SurfaceAnchor.LineUse = false;
 
 					if ( port is Graphics )
 					{
@@ -43,6 +72,8 @@ namespace Epsitec.Common.Document
 				if ( shape.Type == Type.Stroke )
 				{
 					if ( !shape.IsVisible || shape.Path.IsEmpty )  continue;
+
+					obj.SurfaceAnchor.LineUse = true;
 
 					if ( port is Graphics )
 					{
@@ -72,6 +103,8 @@ namespace Epsitec.Common.Document
 					shape.Object.DrawImage(port, drawingContext);
 				}
 			}
+
+			port.FillMode = iMode;
 		}
 
 		// Dessine un traitillé simple (dash/gap) le long d'un chemin.
@@ -108,7 +141,6 @@ namespace Epsitec.Common.Document
 			foreach ( Shape shape in shapes )
 			{
 				if ( shape == null ||
-					 !shape.IsVisible ||
 					 shape.Path == null ||
 					 shape.Path.IsEmpty )
 				{
@@ -117,11 +149,13 @@ namespace Epsitec.Common.Document
 
 				if ( shape.Type == Type.Surface )
 				{
+					if ( !shape.IsVisible )  continue;
 					if ( Geometry.DetectSurface(shape.Path, pos) )  return true;
 				}
 
 				if ( shape.Type == Type.Stroke )
 				{
+					if ( !shape.IsVisible && shape.IsMisc )  continue;
 					double width = 0.0;
 					if ( shape.PropertyStroke != null )  width = shape.PropertyStroke.Width/2;
 					width = System.Math.Max(width, drawingContext.MinimalWidth);
@@ -228,7 +262,6 @@ namespace Epsitec.Common.Document
 		{
 			SurfaceAnchor sa = obj.SurfaceAnchor;
 			if ( sa.IsSurfaceZero && shape.Aspect != Aspect.Support )  return;
-			sa.LineUse = (shape.Type == Type.Stroke);
 
 			Properties.Gradient surface = shape.PropertySurface as Properties.Gradient;
 			Properties.Line     stroke  = shape.PropertyStroke;
@@ -244,8 +277,8 @@ namespace Epsitec.Common.Document
 
 			if ( shape.Aspect == Aspect.OverDashed )
 			{
-				Drawing.Color color = Color.FromBrightness(0.0);
-				if ( surface != null && surface.IsVisible )
+				RichColor color = RichColor.FromBrightness(0.0);
+				if ( surface != null && surface.IsVisible(port) )
 				{
 					if ( surface.Color1.A > 0.0 )
 					{
@@ -267,12 +300,12 @@ namespace Epsitec.Common.Document
 				surface = new Properties.Gradient(this.document, Properties.Type.FillGradient);
 				surface.IsOnlyForCreation = true;  // pas de undo !
 				surface.FillType = Properties.GradientFillType.None;
-				surface.Color1 = Color.FromBrightness(0.6);
+				surface.Color1 = RichColor.FromBrightness(0.6);
 			}
 
 			if ( shape.Aspect == Aspect.Additional )
 			{
-				Color color = surface.Color1;
+				RichColor color = surface.Color1;
 				color.A = 0.2;
 				surface = new Properties.Gradient(this.document, Properties.Type.FillGradient);
 				surface.IsOnlyForCreation = true;  // pas de undo !
@@ -285,16 +318,22 @@ namespace Epsitec.Common.Document
 				surface = new Properties.Gradient(this.document, Properties.Type.FillGradient);
 				surface.IsOnlyForCreation = true;  // pas de undo !
 				surface.FillType = Properties.GradientFillType.None;
-				surface.Color1 = (shape.Type == Type.Stroke) ? drawingContext.HiliteOutlineColor : drawingContext.HiliteSurfaceColor;
+				//?surface.Color1 = (shape.Type == Type.Stroke) ? drawingContext.HiliteOutlineColor : drawingContext.HiliteSurfaceColor;
+				surface.Color1 = new RichColor(drawingContext.HiliteSurfaceColor);
+				if ( shape.PropertySurface != null &&
+					 shape.PropertySurface.Type == Properties.Type.LineColor )
+				{
+					surface.Color1 = new RichColor(drawingContext.HiliteOutlineColor);
+				}
 			}
 
 			CapStyle  cap   = CapStyle.Round;
 			JoinStyle join  = JoinStyle.Round;
-			double    limit = 0.0;
+			double    limit = 5.0;
 			if ( shape.PropertyStroke != null )
 			{
 				cap   = shape.PropertyStroke.Cap;
-				join  = shape.PropertyStroke.Join;
+				join  = shape.PropertyStroke.EffectiveJoin;
 				limit = shape.PropertyStroke.Limit;
 			}
 
@@ -312,29 +351,35 @@ namespace Epsitec.Common.Document
 					shape.Type = Type.Surface;
 				}
 
-				if ( surface.FillType == Properties.GradientFillType.Hatch )
-				{
-					this.RenderHatch(port, drawingContext, shape.Path, sa, surface);
-				}
-				if ( surface.FillType == Properties.GradientFillType.Dots )
-				{
-					this.RenderDots(port, drawingContext, shape.Path, sa, surface);
-				}
-				if ( surface.FillType == Properties.GradientFillType.Squares )
-				{
-					this.RenderSquares(port, drawingContext, shape.Path, sa, surface);
-				}
-
+				Drawer.RenderMotif(port, drawingContext, null, shape.Path, sa, surface);
 				return;
 			}
 
 			Graphics mask = null;
-
 			double lineWidth = 0.0;
-			if ( shape.PropertyStroke != null      )  lineWidth += shape.PropertyStroke.Width;
-			if ( shape.Aspect == Aspect.Hilited    )  lineWidth += drawingContext.HiliteSize;
-			if ( shape.Aspect == Aspect.OverDashed )  lineWidth = 1.0/drawingContext.ScaleX;
-			if ( shape.Aspect == Aspect.Support    )  lineWidth = 1.0/drawingContext.ScaleX;
+
+			if ( shape.PropertyStroke != null )
+			{
+				if ( shape.Type != Type.Stroke || shape.PropertySurface.IsVisible(port) )
+				{
+					lineWidth += shape.PropertyStroke.Width;
+				}
+			}
+
+			if ( shape.Aspect == Aspect.Hilited )
+			{
+				lineWidth += drawingContext.HiliteSize;
+			}
+
+			if ( shape.Aspect == Aspect.OverDashed )
+			{
+				lineWidth = 1.0/drawingContext.ScaleX;
+			}
+
+			if ( shape.Aspect == Aspect.Support )
+			{
+				lineWidth = 1.0/drawingContext.ScaleX;
+			}
 
 			if ( surface != null && surface.Smooth > 0 )  // flou ?
 			{
@@ -356,7 +401,7 @@ namespace Epsitec.Common.Document
 				for ( int i=0 ; i<step ; i++ )
 				{
 					double w = surface.Smooth-i*surface.Smooth/step;
-					mask.Rasterizer.AddOutline(shape.Path, lineWidth+w*2, cap, join, limit);
+					mask.Rasterizer.AddOutline(shape.Path, lineWidth+w*2.0, cap, join, limit);
 					double intensity = (i+1.0)/step;
 					mask.RenderSolid(Drawing.Color.FromBrightness(intensity));
 				}
@@ -402,25 +447,26 @@ namespace Epsitec.Common.Document
 
 			if ( flat )  // uniforme ?
 			{
-				Drawing.Color c1 = (surface == null) ? Color.FromBrightness(0.6) : surface.Color1;
+				Color c1 = (surface == null) ? Color.FromBrightness(0.6) : surface.Color1.Basic;
 				if ( drawingContext != null && shape.Aspect != Aspect.Hilited )
 				{
-					c1 = drawingContext.AdaptColor(c1);
+					c1 = port.GetFinalColor(c1);
 				}
 
-				port.RenderSolid(c1);
+				if ( !shape.IsLinkWithNext )
+				{
+					port.FinalRenderSolid(c1);
+				}
 			}
 			else	// dégradé ?
 			{
-				Drawing.Color c1 = surface.Color1;
-				Drawing.Color c2 = surface.Color2;
+				Color c1 = surface.Color1.Basic;
+				Color c2 = surface.Color2.Basic;
 				if ( drawingContext != null )
 				{
-					c1 = drawingContext.AdaptColor(c1);
-					c2 = drawingContext.AdaptColor(c2);
+					c1 = port.GetFinalColor(c1);
+					c2 = port.GetFinalColor(c2);
 				}
-
-				port.FillMode = FillMode.NonZero;
 
 				if ( surface.Repeat == 1 && surface.Middle == 0.0 )
 				{
@@ -435,7 +481,7 @@ namespace Epsitec.Common.Document
 
 					for ( int i=0 ; i<256 ; i++ )
 					{
-						double factor = this.GetFactor(surface, i/255.0);
+						double factor = surface.GetProgressColorFactor(i/255.0);
 						r[i] = c1.R + (c2.R-c1.R)*factor;
 						g[i] = c1.G + (c2.G-c1.G)*factor;
 						b[i] = c1.B + (c2.B-c1.B)*factor;
@@ -453,7 +499,7 @@ namespace Epsitec.Common.Document
 
 				if ( surface.FillType == Properties.GradientFillType.Linear )
 				{
-					double a = Point.ComputeAngleDeg(center, corner)-90;
+					double a = Point.ComputeAngleDeg(center, corner)-90.0;
 					double d = Point.Distance(center, corner);
 					port.GradientRenderer.Fill = GradientFill.Y;
 					port.GradientRenderer.SetParameters(-255, 255);
@@ -481,14 +527,18 @@ namespace Epsitec.Common.Document
 				{
 					port.GradientRenderer.Fill = GradientFill.Conic;
 					port.GradientRenderer.SetParameters(0, 250);
-					t.RotateDeg(sa.Direction+surface.Angle-90.0);
 					t.Scale(sa.Width/255*surface.Sx, sa.Height/255*surface.Sy);
 					t.Translate(center);
+					t.RotateDeg(sa.Direction+surface.Angle, center);
+					t.MultiplyByPostfix(Transform.FromRotationDeg(-90.0));
 				}
 
-				port.GradientRenderer.Transform = t;
-				port.RenderGradient();
-				port.GradientRenderer.Transform = ot;
+				if ( !shape.IsLinkWithNext )
+				{
+					port.GradientRenderer.Transform = t;
+					port.RenderGradient();
+					port.GradientRenderer.Transform = ot;
+				}
 			}
 
 			if ( surface != null && surface.Smooth > 0 )  // flou ?
@@ -498,44 +548,40 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Calcule le facteur de progression dans la couleur [0..1].
-		protected double GetFactor(Properties.Gradient surface, double progress)
+		// Effectue le rendu d'une zone quelconque contenant un motif.
+		public static void RenderMotif(IPaintPort port, DrawingContext drawingContext, Objects.Abstract obj, Path path, SurfaceAnchor sa, Properties.Gradient surface)
 		{
-			if ( surface.Repeat > 1 )
+			switch ( surface.FillType )
 			{
-				int i = (int)(progress*surface.Repeat);
-				progress = (progress*surface.Repeat)%1.0;
-				if ( i%2 != 0 )  progress = 1.0-progress;
+				case Properties.GradientFillType.Hatch:
+					Drawer.RenderHatch(port, drawingContext, obj, path, sa, surface);
+					break;
+
+				case Properties.GradientFillType.Dots:
+					Drawer.RenderDots(port, drawingContext, obj, path, sa, surface);
+					break;
+
+				case Properties.GradientFillType.Squares:
+					Drawer.RenderSquares(port, drawingContext, obj, path, sa, surface);
+					break;
 			}
-			if ( surface.Middle != 0.0 )
-			{
-				if ( surface.Middle > 0.0 )
-				{
-					progress = 1.0-System.Math.Pow(1.0-progress, 1.0+surface.Middle);
-				}
-				else
-				{
-					progress = System.Math.Pow(progress, 1.0-surface.Middle);
-				}
-			}
-			return progress;
 		}
 
 		// Effectue le rendu d'une zone quelconque hachurée.
-		protected void RenderHatch(Graphics graphics, DrawingContext drawingContext, Path path, SurfaceAnchor sa, Properties.Gradient surface)
+		protected static void RenderHatch(IPaintPort port, DrawingContext drawingContext, Objects.Abstract obj, Path path, SurfaceAnchor sa, Properties.Gradient surface)
 		{
-			Drawing.Color initialColor = graphics.Color;
+			Drawing.RichColor initialColor = port.RichColor;
 
-			Drawing.Color c1 = surface.Color1;
-			Drawing.Color c2 = surface.Color2;
+			RichColor c1 = surface.Color1;
+			RichColor c2 = surface.Color2;
 			if ( drawingContext != null )
 			{
-				c1 = drawingContext.AdaptColor(c1);
-				c2 = drawingContext.AdaptColor(c2);
+				c1 = port.GetFinalColor(c1);
+				c2 = port.GetFinalColor(c2);
 			}
 
-			graphics.Color = c1;
-			graphics.PaintSurface(path);  // dessine le fond
+			Drawer.RenderMotifColor(port, drawingContext, obj, surface, c1, true);
+			port.PaintSurface(path);  // dessine le fond
 
 			for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
 			{
@@ -543,7 +589,7 @@ namespace Epsitec.Common.Document
 
 				Point p1, p2, p3, p4;
 				double offset;
-				this.MinRectMotif(surface, sa, i, out p1, out p2, out p3, out p4, out offset);
+				Drawer.MinRectMotif(surface, sa, i, out p1, out p2, out p3, out p4, out offset);
 				double width = System.Math.Min(surface.GetHatchWidth(i), surface.GetHatchDistance(i));
 
 				Path pathLines = new Path();
@@ -567,28 +613,28 @@ namespace Epsitec.Common.Document
 
 				pathLines = Path.Combine(pathLines, path, PathOperation.And);
 
-				graphics.Color = c2;
-				graphics.PaintSurface(pathLines);
+				Drawer.RenderMotifColor(port, drawingContext, obj, surface, c2, false);
+				port.PaintSurface(pathLines);
 			}
 
-			graphics.Color = initialColor;
+			port.RichColor = initialColor;
 		}
 
 		// Effectue le rendu d'une zone quelconque de points.
-		protected void RenderDots(Graphics graphics, DrawingContext drawingContext, Path path, SurfaceAnchor sa, Properties.Gradient surface)
+		protected static void RenderDots(IPaintPort port, DrawingContext drawingContext, Objects.Abstract obj, Path path, SurfaceAnchor sa, Properties.Gradient surface)
 		{
-			Drawing.Color initialColor = graphics.Color;
+			Drawing.RichColor initialColor = port.RichColor;
 
-			Drawing.Color c1 = surface.Color1;
-			Drawing.Color c2 = surface.Color2;
+			RichColor c1 = surface.Color1;
+			RichColor c2 = surface.Color2;
 			if ( drawingContext != null )
 			{
-				c1 = drawingContext.AdaptColor(c1);
-				c2 = drawingContext.AdaptColor(c2);
+				c1 = port.GetFinalColor(c1);
+				c2 = port.GetFinalColor(c2);
 			}
 
-			graphics.Color = c1;
-			graphics.PaintSurface(path);  // dessine le fond
+			Drawer.RenderMotifColor(port, drawingContext, obj, surface, c1, true);
+			port.PaintSurface(path);  // dessine le fond
 
 			for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
 			{
@@ -596,7 +642,7 @@ namespace Epsitec.Common.Document
 
 				Point p1, p2, p3, p4;
 				double offset;
-				this.MinRectMotif(surface, sa, i, out p1, out p2, out p3, out p4, out offset);
+				Drawer.MinRectMotif(surface, sa, i, out p1, out p2, out p3, out p4, out offset);
 				double width = System.Math.Min(surface.GetHatchWidth(i), surface.GetHatchDistance(i)/2);
 
 				Path pathLines = new Path();
@@ -629,28 +675,28 @@ namespace Epsitec.Common.Document
 
 				pathLines = Path.Combine(pathLines, path, PathOperation.And);
 
-				graphics.Color = c2;
-				graphics.PaintSurface(pathLines);
+				Drawer.RenderMotifColor(port, drawingContext, obj, surface, c2, false);
+				port.PaintSurface(pathLines);
 			}
 
-			graphics.Color = initialColor;
+			port.RichColor = initialColor;
 		}
 
 		// Effectue le rendu d'une zone quelconque de carrés.
-		protected void RenderSquares(Graphics graphics, DrawingContext drawingContext, Path path, SurfaceAnchor sa, Properties.Gradient surface)
+		protected static void RenderSquares(IPaintPort port, DrawingContext drawingContext, Objects.Abstract obj, Path path, SurfaceAnchor sa, Properties.Gradient surface)
 		{
-			Drawing.Color initialColor = graphics.Color;
+			Drawing.RichColor initialColor = port.RichColor;
 
-			Drawing.Color c1 = surface.Color1;
-			Drawing.Color c2 = surface.Color2;
+			RichColor c1 = surface.Color1;
+			RichColor c2 = surface.Color2;
 			if ( drawingContext != null )
 			{
-				c1 = drawingContext.AdaptColor(c1);
-				c2 = drawingContext.AdaptColor(c2);
+				c1 = port.GetFinalColor(c1);
+				c2 = port.GetFinalColor(c2);
 			}
 
-			graphics.Color = c1;
-			graphics.PaintSurface(path);  // dessine le fond
+			Drawer.RenderMotifColor(port, drawingContext, obj, surface, c1, true);
+			port.PaintSurface(path);  // dessine le fond
 
 			for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
 			{
@@ -658,7 +704,7 @@ namespace Epsitec.Common.Document
 
 				Point p1, p2, p3, p4;
 				double offset;
-				this.MinRectMotif(surface, sa, i, out p1, out p2, out p3, out p4, out offset);
+				Drawer.MinRectMotif(surface, sa, i, out p1, out p2, out p3, out p4, out offset);
 				double width = System.Math.Min(surface.GetHatchWidth(i), surface.GetHatchDistance(i)/2);
 
 				Path pathLines = new Path();
@@ -686,16 +732,34 @@ namespace Epsitec.Common.Document
 
 				pathLines = Path.Combine(pathLines, path, PathOperation.And);
 
-				graphics.Color = c2;
-				graphics.PaintSurface(pathLines);
+				Drawer.RenderMotifColor(port, drawingContext, obj, surface, c2, false);
+				port.PaintSurface(pathLines);
 			}
 
-			graphics.Color = initialColor;
+			port.RichColor = initialColor;
+		}
+
+		protected static void RenderMotifColor(IPaintPort port, DrawingContext drawingContext, Objects.Abstract obj, Properties.Gradient surface, RichColor color, bool firstColor)
+		{
+			if ( obj != null && port is PDF.Port )
+			{
+				PDF.Type type = surface.TypeComplexSurfacePDF(port);
+				if ( type == PDF.Type.TransparencyPattern )
+				{
+					PDF.Port pdfPort = port as PDF.Port;
+
+					int id = pdfPort.SearchComplexSurface(obj, surface);
+					pdfPort.SetColoredComplexSurface(color, id, firstColor ? PDF.TypeComplexSurface.ExtGStateP1 : PDF.TypeComplexSurface.ExtGStateP2);
+					return;
+				}
+			}
+
+			port.RichColor = color;
 		}
 
 		// Calcule le rectangle le plus petit possible qui sera rempli par le motif.
 		// L'offset permet à deux objets proches d'avoir des hachures jointives.
-		protected void MinRectMotif(Properties.Gradient surface, SurfaceAnchor sa, int i, out Point p1, out Point p2, out Point p3, out Point p4, out double offset)
+		protected static void MinRectMotif(Properties.Gradient surface, SurfaceAnchor sa, int i, out Point p1, out Point p2, out Point p3, out Point p4, out double offset)
 		{
 			Rectangle bbox = sa.BoundingBox;
 
@@ -804,16 +868,16 @@ namespace Epsitec.Common.Document
 			if ( shape.PropertySurface is Properties.Gradient )
 			{
 				Properties.Gradient surface = shape.PropertySurface as Properties.Gradient;
-				color = surface.Color1;
+				color = surface.Color1.Basic;
 			}
 			if ( shape.PropertySurface is Properties.Font )
 			{
 				Properties.Font font = shape.PropertySurface as Properties.Font;
-				color = font.FontColor;
+				color = font.FontColor.Basic;
 			}
 			if ( color.IsEmpty || !color.IsOpaque )  return false;
 
-			port.Color = drawingContext.AdaptColor(color);
+			port.Color = color;
 			return true;
 		}
 		#endregion
@@ -826,6 +890,7 @@ namespace Epsitec.Common.Document
 								   Shape shape,
 								   Objects.Abstract obj)
 		{
+			if ( shape.PropertySurface == null )  return;
 			this.PDFSetSurface(port, drawingContext, obj, shape.PropertySurface);
 			port.PaintSurface(shape.Path);
 		}
@@ -837,9 +902,58 @@ namespace Epsitec.Common.Document
 								  Shape shape,
 								  Objects.Abstract obj)
 		{
-			this.PDFSetSurface(port, drawingContext, obj, shape.PropertySurface);
-			this.PDFSetStroke(port, drawingContext, obj, shape.PropertyStroke);
-			port.PaintOutline(shape.Path);
+			if ( shape.PropertySurface == null || shape.PropertyStroke == null )  return;
+
+			Properties.Gradient gradient = shape.PropertySurface as Properties.Gradient;
+			PDF.Type type = gradient.TypeComplexSurfacePDF(port);
+			bool isSmooth = gradient.IsSmoothSurfacePDF(port);
+
+			if ( type == PDF.Type.OpaqueGradient       ||
+				 type == PDF.Type.TransparencyGradient ||
+				 type == PDF.Type.OpaquePattern        ||
+				 type == PDF.Type.TransparencyPattern  ||
+				 isSmooth                              )
+			{
+				Properties.Line stroke = shape.PropertyStroke;
+
+				if ( stroke.Dash )  // traitillé ?
+				{
+					DashedPath dp = new DashedPath();
+					dp.DefaultZoom = drawingContext.ScaleX;
+					dp.Append(shape.Path);
+
+					for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
+					{
+						if ( stroke.GetDashGap(i) == 0.0 )  continue;
+						double pen, gap;
+						stroke.GetPenGap(i, true, out pen, out gap);
+						dp.AddDash(pen, gap);
+					}
+
+					using ( Path temp = dp.GenerateDashedPath() )
+					{
+						Path pathSurface = new Path();
+						pathSurface.Append(temp, stroke.Width, stroke.Cap, stroke.EffectiveJoin, stroke.Limit, drawingContext.ScaleX);
+
+						this.PDFSetSurface(port, drawingContext, obj, shape.PropertySurface);
+						port.PaintSurface(pathSurface);
+					}
+				}
+				else
+				{
+					Path pathSurface = new Path();
+					pathSurface.Append(shape.Path, stroke.Width, stroke.Cap, stroke.EffectiveJoin, stroke.Limit, drawingContext.ScaleX);
+
+					this.PDFSetSurface(port, drawingContext, obj, shape.PropertySurface);
+					port.PaintSurface(pathSurface);
+				}
+			}
+			else
+			{
+				this.PDFSetSurface(port, drawingContext, obj, shape.PropertySurface);
+				this.PDFSetStroke(port, drawingContext, obj, shape.PropertyStroke);
+				port.PaintOutline(shape.Path);
+			}
 		}
 
 		// Initialise le port en fonction de la surface.
@@ -848,26 +962,29 @@ namespace Epsitec.Common.Document
 									 Objects.Abstract obj,
 									 Properties.Abstract surface)
 		{
+			PDF.Type type = surface.TypeComplexSurfacePDF(port);
+			bool isSmooth = surface.IsSmoothSurfacePDF(port);
+
+			RichColor color = RichColor.Empty;
 			if ( surface is Properties.Gradient )
 			{
 				Properties.Gradient gradient = surface as Properties.Gradient;
-
-				if ( gradient.FillType == Properties.GradientFillType.Hatch )
-				{
-					Color color = drawingContext.AdaptColor(gradient.Color1);
-					int pattern = port.SearchPattern(obj, gradient);
-					port.SetColoredPattern(color, pattern);
-				}
-				else
-				{
-					port.Color = drawingContext.AdaptColor(gradient.Color1);
-				}
+				color = port.GetFinalColor(gradient.Color1);
 			}
-
 			if ( surface is Properties.Font )
 			{
 				Properties.Font font = surface as Properties.Font;
-				port.Color = drawingContext.AdaptColor(font.FontColor);
+				color = port.GetFinalColor(font.FontColor);
+			}
+
+			if ( type == PDF.Type.None && !isSmooth )
+			{
+				port.RichColor = color;
+			}
+			else
+			{
+				int id = port.SearchComplexSurface(obj, surface);
+				port.SetColoredComplexSurface(color, id);
 			}
 		}
 
@@ -879,7 +996,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( stroke.Dash )  // traitillé ?
 			{
-				port.SetLineDash(stroke.Width, stroke.GetDashPen(0), stroke.GetDashGap(0), stroke.GetDashPen(1), stroke.GetDashGap(1));
+				port.SetLineDash(stroke.Width, stroke.GetDashPen(0), stroke.GetDashGap(0), stroke.GetDashPen(1), stroke.GetDashGap(1), stroke.GetDashPen(2), stroke.GetDashGap(2));
 			}
 			else	// trait continu ?
 			{
@@ -887,7 +1004,7 @@ namespace Epsitec.Common.Document
 			}
 
 			port.LineCap = stroke.Cap;
-			port.LineJoin = stroke.Join;
+			port.LineJoin = stroke.EffectiveJoin;
 			port.LineMiterLimit = stroke.Limit;
 		}
 		#endregion

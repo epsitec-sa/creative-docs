@@ -58,24 +58,6 @@ namespace Epsitec.Common.Document
 			get { return this.drawer; }
 		}
 
-		public IAdorner Adorner
-		{
-			get { return this.adorner; }
-			set { this.adorner = value; }
-		}
-
-		public GlyphPaintStyle GlyphPaintStyle
-		{
-			get { return this.glyphPaintStyle; }
-			set { this.glyphPaintStyle = value; }
-		}
-
-		public Color UniqueColor
-		{
-			get { return this.uniqueColor; }
-			set { this.uniqueColor = value; }
-		}
-
 
 		#region Zoom
 		// Retourne l'origine horizontale minimale.
@@ -631,6 +613,20 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Force la longueur d'un vecteur sur la grille magnétique, si nécessaire.
+		public void SnapGridVectorLength(ref Point vector)
+		{
+			double d = Point.Distance(new Point(0,0), vector);
+			if ( d == 0 )  return;
+			Point pd = new Point(d, 0);
+			this.SnapGrid(ref pd);
+			double sd = pd.X;
+			if ( sd == d )  return;
+
+			vector.X *= sd/d;
+			vector.Y *= sd/d;
+		}
+
 		// Force un point sur la grille magnétique, si nécessaire.
 		public void SnapGrid(ref Point pos)
 		{
@@ -717,7 +713,7 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		#region Label
+		#region Labels
 		// Affichage des noms de objets.
 		public bool LabelsShow
 		{
@@ -731,6 +727,33 @@ namespace Epsitec.Common.Document
 				if ( this.labelsShow != value )
 				{
 					this.labelsShow = value;
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifyArea(this.viewer);
+						this.document.Notifier.NotifyGridChanged();
+						this.document.IsDirtySerialize = true;
+					}
+				}
+			}
+		}
+		#endregion
+
+
+		#region Aggregates
+		// Affichage des noms de styles.
+		public bool AggregatesShow
+		{
+			get
+			{
+				return this.aggregatesShow;
+			}
+
+			set
+			{
+				if ( this.aggregatesShow != value )
+				{
+					this.aggregatesShow = value;
 
 					if ( this.document.Notifier != null )
 					{
@@ -1097,34 +1120,21 @@ namespace Epsitec.Common.Document
 			get { return System.Math.Max(this.handleSize+4, this.hiliteSize)/this.ScaleX/2; }
 		}
 
-		// Adapte une couleur en fonction de l'état de l'icône.
-		public Color AdaptColor(Color color)
+
+		// Estompe une couleur.
+		public void DimmedColor(ref RichColor color)
 		{
-			if ( this.modifyColor != null )
-			{
-				this.modifyColor(ref color);
-			}
-
-			if ( this.adorner != null )
-			{
-				this.adorner.AdaptPictogramColor(ref color, this.glyphPaintStyle, this.uniqueColor);
-			}
-
-			if ( this.isDimmed )  // estompé (hors groupe) ?
+			if ( this.isDimmed )
 			{
 				double alpha = color.A;
-				double intensity = color.GetBrightness();
+				double intensity = color.Basic.GetBrightness();
 				intensity = 0.5+(intensity-0.5)*0.05;  // diminue le contraste
 				intensity = System.Math.Min(intensity+0.1, 1.0);  // augmente l'intensité
-				color = Color.FromBrightness(intensity);
+				color = RichColor.FromBrightness(intensity);
 				color.A = alpha*0.2;  // très transparent
 			}
-
-			return color;
 		}
 
-		public delegate void ModifyColor(ref Color color);
-		public ModifyColor modifyColor;
 
 		// Couleur lorsqu'un objet est survolé par la souris.
 		public Color HiliteOutlineColor
@@ -1776,13 +1786,13 @@ namespace Epsitec.Common.Document
 		// Retourne la couleur pour indiquer un style.
 		static public Color ColorStyle
 		{
-			get { return Color.FromARGB(1.0, 0.0, 0.5, 1.0); }  // bleu
+			get { return Color.FromARGB(0.3, 1.0, 0.75, 0.0); }  // orange
 		}
 
 		// Retourne la couleur pour indiquer un style.
 		static public Color ColorStyleBack
 		{
-			get { return Color.FromARGB(0.15, 0.0, 0.5, 1.0); }  // bleu
+			get { return Color.FromARGB(0.15, 1.0, 0.75, 0.0); }  // orange
 		}
 
 		// Retourne la couleur du pourtour d'une poignée.
@@ -2147,9 +2157,6 @@ namespace Epsitec.Common.Document
 		protected Viewer						viewer;
 		protected Drawer						drawer;
 		protected Size							containerSize;
-		protected IAdorner						adorner;
-		protected GlyphPaintStyle				glyphPaintStyle;
-		protected Color							uniqueColor;
 		protected double						zoom = 1;
 		protected double						originX = 0;
 		protected double						originY = 0;
@@ -2166,6 +2173,7 @@ namespace Epsitec.Common.Document
 		protected bool							magnetActive = true;
 		protected bool							rulersShow = true;
 		protected bool							labelsShow = false;
+		protected bool							aggregatesShow = false;
 		protected bool							hideHalfActive = true;
 		protected bool							isDimmed = false;
 		protected bool							isDrawBoxThin = false;

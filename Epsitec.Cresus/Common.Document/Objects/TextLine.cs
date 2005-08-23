@@ -65,7 +65,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return "manifest:Epsitec.App.DocumentEditor.Images.TextLine.icon"; }
+			get { return Misc.Icon("ObjectTextLine"); }
 		}
 
 
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 
-			Shape[] shapes = this.ShapesBuild(context, false);
+			Shape[] shapes = this.ShapesBuild(null, context, false);
 			int rank = context.Drawer.DetectOutline(pos, context, shapes);
 			if ( rank != -1 )  rank *= 3;
 			return rank;
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( !bbox.Contains(pos) )  return false;
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			Shape[] shapes = this.ShapesBuild(context, false);
+			Shape[] shapes = this.ShapesBuild(null, context, false);
 			if ( context.Drawer.DetectOutline(pos, context, shapes) != -1 )  return true;
 
 			return this.DetectTextCurve(pos);
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "Curve";
-					item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.ToCurve.icon";
+					item.Icon = Misc.Icon("ToCurve");
 					item.Text = Res.Strings.Object.Bezier.Menu.ToCurve;
 					list.Add(item);
 				}
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "Line";
-					item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.ToLine.icon";
+					item.Icon = Misc.Icon("ToLine");
 					item.Text = Res.Strings.Object.Bezier.Menu.ToLine;
 					list.Add(item);
 				}
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Document.Objects
 				item = new ContextMenuItem();
 				item.Command = "Object";
 				item.Name = "HandleAdd";
-				item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.Add.icon";
+				item.Icon = Misc.Icon("Add");
 				item.Text = Res.Strings.Object.Bezier.Menu.HandleAdd;
 				list.Add(item);
 			}
@@ -203,8 +203,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleSym";
-						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
-						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
+						item.IconActiveNo = Misc.Icon("RadioNo");
+						item.IconActiveYes = Misc.Icon("RadioYes");
 						item.Active = ( type == HandleConstrainType.Symmetric );
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleSym;
 						list.Add(item);
@@ -212,8 +212,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleSmooth";
-						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
-						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
+						item.IconActiveNo = Misc.Icon("RadioNo");
+						item.IconActiveYes = Misc.Icon("RadioYes");
 						item.Active = ( type == HandleConstrainType.Smooth );
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleSmooth;
 						list.Add(item);
@@ -221,8 +221,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleCorner";
-						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
-						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
+						item.IconActiveNo = Misc.Icon("RadioNo");
+						item.IconActiveYes = Misc.Icon("RadioYes");
 						item.Active = ( type == HandleConstrainType.Corner );
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleCorner;
 						list.Add(item);
@@ -237,8 +237,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleSmooth";
-						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
-						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
+						item.IconActiveNo = Misc.Icon("RadioNo");
+						item.IconActiveYes = Misc.Icon("RadioYes");
 						item.Active = ( type == HandleConstrainType.Smooth );
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleLine;
 						list.Add(item);
@@ -246,8 +246,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleCorner";
-						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
-						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
+						item.IconActiveNo = Misc.Icon("RadioNo");
+						item.IconActiveYes = Misc.Icon("RadioYes");
 						item.Active = ( type != HandleConstrainType.Smooth );
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleFree;
 						list.Add(item);
@@ -265,7 +265,7 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleContinue";
-						item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.Add.icon";
+						item.Icon = Misc.Icon("Add");
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleContinue;
 						list.Add(item);
 					}
@@ -281,7 +281,7 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleDelete";
-						item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.Sub.icon";
+						item.Icon = Misc.Icon("Sub");
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleDelete;
 						list.Add(item);
 					}
@@ -829,6 +829,26 @@ namespace Epsitec.Common.Document.Objects
 			this.textLayout.FillFontFaceList(list);
 		}
 
+		// Ajoute tous les caractères utilisés par l'objet dans une table.
+		public override void FillOneCharList(System.Collections.Hashtable table)
+		{
+			this.textLayout.DefaultFont      = this.PropertyTextFont.GetFont();
+			this.textLayout.DefaultFontSize  = this.PropertyTextFont.FontSize;
+			this.textLayout.DefaultRichColor = this.PropertyTextFont.FontColor;
+			TextLayout.OneCharStructure[] fix = this.textLayout.ComputeStructure();
+
+			foreach ( TextLayout.OneCharStructure oneChar in fix )
+			{
+				if ( oneChar == null )  continue;
+
+				PDF.CharacterList cl = new PDF.CharacterList(oneChar);
+				if ( !table.ContainsKey(cl) )
+				{
+					table.Add(cl, null);
+				}
+			}
+		}
+
 		// Indique si un objet est éditable.
 		public override bool IsEditable
 		{
@@ -1042,7 +1062,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Constuit les formes de l'objet.
-		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
+		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			Path pathLine = this.PathBuild();
 			Path pathHilite = null;
@@ -1283,9 +1303,9 @@ namespace Epsitec.Common.Document.Objects
 		{
 			Properties.TextLine justif = this.PropertyTextLine;
 
-			this.textLayout.DefaultFont     = this.PropertyTextFont.GetFont();
-			this.textLayout.DefaultFontSize = this.PropertyTextFont.FontSize;
-			this.textLayout.DefaultColor    = this.PropertyTextFont.FontColor;
+			this.textLayout.DefaultFont      = this.PropertyTextFont.GetFont();
+			this.textLayout.DefaultFontSize  = this.PropertyTextFont.FontSize;
+			this.textLayout.DefaultRichColor = this.PropertyTextFont.FontColor;
 			this.advanceCharArray = this.textLayout.ComputeStructure();
 
 			double width = 0;
@@ -1337,7 +1357,7 @@ namespace Epsitec.Common.Document.Objects
 		protected bool AdvanceNext(out string character,
 								   out Font font,
 								   out double fontSize,
-								   out Color fontColor,
+								   out RichColor fontColor,
 								   out Point pos,
 								   out Point ptl,
 								   out Point pbl,
@@ -1350,7 +1370,7 @@ namespace Epsitec.Common.Document.Objects
 			character = "";
 			font = null;
 			fontSize = 0;
-			fontColor = Color.Empty;
+			fontColor = RichColor.Empty;
 			pos = new Point();
 			ptl = new Point();
 			pbl = new Point();
@@ -1417,7 +1437,7 @@ namespace Epsitec.Common.Document.Objects
 			string	character;
 			Font	font;
 			double	fontSize;
-			Color	fontColor;
+			RichColor fontColor;
 			Point	pos, ptl, pbl, ptr, pbr;
 			double	angle;
 			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
@@ -1436,7 +1456,7 @@ namespace Epsitec.Common.Document.Objects
 			string	character;
 			Font	font;
 			double	fontSize;
-			Color	fontColor;
+			RichColor fontColor;
 			Point	pos, ptl, pbl, ptr, pbr;
 			double	angle;
 			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
@@ -1459,7 +1479,7 @@ namespace Epsitec.Common.Document.Objects
 			string	character;
 			Font	font;
 			double	fontSize;
-			Color	fontColor;
+			RichColor fontColor;
 			Point	pos, ptl, pbl, ptr, pbr;
 			double	angle;
 			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
@@ -1492,7 +1512,7 @@ namespace Epsitec.Common.Document.Objects
 			string	character;
 			Font	font;
 			double	fontSize;
-			Color	fontColor;
+			RichColor fontColor;
 			Point	pos, ptl, pbl, ptr, pbr;
 			double	angle;
 			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
@@ -1514,7 +1534,7 @@ namespace Epsitec.Common.Document.Objects
 			string	character;
 			Font	font;
 			double	fontSize;
-			Color	fontColor;
+			RichColor fontColor;
 			Point	pos, ptl, pbl, ptr, pbr;
 			double	angle;
 			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
@@ -1537,7 +1557,7 @@ namespace Epsitec.Common.Document.Objects
 			string	character;
 			Font	font;
 			double	fontSize;
-			Color	fontColor;
+			RichColor fontColor;
 			Point	pos, ptl, pbl, ptr, pbr;
 			double	angle;
 
@@ -1581,7 +1601,7 @@ namespace Epsitec.Common.Document.Objects
 			string	character;
 			Font	font;
 			double	fontSize;
-			Color	fontColor;
+			RichColor fontColor;
 			Point	pos, ptl, pbl, ptr, pbr;
 			double	angle;
 			Point   c1 = new Point(0,0);
@@ -1623,24 +1643,8 @@ namespace Epsitec.Common.Document.Objects
 					Transform ot = port.Transform;
 					port.RotateTransformDeg(angle, pos.X, pos.Y);
 
-					if ( port is Graphics )
-					{
-						Graphics graphics = port as Graphics;
-						graphics.AddText(pos.X, pos.Y, character, font, fontSize);
-						graphics.RenderSolid(drawingContext.AdaptColor(fontColor));
-					}
-					
-					if ( port is Common.Printing.PrintPort )
-					{
-						port.Color = drawingContext.AdaptColor(fontColor);
-						port.PaintText(pos.X, pos.Y, character, font, fontSize);
-					}
-					
-					if ( port is PDF.Port )
-					{
-						port.Color = drawingContext.AdaptColor(fontColor);
-						port.PaintText(pos.X, pos.Y, character, font, fontSize);
-					}
+					port.RichColor = fontColor;
+					port.PaintText(pos.X, pos.Y, character, font, fontSize);
 					
 					port.Transform = ot;
 				}

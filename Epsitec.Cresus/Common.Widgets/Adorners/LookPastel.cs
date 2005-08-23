@@ -22,13 +22,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorControlDarkDark   = Drawing.Color.FromName("ControlDarkDark");
 			this.colorInfo              = Drawing.Color.FromName("Info");
 
-			this.colorGlyph     = Drawing.Color.FromRGB( 68.0/255.0, 106.0/255.0, 140.0/255.0);
-			this.colorCaption   = Drawing.Color.FromRGB(111.0/255.0, 189.0/255.0, 249.0/255.0);
-			this.colorCaptionNF = Drawing.Color.FromRGB(180.0/255.0, 230.0/255.0, 255.0/255.0);
-			this.colorHilite    = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
-			this.colorBorder    = Drawing.Color.FromRGB(122.0/255.0, 148.0/255.0, 170.0/255.0);
-			this.colorError     = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorWindow    = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorGlyph          = Drawing.Color.FromRGB( 68.0/255.0, 106.0/255.0, 140.0/255.0);
+			this.colorCaption        = Drawing.Color.FromRGB(111.0/255.0, 189.0/255.0, 249.0/255.0);
+			this.colorCaptionNF      = Drawing.Color.FromRGB(180.0/255.0, 230.0/255.0, 255.0/255.0);
+			this.colorHilite         = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorBorder         = Drawing.Color.FromRGB(122.0/255.0, 148.0/255.0, 170.0/255.0);
+			this.colorError          = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorTextBackground = Drawing.Color.FromRGB(250.0/255.0, 252.0/255.0, 252.0/255.0);
+			this.colorWindow         = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
 		}
 		
 
@@ -1764,6 +1765,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			get { return this.colorBorder; }
 		}
 
+		public Drawing.Color ColorTextBackground
+		{
+			get { return this.colorTextBackground; }
+		}
+
 		public Drawing.Color ColorText(WidgetState state)
 		{
 			if ( (state&WidgetState.Enabled) != 0 )
@@ -1835,6 +1841,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorBorder;
 		protected Drawing.Color		colorError;
 		protected Drawing.Color		colorWindow;
+		protected Drawing.Color		colorTextBackground;
 		protected Drawing.Color		colorGlyph;
 	}
 }

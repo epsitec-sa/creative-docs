@@ -12,9 +12,6 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Name(Document document) : base(document)
 		{
-			this.label = new StaticText(this);
-			this.label.Alignment = ContentAlignment.MiddleLeft;
-
 			this.field = new TextField(this);
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 1;
@@ -28,7 +25,6 @@ namespace Epsitec.Common.Document.Panels
 			{
 				this.field.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.field = null;
-				this.label = null;
 			}
 			
 			base.Dispose(disposing);
@@ -44,8 +40,6 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			this.ignoreChanged = true;
-
-			this.label.Text = p.TextStyle;
 
 			if ( this.property.IsMulti )
 			{
@@ -78,17 +72,10 @@ namespace Epsitec.Common.Document.Panels
 
 			if ( this.field == null )  return;
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
+			Rectangle rect = this.UsefulZone;
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			r.Right = rect.Right-110;
-			this.label.Bounds = r;
-
-			r = rect;
-			r.Left = r.Right-110;
 			this.field.Bounds = r;
 		}
 		
@@ -100,7 +87,6 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected StaticText				label;
 		protected TextField					field;
 	}
 }

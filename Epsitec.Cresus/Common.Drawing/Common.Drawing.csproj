@@ -75,11 +75,6 @@
                     HintPath = "c:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
                 />
                 <Reference
-                    Name = "AntiGrain.NET"
-                    AssemblyName = "AntiGrain.NET"
-                    HintPath = "..\External\AntiGrain.NET.dll"
-                />
-                <Reference
                     Name = "Common.Drawing.Platform"
                     Project = "{0202C35E-E79E-43BE-9E35-1ACECB0BBE9B}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
@@ -118,6 +113,11 @@
                     Name = "Common.OpenType"
                     Project = "{7703436A-1D8D-46AA-BB44-699AE5EAAA2F}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "AntiGrain.NET"
+                    AssemblyName = "AntiGrain.NET"
+                    HintPath = "..\External\AntiGrain.NET.dll"
                 />
             </References>
         </Build>
@@ -240,6 +240,11 @@
                 />
                 <File
                     RelPath = "Rectangle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "RichColor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

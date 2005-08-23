@@ -12,110 +12,108 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Justif(Document document) : base(document)
 		{
-			this.label = new StaticText(this);
-			this.label.Alignment = ContentAlignment.MiddleLeft;
+			this.gridHorizontal = new Widgets.RadioIconGrid(this);
+			this.gridHorizontal.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.gridHorizontal.TabIndex = 0;
+			this.gridHorizontal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.buttons = new IconButton[5+3+4];
-			for ( int i=0 ; i<5+3+4 ; i++ )
-			{
-				this.buttons[i] = new IconButton(this);
-				this.buttons[i].Clicked += new MessageEventHandler(this.HandlePanelJustifClicked);
-				this.buttons[i].TabIndex = 2+i;
-				this.buttons[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			}
+			this.AddRadioIcon(Properties.JustifHorizontal.Left);
+			this.AddRadioIcon(Properties.JustifHorizontal.Center);
+			this.AddRadioIcon(Properties.JustifHorizontal.Right);
+			this.AddRadioIcon(Properties.JustifHorizontal.Justif);
+			this.AddRadioIcon(Properties.JustifHorizontal.All);
 
-			this.buttons[0].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHLeft.icon";
-			this.buttons[1].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHCenter.icon";
-			this.buttons[2].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHRight.icon";
-			this.buttons[3].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHJustif.icon";
-			this.buttons[4].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHAll.icon";
-			ToolTip.Default.SetToolTip(this.buttons[0], Res.Strings.Panel.Justif.Tooltip.JustifHLeft);
-			ToolTip.Default.SetToolTip(this.buttons[1], Res.Strings.Panel.Justif.Tooltip.JustifHCenter);
-			ToolTip.Default.SetToolTip(this.buttons[2], Res.Strings.Panel.Justif.Tooltip.JustifHRight);
-			ToolTip.Default.SetToolTip(this.buttons[3], Res.Strings.Panel.Justif.Tooltip.JustifHJustif);
-			ToolTip.Default.SetToolTip(this.buttons[4], Res.Strings.Panel.Justif.Tooltip.JustifHAll);
+			this.gridVertical = new Widgets.RadioIconGrid(this);
+			this.gridVertical.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.gridVertical.TabIndex = 0;
+			this.gridVertical.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.buttons[5].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifVTop.icon";
-			this.buttons[6].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifVCenter.icon";
-			this.buttons[7].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifVBottom.icon";
-			ToolTip.Default.SetToolTip(this.buttons[5], Res.Strings.Panel.Justif.Tooltip.JustifVTop);
-			ToolTip.Default.SetToolTip(this.buttons[6], Res.Strings.Panel.Justif.Tooltip.JustifVCenter);
-			ToolTip.Default.SetToolTip(this.buttons[7], Res.Strings.Panel.Justif.Tooltip.JustifVBottom);
+			this.AddRadioIcon(Properties.JustifVertical.Top);
+			this.AddRadioIcon(Properties.JustifVertical.Center);
+			this.AddRadioIcon(Properties.JustifVertical.Bottom);
 
-			this.buttons[8].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifOLR.icon";
-			this.buttons[9].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifOBT.icon";
-			this.buttons[10].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifORL.icon";
-			this.buttons[11].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifOTB.icon";
-			ToolTip.Default.SetToolTip(this.buttons[8], Res.Strings.Panel.Justif.Tooltip.JustifOLR);
-			ToolTip.Default.SetToolTip(this.buttons[9], Res.Strings.Panel.Justif.Tooltip.JustifOBT);
-			ToolTip.Default.SetToolTip(this.buttons[10], Res.Strings.Panel.Justif.Tooltip.JustifORL);
-			ToolTip.Default.SetToolTip(this.buttons[11], Res.Strings.Panel.Justif.Tooltip.JustifOTB);
+			this.gridOrientation = new Widgets.RadioIconGrid(this);
+			this.gridOrientation.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.gridOrientation.TabIndex = 0;
+			this.gridOrientation.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.fieldMarginH = new TextFieldReal(this);
-			this.fieldMarginH.FactorMinRange = 0.0M;
-			this.fieldMarginH.FactorMaxRange = 0.1M;
-			this.fieldMarginH.FactorStep = 1.0M;
-			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldMarginH);
-			this.fieldMarginH.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.AddRadioIcon(Properties.JustifOrientation.LeftToRight);
+			this.AddRadioIcon(Properties.JustifOrientation.BottomToTop);
+			this.AddRadioIcon(Properties.JustifOrientation.RightToLeft);
+			this.AddRadioIcon(Properties.JustifOrientation.TopToBottom);
+
+			this.fieldMarginH = new Widgets.TextFieldLabel(this, false);
+			this.fieldMarginH.LabelShortText = Res.Strings.Panel.Justif.Short.MarginH;
+			this.fieldMarginH.LabelLongText  = Res.Strings.Panel.Justif.Long.MarginH;
+			this.fieldMarginH.TextFieldReal.FactorMinRange = 0.0M;
+			this.fieldMarginH.TextFieldReal.FactorMaxRange = 0.1M;
+			this.fieldMarginH.TextFieldReal.FactorStep = 1.0M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldMarginH.TextFieldReal);
+			this.fieldMarginH.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldMarginH.TabIndex = 20;
 			this.fieldMarginH.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMarginH, Res.Strings.Panel.Justif.Tooltip.MarginH);
 
-			this.fieldMarginV = new TextFieldReal(this);
-			this.fieldMarginV.FactorMinRange = 0.0M;
-			this.fieldMarginV.FactorMaxRange = 0.1M;
-			this.fieldMarginV.FactorStep = 1.0M;
-			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldMarginV);
-			this.fieldMarginV.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldMarginV = new Widgets.TextFieldLabel(this, false);
+			this.fieldMarginV.LabelShortText = Res.Strings.Panel.Justif.Short.MarginV;
+			this.fieldMarginV.LabelLongText  = Res.Strings.Panel.Justif.Long.MarginV;
+			this.fieldMarginV.TextFieldReal.FactorMinRange = 0.0M;
+			this.fieldMarginV.TextFieldReal.FactorMaxRange = 0.1M;
+			this.fieldMarginV.TextFieldReal.FactorStep = 1.0M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldMarginV.TextFieldReal);
+			this.fieldMarginV.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldMarginV.TabIndex = 21;
 			this.fieldMarginV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMarginV, Res.Strings.Panel.Justif.Tooltip.MarginV);
 
-			this.fieldOffsetV = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldOffsetV);
-			this.fieldOffsetV.InternalMinValue = -50.0M;
-			this.fieldOffsetV.InternalMaxValue =  50.0M;
-			this.fieldOffsetV.TextSuffix = "%";
-			this.fieldOffsetV.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldOffsetV = new Widgets.TextFieldLabel(this, false);
+			this.fieldOffsetV.LabelShortText = Res.Strings.Panel.Justif.Short.OffsetV;
+			this.fieldOffsetV.LabelLongText  = Res.Strings.Panel.Justif.Long.OffsetV;
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldOffsetV.TextFieldReal);
+			this.fieldOffsetV.TextFieldReal.InternalMinValue = -50.0M;
+			this.fieldOffsetV.TextFieldReal.InternalMaxValue =  50.0M;
+			this.fieldOffsetV.TextFieldReal.TextSuffix = "%";
+			this.fieldOffsetV.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldOffsetV.TabIndex = 22;
 			this.fieldOffsetV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldOffsetV, Res.Strings.Panel.Justif.Tooltip.OffsetV);
 
-			this.labelMarginH = new StaticText(this);
-			this.labelMarginH.Text = Res.Strings.Panel.Justif.Label.MarginH;
-			this.labelMarginH.Alignment = ContentAlignment.MiddleCenter;
-
-			this.labelMarginV = new StaticText(this);
-			this.labelMarginV.Text = Res.Strings.Panel.Justif.Label.MarginV;
-			this.labelMarginV.Alignment = ContentAlignment.MiddleCenter;
-
-			this.labelOffsetV = new StaticText(this);
-			this.labelOffsetV.Text = Res.Strings.Panel.Justif.Label.OffsetV;
-			this.labelOffsetV.Alignment = ContentAlignment.MiddleCenter;
-
 			this.isNormalAndExtended = true;
 		}
 		
+		protected void AddRadioIcon(Properties.JustifHorizontal type)
+		{
+			this.gridHorizontal.AddRadioIcon(Properties.Justif.GetIconText(type), Properties.Justif.GetName(type), (int)type, false);
+		}
+
+		protected void AddRadioIcon(Properties.JustifVertical type)
+		{
+			this.gridVertical.AddRadioIcon(Properties.Justif.GetIconText(type), Properties.Justif.GetName(type), (int)type, false);
+		}
+
+		protected void AddRadioIcon(Properties.JustifOrientation type)
+		{
+			this.gridOrientation.AddRadioIcon(Properties.Justif.GetIconText(type), Properties.Justif.GetName(type), (int)type, false);
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
-				for ( int i=0 ; i<5+3+4 ; i++ )
-				{
-					this.buttons[i].Clicked -= new MessageEventHandler(this.HandlePanelJustifClicked);
-					this.buttons[i] = null;
-				}
-				this.fieldMarginH.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldMarginV.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldOffsetV.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.gridHorizontal.SelectionChanged -= new EventHandler(HandleTypeChanged);
+				this.gridVertical.SelectionChanged -= new EventHandler(HandleTypeChanged);
+				this.gridOrientation.SelectionChanged -= new EventHandler(HandleTypeChanged);
 
-				this.label = null;
+				this.fieldMarginH.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldMarginV.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldOffsetV.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+
+				this.gridHorizontal = null;
+				this.gridVertical = null;
+				this.gridOrientation = null;
 				this.fieldMarginH = null;
 				this.fieldMarginV = null;
 				this.fieldOffsetV = null;
-				this.labelMarginH = null;
-				this.labelMarginV = null;
-				this.labelOffsetV = null;
 			}
 			
 			base.Dispose(disposing);
@@ -127,7 +125,25 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return ( this.isExtendedSize ? 80 : 30 );
+				double h = this.LabelHeight;
+
+				if ( this.isExtendedSize )  // panneau étendu ?
+				{
+					if ( this.IsLabelProperties )  // étendu/détails ?
+					{
+						h += 105;
+					}
+					else	// étendu/compact ?
+					{
+						h += 80;
+					}
+				}
+				else	// panneau réduit ?
+				{
+					h += 30;
+				}
+
+				return h;
 			}
 		}
 
@@ -141,14 +157,12 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			this.label.Text = p.TextStyle;
-
-			this.SelectButtonHorizontal     = p.Horizontal;
-			this.SelectButtonVertical       = p.Vertical;
-			this.SelectButtonOrientation    = p.Orientation;
-			this.fieldMarginH.InternalValue = (decimal) p.MarginH;
-			this.fieldMarginV.InternalValue = (decimal) p.MarginV;
-			this.fieldOffsetV.InternalValue = (decimal) p.OffsetV*100;
+			this.gridHorizontal.SelectedValue  = (int) p.Horizontal;
+			this.gridVertical.SelectedValue    = (int) p.Vertical;
+			this.gridOrientation.SelectedValue = (int) p.Orientation;
+			this.fieldMarginH.TextFieldReal.InternalValue = (decimal) p.MarginH;
+			this.fieldMarginV.TextFieldReal.InternalValue = (decimal) p.MarginV;
+			this.fieldOffsetV.TextFieldReal.InternalValue = (decimal) p.OffsetV*100;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -160,118 +174,41 @@ namespace Epsitec.Common.Document.Panels
 			Properties.Justif p = this.property as Properties.Justif;
 			if ( p == null )  return;
 
-			p.Horizontal  = this.SelectButtonHorizontal;
-			p.Vertical    = this.SelectButtonVertical;
-			p.Orientation = this.SelectButtonOrientation;
-			p.MarginH     = (double) this.fieldMarginH.InternalValue;
-			p.MarginV     = (double) this.fieldMarginV.InternalValue;
-			p.OffsetV     = (double) this.fieldOffsetV.InternalValue/100;
-		}
-
-		protected Properties.JustifHorizontal SelectButtonHorizontal
-		{
-			get
-			{
-				if ( this.ButtonActive(0) )  return Properties.JustifHorizontal.Left;
-				if ( this.ButtonActive(1) )  return Properties.JustifHorizontal.Center;
-				if ( this.ButtonActive(2) )  return Properties.JustifHorizontal.Right;
-				if ( this.ButtonActive(3) )  return Properties.JustifHorizontal.Justif;
-				if ( this.ButtonActive(4) )  return Properties.JustifHorizontal.All;
-				return Properties.JustifHorizontal.None;
-			}
-
-			set
-			{
-				this.ButtonActive(0, value == Properties.JustifHorizontal.Left);
-				this.ButtonActive(1, value == Properties.JustifHorizontal.Center);
-				this.ButtonActive(2, value == Properties.JustifHorizontal.Right);
-				this.ButtonActive(3, value == Properties.JustifHorizontal.Justif);
-				this.ButtonActive(4, value == Properties.JustifHorizontal.All);
-			}
-		}
-
-		protected Properties.JustifVertical SelectButtonVertical
-		{
-			get
-			{
-				if ( this.ButtonActive(5) )  return Properties.JustifVertical.Top;
-				if ( this.ButtonActive(6) )  return Properties.JustifVertical.Center;
-				if ( this.ButtonActive(7) )  return Properties.JustifVertical.Bottom;
-				return Properties.JustifVertical.None;
-			}
-
-			set
-			{
-				this.ButtonActive(5, value == Properties.JustifVertical.Top);
-				this.ButtonActive(6, value == Properties.JustifVertical.Center);
-				this.ButtonActive(7, value == Properties.JustifVertical.Bottom);
-			}
-		}
-
-		protected Properties.JustifOrientation SelectButtonOrientation
-		{
-			get
-			{
-				if ( this.ButtonActive( 8) )  return Properties.JustifOrientation.LeftToRight;
-				if ( this.ButtonActive( 9) )  return Properties.JustifOrientation.BottomToTop;
-				if ( this.ButtonActive(10) )  return Properties.JustifOrientation.RightToLeft;
-				if ( this.ButtonActive(11) )  return Properties.JustifOrientation.TopToBottom;
-				return Properties.JustifOrientation.None;
-			}
-
-			set
-			{
-				this.ButtonActive( 8, value == Properties.JustifOrientation.LeftToRight);
-				this.ButtonActive( 9, value == Properties.JustifOrientation.BottomToTop);
-				this.ButtonActive(10, value == Properties.JustifOrientation.RightToLeft);
-				this.ButtonActive(11, value == Properties.JustifOrientation.TopToBottom);
-			}
-		}
-
-		protected bool ButtonActive(int i)
-		{
-			return ( this.buttons[i].ActiveState == WidgetState.ActiveYes );
-		}
-
-		protected void ButtonActive(int i, bool active)
-		{
-			this.buttons[i].ActiveState = active ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			p.Horizontal  = (Properties.JustifHorizontal)  this.gridHorizontal.SelectedValue;
+			p.Vertical    = (Properties.JustifVertical)    this.gridVertical.SelectedValue;
+			p.Orientation = (Properties.JustifOrientation) this.gridOrientation.SelectedValue;
+			p.MarginH     = (double) this.fieldMarginH.TextFieldReal.InternalValue;
+			p.MarginV     = (double) this.fieldMarginV.TextFieldReal.InternalValue;
+			p.OffsetV     = (double) this.fieldOffsetV.TextFieldReal.InternalValue/100;
 		}
 
 
 		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
-			for ( int i=5 ; i<5+3+4 ; i++ )
-			{
-				this.buttons[i].SetVisible(this.isExtendedSize);
-			}
+			this.gridVertical.SetVisible(this.isExtendedSize);
+			this.gridOrientation.SetVisible(this.isExtendedSize);
 
 			this.fieldMarginH.SetVisible(this.isExtendedSize);
 
 			if ( this.isExtendedSize )
 			{
-				if ( this.ButtonActive(6) )  // JustifVertical.Center ?
+				Properties.JustifVertical v = (Properties.JustifVertical) this.gridVertical.SelectedValue;
+				if ( v == Properties.JustifVertical.Center )
 				{
 					this.fieldMarginV.SetVisible(false);
 					this.fieldOffsetV.SetVisible(true);
-					this.labelMarginV.SetVisible(false);
-					this.labelOffsetV.SetVisible(true);
 				}
 				else
 				{
 					this.fieldMarginV.SetVisible(true);
 					this.fieldOffsetV.SetVisible(false);
-					this.labelMarginV.SetVisible(true);
-					this.labelOffsetV.SetVisible(false);
 				}
 			}
 			else
 			{
 				this.fieldMarginV.SetVisible(false);
 				this.fieldOffsetV.SetVisible(false);
-				this.labelMarginV.SetVisible(false);
-				this.labelOffsetV.SetVisible(false);
 			}
 		}
 
@@ -280,66 +217,77 @@ namespace Epsitec.Common.Document.Panels
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.buttons == null )  return;
+			if ( this.gridHorizontal == null )  return;
 
 			this.EnableWidgets();
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
+			Rectangle rect = this.UsefulZone;
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			r.Right = rect.Right-20*5;
-			this.label.Bounds = r;
+			r.Width = 22*5;
+			r.Inflate(1);
+			this.gridHorizontal.Bounds = r;
 
-			r.Left = rect.Right-20*5;
-			r.Width = 20;
-			for ( int i=0 ; i<5 ; i++ )
+			if ( this.isExtendedSize && this.IsLabelProperties )
 			{
-				this.buttons[i].Bounds = r;
-				r.Offset(20, 0);
-			}
+				r.Offset(0, -25);
+				r.Left = rect.Left;
+				r.Width = 22*3;
+				r.Inflate(1);
+				this.gridVertical.Bounds = r;
+				r.Left = rect.Right-22*4;
+				r.Width = 22*4;
+				r.Inflate(1);
+				this.gridOrientation.Bounds = r;
 
-			r.Offset(0, -25);
-			r.Left = rect.Right-20*3;
-			r.Width = 20;
-			for ( int i=5 ; i<5+3 ; i++ )
+				r.Offset(0, -28);
+				r.Bottom = r.Top-20;
+				r.Left = rect.Left;
+				r.Right = rect.Right;
+				this.fieldMarginH.Bounds = r;
+
+				r.Offset(0, -25);
+				this.fieldMarginV.Bounds = r;
+				this.fieldOffsetV.Bounds = r;
+			}
+			else
 			{
-				this.buttons[i].Bounds = r;
-				r.Offset(20, 0);
+				r.Offset(0, -25);
+				r.Left = rect.Right-22*3;
+				r.Width = 22*3;
+				r.Inflate(1);
+				this.gridVertical.Bounds = r;
+
+				r.Offset(0, -25);
+				r.Left = rect.Right-22*4;
+				r.Width = 22*4;
+				r.Inflate(1);
+				this.gridOrientation.Bounds = r;
+
+				r = rect;
+				r.Bottom = rect.Top-45;
+				r.Height = 20;
+				r.Width = Widgets.TextFieldLabel.ShortWidth+10;
+				this.fieldMarginH.Bounds = r;
+
+				r = rect;
+				r.Bottom = rect.Top-70;
+				r.Height = 20;
+				r.Width = Widgets.TextFieldLabel.ShortWidth+10;
+				this.fieldMarginV.Bounds = r;
+				this.fieldOffsetV.Bounds = r;
 			}
-
-			r.Offset(0, -25);
-			r.Left = rect.Right-20*4;
-			r.Width = 20;
-			for ( int i=5+3 ; i<5+3+4 ; i++ )
-			{
-				this.buttons[i].Bounds = r;
-				r.Offset(20, 0);
-			}
-
-			r = rect;
-			r.Bottom = rect.Top-45;
-			r.Height = 20;
-			r.Width = 20;
-			this.labelMarginH.Bounds = r;
-			r.Left = r.Right+2;
-			r.Width = 44;
-			this.fieldMarginH.Bounds = r;
-
-			r = rect;
-			r.Bottom = rect.Top-70;
-			r.Height = 20;
-			r.Width = 20;
-			this.labelMarginV.Bounds = r;
-			this.labelOffsetV.Bounds = r;
-			r.Left = r.Right+2;
-			r.Width = 44;
-			this.fieldMarginV.Bounds = r;
-			this.fieldOffsetV.Bounds = r;
 		}
 		
+		// Le type a été changé.
+		private void HandleTypeChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			this.EnableWidgets();
+			this.OnChanged();
+		}
+
 		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
@@ -347,38 +295,12 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
-		// Une valeur a été changée.
-		private void HandlePanelJustifClicked(object sender, MessageEventArgs e)
-		{
-			IconButton button = sender as IconButton;
 
-			if ( button == this.buttons[0] )  this.SelectButtonHorizontal = Properties.JustifHorizontal.Left;
-			if ( button == this.buttons[1] )  this.SelectButtonHorizontal = Properties.JustifHorizontal.Center;
-			if ( button == this.buttons[2] )  this.SelectButtonHorizontal = Properties.JustifHorizontal.Right;
-			if ( button == this.buttons[3] )  this.SelectButtonHorizontal = Properties.JustifHorizontal.Justif;
-			if ( button == this.buttons[4] )  this.SelectButtonHorizontal = Properties.JustifHorizontal.All;
-
-			if ( button == this.buttons[5] )  this.SelectButtonVertical = Properties.JustifVertical.Top;
-			if ( button == this.buttons[6] )  this.SelectButtonVertical = Properties.JustifVertical.Center;
-			if ( button == this.buttons[7] )  this.SelectButtonVertical = Properties.JustifVertical.Bottom;
-
-			if ( button == this.buttons[8] )  this.SelectButtonOrientation = Properties.JustifOrientation.LeftToRight;
-			if ( button == this.buttons[9] )  this.SelectButtonOrientation = Properties.JustifOrientation.BottomToTop;
-			if ( button == this.buttons[10])  this.SelectButtonOrientation = Properties.JustifOrientation.RightToLeft;
-			if ( button == this.buttons[11])  this.SelectButtonOrientation = Properties.JustifOrientation.TopToBottom;
-
-			this.EnableWidgets();
-			this.OnChanged();
-		}
-
-
-		protected StaticText				label;
-		protected IconButton[]				buttons;
-		protected TextFieldReal				fieldMarginH;
-		protected TextFieldReal				fieldMarginV;
-		protected TextFieldReal				fieldOffsetV;
-		protected StaticText				labelMarginH;
-		protected StaticText				labelMarginV;
-		protected StaticText				labelOffsetV;
+		protected Widgets.RadioIconGrid		gridHorizontal;
+		protected Widgets.RadioIconGrid		gridVertical;
+		protected Widgets.RadioIconGrid		gridOrientation;
+		protected Widgets.TextFieldLabel	fieldMarginH;
+		protected Widgets.TextFieldLabel	fieldMarginV;
+		protected Widgets.TextFieldLabel	fieldOffsetV;
 	}
 }

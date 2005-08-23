@@ -194,6 +194,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public Drawing.RichColor				DefaultRichColor
+		{
+			get
+			{
+				return this.style.RichColor;
+			}
+			set
+			{
+				if ( this.DefaultRichColor != value )
+				{
+					this.CloneStyleIfDefaultStyleInUse();
+					this.style.RichColor = value;
+				}
+			}
+		}
+
 		public Drawing.Color					DefaultColor
 		{
 			get
@@ -683,6 +699,23 @@ namespace Epsitec.Common.Widgets
 			this.InsertPutCommand(context, "size=\"" + scale*100.0 + "%\"");
 		}
 
+		internal Drawing.RichColor GetSelectionFontRichColor(TextLayout.Context context)
+		{
+			// Indique la couleur des caractères sélectionnés.
+			// Une couleur vide indique la couleur par défaut.
+			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			{
+				string s = this.SearchPrepared(context, "color");
+				return Drawing.RichColor.FromName(s);
+			}
+			else
+			{
+				JustifBlock block = this.SearchJustifBlock(context);
+				if ( block == null )  return Drawing.RichColor.Empty;
+				return block.FontColor;
+			}
+		}
+		
 		internal Drawing.Color GetSelectionFontColor(TextLayout.Context context)
 		{
 			// Indique la couleur des caractères sélectionnés.
@@ -696,10 +729,26 @@ namespace Epsitec.Common.Widgets
 			{
 				JustifBlock block = this.SearchJustifBlock(context);
 				if ( block == null )  return Drawing.Color.Empty;
-				return block.FontColor;
+				return block.FontColor.Basic;
 			}
 		}
 		
+		internal void SetSelectionFontRichColor(TextLayout.Context context, Drawing.RichColor color)
+		{
+			// Modifie la couleur des caractères sélectionnés.
+			// Une couleur vide indique la couleur par défaut.
+			string s;
+			if ( color.IsEmpty )
+			{
+				s = TextLayout.CodeDefault + "#" + Drawing.RichColor.ToHexa(this.DefaultRichColor);
+			}
+			else
+			{
+				s = "#" + Drawing.RichColor.ToHexa(color);
+			}
+			this.InsertPutCommand(context, "color=\"" + s + "\"");
+		}
+
 		internal void SetSelectionFontColor(TextLayout.Context context, Drawing.Color color)
 		{
 			// Modifie la couleur des caractères sélectionnés.
@@ -1266,7 +1315,7 @@ namespace Epsitec.Common.Widgets
 
 			this.SetSelectionFontName(context, block.FontName);
 			this.SetSelectionFontScale(context, block.FontScale);
-			this.SetSelectionFontColor(context, block.FontColor);
+			this.SetSelectionFontRichColor(context, block.FontColor);
 			this.SetSelectionBold(context, block.Bold);
 			this.SetSelectionItalic(context, block.Italic);
 			this.SetSelectionUnderlined(context, block.Underlined);
@@ -1455,19 +1504,17 @@ namespace Epsitec.Common.Widgets
 			// Dessine le texte, en fonction du layout...
 			// Si une couleur est donnée avec uniqueColor, tout le texte est peint
 			// avec cette couleur, en ignorant les <font color=...>.
-			this.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.Empty, Drawing.GlyphPaintStyle.Normal);
+			this.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.RichColor.Empty, Drawing.GlyphPaintStyle.Normal);
 		}
 
 		public void Paint(Drawing.Point pos, Drawing.IPaintPort graphics, Drawing.Rectangle clipRect, Drawing.Color uniqueColor, Drawing.GlyphPaintStyle paintStyle)
 		{
-			if ( this.Text.Length > 1000 )
-			{
-				this.UpdateLayout();
-			}
-			else
-			{
-				this.UpdateLayout();
-			}
+			this.Paint(pos, graphics, clipRect, new Drawing.RichColor(uniqueColor), paintStyle);
+		}
+
+		public void Paint(Drawing.Point pos, Drawing.IPaintPort graphics, Drawing.Rectangle clipRect, Drawing.RichColor uniqueColor, Drawing.GlyphPaintStyle paintStyle)
+		{
+			this.UpdateLayout();
 
 			IAdorner adorner = Adorner.Factory.Active;
 			double listValue = 0.0;
@@ -1493,7 +1540,7 @@ namespace Epsitec.Common.Widgets
 					}
 					
 					image.DefineZoom(graphics.Transform.GetZoom());
-					image.DefineColor(uniqueColor);
+					image.DefineColor(uniqueColor.Basic);
 					image.DefineAdorner(adorner);
 					
 					double dx = image.Width;
@@ -1511,12 +1558,12 @@ namespace Epsitec.Common.Widgets
 					continue;
 				}
 
-				Drawing.Color color;
+				Drawing.RichColor color;
 				if ( uniqueColor.IsEmpty )
 				{
 					if ( block.Anchor )
 					{
-						color = this.AnchorColor;
+						color = new Drawing.RichColor(this.AnchorColor);
 					}
 					else
 					{
@@ -1533,7 +1580,7 @@ namespace Epsitec.Common.Widgets
 					if ( this.ShowTab )
 					{
 						graphics.LineWidth = 1.0/this.drawingScale;
-						graphics.Color = new Drawing.Color(0.35, color.R, color.G, color.B);
+						graphics.RichColor = new Drawing.RichColor(0.35, color.R, color.G, color.B);
 						graphics.PaintOutline(this.PathTab(graphics, blockRect));
 					}
 					continue;
@@ -1541,7 +1588,7 @@ namespace Epsitec.Common.Widgets
 
 				if ( block.List )
 				{
-					graphics.Color = color;
+					graphics.RichColor = color;
 					this.PaintList(graphics, blockRect, pos.Y+block.Pos.Y, block, ref listValue);
 					listEncounter = true;
 					continue;
@@ -1557,7 +1604,7 @@ namespace Epsitec.Common.Widgets
 					this.OnAnchor(new AnchorEventArgs(x, y+descender, block.Width, ascender-descender, block.BeginIndex));
 				}
 
-				graphics.Color = color;
+				graphics.RichColor = color;
 
 				if ( block.Infos == null )
 				{
@@ -1573,7 +1620,7 @@ namespace Epsitec.Common.Widgets
 					Drawing.Point p1, p2;
 					this.UnderlinedPoints(graphics, block, pos, out p1, out p2);
 					graphics.LineWidth = 1.0;
-					graphics.Color = color;
+					graphics.RichColor = color;
 					graphics.PaintOutline(Drawing.Path.FromLine(p1, p2));
 				}
 
@@ -2064,7 +2111,7 @@ namespace Epsitec.Common.Widgets
 
 				double top    = line.Pos.Y+line.Ascender;
 				double bottom = line.Pos.Y+line.Descender;
-				Drawing.Color color = block.GetFontColor;
+				Drawing.Color color = block.GetFontColor.Basic;
 
 				if ( area.Rect.Top    != top    ||
 					 area.Rect.Bottom != bottom ||  // rectangle dans autre ligne ?
@@ -3037,7 +3084,7 @@ namespace Epsitec.Common.Widgets
 			fontDefault = new FontSimplify();
 			fontDefault.FontName  = TextLayout.CodeDefault + this.DefaultFont.FaceName;
 			fontDefault.FontScale = "100%";
-			fontDefault.FontColor = TextLayout.CodeDefault + "#" + Drawing.Color.ToHexa(this.DefaultColor);
+			fontDefault.FontColor = TextLayout.CodeDefault + "#" + Drawing.RichColor.ToHexa(this.DefaultRichColor);
 
 			fontItem = new FontSimplify();
 			fontItem = fontDefault.Copy();
@@ -3288,7 +3335,7 @@ namespace Epsitec.Common.Widgets
 			
 			font.FontName  = TextLayout.CodeDefault + this.DefaultFont.FaceName;
 			font.FontScale = 1;  // 100%
-			font.FontColor = Drawing.Color.Empty;
+			font.FontColor = Drawing.RichColor.Empty;
 			
 			stack.Push(font);  // push la fonte initiale (jamais de pop)
 			return stack;
@@ -3326,7 +3373,7 @@ namespace Epsitec.Common.Widgets
 				if ( parameters.ContainsKey("color") )
 				{
 					string s = parameters["color"] as string;
-					Drawing.Color color = Drawing.Color.FromName(s);
+					Drawing.RichColor color = Drawing.RichColor.FromName(s);
 					if ( !color.IsEmpty )  font.FontColor = color;
 				}
 				
@@ -3664,7 +3711,7 @@ noText:
 				FontItem fontItem = new FontItem(this);
 				fontItem.FontName  = TextLayout.CodeDefault + this.DefaultFont.FaceName;
 				fontItem.FontScale = 1;  // 100%
-				fontItem.FontColor = Drawing.Color.Empty;
+				fontItem.FontColor = Drawing.RichColor.Empty;
 				if ( this.isPrepareDirty )
 				{
 					fontItem.FontScale = this.ScanFontScale(this.MaxTextOffset);
@@ -4417,7 +4464,7 @@ noText:
 					index ++;
 				}
 			}
-			System.Diagnostics.Debug.Assert(index == len);
+			//?System.Diagnostics.Debug.Assert(index == len);
 
 			return array;
 		}
@@ -4427,7 +4474,7 @@ noText:
 			public char						Character;
 			public Drawing.Font				Font;
 			public double					FontSize;
-			public Drawing.Color			FontColor = Drawing.Color.Empty;
+			public Drawing.RichColor		FontColor = Drawing.RichColor.Empty;
 			public bool						Bold;
 			public bool						Italic;
 			public bool						Underlined;
@@ -4578,9 +4625,9 @@ noText:
 
 			protected TextLayout	host;
 			
-			public string			FontName;
-			public double			FontScale;
-			public Drawing.Color	FontColor;
+			public string				FontName;
+			public double				FontScale;
+			public Drawing.RichColor	FontColor;
 		}
 
 		protected class SupplItem
@@ -4649,13 +4696,13 @@ noText:
 				}
 			}
 
-			public Drawing.Color GetFontColor
+			public Drawing.RichColor GetFontColor
 			{
 				get
 				{
 					if ( this.FontColor.IsEmpty )
 					{
-						return host.DefaultColor;
+						return host.DefaultRichColor;
 					}
 					return this.FontColor;
 				}
@@ -4672,7 +4719,7 @@ noText:
 			public bool						IsDefaultFontName;
 			public Drawing.Font				Font;
 			public double					FontScale;
-			public Drawing.Color			FontColor = Drawing.Color.Empty;
+			public Drawing.RichColor		FontColor = Drawing.RichColor.Empty;
 			public bool						Bold;
 			public bool						Italic;
 			public bool						Underlined;

@@ -123,12 +123,6 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Détermine le nom de la propriété dans la liste (Lister).
-		public string GetListName()
-		{
-			return Corner.GetName(this.cornerType);
-		}
-
 		// Cherche le type correspondant à un index donné.
 		// Ceci détermine l'ordre dans le TextFieldCombo du panneau.
 		public static CornerType ConvType(int index)
@@ -155,18 +149,6 @@ namespace Epsitec.Common.Document.Properties
 			return type;
 		}
 
-		// Cherche le rang d'un type donné.
-		public static int ConvType(CornerType type)
-		{
-			for ( int i=0 ; i<100 ; i++ )
-			{
-				CornerType t = Corner.ConvType(i);
-				if ( t == CornerType.None )  break;
-				if ( t == type )  return i;
-			}
-			return -1;
-		}
-
 		// Retourne le nom d'un type donné.
 		public static string GetName(CornerType type)
 		{
@@ -190,6 +172,30 @@ namespace Epsitec.Common.Document.Properties
 				case CornerType.Fantasy62:  name = Res.Strings.Property.Corner.Fantasy62;  break;
 			}
 			return name;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(CornerType type)
+		{
+			switch ( type )
+			{
+				case CornerType.Right:      return "CornerRight";
+				case CornerType.Round:      return "CornerRound";
+				case CornerType.Bevel:      return "CornerBevel";
+				case CornerType.Line31:     return "CornerLine31";
+				case CornerType.Line41:     return "CornerLine41";
+				case CornerType.Line42:     return "CornerLine42";
+				case CornerType.Line51:     return "CornerLine51";
+				case CornerType.Line61:     return "CornerLine61";
+				case CornerType.Line62:     return "CornerLine62";
+				case CornerType.Curve21:    return "CornerCurve21";
+				case CornerType.Curve22:    return "CornerCurve22";
+				case CornerType.Curve31:    return "CornerCurve31";
+				case CornerType.Fantasy51:  return "CornerFantasy51";
+				case CornerType.Fantasy61:  return "CornerFantasy61";
+				case CornerType.Fantasy62:  return "CornerFantasy62";
+			}
+			return "";
 		}
 
 		// Retourne les valeurs par défaut et les min/max pour un type donné.
@@ -265,6 +271,7 @@ namespace Epsitec.Common.Document.Properties
 					enable2 = true;  effect2 = 0.60;  min2 = -1.0;  max2 = 1.0;  break;
 			}
 		}
+
 
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
@@ -418,6 +425,7 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Corner(document);
 		}
 

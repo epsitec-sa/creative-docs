@@ -37,22 +37,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				bookDoc.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 				bookDoc.AnchorMargins = new Margins(6, 6, 6, 34);
 
-				TabPage bookFormat = new TabPage();
-				bookFormat.Name = "Printer";
-				bookFormat.TabTitle = Res.Strings.Dialog.Print.TabPage.Printer;
-				bookDoc.Items.Add(bookFormat);
+				TabPage bookPrinter = new TabPage();
+				bookPrinter.Name = "Printer";
+				bookPrinter.TabTitle = Res.Strings.Dialog.Print.TabPage.Printer;
+				bookDoc.Items.Add(bookPrinter);
 
-				TabPage bookGrid = new TabPage();
-				bookGrid.Name = "Param";
-				bookGrid.TabTitle = Res.Strings.Dialog.Print.TabPage.Param;
-				bookDoc.Items.Add(bookGrid);
+				TabPage bookParam = new TabPage();
+				bookParam.Name = "Param";
+				bookParam.TabTitle = Res.Strings.Dialog.Print.TabPage.Param;
+				bookDoc.Items.Add(bookParam);
 
-				TabPage bookGuides = new TabPage();
-				bookGuides.Name = "Publisher";
-				bookGuides.TabTitle = Res.Strings.Dialog.Print.TabPage.Publisher;
-				bookDoc.Items.Add(bookGuides);
+				TabPage bookPublisher = new TabPage();
+				bookPublisher.Name = "Publisher";
+				bookPublisher.TabTitle = Res.Strings.Dialog.Print.TabPage.Publisher;
+				bookDoc.Items.Add(bookPublisher);
 
-				bookDoc.ActivePage = bookFormat;
+				bookDoc.ActivePage = bookPrinter;
 
 				// Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);

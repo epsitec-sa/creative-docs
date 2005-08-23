@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.document != null && this.document.Modifier != null )
 			{
-				this.uniqueId = this.document.Modifier.GetNextUniqueObjectId();
+				this.uniqueId = this.document.GetNextUniqueObjectId();
 			}
 
 			this.properties = new UndoableList(this.document, UndoableListType.PropertiesInsideObject);
@@ -60,6 +60,12 @@ namespace Epsitec.Common.Document.Objects
 		protected void CreateProperties(Objects.Abstract model, bool floating)
 		{
 			System.Diagnostics.Debug.Assert(this.document != null);
+			if ( model != null && model.aggregate != null )
+			{
+				this.aggregate = model.aggregate;
+				this.document.Modifier.AggregateToDocument(this.aggregate);
+			}
+
 			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
 			{
 				Properties.Type type = (Properties.Type)value;
@@ -339,7 +345,7 @@ namespace Epsitec.Common.Document.Objects
 				if ( this.Handle(i).Detect(pos) )
 				{
 					double distance = Point.Distance(this.Handle(i).Position, pos);
-					if ( distance < min )
+					if ( distance < min && System.Math.Abs(distance-min) > 0.00001 )
 					{
 						min = distance;
 						rank = i;
@@ -854,7 +860,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Constuit les formes de l'objet.
-		protected virtual Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
+		public virtual Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			return null;
 		}
@@ -867,7 +873,7 @@ namespace Epsitec.Common.Document.Objects
 		//	this.bboxFull  boîte complète lorsque l'objet est sélectionné
 		protected void UpdateBoundingBox()
 		{
-			Shape[] shapes = this.ShapesBuild(null, false);
+			Shape[] shapes = this.ShapesBuild(null, null, false);
 			this.ComputeBoundingBox(shapes);
 
 			for ( int i=0 ; i<this.TotalHandle ; i++ )
@@ -879,6 +885,8 @@ namespace Epsitec.Common.Document.Objects
 		// Calcule toutes les bbox de l'objet en fonction des formes.
 		protected void ComputeBoundingBox(params Shape[] shapes)
 		{
+			if ( shapes == null )  return;
+
 			this.bboxThin = Drawing.Rectangle.Empty;
 			this.bboxGeom = Drawing.Rectangle.Empty;
 
@@ -890,6 +898,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 				
 				if ( shape.Aspect != Aspect.Normal       &&
+					 shape.Aspect != Aspect.Additional   &&
 					 shape.Aspect != Aspect.InvisibleBox )
 				{
 					continue;
@@ -898,21 +907,20 @@ namespace Epsitec.Common.Document.Objects
 				Drawing.Rectangle bbox = Geometry.ComputeBoundingBox(shape.Path);
 				this.bboxThin.MergeWith(bbox);
 
-				double width1 = 0.0;
-				double width2 = 0.0;
+				double width = 0.0;
 
 				if ( shape.Type == Type.Stroke )
 				{
-					width1 = Properties.Line.FatShape(shape);
+					width += Properties.Gradient.InflateBoundingBoxWidth(shape);
+					width += Properties.Line.InflateBoundingBoxWidth(shape);
+					width *= Properties.Line.InflateBoundingBoxFactor(shape);
 				}
 
-				if ( shape.PropertySurface is Properties.Gradient )
+				if ( shape.Type == Type.Surface )
 				{
-					Properties.Gradient surface = shape.PropertySurface as Properties.Gradient;
-					width2 = surface.InflateBoundingBoxWidth();
+					width += Properties.Gradient.InflateBoundingBoxWidth(shape);
 				}
 
-				double width = System.Math.Max(width1, width2);
 				bbox.Inflate(width);
 				this.bboxGeom.MergeWith(bbox);
 			}
@@ -926,17 +934,21 @@ namespace Epsitec.Common.Document.Objects
 					if ( shape == null )  continue;
 					if ( shape.Aspect != Aspect.Normal )  continue;
 
+					bool initialLineUse = this.surfaceAnchor.LineUse;
+
 					if ( shape.Type == Type.Surface && shape.PropertySurface != null )
 					{
 						this.surfaceAnchor.LineUse = false;
 						shape.PropertySurface.InflateBoundingBox(this.surfaceAnchor, ref this.bboxFull);
 					}
 
-					if ( shape.Type == Type.Stroke && shape.PropertyStroke != null )
+					if ( shape.Type == Type.Stroke && shape.PropertySurface != null )
 					{
 						this.surfaceAnchor.LineUse = true;
-						shape.PropertyStroke.InflateBoundingBox(this.surfaceAnchor, ref this.bboxFull);
+						shape.PropertySurface.InflateBoundingBox(this.surfaceAnchor, ref this.bboxFull);
 					}
+
+					this.surfaceAnchor.LineUse = initialLineUse;
 				}
 			}
 		}
@@ -1151,6 +1163,19 @@ namespace Epsitec.Common.Document.Objects
 		// avec des propriétés flottantes, pendant la création.
 		protected void AddProperty(Properties.Type type, Objects.Abstract model, bool floating)
 		{
+			if ( model != null )
+			{
+				Properties.Abstract original = model.Property(type);
+				if ( original != null && original.IsStyle )
+				{
+					// L'objet utilise directement la propriété du style, et
+					// surtout pas une copie !
+					original.Owners.Add(this);  // l'objet est un propriétaire de l'original
+					this.properties.Add(original);  // ajoute dans la liste de l'objet
+					return;
+				}
+			}
+
 			Properties.Abstract property = Properties.Abstract.NewProperty(this.document, type);
 
 			property.Owners.Add(this);  // l'objet est un propriétaire de cette propriété
@@ -1181,7 +1206,7 @@ namespace Epsitec.Common.Document.Objects
 
 			property.IsSelected = this.selected;
 
-			Properties.Abstract idem = this.SearchProperty(property, property.IsStyle, property.IsSelected);
+			Properties.Abstract idem = this.SearchProperty(property, property.IsSelected);
 			if ( idem == null || property is Properties.ModColor )
 			{
 				this.document.Modifier.PropertyAdd(property);
@@ -1258,6 +1283,25 @@ namespace Epsitec.Common.Document.Objects
 				if ( property.Type == type )  return property;
 			}
 			return null;
+		}
+
+		// Retourne la liste de toutes les types utilisant un style.
+		public Properties.Type[] PropertiesStyle()
+		{
+			int total = 0;
+			foreach ( Properties.Abstract property in this.properties )
+			{
+				if ( property.IsStyle )  total ++;
+			}
+
+			Properties.Type[] list = new Properties.Type[total];
+			int i = 0;
+			foreach ( Properties.Abstract property in this.properties )
+			{
+				if ( property.IsStyle )  list[i++] = property.Type;
+			}
+
+			return list;
 		}
 
 		public Properties.Name PropertyName
@@ -1447,6 +1491,7 @@ namespace Epsitec.Common.Document.Objects
 			foreach ( Properties.Abstract property in this.properties )
 			{
 				if ( property.Type == Properties.Type.ModColor )  continue;
+				if ( property.Type == Properties.Type.BackColor )  continue;
 				if ( filter != null && !filter.ExistingProperty(property.Type) )  continue;
 				list.Add(property);
 			}
@@ -1476,38 +1521,44 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this is Objects.Memory )
 			{
+				this.AggregateFree();
+
 				foreach ( Properties.Abstract mp in model.properties )
 				{
 					Properties.Abstract property = this.Property(mp.Type);
 					if ( property == null )  continue;
 
-					if ( property.IsStyle == mp.IsStyle )
+					if ( mp.IsStyle )
 					{
-						mp.CopyTo(property);
+						this.ChangeProperty(mp);
 					}
 					else
 					{
 						Properties.Abstract style = Properties.Abstract.NewProperty(this.document, mp.Type);
 						mp.CopyTo(style);
-						this.document.Modifier.OpletQueueEnable = false;
 						this.ChangeProperty(style);
-						this.document.Modifier.OpletQueueEnable = true;
 					}
 				}
+				this.Aggregate = model.aggregate;
 			}
 			else
 			{
 				foreach ( Properties.Abstract mp in model.properties )
 				{
-					if ( model.IsSelected )
+					if ( !mp.IsStyle )
 					{
-						this.UseProperty(mp);
-					}
-					else
-					{
-						this.PickerProperty(mp);
+						if ( model.IsSelected )
+						{
+							this.UseProperty(mp);
+						}
+						else
+						{
+							this.PickerProperty(mp);
+						}
 					}
 				}
+				this.AggregateUse(model.aggregate);
+				this.Aggregate = model.aggregate;
 				this.SetDirtyBbox();
 			}
 		}
@@ -1625,7 +1676,7 @@ namespace Epsitec.Common.Document.Objects
 		// Détache une propriété.
 		protected void SplitProperty(Properties.Abstract property, bool selected)
 		{
-			Properties.Abstract dst = this.SearchProperty(property, false, selected);
+			Properties.Abstract dst = this.SearchProperty(property, selected);
 			if ( dst == null )  // la propriété détachée sera seule ?
 			{
 				// Crée une nouvelle instance pour la propriété dans son nouvel
@@ -1634,7 +1685,6 @@ namespace Epsitec.Common.Document.Objects
 				property.CopyTo(dst);
 				dst.IsSelected = selected;  // nouvel état
 				dst.IsStyle = false;
-				dst.StyleName = "";
 				this.document.Modifier.PropertyAdd(dst);
 			}
 			this.MergeProperty(dst, property);  // fusionne év. à une même propriété
@@ -1656,23 +1706,142 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Cherche une propriété identique dans une collection du document.
-		protected Properties.Abstract SearchProperty(Properties.Abstract item, bool style, bool selected)
+		protected Properties.Abstract SearchProperty(Properties.Abstract item, bool selected)
 		{
-			UndoableList properties = this.document.Modifier.PropertyList(style, selected);
+			UndoableList properties = this.document.Modifier.PropertyList(selected);
+			
 			foreach ( Properties.Abstract property in properties )
 			{
 				if ( property == item )  continue;  // soi-même ?
 				if ( property.Type != item.Type )  continue;
 
-				// Lorsqu'on cherche à libèrer un style (FreeProperty), il faut chercher
-				// une propriété automatique équivalente au style (item), mais sans tenir
-				// compte du nom du style.
-				property.IsCompareStyleName = false;
-				bool eq = property.Compare(item);
-				property.IsCompareStyleName = true;
-				if ( eq )  return property;
+				if ( property.Compare(item) )  return property;
 			}
 			return null;
+		}
+
+
+		// Agrégat utilisé par l'objet.
+		public Properties.Aggregate Aggregate
+		{
+			get
+			{
+				return this.aggregate;
+			}
+
+			set
+			{
+				if ( this.aggregate != value )
+				{
+					this.InsertOpletAggregate();
+					this.aggregate = value;
+					this.SetDirtyBbox();
+					this.document.Notifier.NotifyArea(this.BoundingBox);
+				}
+			}
+		}
+
+		// Nom de l'agrégat utilisé par l'objet.
+		public string AggregateName
+		{
+			get
+			{
+				if ( this.aggregate == null )  return "";
+				return this.aggregate.AggregateName;
+			}
+		}
+
+		// Adapte l'objet en fonction des changements dans l'agrégat.
+		public void AggregateAdapt(Properties.Aggregate agg)
+		{
+			if ( agg.IsUsedByObject(this) )
+			{
+				this.AggregateFree();
+				this.AggregateUse(this.aggregate);
+			}
+		}
+
+		// Utilise toutes les propriétés d'un agrégat.
+		public void AggregateUse(Properties.Aggregate agg)
+		{
+			if ( agg != null )
+			{
+				if ( this is Objects.Memory )
+				{
+					for ( int i=0 ; i<this.properties.Count ; i++ )
+					{
+						Properties.Abstract property = this.properties[i] as Properties.Abstract;
+						Properties.Abstract style = agg.PropertyDeep(property.Type);
+						if ( style != null )
+						{
+							this.ChangeProperty(style);
+						}
+					}
+				}
+				else
+				{
+					for ( int i=0 ; i<this.properties.Count ; i++ )
+					{
+						Properties.Abstract property = this.properties[i] as Properties.Abstract;
+						Properties.Abstract style = agg.PropertyDeep(property.Type);
+						if ( style != null )
+						{
+							this.UseProperty(style);
+						}
+					}
+				}
+			}
+		}
+
+		// Libère toutes les propriétés d'un agrégat.
+		public void AggregateFree()
+		{
+			for ( int i=0 ; i<this.properties.Count ; i++ )
+			{
+				Properties.Abstract property = this.properties[i] as Properties.Abstract;
+				this.AggregateFree(property);
+			}
+		}
+
+		// Libère une propriété d'un agrégat.
+		public void AggregateFree(Properties.Abstract property)
+		{
+			if ( this is Objects.Memory )
+			{
+				if ( property.IsStyle )
+				{
+					Properties.Abstract free = Properties.Abstract.NewProperty(this.document, property.Type);
+					property.CopyTo(free);
+					free.IsOnlyForCreation = true;
+					free.IsStyle = false;
+					this.ChangeProperty(free);
+				}
+			}
+			else
+			{
+				if ( property.IsStyle )
+				{
+					this.FreeProperty(property);
+				}
+			}
+		}
+
+		// Libère toutes les propriétés d'un agrégat qui sera détruit.
+		public void AggregateDelete(Properties.Aggregate agg)
+		{
+			if ( agg == this.aggregate )
+			{
+				this.AggregateFree();
+				this.Aggregate = null;
+			}
+			else
+			{
+				this.AggregateFree();
+				if ( this.aggregate != null )
+				{
+					this.AggregateUse(this.aggregate);
+				}
+			}
 		}
 
 
@@ -1687,7 +1856,7 @@ namespace Epsitec.Common.Document.Objects
 			bbox.Inflate(context.MinimalWidth);
 			if ( !bbox.Contains(pos) )  return false;
 
-			Shape[] shapes = this.ShapesBuild(context, false);
+			Shape[] shapes = this.ShapesBuild(null, null, false);
 			return context.Drawer.Detect(pos, context, shapes);
 		}
 
@@ -1808,6 +1977,11 @@ namespace Epsitec.Common.Document.Objects
 		{
 		}
 
+		// Ajoute tous les caractères utilisés par l'objet dans une table.
+		public virtual void FillOneCharList(System.Collections.Hashtable table)
+		{
+		}
+
 
 		// Crée une instance de l'objet.
 		protected abstract Objects.Abstract CreateNewObject(Document document, Objects.Abstract model);
@@ -1874,7 +2048,7 @@ namespace Epsitec.Common.Document.Objects
 			System.Diagnostics.Debug.Assert(!this.selected || !this.isHide);
 
 			// Dessine les formes.
-			Shape[] shapes = this.ShapesBuild(drawingContext, false);
+			Shape[] shapes = this.ShapesBuild(port, drawingContext, false);
 			if ( shapes != null )
 			{
 				drawingContext.Drawer.DrawShapes(port, drawingContext, this, shapes);
@@ -1883,13 +2057,13 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if ( this.IsHilite && drawingContext.IsActive )
 					{
-						Shape.Hilited(shapes);
+						Shape.Hilited(port, shapes);
 						drawingContext.Drawer.DrawShapes(port, drawingContext, this, shapes);
 					}
 
 					if ( this.IsOverDash(drawingContext) )
 					{
-						Shape.OverDashed(shapes);
+						Shape.OverDashed(port, shapes);
 						drawingContext.Drawer.DrawShapes(port, drawingContext, this, shapes);
 					}
 				}
@@ -1960,7 +2134,7 @@ namespace Epsitec.Common.Document.Objects
 			graphics.Align(ref bbox);
 			bbox.Inflate(0.5/drawingContext.ScaleX);
 
-			string s = name.String;
+			string s = TextLayout.ConvertToSimpleText(name.String);
 			Point pos = bbox.TopLeft;
 			Font font = Misc.GetFont("Tahoma");
 			double fs = 9.5/drawingContext.ScaleX;
@@ -1971,7 +2145,6 @@ namespace Epsitec.Common.Document.Objects
 			double m = 2.0/drawingContext.ScaleX;
 
 			Color lineColor = drawingContext.HiliteOutlineColor;
-			//?lineColor.A = 1.0;
 			if ( this.isHilite )  // survolé par la souris ?
 			{
 				lineColor = Color.FromRGB(1,0,0);  // rouge
@@ -1999,6 +2172,68 @@ namespace Epsitec.Common.Document.Objects
 				graphics.RenderSolid(shadowColor);
 
 				graphics.AddText(pos.X, pos.Y, s, font, fs);
+				graphics.RenderSolid(textColor);
+			}
+
+			graphics.AddRectangle(bbox);
+			graphics.RenderSolid(lineColor);
+
+			graphics.LineWidth = initialWidth;
+		}
+
+		// Dessine le nom du style.
+		public void DrawAggregate(Graphics graphics, DrawingContext drawingContext)
+		{
+			if ( this.isHide )  return;
+
+			if ( this.aggregate == null )  return;
+			string name = TextLayout.ConvertToSimpleText(this.aggregate.AggregateName);
+			if ( name == "" )  return;
+
+			double initialWidth = graphics.LineWidth;
+			graphics.LineWidth = 1.0/drawingContext.ScaleX;
+
+			Drawing.Rectangle bbox = this.BoundingBox;
+			graphics.Align(ref bbox);
+			bbox.Inflate(0.5/drawingContext.ScaleX);
+
+			Point pos = bbox.BottomLeft;
+			Font font = Misc.GetFont("Tahoma");
+			double fs = 9.5/drawingContext.ScaleX;
+			double ta = font.GetTextAdvance(name)*fs;
+			double fa = font.Ascender*fs;
+			double fd = font.Descender*fs;
+			double h = fa-fd;
+			double m = 2.0/drawingContext.ScaleX;
+
+			Color lineColor = drawingContext.HiliteOutlineColor;
+			if ( this.isHilite )  // survolé par la souris ?
+			{
+				lineColor = Color.FromRGB(1.0, 0.8, 0.0);  // jaune-orange
+			}
+
+			Color textColor = Color.FromBrightness(0);  // noir
+			Color shadowColor = Color.FromBrightness(1);  // blanc
+			if ( lineColor.GetBrightness() < 0.5 )  // couleur foncée ?
+			{
+				textColor = Color.FromBrightness(1);  // blanc
+				shadowColor = Color.FromBrightness(0);  // noir
+			}
+
+			if ( m+ta+m <= bbox.Width )
+			{
+				Drawing.Rectangle rect = new Drawing.Rectangle(bbox.Left, bbox.Bottom, m+ta+m, h);
+				graphics.Align(ref rect);
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(lineColor);
+
+				pos.X += m;
+				pos.Y += m;
+
+				graphics.AddText(pos.X+1.0/drawingContext.ScaleX, pos.Y-1.0/drawingContext.ScaleX, name, font, fs);
+				graphics.RenderSolid(shadowColor);
+
+				graphics.AddText(pos.X, pos.Y, name, font, fs);
 				graphics.RenderSolid(textColor);
 			}
 
@@ -2051,38 +2286,30 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		// Donne la liste des propriétés qui utilisent des patterns.
-		public System.Collections.ArrayList GetPattensPDF()
+		// Donne la liste des propriétés qui utilisent des surfaces complexes.
+		public System.Collections.ArrayList GetComplexSurfacesPDF(IPaintPort port)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 
 			foreach ( Properties.Abstract property in this.properties )
 			{
-				if ( property.IsPatternPDF )
+				for ( int i=0 ; i<2 ; i++ )
 				{
-					list.Add(property);
+					Properties.Abstract surface = null;
+					if ( i == 0 )  surface = property as Properties.Gradient;
+					if ( i == 1 )  surface = property as Properties.Font;
+					if ( surface == null )  continue;
+
+					PDF.Type type = surface.TypeComplexSurfacePDF(port);
+					bool isSmooth = surface.IsSmoothSurfacePDF(port);
+
+					if ( type == PDF.Type.None )  continue;
+					if ( type == PDF.Type.OpaqueRegular && !isSmooth )  continue;
+
+					list.Add(surface);
 				}
 			}
 			return list;
-		}
-
-		// Crée le pattern et retourne sa taille.
-		public Size CreatePatternPDF(int rank, PDF.Port port)
-		{
-			int i = 0;
-			foreach ( Properties.Abstract property in this.properties )
-			{
-				if ( property.IsPatternPDF )
-				{
-					if ( i == rank )
-					{
-						return property.CreatePatternPDF(port);
-					}
-
-					i ++;
-				}
-			}
-			return Size.Empty;
 		}
 
 
@@ -2285,7 +2512,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 		#endregion
 
-		
+
 		#region OpletName
 		// Ajoute un oplet pour mémoriser le nom de l'objet.
 		protected void InsertOpletName()
@@ -2334,7 +2561,50 @@ namespace Epsitec.Common.Document.Objects
 		}
 		#endregion
 
-		
+
+		#region OpletAggregate
+		// Ajoute un oplet pour mémoriser l'agrégat de l'objet.
+		protected void InsertOpletAggregate()
+		{
+			if ( !this.document.Modifier.OpletQueueEnable )  return;
+			OpletAggregate oplet = new OpletAggregate(this);
+			this.document.Modifier.OpletQueue.Insert(oplet);
+		}
+
+		// Mémorise l'agrégat de l'objet.
+		protected class OpletAggregate : AbstractOplet
+		{
+			public OpletAggregate(Objects.Abstract host)
+			{
+				this.host = host;
+				this.aggregate = host.aggregate;
+			}
+
+			protected void Swap()
+			{
+				Properties.Aggregate temp = host.aggregate;
+				host.aggregate = this.aggregate;  // host.aggregate <-> this.aggregate
+				this.aggregate = temp;
+			}
+
+			public override IOplet Undo()
+			{
+				this.Swap();
+				return this;
+			}
+
+			public override IOplet Redo()
+			{
+				this.Swap();
+				return this;
+			}
+
+			protected Objects.Abstract				host;
+			protected Properties.Aggregate			aggregate;
+		}
+		#endregion
+
+
 		#region Serialization
 		// Sérialise l'objet.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -2353,6 +2623,7 @@ namespace Epsitec.Common.Document.Objects
 
 			info.AddValue("Objects", this.objects);
 			info.AddValue("Direction", this.direction);
+			info.AddValue("Aggregate", this.aggregate);
 		}
 
 		// Constructeur qui désérialise l'objet.
@@ -2376,6 +2647,15 @@ namespace Epsitec.Common.Document.Objects
 			else
 			{
 				this.direction = 0.0;
+			}
+
+			if ( this.document.IsRevisionGreaterOrEqual(1,0,24) )
+			{
+				this.aggregate = (Properties.Aggregate) info.GetValue("Aggregate", typeof(Properties.Aggregate));
+			}
+			else
+			{
+				this.aggregate = null;
 			}
 		}
 
@@ -2451,5 +2731,6 @@ namespace Epsitec.Common.Document.Objects
 		protected double						direction = 0.0;
 		protected double						initialDirection = 0.0;
 		protected SurfaceAnchor					surfaceAnchor;
+		protected Properties.Aggregate			aggregate = null;
 	}
 }

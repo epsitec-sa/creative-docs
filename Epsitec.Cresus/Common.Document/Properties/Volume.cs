@@ -116,10 +116,13 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Détermine le nom de la propriété dans la liste (Lister).
-		public string GetListName()
+		// Donne le petit texte pour les échantillons.
+		public override string SampleText
 		{
-			return Volume.GetName(this.volumeType);
+			get
+			{
+				return Volume.GetName(this.volumeType);
+			}
 		}
 
 		// Cherche le type correspondant à un index donné.
@@ -161,6 +164,19 @@ namespace Epsitec.Common.Document.Properties
 				case VolumeType.Cylinder:  name = Res.Strings.Property.Volume.Cylinder;  break;
 			}
 			return name;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(VolumeType type)
+		{
+			switch ( type )
+			{
+				case VolumeType.BoxClose:  return "VolumeBoxClose";
+				case VolumeType.BoxOpen:   return "VolumeBoxOpen";
+				case VolumeType.Pyramid:   return "VolumePyramid";
+				case VolumeType.Cylinder:  return "VolumeCylinder";
+			}
+			return "";
 		}
 
 		
@@ -335,6 +351,7 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Volume(document);
 		}
 

@@ -36,11 +36,12 @@ namespace Epsitec.Common.Widgets.Adorner
 			b = 1-(1-this.colorControlLight.B)*0.7;
 			this.colorButton = Drawing.Color.FromRGB(r,g,b);
 
-			this.colorCaption = Drawing.Color.FromRGB( 58.0/255.0, 167.0/255.0, 233.0/255.0);
-			this.colorHilite  = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
-			this.colorBorder  = Drawing.Color.FromRGB( 23.0/255.0, 132.0/255.0, 198.0/255.0);
-			this.colorError   = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorWindow  = Drawing.Color.FromRGB(198.0/255.0, 226.0/255.0, 234.0/255.0);
+			this.colorCaption        = Drawing.Color.FromRGB( 58.0/255.0, 167.0/255.0, 233.0/255.0);
+			this.colorHilite         = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorBorder         = Drawing.Color.FromRGB( 23.0/255.0, 132.0/255.0, 198.0/255.0);
+			this.colorError          = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorTextBackground = Drawing.Color.FromRGB(250.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorWindow         = Drawing.Color.FromRGB(198.0/255.0, 226.0/255.0, 234.0/255.0);
 		}
 		
 
@@ -1664,6 +1665,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			get { return this.colorBorder; }
 		}
 
+		public Drawing.Color ColorTextBackground
+		{
+			get { return this.colorTextBackground; }
+		}
+
 		public Drawing.Color ColorText(WidgetState state)
 		{
 			if ( (state&WidgetState.Enabled) != 0 )
@@ -1736,6 +1742,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorHilite;
 		protected Drawing.Color		colorBorder;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorTextBackground;
 		protected Drawing.Color		colorWindow;
 	}
 }

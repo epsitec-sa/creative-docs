@@ -12,54 +12,58 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Regular(Document document) : base(document)
 		{
-			this.label = new StaticText(this);
-			this.label.Alignment = ContentAlignment.MiddleLeft;
+			this.grid = new Widgets.RadioIconGrid(this);
+			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.grid.TabIndex = 0;
+			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.fieldNbFaces = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldNbFaces);
-			this.fieldNbFaces.InternalMinValue = 3;
-			this.fieldNbFaces.InternalMaxValue = 24;
-			this.fieldNbFaces.Step = 1;
-			this.fieldNbFaces.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.AddRadioIcon(false);
+			this.AddRadioIcon(true);
+
+			this.fieldNbFaces = new Widgets.TextFieldLabel(this, false);
+			this.fieldNbFaces.LabelShortText = Res.Strings.Panel.Regular.Short.Faces;
+			this.fieldNbFaces.LabelLongText  = Res.Strings.Panel.Regular.Long.Faces;
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldNbFaces.TextFieldReal);
+			this.fieldNbFaces.TextFieldReal.InternalMinValue = 3;
+			this.fieldNbFaces.TextFieldReal.InternalMaxValue = 24;
+			this.fieldNbFaces.TextFieldReal.Step = 1;
+			this.fieldNbFaces.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldNbFaces.TabIndex = 1;
 			this.fieldNbFaces.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldNbFaces, Res.Strings.Panel.Regular.Tooltip.Faces);
 
-			this.checkStar = new CheckButton(this);
-			this.checkStar.Text = Res.Strings.Panel.Regular.Label.Star;
-			this.checkStar.ActiveStateChanged += new EventHandler(this.HandleCheckChanged);
-			this.checkStar.TabIndex = 2;
-			this.checkStar.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.fieldDeep = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldDeep);
-			this.fieldDeep.InternalMinValue = 0;
-			this.fieldDeep.InternalMaxValue = 100;
-			this.fieldDeep.Step = 5;
-			this.fieldDeep.TextSuffix = "%";
-			this.fieldDeep.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldDeep = new Widgets.TextFieldLabel(this, false);
+			this.fieldDeep.LabelShortText = Res.Strings.Panel.Regular.Short.Deep;
+			this.fieldDeep.LabelLongText  = Res.Strings.Panel.Regular.Long.Deep;
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldDeep.TextFieldReal);
+			this.fieldDeep.TextFieldReal.InternalMinValue = 0;
+			this.fieldDeep.TextFieldReal.InternalMaxValue = 100;
+			this.fieldDeep.TextFieldReal.Step = 5;
+			this.fieldDeep.TextFieldReal.TextSuffix = "%";
+			this.fieldDeep.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldDeep.TabIndex = 3;
 			this.fieldDeep.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.labelDeep = new StaticText(this);
-			this.labelDeep.Text = Res.Strings.Panel.Regular.Label.Deep;
-			this.labelDeep.Alignment = ContentAlignment.MiddleCenter;
+			ToolTip.Default.SetToolTip(this.fieldDeep, Res.Strings.Panel.Regular.Tooltip.Deep);
 
 			this.isNormalAndExtended = true;
 		}
 		
+		protected void AddRadioIcon(bool type)
+		{
+			this.grid.AddRadioIcon(Properties.Regular.GetIconText(type), Properties.Regular.GetName(type), type?1:0, false);
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
-				this.fieldNbFaces.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.checkStar.ActiveStateChanged -= new EventHandler(this.HandleCheckChanged);
-				this.fieldDeep.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
+				this.fieldNbFaces.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldDeep.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
 
-				this.label = null;
+				this.grid = null;
 				this.fieldNbFaces = null;
-				this.checkStar = null;
 				this.fieldDeep = null;
-				this.labelDeep = null;
 			}
 			
 			base.Dispose(disposing);
@@ -71,7 +75,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return ( this.isExtendedSize ? 55 : 30 );
+				return ( this.isExtendedSize ? this.LabelHeight+55 : this.LabelHeight+30 );
 			}
 		}
 
@@ -85,11 +89,9 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			this.label.Text = p.TextStyle;
-
-			this.fieldNbFaces.InternalValue = p.NbFaces;
-			this.checkStar.ActiveState = p.Star ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.fieldDeep.InternalValue = (decimal) p.Deep*100;
+			this.grid.SelectedValue = p.Star ? 1 : 0;
+			this.fieldNbFaces.TextFieldReal.InternalValue = p.NbFaces;
+			this.fieldDeep.TextFieldReal.InternalValue = (decimal) p.Deep*100;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -101,17 +103,15 @@ namespace Epsitec.Common.Document.Panels
 			Properties.Regular p = this.property as Properties.Regular;
 			if ( p == null )  return;
 
-			p.NbFaces = (int)this.fieldNbFaces.InternalValue;
-			p.Star = ( this.checkStar.ActiveState == WidgetState.ActiveYes );
-			p.Deep = (double) this.fieldDeep.InternalValue/100;
+			p.Star = (this.grid.SelectedValue == 1);
+			p.NbFaces = (int)this.fieldNbFaces.TextFieldReal.InternalValue;
+			p.Deep = (double) this.fieldDeep.TextFieldReal.InternalValue/100;
 		}
 
 		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
-			this.checkStar.SetEnabled(this.isExtendedSize);
-
-			bool star = ( this.checkStar.ActiveState == WidgetState.ActiveYes );
+			bool star = (this.grid.SelectedValue == 1);
 			this.fieldDeep.SetEnabled(this.isExtendedSize && star);
 		}
 
@@ -120,35 +120,48 @@ namespace Epsitec.Common.Document.Panels
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.fieldNbFaces == null )  return;
+			if ( this.grid == null )  return;
 
 			this.EnableWidgets();
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
+			Rectangle rect = this.UsefulZone;
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			r.Right = rect.Right-50;
-			this.label.Bounds = r;
+			r.Width = 22*2;
+			r.Inflate(1);
+			this.grid.Bounds = r;
 
-			r.Left = rect.Right-50;
-			r.Right = rect.Right;
-			this.fieldNbFaces.Bounds = r;
+			if ( this.isExtendedSize && this.IsLabelProperties )
+			{
+				r = rect;
+				r.Bottom = r.Top-20;
+				r.Left = rect.Left+22*2;
+				r.Right = rect.Right;
+				this.fieldNbFaces.Bounds = r;
 
-			rect.Top = r.Bottom-5;
-			rect.Bottom = rect.Top-20;
-			r = rect;
-			r.Height = 20;
-			r.Width = 50;
-			this.checkStar.Bounds = r;
-			r.Left = r.Right;
-			r.Width = 75;
-			this.labelDeep.Bounds = r;
-			r.Left = r.Right;
-			r.Width = 50;
-			this.fieldDeep.Bounds = r;
+				rect.Top = r.Bottom-5;
+				rect.Bottom = rect.Top-20;
+				r = rect;
+				r.Left = rect.Left;
+				r.Right = rect.Right;
+				this.fieldDeep.Bounds = r;
+			}
+			else
+			{
+				r = rect;
+				r.Bottom = r.Top-20;
+				r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
+				r.Right = rect.Right;
+				this.fieldNbFaces.Bounds = r;
+
+				rect.Top = r.Bottom-5;
+				rect.Bottom = rect.Top-20;
+				r = rect;
+				r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
+				r.Right = rect.Right;
+				this.fieldDeep.Bounds = r;
+			}
 		}
 		
 		// Un champ a été changé.
@@ -159,7 +172,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		// Un champ a été changé.
-		private void HandleCheckChanged(object sender)
+		private void HandleTypeChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
 			this.EnableWidgets();
@@ -167,10 +180,8 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected StaticText				label;
-		protected TextFieldReal				fieldNbFaces;
-		protected CheckButton				checkStar;
-		protected TextFieldReal				fieldDeep;
-		protected StaticText				labelDeep;
+		protected Widgets.RadioIconGrid		grid;
+		protected Widgets.TextFieldLabel	fieldNbFaces;
+		protected Widgets.TextFieldLabel	fieldDeep;
 	}
 }

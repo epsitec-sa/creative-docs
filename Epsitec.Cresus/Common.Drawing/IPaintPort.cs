@@ -3,19 +3,31 @@
 
 namespace Epsitec.Common.Drawing
 {
+	public delegate void ColorModifier(ref RichColor color);
+
 	/// <summary>
 	/// Summary description for IPaintPort.
 	/// </summary>
 	public interface IPaintPort
 	{
-		double		LineWidth		{ get; set; }
-		JoinStyle	LineJoin		{ get; set; }
-		CapStyle	LineCap			{ get; set; }
-		double		LineMiterLimit	{ get; set; }
-		Color		Color			{ get; set; }
-		Transform	Transform		{ get; set; }
-		FillMode	FillMode		{ get; set; }
+		double		LineWidth			{ get; set; }
+		JoinStyle	LineJoin			{ get; set; }
+		CapStyle	LineCap				{ get; set; }
+		double		LineMiterLimit		{ get; set; }
+		RichColor	RichColor			{ get; set; }
+		Color		Color				{ get; set; }
+		RichColor	FinalRichColor		{ get; set; }
+		Color		FinalColor			{ get; set; }
+		Transform	Transform			{ get; set; }
+		FillMode	FillMode			{ get; set; }
 		
+		void PushColorModifier(ColorModifier method);
+		ColorModifier PopColorModifier();
+		System.Collections.Stack StackColorModifier { get; set; }
+
+		RichColor GetFinalColor(RichColor color);
+		Color GetFinalColor(Color color);
+
 		void SetClippingRectangle(Rectangle rect);
 		void SetClippingRectangle(Point p, Size s);
 		void SetClippingRectangle(double x, double y, double width, double height);

@@ -142,9 +142,14 @@ namespace Epsitec.Common.Drawing
 		
 		public double GetBrightness()
 		{
+			return Color.GetBrightness (this.r, this.g, this.b);
+		}
+		
+		public static double GetBrightness(double r, double g, double b)
+		{
 			//	Calcule la luminosité de la couleur.
 			
-			return this.r*0.30 + this.g*0.59 + this.b*0.11;
+			return r*0.30 + g*0.59 + b*0.11;
 		}
 		
 		public void GetHSV(out double h, out double s, out double v)

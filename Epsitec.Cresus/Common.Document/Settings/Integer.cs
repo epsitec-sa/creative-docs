@@ -20,44 +20,36 @@ namespace Epsitec.Common.Document.Settings
 		{
 			this.conditionName = "";
 			this.conditionState = false;
+			this.minValue = 0;
+			this.maxValue = 100;
+			this.step = 1;
 
 			switch ( this.name )
 			{
 				case "DefaultUnit":
 					this.text = Res.Strings.Dialog.Integer.DefaultUnit.Text;
-					this.minValue = 0;
-					this.maxValue = 100;
-					this.step = 1;
 					break;
 
 				case "PrintArea":
 					this.text = Res.Strings.Dialog.Integer.PrintArea.Text;
-					this.minValue = 0;
-					this.maxValue = 100;
-					this.step = 1;
 					break;
 
 				case "PrintCentring":
 					this.text = Res.Strings.Dialog.Integer.PrintCentring.Text;
 					this.conditionName = "PrintAutoZoom";
 					this.conditionState = true;
-					this.minValue = 0;
-					this.maxValue = 100;
-					this.step = 1;
 					break;
 
 				case "ImageDepth":
 					this.text = Res.Strings.Dialog.Integer.ImageDepth.Text;
-					this.minValue = 0;
-					this.maxValue = 100;
-					this.step = 1;
 					break;
 
 				case "ImageCompression":
 					this.text = Res.Strings.Dialog.Integer.ImageCompression.Text;
-					this.minValue = 0;
-					this.maxValue = 100;
-					this.step = 1;
+					break;
+
+				case "ExportPDFColorConversion":
+					this.text = Res.Strings.Dialog.Integer.ExportPDFColorConversion.Text;
 					break;
 			}
 		}
@@ -82,6 +74,9 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ImageCompression":
 						return (int) this.document.Printer.ImageCompression;
+
+					case "ExportPDFColorConversion":
+						return (int) this.document.Settings.ExportPDFInfo.ColorConversion;
 				}
 
 				return 0;
@@ -109,6 +104,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ImageCompression":
 						this.document.Printer.ImageCompression = (ImageCompression) value;
+						break;
+
+					case "ExportPDFColorConversion":
+						this.document.Settings.ExportPDFInfo.ColorConversion = (PDF.ColorConversion) value;
 						break;
 				}
 			}
@@ -215,6 +214,14 @@ namespace Epsitec.Common.Document.Settings
 					if ( ic == ImageCompression.FaxGroup3 )  return Res.Strings.Dialog.Integer.ImageCompression.FaxGroup3;
 					if ( ic == ImageCompression.FaxGroup4 )  return Res.Strings.Dialog.Integer.ImageCompression.FaxGroup4;
 					break;
+
+				case "ExportPDFColorConversion":
+					PDF.ColorConversion cc = (PDF.ColorConversion) type;
+					if ( cc == PDF.ColorConversion.None   )  return Res.Strings.Dialog.Integer.ExportPDFColorConversion.None;
+					if ( cc == PDF.ColorConversion.ToRGB  )  return Res.Strings.Dialog.Integer.ExportPDFColorConversion.ToRGB;
+					if ( cc == PDF.ColorConversion.ToCMYK )  return Res.Strings.Dialog.Integer.ExportPDFColorConversion.ToCMYK;
+					if ( cc == PDF.ColorConversion.ToGray )  return Res.Strings.Dialog.Integer.ExportPDFColorConversion.ToGray;
+					break;
 			}
 			return "";
 		}
@@ -261,6 +268,13 @@ namespace Epsitec.Common.Document.Settings
 
 				case "ImageCompression":
 					return this.RankToTypeImageCompression(rank);
+
+				case "ExportPDFColorConversion":
+					if ( rank == 0 )  return (int) PDF.ColorConversion.None;
+					if ( rank == 1 )  return (int) PDF.ColorConversion.ToRGB;
+					if ( rank == 2 )  return (int) PDF.ColorConversion.ToCMYK;
+					if ( rank == 3 )  return (int) PDF.ColorConversion.ToGray;
+					return -1;
 			}
 			return -1;
 		}

@@ -73,6 +73,18 @@ namespace Epsitec.Common.Document
 			return string.Format("<i>{0}</i>", text);
 		}
 
+		// Retourne le texte pour mettre une image dans un texte.
+		static public string Image(string icon)
+		{
+			return string.Format(@"<img src=""{0}""/>", Misc.Icon(icon));
+		}
+
+		// Retourne le nom complet d'une icône.
+		static public string Icon(string icon)
+		{
+			return string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}.icon", icon);
+		}
+
 		// Donne le nom complet du fichier.
 		// Si le nom n'existe pas, donne "sans titre".
 		// Si le fichier doit être sérialisé, donne le nom en gras.

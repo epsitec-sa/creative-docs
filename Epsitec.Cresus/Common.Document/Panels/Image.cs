@@ -13,9 +13,6 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Image(Document document) : base(document)
 		{
-			this.label = new StaticText(this);
-			this.label.Alignment = ContentAlignment.MiddleLeft;
-
 			this.fieldFilename = new TextField(this);
 			this.fieldFilename.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldFilename.TabIndex = 1;
@@ -68,7 +65,6 @@ namespace Epsitec.Common.Document.Panels
 				this.buttonMirrorV.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 				this.buttonHomo.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 
-				this.label = null;
 				this.fieldFilename = null;
 				this.buttonBrowse = null;
 				this.buttonUpdate = null;
@@ -86,7 +82,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return ( this.isExtendedSize ? 100 : 55 );
+				return ( this.isExtendedSize ? this.LabelHeight+100 : this.LabelHeight+55 );
 			}
 		}
 
@@ -99,8 +95,6 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			this.ignoreChanged = true;
-
-			this.label.Text = p.TextStyle;
 
 			this.fieldFilename.Text = p.Filename;
 			this.fieldFilename.Cursor = p.Filename.Length;
@@ -131,24 +125,16 @@ namespace Epsitec.Common.Document.Panels
 
 			if ( this.fieldFilename == null )  return;
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
+			Rectangle rect = this.UsefulZone;
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			r.Left = rect.Left;
-			r.Right = rect.Right-110;
-			this.label.Bounds = r;
-			r.Left = r.Right;
-			r.Right = rect.Right;
 			this.fieldFilename.Bounds = r;
 
 			r.Offset(0, -25);
-			r.Left = rect.Right-110;
-			r.Right = rect.Right-40;
+			r.Right = rect.Right-50-2;
 			this.buttonBrowse.Bounds = r;
-			r.Left = rect.Right-38;
+			r.Left = rect.Right-50;
 			r.Right = rect.Right;
 			this.buttonUpdate.Bounds = r;
 
@@ -207,7 +193,6 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected StaticText				label;
 		protected TextField					fieldFilename;
 		protected Button					buttonBrowse;
 		protected Button					buttonUpdate;

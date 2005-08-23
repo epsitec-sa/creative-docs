@@ -29,10 +29,34 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowExportCloseClicked);
 
-				Panel panel = new Panel(this.window.Root);
-				panel.Name = "Panel";
-				panel.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-				panel.AnchorMargins = new Margins(10, 10, 10, 40);
+				// Crée les onglets.
+				TabBook bookDoc = new TabBook(this.window.Root);
+				bookDoc.Name = "Book";
+				bookDoc.Arrows = TabBookArrows.Stretch;
+				bookDoc.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+				bookDoc.AnchorMargins = new Margins(6, 6, 6, 34);
+
+				TabPage bookGeneric = new TabPage();
+				bookGeneric.Name = "Generic";
+				bookGeneric.TabTitle = Res.Strings.Dialog.ExportPDF.TabPage.Generic;
+				bookDoc.Items.Add(bookGeneric);
+
+				TabPage bookColor = new TabPage();
+				bookColor.Name = "Color";
+				bookColor.TabTitle = Res.Strings.Dialog.ExportPDF.TabPage.Color;
+				bookDoc.Items.Add(bookColor);
+
+				TabPage bookImage = new TabPage();
+				bookImage.Name = "Image";
+				bookImage.TabTitle = Res.Strings.Dialog.ExportPDF.TabPage.Image;
+				bookDoc.Items.Add(bookImage);
+
+				TabPage bookPublisher = new TabPage();
+				bookPublisher.Name = "Publisher";
+				bookPublisher.TabTitle = Res.Strings.Dialog.ExportPDF.TabPage.Publisher;
+				bookDoc.Items.Add(bookPublisher);
+
+				bookDoc.ActivePage = bookGeneric;
 
 				// Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
@@ -40,7 +64,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonOk.Text = Res.Strings.Dialog.ExportPDF.Button.OK;
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomLeft;
-				buttonOk.AnchorMargins = new Margins(10, 0, 0, 10);
+				buttonOk.AnchorMargins = new Margins(6, 0, 0, 6);
 				buttonOk.Clicked += new MessageEventHandler(this.HandleExportButtonOkClicked);
 				buttonOk.TabIndex = 10;
 				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -50,7 +74,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonCancel.Width = 75;
 				buttonCancel.Text = Res.Strings.Dialog.ExportPDF.Button.Cancel;
 				buttonCancel.Anchor = AnchorStyles.BottomLeft;
-				buttonCancel.AnchorMargins = new Margins(10+75+10, 0, 0, 10);
+				buttonCancel.AnchorMargins = new Margins(6+75+10, 0, 0, 6);
 				buttonCancel.Clicked += new MessageEventHandler(this.HandleExportButtonCancelClicked);
 				buttonCancel.TabIndex = 11;
 				buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -63,7 +87,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.window.Text = string.Format(Res.Strings.Dialog.ExportPDF.Title2, System.IO.Path.GetFileName(filename));
-			this.window.Show();
+			this.window.ShowDialog();
 		}
 
 		// Enregistre la position de la fenêtre du dialogue.
@@ -107,7 +131,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.window.Hide();
 			this.OnClosed();
 
-			string filename = string.Format("{0}\\{1}", this.editor.CurrentDocument.ExportPDFDirectory, this.editor.CurrentDocument.ExportPDFFilename);
+			string filename = string.Format("{0}\\{1}", this.editor.CurrentDocument.ExportDirectory, this.editor.CurrentDocument.ExportFilename);
 			string err = this.editor.CurrentDocument.ExportPDF(filename);
 			this.editor.DialogError(this.editor.CommandDispatcher, err);
 		}

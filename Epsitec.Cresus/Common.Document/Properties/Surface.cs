@@ -126,10 +126,13 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Détermine le nom de la propriété dans la liste (Lister).
-		public string GetListName()
+		// Donne le petit texte pour les échantillons.
+		public override string SampleText
 		{
-			return Surface.GetName(this.surfaceType);
+			get
+			{
+				return Surface.GetName(this.surfaceType);
+			}
 		}
 
 		// Cherche le type correspondant à un index donné.
@@ -197,6 +200,32 @@ namespace Epsitec.Common.Document.Properties
 				case SurfaceType.SpiralCCW:  name = Res.Strings.Property.Surface.SpiralCCW;  break;
 			}
 			return name;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(SurfaceType type)
+		{
+			switch ( type )
+			{
+				case SurfaceType.ParallelT:  return "SurfaceParallelT";
+				case SurfaceType.ParallelB:  return "SurfaceParallelB";
+				case SurfaceType.ParallelL:  return "SurfaceParallelL";
+				case SurfaceType.ParallelR:  return "SurfaceParallelR";
+				case SurfaceType.TrapezeT:   return "SurfaceTrapezeT";
+				case SurfaceType.TrapezeB:   return "SurfaceTrapezeB";
+				case SurfaceType.TrapezeL:   return "SurfaceTrapezeL";
+				case SurfaceType.TrapezeR:   return "SurfaceTrapezeR";
+				case SurfaceType.QuadriL:    return "SurfaceQuadriL";
+				case SurfaceType.QuadriP:    return "SurfaceQuadriP";
+				case SurfaceType.QuadriC:    return "SurfaceQuadriC";
+				case SurfaceType.QuadriX:    return "SurfaceQuadriX";
+				case SurfaceType.Grid:       return "SurfaceGrid";
+				case SurfaceType.Pattern:    return "SurfacePattern";
+				case SurfaceType.Ring:       return "SurfaceRing";
+				case SurfaceType.SpiralCW:   return "SurfaceSpiralCW";
+				case SurfaceType.SpiralCCW:  return "SurfaceSpiralCCW";
+			}
+			return "";
 		}
 
 		// Indique si un facteur est visible.
@@ -561,6 +590,7 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Surface(document);
 		}
 

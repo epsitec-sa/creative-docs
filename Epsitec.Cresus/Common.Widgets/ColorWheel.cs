@@ -37,28 +37,54 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Couleur.
-		public Drawing.Color Color
+		public Drawing.RichColor Color
 		{
 			get
 			{
-				Drawing.Color color = Drawing.Color.FromHSV(this.h, this.s, this.v);
-				color.A = this.a;
-				return color;
+				if ( this.colorSpace == Drawing.ColorSpace.Gray )
+				{
+					return Drawing.RichColor.FromGray(this.g);
+				}
+				else
+				{
+					Drawing.RichColor color = Drawing.RichColor.FromAHSV(this.a, this.h, this.s, this.v);
+					color.ColorSpace = this.colorSpace;
+					return color;
+				}
 			}
 
 			set
 			{
-				double h,s,v,a;
-				value.GetHSV(out h, out s, out v);
-				a = value.A;
-				if ( h != this.h || s != this.s || v != this.v || a != this.a )
+				if ( value.ColorSpace == Drawing.ColorSpace.Gray )
 				{
-					this.h = h;
-					this.s = s;
-					this.v = v;
-					this.a = a;
-					this.ComputePosHandler();
-					this.Invalidate();
+					double g = value.Gray;
+
+					if ( value.ColorSpace != this.colorSpace ||
+						 g != this.g )
+					{
+						this.colorSpace = value.ColorSpace;
+						this.g = g;
+						this.ComputePosHandler();
+						this.Invalidate();
+					}
+				}
+				else
+				{
+					double h,s,v,a;
+					value.Basic.GetHSV(out h, out s, out v);
+					a = value.A;
+
+					if ( value.ColorSpace != this.colorSpace ||
+						 h != this.h || s != this.s || v != this.v || a != this.a )
+					{
+						this.colorSpace = value.ColorSpace;
+						this.h = h;
+						this.s = s;
+						this.v = v;
+						this.a = a;
+						this.ComputePosHandler();
+						this.Invalidate();
+					}
 				}
 			}
 		}
@@ -78,6 +104,16 @@ namespace Epsitec.Common.Widgets
 				this.h = h;
 				this.s = s;
 				this.v = v;
+				this.ComputePosHandler();
+				this.Invalidate();
+			}
+		}
+		
+		public void SetGray(double g)
+		{
+			if ( g != this.g )
+			{
+				this.g = g;
 				this.ComputePosHandler();
 				this.Invalidate();
 			}
@@ -126,6 +162,8 @@ namespace Epsitec.Common.Widgets
 			this.posHandlerH    = this.centerCircle + Drawing.Transform.RotatePointDeg(this.h, new Drawing.Point(0, radius));
 			this.posHandlerSV.X = this.rectSquare.Left + this.rectSquare.Width*this.s;
 			this.posHandlerSV.Y = this.rectSquare.Bottom + this.rectSquare.Height*this.v;
+			this.posHandlerG.X  = this.centerCircle.X;
+			this.posHandlerG.Y  = this.centerCircle.Y + radius*(this.g*2.0-1.0);
 		}
 
 		
@@ -149,6 +187,13 @@ namespace Epsitec.Common.Widgets
 						this.OnChanged();
 						this.Invalidate();
 					}
+					else if ( this.DetectG(pos, true, ref this.g) )
+					{
+						this.mouseDownG = true;
+						this.ComputePosHandler();
+						this.OnChanged();
+						this.Invalidate();
+					}
 					break;
 
 				case MessageType.MouseMove:
@@ -156,7 +201,6 @@ namespace Epsitec.Common.Widgets
 					{
 						if ( this.DetectH(pos, false, ref this.h) )
 						{
-							this.mouseDownH = true;
 							this.ComputePosHandler();
 							this.OnChanged();
 							this.Invalidate();
@@ -166,7 +210,15 @@ namespace Epsitec.Common.Widgets
 					{
 						if ( this.DetectSV(pos, false, ref this.s, ref this.v) )
 						{
-							this.mouseDownSV = true;
+							this.ComputePosHandler();
+							this.OnChanged();
+							this.Invalidate();
+						}
+					}
+					if ( this.mouseDownG )
+					{
+						if ( this.DetectG(pos, false, ref this.g) )
+						{
 							this.ComputePosHandler();
 							this.OnChanged();
 							this.Invalidate();
@@ -175,8 +227,9 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.MouseUp:
-					this.mouseDownH = false;
+					this.mouseDownH  = false;
 					this.mouseDownSV = false;
+					this.mouseDownG  = false;
 					break;
 			}
 			
@@ -186,6 +239,7 @@ namespace Epsitec.Common.Widgets
 		// Détecte la teinte dans le cercle des couleurs.
 		protected bool DetectH(Drawing.Point pos, bool restricted, ref double h)
 		{
+			if ( this.colorSpace == Drawing.ColorSpace.Gray )  return false;
 			if ( this.IsGrey )  return false;
 
 			if ( restricted )
@@ -202,11 +256,12 @@ namespace Epsitec.Common.Widgets
 			h = angle;  // 0..360
 			return true;
 		}
-
 		
 		// Détecte la saturation et l'intensité dans le carré des couleurs.
 		protected bool DetectSV(Drawing.Point pos, bool restricted, ref double s, ref double v)
 		{
+			if ( this.colorSpace == Drawing.ColorSpace.Gray )  return false;
+
 			if ( restricted )
 			{
 				Drawing.Rectangle rect = this.rectSquare;
@@ -219,6 +274,23 @@ namespace Epsitec.Common.Widgets
 
 			s = Epsitec.Common.Math.Clip((pos.X-this.rectSquare.Left)/this.rectSquare.Width);
 			v = Epsitec.Common.Math.Clip((pos.Y-this.rectSquare.Bottom)/this.rectSquare.Height);
+			return true;
+		}
+
+		// Détecte le niveau de gris.
+		protected bool DetectG(Drawing.Point pos, bool restricted, ref double g)
+		{
+			if ( this.colorSpace != Drawing.ColorSpace.Gray )  return false;
+
+			double radius = (this.radiusCircleMax+this.radiusCircleMin)/2;
+			Drawing.Rectangle rect = new Drawing.Rectangle(this.centerCircle.X-10.0, this.centerCircle.Y-radius, 2.0*10.0, 2.0*radius);
+
+			if ( restricted && !rect.Contains(pos) )
+			{
+				return false;
+			}
+
+			g = Epsitec.Common.Math.Clip((pos.Y-rect.Bottom)/rect.Height);
 			return true;
 		}
 
@@ -319,7 +391,7 @@ namespace Epsitec.Common.Widgets
 				path = new Drawing.Path();
 				this.PathAddCircle(path, rInside);
 				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(this.Color);
+				graphics.RenderSolid(this.Color.Basic);
 			}
 
 			rect.Deflate(0.5);
@@ -410,6 +482,40 @@ namespace Epsitec.Common.Widgets
 			graphics.RenderSolid(colorBorder);
 		}
 
+		// Dessine un carré dégradé pour représenter le niveau de gris.
+		protected void PaintGradientGray(Drawing.Graphics graphics,
+										 Drawing.Rectangle rect,
+										 Drawing.Color colorBorder)
+		{
+			if ( this.IsEnabled )
+			{
+				Drawing.Color c1 = Drawing.Color.FromBrightness(0);
+				Drawing.Color c2 = Drawing.Color.FromBrightness(0);
+				Drawing.Color c3 = Drawing.Color.FromBrightness(1);
+				Drawing.Color c4 = Drawing.Color.FromBrightness(1);
+				
+				double x1 = rect.Left;
+				double y1 = rect.Bottom;
+				double x2 = rect.Right;
+				double y2 = rect.Top;
+				
+				Drawing.Transform transform = graphics.Transform;
+				
+				transform.TransformDirect(ref x1, ref y1);
+				transform.TransformDirect(ref x2, ref y2);
+				
+				int x  = (int) x1;
+				int y  = (int) y1;
+				int dx = (int) (x2-x1);
+				int dy = (int) (y2-y1);
+				
+				graphics.SolidRenderer.Clear4Colors(x, y, dx, dy, c1, c2, c3, c4);
+			}
+
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(colorBorder);
+		}
+
 		// Dessine une poignée.
 		protected void PaintHandler(Drawing.Graphics graphics,
 									Drawing.Point center,
@@ -447,22 +553,37 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect = this.rectCircle;
 			Drawing.Color colorBorder = adorner.ColorBorder;
 			Drawing.Color colorWindow = adorner.ColorWindow;
-			this.PaintGradientCircle(graphics, rect, colorBorder, colorWindow);
 
-			rect = this.rectSquare;
-			graphics.Align(ref rect);
-			rect.Deflate(0.5);
-			this.PaintGradientSquare(graphics, rect, colorBorder);
-
-			if ( !this.IsGrey )
+			if ( this.colorSpace == Drawing.ColorSpace.Gray )
 			{
-				this.PaintHandler(graphics, this.posHandlerH,  this.radiusHandler);
+				rect.Left = rect.Center.X-10.0;
+				rect.Width = 2.0*10.0;
+				graphics.Align(ref rect);
+				rect.Deflate(0.5);
+				this.PaintGradientGray(graphics, rect, colorBorder);
+
+				this.PaintHandler(graphics, this.posHandlerG, this.radiusHandler);
 			}
-			this.PaintHandler(graphics, this.posHandlerSV, this.radiusHandler);
+			else
+			{
+				this.PaintGradientCircle(graphics, rect, colorBorder, colorWindow);
+
+				rect = this.rectSquare;
+				graphics.Align(ref rect);
+				rect.Deflate(0.5);
+				this.PaintGradientSquare(graphics, rect, colorBorder);
+
+				if ( !this.IsGrey )
+				{
+					this.PaintHandler(graphics, this.posHandlerH,  this.radiusHandler);
+				}
+				this.PaintHandler(graphics, this.posHandlerSV, this.radiusHandler);
+			}
 		}
 
 
-		protected double					h,s,v,a;
+		protected Drawing.ColorSpace		colorSpace;
+		protected double					h,s,v,a,g;
 		protected Drawing.Color				black;
 		protected Drawing.Rectangle			rectCircle;
 		protected Drawing.Point				centerCircle;
@@ -473,7 +594,9 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Rectangle			rectSquare;
 		protected Drawing.Point				posHandlerH;
 		protected Drawing.Point				posHandlerSV;
-		protected bool						mouseDownH = false;
+		protected Drawing.Point				posHandlerG;
+		protected bool						mouseDownH  = false;
 		protected bool						mouseDownSV = false;
+		protected bool						mouseDownG  = false;
 	}
 }

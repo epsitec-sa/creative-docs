@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return "manifest:Epsitec.App.DocumentEditor.Images.ObjGroup.icon"; }
+			get { return Misc.Icon("ObjectGroup"); }
 		}
 
 
@@ -164,8 +164,10 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Constuit les formes de l'objet.
-		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
+		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
+			if ( this.handles.Count == 0 )  return null;
+
 			Path pathCorners = null;
 
 			if ( drawingContext != null &&

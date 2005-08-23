@@ -76,6 +76,20 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Indique si la forme est ornementale.
+		public bool IsMisc
+		{
+			get
+			{
+				return this.isMisc;
+			}
+
+			set
+			{
+				this.isMisc = value;
+			}
+		}
+
 		// Indique si la forme est visible.
 		public bool IsVisible
 		{
@@ -87,6 +101,34 @@ namespace Epsitec.Common.Document
 			set
 			{
 				this.isVisible = value;
+			}
+		}
+
+		// Indique si la forme est liée à la suivante.
+		public bool IsLinkWithNext
+		{
+			get
+			{
+				return this.isLinkWithNext;
+			}
+
+			set
+			{
+				this.isLinkWithNext = value;
+			}
+		}
+
+		// Indique le mode de remplissage.
+		public FillMode FillMode
+		{
+			get
+			{
+				return this.fillMode;
+			}
+
+			set
+			{
+				this.fillMode = value;
 			}
 		}
 
@@ -117,20 +159,22 @@ namespace Epsitec.Common.Document
 		
 		// Donne la propriété pour une surface.
 		// Type Properties.Gradient ou Properties.Font.
-		public void SetPropertySurface(Properties.Abstract surface)
+		public void SetPropertySurface(IPaintPort port, Properties.Abstract surface)
 		{
 			this.propertySurface = surface;
 			this.Type = Type.Surface;
-			this.PropertyVisibility();
+			this.fillMode = FillMode.EvenOdd;  // mode par défaut pour les surfaces
+			this.PropertyVisibility(port);
 		}
 
 		// Donne les propriétés pour un trait.
-		public void SetPropertyStroke(Properties.Line stroke, Properties.Gradient surface)
+		public void SetPropertyStroke(IPaintPort port, Properties.Line stroke, Properties.Gradient surface)
 		{
 			this.propertyStroke = stroke;
 			this.propertySurface = surface;
 			this.Type = Type.Stroke;
-			this.PropertyVisibility();
+			this.fillMode = FillMode.NonZero;  // mode par défaut pour les traits
+			this.PropertyVisibility(port);
 		}
 
 		public Properties.Abstract PropertySurface
@@ -150,7 +194,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Met la visibilité définie selon les propriétés.
-		protected void PropertyVisibility()
+		protected void PropertyVisibility(IPaintPort port)
 		{
 			if ( this.Type == Type.Surface )
 			{
@@ -160,7 +204,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					this.IsVisible = this.propertySurface.IsVisible;
+					this.IsVisible = this.propertySurface.IsVisible(port);
 				}
 			}
 
@@ -172,13 +216,13 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					this.IsVisible = this.propertyStroke.IsVisible && this.propertySurface.IsVisible;
+					this.IsVisible = this.propertyStroke.IsVisible(port) && this.propertySurface.IsVisible(port);
 				}
 			}
 		}
 		
 		// Met la visibilité définie selon les propriétés.
-		protected void PropertyVisibilityInvert()
+		protected void PropertyVisibilityInvert(IPaintPort port)
 		{
 			if ( this.Type == Type.Surface )
 			{
@@ -188,7 +232,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					this.IsVisible = !this.propertySurface.IsVisible;
+					this.IsVisible = !this.propertySurface.IsVisible(port);
 				}
 			}
 
@@ -200,14 +244,14 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					this.IsVisible = !this.propertyStroke.IsVisible || !this.propertySurface.IsVisible;
+					this.IsVisible = !this.propertyStroke.IsVisible(port) || !this.propertySurface.IsVisible(port);
 				}
 			}
 		}
 		
 
 		// Modifie une liste de formes pour mettre en évidence.
-		public static void Hilited(Shape[] shapes)
+		public static void Hilited(IPaintPort port, Shape[] shapes)
 		{
 			foreach ( Shape shape in shapes )
 			{
@@ -222,12 +266,20 @@ namespace Epsitec.Common.Document
 
 				if ( shape.Type == Type.Surface )
 				{
-					shape.PropertyVisibility();
+					shape.PropertyVisibility(port);
 					shape.Aspect = Aspect.Hilited;
 				}
 
 				if ( shape.Type == Type.Stroke )
 				{
+					if ( shape.isMisc &&
+						 (!shape.propertyStroke.IsVisible(port) ||
+						  !shape.propertySurface.IsVisible(port) ) )
+					{
+						shape.IsVisible = false;
+						continue;
+					}
+
 					shape.IsVisible = true;
 					shape.Aspect = Aspect.Hilited;
 				}
@@ -245,7 +297,7 @@ namespace Epsitec.Common.Document
 		}
 		
 		// Modifie une liste de formes pour mettre en pointillé forcé.
-		public static void OverDashed(Shape[] shapes)
+		public static void OverDashed(IPaintPort port, Shape[] shapes)
 		{
 			foreach ( Shape shape in shapes )
 			{
@@ -265,7 +317,15 @@ namespace Epsitec.Common.Document
 
 				if ( shape.Type == Type.Stroke )
 				{
-					shape.PropertyVisibilityInvert();
+					if ( shape.isMisc &&
+						 (!shape.propertyStroke.IsVisible(port) ||
+						  !shape.propertySurface.IsVisible(port) ) )
+					{
+						shape.IsVisible = false;
+						continue;
+					}
+
+					shape.PropertyVisibilityInvert(port);
 					shape.Aspect = Aspect.OverDashed;
 				}
 
@@ -285,9 +345,12 @@ namespace Epsitec.Common.Document
 		protected Type							type = Type.Undefined;
 		protected Aspect						aspect = Aspect.Normal;
 		protected Path							path = null;
+		protected bool							isMisc = false;
 		protected bool							isVisible = true;
+		protected bool							isLinkWithNext = false;
 		protected Objects.Abstract				obj = null;
 		protected Properties.Abstract			propertySurface = null;
 		protected Properties.Line				propertyStroke = null;
+		protected FillMode						fillMode = FillMode.NonZero;
 	}
 }

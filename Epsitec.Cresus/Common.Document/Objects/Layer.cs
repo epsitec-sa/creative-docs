@@ -168,10 +168,10 @@ namespace Epsitec.Common.Document.Objects
 					name = string.Format("{0}: {1}", Layer.ShortName(ii), layer.Name);
 				}
 
-				string icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
+				string icon = Misc.Icon("RadioNo");
 				if ( ii == currentLayer )
 				{
-					icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
+					icon = Misc.Icon("RadioYes");
 					name = Misc.Bold(name);
 				}
 

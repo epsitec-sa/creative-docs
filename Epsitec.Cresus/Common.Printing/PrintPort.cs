@@ -23,6 +23,7 @@ namespace Epsitec.Common.Printing
 			}
 			
 			this.transform = new Drawing.Transform ();
+			this.stackColorModifier = new System.Collections.Stack();
 			
 			this.graphics.SmoothingMode     = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 			this.graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
@@ -113,7 +114,58 @@ namespace Epsitec.Common.Printing
 			}
 		}
 		
+		public Drawing.RichColor				RichColor
+		{
+			get
+			{
+				return Drawing.RichColor.FromColor(this.originalColor);
+			}
+			set
+			{
+				this.originalColor = value.Basic;
+				this.FinalColor = this.GetFinalColor(value.Basic);
+			}
+		}
+		
 		public Drawing.Color					Color
+		{
+			get
+			{
+				return this.originalColor;
+			}
+			set
+			{
+				this.originalColor = value;
+				this.FinalColor = this.GetFinalColor(value);
+			}
+		}
+		
+		public Drawing.RichColor				FinalRichColor
+		{
+			get
+			{
+				return Drawing.RichColor.FromColor(this.color);
+			}
+			set
+			{
+				Drawing.Color basic = value.Basic;
+				if ( this.color != basic )
+				{
+					if ( basic.IsOpaque )
+					{
+						this.color = basic;
+						this.InvalidateBrush();
+						this.InvalidatePen();
+					}
+					else
+					{
+						throw new System.FormatException(string.Format("The color {0} is not compatible with the PrintPort.", value.ToString()));
+					}
+				}
+			}
+		}
+		
+		public Drawing.Color					FinalColor
 		{
 			get
 			{
@@ -121,21 +173,65 @@ namespace Epsitec.Common.Printing
 			}
 			set
 			{
-				if (this.color != value)
+				if ( this.color != value )
 				{
-					if (value.IsOpaque)
+					if ( value.IsOpaque )
 					{
 						this.color = value;
-						this.InvalidateBrush ();
-						this.InvalidatePen ();
+						this.InvalidateBrush();
+						this.InvalidatePen();
 					}
 					else
 					{
-						throw new System.FormatException (string.Format ("The color {0} is not compatible with the PrintPort.", value.ToString ()));
+						throw new System.FormatException(string.Format("The color {0} is not compatible with the PrintPort.", value.ToString()));
 					}
 				}
 			}
 		}
+		
+		public void PushColorModifier(Drawing.ColorModifier method)
+		{
+			this.stackColorModifier.Push(method);
+		}
+
+		public Drawing.ColorModifier PopColorModifier()
+		{
+			return this.stackColorModifier.Pop() as Drawing.ColorModifier;
+		}
+
+		public System.Collections.Stack			StackColorModifier
+		{
+			get
+			{
+				return this.stackColorModifier;
+			}
+			set
+			{
+				this.stackColorModifier = value;
+			}
+		}
+
+		public Drawing.RichColor GetFinalColor(Drawing.RichColor color)
+		{
+			foreach ( Drawing.ColorModifier method in this.stackColorModifier )
+			{
+				method(ref color);
+			}
+			return color;
+		}
+		
+		public Drawing.Color GetFinalColor(Drawing.Color color)
+		{
+			if ( this.stackColorModifier.Count == 0 )  return color;
+
+			Drawing.RichColor rich = Drawing.RichColor.FromColor(color);
+			foreach ( Drawing.ColorModifier method in this.stackColorModifier )
+			{
+				method(ref rich);
+			}
+			return rich.Basic;
+		}
+		
 		
 		public Drawing.FillMode					FillMode
 		{
@@ -678,7 +774,9 @@ namespace Epsitec.Common.Printing
 		protected float							offset_x, offset_y;
 		protected float							scale;
 		
+		protected Drawing.Color					originalColor = Drawing.Color.FromRGB (0, 0, 0);
 		protected Drawing.Color					color = Drawing.Color.FromRGB (0, 0, 0);
+		protected System.Collections.Stack		stackColorModifier;
 		protected Drawing.Rectangle				clip = Drawing.Rectangle.Infinite;
 		protected Drawing.Transform				transform = new Drawing.Transform ();
 		protected Drawing.FillMode				fill_mode = Drawing.FillMode.NonZero;

@@ -17,6 +17,12 @@
 	<data name="Dialog.Settings.ArrowMove">Keyboard arrows move by...</data>
 	<data name="Dialog.Settings.Dimension">@@Valeurs des cotes</data>
 	<data name="Dialog.Settings.ToLinePrecision">Convert to lines and boolean operations</data>
+	<data name="Dialog.Settings.FirstAction.Nothing">@@Rien</data>
+	<data name="Dialog.Settings.FirstAction.OpenNewDocument">@@Ouvrir un document vide</data>
+	<data name="Dialog.Settings.FirstAction.OpenLastFile">@@Ouvrir le dernier document</data>
+	<data name="Dialog.Settings.FirstAction.OpenLastFiles">@@Ouvrir les derniers documents</data>
+	<data name="Dialog.Settings.MouseWheelAction.Zoom">@@Loupe</data>
+	<data name="Dialog.Settings.MouseWheelAction.VScroll">@@Défilement vertical</data>
 	
 	<data name="Dialog.Print.Printer">Select printer</data>
 	<data name="Dialog.Print.Area">Area</data>
@@ -36,7 +42,10 @@
 	<data name="Dialog.Print.Range.Current">Current page</data>
 	<data name="Dialog.Print.Format.User">@@Personnalisé</data>
 	
-	<data name="Dialog.Export.Param">Image export settings</data>
+	<data name="Dialog.Export.Param">@@Choix pour l'exportation de la page en cours</data>
+	
+	<data name="Dialog.ExportPDF.Param">@@Paramètres pour le document à exporter en PDF</data>
+	<data name="Dialog.ExportPDF.Publisher">@@Réglages pré-presse</data>
 	
 	<data name="Dialog.Bool.GridActive">Active grid</data>
 	<data name="Dialog.Bool.GridShow">Visible grid</data>
@@ -57,6 +66,8 @@
 	<data name="Dialog.Bool.PrintPerfectJoin">Perfect joins (between page zones)</data>
 	<data name="Dialog.Bool.PrintTarget">Cut marks (outside of page)</data>
 	<data name="Dialog.Bool.PrintDebugArea">Print deteced zones (debug)</data>
+	<data name="Dialog.Bool.ExportPDFTarget">@@Traits de coupe (hors de la page)</data>
+	<data name="Dialog.Bool.ExportPDFTextCurve">@@Textes en courbes</data>
 	<data name="Dialog.Bool.RepeatDuplicateMove">Repeat last offset on duplication</data>
 	
 	<data name="Dialog.Double.OutsideArea">Area outside of page</data>
@@ -64,6 +75,7 @@
 	<data name="Dialog.Double.PrintDpi">Resolution (dpi)</data>
 	<data name="Dialog.Double.PrintMargins">@@Marges de centrage</data>
 	<data name="Dialog.Double.PrintDebord">@@Débord</data>
+	<data name="Dialog.Double.ExportPDFDebord">@@Débord</data>
 	<data name="Dialog.Double.ImageDpi">Resolution (dpi)</data>
 	<data name="Dialog.Double.ImageQuality">Image quality</data>
 	<data name="Dialog.Double.ImageQuality1">@@Qualité minimale, taille faible</data>
@@ -113,6 +125,11 @@
 	<data name="Dialog.Integer.ImageCompression.Rle">RLE</data>
 	<data name="Dialog.Integer.ImageCompression.FaxGroup3">Fax Group 3</data>
 	<data name="Dialog.Integer.ImageCompression.FaxGroup4">Fax Group 4</data>
+	<data name="Dialog.Integer.ExportPDFColorConversion.Text">@@Conversion</data>
+	<data name="Dialog.Integer.ExportPDFColorConversion.None">@@Aucune</data>
+	<data name="Dialog.Integer.ExportPDFColorConversion.ToRGB">@@Couleurs en RVB</data>
+	<data name="Dialog.Integer.ExportPDFColorConversion.ToCMYK">@@Couleurs en CMJN</data>
+	<data name="Dialog.Integer.ExportPDFColorConversion.ToGray">@@Couleurs en niveaux de gris</data>
 
 	<data name="Dialog.Point.PageSizeX">Width</data>
 	<data name="Dialog.Point.PageSizeY">Height</data>
@@ -183,11 +200,9 @@
 	<data name="Container.Principal.Menu.Stretch.TrapezeV">Vertical trapezoid deformation</data>
 	<data name="Container.Principal.Menu.Stretch.ParallelH">Horizontal parallelogram deformation</data>
 	<data name="Container.Principal.Menu.Stretch.ParallelV">Vertical parallelogram deformation</data>
-
-	<data name="Container.Styles.Header.Type">Type</data>
-	<data name="Container.Styles.Header.Name">Name</data>
-	<data name="Container.Styles.Header.Total">#</data>
-
+	<data name="Container.Principal.Button.AggregateLabel">@@Style</data>
+	<data name="Container.Principal.Button.AggregateCombo">@@Nom du style</data>
+	
 	<data name="Tool.Select">Select</data>
 	<data name="Tool.Global">Selection rectangle</data>
 	<data name="Tool.Edit">Edit</data>
@@ -241,58 +256,80 @@
 	<data name="Object.Image.Error">File &lt;b&gt;{0}&lt;/b&gt; does not exist.</data>
 
 	<data name="Panel.Abstract.Extend">Expand/collapse pannel</data>
-	<data name="Panel.Abstract.Styles">Styles</data>
 
-	<data name="Panel.Arc.Tooltip.Full">Full</data>
-	<data name="Panel.Arc.Tooltip.Open">Open arc</data>
-	<data name="Panel.Arc.Tooltip.Close">Closed arc</data>
-	<data name="Panel.Arc.Tooltip.Pie">@@Camembert</data>
+	<data name="Panel.AggregateName.Label.Name">@@Nom du style</data>
+	<data name="Panel.AggregateName.Tooltip.Name">@@Nom du style</data>
+	<data name="Panel.AggregateParent.Label.Name">@@Style parent</data>
+	<data name="Panel.AggregateParent.Tooltip.Name">@@Style utilisé comme parent</data>
+
+	<data name="Panel.Arc.Short.Initial">α1</data>
+	<data name="Panel.Arc.Short.Final">α2</data>
+	<data name="Panel.Arc.Long.Initial">Initial angle</data>
+	<data name="Panel.Arc.Long.Final">Final angle</data>
 	<data name="Panel.Arc.Tooltip.Initial">Initial angle</data>
 	<data name="Panel.Arc.Tooltip.Final">Final angle</data>
-	<data name="Panel.Arc.Label.Initial">a1</data>
-	<data name="Panel.Arc.Label.Final">a2</data>
 	
+	<data name="Panel.Arrow.Short.Length">L</data>
+	<data name="Panel.Arrow.Short.Effect1">A</data>
+	<data name="Panel.Arrow.Short.Effect2">B</data>
+	<data name="Panel.Arrow.Long.Length">Length</data>
+	<data name="Panel.Arrow.Long.Effect1">Parameter A</data>
+	<data name="Panel.Arrow.Long.Effect2">Parameter B</data>
 	<data name="Panel.Arrow.Tooltip.Length">Length</data>
 	<data name="Panel.Arrow.Tooltip.Effect1">Parameter A</data>
 	<data name="Panel.Arrow.Tooltip.Effect2">Parameter B</data>
 	<data name="Panel.Arrow.Tooltip.Swap">Swap extremities</data>
-	<data name="Panel.Arrow.Label.Length">L</data>
-	<data name="Panel.Arrow.Label.Effect1">A</data>
-	<data name="Panel.Arrow.Label.Effect2">B</data>
 
 	<data name="Panel.Color.Tooltip.Main">Color</data>
 	
+	<data name="Panel.Corner.Short.Radius">R</data>
+	<data name="Panel.Corner.Short.Effect1">A</data>
+	<data name="Panel.Corner.Short.Effect2">B</data>
+	<data name="Panel.Corner.Long.Radius">Radius</data>
+	<data name="Panel.Corner.Long.Effect1">Parameter A</data>
+	<data name="Panel.Corner.Long.Effect2">Parameter B</data>
 	<data name="Panel.Corner.Tooltip.Radius">Radius</data>
 	<data name="Panel.Corner.Tooltip.Effect1">Parameter A</data>
 	<data name="Panel.Corner.Tooltip.Effect2">Parameter B</data>
-	<data name="Panel.Corner.Label.Radius">R</data>
-	<data name="Panel.Corner.Label.Effect1">A</data>
-	<data name="Panel.Corner.Label.Effect2">B</data>
 
-	<data name="Panel.Dimension.Tooltip.Auto">Automatic measurement</data>
-	<data name="Panel.Dimension.Tooltip.Inside">Inner measurement</data>
-	<data name="Panel.Dimension.Tooltip.Outside">Outer measurement</data>
-	<data name="Panel.Dimension.Tooltip.CenterOrLeft">Center text (or left)</data>
-	<data name="Panel.Dimension.Tooltip.CenterOrRight">Center text (or right)</data>
-	<data name="Panel.Dimension.Tooltip.Left">Text on the left</data>
-	<data name="Panel.Dimension.Tooltip.Right">Text on the right</data>
+	<data name="Panel.Dimension.Short.AddLength">L</data>
+	<data name="Panel.Dimension.Short.OutLength">O</data>
+	<data name="Panel.Dimension.Short.FontOffset">V</data>
+	<data name="Panel.Dimension.Short.Text">T</data>
+	<data name="Panel.Dimension.Long.AddLength">@@Débordement des traits de support</data>
+	<data name="Panel.Dimension.Long.OutLength">Length for outer measurement</data>
+	<data name="Panel.Dimension.Long.FontOffset">Vertical text offset</data>
+	<data name="Panel.Dimension.Long.Text">Text</data>
 	<data name="Panel.Dimension.Tooltip.AddLength">@@Débordement des traits de support</data>
 	<data name="Panel.Dimension.Tooltip.OutLength">Length for outer measurement</data>
 	<data name="Panel.Dimension.Tooltip.RotateText">Inverted text</data>
 	<data name="Panel.Dimension.Tooltip.FontOffset">Vertical text offset</data>
-	<data name="Panel.Dimension.Tooltip.Prefix">Prefix</data>
-	<data name="Panel.Dimension.Tooltip.Postfix">Postfix (unit)</data>
-	<data name="Panel.Dimension.Label.AddLength">L</data>
-	<data name="Panel.Dimension.Label.OutLength">O</data>
-	<data name="Panel.Dimension.Label.FontOffset">T</data>
-	<data name="Panel.Dimension.Label.Prefix">&amp;lt;</data>
-	<data name="Panel.Dimension.Label.Postfix">&amp;gt;</data>
+	<data name="Panel.Dimension.Tooltip.Text">@@Text (# = value)</data>
 
+	<data name="Panel.Font.Short.Size">S</data>
+	<data name="Panel.Font.Short.Color">C</data>
+	<data name="Panel.Font.Long.Size">Default text size</data>
+	<data name="Panel.Font.Long.Color">Default text color</data>
 	<data name="Panel.Font.Tooltip.Name">Default text font</data>
 	<data name="Panel.Font.Tooltip.Size">Default text size</data>
 	<data name="Panel.Font.Tooltip.Color">Default text color</data>
-	<data name="Panel.Font.Label.Color">Color</data>
 
+	<data name="Panel.Gradient.Short.Angle">α</data>
+	<data name="Panel.Gradient.Short.Repeat">#</data>
+	<data name="Panel.Gradient.Short.Middle">M</data>
+	<data name="Panel.Gradient.Short.Smooth">B</data>
+	<data name="Panel.Gradient.Short.HatchAngle">α</data>
+	<data name="Panel.Gradient.Short.HatchWidth">w</data>
+	<data name="Panel.Gradient.Short.HatchDistance">d</data>
+	<data name="Panel.Gradient.Long.Angle">Angle</data>
+	<data name="Panel.Gradient.Long.Repeat">Repeat count</data>
+	<data name="Panel.Gradient.Long.Middle">Middle color</data>
+	<data name="Panel.Gradient.Long.Smooth">Blur</data>
+	<data name="Panel.Gradient.Long.HatchAngle">Angle</data>
+	<data name="Panel.Gradient.Long.HatchWidth">Width</data>
+	<data name="Panel.Gradient.Long.HatchDistance">@@Espacement</data>
+	<data name="Panel.Gradient.Long.Hatch1">1st hatch</data>
+	<data name="Panel.Gradient.Long.Hatch2">2nd hatch</data>
 	<data name="Panel.Gradient.Button.Reset">R</data>
 	<data name="Panel.Gradient.Tooltip.Nothing">No color</data>
 	<data name="Panel.Gradient.Tooltip.Color1">Color 1</data>
@@ -306,24 +343,9 @@
 	<data name="Panel.Gradient.Tooltip.Middle">Middle color</data>
 	<data name="Panel.Gradient.Tooltip.Smooth">Blur</data>
 	<data name="Panel.Gradient.Tooltip.HatchAngle">Angle</data>
-	<data name="Panel.Gradient.Tooltip.HatchWidth">Width</data>
-	<data name="Panel.Gradient.Tooltip.HatchDistance">Distance</data>
+	<data name="Panel.Gradient.Tooltip.HatchWidth">@@Width (zéro si inutilisé)</data>
+	<data name="Panel.Gradient.Tooltip.HatchDistance">@@Espacement</data>
 	<data name="Panel.Gradient.Tooltip.Swap">Swap colors</data>
-	<data name="Panel.Gradient.Label.Angle">α</data>
-	<data name="Panel.Gradient.Label.Repeat">#</data>
-	<data name="Panel.Gradient.Label.Middle">M</data>
-	<data name="Panel.Gradient.Label.Smooth">B</data>
-	<data name="Panel.Gradient.Label.HatchAngle">α</data>
-	<data name="Panel.Gradient.Label.HatchWidth">w</data>
-	<data name="Panel.Gradient.Label.HatchDistance">d</data>
-	<data name="Panel.Gradient.Combo.None">Uniform</data>
-	<data name="Panel.Gradient.Combo.Linear">Linear</data>
-	<data name="Panel.Gradient.Combo.Circle">@@Concentric</data>
-	<data name="Panel.Gradient.Combo.Diamond">Diamond</data>
-	<data name="Panel.Gradient.Combo.Conic">Conic</data>
-	<data name="Panel.Gradient.Combo.Hatch">Hatches</data>
-	<data name="Panel.Gradient.Combo.Dots">Dots</data>
-	<data name="Panel.Gradient.Combo.Squares">Squares</data>
 
 	<data name="Panel.Image.Button.Update">Update</data>
 	<data name="Panel.Image.Button.MirrorX">Swap X</data>
@@ -340,73 +362,54 @@
 	<data name="File.Bitmap.JPG">Compressed Image JPEG</data>
 	<data name="File.Bitmap.PNG">Portable Network Graphics PNG</data>
 	<data name="File.Bitmap.GIF">Graphics Interchange Format GIF</data>
+	<data name="File.Vector.PDF">@@Fichiers PDF</data>
 
-	<data name="Panel.Justif.Tooltip.JustifHLeft">Left aligned</data>
-	<data name="Panel.Justif.Tooltip.JustifHCenter">Centered</data>
-	<data name="Panel.Justif.Tooltip.JustifHRight">Right aligned</data>
-	<data name="Panel.Justif.Tooltip.JustifHJustif">Justified, but last line</data>
-	<data name="Panel.Justif.Tooltip.JustifHAll">Justified, including last line</data>
-	<data name="Panel.Justif.Tooltip.JustifVTop">Align top</data>
-	<data name="Panel.Justif.Tooltip.JustifVCenter">Center vertically</data>
-	<data name="Panel.Justif.Tooltip.JustifVBottom">Align bottom</data>
-	<data name="Panel.Justif.Tooltip.JustifOLR">Default orientation</data>
-	<data name="Panel.Justif.Tooltip.JustifOBT">Bottom-up orientation</data>
-	<data name="Panel.Justif.Tooltip.JustifORL">Right-to-left orientation</data>
-	<data name="Panel.Justif.Tooltip.JustifOTB">Top-to-bottom orientation</data>
+	<data name="Panel.Justif.Short.MarginH">Mx</data>
+	<data name="Panel.Justif.Short.MarginV">My</data>
+	<data name="Panel.Justif.Short.OffsetV">Oy</data>
+	<data name="Panel.Justif.Long.MarginH">Left/right margins</data>
+	<data name="Panel.Justif.Long.MarginV">Top/bottom margins</data>
+	<data name="Panel.Justif.Long.OffsetV">Vertical offset</data>
 	<data name="Panel.Justif.Tooltip.MarginH">Left/right margins</data>
 	<data name="Panel.Justif.Tooltip.MarginV">Top/bottom margins</data>
 	<data name="Panel.Justif.Tooltip.OffsetV">Vertical offset</data>
-	<data name="Panel.Justif.Label.MarginH">Mx</data>
-	<data name="Panel.Justif.Label.MarginV">My</data>
-	<data name="Panel.Justif.Label.OffsetV">Oy</data>
 
-	<data name="Panel.PageName.Tooltip.Name">Page name</data>
 	<data name="Panel.PageName.Label.Name">Page name</data>
+	<data name="Panel.PageName.Tooltip.Name">Page name</data>
 	
-	<data name="Panel.LayerName.Tooltip.Name">Layer name</data>
 	<data name="Panel.LayerName.Label.Name">Layer name</data>
+	<data name="Panel.LayerName.Tooltip.Name">Layer name</data>
 
-	<data name="Panel.StyleName.Tooltip.Name">Style name</data>
-	<data name="Panel.StyleName.Label.Name">Style name</data>
-
+	<data name="Panel.Line.Short.DashLength">P</data>
+	<data name="Panel.Line.Short.DashPen">L</data>
+	<data name="Panel.Line.Short.DashGap">G</data>
+	<data name="Panel.Line.Long.Width">Line width</data>
+	<data name="Panel.Line.Long.Dash1">1st</data>
+	<data name="Panel.Line.Long.Dash2">2nd</data>
+	<data name="Panel.Line.Long.Dash3">3rd</data>
+	<data name="Panel.Line.Long.DashLength">Pattern length</data>
+	<data name="Panel.Line.Long.DashPen">Line length</data>
+	<data name="Panel.Line.Long.DashGap">Gap length</data>
 	<data name="Panel.Line.Tooltip.Nothing">Nothing</data>
 	<data name="Panel.Line.Tooltip.Width">Line width</data>
 	<data name="Panel.Line.Tooltip.Type">Line type</data>
-	<data name="Panel.Line.Tooltip.CapRound">Round cap</data>
-	<data name="Panel.Line.Tooltip.CapSquare">Square cap</data>
-	<data name="Panel.Line.Tooltip.CapButt">Butt cap</data>
-	<data name="Panel.Line.Tooltip.JoinRound">Round join</data>
-	<data name="Panel.Line.Tooltip.JoinMiter">Miter join</data>
-	<data name="Panel.Line.Tooltip.JoinBevel">Bevel join</data>
 	<data name="Panel.Line.Tooltip.Dash1">1st line/gap pair</data>
 	<data name="Panel.Line.Tooltip.Dash2">2nd line/gap pair</data>
 	<data name="Panel.Line.Tooltip.Dash3">3rd line/gap pair</data>
 	<data name="Panel.Line.Tooltip.DashLength">Pattern length</data>
-	<data name="Panel.Line.Tooltip.DashPen">Line length</data>
-	<data name="Panel.Line.Tooltip.DashGap">Gap length</data>
-	<data name="Panel.Line.Label.DashLength">P</data>
-	<data name="Panel.Line.Label.DashPen">L</data>
-	<data name="Panel.Line.Label.DashGap">G</data>
-	<data name="Panel.Line.Combo.Full">Solid</data>
-	<data name="Panel.Line.Combo.Lines">Dashed</data>
-	<data name="Panel.Line.Combo.CompactedLines">Compact dash</data>
-	<data name="Panel.Line.Combo.ExtendedLines">Normal dash</data>
-	<data name="Panel.Line.Combo.Dots">Dot-dot dash</data>
-	<data name="Panel.Line.Combo.LinesDots">Line-dot dash</data>
-	<data name="Panel.Line.Combo.LinesDotsDots">Line-dot-dot dash</data>
-	<data name="Panel.Line.Combo.User">User defined</data>
+	<data name="Panel.Line.Tooltip.DashPen">@@Line length (zéro si point)</data>
+	<data name="Panel.Line.Tooltip.DashGap">@@Gap length (zéro si inutilisé)</data>
 
-	<data name="Panel.ModColor.Label.Title">Color transform:</data>
-	<data name="Panel.ModColor.Label.H">H</data>
-	<data name="Panel.ModColor.Label.S">S</data>
-	<data name="Panel.ModColor.Label.V">V</data>
-	<data name="Panel.ModColor.Label.R">R</data>
-	<data name="Panel.ModColor.Label.G">G</data>
-	<data name="Panel.ModColor.Label.B">B</data>
-	<data name="Panel.ModColor.Label.A">α</data>
-	<data name="Panel.ModColor.Label.Negativ">Negative</data>
-	<data name="Panel.ModColor.Label.Draft">D</data>
-	<data name="Panel.ModColor.Label.Reset">R</data>
+	<data name="Panel.ModColor.Short.H">H</data>
+	<data name="Panel.ModColor.Short.S">S</data>
+	<data name="Panel.ModColor.Short.V">V</data>
+	<data name="Panel.ModColor.Short.R">R</data>
+	<data name="Panel.ModColor.Short.G">G</data>
+	<data name="Panel.ModColor.Short.B">B</data>
+	<data name="Panel.ModColor.Short.A">α</data>
+	<data name="Panel.ModColor.Short.Negativ">Negative</data>
+	<data name="Panel.ModColor.Short.Draft">D</data>
+	<data name="Panel.ModColor.Button.Reset">R</data>
 	<data name="Panel.ModColor.Tooltip.H">Hue</data>
 	<data name="Panel.ModColor.Tooltip.S">Saturation</data>
 	<data name="Panel.ModColor.Tooltip.V">Value</data>
@@ -420,28 +423,40 @@
 
 	<data name="Panel.Name.Tooltip.Title">Object name</data>
 
-	<data name="Panel.Regular.Label.Star">Star</data>
-	<data name="Panel.Regular.Label.Deep">@@Renfoncement</data>
+	<data name="Panel.Regular.Short.Faces">@@N</data>
+	<data name="Panel.Regular.Short.Deep">@@R</data>
+	<data name="Panel.Regular.Long.Faces">@@Nombre de côtés</data>
+	<data name="Panel.Regular.Long.Deep">@@Renfoncement</data>
+	<data name="Panel.Regular.Tooltip.Faces">@@Nombre de côtés</data>
+	<data name="Panel.Regular.Tooltip.Deep">@@Renfoncement de l'étoile</data>
 
-	<data name="Panel.Surface.Label.Factor">@@R{0}</data>
-	<data name="Panel.Surface.Label.Scalar">@@N{0}</data>
-	<data name="Panel.Surface.Label.Reset">R</data>
+	<data name="Panel.Surface.Short.Factor">@@R{0}</data>
+	<data name="Panel.Surface.Short.Scalar">@@N{0}</data>
+	<data name="Panel.Surface.Button.Reset">R</data>
 	<data name="Panel.Surface.Tooltip.Type">3D surface type</data>
 	<data name="Panel.Surface.Tooltip.Reset">Reset (default values)</data>
 
+	<data name="Panel.TextLine.Short.Offset">Oy</data>
+	<data name="Panel.TextLine.Short.Add">@@L</data>
+	<data name="Panel.TextLine.Long.Offset">Orthogonal offset</data>
+	<data name="Panel.TextLine.Long.Add">Intercharacter space</data>
 	<data name="Panel.TextLine.Tooltip.JustifHLeft">Left aligned</data>
 	<data name="Panel.TextLine.Tooltip.JustifHCenter">Centered</data>
 	<data name="Panel.TextLine.Tooltip.JustifHRight">Right aligned</data>
 	<data name="Panel.TextLine.Tooltip.JustifHStretch">Justified</data>
 	<data name="Panel.TextLine.Tooltip.Offset">Orthogonal offset</data>
 	<data name="Panel.TextLine.Tooltip.Add">Intercharacter space</data>
-	<data name="Panel.TextLine.Label.Offset">Oy</data>
-	<data name="Panel.TextLine.Label.Add">@@L</data>
 
-	<data name="Panel.Volume.ToolTip.Type">3D volume type</data>
-	<data name="Panel.Volume.Label.Rapport">@@Mid-point</data>
-	<data name="Panel.Volume.Label.Left">Left angle</data>
-	<data name="Panel.Volume.Label.Right">Right angle</data>
+	<data name="Panel.Volume.Short.Rapport">M</data>
+	<data name="Panel.Volume.Short.Left">L</data>
+	<data name="Panel.Volume.Short.Right">R</data>
+	<data name="Panel.Volume.Long.Rapport">@@Mid-point</data>
+	<data name="Panel.Volume.Long.Left">Left angle</data>
+	<data name="Panel.Volume.Long.Right">Right angle</data>
+	<data name="Panel.Volume.Tooltip.Type">3D volume type</data>
+	<data name="Panel.Volume.Tooltip.Rapport">@@Mid-point</data>
+	<data name="Panel.Volume.Tooltip.Left">Left angle</data>
+	<data name="Panel.Volume.Tooltip.Right">Right angle</data>
 
 	<data name="Property.Abstract.Name">Name</data>
 	<data name="Property.Abstract.LineColor">Line color</data>
@@ -453,11 +468,11 @@
 	<data name="Property.Abstract.FillGradientVR">Right side color</data>
 	<data name="Property.Abstract.Shadow">Shadow</data>
 	<data name="Property.Abstract.PolyClose">Closed surface</data>
-	<data name="Property.Abstract.Arrow">@@Extremities</data>
-	<data name="Property.Abstract.DimensionArrow">@@Extrém. cote</data>
+	<data name="Property.Abstract.Arrow">@@Extrémités trait</data>
+	<data name="Property.Abstract.DimensionArrow">@@Extrémités cote</data>
 	<data name="Property.Abstract.Dimension">@@Cote</data>
 	<data name="Property.Abstract.Corner">Corners</data>
-	<data name="Property.Abstract.Regular">@@Nombre de côtés</data>
+	<data name="Property.Abstract.Regular">@@Polygone régulier</data>
 	<data name="Property.Abstract.Arc">Arc</data>
 	<data name="Property.Abstract.Surface">2D surface</data>
 	<data name="Property.Abstract.Volume">3D volume</data>
@@ -466,8 +481,13 @@
 	<data name="Property.Abstract.TextJustif">Layout</data>
 	<data name="Property.Abstract.TextLine">Text position</data>
 	<data name="Property.Abstract.Image">Image</data>
-	<data name="Property.Abstract.ModColor">Layer color</data>
+	<data name="Property.Abstract.ModColor">Color transform</data>
 	
+	<data name="Property.Arc.Full">Full</data>
+	<data name="Property.Arc.Open">Open arc</data>
+	<data name="Property.Arc.Close">Closed arc</data>
+	<data name="Property.Arc.Pie">@@Camembert</data>
+
 	<data name="Property.Arrow.Right">Nothing</data>
 	<data name="Property.Arrow.ArrowSimply">Simple arrow</data>
 	<data name="Property.Arrow.ArrowFantasy1">Fantasy arrow</data>
@@ -478,6 +498,9 @@
 	<data name="Property.Arrow.Dot">Dot</data>
 	<data name="Property.Arrow.Square">Square</data>
 	<data name="Property.Arrow.Diamond">Diamond</data>
+	
+	<data name="Property.Close.No">@@Contour ouvert</data>
+	<data name="Property.Close.Yes">@@Contour fermé</data>
 	
 	<data name="Property.Corner.Right">Regular</data>
 	<data name="Property.Corner.Round">Round</data>
@@ -495,8 +518,55 @@
 	<data name="Property.Corner.Fantasy61">Fantasy 6.1</data>
 	<data name="Property.Corner.Fantasy62">Fantasy 6.2</data>
 
-	<data name="Property.Dimension.Prefix"> </data>
-	<data name="Property.Dimension.Postfix"> mm </data>
+	<data name="Property.Dimension.Auto">Automatic measurement</data>
+	<data name="Property.Dimension.Inside">Inner measurement</data>
+	<data name="Property.Dimension.Outside">Outer measurement</data>
+	<data name="Property.Dimension.CenterOrLeft">Center text (or left)</data>
+	<data name="Property.Dimension.CenterOrRight">Center text (or right)</data>
+	<data name="Property.Dimension.Left">Text on the left</data>
+	<data name="Property.Dimension.Right">Text on the right</data>
+	<data name="Property.Dimension.Text"> # mm </data>
+
+	<data name="Property.Gradient.None">Uniform</data>
+	<data name="Property.Gradient.Linear">Linear</data>
+	<data name="Property.Gradient.Circle">@@Concentric</data>
+	<data name="Property.Gradient.Diamond">Diamond</data>
+	<data name="Property.Gradient.Conic">Conic</data>
+	<data name="Property.Gradient.Hatch">Hatches</data>
+	<data name="Property.Gradient.Dots">Dots</data>
+	<data name="Property.Gradient.Squares">Squares</data>
+
+	<data name="Property.Justif.JustifHLeft">Left aligned</data>
+	<data name="Property.Justif.JustifHCenter">Centered</data>
+	<data name="Property.Justif.JustifHRight">Right aligned</data>
+	<data name="Property.Justif.JustifHJustif">Justified, but last line</data>
+	<data name="Property.Justif.JustifHAll">Justified, including last line</data>
+	<data name="Property.Justif.JustifHStretch">Justified</data>
+	<data name="Property.Justif.JustifVTop">Align top</data>
+	<data name="Property.Justif.JustifVCenter">Center vertically</data>
+	<data name="Property.Justif.JustifVBottom">Align bottom</data>
+	<data name="Property.Justif.JustifOLR">Default orientation</data>
+	<data name="Property.Justif.JustifOBT">Bottom-up orientation</data>
+	<data name="Property.Justif.JustifORL">Right-to-left orientation</data>
+	<data name="Property.Justif.JustifOTB">Top-to-bottom orientation</data>
+
+	<data name="Property.Line.Full">Solid</data>
+	<data name="Property.Line.Lines">Dashed</data>
+	<data name="Property.Line.LineDense">Compact dash</data>
+	<data name="Property.Line.LineExpand">Normal dash</data>
+	<data name="Property.Line.Dot">Dot-dot dash</data>
+	<data name="Property.Line.LineDot">Line-dot dash</data>
+	<data name="Property.Line.LineDotDot">Line-dot-dot dash</data>
+	<data name="Property.Line.Custom">User defined</data>
+	<data name="Property.Line.CapRound">Round cap</data>
+	<data name="Property.Line.CapSquare">Square cap</data>
+	<data name="Property.Line.CapButt">Butt cap</data>
+	<data name="Property.Line.JoinRound">Round join</data>
+	<data name="Property.Line.JoinMiter">Miter join</data>
+	<data name="Property.Line.JoinBevel">Bevel join</data>
+
+	<data name="Property.Regular.Norm">@@Polygone régulier</data>
+	<data name="Property.Regular.Star">@@Etoile</data>
 
 	<data name="Property.Surface.ParallelT">Parallelogram 1</data>
 	<data name="Property.Surface.ParallelB">Parallelogram 2</data>
@@ -613,6 +683,15 @@
 	<data name="Action.Adjust">Adjust</data>
 	<data name="Action.AdjustWidth">@@Largeurs identiques</data>
 	<data name="Action.AdjustHeight">@@Hauteurs identiques</data>
+	<data name="Action.Color">@@Couleurs</data>
+	<data name="Action.ColorToRGB">@@Toutes les couleurs en RVB</data>
+	<data name="Action.ColorToCMYK">@@Toutes les couleurs en CMJN</data>
+	<data name="Action.ColorToGray">@@Toutes les couleurs en niveaux de gris</data>
+	<data name="Action.ColorValue">@@Intensité des modifications</data>
+	<data name="Action.ColorStrokeDark">@@Traits plus foncés</data>
+	<data name="Action.ColorStrokeLight">@@Traits plus clairs</data>
+	<data name="Action.ColorFillDark">@@Surfaces plus foncées</data>
+	<data name="Action.ColorFillLight">@@Surfaces plus claires</data>
 	
 	<data name="Action.GroupMain">Group</data>
 	<data name="Action.Merge">Merge into the group</data>
@@ -637,6 +716,8 @@
 	<data name="Action.BooleanFrontMinus">Foreground minus background</data>
 	<data name="Action.BooleanBackMinus">Background minus foreground</data>
 	
+	<data name="Action.Glyphs">@@Caractères spéciaux...</data>
+
 	<data name="Action.HideSel">Hide selection</data>
 	<data name="Action.HideRest">Hide others</data>
 	<data name="Action.HideCancel">Show all</data>
@@ -654,7 +735,7 @@
 	<data name="Action.PagePrev">Previous page</data>
 	<data name="Action.PageMenu">Select page</data>
 	<data name="Action.PageNext">Next page</data>
-	<data name="Action.PageChange">Change page state</data>
+	<data name="Action.PageChangeStatus">Change page state</data>
 	
 	<data name="Action.LayerChange">Switch layers</data>
 	<data name="Action.LayerNew">New layer</data>
@@ -677,15 +758,18 @@
 	<data name="Action.LayerChangePrint">Change layer printing mode</data>
 	<data name="Action.LayerChangeMagnet">Change layer state</data>
 	
-	<data name="Action.StyleNew">New style</data>
-	<data name="Action.StyleFree">Free style</data>
-	<data name="Action.StyleUse">Use style</data>
-	<data name="Action.StyleCreate">Create style</data>
-	<data name="Action.StyleDuplicate">Duplicate style</data>
-	<data name="Action.StyleUp">Move style up</data>
-	<data name="Action.StyleDown">Move style down</data>
-	<data name="Action.StyleDelete">Delete style</data>
-	<data name="Action.StyleSwap">Swap styles</data>
+	<data name="Action.AggregateUse">@@Utiliser le style</data>
+	<data name="Action.AggregateNew3">@@Nouveau style pour trait et couleurs</data>
+	<data name="Action.AggregateNewAll">@@Nouveau style pour tout</data>
+	<data name="Action.AggregateDuplicate">@@Dupliquer un style</data>
+	<data name="Action.AggregateUp">@@Style plus haut</data>
+	<data name="Action.AggregateDown">@@Style plus bas</data>
+	<data name="Action.AggregateDelete">@@Supprimer un style</data>
+	<data name="Action.AggregateSwap">@@Permuter deux styles</data>
+	<data name="Action.AggregateChange">@@Changement du style</data>
+	<data name="Action.AggregateFree">@@Libèrer le style</data>
+	<data name="Action.AggregateStyleNew">@@Créer un attribut pour le style</data>
+	<data name="Action.AggregateStyleDelete">@@Supprimer un attribut du style</data>
 	
 	<data name="Action.GuideNewH">New horizontal guide</data>
 	<data name="Action.GuideNewV">New vertical guide</data>
@@ -733,9 +817,11 @@
 	<data name="Action.Preview">Preview as printed</data>
 	<data name="Action.Magnet">Magnetic constructions</data>
 	<data name="Action.Rulers">Rulers</data>
-	<data name="Action.Labels">Object names</data>
+	<data name="Action.Labels">@@Affiche les noms des objets</data>
+	<data name="Action.Aggregates">@@Affiche les noms des styles</data>
 	<data name="Action.Settings">Settings...</data>
 	<data name="Action.Infos">Informations...</data>
+	<data name="Action.LabelProperties">@@Noms des attributs</data>
 
 	<data name="Statistic.Summary">{0}Summary{1}</data>
 	<data name="Statistic.Filename">{0}File name: {1}</data>
@@ -748,11 +834,8 @@
 	<data name="Statistic.Images">{0}Images used{1}</data>
 	<data name="Statistic.None">&lt;i&gt;None&lt;/i&gt;</data>
 	
-	<data name="Menu.Style.Make">Create new style</data>
-	<data name="Menu.Style.Free">Unlink style</data>
 	<data name="Menu.Zoom.Page">full page</data>
 	<data name="Menu.Zoom.Current">current</data>
-	<data name="Style.Name">Style {0}</data>
 	
 	<data name="Page.ShortName.Default">{0}</data>
 	<data name="Page.ShortName.Model">T{0}</data>
@@ -760,6 +843,9 @@
 	<data name="Layer.PositionName.Front">@@Dessus</data>
 	<data name="Layer.PositionName.Middle">@@Fond+{0}</data>
 	<data name="Layer.PositionName.Back">@@Fond</data>
+	<data name="Aggregates.Header.Name">@@Nom</data>
+	<data name="Aggregates.NoneLine">@@&lt;i&gt;Aucun&lt;/i&gt;</data>
+	<data name="Aggregate.Name">@@Style {0}</data>
 
 	<data name="Error.BadFile">Incorrect file type.</data>
 	<data name="Error.BadImage">Unrecognized image format.</data>

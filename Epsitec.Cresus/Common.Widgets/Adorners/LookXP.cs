@@ -1572,6 +1572,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			get { return this.colorCaption; }
 		}
 
+		public Drawing.Color ColorTextBackground
+		{
+			get { return this.colorControlLightLight; }
+		}
+
 		public Drawing.Color ColorText(WidgetState state)
 		{
 			if ( (state&WidgetState.Enabled) != 0 )

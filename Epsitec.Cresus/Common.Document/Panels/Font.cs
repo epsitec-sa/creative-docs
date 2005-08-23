@@ -12,9 +12,6 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Font(Document document) : base(document)
 		{
-			this.label = new StaticText(this);
-			this.label.Alignment = ContentAlignment.MiddleLeft;
-
 			this.fontName = new TextFieldCombo(this);
 			this.fontName.IsReadOnly = true;
 			if ( this.document.Type == DocumentType.Pictogram )
@@ -34,9 +31,11 @@ namespace Epsitec.Common.Document.Panels
 			this.fontName.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontName, Res.Strings.Panel.Font.Tooltip.Name);
 
-			this.fontSize = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealFontSize(this.fontSize);
-			this.fontSize.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fontSize = new Widgets.TextFieldLabel(this, false);
+			this.fontSize.LabelShortText = Res.Strings.Panel.Font.Short.Size;
+			this.fontSize.LabelLongText  = Res.Strings.Panel.Font.Long.Size;
+			this.document.Modifier.AdaptTextFieldRealFontSize(this.fontSize.TextFieldReal);
+			this.fontSize.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontSize.TabIndex = 3;
 			this.fontSize.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontSize, Res.Strings.Panel.Font.Tooltip.Size);
@@ -50,8 +49,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.fontColor, Res.Strings.Panel.Font.Tooltip.Color);
 
 			this.labelColor = new StaticText(this);
-			this.labelColor.Text = Res.Strings.Panel.Font.Label.Color;
-			this.labelColor.Alignment = ContentAlignment.MiddleLeft;
+			this.labelColor.Alignment = ContentAlignment.MiddleRight;
 
 			this.isNormalAndExtended = true;
 		}
@@ -62,11 +60,10 @@ namespace Epsitec.Common.Document.Panels
 			{
 				//?this.fontName.SelectedIndexChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontName.TextChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fontSize.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fontSize.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.fontColor.Changed -= new EventHandler(this.HandleFieldColorChanged);
 
-				this.label = null;
 				this.labelColor = null;
 				this.fontName = null;
 				this.fontSize = null;
@@ -82,7 +79,25 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return ( this.isExtendedSize ? 80 : 30 );
+				double h = this.LabelHeight;
+
+				if ( this.isExtendedSize )  // panneau étendu ?
+				{
+					if ( this.IsLabelProperties )  // étendu/détails ?
+					{
+						h += 80;
+					}
+					else	// étendu/compact ?
+					{
+						h += 55;
+					}
+				}
+				else	// panneau réduit ?
+				{
+					h += 30;
+				}
+
+				return h;
 			}
 		}
 
@@ -96,11 +111,9 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			this.label.Text = p.TextStyle;
-
 			//?this.fontName.SelectedName = p.FontName;
 			this.ComboSelectedName(this.fontName, p.FontName);
-			this.fontSize.InternalValue = (decimal) p.FontSize;
+			this.fontSize.TextFieldReal.InternalValue = (decimal) p.FontSize;
 			this.fontColor.Color = p.FontColor;
 
 			this.ignoreChanged = false;
@@ -117,7 +130,7 @@ namespace Epsitec.Common.Document.Panels
 			if ( name == null )  p.FontName = "";
 			else                 p.FontName = name;
 
-			p.FontSize = (double) this.fontSize.InternalValue;
+			p.FontSize = (double) this.fontSize.TextFieldReal.InternalValue;
 			p.FontColor = this.fontColor.Color;
 		}
 
@@ -158,7 +171,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		// Modifie la couleur d'origine.
-		public override void OriginColorChange(Drawing.Color color)
+		public override void OriginColorChange(Drawing.RichColor color)
 		{
 			if ( this.fontColor.Color != color )
 			{
@@ -168,12 +181,25 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		// Donne la couleur d'origine.
-		public override Drawing.Color OriginColorGet()
+		public override Drawing.RichColor OriginColorGet()
 		{
 			return this.fontColor.Color;
 		}
 
 		
+		// Adapte les textes courts ou longs.
+		protected void UpdateShortLongText()
+		{
+			if ( this.IsLabelProperties )
+			{
+				this.labelColor.Text = Res.Strings.Panel.Font.Long.Color + " ";
+			}
+			else
+			{
+				this.labelColor.Text = Res.Strings.Panel.Font.Short.Color;
+			}
+		}
+
 		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
@@ -181,33 +207,71 @@ namespace Epsitec.Common.Document.Panels
 
 			if ( this.fontName == null )  return;
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
+			this.UpdateShortLongText();
 
-			Rectangle r = rect;
-			r.Bottom = r.Top-20;
-			r.Left = rect.Left;
-			r.Right = rect.Right-50;
-			this.label.Bounds = r;
-			r.Left = rect.Right-50;
-			r.Right = rect.Right;
-			this.fontSize.Bounds = r;
+			Rectangle rect = this.UsefulZone;
 
-			r.Offset(0, -25);
-			r.Left = rect.Left;
-			r.Right = rect.Right-50;
-			this.labelColor.Bounds = r;
-			this.labelColor.SetVisible(this.isExtendedSize);
-			r.Left = rect.Right-50;
-			r.Right = rect.Right;
-			this.fontColor.Bounds = r;
-			this.fontColor.SetVisible(this.isExtendedSize);
+			if ( this.isExtendedSize )
+			{
+				Rectangle r = rect;
+				r.Bottom = r.Top-20;
+				this.fontName.Bounds = r;
+				this.fontName.SetVisible(true);
 
-			r.Offset(0, -25);
-			r.Left = rect.Left;
-			r.Right = rect.Right;
-			this.fontName.Bounds = r;
+				if ( this.IsLabelProperties )
+				{
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Right = rect.Right;
+					this.fontSize.LabelVisibility = true;
+					this.fontSize.Bounds = r;
+					this.fontSize.SetVisible(true);
+
+					r.Offset(0, -25);
+					r.Left = rect.Left;
+					r.Right = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth-Widgets.TextFieldLabel.DefaultMarginWidth;
+					this.labelColor.Bounds = r;
+					this.labelColor.SetVisible(true);
+					r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
+					r.Right = rect.Right;
+					this.fontColor.Bounds = r;
+					this.fontColor.SetVisible(true);
+				}
+				else
+				{
+					r.Offset(0, -25);
+					r.Left = rect.Right-this.fontSize.Width-Widgets.TextFieldLabel.ShortWidth;
+					r.Width = this.fontSize.Width;
+					this.fontSize.LabelVisibility = true;
+					this.fontSize.Bounds = r;
+					this.fontSize.SetVisible(true);
+					r.Left = r.Right;
+					r.Width = Widgets.TextFieldLabel.DefaultLabelWidth;
+					this.labelColor.Bounds = r;
+					this.labelColor.SetVisible(true);
+					r.Left = r.Right+Widgets.TextFieldLabel.DefaultMarginWidth;
+					r.Width = Widgets.TextFieldLabel.DefaultTextWidth;
+					this.fontColor.Bounds = r;
+					this.fontColor.SetVisible(true);
+				}
+			}
+			else
+			{
+				Rectangle r = rect;
+				r.Bottom = r.Top-20;
+				r.Right = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth-5;
+				this.fontName.Bounds = r;
+				this.fontName.SetVisible(true);
+
+				r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
+				r.Width = Widgets.TextFieldLabel.ShortWidth;
+				this.fontSize.LabelVisibility = false;
+				this.fontSize.Bounds = r;
+				this.fontSize.SetVisible(true);
+
+				this.labelColor.SetVisible(false);
+				this.fontColor.SetVisible(false);
+			}
 		}
 
 
@@ -235,10 +299,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected StaticText				label;
 		protected StaticText				labelColor;
 		protected TextFieldCombo			fontName;
-		protected TextFieldReal				fontSize;
+		protected Widgets.TextFieldLabel	fontSize;
 		protected ColorSample				fontColor;
 	}
 }

@@ -12,77 +12,61 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public TextLine(Document document) : base(document)
 		{
-			this.label = new StaticText(this);
-			this.label.Alignment = ContentAlignment.MiddleLeft;
+			this.gridHorizontal = new Widgets.RadioIconGrid(this);
+			this.gridHorizontal.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.gridHorizontal.TabIndex = 0;
+			this.gridHorizontal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.buttons = new IconButton[4];
-			for ( int i=0 ; i<4 ; i++ )
-			{
-				this.buttons[i] = new IconButton(this);
-				this.buttons[i].Clicked += new MessageEventHandler(this.HandlePanelTextLineClicked);
-				this.buttons[i].TabIndex = 2+i;
-				this.buttons[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			}
+			this.AddRadioIcon(Properties.JustifHorizontal.Left);
+			this.AddRadioIcon(Properties.JustifHorizontal.Center);
+			this.AddRadioIcon(Properties.JustifHorizontal.Right);
+			this.AddRadioIcon(Properties.JustifHorizontal.Stretch);
 
-			this.buttons[0].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHLeft.icon";
-			this.buttons[1].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHCenter.icon";
-			this.buttons[2].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHRight.icon";
-			this.buttons[3].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JustifHStretch.icon";
-			ToolTip.Default.SetToolTip(this.buttons[0], Res.Strings.Panel.TextLine.Tooltip.JustifHLeft);
-			ToolTip.Default.SetToolTip(this.buttons[1], Res.Strings.Panel.TextLine.Tooltip.JustifHCenter);
-			ToolTip.Default.SetToolTip(this.buttons[2], Res.Strings.Panel.TextLine.Tooltip.JustifHRight);
-			ToolTip.Default.SetToolTip(this.buttons[3], Res.Strings.Panel.TextLine.Tooltip.JustifHStretch);
-
-			this.fieldOffset = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldOffset);
-			this.fieldOffset.InternalMinValue =  0.0M;
-			this.fieldOffset.InternalMaxValue = 70.0M;
-			this.fieldOffset.Step = 5.0M;
-			this.fieldOffset.TextSuffix = "%";
-			this.fieldOffset.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldOffset = new Widgets.TextFieldLabel(this, false);
+			this.fieldOffset.LabelShortText = Res.Strings.Panel.TextLine.Short.Offset;
+			this.fieldOffset.LabelLongText  = Res.Strings.Panel.TextLine.Long.Offset;
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldOffset.TextFieldReal);
+			this.fieldOffset.TextFieldReal.InternalMinValue =  0.0M;
+			this.fieldOffset.TextFieldReal.InternalMaxValue = 70.0M;
+			this.fieldOffset.TextFieldReal.Step = 5.0M;
+			this.fieldOffset.TextFieldReal.TextSuffix = "%";
+			this.fieldOffset.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldOffset.TabIndex = 20;
 			this.fieldOffset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldOffset, Res.Strings.Panel.TextLine.Tooltip.Offset);
 
-			this.fieldAdd = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldAdd);
-			this.fieldAdd.InternalMinValue = -20.0M;
-			this.fieldAdd.InternalMaxValue = 100.0M;
-			this.fieldAdd.Step = 1.0M;
-			this.fieldAdd.TextSuffix = "%";
-			this.fieldAdd.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldAdd = new Widgets.TextFieldLabel(this, false);
+			this.fieldAdd.LabelShortText = Res.Strings.Panel.TextLine.Short.Add;
+			this.fieldAdd.LabelLongText  = Res.Strings.Panel.TextLine.Long.Add;
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldAdd.TextFieldReal);
+			this.fieldAdd.TextFieldReal.InternalMinValue = -20.0M;
+			this.fieldAdd.TextFieldReal.InternalMaxValue = 100.0M;
+			this.fieldAdd.TextFieldReal.Step = 1.0M;
+			this.fieldAdd.TextFieldReal.TextSuffix = "%";
+			this.fieldAdd.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldAdd.TabIndex = 21;
 			this.fieldAdd.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldAdd, Res.Strings.Panel.TextLine.Tooltip.Add);
 
-			this.labelOffset = new StaticText(this);
-			this.labelOffset.Text = Res.Strings.Panel.TextLine.Label.Offset;
-			this.labelOffset.Alignment = ContentAlignment.MiddleCenter;
-
-			this.labelAdd = new StaticText(this);
-			this.labelAdd.Text = Res.Strings.Panel.TextLine.Label.Add;
-			this.labelAdd.Alignment = ContentAlignment.MiddleCenter;
-
 			this.isNormalAndExtended = true;
 		}
 		
+		protected void AddRadioIcon(Properties.JustifHorizontal type)
+		{
+			this.gridHorizontal.AddRadioIcon(Properties.Justif.GetIconText(type), Properties.Justif.GetName(type), (int)type, false);
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
-				for ( int i=0 ; i<4 ; i++ )
-				{
-					this.buttons[i].Clicked -= new MessageEventHandler(this.HandlePanelTextLineClicked);
-					this.buttons[i] = null;
-				}
-				this.fieldOffset.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldAdd.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.gridHorizontal.SelectionChanged -= new EventHandler(HandleTypeChanged);
+				this.fieldOffset.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldAdd.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
 
-				this.label = null;
+				this.gridHorizontal = null;
 				this.fieldOffset = null;
 				this.fieldAdd = null;
-				this.labelOffset = null;
-				this.labelAdd = null;
 			}
 			
 			base.Dispose(disposing);
@@ -94,7 +78,25 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return ( this.isExtendedSize ? 55 : 30 );
+				double h = this.LabelHeight;
+
+				if ( this.isExtendedSize )  // panneau étendu ?
+				{
+					if ( this.IsLabelProperties )  // étendu/détails ?
+					{
+						h += 80;
+					}
+					else	// étendu/compact ?
+					{
+						h += 55;
+					}
+				}
+				else	// panneau réduit ?
+				{
+					h += 30;
+				}
+
+				return h;
 			}
 		}
 
@@ -108,11 +110,9 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			this.label.Text = p.TextStyle;
-
-			this.SelectButtonHorizontal    = p.Horizontal;
-			this.fieldOffset.InternalValue = (decimal) p.Offset*100;
-			this.fieldAdd.InternalValue    = (decimal) p.Add*100;
+			this.gridHorizontal.SelectedValue = (int) p.Horizontal;
+			this.fieldOffset.TextFieldReal.InternalValue = (decimal) p.Offset*100;
+			this.fieldAdd.TextFieldReal.InternalValue    = (decimal) p.Add*100;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -124,39 +124,9 @@ namespace Epsitec.Common.Document.Panels
 			Properties.TextLine p = this.property as Properties.TextLine;
 			if ( p == null )  return;
 
-			p.Horizontal = this.SelectButtonHorizontal;
-			p.Offset     = (double) this.fieldOffset.InternalValue/100;
-			p.Add        = (double) this.fieldAdd.InternalValue/100;
-		}
-
-		protected Properties.JustifHorizontal SelectButtonHorizontal
-		{
-			get
-			{
-				if ( this.ButtonActive(0) )  return Properties.JustifHorizontal.Left;
-				if ( this.ButtonActive(1) )  return Properties.JustifHorizontal.Center;
-				if ( this.ButtonActive(2) )  return Properties.JustifHorizontal.Right;
-				if ( this.ButtonActive(3) )  return Properties.JustifHorizontal.Stretch;
-				return Properties.JustifHorizontal.None;
-			}
-
-			set
-			{
-				this.ButtonActive(0, value == Properties.JustifHorizontal.Left);
-				this.ButtonActive(1, value == Properties.JustifHorizontal.Center);
-				this.ButtonActive(2, value == Properties.JustifHorizontal.Right);
-				this.ButtonActive(3, value == Properties.JustifHorizontal.Stretch);
-			}
-		}
-
-		protected bool ButtonActive(int i)
-		{
-			return ( this.buttons[i].ActiveState == WidgetState.ActiveYes );
-		}
-
-		protected void ButtonActive(int i, bool active)
-		{
-			this.buttons[i].ActiveState = active ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			p.Horizontal = (Properties.JustifHorizontal) this.gridHorizontal.SelectedValue;
+			p.Offset     = (double) this.fieldOffset.TextFieldReal.InternalValue/100;
+			p.Add        = (double) this.fieldAdd.TextFieldReal.InternalValue/100;
 		}
 
 
@@ -165,8 +135,6 @@ namespace Epsitec.Common.Document.Panels
 		{
 			this.fieldOffset.SetVisible(this.isExtendedSize);
 			this.fieldAdd.SetVisible(this.isExtendedSize);
-			this.labelOffset.SetVisible(this.isExtendedSize);
-			this.labelAdd.SetVisible(this.isExtendedSize);
 		}
 
 		// Met à jour la géométrie.
@@ -174,42 +142,47 @@ namespace Epsitec.Common.Document.Panels
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.buttons == null )  return;
+			if ( this.gridHorizontal == null )  return;
 
 			this.EnableWidgets();
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
+			Rectangle rect = this.UsefulZone;
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			r.Right = rect.Right-20*4;
-			this.label.Bounds = r;
+			r.Width = 22*4;
+			r.Inflate(1);
+			this.gridHorizontal.Bounds = r;
 
-			r.Left = rect.Right-20*4;
-			r.Width = 20;
-			for ( int i=0 ; i<4 ; i++ )
+			if ( this.isExtendedSize && this.IsLabelProperties )
 			{
-				this.buttons[i].Bounds = r;
-				r.Offset(20, 0);
-			}
+				r.Offset(0, -25);
+				r.Left = rect.Left;
+				r.Right = rect.Right;
+				this.fieldOffset.Bounds = r;
 
-			r.Offset(0, -25);
-			r.Left = rect.Left+41;
-			r.Width = 20;
-			this.labelOffset.Bounds = r;
-			r.Left = r.Right+2;
-			r.Width = 44;
-			this.fieldOffset.Bounds = r;
-			r.Left = r.Right+2;
-			r.Width = 20;
-			this.labelAdd.Bounds = r;
-			r.Left = r.Right+2;
-			r.Width = 44;
-			this.fieldAdd.Bounds = r;
+				r.Offset(0, -25);
+				this.fieldAdd.Bounds = r;
+			}
+			else
+			{
+				r.Offset(0, -25);
+				r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth-Widgets.TextFieldLabel.ShortWidth-10;
+				r.Width = Widgets.TextFieldLabel.ShortWidth+10;
+				this.fieldOffset.Bounds = r;
+				r.Left = r.Right;
+				r.Width = Widgets.TextFieldLabel.ShortWidth;
+				this.fieldAdd.Bounds = r;
+			}
 		}
 		
+		// Le type a été changé.
+		private void HandleTypeChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			this.OnChanged();
+		}
+
 		// Un champ a été changé.
 		private void HandleFieldChanged(object sender)
 		{
@@ -217,26 +190,9 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
-		// Une valeur a été changée.
-		private void HandlePanelTextLineClicked(object sender, MessageEventArgs e)
-		{
-			IconButton button = sender as IconButton;
 
-			if ( button == this.buttons[0] )  this.SelectButtonHorizontal = Properties.JustifHorizontal.Left;
-			if ( button == this.buttons[1] )  this.SelectButtonHorizontal = Properties.JustifHorizontal.Center;
-			if ( button == this.buttons[2] )  this.SelectButtonHorizontal = Properties.JustifHorizontal.Right;
-			if ( button == this.buttons[3] )  this.SelectButtonHorizontal = Properties.JustifHorizontal.Stretch;
-
-			this.EnableWidgets();
-			this.OnChanged();
-		}
-
-
-		protected StaticText				label;
-		protected IconButton[]				buttons;
-		protected TextFieldReal				fieldOffset;
-		protected TextFieldReal				fieldAdd;
-		protected StaticText				labelOffset;
-		protected StaticText				labelAdd;
+		protected Widgets.RadioIconGrid		gridHorizontal;
+		protected Widgets.TextFieldLabel	fieldOffset;
+		protected Widgets.TextFieldLabel	fieldAdd;
 	}
 }

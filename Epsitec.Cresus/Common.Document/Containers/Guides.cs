@@ -35,41 +35,41 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
 
-			this.buttonNewH = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.GuideNewH.icon");
+			this.buttonNewH = new IconButton(Misc.Icon("GuideNewH"));
 			this.buttonNewH.Clicked += new MessageEventHandler(this.HandleButtonNewH);
 			this.toolBar.Items.Add(this.buttonNewH);
 			ToolTip.Default.SetToolTip(this.buttonNewH, Res.Strings.Action.GuideNewH);
 
-			this.buttonNewV = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.GuideNewV.icon");
+			this.buttonNewV = new IconButton(Misc.Icon("GuideNewV"));
 			this.buttonNewV.Clicked += new MessageEventHandler(this.HandleButtonNewV);
 			this.toolBar.Items.Add(this.buttonNewV);
 			ToolTip.Default.SetToolTip(this.buttonNewV, Res.Strings.Action.GuideNewV);
 
-			this.buttonDuplicate = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.DuplicateItem.icon");
+			this.buttonDuplicate = new IconButton(Misc.Icon("DuplicateItem"));
 			this.buttonDuplicate.Clicked += new MessageEventHandler(this.HandleButtonDuplicate);
 			this.toolBar.Items.Add(this.buttonDuplicate);
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, Res.Strings.Action.GuideDuplicate);
 
-			this.buttonXfer = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.GuideXfer.icon");
+			this.buttonXfer = new IconButton(Misc.Icon("GuideXfer"));
 			this.buttonXfer.Clicked += new MessageEventHandler(this.HandleButtonXfer);
 			this.toolBar.Items.Add(this.buttonXfer);
 			ToolTip.Default.SetToolTip(this.buttonXfer, Res.Strings.Action.GuideXfer);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonUp = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Up.icon");
+			this.buttonUp = new IconButton(Misc.Icon("Up"));
 			this.buttonUp.Clicked += new MessageEventHandler(this.HandleButtonUp);
 			this.toolBar.Items.Add(this.buttonUp);
 			ToolTip.Default.SetToolTip(this.buttonUp, Res.Strings.Action.GuideUp);
 
-			this.buttonDown = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Down.icon");
+			this.buttonDown = new IconButton(Misc.Icon("Down"));
 			this.buttonDown.Clicked += new MessageEventHandler(this.HandleButtonDown);
 			this.toolBar.Items.Add(this.buttonDown);
 			ToolTip.Default.SetToolTip(this.buttonDown, Res.Strings.Action.GuideDown);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonDelete = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.DeleteItem.icon");
+			this.buttonDelete = new IconButton(Misc.Icon("DeleteItem"));
 			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDelete);
 			this.toolBar.Items.Add(this.buttonDelete);
 			ToolTip.Default.SetToolTip(this.buttonDelete, Res.Strings.Action.GuideDelete);

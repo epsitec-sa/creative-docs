@@ -15,15 +15,16 @@ namespace Epsitec.Common.Widgets.Adorner
 		// Initialise les couleurs en fonction des réglages de Windows.
 		public void RefreshColors()
 		{
-			this.colorBlack       = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorControl     = Drawing.Color.FromRGB( 53.0/255.0, 146.0/255.0, 255.0/255.0);
-			this.colorCaption     = Drawing.Color.FromRGB(255.0/255.0, 210.0/255.0,   0.0/255.0);
-			this.colorCaptionNF   = Drawing.Color.FromRGB(255.0/255.0, 242.0/255.0, 183.0/255.0);
-			this.colorInfo        = Drawing.Color.FromRGB(255.0/255.0, 210.0/255.0,   0.0/255.0);
-			this.colorBorder      = Drawing.Color.FromRGB(128.0/255.0, 128.0/255.0, 128.0/255.0);
-			this.colorDisabled    = Drawing.Color.FromRGB(200.0/255.0, 200.0/255.0, 200.0/255.0);
-			this.colorError       = Drawing.Color.FromRGB(255.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorWindow      = Drawing.Color.FromRGB(247.0/255.0, 247.0/255.0, 247.0/255.0);
+			this.colorBlack          = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorControl        = Drawing.Color.FromRGB( 53.0/255.0, 146.0/255.0, 255.0/255.0);
+			this.colorCaption        = Drawing.Color.FromRGB(255.0/255.0, 210.0/255.0,   0.0/255.0);
+			this.colorCaptionNF      = Drawing.Color.FromRGB(255.0/255.0, 242.0/255.0, 183.0/255.0);
+			this.colorInfo           = Drawing.Color.FromRGB(255.0/255.0, 210.0/255.0,   0.0/255.0);
+			this.colorBorder         = Drawing.Color.FromRGB(128.0/255.0, 128.0/255.0, 128.0/255.0);
+			this.colorDisabled       = Drawing.Color.FromRGB(200.0/255.0, 200.0/255.0, 200.0/255.0);
+			this.colorError          = Drawing.Color.FromRGB(255.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorTextBackground = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
+			this.colorWindow         = Drawing.Color.FromRGB(247.0/255.0, 247.0/255.0, 247.0/255.0);
 
 			this.colorBorder.A = 0.6;
 		}
@@ -1874,6 +1875,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 		}
 
+		public Drawing.Color ColorTextBackground
+		{
+			get { return this.colorTextBackground; }
+		}
+
 		public Drawing.Color ColorText(WidgetState state)
 		{
 			if ( (state&WidgetState.Enabled) != 0 )
@@ -1940,6 +1946,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorBorder;
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorTextBackground;
 		protected Drawing.Color		colorWindow;
 	}
 }

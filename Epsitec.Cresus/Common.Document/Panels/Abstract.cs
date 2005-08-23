@@ -8,7 +8,7 @@ namespace Epsitec.Common.Document.Panels
 	/// La classe Abstract est la classe de base pour tous les panels.
 	/// </summary>
 	[SuppressBundleSupport]
-	public abstract class Abstract : Widgets.Widget
+	public abstract class Abstract : Common.Widgets.Widget
 	{
 		public Abstract(Document document)
 		{
@@ -17,6 +17,13 @@ namespace Epsitec.Common.Document.Panels
 			this.Entered += new MessageEventHandler(this.HandleMouseEntered);
 			this.Exited += new MessageEventHandler(this.HandleMouseExited);
 
+			this.label = new StaticText(this);
+			this.fixIcon = new StaticText(this);
+
+			this.hiliteButton = new GlyphButton(this);
+			this.hiliteButton.ButtonStyle = ButtonStyle.None;
+			this.hiliteButton.GlyphShape = GlyphShape.ArrowRight;
+
 			this.extendedButton = new GlyphButton(this);
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.GlyphShape = GlyphShape.ArrowDown;
@@ -24,14 +31,6 @@ namespace Epsitec.Common.Document.Panels
 			this.extendedButton.TabIndex = 0;
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Panel.Abstract.Extend);
-
-			this.stylesButton = new GlyphButton(this);
-			this.stylesButton.ButtonStyle = ButtonStyle.Icon;
-			this.stylesButton.GlyphShape = GlyphShape.Dots;
-			this.stylesButton.Clicked += new MessageEventHandler(this.StylesButtonClicked);
-			this.stylesButton.TabIndex = 1000;
-			this.stylesButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.stylesButton, Res.Strings.Panel.Abstract.Styles);
 
 			this.colorBlack = Drawing.Color.FromName("WindowFrame");
 			this.UpdateButtons();
@@ -44,7 +43,6 @@ namespace Epsitec.Common.Document.Panels
 				this.Entered -= new MessageEventHandler(this.HandleMouseEntered);
 				this.Exited -= new MessageEventHandler(this.HandleMouseExited);
 				this.extendedButton.Clicked -= new MessageEventHandler(this.ExtendedButtonClicked);
-				this.stylesButton.Clicked -= new MessageEventHandler(this.StylesButtonClicked);
 			}
 			
 			base.Dispose(disposing);
@@ -56,7 +54,31 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return 30;
+				return this.LabelHeight+30;
+			}
+		}
+
+		// Retourne la hauteur pour le label supérieur.
+		protected double LabelHeight
+		{
+			get
+			{
+				return (this.IsLabelProperties || this is ModColor) ? 14 : 0;
+			}
+		}
+
+		// Indique le mode des propriétés.
+		public bool IsLabelProperties
+		{
+			get
+			{
+				if ( this.document != null )
+				{
+					return this.document.GlobalSettings.LabelProperties;
+				}
+
+				System.Diagnostics.Debug.Assert(Abstract.StaticDocument != null);
+				return Abstract.StaticDocument.GlobalSettings.LabelProperties;
 			}
 		}
 
@@ -80,9 +102,19 @@ namespace Epsitec.Common.Document.Panels
 				{
 					this.isExtendedSize = value;
 					this.UpdateButtons();
-					this.Height = this.DefaultHeight;
-					this.ForceLayout();
+					this.HeightChanged();
 				}
+			}
+		}
+
+		// Indique que la hauteur du panneau a changé.
+		public void HeightChanged()
+		{
+			double h = this.DefaultHeight;
+			if ( this.Height != h )
+			{
+				this.Height = h;
+				this.ForceLayout();
 			}
 		}
 
@@ -182,6 +214,11 @@ namespace Epsitec.Common.Document.Panels
 				this.property = value;
 				this.backgroundIntensity = Properties.Abstract.BackgroundIntensity(this.property.Type);
 				this.PropertyToWidgets();
+
+				this.label.Text = Properties.Abstract.Text(this.property.Type);
+
+				this.fixIcon.Text = Misc.Image(Properties.Abstract.IconText(this.property.Type));
+				ToolTip.Default.SetToolTip(this.fixIcon, Properties.Abstract.Text(this.property.Type));
 			}
 		}
 
@@ -210,6 +247,20 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
+		// Retourne la zone rectangulaire utile pour les widgets.
+		protected Rectangle UsefulZone
+		{
+			get
+			{
+				Rectangle rect = this.Client.Bounds;
+				rect.Top -= this.LabelHeight;
+				rect.Left += this.extendedZoneWidth;
+				rect.Right -= this.extendedZoneWidth;
+				rect.Deflate(5);
+				return rect;
+			}
+		}
+
 		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
@@ -217,15 +268,25 @@ namespace Epsitec.Common.Document.Panels
 
 			if ( this.extendedButton == null )  return;
 
-			Rectangle rTop = this.Client.Bounds;
-			rTop.Left += 2;
-			rTop.Width = this.extendedZoneWidth-3;
-			rTop.Top -= 8;
-			rTop.Bottom = rTop.Top-13;
-			this.extendedButton.Bounds = rTop;
+			Rectangle rect = this.Client.Bounds;
+			rect.Left += this.extendedZoneWidth+5;
+			rect.Right -= this.extendedZoneWidth+5;
+			rect.Top -= 1;
+			rect.Bottom = rect.Top-this.LabelHeight;
+			this.label.Bounds = rect;
+			this.label.SetVisible(this.IsLabelProperties || this is ModColor);
 
-			rTop.Offset(this.Client.Width-this.extendedZoneWidth-1, 0);
-			this.stylesButton.Bounds = rTop;
+			rect = this.Client.Bounds;
+			rect.Left += 1;
+			rect.Width = this.extendedZoneWidth;
+			rect.Top -= (this.IsLabelProperties || this is ModColor) ? 2 : 8;
+			rect.Bottom = rect.Top-13;
+			this.fixIcon.Bounds = rect;
+			this.hiliteButton.Bounds = rect;
+
+			rect.Left = this.Client.Bounds.Right-this.extendedZoneWidth+1;
+			rect.Width = this.extendedZoneWidth-3;
+			this.extendedButton.Bounds = rect;
 
 			this.UpdateButtons();
 		}
@@ -235,18 +296,17 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( this.isObjectHilite )
 			{
-				this.extendedButton.ButtonStyle = ButtonStyle.None;
-				this.extendedButton.GlyphShape = GlyphShape.ArrowRight;
-				this.extendedButton.SetVisible(this.isHilite);
+				this.fixIcon.SetVisible(false);
+				this.hiliteButton.SetVisible(this.isHilite);
 			}
 			else
 			{
-				this.extendedButton.ButtonStyle = ButtonStyle.Icon;
-				this.extendedButton.GlyphShape = this.isExtendedSize ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
-				this.extendedButton.SetVisible(this.isNormalAndExtended && !this.isStyleDirect && !this.isLayoutDirect);
+				this.fixIcon.SetVisible(true);
+				this.hiliteButton.SetVisible(false);
 			}
 
-			this.stylesButton.SetVisible(!this.isStyleDirect && !this.isLayoutDirect);
+			this.extendedButton.SetVisible(this.isNormalAndExtended && !this.isStyleDirect && !this.isLayoutDirect);
+			this.extendedButton.GlyphShape = this.isExtendedSize ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 		}
 
 
@@ -267,14 +327,14 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		// Modifie la couleur d'origine.
-		public virtual void OriginColorChange(Drawing.Color color)
+		public virtual void OriginColorChange(Drawing.RichColor color)
 		{
 		}
 
 		// Donne la couleur d'origine.
-		public virtual Drawing.Color OriginColorGet()
+		public virtual Drawing.RichColor OriginColorGet()
 		{
-			return Drawing.Color.FromBrightness(0);
+			return Drawing.RichColor.FromBrightness(0);
 		}
 
 
@@ -283,11 +343,14 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( this.ignoreChanged )  return;
 
-			int id = (int) this.property.Type;
-			string name = string.Format(Res.Strings.Action.PropertyChange, Properties.Abstract.Text(this.property.Type));
-			this.document.Modifier.OpletQueueBeginAction(name, "ChangeProperty", id);
-			this.WidgetsToProperty();
-			this.document.Modifier.OpletQueueValidateAction();
+			if ( this.property != null )
+			{
+				int id = Properties.Aggregate.UniqueId(this.document.Aggregates, this.property);
+				string name = string.Format(Res.Strings.Action.PropertyChange, Properties.Abstract.Text(this.property.Type));
+				this.document.Modifier.OpletQueueBeginAction(name, "ChangeProperty", id);
+				this.WidgetsToProperty();
+				this.document.Modifier.OpletQueueValidateAction();
+			}
 
 			if ( this.Changed != null )  // qq'un écoute ?
 			{
@@ -318,17 +381,6 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.IsPropertiesExtended(this.property.Type, this.isExtendedSize);
 		}
 
-		// Le bouton des styles a été cliqué.
-		private void StylesButtonClicked(object sender, MessageEventArgs e)
-		{
-			GlyphButton button = sender as GlyphButton;
-			Point pos = button.MapClientToScreen(new Point(0, button.Height));
-			VMenu menu = this.document.Modifier.CreateStyleMenu(this.property);
-			menu.Host = this;
-			pos.X -= menu.Width;
-			menu.ShowAsContextMenu(this.Window, pos);
-		}
-
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -354,7 +406,7 @@ namespace Epsitec.Common.Document.Panels
 				graphics.RenderSolid(DrawingContext.ColorMulti);
 
 				part.Left = rect.Left+this.extendedZoneWidth;
-				part.Right = rect.Right-this.extendedZoneWidth;
+				part.Right = rect.Right;
 				graphics.AddFilledRectangle(part);
 				graphics.RenderSolid(DrawingContext.ColorMultiBack);
 			}
@@ -362,12 +414,12 @@ namespace Epsitec.Common.Document.Panels
 			if ( (this.property != null && this.property.IsStyle) || this.isStyleDirect )
 			{
 				Rectangle part = rect;
-				part.Left = part.Right-this.extendedZoneWidth;
+				part.Width = this.extendedZoneWidth;
 				graphics.AddFilledRectangle(part);
 				graphics.RenderSolid(DrawingContext.ColorStyle);
 
 				part.Left = rect.Left+this.extendedZoneWidth;
-				part.Right = rect.Right-this.extendedZoneWidth;
+				part.Right = rect.Right;
 				graphics.AddFilledRectangle(part);
 				graphics.RenderSolid(DrawingContext.ColorStyleBack);
 			}
@@ -391,6 +443,24 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
+		// Met un texte dans un widget quelconque.
+		public static void SetText(Widget widget, string text)
+		{
+			if ( widget.Text != text )
+			{
+				widget.Text = text;
+			}
+		}
+
+
+		// ATTENTION: Ceci n'est pas propre, mais je ne sais pas comment faire mieux.
+		// Le constructeur de Common.Widget appelle DefaultHeight, qui doit
+		// connaître le document pour déterminer la hauteur (avec LabelHeight).
+		// Comme ce constructeur est appelé avant l'initialisation de this.document,
+		// je n'ai pas trouvé d'autre moyen pour connaître le document que de le
+		// mettre au préalable dans une variable statique !!!
+		public static Document				StaticDocument;
+
 		protected Document					document;
 		protected Drawing.Color				colorBlack;
 		protected double					backgroundIntensity = 1.0;
@@ -398,8 +468,10 @@ namespace Epsitec.Common.Document.Panels
 		protected bool						isExtendedSize = false;
 		protected bool						isNormalAndExtended = false;
 		protected double					extendedZoneWidth = 16;
+		protected StaticText				label;
+		protected StaticText				fixIcon;
+		protected GlyphButton				hiliteButton;
 		protected GlyphButton				extendedButton;
-		protected GlyphButton				stylesButton;
 		protected bool						isStyleDirect = false;
 		protected bool						isLayoutDirect = false;
 		protected bool						isHilite = false;

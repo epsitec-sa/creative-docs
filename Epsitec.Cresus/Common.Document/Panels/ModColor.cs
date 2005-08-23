@@ -12,53 +12,45 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public ModColor(Document document) : base(document)
 		{
-			this.label = new StaticText(this);
-			this.label.Alignment = ContentAlignment.MiddleLeft;
-			this.label.Text = Res.Strings.Panel.ModColor.Label.Title;
-
-			this.labelArray = new StaticText[7];
+			this.fieldArray = new Widgets.TextFieldLabel[7];
 			for ( int i=0 ; i<7 ; i++ )
 			{
-				this.labelArray[i] = new StaticText(this);
-				if ( i == 0 )  this.labelArray[i].Text = Res.Strings.Panel.ModColor.Label.H;
-				if ( i == 1 )  this.labelArray[i].Text = Res.Strings.Panel.ModColor.Label.S;
-				if ( i == 2 )  this.labelArray[i].Text = Res.Strings.Panel.ModColor.Label.V;
-				if ( i == 3 )  this.labelArray[i].Text = Res.Strings.Panel.ModColor.Label.R;
-				if ( i == 4 )  this.labelArray[i].Text = Res.Strings.Panel.ModColor.Label.G;
-				if ( i == 5 )  this.labelArray[i].Text = Res.Strings.Panel.ModColor.Label.B;
-				if ( i == 6 )  this.labelArray[i].Text = Res.Strings.Panel.ModColor.Label.A;
-				this.labelArray[i].Alignment = ContentAlignment.MiddleCenter;
-			}
+				this.fieldArray[i] = new Widgets.TextFieldLabel(this, false);
 
-			this.fieldArray = new TextFieldReal[7];
-			for ( int i=0 ; i<7 ; i++ )
-			{
-				this.fieldArray[i] = new TextFieldReal(this);
-				this.fieldArray[i].ValueChanged += new EventHandler(this.HandleValueChanged);
+				if ( i == 0 )  this.fieldArray[i].LabelShortText = Res.Strings.Panel.ModColor.Short.H;
+				if ( i == 1 )  this.fieldArray[i].LabelShortText = Res.Strings.Panel.ModColor.Short.S;
+				if ( i == 2 )  this.fieldArray[i].LabelShortText = Res.Strings.Panel.ModColor.Short.V;
+				if ( i == 3 )  this.fieldArray[i].LabelShortText = Res.Strings.Panel.ModColor.Short.R;
+				if ( i == 4 )  this.fieldArray[i].LabelShortText = Res.Strings.Panel.ModColor.Short.G;
+				if ( i == 5 )  this.fieldArray[i].LabelShortText = Res.Strings.Panel.ModColor.Short.B;
+				if ( i == 6 )  this.fieldArray[i].LabelShortText = Res.Strings.Panel.ModColor.Short.A;
+				
+				this.fieldArray[i].TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
 				this.fieldArray[i].TabIndex = 1+i;
 				this.fieldArray[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				if ( i == 0 )
 				{
-					this.document.Modifier.AdaptTextFieldRealAngle(this.fieldArray[i]);
+					this.document.Modifier.AdaptTextFieldRealAngle(this.fieldArray[i].TextFieldReal);
 				}
 				else
 				{
-					this.document.Modifier.AdaptTextFieldRealScalar(this.fieldArray[i]);
-					this.fieldArray[i].InternalMinValue = -100;
-					this.fieldArray[i].InternalMaxValue =  100;
+					this.document.Modifier.AdaptTextFieldRealScalar(this.fieldArray[i].TextFieldReal);
+					this.fieldArray[i].TextFieldReal.InternalMinValue = -100;
+					this.fieldArray[i].TextFieldReal.InternalMaxValue =  100;
+					this.fieldArray[i].TextFieldReal.TextSuffix = "%";
 				}
-				this.fieldArray[i].Step = 5;
+				this.fieldArray[i].TextFieldReal.Step = 5;
 			}
-			this.fieldArray[0].Color = Drawing.Color.FromRGB(0,0,0);
-			this.fieldArray[0].BackColor = Drawing.Color.FromRGB(0.5,0.5,0.5);
-			this.fieldArray[1].Color = Drawing.Color.FromRGB(0,0,0);
-			this.fieldArray[1].BackColor = Drawing.Color.FromRGB(1,1,1);
-			this.fieldArray[2].Color = Drawing.Color.FromRGB(1,1,1);
-			this.fieldArray[2].BackColor = Drawing.Color.FromRGB(0,0,0);
-			this.fieldArray[3].Color = Drawing.Color.FromRGB(1,0,0);
-			this.fieldArray[4].Color = Drawing.Color.FromRGB(0,1,0);
-			this.fieldArray[5].Color = Drawing.Color.FromRGB(0,0,1);
-			this.fieldArray[6].Color = Drawing.Color.FromRGB(0.5,0.5,0.5);
+			this.fieldArray[0].TextFieldReal.Color = Drawing.Color.FromRGB(0,0,0);
+			this.fieldArray[0].TextFieldReal.BackColor = Drawing.Color.FromRGB(0.5,0.5,0.5);
+			this.fieldArray[1].TextFieldReal.Color = Drawing.Color.FromRGB(0,0,0);
+			this.fieldArray[1].TextFieldReal.BackColor = Drawing.Color.FromRGB(1,1,1);
+			this.fieldArray[2].TextFieldReal.Color = Drawing.Color.FromRGB(1,1,1);
+			this.fieldArray[2].TextFieldReal.BackColor = Drawing.Color.FromRGB(0,0,0);
+			this.fieldArray[3].TextFieldReal.Color = Drawing.Color.FromRGB(1,0,0);
+			this.fieldArray[4].TextFieldReal.Color = Drawing.Color.FromRGB(0,1,0);
+			this.fieldArray[5].TextFieldReal.Color = Drawing.Color.FromRGB(0,0,1);
+			this.fieldArray[6].TextFieldReal.Color = Drawing.Color.FromRGB(0.5,0.5,0.5);
 			ToolTip.Default.SetToolTip(this.fieldArray[0], Res.Strings.Panel.ModColor.Tooltip.H);
 			ToolTip.Default.SetToolTip(this.fieldArray[1], Res.Strings.Panel.ModColor.Tooltip.S);
 			ToolTip.Default.SetToolTip(this.fieldArray[2], Res.Strings.Panel.ModColor.Tooltip.V);
@@ -68,21 +60,21 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.fieldArray[6], Res.Strings.Panel.ModColor.Tooltip.A);
 
 			this.negativ = new CheckButton(this);
-			this.negativ.Text = Res.Strings.Panel.ModColor.Label.Negativ;
+			this.negativ.Text = Res.Strings.Panel.ModColor.Short.Negativ;
 			this.negativ.TabIndex = 10;
 			this.negativ.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.negativ.ActiveStateChanged += new EventHandler(this.HandleNegativChanged);
 			ToolTip.Default.SetToolTip(this.negativ, Res.Strings.Panel.ModColor.Tooltip.Negativ);
 
 			this.draft = new Button(this);
-			this.draft.Text = Res.Strings.Panel.ModColor.Label.Draft;
+			this.draft.Text = Res.Strings.Panel.ModColor.Short.Draft;
 			this.draft.TabIndex = 11;
 			this.draft.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.draft.Clicked += new MessageEventHandler(this.HandleDraft);
 			ToolTip.Default.SetToolTip(this.draft, Res.Strings.Panel.ModColor.Tooltip.Draft);
 
 			this.reset = new Button(this);
-			this.reset.Text = Res.Strings.Panel.ModColor.Label.Reset;
+			this.reset.Text = Res.Strings.Panel.ModColor.Button.Reset;
 			this.reset.TabIndex = 12;
 			this.reset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.reset.Clicked += new MessageEventHandler(this.HandleReset);
@@ -97,15 +89,13 @@ namespace Epsitec.Common.Document.Panels
 			{
 				for ( int i=0 ; i<7 ; i++ )
 				{
-					this.fieldArray[i].ValueChanged -= new EventHandler(this.HandleValueChanged);
+					this.fieldArray[i].TextFieldReal.ValueChanged -= new EventHandler(this.HandleValueChanged);
 					this.fieldArray[i] = null;
-					this.labelArray[i] = null;
 				}
 				this.negativ.ActiveStateChanged -= new EventHandler(this.HandleNegativChanged);
 				this.draft.Clicked -= new MessageEventHandler(this.HandleDraft);
 				this.reset.Clicked -= new MessageEventHandler(this.HandleReset);
 
-				this.label = null;
 				this.negativ = null;
 				this.draft = null;
 				this.reset = null;
@@ -120,7 +110,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return ( this.isExtendedSize ? 99 : 30 );
+				return ( this.isExtendedSize ? this.LabelHeight+79 : this.LabelHeight+30 );
 			}
 		}
 
@@ -135,13 +125,13 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			this.fieldArray[0].InternalValue = (decimal) p.H;
-			this.fieldArray[1].InternalValue = (decimal) p.S*100;
-			this.fieldArray[2].InternalValue = (decimal) p.V*100;
-			this.fieldArray[3].InternalValue = (decimal) p.R*100;
-			this.fieldArray[4].InternalValue = (decimal) p.G*100;
-			this.fieldArray[5].InternalValue = (decimal) p.B*100;
-			this.fieldArray[6].InternalValue = (decimal) p.A*100;
+			this.fieldArray[0].TextFieldReal.InternalValue = (decimal) p.H;
+			this.fieldArray[1].TextFieldReal.InternalValue = (decimal) p.S*100;
+			this.fieldArray[2].TextFieldReal.InternalValue = (decimal) p.V*100;
+			this.fieldArray[3].TextFieldReal.InternalValue = (decimal) p.R*100;
+			this.fieldArray[4].TextFieldReal.InternalValue = (decimal) p.G*100;
+			this.fieldArray[5].TextFieldReal.InternalValue = (decimal) p.B*100;
+			this.fieldArray[6].TextFieldReal.InternalValue = (decimal) p.A*100;
 			this.negativ.ActiveState = p.N ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 
 			this.EnableWidgets();
@@ -154,13 +144,13 @@ namespace Epsitec.Common.Document.Panels
 			Properties.ModColor p = this.property as Properties.ModColor;
 			if ( p == null )  return;
 
-			p.H = (double) this.fieldArray[0].InternalValue;
-			p.S = (double) this.fieldArray[1].InternalValue/100;
-			p.V = (double) this.fieldArray[2].InternalValue/100;
-			p.R = (double) this.fieldArray[3].InternalValue/100;
-			p.G = (double) this.fieldArray[4].InternalValue/100;
-			p.B = (double) this.fieldArray[5].InternalValue/100;
-			p.A = (double) this.fieldArray[6].InternalValue/100;
+			p.H = (double) this.fieldArray[0].TextFieldReal.InternalValue;
+			p.S = (double) this.fieldArray[1].TextFieldReal.InternalValue/100;
+			p.V = (double) this.fieldArray[2].TextFieldReal.InternalValue/100;
+			p.R = (double) this.fieldArray[3].TextFieldReal.InternalValue/100;
+			p.G = (double) this.fieldArray[4].TextFieldReal.InternalValue/100;
+			p.B = (double) this.fieldArray[5].TextFieldReal.InternalValue/100;
+			p.A = (double) this.fieldArray[6].TextFieldReal.InternalValue/100;
 			p.N = (this.negativ.ActiveState & WidgetState.ActiveYes) != 0;
 		}
 
@@ -170,7 +160,6 @@ namespace Epsitec.Common.Document.Panels
 		{
 			for ( int i=0 ; i<7 ; i++ )
 			{
-				this.labelArray[i].SetVisible(this.isExtendedSize);
 				this.fieldArray[i].SetVisible(this.isExtendedSize);
 			}
 			this.negativ.SetVisible(this.isExtendedSize);
@@ -185,34 +174,24 @@ namespace Epsitec.Common.Document.Panels
 
 			if ( this.fieldArray == null )  return;
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
+			Rectangle rect = this.UsefulZone;
 
 			Rectangle r = rect;
-			r.Bottom = r.Top-14;
-			this.label.Bounds = r;
-
-			rect.Top -= 20;
 			rect.Bottom = rect.Top-20;
 			for ( int j=0 ; j<3 ; j++ )
 			{
 				r = rect;
-				r.Left += 1;
 				for ( int i=0 ; i<3 ; i++ )
 				{
 					if ( j*3+i >= 7 )  continue;
-					r.Width = 13;
-					this.labelArray[j*3+i].Bounds = r;
-					r.Left = r.Right;
-					r.Width = 45;
+					r.Width = Widgets.TextFieldLabel.ShortWidth;
 					this.fieldArray[j*3+i].Bounds = r;
 					r.Left = r.Right;
 				}
 				rect.Offset(0, -24);
 			}
 
-			r.Left = rect.Left+72;
+			r.Left = rect.Left+Widgets.TextFieldLabel.ShortWidth+Widgets.TextFieldLabel.DefaultLabelWidth+Widgets.TextFieldLabel.DefaultMarginWidth;
 			r.Right = rect.Right-24-1-24;
 			this.negativ.Bounds = r;
 
@@ -228,12 +207,12 @@ namespace Epsitec.Common.Document.Panels
 		// Couleur -> sliders.
 		protected void ColoriseSliders()
 		{
-			double h = (double) this.fieldArray[0].InternalValue;
+			double h = (double) this.fieldArray[0].TextFieldReal.InternalValue;
 			Drawing.Color saturated = Drawing.Color.FromHSV(h,1,1);
 			
-			this.fieldArray[0].Color = saturated;
-			this.fieldArray[1].Color = saturated;
-			this.fieldArray[2].Color = saturated;
+			this.fieldArray[0].TextFieldReal.Color = saturated;
+			this.fieldArray[1].TextFieldReal.Color = saturated;
+			this.fieldArray[2].TextFieldReal.Color = saturated;
 		}
 
 		// Une valeur a été changée.
@@ -251,31 +230,29 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleDraft(object sender, MessageEventArgs e)
 		{
-			this.fieldArray[0].InternalValue =    0.0M;  // T
-			this.fieldArray[1].InternalValue = -100.0M;  // S
-			this.fieldArray[2].InternalValue =    0.0M;  // L
-			this.fieldArray[3].InternalValue =  100.0M;  // R
-			this.fieldArray[4].InternalValue =    0.0M;  // V
-			this.fieldArray[5].InternalValue =    0.0M;  // B
-			this.fieldArray[6].InternalValue =  -75.0M;  // A
+			this.fieldArray[0].TextFieldReal.InternalValue =    0.0M;  // T
+			this.fieldArray[1].TextFieldReal.InternalValue = -100.0M;  // S
+			this.fieldArray[2].TextFieldReal.InternalValue =    0.0M;  // L
+			this.fieldArray[3].TextFieldReal.InternalValue =  100.0M;  // R
+			this.fieldArray[4].TextFieldReal.InternalValue =    0.0M;  // V
+			this.fieldArray[5].TextFieldReal.InternalValue =    0.0M;  // B
+			this.fieldArray[6].TextFieldReal.InternalValue =  -75.0M;  // A
 			this.negativ.ActiveState = WidgetState.ActiveNo;
 		}
 
 		private void HandleReset(object sender, MessageEventArgs e)
 		{
-			this.fieldArray[0].InternalValue = 0.0M;
-			this.fieldArray[1].InternalValue = 0.0M;
-			this.fieldArray[2].InternalValue = 0.0M;
-			this.fieldArray[3].InternalValue = 0.0M;
-			this.fieldArray[4].InternalValue = 0.0M;
-			this.fieldArray[5].InternalValue = 0.0M;
-			this.fieldArray[6].InternalValue = 0.0M;
+			this.fieldArray[0].TextFieldReal.InternalValue = 0.0M;
+			this.fieldArray[1].TextFieldReal.InternalValue = 0.0M;
+			this.fieldArray[2].TextFieldReal.InternalValue = 0.0M;
+			this.fieldArray[3].TextFieldReal.InternalValue = 0.0M;
+			this.fieldArray[4].TextFieldReal.InternalValue = 0.0M;
+			this.fieldArray[5].TextFieldReal.InternalValue = 0.0M;
+			this.fieldArray[6].TextFieldReal.InternalValue = 0.0M;
 			this.negativ.ActiveState = WidgetState.ActiveNo;
 		}
 
-		protected StaticText				label;
-		protected StaticText[]				labelArray;
-		protected TextFieldReal[]			fieldArray;
+		protected Widgets.TextFieldLabel[]	fieldArray;
 		protected CheckButton				negativ;
 		protected Button					reset;
 		protected Button					draft;

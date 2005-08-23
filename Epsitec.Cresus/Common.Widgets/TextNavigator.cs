@@ -305,6 +305,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public Drawing.RichColor				SelectionFontRichColor
+		{
+			get
+			{
+				return this.textLayout.GetSelectionFontRichColor(this.context);
+			}
+
+			set
+			{
+				if ( this.textLayout.GetSelectionFontRichColor(this.context) != value )
+				{
+					this.UndoMemorise(UndoType.CascadableStyle);
+					this.textLayout.SetSelectionFontRichColor(this.context, value);
+					this.OnStyleChanged();
+				}
+			}
+		}
+
 		public Drawing.Color					SelectionFontColor
 		{
 			get

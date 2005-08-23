@@ -17,6 +17,7 @@ namespace Epsitec.Common.Document.Properties
 		protected override void Initialise()
 		{
 			this.fontName  = "Arial";
+
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
 				this.fontSize  = 2.0;
@@ -25,7 +26,8 @@ namespace Epsitec.Common.Document.Properties
 			{
 				this.fontSize  = 12.0*Modifier.fontSizeScale;  // corps 12
 			}
-			this.fontColor = Drawing.Color.FromBrightness(0);
+
+			this.fontColor = Drawing.RichColor.FromCMYK(0.0, 0.0, 0.0, 1.0);
 		}
 
 		public string FontName
@@ -64,7 +66,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public Drawing.Color FontColor
+		public Drawing.RichColor FontColor
 		{
 			get
 			{
@@ -80,12 +82,6 @@ namespace Epsitec.Common.Document.Properties
 					this.NotifyAfter();
 				}
 			}
-		}
-
-		// Détermine le nom de la propriété dans la liste (Lister).
-		public string GetListName()
-		{
-			return this.fontName;
 		}
 
 		// Indique si une impression complexe est nécessaire.
@@ -130,6 +126,7 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Font(document);
 		}
 
@@ -163,6 +160,48 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		
+		// Donne le type PDF de la surface complexe.
+		public override PDF.Type TypeComplexSurfacePDF(IPaintPort port)
+		{
+			Drawing.Color c = port.GetFinalColor(this.fontColor.Basic);
+
+			if ( c.A == 0.0 )
+			{
+				return PDF.Type.None;
+			}
+
+			if ( c.A < 1.0 )
+			{
+				return PDF.Type.TransparencyRegular;
+			}
+
+			return PDF.Type.OpaqueRegular;
+		}
+
+
+		// Modifie l'espace des couleurs.
+		public override bool ChangeColorSpace(ColorSpace cs)
+		{
+			this.NotifyBefore();
+			this.fontColor.ColorSpace = cs;
+			this.NotifyAfter();
+			this.document.Notifier.NotifyPropertyChanged(this);
+			return true;
+		}
+
+		// Modifie les couleurs.
+		public override bool ChangeColor(double adjust, bool stroke)
+		{
+			if ( stroke )  return false;
+
+			this.NotifyBefore();
+			this.fontColor.ChangeBrightness(adjust);
+			this.NotifyAfter();
+			this.document.Notifier.NotifyPropertyChanged(this);
+			return true;
+		}
+
+		
 		#region Serialization
 		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -179,14 +218,23 @@ namespace Epsitec.Common.Document.Properties
 		{
 			this.fontName = info.GetString("FontName");
 			this.fontSize = info.GetDouble("FontSize");
-			this.fontColor = (Drawing.Color) info.GetValue("FontColor", typeof(Drawing.Color));
+
+			if ( this.document.IsRevisionGreaterOrEqual(1,0,22) )
+			{
+				this.fontColor = (Drawing.RichColor) info.GetValue("FontColor", typeof(Drawing.RichColor));
+			}
+			else
+			{
+				Drawing.Color c = (Drawing.Color) info.GetValue("FontColor", typeof(Drawing.Color));
+				this.fontColor = new RichColor(c);
+			}
 		}
 		#endregion
 
 	
 		protected string				fontName;
 		protected double				fontSize;
-		protected Drawing.Color			fontColor;
+		protected Drawing.RichColor		fontColor;
 		protected double				initialFontSize;
 	}
 }

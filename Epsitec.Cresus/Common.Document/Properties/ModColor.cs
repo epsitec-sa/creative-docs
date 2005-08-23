@@ -232,58 +232,70 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.ModColor(document);
 		}
 
 
 		// Modifie une couleur.
-		public void ModifyColor(ref Drawing.Color color)
+		public void ModifyColor(ref Drawing.RichColor color)
 		{
-#if false
-			if ( this.h != 0.0 || this.s != 0.0 )  // teinte ou saturation ?
-			{
-				double a = color.A;
-				double h,s,v;
-				color.GetHSV(out h, out s, out v);
-				h += this.h;
-				s += this.s;
-				color = Color.FromHSV(h,s,v);
-				color.A = a;
-			}
-#else
+			if ( this.h == 0.0 &&
+				 this.s == 0.0 &&
+				 this.v == 0.0 &&
+				 this.r == 0.0 &&
+				 this.g == 0.0 &&
+				 this.b == 0.0 &&
+				 this.a == 0.0 &&
+				 this.n == false )  return;
+
+			Drawing.Color basic = color.Basic;
+
 			if ( this.h != 0.0 )  // teinte ?
 			{
-				double a = color.A;
+				double a = basic.A;
 				double h,s,v;
-				color.GetHSV(out h, out s, out v);
+				basic.GetHSV(out h, out s, out v);
 				h += this.h;
-				color = Drawing.Color.FromHSV(h,s,v);
-				color.A = a;
+				basic = Drawing.Color.FromHSV(h,s,v);
+				basic.A = a;
 			}
 
 			if ( this.s != 0.0 )  // saturation ?
 			{
-				double avg = (color.R+color.G+color.B)/3.0;
+				double avg = (basic.R+basic.G+basic.B)/3.0;
 				double factor = this.s+1.0;  // 0..2
-				color.R = avg+(color.R-avg)*factor;
-				color.G = avg+(color.G-avg)*factor;
-				color.B = avg+(color.B-avg)*factor;
+				basic.R = avg+(basic.R-avg)*factor;
+				basic.G = avg+(basic.G-avg)*factor;
+				basic.B = avg+(basic.B-avg)*factor;
 			}
-#endif
 
-			color.R = color.R+this.v+this.r;
-			color.G = color.G+this.v+this.g;
-			color.B = color.B+this.v+this.b;
-			color.A = color.A+this.a;
+			basic.R = basic.R+this.v+this.r;
+			basic.G = basic.G+this.v+this.g;
+			basic.B = basic.B+this.v+this.b;
+			basic.A = basic.A+this.a;
 
 			if ( this.n )  // négatif ?
 			{
-				color.R = 1.0-color.R;
-				color.G = 1.0-color.G;
-				color.B = 1.0-color.B;
+				basic.R = 1.0-basic.R;
+				basic.G = 1.0-basic.G;
+				basic.B = 1.0-basic.B;
 			}
 
-			color = color.ClipToRange();
+			basic = basic.ClipToRange();
+
+			// Si une couleur Gray est devenue non grise, change l'espace de
+			// couleur en RGB.
+			if ( color.ColorSpace == ColorSpace.Gray )
+			{
+				if ( basic.R != basic.G || basic.G != basic.B || basic.B != basic.R )
+				{
+					color = RichColor.FromColor(basic);
+					return;
+				}
+			}
+
+			color.Basic = basic;
 		}
 
 

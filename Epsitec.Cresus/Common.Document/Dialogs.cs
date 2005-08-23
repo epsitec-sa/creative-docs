@@ -318,22 +318,61 @@ namespace Epsitec.Common.Document
 		#endregion
 
 		#region ExportPDF
-		// Peuple le dialogue des exportations.
+		// Peuple le dialogue des exportations en PDF.
 		public void BuildExportPDF(Window window)
 		{
 			if ( this.windowExportPDF == null )
 			{
 				this.windowExportPDF = window;
 
-				Widget parent = this.windowExportPDF.Root.FindChild("Panel");
-				Panel container = new Panel(parent);
+				Widget parent, container;
+				Widget book = this.windowExportPDF.Root.FindChild("Book");
+
+				// Onglet Général:
+				parent = book.FindChild("Generic");
+				container = new Widget(parent);
 				container.Name = "Container";
 				container.Dock = DockStyle.Fill;
-
+				
 				this.tabIndex = 0;
 
 				Dialogs.CreateTitle(container, Res.Strings.Dialog.Print.Area);
 				this.CreateRange(container, "ExportPDFRange");
+
+				Dialogs.CreateSeparator(container);
+				this.CreateBool(container, "ExportPDFTextCurve");
+				Dialogs.CreateSeparator(container);
+
+				// Onglet Couleurs:
+				parent = book.FindChild("Color");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+				
+				this.tabIndex = 0;
+				Dialogs.CreateSeparator(container);
+				this.CreateCombo(container, "ExportPDFColorConversion");
+				Dialogs.CreateSeparator(container);
+
+				// Onglet Images:
+				parent = book.FindChild("Image");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+				
+				this.tabIndex = 0;
+				Dialogs.CreateSeparator(container);
+
+				// Onglet Pré-presse:
+				parent = book.FindChild("Publisher");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+				
+				this.tabIndex = 0;
+				Dialogs.CreateTitle(container, Res.Strings.Dialog.ExportPDF.Publisher);
+				this.CreateDouble(container, "ExportPDFDebord");
+				this.CreateBool(container, "ExportPDFTarget");
 				Dialogs.CreateSeparator(container);
 			}
 
@@ -350,6 +389,7 @@ namespace Epsitec.Common.Document
 
 			this.UpdateDialogSettings("ExportPDF");
 			this.UpdateRangeField("ExportPDFRange");
+			this.UpdateCombo("ExportPDFColorConversion");
 		}
 
 		// Appelé lorsque les pages ont changé.
@@ -715,7 +755,7 @@ namespace Epsitec.Common.Document
 			check.Width = 45;
 			check.Height = container.Height;
 			check.Name = sPoint.Name;
-			check.Text = @"<img src=""manifest:Epsitec.App.DocumentEditor.Images.Linked.icon""/>";
+			check.Text = Misc.Image("Linked");
 			check.ActiveState = sPoint.Link ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			check.TabIndex = this.tabIndex++;
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -1607,8 +1647,11 @@ namespace Epsitec.Common.Document
 
 			if ( this.windowExportPDF != null )
 			{
-				Widget parent = this.windowExportPDF.Root.FindChild("Panel");
-				this.DeleteContainer(parent, "Container");
+				Widget parent = this.windowExportPDF.Root.FindChild("Book");
+				this.DeletePage(parent, "Generic");
+				this.DeletePage(parent, "Color");
+				this.DeletePage(parent, "Image");
+				this.DeletePage(parent, "Publisher");
 				this.windowExportPDF = null;
 			}
 

@@ -16,11 +16,11 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialise()
 		{
-			this.color = Drawing.Color.FromBrightness(0.0);
+			this.color = Drawing.RichColor.FromBrightness(0.0);
 		}
 
 		// Couleur de la propriété.
-		public Drawing.Color ColorValue
+		public Drawing.RichColor ColorValue
 		{
 			get
 			{
@@ -70,20 +70,32 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Color(document);
 		}
 
 
-		// Définition de la couleur pour l'impression.
-		public bool PaintColor(Printing.PrintPort port, DrawingContext drawingContext)
+		// Modifie l'espace des couleurs.
+		public override bool ChangeColorSpace(ColorSpace cs)
 		{
-			if ( !this.color.IsOpaque )  return false;
-
-			port.Color = this.color;
+			this.NotifyBefore();
+			this.color.ColorSpace = cs;
+			this.NotifyAfter();
+			this.document.Notifier.NotifyPropertyChanged(this);
 			return true;
 		}
 
+		// Modifie les couleurs.
+		public override bool ChangeColor(double adjust, bool stroke)
+		{
+			this.NotifyBefore();
+			this.color.ChangeBrightness(adjust);
+			this.NotifyAfter();
+			this.document.Notifier.NotifyPropertyChanged(this);
+			return true;
+		}
 
+		
 		#region Serialization
 		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -96,11 +108,19 @@ namespace Epsitec.Common.Document.Properties
 		// Constructeur qui désérialise la propriété.
 		protected Color(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			this.color = (Drawing.Color) info.GetValue("Color", typeof(Drawing.Color));
+			if ( this.document.IsRevisionGreaterOrEqual(1,0,22) )
+			{
+				this.color = (Drawing.RichColor) info.GetValue("Color", typeof(Drawing.RichColor));
+			}
+			else
+			{
+				Drawing.Color c = (Drawing.Color) info.GetValue("Color", typeof(Drawing.Color));
+				this.color = new RichColor(c);
+			}
 		}
 		#endregion
 
 	
-		protected Drawing.Color			color;
+		protected Drawing.RichColor		color;
 	}
 }

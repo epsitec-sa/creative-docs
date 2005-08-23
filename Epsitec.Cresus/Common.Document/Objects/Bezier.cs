@@ -41,7 +41,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return "manifest:Epsitec.App.DocumentEditor.Images.Bezier.icon"; }
+			get { return Misc.Icon("ObjectBezier"); }
 		}
 
 
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 
-			Shape[] shapes = this.ShapesBuild(context, false);
+			Shape[] shapes = this.ShapesBuild(null, context, false);
 			int rank = context.Drawer.DetectOutline(pos, context, shapes);
 			if ( rank != -1 )  rank *= 3;
 			return rank;
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "Curve";
-					item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.ToCurve.icon";
+					item.Icon = Misc.Icon("ToCurve");
 					item.Text = Res.Strings.Object.Bezier.Menu.ToCurve;
 					list.Add(item);
 				}
@@ -141,7 +141,7 @@ namespace Epsitec.Common.Document.Objects
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "Line";
-					item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.ToLine.icon";
+					item.Icon = Misc.Icon("ToLine");
 					item.Text = Res.Strings.Object.Bezier.Menu.ToLine;
 					list.Add(item);
 				}
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Document.Objects
 				item = new ContextMenuItem();
 				item.Command = "Object";
 				item.Name = "HandleAdd";
-				item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.Add.icon";
+				item.Icon = Misc.Icon("Add");
 				item.Text = Res.Strings.Object.Bezier.Menu.HandleAdd;
 				list.Add(item);
 			}
@@ -167,8 +167,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleSym";
-						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
-						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
+						item.IconActiveNo = Misc.Icon("RadioNo");
+						item.IconActiveYes = Misc.Icon("RadioYes");
 						item.Active = ( type == HandleConstrainType.Symmetric );
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleSym;
 						list.Add(item);
@@ -176,8 +176,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleSmooth";
-						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
-						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
+						item.IconActiveNo = Misc.Icon("RadioNo");
+						item.IconActiveYes = Misc.Icon("RadioYes");
 						item.Active = ( type == HandleConstrainType.Smooth );
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleSmooth;
 						list.Add(item);
@@ -185,8 +185,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleCorner";
-						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
-						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
+						item.IconActiveNo = Misc.Icon("RadioNo");
+						item.IconActiveYes = Misc.Icon("RadioYes");
 						item.Active = ( type == HandleConstrainType.Corner );
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleCorner;
 						list.Add(item);
@@ -201,8 +201,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleSmooth";
-						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
-						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
+						item.IconActiveNo = Misc.Icon("RadioNo");
+						item.IconActiveYes = Misc.Icon("RadioYes");
 						item.Active = ( type == HandleConstrainType.Smooth );
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleLine;
 						list.Add(item);
@@ -210,8 +210,8 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleCorner";
-						item.IconActiveNo = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
-						item.IconActiveYes = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
+						item.IconActiveNo = Misc.Icon("RadioNo");
+						item.IconActiveYes = Misc.Icon("RadioYes");
 						item.Active = ( type != HandleConstrainType.Smooth );
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleFree;
 						list.Add(item);
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleContinue";
-						item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.Add.icon";
+						item.Icon = Misc.Icon("Add");
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleContinue;
 						list.Add(item);
 					}
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Document.Objects
 						item = new ContextMenuItem();
 						item.Command = "Object";
 						item.Name = "HandleDelete";
-						item.Icon = "manifest:Epsitec.App.DocumentEditor.Images.Sub.icon";
+						item.Icon = Misc.Icon("Sub");
 						item.Text = Res.Strings.Object.Bezier.Menu.HandleDelete;
 						list.Add(item);
 					}
@@ -1026,7 +1026,7 @@ namespace Epsitec.Common.Document.Objects
 
 		
 		// Constuit les formes de l'objet.
-		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
+		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			Path pathStart, pathEnd, pathLine;
 			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
@@ -1056,13 +1056,13 @@ namespace Epsitec.Common.Document.Objects
 			// Forme de la surface principale.
 			shapes[i] = new Shape();
 			shapes[i].Path = pathLine;
-			shapes[i].SetPropertySurface(this.PropertyFillGradient);
+			shapes[i].SetPropertySurface(port, this.PropertyFillGradient);
 			i ++;
 
 			// Forme du chemin principal.
 			shapes[i] = new Shape();
 			shapes[i].Path = pathLine;
-			shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 			i ++;
 
 			// Forme de la surface de départ.
@@ -1070,7 +1070,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				shapes[i] = new Shape();
 				shapes[i].Path = pathStart;
-				shapes[i].SetPropertySurface(this.PropertyLineColor);
+				shapes[i].SetPropertySurface(port, this.PropertyLineColor);
+				shapes[i].IsMisc = true;
 				i ++;
 			}
 
@@ -1079,7 +1080,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				shapes[i] = new Shape();
 				shapes[i].Path = pathEnd;
-				shapes[i].SetPropertySurface(this.PropertyLineColor);
+				shapes[i].SetPropertySurface(port, this.PropertyLineColor);
+				shapes[i].IsMisc = true;
 				i ++;
 			}
 
@@ -1088,7 +1090,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				shapes[i] = new Shape();
 				shapes[i].Path = pathStart;
-				shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].IsMisc = true;
 				i ++;
 			}
 
@@ -1097,7 +1100,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				shapes[i] = new Shape();
 				shapes[i].Path = pathEnd;
-				shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].IsMisc = true;
 				i ++;
 			}
 
@@ -1117,7 +1121,7 @@ namespace Epsitec.Common.Document.Objects
 
 				shapes[i] = new Shape();
 				shapes[i].Path = pathSupport;
-				shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 				shapes[i].Aspect = Aspect.Support;
 				shapes[i].IsVisible = true;
 				i ++;

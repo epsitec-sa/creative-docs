@@ -57,7 +57,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return "manifest:Epsitec.App.DocumentEditor.Images.TextBox.icon"; }
+			get { return Misc.Icon("ObjectTextBox"); }
 		}
 
 
@@ -223,6 +223,28 @@ namespace Epsitec.Common.Document.Objects
 		public override void FillFontFaceList(System.Collections.ArrayList list)
 		{
 			this.textLayout.FillFontFaceList(list);
+		}
+
+		// Ajoute tous les caractères utilisés par l'objet dans une table.
+		public override void FillOneCharList(System.Collections.Hashtable table)
+		{
+			Point p1 = new Point();
+			Point p2 = new Point();
+			Point p3 = new Point();
+			Point p4 = new Point();
+			if ( !this.InitTextLayout(ref p1, ref p2, ref p3, ref p4, null) )  return;
+			TextLayout.OneCharStructure[] fix = this.textLayout.ComputeStructure();
+
+			foreach ( TextLayout.OneCharStructure oneChar in fix )
+			{
+				if ( oneChar == null )  continue;
+
+				PDF.CharacterList cl = new PDF.CharacterList(oneChar);
+				if ( !table.ContainsKey(cl) )
+				{
+					table.Add(cl, null);
+				}
+			}
 		}
 
 		// Indique si un objet est éditable.
@@ -416,7 +438,7 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Constuit les formes de l'objet.
-		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
+		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			Path path = this.PathBuild();
 
@@ -426,13 +448,13 @@ namespace Epsitec.Common.Document.Objects
 			// Forme de la surface.
 			shapes[i] = new Shape();
 			shapes[i].Path = path;
-			shapes[i].SetPropertySurface(this.PropertyFillGradient);
+			shapes[i].SetPropertySurface(port, this.PropertyFillGradient);
 			i ++;
 
 			// Trait du rectangle.
 			shapes[i] = new Shape();
 			shapes[i].Path = path;
-			shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 			i ++;
 
 			// Caractères du texte.
@@ -480,15 +502,9 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		// Dessine le texte du pavé.
-		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
+		// Calcules les 4 coins.
+		protected void Corners(ref Point p1, ref Point p2, ref Point p3, ref Point p4)
 		{
-			if ( this.handles.Count < 4 )  return;
-
-			this.cursorBox = Drawing.Rectangle.Empty;
-			this.selectBox = Drawing.Rectangle.Empty;
-
-			Point p1, p2, p3, p4;
 			switch ( this.PropertyTextJustif.Orientation )
 			{
 				case Properties.JustifOrientation.RightToLeft:  // <-
@@ -516,17 +532,48 @@ namespace Epsitec.Common.Document.Objects
 					p4 = this.Handle(1).Position;
 					break;
 			}
-			if ( !this.PropertyTextJustif.DeflateBox(ref p1, ref p2, ref p3, ref p4) )  return;
+		}
+
+		// Initialise TextLayout.
+		protected bool InitTextLayout(ref Point p1, ref Point p2, ref Point p3, ref Point p4,
+									  DrawingContext drawingContext)
+		{
+			this.Corners(ref p1, ref p2, ref p3, ref p4);
+			if ( !this.PropertyTextJustif.DeflateBox(ref p1, ref p2, ref p3, ref p4) )
+			{
+				return false;
+			}
 
 			Size size = new Size();
 			size.Width  = Point.Distance(p1,p2);
 			size.Height = Point.Distance(p1,p3);
 			this.textLayout.LayoutSize = size;
-			this.textLayout.DrawingScale = drawingContext.ScaleX;
 
-			this.textLayout.DefaultFont     = this.PropertyTextFont.GetFont();
-			this.textLayout.DefaultFontSize = this.PropertyTextFont.FontSize;
-			this.textLayout.DefaultColor    = this.PropertyTextFont.FontColor;
+			if ( drawingContext != null )
+			{
+				this.textLayout.DrawingScale = drawingContext.ScaleX;
+			}
+
+			this.textLayout.DefaultFont      = this.PropertyTextFont.GetFont();
+			this.textLayout.DefaultFontSize  = this.PropertyTextFont.FontSize;
+			this.textLayout.DefaultRichColor = this.PropertyTextFont.FontColor;
+
+			return true;
+		}
+
+		// Dessine le texte du pavé.
+		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
+		{
+			if ( this.handles.Count < 4 )  return;
+
+			this.cursorBox = Drawing.Rectangle.Empty;
+			this.selectBox = Drawing.Rectangle.Empty;
+
+			Point p1 = new Point();
+			Point p2 = new Point();
+			Point p3 = new Point();
+			Point p4 = new Point();
+			if ( !this.InitTextLayout(ref p1, ref p2, ref p3, ref p4, drawingContext) )  return;
 
 			Properties.JustifVertical   jv = this.PropertyTextJustif.Vertical;
 			Properties.JustifHorizontal jh = this.PropertyTextJustif.Horizontal;

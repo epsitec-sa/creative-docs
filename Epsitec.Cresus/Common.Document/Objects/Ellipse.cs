@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return "manifest:Epsitec.App.DocumentEditor.Images.Ellipse.icon"; }
+			get { return Misc.Icon("ObjectEllipse"); }
 		}
 
 
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Constuit les formes de l'objet.
-		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
+		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			Path path = this.PathBuild(drawingContext);
 			Shape[] shapes = new Shape[2];
@@ -208,12 +208,12 @@ namespace Epsitec.Common.Document.Objects
 			// Forme de la surface.
 			shapes[0] = new Shape();
 			shapes[0].Path = path;
-			shapes[0].SetPropertySurface(this.PropertyFillGradient);
+			shapes[0].SetPropertySurface(port, this.PropertyFillGradient);
 
 			// Forme du chemin.
 			shapes[1] = new Shape();
 			shapes[1].Path = path;
-			shapes[1].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+			shapes[1].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 
 			return shapes;
 		}

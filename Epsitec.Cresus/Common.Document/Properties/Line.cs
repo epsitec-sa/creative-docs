@@ -444,6 +444,102 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+
+		// Retourne le nom d'un type donné.
+		public static string GetName(StandardDashType type)
+		{
+			string name = "";
+			switch ( type )
+			{
+				case StandardDashType.Full:        name = Res.Strings.Property.Line.Full;        break;
+				case StandardDashType.Line:        name = Res.Strings.Property.Line.Lines;        break;
+				case StandardDashType.LineDense:   name = Res.Strings.Property.Line.LineDense;   break;
+				case StandardDashType.LineExpand:  name = Res.Strings.Property.Line.LineExpand;  break;
+				case StandardDashType.Dot:         name = Res.Strings.Property.Line.Dot;         break;
+				case StandardDashType.LineDot:     name = Res.Strings.Property.Line.LineDot;     break;
+				case StandardDashType.LineDotDot:  name = Res.Strings.Property.Line.LineDotDot;  break;
+				case StandardDashType.Custom:      name = Res.Strings.Property.Line.Custom;      break;
+			}
+			return name;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(StandardDashType type)
+		{
+			switch ( type )
+			{
+				case StandardDashType.Full:        return "LineFull";
+				case StandardDashType.Line:        return "LineLine";
+				case StandardDashType.LineDense:   return "LineLineDense";
+				case StandardDashType.LineExpand:  return "LineLineExpand";
+				case StandardDashType.Dot:         return "LineDot";
+				case StandardDashType.LineDot:     return "LineLineDot";
+				case StandardDashType.LineDotDot:  return "LineLineDotDot";
+				case StandardDashType.Custom:      return "LineCustom";
+			}
+			return "";
+		}
+
+		// Retourne le nom d'un type donné.
+		public static string GetName(CapStyle type)
+		{
+			string name = "";
+			switch ( type )
+			{
+				case CapStyle.Round:   name = Res.Strings.Property.Line.CapRound;   break;
+				case CapStyle.Square:  name = Res.Strings.Property.Line.CapSquare;  break;
+				case CapStyle.Butt:    name = Res.Strings.Property.Line.CapButt;    break;
+			}
+			return name;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(CapStyle type)
+		{
+			switch ( type )
+			{
+				case CapStyle.Round:   return "CapRound";
+				case CapStyle.Square:  return "CapSquare";
+				case CapStyle.Butt:    return "CapButt";
+			}
+			return "";
+		}
+
+		// Retourne le nom d'un type donné.
+		public static string GetName(JoinStyle type)
+		{
+			string name = "";
+			switch ( type )
+			{
+				case JoinStyle.Round:  name = Res.Strings.Property.Line.JoinRound;  break;
+				case JoinStyle.Miter:  name = Res.Strings.Property.Line.JoinMiter;  break;
+				case JoinStyle.Bevel:  name = Res.Strings.Property.Line.JoinBevel;  break;
+			}
+			return name;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(JoinStyle type)
+		{
+			switch ( type )
+			{
+				case JoinStyle.Round:  return "JoinRound";
+				case JoinStyle.Miter:  return "JoinMiter";
+				case JoinStyle.Bevel:  return "JoinBevel";
+			}
+			return "";
+		}
+
+		// Donne le petit texte pour les échantillons.
+		public override string SampleText
+		{
+			get
+			{
+				return this.document.Modifier.RealToString(this.width);
+			}
+		}
+
+
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
@@ -451,12 +547,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Indique si le trait est visible.
-		public override bool IsVisible
+		public override bool IsVisible(IPaintPort port)
 		{
-			get
-			{
-				return ( this.width != 0.0 );
-			}
+			return ( this.width != 0.0 );
 		}
 
 		// Effectue une copie de la propriété.
@@ -501,9 +594,49 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Line(document);
 		}
 
+
+		// Retourne la valeur d'engraissement pour la bbox.
+		public static double InflateBoundingBoxWidth(Shape shape)
+		{
+			Line line = shape.PropertyStroke as Line;
+			if ( line == null )  return 0.0;
+			return line.InflateBoundingBoxWidth();
+		}
+
+		// Retourne le facteur d'engraissement pour la bbox.
+		public static double InflateBoundingBoxFactor(Shape shape)
+		{
+			Line line = shape.PropertyStroke as Line;
+			if ( line == null )  return 1.0;
+			return line.InflateBoundingBoxFactor();
+		}
+
+		// Retourne la valeur d'engraissement pour la bbox.
+		public double InflateBoundingBoxWidth()
+		{
+			return this.width*0.5;
+		}
+
+		// Retourne le facteur d'engraissement pour la bbox.
+		public double InflateBoundingBoxFactor()
+		{
+			if ( this.join == JoinStyle.Miter )
+			{
+				return this.Limit;
+			}
+			else if ( this.cap == CapStyle.Square )
+			{
+				return 1.415;  // augmente de racine de 2
+			}
+			else
+			{
+				return 1.0;
+			}
+		}
 
 		// Retourne l'engraissement approximatif pour une bbox.
 		public static double FatShape(Shape shape)
@@ -579,7 +712,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 			if ( this.dash )  // traitillé ?
 			{
-				port.SetLineDash(this.width, this.dashPen[0], this.dashGap[0], this.dashPen[1], this.dashGap[1]);
+				port.SetLineDash(this.width, this.dashPen[0], this.dashGap[0], this.dashPen[1], this.dashGap[1], this.dashPen[2], this.dashGap[2]);
 			}
 			else	// trait continu ?
 			{
@@ -591,7 +724,7 @@ namespace Epsitec.Common.Document.Properties
 			port.LineMiterLimit = this.limit;
 		}
 
-
+		
 		#region Serialization
 		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)

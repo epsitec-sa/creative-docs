@@ -74,6 +74,22 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		// Donne le petit texte pour les échantillons.
+		public override string SampleText
+		{
+			get
+			{
+				if ( this.horizontal == JustifHorizontal.Left    )  return "|ab |";
+				if ( this.horizontal == JustifHorizontal.Center  )  return "| ab |";
+				if ( this.horizontal == JustifHorizontal.Right   )  return "| ab|";
+				if ( this.horizontal == JustifHorizontal.Justif  )  return "|ab|";
+				if ( this.horizontal == JustifHorizontal.All     )  return "|ab.|";
+				if ( this.horizontal == JustifHorizontal.Stretch )  return "<ab>";
+				return "|ab|";
+			}
+		}
+
+
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
@@ -106,6 +122,7 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.TextLine(document);
 		}
 

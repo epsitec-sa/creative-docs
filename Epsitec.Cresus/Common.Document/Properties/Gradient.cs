@@ -34,28 +34,28 @@ namespace Epsitec.Common.Document.Properties
 
 			if ( this.type == Type.LineColor )
 			{
-				this.color1 = Drawing.Color.FromBrightness(0.0);
-				this.color2 = Drawing.Color.FromBrightness(0.5);
+				this.color1 = RichColor.FromBrightness(0.0);
+				this.color2 = RichColor.FromBrightness(0.5);
 			}
 			else if ( this.type == Type.FillGradientVT )
 			{
-				this.color1 = Drawing.Color.FromARGB(0.95, 0.8, 0.7, 0.7);
-				this.color2 = Drawing.Color.FromARGB(0.95, 0.6, 0.5, 0.5);
+				this.color1 = RichColor.FromARGB(0.95, 0.8, 0.7, 0.7);
+				this.color2 = RichColor.FromARGB(0.95, 0.6, 0.5, 0.5);
 			}
 			else if ( this.type == Type.FillGradientVL )
 			{
-				this.color1 = Drawing.Color.FromARGB(0.95, 0.7, 0.8, 0.7);
-				this.color2 = Drawing.Color.FromARGB(0.95, 0.5, 0.6, 0.5);
+				this.color1 = RichColor.FromARGB(0.95, 0.7, 0.8, 0.7);
+				this.color2 = RichColor.FromARGB(0.95, 0.5, 0.6, 0.5);
 			}
 			else if ( this.type == Type.FillGradientVR )
 			{
-				this.color1 = Drawing.Color.FromARGB(0.95, 0.7, 0.7, 0.8);
-				this.color2 = Drawing.Color.FromARGB(0.95, 0.5, 0.5, 0.6);
+				this.color1 = RichColor.FromARGB(0.95, 0.7, 0.7, 0.8);
+				this.color2 = RichColor.FromARGB(0.95, 0.5, 0.5, 0.6);
 			}
 			else
 			{
-				this.color1 = Drawing.Color.FromBrightness(0.8);
-				this.color2 = Drawing.Color.FromBrightness(0.5);
+				this.color1 = RichColor.FromBrightness(0.8);
+				this.color2 = RichColor.FromBrightness(0.5);
 			}
 			this.angle  = 0.0;
 			this.cx     = 0.5;
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Couleur 1 du dégradé.
-		public Drawing.Color Color1
+		public Drawing.RichColor Color1
 		{
 			get
 			{
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Couleur 2 du dégradé.
-		public Drawing.Color Color2
+		public Drawing.RichColor Color2
 		{
 			get
 			{
@@ -471,6 +471,42 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		// Retourne le nom d'un type donné.
+		public static string GetName(GradientFillType type)
+		{
+			string name = "";
+			switch ( type )
+			{
+				case GradientFillType.None:     name = Res.Strings.Property.Gradient.None;     break;
+				case GradientFillType.Linear:   name = Res.Strings.Property.Gradient.Linear;   break;
+				case GradientFillType.Circle:   name = Res.Strings.Property.Gradient.Circle;   break;
+				case GradientFillType.Diamond:  name = Res.Strings.Property.Gradient.Diamond;  break;
+				case GradientFillType.Conic:    name = Res.Strings.Property.Gradient.Conic;    break;
+				case GradientFillType.Hatch:    name = Res.Strings.Property.Gradient.Hatch;    break;
+				case GradientFillType.Dots:     name = Res.Strings.Property.Gradient.Dots;     break;
+				case GradientFillType.Squares:  name = Res.Strings.Property.Gradient.Squares;  break;
+			}
+			return name;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(GradientFillType type)
+		{
+			switch ( type )
+			{
+				case GradientFillType.None:     return "GradientNone";
+				case GradientFillType.Linear:   return "GradientLinear";
+				case GradientFillType.Circle:   return "GradientCircle";
+				case GradientFillType.Diamond:  return "GradientDiamond";
+				case GradientFillType.Conic:    return "GradientConic";
+				case GradientFillType.Hatch:    return "GradientHatch";
+				case GradientFillType.Dots:     return "GradientDots";
+				case GradientFillType.Squares:  return "GradientSquares";
+			}
+			return "";
+		}
+
+		
 		// Indique si une impression complexe est nécessaire.
 		public override bool IsComplexPrinting
 		{
@@ -492,18 +528,29 @@ namespace Epsitec.Common.Document.Properties
 		//		de GradientFillType.None à autre chose, et inversément.
 
 		// Indique si le dégradé est visible.
-		public override bool IsVisible
+		public override bool IsVisible(IPaintPort port)
 		{
-			get
+			Drawing.Color c1 = this.color1.Basic;
+			Drawing.Color c2 = this.color2.Basic;
+
+			if ( this.fillType == GradientFillType.None )
 			{
-				if ( this.fillType == GradientFillType.None )
+				if ( port != null )
 				{
-					return ( this.color1.A > 0 );
+					c1 = port.GetFinalColor(c1);
 				}
-				else
+
+				return ( c1.A > 0 );
+			}
+			else
+			{
+				if ( port != null )
 				{
-					return ( this.color1.A > 0 || this.color2.A > 0 );
+					c1 = port.GetFinalColor(c1);
+					c2 = port.GetFinalColor(c2);
 				}
+
+				return ( c1.A > 0 || c2.A > 0 );
 			}
 		}
 
@@ -563,6 +610,7 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Gradient(document);
 		}
 
@@ -572,6 +620,14 @@ namespace Epsitec.Common.Document.Properties
 		{
 			bbox.Inflate(this.smooth);
 			return bbox;
+		}
+
+		// Retourne la valeur d'engraissement pour la bbox.
+		public static double InflateBoundingBoxWidth(Shape shape)
+		{
+			Gradient surface = shape.PropertySurface as Gradient;
+			if ( surface == null )  return 0.0;
+			return surface.InflateBoundingBoxWidth();
 		}
 
 		// Retourne la valeur d'engraissement pour la bbox.
@@ -859,8 +915,10 @@ namespace Epsitec.Common.Document.Properties
 					Transform ot = graphics.Transform;
 					Transform t = new Transform();
 					t.RotateDeg(sa.Direction);
+					t.Translate(center);
+					t.MultiplyBy(graphics.Transform);
 					graphics.Transform = t;
-					graphics.AddCircle(center.X, center.Y, System.Math.Abs(this.sx*sa.Width), System.Math.Abs(this.sy*sa.Height));
+					graphics.AddCircle(0.0, 0.0, System.Math.Abs(this.sx*sa.Width), System.Math.Abs(this.sy*sa.Height));
 					graphics.Transform = ot;
 				}
 
@@ -873,7 +931,7 @@ namespace Epsitec.Common.Document.Properties
 				if ( this.fillType == GradientFillType.Conic )
 				{
 					double radius = System.Math.Min(System.Math.Abs(this.sx*sa.Width), System.Math.Abs(this.sy*sa.Height));
-					Point pa = center+Transform.RotatePointDeg(this.angle, new Point(0, radius));
+					Point pa = center+Transform.RotatePointDeg(sa.Direction+this.angle, new Point(0, radius));
 					graphics.AddLine(pa, this.ComputeExtremity(center, pa, 0.4, 0.2, 0));
 					graphics.AddLine(pa, this.ComputeExtremity(center, pa, 0.4, 0.2, 1));  // flèche
 					graphics.AddLine(center, pa);
@@ -885,29 +943,147 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Indique si la propriété utilise un pattern.
-		public override bool IsPatternPDF
+		// Calcule le facteur de progression dans la couleur [0..1].
+		// Si M>0:  P=1-(1-P)^(1+M)
+		// Si M<0:  P=P^(1-M)
+		public double GetProgressColorFactor(double progress)
 		{
-			get
+			if ( this.repeat > 1 )
 			{
-				if ( this.fillType == GradientFillType.Hatch )  return true;
-				return false;
+				int i = (int)(progress*this.repeat);
+				progress = (progress*this.repeat)%1.0;
+				if ( i%2 != 0 )  progress = 1.0-progress;
 			}
+			if ( this.middle != 0.0 )
+			{
+				if ( this.middle > 0.0 )
+				{
+					progress = 1.0-System.Math.Pow(1.0-progress, 1.0+this.middle);
+				}
+				else
+				{
+					progress = System.Math.Pow(progress, 1.0-this.middle);
+				}
+			}
+			return progress;
 		}
 
-		// Crée le pattern et retourne sa taille.
-		public override Size CreatePatternPDF(PDF.Port port)
+		// Indique si la surface PDF est floue.
+		public override bool IsSmoothSurfacePDF(IPaintPort port)
 		{
-			System.Diagnostics.Debug.Assert(this.IsPatternPDF);
+			Drawing.Color c1 = port.GetFinalColor(this.color1.Basic);
+			Drawing.Color c2 = port.GetFinalColor(this.color2.Basic);
 
-			Path path = new Path();
-			path.MoveTo(0, 0);
-			path.LineTo(100, 100);
+			if ( this.fillType == GradientFillType.None )
+			{
+				if ( this.smooth > 0.0 && c1.A > 0.0 )
+				{
+					return true;
+				}
+			}
 
-			port.LineWidth = 5;
-			port.PaintOutline(path);
+			if ( this.fillType == GradientFillType.Linear  ||
+				 this.fillType == GradientFillType.Circle  ||
+				 this.fillType == GradientFillType.Diamond ||
+				 this.fillType == GradientFillType.Conic   )
+			{
+				if ( this.smooth > 0.0 && (c1.A > 0.0 || c2.A > 0.0) )
+				{
+					return true;
+				}
+			}
 
-			return new Size(100, 100);
+			return false;
+		}
+
+		// Donne le type PDF de la surface complexe.
+		public override PDF.Type TypeComplexSurfacePDF(IPaintPort port)
+		{
+			Drawing.Color c1 = port.GetFinalColor(this.color1.Basic);
+			Drawing.Color c2 = port.GetFinalColor(this.color2.Basic);
+
+			if ( this.fillType == GradientFillType.None )
+			{
+				if ( c1.A == 0.0 )
+				{
+					return PDF.Type.None;
+				}
+
+				if ( c1.A < 1.0 )
+				{
+					return PDF.Type.TransparencyRegular;
+				}
+
+				return PDF.Type.OpaqueRegular;
+			}
+
+			if ( c1.A == 0.0 && c2.A == 0.0 )
+			{
+				return PDF.Type.None;
+			}
+
+			if ( this.fillType == GradientFillType.Linear  ||
+				 this.fillType == GradientFillType.Circle  ||
+				 this.fillType == GradientFillType.Diamond ||
+				 this.fillType == GradientFillType.Conic   )
+			{
+				if ( c1.A < 1.0 || c2.A < 1.0 )
+				{
+					return PDF.Type.TransparencyGradient;
+				}
+				else
+				{
+					return PDF.Type.OpaqueGradient;
+				}
+			}
+
+			if ( this.fillType == GradientFillType.Hatch   ||
+				 this.fillType == GradientFillType.Dots    ||
+				 this.fillType == GradientFillType.Squares )
+			{
+				if ( c1.A < 1.0 || c2.A < 1.0 )
+				{
+					return PDF.Type.TransparencyPattern;
+				}
+				else
+				{
+					return PDF.Type.OpaquePattern;
+				}
+			}
+
+			return PDF.Type.None;
+		}
+
+		
+		// Modifie l'espace des couleurs.
+		public override bool ChangeColorSpace(ColorSpace cs)
+		{
+			this.NotifyBefore();
+			this.color1.ColorSpace = cs;
+			this.color2.ColorSpace = cs;
+			this.NotifyAfter();
+			this.document.Notifier.NotifyPropertyChanged(this);
+			return true;
+		}
+
+		// Modifie les couleurs.
+		public override bool ChangeColor(double adjust, bool stroke)
+		{
+			if ( this.type == Type.LineColor )
+			{
+				if ( !stroke )  return false;
+			}
+			else
+			{
+				if ( stroke )  return false;
+			}
+
+			this.NotifyBefore();
+			this.color1.ChangeBrightness(adjust);
+			this.color2.ChangeBrightness(adjust);
+			this.NotifyAfter();
+			this.document.Notifier.NotifyPropertyChanged(this);
+			return true;
 		}
 
 		
@@ -945,10 +1121,29 @@ namespace Epsitec.Common.Document.Properties
 		protected Gradient(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 			this.fillType = (GradientFillType) info.GetValue("FillType", typeof(GradientFillType));
-			this.color1 = (Drawing.Color) info.GetValue("Color1", typeof(Drawing.Color));
+
+			if ( this.document.IsRevisionGreaterOrEqual(1,0,22) )
+			{
+				this.color1 = (Drawing.RichColor) info.GetValue("Color1", typeof(Drawing.RichColor));
+			}
+			else
+			{
+				Drawing.Color c1 = (Drawing.Color) info.GetValue("Color1", typeof(Drawing.Color));
+				this.color1 = new RichColor(c1);
+			}
+
 			if ( this.fillType != GradientFillType.None )
 			{
-				this.color2 = (Drawing.Color) info.GetValue("Color2", typeof(Drawing.Color));
+				if ( this.document.IsRevisionGreaterOrEqual(1,0,22) )
+				{
+					this.color2 = (Drawing.RichColor) info.GetValue("Color2", typeof(Drawing.RichColor));
+				}
+				else
+				{
+					Drawing.Color c2 = (Drawing.Color) info.GetValue("Color2", typeof(Drawing.Color));
+					this.color2 = new RichColor(c2);
+				}
+
 				this.angle  = info.GetDouble("Angle");
 				this.cx     = info.GetDouble("Cx");
 				this.cy     = info.GetDouble("Cy");
@@ -983,8 +1178,8 @@ namespace Epsitec.Common.Document.Properties
 
 	
 		protected GradientFillType		fillType;
-		protected Drawing.Color			color1;
-		protected Drawing.Color			color2;
+		protected RichColor				color1;
+		protected RichColor				color2;
 		protected double				angle;
 		protected double				cx;
 		protected double				cy;

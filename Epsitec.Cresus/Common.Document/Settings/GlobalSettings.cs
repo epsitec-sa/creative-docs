@@ -1,4 +1,5 @@
 using Epsitec.Common.Document;
+using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
 
@@ -40,6 +41,7 @@ namespace Epsitec.Common.Document.Settings
 			this.firstAction = FirstAction.OpenNewDocument;
 			this.lastFilename = new System.Collections.ArrayList();
 			this.lastFilenameMax = 10;
+			this.labelProperties = true;
 
 			// Suppose que le dossier des exemples est dans le même dossier
 			// que l'application.
@@ -89,7 +91,7 @@ namespace Epsitec.Common.Document.Settings
 				{
 					// Lors de la première exécution, met l'application au centre
 					// de la fenêtre.
-					Widgets.ScreenInfo si = Widgets.ScreenInfo.Find(new Drawing.Point(0,0));
+					ScreenInfo si = ScreenInfo.Find(new Drawing.Point(0,0));
 					Rectangle area = si.WorkingArea;
 					rect = new Rectangle(area.Center-rect.Size/2, area.Center+rect.Size/2);
 				}
@@ -300,6 +302,20 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
+		public bool LabelProperties
+		{
+			get
+			{
+				return this.labelProperties;
+			}
+
+			set
+			{
+				this.labelProperties = value;
+			}
+		}
+
+
 		public Drawing.ColorCollection ColorCollection
 		{
 			get
@@ -344,7 +360,7 @@ namespace Epsitec.Common.Document.Settings
 		// sans modifier ses dimensions. Utilisé pour les dialogues.
 		public static Drawing.Rectangle WindowClip(Drawing.Rectangle rect)
 		{
-			Widgets.ScreenInfo si = Widgets.ScreenInfo.Find(rect.Center);
+			ScreenInfo si = ScreenInfo.Find(rect.Center);
 			Rectangle area = si.WorkingArea;
 
 			rect.Width  = System.Math.Min(rect.Width,  area.Width );
@@ -455,7 +471,7 @@ namespace Epsitec.Common.Document.Settings
 		// Sérialise les réglages.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			info.AddValue("Version", 1);
+			info.AddValue("Version", 2);
 
 			info.AddValue("WindowLocation", this.windowLocation);
 			info.AddValue("WindowSize", this.windowSize);
@@ -471,6 +487,7 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("FirstAction", this.firstAction);
 			info.AddValue("LastFilename", this.lastFilename);
 			info.AddValue("InitialDirectory", this.initialDirectory);
+			info.AddValue("LabelProperties", this.labelProperties);
 
 			info.AddValue("ColorCollection", this.colorCollection);
 			info.AddValue("ColorCollectionDirectory", this.colorCollectionDirectory);
@@ -497,6 +514,11 @@ namespace Epsitec.Common.Document.Settings
 			this.lastFilename = (System.Collections.ArrayList) info.GetValue("LastFilename", typeof(System.Collections.ArrayList));
 			this.initialDirectory = info.GetString("InitialDirectory");
 
+			if ( version >= 2 )
+			{
+				this.labelProperties = info.GetBoolean("LabelProperties");
+			}
+
 			this.colorCollection = (ColorCollection) info.GetValue("ColorCollection", typeof(ColorCollection));
 			this.colorCollectionDirectory = info.GetString("ColorCollectionDirectory");
 			this.colorCollectionFilename = info.GetString("ColorCollectionFilename");
@@ -518,6 +540,7 @@ namespace Epsitec.Common.Document.Settings
 		protected System.Collections.ArrayList	lastFilename;
 		protected int							lastFilenameMax;
 		protected string						initialDirectory;
+		protected bool							labelProperties;
 		protected Drawing.ColorCollection		colorCollection;
 		protected string						colorCollectionDirectory;
 		protected string						colorCollectionFilename;

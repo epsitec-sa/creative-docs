@@ -63,7 +63,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 
 			this.window.Text = string.Format(Res.Strings.Dialog.Export.Title2, System.IO.Path.GetFileName(filename));
-			this.window.Show();
+			this.window.ShowDialog();
 		}
 
 		// Enregistre la position de la fenêtre du dialogue.

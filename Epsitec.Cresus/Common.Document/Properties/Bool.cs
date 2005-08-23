@@ -37,6 +37,20 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		// Retourne le nom d'un type donné.
+		public static string GetName(bool type)
+		{
+			if ( type )  return Res.Strings.Property.Close.Yes;
+			else         return Res.Strings.Property.Close.No;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(bool type)
+		{
+			if ( type )  return "CloseYes";
+			else         return "CloseNo";
+		}
+
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
@@ -65,6 +79,7 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Bool(document);
 		}
 

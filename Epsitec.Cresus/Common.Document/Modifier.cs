@@ -56,6 +56,7 @@ namespace Epsitec.Common.Document
 			this.toLinePrecision = 0.25;
 			this.dimensionScale = 1.0;
 			this.dimensionDecimal = 1.0;
+			this.aggregateUsed = -1;
 		}
 
 		// Outil sélectionné dans la palette.
@@ -151,7 +152,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Indique si l'outil sélectionné n'est pas un objet.
-		protected bool IsTool
+		public bool IsTool
 		{
 			get
 			{
@@ -182,27 +183,27 @@ namespace Epsitec.Common.Document
 		{
 			switch ( tool )
 			{
-				case "Select":  return Res.Strings.Tool.Select;
-				case "Global":  return Res.Strings.Tool.Global;
-				case "Edit":  return Res.Strings.Tool.Edit;
-				case "Zoom":  return Res.Strings.Tool.Zoom;
-				case "Hand":  return Res.Strings.Tool.Hand;
-				case "Picker":  return Res.Strings.Tool.Picker;
-				case "HotSpot":  return Res.Strings.Tool.HotSpot;
+				case "Select":           return Res.Strings.Tool.Select;
+				case "Global":           return Res.Strings.Tool.Global;
+				case "Edit":             return Res.Strings.Tool.Edit;
+				case "Zoom":             return Res.Strings.Tool.Zoom;
+				case "Hand":             return Res.Strings.Tool.Hand;
+				case "Picker":           return Res.Strings.Tool.Picker;
+				case "HotSpot":          return Res.Strings.Tool.HotSpot;
 
-				case "ObjectLine":  return Res.Strings.Tool.Line;
+				case "ObjectLine":       return Res.Strings.Tool.Line;
 				case "ObjectRectangle":  return Res.Strings.Tool.Rectangle;
-				case "ObjectCircle":  return Res.Strings.Tool.Circle;
-				case "ObjectEllipse":  return Res.Strings.Tool.Ellipse;
-				case "ObjectPoly":  return Res.Strings.Tool.Poly;
-				case "ObjectBezier":  return Res.Strings.Tool.Bezier;
-				case "ObjectRegular":  return Res.Strings.Tool.Regular;
-				case "ObjectSurface":  return Res.Strings.Tool.Surface;
-				case "ObjectVolume":  return Res.Strings.Tool.Volume;
-				case "ObjectTextLine":  return Res.Strings.Tool.TextLine;
-				case "ObjectTextBox":  return Res.Strings.Tool.TextBox;
-				case "ObjectArray":  return Res.Strings.Tool.Array;
-				case "ObjectImage":  return Res.Strings.Tool.Image;
+				case "ObjectCircle":     return Res.Strings.Tool.Circle;
+				case "ObjectEllipse":    return Res.Strings.Tool.Ellipse;
+				case "ObjectPoly":       return Res.Strings.Tool.Poly;
+				case "ObjectBezier":     return Res.Strings.Tool.Bezier;
+				case "ObjectRegular":    return Res.Strings.Tool.Regular;
+				case "ObjectSurface":    return Res.Strings.Tool.Surface;
+				case "ObjectVolume":     return Res.Strings.Tool.Volume;
+				case "ObjectTextLine":   return Res.Strings.Tool.TextLine;
+				case "ObjectTextBox":    return Res.Strings.Tool.TextBox;
+				case "ObjectArray":      return Res.Strings.Tool.Array;
+				case "ObjectImage":      return Res.Strings.Tool.Image;
 				case "ObjectDimension":  return Res.Strings.Tool.Dimension;
 			}
 
@@ -471,8 +472,8 @@ namespace Epsitec.Common.Document
 
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
-				field.InternalMinValue = 100.0M * field.FactorMinRange;
-				field.InternalMaxValue = 100.0M * field.FactorMaxRange;
+				field.InternalMinValue = 200.0M * field.FactorMinRange;
+				field.InternalMaxValue = 200.0M * field.FactorMaxRange;
 				field.Step = 1.0M * field.FactorStep;
 				field.Resolution = 0.1M;
 			}
@@ -642,8 +643,6 @@ namespace Epsitec.Common.Document
 			this.ActiveViewer.CreateEnding(false);
 			this.OpletQueueEnable = false;
 
-			this.UniqueObjectId = 0;
-			this.UniqueStyleId = 0;
 			this.TotalSelected = 0;
 			this.totalHide = 0;
 			this.totalPageHide = 0;
@@ -651,7 +650,6 @@ namespace Epsitec.Common.Document
 
 			this.document.PropertiesAuto.Clear();
 			this.document.PropertiesSel.Clear();
-			this.document.PropertiesStyle.Clear();
 			this.CreateObjectMemory();
 
 			Objects.Page page = new Objects.Page(this.document, null);  // crée la page initiale
@@ -694,7 +692,7 @@ namespace Epsitec.Common.Document
 
 			this.objectMemoryText = new Objects.Memory(this.document, null);
 			this.objectMemoryText.PropertyLineMode.Width = 0.0;
-			this.objectMemoryText.PropertyFillGradient.Color1 = Color.FromARGB(0, 1,1,1);
+			this.objectMemoryText.PropertyFillGradient.Color1 = RichColor.FromARGB(0, 1,1,1);
 		}
 
 
@@ -1031,19 +1029,28 @@ namespace Epsitec.Common.Document
 
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
-#if true
 			int total = layer.Objects.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{
 				Objects.Abstract obj = layer.Objects[i] as Objects.Abstract;
 				if ( obj.IsSelected )  return obj;
 			}
-#else
-			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
+			return null;
+		}
+
+		// Retourne le premier objet sélectionné.
+		public Objects.Abstract RetFirstSelectedObject()
+		{
+			if ( this.TotalSelected == 0 )  return null;
+
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			int total = layer.Objects.Count;
+			for ( int i=0 ; i<total ; i++ )
 			{
-				return obj;
+				Objects.Abstract obj = layer.Objects[i] as Objects.Abstract;
+				if ( obj.IsSelected )  return obj;
 			}
-#endif
 			return null;
 		}
 
@@ -1287,7 +1294,7 @@ namespace Epsitec.Common.Document
 						foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 						{
 							if ( onlyMark && !obj.Mark )  continue;
-							this.document.Modifier.TotalSelected --;
+							this.TotalSelected --;
 							this.document.Notifier.NotifyArea(obj.BoundingBox);
 							this.DeleteGroup(obj);
 							obj.Dispose();
@@ -1504,6 +1511,7 @@ namespace Epsitec.Common.Document
 				this.document.Clipboard.Modifier.New();
 				this.document.Clipboard.Modifier.OpletQueueEnable = false;
 				this.Duplicate(this.document, this.document.Clipboard, new Point(0,0), true);
+				this.document.Clipboard.Modifier.AggregateFreeAll();
 				this.DeleteSelection();
 				this.document.Notifier.NotifySelectionChanged();
 
@@ -1529,6 +1537,7 @@ namespace Epsitec.Common.Document
 				this.document.Clipboard.Modifier.New();
 				this.document.Clipboard.Modifier.OpletQueueEnable = false;
 				this.Duplicate(this.document, this.document.Clipboard, new Point(0,0), true);
+				this.document.Clipboard.Modifier.AggregateFreeAll();
 				this.document.Notifier.NotifySelectionChanged();
 
 				this.OpletQueueValidateAction();
@@ -1791,8 +1800,8 @@ namespace Epsitec.Common.Document
 										  int active, int rank, string action, int todo)
 		{
 			string icon = "";
-			if ( active == 1 )  icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
-			if ( active == 2 )  icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveCurrent.icon";
+			if ( active == 1 )  icon = Misc.Icon("ActiveNo");
+			if ( active == 2 )  icon = Misc.Icon("ActiveCurrent");
 
 			string name = string.Format("{0}: {1}", rank.ToString(), action);
 
@@ -2373,6 +2382,69 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		#region Color
+		// Ajuste la couleur de tous les objets sélectionnés, y compris à l'intérieur
+		// des groupes.
+		public void ColorSelection(ColorSpace cs)
+		{
+			this.OpletQueueBeginAction(Res.Strings.Action.Color);
+			this.DeepSelect(true);
+
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			this.PropertiesListDeep(list);
+
+			foreach ( Properties.Abstract property in list )
+			{
+				if ( property.IsStyle )  continue;
+				property.ChangeColorSpace(cs);
+			}
+
+			this.DeepSelect(false);
+			this.OpletQueueValidateAction();
+		}
+
+		// Ajuste la couleur de tous les objets sélectionnés, y compris à l'intérieur
+		// des groupes.
+		public void ColorSelection(double adjust, bool stroke)
+		{
+			if ( adjust == 0.0 )  return;
+
+			this.OpletQueueBeginAction(Res.Strings.Action.Color);
+			this.DeepSelect(true);
+
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			this.PropertiesListDeep(list);
+
+			foreach ( Properties.Abstract property in list )
+			{
+				if ( property.IsStyle )  continue;
+				property.ChangeColor(adjust, stroke);
+			}
+
+			this.DeepSelect(false);
+			this.OpletQueueValidateAction();
+		}
+
+		// Sélectionne en profondeur tous les objets déjà sélectionnés.
+		protected void DeepSelect(bool select)
+		{
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
+			{
+				if ( obj is Objects.Group )
+				{
+					foreach ( Objects.Abstract subObj in this.document.Deep(obj, false) )
+					{
+						System.Diagnostics.Debug.Assert(subObj.IsSelected != select);
+						subObj.Select(select);
+					}
+				}
+			}
+		}
+		#endregion
+
+
 		#region Group
 		// Fusionne tous les objets sélectionnés.
 		public void MergeSelection()
@@ -2458,7 +2530,7 @@ namespace Epsitec.Common.Document
 				bDo = false;
 				foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 				{
-					this.document.Modifier.TotalSelected --;
+					this.TotalSelected --;
 					layer.Objects.Remove(obj);
 					bDo = true;
 					break;
@@ -3087,7 +3159,7 @@ namespace Epsitec.Common.Document
 			this.Simplify(bezier);
 			this.TotalSelected ++;
 			bezier.PropertyFillGradient.FillType = Properties.GradientFillType.None;
-			bezier.PropertyFillGradient.Color1 = Drawing.Color.FromARGB(0, 1,1,1);
+			bezier.PropertyFillGradient.Color1 = RichColor.FromARGB(0, 1,1,1);
 			bezier.PropertyPolyClose.BoolValue = false;
 
 			Objects.Abstract layer = this.ActiveViewer.DrawingContext.RootObject();
@@ -3700,7 +3772,7 @@ namespace Epsitec.Common.Document
 			System.Collections.ArrayList infos = new System.Collections.ArrayList();
 
 			System.Collections.ArrayList masterList = new System.Collections.ArrayList();
-			this.document.Modifier.ComputeMasterPageList(masterList, pageNumber);
+			this.ComputeMasterPageList(masterList, pageNumber);
 
 			// Mets d'abord les premiers calques de toutes les pages maîtres.
 			foreach ( Objects.Page master in masterList )
@@ -4138,25 +4210,18 @@ namespace Epsitec.Common.Document
 		// Donne la liste à utiliser pour une propriété.
 		public UndoableList PropertyList(Properties.Abstract property)
 		{
-			return this.PropertyList(property.IsStyle,  property.IsSelected);
+			return this.PropertyList(property.IsSelected);
 		}
 
-		public UndoableList PropertyList(bool style, bool selected)
+		public UndoableList PropertyList(bool selected)
 		{
-			if ( style )
+			if ( selected )
 			{
-				return this.document.PropertiesStyle;
+				return this.document.PropertiesSel;
 			}
 			else
 			{
-				if ( selected )
-				{
-					return this.document.PropertiesSel;
-				}
-				else
-				{
-					return this.document.PropertiesAuto;
-				}
+				return this.document.PropertiesAuto;
 			}
 		}
 
@@ -4164,7 +4229,7 @@ namespace Epsitec.Common.Document
 		// Tient compte du mode propertiesDetail.
 		public void PropertiesList(System.Collections.ArrayList list)
 		{
-			this.document.Modifier.OpletQueueEnable = false;
+			this.OpletQueueEnable = false;
 			list.Clear();
 
 			if ( this.tool == "Picker" && this.TotalSelected == 0 )  // pipette ?
@@ -4190,7 +4255,24 @@ namespace Epsitec.Common.Document
 			}
 
 			list.Sort();
-			this.document.Modifier.OpletQueueEnable = true;
+			this.OpletQueueEnable = true;
+		}
+
+		// Ajoute le détail de toutes les propriétés des objets sélectionnés
+		// dans une liste, en vue d'une modifications des couleurs.
+		protected void PropertiesListDeep(System.Collections.ArrayList list)
+		{
+			this.OpletQueueEnable = false;
+			list.Clear();
+
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
+			{
+				obj.PropertiesList(list, true);
+			}
+
+			this.OpletQueueEnable = true;
 		}
 		#endregion
 
@@ -4410,221 +4492,255 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
-		#region StyleMenu
-		// Construit le menu des styles.
-		public VMenu CreateStyleMenu(Properties.Abstract original)
+		#region Aggregates
+		// Retourne le nom de l'agrégat sélectionné.
+		public string AggregateGetSelectedName()
 		{
-			this.menuProperty = original;
+			string name = "";
+			this.aggregateUsed = -1;
 
-			VMenu menu = new VMenu();
-			MenuItem item;
-
-			bool isStyle = false;
-			bool isAuto  = false;
-			if ( original.IsMulti )
+			if ( this.IsTool )  // objets sélectionnés ?
 			{
-				foreach ( Properties.Abstract property in original.Owners )
-				{
-					if ( property.IsStyle )  isStyle = true;
-					else                     isAuto  = true;
-				}
-			}
-			else
-			{
-				isStyle = original.IsStyle;
-				isAuto = !original.IsStyle;
-			}
-
-			if ( isAuto )
-			{
-				item = new MenuItem("StyleMake", "manifest:Epsitec.App.DocumentEditor.Images.StyleMake.icon", Res.Strings.Menu.Style.Make, "");
-				item.Pressed += new MessageEventHandler(this.HandleMenuPressed);
-				menu.Items.Add(item);
-			}
-
-			if ( isStyle )
-			{
-				item = new MenuItem("StyleFree", "manifest:Epsitec.App.DocumentEditor.Images.StyleFree.icon", Res.Strings.Menu.Style.Free, "");
-				item.Pressed += new MessageEventHandler(this.HandleMenuPressed);
-				menu.Items.Add(item);
-			}
-
-			bool first = true;
-			int total = this.document.PropertiesStyle.Count;
-			for ( int i=0 ; i<total ; i++ )
-			{
-				Properties.Abstract property = this.document.PropertiesStyle[i] as Properties.Abstract;
-				if ( property.Type != original.Type )  continue;
-
-				if ( first )
-				{
-					menu.Items.Add(new MenuSeparator());
-					first = false;
-				}
-
-				string icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
-				if ( property == original )
-				{
-					icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
-				}
-
-				item = new MenuItem("StyleUse", icon, property.StyleName, "", i.ToString());
-				item.Pressed += new MessageEventHandler(this.HandleMenuPressed);
-				menu.Items.Add(item);
-			}
-
-			menu.AdjustSize();
-			return menu;
-		}
-
-		private void HandleMenuPressed(object sender, MessageEventArgs e)
-		{
-			MenuItem item = sender as MenuItem;
-
-			if ( item.Command == "StyleMake" )
-			{
-				this.StyleMake(this.menuProperty);
-			}
-
-			if ( item.Command == "StyleFree" )
-			{
-				this.StyleFree(this.menuProperty);
-			}
-
-			if ( item.Command == "StyleUse" )
-			{
-				int rank = System.Convert.ToInt32(item.Name);
-				Properties.Abstract style = this.document.PropertiesStyle[rank] as Properties.Abstract;
-				this.StyleUse(this.menuProperty, style);
-			}
-
-			this.menuProperty = null;
-		}
-
-		// Fabrique un nouveau style.
-		public void StyleMake(Properties.Abstract property)
-		{
-			if ( this.IsTool )  // propriétés des objets sélectionnés ?
-			{
-				using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleNew) )
-				{
-					if ( property.IsMulti )
-					{
-						Properties.Abstract style = Properties.Abstract.NewProperty(this.document, property.Type);
-						property.CopyTo(style);
-						style.IsStyle = true;
-						style.StyleName = this.GetNextStyleName();
-						this.StyleAdd(style);
-						this.document.PropertiesStyle.Add(style);
-						this.document.PropertiesStyle.Selected = this.document.PropertiesStyle.Count-1;
-
-						DrawingContext context = this.ActiveViewer.DrawingContext;
-						Objects.Abstract layer = context.RootObject();
-						foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
-						{
-							obj.UseProperty(style);
-						}
-					}
-					else
-					{
-						this.PropertyList(property).Remove(property);
-						property.IsStyle = true;
-						property.StyleName = this.GetNextStyleName();
-						this.StyleAdd(property);
-					}
-
-					this.document.Notifier.NotifyStyleChanged();
-					this.document.Notifier.NotifySelectionChanged();
-
-					this.OpletQueueValidateAction();
-				}
-			}
-			else	// propriété de objectMemory ?
-			{
-				using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleNew) )
-				{
-					Properties.Abstract style = Properties.Abstract.NewProperty(this.document, property.Type);
-					property.CopyTo(style);
-					style.IsStyle = true;
-					style.StyleName = this.GetNextStyleName();
-					this.StyleAdd(style);
-					this.ObjectMemoryTool.ChangeProperty(style);
-
-					this.document.Notifier.NotifyStyleChanged();
-
-					this.OpletQueueValidateAction();
-				}
-			}
-		}
-
-		// Ajoute un nouveau style.
-		protected void StyleAdd(Properties.Abstract style)
-		{
-			this.document.PropertiesStyle.Add(style);
-			this.document.PropertiesStyle.Selected = this.document.PropertiesStyle.Count-1;
-		}
-
-		// Libère un style.
-		public void StyleFree(Properties.Abstract property)
-		{
-			if ( this.IsTool )  // propriétés des objets sélectionnés ?
-			{
-				using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleFree) )
+				if ( this.TotalSelected != 0 )
 				{
 					DrawingContext context = this.ActiveViewer.DrawingContext;
 					Objects.Abstract layer = context.RootObject();
 					foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 					{
-						obj.FreeProperty(property);
-					}
+						if ( obj.Aggregate == null )  continue;
 
-					this.document.Notifier.NotifyStyleChanged();
-					this.document.Notifier.NotifySelectionChanged();
+						string aggName = obj.AggregateName;
 
-					this.OpletQueueValidateAction();
-				}
-			}
-			else	// propriété de objectMemory ?
-			{
-				using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleFree) )
-				{
-					Properties.Abstract free = Properties.Abstract.NewProperty(this.document, property.Type);
-					property.CopyTo(free);
-					free.IsOnlyForCreation = true;
-					free.IsStyle = false;
-					free.StyleName = "";
-					this.ObjectMemoryTool.ChangeProperty(free);
-
-					this.document.Notifier.NotifyStyleChanged();
-
-					this.OpletQueueValidateAction();
-				}
-			}
-		}
-
-		// Utilise un style.
-		public void StyleUse(Properties.Abstract property, Properties.Abstract style)
-		{
-			if ( this.IsTool )  // propriétés des objets sélectionnés ?
-			{
-				using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleUse) )
-				{
-					DrawingContext context = this.ActiveViewer.DrawingContext;
-					Objects.Abstract layer = context.RootObject();
-					foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
-					{
-						if ( property.IsMulti )
+						if ( name == "" )
 						{
-							obj.UseProperty(style);
+							name = aggName;
+							this.aggregateUsed = this.document.Aggregates.IndexOf(obj.Aggregate);
 						}
 						else
 						{
-							if ( obj.Property(style.Type) == property )
+							if ( name != aggName )  // plusieurs agrégats différents ?
 							{
-								obj.UseProperty(style);
+								name = "...";
+								this.aggregateUsed = -1;
+								break;
 							}
 						}
 					}
+				}
+			}
+			else	// objectMemory ?
+			{
+				name = this.ObjectMemoryTool.AggregateName;
+				this.aggregateUsed = -1;
+			}
+
+			return name;
+		}
+
+#if false
+		// Cherche un agrégat d'après son nom. Rien ne garantit que plusieurs
+		// agrégats n'aient pas des noms identiques, mais c'est le seul moyen
+		// de retrouver un agrégat à partir du nom choisi par l'utilisateur dans
+		// le TextFieldCombo du panneau principal !
+		public Properties.Aggregate AggregateSearch22(string name)
+		{
+			UndoableList aggregates = this.document.Aggregates;
+			foreach ( Properties.Aggregate agg in aggregates )
+			{
+				if ( agg.AggregateName == name )
+				{
+					return agg;
+				}
+			}
+
+			if ( this.objectMemory.AggregateName == name )
+			{
+				return this.objectMemory.Aggregate;
+			}
+
+			if ( this.objectMemoryText.AggregateName == name )
+			{
+				return this.objectMemoryText.Aggregate;
+			}
+
+			return null;
+		}
+#endif
+
+		// Crée un nouvel agrégat avec seulement 3 propriétés.
+		public void AggregateNew3(int rank, string name, bool putToList)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			Properties.Aggregate agg = this.AggregateCreate3(name);
+
+			UndoableList list = this.document.Aggregates;
+			if ( putToList && list.IndexOf(agg) == -1 )
+			{
+				using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateNew3) )
+				{
+					rank = System.Math.Max(rank, 0);
+					rank = System.Math.Min(rank, list.Count-1);
+					list.Insert(rank+1, agg);
+					list.Selected = rank+1;
+
+					this.document.Notifier.NotifyStyleChanged();
+					this.OpletQueueValidateAction();
+				}
+			}
+
+			this.AggregateUse(agg);
+		}
+
+		// Crée un nouvel agrégat avec toutes les propriétés.
+		public void AggregateNewAll(int rank, string name, bool putToList)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			Objects.Abstract model = null;
+			if ( this.IsTool )  // objets sélectionnés ?
+			{
+				model = this.RetFirstSelectedObject();
+			}
+			else	// objectMemory ?
+			{
+				this.OpletQueueEnable = false;
+				model = Objects.Abstract.CreateObject(this.document, this.tool, this.ObjectMemoryTool);
+				this.OpletQueueEnable = true;
+			}
+
+			Properties.Aggregate agg = this.AggregateCreate(name, model);
+
+			UndoableList list = this.document.Aggregates;
+			if ( putToList && list.IndexOf(agg) == -1 )
+			{
+				using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateNew3) )
+				{
+					rank = System.Math.Max(rank, 0);
+					rank = System.Math.Min(rank, list.Count-1);
+					list.Insert(rank+1, agg);
+					list.Selected = rank+1;
+
+					this.document.Notifier.NotifyStyleChanged();
+					this.OpletQueueValidateAction();
+				}
+			}
+
+			this.AggregateUse(agg);
+		}
+
+		// Crée un nouvel agrégat avec seulement 3 propriétés, pas encore référencé.
+		protected Properties.Aggregate AggregateCreate3(string name)
+		{
+			this.OpletQueueEnable = false;
+
+			Properties.Aggregate agg = new Properties.Aggregate(this.document);
+
+			if ( name == "" )
+			{
+				name = this.GetNextAggregateName();  // nom unique
+			}
+			agg.AggregateName = name;
+
+			Objects.Abstract model = this.ObjectMemoryTool;
+			if ( this.TotalSelected > 0 )
+			{
+				model = this.RetFirstSelectedObject();
+			}
+
+			this.AggregateCreateProperty(agg, model, Properties.Type.LineMode);
+			this.AggregateCreateProperty(agg, model, Properties.Type.LineColor);
+			this.AggregateCreateProperty(agg, model, Properties.Type.FillGradient);
+			agg.Styles.Selected = -1;
+
+			this.OpletQueueEnable = true;
+			return agg;
+		}
+
+		// Crée un nouvel agrégat avec toutes les propriétés d'un objet modèle,
+		// pas encore référencé.
+		protected Properties.Aggregate AggregateCreate(string name, Objects.Abstract model)
+		{
+			this.OpletQueueEnable = false;
+
+			Properties.Aggregate agg = new Properties.Aggregate(this.document);
+
+			if ( name == "" )
+			{
+				name = this.GetNextAggregateName();  // nom unique
+			}
+			agg.AggregateName = name;
+
+			for ( int i=0 ; i<100 ; i++ )
+			{
+				Properties.Type type = Properties.Abstract.SortOrder(i);
+				if ( !Properties.Abstract.StyleAbility(type) )  continue;
+				if ( model.Property(type) == null )  continue;
+
+				this.AggregateCreateProperty(agg, model, type);
+			}
+			agg.Styles.Selected = -1;
+
+			this.OpletQueueEnable = true;
+			return agg;
+		}
+
+		// Crée une nouvelle propriété pour un agrégat. Dans Aggregate.Styles,
+		// les propriétés sont toujours selon l'ordre Properties.Abstract.SortOrder !
+		protected Properties.Abstract AggregateCreateProperty(Properties.Aggregate agg, Objects.Abstract model, Properties.Type type)
+		{
+			Properties.Abstract style = Properties.Abstract.NewProperty(this.document, type);
+
+			if ( model != null )
+			{
+				Properties.Abstract original = model.Property(type);
+				if ( original != null )
+				{
+					original.CopyTo(style);
+				}
+			}
+
+			style.IsStyle = true;
+			style.IsOnlyForCreation = false;
+
+			int order = Properties.Abstract.SortOrder(type);
+			int rank = 0;
+			while ( rank < agg.Styles.Count )
+			{
+				Properties.Abstract property = agg.Styles[rank] as Properties.Abstract;
+				if ( order < Properties.Abstract.SortOrder(property.Type) )  break;
+				rank ++;
+			}
+			agg.Styles.Insert(rank, style);
+			agg.Styles.Selected = rank;
+
+			return style;
+		}
+
+		// Utilise un agrégat.
+		public void AggregateUse(Properties.Aggregate agg)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			if ( this.IsTool )  // objets sélectionnés ?
+			{
+				if ( this.TotalSelected == 0 )  return;
+
+				using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateUse) )
+				{
+					DrawingContext context = this.ActiveViewer.DrawingContext;
+					Objects.Abstract layer = context.RootObject();
+					foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
+					{
+						obj.AggregateFree();
+						obj.AggregateUse(agg);
+						obj.Aggregate = agg;
+					}
+
+					this.AggregateToDocument(agg);
 
 					this.document.Notifier.NotifyStyleChanged();
 					this.document.Notifier.NotifySelectionChanged();
@@ -4632,84 +4748,132 @@ namespace Epsitec.Common.Document
 					this.OpletQueueValidateAction();
 				}
 			}
-			else	// propriété de objectMemory ?
+			else	// objectMemory ?
 			{
 				this.OpletQueueEnable = false;
-				this.ObjectMemoryTool.ChangeProperty(style);
+				this.ObjectMemoryTool.AggregateFree();
+				this.ObjectMemoryTool.AggregateUse(agg);
+				this.ObjectMemoryTool.Aggregate = agg;
 				this.OpletQueueEnable = true;
 
 				this.document.Notifier.NotifySelectionChanged();
 			}
+
+			this.aggregateUsed = this.document.Aggregates.IndexOf(agg);
 		}
 
-		// Crée un nouveau style d'un type quelconque.
-		public void StyleCreate(int rank, Properties.Type type)
+		// Ajoute l'agrégat dans la liste du document, si nécessaire.
+		public void AggregateToDocument(Properties.Aggregate agg)
 		{
-			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
-
-			using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleCreate) )
+			UndoableList list = this.document.Aggregates;
+			int index = list.IndexOf(agg);
+			if ( index == -1 )
 			{
-				UndoableList list = this.document.PropertiesStyle;
-				rank = System.Math.Max(rank, 0);
-				rank = System.Math.Min(rank, list.Count-1);
+				list.Add(agg);
+				list.Selected = list.Count-1;
 
-				Properties.Abstract style = Properties.Abstract.NewProperty(this.document, type);
-				style.IsStyle = true;
-				style.IsOnlyForCreation = false;
-				style.StyleName = this.GetNextStyleName();
-				list.Insert(rank+1, style);
-				list.Selected = rank+1;
-
-				this.document.Notifier.NotifyStyleChanged();
-				this.OpletQueueValidateAction();
+				this.aggregateUsed = list.Selected;
+			}
+			else
+			{
+				this.aggregateUsed = index;
 			}
 		}
 
-		// Duplique un style.
-		public void StyleDuplicate(int rank)
+		// Libère les objets sélectionnés des agrégats.
+		public void AggregateFree()
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleDuplicate) )
+			if ( this.IsTool )  // objets sélectionnés ?
 			{
-				UndoableList list = this.document.PropertiesStyle;
-				rank = System.Math.Max(rank, 0);
-				rank = System.Math.Min(rank, list.Count-1);
-				Properties.Abstract property = list[rank] as Properties.Abstract;
+				if ( this.TotalSelected == 0 )  return;
 
-				Properties.Abstract style = Properties.Abstract.NewProperty(this.document, property.Type);
-				property.CopyTo(style);
-				style.IsStyle = true;
-				style.IsOnlyForCreation = false;
-				style.StyleName = this.GetNextStyleName();
-				list.Insert(rank+1, style);
-				list.Selected = rank+1;
-
-				this.document.Notifier.NotifyStyleChanged();
-				this.OpletQueueValidateAction();
-			}
-		}
-
-		// Supprime un style.
-		public void StyleDelete(int rank)
-		{
-			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
-
-			using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleDelete) )
-			{
-				UndoableList list = this.document.PropertiesStyle;
-				rank = System.Math.Max(rank, 0);
-				rank = System.Math.Min(rank, list.Count-1);
-				Properties.Abstract property = list[rank] as Properties.Abstract;
-
-				DrawingContext context = this.ActiveViewer.DrawingContext;
-				Objects.Abstract doc = context.RootObject(0);
-				foreach ( Objects.Abstract obj in this.document.Deep(doc) )
+				using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateFree) )
 				{
-					obj.FreeProperty(property);
+					DrawingContext context = this.ActiveViewer.DrawingContext;
+					Objects.Abstract layer = context.RootObject();
+					foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
+					{
+						obj.AggregateFree();
+						obj.Aggregate = null;
+					}
+
+					this.document.Notifier.NotifyStyleChanged();
+					this.document.Notifier.NotifySelectionChanged();
+
+					this.OpletQueueValidateAction();
+				}
+			}
+			else	// objectMemory ?
+			{
+				this.OpletQueueEnable = false;
+				this.ObjectMemoryTool.AggregateFree();
+				this.ObjectMemoryTool.Aggregate = null;
+				this.OpletQueueEnable = true;
+
+				this.document.Notifier.NotifyStyleChanged();
+				this.document.Notifier.NotifySelectionChanged();
+			}
+		}
+
+		// Libère tous les objets coupés ou copiés des agrégats.
+		protected void AggregateFreeAll()
+		{
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer, false) )
+			{
+				obj.AggregateFree();
+				obj.Aggregate = null;
+			}
+		}
+
+		// Duplique un agrégat.
+		public void AggregateDuplicate(int rank)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateDuplicate) )
+			{
+				UndoableList list = this.document.Aggregates;
+				rank = System.Math.Max(rank, 0);
+				rank = System.Math.Min(rank, list.Count-1);
+				Properties.Aggregate srcAgg = list[rank] as Properties.Aggregate;
+
+				Properties.Aggregate newAgg = new Properties.Aggregate(this.document);
+				srcAgg.DuplicateTo(newAgg);
+				newAgg.AggregateName = Misc.CopyName(newAgg.AggregateName);
+				list.Insert(rank+1, newAgg);
+				list.Selected = rank+1;
+
+				this.document.Notifier.NotifyStyleChanged();
+				this.OpletQueueValidateAction();
+			}
+		}
+
+		// Supprime un agrégat.
+		public void AggregateDelete(int rank)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateDelete) )
+			{
+				UndoableList list = this.document.Aggregates;
+				rank = System.Math.Max(rank, 0);
+				rank = System.Math.Min(rank, list.Count-1);
+				Properties.Aggregate agg = list[rank] as Properties.Aggregate;
+
+				for ( int i=0 ; i<this.document.Aggregates.Count ; i++ )
+				{
+					Properties.Aggregate a = this.document.Aggregates[i] as Properties.Aggregate;
+					if ( a.Parent == agg )
+					{
+						a.Parent = agg.Parent;
+					}
 				}
 
 				list.RemoveAt(rank);
@@ -4717,27 +4881,37 @@ namespace Epsitec.Common.Document
 				rank = System.Math.Min(rank, list.Count-1);
 				list.Selected = rank;
 
+				DrawingContext context = this.ActiveViewer.DrawingContext;
+				Objects.Abstract doc = context.RootObject(0);
+				foreach ( Objects.Abstract obj in this.document.Deep(doc) )
+				{
+					obj.AggregateDelete(agg);
+				}
+
+				this.objectMemory.AggregateDelete(agg);
+				this.objectMemoryText.AggregateDelete(agg);
+
 				this.document.Notifier.NotifyStyleChanged();
 				this.document.Notifier.NotifySelectionChanged();
 				this.OpletQueueValidateAction();
 			}
 		}
 
-		// Permute deux styles.
-		public void StyleSwap(int rank1, int rank2)
+		// Permute deux agrégats.
+		public void AggregateSwap(int rank1, int rank2)
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction(Res.Strings.Action.StyleSwap) )
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateSwap) )
 			{
-				UndoableList list = this.document.PropertiesStyle;
+				UndoableList list = this.document.Aggregates;
 				rank1 = System.Math.Max(rank1, 0);
 				rank1 = System.Math.Min(rank1, list.Count-1);
 				rank2 = System.Math.Max(rank2, 0);
 				rank2 = System.Math.Min(rank2, list.Count-1);
 
-				Properties.Abstract temp = list[rank1] as Properties.Abstract;
+				Properties.Aggregate temp = list[rank1] as Properties.Aggregate;
 				list.RemoveAt(rank1);
 				list.Insert(rank2, temp);
 				list.Selected = rank2;
@@ -4747,57 +4921,156 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Le style sélectionné reprend la bonne propriété de l'objet modèle
-		// pointé par la souris avec la pipette.
-		public void PickerProperty(Objects.Abstract model)
+		// Change le nom d'un aggrégat.
+		public void AggregateChangeName(string name)
 		{
-			int sel = this.document.PropertiesStyle.Selected;
-			if ( sel < 0 )  return;
-			Properties.Abstract dst = this.document.PropertiesStyle[sel] as Properties.Abstract;
-			Properties.Abstract src = model.Property(dst.Type);
-			if ( src == null )  return;
+			if ( this.ActiveViewer.IsCreating )  return;
+			if ( name == "..." )  return;
+			this.document.IsDirtySerialize = true;
 
-			using ( this.OpletQueueBeginAction(Res.Strings.Action.PickerProperty) )
+			if ( this.IsTool )  // objets sélectionnés ?
 			{
-				dst.PickerProperty(src);
+				int sel = this.aggregateUsed;
+				if ( sel == -1 )  return;
+
+				Properties.Aggregate agg = this.document.Aggregates[sel] as Properties.Aggregate;
+
+				this.OpletQueueBeginAction(Res.Strings.Action.AggregateChange, "ChangeAggregateName", sel);
+				agg.AggregateName = name;
+				this.OpletQueueValidateAction();
+
+				this.document.Notifier.NotifyAggregateChanged(agg);
+			}
+			else	// objectMemory ?
+			{
+				if ( this.ObjectMemoryTool.Aggregate == null )  return;
+
+				this.OpletQueueEnable = false;
+				this.ObjectMemoryTool.Aggregate.AggregateName = name;
+				this.OpletQueueEnable = true;
+			}
+		}
+
+		// Modifie le parent d'un agrégat.
+		public void AggregateParent(Properties.Aggregate agg, Properties.Aggregate parent)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateChange, "ChangeAggregateParent") )
+			{
+				agg.Parent = parent;
+
+				DrawingContext context = this.ActiveViewer.DrawingContext;
+				Objects.Abstract doc = context.RootObject(0);
+				foreach ( Objects.Abstract obj in this.document.Deep(doc) )
+				{
+					obj.AggregateAdapt(agg);
+				}
+
+				this.objectMemory.AggregateAdapt(agg);
+				this.objectMemoryText.AggregateAdapt(agg);
+
+				this.document.Notifier.NotifyAggregateChanged(agg);
+				this.document.Notifier.NotifySelectionChanged();
 				this.OpletQueueValidateAction();
 			}
+		}
+
+		// Crée un nouveau style dans un agrégat.
+		public void AggregateStyleNew(Properties.Aggregate agg, Properties.Type type)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
+
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateStyleNew) )
+			{
+				Objects.Abstract model = this.ObjectMemoryTool;
+				this.AggregateCreateProperty(agg, model, type);
+
+				DrawingContext context = this.ActiveViewer.DrawingContext;
+				Objects.Abstract doc = context.RootObject(0);
+				foreach ( Objects.Abstract obj in this.document.Deep(doc) )
+				{
+					obj.AggregateAdapt(agg);
+				}
+
+				this.objectMemory.AggregateAdapt(agg);
+				this.objectMemoryText.AggregateAdapt(agg);
+
+				this.document.Notifier.NotifyStyleChanged();
+				this.document.Notifier.NotifySelectionChanged();
+				this.OpletQueueValidateAction();
+			}
 		}
 
-		// Donne le prochain nom unique de style.
-		protected string GetNextStyleName()
+		// Supprime le style sélectionné d'un agrégat.
+		public void AggregateStyleDelete(Properties.Aggregate agg)
 		{
-			return string.Format(Res.Strings.Style.Name, this.GetNextUniqueStyleId());
+			if ( this.ActiveViewer.IsCreating )  return;
+			if ( agg.Styles.Selected == -1 )  return;
+			this.document.IsDirtySerialize = true;
+
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateStyleDelete) )
+			{
+				int rank = agg.Styles.Selected;
+				agg.Styles.RemoveAt(rank);
+
+				rank = System.Math.Min(rank, agg.Styles.Count-1);
+				agg.Styles.Selected = rank;
+
+				DrawingContext context = this.ActiveViewer.DrawingContext;
+				Objects.Abstract doc = context.RootObject(0);
+				foreach ( Objects.Abstract obj in this.document.Deep(doc) )
+				{
+					obj.AggregateAdapt(agg);
+				}
+
+				this.objectMemory.AggregateAdapt(agg);
+				this.objectMemoryText.AggregateAdapt(agg);
+
+				this.document.Notifier.NotifyStyleChanged();
+				this.document.Notifier.NotifySelectionChanged();
+				this.OpletQueueValidateAction();
+			}
 		}
-		#endregion
 
-
-		#region UniqueId
-		// Retourne le prochain identificateur unique pour les objets.
-		public int GetNextUniqueObjectId()
+		// Reprend les propriétés d'un objet modèle.
+		public void AggregatePicker(Objects.Abstract model)
 		{
-			return ++this.uniqueObjectId;
+			if ( this.TotalSelected == 0 )
+			{
+				this.OpletQueueEnable = false;
+				this.ObjectMemory.PickerProperties(model);
+				this.ObjectMemoryText.PickerProperties(model);
+				this.OpletQueueEnable = true;
+
+				this.document.Notifier.NotifyStyleChanged();
+				this.document.Notifier.NotifySelectionChanged();
+			}
+			else
+			{
+				using ( this.OpletQueueBeginAction(Res.Strings.Action.Picker) )
+				{
+					DrawingContext context = this.ActiveViewer.DrawingContext;
+					Objects.Abstract layer = context.RootObject();
+					foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
+					{
+						if ( obj == model )  continue;
+						this.document.Notifier.NotifyArea(obj.BoundingBox);
+						obj.PickerProperties(model);
+						this.document.Notifier.NotifyArea(obj.BoundingBox);
+					}
+					this.document.Notifier.NotifySelectionChanged();
+					this.OpletQueueValidateAction();
+				}
+			}
 		}
 
-		// Modification de l'identificateur unique.
-		public int UniqueObjectId
+		// Donne le prochain nom unique d'agrégat.
+		protected string GetNextAggregateName()
 		{
-			get { return this.uniqueObjectId; }
-			set { this.uniqueObjectId = value; }
-		}
-
-		// Retourne le prochain identificateur unique pour les noms de style.
-		public int GetNextUniqueStyleId()
-		{
-			return ++this.uniqueStyleId;
-		}
-
-		// Modification de l'identificateur unique.
-		public int UniqueStyleId
-		{
-			get { return this.uniqueStyleId; }
-			set { this.uniqueStyleId = value; }
+			return string.Format(Res.Strings.Aggregate.Name, this.document.GetNextUniqueAggregateId());
 		}
 		#endregion
 
@@ -4942,11 +5215,12 @@ namespace Epsitec.Common.Document
 
 			if ( cmd == this.opletLastCmd && id == this.opletLastId )
 			{
-				if ( cmd == "ChangeProperty"  ||
-					 cmd == "ChangePageName"  ||
-					 cmd == "ChangeLayerName" ||
-					 cmd == "ChangeGuide"     ||
-					 cmd == "ChangeDocSize"   )
+				if ( cmd == "ChangeProperty"      ||
+					 cmd == "ChangePageName"      ||
+					 cmd == "ChangeLayerName"     ||
+					 cmd == "ChangeAggregateName" ||
+					 cmd == "ChangeGuide"         ||
+					 cmd == "ChangeDocSize"       )
 				{
 					this.opletSkip = true;
 					return null;
@@ -5037,13 +5311,12 @@ namespace Epsitec.Common.Document
 		protected bool							repeatDuplicateMove;
 		protected bool							lastOperIsDuplicate;
 		protected Point							moveAfterDuplicate;
-		protected int							uniqueObjectId = 0;
-		protected int							uniqueStyleId = 0;
 		protected double						toLinePrecision;
 		protected string						textInfoModif = "";
 		protected double						outsideArea;
 		protected double						dimensionScale;
 		protected double						dimensionDecimal;
+		protected int							aggregateUsed;
 
 		public static readonly double			fontSizeScale = 3.5;  // empyrique !
 	}

@@ -32,23 +32,23 @@ namespace Epsitec.Common.Widgets
 				this.palette[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
-			this.palette[ 0].Color = Drawing.Color.FromARGB(0.0, 1.0, 1.0, 1.0);
-			this.palette[ 1].Color = Drawing.Color.FromARGB(1.0, 1.0, 0.0, 0.0);
-			this.palette[ 2].Color = Drawing.Color.FromARGB(1.0, 1.0, 1.0, 0.0);
-			this.palette[ 3].Color = Drawing.Color.FromARGB(1.0, 0.0, 1.0, 0.0);
-			this.palette[ 4].Color = Drawing.Color.FromARGB(1.0, 0.0, 1.0, 1.0);
-			this.palette[ 5].Color = Drawing.Color.FromARGB(1.0, 0.0, 0.0, 1.0);
-			this.palette[ 6].Color = Drawing.Color.FromARGB(1.0, 1.0, 0.0, 1.0);
-			this.palette[ 7].Color = Drawing.Color.FromARGB(0.5, 0.5, 0.5, 0.5);
+			this.palette[ 0].Color = Drawing.RichColor.FromARGB(0.0, 1.0, 1.0, 1.0);
+			this.palette[ 1].Color = Drawing.RichColor.FromARGB(1.0, 1.0, 0.0, 0.0);
+			this.palette[ 2].Color = Drawing.RichColor.FromARGB(1.0, 1.0, 1.0, 0.0);
+			this.palette[ 3].Color = Drawing.RichColor.FromARGB(1.0, 0.0, 1.0, 0.0);
+			this.palette[ 4].Color = Drawing.RichColor.FromARGB(1.0, 0.0, 1.0, 1.0);
+			this.palette[ 5].Color = Drawing.RichColor.FromARGB(1.0, 0.0, 0.0, 1.0);
+			this.palette[ 6].Color = Drawing.RichColor.FromARGB(1.0, 1.0, 0.0, 1.0);
+			this.palette[ 7].Color = Drawing.RichColor.FromARGB(0.5, 0.5, 0.5, 0.5);
 
-			this.palette[ 8].Color = Drawing.Color.FromARGB(1.0, 1.0, 1.0, 1.0);
-			this.palette[ 9].Color = Drawing.Color.FromARGB(1.0, 0.9, 0.9, 0.9);
-			this.palette[10].Color = Drawing.Color.FromARGB(1.0, 0.8, 0.8, 0.8);
-			this.palette[11].Color = Drawing.Color.FromARGB(1.0, 0.7, 0.7, 0.7);
-			this.palette[12].Color = Drawing.Color.FromARGB(1.0, 0.6, 0.6, 0.6);
-			this.palette[13].Color = Drawing.Color.FromARGB(1.0, 0.5, 0.5, 0.5);
-			this.palette[14].Color = Drawing.Color.FromARGB(1.0, 0.4, 0.4, 0.4);
-			this.palette[15].Color = Drawing.Color.FromARGB(1.0, 0.0, 0.0, 0.0);
+			this.palette[ 8].Color = Drawing.RichColor.FromARGB(1.0, 1.0, 1.0, 1.0);
+			this.palette[ 9].Color = Drawing.RichColor.FromARGB(1.0, 0.9, 0.9, 0.9);
+			this.palette[10].Color = Drawing.RichColor.FromARGB(1.0, 0.8, 0.8, 0.8);
+			this.palette[11].Color = Drawing.RichColor.FromARGB(1.0, 0.7, 0.7, 0.7);
+			this.palette[12].Color = Drawing.RichColor.FromARGB(1.0, 0.6, 0.6, 0.6);
+			this.palette[13].Color = Drawing.RichColor.FromARGB(1.0, 0.5, 0.5, 0.5);
+			this.palette[14].Color = Drawing.RichColor.FromARGB(1.0, 0.4, 0.4, 0.4);
+			this.palette[15].Color = Drawing.RichColor.FromARGB(1.0, 0.0, 0.0, 0.0);
 
 			this.selected = -1;
 
@@ -160,7 +160,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Drawing.Color					Color
+		public Drawing.RichColor					Color
 		{
 			get
 			{
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					return Drawing.Color.Empty;
+					return Drawing.RichColor.Empty;
 				}
 			}
 

@@ -63,14 +63,14 @@ namespace Epsitec.Common.Document
 			this.objects = new UndoableList(this, UndoableListType.ObjectsInsideDocument);
 			this.propertiesAuto = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
 			this.propertiesSel = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
-			this.propertiesStyle = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
+			this.aggregates = new UndoableList(this, UndoableListType.AggregateInsideDocument);
 			this.exportDirectory = "";
 			this.exportFilename = "";
 			this.exportFilter = 0;
-			this.exportPDFDirectory = "";
-			this.exportPDFFilename = "";
 			this.isSurfaceRotation = false;
 			this.surfaceRotationAngle = 0.0;
+			this.uniqueObjectId = 0;
+			this.uniqueAggregateId = 0;
 
 			this.printDialog = new Common.Dialogs.PrinterDocumentProperties();
 
@@ -161,10 +161,10 @@ namespace Epsitec.Common.Document
 			get { return this.propertiesSel; }
 		}
 
-		// Liste des styles de ce document.
-		public UndoableList PropertiesStyle
+		// Liste des aggrégats de ce document.
+		public UndoableList Aggregates
 		{
-			get { return this.propertiesStyle; }
+			get { return this.aggregates; }
 		}
 
 
@@ -356,34 +356,6 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Nom du dossier d'exportation associé.
-		public string ExportPDFDirectory
-		{
-			get
-			{
-				return this.exportPDFDirectory;
-			}
-
-			set
-			{
-				this.exportPDFDirectory = value;
-			}
-		}
-
-		// Nom du fichier (sans dossier) d'exportation associé.
-		public string ExportPDFFilename
-		{
-			get
-			{
-				return this.exportPDFFilename;
-			}
-
-			set
-			{
-				this.exportPDFFilename = value;
-			}
-		}
-
 		// Indique si la sérialisation est nécessaire.
 		public bool IsDirtySerialize
 		{
@@ -515,7 +487,9 @@ namespace Epsitec.Common.Document
 
 			this.objects = doc.objects;
 			this.propertiesAuto = doc.propertiesAuto;
-			this.propertiesStyle = doc.propertiesStyle;
+			this.aggregates = doc.aggregates;
+			this.uniqueObjectId = doc.uniqueObjectId;
+			this.uniqueAggregateId = doc.uniqueAggregateId;
 			
 			if ( this.type == DocumentType.Pictogram )
 			{
@@ -528,8 +502,6 @@ namespace Epsitec.Common.Document
 				this.exportDirectory = doc.exportDirectory;
 				this.exportFilename = doc.exportFilename;
 				this.exportFilter = doc.exportFilter;
-				this.exportPDFDirectory = doc.exportPDFDirectory;
-				this.exportPDFFilename = doc.exportPDFFilename;
 
 				if ( this.Modifier != null && doc.readObjectMemory != null )
 				{
@@ -621,6 +593,11 @@ namespace Epsitec.Common.Document
 				this.Modifier.OpletQueueEnable = false;
 			}
 
+			if ( !this.IsRevisionGreaterOrEqual(1,0,24) )
+			{
+				this.OldStylesToAggregates();
+			}
+
 			Font.FaceInfo[] fonts = Font.Faces;
 			foreach ( Objects.Abstract obj in this.Deep(null) )
 			{
@@ -641,6 +618,128 @@ namespace Epsitec.Common.Document
 				this.Modifier.OpletQueuePurge();
 			}
 		}
+
+		#region OldStylesToAggregates
+		// Adapte les anciens styles en agrégats.
+		protected void OldStylesToAggregates()
+		{
+			foreach ( Objects.Abstract obj in this.Deep(null) )
+			{
+				Properties.Type[] list = obj.PropertiesStyle();
+				if ( list.Length == 0 )  continue;
+
+				Properties.Aggregate agg = this.OldStylesSearchAggregate(obj, list);
+				if ( agg == null )
+				{
+					agg = this.OldStylesCreateAggregate(obj, list);
+				}
+
+				this.OldStylesUseAggregate(obj, list, agg);
+			}
+
+			this.OldStylesSort();
+
+			if ( this.modifier != null )
+			{
+				this.modifier.ObjectMemory.AggregateFree();
+				this.modifier.ObjectMemoryText.AggregateFree();
+			}
+		}
+
+		protected Properties.Aggregate OldStylesSearchAggregate(Objects.Abstract obj, Properties.Type[] list)
+		{
+			foreach ( Properties.Aggregate agg in this.aggregates )
+			{
+				if ( agg.Styles.Count != list.Length )  continue;
+
+				int eq = 0;
+				for ( int i=0 ; i<list.Length ; i++ )
+				{
+					Properties.Abstract p1 = agg.Styles[i] as Properties.Abstract;
+					Properties.Abstract p2 = obj.Property(list[i]);
+
+					if ( !p1.Compare(p2) )  break;
+					eq ++;
+				}
+
+				if ( eq == list.Length )  return agg;
+			}
+			return null;
+		}
+
+		protected Properties.Aggregate OldStylesCreateAggregate(Objects.Abstract obj, Properties.Type[] list)
+		{
+			Properties.Aggregate agg = new Properties.Aggregate(Document.ReadDocument);
+
+			string name = "";
+			string lastName = "";
+
+			foreach ( Properties.Type type in list )
+			{
+				Properties.Abstract property = Properties.Abstract.NewProperty(Document.ReadDocument, type);
+				Properties.Abstract p = obj.Property(type);
+				p.CopyTo(property);
+				agg.Styles.Add(property);
+
+				if ( p.OldStyleName != lastName )
+				{
+					if ( name.Length > 0 )  name += ", ";
+					name += p.OldStyleName;
+					lastName = p.OldStyleName;
+				}
+			}
+
+			agg.AggregateName = name;
+
+			this.aggregates.Add(agg);
+			return agg;
+		}
+
+		protected void OldStylesUseAggregate(Objects.Abstract obj, Properties.Type[] list, Properties.Aggregate agg)
+		{
+			foreach ( Properties.Type type in list )
+			{
+				Properties.Abstract style = agg.Property(type);
+				obj.ChangeProperty(style);
+			}
+
+			obj.Aggregate = agg;
+		}
+
+		protected void OldStylesSort()
+		{
+			bool stop;
+			do
+			{
+				stop = true;
+				for ( int i=0 ; i<this.aggregates.Count-1 ; i++ )
+				{
+					Properties.Aggregate agg1 = this.aggregates[i+0] as Properties.Aggregate;
+					Properties.Aggregate agg2 = this.aggregates[i+1] as Properties.Aggregate;
+					int n1 = this.OldStylesGetSortValue(agg1);
+					int n2 = this.OldStylesGetSortValue(agg2);
+					if ( n1 > n2 )
+					{
+						this.aggregates[i+0] = agg2;
+						this.aggregates[i+1] = agg1;
+						stop = false;
+					}
+				}
+			}
+			while ( !stop );
+		}
+
+		protected int OldStylesGetSortValue(Properties.Aggregate agg)
+		{
+			int n = 0;
+			foreach ( Properties.Abstract property in agg.Styles )
+			{
+				int v = (int) property.Type;
+				n |= (1<<v);
+			}
+			return n;
+		}
+		#endregion
 
 		// Enregistre le document sur disque.
 		public string Write(string filename)
@@ -746,7 +845,6 @@ namespace Epsitec.Common.Document
 				info.AddValue("Settings", this.settings);
 				info.AddValue("ExportFilename", this.exportFilename);
 				info.AddValue("ExportFilter", this.exportFilter);
-				info.AddValue("ExportPDFFilename", this.exportPDFFilename);
 
 				info.AddValue("ObjectMemory", this.modifier.ObjectMemory);
 				info.AddValue("ObjectMemoryText", this.modifier.ObjectMemoryText);
@@ -754,11 +852,11 @@ namespace Epsitec.Common.Document
 				info.AddValue("RootStack", this.modifier.ActiveViewer.DrawingContext.RootStack);
 			}
 
-			info.AddValue("UniqueObjectId", this.modifier.UniqueObjectId);
-			info.AddValue("UniqueStyleId", this.modifier.UniqueStyleId);
+			info.AddValue("UniqueObjectId", this.uniqueObjectId);
+			info.AddValue("UniqueAggregateId", this.uniqueAggregateId);
 			info.AddValue("Objects", this.objects);
 			info.AddValue("Properties", this.propertiesAuto);
-			info.AddValue("Styles", this.propertiesStyle);
+			info.AddValue("Aggregates", this.aggregates);
 		}
 
 		// Constructeur qui désérialise le document.
@@ -789,17 +887,6 @@ namespace Epsitec.Common.Document
 					this.exportFilter = 0;
 				}
 
-				if ( this.IsRevisionGreaterOrEqual(1,0,21) )
-				{
-					this.exportPDFDirectory = "";
-					this.exportPDFFilename = info.GetString("ExportPDFFilename");
-				}
-				else
-				{
-					this.exportPDFDirectory = "";
-					this.exportPDFFilename = "";
-				}
-
 				if ( this.IsRevisionGreaterOrEqual(1,0,7) )
 				{
 					this.readObjectMemory = (Objects.Memory) info.GetValue("ObjectMemory", typeof(Objects.Memory));
@@ -821,14 +908,20 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			if ( this.modifier != null )
-			{
-				this.modifier.UniqueObjectId = info.GetInt32("UniqueObjectId");
-				this.modifier.UniqueStyleId = info.GetInt32("UniqueStyleId");
-			}
+			this.uniqueObjectId = info.GetInt32("UniqueObjectId");
 			this.objects = (UndoableList) info.GetValue("Objects", typeof(UndoableList));
 			this.propertiesAuto = (UndoableList) info.GetValue("Properties", typeof(UndoableList));
-			this.propertiesStyle = (UndoableList) info.GetValue("Styles", typeof(UndoableList));
+
+			if ( this.IsRevisionGreaterOrEqual(1,0,23) )
+			{
+				this.aggregates = (UndoableList) info.GetValue("Aggregates", typeof(UndoableList));
+				this.uniqueAggregateId = info.GetInt32("UniqueAggregateId");
+			}
+			else
+			{
+				this.aggregates = new UndoableList(Document.ReadDocument, UndoableListType.AggregateInsideDocument);
+				this.uniqueAggregateId = 0;
+			}
 		}
 
 		// Retourne le nom du dossier en cours de lecture/écriture.
@@ -901,8 +994,9 @@ namespace Epsitec.Common.Document
 					if ( layer.Print == Objects.LayerPrint.Hide )  continue;
 
 					Properties.ModColor modColor = layer.PropertyModColor;
-					drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
+					graphics.PushColorModifier(new ColorModifier(modColor.ModifyColor));
 					drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
+					graphics.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
 
 					foreach ( Objects.Abstract obj in this.Deep(layer) )
 					{
@@ -911,6 +1005,9 @@ namespace Epsitec.Common.Document
 
 						obj.DrawGeometry(graphics, drawingContext);
 					}
+
+					graphics.PopColorModifier();
+					graphics.PopColorModifier();
 				}
 
 				if ( this.Modifier != null )
@@ -946,7 +1043,8 @@ namespace Epsitec.Common.Document
 					}
 
 					Properties.ModColor modColor = layer.PropertyModColor;
-					drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
+					graphics.PushColorModifier(new ColorModifier(modColor.ModifyColor));
+					graphics.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
 
 					foreach ( DeepBranchEntry entry in this.DeepBranch(layer, branch) )
 					{
@@ -971,6 +1069,9 @@ namespace Epsitec.Common.Document
 
 						obj.DrawGeometry(graphics, drawingContext);
 					}
+
+					graphics.PopColorModifier();
+					graphics.PopColorModifier();
 				}
 			}
 		}
@@ -1002,6 +1103,20 @@ namespace Epsitec.Common.Document
 			return this.exportPDF.FileExport(filename);
 		}
 
+
+		#region UniqueId
+		// Retourne le prochain identificateur unique pour les objets.
+		public int GetNextUniqueObjectId()
+		{
+			return ++this.uniqueObjectId;
+		}
+
+		// Retourne le prochain identificateur unique pour les noms d'agrégats.
+		public int GetNextUniqueAggregateId()
+		{
+			return ++this.uniqueAggregateId;
+		}
+		#endregion
 
 		#region Flat
 		public System.Collections.IEnumerable Flat(Objects.Abstract root)
@@ -1308,7 +1423,7 @@ namespace Epsitec.Common.Document
 
 			protected Document					document;
 			protected bool						onlySelected;
-			protected Objects.Abstract	root;
+			protected Objects.Abstract			root;
 			protected bool						first;
 			protected int						index;
 			protected System.Collections.Stack	stack;
@@ -1503,13 +1618,11 @@ namespace Epsitec.Common.Document
 		protected string						exportDirectory;
 		protected string						exportFilename;
 		protected int							exportFilter;
-		protected string						exportPDFDirectory;
-		protected string						exportPDFFilename;
 		protected bool							isDirtySerialize;
 		protected UndoableList					objects;
 		protected UndoableList					propertiesAuto;
 		protected UndoableList					propertiesSel;
-		protected UndoableList					propertiesStyle;
+		protected UndoableList					aggregates;
 		protected Settings.Settings				settings;
 		protected Modifier						modifier;
 		protected Notifier						notifier;
@@ -1525,5 +1638,7 @@ namespace Epsitec.Common.Document
 		protected System.Collections.ArrayList	readRootStack;
 		protected bool							isSurfaceRotation;
 		protected double						surfaceRotationAngle;
+		protected int							uniqueObjectId = 0;
+		protected int							uniqueAggregateId = 0;
 	}
 }

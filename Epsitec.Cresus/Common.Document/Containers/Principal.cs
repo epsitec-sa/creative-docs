@@ -13,6 +13,7 @@ namespace Epsitec.Common.Document.Containers
 		public Principal(Document document) : base(document)
 		{
 			this.CreateSelectorToolBar();
+			this.CreateAggregateToolBar();
 			this.CreateSelectorPanel();
 
 			this.detailButton = new CheckButton();
@@ -49,6 +50,8 @@ namespace Epsitec.Common.Document.Containers
 		{
 			if ( disposing )
 			{
+				this.aggregateCombo.TextChanged -= new EventHandler(this.HandleAggregateComboChanged);
+				this.aggregateCombo.ClosedCombo -= new EventHandler(this.HandleAggregateClosedCombo);
 				this.selectorName.TextChanged -= new EventHandler(this.HandleSelectorNameChanged);
 				this.selectorName.OpeningCombo -= new CancelEventHandler(this.HandleSelectorNameOpeningCombo);
 				this.selectorName.ClosedCombo -= new EventHandler(this.HandleSelectorNameClosedCombo);
@@ -86,22 +89,22 @@ namespace Epsitec.Common.Document.Containers
 
 			System.Diagnostics.Debug.Assert(this.selectorToolBar.CommandDispatcher != null);
 			
-			this.selectorAuto = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorAuto.icon");
+			this.selectorAuto = new IconButton(Misc.Icon("SelectorAuto"));
 			this.selectorToolBar.Items.Add(this.selectorAuto);
 			this.selectorAuto.Command = "SelectorAuto";
 			ToolTip.Default.SetToolTip(this.selectorAuto, Res.Strings.Container.Principal.Button.Auto);
 			
-			this.selectorIndividual = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorIndividual.icon");
+			this.selectorIndividual = new IconButton(Misc.Icon("SelectorIndividual"));
 			this.selectorToolBar.Items.Add(this.selectorIndividual);
 			this.selectorIndividual.Command = "SelectorIndividual";
 			ToolTip.Default.SetToolTip(this.selectorIndividual, Res.Strings.Container.Principal.Button.Individual);
 			
-			this.selectorZoom = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorZoom.icon");
+			this.selectorZoom = new IconButton(Misc.Icon("SelectorZoom"));
 			this.selectorToolBar.Items.Add(this.selectorZoom);
 			this.selectorZoom.Command = "SelectorZoom";
 			ToolTip.Default.SetToolTip(this.selectorZoom, Res.Strings.Container.Principal.Button.Zoom);
 			
-			this.selectorStretch = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorStretch.icon");
+			this.selectorStretch = new IconButton(Misc.Icon("SelectorStretch"));
 			this.selectorToolBar.Items.Add(this.selectorStretch);
 			this.selectorStretch.Command = "SelectorStretch";
 			this.selectorStretch.Name = "SelectorStretch";
@@ -118,27 +121,82 @@ namespace Epsitec.Common.Document.Containers
 
 			this.selectorToolBar.Items.Add(new IconSeparator());
 			
-			this.selectorTotal = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectTotal.icon");
+			this.selectorTotal = new IconButton(Misc.Icon("SelectTotal"));
 			this.selectorToolBar.Items.Add(this.selectorTotal);
 			this.selectorTotal.Command = "SelectTotal";
 			ToolTip.Default.SetToolTip(this.selectorTotal, Res.Strings.Container.Principal.Button.Total);
 			
-			this.selectorPartial = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectPartial.icon");
+			this.selectorPartial = new IconButton(Misc.Icon("SelectPartial"));
 			this.selectorToolBar.Items.Add(this.selectorPartial);
 			this.selectorPartial.Command = "SelectPartial";
 			ToolTip.Default.SetToolTip(this.selectorPartial, Res.Strings.Container.Principal.Button.Partial);
 
 			this.selectorToolBar.Items.Add(new IconSeparator());
 			
-			this.selectorAdaptLine = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorAdaptLine.icon");
+			this.selectorAdaptLine = new IconButton(Misc.Icon("SelectorAdaptLine"));
 			this.selectorToolBar.Items.Add(this.selectorAdaptLine);
 			this.selectorAdaptLine.Command = "SelectorAdaptLine";
 			ToolTip.Default.SetToolTip(this.selectorAdaptLine, Res.Strings.Container.Principal.Button.AdaptLine);
 			
-			this.selectorAdaptText = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorAdaptText.icon");
+			this.selectorAdaptText = new IconButton(Misc.Icon("SelectorAdaptText"));
 			this.selectorToolBar.Items.Add(this.selectorAdaptText);
 			this.selectorAdaptText.Command = "SelectorAdaptText";
 			ToolTip.Default.SetToolTip(this.selectorAdaptText, Res.Strings.Container.Principal.Button.AdaptText);
+		}
+
+		// Crée la toolbar pour les agrégats.
+		protected void CreateAggregateToolBar()
+		{
+			this.aggregateToolBar = new HToolBar(this);
+			this.aggregateToolBar.Dock = DockStyle.Top;
+			this.aggregateToolBar.DockMargins = new Margins(0, 0, 0, 5);
+
+			System.Diagnostics.Debug.Assert(this.aggregateToolBar.CommandDispatcher != null);
+
+			StaticText st = new StaticText(this.aggregateToolBar);
+			st.Width = 30;
+			st.Dock = DockStyle.Left;
+			st.Text = Res.Strings.Container.Principal.Button.AggregateLabel;
+
+			this.aggregateCombo = new Widgets.AggregateCombo(this.aggregateToolBar);
+			this.aggregateCombo.Document = this.document;
+			this.aggregateCombo.IsDeep = true;
+			this.aggregateCombo.Width = 135;
+			this.aggregateCombo.Dock = DockStyle.Left;
+			this.aggregateCombo.DockMargins = new Margins(0, 0, 1, 1);
+			this.aggregateCombo.TextChanged += new EventHandler(this.HandleAggregateComboChanged);
+			this.aggregateCombo.ClosedCombo += new EventHandler(this.HandleAggregateClosedCombo);
+			ToolTip.Default.SetToolTip(this.aggregateCombo, Res.Strings.Container.Principal.Button.AggregateCombo);
+			
+			this.aggregateNew3 = new IconButton(Misc.Icon("AggregateNew3"));
+			this.aggregateNew3.Pressed += new MessageEventHandler(this.HandleAggregateNew3);
+			this.aggregateToolBar.Items.Add(this.aggregateNew3);
+			ToolTip.Default.SetToolTip(this.aggregateNew3, Res.Strings.Action.AggregateNew3);
+			
+			this.aggregateNewAll = new IconButton(Misc.Icon("AggregateNewAll"));
+			this.aggregateNewAll.Pressed += new MessageEventHandler(this.HandleAggregateNewAll);
+			this.aggregateToolBar.Items.Add(this.aggregateNewAll);
+			ToolTip.Default.SetToolTip(this.aggregateNewAll, Res.Strings.Action.AggregateNewAll);
+			
+			this.aggregateFree = new IconButton(Misc.Icon("AggregateFree"));
+			this.aggregateFree.Pressed += new MessageEventHandler(this.HandleAggregateFree);
+			this.aggregateToolBar.Items.Add(this.aggregateFree);
+			ToolTip.Default.SetToolTip(this.aggregateFree, Res.Strings.Action.AggregateFree);
+		}
+
+		// Met à jour les boutons des agrégats.
+		protected void UpdateAggregate()
+		{
+			string name = this.document.Modifier.AggregateGetSelectedName();
+
+			this.ignoreChanged = true;
+			this.aggregateCombo.Text = name;
+			this.aggregateCombo.SelectAll();
+			this.ignoreChanged = false;
+
+			this.aggregateNew3.SetEnabled(name == "");
+			this.aggregateNewAll.SetEnabled(name == "" );
+			this.aggregateFree.SetEnabled(name != "" );
 		}
 
 		// Crée le panneau pour les sélections.
@@ -210,25 +268,34 @@ namespace Epsitec.Common.Document.Containers
 			if ( this.document.Modifier.Tool == "Select" ||
 				 this.document.Modifier.Tool == "Global" )
 			{
+				if ( this.document.Modifier.TotalSelected == 0 )
+				{
+					this.aggregateToolBar.Hide();
+				}
+				else
+				{
+					this.aggregateToolBar.Show();
+				}
+
 				this.selectorToolBar.Show();
 				this.selectorPanel.SetVisible(this.document.Modifier.NamesExist);
-
-#if false
-				SelectorType sType = viewer.SelectorType;
-				this.selectorAuto.ActiveState =       (sType == SelectorType.Auto      ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				this.selectorIndividual.ActiveState = (sType == SelectorType.Individual) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				this.selectorZoom.ActiveState =       (sType == SelectorType.Zoomer    ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				this.selectorStretch.ActiveState =    (sType == SelectorType.Stretcher ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-
-				this.selectorTotal.ActiveState   = !viewer.PartialSelect ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				this.selectorPartial.ActiveState =  viewer.PartialSelect ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-#endif
 			}
 			else
 			{
+				if ( this.document.Modifier.IsTool )
+				{
+					this.aggregateToolBar.Hide();
+				}
+				else
+				{
+					this.aggregateToolBar.Show();
+				}
+
 				this.selectorToolBar.Hide();
 				this.selectorPanel.Hide();
 			}
+
+			this.UpdateAggregate();
 
 			this.detailButton.Parent = null;
 
@@ -473,6 +540,41 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
+		// Texte des agrégats changé.
+		private void HandleAggregateComboChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			this.document.Modifier.AggregateChangeName(this.aggregateCombo.Text);
+		}
+
+		// Combo des agrégats fermé.
+		private void HandleAggregateClosedCombo(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			int sel = this.aggregateCombo.SelectedIndex;
+			if ( sel == -1 )  return;
+			Properties.Aggregate agg = this.document.Aggregates[sel] as Properties.Aggregate;
+			this.document.Modifier.AggregateUse(agg);
+		}
+
+		private void HandleAggregateNew3(object sender, MessageEventArgs e)
+		{
+			string name = this.aggregateCombo.Text;
+			this.document.Modifier.AggregateNew3(10000, name, false);
+		}
+
+		private void HandleAggregateNewAll(object sender, MessageEventArgs e)
+		{
+			string name = this.aggregateCombo.Text;
+			this.document.Modifier.AggregateNewAll(10000, name, false);
+		}
+
+		private void HandleAggregateFree(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.AggregateFree();
+		}
+
+
 		// Construit le menu des types de stretch.
 		public VMenu CreateStretchTypeMenu(MessageEventHandler message)
 		{
@@ -509,11 +611,11 @@ namespace Epsitec.Common.Document.Containers
 		// Retourne l'icône à utiliser pour un type de déformation.
 		protected static string GetSelectorTypeStretchIcon(SelectorTypeStretch type)
 		{
-			if ( type == SelectorTypeStretch.Free      )  return "manifest:Epsitec.App.DocumentEditor.Images.SelectorStretch.icon";
-			if ( type == SelectorTypeStretch.ParallelH )  return "manifest:Epsitec.App.DocumentEditor.Images.SelectorStretchParallelH.icon";
-			if ( type == SelectorTypeStretch.ParallelV )  return "manifest:Epsitec.App.DocumentEditor.Images.SelectorStretchParallelV.icon";
-			if ( type == SelectorTypeStretch.TrapezeH  )  return "manifest:Epsitec.App.DocumentEditor.Images.SelectorStretchTrapezeH.icon";
-			if ( type == SelectorTypeStretch.TrapezeV  )  return "manifest:Epsitec.App.DocumentEditor.Images.SelectorStretchTrapezeV.icon";
+			if ( type == SelectorTypeStretch.Free      )  return Misc.Icon("SelectorStretch");
+			if ( type == SelectorTypeStretch.ParallelH )  return Misc.Icon("SelectorStretchParallelH");
+			if ( type == SelectorTypeStretch.ParallelV )  return Misc.Icon("SelectorStretchParallelV");
+			if ( type == SelectorTypeStretch.TrapezeH  )  return Misc.Icon("SelectorStretchTrapezeH");
+			if ( type == SelectorTypeStretch.TrapezeV  )  return Misc.Icon("SelectorStretchTrapezeV");
 			return "";
 		}
 
@@ -530,12 +632,20 @@ namespace Epsitec.Common.Document.Containers
 		protected Panel							selectorPanel;
 		protected TextFieldCombo				selectorName;
 		protected Button						selectorGo;
+
+		protected HToolBar						aggregateToolBar;
+		protected Widgets.AggregateCombo		aggregateCombo;
+		protected IconButton					aggregateNew3;
+		protected IconButton					aggregateNewAll;
+		protected IconButton					aggregateFree;
+
 		protected CheckButton					detailButton;
 		protected Scrollable					scrollable;
 		protected ColorSelector					colorSelector;
 		protected Panels.Abstract				originColorPanel = null;
 		protected Properties.Type				originColorType = Properties.Type.None;
 		protected int							originColorRank = -1;
+
 		protected bool							ignoreColorChanged = false;
 		protected bool							ignoreChanged = false;
 	}

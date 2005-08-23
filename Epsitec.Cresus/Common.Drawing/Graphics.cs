@@ -20,6 +20,7 @@ namespace Epsitec.Common.Drawing
 			this.pixmap     = new Pixmap ();
 			this.rasterizer = new Common.Drawing.Rasterizer ();
 			this.transform  = new Transform ();
+			this.stackColorModifier = new System.Collections.Stack();
 			
 			this.solid_renderer    = new Common.Drawing.Renderers.Solid ();
 			this.image_renderer    = new Common.Drawing.Renderers.Image ();
@@ -45,7 +46,13 @@ namespace Epsitec.Common.Drawing
 		
 		public void RenderSolid(Color color)
 		{
-			this.solid_renderer.Color = color;
+			this.Color = color;
+			this.rasterizer.Render (this.solid_renderer);
+		}
+		
+		public void FinalRenderSolid(Color color)
+		{
+			this.FinalColor = color;
 			this.rasterizer.Render (this.solid_renderer);
 		}
 		
@@ -101,7 +108,45 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public RichColor					RichColor
+		{
+			get
+			{
+				return RichColor.FromColor(this.originalColor);
+			}
+			set
+			{
+				this.originalColor = value.Basic;
+				this.FinalColor = this.GetFinalColor(value.Basic);
+			}
+		}
+		
 		public Color						Color
+		{
+			get
+			{
+				return this.originalColor;
+			}
+			set
+			{
+				this.originalColor = value;
+				this.FinalColor = this.GetFinalColor(value);
+			}
+		}
+
+		public RichColor					FinalRichColor
+		{
+			get
+			{
+				return RichColor.FromColor(this.FinalColor);
+			}
+			set
+			{
+				this.FinalColor = value.Basic;
+			}
+		}
+		
+		public Color						FinalColor
 		{
 			get
 			{
@@ -112,6 +157,50 @@ namespace Epsitec.Common.Drawing
 				this.SolidRenderer.Color = value;
 			}
 		}
+
+		public void PushColorModifier(ColorModifier method)
+		{
+			this.stackColorModifier.Push(method);
+		}
+
+		public ColorModifier PopColorModifier()
+		{
+			return this.stackColorModifier.Pop() as ColorModifier;
+		}
+
+		public System.Collections.Stack		StackColorModifier
+		{
+			get
+			{
+				return this.stackColorModifier;
+			}
+			set
+			{
+				this.stackColorModifier = value;
+			}
+		}
+
+		public RichColor GetFinalColor(RichColor color)
+		{
+			foreach ( ColorModifier method in this.stackColorModifier )
+			{
+				method(ref color);
+			}
+			return color;
+		}
+		
+		public Color GetFinalColor(Color color)
+		{
+			if ( this.stackColorModifier.Count == 0 )  return color;
+
+			RichColor rich = RichColor.FromColor(color);
+			foreach ( ColorModifier method in this.stackColorModifier )
+			{
+				method(ref rich);
+			}
+			return rich.Basic;
+		}
+
 		
 		public FillMode						FillMode
 		{
@@ -124,7 +213,7 @@ namespace Epsitec.Common.Drawing
 				this.Rasterizer.FillMode = value;
 			}
 		}
-		
+
 		public Drawing.Rasterizer			Rasterizer
 		{
 			get { return this.rasterizer; }
@@ -865,7 +954,7 @@ namespace Epsitec.Common.Drawing
 				this.smooth_renderer   = null;
 			}
 		}
-		
+
 		
 		private const double				AlmostInfinite = 1000000000.0;
 		
@@ -885,5 +974,8 @@ namespace Epsitec.Common.Drawing
 		
 		private double						clip_x1, clip_y1, clip_x2, clip_y2;
 		private bool						has_clip_rect;
+
+		private Color						originalColor;
+		private System.Collections.Stack	stackColorModifier;
 	}
 }

@@ -21,27 +21,22 @@ namespace Epsitec.Common.Support
 		
 		public ResourceManager(string path)
 		{
-			string save_dir = System.IO.Directory.GetCurrentDirectory ();
-			
 			this.resource_providers     = new IResourceProvider[0];
 			this.resource_provider_hash = new System.Collections.Hashtable ();
 			this.bundle_providers       = new IBundleProvider[0];
 			this.culture                = CultureInfo.CurrentCulture;
 			
-			try
+			if ((path != null) &&
+				(path.Length > 0))
 			{
-				if ((path != null) &&
-					(path.Length > 0))
-				{
-					System.IO.Directory.SetCurrentDirectory (path);
-				}
-				
-				this.InternalInitialise ();
+				this.default_path = path;
 			}
-			finally
+			else
 			{
-				System.IO.Directory.SetCurrentDirectory (save_dir);
+				this.default_path = System.IO.Directory.GetCurrentDirectory ();
 			}
+			
+			this.InternalInitialise ();
 		}
 		
 		
@@ -138,6 +133,13 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		public string							DefaultPath
+		{
+			get
+			{
+				return this.default_path;
+			}
+		}
 		
 		public bool								IsReady
 		{
@@ -754,6 +756,7 @@ namespace Epsitec.Common.Support
 		private Hashtable				resource_provider_hash;
 		private string					application_name;
 		private string					default_prefix = "file";
+		private string					default_path;
 		private IBundleProvider[]		bundle_providers;
 	}
 }

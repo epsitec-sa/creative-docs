@@ -626,14 +626,18 @@ namespace Epsitec.Common.Document
 			foreach ( Objects.Layer layer in layers )
 			{
 				Properties.ModColor modColor = layer.PropertyModColor;
-				drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
+				port.PushColorModifier(new ColorModifier(modColor.ModifyColor));
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
+				port.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
 
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
 					if ( obj.IsHide )  continue;  // objet caché ?
 					obj.DrawGeometry(port, drawingContext);
 				}
+
+				port.PopColorModifier();
+				port.PopColorModifier();
 			}
 
 			port.Transform = initialTransform;
@@ -654,8 +658,9 @@ namespace Epsitec.Common.Document
 			foreach ( Objects.Layer layer in layers )
 			{
 				Properties.ModColor modColor = layer.PropertyModColor;
-				drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
+				port.PushColorModifier(new ColorModifier(modColor.ModifyColor));
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
+				port.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
 				bool isLayerComplexPrinting = modColor.IsComplexPrinting;
 
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
@@ -698,6 +703,9 @@ namespace Epsitec.Common.Document
 						}
 					}
 				}
+
+				port.PopColorModifier();
+				port.PopColorModifier();
 			}
 
 			port.Transform = initialTransform;
@@ -748,8 +756,9 @@ namespace Epsitec.Common.Document
 			foreach ( Objects.Layer layer in layers )
 			{
 				Properties.ModColor modColor = layer.PropertyModColor;
-				drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
+				port.PushColorModifier(new ColorModifier(modColor.ModifyColor));
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
+				port.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
 
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
@@ -758,6 +767,9 @@ namespace Epsitec.Common.Document
 					obj.DrawGeometry(gfx, drawingContext);
 					if ( obj == topObject )  goto stop;
 				}
+
+				port.PopColorModifier();
+				port.PopColorModifier();
 			}
 
 			stop:
@@ -1064,14 +1076,18 @@ namespace Epsitec.Common.Document
 			foreach ( Objects.Layer layer in layers )
 			{
 				Properties.ModColor modColor = layer.PropertyModColor;
-				drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
+				gfx.PushColorModifier(new ColorModifier(modColor.ModifyColor));
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
+				gfx.PushColorModifier(new ColorModifier(drawingContext.DimmedColor));
 
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
 					if ( obj.IsHide )  continue;  // objet caché ?
 					obj.DrawGeometry(gfx, drawingContext);
 				}
+
+				gfx.PopColorModifier();
+				gfx.PopColorModifier();
 			}
 
 			if ( this.document.InstallType == InstallType.Demo )

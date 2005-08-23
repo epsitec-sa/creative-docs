@@ -105,6 +105,14 @@ namespace Epsitec.Common.Document.Settings
 					this.conditionState = true;
 					break;
 
+				case "ExportPDFTarget":
+					this.text = Res.Strings.Dialog.Bool.ExportPDFTarget;
+					break;
+
+				case "ExportPDFTextCurve":
+					this.text = Res.Strings.Dialog.Bool.ExportPDFTextCurve;
+					break;
+
 				case "RepeatDuplicateMove":
 					this.text = Res.Strings.Dialog.Bool.RepeatDuplicateMove;
 					break;
@@ -173,6 +181,12 @@ namespace Epsitec.Common.Document.Settings
 
 					case "PrintDebugArea":
 						return this.document.Settings.PrintInfo.DebugArea;
+
+					case "ExportPDFTarget":
+						return this.document.Settings.ExportPDFInfo.Target;
+
+					case "ExportPDFTextCurve":
+						return this.document.Settings.ExportPDFInfo.TextCurve;
 
 					case "RepeatDuplicateMove":
 						return this.document.Modifier.RepeatDuplicateMove;
@@ -259,6 +273,14 @@ namespace Epsitec.Common.Document.Settings
 
 					case "PrintDebugArea":
 						this.document.Settings.PrintInfo.DebugArea = value;
+						break;
+
+					case "ExportPDFTarget":
+						this.document.Settings.ExportPDFInfo.Target = value;
+						break;
+
+					case "ExportPDFTextCurve":
+						this.document.Settings.ExportPDFInfo.TextCurve = value;
 						break;
 
 					case "RepeatDuplicateMove":

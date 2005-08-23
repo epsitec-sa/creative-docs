@@ -12,9 +12,6 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Shadow(Document document) : base(document)
 		{
-			this.label = new StaticText(this);
-			this.label.Alignment = ContentAlignment.MiddleLeft;
-
 			this.fieldColor = new ColorSample(this);
 			this.fieldColor.PossibleSource = true;
 			this.fieldColor.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
@@ -72,7 +69,6 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldOx.ValueChanged -= new EventHandler(this.HandleValueChanged);
 				this.fieldOy.ValueChanged -= new EventHandler(this.HandleValueChanged);
 
-				this.label = null;
 				this.fieldColor = null;
 				this.fieldRadius = null;
 				this.fieldOx = null;
@@ -91,7 +87,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return ( this.isExtendedSize ? 55 : 30 );
+				return ( this.isExtendedSize ? this.LabelHeight+55 : this.LabelHeight+30 );
 			}
 		}
 
@@ -105,8 +101,6 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			this.ignoreChanged = true;
-
-			this.label.Text = p.TextStyle;
 
 			this.fieldColor.Color = p.Color;
 			this.fieldRadius.InternalValue = (decimal) p.Radius;
@@ -142,13 +136,13 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		// Modifie la couleur d'origine.
-		public override void OriginColorChange(Drawing.Color color)
+		public override void OriginColorChange(Drawing.RichColor color)
 		{
 			this.fieldColor.Color = color;
 		}
 
 		// Donne la couleur d'origine.
-		public override Drawing.Color OriginColorGet()
+		public override Drawing.RichColor OriginColorGet()
 		{
 			return this.fieldColor.Color;
 		}
@@ -161,15 +155,10 @@ namespace Epsitec.Common.Document.Panels
 
 			if ( this.fieldColor == null )  return;
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
+			Rectangle rect = this.UsefulZone;
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			r.Right = rect.Right-50;
-			this.label.Bounds = r;
-
 			r.Left = rect.Right-50;
 			r.Right = rect.Right;
 			this.fieldColor.Bounds = r;
@@ -209,7 +198,6 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected StaticText				label;
 		protected ColorSample				fieldColor;
 		protected TextFieldReal				fieldRadius;
 		protected TextFieldReal				fieldOx;

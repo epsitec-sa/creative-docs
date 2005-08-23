@@ -15,16 +15,17 @@ namespace Epsitec.Common.Widgets.Adorner
 		// Initialise les couleurs en fonction des réglages de Windows.
 		public void RefreshColors()
 		{
-			this.colorBlack       = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorControl     = Drawing.Color.FromRGB( 53.0/255.0, 146.0/255.0, 255.0/255.0);
-			this.colorCaption     = Drawing.Color.FromRGB(187.0/255.0, 119.0/255.0,  36.0/255.0);
-			this.colorCaptionNF   = Drawing.Color.FromRGB(240.0/255.0, 204.0/255.0, 134.0/255.0);
-			this.colorCaptionText = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
-			this.colorInfo        = Drawing.Color.FromRGB(213.0/255.0, 233.0/255.0, 255.0/255.0);
-			this.colorBorder      = Drawing.Color.FromRGB( 31.0/255.0,   7.0/255.0,   8.0/255.0);
-			this.colorDisabled    = Drawing.Color.FromRGB(140.0/255.0, 140.0/255.0, 140.0/255.0);
-			this.colorError       = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
-			this.colorWindow      = Drawing.Color.FromRGB( 79.0/255.0,  74.0/255.0,  66.0/255.0);
+			this.colorBlack          = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorControl        = Drawing.Color.FromRGB( 53.0/255.0, 146.0/255.0, 255.0/255.0);
+			this.colorCaption        = Drawing.Color.FromRGB(187.0/255.0, 119.0/255.0,  36.0/255.0);
+			this.colorCaptionNF      = Drawing.Color.FromRGB(240.0/255.0, 204.0/255.0, 134.0/255.0);
+			this.colorCaptionText    = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorInfo           = Drawing.Color.FromRGB(213.0/255.0, 233.0/255.0, 255.0/255.0);
+			this.colorBorder         = Drawing.Color.FromRGB( 31.0/255.0,   7.0/255.0,   8.0/255.0);
+			this.colorDisabled       = Drawing.Color.FromRGB(140.0/255.0, 140.0/255.0, 140.0/255.0);
+			this.colorError          = Drawing.Color.FromRGB(255.0/255.0, 177.0/255.0, 177.0/255.0);
+			this.colorTextBackground = Drawing.Color.FromRGB( 63.0/255.0,  45.0/255.0,  15.0/255.0);
+			this.colorWindow         = Drawing.Color.FromRGB( 79.0/255.0,  74.0/255.0,  66.0/255.0);
 
 			this.colorBorder.A = 0.6;
 		}
@@ -216,7 +217,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.Rasterizer.AddSurface(path);
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				Drawing.Color color = this.colorBlack;
+				Drawing.Color color = Drawing.Color.FromBrightness(1.0);
 				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRGB(0.5, 0.0, 0.0);  // rouge foncé
 				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRGB(0.0, 0.3, 0.0);  // vert foncé
 				graphics.RenderSolid(color);
@@ -1934,6 +1935,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 		}
 
+		public Drawing.Color ColorTextBackground
+		{
+			get { return this.colorTextBackground; }
+		}
+
 		public Drawing.Color ColorText(WidgetState state)
 		{
 			if ( (state&WidgetState.Enabled) != 0 )
@@ -2001,6 +2007,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorBorder;
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorError;
+		protected Drawing.Color		colorTextBackground;
 		protected Drawing.Color		colorWindow;
 	}
 }

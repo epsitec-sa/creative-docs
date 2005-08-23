@@ -298,10 +298,10 @@ namespace Epsitec.Common.Document.Objects
 
 				string name = string.Format("{0}: {1}", page.ShortName, page.Name);
 
-				string icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
+				string icon = Misc.Icon("RadioNo");
 				if ( i == currentPage )
 				{
-					icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
+					icon = Misc.Icon("RadioYes");
 					name = Misc.Bold(name);
 				}
 

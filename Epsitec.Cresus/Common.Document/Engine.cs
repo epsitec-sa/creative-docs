@@ -43,7 +43,6 @@ namespace Epsitec.Common.Document
 		{
 			size   = new Size(20, 20);
 			origin = new Point(0, 0);
-			//return;  //?
 
 			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
 			{
@@ -59,19 +58,18 @@ namespace Epsitec.Common.Document
 		
 		public void Paint(Graphics graphics, Size size, byte[] data, GlyphPaintStyle style, Color color, object adornerObject)
 		{
-			//return;  //?
 			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
 			{
 				Document doc = new Document(DocumentType.Pictogram, DocumentMode.ReadOnly, InstallType.Full, null, null);
 				DrawingContext context = new DrawingContext(doc, null);
 				
-				Epsitec.Common.Widgets.IAdorner adorner = adornerObject as Epsitec.Common.Widgets.IAdorner;
-				
 				if ( doc.Read(stream, "") == "" )
 				{
-					context.Adorner = adorner;
-					context.GlyphPaintStyle = style;
-					context.UniqueColor = color;
+					this.adorner = adornerObject as Common.Widgets.IAdorner;
+					this.glyphPaintStyle = style;
+					this.uniqueColor = color;
+					graphics.PushColorModifier(new ColorModifier(this.ColorModifier));
+
 					context.ContainerSize = size;
 					context.PreviewActive = true;
 					context.LayerDrawingMode = LayerDrawingMode.ShowInactive;
@@ -82,11 +80,28 @@ namespace Epsitec.Common.Document
 					graphics.ScaleTransform(scale.X, scale.Y, 0, 0);
 					
 					doc.Paint(graphics, context, Rectangle.Infinite);
+
+					graphics.PopColorModifier();
 				}
+			}
+		}
+
+		// Adapte une couleur.
+		protected void ColorModifier(ref RichColor color)
+		{
+			if ( this.adorner != null )
+			{
+				Color basic = color.Basic;
+				this.adorner.AdaptPictogramColor(ref basic, this.glyphPaintStyle, this.uniqueColor);
+				color.Basic = basic;
 			}
 		}
 		#endregion
 		
-		protected static Engine			current;
+		protected static Engine					current;
+
+		protected Common.Widgets.IAdorner		adorner;
+		protected GlyphPaintStyle				glyphPaintStyle;
+		protected Color							uniqueColor;
 	}
 }

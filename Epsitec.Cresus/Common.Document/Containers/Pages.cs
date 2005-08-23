@@ -17,31 +17,31 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
 			System.Diagnostics.Debug.Assert(this.toolBar.CommandDispatcher != null);
 
-			this.buttonNew = new IconButton("PageNew", "manifest:Epsitec.App.DocumentEditor.Images.PageNew.icon");
+			this.buttonNew = new IconButton("PageNew", Misc.Icon("PageNew"));
 			this.toolBar.Items.Add(this.buttonNew);
 			ToolTip.Default.SetToolTip(this.buttonNew, Res.Strings.Action.PageNewLong);
 			this.Synchro(this.buttonNew);
 
-			this.buttonDuplicate = new IconButton("PageDuplicate", "manifest:Epsitec.App.DocumentEditor.Images.DuplicateItem.icon");
+			this.buttonDuplicate = new IconButton("PageDuplicate", Misc.Icon("DuplicateItem"));
 			this.toolBar.Items.Add(this.buttonDuplicate);
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, Res.Strings.Action.PageDuplicate);
 			this.Synchro(this.buttonDuplicate);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonUp = new IconButton("PageUp", "manifest:Epsitec.App.DocumentEditor.Images.Up.icon");
+			this.buttonUp = new IconButton("PageUp", Misc.Icon("Up"));
 			this.toolBar.Items.Add(this.buttonUp);
 			ToolTip.Default.SetToolTip(this.buttonUp, Res.Strings.Action.PageUp);
 			this.Synchro(this.buttonUp);
 
-			this.buttonDown = new IconButton("PageDown", "manifest:Epsitec.App.DocumentEditor.Images.Down.icon");
+			this.buttonDown = new IconButton("PageDown", Misc.Icon("Down"));
 			this.toolBar.Items.Add(this.buttonDown);
 			ToolTip.Default.SetToolTip(this.buttonDown, Res.Strings.Action.PageDown);
 			this.Synchro(this.buttonDown);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonDelete = new IconButton("PageDelete", "manifest:Epsitec.App.DocumentEditor.Images.DeleteItem.icon");
+			this.buttonDelete = new IconButton("PageDelete", Misc.Icon("DeleteItem"));
 			this.toolBar.Items.Add(this.buttonDelete);
 			ToolTip.Default.SetToolTip(this.buttonDelete, Res.Strings.Action.PageDelete);
 			this.Synchro(this.buttonDelete);
@@ -205,15 +205,26 @@ namespace Epsitec.Common.Document.Containers
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Dialog.Button.More);
 			
-			this.panelPageName = new Panels.PageName(this.document);
-			this.panelPageName.IsExtendedSize = false;
-			this.panelPageName.IsLayoutDirect = true;
-			this.panelPageName.TabIndex = 100;
-			this.panelPageName.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
-			this.panelPageName.Dock = DockStyle.Bottom;
-			this.panelPageName.DockMargins = new Margins(0, 0, 5, 0);
-			this.panelPageName.Parent = this;
 
+			this.toolBarName = new HToolBar(this);
+			this.toolBarName.Dock = DockStyle.Bottom;
+			this.toolBarName.DockMargins = new Margins(0, 0, 0, 0);
+			this.toolBarName.TabIndex = 100;
+			this.toolBarName.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+
+			StaticText st = new StaticText();
+			st.Width = 80;
+			st.Text = Res.Strings.Panel.PageName.Label.Name;
+			this.toolBarName.Items.Add(st);
+
+			this.name = new TextField();
+			this.name.Width = 140;
+			this.name.DockMargins = new Margins(0, 0, 1, 1);
+			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
+			this.toolBarName.Items.Add(this.name);
+			ToolTip.Default.SetToolTip(this.name, Res.Strings.Panel.PageName.Tooltip.Name);
+
+			
 			this.UpdateExtended();
 		}
 		
@@ -254,7 +265,7 @@ namespace Epsitec.Common.Document.Containers
 			if ( initialColumns == 0 )
 			{
 				this.table.SetWidthColumn(0, 40);
-				this.table.SetWidthColumn(1, 172);
+				this.table.SetWidthColumn(1, 177);
 			}
 
 			this.table.SetHeaderTextH(0, Res.Strings.Container.Pages.Header.Number);
@@ -303,7 +314,7 @@ namespace Epsitec.Common.Document.Containers
 		// Met à jour le panneau pour éditer la propriété sélectionnée.
 		protected void UpdatePanel()
 		{
-			this.panelPageName.UpdateValues();
+			this.UpdatePageName();
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
@@ -350,6 +361,18 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
+		// Met à jour le panneau pour éditer le nom de la page sélectionnée.
+		protected void UpdatePageName()
+		{
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			int sel = context.CurrentPage;
+			string text = this.document.Modifier.PageName(sel);
+
+			this.ignoreChanged = true;
+			this.name.Text = text;
+			this.ignoreChanged = false;
+		}
+
 
 		// Liste cliquée.
 		private void HandleTableSelectionChanged(object sender)
@@ -361,7 +384,22 @@ namespace Epsitec.Common.Document.Containers
 		// Liste double-cliquée.
 		private void HandleTableDoubleClicked(object sender, MessageEventArgs e)
 		{
-			this.panelPageName.SetDefaultFocus();
+			this.name.SelectAll();
+			this.name.Focus();
+		}
+
+		// Le nom de la page a changé.
+		private void HandleNameTextChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			int sel = context.CurrentPage;
+
+			if ( this.document.Modifier.PageName(sel) != this.name.Text )
+			{
+				this.document.Modifier.PageName(sel, this.name.Text);
+			}
 		}
 
 		// Le bouton pour étendre/réduire le panneau a été cliqué.
@@ -383,7 +421,7 @@ namespace Epsitec.Common.Document.Containers
 		// Un bouton radio a été cliqué.
 		private void HandleRadioClicked(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.PageChange);
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.PageChangeStatus);
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
@@ -435,7 +473,7 @@ namespace Epsitec.Common.Document.Containers
 		// Un bouton à cocher a été cliqué.
 		private void HandleCheckClicked(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.PageChange);
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.PageChangeStatus);
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
@@ -494,7 +532,7 @@ namespace Epsitec.Common.Document.Containers
 				Objects.Page page = doc[i] as Objects.Page;
 				if ( page.ShortName == field.Text )
 				{
-					this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.PageChange);
+					this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.PageChangeStatus);
 					Objects.Page currentPage = context.RootObject(1) as Objects.Page;
 					currentPage.MasterPageToUse = page;
 					this.document.Notifier.NotifyPagesChanged();
@@ -512,7 +550,8 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton			buttonDown;
 		protected IconButton			buttonDelete;
 		protected CellTable				table;
-		protected Panels.PageName		panelPageName;
+		protected HToolBar				toolBarName;
+		protected TextField				name;
 		protected GlyphButton			extendedButton;
 		protected Widget				panelMisc;
 

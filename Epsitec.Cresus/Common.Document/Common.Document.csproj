@@ -124,6 +124,11 @@
                     Project = "{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -434,11 +439,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Panels\LayerName.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Panels\Line.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -454,22 +454,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Panels\PageName.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Panels\Regular.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Panels\Shadow.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Panels\StyleName.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -489,12 +479,27 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "PDF\CharacterList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PDF\ComplexSurface.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "PDF\Export.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "PDF\Pattern.cs"
+                    RelPath = "PDF\FontList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PDF\ImageSurface.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -510,6 +515,11 @@
                 />
                 <File
                     RelPath = "Properties\Abstract.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\Aggregate.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -668,6 +678,36 @@
                 />
                 <File
                     RelPath = "Settings\String.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\AggregateCombo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\AggregateList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\RadioIcon.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\RadioIconGrid.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\Sample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\TextFieldLabel.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

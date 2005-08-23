@@ -12,18 +12,26 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Bool(Document document) : base(document)
 		{
-			this.button = new CheckButton(this);
-			this.button.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.button.TabIndex = 1;
-			this.button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.grid = new Widgets.RadioIconGrid(this);
+			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.grid.TabIndex = 0;
+			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.AddRadioIcon(false);
+			this.AddRadioIcon(true);
 		}
 		
+		protected void AddRadioIcon(bool type)
+		{
+			this.grid.AddRadioIcon(Properties.Bool.GetIconText(type), Properties.Bool.GetName(type), type?1:0, false);
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
-				this.button.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
-				this.button = null;
+				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
+				this.grid = null;
 			}
 			
 			base.Dispose(disposing);
@@ -39,10 +47,7 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			this.ignoreChanged = true;
-
-			this.button.Text = p.TextStyle;
-			this.button.ActiveState = p.BoolValue ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-
+			this.grid.SelectedValue = p.BoolValue ? 1 : 0;
 			this.ignoreChanged = false;
 		}
 
@@ -52,7 +57,7 @@ namespace Epsitec.Common.Document.Panels
 			Properties.Bool p = this.property as Properties.Bool;
 			if ( p == null )  return;
 
-			p.BoolValue = ( this.button.ActiveState == WidgetState.ActiveYes );
+			p.BoolValue = (this.grid.SelectedValue == 1);
 		}
 
 
@@ -61,22 +66,21 @@ namespace Epsitec.Common.Document.Panels
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.button == null )  return;
+			if ( this.grid == null )  return;
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
-			this.button.Bounds = rect;
+			Rectangle rect = this.UsefulZone;
+			rect.Inflate(1);
+			this.grid.Bounds = rect;
 		}
 		
-		// Une valeur a été changée.
-		private void HandleButtonActiveStateChanged(object sender)
+		// Le type a été changé.
+		private void HandleTypeChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
 			this.OnChanged();
 		}
 
 
-		protected CheckButton				button;
+		protected Widgets.RadioIconGrid		grid;
 	}
 }

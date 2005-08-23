@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return "manifest:Epsitec.App.DocumentEditor.Images.Surface.icon"; }
+			get { return Misc.Icon("ObjectSurface"); }
 		}
 
 
@@ -150,21 +150,29 @@ namespace Epsitec.Common.Document.Objects
 
 		
 		// Constuit les formes de l'objet.
-		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
+		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			Path surface, outline;
 			this.PathBuild(null, out surface, out outline);
 			Shape[] shapes = new Shape[2];
 
+			Properties.SurfaceType type = this.PropertySurface.SurfaceType;
+
 			// Forme de la surface.
 			shapes[0] = new Shape();
 			shapes[0].Path = surface;
-			shapes[0].SetPropertySurface(this.PropertyFillGradient);
+			shapes[0].SetPropertySurface(port, this.PropertyFillGradient);
+
+			if ( type == Properties.SurfaceType.SpiralCCW ||
+				 type == Properties.SurfaceType.SpiralCW  )
+			{
+				shapes[0].FillMode = FillMode.NonZero;
+			}
 
 			// Forme du chemin.
 			shapes[1] = new Shape();
 			shapes[1].Path = outline;
-			shapes[1].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+			shapes[1].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 
 			return shapes;
 		}

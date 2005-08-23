@@ -42,12 +42,6 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Détermine le nom de la propriété dans la liste (Lister).
-		public string GetListName()
-		{
-			return this.stringValue;
-		}
-
 		// Effectue une copie de la propriété.
 		public override void CopyTo(Abstract property)
 		{
@@ -70,6 +64,7 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Name(document);
 		}
 

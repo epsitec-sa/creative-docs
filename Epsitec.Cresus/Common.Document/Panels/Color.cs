@@ -12,9 +12,6 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Color(Document document) : base(document)
 		{
-			this.label = new StaticText(this);
-			this.label.Alignment = ContentAlignment.MiddleLeft;
-
 			this.field = new ColorSample(this);
 			this.field.PossibleSource = true;
 			this.field.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
@@ -31,7 +28,6 @@ namespace Epsitec.Common.Document.Panels
 				this.field.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.field.Changed -= new EventHandler(this.HandleFieldColorChanged);
 				this.field = null;
-				this.label = null;
 			}
 
 			base.Dispose(disposing);
@@ -47,7 +43,6 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			this.ignoreChanged = true;
-			this.label.Text = p.TextStyle;
 			this.field.Color = p.ColorValue;
 			this.ignoreChanged = false;
 		}
@@ -75,7 +70,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		// Modifie la couleur d'origine.
-		public override void OriginColorChange(Drawing.Color color)
+		public override void OriginColorChange(Drawing.RichColor color)
 		{
 			if ( this.field.Color != color )
 			{
@@ -85,7 +80,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		// Donne la couleur d'origine.
-		public override Drawing.Color OriginColorGet()
+		public override Drawing.RichColor OriginColorGet()
 		{
 			return this.field.Color;
 		}
@@ -98,15 +93,9 @@ namespace Epsitec.Common.Document.Panels
 
 			if ( this.field == null )  return;
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
+			Rectangle rect = this.UsefulZone;
 
 			Rectangle r = rect;
-			r.Right = rect.Right-50;
-			this.label.Bounds = r;
-
-			r = rect;
 			r.Left = r.Right-50;
 			this.field.Bounds = r;
 		}
@@ -129,7 +118,6 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected StaticText				label;
 		protected ColorSample				field;
 	}
 }

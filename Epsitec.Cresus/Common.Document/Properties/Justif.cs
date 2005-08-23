@@ -172,6 +172,105 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		// Donne le petit texte pour les échantillons.
+		public override string SampleText
+		{
+			get
+			{
+				if ( this.horizontal == JustifHorizontal.Left    )  return "|ab |";
+				if ( this.horizontal == JustifHorizontal.Center  )  return "| ab |";
+				if ( this.horizontal == JustifHorizontal.Right   )  return "| ab|";
+				if ( this.horizontal == JustifHorizontal.Justif  )  return "|ab|";
+				if ( this.horizontal == JustifHorizontal.All     )  return "|ab.|";
+				if ( this.horizontal == JustifHorizontal.Stretch )  return "<ab>";
+				return "|ab|";
+			}
+		}
+
+		// Retourne le nom d'un type donné.
+		public static string GetName(JustifHorizontal type)
+		{
+			string name = "";
+			switch ( type )
+			{
+				case JustifHorizontal.Left:     name = Res.Strings.Property.Justif.JustifHLeft;     break;
+				case JustifHorizontal.Center:   name = Res.Strings.Property.Justif.JustifHCenter;   break;
+				case JustifHorizontal.Right:    name = Res.Strings.Property.Justif.JustifHRight;    break;
+				case JustifHorizontal.Justif:   name = Res.Strings.Property.Justif.JustifHJustif;   break;
+				case JustifHorizontal.All:      name = Res.Strings.Property.Justif.JustifHAll;      break;
+				case JustifHorizontal.Stretch:  name = Res.Strings.Property.Justif.JustifHStretch;  break;
+			}
+			return name;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(JustifHorizontal type)
+		{
+			switch ( type )
+			{
+				case JustifHorizontal.Left:      return "JustifHLeft";
+				case JustifHorizontal.Center:    return "JustifHCenter";
+				case JustifHorizontal.Right:     return "JustifHRight";
+				case JustifHorizontal.Justif:    return "JustifHJustif";
+				case JustifHorizontal.All:       return "JustifHAll";
+				case JustifHorizontal.Stretch:   return "JustifHStretch";
+			}
+			return "";
+		}
+
+		// Retourne le nom d'un type donné.
+		public static string GetName(JustifVertical type)
+		{
+			string name = "";
+			switch ( type )
+			{
+				case JustifVertical.Top:     name = Res.Strings.Property.Justif.JustifVTop;     break;
+				case JustifVertical.Center:  name = Res.Strings.Property.Justif.JustifVCenter;  break;
+				case JustifVertical.Bottom:  name = Res.Strings.Property.Justif.JustifVBottom;  break;
+			}
+			return name;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(JustifVertical type)
+		{
+			switch ( type )
+			{
+				case JustifVertical.Top:     return "JustifVTop";
+				case JustifVertical.Center:  return "JustifVCenter";
+				case JustifVertical.Bottom:  return "JustifVBottom";
+			}
+			return "";
+		}
+
+		// Retourne le nom d'un type donné.
+		public static string GetName(JustifOrientation type)
+		{
+			string name = "";
+			switch ( type )
+			{
+				case JustifOrientation.LeftToRight:  name = Res.Strings.Property.Justif.JustifOLR;  break;
+				case JustifOrientation.BottomToTop:  name = Res.Strings.Property.Justif.JustifOBT;  break;
+				case JustifOrientation.RightToLeft:  name = Res.Strings.Property.Justif.JustifORL;  break;
+				case JustifOrientation.TopToBottom:  name = Res.Strings.Property.Justif.JustifOTB;  break;
+			}
+			return name;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(JustifOrientation type)
+		{
+			switch ( type )
+			{
+				case JustifOrientation.LeftToRight:  return "JustifOLR";
+				case JustifOrientation.BottomToTop:  return "JustifOBT";
+				case JustifOrientation.RightToLeft:  return "JustifORL";
+				case JustifOrientation.TopToBottom:  return "JustifOTB";
+			}
+			return "";
+		}
+
+
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
@@ -210,6 +309,7 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Justif(document);
 		}
 

@@ -21,11 +21,11 @@ namespace Epsitec.Common.Drawing
 	{
 		public ColorCollection()
 		{
-			this.colors = new Color[ColorCollection.DefaultCount];
+			this.colors = new RichColor[ColorCollection.DefaultCount];
 			
 			for ( int i=0 ; i<ColorCollection.DefaultCount ; i++ )
 			{
-				this.colors[i] = Color.Empty;
+				this.colors[i] = RichColor.Empty;
 			}
 			
 			this.Initialise(ColorCollectionType.Default);
@@ -42,128 +42,129 @@ namespace Epsitec.Common.Drawing
 			switch (type)
 			{
 				case ColorCollectionType.Gray:
-					
-					this.colors[0+8*0] = Color.FromARGB(0.0, 1.0, 1.0, 1.0);
-					this.colors[0+8*1] = Color.FromARGB(1.0, 1.0, 0.0, 0.0);
-					this.colors[0+8*2] = Color.FromARGB(1.0, 0.0, 1.0, 0.0);
-					this.colors[0+8*3] = Color.FromARGB(1.0, 0.0, 0.0, 1.0);
+
+					this.colors[0+8*0] = RichColor.FromARGB(0.0, 1.0, 1.0, 1.0);
+					this.colors[0+8*1] = RichColor.FromARGB(1.0, 1.0, 0.0, 0.0);
+					this.colors[0+8*2] = RichColor.FromARGB(1.0, 0.0, 1.0, 0.0);
+					this.colors[0+8*3] = RichColor.FromARGB(1.0, 0.0, 0.0, 1.0);
 
 					for ( int i=0 ; i<28 ; i++ )
 					{
 						int j = 1 + (i/4) + (i%4)*8;
-						this.colors[j] = Color.FromBrightness(1.0-(i/27.0));
+						this.colors[j] = RichColor.FromGray(1.0-i/27.0);
 					}
 					
 					break;
 			
 				case ColorCollectionType.Rainbow:
-					
-					this.colors[0+8*0] = Color.FromARGB(0.0, 1.00, 1.00, 1.00);
-					this.colors[0+8*1] = Color.FromARGB(1.0, 1.00, 1.00, 1.00);
-					this.colors[0+8*2] = Color.FromARGB(1.0, 0.83, 0.83, 0.83);
-					this.colors[0+8*3] = Color.FromARGB(1.0, 0.67, 0.67, 0.67);
-					this.colors[1+8*0] = Color.FromARGB(1.0, 0.50, 0.50, 0.50);
-					this.colors[1+8*1] = Color.FromARGB(1.0, 0.33, 0.33, 0.33);
-					this.colors[1+8*2] = Color.FromARGB(1.0, 0.17, 0.17, 0.17);
-					this.colors[1+8*3] = Color.FromARGB(1.0, 0.00, 0.00, 0.00);
+
+					this.colors[0+8*0] = RichColor.FromAGray(0.0, 1.00);
+					this.colors[0+8*1] = RichColor.FromAGray(1.0, 1.00);
+					this.colors[0+8*2] = RichColor.FromAGray(1.0, 0.83);
+					this.colors[0+8*3] = RichColor.FromAGray(1.0, 0.67);
+					this.colors[1+8*0] = RichColor.FromAGray(1.0, 0.50);
+					this.colors[1+8*1] = RichColor.FromAGray(1.0, 0.33);
+					this.colors[1+8*2] = RichColor.FromAGray(1.0, 0.17);
+					this.colors[1+8*3] = RichColor.FromAGray(1.0, 0.00);
 
 					for ( int i=0 ; i<24 ; i++ )
 					{
 						int j = 2 + (i/4) + (i%4)*8;
 						double h = 1.0-(i/24.0);
-						this.colors[j] = Color.FromHSV(h*360, 1.0, 1.0);
+						this.colors[j] = RichColor.FromHSV(h*360, 1.0, 1.0);
 					}
 					
 					break;
 			
 				case ColorCollectionType.Light:
-					this.colors[0+8*0] = Color.FromARGB(0.0, 1.00, 1.00, 1.00);
-					this.colors[0+8*1] = Color.FromARGB(1.0, 1.00, 1.00, 1.00);
-					this.colors[0+8*2] = Color.FromARGB(1.0, 0.83, 0.83, 0.83);
-					this.colors[0+8*3] = Color.FromARGB(1.0, 0.67, 0.67, 0.67);
-					this.colors[1+8*0] = Color.FromARGB(1.0, 0.50, 0.50, 0.50);
-					this.colors[1+8*1] = Color.FromARGB(1.0, 0.33, 0.33, 0.33);
-					this.colors[1+8*2] = Color.FromARGB(1.0, 0.17, 0.17, 0.17);
-					this.colors[1+8*3] = Color.FromARGB(1.0, 0.00, 0.00, 0.00);
+
+					this.colors[0+8*0] = RichColor.FromAGray(0.0, 1.00);
+					this.colors[0+8*1] = RichColor.FromAGray(1.0, 1.00);
+					this.colors[0+8*2] = RichColor.FromAGray(1.0, 0.83);
+					this.colors[0+8*3] = RichColor.FromAGray(1.0, 0.67);
+					this.colors[1+8*0] = RichColor.FromAGray(1.0, 0.50);
+					this.colors[1+8*1] = RichColor.FromAGray(1.0, 0.33);
+					this.colors[1+8*2] = RichColor.FromAGray(1.0, 0.17);
+					this.colors[1+8*3] = RichColor.FromAGray(1.0, 0.00);
 
 					for ( int i=0 ; i<24 ; i++ )
 					{
 						int j = 2 + (i/4) + (i%4)*8;
 						double h = 1.0-(i/24.0);
-						this.colors[j] = Color.FromHSV(h*360, 0.3, 1.0);
+						this.colors[j] = RichColor.FromHSV(h*360, 0.3, 1.0);
 					}
 					
 					break;
 			
 				case ColorCollectionType.Dark:
-					
-					this.colors[0+8*0] = Color.FromARGB(0.0, 1.00, 1.00, 1.00);
-					this.colors[0+8*1] = Color.FromARGB(1.0, 1.00, 1.00, 1.00);
-					this.colors[0+8*2] = Color.FromARGB(1.0, 0.83, 0.83, 0.83);
-					this.colors[0+8*3] = Color.FromARGB(1.0, 0.67, 0.67, 0.67);
-					this.colors[1+8*0] = Color.FromARGB(1.0, 0.50, 0.50, 0.50);
-					this.colors[1+8*1] = Color.FromARGB(1.0, 0.33, 0.33, 0.33);
-					this.colors[1+8*2] = Color.FromARGB(1.0, 0.17, 0.17, 0.17);
-					this.colors[1+8*3] = Color.FromARGB(1.0, 0.00, 0.00, 0.00);
+
+					this.colors[0+8*0] = RichColor.FromAGray(0.0, 1.00);
+					this.colors[0+8*1] = RichColor.FromAGray(1.0, 1.00);
+					this.colors[0+8*2] = RichColor.FromAGray(1.0, 0.83);
+					this.colors[0+8*3] = RichColor.FromAGray(1.0, 0.67);
+					this.colors[1+8*0] = RichColor.FromAGray(1.0, 0.50);
+					this.colors[1+8*1] = RichColor.FromAGray(1.0, 0.33);
+					this.colors[1+8*2] = RichColor.FromAGray(1.0, 0.17);
+					this.colors[1+8*3] = RichColor.FromAGray(1.0, 0.00);
 
 					for ( int i=0 ; i<24 ; i++ )
 					{
 						int j = 2 + (i/4) + (i%4)*8;
 						double h = 1.0-(i/24.0);
-						this.colors[j] = Color.FromHSV(h*360, 1.0, 0.7);
+						this.colors[j] = RichColor.FromHSV(h*360, 1.0, 0.7);
 					}
 					
 					break;
 				
 				case ColorCollectionType.Default:
 					
-					this.colors[0*8+0] = Color.FromARGB(0.0, 1.0, 1.0, 1.0);
-					this.colors[0*8+1] = Color.FromARGB(1.0, 1.0, 0.7, 0.7);
-					this.colors[0*8+2] = Color.FromARGB(1.0, 1.0, 1.0, 0.7);
-					this.colors[0*8+3] = Color.FromARGB(1.0, 0.7, 1.0, 0.7);
-					this.colors[0*8+4] = Color.FromARGB(1.0, 0.7, 1.0, 1.0);
-					this.colors[0*8+5] = Color.FromARGB(1.0, 0.7, 0.7, 1.0);
-					this.colors[0*8+6] = Color.FromARGB(1.0, 1.0, 0.7, 1.0);
-					this.colors[0*8+7] = Color.FromARGB(0.2, 0.5, 0.5, 0.5);
+					this.colors[0*8+0] = RichColor.FromAGray(0.0, 1.0);
+					this.colors[0*8+1] = RichColor.FromARGB(1.0, 1.0, 0.7, 0.7);
+					this.colors[0*8+2] = RichColor.FromARGB(1.0, 1.0, 1.0, 0.7);
+					this.colors[0*8+3] = RichColor.FromARGB(1.0, 0.7, 1.0, 0.7);
+					this.colors[0*8+4] = RichColor.FromARGB(1.0, 0.7, 1.0, 1.0);
+					this.colors[0*8+5] = RichColor.FromARGB(1.0, 0.7, 0.7, 1.0);
+					this.colors[0*8+6] = RichColor.FromARGB(1.0, 1.0, 0.7, 1.0);
+					this.colors[0*8+7] = RichColor.FromAGray(0.2, 0.5);
 
-					this.colors[1*8+0] = Color.FromARGB(0.3, 1.0, 1.0, 1.0);
-					this.colors[1*8+1] = Color.FromARGB(1.0, 1.0, 0.0, 0.0);
-					this.colors[1*8+2] = Color.FromARGB(1.0, 1.0, 1.0, 0.0);
-					this.colors[1*8+3] = Color.FromARGB(1.0, 0.0, 1.0, 0.0);
-					this.colors[1*8+4] = Color.FromARGB(1.0, 0.0, 1.0, 1.0);
-					this.colors[1*8+5] = Color.FromARGB(1.0, 0.0, 0.0, 1.0);
-					this.colors[1*8+6] = Color.FromARGB(1.0, 1.0, 0.0, 1.0);
-					this.colors[1*8+7] = Color.FromARGB(0.5, 0.5, 0.5, 0.5);
+					this.colors[1*8+0] = RichColor.FromAGray(0.3, 1.0);
+					this.colors[1*8+1] = RichColor.FromARGB(1.0, 1.0, 0.0, 0.0);
+					this.colors[1*8+2] = RichColor.FromARGB(1.0, 1.0, 1.0, 0.0);
+					this.colors[1*8+3] = RichColor.FromARGB(1.0, 0.0, 1.0, 0.0);
+					this.colors[1*8+4] = RichColor.FromARGB(1.0, 0.0, 1.0, 1.0);
+					this.colors[1*8+5] = RichColor.FromARGB(1.0, 0.0, 0.0, 1.0);
+					this.colors[1*8+6] = RichColor.FromARGB(1.0, 1.0, 0.0, 1.0);
+					this.colors[1*8+7] = RichColor.FromAGray(0.5, 0.5);
 
-					this.colors[2*8+0] = Color.FromARGB(0.6, 1.0, 1.0, 1.0);
-					this.colors[2*8+1] = Color.FromARGB(1.0, 0.7, 0.0, 0.0);
-					this.colors[2*8+2] = Color.FromARGB(1.0, 0.7, 0.7, 0.0);
-					this.colors[2*8+3] = Color.FromARGB(1.0, 0.0, 0.7, 0.0);
-					this.colors[2*8+4] = Color.FromARGB(1.0, 0.0, 0.7, 0.7);
-					this.colors[2*8+5] = Color.FromARGB(1.0, 0.0, 0.0, 0.7);
-					this.colors[2*8+6] = Color.FromARGB(1.0, 0.7, 0.0, 0.7);
-					this.colors[2*8+7] = Color.FromARGB(0.8, 0.5, 0.5, 0.5);
+					this.colors[2*8+0] = RichColor.FromAGray(0.6, 1.0);
+					this.colors[2*8+1] = RichColor.FromARGB(1.0, 0.7, 0.0, 0.0);
+					this.colors[2*8+2] = RichColor.FromARGB(1.0, 0.7, 0.7, 0.0);
+					this.colors[2*8+3] = RichColor.FromARGB(1.0, 0.0, 0.7, 0.0);
+					this.colors[2*8+4] = RichColor.FromARGB(1.0, 0.0, 0.7, 0.7);
+					this.colors[2*8+5] = RichColor.FromARGB(1.0, 0.0, 0.0, 0.7);
+					this.colors[2*8+6] = RichColor.FromARGB(1.0, 0.7, 0.0, 0.7);
+					this.colors[2*8+7] = RichColor.FromAGray(0.8, 0.5);
 
-					this.colors[3*8+0] = Color.FromARGB(1.0, 1.0, 1.0, 1.0);
-					this.colors[3*8+1] = Color.FromARGB(1.0, 0.9, 0.9, 0.9);
-					this.colors[3*8+2] = Color.FromARGB(1.0, 0.8, 0.8, 0.8);
-					this.colors[3*8+3] = Color.FromARGB(1.0, 0.7, 0.7, 0.7);
-					this.colors[3*8+4] = Color.FromARGB(1.0, 0.6, 0.6, 0.6);
-					this.colors[3*8+5] = Color.FromARGB(1.0, 0.5, 0.5, 0.5);
-					this.colors[3*8+6] = Color.FromARGB(1.0, 0.4, 0.4, 0.4);
-					this.colors[3*8+7] = Color.FromARGB(1.0, 0.0, 0.0, 0.0);
+					this.colors[3*8+0] = RichColor.FromGray(1.0);
+					this.colors[3*8+1] = RichColor.FromGray(0.9);
+					this.colors[3*8+2] = RichColor.FromGray(0.8);
+					this.colors[3*8+3] = RichColor.FromGray(0.7);
+					this.colors[3*8+4] = RichColor.FromGray(0.6);
+					this.colors[3*8+5] = RichColor.FromGray(0.5);
+					this.colors[3*8+6] = RichColor.FromGray(0.4);
+					this.colors[3*8+7] = RichColor.FromGray(0.0);
 					
 					break;
 				
 				default:
-					throw new System.ArgumentOutOfRangeException ("type", type, "Type not supported.");
+					throw new System.ArgumentOutOfRangeException("type", type, "Type not supported.");
 			}
 			
 			this.OnChanged();
 		}
 		
 
-		public Color							this[int index]
+		public RichColor						this[int index]
 		{
 			get
 			{
@@ -173,7 +174,7 @@ namespace Epsitec.Common.Drawing
 				}
 				else
 				{
-					return Color.Empty;
+					return RichColor.Empty;
 				}
 			}
 			
@@ -218,7 +219,7 @@ namespace Epsitec.Common.Drawing
 		
 		void System.Collections.ICollection.CopyTo(System.Array array, int index)
 		{
-			this.colors.CopyTo (array, index);
+			this.colors.CopyTo(array, index);
 		}
 		#endregion
 		
@@ -231,7 +232,7 @@ namespace Epsitec.Common.Drawing
 		
 		public void CopyTo(ColorCollection dst)
 		{
-			this.colors.CopyTo (dst.colors, 0);
+			this.colors.CopyTo(dst.colors, 0);
 			dst.OnChanged();
 		}
 
@@ -241,16 +242,27 @@ namespace Epsitec.Common.Drawing
 		{
 			int revision = info.GetInt32("Rev");
 			
-			System.Diagnostics.Debug.Assert (revision == 0);
-			
-			this.colors = (Color[]) info.GetValue("Colors", typeof(Color[]));
+			if ( revision == 0 )
+			{
+				Color[] temp = (Color[]) info.GetValue("Colors", typeof(Color[]));
+
+				this.colors = new RichColor[ColorCollection.DefaultCount];
+				for ( int i=0 ; i<ColorCollection.DefaultCount ; i++ )
+				{
+					this.colors[i] = new RichColor(temp[i]);
+				}
+			}
+			else
+			{
+				this.colors = (RichColor[]) info.GetValue("Colors", typeof(RichColor[]));
+			}
 			
 			this.OnChanged();
 		}
 		
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			info.AddValue("Rev", 0);
+			info.AddValue("Rev", 1);
 			info.AddValue("Colors", this.colors);
 		}
 
@@ -268,7 +280,7 @@ namespace Epsitec.Common.Drawing
 
 		public event Support.EventHandler		Changed;
 
-		protected Color[]						colors;
+		protected RichColor[]					colors;
 		protected const int						DefaultCount = 32;
 	}
 }

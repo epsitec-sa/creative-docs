@@ -2145,6 +2145,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 		}
 
+		public Drawing.Color ColorTextBackground
+		{
+			get { return Drawing.Color.FromBrightness(1.0); }
+		}
+
 		public Drawing.Color ColorText(WidgetState state)
 		{
 			if ( (state&WidgetState.Enabled) != 0 )

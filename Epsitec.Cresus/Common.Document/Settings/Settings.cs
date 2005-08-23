@@ -86,6 +86,10 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultDouble("Export", "ImageAA");
 
 			this.CreateDefaultRange("ExportPDF", "ExportPDFRange");
+			this.CreateDefaultDouble("ExportPDF", "ExportPDFDebord");
+			this.CreateDefaultBool("ExportPDF", "ExportPDFTarget");
+			this.CreateDefaultBool("ExportPDF", "ExportPDFTextCurve");
+			this.CreateDefaultInteger("ExportPDF", "ExportPDFColorConversion");
 		}
 
 		protected void CreateDefaultBool(string dialog, string name)

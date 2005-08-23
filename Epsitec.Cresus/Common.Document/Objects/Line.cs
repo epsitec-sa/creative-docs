@@ -43,7 +43,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return "manifest:Epsitec.App.DocumentEditor.Images.Line.icon"; }
+			get { return Misc.Icon("ObjectLine"); }
 		}
 
 
@@ -181,7 +181,7 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Constuit les formes de l'objet.
-		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
+		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			Path pathStart, pathEnd, pathLine;
 			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Document.Objects
 			// Forme du chemin principal.
 			shapes[i] = new Shape();
 			shapes[i].Path = pathLine;
-			shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 			i ++;
 
 			// Forme de la surface de départ.
@@ -210,7 +210,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				shapes[i] = new Shape();
 				shapes[i].Path = pathStart;
-				shapes[i].SetPropertySurface(this.PropertyLineColor);
+				shapes[i].SetPropertySurface(port, this.PropertyLineColor);
+				shapes[i].IsMisc = true;
 				i ++;
 			}
 
@@ -219,7 +220,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				shapes[i] = new Shape();
 				shapes[i].Path = pathEnd;
-				shapes[i].SetPropertySurface(this.PropertyLineColor);
+				shapes[i].SetPropertySurface(port, this.PropertyLineColor);
+				shapes[i].IsMisc = true;
 				i ++;
 			}
 
@@ -228,7 +230,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				shapes[i] = new Shape();
 				shapes[i].Path = pathStart;
-				shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].IsMisc = true;
 				i ++;
 			}
 
@@ -237,7 +240,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				shapes[i] = new Shape();
 				shapes[i].Path = pathEnd;
-				shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].IsMisc = true;
 				i ++;
 			}
 

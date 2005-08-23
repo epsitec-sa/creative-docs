@@ -12,14 +12,26 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Gradient(Document document) : base(document)
 		{
-			this.label = new StaticText(this);
-			this.label.Alignment = ContentAlignment.MiddleLeft;
+			this.grid = new Widgets.RadioIconGrid(this);
+			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.grid.TabIndex = 0;
+			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.AddRadioIcon(Properties.GradientFillType.None, false);
+			this.AddRadioIcon(Properties.GradientFillType.Linear, false);
+			this.AddRadioIcon(Properties.GradientFillType.Circle, false);
+			this.AddRadioIcon(Properties.GradientFillType.Diamond, false);
+
+			this.AddRadioIcon(Properties.GradientFillType.Conic, false);
+			this.AddRadioIcon(Properties.GradientFillType.Hatch, false);
+			this.AddRadioIcon(Properties.GradientFillType.Dots, false);
+			this.AddRadioIcon(Properties.GradientFillType.Squares, false);
 
 			this.nothingButton = new IconButton(this);
 			this.nothingButton.Clicked += new MessageEventHandler(this.HandleNothingClicked);
 			this.nothingButton.TabIndex = 1;
 			this.nothingButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.nothingButton.IconName = "manifest:Epsitec.App.DocumentEditor.Images.Nothing.icon";
+			this.nothingButton.IconName = Misc.Icon("Nothing");
 			ToolTip.Default.SetToolTip(this.nothingButton, Res.Strings.Panel.Gradient.Tooltip.Nothing);
 
 			this.fieldColor1 = new ColorSample(this);
@@ -38,21 +50,6 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldColor2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldColor2, Res.Strings.Panel.Gradient.Tooltip.Color2);
 
-			this.listFill = new TextFieldCombo(this);
-			this.listFill.IsReadOnly = true;
-			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.None);
-			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.Linear);
-			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.Circle);
-			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.Diamond);
-			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.Conic);
-			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.Hatch);
-			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.Dots);
-			this.listFill.Items.Add(Res.Strings.Panel.Gradient.Combo.Squares);
-			this.listFill.SelectedIndexChanged += new EventHandler(this.HandleListChanged);
-			this.listFill.TabIndex = 4;
-			this.listFill.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.listFill, Res.Strings.Panel.Gradient.Tooltip.Type);
-
 			this.reset = new Button(this);
 			this.reset.Text = Res.Strings.Panel.Gradient.Button.Reset;
 			this.reset.TabIndex = 5;
@@ -60,11 +57,13 @@ namespace Epsitec.Common.Document.Panels
 			this.reset.Clicked += new MessageEventHandler(this.HandleReset);
 			ToolTip.Default.SetToolTip(this.reset, Res.Strings.Panel.Gradient.Tooltip.Reset);
 
-			this.fieldAngle = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldAngle);
-			this.fieldAngle.InternalMinValue = -360.0M;
-			this.fieldAngle.InternalMaxValue =  360.0M;
-			this.fieldAngle.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldAngle = new Widgets.TextFieldLabel(this, false);
+			this.fieldAngle.LabelShortText = Res.Strings.Panel.Gradient.Short.Angle;
+			this.fieldAngle.LabelLongText  = Res.Strings.Panel.Gradient.Long.Angle;
+			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldAngle.TextFieldReal);
+			this.fieldAngle.TextFieldReal.InternalMinValue = -360.0M;
+			this.fieldAngle.TextFieldReal.InternalMaxValue =  360.0M;
+			this.fieldAngle.TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldAngle.TabIndex = 6;
 			this.fieldAngle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldAngle, Res.Strings.Panel.Gradient.Tooltip.Angle);
@@ -77,121 +76,109 @@ namespace Epsitec.Common.Document.Panels
 				this.radioHatchRank[i].TabIndex = 10+i;
 				this.radioHatchRank[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
-			this.radioHatchRank[Properties.Gradient.HatchMax-1].Text = ":";
 			ToolTip.Default.SetToolTip(this.radioHatchRank[0], Res.Strings.Panel.Gradient.Tooltip.Hatch1);
 			ToolTip.Default.SetToolTip(this.radioHatchRank[1], Res.Strings.Panel.Gradient.Tooltip.Hatch2);
 			this.RadioSelected = 0;
 
-			this.fieldRepeat = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldRepeat);
-			this.fieldRepeat.InternalMinValue = 1;
-			this.fieldRepeat.InternalMaxValue = 8;
-			this.fieldRepeat.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldRepeat = new Widgets.TextFieldLabel(this, false);
+			this.fieldRepeat.LabelShortText = Res.Strings.Panel.Gradient.Short.Repeat;
+			this.fieldRepeat.LabelLongText  = Res.Strings.Panel.Gradient.Long.Repeat;
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldRepeat.TextFieldReal);
+			this.fieldRepeat.TextFieldReal.InternalMinValue = 1;
+			this.fieldRepeat.TextFieldReal.InternalMaxValue = 8;
+			this.fieldRepeat.TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldRepeat.TabIndex = 20;
 			this.fieldRepeat.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRepeat, Res.Strings.Panel.Gradient.Tooltip.Repeat);
 
-			this.fieldMiddle = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldMiddle);
-			this.fieldMiddle.InternalMinValue = -500;
-			this.fieldMiddle.InternalMaxValue =  500;
-			this.fieldMiddle.Step = 10;
-			this.fieldMiddle.TextSuffix = "%";
-			this.fieldMiddle.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldMiddle = new Widgets.TextFieldLabel(this, false);
+			this.fieldMiddle.LabelShortText = Res.Strings.Panel.Gradient.Short.Middle;
+			this.fieldMiddle.LabelLongText  = Res.Strings.Panel.Gradient.Long.Middle;
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldMiddle.TextFieldReal);
+			this.fieldMiddle.TextFieldReal.InternalMinValue = -500;
+			this.fieldMiddle.TextFieldReal.InternalMaxValue =  500;
+			this.fieldMiddle.TextFieldReal.Step = 10;
+			this.fieldMiddle.TextFieldReal.TextSuffix = "%";
+			this.fieldMiddle.TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldMiddle.TabIndex = 21;
 			this.fieldMiddle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMiddle, Res.Strings.Panel.Gradient.Tooltip.Middle);
 
-			this.fieldSmooth = new TextFieldReal(this);
-			this.fieldSmooth.FactorMinRange = 0.0M;
-			this.fieldSmooth.FactorMaxRange = 0.1M;
-			this.fieldSmooth.FactorStep = 1.0M;
-			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldSmooth);
-			this.fieldSmooth.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldSmooth = new Widgets.TextFieldLabel(this, false);
+			this.fieldSmooth.LabelShortText = Res.Strings.Panel.Gradient.Short.Smooth;
+			this.fieldSmooth.LabelLongText  = Res.Strings.Panel.Gradient.Long.Smooth;
+			this.fieldSmooth.TextFieldReal.FactorMinRange = 0.0M;
+			this.fieldSmooth.TextFieldReal.FactorMaxRange = 0.1M;
+			this.fieldSmooth.TextFieldReal.FactorStep = 1.0M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldSmooth.TextFieldReal);
+			this.fieldSmooth.TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldSmooth.TabIndex = 22;
 			this.fieldSmooth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldSmooth, Res.Strings.Panel.Gradient.Tooltip.Smooth);
 
-			this.fieldHatchAngle = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldHatchAngle);
-			this.fieldHatchAngle.InternalMinValue = -360.0M;
-			this.fieldHatchAngle.InternalMaxValue =  360.0M;
-			this.fieldHatchAngle.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldHatchAngle = new Widgets.TextFieldLabel(this, false);
+			this.fieldHatchAngle.LabelShortText = Res.Strings.Panel.Gradient.Short.HatchAngle;
+			this.fieldHatchAngle.LabelLongText  = Res.Strings.Panel.Gradient.Long.HatchAngle;
+			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldHatchAngle.TextFieldReal);
+			this.fieldHatchAngle.TextFieldReal.InternalMinValue = -360.0M;
+			this.fieldHatchAngle.TextFieldReal.InternalMaxValue =  360.0M;
+			this.fieldHatchAngle.TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldHatchAngle.TabIndex = 23;
 			this.fieldHatchAngle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHatchAngle, Res.Strings.Panel.Gradient.Tooltip.HatchAngle);
 
-			this.fieldHatchWidth = new TextFieldReal(this);
-			this.fieldHatchWidth.FactorMinRange = 0.0M;
-			this.fieldHatchWidth.FactorMaxRange = 0.1M;
-			this.fieldHatchWidth.FactorStep = 0.1M;
-			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldHatchWidth);
-			this.fieldHatchWidth.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldHatchWidth = new Widgets.TextFieldLabel(this, false);
+			this.fieldHatchWidth.LabelShortText = Res.Strings.Panel.Gradient.Short.HatchWidth;
+			this.fieldHatchWidth.LabelLongText  = Res.Strings.Panel.Gradient.Long.HatchWidth;
+			this.fieldHatchWidth.TextFieldReal.FactorMinRange = 0.0M;
+			this.fieldHatchWidth.TextFieldReal.FactorMaxRange = 0.1M;
+			this.fieldHatchWidth.TextFieldReal.FactorStep = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldHatchWidth.TextFieldReal);
+			this.fieldHatchWidth.TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldHatchWidth.TabIndex = 24;
 			this.fieldHatchWidth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHatchWidth, Res.Strings.Panel.Gradient.Tooltip.HatchWidth);
 
-			this.fieldHatchDistance = new TextFieldReal(this);
-			this.fieldHatchDistance.FactorMinRange = 0.0M;
-			this.fieldHatchDistance.FactorMaxRange = 0.1M;
-			this.fieldHatchDistance.FactorStep = 1.0M;
-			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldHatchDistance);
-			this.fieldHatchDistance.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldHatchDistance = new Widgets.TextFieldLabel(this, false);
+			this.fieldHatchDistance.LabelShortText = Res.Strings.Panel.Gradient.Short.HatchDistance;
+			this.fieldHatchDistance.LabelLongText  = Res.Strings.Panel.Gradient.Long.HatchDistance;
+			this.fieldHatchDistance.TextFieldReal.FactorMinRange = 0.0M;
+			this.fieldHatchDistance.TextFieldReal.FactorMaxRange = 0.1M;
+			this.fieldHatchDistance.TextFieldReal.FactorStep = 1.0M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldHatchDistance.TextFieldReal);
+			this.fieldHatchDistance.TextFieldReal.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.fieldHatchDistance.TabIndex = 25;
 			this.fieldHatchDistance.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHatchDistance, Res.Strings.Panel.Gradient.Tooltip.HatchDistance);
 			
-			this.labelAngle = new StaticText(this);
-			this.labelAngle.Text = Res.Strings.Panel.Gradient.Label.Angle;
-			this.labelAngle.Alignment = ContentAlignment.MiddleCenter;
-
-			this.labelRepeat = new StaticText(this);
-			this.labelRepeat.Text = Res.Strings.Panel.Gradient.Label.Repeat;
-			this.labelRepeat.Alignment = ContentAlignment.MiddleCenter;
-
-			this.labelMiddle = new StaticText(this);
-			this.labelMiddle.Text = Res.Strings.Panel.Gradient.Label.Middle;
-			this.labelMiddle.Alignment = ContentAlignment.MiddleCenter;
-
-			this.labelSmooth = new StaticText(this);
-			this.labelSmooth.Text = Res.Strings.Panel.Gradient.Label.Smooth;
-			this.labelSmooth.Alignment = ContentAlignment.MiddleCenter;
-
-			this.labelHatchAngle = new StaticText(this);
-			this.labelHatchAngle.Text = Res.Strings.Panel.Gradient.Label.HatchAngle;
-			this.labelHatchAngle.Alignment = ContentAlignment.MiddleCenter;
-
-			this.labelHatchWidth = new StaticText(this);
-			this.labelHatchWidth.Text = Res.Strings.Panel.Gradient.Label.HatchWidth;
-			this.labelHatchWidth.Alignment = ContentAlignment.MiddleCenter;
-
-			this.labelHatchDistance = new StaticText(this);
-			this.labelHatchDistance.Text = Res.Strings.Panel.Gradient.Label.HatchDistance;
-			this.labelHatchDistance.Alignment = ContentAlignment.MiddleCenter;
-
 			this.swapColor = new IconButton(this);
-			this.swapColor.IconName = "manifest:Epsitec.App.DocumentEditor.Images.SwapDataV.icon";
+			this.swapColor.IconName = Misc.Icon("SwapDataV");
 			this.swapColor.Clicked += new MessageEventHandler(this.HandleSwapColorClicked);
 			ToolTip.Default.SetToolTip(this.swapColor, Res.Strings.Panel.Gradient.Tooltip.Swap);
 
 			this.isNormalAndExtended = true;
 		}
 		
+		protected void AddRadioIcon(Properties.GradientFillType type, bool endOfLine)
+		{
+			this.grid.AddRadioIcon(Properties.Gradient.GetIconText(type), Properties.Gradient.GetName(type), (int)type, endOfLine);
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
+				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
 				this.nothingButton.Clicked -= new MessageEventHandler(this.HandleNothingClicked);
-				this.listFill.SelectedIndexChanged -= new EventHandler(this.HandleListChanged);
 				this.reset.Clicked -= new MessageEventHandler(this.HandleReset);
 				this.fieldColor1.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.fieldColor1.Changed -= new EventHandler(this.HandleFieldColorChanged);
 				this.fieldColor2.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.fieldColor2.Changed -= new EventHandler(this.HandleFieldColorChanged);
-				this.fieldAngle.ValueChanged -= new EventHandler(this.HandleValueChanged);
-				this.fieldRepeat.ValueChanged -= new EventHandler(this.HandleValueChanged);
-				this.fieldMiddle.ValueChanged -= new EventHandler(this.HandleValueChanged);
-				this.fieldSmooth.ValueChanged -= new EventHandler(this.HandleValueChanged);
+				this.fieldAngle.TextFieldReal.ValueChanged -= new EventHandler(this.HandleValueChanged);
+				this.fieldRepeat.TextFieldReal.ValueChanged -= new EventHandler(this.HandleValueChanged);
+				this.fieldMiddle.TextFieldReal.ValueChanged -= new EventHandler(this.HandleValueChanged);
+				this.fieldSmooth.TextFieldReal.ValueChanged -= new EventHandler(this.HandleValueChanged);
 				this.swapColor.Clicked -= new MessageEventHandler(this.HandleSwapColorClicked);
 
 				for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
@@ -200,8 +187,7 @@ namespace Epsitec.Common.Document.Panels
 					this.radioHatchRank[i] = null;
 				}
 
-				this.label = null;
-				this.listFill = null;
+				this.grid = null;
 				this.reset = null;
 				this.fieldColor1 = null;
 				this.fieldColor2 = null;
@@ -210,10 +196,6 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldRepeat = null;
 				this.fieldMiddle = null;
 				this.fieldSmooth = null;
-				this.labelAngle = null;
-				this.labelRepeat = null;
-				this.labelMiddle = null;
-				this.labelSmooth = null;
 				this.originFieldColor = null;
 			}
 
@@ -226,7 +208,40 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return ( this.isExtendedSize ? 83 : 30 );
+				double h = this.LabelHeight;
+
+				if ( this.isExtendedSize )  // panneau étendu ?
+				{
+					if ( this.IsLabelProperties )  // étendu/détails ?
+					{
+						h += 55;
+
+						Properties.GradientFillType type = (Properties.GradientFillType) this.grid.SelectedValue;
+						if ( type == Properties.GradientFillType.None )
+						{
+							h += 25;
+						}
+						else if ( type == Properties.GradientFillType.Circle   ||
+								  type == Properties.GradientFillType.Diamond  )
+						{
+							h += 75;
+						}
+						else
+						{
+							h += 100;
+						}
+					}
+					else	// étendu/compact ?
+					{
+						h += 80;
+					}
+				}
+				else	// panneau réduit ?
+				{
+					h += 30;
+				}
+
+				return h;
 			}
 		}
 
@@ -241,28 +256,14 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			this.label.Text = p.TextStyle;
-
-			int sel = -1;
-			switch ( p.FillType )
-			{
-				case Properties.GradientFillType.None:     sel = 0;  break;
-				case Properties.GradientFillType.Linear:   sel = 1;  break;
-				case Properties.GradientFillType.Circle:   sel = 2;  break;
-				case Properties.GradientFillType.Diamond:  sel = 3;  break;
-				case Properties.GradientFillType.Conic:    sel = 4;  break;
-				case Properties.GradientFillType.Hatch:    sel = 5;  break;
-				case Properties.GradientFillType.Dots:     sel = 6;  break;
-				case Properties.GradientFillType.Squares:  sel = 7;  break;
-			}
-			this.listFill.SelectedIndex = sel;
+			this.grid.SelectedValue = (int) p.FillType;
 
 			this.fieldColor1.Color = p.Color1;
 			this.fieldColor2.Color = p.Color2;
-			this.fieldAngle.InternalValue = (decimal) this.GetAngle();
-			this.fieldRepeat.InternalValue = (decimal) p.Repeat;
-			this.fieldMiddle.InternalValue = (decimal) p.Middle*100;
-			this.fieldSmooth.InternalValue = (decimal) p.Smooth;
+			this.fieldAngle.TextFieldReal.InternalValue = (decimal) this.GetAngle();
+			this.fieldRepeat.TextFieldReal.InternalValue = (decimal) p.Repeat;
+			this.fieldMiddle.TextFieldReal.InternalValue = (decimal) p.Middle*100;
+			this.fieldSmooth.TextFieldReal.InternalValue = (decimal) p.Smooth;
 			this.HatchToWidget();
 
 			this.cx = p.Cx;
@@ -280,25 +281,14 @@ namespace Epsitec.Common.Document.Panels
 			Properties.Gradient p = this.property as Properties.Gradient;
 			if ( p == null )  return;
 
-			p.FillType = Properties.GradientFillType.None;
-			switch ( this.listFill.SelectedIndex )
-			{
-				case 0:  p.FillType = Properties.GradientFillType.None;     break;
-				case 1:  p.FillType = Properties.GradientFillType.Linear;   break;
-				case 2:  p.FillType = Properties.GradientFillType.Circle;   break;
-				case 3:  p.FillType = Properties.GradientFillType.Diamond;  break;
-				case 4:  p.FillType = Properties.GradientFillType.Conic;    break;
-				case 5:  p.FillType = Properties.GradientFillType.Hatch;    break;
-				case 6:  p.FillType = Properties.GradientFillType.Dots;     break;
-				case 7:  p.FillType = Properties.GradientFillType.Squares;  break;
-			}
+			p.FillType = (Properties.GradientFillType) this.grid.SelectedValue;
 
 			p.Color1 = this.fieldColor1.Color;
 			p.Color2 = this.fieldColor2.Color;
-			this.SetAngle((double) this.fieldAngle.InternalValue);
-			p.Repeat = (int)    this.fieldRepeat.InternalValue;
-			p.Middle = (double) this.fieldMiddle.InternalValue/100;
-			p.Smooth = (double) this.fieldSmooth.InternalValue;
+			this.SetAngle((double) this.fieldAngle.TextFieldReal.InternalValue);
+			p.Repeat = (int)    this.fieldRepeat.TextFieldReal.InternalValue;
+			p.Middle = (double) this.fieldMiddle.TextFieldReal.InternalValue/100;
+			p.Smooth = (double) this.fieldSmooth.TextFieldReal.InternalValue;
 			this.WidgetToHatch();
 
 			p.Cx = this.cx;
@@ -313,9 +303,9 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			int i = this.RadioSelected;
-			this.fieldHatchAngle.InternalValue = (decimal) p.GetHatchAngle(i);
-			this.fieldHatchWidth.InternalValue = (decimal) p.GetHatchWidth(i);
-			this.fieldHatchDistance.InternalValue = (decimal) p.GetHatchDistance(i);
+			this.fieldHatchAngle.TextFieldReal.InternalValue = (decimal) p.GetHatchAngle(i);
+			this.fieldHatchWidth.TextFieldReal.InternalValue = (decimal) p.GetHatchWidth(i);
+			this.fieldHatchDistance.TextFieldReal.InternalValue = (decimal) p.GetHatchDistance(i);
 		}
 
 		protected void WidgetToHatch()
@@ -324,9 +314,9 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			int i = this.RadioSelected;
-			p.SetHatchAngle(i, (double) this.fieldHatchAngle.InternalValue);
-			p.SetHatchWidth(i, (double) this.fieldHatchWidth.InternalValue);
-			p.SetHatchDistance(i, (double) this.fieldHatchDistance.InternalValue);
+			p.SetHatchAngle(i, (double) this.fieldHatchAngle.TextFieldReal.InternalValue);
+			p.SetHatchWidth(i, (double) this.fieldHatchWidth.TextFieldReal.InternalValue);
+			p.SetHatchDistance(i, (double) this.fieldHatchDistance.TextFieldReal.InternalValue);
 		}
 
 		protected int RadioSelected
@@ -356,9 +346,9 @@ namespace Epsitec.Common.Document.Panels
 		protected double GetAngle()
 		{
 			Properties.Gradient p = this.property as Properties.Gradient;
-			int sel = this.listFill.SelectedIndex;
+			Properties.GradientFillType type = (Properties.GradientFillType) this.grid.SelectedValue;
 
-			if ( sel == 1 )  // linéaire ?
+			if ( type == Properties.GradientFillType.Linear )  // linéaire ?
 			{
 				return Point.ComputeAngleDeg(p.Sx, p.Sy)-90;
 			}
@@ -372,9 +362,9 @@ namespace Epsitec.Common.Document.Panels
 		protected void SetAngle(double angle)
 		{
 			Properties.Gradient p = this.property as Properties.Gradient;
-			int sel = this.listFill.SelectedIndex;
+			Properties.GradientFillType type = (Properties.GradientFillType) this.grid.SelectedValue;
 
-			if ( sel == 1 )  // linéaire ?
+			if ( type == Properties.GradientFillType.Linear )  // linéaire ?
 			{
 				double d = System.Math.Sqrt(this.sx*this.sx + this.sy*this.sy);
 				Point s = Transform.RotatePointDeg(angle, new Point(0,d));
@@ -390,79 +380,130 @@ namespace Epsitec.Common.Document.Panels
 		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
-			int sel = this.listFill.SelectedIndex;
-			bool hatch = (sel == 5 || sel == 6 || sel == 7);  // hachures, points ou carrés ?
+			bool color2 = false;
+			bool showReset = false;
+			bool enableReset = false;
+			bool showAngle = false;
+			bool enableAngle = false;
+			bool showRepeat = false;
+			bool enableRepeat = false;
+			bool showHatch = false;
+			bool showSmooth = false;
+			bool enableSmooth = false;
 
-			this.label.SetVisible(true);
-			this.nothingButton.SetVisible(true);
-			this.listFill.SetVisible(this.isExtendedSize);
-			this.reset.SetVisible(this.isExtendedSize);
-			this.fieldColor1.SetVisible(true);
-			this.fieldColor2.SetVisible(sel > 0);
-			this.fieldAngle.SetVisible(this.isExtendedSize && !hatch);
-			this.fieldRepeat.SetVisible(this.isExtendedSize && !hatch);
-			this.fieldMiddle.SetVisible(this.isExtendedSize && !hatch);
-			this.fieldSmooth.SetVisible(this.isExtendedSize && !hatch);
-			this.fieldHatchAngle.SetVisible(this.isExtendedSize && hatch);
-			this.fieldHatchWidth.SetVisible(this.isExtendedSize && hatch);
-			this.fieldHatchDistance.SetVisible(this.isExtendedSize && hatch);
-			this.labelAngle.SetVisible(this.isExtendedSize && !hatch);
-			this.labelRepeat.SetVisible(this.isExtendedSize && !hatch);
-			this.labelMiddle.SetVisible(this.isExtendedSize && !hatch);
-			this.labelSmooth.SetVisible(this.isExtendedSize && !hatch);
-			this.labelHatchAngle.SetVisible(this.isExtendedSize && hatch);
-			this.labelHatchWidth.SetVisible(this.isExtendedSize && hatch);
-			this.labelHatchDistance.SetVisible(this.isExtendedSize && hatch);
-			this.swapColor.SetVisible(sel > 0);
+			Properties.GradientFillType type = (Properties.GradientFillType) this.grid.SelectedValue;
+
+			if ( type != Properties.GradientFillType.None )
+			{
+				color2 = true;
+			}
+
+			if ( this.isExtendedSize )  // panneau étendu ?
+			{
+				if ( this.IsLabelProperties )  // étendu/détails ?
+				{
+					if ( type == Properties.GradientFillType.None )
+					{
+						showSmooth = true;
+						enableSmooth = true;
+					}
+					else if ( type == Properties.GradientFillType.Linear ||
+							  type == Properties.GradientFillType.Conic  )
+					{
+						showReset = true;
+						enableReset = true;
+						showAngle = true;
+						enableAngle = true;
+						showRepeat = true;
+						enableRepeat = true;
+						showSmooth = true;
+						enableSmooth = true;
+					}
+					else if ( type == Properties.GradientFillType.Circle  ||
+							  type == Properties.GradientFillType.Diamond )
+					{
+						showReset = true;
+						enableReset = true;
+						showRepeat = true;
+						enableRepeat = true;
+						showSmooth = true;
+						enableSmooth = true;
+					}
+					else
+					{
+						showReset = true;
+						enableReset = true;
+						showHatch = true;
+					}
+				}
+				else	// étendu/compact ?
+				{
+					if ( type == Properties.GradientFillType.None )
+					{
+						showReset = true;
+						showAngle = true;
+						showRepeat = true;
+						showSmooth = true;
+						enableSmooth = true;
+					}
+					else if ( type == Properties.GradientFillType.Linear ||
+							  type == Properties.GradientFillType.Conic  )
+					{
+						showReset = true;
+						enableReset = true;
+						showAngle = true;
+						enableAngle = true;
+						showRepeat = true;
+						enableRepeat = true;
+						showSmooth = true;
+						enableSmooth = true;
+					}
+					else if ( type == Properties.GradientFillType.Circle  ||
+							  type == Properties.GradientFillType.Diamond )
+					{
+						showReset = true;
+						enableReset = true;
+						showAngle = true;
+						showRepeat = true;
+						enableRepeat = true;
+						showSmooth = true;
+						enableSmooth = true;
+					}
+					else
+					{
+						showReset = true;
+						enableReset = true;
+						showHatch = true;
+					}
+				}
+			}
+
+			this.fieldColor2.SetVisible(color2);
+			this.swapColor.SetVisible(color2);
+
+			this.reset.SetVisible(showReset);
+			this.reset.SetEnabled(enableReset);
+
+			this.fieldAngle.SetVisible(showAngle);
+			this.fieldAngle.SetEnabled(enableAngle);
+
+			this.fieldRepeat.SetVisible(showRepeat);
+			this.fieldRepeat.SetEnabled(enableRepeat);
+
+			this.fieldMiddle.SetVisible(showRepeat);
+			this.fieldMiddle.SetEnabled(enableRepeat);
+
+			this.fieldSmooth.SetVisible(showSmooth);
+			this.fieldSmooth.SetEnabled(enableSmooth);
 
 			for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
 			{
-				this.radioHatchRank[i].SetVisible(this.isExtendedSize && hatch);
-				this.radioHatchRank[i].SetEnabled(hatch);
+				this.radioHatchRank[i].SetVisible(showHatch);
 			}
 
-			if ( sel > 0 )
-			{
-				this.reset.SetEnabled(this.isExtendedSize);
-				this.fieldRepeat.SetEnabled(this.isExtendedSize);
-				this.fieldMiddle.SetEnabled(this.isExtendedSize);
-				this.labelRepeat.SetEnabled(this.isExtendedSize);
-				this.labelMiddle.SetEnabled(this.isExtendedSize);
-			}
-			else
-			{
-				this.reset.SetEnabled(false);
-				this.fieldRepeat.SetEnabled(false);
-				this.fieldMiddle.SetEnabled(false);
-				this.labelRepeat.SetEnabled(false);
-				this.labelMiddle.SetEnabled(false);
-			}
-
-			if ( sel == 1 || sel == 4 )  // linéaire ou cônique ?
-			{
-				this.fieldAngle.SetEnabled(this.isExtendedSize);
-				this.labelAngle.SetEnabled(this.isExtendedSize);
-			}
-			else
-			{
-				this.fieldAngle.SetEnabled(false);
-				this.labelAngle.SetEnabled(false);
-			}
-
-			if ( hatch )  // hachures ?
-			{
-				this.fieldHatchAngle.SetEnabled(this.isExtendedSize);
-				this.fieldHatchWidth.SetEnabled(this.isExtendedSize);
-				this.fieldHatchDistance.SetEnabled(this.isExtendedSize);
-			}
-			else
-			{
-				this.fieldHatchAngle.SetEnabled(false);
-				this.fieldHatchWidth.SetEnabled(false);
-				this.fieldHatchDistance.SetEnabled(false);
-			}
-
-			this.fieldSmooth.SetEnabled(this.isExtendedSize);
+			this.fieldHatchAngle.SetVisible(showHatch);
+			this.fieldHatchWidth.SetVisible(showHatch);
+			this.fieldHatchDistance.SetVisible(showHatch);
 		}
 
 
@@ -495,7 +536,7 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		// Modifie la couleur d'origine.
-		public override void OriginColorChange(Drawing.Color color)
+		public override void OriginColorChange(Drawing.RichColor color)
 		{
 			if ( this.originFieldColor == null )  return;
 			
@@ -507,13 +548,28 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		// Donne la couleur d'origine.
-		public override Drawing.Color OriginColorGet()
+		public override Drawing.RichColor OriginColorGet()
 		{
-			if ( this.originFieldColor == null )  return Drawing.Color.FromBrightness(0);
+			if ( this.originFieldColor == null )  return Drawing.RichColor.FromBrightness(0.0);
 			return this.originFieldColor.Color;
 		}
 
 		
+		// Adapte les textes courts ou longs.
+		protected void UpdateShortLongText()
+		{
+			if ( this.IsLabelProperties )
+			{
+				Abstract.SetText(this.radioHatchRank[0], Res.Strings.Panel.Gradient.Long.Hatch1);
+				Abstract.SetText(this.radioHatchRank[1], Res.Strings.Panel.Gradient.Long.Hatch2);
+			}
+			else
+			{
+				Abstract.SetText(this.radioHatchRank[0], "");
+				Abstract.SetText(this.radioHatchRank[1], ":");
+			}
+		}
+
 		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
@@ -521,107 +577,201 @@ namespace Epsitec.Common.Document.Panels
 
 			if ( this.fieldColor1 == null )  return;
 
+			this.UpdateShortLongText();
 			this.EnableWidgets();
-			int sel = this.listFill.SelectedIndex;
+			Properties.GradientFillType type = (Properties.GradientFillType) this.grid.SelectedValue;
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
-
-			rect.Bottom = rect.Top-20;
+			Rectangle rect = this.UsefulZone;
 			Rectangle r = rect;
+			double pTop = rect.Top;
 
-			r.Left = rect.Left;
-			r.Right = rect.Right-70;
-			this.label.Bounds = r;
-			r.Left = rect.Right-70;
-			r.Right = rect.Right-50;
+			r.Top = pTop;
+			r.Bottom = r.Top-20;
+			r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth-20;
+			r.Width = 20;
 			this.nothingButton.Bounds = r;
 
-			if ( sel == 0 )
+			if ( type == Properties.GradientFillType.None )
 			{
-				r.Left = rect.Right-50;
+				r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
 				r.Right = rect.Right;
 				this.fieldColor1.Bounds = r;
 			}
 			else
 			{
-				r.Left = rect.Right-50;
-				r.Right = rect.Right-30;
+				r.Left = rect.Right-20-8-20;
+				r.Right = rect.Right-20-8;
 				this.fieldColor1.Bounds = r;
 				r.Left = rect.Right-20;
 				r.Right = rect.Right;
 				this.fieldColor2.Bounds = r;
 
-				r.Left = rect.Right-30;
+				r.Left = rect.Right-20-8;
 				r.Right = rect.Right-20;
 				this.swapColor.Bounds = r;
 			}
 
-			if ( this.isExtendedSize )
+			if ( this.isExtendedSize )  // panneau étendu ?
 			{
-				rect.Offset(0, -25);
-				r = rect;
-
+				r.Top = pTop;
+				r.Bottom = r.Top-22*2;
 				r.Left = rect.Left;
-				r.Right = rect.Left+85;
-				this.listFill.Bounds = r;
-				r.Left = rect.Left+90;
-				r.Right = rect.Left+114;
-				this.reset.Bounds = r;
-				r.Left = rect.Right-62;
-				r.Width = 12;
-				this.labelAngle.Bounds = r;
-				r.Left = rect.Right-50;
-				r.Width = 50;
-				this.fieldAngle.Bounds = r;
+				r.Width = 22*4;
+				r.Inflate(1);
+				this.grid.Bounds = r;
+				pTop -= 25;
 
-				r.Width = 16;
-				for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
+				if ( this.IsLabelProperties )  // étendu/détails ?
 				{
-					if ( i == Properties.Gradient.HatchMax-1 )  r.Width = 32;
-					this.radioHatchRank[i].Bounds = r;
-					r.Offset(r.Width, 0);
+					r.Top = pTop;
+					r.Bottom = r.Top-20;
+					r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
+					r.Right = rect.Right;
+					this.reset.Bounds = r;
+					pTop -= 25;
+
+					if ( type == Properties.GradientFillType.Linear ||
+						 type == Properties.GradientFillType.Conic  )
+					{
+						r.Top = pTop;
+						r.Bottom = r.Top-20;
+						r.Left = rect.Left;
+						r.Right = rect.Right;
+						this.fieldAngle.Bounds = r;
+						pTop -= 25;
+					}
+
+					if ( type == Properties.GradientFillType.Linear  ||
+						 type == Properties.GradientFillType.Circle  ||
+						 type == Properties.GradientFillType.Diamond ||
+						 type == Properties.GradientFillType.Conic   )
+					{
+						r.Top = pTop;
+						r.Bottom = r.Top-20;
+						r.Left = rect.Left;
+						r.Right = rect.Right;
+						this.fieldRepeat.Bounds = r;
+						pTop -= 25;
+
+						r.Top = pTop;
+						r.Bottom = r.Top-20;
+						r.Left = rect.Left;
+						r.Right = rect.Right;
+						this.fieldMiddle.Bounds = r;
+						pTop -= 25;
+					}
+
+					if ( type == Properties.GradientFillType.None    ||
+						 type == Properties.GradientFillType.Linear  ||
+						 type == Properties.GradientFillType.Circle  ||
+						 type == Properties.GradientFillType.Diamond ||
+						 type == Properties.GradientFillType.Conic   )
+					{
+						r.Top = pTop;
+						r.Bottom = r.Top-20;
+						r.Left = rect.Left;
+						r.Right = rect.Right;
+						this.fieldSmooth.Bounds = r;
+						pTop -= 25;
+					}
+
+					if ( type == Properties.GradientFillType.Hatch   ||
+						 type == Properties.GradientFillType.Dots    ||
+						 type == Properties.GradientFillType.Squares )
+					{
+						r.Top = pTop;
+						r.Bottom = r.Top-20;
+						r.Left = rect.Left;
+						r.Width = 80;
+						for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
+						{
+							this.radioHatchRank[i].Bounds = r;
+							r.Offset(r.Width, 0);
+						}
+						pTop -= 25;
+
+						r.Top = pTop;
+						r.Bottom = r.Top-20;
+						r.Left = rect.Left;
+						r.Right = rect.Right;
+						this.fieldRepeat.Bounds = r;
+						this.fieldHatchAngle.Bounds = r;
+						pTop -= 25;
+
+						r.Top = pTop;
+						r.Bottom = r.Top-20;
+						r.Left = rect.Left;
+						r.Right = rect.Right;
+						this.fieldMiddle.Bounds = r;
+						this.fieldHatchWidth.Bounds = r;
+						pTop -= 25;
+					
+						r.Top = pTop;
+						r.Bottom = r.Top-20;
+						r.Left = rect.Left;
+						r.Right = rect.Right;
+						this.fieldSmooth.Bounds = r;
+						this.fieldHatchDistance.Bounds = r;
+						pTop -= 25;
+					}
 				}
+				else	// étendu/compact ?
+				{
+					r.Top = pTop;
+					r.Bottom = r.Top-20;
+					r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth-20;
+					r.Width = 20;
+					this.reset.Bounds = r;
 
-				rect.Offset(0, -25);
-				r = rect;
+					r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
+					r.Width = Widgets.TextFieldLabel.ShortWidth;
+					this.fieldAngle.Bounds = r;
 
+					r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
+					r.Width = 16;
+					for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
+					{
+						if ( i == Properties.Gradient.HatchMax-1 )  r.Width = 32;
+						this.radioHatchRank[i].Bounds = r;
+						r.Offset(r.Width, 0);
+					}
+					pTop -= 25;
+
+					r.Top = pTop;
+					r.Bottom = r.Top-20;
+					r.Left = rect.Left;
+					r.Width = Widgets.TextFieldLabel.ShortWidth;
+					this.fieldRepeat.Bounds = r;
+					this.fieldHatchAngle.Bounds = r;
+					r.Left = r.Right;
+					r.Width = Widgets.TextFieldLabel.ShortWidth;
+					this.fieldMiddle.Bounds = r;
+					this.fieldHatchWidth.Bounds = r;
+					r.Left = r.Right;
+					r.Width = Widgets.TextFieldLabel.ShortWidth;
+					this.fieldSmooth.Bounds = r;
+					this.fieldHatchDistance.Bounds = r;
+				}
+			}
+			else	// panneau réduit ?
+			{
+				r.Top = pTop;
+				r.Bottom = r.Top-20;
 				r.Left = rect.Left;
-				r.Width = 12;
-				this.labelRepeat.Bounds = r;
-				this.labelHatchAngle.Bounds = r;
-				r.Left = r.Right;
-				r.Width = 44;
-				this.fieldRepeat.Bounds = r;
-				this.fieldHatchAngle.Bounds = r;
-				r.Left = r.Right;
-				r.Width = 12;
-				this.labelMiddle.Bounds = r;
-				this.labelHatchWidth.Bounds = r;
-				r.Left = r.Right;
-				r.Width = 45;
-				this.fieldMiddle.Bounds = r;
-				this.fieldHatchWidth.Bounds = r;
-				r.Left = r.Right;
-				r.Width = 12;
-				this.labelSmooth.Bounds = r;
-				this.labelHatchDistance.Bounds = r;
-				r.Left = r.Right;
-				r.Width = 50;
-				this.fieldSmooth.Bounds = r;
-				this.fieldHatchDistance.Bounds = r;
+				r.Width = 22*4;
+				r.Inflate(1);
+				this.grid.Bounds = r;
 			}
 		}
 		
 
 		private void HandleReset(object sender, MessageEventArgs e)
 		{
-			int sel = this.listFill.SelectedIndex;
+			Properties.GradientFillType type = (Properties.GradientFillType) this.grid.SelectedValue;
 
-			if ( sel == 1 )  // linéaire ?
+			if ( type == Properties.GradientFillType.Linear )  // linéaire ?
 			{
-				this.fieldAngle.Value = 0.0M;
+				this.fieldAngle.TextFieldReal.Value = 0.0M;
 				this.cx = 0.5;
 				this.cy = 0.5;
 				this.sx = 0.0;
@@ -629,7 +779,7 @@ namespace Epsitec.Common.Document.Panels
 			}
 			else
 			{
-				this.fieldAngle.Value = 0.0M;
+				this.fieldAngle.TextFieldReal.Value = 0.0M;
 				this.cx = 0.5;
 				this.cy = 0.5;
 				this.sx = 0.5;
@@ -663,7 +813,7 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleSwapColorClicked(object sender, MessageEventArgs e)
 		{
-			Drawing.Color temp     = this.fieldColor1.Color;
+			Drawing.RichColor temp = this.fieldColor1.Color;
 			this.fieldColor1.Color = this.fieldColor2.Color;
 			this.fieldColor2.Color = temp;
 
@@ -688,16 +838,26 @@ namespace Epsitec.Common.Document.Panels
 		// Le bouton "aucune couleur" a été cliqué.
 		private void HandleNothingClicked(object sender, MessageEventArgs e)
 		{
-			this.listFill.SelectedIndex = 0;
-			this.fieldColor1.Color = Drawing.Color.FromARGB(0, 1,1,1);
+			this.grid.SelectedValue = (int) Properties.GradientFillType.None;
+			this.fieldColor1.Color = Drawing.RichColor.FromARGB(0, 1,1,1);
 			this.OnChanged();
 		}
 
-		private void HandleListChanged(object sender)
+		// Le type a été changé.
+		private void HandleTypeChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-			this.UpdateClientGeometry();
+
 			this.HandleReset(null, null);
+
+			if ( this.IsLabelProperties )
+			{
+				this.HeightChanged();
+			}
+
+			this.UpdateClientGeometry();
+			this.EnableWidgets();
+			this.OnChanged();
 		}
 
 		private void HandleValueChanged(object sender)
@@ -716,28 +876,20 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected StaticText				label;
+		protected Widgets.RadioIconGrid		grid;
 		protected IconButton				nothingButton;
-		protected TextFieldCombo			listFill;
 		protected Button					reset;
 		protected ColorSample				fieldColor1;
 		protected ColorSample				fieldColor2;
 		protected IconButton				swapColor;
-		protected TextFieldReal				fieldAngle;
-		protected TextFieldReal				fieldRepeat;
-		protected TextFieldReal				fieldMiddle;
-		protected TextFieldReal				fieldSmooth;
-		protected TextFieldReal				fieldHatchAngle;
-		protected TextFieldReal				fieldHatchWidth;
-		protected TextFieldReal				fieldHatchDistance;
+		protected Widgets.TextFieldLabel	fieldAngle;
+		protected Widgets.TextFieldLabel	fieldRepeat;
+		protected Widgets.TextFieldLabel	fieldMiddle;
+		protected Widgets.TextFieldLabel	fieldSmooth;
+		protected Widgets.TextFieldLabel	fieldHatchAngle;
+		protected Widgets.TextFieldLabel	fieldHatchWidth;
+		protected Widgets.TextFieldLabel	fieldHatchDistance;
 		protected RadioButton[]				radioHatchRank;
-		protected StaticText				labelAngle;
-		protected StaticText				labelRepeat;
-		protected StaticText				labelMiddle;
-		protected StaticText				labelSmooth;
-		protected StaticText				labelHatchAngle;
-		protected StaticText				labelHatchWidth;
-		protected StaticText				labelHatchDistance;
 		protected ColorSample				originFieldColor;
 		protected int						originFieldRank = -1;
 		protected double					cx, cy;

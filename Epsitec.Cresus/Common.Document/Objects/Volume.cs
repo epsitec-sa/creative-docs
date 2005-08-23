@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return "manifest:Epsitec.App.DocumentEditor.Images.Volume.icon"; }
+			get { return Misc.Icon("ObjectVolume"); }
 		}
 
 
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Document.Objects
 
 		
 		// Constuit les formes de l'objet.
-		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
+		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			Paths paths = this.PathBuild(drawingContext);
 			Shape[] shapes = new Shape[paths.Count*2];
@@ -167,11 +167,11 @@ namespace Epsitec.Common.Document.Objects
 				{
 					shapes[i*2+0] = new Shape();
 					shapes[i*2+0].Path = path;
-					shapes[i*2+0].SetPropertySurface(paths.PropertySurface(i));
+					shapes[i*2+0].SetPropertySurface(port, paths.PropertySurface(i));
 
 					shapes[i*2+1] = new Shape();
 					shapes[i*2+1].Path = path;
-					shapes[i*2+1].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+					shapes[i*2+1].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 				}
 			}
 

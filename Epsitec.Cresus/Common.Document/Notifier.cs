@@ -7,6 +7,7 @@ namespace Epsitec.Common.Document
 	public delegate void SimpleEventHandler();
 	public delegate void ObjectEventHandler(Objects.Abstract obj);
 	public delegate void PropertyEventHandler(System.Collections.ArrayList propertyList);
+	public delegate void AggregateEventHandler(System.Collections.ArrayList aggregateList);
 	public delegate void RedrawEventHandler(Viewer viewer, Rectangle rect);
 
 	/// <summary>
@@ -54,6 +55,7 @@ namespace Epsitec.Common.Document
 			this.layersChanged = true;
 			this.undoRedoChanged = true;
 			this.gridChanged = true;
+			this.labelPropertiesChanged = true;
 			this.magnetChanged = true;
 			this.previewChanged = true;
 			this.settingsChanged = true;
@@ -200,6 +202,14 @@ namespace Epsitec.Common.Document
 			this.NotifyAsync();
 		}
 
+		// Indique que les commandes pour les noms d'attributs ont changé.
+		public void NotifyLabelPropertiesChanged()
+		{
+			if ( !this.enable )  return;
+			this.labelPropertiesChanged = true;
+			this.NotifyAsync();
+		}
+
 		// Indique que les commandes pour les lignes magnétiques ont changé.
 		public void NotifyMagnetChanged()
 		{
@@ -256,6 +266,17 @@ namespace Epsitec.Common.Document
 			if ( !this.propertyList.Contains(property) )
 			{
 				this.propertyList.Add(property);
+			}
+			this.NotifyAsync();
+		}
+
+		// Indique qu'un aggrégat a changé.
+		public void NotifyAggregateChanged(Properties.Aggregate agg)
+		{
+			if ( !this.enable )  return;
+			if ( !this.aggregateList.Contains(agg) )
+			{
+				this.aggregateList.Add(agg);
 			}
 			this.NotifyAsync();
 		}
@@ -416,6 +437,12 @@ namespace Epsitec.Common.Document
 				this.gridChanged = false;
 			}
 
+			if ( this.labelPropertiesChanged )
+			{
+				this.OnLabelPropertiesChanged();
+				this.labelPropertiesChanged = false;
+			}
+
 			if ( this.magnetChanged )
 			{
 				this.OnMagnetChanged();
@@ -456,6 +483,12 @@ namespace Epsitec.Common.Document
 			{
 				this.OnPropertyChanged(this.propertyList);
 				this.propertyList.Clear();
+			}
+
+			if ( this.aggregateList.Count > 0 )
+			{
+				this.OnAggregateChanged(this.aggregateList);
+				this.aggregateList.Clear();
 			}
 
 			if ( this.selNamesChanged )
@@ -607,6 +640,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnLabelPropertiesChanged()
+		{
+			if ( this.LabelPropertiesChanged != null )  // qq'un écoute ?
+			{
+				this.LabelPropertiesChanged();
+			}
+		}
+
 		protected void OnMagnetChanged()
 		{
 			if ( this.MagnetChanged != null )  // qq'un écoute ?
@@ -663,6 +704,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnAggregateChanged(System.Collections.ArrayList aggregateList)
+		{
+			if ( this.AggregateChanged != null )  // qq'un écoute ?
+			{
+				this.AggregateChanged(aggregateList);
+			}
+		}
+
 		protected void OnSelNamesChanged()
 		{
 			if ( this.SelNamesChanged != null )  // qq'un écoute ?
@@ -696,6 +745,7 @@ namespace Epsitec.Common.Document
 		public event ObjectEventHandler			LayerChanged;
 		public event SimpleEventHandler			UndoRedoChanged;
 		public event SimpleEventHandler			GridChanged;
+		public event SimpleEventHandler			LabelPropertiesChanged;
 		public event SimpleEventHandler			MagnetChanged;
 		public event SimpleEventHandler			PreviewChanged;
 		public event SimpleEventHandler			SettingsChanged;
@@ -703,6 +753,7 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			HideHalfChanged;
 		public event SimpleEventHandler			DebugChanged;
 		public event PropertyEventHandler		PropertyChanged;
+		public event AggregateEventHandler		AggregateChanged;
 		public event SimpleEventHandler			SelNamesChanged;
 		public event RedrawEventHandler			DrawChanged;
 
@@ -725,6 +776,7 @@ namespace Epsitec.Common.Document
 		protected Objects.Abstract				layerObject;
 		protected bool							undoRedoChanged;
 		protected bool							gridChanged;
+		protected bool							labelPropertiesChanged;
 		protected bool							magnetChanged;
 		protected bool							previewChanged;
 		protected bool							settingsChanged;
@@ -732,6 +784,7 @@ namespace Epsitec.Common.Document
 		protected bool							hideHalfChanged;
 		protected bool							debugChanged;
 		protected System.Collections.ArrayList	propertyList = new System.Collections.ArrayList();
+		protected System.Collections.ArrayList	aggregateList = new System.Collections.ArrayList();
 		protected bool							selNamesChanged;
 	}
 }

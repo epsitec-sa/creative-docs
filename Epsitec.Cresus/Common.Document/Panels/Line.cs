@@ -12,63 +12,56 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Line(Document document) : base(document)
 		{
-			this.label = new StaticText(this);
-			this.label.Alignment = ContentAlignment.MiddleLeft;
+			this.grid = new Widgets.RadioIconGrid(this);
+			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.grid.TabIndex = 1;
+			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.AddRadioIcon(Properties.StandardDashType.Full);
+			this.AddRadioIcon(Properties.StandardDashType.Line);
+			this.AddRadioIcon(Properties.StandardDashType.LineDense);
+			this.AddRadioIcon(Properties.StandardDashType.Dot);
+
+			this.AddRadioIcon(Properties.StandardDashType.LineExpand);
+			this.AddRadioIcon(Properties.StandardDashType.LineDot);
+			this.AddRadioIcon(Properties.StandardDashType.LineDotDot);
+			this.AddRadioIcon(Properties.StandardDashType.Custom);
+
+			this.gridCap = new Widgets.RadioIconGrid(this);
+			this.gridCap.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.gridCap.TabIndex = 100;
+			this.gridCap.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.AddRadioIcon(CapStyle.Round);
+			this.AddRadioIcon(CapStyle.Square);
+			this.AddRadioIcon(CapStyle.Butt);
+
+			this.gridJoin = new Widgets.RadioIconGrid(this);
+			this.gridJoin.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.gridJoin.TabIndex = 101;
+			this.gridJoin.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.AddRadioIcon(JoinStyle.Round);
+			this.AddRadioIcon(JoinStyle.Miter);
+			this.AddRadioIcon(JoinStyle.Bevel);
 
 			this.nothingButton = new IconButton(this);
 			this.nothingButton.Clicked += new MessageEventHandler(this.HandleNothingClicked);
-			this.nothingButton.TabIndex = 1;
+			this.nothingButton.TabIndex = 2;
 			this.nothingButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.nothingButton.IconName = "manifest:Epsitec.App.DocumentEditor.Images.Nothing.icon";
+			this.nothingButton.IconName = Misc.Icon("Nothing");
 			ToolTip.Default.SetToolTip(this.nothingButton, Res.Strings.Panel.Line.Tooltip.Nothing);
 
-			this.field = new TextFieldReal(this);
-			this.field.FactorMinRange = 0.0M;
-			this.field.FactorMaxRange = 0.1M;
-			this.field.FactorStep = 0.1M;
-			this.document.Modifier.AdaptTextFieldRealDimension(this.field);
-			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.field = new Widgets.TextFieldLabel(this, false);
+			this.field.LabelLongText = Res.Strings.Panel.Line.Long.Width;
+			this.field.TextFieldReal.FactorMinRange = 0.0M;
+			this.field.TextFieldReal.FactorMaxRange = 0.1M;
+			this.field.TextFieldReal.FactorStep = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.field.TextFieldReal);
+			this.field.TextFieldReal.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 2;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.field, Res.Strings.Panel.Line.Tooltip.Width);
-
-			this.dashType = new TextFieldCombo(this);
-			this.dashType.IsReadOnly = true;
-			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.Full);
-			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.Lines);
-			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.CompactedLines);
-			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.ExtendedLines);
-			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.Dots);
-			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.LinesDots);
-			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.LinesDotsDots);
-			this.dashType.Items.Add(Res.Strings.Panel.Line.Combo.User);
-			this.dashType.SelectedIndexChanged += new EventHandler(this.HandleListChanged);
-			this.dashType.TabIndex = 3;
-			this.dashType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.dashType, Res.Strings.Panel.Line.Tooltip.Type);
-
-			this.buttons = new IconButton[6];
-			for ( int i=0 ; i<6 ; i++ )
-			{
-				this.buttons[i] = new IconButton(this);
-				this.buttons[i].Clicked += new MessageEventHandler(this.HandlePanelLineClicked);
-				this.buttons[i].TabIndex = 4+i;
-				this.buttons[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			}
-
-			this.buttons[0].IconName = "manifest:Epsitec.App.DocumentEditor.Images.CapRound.icon";
-			this.buttons[1].IconName = "manifest:Epsitec.App.DocumentEditor.Images.CapSquare.icon";
-			this.buttons[2].IconName = "manifest:Epsitec.App.DocumentEditor.Images.CapButt.icon";
-			ToolTip.Default.SetToolTip(this.buttons[0], Res.Strings.Panel.Line.Tooltip.CapRound);
-			ToolTip.Default.SetToolTip(this.buttons[1], Res.Strings.Panel.Line.Tooltip.CapSquare);
-			ToolTip.Default.SetToolTip(this.buttons[2], Res.Strings.Panel.Line.Tooltip.CapButt);
-
-			this.buttons[3].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JoinRound.icon";
-			this.buttons[4].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JoinMiter.icon";
-			this.buttons[5].IconName = "manifest:Epsitec.App.DocumentEditor.Images.JoinBevel.icon";
-			ToolTip.Default.SetToolTip(this.buttons[3], Res.Strings.Panel.Line.Tooltip.JoinRound);
-			ToolTip.Default.SetToolTip(this.buttons[4], Res.Strings.Panel.Line.Tooltip.JoinMiter);
-			ToolTip.Default.SetToolTip(this.buttons[5], Res.Strings.Panel.Line.Tooltip.JoinBevel);
 
 			this.radioDashRank = new RadioButton[Properties.Line.DashMax];
 			for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
@@ -78,91 +71,88 @@ namespace Epsitec.Common.Document.Panels
 				this.radioDashRank[i].TabIndex = 20+i;
 				this.radioDashRank[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
-			this.radioDashRank[Properties.Line.DashMax-1].Text = ":";
 			ToolTip.Default.SetToolTip(this.radioDashRank[0], Res.Strings.Panel.Line.Tooltip.Dash1);
 			ToolTip.Default.SetToolTip(this.radioDashRank[1], Res.Strings.Panel.Line.Tooltip.Dash2);
 			ToolTip.Default.SetToolTip(this.radioDashRank[2], Res.Strings.Panel.Line.Tooltip.Dash3);
 			this.RadioSelected = 0;
 
-			this.fieldStandardLength = new TextFieldReal(this);
-			this.fieldStandardLength.FactorMinRange = 0.0M;
-			this.fieldStandardLength.FactorMaxRange = 0.1M;
-			this.fieldStandardLength.FactorStep = 0.1M;
-			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldStandardLength);
-			this.fieldStandardLength.ValueChanged += new EventHandler(this.HandleDashChanged);
+			this.fieldStandardLength = new Widgets.TextFieldLabel(this, false);
+			this.fieldStandardLength.LabelShortText = Res.Strings.Panel.Line.Short.DashLength;
+			this.fieldStandardLength.LabelLongText  = Res.Strings.Panel.Line.Long.DashLength;
+			this.fieldStandardLength.TextFieldReal.FactorMinRange = 0.0M;
+			this.fieldStandardLength.TextFieldReal.FactorMaxRange = 0.1M;
+			this.fieldStandardLength.TextFieldReal.FactorStep = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldStandardLength.TextFieldReal);
+			this.fieldStandardLength.TextFieldReal.ValueChanged += new EventHandler(this.HandleDashChanged);
 			this.fieldStandardLength.TabIndex = 20;
 			this.fieldStandardLength.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldStandardLength, Res.Strings.Panel.Line.Tooltip.DashLength);
 
-			this.fieldDashPen = new TextFieldReal(this);
-			this.fieldDashPen.FactorMinRange = 0.0M;
-			this.fieldDashPen.FactorMaxRange = 0.1M;
-			this.fieldDashPen.FactorStep = 0.1M;
-			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashPen);
-			this.fieldDashPen.ValueChanged += new EventHandler(this.HandleDashChanged);
+			this.fieldDashPen = new Widgets.TextFieldLabel(this, false);
+			this.fieldDashPen.LabelShortText = Res.Strings.Panel.Line.Short.DashPen;
+			this.fieldDashPen.LabelLongText  = Res.Strings.Panel.Line.Long.DashPen;
+			this.fieldDashPen.TextFieldReal.FactorMinRange = 0.0M;
+			this.fieldDashPen.TextFieldReal.FactorMaxRange = 0.1M;
+			this.fieldDashPen.TextFieldReal.FactorStep = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashPen.TextFieldReal);
+			this.fieldDashPen.TextFieldReal.ValueChanged += new EventHandler(this.HandleDashChanged);
 			this.fieldDashPen.TabIndex = 21;
 			this.fieldDashPen.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldDashPen, Res.Strings.Panel.Line.Tooltip.DashPen);
 
-			this.fieldDashGap = new TextFieldReal(this);
-			this.fieldDashGap.FactorMinRange = 0.0M;
-			this.fieldDashGap.FactorMaxRange = 0.1M;
-			this.fieldDashGap.FactorStep = 0.1M;
-			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashGap);
-			this.fieldDashGap.ValueChanged += new EventHandler(this.HandleDashChanged);
+			this.fieldDashGap = new Widgets.TextFieldLabel(this, false);
+			this.fieldDashGap.LabelShortText = Res.Strings.Panel.Line.Short.DashGap;
+			this.fieldDashGap.LabelLongText  = Res.Strings.Panel.Line.Long.DashGap;
+			this.fieldDashGap.TextFieldReal.FactorMinRange = 0.0M;
+			this.fieldDashGap.TextFieldReal.FactorMaxRange = 0.1M;
+			this.fieldDashGap.TextFieldReal.FactorStep = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashGap.TextFieldReal);
+			this.fieldDashGap.TextFieldReal.ValueChanged += new EventHandler(this.HandleDashChanged);
 			this.fieldDashGap.TabIndex = 22;
 			this.fieldDashGap.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldDashGap, Res.Strings.Panel.Line.Tooltip.DashGap);
 
-			this.labelStandardLength = new StaticText(this);
-			this.labelStandardLength.Text = Res.Strings.Panel.Line.Label.DashLength;
-			this.labelStandardLength.Alignment = ContentAlignment.MiddleRight;
-
-			this.labelDashPen = new StaticText(this);
-			this.labelDashPen.Text = Res.Strings.Panel.Line.Label.DashPen;
-			this.labelDashPen.Alignment = ContentAlignment.MiddleRight;
-
-			this.labelDashGap = new StaticText(this);
-			this.labelDashGap.Text = Res.Strings.Panel.Line.Label.DashGap;
-			this.labelDashGap.Alignment = ContentAlignment.MiddleRight;
-
 			this.isNormalAndExtended = true;
 		}
 		
+		protected void AddRadioIcon(Properties.StandardDashType type)
+		{
+			this.grid.AddRadioIcon(Properties.Line.GetIconText(type), Properties.Line.GetName(type), (int)type, false);
+		}
+
+		protected void AddRadioIcon(CapStyle type)
+		{
+			this.gridCap.AddRadioIcon(Properties.Line.GetIconText(type), Properties.Line.GetName(type), (int)type, false);
+		}
+
+		protected void AddRadioIcon(JoinStyle type)
+		{
+			this.gridJoin.AddRadioIcon(Properties.Line.GetIconText(type), Properties.Line.GetName(type), (int)type, false);
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
+				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
+				this.gridCap.SelectionChanged -= new EventHandler(HandleTypeChanged);
+				this.gridJoin.SelectionChanged -= new EventHandler(HandleTypeChanged);
 				this.nothingButton.Clicked -= new MessageEventHandler(this.HandleNothingClicked);
-				this.field.TextChanged -= new EventHandler(this.HandleTextChanged);
-				this.dashType.SelectedIndexChanged -= new EventHandler(this.HandleListChanged);
-
-				for ( int i=0 ; i<6 ; i++ )
-				{
-					this.buttons[i].Clicked -= new MessageEventHandler(this.HandlePanelLineClicked);
-					this.buttons[i] = null;
-				}
+				this.field.TextFieldReal.TextChanged -= new EventHandler(this.HandleTextChanged);
 
 				for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
 				{
 					this.radioDashRank[i].ActiveStateChanged -= new EventHandler(this.HandleDashRankChanged);
 					this.radioDashRank[i] = null;
 				}
-				this.fieldStandardLength.ValueChanged -= new EventHandler(this.HandleDashChanged);
-				this.fieldDashPen.ValueChanged -= new EventHandler(this.HandleDashChanged);
-				this.fieldDashGap.ValueChanged -= new EventHandler(this.HandleDashChanged);
+				this.fieldStandardLength.TextFieldReal.ValueChanged -= new EventHandler(this.HandleDashChanged);
+				this.fieldDashPen.TextFieldReal.ValueChanged -= new EventHandler(this.HandleDashChanged);
+				this.fieldDashGap.TextFieldReal.ValueChanged -= new EventHandler(this.HandleDashChanged);
 
-				this.label = null;
+				this.grid = null;
 				this.field = null;
-				this.dashType = null;
 				this.fieldDashPen = null;
 				this.fieldDashGap = null;
-				this.labelDashPen = null;
-				this.labelDashGap = null;
-				this.label = null;
-				this.label = null;
-				this.label = null;
-				this.label = null;
 			}
 			
 			base.Dispose(disposing);
@@ -174,14 +164,35 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				if ( this.isExtendedSize )
+				double h = this.LabelHeight;
+
+				if ( this.isExtendedSize )  // panneau étendu ?
 				{
-					return 105;
+					if ( this.IsLabelProperties )  // étendu/détails ?
+					{
+						h += 83;
+
+						Properties.StandardDashType type = (Properties.StandardDashType) this.grid.SelectedValue;
+						if ( type == Properties.StandardDashType.Custom )
+						{
+							h += 80;
+						}
+						else if ( type != Properties.StandardDashType.Full )
+						{
+							h += 25;
+						}
+					}
+					else	// étendu/compact ?
+					{
+						h += 106;
+					}
 				}
-				else
+				else	// panneau réduit ?
 				{
-					return 30;
+					h += 30;
 				}
+
+				return h;
 			}
 		}
 
@@ -195,24 +206,14 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			this.label.Text = p.TextStyle;
-			this.field.InternalValue = (decimal) p.Width;
+			this.field.TextFieldReal.InternalValue = (decimal) p.Width;
 
-			int sel = -1;
-			if ( p.Cap == CapStyle.Round  )  sel = 0;
-			if ( p.Cap == CapStyle.Square )  sel = 1;
-			if ( p.Cap == CapStyle.Butt   )  sel = 2;
-			this.SelectButtonCap = sel;
-
-			sel = -1;
-			if ( p.Join == JoinStyle.Round )  sel = 0;
-			if ( p.Join == JoinStyle.Miter )  sel = 1;
-			if ( p.Join == JoinStyle.Bevel )  sel = 2;
-			this.SelectButtonJoin = sel;
+			this.gridCap.SelectedValue  = (int) p.Cap;
+			this.gridJoin.SelectedValue = (int) p.Join;
 
 			this.DashToWidget();
-			this.SelectDash = p.StandardDash;
-			this.fieldStandardLength.InternalValue = (decimal) p.StandardLength;
+			this.grid.SelectedValue = (int) p.StandardDash;
+			this.fieldStandardLength.TextFieldReal.InternalValue = (decimal) p.StandardLength;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -224,31 +225,24 @@ namespace Epsitec.Common.Document.Panels
 			Properties.Line p = this.property as Properties.Line;
 			if ( p == null )  return;
 
-			p.Width = (double) this.field.InternalValue;
+			p.Width = (double) this.field.TextFieldReal.InternalValue;
 
-			int sel = this.SelectButtonCap;
-			if ( sel == 0 )  p.Cap = CapStyle.Round;
-			if ( sel == 1 )  p.Cap = CapStyle.Square;
-			if ( sel == 2 )  p.Cap = CapStyle.Butt;
+			p.Cap  = (CapStyle)  this.gridCap.SelectedValue;
+			p.Join = (JoinStyle) this.gridJoin.SelectedValue;
 
-			sel = this.SelectButtonJoin;
-			if ( sel == 0 )  p.Join = JoinStyle.Round;
-			if ( sel == 1 )  p.Join = JoinStyle.Miter;
-			if ( sel == 2 )  p.Join = JoinStyle.Bevel;
-
-			Properties.StandardDashType newType = this.SelectDash;
+			Properties.StandardDashType newType = (Properties.StandardDashType) this.grid.SelectedValue;
 			if ( newType == Properties.StandardDashType.Custom )
 			{
 				p.StandardDash = newType;
 				this.WidgetToDash();
 
 				this.ignoreChanged = true;
-				this.fieldStandardLength.InternalValue = (decimal) p.StandardLength;
+				this.fieldStandardLength.TextFieldReal.InternalValue = (decimal) p.StandardLength;
 				this.ignoreChanged = false;
 			}
 			else
 			{
-				p.StandardLength = (double) this.fieldStandardLength.InternalValue;
+				p.StandardLength = (double) this.fieldStandardLength.TextFieldReal.InternalValue;
 				p.StandardDash = newType;
 
 				this.ignoreChanged = true;
@@ -263,8 +257,8 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			int i = this.RadioSelected;
-			this.fieldDashPen.InternalValue = (decimal) p.GetDashPen(i);
-			this.fieldDashGap.InternalValue = (decimal) p.GetDashGap(i);
+			this.fieldDashPen.TextFieldReal.InternalValue = (decimal) p.GetDashPen(i);
+			this.fieldDashGap.TextFieldReal.InternalValue = (decimal) p.GetDashGap(i);
 		}
 
 		protected void WidgetToDash()
@@ -273,37 +267,8 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			int i = this.RadioSelected;
-			p.SetDashPen(i, (double) this.fieldDashPen.InternalValue);
-			p.SetDashGap(i, (double) this.fieldDashGap.InternalValue);
-		}
-
-		protected Properties.StandardDashType SelectDash
-		{
-			get
-			{
-				int sel = this.dashType.SelectedIndex;
-				if ( sel == 0 )  return Properties.StandardDashType.Full;
-				if ( sel == 1 )  return Properties.StandardDashType.Line;
-				if ( sel == 2 )  return Properties.StandardDashType.LineDense;
-				if ( sel == 3 )  return Properties.StandardDashType.LineExpand;
-				if ( sel == 4 )  return Properties.StandardDashType.Dot;
-				if ( sel == 5 )  return Properties.StandardDashType.LineDot;
-				if ( sel == 6 )  return Properties.StandardDashType.LineDotDot;
-				if ( sel == 7 )  return Properties.StandardDashType.Custom;
-				return Properties.StandardDashType.Full;
-			}
-
-			set
-			{
-				if ( value == Properties.StandardDashType.Full       )  this.dashType.SelectedIndex = 0;
-				if ( value == Properties.StandardDashType.Line       )  this.dashType.SelectedIndex = 1;
-				if ( value == Properties.StandardDashType.LineDense  )  this.dashType.SelectedIndex = 2;
-				if ( value == Properties.StandardDashType.LineExpand )  this.dashType.SelectedIndex = 3;
-				if ( value == Properties.StandardDashType.Dot        )  this.dashType.SelectedIndex = 4;
-				if ( value == Properties.StandardDashType.LineDot    )  this.dashType.SelectedIndex = 5;
-				if ( value == Properties.StandardDashType.LineDotDot )  this.dashType.SelectedIndex = 6;
-				if ( value == Properties.StandardDashType.Custom     )  this.dashType.SelectedIndex = 7;
-			}
+			p.SetDashPen(i, (double) this.fieldDashPen.TextFieldReal.InternalValue);
+			p.SetDashGap(i, (double) this.fieldDashGap.TextFieldReal.InternalValue);
 		}
 
 		protected int RadioSelected
@@ -329,81 +294,88 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		protected int SelectButtonCap
-		{
-			get
-			{
-				for ( int i=0 ; i<3 ; i++ )
-				{
-					if ( this.buttons[i].ActiveState == WidgetState.ActiveYes )  return i;
-				}
-				return -1;
-			}
-
-			set
-			{
-				for ( int i=0 ; i<3 ; i++ )
-				{
-					this.buttons[i].ActiveState = (i==value) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				}
-			}
-		}
-
-		protected int SelectButtonJoin
-		{
-			get
-			{
-				for ( int i=0 ; i<3 ; i++ )
-				{
-					if ( this.buttons[i+3].ActiveState == WidgetState.ActiveYes )  return i;
-				}
-				return -1;
-			}
-
-			set
-			{
-				for ( int i=0 ; i<3 ; i++ )
-				{
-					this.buttons[i+3].ActiveState = (i==value) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				}
-			}
-		}
-
 
 		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
-			int sel = this.dashType.SelectedIndex;
-			bool dash = (sel >= 1 && sel <= 6);
-			bool user = (sel == 7);
+			bool showStandardLength = false;
+			bool enableStandardLength = false;
+			bool showDash = false;
+			bool enableDash = false;
+			bool capJoin = false;
 
-			this.dashType.SetVisible(this.isExtendedSize);
+			Properties.StandardDashType type = (Properties.StandardDashType) this.grid.SelectedValue;
 
-			for ( int i=0 ; i<6 ; i++ )
+			if ( this.isExtendedSize )  // panneau étendu ?
 			{
-				this.buttons[i].SetVisible(this.isExtendedSize);
-				this.buttons[i].SetEnabled(this.isExtendedSize);
+				if ( this.IsLabelProperties )  // détails ?
+				{
+					if ( type != Properties.StandardDashType.Full   &&
+						 type != Properties.StandardDashType.Custom )
+					{
+						showStandardLength = true;
+						enableStandardLength = true;
+					}
+					if ( type == Properties.StandardDashType.Custom )
+					{
+						showDash = true;
+						enableDash = true;
+					}
+				}
+				else	// compact ?
+				{
+					showStandardLength = true;
+					if ( type != Properties.StandardDashType.Full   &&
+						 type != Properties.StandardDashType.Custom )
+					{
+						enableStandardLength = true;
+					}
+					showDash = true;
+					if ( type == Properties.StandardDashType.Custom )
+					{
+						enableDash = true;
+					}
+				}
+
+				capJoin = true;
 			}
+
+			this.fieldStandardLength.SetVisible(showStandardLength);
+			this.fieldStandardLength.SetEnabled(enableStandardLength);
 
 			for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
 			{
-				this.radioDashRank[i].SetVisible(this.isExtendedSize);
-				this.radioDashRank[i].SetEnabled(user);
+				this.radioDashRank[i].SetVisible(showDash);
+				this.radioDashRank[i].SetEnabled(enableDash);
 			}
 
-			this.fieldStandardLength.SetVisible(this.isExtendedSize);
-			this.fieldStandardLength.SetEnabled(dash);
-			this.labelStandardLength.SetVisible(this.isExtendedSize);
-			this.labelStandardLength.SetEnabled(dash);
+			this.fieldDashPen.SetVisible(showDash);
+			this.fieldDashPen.SetEnabled(enableDash);
+			this.fieldDashGap.SetVisible(showDash);
+			this.fieldDashGap.SetEnabled(enableDash);
 
-			this.fieldDashPen.SetVisible(this.isExtendedSize);
-			this.fieldDashPen.SetEnabled(user);
-			this.fieldDashGap.SetVisible(this.isExtendedSize);
-			this.fieldDashGap.SetEnabled(user);
-			this.labelDashPen.SetVisible(this.isExtendedSize);
-			this.labelDashPen.SetEnabled(user);
-			this.labelDashGap.SetVisible(this.isExtendedSize);
-			this.labelDashGap.SetEnabled(user);
+			this.gridCap.SetVisible(capJoin);
+			this.gridCap.SetEnabled(capJoin);
+
+			this.gridJoin.SetVisible(capJoin);
+			this.gridJoin.SetEnabled(capJoin);
+		}
+
+		// Adapte les textes courts ou longs.
+		protected void UpdateShortLongText()
+		{
+			if ( this.IsLabelProperties )
+			{
+				Abstract.SetText(this.radioDashRank[0], Res.Strings.Panel.Line.Long.Dash1);
+				Abstract.SetText(this.radioDashRank[1], Res.Strings.Panel.Line.Long.Dash2);
+				Abstract.SetText(this.radioDashRank[2], Res.Strings.Panel.Line.Long.Dash3);
+			}
+			else
+			{
+				Abstract.SetText(this.radioDashRank[0], "");
+				Abstract.SetText(this.radioDashRank[1], "");
+				Abstract.SetText(this.radioDashRank[2], ":");
+			}
 		}
 
 		// Met à jour la géométrie.
@@ -411,69 +383,147 @@ namespace Epsitec.Common.Document.Panels
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.buttons == null )  return;
+			if ( this.grid == null )  return;
 
+			this.UpdateShortLongText();
 			this.EnableWidgets();
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
-
+			Rectangle rect = this.UsefulZone;
 			Rectangle r = rect;
-			r.Bottom = r.Top-20;
-			r.Right = rect.Right-70;
-			this.label.Bounds = r;
-			r.Left = rect.Right-70;
-			r.Right = rect.Right-50;
-			this.nothingButton.Bounds = r;
-			r.Left = rect.Right-50;
-			r.Right = rect.Right;
-			this.field.Bounds = r;
+			double pTop = rect.Top;
 
-			r.Top = r.Bottom-5;
-			r.Bottom = r.Top-20;
-			r.Left = rect.Right-(20*6+15);
-			r.Width = 20;
-			for ( int i=0 ; i<6 ; i++ )
+			if ( this.isExtendedSize )  // panneau étendu ?
 			{
-				this.buttons[i].Bounds = r;
-				r.Offset(20+((i==2)?15:0), 0);
+				if ( this.IsLabelProperties )  // étendu/détails ?
+				{
+					r.Top = pTop;
+					r.Bottom = r.Top-22;
+					r.Left = rect.Left;
+					r.Right = rect.Right;
+					r.Inflate(1);
+					this.grid.Bounds = r;
+
+					pTop -= 25;
+					r.Top = pTop;
+					r.Bottom = r.Top-20;
+					r.Left = rect.Left;
+					r.Width = 20;
+					this.nothingButton.Bounds = r;
+					r.Left = r.Right;
+					r.Right = rect.Right;
+					this.field.Bounds = r;
+					pTop -= 25;
+
+					Properties.StandardDashType type = (Properties.StandardDashType) this.grid.SelectedValue;
+					if ( type == Properties.StandardDashType.Custom )
+					{
+						r.Top = pTop-8;
+						r.Bottom = r.Top-16;
+						r.Left = rect.Left;
+						r.Width = 180/3;
+						for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
+						{
+							this.radioDashRank[i].Bounds = r;
+							r.Offset(r.Width, 0);
+						}
+
+						r.Top = r.Bottom;
+						r.Bottom = r.Top-20;
+						r.Left = rect.Left;
+						r.Right = rect.Right;
+						this.fieldDashPen.Bounds = r;
+
+						r.Top = r.Bottom-2;
+						r.Bottom = r.Top-20;
+						r.Left = rect.Left;
+						r.Right = rect.Right;
+						this.fieldDashGap.Bounds = r;
+
+						pTop -= 80;
+					}
+					else if ( type != Properties.StandardDashType.Full )
+					{
+						r.Top = pTop;
+						r.Bottom = r.Top-20;
+						r.Left = rect.Left;
+						r.Right = rect.Right;
+						this.fieldStandardLength.Bounds = r;
+						pTop -= 25;
+					}
+				}
+				else	// étendu/compact ?
+				{
+					r.Top = pTop;
+					r.Bottom = r.Top-22*2;
+					r.Left = rect.Left;
+					r.Width = 22*4;
+					r.Inflate(1);
+					this.grid.Bounds = r;
+
+					r.Top = pTop;
+					r.Bottom = r.Top-20;
+					r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth-20;
+					r.Right = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
+					this.nothingButton.Bounds = r;
+					r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
+					r.Right = rect.Right;
+					this.field.Bounds = r;
+					pTop -= 25;
+
+					r.Top = pTop;
+					r.Bottom = r.Top-20;
+					r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth;
+					r.Right = rect.Right;
+					this.fieldStandardLength.Bounds = r;
+					pTop -= 25;
+
+					r.Top = pTop;
+					r.Bottom = r.Top-20;
+					r.Left = rect.Left;
+					r.Width = 16;
+					for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
+					{
+						if ( i == Properties.Line.DashMax-1 )  r.Width = 32;
+						this.radioDashRank[i].Bounds = r;
+						r.Offset(r.Width, 0);
+					}
+					r.Left = rect.Right-Widgets.TextFieldLabel.ShortWidth-Widgets.TextFieldLabel.ShortWidth;
+					r.Width = Widgets.TextFieldLabel.ShortWidth;
+					this.fieldDashPen.Bounds = r;
+					r.Left = r.Right;
+					r.Width = Widgets.TextFieldLabel.ShortWidth;
+					this.fieldDashGap.Bounds = r;
+					pTop -= 25;
+				}
+
+				r.Top = pTop;
+				r.Bottom = r.Top-20;
+				r.Left = rect.Left;
+				r.Width = 22*3;
+				r.Inflate(1);
+				this.gridCap.Bounds = r;
+				r.Left = rect.Right-22*3;
+				r.Right = rect.Right;
+				this.gridJoin.Bounds = r;
 			}
-
-			r.Top = r.Bottom-5;
-			r.Bottom = r.Top-20;
-			r.Left = rect.Left;
-			r.Right = rect.Left+117;
-			this.dashType.Bounds = r;
-			r.Left = r.Right;
-			r.Width = 12;
-			this.labelStandardLength.Bounds = r;
-			r.Left = r.Right+2;
-			r.Width = 44;
-			this.fieldStandardLength.Bounds = r;
-
-			r.Top = r.Bottom-5;
-			r.Bottom = r.Top-20;
-			r.Left = rect.Left;
-			r.Width = 16;
-			for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
+			else	// panneau réduit ?
 			{
-				if ( i == Properties.Line.DashMax-1 )  r.Width = 32;
-				this.radioDashRank[i].Bounds = r;
-				r.Offset(r.Width, 0);
+				r.Top = pTop;
+				r.Bottom = r.Top-20;
+				r.Left = rect.Left;
+				r.Width = 22*4;
+				r.Inflate(1);
+				this.grid.Bounds = r;
+
+				r.Top = pTop;
+				r.Bottom = r.Top-20;
+				r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth-20;
+				r.Right = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
+				this.nothingButton.Bounds = r;
+				r.Left = rect.Right-Widgets.TextFieldLabel.DefaultTextWidth;
+				r.Right = rect.Right;
+				this.field.Bounds = r;
 			}
-			r.Left = rect.Right-116;
-			r.Width = 12;
-			this.labelDashPen.Bounds = r;
-			r.Left = r.Right+2;
-			r.Width = 44;
-			this.fieldDashPen.Bounds = r;
-			r.Left = r.Right;
-			r.Width = 12;
-			this.labelDashGap.Bounds = r;
-			r.Left = r.Right+2;
-			r.Width = 44;
-			this.fieldDashGap.Bounds = r;
 		}
 
 		// Une valeur a été changée.
@@ -486,24 +536,7 @@ namespace Epsitec.Common.Document.Panels
 		// Le bouton "aucun trait" a été cliqué.
 		private void HandleNothingClicked(object sender, MessageEventArgs e)
 		{
-			this.field.Value = 0.0M;
-			this.OnChanged();
-		}
-
-		// Une valeur a été changée.
-		private void HandlePanelLineClicked(object sender, MessageEventArgs e)
-		{
-			if ( this.ignoreChanged )  return;
-			IconButton button = sender as IconButton;
-
-			if ( button == this.buttons[0] )  this.SelectButtonCap = 0;
-			if ( button == this.buttons[1] )  this.SelectButtonCap = 1;
-			if ( button == this.buttons[2] )  this.SelectButtonCap = 2;
-
-			if ( button == this.buttons[3] )  this.SelectButtonJoin = 0;
-			if ( button == this.buttons[4] )  this.SelectButtonJoin = 1;
-			if ( button == this.buttons[5] )  this.SelectButtonJoin = 2;
-
+			this.field.TextFieldReal.Value = 0.0M;
 			this.OnChanged();
 		}
 
@@ -514,10 +547,16 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
-		// Le type dans la liste a changé.
-		private void HandleListChanged(object sender)
+		// Le type a été changé.
+		private void HandleTypeChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
+
+			if ( sender == this.grid && this.IsLabelProperties )
+			{
+				this.HeightChanged();
+			}
+
 			this.EnableWidgets();
 			this.OnChanged();
 		}
@@ -539,17 +578,14 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected StaticText				label;
+		protected Widgets.RadioIconGrid		grid;
+		protected Widgets.RadioIconGrid		gridCap;
+		protected Widgets.RadioIconGrid		gridJoin;
 		protected IconButton				nothingButton;
-		protected TextFieldReal				field;
-		protected TextFieldCombo			dashType;
-		protected IconButton[]				buttons;
+		protected Widgets.TextFieldLabel	field;
 		protected RadioButton[]				radioDashRank;
-		protected TextFieldReal				fieldStandardLength;
-		protected TextFieldReal				fieldDashPen;
-		protected TextFieldReal				fieldDashGap;
-		protected StaticText				labelStandardLength;
-		protected StaticText				labelDashPen;
-		protected StaticText				labelDashGap;
+		protected Widgets.TextFieldLabel	fieldStandardLength;
+		protected Widgets.TextFieldLabel	fieldDashPen;
+		protected Widgets.TextFieldLabel	fieldDashGap;
 	}
 }

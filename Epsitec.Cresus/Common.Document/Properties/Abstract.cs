@@ -15,7 +15,7 @@ namespace Epsitec.Common.Document.Properties
 		LineMode       = 3,		// mode du trait
 		Arrow          = 4,		// extrémité des segments
 		FillGradient   = 5,		// dégradé de remplissage
-		BackColor      = 6,		// texte: couleur de fond
+		BackColor      = 6,		// texte: couleur de fond (plus utilisé)
 		Shadow         = 7,		// ombre sous l'objet
 		PolyClose      = 8,		// mode de fermeture des polygones
 		Corner         = 9,		// coins des rectangles
@@ -164,21 +164,12 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Nom du style de la propriété.
-		public string StyleName
+		// Indique s'il s'agit d'une propriété de surface pour un trait.
+		public bool IsStrokingGradient
 		{
 			get
 			{
-				return this.styleName;
-			}
-			
-			set
-			{
-				if ( this.styleName != value )
-				{
-					this.InsertOpletProperty();
-					this.styleName = value;
-				}
+				return ( this.type == Type.LineColor );
 			}
 		}
 
@@ -230,6 +221,15 @@ namespace Epsitec.Common.Document.Properties
 			set
 			{
 				this.isFloating = value;
+			}
+		}
+
+		// Retourne le nom de l'ancien style.
+		public string OldStyleName
+		{
+			get
+			{
+				return this.oldStyleName;
 			}
 		}
 
@@ -299,19 +299,54 @@ namespace Epsitec.Common.Document.Properties
 			return "";
 		}
 
+		// Nom de l'icône de la propriété.
+		public static string IconText(Type type)
+		{
+			switch ( type )
+			{
+				case Type.Name:           return "PropertyName";
+				case Type.LineColor:      return "PropertyLineColor";
+				case Type.LineMode:       return "PropertyLineMode";
+				case Type.LineDimension:  return "PropertyLineDimension";
+				case Type.FillGradient:   return "PropertyFillGradient";
+				case Type.FillGradientVT: return "PropertyFillGradientVT";
+				case Type.FillGradientVL: return "PropertyFillGradientVL";
+				case Type.FillGradientVR: return "PropertyFillGradientVR";
+				case Type.Shadow:         return "PropertyShadow";
+				case Type.PolyClose:      return "PropertyPolyClose";
+				case Type.Arrow:          return "PropertyArrow";
+				case Type.DimensionArrow: return "PropertyDimensionArrow";
+				case Type.Dimension:      return "PropertyDimension";
+				case Type.Corner:         return "PropertyCorner";
+				case Type.Regular:        return "PropertyRegular";
+				case Type.Arc:            return "PropertyArc";
+				case Type.Surface:        return "PropertySurface";
+				case Type.Volume:         return "PropertyVolume";
+				case Type.BackColor:      return "PropertyBackColor";
+				case Type.TextFont:       return "PropertyTextFont";
+				case Type.TextJustif:     return "PropertyTextJustif";
+				case Type.TextLine:       return "PropertyTextLine";
+				case Type.Image:          return "PropertyImage";
+				case Type.ModColor:       return "PropertyModColor";
+			}
+			return "";
+		}
+
+		// Donne le petit texte pour les échantillons.
+		public virtual string SampleText
+		{
+			get
+			{
+				return "";
+			}
+		}
+
 		// Nom de la propriété ou du style si c'en est un.
 		public string TextStyle
 		{
 			get
 			{
-				if ( this.isStyle )
-				{
-					return Misc.Bold(this.styleName);
-				}
-				else
-				{
-					return Abstract.Text(this.type);
-				}
+				return Abstract.Text(this.type);
 			}
 		}
 
@@ -369,21 +404,6 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Indique si la propriété utilise un pattern.
-		public virtual bool IsPatternPDF
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		// Crée le pattern et retourne sa taille.
-		public virtual Size CreatePatternPDF(PDF.Port port)
-		{
-			return Size.Empty;
-		}
-
 
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public virtual bool AlterBoundingBox
@@ -397,9 +417,9 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Indique si la propriété est visible.
-		public virtual bool IsVisible
+		public virtual bool IsVisible(IPaintPort port)
 		{
-			get { return true; }
+			return true;
 		}
 
 
@@ -409,6 +429,7 @@ namespace Epsitec.Common.Document.Properties
 			return ( type != Type.None      &&
 					 type != Type.Name      &&
 					 type != Type.Shadow    &&
+					 type != Type.BackColor &&
 					 type != Type.ModColor  &&
 					 type != Type.PolyClose );
 		}
@@ -419,10 +440,8 @@ namespace Epsitec.Common.Document.Properties
 			System.Diagnostics.Debug.Assert(this.isStyle);
 			System.Diagnostics.Debug.Assert(this.Type == model.Type);
 			this.NotifyBefore();
-			string name = this.styleName;
 			model.CopyTo(this);
 			this.isStyle = true;
-			this.styleName = name;
 			this.NotifyAfter();
 			this.document.Notifier.NotifyPropertyChanged(this);
 		}
@@ -441,16 +460,8 @@ namespace Epsitec.Common.Document.Properties
 		// Effectue une copie de la propriété.
 		public virtual void CopyTo(Abstract property)
 		{
-			property.type      = this.type;
-			property.styleName = this.styleName;
-			property.isStyle   = this.isStyle;
-		}
-
-		// Détermine si Compare doit tenir compte du nom du style.
-		public bool IsCompareStyleName
-		{
-			get { return this.isCompareStyleName; }
-			set { this.isCompareStyleName = value; }
+			property.type    = this.type;
+			property.isStyle = this.isStyle;
 		}
 
 		// Compare deux propriétés.
@@ -459,7 +470,6 @@ namespace Epsitec.Common.Document.Properties
 		public virtual bool Compare(Abstract property)
 		{
 			if ( property.type != this.type )  return false;
-			if ( this.isCompareStyleName && property.styleName != this.styleName )  return false;
 			return true;
 		}
 
@@ -533,6 +543,32 @@ namespace Epsitec.Common.Document.Properties
 			{
 				return drawingContext.ScaleX;
 			}
+		}
+
+
+		// Indique si la surface PDF est floue.
+		public virtual bool IsSmoothSurfacePDF(IPaintPort port)
+		{
+			return false;
+		}
+		
+		// Donne le type PDF de la surface complexe.
+		public virtual PDF.Type TypeComplexSurfacePDF(IPaintPort port)
+		{
+			return PDF.Type.None;
+		}
+
+
+		// Modifie l'espace des couleurs.
+		public virtual bool ChangeColorSpace(ColorSpace cs)
+		{
+			return false;
+		}
+
+		// Modifie les couleurs.
+		public virtual bool ChangeColor(double adjust, bool stroke)
+		{
+			return false;
 		}
 
 
@@ -715,10 +751,6 @@ namespace Epsitec.Common.Document.Properties
 		{
 			info.AddValue("Type", this.type);
 			info.AddValue("IsStyle", this.isStyle);
-			if ( this.isStyle )
-			{
-				info.AddValue("StyleName", this.styleName);
-			}
 		}
 
 		// Constructeur qui désérialise la propriété.
@@ -728,9 +760,9 @@ namespace Epsitec.Common.Document.Properties
 			this.Initialise();
 			this.type = (Type) info.GetValue("Type", typeof(Type));
 			this.isStyle = info.GetBoolean("IsStyle");
-			if ( this.isStyle )
+			if ( this.isStyle && !this.document.IsRevisionGreaterOrEqual(1,0,24) )
 			{
-				this.styleName = info.GetString("StyleName");
+				this.oldStyleName = info.GetString("StyleName");
 			}
 			this.owners = new UndoableList(this.document, UndoableListType.ObjectsInsideProperty);
 		}
@@ -740,13 +772,12 @@ namespace Epsitec.Common.Document.Properties
 		protected Document						document;
 		protected Type							type = Type.None;
 		protected UndoableList					owners;
-		protected string						styleName = "";
+		protected string						oldStyleName = "";
 		protected bool							isOnlyForCreation = false;
 		protected bool							isStyle = false;
 		protected bool							isFloating = false;
 		protected bool							isMulti = false;
 		protected bool							isExtendedSize = false;
 		protected bool							isSelected = false;
-		protected bool							isCompareStyleName = true;
 	}
 }

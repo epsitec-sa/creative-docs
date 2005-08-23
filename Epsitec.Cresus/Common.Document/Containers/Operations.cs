@@ -76,6 +76,18 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateHeader(ref this.boxAdjust, ref this.toolBarAdjust, Res.Strings.Action.Adjust);
 			this.CreateButton(this.toolBarAdjust, ref this.buttonAdjustWidth,  "AdjustWidth",  Res.Strings.Action.AdjustWidth,  new MessageEventHandler(this.HandleButtonAdjustWidth));
 			this.CreateButton(this.toolBarAdjust, ref this.buttonAdjustHeight, "AdjustHeight", Res.Strings.Action.AdjustHeight, new MessageEventHandler(this.HandleButtonAdjustHeight));
+
+			// Couleurs.
+			this.CreateHeader(ref this.boxColor, ref this.toolBarColor, Res.Strings.Action.Color);
+			this.CreateButton(this.toolBarColor, ref this.buttonColorToRGB,  "OperColorToRGB",  Res.Strings.Action.ColorToRGB,  new MessageEventHandler(this.HandleButtonColorToRGB));
+			this.CreateButton(this.toolBarColor, ref this.buttonColorToCMYK, "OperColorToCMYK", Res.Strings.Action.ColorToCMYK, new MessageEventHandler(this.HandleButtonColorToCMYK));
+			this.CreateButton(this.toolBarColor, ref this.buttonColorToGray, "OperColorToGray", Res.Strings.Action.ColorToGray, new MessageEventHandler(this.HandleButtonColorToGray));
+			this.CreateSeparator(this.toolBarColor);
+			this.CreateFieldColor(this.toolBarColor, ref this.fieldColor, Res.Strings.Action.ColorValue);
+			this.CreateButton(this.toolBarColor, ref this.buttonColorStrokeDark,  "OperColorStrokeDark",  Res.Strings.Action.ColorStrokeDark,  new MessageEventHandler(this.HandleButtonColorStrokeDark));
+			this.CreateButton(this.toolBarColor, ref this.buttonColorStrokeLight, "OperColorStrokeLight", Res.Strings.Action.ColorStrokeLight, new MessageEventHandler(this.HandleButtonColorStrokeLight));
+			this.CreateButton(this.toolBarColor, ref this.buttonColorFillDark,    "OperColorFillDark",    Res.Strings.Action.ColorFillDark,    new MessageEventHandler(this.HandleButtonColorFillDark));
+			this.CreateButton(this.toolBarColor, ref this.buttonColorFillLight,   "OperColorFillLight",   Res.Strings.Action.ColorFillLight,   new MessageEventHandler(this.HandleButtonColorFillLight));
 		}
 
 		// Crée l'en-tête d'un groupe.
@@ -98,7 +110,7 @@ namespace Epsitec.Common.Document.Containers
 		// Crée un IconButton. 
 		protected void CreateButton(HToolBar bar, ref IconButton button, string icon, string tooltip, MessageEventHandler handler)
 		{
-			button = new IconButton(string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}.icon", icon));
+			button = new IconButton(Misc.Icon(icon));
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -136,7 +148,7 @@ namespace Epsitec.Common.Document.Containers
 			field.TabIndex = tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(field, tooltip);
-			bar.Items.Add(this.fieldRotate);
+			bar.Items.Add(field);
 		}
 
 		// Crée un champ éditable pour un zoom.
@@ -154,7 +166,23 @@ namespace Epsitec.Common.Document.Containers
 			field.TabIndex = tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(field, tooltip);
-			bar.Items.Add(this.fieldZoom);
+			bar.Items.Add(field);
+		}
+
+		// Crée un champ éditable pour une couleur.
+		protected void CreateFieldColor(HToolBar bar, ref TextFieldReal field, string tooltip)
+		{
+			field = new TextFieldReal();
+			this.document.Modifier.AdaptTextFieldRealPercent(field);
+			field.Width = 50;
+			field.InternalMinValue = 0.0M;
+			field.InternalMaxValue = 1.0M;
+			field.DefaultValue = 0.1M;
+			field.InternalValue = 0.1M;
+			field.TabIndex = tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(field, tooltip);
+			bar.Items.Add(field);
 		}
 
 		// Crée un séparateur.
@@ -216,6 +244,14 @@ namespace Epsitec.Common.Document.Containers
 
 			this.buttonAdjustWidth.SetEnabled(enabled2);
 			this.buttonAdjustHeight.SetEnabled(enabled2);
+
+			this.buttonColorToRGB.SetEnabled(enabled);
+			this.buttonColorToCMYK.SetEnabled(enabled);
+			this.buttonColorToGray.SetEnabled(enabled);
+			this.buttonColorStrokeDark.SetEnabled(enabled);
+			this.buttonColorStrokeLight.SetEnabled(enabled);
+			this.buttonColorFillDark.SetEnabled(enabled);
+			this.buttonColorFillLight.SetEnabled(enabled);
 		}
 
 
@@ -387,6 +423,45 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.AdjustSelection(false);
 		}
 
+		private void HandleButtonColorToRGB(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.ColorSelection(ColorSpace.RGB);
+		}
+
+		private void HandleButtonColorToCMYK(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.ColorSelection(ColorSpace.CMYK);
+		}
+
+		private void HandleButtonColorToGray(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.ColorSelection(ColorSpace.Gray);
+		}
+
+		private void HandleButtonColorStrokeDark(object sender, MessageEventArgs e)
+		{
+			double adjust = (double) this.fieldColor.InternalValue;
+			this.document.Modifier.ColorSelection(-adjust, true);
+		}
+
+		private void HandleButtonColorStrokeLight(object sender, MessageEventArgs e)
+		{
+			double adjust = (double) this.fieldColor.InternalValue;
+			this.document.Modifier.ColorSelection(adjust, true);
+		}
+
+		private void HandleButtonColorFillDark(object sender, MessageEventArgs e)
+		{
+			double adjust = (double) this.fieldColor.InternalValue;
+			this.document.Modifier.ColorSelection(-adjust, false);
+		}
+
+		private void HandleButtonColorFillLight(object sender, MessageEventArgs e)
+		{
+			double adjust = (double) this.fieldColor.InternalValue;
+			this.document.Modifier.ColorSelection(adjust, false);
+		}
+
 
 		protected GroupBox				boxMove;
 		protected HToolBar				toolBarMove;
@@ -444,6 +519,17 @@ namespace Epsitec.Common.Document.Containers
 		protected HToolBar				toolBarAdjust;
 		protected IconButton			buttonAdjustWidth;
 		protected IconButton			buttonAdjustHeight;
+		
+		protected GroupBox				boxColor;
+		protected HToolBar				toolBarColor;
+		protected IconButton			buttonColorToRGB;
+		protected IconButton			buttonColorToCMYK;
+		protected IconButton			buttonColorToGray;
+		protected TextFieldReal			fieldColor;
+		protected IconButton			buttonColorStrokeDark;
+		protected IconButton			buttonColorStrokeLight;
+		protected IconButton			buttonColorFillDark;
+		protected IconButton			buttonColorFillLight;
 
 		protected int					tabIndex;
 	}

@@ -19,7 +19,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Drawing.Color					Color
+		public Drawing.RichColor				Color
 		{
 			get
 			{
@@ -152,7 +152,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( Message.State.IsShiftPressed || Message.State.IsCtrlPressed )
 					{
-						Drawing.Color temp = this.Color;
+						Drawing.RichColor temp = this.Color;
 						this.Color = this.dragTarget.Color;
 						this.dragTarget.Color = temp;
 
@@ -238,7 +238,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				this.dragColor = Drawing.Color.Empty;
+				this.dragColor = Drawing.RichColor.Empty;
 				this.Invalidate();
 			}
 		}
@@ -257,7 +257,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( dst == null || src == null )  return;
 
-			Drawing.Color color = enable ? src.Color : Drawing.Color.Empty;
+			Drawing.RichColor color = enable ? src.Color : Drawing.RichColor.Empty;
 			if ( dst.dragColor != color )
 			{
 				dst.dragColor = color;
@@ -282,14 +282,12 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.IsEnabled )
 			{
-				graphics.LineCap = Drawing.CapStyle.Round;
-				
 				graphics.AddLine(rect.Left+0.5, rect.Bottom+0.5, rect.Right-0.5, rect.Top-0.5);
 				graphics.AddLine(rect.Left+0.5, rect.Top-0.5, rect.Right-0.5, rect.Bottom+0.5);
 				graphics.RenderSolid(adorner.ColorBorder);
 
 				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.Color);
+				graphics.RenderSolid(this.Color.Basic);
 
 				rect.Deflate(0.5, 0.5);
 				graphics.AddRectangle(rect);
@@ -299,7 +297,7 @@ namespace Epsitec.Common.Widgets
 				{
 					rect.Deflate(1, 1);
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(ColorSample.GetOpposite(this.Color));
+					graphics.RenderSolid(ColorSample.GetOpposite(this.Color.Basic));
 				}
 
 				if ( !this.dragColor.IsEmpty )
@@ -312,10 +310,10 @@ namespace Epsitec.Common.Widgets
 					graphics.RenderSolid(adorner.ColorBorder);
 
 					graphics.AddFilledCircle(rect.Center, radius);
-					graphics.RenderSolid(this.dragColor);
+					graphics.RenderSolid(this.dragColor.Basic);
 
 					graphics.AddCircle(rect.Center, radius);
-					graphics.RenderSolid(ColorSample.GetOpposite(this.dragColor));
+					graphics.RenderSolid(ColorSample.GetOpposite(this.dragColor.Basic));
 				}
 			}
 			else
@@ -326,7 +324,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Calcule la couleur opposée pour le mise en évidence.
+		// Calcule la couleur opposée pour la mise en évidence.
 		protected static Drawing.Color GetOpposite(Drawing.Color color)
 		{
 			double h,s,v;
@@ -364,11 +362,11 @@ namespace Epsitec.Common.Widgets
 		private DragWindow						dragWindow;
 		private Drawing.Point					dragOrigin;
 		private ColorSample						dragTarget;
-		private Drawing.Color					dragColor = Drawing.Color.Empty;
+		private Drawing.RichColor				dragColor = Drawing.RichColor.Empty;
 		
 		protected Drawing.ColorCollection		collectionList;
 		protected int							collectionIndex;
-		protected Drawing.Color					color;
+		protected Drawing.RichColor				color;
 		protected bool							possibleSource = false;
 	}
 }

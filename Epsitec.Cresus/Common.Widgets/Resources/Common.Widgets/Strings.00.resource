@@ -24,6 +24,11 @@
 	<data name="ColorSelector.ShortHue">T</data>
 	<data name="ColorSelector.ShortSaturation">S</data>
 	<data name="ColorSelector.ShortValue">L</data>
+	<data name="ColorSelector.ShortCyan">C</data>
+	<data name="ColorSelector.ShortMagenta">M</data>
+	<data name="ColorSelector.ShortYellow">J</data>
+	<data name="ColorSelector.ShortBlack">N</data>
+	<data name="ColorSelector.ShortGray">G</data>
 	<data name="ColorSelector.LongRed">Rouge</data>
 	<data name="ColorSelector.LongGreen">Vert</data>
 	<data name="ColorSelector.LongBlue">Bleu</data>
@@ -31,8 +36,16 @@
 	<data name="ColorSelector.LongHue">Teinte</data>
 	<data name="ColorSelector.LongSaturation">Saturation</data>
 	<data name="ColorSelector.LongValue">Luminosité</data>
+	<data name="ColorSelector.LongCyan">Cyan</data>
+	<data name="ColorSelector.LongMagenta">Magenta</data>
+	<data name="ColorSelector.LongYellow">Jaune</data>
+	<data name="ColorSelector.LongBlack">Noir</data>
+	<data name="ColorSelector.LongGray">Gris</data>
 	<data name="ColorSelector.Picker">Pipette-loupe</data>
 	<data name="ColorSelector.Close">Fermer ce panneau</data>
+	<data name="ColorSelector.ColorSpace.RGB">Couleurs RVB</data>
+	<data name="ColorSelector.ColorSpace.CMYK">Couleurs CMJN</data>
+	<data name="ColorSelector.ColorSpace.Gray">Niveaux de gris</data>
 
 	<data name="EditArray.StartReadOnly">Consultation uniquement</data>
 	<data name="EditArray.StartEdition">Modifie les données</data>

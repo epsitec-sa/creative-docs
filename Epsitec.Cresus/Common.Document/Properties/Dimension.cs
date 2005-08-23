@@ -36,8 +36,7 @@ namespace Epsitec.Common.Document.Properties
 			this.addLength = 50.0;
 			this.outLength = 20.0;
 			this.fontOffset = 0.4;
-			this.prefix = Res.Strings.Property.Dimension.Prefix;
-			this.postfix = Res.Strings.Property.Dimension.Postfix;
+			this.dimensionText = Res.Strings.Property.Dimension.Text;
 			this.rotateText = false;
 		}
 
@@ -131,37 +130,19 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public string Prefix
+		public string DimensionText
 		{
 			get
 			{
-				return this.prefix;
+				return this.dimensionText;
 			}
 
 			set
 			{
-				if ( this.prefix != value )
+				if ( this.dimensionText != value )
 				{
 					this.NotifyBefore();
-					this.prefix = value;
-					this.NotifyAfter();
-				}
-			}
-		}
-
-		public string Postfix
-		{
-			get
-			{
-				return this.postfix;
-			}
-
-			set
-			{
-				if ( this.postfix != value )
-				{
-					this.NotifyBefore();
-					this.postfix = value;
+					this.dimensionText = value;
 					this.NotifyAfter();
 				}
 			}
@@ -185,6 +166,70 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		// Donne le petit texte pour les échantillons.
+		public override string SampleText
+		{
+			get
+			{
+				if ( this.dimensionForm == DimensionForm.Inside  )  return "<-->";
+				if ( this.dimensionForm == DimensionForm.Outside )  return ">--<";
+				return "<*>";
+			}
+		}
+
+		// Retourne le nom d'un type donné.
+		public static string GetName(DimensionForm type)
+		{
+			string name = "";
+			switch ( type )
+			{
+				case DimensionForm.Auto:     name = Res.Strings.Property.Dimension.Auto;     break;
+				case DimensionForm.Inside:   name = Res.Strings.Property.Dimension.Inside;   break;
+				case DimensionForm.Outside:  name = Res.Strings.Property.Dimension.Outside;  break;
+			}
+			return name;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(DimensionForm type)
+		{
+			switch ( type )
+			{
+				case DimensionForm.Auto:     return "DimensionAuto";
+				case DimensionForm.Inside:   return "DimensionInside";
+				case DimensionForm.Outside:  return "DimensionOutside";
+			}
+			return "";
+		}
+
+		// Retourne le nom d'un type donné.
+		public static string GetName(DimensionJustif type)
+		{
+			string name = "";
+			switch ( type )
+			{
+				case DimensionJustif.CenterOrLeft:   name = Res.Strings.Property.Dimension.CenterOrLeft;   break;
+				case DimensionJustif.CenterOrRight:  name = Res.Strings.Property.Dimension.CenterOrRight;  break;
+				case DimensionJustif.Left:           name = Res.Strings.Property.Dimension.Left;           break;
+				case DimensionJustif.Right:          name = Res.Strings.Property.Dimension.Right;          break;
+			}
+			return name;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(DimensionJustif type)
+		{
+			switch ( type )
+			{
+				case DimensionJustif.CenterOrLeft:   return "DimensionCenterOrLeft";
+				case DimensionJustif.CenterOrRight:  return "DimensionCenterOrRight";
+				case DimensionJustif.Left:           return "DimensionLeft";
+				case DimensionJustif.Right:          return "DimensionRight";
+			}
+			return "";
+		}
+
+
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
@@ -201,8 +246,7 @@ namespace Epsitec.Common.Document.Properties
 			p.addLength       = this.addLength;
 			p.outLength       = this.outLength;
 			p.fontOffset      = this.fontOffset;
-			p.prefix          = this.prefix;
-			p.postfix         = this.postfix;
+			p.dimensionText   = this.dimensionText;
 			p.rotateText      = this.rotateText;
 		}
 
@@ -217,8 +261,7 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.addLength       != this.addLength       )  return false;
 			if ( p.outLength       != this.outLength       )  return false;
 			if ( p.fontOffset      != this.fontOffset      )  return false;
-			if ( p.prefix          != this.prefix          )  return false;
-			if ( p.postfix         != this.postfix         )  return false;
+			if ( p.dimensionText   != this.dimensionText   )  return false;
 			if ( p.rotateText      != this.rotateText      )  return false;
 
 			return true;
@@ -227,6 +270,7 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Dimension(document);
 		}
 
@@ -242,8 +286,7 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue("AddLength", this.addLength);
 			info.AddValue("OutLength", this.outLength);
 			info.AddValue("FontOffset", this.fontOffset);
-			info.AddValue("Prefix", this.prefix);
-			info.AddValue("Postfix", this.postfix);
+			info.AddValue("DimensionText", this.dimensionText);
 			info.AddValue("RotateText", this.rotateText);
 		}
 
@@ -255,9 +298,18 @@ namespace Epsitec.Common.Document.Properties
 			this.addLength = info.GetDouble("AddLength");
 			this.outLength = info.GetDouble("OutLength");
 			this.fontOffset = info.GetDouble("FontOffset");
-			this.prefix = info.GetString("Prefix");
-			this.postfix = info.GetString("Postfix");
 			this.rotateText = info.GetBoolean("RotateText");
+
+			if ( this.document.IsRevisionGreaterOrEqual(1,0,25) )
+			{
+				this.dimensionText = info.GetString("DimensionText");
+			}
+			else
+			{
+				string prefix = info.GetString("Prefix");
+				string postfix = info.GetString("Postfix");
+				this.dimensionText = prefix + "#" + postfix;
+			}
 		}
 		#endregion
 
@@ -267,8 +319,7 @@ namespace Epsitec.Common.Document.Properties
 		protected double				addLength;
 		protected double				outLength;
 		protected double				fontOffset;
-		protected string				prefix;
-		protected string				postfix;
+		protected string				dimensionText;
 		protected bool					rotateText;
 	}
 }

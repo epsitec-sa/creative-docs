@@ -14,24 +14,7 @@ namespace Epsitec.Common.Support.Implementation
 	{
 		public FileProvider()
 		{
-			this.id_regex    = RegexFactory.FileName;
-			this.path_prefix = System.IO.Directory.GetCurrentDirectory () + System.IO.Path.DirectorySeparatorChar;
-			
-			//	Pas très propre, mais ça suffit maintenant: on supprime le chemin \bin\... pour remonter au niveau
-			//	plus intéressant (celui des sources).
-			
-			if (this.path_prefix.ToLower ().EndsWith (@"\bin\debug\"))
-			{
-				this.path_prefix = this.path_prefix.Substring (0, this.path_prefix.Length - 10);
-			}
-			else if (this.path_prefix.ToLower ().EndsWith (@"\bin\release\"))
-			{
-				this.path_prefix = this.path_prefix.Substring (0, this.path_prefix.Length - 12);
-			}
-			
-			this.path_prefix = this.path_prefix + "resources" + System.IO.Path.DirectorySeparatorChar;
-			
-			System.Diagnostics.Debug.WriteLine ("Path prefix for files: " + this.path_prefix);
+			this.id_regex = RegexFactory.FileName;
 		}
 		
 		
@@ -81,6 +64,54 @@ namespace Epsitec.Common.Support.Implementation
 			get { return "file"; }
 		}
 		
+		
+		public override void Setup(ResourceManager resource_manager)
+		{
+			base.Setup (resource_manager);
+			
+			string dir_1 = resource_manager.DefaultPath;
+			string dir_2 = System.IO.Directory.GetCurrentDirectory ();
+			
+			if (! this.SelectPath (dir_1))
+			{
+				if (! this.SelectPath (dir_2))
+				{
+					throw new System.IO.FileNotFoundException ("Cannot find resources directory.");
+				}
+			}
+		}
+		
+		private bool SelectPath(string path)
+		{
+			if (! path.EndsWith (System.IO.Path.DirectorySeparatorChar.ToString ()))
+			{
+				path = path + System.IO.Path.DirectorySeparatorChar;
+			}
+			
+			//	Pas très propre, mais ça suffit maintenant: on supprime le chemin \bin\... pour remonter au niveau
+			//	plus intéressant (celui des sources).
+			
+			if (path.ToLower ().EndsWith (@"\bin\debug\"))
+			{
+				path = path.Substring (0, path.Length - 10);
+			}
+			else if (path.ToLower ().EndsWith (@"\bin\release\"))
+			{
+				path = path.Substring (0, path.Length - 12);
+			}
+			
+			path = path + "resources" + System.IO.Path.DirectorySeparatorChar;
+			
+			System.Diagnostics.Debug.WriteLine ("Path prefix for files: " + path);
+			
+			if (System.IO.Directory.Exists (path))
+			{
+				this.path_prefix = path;
+				return true;
+			}
+			
+			return false;
+		}
 		
 		public override bool SetupApplication(string application)
 		{

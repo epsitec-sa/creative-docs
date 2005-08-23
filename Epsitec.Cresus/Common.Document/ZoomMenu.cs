@@ -93,10 +93,10 @@ namespace Epsitec.Common.Document
 
 				string name = zm.text;
 
-				string icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioNo.icon";
+				string icon = Misc.Icon("RadioNo");
 				if ( zm.Equal(currentZoom) )
 				{
-					icon = "manifest:Epsitec.App.DocumentEditor.Images.RadioYes.icon";
+					icon = Misc.Icon("RadioYes");
 					name = Misc.Bold(name);
 				}
 

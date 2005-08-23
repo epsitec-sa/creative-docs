@@ -12,67 +12,63 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Volume(Document document) : base(document)
 		{
-			this.label = new StaticText(this);
-			this.label.Alignment = ContentAlignment.MiddleLeft;
+			this.grid = new Widgets.RadioIconGrid(this);
+			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.grid.TabIndex = 0;
+			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.volumeType = new TextFieldCombo(this);
-			this.volumeType.IsReadOnly = true;
-			for ( int i=0 ; i<100 ; i++ )
-			{
-				Properties.VolumeType type = Properties.Volume.ConvType(i);
-				if ( type == Properties.VolumeType.None )  break;
-				this.volumeType.Items.Add(Properties.Volume.GetName(type));
-			}
-			//?this.volumeType.SelectedIndexChanged += new EventHandler(this.HandleTypeChanged);
-			this.volumeType.TextChanged += new EventHandler(this.HandleTypeChanged);
-			this.volumeType.TabIndex = 1;
-			this.volumeType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.volumeType, Res.Strings.Panel.Volume.ToolTip.Type);
+			this.AddRadioIcon(Properties.VolumeType.BoxClose);
+			this.AddRadioIcon(Properties.VolumeType.BoxOpen);
+			this.AddRadioIcon(Properties.VolumeType.Pyramid);
+			this.AddRadioIcon(Properties.VolumeType.Cylinder);
 
-			this.labelRapport = new StaticText(this);
-			this.labelRapport.Text = Res.Strings.Panel.Volume.Label.Rapport;
-
-			this.fieldRapport = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealPercent(this.fieldRapport);
-			this.fieldRapport.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldRapport = new Widgets.TextFieldLabel(this, false);
+			this.fieldRapport.LabelShortText = Res.Strings.Panel.Volume.Short.Rapport;
+			this.fieldRapport.LabelLongText  = Res.Strings.Panel.Volume.Long.Rapport;
+			this.document.Modifier.AdaptTextFieldRealPercent(this.fieldRapport.TextFieldReal);
+			this.fieldRapport.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldRapport.TabIndex = 2;
 			this.fieldRapport.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldRapport, Res.Strings.Panel.Volume.Tooltip.Rapport);
 
-			this.labelLeft = new StaticText(this);
-			this.labelLeft.Text = Res.Strings.Panel.Volume.Label.Left;
-
-			this.fieldLeft = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldLeft);
-			this.fieldLeft.InternalMaxValue = 90.0M;
-			this.fieldLeft.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldLeft = new Widgets.TextFieldLabel(this, false);
+			this.fieldLeft.LabelShortText = Res.Strings.Panel.Volume.Short.Left;
+			this.fieldLeft.LabelLongText  = Res.Strings.Panel.Volume.Long.Left;
+			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldLeft.TextFieldReal);
+			this.fieldLeft.TextFieldReal.InternalMaxValue = 90.0M;
+			this.fieldLeft.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldLeft.TabIndex = 3;
 			this.fieldLeft.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldLeft, Res.Strings.Panel.Volume.Tooltip.Left);
 
-			this.labelRight = new StaticText(this);
-			this.labelRight.Text = Res.Strings.Panel.Volume.Label.Right;
-
-			this.fieldRight = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldRight);
-			this.fieldRight.InternalMaxValue = 90.0M;
-			this.fieldRight.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldRight = new Widgets.TextFieldLabel(this, false);
+			this.fieldRight.LabelShortText = Res.Strings.Panel.Volume.Short.Right;
+			this.fieldRight.LabelLongText  = Res.Strings.Panel.Volume.Long.Right;
+			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldRight.TextFieldReal);
+			this.fieldRight.TextFieldReal.InternalMaxValue = 90.0M;
+			this.fieldRight.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldRight.TabIndex = 4;
 			this.fieldRight.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldRight, Res.Strings.Panel.Volume.Tooltip.Right);
 
 			this.isNormalAndExtended = true;
 		}
 		
+		protected void AddRadioIcon(Properties.VolumeType type)
+		{
+			this.grid.AddRadioIcon(Properties.Volume.GetIconText(type), Properties.Volume.GetName(type), (int)type, false);
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
-				//?this.volumeType.SelectedIndexChanged -= new EventHandler(this.HandleTypeChanged);
-				this.volumeType.TextChanged -= new EventHandler(this.HandleTypeChanged);
-				this.fieldRapport.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldLeft.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldRight.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
+				this.fieldRapport.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldLeft.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldRight.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
 
-				this.label = null;
-				this.volumeType = null;
+				this.grid = null;
 				this.fieldRapport = null;
 				this.fieldLeft = null;
 				this.fieldRight = null;
@@ -87,7 +83,25 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return ( this.isExtendedSize ? 105 : 30 );
+				double h = this.LabelHeight;
+
+				if ( this.isExtendedSize )  // panneau étendu ?
+				{
+					if ( this.IsLabelProperties )  // étendu/détails ?
+					{
+						h += 105;
+					}
+					else	// étendu/compact ?
+					{
+						h += 55;
+					}
+				}
+				else	// panneau réduit ?
+				{
+					h += 30;
+				}
+
+				return h;
 			}
 		}
 
@@ -101,12 +115,10 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			this.label.Text = p.TextStyle;
-
-			this.volumeType.SelectedIndex = Properties.Volume.ConvType(p.VolumeType);
-			this.fieldRapport.InternalValue = (decimal) p.Rapport;
-			this.fieldLeft.InternalValue = (decimal) p.AngleLeft;
-			this.fieldRight.InternalValue = (decimal) p.AngleRight;
+			this.grid.SelectedValue = (int) p.VolumeType;
+			this.fieldRapport.TextFieldReal.InternalValue = (decimal) p.Rapport;
+			this.fieldLeft.TextFieldReal.InternalValue = (decimal) p.AngleLeft;
+			this.fieldRight.TextFieldReal.InternalValue = (decimal) p.AngleRight;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -118,10 +130,10 @@ namespace Epsitec.Common.Document.Panels
 			Properties.Volume p = this.property as Properties.Volume;
 			if ( p == null )  return;
 
-			p.VolumeType = Properties.Volume.ConvType(this.volumeType.SelectedIndex);
-			p.Rapport = (double) this.fieldRapport.InternalValue;
-			p.AngleLeft = (double) this.fieldLeft.InternalValue;
-			p.AngleRight = (double) this.fieldRight.InternalValue;
+			p.VolumeType = (Properties.VolumeType) this.grid.SelectedValue;
+			p.Rapport = (double) this.fieldRapport.TextFieldReal.InternalValue;
+			p.AngleLeft = (double) this.fieldLeft.TextFieldReal.InternalValue;
+			p.AngleRight = (double) this.fieldRight.TextFieldReal.InternalValue;
 		}
 
 		// Grise les widgets nécessaires.
@@ -135,49 +147,53 @@ namespace Epsitec.Common.Document.Panels
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.volumeType == null )  return;
+			if ( this.grid == null )  return;
 
 			this.EnableWidgets();
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
+			Rectangle rect = this.UsefulZone;
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			r.Left = rect.Left;
-			r.Right = rect.Right-110;
-			this.label.Bounds = r;
-			r.Left = rect.Right-110;
-			r.Right = rect.Right;
-			this.volumeType.Bounds = r;
+			r.Inflate(1);
+			this.grid.Bounds = r;
 
-			r.Top = r.Bottom-5;
-			r.Bottom = r.Top-20;
-			r.Left = rect.Left;
-			r.Right = rect.Right-50;
-			this.labelRapport.Bounds = r;
-			r.Left = rect.Right-50;
-			r.Right = rect.Right;
-			this.fieldRapport.Bounds = r;
+			if ( this.isExtendedSize && this.IsLabelProperties )
+			{
+				r.Top = rect.Top-25;
+				r.Bottom = r.Top-20;
+				r.Left = rect.Left;
+				r.Right = rect.Right;
+				this.fieldRapport.Bounds = r;
 
-			r.Top = r.Bottom-5;
-			r.Bottom = r.Top-20;
-			r.Left = rect.Left;
-			r.Right = rect.Right-50;
-			this.labelLeft.Bounds = r;
-			r.Left = rect.Right-50;
-			r.Right = rect.Right;
-			this.fieldLeft.Bounds = r;
+				r.Top = r.Bottom-5;
+				r.Bottom = r.Top-20;
+				r.Left = rect.Left;
+				r.Right = rect.Right;
+				this.fieldLeft.Bounds = r;
 
-			r.Top = r.Bottom-5;
-			r.Bottom = r.Top-20;
-			r.Left = rect.Left;
-			r.Right = rect.Right-50;
-			this.labelRight.Bounds = r;
-			r.Left = rect.Right-50;
-			r.Right = rect.Right;
-			this.fieldRight.Bounds = r;
+				r.Top = r.Bottom-5;
+				r.Bottom = r.Top-20;
+				r.Left = rect.Left;
+				r.Right = rect.Right;
+				this.fieldRight.Bounds = r;
+			}
+			else
+			{
+				r.Top = rect.Top-25;
+				r.Bottom = r.Top-20;
+				r.Left = rect.Left;
+				r.Width = Widgets.TextFieldLabel.ShortWidth;
+				this.fieldRapport.Bounds = r;
+
+				r.Left = r.Right;
+				r.Width = Widgets.TextFieldLabel.ShortWidth;
+				this.fieldLeft.Bounds = r;
+
+				r.Left = r.Right;
+				r.Width = Widgets.TextFieldLabel.ShortWidth;
+				this.fieldRight.Bounds = r;
+			}
 		}
 
 
@@ -185,12 +201,7 @@ namespace Epsitec.Common.Document.Panels
 		private void HandleTypeChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-
-			// Met les valeurs par défaut correspondant au type choisi.
 			this.EnableWidgets();
-
-			Properties.VolumeType type = Properties.Volume.ConvType(this.volumeType.SelectedIndex);
-
 			this.OnChanged();
 		}
 
@@ -202,13 +213,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected StaticText				label;
-		protected TextFieldCombo			volumeType;
-		protected StaticText				labelRapport;
-		protected TextFieldReal				fieldRapport;
-		protected StaticText				labelLeft;
-		protected TextFieldReal				fieldLeft;
-		protected StaticText				labelRight;
-		protected TextFieldReal				fieldRight;
+		protected Widgets.RadioIconGrid		grid;
+		protected Widgets.TextFieldLabel	fieldRapport;
+		protected Widgets.TextFieldLabel	fieldLeft;
+		protected Widgets.TextFieldLabel	fieldRight;
 	}
 }

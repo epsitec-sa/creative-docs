@@ -45,8 +45,8 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else
 			{
-				this.length[0] = 100.0;
-				this.length[1] = 100.0;
+				this.length[0] = 50.0;
+				this.length[1] = 50.0;
 			}
 
 			if ( this.type == Type.DimensionArrow )
@@ -281,45 +281,17 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		// Détermine le nom de la propriété dans la liste (Lister).
-		public string GetListName()
+#if false
+		// Donne le petit texte pour les échantillons.
+		public override string SampleText
 		{
-			return Arrow.GetName(this.arrowType[0]) + ", " +
-				   Arrow.GetName(this.arrowType[1]);
-		}
-
-		// Cherche le type correspondant à un index donné.
-		// Ceci détermine l'ordre dans le TextFieldCombo du panneau.
-		public static ArrowType ConvType(int index)
-		{
-			ArrowType type = ArrowType.None;
-			switch ( index )
+			get
 			{
-				case  0:  type = ArrowType.Right;          break;
-				case  1:  type = ArrowType.ArrowSimply;    break;
-				case  2:  type = ArrowType.ArrowFantasy1;  break;
-				case  3:  type = ArrowType.ArrowCurve1;    break;
-				case  4:  type = ArrowType.ArrowCurve2;    break;
-				case  5:  type = ArrowType.ArrowOutline;   break;
-				case  6:  type = ArrowType.Slash;          break;
-				case  7:  type = ArrowType.Dot;            break;
-				case  8:  type = ArrowType.Square;         break;
-				case  9:  type = ArrowType.Diamond;        break;
+				return Arrow.GetName(this.arrowType[0]) + ", " +
+					   Arrow.GetName(this.arrowType[1]);
 			}
-			return type;
 		}
-
-		// Cherche le rang d'un type donné.
-		public static int ConvType(ArrowType type)
-		{
-			for ( int i=0 ; i<100 ; i++ )
-			{
-				ArrowType t = Arrow.ConvType(i);
-				if ( t == ArrowType.None )  break;
-				if ( t == type )  return i;
-			}
-			return -1;
-		}
+#endif
 
 		// Retourne le nom d'un type donné.
 		public static string GetName(ArrowType type)
@@ -339,6 +311,25 @@ namespace Epsitec.Common.Document.Properties
 				case ArrowType.Diamond:        name = Res.Strings.Property.Arrow.Diamond;        break;
 			}
 			return name;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(ArrowType type)
+		{
+			switch ( type )
+			{
+				case ArrowType.Right:          return "ArrowRight";
+				case ArrowType.ArrowSimply:    return "ArrowSimply";
+				case ArrowType.ArrowFantasy1:  return "ArrowFantasy1";
+				case ArrowType.ArrowCurve1:    return "ArrowCurve1";
+				case ArrowType.ArrowCurve2:    return "ArrowCurve2";
+				case ArrowType.ArrowOutline:   return "ArrowOutline";
+				case ArrowType.Slash:          return "ArrowSlash";
+				case ArrowType.Dot:            return "ArrowDot";
+				case ArrowType.Square:         return "ArrowSquare";
+				case ArrowType.Diamond:        return "ArrowDiamond";
+			}
+			return "";
 		}
 
 		// Retourne les valeurs par défaut et les min/max pour un type donné.
@@ -548,6 +539,7 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Arrow(document);
 		}
 

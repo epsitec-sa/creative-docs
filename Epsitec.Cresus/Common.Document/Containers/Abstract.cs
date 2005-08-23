@@ -8,7 +8,7 @@ namespace Epsitec.Common.Document.Containers
 	/// La classe Containers.Abstract est la classe de base pour tous les agrégats de panneaux.
 	/// </summary>
 	[SuppressBundleSupport]
-	public abstract class Abstract : Widgets.Widget
+	public abstract class Abstract : Common.Widgets.Widget
 	{
 		public Abstract(Document document)
 		{
@@ -58,6 +58,17 @@ namespace Epsitec.Common.Document.Containers
 			this.Update();  // màj immédiate si l'agrégat est visible
 		}
 
+		// Indique qu'il faudra mettre à jour les valeurs contenues.
+		public void SetDirtyAggregates(System.Collections.ArrayList aggregateList)
+		{
+			this.dirtyAggregates.Clear();
+			foreach ( Properties.Aggregate agg in aggregateList )
+			{
+				this.dirtyAggregates.Add(agg);
+			}
+			this.Update();  // màj immédiate si l'agrégat est visible
+		}
+
 		// Indique qu'il faudra mettre à jour un objet.
 		public void SetDirtyObject(Objects.Abstract obj)
 		{
@@ -82,6 +93,7 @@ namespace Epsitec.Common.Document.Containers
 				this.DoUpdateContent();
 				this.isDirtyContent = false;  // propre
 				this.dirtyProperties.Clear();  // les propriétés sont forcément aussi à jour
+				this.dirtyAggregates.Clear();  // les propriétés sont forcément aussi à jour
 				this.dirtyObject = null;
 				this.isDirtySelNames = false;
 			}
@@ -90,6 +102,12 @@ namespace Epsitec.Common.Document.Containers
 			{
 				this.DoUpdateProperties(this.dirtyProperties);
 				this.dirtyProperties.Clear();  // propre
+			}
+
+			if ( this.dirtyAggregates.Count > 0 )
+			{
+				this.DoUpdateAggregates(this.dirtyAggregates);
+				this.dirtyAggregates.Clear();  // propre
 			}
 
 			if ( this.dirtyObject != null )
@@ -112,6 +130,11 @@ namespace Epsitec.Common.Document.Containers
 
 		// Effectue la mise à jour des propriétés.
 		protected virtual void DoUpdateProperties(System.Collections.ArrayList propertyList)
+		{
+		}
+
+		// Effectue la mise à jour des agrégats.
+		protected virtual void DoUpdateAggregates(System.Collections.ArrayList propertyList)
 		{
 		}
 
@@ -142,6 +165,7 @@ namespace Epsitec.Common.Document.Containers
 		protected Document						document;
 		protected bool							isDirtyContent;
 		protected System.Collections.ArrayList	dirtyProperties = new System.Collections.ArrayList();
+		protected System.Collections.ArrayList	dirtyAggregates = new System.Collections.ArrayList();
 		protected Objects.Abstract				dirtyObject = null;
 		protected bool							isDirtySelNames;
 	}

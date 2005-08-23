@@ -78,11 +78,31 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Détermine le nom de la propriété dans la liste (Lister).
-		public string GetListName()
+		// Donne le petit texte pour les échantillons.
+		public override string SampleText
 		{
-			return string.Format("{0}", this.nbFaces);
+			get
+			{
+				string text = string.Format("{0}", this.nbFaces);
+				if ( this.star )  text += " *";
+				return text;
+			}
 		}
+
+		// Retourne le nom d'un type donné.
+		public static string GetName(bool type)
+		{
+			if ( type )  return Res.Strings.Property.Regular.Star;
+			else         return Res.Strings.Property.Regular.Norm;
+		}
+
+		// Retourne l'icône pour un type donné.
+		public static string GetIconText(bool type)
+		{
+			if ( type )  return "RegularStar";
+			else         return "RegularNorm";
+		}
+
 
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
@@ -152,6 +172,7 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Regular(document);
 		}
 

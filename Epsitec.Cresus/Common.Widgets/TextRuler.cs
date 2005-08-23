@@ -378,7 +378,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Drawing.Color					FontColor
+		public Drawing.RichColor				FontRichColor
 		{
 			// Couleur de la fonte.
 			get
@@ -395,7 +395,35 @@ namespace Epsitec.Common.Widgets
 
 					if ( this.textNavigator != null )
 					{
-						this.textNavigator.SelectionFontColor = this.fontColor;
+						this.textNavigator.SelectionFontRichColor = this.fontColor;
+					}
+
+					if ( this.textField != null )
+					{
+						this.textField.Invalidate();
+					}
+				}
+			}
+		}
+
+		public Drawing.Color					FontColor
+		{
+			// Couleur de la fonte.
+			get
+			{
+				return this.fontColor.Basic;
+			}
+
+			set
+			{
+				if ( this.fontColor.Basic != value )
+				{
+					this.fontColor.Basic = value;
+					this.UpdateButtons();  // màj. les widgets
+
+					if ( this.textNavigator != null )
+					{
+						this.textNavigator.SelectionFontColor = this.fontColor.Basic;
 					}
 
 					if ( this.textField != null )
@@ -845,7 +873,7 @@ namespace Epsitec.Common.Widgets
 		{
 			// Combo pour la couleur de la fonte changé.
 			if ( this.silent )  return;
-			this.FontColor = this.ComboSelectedColor(this.fieldFontColor);
+			this.FontRichColor = this.ComboSelectedColor(this.fieldFontColor);
 			this.OnChanged();
 		}
 
@@ -875,7 +903,7 @@ namespace Epsitec.Common.Widgets
 			this.bold       = this.textNavigator.SelectionBold;
 			this.italic     = this.textNavigator.SelectionItalic;
 			this.underlined = this.textNavigator.SelectionUnderlined;
-			this.fontColor  = this.textNavigator.SelectionFontColor;
+			this.fontColor  = this.textNavigator.SelectionFontRichColor;
 			this.list       = this.textNavigator.SelectionList;
 
 			this.UpdateButtons();  // màj. les widgets
@@ -976,32 +1004,32 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected void ComboSelectedColor(TextFieldCombo combo, Drawing.Color color)
+		protected void ComboSelectedColor(TextFieldCombo combo, Drawing.RichColor color)
 		{
 			// Modifie la couleur d'un combo.
 			combo.SelectedIndex = 0;
-			if ( color == Drawing.Color.FromRGB(0,0,0) )  combo.SelectedIndex = 1;
-			if ( color == Drawing.Color.FromRGB(1,0,0) )  combo.SelectedIndex = 2;
-			if ( color == Drawing.Color.FromRGB(0,0,1) )  combo.SelectedIndex = 3;
-			if ( color == Drawing.Color.FromRGB(1,0,1) )  combo.SelectedIndex = 4;
-			if ( color == Drawing.Color.FromRGB(0,1,0) )  combo.SelectedIndex = 5;
-			if ( color == Drawing.Color.FromRGB(0,1,1) )  combo.SelectedIndex = 6;
-			if ( color == Drawing.Color.FromRGB(1,1,0) )  combo.SelectedIndex = 7;
-			if ( color == Drawing.Color.FromRGB(1,1,1) )  combo.SelectedIndex = 8;
+			if ( color == Drawing.RichColor.FromCMYK(0,0,0,1) )  combo.SelectedIndex = 1;
+			if ( color == Drawing.RichColor.FromRGB(1,0,0)    )  combo.SelectedIndex = 2;
+			if ( color == Drawing.RichColor.FromRGB(0,0,1)    )  combo.SelectedIndex = 3;
+			if ( color == Drawing.RichColor.FromRGB(1,0,1)    )  combo.SelectedIndex = 4;
+			if ( color == Drawing.RichColor.FromRGB(0,1,0)    )  combo.SelectedIndex = 5;
+			if ( color == Drawing.RichColor.FromRGB(0,1,1)    )  combo.SelectedIndex = 6;
+			if ( color == Drawing.RichColor.FromRGB(1,1,0)    )  combo.SelectedIndex = 7;
+			if ( color == Drawing.RichColor.FromRGB(1,1,1)    )  combo.SelectedIndex = 8;
 		}
 
-		protected Drawing.Color ComboSelectedColor(TextFieldCombo combo)
+		protected Drawing.RichColor ComboSelectedColor(TextFieldCombo combo)
 		{
 			// Retourne la couleur d'un combo.
-			if ( combo.SelectedIndex == 1 )  return Drawing.Color.FromRGB(0,0,0);
-			if ( combo.SelectedIndex == 2 )  return Drawing.Color.FromRGB(1,0,0);
-			if ( combo.SelectedIndex == 3 )  return Drawing.Color.FromRGB(0,0,1);
-			if ( combo.SelectedIndex == 4 )  return Drawing.Color.FromRGB(1,0,1);
-			if ( combo.SelectedIndex == 5 )  return Drawing.Color.FromRGB(0,1,0);
-			if ( combo.SelectedIndex == 6 )  return Drawing.Color.FromRGB(0,1,1);
-			if ( combo.SelectedIndex == 7 )  return Drawing.Color.FromRGB(1,1,0);
-			if ( combo.SelectedIndex == 8 )  return Drawing.Color.FromRGB(1,1,1);
-			return Drawing.Color.Empty;
+			if ( combo.SelectedIndex == 1 )  return Drawing.RichColor.FromCMYK(0,0,0,1);
+			if ( combo.SelectedIndex == 2 )  return Drawing.RichColor.FromRGB(1,0,0);
+			if ( combo.SelectedIndex == 3 )  return Drawing.RichColor.FromRGB(0,0,1);
+			if ( combo.SelectedIndex == 4 )  return Drawing.RichColor.FromRGB(1,0,1);
+			if ( combo.SelectedIndex == 5 )  return Drawing.RichColor.FromRGB(0,1,0);
+			if ( combo.SelectedIndex == 6 )  return Drawing.RichColor.FromRGB(0,1,1);
+			if ( combo.SelectedIndex == 7 )  return Drawing.RichColor.FromRGB(1,1,0);
+			if ( combo.SelectedIndex == 8 )  return Drawing.RichColor.FromRGB(1,1,1);
+			return Drawing.RichColor.Empty;
 		}
 
 		
@@ -1240,7 +1268,7 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.TextTabType		tabType = Drawing.TextTabType.Right;
 		protected string					fontName = "";
 		protected double					fontScale = 1;
-		protected Drawing.Color				fontColor = Drawing.Color.Empty;
+		protected Drawing.RichColor			fontColor = Drawing.RichColor.Empty;
 		protected bool						bold = false;
 		protected bool						italic = false;
 		protected bool						underlined = false;

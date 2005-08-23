@@ -81,6 +81,35 @@
 	<data name="Dialog.Export.Tooltip.OK">Export image</data>
 	<data name="Dialog.Export.Tooltip.Cancel">Cancel export</data>
 
+	<data name="Dialog.ExportPDF.Title1">@@Exporter au format PDF</data>
+	<data name="Dialog.ExportPDF.Title2">@@Exporter {0}</data>
+	<data name="Dialog.ExportPDF.Button.OK">@@Exporter</data>
+	<data name="Dialog.ExportPDF.Button.Cancel">@@Annuler</data>
+	<data name="Dialog.ExportPDF.Tooltip.OK">@@Exporter au format PDF</data>
+	<data name="Dialog.ExportPDF.Tooltip.Cancel">@@Annuler l'exporation</data>
+	<data name="Dialog.ExportPDF.TabPage.Generic">@@Général</data>
+	<data name="Dialog.ExportPDF.TabPage.Color">@@Couleurs</data>
+	<data name="Dialog.ExportPDF.TabPage.Image">@@Images</data>
+	<data name="Dialog.ExportPDF.TabPage.Publisher">@@Pré-presse</data>
+
+	<data name="Dialog.Glyphs.Title">@@Caractères spéciaux</data>
+	<data name="Dialog.Glyphs.TabPage.List">@@Listes partielles</data>
+	<data name="Dialog.Glyphs.TabPage.Array">@@Tableaux complets</data>
+	<data name="Dialog.Glyphs.Button.Insert">@@Insérer</data>
+	<data name="Dialog.Glyphs.Tooltip.Insert">@@Insérer dans le texte</data>
+	<data name="Dialog.Glyphs.Tooltip.ArrayMinus">@@Aperçu plus petit</data>
+	<data name="Dialog.Glyphs.Tooltip.ArrayPlus">@@Aperçu plus grand</data>
+	<data name="Dialog.Glyphs.Tooltip.CurrentFont">@@Récupérer la police en cours</data>
+	<data name="Dialog.Glyphs.Font">@@Police</data>
+	<data name="Dialog.Glyphs.Family.List">@@Famille</data>
+	<data name="Dialog.Glyphs.Family.Typo">@@Typographie</data>
+	<data name="Dialog.Glyphs.Family.Space">@@Espaces</data>
+	<data name="Dialog.Glyphs.Family.Business">Commercial</data>
+	<data name="Dialog.Glyphs.Family.Math">@@Mathématique</data>
+	<data name="Dialog.Glyphs.Family.GreekLower">@@Lettres grecques minuscules</data>
+	<data name="Dialog.Glyphs.Family.GreekUpper">@@Lettres grecques majuscules</data>
+	<data name="Dialog.Glyphs.Family.Symbol">@@Symboles</data>
+	
 	<data name="Dialog.Infos.Title">Informations</data>
 
 	<data name="Dialog.Key.Title">Registration key...</data>

@@ -12,69 +12,53 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Arc(Document document) : base(document)
 		{
-			this.label = new StaticText(this);
-			this.label.Alignment = ContentAlignment.MiddleLeft;
+			this.grid = new Widgets.RadioIconGrid(this);
+			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.grid.TabIndex = 1;
+			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.buttons = new IconButton[4];
-			for ( int i=0 ; i<4 ; i++ )
-			{
-				this.buttons[i] = new IconButton(this);
-				this.buttons[i].Clicked += new MessageEventHandler(this.HandlePanelArcClicked);
-				this.buttons[i].TabIndex = 2+i;
-				this.buttons[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			}
-
-			this.buttons[0].IconName = "manifest:Epsitec.App.DocumentEditor.Images.ArcFull.icon";
-			this.buttons[1].IconName = "manifest:Epsitec.App.DocumentEditor.Images.ArcOpen.icon";
-			this.buttons[2].IconName = "manifest:Epsitec.App.DocumentEditor.Images.ArcClose.icon";
-			this.buttons[3].IconName = "manifest:Epsitec.App.DocumentEditor.Images.ArcPie.icon";
-			ToolTip.Default.SetToolTip(this.buttons[0], Res.Strings.Panel.Arc.Tooltip.Full);
-			ToolTip.Default.SetToolTip(this.buttons[1], Res.Strings.Panel.Arc.Tooltip.Open);
-			ToolTip.Default.SetToolTip(this.buttons[2], Res.Strings.Panel.Arc.Tooltip.Close);
-			ToolTip.Default.SetToolTip(this.buttons[3], Res.Strings.Panel.Arc.Tooltip.Pie);
-
-			this.fieldStarting = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldStarting);
-			this.fieldStarting.ValueChanged += new EventHandler(this.HandleFieldChanged);
-			this.fieldStarting.TabIndex = 20;
+			this.AddRadioIcon(Properties.ArcType.Full);
+			this.AddRadioIcon(Properties.ArcType.Open);
+			this.AddRadioIcon(Properties.ArcType.Close);
+			this.AddRadioIcon(Properties.ArcType.Pie);
+			
+			this.fieldStarting = new Widgets.TextFieldLabel(this, false);
+			this.fieldStarting.LabelShortText = Res.Strings.Panel.Arc.Short.Initial;
+			this.fieldStarting.LabelLongText  = Res.Strings.Panel.Arc.Long.Initial;
+			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldStarting.TextFieldReal);
+			this.fieldStarting.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldStarting.TabIndex = 2;
 			this.fieldStarting.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldStarting, Res.Strings.Panel.Arc.Tooltip.Initial);
 
-			this.fieldEnding = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldEnding);
-			this.fieldEnding.ValueChanged += new EventHandler(this.HandleFieldChanged);
-			this.fieldEnding.TabIndex = 21;
+			this.fieldEnding = new Widgets.TextFieldLabel(this, false);
+			this.fieldEnding.LabelShortText = Res.Strings.Panel.Arc.Short.Final;
+			this.fieldEnding.LabelLongText  = Res.Strings.Panel.Arc.Long.Final;
+			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldEnding.TextFieldReal);
+			this.fieldEnding.TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldEnding.TabIndex = 3;
 			this.fieldEnding.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldEnding, Res.Strings.Panel.Arc.Tooltip.Final);
-
-			this.labelStarting = new StaticText(this);
-			this.labelStarting.Text = Res.Strings.Panel.Arc.Label.Initial;
-			this.labelStarting.Alignment = ContentAlignment.MiddleCenter;
-
-			this.labelEnding = new StaticText(this);
-			this.labelEnding.Text = Res.Strings.Panel.Arc.Label.Final;
-			this.labelEnding.Alignment = ContentAlignment.MiddleCenter;
 
 			this.isNormalAndExtended = true;
 		}
 		
+		protected void AddRadioIcon(Properties.ArcType type)
+		{
+			this.grid.AddRadioIcon(Properties.Arc.GetIconText(type), Properties.Arc.GetName(type), (int)type, false);
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
-				for ( int i=0 ; i<4 ; i++ )
-				{
-					this.buttons[i].Clicked -= new MessageEventHandler(this.HandlePanelArcClicked);
-					this.buttons[i] = null;
-				}
-				this.fieldStarting.ValueChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fieldEnding.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
+				this.fieldStarting.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldEnding.TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
 
-				this.label = null;
+				this.grid = null;
 				this.fieldStarting = null;
 				this.fieldEnding = null;
-				this.labelStarting = null;
-				this.labelEnding = null;
 			}
 			
 			base.Dispose(disposing);
@@ -86,7 +70,25 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return ( this.isExtendedSize ? 55 : 30 );
+				double h = this.LabelHeight;
+
+				if ( this.isExtendedSize )  // panneau étendu ?
+				{
+					if ( this.IsLabelProperties )  // étendu/détails ?
+					{
+						h += 80;
+					}
+					else	// étendu/compact ?
+					{
+						h += 55;
+					}
+				}
+				else	// panneau réduit ?
+				{
+					h += 30;
+				}
+
+				return h;
 			}
 		}
 
@@ -100,11 +102,9 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			this.label.Text = p.TextStyle;
-
-			this.SelectButtonType            = p.ArcType;
-			this.fieldStarting.InternalValue = (decimal) p.StartingAngle;
-			this.fieldEnding.InternalValue   = (decimal) p.EndingAngle;
+			this.SelectButtonType = p.ArcType;
+			this.fieldStarting.TextFieldReal.InternalValue = (decimal) p.StartingAngle;
+			this.fieldEnding.TextFieldReal.InternalValue   = (decimal) p.EndingAngle;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -117,54 +117,34 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			p.ArcType       = this.SelectButtonType;
-			p.StartingAngle = (double) this.fieldStarting.InternalValue;
-			p.EndingAngle   = (double) this.fieldEnding.InternalValue;
+			p.StartingAngle = (double) this.fieldStarting.TextFieldReal.InternalValue;
+			p.EndingAngle   = (double) this.fieldEnding.TextFieldReal.InternalValue;
 		}
 
 		protected Properties.ArcType SelectButtonType
 		{
 			get
 			{
-				if ( this.ButtonActive(0) )  return Properties.ArcType.Full;
-				if ( this.ButtonActive(1) )  return Properties.ArcType.Open;
-				if ( this.ButtonActive(2) )  return Properties.ArcType.Close;
-				if ( this.ButtonActive(3) )  return Properties.ArcType.Pie;
-				return Properties.ArcType.Full;
+				return (Properties.ArcType) this.grid.SelectedValue;
 			}
 
 			set
 			{
-				this.ButtonActive(0, value == Properties.ArcType.Full);
-				this.ButtonActive(1, value == Properties.ArcType.Open);
-				this.ButtonActive(2, value == Properties.ArcType.Close);
-				this.ButtonActive(3, value == Properties.ArcType.Pie);
+				this.grid.SelectedValue = (int) value;
 			}
-		}
-
-		protected bool ButtonActive(int i)
-		{
-			return ( this.buttons[i].ActiveState == WidgetState.ActiveYes );
-		}
-
-		protected void ButtonActive(int i, bool active)
-		{
-			this.buttons[i].ActiveState = active ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 		}
 
 
 		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
-			bool enable = !this.ButtonActive(0);
+			bool enable = (this.SelectButtonType != Properties.ArcType.Full);
+
 			this.fieldStarting.SetEnabled(this.isExtendedSize && enable);
 			this.fieldEnding.SetEnabled(this.isExtendedSize && enable);
-			this.labelStarting.SetEnabled(this.isExtendedSize && enable);
-			this.labelEnding.SetEnabled(this.isExtendedSize && enable);
 
 			this.fieldStarting.SetVisible(this.isExtendedSize);
 			this.fieldEnding.SetVisible(this.isExtendedSize);
-			this.labelStarting.SetVisible(this.isExtendedSize);
-			this.labelEnding.SetVisible(this.isExtendedSize);
 		}
 
 		// Met à jour la géométrie.
@@ -172,40 +152,38 @@ namespace Epsitec.Common.Document.Panels
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.buttons == null )  return;
+			if ( this.grid == null )  return;
 
 			this.EnableWidgets();
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
+			Rectangle rect = this.UsefulZone;
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			r.Right = rect.Right-20*4;
-			this.label.Bounds = r;
+			r.Inflate(1);
+			this.grid.Bounds = r;
 
-			r.Left = rect.Right-20*4;
-			r.Width = 20;
-			for ( int i=0 ; i<4 ; i++ )
+			if ( this.isExtendedSize && this.IsLabelProperties )
 			{
-				this.buttons[i].Bounds = r;
-				r.Offset(20, 0);
+				r.Offset(0, -25);
+				r.Left = rect.Left;
+				r.Right = rect.Right;
+				this.fieldStarting.Bounds = r;
+				r.Offset(0, -25);
+				this.fieldEnding.Bounds = r;
 			}
+			else
+			{
+				double w = Widgets.TextFieldLabel.ShortWidth+10;
 
-			r.Offset(0, -25);
-			r.Left = rect.Left+29;
-			r.Width = 20;
-			this.labelStarting.Bounds = r;
-			r.Left = r.Right+2;
-			r.Width = 50;
-			this.fieldStarting.Bounds = r;
-			r.Left = r.Right+2;
-			r.Width = 20;
-			this.labelEnding.Bounds = r;
-			r.Left = r.Right+2;
-			r.Width = 50;
-			this.fieldEnding.Bounds = r;
+				r.Offset(0, -25);
+				r.Left = rect.Right-w-w;
+				r.Width = w;
+				this.fieldStarting.Bounds = r;
+				r.Left = r.Right;
+				r.Width = w;
+				this.fieldEnding.Bounds = r;
+			}
 		}
 		
 		// Un champ a été changé.
@@ -216,25 +194,17 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 		// Une valeur a été changée.
-		private void HandlePanelArcClicked(object sender, MessageEventArgs e)
+		private void HandleTypeChanged(object sender)
 		{
-			IconButton button = sender as IconButton;
-
-			if ( button == this.buttons[0] )  this.SelectButtonType = Properties.ArcType.Full;
-			if ( button == this.buttons[1] )  this.SelectButtonType = Properties.ArcType.Open;
-			if ( button == this.buttons[2] )  this.SelectButtonType = Properties.ArcType.Close;
-			if ( button == this.buttons[3] )  this.SelectButtonType = Properties.ArcType.Pie;
-
+			if ( this.ignoreChanged )  return;
+			this.SelectButtonType = (Properties.ArcType) this.grid.SelectedValue;
 			this.EnableWidgets();
 			this.OnChanged();
 		}
 
 
-		protected StaticText				label;
-		protected IconButton[]				buttons;
-		protected TextFieldReal				fieldStarting;
-		protected TextFieldReal				fieldEnding;
-		protected StaticText				labelStarting;
-		protected StaticText				labelEnding;
+		protected Widgets.RadioIconGrid		grid;
+		protected Widgets.TextFieldLabel	fieldStarting;
+		protected Widgets.TextFieldLabel	fieldEnding;
 	}
 }

@@ -819,14 +819,14 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case MessageType.MouseDown:
-					this.ProcessMouse(pos, message.IsShiftPressed, message.IsCtrlPressed);
+					this.ProcessMouse(pos, message.IsShiftPressed, message.IsCtrlPressed, false);
 					this.mouseDown = true;
 					break;
 				
 				case MessageType.MouseMove:
 					if ( this.mouseDown )
 					{
-						this.ProcessMouse(pos, message.IsShiftPressed, message.IsCtrlPressed);
+						this.ProcessMouse(pos, message.IsShiftPressed, message.IsCtrlPressed, false);
 					}
 					else
 					{
@@ -837,7 +837,7 @@ namespace Epsitec.Common.Widgets
 				case MessageType.MouseUp:
 					if ( this.mouseDown )
 					{
-						this.ProcessMouse(pos, message.IsShiftPressed, message.IsCtrlPressed);
+						this.ProcessMouse(pos, message.IsShiftPressed, message.IsCtrlPressed, true);
 						this.mouseDown = false;
 					}
 					break;
@@ -886,7 +886,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Sélectionne une cellule.
-		protected void ProcessMouse(Drawing.Point pos, bool isShiftPressed, bool isCtrlPressed)
+		protected void ProcessMouse(Drawing.Point pos, bool isShiftPressed, bool isCtrlPressed, bool isFinal)
 		{
 			CellArrayStyle style = this.styleV | this.styleH;
 			if ( (style & CellArrayStyle.SelectCell) == 0 &&
@@ -928,6 +928,10 @@ namespace Epsitec.Common.Widgets
 				}
 
 				this.OnSelectionChanged();
+				if ( isFinal )
+				{
+					this.OnFinalSelectionChanged();
+				}
 			}
 		}
 
@@ -1038,6 +1042,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.OnSelectionChanged();
+			this.OnFinalSelectionChanged();
 			this.ShowSelect();
 		}
 
@@ -1142,6 +1147,15 @@ namespace Epsitec.Common.Widgets
 			if ( this.SelectionChanged != null )  // qq'un écoute ?
 			{
 				this.SelectionChanged(this);
+			}
+		}
+
+		// Génère un événement pour dire que la sélection a changé.
+		protected virtual void OnFinalSelectionChanged()
+		{
+			if ( this.FinalSelectionChanged != null )  // qq'un écoute ?
+			{
+				this.FinalSelectionChanged(this);
 			}
 		}
 
@@ -1906,6 +1920,7 @@ namespace Epsitec.Common.Widgets
 		
 
 		public event Support.EventHandler SelectionChanged;
+		public event Support.EventHandler FinalSelectionChanged;
 		public event Support.EventHandler SortChanged;
 		public event Support.EventHandler FlyOverChanged;
 

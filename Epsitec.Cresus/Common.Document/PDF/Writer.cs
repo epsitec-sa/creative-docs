@@ -1,3 +1,5 @@
+using Epsitec.Common.Drawing;
+
 namespace Epsitec.Common.Document.PDF
 {
 	/// <summary>

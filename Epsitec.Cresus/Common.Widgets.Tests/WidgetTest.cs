@@ -743,7 +743,7 @@ namespace Epsitec.Common.Widgets
 		[Test] public void CheckSaveCommandEnable()
 		{
 			Widget[]     find  = Widget.FindAllCommandWidgets ("save");
-			CommandState state = find[0].CommandState;
+			CommandState state = find.Length == 0 ? null : find[0].CommandState;
 			
 			Assert.IsNotNull (state);
 			
@@ -860,8 +860,8 @@ namespace Epsitec.Common.Widgets
 			tag.Bounds = new Drawing.Rectangle (10, 70, 25, 25);
 			tag.Parent = window.Root;
 			
-			selector1.Color = tag.Color;
-			selector2.Color = tag.BackColor;
+			selector1.Color = new RichColor(tag.Color);
+			selector2.Color = new RichColor(tag.BackColor);
 			
 			window.Show ();
 		}
@@ -895,7 +895,7 @@ namespace Epsitec.Common.Widgets
 		private void HandleSelectorChangedForeground(object sender)
 		{
 			ColorSelector selector = sender as ColorSelector;
-			Drawing.Color color    = selector.Color;
+			Drawing.Color color    = selector.Color.Basic;
 			Widget        parent   = selector.Parent;
 			
 			Tag tag;
@@ -916,7 +916,7 @@ namespace Epsitec.Common.Widgets
 		private void HandleSelectorChangedBackground(object sender)
 		{
 			ColorSelector selector = sender as ColorSelector;
-			Drawing.Color color    = selector.Color;
+			Drawing.Color color    = selector.Color.Basic;
 			Widget        parent   = selector.Parent;
 			
 			Tag tag;

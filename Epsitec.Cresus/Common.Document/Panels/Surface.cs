@@ -12,56 +12,58 @@ namespace Epsitec.Common.Document.Panels
 	{
 		public Surface(Document document) : base(document)
 		{
-			this.label = new StaticText(this);
-			this.label.Alignment = ContentAlignment.MiddleLeft;
+			this.grid = new Widgets.RadioIconGrid(this);
+			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.grid.TabIndex = 0;
+			this.grid.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.surfaceType = new TextFieldCombo(this);
-			this.surfaceType.IsReadOnly = true;
-			for ( int i=0 ; i<100 ; i++ )
-			{
-				Properties.SurfaceType type = Properties.Surface.ConvType(i);
-				if ( type == Properties.SurfaceType.None )  break;
-				this.surfaceType.Items.Add(Properties.Surface.GetName(type));
-			}
-			//?this.surfaceType.SelectedIndexChanged += new EventHandler(this.HandleTypeChanged);
-			this.surfaceType.TextChanged += new EventHandler(this.HandleTypeChanged);
-			this.surfaceType.TabIndex = 1;
-			this.surfaceType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.surfaceType, Res.Strings.Panel.Surface.Tooltip.Type);
+			this.AddRadioIcon(Properties.SurfaceType.ParallelT, false);
+			this.AddRadioIcon(Properties.SurfaceType.ParallelB, false);
+			this.AddRadioIcon(Properties.SurfaceType.ParallelL, false);
+			this.AddRadioIcon(Properties.SurfaceType.ParallelR, false);
+			this.AddRadioIcon(Properties.SurfaceType.TrapezeT, false);
+			this.AddRadioIcon(Properties.SurfaceType.TrapezeB, false);
+			this.AddRadioIcon(Properties.SurfaceType.TrapezeL, false);
+			this.AddRadioIcon(Properties.SurfaceType.TrapezeR, false);
 
-			this.labelFactor = new StaticText[4];
-			this.fieldFactor = new TextFieldReal[4];
+			this.AddRadioIcon(Properties.SurfaceType.QuadriL, false);
+			this.AddRadioIcon(Properties.SurfaceType.QuadriP, false);
+			this.AddRadioIcon(Properties.SurfaceType.QuadriC, false);
+			this.AddRadioIcon(Properties.SurfaceType.QuadriX, true);
+			
+			this.AddRadioIcon(Properties.SurfaceType.Grid, false);
+			this.AddRadioIcon(Properties.SurfaceType.Pattern, false);
+			this.AddRadioIcon(Properties.SurfaceType.Ring, false);
+			this.AddRadioIcon(Properties.SurfaceType.SpiralCW, false);
+			this.AddRadioIcon(Properties.SurfaceType.SpiralCCW, false);
+
+			this.fieldFactor = new Widgets.TextFieldLabel[4];
 			for ( int i=0 ; i<4 ; i++ )
 			{
-				this.labelFactor[i] = new StaticText(this);
-				this.labelFactor[i].Text = string.Format(Res.Strings.Panel.Surface.Label.Factor, i+1);
-
-				this.fieldFactor[i] = new TextFieldReal(this);
-				this.document.Modifier.AdaptTextFieldRealPercent(this.fieldFactor[i]);
-				this.fieldFactor[i].ValueChanged += new EventHandler(this.HandleFieldChanged);
+				this.fieldFactor[i] = new Widgets.TextFieldLabel(this, false);
+				this.fieldFactor[i].LabelShortText = string.Format(Res.Strings.Panel.Surface.Short.Factor, i+1);
+				this.document.Modifier.AdaptTextFieldRealPercent(this.fieldFactor[i].TextFieldReal);
+				this.fieldFactor[i].TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldFactor[i].TabIndex = 2+i;
 				this.fieldFactor[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
-			this.labelScalar = new StaticText[2];
-			this.fieldScalar = new TextFieldReal[2];
+			this.fieldScalar = new Widgets.TextFieldLabel[2];
 			for ( int i=0 ; i<2 ; i++ )
 			{
-				this.labelScalar[i] = new StaticText(this);
-				this.labelScalar[i].Text = string.Format(Res.Strings.Panel.Surface.Label.Scalar, i+1);
-
-				this.fieldScalar[i] = new TextFieldReal(this);
-				this.document.Modifier.AdaptTextFieldRealScalar(this.fieldScalar[i]);
-				this.fieldScalar[i].InternalMinValue = 1;
-				this.fieldScalar[i].InternalMaxValue = 20;
-				this.fieldScalar[i].Step = 1;
-				this.fieldScalar[i].ValueChanged += new EventHandler(this.HandleFieldChanged);
+				this.fieldScalar[i] = new Widgets.TextFieldLabel(this, false);
+				this.fieldScalar[i].LabelShortText = string.Format(Res.Strings.Panel.Surface.Short.Scalar, i+1);
+				this.document.Modifier.AdaptTextFieldRealScalar(this.fieldScalar[i].TextFieldReal);
+				this.fieldScalar[i].TextFieldReal.InternalMinValue = 1;
+				this.fieldScalar[i].TextFieldReal.InternalMaxValue = 20;
+				this.fieldScalar[i].TextFieldReal.Step = 1;
+				this.fieldScalar[i].TextFieldReal.ValueChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldScalar[i].TabIndex = 2+i;
 				this.fieldScalar[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
 			this.resetButton = new Button(this);
-			this.resetButton.Text = Res.Strings.Panel.Surface.Label.Reset;
+			this.resetButton.Text = Res.Strings.Panel.Surface.Button.Reset;
 			this.resetButton.Clicked += new MessageEventHandler(this.HandleResetButton);
 			this.resetButton.TabIndex = 100;
 			this.resetButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -69,27 +71,30 @@ namespace Epsitec.Common.Document.Panels
 
 			this.isNormalAndExtended = true;
 		}
-		
+
+		protected void AddRadioIcon(Properties.SurfaceType type, bool endOfLine)
+		{
+			this.grid.AddRadioIcon(Properties.Surface.GetIconText(type), Properties.Surface.GetName(type), (int)type, endOfLine);
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
-				//?this.surfaceType.SelectedIndexChanged -= new EventHandler(this.HandleTypeChanged);
-				this.surfaceType.TextChanged -= new EventHandler(this.HandleTypeChanged);
+				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
 				for ( int i=0 ; i<4 ; i++ )
 				{
-					this.fieldFactor[i].ValueChanged -= new EventHandler(this.HandleFieldChanged);
+					this.fieldFactor[i].TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
 					this.fieldFactor[i] = null;
 				}
 				for ( int i=0 ; i<2 ; i++ )
 				{
-					this.fieldScalar[i].ValueChanged -= new EventHandler(this.HandleFieldChanged);
+					this.fieldScalar[i].TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);
 					this.fieldScalar[i] = null;
 				}
 				this.resetButton.Clicked -= new MessageEventHandler(this.HandleResetButton);
 
-				this.label = null;
-				this.surfaceType = null;
+				this.grid = null;
 				this.resetButton = null;
 			}
 			
@@ -102,7 +107,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return ( this.isExtendedSize ? 80 : 30 );
+				return ( this.isExtendedSize ? this.LabelHeight+124 : this.LabelHeight+30 );
 			}
 		}
 
@@ -116,16 +121,14 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			this.label.Text = p.TextStyle;
-
-			this.surfaceType.SelectedIndex = Properties.Surface.ConvType(p.SurfaceType);
+			this.grid.SelectedValue = (int) p.SurfaceType;
 			for ( int i=0 ; i<4 ; i++ )
 			{
-				this.fieldFactor[i].InternalValue = (decimal) p.GetFactor(i);
+				this.fieldFactor[i].TextFieldReal.InternalValue = (decimal) p.GetFactor(i);
 			}
 			for ( int i=0 ; i<2 ; i++ )
 			{
-				this.fieldScalar[i].InternalValue = (decimal) p.GetScalar(i);
+				this.fieldScalar[i].TextFieldReal.InternalValue = (decimal) p.GetScalar(i);
 			}
 
 			this.EnableWidgets();
@@ -143,17 +146,17 @@ namespace Epsitec.Common.Document.Panels
 			{
 				if ( Properties.Surface.IsEnableFactor(p.SurfaceType, i) )
 				{
-					p.SetFactor(i, (double) this.fieldFactor[i].InternalValue);
+					p.SetFactor(i, (double) this.fieldFactor[i].TextFieldReal.InternalValue);
 				}
 			}
 			for ( int i=0 ; i<2 ; i++ )
 			{
 				if ( Properties.Surface.IsEnableScalar(p.SurfaceType, i) )
 				{
-					p.SetScalar(i, (int) this.fieldScalar[i].InternalValue);
+					p.SetScalar(i, (int) this.fieldScalar[i].TextFieldReal.InternalValue);
 				}
 			}
-			p.SurfaceType = Properties.Surface.ConvType(this.surfaceType.SelectedIndex);
+			p.SurfaceType = (Properties.SurfaceType) this.grid.SelectedValue;
 			this.ignoreChanged = false;
 			this.PropertyToWidgets();
 		}
@@ -167,22 +170,18 @@ namespace Epsitec.Common.Document.Panels
 			for ( int i=0 ; i<4 ; i++ )
 			{
 				bool visible = Properties.Surface.IsVisibleFactor(p.SurfaceType, i);
-				this.labelFactor[i].SetVisible(visible);
 				this.fieldFactor[i].SetVisible(visible);
 
 				bool enable = Properties.Surface.IsEnableFactor(p.SurfaceType, i);
-				this.labelFactor[i].SetEnabled(enable);
 				this.fieldFactor[i].SetEnabled(enable);
 			}
 
 			for ( int i=0 ; i<2 ; i++ )
 			{
 				bool visible = Properties.Surface.IsVisibleScalar(p.SurfaceType, i);
-				this.labelScalar[i].SetVisible(visible);
 				this.fieldScalar[i].SetVisible(visible);
 
 				bool enable = Properties.Surface.IsEnableScalar(p.SurfaceType, i);
-				this.labelScalar[i].SetEnabled(enable);
 				this.fieldScalar[i].SetEnabled(enable);
 			}
 		}
@@ -193,55 +192,41 @@ namespace Epsitec.Common.Document.Panels
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.surfaceType == null )  return;
+			if ( this.grid == null )  return;
 
 			this.EnableWidgets();
 
-			Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.extendedZoneWidth, 0);
-			rect.Deflate(5);
+			Rectangle rect = this.UsefulZone;
 
 			Rectangle r = rect;
-			r.Bottom = r.Top-20;
-			r.Left = rect.Left;
-			r.Right = rect.Right-110;
-			this.label.Bounds = r;
-			r.Left = rect.Right-110;
-			r.Right = rect.Right;
-			this.surfaceType.Bounds = r;
+			r.Bottom = r.Top-22*3;
+			if ( !this.isExtendedSize )
+			{
+				r.Bottom = r.Top-20;
+			}
+			r.Inflate(1);
+			this.grid.Bounds = r;
 
-			r.Top = r.Bottom-5;
+			double w = Widgets.TextFieldLabel.ShortWidth+8;
+
+			r.Top = rect.Top-69;
 			r.Bottom = r.Top-20;
-			r.Left = rect.Right-55-14-5-55-14;
-			r.Right = rect.Right-55-14-5-55;
-			this.labelFactor[0].Bounds = r;
-			this.labelScalar[0].Bounds = r;
-			r.Left = rect.Right-55-14-5-55;
-			r.Right = rect.Right-55-14-5;
+			r.Left = rect.Right-w-w;
+			r.Width = w;
 			this.fieldFactor[0].Bounds = r;
 			this.fieldScalar[0].Bounds = r;
-			r.Left = rect.Right-55-14;
-			r.Right = rect.Right-55;
-			this.labelFactor[2].Bounds = r;
-			r.Left = rect.Right-55;
-			r.Right = rect.Right;
+			r.Left = r.Right;
+			r.Width = w;
 			this.fieldFactor[2].Bounds = r;
 
 			r.Top = r.Bottom-5;
 			r.Bottom = r.Top-20;
-			r.Left = rect.Right-55-14-5-55-14;
-			r.Right = rect.Right-55-14-5-55;
-			this.labelFactor[1].Bounds = r;
-			this.labelScalar[1].Bounds = r;
-			r.Left = rect.Right-55-14-5-55;
-			r.Right = rect.Right-55-14-5;
+			r.Left = rect.Right-w-w;
+			r.Width = w;
 			this.fieldFactor[1].Bounds = r;
 			this.fieldScalar[1].Bounds = r;
-			r.Left = rect.Right-55-14;
-			r.Right = rect.Right-55;
-			this.labelFactor[3].Bounds = r;
-			r.Left = rect.Right-55;
-			r.Right = rect.Right;
+			r.Left = r.Right;
+			r.Width = w;
 			this.fieldFactor[3].Bounds = r;
 
 			r.Left = rect.Left;
@@ -275,12 +260,9 @@ namespace Epsitec.Common.Document.Panels
 		}
 
 
-		protected StaticText				label;
-		protected TextFieldCombo			surfaceType;
-		protected StaticText[]				labelFactor;
-		protected TextFieldReal[]			fieldFactor;
-		protected StaticText[]				labelScalar;
-		protected TextFieldReal[]			fieldScalar;
+		protected Widgets.RadioIconGrid		grid;
+		protected Widgets.TextFieldLabel[]	fieldFactor;
+		protected Widgets.TextFieldLabel[]	fieldScalar;
 		protected Button					resetButton;
 	}
 }

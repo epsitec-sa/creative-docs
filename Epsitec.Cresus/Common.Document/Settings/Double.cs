@@ -70,6 +70,14 @@ namespace Epsitec.Common.Document.Settings
 					this.factorStep = 1.0;
 					break;
 
+				case "ExportPDFDebord":
+					this.text = Res.Strings.Dialog.Double.ExportPDFDebord;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 0.1;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
+					break;
+
 				case "ImageDpi":
 					this.text = Res.Strings.Dialog.Double.ImageDpi;
 					this.integer = true;
@@ -168,6 +176,9 @@ namespace Epsitec.Common.Document.Settings
 					case "PrintDebord":
 						return this.document.Settings.PrintInfo.Debord;
 
+					case "ExportPDFDebord":
+						return this.document.Settings.ExportPDFInfo.Debord;
+
 					case "ImageDpi":
 						return this.document.Printer.ImageDpi;
 
@@ -218,6 +229,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "PrintDebord":
 						this.document.Settings.PrintInfo.Debord = value;
+						break;
+
+					case "ExportPDFDebord":
+						this.document.Settings.ExportPDFInfo.Debord = value;
 						break;
 
 					case "ImageDpi":

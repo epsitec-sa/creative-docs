@@ -28,6 +28,14 @@ namespace Epsitec.Common.Document
 			this.lineUse = false;
 		}
 
+		// Force la surface à utiliser.
+		public void SetSurface(Rectangle rect)
+		{
+			this.surfaceThin = rect;
+			this.surfaceGeom = rect;
+			this.dirty = false;
+		}
+
 
 		// Indique que l'objet a été modifié.
 		public void SetDirty()

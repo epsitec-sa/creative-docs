@@ -250,7 +250,7 @@ namespace Epsitec.Common.Drawing
 			public int					FontId      = -1;
 			public double				FontSize    = 0.0;
 			public double				FontScale   = 0.0;
-			public Color				FontColor   = Color.Empty;
+			public RichColor			FontColor   = RichColor.Empty;
 			public bool					Bold        = false;
 			public bool					Italic      = false;
 			public bool					Underlined  = false;

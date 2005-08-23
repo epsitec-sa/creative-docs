@@ -75,20 +75,18 @@ namespace Epsitec.Common.Document.Containers
 			rows += this.document.PropertiesAuto.Count;
 			rows += this.document.PropertiesSel.Count;
 			int initialColumns = this.table.Columns;
-			this.table.SetArraySize(4, rows);
+			this.table.SetArraySize(3, rows);
 
 			if ( initialColumns == 0 )
 			{
-				this.table.SetWidthColumn(0, 12);
-				this.table.SetWidthColumn(1, 94);
-				this.table.SetWidthColumn(2, 84);
-				this.table.SetWidthColumn(3, 22);
+				this.table.SetWidthColumn(0,  12);
+				this.table.SetWidthColumn(1, 170);
+				this.table.SetWidthColumn(2,  30);
 			}
 
 			this.table.SetHeaderTextH(0, "");
 			this.table.SetHeaderTextH(1, "Type");
-			this.table.SetHeaderTextH(2, "Nom");
-			this.table.SetHeaderTextH(3, "Nb");
+			this.table.SetHeaderTextH(2, "Nb");
 
 			for ( int i=0 ; i<rows ; i++ )
 			{
@@ -125,9 +123,6 @@ namespace Epsitec.Common.Document.Containers
 				}
 
 				st = this.table[2, i].Children[0] as StaticText;
-				st.Text = property.StyleName;
-
-				st = this.table[3, i].Children[0] as StaticText;
 				if ( select )
 				{
 					st.Text = string.Format("<b>{0}</b>", property.Owners.Count);
@@ -155,7 +150,7 @@ namespace Epsitec.Common.Document.Containers
 				if ( this.table[column, row].IsEmpty )
 				{
 					StaticText st = new StaticText();
-					st.Alignment = (column==3) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
+					st.Alignment = (column==2) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
 					st.Dock = DockStyle.Fill;
 					this.table[column, row].Insert(st);
 				}
@@ -165,6 +160,8 @@ namespace Epsitec.Common.Document.Containers
 		// Hilite une ligne de la table.
 		protected void TableHiliteRow(int row, bool hilite)
 		{
+			if ( row >= this.table.Rows )  return;
+
 			if ( this.table[0, row].IsHilite != hilite )
 			{
 				this.table[0, row].IsHilite = hilite;

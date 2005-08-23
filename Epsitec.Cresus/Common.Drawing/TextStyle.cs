@@ -73,7 +73,7 @@ namespace Epsitec.Common.Drawing
 			this.font            = null;
 			this.size            = 0;
 			
-			this.color           = Color.Empty;
+			this.color           = RichColor.Empty;
 			this.color_anchor    = Color.Empty;
 			this.color_wave      = Color.Empty;
 			
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Drawing
 			this.font            = Font.DefaultFont;
 			this.size            = Font.DefaultFontSize;
 			
-			this.color           = new Color (0, 0, 0);
+			this.color           = new RichColor (1.0, 0.0, 0.0, 0.0, 1.0);
 			this.color_anchor    = new Color (0, 0, 1);
 			this.color_wave      = new Color (1, 0, 0);
 			
@@ -174,11 +174,11 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public Color							Color
+		public RichColor						RichColor
 		{
 			get
 			{
-				return (this.color.IsEmpty) ? this.parent.Color : this.color;
+				return (this.color.IsEmpty) ? new RichColor(this.parent.Color) : this.color;
 			}
 			set
 			{
@@ -187,6 +187,24 @@ namespace Epsitec.Common.Drawing
 				if (this.color != value)
 				{
 					this.color = value;
+					this.OnChanged ();
+				}
+			}
+		}
+		
+		public Color							Color
+		{
+			get
+			{
+				return (this.color.IsEmpty) ? this.parent.Color : this.color.Basic;
+			}
+			set
+			{
+				this.CheckForDefaultStyle ();
+				
+				if (this.color.Basic != value)
+				{
+					this.color.Basic = value;
 					this.OnChanged ();
 				}
 			}
@@ -620,9 +638,14 @@ namespace Epsitec.Common.Drawing
 		}
 	
 		
-		public static void DefineDefaultColor(Drawing.Color color)
+		public static void DefineDefaultRichColor(Drawing.RichColor color)
 		{
 			TextStyle.default_style.color = color;
+		}
+		
+		public static void DefineDefaultColor(Drawing.Color color)
+		{
+			TextStyle.default_style.color.Basic = color;
 		}
 		
 		
@@ -730,7 +753,7 @@ namespace Epsitec.Common.Drawing
 		
 		private Font							font;
 		private double							size;
-		private Color							color;
+		private RichColor						color;
 		private Color							color_anchor;
 		private Color							color_wave;
 		private ContentAlignment				alignment;

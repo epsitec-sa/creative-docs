@@ -16,14 +16,14 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialise()
 		{
-			this.color  = Drawing.Color.FromARGB(0.0, 0.5, 0.5, 0.5);
+			this.color  = Drawing.RichColor.FromARGB(0.0, 0.5, 0.5, 0.5);
 			this.radius =  2.0;
 			this.ox     =  1.0;
 			this.oy     = -1.0;
 		}
 
 		// Couleur de l'ombre.
-		public Drawing.Color Color
+		public Drawing.RichColor Color
 		{
 			get
 			{
@@ -126,6 +126,7 @@ namespace Epsitec.Common.Document.Properties
 		// Crée le panneau permettant d'éditer la propriété.
 		public override Panels.Abstract CreatePanel(Document document)
 		{
+			Panels.Abstract.StaticDocument = document;
 			return new Panels.Shadow(document);
 		}
 
@@ -141,11 +142,11 @@ namespace Epsitec.Common.Document.Properties
 			if ( this.radius == 0 )
 			{
 				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(this.color);
+				graphics.RenderSolid(this.color.Basic);
 			}
 			else
 			{
-				graphics.SmoothRenderer.Color = this.color;
+				graphics.SmoothRenderer.Color = this.color.Basic;
 				graphics.SmoothRenderer.SetParameters(this.radius*drawingContext.ScaleX, this.radius*drawingContext.ScaleY);
 				graphics.SmoothRenderer.AddPath(path);
 			}
@@ -169,7 +170,16 @@ namespace Epsitec.Common.Document.Properties
 		// Constructeur qui désérialise la propriété.
 		protected Shadow(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			this.color = (Drawing.Color) info.GetValue("Color", typeof(Drawing.Color));
+			if ( this.document.IsRevisionGreaterOrEqual(1,0,22) )
+			{
+				this.color = (Drawing.RichColor) info.GetValue("Color", typeof(Drawing.RichColor));
+			}
+			else
+			{
+				Drawing.Color c = (Drawing.Color) info.GetValue("Color", typeof(Drawing.Color));
+				this.color = new RichColor(c);
+			}
+
 			this.radius = info.GetDouble("Radius");
 			this.ox = info.GetDouble("Ox");
 			this.oy = info.GetDouble("Oy");
@@ -177,7 +187,7 @@ namespace Epsitec.Common.Document.Properties
 		#endregion
 
 	
-		protected Drawing.Color			color;
+		protected Drawing.RichColor		color;
 		protected double				radius;
 		protected double				ox;
 		protected double				oy;

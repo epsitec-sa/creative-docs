@@ -17,48 +17,48 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
 			System.Diagnostics.Debug.Assert(this.toolBar.CommandDispatcher != null);
 
-			this.buttonNew = new IconButton("LayerNew", "manifest:Epsitec.App.DocumentEditor.Images.LayerNew.icon");
+			this.buttonNew = new IconButton("LayerNew", Misc.Icon("LayerNew"));
 			this.toolBar.Items.Add(this.buttonNew);
 			ToolTip.Default.SetToolTip(this.buttonNew, Res.Strings.Action.LayerNewLong);
 			this.Synchro(this.buttonNew);
 
-			this.buttonDuplicate = new IconButton("LayerDuplicate", "manifest:Epsitec.App.DocumentEditor.Images.DuplicateItem.icon");
+			this.buttonDuplicate = new IconButton("LayerDuplicate", Misc.Icon("DuplicateItem"));
 			this.toolBar.Items.Add(this.buttonDuplicate);
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, Res.Strings.Action.LayerDuplicate);
 			this.Synchro(this.buttonDuplicate);
 
-			this.buttonNewSel = new IconButton("LayerNewSel", "manifest:Epsitec.App.DocumentEditor.Images.LayerNewSel.icon");
+			this.buttonNewSel = new IconButton("LayerNewSel", Misc.Icon("LayerNewSel"));
 			this.toolBar.Items.Add(this.buttonNewSel);
 			ToolTip.Default.SetToolTip(this.buttonNewSel, Res.Strings.Action.LayerNewSel);
 			this.Synchro(this.buttonNewSel);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonMergeUp = new IconButton("LayerMergeUp", "manifest:Epsitec.App.DocumentEditor.Images.LayerMergeUp.icon");
+			this.buttonMergeUp = new IconButton("LayerMergeUp", Misc.Icon("LayerMergeUp"));
 			this.toolBar.Items.Add(this.buttonMergeUp);
 			ToolTip.Default.SetToolTip(this.buttonMergeUp, Res.Strings.Action.LayerMergeUp);
 			this.Synchro(this.buttonMergeUp);
 
-			this.buttonMergeDown = new IconButton("LayerMergeDown", "manifest:Epsitec.App.DocumentEditor.Images.LayerMergeDown.icon");
+			this.buttonMergeDown = new IconButton("LayerMergeDown", Misc.Icon("LayerMergeDown"));
 			this.toolBar.Items.Add(this.buttonMergeDown);
 			ToolTip.Default.SetToolTip(this.buttonMergeDown, Res.Strings.Action.LayerMergeDown);
 			this.Synchro(this.buttonMergeDown);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonUp = new IconButton("LayerUp", "manifest:Epsitec.App.DocumentEditor.Images.Up.icon");
+			this.buttonUp = new IconButton("LayerUp", Misc.Icon("Up"));
 			this.toolBar.Items.Add(this.buttonUp);
 			ToolTip.Default.SetToolTip(this.buttonUp, Res.Strings.Action.LayerUp);
 			this.Synchro(this.buttonUp);
 
-			this.buttonDown = new IconButton("LayerDown", "manifest:Epsitec.App.DocumentEditor.Images.Down.icon");
+			this.buttonDown = new IconButton("LayerDown", Misc.Icon("Down"));
 			this.toolBar.Items.Add(this.buttonDown);
 			ToolTip.Default.SetToolTip(this.buttonDown, Res.Strings.Action.LayerDown);
 			this.Synchro(this.buttonDown);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonDelete = new IconButton("LayerDelete", "manifest:Epsitec.App.DocumentEditor.Images.DeleteItem.icon");
+			this.buttonDelete = new IconButton("LayerDelete", Misc.Icon("DeleteItem"));
 			this.toolBar.Items.Add(this.buttonDelete);
 			ToolTip.Default.SetToolTip(this.buttonDelete, Res.Strings.Action.LayerDelete);
 			this.Synchro(this.buttonDelete);
@@ -76,6 +76,7 @@ namespace Epsitec.Common.Document.Containers
 			this.table.StyleV |= CellArrayStyle.SelectLine;
 			this.table.DefHeight = 18;
 
+			Panels.Abstract.StaticDocument = this.document;
 			this.panelModColor = new Panels.ModColor(this.document);
 			this.panelModColor.IsExtendedSize = true;
 			this.panelModColor.IsLayoutDirect = true;
@@ -159,15 +160,26 @@ namespace Epsitec.Common.Document.Containers
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Dialog.Button.More);
+
 			
-			this.panelLayerName = new Panels.LayerName(this.document);
-			this.panelLayerName.IsExtendedSize = false;
-			this.panelLayerName.IsLayoutDirect = true;
-			this.panelLayerName.TabIndex = 100;
-			this.panelLayerName.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
-			this.panelLayerName.Dock = DockStyle.Bottom;
-			this.panelLayerName.DockMargins = new Margins(0, 0, 5, 0);
-			this.panelLayerName.Parent = this;
+			this.toolBarName = new HToolBar(this);
+			this.toolBarName.Dock = DockStyle.Bottom;
+			this.toolBarName.DockMargins = new Margins(0, 0, 0, 0);
+			this.toolBarName.TabIndex = 100;
+			this.toolBarName.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+
+			StaticText st = new StaticText();
+			st.Width = 80;
+			st.Text = Res.Strings.Panel.LayerName.Label.Name;
+			this.toolBarName.Items.Add(st);
+
+			this.name = new TextField();
+			this.name.Width = 140;
+			this.name.DockMargins = new Margins(0, 0, 1, 1);
+			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
+			this.toolBarName.Items.Add(this.name);
+			ToolTip.Default.SetToolTip(this.name, Res.Strings.Panel.LayerName.Tooltip.Name);
+
 
 			this.UpdateExtended();
 		}
@@ -219,7 +231,7 @@ namespace Epsitec.Common.Document.Containers
 			{
 				this.table.SetWidthColumn(0, 20);
 				this.table.SetWidthColumn(1, 50);
-				this.table.SetWidthColumn(2, 124);
+				this.table.SetWidthColumn(2, 129);
 				this.table.SetWidthColumn(3, 18);
 			}
 
@@ -302,13 +314,25 @@ namespace Epsitec.Common.Document.Containers
 		// Met à jour le panneau pour éditer la propriété sélectionnée.
 		protected void UpdatePanel()
 		{
-			this.panelLayerName.UpdateValues();
+			this.UpdateLayerName();
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			int sel = context.CurrentLayer;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
 			Objects.Layer layer = page.Objects[sel] as Objects.Layer;
 			this.panelModColor.Property = layer.PropertyModColor;
+		}
+
+		// Met à jour le panneau pour éditer le nom du calque sélectionné.
+		protected void UpdateLayerName()
+		{
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			int sel = context.CurrentLayer;
+			string text = this.document.Modifier.LayerName(sel);
+
+			this.ignoreChanged = true;
+			this.name.Text = text;
+			this.ignoreChanged = false;
 		}
 
 
@@ -322,7 +346,23 @@ namespace Epsitec.Common.Document.Containers
 		// Liste double-cliquée.
 		private void HandleTableDoubleClicked(object sender, MessageEventArgs e)
 		{
-			this.panelLayerName.SetDefaultFocus();
+			this.name.SelectAll();
+			this.name.Focus();
+		}
+
+		// Le nom du calque a changé.
+		private void HandleNameTextChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			int sel = context.CurrentLayer;
+			if ( sel == -1 )  return;
+
+			if ( this.document.Modifier.LayerName(sel) != this.name.Text )
+			{
+				this.document.Modifier.LayerName(sel, this.name.Text);
+			}
 		}
 
 		// Bouton "check" à 3 états dans la liste cliqué.
@@ -471,7 +511,8 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton			buttonDown;
 		protected IconButton			buttonDelete;
 		protected CellTable				table;
-		protected Panels.LayerName		panelLayerName;
+		protected HToolBar				toolBarName;
+		protected TextField				name;
 		protected GlyphButton			extendedButton;
 		protected Widget				panelMisc;
 		protected Widget				panelButton;

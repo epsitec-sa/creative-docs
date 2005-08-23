@@ -10,6 +10,8 @@ namespace Epsitec.Common.Document
 		ObjectsInsideProperty,		// liste des objets propriétaires d'une propriété
 		PropertiesInsideDocument,	// liste de propriétés ou de styles du document
 		PropertiesInsideObject,		// liste des propriétés utilisées par un objet
+		StylesInsideAggregate,		// styles utilisés par un agrégat
+		AggregateInsideDocument,	// agrégats du document
 		Guides,						// liste des repères
 	}
 

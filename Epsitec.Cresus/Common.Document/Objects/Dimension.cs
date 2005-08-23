@@ -1,3 +1,4 @@
+using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
@@ -46,7 +47,7 @@ namespace Epsitec.Common.Document.Objects
 		// Nom de l'icône.
 		public override string IconName
 		{
-			get { return "manifest:Epsitec.App.DocumentEditor.Images.Dimension.icon"; }
+			get { return Misc.Icon("ObjectDimension"); }
 		}
 
 
@@ -128,7 +129,11 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.SnapPos(ref pos);
+			
+			if ( rank != 4 )  // pas milieu ?
+			{
+				drawingContext.SnapPos(ref pos);
+			}
 
 			if ( rank == 0 )  // extrémité gauche ?
 			{
@@ -218,10 +223,23 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if ( this.IsRight )
 				{
+#if true
+					Point p = Point.Projection(this.Handle(0).Position, this.Handle(1).Position, pos);
+					Point move = pos-p;
+
+					Point vector = this.Handle(0).Position-this.Handle(2).Position+move;
+					Point adjust = vector;
+					drawingContext.SnapGridVectorLength(ref adjust);
+					adjust -= vector;
+
+					this.Handle(0).Position += move+adjust;
+					this.Handle(1).Position += move+adjust;
+#else
 					Point p = Point.Projection(this.Handle(0).Position, this.Handle(1).Position, pos);
 					Point move = pos-p;
 					this.Handle(0).Position += move;
 					this.Handle(1).Position += move;
+#endif
 					this.Handle(4).Position = Point.Scale(this.Handle(0).Position, this.Handle(1).Position, 0.5);
 				}
 				else
@@ -268,18 +286,25 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.SnapPos(ref pos);
 
 			if ( this.creatingPhase == 0 )
 			{
+				drawingContext.SnapPos(ref pos);
 				this.Handle(1).Position = pos;
 			}
 
 			if ( this.creatingPhase == 1 )
 			{
 				Point p = Point.Projection(this.Handle(2).Position, this.Handle(3).Position, pos);
-				this.Handle(0).Position = this.Handle(2).Position+pos-p;
-				this.Handle(1).Position = this.Handle(3).Position+pos-p;
+
+				Point vector = pos-p;
+				Point adjust = vector;
+				drawingContext.SnapGridVectorLength(ref adjust);
+				adjust -= vector;
+
+				this.Handle(0).Position = this.Handle(2).Position+pos-p+adjust;
+				this.Handle(1).Position = this.Handle(3).Position+pos-p+adjust;
+
 				this.Handle(4).Position = Point.Scale(this.Handle(0).Position, this.Handle(1).Position, 0.5);
 			}
 
@@ -365,6 +390,42 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Ajoute toutes les fontes utilisées par l'objet dans une liste.
+		public override void FillFontFaceList(System.Collections.ArrayList list)
+		{
+			string fontName = this.PropertyTextFont.GetFont().FaceName;
+
+			if ( !list.Contains(fontName) )
+			{
+				list.Add(fontName);
+			}
+		}
+
+		// Ajoute tous les caractères utilisés par l'objet dans une table.
+		public override void FillOneCharList(System.Collections.Hashtable table)
+		{
+			Properties.Font propFont = this.PropertyTextFont;
+			Drawing.Font font = propFont.GetFont();
+			double fontSize = propFont.FontSize;
+			string text = this.GetText;
+
+			for ( int i=0 ; i<text.Length ; i++ )
+			{
+				TextLayout.OneCharStructure oneChar = new TextLayout.OneCharStructure();
+				oneChar.Character = text[i];
+				oneChar.Font = font;
+				oneChar.FontSize = fontSize;
+				oneChar.FontColor = propFont.FontColor;
+
+				PDF.CharacterList cl = new PDF.CharacterList(oneChar);
+				if ( !table.ContainsKey(cl) )
+				{
+					table.Add(cl, null);
+				}
+			}
+		}
+
+		
 		// Conversion d'une longueur en chaîne.
 		protected string ToString(double value)
 		{
@@ -386,12 +447,18 @@ namespace Epsitec.Common.Document.Objects
 				Properties.Dimension dimension = this.PropertyDimension;
 				double length = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 				string num = this.ToString(length);
-				return string.Format("{0}{1}{2}", dimension.Prefix, num, dimension.Postfix);
+
+				string text = dimension.DimensionText;
+				text = text.Replace("##", "\x0001");  // "##" -> "#"
+				text = text.Replace("#", num);        // "#" -> valeur numérique
+				text = text.Replace("\x0001", "#");
+
+				return text;
 			}
 		}
 
 		// Constuit les formes de l'objet.
-		protected override Shape[] ShapesBuild(DrawingContext drawingContext, bool simplify)
+		public override Shape[] ShapesBuild(IPaintPort port, DrawingContext drawingContext, bool simplify)
 		{
 			Path pathStart, pathEnd, pathLine, pathSupport, pathText;
 			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
@@ -400,7 +467,7 @@ namespace Epsitec.Common.Document.Objects
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
 						   out pathLine, out pathSupport, out pathText);
 
-			int totalShapes = 3;
+			int totalShapes = 4;
 			if ( surfaceStart )  totalShapes ++;
 			if ( surfaceEnd   )  totalShapes ++;
 			if ( outlineStart )  totalShapes ++;
@@ -412,7 +479,7 @@ namespace Epsitec.Common.Document.Objects
 			// Forme du chemin principal.
 			shapes[i] = new Shape();
 			shapes[i].Path = pathLine;
-			shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 			i ++;
 
 			// Forme de la surface de départ.
@@ -420,7 +487,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				shapes[i] = new Shape();
 				shapes[i].Path = pathStart;
-				shapes[i].SetPropertySurface(this.PropertyLineColor);
+				shapes[i].SetPropertySurface(port, this.PropertyLineColor);
 				i ++;
 			}
 
@@ -429,7 +496,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				shapes[i] = new Shape();
 				shapes[i].Path = pathEnd;
-				shapes[i].SetPropertySurface(this.PropertyLineColor);
+				shapes[i].SetPropertySurface(port, this.PropertyLineColor);
 				i ++;
 			}
 
@@ -438,7 +505,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				shapes[i] = new Shape();
 				shapes[i].Path = pathStart;
-				shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 				i ++;
 			}
 
@@ -447,20 +514,26 @@ namespace Epsitec.Common.Document.Objects
 			{
 				shapes[i] = new Shape();
 				shapes[i].Path = pathEnd;
-				shapes[i].SetPropertyStroke(this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
 				i ++;
 			}
 
 			// Forme des traits de support.
 			shapes[i] = new Shape();
 			shapes[i].Path = pathSupport;
-			shapes[i].SetPropertyStroke(this.PropertyLineDimension, this.PropertyLineColor);
+			shapes[i].SetPropertyStroke(port, this.PropertyLineDimension, this.PropertyLineColor);
 			i ++;
 
-			// Forme du texte.
+			// Caractères du texte.
+			shapes[i] = new Shape();
+			shapes[i].SetTextObject(this);
+			i ++;
+
+			// Caractères du texte pour bbox et détection
 			shapes[i] = new Shape();
 			shapes[i].Path = pathText;
-			shapes[i].SetPropertySurface(this.PropertyTextFont);
+			shapes[i].Type = Type.Surface;
+			shapes[i].Aspect = Aspect.InvisibleBox;
 			i ++;
 
 			return shapes;
@@ -479,8 +552,9 @@ namespace Epsitec.Common.Document.Objects
 			pathText    = new Path();
 
 			Properties.Dimension dimension = this.PropertyDimension;
-			Drawing.Font font = this.PropertyTextFont.GetFont();
-			double fontSize = this.PropertyTextFont.FontSize;
+			Properties.Font propFont = this.PropertyTextFont;
+			Drawing.Font font = propFont.GetFont();
+			double fontSize = propFont.FontSize;
 			string text = this.GetText;
 
 			double textWidth = 0.0;
@@ -752,6 +826,123 @@ namespace Epsitec.Common.Document.Objects
 				return ( Geometry.IsRight(this.Handle(1).Position, this.Handle(0).Position, this.Handle(2).Position) &&
 						 Geometry.IsRight(this.Handle(0).Position, this.Handle(1).Position, this.Handle(3).Position) );
 			}
+		}
+
+
+		// Dessine le texte de la cote.
+		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
+		{
+			Path pathStart = new Path();
+			Path pathEnd   = new Path();
+			bool outlineStart, outlineEnd, surfaceStart, surfaceEnd;
+
+			Properties.Dimension dimension = this.PropertyDimension;
+			Properties.Font propFont = this.PropertyTextFont;
+			Drawing.Font font = propFont.GetFont();
+			double fontSize = propFont.FontSize;
+			string text = this.GetText;
+
+			double textWidth = 0.0;
+			for ( int i=0 ; i<text.Length ; i++ )
+			{
+				textWidth += font.GetCharAdvance(text[i])*fontSize;
+			}
+
+			Point p1 = this.Handle(0).Position;
+			Point p2 = this.Handle(1).Position;
+			double w = this.PropertyLineMode.Width;
+			CapStyle cap = this.PropertyLineMode.Cap;
+			Point pp1 = this.PropertyDimensionArrow.PathExtremity(pathStart, 0, w,cap, p1,p2, false, out outlineStart, out surfaceStart);
+			Point pp2 = this.PropertyDimensionArrow.PathExtremity(pathEnd,   1, w,cap, p2,p1, false, out outlineEnd,   out surfaceEnd);
+			double length = Point.Distance(pp1, pp2);
+
+			Properties.DimensionJustif cj = dimension.DimensionJustif;
+			Properties.DimensionForm   cf = dimension.DimensionForm;
+
+			if ( cf == Properties.DimensionForm.Auto )
+			{
+				cf = (textWidth < length) ? Properties.DimensionForm.Inside : Properties.DimensionForm.Outside;
+			}
+
+			if ( cf == Properties.DimensionForm.Outside )  // ->|-12-|<- ?
+			{
+				length = Point.Distance(p1, p2);
+			}
+
+			int justif = 0;
+			switch ( cj )
+			{
+				case Properties.DimensionJustif.CenterOrLeft:
+					if ( textWidth >= length )  justif = -1;
+					break;
+				case Properties.DimensionJustif.CenterOrRight:
+					if ( textWidth >= length )  justif = 1;
+					break;
+				case Properties.DimensionJustif.Left:
+					justif = -1;
+					break;
+				case Properties.DimensionJustif.Right:
+					justif = 1;
+					break;
+			}
+
+			double textPos = Point.Distance(p1, p2)/2;
+
+			if ( cf == Properties.DimensionForm.Inside )  // |<-12->| ?
+			{
+				if ( justif == 1 )
+				{
+					textPos = Point.Distance(p1, p2);
+				}
+
+				if ( justif == -1 )
+				{
+					textPos = 0.0;
+				}
+			}
+			else	// ->|-12-|<- ?
+			{
+				pathStart = new Path();
+				pathEnd   = new Path();
+				pp1 = this.PropertyDimensionArrow.PathExtremity(pathStart, 0, w,cap, p1,Point.Scale(p1,p2,-1), false, out outlineStart, out surfaceStart);
+				pp2 = this.PropertyDimensionArrow.PathExtremity(pathEnd,   1, w,cap, p2,Point.Scale(p2,p1,-1), false, out outlineEnd,   out surfaceEnd);
+				double lex1 = Point.Distance(p1, pp1);
+				double lex2 = Point.Distance(p2, pp2);
+
+				pp1 = Point.Move(p1, p2, -(lex1+dimension.OutLength));
+				pp2 = Point.Move(p2, p1, -(lex2+dimension.OutLength));
+
+				if ( justif == 1 )
+				{
+					textPos = Point.Distance(p1, p2)+lex1+dimension.OutLength;
+				}
+
+				if ( justif == -1 )
+				{
+					textPos = -(lex2+dimension.OutLength);
+				}
+			}
+
+			double angle = Point.ComputeAngleDeg(this.Handle(0).Position, this.Handle(1).Position);
+			if ( dimension.RotateText )  angle += 180.0;
+			Point center = Point.Move(this.Handle(0).Position, this.Handle(1).Position, textPos);
+			double advance = -textWidth/2.0;
+			if ( justif ==  1 )  advance = 0;
+			if ( justif == -1 )  advance = -textWidth;
+			double offset = font.Ascender*fontSize*dimension.FontOffset;
+
+			Transform ot = port.Transform;
+
+			Transform transform = new Transform();
+			transform.Scale(fontSize);
+			transform.RotateDeg(angle);
+			transform.Translate(center+Transform.RotatePointDeg(angle, new Point(advance, offset)));
+			port.MergeTransform(transform);
+
+			port.RichColor = propFont.FontColor;
+			port.PaintText(0.0, 0.0, text, font, 1.0);
+
+			port.Transform = ot;
 		}
 
 
