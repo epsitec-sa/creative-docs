@@ -4923,6 +4923,9 @@ namespace Epsitec.Common.Widgets
 			
 			client_rect.Deflate (this.DockPadding);
 			
+			double push_dx = 0;
+			double push_dy = 0;
+			
 			for (int i = 0; i < children.Length; i++)
 			{
 				Widget child = children[i];
@@ -4998,24 +5001,78 @@ namespace Epsitec.Common.Widgets
 					case ContainerLayoutMode.HorizontalFlow:
 						foreach (Widget child in fill_queue)
 						{
-							bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, fill_dx / n, client_rect.Height);
+							double min_dx = child.MinSize.Width;
+							double new_dx = fill_dx / n;
+							
+							if (new_dx < min_dx)
+							{
+								push_dx += min_dx - new_dx;
+								new_dx   = min_dx;
+							}
+							
+							bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, new_dx, client_rect.Height);
 							bounds.Deflate (child.DockMargins);
 						
 							child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
-							client_rect.Left += fill_dx / n;
+							client_rect.Left += new_dx;
 						}
 						break;
 					
 					case ContainerLayoutMode.VerticalFlow:
 						foreach (Widget child in fill_queue)
 						{
-							bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Top - fill_dy / n, client_rect.Width, fill_dy / n);
+							double min_dy = child.MinSize.Height;
+							double new_dy = fill_dy / n;
+							
+							if (new_dy < min_dy)
+							{
+								push_dy += min_dy - new_dy;
+								new_dy   = min_dy;
+							}
+							
+							bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Top - new_dy, client_rect.Width, new_dy);
 							bounds.Deflate (child.DockMargins);
-						
+							
 							child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
-							client_rect.Top -= fill_dy / n;
+							client_rect.Top -= new_dy;
 						}
 						break;
+				}
+			}
+			
+			if (push_dy > 0)
+			{
+				for (int i = 0; i < children.Length; i++)
+				{
+					Widget child = children[i];
+					
+					if ((child.Dock != DockStyle.Bottom) ||
+						(child.IsVisibleFlagSet == false))
+					{
+						continue;
+					}
+					
+					bounds = child.Bounds;
+					bounds.Offset (0, - push_dy);
+					child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+				}
+			}
+			
+			if (push_dx > 0)
+			{
+				for (int i = 0; i < children.Length; i++)
+				{
+					Widget child = children[i];
+					
+					if ((child.Dock != DockStyle.Right) ||
+						(child.IsVisibleFlagSet == false))
+					{
+						continue;
+					}
+					
+					bounds = child.Bounds;
+					bounds.Offset (push_dx, 0);
+					child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
 				}
 			}
 		}
