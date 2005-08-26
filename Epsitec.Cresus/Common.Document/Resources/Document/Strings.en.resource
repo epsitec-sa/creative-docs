@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- Ressources pour le projet Common.Document -->
+<!-- Ressources anglaises pour le projet Common.Document -->
 
 <bundle type="String">
 	<data name="Dialog.Title">Crésus</data>
 	
 	<data name="Dialog.Button.Browse">Browse...</data>
 	<data name="Dialog.Button.Properties">Properties...</data>
-	<data name="Dialog.Button.More">Extend/collapse panel</data>
+	<data name="Dialog.Button.More">Expand or Collapse Panel</data>
 	<data name="Dialog.Point.Link">Linked</data>
 
 	<data name="Dialog.Settings.SizeDoc">Page size</data>
@@ -15,21 +15,21 @@
 	<data name="Dialog.Settings.Magnet">Magnetic guides</data>
 	<data name="Dialog.Settings.DuplicateMove">Offset for object duplication</data>
 	<data name="Dialog.Settings.ArrowMove">Keyboard arrows move by...</data>
-	<data name="Dialog.Settings.Dimension">@@Valeurs des cotes</data>
+	<data name="Dialog.Settings.Dimension">Values for dimension objects</data>
 	<data name="Dialog.Settings.ToLinePrecision">Convert to lines and boolean operations</data>
-	<data name="Dialog.Settings.FirstAction.Nothing">@@Rien</data>
-	<data name="Dialog.Settings.FirstAction.OpenNewDocument">@@Ouvrir un document vide</data>
-	<data name="Dialog.Settings.FirstAction.OpenLastFile">@@Ouvrir le dernier document</data>
-	<data name="Dialog.Settings.FirstAction.OpenLastFiles">@@Ouvrir les derniers documents</data>
-	<data name="Dialog.Settings.MouseWheelAction.Zoom">@@Loupe</data>
-	<data name="Dialog.Settings.MouseWheelAction.VScroll">@@Défilement vertical</data>
+	<data name="Dialog.Settings.FirstAction.Nothing">Nothing</data>
+	<data name="Dialog.Settings.FirstAction.OpenNewDocument">Open an empty document</data>
+	<data name="Dialog.Settings.FirstAction.OpenLastFile">Open last document</data>
+	<data name="Dialog.Settings.FirstAction.OpenLastFiles">Open last documents</data>
+	<data name="Dialog.Settings.MouseWheelAction.Zoom">Zoom</data>
+	<data name="Dialog.Settings.MouseWheelAction.VScroll">Scroll page</data>
 	
 	<data name="Dialog.Print.Printer">Select printer</data>
 	<data name="Dialog.Print.Area">Area</data>
 	<data name="Dialog.Print.Copies">Copies</data>
 	<data name="Dialog.Print.Param">Printer settings</data>
 	<data name="Dialog.Print.File">File</data>
-	<data name="Dialog.Print.Publisher">Publishing-related</data>
+	<data name="Dialog.Print.Publisher">Publishing-related settings</data>
 	<data name="Dialog.Print.ToFile.Title">Print to file</data>
 	<data name="Dialog.Print.ToFile.Type">File type</data>
 	<data name="Dialog.Print.Paper.Direction">Orientation</data>
@@ -40,62 +40,62 @@
 	<data name="Dialog.Print.Range.From">Pages from</data>
 	<data name="Dialog.Print.Range.To">to</data>
 	<data name="Dialog.Print.Range.Current">Current page</data>
-	<data name="Dialog.Print.Format.User">@@Personnalisé</data>
+	<data name="Dialog.Print.Format.User">Custom</data>
 	
-	<data name="Dialog.Export.Param">@@Choix pour l'exportation de la page en cours</data>
+	<data name="Dialog.Export.Param">Export settings for current page</data>
 	
-	<data name="Dialog.ExportPDF.Param">@@Paramètres pour le document à exporter en PDF</data>
-	<data name="Dialog.ExportPDF.Publisher">@@Réglages pré-presse</data>
+	<data name="Dialog.ExportPDF.Param">PDF export settings</data>
+	<data name="Dialog.ExportPDF.Publisher">Publishing-related settings</data>
 	
-	<data name="Dialog.Bool.GridActive">Active grid</data>
-	<data name="Dialog.Bool.GridShow">Visible grid</data>
-	<data name="Dialog.Bool.GuidesActive">Active guides</data>
-	<data name="Dialog.Bool.GuidesShow">Visible guides</data>
-	<data name="Dialog.Bool.GuidesMouse">Move guides with mouse</data>
+	<data name="Dialog.Bool.GridActive">Enable grid</data>
+	<data name="Dialog.Bool.GridShow">Show grid</data>
+	<data name="Dialog.Bool.GuidesActive">Enable guides</data>
+	<data name="Dialog.Bool.GuidesShow">Show guides</data>
+	<data name="Dialog.Bool.GuidesMouse">Allow guides to be dragged</data>
 	<data name="Dialog.Bool.PreviewActive">Preview as printed</data>
-	<data name="Dialog.Bool.RulersShow">Visible rulers</data>
-	<data name="Dialog.Bool.LabelsShow">Visible object names</data>
-	<data name="Dialog.Bool.MagnetActive">Magnetic constructions</data>
+	<data name="Dialog.Bool.RulersShow">Show rulers</data>
+	<data name="Dialog.Bool.LabelsShow">Show object names</data>
+	<data name="Dialog.Bool.MagnetActive">Smart guides</data>
 	<data name="Dialog.Bool.PrintCollate">Collate (1,2,3 - 1,2,3)</data>
 	<data name="Dialog.Bool.PrintReverse">Reverse order</data>
 	<data name="Dialog.Bool.PrintToFile">Print to file</data>
-	<data name="Dialog.Bool.PrintDraft">Draft (neither gradients nor transparency)</data>
-	<data name="Dialog.Bool.PrintAutoLandscape">Automatic portrait/landscape</data>
-	<data name="Dialog.Bool.PrintAutoZoom">Fit printing to page size</data>
+	<data name="Dialog.Bool.PrintDraft">Draft (no gradients, no transparency)</data>
+	<data name="Dialog.Bool.PrintAutoLandscape">Automatic portrait/landscape selection</data>
+	<data name="Dialog.Bool.PrintAutoZoom">Fit document to paper size</data>
 	<data name="Dialog.Bool.PrintAA">Anti-aliasing (for color printing)</data>
 	<data name="Dialog.Bool.PrintPerfectJoin">Perfect joins (between page zones)</data>
-	<data name="Dialog.Bool.PrintTarget">Cut marks (outside of page)</data>
+	<data name="Dialog.Bool.PrintTarget">Print crop marks (outside of page)</data>
 	<data name="Dialog.Bool.PrintDebugArea">Print deteced zones (debug)</data>
-	<data name="Dialog.Bool.ExportPDFTarget">@@Traits de coupe (hors de la page)</data>
-	<data name="Dialog.Bool.ExportPDFTextCurve">@@Textes en courbes</data>
+	<data name="Dialog.Bool.ExportPDFTarget">Include crop marks (outside of page)</data>
+	<data name="Dialog.Bool.ExportPDFTextCurve">Render text as curves</data>
 	<data name="Dialog.Bool.RepeatDuplicateMove">Repeat last offset on duplication</data>
 	
 	<data name="Dialog.Double.OutsideArea">Area outside of page</data>
 	<data name="Dialog.Double.PrintCopies">Number of copies</data>
 	<data name="Dialog.Double.PrintDpi">Resolution (dpi)</data>
-	<data name="Dialog.Double.PrintMargins">@@Marges de centrage</data>
-	<data name="Dialog.Double.PrintDebord">@@Débord</data>
-	<data name="Dialog.Double.ExportPDFDebord">@@Débord</data>
+	<data name="Dialog.Double.PrintMargins">Safety margins</data>
+	<data name="Dialog.Double.PrintDebord">Bleed</data>
+	<data name="Dialog.Double.ExportPDFDebord">Bleed</data>
 	<data name="Dialog.Double.ImageDpi">Resolution (dpi)</data>
 	<data name="Dialog.Double.ImageQuality">Image quality</data>
-	<data name="Dialog.Double.ImageQuality1">@@Qualité minimale, taille faible</data>
-	<data name="Dialog.Double.ImageQuality2">@@Basse qualité, taille faible</data>
-	<data name="Dialog.Double.ImageQuality3">@@Qualité moyenne, taille standard</data>
-	<data name="Dialog.Double.ImageQuality4">@@Bonne qualité, taille importante</data>
-	<data name="Dialog.Double.ImageQuality5">@@Qualité maximale, taille importante</data>
+	<data name="Dialog.Double.ImageQuality1">Minium quality, smallest size</data>
+	<data name="Dialog.Double.ImageQuality2">Low quality, small size</data>
+	<data name="Dialog.Double.ImageQuality3">Medium quality, medium size</data>
+	<data name="Dialog.Double.ImageQuality4">Good quality, large size</data>
+	<data name="Dialog.Double.ImageQuality5">Best quality, largest size</data>
 	<data name="Dialog.Double.ImageAA">Anti-aliasing</data>
-	<data name="Dialog.Double.ImageAA1">@@Escaliers importants (tout ou rien)</data>
-	<data name="Dialog.Double.ImageAA2">@@Escaliers prononcés</data>
-	<data name="Dialog.Double.ImageAA3">@@Adoucissement moyen</data>
-	<data name="Dialog.Double.ImageAA4">@@Adoucissement important</data>
-	<data name="Dialog.Double.ImageAA5">@@Adoucissement maximal (standard)</data>
+	<data name="Dialog.Double.ImageAA1">No anti-aliasing</data>
+	<data name="Dialog.Double.ImageAA2">Minimum anti-aliasing</data>
+	<data name="Dialog.Double.ImageAA3">Medium anti-aliasing</data>
+	<data name="Dialog.Double.ImageAA4">High anti-aliasing</data>
+	<data name="Dialog.Double.ImageAA5">Maximal anti-aliasing (default)</data>
 	<data name="Dialog.Double.ArrowMoveMul">Multiply by/Shift</data>
 	<data name="Dialog.Double.ArrowMoveDiv">Divide by/Ctrl</data>
 	<data name="Dialog.Double.ToLinePrecision">Precision</data>
 	<data name="Dialog.Double.DimensionScale">Scale</data>
 	<data name="Dialog.Double.DimensionDecimal">Number of digits</data>
 
-	<data name="Dialog.Integer.DefaultUnit.Text">@@Unité de travail</data>
+	<data name="Dialog.Integer.DefaultUnit.Text">Unit of measure</data>
 	<data name="Dialog.Integer.DefaultUnit.Millimetre">Millimeters</data>
 	<data name="Dialog.Integer.DefaultUnit.Centimetre">Centimeters</data>
 	<data name="Dialog.Integer.DefaultUnit.Inch">Inches</data>
@@ -104,32 +104,32 @@
 	<data name="Dialog.Integer.PrintArea.Even">Even pages</data>
 	<data name="Dialog.Integer.PrintArea.Odd">Odd pages</data>
 	<data name="Dialog.Integer.PrintCentring.Text">Page offset</data>
-	<data name="Dialog.Integer.PrintCentring.BottomLeft">Align bottom/left</data>
-	<data name="Dialog.Integer.PrintCentring.BottomCenter">Center at bottom</data>
-	<data name="Dialog.Integer.PrintCentring.BottomRight">Align bottom/right</data>
-	<data name="Dialog.Integer.PrintCentring.MiddleLeft">Center at left</data>
-	<data name="Dialog.Integer.PrintCentring.MiddleCenter">Center</data>
-	<data name="Dialog.Integer.PrintCentring.MiddleRight">Center at right</data>
-	<data name="Dialog.Integer.PrintCentring.TopLeft">Align top/left</data>
-	<data name="Dialog.Integer.PrintCentring.TopCenter">Center at top</data>
-	<data name="Dialog.Integer.PrintCentring.TopRight">Align top/right</data>
+	<data name="Dialog.Integer.PrintCentring.BottomLeft">Bottom/left aligned</data>
+	<data name="Dialog.Integer.PrintCentring.BottomCenter">Bottom centered</data>
+	<data name="Dialog.Integer.PrintCentring.BottomRight">Bottom/right aligned</data>
+	<data name="Dialog.Integer.PrintCentring.MiddleLeft">Left centered</data>
+	<data name="Dialog.Integer.PrintCentring.MiddleCenter">Centered</data>
+	<data name="Dialog.Integer.PrintCentring.MiddleRight">Right centered</data>
+	<data name="Dialog.Integer.PrintCentring.TopLeft">Top/left aligned</data>
+	<data name="Dialog.Integer.PrintCentring.TopCenter">Top centered</data>
+	<data name="Dialog.Integer.PrintCentring.TopRight">Top/right aligned</data>
 	<data name="Dialog.Integer.ImageDepth.Text">Colors</data>
-	<data name="Dialog.Integer.ImageDepth.Bit2">Black and white (1 bit)</data>
-	<data name="Dialog.Integer.ImageDepth.Bit8">256 (8 bits)</data>
-	<data name="Dialog.Integer.ImageDepth.Bit16">65 000 (16 bits)</data>
-	<data name="Dialog.Integer.ImageDepth.Bit24">16 millions (24 bits)</data>
-	<data name="Dialog.Integer.ImageDepth.Bit32">With transparency (32 bits)</data>
-	<data name="Dialog.Integer.ImageCompression.Text">Compression type</data>
+	<data name="Dialog.Integer.ImageDepth.Bit2">Black and white (1-bit)</data>
+	<data name="Dialog.Integer.ImageDepth.Bit8">256 (8-bit)</data>
+	<data name="Dialog.Integer.ImageDepth.Bit16">65 000 (16-bit)</data>
+	<data name="Dialog.Integer.ImageDepth.Bit24">16 millions (24-bit)</data>
+	<data name="Dialog.Integer.ImageDepth.Bit32">With transparency (32-bit)</data>
+	<data name="Dialog.Integer.ImageCompression.Text">Compression</data>
 	<data name="Dialog.Integer.ImageCompression.None">None</data>
 	<data name="Dialog.Integer.ImageCompression.Lzw">LZW</data>
 	<data name="Dialog.Integer.ImageCompression.Rle">RLE</data>
 	<data name="Dialog.Integer.ImageCompression.FaxGroup3">Fax Group 3</data>
 	<data name="Dialog.Integer.ImageCompression.FaxGroup4">Fax Group 4</data>
-	<data name="Dialog.Integer.ExportPDFColorConversion.Text">@@Conversion</data>
-	<data name="Dialog.Integer.ExportPDFColorConversion.None">@@Aucune</data>
-	<data name="Dialog.Integer.ExportPDFColorConversion.ToRGB">@@Couleurs en RVB</data>
-	<data name="Dialog.Integer.ExportPDFColorConversion.ToCMYK">@@Couleurs en CMJN</data>
-	<data name="Dialog.Integer.ExportPDFColorConversion.ToGray">@@Couleurs en niveaux de gris</data>
+	<data name="Dialog.Integer.ExportPDFColorConversion.Text">Color conversion</data>
+	<data name="Dialog.Integer.ExportPDFColorConversion.None">None</data>
+	<data name="Dialog.Integer.ExportPDFColorConversion.ToRGB">RGB Colors</data>
+	<data name="Dialog.Integer.ExportPDFColorConversion.ToCMYK">CMYK Colors</data>
+	<data name="Dialog.Integer.ExportPDFColorConversion.ToGray">Grayscale</data>
 
 	<data name="Dialog.Point.PageSizeX">Width</data>
 	<data name="Dialog.Point.PageSizeY">Height</data>
@@ -141,8 +141,8 @@
 	<data name="Dialog.Point.GridOffsetY">Vertical offset</data>
 	<data name="Dialog.Point.DuplicateMoveX">Move right</data>
 	<data name="Dialog.Point.DuplicateMoveY">Move up</data>
-	<data name="Dialog.Point.ArrowMoveX">Horizontal movement</data>
-	<data name="Dialog.Point.ArrowMoveY">Vertical movement</data>
+	<data name="Dialog.Point.ArrowMoveX">Horizontal offset</data>
+	<data name="Dialog.Point.ArrowMoveY">Vertical offset</data>
 
 	<data name="Container.Guides.RadioGlobal">Global</data>
 	<data name="Container.Guides.RadioPage">Current page</data>
@@ -150,21 +150,21 @@
 	<data name="Container.Guides.Header.Position">Position</data>
 	<data name="Container.Guides.Undefined">&lt;i&gt;undefined &lt;/i&gt;</data>
 
-	<data name="Container.Layers.Button.Magnet">Objects for magnetic construction</data>
+	<data name="Container.Layers.Button.Magnet">Use objects as Smart Guides</data>
 	<data name="Container.Layers.Button.Show">Display all</data>
-	<data name="Container.Layers.Button.Dimmed">Fade out others</data>
+	<data name="Container.Layers.Button.Dimmed">Fade others</data>
 	<data name="Container.Layers.Button.Hide">Hide others</data>
 	<data name="Container.Layers.Button.HelpShow">Display all layers</data>
 	<data name="Container.Layers.Button.HelpDimmed">Fade out other layers</data>
 	<data name="Container.Layers.Button.HelpHide">Hide other layers</data>
 	<data name="Container.Layers.Button.PrintGroup">On printing:</data>
 	<data name="Container.Layers.Button.PrintShow">Print</data>
-	<data name="Container.Layers.Button.PrintDimmed">Fade out</data>
+	<data name="Container.Layers.Button.PrintDimmed">Fade</data>
 	<data name="Container.Layers.Button.PrintHide">Hide</data>
 	<data name="Container.Layers.Header.Position">Position</data>
 	<data name="Container.Layers.Header.Name">Name</data>
 
-	<data name="Container.Pages.Button.Slave">Plain page</data>
+	<data name="Container.Pages.Button.Slave">Document page</data>
 	<data name="Container.Pages.Button.Master">Template page</data>
 	<data name="Container.Pages.Button.PageStack">Page structure...</data>
 	<data name="Container.Pages.Button.SlaveGroup">Include template pages?</data>
@@ -172,7 +172,7 @@
 	<data name="Container.Pages.Button.SlaveDefault">Yes</data>
 	<data name="Container.Pages.Button.SlaveSpecific">Include this template</data>
 	<data name="Container.Pages.Button.SlaveGuides">Include guides</data>
-	<data name="Container.Pages.Button.MasterGroup">Destination :</data>
+	<data name="Container.Pages.Button.MasterGroup">Destination:</data>
 	<data name="Container.Pages.Button.MasterAll">Apply to all pages</data>
 	<data name="Container.Pages.Button.MasterOdd">Apply to odd pages</data>
 	<data name="Container.Pages.Button.MasterEven">Apply to even pages</data>
@@ -192,23 +192,23 @@
 	<data name="Container.Principal.Button.Partial">Partial selection enabled</data>
 	<data name="Container.Principal.Button.AdaptLine">Fit line widths</data>
 	<data name="Container.Principal.Button.AdaptText">Fit text sizes</data>
-	<data name="Container.Principal.Button.SelName">Name of object to select</data>
+	<data name="Container.Principal.Button.SelName">Name of the object(s) you want to select</data>
 	<data name="Container.Principal.Button.SelGo">Select</data>
-	<data name="Container.Principal.Button.SelGoHelp">Select object by its name</data>
+	<data name="Container.Principal.Button.SelGoHelp">Select object(s) by name</data>
 	<data name="Container.Principal.Menu.Stretch.Free">Free form deformation</data>
 	<data name="Container.Principal.Menu.Stretch.TrapezeH">Horizontal trapezoid deformation</data>
 	<data name="Container.Principal.Menu.Stretch.TrapezeV">Vertical trapezoid deformation</data>
 	<data name="Container.Principal.Menu.Stretch.ParallelH">Horizontal parallelogram deformation</data>
 	<data name="Container.Principal.Menu.Stretch.ParallelV">Vertical parallelogram deformation</data>
-	<data name="Container.Principal.Button.AggregateLabel">@@Style</data>
-	<data name="Container.Principal.Button.AggregateCombo">@@Nom du style</data>
+	<data name="Container.Principal.Button.AggregateLabel">Style</data>
+	<data name="Container.Principal.Button.AggregateCombo">Style name</data>
 	
 	<data name="Tool.Select">Select</data>
 	<data name="Tool.Global">Selection rectangle</data>
 	<data name="Tool.Edit">Edit</data>
 	<data name="Tool.Zoom">Magnifying glass</data>
 	<data name="Tool.Hand">Hand</data>
-	<data name="Tool.Picker">Pipette</data>
+	<data name="Tool.Picker">Pipette (attribute picker)</data>
 	<data name="Tool.HotSpot">Hot spot</data>
 	<data name="Tool.Line">Line segment</data>
 	<data name="Tool.Rectangle">Rectangle</data>
@@ -237,36 +237,36 @@
 	<data name="Object.Bezier.Menu.HandleCorner">Angular</data>
 	<data name="Object.Bezier.Menu.HandleLine">In line</data>
 	<data name="Object.Bezier.Menu.HandleFree">Free</data>
-	<data name="Object.Bezier.Menu.HandleContinue">Prolong the line</data>
+	<data name="Object.Bezier.Menu.HandleContinue">Extend line</data>
 	<data name="Object.Bezier.Menu.HandleDelete">Remove point</data>
 	<data name="Object.Bezier.Info">ln={0} α={1}</data>
-	<data name="Object.Bezier.Button.CreateEnding">Finish creation</data>
-	<data name="Object.Bezier.Button.CreateAndSelect">Finish and select</data>
+	<data name="Object.Bezier.Button.CreateEnding">Validate</data>
+	<data name="Object.Bezier.Button.CreateAndSelect">Validate and select</data>
 
-	<data name="Object.Poly.Menu.HandleAdd">Add a point</data>
+	<data name="Object.Poly.Menu.HandleAdd">Add point</data>
 	<data name="Object.Poly.Menu.HandleSym">Free form corner</data>
 	<data name="Object.Poly.Menu.HandleSimply">Orthogonal corner</data>
-	<data name="Object.Poly.Menu.HandleContinue">Prolong the line</data>
+	<data name="Object.Poly.Menu.HandleContinue">Extend line</data>
 	<data name="Object.Poly.Menu.HandleDelete">Remove point</data>
 	<data name="Object.Poly.Info1">ln={0} α={1}</data>
 	<data name="Object.Poly.Info2">ln={0} α={2}  |  ln={1} α={3}</data>
-	<data name="Object.Poly.Button.CreateEnding">Finish creation</data>
-	<data name="Object.Poly.Button.CreateAndSelect">Finish and select</data>
+	<data name="Object.Poly.Button.CreateEnding">Validate</data>
+	<data name="Object.Poly.Button.CreateAndSelect">Validate and select</data>
 
 	<data name="Object.Image.Error">File &lt;b&gt;{0}&lt;/b&gt; does not exist.</data>
 
-	<data name="Panel.Abstract.Extend">Expand/collapse pannel</data>
+	<data name="Panel.Abstract.Extend">Expand or Collapse pannel</data>
 
-	<data name="Panel.AggregateName.Label.Name">@@Nom du style</data>
-	<data name="Panel.AggregateName.Tooltip.Name">@@Nom du style</data>
-	<data name="Panel.AggregateChildrens.Label.Name">@@Styles de base</data>
+	<data name="Panel.AggregateName.Label.Name">Style name</data>
+	<data name="Panel.AggregateName.Tooltip.Name">Style name</data>
+	<data name="Panel.AggregateChildrens.Label.Name">Base styles</data>
 
 	<data name="Panel.Arc.Short.Initial">α1</data>
 	<data name="Panel.Arc.Short.Final">α2</data>
-	<data name="Panel.Arc.Long.Initial">Initial angle</data>
-	<data name="Panel.Arc.Long.Final">Final angle</data>
-	<data name="Panel.Arc.Tooltip.Initial">Initial angle</data>
-	<data name="Panel.Arc.Tooltip.Final">Final angle</data>
+	<data name="Panel.Arc.Long.Initial">Starting angle</data>
+	<data name="Panel.Arc.Long.Final">Ending angle</data>
+	<data name="Panel.Arc.Tooltip.Initial">Starting angle</data>
+	<data name="Panel.Arc.Tooltip.Final">Ending angle</data>
 	
 	<data name="Panel.Arrow.Short.Length">L</data>
 	<data name="Panel.Arrow.Short.Effect1">A</data>
@@ -277,7 +277,7 @@
 	<data name="Panel.Arrow.Tooltip.Length">Length</data>
 	<data name="Panel.Arrow.Tooltip.Effect1">Parameter A</data>
 	<data name="Panel.Arrow.Tooltip.Effect2">Parameter B</data>
-	<data name="Panel.Arrow.Tooltip.Swap">Swap extremities</data>
+	<data name="Panel.Arrow.Tooltip.Swap">Swap ends</data>
 
 	<data name="Panel.Color.Tooltip.Main">Color</data>
 	
@@ -295,15 +295,15 @@
 	<data name="Panel.Dimension.Short.OutLength">O</data>
 	<data name="Panel.Dimension.Short.FontOffset">V</data>
 	<data name="Panel.Dimension.Short.Text">T</data>
-	<data name="Panel.Dimension.Long.AddLength">@@Débordement des traits de support</data>
+	<data name="Panel.Dimension.Long.AddLength">Support lines</data>
 	<data name="Panel.Dimension.Long.OutLength">Length for outer measurement</data>
 	<data name="Panel.Dimension.Long.FontOffset">Vertical text offset</data>
 	<data name="Panel.Dimension.Long.Text">Text</data>
-	<data name="Panel.Dimension.Tooltip.AddLength">@@Débordement des traits de support</data>
+	<data name="Panel.Dimension.Tooltip.AddLength">Support lines</data>
 	<data name="Panel.Dimension.Tooltip.OutLength">Length for outer measurement</data>
 	<data name="Panel.Dimension.Tooltip.RotateText">Inverted text</data>
 	<data name="Panel.Dimension.Tooltip.FontOffset">Vertical text offset</data>
-	<data name="Panel.Dimension.Tooltip.Text">@@Text (# = value)</data>
+	<data name="Panel.Dimension.Tooltip.Text">Text (# = value)</data>
 
 	<data name="Panel.Font.Short.Size">S</data>
 	<data name="Panel.Font.Short.Color">C</data>
@@ -342,8 +342,8 @@
 	<data name="Panel.Gradient.Tooltip.Middle">Middle color</data>
 	<data name="Panel.Gradient.Tooltip.Smooth">Blur</data>
 	<data name="Panel.Gradient.Tooltip.HatchAngle">Angle</data>
-	<data name="Panel.Gradient.Tooltip.HatchWidth">@@Width (zéro si inutilisé)</data>
-	<data name="Panel.Gradient.Tooltip.HatchDistance">@@Espacement</data>
+	<data name="Panel.Gradient.Tooltip.HatchWidth">Width (0 = nothing)</data>
+	<data name="Panel.Gradient.Tooltip.HatchDistance">Distance</data>
 	<data name="Panel.Gradient.Tooltip.Swap">Swap colors</data>
 
 	<data name="Panel.Image.Button.Update">Update</data>
@@ -361,7 +361,7 @@
 	<data name="File.Bitmap.JPG">Compressed Image JPEG</data>
 	<data name="File.Bitmap.PNG">Portable Network Graphics PNG</data>
 	<data name="File.Bitmap.GIF">Graphics Interchange Format GIF</data>
-	<data name="File.Vector.PDF">@@Fichiers PDF</data>
+	<data name="File.Vector.PDF">PDF (Adobe® Acrobat® file format)</data>
 
 	<data name="Panel.Justif.Short.MarginH">Mx</data>
 	<data name="Panel.Justif.Short.MarginV">My</data>
@@ -396,8 +396,8 @@
 	<data name="Panel.Line.Tooltip.Dash2">2nd line/gap pair</data>
 	<data name="Panel.Line.Tooltip.Dash3">3rd line/gap pair</data>
 	<data name="Panel.Line.Tooltip.DashLength">Pattern length</data>
-	<data name="Panel.Line.Tooltip.DashPen">@@Line length (zéro si point)</data>
-	<data name="Panel.Line.Tooltip.DashGap">@@Gap length (zéro si inutilisé)</data>
+	<data name="Panel.Line.Tooltip.DashPen">Line length (0 = dot)</data>
+	<data name="Panel.Line.Tooltip.DashGap">Gap length (0 = no gap)</data>
 
 	<data name="Panel.ModColor.Short.H">H</data>
 	<data name="Panel.ModColor.Short.S">S</data>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- Ressources pour le projet Common.Document -->
+<!-- Ressources françaises pour le projet Common.Document -->
 
 <bundle type="String">
 	<data name="Dialog.Title">Crésus</data>
