@@ -63,7 +63,7 @@ namespace Epsitec.Common.Document
 			this.objects = new UndoableList(this, UndoableListType.ObjectsInsideDocument);
 			this.propertiesAuto = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
 			this.propertiesSel = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
-			this.aggregates = new UndoableList(this, UndoableListType.AggregateInsideDocument);
+			this.aggregates = new UndoableList(this, UndoableListType.AggregatesInsideDocument);
 			this.exportDirectory = "";
 			this.exportFilename = "";
 			this.exportFilter = 0;
@@ -703,7 +703,7 @@ namespace Epsitec.Common.Document
 				obj.ChangeProperty(style);
 			}
 
-			obj.Aggregate = agg;
+			obj.Aggregates.Add(agg);
 		}
 
 		protected void OldStylesSort()
@@ -919,7 +919,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				this.aggregates = new UndoableList(Document.ReadDocument, UndoableListType.AggregateInsideDocument);
+				this.aggregates = new UndoableList(Document.ReadDocument, UndoableListType.AggregatesInsideDocument);
 				this.uniqueAggregateId = 0;
 			}
 		}

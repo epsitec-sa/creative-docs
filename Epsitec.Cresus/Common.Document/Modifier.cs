@@ -4507,14 +4507,14 @@ namespace Epsitec.Common.Document
 					Objects.Abstract layer = context.RootObject();
 					foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 					{
-						if ( obj.Aggregate == null )  continue;
+						if ( obj.Aggregates.Count == 0 )  continue;
 
 						string aggName = obj.AggregateName;
 
 						if ( name == "" )
 						{
 							name = aggName;
-							this.aggregateUsed = this.document.Aggregates.IndexOf(obj.Aggregate);
+							this.aggregateUsed = this.document.Aggregates.IndexOf(obj.Aggregates[0]);
 						}
 						else
 						{
@@ -4567,13 +4567,39 @@ namespace Epsitec.Common.Document
 		}
 #endif
 
+		// Crée un nouvel agrégat vide.
+		public void AggregateNewEmpty(int rank, string name, bool putToList)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			Properties.Aggregate agg = this.AggregateCreate(name, false);
+
+			UndoableList list = this.document.Aggregates;
+			if ( putToList && list.IndexOf(agg) == -1 )
+			{
+				using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateNew3) )
+				{
+					rank = System.Math.Max(rank, 0);
+					rank = System.Math.Min(rank, list.Count-1);
+					list.Insert(rank+1, agg);
+					list.Selected = rank+1;
+
+					this.document.Notifier.NotifyStyleChanged();
+					this.OpletQueueValidateAction();
+				}
+			}
+
+			this.AggregateUse(agg);
+		}
+
 		// Crée un nouvel agrégat avec seulement 3 propriétés.
 		public void AggregateNew3(int rank, string name, bool putToList)
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
-			Properties.Aggregate agg = this.AggregateCreate3(name);
+			Properties.Aggregate agg = this.AggregateCreate(name, true);
 
 			UndoableList list = this.document.Aggregates;
 			if ( putToList && list.IndexOf(agg) == -1 )
@@ -4632,7 +4658,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Crée un nouvel agrégat avec seulement 3 propriétés, pas encore référencé.
-		protected Properties.Aggregate AggregateCreate3(string name)
+		protected Properties.Aggregate AggregateCreate(string name, bool three)
 		{
 			this.OpletQueueEnable = false;
 
@@ -4650,9 +4676,12 @@ namespace Epsitec.Common.Document
 				model = this.RetFirstSelectedObject();
 			}
 
-			this.AggregateCreateProperty(agg, model, Properties.Type.LineMode);
-			this.AggregateCreateProperty(agg, model, Properties.Type.LineColor);
-			this.AggregateCreateProperty(agg, model, Properties.Type.FillGradient);
+			if ( three )
+			{
+				this.AggregateCreateProperty(agg, model, Properties.Type.LineMode);
+				this.AggregateCreateProperty(agg, model, Properties.Type.LineColor);
+				this.AggregateCreateProperty(agg, model, Properties.Type.FillGradient);
+			}
 			agg.Styles.Selected = -1;
 
 			this.OpletQueueEnable = true;
@@ -4736,8 +4765,9 @@ namespace Epsitec.Common.Document
 					foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 					{
 						obj.AggregateFree();
-						obj.AggregateUse(agg);
-						obj.Aggregate = agg;
+						obj.Aggregates.Clear();
+						obj.Aggregates.Add(agg);
+						obj.AggregateUse();
 					}
 
 					this.AggregateToDocument(agg);
@@ -4752,8 +4782,9 @@ namespace Epsitec.Common.Document
 			{
 				this.OpletQueueEnable = false;
 				this.ObjectMemoryTool.AggregateFree();
-				this.ObjectMemoryTool.AggregateUse(agg);
-				this.ObjectMemoryTool.Aggregate = agg;
+				this.ObjectMemoryTool.Aggregates.Clear();
+				this.ObjectMemoryTool.Aggregates.Add(agg);
+				this.ObjectMemoryTool.AggregateUse();
 				this.OpletQueueEnable = true;
 
 				this.document.Notifier.NotifySelectionChanged();
@@ -4797,7 +4828,7 @@ namespace Epsitec.Common.Document
 					foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 					{
 						obj.AggregateFree();
-						obj.Aggregate = null;
+						obj.Aggregates.Clear();
 					}
 
 					this.document.Notifier.NotifyStyleChanged();
@@ -4810,7 +4841,7 @@ namespace Epsitec.Common.Document
 			{
 				this.OpletQueueEnable = false;
 				this.ObjectMemoryTool.AggregateFree();
-				this.ObjectMemoryTool.Aggregate = null;
+				this.ObjectMemoryTool.Aggregates.Clear();
 				this.OpletQueueEnable = true;
 
 				this.document.Notifier.NotifyStyleChanged();
@@ -4826,7 +4857,7 @@ namespace Epsitec.Common.Document
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, false) )
 			{
 				obj.AggregateFree();
-				obj.Aggregate = null;
+				obj.Aggregates.Clear();
 			}
 		}
 
@@ -4870,9 +4901,9 @@ namespace Epsitec.Common.Document
 				for ( int i=0 ; i<this.document.Aggregates.Count ; i++ )
 				{
 					Properties.Aggregate a = this.document.Aggregates[i] as Properties.Aggregate;
-					if ( a.Parent == agg )
+					if ( a.Childrens.Contains(agg) )
 					{
-						a.Parent = agg.Parent;
+						a.Childrens.Remove(agg);
 					}
 				}
 
@@ -4921,7 +4952,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Change le nom d'un aggrégat.
+		// Change le nom d'un agrégat.
 		public void AggregateChangeName(string name)
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
@@ -4943,37 +4974,12 @@ namespace Epsitec.Common.Document
 			}
 			else	// objectMemory ?
 			{
-				if ( this.ObjectMemoryTool.Aggregate == null )  return;
+				if ( this.ObjectMemoryTool.Aggregates.Count == 0 )  return;
 
 				this.OpletQueueEnable = false;
-				this.ObjectMemoryTool.Aggregate.AggregateName = name;
+				Properties.Aggregate agg = this.ObjectMemoryTool.Aggregates[0] as Properties.Aggregate;
+				agg.AggregateName = name;
 				this.OpletQueueEnable = true;
-			}
-		}
-
-		// Modifie le parent d'un agrégat.
-		public void AggregateParent(Properties.Aggregate agg, Properties.Aggregate parent)
-		{
-			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
-
-			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateChange, "ChangeAggregateParent") )
-			{
-				agg.Parent = parent;
-
-				DrawingContext context = this.ActiveViewer.DrawingContext;
-				Objects.Abstract doc = context.RootObject(0);
-				foreach ( Objects.Abstract obj in this.document.Deep(doc) )
-				{
-					obj.AggregateAdapt(agg);
-				}
-
-				this.objectMemory.AggregateAdapt(agg);
-				this.objectMemoryText.AggregateAdapt(agg);
-
-				this.document.Notifier.NotifyAggregateChanged(agg);
-				this.document.Notifier.NotifySelectionChanged();
-				this.OpletQueueValidateAction();
 			}
 		}
 
@@ -5018,6 +5024,92 @@ namespace Epsitec.Common.Document
 
 				rank = System.Math.Min(rank, agg.Styles.Count-1);
 				agg.Styles.Selected = rank;
+
+				DrawingContext context = this.ActiveViewer.DrawingContext;
+				Objects.Abstract doc = context.RootObject(0);
+				foreach ( Objects.Abstract obj in this.document.Deep(doc) )
+				{
+					obj.AggregateAdapt(agg);
+				}
+
+				this.objectMemory.AggregateAdapt(agg);
+				this.objectMemoryText.AggregateAdapt(agg);
+
+				this.document.Notifier.NotifyStyleChanged();
+				this.document.Notifier.NotifySelectionChanged();
+				this.OpletQueueValidateAction();
+			}
+		}
+
+		// Ajoute un enfant à un agrégat.
+		public void AggregateChildrensNew(Properties.Aggregate agg, Properties.Aggregate newAgg)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensNew) )
+			{
+				agg.Childrens.Insert(0, newAgg);
+				agg.Childrens.Selected = 0;
+
+				DrawingContext context = this.ActiveViewer.DrawingContext;
+				Objects.Abstract doc = context.RootObject(0);
+				foreach ( Objects.Abstract obj in this.document.Deep(doc) )
+				{
+					obj.AggregateAdapt(agg);
+				}
+
+				this.objectMemory.AggregateAdapt(agg);
+				this.objectMemoryText.AggregateAdapt(agg);
+
+				this.document.Notifier.NotifyStyleChanged();
+				this.document.Notifier.NotifySelectionChanged();
+				this.OpletQueueValidateAction();
+			}
+		}
+
+		// Permute deux enfants.
+		public void AggregateChildrensSwap(Properties.Aggregate agg, int rank1, int rank2)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			string op = (rank1 > rank2) ? Res.Strings.Action.AggregateChildrensUp : Res.Strings.Action.AggregateChildrensDown;
+			using ( this.OpletQueueBeginAction(op) )
+			{
+				Properties.Aggregate temp = agg.Childrens[rank1] as Properties.Aggregate;
+				agg.Childrens.RemoveAt(rank1);
+				agg.Childrens.Insert(rank2, temp);
+				agg.Childrens.Selected = rank2;
+
+				DrawingContext context = this.ActiveViewer.DrawingContext;
+				Objects.Abstract doc = context.RootObject(0);
+				foreach ( Objects.Abstract obj in this.document.Deep(doc) )
+				{
+					obj.AggregateAdapt(agg);
+				}
+
+				this.objectMemory.AggregateAdapt(agg);
+				this.objectMemoryText.AggregateAdapt(agg);
+
+				this.document.Notifier.NotifyStyleChanged();
+				this.document.Notifier.NotifySelectionChanged();
+				this.OpletQueueValidateAction();
+			}
+		}
+
+		// Supprime un enfant à un agrégat.
+		public void AggregateChildrensDelete(Properties.Aggregate agg, Properties.Aggregate delAgg)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateChildrensDelete) )
+			{
+				agg.Childrens.Remove(delAgg);
+
+				int sel = System.Math.Min(agg.Childrens.Selected, agg.Childrens.Count-1);
+				agg.Childrens.Selected = sel;
 
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract doc = context.RootObject(0);

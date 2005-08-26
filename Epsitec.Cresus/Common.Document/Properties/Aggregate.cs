@@ -15,6 +15,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 			this.document = document;
 			this.styles = new UndoableList(this.document, UndoableListType.StylesInsideAggregate);
+			this.childrens = new UndoableList(this.document, UndoableListType.AggregatesChildrens);
 		}
 
 
@@ -45,21 +46,12 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Agrégat parent.
-		public Aggregate Parent
+		// Liste des fils de l'agrégat.
+		public UndoableList Childrens
 		{
 			get
 			{
-				return this.parent;
-			}
-
-			set
-			{
-				if ( this.parent != value )
-				{
-					this.InsertOpletAggregate();
-					this.parent = value;
-				}
+				return this.childrens;
 			}
 		}
 
@@ -80,39 +72,61 @@ namespace Epsitec.Common.Document.Properties
 			return null;
 		}
 
-		// Donne une propriété de l'agrégat ou de l'un des agrégats parents.
+		// Donne une propriété de l'agrégat ou de l'un des agrégats enfants.
 		public Properties.Abstract PropertyDeep(Properties.Type type)
 		{
-			Properties.Aggregate agg = this;
+			return this.PropertyDeep(type, 0);
+		}
+		
+		protected Properties.Abstract PropertyDeep(Properties.Type type, int deep)
+		{
+			if ( deep > 10 )  return null;
 
-			int max = 10;  // profondeur maximale autorisée !
-			do
+			Properties.Abstract property = this.Property(type);
+			if ( property != null )  return property;
+
+			if ( this.childrens.Count != 0 )
 			{
-				Properties.Abstract property = agg.Property(type);
-				if ( property != null )  return property;
-
-				agg = agg.parent;
-				max --;
+				foreach ( Properties.Aggregate children in this.childrens )
+				{
+					property = children.PropertyDeep(type, deep+1);
+					if ( property != null )  return property;
+				}
 			}
-			while ( agg != null && max > 0 );
-
 			return null;
+		}
+
+		// Indique si l'agrégat contient une propriété.
+		public bool Contains(Properties.Abstract property)
+		{
+			return this.styles.Contains(property);
 		}
 
 		// Vérifie si un objet utilise cet agrégat.
 		public bool IsUsedByObject(Objects.Abstract obj)
 		{
-			Properties.Aggregate agg = obj.Aggregate;
+			return this.IsUsedByObject(obj, 0);
+		}
+		
+		protected bool IsUsedByObject(Objects.Abstract obj, int deep)
+		{
+			if ( deep > 10 )  return false;
 
-			int max = 10;  // profondeur maximale autorisée !
-			while ( agg != null && max > 0 )
+			UndoableList list = obj.Aggregates;
+			for ( int i=0 ; i<list.Count ; i++ )
 			{
+				Properties.Aggregate agg = list[i] as Properties.Aggregate;
+
 				if ( agg == this )  return true;
 
-				agg = agg.parent;
-				max --;
+				if ( this.childrens.Count != 0 )
+				{
+					foreach ( Properties.Aggregate children in this.childrens )
+					{
+						if ( children.IsUsedByObject(obj, deep+1) )  return true;
+					}
+				}
 			}
-
 			return false;
 		}
 
@@ -121,15 +135,15 @@ namespace Epsitec.Common.Document.Properties
 		public void CopyTo(Aggregate dst)
 		{
 			dst.aggregateName = this.aggregateName;
-			dst.parent = this.parent;
 			this.styles.CopyTo(dst.styles);
+			this.childrens.CopyTo(dst.childrens);
 		}
 
 		// Duplique tout l'agrégat.
 		public void DuplicateTo(Aggregate dst)
 		{
 			dst.aggregateName = this.aggregateName;
-			dst.parent = this.parent;
+			this.childrens.CopyTo(dst.childrens);
 
 			foreach ( Properties.Abstract srcProp in this.styles )
 			{
@@ -183,7 +197,6 @@ namespace Epsitec.Common.Document.Properties
 			{
 				this.host = host;
 				this.name = host.aggregateName;
-				this.parent = host.parent;
 			}
 
 			protected void Swap()
@@ -191,10 +204,6 @@ namespace Epsitec.Common.Document.Properties
 				string temp = this.host.aggregateName;
 				this.host.aggregateName = this.name;
 				this.name = temp;
-
-				Aggregate atemp = this.host.parent;
-				this.host.parent = this.parent;
-				this.parent = atemp;
 
 				this.host.document.Notifier.NotifyStyleChanged();
 			}
@@ -213,7 +222,6 @@ namespace Epsitec.Common.Document.Properties
 
 			protected Aggregate				host;
 			protected string				name;
-			protected Aggregate				parent;
 		}
 		#endregion
 
@@ -224,7 +232,7 @@ namespace Epsitec.Common.Document.Properties
 		{
 			info.AddValue("AggregateName", this.aggregateName);
 			info.AddValue("Styles", this.styles);
-			info.AddValue("Parent", this.parent);
+			info.AddValue("Childrens", this.childrens);
 		}
 
 		// Constructeur qui désérialise l'agrégat.
@@ -233,7 +241,15 @@ namespace Epsitec.Common.Document.Properties
 			this.document = Document.ReadDocument;
 			this.aggregateName = info.GetString("AggregateName");
 			this.styles = (UndoableList) info.GetValue("Styles", typeof(UndoableList));
-			this.parent = (Aggregate) info.GetValue("Parent", typeof(Aggregate));
+
+			if ( this.document.IsRevisionGreaterOrEqual(1,0,27) )
+			{
+				this.childrens = (UndoableList) info.GetValue("Childrens", typeof(UndoableList));
+			}
+			else
+			{
+				this.childrens = new UndoableList(this.document, UndoableListType.AggregatesChildrens);
+			}
 		}
 		#endregion
 
@@ -241,6 +257,6 @@ namespace Epsitec.Common.Document.Properties
 		protected Document						document;
 		protected string						aggregateName = "";
 		protected UndoableList					styles;
-		protected Aggregate						parent;
+		protected UndoableList					childrens;
 	}
 }

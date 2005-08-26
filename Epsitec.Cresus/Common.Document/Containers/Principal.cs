@@ -195,8 +195,8 @@ namespace Epsitec.Common.Document.Containers
 			this.ignoreChanged = false;
 
 			this.aggregateNew3.SetEnabled(name == "");
-			this.aggregateNewAll.SetEnabled(name == "" );
-			this.aggregateFree.SetEnabled(name != "" );
+			this.aggregateNewAll.SetEnabled(name == "");
+			this.aggregateFree.SetEnabled(name != "");
 		}
 
 		// Crée le panneau pour les sélections.
@@ -575,6 +575,7 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
+		#region StretchMenu
 		// Construit le menu des types de stretch.
 		public VMenu CreateStretchTypeMenu(MessageEventHandler message)
 		{
@@ -618,6 +619,7 @@ namespace Epsitec.Common.Document.Containers
 			if ( type == SelectorTypeStretch.TrapezeV  )  return Misc.Icon("SelectorStretchTrapezeV");
 			return "";
 		}
+		#endregion
 
 
 		protected HToolBar						selectorToolBar;

@@ -21,53 +21,60 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.TabIndex = tabIndex++;
 			this.toolBar.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 
-			this.buttonNewAggregate = new IconButton(Misc.Icon("AggregateNew3"));
-			this.buttonNewAggregate.Clicked += new MessageEventHandler(this.HandleButtonNewAggregate);
-			this.toolBar.Items.Add(this.buttonNewAggregate);
-			ToolTip.Default.SetToolTip(this.buttonNewAggregate, Res.Strings.Action.AggregateNew3);
+			this.buttonAggregateNewEmpty = new IconButton(Misc.Icon("AggregateNewEmpty"));
+			this.buttonAggregateNewEmpty.Clicked += new MessageEventHandler(this.HandleButtonAggregateNewEmpty);
+			this.toolBar.Items.Add(this.buttonAggregateNewEmpty);
+			ToolTip.Default.SetToolTip(this.buttonAggregateNewEmpty, Res.Strings.Action.AggregateNewEmpty);
 
-			this.buttonDuplicateAggregate = new IconButton(Misc.Icon("AggregateDuplicate"));
-			this.buttonDuplicateAggregate.Clicked += new MessageEventHandler(this.HandleButtonDuplicateAggregate);
-			this.toolBar.Items.Add(this.buttonDuplicateAggregate);
-			ToolTip.Default.SetToolTip(this.buttonDuplicateAggregate, Res.Strings.Action.AggregateDuplicate);
+			this.buttonAggregateNew3 = new IconButton(Misc.Icon("AggregateNew3"));
+			this.buttonAggregateNew3.Clicked += new MessageEventHandler(this.HandleButtonAggregateNew3);
+			this.toolBar.Items.Add(this.buttonAggregateNew3);
+			ToolTip.Default.SetToolTip(this.buttonAggregateNew3, Res.Strings.Action.AggregateNew3);
 
-			this.toolBar.Items.Add(new IconSeparator());
-
-			this.buttonUpAggregate = new IconButton(Misc.Icon("AggregateUp"));
-			this.buttonUpAggregate.Clicked += new MessageEventHandler(this.HandleButtonUpAggregate);
-			this.toolBar.Items.Add(this.buttonUpAggregate);
-			ToolTip.Default.SetToolTip(this.buttonUpAggregate, Res.Strings.Action.AggregateUp);
-
-			this.buttonDownAggregate = new IconButton(Misc.Icon("AggregateDown"));
-			this.buttonDownAggregate.Clicked += new MessageEventHandler(this.HandleButtonDownAggregate);
-			this.toolBar.Items.Add(this.buttonDownAggregate);
-			ToolTip.Default.SetToolTip(this.buttonDownAggregate, Res.Strings.Action.AggregateDown);
+			this.buttonAggregateDuplicate = new IconButton(Misc.Icon("AggregateDuplicate"));
+			this.buttonAggregateDuplicate.Clicked += new MessageEventHandler(this.HandleButtonAggregateDuplicate);
+			this.toolBar.Items.Add(this.buttonAggregateDuplicate);
+			ToolTip.Default.SetToolTip(this.buttonAggregateDuplicate, Res.Strings.Action.AggregateDuplicate);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonDeleteAggregate = new IconButton(Misc.Icon("AggregateDelete"));
-			this.buttonDeleteAggregate.Clicked += new MessageEventHandler(this.HandleButtonDeleteAggregate);
-			this.toolBar.Items.Add(this.buttonDeleteAggregate);
-			ToolTip.Default.SetToolTip(this.buttonDeleteAggregate, Res.Strings.Action.AggregateDelete);
+			this.buttonAggregateUp = new IconButton(Misc.Icon("AggregateUp"));
+			this.buttonAggregateUp.Clicked += new MessageEventHandler(this.HandleButtonAggregateUp);
+			this.toolBar.Items.Add(this.buttonAggregateUp);
+			ToolTip.Default.SetToolTip(this.buttonAggregateUp, Res.Strings.Action.AggregateUp);
+
+			this.buttonAggregateDown = new IconButton(Misc.Icon("AggregateDown"));
+			this.buttonAggregateDown.Clicked += new MessageEventHandler(this.HandleButtonAggregateDown);
+			this.toolBar.Items.Add(this.buttonAggregateDown);
+			ToolTip.Default.SetToolTip(this.buttonAggregateDown, Res.Strings.Action.AggregateDown);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonNewStyle = new IconButton(Misc.Icon("AggregateStyleNew"));
-			this.buttonNewStyle.Clicked += new MessageEventHandler(this.HandleButtonNewStyle);
-			this.toolBar.Items.Add(this.buttonNewStyle);
-			ToolTip.Default.SetToolTip(this.buttonNewStyle, Res.Strings.Action.AggregateStyleNew);
+			this.buttonAggregateDelete = new IconButton(Misc.Icon("AggregateDelete"));
+			this.buttonAggregateDelete.Clicked += new MessageEventHandler(this.HandleButtonAggregateDelete);
+			this.toolBar.Items.Add(this.buttonAggregateDelete);
+			ToolTip.Default.SetToolTip(this.buttonAggregateDelete, Res.Strings.Action.AggregateDelete);
 
-			this.buttonDeleteStyle = new IconButton(Misc.Icon("AggregateStyleDelete"));
-			this.buttonDeleteStyle.Clicked += new MessageEventHandler(this.HandleButtonDeleteStyle);
-			this.toolBar.Items.Add(this.buttonDeleteStyle);
-			ToolTip.Default.SetToolTip(this.buttonDeleteStyle, Res.Strings.Action.AggregateStyleDelete);
+			this.toolBar.Items.Add(new IconSeparator());
+
+			this.buttonStyleNew = new IconButton(Misc.Icon("AggregateStyleNew"));
+			this.buttonStyleNew.Clicked += new MessageEventHandler(this.HandleButtonStyleNew);
+			this.toolBar.Items.Add(this.buttonStyleNew);
+			ToolTip.Default.SetToolTip(this.buttonStyleNew, Res.Strings.Action.AggregateStyleNew);
+
+			this.buttonStyleDelete = new IconButton(Misc.Icon("AggregateStyleDelete"));
+			this.buttonStyleDelete.Clicked += new MessageEventHandler(this.HandleButtonStyleDelete);
+			this.toolBar.Items.Add(this.buttonStyleDelete);
+			ToolTip.Default.SetToolTip(this.buttonStyleDelete, Res.Strings.Action.AggregateStyleDelete);
 
 			// Table des agrégats.
 			this.list = new Widgets.AggregateList();
 			this.list.Document = this.document;
+			this.list.List = this.document.Aggregates;
 			this.list.HScroller = true;
 			this.list.VScroller = true;
 			this.list.Parent = this;
+			this.list.MinSize = new Size(10, 87);
 			this.list.Dock = DockStyle.Fill;
 			this.list.DockMargins = new Margins(0, 0, 0, 0);
 			this.list.FinalSelectionChanged += new EventHandler(this.HandleAggregatesTableSelectionChanged);
@@ -97,27 +104,56 @@ namespace Epsitec.Common.Document.Containers
 			this.panelContainer.TabIndex = tabIndex++;
 			this.panelContainer.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 
-			// Parent de l'agrégat.
-			this.toolBarParent = new HToolBar(this);
-			this.toolBarParent.Dock = DockStyle.Bottom;
-			this.toolBarParent.DockMargins = new Margins(0, 0, 0, 0);
-			this.toolBarParent.TabIndex = tabIndex++;
-			this.toolBarParent.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			// Enfants de l'agrégat.
+			this.childrens = new Widgets.AggregateList();
+			this.childrens.Document = this.document;
+			this.childrens.HScroller = true;
+			this.childrens.VScroller = true;
+			this.childrens.IsHiliteColumn = false;
+			this.childrens.IsOrderColumn = true;
+			this.childrens.IsChildrensColumn = false;
+			this.childrens.Parent = this;
+			this.childrens.Height = 87;
+			this.childrens.Dock = DockStyle.Bottom;
+			this.childrens.DockMargins = new Margins(0, 0, 0, 0);
+			this.childrens.FinalSelectionChanged += new EventHandler(this.HandleAggregatesChildrensSelectionChanged);
+			this.childrens.TabIndex = tabIndex++;
+			this.childrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+
+			this.toolBarChildrens = new HToolBar(this);
+			this.toolBarChildrens.Dock = DockStyle.Bottom;
+			this.toolBarChildrens.DockMargins = new Margins(0, 0, 0, 0);
+			this.toolBarChildrens.TabIndex = tabIndex++;
+			this.toolBarChildrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 
 			StaticText st = new StaticText();
 			st.Width = 80;
-			st.Text = Res.Strings.Panel.AggregateParent.Label.Name;
-			this.toolBarParent.Items.Add(st);
+			st.Text = Res.Strings.Panel.AggregateChildrens.Label.Name;
+			this.toolBarChildrens.Items.Add(st);
 
-			this.parentCombo = new Widgets.AggregateCombo();
-			this.parentCombo.Document = this.document;
-			this.parentCombo.IsReadOnly = true;
-			this.parentCombo.Width = 140;
-			this.parentCombo.DockMargins = new Margins(0, 0, 1, 1);
-			this.parentCombo.OpeningCombo += new CancelEventHandler(this.HandleParentOpeningCombo);
-			this.parentCombo.ClosedCombo += new EventHandler(this.HandleParentClosedCombo);
-			this.toolBarParent.Items.Add(this.parentCombo);
-			ToolTip.Default.SetToolTip(this.parentCombo, Res.Strings.Panel.AggregateParent.Tooltip.Name);
+			this.buttonChildrensNew = new IconButton(Misc.Icon("AggregateChildrensNew"));
+			this.buttonChildrensNew.Clicked += new MessageEventHandler(this.HandleButtonChildrensNew);
+			this.toolBarChildrens.Items.Add(this.buttonChildrensNew);
+			ToolTip.Default.SetToolTip(this.buttonChildrensNew, Res.Strings.Action.AggregateChildrensNew);
+
+			this.toolBarChildrens.Items.Add(new IconSeparator());
+
+			this.buttonChildrensUp = new IconButton(Misc.Icon("Up"));
+			this.buttonChildrensUp.Clicked += new MessageEventHandler(this.HandleButtonChildrensUp);
+			this.toolBarChildrens.Items.Add(this.buttonChildrensUp);
+			ToolTip.Default.SetToolTip(this.buttonChildrensUp, Res.Strings.Action.AggregateChildrensUp);
+
+			this.buttonChildrensDown = new IconButton(Misc.Icon("Down"));
+			this.buttonChildrensDown.Clicked += new MessageEventHandler(this.HandleButtonChildrensDown);
+			this.toolBarChildrens.Items.Add(this.buttonChildrensDown);
+			ToolTip.Default.SetToolTip(this.buttonChildrensDown, Res.Strings.Action.AggregateChildrensDown);
+
+			this.toolBarChildrens.Items.Add(new IconSeparator());
+
+			this.buttonChildrensDelete = new IconButton(Misc.Icon("DeleteItem"));
+			this.buttonChildrensDelete.Clicked += new MessageEventHandler(this.HandleButtonChildrensDelete);
+			this.toolBarChildrens.Items.Add(this.buttonChildrensDelete);
+			ToolTip.Default.SetToolTip(this.buttonChildrensDelete, Res.Strings.Action.AggregateChildrensDelete);
 
 			// Nom de l'agrégat.
 			this.toolBarName = new HToolBar(this);
@@ -132,11 +168,22 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBarName.Items.Add(st);
 
 			this.name = new TextField();
-			this.name.Width = 140;
+			this.name.Width = 135;
 			this.name.DockMargins = new Margins(0, 0, 1, 1);
 			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
 			this.toolBarName.Items.Add(this.name);
 			ToolTip.Default.SetToolTip(this.name, Res.Strings.Panel.AggregateName.Tooltip.Name);
+
+			this.buttonChildrensExtend = new GlyphButton(this.toolBarName);
+			this.buttonChildrensExtend.ButtonStyle = ButtonStyle.Icon;
+			this.buttonChildrensExtend.GlyphShape = GlyphShape.ArrowDown;
+			this.buttonChildrensExtend.Width = 12;
+			this.buttonChildrensExtend.Dock = DockStyle.Right;
+			this.buttonChildrensExtend.DockMargins = new Margins(0, 0, 5, 5);
+			this.buttonChildrensExtend.Clicked += new MessageEventHandler(this.HandleButtonChildrensExtend);
+			ToolTip.Default.SetToolTip(this.buttonChildrensExtend, Res.Strings.Panel.Abstract.Extend);
+
+			this.UpdateChildrensExtend();
 		}
 		
 
@@ -151,7 +198,7 @@ namespace Epsitec.Common.Document.Containers
 			for ( int i=0 ; i<this.document.Aggregates.Count ; i++ )
 			{
 				Properties.Aggregate agg = this.document.Aggregates[i] as Properties.Aggregate;
-				bool hilite = (hiliteObject != null && hiliteObject.Aggregate == agg);
+				bool hilite = (hiliteObject != null && hiliteObject.Aggregates.Contains(agg));
 				this.list.HiliteRow(i, hilite);
 			}
 		}
@@ -160,9 +207,11 @@ namespace Epsitec.Common.Document.Containers
 		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
+			this.list.List = this.document.Aggregates;
 			this.list.UpdateContent();
 			this.UpdateAggregateName();
-			this.UpdateAggregateParent();
+			this.UpdateAggregateChildrens();
+			this.UpdateToolBarChildrens();
 			this.UpdateToolBar();
 			this.UpdatePanel();
 			this.ListShowSelection();
@@ -199,10 +248,10 @@ namespace Epsitec.Common.Document.Containers
 			int total = this.list.Rows;
 			int sel = this.document.Aggregates.Selected;
 
-			this.buttonUpAggregate.SetEnabled(sel != -1 && sel > 0);
-			this.buttonDuplicateAggregate.SetEnabled(sel != -1);
-			this.buttonDownAggregate.SetEnabled(sel != -1 && sel < total-1);
-			this.buttonDeleteAggregate.SetEnabled(sel != -1);
+			this.buttonAggregateUp.SetEnabled(sel != -1 && sel > 0);
+			this.buttonAggregateDuplicate.SetEnabled(sel != -1);
+			this.buttonAggregateDown.SetEnabled(sel != -1 && sel < total-1);
+			this.buttonAggregateDelete.SetEnabled(sel != -1);
 
 			Properties.Type type = Properties.Type.None;
 			bool enableDelete = false;
@@ -218,8 +267,8 @@ namespace Epsitec.Common.Document.Containers
 					}
 				}
 			}
-			this.buttonNewStyle.SetEnabled(sel != -1);
-			this.buttonDeleteStyle.SetEnabled(enableDelete);
+			this.buttonStyleNew.SetEnabled(sel != -1);
+			this.buttonStyleDelete.SetEnabled(enableDelete);
 		}
 
 
@@ -239,20 +288,43 @@ namespace Epsitec.Common.Document.Containers
 			this.ignoreChanged = false;
 		}
 
-		// Met à jour le panneau pour éditer le parent de l'agrégat sélectionné.
-		protected void UpdateAggregateParent()
+		// Met à jour les panneaux des enfants selon le mode réduit/étendu.
+		protected void UpdateChildrensExtend()
+		{
+			this.buttonChildrensExtend.GlyphShape = this.isChildrensExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
+			this.toolBarChildrens.SetVisible(this.isChildrensExtended);
+			this.childrens.SetVisible(this.isChildrensExtended);
+		}
+
+		// Met à jour les boutons de la toolbar des enfants.
+		protected void UpdateToolBarChildrens()
+		{
+			int aggSel = this.list.SelectedPropertyRow;
+			int total = this.childrens.Rows;
+			int sel = this.childrens.SelectedPropertyRow;
+
+			this.buttonChildrensNew.SetEnabled(aggSel != -1);
+			this.buttonChildrensUp.SetEnabled(sel != -1 && sel > 0);
+			this.buttonChildrensDown.SetEnabled(sel != -1 && sel < total-1);
+			this.buttonChildrensDelete.SetEnabled(sel != -1);
+		}
+
+		// Met à jour le panneau pour éditer les enfants de l'agrégat sélectionné.
+		protected void UpdateAggregateChildrens()
 		{
 			Properties.Aggregate agg = this.GetAggregate();
 
-			string name = "";
-			if ( agg != null && agg.Parent != null )
+			if ( agg == null )
 			{
-				name = agg.Parent.AggregateName;
+				this.childrens.List = null;
+			}
+			else
+			{
+				this.childrens.List = agg.Childrens;
+				this.childrens.SelectRow(agg.Childrens.Selected, true);
 			}
 
-			this.ignoreChanged = true;
-			this.parentCombo.Text = name;
-			this.ignoreChanged = false;
+			this.childrens.UpdateContent();
 		}
 
 		// Met à jour le panneau pour éditer la propriété sélectionnée.
@@ -308,7 +380,15 @@ namespace Epsitec.Common.Document.Containers
 
 
 		// Crée un nouvel agrégat.
-		private void HandleButtonNewAggregate(object sender, MessageEventArgs e)
+		private void HandleButtonAggregateNewEmpty(object sender, MessageEventArgs e)
+		{
+			int sel = this.document.Aggregates.Selected;
+			if ( sel == -1 )  sel = 10000;
+			this.document.Modifier.AggregateNewEmpty(sel, "", true);
+		}
+
+		// Crée un nouvel agrégat.
+		private void HandleButtonAggregateNew3(object sender, MessageEventArgs e)
 		{
 			int sel = this.document.Aggregates.Selected;
 			if ( sel == -1 )  sel = 10000;
@@ -316,7 +396,7 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 		// Duplique un agrégat.
-		private void HandleButtonDuplicateAggregate(object sender, MessageEventArgs e)
+		private void HandleButtonAggregateDuplicate(object sender, MessageEventArgs e)
 		{
 			int sel = this.document.Aggregates.Selected;
 			if ( sel == -1 )  sel = 10000;
@@ -324,21 +404,21 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 		// Monte d'une ligne l'agrégat sélectionné.
-		private void HandleButtonUpAggregate(object sender, MessageEventArgs e)
+		private void HandleButtonAggregateUp(object sender, MessageEventArgs e)
 		{
 			int sel = this.document.Aggregates.Selected;
 			this.document.Modifier.AggregateSwap(sel, sel-1);
 		}
 
 		// Descend d'une ligne l'agrégat sélectionné.
-		private void HandleButtonDownAggregate(object sender, MessageEventArgs e)
+		private void HandleButtonAggregateDown(object sender, MessageEventArgs e)
 		{
 			int sel = this.document.Aggregates.Selected;
 			this.document.Modifier.AggregateSwap(sel, sel+1);
 		}
 
 		// Supprime l'agrégat sélectionné.
-		private void HandleButtonDeleteAggregate(object sender, MessageEventArgs e)
+		private void HandleButtonAggregateDelete(object sender, MessageEventArgs e)
 		{
 			int sel = this.document.Aggregates.Selected;
 			this.document.Modifier.AggregateDelete(sel);
@@ -367,7 +447,8 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdateToolBar();
 			this.UpdatePanel();
 			this.UpdateAggregateName();
-			this.UpdateAggregateParent();
+			this.UpdateAggregateChildrens();
+			this.UpdateToolBarChildrens();
 			this.ListShowSelection();
 		}
 
@@ -393,7 +474,7 @@ namespace Epsitec.Common.Document.Containers
 			Objects.Abstract layer = context.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 			{
-				obj.IsHilite = (agg != null && obj.Aggregate == agg);
+				obj.IsHilite = (agg != null && obj.Aggregates.Contains(agg));
 			}
 
 			this.list.HiliteColor = context.HiliteSurfaceColor;
@@ -404,13 +485,91 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
-
-		// Crée une nouvelle propriété.
-		private void HandleButtonNewStyle(object sender, MessageEventArgs e)
+		// Crée un nouvel enfant.
+		private void HandleButtonChildrensNew(object sender, MessageEventArgs e)
 		{
 			IconButton button = sender as IconButton;
 			Point pos = button.MapClientToScreen(new Point(0,0));
-			VMenu menu = this.CreateMenu(pos);
+			VMenu menu = this.CreateMenuChildrens(pos);
+			if ( menu == null )  return;
+			menu.Host = this;
+
+			ScreenInfo info = ScreenInfo.Find(pos);
+			Drawing.Rectangle area = info.WorkingArea;
+
+			if ( pos.Y-menu.Height < area.Bottom )  // dépasse en bas ?
+			{
+				pos = button.MapClientToScreen(new Drawing.Point(0, button.Height));
+				pos.Y += menu.Height;  // déroule contre le haut ?
+			}
+
+			if ( pos.X+menu.Width > area.Right )  // dépasse à droite ?
+			{
+				pos.X -= pos.X+menu.Width-area.Right;
+			}
+
+			menu.ShowAsContextMenu(this.Window, pos);
+		}
+
+		// Enfant en haut.
+		private void HandleButtonChildrensUp(object sender, MessageEventArgs e)
+		{
+			int sel = this.childrens.SelectedPropertyRow;
+			if ( sel == -1 )  return;
+			Properties.Aggregate agg = this.GetAggregate();
+			this.document.Modifier.AggregateChildrensSwap(agg, sel, sel-1);
+		}
+
+		// Enfant en bas.
+		private void HandleButtonChildrensDown(object sender, MessageEventArgs e)
+		{
+			int sel = this.childrens.SelectedPropertyRow;
+			if ( sel == -1 )  return;
+			Properties.Aggregate agg = this.GetAggregate();
+			this.document.Modifier.AggregateChildrensSwap(agg, sel, sel+1);
+		}
+
+		// Supprime l'enfant.
+		private void HandleButtonChildrensDelete(object sender, MessageEventArgs e)
+		{
+			int sel = this.childrens.SelectedPropertyRow;
+			if ( sel == -1 )  return;
+			Properties.Aggregate agg = this.GetAggregate();
+			Properties.Aggregate delAgg = agg.Childrens[sel] as Properties.Aggregate;
+			this.document.Modifier.AggregateChildrensDelete(agg, delAgg);
+		}
+
+		// Etend/réduit le panneau des enfants.
+		private void HandleButtonChildrensExtend(object sender, MessageEventArgs e)
+		{
+			this.isChildrensExtended = !this.isChildrensExtended;
+			this.UpdateChildrensExtend();
+			this.ForceLayout();
+		}
+
+		// Sélection changée dans la liste des enfants.
+		private void HandleAggregatesChildrensSelectionChanged(object sender)
+		{
+			Properties.Aggregate agg = this.GetAggregate();
+			this.document.Modifier.OpletQueueEnable = false;
+			agg.Childrens.Selected = this.childrens.SelectedRow;
+			this.document.Modifier.OpletQueueEnable = true;
+
+			for ( int i=0 ; i<this.childrens.Columns ; i++ )
+			{
+				this.childrens.SelectCell(i, this.childrens.SelectedRow, true);
+			}
+
+			this.UpdateToolBarChildrens();
+		}
+
+
+		// Crée une nouvelle propriété.
+		private void HandleButtonStyleNew(object sender, MessageEventArgs e)
+		{
+			IconButton button = sender as IconButton;
+			Point pos = button.MapClientToScreen(new Point(0,0));
+			VMenu menu = this.CreateMenuTypes(pos);
 			menu.Host = this;
 
 			ScreenInfo info = ScreenInfo.Find(pos);
@@ -431,7 +590,7 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 		// Supprime la propriété sélectionnée.
-		private void HandleButtonDeleteStyle(object sender, MessageEventArgs e)
+		private void HandleButtonStyleDelete(object sender, MessageEventArgs e)
 		{
 			Properties.Aggregate agg = this.GetAggregate();
 			this.document.Modifier.AggregateStyleDelete(agg);
@@ -454,40 +613,6 @@ namespace Epsitec.Common.Document.Containers
 			this.document.IsDirtySerialize = true;
 
 			this.document.Notifier.NotifyAggregateChanged(agg);
-
-			foreach ( Properties.Aggregate a in this.document.Aggregates )
-			{
-				if ( a.Parent == agg )
-				{
-					this.document.Notifier.NotifyAggregateChanged(a);
-				}
-			}
-		}
-
-		// Le combo des agrégats sera ouvert.
-		private void HandleParentOpeningCombo(object sender, CancelEventArgs e)
-		{
-			this.parentCombo.IsNoneLine = true;
-			this.parentCombo.ExcludeRank = this.document.Aggregates.Selected;
-		}
-
-		// Combo des agrégats fermé.
-		private void HandleParentClosedCombo(object sender)
-		{
-			if ( this.ignoreChanged )  return;
-			int sel = this.parentCombo.SelectedIndex;
-			if ( sel == -1 )  return;
-
-			Properties.Aggregate parent = null;
-			if ( sel != -2 )  // pas ligne <aucun> ?
-			{
-				parent = this.document.Aggregates[sel] as Properties.Aggregate;
-			}
-
-			sel = this.document.Aggregates.Selected;
-			Properties.Aggregate agg = this.document.Aggregates[sel] as Properties.Aggregate;
-
-			this.document.Modifier.AggregateParent(agg, parent);
 		}
 
 		// Le contenu du panneau a changé.
@@ -527,9 +652,9 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		#region CreateMenu
+		#region MenuTypes
 		// Construit le menu pour choisir le style.
-		protected VMenu CreateMenu(Point pos)
+		protected VMenu CreateMenuTypes(Point pos)
 		{
 			Properties.Aggregate agg = this.GetAggregate();
 			VMenu menu = new VMenu();
@@ -549,15 +674,15 @@ namespace Epsitec.Common.Document.Containers
 				string text = Properties.Abstract.Text(type);
 				string line = string.Format("{0}   {1}", icon, text);
 				MenuItem item = new MenuItem("StyleNew", "", line, "", Properties.Abstract.TypeName(type));
-				item.SetEnabled(!this.MenuExist(agg.Styles, type));
-				item.Pressed += new MessageEventHandler(this.HandleMenuPressed);
+				item.SetEnabled(!this.MenuTypesExist(agg.Styles, type));
+				item.Pressed += new MessageEventHandler(this.HandleMenuTypesPressed);
 				menu.Items.Add(item);
 			}
 			menu.AdjustSize();
 			return menu;
 		}
 
-		protected bool MenuExist(UndoableList styles, Properties.Type type)
+		protected bool MenuTypesExist(UndoableList styles, Properties.Type type)
 		{
 			foreach ( Properties.Abstract property in styles )
 			{
@@ -566,12 +691,56 @@ namespace Epsitec.Common.Document.Containers
 			return false;
 		}
 
-		private void HandleMenuPressed(object sender, MessageEventArgs e)
+		private void HandleMenuTypesPressed(object sender, MessageEventArgs e)
 		{
 			MenuItem item = sender as MenuItem;
 			Properties.Aggregate agg = this.GetAggregate();
 			Properties.Type type = Properties.Abstract.TypeName(item.Name);
 			this.document.Modifier.AggregateStyleNew(agg, type);
+		}
+		#endregion
+
+		
+		#region MenuChildrens
+		// Construit le menu pour choisir un enfant à ajouter.
+		protected VMenu CreateMenuChildrens(Point pos)
+		{
+			VMenu menu = new VMenu();
+			Properties.Aggregate currentAgg = this.GetAggregate();
+			int used = 0;
+			for ( int i=0 ; i<this.document.Aggregates.Count ; i++ )
+			{
+				Properties.Aggregate agg = this.document.Aggregates[i] as Properties.Aggregate;
+				if ( agg == currentAgg )  continue;
+				if ( currentAgg.Childrens.Contains(agg) )  continue;
+
+				string line = agg.AggregateName;
+				MenuItem item = new MenuItem("ChildrensNew", "", line, "", i.ToString());
+				item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
+				menu.Items.Add(item);
+				used ++;
+			}
+			if ( used == 0 )  return null;
+			menu.AdjustSize();
+			return menu;
+		}
+
+		protected bool MenuChildrensExist(UndoableList styles, Properties.Type type)
+		{
+			foreach ( Properties.Abstract property in styles )
+			{
+				if ( property.Type == type )  return true;
+			}
+			return false;
+		}
+
+		private void HandleMenuChildrensPressed(object sender, MessageEventArgs e)
+		{
+			MenuItem item = sender as MenuItem;
+			int i = System.Int32.Parse(item.Name);
+			Properties.Aggregate newAgg = this.document.Aggregates[i] as Properties.Aggregate;
+			Properties.Aggregate agg = this.GetAggregate();
+			this.document.Modifier.AggregateChildrensNew(agg, newAgg);
 		}
 		#endregion
 
@@ -589,23 +758,29 @@ namespace Epsitec.Common.Document.Containers
 
 
 		protected HToolBar					toolBar;
-		protected IconButton				buttonNewAggregate;
-		protected IconButton				buttonDuplicateAggregate;
-		protected IconButton				buttonUpAggregate;
-		protected IconButton				buttonDownAggregate;
-		protected IconButton				buttonDeleteAggregate;
-		protected IconButton				buttonNewStyle;
-		protected IconButton				buttonDeleteStyle;
+		protected IconButton				buttonAggregateNewEmpty;
+		protected IconButton				buttonAggregateNew3;
+		protected IconButton				buttonAggregateDuplicate;
+		protected IconButton				buttonAggregateUp;
+		protected IconButton				buttonAggregateDown;
+		protected IconButton				buttonAggregateDelete;
+		protected IconButton				buttonStyleNew;
+		protected IconButton				buttonStyleDelete;
 		protected Widgets.AggregateList		list;
 		protected HToolBar					toolBarName;
 		protected TextField					name;
-		protected HToolBar					toolBarParent;
-		protected Widgets.AggregateCombo	parentCombo;
+		protected HToolBar					toolBarChildrens;
+		protected IconButton				buttonChildrensNew;
+		protected IconButton				buttonChildrensUp;
+		protected IconButton				buttonChildrensDown;
+		protected IconButton				buttonChildrensDelete;
+		protected GlyphButton				buttonChildrensExtend;
+		protected Widgets.AggregateList		childrens;
 		protected Widget					panelContainer;
 		protected Panels.Abstract			panel;
 		protected ColorSelector				colorSelector;
 
-		protected bool						isExtended = false;
+		protected bool						isChildrensExtended = false;
 		protected bool						ignoreChanged = false;
 
 		protected bool						aggregateTypesDirty = true;

@@ -276,6 +276,14 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\AggregateChildrens.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\AggregateChildrensNew.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\AggregateDelete.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -300,7 +308,7 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\AggregateParent.icon"
+                    RelPath = "Images\AggregateNewEmpty.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

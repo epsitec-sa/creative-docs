@@ -25,6 +25,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.properties = new UndoableList(this.document, UndoableListType.PropertiesInsideObject);
+			this.aggregates = new UndoableList(this.document, UndoableListType.AggregatesInsideObject);
 			this.surfaceAnchor = new SurfaceAnchor(this.document, this);
 		}
 
@@ -60,10 +61,13 @@ namespace Epsitec.Common.Document.Objects
 		protected void CreateProperties(Objects.Abstract model, bool floating)
 		{
 			System.Diagnostics.Debug.Assert(this.document != null);
-			if ( model != null && model.aggregate != null )
+			if ( model != null && model.aggregates != null && model.aggregates.Count != 0 )
 			{
-				this.aggregate = model.aggregate;
-				this.document.Modifier.AggregateToDocument(this.aggregate);
+				foreach ( Properties.Aggregate agg in model.aggregates )
+				{
+					this.aggregates.Add(agg);
+					this.document.Modifier.AggregateToDocument(agg);
+				}
 			}
 
 			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
@@ -1519,6 +1523,7 @@ namespace Epsitec.Common.Document.Objects
 		// Reprend toutes les propriétés d'un objet source.
 		public void PickerProperties(Objects.Abstract model)
 		{
+#if false
 			if ( this is Objects.Memory )
 			{
 				this.AggregateFree();
@@ -1557,10 +1562,11 @@ namespace Epsitec.Common.Document.Objects
 						}
 					}
 				}
-				this.AggregateUse(model.aggregate);
+				this.AggregateUse(model.aggregates);
 				this.Aggregate = model.aggregate;
 				this.SetDirtyBbox();
 			}
+#endif
 		}
 
 		// Modifie la propriété PolyClose de l'objet en cours de création.
@@ -1721,24 +1727,27 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Agrégat utilisé par l'objet.
-		public Properties.Aggregate Aggregate
+		// Liste des agrégats utilisés par l'objet.
+		public UndoableList Aggregates
 		{
 			get
 			{
-				return this.aggregate;
+				return this.aggregates;
+			}
+		}
+
+		// Ajoute un agrégat au sommet de la liste de l'objet.
+		public void AggregateAdd(Properties.Aggregate agg)
+		{
+			this.aggregates.Insert(0, agg);
+
+			if ( agg.IsUsedByObject(this) )
+			{
+				this.AggregateUse();
 			}
 
-			set
-			{
-				if ( this.aggregate != value )
-				{
-					this.InsertOpletAggregate();
-					this.aggregate = value;
-					this.SetDirtyBbox();
-					this.document.Notifier.NotifyArea(this.BoundingBox);
-				}
-			}
+			this.SetDirtyBbox();
+			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
 		// Nom de l'agrégat utilisé par l'objet.
@@ -1746,8 +1755,24 @@ namespace Epsitec.Common.Document.Objects
 		{
 			get
 			{
-				if ( this.aggregate == null )  return "";
-				return this.aggregate.AggregateName;
+				if ( this.aggregates.Count == 0 )  return "";
+
+				Properties.Aggregate agg = this.aggregates[0] as Properties.Aggregate;
+				return agg.AggregateName;
+			}
+		}
+
+		// Liste des noms des agrégats utilisés par l'objet.
+		public System.Collections.ArrayList AggregateNames
+		{
+			get
+			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList();
+				foreach ( Properties.Aggregate agg in this.aggregates )
+				{
+					list.Add(agg.AggregateName);
+				}
+				return list;
 			}
 		}
 
@@ -1757,43 +1782,48 @@ namespace Epsitec.Common.Document.Objects
 			if ( agg.IsUsedByObject(this) )
 			{
 				this.AggregateFree();
-				this.AggregateUse(this.aggregate);
+				this.AggregateUse();
 			}
 		}
 
-		// Utilise toutes les propriétés d'un agrégat.
-		public void AggregateUse(Properties.Aggregate agg)
+		// Utilise toutes les propriétés de la liste d'agrégats.
+		public void AggregateUse()
 		{
-			if ( agg != null )
+			if ( this is Objects.Memory )
 			{
-				if ( this is Objects.Memory )
+				for ( int i=0 ; i<this.properties.Count ; i++ )
 				{
-					for ( int i=0 ; i<this.properties.Count ; i++ )
+					Properties.Abstract property = this.properties[i] as Properties.Abstract;
+					foreach ( Properties.Aggregate agg in this.aggregates )
 					{
-						Properties.Abstract property = this.properties[i] as Properties.Abstract;
 						Properties.Abstract style = agg.PropertyDeep(property.Type);
 						if ( style != null )
 						{
 							this.ChangeProperty(style);
+							break;
 						}
 					}
 				}
-				else
+			}
+			else
+			{
+				for ( int i=0 ; i<this.properties.Count ; i++ )
 				{
-					for ( int i=0 ; i<this.properties.Count ; i++ )
+					Properties.Abstract property = this.properties[i] as Properties.Abstract;
+					foreach ( Properties.Aggregate agg in this.aggregates )
 					{
-						Properties.Abstract property = this.properties[i] as Properties.Abstract;
 						Properties.Abstract style = agg.PropertyDeep(property.Type);
 						if ( style != null )
 						{
 							this.UseProperty(style);
+							break;
 						}
 					}
 				}
 			}
 		}
 
-		// Libère toutes les propriétés d'un agrégat.
+		// Libère toutes les propriétés des agrégats.
 		public void AggregateFree()
 		{
 			for ( int i=0 ; i<this.properties.Count ; i++ )
@@ -1803,7 +1833,20 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Libère une propriété d'un agrégat.
+		// Libère toutes les propriétés d'un agrégat donné.
+		public void AggregateFree(Properties.Aggregate agg)
+		{
+			for ( int i=0 ; i<this.properties.Count ; i++ )
+			{
+				Properties.Abstract property = this.properties[i] as Properties.Abstract;
+				if ( agg.Contains(property) )
+				{
+					this.AggregateFree(property);
+				}
+			}
+		}
+
+		// Libère une propriété.
 		public void AggregateFree(Properties.Abstract property)
 		{
 			if ( this is Objects.Memory )
@@ -1829,18 +1872,15 @@ namespace Epsitec.Common.Document.Objects
 		// Libère toutes les propriétés d'un agrégat qui sera détruit.
 		public void AggregateDelete(Properties.Aggregate agg)
 		{
-			if ( agg == this.aggregate )
+			if ( this.aggregates.Contains(agg) )
 			{
 				this.AggregateFree();
-				this.Aggregate = null;
+				this.aggregates.Remove(agg);
 			}
 			else
 			{
 				this.AggregateFree();
-				if ( this.aggregate != null )
-				{
-					this.AggregateUse(this.aggregate);
-				}
+				this.AggregateUse();
 			}
 		}
 
@@ -2186,8 +2226,8 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.isHide )  return;
 
-			if ( this.aggregate == null )  return;
-			string name = TextLayout.ConvertToSimpleText(this.aggregate.AggregateName);
+			if ( this.aggregates.Count == 0 )  return;
+			string name = TextLayout.ConvertToSimpleText(this.AggregateName);
 			if ( name == "" )  return;
 
 			double initialWidth = graphics.LineWidth;
@@ -2562,49 +2602,6 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
-		#region OpletAggregate
-		// Ajoute un oplet pour mémoriser l'agrégat de l'objet.
-		protected void InsertOpletAggregate()
-		{
-			if ( !this.document.Modifier.OpletQueueEnable )  return;
-			OpletAggregate oplet = new OpletAggregate(this);
-			this.document.Modifier.OpletQueue.Insert(oplet);
-		}
-
-		// Mémorise l'agrégat de l'objet.
-		protected class OpletAggregate : AbstractOplet
-		{
-			public OpletAggregate(Objects.Abstract host)
-			{
-				this.host = host;
-				this.aggregate = host.aggregate;
-			}
-
-			protected void Swap()
-			{
-				Properties.Aggregate temp = host.aggregate;
-				host.aggregate = this.aggregate;  // host.aggregate <-> this.aggregate
-				this.aggregate = temp;
-			}
-
-			public override IOplet Undo()
-			{
-				this.Swap();
-				return this;
-			}
-
-			public override IOplet Redo()
-			{
-				this.Swap();
-				return this;
-			}
-
-			protected Objects.Abstract				host;
-			protected Properties.Aggregate			aggregate;
-		}
-		#endregion
-
-
 		#region Serialization
 		// Sérialise l'objet.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -2623,7 +2620,7 @@ namespace Epsitec.Common.Document.Objects
 
 			info.AddValue("Objects", this.objects);
 			info.AddValue("Direction", this.direction);
-			info.AddValue("Aggregate", this.aggregate);
+			info.AddValue("Aggregates", this.aggregates);
 		}
 
 		// Constructeur qui désérialise l'objet.
@@ -2649,13 +2646,22 @@ namespace Epsitec.Common.Document.Objects
 				this.direction = 0.0;
 			}
 
-			if ( this.document.IsRevisionGreaterOrEqual(1,0,24) )
+			if ( this.document.IsRevisionGreaterOrEqual(1,0,26) )
 			{
-				this.aggregate = (Properties.Aggregate) info.GetValue("Aggregate", typeof(Properties.Aggregate));
+				this.aggregates = (UndoableList) info.GetValue("Aggregates", typeof(UndoableList));
+			}
+			else if ( this.document.IsRevisionGreaterOrEqual(1,0,24) )
+			{
+				this.aggregates = new UndoableList(this.document, UndoableListType.AggregatesInsideObject);
+				Properties.Aggregate agg = (Properties.Aggregate) info.GetValue("Aggregate", typeof(Properties.Aggregate));
+				if ( agg != null )
+				{
+					this.aggregates.Add(agg);
+				}
 			}
 			else
 			{
-				this.aggregate = null;
+				this.aggregates = new UndoableList(this.document, UndoableListType.AggregatesInsideObject);
 			}
 		}
 
@@ -2731,6 +2737,6 @@ namespace Epsitec.Common.Document.Objects
 		protected double						direction = 0.0;
 		protected double						initialDirection = 0.0;
 		protected SurfaceAnchor					surfaceAnchor;
-		protected Properties.Aggregate			aggregate = null;
+		protected UndoableList					aggregates = null;
 	}
 }

@@ -357,16 +357,17 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.list = new AggregateList();
 			this.list.Document = this.document;
+			this.list.List = this.document.Aggregates;
 			this.list.ExcludeRank = this.excludeRank;
 			this.list.IsNoneLine = this.isNoneLine;
 			this.list.IsDeep = this.isDeep;
 			this.list.HScroller = false;
 			this.list.VScroller = false;
 			this.list.IsHiliteColumn = false;
-			this.list.IsParentColumn = false;
+			this.list.IsChildrensColumn = false;
 			this.list.IsInitialSelection = false;
 			this.list.UpdateContent();
-			double width = 116+this.list.TotalProperties*20+margins.Left+margins.Right;
+			double width = 126+this.list.TotalProperties*20+margins.Left+margins.Right;
 
 			double h = this.document.Aggregates.Count*16+17+margins.Bottom+margins.Top;
 			Point pos = this.MapClientToScreen(new Point(0, 1));

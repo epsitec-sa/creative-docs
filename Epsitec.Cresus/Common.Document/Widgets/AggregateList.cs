@@ -36,6 +36,26 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		public UndoableList List
+		{
+			get
+			{
+				return this.list;
+			}
+
+			set
+			{
+				if ( value == null )
+				{
+					this.list = new UndoableList(this.document, UndoableListType.AggregatesChildrens);
+				}
+				else
+				{
+					this.list = value;
+				}
+			}
+		}
+
 		public bool HScroller
 		{
 			get
@@ -92,7 +112,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Attributs cherchés en profondeur, dans les parents.
+		// Attributs cherchés en profondeur, dans les enfants.
 		public bool IsDeep
 		{
 			get
@@ -131,20 +151,36 @@ namespace Epsitec.Common.Document.Widgets
 			set
 			{
 				this.isHiliteColumn = value;
+				if ( this.isHiliteColumn )  this.IsOrderColumn = false;
 			}
 		}
 
-		// Colonne pour les parents.
-		public bool IsParentColumn
+		// Première colonne pour les numéros d'ordre.
+		public bool IsOrderColumn
 		{
 			get
 			{
-				return this.isParentColumn;
+				return this.isOrderColumn;
 			}
 
 			set
 			{
-				this.isParentColumn = value;
+				this.isOrderColumn = value;
+				if ( this.isOrderColumn )  this.isHiliteColumn = false;
+			}
+		}
+
+		// Colonne pour les enfants.
+		public bool IsChildrensColumn
+		{
+			get
+			{
+				return this.isChildrensColumn;
+			}
+
+			set
+			{
+				this.isChildrensColumn = value;
 			}
 		}
 
@@ -246,7 +282,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.UpdateIndex();
 			int rank = this.RowToRank(row);
 			if ( rank == -1 )  return false;  // ligne "aucun" ?
-			Properties.Aggregate agg = this.document.Aggregates[rank] as Properties.Aggregate;
+			Properties.Aggregate agg = this.list[rank] as Properties.Aggregate;
 			return (agg.Property(this.types[column-fix], this.isDeep) != null);
 		}
 
@@ -254,11 +290,12 @@ namespace Epsitec.Common.Document.Widgets
 		public void UpdateContent()
 		{
 			System.Diagnostics.Debug.Assert(this.document != null);
+			System.Diagnostics.Debug.Assert(this.list != null);
 			this.typesDirty = true;
 			this.UpdateIndex();
 
 			int fix = this.FixColumns;
-			int rows = this.document.Aggregates.Count;
+			int rows = this.list.Count;
 			int initialColumns = this.Columns;
 			this.SetArraySize(fix+this.types.Length, rows);
 			int i;
@@ -266,9 +303,10 @@ namespace Epsitec.Common.Document.Widgets
 			if ( initialColumns != this.Columns )
 			{
 				i = 0;
-				if ( this.isHiliteColumn )  this.SetWidthColumn(i++,  12);
-				                            this.SetWidthColumn(i++, 115);
-				if ( this.isParentColumn )  this.SetWidthColumn(i++,  30);
+				if ( this.isHiliteColumn )     this.SetWidthColumn(i++,  12);
+				if ( this.isOrderColumn )      this.SetWidthColumn(i++,  20);
+				                               this.SetWidthColumn(i++, 125);
+				if ( this.isChildrensColumn )  this.SetWidthColumn(i++,  20);
 
 				for ( i=0 ; i<this.types.Length ; i++ )
 				{
@@ -277,17 +315,17 @@ namespace Epsitec.Common.Document.Widgets
 			}
 
 			i = 0;
-			if ( this.isHiliteColumn )
+			if ( this.isHiliteColumn || this.isOrderColumn )
 			{
 				this.SetHeaderTextH(i++, "");
 			}
 
 			this.SetHeaderTextH(i++, Res.Strings.Aggregates.Header.Name);
 			
-			if ( this.isParentColumn )
+			if ( this.isChildrensColumn )
 			{
-				this.SetHeaderTextH(i, Misc.Image("AggregateParent"));
-				ToolTip.Default.SetToolTip(this.FindButtonH(i), Res.Strings.Panel.AggregateParent.Label.Name);
+				this.SetHeaderTextH(i, Misc.Image("AggregateChildrens"));
+				ToolTip.Default.SetToolTip(this.FindButtonH(i), Res.Strings.Panel.AggregateChildrens.Label.Name);
 			}
 
 			for ( i=0 ; i<this.types.Length ; i++ )
@@ -320,6 +358,18 @@ namespace Epsitec.Common.Document.Widgets
 				}
 			}
 
+			if ( this.isOrderColumn )
+			{
+				if ( this[0, row].IsEmpty )
+				{
+					StaticText st = new StaticText();
+					st.Alignment = ContentAlignment.MiddleCenter;
+					st.Dock = DockStyle.Fill;
+					st.DockMargins = new Margins(2, 2, 0, 0);
+					this[0, row].Insert(st);
+				}
+			}
+
 			if ( this[nc, row].IsEmpty )
 			{
 				StaticText st = new StaticText();
@@ -329,15 +379,14 @@ namespace Epsitec.Common.Document.Widgets
 				this[nc, row].Insert(st);
 			}
 
-			if ( this.isParentColumn )
+			if ( this.isChildrensColumn )
 			{
 				if ( this[fix-1, row].IsEmpty )
 				{
 					StaticText st = new StaticText();
-					st.SetClientZoom(0.65);
-					st.Alignment = ContentAlignment.MiddleLeft;
+					st.Alignment = ContentAlignment.MiddleCenter;
 					st.Dock = DockStyle.Fill;
-					st.DockMargins = new Margins(1, 0, 0, 0);
+					st.DockMargins = new Margins(2, 2, 0, 0);
 					this[fix-1, row].Insert(st);
 				}
 			}
@@ -358,13 +407,14 @@ namespace Epsitec.Common.Document.Widgets
 		public void UpdateRow(int row)
 		{
 			System.Diagnostics.Debug.Assert(this.document != null);
+			System.Diagnostics.Debug.Assert(this.list != null);
 			int rank = this.RowToRank(row);
 			Properties.Aggregate agg = null;
 			if ( rank != -1 )
 			{
-				agg = this.document.Aggregates[rank] as Properties.Aggregate;
+				agg = this.list[rank] as Properties.Aggregate;
 			}
-			bool selected = (rank == this.document.Aggregates.Selected && this.isInitialSelection);
+			bool selected = (rank == this.list.Selected && this.isInitialSelection);
 			int nc = this.NameColumn;
 			int fix = this.FixColumns;
 			GlyphButton gb;
@@ -378,14 +428,30 @@ namespace Epsitec.Common.Document.Widgets
 				this[0, row].IsHilite = false;
 			}
 
+			if ( this.isOrderColumn )
+			{
+				st = this[0, row].Children[0] as StaticText;
+				st.Text = (row+1).ToString();
+				this.SelectCell(0, row, selected);
+			}
+
 			st = this[nc, row].Children[0] as StaticText;
 			st.Text = (agg==null) ? Res.Strings.Aggregates.NoneLine : agg.AggregateName;
 			this.SelectCell(nc, row, selected);
 
-			if ( this.isParentColumn )
+			if ( this.isChildrensColumn )
 			{
+				string text = "";
+				if ( agg != null )
+				{
+					int count = agg.Childrens.Count;
+					if ( count != 0 )
+					{
+						text = count.ToString();
+					}
+				}
 				st = this[fix-1, row].Children[0] as StaticText;
-				st.Text = (agg == null || agg.Parent==null) ? "" : agg.Parent.AggregateName;
+				st.Text = text;
 				this.SelectCell(fix-1, row, selected);
 			}
 
@@ -427,6 +493,7 @@ namespace Epsitec.Common.Document.Widgets
 		// Hilite une ligne de la table.
 		public void HiliteRow(int row, bool hilite)
 		{
+			System.Diagnostics.Debug.Assert(this.list != null);
 			if ( !this.isHiliteColumn )  return;
 
 			if ( this[0, row].IsHilite != hilite )
@@ -446,7 +513,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			Properties.Type[] table = new Properties.Type[100];
 			int total = 0;
-			foreach ( Properties.Aggregate agg in this.document.Aggregates )
+			foreach ( Properties.Aggregate agg in this.list )
 			{
 				foreach ( Properties.Abstract property in agg.Styles )
 				{
@@ -491,7 +558,7 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			get
 			{
-				return this.isHiliteColumn ? 1 : 0;
+				return (this.isHiliteColumn || this.IsOrderColumn) ? 1 : 0;
 			}
 		}
 
@@ -501,19 +568,22 @@ namespace Epsitec.Common.Document.Widgets
 			get
 			{
 				int fix = 1;
-				if ( this.isHiliteColumn )  fix ++;
-				if ( this.isParentColumn )  fix ++;
+				if ( this.isHiliteColumn    )  fix ++;
+				if ( this.IsOrderColumn     )  fix ++;
+				if ( this.isChildrensColumn )  fix ++;
 				return fix;
 			}
 		}
 
 
 		protected Document						document;
+		protected UndoableList					list;
 		protected int							excludeRank = -1;
 		protected bool							isDeep = false;
 		protected bool							isNoneLine = false;
 		protected bool							isHiliteColumn = true;
-		protected bool							isParentColumn = true;
+		protected bool							isOrderColumn = false;
+		protected bool							isChildrensColumn = true;
 		protected bool							isInitialSelection = true;
 		protected bool							typesDirty = true;
 		protected Properties.Type[]				types;
