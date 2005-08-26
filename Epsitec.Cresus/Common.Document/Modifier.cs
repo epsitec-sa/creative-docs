@@ -4992,6 +4992,10 @@ namespace Epsitec.Common.Document
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateStyleNew) )
 			{
 				Objects.Abstract model = this.ObjectMemoryTool;
+				if ( this.TotalSelected > 0 )
+				{
+					model = this.RetFirstSelectedObject();
+				}
 				this.AggregateCreateProperty(agg, model, type);
 
 				DrawingContext context = this.ActiveViewer.DrawingContext;
