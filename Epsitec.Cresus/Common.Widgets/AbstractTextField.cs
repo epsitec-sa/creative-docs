@@ -730,8 +730,8 @@ namespace Epsitec.Common.Widgets
 			this.contextMenu.Items.Add(mi);
 
 			mi = new MenuItem();
-			mi.Name = "Erase";
-			mi.Text = Res.Strings.AbstractTextField.Menu.Erase;
+			mi.Name = "Delete";
+			mi.Text = Res.Strings.AbstractTextField.Menu.Delete;
 			mi.SetEnabled(sel);
 			this.contextMenu.Items.Add(mi);
 
@@ -761,7 +761,7 @@ namespace Epsitec.Common.Widgets
 			if ( e.MenuItem.Name == "Cut" )
 			{
 				this.copyPasteBehavior.ProcessCopy();
-				this.copyPasteBehavior.ProcessErase();
+				this.copyPasteBehavior.ProcessDelete();
 			}
 
 			if ( e.MenuItem.Name == "Copy" )
@@ -774,9 +774,9 @@ namespace Epsitec.Common.Widgets
 				this.copyPasteBehavior.ProcessPaste();
 			}
 
-			if ( e.MenuItem.Name == "Erase" )
+			if ( e.MenuItem.Name == "Delete" )
 			{
-				this.copyPasteBehavior.ProcessErase();
+				this.copyPasteBehavior.ProcessDelete();
 			}
 
 			if ( e.MenuItem.Name == "SelectAll" )

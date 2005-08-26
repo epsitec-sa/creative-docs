@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.colorSpace == Drawing.ColorSpace.Gray )
 				{
-					return Drawing.RichColor.FromGray(this.g);
+					return Drawing.RichColor.FromAGray(this.a, this.g);
 				}
 				else
 				{
@@ -58,12 +58,14 @@ namespace Epsitec.Common.Widgets
 				if ( value.ColorSpace == Drawing.ColorSpace.Gray )
 				{
 					double g = value.Gray;
+					double a = value.A;
 
 					if ( value.ColorSpace != this.colorSpace ||
-						 g != this.g )
+						 g != this.g || a != this.a )
 					{
 						this.colorSpace = value.ColorSpace;
 						this.g = g;
+						this.a = a;
 						this.ComputePosHandler();
 						this.Invalidate();
 					}
@@ -109,10 +111,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void SetGray(double g)
+		public void SetAGray(double a, double g)
 		{
-			if ( g != this.g )
+			if ( a != this.a || g != this.g )
 			{
+				this.a = a;
 				this.g = g;
 				this.ComputePosHandler();
 				this.Invalidate();
@@ -163,7 +166,7 @@ namespace Epsitec.Common.Widgets
 			this.posHandlerSV.X = this.rectSquare.Left + this.rectSquare.Width*this.s;
 			this.posHandlerSV.Y = this.rectSquare.Bottom + this.rectSquare.Height*this.v;
 			this.posHandlerG.X  = this.centerCircle.X;
-			this.posHandlerG.Y  = this.centerCircle.Y + radius*(this.g*2.0-1.0);
+			this.posHandlerG.Y  = this.rectSquare.Bottom + this.rectSquare.Height*this.g;
 		}
 
 		
@@ -282,15 +285,19 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.colorSpace != Drawing.ColorSpace.Gray )  return false;
 
-			double radius = (this.radiusCircleMax+this.radiusCircleMin)/2;
-			Drawing.Rectangle rect = new Drawing.Rectangle(this.centerCircle.X-10.0, this.centerCircle.Y-radius, 2.0*10.0, 2.0*radius);
-
-			if ( restricted && !rect.Contains(pos) )
+			if ( restricted )
 			{
-				return false;
+				Drawing.Rectangle rect = this.rectSquare;
+				rect.Inflate(this.radiusHandler);
+				rect.Left = rect.Center.X-10.0;
+				rect.Width = 2.0*10.0;
+				if ( !rect.Contains(pos) )
+				{
+					return false;
+				}
 			}
 
-			g = Epsitec.Common.Math.Clip((pos.Y-rect.Bottom)/rect.Height);
+			g = Epsitec.Common.Math.Clip((pos.Y-this.rectSquare.Bottom)/this.rectSquare.Height);
 			return true;
 		}
 
@@ -373,6 +380,45 @@ namespace Epsitec.Common.Widgets
 			
 					graphics.RenderGradient();
 				}
+
+				// Dessine l'échantillon au milieu.
+				Drawing.Rectangle rInside = rect;
+				rInside.Deflate(this.rectCircle.Width*0.125);
+				path = new Drawing.Path();
+				this.PathAddCircle(path, rInside);
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(colorWindow);
+
+				rInside.Deflate(0.5);
+				graphics.AddLine(rInside.Left, (rInside.Bottom+rInside.Top)/2, rInside.Right, (rInside.Bottom+rInside.Top)/2);
+				graphics.AddLine((rInside.Left+rInside.Right)/2, rInside.Bottom, (rInside.Left+rInside.Right)/2, rInside.Top);
+				graphics.RenderSolid(colorBorder);
+
+				rInside.Inflate(0.5);
+				path = new Drawing.Path();
+				this.PathAddCircle(path, rInside);
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(this.Color.Basic);
+			}
+
+			rect.Deflate(0.5);
+			this.PaintCircle(graphics, rect, colorBorder);
+			rect.Deflate(this.rectCircle.Width*0.125);
+			this.PaintCircle(graphics, rect, colorBorder);
+		}
+
+		// Dessine un cercle gris échantillon.
+		protected void PaintGrayCircle(Drawing.Graphics graphics,
+									   Drawing.Rectangle rect,
+									   Drawing.Color colorBorder,
+									   Drawing.Color colorWindow)
+		{
+			if ( this.IsEnabled )
+			{
+				double cx = rect.Left+rect.Width/2;
+				double cy = rect.Bottom+rect.Height/2;
+			
+				Drawing.Path path;
 
 				// Dessine l'échantillon au milieu.
 				Drawing.Rectangle rInside = rect;
@@ -556,6 +602,9 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.colorSpace == Drawing.ColorSpace.Gray )
 			{
+				this.PaintGrayCircle(graphics, rect, colorBorder, colorWindow);
+
+				rect = this.rectSquare;
 				rect.Left = rect.Center.X-10.0;
 				rect.Width = 2.0*10.0;
 				graphics.Align(ref rect);

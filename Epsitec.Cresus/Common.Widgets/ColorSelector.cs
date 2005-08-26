@@ -29,12 +29,19 @@ namespace Epsitec.Common.Widgets
 				this.fields[i].TabIndex = i+100;
 				this.fields[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.fields[i].Value = 0;
-				if ( i < 4 )  // r,g,b,a ?
+				if ( i < 3 )  // r,g,b ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 255;
 					this.fields[i].Step = 10;
 					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextRGBChanged);
+				}
+				else if ( i == 3 )  // a ?
+				{
+					this.fields[i].MinValue = 0;
+					this.fields[i].MaxValue = 255;
+					this.fields[i].Step = 10;
+					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextAlphaChanged);
 				}
 				else if ( i == 4 )  // t ?
 				{
@@ -305,8 +312,10 @@ namespace Epsitec.Common.Widgets
 		// Couleur -> textes éditables.
 		protected void ColorToFieldsGray()
 		{
+			double a = this.color.A;
 			double g = this.color.Gray;
 		
+			this.fields[ 3].Value = (decimal) System.Math.Floor(a*255+0.5);
 			this.fields[11].Value = (decimal) System.Math.Floor(g*100+0.5);
 		}
 
@@ -376,12 +385,13 @@ namespace Epsitec.Common.Widgets
 		// Textes éditables Gray -> couleur.
 		protected void FieldsGrayToColor()
 		{
+			double a = (double) this.fields[ 3].Value/255;
 			double g = (double) this.fields[11].Value/100;
 
 			System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
 			this.suspendColorEvents = true;
-			this.color = Drawing.RichColor.FromAGray(this.color.A, g);
-			this.circle.SetGray(g);
+			this.color = Drawing.RichColor.FromAGray(a,g);
+			this.circle.SetAGray(a,g);
 			this.ColorToFieldsRGB();
 			this.ColorToFieldsHSV();
 			this.ColorToFieldsCMYK();
@@ -624,9 +634,13 @@ namespace Epsitec.Common.Widgets
 			{
 				for ( int i=0 ; i<this.nbField ; i++ )
 				{
-					if ( i < 4 )
+					if ( i < 3 )
 					{
 						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextRGBChanged);
+					}
+					else if ( i == 3 )
+					{
+						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextAlphaChanged);
 					}
 					else if ( i == 4 )
 					{
@@ -672,6 +686,28 @@ namespace Epsitec.Common.Widgets
 			this.Color = new Drawing.RichColor(this.picker.HotColor);
 		}
 		
+		// La valeur alpha a été changée.
+		private void HandleTextAlphaChanged(object sender)
+		{
+			if ( !this.suspendColorEvents )
+			{
+				if ( this.Color.ColorSpace == Drawing.ColorSpace.RGB  )
+				{
+					this.FieldsRGBToColor();
+				}
+			
+				if ( this.Color.ColorSpace == Drawing.ColorSpace.CMYK )
+				{
+					this.FieldsCMYKToColor();
+				}
+			
+				if ( this.Color.ColorSpace == Drawing.ColorSpace.Gray )
+				{
+					this.FieldsGrayToColor();
+				}
+			}
+		}
+
 		// Une valeur RGB a été changée.
 		private void HandleTextRGBChanged(object sender)
 		{

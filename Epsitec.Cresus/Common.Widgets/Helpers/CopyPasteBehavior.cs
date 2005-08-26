@@ -45,7 +45,7 @@ namespace Epsitec.Common.Widgets.Helpers
 								break;
 							
 							case KeyCode.AlphaX:
-								if (this.ProcessCopy () && this.ProcessErase ())
+								if (this.ProcessCopy () && this.ProcessDelete ())
 								{
 									message.Consumer = this.host;
 								}
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			return false;
 		}
 		
-		public bool ProcessErase()
+		public bool ProcessDelete()
 		{
 			AbstractTextField text = this.host as AbstractTextField;
 			

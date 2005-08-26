@@ -65,7 +65,7 @@ namespace Epsitec.Common.Dialogs
 			
 			button1               = new Button (this.window.Root);
 			button1.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 2*75 - 2*8, 16, 75, button1.Height);
-			button1.Text          = "OK";
+			button1.Text          = Widgets.Res.Strings.Dialog.Button.OK;
 			button1.Command       = "ValidateDialog";
 			button1.TabIndex      = 2;
 			button1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				button2               = new Button (this.window.Root);
 				button2.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 75 - 8, 16, 75, button2.Height);
-				button2.Text          = "Annuler";
+				button2.Text          = Widgets.Res.Strings.Dialog.Button.Cancel;
 				button2.Name          = "Cancel";
 				button2.Command       = "QuitDialog";
 				button2.TabIndex      = 3;
