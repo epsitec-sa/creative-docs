@@ -1523,7 +1523,6 @@ namespace Epsitec.Common.Document.Objects
 		// Reprend toutes les propriétés d'un objet source.
 		public void PickerProperties(Objects.Abstract model)
 		{
-#if false
 			if ( this is Objects.Memory )
 			{
 				this.AggregateFree();
@@ -1544,7 +1543,7 @@ namespace Epsitec.Common.Document.Objects
 						this.ChangeProperty(style);
 					}
 				}
-				this.Aggregate = model.aggregate;
+				model.aggregates.UndoableCopyTo(this.aggregates);
 			}
 			else
 			{
@@ -1562,11 +1561,10 @@ namespace Epsitec.Common.Document.Objects
 						}
 					}
 				}
-				this.AggregateUse(model.aggregates);
-				this.Aggregate = model.aggregate;
+				model.aggregates.UndoableCopyTo(this.aggregates);
+				this.AggregateUse();
 				this.SetDirtyBbox();
 			}
-#endif
 		}
 
 		// Modifie la propriété PolyClose de l'objet en cours de création.

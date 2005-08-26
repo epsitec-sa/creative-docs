@@ -259,7 +259,7 @@
 
 	<data name="Panel.AggregateName.Label.Name">Nom du style</data>
 	<data name="Panel.AggregateName.Tooltip.Name">Nom du style</data>
-	<data name="Panel.AggregateChildrens.Label.Name">Styles dérivés</data>
+	<data name="Panel.AggregateChildrens.Label.Name">Styles de base</data>
 
 	<data name="Panel.Arc.Short.Initial">α1</data>
 	<data name="Panel.Arc.Short.Final">α2</data>
@@ -770,10 +770,10 @@
 	<data name="Action.AggregateFree">Libèrer le style</data>
 	<data name="Action.AggregateStyleNew">Créer un attribut pour le style</data>
 	<data name="Action.AggregateStyleDelete">Supprimer un attribut du style</data>
-	<data name="Action.AggregateChildrensNew">Ajouter un style dérivé en tête de liste</data>
-	<data name="Action.AggregateChildrensUp">Monter le style dérivé</data>
-	<data name="Action.AggregateChildrensDown">Descendre le style dérivé</data>
-	<data name="Action.AggregateChildrensDelete">Supprimer le style dérivé</data>
+	<data name="Action.AggregateChildrensNew">Ajouter un style de base en tête de liste</data>
+	<data name="Action.AggregateChildrensUp">Monter le style de base</data>
+	<data name="Action.AggregateChildrensDown">Descendre le style de base</data>
+	<data name="Action.AggregateChildrensDelete">Supprimer le style de base</data>
 	
 	<data name="Action.GuideNewH">Nouveau repère horizontal</data>
 	<data name="Action.GuideNewV">Nouveau repère vertical</data>

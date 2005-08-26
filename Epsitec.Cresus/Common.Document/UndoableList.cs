@@ -164,6 +164,16 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Copie toute la liste, avec possibilité d'annulation.
+		public void UndoableCopyTo(UndoableList dst)
+		{
+			dst.Clear();
+			foreach ( object obj in this.arrayList )
+			{
+				dst.Add(obj);
+			}
+		}
+
 		// Copie toute la liste, sans possibilité d'annulation.
 		public void CopyTo(UndoableList dst)
 		{
