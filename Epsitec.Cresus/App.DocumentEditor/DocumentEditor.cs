@@ -500,6 +500,8 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(debugMenu, "", "", "", "");
 			this.MenuAdd(debugMenu, Misc.Icon("SelectTotal"), "SelectTotal", "Sélection totale requise", DocumentEditor.GetShortCut(this.selectTotalState));
 			this.MenuAdd(debugMenu, Misc.Icon("SelectPartial"), "SelectPartial", "Sélection partielle autorisée", DocumentEditor.GetShortCut(this.selectPartialState));
+			this.MenuAdd(debugMenu, "", "", "", "");
+			this.MenuAdd(debugMenu, "", "ForceSaveAll", "Tout enregistrer forcé", DocumentEditor.GetShortCut(this.forceSaveAllState));
 			debugMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = debugMenu;
 #endif
@@ -1652,6 +1654,22 @@ namespace Epsitec.App.DocumentEditor
 			this.currentDocument = cd;
 			return true;
 		}
+
+		// Sauvegarde tous les documents, même ceux qui sont à jour.
+		protected bool ForceSaveAll(CommandDispatcher dispatcher)
+		{
+			int cd = this.currentDocument;
+
+			int total = this.bookDocuments.PageCount;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				this.currentDocument = i;
+				this.Save(dispatcher, false);
+			}
+
+			this.currentDocument = cd;
+			return true;
+		}
 		#endregion
 
 		[Command ("New")]
@@ -1715,6 +1733,12 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.CloseDocument();
 			}
+		}
+
+		[Command ("ForceSaveAll")]
+		void CommandForceSaveAll(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ForceSaveAll(dispatcher);
 		}
 
 		[Command ("NextDocument")]
@@ -2983,6 +3007,7 @@ namespace Epsitec.App.DocumentEditor
 			this.saveModelState = new CommandState("SaveModel", this.commandDispatcher);
 			this.closeState = new CommandState("Close", this.commandDispatcher);
 			this.closeAllState = new CommandState("CloseAll", this.commandDispatcher);
+			this.forceSaveAllState = new CommandState("ForceSaveAll", this.commandDispatcher);
 			this.nextDocState = new CommandState("NextDocument", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.FuncF6);
 			this.prevDocState = new CommandState("PrevDocument", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.ModifierShift|KeyCode.FuncF6);
 			this.printState = new CommandState("Print", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaP);
@@ -4297,6 +4322,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.closeState.Enabled = (this.bookDocuments.PageCount > 0);
 			this.closeAllState.Enabled = (this.bookDocuments.PageCount > 0);
+			this.forceSaveAllState.Enabled = (this.bookDocuments.PageCount > 0);
 			this.nextDocState.Enabled = (this.bookDocuments.PageCount > 1);
 			this.prevDocState.Enabled = (this.bookDocuments.PageCount > 1);
 			
@@ -4545,6 +4571,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					saveModelState;
 		protected CommandState					closeState;
 		protected CommandState					closeAllState;
+		protected CommandState					forceSaveAllState;
 		protected CommandState					nextDocState;
 		protected CommandState					prevDocState;
 		protected CommandState					printState;
