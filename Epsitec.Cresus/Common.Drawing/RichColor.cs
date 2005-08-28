@@ -1,7 +1,5 @@
 namespace Epsitec.Common.Drawing
 {
-	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
-	
 	public enum ColorSpace
 	{
 		None = 0,
@@ -604,6 +602,7 @@ namespace Epsitec.Common.Drawing
 			{
 				return this.name;
 			}
+
 			set
 			{
 				this.name = value;
@@ -1036,20 +1035,10 @@ namespace Epsitec.Common.Drawing
 		}
 		
 
-		private ColorSpace					colorSpace;
-		private double						alpha;
-		private double						value1;  // red or cyan or gray
-		private double						value2;  // green or magenta
-		private double						value3;  // blue or yellow
-		private double						value4;  // black
-		private bool						isEmpty;
-		
-		private string						name;
-		
-		
 		#region ISerializable Members
 		public RichColor(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
+#if false
 			try
 			{
 				object o1 = info.GetValue ("ColorSpace", typeof (object));
@@ -1095,19 +1084,41 @@ namespace Epsitec.Common.Drawing
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("Deserialized old-style RichColor: {0} - {1}/{2}/{3}/{4}", this.colorSpace, this.value1, this.value2, this.value3, this.value4));
 			}
+#else
+			this.colorSpace = (ColorSpace) info.GetValue("ColorSpace", typeof(ColorSpace));
+			this.alpha  = info.GetDouble("Alpha");
+			this.value1 = info.GetDouble("V1");
+			this.value2 = info.GetDouble("V2");
+			this.value3 = info.GetDouble("V3");
+			this.value4 = info.GetDouble("V4");
+			this.isEmpty = info.GetBoolean("IsEmpty");
+			this.name = info.GetString("Name");
+#endif
 		}
 		
 		void System.Runtime.Serialization.ISerializable.GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-			info.AddValue ("ColorSpace", this.colorSpace, typeof (ColorSpace));
-			info.AddValue ("Alpha", this.alpha);
-			info.AddValue ("V1", this.value1);
-			info.AddValue ("V2", this.value2);
-			info.AddValue ("V3", this.value3);
-			info.AddValue ("V4", this.value4);
-			info.AddValue ("IsEmpty", this.isEmpty);
-			info.AddValue ("Name", this.name);
+			info.AddValue("ColorSpace", this.colorSpace, typeof(ColorSpace));
+			info.AddValue("Alpha", this.alpha);
+			info.AddValue("V1", this.value1);
+			info.AddValue("V2", this.value2);
+			info.AddValue("V3", this.value3);
+			info.AddValue("V4", this.value4);
+			info.AddValue("IsEmpty", this.isEmpty);
+			info.AddValue("Name", this.name);
 		}
 		#endregion
+
+		
+		private ColorSpace					colorSpace;
+		private double						alpha;
+		private double						value1;  // red or cyan or gray
+		private double						value2;  // green or magenta
+		private double						value3;  // blue or yellow
+		private double						value4;  // black
+		private bool						isEmpty;
+		private string						name;
+		
+		
 	}
 }
