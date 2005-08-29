@@ -258,7 +258,9 @@ namespace Epsitec.Common.Document
 					Size cs = this.ContainerSize;
 					if ( cs.Width <= 0.0 || cs.Height <= 0.0 )  return 1.0;
 					Size size = this.document.Size;
-					return (cs.Width/size.Width)*2.54;
+					double zx = cs.Width/size.Width;
+					double dpi = this.document.GlobalSettings.ScreenDpi;
+					return zx*2.54*(96.0/dpi);
 				}
 			}
 		}
