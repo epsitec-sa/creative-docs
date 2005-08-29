@@ -490,7 +490,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( (state&WidgetState.Focused) != 0 )
 			{
 				Drawing.Rectangle rFocus = rect;
-				rFocus.Deflate(3.5);
+				rFocus.Deflate(2.5);
 				this.PaintFocusBox(graphics, rFocus);
 			}
 		}

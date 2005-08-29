@@ -403,10 +403,10 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Widgets.ButtonStyle style)
 		{
 			Drawing.Rectangle rFocus = rect;
-			rFocus.Deflate(3.5, 3.5);
+			rFocus.Deflate(3.5);
 
 			Drawing.Rectangle rInside = rect;
-			rInside.Deflate(1, 1);
+			rInside.Deflate(1);
 
 			if ( style == ButtonStyle.Normal        ||
 				 style == ButtonStyle.DefaultAccept ||
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.AddRectangle(rect);
 					graphics.RenderSolid(this.ColorOutline(state));
 				}
-				rFocus.Inflate(3.0);
+				rFocus.Inflate(1.0);
 			}
 			else if ( style == ButtonStyle.ListItem )
 			{

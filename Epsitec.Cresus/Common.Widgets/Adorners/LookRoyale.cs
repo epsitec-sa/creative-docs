@@ -556,7 +556,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.AddRectangle(rect);
 					graphics.RenderSolid(this.colorBorder);
 				}
-				rFocus.Inflate(3.0);
+				rFocus.Deflate(1.0);
 			}
 			else if ( style == ButtonStyle.ListItem )
 			{

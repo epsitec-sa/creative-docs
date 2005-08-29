@@ -389,7 +389,7 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Widgets.ButtonStyle style)
 		{
 			Drawing.Rectangle rFocus = rect;
-			rFocus.Deflate(2, 2);
+			rFocus.Deflate(2);
 			double radFocus = 0;
 
 			if ( style == ButtonStyle.Normal        ||
@@ -474,7 +474,6 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.AddRectangle(rInside);
 					graphics.RenderSolid(this.colorCaption);
 				}
-				rFocus.Inflate(2);
 				radFocus = -1;
 			}
 			else if ( style == ButtonStyle.ListItem )

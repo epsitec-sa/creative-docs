@@ -70,7 +70,7 @@ namespace Epsitec.Common.Widgets
 					this.iconName = value;
 					
 					if ( this.iconName == null ||
-						this.iconName == ""   )
+						 this.iconName == ""   )
 					{
 						this.Text = null;
 					}

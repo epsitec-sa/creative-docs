@@ -1456,6 +1456,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\Unlinked.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Up.icon"
                     BuildAction = "EmbeddedResource"
                 />

@@ -381,7 +381,7 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Widgets.ButtonStyle style)
 		{
 			Drawing.Rectangle rFocus = rect;
-			rFocus.Deflate(3.5, 3.5);
+			rFocus.Deflate(3.5);
 
 			if ( style == ButtonStyle.Normal        ||
 				 style == ButtonStyle.DefaultAccept ||
@@ -390,7 +390,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				if ( (state&WidgetState.Enabled) != 0 &&
 					 style == ButtonStyle.DefaultAccept )
 				{
-					rect.Deflate(1, 1);
+					rect.Deflate(1);
 				}
 
 				Drawing.Path path = this.PathRoundRectangle(rect, 0);
@@ -511,7 +511,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.Rasterizer.AddOutline(path, 1);
 					graphics.RenderSolid(this.colorCaption);
 				}
-				rFocus.Inflate(3.0);
+				rFocus.Inflate(1.0);
 				rFocus.Right ++;
 			}
 			else if ( style == ButtonStyle.ListItem )

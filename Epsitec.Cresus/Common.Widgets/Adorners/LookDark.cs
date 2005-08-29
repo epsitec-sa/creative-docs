@@ -382,7 +382,7 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Widgets.ButtonStyle style)
 		{
 			Drawing.Rectangle rFocus = rect;
-			rFocus.Deflate(1.0, 1.0);
+			rFocus.Deflate(1.0);
 			double radFocus = 0;
 
 			if ( style == ButtonStyle.Normal        ||
@@ -430,7 +430,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				if ( (state&WidgetState.Enabled) != 0 &&
 					 style == ButtonStyle.DefaultAccept )
 				{
-					rect.Deflate(1, 1);
+					rect.Deflate(1);
 					path = this.PathRoundRectangle(rect, 0);
 					graphics.Rasterizer.AddOutline(path, 1);
 					graphics.RenderSolid(this.colorBlack);
@@ -495,7 +495,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.AddRectangle(rInside);
 					graphics.RenderSolid(this.colorBlack);
 				}
-				rFocus.Inflate(1.0);
+				rFocus.Deflate(1.0);
 				rFocus.Right ++;
 				radFocus = -1;
 			}

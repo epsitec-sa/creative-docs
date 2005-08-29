@@ -749,21 +749,19 @@ namespace Epsitec.Common.Document
 			sep.Width = 1;
 			sep.Height = container.Height;
 			sep.Dock = DockStyle.Left;
-			sep.DockMargins = new Margins(8, 0, 0, 0);
+			sep.DockMargins = new Margins(2, 0, 0, 0);
 
-			CheckButton check = new CheckButton(container);
-			check.Width = 45;
-			check.Height = container.Height;
-			check.Name = sPoint.Name;
-			check.Text = Misc.Image("Linked");
-			check.ActiveState = sPoint.Link ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			check.TabIndex = this.tabIndex++;
-			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			check.Dock = DockStyle.Left;
-			check.DockMargins = new Margins(-3, 0, 0, 0);
-			check.ActiveStateChanged += new EventHandler(this.HandleCheckPointActiveStateChanged);
-			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Point.Link);
-			this.WidgetsTableAdd(check, ".Link");
+			IconButton ib = new IconButton(container);
+			ib.Name = sPoint.Name;
+			Dialogs.UpdateLink(ib, sPoint.Link);
+			ib.TabIndex = this.tabIndex++;
+			ib.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ib.Dock = DockStyle.Left;
+			double m = System.Math.Floor((container.Height-ib.DefaultHeight)/2);
+			ib.DockMargins = new Margins(-1, 8, m, m);
+			ib.Clicked += new MessageEventHandler(HandlePointActiveStateChanged);
+			ToolTip.Default.SetToolTip(ib, Res.Strings.Dialog.Point.Link);
+			this.WidgetsTableAdd(ib, ".Link");
 
 			if ( sPoint.Doubler )
 			{
@@ -883,17 +881,32 @@ namespace Epsitec.Common.Document
 			sPoint.Value = point;
 		}
 
-		private void HandleCheckPointActiveStateChanged(object sender)
+		private void HandlePointActiveStateChanged(object sender, MessageEventArgs e)
 		{
-			CheckButton check = sender as CheckButton;
-			if ( check == null )  return;
+			IconButton ib = sender as IconButton;
+			if ( ib == null )  return;
 
-			Settings.Abstract settings = this.document.Settings.Get(check.Name);
+			Settings.Abstract settings = this.document.Settings.Get(ib.Name);
 			if ( settings == null )  return;
 			Settings.Point sPoint = settings as Settings.Point;
 			if ( sPoint == null )  return;
 
-			sPoint.Link = ( check.ActiveState == WidgetState.ActiveYes );
+			sPoint.Link = !sPoint.Link;
+			Dialogs.UpdateLink(ib, sPoint.Link);
+		}
+
+		protected static void UpdateLink(IconButton ib, bool state)
+		{
+			if ( state )
+			{
+				ib.ActiveState = WidgetState.ActiveYes;
+				ib.IconName = Misc.Icon("Linked");
+			}
+			else
+			{
+				ib.ActiveState = WidgetState.ActiveNo;
+				ib.IconName = Misc.Icon("Unlinked");
+			}
 		}
 
 		private void HandleDoublerPointDivXClicked(object sender, MessageEventArgs e)
@@ -1739,10 +1752,10 @@ namespace Epsitec.Common.Document
 						field.InternalValue = (decimal) sPoint.Value.Y;
 					}
 
-					CheckButton check = this.WidgetsTableSearch(setting.Name, ".Link") as CheckButton;
-					if ( check != null )
+					IconButton ib = this.WidgetsTableSearch(setting.Name, ".Link") as IconButton;
+					if ( ib != null )
 					{
-						check.ActiveState = sPoint.Link ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+						ib.ActiveState = sPoint.Link ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 					}
 
 					if ( setting.Name == "PageSize" )

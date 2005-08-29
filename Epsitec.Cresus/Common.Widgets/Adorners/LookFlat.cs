@@ -345,7 +345,7 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Widgets.ButtonStyle style)
 		{
 			Drawing.Rectangle rFocus = rect;
-			rFocus.Deflate(1.0, 1.0);
+			rFocus.Deflate(1.0);
 			double radFocus = 0;
 
 			if ( style == ButtonStyle.Normal        ||
