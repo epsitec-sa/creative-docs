@@ -86,7 +86,7 @@
 	<data name="Dialog.ExportPDF.Button.OK">Export</data>
 	<data name="Dialog.ExportPDF.Button.Cancel">Cancel</data>
 	<data name="Dialog.ExportPDF.Tooltip.OK">Export to PDF (Adobe® Acrobat® file format)</data>
-	<data name="Dialog.ExportPDF.Tooltip.Cancel">Cancel exporat</data>
+	<data name="Dialog.ExportPDF.Tooltip.Cancel">Cancel export</data>
 	<data name="Dialog.ExportPDF.TabPage.Generic">General</data>
 	<data name="Dialog.ExportPDF.TabPage.Color">Color</data>
 	<data name="Dialog.ExportPDF.TabPage.Image">Images</data>

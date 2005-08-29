@@ -96,8 +96,8 @@
 	<data name="Dialog.Double.DimensionDecimal">Number of digits</data>
 
 	<data name="Dialog.Integer.DefaultUnit.Text">Unit of measure</data>
-	<data name="Dialog.Integer.DefaultUnit.Millimetre">Millimeters</data>
-	<data name="Dialog.Integer.DefaultUnit.Centimetre">Centimeters</data>
+	<data name="Dialog.Integer.DefaultUnit.Millimeter">Millimeters</data>
+	<data name="Dialog.Integer.DefaultUnit.Centimeter">Centimeters</data>
 	<data name="Dialog.Integer.DefaultUnit.Inch">Inches</data>
 	<data name="Dialog.Integer.PrintArea.Text">Print</data>
 	<data name="Dialog.Integer.PrintArea.All">All pages</data>
@@ -334,7 +334,7 @@
 	<data name="Panel.Gradient.Tooltip.Color1">Color 1</data>
 	<data name="Panel.Gradient.Tooltip.Color2">Color 2</data>
 	<data name="Panel.Gradient.Tooltip.Type">Fill type</data>
-	<data name="Panel.Gradient.Tooltip.Reset">Reset (default values)"</data>
+	<data name="Panel.Gradient.Tooltip.Reset">Reset (default values)</data>
 	<data name="Panel.Gradient.Tooltip.Angle">Angle</data>
 	<data name="Panel.Gradient.Tooltip.Hatch1">1st hatch</data>
 	<data name="Panel.Gradient.Tooltip.Hatch2">2nd hatch</data>
@@ -498,8 +498,8 @@
 	<data name="Property.Arrow.Square">Square</data>
 	<data name="Property.Arrow.Diamond">Diamond</data>
 	
-	<data name="Property.Close.No">Closed path</data>
-	<data name="Property.Close.Yes">Open path</data>
+	<data name="Property.Close.No">Open path</data>
+	<data name="Property.Close.Yes">Closed path</data>
 	
 	<data name="Property.Corner.Right">Regular</data>
 	<data name="Property.Corner.Round">Round</data>
@@ -720,6 +720,7 @@
 	<data name="Action.HideSel">Hide selection</data>
 	<data name="Action.HideRest">Hide others</data>
 	<data name="Action.HideCancel">Show all</data>
+	<data name="Action.HideHalf">@@Mode estompé</data>
 	
 	<data name="Action.PageChange">Switch pages</data>
 	<data name="Action.PageNew">New page</data>

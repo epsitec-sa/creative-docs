@@ -5,7 +5,7 @@
 	<data name="Dialog.Title">Crésus</data>
 	
 	<data name="Dialog.Button.Browse">Parcourir...</data>
-	<data name="Dialog.Button.Properties">Propriétés...</data>
+	<data name="Dialog.Button.Properties">Attributs...</data>
 	<data name="Dialog.Button.More">Etend ou réduit le panneau</data>
 	<data name="Dialog.Point.Link">Liés</data>
 
@@ -527,10 +527,10 @@
 	<data name="Property.Dimension.Text"> # mm </data>
 
 	<data name="Property.Gradient.None">Uniforme</data>
-	<data name="Property.Gradient.Linear">Linéaire</data>
-	<data name="Property.Gradient.Circle">Concentrique</data>
-	<data name="Property.Gradient.Diamond">Diamant</data>
-	<data name="Property.Gradient.Conic">Conique</data>
+	<data name="Property.Gradient.Linear">Dégradé linéaire</data>
+	<data name="Property.Gradient.Circle">Dégradé concentrique</data>
+	<data name="Property.Gradient.Diamond">Dégradé en diamant</data>
+	<data name="Property.Gradient.Conic">Dégradé conique</data>
 	<data name="Property.Gradient.Hatch">Hachures</data>
 	<data name="Property.Gradient.Dots">Points</data>
 	<data name="Property.Gradient.Squares">Carrés</data>
@@ -720,6 +720,7 @@
 	<data name="Action.HideSel">Cacher la sélection</data>
 	<data name="Action.HideRest">Cacher le reste</data>
 	<data name="Action.HideCancel">Montrer tout</data>
+	<data name="Action.HideHalf">Mode estompé</data>
 	
 	<data name="Action.PageChange">Changer de page</data>
 	<data name="Action.PageNew">Nouvelle page</data>

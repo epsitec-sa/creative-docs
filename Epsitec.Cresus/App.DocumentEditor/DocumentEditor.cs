@@ -312,7 +312,7 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(objMenu, Misc.Icon("HideSel"), "HideSel", DocumentEditor.GetRes("Action.HideSel"), DocumentEditor.GetShortCut(this.hideSelState));
 			this.MenuAdd(objMenu, Misc.Icon("HideRest"), "HideRest", DocumentEditor.GetRes("Action.HideRest"), DocumentEditor.GetShortCut(this.hideRestState));
 			this.MenuAdd(objMenu, Misc.Icon("HideCancel"), "HideCancel", DocumentEditor.GetRes("Action.HideCancel"), DocumentEditor.GetShortCut(this.hideCancelState));
-			this.MenuAdd(objMenu, "y/n", "HideHalf", "Mode estompé", "");
+			this.MenuAdd(objMenu, "y/n", "HideHalf", DocumentEditor.GetRes("Action.HideHalf"), "");
 			this.MenuAdd(objMenu, "", "", "", "");
 			this.MenuAdd(objMenu, Misc.Icon("OrderUpAll"), "SubmenuOrder", DocumentEditor.GetRes("Action.OrderMain"), "");
 			this.MenuAdd(objMenu, Misc.Icon("OperMoveH"), "SubmenuOper", DocumentEditor.GetRes("Action.OperationMain"), "");
