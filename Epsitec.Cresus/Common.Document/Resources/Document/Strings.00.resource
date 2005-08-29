@@ -576,7 +576,7 @@
 	<data name="Property.Surface.TrapezeL">Trapèze 3</data>
 	<data name="Property.Surface.TrapezeR">Trapèze 4</data>
 	<data name="Property.Surface.QuadriL">Losange</data>
-	<data name="Property.Surface.QuadriP">Paral. incliné</data>
+	<data name="Property.Surface.QuadriP">Parallélogramme incliné</data>
 	<data name="Property.Surface.QuadriC">Cerf-volant</data>
 	<data name="Property.Surface.QuadriX">Quadrilatère</data>
 	<data name="Property.Surface.Grid">Grille</data>

@@ -216,8 +216,8 @@
 	<data name="Tool.Ellipse">Ellipse</data>
 	<data name="Tool.Poly">Free form polygon</data>
 	<data name="Tool.Bezier">Bézier curve</data>
-	<data name="Tool.Regular">Regular polygon</data>
-	<data name="Tool.Surface">2D surfaces</data>
+	<data name="Tool.Regular">Polygon</data>
+	<data name="Tool.Surface">2D figures</data>
 	<data name="Tool.Volume">3D volumes</data>
 	<data name="Tool.TextLine">Line of text</data>
 	<data name="Tool.TextBox">Block of text</data>
@@ -296,13 +296,13 @@
 	<data name="Panel.Dimension.Short.FontOffset">V</data>
 	<data name="Panel.Dimension.Short.Text">T</data>
 	<data name="Panel.Dimension.Long.AddLength">Support lines</data>
-	<data name="Panel.Dimension.Long.OutLength">Length for outer measurement</data>
+	<data name="Panel.Dimension.Long.OutLength">Outer measurement length</data>
 	<data name="Panel.Dimension.Long.FontOffset">Vertical text offset</data>
 	<data name="Panel.Dimension.Long.Text">Text</data>
 	<data name="Panel.Dimension.Tooltip.AddLength">Support lines</data>
 	<data name="Panel.Dimension.Tooltip.OutLength">Length for outer measurement</data>
 	<data name="Panel.Dimension.Tooltip.RotateText">Inverted text</data>
-	<data name="Panel.Dimension.Tooltip.FontOffset">Vertical text offset</data>
+	<data name="Panel.Dimension.Tooltip.FontOffset">Offset for vertical text</data>
 	<data name="Panel.Dimension.Tooltip.Text">Text (# = value)</data>
 
 	<data name="Panel.Font.Short.Size">S</data>
@@ -322,11 +322,11 @@
 	<data name="Panel.Gradient.Short.HatchDistance">d</data>
 	<data name="Panel.Gradient.Long.Angle">Angle</data>
 	<data name="Panel.Gradient.Long.Repeat">Repeat count</data>
-	<data name="Panel.Gradient.Long.Middle">Middle color</data>
-	<data name="Panel.Gradient.Long.Smooth">Blur</data>
+	<data name="Panel.Gradient.Long.Middle">Center offset</data>
+	<data name="Panel.Gradient.Long.Smooth">Blur distance</data>
 	<data name="Panel.Gradient.Long.HatchAngle">Angle</data>
 	<data name="Panel.Gradient.Long.HatchWidth">Width</data>
-	<data name="Panel.Gradient.Long.HatchDistance">@@Espacement</data>
+	<data name="Panel.Gradient.Long.HatchDistance">Distance</data>
 	<data name="Panel.Gradient.Long.Hatch1">1st hatch</data>
 	<data name="Panel.Gradient.Long.Hatch2">2nd hatch</data>
 	<data name="Panel.Gradient.Button.Reset">R</data>
@@ -339,8 +339,8 @@
 	<data name="Panel.Gradient.Tooltip.Hatch1">1st hatch</data>
 	<data name="Panel.Gradient.Tooltip.Hatch2">2nd hatch</data>
 	<data name="Panel.Gradient.Tooltip.Repeat">Repeat count</data>
-	<data name="Panel.Gradient.Tooltip.Middle">Middle color</data>
-	<data name="Panel.Gradient.Tooltip.Smooth">Blur</data>
+	<data name="Panel.Gradient.Tooltip.Middle">Center color</data>
+	<data name="Panel.Gradient.Tooltip.Smooth">Blur distance</data>
 	<data name="Panel.Gradient.Tooltip.HatchAngle">Angle</data>
 	<data name="Panel.Gradient.Tooltip.HatchWidth">Width (0 = nothing)</data>
 	<data name="Panel.Gradient.Tooltip.HatchDistance">Distance</data>
@@ -386,7 +386,7 @@
 	<data name="Panel.Line.Long.Dash1">1st</data>
 	<data name="Panel.Line.Long.Dash2">2nd</data>
 	<data name="Panel.Line.Long.Dash3">3rd</data>
-	<data name="Panel.Line.Long.DashLength">Pattern length</data>
+	<data name="Panel.Line.Long.DashLength">Dash length</data>
 	<data name="Panel.Line.Long.DashPen">Line length</data>
 	<data name="Panel.Line.Long.DashGap">Gap length</data>
 	<data name="Panel.Line.Tooltip.Nothing">Nothing</data>
@@ -395,7 +395,7 @@
 	<data name="Panel.Line.Tooltip.Dash1">1st line/gap pair</data>
 	<data name="Panel.Line.Tooltip.Dash2">2nd line/gap pair</data>
 	<data name="Panel.Line.Tooltip.Dash3">3rd line/gap pair</data>
-	<data name="Panel.Line.Tooltip.DashLength">Pattern length</data>
+	<data name="Panel.Line.Tooltip.DashLength">Dash length</data>
 	<data name="Panel.Line.Tooltip.DashPen">Line length (0 = dot)</data>
 	<data name="Panel.Line.Tooltip.DashGap">Gap length (0 = no gap)</data>
 
@@ -422,58 +422,58 @@
 
 	<data name="Panel.Name.Tooltip.Title">Object name</data>
 
-	<data name="Panel.Regular.Short.Faces">@@N</data>
-	<data name="Panel.Regular.Short.Deep">@@R</data>
-	<data name="Panel.Regular.Long.Faces">@@Nombre de côtés</data>
-	<data name="Panel.Regular.Long.Deep">@@Renfoncement</data>
-	<data name="Panel.Regular.Tooltip.Faces">@@Nombre de côtés</data>
-	<data name="Panel.Regular.Tooltip.Deep">@@Renfoncement de l'étoile</data>
+	<data name="Panel.Regular.Short.Faces">N</data>
+	<data name="Panel.Regular.Short.Deep">R</data>
+	<data name="Panel.Regular.Long.Faces">Sides</data>
+	<data name="Panel.Regular.Long.Deep">Recess</data>
+	<data name="Panel.Regular.Tooltip.Faces">Side number for a polygon</data>
+	<data name="Panel.Regular.Tooltip.Deep">Recess ratio for a star</data>
 
-	<data name="Panel.Surface.Short.Factor">@@R{0}</data>
-	<data name="Panel.Surface.Short.Scalar">@@N{0}</data>
+	<data name="Panel.Surface.Short.Factor">R{0}</data>
+	<data name="Panel.Surface.Short.Scalar">N{0}</data>
 	<data name="Panel.Surface.Button.Reset">R</data>
 	<data name="Panel.Surface.Tooltip.Type">3D surface type</data>
 	<data name="Panel.Surface.Tooltip.Reset">Reset (default values)</data>
 
 	<data name="Panel.TextLine.Short.Offset">Oy</data>
-	<data name="Panel.TextLine.Short.Add">@@L</data>
-	<data name="Panel.TextLine.Long.Offset">Orthogonal offset</data>
-	<data name="Panel.TextLine.Long.Add">Intercharacter space</data>
+	<data name="Panel.TextLine.Short.Add">L</data>
+	<data name="Panel.TextLine.Long.Offset">Offset</data>
+	<data name="Panel.TextLine.Long.Add">Kerning</data>
 	<data name="Panel.TextLine.Tooltip.JustifHLeft">Left aligned</data>
 	<data name="Panel.TextLine.Tooltip.JustifHCenter">Centered</data>
 	<data name="Panel.TextLine.Tooltip.JustifHRight">Right aligned</data>
 	<data name="Panel.TextLine.Tooltip.JustifHStretch">Justified</data>
 	<data name="Panel.TextLine.Tooltip.Offset">Orthogonal offset</data>
-	<data name="Panel.TextLine.Tooltip.Add">Intercharacter space</data>
+	<data name="Panel.TextLine.Tooltip.Add">Intercharacter space (character kerning)</data>
 
 	<data name="Panel.Volume.Short.Rapport">M</data>
 	<data name="Panel.Volume.Short.Left">L</data>
 	<data name="Panel.Volume.Short.Right">R</data>
-	<data name="Panel.Volume.Long.Rapport">@@Mid-point</data>
-	<data name="Panel.Volume.Long.Left">Left angle</data>
-	<data name="Panel.Volume.Long.Right">Right angle</data>
+	<data name="Panel.Volume.Long.Rapport">Vertical center</data>
+	<data name="Panel.Volume.Long.Left">Left side angle</data>
+	<data name="Panel.Volume.Long.Right">Right side angle</data>
 	<data name="Panel.Volume.Tooltip.Type">3D volume type</data>
-	<data name="Panel.Volume.Tooltip.Rapport">@@Mid-point</data>
-	<data name="Panel.Volume.Tooltip.Left">Left angle</data>
-	<data name="Panel.Volume.Tooltip.Right">Right angle</data>
+	<data name="Panel.Volume.Tooltip.Rapport">Vertical center (50% = centered if symmetric)</data>
+	<data name="Panel.Volume.Tooltip.Left">Left side angle</data>
+	<data name="Panel.Volume.Tooltip.Right">Right side angle</data>
 
 	<data name="Property.Abstract.Name">Name</data>
 	<data name="Property.Abstract.LineColor">Line color</data>
 	<data name="Property.Abstract.LineMode">Line width</data>
-	<data name="Property.Abstract.LineDimension">@@Epaisseur supports</data>
-	<data name="Property.Abstract.FillGradient">Inner color</data>
+	<data name="Property.Abstract.LineDimension">Support lines</data>
+	<data name="Property.Abstract.FillGradient">Surface color</data>
 	<data name="Property.Abstract.FillGradientVT">Top color</data>
-	<data name="Property.Abstract.FillGradientVL">Left side color</data>
-	<data name="Property.Abstract.FillGradientVR">Right side color</data>
+	<data name="Property.Abstract.FillGradientVL">Left hand side color</data>
+	<data name="Property.Abstract.FillGradientVR">Right hand side color</data>
 	<data name="Property.Abstract.Shadow">Shadow</data>
-	<data name="Property.Abstract.PolyClose">Closed surface</data>
-	<data name="Property.Abstract.Arrow">@@Extrémités trait</data>
-	<data name="Property.Abstract.DimensionArrow">@@Extrémités cote</data>
-	<data name="Property.Abstract.Dimension">@@Cote</data>
+	<data name="Property.Abstract.PolyClose">Path</data>
+	<data name="Property.Abstract.Arrow">Line caps</data>
+	<data name="Property.Abstract.DimensionArrow">Dimension caps</data>
+	<data name="Property.Abstract.Dimension">Dimension</data>
 	<data name="Property.Abstract.Corner">Corners</data>
-	<data name="Property.Abstract.Regular">@@Polygone régulier</data>
+	<data name="Property.Abstract.Regular">Polygon</data>
 	<data name="Property.Abstract.Arc">Arc</data>
-	<data name="Property.Abstract.Surface">2D surface</data>
+	<data name="Property.Abstract.Surface">2D figure</data>
 	<data name="Property.Abstract.Volume">3D volume</data>
 	<data name="Property.Abstract.BackColor">Background color</data>
 	<data name="Property.Abstract.TextFont">Font</data>
@@ -485,7 +485,7 @@
 	<data name="Property.Arc.Full">Full</data>
 	<data name="Property.Arc.Open">Open arc</data>
 	<data name="Property.Arc.Close">Closed arc</data>
-	<data name="Property.Arc.Pie">@@Camembert</data>
+	<data name="Property.Arc.Pie">Pie chart</data>
 
 	<data name="Property.Arrow.Right">Nothing</data>
 	<data name="Property.Arrow.ArrowSimply">Simple arrow</data>
@@ -498,8 +498,8 @@
 	<data name="Property.Arrow.Square">Square</data>
 	<data name="Property.Arrow.Diamond">Diamond</data>
 	
-	<data name="Property.Close.No">@@Contour ouvert</data>
-	<data name="Property.Close.Yes">@@Contour fermé</data>
+	<data name="Property.Close.No">Closed path</data>
+	<data name="Property.Close.Yes">Open path</data>
 	
 	<data name="Property.Corner.Right">Regular</data>
 	<data name="Property.Corner.Round">Round</data>
@@ -528,7 +528,7 @@
 
 	<data name="Property.Gradient.None">Uniform</data>
 	<data name="Property.Gradient.Linear">Linear</data>
-	<data name="Property.Gradient.Circle">@@Concentric</data>
+	<data name="Property.Gradient.Circle">Circular</data>
 	<data name="Property.Gradient.Diamond">Diamond</data>
 	<data name="Property.Gradient.Conic">Conic</data>
 	<data name="Property.Gradient.Hatch">Hatches</data>
@@ -564,8 +564,8 @@
 	<data name="Property.Line.JoinMiter">Miter join</data>
 	<data name="Property.Line.JoinBevel">Bevel join</data>
 
-	<data name="Property.Regular.Norm">@@Polygone régulier</data>
-	<data name="Property.Regular.Star">@@Etoile</data>
+	<data name="Property.Regular.Norm">Regular polygon</data>
+	<data name="Property.Regular.Star">Star</data>
 
 	<data name="Property.Surface.ParallelT">Parallelogram 1</data>
 	<data name="Property.Surface.ParallelB">Parallelogram 2</data>
@@ -576,9 +576,9 @@
 	<data name="Property.Surface.TrapezeL">Trapezoid 3</data>
 	<data name="Property.Surface.TrapezeR">Trapezoid 4</data>
 	<data name="Property.Surface.QuadriL">Diamond</data>
-	<data name="Property.Surface.QuadriP">Slanted paral.</data>
-	<data name="Property.Surface.QuadriC">@@Skyte</data>
-	<data name="Property.Surface.QuadriX">@@Quadrilateron</data>
+	<data name="Property.Surface.QuadriP">Slanted parallelogram</data>
+	<data name="Property.Surface.QuadriC">Skyte</data>
+	<data name="Property.Surface.QuadriX">Quadrilateron</data>
 	<data name="Property.Surface.Grid">Grid</data>
 	<data name="Property.Surface.Pattern">Pattern</data>
 	<data name="Property.Surface.Ring">Ring</data>
@@ -634,63 +634,63 @@
 	<data name="Action.OrderDownAll">Send to back</data>
 	
 	<data name="Action.OperationMain">Operation</data>
-	<data name="Action.MoveMain">@@Déplacament</data>
-	<data name="Action.MoveValueX">@@Valeur du déplacement horizontal</data>
-	<data name="Action.MoveValueY">@@Valeur du déplacement vertical</data>
-	<data name="Action.MoveLeft">@@Déplacament à gauche</data>
-	<data name="Action.MoveRight">@@Déplacament à droite</data>
-	<data name="Action.MoveDown">@@Déplacament en bas</data>
-	<data name="Action.MoveUp">@@Déplacament en haut</data>
+	<data name="Action.MoveMain">Move</data>
+	<data name="Action.MoveValueX">Horizontal offset</data>
+	<data name="Action.MoveValueY">Vertical offset</data>
+	<data name="Action.MoveLeft">Move left</data>
+	<data name="Action.MoveRight">Move right</data>
+	<data name="Action.MoveDown">Move down</data>
+	<data name="Action.MoveUp">Move up</data>
 	<data name="Action.Move">Move by {0};{1}</data>
-	<data name="Action.RotateMain">@@Rotation</data>
-	<data name="Action.Rotate90">90° to the left (CCW)</data>
+	<data name="Action.RotateMain">Rotate</data>
+	<data name="Action.Rotate90">90° to the left (counter clockwise)</data>
 	<data name="Action.Rotate180">180°</data>
-	<data name="Action.Rotate270">90° to the right (CW)</data>
-	<data name="Action.RotateValue">@@Angle de rotation en degrés</data>
-	<data name="Action.RotateFreeCCW">@@Rotation anti-horaire</data>
-	<data name="Action.RotateFreeCW">@@Rotation horaire</data>
+	<data name="Action.Rotate270">90° to the right (clockwise)</data>
+	<data name="Action.RotateValue">Angle in degrees</data>
+	<data name="Action.RotateFreeCCW">Rotate counter clockwise</data>
+	<data name="Action.RotateFreeCW">Rotate clockwise</data>
 	<data name="Action.Rotate">Rotate by {0}</data>
-	<data name="Action.MirrorMain">@@Miroir</data>
+	<data name="Action.MirrorMain">Flip</data>
 	<data name="Action.MirrorH">Flip horizontally</data>
 	<data name="Action.MirrorV">Flip vertically</data>
-	<data name="Action.ZoomMain">@@Réduction et agrandissement</data>
+	<data name="Action.ZoomMain">Scale</data>
 	<data name="Action.ZoomMul2">Scale up ×2</data>
 	<data name="Action.ZoomDiv2">Scale down ÷2</data>
-	<data name="Action.ZoomValue">@@Facteur d'agrandissement/réduction</data>
-	<data name="Action.ZoomFreeP">@@Agrandissement</data>
-	<data name="Action.ZoomFreeM">@@Réduction</data>
+	<data name="Action.ZoomValue">Scale ratio</data>
+	<data name="Action.ZoomFreeP">Scale up</data>
+	<data name="Action.ZoomFreeM">Scale down</data>
 	<data name="Action.ZoomP">Scale up by {0}%</data>
 	<data name="Action.ZoomM">Scale down by {0}%</data>
 	<data name="Action.Align">Align</data>
 	<data name="Action.AlignGrid">Fit to grid</data>
-	<data name="Action.AlignLeft">@@Alignement à gauche</data>
-	<data name="Action.AlignCenterX">@@Alignement centré horizontalement</data>
-	<data name="Action.AlignRight">@@Alignement à droite</data>
-	<data name="Action.AlignTop">@@Alignement en haut</data>
-	<data name="Action.AlignCenterY">@@Alignement centré verticalement</data>
-	<data name="Action.AlignBottom">@@Alignement en bas</data>
-	<data name="Action.Share">@@Distribute</data>
-	<data name="Action.ShareSpaceX">@@Distribution espacée horizontalement</data>
-	<data name="Action.ShareLeft">@@Distribution sur la gauche</data>
-	<data name="Action.ShareCenterX">@@Distribution centrée horizontalement</data>
-	<data name="Action.ShareRight">@@Distribution sur la droite</data>
-	<data name="Action.ShareSpaceY">@@Distribution espacée verticalement</data>
-	<data name="Action.ShareTop">@@Distribution sur le haut</data>
-	<data name="Action.ShareCenterY">@@Distribution centrée verticalement</data>
-	<data name="Action.ShareBottom">@@Distribution sur le bas</data>
-	<data name="Action.ShareSpace">@@Space evenly</data>
-	<data name="Action.Adjust">Adjust</data>
-	<data name="Action.AdjustWidth">@@Largeurs identiques</data>
-	<data name="Action.AdjustHeight">@@Hauteurs identiques</data>
-	<data name="Action.Color">@@Couleurs</data>
-	<data name="Action.ColorToRGB">@@Toutes les couleurs en RVB</data>
-	<data name="Action.ColorToCMYK">@@Toutes les couleurs en CMJN</data>
-	<data name="Action.ColorToGray">@@Toutes les couleurs en niveaux de gris</data>
-	<data name="Action.ColorValue">@@Intensité des modifications</data>
-	<data name="Action.ColorStrokeDark">@@Traits plus foncés</data>
-	<data name="Action.ColorStrokeLight">@@Traits plus clairs</data>
-	<data name="Action.ColorFillDark">@@Surfaces plus foncées</data>
-	<data name="Action.ColorFillLight">@@Surfaces plus claires</data>
+	<data name="Action.AlignLeft">Align left</data>
+	<data name="Action.AlignCenterX">Center horizontally</data>
+	<data name="Action.AlignRight">Align right</data>
+	<data name="Action.AlignTop">Align top</data>
+	<data name="Action.AlignCenterY">Center vertically</data>
+	<data name="Action.AlignBottom">Align bottom</data>
+	<data name="Action.Share">Space</data>
+	<data name="Action.ShareSpaceX">Space evenly (same space between objects)</data>
+	<data name="Action.ShareLeft">Space evenly (same distance between objects, left side to left side)</data>
+	<data name="Action.ShareCenterX">Space evenly (same distance between objects, center to center)</data>
+	<data name="Action.ShareRight">Space evenly (same distance between objects, right side to right side)</data>
+	<data name="Action.ShareSpaceY">Space evenly (same space between objects)</data>
+	<data name="Action.ShareTop">Space evenly (same space between objects, top side to top side)</data>
+	<data name="Action.ShareCenterY">Space evenly (same space between objects, center to center)</data>
+	<data name="Action.ShareBottom">Space evenly (same space between objects, bottom side to bottom side)</data>
+	<data name="Action.ShareSpace">Space evenly</data>
+	<data name="Action.Adjust">Adjust size</data>
+	<data name="Action.AdjustWidth">Same widths</data>
+	<data name="Action.AdjustHeight">Same heights</data>
+	<data name="Action.Color">Adjust colors</data>
+	<data name="Action.ColorToRGB">Convert all colors to RGB</data>
+	<data name="Action.ColorToCMYK">Convert all colors to CMYK</data>
+	<data name="Action.ColorToGray">Discard all colors and convert to grayscale</data>
+	<data name="Action.ColorValue">Modification of color value</data>
+	<data name="Action.ColorStrokeDark">Darker lines</data>
+	<data name="Action.ColorStrokeLight">Lighter lines</data>
+	<data name="Action.ColorFillDark">Darker surfaces</data>
+	<data name="Action.ColorFillLight">Lighter surfaces</data>
 	
 	<data name="Action.GroupMain">Group</data>
 	<data name="Action.Merge">Merge into the group</data>
@@ -702,11 +702,11 @@
 	
 	<data name="Action.GeometryMain">Geometry</data>
 	<data name="Action.Combine">Combine</data>
-	<data name="Action.Uncombine">@@Un-combine</data>
+	<data name="Action.Uncombine">Split</data>
 	<data name="Action.ToBezier">Convert to curves</data>
 	<data name="Action.ToPoly">Convert to lines</data>
 	<data name="Action.ToSimplest">Simplify (debug)</data>
-	<data name="Action.Fragment">@@Explode</data>
+	<data name="Action.Fragment">Explode</data>
 	
 	<data name="Action.BooleanMain">Boolean operation</data>
 	<data name="Action.BooleanOr">Union</data>
@@ -715,7 +715,7 @@
 	<data name="Action.BooleanFrontMinus">Foreground minus background</data>
 	<data name="Action.BooleanBackMinus">Background minus foreground</data>
 	
-	<data name="Action.Glyphs">@@Caractères spéciaux...</data>
+	<data name="Action.Glyphs">Symbols...</data>
 
 	<data name="Action.HideSel">Hide selection</data>
 	<data name="Action.HideRest">Hide others</data>
@@ -757,23 +757,23 @@
 	<data name="Action.LayerChangePrint">Change layer printing mode</data>
 	<data name="Action.LayerChangeMagnet">Change layer state</data>
 	
-	<data name="Action.AggregateUse">@@Utiliser le style</data>
-	<data name="Action.AggregateNewEmpty">@@Nouveau style vide</data>
-	<data name="Action.AggregateNew3">@@Nouveau style pour trait et couleurs</data>
-	<data name="Action.AggregateNewAll">@@Nouveau style pour tout</data>
-	<data name="Action.AggregateDuplicate">@@Dupliquer un style</data>
-	<data name="Action.AggregateUp">@@Style plus haut</data>
-	<data name="Action.AggregateDown">@@Style plus bas</data>
-	<data name="Action.AggregateDelete">@@Supprimer un style</data>
-	<data name="Action.AggregateSwap">@@Permuter deux styles</data>
-	<data name="Action.AggregateChange">@@Changement du style</data>
-	<data name="Action.AggregateFree">@@Libèrer le style</data>
-	<data name="Action.AggregateStyleNew">@@Créer un attribut pour le style</data>
-	<data name="Action.AggregateStyleDelete">@@Supprimer un attribut du style</data>
-	<data name="Action.AggregateChildrensNew">@@Ajouter un style de base en tête de liste</data>
-	<data name="Action.AggregateChildrensUp">@@Monter le style de base</data>
-	<data name="Action.AggregateChildrensDown">@@Descendre le style de base</data>
-	<data name="Action.AggregateChildrensDelete">@@Supprimer le style de base</data>
+	<data name="Action.AggregateUse">Use style</data>
+	<data name="Action.AggregateNewEmpty">New style (empty)</data>
+	<data name="Action.AggregateNew3">New Style (based on line width and colors)</data>
+	<data name="Action.AggregateNewAll">New style (based on all properties)</data>
+	<data name="Action.AggregateDuplicate">Make copy of current style</data>
+	<data name="Action.AggregateUp">Move style up in list</data>
+	<data name="Action.AggregateDown">Move style down in list</data>
+	<data name="Action.AggregateDelete">Delete style</data>
+	<data name="Action.AggregateSwap">Swap styles</data>
+	<data name="Action.AggregateChange">Change style</data>
+	<data name="Action.AggregateFree">Free style</data>
+	<data name="Action.AggregateStyleNew">Add property to current style</data>
+	<data name="Action.AggregateStyleDelete">Remove property from current style</data>
+	<data name="Action.AggregateChildrensNew">Add base style to current style</data>
+	<data name="Action.AggregateChildrensUp">Move base style up in list</data>
+	<data name="Action.AggregateChildrensDown">Move base style down in list</data>
+	<data name="Action.AggregateChildrensDelete">Remove base style from current style</data>
 	
 	<data name="Action.GuideNewH">New horizontal guide</data>
 	<data name="Action.GuideNewV">New vertical guide</data>
@@ -821,11 +821,11 @@
 	<data name="Action.Preview">Preview as printed</data>
 	<data name="Action.Magnet">Magnetic constructions</data>
 	<data name="Action.Rulers">Rulers</data>
-	<data name="Action.Labels">@@Affiche les noms des objets</data>
-	<data name="Action.Aggregates">@@Affiche les noms des styles</data>
+	<data name="Action.Labels">Display object labels</data>
+	<data name="Action.Aggregates">Display style names</data>
 	<data name="Action.Settings">Settings...</data>
 	<data name="Action.Infos">Informations...</data>
-	<data name="Action.LabelProperties">@@Noms des attributs</data>
+	<data name="Action.LabelProperties">Property names</data>
 
 	<data name="Statistic.Summary">{0}Summary{1}</data>
 	<data name="Statistic.Filename">{0}File name: {1}</data>
@@ -843,23 +843,23 @@
 	
 	<data name="Page.ShortName.Default">{0}</data>
 	<data name="Page.ShortName.Model">T{0}</data>
-	<data name="Layer.PositionName.Unique">@@Unique</data>
-	<data name="Layer.PositionName.Front">@@Dessus</data>
-	<data name="Layer.PositionName.Middle">@@Fond+{0}</data>
-	<data name="Layer.PositionName.Back">@@Fond</data>
-	<data name="Aggregates.Header.Name">@@Nom</data>
-	<data name="Aggregates.NoneLine">@@&lt;i&gt;Aucun&lt;/i&gt;</data>
-	<data name="Aggregate.Name">@@Style {0}</data>
+	<data name="Layer.PositionName.Unique">Unique</data>
+	<data name="Layer.PositionName.Front">Top</data>
+	<data name="Layer.PositionName.Middle">Bottom+{0}</data>
+	<data name="Layer.PositionName.Back">Bottom</data>
+	<data name="Aggregates.Header.Name">Name</data>
+	<data name="Aggregates.NoneLine">&lt;i&gt;None&lt;/i&gt;</data>
+	<data name="Aggregate.Name">Style {0}</data>
 
 	<data name="Error.BadFile">Incorrect file type.</data>
 	<data name="Error.BadImage">Unrecognized image format.</data>
 	<data name="Error.NoBitmap">No bitmap.</data>
 	<data name="Error.Share">Object cannot be distributed,&lt;br/%gt;they are too near each other.</data>
 	<data name="Error.Combine">One or more objects could not be combined.</data>
-	<data name="Error.Uncombine">One or more objects could not be @@un-combined.</data>
+	<data name="Error.Uncombine">One or more objects could not be split.</data>
 	<data name="Error.ToBezier">One or more objects could not be converted to curves.</data>
 	<data name="Error.ToPoly">One or more objects could not be converted to lines.</data>
-	<data name="Error.Fragment">One or more objects could not be @@exploded.</data>
+	<data name="Error.Fragment">One or more objects could not be exploded.</data>
 	<data name="Error.Boolean">Impossible operation.</data>
 
 </bundle>
