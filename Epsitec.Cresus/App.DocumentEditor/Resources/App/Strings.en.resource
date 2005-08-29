@@ -25,7 +25,7 @@
 	<data name="Tooltip.TabBook.Close">Close document</data>
 	<data name="Tooltip.Ruler.Drag">Drag to create a guide</data>
 
-	<data name="TabPage.Principal">Attributes</data>
+	<data name="TabPage.Principal">Properties</data>
 	<data name="TabPage.Styles">Styles</data>
 	<data name="TabPage.Autos">Auto</data>
 	<data name="TabPage.Pages">Pages</data>

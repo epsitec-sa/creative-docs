@@ -208,7 +208,7 @@
 	<data name="Tool.Edit">Edit</data>
 	<data name="Tool.Zoom">Magnifying glass</data>
 	<data name="Tool.Hand">Hand</data>
-	<data name="Tool.Picker">Pipette (attribute picker)</data>
+	<data name="Tool.Picker">Pipette (property picker)</data>
 	<data name="Tool.HotSpot">Hot spot</data>
 	<data name="Tool.Line">Line segment</data>
 	<data name="Tool.Rectangle">Rectangle</data>
@@ -219,8 +219,8 @@
 	<data name="Tool.Regular">Polygon</data>
 	<data name="Tool.Surface">2D figures</data>
 	<data name="Tool.Volume">3D volumes</data>
-	<data name="Tool.TextLine">Line of text</data>
-	<data name="Tool.TextBox">Block of text</data>
+	<data name="Tool.TextLine">Text line</data>
+	<data name="Tool.TextBox">Text block</data>
 	<data name="Tool.Array">Table</data>
 	<data name="Tool.Image">Bitmap image</data>
 	<data name="Tool.Dimension">Dimension</data>
@@ -296,7 +296,7 @@
 	<data name="Panel.Dimension.Short.FontOffset">V</data>
 	<data name="Panel.Dimension.Short.Text">T</data>
 	<data name="Panel.Dimension.Long.AddLength">Support lines</data>
-	<data name="Panel.Dimension.Long.OutLength">Outer measurement length</data>
+	<data name="Panel.Dimension.Long.OutLength">Outer measurement</data>
 	<data name="Panel.Dimension.Long.FontOffset">Vertical text offset</data>
 	<data name="Panel.Dimension.Long.Text">Text</data>
 	<data name="Panel.Dimension.Tooltip.AddLength">Support lines</data>
@@ -477,8 +477,8 @@
 	<data name="Property.Abstract.Volume">3D volume</data>
 	<data name="Property.Abstract.BackColor">Background color</data>
 	<data name="Property.Abstract.TextFont">Font</data>
-	<data name="Property.Abstract.TextJustif">Layout</data>
-	<data name="Property.Abstract.TextLine">Text position</data>
+	<data name="Property.Abstract.TextJustif">Layout (text block)</data>
+	<data name="Property.Abstract.TextLine">Layout (text line)</data>
 	<data name="Property.Abstract.Image">Image</data>
 	<data name="Property.Abstract.ModColor">Color transform</data>
 	
@@ -527,10 +527,10 @@
 	<data name="Property.Dimension.Text"> # mm </data>
 
 	<data name="Property.Gradient.None">Uniform</data>
-	<data name="Property.Gradient.Linear">Linear</data>
-	<data name="Property.Gradient.Circle">Circular</data>
-	<data name="Property.Gradient.Diamond">Diamond</data>
-	<data name="Property.Gradient.Conic">Conic</data>
+	<data name="Property.Gradient.Linear">Linear gradient</data>
+	<data name="Property.Gradient.Circle">Circular gradient</data>
+	<data name="Property.Gradient.Diamond">Diamond gradient</data>
+	<data name="Property.Gradient.Conic">Conic gradient</data>
 	<data name="Property.Gradient.Hatch">Hatches</data>
 	<data name="Property.Gradient.Dots">Dots</data>
 	<data name="Property.Gradient.Squares">Squares</data>
@@ -720,7 +720,7 @@
 	<data name="Action.HideSel">Hide selection</data>
 	<data name="Action.HideRest">Hide others</data>
 	<data name="Action.HideCancel">Show all</data>
-	<data name="Action.HideHalf">@@Mode estompé</data>
+	<data name="Action.HideHalf">Dim hidden objects</data>
 	
 	<data name="Action.PageChange">Switch pages</data>
 	<data name="Action.PageNew">New page</data>
@@ -787,7 +787,7 @@
 	<data name="Action.GuideChangeType">Change guide type</data>
 	<data name="Action.GuideChangePosition">Change guide position</data>
 	
-	<data name="Action.PropertyChange">Change attribute &quot;{0}&quot;</data>
+	<data name="Action.PropertyChange">Change property &quot;{0}&quot;</data>
 	<data name="Action.PickerProperty">Style from pipette</data>
 	<data name="Action.ObjectCreate">Create object &quot;{0}&quot;</data>
 	<data name="Action.Select">Select</data>
