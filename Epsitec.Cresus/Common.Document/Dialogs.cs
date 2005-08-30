@@ -746,14 +746,16 @@ namespace Epsitec.Common.Document
 			this.WidgetsTableAdd(field, ".Y");
 
 			Separator sep = new Separator(container);
+			sep.Name = sPoint.Name;
 			sep.Width = 1;
 			sep.Height = container.Height;
 			sep.Dock = DockStyle.Left;
 			sep.DockMargins = new Margins(2, 0, 0, 0);
+			this.WidgetsTableAdd(sep, ".SepLink");
 
 			IconButton ib = new IconButton(container);
 			ib.Name = sPoint.Name;
-			Dialogs.UpdateLink(ib, sPoint.Link);
+			Dialogs.UpdateLink(ib, sep, sPoint.Link);
 			ib.TabIndex = this.tabIndex++;
 			ib.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ib.Dock = DockStyle.Left;
@@ -892,20 +894,23 @@ namespace Epsitec.Common.Document
 			if ( sPoint == null )  return;
 
 			sPoint.Link = !sPoint.Link;
-			Dialogs.UpdateLink(ib, sPoint.Link);
+			Separator sep = this.WidgetsTableSearch(settings.Name, ".SepLink") as Separator;
+			Dialogs.UpdateLink(ib, sep, sPoint.Link);
 		}
 
-		protected static void UpdateLink(IconButton ib, bool state)
+		protected static void UpdateLink(IconButton ib, Separator sep, bool state)
 		{
 			if ( state )
 			{
 				ib.ActiveState = WidgetState.ActiveYes;
 				ib.IconName = Misc.Icon("Linked");
+				sep.SetEnabled(true);
 			}
 			else
 			{
 				ib.ActiveState = WidgetState.ActiveNo;
 				ib.IconName = Misc.Icon("Unlinked");
+				sep.SetEnabled(false);
 			}
 		}
 
@@ -1753,8 +1758,10 @@ namespace Epsitec.Common.Document
 					}
 
 					IconButton ib = this.WidgetsTableSearch(setting.Name, ".Link") as IconButton;
-					if ( ib != null )
+					Separator sep = this.WidgetsTableSearch(setting.Name, ".SepLink") as Separator;
+					if ( ib != null && sep != null )
 					{
+						Dialogs.UpdateLink(ib, sep, sPoint.Link);
 						ib.ActiveState = sPoint.Link ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 					}
 
