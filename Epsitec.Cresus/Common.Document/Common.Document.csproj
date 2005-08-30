@@ -619,7 +619,7 @@
                 />
                 <File
                     RelPath = "Resources\Document\Strings.en.resource"
-                    BuildAction = "None"
+                    BuildAction = "Content"
                 />
                 <File
                     RelPath = "Settings\Abstract.cs"

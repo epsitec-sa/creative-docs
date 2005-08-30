@@ -1541,7 +1541,7 @@
                 />
                 <File
                     RelPath = "Resources\App\Strings.en.resource"
-                    BuildAction = "None"
+                    BuildAction = "Content"
                 />
             </Include>
         </Files>
