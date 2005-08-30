@@ -75,16 +75,6 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "Common.IO"
-                    AssemblyName = "Common.IO"
-                    HintPath = "..\..\..\..\..\Epsitec.Cresus\Common.IO\bin\Debug\Common.IO.dll"
-                />
-                <Reference
-                    Name = "Common.Support"
-                    AssemblyName = "Common.Support"
-                    HintPath = "..\..\..\..\..\Epsitec.Cresus\Common.Support\bin\Debug\Common.Support.dll"
-                />
-                <Reference
                     Name = "Common.OpenType"
                     Project = "{7703436A-1D8D-46AA-BB44-699AE5EAAA2F}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
@@ -110,13 +100,23 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
+                    Name = "Common.Drawing"
+                    Project = "{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Common.IO"
+                    Project = "{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
                     Name = "Common.Types"
                     Project = "{8960D1EA-3B82-49A1-9D44-F92F467209FF}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "Common.Drawing"
-                    Project = "{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}"
+                    Name = "Common.Support"
+                    Project = "{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
