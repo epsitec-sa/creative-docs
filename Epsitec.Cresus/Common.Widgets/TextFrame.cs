@@ -29,6 +29,8 @@ namespace Epsitec.Common.Widgets
 			
 			this.text_fitter.ClearAllMarks ();
 			this.text_fitter.GenerateAllMarks ();
+			
+			this.navigator.TextChanged += new Support.EventHandler (this.HandleTextChanged);
 		}
 		
 		
@@ -49,18 +51,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
-		{
-			if (this.navigator.ProcessMessage (message, pos))
-			{
-				System.Diagnostics.Debug.WriteLine ("Message processed: " + message.ToString ());
-				this.Invalidate ();
-				return;
-			}
-			
-			base.ProcessMessage (message, pos);
-		}
-		
 		protected override void OnSizeChanged()
 		{
 			base.OnSizeChanged ();
@@ -76,6 +66,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
+		{
+			if (this.navigator.ProcessMessage (message, pos))
+			{
+				System.Diagnostics.Debug.WriteLine ("Message processed: " + message.ToString ());
+				this.Invalidate ();
+				return;
+			}
+			
+			base.ProcessMessage (message, pos);
+		}
+		
 		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clip_rect)
 		{
 			graphics.AddFilledRectangle (0, 0, this.Width, this.Height);
@@ -87,6 +89,7 @@ namespace Epsitec.Common.Widgets
 			this.graphics = null;
 			System.Diagnostics.Debug.WriteLine ("Paint done.");
 		}
+		
 		
 		#region ITextRenderer Members
 		public bool IsFrameAreaVisible(Epsitec.Common.Text.ITextFrame frame, double x, double y, double width, double height)
@@ -204,6 +207,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		#endregion
+		
+		private void HandleTextChanged(object sender)
+		{
+			this.text_fitter.ClearAllMarks ();
+			this.text_fitter.GenerateAllMarks ();
+			this.Invalidate ();
+		}
 		
 		
 		private Drawing.Graphics				graphics;

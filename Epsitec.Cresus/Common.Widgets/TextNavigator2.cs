@@ -107,7 +107,7 @@ namespace Epsitec.Common.Widgets
 			return processed;
 		}
 		
-
+		
 		private bool ProcessReturnKey(Message message)
 		{
 			if (this.disable_return_key)
@@ -199,11 +199,33 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessBackKey(Message message)
 		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			
+			if (this.text_navigator.HasSelection)
+			{
+				this.text_navigator.Delete ();
+				return true;
+			}
+			
 			return false;
 		}
 		
 		private bool ProcessDeleteKey(Message message)
 		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			
+			if (this.text_navigator.HasSelection)
+			{
+				this.text_navigator.Delete ();
+				return true;
+			}
+			
 			return false;
 		}
 		
@@ -325,7 +347,24 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessKeyPress(Message message)
 		{
-			return true;
+			Text.Unicode.Code code = (Text.Unicode.Code) message.KeyChar;
+			
+			if (code >= Text.Unicode.Code.Space)
+			{
+				if (this.text_navigator.IsSelectionActive)
+				{
+					this.text_navigator.EndSelection ();
+				}
+				if (this.text_navigator.HasSelection)
+				{
+					this.text_navigator.Delete ();
+				}
+				
+				this.Insert (code);
+				return true;
+			}
+			
+			return false;
 		}
 		
 		
@@ -396,11 +435,47 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		
 		public bool Insert(Text.Unicode.Code code)
 		{
+			if (code > Text.Unicode.Code.Invalid)
+			{
+				//	TODO: gérer la génération d'un surrogate pair
+				
+				return false;
+			}
+			else
+			{
+				return this.Insert (new string ((char) code, 1));
+			}
+		}
+		
+		public bool Insert(string text)
+		{
+			this.text_navigator.Insert (text);
+			this.NotifyTextChanged ();
+			
 			return true;
 		}
 		
+		
+		
+		private void NotifyTextChanged()
+		{
+			this.OnTextChanged ();
+		}
+		
+		
+		protected virtual void OnTextChanged()
+		{
+			if (this.TextChanged != null)
+			{
+				this.TextChanged (this);
+			}
+		}
+		
+		
+		public event Support.EventHandler		TextChanged;
 		
 		private Text.TextNavigator				text_navigator;
 		
