@@ -100,6 +100,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public bool								HasSelection
+		{
+			get
+			{
+				return this.selection_cursors == null ? false : true;
+			}
+		}
+		
 		
 		public Common.Support.OpletQueue		OpletQueue
 		{
@@ -392,6 +400,13 @@ namespace Epsitec.Common.Text
 		
 		public void ClearSelection()
 		{
+			this.ClearSelection (0);
+		}
+		
+		public void ClearSelection(int direction)
+		{
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
+			
 			//	Désélectionne tout le texte.
 			
 			if (this.selection_cursors != null)
@@ -401,13 +416,29 @@ namespace Epsitec.Common.Text
 				
 				using (this.story.OpletQueue.BeginAction ())
 				{
-					this.InternalInsertSelectionOplet ();
+					int[]   positions = this.GetSelectionCursorPositions ();
+					Range[] ranges    = Range.CreateSortedRanges (positions);
+					
+					this.InternalInsertSelectionOplet (positions);
+					
+					//	Déplace le curseur de travail au début ou à la fin de la
+					//	tranche sélectionnée, en fonction de la direction :
+					
+					if ((direction != 0) &&
+						(ranges.Length > 0))
+					{
+						int pos = (direction < 0) ? ranges[0].Start : ranges[ranges.Length-1].End;
+						this.story.SetCursorPosition (this.cursor, pos, direction);
+					}
+					
 					this.story.OpletQueue.ValidateAction ();
 				}
 				
 				this.InternalClearSelection ();
 				this.UpdateSelectionMarkers ();
 			}
+			
+			System.Diagnostics.Debug.Assert (this.HasSelection == false);
 		}
 		
 		
@@ -892,7 +923,7 @@ namespace Epsitec.Common.Text
 						fix_up = true;
 					}
 					
-					this.MergeRanges (ranges, range);
+					Range.Merge (ranges, range);
 					
 					start = pos + i + 1;
 				}
@@ -902,7 +933,7 @@ namespace Epsitec.Common.Text
 			{
 				//	Il reste encore un fragment de début de paragraphe à détruire :
 				
-				this.MergeRanges (ranges, new Range (start, end - start));
+				Range.Merge (ranges, new Range (start, end - start));
 			}
 			
 			if (! fix_up)
@@ -951,6 +982,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		#region Range Class
 		private class Range
 		{
 			public Range(int start, int length)
@@ -965,6 +997,16 @@ namespace Epsitec.Common.Text
 				get
 				{
 					return this.start;
+				}
+				set
+				{
+					if (this.start != value)
+					{
+						int end = this.End;
+						
+						this.start  = value;
+						this.length = end - value;
+					}
 				}
 			}
 			
@@ -989,32 +1031,100 @@ namespace Epsitec.Common.Text
 			}
 			
 			
-			private int							start;
-			private int							length;
-		}
-		
-		
-		private void MergeRanges(System.Collections.Stack ranges, Range new_range)
-		{
-			if (ranges.Count > 0)
+			public static void Merge(System.Collections.Stack ranges, Range new_range)
 			{
-				Range old_range = ranges.Peek () as Range;
+				//	Insère une nouvelle zone sélectionnée. Si elle rejoint parfaitement
+				//	la zone précédente, on allonge simplement celle-ci. Dans le cas
+				//	contraire, ajoute une zone dans la pile.
 				
-				if (old_range.End == new_range.Start)
+				if (ranges.Count > 0)
 				{
-					old_range.End = new_range.End;
+					Range old_range = ranges.Peek () as Range;
+					
+					if (old_range.End == new_range.Start)
+					{
+						old_range.End = new_range.End;
+					}
+					else
+					{
+						ranges.Push (new_range);
+					}
 				}
 				else
 				{
 					ranges.Push (new_range);
 				}
 			}
-			else
+			
+			public static void Merge(System.Collections.ArrayList ranges, Range new_range)
 			{
-				ranges.Push (new_range);
+				//	Fusionne une nouvelle zone dans la liste des zones existantes. S'il
+				//	y a recouvrement avec une zone existante, celle-ci sera agrandie.
+				//	Si plusieurs zones se recouvrent, les zones recouvertes sont supprimées
+				//	de la liste.
+				
+				int pos = 0;
+				
+				for (int i = 0; i < ranges.Count; i++)
+				{
+					Range old_range = ranges[i] as Range;
+					
+					if ((new_range.Start <= old_range.End) &&
+						(new_range.End >= old_range.Start))
+					{
+						//	Il y a un chevauchement. Fusionne les deux zones. Pour traiter
+						//	correctement l'agrandissement, on préfère retirer l'ancienne
+						//	zone, l'agrandir et la fusionner à son tour :
+						
+						ranges.RemoveAt (i);
+						
+						old_range.Start = System.Math.Min (old_range.Start, new_range.Start);
+						old_range.End   = System.Math.Max (old_range.End, new_range.End);
+						
+						Range.Merge (ranges, old_range);
+						
+						return;
+					}
+					if (new_range.Start > old_range.End)
+					{
+						pos = i+1;
+					}
+				}
+				
+				ranges.Insert (pos, new_range);
 			}
+			
+			
+			public static Range[] CreateSortedRanges(int[] positions)
+			{
+				System.Diagnostics.Debug.Assert ((positions.Length % 2) == 0);
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				
+				for (int i = 0; i < positions.Length; i += 2)
+				{
+					int p1 = positions[i+0];
+					int p2 = positions[i+1];
+					
+					if (p1 < p2)
+					{
+						Range.Merge (list, new Range (p1, p2-p1));
+					}
+					else if (p1 > p2)
+					{
+						Range.Merge (list, new Range (p2, p1-p2));
+					}
+				}
+				
+				Range[] ranges = new Range[list.Count];
+				list.CopyTo (ranges);
+				return ranges;
+			}
+			
+			
+			private int							start;
+			private int							length;
 		}
-		
+		#endregion
 		
 		protected virtual bool IsParagraphStart(int offset)
 		{
@@ -1104,6 +1214,11 @@ namespace Epsitec.Common.Text
 		private void InternalInsertSelectionOplet()
 		{
 			int[] positions = this.GetSelectionCursorPositions ();
+			this.InternalInsertSelectionOplet (positions);
+		}
+		
+		private void InternalInsertSelectionOplet(int[] positions)
+		{
 			this.story.OpletQueue.Insert (new ClearSelectionOplet (this, positions));
 		}
 		
@@ -1374,6 +1489,10 @@ namespace Epsitec.Common.Text
 		
 		
 		#region ClearSelectionOplet Class
+		/// <summary>
+		/// La classe ClearSelectionOplet permet de gérer l'annulation la
+		/// suppression d'une sélection.
+		/// </summary>
 		protected class ClearSelectionOplet : Common.Support.AbstractOplet
 		{
 			public ClearSelectionOplet(TextNavigator navigator, int[] positions)

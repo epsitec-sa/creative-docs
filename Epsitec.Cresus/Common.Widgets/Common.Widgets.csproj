@@ -534,6 +534,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TextNavigator2.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TextRuler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
