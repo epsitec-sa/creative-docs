@@ -112,8 +112,17 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public static bool IsLineStart(TextStory story, TextFitter fitter, ICursor cursor, int offset)
+		public static bool IsLineStart(TextStory story, TextFitter fitter, ICursor cursor, int offset, int direction)
 		{
+			if (direction > 0)
+			{
+				//	C'est forcément une fin de ligne en cas de "hit", puisque
+				//	début et fin sont confondus et que la direction seule permet
+				//	de les discriminer.
+				
+				return false;
+			}
+			
 			offset += story.GetCursorPosition (cursor);
 			
 			Internal.TextTable text   = story.TextTable;
@@ -151,8 +160,22 @@ namespace Epsitec.Common.Text.Internal
 			return false;
 		}
 		
-		public static bool IsLineEnd(TextStory story, TextFitter fitter, ICursor cursor, int offset)
+		public static bool IsLineEnd(TextStory story, TextFitter fitter, ICursor cursor, int offset, int direction)
 		{
+			if (direction < 0)
+			{
+				//	C'est forcément un début de ligne en cas de "hit", puisque
+				//	début et fin sont confondus et que la direction seule permet
+				//	de les discriminer.
+				
+				return false;
+			}
+			
+			if (Navigator.IsParagraphEnd (story, cursor, offset))
+			{
+				return true;
+			}
+			
 			offset += story.GetCursorPosition (cursor);
 			
 			Internal.TextTable text   = story.TextTable;

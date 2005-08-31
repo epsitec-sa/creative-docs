@@ -183,15 +183,48 @@ namespace Epsitec.Common.Support
 			cursor = new Text.Cursors.SimpleCursor ();
 			story.NewCursor (cursor);
 			
-			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 0));
-			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 15));
-			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 29));
-			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 39));
-			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 63));
-			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 77));
-			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 91));
-			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 102));
-			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 113));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 0, -1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 15, -1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 29, -1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 39, -1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 63, -1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 77, -1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 91, -1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 102, -1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 113, -1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 116, -1));
+			
+			Assert.IsFalse (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 15, 1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 29, 1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 39, 1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 63, 1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 77, 1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 91, 1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 102, 1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 113, 1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineStart (story, fitter, cursor, 116, 1));
+			
+			Assert.IsFalse (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 0, -1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 15, -1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 29, -1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 39, -1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 63, -1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 77, -1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 91, -1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 102, -1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 113, -1));
+			
+			Assert.IsFalse (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 0, 1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 15, 1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 29, 1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 39, 1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 63, 1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 77, 1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 91, 1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 102, 1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 112, 1));
+			Assert.IsFalse (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 113, 1));
+			Assert.IsTrue (Text.Internal.Navigator.IsLineEnd (story, fitter, cursor, 116, 1));
 			
 			navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
 			Assert.AreEqual (-1, navigator.CursorDirection);
@@ -209,6 +242,12 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (77, navigator.CursorPosition);
 			Assert.AreEqual (1, navigator.CursorDirection);
 			
+			navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);
+			Assert.AreEqual (78, navigator.CursorPosition);
+			Assert.AreEqual (1, navigator.CursorDirection);
+			navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);
+			Assert.AreEqual (77, navigator.CursorPosition);
+			Assert.AreEqual (-1, navigator.CursorDirection);
 			navigator.MoveTo (Text.TextNavigator.Target.LineStart, 0);
 			Assert.AreEqual (77, navigator.CursorPosition);
 			Assert.AreEqual (-1, navigator.CursorDirection);

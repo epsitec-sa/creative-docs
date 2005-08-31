@@ -88,6 +88,25 @@ namespace Epsitec.Common.Widgets
 			this.text_fitter.RenderTextFrame (this.text_frame, this);
 			this.graphics = null;
 			System.Diagnostics.Debug.WriteLine ("Paint done.");
+			
+			Text.ITextFrame frame;
+			double cx, cy, ascender, descender, angle;
+			
+			this.text_navigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle);
+			
+			if (frame == this.text_frame)
+			{
+				double tan = System.Math.Tan (System.Math.PI / 2 - angle);
+				
+				double x1 = cx + descender * tan;
+				double x2 = cx + ascender  * tan;
+				double y1 = cy + descender;
+				double y2 = cy + ascender;
+				
+				graphics.LineWidth = 2.0;
+				graphics.AddLine (x1, y1, x2, y2);
+				graphics.RenderSolid (Drawing.Color.FromRGB (1.0, 0.0, 0.0));
+			}
 		}
 		
 		

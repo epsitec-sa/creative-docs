@@ -765,7 +765,7 @@ namespace Epsitec.Common.Text
 			if ((moved > 0) &&
 				(direction > 0))
 			{
-				if ((Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, 0)) ||
+				if ((Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, 0, direction)) ||
 					(Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0)))
 				{
 					//	Si nous avons atteint la fin d'une ligne de texte en marche avant,
@@ -800,11 +800,12 @@ namespace Epsitec.Common.Text
 			
 			if (direction > 0)
 			{
+				int dir = old_dir;
 				int max = this.story.TextLength - old_pos;
 				
 				for (int i = 0; i < max; i++)
 				{
-					if (callback (i))
+					if (callback (i, dir))
 					{
 						if (count-- == 0)
 						{
@@ -817,15 +818,17 @@ namespace Epsitec.Common.Text
 					}
 					
 					moved++;
+					dir = 1;
 				}
 			}
 			else
 			{
+				int dir = old_dir;
 				int max = old_pos;
 				
 				for (int i = 0; i < max; i++)
 				{
-					if (callback (-i))
+					if (callback (-i, dir))
 					{
 						if (count-- == 0)
 						{
@@ -838,6 +841,7 @@ namespace Epsitec.Common.Text
 					}
 					
 					moved--;
+					dir = -1;
 				}
 			}
 			
@@ -900,12 +904,12 @@ namespace Epsitec.Common.Text
 						
 						System.Diagnostics.Debug.Assert (count == 1);
 						System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == start);
-						System.Diagnostics.Debug.Assert (this.IsParagraphStart (0));
+						System.Diagnostics.Debug.Assert (this.IsParagraphStart (0, -1));
 					}
 					
 					Range range;
 					
-					if (this.IsParagraphStart (0))
+					if (this.IsParagraphStart (0, 1))
 					{
 						//	C'est un paragraphe complet qui est sélectionné. On le
 						//	détruit sans autre forme de procès.
@@ -949,7 +953,7 @@ namespace Epsitec.Common.Text
 				if (this.SkipOverAutoText (ref fence, -1))
 				{
 					System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == start);
-					System.Diagnostics.Debug.Assert (this.IsParagraphStart (0));
+					System.Diagnostics.Debug.Assert (this.IsParagraphStart (0, -1));
 				}
 			}
 			
@@ -1126,22 +1130,22 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
-		protected virtual bool IsParagraphStart(int offset)
+		protected virtual bool IsParagraphStart(int offset, int direction)
 		{
 			return Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, offset);
 		}
 		
-		protected virtual bool IsParagraphEnd(int offset)
+		protected virtual bool IsParagraphEnd(int offset, int direction)
 		{
 			return Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, offset);
 		}
 		
-		protected virtual bool IsWordStart(int offset)
+		protected virtual bool IsWordStart(int offset, int direction)
 		{
 			return Internal.Navigator.IsWordStart (this.story, this.temp_cursor, offset);
 		}
 		
-		protected virtual bool IsWordEnd(int offset)
+		protected virtual bool IsWordEnd(int offset, int direction)
 		{
 			//	Si nous sommes à la fin d'un paragraphe ou d'une ligne, nous
 			//	sommes déjà à une fin de mot...
@@ -1159,14 +1163,14 @@ namespace Epsitec.Common.Text
 			return Internal.Navigator.IsWordStart (this.story, this.temp_cursor, offset);
 		}
 		
-		protected virtual bool IsLineStart(int offset)
+		protected virtual bool IsLineStart(int offset, int direction)
 		{
-			if (this.IsParagraphStart (offset))
+			if (this.IsParagraphStart (offset, direction))
 			{
 				return true;
 			}
 			
-			if (Internal.Navigator.IsLineStart (this.story, this.fitter, this.temp_cursor, offset))
+			if (Internal.Navigator.IsLineStart (this.story, this.fitter, this.temp_cursor, offset, direction))
 			{
 				return true;
 			}
@@ -1174,14 +1178,14 @@ namespace Epsitec.Common.Text
 			return false;
 		}
 		
-		protected virtual bool IsLineEnd(int offset)
+		protected virtual bool IsLineEnd(int offset, int direction)
 		{
-			if (this.IsParagraphEnd (offset))
+			if (this.IsParagraphEnd (offset, direction))
 			{
 				return true;
 			}
 			
-			if (Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, offset))
+			if (Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, offset, direction))
 			{
 				return true;
 			}
@@ -1551,7 +1555,7 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
-		protected delegate bool MoveCallback(int offset);
+		protected delegate bool MoveCallback(int offset, int direction);
 		
 		
 		private TextStory						story;

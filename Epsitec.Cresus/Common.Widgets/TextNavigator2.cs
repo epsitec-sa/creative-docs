@@ -351,15 +351,6 @@ namespace Epsitec.Common.Widgets
 			
 			if (code >= Text.Unicode.Code.Space)
 			{
-				if (this.text_navigator.IsSelectionActive)
-				{
-					this.text_navigator.EndSelection ();
-				}
-				if (this.text_navigator.HasSelection)
-				{
-					this.text_navigator.Delete ();
-				}
-				
 				this.Insert (code);
 				return true;
 			}
@@ -452,6 +443,15 @@ namespace Epsitec.Common.Widgets
 		
 		public bool Insert(string text)
 		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			if (this.text_navigator.HasSelection)
+			{
+				this.text_navigator.Delete ();
+			}
+			
 			this.text_navigator.Insert (text);
 			this.NotifyTextChanged ();
 			

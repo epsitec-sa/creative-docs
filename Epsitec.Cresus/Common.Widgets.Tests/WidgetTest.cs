@@ -21,31 +21,23 @@ namespace Epsitec.Common.Widgets
 			
 			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 			
-			Text.Properties.FontProperty fp = new Text.Properties.FontProperty ("Arial", "Regular");
+			Text.Properties.FontProperty fp = new Text.Properties.FontProperty ("Palatino Linotype", "Italic");
 			
-			fp.Features = new string[] { "liga", "kern" };
-			
-			ulong[] text;
-			string words;
+			fp.Features = new string[] { "liga", "dlig", "kern" };
 			
 			properties.Add (fp);
-			properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
+			properties.Add (new Text.Properties.FontSizeProperty (14.0, Text.Properties.SizeUnits.Points));
 			properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 			properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
-			properties.Add (new Text.Properties.LeadingProperty (14.0, Text.Properties.SizeUnits.Points, 15.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
-			
-			words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
+			properties.Add (new Text.Properties.LeadingProperty (16.0, Text.Properties.SizeUnits.Points, 15.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			
 			Text.TextStyle style = story.TextContext.StyleList.NewTextStyle ("Default", Text.TextStyleClass.Paragraph, properties);
 			story.TextContext.DefaultStyle = style;
 			
-#if false
-			story.ConvertToStyledText (words, no_styles, properties, out text);
-			story.InsertText (navigator.TextNavigator.ActiveCursor, text);
-#else
+			string words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
+			
 			navigator.Insert (words);
-#endif
 			
 			frame.Dock        = DockStyle.Fill;
 			frame.DockMargins = new Margins (4, 4, 4, 4);
