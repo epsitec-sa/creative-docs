@@ -1,0 +1,220 @@
+//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
+namespace Epsitec.Common.Widgets
+{
+	/// <summary>
+	/// La classe TextFrame permet de représenter du texte en associant un widget
+	/// à un frame (cf. Common.Text pour les concepts utilisés).
+	/// </summary>
+	public class TextFrame : Widget, Epsitec.Common.Text.ITextRenderer
+	{
+		public TextFrame()
+		{
+			this.InternalState |= InternalState.AutoFocus;
+			this.InternalState |= InternalState.Focusable;
+			
+			this.oplet_queue = new Epsitec.Common.Support.OpletQueue ();
+			
+			this.text_context   = new Epsitec.Common.Text.Context ();
+			this.text_story     = new Epsitec.Common.Text.TextStory (this.oplet_queue, this.text_context);
+			this.text_fitter    = new Epsitec.Common.Text.TextFitter (this.text_story);
+			this.text_navigator = new Epsitec.Common.Text.TextNavigator (this.text_story, this.text_fitter);
+			this.text_frame     = new Epsitec.Common.Text.SimpleTextFrame (this.DefaultWidth, this.DefaultHeight);
+			
+			this.navigator = new TextNavigator2 ();
+			
+			this.navigator.TextNavigator = this.text_navigator;
+			this.text_fitter.FrameList.Add (this.text_frame);
+			
+			this.text_fitter.ClearAllMarks ();
+			this.text_fitter.GenerateAllMarks ();
+		}
+		
+		
+		public Epsitec.Common.Text.TextStory	TextStory
+		{
+			get
+			{
+				return this.text_story;
+			}
+		}
+		
+		public TextNavigator2					TextNavigator
+		{
+			get
+			{
+				return this.navigator;
+			}
+		}
+		
+		
+		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
+		{
+			if (this.navigator.ProcessMessage (message, pos))
+			{
+				System.Diagnostics.Debug.WriteLine ("Message processed: " + message.ToString ());
+				this.Invalidate ();
+				return;
+			}
+			
+			base.ProcessMessage (message, pos);
+		}
+		
+		protected override void OnSizeChanged()
+		{
+			base.OnSizeChanged ();
+			
+			if ((this.text_fitter != null) &&
+				(this.text_frame != null))
+			{
+				this.text_frame.Width  = this.Client.Width;
+				this.text_frame.Height = this.Client.Height;
+				
+				this.text_fitter.ClearAllMarks ();
+				this.text_fitter.GenerateAllMarks ();
+			}
+		}
+		
+		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clip_rect)
+		{
+			graphics.AddFilledRectangle (0, 0, this.Width, this.Height);
+			graphics.RenderSolid (Drawing.Color.FromBrightness (1.0));
+			
+			System.Diagnostics.Debug.WriteLine ("Paint started.");
+			this.graphics = graphics;
+			this.text_fitter.RenderTextFrame (this.text_frame, this);
+			this.graphics = null;
+			System.Diagnostics.Debug.WriteLine ("Paint done.");
+		}
+		
+		#region ITextRenderer Members
+		public bool IsFrameAreaVisible(Epsitec.Common.Text.ITextFrame frame, double x, double y, double width, double height)
+		{
+			return true;
+		}
+		
+		public void RenderStartParagraph(Text.Layout.Context context)
+		{
+		}
+		
+		public void RenderStartLine(Text.Layout.Context context)
+		{
+			double ox = context.X;
+			double oy = context.Y;
+			double dx = context.TextWidth;
+			
+			this.graphics.LineWidth = 0.3;
+			this.graphics.AddLine (ox, oy, ox + dx, oy);
+			this.graphics.RenderSolid (Drawing.Color.FromName ("Green"));
+			
+			context.RendererNeedsTextAndGlyphs = true;
+		}
+		
+		public void Render(Epsitec.Common.Text.ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
+		{
+			System.Diagnostics.Debug.Assert (mapping != null);
+			
+			//	Vérifions d'abord que le mapping du texte vers les glyphes est
+			//	correct et correspond à quelque chose de valide :
+			
+			int offset = 0;
+			
+			int[]    c_array;
+			ushort[] g_array;
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			while (mapping.GetNextMapping (out c_array, out g_array))
+			{
+				for (int i = 0; i < g_array.Length; i++)
+				{
+					System.Diagnostics.Debug.Assert (g_array[i] == glyphs[offset++]);
+				}
+				for (int i = 0; i < c_array.Length; i++)
+				{
+					buffer.Append ((char)(c_array[i]));
+				}
+			}
+			
+			if (font.FontManagerType == OpenType.FontManagerType.System)
+			{
+				Drawing.NativeTextRenderer.Draw (this.graphics.Pixmap, font, size, glyphs, x, y, color);
+			}
+			else
+			{
+				Drawing.Font drawing_font = Drawing.Font.GetFont (font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+				
+				if (drawing_font != null)
+				{
+					for (int i = 0; i < glyphs.Length; i++)
+					{
+						if (glyphs[i] < 0xffff)
+						{
+							this.graphics.Rasterizer.AddGlyph (drawing_font, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+						}
+					}
+				}
+				
+				this.graphics.RenderSolid (color);
+			}
+		}
+		
+		public void Render(Epsitec.Common.Text.ITextFrame frame, Epsitec.Common.Text.IGlyphRenderer glyph_renderer, Drawing.Color color, double x, double y, bool is_last_run)
+		{
+			glyph_renderer.RenderGlyph (frame, x, y);
+		}
+		
+		public void RenderEndLine(Text.Layout.Context context)
+		{
+		}
+		
+		public void RenderEndParagraph(Text.Layout.Context context)
+		{
+			Text.Layout.UnderlineRecord[] records = context.UnderlineRecords;
+			
+			double x1 = 0;
+			double y1 = 0;
+			
+			//	Dans ce test, la couleur est stockée directement comme LineStyle pour la propriété
+			//	"underline".
+			
+			string color = "Yellow";
+			
+			if (records.Length > 0)
+			{
+				for (int i = 0; i < records.Length; i++)
+				{
+					if ((records[i].Type == Common.Text.Layout.UnderlineRecord.RecordType.LineEnd) ||
+						(records[i].Underlines.Length == 0))
+					{
+						this.graphics.LineWidth = 1.0;
+						this.graphics.AddLine (x1, y1, records[i].X, records[i].Y + records[i].Descender * 0.8);
+						this.graphics.RenderSolid (Drawing.Color.FromName (color));
+					}
+					
+					x1 = records[i].X;
+					y1 = records[i].Y + records[i].Descender * 0.8;
+					
+					if (records[i].Underlines.Length > 0)
+					{
+						color = records[i].Underlines[0].LineStyle;
+					}
+				}
+			}
+		}
+		#endregion
+		
+		
+		private Drawing.Graphics				graphics;
+		
+		private Support.OpletQueue				oplet_queue;
+		private Common.Text.Context				text_context;
+		private Common.Text.TextStory			text_story;
+		private Common.Text.TextFitter			text_fitter;
+		private Common.Text.TextNavigator		text_navigator;
+		private Common.Text.SimpleTextFrame		text_frame;
+		
+		private TextNavigator2					navigator;
+	}
+}
