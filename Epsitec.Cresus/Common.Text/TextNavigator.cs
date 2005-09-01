@@ -1154,15 +1154,21 @@ namespace Epsitec.Common.Text
 		
 		protected virtual bool IsWordStart(int offset, int direction)
 		{
+			//	Si nous sommes à la fin d'un paragraphe, nous considérons que
+			//	c'est une frontière de mot :
+			
+			if (Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, offset))
+			{
+				return true;
+			}
+			
 			return Internal.Navigator.IsWordStart (this.story, this.temp_cursor, offset);
 		}
 		
 		protected virtual bool IsWordEnd(int offset, int direction)
 		{
-			//	Si nous sommes à la fin d'un paragraphe ou d'une ligne, nous
-			//	sommes déjà à une fin de mot...
-			
-			//	TODO: gérer fins de lignes
+			//	Si nous sommes à la fin d'un paragraphe nous sommes déjà à
+			//	une fin de mot :
 			
 			if (Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, offset))
 			{
