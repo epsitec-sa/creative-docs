@@ -276,6 +276,7 @@ namespace Epsitec.Common.Document.Objects
 			this.textLayout.Text = obj.textLayout.Text;
 			obj.textLayout.Style.TabCopyTo(this.textLayout.Style);
 			obj.textNavigator.Context.CopyTo(this.textNavigator.Context);
+			this.textLayout.Simplify(this.textNavigator.Context);
 		}
 
 
