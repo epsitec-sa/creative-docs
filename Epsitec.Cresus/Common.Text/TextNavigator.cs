@@ -329,6 +329,18 @@ namespace Epsitec.Common.Text
 				
 				case Target.WordEnd:
 					this.MoveCursor (count, 1, new MoveCallback (this.IsWordEnd), out new_pos, out new_dir);
+					
+					//	Si en marche avant, on arrive à la fin d'une ligne qui n'est pas
+					//	une fin de paragraphe, alors il faut changer la direction, afin
+					//	que le curseur apparaisse au début de la igne suivante :
+					
+					if ((Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, new_pos - old_pos) == false) &&
+						(Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, new_pos - old_pos, 1)))
+					{
+						System.Diagnostics.Debug.WriteLine ("Swap direction (2)");
+						new_dir = -1;
+					}
+					
 					break;
 					
 				default:
