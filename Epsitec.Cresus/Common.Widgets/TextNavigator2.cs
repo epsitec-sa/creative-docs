@@ -37,6 +37,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Text.ITextFrame					TextFrame
+		{
+			get
+			{
+				return this.text_frame;
+			}
+			set
+			{
+				this.text_frame = value;
+			}
+		}
+		
 		
 		public bool ProcessMessage(Message message, Drawing.Point pos)
 		{
@@ -207,10 +219,13 @@ namespace Epsitec.Common.Widgets
 			if (this.text_navigator.HasSelection)
 			{
 				this.text_navigator.Delete ();
+				this.NotifyTextChanged ();
 				return true;
 			}
 			
-			return false;
+			this.text_navigator.Delete (-1);
+			this.NotifyTextChanged ();
+			return true;
 		}
 		
 		private bool ProcessDeleteKey(Message message)
@@ -223,10 +238,13 @@ namespace Epsitec.Common.Widgets
 			if (this.text_navigator.HasSelection)
 			{
 				this.text_navigator.Delete ();
+				this.NotifyTextChanged ();
 				return true;
 			}
 			
-			return false;
+			this.text_navigator.Delete (1);
+			this.NotifyTextChanged ();
+			return true;
 		}
 		
 		private bool ProcessHomeKey(Message message)
@@ -368,14 +386,59 @@ namespace Epsitec.Common.Widgets
 				this.is_mouse_dragging = true;
 			}
 			
-			//	TODO: positionne le curseur à l'endroit cliqué
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			if (this.text_navigator.HasSelection)
+			{
+				this.text_navigator.ClearSelection ();
+			}
 			
-			return true;
+			int p, d;
+			
+			double cx = pos.X;
+			double cy = pos.Y;
+			
+			if (this.text_navigator.HitTest (this.text_frame, cx, cy, true, out p, out d))
+			{
+				this.initial_position = p;
+				
+				this.text_navigator.HitTest (this.text_frame, cx, cy, false, out p, out d);
+				this.text_navigator.MoveTo (p, d);
+				
+				return true;
+			}
+			
+			this.initial_position = -1;
+			return false;
 		}
 		
 		private bool ProcessMouseDrag(Drawing.Point pos)
 		{
-			//	TODO: déplace la zone de sélection
+			int p, d;
+			
+			double cx = pos.X;
+			double cy = pos.Y;
+			
+			if (this.text_navigator.HitTest (this.text_frame, cx, cy, true, out p, out d))
+			{
+				if ((this.is_mouse_selecting == false) &&
+					(this.initial_position != p))
+				{
+					this.is_mouse_selecting = true;
+					this.text_navigator.StartSelection ();
+					
+					System.Diagnostics.Debug.WriteLine ("Started mouse selection.");
+				}
+				
+				if (this.is_mouse_selecting)
+				{
+					this.text_navigator.MoveTo (p, d);
+				}
+				
+				return true;
+			}
 			
 			return true;
 		}
@@ -390,6 +453,14 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessMouseUp(Message message, Drawing.Point pos)
 		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+				this.is_mouse_selecting = false;
+			}
+			
+			System.Diagnostics.Debug.WriteLine ("MouseUp: " + message.ButtonDownCount);
+			
 			if (message.ButtonDownCount == 1)
 			{
 				//	TODO: valide position/fin de sélection
@@ -407,8 +478,11 @@ namespace Epsitec.Common.Widgets
 				this.SelectAll ();
 			}
 			
-			this.is_mouse_down     = false;
-			this.is_mouse_dragging = false;
+			System.Diagnostics.Debug.Assert (this.is_mouse_selecting == false);
+			
+			this.is_mouse_down      = false;
+			this.is_mouse_dragging  = false;
+			this.is_mouse_selecting = false;
 			
 			return true;
 		}
@@ -416,14 +490,28 @@ namespace Epsitec.Common.Widgets
 		
 		public void SelectWord()
 		{
+			this.text_navigator.MoveTo (Text.TextNavigator.Target.WordStart, 0);
+			this.text_navigator.StartSelection ();
+			this.text_navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
+			this.text_navigator.EndSelection ();
+			
+			System.Diagnostics.Debug.WriteLine ("Word selected : " + this.text_navigator.HasSelection);
 		}
 		
 		public void SelectLine()
 		{
+			this.text_navigator.MoveTo (Text.TextNavigator.Target.LineStart, 0);
+			this.text_navigator.StartSelection ();
+			this.text_navigator.MoveTo (Text.TextNavigator.Target.LineEnd, 1);
+			this.text_navigator.EndSelection ();
 		}
 		
 		public void SelectAll()
 		{
+			this.text_navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
+			this.text_navigator.StartSelection ();
+			this.text_navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 0);
+			this.text_navigator.EndSelection ();
 		}
 		
 		
@@ -478,6 +566,9 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		TextChanged;
 		
 		private Text.TextNavigator				text_navigator;
+		private Text.ITextFrame					text_frame;
+		
+		private int								initial_position;
 		
 		private bool							disable_tab_key;
 		private bool							disable_return_key;
@@ -490,5 +581,6 @@ namespace Epsitec.Common.Widgets
 		private bool							is_read_only;
 		private bool							is_mouse_down;
 		private bool							is_mouse_dragging;
+		private bool							is_mouse_selecting;
 	}
 }

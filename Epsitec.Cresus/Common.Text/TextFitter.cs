@@ -174,6 +174,131 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public bool HitTestTextFrame(ITextFrame frame, double x, double y, bool skip_invisible, ref int position, ref int direction)
+		{
+			int index = this.frame_list.IndexOf (frame);
+			
+			if (index < 0)
+			{
+				throw new System.ArgumentException ("Not a valid ITextFrame.", "frame");
+			}
+			
+			Cursors.FitterCursor cursor = this.frame_list.FindFirstCursor (index);
+			Internal.TextTable   text   = this.story.TextTable;
+			
+			while (cursor != null)
+			{
+				if (cursor.ContainsFrameIndex (index) == false)
+				{
+					break;
+				}
+				
+				if (this.HitTestParagraphInTextFrame (cursor, frame, x, y, skip_invisible, ref position, ref direction))
+				{
+					return true;
+				}
+				
+				//	Trouve le curseur du paragraphe suivant :
+				
+				CursorInfo[] cursors = text.FindNextCursor (cursor.CursorId, Cursors.FitterCursor.Filter);
+				
+				if (cursors.Length == 1)
+				{
+					cursor = text.GetCursorInstance (cursors[0].CursorId) as Cursors.FitterCursor;
+				}
+				else
+				{
+					break;
+				}
+			}
+			
+			return false;
+		}
+		
+		public bool HitTestParagraphInTextFrame(ICursor fitter_cursor, ITextFrame frame, double x, double y, bool skip_invisible, ref int position, ref int direction)
+		{
+			Cursors.FitterCursor cursor = fitter_cursor as Cursors.FitterCursor;
+			
+			if (cursor == null)
+			{
+				throw new System.ArgumentException ("Not a valid FitterCursor.", "fitter_cursor");
+			}
+			
+			Cursors.FitterCursor.Element[] elements = cursor.Elements;
+			
+			int para_start  = this.story.GetCursorPosition (fitter_cursor);
+			int line_offset = 0;
+			
+			frame.MapFromView (ref x, ref y);
+			
+			for (int i = 0; i < elements.Length; i++)
+			{
+				double l_yb = elements[i].LineBaseY;
+				double l_y1 = l_yb + elements[i].LineAscender;
+				double l_y2 = l_yb + elements[i].LineDescender;
+				
+				if ((y >= l_y2) &&
+					(y <= l_y1))
+				{
+					//	La bande horizontale qui comprend cette ligne se trouve dans la
+					//	zone d'intérêt. Analysons-la plus à fond :
+					
+					double cx1 = 0;
+					double cy1 = 0;
+					
+					this.GetCursorGeometry (frame, para_start + line_offset, 0, elements, i, ref cx1, ref cy1);
+					
+					if (x < cx1)
+					{
+						position  = para_start + line_offset;
+						direction = -1;
+					}
+					else
+					{
+						double cx2 = 0;
+						double cy2 = 0;
+						
+						int last_valid_offset = 0;
+						
+						for (int glyph_offset = 1; glyph_offset <= elements[i].Length; glyph_offset++)
+						{
+							this.GetCursorGeometry (frame, para_start + line_offset, glyph_offset, elements, i, ref cx2, ref cy2);
+							
+							if ((x >= cx1) &&
+								(x <= cx2))
+							{
+								int adjust = (2*x < (cx1 + cx2)) ? -1 : 0;
+								
+								position  = para_start + line_offset + glyph_offset + adjust;
+								direction = (position == 0) ? 1 : -1;
+								
+								return true;
+							}
+							
+							if ((cx2 > cx1) ||
+								(skip_invisible))
+							{
+								last_valid_offset = glyph_offset;
+							}
+							
+							cx1 = cx2;
+							cy1 = cy2;
+						}
+						
+						if (x > cx2)
+						{
+							position  = para_start + line_offset + last_valid_offset;
+							direction = 1;
+						}
+					}
+				}
+				
+				line_offset += elements[i].Length;
+			}
+			
+			return false;
+		}
+		
 		public void GetStatistics(out int paragraph_count, out int line_count)
 		{
 			paragraph_count = 0;
@@ -248,7 +373,7 @@ namespace Epsitec.Common.Text
 						{
 							//	Le curseur se trouve dans la ligne en cours d'analyse.
 							//	On tient compte de la direction de déplacement pour
-							//	déterminer le curseur se trouve à la fin de la ligne
+							//	déterminer si le curseur se trouve à la fin de la ligne
 							//	en cours ou au début de la ligne suivante.
 							
 							frame = this.FrameList[frame_index];
@@ -760,16 +885,22 @@ restart_paragraph_layout:
 		
 		private void GetCursorGeometry(int position, int cursor_offset, Cursors.FitterCursor.Element[] elements, int i, ref double x, ref double y)
 		{
-			ITextFrame frame  = this.FrameList[elements[i].FrameIndex];
-			int        length = elements[i].Length;
-			ulong[]    text   = new ulong[length];
+			ITextFrame frame = this.FrameList[elements[i].FrameIndex];
 			
+			this.GetCursorGeometry (frame, position, cursor_offset, elements, i, ref x, ref y);
+		}
+		
+		private void GetCursorGeometry(ITextFrame frame, int position, int cursor_offset, Cursors.FitterCursor.Element[] elements, int i, ref double x, ref double y)
+		{
 			//	Pour éviter de redemander à chaque fois au geometry renderer de produire
 			//	les informations de position des caractères, on utilise un cache ici :
 			
 			if ((this.geometry_cache_version.HasAnythingChanged) ||
 				(this.geometry_cache_start != position))
 			{
+				int     length = elements[i].Length;
+				ulong[] text   = new ulong[length];
+				
 				this.geometry_cache_version.Update ();
 				
 				this.story.ReadText (position, length, text);

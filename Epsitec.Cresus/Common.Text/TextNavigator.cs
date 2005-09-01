@@ -277,6 +277,60 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public void Delete(int move)
+		{
+			int p1 = this.story.GetCursorPosition (this.cursor);
+			int p2 = p1 + move;
+			
+			if (p1 < 0)
+			{
+				p1 = 0;
+			}
+			if (p1 > this.story.TextLength)
+			{
+				p1 = this.story.TextLength;
+			}
+			if (p2 < 0)
+			{
+				p2 = 0;
+			}
+			if (p2 > this.story.TextLength)
+			{
+				p2 = this.story.TextLength;
+			}
+			
+			if (p2 < p1)
+			{
+				int pp = p1;
+				p1 = p2;
+				p2 = pp;
+			}
+			
+			if (p1 == p2)
+			{
+				return;
+			}
+			
+			Cursors.TempCursor temp = new Cursors.TempCursor ();
+			
+			this.story.NewCursor (temp);
+			
+			try
+			{
+				this.story.SetCursorPosition (temp, p1);
+				this.DeleteText (temp, p2-p1);
+			}
+			finally
+			{
+				this.story.RecycleCursor (temp);
+			}
+		}
+		
+		public void MoveTo(int position, int direction)
+		{
+			this.story.SetCursorPosition (this.ActiveCursor, position, direction);
+		}
+		
 		public void MoveTo(Target target, int count)
 		{
 			System.Diagnostics.Debug.Assert (count >= 0);
@@ -563,6 +617,27 @@ namespace Epsitec.Common.Text
 			this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
 		}
 		
+		
+		public bool HitTest(ITextFrame frame, double cx, double cy, bool skip_invisible, out int position, out int direction)
+		{
+			position  = 0;
+			direction = 0;
+			
+			if (frame != null)
+			{
+				if (this.fitter.HitTestTextFrame (frame, cx, cy, skip_invisible, ref position, ref direction))
+				{
+					return true;
+				}
+				
+				if (direction != 0)
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
 		
 		public bool GetCursorGeometry(out ITextFrame frame, out double cx, out double cy, out double ascender, out double descender, out double angle)
 		{

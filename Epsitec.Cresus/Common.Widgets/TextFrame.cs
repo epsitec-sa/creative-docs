@@ -13,6 +13,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= InternalState.AutoDoubleClick;
 			
 			this.oplet_queue = new Epsitec.Common.Support.OpletQueue ();
 			
@@ -25,6 +26,8 @@ namespace Epsitec.Common.Widgets
 			this.navigator = new TextNavigator2 ();
 			
 			this.navigator.TextNavigator = this.text_navigator;
+			this.navigator.TextFrame     = this.text_frame;
+			
 			this.text_fitter.FrameList.Add (this.text_frame);
 			
 			this.text_fitter.ClearAllMarks ();
@@ -70,7 +73,6 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.navigator.ProcessMessage (message, pos))
 			{
-				System.Diagnostics.Debug.WriteLine ("Message processed: " + message.ToString ());
 				this.Invalidate ();
 				return;
 			}
@@ -83,11 +85,11 @@ namespace Epsitec.Common.Widgets
 			graphics.AddFilledRectangle (0, 0, this.Width, this.Height);
 			graphics.RenderSolid (Drawing.Color.FromBrightness (1.0));
 			
-			System.Diagnostics.Debug.WriteLine ("Paint started.");
+//-			System.Diagnostics.Debug.WriteLine ("Paint started.");
 			this.graphics = graphics;
 			this.text_fitter.RenderTextFrame (this.text_frame, this);
 			this.graphics = null;
-			System.Diagnostics.Debug.WriteLine ("Paint done.");
+//-			System.Diagnostics.Debug.WriteLine ("Paint done.");
 			
 			Text.ITextFrame frame;
 			double cx, cy, ascender, descender, angle;

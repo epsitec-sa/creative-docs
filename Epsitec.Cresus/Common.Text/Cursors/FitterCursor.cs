@@ -97,6 +97,7 @@ namespace Epsitec.Common.Text.Cursors
 			}
 		}
 		
+		
 		public static CursorInfo.Filter			Filter
 		{
 			get
