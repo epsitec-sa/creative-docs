@@ -34,6 +34,8 @@ namespace Epsitec.Common.Widgets
 			this.text_fitter.GenerateAllMarks ();
 			
 			this.navigator.TextChanged += new Support.EventHandler (this.HandleTextChanged);
+			
+			this.marker_selected = this.text_context.Markers.Selected;
 		}
 		
 		
@@ -142,23 +144,54 @@ namespace Epsitec.Common.Widgets
 			//	Vérifions d'abord que le mapping du texte vers les glyphes est
 			//	correct et correspond à quelque chose de valide :
 			
-			int offset = 0;
+			int  offset = 0;
+			bool is_in_selection = false;
 			
 			int[]    c_array;
+			ulong[]  t_array;
 			ushort[] g_array;
 			
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			while (mapping.GetNextMapping (out c_array, out g_array))
+			while (mapping.GetNextMapping (out c_array, out g_array, out t_array))
 			{
-				for (int i = 0; i < g_array.Length; i++)
+				int num_glyphs = g_array.Length;
+				int num_chars  = c_array.Length;
+				
+				System.Diagnostics.Debug.Assert ((num_glyphs == 1) || (num_chars == 1));
+				
+				double x1 = x[offset+0];
+				double x2 = x[offset+num_glyphs];
+				
+				for (int i = 0; i < num_chars; i++)
 				{
-					System.Diagnostics.Debug.Assert (g_array[i] == glyphs[offset++]);
+					if ((t_array[i] & this.marker_selected) != 0)
+					{
+						//	Le caractère considéré est sélectionné.
+						
+						if (is_in_selection == false)
+						{
+							//	C'est le premier caractère d'une tranche. Il faut
+							//	mémoriser son début :
+							
+							double xx = x1 + ((x2 - x1) * i) / num_chars;
+							System.Diagnostics.Debug.WriteLine (string.Format ("Start selection at {0:000.0}:{1:000.0}", xx, y[offset]));
+							is_in_selection = true;
+						}
+					}
+					else
+					{
+						if (is_in_selection)
+						{
+							//	Nous avons quitté une tranche sélectionnée. Il faut
+							//	mémoriser sa fin :
+							
+							double xx = x1 + ((x2 - x1) * i) / num_chars;
+							System.Diagnostics.Debug.WriteLine (string.Format ("End selection at {0:000.0}:{1:000.0}", xx, y[offset]));
+							is_in_selection = false;
+						}
+					}
 				}
-				for (int i = 0; i < c_array.Length; i++)
-				{
-					buffer.Append ((char)(c_array[i]));
-				}
+				
+				offset += num_glyphs;
 			}
 			
 			if (font.FontManagerType == OpenType.FontManagerType.System)
@@ -238,6 +271,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		private Drawing.Graphics				graphics;
+		private ulong							marker_selected;
 		
 		private Support.OpletQueue				oplet_queue;
 		private Common.Text.Context				text_context;
