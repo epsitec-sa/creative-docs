@@ -81,8 +81,20 @@ namespace Epsitec.Common.Text
 		
 		public void ClearAllMarks()
 		{
-			TextProcessor processor = new TextProcessor (this.story);
-			processor.Process (new TextProcessor.Executor (this.ExecuteClear));
+			if (this.story.TextLength == 0)
+			{
+				TextProcessor.Status status;
+				int                  length = 0;
+				
+				this.ExecuteClear (null, 0, ref length, out status);
+			}
+			else
+			{
+				TextProcessor processor = new TextProcessor (this.story);
+				processor.Process (new TextProcessor.Executor (this.ExecuteClear));
+			}
+			
+			System.Diagnostics.Debug.Assert (this.CursorCount == 0);
 			
 			this.frame_list.ClearCursorMap ();
 			this.Invalidate ();

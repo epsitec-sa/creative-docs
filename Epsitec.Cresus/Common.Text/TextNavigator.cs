@@ -1484,7 +1484,7 @@ namespace Epsitec.Common.Text
 			}
 			else if (direction < 0)
 			{
-				while (pos >= 0)
+				while (pos > 0)
 				{
 					this.story.SetCursorPosition (this.temp_cursor, pos);
 					
