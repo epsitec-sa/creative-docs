@@ -13,8 +13,8 @@ namespace Epsitec.Common.Text
 		
 		void RenderStartParagraph(Layout.Context context);
 		void RenderStartLine(Layout.Context context);
-		void Render(ITextFrame frame, OpenType.Font font, double size, Drawing.Color color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run);
-		void Render(ITextFrame frame, IGlyphRenderer glyph_renderer, Drawing.Color color, double x, double y, bool is_last_run);
+		void Render(Layout.Context layout, OpenType.Font font, double size, Drawing.Color color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run);
+		void Render(Layout.Context layout, IGlyphRenderer glyph_renderer, Drawing.Color color, double x, double y, bool is_last_run);
 		void RenderEndLine(Layout.Context context);
 		void RenderEndParagraph(Layout.Context context);
 	}

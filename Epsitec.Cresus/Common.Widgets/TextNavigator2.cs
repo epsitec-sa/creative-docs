@@ -428,8 +428,6 @@ namespace Epsitec.Common.Widgets
 				{
 					this.is_mouse_selecting = true;
 					this.text_navigator.StartSelection ();
-					
-					System.Diagnostics.Debug.WriteLine ("Started mouse selection.");
 				}
 				
 				if (this.is_mouse_selecting)
@@ -458,8 +456,6 @@ namespace Epsitec.Common.Widgets
 				this.text_navigator.EndSelection ();
 				this.is_mouse_selecting = false;
 			}
-			
-			System.Diagnostics.Debug.WriteLine ("MouseUp: " + message.ButtonDownCount);
 			
 			if (message.ButtonDownCount == 1)
 			{
@@ -494,8 +490,6 @@ namespace Epsitec.Common.Widgets
 			this.text_navigator.StartSelection ();
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
 			this.text_navigator.EndSelection ();
-			
-			System.Diagnostics.Debug.WriteLine ("Word selected : " + this.text_navigator.HasSelection);
 		}
 		
 		public void SelectLine()

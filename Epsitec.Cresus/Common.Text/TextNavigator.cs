@@ -328,7 +328,7 @@ namespace Epsitec.Common.Text
 		
 		public void MoveTo(int position, int direction)
 		{
-			this.story.SetCursorPosition (this.ActiveCursor, position, direction);
+			this.InternalSetCursor (position, direction);
 		}
 		
 		public void MoveTo(Target target, int count)
@@ -404,37 +404,7 @@ namespace Epsitec.Common.Text
 			if ((old_pos != new_pos) ||
 				(old_dir != new_dir))
 			{
-				if (Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0))
-				{
-					//	Le curseur n'a pas le droit de se trouver en début de paragraphe
-					//	si celui-ci commence par du texte automatique, car on n'a pas le
-					//	droit d'insérer de texte avant celui-ci.
-					
-					if (this.SkipOverAutoText (ref new_pos, 1))
-					{
-						new_dir = -1;
-					}
-				}
-				
-				//	Déplace le curseur "officiel" une seule fois. Ceci permet d'éviter
-				//	qu'un appel à MoveTo provoque plusieurs enregistrements dans l'oplet
-				//	queue active :
-				
-				this.story.SetCursorPosition (this.ActiveCursor, new_pos, new_dir);
-				
-				//	Met encore à jour les marques de sélection ou les informations de
-				//	format associées au curseur :
-				
-				if (this.IsSelectionActive)
-				{
-					this.UpdateSelectionMarkers ();
-				}
-				else
-				{
-					this.UpdateCurrentStylesAndProperties ();
-				}
-				
-				this.OnCursorMoved ();
+				this.InternalSetCursor (new_pos, new_dir);
 			}
 		}
 		
@@ -1307,6 +1277,43 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		private void InternalSetCursor(int new_pos, int new_dir)
+		{
+			this.story.SetCursorPosition (this.temp_cursor, new_pos, new_dir);
+
+			if (Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0))
+			{
+				//	Le curseur n'a pas le droit de se trouver en début de paragraphe
+				//	si celui-ci commence par du texte automatique, car on n'a pas le
+				//	droit d'insérer de texte avant celui-ci.
+				
+				if (this.SkipOverAutoText (ref new_pos, 1))
+				{
+					new_dir = -1;
+				}
+			}
+			
+			//	Déplace le curseur "officiel" une seule fois. Ceci permet d'éviter
+			//	qu'un appel à MoveTo provoque plusieurs enregistrements dans l'oplet
+			//	queue active :
+			
+			this.story.SetCursorPosition (this.ActiveCursor, new_pos, new_dir);
+			
+			//	Met encore à jour les marques de sélection ou les informations de
+			//	format associées au curseur :
+			
+			if (this.IsSelectionActive)
+			{
+				this.UpdateSelectionMarkers ();
+			}
+			else
+			{
+				this.UpdateCurrentStylesAndProperties ();
+			}
+			
+			this.OnCursorMoved ();
+		}
 		
 		private void InternalInsertSelectionOplet()
 		{

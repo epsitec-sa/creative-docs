@@ -137,8 +137,10 @@ namespace Epsitec.Common.Widgets
 			context.RendererNeedsTextAndGlyphs = true;
 		}
 		
-		public void Render(Epsitec.Common.Text.ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
+		public void Render(Epsitec.Common.Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
 		{
+			Epsitec.Common.Text.ITextFrame frame = layout.Frame;
+			
 			System.Diagnostics.Debug.Assert (mapping != null);
 			
 			//	Vérifions d'abord que le mapping du texte vers les glyphes est
@@ -217,9 +219,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void Render(Epsitec.Common.Text.ITextFrame frame, Epsitec.Common.Text.IGlyphRenderer glyph_renderer, Drawing.Color color, double x, double y, bool is_last_run)
+		public void Render(Epsitec.Common.Text.Layout.Context layout, Epsitec.Common.Text.IGlyphRenderer glyph_renderer, Drawing.Color color, double x, double y, bool is_last_run)
 		{
-			glyph_renderer.RenderGlyph (frame, x, y);
+			glyph_renderer.RenderGlyph (layout.Frame, x, y);
 		}
 		
 		public void RenderEndLine(Text.Layout.Context context)

@@ -494,7 +494,7 @@ advance_next:
 				//	Le rendu réel est fait par le renderer, ce qui lui permet d'appliquer
 				//	éventuellement des modifications :
 				
-				renderer.Render (context.Frame, image, color, ox, oy, is_last_run);
+				renderer.Render (context, image, color, ox, oy, is_last_run);
 				
 				ox += advance;
 				
@@ -652,7 +652,7 @@ advance_next:
 			//	Demande à ITextRenderer de faire le rendu avec les positions que
 			//	nous venons de déterminer :
 			
-			renderer.Render (context.Frame, font, font_size, color, mapping, glyphs, x_pos, y_pos, x_scale, null, is_last_run);
+			renderer.Render (context, font, font_size, color, mapping, glyphs, x_pos, y_pos, x_scale, null, is_last_run);
 		}
 		
 		
