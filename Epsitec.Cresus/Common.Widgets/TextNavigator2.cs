@@ -106,7 +106,6 @@ namespace Epsitec.Common.Widgets
 				case KeyCode.ArrowRight:	processed = this.ProcessRightArrowKey (message);	break;
 				case KeyCode.ArrowUp:		processed = this.ProcessUpArrowKey (message);		break;
 				case KeyCode.ArrowDown:		processed = this.ProcessDownArrowKey (message);		break;
-					break;
 				
 				case KeyCode.PageUp:
 				case KeyCode.PageDown:
@@ -249,6 +248,7 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessHomeKey(Message message)
 		{
+			this.ClearVerticalMoveCache ();
 			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, -1);
 			
 			if (message.IsCtrlPressed)
@@ -265,6 +265,7 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessEndKey(Message message)
 		{
+			this.ClearVerticalMoveCache ();
 			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, 1);
 			
 			if (message.IsCtrlPressed)
@@ -281,6 +282,8 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessLeftArrowKey(Message message)
 		{
+			this.ClearVerticalMoveCache ();
+			
 			if (this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, -1))
 			{
 				if (message.IsCtrlPressed == false)
@@ -303,6 +306,8 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessRightArrowKey(Message message)
 		{
+			this.ClearVerticalMoveCache ();
+			
 			if (this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, 1))
 			{
 				if (message.IsCtrlPressed == false)
@@ -329,16 +334,12 @@ namespace Epsitec.Common.Widgets
 			
 			if (message.IsCtrlPressed)
 			{
+				this.ClearVerticalMoveCache ();
 				this.text_navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 1);
 			}
 			else
 			{
-				Text.ITextFrame frame;
-				double cx, cy, ascender, descender, angle;
-				
-				this.text_navigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle);
-				
-				//	TODO: gérer le déplacement géographique
+				this.text_navigator.VerticalMove (this.GetVerticalMoveCache (), -1);
 			}
 			
 			return true;
@@ -350,16 +351,41 @@ namespace Epsitec.Common.Widgets
 			
 			if (message.IsCtrlPressed)
 			{
+				this.ClearVerticalMoveCache ();
 				this.text_navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 1);
 			}
 			else
 			{
-				//	TODO: gérer le déplacement géographique
+				this.text_navigator.VerticalMove (this.GetVerticalMoveCache (), 1);
 			}
 			
 			return true;
 		}
 		
+		
+		private void ClearVerticalMoveCache()
+		{
+			this.initial_x = double.NaN;
+		}
+		
+		private double GetVerticalMoveCache()
+		{
+			//	Si on démarre un déplacement vertical avec les touches haut/bas,
+			//	on désire se souvenir de la position [x] initale, de manière à
+			//	pouvoir sauter des lignes plus courtes en maintenant un déplacement
+			//	avec [x] constant.
+			
+			if (double.IsNaN (this.initial_x))
+			{
+				Text.ITextFrame frame;
+				double cx, cy, ascender, descender, angle;
+					
+				this.text_navigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle);
+				this.initial_x = cx;
+			}
+			
+			return this.initial_x;
+		}
 		
 		private bool ChangeSelectionModeBeforeMove(bool selection, int direction)
 		{
@@ -416,6 +442,8 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessMouseDown(Message message, Drawing.Point pos)
 		{
+			this.ClearVerticalMoveCache ();
+			
 			this.is_mouse_down = true;
 			
 			if (message.ButtonDownCount == 1)
@@ -581,6 +609,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void NotifyTextChanged()
 		{
+			this.ClearVerticalMoveCache ();
 			this.OnTextChanged ();
 		}
 		
@@ -600,6 +629,7 @@ namespace Epsitec.Common.Widgets
 		private Text.ITextFrame					text_frame;
 		
 		private int								initial_position;
+		private double							initial_x = double.NaN;
 		
 		private bool							disable_tab_key;
 		private bool							disable_return_key;

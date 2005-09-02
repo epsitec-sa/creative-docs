@@ -610,6 +610,62 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void VerticalMove(double x, int direction)
+		{
+			if (direction == 0)
+			{
+				return;
+			}
+			
+			ICursor temp = new Cursors.TempCursor ();
+			this.story.NewCursor (temp);
+			
+			try
+			{
+				int old_pos = this.CursorPosition;
+				int old_dir = this.CursorDirection;
+				
+				this.story.SetCursorPosition (temp, old_pos, old_dir);
+				
+				int new_pos;
+				int new_dir;
+				
+				ITextFrame frame;
+				double cx, cy, ascender, descender, angle;
+				
+				if (direction < 0)
+				{
+					this.MoveCursor (temp, 0, -1, new MoveCallback (this.IsLineStart), out new_pos, out new_dir);
+					this.story.SetCursorPosition (temp, new_pos, new_dir);
+					this.MoveCursor (temp, -1, out new_pos, out new_dir);
+					this.story.SetCursorPosition (temp, new_pos, new_dir);
+					
+					if ((this.GetCursorGeometry (temp, out frame, out cx, out cy, out ascender, out descender, out angle)) &&
+						(this.HitTest (frame, x, cy, false, out new_pos, out new_dir)))
+					{
+						this.MoveTo (new_pos, new_dir);
+					}
+				}
+				else
+				{
+					this.MoveCursor (temp, 0, 1, new MoveCallback (this.IsLineEnd), out new_pos, out new_dir);
+					this.story.SetCursorPosition (temp, new_pos, new_dir);
+					this.MoveCursor (temp, 1, out new_pos, out new_dir);
+					this.story.SetCursorPosition (temp, new_pos, new_dir);
+					
+					if ((this.GetCursorGeometry (temp, out frame, out cx, out cy, out ascender, out descender, out angle)) &&
+						(this.HitTest (frame, x, cy, false, out new_pos, out new_dir)))
+					{
+						this.MoveTo (new_pos, new_dir);
+					}
+				}
+			}
+			finally
+			{
+				this.story.RecycleCursor (temp);
+			}
+		}
+		
 		public bool GetCursorGeometry(out ITextFrame frame, out double cx, out double cy, out double ascender, out double descender, out double angle)
 		{
 			return this.GetCursorGeometry (this.ActiveCursor, out frame, out cx, out cy, out ascender, out descender, out angle);
