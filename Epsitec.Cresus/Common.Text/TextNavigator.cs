@@ -344,11 +344,11 @@ namespace Epsitec.Common.Text
 			switch (target)
 			{
 				case Target.CharacterNext:
-					this.MoveCursor (count, out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, out new_pos, out new_dir);
 					break;
 				
 				case Target.CharacterPrevious:
-					this.MoveCursor (-count, out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, -count, out new_pos, out new_dir);
 					break;
 				
 				case Target.TextStart:
@@ -362,27 +362,27 @@ namespace Epsitec.Common.Text
 					break;
 					
 				case Target.ParagraphStart:
-					this.MoveCursor (count, -1, new MoveCallback (this.IsParagraphStart), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, -1, new MoveCallback (this.IsParagraphStart), out new_pos, out new_dir);
 					break;
 				
 				case Target.ParagraphEnd:
-					this.MoveCursor (count, 1, new MoveCallback (this.IsParagraphEnd), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, 1, new MoveCallback (this.IsParagraphEnd), out new_pos, out new_dir);
 					break;
 				
 				case Target.LineStart:
-					this.MoveCursor (count, -1, new MoveCallback (this.IsLineStart), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, -1, new MoveCallback (this.IsLineStart), out new_pos, out new_dir);
 					break;
 				
 				case Target.LineEnd:
-					this.MoveCursor (count, 1, new MoveCallback (this.IsLineEnd), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, 1, new MoveCallback (this.IsLineEnd), out new_pos, out new_dir);
 					break;
 				
 				case Target.WordStart:
-					this.MoveCursor (count, -1, new MoveCallback (this.IsWordStart), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, -1, new MoveCallback (this.IsWordStart), out new_pos, out new_dir);
 					break;
 				
 				case Target.WordEnd:
-					this.MoveCursor (count, 1, new MoveCallback (this.IsWordEnd), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, 1, new MoveCallback (this.IsWordEnd), out new_pos, out new_dir);
 					
 					//	Si en marche avant, on arrive à la fin d'une ligne qui n'est pas
 					//	une fin de paragraphe, alors il faut changer la direction, afin
@@ -609,14 +609,20 @@ namespace Epsitec.Common.Text
 			return false;
 		}
 		
+		
 		public bool GetCursorGeometry(out ITextFrame frame, out double cx, out double cy, out double ascender, out double descender, out double angle)
+		{
+			return this.GetCursorGeometry (this.ActiveCursor, out frame, out cx, out cy, out ascender, out descender, out angle);
+		}
+		
+		public bool GetCursorGeometry(ICursor cursor, out ITextFrame frame, out double cx, out double cy, out double ascender, out double descender, out double angle)
 		{
 			this.UpdateCurrentStylesAndProperties ();
 			
 			int para_line;
 			int line_char;
 			
-			if (this.fitter.GetCursorGeometry (this.ActiveCursor, out frame, out cx, out cy, out para_line, out line_char))
+			if (this.fitter.GetCursorGeometry (cursor, out frame, out cx, out cy, out para_line, out line_char))
 			{
 				Property[] properties = this.current_accumulator.AccumulatedProperties;
 				
@@ -711,7 +717,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected virtual bool MoveCursor(int distance, out int new_pos, out int new_dir)
+		protected virtual bool MoveCursor(ICursor cursor, int distance, out int new_pos, out int new_dir)
 		{
 			int count;
 			int direction;
@@ -732,7 +738,7 @@ namespace Epsitec.Common.Text
 			Internal.TextTable text_table = this.story.TextTable;
 			StyleList          style_list = context.StyleList;
 			
-			int pos = this.story.GetCursorPosition (this.ActiveCursor);
+			int pos = this.story.GetCursorPosition (cursor);
 			
 			this.story.SetCursorPosition (this.temp_cursor, pos);
 			
@@ -840,11 +846,11 @@ namespace Epsitec.Common.Text
 			return moved > 0;
 		}
 		
-		protected virtual bool MoveCursor(int count, int direction, MoveCallback callback, out int new_pos, out int new_dir)
+		protected virtual bool MoveCursor(ICursor cursor, int count, int direction, MoveCallback callback, out int new_pos, out int new_dir)
 		{
 			int moved   = 0;
-			int old_pos = this.CursorPosition;
-			int old_dir = this.CursorDirection;
+			int old_pos = this.story.GetCursorPosition (cursor);
+			int old_dir = this.story.GetCursorDirection (cursor);
 			
 			Context            context    = this.TextContext;
 			Internal.TextTable text_table = this.story.TextTable;

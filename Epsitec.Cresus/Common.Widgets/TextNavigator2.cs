@@ -104,8 +104,8 @@ namespace Epsitec.Common.Widgets
 				
 				case KeyCode.ArrowLeft:		processed = this.ProcessLeftArrowKey (message);		break;
 				case KeyCode.ArrowRight:	processed = this.ProcessRightArrowKey (message);	break;
-				case KeyCode.ArrowUp:
-				case KeyCode.ArrowDown:
+				case KeyCode.ArrowUp:		processed = this.ProcessUpArrowKey (message);		break;
+				case KeyCode.ArrowDown:		processed = this.ProcessDownArrowKey (message);		break;
 					break;
 				
 				case KeyCode.PageUp:
@@ -318,6 +318,43 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				this.text_navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);
+			}
+			
+			return true;
+		}
+		
+		private bool ProcessUpArrowKey(Message message)
+		{
+			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, -1);
+			
+			if (message.IsCtrlPressed)
+			{
+				this.text_navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 1);
+			}
+			else
+			{
+				Text.ITextFrame frame;
+				double cx, cy, ascender, descender, angle;
+				
+				this.text_navigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle);
+				
+				//	TODO: gérer le déplacement géographique
+			}
+			
+			return true;
+		}
+		
+		private bool ProcessDownArrowKey(Message message)
+		{
+			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, 1);
+			
+			if (message.IsCtrlPressed)
+			{
+				this.text_navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 1);
+			}
+			else
+			{
+				//	TODO: gérer le déplacement géographique
 			}
 			
 			return true;

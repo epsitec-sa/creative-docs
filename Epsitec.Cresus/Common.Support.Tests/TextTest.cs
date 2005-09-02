@@ -127,20 +127,20 @@ namespace Epsitec.Common.Support
 			navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);
 			Assert.AreEqual (3, navigator.CursorPosition);
 			
-			navigator.Insert (" xyz   qrs");
+			navigator.Insert (" xyz   qrs");					//	"abc xyz   qrs|\ndef"
 			Assert.AreEqual (13, navigator.CursorPosition);
 			
 			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 0);
 			Assert.AreEqual (13, navigator.CursorPosition);
 			
-			navigator.MoveTo (Text.TextNavigator.Target.WordStart, 0);
-			Assert.AreEqual (10, navigator.CursorPosition);
+			navigator.MoveTo (Text.TextNavigator.Target.WordStart, 1);
+			Assert.AreEqual (10, navigator.CursorPosition);		//	"abc xyz   |qrs\ndef"
 			
 			navigator.MoveTo (Text.TextNavigator.Target.WordStart, 0);
 			Assert.AreEqual (10, navigator.CursorPosition);
 			
 			navigator.MoveTo (Text.TextNavigator.Target.WordStart, 1);
-			Assert.AreEqual (4, navigator.CursorPosition);
+			Assert.AreEqual (4, navigator.CursorPosition);		//	"abc |xyz   qrs\ndef"
 			
 			navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 0);
 			Assert.AreEqual (4, navigator.CursorPosition);
