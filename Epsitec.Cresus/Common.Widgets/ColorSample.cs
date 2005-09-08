@@ -70,6 +70,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public double							MarginSource
+		{
+			// Marge lorsque l'origine des couleurs est affichée.
+			
+			get
+			{
+				return this.marginSource;
+			}
+
+			set
+			{
+				this.marginSource = value;
+			}
+		}
+
 		
 		// Lie l'échantillon à une couleur dans une liste.
 		public void AttachColorCollection(Drawing.ColorCollection list, int index)
@@ -275,7 +290,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.possibleSource && this.ActiveState == WidgetState.ActiveYes )
 			{
 				Drawing.Rectangle r = rect;
-				r.Inflate(4);
+				r.Inflate(this.marginSource);
 				graphics.AddFilledRectangle(r);
 				graphics.RenderSolid(adorner.ColorCaption);
 			}
@@ -368,5 +383,6 @@ namespace Epsitec.Common.Widgets
 		protected int							collectionIndex;
 		protected Drawing.RichColor				color;
 		protected bool							possibleSource = false;
+		protected double						marginSource = 4;
 	}
 }

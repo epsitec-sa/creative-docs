@@ -9,6 +9,7 @@ namespace Epsitec.Common.Document
 	public delegate void PropertyEventHandler(System.Collections.ArrayList propertyList);
 	public delegate void AggregateEventHandler(System.Collections.ArrayList aggregateList);
 	public delegate void RedrawEventHandler(Viewer viewer, Rectangle rect);
+	public delegate void TextRulerColorEventHandler(Common.Widgets.TextRuler ruler);
 
 	/// <summary>
 	/// Summary description for Notifier.
@@ -334,6 +335,19 @@ namespace Epsitec.Common.Document
 			Window window = this.document.Modifier.ActiveViewer.Window;
 			if ( window == null )  return;
 			window.AsyncNotify();
+		}
+
+		
+		// Indique que la couleur dans une règle a été cliquée.
+		public void NotifyTextRulerColorClicked(Common.Widgets.TextRuler ruler)
+		{
+			this.OnTextRulerColorClicked(ruler);
+		}
+
+		// Indique que la couleur du texte dans une règle a changé.
+		public void NotifyTextRulerColorChanged(Common.Widgets.TextRuler ruler)
+		{
+			this.OnTextRulerColorChanged(ruler);
 		}
 
 		
@@ -728,6 +742,22 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnTextRulerColorClicked(Common.Widgets.TextRuler ruler)
+		{
+			if ( this.TextRulerColorClicked != null )  // qq'un écoute ?
+			{
+				this.TextRulerColorClicked(ruler);
+			}
+		}
+
+		protected void OnTextRulerColorChanged(Common.Widgets.TextRuler ruler)
+		{
+			if ( this.TextRulerColorChanged != null )  // qq'un écoute ?
+			{
+				this.TextRulerColorChanged(ruler);
+			}
+		}
+
 
 		public event SimpleEventHandler			DocumentChanged;
 		public event SimpleEventHandler			MouseChanged;
@@ -756,6 +786,8 @@ namespace Epsitec.Common.Document
 		public event AggregateEventHandler		AggregateChanged;
 		public event SimpleEventHandler			SelNamesChanged;
 		public event RedrawEventHandler			DrawChanged;
+		public event TextRulerColorEventHandler	TextRulerColorClicked;
+		public event TextRulerColorEventHandler	TextRulerColorChanged;
 
 		protected Document						document;
 		protected bool							enable = true;

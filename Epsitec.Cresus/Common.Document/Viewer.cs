@@ -67,6 +67,8 @@ namespace Epsitec.Common.Document
 				this.textRuler.AllFonts = false;
 			}
 			this.textRuler.Changed += new EventHandler(this.HandleRulerChanged);
+			this.textRuler.ColorClicked += new EventHandler(this.HandleRulerColorClicked);
+			this.textRuler.ColorNavigatorChanged += new EventHandler(this.HandleRulerColorNavigatorChanged);
 
 			this.hotSpotHandle = new Objects.Handle(this.document);
 			this.hotSpotHandle.Type = Objects.HandleType.Center;
@@ -81,6 +83,8 @@ namespace Epsitec.Common.Document
 			if ( disposing )
 			{
 				this.textRuler.Changed -= new EventHandler(this.HandleRulerChanged);
+				this.textRuler.ColorClicked -= new EventHandler(this.HandleRulerColorClicked);
+				this.textRuler.ColorNavigatorChanged -= new EventHandler(this.HandleRulerColorNavigatorChanged);
 				this.autoScrollTimer.TimeElapsed -= new EventHandler(this.HandleTimeElapsed);
 				this.autoScrollTimer.Dispose();
 				this.autoScrollTimer = null;
@@ -2057,6 +2061,20 @@ namespace Epsitec.Common.Document
 			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
 			if ( editObject == null )  return;
 			this.document.Notifier.NotifyArea(editObject.BoundingBox);
+		}
+
+		// Appelé lorsque la couleur dans la règle est cliquée.
+		private void HandleRulerColorClicked(object sender)
+		{
+			Common.Widgets.TextRuler ruler = sender as Common.Widgets.TextRuler;
+			this.document.Notifier.NotifyTextRulerColorClicked(ruler);
+		}
+
+		// Appelé lorsque la couleur dans la règle a changé suite à une navigation.
+		private void HandleRulerColorNavigatorChanged(object sender)
+		{
+			Common.Widgets.TextRuler ruler = sender as Common.Widgets.TextRuler;
+			this.document.Notifier.NotifyTextRulerColorChanged(ruler);
 		}
 
 		// Positionne la règle en fonction de l'éventuel objet en cours d'édition.

@@ -444,6 +444,8 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleOriginColorChanged(object sender, bool lastOrigin)
 		{
 			this.originColorPanel = null;
+			this.OriginColorRulerDeselect();
+
 			Widget wSender = sender as Widget;
 			Color backColor = Color.Empty;
 
@@ -484,17 +486,65 @@ namespace Epsitec.Common.Document.Containers
 			}
 		}
 
+		// La couleur dans la règle d'un texte a été cliquée.
+		public void TextRulerColorClicked(Common.Widgets.TextRuler ruler)
+		{
+			this.originColorPanel = null;
+			this.originColorRuler = ruler;
+			this.originColorRuler.ColorSample.ActiveState = WidgetState.ActiveYes;
+
+			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			{
+				Panels.Abstract panel = widget as Panels.Abstract;
+				if ( panel == null )  continue;
+
+				panel.OriginColorDeselect();
+			}
+
+			this.colorSelector.SetVisible(true);
+			this.colorSelector.BackColor = Color.Empty;
+			this.ignoreColorChanged = true;
+			this.colorSelector.Color = this.originColorRuler.FontRichColor;
+			this.ignoreColorChanged = false;
+		}
+
+		// La couleur dans la règle d'un texte a changé.
+		public void TextRulerColorChanged(Common.Widgets.TextRuler ruler)
+		{
+			if ( this.originColorRuler == null )  return;
+
+			this.ignoreColorChanged = true;
+			this.colorSelector.Color = this.originColorRuler.FontRichColor;
+			this.ignoreColorChanged = false;
+		}
+
 		// Couleur changée dans la roue.
 		private void HandleColorSelectorChanged(object sender)
 		{
-			if ( this.ignoreColorChanged || this.originColorPanel == null )  return;
-			this.originColorPanel.OriginColorChange(this.colorSelector.Color);
+			if ( this.ignoreColorChanged )  return;
+
+			if ( this.originColorPanel != null )
+			{
+				this.originColorPanel.OriginColorChange(this.colorSelector.Color);
+			}
+
+			if ( this.originColorRuler != null )
+			{
+				this.originColorRuler.FontRichColor = this.colorSelector.Color;
+
+				Objects.Abstract edit = this.document.Modifier.RetEditObject();
+				if ( edit != null )
+				{
+					this.document.Notifier.NotifyArea(edit.EditSelectBox);
+				}
+			}
 		}
 
 		// Fermer la roue.
 		private void HandleColorSelectorClosed(object sender)
 		{
 			this.originColorPanel = null;
+			this.OriginColorRulerDeselect();
 			this.originColorType = Properties.Type.None;
 
 			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
@@ -506,6 +556,15 @@ namespace Epsitec.Common.Document.Containers
 
 			this.colorSelector.SetVisible(false);
 			this.colorSelector.BackColor = Color.Empty;
+		}
+
+		// Désélectionne l'origine de couleurs possibles dans la règle.
+		protected void OriginColorRulerDeselect()
+		{
+			if ( this.originColorRuler == null )  return;
+
+			this.originColorRuler.ColorSample.ActiveState = WidgetState.ActiveNo;
+			this.originColorRuler = null;
 		}
 
 
@@ -647,6 +706,7 @@ namespace Epsitec.Common.Document.Containers
 		protected Panels.Abstract				originColorPanel = null;
 		protected Properties.Type				originColorType = Properties.Type.None;
 		protected int							originColorRank = -1;
+		protected Common.Widgets.TextRuler		originColorRuler = null;
 
 		protected bool							ignoreColorChanged = false;
 		protected bool							ignoreChanged = false;

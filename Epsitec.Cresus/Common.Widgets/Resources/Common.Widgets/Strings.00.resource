@@ -64,7 +64,7 @@
 	<data name="TextNavigator.Action.Modify">Modification du texte</data>
 	<data name="TextNavigator.Action.Insert">Insertion de caractères</data>
 	<data name="TextNavigator.Action.Delete">Suppression de caractères</data>
-	<data name="TextNavigator.Action.Style">Changement de style du texte</data>
+	<data name="TextNavigator.Action.Style">Changement de l'aspect du texte</data>
 	<data name="TextNavigator.Action.Tab">Modification d'un tabulateur</data>
 
 	<data name="TextRuler.Tab">Choix du type de tabulateur</data>
@@ -76,16 +76,8 @@
 	<data name="TextRuler.Bold">Gras</data>
 	<data name="TextRuler.Italic">Italique</data>
 	<data name="TextRuler.Underlined">Souligné</data>
-	<data name="TextRuler.Color.List">Couleur</data>
-	<data name="TextRuler.Color.Default">Par défaut...</data>
-	<data name="TextRuler.Color.Black">Noir</data>
-	<data name="TextRuler.Color.Red">Rouge</data>
-	<data name="TextRuler.Color.Blue">Bleu</data>
-	<data name="TextRuler.Color.Purple">Magenta</data>
-	<data name="TextRuler.Color.Green">Vert</data>
-	<data name="TextRuler.Color.Cyan">Cyan</data>
-	<data name="TextRuler.Color.Yellow">Jaune</data>
-	<data name="TextRuler.Color.White">Blanc</data>
+	<data name="TextRuler.DefaultColor">Couleur par défaut</data>
+	<data name="TextRuler.Color">Couleur</data>
 	<data name="TextRuler.ListNum">Numérotation</data>
 	<data name="TextRuler.ListFix">Puces</data>
 	<data name="TextRuler.Tooltip.Unit">mm</data>

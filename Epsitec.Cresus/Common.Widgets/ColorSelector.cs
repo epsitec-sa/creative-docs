@@ -192,6 +192,11 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
+				if ( value.IsEmpty )
+				{
+					value = Drawing.RichColor.FromARGB(0, 1,1,1);
+				}
+
 				if ( this.color != value )
 				{
 					System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
@@ -440,7 +445,7 @@ namespace Epsitec.Common.Widgets
 			bool visibleFieldsCMYK = visibleFields;
 			bool visibleFieldsGray = visibleFields;
 
-			if ( this.Color.ColorSpace == Drawing.ColorSpace.RGB  )
+			if ( this.Color.ColorSpace == Drawing.ColorSpace.RGB )
 			{
 				visibleFieldsCMYK = false;
 				visibleFieldsGray = false;

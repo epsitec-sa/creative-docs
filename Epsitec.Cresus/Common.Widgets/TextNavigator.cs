@@ -646,11 +646,15 @@ namespace Epsitec.Common.Widgets
 			this.mouseSelZone = false;
 			if ( this.textLayout.DetectIndex(pos, false, out index, out after) )
 			{
-				this.context.CursorFrom  = index;
-				this.context.CursorTo    = index;
-				this.context.CursorAfter = after;
-				this.textLayout.DefineCursorPosX(this.context);
-				this.OnCursorChanged(true);
+				if ( this.context.CursorFrom  != index ||
+					 this.context.CursorTo    != index )
+				{
+					this.context.CursorFrom  = index;
+					this.context.CursorTo    = index;
+					this.context.CursorAfter = after;
+					this.textLayout.DefineCursorPosX(this.context);
+					this.OnCursorChanged(true);
+				}
 				return true;
 			}
 			
@@ -665,10 +669,13 @@ namespace Epsitec.Common.Widgets
 			if ( this.textLayout.DetectIndex(pos, true, out index, out after) )
 			{
 				this.mouseSelZone = true;
-				this.context.CursorTo    = index;
-				this.context.CursorAfter = after;
-				this.textLayout.DefineCursorPosX(this.context);
-				this.OnCursorChanged(true);
+				if ( this.context.CursorTo != index )
+				{
+					this.context.CursorTo    = index;
+					this.context.CursorAfter = after;
+					this.textLayout.DefineCursorPosX(this.context);
+					this.OnCursorChanged(true);
+				}
 			}
 		}
 
@@ -700,9 +707,12 @@ namespace Epsitec.Common.Widgets
 				bool after;
 				if ( this.textLayout.DetectIndex(pos, this.mouseSelZone, out index, out after) )
 				{
-					this.context.CursorTo    = index;
-					this.context.CursorAfter = after;
-					this.textLayout.DefineCursorPosX(this.context);
+					if ( this.context.CursorTo != index )
+					{
+						this.context.CursorTo    = index;
+						this.context.CursorAfter = after;
+						this.textLayout.DefineCursorPosX(this.context);
+					}
 				}
 			}
 

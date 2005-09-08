@@ -648,12 +648,10 @@ namespace Epsitec.Common.Document.Objects
 				Point c1, c2;
 				if ( this.textLayout.FindTextCursor(this.textNavigator.Context, out c1, out c2) )
 				{
-					if ( active )
-					{
-						graphics.LineWidth = 1.0/drawingContext.ScaleX;
-						graphics.AddLine(c1, c2);
-						graphics.RenderSolid(DrawingContext.ColorCursorEdit);
-					}
+					graphics.LineWidth = 1.0/drawingContext.ScaleX;
+					graphics.AddLine(c1, c2);
+					graphics.RenderSolid(DrawingContext.ColorCursorEdit(active));
+
 					c1 = this.transform.TransformDirect(c1);
 					c2 = this.transform.TransformDirect(c2);
 					this.ComputeAutoScroll(c1, c2);

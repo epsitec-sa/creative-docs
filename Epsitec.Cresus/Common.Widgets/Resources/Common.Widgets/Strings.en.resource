@@ -64,7 +64,7 @@
 	<data name="TextNavigator.Action.Modify">Text modification</data>
 	<data name="TextNavigator.Action.Insert">Text insertion</data>
 	<data name="TextNavigator.Action.Delete">Text deletion</data>
-	<data name="TextNavigator.Action.Style">Style change</data>
+	<data name="TextNavigator.Action.Style">Text change</data>
 	<data name="TextNavigator.Action.Tab">Tabulator change</data>
 
 	<data name="TextRuler.Tab">Select Tab Type</data>
@@ -76,16 +76,8 @@
 	<data name="TextRuler.Bold">Bold</data>
 	<data name="TextRuler.Italic">Italic</data>
 	<data name="TextRuler.Underlined">Underline</data>
-	<data name="TextRuler.Color.List">Color</data>
-	<data name="TextRuler.Color.Default">Default...</data>
-	<data name="TextRuler.Color.Black">Black</data>
-	<data name="TextRuler.Color.Red">Red</data>
-	<data name="TextRuler.Color.Blue">Blue</data>
-	<data name="TextRuler.Color.Purple">Magenta</data>
-	<data name="TextRuler.Color.Green">Green</data>
-	<data name="TextRuler.Color.Cyan">Cyan</data>
-	<data name="TextRuler.Color.Yellow">Yellow</data>
-	<data name="TextRuler.Color.White">White</data>
+	<data name="TextRuler.DefaultColor">Default color</data>
+	<data name="TextRuler.Color">Color</data>
 	<data name="TextRuler.ListNum">Numbered List</data>
 	<data name="TextRuler.ListFix">Bullets</data>
 	<data name="TextRuler.Tooltip.Unit">mm</data>

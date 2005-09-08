@@ -1653,13 +1653,10 @@ namespace Epsitec.Common.Document.Objects
 					 this.edited &&
 					 rank == this.textNavigator.Context.CursorTo )
 				{
-					if ( active )
-					{
-						Graphics graphics = port as Graphics;
-						graphics.LineWidth = 1.0/drawingContext.ScaleX;
-						graphics.AddLine(ptl, pbl);
-						graphics.RenderSolid(DrawingContext.ColorCursorEdit);
-					}
+					Graphics graphics = port as Graphics;
+					graphics.LineWidth = 1.0/drawingContext.ScaleX;
+					graphics.AddLine(ptl, pbl);
+					graphics.RenderSolid(DrawingContext.ColorCursorEdit(active));
 					c1 = ptl;
 					c2 = pbl;
 				}
@@ -1672,13 +1669,10 @@ namespace Epsitec.Common.Document.Objects
 				 this.edited &&
 				 this.advanceRank-1 == this.textNavigator.Context.CursorTo )
 			{
-				if ( active )
-				{
-					Graphics graphics = port as Graphics;
-					graphics.LineWidth = 1.0/drawingContext.ScaleX;
-					graphics.AddLine(lastTop, lastBottom);
-					graphics.RenderSolid(DrawingContext.ColorCursorEdit);
-				}
+				Graphics graphics = port as Graphics;
+				graphics.LineWidth = 1.0/drawingContext.ScaleX;
+				graphics.AddLine(lastTop, lastBottom);
+				graphics.RenderSolid(DrawingContext.ColorCursorEdit(active));
 				c1 = lastTop;
 				c2 = lastBottom;
 			}

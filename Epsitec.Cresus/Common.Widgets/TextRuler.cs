@@ -59,20 +59,18 @@ namespace Epsitec.Common.Widgets
 			this.buttonUnderlined.Clicked += new MessageEventHandler(this.HandleButtonUnderlinedClicked);
 			ToolTip.Default.SetToolTip(this.buttonUnderlined, Res.Strings.TextRuler.Underlined);
 
-			this.fieldFontColor = new TextFieldCombo(this);
+			this.fieldFontColor = new ColorSample(this);
 			this.fieldFontColor.AutoFocus = false;
-			this.fieldFontColor.IsReadOnly = true;
-			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Default);
-			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Black);
-			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Red);
-			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Blue);
-			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Purple);
-			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Green);
-			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Cyan);
-			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.Yellow);
-			this.fieldFontColor.Items.Add(Res.Strings.TextRuler.Color.White);
-			this.fieldFontColor.SelectedIndexChanged += new Support.EventHandler(this.HandleFieldFontColorChanged);
-			ToolTip.Default.SetToolTip(this.fieldFontColor, Res.Strings.TextRuler.Color.List);
+			this.fieldFontColor.PossibleSource = true;
+			this.fieldFontColor.MarginSource = 2;
+			this.fieldFontColor.Clicked += new MessageEventHandler(this.HandleFieldFontColorClicked);
+			ToolTip.Default.SetToolTip(this.fieldFontColor, Res.Strings.TextRuler.Color);
+
+			this.nothingButton = new GlyphButton(this);
+			this.nothingButton.AutoFocus = false;
+			this.nothingButton.GlyphShape = Widgets.GlyphShape.Close;
+			this.nothingButton.Clicked += new MessageEventHandler(this.HandleNothingButtonClicked);
+			ToolTip.Default.SetToolTip(this.nothingButton, Res.Strings.TextRuler.DefaultColor);
 
 			this.buttonListNum = new IconButton(this);
 			this.buttonListNum.AutoFocus = false;
@@ -128,7 +126,7 @@ namespace Epsitec.Common.Widgets
 				}
 				if ( this.fieldFontColor != null )
 				{
-					this.fieldFontColor.SelectedIndexChanged -= new Support.EventHandler(this.HandleFieldFontColorChanged);
+					this.fieldFontColor.Clicked -= new MessageEventHandler(this.HandleFieldFontColorClicked);
 				}
 				if ( this.buttonListNum != null )
 				{
@@ -206,7 +204,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.listCapability != value )
 				{
 					this.listCapability = value;
-					this.UpdateButtons();  // màj. les widgets
+					this.UpdateButtons(false);  // màj. les widgets
 					this.UpdateGeometry();
 					this.Invalidate();
 				}
@@ -322,6 +320,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public ColorSample						ColorSample
+		{
+			get
+			{
+				return this.fieldFontColor;
+			}
+		}
+
 		public string							FontName
 		{
 			// Nom de la fonte.
@@ -335,7 +341,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.fontName != value )
 				{
 					this.fontName = value;
-					this.UpdateButtons();  // màj. les widgets
+					this.UpdateButtons(false);  // màj. les widgets
 
 					if ( this.textNavigator != null )
 					{
@@ -363,7 +369,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.fontScale != value )
 				{
 					this.fontScale = value;
-					this.UpdateButtons();  // màj. les widgets
+					this.UpdateButtons(false);  // màj. les widgets
 
 					if ( this.textNavigator != null )
 					{
@@ -391,11 +397,13 @@ namespace Epsitec.Common.Widgets
 				if ( this.fontColor != value )
 				{
 					this.fontColor = value;
-					this.UpdateButtons();  // màj. les widgets
+					this.UpdateButtons(false);  // màj. les widgets
 
 					if ( this.textNavigator != null )
 					{
+						this.ignoreColorChange = true;
 						this.textNavigator.SelectionFontRichColor = this.fontColor;
+						this.ignoreColorChange = false;
 					}
 
 					if ( this.textField != null )
@@ -419,7 +427,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.fontColor.Basic != value )
 				{
 					this.fontColor.Basic = value;
-					this.UpdateButtons();  // màj. les widgets
+					this.UpdateButtons(false);  // màj. les widgets
 
 					if ( this.textNavigator != null )
 					{
@@ -447,7 +455,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.bold != value )
 				{
 					this.bold = value;
-					this.UpdateButtons();  // màj. les widgets
+					this.UpdateButtons(false);  // màj. les widgets
 
 					if ( this.textNavigator != null )
 					{
@@ -475,7 +483,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.italic != value )
 				{
 					this.italic = value;
-					this.UpdateButtons();  // màj. les widgets
+					this.UpdateButtons(false);  // màj. les widgets
 
 					if ( this.textNavigator != null )
 					{
@@ -503,7 +511,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.underlined != value )
 				{
 					this.underlined = value;
-					this.UpdateButtons();  // màj. les widgets
+					this.UpdateButtons(false);  // màj. les widgets
 
 					if ( this.textNavigator != null )
 					{
@@ -531,7 +539,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.list != value )
 				{
 					this.list = value;
-					this.UpdateButtons();  // màj. les widgets
+					this.UpdateButtons(false);  // màj. les widgets
 
 					if ( this.textNavigator != null )
 					{
@@ -869,12 +877,20 @@ namespace Epsitec.Common.Widgets
 			this.OnChanged();
 		}
 
-		private void HandleFieldFontColorChanged(object sender)
+		private void HandleNothingButtonClicked(object sender, MessageEventArgs e)
 		{
-			// Combo pour la couleur de la fonte changé.
+			// Bouton "couleur par défaut" cliqué.
 			if ( this.silent )  return;
-			this.FontRichColor = this.ComboSelectedColor(this.fieldFontColor);
+			this.FontRichColor = Drawing.RichColor.Empty;
 			this.OnChanged();
+			this.OnColorNavigatorChanged();
+		}
+
+		private void HandleFieldFontColorClicked(object sender, MessageEventArgs e)
+		{
+			// Echantillon pour la couleur de la fonte cliqué.
+			if ( this.silent )  return;
+			this.OnColorClicked();
 		}
 
 		private void HandleButtonListNumClicked(object sender, MessageEventArgs e)
@@ -906,10 +922,10 @@ namespace Epsitec.Common.Widgets
 			this.fontColor  = this.textNavigator.SelectionFontRichColor;
 			this.list       = this.textNavigator.SelectionList;
 
-			this.UpdateButtons();  // màj. les widgets
+			this.UpdateButtons(true);  // màj. les widgets
 		}
 
-		protected void UpdateButtons()
+		protected void UpdateButtons(bool navigation)
 		{
 			// Met à jour les widgets de la règle en fonction des données.
 			this.silent = true;
@@ -919,7 +935,16 @@ namespace Epsitec.Common.Widgets
 			this.ButtonActive(this.buttonBold,       this.bold      );
 			this.ButtonActive(this.buttonItalic,     this.italic    );
 			this.ButtonActive(this.buttonUnderlined, this.underlined);
-			this.ComboSelectedColor(this.fieldFontColor, this.fontColor);
+
+			if ( this.fieldFontColor.Color != this.fontColor )
+			{
+				this.fieldFontColor.Color = this.fontColor;
+				if ( navigation && !this.ignoreColorChange )
+				{
+					this.OnColorNavigatorChanged();
+				}
+			}
+
 			this.ButtonActive(this.buttonListNum, this.list == Drawing.TextListType.Num);
 			this.ButtonActive(this.buttonListFix, this.list == Drawing.TextListType.Fix);
 			this.buttonListNum.SetVisible(this.listCapability);
@@ -1004,35 +1029,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected void ComboSelectedColor(TextFieldCombo combo, Drawing.RichColor color)
-		{
-			// Modifie la couleur d'un combo.
-			combo.SelectedIndex = 0;
-			if ( color == Drawing.RichColor.FromCMYK(0,0,0,1) )  combo.SelectedIndex = 1;
-			if ( color == Drawing.RichColor.FromRGB(1,0,0)    )  combo.SelectedIndex = 2;
-			if ( color == Drawing.RichColor.FromRGB(0,0,1)    )  combo.SelectedIndex = 3;
-			if ( color == Drawing.RichColor.FromRGB(1,0,1)    )  combo.SelectedIndex = 4;
-			if ( color == Drawing.RichColor.FromRGB(0,1,0)    )  combo.SelectedIndex = 5;
-			if ( color == Drawing.RichColor.FromRGB(0,1,1)    )  combo.SelectedIndex = 6;
-			if ( color == Drawing.RichColor.FromRGB(1,1,0)    )  combo.SelectedIndex = 7;
-			if ( color == Drawing.RichColor.FromRGB(1,1,1)    )  combo.SelectedIndex = 8;
-		}
-
-		protected Drawing.RichColor ComboSelectedColor(TextFieldCombo combo)
-		{
-			// Retourne la couleur d'un combo.
-			if ( combo.SelectedIndex == 1 )  return Drawing.RichColor.FromCMYK(0,0,0,1);
-			if ( combo.SelectedIndex == 2 )  return Drawing.RichColor.FromRGB(1,0,0);
-			if ( combo.SelectedIndex == 3 )  return Drawing.RichColor.FromRGB(0,0,1);
-			if ( combo.SelectedIndex == 4 )  return Drawing.RichColor.FromRGB(1,0,1);
-			if ( combo.SelectedIndex == 5 )  return Drawing.RichColor.FromRGB(0,1,0);
-			if ( combo.SelectedIndex == 6 )  return Drawing.RichColor.FromRGB(0,1,1);
-			if ( combo.SelectedIndex == 7 )  return Drawing.RichColor.FromRGB(1,1,0);
-			if ( combo.SelectedIndex == 8 )  return Drawing.RichColor.FromRGB(1,1,1);
-			return Drawing.RichColor.Empty;
-		}
-
-		
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
@@ -1075,6 +1071,10 @@ namespace Epsitec.Common.Widgets
 
 			rect.Offset(rect.Width+3, 0);
 			rect.Width = TextRuler.buttonFontColorWidth;
+			Drawing.Rectangle r = rect;
+			r.Width  = 10;
+			r.Height = 10;
+			this.nothingButton.Bounds = r;
 			this.fieldFontColor.Bounds = rect;
 
 			rect.Offset(rect.Width+3, 0);
@@ -1260,7 +1260,28 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		// Génère un événement pour dire que la couleur a été cliquée.
+		protected void OnColorClicked()
+		{
+			if ( this.ColorClicked != null )  // qq'un écoute ?
+			{
+				this.ColorClicked(this);
+			}
+		}
+		
+		// Génère un événement pour dire que la couleur a changé suite à la
+		// navigation dans le texte.
+		protected void OnColorNavigatorChanged()
+		{
+			if ( this.ColorNavigatorChanged != null )  // qq'un écoute ?
+			{
+				this.ColorNavigatorChanged(this);
+			}
+		}
+		
 		public event Support.EventHandler	Changed;
+		public event Support.EventHandler	ColorClicked;
+		public event Support.EventHandler	ColorNavigatorChanged;
 
 
 		protected AbstractTextField			textField;
@@ -1290,18 +1311,20 @@ namespace Epsitec.Common.Widgets
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
 		protected IconButton				buttonUnderlined;
-		protected TextFieldCombo			fieldFontColor;
+		protected GlyphButton				nothingButton;
+		protected ColorSample				fieldFontColor;
 		protected IconButton				buttonListNum;
 		protected IconButton				buttonListFix;
 		protected ToolTip					manualToolTip;
 		protected bool						silent = false;
+		protected bool						ignoreColorChange = false;
 
 		protected static readonly double	buttonMargin = 3;
 		protected static readonly double	buttonWidth = 20;
 		protected static readonly double	buttonFontNameMinWidth = 100;
 		protected static readonly double	buttonFontNameMaxWidth = 150;
 		protected static readonly double	buttonFontScaleWidth = 50;
-		protected static readonly double	buttonFontColorWidth = 90;
+		protected static readonly double	buttonFontColorWidth = 30;
 		protected static readonly double	zoneSupHeight = TextRuler.buttonMargin*2+TextRuler.buttonWidth;
 		protected static readonly double	zoneInfHeight = 15;
 	}

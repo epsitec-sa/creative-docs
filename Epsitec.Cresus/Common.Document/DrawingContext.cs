@@ -1840,9 +1840,16 @@ namespace Epsitec.Common.Document
 		}
 
 		// Retourne la couleur du curseur pendant l'édition.
-		static public Color ColorCursorEdit
+		static public Color ColorCursorEdit(bool active)
 		{
-			get { return Color.FromARGB(1.0, 1.0, 0.0, 0.0); }  // rouge
+			if ( active )
+			{
+				return Color.FromARGB(1.0, 1.0, 0.0, 0.0);  // rouge
+			}
+			else
+			{
+				return Color.FromBrightness(0.85);  // gris
+			}
 		}
 
 		// Retourne la couleur des sélections pendant l'édition.

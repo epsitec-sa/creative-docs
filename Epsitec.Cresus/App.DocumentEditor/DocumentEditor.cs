@@ -3177,6 +3177,8 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.AggregateChanged       += new AggregateEventHandler(this.HandleAggregateChanged);
 			this.CurrentDocument.Notifier.SelNamesChanged        += new SimpleEventHandler(this.HandleSelNamesChanged);
 			this.CurrentDocument.Notifier.DrawChanged            += new RedrawEventHandler(this.HandleDrawChanged);
+			this.CurrentDocument.Notifier.TextRulerColorClicked  += new TextRulerColorEventHandler(this.HandleTextRulerColorClicked);
+			this.CurrentDocument.Notifier.TextRulerColorChanged  += new TextRulerColorEventHandler(this.HandleTextRulerColorChanged);
 		}
 
 		// Appelé par le document lorsque les informations sur le document ont changé.
@@ -3904,6 +3906,24 @@ namespace Epsitec.App.DocumentEditor
 			this.InvalidateDraw(viewer, box);
 		}
 
+		// Appelé par le document lorsque la couleur dans une règle a été cliquée.
+		private void HandleTextRulerColorClicked(TextRuler ruler)
+		{
+			if ( !this.IsCurrentDocument )  return;
+
+			DocumentInfo di = this.CurrentDocumentInfo;
+			di.containerPrincipal.TextRulerColorClicked(ruler);
+		}
+
+		// Appelé par le document lorsque la couleur dans une règle a changé.
+		private void HandleTextRulerColorChanged(TextRuler ruler)
+		{
+			if ( !this.IsCurrentDocument )  return;
+
+			DocumentInfo di = this.CurrentDocumentInfo;
+			di.containerPrincipal.TextRulerColorChanged(ruler);
+		}
+		
 
 		// Invalide une partie de la zone de dessin d'un visualisateur.
 		protected void InvalidateDraw(Viewer viewer, Drawing.Rectangle bbox)
