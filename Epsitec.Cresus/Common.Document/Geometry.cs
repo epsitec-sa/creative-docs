@@ -223,6 +223,34 @@ namespace Epsitec.Common.Document
 			return surf.IsInside();
 		}
 
+		// Calcule la bbox qui englobe exactement une forme quelconque.
+		public static Rectangle ComputeBoundingBox(Shape shape)
+		{
+			Properties.Line     stroke  = shape.PropertyStroke  as Properties.Line;
+			Properties.Gradient surface = shape.PropertySurface as Properties.Gradient;
+
+			if ( shape.Type == Type.Stroke && stroke != null && surface != null && shape.IsVisible )
+			{
+				double width   = stroke.Width + surface.Smooth*2;
+				CapStyle cap   = stroke.Cap;
+				JoinStyle join = stroke.EffectiveJoin;
+				double limit   = stroke.Limit;
+
+				Path realPath = new Path();
+				realPath.Append(shape.Path, width, cap, join, limit, 0.1);
+				return Geometry.ComputeBoundingBox(realPath);
+			}
+
+			if ( shape.Type == Type.Surface && surface != null && shape.IsVisible )
+			{
+				Rectangle bbox = Geometry.ComputeBoundingBox(shape.Path);
+				bbox.Inflate(surface.Smooth);
+				return bbox;
+			}
+
+			return Geometry.ComputeBoundingBox(shape.Path);
+		}
+
 		// Calcule la bbox qui englobe exactement un chemin quelconque.
 		public static Rectangle ComputeBoundingBox(Path path)
 		{

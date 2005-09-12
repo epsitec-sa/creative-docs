@@ -765,13 +765,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			get
 			{
-				Drawing.Rectangle bbox = this.BoundingBoxThin;
-				Properties.Line line = this.PropertyLineMode;
-				if ( line != null )
-				{
-					bbox.Inflate(line.Width/2.0);
-				}
-				return bbox;
+				return this.BoundingBoxGeom;
 			}
 		}
 
@@ -780,13 +774,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			get
 			{
-				Drawing.Rectangle bbox = this.BoundingBoxThin;
-				Properties.Line line = this.PropertyLineMode;
-				if ( line != null )
-				{
-					bbox.Inflate(line.Width/2.0);
-				}
-				return bbox;
+				return this.BoundingBoxGeom;
 			}
 		}
 
@@ -908,6 +896,7 @@ namespace Epsitec.Common.Document.Objects
 					continue;
 				}
 
+#if false
 				Drawing.Rectangle bbox = Geometry.ComputeBoundingBox(shape.Path);
 				this.bboxThin.MergeWith(bbox);
 
@@ -927,6 +916,13 @@ namespace Epsitec.Common.Document.Objects
 
 				bbox.Inflate(width);
 				this.bboxGeom.MergeWith(bbox);
+#else
+				Drawing.Rectangle bbox = Geometry.ComputeBoundingBox(shape.Path);
+				this.bboxThin.MergeWith(bbox);
+
+				bbox = Geometry.ComputeBoundingBox(shape);
+				this.bboxGeom.MergeWith(bbox);
+#endif
 			}
 
 			this.bboxFull = this.bboxGeom;
