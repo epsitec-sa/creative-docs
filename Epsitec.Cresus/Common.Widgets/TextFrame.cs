@@ -87,29 +87,34 @@ namespace Epsitec.Common.Widgets
 			graphics.AddFilledRectangle (0, 0, this.Width, this.Height);
 			graphics.RenderSolid (Drawing.Color.FromBrightness (1.0));
 			
+			this.has_selection = false;
+			
 //-			System.Diagnostics.Debug.WriteLine ("Paint started.");
 			this.graphics = graphics;
 			this.text_fitter.RenderTextFrame (this.text_frame, this);
 			this.graphics = null;
 //-			System.Diagnostics.Debug.WriteLine ("Paint done.");
 			
-			Text.ITextFrame frame;
-			double cx, cy, ascender, descender, angle;
-			
-			this.text_navigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle);
-			
-			if (frame == this.text_frame)
+			if (this.has_selection == false)
 			{
-				double tan = System.Math.Tan (System.Math.PI / 2 - angle);
+				Text.ITextFrame frame;
+				double cx, cy, ascender, descender, angle;
 				
-				double x1 = cx + descender * tan;
-				double x2 = cx + ascender  * tan;
-				double y1 = cy + descender;
-				double y2 = cy + ascender;
+				this.text_navigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle);
 				
-				graphics.LineWidth = 2.0;
-				graphics.AddLine (x1, y1, x2, y2);
-				graphics.RenderSolid (Drawing.Color.FromRGB (1.0, 0.0, 0.0));
+				if (frame == this.text_frame)
+				{
+					double tan = System.Math.Tan (System.Math.PI / 2 - angle);
+					
+					double x1 = cx + descender * tan;
+					double x2 = cx + ascender  * tan;
+					double y1 = cy + descender;
+					double y2 = cy + ascender;
+					
+					graphics.LineWidth = 2.0;
+					graphics.AddLine (x1, y1, x2, y2);
+					graphics.RenderSolid (Drawing.Color.FromRGB (1.0, 0.0, 0.0));
+				}
 			}
 		}
 		
@@ -184,7 +189,6 @@ namespace Epsitec.Common.Widgets
 							//	mémoriser son début :
 							
 							double xx = x1 + ((x2 - x1) * i) / num_chars;
-							System.Diagnostics.Debug.WriteLine (string.Format ("Line asc={0:000} desc={1:000} h={2:000}", layout.LineAscender, layout.LineDescender, layout.LineAscender - layout.LineDescender));
 							is_in_selection = true;
 							sel_x = xx;
 							sel_y = y[offset];
@@ -211,7 +215,6 @@ namespace Epsitec.Common.Widgets
 								double dy = layout.LineAscender - layout.LineDescender;
 								
 								Drawing.Rectangle rect = new Drawing.Rectangle (sel_x, sel_y + layout.LineDescender, dx, dy);
-								System.Diagnostics.Debug.WriteLine (string.Format ("In line : {0}", rect));
 								
 								sel_bbox = Drawing.Rectangle.Union (sel_bbox, rect);
 								
@@ -251,7 +254,6 @@ namespace Epsitec.Common.Widgets
 					double dy = layout.LineAscender - layout.LineDescender;
 					
 					Drawing.Rectangle rect = new Drawing.Rectangle (sel_x, sel_y + layout.LineDescender, dx, dy);
-					System.Diagnostics.Debug.WriteLine (string.Format ("End of line : {0}", rect));
 					
 					sel_bbox = Drawing.Rectangle.Union (sel_bbox, rect);
 					
@@ -291,13 +293,13 @@ namespace Epsitec.Common.Widgets
 			
 			if (sel_rect_list != null)
 			{
+				this.has_selection = true;
+				
 				Drawing.Rectangle save_clip = this.graphics.SaveClippingRectangle ();
 				
 				this.graphics.SetClippingRectangles (sel_rect_list);
 				this.graphics.AddFilledRectangle (sel_bbox);
 				this.graphics.RenderSolid (Drawing.Color.FromName ("HotTrack"));
-				
-				System.Diagnostics.Debug.WriteLine (string.Format ("BBox : {0}", sel_bbox));
 				
 				if (font.FontManagerType == OpenType.FontManagerType.System)
 				{
@@ -379,6 +381,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		private Drawing.Graphics				graphics;
+		private bool							has_selection;
 		private ulong							marker_selected;
 		
 		private Support.OpletQueue				oplet_queue;
