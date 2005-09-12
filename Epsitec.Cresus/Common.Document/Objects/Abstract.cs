@@ -2043,6 +2043,7 @@ namespace Epsitec.Common.Document.Objects
 				Handle newHandle = new Handle(this.document);
 				srcHandle.CopyTo(newHandle);
 				this.handles.Add(newHandle);
+				newHandle.IsHilited = false;
 			}
 
 			this.isHide              = src.isHide;

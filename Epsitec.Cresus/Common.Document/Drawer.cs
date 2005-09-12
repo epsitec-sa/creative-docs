@@ -666,7 +666,7 @@ namespace Epsitec.Common.Document
 					posh += surface.GetHatchDistance(i);
 				}
 
-				if ( !drawingContext.PreviewActive )
+				if ( drawingContext != null && !drawingContext.PreviewActive )
 				{
 					Path pathApprox = new Path();
 					pathApprox.Append(pathLines, 0.01, 0.0);

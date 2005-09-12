@@ -221,8 +221,8 @@ namespace Epsitec.Common.Document.Panels
 						{
 							h += 25;
 						}
-						else if ( type == Properties.GradientFillType.Circle   ||
-								  type == Properties.GradientFillType.Diamond  )
+						else if ( type == Properties.GradientFillType.Circle  ||
+								  type == Properties.GradientFillType.Diamond )
 						{
 							h += 75;
 						}

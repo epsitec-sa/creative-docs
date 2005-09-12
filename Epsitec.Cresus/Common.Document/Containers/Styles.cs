@@ -622,6 +622,14 @@ namespace Epsitec.Common.Document.Containers
 			if ( sel != -1 )
 			{
 				this.list.UpdateRow(sel);
+
+				double h = this.panel.DefaultHeight;
+				if ( h != this.panelContainer.Height )
+				{
+					this.panel.Height = h;
+					this.panelContainer.Height = h;
+					this.panelContainer.ForceLayout();
+				}
 			}
 		}
 
