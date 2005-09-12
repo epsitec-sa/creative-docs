@@ -149,9 +149,18 @@ namespace Epsitec.Common.Widgets
 			int  offset = 0;
 			bool is_in_selection = false;
 			
+			double sel_x = 0;
+			double sel_y = 0;
+			
+			System.Collections.ArrayList sel_rect_list = null;
+			Drawing.Rectangle            sel_bbox      = Drawing.Rectangle.Empty;
+			
 			int[]    c_array;
 			ulong[]  t_array;
 			ushort[] g_array;
+			
+			double x1 = 0;
+			double x2 = 0;
 			
 			while (mapping.GetNextMapping (out c_array, out g_array, out t_array))
 			{
@@ -160,8 +169,8 @@ namespace Epsitec.Common.Widgets
 				
 				System.Diagnostics.Debug.Assert ((num_glyphs == 1) || (num_chars == 1));
 				
-				double x1 = x[offset+0];
-				double x2 = x[offset+num_glyphs];
+				x1 = x[offset+0];
+				x2 = x[offset+num_glyphs];
 				
 				for (int i = 0; i < num_chars; i++)
 				{
@@ -175,8 +184,10 @@ namespace Epsitec.Common.Widgets
 							//	mémoriser son début :
 							
 							double xx = x1 + ((x2 - x1) * i) / num_chars;
-							System.Diagnostics.Debug.WriteLine (string.Format ("Start selection at {0:000.0}:{1:000.0}", xx, y[offset]));
+							System.Diagnostics.Debug.WriteLine (string.Format ("Line asc={0:000} desc={1:000} h={2:000}", layout.LineAscender, layout.LineDescender, layout.LineAscender - layout.LineDescender));
 							is_in_selection = true;
+							sel_x = xx;
+							sel_y = y[offset];
 						}
 					}
 					else
@@ -187,13 +198,73 @@ namespace Epsitec.Common.Widgets
 							//	mémoriser sa fin :
 							
 							double xx = x1 + ((x2 - x1) * i) / num_chars;
-							System.Diagnostics.Debug.WriteLine (string.Format ("End selection at {0:000.0}:{1:000.0}", xx, y[offset]));
 							is_in_selection = false;
+							
+							if (xx > sel_x)
+							{
+								if (sel_rect_list == null)
+								{
+									sel_rect_list = new System.Collections.ArrayList ();
+								}
+								
+								double dx = xx - sel_x;
+								double dy = layout.LineAscender - layout.LineDescender;
+								
+								Drawing.Rectangle rect = new Drawing.Rectangle (sel_x, sel_y + layout.LineDescender, dx, dy);
+								System.Diagnostics.Debug.WriteLine (string.Format ("In line : {0}", rect));
+								
+								sel_bbox = Drawing.Rectangle.Union (sel_bbox, rect);
+								
+								double px1 = rect.Left;
+								double px2 = rect.Right;
+								double py1 = rect.Bottom;
+								double py2 = rect.Top;
+								
+								this.graphics.Rasterizer.Transform.TransformDirect (ref px1, ref py1);
+								this.graphics.Rasterizer.Transform.TransformDirect (ref px2, ref py2);
+								
+								sel_rect_list.Add (Drawing.Rectangle.FromCorners (px1, py1, px2, py2));
+							}
 						}
 					}
 				}
 				
 				offset += num_glyphs;
+			}
+			
+			if (is_in_selection)
+			{
+				//	Nous avons quitté une tranche sélectionnée. Il faut
+				//	mémoriser sa fin :
+				
+				double xx = x2;
+				is_in_selection = false;
+				
+				if (xx > sel_x)
+				{
+					if (sel_rect_list == null)
+					{
+						sel_rect_list = new System.Collections.ArrayList ();
+					}
+					
+					double dx = xx - sel_x;
+					double dy = layout.LineAscender - layout.LineDescender;
+					
+					Drawing.Rectangle rect = new Drawing.Rectangle (sel_x, sel_y + layout.LineDescender, dx, dy);
+					System.Diagnostics.Debug.WriteLine (string.Format ("End of line : {0}", rect));
+					
+					sel_bbox = Drawing.Rectangle.Union (sel_bbox, rect);
+					
+					double px1 = rect.Left;
+					double px2 = rect.Right;
+					double py1 = rect.Bottom;
+					double py2 = rect.Top;
+					
+					this.graphics.Rasterizer.Transform.TransformDirect (ref px1, ref py1);
+					this.graphics.Rasterizer.Transform.TransformDirect (ref px2, ref py2);
+					
+					sel_rect_list.Add (Drawing.Rectangle.FromCorners (px1, py1, px2, py2));
+				}
 			}
 			
 			if (font.FontManagerType == OpenType.FontManagerType.System)
@@ -216,6 +287,41 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				this.graphics.RenderSolid (color);
+			}
+			
+			if (sel_rect_list != null)
+			{
+				Drawing.Rectangle save_clip = this.graphics.SaveClippingRectangle ();
+				
+				this.graphics.SetClippingRectangles (sel_rect_list);
+				this.graphics.AddFilledRectangle (sel_bbox);
+				this.graphics.RenderSolid (Drawing.Color.FromName ("HotTrack"));
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("BBox : {0}", sel_bbox));
+				
+				if (font.FontManagerType == OpenType.FontManagerType.System)
+				{
+					Drawing.NativeTextRenderer.Draw (this.graphics.Pixmap, font, size, glyphs, x, y, color);
+				}
+				else
+				{
+					Drawing.Font drawing_font = Drawing.Font.GetFont (font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+					
+					if (drawing_font != null)
+					{
+						for (int i = 0; i < glyphs.Length; i++)
+						{
+							if (glyphs[i] < 0xffff)
+							{
+								this.graphics.Rasterizer.AddGlyph (drawing_font, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+							}
+						}
+					}
+					
+					this.graphics.RenderSolid (Drawing.Color.FromName ("HighlightText"));
+				}
+				
+				this.graphics.RestoreClippingRectangle (save_clip);
 			}
 		}
 		

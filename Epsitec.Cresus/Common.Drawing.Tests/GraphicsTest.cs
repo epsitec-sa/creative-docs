@@ -122,6 +122,17 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 
+		[Test] public void CheckPathAppend()
+		{
+			Window window = new Window ();
+			window.WindowSize = new Size (800, 1500);
+			
+			window.Text = "CheckPathAppend";
+			window.Root.PaintForeground += new PaintEventHandler(PathAppend_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+
 		[Test] public void CheckClipping()
 		{
 			Window window = new Window ();
@@ -736,6 +747,31 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
 			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
+		}
+		
+		private void PathAppend_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double cx = root.Client.Width / 2;
+			double cy = root.Client.Height / 2;
+			
+			Path path = new Path ();
+			path.MoveTo ( 990 - 600,  927 - 800);
+			path.LineTo ( 760 - 600,  923 - 800);
+			path.LineTo (1027 - 600, 1512 - 800);
+			path.Close ();
+			
+			e.Graphics.Color = Drawing.Color.FromName ("Yellow");
+			e.Graphics.PaintSurface (path);
+			
+			e.Graphics.Color = Drawing.Color.FromName ("Black");
+			e.Graphics.LineWidth = 100;
+			e.Graphics.LineMiterLimit = 5;
+			e.Graphics.LineJoin = JoinStyle.MiterRevert;
+			e.Graphics.LineCap = CapStyle.Round;
+			
+			e.Graphics.PaintOutline (path);
 		}
 		
 		private void Clipping_PaintForeground(object sender, PaintEventArgs e)

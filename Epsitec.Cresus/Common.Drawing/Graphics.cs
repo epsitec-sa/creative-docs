@@ -762,6 +762,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		
 		public void SetClippingRectangle(double x, double y, double width, double height)
 		{
 			double x1 = x;
@@ -818,6 +819,35 @@ namespace Epsitec.Common.Drawing
 			this.rasterizer.SetClipBox (bbox.Left, bbox.Bottom, bbox.Right, bbox.Top);
 		}
 		
+		public void SetClippingRectangles(System.Collections.ICollection rectangles)
+		{
+			if ((rectangles == null) ||
+				(rectangles.Count == 0))
+			{
+				return;
+			}
+			
+			Drawing.Rectangle clip = this.SaveClippingRectangle ();
+			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
+			
+			this.pixmap.EmptyClipping ();
+			
+			foreach (Drawing.Rectangle rectangle in rectangles)
+			{
+				Drawing.Rectangle rect = Drawing.Rectangle.Intersection (rectangle, clip);
+				
+				if (!rect.IsEmpty)
+				{
+					this.pixmap.AddClipBox (rect.Left, rect.Bottom, rect.Right, rect.Top);
+					bbox = Drawing.Rectangle.Union (bbox, rect);
+				}
+			}
+			
+			this.has_clip_rect = true;
+			this.rasterizer.SetClipBox (bbox.Left, bbox.Bottom, bbox.Right, bbox.Top);
+		}
+		
+		
 		public Drawing.Rectangle SaveClippingRectangle()
 		{
 			if (this.has_clip_rect)
@@ -856,6 +886,7 @@ namespace Epsitec.Common.Drawing
 			this.has_clip_rect = false;
 		}
 		
+		
 		public bool TestForEmptyClippingRectangle()
 		{
 			if (this.has_clip_rect)
@@ -869,6 +900,7 @@ namespace Epsitec.Common.Drawing
 			
 			return false;
 		}
+		
 		
 		public void SetClippingRectangle(Point p, Size s)
 		{
