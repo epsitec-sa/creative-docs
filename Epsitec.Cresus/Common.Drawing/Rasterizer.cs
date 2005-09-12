@@ -14,6 +14,7 @@ namespace Epsitec.Common.Drawing
 	{
 		Miter = 0,
 		MiterRevert = 1,
+		MiterRound = 4,
 		Round = 2,
 		Bevel = 3,
 	}

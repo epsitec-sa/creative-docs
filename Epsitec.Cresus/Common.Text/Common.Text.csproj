@@ -334,11 +334,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Cursors\TempCursorDirection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Internal\CharMarker.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
