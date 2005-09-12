@@ -279,10 +279,15 @@ namespace Epsitec.Common.Text
 							if ((x >= cx1) &&
 								(x <= cx2))
 							{
-								int adjust = (2*x < (cx1 + cx2)) ? -1 : 0;
+								//	Cas particulier : si la ligne est vide (juste un caractère
+								//	de fin de ligne), cx1 == cx2 et il faut générer une position
+								//	telle que le curseur résultant sera placé au début de la
+								//	ligne (position avant le saut de ligne, direction = 1).
+								
+								int adjust = (2*x <= (cx1 + cx2)) ? -1 : 0;
 								
 								position  = para_start + line_offset + glyph_offset + adjust;
-								direction = (position == 0) ? 1 : -1;
+								direction = ((position == 0) || (cx1 == cx2)) ? 1 : -1;
 								
 								return true;
 							}
