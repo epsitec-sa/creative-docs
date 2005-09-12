@@ -143,7 +143,7 @@ namespace Epsitec.Common.Text
 			
 			for (int i = 0; i < elements.Length; i++)
 			{
-				this.RenderElement (renderer, frame, elements, i, layout);
+				this.RenderElement (renderer, frame, elements, i, layout, cursor.SpaceAfterParagraph);
 			}
 			
 			renderer.RenderEndParagraph (layout);
@@ -241,13 +241,16 @@ namespace Epsitec.Common.Text
 			int para_start  = this.story.GetCursorPosition (fitter_cursor);
 			int line_offset = 0;
 			
+			double view_x = x;
+			double view_y = y;
+			
 			frame.MapFromView (ref x, ref y);
 			
 			for (int i = 0; i < elements.Length; i++)
 			{
 				double l_yb = elements[i].LineBaseY;
-				double l_y1 = l_yb + elements[i].LineAscender;
-				double l_y2 = l_yb + elements[i].LineDescender;
+				double l_y1 = elements[i].LineTopY;
+				double l_y2 = elements[i].LineBottomY - cursor.SpaceAfterParagraph;
 				
 				if ((y >= l_y2) &&
 					(y <= l_y1))
@@ -256,56 +259,60 @@ namespace Epsitec.Common.Text
 					//	zone d'intérêt. Analysons-la plus à fond :
 					
 					double cx1 = 0;
+					double cy  = 0;
 					double cy1 = 0;
+					double cy2 = 0;
 					
-					this.GetCursorGeometry (frame, para_start + line_offset, 0, elements, i, ref cx1, ref cy1);
+					this.GetCursorGeometry (frame, para_start + line_offset, 0, elements, i, ref cx1, ref cy, ref cy1, ref cy2, cursor.SpaceAfterParagraph);
 					
-					if (x < cx1)
+					if ((view_y >= cy1) &&
+						(view_y <= cy2))
 					{
-						position  = para_start + line_offset;
-						direction = -1;
-					}
-					else
-					{
-						double cx2 = 0;
-						double cy2 = 0;
-						
-						int last_valid_offset = 0;
-						
-						for (int glyph_offset = 1; glyph_offset <= elements[i].Length; glyph_offset++)
+						if (view_x < cx1)
 						{
-							this.GetCursorGeometry (frame, para_start + line_offset, glyph_offset, elements, i, ref cx2, ref cy2);
-							
-							if ((x >= cx1) &&
-								(x <= cx2))
-							{
-								//	Cas particulier : si la ligne est vide (juste un caractère
-								//	de fin de ligne), cx1 == cx2 et il faut générer une position
-								//	telle que le curseur résultant sera placé au début de la
-								//	ligne (position avant le saut de ligne, direction = 1).
-								
-								int adjust = (2*x <= (cx1 + cx2)) ? -1 : 0;
-								
-								position  = para_start + line_offset + glyph_offset + adjust;
-								direction = ((position == 0) || (cx1 == cx2)) ? 1 : -1;
-								
-								return true;
-							}
-							
-							if ((cx2 > cx1) ||
-								(skip_invisible))
-							{
-								last_valid_offset = glyph_offset;
-							}
-							
-							cx1 = cx2;
-							cy1 = cy2;
+							position  = para_start + line_offset;
+							direction = -1;
 						}
-						
-						if (x > cx2)
+						else
 						{
-							position  = para_start + line_offset + last_valid_offset;
-							direction = 1;
+							double cx2 = 0;
+							
+							int last_valid_offset = 0;
+							
+							for (int glyph_offset = 1; glyph_offset <= elements[i].Length; glyph_offset++)
+							{
+								this.GetCursorGeometry (frame, para_start + line_offset, glyph_offset, elements, i, ref cx2, ref cy, ref cy1, ref cy2, cursor.SpaceAfterParagraph);
+								
+								if ((view_x >= cx1) &&
+									(view_x <= cx2))
+								{
+									//	Cas particulier : si la ligne est vide (juste un caractère
+									//	de fin de ligne), cx1 == cx2 et il faut générer une position
+									//	telle que le curseur résultant sera placé au début de la
+									//	ligne (position avant le saut de ligne, direction = 1).
+									
+									int adjust = (2*view_x <= (cx1 + cx2)) ? -1 : 0;
+									
+									position  = para_start + line_offset + glyph_offset + adjust;
+									direction = ((position == 0) || (cx1 == cx2)) ? 1 : -1;
+									
+									return true;
+								}
+								
+								if ((cx2 > cx1) ||
+									(skip_invisible))
+								{
+									last_valid_offset = glyph_offset;
+								}
+								
+								cx1 = cx2;
+							}
+							
+							if (view_x > cx2)
+							{
+								position  = para_start + line_offset + last_valid_offset;
+								direction = 1;
+							}
 						}
 					}
 				}
@@ -401,7 +408,10 @@ namespace Epsitec.Common.Text
 							paragraph_line = i - tab_count;
 							line_character = position - line_start + tab_char_count;
 							
-							this.GetCursorGeometry (line_start, position - line_start, elements, i, ref x, ref y);
+							double y1 = 0;
+							double y2 = 0;
+							
+							this.GetCursorGeometry (line_start, position - line_start, elements, i, ref x, ref y, ref y1, ref y2, fitter_cursor.SpaceAfterParagraph);
 							
 							return true;
 						}
@@ -749,10 +759,13 @@ restart_paragraph_layout:
 					element.FrameIndex    = layout.FrameIndex;
 					element.LineBaseX     = layout.LineStartX;
 					element.LineBaseY     = layout.Y;
+					element.LineBottomY   = layout.BottomY;
+					element.LineTopY      = layout.TopY;
 					element.LineWidth     = (continuation && !tab_new_line) ? result[result.Count-1].Profile.TotalWidth : layout.AvailableWidth;
 					element.LineAscender  = layout.LineAscender;
 					element.LineDescender = layout.LineDescender;
 					element.IsTabulation  = layout_status == Layout.Status.OkTabReached;
+					element.IsNewLine     = (layout_status != Layout.Status.OkTabReached) | tab_new_line;
 					
 					list.Add (element);
 				}
@@ -823,6 +836,7 @@ restart_paragraph_layout:
 						
 						mark.AddRange (list);
 						mark.DefineParagraphY (paragraph_start_frame_y);
+						mark.DefineSpaceAfterParagraph (layout.LineSpaceAfter);
 						list.Clear ();
 						
 						story.MoveCursor (mark, pos + paragraph_start_offset);
@@ -900,14 +914,14 @@ restart_paragraph_layout:
 		}
 		
 		
-		private void GetCursorGeometry(int position, int cursor_offset, Cursors.FitterCursor.Element[] elements, int i, ref double x, ref double y)
+		private void GetCursorGeometry(int position, int cursor_offset, Cursors.FitterCursor.Element[] elements, int i, ref double x, ref double y, ref double y1, ref double y2, double space_after)
 		{
 			ITextFrame frame = this.FrameList[elements[i].FrameIndex];
 			
-			this.GetCursorGeometry (frame, position, cursor_offset, elements, i, ref x, ref y);
+			this.GetCursorGeometry (frame, position, cursor_offset, elements, i, ref x, ref y, ref y1, ref y2, space_after);
 		}
 		
-		private void GetCursorGeometry(ITextFrame frame, int position, int cursor_offset, Cursors.FitterCursor.Element[] elements, int i, ref double x, ref double y)
+		private void GetCursorGeometry(ITextFrame frame, int position, int cursor_offset, Cursors.FitterCursor.Element[] elements, int i, ref double x, ref double y, ref double y1, ref double y2, double space_after)
 		{
 			//	Pour éviter de redemander à chaque fois au geometry renderer de produire
 			//	les informations de position des caractères, on utilise un cache ici :
@@ -928,7 +942,7 @@ restart_paragraph_layout:
 				layout.DisableFontBaselineOffset  = true;
 				layout.RendererNeedsTextAndGlyphs = true;
 				
-				this.RenderElement (renderer, frame, elements, i, layout);
+				this.RenderElement (renderer, frame, elements, i, layout, space_after);
 				
 				this.geometry_cache_renderer = renderer;
 				this.geometry_cache_start    = position;
@@ -941,22 +955,26 @@ restart_paragraph_layout:
 			
 			if (item != null)
 			{
-				x = item.X;
-				y = item.Y;
+				x  = item.X;
+				y  = item.Y;
+				y1 = item.Y1;
+				y2 = item.Y2;
 			}
 			else
 			{
 				//	Pas d'élément trouvé : on prend la ligne de base comme
 				//	référence :
 				
-				x = elements[i].LineBaseX;
-				y = elements[i].LineBaseY;
+				x  = elements[i].LineBaseX;
+				y  = elements[i].LineBaseY;
+				y1 = y + elements[i].LineDescender;
+				y2 = y + elements[i].LineAscender;
 				
 				frame.MapToView (ref x, ref y);
 			}
 		}
 		
-		private void RenderElement(ITextRenderer renderer, ITextFrame frame, Cursors.FitterCursor.Element[] elements, int i, Layout.Context layout)
+		private void RenderElement(ITextRenderer renderer, ITextFrame frame, Cursors.FitterCursor.Element[] elements, int i, Layout.Context layout, double space_after)
 		{
 			int last_i = elements.Length - 1;
 			int index  = elements[i].FrameIndex;
@@ -972,8 +990,20 @@ restart_paragraph_layout:
 				double width = elements[i].LineWidth;
 				double asc   = elements[i].LineAscender;
 				double desc  = elements[i].LineDescender;
+				double y1    = elements[i].LineBottomY - oy;
+				double y2    = elements[i].LineTopY - oy;
 				
 				layout.Frame.MapToView (ref ox, ref oy);
+				
+				y1 += oy;
+				y2 += oy;
+				
+//-				System.Diagnostics.Debug.WriteLine (string.Format ("Base={0} Top={1} Bottom={2} Height={3} Last={4} After={5}", (int) oy, (int) y2, (int) y1, (int)(y2 - y1), Cursors.FitterCursor.IsLastLine (elements, i), Cursors.FitterCursor.IsLastLine (elements, i) ? (int) space_after : 0));
+				
+				if (Cursors.FitterCursor.IsLastLine (elements, i))
+				{
+					y1 -= space_after;
+				}
 				
 				if ((length > 0) &&
 					(renderer.IsFrameAreaVisible (layout.Frame, ox, oy+desc, width, asc+desc)))
@@ -986,6 +1016,8 @@ restart_paragraph_layout:
 					layout.Y             = oy;
 					layout.LineAscender  = asc;
 					layout.LineDescender = desc;
+					layout.BottomY       = y1;
+					layout.TopY          = y2;
 					
 					layout.RenderLine (renderer, profile, length, ox, oy, width, i, is_tab, is_last);
 				}

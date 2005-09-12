@@ -53,6 +53,14 @@ namespace Epsitec.Common.Text.Cursors
 			}
 		}
 		
+		public double							SpaceAfterParagraph
+		{
+			get
+			{
+				return this.space_after_paragraph;
+			}
+		}
+		
 		public int[]							TextFrameIndexes
 		{
 			get
@@ -120,6 +128,11 @@ namespace Epsitec.Common.Text.Cursors
 		public void DefineParagraphY(double y)
 		{
 			this.paragraph_y = y;
+		}
+		
+		public void DefineSpaceAfterParagraph(double y)
+		{
+			this.space_after_paragraph = y;
 		}
 		
 		public void AddRange(System.Collections.IList values)
@@ -199,6 +212,20 @@ namespace Epsitec.Common.Text.Cursors
 		}
 		
 		
+		internal static bool IsLastLine(Cursors.FitterCursor.Element[] elements, int i)
+		{
+			for (int j = i; j < elements.Length - 1; j++)
+			{
+				if (elements[j].IsNewLine)
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
+		
 		#region Element Structure
 		public struct Element
 		{
@@ -262,6 +289,30 @@ namespace Epsitec.Common.Text.Cursors
 				}
 			}
 			
+			public double						LineTopY
+			{
+				get
+				{
+					return this.line_top_y;
+				}
+				set
+				{
+					this.line_top_y = value;
+				}
+			}
+			
+			public double						LineBottomY
+			{
+				get
+				{
+					return this.line_bottom_y;
+				}
+				set
+				{
+					this.line_bottom_y = value;
+				}
+			}
+			
 			public double						LineWidth
 			{
 				get
@@ -310,16 +361,31 @@ namespace Epsitec.Common.Text.Cursors
 				}
 			}
 			
+			public bool							IsNewLine
+			{
+				get
+				{
+					return this.is_new_line;
+				}
+				set
+				{
+					this.is_new_line = value;
+				}
+			}
+			
 			
 			private ushort						length;
 			private Layout.StretchProfile		profile;
 			private int							frame_index;
 			private double						line_base_x;
 			private double						line_base_y;
+			private double						line_top_y;
+			private double						line_bottom_y;
 			private double						line_width;
 			private double						line_ascender;
 			private double						line_descender;
 			private bool						is_tabulation;
+			private bool						is_new_line;
 		}
 		#endregion
 		
@@ -389,6 +455,7 @@ namespace Epsitec.Common.Text.Cursors
 		
 		private Element[]						elements;
 		private double							paragraph_y;
+		private double							space_after_paragraph;
 		private TextFitter						fitter;
 	}
 }

@@ -150,6 +150,30 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public double							TopY
+		{
+			get
+			{
+				return this.oy_top;
+			}
+			set
+			{
+				this.oy_top = value;
+			}
+		}
+		
+		public double							BottomY
+		{
+			get
+			{
+				return this.oy_bottom;
+			}
+			set
+			{
+				this.oy_bottom = value;
+			}
+		}
+		
 		public double							MaxY
 		{
 			get
@@ -631,23 +655,29 @@ restart:
 					
 					oy = this.frame_y;
 					
+					this.oy_top = oy;
+					
 					if ((paragraph_line_count == 0) &&
 						(this.frame_y != 0) &&
 						(! continuation))
 					{
 						//	A la première ligne du paragraphe, on ajoute l'espace "avant"
 						//	tel que défini par la propriété de "leading". Mais on n'ajoute
-						//	pas cet espace en sommet de frame.
+						//	cet espace que si on n'est pas en sommet de frame :
 						
 						oy -= this.line_space_before;
 						oy -= this.line_skip_before;
 						
-						this.frame_y_line = this.frame_y - this.line_space_before - this.line_skip_before;
+						this.oy_top -= this.line_skip_before;
+						
+//-						this.frame_y_line = this.frame_y - this.line_space_before - this.line_skip_before;
 					}
 					else
 					{
-						this.frame_y_line = this.frame_y;
+//-						this.frame_y_line = this.frame_y;
 					}
+					
+					this.frame_y_line = oy;
 					
 					while ((! this.frame.ConstrainLineBox (oy, line_ascender, line_descender, line_height, this.line_leading, this.line_sync_to_grid, out ox, out oy, out dx, out next_frame_y))
 						|| (dx < this.mx_left + this.mx_right)
@@ -678,6 +708,7 @@ restart:
 					this.oy_max       = oy + line_ascender;
 					this.oy_min       = oy + line_descender;
 					this.frame_y      = next_frame_y;
+					this.oy_bottom    = next_frame_y;
 					this.line_width   = dx;
 					this.line_height  = line_height;
 					
@@ -1540,6 +1571,8 @@ restart:
 		private double							oy_base;
 		private double							oy_max;
 		private double							oy_min;
+		private double							oy_top;
+		private double							oy_bottom;
 		
 		private double							line_height;
 		private double							line_width;

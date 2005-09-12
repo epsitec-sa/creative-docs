@@ -155,7 +155,6 @@ namespace Epsitec.Common.Widgets
 			bool is_in_selection = false;
 			
 			double sel_x = 0;
-			double sel_y = 0;
 			
 			System.Collections.ArrayList sel_rect_list = null;
 			Drawing.Rectangle            sel_bbox      = Drawing.Rectangle.Empty;
@@ -191,7 +190,6 @@ namespace Epsitec.Common.Widgets
 							double xx = x1 + ((x2 - x1) * i) / num_chars;
 							is_in_selection = true;
 							sel_x = xx;
-							sel_y = y[offset];
 						}
 					}
 					else
@@ -212,9 +210,9 @@ namespace Epsitec.Common.Widgets
 								}
 								
 								double dx = xx - sel_x;
-								double dy = layout.LineAscender - layout.LineDescender;
+								double dy = layout.TopY - layout.BottomY;
 								
-								Drawing.Rectangle rect = new Drawing.Rectangle (sel_x, sel_y + layout.LineDescender, dx, dy);
+								Drawing.Rectangle rect = new Drawing.Rectangle (sel_x, layout.BottomY, dx, dy);
 								
 								sel_bbox = Drawing.Rectangle.Union (sel_bbox, rect);
 								
@@ -251,9 +249,9 @@ namespace Epsitec.Common.Widgets
 					}
 					
 					double dx = xx - sel_x;
-					double dy = layout.LineAscender - layout.LineDescender;
+					double dy = layout.TopY - layout.BottomY;
 					
-					Drawing.Rectangle rect = new Drawing.Rectangle (sel_x, sel_y + layout.LineDescender, dx, dy);
+					Drawing.Rectangle rect = new Drawing.Rectangle (sel_x, layout.BottomY, dx, dy);
 					
 					sel_bbox = Drawing.Rectangle.Union (sel_bbox, rect);
 					
@@ -299,7 +297,7 @@ namespace Epsitec.Common.Widgets
 				
 				this.graphics.SetClippingRectangles (sel_rect_list);
 				this.graphics.AddFilledRectangle (sel_bbox);
-				this.graphics.RenderSolid (Drawing.Color.FromName ("HotTrack"));
+				this.graphics.RenderSolid (Drawing.Color.FromName ("Highlight"));
 				
 				if (font.FontManagerType == OpenType.FontManagerType.System)
 				{

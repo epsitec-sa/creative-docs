@@ -70,6 +70,9 @@ namespace Epsitec.Common.Text.Internal
 			int[]    map_char;
 			ushort[] map_glyphs;
 			
+			double y1 = layout.BottomY;
+			double y2 = layout.TopY;
+			
 			int glyph_index = 0;
 			
 			while (mapping.GetNextMapping (out map_char, out map_glyphs))
@@ -84,7 +87,7 @@ namespace Epsitec.Common.Text.Internal
 				
 				for (int i = 0; i < map_char.Length; i++)
 				{
-					this.items.Add (new Element (frame, font, size, map_char[i], ox, oy));
+					this.items.Add (new Element (frame, font, size, map_char[i], ox, oy, y1, y2));
 					
 					ox += ax;
 				}
@@ -94,7 +97,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			if (is_last_run)
 			{
-				this.items.Add (new Element (frame, font, size, 0, x[glyph_index], y[glyph_index-1]));
+				this.items.Add (new Element (frame, font, size, 0, x[glyph_index], y[glyph_index-1], y1, y2));
 			}
 		}
 		
@@ -102,7 +105,10 @@ namespace Epsitec.Common.Text.Internal
 		{
 			ITextFrame frame = layout.Frame;
 			
-			this.items.Add (new Element (frame, null, 0, 0, x, y));
+			double y1 = layout.BottomY;
+			double y2 = layout.TopY;
+			
+			this.items.Add (new Element (frame, null, 0, 0, x, y, y1, y2));
 			
 			if (is_last_run)
 			{
@@ -110,7 +116,7 @@ namespace Epsitec.Common.Text.Internal
 				
 				glyph_renderer.GetGeometry (out ascender, out descender, out advance, out x1, out x2);
 				
-				this.items.Add (new Element (frame, null, 0, 0, x + advance, y));
+				this.items.Add (new Element (frame, null, 0, 0, x + advance, y, y1, y2));
 			}
 		}
 		
@@ -125,7 +131,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public class Element
 		{
-			public Element(ITextFrame frame, OpenType.Font font, double size, int code, double x, double y)
+			public Element(ITextFrame frame, OpenType.Font font, double size, int code, double x, double y, double y1, double y2)
 			{
 				this.frame = frame;
 				
@@ -135,6 +141,9 @@ namespace Epsitec.Common.Text.Internal
 				
 				this.x = x;
 				this.y = y;
+				
+				this.y1 = y1;
+				this.y2 = y2;
 			}
 			
 			
@@ -155,13 +164,29 @@ namespace Epsitec.Common.Text.Internal
 				}
 			}
 			
+			public double						Y1
+			{
+				get
+				{
+					return this.y1;
+				}
+			}
+			
+			public double						Y2
+			{
+				get
+				{
+					return this.y2;
+				}
+			}
+			
 			
 			private ITextFrame					frame;
 			private OpenType.Font				font;
 			private double						size;
 			private int							code;
 			private double						x;
-			private double						y;
+			private double						y, y1, y2;
 		}
 		
 		
