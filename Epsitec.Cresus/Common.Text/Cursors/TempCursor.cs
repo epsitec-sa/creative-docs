@@ -36,7 +36,7 @@ namespace Epsitec.Common.Text.Cursors
 			}
 		}
 		
-		public int								Direction
+		public virtual int						Direction
 		{
 			get
 			{
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Text.Cursors
 			}
 			set
 			{
-				System.Diagnostics.Debug.Assert (value == 0);
+//				System.Diagnostics.Debug.Assert (value == 0);
 			}
 		}
 		

@@ -419,10 +419,11 @@ namespace Epsitec.Common.Text
 			this.selection_cursors.Add (c1);
 			this.selection_cursors.Add (c2);
 			
-			int position = this.story.GetCursorPosition (this.cursor);
+			int position  = this.story.GetCursorPosition (this.cursor);
+			int direction = this.story.GetCursorDirection (this.cursor);
 			
-			this.story.SetCursorPosition (c1, position);
-			this.story.SetCursorPosition (c2, position);
+			this.story.SetCursorPosition (c1, position, direction);
+			this.story.SetCursorPosition (c2, position, direction);
 			
 			this.active_selection_cursor = c2;
 		}
@@ -617,7 +618,7 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			ICursor temp = new Cursors.TempCursor ();
+			ICursor temp = new Cursors.TempCursorDir ();
 			this.story.NewCursor (temp);
 			
 			try
@@ -770,6 +771,53 @@ namespace Epsitec.Common.Text
 				
 				return false;
 			}
+		}
+		
+		
+		public virtual void UpdateCurrentStylesAndProperties()
+		{
+			TextStyle[] styles;
+			Property[]  properties;
+			
+			//	En marche arrière, on utilise le style du caractère courant, alors
+			//	qu'en marche avant, on utilise le style du caractère précédent :
+			
+			int pos    = this.story.GetCursorPosition (this.cursor);
+			int dir    = this.story.GetCursorDirection (this.cursor);
+			int offset = ((pos > 0) && (dir > 0)) ? -1 : 0;
+			
+			if ((pos > 0) &&
+				(pos == this.TextLength))
+			{
+				offset = -1;
+			}
+			
+			ulong code = this.story.ReadChar (this.cursor, offset);
+			
+			if (code == 0)
+			{
+				if (this.TextContext.DefaultStyle != null)
+				{
+					styles     = new TextStyle[] { this.TextContext.DefaultStyle };
+					properties = new Property[0];
+				}
+				else
+				{
+					styles     = new TextStyle[0];
+					properties = new Property[0];
+				}
+			}
+			else
+			{
+				this.TextContext.GetStyles (code, out styles);
+				this.TextContext.GetProperties (code, out properties);
+			}
+			
+			this.current_styles      = styles;
+			this.current_properties  = properties;
+			this.current_accumulator = new Styles.PropertyContainer.Accumulator ();
+			
+			this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
 		}
 		
 		
@@ -1535,52 +1583,6 @@ namespace Epsitec.Common.Text
 			this.story.RecycleCursor (cursor);
 		}
 		
-		
-		public virtual void UpdateCurrentStylesAndProperties()
-		{
-			TextStyle[] styles;
-			Property[]  properties;
-			
-			//	En marche arrière, on utilise le style du caractère courant, alors
-			//	qu'en marche avant, on utilise le style du caractère précédent :
-			
-			int pos    = this.story.GetCursorPosition (this.cursor);
-			int dir    = this.story.GetCursorDirection (this.cursor);
-			int offset = ((pos > 0) && (dir > 0)) ? -1 : 0;
-			
-			if ((pos > 0) &&
-				(pos == this.TextLength))
-			{
-				offset = -1;
-			}
-			
-			ulong code = this.story.ReadChar (this.cursor, offset);
-			
-			if (code == 0)
-			{
-				if (this.TextContext.DefaultStyle != null)
-				{
-					styles     = new TextStyle[] { this.TextContext.DefaultStyle };
-					properties = new Property[0];
-				}
-				else
-				{
-					styles     = new TextStyle[0];
-					properties = new Property[0];
-				}
-			}
-			else
-			{
-				this.TextContext.GetStyles (code, out styles);
-				this.TextContext.GetProperties (code, out properties);
-			}
-			
-			this.current_styles      = styles;
-			this.current_properties  = properties;
-			this.current_accumulator = new Styles.PropertyContainer.Accumulator ();
-			
-			this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
-		}
 		
 		protected virtual void UpdateSelectionMarkers()
 		{

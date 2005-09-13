@@ -215,6 +215,7 @@ namespace Epsitec.Common.Text
 			if (cursor.Attachment == CursorAttachment.Temporary)
 			{
 				this.text.SetCursorPosition (cursor.CursorId, position);
+				this.text.SetCursorDirection (cursor.CursorId, direction);
 			}
 			else
 			{
