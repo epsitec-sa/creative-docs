@@ -254,6 +254,9 @@ namespace Epsitec.Common.Document
 		// Calcule la bbox qui englobe exactement un chemin quelconque.
 		public static Rectangle ComputeBoundingBox(Path path)
 		{
+#if true
+			return path.ComputeBounds();
+#else
 			Rectangle bbox = Rectangle.Empty;
 			PathElement[] elements;
 			Point[] points;
@@ -310,6 +313,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 			return bbox;
+#endif
 		}
 
 		// Ajoute une courbe de Bézier dans la bbox.

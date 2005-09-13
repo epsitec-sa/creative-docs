@@ -3001,7 +3001,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.newState = new CommandState("New", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaN);
 			this.openState = new CommandState("Open", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaO);
-			this.openModelState = new CommandState("OpenModel", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaO);
+			this.openModelState = new CommandState("OpenModel", this.commandDispatcher);
 			this.saveState = new CommandState("Save", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaS);
 			this.saveAsState = new CommandState("SaveAs", this.commandDispatcher);
 			this.saveModelState = new CommandState("SaveModel", this.commandDispatcher);
