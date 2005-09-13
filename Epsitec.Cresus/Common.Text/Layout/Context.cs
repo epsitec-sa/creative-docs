@@ -83,10 +83,6 @@ namespace Epsitec.Common.Text.Layout
 			{
 				return this.text_offset;
 			}
-			set
-			{
-				this.text_offset = value;
-			}
 		}
 		
 		public StretchProfile					TextStretchProfile
@@ -122,7 +118,7 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public double							X
+		public double							LineCurrentX
 		{
 			get
 			{
@@ -138,39 +134,27 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		public double							Y
+		public double							LineBaseY
 		{
 			get
 			{
 				return this.oy_base;
 			}
-			set
-			{
-				this.oy_base = value;
-			}
 		}
 		
-		public double							TopY
+		public double							LineY1
 		{
 			get
 			{
-				return this.oy_top;
-			}
-			set
-			{
-				this.oy_top = value;
+				return this.line_y1;
 			}
 		}
 		
-		public double							BottomY
+		public double							LineY2
 		{
 			get
 			{
-				return this.oy_bottom;
-			}
-			set
-			{
-				this.oy_bottom = value;
+				return this.line_y2;
 			}
 		}
 		
@@ -239,7 +223,7 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-
+		
 		public double							LeftMargin
 		{
 			get
@@ -278,10 +262,6 @@ namespace Epsitec.Common.Text.Layout
 			{
 				return this.oy_max - this.oy_base;
 			}
-			set
-			{
-				this.oy_max = this.oy_base + value;
-			}
 		}
 		
 		public double							LineDescender
@@ -289,10 +269,6 @@ namespace Epsitec.Common.Text.Layout
 			get
 			{
 				return this.oy_min - this.oy_base;
-			}
-			set
-			{
-				this.oy_min = this.oy_base + value;
 			}
 		}
 		
@@ -305,10 +281,6 @@ namespace Epsitec.Common.Text.Layout
 			get
 			{
 				return this.line_skip_before;
-			}
-			set
-			{
-				this.line_skip_before = value;
 			}
 		}
 		
@@ -335,10 +307,6 @@ namespace Epsitec.Common.Text.Layout
 			{
 				return this.fence_line_count;
 			}
-			set
-			{
-				this.fence_line_count = value;
-			}
 		}
 		
 		public bool								KeepWithPreviousParagraph
@@ -346,10 +314,6 @@ namespace Epsitec.Common.Text.Layout
 			get
 			{
 				return this.keep_with_prev_para;
-			}
-			set
-			{
-				this.keep_with_prev_para = value;
 			}
 		}
 		
@@ -359,34 +323,22 @@ namespace Epsitec.Common.Text.Layout
 			{
 				return this.keep_with_next_para;
 			}
-			set
-			{
-				this.keep_with_next_para = value;
-			}
 		}
 		
 		
-		public bool								RendererNeedsTextAndGlyphs
+		public bool								IsSimpleRenderingDisabled
 		{
 			get
 			{
-				return this.renderer_needs_text_and_glyphs;
-			}
-			set
-			{
-				this.renderer_needs_text_and_glyphs = value;
+				return this.disable_simple_rendering;
 			}
 		}
 		
-		public bool								DisableFontBaselineOffset
+		public bool								IsFontBaselineOffsetDisabled
 		{
 			get
 			{
 				return this.disable_font_baseline_offset;
-			}
-			set
-			{
-				this.disable_font_baseline_offset = value;
 			}
 		}
 		
@@ -655,7 +607,7 @@ restart:
 					
 					oy = this.frame_y;
 					
-					this.oy_top = oy;
+					this.line_y2 = oy;
 					
 					if ((paragraph_line_count == 0) &&
 						(this.frame_y != 0) &&
@@ -668,7 +620,7 @@ restart:
 						oy -= this.line_space_before;
 						oy -= this.line_skip_before;
 						
-						this.oy_top -= this.line_skip_before;
+						this.line_y2 -= this.line_skip_before;
 						
 //-						this.frame_y_line = this.frame_y - this.line_space_before - this.line_skip_before;
 					}
@@ -708,7 +660,7 @@ restart:
 					this.oy_max       = oy + line_ascender;
 					this.oy_min       = oy + line_descender;
 					this.frame_y      = next_frame_y;
-					this.oy_bottom    = next_frame_y;
+					this.line_y1    = next_frame_y;
 					this.line_width   = dx;
 					this.line_height  = line_height;
 					
@@ -836,7 +788,7 @@ restart:
 			{
 				//	Enregistre le changement d'état de soulignement.
 				
-				double oy   = this.Y;
+				double oy   = this.LineBaseY;
 				double asc  = this.LineAscender;
 				double desc = this.LineDescender;
 				
@@ -855,6 +807,47 @@ restart:
 			}
 			
 			this.underline_records.Add (record);
+		}
+		
+		
+		public void DefineLineGeometry(double y, double y1, double y2, double ascender, double descender)
+		{
+			this.oy_base = y;
+			this.oy_max  = y + ascender;
+			this.oy_min  = y + descender;
+			this.line_y1 = y1;
+			this.line_y2 = y2;
+		}
+		
+		public void DefineLineSkipBefore(double value)
+		{
+			this.line_skip_before = value;
+		}
+		
+		public void DefineFenceLineCount(int value)
+		{
+			this.fence_line_count = value;
+		}
+		
+		public void DefineKeepWithPreviousParagraph(bool value)
+		{
+			this.keep_with_prev_para = value;
+		}
+		
+		public void DefineTextOffset(int value)
+		{
+			this.text_offset = value;
+		}
+		
+		
+		public void DisableSimpleRendering()
+		{
+			this.disable_simple_rendering = true;
+		}
+		
+		public void DisableFontBaselineOffset()
+		{
+			this.disable_font_baseline_offset = true;
 		}
 		
 		
@@ -978,8 +971,8 @@ restart:
 			{
 				int offset = this.TextOffset;
 				
-				double ox   = this.X;
-				double oy   = this.Y;
+				double ox   = this.LineCurrentX;
+				double oy   = this.LineBaseY;
 				double asc  = this.LineAscender;
 				double desc = this.LineDescender;
 				
@@ -1000,8 +993,8 @@ restart:
 						{
 							int offset = this.TextOffset;
 							
-							double ox   = this.X; // - this.text_profile.WidthEndSpace;
-							double oy   = this.Y;
+							double ox   = this.LineCurrentX; // - this.text_profile.WidthEndSpace;
+							double oy   = this.LineBaseY;
 							double asc  = this.LineAscender;
 							double desc = this.LineDescender;
 							
@@ -1571,8 +1564,9 @@ restart:
 		private double							oy_base;
 		private double							oy_max;
 		private double							oy_min;
-		private double							oy_top;
-		private double							oy_bottom;
+		
+		private double							line_y1;
+		private double							line_y2;
 		
 		private double							line_height;
 		private double							line_width;
@@ -1604,7 +1598,7 @@ restart:
 		private bool							enable_hyphenation;
 		private bool							break_anywhere;
 		
-		private bool							renderer_needs_text_and_glyphs;
+		private bool							disable_simple_rendering;
 		private bool							disable_font_baseline_offset;
 		
 		private Layout.BaseEngine				layout_engine;

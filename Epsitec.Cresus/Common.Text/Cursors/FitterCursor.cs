@@ -135,6 +135,7 @@ namespace Epsitec.Common.Text.Cursors
 			this.space_after_paragraph = y;
 		}
 		
+		
 		public void AddRange(System.Collections.IList values)
 		{
 			int n = values.Count;
@@ -169,6 +170,7 @@ namespace Epsitec.Common.Text.Cursors
 			}
 		}
 		
+		
 		public bool ContainsFrameIndex(int index)
 		{
 			for (int i = 0; i < this.elements.Length; i++)
@@ -180,6 +182,11 @@ namespace Epsitec.Common.Text.Cursors
 			}
 			
 			return false;
+		}
+		
+		public bool IsLastLine(int index)
+		{
+			return FitterCursor.IsLastLine (this.elements, index);
 		}
 		
 		
@@ -253,6 +260,7 @@ namespace Epsitec.Common.Text.Cursors
 				}
 			}
 			
+			
 			public int							FrameIndex
 			{
 				get
@@ -265,15 +273,16 @@ namespace Epsitec.Common.Text.Cursors
 				}
 			}
 			
-			public double						LineBaseX
+			
+			public double						LineStartX
 			{
 				get
 				{
-					return this.line_base_x;
+					return this.line_start_x;
 				}
 				set
 				{
-					this.line_base_x = value;
+					this.line_start_x = value;
 				}
 			}
 			
@@ -289,27 +298,27 @@ namespace Epsitec.Common.Text.Cursors
 				}
 			}
 			
-			public double						LineTopY
+			public double						LineY1
 			{
 				get
 				{
-					return this.line_top_y;
+					return this.line_y1;
 				}
 				set
 				{
-					this.line_top_y = value;
+					this.line_y1 = value;
 				}
 			}
 			
-			public double						LineBottomY
+			public double						LineY2
 			{
 				get
 				{
-					return this.line_bottom_y;
+					return this.line_y2;
 				}
 				set
 				{
-					this.line_bottom_y = value;
+					this.line_y2 = value;
 				}
 			}
 			
@@ -349,6 +358,7 @@ namespace Epsitec.Common.Text.Cursors
 				}
 			}
 			
+			
 			public bool							IsTabulation
 			{
 				get
@@ -377,10 +387,10 @@ namespace Epsitec.Common.Text.Cursors
 			private ushort						length;
 			private Layout.StretchProfile		profile;
 			private int							frame_index;
-			private double						line_base_x;
+			private double						line_start_x;
 			private double						line_base_y;
-			private double						line_top_y;
-			private double						line_bottom_y;
+			private double						line_y1;
+			private double						line_y2;
 			private double						line_width;
 			private double						line_ascender;
 			private double						line_descender;

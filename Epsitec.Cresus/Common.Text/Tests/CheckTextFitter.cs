@@ -294,7 +294,7 @@ namespace Epsitec.Common.Text.Tests
 				
 				foreach (Cursors.FitterCursor.Element elem in fitter_cursor.Elements)
 				{
-					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineBaseX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
+					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineStartX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
 				}
 			}
 		}
@@ -367,7 +367,7 @@ namespace Epsitec.Common.Text.Tests
 				
 				foreach (Cursors.FitterCursor.Element elem in fitter_cursor.Elements)
 				{
-					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineBaseX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
+					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineStartX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
 				}
 			}
 			
@@ -449,7 +449,7 @@ namespace Epsitec.Common.Text.Tests
 				
 				foreach (Cursors.FitterCursor.Element elem in fitter_cursor.Elements)
 				{
-					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineBaseX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
+					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineStartX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
 				}
 			}
 		}
@@ -527,7 +527,7 @@ namespace Epsitec.Common.Text.Tests
 				
 				foreach (Cursors.FitterCursor.Element elem in fitter_cursor.Elements)
 				{
-					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineBaseX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
+					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineStartX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
 				}
 			}
 		}

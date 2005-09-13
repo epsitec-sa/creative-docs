@@ -131,15 +131,15 @@ namespace Epsitec.Common.Widgets
 		
 		public void RenderStartLine(Text.Layout.Context context)
 		{
-			double ox = context.X;
-			double oy = context.Y;
+			double ox = context.LineCurrentX;
+			double oy = context.LineBaseY;
 			double dx = context.TextWidth;
 			
 			this.graphics.LineWidth = 0.3;
 			this.graphics.AddLine (ox, oy, ox + dx, oy);
 			this.graphics.RenderSolid (Drawing.Color.FromName ("Green"));
 			
-			context.RendererNeedsTextAndGlyphs = true;
+			context.DisableSimpleRendering ();
 		}
 		
 		public void Render(Epsitec.Common.Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
@@ -210,9 +210,9 @@ namespace Epsitec.Common.Widgets
 								}
 								
 								double dx = xx - sel_x;
-								double dy = layout.TopY - layout.BottomY;
+								double dy = layout.LineY2 - layout.LineY1;
 								
-								Drawing.Rectangle rect = new Drawing.Rectangle (sel_x, layout.BottomY, dx, dy);
+								Drawing.Rectangle rect = new Drawing.Rectangle (sel_x, layout.LineY1, dx, dy);
 								
 								sel_bbox = Drawing.Rectangle.Union (sel_bbox, rect);
 								
@@ -249,9 +249,9 @@ namespace Epsitec.Common.Widgets
 					}
 					
 					double dx = xx - sel_x;
-					double dy = layout.TopY - layout.BottomY;
+					double dy = layout.LineY2 - layout.LineY1;
 					
-					Drawing.Rectangle rect = new Drawing.Rectangle (sel_x, layout.BottomY, dx, dy);
+					Drawing.Rectangle rect = new Drawing.Rectangle (sel_x, layout.LineY1, dx, dy);
 					
 					sel_bbox = Drawing.Rectangle.Union (sel_bbox, rect);
 					

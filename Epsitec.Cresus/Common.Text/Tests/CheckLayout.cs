@@ -85,7 +85,7 @@ namespace Epsitec.Common.Text.Tests
 			context.SelectFrame (0, 0);
 			
 			status  = context.Fit (ref breaks, 0);
-			context.TextOffset = breaks[0].Offset;
+			context.DefineTextOffset (breaks[0].Offset);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 28);
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (context.LineHeight < 14.4000);
 			
 			status  = context.Fit (ref breaks, 1);
-			context.TextOffset = breaks[0].Offset;
+			context.DefineTextOffset (breaks[0].Offset);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 62);
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (context.LineHeight < 19.2001);
 			
 			status  = context.Fit (ref breaks, 2);
-			context.TextOffset = breaks[0].Offset;
+			context.DefineTextOffset (breaks[0].Offset);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 95);
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (context.LineHeight < 14.4000);
 			
 			status  = context.Fit (ref breaks, 3);
-			context.TextOffset = breaks[0].Offset;
+			context.DefineTextOffset (breaks[0].Offset);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 131);
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (context.LineHeight < 14.4000);
 			
 			status  = context.Fit (ref breaks, 4);
-			context.TextOffset = breaks[0].Offset;
+			context.DefineTextOffset (breaks[0].Offset);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.OkFitEnded);
 			Debug.Assert.IsTrue (breaks[0].Offset == 149);
@@ -140,11 +140,11 @@ namespace Epsitec.Common.Text.Tests
 			frame_0.Width = 300;
 			frame_0.Height = 20;
 			
-			context.TextOffset = 0;
+			context.DefineTextOffset (0);
 			context.SelectFrame (0, 0);
 			
 			status  = context.Fit (ref breaks, 0);
-			context.TextOffset = breaks[0].Offset;
+			context.DefineTextOffset (breaks[0].Offset);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 46);
@@ -156,11 +156,11 @@ namespace Epsitec.Common.Text.Tests
 			frame_0.Width = 300;
 			frame_0.Height = 18;
 			
-			context.TextOffset = 0;
+			context.DefineTextOffset (0);
 			context.SelectFrame (0, 0);
 			
 			status  = context.Fit (ref breaks, 0);
-			context.TextOffset = breaks[0].Offset;
+			context.DefineTextOffset (breaks[0].Offset);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 28);
@@ -169,13 +169,13 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (context.LineHeight < 14.4000);
 			
 			status  = context.Fit (ref breaks, 0);
-			context.TextOffset = breaks[0].Offset;
+			context.DefineTextOffset (breaks[0].Offset);
 			
 			Debug.Assert.IsTrue (context.LineHeight > 19.1999);
 			Debug.Assert.IsTrue (context.LineHeight < 19.2001);
 			
 			status  = context.Fit (ref breaks, 0);
-			context.TextOffset = breaks[0].Offset;
+			context.DefineTextOffset (breaks[0].Offset);
 			
 			Debug.Assert.IsTrue (context.LineHeight > 14.3998);
 			Debug.Assert.IsTrue (context.LineHeight < 14.4000);
@@ -297,13 +297,13 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[0].Offset == 27);
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			
-			context.TextOffset = breaks[0].Offset;
+			context.DefineTextOffset (breaks[0].Offset);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks[0].Offset == 56);
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			
-			context.TextOffset = breaks[0].Offset;
+			context.DefineTextOffset (breaks[0].Offset);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks[0].Offset == 68);

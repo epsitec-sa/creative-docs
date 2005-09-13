@@ -48,6 +48,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void RenderStartParagraph(Layout.Context context)
 		{
+			System.Diagnostics.Debug.Assert (context.IsSimpleRenderingDisabled);
+			System.Diagnostics.Debug.Assert (context.IsFontBaselineOffsetDisabled);
 		}
 		
 		public void RenderStartLine(Layout.Context context)
@@ -56,22 +58,25 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void Render(Layout.Context layout, OpenType.Font font, double size, Drawing.Color color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
 		{
-			ITextFrame frame = layout.Frame;
-			
-			System.Diagnostics.Debug.Assert (frame != null);
-			System.Diagnostics.Debug.Assert (font != null);
-			System.Diagnostics.Debug.Assert (mapping != null);
+			//	Enregistre la position des divers caractères qui composent le texte
+			//	avec la fonte courante. Peuple la liste des éléments à cet effet.
 			
 			if (glyphs.Length == 0)
 			{
 				return;
 			}
 			
+			ITextFrame frame = layout.Frame;
+			
+			System.Diagnostics.Debug.Assert (frame != null);
+			System.Diagnostics.Debug.Assert (font != null);
+			System.Diagnostics.Debug.Assert (mapping != null);
+			
 			int[]    map_char;
 			ushort[] map_glyphs;
 			
-			double y1 = layout.BottomY;
-			double y2 = layout.TopY;
+			double y1 = layout.LineY1;
+			double y2 = layout.LineY2;
 			
 			int glyph_index = 0;
 			
@@ -80,16 +85,17 @@ namespace Epsitec.Common.Text.Internal
 				System.Diagnostics.Debug.Assert ((map_glyphs.Length == 1) || (is_last_run));
 				
 				double ox = x[glyph_index];
-				double dx = x[glyph_index+1] - ox;
 				double oy = y[glyph_index];
+				double dx = x[glyph_index+1] - ox;
 				
 				double ax = dx / map_char.Length;
 				
-				for (int i = 0; i < map_char.Length; i++)
+				//	S'il y a plusieurs caractères pour un glyphe donné (ligature),
+				//	on répartit la largeur de manière égale entre les caractères.
+				
+				for (int i = 0; i < map_char.Length; i++, ox += ax)
 				{
 					this.items.Add (new Element (frame, font, size, map_char[i], ox, oy, y1, y2));
-					
-					ox += ax;
 				}
 				
 				glyph_index++;
@@ -97,7 +103,13 @@ namespace Epsitec.Common.Text.Internal
 			
 			if (is_last_run)
 			{
-				this.items.Add (new Element (frame, font, size, 0, x[glyph_index], y[glyph_index-1], y1, y2));
+				//	Pour la dernière ligne, on enregistre encore un élément pour
+				//	représenter la marque de fin de paragraphe :
+				
+				double ox = x[glyph_index];
+				double oy = y[glyph_index-1];
+				
+				this.items.Add (new Element (frame, font, size, 0, ox, oy, y1, y2));
 			}
 		}
 		
@@ -105,8 +117,8 @@ namespace Epsitec.Common.Text.Internal
 		{
 			ITextFrame frame = layout.Frame;
 			
-			double y1 = layout.BottomY;
-			double y2 = layout.TopY;
+			double y1 = layout.LineY1;
+			double y2 = layout.LineY2;
 			
 			this.items.Add (new Element (frame, null, 0, 0, x, y, y1, y2));
 			
@@ -145,7 +157,6 @@ namespace Epsitec.Common.Text.Internal
 				this.y1 = y1;
 				this.y2 = y2;
 			}
-			
 			
 			
 			public double						X

@@ -229,6 +229,10 @@ namespace Epsitec.Common.Text
 		
 		public bool HitTestParagraphInTextFrame(ICursor fitter_cursor, ITextFrame frame, double x, double y, bool skip_invisible, ref int position, ref int direction)
 		{
+			//	Détermine où se trouve le curseur dans le frame spécifié. La recherche
+			//	se base sur les positions des lignes, dans un premier temps, puis sur
+			//	les informations détaillées de position au sein de la ligne.
+			
 			Cursors.FitterCursor cursor = fitter_cursor as Cursors.FitterCursor;
 			
 			if (cursor == null)
@@ -244,13 +248,20 @@ namespace Epsitec.Common.Text
 			double view_x = x;
 			double view_y = y;
 			
+			//	Convertit les coordonnées [x,y] en coordonnées internes, pour la
+			//	première recherche approximative. Les recherches détaillées basées
+			//	sur GetCursorGeometry se basent ensuite sur des coordonnées [view]
+			//	standard.
+			
 			frame.MapFromView (ref x, ref y);
+			
+			double dy_after = cursor.SpaceAfterParagraph;
 			
 			for (int i = 0; i < elements.Length; i++)
 			{
 				double l_yb = elements[i].LineBaseY;
-				double l_y1 = elements[i].LineTopY;
-				double l_y2 = elements[i].LineBottomY - cursor.SpaceAfterParagraph;
+				double l_y1 = elements[i].LineY2;
+				double l_y2 = elements[i].LineY1 - dy_after;
 				
 				if ((y >= l_y2) &&
 					(y <= l_y1))
@@ -263,25 +274,35 @@ namespace Epsitec.Common.Text
 					double cy1 = 0;
 					double cy2 = 0;
 					
-					this.GetCursorGeometry (frame, para_start + line_offset, 0, elements, i, ref cx1, ref cy, ref cy1, ref cy2, cursor.SpaceAfterParagraph);
+					this.GetCursorGeometry (frame, para_start + line_offset, 0, elements, i, ref cx1, ref cy, ref cy1, ref cy2, dy_after);
 					
 					if ((view_y >= cy1) &&
 						(view_y <= cy2))
 					{
+						//	Verticalement, le curseur est bien dans la ligne, en tenant
+						//	compte de toutes les finesses (interligne, espace avant et
+						//	après, etc.)
+						
 						if (view_x < cx1)
 						{
+							//	On se trouve trop à gauche --> début de ligne.
+							
 							position  = para_start + line_offset;
 							direction = -1;
 						}
 						else
 						{
-							double cx2 = 0;
-							
 							int last_valid_offset = 0;
+							
+							//	Passe toute la ligne au crible fin, caractère par carac-
+							//	tère, jusqu'à trouver celui qui est sous le curseur :
 							
 							for (int glyph_offset = 1; glyph_offset <= elements[i].Length; glyph_offset++)
 							{
-								this.GetCursorGeometry (frame, para_start + line_offset, glyph_offset, elements, i, ref cx2, ref cy, ref cy1, ref cy2, cursor.SpaceAfterParagraph);
+								int    pos = para_start + line_offset;
+								double cx2 = cx1;
+								
+								this.GetCursorGeometry (frame, pos, glyph_offset, elements, i, ref cx2, ref cy, ref cy1, ref cy2, dy_after);
 								
 								if ((view_x >= cx1) &&
 									(view_x <= cx2))
@@ -308,7 +329,9 @@ namespace Epsitec.Common.Text
 								cx1 = cx2;
 							}
 							
-							if (view_x > cx2)
+							//	On se trouve trop à droite --> fin de ligne.
+							
+							if (view_x > cx1)
 							{
 								position  = para_start + line_offset + last_valid_offset;
 								direction = 1;
@@ -321,22 +344,6 @@ namespace Epsitec.Common.Text
 			}
 			
 			return false;
-		}
-		
-		public void GetStatistics(out int paragraph_count, out int line_count)
-		{
-			paragraph_count = 0;
-			line_count      = 0;
-			
-			CursorInfo[] infos = this.story.TextTable.FindCursors (0, this.story.TextLength, Cursors.FitterCursor.Filter);
-			
-			for (int i = 0; i < infos.Length; i++)
-			{
-				Cursors.FitterCursor cursor = this.story.TextTable.GetCursorInstance (infos[i].CursorId) as Cursors.FitterCursor;
-				
-				paragraph_count += 1;
-				line_count      += cursor.LineCount;
-			}
 		}
 		
 		
@@ -402,7 +409,7 @@ namespace Epsitec.Common.Text
 							
 							frame = this.FrameList[frame_index];
 							
-							x = elements[i].LineBaseX;
+							x = elements[i].LineStartX;
 							y = elements[i].LineBaseY;
 							
 							paragraph_line = i - tab_count;
@@ -447,6 +454,22 @@ namespace Epsitec.Common.Text
 			return false;
 		}
 		
+		
+		public void GetStatistics(out int paragraph_count, out int line_count)
+		{
+			paragraph_count = 0;
+			line_count      = 0;
+			
+			CursorInfo[] infos = this.story.TextTable.FindCursors (0, this.story.TextLength, Cursors.FitterCursor.Filter);
+			
+			for (int i = 0; i < infos.Length; i++)
+			{
+				Cursors.FitterCursor cursor = this.story.TextTable.GetCursorInstance (infos[i].CursorId) as Cursors.FitterCursor;
+				
+				paragraph_count += 1;
+				line_count      += cursor.LineCount;
+			}
+		}
 		
 		
 		private void Invalidate()
@@ -507,9 +530,9 @@ namespace Epsitec.Common.Text
 			
 			layout.SelectFrame (this.frame_index, this.frame_y);
 			
-			layout.LineSkipBefore            = this.line_skip_before;
-			layout.KeepWithPreviousParagraph = this.keep_with_prev;
-			layout.FenceLineCount            = this.line_fence;
+			layout.DefineLineSkipBefore (this.line_skip_before);
+			layout.DefineKeepWithPreviousParagraph (this.keep_with_prev);
+			layout.DefineFenceLineCount (this.line_fence);
 			
 			int    paragraph_start_offset      = 0;
 			int    paragraph_start_frame_index = layout.FrameIndex;;
@@ -577,8 +600,8 @@ restart_paragraph_layout:
 						this.keep_with_prev   = layout.KeepWithNextParagraph;
 						this.line_fence       = -1;
 						
-						layout.LineSkipBefore            = this.line_skip_before;
-						layout.KeepWithPreviousParagraph = this.keep_with_prev;
+						layout.DefineLineSkipBefore (this.line_skip_before);
+						layout.DefineKeepWithPreviousParagraph (this.keep_with_prev);
 						
 						break;
 					
@@ -754,13 +777,16 @@ restart_paragraph_layout:
 						end_of_text = true;
 					}
 					
+					//	Génère un élément décrivant la ligne (ou le morceau de ligne
+					//	qui précède un tabulateur) :
+					
 					element.Length        = offset - line_start_offset;
 					element.Profile       = profile;
 					element.FrameIndex    = layout.FrameIndex;
-					element.LineBaseX     = layout.LineStartX;
-					element.LineBaseY     = layout.Y;
-					element.LineBottomY   = layout.BottomY;
-					element.LineTopY      = layout.TopY;
+					element.LineStartX    = layout.LineStartX;
+					element.LineBaseY     = layout.LineBaseY;
+					element.LineY1        = layout.LineY1;
+					element.LineY2        = layout.LineY2;
 					element.LineWidth     = (continuation && !tab_new_line) ? result[result.Count-1].Profile.TotalWidth : layout.AvailableWidth;
 					element.LineAscender  = layout.LineAscender;
 					element.LineDescender = layout.LineDescender;
@@ -776,7 +802,7 @@ restart_paragraph_layout:
 				}
 				else
 				{
-					layout.TextOffset = offset;
+					layout.DefineTextOffset (offset);
 				}
 				
 				if (layout_status == Layout.Status.OkTabReached)
@@ -834,6 +860,10 @@ restart_paragraph_layout:
 						
 						Cursors.FitterCursor mark = this.NewFitterCursor ();
 						
+						//	Prend note des informations de position relatives aux lignes
+						//	constituant le paragraphe, ainsi que des informations globales
+						//	sur le paragraphe :
+						
 						mark.AddRange (list);
 						mark.DefineParagraphY (paragraph_start_frame_y);
 						mark.DefineSpaceAfterParagraph (layout.LineSpaceAfter);
@@ -878,6 +908,9 @@ restart_paragraph_layout:
 		
 		private int RewindToPreviousParagraph(Cursors.TempCursor cursor, int position, int offset)
 		{
+			//	Revient au paragraphe précédent et supprime le curseur du paragraphe
+			//	créé le plus récemment :
+			
 			Cursors.FitterCursor para_1 = this.GetPreviousFitterCursor (position + offset);
 			Cursors.FitterCursor para_2 = this.GetPreviousFitterCursor (para_1);
 			
@@ -936,11 +969,15 @@ restart_paragraph_layout:
 				
 				this.story.ReadText (position, length, text);
 				
+				//	Analyse le layout précis en réalisant un rendu du texte avec
+				//	GeometryRenderer, lequel enregistre les positions de tous les
+				//	caractères traités :
+				
 				Layout.Context            layout   = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
 				Internal.GeometryRenderer renderer = new Internal.GeometryRenderer ();
 				
-				layout.DisableFontBaselineOffset  = true;
-				layout.RendererNeedsTextAndGlyphs = true;
+				layout.DisableFontBaselineOffset ();
+				layout.DisableSimpleRendering ();
 				
 				this.RenderElement (renderer, frame, elements, i, layout, space_after);
 				
@@ -965,7 +1002,7 @@ restart_paragraph_layout:
 				//	Pas d'élément trouvé : on prend la ligne de base comme
 				//	référence :
 				
-				x  = elements[i].LineBaseX;
+				x  = elements[i].LineStartX;
 				y  = elements[i].LineBaseY;
 				y1 = y + elements[i].LineDescender;
 				y2 = y + elements[i].LineAscender;
@@ -973,6 +1010,7 @@ restart_paragraph_layout:
 				frame.MapToView (ref x, ref y);
 			}
 		}
+		
 		
 		private void RenderElement(ITextRenderer renderer, ITextFrame frame, Cursors.FitterCursor.Element[] elements, int i, Layout.Context layout, double space_after)
 		{
@@ -985,23 +1023,30 @@ restart_paragraph_layout:
 			if ((frame == null) ||
 				(layout.Frame == frame))
 			{
-				double ox    = elements[i].LineBaseX;
+				double ox    = elements[i].LineStartX;
 				double oy    = elements[i].LineBaseY;
 				double width = elements[i].LineWidth;
 				double asc   = elements[i].LineAscender;
 				double desc  = elements[i].LineDescender;
-				double y1    = elements[i].LineBottomY - oy;
-				double y2    = elements[i].LineTopY - oy;
+				double y1    = elements[i].LineY1;
+				double y2    = elements[i].LineY2;
+				
+				//	Transforme les coordonnées internes en coordonnées utilisables pour
+				//	l'affichage :
+				
+				y1 -= oy;
+				y2 -= oy;
 				
 				layout.Frame.MapToView (ref ox, ref oy);
 				
 				y1 += oy;
 				y2 += oy;
 				
-//-				System.Diagnostics.Debug.WriteLine (string.Format ("Base={0} Top={1} Bottom={2} Height={3} Last={4} After={5}", (int) oy, (int) y2, (int) y1, (int)(y2 - y1), Cursors.FitterCursor.IsLastLine (elements, i), Cursors.FitterCursor.IsLastLine (elements, i) ? (int) space_after : 0));
-				
 				if (Cursors.FitterCursor.IsLastLine (elements, i))
 				{
+					//	C'est la dernière ligne du paragraphe, donc il faut tenir compte
+					//	de l'espace qui est ajouté après et descendre y1 en conséquence :
+					
 					y1 -= space_after;
 				}
 				
@@ -1013,21 +1058,20 @@ restart_paragraph_layout:
 					
 					Layout.StretchProfile profile = elements[i].Profile;
 					
-					layout.Y             = oy;
-					layout.LineAscender  = asc;
-					layout.LineDescender = desc;
-					layout.BottomY       = y1;
-					layout.TopY          = y2;
+					//	Le render a besoin de pouvoir accéder à diverses informations
+					//	sur la géométrie de la ligne. On les initialise à cet effet :
 					
+					layout.DefineLineGeometry (oy, y1, y2, asc, desc);
 					layout.RenderLine (renderer, profile, length, ox, oy, width, i, is_tab, is_last);
 				}
 				else
 				{
+					layout.DefineLineGeometry (oy, y1, y2, asc, desc);
 					layout.InvisibleLine (renderer, length, ox, oy);
 				}
 			}
 			
-			layout.TextOffset += length;
+			layout.DefineTextOffset (layout.TextOffset + length);
 		}
 		
 		
@@ -1048,7 +1092,8 @@ restart_paragraph_layout:
 			return (cursor == null) ? null : this.GetPreviousFitterCursor (this.story.GetCursorPosition (cursor));
 		}
 		
-		private Properties.KeepProperty GetKeepProperty(ICursor cursor)
+		
+		private Properties.KeepProperty    GetKeepProperty(ICursor cursor)
 		{
 			if (cursor == null)
 			{
@@ -1081,14 +1126,6 @@ restart_paragraph_layout:
 		}
 		
 		
-		private enum TabStatus
-		{
-			Ok,
-			ErrorNeedMoreText,
-			ErrorNeedMoreRoom,
-			ErrorCannotFit
-		}
-		
 		private TabStatus MeasureTabTextWidth(Layout.Context layout, Properties.TabProperty tab_property, int line_count, bool start_of_line, out double tab_x, out double width)
 		{
 			tab_x = 0;
@@ -1096,7 +1133,7 @@ restart_paragraph_layout:
 			
 			double d = tab_property.Disposition;
 			
-			double x1 = start_of_line ? layout.LeftMargin : layout.X;
+			double x1 = start_of_line ? layout.LeftMargin : layout.LineCurrentX;
 			double x2 = tab_property.PositionInPoints;
 			double x3 = layout.LineWidth - layout.RightMargin;
 			
@@ -1216,12 +1253,13 @@ restart_paragraph_layout:
 			return TabStatus.ErrorCannotFit;
 		}
 		
+		
 		private double ComputePenalty(double space_penalty, double break_penalty)
 		{
 			return space_penalty + break_penalty;
 		}
 		
-		private int ComputeParagraphLength(ulong[] text, int offset)
+		private int    ComputeParagraphLength(ulong[] text, int offset)
 		{
 			//	Détermine la longueur du paragraphe dans le texte passé en entrée, en
 			//	commençant à l'offset indiqué. Une marque de fin de texte ne fait pas
@@ -1286,6 +1324,16 @@ restart_paragraph_layout:
 			this.free_cursors.Push (cursor);
 		}
 		
+		
+		#region TabStatus Enumeration
+		private enum TabStatus
+		{
+			Ok,
+			ErrorNeedMoreText,
+			ErrorNeedMoreRoom,
+			ErrorCannotFit
+		}
+		#endregion
 		
 		private long							version;
 		

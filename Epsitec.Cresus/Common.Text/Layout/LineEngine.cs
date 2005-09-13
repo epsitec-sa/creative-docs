@@ -30,7 +30,7 @@ namespace Epsitec.Common.Text.Layout
 			scratch.FenceMinX = context.LineWidth-context.RightMargin-context.BreakFenceBefore;
 			scratch.FenceMaxX = context.LineWidth-context.RightMargin+context.BreakFenceAfter;
 			
-			scratch.Advance        = context.X;
+			scratch.Advance        = context.LineCurrentX;
 			scratch.WordBreakInfo  = Unicode.BreakInfo.No;
 			scratch.StretchProfile = new StretchProfile ();
 			
@@ -197,8 +197,8 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 		
 		public override Layout.Status Render(Layout.Context context, ITextRenderer renderer, int length)
 		{
-			double  ox = context.X;
-			double  oy = context.Y;
+			double  ox = context.LineCurrentX;
+			double  oy = context.LineBaseY;
 			ulong[] text;
 			
 			if (context.GetTextCopy (context.TextOffset, out text, ref length))
@@ -517,7 +517,7 @@ advance_next:
 			//	(par ex. pour déterminer la position du curseur), on en tient compte
 			//	ici :
 			
-			if (context.DisableFontBaselineOffset)
+			if (context.IsFontBaselineOffsetDisabled)
 			{
 				font_baseline = 0;
 			}
@@ -560,7 +560,7 @@ advance_next:
 				
 				BaseEngine.GenerateGlyphs (context.TextContext, font, temp, 0, length+1, out glyphs, ref attributes);
 				
-				if (context.RendererNeedsTextAndGlyphs)
+				if (context.IsSimpleRenderingDisabled)
 				{
 					int     num = length+1;
 					short[] map = new short[num+1];
@@ -582,7 +582,7 @@ advance_next:
 			{
 				BaseEngine.GenerateGlyphs (context.TextContext, font, text, offset, length, out glyphs, ref attributes);
 				
-				if (context.RendererNeedsTextAndGlyphs)
+				if (context.IsSimpleRenderingDisabled)
 				{
 					int     num = length;
 					short[] map = new short[num+1];

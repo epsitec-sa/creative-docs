@@ -882,7 +882,7 @@ namespace Epsitec.Common.Text
 				{
 					if (Unicode.Bits.GetBreakInfo (text[i - area_start]) == Unicode.BreakInfo.Optional)
 					{
-						word_end = i;
+						word_end = i + 1;
 						break;
 					}
 				}
