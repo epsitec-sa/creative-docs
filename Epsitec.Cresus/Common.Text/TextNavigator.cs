@@ -1404,6 +1404,15 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			if (Internal.Navigator.IsEndOfText (this.story, this.temp_cursor, -1))
+			{
+				//	Le curseur est au-delà de la fin du texte; il faut le ramener
+				//	juste avant le caractère marqueur de la fin du texte :
+				
+				new_pos -= 1;
+				new_dir  = -1;
+			}
+			
 			//	Déplace le curseur "officiel" une seule fois. Ceci permet d'éviter
 			//	qu'un appel à MoveTo provoque plusieurs enregistrements dans l'oplet
 			//	queue active :

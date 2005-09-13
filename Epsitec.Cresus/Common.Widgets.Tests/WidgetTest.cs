@@ -37,6 +37,8 @@ namespace Epsitec.Common.Widgets
 			
 			string words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
 			
+			navigator.Insert (Text.Unicode.Code.EndOfText);
+			navigator.TextNavigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
 			navigator.Insert (words);
 			
 			frame.Dock        = DockStyle.Fill;

@@ -30,6 +30,9 @@ namespace Epsitec.Common.Text.Internal
 				case Unicode.Code.ParagraphSeparator:
 				case Unicode.Code.LineSeparator:
 					return true;
+				
+				case Unicode.Code.EndOfText:
+					return true;
 			}
 			
 			return false;
@@ -38,6 +41,24 @@ namespace Epsitec.Common.Text.Internal
 		public static bool IsParagraphSeparator(ulong code)
 		{
 			return Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (code));
+		}
+		
+		
+		public static bool IsEndOfText(TextStory story, ICursor cursor, int offset)
+		{
+			Unicode.Code code = Unicode.Bits.GetUnicodeCode (story.ReadChar (cursor, offset));
+			
+			return Navigator.IsEndOfText (code);
+		}
+		
+		public static bool IsEndOfText(Unicode.Code code)
+		{
+			return Unicode.Code.EndOfText == code;
+		}
+		
+		public static bool IsEndOfText(ulong code)
+		{
+			return Navigator.IsEndOfText (Unicode.Bits.GetUnicodeCode (code));
 		}
 		
 		
