@@ -317,8 +317,21 @@ namespace Epsitec.Common.Text
 			
 			try
 			{
-				this.story.SetCursorPosition (temp, p1);
-				this.DeleteText (temp, p2-p1);
+				this.story.SetCursorPosition (temp, p2);
+				
+				if (Internal.Navigator.IsEndOfText (this.story, temp, -1))
+				{
+					//	La position du texte est telle que le curseur se trouve après
+					//	la marque de fin de texte. Corrige sa position :
+					
+					p2 -= 1;
+				}
+				
+				if (p2 > p1)
+				{
+					this.story.SetCursorPosition (temp, p1);
+					this.DeleteText (temp, p2-p1);
+				}
 			}
 			finally
 			{
