@@ -3393,6 +3393,7 @@ namespace Epsitec.Common.Document
 			}
 
 			this.DeselectAll();
+			this.ActiveViewer.ClearHilite();
 		}
 
 		// Termine un changement de page.
@@ -3840,6 +3841,7 @@ namespace Epsitec.Common.Document
 		public void InitiateChangingLayer()
 		{
 			this.DeselectAll();
+			this.ActiveViewer.ClearHilite();
 		}
 
 		// Termine un changement de calque.

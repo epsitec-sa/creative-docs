@@ -45,12 +45,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 
 				StaticText www = new StaticText(this.window.Root);
-				www.Width = 100;
+				www.Width = 120;
 				www.Text = string.Format("<a href=\"{0}\">{1}</a><br/>", Res.Strings.Dialog.About.Link, Res.Strings.Dialog.About.Web);
-				www.Alignment = ContentAlignment.MiddleRight;
+				www.Alignment = ContentAlignment.MiddleLeft;
 				www.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
 				www.Anchor = AnchorStyles.BottomRight;
-				www.AnchorMargins = new Margins(0, 20, 0, 15);
+				www.AnchorMargins = new Margins(0, 0, 0, 15);
 			}
 
 			this.window.ShowDialog();
@@ -102,7 +102,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				StaticText warning = new StaticText(parent);
 				warning.Text = "<b>" + Res.Strings.Dialog.About.Demo + "</b>";
-				warning.Location = new Point(316, y+0);
+				warning.Location = new Point(280, y+0);
 				warning.Size = new Size(84, 40);
 				warning.SetClientZoom(2.5);
 			}
@@ -111,9 +111,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				StaticText warning = new StaticText(parent);
 				warning.Text = "<b>" + Res.Strings.Dialog.About.Expired + "</b>";
-				warning.Location = new Point(316, y+0);
+				warning.Location = new Point(280, y+0);
 				warning.Size = new Size(84, 40);
 				warning.SetClientZoom(2.5);
+			}
+
+			if ( type == InstallType.Freeware )
+			{
+				StaticText warning = new StaticText(parent);
+				warning.Text = "<b>" + Res.Strings.Dialog.About.Freeware + "</b>";
+				warning.Location = new Point(280, y+0);
+				warning.Size = new Size(190, 40);
+				warning.SetClientZoom(2.0);
 			}
 
 			return image;

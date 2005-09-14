@@ -34,20 +34,28 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				string key = Common.Support.SerialAlgorithm.ReadSerial();
-				this.askKey = (key == null);
-
-				if ( key == null || key == "demo" )
+				if ( Res.Strings.Application.Type == "F" )
 				{
-					this.installType = InstallType.Demo;
-				}
-				else if ( Common.Support.SerialAlgorithm.CheckSerial(key) )
-				{
-					this.installType = InstallType.Full;
+					this.askKey = false;
+					this.installType = InstallType.Freeware;
 				}
 				else
 				{
-					this.installType = InstallType.Expired;
+					string key = Common.Support.SerialAlgorithm.ReadSerial();
+					this.askKey = (key == null);
+
+					if ( key == null || key == "demo" )
+					{
+						this.installType = InstallType.Demo;
+					}
+					else if ( Common.Support.SerialAlgorithm.CheckSerial(key) )
+					{
+						this.installType = InstallType.Full;
+					}
+					else
+					{
+						this.installType = InstallType.Expired;
+					}
 				}
 			}
 
@@ -509,7 +517,10 @@ namespace Epsitec.App.DocumentEditor
 			VMenu helpMenu = new VMenu();
 			helpMenu.Name = "Help";
 			helpMenu.Host = this;
-			this.MenuAdd(helpMenu, Misc.Icon("Key"), "KeyApplication", Res.Strings.Menu.Help.Key, DocumentEditor.GetShortCut(this.keyState));
+			if ( this.installType != InstallType.Freeware )
+			{
+				this.MenuAdd(helpMenu, Misc.Icon("Key"), "KeyApplication", Res.Strings.Menu.Help.Key, DocumentEditor.GetShortCut(this.keyState));
+			}
 			this.MenuAdd(helpMenu, Misc.Icon("Update"), "UpdateApplication", Res.Strings.Menu.Help.Update, DocumentEditor.GetShortCut(this.updateState));
 			this.MenuAdd(helpMenu, "", "", "", "");
 			this.MenuAdd(helpMenu, Misc.Icon("About"), "AboutApplication", Res.Strings.Menu.Help.About, DocumentEditor.GetShortCut(this.aboutState));

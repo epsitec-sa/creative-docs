@@ -6,6 +6,7 @@
 	<data name="Application.TitlePic">Crésus Pictogrammes</data>
 	<data name="Application.TitleTxt">Crésus Textes</data>
 	<data name="Application.TitleShort">Crésus</data>
+	<data name="Application.Type">N</data>
 	
 	<data name="Menu.Main.File">Fichier</data>
 	<data name="Menu.Main.Edit">Edition</data>
@@ -74,6 +75,7 @@
 	<data name="Dialog.About.Copyright">© 2004-2005 EPSITEC SA, Daniel Roux, Pierre Arnaud</data>
 	<data name="Dialog.About.Demo">démo</data>
 	<data name="Dialog.About.Expired">échu</data>
+	<data name="Dialog.About.Freeware">version gratuite</data>
 
 	<data name="Dialog.Export.Title1">Exporter un document</data>
 	<data name="Dialog.Export.Title2">Exporter {0}</data>
@@ -164,6 +166,7 @@
 	<data name="Dialog.Update.Over">&lt;i&gt;Plus de mises à jour gratuites&lt;/i&gt;.</data>
 	<data name="Dialog.Update.BuyDemo">Vous pouvez acheter ce logiciel auprès de Epsitec SA.</data>
 	<data name="Dialog.Update.BuyFull">Vous pouvez obtenir une mise à jour auprès de Epsitec SA.</data>
+	<data name="Dialog.Update.BuyFreeware">Consultez notre site web pour vérifier si une mise à jour est disponible.</data>
 	<data name="Dialog.Update.Web1">Web:</data>
 	<data name="Dialog.Update.Web2">http://www.epsitec.ch/cresus/documents/download-f.php</data>
 	<data name="Dialog.Update.Web3">www.epsitec.ch</data>

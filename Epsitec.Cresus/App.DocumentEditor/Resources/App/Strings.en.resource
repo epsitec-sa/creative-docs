@@ -2,10 +2,11 @@
 <!-- Ressources pour le projet App.DocumentEditor -->
 
 <bundle type="String">
-	<data name="Application.TitleDoc">Crésus Documents</data>
-	<data name="Application.TitlePic">Crésus Pictogrammes</data>
-	<data name="Application.TitleTxt">Crésus Textes</data>
-	<data name="Application.TitleShort">Crésus</data>
+	<data name="Application.TitleDoc">Creative Docs .NET</data>
+	<data name="Application.TitlePic">Creative Pict .NET</data>
+	<data name="Application.TitleTxt">Creative Text .NET</data>
+	<data name="Application.TitleShort">CreativeDocs</data>
+	<data name="Application.Type">F</data>
 	
 	<data name="Menu.Main.File">File</data>
 	<data name="Menu.Main.Edit">Edit</data>
@@ -65,14 +66,15 @@
 	<data name="Dialog.Export.Title">Export current page</data>
 
 	<data name="Dialog.About.Title">About...</data>
-	<data name="Dialog.About.Link">http://www.epsitec.ch/cresus/documents/base-e.php</data>
-	<data name="Dialog.About.Web">www.epsitec.ch</data>
+	<data name="Dialog.About.Link">http://www.creativedocs.net</data>
+	<data name="Dialog.About.Web">www.creativedocs.net</data>
 	<data name="Dialog.About.Version">Version</data>
 	<data name="Dialog.About.Language">Language: English</data>
 	<data name="Dialog.About.Key">Serial number</data>
 	<data name="Dialog.About.Copyright">© 2004-2005 EPSITEC SA, Daniel Roux, Pierre Arnaud</data>
-	<data name="Dialog.About.Demo">demo</data>
-	<data name="Dialog.About.Expired">expired</data>
+	<data name="Dialog.About.Demo">Demo</data>
+	<data name="Dialog.About.Expired">Expired</data>
+	<data name="Dialog.About.Freeware">Freeware</data>
 
 	<data name="Dialog.Export.Title1">Exporting</data>
 	<data name="Dialog.Export.Title2">Exporting {0}</data>
@@ -163,9 +165,10 @@
 	<data name="Dialog.Update.Over">&lt;i&gt;No more free of charge updates&lt;/i&gt;.</data>
 	<data name="Dialog.Update.BuyDemo">You may buy this software from Epsitec SA.</data>
 	<data name="Dialog.Update.BuyFull">You may buy an update from Epsitec SA.</data>
+	<data name="Dialog.Update.BuyFreeware">You may obtain an update from Epsitec SA.</data>
 	<data name="Dialog.Update.Web1">Web:</data>
-	<data name="Dialog.Update.Web2">http://www.epsitec.ch/cresus/documents/download-e.php</data>
-	<data name="Dialog.Update.Web3">www.epsitec.ch</data>
+	<data name="Dialog.Update.Web2">http://www.creativedocs.net</data>
+	<data name="Dialog.Update.Web3">www.creativedocs.net</data>
 	<data name="Dialog.Update.Mail1">E-mail:</data>
 	<data name="Dialog.Update.Mail2">mailto:epsitec@epsitec.ch</data>
 	<data name="Dialog.Update.Mail3">epsitec@epsitec.ch</data>

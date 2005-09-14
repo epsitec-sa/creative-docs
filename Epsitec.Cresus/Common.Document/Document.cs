@@ -26,6 +26,7 @@ namespace Epsitec.Common.Document
 		Demo,			// version demo
 		Full,			// version pleine valide
 		Expired,		// version pleine échue
+		Freeware,		// version freeware
 	}
 
 	/// <summary>

@@ -42,6 +42,7 @@
 	<data name="ColorSelector.LongBlack">Black</data>
 	<data name="ColorSelector.LongGray">Lightness</data>
 	<data name="ColorSelector.Picker">Color Picker</data>
+	<data name="ColorSelector.Hexa">@@Couleur HTML (RGB hexadécimal)</data>
 	<data name="ColorSelector.Close">Close this pannel</data>
 	<data name="ColorSelector.ColorSpace.RGB">RGB Color Mode</data>
 	<data name="ColorSelector.ColorSpace.CMYK">CMYK Color Mode</data>

@@ -24,7 +24,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.window = new Window();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
-				this.WindowInit("Update", 330, 210);
+				this.WindowInit("Update", 350, 210);
 				this.window.Text = Res.Strings.Dialog.Update.Title;
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
@@ -84,6 +84,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				b.Append(Res.Strings.Dialog.Update.BuyDemo);
 				b.Append("<br/>");
 			}
+			else if ( this.editor.InstallType == InstallType.Freeware )
+			{
+				b.Append(Res.Strings.Dialog.Update.BuyFreeware);
+				b.Append("<br/>");
+			}
 			else
 			{
 				b.Append(Res.Strings.Dialog.Update.BuyFull);
@@ -104,7 +109,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.buy.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
 
 			TextStyle.Tab tab = new TextStyle.Tab();
-			tab.Pos = 60;
+			tab.Pos = 70;
 			this.buy.TextLayout.TabInsert(tab);
 
 			this.window.ShowDialog();

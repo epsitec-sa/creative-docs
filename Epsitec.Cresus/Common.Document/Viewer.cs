@@ -1397,6 +1397,12 @@ namespace Epsitec.Common.Document
 			return ( detect != null );
 		}
 
+		// Annule le hilite des objets.
+		public void ClearHilite()
+		{
+			this.Hilite(null);
+		}
+
 		// Hilite un objet.
 		protected void Hilite(Objects.Abstract item)
 		{

@@ -167,6 +167,10 @@ namespace Epsitec.Common.Widgets
 			this.buttonGray.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceGray.icon";
 			this.buttonGray.Clicked += new MessageEventHandler(this.HandleButtonGrayClicked);
 			ToolTip.Default.SetToolTip(this.buttonGray, Res.Strings.ColorSelector.ColorSpace.Gray);
+
+			this.colorHexa = new StaticText(this);
+			ToolTip.Default.SetToolTip(this.colorHexa, Res.Strings.ColorSelector.Hexa);
+			this.UpdateColorHexa();
 		}
 		
 		public ColorSelector(Widget embedder) : this()
@@ -258,6 +262,7 @@ namespace Epsitec.Common.Widgets
 			this.ColorToFieldsCMYK();
 			this.ColorToFieldsGray();
 			this.UpdateColorSpace();
+			this.UpdateColorHexa();
 			this.UpdateClientGeometry();
 			this.Invalidate();
 			this.OnChanged();
@@ -271,6 +276,24 @@ namespace Epsitec.Common.Widgets
 			this.buttonRGB .ActiveState = (cs == Drawing.ColorSpace.RGB ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			this.buttonCMYK.ActiveState = (cs == Drawing.ColorSpace.CMYK) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			this.buttonGray.ActiveState = (cs == Drawing.ColorSpace.Gray) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+		}
+
+		// Met à jour la valeur hexadécimale de la couleur.
+		protected void UpdateColorHexa()
+		{
+			double a,r,g,b;
+			this.color.Basic.GetARGB(out a, out r, out g, out b);
+
+			r = Epsitec.Common.Math.Clip(r);
+			g = Epsitec.Common.Math.Clip(g);
+			b = Epsitec.Common.Math.Clip(b);
+
+			int rr = (int) System.Math.Floor(r*255+0.5);
+			int gg = (int) System.Math.Floor(g*255+0.5);
+			int bb = (int) System.Math.Floor(b*255+0.5);
+
+			string text = string.Format("#{0}{1}{2}", rr.ToString("X2"), gg.ToString("X2"), bb.ToString("X2"));
+			this.colorHexa.Text = text;
 		}
 
 		// Couleur -> textes éditables.
@@ -340,6 +363,7 @@ namespace Epsitec.Common.Widgets
 			this.ColorToFieldsCMYK();
 			this.ColorToFieldsGray();
 			this.ColoriseSliders();
+			this.UpdateColorHexa();
 			this.Invalidate();
 			this.OnChanged();
 			this.suspendColorEvents = false;
@@ -360,6 +384,7 @@ namespace Epsitec.Common.Widgets
 			this.ColorToFieldsCMYK();
 			this.ColorToFieldsGray();
 			this.ColoriseSliders();
+			this.UpdateColorHexa();
 			this.Invalidate();
 			this.OnChanged();
 			this.suspendColorEvents = false;
@@ -382,6 +407,7 @@ namespace Epsitec.Common.Widgets
 			this.ColorToFieldsHSV();
 			this.ColorToFieldsGray();
 			this.ColoriseSliders();
+			this.UpdateColorHexa();
 			this.Invalidate();
 			this.OnChanged();
 			this.suspendColorEvents = false;
@@ -401,6 +427,7 @@ namespace Epsitec.Common.Widgets
 			this.ColorToFieldsHSV();
 			this.ColorToFieldsCMYK();
 			this.ColoriseSliders();
+			this.UpdateColorHexa();
 			this.Invalidate();
 			this.OnChanged();
 			this.suspendColorEvents = false;
@@ -587,6 +614,12 @@ namespace Epsitec.Common.Widgets
 			this.picker.Bounds = r;
 			this.picker.SetVisible(visibleFields);
 
+			r.Top    = r.Bottom-1;
+			r.Bottom = r.Top-16;
+			r.Left  = this.fields[3].Left;
+			r.Right = this.fields[3].Right;
+			this.colorHexa.Bounds = r;
+
 			if ( this.hasCloseButton )
 			{
 				r.Left = rect.Left;
@@ -601,17 +634,6 @@ namespace Epsitec.Common.Widgets
 				this.buttonClose.SetVisible(false);
 			}
 
-#if false
-			r.Left = rect.Left;
-			r.Width = 14;
-			r.Bottom = rect.Top-hCircle+14;
-			r.Height = 14;
-			this.buttonCMYK.Bounds = r;
-			r.Offset(0, -14);
-			this.buttonRGB.Bounds = r;
-			r.Offset(14, 0);
-			this.buttonGray.Bounds = r;
-#else
 			r.Left = rect.Left;
 			r.Width = 14;
 			r.Bottom = rect.Top-hCircle;
@@ -621,7 +643,6 @@ namespace Epsitec.Common.Widgets
 			this.buttonCMYK.Bounds = r;
 			r.Offset(14, 0);
 			this.buttonGray.Bounds = r;
-#endif
 		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
@@ -761,6 +782,7 @@ namespace Epsitec.Common.Widgets
 				this.ColorToFieldsCMYK();
 				this.ColorToFieldsGray();
 				this.ColoriseSliders();
+				this.UpdateColorHexa();
 				this.Invalidate();
 				this.OnChanged();
 				this.suspendColorEvents = false;
@@ -843,6 +865,7 @@ namespace Epsitec.Common.Widgets
 		protected int							nbField;
 		protected StaticText[]					labels;
 		protected TextFieldSlider[]				fields;
+		protected StaticText					colorHexa;
 		protected bool							suspendColorEvents = false;
 		protected bool							hasCloseButton = false;
 		protected GlyphButton					buttonClose;

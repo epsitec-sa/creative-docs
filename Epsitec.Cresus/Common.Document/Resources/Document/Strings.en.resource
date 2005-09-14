@@ -2,7 +2,7 @@
 <!-- Ressources anglaises pour le projet Common.Document -->
 
 <bundle type="String">
-	<data name="Dialog.Title">Crésus</data>
+	<data name="Dialog.Title">CreativeDocs</data>
 	
 	<data name="Dialog.Button.Browse">Browse...</data>
 	<data name="Dialog.Button.Properties">Properties...</data>

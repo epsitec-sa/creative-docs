@@ -42,6 +42,7 @@
 	<data name="ColorSelector.LongBlack">Noir</data>
 	<data name="ColorSelector.LongGray">Luminosité</data>
 	<data name="ColorSelector.Picker">Pipette-loupe</data>
+	<data name="ColorSelector.Hexa">Couleur HTML (RGB hexadécimal)</data>
 	<data name="ColorSelector.Close">Fermer ce panneau</data>
 	<data name="ColorSelector.ColorSpace.RGB">Couleurs RVB</data>
 	<data name="ColorSelector.ColorSpace.CMYK">Couleurs CMJN</data>
