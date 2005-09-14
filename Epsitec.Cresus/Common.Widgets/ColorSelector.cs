@@ -351,6 +351,7 @@ namespace Epsitec.Common.Widgets
 
 			string text = string.Format("#{0}{1}{2}", rr.ToString("x2"), gg.ToString("x2"), bb.ToString("x2"));
 			this.fieldHexa.Text = text;
+			this.fieldHexa.SelectAll();
 		}
 
 		// Textes éditables RGB -> couleur.
@@ -453,21 +454,34 @@ namespace Epsitec.Common.Widgets
 				text = text.Substring(1);  // supprime le #
 			}
 
-			if ( text.Length >= 2 )
+			if ( text.Length == 3 )
 			{
-				r = ColorSelector.ParseHexa(text.Substring(0, 2))/255.0;
+				int rr = ColorSelector.ParseHexa(text.Substring(0, 1));
+				int gg = ColorSelector.ParseHexa(text.Substring(1, 1));
+				int bb = ColorSelector.ParseHexa(text.Substring(2, 1));
+				
+				r = (rr * 16 + rr) / 255.0;
+				g = (gg * 16 + gg) / 255.0;
+				b = (bb * 16 + bb) / 255.0;
 			}
-
-			if ( text.Length >= 4 )
+			else
 			{
-				g = ColorSelector.ParseHexa(text.Substring(2, 2))/255.0;
+				if ( text.Length >= 2 )
+				{
+					r = ColorSelector.ParseHexa(text.Substring(0, 2))/255.0;
+				}
+
+				if ( text.Length >= 4 )
+				{
+					g = ColorSelector.ParseHexa(text.Substring(2, 2))/255.0;
+				}
+				
+				if ( text.Length >= 6 )
+				{
+					b = ColorSelector.ParseHexa(text.Substring(4, 2))/255.0;
+				}
 			}
 			
-			if ( text.Length >= 6 )
-			{
-				b = ColorSelector.ParseHexa(text.Substring(4, 2))/255.0;
-			}
-
 			System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
 			this.suspendColorEvents = true;
 			this.color = Drawing.RichColor.FromARGB(a,r,g,b);
