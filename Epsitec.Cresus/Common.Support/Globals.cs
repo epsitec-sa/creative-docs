@@ -40,6 +40,15 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public static string					ExecutableName
+		{
+			get
+			{
+				string name = System.Windows.Forms.Application.ExecutablePath;
+				return System.IO.Path.GetFileName (name);
+			}
+		}
+		
 		public object							this[string key]
 		{
 			//	On peut accéder aux propriétés globales très simplement au moyen de l'opérateur [],
