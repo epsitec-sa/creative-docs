@@ -165,7 +165,7 @@
 	<data name="Dialog.Update.Over">&lt;i&gt;No more free of charge updates&lt;/i&gt;.</data>
 	<data name="Dialog.Update.BuyDemo">You may buy this software from Epsitec SA.</data>
 	<data name="Dialog.Update.BuyFull">You may buy an update from Epsitec SA.</data>
-	<data name="Dialog.Update.BuyFreeware">You may obtain an update from Epsitec SA.</data>
+	<data name="Dialog.Update.BuyFreeware">Visit our web site to check for updates.</data>
 	<data name="Dialog.Update.Web1">Web:</data>
 	<data name="Dialog.Update.Web2">http://www.creativedocs.net</data>
 	<data name="Dialog.Update.Web3">www.creativedocs.net</data>

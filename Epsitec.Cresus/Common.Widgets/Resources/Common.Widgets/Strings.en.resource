@@ -29,6 +29,7 @@
 	<data name="ColorSelector.ShortYellow">Y</data>
 	<data name="ColorSelector.ShortBlack">K</data>
 	<data name="ColorSelector.ShortGray">L</data>
+	<data name="ColorSelector.ShortHexa">X</data>
 	<data name="ColorSelector.LongRed">Red</data>
 	<data name="ColorSelector.LongGreen">Green</data>
 	<data name="ColorSelector.LongBlue">Blue</data>
@@ -41,8 +42,8 @@
 	<data name="ColorSelector.LongYellow">Yellow</data>
 	<data name="ColorSelector.LongBlack">Black</data>
 	<data name="ColorSelector.LongGray">Lightness</data>
+	<data name="ColorSelector.LongHexa">HTML color (RGB hexa)</data>
 	<data name="ColorSelector.Picker">Color Picker</data>
-	<data name="ColorSelector.Hexa">@@Couleur HTML (RGB hexadécimal)</data>
 	<data name="ColorSelector.Close">Close this pannel</data>
 	<data name="ColorSelector.ColorSpace.RGB">RGB Color Mode</data>
 	<data name="ColorSelector.ColorSpace.CMYK">CMYK Color Mode</data>

@@ -96,14 +96,17 @@ namespace Epsitec.Common.Widgets
 			ToolTip.Default.SetToolTip(this.fields[2], Res.Strings.ColorSelector.LongBlue);
 			ToolTip.Default.SetToolTip(this.fields[3], Res.Strings.ColorSelector.LongAlpha);
 
+			this.fields[4].TextSuffix = "\u00B0";  // symbole unicode "degré" (#176)
 			this.fields[4].Color = Drawing.Color.FromRGB(0,0,0);
 			this.fields[4].BackColor = Drawing.Color.FromRGB(0.5,0.5,0.5);
 			ToolTip.Default.SetToolTip(this.fields[4], Res.Strings.ColorSelector.LongHue);
 
+			this.fields[5].TextSuffix = "%";
 			this.fields[5].Color = Drawing.Color.FromRGB(0,0,0);
 			this.fields[5].BackColor = Drawing.Color.FromRGB(1,1,1);
 			ToolTip.Default.SetToolTip(this.fields[5], Res.Strings.ColorSelector.LongSaturation);
 			
+			this.fields[6].TextSuffix = "%";
 			this.fields[6].Color = Drawing.Color.FromRGB(1,1,1);
 			this.fields[6].BackColor = Drawing.Color.FromRGB(0,0,0);
 			ToolTip.Default.SetToolTip(this.fields[6], Res.Strings.ColorSelector.LongValue);
@@ -134,6 +137,13 @@ namespace Epsitec.Common.Widgets
 			this.labels[ 9].Text = Res.Strings.ColorSelector.ShortYellow;
 			this.labels[10].Text = Res.Strings.ColorSelector.ShortBlack;
 			this.labels[11].Text = Res.Strings.ColorSelector.ShortGray;
+
+			this.labelHexa = new StaticText(this);
+			this.labelHexa.Text = Res.Strings.ColorSelector.ShortHexa;
+
+			this.fieldHexa = new TextField(this);
+			this.fieldHexa.TextChanged += new Support.EventHandler(this.HandleTextHexaChanged);
+			ToolTip.Default.SetToolTip(this.fieldHexa, Res.Strings.ColorSelector.LongHexa);
 
 			this.circle = new ColorWheel(this);
 			this.circle.Changed += new Support.EventHandler(this.HandleCircleChanged);
@@ -167,10 +177,6 @@ namespace Epsitec.Common.Widgets
 			this.buttonGray.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceGray.icon";
 			this.buttonGray.Clicked += new MessageEventHandler(this.HandleButtonGrayClicked);
 			ToolTip.Default.SetToolTip(this.buttonGray, Res.Strings.ColorSelector.ColorSpace.Gray);
-
-			this.colorHexa = new StaticText(this);
-			ToolTip.Default.SetToolTip(this.colorHexa, Res.Strings.ColorSelector.Hexa);
-			this.UpdateColorHexa();
 		}
 		
 		public ColorSelector(Widget embedder) : this()
@@ -261,8 +267,8 @@ namespace Epsitec.Common.Widgets
 			this.ColorToFieldsHSV();
 			this.ColorToFieldsCMYK();
 			this.ColorToFieldsGray();
+			this.ColorToFieldsHexa();
 			this.UpdateColorSpace();
-			this.UpdateColorHexa();
 			this.UpdateClientGeometry();
 			this.Invalidate();
 			this.OnChanged();
@@ -276,24 +282,6 @@ namespace Epsitec.Common.Widgets
 			this.buttonRGB .ActiveState = (cs == Drawing.ColorSpace.RGB ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			this.buttonCMYK.ActiveState = (cs == Drawing.ColorSpace.CMYK) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			this.buttonGray.ActiveState = (cs == Drawing.ColorSpace.Gray) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-		}
-
-		// Met à jour la valeur hexadécimale de la couleur.
-		protected void UpdateColorHexa()
-		{
-			double a,r,g,b;
-			this.color.Basic.GetARGB(out a, out r, out g, out b);
-
-			r = Epsitec.Common.Math.Clip(r);
-			g = Epsitec.Common.Math.Clip(g);
-			b = Epsitec.Common.Math.Clip(b);
-
-			int rr = (int) System.Math.Floor(r*255+0.5);
-			int gg = (int) System.Math.Floor(g*255+0.5);
-			int bb = (int) System.Math.Floor(b*255+0.5);
-
-			string text = string.Format("#{0}{1}{2}", rr.ToString("X2"), gg.ToString("X2"), bb.ToString("X2"));
-			this.colorHexa.Text = text;
 		}
 
 		// Couleur -> textes éditables.
@@ -347,6 +335,24 @@ namespace Epsitec.Common.Widgets
 			this.fields[11].Value = (decimal) System.Math.Floor(g*100+0.5);
 		}
 
+		// Couleur -> textes éditables.
+		protected void ColorToFieldsHexa()
+		{
+			double a,r,g,b;
+			this.color.Basic.GetARGB(out a, out r, out g, out b);
+
+			r = Epsitec.Common.Math.Clip(r);
+			g = Epsitec.Common.Math.Clip(g);
+			b = Epsitec.Common.Math.Clip(b);
+
+			int rr = (int) System.Math.Floor(r*255+0.5);
+			int gg = (int) System.Math.Floor(g*255+0.5);
+			int bb = (int) System.Math.Floor(b*255+0.5);
+
+			string text = string.Format("#{0}{1}{2}", rr.ToString("x2"), gg.ToString("x2"), bb.ToString("x2"));
+			this.fieldHexa.Text = text;
+		}
+
 		// Textes éditables RGB -> couleur.
 		protected void FieldsRGBToColor()
 		{
@@ -362,8 +368,8 @@ namespace Epsitec.Common.Widgets
 			this.ColorToFieldsHSV();
 			this.ColorToFieldsCMYK();
 			this.ColorToFieldsGray();
+			this.ColorToFieldsHexa();
 			this.ColoriseSliders();
-			this.UpdateColorHexa();
 			this.Invalidate();
 			this.OnChanged();
 			this.suspendColorEvents = false;
@@ -383,8 +389,8 @@ namespace Epsitec.Common.Widgets
 			this.ColorToFieldsRGB();
 			this.ColorToFieldsCMYK();
 			this.ColorToFieldsGray();
+			this.ColorToFieldsHexa();
 			this.ColoriseSliders();
-			this.UpdateColorHexa();
 			this.Invalidate();
 			this.OnChanged();
 			this.suspendColorEvents = false;
@@ -406,8 +412,8 @@ namespace Epsitec.Common.Widgets
 			this.ColorToFieldsRGB();
 			this.ColorToFieldsHSV();
 			this.ColorToFieldsGray();
+			this.ColorToFieldsHexa();
 			this.ColoriseSliders();
-			this.UpdateColorHexa();
 			this.Invalidate();
 			this.OnChanged();
 			this.suspendColorEvents = false;
@@ -426,8 +432,51 @@ namespace Epsitec.Common.Widgets
 			this.ColorToFieldsRGB();
 			this.ColorToFieldsHSV();
 			this.ColorToFieldsCMYK();
+			this.ColorToFieldsHexa();
 			this.ColoriseSliders();
-			this.UpdateColorHexa();
+			this.Invalidate();
+			this.OnChanged();
+			this.suspendColorEvents = false;
+		}
+
+		// Textes éditables Hexa -> couleur.
+		protected void FieldsHexaToColor()
+		{
+			double r = 0;
+			double g = 0;
+			double b = 0;
+			double a = (double) this.fields[3].Value/255;
+
+			string text = this.fieldHexa.Text;
+			if ( text.Length >= 1 && text[0] == '#' )
+			{
+				text = text.Substring(1);  // supprime le #
+			}
+
+			if ( text.Length >= 2 )
+			{
+				r = ColorSelector.ParseHexa(text.Substring(0, 2))/255.0;
+			}
+
+			if ( text.Length >= 4 )
+			{
+				g = ColorSelector.ParseHexa(text.Substring(2, 2))/255.0;
+			}
+			
+			if ( text.Length >= 6 )
+			{
+				b = ColorSelector.ParseHexa(text.Substring(4, 2))/255.0;
+			}
+
+			System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
+			this.suspendColorEvents = true;
+			this.color = Drawing.RichColor.FromARGB(a,r,g,b);
+			this.circle.Color = this.color;
+			this.ColorToFieldsRGB();
+			this.ColorToFieldsHSV();
+			this.ColorToFieldsCMYK();
+			this.ColorToFieldsGray();
+			this.ColoriseSliders();
 			this.Invalidate();
 			this.OnChanged();
 			this.suspendColorEvents = false;
@@ -607,18 +656,22 @@ namespace Epsitec.Common.Widgets
 				r.Offset(0, -19);
 			}
 			
+			r.Left  = 10+70+70;
+			r.Width = 12;
+			this.labelHexa.Bounds = r;
+
+			r.Left  = r.Right;
+			r.Width = 50;
+			this.fieldHexa.Bounds = r;
+
+			r.Offset(0, -19);
+
 			r.Top    = r.Top-2;
 			r.Bottom = r.Bottom+1;
 			r.Right = this.fields[3].Right;
 			r.Left  = r.Right - r.Height;
 			this.picker.Bounds = r;
 			this.picker.SetVisible(visibleFields);
-
-			r.Top    = r.Bottom-1;
-			r.Bottom = r.Top-16;
-			r.Left  = this.fields[3].Left;
-			r.Right = this.fields[3].Right;
-			this.colorHexa.Bounds = r;
 
 			if ( this.hasCloseButton )
 			{
@@ -686,6 +739,11 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
+				if ( this.fieldHexa != null )
+				{
+					this.fieldHexa.TextChanged -= new Support.EventHandler(this.HandleTextHexaChanged);
+				}
+
 				if ( this.circle != null )
 				{
 					this.circle.Changed -= new Support.EventHandler(this.HandleCircleChanged);
@@ -770,6 +828,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		// Une valeur Hexa a été changée.
+		private void HandleTextHexaChanged(object sender)
+		{
+			if ( !this.suspendColorEvents )
+			{
+				this.FieldsHexaToColor();
+			}
+		}
+
 		// Couleur dans le cercle changée.
 		private void HandleCircleChanged(object sender)
 		{
@@ -781,8 +848,8 @@ namespace Epsitec.Common.Widgets
 				this.ColorToFieldsHSV();
 				this.ColorToFieldsCMYK();
 				this.ColorToFieldsGray();
+				this.ColorToFieldsHexa();
 				this.ColoriseSliders();
-				this.UpdateColorHexa();
 				this.Invalidate();
 				this.OnChanged();
 				this.suspendColorEvents = false;
@@ -856,16 +923,35 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		// Conversion d'une chaîne hexadécimale en un entier.
+		static protected int ParseHexa(string hexa)
+		{
+			int i = 0;
+
+			try
+			{
+				i = System.Int32.Parse(hexa, System.Globalization.NumberStyles.AllowHexSpecifier);
+			}
+			catch
+			{
+				i = 0;
+			}
+
+			return i;
+		}
+
+
 		public event Support.EventHandler		Changed;
 		public event Support.EventHandler		CloseClicked;
 
-		protected Drawing.RichColor				color = new Drawing.RichColor(0.0);
+		protected Drawing.RichColor				color = Drawing.RichColor.Empty;
 		protected ColorWheel					circle;
 		protected ColorPalette					palette;
 		protected int							nbField;
 		protected StaticText[]					labels;
 		protected TextFieldSlider[]				fields;
-		protected StaticText					colorHexa;
+		protected StaticText					labelHexa;
+		protected TextField						fieldHexa;
 		protected bool							suspendColorEvents = false;
 		protected bool							hasCloseButton = false;
 		protected GlyphButton					buttonClose;

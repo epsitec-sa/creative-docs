@@ -29,6 +29,7 @@
 	<data name="ColorSelector.ShortYellow">J</data>
 	<data name="ColorSelector.ShortBlack">N</data>
 	<data name="ColorSelector.ShortGray">L</data>
+	<data name="ColorSelector.ShortHexa">H</data>
 	<data name="ColorSelector.LongRed">Rouge</data>
 	<data name="ColorSelector.LongGreen">Vert</data>
 	<data name="ColorSelector.LongBlue">Bleu</data>
@@ -41,8 +42,8 @@
 	<data name="ColorSelector.LongYellow">Jaune</data>
 	<data name="ColorSelector.LongBlack">Noir</data>
 	<data name="ColorSelector.LongGray">Luminosité</data>
+	<data name="ColorSelector.LongHexa">Couleur HTML (RVB hexadécimal)</data>
 	<data name="ColorSelector.Picker">Pipette-loupe</data>
-	<data name="ColorSelector.Hexa">Couleur HTML (RGB hexadécimal)</data>
 	<data name="ColorSelector.Close">Fermer ce panneau</data>
 	<data name="ColorSelector.ColorSpace.RGB">Couleurs RVB</data>
 	<data name="ColorSelector.ColorSpace.CMYK">Couleurs CMJN</data>
