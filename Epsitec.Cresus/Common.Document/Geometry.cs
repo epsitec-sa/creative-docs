@@ -313,7 +313,6 @@ namespace Epsitec.Common.Document
 				}
 			}
 			return bbox;
-#endif
 		}
 
 		// Ajoute une courbe de Bézier dans la bbox.
@@ -324,6 +323,7 @@ namespace Epsitec.Common.Document
 			{
 				bbox.MergeWith(Point.FromBezier(p1, s1, s2, p2, t));
 			}
+#endif
 		}
 
 

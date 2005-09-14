@@ -130,7 +130,7 @@ namespace Epsitec.Common.Document.Settings
 					this.text = Res.Strings.Dialog.Double.ToLinePrecision;
 					this.integer = true;
 					this.factorMinValue = 0.0;
-					this.factorMaxValue = 100.0;
+					this.factorMaxValue = 200.0;
 					this.factorStep = 10.0;
 					this.suffix = "%";
 					break;
