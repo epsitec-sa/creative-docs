@@ -266,7 +266,8 @@ namespace Epsitec.Common.Document.Containers
 			DrawingContext context = viewer.DrawingContext;
 
 			if ( this.document.Modifier.Tool == "Select" ||
-				 this.document.Modifier.Tool == "Global" )
+				 this.document.Modifier.Tool == "Global" ||
+				 this.document.Modifier.Tool == "Edit"   )
 			{
 				if ( this.document.Modifier.TotalSelected == 0 )
 				{
