@@ -11,7 +11,7 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public sealed class ResourceManager
 	{
-		public ResourceManager() : this ("")
+		public ResourceManager() : this (Support.Globals.Directories.Executable)
 		{
 		}
 		
