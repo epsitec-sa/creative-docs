@@ -42,7 +42,7 @@
 	<data name="ColorSelector.LongYellow">Yellow</data>
 	<data name="ColorSelector.LongBlack">Black</data>
 	<data name="ColorSelector.LongGray">Lightness</data>
-	<data name="ColorSelector.LongHexa">HTML color (RGB hexa)</data>
+	<data name="ColorSelector.LongHexa">HTML Color (hexa RGB)</data>
 	<data name="ColorSelector.Picker">Color Picker</data>
 	<data name="ColorSelector.Close">Close this pannel</data>
 	<data name="ColorSelector.ColorSpace.RGB">RGB Color Mode</data>

@@ -1348,6 +1348,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\SplashScreen-e.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Sub.icon"
                     BuildAction = "EmbeddedResource"
                 />
