@@ -10,10 +10,10 @@ namespace Epsitec.App.DocumentEditor
 	/// </summary>
 	public class Application
 	{
-		#region Application Startup
-		[System.STAThread]
-		static void Main() 
+		public static void Start(string mode) 
 		{
+			Application.mode = mode;
+			
 			Res.Initialise(typeof(Application), "App");
 			
 			// Il faut indiquer ci-après la date de diffusion du logiciel, qui doit
@@ -31,7 +31,7 @@ namespace Epsitec.App.DocumentEditor
 			Application.application = new Application(DocumentType.Graphic);
 			Application.application.MainWindow.Run();
 		}
-		#endregion
+		
 		
 		public Application(DocumentType type)
 		{
@@ -105,6 +105,14 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
+		public static string			Mode
+		{
+			get
+			{
+				return Application.mode;
+			}
+		}
+		
 		public DocumentType				Type
 		{
 			get { return this.editor.Type; }
@@ -203,6 +211,7 @@ namespace Epsitec.App.DocumentEditor
 
 		
 		private static Application		application;
+		private static string			mode;
 		
 		private Window					mainWindow;
 		private HMenu					menu;

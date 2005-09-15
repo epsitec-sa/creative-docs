@@ -171,10 +171,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.ServerManager", "App.Se
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Document", "X.Setup.Document\X.Setup.Document.vdproj", "{B2F9D51A-80EA-4DC6-B6DC-728FD54839B8}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X.Tool.ResGenerator", "X.Tool.ResGenerator\X.Tool.ResGenerator.csproj", "{3E741450-319E-49CF-BFEC-35BE01CE0AFD}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -188,6 +184,22 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.OpenType", "Common.O
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Text", "Common.Text\Common.Text.csproj", "{62F59974-6D79-4919-AAA0-10717A8D8514}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CreativeDocs", "App.CreativeDocs\App.CreativeDocs.csproj", "{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.CresusDocuments", "App.CresusDocuments\App.CresusDocuments.csproj", "{D0BF9A45-E6F2-4FEF-B5A0-008BE0159967}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.CresusDocuments", "X.Setup.CresusDocuments\X.Setup.CresusDocuments.vdproj", "{E96EECAF-5BB4-49F0-9F8C-29113C9FFD74}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.CreativeDocs", "X.Setup.CreativeDocs\X.Setup.CreativeDocs.vdproj", "{C189739F-7419-4C54-A870-215A538C10C5}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -367,8 +379,6 @@ Global
 		{9FB52048-28B5-437B-B9B6-73B35148FAF8}.Debug.Build.0 = Debug|.NET
 		{9FB52048-28B5-437B-B9B6-73B35148FAF8}.Release.ActiveCfg = Release|.NET
 		{9FB52048-28B5-437B-B9B6-73B35148FAF8}.Release.Build.0 = Release|.NET
-		{B2F9D51A-80EA-4DC6-B6DC-728FD54839B8}.Debug.ActiveCfg = Debug
-		{B2F9D51A-80EA-4DC6-B6DC-728FD54839B8}.Release.ActiveCfg = Release
 		{3E741450-319E-49CF-BFEC-35BE01CE0AFD}.Debug.ActiveCfg = Debug|.NET
 		{3E741450-319E-49CF-BFEC-35BE01CE0AFD}.Debug.Build.0 = Debug|.NET
 		{3E741450-319E-49CF-BFEC-35BE01CE0AFD}.Release.ActiveCfg = Release|.NET
@@ -385,6 +395,18 @@ Global
 		{62F59974-6D79-4919-AAA0-10717A8D8514}.Debug.Build.0 = Debug|.NET
 		{62F59974-6D79-4919-AAA0-10717A8D8514}.Release.ActiveCfg = Release|.NET
 		{62F59974-6D79-4919-AAA0-10717A8D8514}.Release.Build.0 = Release|.NET
+		{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}.Debug.ActiveCfg = Debug|.NET
+		{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}.Debug.Build.0 = Debug|.NET
+		{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}.Release.ActiveCfg = Release|.NET
+		{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}.Release.Build.0 = Release|.NET
+		{D0BF9A45-E6F2-4FEF-B5A0-008BE0159967}.Debug.ActiveCfg = Debug|.NET
+		{D0BF9A45-E6F2-4FEF-B5A0-008BE0159967}.Debug.Build.0 = Debug|.NET
+		{D0BF9A45-E6F2-4FEF-B5A0-008BE0159967}.Release.ActiveCfg = Release|.NET
+		{D0BF9A45-E6F2-4FEF-B5A0-008BE0159967}.Release.Build.0 = Release|.NET
+		{E96EECAF-5BB4-49F0-9F8C-29113C9FFD74}.Debug.ActiveCfg = Debug
+		{E96EECAF-5BB4-49F0-9F8C-29113C9FFD74}.Release.ActiveCfg = Release
+		{C189739F-7419-4C54-A870-215A538C10C5}.Debug.ActiveCfg = Debug
+		{C189739F-7419-4C54-A870-215A538C10C5}.Release.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info

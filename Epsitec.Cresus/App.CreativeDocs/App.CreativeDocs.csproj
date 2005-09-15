@@ -1,0 +1,138 @@
+<VisualStudioProject>
+    <CSHARP
+        ProjectType = "Local"
+        ProductVersion = "7.10.3077"
+        SchemaVersion = "2.0"
+        ProjectGuid = "{1D0BD1B8-DF78-45E2-A3B7-D1AE3FB31E46}"
+    >
+        <Build>
+            <Settings
+                ApplicationIcon = "App.ico"
+                AssemblyKeyContainerName = ""
+                AssemblyName = "App.CreativeDocs"
+                AssemblyOriginatorKeyFile = ""
+                DefaultClientScript = "JScript"
+                DefaultHTMLPageLayout = "Grid"
+                DefaultTargetSchema = "IE50"
+                DelaySign = "false"
+                OutputType = "WinExe"
+                PreBuildEvent = 'copy "$(SolutionDir)Common.Document\Resources\Document\Strings.en.resource" "$(ProjectDir)Resources\Document\Strings.00.resource"&#xd;&#xa;copy "$(SolutionDir)Common.Widgets\Resources\Common.Widgets\Strings.en.resource" "$(ProjectDir)Resources\Common.Widgets\Strings.00.resource"&#xd;&#xa;copy "$(SolutionDir)App.DocumentEditor\Resources\App\Strings.en.resource" "$(ProjectDir)Resources\App\Strings.00.resource"&#xd;&#xa;'
+                PostBuildEvent = ""
+                RootNamespace = "Epsitec.App.CreativeDocs"
+                RunPostBuildEvent = "OnBuildSuccess"
+                StartupObject = ""
+            >
+                <Config
+                    Name = "Debug"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "DEBUG;TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "true"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "false"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+                <Config
+                    Name = "Release"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "false"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "System"
+                    AssemblyName = "System"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                />
+                <Reference
+                    Name = "App.DocumentEditor"
+                    Project = "{B3B20AC3-680D-41E0-94C2-8113577CE703}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "App.ico"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "Application.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AssemblyInfo.cs"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SplashScreen.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Resources\App\Strings.00.resource"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Resources\Common.Widgets\Strings.00.resource"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Resources\Document\Strings.00.resource"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\2005-curve.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\2005-font.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\a4-1col.crmod"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\a4-2col.crmod"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\a4-3col.crmod"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\aqua1.crdoc"
+                    BuildAction = "Content"
+                />
+            </Include>
+        </Files>
+    </CSHARP>
+</VisualStudioProject>
+

@@ -9,13 +9,13 @@
             <Settings
                 ApplicationIcon = "App.ico"
                 AssemblyKeyContainerName = ""
-                AssemblyName = "CresusDoc"
+                AssemblyName = "App.DocumentEditor"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "WinExe"
+                OutputType = "Library"
                 PreBuildEvent = 'xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\excludesvn.ini&#xd;&#xa;xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\excludesvn.ini'
                 PostBuildEvent = ""
                 RootNamespace = "Epsitec.App.DocumentEditor"
@@ -160,7 +160,7 @@
             <Include>
                 <File
                     RelPath = "App.ico"
-                    BuildAction = "Content"
+                    BuildAction = "None"
                 />
                 <File
                     RelPath = "Application.cs"
@@ -1341,14 +1341,6 @@
                 />
                 <File
                     RelPath = "Images\ShareTop.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\SplashScreen.png"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\SplashScreen-e.png"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

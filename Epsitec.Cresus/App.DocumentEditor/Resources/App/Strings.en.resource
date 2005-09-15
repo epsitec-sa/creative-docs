@@ -74,7 +74,7 @@
 	<data name="Dialog.About.Copyright">© 2004-2005 EPSITEC SA, Daniel Roux, Pierre Arnaud</data>
 	<data name="Dialog.About.Demo">Demo</data>
 	<data name="Dialog.About.Expired">Expired</data>
-	<data name="Dialog.About.Freeware">Freeware</data>
+	<data name="Dialog.About.Freeware">Shareware</data>
 
 	<data name="Dialog.Export.Title1">Exporting</data>
 	<data name="Dialog.Export.Title2">Exporting {0}</data>
@@ -170,8 +170,8 @@
 	<data name="Dialog.Update.Web2">http://www.creativedocs.net</data>
 	<data name="Dialog.Update.Web3">www.creativedocs.net</data>
 	<data name="Dialog.Update.Mail1">E-mail:</data>
-	<data name="Dialog.Update.Mail2">mailto:epsitec@epsitec.ch</data>
-	<data name="Dialog.Update.Mail3">epsitec@epsitec.ch</data>
+	<data name="Dialog.Update.Mail2">mailto:info@creativedocs.net</data>
+	<data name="Dialog.Update.Mail3">info@creativedocs.net</data>
 	<data name="Dialog.Update.Address1">Snail mail:</data>
 	<data name="Dialog.Update.Address2">Epsitec SA, Mouette 5, CH-1092 Belmont, Switzerland</data>
 	<data name="Dialog.Update.Phone1">Phone:</data>

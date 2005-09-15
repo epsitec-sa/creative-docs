@@ -68,10 +68,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			double y = parent.Height-200;
 
-			string res = "manifest:Epsitec.App.DocumentEditor.Images.SplashScreen.png";
+			string res;
 			if ( type == InstallType.Freeware )
 			{
-				res = "manifest:Epsitec.App.DocumentEditor.Images.SplashScreen-e.png";
+				res = "manifest:Epsitec.App.CreativeDocs.SplashScreen.png";
+			}
+			else
+			{
+				res = "manifest:Epsitec.App.CresusDocuments.SplashScreen.png";
 			}
 			string text = string.Format("<img src=\"{0}\"/>", res);
 			StaticText image = new StaticText(parent);

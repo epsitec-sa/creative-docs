@@ -34,7 +34,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				if ( Res.Strings.Application.Type == "F" )
+				if ( Application.Mode == "F" )
 				{
 					this.askKey = false;
 					this.installType = InstallType.Freeware;
