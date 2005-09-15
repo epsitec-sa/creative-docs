@@ -45,7 +45,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 
 				StaticText www = new StaticText(this.window.Root);
-				www.Width = 400-256;
+				www.Width = 400-280;
 				www.Text = string.Format("<a href=\"{0}\">{1}</a><br/>", Res.Strings.Dialog.About.Link, Res.Strings.Dialog.About.Web);
 				www.Alignment = ContentAlignment.MiddleLeft;
 				www.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
@@ -79,34 +79,52 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			image.Location = new Point(0, y+0);
 			image.Size = new Size(400, 200);
 
-			string version = About.GetVersion();
-			StaticText sv = new StaticText(parent);
-			sv.Text = string.Format("<font size=\"140%\"><b>{0} {1}</b></font>    {2}", Res.Strings.Dialog.About.Version, version, Res.Strings.Dialog.About.Language);
-			sv.Location = new Point(22, y+5+12*2);
-			sv.Size = new Size(270, 14);
-			sv.SetClientZoom(0.8);
-
-			string sk = About.GetKey();
-			if ( sk != null )
+			if ( type == InstallType.Freeware )
 			{
-				StaticText key = new StaticText(parent);
-				key.Text = string.Format("{0}: {1}", Res.Strings.Dialog.About.Key, sk);
-				key.Location = new Point(22, y+5+12*1);
-				key.Size = new Size(270, 14);
-				key.SetClientZoom(0.8);
-			}
+				string version = About.GetVersion();
+				StaticText sv = new StaticText(parent);
+				sv.Text = string.Format("<font size=\"140%\"><b>{0} {1}</b></font>    {2}", Res.Strings.Dialog.About.Version, version, Res.Strings.Dialog.About.Language);
+				sv.Location = new Point(10, y+5+12*1);
+				sv.Size = new Size(270, 14);
+				sv.SetClientZoom(0.8);
 
-			StaticText ep = new StaticText(parent);
-			ep.Text = Res.Strings.Dialog.About.Copyright;
-			ep.Location = new Point(22, y+5+12*0);
-			ep.Size = new Size(270, 14);
-			ep.SetClientZoom(0.8);
+				StaticText ep = new StaticText(parent);
+				ep.Text = Res.Strings.Dialog.About.Copyright;
+				ep.Location = new Point(10, y+5+12*0);
+				ep.Size = new Size(270, 14);
+				ep.SetClientZoom(0.8);
+			}
+			else
+			{
+				string version = About.GetVersion();
+				StaticText sv = new StaticText(parent);
+				sv.Text = string.Format("<font size=\"140%\"><b>{0} {1}</b></font>    {2}", Res.Strings.Dialog.About.Version, version, Res.Strings.Dialog.About.Language);
+				sv.Location = new Point(22, y+5+12*2);
+				sv.Size = new Size(270, 14);
+				sv.SetClientZoom(0.8);
+
+				string sk = About.GetKey();
+				if ( sk != null )
+				{
+					StaticText key = new StaticText(parent);
+					key.Text = string.Format("{0}: {1}", Res.Strings.Dialog.About.Key, sk);
+					key.Location = new Point(22, y+5+12*1);
+					key.Size = new Size(270, 14);
+					key.SetClientZoom(0.8);
+				}
+
+				StaticText ep = new StaticText(parent);
+				ep.Text = Res.Strings.Dialog.About.Copyright;
+				ep.Location = new Point(22, y+5+12*0);
+				ep.Size = new Size(270, 14);
+				ep.SetClientZoom(0.8);
+			}
 
 			if ( type == InstallType.Demo )
 			{
 				StaticText warning = new StaticText(parent);
 				warning.Text = "<b>" + Res.Strings.Dialog.About.Demo + "</b>";
-				warning.Location = new Point(256, y+0);
+				warning.Location = new Point(280, y+0);
 				warning.Size = new Size(84, 40);
 				warning.SetClientZoom(2.5);
 			}
@@ -115,7 +133,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				StaticText warning = new StaticText(parent);
 				warning.Text = "<b>" + Res.Strings.Dialog.About.Expired + "</b>";
-				warning.Location = new Point(256, y+0);
+				warning.Location = new Point(280, y+0);
 				warning.Size = new Size(84, 40);
 				warning.SetClientZoom(2.5);
 			}
@@ -124,7 +142,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				StaticText warning = new StaticText(parent);
 				warning.Text = "<b>" + Res.Strings.Dialog.About.Freeware + "</b>";
-				warning.Location = new Point(256, y+0);
+				warning.Location = new Point(280, y+0);
 				warning.Size = new Size(190, 40);
 				warning.SetClientZoom(2.0);
 			}
