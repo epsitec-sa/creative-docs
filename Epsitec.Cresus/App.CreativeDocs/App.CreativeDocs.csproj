@@ -89,6 +89,7 @@
                 />
                 <File
                     RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -129,6 +130,62 @@
                 />
                 <File
                     RelPath = "Samples\aqua1.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\blupi.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\cross1.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\cross2.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\flowchart1.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\illusion1.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\illusion2.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\meca1.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\motor.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\objets.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\perpective1.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\perpective2.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\smilies.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\title.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\transparency.crdoc"
                     BuildAction = "Content"
                 />
             </Include>

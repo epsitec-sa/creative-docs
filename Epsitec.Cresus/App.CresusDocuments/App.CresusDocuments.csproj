@@ -81,7 +81,7 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
             </References>
@@ -135,15 +135,7 @@
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "Samples\attention.crdoc"
-                    BuildAction = "Content"
-                />
-                <File
                     RelPath = "Samples\blupi.crdoc"
-                    BuildAction = "Content"
-                />
-                <File
-                    RelPath = "Samples\cible.crdoc"
                     BuildAction = "Content"
                 />
                 <File
@@ -160,6 +152,10 @@
                 />
                 <File
                     RelPath = "Samples\epsitec.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\flowchart1.crdoc"
                     BuildAction = "Content"
                 />
                 <File
@@ -187,10 +183,6 @@
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "Samples\orga1.crdoc"
-                    BuildAction = "Content"
-                />
-                <File
                     RelPath = "Samples\perpective1.crdoc"
                     BuildAction = "Content"
                 />
@@ -203,15 +195,23 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "Samples\target.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
                     RelPath = "Samples\text.crdoc"
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "Samples\titre.crdoc"
+                    RelPath = "Samples\title.crdoc"
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "Samples\transparence.crdoc"
+                    RelPath = "Samples\transparency.crdoc"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "Samples\warning.crdoc"
                     BuildAction = "Content"
                 />
             </Include>

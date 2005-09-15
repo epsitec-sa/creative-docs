@@ -147,8 +147,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				StaticText warning = new StaticText(parent);
 				warning.Text = "<b>" + Res.Strings.Dialog.About.Freeware + "</b>";
 				warning.Location = new Point(280, y+0);
-				warning.Size = new Size(190, 40);
-				warning.SetClientZoom(2.0);
+				warning.Size = new Size(120, 40);
+				warning.SetClientZoom(1.8);
 			}
 
 			return image;
