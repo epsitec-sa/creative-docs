@@ -74,7 +74,7 @@
 	<data name="Dialog.About.Copyright">© 2004-2005 EPSITEC SA, Daniel Roux, Pierre Arnaud</data>
 	<data name="Dialog.About.Demo">Demo</data>
 	<data name="Dialog.About.Expired">Expired</data>
-	<data name="Dialog.About.Freeware">Eval</data>
+	<data name="Dialog.About.Freeware">Evaluation</data>
 
 	<data name="Dialog.Export.Title1">Exporting</data>
 	<data name="Dialog.Export.Title2">Exporting {0}</data>
