@@ -52,12 +52,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				if ((this.current_styles == null) ||
-					(this.current_properties == null))
-				{
-					this.UpdateCurrentStylesAndProperties ();
-				}
-				
+				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 				return this.current_styles.Clone () as TextStyle[];
 			}
 		}
@@ -66,12 +61,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				if ((this.current_styles == null) ||
-					(this.current_properties == null))
-				{
-					this.UpdateCurrentStylesAndProperties ();
-				}
-				
+				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 				return this.current_properties.Clone () as Property[];
 			}
 		}
@@ -146,11 +136,7 @@ namespace Epsitec.Common.Text
 		{
 			ulong[] styled_text;
 			
-			if ((this.current_styles == null) ||
-				(this.current_properties == null))
-			{
-				this.UpdateCurrentStylesAndProperties ();
-			}
+			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 			
 			System.Collections.Stack starts = new System.Collections.Stack ();
 			
@@ -548,7 +534,7 @@ namespace Epsitec.Common.Text
 		
 		public void SetStyle(TextStyle style, params Property[] properties)
 		{
-			TextStyle[] styles = new TextStyle[1];
+			TextStyle[] styles = new TextStyle[] { style };
 			
 			this.SetStyles (styles, properties);
 		}
@@ -687,7 +673,7 @@ namespace Epsitec.Common.Text
 		
 		public bool GetCursorGeometry(ICursor cursor, out ITextFrame frame, out double cx, out double cy, out double ascender, out double descender, out double angle)
 		{
-			this.UpdateCurrentStylesAndProperties ();
+			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 			
 			int para_line;
 			int line_char;
@@ -786,9 +772,19 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public virtual void UpdateCurrentStylesAndPropertiesIfNeeded()
+		{
+			if ((this.current_styles == null) ||
+				(this.current_properties == null))
+			{
+				this.UpdateCurrentStylesAndProperties ();
+			}
+		}
 		
 		public virtual void UpdateCurrentStylesAndProperties()
 		{
+			System.Diagnostics.Debug.WriteLine ("Executing UpdateCurrentStylesAndProperties");
+			
 			TextStyle[] styles;
 			Property[]  properties;
 			
@@ -945,7 +941,7 @@ namespace Epsitec.Common.Text
 			if ((moved > 0) &&
 				(direction > 0))
 			{
-				if ((Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, 0, direction)) ||
+				if ((Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, 0, direction) && ! Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, 0)) ||
 					(Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0)))
 				{
 					//	Si nous avons atteint la fin d'une ligne de texte en marche avant,

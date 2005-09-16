@@ -606,8 +606,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		
-		private void NotifyTextChanged()
+		public void NotifyTextChanged()
 		{
 			this.ClearVerticalMoveCache ();
 			this.OnTextChanged ();

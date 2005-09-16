@@ -95,7 +95,8 @@ namespace Epsitec.Common.Widgets
 			this.graphics = null;
 //-			System.Diagnostics.Debug.WriteLine ("Paint done.");
 			
-			if (this.has_selection == false)
+			if ((this.has_selection == false) &&
+				(this.IsFocused))
 			{
 				Text.ITextFrame frame;
 				double cx, cy, ascender, descender, angle;

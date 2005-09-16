@@ -41,6 +41,14 @@ namespace Epsitec.Common.Widgets
 			navigator.TextNavigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
 			navigator.Insert (words);
 			
+			Widget pane = new Widget ();
+			
+			pane.Parent = window.Root;
+			pane.Width  = 80;
+			pane.Dock   = DockStyle.Right;
+			
+			TextFrameManager manager = new TextFrameManager (pane, frame);
+			
 			frame.Dock        = DockStyle.Fill;
 			frame.DockMargins = new Margins (4, 4, 4, 4);
 			frame.Parent      = window.Root;
@@ -48,6 +56,57 @@ namespace Epsitec.Common.Widgets
 			frame.Focus ();
 			
 			window.Show ();
+		}
+		
+		class TextFrameManager
+		{
+			public TextFrameManager(Widget pane, TextFrame frame)
+			{
+				this.frame = frame;
+				
+				this.CreateButton (pane, "Default", "default");
+				this.CreateButton (pane, "Regular", "regular");
+				this.CreateButton (pane, "Italic", "italic");
+				this.CreateButton (pane, "Bold", "bold");
+			}
+			
+			private void CreateButton(Widget pane, string title, string name)
+			{
+				Button button;
+				
+				button        = new Button (title);
+				button.Dock   = DockStyle.Top;
+				button.Parent = pane;
+				button.Name   = name;
+				button.Clicked += new MessageEventHandler(this.CheckTextFrameButtonClicked);
+				button.AutoFocus = false;
+			}
+			
+			
+			private void CheckTextFrameButtonClicked(object sender, MessageEventArgs e)
+			{
+				Button button = sender as Button;
+				
+				switch (button.Name)
+				{
+					case "default":
+						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle);
+						break;
+					case "regular":
+						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontProperty (null, "Regular"));
+						break;
+					case "bold":
+						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontProperty (null, "Bold"));
+						break;
+					case "italic":
+						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontProperty (null, "Italic"));
+						break;
+				}
+				this.frame.TextNavigator.NotifyTextChanged ();
+			}
+			
+			
+			private TextFrame					frame;
 		}
 		
 		[Test] public void CheckParentChildRelationship()
