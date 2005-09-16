@@ -157,12 +157,17 @@ namespace Epsitec.Common.Text
 			
 			Property[] properties = this.current_accumulator.AccumulatedProperties;
 			
+#if DEBUG
+			for (int i = 0; i < properties.Length; i++)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0} : {1} -- {2}", i, properties[i].GetType ().Name, properties[i].ToString ()));
+			}
+#endif
+			
 			Properties.ManagedParagraphProperty mpp = null;
 			
 			for (int i = 0; i < properties.Length; i++)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0} : {1}", i, properties[i].GetType ().Name));
-				
 				if (properties[i] is Properties.ManagedParagraphProperty)
 				{
 					mpp = properties[i] as Properties.ManagedParagraphProperty;
@@ -559,14 +564,46 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (styles != null);
 			System.Diagnostics.Debug.Assert (properties != null);
 			
-			//	TODO: gérer la sélection
-			
 			Property[] paragraph_properties = Property.FilterUniformParagraphProperties (properties);
 			Property[] character_properties = Property.FilterOtherProperties (properties);
 			
 			TextStyle[] paragraph_styles = TextStyle.FilterStyles (styles, TextStyleClass.Paragraph);
 			TextStyle[] character_styles = TextStyle.FilterStyles (styles, TextStyleClass.Text, TextStyleClass.Character);
 			
+			if (this.HasSelection)
+			{
+				int[]   positions = this.GetSelectionCursorPositions ();
+				Range[] ranges    = Range.CreateSortedRanges (positions);
+				
+				foreach (Range range in ranges)
+				{
+					int start = range.Start;
+					int end   = range.End;
+					int pos   = start;
+					
+					while (pos < end)
+					{
+						this.SetParagraphStyles (pos, paragraph_properties, paragraph_styles);
+						pos = this.FindNextParagraphStart (pos);
+					}
+				}
+			}
+			else
+			{
+				int pos = this.story.GetCursorPosition (this.cursor);
+				
+				this.SetParagraphStyles (pos, paragraph_properties, paragraph_styles);
+			}
+			
+			this.current_styles      = styles.Clone () as TextStyle[];
+			this.current_properties  = properties.Clone () as Property[];
+			this.current_accumulator = new Styles.PropertyContainer.Accumulator ();
+			
+			this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
+		}
+		
+		private void SetAllStyles(Property[] paragraph_properties, Property[] character_properties, TextStyle[] paragraph_styles, TextStyle[] character_styles)
+		{
 			//	Pour modifier le style d'un paragraphe, il faut se placer au début
 			//	du paragraphe :
 			
@@ -579,12 +616,38 @@ namespace Epsitec.Common.Text
 			this.story.SetCursorPosition (this.temp_cursor, pos + start);
 			
 			Internal.Navigator.SetParagraphStylesAndProperties (this.story, this.temp_cursor, paragraph_styles, paragraph_properties);
+		}
+		
+		private void SetParagraphStyles(int pos, Property[] paragraph_properties, TextStyle[] paragraph_styles)
+		{
+			//	Pour modifier le style d'un paragraphe, il faut se placer au début
+			//	du paragraphe :
 			
-			this.current_styles      = styles.Clone () as TextStyle[];
-			this.current_properties  = properties.Clone () as Property[];
-			this.current_accumulator = new Styles.PropertyContainer.Accumulator ();
+			this.story.SetCursorPosition (this.temp_cursor, pos);
 			
-			this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
+			int start = Internal.Navigator.GetParagraphStartOffset (this.story, this.temp_cursor);
+			
+			this.story.SetCursorPosition (this.temp_cursor, pos + start);
+			
+			Internal.Navigator.SetParagraphStylesAndProperties (this.story, this.temp_cursor, paragraph_styles, paragraph_properties);
+		}
+		
+		
+		private int FindNextParagraphStart(int pos)
+		{
+			this.story.SetCursorPosition (this.temp_cursor, pos);
+			
+			int max = this.story.TextLength;
+			
+			for (int offset = 0; pos + offset < max; offset++)
+			{
+				if (Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, offset))
+				{
+					return pos + offset + 1;
+				}
+			}
+			
+			return max;
 		}
 		
 		
@@ -827,6 +890,15 @@ namespace Epsitec.Common.Text
 			this.current_accumulator = new Styles.PropertyContainer.Accumulator ();
 			
 			this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
+			
+#if DEBUG
+			properties = this.current_accumulator.AccumulatedProperties;
+			
+			for (int i = 0; i < properties.Length; i++)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0} : {1} -- {2}", i, properties[i].GetType ().Name, properties[i].ToString ()));
+			}
+#endif
 		}
 		
 		

@@ -339,11 +339,15 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool GetManagedParagraphProperties(TextStory story, ICursor cursor, int offset, out Properties.ManagedParagraphProperty[] properties)
 		{
-			return Navigator.GetManagedParagraphProperties (story, story.ReadChar (cursor, offset), out properties);
+			ulong code = story.ReadChar (cursor, offset);
+			return Navigator.GetManagedParagraphProperties (story, code, out properties);
 		}
 		
 		public static bool GetManagedParagraphProperties(TextStory story, ulong code, out Properties.ManagedParagraphProperty[] properties)
 		{
+			//	Crée la liste (triée) des propriétés de type ManagedParagraphProperty
+			//	qui décrivent le paragraphe actuel.
+			
 			Property[] props;
 			
 			if (Navigator.GetFlattenedProperties (story, code, out props))
@@ -363,6 +367,13 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static void HandleManagedParagraphPropertiesChange(TextStory story, ICursor cursor, int offset, Properties.ManagedParagraphProperty[] old_properties, Properties.ManagedParagraphProperty[] new_properties)
 		{
+			//	Gère le passage d'un jeu de propriétés ManagedParagraphProperty à
+			//	un autre (old_properties --> new_properties).
+			
+			//	Pour chaque propriété qui disparaît, le gestionnaire correspondant
+			//	sera appelé (DetachFromParagaph); de même, pour chaque propriété
+			//	nouvelle, c'est AttachToParagraph qui sera appelé.
+			
 			System.Diagnostics.Debug.Assert (Navigator.IsParagraphStart (story, cursor, offset));
 			
 			int n_old = old_properties == null ? 0 : old_properties.Length;
@@ -602,6 +613,10 @@ namespace Epsitec.Common.Text.Internal
 			
 			story.ReadText (cursor, offset_start, length, text);
 			
+			//	Détermine l'état des propriétés "ManagedParagraph" qui déterminent
+			//	si/comment un paragraphe est géré (liste à puces, etc.) et dont tout
+			//	changement requiert une gestion explicite.
+			
 			Properties.ManagedParagraphProperty[] old_props;
 			Properties.ManagedParagraphProperty[] new_props;
 			
@@ -610,6 +625,9 @@ namespace Epsitec.Common.Text.Internal
 			ulong code  = 0;
 			int   start = 0;
 			int   count = 0;
+			
+			//	Change le style par tranches (une tranche partage exactement le même
+			//	ensemble de styles et propriétés) pour être plus efficace :
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -629,10 +647,15 @@ namespace Epsitec.Common.Text.Internal
 				}
 			}
 			
+			//	Change encore le style de la dernière (ou de l'unique) tranche :
+			
 			Navigator.SetParagraphStylesAndProperties (story, text, code, start, count, styles, properties);
 			Navigator.GetManagedParagraphProperties (story, text[0], out new_props);
 			
 			story.WriteText (cursor, offset_start, text);
+			
+			//	Finalement, gère encore les changements de propriétés "ManagedParagraph"
+			//	afin d'ajouter ou de supprimer les textes automatiques :
 			
 			Navigator.HandleManagedParagraphPropertiesChange (story, cursor, offset_start, old_props, new_props);
 		}
@@ -640,6 +663,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		private static void SetParagraphStylesAndProperties(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] paragraph_styles, Property[] paragraph_properties)
 		{
+			//	Change le style de paragraphe pour une tranche donnée.
+			
 			if (length == 0)
 			{
 				return;
