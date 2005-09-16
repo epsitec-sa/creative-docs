@@ -66,8 +66,15 @@ namespace Epsitec.Common.Widgets
 				
 				this.CreateButton (pane, "Default", "default");
 				this.CreateButton (pane, "Regular", "regular");
-				this.CreateButton (pane, "Italic", "italic");
-				this.CreateButton (pane, "Bold", "bold");
+				this.CreateButton (pane, "<i>Italic</i>", "italic");
+				this.CreateButton (pane, "<b>Bold</b>", "bold");
+				this.CreateButton (pane, "8 pts", "size:8");
+				this.CreateButton (pane, "18 pts", "size:18");
+				this.CreateButton (pane, "+20 %", "size:+20%");
+				this.CreateButton (pane, "|&lt;---", "left-aligned");
+				this.CreateButton (pane, "&lt;-|-&gt;", "centered");
+				this.CreateButton (pane, "---&gt;|", "right-aligned");
+				this.CreateButton (pane, "|&lt;-----&gt;|", "justified");
 			}
 			
 			private void CreateButton(Widget pane, string title, string name)
@@ -98,8 +105,29 @@ namespace Epsitec.Common.Widgets
 					case "bold":
 						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontProperty (null, "Bold"));
 						break;
+					case "size:8":
+						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontSizeProperty (8.0, Common.Text.Properties.SizeUnits.Points));
+						break;
+					case "size:18":
+						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontSizeProperty (18.0, Common.Text.Properties.SizeUnits.Points));
+						break;
+					case "size:+20%":
+						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontSizeProperty (120.0, Common.Text.Properties.SizeUnits.Percent));
+						break;
 					case "italic":
 						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontProperty (null, "Italic"));
+						break;
+					case "left-aligned":
+						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.MarginsProperty (double.NaN, double.NaN, double.NaN, double.NaN, Common.Text.Properties.SizeUnits.None, 0, 0, 0, double.NaN, double.NaN, Common.Text.Properties.ThreeState.Undefined));
+						break;
+					case "right-aligned":
+						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.MarginsProperty (double.NaN, double.NaN, double.NaN, double.NaN, Common.Text.Properties.SizeUnits.None, 0, 0, 1, double.NaN, double.NaN, Common.Text.Properties.ThreeState.Undefined));
+						break;
+					case "centered":
+						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.MarginsProperty (double.NaN, double.NaN, double.NaN, double.NaN, Common.Text.Properties.SizeUnits.None, 0, 0, 0.5, double.NaN, double.NaN, Common.Text.Properties.ThreeState.Undefined));
+						break;
+					case "justified":
+						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.MarginsProperty (double.NaN, double.NaN, double.NaN, double.NaN, Common.Text.Properties.SizeUnits.None, 1.0, 0, 0, double.NaN, double.NaN, Common.Text.Properties.ThreeState.Undefined));
 						break;
 				}
 				this.frame.TextNavigator.NotifyTextChanged ();
