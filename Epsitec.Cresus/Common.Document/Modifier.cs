@@ -32,13 +32,13 @@ namespace Epsitec.Common.Document
 			{
 				if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
 				{
-					this.RealUnitDimension = RealUnitType.DimensionMillimeter;
+					this.SetRealUnitDimension(RealUnitType.DimensionMillimeter, false);
 					this.duplicateMove = new Point(50.0, 50.0);  // 5mm
 					this.arrowMove = new Point(10.0, 10.0);  // 1mm
 				}
 				else
 				{
-					this.RealUnitDimension = RealUnitType.DimensionInch;
+					this.SetRealUnitDimension(RealUnitType.DimensionInch, false);
 					this.duplicateMove = new Point(50.8, 50.8);  // 0.2in
 					this.arrowMove = new Point(25.4, 25.4);  // 1in
 				}
@@ -418,31 +418,40 @@ namespace Epsitec.Common.Document
 			
 			set
 			{
-				this.realUnitDimension = value;
+				this.SetRealUnitDimension(value, true);
+			}
+		}
 
-				switch ( this.realUnitDimension )
-				{
-					case RealUnitType.DimensionMillimeter:
-						this.realScale = 10.0;
-						this.realPrecision = 0.01;
-						break;
+		// Choix de l'unité de dimension par défaut.
+		public void SetRealUnitDimension(RealUnitType unit, bool adapt)
+		{
+			this.realUnitDimension = unit;
 
-					case RealUnitType.DimensionCentimeter:
-						this.realScale = 100.0;
-						this.realPrecision = 0.001;
-						break;
+			switch ( this.realUnitDimension )
+			{
+				case RealUnitType.DimensionMillimeter:
+					this.realScale = 10.0;
+					this.realPrecision = 0.01;
+					break;
 
-					case RealUnitType.DimensionInch:
-						this.realScale = 254.0;
-						this.realPrecision = 0.0001;
-						break;
+				case RealUnitType.DimensionCentimeter:
+					this.realScale = 100.0;
+					this.realPrecision = 0.001;
+					break;
 
-					default:
-						this.realScale = 1.0;
-						this.realPrecision = 1.0;
-						break;
-				}
+				case RealUnitType.DimensionInch:
+					this.realScale = 254.0;
+					this.realPrecision = 0.0001;
+					break;
 
+				default:
+					this.realScale = 1.0;
+					this.realPrecision = 1.0;
+					break;
+			}
+
+			if ( adapt )
+			{
 				this.AdaptAllTextFieldReal();
 			}
 		}
@@ -550,7 +559,7 @@ namespace Epsitec.Common.Document
 
 		// Modifie tous les widgets de l'application reflétant des dimensions
 		// pour utiliser une autre unité.
-		protected void AdaptAllTextFieldReal()
+		public void AdaptAllTextFieldReal()
 		{
 			foreach ( Window window in Window.DebugAliveWindows )
 			{
@@ -560,7 +569,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Modifie tous les widgets d'un panneau qui sera utilisé.
-		public void AdaptAllTextFieldReal(Widget parent)
+		protected void AdaptAllTextFieldReal(Widget parent)
 		{
 			Widget[] widgets = parent.FindAllChildren();
 			foreach ( Widget widget in widgets )
@@ -576,9 +585,9 @@ namespace Epsitec.Common.Document
 						}
 						else
 						{
-							decimal val = field.InternalValue;
+							decimal value = field.InternalValue;
 							this.AdaptTextFieldRealDimension(field);
-							field.InternalValue = val;
+							field.InternalValue = value;
 						}
 					}
 				}

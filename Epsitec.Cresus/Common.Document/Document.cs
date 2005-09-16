@@ -63,7 +63,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					this.size = new Size(2159, 3556);  // Legal
+					this.size = new Size(2159, 2794);  // Letter US (8.5x11in)
 				}
 			}
 

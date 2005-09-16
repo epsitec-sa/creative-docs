@@ -350,7 +350,16 @@ namespace Epsitec.Common.Document.Settings
 		// Constructeur qui désérialise le réglage.
 		protected Integer(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			this.Value = info.GetInt32("Value");
+			if ( this.name == "DefaultUnit" )
+			{
+				RealUnitType unit = (RealUnitType) info.GetInt32("Value");
+				this.document.Modifier.SetRealUnitDimension(unit, false);
+			}
+			else
+			{
+				this.Value = info.GetInt32("Value");
+			}
+
 			this.Initialise();
 		}
 		#endregion

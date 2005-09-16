@@ -234,7 +234,7 @@
 	<data name="Object.Bezier.Menu.HandleAdd">Add point</data>
 	<data name="Object.Bezier.Menu.HandleSym">Symmetric</data>
 	<data name="Object.Bezier.Menu.HandleSmooth">Smooth</data>
-	<data name="Object.Bezier.Menu.HandleCorner">Angular</data>
+	<data name="Object.Bezier.Menu.HandleCorner">Cusp</data>
 	<data name="Object.Bezier.Menu.HandleLine">In line</data>
 	<data name="Object.Bezier.Menu.HandleFree">Free</data>
 	<data name="Object.Bezier.Menu.HandleContinue">Extend line</data>

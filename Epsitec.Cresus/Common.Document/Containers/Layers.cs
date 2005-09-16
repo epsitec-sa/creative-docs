@@ -230,8 +230,8 @@ namespace Epsitec.Common.Document.Containers
 			if ( initialColumns == 0 )
 			{
 				this.table.SetWidthColumn(0, 20);
-				this.table.SetWidthColumn(1, 50);
-				this.table.SetWidthColumn(2, 129);
+				this.table.SetWidthColumn(1, 60);
+				this.table.SetWidthColumn(2, 119);
 				this.table.SetWidthColumn(3, 18);
 			}
 

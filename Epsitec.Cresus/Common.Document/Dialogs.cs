@@ -1231,6 +1231,7 @@ namespace Epsitec.Common.Document
 
 		protected void UpdatePaper()
 		{
+			bool initial = this.ignoreChanged;
 			this.ignoreChanged = true;
 
 			TextFieldCombo combo = this.WidgetsTableSearch("PaperFormat", "") as TextFieldCombo;
@@ -1254,7 +1255,7 @@ namespace Epsitec.Common.Document
 				radio.ActiveState = !portrait ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			}
 
-			this.ignoreChanged = false;
+			this.ignoreChanged = initial;
 		}
 
 		protected static Size PaperRankToSize(int rank)
@@ -1701,6 +1702,8 @@ namespace Epsitec.Common.Document
 		// Met à jour tous les widgets d'un dialogue.
 		protected void UpdateDialogSettings(string dialog)
 		{
+			this.ignoreChanged = true;
+
 			int total = this.document.Settings.Count;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -1722,10 +1725,10 @@ namespace Epsitec.Common.Document
 				{
 					Settings.Integer sInteger = setting as Settings.Integer;
 
-					TextFieldReal field = this.WidgetsTableSearch(setting.Name, "") as TextFieldReal;
-					if ( field != null )
+					TextFieldCombo combo = this.WidgetsTableSearch(setting.Name, "") as TextFieldCombo;
+					if ( combo != null )
 					{
-						field.InternalValue = (decimal) sInteger.Value;
+						combo.SelectedIndex = sInteger.TypeToRank(sInteger.Value);
 					}
 				}
 
@@ -1801,6 +1804,9 @@ namespace Epsitec.Common.Document
 				if ( sBool == null )  continue;
 				this.EnableWidget(setting.Name, sBool.Value^setting.ConditionState);
 			}
+
+			this.document.Modifier.AdaptAllTextFieldReal();
+			this.ignoreChanged = false;
 		}
 
 		// Modifie l'état d'un widget.
