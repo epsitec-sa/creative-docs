@@ -30,9 +30,18 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				this.RealUnitDimension = RealUnitType.DimensionMillimeter;
-				this.duplicateMove = new Point(50.0, 50.0);  // 5mm
-				this.arrowMove = new Point(10.0, 10.0);  // 1mm
+				if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+				{
+					this.RealUnitDimension = RealUnitType.DimensionMillimeter;
+					this.duplicateMove = new Point(50.0, 50.0);  // 5mm
+					this.arrowMove = new Point(10.0, 10.0);  // 1mm
+				}
+				else
+				{
+					this.RealUnitDimension = RealUnitType.DimensionInch;
+					this.duplicateMove = new Point(50.8, 50.8);  // 0.2in
+					this.arrowMove = new Point(25.4, 25.4);  // 1in
+				}
 				this.arrowMoveMul = 10.0;
 				this.arrowMoveDiv = 10.0;
 				this.outsideArea = 0.0;

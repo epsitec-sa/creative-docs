@@ -36,11 +36,25 @@ namespace Epsitec.Common.Document.Properties
 			{
 				if ( this.type == Type.LineDimension )
 				{
-					this.width = 2.0;  // 0.2mm
+					if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+					{
+						this.width = 2.0;  // 0.2mm
+					}
+					else
+					{
+						this.width = 2.54;  // 0.01in
+					}
 				}
 				else
 				{
-					this.width = 5.0;  // 0.5mm
+					if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+					{
+						this.width = 5.00;  // 0.5mm
+					}
+					else
+					{
+						this.width = 5.08;  // 0.02in
+					}
 				}
 			}
 
@@ -61,8 +75,16 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else
 			{
-				this.dashPen[0] = 50.0;  // 5.0mm
-				this.dashGap[0] = 50.0;
+				if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+				{
+					this.dashPen[0] = 20.0;  // 2.0mm
+					this.dashGap[0] = 20.0;
+				}
+				else
+				{
+					this.dashPen[0] = 25.4;  // 0.1in
+					this.dashGap[0] = 25.4;
+				}
 			}
 			
 			for ( int i=1 ; i<Line.DashMax ; i++ )

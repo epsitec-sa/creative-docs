@@ -34,9 +34,18 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				this.gridStep   = new Point(50.0, 50.0);  // 5mm
-				this.gridSubdiv = new Point(5.0, 5.0);
-				this.gridOffset = new Point(0.0, 0.0);
+				if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+				{
+					this.gridStep   = new Point(50.0, 50.0);  // 5mm
+					this.gridSubdiv = new Point(5.0, 5.0);
+					this.gridOffset = new Point(0.0, 0.0);
+				}
+				else
+				{
+					this.gridStep   = new Point(50.8, 50.8);  // 0.2in
+					this.gridSubdiv = new Point(5.0, 5.0);
+					this.gridOffset = new Point(0.0, 0.0);
+				}
 			}
 
 			this.magnetLineMain   = new MagnetLine(this.document, this, MagnetLine.Type.Main);

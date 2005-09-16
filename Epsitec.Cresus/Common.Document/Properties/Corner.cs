@@ -39,14 +39,23 @@ namespace Epsitec.Common.Document.Properties
 		protected override void Initialise()
 		{
 			this.cornerType = CornerType.Right;
+			
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
 				this.radius = 2.0;
 			}
 			else
 			{
-				this.radius = 50.0;
+				if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+				{
+					this.radius = 50.0;  // 5mm
+				}
+				else
+				{
+					this.radius = 50.8;  // 0.2in
+				}
 			}
+			
 			this.effect1 = 0.5;
 			this.effect2 = 0.5;
 		}

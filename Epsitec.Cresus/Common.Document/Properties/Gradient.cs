@@ -81,9 +81,18 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else
 			{
-				this.hatchWidth[0]    =  5.0;  // 0.5mm
-				this.hatchDistance[0] = 50.0;  // 5.0mm
-				this.hatchDistance[1] = 50.0;  // 5.0mm
+				if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+				{
+					this.hatchWidth[0]    =  5.0;  // 0.5mm
+					this.hatchDistance[0] = 50.0;  // 5.0mm
+					this.hatchDistance[1] = 50.0;  // 5.0mm
+				}
+				else
+				{
+					this.hatchWidth[0]    =  5.08;  // 0.02in
+					this.hatchDistance[0] = 50.80;  // 0.2in
+					this.hatchDistance[1] = 50.80;  // 0.2in
+				}
 			}
 
 			this.hatchWidth[1] = 0.0;

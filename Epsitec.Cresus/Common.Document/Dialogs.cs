@@ -1142,7 +1142,7 @@ namespace Epsitec.Common.Document
 
 			field.Items.Add(Res.Strings.Dialog.Print.Format.User);
 			field.Items.Add("Diapositive");
-			field.Items.Add("Lettre US");
+			field.Items.Add("Letter US");
 			field.Items.Add("Legal");
 			field.Items.Add("Tabloïd");
 			field.Items.Add("Formulaire/Demi");

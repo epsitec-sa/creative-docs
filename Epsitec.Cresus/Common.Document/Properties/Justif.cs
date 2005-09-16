@@ -58,9 +58,18 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else
 			{
-				this.marginH = 10.0;
-				this.marginV = 10.0;
-				this.offsetV = 0.0;
+				if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+				{
+					this.marginH = 10.0;  // 1mm
+					this.marginV = 10.0;  // 1mm
+					this.offsetV = 0.0;
+				}
+				else
+				{
+					this.marginH = 12.7;  // 0.05in
+					this.marginV = 12.7;  // 0.05in
+					this.offsetV = 0.0;
+				}
 			}
 		}
 

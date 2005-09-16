@@ -45,14 +45,30 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else
 			{
-				this.length[0] = 50.0;
-				this.length[1] = 50.0;
+				if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+				{
+					this.length[0] = 50.0;  // 5mm
+					this.length[1] = 50.0;
+				}
+				else
+				{
+					this.length[0] = 50.8;  // 0.2in
+					this.length[1] = 50.8;
+				}
 			}
 
 			if ( this.type == Type.DimensionArrow )
 			{
-				this.length[0] = 50.0;
-				this.length[1] = 50.0;
+				if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+				{
+					this.length[0] = 50.0;  // 5mm
+					this.length[1] = 50.0;
+				}
+				else
+				{
+					this.length[0] = 50.8;  // 0.2in
+					this.length[1] = 50.8;
+				}
 
 				this.arrowType[0] = ArrowType.ArrowSimply;
 				this.arrowType[1] = ArrowType.ArrowSimply;

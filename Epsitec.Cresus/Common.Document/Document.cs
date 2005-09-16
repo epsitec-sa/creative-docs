@@ -57,7 +57,14 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				this.size = new Size(2100, 2970);  // A4 vertical
+				if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+				{
+					this.size = new Size(2100, 2970);  // A4 vertical
+				}
+				else
+				{
+					this.size = new Size(2159, 3556);  // Legal
+				}
 			}
 
 			this.hotSpot = new Point(0, 0);

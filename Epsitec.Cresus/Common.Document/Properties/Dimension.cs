@@ -33,8 +33,18 @@ namespace Epsitec.Common.Document.Properties
 		{
 			this.dimensionJustif = DimensionJustif.CenterOrRight;
 			this.dimensionForm = DimensionForm.Auto;
-			this.addLength = 50.0;
-			this.outLength = 20.0;
+
+			if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+			{
+				this.addLength = 50.0;  // 5mm
+				this.outLength = 20.0;  // 2mm
+			}
+			else
+			{
+				this.addLength = 50.8;  // 0.2in
+				this.outLength = 25.4;  // 0.1in
+			}
+			
 			this.fontOffset = 0.4;
 			this.dimensionText = Res.Strings.Property.Dimension.Text;
 			this.rotateText = false;
