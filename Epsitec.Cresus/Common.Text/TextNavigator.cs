@@ -575,16 +575,32 @@ namespace Epsitec.Common.Text
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				foreach (Range range in ranges)
+				if ((paragraph_properties.Length > 0) ||
+					(paragraph_styles.Length > 0))
 				{
-					int start = range.Start;
-					int end   = range.End;
-					int pos   = start;
-					
-					while (pos < end)
+					foreach (Range range in ranges)
 					{
-						this.SetParagraphStyles (pos, paragraph_properties, paragraph_styles);
-						pos = this.FindNextParagraphStart (pos);
+						int start = range.Start;
+						int end   = range.End;
+						int pos   = start;
+						
+						while (pos < end)
+						{
+							this.SetParagraphStyles (pos, paragraph_properties, paragraph_styles);
+							pos = this.FindNextParagraphStart (pos);
+						}
+					}
+				}
+				
+				if ((character_properties.Length > 0) ||
+					(character_styles.Length > 0))
+				{
+					foreach (Range range in ranges)
+					{
+						int pos    = range.Start;
+						int length = range.Length;
+					
+//						this.SetCharacterStyles (pos, length, character_properties, character_styles);
 					}
 				}
 			}
@@ -593,21 +609,60 @@ namespace Epsitec.Common.Text
 				int pos = this.story.GetCursorPosition (this.cursor);
 				
 				this.SetParagraphStyles (pos, paragraph_properties, paragraph_styles);
+				
+				this.current_styles      = styles.Clone () as TextStyle[];
+				this.current_properties  = properties.Clone () as Property[];
+				this.current_accumulator = new Styles.PropertyContainer.Accumulator ();
+			
+				this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
 			}
-			
-			this.current_styles      = styles.Clone () as TextStyle[];
-			this.current_properties  = properties.Clone () as Property[];
-			this.current_accumulator = new Styles.PropertyContainer.Accumulator ();
-			
-			this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
 		}
 		
-		private void SetAllStyles(Property[] paragraph_properties, Property[] character_properties, TextStyle[] paragraph_styles, TextStyle[] character_styles)
+		
+		public void SetTextProperties(Properties.ApplyMode mode, params Property[] properties)
+		{
+			System.Diagnostics.Debug.Assert (properties != null);
+			
+			Property[] paragraph_properties = Property.FilterUniformParagraphProperties (properties);
+			Property[] character_properties = Property.FilterOtherProperties (properties);
+			
+			if (this.HasSelection)
+			{
+				int[]   positions = this.GetSelectionCursorPositions ();
+				Range[] ranges    = Range.CreateSortedRanges (positions);
+				
+				if (character_properties.Length > 0)
+				{
+					foreach (Range range in ranges)
+					{
+						int pos    = range.Start;
+						int length = range.Length;
+					
+						this.SetTextProperties (pos, length, character_properties, mode);
+					}
+				}
+			}
+		}
+		
+		
+		private void SetCharacterStyles(int pos, int length, TextStyle[] styles)
+		{
+			this.story.SetCursorPosition (this.temp_cursor, pos);
+			
+			Internal.Navigator.SetCharacterStyles (this.story, this.temp_cursor, length, styles);
+		}
+		
+		private void SetTextProperties(int pos, int length, Property[] properties, Properties.ApplyMode mode)
+		{
+			this.story.SetCursorPosition (this.temp_cursor, pos);
+			
+			Internal.Navigator.SetTextProperties (this.story, this.temp_cursor, length, properties, mode);
+		}
+		
+		private void SetParagraphStyles(int pos, Property[] properties, TextStyle[] styles)
 		{
 			//	Pour modifier le style d'un paragraphe, il faut se placer au début
 			//	du paragraphe :
-			
-			int pos = this.story.GetCursorPosition (this.cursor);
 			
 			this.story.SetCursorPosition (this.temp_cursor, pos);
 			
@@ -615,21 +670,7 @@ namespace Epsitec.Common.Text
 			
 			this.story.SetCursorPosition (this.temp_cursor, pos + start);
 			
-			Internal.Navigator.SetParagraphStylesAndProperties (this.story, this.temp_cursor, paragraph_styles, paragraph_properties);
-		}
-		
-		private void SetParagraphStyles(int pos, Property[] paragraph_properties, TextStyle[] paragraph_styles)
-		{
-			//	Pour modifier le style d'un paragraphe, il faut se placer au début
-			//	du paragraphe :
-			
-			this.story.SetCursorPosition (this.temp_cursor, pos);
-			
-			int start = Internal.Navigator.GetParagraphStartOffset (this.story, this.temp_cursor);
-			
-			this.story.SetCursorPosition (this.temp_cursor, pos + start);
-			
-			Internal.Navigator.SetParagraphStylesAndProperties (this.story, this.temp_cursor, paragraph_styles, paragraph_properties);
+			Internal.Navigator.SetParagraphStylesAndProperties (this.story, this.temp_cursor, styles, properties);
 		}
 		
 		

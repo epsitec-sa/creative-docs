@@ -64,10 +64,13 @@ namespace Epsitec.Common.Widgets
 			{
 				this.frame = frame;
 				
-				this.CreateButton (pane, "Default", "default");
-				this.CreateButton (pane, "Regular", "regular");
-				this.CreateButton (pane, "<i>Italic</i>", "italic");
-				this.CreateButton (pane, "<b>Bold</b>", "bold");
+				this.CreateButton (pane, "Default",			"default");
+				
+				this.CreateButton (pane, "Regular",			"style:regular");
+				this.CreateButton (pane, "<i>Italic</i>",	"style:italic");
+				this.CreateButton (pane, "<b>Bold</b>",		"style:bold");
+				this.CreateButton (pane, "Rst Style",		"style:reset");
+				
 				this.CreateButton (pane, "8 pts", "size:8");
 				this.CreateButton (pane, "24 pts", "size:24");
 				this.CreateButton (pane, "+20 %", "size:+20%");
@@ -102,12 +105,20 @@ namespace Epsitec.Common.Widgets
 					case "default":
 						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle);
 						break;
-					case "regular":
-						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontProperty (null, "Regular"));
+					
+					case "style:regular":
+						this.frame.TextNavigator.TextNavigator.SetTextProperties (Common.Text.Properties.ApplyMode.Set, new Common.Text.Properties.FontProperty (null, "Regular"));
 						break;
-					case "bold":
-						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontProperty (null, "Bold"));
+					case "style:bold":
+						this.frame.TextNavigator.TextNavigator.SetTextProperties (Common.Text.Properties.ApplyMode.Set, new Common.Text.Properties.FontProperty (null, "Bold"));
 						break;
+					case "style:italic":
+						this.frame.TextNavigator.TextNavigator.SetTextProperties (Common.Text.Properties.ApplyMode.Set, new Common.Text.Properties.FontProperty (null, "Italic"));
+						break;
+					case "style:reset":
+						this.frame.TextNavigator.TextNavigator.SetTextProperties (Common.Text.Properties.ApplyMode.Clear, new Common.Text.Properties.FontProperty ());
+						break;
+					
 					case "size:8":
 						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontSizeProperty (8.0, Common.Text.Properties.SizeUnits.Points));
 						break;
@@ -116,9 +127,6 @@ namespace Epsitec.Common.Widgets
 						break;
 					case "size:+20%":
 						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontSizeProperty (120.0, Common.Text.Properties.SizeUnits.Percent));
-						break;
-					case "italic":
-						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontProperty (null, "Italic"));
 						break;
 					case "left-aligned":
 						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.MarginsProperty (double.NaN, double.NaN, double.NaN, double.NaN, Common.Text.Properties.SizeUnits.None, 0, 0, 0, double.NaN, double.NaN, Common.Text.Properties.ThreeState.Undefined));

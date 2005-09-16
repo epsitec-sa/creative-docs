@@ -469,6 +469,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\ApplyMode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\AutoTextProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

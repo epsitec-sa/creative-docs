@@ -661,6 +661,109 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public static void SetCharacterStyles(TextStory story, ICursor cursor, int length, TextStyle[] styles)
+		{
+			if (length == 0)
+			{
+				//	Aucun caractère n'est affecté par la modification; ne fait
+				//	rien du tout.
+				
+				return;
+			}
+			
+			if (styles == null) styles = new TextStyle[0];
+			
+			int offset_start = 0;
+			int offset_end   = length;
+			
+			ulong[] text = new ulong[length];
+			
+			story.ReadText (cursor, offset_start, length, text);
+			
+			ulong code  = 0;
+			int   start = 0;
+			int   count = 0;
+			
+			//	Change le style par tranches (une tranche partage exactement le même
+			//	ensemble de styles et propriétés) pour être plus efficace :
+			
+			for (int i = 0; i < length; i++)
+			{
+				ulong next = Internal.CharMarker.ExtractStyleAndSettings (text[i]);
+				
+				if (code != next)
+				{
+					Navigator.SetCharacterStyles (story, text, code, start, count, styles);
+					
+					start = i;
+					count = 1;
+					code  = next;
+				}
+				else
+				{
+					count++;
+				}
+			}
+			
+			//	Change encore le style de la dernière (ou de l'unique) tranche :
+			
+			Navigator.SetCharacterStyles (story, text, code, start, count, styles);
+			
+			story.WriteText (cursor, offset_start, text);
+		}
+		
+		public static void SetTextProperties(TextStory story, ICursor cursor, int length, Property[] properties, Properties.ApplyMode mode)
+		{
+			if (length == 0)
+			{
+				//	Aucun caractère n'est affecté par la modification; ne fait
+				//	rien du tout.
+				
+				return;
+			}
+			
+			if (properties == null) properties = new Property[0];
+			
+			int offset_start = 0;
+			int offset_end   = length;
+			
+			ulong[] text = new ulong[length];
+			
+			story.ReadText (cursor, offset_start, length, text);
+			
+			ulong code  = 0;
+			int   start = 0;
+			int   count = 0;
+			
+			//	Change le style par tranches (une tranche partage exactement le même
+			//	ensemble de styles et propriétés) pour être plus efficace :
+			
+			for (int i = 0; i < length; i++)
+			{
+				ulong next = Internal.CharMarker.ExtractStyleAndSettings (text[i]);
+				
+				if (code != next)
+				{
+					Navigator.SetTextProperties (story, text, code, start, count, properties, mode);
+					
+					start = i;
+					count = 1;
+					code  = next;
+				}
+				else
+				{
+					count++;
+				}
+			}
+			
+			//	Change encore le style de la dernière (ou de l'unique) tranche :
+			
+			Navigator.SetTextProperties (story, text, code, start, count, properties, mode);
+			
+			story.WriteText (cursor, offset_start, text);
+		}
+		
+		
 		private static void SetParagraphStylesAndProperties(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] paragraph_styles, Property[] paragraph_properties)
 		{
 			//	Change le style de paragraphe pour une tranche donnée.
@@ -719,6 +822,244 @@ namespace Epsitec.Common.Text.Internal
 				text[offset+i] |= style_bits;
 			}
 		}
+		
+		
+		private static void SetTextProperties(TextStory story, ulong[] text, ulong code, int offset, int length, Property[] character_properties, Properties.ApplyMode mode)
+		{
+			//	Modifie les propriétés du texte en utilisant celles passées en
+			//	entrée, en se basant sur le mode de combinaison spécifié.
+			
+			if ((length == 0) ||
+				(mode == Properties.ApplyMode.None))
+			{
+				return;
+			}
+			
+			Text.Context context = story.TextContext;
+			
+			TextStyle[] current_styles;
+			Property[]  current_properties;
+			
+			//	Récupère d'abord les styles et les propriétés courantes :
+			
+			context.GetStyles (code, out current_styles);
+			context.GetProperties (code, out current_properties);
+			
+			foreach (Property p in current_properties)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Current: {0} - {1}.", p.WellKnownType, p.ToString ()));
+			}
+			
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (character_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (character_properties) == false);
+			
+			//	Dans un premier temps, on ne conserve tous les styles et que les
+			//	propriétés associés directement au paragraphe. Les autres propriétés
+			//	vont devoir être filtrées :
+			
+			System.Collections.ArrayList all_styles = new System.Collections.ArrayList ();
+			System.Collections.ArrayList all_properties = new System.Collections.ArrayList ();
+			
+			all_styles.AddRange (current_styles);
+			
+			all_properties.AddRange (Property.FilterUniformParagraphProperties (current_properties));
+			all_properties.AddRange (Navigator.Combine (Property.FilterOtherProperties (current_properties), character_properties, mode));
+			
+			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, all_properties);
+			
+			ulong style_bits;
+			
+			story.ConvertToStyledText (flat, out style_bits);
+			
+			for (int i = 0; i < length; i++)
+			{
+				text[offset+i] &= ~ Internal.CharMarker.StyleAndSettingsMask;
+				text[offset+i] |= style_bits;
+			}
+		}
+		
+		
+		private static void SetCharacterStyles(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] character_styles)
+		{
+			//	Remplace les styles et les propriétés du texte par ceux passés
+			//	en entrée. Cet appel est destructif par rapport aux anciens
+			//	styles/propriétés.
+			
+			if (length == 0)
+			{
+				return;
+			}
+			
+			Text.Context context = story.TextContext;
+			
+			TextStyle[] current_styles;
+			Property[]  current_properties;
+			
+			//	Récupère d'abord les styles et les propriétés associées au texte
+			//	actuel :
+			
+			context.GetStyles (code, out current_styles);
+			context.GetProperties (code, out current_properties);
+			
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
+			
+			//	Ne conserve que les styles et les propriétés associés directement
+			//	au paragraphe :
+			
+			TextStyle[] filtered_styles     = TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph);
+			Property[]  filtered_properties = Property.FilterUniformParagraphProperties (current_properties);
+			
+			TextStyle[] all_styles     = new TextStyle[filtered_styles.Length + character_styles.Length];
+			Property[]  all_properties = filtered_properties;
+			
+			System.Array.Copy (filtered_styles, 0, all_styles, 0, filtered_styles.Length);
+			System.Array.Copy (character_styles, 0, all_styles, filtered_styles.Length, character_styles.Length);
+			
+			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, all_properties);
+			
+			ulong style_bits;
+			
+			story.ConvertToStyledText (flat, out style_bits);
+			
+			for (int i = 0; i < length; i++)
+			{
+				text[offset+i] &= ~ Internal.CharMarker.StyleAndSettingsMask;
+				text[offset+i] |= style_bits;
+			}
+		}
+		
+		
+		private static System.Collections.ICollection Combine(Property[] a, Property[] b, Properties.ApplyMode mode)
+		{
+			switch (mode)
+			{
+				case Properties.ApplyMode.Clear:	return Navigator.CombineClear (a, b);
+				case Properties.ApplyMode.Set:		return Navigator.CombineSet (a, b);
+				case Properties.ApplyMode.Combine:	return Navigator.CombineAccumulate (a, b);
+				
+				default:
+					throw new System.InvalidOperationException (string.Format ("ApplyMode.{0} not valid here.", mode));
+			}
+			
+			
+		}
+		
+		private static System.Collections.ICollection CombineClear(Property[] a, Property[] b)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			list.AddRange (a);
+			
+			foreach (Property p in a)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Found: {0} - {1}.", p.WellKnownType, p.ToString ()));
+			}
+			
+			foreach (Property p in b)
+			{
+				//	Vérifie si cette propriété existe dans la liste. Si oui, on
+				//	doit la supprimer.
+				
+				for (int i = 0; i < list.Count; )
+				{
+					Property test = list[i] as Property;
+					
+					if (test.WellKnownType == p.WellKnownType)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Removed: {0} - {1}.", p.WellKnownType, p.ToString ()));
+						list.RemoveAt (i);
+					}
+					else
+					{
+						i++;
+					}
+				}
+			}
+			
+			return list;
+		}
+		
+		private static System.Collections.ICollection CombineSet(Property[] a, Property[] b)
+		{
+			System.Collections.ArrayList list = Navigator.CombineClear (a, b) as System.Collections.ArrayList;
+			list.AddRange (b);
+			foreach (Property p in b)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Added: {0} - {1}.", p.WellKnownType, p.ToString ()));
+			}
+			return list;
+		}
+		
+		private static System.Collections.ICollection CombineAccumulate(Property[] a, Property[] b)
+		{
+			Styles.PropertyContainer.Accumulator accumulator = new Styles.PropertyContainer.Accumulator ();
+			
+			accumulator.Accumulate (a);
+			accumulator.Accumulate (b);
+			
+			return accumulator.AccumulatedProperties;
+		}
+		
+		
+		private static void SetTextStyles(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] character_styles, Property[] character_properties)
+		{
+			//	Remplace les styles et les propriétés du texte par ceux passés
+			//	en entrée. Cet appel est destructif par rapport aux anciens
+			//	styles/propriétés.
+			
+			if (length == 0)
+			{
+				return;
+			}
+			
+			Text.Context context = story.TextContext;
+			
+			TextStyle[] current_styles;
+			Property[]  current_properties;
+			
+			//	Récupère d'abord les styles et les propriétés associées au texte
+			//	actuel :
+			
+			context.GetStyles (code, out current_styles);
+			context.GetProperties (code, out current_properties);
+			
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (character_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (character_properties) == false);
+			
+			//	Ne conserve que les styles et les propriétés associés directement
+			//	au paragraphe :
+			
+			TextStyle[] filtered_styles     = TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph);
+			Property[]  filtered_properties = Property.FilterUniformParagraphProperties (current_properties);
+			
+			TextStyle[] all_styles     = new TextStyle[filtered_styles.Length + character_styles.Length];
+			Property[]  all_properties = new Property[filtered_properties.Length + character_properties.Length];
+			
+			System.Array.Copy (filtered_properties, 0, all_properties, 0, filtered_properties.Length);
+			System.Array.Copy (character_properties, 0, all_properties, filtered_properties.Length, character_properties.Length);
+			
+			System.Array.Copy (filtered_styles, 0, all_styles, 0, filtered_styles.Length);
+			System.Array.Copy (character_styles, 0, all_styles, filtered_styles.Length, character_styles.Length);
+			
+			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, all_properties);
+			
+			ulong style_bits;
+			
+			story.ConvertToStyledText (flat, out style_bits);
+			
+			for (int i = 0; i < length; i++)
+			{
+				text[offset+i] &= ~ Internal.CharMarker.StyleAndSettingsMask;
+				text[offset+i] |= style_bits;
+			}
+		}
+		
+		
 		
 		
 		private class PropertyFinder
