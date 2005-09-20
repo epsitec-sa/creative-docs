@@ -303,6 +303,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "VersionChecker.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Data\ComponentCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
