@@ -71,9 +71,11 @@ namespace Epsitec.Common.Widgets
 				this.CreateButton (pane, "<b>Bold</b>",		"style:bold");
 				this.CreateButton (pane, "Rst Style",		"style:reset");
 				
-				this.CreateButton (pane, "8 pts", "size:8");
-				this.CreateButton (pane, "24 pts", "size:24");
-				this.CreateButton (pane, "+20 %", "size:+20%");
+				this.CreateButton (pane, "8 pts",			"size:8");
+				this.CreateButton (pane, "24 pts",			"size:24");
+				this.CreateButton (pane, "+20 %",			"size:+20%");
+				this.CreateButton (pane, "Rst Size",		"size:reset");
+				
 				this.CreateButton (pane, "|&lt;---", "left-aligned");
 				this.CreateButton (pane, "&lt;-|-&gt;", "centered");
 				this.CreateButton (pane, "---&gt;|", "right-aligned");
@@ -103,7 +105,8 @@ namespace Epsitec.Common.Widgets
 				switch (button.Name)
 				{
 					case "default":
-						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle);
+						this.frame.TextNavigator.TextNavigator.SetParagraphStyles (this.frame.TextStory.TextContext.DefaultStyle);
+						this.frame.TextNavigator.TextNavigator.SetParagraphProperties (Common.Text.Properties.ApplyMode.Overwrite, new Text.Property[0]);
 						break;
 					
 					case "style:regular":
@@ -120,34 +123,39 @@ namespace Epsitec.Common.Widgets
 						break;
 					
 					case "size:8":
-						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontSizeProperty (8.0, Common.Text.Properties.SizeUnits.Points));
+						this.frame.TextNavigator.TextNavigator.SetTextProperties (Common.Text.Properties.ApplyMode.Set, new Common.Text.Properties.FontSizeProperty (8.0, Common.Text.Properties.SizeUnits.Points));
 						break;
 					case "size:24":
-						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontSizeProperty (24.0, Common.Text.Properties.SizeUnits.Points));
+						this.frame.TextNavigator.TextNavigator.SetTextProperties (Common.Text.Properties.ApplyMode.Set, new Common.Text.Properties.FontSizeProperty (24.0, Common.Text.Properties.SizeUnits.Points));
 						break;
 					case "size:+20%":
-						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.FontSizeProperty (120.0, Common.Text.Properties.SizeUnits.Percent));
+						this.frame.TextNavigator.TextNavigator.SetTextProperties (Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontSizeProperty (120.0, Common.Text.Properties.SizeUnits.Percent));
 						break;
+					case "size:reset":
+						this.frame.TextNavigator.TextNavigator.SetTextProperties (Common.Text.Properties.ApplyMode.Clear, new Common.Text.Properties.FontSizeProperty ());
+						break;
+					
 					case "left-aligned":
-						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.MarginsProperty (double.NaN, double.NaN, double.NaN, double.NaN, Common.Text.Properties.SizeUnits.None, 0, 0, 0, double.NaN, double.NaN, Common.Text.Properties.ThreeState.Undefined));
+						this.frame.TextNavigator.TextNavigator.SetParagraphProperties (Common.Text.Properties.ApplyMode.Set, new Common.Text.Properties.MarginsProperty (double.NaN, double.NaN, double.NaN, double.NaN, Common.Text.Properties.SizeUnits.None, 0, 0, 0, double.NaN, double.NaN, Common.Text.Properties.ThreeState.Undefined));
 						break;
 					case "right-aligned":
-						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.MarginsProperty (double.NaN, double.NaN, double.NaN, double.NaN, Common.Text.Properties.SizeUnits.None, 0, 0, 1, double.NaN, double.NaN, Common.Text.Properties.ThreeState.Undefined));
+						this.frame.TextNavigator.TextNavigator.SetParagraphProperties (Common.Text.Properties.ApplyMode.Set, new Common.Text.Properties.MarginsProperty (double.NaN, double.NaN, double.NaN, double.NaN, Common.Text.Properties.SizeUnits.None, 0, 0, 1, double.NaN, double.NaN, Common.Text.Properties.ThreeState.Undefined));
 						break;
 					case "centered":
-						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.MarginsProperty (double.NaN, double.NaN, double.NaN, double.NaN, Common.Text.Properties.SizeUnits.None, 0, 0, 0.5, double.NaN, double.NaN, Common.Text.Properties.ThreeState.Undefined));
+						this.frame.TextNavigator.TextNavigator.SetParagraphProperties (Common.Text.Properties.ApplyMode.Set, new Common.Text.Properties.MarginsProperty (double.NaN, double.NaN, double.NaN, double.NaN, Common.Text.Properties.SizeUnits.None, 0, 0, 0.5, double.NaN, double.NaN, Common.Text.Properties.ThreeState.Undefined));
 						break;
 					case "justified":
-						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.MarginsProperty (double.NaN, double.NaN, double.NaN, double.NaN, Common.Text.Properties.SizeUnits.None, 1.0, 0, 0, double.NaN, double.NaN, Common.Text.Properties.ThreeState.Undefined));
+						this.frame.TextNavigator.TextNavigator.SetParagraphProperties (Common.Text.Properties.ApplyMode.Set, new Common.Text.Properties.MarginsProperty (double.NaN, double.NaN, double.NaN, double.NaN, Common.Text.Properties.SizeUnits.None, 1.0, 0, 0, double.NaN, double.NaN, Common.Text.Properties.ThreeState.Undefined));
 						break;
+					
 					case "lead:auto":
-						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.LeadingProperty (0.0, Common.Text.Properties.SizeUnits.Points, Common.Text.Properties.AlignMode.Undefined));
+						this.frame.TextNavigator.TextNavigator.SetParagraphProperties (Common.Text.Properties.ApplyMode.Set, new Common.Text.Properties.LeadingProperty (0.0, Common.Text.Properties.SizeUnits.Points, Common.Text.Properties.AlignMode.Undefined));
 						break;
 					case "lead:150%":
-						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.LeadingProperty (150.0, Common.Text.Properties.SizeUnits.Percent, Common.Text.Properties.AlignMode.Undefined));
+						this.frame.TextNavigator.TextNavigator.SetParagraphProperties (Common.Text.Properties.ApplyMode.Set, new Common.Text.Properties.LeadingProperty (150.0, Common.Text.Properties.SizeUnits.Percent, Common.Text.Properties.AlignMode.Undefined));
 						break;
 					case "lead:20":
-						this.frame.TextNavigator.TextNavigator.SetStyle (this.frame.TextStory.TextContext.DefaultStyle, new Common.Text.Properties.LeadingProperty (20.0, Common.Text.Properties.SizeUnits.Points, Common.Text.Properties.AlignMode.Undefined));
+						this.frame.TextNavigator.TextNavigator.SetParagraphProperties (Common.Text.Properties.ApplyMode.Set, new Common.Text.Properties.LeadingProperty (20.0, Common.Text.Properties.SizeUnits.Points, Common.Text.Properties.AlignMode.Undefined));
 						break;
 				}
 				this.frame.TextNavigator.NotifyTextChanged ();

@@ -905,10 +905,10 @@ namespace Epsitec.Common.Drawing
 					
 					navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 1);
 					navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);	//	juste après le point final
-					navigator.SetStyles (new Text.TextStyle[] { style1, style2 }, new Text.Property[] { });
+					navigator.SetParagraphStyles (style1, style2);
 					navigator.Insert ("..\nComplément 1.\nComplément 2.");
 					navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);		//	fin du texte
-					navigator.SetStyle (style1);
+					navigator.SetParagraphStyles (style1);
 					navigator.Insert ("Texte normal.\n");
 					navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 1);		//	juste avant "Texte normal.\n"
 					navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 2);	//	juste avant le "." de la ligne précédente
@@ -917,13 +917,13 @@ namespace Epsitec.Common.Drawing
 					navigator.EndSelection ();
 					navigator.Delete ();
 					navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 1);
-					navigator.SetStyle (style1);
+					navigator.SetParagraphStyles (style1);
 					navigator.Insert ("aaa\nbbb\n");
 					navigator.Insert ("ccc");
-					navigator.SetStyles (new Text.TextStyle[] { style1, style2 }, new Text.Property[] { });
+					navigator.SetParagraphStyles (style1, style2);
 					navigator.Insert ("\n");
 					navigator.Insert ("ddd\neee\nfff\n");
-					navigator.SetStyle (style1);
+					navigator.SetParagraphStyles (style1);
 					navigator.Insert ("Texte final.\n");
 					navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 5);		//	au début de "ccc"
 					navigator.StartSelection ();

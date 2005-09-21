@@ -14,5 +14,6 @@ namespace Epsitec.Common.Text.Properties
 		Set,									//	écrase les réglages courants
 		Clear,									//	efface les réglages courants
 		Combine,								//	combine avec les réglages courants
+		Overwrite,								//	...
 	}
 }

@@ -529,43 +529,27 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void SetStyle(TextStyle style)
-		{
-			TextStyle[] styles     = new TextStyle[] { style };
-			Property[]  properties = new Property[0];
-			
-			this.SetStyles (styles, properties);
-		}
-		
-		public void SetStyle(TextStyle style, params Property[] properties)
-		{
-			TextStyle[] styles = new TextStyle[] { style };
-			
-			this.SetStyles (styles, properties);
-		}
-		
-		public void SetStyles(System.Collections.ICollection styles, System.Collections.ICollection properties)
+		public void SetParagraphStyles(System.Collections.ICollection styles)
 		{
 			TextStyle[] s_array = new TextStyle[styles == null ? 0 : styles.Count];
-			Property[]  p_array = new Property[properties == null ? 0 : properties.Count];
 			
-			if (styles != null) styles.CopyTo (s_array, 0);
-			if (properties != null) properties.CopyTo (p_array, 0);
+			if (styles != null)
+			{
+				styles.CopyTo (s_array, 0);
+			}
 			
-			this.SetStyles (s_array, p_array);
+			this.SetParagraphStyles (s_array);
 		}
 		
-		public void SetStyles(TextStyle[] styles, Property[] properties)
+		public void SetParagraphStyles(params TextStyle[] styles)
 		{
-			//	Change les styles et propriétés attachées à la position courante,
-			//	ce qui va peut-être modifier les propriétés du paragraphe. En cas
-			//	de sélection, la gestion est plus compliquée.
+			//	Change les styles et propriétés du paragraphe attachés à la position
+			//	courante. En cas de sélection, change les propriétés et styles
 			
 			System.Diagnostics.Debug.Assert (styles != null);
-			System.Diagnostics.Debug.Assert (properties != null);
 			
-			Property[] paragraph_properties = Property.FilterUniformParagraphProperties (properties);
-			Property[] character_properties = Property.FilterOtherProperties (properties);
+//			Property[] paragraph_properties = Property.FilterUniformParagraphProperties (properties);
+//			Property[] character_properties = Property.FilterOtherProperties (properties);
 			
 			TextStyle[] paragraph_styles = TextStyle.FilterStyles (styles, TextStyleClass.Paragraph);
 			TextStyle[] character_styles = TextStyle.FilterStyles (styles, TextStyleClass.Text, TextStyleClass.Character);
@@ -575,8 +559,7 @@ namespace Epsitec.Common.Text
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				if ((paragraph_properties.Length > 0) ||
-					(paragraph_styles.Length > 0))
+				if (paragraph_styles.Length > 0)
 				{
 					foreach (Range range in ranges)
 					{
@@ -586,21 +569,20 @@ namespace Epsitec.Common.Text
 						
 						while (pos < end)
 						{
-							this.SetParagraphStyles (pos, paragraph_properties, paragraph_styles);
+							this.SetParagraphStyles (pos, paragraph_styles);
 							pos = this.FindNextParagraphStart (pos);
 						}
 					}
 				}
 				
-				if ((character_properties.Length > 0) ||
-					(character_styles.Length > 0))
+				if (character_styles.Length > 0)
 				{
 					foreach (Range range in ranges)
 					{
 						int pos    = range.Start;
 						int length = range.Length;
 					
-//						this.SetCharacterStyles (pos, length, character_properties, character_styles);
+						this.SetCharacterStyles (pos, length, character_styles);
 					}
 				}
 			}
@@ -608,16 +590,56 @@ namespace Epsitec.Common.Text
 			{
 				int pos = this.story.GetCursorPosition (this.cursor);
 				
-				this.SetParagraphStyles (pos, paragraph_properties, paragraph_styles);
+				this.SetParagraphStyles (pos, paragraph_styles);
 				
 				this.current_styles      = styles.Clone () as TextStyle[];
-				this.current_properties  = properties.Clone () as Property[];
+//-				this.current_properties  = properties.Clone () as Property[];
 				this.current_accumulator = new Styles.PropertyContainer.Accumulator ();
 			
 				this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
 			}
 		}
 		
+		
+		public void SetParagraphProperties(Properties.ApplyMode mode, params Property[] properties)
+		{
+			System.Diagnostics.Debug.Assert (properties != null);
+			
+			Property[] paragraph_properties = Property.FilterUniformParagraphProperties (properties);
+			Property[] character_properties = Property.FilterOtherProperties (properties);
+			
+			if (this.HasSelection)
+			{
+				int[]   positions = this.GetSelectionCursorPositions ();
+				Range[] ranges    = Range.CreateSortedRanges (positions);
+				
+				if (paragraph_properties.Length > 0)
+				{
+					foreach (Range range in ranges)
+					{
+						int start = range.Start;
+						int end   = range.End;
+						int pos   = start;
+						
+						while (pos < end)
+						{
+							this.SetParagraphProperties (pos, mode, paragraph_properties);
+							pos = this.FindNextParagraphStart (pos);
+						}
+					}
+				}
+			}
+			else
+			{
+				Internal.Navigator.SetParagraphProperties (this.story, this.cursor, mode, paragraph_properties);
+				
+//-				this.current_styles      = styles.Clone () as TextStyle[];
+//-				this.current_properties  = properties.Clone () as Property[];
+//-				this.current_accumulator = new Styles.PropertyContainer.Accumulator ();
+			
+//-				this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
+			}
+		}
 		
 		public void SetTextProperties(Properties.ApplyMode mode, params Property[] properties)
 		{
@@ -642,53 +664,6 @@ namespace Epsitec.Common.Text
 					}
 				}
 			}
-		}
-		
-		
-		private void SetCharacterStyles(int pos, int length, TextStyle[] styles)
-		{
-			this.story.SetCursorPosition (this.temp_cursor, pos);
-			
-			Internal.Navigator.SetCharacterStyles (this.story, this.temp_cursor, length, styles);
-		}
-		
-		private void SetTextProperties(int pos, int length, Property[] properties, Properties.ApplyMode mode)
-		{
-			this.story.SetCursorPosition (this.temp_cursor, pos);
-			
-			Internal.Navigator.SetTextProperties (this.story, this.temp_cursor, length, properties, mode);
-		}
-		
-		private void SetParagraphStyles(int pos, Property[] properties, TextStyle[] styles)
-		{
-			//	Pour modifier le style d'un paragraphe, il faut se placer au début
-			//	du paragraphe :
-			
-			this.story.SetCursorPosition (this.temp_cursor, pos);
-			
-			int start = Internal.Navigator.GetParagraphStartOffset (this.story, this.temp_cursor);
-			
-			this.story.SetCursorPosition (this.temp_cursor, pos + start);
-			
-			Internal.Navigator.SetParagraphStylesAndProperties (this.story, this.temp_cursor, styles, properties);
-		}
-		
-		
-		private int FindNextParagraphStart(int pos)
-		{
-			this.story.SetCursorPosition (this.temp_cursor, pos);
-			
-			int max = this.story.TextLength;
-			
-			for (int offset = 0; pos + offset < max; offset++)
-			{
-				if (Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, offset))
-				{
-					return pos + offset + 1;
-				}
-			}
-			
-			return max;
 		}
 		
 		
@@ -876,7 +851,8 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		public virtual void UpdateCurrentStylesAndPropertiesIfNeeded()
+		
+		public void UpdateCurrentStylesAndPropertiesIfNeeded()
 		{
 			if ((this.current_styles == null) ||
 				(this.current_properties == null))
@@ -885,7 +861,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		public virtual void UpdateCurrentStylesAndProperties()
+		public void UpdateCurrentStylesAndProperties()
 		{
 			System.Diagnostics.Debug.WriteLine ("Executing UpdateCurrentStylesAndProperties");
 			
@@ -943,7 +919,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected virtual bool MoveCursor(ICursor cursor, int distance, out int new_pos, out int new_dir)
+		protected bool MoveCursor(ICursor cursor, int distance, out int new_pos, out int new_dir)
 		{
 			int count;
 			int direction;
@@ -1072,7 +1048,7 @@ namespace Epsitec.Common.Text
 			return moved > 0;
 		}
 		
-		protected virtual bool MoveCursor(ICursor cursor, int count, int direction, MoveCallback callback, out int new_pos, out int new_dir)
+		protected bool MoveCursor(ICursor cursor, int count, int direction, MoveCallback callback, out int new_pos, out int new_dir)
 		{
 			int moved   = 0;
 			int old_pos = this.story.GetCursorPosition (cursor);
@@ -1149,7 +1125,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected virtual void DeleteText(ICursor cursor, int length)
+		protected void DeleteText(ICursor cursor, int length)
 		{
 			//	Supprime le fragment de texte; il faut traiter spécialement la
 			//	destruction des fins de paragraphes, car elle provoque le change-
@@ -1270,7 +1246,8 @@ namespace Epsitec.Common.Text
 				if (styles == null) styles = new TextStyle[0];
 				if (props == null)  props  = new Property[0];
 				
-				Internal.Navigator.SetParagraphStylesAndProperties (this.story, this.temp_cursor, styles, props);
+				Internal.Navigator.SetParagraphStyles (this.story, this.temp_cursor, styles);
+				Internal.Navigator.SetParagraphProperties (this.story, this.temp_cursor, Properties.ApplyMode.Overwrite, props);
 			}
 		}
 		
@@ -1419,17 +1396,17 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
-		protected virtual bool IsParagraphStart(int offset, int direction)
+		protected bool IsParagraphStart(int offset, int direction)
 		{
 			return Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, offset);
 		}
 		
-		protected virtual bool IsParagraphEnd(int offset, int direction)
+		protected bool IsParagraphEnd(int offset, int direction)
 		{
 			return Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, offset);
 		}
 		
-		protected virtual bool IsWordStart(int offset, int direction)
+		protected bool IsWordStart(int offset, int direction)
 		{
 			//	Si nous sommes à la fin d'un paragraphe, nous considérons que
 			//	c'est une frontière de mot :
@@ -1442,7 +1419,7 @@ namespace Epsitec.Common.Text
 			return Internal.Navigator.IsWordStart (this.story, this.temp_cursor, offset);
 		}
 		
-		protected virtual bool IsWordEnd(int offset, int direction)
+		protected bool IsWordEnd(int offset, int direction)
 		{
 			//	Si nous sommes à la fin d'un paragraphe nous sommes déjà à
 			//	une fin de mot :
@@ -1458,7 +1435,7 @@ namespace Epsitec.Common.Text
 			return Internal.Navigator.IsWordStart (this.story, this.temp_cursor, offset);
 		}
 		
-		protected virtual bool IsLineStart(int offset, int direction)
+		protected bool IsLineStart(int offset, int direction)
 		{
 			if (this.IsParagraphStart (offset, direction))
 			{
@@ -1473,7 +1450,7 @@ namespace Epsitec.Common.Text
 			return false;
 		}
 		
-		protected virtual bool IsLineEnd(int offset, int direction)
+		protected bool IsLineEnd(int offset, int direction)
 		{
 			if (this.IsParagraphEnd (offset, direction))
 			{
@@ -1489,7 +1466,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected virtual void Dispose(bool disposing)
+		protected void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
@@ -1507,6 +1484,72 @@ namespace Epsitec.Common.Text
 					this.temp_cursor = null;
 				}
 			}
+		}
+		
+		
+		private void SetParagraphStyles(int pos, TextStyle[] styles)
+		{
+			//	Pour modifier le style d'un paragraphe, il faut se placer au début
+			//	du paragraphe :
+			
+			this.story.SetCursorPosition (this.temp_cursor, pos);
+			
+			int start = Internal.Navigator.GetParagraphStartOffset (this.story, this.temp_cursor);
+			
+			this.story.SetCursorPosition (this.temp_cursor, pos + start);
+			
+			Internal.Navigator.SetParagraphStyles (this.story, this.temp_cursor, styles);
+		}
+		
+		private void SetParagraphProperties(int pos, Properties.ApplyMode mode, Property[] properties)
+		{
+			this.story.SetCursorPosition (this.temp_cursor, pos);
+			
+			int start = Internal.Navigator.GetParagraphStartOffset (this.story, this.temp_cursor);
+			
+			this.story.SetCursorPosition (this.temp_cursor, pos + start);
+			
+			Internal.Navigator.SetParagraphProperties (this.story, this.temp_cursor, mode, properties);
+		}
+		
+		private void SetTextStyles(int pos, int length, TextStyle[] styles)
+		{
+			this.story.SetCursorPosition (this.temp_cursor, pos);
+			
+			Internal.Navigator.SetTextStyles (this.story, this.temp_cursor, length, styles);
+		}
+		
+		private void SetCharacterStyles(int pos, int length, TextStyle[] styles)
+		{
+			this.story.SetCursorPosition (this.temp_cursor, pos);
+			
+			Internal.Navigator.SetCharacterStyles (this.story, this.temp_cursor, length, styles);
+		}
+		
+		
+		private void SetTextProperties(int pos, int length, Property[] properties, Properties.ApplyMode mode)
+		{
+			this.story.SetCursorPosition (this.temp_cursor, pos);
+			
+			Internal.Navigator.SetTextProperties (this.story, this.temp_cursor, length, mode, properties);
+		}
+		
+		
+		private int FindNextParagraphStart(int pos)
+		{
+			this.story.SetCursorPosition (this.temp_cursor, pos);
+			
+			int max = this.story.TextLength;
+			
+			for (int offset = 0; pos + offset < max; offset++)
+			{
+				if (Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, offset))
+				{
+					return pos + offset + 1;
+				}
+			}
+			
+			return max;
 		}
 		
 		
@@ -1603,7 +1646,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected virtual int SkipOverProperty(ICursor cursor, Property property, int direction)
+		protected int SkipOverProperty(ICursor cursor, Property property, int direction)
 		{
 			//	Saute la propriété, en marche avant ou en marche arrière. En cas
 			//	de marche avant, on s'arrête après la tranche. En cas de marche
@@ -1627,7 +1670,7 @@ namespace Epsitec.Common.Text
 			return 0;
 		}
 		
-		protected virtual bool SkipOverAutoText(ref int pos, int direction)
+		protected bool SkipOverAutoText(ref int pos, int direction)
 		{
 			bool hit = false;
 			
@@ -1715,7 +1758,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		protected virtual void UpdateSelectionMarkers()
+		protected void UpdateSelectionMarkers()
 		{
 			//	Met à jour les marques de sélection dans le texte. On va opérer
 			//	en deux passes; d'abord on les enlève toutes, ensuite on génère
@@ -1768,7 +1811,7 @@ namespace Epsitec.Common.Text
 		}
 
 		
-		protected virtual void OnCursorMoved()
+		protected void OnCursorMoved()
 		{
 		}
 		

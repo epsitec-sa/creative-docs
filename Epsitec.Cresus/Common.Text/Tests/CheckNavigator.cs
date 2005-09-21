@@ -161,9 +161,9 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.MarginsProperty (10.0, 10.0, Properties.SizeUnits.Millimeters));
 			
 			story.SetCursorPosition (cursor, 2);
-			Internal.Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style2 }, properties);
-			Internal.Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style1, style2 }, properties);
-			Internal.Navigator.SetParagraphStylesAndProperties (story, cursor, new TextStyle[] { style2 }, properties);
+			Internal.Navigator.SetParagraphStyles (story, cursor, style2);
+			Internal.Navigator.SetParagraphStyles (story, cursor, style1, style2);
+			Internal.Navigator.SetParagraphStyles (story, cursor, style2);
 			
 			text = new ulong[story.TextLength];
 			story.SetCursorPosition (cursor, 0);
