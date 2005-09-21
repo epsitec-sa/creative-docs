@@ -724,7 +724,7 @@ namespace Epsitec.Common.Document
 		// Met à jour tous les compteurs.
 		protected void UpdateCounters()
 		{
-			if ( this.dirtyCounters == false )  return;
+			if ( !this.dirtyCounters )  return;
 
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 
@@ -3506,7 +3506,7 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageDelete) )
 			{
-				this.DeselectAll();
+				this.InitiateChangingPage();
 
 				UndoableList list = this.document.GetObjects;  // liste des pages
 				if ( list.Count <= 1 )  return;  // il doit rester une page
@@ -3520,7 +3520,7 @@ namespace Epsitec.Common.Document
 				list.RemoveAt(rank);
 
 				rank = System.Math.Min(rank, list.Count-1);
-				this.ActiveViewer.DrawingContext.CurrentPage = rank;
+				this.TerminateChangingPage(rank);
 
 				this.UpdatePageShortNames();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
@@ -3539,6 +3539,8 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageSwap) )
 			{
+				this.InitiateChangingPage();
+
 				UndoableList list = this.document.GetObjects;  // liste des pages
 				rank1 = System.Math.Max(rank1, 0);
 				rank1 = System.Math.Min(rank1, list.Count-1);
@@ -3550,7 +3552,7 @@ namespace Epsitec.Common.Document
 				pages.RemoveAt(rank1);
 				pages.Insert(rank2, temp);
 
-				this.ActiveViewer.DrawingContext.CurrentPage = rank2;
+				this.TerminateChangingPage(rank2);
 
 				this.UpdatePageShortNames();
 				this.document.Notifier.NotifyArea();
@@ -3878,7 +3880,7 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerNew) )
 			{
-				this.DeselectAll();
+				this.InitiateChangingLayer();
 
 				// Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
@@ -3889,7 +3891,7 @@ namespace Epsitec.Common.Document
 				layer.Name = name;
 				list.Insert(rank, layer);
 
-				this.ActiveViewer.DrawingContext.CurrentLayer = rank;
+				this.TerminateChangingLayer(rank);
 
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
@@ -3906,6 +3908,8 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerNewSel) )
 			{
+				this.InsertOpletDirtyCounters();
+
 				// Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
 				rank = System.Math.Max(rank, 0);
@@ -3922,14 +3926,16 @@ namespace Epsitec.Common.Document
 				{
 					layer.Name = name;
 				}
-				list.Insert(rank+1, layer);
 
 				UndoableList src = srcLayer.Objects;
 				UndoableList dst = layer.Objects;
 				Modifier.Duplicate(this.document, this.document, src, dst, false, new Point(0,0), true);
 				this.DeleteSelection();
 
-				this.ActiveViewer.DrawingContext.CurrentLayer = rank+1;
+				this.InitiateChangingLayer();
+				list.Insert(rank+1, layer);
+				this.TerminateChangingLayer(rank+1);
+				this.ActiveViewer.UpdateSelector();
 
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
@@ -3946,7 +3952,7 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerDuplicate) )
 			{
-				this.DeselectAll();
+				this.InitiateChangingLayer();
 
 				// Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
@@ -3970,7 +3976,7 @@ namespace Epsitec.Common.Document
 				UndoableList dst = layer.Objects;
 				Modifier.Duplicate(this.document, this.document, src, dst, false, new Point(0,0), false);
 
-				this.ActiveViewer.DrawingContext.CurrentLayer = rank+1;
+				this.TerminateChangingLayer(rank+1);
 
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
@@ -3987,7 +3993,7 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerDelete) )
 			{
-				this.DeselectAll();
+				this.InitiateChangingLayer();
 
 				// Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
@@ -4001,7 +4007,7 @@ namespace Epsitec.Common.Document
 				list.RemoveAt(rank);
 
 				rank = System.Math.Min(rank, list.Count-1);
-				this.ActiveViewer.DrawingContext.CurrentLayer = rank;
+				this.TerminateChangingLayer(rank);
 
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
@@ -4018,6 +4024,8 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerMerge) )
 			{
+				this.InitiateChangingLayer();
+
 				// Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
 				rankSrc = System.Math.Max(rankSrc, 0);
@@ -4049,7 +4057,7 @@ namespace Epsitec.Common.Document
 				srcLayer.Dispose();
 				list.RemoveAt(rankSrc);
 
-				this.ActiveViewer.DrawingContext.CurrentLayer = rankDst;
+				this.TerminateChangingLayer(rankDst);
 
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifyLayersChanged();
@@ -4065,6 +4073,8 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerSwap) )
 			{
+				this.InitiateChangingLayer();
+
 				// Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
 				rank1 = System.Math.Max(rank1, 0);
@@ -4077,7 +4087,7 @@ namespace Epsitec.Common.Document
 				layers.RemoveAt(rank1);
 				layers.Insert(rank2, temp);
 
-				this.ActiveViewer.DrawingContext.CurrentLayer = rank2;
+				this.TerminateChangingLayer(rank2);
 
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifyLayersChanged();
@@ -5282,6 +5292,44 @@ namespace Epsitec.Common.Document
 			protected Document				host;
 			protected Size					documentSize;
 			protected double				outsideArea;
+		}
+		#endregion
+
+
+		#region OpletDirtyCounters
+		// Ajoute un oplet pour indiquer que les compteurs devront être mis à jour.
+		public void InsertOpletDirtyCounters()
+		{
+			if ( !this.document.Modifier.OpletQueueEnable )  return;
+			OpletDirtyCounters oplet = new OpletDirtyCounters(this.document);
+			this.document.Modifier.OpletQueue.Insert(oplet);
+		}
+
+		protected class OpletDirtyCounters : AbstractOplet
+		{
+			public OpletDirtyCounters(Document host)
+			{
+				this.host = host;
+			}
+
+			protected void Swap()
+			{
+				this.host.Modifier.DirtyCounters();
+			}
+
+			public override IOplet Undo()
+			{
+				this.Swap();
+				return this;
+			}
+
+			public override IOplet Redo()
+			{
+				this.Swap();
+				return this;
+			}
+
+			protected Document				host;
 		}
 		#endregion
 
