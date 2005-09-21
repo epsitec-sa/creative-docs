@@ -1,4 +1,6 @@
 using NUnit.Framework;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters.Soap;
 
 namespace Epsitec.Common.Types
 {
@@ -133,6 +135,111 @@ namespace Epsitec.Common.Types
 			Assert.IsTrue (et.CheckConstraint ("{Other}"));
 		}
 		
+		
+		[Test] public void CheckDateSerialization()
+		{
+			Date date_1 = Date.Today;
+			Date date_2;
+			
+			DateUser dt_1 = new DateUser ();
+			DateUser dt_2;
+			
+			using (System.IO.Stream stream = System.IO.File.Open ("test.bin", System.IO.FileMode.Create))
+			{
+				BinaryFormatter formatter = new BinaryFormatter ();
+				formatter.Serialize (stream, date_1);
+			}
+			
+			using (System.IO.Stream stream = System.IO.File.Open ("test.bin", System.IO.FileMode.Open))
+			{
+				BinaryFormatter formatter = new BinaryFormatter ();
+				date_2 = (Date) formatter.Deserialize (stream);
+			}
+			
+			using (System.IO.Stream stream = System.IO.File.Open ("test.bin", System.IO.FileMode.Create))
+			{
+				BinaryFormatter formatter = new BinaryFormatter ();
+				formatter.Serialize (stream, dt_1);
+			}
+			
+			using (System.IO.Stream stream = System.IO.File.Open ("test.bin", System.IO.FileMode.Open))
+			{
+				BinaryFormatter formatter = new BinaryFormatter ();
+				dt_2 = (DateUser) formatter.Deserialize (stream);
+			}
+			
+			Assert.IsNotNull (dt_2);
+			
+			System.IO.File.Delete ("test.bin");
+			
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Create))
+			{
+				SoapFormatter formatter = new SoapFormatter ();
+				formatter.Serialize (stream, date_1);
+			}
+			
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Open))
+			{
+				System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+				byte[] buffer = new byte[stream.Length];
+				stream.Read (buffer, 0, (int) stream.Length);
+				System.Console.Out.WriteLine ("{0}", encoding.GetString (buffer));
+			}
+			
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Open))
+			{
+				SoapFormatter formatter = new SoapFormatter ();
+				date_2 = (Date) formatter.Deserialize (stream);
+			}
+			
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Create))
+			{
+				SoapFormatter formatter = new SoapFormatter ();
+				formatter.Serialize (stream, dt_1);
+			}
+			
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Open))
+			{
+				System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+				byte[] buffer = new byte[stream.Length];
+				stream.Read (buffer, 0, (int) stream.Length);
+				System.Console.Out.WriteLine ("{0}", encoding.GetString (buffer));
+			}
+			
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Open))
+			{
+				SoapFormatter formatter = new SoapFormatter ();
+				dt_2 = (DateUser) formatter.Deserialize (stream);
+			}
+			
+			System.IO.File.Delete ("test.soap");
+		}
+		
+		[System.Serializable]
+		class DateUser : System.Runtime.Serialization.ISerializable
+		{
+			public DateUser()
+			{
+			}
+			
+			protected DateUser(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : this()
+			{
+				this.time = new Types.Time (info.GetInt64 ("time"));
+				this.date = new Types.Date (info.GetInt64 ("date"));
+			}
+			#region ISerializable Members
+
+			public void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+			{
+				info.AddValue ("time", this.time.Ticks);
+				info.AddValue ("date", this.date.Ticks);
+			}
+			#endregion
+			
+			private Date			date = Date.Today;
+			private Time			time = Time.Now;
+		}
+
 		private enum MyEnum
 		{
 			None	= -1,

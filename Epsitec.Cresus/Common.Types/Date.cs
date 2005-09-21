@@ -10,6 +10,7 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	
 	[System.Serializable]
+	[System.ComponentModel.TypeConverter (typeof (Date.Converter))]
 	
 	public struct Date : System.IComparable, INullable
 	{
@@ -38,6 +39,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		public Date(long ticks)
+		{
+			this.ticks = ticks;
+		}
+		
 		
 		public int								Day
 		{
@@ -64,9 +70,11 @@ namespace Epsitec.Common.Types
 			get { return this.InternalDate.Year; }
 		}
 		
+		
 		public long								Ticks
 		{
 			get { return this.ticks; }
+			set { this.ticks = value; }
 		}
 		
 		
@@ -185,6 +193,23 @@ namespace Epsitec.Common.Types
 			}
 			
 			return 0;
+		}
+		#endregion
+		
+		#region Converter Class
+		public class Converter : Epsitec.Common.Types.AbstractStringConverter
+		{
+			public override object ParseString(string value, System.Globalization.CultureInfo culture)
+			{
+				long ticks = System.Int64.Parse (value, culture);
+				return new Date (ticks);
+			}
+			
+			public override string ToString(object value, System.Globalization.CultureInfo culture)
+			{
+				Date date = (Date) value;
+				return string.Format (culture, "{0}", date.Ticks);
+			}
 		}
 		#endregion
 		

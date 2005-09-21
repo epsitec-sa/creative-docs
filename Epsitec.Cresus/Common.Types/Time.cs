@@ -9,6 +9,7 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	
 	[System.Serializable]
+	[System.ComponentModel.TypeConverter (typeof (Time.Converter))]
 	
 	public struct Time : System.IComparable, INullable
 	{
@@ -87,9 +88,11 @@ namespace Epsitec.Common.Types
 			get { return (this.InternalTime) % 1000; }
 		}
 		
+		
 		public long								Ticks
 		{
-			get { return this.InternalTime * 10000L; }
+			get { return this.time * 10000L; }
+			set { this.time = (int)(value / 10000L); }
 		}
 		
 		
@@ -219,6 +222,23 @@ namespace Epsitec.Common.Types
 			return 0;
 		}
 
+		#endregion
+		
+		#region Converter Class
+		public class Converter : Epsitec.Common.Types.AbstractStringConverter
+		{
+			public override object ParseString(string value, System.Globalization.CultureInfo culture)
+			{
+				long ticks = System.Int64.Parse (value, culture);
+				return new Time (ticks);
+			}
+			
+			public override string ToString(object value, System.Globalization.CultureInfo culture)
+			{
+				Time time = (Time) value;
+				return string.Format (culture, "{0}", time.Ticks);
+			}
+		}
 		#endregion
 		
 		private int								InternalTime
