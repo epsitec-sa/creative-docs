@@ -1,4 +1,5 @@
-using System;
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
@@ -107,7 +108,7 @@ namespace Epsitec.Common.Support
 		public void StartCheck(string url)
 		{
 			this.reader       = new ReadStringFromUrl (VersionChecker.Read);
-			this.reader_async = reader.BeginInvoke (url, null, null);
+			this.reader_async = this.reader.BeginInvoke (url, null, null);
 		}
 		
 		

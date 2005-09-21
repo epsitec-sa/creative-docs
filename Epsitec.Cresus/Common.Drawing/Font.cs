@@ -232,7 +232,16 @@ namespace Epsitec.Common.Drawing
 		
 		public int GetGlyphIndex(int unicode)
 		{
-			return AntiGrain.Font.Face.GetGlyphIndex (this.handle, unicode);
+			try
+			{
+				return AntiGrain.Font.Face.GetGlyphIndex (this.handle, unicode);
+			}
+			catch (System.NullReferenceException ex)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Exception in GetGlyphIndex for font {0}:", this.FullName));
+				System.Diagnostics.Debug.WriteLine (ex.Message);
+				throw;
+			}
 		}
 		
 		public double GetGlyphAdvance(int glyph)
