@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -8,6 +8,9 @@ namespace Epsitec.Common.Types
 	/// représente que la date du jour, sans aucune indication de
 	/// l'heure.
 	/// </summary>
+	
+	[System.Serializable]
+	
 	public struct Date : System.IComparable, INullable
 	{
 		public Date(int year, int month, int day)
