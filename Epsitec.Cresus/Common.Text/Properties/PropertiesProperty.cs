@@ -236,19 +236,6 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public static bool ContainsPropertiesProperties(System.Collections.ICollection properties)
-		{
-			foreach (Property property in properties)
-			{
-				if (property is PropertiesProperty)
-				{
-					return true;
-				}
-			}
-			
-			return false;
-		}
-		
 		public static Property[] RemovePropertiesProperties(System.Collections.ICollection properties)
 		{
 			//	Supprime les propriétés PropertiesProprty de la liste.

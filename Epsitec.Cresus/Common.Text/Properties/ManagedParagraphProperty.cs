@@ -4,9 +4,7 @@
 namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
-	/// La classe ManagedParagraphProperty décrit les paramètres nécessaires à
-	/// la définition d'un paragraphe "géré", comme une liste à puces, par ex.
-	/// qui nécessite une gestion particulière.
+	/// La classe ManagedParagraphProperty ...
 	/// </summary>
 	public class ManagedParagraphProperty : Property
 	{

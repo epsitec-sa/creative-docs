@@ -199,19 +199,6 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public static bool ContainsStylesProperties(System.Collections.ICollection properties)
-		{
-			foreach (Property property in properties)
-			{
-				if (property is StylesProperty)
-				{
-					return true;
-				}
-			}
-			
-			return false;
-		}
-		
 		public static Property[] RemoveStylesProperties(System.Collections.ICollection properties)
 		{
 			//	Supprime les propriétés StylesProprty de la liste.
