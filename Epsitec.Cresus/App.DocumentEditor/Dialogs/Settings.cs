@@ -125,6 +125,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				field.Resolution = 1.0M;
 				field.Value = (decimal) this.globalSettings.ScreenDpi;
 
+				Common.Document.Dialogs.CreateTitle(global, Res.Strings.Dialog.Settings.AutoUpdate);
+
+				check = this.CreateCheck(global, "AutoChecker", Res.Strings.Dialog.Settings.AutoChecker);
+				check.ActiveState = this.globalSettings.AutoChecker ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
 				// Crée les onglets "document".
 				TabBook bookDoc = new TabBook(this.window.Root);
 				bookDoc.Name = "BookDocument";
@@ -328,6 +333,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( check.Name == "FineCursor" )
 			{
 				this.globalSettings.FineCursor = !this.globalSettings.FineCursor;
+			}
+			if ( check.Name == "AutoChecker" )
+			{
+				this.globalSettings.AutoChecker = !this.globalSettings.AutoChecker;
 			}
 		}
 

@@ -193,6 +193,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Dialogs\Download.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Dialogs\Export.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

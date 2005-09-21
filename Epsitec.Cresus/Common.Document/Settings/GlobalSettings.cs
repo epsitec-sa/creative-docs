@@ -42,6 +42,8 @@ namespace Epsitec.Common.Document.Settings
 			this.lastFilename = new System.Collections.ArrayList();
 			this.lastFilenameMax = 10;
 			this.labelProperties = true;
+			this.fineCursor = false;
+			this.fineCursor = false;
 
 			// Suppose que le dossier des exemples est dans le même dossier
 			// que l'application.
@@ -51,6 +53,10 @@ namespace Epsitec.Common.Document.Settings
 			this.colorCollection = new ColorCollection();
 			this.colorCollectionDirectory = "";
 			this.colorCollectionFilename = "";
+
+			this.autoChecker = true;
+			this.dateChecker = Common.Types.Date.Today;
+			this.dateChecker = this.dateChecker.AddDays(-1);
 		}
 
 		// Met tous les fichiers d'exemples dans la liste des 10 premiers
@@ -355,6 +361,32 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
+		public bool AutoChecker
+		{
+			get
+			{
+				return this.autoChecker;
+			}
+
+			set
+			{
+				this.autoChecker = value;
+			}
+		}
+
+		public Common.Types.Date DateChecker
+		{
+			get
+			{
+				return this.dateChecker;
+			}
+
+			set
+			{
+				this.dateChecker = value;
+			}
+		}
+
 
 		// Adapte un rectangle pour qu'il entre dans l'écran, si possible
 		// sans modifier ses dimensions. Utilisé pour les dialogues.
@@ -471,7 +503,7 @@ namespace Epsitec.Common.Document.Settings
 		// Sérialise les réglages.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			info.AddValue("Version", 2);
+			info.AddValue("Version", 3);
 
 			info.AddValue("WindowLocation", this.windowLocation);
 			info.AddValue("WindowSize", this.windowSize);
@@ -492,6 +524,9 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("ColorCollection", this.colorCollection);
 			info.AddValue("ColorCollectionDirectory", this.colorCollectionDirectory);
 			info.AddValue("ColorCollectionFilename", this.colorCollectionFilename);
+
+			info.AddValue("AutoChecker", this.autoChecker);
+			info.AddValue("DateChecker", this.dateChecker.Ticks);
 		}
 
 		// Constructeur qui désérialise les réglages.
@@ -522,6 +557,12 @@ namespace Epsitec.Common.Document.Settings
 			this.colorCollection = (ColorCollection) info.GetValue("ColorCollection", typeof(ColorCollection));
 			this.colorCollectionDirectory = info.GetString("ColorCollectionDirectory");
 			this.colorCollectionFilename = info.GetString("ColorCollectionFilename");
+
+			if ( version >= 3 )
+			{
+				this.autoChecker = info.GetBoolean("AutoChecker");
+				this.dateChecker = new Types.Date(info.GetInt64("DateChecker"));
+			}
 		}
 		#endregion
 
@@ -544,6 +585,8 @@ namespace Epsitec.Common.Document.Settings
 		protected Drawing.ColorCollection		colorCollection;
 		protected string						colorCollectionDirectory;
 		protected string						colorCollectionFilename;
+		protected bool							autoChecker;
+		protected Common.Types.Date				dateChecker;
 
 
 		#region WindowBounds

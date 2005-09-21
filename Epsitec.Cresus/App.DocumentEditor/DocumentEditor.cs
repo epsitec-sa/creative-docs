@@ -68,6 +68,7 @@ namespace Epsitec.App.DocumentEditor
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive(this.globalSettings.Adorner);
 
 			this.dlgAbout     = new Dialogs.About(this);
+			this.dlgDownload  = new Dialogs.Download(this);
 			this.dlgExport    = new Dialogs.Export(this);
 			this.dlgExportPDF = new Dialogs.ExportPDF(this);
 			this.dlgGlyphs    = new Dialogs.Glyphs(this);
@@ -92,6 +93,7 @@ namespace Epsitec.App.DocumentEditor
 				// Donne l'occasion aux événements d'affichage d'être traités:
 				Window.PumpEvents();
 			}
+			this.StartCheck(false);
 			this.InitCommands();
 			this.CreateLayout();
 
@@ -222,6 +224,8 @@ namespace Epsitec.App.DocumentEditor
 				this.dlgSplash.Hide();
 				this.dlgKey.Show();
 			}
+
+			this.EndCheck(false);
 		}
 
 		public void AsyncNotify()
@@ -500,16 +504,16 @@ namespace Epsitec.App.DocumentEditor
 			VMenu debugMenu = new VMenu();
 			debugMenu.Name = "Debug";
 			debugMenu.Host = this;
-			this.MenuAdd(debugMenu, "y/n", "DebugBboxThin", "BBoxThin", DocumentEditor.GetShortCut(this.debugBboxThinState));
-			this.MenuAdd(debugMenu, "y/n", "DebugBboxGeom", "BBoxGeom", DocumentEditor.GetShortCut(this.debugBboxGeomState));
-			this.MenuAdd(debugMenu, "y/n", "DebugBboxFull", "BBoxFull", DocumentEditor.GetShortCut(this.debugBboxFullState));
+			this.MenuAdd(debugMenu, "y/n", "DebugBboxThin", "Show BBoxThin", DocumentEditor.GetShortCut(this.debugBboxThinState));
+			this.MenuAdd(debugMenu, "y/n", "DebugBboxGeom", "Show BBoxGeom", DocumentEditor.GetShortCut(this.debugBboxGeomState));
+			this.MenuAdd(debugMenu, "y/n", "DebugBboxFull", "Show BBoxFull", DocumentEditor.GetShortCut(this.debugBboxFullState));
 			this.MenuAdd(debugMenu, "", "", "", "");
-			this.MenuAdd(debugMenu, "", "DebugDirty", "Salir", DocumentEditor.GetShortCut(this.debugDirtyState));
+			this.MenuAdd(debugMenu, "", "DebugDirty", "Make dirty", DocumentEditor.GetShortCut(this.debugDirtyState));
 			this.MenuAdd(debugMenu, "", "", "", "");
-			this.MenuAdd(debugMenu, Misc.Icon("SelectTotal"), "SelectTotal", "Sélection totale requise", DocumentEditor.GetShortCut(this.selectTotalState));
-			this.MenuAdd(debugMenu, Misc.Icon("SelectPartial"), "SelectPartial", "Sélection partielle autorisée", DocumentEditor.GetShortCut(this.selectPartialState));
+			this.MenuAdd(debugMenu, Misc.Icon("SelectTotal"), "SelectTotal", "Full selection required", DocumentEditor.GetShortCut(this.selectTotalState));
+			this.MenuAdd(debugMenu, Misc.Icon("SelectPartial"), "SelectPartial", "Partial selection enabled", DocumentEditor.GetShortCut(this.selectPartialState));
 			this.MenuAdd(debugMenu, "", "", "", "");
-			this.MenuAdd(debugMenu, "", "ForceSaveAll", "Tout enregistrer forcé", DocumentEditor.GetShortCut(this.forceSaveAllState));
+			this.MenuAdd(debugMenu, "", "ForceSaveAll", "Save and overwrite all", DocumentEditor.GetShortCut(this.forceSaveAllState));
 			debugMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = debugMenu;
 #endif
@@ -2653,8 +2657,16 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("UpdateApplication")]
 		void CommandUpdateApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.dlgSplash.Hide();
-			this.dlgUpdate.Show();
+			if ( this.installType == InstallType.Freeware )
+			{
+				this.StartCheck(true);
+				this.EndCheck(true);
+			}
+			else
+			{
+				this.dlgSplash.Hide();
+				this.dlgUpdate.Show();
+			}
 		}
 
 		[Command ("AboutApplication")]
@@ -4441,6 +4453,7 @@ namespace Epsitec.App.DocumentEditor
 			this.globalSettings.MainWindow = this.Window.WindowPlacementNormalBounds;
 
 			this.dlgAbout.Save();
+			this.dlgDownload.Save();
 			this.dlgExport.Save();
 			this.dlgExportPDF.Save();
 			this.dlgGlyphs.Save();
@@ -4491,6 +4504,66 @@ namespace Epsitec.App.DocumentEditor
 					return string.Format("{0}\\{1}", dir, "CresusDocuments.data");
 				}
 			}
+		}
+		#endregion
+
+
+		#region Check
+		// Lance le processus asynchrone qui va se connecter au site web
+		// et regarder s'il y a une version plus récente.
+		protected void StartCheck(bool always)
+		{
+			if ( this.installType != InstallType.Freeware )  return;
+			if ( !always && !this.globalSettings.AutoChecker )  return;
+
+			if ( !always )
+			{
+				Common.Types.Date today = Common.Types.Date.Today;
+				if ( Common.Types.Date.Equals(this.globalSettings.DateChecker, today) )
+				{
+					return;
+				}
+			}
+
+			this.checker = new VersionChecker(typeof(App.DocumentEditor.Application).Assembly);
+
+			string url = "http://www.creativedocs.net/update/check" +
+						 "?software=CreativeDocs&version=" +
+						 this.checker.CurrentVersion;
+
+			this.checker.StartCheck(url);
+		}
+
+		// Attend la fin du processus de check et indique si une mise à jour est
+		// disponible.
+		protected void EndCheck(bool always)
+		{
+			if ( this.checker == null )  return;
+
+			while ( !this.checker.IsReady )
+			{
+				System.Threading.Thread.Sleep(100);
+			}
+
+			this.globalSettings.DateChecker = Common.Types.Date.Today;
+
+			if ( this.checker.FoundNewerVersion )
+			{
+				string version = this.checker.NewerVersion;
+				string url = this.checker.NewerVersionUrl;
+				
+				this.dlgSplash.Hide();
+				this.dlgDownload.SetInfo(version, url);
+				this.dlgDownload.Show();
+			}
+			else if ( always )
+			{
+				this.dlgSplash.Hide();
+				this.dlgDownload.SetInfo("", "");
+				this.dlgDownload.Show();
+			}
+
+			this.checker = null;
 		}
 		#endregion
 
@@ -4547,6 +4620,7 @@ namespace Epsitec.App.DocumentEditor
 		protected GlobalSettings				globalSettings;
 		protected bool							askKey = false;
 		protected MouseCursor					lastMouseCursor = MouseCursor.AsArrow;
+		protected VersionChecker				checker;
 
 		protected CommandDispatcher				commandDispatcher;
 
@@ -4562,6 +4636,7 @@ namespace Epsitec.App.DocumentEditor
 		protected int							tabIndex;
 
 		protected Dialogs.About					dlgAbout;
+		protected Dialogs.Download				dlgDownload;
 		protected Dialogs.Export				dlgExport;
 		protected Dialogs.ExportPDF				dlgExportPDF;
 		protected Dialogs.Glyphs				dlgGlyphs;
