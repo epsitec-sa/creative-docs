@@ -808,6 +808,36 @@ namespace Epsitec.Common.Text
 			if ((this.debug_disable_oplet == false) &&
 				(this.oplet_queue != null))
 			{
+				Common.Support.IOplet[] last_oplets = this.oplet_queue.LastActionOplets;
+				
+				if (last_oplets.Length == 1)
+				{
+					Common.Support.IOplet last = last_oplets[0];
+					
+					if (last.GetType () == oplet.GetType ())
+					{
+						//	L'oplet qui doit être inséré est du même type que celui qui
+						//	a été inséré auparavant. Peut-être peut-on les fusionner ?
+						
+						if (oplet is CursorMoveOplet)
+						{
+							//	Un déplacement du curseur suivant un autre --> on ne
+							//	conserve que la position de départ; pour autant que
+							//	les deux oplets concernent le même curseur.
+							
+							CursorMoveOplet cmo_1 = oplet as CursorMoveOplet;
+							CursorMoveOplet cmo_2 = last as CursorMoveOplet;
+							
+							if (cmo_1.Cursor == cmo_2.Cursor)
+							{
+								System.Diagnostics.Debug.WriteLine ("Merged CursorMoveOplets.");
+								oplet.Dispose ();
+								return;
+							}
+						}
+					}
+				}
+				
 				//	TODO: gérer la fusion d'oplets identiques
 				
 				using (this.oplet_queue.BeginAction ())
@@ -1264,7 +1294,7 @@ namespace Epsitec.Common.Text
 				int undo_start = this.story.text_length + 1;
 				int undo_end   = undo_start + this.story.undo_length;
 				
-				this.story.InternalMoveText (this.position, undo_end - this.length, this.length);
+				this.story.InternalMoveText (this.position, undo_start - this.length, this.length);
 				
 				this.story.text_length -= this.length;
 				this.story.undo_length += this.length;
@@ -1292,7 +1322,7 @@ namespace Epsitec.Common.Text
 				int undo_start = this.story.text_length + 1;
 				int undo_end   = undo_start + this.story.undo_length;
 				
-				this.story.InternalMoveText (undo_end - this.length, this.position, this.length);
+				this.story.InternalMoveText (undo_start, this.position, this.length);
 				
 				this.story.text_length += this.length;
 				this.story.undo_length -= this.length;
@@ -1350,7 +1380,7 @@ namespace Epsitec.Common.Text
 					int undo_end   = undo_start + this.story.undo_length;
 					
 					CursorInfo[] infos;
-					this.story.InternalDeleteText (undo_end - this.length, this.length, out infos, true);
+					this.story.InternalDeleteText (undo_start, this.length, out infos, true);
 					
 					//	TODO: gérer la suppression des curseurs...
 					//	TODO: gérer la suppression des styles...

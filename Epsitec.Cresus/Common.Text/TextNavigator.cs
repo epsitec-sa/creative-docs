@@ -529,60 +529,33 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void SetParagraphStyles(System.Collections.ICollection styles)
-		{
-			TextStyle[] s_array = new TextStyle[styles == null ? 0 : styles.Count];
-			
-			if (styles != null)
-			{
-				styles.CopyTo (s_array, 0);
-			}
-			
-			this.SetParagraphStyles (s_array);
-		}
-		
 		public void SetParagraphStyles(params TextStyle[] styles)
 		{
-			//	Change les styles et propriétés du paragraphe attachés à la position
-			//	courante. En cas de sélection, change les propriétés et styles
+			//	Change les styles du paragraphe attachés à la position courante (ou
+			//	compris dans la sélection).
 			
 			System.Diagnostics.Debug.Assert (styles != null);
-			
-//			Property[] paragraph_properties = Property.FilterUniformParagraphProperties (properties);
-//			Property[] character_properties = Property.FilterOtherProperties (properties);
+			System.Diagnostics.Debug.Assert (styles.Length > 0);
 			
 			TextStyle[] paragraph_styles = TextStyle.FilterStyles (styles, TextStyleClass.Paragraph);
-			TextStyle[] character_styles = TextStyle.FilterStyles (styles, TextStyleClass.Text, TextStyleClass.Character);
+			
+			System.Diagnostics.Debug.Assert (paragraph_styles.Length > 0);
 			
 			if (this.HasSelection)
 			{
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				if (paragraph_styles.Length > 0)
+				foreach (Range range in ranges)
 				{
-					foreach (Range range in ranges)
-					{
-						int start = range.Start;
-						int end   = range.End;
-						int pos   = start;
-						
-						while (pos < end)
-						{
-							this.SetParagraphStyles (pos, paragraph_styles);
-							pos = this.FindNextParagraphStart (pos);
-						}
-					}
-				}
-				
-				if (character_styles.Length > 0)
-				{
-					foreach (Range range in ranges)
-					{
-						int pos    = range.Start;
-						int length = range.Length;
+					int start = range.Start;
+					int end   = range.End;
+					int pos   = start;
 					
-						this.SetCharacterStyles (pos, length, character_styles);
+					while (pos < end)
+					{
+						this.SetParagraphStyles (pos, paragraph_styles);
+						pos = this.FindNextParagraphStart (pos);
 					}
 				}
 			}
@@ -592,40 +565,120 @@ namespace Epsitec.Common.Text
 				
 				this.SetParagraphStyles (pos, paragraph_styles);
 				
-				this.current_styles      = styles.Clone () as TextStyle[];
-//-				this.current_properties  = properties.Clone () as Property[];
-				this.current_accumulator = new Styles.PropertyContainer.Accumulator ();
-			
-				this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
+				System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
+				
+				new_styles.AddRange (paragraph_styles);
+				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
+				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Character));
+				
+				this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
+				
+				this.RefreshAccumulatedStylesAndProperties ();
 			}
 		}
 		
-		
-		public void SetParagraphProperties(Properties.ApplyMode mode, params Property[] properties)
+		public void SetTextStyles(params TextStyle[] styles)
 		{
-			System.Diagnostics.Debug.Assert (properties != null);
+			//	Change les styles du texte attachés à la position courante (ou
+			//	compris dans la sélection).
 			
-			Property[] paragraph_properties = Property.FilterUniformParagraphProperties (properties);
-			Property[] character_properties = Property.FilterOtherProperties (properties);
+			System.Diagnostics.Debug.Assert (styles != null);
+			System.Diagnostics.Debug.Assert (styles.Length > 0);
+			
+			TextStyle[] text_styles = TextStyle.FilterStyles (styles, TextStyleClass.Text);
+			
+			System.Diagnostics.Debug.Assert (text_styles.Length > 0);
 			
 			if (this.HasSelection)
 			{
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				if (paragraph_properties.Length > 0)
+				foreach (Range range in ranges)
 				{
-					foreach (Range range in ranges)
+					int pos    = range.Start;
+					int length = range.Length;
+				
+					this.SetTextStyles (pos, length, text_styles);
+				}
+			}
+			else
+			{
+				System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
+				
+				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
+				new_styles.AddRange (text_styles);
+				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Character));
+				
+				this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
+				
+				this.RefreshAccumulatedStylesAndProperties ();
+			}
+		}
+		
+		public void SetCharacterStyles(params TextStyle[] styles)
+		{
+			//	Change les styles des caractères attachés à la position courante (ou
+			//	compris dans la sélection).
+			
+			System.Diagnostics.Debug.Assert (styles != null);
+			System.Diagnostics.Debug.Assert (styles.Length > 0);
+			
+			TextStyle[] character_styles = TextStyle.FilterStyles (styles, TextStyleClass.Character);
+			
+			System.Diagnostics.Debug.Assert (character_styles.Length > 0);
+			
+			if (this.HasSelection)
+			{
+				int[]   positions = this.GetSelectionCursorPositions ();
+				Range[] ranges    = Range.CreateSortedRanges (positions);
+				
+				foreach (Range range in ranges)
+				{
+					int pos    = range.Start;
+					int length = range.Length;
+				
+					this.SetCharacterStyles (pos, length, character_styles);
+				}
+			}
+			else
+			{
+				System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
+				
+				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
+				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
+				new_styles.AddRange (character_styles);
+				
+				this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
+				
+				this.RefreshAccumulatedStylesAndProperties ();
+			}
+		}
+		
+		public void SetParagraphProperties(Properties.ApplyMode mode, params Property[] properties)
+		{
+			if (properties == null)
+			{
+				properties = new Property[0];
+			}
+			
+			Property[] paragraph_properties = Property.FilterUniformParagraphProperties (properties);
+			
+			if (this.HasSelection)
+			{
+				int[]   positions = this.GetSelectionCursorPositions ();
+				Range[] ranges    = Range.CreateSortedRanges (positions);
+				
+				foreach (Range range in ranges)
+				{
+					int start = range.Start;
+					int end   = range.End;
+					int pos   = start;
+					
+					while (pos < end)
 					{
-						int start = range.Start;
-						int end   = range.End;
-						int pos   = start;
-						
-						while (pos < end)
-						{
-							this.SetParagraphProperties (pos, mode, paragraph_properties);
-							pos = this.FindNextParagraphStart (pos);
-						}
+						this.SetParagraphProperties (pos, mode, paragraph_properties);
+						pos = this.FindNextParagraphStart (pos);
 					}
 				}
 			}
@@ -633,36 +686,49 @@ namespace Epsitec.Common.Text
 			{
 				Internal.Navigator.SetParagraphProperties (this.story, this.cursor, mode, paragraph_properties);
 				
-//-				this.current_styles      = styles.Clone () as TextStyle[];
-//-				this.current_properties  = properties.Clone () as Property[];
-//-				this.current_accumulator = new Styles.PropertyContainer.Accumulator ();
-			
-//-				this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
+				System.Collections.ArrayList new_properties = new System.Collections.ArrayList ();
+				
+				new_properties.AddRange (Internal.Navigator.Combine (Property.FilterUniformParagraphProperties (this.current_properties), paragraph_properties, mode));
+				new_properties.AddRange (Property.FilterOtherProperties (this.current_properties));
+				
+				this.current_properties = new_properties.ToArray (typeof (Property)) as Property[];
+				
+				this.RefreshAccumulatedStylesAndProperties ();
 			}
 		}
 		
 		public void SetTextProperties(Properties.ApplyMode mode, params Property[] properties)
 		{
-			System.Diagnostics.Debug.Assert (properties != null);
+			if (properties == null)
+			{
+				properties = new Property[0];
+			}
 			
-			Property[] paragraph_properties = Property.FilterUniformParagraphProperties (properties);
-			Property[] character_properties = Property.FilterOtherProperties (properties);
+			Property[] text_properties = Property.FilterOtherProperties (properties);
 			
 			if (this.HasSelection)
 			{
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				if (character_properties.Length > 0)
+				foreach (Range range in ranges)
 				{
-					foreach (Range range in ranges)
-					{
-						int pos    = range.Start;
-						int length = range.Length;
-					
-						this.SetTextProperties (pos, length, character_properties, mode);
-					}
+					int pos    = range.Start;
+					int length = range.Length;
+				
+					this.SetTextProperties (pos, length, text_properties, mode);
 				}
+			}
+			else
+			{
+				System.Collections.ArrayList new_properties = new System.Collections.ArrayList ();
+				
+				new_properties.AddRange (Property.FilterUniformParagraphProperties (this.current_properties));
+				new_properties.AddRange (Internal.Navigator.Combine (Property.FilterOtherProperties (this.current_properties), text_properties, mode));
+				
+				this.current_properties = new_properties.ToArray (typeof (Property)) as Property[];
+				
+				this.RefreshAccumulatedStylesAndProperties ();
 			}
 		}
 		
@@ -1526,12 +1592,19 @@ namespace Epsitec.Common.Text
 			Internal.Navigator.SetCharacterStyles (this.story, this.temp_cursor, length, styles);
 		}
 		
-		
 		private void SetTextProperties(int pos, int length, Property[] properties, Properties.ApplyMode mode)
 		{
 			this.story.SetCursorPosition (this.temp_cursor, pos);
 			
 			Internal.Navigator.SetTextProperties (this.story, this.temp_cursor, length, mode, properties);
+		}
+		
+		
+		private void RefreshAccumulatedStylesAndProperties()
+		{
+			this.current_accumulator = new Styles.PropertyContainer.Accumulator ();
+			
+			this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
 		}
 		
 		

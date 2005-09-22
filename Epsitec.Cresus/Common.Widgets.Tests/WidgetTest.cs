@@ -41,6 +41,8 @@ namespace Epsitec.Common.Widgets
 			navigator.TextNavigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
 			navigator.Insert (words);
 			
+			frame.OpletQueue.PurgeUndo ();
+			
 			Widget pane = new Widget ();
 			
 			pane.Parent = window.Root;
@@ -83,6 +85,12 @@ namespace Epsitec.Common.Widgets
 				this.CreateButton (pane, "Auto leading", "lead:auto");
 				this.CreateButton (pane, "150% leading", "lead:150%");
 				this.CreateButton (pane, "20 pts leading", "lead:20");
+				
+				this.CreateButton (pane, "Undo", "undo");
+				this.CreateButton (pane, "Redo", "redo");
+				
+				pane.FindChild ("undo").SetEnabled (false);
+				pane.FindChild ("redo").SetEnabled (false);
 			}
 			
 			private void CreateButton(Widget pane, string title, string name)
@@ -157,7 +165,28 @@ namespace Epsitec.Common.Widgets
 					case "lead:20":
 						this.frame.TextNavigator.TextNavigator.SetParagraphProperties (Common.Text.Properties.ApplyMode.Set, new Common.Text.Properties.LeadingProperty (20.0, Common.Text.Properties.SizeUnits.Points, Common.Text.Properties.AlignMode.Undefined));
 						break;
+						
+					case "undo":
+						if (this.frame.OpletQueue.CanUndo)
+						{
+							this.frame.OpletQueue.UndoAction ();
+						}
+						break;
+					case "redo":
+						if (this.frame.OpletQueue.CanRedo)
+						{
+							this.frame.OpletQueue.RedoAction ();
+						}
+						break;
 				}
+				
+				System.Diagnostics.Debug.WriteLine ("Text=" + this.frame.TextStory.GetDebugText ());
+				System.Diagnostics.Debug.WriteLine ("Undo=" + this.frame.TextStory.GetDebugUndo ());
+				System.Diagnostics.Debug.WriteLine ("");
+				
+				button.Parent.FindChild ("undo").SetEnabled (this.frame.OpletQueue.CanUndo);
+				button.Parent.FindChild ("redo").SetEnabled (this.frame.OpletQueue.CanRedo);
+				
 				this.frame.TextNavigator.NotifyTextChanged ();
 			}
 			

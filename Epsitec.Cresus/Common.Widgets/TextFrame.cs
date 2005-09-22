@@ -39,6 +39,19 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public override Support.OpletQueue		OpletQueue
+		{
+			get
+			{
+				return this.oplet_queue;
+			}
+			set
+			{
+				throw new System.InvalidOperationException ("Cannot set OpletQueue on Widget.");
+			}
+		}
+		
+		
 		public Epsitec.Common.Text.TextStory	TextStory
 		{
 			get

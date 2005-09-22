@@ -1003,7 +1003,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		private static void SetParagraphProperties(TextStory story, ulong[] text, ulong code, int offset, int length, Property[] text_properties, Properties.ApplyMode mode)
+		private static void SetParagraphProperties(TextStory story, ulong[] text, ulong code, int offset, int length, Property[] paragraph_properties, Properties.ApplyMode mode)
 		{
 			//	Modifie les propriétés du paragraphe en utilisant celles passées en
 			//	entrée, en se basant sur le mode de combinaison spécifié.
@@ -1030,9 +1030,9 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (text_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (paragraph_properties) == false);
 			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (text_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (paragraph_properties) == false);
 			
 			//	Dans un premier temps, on ne conserve tous les styles et que les
 			//	propriétés associés directement au paragraphe. Les autres propriétés
@@ -1043,7 +1043,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			all_styles.AddRange (current_styles);
 			
-			all_properties.AddRange (Navigator.Combine (Property.FilterUniformParagraphProperties (current_properties), text_properties, mode));
+			all_properties.AddRange (Navigator.Combine (Property.FilterUniformParagraphProperties (current_properties), paragraph_properties, mode));
 			all_properties.AddRange (Property.FilterOtherProperties (current_properties));
 			
 			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, all_properties);
@@ -1154,7 +1154,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		private static System.Collections.ICollection Combine(Property[] a, Property[] b, Properties.ApplyMode mode)
+		internal static System.Collections.ICollection Combine(Property[] a, Property[] b, Properties.ApplyMode mode)
 		{
 			switch (mode)
 			{
@@ -1167,6 +1167,7 @@ namespace Epsitec.Common.Text.Internal
 					throw new System.InvalidOperationException (string.Format ("ApplyMode.{0} not valid here.", mode));
 			}
 		}
+		
 		
 		private static System.Collections.ICollection CombineClear(Property[] a, Property[] b)
 		{
