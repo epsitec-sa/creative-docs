@@ -507,6 +507,11 @@ namespace Epsitec.Common.Drawing
 			this.AddCircle (p.X, p.Y, r, r);
 		}
 		
+		public void AddCircle(Point p, double rx, double ry)
+		{
+			this.AddCircle (p.X, p.Y, rx, ry);
+		}
+		
 		public void AddCircle(double x, double y, double r)
 		{
 			this.AddCircle (x, y, r, r);
@@ -525,6 +530,11 @@ namespace Epsitec.Common.Drawing
 		public void AddFilledCircle(Point p, double r)
 		{
 			this.AddFilledCircle (p.X, p.Y, r, r);
+		}
+		
+		public void AddFilledCircle(Point p, double rx, double ry)
+		{
+			this.AddFilledCircle (p.X, p.Y, rx, ry);
 		}
 		
 		public void AddFilledCircle(double x, double y, double r)
@@ -609,15 +619,8 @@ namespace Epsitec.Common.Drawing
 		
 		public void   AddCircle(double cx, double cy, double rx, double ry)
 		{
-			using (Path path = new Path ())
+			using (Path path = Path.CreateCircle (cx, cy, rx, ry))
 			{
-				path.MoveTo (cx-rx, cy);
-				path.CurveTo (cx-rx*1.00, cy+ry*0.56, cx-rx*0.56, cy+ry*1.00, cx,    cy+ry);
-				path.CurveTo (cx+rx*0.56, cy+ry*1.00, cx+rx*1.00, cy+ry*0.56, cx+rx, cy);
-				path.CurveTo (cx+rx*1.00, cy-ry*0.56, cx+rx*0.56, cy-ry*1.00, cx,    cy-ry);
-				path.CurveTo (cx-rx*0.56, cy-ry*1.00, cx-rx*1.00, cy-ry*0.56, cx-rx, cy);
-				path.Close ();
-				
 				this.rasterizer.AddOutline (path, this.line_width, this.line_cap, this.line_join, this.line_miter_limit);
 			}
 		}
@@ -643,15 +646,8 @@ namespace Epsitec.Common.Drawing
 		
 		public void   AddFilledCircle(double cx, double cy, double rx, double ry)
 		{
-			using (Path path = new Path ())
+			using (Path path = Path.CreateCircle (cx, cy, rx, ry))
 			{
-				path.MoveTo (cx-rx, cy);
-				path.CurveTo (cx-rx*1.00, cy+ry*0.56, cx-rx*0.56, cy+ry*1.00, cx,    cy+ry);
-				path.CurveTo (cx+rx*0.56, cy+ry*1.00, cx+rx*1.00, cy+ry*0.56, cx+rx, cy);
-				path.CurveTo (cx+rx*1.00, cy-ry*0.56, cx+rx*0.56, cy-ry*1.00, cx,    cy-ry);
-				path.CurveTo (cx-rx*0.56, cy-ry*1.00, cx-rx*1.00, cy-ry*0.56, cx-rx, cy);
-				path.Close ();
-				
 				this.rasterizer.AddSurface (path);
 			}
 		}

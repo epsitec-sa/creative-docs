@@ -224,6 +224,8 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
+			path.Dispose();
+			
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
 				Drawing.Color color = this.colorBlack;
@@ -271,15 +273,17 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
 			{
 				Drawing.Point center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
-				Drawing.Path path = new Drawing.Path();
-				path.MoveTo(center.X-rect.Width*0.1, center.Y-rect.Height*0.1);
-				path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.3);
-				path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.1);
-				path.LineTo(center.X-rect.Width*0.1, center.Y-rect.Height*0.3);
-				path.LineTo(center.X-rect.Width*0.3, center.Y-rect.Height*0.1);
-				path.LineTo(center.X-rect.Width*0.3, center.Y+rect.Height*0.1);
-				path.Close();
-				graphics.Rasterizer.AddSurface(path);
+				using (Drawing.Path path = new Drawing.Path())
+				{
+					path.MoveTo(center.X-rect.Width*0.1, center.Y-rect.Height*0.1);
+					path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.3);
+					path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.1);
+					path.LineTo(center.X-rect.Width*0.1, center.Y-rect.Height*0.3);
+					path.LineTo(center.X-rect.Width*0.3, center.Y-rect.Height*0.1);
+					path.LineTo(center.X-rect.Width*0.3, center.Y+rect.Height*0.1);
+					path.Close();
+					graphics.Rasterizer.AddSurface(path);
+				}
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
 					graphics.RenderSolid(this.colorBlack);
@@ -1436,24 +1440,33 @@ namespace Epsitec.Common.Widgets.Adorner
 									   double angle)
 		{
 			Drawing.Point c = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
+			
 			double rx = rect.Width/2;
 			double ry = rect.Height/2;
-			Drawing.Path path = new Drawing.Path();
-			angle = angle*System.Math.PI/180;  // angle en radians
-			double c1x, c1y, c2x, c2y, px, py;
-			px  = -rx;       py  = 0;        this.RotatePoint(angle, ref px,  ref py);
-			path.MoveTo(c.X+px, c.Y+py);
-			c1x = -rx;       c1y = ry*0.56;  this.RotatePoint(angle, ref c1x, ref c1y);
-			c2x = -rx*0.56;  c2y = ry;       this.RotatePoint(angle, ref c2x, ref c2y);
-			px  = 0;         py  = ry;       this.RotatePoint(angle, ref px,  ref py);
-			path.CurveTo(c.X+c1x, c.Y+c1y, c.X+c2x, c.Y+c2y, c.X+px, c.Y+py);
-			c1x = rx*0.56;   c1y = ry;       this.RotatePoint(angle, ref c1x, ref c1y);
-			c2x = rx;        c2y = ry*0.56;  this.RotatePoint(angle, ref c2x, ref c2y);
-			px  = rx;        py  = 0;        this.RotatePoint(angle, ref px,  ref py);
-			path.CurveTo(c.X+c1x, c.Y+c1y, c.X+c2x, c.Y+c2y, c.X+px, c.Y+py);
-			path.Close();
-			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(color);
+			
+			using (Drawing.Path path = new Drawing.Path())
+			{
+				angle = angle*System.Math.PI/180;  // angle en radians
+				double c1x, c1y, c2x, c2y, px, py;
+				
+				px  = -rx;						py  = 0;						this.RotatePoint(angle, ref px,  ref py);
+				path.MoveTo(c.X+px, c.Y+py);
+				
+				c1x = -rx;						c1y = ry*Drawing.Path.Kappa;	this.RotatePoint(angle, ref c1x, ref c1y);
+				c2x = -rx*Drawing.Path.Kappa;	c2y = ry;						this.RotatePoint(angle, ref c2x, ref c2y);
+				px  = 0;						py  = ry;						this.RotatePoint(angle, ref px,  ref py);
+				path.CurveTo(c.X+c1x, c.Y+c1y, c.X+c2x, c.Y+c2y, c.X+px, c.Y+py);
+				
+				c1x = rx*Drawing.Path.Kappa;	c1y = ry;						this.RotatePoint(angle, ref c1x, ref c1y);
+				c2x = rx;						c2y = ry*Drawing.Path.Kappa;	this.RotatePoint(angle, ref c2x, ref c2y);
+				px  = rx;						py  = 0;						this.RotatePoint(angle, ref px,  ref py);
+				path.CurveTo(c.X+c1x, c.Y+c1y, c.X+c2x, c.Y+c2y, c.X+px, c.Y+py);
+				
+				path.Close();
+				
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(color);
+			}
 		}
 
 		// Fait tourner un point autour de l'origine.
@@ -1475,14 +1488,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			Drawing.Point c = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
 			double rx = rect.Width/2;
 			double ry = rect.Height/2;
-			Drawing.Path path = new Drawing.Path();
-			path.MoveTo(c.X-rx, c.Y);
-			path.CurveTo(c.X-rx, c.Y+ry*0.56, c.X-rx*0.56, c.Y+ry, c.X, c.Y+ry);
-			path.CurveTo(c.X+rx*0.56, c.Y+ry, c.X+rx, c.Y+ry*0.56, c.X+rx, c.Y);
-			path.CurveTo(c.X+rx, c.Y-ry*0.56, c.X+rx*0.56, c.Y-ry, c.X, c.Y-ry);
-			path.CurveTo(c.X-rx*0.56, c.Y-ry, c.X-rx, c.Y-ry*0.56, c.X-rx, c.Y);
-			path.Close();
-			graphics.Rasterizer.AddSurface(path);
+			graphics.AddFilledCircle(c.X, c.Y, rx, ry);
 			graphics.RenderSolid(color);
 		}
 

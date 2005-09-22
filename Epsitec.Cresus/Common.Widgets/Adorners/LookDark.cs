@@ -1669,14 +1669,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			Drawing.Point c = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
 			double rx = rect.Width/2;
 			double ry = rect.Height/2;
-			Drawing.Path path = new Drawing.Path();
-			path.MoveTo(c.X-rx, c.Y);
-			path.CurveTo(c.X-rx, c.Y+ry*0.56, c.X-rx*0.56, c.Y+ry, c.X, c.Y+ry);
-			path.CurveTo(c.X+rx*0.56, c.Y+ry, c.X+rx, c.Y+ry*0.56, c.X+rx, c.Y);
-			path.CurveTo(c.X+rx, c.Y-ry*0.56, c.X+rx*0.56, c.Y-ry, c.X, c.Y-ry);
-			path.CurveTo(c.X-rx*0.56, c.Y-ry, c.X-rx, c.Y-ry*0.56, c.X-rx, c.Y);
-			path.Close();
-			graphics.Rasterizer.AddSurface(path);
+			graphics.AddFilledCircle(c.X, c.Y, rx, ry);
 			graphics.RenderSolid(color);
 		}
 

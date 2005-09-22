@@ -321,12 +321,8 @@ namespace Epsitec.Common.Widgets
 			Drawing.Point c = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
 			double rx = rect.Width/2;
 			double ry = rect.Height/2;
-			path.MoveTo(c.X-rx, c.Y);
-			path.CurveTo(c.X-rx, c.Y+ry*0.56, c.X-rx*0.56, c.Y+ry, c.X, c.Y+ry);
-			path.CurveTo(c.X+rx*0.56, c.Y+ry, c.X+rx, c.Y+ry*0.56, c.X+rx, c.Y);
-			path.CurveTo(c.X+rx, c.Y-ry*0.56, c.X+rx*0.56, c.Y-ry, c.X, c.Y-ry);
-			path.CurveTo(c.X-rx*0.56, c.Y-ry, c.X-rx, c.Y-ry*0.56, c.X-rx, c.Y);
-			path.Close();
+			
+			path.AppendCircle(c.X, c.Y, rx, ry);
 		}
 
 		// Indique si la couleur représente un niveau de gris.
@@ -452,17 +448,15 @@ namespace Epsitec.Common.Widgets
 								   Drawing.Color color)
 		{
 			Drawing.Point c = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
+			
 			double rx = rect.Width/2;
 			double ry = rect.Height/2;
-			Drawing.Path path = new Drawing.Path();
-			path.MoveTo(c.X-rx, c.Y);
-			path.CurveTo(c.X-rx, c.Y+ry*0.56, c.X-rx*0.56, c.Y+ry, c.X, c.Y+ry);
-			path.CurveTo(c.X+rx*0.56, c.Y+ry, c.X+rx, c.Y+ry*0.56, c.X+rx, c.Y);
-			path.CurveTo(c.X+rx, c.Y-ry*0.56, c.X+rx*0.56, c.Y-ry, c.X, c.Y-ry);
-			path.CurveTo(c.X-rx*0.56, c.Y-ry, c.X-rx, c.Y-ry*0.56, c.X-rx, c.Y);
-			path.Close();
-			graphics.Rasterizer.AddOutline(path);
-			graphics.RenderSolid(color);
+			
+			using (Drawing.Path path = Drawing.Path.CreateCircle(c.X, c.Y, rx, ry))
+			{
+				graphics.Rasterizer.AddOutline(path);
+				graphics.RenderSolid(color);
+			}
 		}
 
 		// Dessine un carré dégradé pour représenter SV.

@@ -352,6 +352,17 @@ namespace Epsitec.Common.Drawing
 		
 		public void AppendCircle(double cx, double cy, double rx, double ry)
 		{
+			this.Append (Path.CreateCircle (cx, cy, rx, ry), 0);
+		}
+		
+		
+		public static Path CreateCircle(Point c, double rx, double ry)
+		{
+			return Path.CreateCircle (c.X, c.Y, rx, ry);
+		}
+		
+		public static Path CreateCircle(double cx, double cy, double rx, double ry)
+		{
 			Drawing.Path path = new Drawing.Path();
 			
 			path.MoveTo (cx-rx, cy);
@@ -361,7 +372,7 @@ namespace Epsitec.Common.Drawing
 			path.CurveTo (cx-rx*Path.Kappa, cy-ry, cx-rx, cy-ry*Path.Kappa, cx-rx, cy);
 			path.Close ();
 			
-			this.Append (path, 0);
+			return path;
 		}
 		
 		
@@ -805,7 +816,7 @@ namespace Epsitec.Common.Drawing
 		//
 		//	Cf l'article http://www.whizkidtech.redprince.net/bezier/circle/
 		
-		protected const double					Kappa = 0.552284749828;
+		public const double				Kappa = 0.552284749828;
 		
 		
 		internal void InternalCreateNonEmpty()

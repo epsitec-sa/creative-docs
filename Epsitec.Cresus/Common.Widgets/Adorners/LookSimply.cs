@@ -105,7 +105,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				rect.Height = rect.Width;
 			}
 
-			Drawing.Point center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
+			Drawing.Point center = rect.Center;
 			Drawing.Path path = new Drawing.Path();
 			switch ( type )
 			{
@@ -246,6 +246,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
+			path.Dispose();
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
 				Drawing.Color color = this.colorBlack;
@@ -307,16 +308,18 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
 			{
-				Drawing.Point center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
-				Drawing.Path path = new Drawing.Path();
-				path.MoveTo(center.X-rect.Width*0.1, center.Y-rect.Height*0.1);
-				path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.3);
-				path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.1);
-				path.LineTo(center.X-rect.Width*0.1, center.Y-rect.Height*0.3);
-				path.LineTo(center.X-rect.Width*0.3, center.Y-rect.Height*0.1);
-				path.LineTo(center.X-rect.Width*0.3, center.Y+rect.Height*0.1);
-				path.Close();
-				graphics.Rasterizer.AddSurface(path);
+				Drawing.Point center = rect.Center;
+				using (Drawing.Path path = new Drawing.Path())
+				{
+					path.MoveTo(center.X-rect.Width*0.1, center.Y-rect.Height*0.1);
+					path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.3);
+					path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.1);
+					path.LineTo(center.X-rect.Width*0.1, center.Y-rect.Height*0.3);
+					path.LineTo(center.X-rect.Width*0.3, center.Y-rect.Height*0.1);
+					path.LineTo(center.X-rect.Width*0.3, center.Y+rect.Height*0.1);
+					path.Close();
+					graphics.Rasterizer.AddSurface(path);
+				}
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
 					graphics.RenderSolid(this.colorBlack);
@@ -456,6 +459,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 
 				graphics.Rasterizer.AddOutline(path, 1);
+				path.Dispose();
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
 					graphics.RenderSolid(this.colorControlDarkDark);
@@ -486,6 +490,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					Drawing.Path pInside = this.PathRoundRectangle(rInside, -1);
 					graphics.Rasterizer.AddOutline(pInside, 2);
 					graphics.RenderSolid(this.colorHilite);
+					pInside.Dispose();
 				}
 
 				rInside = rect;
@@ -710,7 +715,7 @@ namespace Epsitec.Common.Widgets.Adorner
 						rect = thumbRect;
 						if ( rect.Width >= 10 && rect.Height >= 20 )
 						{
-							center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
+							center = rect.Center;
 							center.Y = System.Math.Floor(center.Y)+0.5;
 							double y = center.Y-4;
 							for ( int i=0 ; i<4 ; i++ )
@@ -735,7 +740,7 @@ namespace Epsitec.Common.Widgets.Adorner
 						rect = thumbRect;
 						if ( rect.Height >= 10 && rect.Width >= 20 )
 						{
-							center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
+							center = rect.Center;
 							center.X = System.Math.Floor(center.X)-0.5;
 							double x = center.X-4+1;
 							for ( int i=0 ; i<4 ; i++ )
@@ -881,6 +886,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 
 			graphics.Rasterizer.AddOutline(pTitle, 1);
+			pTitle.Dispose();
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
 				graphics.RenderSolid(this.colorControlDarkDark);
@@ -925,6 +931,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 
 			graphics.Rasterizer.AddOutline(pTitle, 1);
+			pTitle.Dispose();
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
 				graphics.RenderSolid(this.colorControlDarkDark);
@@ -1366,11 +1373,7 @@ namespace Epsitec.Common.Widgets.Adorner
 									   Drawing.Color color,
 									   Direction dir)
 		{
-			Drawing.Path path;
-			
-			path = new Drawing.Path();
-			path.AppendCircle(rect.Center, rect.Width/2, rect.Height/2);
-			graphics.Rasterizer.AddSurface(path);
+			graphics.AddFilledCircle(rect.Center, rect.Width/2, rect.Height/2);
 			if ( color.IsEmpty || (state&WidgetState.Enabled) == 0 )
 			{
 				graphics.RenderSolid(this.colorControl);
@@ -1387,17 +1390,19 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				rInside = rect;
 				rInside.Deflate(1.5);
-				path = new Drawing.Path();
-				path.AppendCircle(rInside.Center, rInside.Width/2, rInside.Height/2);
-				graphics.Rasterizer.AddOutline(path, 2);
-				graphics.RenderSolid(this.colorHilite);
+				using (Drawing.Path path = Drawing.Path.CreateCircle(rInside.Center, rInside.Width/2, rInside.Height/2))
+				{
+					graphics.Rasterizer.AddOutline(path, 2);
+					graphics.RenderSolid(this.colorHilite);
+				}
 			}
 
 			rInside = rect;
 			rInside.Deflate(0.5);
-			path = new Drawing.Path();
-			path.AppendCircle(rInside.Center, rInside.Width/2, rInside.Height/2);
-			graphics.Rasterizer.AddOutline(path, 1);
+			using (Drawing.Path path = Drawing.Path.CreateCircle(rInside.Center, rInside.Width/2, rInside.Height/2))
+			{
+				graphics.Rasterizer.AddOutline(path, 1);
+			}
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
 				graphics.RenderSolid(this.colorControlDarkDark);
@@ -1606,17 +1611,9 @@ namespace Epsitec.Common.Widgets.Adorner
 								   Drawing.Rectangle rect,
 								   Drawing.Color color)
 		{
-			Drawing.Point c = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
 			double rx = rect.Width/2;
 			double ry = rect.Height/2;
-			Drawing.Path path = new Drawing.Path();
-			path.MoveTo(c.X-rx, c.Y);
-			path.CurveTo(c.X-rx, c.Y+ry*0.56, c.X-rx*0.56, c.Y+ry, c.X, c.Y+ry);
-			path.CurveTo(c.X+rx*0.56, c.Y+ry, c.X+rx, c.Y+ry*0.56, c.X+rx, c.Y);
-			path.CurveTo(c.X+rx, c.Y-ry*0.56, c.X+rx*0.56, c.Y-ry, c.X, c.Y-ry);
-			path.CurveTo(c.X-rx*0.56, c.Y-ry, c.X-rx, c.Y-ry*0.56, c.X-rx, c.Y);
-			path.Close();
-			graphics.Rasterizer.AddSurface(path);
+			graphics.AddFilledCircle(rect.Center, rx, ry);
 			graphics.RenderSolid(color);
 		}
 
