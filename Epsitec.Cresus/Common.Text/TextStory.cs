@@ -825,13 +825,34 @@ namespace Epsitec.Common.Text
 							//	conserve que la position de départ; pour autant que
 							//	les deux oplets concernent le même curseur.
 							
-							CursorMoveOplet cmo_1 = oplet as CursorMoveOplet;
-							CursorMoveOplet cmo_2 = last as CursorMoveOplet;
+							CursorMoveOplet op_1 = oplet as CursorMoveOplet;
+							CursorMoveOplet op_2 = last as CursorMoveOplet;
 							
-							if (cmo_1.Cursor == cmo_2.Cursor)
+							if (op_1.Cursor == op_2.Cursor)
 							{
-								System.Diagnostics.Debug.WriteLine ("Merged CursorMoveOplets.");
-								oplet.Dispose ();
+								op_1.Dispose ();
+								return;
+							}
+						}
+						else if (oplet is TextInsertOplet)
+						{
+							TextInsertOplet op_1 = oplet as TextInsertOplet;
+							TextInsertOplet op_2 = last as TextInsertOplet;
+							
+							if (op_2.MergeWith (op_1))
+							{
+								op_1.Dispose ();
+								return;
+							}
+						}
+						else if (oplet is TextDeleteOplet)
+						{
+							TextDeleteOplet op_1 = oplet as TextDeleteOplet;
+							TextDeleteOplet op_2 = last as TextDeleteOplet;
+							
+							if (op_2.MergeWith (op_1))
+							{
+								op_1.Dispose ();
 								return;
 							}
 						}
@@ -1285,6 +1306,18 @@ namespace Epsitec.Common.Text
 			}
 			
 			
+			public bool MergeWith(TextInsertOplet other)
+			{
+				if (this.position + this.length == other.position)
+				{
+					this.length += other.length;
+					return true;
+				}
+				
+				return false;
+			}
+			
+			
 			public override Common.Support.IOplet Undo()
 			{
 				this.story.InternalSaveCursorPositions (this.position, this.length, out this.cursors);
@@ -1421,6 +1454,43 @@ namespace Epsitec.Common.Text
 				this.direction = direction;
 			}
 			
+			
+			public bool MergeWith(TextDeleteOplet other)
+			{
+				if (this.position == other.position)
+				{
+					//	Les deux tranches sont déjà stockées dans le bon ordre dans
+					//	le buffer d'annulation; on peut simplement allonger le texte
+					//	à annuler :
+					
+					this.length += other.length;
+					other.length = 0;
+					return true;
+				}
+				
+				if (this.position == other.position + other.length)
+				{
+					//	Le texte doit encore être permuté dans le buffer d'annulation
+					//	avant de pouvoir allonger le texte à annuler :
+					
+					int undo_start = this.story.text_length + 1;
+					int undo_end   = undo_start + this.story.undo_length;
+					
+					int pos_2 = undo_end - other.length;
+					int pos_1 = pos_2 - this.length;
+					
+					this.story.InternalMoveText (pos_2, pos_1, other.length);
+					
+					this.position = other.position;
+					this.length  += other.length;
+					other.length  = 0;
+					return true;
+				}
+				
+				return false;
+			}
+			
+			
 			public override Common.Support.IOplet Undo()
 			{
 				int undo_start = this.story.text_length + 1;
@@ -1508,15 +1578,16 @@ namespace Epsitec.Common.Text
 				//	est dans l'état "undoable", il faudra supprimer le texte de
 				//	la "undo area".
 				
-				System.Diagnostics.Debug.Assert (this.length > 0);
-				
 				if (this.cursors != null)
 				{
-					int undo_start = this.story.text_length + 1;
-					int undo_end   = undo_start + this.story.undo_length;
-					
-					CursorInfo[] infos;
-					this.story.InternalDeleteText (undo_end - this.length, this.length, out infos, true);
+					if (this.length > 0)
+					{
+						int undo_start = this.story.text_length + 1;
+						int undo_end   = undo_start + this.story.undo_length;
+						
+						CursorInfo[] infos;
+						this.story.InternalDeleteText (undo_end - this.length, this.length, out infos, true);
+					}
 					
 					//	TODO: gérer la suppression des curseurs...
 					//	TODO: gérer la suppression des styles...

@@ -88,6 +88,7 @@ namespace Epsitec.Common.Widgets
 				
 				this.CreateButton (pane, "Undo", "undo");
 				this.CreateButton (pane, "Redo", "redo");
+				this.CreateButton (pane, "Forget", "purge-undo-redo");
 				
 				pane.FindChild ("undo").SetEnabled (false);
 				pane.FindChild ("redo").SetEnabled (false);
@@ -177,6 +178,10 @@ namespace Epsitec.Common.Widgets
 						{
 							this.frame.OpletQueue.RedoAction ();
 						}
+						break;
+					case "purge-undo-redo":
+						this.frame.OpletQueue.PurgeUndo ();
+						this.frame.OpletQueue.PurgeRedo ();
 						break;
 				}
 				
