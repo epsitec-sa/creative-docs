@@ -88,6 +88,19 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
+		public string							InvariantStyleHash
+		{
+			get
+			{
+				if (this.style_hash == null)
+				{
+					this.style_hash = FontCollection.GetStyleHash (this.InvariantStyleName);
+				}
+				
+				return this.style_hash;
+			}
+		}
+		
 		
 		public string							FullName
 		{
@@ -335,5 +348,6 @@ namespace Epsitec.Common.OpenType
 		private object							record;
 		private FontData						font_data;
 		private System.Collections.Hashtable	font_sizes;
+		private string							style_hash;
 	}
 }

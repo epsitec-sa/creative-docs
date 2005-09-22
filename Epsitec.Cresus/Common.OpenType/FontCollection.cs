@@ -65,12 +65,89 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public static string GetStyleHash(string style)
+		{
+			string[] parts = style.Split (' ');
+			
+			int bold   = 0;
+			int italic = 0;
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (string part in parts)
+			{
+				if (part.Length > 0)
+				{
+					switch (part)
+					{
+						case "Regular":
+						case "Normal":
+						case "Roman":
+							break;
+						
+						case "Bold":
+						case "(+Bold)":
+							bold = bold + 1;
+							break;
+						
+						case "(-Bold)":
+							bold = bold - 1;
+							break;
+						
+						case "(!Bold)":
+							bold = (bold > 0) ? bold - 1 : bold + 1;
+							break;
+						
+						case "Italic":
+						case "(+Italic)":
+							italic = italic + 1;
+							break;
+						
+						case "(-Italic)":
+							italic = italic - 1;
+							break;
+						
+						case "(!Italic)":
+							italic = (italic > 0) ? italic - 1 : italic + 1;
+							break;
+						
+						default:
+							if (list.Contains (part) == false)
+							{
+								list.Add (part);
+							}
+							break;
+					}
+				}
+			}
+			
+			if (bold > 0)
+			{
+				list.Add ("Bold");
+			}
+			if (italic > 0)
+			{
+				list.Add ("Italic");
+			}
+			
+			list.Sort ();
+			
+			parts = (string[]) list.ToArray (typeof (string));
+			
+			return string.Join (" ", parts);
+		}
+		
+		
 		public Font CreateFont(string face, string style)
 		{
+			string hash = FontCollection.GetStyleHash (style);
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Mapping style <{0}> to <{1}>", style, hash));
+			
 			foreach (FontIdentity identity in this.full_list)
 			{
 				if ((identity.InvariantFaceName == face) &&
-					(identity.InvariantStyleName == style))
+					(identity.InvariantStyleHash == hash))
 				{
 					return this.CreateFont (identity);
 				}

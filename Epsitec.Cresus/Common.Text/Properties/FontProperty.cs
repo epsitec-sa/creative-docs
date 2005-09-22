@@ -122,7 +122,23 @@ namespace Epsitec.Common.Text.Properties
 			
 			FontProperty a = this;
 			FontProperty b = property as FontProperty;
-			FontProperty c = new FontProperty (b.FaceName == null ? a.FaceName : b.FaceName, b.StyleName == null ? a.StyleName : b.StyleName);
+			
+			string face_name  = ((b.FaceName == null)  || (b.FaceName.Length == 0))  ? a.FaceName  : b.FaceName;
+			string style_name = ((b.StyleName == null) || (b.StyleName.Length == 0)) ? a.StyleName : b.StyleName;
+			
+			if ((a.StyleName != null) &&
+				(b.StyleName != null) &&
+				(b.StyleName.Length > 0))
+			{
+				if (b.StyleName.IndexOf ("(") != -1)
+				{
+					style_name = FontProperty.CombineStyles (a.StyleName, b.StyleName);
+				}
+			}
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Combined <{0}> with <{1}> --> <{2}>", a.StyleName, b.StyleName, style_name));
+			
+			FontProperty c = new FontProperty (face_name, style_name);
 			
 			//	TODO: gérer 'features'
 			
@@ -130,6 +146,160 @@ namespace Epsitec.Common.Text.Properties
 			
 			return c;
 		}
+		
+		
+		public static string CombineStyles(string a, string b)
+		{
+			int  count_bold    = 0;
+			int  count_italic  = 0;
+			bool invert_bold   = false;
+			bool invert_italic = false;
+			
+			System.Collections.ArrayList list   = new System.Collections.ArrayList ();
+			System.Collections.ArrayList result = new System.Collections.ArrayList ();
+			
+			FontProperty.SplitStyle (a, list);
+			FontProperty.SplitStyle (b, list);
+			
+			foreach (string element in list)
+			{
+				if (element.Length == 0)
+				{
+					continue;
+				}
+				
+				switch (element)
+				{
+					case "Regular":
+					case "Normal":
+					case "Roman":
+						count_bold    = 0;
+						count_italic  = 0;
+						invert_bold   = false;
+						invert_italic = false;
+						result.Add (element);
+						break;
+					
+					case "Bold":
+					case "+Bold":
+						count_bold++;
+						break;
+					case "-Bold":
+						count_bold--;
+						break;
+					case "!Bold":
+						invert_bold = !invert_bold;
+						break;
+					
+					case "Italic":
+					case "+Italic":
+						count_italic++;
+						break;
+					case "-Italic":
+						count_italic--;
+						break;
+					case "!Italic":
+						invert_italic = !invert_italic;
+						break;
+					
+					default:
+						if (result.Contains (element) == false)
+						{
+							result.Add (element);
+						}
+						break;
+				}
+			}
+			
+			//	Résume l'état des changements de graisse :
+			
+			while (count_bold > 0)
+			{
+				result.Add ("(+Bold)");
+				count_bold--;
+			}
+			while (count_bold < 0)
+			{
+				result.Add ("(-Bold)");
+				count_bold++;
+			}
+			if (invert_bold)
+			{
+				result.Add ("(!Bold)");
+			}
+			
+			//	Résume l'état des changements d'italique :
+			
+			while (count_italic > 0)
+			{
+				result.Add ("(+Italic)");
+				count_italic--;
+			}
+			while (count_italic < 0)
+			{
+				result.Add ("(-Italic)");
+				count_italic++;
+			}
+			if (invert_italic)
+			{
+				result.Add ("(!Italic)");
+			}
+			
+			string[] elements = (string[]) result.ToArray (typeof (string));
+			
+			return string.Join (" ", elements);
+		}
+		
+		public static void SplitStyle(string style, System.Collections.ArrayList list)
+		{
+			int pos = style.IndexOf ('(');
+			int end = style.IndexOf (')');
+			
+			if ((pos == -1) &&
+				(end == -1))
+			{
+				list.Add (style.Trim ());
+				return;
+			}
+			
+			while (style.Length > 0)
+			{
+				System.Diagnostics.Debug.Assert (pos > -1);
+				System.Diagnostics.Debug.Assert (end > -1);
+				
+				if (pos > 0)
+				{
+					list.Add (style.Substring (0, pos).Trim ());
+					
+					style = style.Substring (pos);
+					
+					end -= pos;
+					pos  = 0;
+				}
+				
+				if (end > 1)
+				{
+					list.Add (style.Substring (1, end-1).Trim ());
+				}
+				
+				style = style.Substring (end+1).Trim ();
+				
+				pos = style.IndexOf ('(');
+				end = style.IndexOf (')');
+				
+				if ((pos == -1) &&
+					(end == -1))
+				{
+					break;
+				}
+			}
+			
+			if (style.Length > 0)
+			{
+				list.Add (style.Trim ());
+			}
+		}
+		
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
