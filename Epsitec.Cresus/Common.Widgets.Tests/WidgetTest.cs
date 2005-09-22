@@ -90,8 +90,8 @@ namespace Epsitec.Common.Widgets
 				this.CreateButton (pane, "Redo", "redo");
 				this.CreateButton (pane, "Forget", "purge-undo-redo");
 				
-				pane.FindChild ("undo").SetEnabled (false);
-				pane.FindChild ("redo").SetEnabled (false);
+//-				pane.FindChild ("undo").SetEnabled (false);
+//-				pane.FindChild ("redo").SetEnabled (false);
 			}
 			
 			private void CreateButton(Widget pane, string title, string name)
@@ -168,26 +168,21 @@ namespace Epsitec.Common.Widgets
 						break;
 						
 					case "undo":
-						if (this.frame.OpletQueue.CanUndo)
-						{
-							this.frame.OpletQueue.UndoAction ();
-						}
+						this.frame.TextNavigator.Undo ();
 						break;
 					case "redo":
-						if (this.frame.OpletQueue.CanRedo)
-						{
-							this.frame.OpletQueue.RedoAction ();
-						}
+						this.frame.TextNavigator.Redo ();
 						break;
+					
 					case "purge-undo-redo":
 						this.frame.OpletQueue.PurgeUndo ();
 						this.frame.OpletQueue.PurgeRedo ();
 						break;
 				}
 				
-				System.Diagnostics.Debug.WriteLine ("Text=" + this.frame.TextStory.GetDebugText ());
-				System.Diagnostics.Debug.WriteLine ("Undo=" + this.frame.TextStory.GetDebugUndo ());
-				System.Diagnostics.Debug.WriteLine ("");
+//-				System.Diagnostics.Debug.WriteLine ("Text=" + this.frame.TextStory.GetDebugText ());
+//-				System.Diagnostics.Debug.WriteLine ("Undo=" + this.frame.TextStory.GetDebugUndo ());
+//-				System.Diagnostics.Debug.WriteLine ("");
 				
 				button.Parent.FindChild ("undo").SetEnabled (this.frame.OpletQueue.CanUndo);
 				button.Parent.FindChild ("redo").SetEnabled (this.frame.OpletQueue.CanRedo);

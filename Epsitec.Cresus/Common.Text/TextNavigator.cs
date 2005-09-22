@@ -134,6 +134,8 @@ namespace Epsitec.Common.Text
 		
 		public void Insert(string text)
 		{
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
+			
 			ulong[] styled_text;
 			
 			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
@@ -216,6 +218,8 @@ namespace Epsitec.Common.Text
 		
 		public void Delete()
 		{
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
+			
 			//	Supprime le contenu de la sélection (pour autant qu'il y en ait
 			//	une qui soit définie).
 			
@@ -270,6 +274,8 @@ namespace Epsitec.Common.Text
 		
 		public void Delete(int move)
 		{
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
+			
 			int p1 = this.story.GetCursorPosition (this.cursor);
 			int p2 = p1 + move;
 			
@@ -413,6 +419,21 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void Undo()
+		{
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
+			
+			this.OpletQueue.UndoAction ();
+		}
+		
+		public void Redo()
+		{
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
+			
+			this.OpletQueue.RedoAction ();
+		}
+		
+		
 		public void StartSelection()
 		{
 			System.Diagnostics.Debug.Assert (! this.IsSelectionActive);
@@ -437,6 +458,12 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive);
 			
 			this.active_selection_cursor = null;
+			
+			using (this.story.OpletQueue.BeginAction ())
+			{
+				this.InternalInsertDeselectionOplet ();
+				this.story.OpletQueue.ValidateAction ();
+			}
 		}
 		
 		public void ClearSelection()
@@ -546,17 +573,22 @@ namespace Epsitec.Common.Text
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				foreach (Range range in ranges)
+				using (this.story.OpletQueue.BeginAction ())
 				{
-					int start = range.Start;
-					int end   = range.End;
-					int pos   = start;
-					
-					while (pos < end)
+					foreach (Range range in ranges)
 					{
-						this.SetParagraphStyles (pos, paragraph_styles);
-						pos = this.FindNextParagraphStart (pos);
+						int start = range.Start;
+						int end   = range.End;
+						int pos   = start;
+						
+						while (pos < end)
+						{
+							this.SetParagraphStyles (pos, paragraph_styles);
+							pos = this.FindNextParagraphStart (pos);
+						}
 					}
+					
+					this.story.OpletQueue.ValidateAction ();
 				}
 			}
 			else
@@ -594,12 +626,17 @@ namespace Epsitec.Common.Text
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				foreach (Range range in ranges)
+				using (this.story.OpletQueue.BeginAction ())
 				{
-					int pos    = range.Start;
-					int length = range.Length;
+					foreach (Range range in ranges)
+					{
+						int pos    = range.Start;
+						int length = range.Length;
 				
-					this.SetTextStyles (pos, length, text_styles);
+						this.SetTextStyles (pos, length, text_styles);
+					}
+					
+					this.story.OpletQueue.ValidateAction ();
 				}
 			}
 			else
@@ -633,12 +670,17 @@ namespace Epsitec.Common.Text
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				foreach (Range range in ranges)
+				using (this.story.OpletQueue.BeginAction ())
 				{
-					int pos    = range.Start;
-					int length = range.Length;
-				
-					this.SetCharacterStyles (pos, length, character_styles);
+					foreach (Range range in ranges)
+					{
+						int pos    = range.Start;
+						int length = range.Length;
+						
+						this.SetCharacterStyles (pos, length, character_styles);
+					}
+					
+					this.story.OpletQueue.ValidateAction ();
 				}
 			}
 			else
@@ -669,17 +711,22 @@ namespace Epsitec.Common.Text
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				foreach (Range range in ranges)
+				using (this.story.OpletQueue.BeginAction ())
 				{
-					int start = range.Start;
-					int end   = range.End;
-					int pos   = start;
-					
-					while (pos < end)
+					foreach (Range range in ranges)
 					{
-						this.SetParagraphProperties (pos, mode, paragraph_properties);
-						pos = this.FindNextParagraphStart (pos);
+						int start = range.Start;
+						int end   = range.End;
+						int pos   = start;
+						
+						while (pos < end)
+						{
+							this.SetParagraphProperties (pos, mode, paragraph_properties);
+							pos = this.FindNextParagraphStart (pos);
+						}
 					}
+					
+					this.story.OpletQueue.ValidateAction ();
 				}
 			}
 			else
@@ -711,12 +758,17 @@ namespace Epsitec.Common.Text
 				int[]   positions = this.GetSelectionCursorPositions ();
 				Range[] ranges    = Range.CreateSortedRanges (positions);
 				
-				foreach (Range range in ranges)
+				using (this.story.OpletQueue.BeginAction ())
 				{
-					int pos    = range.Start;
-					int length = range.Length;
-				
-					this.SetTextProperties (pos, length, text_properties, mode);
+					foreach (Range range in ranges)
+					{
+						int pos    = range.Start;
+						int length = range.Length;
+					
+						this.SetTextProperties (pos, length, text_properties, mode);
+					}
+					
+					this.story.OpletQueue.ValidateAction ();
 				}
 			}
 			else
@@ -1683,6 +1735,11 @@ namespace Epsitec.Common.Text
 			this.story.OpletQueue.Insert (new ClearSelectionOplet (this, positions));
 		}
 		
+		private void InternalInsertDeselectionOplet()
+		{
+			this.story.OpletQueue.Insert (new DefineSelectionOplet (this));
+		}
+		
 		private void InternalClearSelection()
 		{
 			if (this.selection_cursors != null)
@@ -1905,13 +1962,15 @@ namespace Epsitec.Common.Text
 		
 		#region ClearSelectionOplet Class
 		/// <summary>
-		/// La classe ClearSelectionOplet permet de gérer l'annulation la
+		/// La classe ClearSelectionOplet permet de gérer l'annulation de la
 		/// suppression d'une sélection.
 		/// </summary>
 		protected class ClearSelectionOplet : Common.Support.AbstractOplet
 		{
 			public ClearSelectionOplet(TextNavigator navigator, int[] positions)
 			{
+				System.Diagnostics.Debug.WriteLine ("Remember ClearSelection, " + positions.Length + " positions.");
+				
 				this.navigator = navigator;
 				this.positions = positions;
 			}
@@ -1919,6 +1978,7 @@ namespace Epsitec.Common.Text
 			
 			public override Epsitec.Common.Support.IOplet Undo()
 			{
+				System.Diagnostics.Debug.WriteLine ("UNDO ClearSelection. Restore " + positions.Length + " positions.");
 				this.navigator.InternalDefineSelection (this.positions);
 				this.navigator.UpdateSelectionMarkers ();
 				
@@ -1927,7 +1987,51 @@ namespace Epsitec.Common.Text
 			
 			public override Epsitec.Common.Support.IOplet Redo()
 			{
+				System.Diagnostics.Debug.WriteLine ("REDO ClearSelection.");
+				
 				this.navigator.InternalClearSelection ();
+				this.navigator.UpdateSelectionMarkers ();
+				
+				return this;
+			}
+			
+			public override void Dispose()
+			{
+				base.Dispose ();
+			}
+			
+			
+			private TextNavigator				navigator;
+			private int[]						positions;
+		}
+		#endregion
+		
+		#region DefineSelectionOplet Class
+		/// <summary>
+		/// La classe DefineSelectionOplet permet de gérer l'annulation de la
+		/// définition d'une sélection.
+		/// </summary>
+		protected class DefineSelectionOplet : Common.Support.AbstractOplet
+		{
+			public DefineSelectionOplet(TextNavigator navigator)
+			{
+				this.navigator = navigator;
+			}
+			
+			
+			public override Epsitec.Common.Support.IOplet Undo()
+			{
+				this.positions = this.navigator.GetSelectionCursorPositions ();
+				
+				this.navigator.InternalClearSelection ();
+				this.navigator.UpdateSelectionMarkers ();
+				
+				return this;
+			}
+			
+			public override Epsitec.Common.Support.IOplet Redo()
+			{
+				this.navigator.InternalDefineSelection (this.positions);
 				this.navigator.UpdateSelectionMarkers ();
 				
 				return this;

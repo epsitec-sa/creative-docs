@@ -606,6 +606,42 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public bool Undo()
+		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			
+			if (this.text_navigator.OpletQueue.CanUndo)
+			{
+				this.text_navigator.Undo ();
+				this.NotifyTextChanged ();
+				
+				return true;
+			}
+			
+			return false;
+		}
+		
+		public bool Redo()
+		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			
+			if (this.text_navigator.OpletQueue.CanRedo)
+			{
+				this.text_navigator.Redo ();
+				this.NotifyTextChanged ();
+				
+				return true;
+			}
+			
+			return false;
+		}
+		
 		
 		public void NotifyTextChanged()
 		{
