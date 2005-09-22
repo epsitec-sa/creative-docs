@@ -1,0 +1,127 @@
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Document;
+
+namespace Epsitec.App.DocumentEditor.Dialogs
+{
+	using GlobalSettings = Common.Document.Settings.GlobalSettings;
+
+	/// <summary>
+	/// Dialogue "Télécharger une mise à jour".
+	/// </summary>
+	public class Download : Abstract
+	{
+		public Download(DocumentEditor editor) : base(editor)
+		{
+		}
+
+		// Spécifie les informations pour la mise à jour.
+		public void SetInfo(string version, string url)
+		{
+			if ( version.EndsWith(".0") )
+			{
+				version = version.Substring(0, version.Length-2);
+			}
+			this.version = version;
+			this.url = url;
+		}
+
+		// Crée et montre la fenêtre du dialogue.
+		public override void Show()
+		{
+			if ( this.window == null )
+			{
+				this.window = new Window();
+				this.window.MakeFixedSizeWindow();
+				this.window.MakeSecondaryWindow();
+				this.WindowInit("Download", 250, 120);
+				this.window.Text = Res.Strings.Dialog.Download.Title;
+				this.window.PreventAutoClose = true;
+				this.window.Owner = this.editor.Window;
+				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowDownloadCloseClicked);
+
+				StaticText title = new StaticText(this.window.Root);
+				if ( this.url == "" )
+				{
+					title.Text = Res.Strings.Dialog.Download.Useless;
+				}
+				else
+				{
+					title.Text = Res.Strings.Dialog.Download.Available;
+				}
+				title.Dock = DockStyle.Top;
+				title.DockMargins = new Margins(10, 10, 10, 0);
+
+				string chip = "<list type=\"fix\" width=\"1.5\"/>";
+
+				string current = string.Format(Res.Strings.Dialog.Download.Actual, About.GetVersion());
+				StaticText actual = new StaticText(this.window.Root);
+				actual.Text = chip+current;
+				actual.Dock = DockStyle.Top;
+				actual.DockMargins = new Margins(10, 10, 8, 0);
+
+				string text;
+				if ( this.url == "" )
+				{
+					text = Res.Strings.Dialog.Download.Nothing;
+				}
+				else
+				{
+					string link = string.Format(Res.Strings.Dialog.Download.Link, this.version);
+					text = string.Format("<a href=\"{0}\">{1}</a>", this.url, link);
+				}
+				StaticText url = new StaticText(this.window.Root);
+				url.Text = chip+text;
+				url.Dock = DockStyle.Top;
+				url.DockMargins = new Margins(10, 10, 0, 0);
+				url.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
+
+				// Bouton de fermeture.
+				Button buttonClose = new Button(this.window.Root);
+				buttonClose.Width = 75;
+				buttonClose.Text = Res.Strings.Dialog.Button.Close;
+				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
+				buttonClose.Anchor = AnchorStyles.BottomLeft;
+				buttonClose.AnchorMargins = new Margins(10, 0, 0, 10);
+				buttonClose.Clicked += new MessageEventHandler(this.HandleDownloadButtonCloseClicked);
+				buttonClose.TabIndex = 1000;
+				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
+			}
+
+			this.window.ShowDialog();
+		}
+
+		// Enregistre la position de la fenêtre du dialogue.
+		public override void Save()
+		{
+			this.WindowSave("Download");
+		}
+
+
+		private void HandleLinkHypertextClicked(object sender, MessageEventArgs e)
+		{
+			Widget widget = sender as Widget;
+			System.Diagnostics.Process.Start(widget.Hypertext);
+		}
+
+		private void HandleWindowDownloadCloseClicked(object sender)
+		{
+			this.editor.Window.MakeActive();
+			this.window.Hide();
+			this.OnClosed();
+		}
+
+		private void HandleDownloadButtonCloseClicked(object sender, MessageEventArgs e)
+		{
+			this.editor.Window.MakeActive();
+			this.window.Hide();
+			this.OnClosed();
+		}
+
+
+		protected string				version;
+		protected string				url;
+	}
+}
