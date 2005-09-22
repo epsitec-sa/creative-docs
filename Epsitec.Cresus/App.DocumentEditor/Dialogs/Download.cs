@@ -44,7 +44,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				StaticText title = new StaticText(this.window.Root);
 				if ( this.url == "" )
 				{
-					title.Text = Res.Strings.Dialog.Download.Useless;
+					title.Text = Res.Strings.Dialog.Download.UpToDate;
 				}
 				else
 				{

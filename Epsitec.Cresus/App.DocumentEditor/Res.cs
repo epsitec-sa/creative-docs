@@ -51,7 +51,7 @@ namespace Epsitec.App.DocumentEditor
 					public static string Link { get { return GetText ("Strings", "Dialog", "Download", "Link"); } }
 					public static string Nothing { get { return GetText ("Strings", "Dialog", "Download", "Nothing"); } }
 					public static string Title { get { return GetText ("Strings", "Dialog", "Download", "Title"); } }
-					public static string Useless { get { return GetText ("Strings", "Dialog", "Download", "Useless"); } }
+					public static string UpToDate { get { return GetText ("Strings", "Dialog", "Download", "UpToDate"); } }
 				}
 				
 				public sealed class Export

@@ -78,7 +78,7 @@
 	<data name="Dialog.About.Freeware">évaluation</data>
 
 	<data name="Dialog.Download.Title">Télécharger une mise à jour</data>
-	<data name="Dialog.Download.Useless">Votre logiciel est à jour.</data>
+	<data name="Dialog.Download.UpToDate">Votre logiciel est à jour.</data>
 	<data name="Dialog.Download.Available">Une mise à jour est disponible:</data>
 	<data name="Dialog.Download.Actual">Version actuelle {0}</data>
 	<data name="Dialog.Download.Link">Mise à jour {0}</data>

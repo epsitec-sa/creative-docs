@@ -18,7 +18,7 @@
 	<data name="Menu.Main.Help">Help</data>
 
 	<data name="Menu.Help.Key">Key...</data>
-	<data name="Menu.Help.Update">Update...</data>
+	<data name="Menu.Help.Update">Check for Updates...</data>
 	<data name="Menu.Help.About">About...</data>
 
 	<data name="LastFiles.None">&lt;i&gt;None&lt;/i&gt;</data>
@@ -76,12 +76,12 @@
 	<data name="Dialog.About.Expired">Expired</data>
 	<data name="Dialog.About.Freeware">Evaluation</data>
 
-	<data name="Dialog.Download.Title">@@Télécharger une mise à jour</data>
-	<data name="Dialog.Download.Useless">@@Votre logiciel est à jour.</data>
-	<data name="Dialog.Download.Available">@@Une mise à jour est disponible:</data>
-	<data name="Dialog.Download.Actual">@@Version actuelle {0}</data>
-	<data name="Dialog.Download.Link">@@Mise à jour {0}</data>
-	<data name="Dialog.Download.Nothing">@@Aucune mise à jour n'est disponible</data>
+	<data name="Dialog.Download.Title">Check for Updates</data>
+	<data name="Dialog.Download.UpToDate">Your application is up-to-date.</data>
+	<data name="Dialog.Download.Available">A new version is currently available:</data>
+	<data name="Dialog.Download.Actual">Your version: {0}</data>
+	<data name="Dialog.Download.Link">New version: {0}</data>
+	<data name="Dialog.Download.Nothing">No new version is currently available.</data>
 	
 	<data name="Dialog.Export.Title1">Exporting</data>
 	<data name="Dialog.Export.Title2">Exporting {0}</data>
@@ -160,8 +160,8 @@
 	<data name="Dialog.Settings.FineCursor">Precise cursor</data>
 	<data name="Dialog.Settings.Adorner">Interface look</data>
 	<data name="Dialog.Settings.ScreenDpi">Resolution (dpi)</data>
-	<data name="Dialog.Settings.AutoUpdate">@@Mise à jour du logiciel</data>
-	<data name="Dialog.Settings.AutoChecker">@@Recherche automatique</data>
+	<data name="Dialog.Settings.AutoUpdate">Automatically check for updates</data>
+	<data name="Dialog.Settings.AutoChecker">Check once every day</data>
 	<data name="Dialog.Settings.TabPage.Format">Format</data>
 	<data name="Dialog.Settings.TabPage.Grid">Grid</data>
 	<data name="Dialog.Settings.TabPage.Guides">Guides</data>
