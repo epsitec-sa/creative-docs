@@ -199,7 +199,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckCompileRefLevel1()
 		{
 			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
-			string test_string = "<bundle><data name='a'>A</data><ref target='file:button.cancel'/></bundle>";
+			string test_string = @"<bundle><data name=""aaa"">A</data><ref target=""file:button.cancel""/></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
@@ -208,12 +208,13 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assert.AreEqual (5, bundle.CountFields);
-			Assert.AreEqual ("a",      names[0]);
-			Assert.AreEqual ("class",  names[1]);
-			Assert.AreEqual ("Name",   names[2]);
-			Assert.AreEqual ("Size",   names[3]);
-			Assert.AreEqual ("Text",   names[4]);
+			Assert.AreEqual (6, bundle.CountFields);
+			Assert.AreEqual ("aaa",    names[0]);
+			Assert.AreEqual ("Anchor", names[1]);
+			Assert.AreEqual ("class",  names[2]);
+			Assert.AreEqual ("Name",   names[3]);
+			Assert.AreEqual ("Size",   names[4]);
+			Assert.AreEqual ("Text",   names[5]);
 		}
 		
 		[Test] public void CheckCompileRefLevel2()

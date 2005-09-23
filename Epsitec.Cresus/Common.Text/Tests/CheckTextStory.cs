@@ -69,6 +69,8 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (cursor.Direction == 0);
 			
+			story.DebugDisableOpletMerge = true;
+			
 			story.OpletQueue.PurgeUndo ();
 			story.InsertText (cursor, text_abc);
 			

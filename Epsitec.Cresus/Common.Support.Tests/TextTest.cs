@@ -338,6 +338,7 @@ namespace Epsitec.Common.Support
 			texts = navigator.GetSelectedTexts ();
 			Assert.IsTrue (texts[0].EndsWith ("algorithm." + "\u2029" + "f"));
 			
+			navigator.OpletQueue.UndoAction ();		//	Select
 			navigator.OpletQueue.UndoAction ();		//	MoveTo
 			navigator.OpletQueue.UndoAction ();		//	Delete + deselect
 			
@@ -348,13 +349,13 @@ namespace Epsitec.Common.Support
 			
 			Assert.AreEqual (113, navigator.CursorPosition);
 			Assert.AreEqual (-1, navigator.CursorDirection);
+			Assert.IsTrue (navigator.HasSelection);
 			
-			navigator.OpletQueue.UndoAction ();		//	MoveTo
+			navigator.OpletQueue.UndoAction ();		//	Select
 			
-			Assert.AreEqual (116, navigator.CursorPosition);
-			Assert.AreEqual (1, navigator.CursorDirection);
+			Assert.IsFalse (navigator.HasSelection);
 			
-			navigator.OpletQueue.UndoAction ();		//	MoveTo
+			navigator.OpletQueue.UndoAction ();		//	MoveTo(s)
 			
 			Assert.AreEqual (4, navigator.CursorPosition);
 			Assert.AreEqual (1, navigator.CursorDirection);

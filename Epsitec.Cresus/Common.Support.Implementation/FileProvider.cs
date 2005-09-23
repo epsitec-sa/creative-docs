@@ -71,12 +71,16 @@ namespace Epsitec.Common.Support.Implementation
 			
 			string dir_1 = resource_manager.DefaultPath;
 			string dir_2 = System.IO.Directory.GetCurrentDirectory ();
+			string dir_3 = System.IO.Path.GetDirectoryName (typeof (ResourceManager).Assembly.Location);
 			
 			if (! this.SelectPath (dir_1))
 			{
 				if (! this.SelectPath (dir_2))
 				{
-					throw new System.IO.FileNotFoundException ("Cannot find resources directory.");
+					if (! this.SelectPath (dir_3))
+					{
+						throw new System.IO.FileNotFoundException ("Cannot find resources directory.");
+					}
 				}
 			}
 		}
@@ -102,10 +106,10 @@ namespace Epsitec.Common.Support.Implementation
 			
 			path = path + "resources" + System.IO.Path.DirectorySeparatorChar;
 			
-			System.Diagnostics.Debug.WriteLine ("Path prefix for files: " + path);
-			
 			if (System.IO.Directory.Exists (path))
 			{
+				System.Diagnostics.Debug.WriteLine ("Path prefix for resource files: " + path);
+				
 				this.path_prefix = path;
 				return true;
 			}

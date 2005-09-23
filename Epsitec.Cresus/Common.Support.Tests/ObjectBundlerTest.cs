@@ -23,6 +23,7 @@ namespace Epsitec.Common.Support
 			ObjectBundler bundler = new ObjectBundler (Resources.DefaultManager);
 			
 			Assert.IsNotNull (bundle);
+			Assert.AreEqual (bundle["class"].AsString, "Button");
 			
 			object         obj    = bundler.CreateFromBundle (bundle);
 			Widgets.Button button = obj as Widgets.Button;
@@ -31,7 +32,7 @@ namespace Epsitec.Common.Support
 			Assert.IsNotNull (button);
 			Assert.AreEqual ("cancel", button.Name);
 			Assert.IsTrue (button.Text.Length > 0);
-			Assert.AreEqual (Widgets.AnchorStyles.None, button.Anchor);
+			Assert.AreEqual (Widgets.AnchorStyles.BottomLeft, button.Anchor);
 			Assert.AreEqual (100, button.Width);
 			Assert.AreEqual (new Widgets.Button ().Height, button.Height);
 		}

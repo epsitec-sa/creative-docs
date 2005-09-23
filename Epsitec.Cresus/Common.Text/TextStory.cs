@@ -132,6 +132,18 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public bool								DebugDisableOpletMerge
+		{
+			get
+			{
+				return this.debug_disable_merge;
+			}
+			set
+			{
+				this.debug_disable_merge = value;
+			}
+		}
+		
 		
 		public void NewCursor(ICursor cursor)
 		{
@@ -810,7 +822,8 @@ namespace Epsitec.Common.Text
 			{
 				Common.Support.IOplet[] last_oplets = this.oplet_queue.LastActionOplets;
 				
-				if (last_oplets.Length == 1)
+				if ((last_oplets.Length == 1) &&
+					(this.debug_disable_merge == false))
 				{
 					Common.Support.IOplet last = last_oplets[0];
 					
@@ -1794,6 +1807,7 @@ namespace Epsitec.Common.Text
 		private Context							context;
 		
 		private bool							debug_disable_oplet;
+		private bool							debug_disable_merge;
 		
 		private int								text_change_mark_start;
 		private int								text_change_mark_end;

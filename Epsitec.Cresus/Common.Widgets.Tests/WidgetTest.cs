@@ -122,10 +122,10 @@ namespace Epsitec.Common.Widgets
 						this.frame.TextNavigator.TextNavigator.SetTextProperties (Common.Text.Properties.ApplyMode.Set, new Common.Text.Properties.FontProperty (null, "Regular"));
 						break;
 					case "style:bold":
-						this.frame.TextNavigator.TextNavigator.SetTextProperties (Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty (null, "(!Bold)"));
+						this.frame.TextNavigator.TextNavigator.SetTextProperties (Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty (null, "!Bold"));
 						break;
 					case "style:italic":
-						this.frame.TextNavigator.TextNavigator.SetTextProperties (Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty (null, "(!Italic)"));
+						this.frame.TextNavigator.TextNavigator.SetTextProperties (Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty (null, "!Italic"));
 						break;
 					case "style:reset":
 						this.frame.TextNavigator.TextNavigator.SetTextProperties (Common.Text.Properties.ApplyMode.Clear, new Common.Text.Properties.FontProperty ());

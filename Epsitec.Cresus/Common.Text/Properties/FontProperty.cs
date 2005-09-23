@@ -126,6 +126,10 @@ namespace Epsitec.Common.Text.Properties
 			string face_name  = ((b.FaceName == null)  || (b.FaceName.Length == 0))  ? a.FaceName  : b.FaceName;
 			string style_name = ((b.StyleName == null) || (b.StyleName.Length == 0)) ? a.StyleName : b.StyleName;
 			
+			//	Combine les noms des styles de manière avancée dès que la propriété
+			//	contient des styles à ajouter/supprimer/inverser, avec une syntaxe
+			//	du type "(+Bold)", "(-Bold)" ou "(!Bold)".
+			
 			if ((a.StyleName != null) &&
 				(b.StyleName != null) &&
 				(b.StyleName.Length > 0))
@@ -136,11 +140,33 @@ namespace Epsitec.Common.Text.Properties
 				}
 			}
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Combined <{0}> with <{1}> --> <{2}>", a.StyleName, b.StyleName, style_name));
+			System.Collections.ArrayList features = new System.Collections.ArrayList ();
 			
-			FontProperty c = new FontProperty (face_name, style_name);
+			if ((a.Features != null) &&
+				(a.Features.Length > 0))
+			{
+				foreach (string feature in a.Features)
+				{
+					if (features.Contains (feature) == false)
+					{
+						features.Add (feature);
+					}
+				}
+			}
 			
-			//	TODO: gérer 'features'
+			if ((b.Features != null) &&
+				(b.Features.Length > 0))
+			{
+				foreach (string feature in b.Features)
+				{
+					if (features.Contains (feature) == false)
+					{
+						features.Add (feature);
+					}
+				}
+			}
+			
+			FontProperty c = new FontProperty (face_name, style_name, (string[]) features.ToArray (typeof (string)));
 			
 			c.DefineVersion (System.Math.Max (a.Version, b.Version));
 			
@@ -150,6 +176,9 @@ namespace Epsitec.Common.Text.Properties
 		
 		public static string CombineStyles(string a, string b)
 		{
+			//	Combine deux séries de noms de styles, en simplifiant d'éventuelles
+			//	modifications "+Bold" et "-Bold" qui s'annuleraient.
+			
 			int  count_bold    = 0;
 			int  count_italic  = 0;
 			bool invert_bold   = false;
@@ -158,8 +187,8 @@ namespace Epsitec.Common.Text.Properties
 			System.Collections.ArrayList list   = new System.Collections.ArrayList ();
 			System.Collections.ArrayList result = new System.Collections.ArrayList ();
 			
-			FontProperty.SplitStyle (a, list);
-			FontProperty.SplitStyle (b, list);
+			list.AddRange (a.Split (' '));
+			list.AddRange (b.Split (' '));
 			
 			foreach (string element in list)
 			{
@@ -170,36 +199,25 @@ namespace Epsitec.Common.Text.Properties
 				
 				switch (element)
 				{
+					case "Bold":	count_bold  = 1;	break;
+					case "+Bold":	count_bold += 1;	break;
+					case "-Bold":	count_bold -= 1;	break;
+					
+					case "Italic":	count_italic  = 1;	break;
+					case "+Italic":	count_italic += 1;	break;
+					case "-Italic":	count_italic -= 1;	break;
+					
+					case "!Bold":	invert_bold   = !invert_bold;	break;
+					case "!Italic":	invert_italic = !invert_italic;	break;
+					
 					case "Regular":
 					case "Normal":
 					case "Roman":
-						count_bold    = 0;
-						count_italic  = 0;
-						invert_bold   = false;
-						invert_italic = false;
+						count_bold   = 0; invert_bold   = false;
+						count_italic = 0; invert_italic = false;
+						
 						result.Add (element);
-						break;
-					
-					case "Bold":
-					case "+Bold":
-						count_bold++;
-						break;
-					case "-Bold":
-						count_bold--;
-						break;
-					case "!Bold":
-						invert_bold = !invert_bold;
-						break;
-					
-					case "Italic":
-					case "+Italic":
-						count_italic++;
-						break;
-					case "-Italic":
-						count_italic--;
-						break;
-					case "!Italic":
-						invert_italic = !invert_italic;
+						
 						break;
 					
 					default:
@@ -213,92 +231,21 @@ namespace Epsitec.Common.Text.Properties
 			
 			//	Résume l'état des changements de graisse :
 			
-			while (count_bold > 0)
-			{
-				result.Add ("(+Bold)");
-				count_bold--;
-			}
-			while (count_bold < 0)
-			{
-				result.Add ("(-Bold)");
-				count_bold++;
-			}
-			if (invert_bold)
-			{
-				result.Add ("(!Bold)");
-			}
+			while (count_bold-- > 0) result.Add ("+Bold");
+			while (++count_bold < 0) result.Add ("-Bold");
+			
+			if (invert_bold) result.Add ("!Bold");
 			
 			//	Résume l'état des changements d'italique :
 			
-			while (count_italic > 0)
-			{
-				result.Add ("(+Italic)");
-				count_italic--;
-			}
-			while (count_italic < 0)
-			{
-				result.Add ("(-Italic)");
-				count_italic++;
-			}
-			if (invert_italic)
-			{
-				result.Add ("(!Italic)");
-			}
+			while (count_italic-- > 0) result.Add ("+Italic");
+			while (++count_italic < 0) result.Add ("-Italic");
 			
-			string[] elements = (string[]) result.ToArray (typeof (string));
+			if (invert_italic) result.Add ("!Italic");
 			
-			return string.Join (" ", elements);
+			return string.Join (" ", (string[]) result.ToArray (typeof (string)));
 		}
 		
-		public static void SplitStyle(string style, System.Collections.ArrayList list)
-		{
-			int pos = style.IndexOf ('(');
-			int end = style.IndexOf (')');
-			
-			if ((pos == -1) &&
-				(end == -1))
-			{
-				list.Add (style.Trim ());
-				return;
-			}
-			
-			while (style.Length > 0)
-			{
-				System.Diagnostics.Debug.Assert (pos > -1);
-				System.Diagnostics.Debug.Assert (end > -1);
-				
-				if (pos > 0)
-				{
-					list.Add (style.Substring (0, pos).Trim ());
-					
-					style = style.Substring (pos);
-					
-					end -= pos;
-					pos  = 0;
-				}
-				
-				if (end > 1)
-				{
-					list.Add (style.Substring (1, end-1).Trim ());
-				}
-				
-				style = style.Substring (end+1).Trim ();
-				
-				pos = style.IndexOf ('(');
-				end = style.IndexOf (')');
-				
-				if ((pos == -1) &&
-					(end == -1))
-				{
-					break;
-				}
-			}
-			
-			if (style.Length > 0)
-			{
-				list.Add (style.Trim ());
-			}
-		}
 		
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)

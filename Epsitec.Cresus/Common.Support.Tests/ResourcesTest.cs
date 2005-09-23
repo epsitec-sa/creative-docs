@@ -305,9 +305,9 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckRes()
 		{
-			Assert.AreEqual (Res.Strings.Label.Hello, "Hello <i>world</i>&nbsp;!");
-			Assert.AreEqual (Res.Strings.Title.Dialog.Open, "Open..");
-			Assert.AreEqual (Res.Strings.Title.SettingsWindow, "Réglages");
+			Assert.AreEqual ("Hello <i>world</i>&nbsp;!", Res.Strings.Label.Hello);
+			Assert.AreEqual ("Open..", Res.Strings.Title.Dialog.Open);
+			Assert.AreEqual ("Réglages", Res.Strings.Title.SettingsWindow);
 		}
 		
 		[Test] public void CheckGetBundleIds()
