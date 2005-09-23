@@ -655,14 +655,14 @@ restart:
 						goto restart;
 					}
 					
-					this.ox           = ox + this.mx_left;
-					this.oy_base      = oy;
-					this.oy_max       = oy + line_ascender;
-					this.oy_min       = oy + line_descender;
-					this.frame_y      = next_frame_y;
-					this.line_y1    = next_frame_y;
-					this.line_width   = dx;
-					this.line_height  = line_height;
+					this.ox          = ox + this.mx_left;
+					this.oy_base     = oy;
+					this.oy_max      = oy + line_ascender;
+					this.oy_min      = oy + line_descender;
+					this.frame_y     = next_frame_y;
+					this.line_y1     = next_frame_y;
+					this.line_width  = dx;
+					this.line_height = line_height;
 					
 					if ((def_line_height == 0) &&
 						(def_line_width == 0))

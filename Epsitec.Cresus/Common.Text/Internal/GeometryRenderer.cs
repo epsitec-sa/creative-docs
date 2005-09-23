@@ -75,8 +75,12 @@ namespace Epsitec.Common.Text.Internal
 			int[]    map_char;
 			ushort[] map_glyphs;
 			
-			double y1 = layout.LineY1;
-			double y2 = layout.LineY2;
+			double ascender  = layout.LineAscender;
+			double descender = layout.LineDescender;
+			
+			double yb = layout.LineBaseY;
+			double y1 = System.Math.Min (layout.LineY1, yb + descender);
+			double y2 = System.Math.Max (layout.LineY2, yb + ascender);
 			
 			int glyph_index = 0;
 			

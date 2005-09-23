@@ -260,11 +260,11 @@ namespace Epsitec.Common.Text
 			for (int i = 0; i < elements.Length; i++)
 			{
 				double l_yb = elements[i].LineBaseY;
-				double l_y1 = elements[i].LineY2;
-				double l_y2 = elements[i].LineY1 - dy_after;
+				double l_y1 = System.Math.Min (elements[i].LineY1 - dy_after, l_yb + elements[i].LineDescender);
+				double l_y2 = System.Math.Max (elements[i].LineY2, l_yb + elements[i].LineAscender);
 				
-				if ((y >= l_y2) &&
-					(y <= l_y1))
+				if ((y >= l_y1) &&
+					(y <= l_y2))
 				{
 					//	La bande horizontale qui comprend cette ligne se trouve dans la
 					//	zone d'intérêt. Analysons-la plus à fond :
