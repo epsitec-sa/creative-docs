@@ -1115,8 +1115,6 @@ namespace Epsitec.Common.Text
 					System.Diagnostics.Debug.Assert (pos+1 == this.story.TextLength);
 					System.Diagnostics.Debug.Assert (direction == 1);
 					
-					System.Diagnostics.Debug.WriteLine ("Reached the end of the text.");
-					
 					moved += 1;
 					pos   += 1;
 					
@@ -1717,8 +1715,6 @@ namespace Epsitec.Common.Text
 				
 				new_pos -= 1;
 				new_dir  = Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, -1) ? -1 : 1;
-				
-				System.Diagnostics.Debug.WriteLine ("Après EndOfText; correction avec dir=" + new_dir.ToString ());
 			}
 			
 			//	Déplace le curseur "officiel" une seule fois. Ceci permet d'éviter
@@ -1965,7 +1961,16 @@ namespace Epsitec.Common.Text
 		
 		protected virtual void OnOpletExecuted(Common.Support.OpletEventArgs e)
 		{
-			this.ClearCurrentStylesAndProperties ();
+			System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1}", e.Event, e.Oplet.GetType ().Name));
+			
+			if ((e.Oplet is TextStory.CursorMoveOplet) ||
+				(e.Oplet is TextNavigator.DefineSelectionOplet) ||
+				(e.Oplet is TextNavigator.ClearSelectionOplet))
+			{
+				System.Diagnostics.Debug.WriteLine ("Updated cursor info.");
+				
+				this.UpdateCurrentStylesAndProperties ();
+			}
 			
 			if (this.OpletExecuted != null)
 			{
@@ -2002,8 +2007,6 @@ namespace Epsitec.Common.Text
 		{
 			public ClearSelectionOplet(TextNavigator navigator, int[] positions)
 			{
-				System.Diagnostics.Debug.WriteLine ("Remember ClearSelection, " + positions.Length + " positions.");
-				
 				this.navigator = navigator;
 				this.positions = positions;
 			}
@@ -2011,7 +2014,6 @@ namespace Epsitec.Common.Text
 			
 			public override Epsitec.Common.Support.IOplet Undo()
 			{
-				System.Diagnostics.Debug.WriteLine ("UNDO ClearSelection. Restore " + positions.Length + " positions.");
 				this.navigator.InternalDefineSelection (this.positions);
 				this.navigator.UpdateSelectionMarkers ();
 				
@@ -2022,8 +2024,6 @@ namespace Epsitec.Common.Text
 			
 			public override Epsitec.Common.Support.IOplet Redo()
 			{
-				System.Diagnostics.Debug.WriteLine ("REDO ClearSelection.");
-				
 				this.navigator.InternalClearSelection ();
 				this.navigator.UpdateSelectionMarkers ();
 				
