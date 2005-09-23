@@ -565,8 +565,17 @@ namespace Epsitec.Common.OpenType.Platform
 			{
 				using (TempDC dc = new TempDC (font))
 				{
-					int table  = 0;
+					int table  = 0x66637474;		//	"ttcf"
 					int length = Win32.GetFontData (dc.Handle, table, 0, null, 0);
+					
+					//	Si la tentative d'accès à la table TTC n'a pas abouti, on essaie
+					//	encore d'accéder normalement à la fonte :
+					
+					if (length <= 0)
+					{
+						table  = 0;
+						length = Win32.GetFontData (dc.Handle, table, 0, null, 0);
+					}
 					
 					if (length > 0)
 					{
@@ -628,6 +637,18 @@ namespace Epsitec.Common.OpenType.Platform
 			{
 				using (TempDC dc = new TempDC (font))
 				{
+					if (Win32.IsTrueTypeCollection (dc.Handle))
+					{
+						//	C'est une collection TrueType. On ne peut pas simplement
+						//	demander à GetFontData de retourner la table en question,
+						//	car les offsets seraient faux. Il faudrait donc lire la
+						//	fonte en entier et extraire ce qui est pertinent !
+						
+						//	TODO: ...
+						
+						return null;
+					}
+					
 					int table  = (('n') << 0) | (('a') << 8) | (('m') << 16) | (('e') << 24);
 					int length = Win32.GetFontData (dc.Handle, table, 0, null, 0);
 					
@@ -642,6 +663,15 @@ namespace Epsitec.Common.OpenType.Platform
 			}
 			
 			return data;
+		}
+		
+		
+		private static bool IsTrueTypeCollection(System.IntPtr dc_handle)
+		{
+			int table  = 0x66637474;		//	"ttcf"
+			int length = Win32.GetFontData (dc_handle, table, 0, null, 0);
+			
+			return (length > 0) ? true : false;
 		}
 	}
 }

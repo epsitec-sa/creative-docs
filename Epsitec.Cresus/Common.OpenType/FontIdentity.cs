@@ -4,14 +4,32 @@
 namespace Epsitec.Common.OpenType
 {
 	/// <summary>
-	/// Summary description for FontIdentity.
+	/// La classe FontIdentity donne accès aux noms détaillés de la fonte et
+	/// cache l'accès aux données complètes (chargées qu'en cas de besoin).
 	/// </summary>
 	public sealed class FontIdentity
 	{
-		public FontIdentity(Table_name open_type_name_table, object system_record)
+		public FontIdentity(Table_name open_type_name_table, object system_record) : this (open_type_name_table, system_record, -1)
 		{
-			this.ot_name = open_type_name_table;
-			this.record  = system_record;
+		}
+		
+		public FontIdentity(Table_name open_type_name_table, object system_record, int ttc_index)
+		{
+			this.ot_name   = open_type_name_table;
+			this.record    = system_record;
+			this.ttc_index = ttc_index;
+		}
+		
+		
+		internal FontIdentity(object system_record, int ttc_index)
+		{
+			this.record    = system_record;
+			this.ttc_index = ttc_index;
+		}
+		
+		internal FontIdentity(FontData font_data, object system_record, int ttc_index) : this (system_record, ttc_index)
+		{
+			this.font_data = font_data;
 		}
 		
 		
@@ -121,7 +139,7 @@ namespace Epsitec.Common.OpenType
 					{
 						byte[] data = Platform.Neutral.LoadFontData (this.record);
 						
-						this.font_data = data == null ? null : new FontData (data);
+						this.font_data = data == null ? null : new FontData (data, this.ttc_index);
 					}
 				}
 				
@@ -159,6 +177,13 @@ namespace Epsitec.Common.OpenType
 					return FontStyle.Oblique;
 				}
 			}
+		}
+		
+		
+		
+		internal void DefineTableName(Table_name open_type_name_table)
+		{
+			this.ot_name = open_type_name_table;
 		}
 		
 		
@@ -349,5 +374,6 @@ namespace Epsitec.Common.OpenType
 		private FontData						font_data;
 		private System.Collections.Hashtable	font_sizes;
 		private string							style_hash;
+		private int								ttc_index;
 	}
 }

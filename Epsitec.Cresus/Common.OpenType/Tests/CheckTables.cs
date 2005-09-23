@@ -442,8 +442,8 @@ namespace Epsitec.Common.OpenType.Tests
 			Font font_1 = new Font ();
 			Font font_2 = new Font ();
 			
-			font_1.Initialize (new FontData (Platform.Neutral.LoadFontData (font_name_1, "Normal")));
-			font_2.Initialize (new FontData (Platform.Neutral.LoadFontData (font_name_2, "Normal")));
+			font_1.Initialize (new FontData (Platform.Neutral.LoadFontData (font_name_1, "Normal"), -1));
+			font_2.Initialize (new FontData (Platform.Neutral.LoadFontData (font_name_2, "Normal"), -1));
 			
 			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_1.GetSupportedScripts ()));
 			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_2.GetSupportedScripts ()));

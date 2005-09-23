@@ -171,6 +171,36 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
+	public class Table_ttcf : Tables
+	{
+		public Table_ttcf(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public int		Version
+		{
+			get
+			{
+				return this.ReadInt32 (4);
+			}
+		}
+		
+		public int		NumFonts
+		{
+			get
+			{
+				return this.ReadInt32 (8);
+			}
+		}
+		
+		
+		public int GetFontOffset(int n)
+		{
+			return this.ReadInt32 (12 + 4*n);
+		}
+	}
+	
 	public class Table_head : Tables
 	{
 		public Table_head(byte[] data, int offset) : base (data, offset)

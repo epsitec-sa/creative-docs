@@ -4,7 +4,8 @@
 namespace Epsitec.Common.OpenType.Platform
 {
 	/// <summary>
-	/// Summary description for Neutral.
+	/// La classe Neutral encapsule les dépendances système de manière à ce que
+	/// l'appelant ne voie pas ce qui se passe derrière les rideaux.
 	/// </summary>
 	public sealed class Neutral
 	{
