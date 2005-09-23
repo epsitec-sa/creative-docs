@@ -307,6 +307,8 @@ namespace Epsitec.Common.Text
 								if ((view_x >= cx1) &&
 									(view_x <= cx2))
 								{
+									//	Le clic a été fait dans le corps de la ligne.
+									
 									//	Cas particulier : si la ligne est vide (juste un caractère
 									//	de fin de ligne), cx1 == cx2 et il faut générer une position
 									//	telle que le curseur résultant sera placé au début de la
@@ -315,7 +317,7 @@ namespace Epsitec.Common.Text
 									int adjust = (2*view_x <= (cx1 + cx2)) ? -1 : 0;
 									
 									position  = para_start + line_offset + glyph_offset + adjust;
-									direction = ((position == 0) || (cx1 == cx2)) ? 1 : -1;
+									direction = ((glyph_offset + adjust > 0) || (position == 0) || (cx1 == cx2)) ? 1 : -1;
 									
 									return true;
 								}

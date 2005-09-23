@@ -24,6 +24,18 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
+		public static bool						LoadTTC
+		{
+			get
+			{
+				return FontCollection.load_ttc;
+			}
+			set
+			{
+				FontCollection.load_ttc = value;
+			}
+		}
+		
 		
 		public void Initialize()
 		{
@@ -48,7 +60,8 @@ namespace Epsitec.Common.OpenType
 						//	de type TTC (TrueType Collection). On doit donc s'y prendre
 						//	autrement.
 						
-						if (record != null)
+						if ((record != null) &&
+							(FontCollection.LoadTTC))
 						{
 							FontIdentity fid  = new FontIdentity (record, 0);
 							Table_ttcf   ttcf = fid.FontData.TrueTypeCollection;
@@ -214,6 +227,8 @@ namespace Epsitec.Common.OpenType
 			return string.Join (" ", (string[]) list.ToArray (typeof (string)));
 		}
 		
+		
+		private static bool						load_ttc;
 		
 		private System.Collections.Hashtable	full_hash;
 		private System.Collections.ArrayList	full_list;

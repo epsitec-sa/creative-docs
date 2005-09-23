@@ -794,8 +794,11 @@ namespace Epsitec.Common.Text
 			{
 				if (this.fitter.HitTestTextFrame (frame, cx, cy, skip_invisible, ref position, ref direction))
 				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("HitTest OK. cx={0} cy={1}, position={2}, direction={3}", cx.ToString ("####"), cy.ToString ("####"), position, direction));
 					return true;
 				}
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("HitTest KO. cx={0} cy={1}, position={2}, direction={3}", cx.ToString ("####"), cy.ToString ("####"), position, direction));
 				
 				if (direction != 0)
 				{
