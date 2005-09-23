@@ -593,6 +593,8 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
+				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
+				
 				int pos = this.story.GetCursorPosition (this.cursor);
 				
 				this.SetParagraphStyles (pos, paragraph_styles);
@@ -641,6 +643,8 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
+				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
+				
 				System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
 				
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
@@ -685,6 +689,8 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
+				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
+				
 				System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
 				
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
@@ -731,6 +737,8 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
+				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
+				
 				Internal.Navigator.SetParagraphProperties (this.story, this.cursor, mode, paragraph_properties);
 				
 				System.Collections.ArrayList new_properties = new System.Collections.ArrayList ();
@@ -773,6 +781,8 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
+				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
+				
 				System.Collections.ArrayList new_properties = new System.Collections.ArrayList ();
 				
 				new_properties.AddRange (Property.FilterUniformParagraphProperties (this.current_properties));
@@ -794,11 +804,8 @@ namespace Epsitec.Common.Text
 			{
 				if (this.fitter.HitTestTextFrame (frame, cx, cy, skip_invisible, ref position, ref direction))
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("HitTest OK. cx={0} cy={1}, position={2}, direction={3}", cx.ToString ("####"), cy.ToString ("####"), position, direction));
 					return true;
 				}
-				
-				System.Diagnostics.Debug.WriteLine (string.Format ("HitTest KO. cx={0} cy={1}, position={2}, direction={3}", cx.ToString ("####"), cy.ToString ("####"), position, direction));
 				
 				if (direction != 0)
 				{
@@ -972,6 +979,12 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		public void ClearCurrentStylesAndProperties()
+		{
+			this.current_styles     = null;
+			this.current_properties = null;
+		}
 		
 		public void UpdateCurrentStylesAndPropertiesIfNeeded()
 		{
@@ -1703,7 +1716,9 @@ namespace Epsitec.Common.Text
 				//	juste avant le caractère marqueur de la fin du texte :
 				
 				new_pos -= 1;
-				new_dir  = -1;
+				new_dir  = Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, -1) ? -1 : 1;
+				
+				System.Diagnostics.Debug.WriteLine ("Après EndOfText; correction avec dir=" + new_dir.ToString ());
 			}
 			
 			//	Déplace le curseur "officiel" une seule fois. Ceci permet d'éviter
@@ -1944,8 +1959,18 @@ namespace Epsitec.Common.Text
 		}
 
 		
-		protected void OnCursorMoved()
+		protected virtual void OnCursorMoved()
 		{
+		}
+		
+		protected virtual void OnOpletExecuted(Common.Support.OpletEventArgs e)
+		{
+			this.ClearCurrentStylesAndProperties ();
+			
+			if (this.OpletExecuted != null)
+			{
+				this.OpletExecuted (this, e);
+			}
 		}
 		
 		
@@ -1953,13 +1978,18 @@ namespace Epsitec.Common.Text
 		{
 			System.Diagnostics.Debug.Assert (this.story == sender);
 			
-			TextStory.ICursorOplet cursor_oplet = e.Oplet as TextStory.ICursorOplet;
-			
-			if ((cursor_oplet != null) &&
-				(cursor_oplet.Cursor == this.cursor))
-			{
-				this.UpdateCurrentStylesAndProperties ();
-			}
+			this.OnOpletExecuted (e);
+		}
+		
+		
+		private void NotifyUndoExecuted(Common.Support.AbstractOplet oplet)
+		{
+			this.OnOpletExecuted (new OpletEventArgs (oplet, Common.Support.OpletEvent.UndoExecuted));
+		}
+		
+		private void NotifyRedoExecuted(Common.Support.AbstractOplet oplet)
+		{
+			this.OnOpletExecuted (new OpletEventArgs (oplet, Common.Support.OpletEvent.RedoExecuted));
 		}
 		
 		
@@ -1985,6 +2015,8 @@ namespace Epsitec.Common.Text
 				this.navigator.InternalDefineSelection (this.positions);
 				this.navigator.UpdateSelectionMarkers ();
 				
+				this.navigator.NotifyUndoExecuted (this);
+				
 				return this;
 			}
 			
@@ -1994,6 +2026,8 @@ namespace Epsitec.Common.Text
 				
 				this.navigator.InternalClearSelection ();
 				this.navigator.UpdateSelectionMarkers ();
+				
+				this.navigator.NotifyRedoExecuted (this);
 				
 				return this;
 			}
@@ -2029,6 +2063,8 @@ namespace Epsitec.Common.Text
 				this.navigator.InternalClearSelection ();
 				this.navigator.UpdateSelectionMarkers ();
 				
+				this.navigator.NotifyUndoExecuted (this);
+				
 				return this;
 			}
 			
@@ -2036,6 +2072,8 @@ namespace Epsitec.Common.Text
 			{
 				this.navigator.InternalDefineSelection (this.positions);
 				this.navigator.UpdateSelectionMarkers ();
+				
+				this.navigator.NotifyRedoExecuted (this);
 				
 				return this;
 			}
@@ -2075,6 +2113,7 @@ namespace Epsitec.Common.Text
 		
 		protected delegate bool MoveCallback(int offset, int direction);
 		
+		public event OpletEventHandler			OpletExecuted;
 		
 		private TextStory						story;
 		private TextFitter						fitter;
