@@ -685,32 +685,35 @@ restart:
 					case Layout.Status.OkFitEnded:
 					case Layout.Status.OkTabReached:
 						
-						if ((continuation) &&
-							(this.frame != null) &&
-							(this.line_height > def_line_height))
+						if (this.auto_leading)
 						{
-							//	Si on est en train de traiter une ligne avec des TABs et
-							//	que la hauteur de la ligne a changé, il faut demander à
-							//	l'appellant de refaire une seconde passe complète de la
-							//	ligne :
+							if ((continuation) &&
+								(this.frame != null) &&
+								(this.line_height > def_line_height))
+							{
+								//	Si on est en train de traiter une ligne avec des TABs et
+								//	que la hauteur de la ligne a changé, il faut demander à
+								//	l'appellant de refaire une seconde passe complète de la
+								//	ligne :
+								
+								return Layout.Status.RestartLineLayout;
+							}
 							
-							return Layout.Status.RestartLineLayout;
-						}
-						
-						if ((this.frame_list != null) &&
-							(this.line_height > def_line_height))
-						{
-							//	Oups. On vient de réaliser un fit idéal, mais qui ne tient
-							//	pas dans l'espace alloué verticalement. Il faut forcer une
-							//	nouvelle passe :
-							
-							def_line_height = this.line_height;
-							result.Clear ();
-							this.break_anywhere = false;
-							pass = 0;
-							
-							snapshot.Restore (this);
-							continue;
+							if ((this.frame_list != null) &&
+								(this.line_height > def_line_height))
+							{
+								//	Oups. On vient de réaliser un fit idéal, mais qui ne tient
+								//	pas dans l'espace alloué verticalement. Il faut forcer une
+								//	nouvelle passe :
+								
+								def_line_height = this.line_height;
+								result.Clear ();
+								this.break_anywhere = false;
+								pass = 0;
+								
+								snapshot.Restore (this);
+								continue;
+							}
 						}
 						
 						if ((status == Layout.Status.OkFitEnded) &&
