@@ -134,11 +134,13 @@ namespace Epsitec.Common.Text.Properties
 				(b.StyleName != null) &&
 				(b.StyleName.Length > 0))
 			{
-				if (b.StyleName.IndexOf ("(") != -1)
+				if (b.StyleName.IndexOfAny (new char[] { '+', '-', '!' }) != -1)
 				{
 					style_name = FontProperty.CombineStyles (a.StyleName, b.StyleName);
 				}
 			}
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Combined '{0}' with '{1}' --> '{2}'", a.StyleName, b.StyleName, style_name));
 			
 			System.Collections.ArrayList features = new System.Collections.ArrayList ();
 			
@@ -245,7 +247,6 @@ namespace Epsitec.Common.Text.Properties
 			
 			return string.Join (" ", (string[]) result.ToArray (typeof (string)));
 		}
-		
 		
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
