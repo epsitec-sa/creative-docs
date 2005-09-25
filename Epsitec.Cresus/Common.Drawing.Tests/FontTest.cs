@@ -564,6 +564,10 @@ namespace Epsitec.Common.Drawing
 			double   size = 10.6;
 			string   text = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
 			
+			AntiGrain.Interface.NoOp ();
+			AntiGrain.Interface.NoOp ();
+			AntiGrain.Interface.NoOp ();
+			
 			long c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			long c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			long c0 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
@@ -602,7 +606,9 @@ namespace Epsitec.Common.Drawing
 				tot += c2;
 			}
 			
-			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " -> " + (tot / 100 / cpu_speed / text.Length) + "us / char in AGG");
+			long mean = tot / 100;
+			
+			System.Console.Out.WriteLine ("Mean Rendering : " + mean.ToString () + " -> " + (mean / cpu_speed / text.Length) + "us / char in AGG <=> " + (mean / text.Length) + " cycles / char.");
 		}
 		
 		[Test] public void CheckRenderingSpeedGDIPlus()
