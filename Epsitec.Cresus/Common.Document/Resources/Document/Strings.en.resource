@@ -524,7 +524,7 @@
 	<data name="Property.Dimension.CenterOrRight">Center text (or right)</data>
 	<data name="Property.Dimension.Left">Text on the left</data>
 	<data name="Property.Dimension.Right">Text on the right</data>
-	<data name="Property.Dimension.Text"> # mm </data>
+	<data name="Property.Dimension.Text"> # in </data>
 
 	<data name="Property.Gradient.None">Uniform</data>
 	<data name="Property.Gradient.Linear">Linear gradient</data>

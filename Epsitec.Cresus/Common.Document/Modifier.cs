@@ -63,9 +63,18 @@ namespace Epsitec.Common.Document
 			this.FlushMoveAfterDuplicate();
 
 			this.toLinePrecision = 0.25;
-			this.dimensionScale = 1.0;
-			this.dimensionDecimal = 1.0;
 			this.aggregateUsed = -1;
+
+			if ( System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+			{
+				this.dimensionScale = 1.0;
+				this.dimensionDecimal = 1.0;
+			}
+			else
+			{
+				this.dimensionScale = 1.0;
+				this.dimensionDecimal = 2.0;
+			}
 		}
 
 		// Outil sélectionné dans la palette.

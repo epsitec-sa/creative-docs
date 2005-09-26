@@ -446,6 +446,10 @@ namespace Epsitec.Common.Document.Objects
 			{
 				Properties.Dimension dimension = this.PropertyDimension;
 				double length = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
+				if ( !System.Globalization.RegionInfo.CurrentRegion.IsMetric )
+				{
+					length /= 25.4;  // en pouces
+				}
 				string num = this.ToString(length);
 
 				string text = dimension.DimensionText;
