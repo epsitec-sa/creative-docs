@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -15,12 +15,28 @@ namespace Epsitec.Common.Widgets
 		public AbstractGroup()
 		{
 			this.InternalState |= InternalState.PossibleContainer;
-			this.TabNavigation  = Widget.TabNavigationMode.ForwardTabPassive;
+			base.TabNavigation  = Widget.TabNavigationMode.ForwardTabPassive;
 		}
 		
 		public AbstractGroup(Widget embedder) : this ()
 		{
 			this.SetEmbedder(embedder);
 		}
+		
+		public override TabNavigationMode		TabNavigation
+		{
+			get
+			{
+				return base.TabNavigation;
+			}
+			set
+			{
+				value &= ~ (TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly);
+				value |= TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+				
+				base.TabNavigation = value;
+			}
+		}
+
 	}
 }

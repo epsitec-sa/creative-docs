@@ -46,6 +46,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.radio1.DockMargins = new Margins(10, 10, 0, 0);
 				this.radio1.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);
 				this.radio1.TabIndex = this.tabIndex++;
+				this.radio1.Index = 1;
 				this.radio1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.radio2 = new RadioButton(this.window.Root);
@@ -56,6 +57,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.radio2.DockMargins = new Margins(10, 10, 0, 0);
 				this.radio2.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);
 				this.radio2.TabIndex = this.tabIndex++;
+				this.radio2.Index = 2;
 				this.radio2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 				this.keyLabel = new StaticText(this.window.Root);

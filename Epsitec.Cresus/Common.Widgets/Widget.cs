@@ -2145,10 +2145,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public TabNavigationMode					TabNavigation
+		public virtual TabNavigationMode			TabNavigation
 		{
-			get { return this.tab_navigation_mode; }
-			set { this.tab_navigation_mode = value; }
+			get
+			{
+				return this.tab_navigation_mode;
+			}
+			set
+			{
+				this.tab_navigation_mode = value;
+			}
 		}
 		
 		public Shortcut								Shortcut

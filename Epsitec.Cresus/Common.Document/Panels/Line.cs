@@ -68,6 +68,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				this.radioDashRank[i] = new RadioButton(this);
 				this.radioDashRank[i].ActiveStateChanged += new EventHandler(this.HandleDashRankChanged);
+				this.radioDashRank[i].Index = i;
 				this.radioDashRank[i].TabIndex = 20+i;
 				this.radioDashRank[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}

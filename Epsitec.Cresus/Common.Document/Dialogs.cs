@@ -1111,6 +1111,7 @@ namespace Epsitec.Common.Document
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Left;
 			radio.DockMargins = new Margins(0, 0, 0, 0);
+			radio.Index = 1;
 			this.WidgetsTableAdd(radio, "");
 			
 			radio = new RadioButton(container);
@@ -1121,6 +1122,7 @@ namespace Epsitec.Common.Document
 			radio.TabIndex = this.tabIndex++;
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Left;
+			radio.Index = 2;
 			this.WidgetsTableAdd(radio, "");
 
 			container = new Panel(parent);
@@ -1431,7 +1433,8 @@ namespace Epsitec.Common.Document
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Top;
 			radio.DockMargins = new Margins(10, 10, 0, 0);
-			radio.Clicked += new MessageEventHandler(this.HandleRangeRadioClicked);
+			radio.ActiveStateChanged += new EventHandler(this.HandleRangeRadioActiveStateChanged);
+			radio.Index = 1;
 			this.WidgetsTableAdd(radio, ".All");
 			
 			// début from-to
@@ -1451,7 +1454,8 @@ namespace Epsitec.Common.Document
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Left;
 			radio.DockMargins = new Margins(0, 0, 0, 0);
-			radio.Clicked += new MessageEventHandler(this.HandleRangeRadioClicked);
+			radio.ActiveStateChanged += new EventHandler(this.HandleRangeRadioActiveStateChanged);
+			radio.Index = 2;
 			this.WidgetsTableAdd(radio, ".FromTo");
 			
 			field = new TextFieldReal(container);
@@ -1505,16 +1509,18 @@ namespace Epsitec.Common.Document
 			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			radio.Dock = DockStyle.Top;
 			radio.DockMargins = new Margins(10, 10, 0, 5);
-			radio.Clicked += new MessageEventHandler(this.HandleRangeRadioClicked);
+			radio.ActiveStateChanged += new EventHandler(this.HandleRangeRadioActiveStateChanged);
+			radio.Index = 3;
 			this.WidgetsTableAdd(radio, ".Current");
 
 			this.UpdateRangeRadio(name);
 		}
 
-		private void HandleRangeRadioClicked(object sender, MessageEventArgs e)
+		private void HandleRangeRadioActiveStateChanged(object sender)
 		{
 			RadioButton radio = sender as RadioButton;
 			if ( radio == null )  return;
+			if ( radio.ActiveState != WidgetState.ActiveYes )  return;
 
 			Settings.Abstract settings = this.document.Settings.Get(radio.Name);
 			if ( settings == null )  return;

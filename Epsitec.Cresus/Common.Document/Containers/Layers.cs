@@ -138,19 +138,22 @@ namespace Epsitec.Common.Document.Containers
 			this.radioShowPrint.Dock = DockStyle.Top;
 			this.radioShowPrint.DockMargins = new Margins(10, 10, 0, 0);
 			this.radioShowPrint.Text = Res.Strings.Container.Layers.Button.PrintShow;
-			this.radioShowPrint.Clicked += new MessageEventHandler(this.HandleRadioPrintClicked);
+			this.radioShowPrint.Clicked += new MessageEventHandler(this.HandleRadioPrintClicked);	//@@
+			this.radioShowPrint.Index = 1;
 
 			this.radioDimmedPrint = new RadioButton(this.radioGroupPrint);
 			this.radioDimmedPrint.Dock = DockStyle.Top;
 			this.radioDimmedPrint.DockMargins = new Margins(10, 10, 0, 0);
 			this.radioDimmedPrint.Text = Res.Strings.Container.Layers.Button.PrintDimmed;
-			this.radioDimmedPrint.Clicked += new MessageEventHandler(this.HandleRadioPrintClicked);
+			this.radioDimmedPrint.Clicked += new MessageEventHandler(this.HandleRadioPrintClicked);	//@@
+			this.radioDimmedPrint.Index = 2;
 
 			this.radioHidePrint = new RadioButton(this.radioGroupPrint);
 			this.radioHidePrint.Dock = DockStyle.Top;
 			this.radioHidePrint.DockMargins = new Margins(10, 10, 0, 0);
 			this.radioHidePrint.Text = Res.Strings.Container.Layers.Button.PrintHide;
-			this.radioHidePrint.Clicked += new MessageEventHandler(this.HandleRadioPrintClicked);
+			this.radioHidePrint.Clicked += new MessageEventHandler(this.HandleRadioPrintClicked);	//@@
+			this.radioHidePrint.Index = 3;
 			// --- Fin panelMisc
 			
 			this.extendedButton = new GlyphButton(this);

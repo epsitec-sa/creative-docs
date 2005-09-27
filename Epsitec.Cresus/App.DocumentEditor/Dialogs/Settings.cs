@@ -43,7 +43,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				radio1.Text = Res.Strings.Dialog.Settings.RadioGlobal;
 				radio1.Width = 80;
 				radio1.Dock = DockStyle.Left;
-				radio1.Clicked += new MessageEventHandler(this.HandleRadioSettingsChanged);
+				radio1.ActiveStateChanged += new EventHandler(this.HandleRadioSettingsChanged);
+				radio1.Index = 1;
 
 				RadioButton radio2 = new RadioButton(topPart);
 				radio2.Name = "RadioDocument";
@@ -51,7 +52,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				radio2.Width = 80;
 				radio2.Dock = DockStyle.Left;
 				radio2.ActiveState = WidgetState.ActiveYes;
-				radio2.Clicked += new MessageEventHandler(this.HandleRadioSettingsChanged);
+				radio2.ActiveStateChanged += new EventHandler(this.HandleRadioSettingsChanged);
+				radio2.Index = 2;
 
 				// Crée le panneau "global".
 				Panel global = new Panel(this.window.Root);
@@ -267,9 +269,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return check;
 		}
 
-		private void HandleRadioSettingsChanged(object sender, MessageEventArgs e)
+		private void HandleRadioSettingsChanged(object sender)
 		{
 			RadioButton radio = sender as RadioButton;
+			
+			if ( radio == null )  return;
+			if ( radio.ActiveState != WidgetState.ActiveYes )  return;
+			
 			if ( radio.Name == "RadioGlobal" )
 			{
 				this.window.Root.FindChild("BookGlobal").SetVisible(true);

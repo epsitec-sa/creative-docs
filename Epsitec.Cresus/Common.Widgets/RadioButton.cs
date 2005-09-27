@@ -350,6 +350,8 @@ namespace Epsitec.Common.Widgets
 					return false;
 			}
 			
+			System.Diagnostics.Debug.WriteLine ("RadioButton KeyDown, dir=" + dir);
+			
 			System.Collections.ArrayList list = RadioButton.FindRadioChildren (this.Parent, this.Group);
 			list.Sort (new RadioButtonComparer (dir));
 			

@@ -82,25 +82,29 @@ namespace Epsitec.Common.Document.Containers
 			this.radioAll.Dock = DockStyle.Top;
 			this.radioAll.DockMargins = new Margins(10, 10, 5, 0);
 			this.radioAll.Text = Res.Strings.Container.Pages.Button.MasterAll;
-			this.radioAll.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			this.radioAll.Clicked += new MessageEventHandler(this.HandleRadioClicked);	//@@
+			this.radioAll.Index = 1;
 
 			this.radioOdd = new RadioButton(this.radioMasterGroup);
 			this.radioOdd.Dock = DockStyle.Top;
 			this.radioOdd.DockMargins = new Margins(10, 10, 0, 0);
 			this.radioOdd.Text = Res.Strings.Container.Pages.Button.MasterOdd;
-			this.radioOdd.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			this.radioOdd.Clicked += new MessageEventHandler(this.HandleRadioClicked);	//@@
+			this.radioOdd.Index = 2;
 
 			this.radioEven = new RadioButton(this.radioMasterGroup);
 			this.radioEven.Dock = DockStyle.Top;
 			this.radioEven.DockMargins = new Margins(10, 10, 0, 0);
 			this.radioEven.Text = Res.Strings.Container.Pages.Button.MasterEven;
-			this.radioEven.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			this.radioEven.Clicked += new MessageEventHandler(this.HandleRadioClicked);	//@@
+			this.radioEven.Index = 3;
 
 			this.radioNone = new RadioButton(this.radioMasterGroup);
 			this.radioNone.Dock = DockStyle.Top;
 			this.radioNone.DockMargins = new Margins(10, 10, 0, 0);
 			this.radioNone.Text = Res.Strings.Container.Pages.Button.MasterNone;
-			this.radioNone.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			this.radioNone.Clicked += new MessageEventHandler(this.HandleRadioClicked);	//@@
+			this.radioNone.Index = 4;
 
 			this.checkAutoStop = new CheckButton(this.radioMasterGroup);
 			this.checkAutoStop.Dock = DockStyle.Top;
@@ -144,19 +148,22 @@ namespace Epsitec.Common.Document.Containers
 			this.radioNever.Dock = DockStyle.Top;
 			this.radioNever.DockMargins = new Margins(10, 0, 0, 0);
 			this.radioNever.Text = Res.Strings.Container.Pages.Button.SlaveNever;
-			this.radioNever.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			this.radioNever.Clicked += new MessageEventHandler(this.HandleRadioClicked);	//@@
+			this.radioNever.Index = 1;
 
 			this.radioDefault = new RadioButton(this.radioGroupLeft);
 			this.radioDefault.Dock = DockStyle.Top;
 			this.radioDefault.DockMargins = new Margins(10, 0, 0, 0);
 			this.radioDefault.Text = Res.Strings.Container.Pages.Button.SlaveDefault;
-			this.radioDefault.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			this.radioDefault.Clicked += new MessageEventHandler(this.HandleRadioClicked);	//@@
+			this.radioDefault.Index = 2;
 
 			this.radioSpecific = new RadioButton(this.radioGroupLeft);
 			this.radioSpecific.Dock = DockStyle.Top;
 			this.radioSpecific.DockMargins = new Margins(10, 0, 0, 0);
 			this.radioSpecific.Text = Res.Strings.Container.Pages.Button.SlaveSpecific;
-			this.radioSpecific.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			this.radioSpecific.Clicked += new MessageEventHandler(this.HandleRadioClicked);	//@@
+			this.radioSpecific.Index = 3;
 
 			this.checkGuides = new CheckButton(this.radioGroupLeft);
 			this.checkGuides.Dock = DockStyle.Top;
@@ -187,14 +194,16 @@ namespace Epsitec.Common.Document.Containers
 			this.radioSlave.Dock = DockStyle.Left;
 			this.radioSlave.DockMargins = new Margins(10, 10, 0, 0);
 			this.radioSlave.Text = Res.Strings.Container.Pages.Button.Slave;
-			this.radioSlave.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			this.radioSlave.Clicked += new MessageEventHandler(this.HandleRadioClicked);	//@@
+			this.radioSlave.Index = 1;
 
 			this.radioMaster = new RadioButton(this.radioGroup);
 			this.radioMaster.Width = 100;
 			this.radioMaster.Dock = DockStyle.Left;
 			this.radioMaster.DockMargins = new Margins(10, 10, 0, 0);
 			this.radioMaster.Text = Res.Strings.Container.Pages.Button.Master;
-			this.radioMaster.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			this.radioMaster.Clicked += new MessageEventHandler(this.HandleRadioClicked);	//@@
+			this.radioMaster.Index = 2;
 			// --- Fin panelMisc
 			
 			this.extendedButton = new GlyphButton(this);

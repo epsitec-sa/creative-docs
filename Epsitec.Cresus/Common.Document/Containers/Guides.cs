@@ -22,14 +22,16 @@ namespace Epsitec.Common.Document.Containers
 			this.radioGlobal.Text = Res.Strings.Container.Guides.RadioGlobal;
 			this.radioGlobal.Dock = DockStyle.Left;
 			this.radioGlobal.DockMargins = new Margins(0, 10, 0, 0);
-			this.radioGlobal.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			this.radioGlobal.Clicked += new MessageEventHandler(this.HandleRadioClicked);	//@@
+			this.radioGlobal.Index = 1;
 
 			this.radioPage = new RadioButton(this.radioGroup);
 			this.radioPage.Width = 100;
 			this.radioPage.Text = Res.Strings.Container.Guides.RadioPage;
 			this.radioPage.Dock = DockStyle.Left;
 			this.radioPage.DockMargins = new Margins(0, 0, 0, 0);
-			this.radioPage.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			this.radioPage.Clicked += new MessageEventHandler(this.HandleRadioClicked);		//@@
+			this.radioPage.Index = 2;
 
 			this.toolBar = new HToolBar(this);
 			this.toolBar.Dock = DockStyle.Top;
