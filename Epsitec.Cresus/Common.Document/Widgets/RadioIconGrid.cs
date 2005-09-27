@@ -67,6 +67,24 @@ namespace Epsitec.Common.Document.Widgets
 			this.list.Add(icon);
 		}
 
+		public RadioIcon SelectedRadioIcon
+		{
+			get
+			{
+				foreach ( RadioIcon icon in this.list )
+				{
+					if ( icon == null )  continue;
+
+					if ( icon.EnumValue == this.selectedValue )
+					{
+						return icon;
+					}
+				}
+				
+				return null;
+			}
+		}
+
 		public int SelectedValue
 		{
 			get
