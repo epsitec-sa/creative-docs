@@ -139,6 +139,8 @@ namespace Epsitec.Common.Text
 			Layout.Context                 layout   = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
 			Cursors.FitterCursor.Element[] elements = cursor.Elements;
 			
+			layout.DefineShowControlCharacters ();
+			
 			renderer.RenderStartParagraph (layout);
 			
 			for (int i = 0; i < elements.Length; i++)
@@ -978,6 +980,7 @@ restart_paragraph_layout:
 				Layout.Context            layout   = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
 				Internal.GeometryRenderer renderer = new Internal.GeometryRenderer ();
 				
+//				layout.DefineShowControlCharacters ();
 				layout.DisableFontBaselineOffset ();
 				layout.DisableSimpleRendering ();
 				

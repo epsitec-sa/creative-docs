@@ -111,7 +111,7 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public static ushort[] GenerateGlyphs (Text.Context context, OpenType.Font font, ulong[] text, int offset, int length)
+		public static ushort[] GenerateGlyphs (Layout.Context context, OpenType.Font font, ulong[] text, int offset, int length)
 		{
 			ushort[] glyphs;
 			byte[]   attributes = null;
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public static void GenerateGlyphs(Text.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, ref byte[] attributes)
+		public static void GenerateGlyphs(Layout.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, ref byte[] attributes)
 		{
 			ulong[] temp = new ulong[length];
 			
@@ -137,11 +137,23 @@ namespace Epsitec.Common.Text.Layout
 				
 				if (Unicode.Bits.GetSpecialCodeFlag (bits))
 				{
-					temp[i] = (ulong) (context.GetGlyphForSpecialCode (bits) | (int) Unicode.Bits.SpecialCodeFlag);
+					temp[i] = (ulong) (context.TextContext.GetGlyphForSpecialCode (bits) | (int) Unicode.Bits.SpecialCodeFlag);
 				}
-				else if (analyzer.IsControl (code) || analyzer.IsZeroWidth (code))
+				else if (analyzer.IsZeroWidth (code))
 				{
 					temp[i] &= ~ Unicode.Bits.FullCodeMask;
+				}
+				else if (analyzer.IsControl (code))
+				{
+					if (context.ShowControlCharacters)
+					{
+						temp[i] &= ~ Unicode.Bits.CodeMask;
+						temp[i] |= BaseEngine.MapToVisibleControlCharacter (code) & Unicode.Bits.CodeMask;
+					}
+					else
+					{
+						temp[i] &= ~ Unicode.Bits.FullCodeMask;
+					}
 				}
 				else if ((code == (int) Unicode.Code.SoftHyphen) &&
 					/**/ (i+1 < length))
@@ -158,7 +170,7 @@ namespace Epsitec.Common.Text.Layout
 			font.GenerateGlyphs (temp, 0, length, out glyphs, ref attributes);
 		}
 		
-		public static void GenerateGlyphs(Text.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, ref short[] attributes)
+		public static void GenerateGlyphs(Layout.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, ref short[] attributes)
 		{
 			ulong[] temp = new ulong[length];
 			
@@ -173,11 +185,23 @@ namespace Epsitec.Common.Text.Layout
 				
 				if (Unicode.Bits.GetSpecialCodeFlag (bits))
 				{
-					temp[i] = (ulong) (context.GetGlyphForSpecialCode (bits) | (int) Unicode.Bits.SpecialCodeFlag);
+					temp[i] = (ulong) (context.TextContext.GetGlyphForSpecialCode (bits) | (int) Unicode.Bits.SpecialCodeFlag);
 				}
-				else if (analyzer.IsControl (code) || analyzer.IsZeroWidth (code))
+				else if (analyzer.IsZeroWidth (code))
 				{
 					temp[i] &= ~ Unicode.Bits.FullCodeMask;
+				}
+				else if (analyzer.IsControl (code))
+				{
+					if (context.ShowControlCharacters)
+					{
+						temp[i] &= ~ Unicode.Bits.CodeMask;
+						temp[i] |= BaseEngine.MapToVisibleControlCharacter (code) & Unicode.Bits.CodeMask;
+					}
+					else
+					{
+						temp[i] &= ~ Unicode.Bits.FullCodeMask;
+					}
 				}
 				else if ((code == (int) Unicode.Code.SoftHyphen) &&
 					/**/ (i+1 < length))
@@ -194,6 +218,29 @@ namespace Epsitec.Common.Text.Layout
 			font.GenerateGlyphs (temp, 0, length, out glyphs, ref attributes);
 		}
 		
+		public static ulong MapToVisibleControlCharacter(int code)
+		{
+			switch ((Unicode.Code)code)
+			{
+				case Unicode.Code.ParagraphSeparator:
+					code = 0x00B6;
+					break;
+				
+				case Unicode.Code.LineSeparator:
+					code = 0x000A;
+					break;
+				
+				case Unicode.Code.EndOfText:
+					code = 0x00A4;
+					break;
+				
+				default:
+					code = 0;
+					break;
+			}
+			
+			return (ulong) code;
+		}
 		
 		public static void GenerateGlyphsAndStretchClassAttributes(Text.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, out byte[] attributes)
 		{

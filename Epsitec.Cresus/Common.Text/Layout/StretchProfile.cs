@@ -225,7 +225,7 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		public void Add(Text.Context context, OpenType.Font font, double size, ulong[] text, int offset, int length)
+		public void Add(Layout.Context context, OpenType.Font font, double size, ulong[] text, int offset, int length)
 		{
 			ushort[] glyphs;
 			byte[]   attributes = new byte[length];

@@ -558,7 +558,7 @@ advance_next:
 				
 				attributes[end] = Unicode.BreakAnalyzer.GetStretchClass (temp[end]);
 				
-				BaseEngine.GenerateGlyphs (context.TextContext, font, temp, 0, length+1, out glyphs, ref attributes);
+				BaseEngine.GenerateGlyphs (context, font, temp, 0, length+1, out glyphs, ref attributes);
 				
 				if (context.IsSimpleRenderingDisabled)
 				{
@@ -573,14 +573,14 @@ advance_next:
 					map[num-1] = map[num-2];				//	considère que le tiret ne compte pas
 					map[num-0] = (short) (map[num-2] + 1);
 					
-					BaseEngine.GenerateGlyphs (context.TextContext, font, temp, 0, length+1, out glyphs, ref map);
+					BaseEngine.GenerateGlyphs (context, font, temp, 0, length+1, out glyphs, ref map);
 					
 					mapping = new TextToGlyphMapping (text, offset, length, glyphs, map);
 				}
 			}
 			else
 			{
-				BaseEngine.GenerateGlyphs (context.TextContext, font, text, offset, length, out glyphs, ref attributes);
+				BaseEngine.GenerateGlyphs (context, font, text, offset, length, out glyphs, ref attributes);
 				
 				if (context.IsSimpleRenderingDisabled)
 				{
@@ -592,7 +592,7 @@ advance_next:
 						map[i] = (short) i;
 					}
 					
-					BaseEngine.GenerateGlyphs (context.TextContext, font, text, offset, length, out glyphs, ref map);
+					BaseEngine.GenerateGlyphs (context, font, text, offset, length, out glyphs, ref map);
 					
 					mapping = new TextToGlyphMapping (text, offset, length, glyphs, map);
 				}
@@ -694,11 +694,11 @@ advance_next:
 				
 				ulong[] temp = this.GetHyphenatedText (text, offset, length, font.GetHyphen ());
 				
-				profile.Add (context.TextContext, font, font_size, temp, 0, length + 1);
+				profile.Add (context, font, font_size, temp, 0, length + 1);
 			}
 			else
 			{
-				profile.Add (context.TextContext, font, font_size, text, offset, length);
+				profile.Add (context, font, font_size, text, offset, length);
 			}
 			
 			if (glue > 0)

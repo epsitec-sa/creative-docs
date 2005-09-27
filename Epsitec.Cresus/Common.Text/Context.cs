@@ -85,6 +85,18 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public bool								ShowControlCharacters
+		{
+			get
+			{
+				return this.show_control_characters;
+			}
+			set
+			{
+				this.show_control_characters = value;
+			}
+		}
+		
 		
 		public Context.DefaultMarkers			Markers
 		{
@@ -987,6 +999,8 @@ namespace Epsitec.Common.Text
 		private DefaultMarkers					markers;
 		private System.Collections.Hashtable	conditions;
 		private TextStyle						default_style;
+		
+		private bool							show_control_characters;
 		
 		private OpenType.FontCollection			font_collection;
 		private System.Collections.Hashtable	font_cache;

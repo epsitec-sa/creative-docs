@@ -326,6 +326,14 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public bool								ShowControlCharacters
+		{
+			get
+			{
+				return this.show_control_characters;
+			}
+		}
+		
 		public bool								IsSimpleRenderingDisabled
 		{
 			get
@@ -350,7 +358,6 @@ namespace Epsitec.Common.Text.Layout
 				return this.line_width - this.mx_left - this.mx_right;
 			}
 		}
-		
 		
 		public bool								IsLeftToRight
 		{
@@ -840,6 +847,11 @@ restart:
 		public void DefineTextOffset(int value)
 		{
 			this.text_offset = value;
+		}
+		
+		public void DefineShowControlCharacters()
+		{
+			this.show_control_characters = this.text_context.ShowControlCharacters;
 		}
 		
 		
@@ -1600,6 +1612,8 @@ restart:
 		
 		private bool							enable_hyphenation;
 		private bool							break_anywhere;
+		
+		private bool							show_control_characters;
 		
 		private bool							disable_simple_rendering;
 		private bool							disable_font_baseline_offset;
