@@ -859,6 +859,28 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		// Début du déplacement global de la propriété.
+		public override void MoveGlobalStarting()
+		{
+			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
+
+			this.InsertOpletProperty();
+
+			this.initialSmooth = this.smooth;
+		}
+		
+		// Effectue le déplacement global de la propriété.
+		public override void MoveGlobalProcess(Selector selector)
+		{
+			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
+
+			double zoom = selector.GetTransformZoom;
+			this.smooth = this.initialSmooth*zoom;
+
+			this.document.Notifier.NotifyPropertyChanged(this);
+		}
+
+		
 		// Calcule l'extrémité gauche ou droite de la flèche.
 		protected Point ComputeExtremity(Point p1, Point p2, double para, double perp, int rank)
 		{
