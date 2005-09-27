@@ -7,7 +7,7 @@ namespace Epsitec.Common.Document.Widgets
 	/// La classe RadioIconGrid est un widget affichant une tableau de IconButton,
 	/// dont un seul à la fois est sélectionné.
 	/// </summary>
-	public class RadioIconGrid : Widget
+	public class RadioIconGrid : AbstractGroup
 	{
 		public RadioIconGrid()
 		{
@@ -27,6 +27,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.SetEmbedder(embedder);
 		}
 
+		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
@@ -52,6 +53,7 @@ namespace Epsitec.Common.Document.Widgets
 			base.Dispose(disposing);
 		}
 
+		
 		public void AddRadioIcon(string iconText, string tooltip, int enumValue, bool endOfLine)
 		{
 			Widgets.RadioIcon icon = new Widgets.RadioIcon();
@@ -109,6 +111,30 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		public bool Navigate(RadioIcon icon, KeyCode key)
+		{
+			switch( key )
+			{
+				case KeyCode.ArrowUp:
+				case KeyCode.ArrowDown:
+				case KeyCode.ArrowLeft:
+				case KeyCode.ArrowRight:
+					
+					//	Détermine quel widget il faut activer, en fonction de la
+					//	ligne et de la colonne où l'on se trouve.
+					
+					//	TODO: ...trouver le bon 'icon'...
+					
+					this.SelectedValue = icon.EnumValue;
+					icon.Focus ();
+					
+					return true;
+				
+				default:
+					return false;
+			}
+		}
+		
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
@@ -153,6 +179,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		
 		public event Support.EventHandler SelectionChanged;
 
 		protected System.Collections.ArrayList	list;

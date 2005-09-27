@@ -18,6 +18,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.SetEmbedder(embedder);
 		}
 
+		
 		public int EnumValue
 		{
 			get
@@ -45,6 +46,42 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		{
+			switch ( message.Type )
+			{
+				case MessageType.KeyDown:
+					if (this.ProcessKeyDown(message.KeyCode))
+					{
+						message.Consumer = this;
+						return;
+					}
+					break;
+			}
+			
+			base.ProcessMessage(message, pos);
+		}
+
+		protected virtual bool ProcessKeyDown(KeyCode key)
+		{
+			RadioIconGrid grid = this.Parent as RadioIconGrid;
+			
+			if ( grid == null )  return false;
+			
+			switch( key )
+			{
+				case KeyCode.ArrowUp:
+				case KeyCode.ArrowDown:
+				case KeyCode.ArrowLeft:
+				case KeyCode.ArrowRight:
+					return grid.Navigate(this, key);
+				
+				default:
+					return false;
+			}
+		}
+
+		
 		protected int				enumValue;
 		protected bool				endOfLine;
 	}

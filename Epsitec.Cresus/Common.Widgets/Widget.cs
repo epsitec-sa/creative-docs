@@ -2507,6 +2507,9 @@ namespace Epsitec.Common.Widgets
 		
 		internal void SetFocused(bool focused)
 		{
+			//	Utiliser Focus() en lieu et place de SetFocused(true), pour
+			//	avoir une gestion complète des conditions de focus.
+			
 			Window window = this.Window;
 			
 			if (! this.IsFocusedFlagSet)

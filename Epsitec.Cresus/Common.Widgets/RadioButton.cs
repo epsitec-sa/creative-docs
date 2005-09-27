@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -350,8 +350,6 @@ namespace Epsitec.Common.Widgets
 					return false;
 			}
 			
-			System.Diagnostics.Debug.WriteLine ("RadioButton KeyDown, dir=" + dir);
-			
 			System.Collections.ArrayList list = RadioButton.FindRadioChildren (this.Parent, this.Group);
 			list.Sort (new RadioButtonComparer (dir));
 			
@@ -370,7 +368,7 @@ namespace Epsitec.Common.Widgets
 			if (turn_on != null)
 			{
 				turn_on.ActiveState = WidgetState.ActiveYes;
-				turn_on.SetFocused (true);
+				turn_on.Focus ();
 				
 				return true;
 			}
