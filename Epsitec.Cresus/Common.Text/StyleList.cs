@@ -91,6 +91,39 @@ namespace Epsitec.Common.Text
 			return style;
 		}
 		
+		public TextStyle NewTextStyle(string name, TextStyleClass text_style_class, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		{
+			TextStyle style = new TextStyle (name, text_style_class, properties, parent_styles);
+			
+			this.Attach (style);
+			
+			return style;
+		}
+		
+		
+		public void RedefineTextStyle(TextStyle style, System.Collections.ICollection properties)
+		{
+			//	Change les propriétés d'un style. Le style devient un style "plat"
+			//	indépendant d'autres styles.
+			
+			System.Diagnostics.Debug.Assert (this.text_style_list.Contains (style));
+			
+			style.Clear ();
+			style.Initialise (properties);
+		}
+		
+		public void RedefineTextStyle(TextStyle style, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		{
+			//	Change les propriétés et les parents d'un style. Le style devient
+			//	un style dérivé.
+			
+			System.Diagnostics.Debug.Assert (this.text_style_list.Contains (style));
+			System.Diagnostics.Debug.Assert (parent_styles != null);
+			System.Diagnostics.Debug.Assert (parent_styles.Count > 0);
+			
+			style.Clear ();
+			style.Initialise (properties, parent_styles);
+		}
 		
 		public void RecycleTextStyle(TextStyle style)
 		{

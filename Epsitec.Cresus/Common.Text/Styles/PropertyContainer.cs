@@ -139,7 +139,7 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		public virtual void Initialise(System.Collections.ICollection properties)
+		internal void Initialise(System.Collections.ICollection properties)
 		{
 			//	Insère les propriétés dans notre table interne. Les propriétés
 			//	sont toujours triées en s'appuyant sur leur WellKnownType, ce
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Text.Styles
 			this.ClearContentsSignature ();
 		}
 		
-		public bool Update()
+		public virtual bool Update()
 		{
 			//	Recalcule le numéro de version correspondant à ce style
 			//	en se basant sur les versions des propriétés.
@@ -360,6 +360,7 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
+		#region Accumulator Class
 		public class Accumulator
 		{
 			public Accumulator() : this (null)
@@ -484,7 +485,7 @@ namespace Epsitec.Common.Text.Styles
 			System.Collections.ArrayList		list;
 			bool								special;
 		}
-		
+		#endregion
 		
 		#region IContentsSignatureUpdater Members
 		public virtual void UpdateContentsSignature(IO.IChecksum checksum)
@@ -542,6 +543,16 @@ namespace Epsitec.Common.Text.Styles
 		protected void ClearContentsSignature()
 		{
 			this.contents_signature = 0;
+		}
+		
+		protected long GetInternalVersion()
+		{
+			return this.version;
+		}
+		
+		protected void SetInternalVersion(long value)
+		{
+			this.version = value;
 		}
 		
 		

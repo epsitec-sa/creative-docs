@@ -21,6 +21,22 @@ namespace Epsitec.Common.Text
 			this.text_style_class = text_style_class;
 		}
 		
+		internal TextStyle(string name, TextStyleClass text_style_class, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		{
+			this.name             = name;
+			this.text_style_class = text_style_class;
+			
+			if ((parent_styles == null) ||
+				(parent_styles.Count == 0))
+			{
+				base.Initialise (properties);
+			}
+			else
+			{
+				this.Initialise (properties, parent_styles);
+			}
+		}
+		
 		
 		public string							Name
 		{
@@ -48,15 +64,77 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		internal void Clear()
+		{
+			//	Oublie les dépendances d'un style avec d'éventuels styles parents
+			//	pour redevenir un style "plat".
+			
+			this.parent_styles = null;
+			this.style_properties = null;
+			this.Invalidate ();
+		}
+		
+		internal void Initialise(System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		{
+			//	Initialise un style dérivé d'autres styles. Il faut d'une part
+			//	prendre note des styles parents et d'autre part se souvenir des
+			//	propriétés additionnelles. En effet, PropertyContainer stockant
+			//	toutes les propriétés au même niveau, il ne serait pas possible
+			//	d'en regénérer la liste si ces infos n'étaient pas conservées.
+			
+			this.parent_styles    = new TextStyle[parent_styles.Count];
+			this.style_properties = new Property[properties.Count];
+				
+			parent_styles.CopyTo (this.parent_styles, 0);
+			properties.CopyTo (this.style_properties, 0);
+				
+			this.GenerateStyleProperties ();
+		}
+		
+		
 		public override void UpdateContentsSignature(Epsitec.Common.IO.IChecksum checksum)
 		{
 			//	Ignore le nom dans le calcul de la signature. C'est voulu !
 			
 			checksum.Update ((int) this.text_style_class);
 			
+			if ((this.parent_styles != null) &&
+				(this.parent_styles.Length > 0))
+			{
+				foreach (TextStyle style in this.parent_styles)
+				{
+					checksum.Update (style.GetContentsSignature ());
+				}
+			}
+			
 			base.UpdateContentsSignature (checksum);
 		}
 		
+		public override bool Update()
+		{
+			if ((this.parent_styles != null) &&
+				(this.parent_styles.Length > 0))
+			{
+				long version = 0;
+				
+				foreach (TextStyle style in this.parent_styles)
+				{
+					version = System.Math.Max (version, style.Version);
+				}
+				
+				if (this.GetInternalVersion () != version)
+				{
+					this.SetInternalVersion (version);
+					this.ClearContentsSignature ();
+					this.GenerateStyleProperties ();
+					
+					return true;
+				}
+			}
+			
+			return base.Update ();
+		}
+
 		public override string ToString()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -158,7 +236,27 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		private void GenerateStyleProperties()
+		{
+			System.Diagnostics.Debug.Assert (this.style_properties != null);
+			System.Diagnostics.Debug.Assert (this.parent_styles != null);
+			
+			Styles.PropertyContainer.Accumulator accumulator = new Accumulator ();
+			
+			foreach (TextStyle style in this.parent_styles)
+			{
+				accumulator.Accumulate (style);
+			}
+			
+			accumulator.Accumulate (this.style_properties);
+			
+			base.Initialise (accumulator.AccumulatedProperties);
+		}
+		
+		
 		private string							name;
 		private TextStyleClass					text_style_class;
+		private TextStyle[]						parent_styles;
+		private Property[]						style_properties;
 	}
 }
