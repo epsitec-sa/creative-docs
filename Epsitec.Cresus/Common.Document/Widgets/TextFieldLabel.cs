@@ -7,7 +7,7 @@ namespace Epsitec.Common.Document.Widgets
 	/// La classe TextFieldLabel est un label StaticText suivi d'un TextFieldReal
 	/// ou d'un TextField.
 	/// </summary>
-	public class TextFieldLabel : Widget
+	public class TextFieldLabel : AbstractGroup
 	{
 		public TextFieldLabel()
 		{
@@ -29,12 +29,16 @@ namespace Epsitec.Common.Document.Widgets
 				this.textFieldSimple = new TextField(this);
 				this.textFieldSimple.Width = TextFieldLabel.DefaultTextWidth;
 				this.textFieldSimple.Dock = DockStyle.Right;
+				this.textFieldSimple.TabIndex = 0;
+				this.textFieldSimple.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 			else
 			{
 				this.textFieldReal = new TextFieldReal(this);
 				this.textFieldReal.Width = TextFieldLabel.DefaultTextWidth;
 				this.textFieldReal.Dock = DockStyle.Right;
+				this.textFieldReal.TabIndex = 0;
+				this.textFieldReal.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 		}
 

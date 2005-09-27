@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioGlobal.Text = Res.Strings.Container.Guides.RadioGlobal;
 			this.radioGlobal.Dock = DockStyle.Left;
 			this.radioGlobal.DockMargins = new Margins(0, 10, 0, 0);
-			this.radioGlobal.Clicked += new MessageEventHandler(this.HandleRadioClicked);	//@@
+			this.radioGlobal.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioGlobal.Index = 1;
 
 			this.radioPage = new RadioButton(this.radioGroup);
@@ -30,7 +30,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioPage.Text = Res.Strings.Container.Guides.RadioPage;
 			this.radioPage.Dock = DockStyle.Left;
 			this.radioPage.DockMargins = new Margins(0, 0, 0, 0);
-			this.radioPage.Clicked += new MessageEventHandler(this.HandleRadioClicked);		//@@
+			this.radioPage.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
 			this.radioPage.Index = 2;
 
 			this.toolBar = new HToolBar(this);
@@ -266,13 +266,14 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Un bouton radio a été cliqué.
-		private void HandleRadioClicked(object sender, MessageEventArgs e)
+		// Un bouton radio a changé.
+		private void HandleRadioChanged(object sender)
 		{
-			this.document.Settings.GlobalGuides = (sender == this.radioGlobal);
+			RadioButton radio = sender as RadioButton;
+			if ( radio == null )  return;
+			if ( radio.ActiveState != WidgetState.ActiveYes )  return;
 
-			this.radioGlobal.ActiveState =  this.document.Settings.GlobalGuides ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radioPage.ActiveState   = !this.document.Settings.GlobalGuides ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.document.Settings.GlobalGuides = (this.radioGlobal.ActiveState == WidgetState.ActiveYes);
 		}
 
 

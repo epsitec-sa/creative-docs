@@ -143,6 +143,8 @@ namespace Epsitec.Common.Widgets
 
 			this.fieldHexa = new TextField(this);
 			this.fieldHexa.TextChanged += new Support.EventHandler(this.HandleTextHexaChanged);
+			this.fieldHexa.TabIndex = 200;
+			this.fieldHexa.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHexa, Res.Strings.ColorSelector.LongHexa);
 
 			this.circle = new ColorWheel(this);

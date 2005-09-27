@@ -45,6 +45,32 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		public int Column
+		{
+			get
+			{
+				return this.column;
+			}
+
+			set
+			{
+				this.column = value;
+			}
+		}
+
+		public int Row
+		{
+			get
+			{
+				return this.row;
+			}
+
+			set
+			{
+				this.row = value;
+			}
+		}
+
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
@@ -84,5 +110,7 @@ namespace Epsitec.Common.Document.Widgets
 		
 		protected int				enumValue;
 		protected bool				endOfLine;
+		protected int				column;
+		protected int				row;
 	}
 }

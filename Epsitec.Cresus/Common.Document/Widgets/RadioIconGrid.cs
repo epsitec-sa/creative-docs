@@ -53,7 +53,6 @@ namespace Epsitec.Common.Document.Widgets
 			base.Dispose(disposing);
 		}
 
-		
 		public void AddRadioIcon(string iconText, string tooltip, int enumValue, bool endOfLine)
 		{
 			Widgets.RadioIcon icon = new Widgets.RadioIcon();
@@ -62,6 +61,8 @@ namespace Epsitec.Common.Document.Widgets
 			icon.EndOfLine = endOfLine;
 			icon.Parent = this;
 			icon.Clicked += new MessageEventHandler(this.HandleIconClicked);
+			icon.TabIndex = this.list.Count;
+			icon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(icon, tooltip);
 			this.list.Add(icon);
 		}
@@ -111,28 +112,56 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Détermine quel widget il faut activer, en fonction de la
+		// ligne et de la colonne où l'on se trouve.
 		public bool Navigate(RadioIcon icon, KeyCode key)
 		{
-			switch( key )
+			Widgets.RadioIcon dest;
+
+			switch ( key )
 			{
 				case KeyCode.ArrowUp:
+					dest = this.Search(icon.Column, icon.Row-1);
+					if ( dest == null )  return false;
+					this.SelectedValue = dest.EnumValue;
+					dest.Focus();
+					return true;
+
 				case KeyCode.ArrowDown:
+					dest = this.Search(icon.Column, icon.Row+1);
+					if ( dest == null )  return false;
+					this.SelectedValue = dest.EnumValue;
+					dest.Focus();
+					return true;
+
 				case KeyCode.ArrowLeft:
+					dest = this.Search(icon.Column-1, icon.Row);
+					if ( dest == null )  return false;
+					this.SelectedValue = dest.EnumValue;
+					dest.Focus();
+					return true;
+
 				case KeyCode.ArrowRight:
-					
-					//	Détermine quel widget il faut activer, en fonction de la
-					//	ligne et de la colonne où l'on se trouve.
-					
-					//	TODO: ...trouver le bon 'icon'...
-					
-					this.SelectedValue = icon.EnumValue;
-					icon.Focus ();
-					
+					dest = this.Search(icon.Column+1, icon.Row);
+					if ( dest == null )  return false;
+					this.SelectedValue = dest.EnumValue;
+					dest.Focus();
 					return true;
 				
 				default:
 					return false;
 			}
+		}
+
+		protected Widgets.RadioIcon Search(int column, int row)
+		{
+			foreach ( Widgets.RadioIcon icon in this.list )
+			{
+				if ( !icon.IsVisible )  continue;
+				if ( icon.Column == column && icon.Row == row )  return icon;
+			}
+
+			return null;
 		}
 		
 		protected override void UpdateClientGeometry()
@@ -141,7 +170,10 @@ namespace Epsitec.Common.Document.Widgets
 			
 			if ( this.list == null )  return;
 
+			Rectangle box = this.Client.Bounds;
 			Point corner = this.Client.Bounds.TopLeft;
+			int column = 0;
+			int row = 0;
 
 			foreach ( Widgets.RadioIcon icon in this.list )
 			{
@@ -149,14 +181,20 @@ namespace Epsitec.Common.Document.Widgets
 
 				Rectangle rect = new Rectangle(corner.X, corner.Y-this.defaultButtonHeight, this.defaultButtonWidth, this.defaultButtonHeight);
 				icon.Bounds = rect;
+				icon.Column = column;
+				icon.Row = row;
+				icon.SetVisible(box.Contains(rect));
 
 				corner.X += this.defaultButtonWidth;
+				column ++;
 
 				if ( corner.X > this.Client.Bounds.Right-this.defaultButtonWidth ||
 					 (icon.EndOfLine && this.enableEndOfLine) )
 				{
 					corner.X = this.Client.Bounds.Left;
 					corner.Y -= this.defaultButtonHeight;
+					column = 0;
+					row ++;
 				}
 			}
 		}
