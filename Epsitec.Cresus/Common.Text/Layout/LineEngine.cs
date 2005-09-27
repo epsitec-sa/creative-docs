@@ -26,7 +26,7 @@ namespace Epsitec.Common.Text.Layout
 			FitScratch scratch = new FitScratch ();
 			
 			scratch.Offset    = context.TextOffset;
-			scratch.AddBreak  = context.BreakAnywhere;
+			scratch.BreakMode = context.BreakMode;
 			scratch.FenceMinX = context.LineWidth-context.RightMargin-context.BreakFenceBefore;
 			scratch.FenceMaxX = context.LineWidth-context.RightMargin+context.BreakFenceAfter;
 			
@@ -55,7 +55,10 @@ namespace Epsitec.Common.Text.Layout
 						{
 							//	Nous sommes dans la zone sensible nécessitant la césure :
 							
-							scratch.AddBreak = true;
+							if (scratch.BreakMode == BreakMode.Default)
+							{
+								scratch.BreakMode = BreakMode.Hyphenate;
+							}
 						}
 						
 						//	Détermine la prochaine tranche de caractères contigus utilisant
@@ -368,9 +371,20 @@ advance_next:
 			{
 				double break_penalty;
 				
-				if (scratch.AddBreak && context.EnableHyphenation)
+				bool can_break = false;
+				bool add_break = false;
+				
+				if ((scratch.BreakMode == BreakMode.Hyphenate) &&
+					(context.EnableHyphenation))
 				{
 					frag_length = this.GetNextFragmentLength (text, offset, run_length, frag_length, out break_penalty);
+				}
+				else if (scratch.BreakMode == BreakMode.Break)
+				{
+					//	TODO: break catastrophique
+					
+					frag_length++;
+					break_penalty = 100.0;
 				}
 				else
 				{
@@ -381,10 +395,9 @@ advance_next:
 				ulong    hyphen = scratch.Font.GetHyphen ();
 				ushort[] glyphs;
 				byte[]   attr;
-				bool     can_break;
-				bool     add_break;
 				
-				if (frag_length < run_length)
+				if ((frag_length < run_length) &&
+					(scratch.BreakMode == BreakMode.Hyphenate))
 				{
 					//	Produit la césure manuellement (il faudrait faire mieux pour gérer
 					//	correctement des langues comme le suédois ou l'ancien allemand
@@ -411,12 +424,12 @@ advance_next:
 					scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize) + glyphs.Length * scratch.FontAdvance;
 					
 					if ((scratch.Advance+scratch.TextWidth > scratch.FenceMinX) &&
-						(scratch.AddBreak == false))
+						(scratch.BreakMode == BreakMode.Default))
 					{
 						//	Le fragment de mot déborde dans la zone nécessitant une
 						//	découpe :
 						
-						scratch.AddBreak = true;
+						scratch.BreakMode = BreakMode.Hyphenate;
 						
 						if (context.EnableHyphenation)
 						{
@@ -431,8 +444,8 @@ advance_next:
 					//	Détermine si une coupure de ligne est possible (comme c'est
 					//	le cas à la frontière de mots) :
 					
-					can_break = (run_length == text_length);
-					add_break = scratch.AddBreak && (scratch.WordBreakInfo == Unicode.BreakInfo.Optional);
+					can_break = (run_length == text_length) || (scratch.BreakMode == BreakMode.Break);
+					add_break = (scratch.BreakMode != BreakMode.Default) && (scratch.WordBreakInfo == Unicode.BreakInfo.Optional);
 					
 					profile.Add (scratch.Font, scratch.FontSize, glyphs, attr, scratch.FontAdvance);
 				}
@@ -771,7 +784,7 @@ advance_next:
 			public double						LastBreakPenalty;
 			public StretchProfile				LastStretchProfile;
 			
-			public bool							AddBreak;
+			public BreakMode					BreakMode;
 			
 			public ulong[]						Text;
 			public int							TextStart;

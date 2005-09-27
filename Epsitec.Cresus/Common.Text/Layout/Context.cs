@@ -215,11 +215,11 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		public bool								BreakAnywhere
+		public BreakMode						BreakMode
 		{
 			get
 			{
-				return this.break_anywhere;
+				return this.break_mode;
 			}
 		}
 		
@@ -488,8 +488,8 @@ namespace Epsitec.Common.Text.Layout
 				this.ox = this.mx_left;
 			}
 			
-			this.ox_line_start  = this.ox;
-			this.break_anywhere = false;
+			this.ox_line_start = this.ox;
+			this.break_mode    = BreakMode.Default;
 			
 			Debug.Assert.IsNotNull (this.layout_engine);
 			Debug.Assert.IsNotNull (this.text);
@@ -715,7 +715,7 @@ restart:
 								
 								def_line_height = this.line_height;
 								result.Clear ();
-								this.break_anywhere = false;
+								this.break_mode = BreakMode.Default;
 								pass = 0;
 								
 								snapshot.Restore (this);
@@ -765,8 +765,18 @@ restart:
 						continue;
 					
 					case Layout.Status.ErrorCannotFit:
-						this.break_anywhere = true;
-						pass++;
+						if (this.break_mode == BreakMode.Hyphenate)
+						{
+							this.break_mode = BreakMode.Break;
+							pass++;
+						}
+						else
+						{
+							this.break_mode = BreakMode.Hyphenate;
+						}
+						
+						System.Diagnostics.Debug.WriteLine ("Cannot fit, break mode : " + this.break_mode);
+						
 						snapshot.Restore (this, false);
 						continue;
 					
@@ -902,8 +912,8 @@ restart:
 			Debug.Assert.IsNotNull (this.layout_engine);
 			Debug.Assert.IsNotNull (this.text_context);
 			
-			this.text_profile   = profile;
-			this.break_anywhere = false;
+			this.text_profile = profile;
+			this.break_mode   = BreakMode.Default;
 			
 			double space;
 			
@@ -1611,7 +1621,7 @@ restart:
 		private double							disposition;
 		
 		private bool							enable_hyphenation;
-		private bool							break_anywhere;
+		private BreakMode						break_mode;
 		
 		private bool							show_control_characters;
 		
