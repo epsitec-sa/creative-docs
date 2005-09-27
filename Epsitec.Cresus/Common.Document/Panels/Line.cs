@@ -69,8 +69,9 @@ namespace Epsitec.Common.Document.Panels
 				this.radioDashRank[i] = new RadioButton(this);
 				this.radioDashRank[i].ActiveStateChanged += new EventHandler(this.HandleDashRankChanged);
 				this.radioDashRank[i].Index = i;
-				this.radioDashRank[i].TabIndex = 20+i;
+				this.radioDashRank[i].TabIndex = 10+i;
 				this.radioDashRank[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.radioDashRank[i].Index = i;
 			}
 			ToolTip.Default.SetToolTip(this.radioDashRank[0], Res.Strings.Panel.Line.Tooltip.Dash1);
 			ToolTip.Default.SetToolTip(this.radioDashRank[1], Res.Strings.Panel.Line.Tooltip.Dash2);

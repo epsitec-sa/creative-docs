@@ -118,6 +118,8 @@ namespace Epsitec.Common.Document
 				this.containerGuides.Dock = DockStyle.Fill;
 				this.containerGuides.DockMargins = new Margins(10, 10, 4, 10);
 				this.containerGuides.Parent = container;
+				this.containerGuides.TabIndex = this.tabIndex++;
+				this.containerGuides.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 				// Onglet Move:
 				parent = book.FindChild("Move");

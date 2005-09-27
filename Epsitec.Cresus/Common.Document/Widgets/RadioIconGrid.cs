@@ -140,31 +140,57 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				case KeyCode.ArrowUp:
 					dest = this.Search(icon.Column, icon.Row-1);
-					if ( dest == null )  return false;
-					this.SelectedValue = dest.EnumValue;
-					dest.Focus();
-					return true;
+					if ( dest != null )
+					{
+						this.SelectedValue = dest.EnumValue;
+						dest.Focus();
+						return true;
+					}
+					return false;
 
 				case KeyCode.ArrowDown:
 					dest = this.Search(icon.Column, icon.Row+1);
-					if ( dest == null )  return false;
-					this.SelectedValue = dest.EnumValue;
-					dest.Focus();
-					return true;
+					if ( dest != null )
+					{
+						this.SelectedValue = dest.EnumValue;
+						dest.Focus();
+						return true;
+					}
+					return false;
 
 				case KeyCode.ArrowLeft:
 					dest = this.Search(icon.Column-1, icon.Row);
-					if ( dest == null )  return false;
-					this.SelectedValue = dest.EnumValue;
-					dest.Focus();
-					return true;
+					if ( dest != null )
+					{
+						this.SelectedValue = dest.EnumValue;
+						dest.Focus();
+						return true;
+					}
+					dest = this.Search(icon.Rank-1);
+					if ( dest != null )
+					{
+						this.SelectedValue = dest.EnumValue;
+						dest.Focus();
+						return true;
+					}
+					return false;
 
 				case KeyCode.ArrowRight:
 					dest = this.Search(icon.Column+1, icon.Row);
-					if ( dest == null )  return false;
-					this.SelectedValue = dest.EnumValue;
-					dest.Focus();
-					return true;
+					if ( dest != null )
+					{
+						this.SelectedValue = dest.EnumValue;
+						dest.Focus();
+						return true;
+					}
+					dest = this.Search(icon.Rank+1);
+					if ( dest != null )
+					{
+						this.SelectedValue = dest.EnumValue;
+						dest.Focus();
+						return true;
+					}
+					return false;
 				
 				default:
 					return false;
@@ -181,7 +207,18 @@ namespace Epsitec.Common.Document.Widgets
 
 			return null;
 		}
-		
+
+		protected Widgets.RadioIcon Search(int rank)
+		{
+			foreach ( Widgets.RadioIcon icon in this.list )
+			{
+				if ( !icon.IsVisible )  continue;
+				if ( icon.Rank == rank )  return icon;
+			}
+
+			return null;
+		}
+
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
@@ -192,6 +229,7 @@ namespace Epsitec.Common.Document.Widgets
 			Point corner = this.Client.Bounds.TopLeft;
 			int column = 0;
 			int row = 0;
+			int rank = 0;
 
 			foreach ( Widgets.RadioIcon icon in this.list )
 			{
@@ -201,10 +239,12 @@ namespace Epsitec.Common.Document.Widgets
 				icon.Bounds = rect;
 				icon.Column = column;
 				icon.Row = row;
+				icon.Rank = rank;
 				icon.SetVisible(box.Contains(rect));
 
 				corner.X += this.defaultButtonWidth;
 				column ++;
+				rank ++;
 
 				if ( corner.X > this.Client.Bounds.Right-this.defaultButtonWidth ||
 					 (icon.EndOfLine && this.enableEndOfLine) )

@@ -45,6 +45,19 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		public int Rank
+		{
+			get
+			{
+				return this.rank;
+			}
+
+			set
+			{
+				this.rank = value;
+			}
+		}
+
 		public int Column
 		{
 			get
@@ -170,6 +183,7 @@ namespace Epsitec.Common.Document.Widgets
 		
 		protected int				enumValue;
 		protected bool				endOfLine;
+		protected int				rank;
 		protected int				column;
 		protected int				row;
 	}

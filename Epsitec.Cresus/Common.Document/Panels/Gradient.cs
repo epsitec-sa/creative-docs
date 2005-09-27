@@ -75,6 +75,7 @@ namespace Epsitec.Common.Document.Panels
 				this.radioHatchRank[i].ActiveStateChanged += new EventHandler(this.HandleHatchRankChanged);
 				this.radioHatchRank[i].TabIndex = 10+i;
 				this.radioHatchRank[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.radioHatchRank[i].Index = i;
 			}
 			ToolTip.Default.SetToolTip(this.radioHatchRank[0], Res.Strings.Panel.Gradient.Tooltip.Hatch1);
 			ToolTip.Default.SetToolTip(this.radioHatchRank[1], Res.Strings.Panel.Gradient.Tooltip.Hatch2);
