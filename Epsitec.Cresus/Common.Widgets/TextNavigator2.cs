@@ -643,6 +643,57 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public void SetParagraphStyles(params Text.TextStyle[] styles)
+		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			
+			this.text_navigator.SetParagraphStyles (styles);
+		}
+		
+		public void SetTextStyles(params Text.TextStyle[] styles)
+		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			
+			this.text_navigator.SetTextStyles (styles);
+		}
+		
+		public void SetCharacterStyles(params Text.TextStyle[] styles)
+		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			
+			this.text_navigator.SetCharacterStyles (styles);
+		}
+		
+		public void SetParagraphProperties(Text.Properties.ApplyMode mode, params Text.Property[] properties)
+		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			
+			this.text_navigator.SetParagraphProperties (mode, properties);
+		}
+		
+		public void SetTextProperties(Text.Properties.ApplyMode mode, params Text.Property[] properties)
+		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			
+			this.text_navigator.SetTextProperties (mode, properties);
+		}
+		
+		
 		public void NotifyTextChanged()
 		{
 			this.ClearVerticalMoveCache ();

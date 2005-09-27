@@ -561,6 +561,7 @@ namespace Epsitec.Common.Text
 			//	Change les styles du paragraphe attachés à la position courante (ou
 			//	compris dans la sélection).
 			
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
 			System.Diagnostics.Debug.Assert (styles != null);
 			System.Diagnostics.Debug.Assert (styles.Length > 0);
 			
@@ -616,6 +617,7 @@ namespace Epsitec.Common.Text
 			//	Change les styles du texte attachés à la position courante (ou
 			//	compris dans la sélection).
 			
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
 			System.Diagnostics.Debug.Assert (styles != null);
 			System.Diagnostics.Debug.Assert (styles.Length > 0);
 			
@@ -662,6 +664,7 @@ namespace Epsitec.Common.Text
 			//	Change les styles des caractères attachés à la position courante (ou
 			//	compris dans la sélection).
 			
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
 			System.Diagnostics.Debug.Assert (styles != null);
 			System.Diagnostics.Debug.Assert (styles.Length > 0);
 			
@@ -705,6 +708,8 @@ namespace Epsitec.Common.Text
 		
 		public void SetParagraphProperties(Properties.ApplyMode mode, params Property[] properties)
 		{
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
+			
 			if (properties == null)
 			{
 				properties = new Property[0];
@@ -754,6 +759,8 @@ namespace Epsitec.Common.Text
 		
 		public void SetTextProperties(Properties.ApplyMode mode, params Property[] properties)
 		{
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
+			
 			if (properties == null)
 			{
 				properties = new Property[0];
@@ -1768,6 +1775,8 @@ namespace Epsitec.Common.Text
 				
 				this.active_selection_cursor = null;
 			}
+			
+			System.Diagnostics.Debug.Assert (this.HasSelection == false);
 		}
 		
 		private void InternalDefineSelection(int[] positions)
@@ -1787,6 +1796,8 @@ namespace Epsitec.Common.Text
 				this.story.SetCursorPosition (c1, positions[i+0]);
 				this.story.SetCursorPosition (c2, positions[i+1]);
 			}
+			
+			System.Diagnostics.Debug.Assert (this.HasSelection);
 		}
 		
 		
