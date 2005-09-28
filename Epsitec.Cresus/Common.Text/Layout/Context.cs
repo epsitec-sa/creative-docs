@@ -724,6 +724,15 @@ restart:
 						}
 						
 						if ((status == Layout.Status.OkFitEnded) &&
+							(this.text_offset > 0) &&
+							(Unicode.Bits.GetCode (this.text[this.text_offset-1]) == (int) Unicode.Code.LineSeparator))
+						{
+							//	C'est une fin de ligne forcée, pas une fin de paragraphe...
+							
+							status = Layout.Status.Ok;
+						}
+						
+						if ((status == Layout.Status.OkFitEnded) &&
 							(this.frame != null) &&
 							(this.frame_first_line > 0) &&
 							(paragraph_line_count - this.frame_first_line + 1 < this.keep_end_lines))

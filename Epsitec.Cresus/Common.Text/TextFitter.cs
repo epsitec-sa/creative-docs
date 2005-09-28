@@ -1281,7 +1281,7 @@ restart_paragraph_layout:
 					return i - offset;
 				}
 				
-				if (analyzer.IsBreak (code))
+				if (analyzer.IsParagraphBreak (code))
 				{
 					return i - offset + 1;
 				}

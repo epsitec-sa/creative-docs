@@ -596,7 +596,7 @@ namespace Epsitec.Common.Text
 				return true;
 			}
 			
-			public bool IsBreak(int code)
+			public bool IsParagraphBreak(int code)
 			{
 				switch ((Unicode.Code)code)
 				{
@@ -610,6 +610,8 @@ namespace Epsitec.Common.Text
 						throw new System.ArgumentException ("Deprecated Unicode code.");
 					
 					case Unicode.Code.LineSeparator:
+						return false;
+					
 					case Unicode.Code.PageSeparator:
 					case Unicode.Code.ParagraphSeparator:
 						break;

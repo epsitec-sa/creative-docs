@@ -145,22 +145,22 @@ namespace Epsitec.Common.Widgets
 					if ((message.IsCtrlPressed) &&
 						(this.allow_frames))
 					{
-						if (message.IsShiftPressed)
+						if (message.IsShiftPressed)										//	saut de colonne
 						{
 							//	TODO: insérer un saut de frame
 						}
 						else
 						{
-							return this.Insert (Text.Unicode.Code.PageSeparator);
+							return this.Insert (Text.Unicode.Code.PageSeparator);		//	saut de page
 						}
 					}
 					else
 					{
-						if (message.IsShiftPressed)
+						if (message.IsShiftPressed)										//	saut de ligne
 						{
 							return this.Insert (Text.Unicode.Code.LineSeparator);
 						}
-						else
+						else															//	saut de paragraphe
 						{
 							return this.Insert (Text.Unicode.Code.ParagraphSeparator);
 						}

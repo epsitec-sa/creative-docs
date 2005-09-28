@@ -26,9 +26,11 @@ namespace Epsitec.Common.Text.Internal
 		{
 			switch (code)
 			{
+				case Unicode.Code.LineSeparator:
+					return false;
+				
 				case Unicode.Code.PageSeparator:
 				case Unicode.Code.ParagraphSeparator:
-				case Unicode.Code.LineSeparator:
 					return true;
 				
 				case Unicode.Code.EndOfText:
