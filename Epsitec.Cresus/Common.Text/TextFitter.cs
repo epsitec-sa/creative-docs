@@ -886,6 +886,12 @@ restart_paragraph_layout:
 						paragraph_start_frame_index = layout.FrameIndex;
 						paragraph_start_frame_y     = layout.FrameY;
 						line_count                  = 0;
+						
+						if ((layout_status == Layout.Status.OkFitEnded) &&
+							(layout.LastProcessedCharacter == Unicode.Code.PageSeparator))
+						{
+							//	TODO: gérer le saut (de page, colonne, section, ...)
+						}
 					}
 					else
 					{

@@ -36,6 +36,14 @@ namespace Epsitec.Common.Text
 			get;
 		}
 		
+		public virtual Properties.PropertyAffinity	PropertyAffinity
+		{
+			get
+			{
+				return Properties.PropertyAffinity.Text;
+			}
+		}
+		
 		public virtual Properties.CombinationMode	CombinationMode
 		{
 			get

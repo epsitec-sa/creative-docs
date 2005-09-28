@@ -40,6 +40,14 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public override PropertyAffinity		PropertyAffinity
+		{
+			get
+			{
+				return PropertyAffinity.Symbol;
+			}
+		}
+
 		public override CombinationMode			CombinationMode
 		{
 			get

@@ -5,7 +5,10 @@ namespace Epsitec.Common.Text.Properties
 {
 	/// <summary>
 	/// L'énumération PropertyType définit les divers types de propriétés
-	/// supportées.
+	/// supportées. Ces types servent uniquement à classer en trois catégories
+	/// les propriétés; cela n'a aucun rapport avec leur "affinité".
+	/// 
+	/// Voir aussi Properties.PropertyAffinity.
 	/// </summary>
 	public enum PropertyType
 	{

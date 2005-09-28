@@ -118,6 +118,22 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public Unicode.Code						LastProcessedCharacter
+		{
+			get
+			{
+				if ((this.text_offset > 0) &&
+					(this.text != null) &&
+					(this.text.Length >= this.text_offset))
+				{
+					return (Unicode.Code) Unicode.Bits.GetCode (this.text[this.text_offset-1]);
+				}
+				
+				return Unicode.Code.Null;
+			}
+		}
+		
+		
 		public double							LineCurrentX
 		{
 			get
@@ -724,8 +740,7 @@ restart:
 						}
 						
 						if ((status == Layout.Status.OkFitEnded) &&
-							(this.text_offset > 0) &&
-							(Unicode.Bits.GetCode (this.text[this.text_offset-1]) == (int) Unicode.Code.LineSeparator))
+							(this.LastProcessedCharacter == Unicode.Code.LineSeparator))
 						{
 							//	C'est une fin de ligne forcée, pas une fin de paragraphe...
 							
