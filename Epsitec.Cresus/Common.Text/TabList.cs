@@ -67,7 +67,12 @@ namespace Epsitec.Common.Text
 				throw new System.ArgumentException (string.Format ("TabProperty named {0} does not exist", tab.TabTag), "tab");
 			}
 			
-			record.Initialise (position, units, disposition, docking_mark);
+			this.StyleVersion.Change ();
+			
+			lock (record)
+			{
+				record.Initialise (position, units, disposition, docking_mark);
+			}
 		}
 		
 		public void RecycleTab(Properties.TabProperty tab)
@@ -114,7 +119,23 @@ namespace Epsitec.Common.Text
 			return this.GetTabRecord (tab).DockingMark;
 		}
 		
+		public long GetTabVersion(Properties.TabProperty tab)
+		{
+			TabRecord record = this.GetTabRecord (tab);
+			
+			lock (record)
+			{
+				if (record.Version == 0)
+				{
+					record.Version = this.Version;
+				}
+				
+				return record.Version;
+			}
+		}
 		
+		
+		#region TabRecord Class
 		private class TabRecord
 		{
 			public TabRecord(double position, Properties.SizeUnits units, double disposition, string docking_mark)
@@ -163,6 +184,18 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			public long							Version
+			{
+				get
+				{
+					return this.version;
+				}
+				set
+				{
+					this.version = value;
+				}
+			}
+			
 			
 			public void Initialise(double position, Properties.SizeUnits units, double disposition, string docking_mark)
 			{
@@ -170,6 +203,8 @@ namespace Epsitec.Common.Text
 				this.units        = units;
 				this.disposition  = disposition;
 				this.docking_mark = docking_mark;
+				
+				this.version = 0;
 			}
 			
 			
@@ -177,7 +212,9 @@ namespace Epsitec.Common.Text
 			private Properties.SizeUnits		units;
 			private double						disposition;				//	0.0 = aligné à gauche, 0.5 = centré, 1.0 = aligné à droite
 			private string						docking_mark;				//	"." = aligne sur le point décimal
+			private long						version;
 		}
+		#endregion
 		
 		private TabRecord GetTabRecord(Properties.TabProperty tab)
 		{
