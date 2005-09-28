@@ -39,8 +39,8 @@ namespace Epsitec.Common.Text.Tests
 			ParagraphManagers.ItemListManager.Parameters items = new ParagraphManagers.ItemListManager.Parameters ();
 			
 			items.Generator = generator;
-			items.TabItem   = new Properties.TabProperty (10.0, 0.0, null);
-			items.TabBody   = new Properties.TabProperty (40.0, 0.0, null);
+			items.TabItem   = new Properties.TabProperty (null, 10.0, 0.0, null);
+			items.TabBody   = new Properties.TabProperty (null, 40.0, 0.0, null);
 			
 			properties.Clear ();
 			properties.Add (new Properties.FontProperty ("Verdana", "Regular"));

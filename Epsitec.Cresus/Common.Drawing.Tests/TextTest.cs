@@ -751,7 +751,7 @@ namespace Epsitec.Common.Drawing
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
 					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
-					properties_1.Add (new Text.Properties.TabProperty (tab, 0, null));
+					properties_1.Add (new Text.Properties.TabProperty (null, tab, 0, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties_1.Add (new Text.Properties.LeadingProperty (18.0, Text.Properties.SizeUnits.Points, 10.0, Text.Properties.SizeUnits.Points, 0.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 					
@@ -777,7 +777,7 @@ namespace Epsitec.Common.Drawing
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
 					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
-					properties_1.Add (new Text.Properties.TabProperty (tab, 0.5, null));
+					properties_1.Add (new Text.Properties.TabProperty (null, tab, 0.5, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
@@ -801,7 +801,7 @@ namespace Epsitec.Common.Drawing
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
 					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
-					properties_1.Add (new Text.Properties.TabProperty (tab, 0.0, null));
+					properties_1.Add (new Text.Properties.TabProperty (null, tab, 0.0, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					properties_1.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
 					
@@ -827,7 +827,7 @@ namespace Epsitec.Common.Drawing
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
 					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
-					properties_1.Add (new Text.Properties.TabProperty (tab, 0.0, null));
+					properties_1.Add (new Text.Properties.TabProperty (null, tab, 0.0, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
@@ -851,7 +851,7 @@ namespace Epsitec.Common.Drawing
 					properties_1.Add (new Text.Properties.FontProperty ("Arial", "Regular", this.features));
 					properties_1.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties_1.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
-					properties_1.Add (new Text.Properties.TabProperty (tab, 0.5, null));
+					properties_1.Add (new Text.Properties.TabProperty (null, tab, 0.5, null));
 					properties_1.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 					
 					properties_2.Add (new Text.Properties.FontProperty ("Arial", "Bold", this.features));
@@ -884,8 +884,8 @@ namespace Epsitec.Common.Drawing
 					Text.ParagraphManagers.ItemListManager.Parameters items = new Text.ParagraphManagers.ItemListManager.Parameters ();
 					
 					items.Generator = generator;
-					items.TabItem   = new Text.Properties.TabProperty (10.0, 0.0, null);
-					items.TabBody   = new Text.Properties.TabProperty (tab, 0.0, null);
+					items.TabItem   = new Text.Properties.TabProperty (null, 10.0, 0.0, null);
+					items.TabBody   = new Text.Properties.TabProperty (null, tab, 0.0, null);
 					
 					Text.Properties.ManagedParagraphProperty mp = new Text.Properties.ManagedParagraphProperty ("ItemList", items.Save ());
 					

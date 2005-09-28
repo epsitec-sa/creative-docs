@@ -13,12 +13,12 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public ImageProperty(string image_name)
+		public ImageProperty(string image_tag)
 		{
-			this.image_name = image_name;
+			this.image_tag = image_tag;
 		}
 		
-		public ImageProperty(string image_name, Context context) : this (image_name)
+		public ImageProperty(string image_tag, Context context) : this (image_tag)
 		{
 			this.SetupImageRenderer (context);
 		}
@@ -57,11 +57,11 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public string							ImageName
+		public string							ImageTag
 		{
 			get
 			{
-				return this.image_name;
+				return this.image_tag;
 			}
 		}
 		
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public void SetupImageRenderer(Context context)
 		{
-			this.image_renderer = context.FindResource (this.image_name);
+			this.image_renderer = context.FindResource (this.image_tag);
 		}
 
 		
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeString (this.image_name));
+				/**/				SerializerSupport.SerializeString (this.image_tag));
 		}
 
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
@@ -97,9 +97,9 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 1);
 			
-			string image_name = SerializerSupport.DeserializeString (args[0]);
+			string image_tag = SerializerSupport.DeserializeString (args[0]);
 			
-			this.image_name = image_name;
+			this.image_tag = image_tag;
 			
 			this.SetupImageRenderer (context);
 		}
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.image_name);
+			checksum.UpdateValue (this.image_tag);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -150,11 +150,11 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(ImageProperty a, ImageProperty b)
 		{
-			return a.image_name == b.image_name;
+			return a.image_tag == b.image_tag;
 		}
 		
 		
-		private string							image_name;
+		private string							image_tag;
 		private IGlyphRenderer					image_renderer;
 	}
 }

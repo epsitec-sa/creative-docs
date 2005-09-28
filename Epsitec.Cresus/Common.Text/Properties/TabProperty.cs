@@ -8,19 +8,20 @@ namespace Epsitec.Common.Text.Properties
 	/// </summary>
 	public class TabProperty : Property
 	{
-		public TabProperty() : this (0, SizeUnits.Points, 0, null)
+		public TabProperty() : this (null, 0, SizeUnits.Points, 0, null)
 		{
 		}
 		
-		public TabProperty(double position, double disposition, string docking_mark) : this (position, SizeUnits.Points, disposition, docking_mark)
+		public TabProperty(string tag, double position, double disposition, string docking_mark) : this (tag, position, SizeUnits.Points, disposition, docking_mark)
 		{
 		}
 		
-		public TabProperty(double position, SizeUnits units, double disposition, string docking_mark)
+		public TabProperty(string tag, double position, SizeUnits units, double disposition, string docking_mark)
 		{
 			System.Diagnostics.Debug.Assert (double.IsNaN (position) == false);
 			System.Diagnostics.Debug.Assert (UnitsTools.IsAbsoluteSize (units));
 			
+			this.tab_tag      = tag;
 			this.position     = position;
 			this.units        = units;
 			this.disposition  = disposition;
@@ -125,6 +126,14 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public string							TabTag
+		{
+			get
+			{
+				return this.tab_tag;
+			}
+		}
+		
 		
 		public override Property EmptyClone()
 		{
@@ -134,6 +143,7 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
+				/**/				SerializerSupport.SerializeString (this.tab_tag),
 				/**/				SerializerSupport.SerializeDouble (this.position),
 				/**/				SerializerSupport.SerializeSizeUnits (this.units),
 				/**/				SerializerSupport.SerializeDouble (this.disposition),
@@ -144,13 +154,15 @@ namespace Epsitec.Common.Text.Properties
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 4);
+			Debug.Assert.IsTrue (args.Length == 5);
 			
-			double    position     = SerializerSupport.DeserializeDouble (args[0]);
-			SizeUnits units        = SerializerSupport.DeserializeSizeUnits (args[1]);
-			double    disposition  = SerializerSupport.DeserializeDouble (args[2]);
-			string    docking_mark = SerializerSupport.DeserializeString (args[3]);
+			string    tab_tag      = SerializerSupport.DeserializeString (args[0]);
+			double    position     = SerializerSupport.DeserializeDouble (args[1]);
+			SizeUnits units        = SerializerSupport.DeserializeSizeUnits (args[2]);
+			double    disposition  = SerializerSupport.DeserializeDouble (args[3]);
+			string    docking_mark = SerializerSupport.DeserializeString (args[4]);
 			
+			this.tab_tag      = tab_tag;
 			this.position     = position;
 			this.units        = units;
 			this.disposition  = disposition;
@@ -166,6 +178,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
+			checksum.UpdateValue (this.tab_tag);
 			checksum.UpdateValue (this.position);
 			checksum.UpdateValue ((int) this.units);
 			checksum.UpdateValue (this.disposition);
@@ -180,13 +193,15 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(TabProperty a, TabProperty b)
 		{
-			return NumberSupport.Equal (a.position, b.position)
+			return a.tab_tag == b.tab_tag
+				&& NumberSupport.Equal (a.position, b.position)
 				&& a.units == b.units
 				&& NumberSupport.Equal (a.disposition, b.disposition)
 				&& a.docking_mark == b.docking_mark;
 		}
 		
 		
+		private string							tab_tag;
 		private double							position;
 		private SizeUnits						units;
 		private double							disposition;				//	0.0 = aligné à gauche, 0.5 = centré, 1.0 = aligné à droite
