@@ -40,7 +40,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return PropertyType.ExtraSetting;
+				return PropertyType.LocalSetting;
 			}
 		}
 		
