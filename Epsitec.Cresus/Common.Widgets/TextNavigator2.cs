@@ -248,6 +248,7 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessHomeKey(Message message)
 		{
+			this.PreProcessCursorMove (message.IsShiftPressed);
 			this.ClearVerticalMoveCache ();
 			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, -1);
 			
@@ -265,6 +266,7 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessEndKey(Message message)
 		{
+			this.PreProcessCursorMove (message.IsShiftPressed);
 			this.ClearVerticalMoveCache ();
 			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, 1);
 			
@@ -282,6 +284,7 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessLeftArrowKey(Message message)
 		{
+			this.PreProcessCursorMove (message.IsShiftPressed);
 			this.ClearVerticalMoveCache ();
 			
 			if (this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, -1))
@@ -306,6 +309,7 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessRightArrowKey(Message message)
 		{
+			this.PreProcessCursorMove (message.IsShiftPressed);
 			this.ClearVerticalMoveCache ();
 			
 			if (this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, 1))
@@ -330,6 +334,7 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessUpArrowKey(Message message)
 		{
+			this.PreProcessCursorMove (message.IsShiftPressed);
 			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, -1);
 			
 			if (message.IsCtrlPressed)
@@ -347,6 +352,7 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessDownArrowKey(Message message)
 		{
+			this.PreProcessCursorMove (message.IsShiftPressed);
 			this.ChangeSelectionModeBeforeMove (message.IsShiftPressed, 1);
 			
 			if (message.IsCtrlPressed)
@@ -362,6 +368,14 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 		
+		
+		private void PreProcessCursorMove (bool is_shift_pressed)
+		{
+			if (! is_shift_pressed)
+			{
+				this.text_navigator.ClearCurrentStylesAndProperties ();
+			}
+		}
 		
 		private void ClearVerticalMoveCache()
 		{
@@ -551,26 +565,41 @@ namespace Epsitec.Common.Widgets
 		
 		public void SelectWord()
 		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.WordStart, 0);
 			this.text_navigator.StartSelection ();
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
-			this.text_navigator.EndSelection ();
+//			this.text_navigator.EndSelection ();
 		}
 		
 		public void SelectLine()
 		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.LineStart, 0);
 			this.text_navigator.StartSelection ();
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.LineEnd, 1);
-			this.text_navigator.EndSelection ();
+//			this.text_navigator.EndSelection ();
 		}
 		
 		public void SelectAll()
 		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
 			this.text_navigator.StartSelection ();
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 0);
-			this.text_navigator.EndSelection ();
+//			this.text_navigator.EndSelection ();
 		}
 		
 		
