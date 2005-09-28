@@ -383,6 +383,18 @@ namespace Epsitec.Common.Text.Styles
 				}
 			}
 			
+			public bool							SkipSymbolProperties
+			{
+				get
+				{
+					return this.skip_symbol_properties;
+				}
+				set
+				{
+					this.skip_symbol_properties = value;
+				}
+			}
+			
 			public Property[]					AccumulatedProperties
 			{
 				get
@@ -424,6 +436,12 @@ namespace Epsitec.Common.Text.Styles
 			
 			public Accumulator Accumulate(Property property)
 			{
+				if ((this.skip_symbol_properties) &&
+					(property.PropertyAffinity == Properties.PropertyAffinity.Symbol))
+				{
+					return this;
+				}
+				
 				System.Type type = property.GetType ();
 				
 				if (property.CombinationMode == Properties.CombinationMode.Accumulate)
@@ -484,6 +502,7 @@ namespace Epsitec.Common.Text.Styles
 			System.Collections.Hashtable		hash;
 			System.Collections.ArrayList		list;
 			bool								special;
+			bool								skip_symbol_properties;
 		}
 		#endregion
 		

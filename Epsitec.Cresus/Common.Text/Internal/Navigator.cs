@@ -1160,7 +1160,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			switch (mode)
 			{
-				case Properties.ApplyMode.Overwrite:	return b;
+				case Properties.ApplyMode.Overwrite:	return Navigator.CombineOverwrite (a, b);
 				case Properties.ApplyMode.Clear:		return Navigator.CombineClear (a, b);
 				case Properties.ApplyMode.Set:			return Navigator.CombineSet (a, b);
 				case Properties.ApplyMode.Combine:		return Navigator.CombineAccumulate (a, b);
@@ -1170,6 +1170,48 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
+		
+		private static System.Collections.ICollection CombineOverwrite(Property[] a, Property[] b)
+		{
+			//	Un overwrite écrase toutes les propriétés source, sauf si la source
+			//	contient des propriétés avec affinité PropertyAffinity.Symbol; dans
+			//	ce cas, la propriété survit à l'overwrite...
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (Property p in a)
+			{
+				if (p.PropertyAffinity == Properties.PropertyAffinity.Symbol)
+				{
+					list.Add (p);
+				}
+			}
+			
+			foreach (Property p in b)
+			{
+				//	Si des propriétés ont survécu au filtrage ci-dessus, elles sont
+				//	tout de même des candidates au remplacement si des propriétés
+				//	de la même classe sont insérées.
+				
+				for (int i = 0; i < list.Count; )
+				{
+					Property test = list[i] as Property;
+					
+					if (test.WellKnownType == p.WellKnownType)
+					{
+						list.RemoveAt (i);
+					}
+					else
+					{
+						i++;
+					}
+				}
+				
+				list.Add (p);
+			}
+			
+			return list;
+		}
 		
 		private static System.Collections.ICollection CombineClear(Property[] a, Property[] b)
 		{

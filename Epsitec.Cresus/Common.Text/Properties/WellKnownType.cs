@@ -10,35 +10,38 @@ namespace Epsitec.Common.Text.Properties
 	/// </summary>
 	public enum WellKnownType
 	{
-		Font			= 1,			//	style
-		FontSize,						//	style
+		Font				= 1,		//	style
+		FontSize			= 2,		//	style
+		FontKern			= 3,		//	local
+		FontOffset			= 4,		//	local
 		
-		Conditional,					//	style
-		Keep,							//	style
-		Layout,							//	style
-		Leading,						//	style
-		Margins,						//	style
+		Conditional			= 10,		//	style
+		Keep				= 11,		//	style
+		Layout				= 12,		//	style
+		Leading				= 13,		//	style
+		Margins				= 14,		//	style
 		
-		ManagedParagraph,				//	style
+		ManagedParagraph	= 30,		//	style
 		
-		Properties,						//	style
-		Styles,							//	style
+		Properties			= 50,		//	style
+		Styles				= 51,		//	style
+		Tabs				= 52,		//	style
 		
-		Color,							//	extra
-		Link,							//	extra
-		Meta,							//	extra
-		Underline,						//	extra
+		Color				= 100,		//	extra
+		Link				= 101,		//	extra
+		Meta				= 102,		//	extra
+		Underline			= 103,		//	extra
 		
-		AutoText,						//	extra
-		Generator,						//	extra
-		Language,						//	extra
-		Tab,							//	extra
+		AutoText			= 150,		//	extra
+		Generator			= 151,		//	extra
+		Language			= 152,		//	extra
 		
-		FontKern,						//	local
-		FontOffset,						//	local
-		OpenType,						//	local
-		Image,							//	local
+		Image				= 200,		//	local
+		OpenType			= 201,		//	local
 		
-		Other			= 1000000,
+		Break				= 220,		//	local
+		Tab					= 221,		//	local
+		
+		Other				= 1000000,
 	}
 }

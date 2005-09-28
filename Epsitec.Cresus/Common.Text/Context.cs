@@ -85,6 +85,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
 		public bool								ShowControlCharacters
 		{
 			get
@@ -94,6 +95,18 @@ namespace Epsitec.Common.Text
 			set
 			{
 				this.show_control_characters = value;
+			}
+		}
+		
+		public bool								IsDegradedLayoutEnabled
+		{
+			get
+			{
+				return this.is_degraded_layout_enabled;
+			}
+			set
+			{
+				this.is_degraded_layout_enabled = value;
 			}
 		}
 		
@@ -761,6 +774,25 @@ namespace Epsitec.Common.Text
 			this.get_margins_last_property      = property;
 		}
 		
+		public void GetBreak(ulong code, out Properties.BreakProperty property)
+		{
+			System.Diagnostics.Debug.WriteLine ("GetBreak: " + code.ToString ("X"));
+			
+			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			Styles.SimpleStyle   style          = this.style_list[code];
+			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
+			
+			if (local_settings == null)
+			{
+				property = null;
+			}
+			else
+			{
+				property = local_settings[Properties.WellKnownType.Break] as Properties.BreakProperty;
+			}
+		}
+		
 		public void GetTab(ulong code, out Properties.TabProperty property)
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
@@ -999,6 +1031,7 @@ namespace Epsitec.Common.Text
 		private TextStyle						default_style;
 		
 		private bool							show_control_characters;
+		private bool							is_degraded_layout_enabled;
 		
 		private OpenType.FontCollection			font_collection;
 		private System.Collections.Hashtable	font_cache;

@@ -484,6 +484,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\BreakProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\ColorProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -605,6 +610,11 @@
                 />
                 <File
                     RelPath = "Properties\TabProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\TabsProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

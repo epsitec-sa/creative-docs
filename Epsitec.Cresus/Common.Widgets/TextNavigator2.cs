@@ -33,7 +33,22 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.text_navigator = value;
+				if (this.text_navigator != value)
+				{
+					if (this.text_navigator != null)
+					{
+						this.text_navigator.TextChanged -= new Support.EventHandler (this.HandleTextChanged);
+						this.text_navigator.CursorMoved -= new Support.EventHandler (this.HandleCursorMoved);
+					}
+					
+					this.text_navigator = value;
+					
+					if (this.text_navigator != null)
+					{
+						this.text_navigator.CursorMoved += new Support.EventHandler (this.HandleCursorMoved);
+						this.text_navigator.TextChanged += new Support.EventHandler (this.HandleTextChanged);
+					}
+				}
 			}
 		}
 		
@@ -147,11 +162,11 @@ namespace Epsitec.Common.Widgets
 					{
 						if (message.IsShiftPressed)										//	saut de colonne
 						{
-							//	TODO: insérer un saut de frame
+							return this.Insert (Text.Properties.BreakProperty.NewFrame);
 						}
-						else
+						else															//	saut de page
 						{
-							return this.Insert (Text.Unicode.Code.PageSeparator);		//	saut de page
+							return this.Insert (Text.Properties.BreakProperty.NewPage);
 						}
 					}
 					else
@@ -218,12 +233,10 @@ namespace Epsitec.Common.Widgets
 			if (this.text_navigator.HasSelection)
 			{
 				this.text_navigator.Delete ();
-				this.NotifyTextChanged ();
 				return true;
 			}
 			
 			this.text_navigator.Delete (-1);
-			this.NotifyTextChanged ();
 			return true;
 		}
 		
@@ -237,12 +250,10 @@ namespace Epsitec.Common.Widgets
 			if (this.text_navigator.HasSelection)
 			{
 				this.text_navigator.Delete ();
-				this.NotifyTextChanged ();
 				return true;
 			}
 			
 			this.text_navigator.Delete (1);
-			this.NotifyTextChanged ();
 			return true;
 		}
 		
@@ -573,7 +584,6 @@ namespace Epsitec.Common.Widgets
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.WordStart, 0);
 			this.text_navigator.StartSelection ();
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
-//			this.text_navigator.EndSelection ();
 		}
 		
 		public void SelectLine()
@@ -586,7 +596,6 @@ namespace Epsitec.Common.Widgets
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.LineStart, 0);
 			this.text_navigator.StartSelection ();
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.LineEnd, 1);
-//			this.text_navigator.EndSelection ();
 		}
 		
 		public void SelectAll()
@@ -599,7 +608,6 @@ namespace Epsitec.Common.Widgets
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
 			this.text_navigator.StartSelection ();
 			this.text_navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 0);
-//			this.text_navigator.EndSelection ();
 		}
 		
 		
@@ -617,6 +625,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool Insert(Text.Properties.BreakProperty break_property)
+		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			if (this.text_navigator.HasSelection)
+			{
+				this.text_navigator.Delete ();
+			}
+			
+			this.text_navigator.Insert (Text.Unicode.Code.PageSeparator, break_property);
+			
+			return true;
+		}
+		
 		public bool Insert(string text)
 		{
 			if (this.text_navigator.IsSelectionActive)
@@ -629,7 +653,6 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.text_navigator.Insert (text);
-			this.NotifyTextChanged ();
 			
 			return true;
 		}
@@ -645,7 +668,6 @@ namespace Epsitec.Common.Widgets
 			if (this.text_navigator.OpletQueue.CanUndo)
 			{
 				this.text_navigator.Undo ();
-				this.NotifyTextChanged ();
 				
 				return true;
 			}
@@ -663,7 +685,6 @@ namespace Epsitec.Common.Widgets
 			if (this.text_navigator.OpletQueue.CanRedo)
 			{
 				this.text_navigator.Redo ();
-				this.NotifyTextChanged ();
 				
 				return true;
 			}
@@ -725,21 +746,47 @@ namespace Epsitec.Common.Widgets
 		
 		public void NotifyTextChanged()
 		{
-			this.ClearVerticalMoveCache ();
 			this.OnTextChanged ();
+		}
+		
+		public void NotifyCursorMoved()
+		{
+			this.OnCursorMoved ();
+		}
+		
+		
+		private void HandleTextChanged(object sender)
+		{
+			this.NotifyTextChanged ();
+		}
+		
+		private void HandleCursorMoved(object sender)
+		{
+			this.NotifyCursorMoved ();
 		}
 		
 		
 		protected virtual void OnTextChanged()
 		{
+			this.ClearVerticalMoveCache ();
+			
 			if (this.TextChanged != null)
 			{
 				this.TextChanged (this);
 			}
 		}
 		
+		protected virtual void OnCursorMoved()
+		{
+			if (this.CursorMoved != null)
+			{
+				this.CursorMoved (this);
+			}
+		}
+		
 		
 		public event Support.EventHandler		TextChanged;
+		public event Support.EventHandler		CursorMoved;
 		
 		private Text.TextNavigator				text_navigator;
 		private Text.ITextFrame					text_frame;

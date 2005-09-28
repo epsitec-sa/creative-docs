@@ -43,6 +43,14 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public override bool					RequiresUniformParagraph
+		{
+			get
+			{
+				return true;
+			}
+		}
+		
 		
 		public string							ManagerName
 		{

@@ -3,6 +3,7 @@
 
 namespace Epsitec.Common.Text
 {
+	using EventHandler		= Epsitec.Common.Support.EventHandler;
 	using OpletEventHandler = Epsitec.Common.Support.OpletEventHandler;
 	using OpletEventArgs	= Epsitec.Common.Support.OpletEventArgs;
 	
@@ -132,88 +133,42 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
-		public void Insert(string text)
+		public void Insert(Unicode.Code code, Property property)
 		{
-			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
+			//	Insère un caractère spécial qui doit être lié à la propriété de
+			//	manière inamovible.
 			
-			ulong[] styled_text;
+			System.Diagnostics.Debug.Assert (property != null);
+			System.Diagnostics.Debug.Assert (property.PropertyAffinity == Properties.PropertyAffinity.Symbol);
+			
+			//	La propriété passée en entrée est simplement ajoutée en fin de
+			//	liste des propriétés associées au curseur, temporairement :
 			
 			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 			
-			System.Collections.Stack starts = new System.Collections.Stack ();
+			Property[] old_properties = this.current_properties;
+			Property[] new_properties = new Property[old_properties.Length+1];
 			
-			int pos = this.story.GetCursorPosition (this.cursor);
+			old_properties.CopyTo (new_properties, 0);
+			new_properties[old_properties.Length] = property;
 			
-			if ((pos == this.story.TextLength) &&
-				(Internal.Navigator.IsParagraphStart (this.story, this.cursor, 0)))
+			try
 			{
-				starts.Push (pos);
+				this.current_properties = new_properties;
+				this.InsertText (new string ((char) code, 1));
+			}
+			finally
+			{
+				this.current_properties = old_properties;
 			}
 			
-			this.story.ConvertToStyledText (text, this.current_styles, this.current_properties, out styled_text);
-			this.story.InsertText (this.cursor, styled_text);
-			
-			//	Si le texte inséré contient un saut de paragraphe et que le style
-			//	en cours fait référence à un gestionnaire de paragraphe nécessitant
-			//	l'ajout de texte automatique, il faut encore générer le texte auto.
-			
-			Property[] properties = this.current_accumulator.AccumulatedProperties;
-			
-#if DEBUG
-			for (int i = 0; i < properties.Length; i++)
-			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0} : {1} -- {2}", i, properties[i].GetType ().Name, properties[i].ToString ()));
-			}
-#endif
-			
-			Properties.ManagedParagraphProperty mpp = null;
-			
-			for (int i = 0; i < properties.Length; i++)
-			{
-				if (properties[i] is Properties.ManagedParagraphProperty)
-				{
-					mpp = properties[i] as Properties.ManagedParagraphProperty;
-					break;
-				}
-			}
-			
-			if (mpp != null)
-			{
-				System.Diagnostics.Debug.WriteLine ("Found managed paragraph property.");
-				
-				for (int i = 0; i < styled_text.Length; i++)
-				{
-					if (Internal.Navigator.IsParagraphSeparator (styled_text[i]))
-					{
-						//	Ne génère pas un changement de style de paragraphe si le texte se
-						//	termine par un paragraphe vide.
-						
-						int start = pos + i + 1;
-						
-						if (start < this.story.TextLength)
-						{
-							starts.Push (pos + i + 1);
-						}
-					}
-				}
-				
-				if (starts.Count > 0)
-				{
-					System.Diagnostics.Debug.WriteLine ("Handle insertion of new managed paragraphs.");
-					ParagraphManagerList list = story.TextContext.ParagraphManagerList;
-					
-					while (starts.Count > 0)
-					{
-						pos = (int) starts.Pop ();
-						
-						System.Diagnostics.Debug.WriteLine ("--> start at " + pos.ToString ());
-						
-						this.story.SetCursorPosition (this.temp_cursor, pos);
-						
-						list[mpp.ManagerName].AttachToParagraph (this.story, this.temp_cursor, mpp);
-					}
-				}
-			}
+			this.NotifyTextChanged ();
+		}
+		
+		public void Insert(string text)
+		{
+			this.InsertText (text);
+			this.NotifyTextChanged ();
 		}
 		
 		public void Delete()
@@ -270,6 +225,8 @@ namespace Epsitec.Common.Text
 				this.InternalClearSelection ();
 				this.UpdateSelectionMarkers ();
 			}
+			
+			this.NotifyTextChanged ();
 		}
 		
 		public void Delete(int move)
@@ -334,6 +291,8 @@ namespace Epsitec.Common.Text
 			{
 				this.story.RecycleCursor (temp);
 			}
+			
+			this.NotifyTextChanged ();
 		}
 		
 		public void MoveTo(int position, int direction)
@@ -451,6 +410,7 @@ namespace Epsitec.Common.Text
 			this.story.SetCursorPosition (c2, position, direction);
 			
 			this.active_selection_cursor = c2;
+			this.NotifyCursorMoved ();
 		}
 		
 		public void EndSelection()
@@ -464,6 +424,8 @@ namespace Epsitec.Common.Text
 				this.InternalInsertDeselectionOplet ();
 				this.story.OpletQueue.ValidateAction ();
 			}
+			
+			this.NotifyCursorMoved ();
 		}
 		
 		public void ClearSelection()
@@ -507,6 +469,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			System.Diagnostics.Debug.Assert (this.HasSelection == false);
+			this.NotifyCursorMoved ();
 		}
 		
 		
@@ -610,6 +573,8 @@ namespace Epsitec.Common.Text
 				
 				this.RefreshAccumulatedStylesAndProperties ();
 			}
+			
+			this.NotifyTextChanged ();
 		}
 		
 		public void SetTextStyles(params TextStyle[] styles)
@@ -657,6 +622,8 @@ namespace Epsitec.Common.Text
 				
 				this.RefreshAccumulatedStylesAndProperties ();
 			}
+			
+			this.NotifyTextChanged ();
 		}
 		
 		public void SetCharacterStyles(params TextStyle[] styles)
@@ -704,6 +671,8 @@ namespace Epsitec.Common.Text
 				
 				this.RefreshAccumulatedStylesAndProperties ();
 			}
+			
+			this.NotifyTextChanged ();
 		}
 		
 		public void SetParagraphProperties(Properties.ApplyMode mode, params Property[] properties)
@@ -755,6 +724,8 @@ namespace Epsitec.Common.Text
 				
 				this.RefreshAccumulatedStylesAndProperties ();
 			}
+			
+			this.NotifyTextChanged ();
 		}
 		
 		public void SetTextProperties(Properties.ApplyMode mode, params Property[] properties)
@@ -799,6 +770,8 @@ namespace Epsitec.Common.Text
 				
 				this.RefreshAccumulatedStylesAndProperties ();
 			}
+			
+			this.NotifyTextChanged ();
 		}
 		
 		
@@ -878,6 +851,8 @@ namespace Epsitec.Common.Text
 			{
 				this.story.RecycleCursor (temp);
 			}
+			
+			this.NotifyCursorMoved ();
 		}
 		
 		public bool GetCursorGeometry(out ITextFrame frame, out double cx, out double cy, out double ascender, out double descender, out double angle)
@@ -894,7 +869,7 @@ namespace Epsitec.Common.Text
 			
 			if (this.fitter.GetCursorGeometry (cursor, out frame, out cx, out cy, out para_line, out line_char))
 			{
-				Property[] properties = this.current_accumulator.AccumulatedProperties;
+				Property[] properties = this.accumulated_properties;
 				
 				if ((this.CursorPosition == this.story.TextLength) &&
 					(para_line == 0) &&
@@ -1045,12 +1020,11 @@ namespace Epsitec.Common.Text
 			
 			this.current_styles      = styles;
 			this.current_properties  = properties;
-			this.current_accumulator = new Styles.PropertyContainer.Accumulator ();
 			
-			this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
+			this.RefreshAccumulatedStylesAndProperties ();
 			
 #if DEBUG
-			properties = this.current_accumulator.AccumulatedProperties;
+			properties = this.accumulated_properties;
 			
 			for (int i = 0; i < properties.Length; i++)
 			{
@@ -1263,6 +1237,90 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		protected void InsertText(string text)
+		{
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
+			
+			ulong[] styled_text;
+			
+			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
+			
+			System.Collections.Stack starts = new System.Collections.Stack ();
+			
+			int pos = this.story.GetCursorPosition (this.cursor);
+			
+			if ((pos == this.story.TextLength) &&
+				(Internal.Navigator.IsParagraphStart (this.story, this.cursor, 0)))
+			{
+				starts.Push (pos);
+			}
+			
+			this.story.ConvertToStyledText (text, this.current_styles, this.current_properties, out styled_text);
+			this.story.InsertText (this.cursor, styled_text);
+			
+			//	Si le texte inséré contient un saut de paragraphe et que le style
+			//	en cours fait référence à un gestionnaire de paragraphe nécessitant
+			//	l'ajout de texte automatique, il faut encore générer le texte auto.
+			
+			Property[] properties = this.accumulated_properties;
+			
+#if DEBUG
+			for (int i = 0; i < properties.Length; i++)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0} : {1} -- {2}", i, properties[i].GetType ().Name, properties[i].ToString ()));
+			}
+#endif
+			
+			Properties.ManagedParagraphProperty mpp = null;
+			
+			for (int i = 0; i < properties.Length; i++)
+			{
+				if (properties[i] is Properties.ManagedParagraphProperty)
+				{
+					mpp = properties[i] as Properties.ManagedParagraphProperty;
+					break;
+				}
+			}
+			
+			if (mpp != null)
+			{
+				System.Diagnostics.Debug.WriteLine ("Found managed paragraph property.");
+				
+				for (int i = 0; i < styled_text.Length; i++)
+				{
+					if (Internal.Navigator.IsParagraphSeparator (styled_text[i]))
+					{
+						//	Ne génère pas un changement de style de paragraphe si le texte se
+						//	termine par un paragraphe vide.
+						
+						int start = pos + i + 1;
+						
+						if (start < this.story.TextLength)
+						{
+							starts.Push (pos + i + 1);
+						}
+					}
+				}
+				
+				if (starts.Count > 0)
+				{
+					System.Diagnostics.Debug.WriteLine ("Handle insertion of new managed paragraphs.");
+					ParagraphManagerList list = story.TextContext.ParagraphManagerList;
+					
+					while (starts.Count > 0)
+					{
+						pos = (int) starts.Pop ();
+						
+						System.Diagnostics.Debug.WriteLine ("--> start at " + pos.ToString ());
+						
+						this.story.SetCursorPosition (this.temp_cursor, pos);
+						
+						list[mpp.ManagerName].AttachToParagraph (this.story, this.temp_cursor, mpp);
+					}
+				}
+			}
+		}
 		
 		protected void DeleteText(ICursor cursor, int length)
 		{
@@ -1675,9 +1733,12 @@ namespace Epsitec.Common.Text
 		
 		private void RefreshAccumulatedStylesAndProperties()
 		{
-			this.current_accumulator = new Styles.PropertyContainer.Accumulator ();
+			Styles.PropertyContainer.Accumulator current_accumulator = new Styles.PropertyContainer.Accumulator ();
 			
-			this.current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
+			current_accumulator.SkipSymbolProperties = true;
+			current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
+			
+			this.accumulated_properties = current_accumulator.AccumulatedProperties;
 		}
 		
 		
@@ -1742,7 +1803,7 @@ namespace Epsitec.Common.Text
 				this.UpdateCurrentStylesAndProperties ();
 			}
 			
-			this.OnCursorMoved ();
+			this.NotifyCursorMoved ();
 		}
 		
 		private void InternalInsertSelectionOplet()
@@ -1968,24 +2029,34 @@ namespace Epsitec.Common.Text
 		
 		protected virtual void OnCursorMoved()
 		{
+			if (this.CursorMoved != null)
+			{
+				this.CursorMoved (this);
+			}
 		}
 		
 		protected virtual void OnOpletExecuted(Common.Support.OpletEventArgs e)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1}", e.Event, e.Oplet.GetType ().Name));
-			
 			if ((e.Oplet is TextStory.CursorMoveOplet) ||
 				(e.Oplet is TextNavigator.DefineSelectionOplet) ||
 				(e.Oplet is TextNavigator.ClearSelectionOplet))
 			{
-				System.Diagnostics.Debug.WriteLine ("Updated cursor info.");
-				
 				this.UpdateCurrentStylesAndProperties ();
 			}
 			
 			if (this.OpletExecuted != null)
 			{
 				this.OpletExecuted (this, e);
+			}
+			
+			this.NotifyTextChanged ();
+		}
+		
+		protected virtual void OnTextChanged()
+		{
+			if (this.TextChanged != null)
+			{
+				this.TextChanged (this);
 			}
 		}
 		
@@ -2006,6 +2077,16 @@ namespace Epsitec.Common.Text
 		private void NotifyRedoExecuted(Common.Support.AbstractOplet oplet)
 		{
 			this.OnOpletExecuted (new OpletEventArgs (oplet, Common.Support.OpletEvent.RedoExecuted));
+		}
+		
+		private void NotifyTextChanged()
+		{
+			this.OnTextChanged ();
+		}
+		
+		private void NotifyCursorMoved()
+		{
+			this.OnCursorMoved ();
 		}
 		
 		
@@ -2125,6 +2206,8 @@ namespace Epsitec.Common.Text
 		protected delegate bool MoveCallback(int offset, int direction);
 		
 		public event OpletEventHandler			OpletExecuted;
+		public event EventHandler				TextChanged;
+		public event EventHandler				CursorMoved;
 		
 		private TextStory						story;
 		private TextFitter						fitter;
@@ -2135,6 +2218,6 @@ namespace Epsitec.Common.Text
 		
 		private TextStyle[]						current_styles;
 		private Property[]						current_properties;
-		Styles.PropertyContainer.Accumulator	current_accumulator;
+		private Property[]						accumulated_properties;
 	}
 }

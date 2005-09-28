@@ -888,9 +888,23 @@ restart_paragraph_layout:
 						line_count                  = 0;
 						
 						if ((layout_status == Layout.Status.OkFitEnded) &&
-							(layout.LastProcessedCharacter == Unicode.Code.PageSeparator))
+							(layout.LastProcessedCode == Unicode.Code.PageSeparator))
 						{
-							//	TODO: gérer le saut (de page, colonne, section, ...)
+							Properties.BreakProperty break_property;
+							this.story.TextContext.GetBreak (layout.LastProcessedCharacter, out break_property);
+							
+							if (break_property == null)
+							{
+								layout.DefineParagraphStartMode (Properties.ParagraphStartMode.Anywhere);
+							}
+							else
+							{
+								layout.DefineParagraphStartMode (break_property.ParagraphStartMode);
+							}
+						}
+						else
+						{
+							layout.DefineParagraphStartMode (Properties.ParagraphStartMode.Anywhere);
 						}
 					}
 					else

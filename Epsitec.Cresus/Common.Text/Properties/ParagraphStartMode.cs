@@ -8,14 +8,14 @@ namespace Epsitec.Common.Text.Properties
 	/// </summary>
 	public enum ParagraphStartMode
 	{
-		Undefined,					//	non défini
+		Undefined			= 0,		//	non défini
 		
-		Anywhere,					//	n'importe où
+		Anywhere			= 1,		//	n'importe où
 		
-		NewFrame,					//	au début d'un frame
+		NewFrame			= 2,		//	au début d'un frame
 		
-		NewPage,					//	au début d'une page
-		NewOddPage,					//	au début d'une page impaire
-		NewEvenPage,				//	au début d'une page paire
+		NewPage				= 3,		//	au début d'une page
+		NewOddPage			= 4,		//	au début d'une page impaire
+		NewEvenPage			= 5,		//	au début d'une page paire
 	}
 }

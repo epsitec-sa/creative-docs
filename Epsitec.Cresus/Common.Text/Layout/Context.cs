@@ -118,7 +118,15 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public Unicode.Code						LastProcessedCharacter
+		public Unicode.Code						LastProcessedCode
+		{
+			get
+			{
+				return (Unicode.Code) Unicode.Bits.GetCode (this.LastProcessedCharacter);
+			}
+		}
+		
+		public ulong							LastProcessedCharacter
 		{
 			get
 			{
@@ -126,10 +134,10 @@ namespace Epsitec.Common.Text.Layout
 					(this.text != null) &&
 					(this.text.Length >= this.text_offset))
 				{
-					return (Unicode.Code) Unicode.Bits.GetCode (this.text[this.text_offset-1]);
+					return this.text[this.text_offset-1];
 				}
 				
-				return Unicode.Code.Null;
+				return 0;
 			}
 		}
 		
@@ -740,7 +748,7 @@ restart:
 						}
 						
 						if ((status == Layout.Status.OkFitEnded) &&
-							(this.LastProcessedCharacter == Unicode.Code.LineSeparator))
+							(this.LastProcessedCode == Unicode.Code.LineSeparator))
 						{
 							//	C'est une fin de ligne forcée, pas une fin de paragraphe...
 							
@@ -791,7 +799,11 @@ restart:
 					case Layout.Status.ErrorCannotFit:
 						if (this.break_mode == BreakMode.Hyphenate)
 						{
-							this.break_mode = BreakMode.Break;
+							if (this.text_context.IsDegradedLayoutEnabled)
+							{
+								this.break_mode = BreakMode.Break;
+							}
+							
 							pass++;
 						}
 						else
@@ -886,6 +898,17 @@ restart:
 		public void DefineShowControlCharacters()
 		{
 			this.show_control_characters = this.text_context.ShowControlCharacters;
+		}
+		
+		public void DefineParagraphStartMode(Properties.ParagraphStartMode mode)
+		{
+			if ((mode != Properties.ParagraphStartMode.Anywhere) &&
+				(mode != Properties.ParagraphStartMode.Undefined))
+			{
+				System.Diagnostics.Debug.WriteLine ("Force paragraph start mode: " + mode);
+			}
+			
+			this.para_default_start_mode = mode;
 		}
 		
 		
@@ -1290,6 +1313,53 @@ restart:
 				
 				this.keep_with_next_para = false;
 			}
+			
+			if ((this.para_default_start_mode == Properties.ParagraphStartMode.Undefined) ||
+				(this.para_default_start_mode == Properties.ParagraphStartMode.Anywhere))
+			{
+			}
+			else
+			{
+				//	Combine les deux modes de début de paragraphe :
+				
+				switch (this.para_default_start_mode)
+				{
+					case Properties.ParagraphStartMode.NewFrame:
+						
+						//	Si le paragraphe est précédé d'un saut de frame, on force
+						//	un saut uniquement si le paragraphe lui-même ne force pas
+						//	déjà un saut de page :
+						
+						switch (this.para_start_mode)
+						{
+							case Properties.ParagraphStartMode.Undefined:
+							case Properties.ParagraphStartMode.Anywhere:
+								this.para_start_mode = this.para_default_start_mode;
+								break;
+						}
+						break;
+					
+					case Properties.ParagraphStartMode.NewPage:
+					case Properties.ParagraphStartMode.NewOddPage:
+					case Properties.ParagraphStartMode.NewEvenPage:
+						
+						//	Si le paragraphe est précédé d'un saut de page, on force
+						//	un saut uniquement si le paragraphe lui-même ne force pas
+						//	déjà un saut de page précis (page paire/impaire) :
+						
+						switch (this.para_start_mode)
+						{
+							case Properties.ParagraphStartMode.Undefined:
+							case Properties.ParagraphStartMode.Anywhere:
+							case Properties.ParagraphStartMode.NewFrame:
+							case Properties.ParagraphStartMode.NewPage:
+								this.para_start_mode = this.para_default_start_mode;
+								break;
+						}
+						break;
+					
+				}
+			}
 		}
 		
 		private void SelectLineHeightAndLeading(int offset, double line_height, double ascender, double descender)
@@ -1627,6 +1697,7 @@ restart:
 		private double							line_space_before;
 		private double							line_space_after;
 		
+		private Properties.ParagraphStartMode	para_default_start_mode;
 		private Properties.ParagraphStartMode	para_start_mode;
 		private int								keep_start_lines;
 		private int								keep_end_lines;

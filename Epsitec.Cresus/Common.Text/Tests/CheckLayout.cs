@@ -272,6 +272,12 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (status == Layout.Status.ErrorCannotFit);
 			
+			context = new Layout.Context (story.TextContext, story_text, 0, -100, 14.0, 20, 0, 0, 10, 10);
+			story.TextContext.IsDegradedLayoutEnabled = true;
+			status  = context.Fit (ref breaks, 0);
+			
+			Debug.Assert.IsTrue (status == Layout.Status.Ok);
+			
 			story.MoveCursor (cursor, story.TextLength);
 			properties = new System.Collections.ArrayList ();
 			

@@ -33,8 +33,10 @@ namespace Epsitec.Common.Widgets
 			properties.Add (new Text.Properties.LeadingProperty (16.0, Text.Properties.SizeUnits.Points, 15.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			
 			Text.TextStyle style = story.TextContext.StyleList.NewTextStyle ("Default", Text.TextStyleClass.Paragraph, properties);
+			
 			story.TextContext.DefaultStyle = style;
 			story.TextContext.ShowControlCharacters = true;
+			story.TextContext.IsDegradedLayoutEnabled = true;
 			
 			string words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe et d'affichage. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite. Quelle idée, un fjord finlandais ! Avocat.\nAWAY.\n______\n";
 			
@@ -55,8 +57,17 @@ namespace Epsitec.Common.Widgets
 			frame.Dock        = DockStyle.Fill;
 			frame.DockMargins = new Margins (4, 4, 4, 4);
 			frame.Parent      = window.Root;
+			frame.Name        = "A";
 			
 			frame.Focus ();
+			
+			TextFrame frame2 = new TextFrame (frame);
+			
+			frame2.Height      = 150;
+			frame2.Dock        = DockStyle.Bottom;
+			frame2.DockMargins = new Margins (4, 4, 4, 4);
+			frame2.Parent      = window.Root;
+			frame2.Name        = "B";
 			
 			window.Show ();
 		}

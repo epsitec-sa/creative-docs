@@ -34,6 +34,41 @@ namespace Epsitec.Common.Widgets
 			this.text_fitter.GenerateAllMarks ();
 			
 			this.navigator.TextChanged += new Support.EventHandler (this.HandleTextChanged);
+			this.navigator.CursorMoved += new Support.EventHandler (this.HandleCursorMoved);
+			
+			this.marker_selected = this.text_context.Markers.Selected;
+		}
+		
+		public TextFrame(TextFrame frame) : this (frame.text_story, frame.text_fitter, frame.text_navigator)
+		{
+		}
+		
+		public TextFrame(Text.TextStory story, Text.TextFitter fitter, Text.TextNavigator navigator)
+		{
+			this.InternalState |= InternalState.AutoFocus;
+			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= InternalState.AutoDoubleClick;
+			
+			this.oplet_queue = story.OpletQueue;
+			
+			this.text_context   = story.TextContext;
+			this.text_story     = story;
+			this.text_fitter    = fitter;
+			this.text_navigator = navigator;
+			this.text_frame     = new Epsitec.Common.Text.SimpleTextFrame (this.DefaultWidth, this.DefaultHeight);
+			
+			this.navigator = new TextNavigator2 ();
+			
+			this.navigator.TextNavigator = this.text_navigator;
+			this.navigator.TextFrame     = this.text_frame;
+			
+			this.text_fitter.FrameList.Add (this.text_frame);
+			
+			this.text_fitter.ClearAllMarks ();
+			this.text_fitter.GenerateAllMarks ();
+			
+			this.navigator.TextChanged += new Support.EventHandler (this.HandleTextChanged);
+			this.navigator.CursorMoved += new Support.EventHandler (this.HandleCursorMoved);
 			
 			this.marker_selected = this.text_context.Markers.Selected;
 		}
@@ -387,6 +422,11 @@ namespace Epsitec.Common.Widgets
 		{
 			this.text_fitter.ClearAllMarks ();
 			this.text_fitter.GenerateAllMarks ();
+			this.Invalidate ();
+		}
+		
+		private void HandleCursorMoved(object sender)
+		{
 			this.Invalidate ();
 		}
 		
