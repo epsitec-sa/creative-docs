@@ -494,7 +494,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( (state&WidgetState.Focused) != 0 )
 			{
 				Drawing.Rectangle rFocus = rect;
-				rFocus.Deflate(2.5);
+				if ( System.Math.Min(rect.Width, rect.Height) < 16 )
+				{
+					rFocus.Deflate(1.5);
+				}
+				else
+				{
+					rFocus.Deflate(2.5);
+				}
 				this.PaintFocusBox(graphics, rFocus);
 			}
 		}

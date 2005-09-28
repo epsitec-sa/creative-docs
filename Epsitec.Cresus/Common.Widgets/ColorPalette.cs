@@ -30,6 +30,12 @@ namespace Epsitec.Common.Widgets
 				this.palette[i].Clicked += new MessageEventHandler(this.HandleColorClicked);
 				this.palette[i].TabIndex = i;
 				this.palette[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+				int x = i/this.nbRows;
+				int y = i%this.nbRows;
+				this.palette[i].Column = x;
+				this.palette[i].Row    = y;
+				this.palette[i].Rank   = x+y*this.nbColumns;
 			}
 
 			this.palette[ 0].Color = Drawing.RichColor.FromARGB(0.0, 1.0, 1.0, 1.0);
@@ -160,7 +166,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Drawing.RichColor					Color
+		public Drawing.RichColor				Color
 		{
 			get
 			{
@@ -180,6 +186,18 @@ namespace Epsitec.Common.Widgets
 				{
 					this.palette[this.selected].Color = value;
 				}
+			}
+		}
+
+		public ColorSample						SelectedColorSample
+		{
+			get
+			{
+				if ( this.selected == -1 )
+				{
+					return this.palette[0];
+				}
+				return this.palette[this.selected];
 			}
 		}
 
@@ -223,6 +241,119 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
+		// Détermine quel widget il faut activer, en fonction de la
+		// ligne et de la colonne où l'on se trouve.
+		public bool Navigate(ColorSample sample, KeyCode key)
+		{
+			ColorSample dest;
+
+			switch ( key )
+			{
+				case KeyCode.ArrowUp:
+					dest = this.Search(sample.Column, sample.Row-1);
+					if ( dest != null )
+					{
+						this.SelectSample(dest, false);
+						dest.Focus();
+						return true;
+					}
+					return false;
+
+				case KeyCode.ArrowDown:
+					dest = this.Search(sample.Column, sample.Row+1);
+					if ( dest != null )
+					{
+						this.SelectSample(dest, false);
+						dest.Focus();
+						return true;
+					}
+					return false;
+
+				case KeyCode.ArrowLeft:
+					dest = this.Search(sample.Column-1, sample.Row);
+					if ( dest != null )
+					{
+						this.SelectSample(dest, false);
+						dest.Focus();
+						return true;
+					}
+					dest = this.Search(sample.Rank-1);
+					if ( dest != null )
+					{
+						this.SelectSample(dest, false);
+						dest.Focus();
+						return true;
+					}
+					return false;
+
+				case KeyCode.ArrowRight:
+					dest = this.Search(sample.Column+1, sample.Row);
+					if ( dest != null )
+					{
+						this.SelectSample(dest, false);
+						dest.Focus();
+						return true;
+					}
+					dest = this.Search(sample.Rank+1);
+					if ( dest != null )
+					{
+						this.SelectSample(dest, false);
+						dest.Focus();
+						return true;
+					}
+					return false;
+				
+				default:
+					return false;
+			}
+		}
+
+		protected ColorSample Search(int column, int row)
+		{
+			for ( int i=0 ; i<this.nbTotal ; i++ )
+			{
+				if ( this.palette[i].Column == column &&
+					 this.palette[i].Row    == row    )
+				{
+					return this.palette[i];
+				}
+			}
+
+			return null;
+		}
+
+		protected ColorSample Search(int rank)
+		{
+			for ( int i=0 ; i<this.nbTotal ; i++ )
+			{
+				if ( this.palette[i].Rank == rank )  return this.palette[i];
+			}
+
+			return null;
+		}
+
+		// Sélectionne un échantillon.
+		protected void SelectSample(ColorSample sample, bool import)
+		{
+			for ( int i=0 ; i<this.nbTotal ; i++ )
+			{
+				if ( this.palette[i] == sample )
+				{
+					this.ColorSelected = i;
+
+					if ( import )
+					{
+						this.OnImport();
+					}
+					else
+					{
+						this.OnExport();
+					}
+				}
+			}
+		}
+
+		
 		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
@@ -301,24 +432,8 @@ namespace Epsitec.Common.Widgets
 		private void HandleColorClicked(object sender, MessageEventArgs e)
 		{
 			ColorSample cs = sender as ColorSample;
-
-			for ( int i=0 ; i<this.nbTotal ; i++ )
-			{
-				if ( cs == this.palette[i] )
-				{
-					this.ColorSelected = i;
-
-					if ( e != null && (e.Message.IsShiftPressed || e.Message.IsCtrlPressed) )
-					{
-						this.OnImport();
-					}
-					else
-					{
-						this.OnExport();
-					}
-					return;
-				}
-			}
+			bool import = ( e != null && (e.Message.IsShiftPressed || e.Message.IsCtrlPressed) );
+			this.SelectSample(cs, import);
 		}
 
 		

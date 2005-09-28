@@ -272,8 +272,8 @@ namespace Epsitec.Common.Document.Containers
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.buttonPageStack.TabIndex = 98;
-			this.buttonPageStack.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.extendedButton.TabIndex = 98;
+			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Dialog.Button.More);
 			
 

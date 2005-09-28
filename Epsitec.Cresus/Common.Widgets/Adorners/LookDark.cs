@@ -382,7 +382,10 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Widgets.ButtonStyle style)
 		{
 			Drawing.Rectangle rFocus = rect;
-			rFocus.Deflate(1.0);
+			if ( System.Math.Min(rect.Width, rect.Height) >= 16 )
+			{
+				rFocus.Deflate(1.0);
+			}
 			double radFocus = 0;
 
 			if ( style == ButtonStyle.Normal        ||

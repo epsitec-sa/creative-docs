@@ -90,7 +90,7 @@ namespace Epsitec.Common.Document.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.KeyDown:
-					if (this.ProcessKeyDown(message.KeyCode))
+					if ( this.ProcessKeyDown(message.KeyCode) )
 					{
 						message.Consumer = this;
 						return;
@@ -104,7 +104,6 @@ namespace Epsitec.Common.Document.Widgets
 		protected virtual bool ProcessKeyDown(KeyCode key)
 		{
 			RadioIconGrid grid = this.Parent as RadioIconGrid;
-			
 			if ( grid == null )  return false;
 			
 			switch( key )
@@ -131,9 +130,9 @@ namespace Epsitec.Common.Document.Widgets
 				return base.AboutToGetFocus(dir, mode, out focus);
 			}
 			
-			//	Ce n'est pas notre bouton radio qui est allumé. TAB voudrait nous donner le
-			//	focus, mais ce n'est pas adéquat; mieux vaut mettre le focus sur le frère qui
-			//	est activé :
+			// Ce n'est pas notre bouton radio qui est allumé. TAB voudrait nous donner le
+			// focus, mais ce n'est pas adéquat; mieux vaut mettre le focus sur le frère qui
+			// est activé :
 			
 			RadioIcon icon = grid.SelectedRadioIcon;
 			
@@ -154,26 +153,26 @@ namespace Epsitec.Common.Document.Widgets
 				return base.FindTabWidgetList(mode);
 			}
 			
-			//	On recherche les frères de ce widget, pour déterminer lequel devra être activé par la
-			//	pression de la touche TAB. Pour bien faire, il faut supprimer les autres boutons radio
-			//	qui appartiennent à notre groupe :
+			// On recherche les frères de ce widget, pour déterminer lequel devra être activé par la
+			// pression de la touche TAB. Pour bien faire, il faut supprimer les autres boutons radio
+			// qui appartiennent à notre groupe :
 			
-			System.Collections.ArrayList list = base.FindTabWidgetList (mode);
-			System.Collections.ArrayList copy = new System.Collections.ArrayList ();
+			System.Collections.ArrayList list = base.FindTabWidgetList(mode);
+			System.Collections.ArrayList copy = new System.Collections.ArrayList();
 			
-			foreach (Widget widget in list)
+			foreach ( Widget widget in list )
 			{
 				RadioIcon icon = widget as RadioIcon;
 				
 				if ( icon != null &&
 					 icon != this )
 				{
-					//	Saute les boutons du même groupe. Ils ne sont pas accessibles par la
-					//	touche TAB.
+					// Saute les boutons du même groupe. Ils ne sont pas accessibles par la
+					// touche TAB.
 				}
 				else
 				{
-					copy.Add (widget);
+					copy.Add(widget);
 				}
 			}
 			
@@ -183,8 +182,8 @@ namespace Epsitec.Common.Document.Widgets
 		
 		protected int				enumValue;
 		protected bool				endOfLine;
-		protected int				rank;
-		protected int				column;
-		protected int				row;
+		protected int				rank = -1;
+		protected int				column = -1;
+		protected int				row = -1;
 	}
 }

@@ -546,6 +546,19 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.AddRectangle(rect);
 					graphics.RenderSolid(this.colorBorder);
 				}
+
+				if ( (state&WidgetState.Focused) != 0 )
+				{
+					if ( System.Math.Min(rect.Width, rect.Height) < 16 )
+					{
+						rect.Deflate(2);
+					}
+					else
+					{
+						rect.Deflate(3);
+					}
+					this.PaintFocusBox(graphics, rect);
+				}
 			}
 			else if ( style == ButtonStyle.HeaderSlider )
 			{

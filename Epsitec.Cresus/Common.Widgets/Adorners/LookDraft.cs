@@ -494,6 +494,19 @@ namespace Epsitec.Common.Widgets.Adorner
 				{
 					this.PaintImageButton(graphics, rect, 46);
 				}
+
+				if ( (state&WidgetState.Focused) != 0 )
+				{
+					if ( System.Math.Min(rect.Width, rect.Height) < 16 )
+					{
+						rect.Deflate(1);
+					}
+					else
+					{
+						rect.Deflate(2);
+					}
+					this.PaintFocusBox(graphics, rect);
+				}
 			}
 			else if ( style == ButtonStyle.HeaderSlider )
 			{

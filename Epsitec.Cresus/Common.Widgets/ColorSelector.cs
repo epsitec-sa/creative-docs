@@ -26,7 +26,6 @@ namespace Epsitec.Common.Widgets
 				this.labels[i] = new StaticText(this);
 				this.fields[i] = new TextFieldSlider(this);
 
-				this.fields[i].TabIndex = i+100;
 				this.fields[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.fields[i].Value = 0;
 				if ( i < 3 )  // r,g,b ?
@@ -154,6 +153,8 @@ namespace Epsitec.Common.Widgets
 			this.palette.HasOptionButton = true;
 			this.palette.Export += new Support.EventHandler(this.HandlePaletteExport);
 			this.palette.Import += new Support.EventHandler(this.HandlePaletteImport);
+			this.palette.TabIndex = 10;
+			this.palette.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			this.picker = new Tools.Magnifier.DragSource(this);
 			this.picker.HotColorChanged += new Support.EventHandler(this.HandlePickerHotColorChanged);
@@ -163,21 +164,29 @@ namespace Epsitec.Common.Widgets
 			this.buttonClose.GlyphShape = GlyphShape.Close;
 			this.buttonClose.ButtonStyle = ButtonStyle.Normal;
 			this.buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+			this.buttonClose.TabIndex = 1;
+			this.buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonClose, Res.Strings.ColorSelector.Close);
 
 			this.buttonRGB = new IconButton(this);
 			this.buttonRGB.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceRGB.icon";
 			this.buttonRGB.Clicked += new MessageEventHandler(this.HandleButtonRGBClicked);
+			this.buttonRGB.TabIndex = 21;
+			this.buttonRGB.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonRGB, Res.Strings.ColorSelector.ColorSpace.RGB);
 
 			this.buttonCMYK = new IconButton(this);
 			this.buttonCMYK.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceCMYK.icon";
 			this.buttonCMYK.Clicked += new MessageEventHandler(this.HandleButtonCMYKClicked);
+			this.buttonCMYK.TabIndex = 22;
+			this.buttonCMYK.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonCMYK, Res.Strings.ColorSelector.ColorSpace.CMYK);
 
 			this.buttonGray = new IconButton(this);
 			this.buttonGray.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceGray.icon";
 			this.buttonGray.Clicked += new MessageEventHandler(this.HandleButtonGrayClicked);
+			this.buttonGray.TabIndex = 23;
+			this.buttonGray.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonGray, Res.Strings.ColorSelector.ColorSpace.Gray);
 		}
 		

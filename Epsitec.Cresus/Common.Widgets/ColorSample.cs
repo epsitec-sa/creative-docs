@@ -85,7 +85,46 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public int								Rank
+		{
+			get
+			{
+				return this.rank;
+			}
+			
+			set
+			{
+				this.rank = value;
+			}
+		}
 		
+		public int								Column
+		{
+			get
+			{
+				return this.column;
+			}
+			
+			set
+			{
+				this.column = value;
+			}
+		}
+		
+		public int								Row
+		{
+			get
+			{
+				return this.row;
+			}
+			
+			set
+			{
+				this.row = value;
+			}
+		}
+		
+
 		// Lie l'échantillon à une couleur dans une liste.
 		public void AttachColorCollection(Drawing.ColorCollection list, int index)
 		{
@@ -101,6 +140,71 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
+		{
+			ColorPalette palette = this.Parent as ColorPalette;
+
+			ColorSample sample = null;
+			if ( palette != null )
+			{
+				sample = palette.SelectedColorSample;
+			}
+			
+			if ( palette == null ||
+				 this == sample ||
+				 mode != TabNavigationMode.ActivateOnTab )
+			{
+				return base.AboutToGetFocus(dir, mode, out focus);
+			}
+			
+			// Ce n'est pas notre bouton radio qui est allumé. TAB voudrait nous donner le
+			// focus, mais ce n'est pas adéquat; mieux vaut mettre le focus sur le frère qui
+			// est activé :
+			
+			if ( sample == null )
+			{
+				return base.AboutToGetFocus(dir, mode, out focus);
+			}
+			else
+			{
+				return sample.AboutToGetFocus(dir, mode, out focus);
+			}
+		}
+		
+		protected override System.Collections.ArrayList FindTabWidgetList(TabNavigationMode mode)
+		{
+			if ( mode != TabNavigationMode.ActivateOnTab )
+			{
+				return base.FindTabWidgetList(mode);
+			}
+			
+			// On recherche les frères de ce widget, pour déterminer lequel devra être activé par la
+			// pression de la touche TAB. Pour bien faire, il faut supprimer les autres boutons radio
+			// qui appartiennent à notre groupe :
+			
+			System.Collections.ArrayList list = base.FindTabWidgetList(mode);
+			System.Collections.ArrayList copy = new System.Collections.ArrayList();
+			
+			foreach ( Widget widget in list )
+			{
+				ColorSample sample = widget as ColorSample;
+				
+				if ( sample != null &&
+					 sample != this )
+				{
+					// Saute les boutons du même groupe. Ils ne sont pas accessibles par la
+					// touche TAB.
+				}
+				else
+				{
+					copy.Add(widget);
+				}
+			}
+			
+			return copy;
+		}
+
+		
 		#region IDragBehaviorHost Members
 		public Drawing.Point					DragLocation
 		{
@@ -224,6 +328,13 @@ namespace Epsitec.Common.Widgets
 			{
 				case MessageType.KeyDown:
 				case MessageType.KeyUp:
+					if ( message.Type == MessageType.KeyDown &&
+						 this.ProcessKeyDown(message.KeyCode) )
+					{
+						message.Consumer = this;
+						return;
+					}
+
 					if ( message.KeyCode == KeyCode.ShiftKey   ||
 						 message.KeyCode == KeyCode.ControlKey )
 					{
@@ -240,6 +351,24 @@ namespace Epsitec.Common.Widgets
 			if ( !this.dragBehavior.ProcessMessage(message, pos) )
 			{
 				base.ProcessMessage(message, pos);
+			}
+		}
+
+		protected virtual bool ProcessKeyDown(KeyCode key)
+		{
+			ColorPalette palette = this.Parent as ColorPalette;
+			if ( palette == null )  return false;
+			
+			switch( key )
+			{
+				case KeyCode.ArrowUp:
+				case KeyCode.ArrowDown:
+				case KeyCode.ArrowLeft:
+				case KeyCode.ArrowRight:
+					return palette.Navigate(this, key);
+				
+				default:
+					return false;
 			}
 		}
 
@@ -384,5 +513,8 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.RichColor				color;
 		protected bool							possibleSource = false;
 		protected double						marginSource = 4;
+		protected int							rank = -1;
+		protected int							column = -1;
+		protected int							row = -1;
 	}
 }

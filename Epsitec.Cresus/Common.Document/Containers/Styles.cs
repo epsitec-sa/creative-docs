@@ -12,27 +12,33 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Styles(Document document) : base(document)
 		{
-			int tabIndex = 0;
-
 			// Toolbar principale.
 			this.toolBar = new HToolBar(this);
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
-			this.toolBar.TabIndex = tabIndex++;
-			this.toolBar.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			this.toolBar.TabIndex = 1;
+			this.toolBar.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+
+			int index = 0;
 
 			this.buttonAggregateNewEmpty = new IconButton(Misc.Icon("AggregateNewEmpty"));
 			this.buttonAggregateNewEmpty.Clicked += new MessageEventHandler(this.HandleButtonAggregateNewEmpty);
+			this.buttonAggregateNewEmpty.TabIndex = index++;
+			this.buttonAggregateNewEmpty.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonAggregateNewEmpty);
 			ToolTip.Default.SetToolTip(this.buttonAggregateNewEmpty, Res.Strings.Action.AggregateNewEmpty);
 
 			this.buttonAggregateNew3 = new IconButton(Misc.Icon("AggregateNew3"));
 			this.buttonAggregateNew3.Clicked += new MessageEventHandler(this.HandleButtonAggregateNew3);
+			this.buttonAggregateNew3.TabIndex = index++;
+			this.buttonAggregateNew3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonAggregateNew3);
 			ToolTip.Default.SetToolTip(this.buttonAggregateNew3, Res.Strings.Action.AggregateNew3);
 
 			this.buttonAggregateDuplicate = new IconButton(Misc.Icon("AggregateDuplicate"));
 			this.buttonAggregateDuplicate.Clicked += new MessageEventHandler(this.HandleButtonAggregateDuplicate);
+			this.buttonAggregateDuplicate.TabIndex = index++;
+			this.buttonAggregateDuplicate.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonAggregateDuplicate);
 			ToolTip.Default.SetToolTip(this.buttonAggregateDuplicate, Res.Strings.Action.AggregateDuplicate);
 
@@ -40,11 +46,15 @@ namespace Epsitec.Common.Document.Containers
 
 			this.buttonAggregateUp = new IconButton(Misc.Icon("AggregateUp"));
 			this.buttonAggregateUp.Clicked += new MessageEventHandler(this.HandleButtonAggregateUp);
+			this.buttonAggregateUp.TabIndex = index++;
+			this.buttonAggregateUp.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonAggregateUp);
 			ToolTip.Default.SetToolTip(this.buttonAggregateUp, Res.Strings.Action.AggregateUp);
 
 			this.buttonAggregateDown = new IconButton(Misc.Icon("AggregateDown"));
 			this.buttonAggregateDown.Clicked += new MessageEventHandler(this.HandleButtonAggregateDown);
+			this.buttonAggregateDown.TabIndex = index++;
+			this.buttonAggregateDown.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonAggregateDown);
 			ToolTip.Default.SetToolTip(this.buttonAggregateDown, Res.Strings.Action.AggregateDown);
 
@@ -52,6 +62,8 @@ namespace Epsitec.Common.Document.Containers
 
 			this.buttonAggregateDelete = new IconButton(Misc.Icon("AggregateDelete"));
 			this.buttonAggregateDelete.Clicked += new MessageEventHandler(this.HandleButtonAggregateDelete);
+			this.buttonAggregateDelete.TabIndex = index++;
+			this.buttonAggregateDelete.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonAggregateDelete);
 			ToolTip.Default.SetToolTip(this.buttonAggregateDelete, Res.Strings.Action.AggregateDelete);
 
@@ -59,11 +71,15 @@ namespace Epsitec.Common.Document.Containers
 
 			this.buttonStyleNew = new IconButton(Misc.Icon("AggregateStyleNew"));
 			this.buttonStyleNew.Clicked += new MessageEventHandler(this.HandleButtonStyleNew);
+			this.buttonStyleNew.TabIndex = index++;
+			this.buttonStyleNew.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonStyleNew);
 			ToolTip.Default.SetToolTip(this.buttonStyleNew, Res.Strings.Action.AggregateStyleNew);
 
 			this.buttonStyleDelete = new IconButton(Misc.Icon("AggregateStyleDelete"));
 			this.buttonStyleDelete.Clicked += new MessageEventHandler(this.HandleButtonStyleDelete);
+			this.buttonStyleDelete.TabIndex = index++;
+			this.buttonStyleDelete.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonStyleDelete);
 			ToolTip.Default.SetToolTip(this.buttonStyleDelete, Res.Strings.Action.AggregateStyleDelete);
 
@@ -80,8 +96,8 @@ namespace Epsitec.Common.Document.Containers
 			this.list.FinalSelectionChanged += new EventHandler(this.HandleAggregatesTableSelectionChanged);
 			this.list.FlyOverChanged += new EventHandler(this.HandleAggregatesTableFlyOverChanged);
 			this.list.DoubleClicked += new MessageEventHandler(this.HandleAggregatesTableDoubleClicked);
-			this.list.TabIndex = tabIndex++;
-			this.list.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			this.list.TabIndex = 2;
+			this.list.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			// Roue des couleurs.
 			this.colorSelector = new ColorSelector();
@@ -92,8 +108,8 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.Parent = this;
 			this.colorSelector.Dock = DockStyle.Bottom;
 			this.colorSelector.DockMargins = new Margins(0, 0, 5, 0);
-			this.colorSelector.TabIndex = tabIndex++;
-			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			this.colorSelector.TabIndex = 100;
+			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.colorSelector.SetVisible(false);
 
 			// Conteneur du panneau.
@@ -101,8 +117,8 @@ namespace Epsitec.Common.Document.Containers
 			this.panelContainer.Height = 0.0;
 			this.panelContainer.Dock = DockStyle.Bottom;
 			this.panelContainer.DockMargins = new Margins(0, 0, 5, 0);
-			this.panelContainer.TabIndex = tabIndex++;
-			this.panelContainer.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			this.panelContainer.TabIndex = 99;
+			this.panelContainer.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			// Enfants de l'agrégat.
 			this.childrens = new Widgets.AggregateList();
@@ -117,22 +133,26 @@ namespace Epsitec.Common.Document.Containers
 			this.childrens.Dock = DockStyle.Bottom;
 			this.childrens.DockMargins = new Margins(0, 0, 0, 0);
 			this.childrens.FinalSelectionChanged += new EventHandler(this.HandleAggregatesChildrensSelectionChanged);
-			this.childrens.TabIndex = tabIndex++;
-			this.childrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			this.childrens.TabIndex = 98;
+			this.childrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.toolBarChildrens = new HToolBar(this);
 			this.toolBarChildrens.Dock = DockStyle.Bottom;
 			this.toolBarChildrens.DockMargins = new Margins(0, 0, 0, 0);
-			this.toolBarChildrens.TabIndex = tabIndex++;
-			this.toolBarChildrens.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			this.toolBarChildrens.TabIndex = 97;
+			this.toolBarChildrens.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			StaticText st = new StaticText();
 			st.Width = 80;
 			st.Text = Res.Strings.Panel.AggregateChildrens.Label.Name;
 			this.toolBarChildrens.Items.Add(st);
 
+			index = 0;
+
 			this.buttonChildrensNew = new IconButton(Misc.Icon("AggregateChildrensNew"));
 			this.buttonChildrensNew.Clicked += new MessageEventHandler(this.HandleButtonChildrensNew);
+			this.buttonChildrensNew.TabIndex = index++;
+			this.buttonChildrensNew.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toolBarChildrens.Items.Add(this.buttonChildrensNew);
 			ToolTip.Default.SetToolTip(this.buttonChildrensNew, Res.Strings.Action.AggregateChildrensNew);
 
@@ -140,11 +160,15 @@ namespace Epsitec.Common.Document.Containers
 
 			this.buttonChildrensUp = new IconButton(Misc.Icon("Up"));
 			this.buttonChildrensUp.Clicked += new MessageEventHandler(this.HandleButtonChildrensUp);
+			this.buttonChildrensUp.TabIndex = index++;
+			this.buttonChildrensUp.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toolBarChildrens.Items.Add(this.buttonChildrensUp);
 			ToolTip.Default.SetToolTip(this.buttonChildrensUp, Res.Strings.Action.AggregateChildrensUp);
 
 			this.buttonChildrensDown = new IconButton(Misc.Icon("Down"));
 			this.buttonChildrensDown.Clicked += new MessageEventHandler(this.HandleButtonChildrensDown);
+			this.buttonChildrensDown.TabIndex = index++;
+			this.buttonChildrensDown.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toolBarChildrens.Items.Add(this.buttonChildrensDown);
 			ToolTip.Default.SetToolTip(this.buttonChildrensDown, Res.Strings.Action.AggregateChildrensDown);
 
@@ -152,6 +176,8 @@ namespace Epsitec.Common.Document.Containers
 
 			this.buttonChildrensDelete = new IconButton(Misc.Icon("DeleteItem"));
 			this.buttonChildrensDelete.Clicked += new MessageEventHandler(this.HandleButtonChildrensDelete);
+			this.buttonChildrensDelete.TabIndex = index++;
+			this.buttonChildrensDelete.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toolBarChildrens.Items.Add(this.buttonChildrensDelete);
 			ToolTip.Default.SetToolTip(this.buttonChildrensDelete, Res.Strings.Action.AggregateChildrensDelete);
 
@@ -159,8 +185,8 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBarName = new HToolBar(this);
 			this.toolBarName.Dock = DockStyle.Bottom;
 			this.toolBarName.DockMargins = new Margins(0, 0, 0, 0);
-			this.toolBarName.TabIndex = tabIndex++;
-			this.toolBarName.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			this.toolBarName.TabIndex = 96;
+			this.toolBarName.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
 			st = new StaticText();
 			st.Width = 80;
@@ -171,6 +197,8 @@ namespace Epsitec.Common.Document.Containers
 			this.name.Width = 135;
 			this.name.DockMargins = new Margins(0, 0, 1, 1);
 			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
+			this.name.TabIndex = 1;
+			this.name.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.toolBarName.Items.Add(this.name);
 			ToolTip.Default.SetToolTip(this.name, Res.Strings.Panel.AggregateName.Tooltip.Name);
 
@@ -181,6 +209,8 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonChildrensExtend.Dock = DockStyle.Right;
 			this.buttonChildrensExtend.DockMargins = new Margins(0, 0, 5, 5);
 			this.buttonChildrensExtend.Clicked += new MessageEventHandler(this.HandleButtonChildrensExtend);
+			this.buttonChildrensExtend.TabIndex = 2;
+			this.buttonChildrensExtend.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonChildrensExtend, Res.Strings.Panel.Abstract.Extend);
 
 			this.UpdateChildrensExtend();
@@ -362,6 +392,8 @@ namespace Epsitec.Common.Document.Containers
 			this.panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
 			this.panel.Parent = this.panelContainer;
 			this.panel.Dock = DockStyle.Fill;
+			this.panel.TabIndex = 1;
+			this.panel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			this.panelContainer.Height = this.panel.DefaultHeight;
 			this.panelContainer.ForceLayout();
 		}
