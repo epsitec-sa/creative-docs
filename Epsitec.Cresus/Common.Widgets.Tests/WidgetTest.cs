@@ -21,9 +21,7 @@ namespace Epsitec.Common.Widgets
 			
 			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 			
-			Text.Properties.FontProperty fp = new Text.Properties.FontProperty ("Palatino Linotype", "Italic");
-			
-			fp.Features = new string[] { "liga", "dlig", "kern" };
+			Text.Properties.FontProperty fp = new Text.Properties.FontProperty ("Palatino Linotype", "Italic", "liga", "dlig", "kern");
 			
 			properties.Add (fp);
 			properties.Add (new Text.Properties.FontSizeProperty (14.0, Text.Properties.SizeUnits.Points));

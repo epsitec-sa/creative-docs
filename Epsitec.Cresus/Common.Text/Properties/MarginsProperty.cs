@@ -75,14 +75,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.left_margin_first_line;
 			}
-			set
-			{
-				if (NumberSupport.Different (this.left_margin_first_line, value))
-				{
-					this.left_margin_first_line = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public double							LeftMarginBody
@@ -90,14 +82,6 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return this.left_margin_body;
-			}
-			set
-			{
-				if (NumberSupport.Different (this.left_margin_body, value))
-				{
-					this.left_margin_body = value;
-					this.Invalidate ();
-				}
 			}
 		}
 		
@@ -107,14 +91,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.right_margin_first_line;
 			}
-			set
-			{
-				if (NumberSupport.Different (this.right_margin_first_line, value))
-				{
-					this.right_margin_first_line = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public double							RightMarginBody
@@ -122,14 +98,6 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return this.right_margin_body;
-			}
-			set
-			{
-				if (NumberSupport.Different (this.right_margin_body, value))
-				{
-					this.right_margin_body = value;
-					this.Invalidate ();
-				}
 			}
 		}
 		
@@ -139,14 +107,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.units;
 			}
-			set
-			{
-				if (this.units != value)
-				{
-					this.units = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public double							JustificationBody
@@ -154,14 +114,6 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return this.justification_body;
-			}
-			set
-			{
-				if (NumberSupport.Different (this.justification_body, value))
-				{
-					this.justification_body = value;
-					this.Invalidate ();
-				}
 			}
 		}
 		
@@ -171,14 +123,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.justification_last_line;
 			}
-			set
-			{
-				if (NumberSupport.Different (this.justification_last_line, value))
-				{
-					this.justification_last_line = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public double							Disposition
@@ -186,14 +130,6 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return this.disposition;
-			}
-			set
-			{
-				if (NumberSupport.Different (this.disposition, value))
-				{
-					this.disposition = value;
-					this.Invalidate ();
-				}
 			}
 		}
 		
@@ -203,14 +139,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.break_fence_before;
 			}
-			set
-			{
-				if (NumberSupport.Different (this.break_fence_before, value))
-				{
-					this.break_fence_before = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public double							BreakFenceAfter
@@ -219,14 +147,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.break_fence_after;
 			}
-			set
-			{
-				if (NumberSupport.Different (this.break_fence_after, value))
-				{
-					this.break_fence_after = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public ThreeState						EnableHyphenation
@@ -234,14 +154,6 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return this.enable_hyphenation;
-			}
-			set
-			{
-				if (this.enable_hyphenation != value)
-				{
-					this.enable_hyphenation = value;
-					this.Invalidate ();
-				}
 			}
 		}
 		

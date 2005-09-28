@@ -18,7 +18,7 @@ namespace Epsitec.Common.Text.Properties
 			this.style_name = style;
 		}
 		
-		public FontProperty(string face, string style, string[] features)
+		public FontProperty(string face, string style, params string[] features)
 		{
 			this.face_name  = face;
 			this.style_name = style;
@@ -49,14 +49,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.face_name;
 			}
-			set
-			{
-				if (this.face_name != value)
-				{
-					this.face_name = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public string							StyleName
@@ -65,14 +57,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.style_name;
 			}
-			set
-			{
-				if (this.style_name != value)
-				{
-					this.style_name = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public string[]							Features
@@ -80,14 +64,6 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return this.features;
-			}
-			set
-			{
-				if (! Types.Comparer.Equal (this.features, value))
-				{
-					this.features = value.Clone () as string[];
-					this.Invalidate ();
-				}
 			}
 		}
 		

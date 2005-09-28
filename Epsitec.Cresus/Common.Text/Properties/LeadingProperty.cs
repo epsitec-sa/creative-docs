@@ -72,14 +72,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.leading;
 			}
-			set
-			{
-				if (NumberSupport.Different (this.leading, value))
-				{
-					this.leading = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public double							SpaceBefore
@@ -88,14 +80,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.space_before;
 			}
-			set
-			{
-				if (NumberSupport.Different (this.space_before, value))
-				{
-					this.space_before = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public double							SpaceAfter
@@ -103,14 +87,6 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return this.space_after;
-			}
-			set
-			{
-				if (NumberSupport.Different (this.space_after, value))
-				{
-					this.space_after = value;
-					this.Invalidate ();
-				}
 			}
 		}
 		
@@ -161,14 +137,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.leading_units;
 			}
-			set
-			{
-				if (this.leading_units != value)
-				{
-					this.leading_units = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public SizeUnits						SpaceBeforeUnits
@@ -176,14 +144,6 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return this.space_before_units;
-			}
-			set
-			{
-				if (this.space_before_units != value)
-				{
-					this.space_before_units = value;
-					this.Invalidate ();
-				}
 			}
 		}
 		
@@ -193,14 +153,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.space_after_units;
 			}
-			set
-			{
-				if (this.space_after_units != value)
-				{
-					this.space_after_units = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		
@@ -209,14 +161,6 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return this.align_mode;
-			}
-			set
-			{
-				if (this.align_mode != value)
-				{
-					this.align_mode = value;
-					this.Invalidate ();
-				}
 			}
 		}
 		

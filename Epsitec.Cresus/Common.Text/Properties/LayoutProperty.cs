@@ -45,14 +45,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.engine_name;
 			}
-			set
-			{
-				if (this.engine_name != value)
-				{
-					this.engine_name = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		

@@ -43,14 +43,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.offset;
 			}
-			set
-			{
-				if (NumberSupport.Different (this.offset, value))
-				{
-					this.offset = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public SizeUnits						Units
@@ -58,14 +50,6 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return this.units;
-			}
-			set
-			{
-				if (this.units != value)
-				{
-					this.units = value;
-					this.Invalidate ();
-				}
 			}
 		}
 		

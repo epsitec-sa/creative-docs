@@ -42,14 +42,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.size;
 			}
-			set
-			{
-				if (NumberSupport.Different (this.size, value))
-				{
-					this.size = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public double							SizeInPoints
@@ -70,14 +62,6 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return this.units;
-			}
-			set
-			{
-				if (this.units != value)
-				{
-					this.units = value;
-					this.Invalidate ();
-				}
 			}
 		}
 		

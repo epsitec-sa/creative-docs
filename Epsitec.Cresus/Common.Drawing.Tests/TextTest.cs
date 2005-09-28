@@ -473,8 +473,7 @@ namespace Epsitec.Common.Drawing
 					
 					Text.Properties.FontProperty fp;
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Arial", "Regular");
-					fp.Features = this.features;
+					fp = new Text.Properties.FontProperty ("Arial", "Regular", this.features);
 					
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
@@ -489,8 +488,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 #if true
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Palatino Linotype", "Regular");
-					fp.Features = this.features;
+					fp = new Text.Properties.FontProperty ("Palatino Linotype", "Regular", this.features);
 					
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.SizeUnits.Points));
@@ -509,8 +507,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Times New Roman", "Italic");
-					fp.Features = this.features;
+					fp = new Text.Properties.FontProperty ("Times New Roman", "Italic", this.features);
 					
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
@@ -524,8 +521,8 @@ namespace Epsitec.Common.Drawing
 					
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Arial", "Regular");
-					fp.Features = this.features;
+					fp = new Text.Properties.FontProperty ("Arial", "Regular", this.features);
+					
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, Text.Properties.ThreeState.False));
@@ -546,8 +543,7 @@ namespace Epsitec.Common.Drawing
 					
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Arial", "Regular");
-					fp.Features = this.features;
+					fp = new Text.Properties.FontProperty ("Arial", "Regular", this.features);
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (12.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.4, 0.0, 1.0, 15, 1, Text.Properties.ThreeState.False));
@@ -561,8 +557,7 @@ namespace Epsitec.Common.Drawing
 					words = "Une phrase contenant un \"non\u2011breaking hyphen\" mais aussi un \"soft\u2010hyphen\" au milieu du mot \"Merk\u00ADwürdig\". Voici une césure mongloienne au milieu du mot \"Abra\u1806cadabra\".\n";
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
-					fp.Features = this.features;
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.5, 15, 1, Text.Properties.ThreeState.True));
@@ -596,8 +591,7 @@ namespace Epsitec.Common.Drawing
 					double disp = 0.0;
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
-					fp.Features = this.features;
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
@@ -608,8 +602,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
-					fp.Features = this.features;
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
@@ -621,8 +614,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
-					fp.Features = this.features;
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
@@ -633,8 +625,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
-					fp.Features = this.features;
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
@@ -647,8 +638,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
-					fp.Features = this.features;
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
@@ -659,8 +649,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
-					fp.Features = this.features;
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
@@ -672,8 +661,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
-					fp.Features = this.features;
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
@@ -687,8 +675,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.InsertText (cursor, text);
 					
 					properties.Clear ();
-					fp = new Text.Properties.FontProperty ("Verdana", "Regular");
-					fp.Features = this.features;
+					fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
 					properties.Add (fp);
 					properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 					properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, just, 0.0, disp, 15, 1, Text.Properties.ThreeState.True));
@@ -707,8 +694,7 @@ namespace Epsitec.Common.Drawing
 						for (int i = 0; (i < 15) && (glyph < 205); i++)
 						{
 							properties.Clear ();
-							fp = new Text.Properties.FontProperty (symbol, "Regular");
-							fp.Features = this.features;
+							fp = new Text.Properties.FontProperty (symbol, "Regular", this.features);
 							properties.Add (fp);
 							properties.Add (new Text.Properties.FontSizeProperty (24.0, Text.Properties.SizeUnits.Points));
 							properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));
@@ -721,8 +707,7 @@ namespace Epsitec.Common.Drawing
 						}
 						
 						properties.Clear ();
-						fp = new Text.Properties.FontProperty ("Verdana", "Regular");
-						fp.Features = this.features;
+						fp = new Text.Properties.FontProperty ("Verdana", "Regular", this.features);
 						properties.Add (fp);
 						properties.Add (new Text.Properties.FontSizeProperty (16.0, Text.Properties.SizeUnits.Points));
 						properties.Add (new Text.Properties.MarginsProperty (0, 0, 0, 0, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.False));

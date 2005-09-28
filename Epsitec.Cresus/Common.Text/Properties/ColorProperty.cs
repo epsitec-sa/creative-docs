@@ -42,14 +42,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.text_color;
 			}
-			set
-			{
-				if (this.text_color != value)
-				{
-					this.text_color = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		

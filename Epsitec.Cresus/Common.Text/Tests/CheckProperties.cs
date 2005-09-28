@@ -71,9 +71,7 @@ namespace Epsitec.Common.Text.Tests
 			Properties.MarginsProperty margins_c = margins_a.GetCombination (margins_b) as Properties.MarginsProperty;
 			Properties.MarginsProperty margins_d = margins_b.GetCombination (margins_a) as Properties.MarginsProperty;
 			
-			margins_a.Units = Properties.SizeUnits.Points;
-			margins_a.LeftMarginBody  = 10;
-			margins_a.RightMarginBody = 10;
+			margins_a = new Properties.MarginsProperty (double.NaN, 10, double.NaN, 10, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 0.0, 0.0, Properties.ThreeState.Undefined);
 			
 			Properties.MarginsProperty margins_e = margins_a.GetCombination (margins_b) as Properties.MarginsProperty;
 			Properties.MarginsProperty margins_f = margins_b.GetCombination (margins_a) as Properties.MarginsProperty;

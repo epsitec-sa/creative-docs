@@ -56,14 +56,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.start_lines;
 			}
-			set
-			{
-				if (this.start_lines != value)
-				{
-					this.start_lines = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public int								EndLines
@@ -72,14 +64,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.end_lines;
 			}
-			set
-			{
-				if (this.end_lines != value)
-				{
-					this.end_lines = value;
-					this.Invalidate ();
-				}
-			}
 		}
 		
 		public ParagraphStartMode				ParagraphStartMode
@@ -87,14 +71,6 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return this.paragraph_start_mode;
-			}
-			set
-			{
-				if (this.paragraph_start_mode != value)
-				{
-					this.paragraph_start_mode = value;
-					this.Invalidate ();
-				}
 			}
 		}
 		
@@ -105,13 +81,6 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.with_next_paragraph;
 			}
-			set
-			{
-				if (this.with_next_paragraph != value)
-				{
-					this.with_next_paragraph = value;
-				}
-			}
 		}
 		
 		public ThreeState						KeepWithPreviousParagraph
@@ -119,13 +88,6 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return this.with_prev_paragraph;
-			}
-			set
-			{
-				if (this.with_prev_paragraph != value)
-				{
-					this.with_prev_paragraph = value;
-				}
 			}
 		}
 		

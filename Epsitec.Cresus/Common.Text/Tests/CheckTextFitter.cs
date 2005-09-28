@@ -555,11 +555,9 @@ namespace Epsitec.Common.Text.Tests
 			
 			TabList tabs = story.TextContext.TabList;
 			
-			Properties.FontProperty font_regular = new Properties.FontProperty ("Arial", "Regular");
+			Properties.FontProperty font_regular = new Properties.FontProperty ("Arial", "Regular", "liga");
 			Properties.FontProperty font_bold    = new Properties.FontProperty ("Arial", "Bold");
 			Properties.FontProperty font_italic  = new Properties.FontProperty ("Arial", "Italic");
-			
-			font_regular.Features = new string[] { "liga" };
 			
 			properties_1.Add (font_regular);
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
