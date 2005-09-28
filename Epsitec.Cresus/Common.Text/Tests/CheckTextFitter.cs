@@ -238,11 +238,13 @@ namespace Epsitec.Common.Text.Tests
 			System.Collections.ArrayList properties_1 = new System.Collections.ArrayList ();
 			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
 			
+			TabList tabs = story.TextContext.TabList;
+			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (new Properties.TabProperty (null, 60, 0, null));
+			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
@@ -312,11 +314,13 @@ namespace Epsitec.Common.Text.Tests
 			System.Collections.ArrayList properties_1 = new System.Collections.ArrayList ();
 			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
 			
+			TabList tabs = story.TextContext.TabList;
+			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (new Properties.TabProperty (null, 60, 0.5, null));
+			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.5, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
@@ -394,11 +398,13 @@ namespace Epsitec.Common.Text.Tests
 			System.Collections.ArrayList properties_1 = new System.Collections.ArrayList ();
 			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
 			
+			TabList tabs = story.TextContext.TabList;
+			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (new Properties.TabProperty (null, 60, 0, null));
+			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
@@ -467,11 +473,13 @@ namespace Epsitec.Common.Text.Tests
 			System.Collections.ArrayList properties_1 = new System.Collections.ArrayList ();
 			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
 			
+			TabList tabs = story.TextContext.TabList;
+			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (new Properties.TabProperty (null, 60, 0, null));
+			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
@@ -545,6 +553,8 @@ namespace Epsitec.Common.Text.Tests
 			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
 			System.Collections.ArrayList properties_3 = new System.Collections.ArrayList ();
 			
+			TabList tabs = story.TextContext.TabList;
+			
 			Properties.FontProperty font_regular = new Properties.FontProperty ("Arial", "Regular");
 			Properties.FontProperty font_bold    = new Properties.FontProperty ("Arial", "Bold");
 			Properties.FontProperty font_italic  = new Properties.FontProperty ("Arial", "Italic");
@@ -555,7 +565,7 @@ namespace Epsitec.Common.Text.Tests
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (new Properties.TabProperty (null, 60, 0, null));
+			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null));
 			
 			properties_2.Add (font_bold);
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));

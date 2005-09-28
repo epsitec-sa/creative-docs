@@ -1156,10 +1156,12 @@ restart_paragraph_layout:
 			tab_x = 0;
 			width = 0;
 			
-			double d = tab_property.Disposition;
+			TabList tabs = layout.TextContext.TabList;
+			
+			double d = tabs.GetTabDisposition (tab_property);
 			
 			double x1 = start_of_line ? layout.LeftMargin : layout.LineCurrentX;
-			double x2 = tab_property.PositionInPoints;
+			double x2 = tabs.GetTabPositionInPoints (tab_property);
 			double x3 = layout.LineWidth - layout.RightMargin;
 			
 			double x_before = x2 - x1;

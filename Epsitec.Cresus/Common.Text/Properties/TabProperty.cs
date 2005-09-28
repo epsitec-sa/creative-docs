@@ -8,22 +8,13 @@ namespace Epsitec.Common.Text.Properties
 	/// </summary>
 	public class TabProperty : Property
 	{
-		public TabProperty() : this (null, 0, SizeUnits.Points, 0, null)
+		public TabProperty()
 		{
 		}
 		
-		public TabProperty(string tag, double position, double disposition, string docking_mark) : this (tag, position, SizeUnits.Points, disposition, docking_mark)
+		public TabProperty(string tag)
 		{
-		}
-		
-		public TabProperty(string tag, double position, SizeUnits units, double disposition, string docking_mark)
-		{
-			System.Diagnostics.Debug.Assert (double.IsNaN (position) == false);
-			System.Diagnostics.Debug.Assert (UnitsTools.IsAbsoluteSize (units));
-			
 			this.tab_tag = tag;
-			
-			this.Initialise (position, units, disposition, docking_mark);
 		}
 		
 		
@@ -60,70 +51,6 @@ namespace Epsitec.Common.Text.Properties
 		}
 
 		
-		public double							Position
-		{
-			get
-			{
-				return this.position;
-			}
-			set
-			{
-				if (NumberSupport.Different (this.position, value))
-				{
-					this.position = value;
-					this.Invalidate ();
-				}
-			}
-		}
-		
-		public double							PositionInPoints
-		{
-			get
-			{
-				return UnitsTools.ConvertToPoints (this.position, this.units);
-			}
-		}
-		
-		public SizeUnits						Units
-		{
-			get
-			{
-				return this.units;
-			}
-		}
-		
-		public double							Disposition
-		{
-			get
-			{
-				return this.disposition;
-			}
-			set
-			{
-				if (NumberSupport.Different (this.disposition, value))
-				{
-					this.disposition = value;
-					this.Invalidate ();
-				}
-			}
-		}
-		
-		public string							DockingMark
-		{
-			get
-			{
-				return this.docking_mark;
-			}
-			set
-			{
-				if (this.docking_mark != value)
-				{
-					this.docking_mark = value;
-					this.Invalidate ();
-				}
-			}
-		}
-		
 		public string							TabTag
 		{
 			get
@@ -132,16 +59,6 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		
-		internal void Initialise(double position, SizeUnits units, double disposition, string docking_mark)
-		{
-			this.position     = position;
-			this.units        = units;
-			this.disposition  = disposition;
-			this.docking_mark = docking_mark;
-			
-			this.Invalidate ();
-		}
 		
 		
 		public override Property EmptyClone()
@@ -152,30 +69,18 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeString (this.tab_tag),
-				/**/				SerializerSupport.SerializeDouble (this.position),
-				/**/				SerializerSupport.SerializeSizeUnits (this.units),
-				/**/				SerializerSupport.SerializeDouble (this.disposition),
-				/**/				SerializerSupport.SerializeString (this.docking_mark));
+				/**/				SerializerSupport.SerializeString (this.tab_tag));
 		}
 		
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 5);
+			Debug.Assert.IsTrue (args.Length == 1);
 			
-			string    tab_tag      = SerializerSupport.DeserializeString (args[0]);
-			double    position     = SerializerSupport.DeserializeDouble (args[1]);
-			SizeUnits units        = SerializerSupport.DeserializeSizeUnits (args[2]);
-			double    disposition  = SerializerSupport.DeserializeDouble (args[3]);
-			string    docking_mark = SerializerSupport.DeserializeString (args[4]);
+			string tab_tag = SerializerSupport.DeserializeString (args[0]);
 			
-			this.tab_tag      = tab_tag;
-			this.position     = position;
-			this.units        = units;
-			this.disposition  = disposition;
-			this.docking_mark = docking_mark;
+			this.tab_tag = tab_tag;
 		}
 		
 		
@@ -188,10 +93,6 @@ namespace Epsitec.Common.Text.Properties
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
 			checksum.UpdateValue (this.tab_tag);
-			checksum.UpdateValue (this.position);
-			checksum.UpdateValue ((int) this.units);
-			checksum.UpdateValue (this.disposition);
-			checksum.UpdateValue (this.docking_mark);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -202,18 +103,10 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(TabProperty a, TabProperty b)
 		{
-			return a.tab_tag == b.tab_tag
-				&& NumberSupport.Equal (a.position, b.position)
-				&& a.units == b.units
-				&& NumberSupport.Equal (a.disposition, b.disposition)
-				&& a.docking_mark == b.docking_mark;
+			return a.tab_tag == b.tab_tag;
 		}
 		
 		
 		private string							tab_tag;
-		private double							position;
-		private SizeUnits						units;
-		private double							disposition;				//	0.0 = aligné à gauche, 0.5 = centré, 1.0 = aligné à droite
-		private string							docking_mark;				//	"." = aligne sur le point décimal
 	}
 }

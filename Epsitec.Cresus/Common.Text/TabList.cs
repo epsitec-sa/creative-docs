@@ -10,7 +10,6 @@ namespace Epsitec.Common.Text
 	{
 		public TabList()
 		{
-			this.tab_list = new System.Collections.ArrayList ();
 			this.tab_hash = new System.Collections.Hashtable ();
 		}
 		
@@ -48,9 +47,9 @@ namespace Epsitec.Common.Text
 		
 		public Properties.TabProperty NewTab(string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark)
 		{
-			Properties.TabProperty tab = new Properties.TabProperty (tag, position, units, disposition, docking_mark);
+			Properties.TabProperty tab = new Properties.TabProperty (tag);
 			
-			this.Attach (tab);
+			this.Attach (tab, new TabRecord (position, units, disposition, docking_mark));
 			
 			return tab;
 		}
@@ -58,7 +57,17 @@ namespace Epsitec.Common.Text
 		
 		public void RedefineTab(Properties.TabProperty tab, double position, Properties.SizeUnits units, double disposition, string docking_mark)
 		{
-			tab.Initialise (position, units, disposition, docking_mark);
+			System.Diagnostics.Debug.Assert (tab != null);
+			System.Diagnostics.Debug.Assert (tab.TabTag != null);
+			
+			TabRecord record = this.GetTabRecord (tab);
+			
+			if (record == null)
+			{
+				throw new System.ArgumentException (string.Format ("TabProperty named {0} does not exist", tab.TabTag), "tab");
+			}
+			
+			record.Initialise (position, units, disposition, docking_mark);
 		}
 		
 		public void RecycleTab(Properties.TabProperty tab)
@@ -71,7 +80,7 @@ namespace Epsitec.Common.Text
 		{
 			if (this.tab_hash.Contains (tag))
 			{
-				return this.tab_hash[tag] as Properties.TabProperty;
+				return new Properties.TabProperty (tag);
 			}
 			else
 			{
@@ -80,7 +89,102 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		private void Attach(Properties.TabProperty tab)
+		public double GetTabPosition(Properties.TabProperty tab)
+		{
+			return this.GetTabRecord (tab).Position;
+		}
+		
+		public double GetTabPositionInPoints(Properties.TabProperty tab)
+		{
+			return this.GetTabRecord (tab).PositionInPoints;
+		}
+
+		public Properties.SizeUnits GetTabUnits(Properties.TabProperty tab)
+		{
+			return this.GetTabRecord (tab).Units;
+		}
+		
+		public double GetTabDisposition(Properties.TabProperty tab)
+		{
+			return this.GetTabRecord (tab).Disposition;
+		}
+		
+		public string GetTabDockingMark(Properties.TabProperty tab)
+		{
+			return this.GetTabRecord (tab).DockingMark;
+		}
+		
+		
+		private class TabRecord
+		{
+			public TabRecord(double position, Properties.SizeUnits units, double disposition, string docking_mark)
+			{
+				this.Initialise (position, units, disposition, docking_mark);
+			}
+			
+			
+			public double						Position
+			{
+				get
+				{
+					return this.position;
+				}
+			}
+			
+			public double						PositionInPoints
+			{
+				get
+				{
+					return Properties.UnitsTools.ConvertToPoints (this.position, this.units);
+				}
+			}
+			
+			public Properties.SizeUnits			Units
+			{
+				get
+				{
+					return this.units;
+				}
+			}
+			
+			public double						Disposition
+			{
+				get
+				{
+					return this.disposition;
+				}
+			}
+			
+			public string						DockingMark
+			{
+				get
+				{
+					return this.docking_mark;
+				}
+			}
+			
+			
+			public void Initialise(double position, Properties.SizeUnits units, double disposition, string docking_mark)
+			{
+				this.position     = position;
+				this.units        = units;
+				this.disposition  = disposition;
+				this.docking_mark = docking_mark;
+			}
+			
+			
+			private double						position;
+			private Properties.SizeUnits		units;
+			private double						disposition;				//	0.0 = aligné à gauche, 0.5 = centré, 1.0 = aligné à droite
+			private string						docking_mark;				//	"." = aligne sur le point décimal
+		}
+		
+		private TabRecord GetTabRecord(Properties.TabProperty tab)
+		{
+			return this.tab_hash[tab.TabTag] as TabRecord;
+		}
+		
+		private void Attach(Properties.TabProperty tab, TabRecord record)
 		{
 			string tag = tab.TabTag;
 			
@@ -89,8 +193,7 @@ namespace Epsitec.Common.Text
 				throw new System.ArgumentException (string.Format ("TabProperty named {0} already exists", tag), "tab");
 			}
 			
-			this.tab_list.Add (tab);
-			this.tab_hash[tag] = tab;
+			this.tab_hash[tag] = record;
 		}
 		
 		private void Detach(Properties.TabProperty tab)
@@ -99,7 +202,6 @@ namespace Epsitec.Common.Text
 			
 			if (this.tab_hash.Contains (tag))
 			{
-				this.tab_list.Remove (tab);
 				this.tab_hash.Remove (tag);
 			}
 			else
@@ -109,7 +211,6 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		private System.Collections.ArrayList	tab_list;
 		private System.Collections.Hashtable	tab_hash;
 	}
 }
