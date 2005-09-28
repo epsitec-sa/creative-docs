@@ -264,6 +264,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TabList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TextConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

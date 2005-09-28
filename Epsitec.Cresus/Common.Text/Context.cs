@@ -12,6 +12,7 @@ namespace Epsitec.Common.Text
 		public Context()
 		{
 			this.style_list     = new StyleList ();
+			this.tab_list       = new TabList ();
 			this.layout_list    = new LayoutList (this);
 			this.generator_list = new GeneratorList (this);
 			this.p_manager_list = new ParagraphManagerList (this);
@@ -38,6 +39,14 @@ namespace Epsitec.Common.Text
 			get
 			{
 				return this.style_list;
+			}
+		}
+		
+		public TabList							TabList
+		{
+			get
+			{
+				return this.tab_list;
 			}
 		}
 		
@@ -1022,6 +1031,7 @@ namespace Epsitec.Common.Text
 		
 		
 		private StyleList						style_list;
+		private TabList							tab_list;
 		private LayoutList						layout_list;
 		private GeneratorList					generator_list;
 		private ParagraphManagerList			p_manager_list;

@@ -21,11 +21,9 @@ namespace Epsitec.Common.Text.Properties
 			System.Diagnostics.Debug.Assert (double.IsNaN (position) == false);
 			System.Diagnostics.Debug.Assert (UnitsTools.IsAbsoluteSize (units));
 			
-			this.tab_tag      = tag;
-			this.position     = position;
-			this.units        = units;
-			this.disposition  = disposition;
-			this.docking_mark = docking_mark;
+			this.tab_tag = tag;
+			
+			this.Initialise (position, units, disposition, docking_mark);
 		}
 		
 		
@@ -132,6 +130,17 @@ namespace Epsitec.Common.Text.Properties
 			{
 				return this.tab_tag;
 			}
+		}
+		
+		
+		internal void Initialise(double position, SizeUnits units, double disposition, string docking_mark)
+		{
+			this.position     = position;
+			this.units        = units;
+			this.disposition  = disposition;
+			this.docking_mark = docking_mark;
+			
+			this.Invalidate ();
 		}
 		
 		
