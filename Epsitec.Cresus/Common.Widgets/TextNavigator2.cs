@@ -543,8 +543,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.text_navigator.IsSelectionActive)
 			{
-				this.text_navigator.EndSelection ();
-				this.is_mouse_selecting = false;
+//-				this.text_navigator.EndSelection ();
+//-				this.is_mouse_selecting = false;
 			}
 			
 			if (message.ButtonDownCount == 1)
@@ -564,7 +564,7 @@ namespace Epsitec.Common.Widgets
 				this.SelectAll ();
 			}
 			
-			System.Diagnostics.Debug.Assert (this.is_mouse_selecting == false);
+//-			System.Diagnostics.Debug.Assert (this.is_mouse_selecting == false);
 			
 			this.is_mouse_down      = false;
 			this.is_mouse_dragging  = false;
