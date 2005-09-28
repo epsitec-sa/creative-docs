@@ -72,6 +72,8 @@ namespace Epsitec.Common.Widgets
 			window.Show ();
 		}
 		
+		
+		#region TextFrameManager Class
 		class TextFrameManager
 		{
 			public TextFrameManager(Widget pane, TextFrame frame)
@@ -205,6 +207,7 @@ namespace Epsitec.Common.Widgets
 			
 			private TextFrame					frame;
 		}
+		#endregion
 		
 		[Test] public void CheckParentChildRelationship()
 		{
