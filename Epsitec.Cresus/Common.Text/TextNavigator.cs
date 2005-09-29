@@ -1250,7 +1250,7 @@ namespace Epsitec.Common.Text
 			
 			int pos = this.story.GetCursorPosition (this.cursor);
 			
-			if ((pos == this.story.TextLength) &&
+			if ((Internal.Navigator.IsEndOfText (this.story, this.cursor, 0)) &&
 				(Internal.Navigator.IsParagraphStart (this.story, this.cursor, 0)))
 			{
 				starts.Push (pos);
@@ -1349,7 +1349,8 @@ namespace Epsitec.Common.Text
 			{
 				System.Diagnostics.Debug.Assert (start <= pos+i);
 				
-				if (Internal.Navigator.IsParagraphSeparator (text[i]))
+				if ((Internal.Navigator.IsParagraphSeparator (text[i])) ||
+					(Internal.Navigator.IsEndOfText (this.story, cursor, i+1)))
 				{
 					//	Vérifie si l'on détruit un paragraphe complet (avec un
 					//	éventuel texte automatique au début)
@@ -1445,6 +1446,41 @@ namespace Epsitec.Common.Text
 				
 				Internal.Navigator.SetParagraphStyles (this.story, this.temp_cursor, styles);
 				Internal.Navigator.SetParagraphProperties (this.story, this.temp_cursor, Properties.ApplyMode.Overwrite, props);
+			}
+			else
+			{
+				//	Le curseur pourrait maintenant avoir une mise en page de paragraphe
+				//	différente de ce qu'il avait avant. Il faut mettre à jour juste la
+				//	partie "paragraphe" du style et des propriétés...
+				
+				Property[]  old_properties = this.current_properties;
+				TextStyle[] old_styles     = this.current_styles;
+				
+				System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (old_properties) == false);
+				System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (old_properties) == false);
+				
+				//	Change l'état du curseur, comme s'il venait d'arriver où il est; on
+				//	perd donc les réglages précédents, temporairement.
+				
+				this.UpdateCurrentStylesAndProperties ();
+				
+				System.Collections.ArrayList new_styles     = new System.Collections.ArrayList ();
+				System.Collections.ArrayList new_properties = new System.Collections.ArrayList ();
+				
+				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
+				new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Text));
+				new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Character));
+				
+				new_properties.AddRange (Property.FilterUniformParagraphProperties (this.current_properties));
+				new_properties.AddRange (Property.FilterOtherProperties (old_properties));
+				
+				//	Regénère les styles et propriétés d'origine du curseur, pour ce qui
+				//	concerne le texte, mais conserve les réglages du paragraphe en cours.
+				
+				this.current_styles     = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
+				this.current_properties = new_properties.ToArray (typeof (Property)) as Property[];
+				
+				this.RefreshAccumulatedStylesAndProperties ();
 			}
 		}
 		

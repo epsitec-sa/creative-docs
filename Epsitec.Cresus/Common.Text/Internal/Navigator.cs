@@ -48,6 +48,13 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool IsEndOfText(TextStory story, ICursor cursor, int offset)
 		{
+			int pos = story.GetCursorPosition (cursor) + offset;
+			
+			if (pos >= story.TextLength)
+			{
+				return true;
+			}
+			
 			Unicode.Code code = Unicode.Bits.GetUnicodeCode (story.ReadChar (cursor, offset));
 			
 			return Navigator.IsEndOfText (code);
