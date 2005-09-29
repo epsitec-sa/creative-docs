@@ -66,6 +66,7 @@ namespace Epsitec.Common.Widgets
 				case MessageType.KeyPress:
 					if ( message.IsAltPressed || message.IsCtrlPressed )
 					{
+						base.ProcessMessage (message, pos);
 						return;
 					}
 					
@@ -76,6 +77,8 @@ namespace Epsitec.Common.Widgets
 						this.OnShortcutPressed();
 						break;
 					}
+					
+					base.ProcessMessage (message, pos);
 					return;
 				
 				case MessageType.KeyUp:
@@ -84,9 +87,11 @@ namespace Epsitec.Common.Widgets
 						this.isKeyboardPressed = false;
 						break;
 					}
+					base.ProcessMessage (message, pos);
 					return;
 				
 				default:
+					base.ProcessMessage (message, pos);
 					return;
 			}
 			

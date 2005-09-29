@@ -6,10 +6,12 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.UI.Controllers
 {
+	using GroupController = Epsitec.Common.Widgets.Helpers.GroupController;
+	
 	/// <summary>
 	/// La classe WidgetStateController réalise un contrôleur très simple qui
 	/// s'appuie sur un widget existant et interagit avec sa propriété ActiveState.
-	/// Lorsque la widget observé est un RadioButton (avec Group/Index), alors la
+	/// Lorsque la widget observé est un widget 'radio' (avec Group/Index), alors la
 	/// gestion est un peu plus subtile, en ce sens qu'elle tient compte du groupe
 	/// complet et détermine ainsi une valeur numérique, pas un booléen.
 	/// </summary>
@@ -49,15 +51,13 @@ namespace Epsitec.Common.UI.Controllers
 		
 		public override void CreateUI(Widget widget)
 		{
-			if (widget is RadioButton)
+			if (widget.AutoRadio)
 			{
 				//	Cas particulier: le widget est un bouton radio, et on ne doit s'attacher non
 				//	pas au bouton radio lui-même, mais au contrôleur du groupe de boutons :
 				
-				RadioButton radio = widget as RadioButton;
-				
-				this.widget = radio;
-				this.group  = radio.Controller;
+				this.widget = widget;
+				this.group  = GroupController.GetGroupController (widget);
 				
 				if (this.group == null)
 				{
@@ -72,7 +72,7 @@ namespace Epsitec.Common.UI.Controllers
 					//	C'est une énumération pour laquelle nous connaissons peut-être les légendes des
 					//	divers éléments. Dans ce cas, on va renommer les boutons radio qui correspondent :
 					
-					foreach (RadioButton item in RadioButton.FindRadioChildren (radio.Parent, radio.Group))
+					foreach (RadioButton item in this.group.FindWidgets ())
 					{
 						int index = item.Index;
 						
@@ -172,7 +172,7 @@ namespace Epsitec.Common.UI.Controllers
 		
 		
 		private Widget							widget;
-		private RadioButton.GroupController		group;
+		private GroupController					group;
 		private Types.INamedType				data_type;
 	}
 }

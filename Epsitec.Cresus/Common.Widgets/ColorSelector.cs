@@ -167,25 +167,34 @@ namespace Epsitec.Common.Widgets
 			this.buttonClose.TabIndex = 1;
 			this.buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonClose, Res.Strings.ColorSelector.Close);
-
+			
+			this.colorSpaceController = Helpers.GroupController.GetGroupController(this, "ColorSpace");
+			this.colorSpaceController.Changed += new Support.EventHandler(this.HandleColorSpaceChanged);
+			
 			this.buttonRGB = new IconButton(this);
+			this.buttonRGB.AutoRadio = true;
+			this.buttonRGB.Group = this.colorSpaceController.Group;
+			this.buttonRGB.Index = 1;
 			this.buttonRGB.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceRGB.icon";
-			this.buttonRGB.Clicked += new MessageEventHandler(this.HandleButtonRGBClicked);
 			this.buttonRGB.TabIndex = 21;
 			this.buttonRGB.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonRGB, Res.Strings.ColorSelector.ColorSpace.RGB);
 
 			this.buttonCMYK = new IconButton(this);
+			this.buttonCMYK.AutoRadio = true;
+			this.buttonCMYK.Group = this.colorSpaceController.Group;
+			this.buttonCMYK.Index = 2;
 			this.buttonCMYK.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceCMYK.icon";
-			this.buttonCMYK.Clicked += new MessageEventHandler(this.HandleButtonCMYKClicked);
-			this.buttonCMYK.TabIndex = 22;
+			this.buttonCMYK.TabIndex = 21;
 			this.buttonCMYK.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonCMYK, Res.Strings.ColorSelector.ColorSpace.CMYK);
 
 			this.buttonGray = new IconButton(this);
+			this.buttonGray.AutoRadio = true;
+			this.buttonGray.Group = this.colorSpaceController.Group;
+			this.buttonGray.Index = 3;
 			this.buttonGray.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceGray.icon";
-			this.buttonGray.Clicked += new MessageEventHandler(this.HandleButtonGrayClicked);
-			this.buttonGray.TabIndex = 23;
+			this.buttonGray.TabIndex = 21;
 			this.buttonGray.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonGray, Res.Strings.ColorSelector.ColorSpace.Gray);
 		}
@@ -899,36 +908,22 @@ namespace Epsitec.Common.Widgets
 			this.OnCloseClicked();
 		}
 
-		private void HandleButtonRGBClicked(object sender, MessageEventArgs e)
+		private void HandleColorSpaceChanged(object sender)
 		{
-			this.color.ColorSpace = Drawing.ColorSpace.RGB;
+			switch( this.colorSpaceController.ActiveIndex )
+			{
+				case 1: this.color.ColorSpace = Drawing.ColorSpace.RGB;		break;
+				case 2: this.color.ColorSpace = Drawing.ColorSpace.CMYK;	break;
+				case 3: this.color.ColorSpace = Drawing.ColorSpace.Gray;	break;
+			}
+			
 			this.circle.Color = this.color;
 
 			this.suspendColorEvents = true;
 			this.UpdateColors();
 			this.suspendColorEvents = false;
 		}
-
-		private void HandleButtonCMYKClicked(object sender, MessageEventArgs e)
-		{
-			this.color.ColorSpace = Drawing.ColorSpace.CMYK;
-			this.circle.Color = this.color;
-
-			this.suspendColorEvents = true;
-			this.UpdateColors();
-			this.suspendColorEvents = false;
-		}
-
-		private void HandleButtonGrayClicked(object sender, MessageEventArgs e)
-		{
-			this.color.ColorSpace = Drawing.ColorSpace.Gray;
-			this.circle.Color = this.color;
-
-			this.suspendColorEvents = true;
-			this.UpdateColors();
-			this.suspendColorEvents = false;
-		}
-
+		
 		
 		// Génère un événement pour dire ça a changé.
 		protected virtual void OnChanged()
@@ -980,6 +975,8 @@ namespace Epsitec.Common.Widgets
 		protected bool							suspendColorEvents = false;
 		protected bool							hasCloseButton = false;
 		protected GlyphButton					buttonClose;
+		
+		protected Helpers.GroupController		colorSpaceController;
 		protected IconButton					buttonRGB;
 		protected IconButton					buttonCMYK;
 		protected IconButton					buttonGray;

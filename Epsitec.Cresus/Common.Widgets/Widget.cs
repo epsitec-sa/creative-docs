@@ -49,6 +49,7 @@ namespace Epsitec.Common.Widgets
 		
 		PreferXLayout		= 0x00000400,		//	=> en cas de DockStyle.Fill multiple, place le contenu horizontalement
 		
+		AutoRadio			= 0x00004000,		//	=> comportement 'radio'
 		AutoMinMax			= 0x00008000,		//	=> calcule automatiquement les tailles min et max
 		AutoCapture			= 0x00010000,
 		AutoFocus			= 0x00020000,
@@ -1383,6 +1384,25 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool									AutoRadio
+		{
+			get
+			{
+				return (this.internal_state & InternalState.AutoRadio) != 0;
+			}
+			set
+			{
+				if (value)
+				{
+					this.internal_state |= InternalState.AutoRadio;
+				}
+				else
+				{
+					this.internal_state &= ~InternalState.AutoRadio;
+				}
+			}
+		}
+		
 		public bool									AutoMnemonic
 		{
 			get
@@ -1905,6 +1925,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		[Bundle] public string						Group
+		{
+			get
+			{
+				return this.group;
+			}
+			set
+			{
+				this.group = value;
+			}
+		}
+		
 		
 		[Bundle]			public string			Name
 		{
@@ -2342,6 +2374,12 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void Toggle()
 		{
+			if ((this.AutoRadio) &&
+				(this.ActiveState == WidgetState.ActiveYes))
+			{
+				return;
+			}
+			
 			if (this.AcceptThreeState)
 			{
 				switch (this.ActiveState)
@@ -4106,6 +4144,53 @@ namespace Epsitec.Common.Widgets
 			
 			Widget find = null;
 			
+			if (this.AutoRadio)
+			{
+				if (mode == TabNavigationMode.ActivateOnCursorX)
+				{
+					Helpers.GroupController controller = Helpers.GroupController.GetGroupController (this);
+					
+					find = controller.FindXWidget (this, dir == TabNavigationDir.Backwards ? -1 : 1);
+					
+					if ((find == null) &&
+						(controller.FindXWidget (this, dir == TabNavigationDir.Backwards ? 1 : -1) == null))
+					{
+						//	L'utilisateur demande un déplacement horizontal bien que la disposition
+						//	soit purement verticale. On corrige pour lui :
+						
+						find = controller.FindYWidget (this, dir == TabNavigationDir.Backwards ? -1 : 1);
+					}
+					
+					if (find != null)
+					{
+						find.ActiveState = WidgetState.ActiveYes;
+						return find;
+					}
+				}
+				
+				if (mode == TabNavigationMode.ActivateOnCursorY)
+				{
+					Helpers.GroupController controller = Helpers.GroupController.GetGroupController (this);
+					
+					find = controller.FindYWidget (this, dir == TabNavigationDir.Backwards ? -1 : 1);
+					
+					if ((find == null) &&
+						(controller.FindYWidget (this, dir == TabNavigationDir.Backwards ? 1 : -1) == null))
+					{
+						//	L'utilisateur demande un déplacement vertical bien que la disposition
+						//	soit purement horizontale. On corrige pour lui :
+						
+						find = controller.FindXWidget (this, dir == TabNavigationDir.Backwards ? -1 : 1);
+					}
+					
+					if (find != null)
+					{
+						find.ActiveState = WidgetState.ActiveYes;
+						return find;
+					}
+				}
+			}
+			
 			if ((!disable_first_enter) &&
 				((this.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0) &&
 				(this.HasChildren))
@@ -4370,7 +4455,37 @@ namespace Epsitec.Common.Widgets
 			
 			list.Sort (new TabIndexComparer ());
 			
-			return list;
+			if ((mode == TabNavigationMode.ActivateOnTab) &&
+				(this.AutoRadio))
+			{
+				//	On recherche les frères de ce widget, pour déterminer lequel devra être activé par la
+				//	pression de la touche TAB. Pour bien faire, il faut supprimer les autres boutons radio
+				//	qui appartiennent à notre groupe :
+			
+				System.Collections.ArrayList copy = new System.Collections.ArrayList ();
+				
+				string group = this.Group;
+				
+				foreach (Widget widget in list)
+				{
+					if ((widget != this) &&
+						(widget.Group == group))
+					{
+						//	Saute les boutons du même groupe. Ils ne sont pas accessibles par la
+						//	touche TAB.
+					}
+					else
+					{
+						copy.Add (widget);
+					}
+				}
+				
+				return copy;
+			}
+			else
+			{
+				return list;
+			}
 		}
 		
 		protected virtual Widget GetTabFromSiblings(int index, TabNavigationDir dir, Widget[] siblings)
@@ -4446,6 +4561,23 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
+			if ((this.AutoRadio) &&
+				(this.ActiveState != WidgetState.ActiveYes) &&
+				(mode == TabNavigationMode.ActivateOnTab))
+			{
+				//	Ce n'est pas ce bouton radio qui est allumé. TAB voudrait nous
+				//	donner le focus, mais ce n'est pas adéquat; mieux vaut mettre
+				//	le focus sur le frère qui est actuellement activé :
+				
+				Helpers.GroupController controller    = Helpers.GroupController.GetGroupController (this);
+				Widget                  active_widget = controller.FindActiveWidget ();
+				
+				if (active_widget != null)
+				{
+					return active_widget.AboutToGetFocus (dir, mode, out focus);
+				}
+			}
+			
 			focus = this;
 			return true;
 		}
@@ -6140,6 +6272,18 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnActiveStateChanged()
 		{
+			if ((this.ActiveState == WidgetState.ActiveYes) &&
+				(this.Group != null) &&
+				(this.Group.Length > 0))
+			{
+				//	Eteint les autres boutons du groupe (s'il y en a) :
+				
+				Helpers.GroupController controller = Helpers.GroupController.GetGroupController (this);
+				
+				controller.TurnOffAllButOne (this);
+				controller.SetActiveIndex (this.Index);
+			}
+			
 			if (this.ActiveStateChanged != null)
 			{
 				this.ActiveStateChanged (this);
@@ -6779,6 +6923,7 @@ namespace Epsitec.Common.Widgets
 		private string							name;
 		private string							command;
 		private int								index = -1;
+		private string							group;
 		private string							text;
 		private TextLayout						text_layout;
 		private ContentAlignment				alignment;

@@ -7,6 +7,8 @@ using System.Globalization;
 
 namespace Epsitec.Common.Designer.Dialogs
 {
+	using GroupController = Epsitec.Common.Widgets.Helpers.GroupController;
+	
 	public class SubBundleSpec
 	{
 		public SubBundleSpec()
@@ -51,9 +53,9 @@ namespace Epsitec.Common.Designer.Dialogs
 				{
 					this.level = value;
 					
-					if (this.container != null)
+					if (this.controller != null)
 					{
-						RadioButton.Activate (this.container, "level", (int) this.level);
+						this.controller.ActiveIndex = (int) this.level;
 					}
 					
 					this.OnChanged ();
@@ -157,7 +159,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			radio.TabIndex = 10;
 			radio.ActiveStateChanged += new EventHandler (this.HandleRadioActiveStateChanged);
 			
-			RadioButton.Activate (container, "level", (int) this.level);
+			this.controller = GroupController.GetGroupController (this.container, "level");
+			
+			this.controller.ActiveIndex = (int) this.level;
 		}
 		
 		
@@ -187,8 +191,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			System.Diagnostics.Debug.Assert (this.lang_id == sender);
 			
-			RadioButton radio = RadioButton.FindRadio (this.lang_id.Parent, "level", (int) ResourceLevel.Localised);
-			radio.ActiveState = WidgetState.ActiveYes;
+			this.controller.ActiveIndex = (int) ResourceLevel.Localised;
 		}
 		
 		
@@ -205,6 +208,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		
 		
 		protected Widget						container;
+		protected GroupController				controller;
 		protected TextFieldCombo				lang_id;
 		
 		protected bool							detailed_choice = false;

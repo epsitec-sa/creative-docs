@@ -772,6 +772,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Helpers\GroupComparer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Helpers\GroupController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Helpers\IDragBehaviorHost.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

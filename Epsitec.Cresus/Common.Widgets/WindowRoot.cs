@@ -233,28 +233,46 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
-				CommandDispatcher                dispatcher = this.CommandDispatcher;
-				CommandDispatcher.CommandState[] states     = dispatcher.CommandStates;
+				Widget focused = this.window.FocusedWidget;
+				bool   execute = true;
 				
-				foreach (CommandDispatcher.CommandState state in states)
+				if ((focused != null) &&
+					(focused.AutoRadio))
 				{
-					CommandState command = state as CommandState;
-					
-					if (command != null)
+					switch (shortcut.KeyCodeOnly)
 					{
-						if ((command.Shortcut != null) &&
-							(command.Shortcut.Match (shortcut)) &&
-							(command.Enabled))
-						{
-							//	Exécute la commande.
-							
-							dispatcher.Dispatch (command.Name, this);
-							return true;
-						}
+						case KeyCode.ArrowLeft:
+						case KeyCode.ArrowRight:
+						case KeyCode.ArrowUp:
+						case KeyCode.ArrowDown:
+							execute = false;
+							break;
 					}
 				}
 				
-				Widget focused = this.window.FocusedWidget;
+				if (execute)
+				{
+					CommandDispatcher                dispatcher = this.CommandDispatcher;
+					CommandDispatcher.CommandState[] states     = dispatcher.CommandStates;
+					
+					foreach (CommandDispatcher.CommandState state in states)
+					{
+						CommandState command = state as CommandState;
+						
+						if (command != null)
+						{
+							if ((command.Shortcut != null) &&
+								(command.Shortcut.Match (shortcut)) &&
+								(command.Enabled))
+							{
+								//	Exécute la commande.
+								
+								dispatcher.Dispatch (command.Name, this);
+								return true;
+							}
+						}
+					}
+				}
 				
 				if (focused == null)
 				{
@@ -269,6 +287,26 @@ namespace Epsitec.Common.Widgets
 					case KeyCode.Tab:
 						mode = TabNavigationMode.ActivateOnTab;
 						dir  = Message.State.IsShiftPressed ? TabNavigationDir.Backwards : TabNavigationDir.Forwards;
+						break;
+					
+					case KeyCode.ArrowLeft:
+						mode = TabNavigationMode.ActivateOnCursorX;
+						dir  = TabNavigationDir.Backwards;
+						break;
+					
+					case KeyCode.ArrowRight:
+						mode = TabNavigationMode.ActivateOnCursorX;
+						dir  = TabNavigationDir.Forwards;
+						break;
+					
+					case KeyCode.ArrowUp:
+						mode = TabNavigationMode.ActivateOnCursorY;
+						dir  = TabNavigationDir.Backwards;
+						break;
+					
+					case KeyCode.ArrowDown:
+						mode = TabNavigationMode.ActivateOnCursorY;
+						dir  = TabNavigationDir.Forwards;
 						break;
 				}
 				

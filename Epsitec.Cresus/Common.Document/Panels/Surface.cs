@@ -81,7 +81,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
+				this.grid.SelectionChanged -= new EventHandler(this.HandleTypeChanged);
 				for ( int i=0 ; i<4 ; i++ )
 				{
 					this.fieldFactor[i].TextFieldReal.ValueChanged -= new EventHandler(this.HandleFieldChanged);

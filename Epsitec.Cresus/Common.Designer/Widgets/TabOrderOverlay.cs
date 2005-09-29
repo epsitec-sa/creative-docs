@@ -8,6 +8,7 @@ namespace Epsitec.Common.Designer.Widgets
 {
 	using IWidgetCollectionHost = Epsitec.Common.Widgets.Helpers.IWidgetCollectionHost;
 	using WidgetCollection      = Epsitec.Common.Widgets.Helpers.WidgetCollection;
+	using GroupController       = Epsitec.Common.Widgets.Helpers.GroupController;
 	
 	/// <summary>
 	/// La classe TabOrderOverlay crée une surface qui a la même taille que
@@ -236,16 +237,17 @@ namespace Epsitec.Common.Designer.Widgets
 			this.parent_filter = null;
 			this.default_index = 1;
 			
-			if (widget is RadioButton)
+			if (widget.AutoRadio)
 			{
-				RadioButton radio = widget as RadioButton;
-				System.Collections.ArrayList list  = RadioButton.FindRadioChildren (radio.Parent, radio.Group);
-				RadioButton[] radios = new RadioButton[list.Count];
+				GroupController              controller = GroupController.GetGroupController (widget);
+				System.Collections.ArrayList list       = controller.FindWidgets ();
+				
+				Widget[] radios = new Widget[list.Count];
 				list.CopyTo (radios);
 				
 				for (int i = 0; i < radios.Length; i++)
 				{
-					if (radios[i] == radio)
+					if (radios[i] == widget)
 					{
 						continue;
 					}

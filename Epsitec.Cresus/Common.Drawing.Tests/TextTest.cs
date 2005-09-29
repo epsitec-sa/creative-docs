@@ -420,7 +420,7 @@ namespace Epsitec.Common.Drawing
 				CheckButton cb6 = new CheckButton (this.window.Root);
 				CheckButton cb7 = new CheckButton (this.window.Root);
 				
-				RadioButton.Activate (this.window.Root, "g1", 0);
+				rb1.ActiveState = WidgetState.ActiveYes;
 				
 				st1.Dock = DockStyle.Top; st1.DockMargins = new Margins (4, 4, 4, 4);
 				cb1.Dock = DockStyle.Top; cb1.DockMargins = new Margins (4, 4, 4, 0);

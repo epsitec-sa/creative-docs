@@ -9,6 +9,7 @@ namespace Epsitec.Common.Widgets.Feel
 		{
 		}
 		
+		
 		#region IFeel Members
 		public bool TestAcceptKey(Epsitec.Common.Widgets.Message message)
 		{
@@ -102,6 +103,7 @@ namespace Epsitec.Common.Widgets.Feel
 			
 			return false;
 		}
+		
 		
 		public Shortcut							AcceptShortcut
 		{

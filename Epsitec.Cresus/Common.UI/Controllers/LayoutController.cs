@@ -6,6 +6,8 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.UI.Controllers
 {
+	using GroupController = Epsitec.Common.Widgets.Helpers.GroupController;
+	
 	/// <summary>
 	/// Summary description for LayoutController.
 	/// </summary>
@@ -124,7 +126,10 @@ namespace Epsitec.Common.UI.Controllers
 				if ((this.edge_select != null) &&
 					(this.radio_manual != null))
 				{
-					RadioButton.Activate (this.radio_manual.Parent, this.radio_manual.Group, (int) this.show_mode);
+					GroupController controller = GroupController.GetGroupController (this.radio_manual);
+					
+					controller.ActiveIndex = (int) this.show_mode;
+					
 					this.edge_select.Invalidate ();
 				}
 				
