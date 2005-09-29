@@ -1337,6 +1337,77 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 		}
 
+		// Dessine le bouton pour un ruban.
+		public void PaintRibbonButtonBackground(Drawing.Graphics graphics,
+												Drawing.Rectangle rect,
+												WidgetState state)
+		{
+		}
+
+		// Dessine le bouton pour un ruban.
+		public void PaintRibbonButtonForeground(Drawing.Graphics graphics,
+												Drawing.Rectangle rect,
+												WidgetState state)
+		{
+		}
+
+		// Dessine la bande principale d'un ruban.
+		public void PaintRibbonTabBackground(Drawing.Graphics graphics,
+											 Drawing.Rectangle rect,
+											 double titleHeight,
+											 WidgetState state)
+		{
+			this.PaintImageButton(graphics, rect, 41);
+
+			rect.Bottom = rect.Top-titleHeight-1;
+			this.PaintImageButton(graphics, rect, 40);
+		}
+
+		// Dessine la bande principale d'un ruban.
+		public void PaintRibbonTabForeground(Drawing.Graphics graphics,
+											 Drawing.Rectangle rect,
+											 double titleHeight,
+											 WidgetState state)
+		{
+		}
+
+		// Dessine une section d'un ruban.
+		public void PaintRibbonSectionBackground(Drawing.Graphics graphics,
+												 Drawing.Rectangle rect,
+												 double titleHeight,
+												 WidgetState state)
+		{
+			rect.Deflate(0.5);
+
+			graphics.AddLine(rect.Left, rect.Top, rect.Left, rect.Bottom);
+			graphics.RenderSolid(Drawing.Color.FromRGB(176.0/255.0, 185.0/255.0, 209.0/255.0));
+
+			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Bottom);
+			graphics.RenderSolid(Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0));
+		}
+
+		// Dessine une section d'un ruban.
+		public void PaintRibbonSectionForeground(Drawing.Graphics graphics,
+												 Drawing.Rectangle rect,
+												 double titleHeight,
+												 WidgetState state)
+		{
+		}
+
+		// Dessine le texte du titre d'une section d'un ruban.
+		public void PaintRibbonSectionTextLayout(Drawing.Graphics graphics,
+												 Drawing.Point pos,
+												 TextLayout text,
+												 WidgetState state)
+		{
+			if ( text == null )  return;
+
+			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+			text.Paint(new Drawing.Point(pos.X+2.0, pos.Y-1.5), graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(0.5), Drawing.GlyphPaintStyle.Normal);
+			text.Paint(new Drawing.Point(pos.X+1.0, pos.Y-0.7), graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(0.0), Drawing.GlyphPaintStyle.Normal);
+			text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(1), Drawing.GlyphPaintStyle.Normal);
+		}
+
 		// Dessine un tag.
 		public void PaintTagBackground(Drawing.Graphics graphics,
 									   Drawing.Rectangle rect,
@@ -1694,7 +1765,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			icon.Top    = 256-32*(rank/8);
 			icon.Bottom = icon.Top-32;
 
-			if ( rank == 16 || rank == 17 || rank == 19 || rank == 21 || rank == 28 || rank == 44 )
+			if ( rank == 16 || rank == 17 || rank == 19 || rank == 21 || rank == 28 || rank == 40 || rank == 41 )
 			{
 				this.PaintImageButton1(graphics, rect, icon);
 			}

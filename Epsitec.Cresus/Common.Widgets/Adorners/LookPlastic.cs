@@ -1214,6 +1214,64 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 		}
 
+		// Dessine le bouton pour un ruban.
+		public void PaintRibbonButtonBackground(Drawing.Graphics graphics,
+												Drawing.Rectangle rect,
+												WidgetState state)
+		{
+		}
+
+		// Dessine le bouton pour un ruban.
+		public void PaintRibbonButtonForeground(Drawing.Graphics graphics,
+												Drawing.Rectangle rect,
+												WidgetState state)
+		{
+		}
+
+		// Dessine la bande principale d'un ruban.
+		public void PaintRibbonTabBackground(Drawing.Graphics graphics,
+											 Drawing.Rectangle rect,
+											 double titleHeight,
+											 WidgetState state)
+		{
+		}
+
+		// Dessine la bande principale d'un ruban.
+		public void PaintRibbonTabForeground(Drawing.Graphics graphics,
+											 Drawing.Rectangle rect,
+											 double titleHeight,
+											 WidgetState state)
+		{
+		}
+
+		// Dessine une section d'un ruban.
+		public void PaintRibbonSectionBackground(Drawing.Graphics graphics,
+												 Drawing.Rectangle rect,
+												 double titleHeight,
+												 WidgetState state)
+		{
+		}
+
+		// Dessine une section d'un ruban.
+		public void PaintRibbonSectionForeground(Drawing.Graphics graphics,
+												 Drawing.Rectangle rect,
+												 double titleHeight,
+												 WidgetState state)
+		{
+		}
+
+		// Dessine le texte du titre d'une section d'un ruban.
+		public void PaintRibbonSectionTextLayout(Drawing.Graphics graphics,
+												 Drawing.Point pos,
+												 TextLayout text,
+												 WidgetState state)
+		{
+			if ( text == null )  return;
+
+			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+			text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
+		}
+
 		// Dessine un tag.
 		public void PaintTagBackground(Drawing.Graphics graphics,
 									   Drawing.Rectangle rect,

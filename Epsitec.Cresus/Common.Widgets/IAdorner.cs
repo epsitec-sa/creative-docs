@@ -94,6 +94,14 @@ namespace Epsitec.Common.Widgets
 		void PaintStatusItemBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintStatusItemForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 
+		void PaintRibbonButtonBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
+		void PaintRibbonButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
+		void PaintRibbonTabBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, double titleHeight, WidgetState state);
+		void PaintRibbonTabForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, double titleHeight, WidgetState state);
+		void PaintRibbonSectionBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, double titleHeight, WidgetState state);
+		void PaintRibbonSectionForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, double titleHeight, WidgetState state);
+		void PaintRibbonSectionTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state);
+
 		void PaintTagBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Drawing.Color color, Direction dir);
 		void PaintTagForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Drawing.Color color, Direction dir);
 

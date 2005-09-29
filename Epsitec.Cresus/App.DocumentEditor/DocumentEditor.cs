@@ -10,6 +10,7 @@ namespace Epsitec.App.DocumentEditor
 {
 	using Drawing        = Common.Drawing;
 	using Widgets        = Common.Widgets;
+	using Ribbons        = Common.Document.Ribbons;
 	using Containers     = Common.Document.Containers;
 	using Objects        = Common.Document.Objects;
 	using Settings       = Common.Document.Settings;
@@ -563,6 +564,7 @@ namespace Epsitec.App.DocumentEditor
 			buttonRedo.DockMargins = new Margins(-1, 0, 0, 0);
 
 			this.HToolBarAdd("", "", "");
+#if false
 			this.HToolBarAdd(Misc.Icon("OrderDownAll"), "OrderDownAll", DocumentEditor.GetRes("Action.OrderDownAll"));
 			this.HToolBarAdd(Misc.Icon("OrderDownOne"), "OrderDownOne", DocumentEditor.GetRes("Action.OrderDownOne"));
 			this.HToolBarAdd(Misc.Icon("OrderUpOne"), "OrderUpOne", DocumentEditor.GetRes("Action.OrderUpOne"));
@@ -575,6 +577,21 @@ namespace Epsitec.App.DocumentEditor
 			this.HToolBarAdd(Misc.Icon("Inside"), "Inside", DocumentEditor.GetRes("Action.Inside"));
 			this.HToolBarAdd(Misc.Icon("Outside"), "Outside", DocumentEditor.GetRes("Action.Outside"));
 			this.HToolBarAdd("", "", "");
+#else
+			this.ribbonTextButton = new IconButton();
+			this.ribbonTextButton.Text = "Texte";
+			this.ribbonTextButton.Width = 40;
+			this.ribbonTextButton.Clicked += new MessageEventHandler(this.HandleRibbonTextClicked);
+			this.hToolBar.Items.Add(this.ribbonTextButton);
+
+			this.ribbonOpButton = new IconButton();
+			this.ribbonOpButton.Text = "Opérations";
+			this.ribbonOpButton.Width = 64;
+			this.ribbonOpButton.Clicked += new MessageEventHandler(this.HandleRibbonOpClicked);
+			this.hToolBar.Items.Add(this.ribbonOpButton);
+
+			this.HToolBarAdd("", "", "");
+#endif
 			this.HToolBarAdd(Misc.Icon("Preview"), "Preview", DocumentEditor.GetRes("Action.Preview"));
 			this.HToolBarAdd(Misc.Icon("Grid"), "Grid", DocumentEditor.GetRes("Action.Grid"));
 			this.HToolBarAdd(Misc.Icon("Magnet"), "Magnet", DocumentEditor.GetRes("Action.Magnet"));
@@ -583,7 +600,7 @@ namespace Epsitec.App.DocumentEditor
 			this.HToolBarAdd(Misc.Icon("LabelProperties"), "LabelProperties", DocumentEditor.GetRes("Action.LabelProperties"));
 			this.HToolBarAdd(Misc.Icon("Settings"), "Settings", DocumentEditor.GetRes("Action.Settings"));
 			this.HToolBarAdd(Misc.Icon("Infos"), "Infos", DocumentEditor.GetRes("Action.Infos"));
-			this.HToolBarAdd(Misc.Icon("Glyphs"), "Glyphs", DocumentEditor.GetRes("Action.Glyphs"));
+			//?this.HToolBarAdd(Misc.Icon("Glyphs"), "Glyphs", DocumentEditor.GetRes("Action.Glyphs"));
 			this.HToolBarAdd("", "", "");
 			if ( this.useArray )
 			{
@@ -696,6 +713,53 @@ namespace Epsitec.App.DocumentEditor
 			
 			di.tabPage = new TabPage();
 			this.bookDocuments.Items.Insert(this.currentDocument, di.tabPage);
+
+			// Rubans.
+			di.ribbonText = new Ribbons.RibbonContainer(this);
+			di.ribbonText.Height = 22;
+			di.ribbonText.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			di.ribbonText.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
+			di.ribbonText.SetVisible(false);
+
+			Ribbons.Font font = new Ribbons.Font(document);
+			di.ribbonText.Items.Add(font);
+			
+			Ribbons.Insert insert = new Ribbons.Insert(document);
+			di.ribbonText.Items.Add(insert);
+			
+			di.ribbonText.Height = this.ribbonHeight;
+
+			di.ribbonOp = new Ribbons.RibbonContainer(this);
+			di.ribbonOp.Height = 22;
+			di.ribbonOp.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			di.ribbonOp.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
+			di.ribbonOp.SetVisible(false);
+
+			Ribbons.Order order = new Ribbons.Order(document);
+			di.ribbonOp.Items.Add(order);
+			
+			Ribbons.Group group = new Ribbons.Group(document);
+			di.ribbonOp.Items.Add(group);
+			
+			Ribbons.Move move = new Ribbons.Move(document);
+			di.ribbonOp.Items.Add(move);
+
+			Ribbons.Rotate rotate = new Ribbons.Rotate(document);
+			di.ribbonOp.Items.Add(rotate);
+
+			Ribbons.Scale scale = new Ribbons.Scale(document);
+			di.ribbonOp.Items.Add(scale);
+
+			Ribbons.Align align = new Ribbons.Align(document);
+			di.ribbonOp.Items.Add(align);
+
+			Ribbons.Geom geom = new Ribbons.Geom(document);
+			di.ribbonOp.Items.Add(geom);
+
+			Ribbons.Color color = new Ribbons.Color(document);
+			di.ribbonOp.Items.Add(color);
+
+			di.ribbonOp.Height = this.ribbonHeight;
 
 			Widget mainViewParent;
 			double lm = 0;
@@ -1088,6 +1152,40 @@ namespace Epsitec.App.DocumentEditor
 				ToolTip.Default.SetToolTip(button, tooltip);
 				return button;
 			}
+		}
+
+
+		private void HandleRibbonTextClicked(object sender, MessageEventArgs e)
+		{
+			DocumentInfo di = this.CurrentDocumentInfo;
+			this.ActiveRibbon(di.ribbonText.IsVisible ? null : di.ribbonText);
+		}
+
+		private void HandleRibbonOpClicked(object sender, MessageEventArgs e)
+		{
+			DocumentInfo di = this.CurrentDocumentInfo;
+			this.ActiveRibbon(di.ribbonOp.IsVisible ? null : di.ribbonOp);
+		}
+
+		// Active un ruban.
+		protected void ActiveRibbon(Ribbons.RibbonContainer active)
+		{
+			DocumentInfo di = this.CurrentDocumentInfo;
+
+			di.ribbonText.SetVisible(di.ribbonText == active);
+			di.ribbonOp.SetVisible(di.ribbonOp == active);
+
+			this.ribbonTextButton.ActiveState = di.ribbonText.IsVisible ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.ribbonOpButton.ActiveState = di.ribbonOp.IsVisible ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
+			bool visible = false;
+			if ( di.ribbonText.IsVisible )  visible = true;
+			if ( di.ribbonOp.IsVisible )  visible = true;
+
+			double h = visible ? this.ribbonHeight : 0;
+			this.vToolBar.AnchorMargins = new Margins(0, 0, this.hToolBar.Height+h, this.info.Height);
+			this.bookDocuments.AnchorMargins = new Margins(this.vToolBar.Width+1, this.panelsWidth+2, this.hToolBar.Height+h+1, this.info.Height+1);
+			di.bookPanels.AnchorMargins = new Margins(1, 1, this.hToolBar.Height+h+1, this.info.Height+1);
 		}
 
 
@@ -3406,6 +3504,10 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.IsCurrentDocument )
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
+
+				di.ribbonText.SetDirtyContent();
+				di.ribbonOp.SetDirtyContent();
+				
 				di.containerPrincipal.SetDirtyContent();
 #if DEBUG
 				di.containerAutos.SetDirtyContent();
@@ -4627,10 +4729,13 @@ namespace Epsitec.App.DocumentEditor
 		protected HMenu							menu;
 		protected VMenu							fileMenu;
 		protected HToolBar						hToolBar;
+		protected IconButton					ribbonTextButton;
+		protected IconButton					ribbonOpButton;
 		protected VToolBar						vToolBar;
 		protected StatusBar						info;
 		protected ResizeKnob					resize;
 		protected TabBook						bookDocuments;
+		protected double						ribbonHeight = 66;
 		protected double						panelsWidth = 252;
 		protected bool							ignoreChange;
 		protected int							tabIndex;
@@ -4813,6 +4918,8 @@ namespace Epsitec.App.DocumentEditor
 		protected class DocumentInfo
 		{
 			public Document						document;
+			public Ribbons.RibbonContainer		ribbonText;
+			public Ribbons.RibbonContainer		ribbonOp;
 			public TabPage						tabPage;
 			public HRuler						hRuler;
 			public VRuler						vRuler;
@@ -4831,6 +4938,8 @@ namespace Epsitec.App.DocumentEditor
 			public void Dispose()
 			{
 				if ( this.tabPage != null )  this.tabPage.Dispose();
+				if ( this.ribbonText != null )  this.ribbonText.Dispose();
+				if ( this.ribbonOp != null )  this.ribbonOp.Dispose();
 				if ( this.hRuler != null )  this.hRuler.Dispose();
 				if ( this.vRuler != null )  this.vRuler.Dispose();
 				if ( this.hScroller != null )  this.hScroller.Dispose();
