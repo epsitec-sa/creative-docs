@@ -14,14 +14,6 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = "Geometry";
 
-			this.buttonBooleanOr = this.CreateIconButton("BooleanOr", Misc.Icon("BooleanOr"), Res.Strings.Action.BooleanOr);
-			this.buttonBooleanAnd = this.CreateIconButton("BooleanAnd", Misc.Icon("BooleanAnd"), Res.Strings.Action.BooleanAnd);
-			this.buttonBooleanXor = this.CreateIconButton("BooleanXor", Misc.Icon("BooleanXor"), Res.Strings.Action.BooleanXor);
-			this.buttonBooleanFrontMinus = this.CreateIconButton("BooleanFrontMinus", Misc.Icon("BooleanFrontMinus"), Res.Strings.Action.BooleanFrontMinus);
-			this.buttonBooleanBackMinus = this.CreateIconButton("BooleanBackMinus", Misc.Icon("BooleanBackMinus"), Res.Strings.Action.BooleanBackMinus);
-
-			this.CreateSeparator(ref this.separator);
-
 			this.buttonCombine   = this.CreateIconButton("Combine",   Misc.Icon("Combine"),   Res.Strings.Action.Combine);
 			this.buttonUncombine = this.CreateIconButton("Uncombine", Misc.Icon("Uncombine"), Res.Strings.Action.Uncombine);
 			this.buttonToBezier  = this.CreateIconButton("ToBezier",  Misc.Icon("ToBezier"),  Res.Strings.Action.ToBezier);
@@ -52,7 +44,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return 8 + 22*3 + this.separatorWidth + 22*3;
+				return 8 + 22*3;
 			}
 		}
 
@@ -68,20 +60,9 @@ namespace Epsitec.Common.Document.Ribbons
 			double dy = this.buttonCombine.DefaultHeight;
 
 			Rectangle rect = this.UsefulZone;
-			rect.Left += dx*3;
-			rect.Width = this.separatorWidth;
-			this.separator.Bounds = rect;
-
-			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy);
-			this.buttonBooleanOr.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonBooleanAnd.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonBooleanXor.Bounds = rect;
-			rect.Offset(dx+this.separatorWidth, 0);
 			this.buttonCombine.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonUncombine.Bounds = rect;
@@ -89,10 +70,6 @@ namespace Epsitec.Common.Document.Ribbons
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			this.buttonBooleanFrontMinus.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonBooleanBackMinus.Bounds = rect;
-			rect.Offset(dx*2+this.separatorWidth, 0);
 			this.buttonToBezier.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonToPoly.Bounds = rect;
@@ -107,7 +84,6 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonCombine == null )  return;
 
-			this.separator.SetVisible(this.isExtendedSize);
 			this.buttonCombine.SetVisible(this.isExtendedSize);
 			this.buttonUncombine.SetVisible(this.isExtendedSize);
 			this.buttonToBezier.SetVisible(this.isExtendedSize);
@@ -116,12 +92,6 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		protected IconButton				buttonBooleanOr;
-		protected IconButton				buttonBooleanAnd;
-		protected IconButton				buttonBooleanXor;
-		protected IconButton				buttonBooleanFrontMinus;
-		protected IconButton				buttonBooleanBackMinus;
-		protected IconSeparator				separator;
 		protected IconButton				buttonCombine;
 		protected IconButton				buttonUncombine;
 		protected IconButton				buttonToBezier;

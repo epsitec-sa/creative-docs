@@ -627,12 +627,37 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Ribbons\Action.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Ribbons\Align.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Ribbons\Bool.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Ribbons\Clipboard.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Ribbons\Color.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Ribbons\Debug.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Ribbons\File.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -678,6 +703,26 @@
                 />
                 <File
                     RelPath = "Ribbons\Scale.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Ribbons\Select.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Ribbons\Undo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Ribbons\View.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Ribbons\Zoom.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

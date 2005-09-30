@@ -609,6 +609,10 @@
 	<data name="Action.LastFiles">Fichiers récents</data>
 	<data name="Action.Quit">Quitter</data>
 
+	<data name="Action.Key">Clé...</data>
+	<data name="Action.Update">Mise à jour...</data>
+	<data name="Action.About">A propos de...</data>
+
 	<data name="Action.Undo">Annuler</data>
 	<data name="Action.UndoRedoList">Annuler ou refaire plusieurs actions</data>
 	<data name="Action.Redo">Refaire</data>

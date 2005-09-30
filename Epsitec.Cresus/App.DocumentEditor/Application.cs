@@ -84,9 +84,11 @@ namespace Epsitec.App.DocumentEditor
 					break;
 			}
 			
+#if false
 			this.menu = this.editor.GetMenu();
 			this.menu.Dock   = DockStyle.Top;
 			this.menu.Parent = this.mainWindow.Root;
+#endif
 			
 			this.editor.Size   = this.mainWindow.ClientSize;
 			this.editor.Dock   = DockStyle.Fill;

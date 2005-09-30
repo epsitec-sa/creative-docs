@@ -185,7 +185,8 @@ namespace Epsitec.Common.Document.Ribbons
 		// Met à jour les boutons.
 		protected virtual void UpdateButtons()
 		{
-			this.extendedButton.SetVisible(this.isNormalAndExtended);
+			//?this.extendedButton.SetVisible(this.isNormalAndExtended);
+			this.extendedButton.SetVisible(false);
 			this.extendedButton.GlyphShape = this.isExtendedSize ? GlyphShape.ArrowLeft : GlyphShape.ArrowRight;
 		}
 
@@ -310,10 +311,40 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
+		// Ajoute une icône.
+		protected void MenuAdd(VMenu vmenu, string icon, string command, string text, string shortcut)
+		{
+			this.MenuAdd(vmenu, icon, command, text, shortcut, command);
+		}
+		
+		protected void MenuAdd(VMenu vmenu, string icon, string command, string text, string shortcut, string name)
+		{
+			if ( text == "" )
+			{
+				vmenu.Items.Add(new MenuSeparator());
+			}
+			else
+			{
+				MenuItem item;
+				
+				if ( icon == "y/n" )
+				{
+					item = MenuItem.CreateYesNo(command, text, shortcut, name);
+				}
+				else
+				{
+					item = new MenuItem(command, icon, text, shortcut, name);
+				}
+				
+				vmenu.Items.Add(item);
+			}
+		}
+
+
 		protected Document					document;
 		protected TextLayout				title;
 		protected double					backgroundIntensity = 1.0;
-		protected bool						isExtendedSize = false;
+		protected bool						isExtendedSize = true;
 		protected bool						isNormalAndExtended = true;
 		protected GlyphButton				extendedButton;
 		protected bool						ignoreChanged = false;

@@ -173,13 +173,13 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		protected IconButton			buttonZoomDiv2;
-		protected IconButton			buttonZoomMul2;
-		protected IconButton			buttonMirrorH;
-		protected IconButton			buttonMirrorV;
-		protected IconSeparator			separator;
-		protected IconButton			buttonZoomi;
-		protected IconButton			buttonZoom;
-		protected TextFieldReal			fieldZoom;
+		protected IconButton				buttonZoomDiv2;
+		protected IconButton				buttonZoomMul2;
+		protected IconButton				buttonMirrorH;
+		protected IconButton				buttonMirrorV;
+		protected IconSeparator				separator;
+		protected IconButton				buttonZoomi;
+		protected IconButton				buttonZoom;
+		protected TextFieldReal				fieldZoom;
 	}
 }

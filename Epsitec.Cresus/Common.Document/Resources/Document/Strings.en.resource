@@ -608,6 +608,10 @@
 	<data name="Action.Export">Export...</data>
 	<data name="Action.LastFiles">Recent files</data>
 	<data name="Action.Quit">Quit</data>
+	
+	<data name="Action.Key">Key...</data>
+	<data name="Action.Update">Check for Updates...</data>
+	<data name="Action.About">About...</data>
 
 	<data name="Action.Undo">Undo</data>
 	<data name="Action.UndoRedoList">Undo/redo multiple actions</data>

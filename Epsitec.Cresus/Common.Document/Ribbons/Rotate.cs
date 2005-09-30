@@ -160,12 +160,12 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		protected IconButton			buttonRotate90;
-		protected IconButton			buttonRotate180;
-		protected IconButton			buttonRotate270;
-		protected IconSeparator			separator;
-		protected IconButton			buttonRotate;
-		protected IconButton			buttonRotatei;
-		protected TextFieldReal			fieldRotate;
+		protected IconButton				buttonRotate90;
+		protected IconButton				buttonRotate180;
+		protected IconButton				buttonRotate270;
+		protected IconSeparator				separator;
+		protected IconButton				buttonRotate;
+		protected IconButton				buttonRotatei;
+		protected TextFieldReal				fieldRotate;
 	}
 }
