@@ -275,7 +275,7 @@ namespace Epsitec.Common.Text
 		#region Sequence Class
 		public abstract class Sequence : ISerializableAsText
 		{
-			public Sequence()
+			protected Sequence()
 			{
 			}
 			

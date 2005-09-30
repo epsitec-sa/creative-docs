@@ -108,25 +108,25 @@ namespace Epsitec.Common.Types
 		
 		public Time AddHour(int value)
 		{
-			long ticks = this.Ticks + value * 60 * 60 * Time.TicksPerSecond;
+			long ticks = this.Ticks + (long) value * 60 * 60 * Time.TicksPerSecond;
 			return new Time (ticks % Time.TicksPerDay);
 		}
 		
 		public Time AddMinute(int value)
 		{
-			long ticks = this.Ticks + value * 60 * Time.TicksPerSecond;
+			long ticks = this.Ticks + (long) value * 60 * Time.TicksPerSecond;
 			return new Time (ticks % Time.TicksPerDay);
 		}
 		
 		public Time AddSecond(int value)
 		{
-			long ticks = this.Ticks + value * Time.TicksPerSecond;
+			long ticks = this.Ticks + (long) value * Time.TicksPerSecond;
 			return new Time (ticks % Time.TicksPerDay);
 		}
 		
 		public Time AddMillisecond(int value)
 		{
-			long ticks = this.Ticks + value * Time.TicksPerSecond / 1000L;
+			long ticks = this.Ticks + (long) value * Time.TicksPerSecond / 1000L;
 			return new Time (ticks % Time.TicksPerDay);
 		}
 		

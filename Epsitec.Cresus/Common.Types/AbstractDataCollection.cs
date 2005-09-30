@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -9,7 +9,7 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public abstract class AbstractDataCollection : IDataCollection, System.ICloneable
 	{
-		public AbstractDataCollection()
+		protected AbstractDataCollection()
 		{
 		}
 		

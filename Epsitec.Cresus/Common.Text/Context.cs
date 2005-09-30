@@ -774,7 +774,6 @@ namespace Epsitec.Common.Text
 			Styles.SimpleStyle style = this.style_list[code];
 			
 			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
-			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
 			
 			property = style[Properties.WellKnownType.Margins] as Properties.MarginsProperty;
 			
@@ -785,7 +784,7 @@ namespace Epsitec.Common.Text
 		
 		public void GetBreak(ulong code, out Properties.BreakProperty property)
 		{
-			System.Diagnostics.Debug.WriteLine ("GetBreak: " + code.ToString ("X"));
+			System.Diagnostics.Debug.WriteLine ("GetBreak: " + code.ToString ("X", System.Globalization.CultureInfo.InvariantCulture));
 			
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
@@ -924,7 +923,6 @@ namespace Epsitec.Common.Text
 			{
 				this.context  = context;
 				this.property = property;
-				this.code     = code;
 			}
 			
 			
@@ -1005,9 +1003,9 @@ namespace Epsitec.Common.Text
 			private ulong						requires_spell_checking;
 			private ulong						spell_checking_error;
 			
-			public static string				TagSelected					= "Selected";
-			public static string				TagRequiresSpellChecking	= "RequiresSpellChecking";
-			public static string				TagSpellCheckingError		= "SpellCheckingError";
+			public const string					TagSelected					= "Selected";
+			public const string					TagRequiresSpellChecking	= "RequiresSpellChecking";
+			public const string					TagSpellCheckingError		= "SpellCheckingError";
 		}
 		#endregion
 		

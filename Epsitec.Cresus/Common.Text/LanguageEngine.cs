@@ -6,9 +6,9 @@ namespace Epsitec.Common.Text
 	/// <summary>
 	/// Summary description for LanguageEngine.
 	/// </summary>
-	public class LanguageEngine
+	public sealed class LanguageEngine
 	{
-		public LanguageEngine()
+		private LanguageEngine()
 		{
 		}
 		

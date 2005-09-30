@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe Copier permet de réaliser des copies de données simples.
 	/// </summary>
-	public class Copier
+	public sealed class Copier
 	{
 		private Copier()
 		{

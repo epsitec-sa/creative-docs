@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe Comparer permet de comparer deux objets.
 	/// </summary>
-	public class Comparer
+	public sealed class Comparer
 	{
 		private Comparer()
 		{

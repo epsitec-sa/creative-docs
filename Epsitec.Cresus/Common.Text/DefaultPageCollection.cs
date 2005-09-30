@@ -98,7 +98,7 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
-		protected int							count;
-		protected System.Collections.Hashtable	properties;
+		private int								count;
+		private System.Collections.Hashtable	properties;
 	}
 }

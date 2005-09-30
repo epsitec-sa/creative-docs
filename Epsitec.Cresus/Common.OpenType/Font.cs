@@ -979,7 +979,7 @@ namespace Epsitec.Common.OpenType
 				{
 					for (int i = 0; i < this.substitution_lookups.Length; i++)
 					{
-						this.ApplySubstitutions (this.substitution_lookups[i], input, length, output, out length, ref gl_map);
+						Font.ApplySubstitutions (this.substitution_lookups[i], input, length, output, out length, ref gl_map);
 						
 						input   = output;
 						output  = temp[toggle & 1];
@@ -1147,7 +1147,7 @@ namespace Epsitec.Common.OpenType
 			output_length = output_offset;
 		}
 		
-		private void ApplySubstitutions(BaseSubstitution substitution, ushort[] input_glyphs, int input_length, ushort[] output_glyphs, out int output_length, ref int[] gl_map)
+		private static void ApplySubstitutions(BaseSubstitution substitution, ushort[] input_glyphs, int input_length, ushort[] output_glyphs, out int output_length, ref int[] gl_map)
 		{
 			int input_offset  = 0;
 			int output_offset = 0;

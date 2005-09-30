@@ -71,7 +71,7 @@ namespace Epsitec.Common.Types
 			{
 				return Converter.Convert (obj, out value);
 			}
-			catch
+			catch (System.ArgumentException)
 			{
 				value = false;
 				return false;
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Types
 			{
 				return Converter.Convert (obj, out value);
 			}
-			catch
+			catch (System.ArgumentException)
 			{
 				value = 0;
 				return false;
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Types
 			{
 				return Converter.Convert (obj, out value);
 			}
-			catch
+			catch (System.ArgumentException)
 			{
 				value = 0;
 				return false;
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Types
 			{
 				return Converter.Convert (obj, out value);
 			}
-			catch
+			catch (System.ArgumentException)
 			{
 				value = 0;
 				return false;
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Types
 			{
 				return Converter.Convert (obj, type, out value);
 			}
-			catch
+			catch (System.ArgumentException)
 			{
 				value = null;
 				return false;
@@ -594,7 +594,7 @@ namespace Epsitec.Common.Types
 				
 				return Converter.CheckEnumValue (type, value);
 			}
-			catch
+			catch (System.ArgumentException)
 			{
 			}
 			

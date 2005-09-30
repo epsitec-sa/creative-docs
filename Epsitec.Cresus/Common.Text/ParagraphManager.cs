@@ -8,7 +8,7 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public abstract class ParagraphManager : IParagraphManager
 	{
-		public ParagraphManager()
+		protected ParagraphManager()
 		{
 		}
 		

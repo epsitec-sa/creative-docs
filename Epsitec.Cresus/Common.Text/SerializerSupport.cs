@@ -112,7 +112,7 @@ namespace Epsitec.Common.Text
 		
 		public static string SerializeEnum(System.Enum value)
 		{
-			return value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			return value.ToString ();
 		}
 		
 		public static string SerializeBoolean(bool value)

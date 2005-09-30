@@ -148,7 +148,7 @@ namespace Epsitec.Common.Types
 				
 				return Converter.CheckEnumValue (this.enum_type, enum_value);
 			}
-			catch
+			catch (System.ArgumentException)
 			{
 			}
 			

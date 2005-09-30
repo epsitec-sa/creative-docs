@@ -45,7 +45,7 @@ namespace Epsitec.Common.Text.Internal.Sequences
 		
 		protected override void Setup(string argument)
 		{
-			this.alphabet = alphabet;
+			this.alphabet = argument;
 		}
 
 		

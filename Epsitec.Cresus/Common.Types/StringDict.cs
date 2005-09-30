@@ -182,6 +182,6 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		protected System.Collections.Hashtable	hash = new System.Collections.Hashtable ();
+		private System.Collections.Hashtable	hash = new System.Collections.Hashtable ();
 	}
 }

@@ -834,7 +834,6 @@ namespace Epsitec.Common.OpenType
 			int o_start_code = o_end_code + max + 2;
 			int o_id_delta   = o_start_code + max;
 			int o_id_range_o = o_id_delta + max;
-			int o_glyph_ids  = o_id_range_o + max;
 			
 			for (int i = 0; i < max; i += 2)
 			{
