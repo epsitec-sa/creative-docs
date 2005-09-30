@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Undo : Abstract
 	{
-		public Undo(Document document) : base(document)
+		public Undo() : base()
 		{
 			this.title.Text = "Undo";
 
@@ -22,11 +22,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonList.GlyphShape = GlyphShape.Menu;
 			this.buttonList.Clicked += new MessageEventHandler(this.HandleListClicked);
 			ToolTip.Default.SetToolTip(this.buttonList, Res.Strings.Action.UndoRedoList);
-
-			//?this.buttonUndo.SetClientZoom(1.5);
-			//?this.buttonRedo.SetClientZoom(1.5);
-
-			this.isNormalAndExtended = false;
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -38,17 +33,8 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
-		{
-			get
-			{
-				return 8 + 22*1.5*2;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{

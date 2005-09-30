@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Bool : Abstract
 	{
-		public Bool(Document document) : base(document)
+		public Bool() : base()
 		{
 			this.title.Text = "Boolean";
 
@@ -30,17 +30,8 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
-		{
-			get
-			{
-				return 8 + 22*3;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{

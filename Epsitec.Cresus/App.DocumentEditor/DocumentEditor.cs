@@ -579,11 +579,28 @@ namespace Epsitec.App.DocumentEditor
 			this.HToolBarAdd(Misc.Icon("Inside"), "Inside", DocumentEditor.GetRes("Action.Inside"));
 			this.HToolBarAdd(Misc.Icon("Outside"), "Outside", DocumentEditor.GetRes("Action.Outside"));
 			this.HToolBarAdd("", "", "");
+			this.HToolBarAdd(Misc.Icon("Preview"), "Preview", DocumentEditor.GetRes("Action.Preview"));
+			this.HToolBarAdd(Misc.Icon("Grid"), "Grid", DocumentEditor.GetRes("Action.Grid"));
+			this.HToolBarAdd(Misc.Icon("Magnet"), "Magnet", DocumentEditor.GetRes("Action.Magnet"));
+			this.HToolBarAdd(Misc.Icon("Labels"), "Labels", DocumentEditor.GetRes("Action.Labels"));
+			this.HToolBarAdd(Misc.Icon("Aggregates"), "Aggregates", DocumentEditor.GetRes("Action.Aggregates"));
+			this.HToolBarAdd(Misc.Icon("LabelProperties"), "LabelProperties", DocumentEditor.GetRes("Action.LabelProperties"));
+			this.HToolBarAdd(Misc.Icon("Settings"), "Settings", DocumentEditor.GetRes("Action.Settings"));
+			this.HToolBarAdd(Misc.Icon("Infos"), "Infos", DocumentEditor.GetRes("Action.Infos"));
+			this.HToolBarAdd(Misc.Icon("Glyphs"), "Glyphs", DocumentEditor.GetRes("Action.Glyphs"));
+			this.HToolBarAdd("", "", "");
+			if ( this.useArray )
+			{
+				this.HToolBarAdd(Misc.Icon("ArrayFrame"), "ArrayOutlineFrame", "Modifie le cadre");
+				this.HToolBarAdd(Misc.Icon("ArrayHoriz"), "ArrayOutlineHoriz", "Modifie l'intérieur horizontal");
+				this.HToolBarAdd(Misc.Icon("ArrayVerti"), "ArrayOutlineVerti", "Modifie l'intérieur vertical");
+				this.HToolBarAdd("", "", "");
+			}
 #endif
 
 			this.ribbonMainButton = new IconButton();
-			this.ribbonMainButton.Text = "Document";
-			this.ribbonMainButton.Width = 64;
+			this.ribbonMainButton.Text = "Documents";
+			this.ribbonMainButton.Width = 70;
 			this.ribbonMainButton.Clicked += new MessageEventHandler(this.HandleRibbonMainClicked);
 			this.hToolBar.Items.Add(this.ribbonMainButton);
 
@@ -605,31 +622,59 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonTextButton.Clicked += new MessageEventHandler(this.HandleRibbonTextClicked);
 			this.hToolBar.Items.Add(this.ribbonTextButton);
 
-#if false
-			this.HToolBarAdd("", "", "");
-
-			this.HToolBarAdd(Misc.Icon("Preview"), "Preview", DocumentEditor.GetRes("Action.Preview"));
-			this.HToolBarAdd(Misc.Icon("Grid"), "Grid", DocumentEditor.GetRes("Action.Grid"));
-			this.HToolBarAdd(Misc.Icon("Magnet"), "Magnet", DocumentEditor.GetRes("Action.Magnet"));
-			this.HToolBarAdd(Misc.Icon("Labels"), "Labels", DocumentEditor.GetRes("Action.Labels"));
-			this.HToolBarAdd(Misc.Icon("Aggregates"), "Aggregates", DocumentEditor.GetRes("Action.Aggregates"));
-			this.HToolBarAdd(Misc.Icon("LabelProperties"), "LabelProperties", DocumentEditor.GetRes("Action.LabelProperties"));
-			this.HToolBarAdd(Misc.Icon("Settings"), "Settings", DocumentEditor.GetRes("Action.Settings"));
-			this.HToolBarAdd(Misc.Icon("Infos"), "Infos", DocumentEditor.GetRes("Action.Infos"));
-			this.HToolBarAdd(Misc.Icon("Glyphs"), "Glyphs", DocumentEditor.GetRes("Action.Glyphs"));
-			this.HToolBarAdd("", "", "");
-			if ( this.useArray )
-			{
-				this.HToolBarAdd(Misc.Icon("ArrayFrame"), "ArrayOutlineFrame", "Modifie le cadre");
-				this.HToolBarAdd(Misc.Icon("ArrayHoriz"), "ArrayOutlineHoriz", "Modifie l'intérieur horizontal");
-				this.HToolBarAdd(Misc.Icon("ArrayVerti"), "ArrayOutlineVerti", "Modifie l'intérieur vertical");
-				this.HToolBarAdd("", "", "");
-			}
-#endif
-
 			this.info = new StatusBar(this);
 			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
 			this.info.AnchorMargins = new Margins(0, 22-5, 0, 0);
+
+			this.ribbonMain = new Ribbons.RibbonContainer(this);
+			this.ribbonMain.Height = 22;
+			this.ribbonMain.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.ribbonMain.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonMain.SetVisible(false);
+			this.ribbonMain.Items.Add(new Ribbons.File());
+			this.ribbonMain.Items.Add(new Ribbons.View());
+			this.ribbonMain.Items.Add(new Ribbons.Zoom());
+			this.ribbonMain.Items.Add(new Ribbons.Action());
+#if DEBUG
+			this.ribbonMain.Items.Add(new Ribbons.Debug());
+#endif
+			this.ribbonMain.Height = this.ribbonHeight;
+
+			this.ribbonObject = new Ribbons.RibbonContainer(this);
+			this.ribbonObject.Height = 22;
+			this.ribbonObject.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.ribbonObject.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonObject.SetVisible(false);
+			this.ribbonObject.Items.Add(new Ribbons.Undo());
+			this.ribbonObject.Items.Add(new Ribbons.Select());
+			this.ribbonObject.Items.Add(new Ribbons.Clipboard());
+			this.ribbonObject.Items.Add(new Ribbons.Order());
+			this.ribbonObject.Items.Add(new Ribbons.Group());
+			this.ribbonObject.Items.Add(new Ribbons.Move());
+			this.ribbonObject.Items.Add(new Ribbons.Rotate());
+			this.ribbonObject.Items.Add(new Ribbons.Scale());
+			this.ribbonObject.Height = this.ribbonHeight;
+
+			this.ribbonOper = new Ribbons.RibbonContainer(this);
+			this.ribbonOper.Height = 22;
+			this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.ribbonOper.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonOper.SetVisible(false);
+			this.ribbonOper.Items.Add(new Ribbons.Align());
+			this.ribbonOper.Items.Add(new Ribbons.Bool());
+			this.ribbonOper.Items.Add(new Ribbons.Geom());
+			this.ribbonOper.Items.Add(new Ribbons.Color());
+			this.ribbonOper.Height = this.ribbonHeight;
+
+			this.ribbonText = new Ribbons.RibbonContainer(this);
+			this.ribbonText.Height = 22;
+			this.ribbonText.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.ribbonText.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
+			this.ribbonText.SetVisible(false);
+			this.ribbonText.Items.Add(new Ribbons.Font());
+			this.ribbonText.Items.Add(new Ribbons.Insert());
+			this.ribbonText.Items.Add(new Ribbons.Clipboard());
+			this.ribbonText.Height = this.ribbonHeight;
 
 			this.InfoAdd("", 120, "StatusDocument", "");
 #if false
@@ -680,7 +725,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.vToolBar = new VToolBar(this);
 			this.vToolBar.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-			this.vToolBar.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, this.info.Height);
+			this.vToolBar.AnchorMargins = new Margins(0, 0, this.hToolBar.Height+this.RibbonHeight, this.info.Height);
 			this.VToolBarAdd(Misc.Icon("Select"), "ToolSelect", DocumentEditor.GetRes("Tool.Select", this.toolSelectState), "Select");
 			this.VToolBarAdd(Misc.Icon("Global"), "ToolGlobal", DocumentEditor.GetRes("Tool.Global", this.toolGlobalState), "Global");
 			this.VToolBarAdd(Misc.Icon("Edit"), "ToolEdit", DocumentEditor.GetRes("Tool.Edit", this.toolEditState), "Edit");
@@ -717,7 +762,7 @@ namespace Epsitec.App.DocumentEditor
 			this.bookDocuments = new TabBook(this);
 			this.bookDocuments.Width = this.panelsWidth;
 			this.bookDocuments.Anchor = AnchorStyles.All;
-			this.bookDocuments.AnchorMargins = new Margins(this.vToolBar.Width+1, this.panelsWidth+2, this.hToolBar.Height+1, this.info.Height+1);
+			this.bookDocuments.AnchorMargins = new Margins(this.vToolBar.Width+this.RibbonHeight+1, this.panelsWidth+2, this.hToolBar.Height+1, this.info.Height+1);
 			this.bookDocuments.Arrows = TabBookArrows.Right;
 			this.bookDocuments.HasCloseButton = true;
 			this.bookDocuments.CloseButton.Command = "Close";
@@ -734,57 +779,6 @@ namespace Epsitec.App.DocumentEditor
 			
 			di.tabPage = new TabPage();
 			this.bookDocuments.Items.Insert(this.currentDocument, di.tabPage);
-
-			// Rubans.
-			di.ribbonMain = new Ribbons.RibbonContainer(this);
-			di.ribbonMain.Height = 22;
-			di.ribbonMain.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			di.ribbonMain.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
-			di.ribbonMain.SetVisible(false);
-			di.ribbonMain.Items.Add(new Ribbons.File(document));
-			di.ribbonMain.Items.Add(new Ribbons.View(document));
-			di.ribbonMain.Items.Add(new Ribbons.Zoom(document));
-			di.ribbonMain.Items.Add(new Ribbons.Action(document));
-#if DEBUG
-			di.ribbonMain.Items.Add(new Ribbons.Debug(document));
-#endif
-			di.ribbonMain.Height = this.ribbonHeight;
-
-			di.ribbonObject = new Ribbons.RibbonContainer(this);
-			di.ribbonObject.Height = 22;
-			di.ribbonObject.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			di.ribbonObject.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
-			di.ribbonObject.SetVisible(false);
-			di.ribbonObject.Items.Add(new Ribbons.Undo(document));
-			di.ribbonObject.Items.Add(new Ribbons.Select(document));
-			di.ribbonObject.Items.Add(new Ribbons.Clipboard(document));
-			di.ribbonObject.Items.Add(new Ribbons.Order(document));
-			di.ribbonObject.Items.Add(new Ribbons.Group(document));
-			di.ribbonObject.Items.Add(new Ribbons.Move(document));
-			di.ribbonObject.Items.Add(new Ribbons.Rotate(document));
-			di.ribbonObject.Items.Add(new Ribbons.Scale(document));
-			di.ribbonObject.Height = this.ribbonHeight;
-
-			di.ribbonOper = new Ribbons.RibbonContainer(this);
-			di.ribbonOper.Height = 22;
-			di.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			di.ribbonOper.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
-			di.ribbonOper.SetVisible(false);
-			di.ribbonOper.Items.Add(new Ribbons.Align(document));
-			di.ribbonOper.Items.Add(new Ribbons.Bool(document));
-			di.ribbonOper.Items.Add(new Ribbons.Geom(document));
-			di.ribbonOper.Items.Add(new Ribbons.Color(document));
-			di.ribbonOper.Height = this.ribbonHeight;
-
-			di.ribbonText = new Ribbons.RibbonContainer(this);
-			di.ribbonText.Height = 22;
-			di.ribbonText.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			di.ribbonText.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
-			di.ribbonText.SetVisible(false);
-			di.ribbonText.Items.Add(new Ribbons.Font(document));
-			di.ribbonText.Items.Add(new Ribbons.Insert(document));
-			di.ribbonText.Items.Add(new Ribbons.Clipboard(document));
-			di.ribbonText.Height = this.ribbonHeight;
 
 			Widget mainViewParent;
 			double lm = 0;
@@ -952,7 +946,7 @@ namespace Epsitec.App.DocumentEditor
 			di.bookPanels = new TabBook(this);
 			di.bookPanels.Width = this.panelsWidth;
 			di.bookPanels.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
-			di.bookPanels.AnchorMargins = new Margins(1, 1, this.hToolBar.Height+1, this.info.Height+1);
+			di.bookPanels.AnchorMargins = new Margins(1, 1, this.hToolBar.Height+this.RibbonHeight+1, this.info.Height+1);
 			di.bookPanels.Arrows = TabBookArrows.Stretch;
 			di.bookPanels.ActivePageChanged += new EventHandler(this.HandleBookPanelsActivePageChanged);
 
@@ -1186,53 +1180,62 @@ namespace Epsitec.App.DocumentEditor
 
 		private void HandleRibbonMainClicked(object sender, MessageEventArgs e)
 		{
-			DocumentInfo di = this.CurrentDocumentInfo;
-			this.ActiveRibbon(di.ribbonMain.IsVisible ? null : di.ribbonMain);
+			this.ActiveRibbon(this.ribbonMain.IsVisible ? null : this.ribbonMain);
 		}
 
 		private void HandleRibbonObjectClicked(object sender, MessageEventArgs e)
 		{
-			DocumentInfo di = this.CurrentDocumentInfo;
-			this.ActiveRibbon(di.ribbonObject.IsVisible ? null : di.ribbonObject);
+			this.ActiveRibbon(this.ribbonObject.IsVisible ? null : this.ribbonObject);
 		}
 
 		private void HandleRibbonOperClicked(object sender, MessageEventArgs e)
 		{
-			DocumentInfo di = this.CurrentDocumentInfo;
-			this.ActiveRibbon(di.ribbonOper.IsVisible ? null : di.ribbonOper);
+			this.ActiveRibbon(this.ribbonOper.IsVisible ? null : this.ribbonOper);
 		}
 
 		private void HandleRibbonTextClicked(object sender, MessageEventArgs e)
 		{
-			DocumentInfo di = this.CurrentDocumentInfo;
-			this.ActiveRibbon(di.ribbonText.IsVisible ? null : di.ribbonText);
+			this.ActiveRibbon(this.ribbonText.IsVisible ? null : this.ribbonText);
 		}
 
 		// Active un ruban.
 		protected void ActiveRibbon(Ribbons.RibbonContainer active)
 		{
-			DocumentInfo di = this.CurrentDocumentInfo;
+			this.ribbonMain.SetVisible(this.ribbonMain == active);
+			this.ribbonObject.SetVisible(this.ribbonObject == active);
+			this.ribbonOper.SetVisible(this.ribbonOper == active);
+			this.ribbonText.SetVisible(this.ribbonText == active);
 
-			di.ribbonMain.SetVisible(di.ribbonMain == active);
-			di.ribbonObject.SetVisible(di.ribbonObject == active);
-			di.ribbonOper.SetVisible(di.ribbonOper == active);
-			di.ribbonText.SetVisible(di.ribbonText == active);
+			this.ribbonMainButton.ActiveState = this.ribbonMain.IsVisible ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.ribbonObjectButton.ActiveState = this.ribbonObject.IsVisible ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.ribbonOperButton.ActiveState = this.ribbonOper.IsVisible ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.ribbonTextButton.ActiveState = this.ribbonText.IsVisible ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 
-			this.ribbonMainButton.ActiveState = di.ribbonMain.IsVisible ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.ribbonObjectButton.ActiveState = di.ribbonObject.IsVisible ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.ribbonOperButton.ActiveState = di.ribbonOper.IsVisible ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.ribbonTextButton.ActiveState = di.ribbonText.IsVisible ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-
-			bool visible = false;
-			if ( di.ribbonMain.IsVisible )  visible = true;
-			if ( di.ribbonObject.IsVisible )  visible = true;
-			if ( di.ribbonOper.IsVisible )  visible = true;
-			if ( di.ribbonText.IsVisible )  visible = true;
-
-			double h = visible ? this.ribbonHeight : 0;
+			double h = this.RibbonHeight;
 			this.vToolBar.AnchorMargins = new Margins(0, 0, this.hToolBar.Height+h, this.info.Height);
 			this.bookDocuments.AnchorMargins = new Margins(this.vToolBar.Width+1, this.panelsWidth+2, this.hToolBar.Height+h+1, this.info.Height+1);
-			di.bookPanels.AnchorMargins = new Margins(1, 1, this.hToolBar.Height+h+1, this.info.Height+1);
+
+			int total = this.bookDocuments.PageCount;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				DocumentInfo di = this.documents[i] as DocumentInfo;
+				di.bookPanels.AnchorMargins = new Margins(1, 1, this.hToolBar.Height+h+1, this.info.Height+1);
+			}
+		}
+
+		// Retourne la hauteur utilisée par les rubans.
+		protected double RibbonHeight
+		{
+			get
+			{
+				bool visible = false;
+				if ( this.ribbonMain.IsVisible )  visible = true;
+				if ( this.ribbonObject.IsVisible )  visible = true;
+				if ( this.ribbonOper.IsVisible )  visible = true;
+				if ( this.ribbonText.IsVisible )  visible = true;
+
+				return visible ? this.ribbonHeight : 0;
+			}
 		}
 
 
@@ -3552,10 +3555,10 @@ namespace Epsitec.App.DocumentEditor
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
 
-				di.ribbonMain.SetDirtyContent();
-				di.ribbonObject.SetDirtyContent();
-				di.ribbonOper.SetDirtyContent();
-				di.ribbonText.SetDirtyContent();
+				this.ribbonMain.SetDirtyContent();
+				this.ribbonObject.SetDirtyContent();
+				this.ribbonOper.SetDirtyContent();
+				this.ribbonText.SetDirtyContent();
 				
 				di.containerPrincipal.SetDirtyContent();
 #if DEBUG
@@ -4448,6 +4451,11 @@ namespace Epsitec.App.DocumentEditor
 					di.bookPanels.SetVisible(i == this.currentDocument);
 				}
 
+				this.ribbonMain.SetDocument(this.type, this.globalSettings, this.CurrentDocument);
+				this.ribbonObject.SetDocument(this.type, this.globalSettings, this.CurrentDocument);
+				this.ribbonOper.SetDocument(this.type, this.globalSettings, this.CurrentDocument);
+				this.ribbonText.SetDocument(this.type, this.globalSettings, this.CurrentDocument);
+
 				this.CommandStateShake(this.pageNextState);
 				this.CommandStateShake(this.pagePrevState);
 				this.CommandStateShake(this.pageMenuState);
@@ -4459,6 +4467,11 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
+				this.ribbonMain.SetDocument(this.type, this.globalSettings, null);
+				this.ribbonObject.SetDocument(this.type, this.globalSettings, null);
+				this.ribbonOper.SetDocument(this.type, this.globalSettings, null);
+				this.ribbonText.SetDocument(this.type, this.globalSettings, null);
+
 				this.HandleDocumentChanged();
 				this.HandleMouseChanged();
 				this.HandleOriginChanged();
@@ -4782,6 +4795,10 @@ namespace Epsitec.App.DocumentEditor
 		protected IconButton					ribbonObjectButton;
 		protected IconButton					ribbonOperButton;
 		protected IconButton					ribbonTextButton;
+		protected Ribbons.RibbonContainer		ribbonMain;
+		protected Ribbons.RibbonContainer		ribbonObject;
+		protected Ribbons.RibbonContainer		ribbonOper;
+		protected Ribbons.RibbonContainer		ribbonText;
 		protected VToolBar						vToolBar;
 		protected StatusBar						info;
 		protected ResizeKnob					resize;
@@ -4969,10 +4986,6 @@ namespace Epsitec.App.DocumentEditor
 		protected class DocumentInfo
 		{
 			public Document						document;
-			public Ribbons.RibbonContainer		ribbonMain;
-			public Ribbons.RibbonContainer		ribbonObject;
-			public Ribbons.RibbonContainer		ribbonOper;
-			public Ribbons.RibbonContainer		ribbonText;
 			public TabPage						tabPage;
 			public HRuler						hRuler;
 			public VRuler						vRuler;
@@ -4991,10 +5004,6 @@ namespace Epsitec.App.DocumentEditor
 			public void Dispose()
 			{
 				if ( this.tabPage != null )  this.tabPage.Dispose();
-				if ( this.ribbonMain != null )  this.ribbonMain.Dispose();
-				if ( this.ribbonObject != null )  this.ribbonObject.Dispose();
-				if ( this.ribbonOper != null )  this.ribbonOper.Dispose();
-				if ( this.ribbonText != null )  this.ribbonText.Dispose();
 				if ( this.hRuler != null )  this.hRuler.Dispose();
 				if ( this.vRuler != null )  this.vRuler.Dispose();
 				if ( this.hScroller != null )  this.hScroller.Dispose();

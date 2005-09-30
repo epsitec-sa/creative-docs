@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Zoom : Abstract
 	{
-		public Zoom(Document document) : base(document)
+		public Zoom() : base()
 		{
 			this.title.Text = "Zoom";
 
@@ -24,8 +24,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.CreateSeparator(ref this.separator);
 			this.buttonZoomAdd = this.CreateIconButton("ZoomAdd", Misc.Icon("ZoomAdd"), Res.Strings.Action.ZoomAdd);
 			this.buttonZoomSub = this.CreateIconButton("ZoomSub", Misc.Icon("ZoomSub"), Res.Strings.Action.ZoomSub);
-
-			this.isNormalAndExtended = false;
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -37,17 +35,8 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
-		{
-			get
-			{
-				return 8 + 22*4 + this.separatorWidth + 22*1;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{

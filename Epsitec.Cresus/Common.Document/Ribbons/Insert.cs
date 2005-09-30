@@ -10,13 +10,11 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Insert : Abstract
 	{
-		public Insert(Document document) : base(document)
+		public Insert() : base()
 		{
 			this.title.Text = "Insert";
 
 			this.buttonGlyphs = this.CreateIconButton("Glyphs", Misc.Icon("Glyphs"), Res.Strings.Action.Glyphs);
-
-			this.isNormalAndExtended = false;
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -28,21 +26,12 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{
-				return 8+22+22;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
-		{
-			get
-			{
-				return 8+22+22;
+				return 8 + 22*2;
 			}
 		}
 

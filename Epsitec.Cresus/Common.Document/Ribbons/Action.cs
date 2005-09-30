@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Action : Abstract
 	{
-		public Action(Document document) : base(document)
+		public Action() : base()
 		{
 			this.title.Text = "Actions";
 
@@ -19,8 +19,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonPageStack = this.CreateIconButton("PageStack", Misc.Icon("PageStack"), Res.Strings.Action.PageStack);
 			this.buttonUpdate = this.CreateIconButton("UpdateApplication", Misc.Icon("Update"), Res.Strings.Action.Update);
 			this.buttonAbout = this.CreateIconButton("AboutApplication", Misc.Icon("About"), Res.Strings.Action.About);
-
-			this.isNormalAndExtended = false;
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -32,17 +30,8 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
-		{
-			get
-			{
-				return 8 + 22*3;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{

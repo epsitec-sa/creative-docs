@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Scale : Abstract
 	{
-		public Scale(Document document) : base(document)
+		public Scale() : base()
 		{
 			this.title.Text = Res.Strings.Action.ZoomMain;
 
@@ -33,21 +33,19 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
+		public override void SetDocument(DocumentType type, Settings.GlobalSettings gs, Document document)
 		{
-			get
-			{
-				return 8+22+22;
-			}
+			base.SetDocument(type, gs, document);
+
+			this.AdaptFieldZoom(this.fieldZoom);
 		}
 
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{
-				return 8+22+22+this.separatorWidth+50;
+				return 8 + 22*2 + this.separatorWidth + 50;
 			}
 		}
 
@@ -91,27 +89,19 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Met à jour les boutons.
-		protected override void UpdateButtons()
-		{
-			base.UpdateButtons();
-
-			if ( this.buttonZoom == null )  return;
-
-			this.separator.SetVisible(this.isExtendedSize);
-			this.buttonZoomi.SetVisible(this.isExtendedSize);
-			this.buttonZoom.SetVisible(this.isExtendedSize);
-			this.fieldZoom.SetVisible(this.isExtendedSize);
-		}
-
 		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
-			bool enabled = (this.document.Modifier.TotalSelected > 0);
+			bool enabled = false;
 
-			if ( this.document.Modifier.Tool == "Edit" )
+			if ( this.document != null )
 			{
-				enabled = false;
+				enabled = (this.document.Modifier.TotalSelected > 0);
+
+				if ( this.document.Modifier.Tool == "Edit" )
+				{
+					enabled = false;
+				}
 			}
 
 			this.buttonZoomDiv2.SetEnabled(enabled);
@@ -126,19 +116,45 @@ namespace Epsitec.Common.Document.Ribbons
 		protected void CreateFieldZoom(ref TextFieldReal field, string tooltip)
 		{
 			field = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealScalar(field);
 			field.Width = 50;
-			field.InternalMinValue = 1.0M;
-			field.InternalMaxValue = 2.0M;
-			field.DefaultValue = 1.0M;
-			field.Step = 0.1M;
-			field.Resolution = 0.01M;
-			field.InternalValue = 1.2M;
 			field.TabIndex = tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
 			ToolTip.Default.SetToolTip(field, tooltip);
 		}
 
+		// Adapte un champ éditable pour un zoom.
+		protected void AdaptFieldZoom(TextFieldReal field)
+		{
+			if ( this.document == null )
+			{
+				field.SetEnabled(false);
+			}
+			else
+			{
+				field.SetEnabled(true);
+
+				this.ignoreChange = true;
+				this.document.Modifier.AdaptTextFieldRealScalar(field);
+				field.InternalMinValue = 1.0M;
+				field.InternalMaxValue = 2.0M;
+				field.DefaultValue = 1.0M;
+				field.Step = 0.1M;
+				field.Resolution = 0.01M;
+				field.InternalValue = (decimal) this.document.Modifier.ZoomFactor;
+				this.ignoreChange = false;
+			}
+		}
+
+		private void HandleFieldValueChanged(object sender)
+		{
+			if ( this.ignoreChange )  return;
+			TextFieldReal field = sender as TextFieldReal;
+			if ( field == this.fieldZoom )
+			{
+				this.document.Modifier.ZoomFactor = (double) field.InternalValue;
+			}
+		}
 
 		private void HandleButtonMirrorH(object sender, MessageEventArgs e)
 		{
@@ -162,13 +178,13 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleButtonZoom(object sender, MessageEventArgs e)
 		{
-			double scale = (double) this.fieldZoom.InternalValue;
+			double scale = this.document.Modifier.ZoomFactor;
 			this.document.Modifier.ZoomSelection(scale);
 		}
 
 		private void HandleButtonZoomi(object sender, MessageEventArgs e)
 		{
-			double scale = (double) this.fieldZoom.InternalValue;
+			double scale = this.document.Modifier.ZoomFactor;
 			this.document.Modifier.ZoomSelection(1.0/scale);
 		}
 

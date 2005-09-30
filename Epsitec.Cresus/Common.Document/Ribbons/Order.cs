@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Order : Abstract
 	{
-		public Order(Document document) : base(document)
+		public Order() : base()
 		{
 			this.title.Text = Res.Strings.Action.OrderMain;
 
@@ -18,8 +18,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonDownOne = this.CreateIconButton("OrderDownOne", Misc.Icon("OrderDownOne"), Res.Strings.Action.OrderDownOne);
 			this.buttonUpOne   = this.CreateIconButton("OrderUpOne",   Misc.Icon("OrderUpOne"),   Res.Strings.Action.OrderUpOne  );
 			this.buttonUpAll   = this.CreateIconButton("OrderUpAll",   Misc.Icon("OrderUpAll"),   Res.Strings.Action.OrderUpAll  );
-
-			this.isNormalAndExtended = false;
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -31,21 +29,12 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{
-				return 8+22+22;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
-		{
-			get
-			{
-				return 8+22+22;
+				return 8 + 22*2;
 			}
 		}
 

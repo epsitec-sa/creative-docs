@@ -11,10 +11,6 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public RibbonContainer()
 		{
-			this.direction = Direction.Up;
-			
-			//?double m = (this.DefaultHeight-this.defaultButtonHeight)/2;
-			//?this.DockPadding = new Drawing.Margins(m, m, m, m);
 		}
 		
 		public RibbonContainer(Widget embedder) : this()
@@ -23,29 +19,38 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		public override double				DefaultHeight
+		// Retourne la hauteur standard d'une barre.
+		public override double DefaultHeight
 		{
-			// Retourne la hauteur standard d'une barre.
 			get
 			{
 				return 66;
 			}
 		}
 		
-		protected double					LabelHeight
+		// Retourne la hauteur pour le label supérieur.
+		protected double LabelHeight
 		{
-			// Retourne la hauteur pour le label supérieur.
 			get
 			{
 				return 14;
 			}
 		}
 
-		public override DockStyle			DefaultIconDockStyle
+		public override DockStyle DefaultIconDockStyle
 		{
 			get
 			{
 				return DockStyle.Left;
+			}
+		}
+
+		public void SetDocument(DocumentType type, Settings.GlobalSettings gs, Document document)
+		{
+			foreach ( Abstract ribbon in this.Children )
+			{
+				if ( ribbon == null )  continue;
+				ribbon.SetDocument(type, gs, document);
 			}
 		}
 

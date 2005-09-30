@@ -10,11 +10,9 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Font : Abstract
 	{
-		public Font(Document document) : base(document)
+		public Font() : base()
 		{
 			this.title.Text = Res.Strings.Property.Abstract.TextFont;
-
-			this.isNormalAndExtended = false;
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -26,17 +24,8 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
-		{
-			get
-			{
-				return 8+200;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{

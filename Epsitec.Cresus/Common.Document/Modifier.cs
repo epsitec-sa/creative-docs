@@ -27,6 +27,7 @@ namespace Epsitec.Common.Document
 				this.arrowMoveMul = 10.0;
 				this.arrowMoveDiv = 10.0;
 				this.outsideArea = 10.0;
+				this.moveDistance = new Point(1.0, 1.0);
 			}
 			else
 			{
@@ -35,17 +36,23 @@ namespace Epsitec.Common.Document
 					this.SetRealUnitDimension(RealUnitType.DimensionMillimeter, false);
 					this.duplicateMove = new Point(50.0, 50.0);  // 5mm
 					this.arrowMove = new Point(10.0, 10.0);  // 1mm
+					this.moveDistance = new Point(100.0, 100.0);  // 10mm
 				}
 				else
 				{
 					this.SetRealUnitDimension(RealUnitType.DimensionInch, false);
 					this.duplicateMove = new Point(50.8, 50.8);  // 0.2in
-					this.arrowMove = new Point(25.4, 25.4);  // 1in
+					this.arrowMove = new Point(25.4, 25.4);  // 0.1in
+					this.moveDistance = new Point(254.0, 254.0);  // 1in
 				}
 				this.arrowMoveMul = 10.0;
 				this.arrowMoveDiv = 10.0;
 				this.outsideArea = 0.0;
 			}
+
+			this.rotateAngle = 10.0;  // 10 degrés
+			this.zoomFactor = 1.2;  // x1.2
+			this.colorAdjust = 0.1;  // 10%
 
 			int total = 0;
 			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
@@ -376,7 +383,7 @@ namespace Epsitec.Common.Document
 			{
 				this.bookInitialSelector = SelectorType.None;
 				if ( !this.ActiveViewer.Selector.Visible ||
-					 this.ActiveViewer.Selector.TypeInUse != SelectorType.Zoomer )
+					this.ActiveViewer.Selector.TypeInUse != SelectorType.Zoomer )
 				{
 					this.bookInitialSelector = this.ActiveViewer.SelectorType;
 					this.ActiveViewer.SelectorType = SelectorType.Zoomer;
@@ -1600,7 +1607,7 @@ namespace Epsitec.Common.Document
 
 		// Duplique d'un document dans un autre.
 		protected void Duplicate(Document srcDoc, Document dstDoc,
-								 Point move, bool onlySelected)
+			Point move, bool onlySelected)
 		{
 			DrawingContext srcContext = srcDoc.Modifier.ActiveViewer.DrawingContext;
 			UndoableList srcList = srcContext.RootObject().Objects;
@@ -1613,8 +1620,8 @@ namespace Epsitec.Common.Document
 
 		// Copie tous les objets d'une liste source dans une liste destination.
 		protected static void Duplicate(Document srcDoc, Document dstDoc,
-										UndoableList srcList, UndoableList dstList,
-										bool deselect, Point move, bool onlySelected)
+			UndoableList srcList, UndoableList dstList,
+			bool deselect, Point move, bool onlySelected)
 		{
 			int total = srcList.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -1824,7 +1831,7 @@ namespace Epsitec.Common.Document
 
 		// Crée une case du menu des actions à refaire/annuler.
 		protected void CreateUndoRedoMenu(System.Collections.ArrayList list, MessageEventHandler message,
-										  int active, int rank, string action, int todo)
+			int active, int rank, string action, int todo)
 		{
 			string icon = "";
 			if ( active == 1 )  icon = Misc.Icon("ActiveNo");
@@ -2008,6 +2015,41 @@ namespace Epsitec.Common.Document
 
 
 		#region Operations
+		// Distance du déplacement horizontal.
+		public double MoveDistanceH
+		{
+			get { return this.moveDistance.X; }
+			set { this.moveDistance.X = value; }
+		}
+
+		// Distance du déplacement vertical.
+		public double MoveDistanceV
+		{
+			get { return this.moveDistance.Y; }
+			set { this.moveDistance.Y = value; }
+		}
+
+		// Angle de rotation.
+		public double RotateAngle
+		{
+			get { return this.rotateAngle; }
+			set { this.rotateAngle = value; }
+		}
+
+		// Facteur de zoom.
+		public double ZoomFactor
+		{
+			get { return this.zoomFactor; }
+			set { this.zoomFactor = value; }
+		}
+
+		// Facteur d'ajustement de couleur.
+		public double ColorAdjust
+		{
+			get { return this.colorAdjust; }
+			set { this.colorAdjust = value; }
+		}
+
 		// Déplace tous les objets sélectionnés.
 		public void MoveSelection(Point dir, int alter)
 		{
@@ -5484,6 +5526,10 @@ namespace Epsitec.Common.Document
 		protected bool							repeatDuplicateMove;
 		protected bool							lastOperIsDuplicate;
 		protected Point							moveAfterDuplicate;
+		protected Point							moveDistance;
+		protected double						rotateAngle;
+		protected double						zoomFactor;
+		protected double						colorAdjust;
 		protected double						toLinePrecision;
 		protected string						textInfoModif = "";
 		protected double						outsideArea;

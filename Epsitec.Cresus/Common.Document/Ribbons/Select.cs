@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Select : Abstract
 	{
-		public Select(Document document) : base(document)
+		public Select() : base()
 		{
 			this.title.Text = "Selection";
 
@@ -24,11 +24,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonHideRest = this.CreateIconButton("HideRest", Misc.Icon("HideRest"), Res.Strings.Action.HideRest);
 			this.buttonHideCancel = this.CreateIconButton("HideCancel", Misc.Icon("HideCancel"), Res.Strings.Action.HideCancel);
 			this.buttonHideHalf = this.CreateIconButton("HideHalf", Misc.Icon("HideHalf"), Res.Strings.Action.HideHalf);
-
-			//?this.buttonDelete.SetClientZoom(1.5);
-			//?this.buttonDuplicate.SetClientZoom(1.5);
-
-			this.isNormalAndExtended = false;
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -40,17 +35,8 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
-		{
-			get
-			{
-				return 8 + 22*1.5*2 + this.separatorWidth + 22*4;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{

@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Debug : Abstract
 	{
-		public Debug(Document document) : base(document)
+		public Debug() : base()
 		{
 			this.title.Text = "Debug";
 
@@ -18,8 +18,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonOthers.ButtonStyle = ButtonStyle.ToolItem;
 			this.buttonOthers.GlyphShape = GlyphShape.Menu;
 			this.buttonOthers.Clicked += new MessageEventHandler(this.HandleOthersClicked);
-
-			this.isNormalAndExtended = false;
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -31,17 +29,8 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
-		{
-			get
-			{
-				return 8 + 40;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{

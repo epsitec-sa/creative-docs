@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Geom : Abstract
 	{
-		public Geom(Document document) : base(document)
+		public Geom() : base()
 		{
 			this.title.Text = "Geometry";
 
@@ -30,17 +30,8 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
-		{
-			get
-			{
-				return 8 + 22*3;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{
@@ -75,20 +66,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonToPoly.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonFragment.Bounds = rect;
-		}
-
-		// Met à jour les boutons.
-		protected override void UpdateButtons()
-		{
-			base.UpdateButtons();
-
-			if ( this.buttonCombine == null )  return;
-
-			this.buttonCombine.SetVisible(this.isExtendedSize);
-			this.buttonUncombine.SetVisible(this.isExtendedSize);
-			this.buttonToBezier.SetVisible(this.isExtendedSize);
-			this.buttonToPoly.SetVisible(this.isExtendedSize);
-			this.buttonFragment.SetVisible(this.isExtendedSize);
 		}
 
 

@@ -1113,6 +1113,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\Paste2.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Pen.icon"
                     BuildAction = "EmbeddedResource"
                 />

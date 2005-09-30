@@ -10,33 +10,27 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public abstract class Abstract : Common.Widgets.Widget
 	{
-		public Abstract(Document document)
+		public Abstract()
 		{
-			this.document = document;
-
 			this.title = new TextLayout();
 			this.title.DefaultFont     = this.DefaultFont;
 			this.title.DefaultFontSize = this.DefaultFontSize;
-
-			this.extendedButton = new GlyphButton(this);
-			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
-			this.extendedButton.GlyphShape = GlyphShape.ArrowRight;
-			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
-			this.extendedButton.TabIndex = this.tabIndex++;
-			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Panel.Abstract.Extend);
-
-			this.UpdateButtons();
 		}
 		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
-				this.extendedButton.Clicked -= new MessageEventHandler(this.ExtendedButtonClicked);
 			}
 			
 			base.Dispose(disposing);
+		}
+
+		public virtual void SetDocument(DocumentType type, Settings.GlobalSettings gs, Document document)
+		{
+			this.documentType = type;
+			this.globalSettings = gs;
+			this.document = document;
 		}
 
 		
@@ -45,25 +39,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return this.isExtendedSize ? this.ExtendWidth : this.CompactWidth;
-			}
-		}
-
-		// Retourne la largeur compacte.
-		public virtual double CompactWidth
-		{
-			get
-			{
-				return 8+22+22;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public virtual double ExtendWidth
-		{
-			get
-			{
-				return 8+22+22+22+22;
+				return 8 + 22*2;
 			}
 		}
 
@@ -72,7 +48,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return this.LabelHeight+8+22+22;
+				return this.LabelHeight + 8 + 22*2;
 			}
 		}
 
@@ -90,31 +66,6 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.isDirtyContent = true;
 			this.Update();  // màj immédiate si le ruban est visible
-		}
-
-		// Indique si ce panneau possède 2 hauteurs différentes.
-		public virtual bool IsNormalAndExtended()
-		{
-			return this.isNormalAndExtended;
-		}
-
-		// Indique si le panneau est réduit (petite largeur) ou étendu (grande largeur).
-		public virtual bool IsExtendedSize
-		{
-			get
-			{
-				return this.isExtendedSize;
-			}
-
-			set
-			{
-				if ( this.isExtendedSize != value )
-				{
-					this.isExtendedSize = value;
-					this.UpdateButtons();
-					this.WidthChanged();
-				}
-			}
 		}
 
 		// Met à jour le contenu, si nécessaire.
@@ -169,25 +120,6 @@ namespace Epsitec.Common.Document.Ribbons
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
-
-			if ( this.extendedButton == null )  return;
-
-			Rectangle rect = this.Client.Bounds;
-			rect.Right -= 1;
-			rect.Left = rect.Right-(this.LabelHeight-2);
-			rect.Top -= 1;
-			rect.Bottom = rect.Top-(this.LabelHeight-2);
-			this.extendedButton.Bounds = rect;
-
-			this.UpdateButtons();
-		}
-
-		// Met à jour les boutons.
-		protected virtual void UpdateButtons()
-		{
-			//?this.extendedButton.SetVisible(this.isNormalAndExtended);
-			this.extendedButton.SetVisible(false);
-			this.extendedButton.GlyphShape = this.isExtendedSize ? GlyphShape.ArrowLeft : GlyphShape.ArrowRight;
 		}
 
 
@@ -219,20 +151,6 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Génère un événement pour dire que ça a changé.
-		protected virtual void OnChanged()
-		{
-			if ( this.ignoreChanged )  return;
-
-			if ( this.Changed != null )  // qq'un écoute ?
-			{
-				this.Changed(this);
-			}
-		}
-
-		public event EventHandler Changed;
-
-
 		// Génère un événement pour dire que la couleur d'origine a changé.
 		protected virtual void OnOriginColorChanged()
 		{
@@ -245,31 +163,6 @@ namespace Epsitec.Common.Document.Ribbons
 		public event EventHandler OriginColorChanged;
 
 
-		// Le bouton pour étendre/réduire le panneau a été cliqué.
-		private void ExtendedButtonClicked(object sender, MessageEventArgs e)
-		{
-			this.IsExtendedSize = !this.isExtendedSize;
-
-			if ( this.IsExtendedSize )
-			{
-				this.CompactOthers(this);
-			}
-		}
-
-		// Compacte tous les rubans sauf un.
-		protected void CompactOthers(Abstract activeRibbon)
-		{
-			RibbonContainer container = this.Parent as RibbonContainer;
-			if ( container == null )  return;
-
-			foreach ( Abstract ribbon in container.Children )
-			{
-				if ( ribbon == null || ribbon == activeRibbon )  continue;
-				ribbon.IsExtendedSize = false;
-			}
-		}
-
-
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
@@ -279,7 +172,7 @@ namespace Epsitec.Common.Document.Ribbons
 			adorner.PaintRibbonSectionBackground(graphics, rect, this.LabelHeight, state);
 
 			Point pos = new Point(rect.Left+3, rect.Top-this.LabelHeight);
-			this.title.LayoutSize = new Size(rect.Width-this.LabelHeight, this.LabelHeight);
+			this.title.LayoutSize = new Size(rect.Width-4, this.LabelHeight);
 			adorner.PaintRibbonSectionTextLayout(graphics, pos, this.title, state);
 		}
 
@@ -341,15 +234,13 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
+		protected DocumentType				documentType;
+		protected Settings.GlobalSettings	globalSettings;
 		protected Document					document;
 		protected TextLayout				title;
-		protected double					backgroundIntensity = 1.0;
-		protected bool						isExtendedSize = true;
-		protected bool						isNormalAndExtended = true;
-		protected GlyphButton				extendedButton;
-		protected bool						ignoreChanged = false;
 		protected int						tabIndex = 0;
 		protected bool						isDirtyContent;
+		protected bool						ignoreChange = false;
 		protected double					separatorWidth = 8;
 	}
 }

@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Align : Abstract
 	{
-		public Align(Document document) : base(document)
+		public Align() : base()
 		{
 			this.title.Text = "Align";
 
@@ -51,17 +51,8 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
-		{
-			get
-			{
-				return 8 + 22*3;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{
@@ -137,41 +128,25 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonAdjustHeight.Bounds = rect;
 		}
 
-		// Met à jour les boutons.
-		protected override void UpdateButtons()
-		{
-			base.UpdateButtons();
-
-			if ( this.buttonAlignLeft == null )  return;
-
-			this.separator1.SetVisible(this.isExtendedSize);
-			this.buttonAlignGrid.SetVisible(this.isExtendedSize);
-			this.separator2.SetVisible(this.isExtendedSize);
-			this.buttonShareLeft.SetVisible(this.isExtendedSize);
-			this.buttonShareCenterX.SetVisible(this.isExtendedSize);
-			this.buttonShareSpaceX.SetVisible(this.isExtendedSize);
-			this.buttonShareRight.SetVisible(this.isExtendedSize);
-			this.buttonShareTop.SetVisible(this.isExtendedSize);
-			this.buttonShareCenterY.SetVisible(this.isExtendedSize);
-			this.buttonShareSpaceY.SetVisible(this.isExtendedSize);
-			this.buttonShareBottom.SetVisible(this.isExtendedSize);
-			this.separator3.SetVisible(this.isExtendedSize);
-			this.buttonAdjustWidth.SetVisible(this.isExtendedSize);
-			this.buttonAdjustHeight.SetVisible(this.isExtendedSize);
-		}
-
 		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
-			bool enabled  = (this.document.Modifier.TotalSelected > 0);
-			bool enabled2 = (this.document.Modifier.TotalSelected > 1);
-			bool enabled3 = (this.document.Modifier.TotalSelected > 2);
+			bool enabled  = false;
+			bool enabled2 = false;
+			bool enabled3 = false;
 
-			if ( this.document.Modifier.Tool == "Edit" )
+			if ( this.document != null )
 			{
-				enabled  = false;
-				enabled2 = false;
-				enabled3 = false;
+				enabled  = (this.document.Modifier.TotalSelected > 0);
+				enabled2 = (this.document.Modifier.TotalSelected > 1);
+				enabled3 = (this.document.Modifier.TotalSelected > 2);
+
+				if ( this.document.Modifier.Tool == "Edit" )
+				{
+					enabled  = false;
+					enabled2 = false;
+					enabled3 = false;
+				}
 			}
 
 			this.buttonAlignLeft.SetEnabled(enabled2);

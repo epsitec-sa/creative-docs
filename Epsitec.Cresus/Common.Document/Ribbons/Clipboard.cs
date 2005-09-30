@@ -10,17 +10,13 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Clipboard : Abstract
 	{
-		public Clipboard(Document document) : base(document)
+		public Clipboard() : base()
 		{
 			this.title.Text = "Clipboard";
 
-			this.buttonCut   = this.CreateIconButton("Cut",   Misc.Icon("Cut"),   Res.Strings.Action.Cut);
-			this.buttonCopy  = this.CreateIconButton("Copy",  Misc.Icon("Copy"),  Res.Strings.Action.Copy);
-			this.buttonPaste = this.CreateIconButton("Paste", Misc.Icon("Paste"), Res.Strings.Action.Paste);
-
-			this.buttonPaste.SetClientZoom(2);
-
-			this.isNormalAndExtended = false;
+			this.buttonCut   = this.CreateIconButton("Cut",   Misc.Icon("Cut"),    Res.Strings.Action.Cut);
+			this.buttonCopy  = this.CreateIconButton("Copy",  Misc.Icon("Copy"),   Res.Strings.Action.Copy);
+			this.buttonPaste = this.CreateIconButton("Paste", Misc.Icon("Paste2"), Res.Strings.Action.Paste);
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -32,21 +28,12 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{
-				return 8+22+4+44;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
-		{
-			get
-			{
-				return 8+22+4+44;
+				return 8 + 22 + 4 + 22*1.5;
 			}
 		}
 
@@ -70,9 +57,9 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonCopy.Bounds = rect;
 
 			rect = this.UsefulZone;
-			rect.Width  = dx*2;
-			rect.Height = dy*2;
-			rect.Offset(dx+4, 0);
+			rect.Width  = dx*1.5;
+			rect.Height = dy*1.5;
+			rect.Offset(dx+4, dy*0.5);
 			this.buttonPaste.Bounds = rect;
 		}
 

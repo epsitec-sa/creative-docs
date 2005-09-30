@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Move : Abstract
 	{
-		public Move(Document document) : base(document)
+		public Move() : base()
 		{
 			this.title.Text = Res.Strings.Action.MoveMain;
 
@@ -31,21 +31,20 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
+		public override void SetDocument(DocumentType type, Settings.GlobalSettings gs, Document document)
 		{
-			get
-			{
-				return 8+22+22;
-			}
+			base.SetDocument(type, gs, document);
+
+			this.AdaptFieldMove(this.fieldMoveH);
+			this.AdaptFieldMove(this.fieldMoveV);
 		}
 
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{
-				return 8+22+22+50;
+				return 8 + 22*2 + 50;
 			}
 		}
 
@@ -83,25 +82,19 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Met à jour les boutons.
-		protected override void UpdateButtons()
-		{
-			base.UpdateButtons();
-
-			if ( this.fieldMoveH == null )  return;
-
-			this.fieldMoveH.SetVisible(this.isExtendedSize);
-			this.fieldMoveV.SetVisible(this.isExtendedSize);
-		}
-
 		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
-			bool enabled = (this.document.Modifier.TotalSelected > 0);
+			bool enabled = false;
 
-			if ( this.document.Modifier.Tool == "Edit" )
+			if ( this.document != null )
 			{
-				enabled = false;
+				enabled = (this.document.Modifier.TotalSelected > 0);
+
+				if ( this.document.Modifier.Tool == "Edit" )
+				{
+					enabled = false;
+				}
 			}
 
 			this.buttonMoveH.SetEnabled(enabled);
@@ -114,43 +107,76 @@ namespace Epsitec.Common.Document.Ribbons
 		protected void CreateFieldMove(ref TextFieldReal field, string tooltip)
 		{
 			field = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealDimension(field);
 			field.Width = 50;
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				field.InternalValue = 1.0M;
-			}
-			else
-			{
-				field.InternalValue = 100.0M;  // 10mm
-			}
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
 			ToolTip.Default.SetToolTip(field, tooltip);
 		}
 
+		// Adapte un champ éditable pour un déplacement.
+		protected void AdaptFieldMove(TextFieldReal field)
+		{
+			if ( this.document == null )
+			{
+				field.SetEnabled(false);
+			}
+			else
+			{
+				field.SetEnabled(true);
+
+				this.document.Modifier.AdaptTextFieldRealDimension(field);
+
+				this.ignoreChange = true;
+				field.InternalMinValue = 0;
+				if ( field == this.fieldMoveH )
+				{
+					field.InternalValue = (decimal) this.document.Modifier.MoveDistanceH;
+				}
+				if ( field == this.fieldMoveV )
+				{
+					field.InternalValue = (decimal) this.document.Modifier.MoveDistanceV;
+				}
+				this.ignoreChange = false;
+			}
+		}
+
+		private void HandleFieldValueChanged(object sender)
+		{
+			if ( this.ignoreChange )  return;
+			TextFieldReal field = sender as TextFieldReal;
+
+			if ( field == this.fieldMoveH )
+			{
+				this.document.Modifier.MoveDistanceH = (double) field.InternalValue;
+			}
+			if ( field == this.fieldMoveV )
+			{
+				this.document.Modifier.MoveDistanceV = (double) field.InternalValue;
+			}
+		}
 
 		private void HandleButtonMoveH(object sender, MessageEventArgs e)
 		{
-			double dx = (double) this.fieldMoveH.InternalValue;
+			double dx = this.document.Modifier.MoveDistanceH;
 			this.document.Modifier.MoveSelection(new Point(dx,0));
 		}
 
 		private void HandleButtonMoveHi(object sender, MessageEventArgs e)
 		{
-			double dx = (double) this.fieldMoveH.InternalValue;
+			double dx = this.document.Modifier.MoveDistanceH;
 			this.document.Modifier.MoveSelection(new Point(-dx,0));
 		}
 
 		private void HandleButtonMoveV(object sender, MessageEventArgs e)
 		{
-			double dy = (double) this.fieldMoveV.InternalValue;
+			double dy = this.document.Modifier.MoveDistanceV;
 			this.document.Modifier.MoveSelection(new Point(0,dy));
 		}
 
 		private void HandleButtonMoveVi(object sender, MessageEventArgs e)
 		{
-			double dy = (double) this.fieldMoveV.InternalValue;
+			double dy = this.document.Modifier.MoveDistanceV;
 			this.document.Modifier.MoveSelection(new Point(0,-dy));
 		}
 

@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Rotate : Abstract
 	{
-		public Rotate(Document document) : base(document)
+		public Rotate() : base()
 		{
 			this.title.Text = Res.Strings.Action.RotateMain;
 
@@ -32,21 +32,19 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
+		public override void SetDocument(DocumentType type, Settings.GlobalSettings gs, Document document)
 		{
-			get
-			{
-				return 8+22+22;
-			}
+			base.SetDocument(type, gs, document);
+
+			this.AdaptFieldRot(this.fieldRotate);
 		}
 
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{
-				return 8+22+22+this.separatorWidth+50;
+				return 8 + 22*2 + this.separatorWidth + 50;
 			}
 		}
 
@@ -89,27 +87,19 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Met à jour les boutons.
-		protected override void UpdateButtons()
-		{
-			base.UpdateButtons();
-
-			if ( this.buttonRotate == null )  return;
-
-			this.separator.SetVisible(this.isExtendedSize);
-			this.buttonRotate.SetVisible(this.isExtendedSize);
-			this.buttonRotatei.SetVisible(this.isExtendedSize);
-			this.fieldRotate.SetVisible(this.isExtendedSize);
-		}
-
 		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
-			bool enabled = (this.document.Modifier.TotalSelected > 0);
+			bool enabled = false;
 
-			if ( this.document.Modifier.Tool == "Edit" )
+			if ( this.document != null )
 			{
-				enabled = false;
+				enabled = (this.document.Modifier.TotalSelected > 0);
+
+				if ( this.document.Modifier.Tool == "Edit" )
+				{
+					enabled = false;
+				}
 			}
 
 			this.buttonRotate90.SetEnabled(enabled);
@@ -123,14 +113,40 @@ namespace Epsitec.Common.Document.Ribbons
 		protected void CreateFieldRot(ref TextFieldReal field, string tooltip)
 		{
 			field = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealAngle(field);
 			field.Width = 50;
-			field.InternalValue = 10.0M;
 			field.TabIndex = tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
 			ToolTip.Default.SetToolTip(field, tooltip);
 		}
 
+		// Adapte un champ éditable pour une rotation.
+		protected void AdaptFieldRot(TextFieldReal field)
+		{
+			if ( this.document == null )
+			{
+				field.SetEnabled(false);
+			}
+			else
+			{
+				field.SetEnabled(true);
+
+				this.ignoreChange = true;
+				this.document.Modifier.AdaptTextFieldRealAngle(field);
+				field.InternalValue = (decimal) this.document.Modifier.RotateAngle;
+				this.ignoreChange = false;
+			}
+		}
+
+		private void HandleFieldValueChanged(object sender)
+		{
+			if ( this.ignoreChange )  return;
+			TextFieldReal field = sender as TextFieldReal;
+			if ( field == this.fieldRotate )
+			{
+				this.document.Modifier.RotateAngle = (double) field.InternalValue;
+			}
+		}
 
 		private void HandleButtonRotate90(object sender, MessageEventArgs e)
 		{
@@ -149,13 +165,13 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleButtonRotate(object sender, MessageEventArgs e)
 		{
-			double angle = (double) this.fieldRotate.InternalValue;
+			double angle = this.document.Modifier.RotateAngle;
 			this.document.Modifier.RotateSelection(angle);
 		}
 
 		private void HandleButtonRotatei(object sender, MessageEventArgs e)
 		{
-			double angle = (double) this.fieldRotate.InternalValue;
+			double angle = this.document.Modifier.RotateAngle;
 			this.document.Modifier.RotateSelection(-angle);
 		}
 

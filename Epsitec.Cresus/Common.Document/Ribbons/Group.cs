@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Group : Abstract
 	{
-		public Group(Document document) : base(document)
+		public Group() : base()
 		{
 			this.title.Text = Res.Strings.Action.GroupMain;
 
@@ -20,8 +20,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonUngroup = this.CreateIconButton("Ungroup", Misc.Icon("Ungroup"), Res.Strings.Action.Ungroup);
 			this.buttonInside = this.CreateIconButton("Inside", Misc.Icon("Inside"), Res.Strings.Action.Inside);
 			this.buttonOutside = this.CreateIconButton("Outside", Misc.Icon("Outside"), Res.Strings.Action.Outside);
-
-			this.isNormalAndExtended = false;
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -33,21 +31,12 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{
-				return 8+22+22+22;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
-		{
-			get
-			{
-				return 8+22+22+22;
+				return 8 + 22*3;
 			}
 		}
 

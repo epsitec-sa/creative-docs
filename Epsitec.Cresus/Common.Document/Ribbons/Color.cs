@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class Color : Abstract
 	{
-		public Color(Document document) : base(document)
+		public Color() : base()
 		{
 			this.title.Text = "Color";
 
@@ -34,17 +34,15 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
+		public override void SetDocument(DocumentType type, Settings.GlobalSettings gs, Document document)
 		{
-			get
-			{
-				return 8 + 22*2;
-			}
+			base.SetDocument(type, gs, document);
+
+			this.AdaptFieldColor(this.fieldColor);
 		}
 
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{
@@ -94,29 +92,19 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Met à jour les boutons.
-		protected override void UpdateButtons()
-		{
-			base.UpdateButtons();
-
-			if ( this.buttonColorToRGB == null )  return;
-
-			this.separator.SetVisible(this.isExtendedSize);
-			this.buttonColorStrokeDark.SetVisible(this.isExtendedSize);
-			this.buttonColorStrokeLight.SetVisible(this.isExtendedSize);
-			this.buttonColorFillDark.SetVisible(this.isExtendedSize);
-			this.buttonColorFillLight.SetVisible(this.isExtendedSize);
-			this.fieldColor.SetVisible(this.isExtendedSize);
-		}
-
 		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
-			bool enabled = (this.document.Modifier.TotalSelected > 0);
+			bool enabled = false;
 
-			if ( this.document.Modifier.Tool == "Edit" )
+			if ( this.document != null )
 			{
-				enabled = false;
+				enabled = (this.document.Modifier.TotalSelected > 0);
+
+				if ( this.document.Modifier.Tool == "Edit" )
+				{
+					enabled = false;
+				}
 			}
 
 			this.buttonColorToRGB.SetEnabled(enabled);
@@ -132,17 +120,43 @@ namespace Epsitec.Common.Document.Ribbons
 		protected void CreateFieldColor(ref TextFieldReal field, string tooltip)
 		{
 			field = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealPercent(field);
 			field.Width = 50;
-			field.InternalMinValue = 0.0M;
-			field.InternalMaxValue = 1.0M;
-			field.DefaultValue = 0.1M;
-			field.InternalValue = 0.1M;
 			field.TabIndex = tabIndex++;
 			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
 			ToolTip.Default.SetToolTip(field, tooltip);
 		}
 
+		// Adapte un champ éditable pour une couleur.
+		protected void AdaptFieldColor(TextFieldReal field)
+		{
+			if ( this.document == null )
+			{
+				field.SetEnabled(false);
+			}
+			else
+			{
+				field.SetEnabled(true);
+
+				this.ignoreChange = true;
+				this.document.Modifier.AdaptTextFieldRealPercent(field);
+				field.InternalMinValue = 0.0M;
+				field.InternalMaxValue = 1.0M;
+				field.DefaultValue = 0.1M;
+				field.InternalValue = (decimal) this.document.Modifier.ColorAdjust;
+				this.ignoreChange = false;
+			}
+		}
+
+		private void HandleFieldValueChanged(object sender)
+		{
+			if ( this.ignoreChange )  return;
+			TextFieldReal field = sender as TextFieldReal;
+			if ( field == this.fieldColor )
+			{
+				this.document.Modifier.ColorAdjust = (double) field.InternalValue;
+			}
+		}
 
 		private void HandleButtonColorToRGB(object sender, MessageEventArgs e)
 		{
@@ -161,25 +175,25 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleButtonColorStrokeDark(object sender, MessageEventArgs e)
 		{
-			double adjust = (double) this.fieldColor.InternalValue;
+			double adjust = this.document.Modifier.ColorAdjust;
 			this.document.Modifier.ColorSelection(-adjust, true);
 		}
 
 		private void HandleButtonColorStrokeLight(object sender, MessageEventArgs e)
 		{
-			double adjust = (double) this.fieldColor.InternalValue;
+			double adjust = this.document.Modifier.ColorAdjust;
 			this.document.Modifier.ColorSelection(adjust, true);
 		}
 
 		private void HandleButtonColorFillDark(object sender, MessageEventArgs e)
 		{
-			double adjust = (double) this.fieldColor.InternalValue;
+			double adjust = this.document.Modifier.ColorAdjust;
 			this.document.Modifier.ColorSelection(-adjust, false);
 		}
 
 		private void HandleButtonColorFillLight(object sender, MessageEventArgs e)
 		{
-			double adjust = (double) this.fieldColor.InternalValue;
+			double adjust = this.document.Modifier.ColorAdjust;
 			this.document.Modifier.ColorSelection(adjust, false);
 		}
 

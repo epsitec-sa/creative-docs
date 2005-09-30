@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Ribbons
 	[SuppressBundleSupport]
 	public class File : Abstract
 	{
-		public File(Document document) : base(document)
+		public File() : base()
 		{
 			this.title.Text = "File";
 
@@ -32,12 +32,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonOthers.GlyphShape = GlyphShape.Dots;
 			this.buttonOthers.Clicked += new MessageEventHandler(this.HandleOthersClicked);
 			ToolTip.Default.SetToolTip(this.buttonOthers, "Additional operations...");
-
-			//?this.buttonOpen.SetClientZoom(1.5);
-			//?this.buttonSave.SetClientZoom(1.5);
-			//?this.buttonPrint.SetClientZoom(1.5);
-
-			this.isNormalAndExtended = false;
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -49,17 +43,8 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
-		// Retourne la largeur compacte.
-		public override double CompactWidth
-		{
-			get
-			{
-				return 8 + 22*1.5*3 + 4 + 22*2;
-			}
-		}
-
-		// Retourne la largeur étendue.
-		public override double ExtendWidth
+		// Retourne la largeur standard.
+		public override double DefaultWidth
 		{
 			get
 			{
@@ -126,7 +111,7 @@ namespace Epsitec.Common.Document.Ribbons
 		// Construit le sous-menu des derniers fichiers ouverts.
 		protected VMenu BuildLastFilenamesMenu()
 		{
-			int total = this.document.GlobalSettings.LastFilenameCount;
+			int total = this.globalSettings.LastFilenameCount;
 			if ( total == 0 )  return null;
 
 			VMenu menu = new VMenu();
@@ -134,8 +119,8 @@ namespace Epsitec.Common.Document.Ribbons
 			for ( int i=0 ; i<total ; i++ )
 			{
 				string cmd = "LastFile(this.Name)";
-				string filename = string.Format("{0} {1}", (i+1)%10, this.document.GlobalSettings.LastFilenameGetShort(i));
-				string name = this.document.GlobalSettings.LastFilenameGet(i);
+				string filename = string.Format("{0} {1}", (i+1)%10, this.globalSettings.LastFilenameGetShort(i));
+				string name = this.globalSettings.LastFilenameGet(i);
 				MenuItem item = new MenuItem(cmd, "", filename, "", name);
 				menu.Items.Add(item);
 			}
