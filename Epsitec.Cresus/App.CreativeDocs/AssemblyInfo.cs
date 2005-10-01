@@ -2,7 +2,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 [assembly: AssemblyTitle("EPSITEC Creative Docs .NET")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("BETA Version")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Epsitec")]
 [assembly: AssemblyProduct("Creative Docs .NET")]
@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
-[assembly: AssemblyVersion("1.1.2.0")]
+[assembly: AssemblyVersion("1.2.0.0")]
 
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile(@"..\..\..\Epsitec.Cresus.snk")]

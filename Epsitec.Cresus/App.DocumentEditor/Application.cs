@@ -216,7 +216,9 @@ namespace Epsitec.App.DocumentEditor
 		private static string			mode;
 		
 		private Window					mainWindow;
+#if false
 		private HMenu					menu;
+#endif
 		private DocumentEditor			editor;
 	}
 }
