@@ -20,18 +20,16 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonSaveAs = this.CreateIconButton("SaveAs", Misc.Icon("SaveAs"), Res.Strings.Action.SaveAs);
 			this.buttonPrint = this.CreateIconButton("Print", Misc.Icon("Print2"), Res.Strings.Action.Print);
 			this.buttonExport = this.CreateIconButton("Export", Misc.Icon("Export"), Res.Strings.Action.Export);
+			this.buttonCloseAll = this.CreateIconButton("CloseAll", Misc.Icon("CloseAll"), Res.Strings.Action.CloseAll);
+			this.CreateSeparator(ref this.separator);
+			this.buttonOpenModel = this.CreateIconButton("OpenModel", Misc.Icon("OpenModel"), Res.Strings.Action.OpenModel);
+			this.buttonSaveModel = this.CreateIconButton("SaveModel", Misc.Icon("SaveModel"), Res.Strings.Action.SaveModel);
 
 			this.buttonLastFiles = new GlyphButton(this);
 			this.buttonLastFiles.ButtonStyle = ButtonStyle.ToolItem;
 			this.buttonLastFiles.GlyphShape = GlyphShape.Menu;
 			this.buttonLastFiles.Clicked += new MessageEventHandler(this.HandleLastFilesClicked);
 			ToolTip.Default.SetToolTip(this.buttonLastFiles, Res.Strings.Action.LastFiles);
-
-			this.buttonOthers = new GlyphButton(this);
-			this.buttonOthers.ButtonStyle = ButtonStyle.ToolItem;
-			this.buttonOthers.GlyphShape = GlyphShape.Dots;
-			this.buttonOthers.Clicked += new MessageEventHandler(this.HandleOthersClicked);
-			ToolTip.Default.SetToolTip(this.buttonOthers, "Additional operations...");
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -48,7 +46,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return 8 + 22*1.5*3 + 4 + 22*2;
+				return 8 + 22*1.5*3 + 4 + 22*2 + this.separatorWidth + 22;
 			}
 		}
 
@@ -64,6 +62,11 @@ namespace Epsitec.Common.Document.Ribbons
 			double dy = this.buttonNew.DefaultHeight;
 
 			Rectangle rect = this.UsefulZone;
+			rect.Left += 22*1.5*3 + 4 + 22*2;
+			rect.Width = this.separatorWidth;
+			this.separator.Bounds = rect;
+
+			rect = this.UsefulZone;
 			rect.Width  = dx*1.5;
 			rect.Height = dy*1.5;
 			rect.Offset(0, dy*0.5);
@@ -85,6 +88,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonNew.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonExport.Bounds = rect;
+			rect.Offset(dx+this.separatorWidth, 0);
+			this.buttonOpenModel.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
@@ -92,7 +97,9 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Offset(dx*1.5*3+4, 0);
 			this.buttonSaveAs.Bounds = rect;
 			rect.Offset(dx, 0);
-			this.buttonOthers.Bounds = rect;
+			this.buttonCloseAll.Bounds = rect;
+			rect.Offset(dx+this.separatorWidth, 0);
+			this.buttonSaveModel.Bounds = rect;
 		}
 
 
@@ -130,40 +137,16 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Bouton pour ouvrir le menu des autres opérations.
-		private void HandleOthersClicked(object sender, MessageEventArgs e)
-		{
-			GlyphButton button = sender as GlyphButton;
-			if ( button == null )  return;
-			Point pos = button.MapClientToScreen(new Point(0, 1));
-			VMenu menu = this.BuildOthersMenu();
-			if ( menu == null )  return;
-			menu.Host = this;
-			menu.ShowAsContextMenu(this.Window, pos);
-		}
-
-		// Construit le sous-menu des autres opérations.
-		protected VMenu BuildOthersMenu()
-		{
-			VMenu menu = new VMenu();
-
-			this.MenuAdd(menu, "", "OpenModel", Res.Strings.Action.OpenModel, "");
-			this.MenuAdd(menu, "", "SaveModel", Res.Strings.Action.SaveModel, "");
-			this.MenuAdd(menu, "", "", "", "");
-			this.MenuAdd(menu, "", "CloseAll", Res.Strings.Action.CloseAll, "");
-
-			menu.AdjustSize();
-			return menu;
-		}
-
-
 		protected IconButton				buttonNew;
 		protected IconButton				buttonOpen;
 		protected IconButton				buttonSave;
 		protected IconButton				buttonSaveAs;
 		protected IconButton				buttonPrint;
 		protected IconButton				buttonExport;
+		protected IconButton				buttonCloseAll;
+		protected IconSeparator				separator;
+		protected IconButton				buttonOpenModel;
+		protected IconButton				buttonSaveModel;
 		protected GlyphButton				buttonLastFiles;
-		protected GlyphButton				buttonOthers;
 	}
 }

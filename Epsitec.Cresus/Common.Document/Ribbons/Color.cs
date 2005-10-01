@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Height = dy;
 			this.buttonColorToGray.Bounds = rect;
 			rect.Offset(dx*2+this.separatorWidth, 0);
-			rect.Width = 50;
+			rect.Width = 22*4;
 			this.fieldColor.Bounds = rect;
 		}
 

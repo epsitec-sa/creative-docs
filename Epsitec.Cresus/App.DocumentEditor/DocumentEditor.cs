@@ -705,7 +705,7 @@ namespace Epsitec.App.DocumentEditor
 #endif
 
 			StatusField sf = this.InfoAdd("", 90, "StatusZoom", "") as StatusField;
-			sf.Clicked += new MessageEventHandler(this.HandleStatusZoomClicked);
+			//?sf.Clicked += new MessageEventHandler(this.HandleStatusZoomClicked);
 
 			this.InfoAdd("", 110, "StatusMouse", "");
 			this.InfoAdd("", 250, "StatusModif", "");
@@ -1757,7 +1757,7 @@ namespace Epsitec.App.DocumentEditor
 		
 			dialog.InitialDirectory = this.globalSettings.InitialDirectory;
 			dialog.FileName = "";
-			dialog.Title = Res.Strings.Dialog.Save.TitleDoc;
+			dialog.Title = Res.Strings.Dialog.Save.TitleMod;
 			dialog.Filters.Add("crmod", Res.Strings.Dialog.FileMod, "*.crmod");
 			dialog.PromptForOverwriting = true;
 			dialog.Owner = this.Window;

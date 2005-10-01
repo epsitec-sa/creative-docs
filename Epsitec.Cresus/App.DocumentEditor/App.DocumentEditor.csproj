@@ -489,6 +489,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\CloseAll.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\CloseNo.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -993,6 +997,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\OpenModel.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\OperColorFillDark.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -1282,6 +1290,10 @@
                 />
                 <File
                     RelPath = "Images\SaveAs.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SaveModel.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

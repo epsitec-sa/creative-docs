@@ -73,8 +73,9 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Offset(dx, 0);
 			this.buttonZoomMul2.Bounds = rect;
 			rect.Offset(dx+this.separatorWidth, 0);
+			rect.Width = 25;
 			this.buttonZoomi.Bounds = rect;
-			rect.Offset(dx, 0);
+			rect.Offset(25, 0);
 			this.buttonZoom.Bounds = rect;
 
 			rect = this.UsefulZone;
