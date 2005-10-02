@@ -1190,6 +1190,16 @@ namespace Epsitec.Common.Widgets.Adorner
 											 double titleHeight,
 											 WidgetState state)
 		{
+			rect.Top -= titleHeight;
+			rect.Deflate(0.5);
+
+			graphics.AddLine(rect.Left, rect.Top, rect.Right, rect.Top);
+			graphics.AddLine(rect.Left, rect.Bottom, rect.Left, rect.Top);
+			graphics.RenderSolid(this.colorControlLightLight);
+
+			graphics.AddLine(rect.Left, rect.Bottom, rect.Right, rect.Bottom);
+			graphics.AddLine(rect.Right, rect.Bottom, rect.Right, rect.Top);
+			graphics.RenderSolid(this.colorControlDark);
 		}
 
 		// Dessine la bande principale d'un ruban.
@@ -1206,6 +1216,22 @@ namespace Epsitec.Common.Widgets.Adorner
 												 double titleHeight,
 												 WidgetState state)
 		{
+			rect.Deflate(0.5);
+
+			graphics.AddLine(rect.Left, rect.Top, rect.Left, rect.Top-titleHeight);
+			graphics.RenderSolid(this.colorControlDark);
+			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Top-titleHeight);
+			graphics.RenderSolid(this.colorControlLightLight);
+
+			rect.Top -= titleHeight;
+
+			graphics.AddLine(rect.Left, rect.Top, rect.Right, rect.Top);
+			graphics.AddLine(rect.Left, rect.Bottom, rect.Left, rect.Top);
+			graphics.RenderSolid(this.colorControlLightLight);
+
+			graphics.AddLine(rect.Left, rect.Bottom, rect.Right, rect.Bottom);
+			graphics.AddLine(rect.Right, rect.Bottom, rect.Right, rect.Top);
+			graphics.RenderSolid(this.colorControlDark);
 		}
 
 		// Dessine une section d'un ruban.
@@ -1225,6 +1251,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( text == null )  return;
 
 			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+			text.Alignment = Drawing.ContentAlignment.MiddleLeft;
 			text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
 		}
 

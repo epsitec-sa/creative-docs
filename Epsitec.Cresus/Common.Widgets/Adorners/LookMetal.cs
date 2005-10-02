@@ -1403,6 +1403,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( text == null )  return;
 
 			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+			text.Alignment = Drawing.ContentAlignment.MiddleLeft;
 			text.Paint(new Drawing.Point(pos.X+2.0, pos.Y-1.5), graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(0.5), Drawing.GlyphPaintStyle.Normal);
 			text.Paint(new Drawing.Point(pos.X+1.0, pos.Y-0.7), graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(0.0), Drawing.GlyphPaintStyle.Normal);
 			text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(1), Drawing.GlyphPaintStyle.Normal);

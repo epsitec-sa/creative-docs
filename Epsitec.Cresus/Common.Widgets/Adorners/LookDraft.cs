@@ -1214,6 +1214,13 @@ namespace Epsitec.Common.Widgets.Adorner
 											 double titleHeight,
 											 WidgetState state)
 		{
+			Drawing.Rectangle r = rect;
+			r.Bottom = r.Top-2;
+			this.PaintSeparatorBackground(graphics, r, state, Direction.Up, false);
+
+			r = rect;
+			r.Top = r.Bottom+2;
+			this.PaintSeparatorBackground(graphics, r, state, Direction.Up, false);
 		}
 
 		// Dessine la bande principale d'un ruban.
@@ -1230,6 +1237,8 @@ namespace Epsitec.Common.Widgets.Adorner
 												 double titleHeight,
 												 WidgetState state)
 		{
+			rect.Left = rect.Right-2;
+			this.PaintSeparatorBackground(graphics, rect, state, Direction.Right, false);
 		}
 
 		// Dessine une section d'un ruban.
@@ -1249,6 +1258,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( text == null )  return;
 
 			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+			text.Alignment = Drawing.ContentAlignment.MiddleCenter;
 			text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
 		}
 

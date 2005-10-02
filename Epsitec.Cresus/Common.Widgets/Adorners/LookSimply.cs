@@ -1393,6 +1393,13 @@ namespace Epsitec.Common.Widgets.Adorner
 											 double titleHeight,
 											 WidgetState state)
 		{
+			Drawing.Rectangle header = rect;
+			header.Bottom = header.Top-titleHeight;
+			graphics.AddFilledRectangle(header);
+			graphics.RenderSolid(this.colorControlLight);
+
+			rect.Top -= titleHeight;
+			graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
 			graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
 			graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
 		}
@@ -1411,27 +1418,9 @@ namespace Epsitec.Common.Widgets.Adorner
 												 double titleHeight,
 												 WidgetState state)
 		{
-			graphics.AddFilledRectangle(rect);
-			if ( (state&WidgetState.Enabled) != 0 )
-			{
-				graphics.RenderSolid(this.colorControlLight);
-			}
-			else
-			{
-				graphics.RenderSolid(this.colorControl);
-			}
-
 			rect.Deflate(0.5);
-			graphics.AddRectangle(rect);
-			graphics.AddLine(rect.Left, rect.Top-titleHeight, rect.Right, rect.Top-titleHeight);
-			if ( (state&WidgetState.Enabled) != 0 )
-			{
-				graphics.RenderSolid(this.colorControlDarkDark);
-			}
-			else
-			{
-				graphics.RenderSolid(this.colorControlDark);
-			}
+			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Bottom);
+			graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
 		}
 
 		// Dessine une section d'un ruban.
@@ -1451,6 +1440,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( text == null )  return;
 
 			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+			text.Alignment = Drawing.ContentAlignment.MiddleLeft;
 			text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
 		}
 
