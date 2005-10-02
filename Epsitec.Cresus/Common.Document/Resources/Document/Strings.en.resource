@@ -859,7 +859,7 @@
 	<data name="Error.BadFile">Incorrect file type.</data>
 	<data name="Error.BadImage">Unrecognized image format.</data>
 	<data name="Error.NoBitmap">No bitmap.</data>
-	<data name="Error.Share">Object cannot be distributed,&lt;br/%gt;they are too near each other.</data>
+	<data name="Error.Share">Object cannot be distributed,&lt;br/&gt;they are too near each other.</data>
 	<data name="Error.Combine">One or more objects could not be combined.</data>
 	<data name="Error.Uncombine">One or more objects could not be split.</data>
 	<data name="Error.ToBezier">One or more objects could not be converted to curves.</data>

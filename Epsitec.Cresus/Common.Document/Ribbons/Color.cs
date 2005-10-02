@@ -14,14 +14,14 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = "Color";
 
-			this.CreateButton(ref this.buttonColorToRGB,  "OperColorToRGB",  Res.Strings.Action.ColorToRGB,  new MessageEventHandler(this.HandleButtonColorToRGB));
-			this.CreateButton(ref this.buttonColorToCMYK, "OperColorToCMYK", Res.Strings.Action.ColorToCMYK, new MessageEventHandler(this.HandleButtonColorToCMYK));
-			this.CreateButton(ref this.buttonColorToGray, "OperColorToGray", Res.Strings.Action.ColorToGray, new MessageEventHandler(this.HandleButtonColorToGray));
-			this.CreateSeparator(ref this.separator);
-			this.CreateButton(ref this.buttonColorStrokeDark,  "OperColorStrokeDark",  Res.Strings.Action.ColorStrokeDark,  new MessageEventHandler(this.HandleButtonColorStrokeDark));
-			this.CreateButton(ref this.buttonColorStrokeLight, "OperColorStrokeLight", Res.Strings.Action.ColorStrokeLight, new MessageEventHandler(this.HandleButtonColorStrokeLight));
-			this.CreateButton(ref this.buttonColorFillDark,    "OperColorFillDark",    Res.Strings.Action.ColorFillDark,    new MessageEventHandler(this.HandleButtonColorFillDark));
-			this.CreateButton(ref this.buttonColorFillLight,   "OperColorFillLight",   Res.Strings.Action.ColorFillLight,   new MessageEventHandler(this.HandleButtonColorFillLight));
+			this.buttonColorToRGB  = this.CreateIconButton("ColorToRGB",  Misc.Icon("OperColorToRGB"),    Res.Strings.Action.ColorToRGB);
+			this.buttonColorToCMYK = this.CreateIconButton("ColorToCMYK", Misc.Icon("OperColorToCMYK"),    Res.Strings.Action.ColorToCMYK);
+			this.buttonColorToGray = this.CreateIconButton("ColorToGray", Misc.Icon("OperColorToGray"),    Res.Strings.Action.ColorToGray);
+			this.separator = new IconSeparator(this);
+			this.buttonColorStrokeDark  = this.CreateIconButton("ColorStrokeDark",  Misc.Icon("OperColorStrokeDark"),  Res.Strings.Action.ColorStrokeDark);
+			this.buttonColorStrokeLight = this.CreateIconButton("ColorStrokeLight", Misc.Icon("OperColorStrokeLight"), Res.Strings.Action.ColorStrokeLight);
+			this.buttonColorFillDark    = this.CreateIconButton("ColorFillDark",    Misc.Icon("OperColorFillDark"),    Res.Strings.Action.ColorFillDark);
+			this.buttonColorFillLight   = this.CreateIconButton("ColorFillLight",   Misc.Icon("OperColorFillLight"),   Res.Strings.Action.ColorFillLight);
 			this.CreateFieldColor(ref this.fieldColor, Res.Strings.Action.ColorValue);
 		}
 		
@@ -92,30 +92,6 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Effectue la mise à jour du contenu.
-		protected override void DoUpdateContent()
-		{
-			bool enabled = false;
-
-			if ( this.document != null )
-			{
-				enabled = (this.document.Modifier.TotalSelected > 0);
-
-				if ( this.document.Modifier.Tool == "Edit" )
-				{
-					enabled = false;
-				}
-			}
-
-			this.buttonColorToRGB.SetEnabled(enabled);
-			this.buttonColorToCMYK.SetEnabled(enabled);
-			this.buttonColorToGray.SetEnabled(enabled);
-			this.buttonColorStrokeDark.SetEnabled(enabled);
-			this.buttonColorStrokeLight.SetEnabled(enabled);
-			this.buttonColorFillDark.SetEnabled(enabled);
-			this.buttonColorFillLight.SetEnabled(enabled);
-		}
-		
 		// Crée un champ éditable pour une couleur.
 		protected void CreateFieldColor(ref TextFieldReal field, string tooltip)
 		{
@@ -156,45 +132,6 @@ namespace Epsitec.Common.Document.Ribbons
 			{
 				this.document.Modifier.ColorAdjust = (double) field.InternalValue;
 			}
-		}
-
-		private void HandleButtonColorToRGB(object sender, MessageEventArgs e)
-		{
-			this.document.Modifier.ColorSelection(ColorSpace.RGB);
-		}
-
-		private void HandleButtonColorToCMYK(object sender, MessageEventArgs e)
-		{
-			this.document.Modifier.ColorSelection(ColorSpace.CMYK);
-		}
-
-		private void HandleButtonColorToGray(object sender, MessageEventArgs e)
-		{
-			this.document.Modifier.ColorSelection(ColorSpace.Gray);
-		}
-
-		private void HandleButtonColorStrokeDark(object sender, MessageEventArgs e)
-		{
-			double adjust = this.document.Modifier.ColorAdjust;
-			this.document.Modifier.ColorSelection(-adjust, true);
-		}
-
-		private void HandleButtonColorStrokeLight(object sender, MessageEventArgs e)
-		{
-			double adjust = this.document.Modifier.ColorAdjust;
-			this.document.Modifier.ColorSelection(adjust, true);
-		}
-
-		private void HandleButtonColorFillDark(object sender, MessageEventArgs e)
-		{
-			double adjust = this.document.Modifier.ColorAdjust;
-			this.document.Modifier.ColorSelection(-adjust, false);
-		}
-
-		private void HandleButtonColorFillLight(object sender, MessageEventArgs e)
-		{
-			double adjust = this.document.Modifier.ColorAdjust;
-			this.document.Modifier.ColorSelection(adjust, false);
 		}
 
 

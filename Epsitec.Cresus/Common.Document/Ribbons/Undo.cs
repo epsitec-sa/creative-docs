@@ -16,12 +16,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonUndo = this.CreateIconButton("Undo", Misc.Icon("Undo2"), Res.Strings.Action.Undo);
 			this.buttonRedo = this.CreateIconButton("Redo", Misc.Icon("Redo2"), Res.Strings.Action.Redo);
-
-			this.buttonList = new GlyphButton(this);
-			this.buttonList.ButtonStyle = ButtonStyle.ToolItem;
-			this.buttonList.GlyphShape = GlyphShape.Menu;
-			this.buttonList.Clicked += new MessageEventHandler(this.HandleListClicked);
-			ToolTip.Default.SetToolTip(this.buttonList, Res.Strings.Action.UndoRedoList);
+			this.buttonList = this.CreateMenuButton("UndoRedoList", Res.Strings.Action.UndoRedoList, new MessageEventHandler(this.HandleListClicked));
 		}
 		
 		protected override void Dispose(bool disposing)

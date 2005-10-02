@@ -14,10 +14,10 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.MoveMain;
 
-			this.CreateButton(ref this.buttonMoveHi, "OperMoveHi", Res.Strings.Action.MoveLeft,  new MessageEventHandler(this.HandleButtonMoveHi));
-			this.CreateButton(ref this.buttonMoveH,  "OperMoveH",  Res.Strings.Action.MoveRight, new MessageEventHandler(this.HandleButtonMoveH));
-			this.CreateButton(ref this.buttonMoveVi, "OperMoveVi", Res.Strings.Action.MoveDown, new MessageEventHandler(this.HandleButtonMoveVi));
-			this.CreateButton(ref this.buttonMoveV,  "OperMoveV",  Res.Strings.Action.MoveUp,   new MessageEventHandler(this.HandleButtonMoveV));
+			this.buttonMoveHi = this.CreateIconButton("MoveLeftFree",  Misc.Icon("OperMoveHi"), Res.Strings.Action.MoveLeft);
+			this.buttonMoveH  = this.CreateIconButton("MoveRightFree", Misc.Icon("OperMoveH"),  Res.Strings.Action.MoveRight);
+			this.buttonMoveVi = this.CreateIconButton("MoveDownFree",  Misc.Icon("OperMoveVi"), Res.Strings.Action.MoveDown);
+			this.buttonMoveV  = this.CreateIconButton("MoveUpFree",    Misc.Icon("OperMoveV"),  Res.Strings.Action.MoveUp);
 			this.CreateFieldMove(ref this.fieldMoveH, Res.Strings.Action.MoveValueX);
 			this.CreateFieldMove(ref this.fieldMoveV, Res.Strings.Action.MoveValueY);
 		}
@@ -82,27 +82,6 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Effectue la mise à jour du contenu.
-		protected override void DoUpdateContent()
-		{
-			bool enabled = false;
-
-			if ( this.document != null )
-			{
-				enabled = (this.document.Modifier.TotalSelected > 0);
-
-				if ( this.document.Modifier.Tool == "Edit" )
-				{
-					enabled = false;
-				}
-			}
-
-			this.buttonMoveH.SetEnabled(enabled);
-			this.buttonMoveHi.SetEnabled(enabled);
-			this.buttonMoveV.SetEnabled(enabled);
-			this.buttonMoveVi.SetEnabled(enabled);
-		}
-		
 		// Crée un champ éditable pour un déplacement.
 		protected void CreateFieldMove(ref TextFieldReal field, string tooltip)
 		{
@@ -154,30 +133,6 @@ namespace Epsitec.Common.Document.Ribbons
 			{
 				this.document.Modifier.MoveDistanceV = (double) field.InternalValue;
 			}
-		}
-
-		private void HandleButtonMoveH(object sender, MessageEventArgs e)
-		{
-			double dx = this.document.Modifier.MoveDistanceH;
-			this.document.Modifier.MoveSelection(new Point(dx,0));
-		}
-
-		private void HandleButtonMoveHi(object sender, MessageEventArgs e)
-		{
-			double dx = this.document.Modifier.MoveDistanceH;
-			this.document.Modifier.MoveSelection(new Point(-dx,0));
-		}
-
-		private void HandleButtonMoveV(object sender, MessageEventArgs e)
-		{
-			double dy = this.document.Modifier.MoveDistanceV;
-			this.document.Modifier.MoveSelection(new Point(0,dy));
-		}
-
-		private void HandleButtonMoveVi(object sender, MessageEventArgs e)
-		{
-			double dy = this.document.Modifier.MoveDistanceV;
-			this.document.Modifier.MoveSelection(new Point(0,-dy));
 		}
 
 

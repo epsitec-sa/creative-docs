@@ -61,48 +61,6 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
-		// Indique qu'il faudra mettre à jour tout le contenu.
-		public void SetDirtyContent()
-		{
-			this.isDirtyContent = true;
-			this.Update();  // màj immédiate si le ruban est visible
-		}
-
-		// Met à jour le contenu, si nécessaire.
-		protected void Update()
-		{
-			if ( !this.IsVisible )  return;
-
-			if ( this.isDirtyContent )
-			{
-				this.DoUpdateContent();
-				this.isDirtyContent = false;  // propre
-			}
-		}
-		
-		// Effectue la mise à jour du contenu.
-		protected virtual void DoUpdateContent()
-		{
-		}
-		
-		// Appelé par Widget lorsque la visibilité change.
-		protected override void OnVisibleChanged()
-		{
-			base.OnVisibleChanged();
-			this.Update();  // màj si visible et sale
-		}
-
-		// Indique que la largeur du panneau a changé.
-		protected void WidthChanged()
-		{
-			double w = this.DefaultWidth;
-			if ( this.Width != w )
-			{
-				this.Width = w;
-				this.ForceLayout();
-			}
-		}
-
 
 		// Retourne la zone rectangulaire utile pour les widgets.
 		protected Rectangle UsefulZone
@@ -177,12 +135,6 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Crée un séparateur.
-		protected void CreateSeparator(ref IconSeparator sep)
-		{
-			sep = new IconSeparator(this);
-		}
-
 		// Crée un IconButton.
 		protected void CreateButton(ref IconButton button, string icon, string tooltip, MessageEventHandler handler)
 		{
@@ -200,6 +152,20 @@ namespace Epsitec.Common.Document.Ribbons
 			IconButton button = new IconButton(command, icon, command);
 			button.Parent = this;
 			ToolTip.Default.SetToolTip(button, tooltip);
+			return button;
+		}
+
+		// Crée un bouton "v" pour un menu.
+		protected GlyphButton CreateMenuButton(string command, string tooltip, MessageEventHandler handler)
+		{
+			GlyphButton button = new GlyphButton(this);
+			button.Command = command;
+			button.ButtonStyle = ButtonStyle.ToolItem;
+			button.GlyphShape = GlyphShape.Menu;
+			button.Clicked += handler;
+			button.TabIndex = this.tabIndex++;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(button, Res.Strings.Action.LastFiles);
 			return button;
 		}
 
@@ -239,7 +205,6 @@ namespace Epsitec.Common.Document.Ribbons
 		protected Document					document;
 		protected TextLayout				title;
 		protected int						tabIndex = 0;
-		protected bool						isDirtyContent;
 		protected bool						ignoreChange = false;
 		protected double					separatorWidth = 8;
 	}

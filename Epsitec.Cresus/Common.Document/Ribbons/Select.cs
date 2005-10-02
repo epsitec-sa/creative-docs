@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonDelete = this.CreateIconButton("Delete", Misc.Icon("Delete2"), Res.Strings.Action.Delete);
 			this.buttonDuplicate = this.CreateIconButton("Duplicate", Misc.Icon("Duplicate2"), Res.Strings.Action.Duplicate);
-			this.CreateSeparator(ref this.separator);
+			this.separator = new IconSeparator(this);
 			this.buttonDeselectAll = this.CreateIconButton("DeselectAll", Misc.Icon("DeselectAll"), Res.Strings.Action.DeselectAll);
 			this.buttonSelectAll = this.CreateIconButton("SelectAll", Misc.Icon("SelectAll"), Res.Strings.Action.SelectAll);
 			this.buttonSelectInvert = this.CreateIconButton("SelectInvert", Misc.Icon("SelectInvert"), Res.Strings.Action.SelectInvert);

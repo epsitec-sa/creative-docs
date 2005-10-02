@@ -14,13 +14,13 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.ZoomMain;
 
-			this.CreateButton(ref this.buttonZoomDiv2, "OperZoomDiv2", Res.Strings.Action.ZoomDiv2, new MessageEventHandler(this.HandleButtonZoomDiv2));
-			this.CreateButton(ref this.buttonZoomMul2, "OperZoomMul2", Res.Strings.Action.ZoomMul2, new MessageEventHandler(this.HandleButtonZoomMul2));
-			this.CreateButton(ref this.buttonMirrorH, "OperMirrorH", Res.Strings.Action.MirrorH, new MessageEventHandler(this.HandleButtonMirrorH));
-			this.CreateButton(ref this.buttonMirrorV, "OperMirrorV", Res.Strings.Action.MirrorV, new MessageEventHandler(this.HandleButtonMirrorV));
-			this.CreateSeparator(ref this.separator);
-			this.CreateButton(ref this.buttonZoomi, "OperZoomi", Res.Strings.Action.ZoomFreeM, new MessageEventHandler(this.HandleButtonZoomi));
-			this.CreateButton(ref this.buttonZoom,  "OperZoom",  Res.Strings.Action.ZoomFreeP, new MessageEventHandler(this.HandleButtonZoom));
+			this.buttonZoomDiv2 = this.CreateIconButton("ZoomDiv2", Misc.Icon("OperZoomDiv2"), Res.Strings.Action.ZoomDiv2);
+			this.buttonZoomMul2 = this.CreateIconButton("ZoomMul2", Misc.Icon("OperZoomMul2"), Res.Strings.Action.ZoomMul2);
+			this.buttonMirrorH = this.CreateIconButton("MirrorH", Misc.Icon("OperMirrorH"), Res.Strings.Action.MirrorH);
+			this.buttonMirrorV = this.CreateIconButton("MirrorV", Misc.Icon("OperMirrorV"), Res.Strings.Action.MirrorV);
+			this.separator = new IconSeparator(this);
+			this.buttonZoomDivFree = this.CreateIconButton("ZoomDivFree", Misc.Icon("OperZoomi"), Res.Strings.Action.ZoomFreeM);
+			this.buttonZoomMulFree = this.CreateIconButton("ZoomMulFree", Misc.Icon("OperZoom"),  Res.Strings.Action.ZoomFreeP);
 			this.CreateFieldZoom(ref this.fieldZoom, Res.Strings.Action.ZoomValue);
 		}
 		
@@ -55,10 +55,10 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.buttonZoom == null )  return;
+			if ( this.buttonZoomDiv2 == null )  return;
 
-			double dx = this.buttonZoom.DefaultWidth;
-			double dy = this.buttonZoom.DefaultHeight;
+			double dx = this.buttonZoomDiv2.DefaultWidth;
+			double dy = this.buttonZoomDiv2.DefaultHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*2;
@@ -74,9 +74,9 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonZoomMul2.Bounds = rect;
 			rect.Offset(dx+this.separatorWidth, 0);
 			rect.Width = 25;
-			this.buttonZoomi.Bounds = rect;
+			this.buttonZoomDivFree.Bounds = rect;
 			rect.Offset(25, 0);
-			this.buttonZoom.Bounds = rect;
+			this.buttonZoomMulFree.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
@@ -90,29 +90,6 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Effectue la mise à jour du contenu.
-		protected override void DoUpdateContent()
-		{
-			bool enabled = false;
-
-			if ( this.document != null )
-			{
-				enabled = (this.document.Modifier.TotalSelected > 0);
-
-				if ( this.document.Modifier.Tool == "Edit" )
-				{
-					enabled = false;
-				}
-			}
-
-			this.buttonZoomDiv2.SetEnabled(enabled);
-			this.buttonZoomMul2.SetEnabled(enabled);
-			this.buttonMirrorH.SetEnabled(enabled);
-			this.buttonMirrorV.SetEnabled(enabled);
-			this.buttonZoomi.SetEnabled(enabled);
-			this.buttonZoom.SetEnabled(enabled);
-		}
-		
 		// Crée un champ éditable pour un zoom.
 		protected void CreateFieldZoom(ref TextFieldReal field, string tooltip)
 		{
@@ -157,46 +134,14 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
-		private void HandleButtonMirrorH(object sender, MessageEventArgs e)
-		{
-			this.document.Modifier.MirrorSelection(true);
-		}
-
-		private void HandleButtonMirrorV(object sender, MessageEventArgs e)
-		{
-			this.document.Modifier.MirrorSelection(false);
-		}
-
-		private void HandleButtonZoomMul2(object sender, MessageEventArgs e)
-		{
-			this.document.Modifier.ZoomSelection(2.0);
-		}
-
-		private void HandleButtonZoomDiv2(object sender, MessageEventArgs e)
-		{
-			this.document.Modifier.ZoomSelection(0.5);
-		}
-
-		private void HandleButtonZoom(object sender, MessageEventArgs e)
-		{
-			double scale = this.document.Modifier.ZoomFactor;
-			this.document.Modifier.ZoomSelection(scale);
-		}
-
-		private void HandleButtonZoomi(object sender, MessageEventArgs e)
-		{
-			double scale = this.document.Modifier.ZoomFactor;
-			this.document.Modifier.ZoomSelection(1.0/scale);
-		}
-
 
 		protected IconButton				buttonZoomDiv2;
 		protected IconButton				buttonZoomMul2;
 		protected IconButton				buttonMirrorH;
 		protected IconButton				buttonMirrorV;
 		protected IconSeparator				separator;
-		protected IconButton				buttonZoomi;
-		protected IconButton				buttonZoom;
+		protected IconButton				buttonZoomDivFree;
+		protected IconButton				buttonZoomMulFree;
 		protected TextFieldReal				fieldZoom;
 	}
 }

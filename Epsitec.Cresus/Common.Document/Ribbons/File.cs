@@ -16,20 +16,15 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonNew = this.CreateIconButton("New", Misc.Icon("New"), Res.Strings.Action.New);
 			this.buttonOpen = this.CreateIconButton("Open", Misc.Icon("Open2"), Res.Strings.Action.Open);
+			this.buttonLastFiles = this.CreateMenuButton("", Res.Strings.Action.LastFiles, new MessageEventHandler(this.HandleLastFilesClicked));
 			this.buttonSave = this.CreateIconButton("Save", Misc.Icon("Save2"), Res.Strings.Action.Save);
 			this.buttonSaveAs = this.CreateIconButton("SaveAs", Misc.Icon("SaveAs"), Res.Strings.Action.SaveAs);
 			this.buttonPrint = this.CreateIconButton("Print", Misc.Icon("Print2"), Res.Strings.Action.Print);
 			this.buttonExport = this.CreateIconButton("Export", Misc.Icon("Export"), Res.Strings.Action.Export);
 			this.buttonCloseAll = this.CreateIconButton("CloseAll", Misc.Icon("CloseAll"), Res.Strings.Action.CloseAll);
-			this.CreateSeparator(ref this.separator);
+			this.separator = new IconSeparator(this);
 			this.buttonOpenModel = this.CreateIconButton("OpenModel", Misc.Icon("OpenModel"), Res.Strings.Action.OpenModel);
 			this.buttonSaveModel = this.CreateIconButton("SaveModel", Misc.Icon("SaveModel"), Res.Strings.Action.SaveModel);
-
-			this.buttonLastFiles = new GlyphButton(this);
-			this.buttonLastFiles.ButtonStyle = ButtonStyle.ToolItem;
-			this.buttonLastFiles.GlyphShape = GlyphShape.Menu;
-			this.buttonLastFiles.Clicked += new MessageEventHandler(this.HandleLastFilesClicked);
-			ToolTip.Default.SetToolTip(this.buttonLastFiles, Res.Strings.Action.LastFiles);
 		}
 		
 		protected override void Dispose(bool disposing)

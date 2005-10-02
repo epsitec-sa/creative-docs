@@ -21,14 +21,9 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonZoomSel = this.CreateIconButton("ZoomSel", Misc.Icon("ZoomSel"), Res.Strings.Action.ZoomSel);
 			this.buttonZoomSelWidth = this.CreateIconButton("ZoomSelWidth", Misc.Icon("ZoomSelWidth"), Res.Strings.Action.ZoomSelWidth);
 			this.buttonZoomPrev = this.CreateIconButton("ZoomPrev", Misc.Icon("ZoomPrev"), Res.Strings.Action.ZoomPrev);
-			this.CreateSeparator(ref this.separator);
+			this.separator = new IconSeparator(this);
 			this.CreateFieldZoom(ref this.fieldZoom, "Zoom factor");
-
-			this.buttonOthers = new GlyphButton(this);
-			this.buttonOthers.ButtonStyle = ButtonStyle.ToolItem;
-			this.buttonOthers.GlyphShape = GlyphShape.Menu;
-			this.buttonOthers.Clicked += new MessageEventHandler(this.HandleOthersClicked);
-			ToolTip.Default.SetToolTip(this.buttonOthers, "Zoom menu...");
+			this.buttonOthers = this.CreateMenuButton("", "Zoom menu...", new MessageEventHandler(this.HandleOthersClicked));
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -55,6 +50,7 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 
 			this.AdaptFieldZoom(this.fieldZoom);
+			this.buttonOthers.SetEnabled(this.document != null);
 		}
 
 		// Retourne la largeur standard.

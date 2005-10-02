@@ -859,7 +859,7 @@
 	<data name="Error.BadFile">Type de fichier incorrect.</data>
 	<data name="Error.BadImage">Format d'image inconnu.</data>
 	<data name="Error.NoBitmap">Pas de bitmap.</data>
-	<data name="Error.Share">Impossible de distribuer les objets,&lt;br/%gt;car ils sont trop serrés.</data>
+	<data name="Error.Share">Impossible de distribuer les objets,&lt;br/&gt;car ils sont trop serrés.</data>
 	<data name="Error.Combine">Un ou plusieurs objets n'ont pas pu être combinés.</data>
 	<data name="Error.Uncombine">Un ou plusieurs objets n'ont pas pu être scindés.</data>
 	<data name="Error.ToBezier">Un ou plusieurs objets n'ont pas pu être convertis en courbes.</data>

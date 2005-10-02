@@ -14,10 +14,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = "Debug";
 
-			this.buttonOthers = new GlyphButton(this);
-			this.buttonOthers.ButtonStyle = ButtonStyle.ToolItem;
-			this.buttonOthers.GlyphShape = GlyphShape.Menu;
-			this.buttonOthers.Clicked += new MessageEventHandler(this.HandleOthersClicked);
+			this.buttonOthers = this.CreateMenuButton("", "Debug menu...", new MessageEventHandler(this.HandleOthersClicked));
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -79,9 +76,6 @@ namespace Epsitec.Common.Document.Ribbons
 			this.MenuAdd(menu, "y/n", "DebugBboxFull", "Show BBoxFull", "");
 			this.MenuAdd(menu, "", "", "", "");
 			this.MenuAdd(menu, "", "DebugDirty", "Make dirty", "F12");
-			this.MenuAdd(menu, "", "", "", "");
-			this.MenuAdd(menu, Misc.Icon("SelectTotal"), "SelectTotal", "Full selection required", "");
-			this.MenuAdd(menu, Misc.Icon("SelectPartial"), "SelectPartial", "Partial selection enabled", "");
 			this.MenuAdd(menu, "", "", "", "");
 			this.MenuAdd(menu, "", "ForceSaveAll", "Save and overwrite all", "");
 

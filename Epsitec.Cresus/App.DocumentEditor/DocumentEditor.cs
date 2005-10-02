@@ -2307,6 +2307,20 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.RotateSelection(270);
 		}
 
+		[Command ("RotateFreeCCW")]
+		void CommandRotateFreeCCW(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			double angle = this.CurrentDocument.Modifier.RotateAngle;
+			this.CurrentDocument.Modifier.RotateSelection(angle);
+		}
+
+		[Command ("RotateFreeCW")]
+		void CommandRotateFreeCW(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			double angle = this.CurrentDocument.Modifier.RotateAngle;
+			this.CurrentDocument.Modifier.RotateSelection(-angle);
+		}
+
 		[Command ("MirrorH")]
 		void CommandMirrorH(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -2329,6 +2343,168 @@ namespace Epsitec.App.DocumentEditor
 		void CommandZoomDiv2(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.ZoomSelection(0.5);
+		}
+
+		[Command ("ZoomMulFree")]
+		void CommandZoomMulFree(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			double scale = this.CurrentDocument.Modifier.ZoomFactor;
+			this.CurrentDocument.Modifier.ZoomSelection(scale);
+		}
+
+		[Command ("ZoomDivFree")]
+		void CommandZoomDivFree(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			double scale = this.CurrentDocument.Modifier.ZoomFactor;
+			this.CurrentDocument.Modifier.ZoomSelection(1.0/scale);
+		}
+
+		[Command ("AlignLeft")]
+		void CommandAlignLeft(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.AlignSelection(-1, true);
+		}
+
+		[Command ("AlignCenterX")]
+		void CommandAlignCenterX(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.AlignSelection(0, true);
+		}
+
+		[Command ("AlignRight")]
+		void CommandAlignRight(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.AlignSelection(1, true);
+		}
+
+		[Command ("AlignTop")]
+		void CommandAlignTop(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.AlignSelection(1, false);
+		}
+
+		[Command ("AlignCenterY")]
+		void CommandAlignCenterY(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.AlignSelection(0, false);
+		}
+
+		[Command ("AlignBottom")]
+		void CommandAlignBottom(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.AlignSelection(-1, false);
+		}
+
+		[Command ("AlignGrid")]
+		void CommandAlignGrid(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.AlignGridSelection();
+		}
+
+		[Command ("ShareLeft")]
+		void CommandShareLeft(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ShareSelection(-1, true);
+		}
+
+		[Command ("ShareCenterX")]
+		void CommandShareCenterX(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ShareSelection(0, true);
+		}
+
+		[Command ("ShareSpaceX")]
+		void CommandShareSpaceX(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.SpaceSelection(true);
+		}
+
+		[Command ("ShareRight")]
+		void CommandShareRight(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ShareSelection(1, true);
+		}
+
+		[Command ("ShareTop")]
+		void CommandShareTop(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ShareSelection(1, false);
+		}
+
+		[Command ("ShareCenterY")]
+		void CommandShareCenterY(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ShareSelection(0, false);
+		}
+
+		[Command ("ShareSpaceY")]
+		void CommandShareSpaceY(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.SpaceSelection(false);
+		}
+
+		[Command ("ShareBottom")]
+		void CommandShareBottom(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ShareSelection(-1, false);
+		}
+
+		[Command ("AdjustWidth")]
+		void CommandAdjustWidth(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.AdjustSelection(true);
+		}
+
+		[Command ("AdjustHeight")]
+		void CommandAdjustHeight(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.AdjustSelection(false);
+		}
+
+		[Command ("ColorToRGB")]
+		void CommandColorToRGB(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ColorSelection(ColorSpace.RGB);
+		}
+
+		[Command ("ColorToCMYK")]
+		void CommandColorToCMYK(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ColorSelection(ColorSpace.CMYK);
+		}
+
+		[Command ("ColorToGray")]
+		void CommandColorToGray(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ColorSelection(ColorSpace.Gray);
+		}
+
+		[Command ("ColorStrokeDark")]
+		void CommandColorStrokeDark(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			double adjust = this.CurrentDocument.Modifier.ColorAdjust;
+			this.CurrentDocument.Modifier.ColorSelection(-adjust, true);
+		}
+
+		[Command ("ColorStrokeLight")]
+		void CommandColorStrokeLight(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			double adjust = this.CurrentDocument.Modifier.ColorAdjust;
+			this.CurrentDocument.Modifier.ColorSelection(adjust, true);
+		}
+
+		[Command ("ColorFillDark")]
+		void CommandColorFillDark(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			double adjust = this.CurrentDocument.Modifier.ColorAdjust;
+			this.CurrentDocument.Modifier.ColorSelection(-adjust, false);
+		}
+
+		[Command ("ColorFillLight")]
+		void CommandColorFillLight(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			double adjust = this.CurrentDocument.Modifier.ColorAdjust;
+			this.CurrentDocument.Modifier.ColorSelection(adjust, false);
 		}
 
 		[Command ("Merge")]
@@ -2825,6 +3001,34 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
+		[Command ("MoveLeftFree")]
+		void CommandMoveLeftFree(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			double dx = this.CurrentDocument.Modifier.MoveDistanceH;
+			this.CurrentDocument.Modifier.MoveSelection(new Point(-dx,0));
+		}
+
+		[Command ("MoveRightFree")]
+		void CommandMoveRightFree(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			double dx = this.CurrentDocument.Modifier.MoveDistanceH;
+			this.CurrentDocument.Modifier.MoveSelection(new Point(dx,0));
+		}
+
+		[Command ("MoveUpFree")]
+		void CommandMoveUpFree(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			double dy = this.CurrentDocument.Modifier.MoveDistanceV;
+			this.CurrentDocument.Modifier.MoveSelection(new Point(0,dy));
+		}
+
+		[Command ("MoveDownFree")]
+		void CommandMoveDownFree(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			double dy = this.CurrentDocument.Modifier.MoveDistanceV;
+			this.CurrentDocument.Modifier.MoveSelection(new Point(0,-dy));
+		}
+
 		[Command ("MoveLeftNorm")]
 		void CommandMoveLeftNorm(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -3196,13 +3400,45 @@ namespace Epsitec.App.DocumentEditor
 			this.orderDownOneState = new CommandState("OrderDownOne", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.PageDown);
 			this.orderUpAllState = new CommandState("OrderUpAll", this.commandDispatcher, KeyCode.ModifierShift|KeyCode.PageUp);
 			this.orderDownAllState = new CommandState("OrderDownAll", this.commandDispatcher, KeyCode.ModifierShift|KeyCode.PageDown);
+			this.moveLeftFreeState = new CommandState("MoveLeftFree", this.commandDispatcher);
+			this.moveRightFreeState = new CommandState("MoveRightFree", this.commandDispatcher);
+			this.moveUpFreeState = new CommandState("MoveUpFree", this.commandDispatcher);
+			this.moveDownFreeState = new CommandState("MoveDownFree", this.commandDispatcher);
 			this.rotate90State = new CommandState("Rotate90", this.commandDispatcher);
 			this.rotate180State = new CommandState("Rotate180", this.commandDispatcher);
 			this.rotate270State = new CommandState("Rotate270", this.commandDispatcher);
+			this.rotateFreeCCWState = new CommandState("RotateFreeCCW", this.commandDispatcher);
+			this.rotateFreeCWState = new CommandState("RotateFreeCW", this.commandDispatcher);
 			this.mirrorHState = new CommandState("MirrorH", this.commandDispatcher);
 			this.mirrorVState = new CommandState("MirrorV", this.commandDispatcher);
 			this.zoomMul2State = new CommandState("ZoomMul2", this.commandDispatcher);
 			this.zoomDiv2State = new CommandState("ZoomDiv2", this.commandDispatcher);
+			this.zoomMulFreeState = new CommandState("ZoomMulFree", this.commandDispatcher);
+			this.zoomDivFreeState = new CommandState("ZoomDivFree", this.commandDispatcher);
+			this.alignLeftState = new CommandState("AlignLeft", this.commandDispatcher);
+			this.alignCenterXState = new CommandState("AlignCenterX", this.commandDispatcher);
+			this.alignRightState = new CommandState("AlignRight", this.commandDispatcher);
+			this.alignTopState = new CommandState("AlignTop", this.commandDispatcher);
+			this.alignCenterYState = new CommandState("AlignCenterY", this.commandDispatcher);
+			this.alignBottomState = new CommandState("AlignBottom", this.commandDispatcher);
+			this.alignGridState = new CommandState("AlignGrid", this.commandDispatcher);
+			this.shareLeftState = new CommandState("ShareLeft", this.commandDispatcher);
+			this.shareCenterXState = new CommandState("ShareCenterX", this.commandDispatcher);
+			this.shareSpaceXState = new CommandState("ShareSpaceX", this.commandDispatcher);
+			this.shareRightState = new CommandState("ShareRight", this.commandDispatcher);
+			this.shareTopState = new CommandState("ShareTop", this.commandDispatcher);
+			this.shareCenterYState = new CommandState("ShareCenterY", this.commandDispatcher);
+			this.shareSpaceYState = new CommandState("ShareSpaceY", this.commandDispatcher);
+			this.shareBottomState = new CommandState("ShareBottom", this.commandDispatcher);
+			this.adjustWidthState = new CommandState("AdjustWidth", this.commandDispatcher);
+			this.adjustHeightState = new CommandState("AdjustHeight", this.commandDispatcher);
+			this.colorToRGBState = new CommandState("ColorToRGB", this.commandDispatcher);
+			this.colorToCMYKState = new CommandState("ColorToCMYK", this.commandDispatcher);
+			this.colorToGrayState = new CommandState("ColorToGray", this.commandDispatcher);
+			this.colorStrokeDarkState = new CommandState("ColorStrokeDark", this.commandDispatcher);
+			this.colorStrokeLightState = new CommandState("ColorStrokeLight", this.commandDispatcher);
+			this.colorFillDarkState = new CommandState("ColorFillDark", this.commandDispatcher);
+			this.colorFillLightState = new CommandState("ColorFillLight", this.commandDispatcher);
 			this.mergeState = new CommandState("Merge", this.commandDispatcher);
 			this.extractState = new CommandState("Extract", this.commandDispatcher);
 			this.groupState = new CommandState("Group", this.commandDispatcher);
@@ -3555,11 +3791,6 @@ namespace Epsitec.App.DocumentEditor
 			{
 				DocumentInfo di = this.CurrentDocumentInfo;
 
-				this.ribbonMain.SetDirtyContent();
-				this.ribbonObject.SetDirtyContent();
-				this.ribbonOper.SetDirtyContent();
-				this.ribbonText.SetDirtyContent();
-				
 				di.containerPrincipal.SetDirtyContent();
 #if DEBUG
 				di.containerAutos.SetDirtyContent();
@@ -3586,13 +3817,45 @@ namespace Epsitec.App.DocumentEditor
 				this.orderDownOneState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating && !isEdit );
 				this.orderUpAllState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating && !isEdit );
 				this.orderDownAllState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating && !isEdit );
+				this.moveLeftFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.moveRightFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.moveUpFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.moveDownFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.rotate90State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.rotate180State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.rotate270State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.rotateFreeCCWState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.rotateFreeCWState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.mirrorHState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.mirrorVState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.zoomMul2State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.zoomDiv2State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.zoomMulFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.zoomDivFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.alignLeftState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.alignCenterXState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.alignRightState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.alignTopState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.alignCenterYState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.alignBottomState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.alignGridState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.shareLeftState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.shareCenterXState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.shareSpaceXState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.shareRightState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.shareTopState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.shareCenterYState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.shareSpaceYState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.shareBottomState.Enabled = ( totalSelected > 2 && !isCreating && !isEdit );
+				this.adjustWidthState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.adjustHeightState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.colorToRGBState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.colorToCMYKState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.colorToGrayState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.colorStrokeDarkState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.colorStrokeLightState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.colorFillDarkState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.colorFillLightState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.mergeState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
 				this.extractState.Enabled = ( totalSelected > 0 && !isBase && !isCreating && !isEdit );
 				this.groupState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
@@ -3682,13 +3945,45 @@ namespace Epsitec.App.DocumentEditor
 				this.orderDownOneState.Enabled = false;
 				this.orderUpAllState.Enabled = false;
 				this.orderDownAllState.Enabled = false;
+				this.moveLeftFreeState.Enabled = false;
+				this.moveRightFreeState.Enabled = false;
+				this.moveUpFreeState.Enabled = false;
+				this.moveDownFreeState.Enabled = false;
 				this.rotate90State.Enabled = false;
 				this.rotate180State.Enabled = false;
 				this.rotate270State.Enabled = false;
+				this.rotateFreeCCWState.Enabled = false;
+				this.rotateFreeCWState.Enabled = false;
 				this.mirrorHState.Enabled = false;
 				this.mirrorVState.Enabled = false;
 				this.zoomMul2State.Enabled = false;
 				this.zoomDiv2State.Enabled = false;
+				this.zoomMulFreeState.Enabled = false;
+				this.zoomDivFreeState.Enabled = false;
+				this.alignLeftState.Enabled = false;
+				this.alignCenterXState.Enabled = false;
+				this.alignRightState.Enabled = false;
+				this.alignTopState.Enabled = false;
+				this.alignCenterYState.Enabled = false;
+				this.alignBottomState.Enabled = false;
+				this.alignGridState.Enabled = false;
+				this.shareLeftState.Enabled = false;
+				this.shareCenterXState.Enabled = false;
+				this.shareSpaceXState.Enabled = false;
+				this.shareRightState.Enabled = false;
+				this.shareTopState.Enabled = false;
+				this.shareCenterYState.Enabled = false;
+				this.shareSpaceYState.Enabled = false;
+				this.shareBottomState.Enabled = false;
+				this.adjustWidthState.Enabled = false;
+				this.adjustHeightState.Enabled = false;
+				this.colorToRGBState.Enabled = false;
+				this.colorToCMYKState.Enabled = false;
+				this.colorToGrayState.Enabled = false;
+				this.colorStrokeDarkState.Enabled = false;
+				this.colorStrokeLightState.Enabled = false;
+				this.colorFillDarkState.Enabled = false;
+				this.colorFillLightState.Enabled = false;
 				this.mergeState.Enabled = false;
 				this.extractState.Enabled = false;
 				this.groupState.Enabled = false;
@@ -4868,13 +5163,45 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					orderDownOneState;
 		protected CommandState					orderUpAllState;
 		protected CommandState					orderDownAllState;
+		protected CommandState					moveLeftFreeState;
+		protected CommandState					moveRightFreeState;
+		protected CommandState					moveUpFreeState;
+		protected CommandState					moveDownFreeState;
 		protected CommandState					rotate90State;
 		protected CommandState					rotate180State;
 		protected CommandState					rotate270State;
+		protected CommandState					rotateFreeCCWState;
+		protected CommandState					rotateFreeCWState;
 		protected CommandState					mirrorHState;
 		protected CommandState					mirrorVState;
 		protected CommandState					zoomMul2State;
 		protected CommandState					zoomDiv2State;
+		protected CommandState					zoomMulFreeState;
+		protected CommandState					zoomDivFreeState;
+		protected CommandState					alignLeftState;
+		protected CommandState					alignCenterXState;
+		protected CommandState					alignRightState;
+		protected CommandState					alignTopState;
+		protected CommandState					alignCenterYState;
+		protected CommandState					alignBottomState;
+		protected CommandState					alignGridState;
+		protected CommandState					shareSpaceXState;
+		protected CommandState					shareLeftState;
+		protected CommandState					shareCenterXState;
+		protected CommandState					shareRightState;
+		protected CommandState					shareSpaceYState;
+		protected CommandState					shareTopState;
+		protected CommandState					shareCenterYState;
+		protected CommandState					shareBottomState;
+		protected CommandState					adjustWidthState;
+		protected CommandState					adjustHeightState;
+		protected CommandState					colorToRGBState;
+		protected CommandState					colorToCMYKState;
+		protected CommandState					colorToGrayState;
+		protected CommandState					colorStrokeDarkState;
+		protected CommandState					colorStrokeLightState;
+		protected CommandState					colorFillDarkState;
+		protected CommandState					colorFillLightState;
 		protected CommandState					mergeState;
 		protected CommandState					extractState;
 		protected CommandState					groupState;
