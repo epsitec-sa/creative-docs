@@ -1929,7 +1929,7 @@ namespace Epsitec.Common.Document
 			if ( globalMenu || nbSel == 0 )
 			{
 				exist = false;
-				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Deselect",     Misc.Icon("Deselect"),     Res.Strings.Action.SelectAll);
+				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Deselect",     Misc.Icon("DeselectAll"),  Res.Strings.Action.SelectAll);
 				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "SelectAll",    Misc.Icon("SelectAll"),    Res.Strings.Action.DeselectAll);
 				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "SelectInvert", Misc.Icon("SelectInvert"), Res.Strings.Action.SelectInvert);
 				if ( exist )  ContextMenuItem.MenuAddSep(list);
