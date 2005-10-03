@@ -167,7 +167,7 @@ namespace Epsitec.Common.Document.Widgets
 			
 			if ( this.button != null )
 			{
-				this.margins.Right = this.button.IsVisibleFlagSet ? this.defaultButtonWidth : 0;
+				this.margins.Right = this.button.Visibility ? this.defaultButtonWidth : 0;
 				this.button.Bounds = this.GetButtonBounds();
 			}
 		}
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			if ( this.button != null )
 			{
-				if ( this.button.IsVisibleFlagSet != show )
+				if ( this.button.Visibility != show )
 				{
 					this.button.SetVisible(show);
 					

@@ -1113,7 +1113,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ((this.IsVisibleFlagSet == false) ||
+				if ((this.Visibility == false) ||
 					(this.parent == null))
 				{
 					return false;
@@ -1123,7 +1123,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual bool							IsVisibleFlagSet
+		public virtual bool							Visibility
 		{
 			get
 			{
@@ -3594,7 +3594,7 @@ namespace Epsitec.Common.Widgets
 					}
 					if ((mode & ChildFindMode.SkipHidden) != 0)
 					{
-						if (widget.IsVisibleFlagSet == false)
+						if (widget.Visibility == false)
 						{
 							continue;
 						}
@@ -3683,7 +3683,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else if ((mode & ChildFindMode.SkipHidden) != 0)
 					{
-						if (widget.IsVisibleFlagSet == false)
+						if (widget.Visibility == false)
 						{
 							continue;
 						}
@@ -4432,7 +4432,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (((sibling.TabNavigation & mode) != 0) &&
 						(sibling.IsEnabled) &&
-						(sibling.IsVisibleFlagSet))
+						(sibling.Visibility))
 					{
 						if (((sibling.TabNavigation & TabNavigationMode.SkipIfReadOnly) != 0) &&
 							(sibling is Types.IReadOnly))
@@ -4956,7 +4956,7 @@ namespace Epsitec.Common.Widgets
 					continue;
 				}
 				
-				if (child.IsVisibleFlagSet == false)
+				if (child.Visibility == false)
 				{
 					continue;
 				}
@@ -5079,7 +5079,7 @@ namespace Epsitec.Common.Widgets
 					continue;
 				}
 				
-				if (child.IsVisibleFlagSet == false)
+				if (child.Visibility == false)
 				{
 					continue;
 				}
@@ -5188,7 +5188,7 @@ namespace Epsitec.Common.Widgets
 					Widget child = children[i];
 					
 					if ((child.Dock != DockStyle.Bottom) ||
-						(child.IsVisibleFlagSet == false))
+						(child.Visibility == false))
 					{
 						continue;
 					}
@@ -5206,7 +5206,7 @@ namespace Epsitec.Common.Widgets
 					Widget child = children[i];
 					
 					if ((child.Dock != DockStyle.Right) ||
-						(child.IsVisibleFlagSet == false))
+						(child.Visibility == false))
 					{
 						continue;
 					}
@@ -5303,7 +5303,7 @@ namespace Epsitec.Common.Widgets
 						
 							System.Diagnostics.Debug.Assert (widget != null);
 						
-							if (widget.IsVisibleFlagSet)
+							if (widget.Visibility)
 							{
 								widget.PaintHandler (graphics, repaint, paint_filter);
 							}
@@ -5411,7 +5411,7 @@ namespace Epsitec.Common.Widgets
 					bool   contains_focus = widget.ContainsFocus;
 					
 					if ((widget.IsFrozen == false) &&
-						((widget.IsVisibleFlagSet) || (contains_focus && message.IsKeyType)) &&
+						((widget.Visibility) || (contains_focus && message.IsKeyType)) &&
 						((message.FilterOnlyFocused == false) || (contains_focus)) &&
 						((message.FilterOnlyOnHit == false) || (widget.HitTest (client_pos))))
 					{
@@ -5465,7 +5465,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void DispatchMessage(Message message, Drawing.Point pos)
 		{
-			if (this.IsVisibleFlagSet || message.IsKeyType)
+			if (this.Visibility || message.IsKeyType)
 			{
 				bool is_entered = this.IsEntered;
 				
@@ -5634,7 +5634,7 @@ namespace Epsitec.Common.Widgets
 				
 				if ((widget.IsEnabled) &&
 					(widget.IsFrozen == false) &&
-					(widget.IsVisibleFlagSet))
+					(widget.Visibility))
 				{
 					if (widget.ShortcutHandler (shortcut, false))
 					{
@@ -5760,14 +5760,14 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.parent == null)
 			{
-				if (this.IsVisibleFlagSet)
+				if (this.Visibility)
 				{
 					this.NotifyChangedToHidden ();
 				}
 			}
 			else
 			{
-				if ((this.IsVisibleFlagSet) &&
+				if ((this.Visibility) &&
 					(this.IsVisible))
 				{
 					this.NotifyChangedToVisible ();
@@ -6171,7 +6171,7 @@ namespace Epsitec.Common.Widgets
 			
 			foreach (Widget child in children)
 			{
-				if (child.IsVisibleFlagSet)
+				if (child.Visibility)
 				{
 					child.NotifyChangedToHidden ();
 				}
@@ -6186,7 +6186,7 @@ namespace Epsitec.Common.Widgets
 			
 			foreach (Widget child in children)
 			{
-				if (child.IsVisibleFlagSet)
+				if (child.Visibility)
 				{
 					child.NotifyChangedToVisible ();
 				}
