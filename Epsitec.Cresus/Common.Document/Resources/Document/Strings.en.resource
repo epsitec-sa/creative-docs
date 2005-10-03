@@ -596,6 +596,9 @@
 	<data name="Misc.Extract">Extract</data>
 	<data name="Misc.ExtractOf">of</data>
 
+	<data name="Action.ActionMain">Action</data>
+
+	<data name="Action.FileMain">File</data>
 	<data name="Action.New">New</data>
 	<data name="Action.Open">Open...</data>
 	<data name="Action.OpenModel">Open template...</data>
@@ -613,9 +616,11 @@
 	<data name="Action.Update">Check for Updates...</data>
 	<data name="Action.About">About...</data>
 
+	<data name="Action.UndoMain">Undo</data>
 	<data name="Action.Undo">Undo</data>
 	<data name="Action.UndoRedoList">Undo/redo multiple actions</data>
 	<data name="Action.Redo">Redo</data>
+	<data name="Action.Clipboard">Clipboard</data>
 	<data name="Action.Cut">Cut</data>
 	<data name="Action.Copy">Copy</data>
 	<data name="Action.Paste">Paste</data>
@@ -626,6 +631,7 @@
 	<data name="Action.ChangeTool">Select tool &quot;{0}&quot;</data>
 	<data name="Action.OutsideArea">Area outside of page</data>
 	
+	<data name="Action.SelectMain">Select</data>
 	<data name="Action.DeselectAll">Deselect all</data>
 	<data name="Action.SelectAll">Select all</data>
 	<data name="Action.SelectInvert">Invert selection</data>
@@ -657,7 +663,7 @@
 	<data name="Action.MirrorMain">Flip</data>
 	<data name="Action.MirrorH">Flip horizontally</data>
 	<data name="Action.MirrorV">Flip vertically</data>
-	<data name="Action.ZoomMain">Scale</data>
+	<data name="Action.ScaleMain">Scale</data>
 	<data name="Action.ZoomMul2">Scale up ×2</data>
 	<data name="Action.ZoomDiv2">Scale down ÷2</data>
 	<data name="Action.ZoomValue">Scale ratio</data>
@@ -665,6 +671,7 @@
 	<data name="Action.ZoomFreeM">Scale down</data>
 	<data name="Action.ZoomP">Scale up by {0}%</data>
 	<data name="Action.ZoomM">Scale down by {0}%</data>
+	<data name="Action.AlignMain">Align</data>
 	<data name="Action.Align">Align</data>
 	<data name="Action.AlignGrid">Fit to grid</data>
 	<data name="Action.AlignLeft">Align left</data>
@@ -686,6 +693,7 @@
 	<data name="Action.Adjust">Adjust size</data>
 	<data name="Action.AdjustWidth">Same widths</data>
 	<data name="Action.AdjustHeight">Same heights</data>
+	<data name="Action.ColorMain">Color</data>
 	<data name="Action.Color">Adjust colors</data>
 	<data name="Action.ColorToRGB">Convert all colors to RGB</data>
 	<data name="Action.ColorToCMYK">Convert all colors to CMYK</data>
@@ -712,7 +720,7 @@
 	<data name="Action.ToSimplest">Simplify (debug)</data>
 	<data name="Action.Fragment">Explode</data>
 	
-	<data name="Action.BooleanMain">Boolean operation</data>
+	<data name="Action.BooleanMain">Boolean</data>
 	<data name="Action.BooleanOr">Union</data>
 	<data name="Action.BooleanAnd">Intersection</data>
 	<data name="Action.BooleanXor">Exclusion</data>
@@ -812,6 +820,7 @@
 	<data name="Action.StretchType">Stretch type</data>
 	<data name="Action.SurfaceReset">Reset surface</data>
 	
+	<data name="Action.ZoomMain">Zoom</data>
 	<data name="Action.ZoomMin">Zoom to minimum</data>
 	<data name="Action.ZoomPage">Zoom to full page</data>
 	<data name="Action.ZoomPageWidth">Zoom to page width</data>
@@ -822,6 +831,7 @@
 	<data name="Action.ZoomSub">Zoom out</data>
 	<data name="Action.ZoomAdd">Zoom in</data>
 	
+	<data name="Action.ViewMain">View</data>
 	<data name="Action.Grid">Magnetic grid</data>
 	<data name="Action.Preview">Preview as printed</data>
 	<data name="Action.Magnet">Magnetic constructions</data>
@@ -831,6 +841,8 @@
 	<data name="Action.Settings">Settings...</data>
 	<data name="Action.Infos">Informations...</data>
 	<data name="Action.LabelProperties">Property names</data>
+
+	<data name="Action.Text.Insert">Insert</data>
 
 	<data name="Statistic.Summary">{0}Summary{1}</data>
 	<data name="Statistic.Filename">{0}File name: {1}</data>

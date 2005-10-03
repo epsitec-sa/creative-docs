@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Zoom() : base()
 		{
-			this.title.Text = "Zoom";
+			this.title.Text = Res.Strings.Action.ZoomMain;
 
 			this.buttonZoomMin = this.CreateIconButton("ZoomMin", Misc.Icon("ZoomMin"), Res.Strings.Action.ZoomMin);
 			this.buttonZoomPage = this.CreateIconButton("ZoomPage", Misc.Icon("ZoomPage"), Res.Strings.Action.ZoomPage);

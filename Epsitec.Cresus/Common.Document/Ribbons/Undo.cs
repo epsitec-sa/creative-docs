@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Undo() : base()
 		{
-			this.title.Text = "Undo";
+			this.title.Text = Res.Strings.Action.UndoMain;
 
 			this.buttonUndo = this.CreateIconButton("Undo", Misc.Icon("Undo2"), Res.Strings.Action.Undo);
 			this.buttonRedo = this.CreateIconButton("Redo", Misc.Icon("Redo2"), Res.Strings.Action.Redo);

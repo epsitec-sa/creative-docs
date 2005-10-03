@@ -1362,6 +1362,27 @@ namespace Epsitec.Common.Widgets.Adorner
 												Drawing.Rectangle rect,
 												WidgetState state)
 		{
+			if ( (state&WidgetState.Entered) != 0 ||  // bouton survolé ?
+				 (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+			{
+				Drawing.Rectangle rInside;
+				rInside = rect;
+				rInside.Deflate(0.5);
+				graphics.AddRectangle(rInside);
+				graphics.RenderSolid(this.colorBlack);
+			}
+
+			if ( (state&WidgetState.ActiveYes) != 0 )  // bouton activé ?
+			{
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.colorCaption);
+
+				Drawing.Rectangle rInside;
+				rInside = rect;
+				rInside.Deflate(0.5);
+				graphics.AddRectangle(rInside);
+				graphics.RenderSolid(this.colorBlack);
+			}
 		}
 
 		// Dessine le bouton pour un ruban.
@@ -1369,6 +1390,24 @@ namespace Epsitec.Common.Widgets.Adorner
 												Drawing.Rectangle rect,
 												WidgetState state)
 		{
+		}
+
+		// Dessine le texte d'un bouton du ruban.
+		public void PaintRibbonButtonTextLayout(Drawing.Graphics graphics,
+												Drawing.Point pos,
+												TextLayout text,
+												WidgetState state)
+		{
+			if ( text == null )  return;
+			state &= ~WidgetState.Focused;
+
+			Drawing.Color color = Drawing.Color.Empty;
+			if ( (state&WidgetState.ActiveYes) != 0 )  // bouton activé ?
+			{
+				color = this.colorBlack;
+			}
+			
+			text.Paint(pos, graphics, Drawing.Rectangle.Infinite, color, Drawing.GlyphPaintStyle.Normal);
 		}
 
 		// Dessine la bande principale d'un ruban.
@@ -1823,6 +1862,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public Drawing.Margins GeometryToolShapeBounds { get { return new Drawing.Margins(0,1,0,0); } }
 		public Drawing.Margins GeometryButtonShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
+		public Drawing.Margins GeometryRibbonShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public Drawing.Margins GeometryTextFieldShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public Drawing.Margins GeometryListShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public double GeometryComboRightMargin { get { return 2; } }

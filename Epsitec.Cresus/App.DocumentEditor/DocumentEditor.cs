@@ -598,27 +598,23 @@ namespace Epsitec.App.DocumentEditor
 			}
 #endif
 
-			this.ribbonMainButton = new IconButton();
-			this.ribbonMainButton.Text = "Documents";
-			this.ribbonMainButton.Width = 70;
+			this.ribbonMainButton = new Ribbons.RibbonButton("", "Documents");
+			this.ribbonMainButton.Size = this.ribbonMainButton.RequiredSize;
 			this.ribbonMainButton.Clicked += new MessageEventHandler(this.HandleRibbonMainClicked);
 			this.hToolBar.Items.Add(this.ribbonMainButton);
 
-			this.ribbonObjectButton = new IconButton();
-			this.ribbonObjectButton.Text = "Objects";
-			this.ribbonObjectButton.Width = 52;
+			this.ribbonObjectButton = new Ribbons.RibbonButton("", "Objects");
+			this.ribbonObjectButton.Size = this.ribbonObjectButton.RequiredSize;
 			this.ribbonObjectButton.Clicked += new MessageEventHandler(this.HandleRibbonObjectClicked);
 			this.hToolBar.Items.Add(this.ribbonObjectButton);
 
-			this.ribbonOperButton = new IconButton();
-			this.ribbonOperButton.Text = "Operations";
-			this.ribbonOperButton.Width = 64;
+			this.ribbonOperButton = new Ribbons.RibbonButton("", "Operations");
+			this.ribbonOperButton.Size = this.ribbonOperButton.RequiredSize;
 			this.ribbonOperButton.Clicked += new MessageEventHandler(this.HandleRibbonOperClicked);
 			this.hToolBar.Items.Add(this.ribbonOperButton);
 
-			this.ribbonTextButton = new IconButton();
-			this.ribbonTextButton.Text = "Text";
-			this.ribbonTextButton.Width = 40;
+			this.ribbonTextButton = new Ribbons.RibbonButton("", "Text");
+			this.ribbonTextButton.Size = this.ribbonTextButton.RequiredSize;
 			this.ribbonTextButton.Clicked += new MessageEventHandler(this.HandleRibbonTextClicked);
 			this.hToolBar.Items.Add(this.ribbonTextButton);
 
@@ -705,7 +701,7 @@ namespace Epsitec.App.DocumentEditor
 #endif
 
 			StatusField sf = this.InfoAdd("", 90, "StatusZoom", "") as StatusField;
-			//?sf.Clicked += new MessageEventHandler(this.HandleStatusZoomClicked);
+			sf.Clicked += new MessageEventHandler(this.HandleStatusZoomClicked);
 
 			this.InfoAdd("", 110, "StatusMouse", "");
 			this.InfoAdd("", 250, "StatusModif", "");
@@ -5086,10 +5082,10 @@ namespace Epsitec.App.DocumentEditor
 		protected HMenu							menu;
 		protected VMenu							fileMenu;
 		protected HToolBar						hToolBar;
-		protected IconButton					ribbonMainButton;
-		protected IconButton					ribbonObjectButton;
-		protected IconButton					ribbonOperButton;
-		protected IconButton					ribbonTextButton;
+		protected Ribbons.RibbonButton			ribbonMainButton;
+		protected Ribbons.RibbonButton			ribbonObjectButton;
+		protected Ribbons.RibbonButton			ribbonOperButton;
+		protected Ribbons.RibbonButton			ribbonTextButton;
 		protected Ribbons.RibbonContainer		ribbonMain;
 		protected Ribbons.RibbonContainer		ribbonObject;
 		protected Ribbons.RibbonContainer		ribbonOper;

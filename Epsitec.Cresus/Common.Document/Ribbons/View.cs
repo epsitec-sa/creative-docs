@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public View() : base()
 		{
-			this.title.Text = "View";
+			this.title.Text = Res.Strings.Action.ViewMain;
 
 			this.buttonPreview = this.CreateIconButton("Preview", Misc.Icon("Preview"), Res.Strings.Action.Preview);
 			this.buttonGrid = this.CreateIconButton("Grid", Misc.Icon("Grid"), Res.Strings.Action.Grid);

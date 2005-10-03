@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Insert() : base()
 		{
-			this.title.Text = "Insert";
+			this.title.Text = Res.Strings.Action.Text.Insert;
 
 			this.buttonGlyphs = this.CreateIconButton("Glyphs", Misc.Icon("Glyphs"), Res.Strings.Action.Glyphs);
 		}

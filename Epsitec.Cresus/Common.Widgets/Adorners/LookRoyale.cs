@@ -1367,6 +1367,66 @@ namespace Epsitec.Common.Widgets.Adorner
 												Drawing.Rectangle rect,
 												WidgetState state)
 		{
+			rect.Bottom -= 2;
+
+			if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+			{
+				double radius = System.Math.Min(rect.Width, rect.Height)/8;
+				Drawing.Path pTitle = this.PathTopRoundRectangle(rect, radius);
+
+				graphics.Rasterizer.AddSurface(pTitle);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.RenderSolid(this.colorFrame);
+
+					Drawing.Rectangle rHilite = rect;
+					rHilite.Bottom = rHilite.Top-3;
+					Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, radius);
+					graphics.Rasterizer.AddSurface(pHilite);
+					graphics.RenderSolid(this.colorHilite);
+
+					graphics.Rasterizer.AddOutline(pTitle, 1);
+					graphics.RenderSolid(this.colorBorder);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorWhite);
+
+					graphics.Rasterizer.AddOutline(pTitle, 1);
+					graphics.RenderSolid(this.colorDisabled);
+				}
+			}
+			else
+			{
+				rect.Top -= 2;
+				rect.Left  += 1;
+				rect.Right -= 1;
+
+				double radius = System.Math.Min(rect.Width, rect.Height)/8;
+				Drawing.Path pTitle = this.PathTopRoundRectangle(rect, radius);
+
+				this.PaintImageButton(graphics, rect, 18);
+
+				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+				{
+					Drawing.Rectangle rHilite = rect;
+					rHilite.Bottom = rHilite.Top-3;
+					Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, radius);
+					graphics.Rasterizer.AddSurface(pHilite);
+					graphics.RenderSolid(this.colorHilite);
+				}
+
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.Rasterizer.AddOutline(pTitle, 1);
+					graphics.RenderSolid(this.colorBorder);
+				}
+				else
+				{
+					graphics.Rasterizer.AddOutline(pTitle, 1);
+					graphics.RenderSolid(this.colorDisabled);
+				}
+			}
 		}
 
 		// Dessine le bouton pour un ruban.
@@ -1374,6 +1434,23 @@ namespace Epsitec.Common.Widgets.Adorner
 												Drawing.Rectangle rect,
 												WidgetState state)
 		{
+		}
+
+		// Dessine le texte d'un bouton du ruban.
+		public void PaintRibbonButtonTextLayout(Drawing.Graphics graphics,
+												Drawing.Point pos,
+												TextLayout text,
+												WidgetState state)
+		{
+			if ( text == null )  return;
+
+			if ( (state&WidgetState.ActiveYes) == 0 )   // bouton désactivé ?
+			{
+				pos.Y -= 2;
+			}
+			state &= ~WidgetState.Focused;
+			PaintTextStyle style = PaintTextStyle.HMenu;
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, style, Drawing.Color.Empty);
 		}
 
 		// Dessine la bande principale d'un ruban.
@@ -2008,6 +2085,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public Drawing.Margins GeometryToolShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public Drawing.Margins GeometryButtonShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
+		public Drawing.Margins GeometryRibbonShapeBounds { get { return new Drawing.Margins(0,0,0,2); } }
 		public Drawing.Margins GeometryTextFieldShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public Drawing.Margins GeometryListShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public double GeometryComboRightMargin { get { return 2; } }

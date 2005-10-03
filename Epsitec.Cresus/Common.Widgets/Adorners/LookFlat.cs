@@ -1056,6 +1056,7 @@ namespace Epsitec.Common.Widgets.Adorner
 												Drawing.Rectangle rect,
 												WidgetState state)
 		{
+			this.PaintButtonBackground(graphics, rect, state, Widgets.Direction.None, ButtonStyle.ToolItem);
 		}
 
 		// Dessine le bouton pour un ruban.
@@ -1063,6 +1064,18 @@ namespace Epsitec.Common.Widgets.Adorner
 												Drawing.Rectangle rect,
 												WidgetState state)
 		{
+		}
+
+		// Dessine le texte d'un bouton du ruban.
+		public void PaintRibbonButtonTextLayout(Drawing.Graphics graphics,
+												Drawing.Point pos,
+												TextLayout text,
+												WidgetState state)
+		{
+			if ( text == null )  return;
+			state &= ~WidgetState.Focused;
+			PaintTextStyle style = PaintTextStyle.HMenu;
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, style, Drawing.Color.Empty);
 		}
 
 		// Dessine la bande principale d'un ruban.
@@ -1435,6 +1448,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public Drawing.Margins GeometryToolShapeBounds { get { return new Drawing.Margins(0,1,0,0); } }
 		public Drawing.Margins GeometryButtonShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
+		public Drawing.Margins GeometryRibbonShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public Drawing.Margins GeometryTextFieldShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public Drawing.Margins GeometryListShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public double GeometryComboRightMargin { get { return 0; } }

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Select() : base()
 		{
-			this.title.Text = "Selection";
+			this.title.Text = Res.Strings.Action.SelectMain;
 
 			this.buttonDelete = this.CreateIconButton("Delete", Misc.Icon("Delete2"), Res.Strings.Action.Delete);
 			this.buttonDuplicate = this.CreateIconButton("Duplicate", Misc.Icon("Duplicate2"), Res.Strings.Action.Duplicate);

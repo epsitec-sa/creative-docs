@@ -96,6 +96,7 @@ namespace Epsitec.Common.Widgets
 
 		void PaintRibbonButtonBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintRibbonButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
+		void PaintRibbonButtonTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state);
 		void PaintRibbonTabBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, double titleHeight, WidgetState state);
 		void PaintRibbonTabForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, double titleHeight, WidgetState state);
 		void PaintRibbonSectionBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, double titleHeight, WidgetState state);
@@ -140,6 +141,7 @@ namespace Epsitec.Common.Widgets
 		Drawing.Margins GeometryGroupShapeBounds { get; }
 		Drawing.Margins GeometryToolShapeBounds { get; }
 		Drawing.Margins GeometryButtonShapeBounds { get; }
+		Drawing.Margins GeometryRibbonShapeBounds { get; }
 		Drawing.Margins GeometryTextFieldShapeBounds { get; }
 		Drawing.Margins GeometryListShapeBounds { get; }
 		double GeometryComboRightMargin { get; }

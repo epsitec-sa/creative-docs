@@ -596,6 +596,9 @@
 	<data name="Misc.Extract">Extrait</data>
 	<data name="Misc.ExtractOf">de</data>
 
+	<data name="Action.ActionMain">Action</data>
+
+	<data name="Action.FileMain">Fichier</data>
 	<data name="Action.New">Nouveau</data>
 	<data name="Action.Open">Ouvrir...</data>
 	<data name="Action.OpenModel">Ouvrir modèle...</data>
@@ -613,9 +616,11 @@
 	<data name="Action.Update">Mise à jour...</data>
 	<data name="Action.About">A propos de...</data>
 
+	<data name="Action.UndoMain">Annuler</data>
 	<data name="Action.Undo">Annuler</data>
 	<data name="Action.UndoRedoList">Annuler ou refaire plusieurs actions</data>
 	<data name="Action.Redo">Refaire</data>
+	<data name="Action.Clipboard">Bloc-notes</data>
 	<data name="Action.Cut">Couper</data>
 	<data name="Action.Copy">Copier</data>
 	<data name="Action.Paste">Coller</data>
@@ -626,6 +631,7 @@
 	<data name="Action.ChangeTool">Choix de l'outil &quot;{0}&quot;</data>
 	<data name="Action.OutsideArea">Zone hors page</data>
 	
+	<data name="Action.SelectMain">Sélection</data>
 	<data name="Action.DeselectAll">Tout désélectionner</data>
 	<data name="Action.SelectAll">Tout sélectionner</data>
 	<data name="Action.SelectInvert">Inverser la sélection</data>
@@ -657,7 +663,7 @@
 	<data name="Action.MirrorMain">Miroir</data>
 	<data name="Action.MirrorH">Miroir horizontal</data>
 	<data name="Action.MirrorV">Miroir vertical</data>
-	<data name="Action.ZoomMain">Réduction et agrandissement</data>
+	<data name="Action.ScaleMain">Echelle</data>
 	<data name="Action.ZoomMul2">Agrandissement ×2</data>
 	<data name="Action.ZoomDiv2">Réduction ÷2</data>
 	<data name="Action.ZoomValue">Facteur d'agrandissement/réduction</data>
@@ -665,6 +671,7 @@
 	<data name="Action.ZoomFreeM">Réduction</data>
 	<data name="Action.ZoomP">Agrandissement {0}%</data>
 	<data name="Action.ZoomM">Réduction {0}%</data>
+	<data name="Action.AlignMain">Alignement</data>
 	<data name="Action.Align">Alignement</data>
 	<data name="Action.AlignGrid">Alignement sur la grille magnétique</data>
 	<data name="Action.AlignLeft">Alignement à gauche</data>
@@ -686,6 +693,7 @@
 	<data name="Action.Adjust">Ajustement</data>
 	<data name="Action.AdjustWidth">Largeurs identiques</data>
 	<data name="Action.AdjustHeight">Hauteurs identiques</data>
+	<data name="Action.ColorMain">Couleur</data>
 	<data name="Action.Color">Couleurs</data>
 	<data name="Action.ColorToRGB">Toutes les couleurs en RVB</data>
 	<data name="Action.ColorToCMYK">Toutes les couleurs en CMJN</data>
@@ -712,7 +720,7 @@
 	<data name="Action.ToSimplest">Simplifier (debug)</data>
 	<data name="Action.Fragment">Fragmenter</data>
 	
-	<data name="Action.BooleanMain">Opération booléenne</data>
+	<data name="Action.BooleanMain">Booléen</data>
 	<data name="Action.BooleanOr">Union</data>
 	<data name="Action.BooleanAnd">Intersection</data>
 	<data name="Action.BooleanXor">Exclusion</data>
@@ -812,6 +820,7 @@
 	<data name="Action.StretchType">Type de déformation</data>
 	<data name="Action.SurfaceReset">Réinitialisation de la surface</data>
 	
+	<data name="Action.ZoomMain">Zoom</data>
 	<data name="Action.ZoomMin">Zoom minimal</data>
 	<data name="Action.ZoomPage">Zoom pleine page</data>
 	<data name="Action.ZoomPageWidth">Zoom largeur page</data>
@@ -822,6 +831,7 @@
 	<data name="Action.ZoomSub">Réduction</data>
 	<data name="Action.ZoomAdd">Agrandissement</data>
 	
+	<data name="Action.ViewMain">Vue</data>
 	<data name="Action.Grid">Grille magnétique</data>
 	<data name="Action.Preview">Comme imprimé</data>
 	<data name="Action.Magnet">Constructions magnétiques</data>
@@ -831,6 +841,8 @@
 	<data name="Action.Settings">Réglages...</data>
 	<data name="Action.Infos">Informations...</data>
 	<data name="Action.LabelProperties">Attributs détaillés</data>
+	
+	<data name="Action.Text.Insert">Insertion</data>
 
 	<data name="Statistic.Summary">{0}Résumé{1}</data>
 	<data name="Statistic.Filename">{0}Nom complet: {1}</data>

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Geom() : base()
 		{
-			this.title.Text = "Geometry";
+			this.title.Text = Res.Strings.Action.GeometryMain;
 
 			this.buttonCombine   = this.CreateIconButton("Combine",   Misc.Icon("Combine"),   Res.Strings.Action.Combine);
 			this.buttonUncombine = this.CreateIconButton("Uncombine", Misc.Icon("Uncombine"), Res.Strings.Action.Uncombine);

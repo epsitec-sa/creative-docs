@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Bool() : base()
 		{
-			this.title.Text = "Boolean";
+			this.title.Text = Res.Strings.Action.BooleanMain;
 
 			this.buttonBooleanOr = this.CreateIconButton("BooleanOr", Misc.Icon("BooleanOr"), Res.Strings.Action.BooleanOr);
 			this.buttonBooleanAnd = this.CreateIconButton("BooleanAnd", Misc.Icon("BooleanAnd"), Res.Strings.Action.BooleanAnd);

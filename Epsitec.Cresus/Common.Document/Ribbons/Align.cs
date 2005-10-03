@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Align() : base()
 		{
-			this.title.Text = "Align";
+			this.title.Text = Res.Strings.Action.AlignMain;
 
 			this.buttonAlignLeft    = this.CreateIconButton("AlignLeft",    Misc.Icon("AlignLeft"),    Res.Strings.Action.AlignLeft);
 			this.buttonAlignCenterX = this.CreateIconButton("AlignCenterX", Misc.Icon("AlignCenterX"), Res.Strings.Action.AlignCenterX);

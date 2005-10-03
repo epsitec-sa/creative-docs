@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public Color() : base()
 		{
-			this.title.Text = "Color";
+			this.title.Text = Res.Strings.Action.ColorMain;
 
 			this.buttonColorToRGB  = this.CreateIconButton("ColorToRGB",  Misc.Icon("OperColorToRGB"),    Res.Strings.Action.ColorToRGB);
 			this.buttonColorToCMYK = this.CreateIconButton("ColorToCMYK", Misc.Icon("OperColorToCMYK"),    Res.Strings.Action.ColorToCMYK);

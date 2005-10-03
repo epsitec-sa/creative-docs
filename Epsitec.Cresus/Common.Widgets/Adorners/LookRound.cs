@@ -1314,6 +1314,75 @@ namespace Epsitec.Common.Widgets.Adorner
 												Drawing.Rectangle rect,
 												WidgetState state)
 		{
+			if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+			{
+				rect.Bottom -= 3;
+				double radius = System.Math.Min(rect.Width, rect.Height)/8;
+				Drawing.Path pTitle = this.PathTopRoundRectangle(rect, radius);
+
+				graphics.Rasterizer.AddSurface(pTitle);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.RenderSolid(this.colorControlLight);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControl);
+				}
+
+				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+				{
+					Drawing.Rectangle rHilite = rect;
+					rHilite.Bottom = rHilite.Top-3;
+					Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, radius);
+					graphics.Rasterizer.AddSurface(pHilite);
+					graphics.RenderSolid(this.colorHilite);
+				}
+
+				graphics.Rasterizer.AddOutline(pTitle, 1);
+				pTitle.Dispose();
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.RenderSolid(this.colorControlDarkDark);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControlDark);
+				}
+			}
+			else
+			{
+				rect.Bottom -= 2;
+				rect.Top -= 2;
+				rect.Left  += 1;
+				rect.Right -= 1;
+
+				double radius = System.Math.Min(rect.Width, rect.Height)/8;
+				Drawing.Path pTitle = this.PathTopRoundRectangle(rect, radius);
+
+				graphics.Rasterizer.AddSurface(pTitle);
+				graphics.RenderSolid(this.colorControl);
+
+				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+				{
+					Drawing.Rectangle rHilite = rect;
+					rHilite.Bottom = rHilite.Top-3;
+					Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, radius);
+					graphics.Rasterizer.AddSurface(pHilite);
+					graphics.RenderSolid(this.colorHilite);
+				}
+
+				graphics.Rasterizer.AddOutline(pTitle, 1);
+				pTitle.Dispose();
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.RenderSolid(this.colorControlDarkDark);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControlDark);
+				}
+			}
 		}
 
 		// Dessine le bouton pour un ruban.
@@ -1321,6 +1390,23 @@ namespace Epsitec.Common.Widgets.Adorner
 												Drawing.Rectangle rect,
 												WidgetState state)
 		{
+		}
+
+		// Dessine le texte d'un bouton du ruban.
+		public void PaintRibbonButtonTextLayout(Drawing.Graphics graphics,
+												Drawing.Point pos,
+												TextLayout text,
+												WidgetState state)
+		{
+			if ( text == null )  return;
+
+			if ( (state&WidgetState.ActiveYes) == 0 )   // bouton désactivé ?
+			{
+				pos.Y -= 2;
+			}
+			state &= ~WidgetState.Focused;
+			PaintTextStyle style = PaintTextStyle.HMenu;
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, style, Drawing.Color.Empty);
 		}
 
 		// Dessine la bande principale d'un ruban.
@@ -1354,8 +1440,11 @@ namespace Epsitec.Common.Widgets.Adorner
 												 double titleHeight,
 												 WidgetState state)
 		{
+			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Top-titleHeight);
+			graphics.RenderSolid(Drawing.Color.FromBrightness(1));
+
 			rect.Deflate(0.5);
-			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Bottom);
+			graphics.AddLine(rect.Right, rect.Top-titleHeight, rect.Right, rect.Bottom);
 			graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
 		}
 
@@ -1376,7 +1465,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( text == null )  return;
 
 			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
-			text.Alignment = Drawing.ContentAlignment.MiddleLeft;
+			text.Alignment = Drawing.ContentAlignment.MiddleCenter;
 			text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(0), Drawing.GlyphPaintStyle.Normal);
 		}
 
@@ -1761,6 +1850,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public Drawing.Margins GeometryToolShapeBounds { get { return new Drawing.Margins(0,1,0,0); } }
 		public Drawing.Margins GeometryButtonShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
+		public Drawing.Margins GeometryRibbonShapeBounds { get { return new Drawing.Margins(0,0,0,3); } }
 		public Drawing.Margins GeometryTextFieldShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public Drawing.Margins GeometryListShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public double GeometryComboRightMargin { get { return 2; } }
