@@ -1558,7 +1558,7 @@ namespace Epsitec.Common.Document
 					}
 					else
 					{
-						st = SelectorType.Zoomer;
+						st = SelectorType.Scaler;
 					}
 				}
 
@@ -1850,8 +1850,8 @@ namespace Epsitec.Common.Document
 				if ( exist )  ContextMenuItem.MenuAddSep(listOper);
 
 				exist = false;
-				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ZoomDiv2",  Misc.Icon("OperZoomDiv2"), Res.Strings.Action.ZoomDiv2);
-				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ZoomMul2",  Misc.Icon("OperZoomMul2"), Res.Strings.Action.ZoomMul2);
+				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ScaleDiv2",  Misc.Icon("OperScaleDiv2"), Res.Strings.Action.ScaleDiv2);
+				exist |= ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ScaleMul2",  Misc.Icon("OperScaleMul2"), Res.Strings.Action.ScaleMul2);
 
 				if ( ContextMenuItem.IsMenuActive(listOper) )
 				{

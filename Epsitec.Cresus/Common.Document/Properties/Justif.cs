@@ -369,9 +369,9 @@ namespace Epsitec.Common.Document.Properties
 		{
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptText )  return;
 
-			double zoom = selector.GetTransformZoom;
-			this.marginH = this.initialMarginH*zoom;
-			this.marginV = this.initialMarginV*zoom;
+			double scale = selector.GetTransformScale;
+			this.marginH = this.initialMarginH*scale;
+			this.marginV = this.initialMarginV*scale;
 
 			this.document.Notifier.NotifyPropertyChanged(this);
 		}

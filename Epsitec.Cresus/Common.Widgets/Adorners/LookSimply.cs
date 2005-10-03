@@ -1504,10 +1504,11 @@ namespace Epsitec.Common.Widgets.Adorner
 												 double titleHeight,
 												 WidgetState state)
 		{
-			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Top-titleHeight);
-			graphics.RenderSolid(Drawing.Color.FromBrightness(1));
-
 			rect.Deflate(0.5);
+
+			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Top-titleHeight);
+			graphics.RenderSolid(Drawing.Color.FromBrightness(0.75));
+
 			graphics.AddLine(rect.Right, rect.Top-titleHeight, rect.Right, rect.Bottom);
 			graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
 		}

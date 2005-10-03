@@ -874,8 +874,8 @@ namespace Epsitec.Common.Document.Properties
 		{
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
 
-			double zoom = selector.GetTransformZoom;
-			this.smooth = this.initialSmooth*zoom;
+			double scale = selector.GetTransformScale;
+			this.smooth = this.initialSmooth*scale;
 
 			this.document.Notifier.NotifyPropertyChanged(this);
 		}

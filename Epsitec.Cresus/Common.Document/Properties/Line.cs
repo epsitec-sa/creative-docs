@@ -701,14 +701,14 @@ namespace Epsitec.Common.Document.Properties
 		{
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
 
-			double zoom = selector.GetTransformZoom;
+			double scale = selector.GetTransformScale;
 
-			this.width = this.initialWidth*zoom;
+			this.width = this.initialWidth*scale;
 
 			for ( int i=0 ; i<Line.DashMax ; i++ )
 			{
-				this.dashPen[i] = this.initialDashPen[i]*zoom;
-				this.dashGap[i] = this.initialDashGap[i]*zoom;
+				this.dashPen[i] = this.initialDashPen[i]*scale;
+				this.dashGap[i] = this.initialDashGap[i]*scale;
 			}
 
 			this.document.Notifier.NotifyPropertyChanged(this);

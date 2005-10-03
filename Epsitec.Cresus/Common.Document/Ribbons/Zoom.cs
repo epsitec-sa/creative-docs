@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonZoomPrev = this.CreateIconButton("ZoomPrev", Misc.Icon("ZoomPrev"), Res.Strings.Action.ZoomPrev);
 			this.separator = new IconSeparator(this);
 			this.CreateFieldZoom(ref this.fieldZoom, "Zoom factor");
-			this.buttonOthers = this.CreateMenuButton("", "Zoom menu...", new MessageEventHandler(this.HandleOthersClicked));
+			this.buttonOthers = this.CreateMenuButton("", Res.Strings.Action.ZoomMenu, new MessageEventHandler(this.HandleOthersClicked));
 		}
 		
 		protected override void Dispose(bool disposing)

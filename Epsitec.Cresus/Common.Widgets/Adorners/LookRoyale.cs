@@ -1485,7 +1485,11 @@ namespace Epsitec.Common.Widgets.Adorner
 												 WidgetState state)
 		{
 			rect.Deflate(0.5);
-			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Bottom+1);
+
+			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Top-titleHeight);
+			graphics.RenderSolid(Drawing.Color.FromRGB(167.0/255.0, 185.0/255.0, 208.0/255.0));
+
+			graphics.AddLine(rect.Right, rect.Top-titleHeight, rect.Right, rect.Bottom);
 			graphics.RenderSolid(this.colorBorder);
 		}
 

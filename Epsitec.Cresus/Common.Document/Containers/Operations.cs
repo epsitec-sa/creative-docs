@@ -39,14 +39,14 @@ namespace Epsitec.Common.Document.Containers
 			this.CreateButton(this.toolBarMirror, ref this.buttonMirrorH, "OperMirrorH", Res.Strings.Action.MirrorH, new MessageEventHandler(this.HandleButtonMirrorH));
 			this.CreateButton(this.toolBarMirror, ref this.buttonMirrorV, "OperMirrorV", Res.Strings.Action.MirrorV, new MessageEventHandler(this.HandleButtonMirrorV));
 
-			// Zoom.
-			this.CreateHeader(ref this.boxZoom, ref this.toolBarZoom, Res.Strings.Action.ZoomMain);
-			this.CreateButton(this.toolBarZoom, ref this.buttonZoomDiv2, "OperZoomDiv2", Res.Strings.Action.ZoomDiv2, new MessageEventHandler(this.HandleButtonZoomDiv2));
-			this.CreateButton(this.toolBarZoom, ref this.buttonZoomMul2, "OperZoomMul2", Res.Strings.Action.ZoomMul2, new MessageEventHandler(this.HandleButtonZoomMul2));
-			this.CreateSeparator(this.toolBarZoom);
-			this.CreateFieldZoom(this.toolBarZoom, ref this.fieldZoom, Res.Strings.Action.ZoomValue);
-			this.CreateButton(this.toolBarZoom, ref this.buttonZoomi, "OperZoomi", Res.Strings.Action.ZoomFreeM, new MessageEventHandler(this.HandleButtonZoomi));
-			this.CreateButton(this.toolBarZoom, ref this.buttonZoom,  "OperZoom",  Res.Strings.Action.ZoomFreeP, new MessageEventHandler(this.HandleButtonZoom));
+			// Echelle.
+			this.CreateHeader(ref this.boxScale, ref this.toolBarScale, Res.Strings.Action.ScaleMain);
+			this.CreateButton(this.toolBarScale, ref this.buttonScaleDiv2, "OperScaleDiv2", Res.Strings.Action.ScaleDiv2, new MessageEventHandler(this.HandleButtonScaleDiv2));
+			this.CreateButton(this.toolBarScale, ref this.buttonScaleMul2, "OperScaleMul2", Res.Strings.Action.ScaleMul2, new MessageEventHandler(this.HandleButtonScaleMul2));
+			this.CreateSeparator(this.toolBarScale);
+			this.CreateFieldScale(this.toolBarScale, ref this.fieldScale, Res.Strings.Action.ScaleValue);
+			this.CreateButton(this.toolBarScale, ref this.buttonScaleDivFree, "OperScaleDivFree", Res.Strings.Action.ScaleDivFree, new MessageEventHandler(this.HandleButtonScaleDivFree));
+			this.CreateButton(this.toolBarScale, ref this.buttonScaleMulFree, "OperScaleMulFree", Res.Strings.Action.ScaleMulFree, new MessageEventHandler(this.HandleButtonScaleMulFree));
 
 			// Alignement.
 			this.CreateHeader(ref this.boxAlign, ref this.toolBarAlign, Res.Strings.Action.Align);
@@ -151,8 +151,8 @@ namespace Epsitec.Common.Document.Containers
 			bar.Items.Add(field);
 		}
 
-		// Crée un champ éditable pour un zoom.
-		protected void CreateFieldZoom(HToolBar bar, ref TextFieldReal field, string tooltip)
+		// Crée un champ éditable pour une échelle.
+		protected void CreateFieldScale(HToolBar bar, ref TextFieldReal field, string tooltip)
 		{
 			field = new TextFieldReal();
 			this.document.Modifier.AdaptTextFieldRealScalar(field);
@@ -220,10 +220,10 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonMirrorH.SetEnabled(enabled);
 			this.buttonMirrorV.SetEnabled(enabled);
 			
-			this.buttonZoomMul2.SetEnabled(enabled);
-			this.buttonZoomDiv2.SetEnabled(enabled);
-			this.buttonZoom.SetEnabled(enabled);
-			this.buttonZoomi.SetEnabled(enabled);
+			this.buttonScaleMul2.SetEnabled(enabled);
+			this.buttonScaleDiv2.SetEnabled(enabled);
+			this.buttonScaleMulFree.SetEnabled(enabled);
+			this.buttonScaleDivFree.SetEnabled(enabled);
 
 			this.buttonAlignGrid.SetEnabled(enabled);
 			this.buttonAlignLeft.SetEnabled(enabled2);
@@ -316,26 +316,26 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.MirrorSelection(false);
 		}
 
-		private void HandleButtonZoomMul2(object sender, MessageEventArgs e)
+		private void HandleButtonScaleMul2(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.ZoomSelection(2.0);
+			this.document.Modifier.ScaleSelection(2.0);
 		}
 
-		private void HandleButtonZoomDiv2(object sender, MessageEventArgs e)
+		private void HandleButtonScaleDiv2(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.ZoomSelection(0.5);
+			this.document.Modifier.ScaleSelection(0.5);
 		}
 
-		private void HandleButtonZoom(object sender, MessageEventArgs e)
+		private void HandleButtonScaleMulFree(object sender, MessageEventArgs e)
 		{
-			double scale = (double) this.fieldZoom.InternalValue;
-			this.document.Modifier.ZoomSelection(scale);
+			double scale = (double) this.fieldScale.InternalValue;
+			this.document.Modifier.ScaleSelection(scale);
 		}
 
-		private void HandleButtonZoomi(object sender, MessageEventArgs e)
+		private void HandleButtonScaleDivFree(object sender, MessageEventArgs e)
 		{
-			double scale = (double) this.fieldZoom.InternalValue;
-			this.document.Modifier.ZoomSelection(1.0/scale);
+			double scale = (double) this.fieldScale.InternalValue;
+			this.document.Modifier.ScaleSelection(1.0/scale);
 		}
 
 		private void HandleButtonAlignGrid(object sender, MessageEventArgs e)
@@ -486,13 +486,13 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton			buttonMirrorH;
 		protected IconButton			buttonMirrorV;
 		
-		protected GroupBox				boxZoom;
-		protected HToolBar				toolBarZoom;
-		protected IconButton			buttonZoomDiv2;
-		protected IconButton			buttonZoomMul2;
-		protected TextFieldReal			fieldZoom;
-		protected IconButton			buttonZoomi;
-		protected IconButton			buttonZoom;
+		protected GroupBox				boxScale;
+		protected HToolBar				toolBarScale;
+		protected IconButton			buttonScaleDiv2;
+		protected IconButton			buttonScaleMul2;
+		protected TextFieldReal			fieldScale;
+		protected IconButton			buttonScaleDivFree;
+		protected IconButton			buttonScaleMulFree;
 		
 		protected GroupBox				boxAlign;
 		protected HToolBar				toolBarAlign;

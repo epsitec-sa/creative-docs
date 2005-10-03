@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document
 			}
 
 			this.rotateAngle = 10.0;  // 10 degrés
-			this.zoomFactor = 1.2;  // x1.2
+			this.scaleFactor = 1.2;  // x1.2
 			this.colorAdjust = 0.1;  // 10%
 
 			int total = 0;
@@ -383,10 +383,10 @@ namespace Epsitec.Common.Document
 			{
 				this.bookInitialSelector = SelectorType.None;
 				if ( !this.ActiveViewer.Selector.Visible ||
-					this.ActiveViewer.Selector.TypeInUse != SelectorType.Zoomer )
+					 this.ActiveViewer.Selector.TypeInUse != SelectorType.Scaler )
 				{
 					this.bookInitialSelector = this.ActiveViewer.SelectorType;
-					this.ActiveViewer.SelectorType = SelectorType.Zoomer;
+					this.ActiveViewer.SelectorType = SelectorType.Scaler;
 				}
 			}
 			else
@@ -2036,11 +2036,11 @@ namespace Epsitec.Common.Document
 			set { this.rotateAngle = value; }
 		}
 
-		// Facteur de zoom.
-		public double ZoomFactor
+		// Facteur d'échelle pour les agrandissement/réductions.
+		public double ScaleFactor
 		{
-			get { return this.zoomFactor; }
-			set { this.zoomFactor = value; }
+			get { return this.scaleFactor; }
+			set { this.scaleFactor = value; }
 		}
 
 		// Facteur d'ajustement de couleur.
@@ -2119,21 +2119,21 @@ namespace Epsitec.Common.Document
 			this.TerminateOper();
 		}
 
-		// Zoom de tous les objets sélectionnés.
-		public void ZoomSelection(double scale)
+		// Mise à l'échelle de tous les objets sélectionnés.
+		public void ScaleSelection(double scale)
 		{
 			if ( this.tool == "Edit" )  return;
 			string name = "";
 			if ( scale > 1.0 )
 			{
-				name = string.Format(Res.Strings.Action.ZoomP, (scale*100.0).ToString("F1"));
+				name = string.Format(Res.Strings.Action.ScaleMul, (scale*100.0).ToString("F1"));
 			}
 			else
 			{
-				name = string.Format(Res.Strings.Action.ZoomM, (scale*100.0).ToString("F1"));
+				name = string.Format(Res.Strings.Action.ScaleDiv, (scale*100.0).ToString("F1"));
 			}
 			this.PrepareOper(name);
-			this.ActiveViewer.Selector.OperZoom(scale);
+			this.ActiveViewer.Selector.OperScale(scale);
 			this.TerminateOper();
 		}
 
@@ -2146,14 +2146,14 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.EnableSelectionChanged = false;
 
 			if ( this.ActiveViewer.Selector.Visible &&
-				 this.ActiveViewer.Selector.TypeInUse == SelectorType.Zoomer )
+				 this.ActiveViewer.Selector.TypeInUse == SelectorType.Scaler )
 			{
 				this.operInitialSelector = SelectorType.None;
 			}
 			else
 			{
 				this.operInitialSelector = this.ActiveViewer.SelectorType;
-				this.ActiveViewer.SelectorType = SelectorType.Zoomer;
+				this.ActiveViewer.SelectorType = SelectorType.Scaler;
 			}
 
 			this.document.Notifier.EnableSelectionChanged = true;
@@ -2440,7 +2440,7 @@ namespace Epsitec.Common.Document
 						finalBox.Bottom = globalBox.Bottom;
 						finalBox.Top    = globalBox.Top;
 					}
-					selector.QuickZoom(objBox, finalBox);
+					selector.QuickScale(objBox, finalBox);
 
 					obj.MoveGlobalStarting();
 					obj.MoveGlobalProcess(selector);
@@ -5528,7 +5528,7 @@ namespace Epsitec.Common.Document
 		protected Point							moveAfterDuplicate;
 		protected Point							moveDistance;
 		protected double						rotateAngle;
-		protected double						zoomFactor;
+		protected double						scaleFactor;
 		protected double						colorAdjust;
 		protected double						toLinePrecision;
 		protected string						textInfoModif = "";

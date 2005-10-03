@@ -8,7 +8,7 @@ namespace Epsitec.Common.Document
 		None,
 		Auto,			// mode automatique
 		Individual,		// objets individuels
-		Zoomer,			// zoom et rotation
+		Scaler,			// mise à l'échelle et rotation
 		Stretcher,		// déformation
 	}
 
@@ -211,9 +211,9 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
-		// Initialise le sélectionneur pour effectuer un zoom rapide
+		// Initialise le sélectionneur pour effectuer une mise à l'échelle rapide
 		// (c'est-à-dire non interactif).
-		public void QuickZoom(Rectangle rInitial, Rectangle rFinal)
+		public void QuickScale(Rectangle rInitial, Rectangle rFinal)
 		{
 			this.initialData.P1 = rInitial.BottomLeft;
 			this.initialData.P2 = rInitial.TopRight;
@@ -222,7 +222,7 @@ namespace Epsitec.Common.Document
 			this.initialData.Center = rInitial.Center;
 			this.initialData.Angle = 0.0;
 
-			this.finalData.TypeInUse = SelectorType.Zoomer;
+			this.finalData.TypeInUse = SelectorType.Scaler;
 			this.finalData.P1 = rFinal.BottomLeft;
 			this.finalData.P2 = rFinal.TopRight;
 			this.finalData.P3 = rFinal.TopLeft;
@@ -249,7 +249,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.finalData.Visible )
 			{
-				if ( this.finalData.TypeInUse == SelectorType.Zoomer )
+				if ( this.finalData.TypeInUse == SelectorType.Scaler )
 				{
 					if ( this.rotate.Detect(mouse) )  { rank = 6;  return true; }
 					if ( this.center.Detect(mouse) )  { rank = 5;  return true; }
@@ -290,25 +290,25 @@ namespace Epsitec.Common.Document
 		{
 			if ( rank == 0 )  // global ?
 			{
-				this.document.Modifier.OpletQueueNameAction("Déplacement global");
+				this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.Selector.Move);
 			}
 			else if ( rank == 5 )  // center ?
 			{
-				this.document.Modifier.OpletQueueNameAction("Déplacement du centre de rotation global");
+				this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.Selector.Center);
 			}
 			else if ( rank == 6 )  // rotate ?
 			{
-				this.document.Modifier.OpletQueueNameAction("Rotation globale");
+				this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.Selector.Rotate);
 			}
 			else
 			{
 				if ( this.finalData.TypeInUse == SelectorType.Stretcher )
 				{
-					this.document.Modifier.OpletQueueNameAction("Déformation globale");
+					this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.Selector.Stretcher);
 				}
 				else
 				{
-					this.document.Modifier.OpletQueueNameAction("Zoom global");
+					this.document.Modifier.OpletQueueNameAction(Res.Strings.Action.Selector.Scaler);
 				}
 			}
 		}
@@ -382,7 +382,7 @@ namespace Epsitec.Common.Document
 			{
 				Point ip1 = this.finalData.P1;
 
-				if ( this.finalData.TypeInUse == SelectorType.Zoomer )
+				if ( this.finalData.TypeInUse == SelectorType.Scaler )
 				{
 					Point dim = this.finalData.P2-this.finalData.P1;
 					this.finalData.P1 = pos;
@@ -524,7 +524,7 @@ namespace Epsitec.Common.Document
 			{
 				double dx = this.finalData.P1.X - this.initialData.P1.X;
 				double dy = this.finalData.P1.Y - this.initialData.P1.Y;
-				text = string.Format("dx={0} dy={1}", this.document.Modifier.RealToString(dx), this.document.Modifier.RealToString(dy));
+				text = string.Format(Res.Strings.Action.Selector.Info.Move, this.document.Modifier.RealToString(dx), this.document.Modifier.RealToString(dy));
 			}
 			else if ( rank <= 4 )  // coin ?
 			{
@@ -534,19 +534,19 @@ namespace Epsitec.Common.Document
 				double fdy = this.finalData.P2.Y - this.finalData.P1.Y;
 				double zx = (idx==0) ? 100.0 : fdx/idx*100.0;
 				double zy = (idy==0) ? 100.0 : fdy/idy*100.0;
-				text = string.Format("zoom x={0}% zoom y={1}%", zx.ToString("F1"), zy.ToString("F1"));
+				text = string.Format(Res.Strings.Action.Selector.Info.Scale, zx.ToString("F1"), zy.ToString("F1"));
 			}
 			else if ( rank == 5 )  // center ?
 			{
 				double dx = this.finalData.Center.X - this.initialData.Center.X;
 				double dy = this.finalData.Center.Y - this.initialData.Center.Y;
-				text = string.Format("dx={0} dy={1}", this.document.Modifier.RealToString(dx), this.document.Modifier.RealToString(dy));
+				text = string.Format(Res.Strings.Action.Selector.Info.Center, this.document.Modifier.RealToString(dx), this.document.Modifier.RealToString(dy));
 			}
 			else if ( rank == 6 )  // rotate ?
 			{
 				double a = this.finalData.Angle;
 				if ( a < 0.0 )  a += 360.0;
-				text = string.Format("angle={0}", this.document.Modifier.AngleToString(a));
+				text = string.Format(Res.Strings.Action.Selector.Info.Rotate, this.document.Modifier.AngleToString(a));
 			}
 
 			this.document.Modifier.TextInfoModif = text;
@@ -592,15 +592,15 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
-		// Effectue une opération d'agrandissement.
-		public void OperZoom(double zoom)
+		// Effectue une opération de mise à l'échelle.
+		public void OperScale(double scale)
 		{
 			this.OpletQueueInsert();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Modifier.ActiveViewer.MoveGlobalStarting();
 			Point center = this.finalData.Center;
-			this.finalData.P1 = Point.Scale(center, this.finalData.P1, zoom);
-			this.finalData.P2 = Point.Scale(center, this.finalData.P2, zoom);
+			this.finalData.P1 = Point.Scale(center, this.finalData.P1, scale);
+			this.finalData.P2 = Point.Scale(center, this.finalData.P2, scale);
 			this.document.Modifier.ActiveViewer.MoveGlobalProcess(this);
 			this.UpdateHandlePos();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
@@ -648,7 +648,7 @@ namespace Epsitec.Common.Document
 			this.h3.IsVisible = visible;
 			this.h4.IsVisible = visible;
 
-			if ( this.finalData.TypeInUse == SelectorType.Zoomer )
+			if ( this.finalData.TypeInUse == SelectorType.Scaler )
 			{
 				this.h1.ConstrainType = Objects.HandleConstrainType.Simply;
 				this.h2.ConstrainType = Objects.HandleConstrainType.Simply;
@@ -692,7 +692,7 @@ namespace Epsitec.Common.Document
 			Point p3 = this.finalData.P3;
 			Point p4 = this.finalData.P4;
 
-			if ( this.finalData.TypeInUse == SelectorType.Zoomer )
+			if ( this.finalData.TypeInUse == SelectorType.Scaler )
 			{
 				Point adj = new Point(0.5/drawingContext.ScaleX, 0.5/drawingContext.ScaleY);
 				p1 += adj;
@@ -721,7 +721,7 @@ namespace Epsitec.Common.Document
 
 			if ( this.finalData.Handles )
 			{
-				if ( this.finalData.TypeInUse == SelectorType.Zoomer )
+				if ( this.finalData.TypeInUse == SelectorType.Scaler )
 				{
 					Point c = this.finalData.Center;
 					Point p = this.rotate.Position;
@@ -865,17 +865,17 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le facteur de zoom moyen.
-		public double GetTransformZoom
+		// Retourne le facteur de mise à l'échelle moyen.
+		public double GetTransformScale
 		{
 			get
 			{
-				return (this.GetTransformZoomX+this.GetTransformZoomY)/2.0;
+				return (this.GetTransformScaleX+this.GetTransformScaleY)/2.0;
 			}
 		}
 
-		// Retourne le facteur de zoom horizontal.
-		public double GetTransformZoomX
+		// Retourne le facteur de mise à l'échelle horizontal.
+		public double GetTransformScaleX
 		{
 			get
 			{
@@ -885,8 +885,8 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Retourne le facteur de zoom vertical.
-		public double GetTransformZoomY
+		// Retourne le facteur de mise à l'échelle vertical.
+		public double GetTransformScaleY
 		{
 			get
 			{
@@ -956,7 +956,7 @@ namespace Epsitec.Common.Document
 			public SelectorData()
 			{
 				this.typeChoice = SelectorType.Auto;
-				this.typeInUse = SelectorType.Zoomer;
+				this.typeInUse = SelectorType.Scaler;
 				this.TypeStretch = SelectorTypeStretch.Free;
 				this.center.X = 0.5;
 				this.center.Y = 0.5;
@@ -1038,7 +1038,7 @@ namespace Epsitec.Common.Document
 				{
 					this.p1 = value;
 
-					if ( this.typeInUse == SelectorType.Zoomer )
+					if ( this.typeInUse == SelectorType.Scaler )
 					{
 						this.p3.X = value.X;
 						this.p4.Y = value.Y;
@@ -1057,7 +1057,7 @@ namespace Epsitec.Common.Document
 				{
 					this.p2 = value;
 
-					if ( this.typeInUse == SelectorType.Zoomer )
+					if ( this.typeInUse == SelectorType.Scaler )
 					{
 						this.p4.X = value.X;
 						this.p3.Y = value.Y;
@@ -1076,7 +1076,7 @@ namespace Epsitec.Common.Document
 				{
 					this.p3 = value;
 
-					if ( this.typeInUse == SelectorType.Zoomer )
+					if ( this.typeInUse == SelectorType.Scaler )
 					{
 						this.p1.X = value.X;
 						this.p2.Y = value.Y;
@@ -1095,7 +1095,7 @@ namespace Epsitec.Common.Document
 				{
 					this.p4 = value;
 
-					if ( this.typeInUse == SelectorType.Zoomer )
+					if ( this.typeInUse == SelectorType.Scaler )
 					{
 						this.p2.X = value.X;
 						this.p1.Y = value.Y;

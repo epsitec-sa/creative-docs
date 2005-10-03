@@ -14,9 +14,9 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.ColorMain;
 
-			this.buttonColorToRGB  = this.CreateIconButton("ColorToRGB",  Misc.Icon("OperColorToRGB"),    Res.Strings.Action.ColorToRGB);
-			this.buttonColorToCMYK = this.CreateIconButton("ColorToCMYK", Misc.Icon("OperColorToCMYK"),    Res.Strings.Action.ColorToCMYK);
-			this.buttonColorToGray = this.CreateIconButton("ColorToGray", Misc.Icon("OperColorToGray"),    Res.Strings.Action.ColorToGray);
+			this.buttonColorToRGB  = this.CreateIconButton("ColorToRGB",  Misc.Icon("OperColorToRGB"),  Res.Strings.Action.ColorToRGB);
+			this.buttonColorToCMYK = this.CreateIconButton("ColorToCMYK", Misc.Icon("OperColorToCMYK"), Res.Strings.Action.ColorToCMYK);
+			this.buttonColorToGray = this.CreateIconButton("ColorToGray", Misc.Icon("OperColorToGray"), Res.Strings.Action.ColorToGray);
 			this.separator = new IconSeparator(this);
 			this.buttonColorStrokeDark  = this.CreateIconButton("ColorStrokeDark",  Misc.Icon("OperColorStrokeDark"),  Res.Strings.Action.ColorStrokeDark);
 			this.buttonColorStrokeLight = this.CreateIconButton("ColorStrokeLight", Misc.Icon("OperColorStrokeLight"), Res.Strings.Action.ColorStrokeLight);
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return 8 + 22*2 + this.separatorWidth + 22*4;
+				return 8 + 22*2 + this.separatorWidth + 22*2 + 50;
 			}
 		}
 
@@ -77,17 +77,17 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonColorStrokeDark.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonColorStrokeLight.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonColorFillDark.Bounds = rect;
-			rect.Offset(dx, 0);
-			this.buttonColorFillLight.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
 			this.buttonColorToGray.Bounds = rect;
 			rect.Offset(dx*2+this.separatorWidth, 0);
-			rect.Width = 22*4;
+			this.buttonColorFillDark.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonColorFillLight.Bounds = rect;
+			rect.Offset(dx, dy*0.5);
+			rect.Width = 50;
 			this.fieldColor.Bounds = rect;
 		}
 

@@ -153,8 +153,8 @@ namespace Epsitec.Common.Document.Properties
 		{
 			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptText )  return;
 
-			double zoom = selector.GetTransformZoom;
-			this.fontSize = this.initialFontSize*zoom;
+			double scale = selector.GetTransformScale;
+			this.fontSize = this.initialFontSize*scale;
 
 			this.document.Notifier.NotifyPropertyChanged(this);
 		}

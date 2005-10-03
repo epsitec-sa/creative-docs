@@ -1214,9 +1214,14 @@ namespace Epsitec.Common.Widgets.Adorner
 											  Drawing.Rectangle rect,
 											  WidgetState state)
 		{
-			Drawing.Color topColor    = Drawing.Color.FromRGB(143.0/255.0, 201.0/255.0, 255.0/255.0);
+			rect.Width -= 1;
+			Drawing.Color topColor    = Drawing.Color.FromRGB(185.0/255.0, 221.0/255.0, 253.0/255.0);
 			Drawing.Color bottomColor = Drawing.Color.FromRGB(212.0/255.0, 234.0/255.0, 252.0/255.0);
-			this.GradientRect(graphics, rect, bottomColor, topColor, 90);
+			this.GradientRect(graphics, rect, bottomColor, topColor, 45);
+
+			rect.Deflate(0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(this.colorBorder);
 		}
 
 		public void PaintStatusItemForeground(Drawing.Graphics graphics,
@@ -1281,9 +1286,15 @@ namespace Epsitec.Common.Widgets.Adorner
 											 double titleHeight,
 											 WidgetState state)
 		{
+			Drawing.Rectangle header = rect;
+			header.Bottom = header.Top-titleHeight;
+			Drawing.Color topColor    = Drawing.Color.FromRGB(138.0/255.0, 178.0/255.0, 231.0/255.0);
+			Drawing.Color bottomColor = Drawing.Color.FromRGB(168.0/255.0, 215.0/255.0, 252.0/255.0);
+			this.GradientRect(graphics, header, bottomColor, topColor, 0);
+
 			rect.Top -= titleHeight;
-			Drawing.Color topColor    = Drawing.Color.FromRGB(198.0/255.0, 225.0/255.0, 255.0/255.0);
-			Drawing.Color bottomColor = Drawing.Color.FromRGB(249.0/255.0, 252.0/255.0, 255.0/255.0);
+			topColor    = Drawing.Color.FromRGB(198.0/255.0, 225.0/255.0, 255.0/255.0);
+			bottomColor = Drawing.Color.FromRGB(249.0/255.0, 252.0/255.0, 255.0/255.0);
 			this.GradientRect(graphics, rect, bottomColor, topColor, 90);
 
 			graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
@@ -1305,6 +1316,12 @@ namespace Epsitec.Common.Widgets.Adorner
 												 double titleHeight,
 												 WidgetState state)
 		{
+			Drawing.Rectangle header = rect;
+			header.Bottom = header.Top-titleHeight;
+			Drawing.Color topColor    = Drawing.Color.FromRGB(138.0/255.0, 178.0/255.0, 231.0/255.0);
+			Drawing.Color bottomColor = Drawing.Color.FromRGB(168.0/255.0, 215.0/255.0, 252.0/255.0);
+			this.GradientRect(graphics, header, bottomColor, topColor, 0);
+
 			rect.Deflate(0.5);
 			graphics.AddLine(rect.Right, rect.Top, rect.Right, rect.Bottom);
 			graphics.RenderSolid(this.ColorBorder);

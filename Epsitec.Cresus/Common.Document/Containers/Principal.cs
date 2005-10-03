@@ -99,10 +99,10 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorIndividual.Command = "SelectorIndividual";
 			ToolTip.Default.SetToolTip(this.selectorIndividual, Res.Strings.Container.Principal.Button.Individual);
 			
-			this.selectorZoom = new IconButton(Misc.Icon("SelectorZoom"));
-			this.selectorToolBar.Items.Add(this.selectorZoom);
-			this.selectorZoom.Command = "SelectorZoom";
-			ToolTip.Default.SetToolTip(this.selectorZoom, Res.Strings.Container.Principal.Button.Zoom);
+			this.selectorScaler = new IconButton(Misc.Icon("SelectorScaler"));
+			this.selectorToolBar.Items.Add(this.selectorScaler);
+			this.selectorScaler.Command = "SelectorScaler";
+			ToolTip.Default.SetToolTip(this.selectorScaler, Res.Strings.Container.Principal.Button.Scaler);
 			
 			this.selectorStretch = new IconButton(Misc.Icon("SelectorStretch"));
 			this.selectorToolBar.Items.Add(this.selectorStretch);
@@ -685,7 +685,7 @@ namespace Epsitec.Common.Document.Containers
 		protected HToolBar						selectorToolBar;
 		protected IconButton					selectorAuto;
 		protected IconButton					selectorIndividual;
-		protected IconButton					selectorZoom;
+		protected IconButton					selectorScaler;
 		protected IconButton					selectorStretch;
 		protected IconButton					selectorTotal;
 		protected IconButton					selectorPartial;

@@ -1073,19 +1073,19 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\OperZoom.icon"
+                    RelPath = "Images\OperScaleDiv2.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\OperZoomDiv2.icon"
+                    RelPath = "Images\OperScaleDivFree.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\OperZoomi.icon"
+                    RelPath = "Images\OperScaleMul2.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\OperZoomMul2.icon"
+                    RelPath = "Images\OperScaleMulFree.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -1325,6 +1325,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\SelectorScaler.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\SelectorStretch.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -1342,10 +1346,6 @@
                 />
                 <File
                     RelPath = "Images\SelectorStretchTrapezeV.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\SelectorZoom.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

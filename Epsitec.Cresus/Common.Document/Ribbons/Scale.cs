@@ -14,14 +14,14 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.ScaleMain;
 
-			this.buttonZoomDiv2 = this.CreateIconButton("ZoomDiv2", Misc.Icon("OperZoomDiv2"), Res.Strings.Action.ZoomDiv2);
-			this.buttonZoomMul2 = this.CreateIconButton("ZoomMul2", Misc.Icon("OperZoomMul2"), Res.Strings.Action.ZoomMul2);
+			this.buttonScaleDiv2 = this.CreateIconButton("ScaleDiv2", Misc.Icon("OperScaleDiv2"), Res.Strings.Action.ScaleDiv2);
+			this.buttonScaleMul2 = this.CreateIconButton("ScaleMul2", Misc.Icon("OperScaleMul2"), Res.Strings.Action.ScaleMul2);
 			this.buttonMirrorH = this.CreateIconButton("MirrorH", Misc.Icon("OperMirrorH"), Res.Strings.Action.MirrorH);
 			this.buttonMirrorV = this.CreateIconButton("MirrorV", Misc.Icon("OperMirrorV"), Res.Strings.Action.MirrorV);
 			this.separator = new IconSeparator(this);
-			this.buttonZoomDivFree = this.CreateIconButton("ZoomDivFree", Misc.Icon("OperZoomi"), Res.Strings.Action.ZoomFreeM);
-			this.buttonZoomMulFree = this.CreateIconButton("ZoomMulFree", Misc.Icon("OperZoom"),  Res.Strings.Action.ZoomFreeP);
-			this.CreateFieldZoom(ref this.fieldZoom, Res.Strings.Action.ZoomValue);
+			this.buttonScaleDivFree = this.CreateIconButton("ScaleDivFree", Misc.Icon("OperScaleDivFree"), Res.Strings.Action.ScaleDivFree);
+			this.buttonScaleMulFree = this.CreateIconButton("ScaleMulFree", Misc.Icon("OperScaleMulFree"),  Res.Strings.Action.ScaleMulFree);
+			this.CreateFieldScale(ref this.fieldScale, Res.Strings.Action.ScaleValue);
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			base.SetDocument(type, gs, document);
 
-			this.AdaptFieldZoom(this.fieldZoom);
+			this.AdaptFieldScale(this.fieldScale);
 		}
 
 		// Retourne la largeur standard.
@@ -55,10 +55,10 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.buttonZoomDiv2 == null )  return;
+			if ( this.buttonScaleDiv2 == null )  return;
 
-			double dx = this.buttonZoomDiv2.DefaultWidth;
-			double dy = this.buttonZoomDiv2.DefaultHeight;
+			double dx = this.buttonScaleDiv2.DefaultWidth;
+			double dy = this.buttonScaleDiv2.DefaultHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*2;
@@ -69,14 +69,14 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Width  = dx;
 			rect.Height = dy;
 			rect.Offset(0, dy);
-			this.buttonZoomDiv2.Bounds = rect;
+			this.buttonScaleDiv2.Bounds = rect;
 			rect.Offset(dx, 0);
-			this.buttonZoomMul2.Bounds = rect;
+			this.buttonScaleMul2.Bounds = rect;
 			rect.Offset(dx+this.separatorWidth, 0);
 			rect.Width = 25;
-			this.buttonZoomDivFree.Bounds = rect;
+			this.buttonScaleDivFree.Bounds = rect;
 			rect.Offset(25, 0);
-			this.buttonZoomMulFree.Bounds = rect;
+			this.buttonScaleMulFree.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
@@ -86,12 +86,12 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonMirrorV.Bounds = rect;
 			rect.Offset(dx+this.separatorWidth, 0);
 			rect.Width = 50;
-			this.fieldZoom.Bounds = rect;
+			this.fieldScale.Bounds = rect;
 		}
 
 
-		// Crée un champ éditable pour un zoom.
-		protected void CreateFieldZoom(ref TextFieldReal field, string tooltip)
+		// Crée un champ éditable pour une échelle.
+		protected void CreateFieldScale(ref TextFieldReal field, string tooltip)
 		{
 			field = new TextFieldReal(this);
 			field.Width = 50;
@@ -101,8 +101,8 @@ namespace Epsitec.Common.Document.Ribbons
 			ToolTip.Default.SetToolTip(field, tooltip);
 		}
 
-		// Adapte un champ éditable pour un zoom.
-		protected void AdaptFieldZoom(TextFieldReal field)
+		// Adapte un champ éditable pour une échelle.
+		protected void AdaptFieldScale(TextFieldReal field)
 		{
 			if ( this.document == null )
 			{
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Document.Ribbons
 				field.DefaultValue = 1.0M;
 				field.Step = 0.1M;
 				field.Resolution = 0.01M;
-				field.InternalValue = (decimal) this.document.Modifier.ZoomFactor;
+				field.InternalValue = (decimal) this.document.Modifier.ScaleFactor;
 				this.ignoreChange = false;
 			}
 		}
@@ -128,20 +128,20 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			if ( this.ignoreChange )  return;
 			TextFieldReal field = sender as TextFieldReal;
-			if ( field == this.fieldZoom )
+			if ( field == this.fieldScale )
 			{
-				this.document.Modifier.ZoomFactor = (double) field.InternalValue;
+				this.document.Modifier.ScaleFactor = (double) field.InternalValue;
 			}
 		}
 
 
-		protected IconButton				buttonZoomDiv2;
-		protected IconButton				buttonZoomMul2;
+		protected IconButton				buttonScaleDiv2;
+		protected IconButton				buttonScaleMul2;
 		protected IconButton				buttonMirrorH;
 		protected IconButton				buttonMirrorV;
 		protected IconSeparator				separator;
-		protected IconButton				buttonZoomDivFree;
-		protected IconButton				buttonZoomMulFree;
-		protected TextFieldReal				fieldZoom;
+		protected IconButton				buttonScaleDivFree;
+		protected IconButton				buttonScaleMulFree;
+		protected TextFieldReal				fieldScale;
 	}
 }

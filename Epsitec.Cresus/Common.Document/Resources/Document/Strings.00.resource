@@ -185,7 +185,7 @@
 	<data name="Container.Principal.Button.Detail">Détails</data>
 	<data name="Container.Principal.Button.Auto">Sélection automatique</data>
 	<data name="Container.Principal.Button.Individual">Sélectionne les objets individuellement</data>
-	<data name="Container.Principal.Button.Zoom">Déplacement, agrandissement et rotation</data>
+	<data name="Container.Principal.Button.Scaler">Déplacement, agrandissement et rotation</data>
 	<data name="Container.Principal.Button.Stretch">Déformation</data>
 	<data name="Container.Principal.Button.StretchType">Type de déformation</data>
 	<data name="Container.Principal.Button.Total">Sélection totale requise</data>
@@ -637,6 +637,16 @@
 	<data name="Action.SelectInvert">Inverser la sélection</data>
 	<data name="Action.SelectName">Sélection par nom &quot;{0}&quot;</data>
 
+	<data name="Action.Selector.Move">Déplacement global</data>
+	<data name="Action.Selector.Center">Déplacement du centre de rotation global</data>
+	<data name="Action.Selector.Rotate">Rotation globale</data>
+	<data name="Action.Selector.Scaler">Mise à l'échelle globale</data>
+	<data name="Action.Selector.Stretcher">Déformation globale</data>
+	<data name="Action.Selector.Info.Move">dx={0} dy={1}</data>
+	<data name="Action.Selector.Info.Scale">échelle x={0}% échelle y={1}%</data>
+	<data name="Action.Selector.Info.Center">dx={0} dy={1}</data>
+	<data name="Action.Selector.Info.Rotate">angle={0}</data>
+
 	<data name="Action.OrderMain">Ordre</data>
 	<data name="Action.OrderUpAll">Premier plan</data>
 	<data name="Action.OrderUpOne">En avant</data>
@@ -664,13 +674,13 @@
 	<data name="Action.MirrorH">Miroir horizontal</data>
 	<data name="Action.MirrorV">Miroir vertical</data>
 	<data name="Action.ScaleMain">Echelle</data>
-	<data name="Action.ZoomMul2">Agrandissement ×2</data>
-	<data name="Action.ZoomDiv2">Réduction ÷2</data>
-	<data name="Action.ZoomValue">Facteur d'agrandissement/réduction</data>
-	<data name="Action.ZoomFreeP">Agrandissement</data>
-	<data name="Action.ZoomFreeM">Réduction</data>
-	<data name="Action.ZoomP">Agrandissement {0}%</data>
-	<data name="Action.ZoomM">Réduction {0}%</data>
+	<data name="Action.ScaleMul2">Agrandissement ×2</data>
+	<data name="Action.ScaleDiv2">Réduction ÷2</data>
+	<data name="Action.ScaleValue">Facteur d'agrandissement/réduction</data>
+	<data name="Action.ScaleMulFree">Agrandissement</data>
+	<data name="Action.ScaleDivFree">Réduction</data>
+	<data name="Action.ScaleMul">Agrandissement {0}%</data>
+	<data name="Action.ScaleDiv">Réduction {0}%</data>
 	<data name="Action.AlignMain">Alignement</data>
 	<data name="Action.Align">Alignement</data>
 	<data name="Action.AlignGrid">Alignement sur la grille magnétique</data>
@@ -830,6 +840,7 @@
 	<data name="Action.ZoomPrev">Zoom précédent</data>
 	<data name="Action.ZoomSub">Réduction</data>
 	<data name="Action.ZoomAdd">Agrandissement</data>
+	<data name="Action.ZoomMenu">Choix du zoom</data>
 	
 	<data name="Action.ViewMain">Vue</data>
 	<data name="Action.Grid">Grille magnétique</data>

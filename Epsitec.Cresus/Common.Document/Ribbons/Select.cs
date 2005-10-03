@@ -14,16 +14,16 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.SelectMain;
 
-			this.buttonDelete = this.CreateIconButton("Delete", Misc.Icon("Delete2"), Res.Strings.Action.Delete);
+			this.buttonDelete    = this.CreateIconButton("Delete",    Misc.Icon("Delete2"),    Res.Strings.Action.Delete);
 			this.buttonDuplicate = this.CreateIconButton("Duplicate", Misc.Icon("Duplicate2"), Res.Strings.Action.Duplicate);
 			this.separator = new IconSeparator(this);
-			this.buttonDeselectAll = this.CreateIconButton("DeselectAll", Misc.Icon("DeselectAll"), Res.Strings.Action.DeselectAll);
-			this.buttonSelectAll = this.CreateIconButton("SelectAll", Misc.Icon("SelectAll"), Res.Strings.Action.SelectAll);
+			this.buttonDeselectAll  = this.CreateIconButton("DeselectAll",  Misc.Icon("DeselectAll"),  Res.Strings.Action.DeselectAll);
+			this.buttonSelectAll    = this.CreateIconButton("SelectAll",    Misc.Icon("SelectAll"),    Res.Strings.Action.SelectAll);
 			this.buttonSelectInvert = this.CreateIconButton("SelectInvert", Misc.Icon("SelectInvert"), Res.Strings.Action.SelectInvert);
-			this.buttonHideSel = this.CreateIconButton("HideSel", Misc.Icon("HideSel"), Res.Strings.Action.HideSel);
-			this.buttonHideRest = this.CreateIconButton("HideRest", Misc.Icon("HideRest"), Res.Strings.Action.HideRest);
-			this.buttonHideCancel = this.CreateIconButton("HideCancel", Misc.Icon("HideCancel"), Res.Strings.Action.HideCancel);
-			this.buttonHideHalf = this.CreateIconButton("HideHalf", Misc.Icon("HideHalf"), Res.Strings.Action.HideHalf);
+			this.buttonHideSel      = this.CreateIconButton("HideSel",      Misc.Icon("HideSel"),      Res.Strings.Action.HideSel);
+			this.buttonHideRest     = this.CreateIconButton("HideRest",     Misc.Icon("HideRest"),     Res.Strings.Action.HideRest);
+			this.buttonHideCancel   = this.CreateIconButton("HideCancel",   Misc.Icon("HideCancel"),   Res.Strings.Action.HideCancel);
+			this.buttonHideHalf     = this.CreateIconButton("HideHalf",     Misc.Icon("HideHalf"),     Res.Strings.Action.HideHalf);
 		}
 		
 		protected override void Dispose(bool disposing)

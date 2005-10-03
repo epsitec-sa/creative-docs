@@ -356,8 +356,8 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(operMenu, Misc.Icon("OperMirrorH"), "MirrorH", DocumentEditor.GetRes("Action.MirrorH"), DocumentEditor.GetShortCut(this.mirrorHState));
 			this.MenuAdd(operMenu, Misc.Icon("OperMirrorV"), "MirrorV", DocumentEditor.GetRes("Action.MirrorV"), DocumentEditor.GetShortCut(this.mirrorVState));
 			this.MenuAdd(operMenu, "", "", "", "");
-			this.MenuAdd(operMenu, Misc.Icon("OperZoomDiv2"), "ZoomDiv2", DocumentEditor.GetRes("Action.ZoomDiv2"), DocumentEditor.GetShortCut(this.zoomDiv2State));
-			this.MenuAdd(operMenu, Misc.Icon("OperZoomMul2"), "ZoomMul2", DocumentEditor.GetRes("Action.ZoomMul2"), DocumentEditor.GetShortCut(this.zoomMul2State));
+			this.MenuAdd(operMenu, Misc.Icon("OperScaleDiv2"), "ScaleDiv2", DocumentEditor.GetRes("Action.ScaleDiv2"), DocumentEditor.GetShortCut(this.scaleDiv2State));
+			this.MenuAdd(operMenu, Misc.Icon("OperScaleMul2"), "ScaleMul2", DocumentEditor.GetRes("Action.ScaleMul2"), DocumentEditor.GetShortCut(this.scaleMul2State));
 			operMenu.AdjustSize();
 			this.MenuAddSub(objMenu, operMenu, "SubmenuOper");
 
@@ -2329,30 +2329,30 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.MirrorSelection(false);
 		}
 
-		[Command ("ZoomMul2")]
-		void CommandZoomMul2(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("ScaleMul2")]
+		void CommandScaleMul2(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.ZoomSelection(2.0);
+			this.CurrentDocument.Modifier.ScaleSelection(2.0);
 		}
 
-		[Command ("ZoomDiv2")]
-		void CommandZoomDiv2(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("ScaleDiv2")]
+		void CommandScaleDiv2(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.ZoomSelection(0.5);
+			this.CurrentDocument.Modifier.ScaleSelection(0.5);
 		}
 
-		[Command ("ZoomMulFree")]
-		void CommandZoomMulFree(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("ScaleMulFree")]
+		void CommandScaleMulFree(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			double scale = this.CurrentDocument.Modifier.ZoomFactor;
-			this.CurrentDocument.Modifier.ZoomSelection(scale);
+			double scale = this.CurrentDocument.Modifier.ScaleFactor;
+			this.CurrentDocument.Modifier.ScaleSelection(scale);
 		}
 
-		[Command ("ZoomDivFree")]
-		void CommandZoomDivFree(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("ScaleDivFree")]
+		void CommandScaleDivFree(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			double scale = this.CurrentDocument.Modifier.ZoomFactor;
-			this.CurrentDocument.Modifier.ZoomSelection(1.0/scale);
+			double scale = this.CurrentDocument.Modifier.ScaleFactor;
+			this.CurrentDocument.Modifier.ScaleSelection(1.0/scale);
 		}
 
 		[Command ("AlignLeft")]
@@ -2706,12 +2706,12 @@ namespace Epsitec.App.DocumentEditor
 			viewer.SelectorType = SelectorType.Individual;
 		}
 
-		[Command ("SelectorZoom")]
-		void CommandSelectorZoom(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("SelectorScaler")]
+		void CommandSelectorScaler(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.Tool = "Select";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
-			viewer.SelectorType = SelectorType.Zoomer;
+			viewer.SelectorType = SelectorType.Scaler;
 		}
 
 		[Command ("SelectorStretch")]
@@ -3407,10 +3407,10 @@ namespace Epsitec.App.DocumentEditor
 			this.rotateFreeCWState = new CommandState("RotateFreeCW", this.commandDispatcher);
 			this.mirrorHState = new CommandState("MirrorH", this.commandDispatcher);
 			this.mirrorVState = new CommandState("MirrorV", this.commandDispatcher);
-			this.zoomMul2State = new CommandState("ZoomMul2", this.commandDispatcher);
-			this.zoomDiv2State = new CommandState("ZoomDiv2", this.commandDispatcher);
-			this.zoomMulFreeState = new CommandState("ZoomMulFree", this.commandDispatcher);
-			this.zoomDivFreeState = new CommandState("ZoomDivFree", this.commandDispatcher);
+			this.scaleMul2State = new CommandState("ScaleMul2", this.commandDispatcher);
+			this.scaleDiv2State = new CommandState("ScaleDiv2", this.commandDispatcher);
+			this.scaleMulFreeState = new CommandState("ScaleMulFree", this.commandDispatcher);
+			this.scaleDivFreeState = new CommandState("ScaleDivFree", this.commandDispatcher);
 			this.alignLeftState = new CommandState("AlignLeft", this.commandDispatcher);
 			this.alignCenterXState = new CommandState("AlignCenterX", this.commandDispatcher);
 			this.alignRightState = new CommandState("AlignRight", this.commandDispatcher);
@@ -3459,7 +3459,7 @@ namespace Epsitec.App.DocumentEditor
 			this.selectInvertState = new CommandState("SelectInvert", this.commandDispatcher);
 			this.selectorAutoState = new CommandState("SelectorAuto", this.commandDispatcher);
 			this.selectorIndividualState = new CommandState("SelectorIndividual", this.commandDispatcher);
-			this.selectorZoomState = new CommandState("SelectorZoom", this.commandDispatcher);
+			this.selectorScalerState = new CommandState("SelectorScaler", this.commandDispatcher);
 			this.selectorStretchState = new CommandState("SelectorStretch", this.commandDispatcher);
 			this.selectorStretchTypeState = new CommandState("SelectorStretchType", this.commandDispatcher);
 			this.selectTotalState = new CommandState("SelectTotal", this.commandDispatcher);
@@ -3824,10 +3824,10 @@ namespace Epsitec.App.DocumentEditor
 				this.rotateFreeCWState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.mirrorHState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.mirrorVState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.zoomMul2State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.zoomDiv2State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.zoomMulFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
-				this.zoomDivFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.scaleMul2State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.scaleDiv2State.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.scaleMulFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
+				this.scaleDivFreeState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.alignLeftState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
 				this.alignCenterXState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
 				this.alignRightState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
@@ -3883,12 +3883,12 @@ namespace Epsitec.App.DocumentEditor
 
 				this.selectorAutoState.Enabled        = true;
 				this.selectorIndividualState.Enabled  = true;
-				this.selectorZoomState.Enabled        = true;
+				this.selectorScalerState.Enabled      = true;
 				this.selectorStretchState.Enabled     = true;
 				this.selectorStretchTypeState.Enabled = true;
 				this.selectorAutoState.ActiveState       = (sType == SelectorType.Auto      ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 				this.selectorIndividualState.ActiveState = (sType == SelectorType.Individual) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				this.selectorZoomState.ActiveState       = (sType == SelectorType.Zoomer    ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectorScalerState.ActiveState     = (sType == SelectorType.Scaler    ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 				this.selectorStretchState.ActiveState    = (sType == SelectorType.Stretcher ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 				di.containerPrincipal.UpdateSelectorStretch();
 
@@ -3952,10 +3952,10 @@ namespace Epsitec.App.DocumentEditor
 				this.rotateFreeCWState.Enabled = false;
 				this.mirrorHState.Enabled = false;
 				this.mirrorVState.Enabled = false;
-				this.zoomMul2State.Enabled = false;
-				this.zoomDiv2State.Enabled = false;
-				this.zoomMulFreeState.Enabled = false;
-				this.zoomDivFreeState.Enabled = false;
+				this.scaleMul2State.Enabled = false;
+				this.scaleDiv2State.Enabled = false;
+				this.scaleMulFreeState.Enabled = false;
+				this.scaleDivFreeState.Enabled = false;
 				this.alignLeftState.Enabled = false;
 				this.alignCenterXState.Enabled = false;
 				this.alignRightState.Enabled = false;
@@ -4011,12 +4011,12 @@ namespace Epsitec.App.DocumentEditor
 
 				this.selectorAutoState.Enabled        = false;
 				this.selectorIndividualState.Enabled  = false;
-				this.selectorZoomState.Enabled        = false;
+				this.selectorScalerState.Enabled      = false;
 				this.selectorStretchState.Enabled     = false;
 				this.selectorStretchTypeState.Enabled = false;
 				this.selectorAutoState.ActiveState       = WidgetState.ActiveNo;
 				this.selectorIndividualState.ActiveState = WidgetState.ActiveNo;
-				this.selectorZoomState.ActiveState       = WidgetState.ActiveNo;
+				this.selectorScalerState.ActiveState     = WidgetState.ActiveNo;
 				this.selectorStretchState.ActiveState    = WidgetState.ActiveNo;
 
 				this.selectTotalState.Enabled   = false;
@@ -5170,10 +5170,10 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					rotateFreeCWState;
 		protected CommandState					mirrorHState;
 		protected CommandState					mirrorVState;
-		protected CommandState					zoomMul2State;
-		protected CommandState					zoomDiv2State;
-		protected CommandState					zoomMulFreeState;
-		protected CommandState					zoomDivFreeState;
+		protected CommandState					scaleMul2State;
+		protected CommandState					scaleDiv2State;
+		protected CommandState					scaleMulFreeState;
+		protected CommandState					scaleDivFreeState;
 		protected CommandState					alignLeftState;
 		protected CommandState					alignCenterXState;
 		protected CommandState					alignRightState;
@@ -5222,7 +5222,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					selectInvertState;
 		protected CommandState					selectorAutoState;
 		protected CommandState					selectorIndividualState;
-		protected CommandState					selectorZoomState;
+		protected CommandState					selectorScalerState;
 		protected CommandState					selectorStretchState;
 		protected CommandState					selectorStretchTypeState;
 		protected CommandState					selectTotalState;

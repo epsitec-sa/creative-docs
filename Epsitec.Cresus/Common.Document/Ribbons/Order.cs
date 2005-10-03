@@ -16,8 +16,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonDownAll = this.CreateIconButton("OrderDownAll", Misc.Icon("OrderDownAll"), Res.Strings.Action.OrderDownAll);
 			this.buttonDownOne = this.CreateIconButton("OrderDownOne", Misc.Icon("OrderDownOne"), Res.Strings.Action.OrderDownOne);
-			this.buttonUpOne   = this.CreateIconButton("OrderUpOne",   Misc.Icon("OrderUpOne"),   Res.Strings.Action.OrderUpOne  );
-			this.buttonUpAll   = this.CreateIconButton("OrderUpAll",   Misc.Icon("OrderUpAll"),   Res.Strings.Action.OrderUpAll  );
+			this.buttonUpOne   = this.CreateIconButton("OrderUpOne",   Misc.Icon("OrderUpOne"),   Res.Strings.Action.OrderUpOne);
+			this.buttonUpAll   = this.CreateIconButton("OrderUpAll",   Misc.Icon("OrderUpAll"),   Res.Strings.Action.OrderUpAll);
 		}
 		
 		protected override void Dispose(bool disposing)
