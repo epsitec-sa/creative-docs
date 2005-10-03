@@ -104,6 +104,11 @@
                     AssemblyName = "System.Runtime.Serialization.Formatters.Soap"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Serialization.Formatters.Soap.dll"
                 />
+                <Reference
+                    Name = "AntiGrain.NET"
+                    AssemblyName = "AntiGrain.NET"
+                    HintPath = "..\External\AntiGrain.NET.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -135,6 +140,11 @@
                 />
                 <File
                     RelPath = "DecimalRangeTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ObjectTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

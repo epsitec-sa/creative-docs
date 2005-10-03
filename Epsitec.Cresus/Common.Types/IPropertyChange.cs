@@ -10,6 +10,6 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface IPropertyChange
 	{
-		event PropertyChangedEventHandler		PropertyChanged;
+		event Support.PropertyChangedEventHandler		PropertyChanged;
 	}
 }

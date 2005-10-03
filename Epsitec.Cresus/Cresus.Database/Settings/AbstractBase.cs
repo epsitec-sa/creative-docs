@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Database.Settings
 		{
 			if (this.PropertyChanged != null)
 			{
-				this.PropertyChanged (this, new PropertyChangedEventArgs (name));
+				this.PropertyChanged (this, new Epsitec.Common.Support.PropertyChangedEventArgs (name));
 			}
 		}
 		

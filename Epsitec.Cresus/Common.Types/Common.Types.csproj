@@ -84,6 +84,11 @@
                     Project = "{EAF258A4-E107-4466-A3E1-9FC072557940}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -105,6 +110,11 @@
                 />
                 <File
                     RelPath = "BooleanType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Callbacks.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -145,6 +155,11 @@
                 />
                 <File
                     RelPath = "EnumType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Events.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -249,7 +264,27 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Object.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ObjectType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "OpenEnumType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Property.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PropertyMetadata.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -275,6 +310,11 @@
                 />
                 <File
                     RelPath = "Time.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "UndefinedValue.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
