@@ -44,19 +44,25 @@ namespace Epsitec.Common.Widgets.Collections
 				throw new System.ArgumentNullException ();
 			}
 			
+			this.NotifyBeforeVisualInsertion (value);
 			int index = this.list.Add (value);
-			this.NotifyVisualInsertion (value);
+			this.NotifyAfterVisualInsertion (value);
 			this.NotifyContentsChanged ();
 			return index;
 		}
 		
-		public void AddRange(System.Collections.ICollection widgets)
+		public void AddRange(System.Collections.ICollection visuals)
 		{
-			this.list.AddRange (widgets);
-			
-			foreach (Visual widget in widgets)
+			foreach (Visual visual in visuals)
 			{
-				this.NotifyVisualInsertion (widget);
+				this.NotifyBeforeVisualInsertion (visual);
+			}
+			
+			this.list.AddRange (visuals);
+			
+			foreach (Visual visual in visuals)
+			{
+				this.NotifyAfterVisualInsertion (visual);
 			}
 			
 			this.NotifyContentsChanged ();
@@ -66,8 +72,9 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			if (this.list.Contains (value))
 			{
+				this.NotifyBeforeVisualRemoval (value);
 				this.list.Remove (value);
-				this.NotifyVisualRemoval (value);
+				this.NotifyAfterVisualRemoval (value);
 				this.NotifyContentsChanged ();
 			}
 		}
@@ -75,6 +82,12 @@ namespace Epsitec.Common.Widgets.Collections
 		public bool Contains(Visual value)
 		{
 			return this.list.Contains (value);
+		}
+		
+		
+		public Visual[] ToArray()
+		{
+			return (Visual[]) this.list.ToArray (typeof (Visual));
 		}
 		
 		
@@ -111,15 +124,17 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			Visual item = this[index];
 			
+			this.NotifyBeforeVisualRemoval (item);
 			this.list.RemoveAt (index);
-			this.NotifyVisualRemoval (item);
+			this.NotifyAfterVisualRemoval (item);
 			this.NotifyContentsChanged ();
 		}
 
 		public void Insert(int index, object value)
 		{
+			this.NotifyBeforeVisualInsertion (value as Visual);
 			this.list.Insert (index, value);
-			this.NotifyVisualInsertion (value as Visual);
+			this.NotifyAfterVisualInsertion (value as Visual);
 			this.NotifyContentsChanged ();
 		}
 
@@ -137,13 +152,18 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			if (this.list.Count > 0)
 			{
-				Visual[] widgets = (Visual[]) this.list.ToArray (typeof (Visual));
+				Visual[] visuals = this.ToArray ();
+				
+				for (int i = 0; i < visuals.Length; i++)
+				{
+					this.NotifyBeforeVisualRemoval (visuals[i]);
+				}
 				
 				this.list.Clear ();
 				
-				for (int i = 0; i < widgets.Length; i++)
+				for (int i = 0; i < visuals.Length; i++)
 				{
-					this.NotifyVisualRemoval (widgets[i]);
+					this.NotifyAfterVisualRemoval (visuals[i]);
 				}
 				
 				this.NotifyContentsChanged ();
@@ -200,14 +220,24 @@ namespace Epsitec.Common.Widgets.Collections
 		}
 		#endregion
 		
-		private void NotifyVisualInsertion(Visual item)
+		private void NotifyBeforeVisualInsertion(Visual item)
 		{
-			this.host.NotifyVisualCollectionInsertion (this, item);
+			this.host.NotifyVisualCollectionBeforeInsertion (this, item);
 		}
 		
-		private void NotifyVisualRemoval(Visual item)
+		private void NotifyAfterVisualInsertion(Visual item)
 		{
-			this.host.NotifyVisualCollectionRemoval (this, item);
+			this.host.NotifyVisualCollectionAfterInsertion (this, item);
+		}
+		
+		private void NotifyBeforeVisualRemoval(Visual item)
+		{
+			this.host.NotifyVisualCollectionBeforeRemoval (this, item);
+		}
+		
+		private void NotifyAfterVisualRemoval(Visual item)
+		{
+			this.host.NotifyVisualCollectionAfterRemoval (this, item);
 		}
 		
 		private void NotifyContentsChanged()

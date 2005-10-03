@@ -6611,61 +6611,61 @@ namespace Epsitec.Common.Widgets
 //				this.NotifyChanged ();
 //			}
 			
-			internal void Replace(Widget old_widget, Widget new_widget)
-			{
-				if (old_widget == new_widget)
-				{
-					return;
-				}
-				
-				int pos1 = this.list.IndexOf (old_widget);
-				int pos2 = this.list.IndexOf (new_widget);
-				
-				if (pos1 < 0)
-				{
-					throw new System.ArgumentException ("Widget not in collection.", "old_widget");
-				}
-				if (pos2 < 0)
-				{
-					this.PreRemove (old_widget);
-					this.PreInsert (new_widget);
-					
-					this.list[pos1] = new_widget;
-					
-					if (this.array != null)
-					{
-						this.array[pos1] = new_widget;
-					}
-					
-					this.NotifyChanged ();
-				}
-				else
-				{
-					this.list[pos1] = new_widget;
-					this.list[pos2] = old_widget;
-					
-					if (this.array != null)
-					{
-						this.array[pos1] = new_widget;
-						this.array[pos2] = old_widget;
-					}
-					
-					this.NotifyChanged ();
-				}
-			}
+//			internal void Replace(Widget old_widget, Widget new_widget)
+//			{
+//				if (old_widget == new_widget)
+//				{
+//					return;
+//				}
+//				
+//				int pos1 = this.list.IndexOf (old_widget);
+//				int pos2 = this.list.IndexOf (new_widget);
+//				
+//				if (pos1 < 0)
+//				{
+//					throw new System.ArgumentException ("Widget not in collection.", "old_widget");
+//				}
+//				if (pos2 < 0)
+//				{
+//					this.PreRemove (old_widget);
+//					this.PreInsert (new_widget);
+//					
+//					this.list[pos1] = new_widget;
+//					
+//					if (this.array != null)
+//					{
+//						this.array[pos1] = new_widget;
+//					}
+//					
+//					this.NotifyChanged ();
+//				}
+//				else
+//				{
+//					this.list[pos1] = new_widget;
+//					this.list[pos2] = old_widget;
+//					
+//					if (this.array != null)
+//					{
+//						this.array[pos1] = new_widget;
+//						this.array[pos2] = old_widget;
+//					}
+//					
+//					this.NotifyChanged ();
+//				}
+//			}
 			
-			internal void InsertAt(int index, Widget widget)
-			{
-				if (widget == null)
-				{
-					throw new System.ArgumentException ("Widget is not valid.", "widget");
-				}
-				
-				this.PreInsert (widget);
-				this.array = null;
-				this.list.Insert (index, widget);
-				this.NotifyChanged ();
-			}
+//			internal void InsertAt(int index, Widget widget)
+//			{
+//				if (widget == null)
+//				{
+//					throw new System.ArgumentException ("Widget is not valid.", "widget");
+//				}
+//				
+//				this.PreInsert (widget);
+//				this.array = null;
+//				this.list.Insert (index, widget);
+//				this.NotifyChanged ();
+//			}
 			
 			
 			private void PreInsert(object widget)
@@ -6720,18 +6720,19 @@ namespace Epsitec.Common.Widgets
 			
 			
 			#region IList Members
-			public bool IsReadOnly
+			public bool							IsReadOnly
 			{
 				get	{ return false; }
 			}
 			
-			object							System.Collections.IList.this[int index]
+			object System.Collections.IList.this[int index]
 			{
 				get	{ return this.list[index]; }
 				set	{ throw new System.NotSupportedException ("Widget"); }
 			}
 			
-			public void RemoveAt(int index)
+			
+			void System.Collections.IList.RemoveAt(int index)
 			{
 				System.Diagnostics.Debug.Assert (this.list[index] != null);
 				this.PreRemove (this.list[index]);
@@ -6740,7 +6741,7 @@ namespace Epsitec.Common.Widgets
 				this.NotifyChanged ();
 			}
 			
-			public void Insert(int index, object value)
+			void System.Collections.IList.Insert(int index, object value)
 			{
 				throw new System.NotSupportedException ("Widget");
 			}
@@ -6762,7 +6763,8 @@ namespace Epsitec.Common.Widgets
 			{
 				while (this.Count > 0)
 				{
-					this.RemoveAt (this.Count - 1);
+					System.Collections.IList ilist = this as System.Collections.IList;
+					ilist.RemoveAt (this.Count - 1);
 				}
 			}
 			
@@ -6778,14 +6780,6 @@ namespace Epsitec.Common.Widgets
 				this.array = null;
 				this.NotifyChanged ();
 				return result;
-			}
-			
-			public void AddRange(System.Collections.IList list)
-			{
-				for (int i = 0; i < list.Count; i++)
-				{
-					this.Add (list[i]);
-				}
 			}
 			
 			public bool IsFixedSize

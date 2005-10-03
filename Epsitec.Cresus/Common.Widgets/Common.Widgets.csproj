@@ -752,6 +752,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Collections\ChildrenCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Collections\IVisualCollectionHost.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

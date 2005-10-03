@@ -71,20 +71,48 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		
 		#region IVisualCollectionHost Members
-		void Collections.IVisualCollectionHost.NotifyVisualCollectionInsertion(Collections.VisualCollection collection, Visual visual)
+		void Collections.IVisualCollectionHost.NotifyVisualCollectionBeforeInsertion(Collections.VisualCollection collection, Visual visual)
 		{
-			if (this.visual != null)
+			if ((visual.ParentLayer != null) &&
+				(visual.ParentLayer != this))
 			{
-				this.visual.NotifyVisualInsertion (this, visual);
+				//	Le widget a déjà un layer parent, autre que nous. Il faut le
+				//	désenregistrer avant que l'insertion n'ait lieu :
+				
+				visual.ParentLayer.Children.Remove (visual);
+				
+				System.Diagnostics.Debug.Assert (visual.ParentLayer == null);
 			}
 		}
 		
-		void Collections.IVisualCollectionHost.NotifyVisualCollectionRemoval(Collections.VisualCollection collection, Visual visual)
+		void Collections.IVisualCollectionHost.NotifyVisualCollectionAfterInsertion(Collections.VisualCollection collection, Visual visual)
 		{
-			if (this.visual != null)
+			System.Diagnostics.Debug.Assert (this.visual != null);
+			
+			if (visual.ParentLayer == null)
 			{
-				this.visual.NotifyVisualRemoval (this, visual);
+				visual.SetParentLayer (this);
 			}
+			
+			System.Diagnostics.Debug.Assert (visual.ParentLayer == this);
+			
+			this.visual.NotifyChildrenChanged (this);
+		}
+		
+		void Collections.IVisualCollectionHost.NotifyVisualCollectionBeforeRemoval(Collections.VisualCollection collection, Visual visual)
+		{
+			System.Diagnostics.Debug.Assert (visual.ParentLayer == this);
+		}
+		
+		void Collections.IVisualCollectionHost.NotifyVisualCollectionAfterRemoval(Collections.VisualCollection collection, Visual visual)
+		{
+			System.Diagnostics.Debug.Assert (visual.ParentLayer == this);
+			
+			visual.SetParentLayer (null);
+			
+			System.Diagnostics.Debug.Assert (visual.ParentLayer == null);
+			
+			this.visual.NotifyChildrenChanged (this);
 		}
 		
 		void Collections.IVisualCollectionHost.NotifyVisualCollectionChanged(Collections.VisualCollection collection)

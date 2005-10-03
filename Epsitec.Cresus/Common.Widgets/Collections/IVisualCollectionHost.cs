@@ -8,8 +8,10 @@ namespace Epsitec.Common.Widgets.Collections
 	/// </summary>
 	public interface IVisualCollectionHost
 	{
-		void NotifyVisualCollectionInsertion(VisualCollection collection, Visual visual);
-		void NotifyVisualCollectionRemoval(VisualCollection collection, Visual visual);
+		void NotifyVisualCollectionBeforeInsertion(VisualCollection collection, Visual visual);
+		void NotifyVisualCollectionAfterInsertion(VisualCollection collection, Visual visual);
+		void NotifyVisualCollectionBeforeRemoval(VisualCollection collection, Visual visual);
+		void NotifyVisualCollectionAfterRemoval(VisualCollection collection, Visual visual);
 		void NotifyVisualCollectionChanged(VisualCollection collection);
 	}
 }

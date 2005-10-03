@@ -39,6 +39,11 @@ namespace Epsitec.Common.Widgets.Collections
 		}
 		
 		
+		public Layer AddLayer()
+		{
+			return this.AddLayer ("");
+		}
+		
 		public Layer AddLayer(string name)
 		{
 			Layer layer = new Layer (this.visual);
@@ -51,7 +56,7 @@ namespace Epsitec.Common.Widgets.Collections
 			return layer;
 		}
 		
-		public void Remove(Layer layer)
+		public void RemoveLayer(Layer layer)
 		{
 			if (this.list.Contains (layer))
 			{
@@ -59,6 +64,7 @@ namespace Epsitec.Common.Widgets.Collections
 				this.NotifyLayerRemoval (layer);
 			}
 		}
+		
 		
 		public bool Contains(Layer layer)
 		{
@@ -109,7 +115,7 @@ namespace Epsitec.Common.Widgets.Collections
 
 		void System.Collections.IList.Remove(object value)
 		{
-			this.Remove (value as Layer);
+			this.RemoveLayer (value as Layer);
 		}
 
 		bool System.Collections.IList.Contains(object value)
