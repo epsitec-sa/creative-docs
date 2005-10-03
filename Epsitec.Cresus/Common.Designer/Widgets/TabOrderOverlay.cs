@@ -203,7 +203,7 @@ namespace Epsitec.Common.Designer.Widgets
 		
 		protected virtual void AttachWidget(Widget widget)
 		{
-			this.Parent = null;
+			this.SetParent (null);
 			this.SetEmbedder (widget);
 			this.Bounds = this.Parent.Client.Bounds;
 			this.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Designer.Widgets
 		
 		protected virtual void DetachWidget(Widget widget)
 		{
-			this.Parent = null;
+			this.SetParent (null);
 		}
 		
 		

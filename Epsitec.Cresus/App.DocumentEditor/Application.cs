@@ -92,7 +92,7 @@ namespace Epsitec.App.DocumentEditor
 			
 			this.editor.Size   = this.mainWindow.ClientSize;
 			this.editor.Dock   = DockStyle.Fill;
-			this.editor.Parent = this.mainWindow.Root;
+			this.editor.SetParent (this.mainWindow.Root);
 			
 			this.mainWindow.CommandDispatcher = this.editor.CommandDispatcher;
 			this.mainWindow.Show();

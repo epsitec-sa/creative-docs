@@ -84,6 +84,21 @@ namespace Epsitec.Common.Types
 		}
 		
 		
+		public static Property RegisterReadOnly(string name, System.Type property_type, System.Type owner_type)
+		{
+			return Property.Register (name, property_type, owner_type, new PropertyMetadata ());
+		}
+		
+		public static Property RegisterReadOnly(string name, System.Type property_type, System.Type owner_type, PropertyMetadata metadata)
+		{
+			Property dp = new Property (name, property_type, owner_type, metadata);
+			
+			Object.Register (dp);
+			
+			return dp;
+		}
+		
+		
 		private string							name;
 		private System.Type						property_type;
 		private System.Type						owner_type;

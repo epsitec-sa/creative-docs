@@ -32,7 +32,7 @@ namespace Epsitec.Common.Widgets
 			this.lineHeight = this.DefaultFontHeight+1;
 			this.scroller = new VScroller(null);
 			this.scroller.IsInverted = true;
-			this.scroller.Parent = this;
+			this.scroller.SetParent (this);
 			this.scroller.ValueChanged += new Support.EventHandler(this.HandleScrollerValueChanged);
 			this.scroller.Hide();
 			this.UpdateMargins();

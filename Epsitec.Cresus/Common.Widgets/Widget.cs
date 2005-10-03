@@ -438,7 +438,7 @@ namespace Epsitec.Common.Widgets
 					System.Diagnostics.Debug.Assert (this.children.Count == 0);
 				}
 				
-				this.Parent = null;
+				this.SetParent (null);
 				
 				if (this.Disposed != null)
 				{
@@ -1693,31 +1693,6 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.parent;
 			}
-			set
-			{
-				if (value != this.parent)
-				{
-					Widget parent;
-					
-					if (value == null)
-					{
-						parent = this.parent;
-						this.parent.Children.Remove (this);
-					}
-					else
-					{
-						parent = value;
-						parent.Children.Add (this);
-					}
-					
-					System.Diagnostics.Debug.Assert (this.parent == value);
-					
-					if (this.Dock != DockStyle.None)
-					{
-						parent.UpdateChildrenLayout ();
-					}
-				}
-			}
 		}
 		
 		public virtual Window						Window
@@ -2455,6 +2430,33 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public void SetParent(Widget widget)
+		{
+			if (widget != this.parent)
+			{
+				Widget parent;
+				
+				if (widget == null)
+				{
+					parent = this.parent;
+					this.parent.Children.Remove (this);
+				}
+				else
+				{
+					parent = widget;
+					parent.Children.Add (this);
+				}
+				
+				System.Diagnostics.Debug.Assert (this.parent == widget);
+				
+				if (this.Dock != DockStyle.None)
+				{
+					parent.UpdateChildrenLayout ();
+				}
+			}
+		}
+		
+		
 		public virtual void SetVisible(bool visible)
 		{
 			if ((this.internal_state & InternalState.Visible) == 0)
@@ -2745,7 +2747,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void SetEmbedder(Widget embedder)
 		{
-			this.Parent = embedder;
+			this.SetParent (embedder);
 			this.internal_state |= InternalState.Embedded;
 		}
 		

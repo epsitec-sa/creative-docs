@@ -18,7 +18,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void Insert(Widget widget)
 		{
-			widget.Parent = this;
+			widget.SetParent (this);
 			widget.Bounds = widget.Parent.Bounds;
 			
 			if ( this.cellArray != null )

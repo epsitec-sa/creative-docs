@@ -272,29 +272,29 @@ namespace Epsitec.Common.Widgets
 			
 			Tag tag1 = new Tag("ExecuteTag", "TestTag");
 			tag1.Bounds = new Drawing.Rectangle(115, 246, 18, 18);
-			tag1.Parent = window.Root;
+			tag1.SetParent (window.Root);
 			tip.SetToolTip(tag1, "Je suis un <i>smart tag</i> maison.");
 
 			Tag tag2 = new Tag("ExecuteTag", "TestTag");
 			tag2.Bounds = new Drawing.Rectangle(115, 226, 18, 18);
-			tag2.Parent = window.Root;
+			tag2.SetParent (window.Root);
 			tag2.Color = Drawing.Color.FromRGB(1,0,0);
 			tip.SetToolTip(tag2, "Je suis un <i>smart tag</i> maison rouge.");
 
 			Tag tag3 = new Tag("ExecuteTag", "TestTag");
 			tag3.Bounds = new Drawing.Rectangle(115, 206, 18, 18);
-			tag3.Parent = window.Root;
+			tag3.SetParent (window.Root);
 			tag3.Color = Drawing.Color.FromRGB(0,1,0);
 			tip.SetToolTip(tag3, "Je suis un <i>smart tag</i> maison vert.");
 
 			Tag tag4 = new Tag("ExecuteTag", "TestTag");
 			tag4.Bounds = new Drawing.Rectangle(140, 246, 12, 12);
-			tag4.Parent = window.Root;
+			tag4.SetParent (window.Root);
 			tip.SetToolTip(tag4, "Je suis un petit <i>smart tag</i> maison.");
 
 			Tag tag5 = new Tag("ExecuteTag", "TestTag");
 			tag5.Bounds = new Drawing.Rectangle(140, 226, 12, 12);
-			tag5.Parent = window.Root;
+			tag5.SetParent (window.Root);
 			tag5.Color = Drawing.Color.FromRGB(0,0,1);
 			tip.SetToolTip(tag5, "Je suis un petit <i>smart tag</i> maison bleu.");
 
@@ -622,52 +622,52 @@ namespace Epsitec.Common.Widgets
 			page3.TabTitle = "<m>T</m>roisième";
 			
 			TextFieldEx text_ex_1 = new TextFieldEx();
-			text_ex_1.Parent = page3;
+			text_ex_1.SetParent (page3);
 			text_ex_1.Bounds = new Drawing.Rectangle(10, page3.Height-30, 120, text_ex_1.Height);
 			text_ex_1.TabIndex = 1;
 			text_ex_1.EditionAccepted += new EventHandler(this.HandleTextExEditionAccepted);
 			text_ex_1.EditionRejected += new EventHandler(this.HandleTextExEditionRejected);
 			
 			TextFieldEx text_ex_2 = new TextFieldEx();
-			text_ex_2.Parent = page3;
+			text_ex_2.SetParent (page3);
 			text_ex_2.Bounds = new Drawing.Rectangle(10, page3.Height-30-28, 120, text_ex_2.Height);
 			text_ex_2.TabIndex = 2;
 			
 			TextFieldEx text_ex_3 = new TextFieldEx();
-			text_ex_3.Parent = page3;
+			text_ex_3.SetParent (page3);
 			text_ex_3.Bounds = new Drawing.Rectangle(10, page3.Height-30-28-28, 120, text_ex_3.Height);
 			text_ex_3.SetEnabled(false);
 			text_ex_3.TabIndex = 3;
 			
 			TextFieldEx text_ex_4 = new TextFieldEx();
-			text_ex_4.Parent = page3;
+			text_ex_4.SetParent (page3);
 			text_ex_4.Bounds = new Drawing.Rectangle(10, page3.Height-30-28-28-28, 120, text_ex_4.Height);
 			text_ex_4.TabIndex = 4;
 			text_ex_4.ButtonShowCondition = ShowCondition.WhenModified;
 			
 			TextFieldEx text_ex_5 = new TextFieldEx();
-			text_ex_5.Parent = page3;
+			text_ex_5.SetParent (page3);
 			text_ex_5.Bounds = new Drawing.Rectangle(10, page3.Height-30-28-28-28-28, 120, text_ex_5.Height);
 			text_ex_5.TabIndex = 5;
 			text_ex_5.ButtonShowCondition = ShowCondition.WhenFocused;
 			text_ex_5.DefocusAction       = DefocusAction.AcceptEdition;
 			
 			TextFieldEx text_ex_6 = new TextFieldEx();
-			text_ex_6.Parent = page3;
+			text_ex_6.SetParent (page3);
 			text_ex_6.Bounds = new Drawing.Rectangle(10+120+5, page3.Height-30, 120, text_ex_6.Height);
 			text_ex_6.TabIndex = 6;
 			text_ex_6.ButtonShowCondition = ShowCondition.WhenModified;
 			text_ex_6.DefocusAction       = DefocusAction.Modal;
 			
 			TextFieldEx text_ex_7 = new TextFieldEx();
-			text_ex_7.Parent = page3;
+			text_ex_7.SetParent (page3);
 			text_ex_7.Bounds = new Drawing.Rectangle(10+120+5, page3.Height-30-28, 120, text_ex_7.Height);
 			text_ex_7.TabIndex = 7;
 			text_ex_7.ButtonShowCondition = ShowCondition.Never;
 			text_ex_7.DefocusAction       = DefocusAction.AcceptEdition;
 			
 			TextFieldEx text_ex_8 = new TextFieldEx();
-			text_ex_8.Parent = page3;
+			text_ex_8.SetParent (page3);
 			text_ex_8.Bounds = new Drawing.Rectangle(10+120+5, page3.Height-30-28-28, 120, text_ex_8.Height);
 			text_ex_8.TabIndex = 8;
 			text_ex_8.ButtonShowCondition = ShowCondition.WhenModified;
@@ -782,7 +782,7 @@ namespace Epsitec.Common.Widgets
 			multi.Anchor = AnchorStyles.All;
 			multi.AnchorMargins = new Margins(10, 10, 40, 30);
 			multi.AnchorMargins = new Margins(60, 60, 40, 30);
-			multi.Parent = window.Root;
+			multi.SetParent (window.Root);
 			multi.SetProperty("stats", stats);
 			multi.SelectionChanged += new EventHandler(this.HandleMultiSelectionOrCursorChanged1);
 			multi.CursorChanged    += new EventHandler(this.HandleMultiSelectionOrCursorChanged1);
@@ -793,7 +793,7 @@ namespace Epsitec.Common.Widgets
 			stats.Height = 26;
 			stats.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
 			stats.AnchorMargins = new Margins(10, 10, 0, 2);
-			stats.Parent = window.Root;
+			stats.SetParent (window.Root);
 
 			Button buttonBold = new Button();
 			buttonBold.Text = "<b>B</b>";
@@ -801,7 +801,7 @@ namespace Epsitec.Common.Widgets
 			buttonBold.AutoFocus = false;
 			buttonBold.Anchor = AnchorStyles.TopLeft;
 			buttonBold.AnchorMargins = new Margins(10, 0, 10, 0);
-			buttonBold.Parent = window.Root;
+			buttonBold.SetParent (window.Root);
 			buttonBold.Clicked += new MessageEventHandler(this.HandleMultiBold);
 			
 			Button buttonItalic = new Button();
@@ -810,7 +810,7 @@ namespace Epsitec.Common.Widgets
 			buttonItalic.AutoFocus = false;
 			buttonItalic.Anchor = AnchorStyles.TopLeft;
 			buttonItalic.AnchorMargins = new Margins(40, 0, 10, 0);
-			buttonItalic.Parent = window.Root;
+			buttonItalic.SetParent (window.Root);
 			buttonItalic.Clicked += new MessageEventHandler(this.HandleMultiItalic);
 			
 			Button buttonUnderline = new Button();
@@ -819,7 +819,7 @@ namespace Epsitec.Common.Widgets
 			buttonUnderline.AutoFocus = false;
 			buttonUnderline.Anchor = AnchorStyles.TopLeft;
 			buttonUnderline.AnchorMargins = new Margins(70, 0, 10, 0);
-			buttonUnderline.Parent = window.Root;
+			buttonUnderline.SetParent (window.Root);
 			buttonUnderline.Clicked += new MessageEventHandler(this.HandleMultiUnderline);
 			
 			Button buttonFace1 = new Button();
@@ -828,7 +828,7 @@ namespace Epsitec.Common.Widgets
 			buttonFace1.AutoFocus = false;
 			buttonFace1.Anchor = AnchorStyles.TopLeft;
 			buttonFace1.AnchorMargins = new Margins(110, 0, 10, 0);
-			buttonFace1.Parent = window.Root;
+			buttonFace1.SetParent (window.Root);
 			buttonFace1.Clicked += new MessageEventHandler(this.HandleMultiFace1);
 			
 			Button buttonFace2 = new Button();
@@ -837,7 +837,7 @@ namespace Epsitec.Common.Widgets
 			buttonFace2.AutoFocus = false;
 			buttonFace2.Anchor = AnchorStyles.TopLeft;
 			buttonFace2.AnchorMargins = new Margins(140, 0, 10, 0);
-			buttonFace2.Parent = window.Root;
+			buttonFace2.SetParent (window.Root);
 			buttonFace2.Clicked += new MessageEventHandler(this.HandleMultiFace2);
 			
 			Button buttonFace3 = new Button();
@@ -846,7 +846,7 @@ namespace Epsitec.Common.Widgets
 			buttonFace3.AutoFocus = false;
 			buttonFace3.Anchor = AnchorStyles.TopLeft;
 			buttonFace3.AnchorMargins = new Margins(170, 0, 10, 0);
-			buttonFace3.Parent = window.Root;
+			buttonFace3.SetParent (window.Root);
 			buttonFace3.Clicked += new MessageEventHandler(this.HandleMultiFace3);
 			
 			Button buttonSize1 = new Button();
@@ -855,7 +855,7 @@ namespace Epsitec.Common.Widgets
 			buttonSize1.AutoFocus = false;
 			buttonSize1.Anchor = AnchorStyles.TopLeft;
 			buttonSize1.AnchorMargins = new Margins(210, 0, 10, 0);
-			buttonSize1.Parent = window.Root;
+			buttonSize1.SetParent (window.Root);
 			buttonSize1.Clicked += new MessageEventHandler(this.HandleMultiSize1);
 			
 			Button buttonSize2 = new Button();
@@ -864,7 +864,7 @@ namespace Epsitec.Common.Widgets
 			buttonSize2.AutoFocus = false;
 			buttonSize2.Anchor = AnchorStyles.TopLeft;
 			buttonSize2.AnchorMargins = new Margins(240, 0, 10, 0);
-			buttonSize2.Parent = window.Root;
+			buttonSize2.SetParent (window.Root);
 			buttonSize2.Clicked += new MessageEventHandler(this.HandleMultiSize2);
 			
 			Button buttonColor1 = new Button();
@@ -873,7 +873,7 @@ namespace Epsitec.Common.Widgets
 			buttonColor1.AutoFocus = false;
 			buttonColor1.Anchor = AnchorStyles.TopLeft;
 			buttonColor1.AnchorMargins = new Margins(280, 0, 10, 0);
-			buttonColor1.Parent = window.Root;
+			buttonColor1.SetParent (window.Root);
 			buttonColor1.Clicked += new MessageEventHandler(this.HandleMultiColor1);
 			
 			Button buttonColor2 = new Button();
@@ -882,7 +882,7 @@ namespace Epsitec.Common.Widgets
 			buttonColor2.AutoFocus = false;
 			buttonColor2.Anchor = AnchorStyles.TopLeft;
 			buttonColor2.AnchorMargins = new Margins(310, 0, 10, 0);
-			buttonColor2.Parent = window.Root;
+			buttonColor2.SetParent (window.Root);
 			buttonColor2.Clicked += new MessageEventHandler(this.HandleMultiColor2);
 			
 			Button buttonUndo = new Button();
@@ -891,7 +891,7 @@ namespace Epsitec.Common.Widgets
 			buttonUndo.AutoFocus = false;
 			buttonUndo.Anchor = AnchorStyles.TopLeft;
 			buttonUndo.AnchorMargins = new Margins(350, 0, 10, 0);
-			buttonUndo.Parent = window.Root;
+			buttonUndo.SetParent (window.Root);
 			buttonUndo.Clicked += new MessageEventHandler(this.HandleMultiUndo);
 			
 			Button buttonRedo = new Button();
@@ -900,7 +900,7 @@ namespace Epsitec.Common.Widgets
 			buttonRedo.AutoFocus = false;
 			buttonRedo.Anchor = AnchorStyles.TopLeft;
 			buttonRedo.AnchorMargins = new Margins(380, 0, 10, 0);
-			buttonRedo.Parent = window.Root;
+			buttonRedo.SetParent (window.Root);
 			buttonRedo.Clicked += new MessageEventHandler(this.HandleMultiRedo);
 //			window.Root.DebugActive = true;
 			window.FocusedWidget    = multi;
@@ -1010,7 +1010,7 @@ namespace Epsitec.Common.Widgets
 			multi.ScrollZone = 0.2;
 			multi.Anchor = AnchorStyles.All;
 			multi.AnchorMargins = new Margins(10, 10, 10+ruler.DefaultHeight, 26+46+46);
-			multi.Parent = window.Root;
+			multi.SetParent (window.Root);
 			multi.SetProperty("stats", stats);
 			multi.SetProperty("tags", tags);
 			multi.SetProperty("final", final);
@@ -1022,25 +1022,25 @@ namespace Epsitec.Common.Widgets
 			ruler.Anchor = AnchorStyles.TopLeft|AnchorStyles.LeftAndRight;
 			ruler.AnchorMargins = new Margins(10, 10, 10, 0);
 			ruler.AttachToTextField(multi);
-			ruler.Parent = window.Root;
+			ruler.SetParent (window.Root);
 			ruler.Changed += new EventHandler(this.HandleMultiSelectionOrCursorChanged2);
 			
 			stats.Height = 26;
 			stats.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
 			stats.AnchorMargins = new Margins(10, 10, 0, 46+46);
-			stats.Parent = window.Root;
+			stats.SetParent (window.Root);
 
 			tags.Height = 46;
 			tags.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
 			tags.AnchorMargins = new Margins(10, 10, 0, 46);
 			tags.SetClientZoom(0.85);
-			tags.Parent = window.Root;
+			tags.SetParent (window.Root);
 
 			final.Height = 46;
 			final.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
 			final.AnchorMargins = new Margins(10, 10, 0, 0);
 			final.SetClientZoom(0.85);
-			final.Parent = window.Root;
+			final.SetParent (window.Root);
 
 			window.FocusedWidget = multi;
 			window.Show();
@@ -1520,7 +1520,7 @@ namespace Epsitec.Common.Widgets
 		{
 			ScrollList sl = new ScrollList();
 			
-			sl.Parent = parent;
+			sl.SetParent (parent);
 			sl.Size = new Size(100, 64);
 			sl.Anchor = AnchorStyles.TopLeft;
 			sl.AnchorMargins = new Margins(mx, 0, my, 0);
@@ -1571,7 +1571,7 @@ namespace Epsitec.Common.Widgets
 			book.PaneBehaviour = PaneBookBehaviour.FollowMe;
 			//book.PaneBehaviour = PaneBookBehaviour.Draft;
 			book.Dock = DockStyle.Fill;
-			book.Parent = window.Root;
+			book.SetParent (window.Root);
 
 			PanePage p1 = new PanePage();
 			p1.PaneRelativeSize = 20;
@@ -1679,7 +1679,7 @@ namespace Epsitec.Common.Widgets
 			book.PaneBookStyle = PaneBookStyle.LeftRight;
 			book.PaneBehaviour = PaneBookBehaviour.FollowMe;
 			book.Dock = DockStyle.Fill;
-			book.Parent = window.Root;
+			book.SetParent (window.Root);
 
 			PanePage p1 = new PanePage();
 			p1.PaneRelativeSize = 10;
@@ -1725,7 +1725,7 @@ namespace Epsitec.Common.Widgets
 			book.PaneBookStyle = PaneBookStyle.LeftRight;
 			book.PaneBehaviour = PaneBookBehaviour.FollowMe;
 			book.Dock = DockStyle.Fill;
-			book.Parent = window.Root;
+			book.SetParent (window.Root);
 
 			PanePage p1 = new PanePage();
 			p1.PaneRelativeSize = 10;

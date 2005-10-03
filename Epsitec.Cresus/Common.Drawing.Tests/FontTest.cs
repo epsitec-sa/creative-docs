@@ -94,7 +94,7 @@ namespace Epsitec.Common.Drawing
 					window.ClientSize = new Size (1000, 100);
 					
 					text.Dock   = Widgets.DockStyle.Fill;
-					text.Parent = window.Root;
+					text.SetParent (window.Root);
 					text.Text   = Widgets.TextLayout.ConvertToTaggedText (buffer.ToString ());
 					text.TextLayout.DefaultFont = font;
 					text.TextLayout.DefaultFontSize = 60;

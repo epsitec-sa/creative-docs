@@ -154,7 +154,7 @@ namespace Epsitec.Common.Dialogs
 			window.Text = "CheckPort - AGG";
 			window.ClientSize = new Drawing.Size (250, 120);
 			widget.Dock       = Widgets.DockStyle.Fill;
-			widget.Parent     = window.Root;
+			widget.SetParent (window.Root);
 			
 			window.Show ();
 			

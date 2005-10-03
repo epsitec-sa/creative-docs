@@ -407,7 +407,7 @@ namespace Epsitec.Common.Widgets
 				case PaneBookBehaviour.Draft:
 					this.alphaBar = new AlphaBar();
 					this.alphaBar.Bounds = button.Bounds;
-					this.alphaBar.Parent = this;
+					this.alphaBar.SetParent (this);
 					this.sliderDragRect = button.Bounds;
 
 					if ( this.type == PaneBookStyle.LeftRight )
@@ -797,13 +797,13 @@ namespace Epsitec.Common.Widgets
 			item.Bounds = this.InnerBounds;
 			item.PaneButton.PaneButtonStyle = ( this.type == PaneBookStyle.LeftRight ) ? PaneButtonStyle.Vertical : PaneButtonStyle.Horizontal;
 			
-			item.PaneButton.Parent = this;
+			item.PaneButton.SetParent (this);
 			item.PaneButton.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);
 			item.PaneButton.DragMoved   += new MessageEventHandler(this.HandleSliderDragMoved);
 			item.PaneButton.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
 			item.RankChanged += new Support.EventHandler(this.HandlePageRankChanged);
 			
-			item.GlyphButton.Parent = this;
+			item.GlyphButton.SetParent (this);
 			item.GlyphButton.Clicked += new MessageEventHandler(this.HandleGlyphButtonClicked);
 
 			this.UpdatePaneButtons();

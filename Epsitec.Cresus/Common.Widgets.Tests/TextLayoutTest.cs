@@ -94,7 +94,7 @@ namespace Epsitec.Common.Widgets
 			StaticText text = new StaticText ();
 			text.Dock = DockStyle.Fill;
 			text.Text = @"abracadabra abracadabra<br/><a href=""x"">abc <img src=""file:images/icon.png"" width=""5"" height=""4""/> def</a><br/>abracadabra abracadabra <a href=""y"">bla bla bla&#160;!</a>";
-			text.Parent = window.Root;
+			text.SetParent (window.Root);
 			text.BackColor = Color.FromRGB (1.0, 1.0, 1.0);
 			
 			window.Show ();
@@ -344,7 +344,7 @@ namespace Epsitec.Common.Widgets
 			text.Dock = DockStyle.Fill;
 			//?text.Text = "1.<br/><br/>3.";
 			text.Text = "1.<br/><br/><b><i>3.</b></i><br/><br/>5.<br/><br/>";
-			text.Parent = window.Root;
+			text.SetParent (window.Root);
 			window.Show ();
 		}
 		

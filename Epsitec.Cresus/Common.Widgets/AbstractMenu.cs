@@ -292,7 +292,7 @@ namespace Epsitec.Common.Widgets
 			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.Width, this.Height);
 			
-			this.Parent = this.window.Root;
+			this.SetParent (this.window.Root);
 			AbstractMenu.RegisterFilter(this);
 
 			this.window.AnimateShow(Animation.FadeIn);
@@ -781,7 +781,7 @@ namespace Epsitec.Common.Widgets
 			this.submenu.window.DisableMouseActivation();
 			this.submenu.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
 			
-			this.submenu.Parent = this.submenu.window.Root;
+			this.submenu.SetParent (this.submenu.window.Root);
 			AbstractMenu.RegisterFilter(this.submenu);
 			 
 			Animation anim = Animation.None;

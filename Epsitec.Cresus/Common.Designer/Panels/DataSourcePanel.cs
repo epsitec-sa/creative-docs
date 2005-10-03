@@ -88,7 +88,7 @@ namespace Epsitec.Common.Designer.Panels
 			widget.Name = name;
 			
 			source.Widget   = widget;
-			source.Parent   = this.widget;
+			source.SetParent (this.widget);
 			source.Location = new Drawing.Point (x, this.size.Height - y - dy);
 			source.Size     = new Drawing.Size (dx, dy);
 			

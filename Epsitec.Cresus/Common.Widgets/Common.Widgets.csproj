@@ -569,6 +569,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Visual.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "VMenu.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -798,6 +803,11 @@
                 />
                 <File
                     RelPath = "Helpers\StringCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Helpers\VisualCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

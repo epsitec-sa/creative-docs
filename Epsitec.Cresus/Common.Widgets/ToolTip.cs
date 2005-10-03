@@ -126,7 +126,7 @@ namespace Epsitec.Common.Widgets
 				this.hash   = null;
 				this.widget = null;
 				this.owner  = null;
-				this.Parent = null;
+				this.SetParent (null);
 				
 				if ( this.window != null )
 				{

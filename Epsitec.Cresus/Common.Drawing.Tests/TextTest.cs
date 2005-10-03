@@ -18,7 +18,7 @@ namespace Epsitec.Common.Drawing
 			window.WindowLocation = ScreenInfo.Find (new Point (10, 10)).WorkingArea.TopLeft + new Point (100, -100 - window.WindowSize.Height);
 			window.Text           = "TextTest/CheckPainting";
 			
-			painter.Parent = window.Root;
+			painter.SetParent (window.Root);
 			painter.Dock   = DockStyle.Fill;
 			
 			Controller controller = new Controller (painter);

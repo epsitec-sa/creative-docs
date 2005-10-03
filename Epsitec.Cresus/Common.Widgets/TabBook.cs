@@ -835,7 +835,7 @@ namespace Epsitec.Common.Widgets
 			
 			System.Diagnostics.Debug.Assert (oldBook == this);
 			
-			item.TabButton.Parent = this;
+			item.TabButton.SetParent (this);
 			item.TabButton.Pressed += new MessageEventHandler(this.HandleTabButton);
 			item.RankChanged += new Support.EventHandler(this.HandlePageRankChanged);
 			this.isRefreshNeeded = true;

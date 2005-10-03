@@ -186,7 +186,7 @@ namespace Epsitec.Common.Drawing
 			Widgets.Widget widget = new TestWidget (stack);
 			
 			widget.Dock   = Widgets.DockStyle.Fill;
-			widget.Parent = window.Root;
+			widget.SetParent (window.Root);
 			
 			window.Show ();
 		}

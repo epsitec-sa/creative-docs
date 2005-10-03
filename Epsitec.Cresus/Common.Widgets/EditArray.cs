@@ -977,7 +977,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.caption != null)
 					{
-						this.caption.Parent = null;
+						this.caption.SetParent (null);
 						this.caption.Dispose ();
 						this.caption = null;
 					}
@@ -1023,7 +1023,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (widget != null)
 				{
-					widget.Parent       = null;
+					widget.SetParent (null);
 					widget.Focused     -= new Support.EventHandler (this.HandleEditArrayFocused);
 					widget.TextChanged -= new Epsitec.Common.Support.EventHandler (this.HandleTextChanged);
 					widget.Dispose ();

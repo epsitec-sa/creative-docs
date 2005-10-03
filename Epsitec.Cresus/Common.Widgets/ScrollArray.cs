@@ -365,7 +365,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.title_widget != null)
 					{
-						this.title_widget.Parent = null;
+						this.title_widget.SetParent (null);
 					}
 					
 					this.title_widget = value;
@@ -392,7 +392,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.tag_widget != null)
 					{
-						this.tag_widget.Parent = null;
+						this.tag_widget.SetParent (null);
 					}
 					
 					this.tag_widget = value;
@@ -412,7 +412,7 @@ namespace Epsitec.Common.Widgets
 					{
 						if (this.clip_widget != null)
 						{
-							this.clip_widget.Parent = null;
+							this.clip_widget.SetParent (null);
 							this.clip_widget = null;
 						}
 					}
@@ -2583,7 +2583,7 @@ invalid:	row    = -1;
 					if (this.header_button != null)
 					{
 						this.header_button.Clicked -= new MessageEventHandler (this.host.HandleHeaderButtonClicked);
-						this.header_button.Parent = null;
+						this.header_button.SetParent (null);
 						this.header_button = null;
 					}
 					if (this.header_slider != null)
@@ -2591,7 +2591,7 @@ invalid:	row    = -1;
 						this.header_slider.DragStarted -= new MessageEventHandler (this.host.HandleSliderDragStarted);
 						this.header_slider.DragMoved   -= new MessageEventHandler (this.host.HandleSliderDragMoved);
 						this.header_slider.DragEnded   -= new MessageEventHandler (this.host.HandleSliderDragEnded);
-						this.header_slider.Parent = null;
+						this.header_slider.SetParent (null);
 						this.header_slider = null;
 					}
 				}

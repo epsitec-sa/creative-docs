@@ -340,7 +340,7 @@ namespace Epsitec.Common.Designer
 			this.widget_palette.DragEnd   += new Support.EventHandler (this.HandleSourceDragEnd);
 			this.data_palette.DragEnd     += new Support.EventHandler (this.HandleSourceDragEnd);
 			
-			this.creation_panel.Parent = this.MainPanel;
+			this.creation_panel.SetParent (this.MainPanel);
 		}
 		
 		protected void CreateAttributePanel()
@@ -364,7 +364,7 @@ namespace Epsitec.Common.Designer
 			
 			widget = this.attribute_palette.Widget;
 			
-			widget.Parent      = root;
+			widget.SetParent (root);
 			widget.Dock        = DockStyle.Fill;
 			widget.DockMargins = new Drawing.Margins (4, 4, 4, 4);
 			
@@ -382,10 +382,10 @@ namespace Epsitec.Common.Designer
 			this.tool_bar.Items.Add (IconButton.CreateSimple (Command.ZDownActiveSelection,   "manifest:Epsitec.Common.Designer.Images.ZDown.icon"));
 			
 			this.tool_bar.Size   = new Drawing.Size (dx, this.tool_bar.DefaultHeight);
-			this.tool_bar.Parent = root;
+			this.tool_bar.SetParent (root);
 			this.tool_bar.Dock   = DockStyle.Top;
 			
-			this.attribute_panel.Parent = this.MainPanel;
+			this.attribute_panel.SetParent (this.MainPanel);
 		}
 		
 		

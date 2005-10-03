@@ -117,7 +117,7 @@ namespace Epsitec.Common.Document
 				this.containerGuides = new Containers.Guides(this.document);
 				this.containerGuides.Dock = DockStyle.Fill;
 				this.containerGuides.DockMargins = new Margins(10, 10, 4, 10);
-				this.containerGuides.Parent = container;
+				this.containerGuides.SetParent (container);
 				this.containerGuides.TabIndex = this.tabIndex++;
 				this.containerGuides.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 

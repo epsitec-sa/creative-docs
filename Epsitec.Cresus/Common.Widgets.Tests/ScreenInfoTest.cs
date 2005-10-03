@@ -69,7 +69,7 @@ namespace Epsitec.Common.Widgets
 			Magnifier glass = new Magnifier ();
 			
 			glass.Dock   = DockStyle.Fill;
-			glass.Parent = window.Root;
+			glass.SetParent (window.Root);
 			glass.Focus();
 			
 			glass.HotColorChanged += new Support.EventHandler (this.HandleMagnifierHotColorChanged);

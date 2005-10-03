@@ -190,7 +190,7 @@ namespace Epsitec.Common.Designer.Editors
 			
 			pane.Dock   = DockStyle.Top;
 			pane.Width  = this.page.Width;
-			pane.Parent = this.page;
+			pane.SetParent (this.page);
 			pane.Name   = property_name;
 			
 			pane.Attach (adapter);

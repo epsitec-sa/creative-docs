@@ -28,7 +28,7 @@ namespace Epsitec.Common.Widgets
 			
 			widget.Dock     = DockStyle.None;
 			widget.Size     = initial_size;
-			widget.Parent   = this.Root;
+			widget.SetParent (this.Root);
 			widget.Location = new Drawing.Point (margins.Bottom, margins.Left);
 			
 			this.MarkForRepaint ();

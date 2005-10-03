@@ -153,7 +153,7 @@ namespace Epsitec.Common.Designer.Widgets
 			
 			widget.SetProperty (string.Concat (GripsOverlay.prop_selected_by, this.Name), sel);
 			
-			this.Parent = null;
+			this.SetParent (null);
 			
 			this.SetEmbedder (widget.Window.Root);
 			this.Anchor        = AnchorStyles.All;
@@ -197,7 +197,7 @@ namespace Epsitec.Common.Designer.Widgets
 			
 			if (this.selections.Count == 0)
 			{
-				this.Parent = null;
+				this.SetParent (null);
 			}
 		}
 		
@@ -494,7 +494,7 @@ namespace Epsitec.Common.Designer.Widgets
 					this.drag_window_origin = this.overlay.drop_behavior.DragWindowLocation;
 					this.drag_drop_active   = true;
 					
-					grip.Parent = this.overlay.drop_behavior.Widget.Parent;
+					grip.SetParent (this.overlay.drop_behavior.Widget.Parent);
 				}
 				else
 				{
@@ -517,7 +517,7 @@ namespace Epsitec.Common.Designer.Widgets
 				
 				if (this.drag_drop_active)
 				{
-					grip.Parent = this.overlay;
+					grip.SetParent (this.overlay);
 					
 					if (this.overlay.drop_behavior.ValidateWidgetDragging ())
 					{

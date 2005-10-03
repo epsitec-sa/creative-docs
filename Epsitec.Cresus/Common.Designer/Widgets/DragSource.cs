@@ -93,7 +93,7 @@ namespace Epsitec.Common.Designer.Widgets
 		{
 			if (widget != null)
 			{
-				widget.Parent = this;
+				widget.SetParent (this);
 				widget.Bounds = this.Client.Bounds;
 				widget.Dock   = DockStyle.Fill;
 				widget.SetFrozen (true);
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Designer.Widgets
 		{
 			if (widget != null)
 			{
-				widget.Parent = null;
+				widget.SetParent (null);
 			}
 		}
 		
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Designer.Widgets
 			copy.Dock   = DockStyle.None;
 			copy.Anchor = AnchorStyles.None;
 			copy.Bounds = this.widget.Bounds;
-			copy.Parent = this.widget.Parent;
+			copy.SetParent (this.widget.Parent);
 			
 			this.drop_behavior.Widget     = copy;
 			this.drop_behavior.DropTarget = null;

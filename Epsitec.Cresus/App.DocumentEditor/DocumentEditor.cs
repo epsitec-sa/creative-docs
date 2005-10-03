@@ -801,21 +801,21 @@ namespace Epsitec.App.DocumentEditor
 
 				mainViewParent = leftPane;
 				Viewer viewer = new Viewer(document);
-				viewer.Parent = mainViewParent;
+				viewer.SetParent (mainViewParent);
 				viewer.Anchor = AnchorStyles.All;
 				viewer.AnchorMargins = new Margins(wm, wm+sw+1, 6+wm, wm+sw+1);
 				document.Modifier.ActiveViewer = viewer;
 				document.Modifier.AttachViewer(viewer);
 
 				Viewer frame1 = new Viewer(document);
-				frame1.Parent = rightPane;
+				frame1.SetParent (rightPane);
 				frame1.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 				frame1.AnchorMargins = new Margins(wm, wm, 6+wm, wm);
 				frame1.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
 				document.Modifier.AttachViewer(frame1);
 
 				Viewer frame2 = new Viewer(document);
-				frame2.Parent = rightPane;
+				frame2.SetParent (rightPane);
 				frame2.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 				frame2.AnchorMargins = new Margins(wm, wm, 6+wm+30, wm);
 				frame2.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
@@ -828,7 +828,7 @@ namespace Epsitec.App.DocumentEditor
 
 				mainViewParent = di.tabPage;
 				Viewer viewer = new Viewer(document);
-				viewer.Parent = mainViewParent;
+				viewer.SetParent (mainViewParent);
 				viewer.Anchor = AnchorStyles.All;
 				viewer.AnchorMargins = new Margins(wm+lm, wm+sw+1, 6+wm+tm, wm+sw+1);
 				document.Modifier.ActiveViewer = viewer;
@@ -858,7 +858,7 @@ namespace Epsitec.App.DocumentEditor
 			hBand.AnchorMargins = new Margins(wm+lm, wm+sw+1, 0, wm);
 
 			GlyphButton quickPagePrev = new GlyphButton("PagePrev");
-			quickPagePrev.Parent = hBand;
+			quickPagePrev.SetParent (hBand);
 			quickPagePrev.GlyphShape = GlyphShape.ArrowLeft;
 			quickPagePrev.Width = sw;
 			quickPagePrev.Height = sw;
@@ -874,7 +874,7 @@ namespace Epsitec.App.DocumentEditor
 			ToolTip.Default.SetToolTip(di.quickPageMenu, DocumentEditor.GetRes("Action.PageMenu"));
 
 			GlyphButton quickPageNext = new GlyphButton("PageNext");
-			quickPageNext.Parent = hBand;
+			quickPageNext.SetParent (hBand);
 			quickPageNext.GlyphShape = GlyphShape.ArrowRight;
 			quickPageNext.Width = sw;
 			quickPageNext.Height = sw;
@@ -911,7 +911,7 @@ namespace Epsitec.App.DocumentEditor
 			ToolTip.Default.SetToolTip(quickLayerNew, DocumentEditor.GetRes("Action.LayerNew"));
 
 			GlyphButton quickLayerNext = new GlyphButton("LayerNext");
-			quickLayerNext.Parent = vBand;
+			quickLayerNext.SetParent (vBand);
 			quickLayerNext.GlyphShape = GlyphShape.ArrowUp;
 			quickLayerNext.Width = sw;
 			quickLayerNext.Height = sw;
@@ -927,7 +927,7 @@ namespace Epsitec.App.DocumentEditor
 			ToolTip.Default.SetToolTip(di.quickLayerMenu, DocumentEditor.GetRes("Action.LayerMenu"));
 
 			GlyphButton quickLayerPrev = new GlyphButton("LayerPrev");
-			quickLayerPrev.Parent = vBand;
+			quickLayerPrev.SetParent (vBand);
 			quickLayerPrev.GlyphShape = GlyphShape.ArrowDown;
 			quickLayerPrev.Width = sw;
 			quickLayerPrev.Height = sw;
@@ -983,33 +983,33 @@ namespace Epsitec.App.DocumentEditor
 			di.bookPanels.ActivePage = bookPrincipal;
 
 			di.containerPrincipal = new Containers.Principal(document);
-			di.containerPrincipal.Parent = bookPrincipal;
+			di.containerPrincipal.SetParent (bookPrincipal);
 			di.containerPrincipal.Dock = DockStyle.Fill;
 			di.containerPrincipal.DockMargins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerPrincipal);
 
 			di.containerStyles = new Containers.Styles(document);
-			di.containerStyles.Parent = bookStyles;
+			di.containerStyles.SetParent (bookStyles);
 			di.containerStyles.Dock = DockStyle.Fill;
 			di.containerStyles.DockMargins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerStyles);
 
 #if DEBUG
 			di.containerAutos = new Containers.Autos(document);
-			di.containerAutos.Parent = bookAutos;
+			di.containerAutos.SetParent (bookAutos);
 			di.containerAutos.Dock = DockStyle.Fill;
 			di.containerAutos.DockMargins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerAutos);
 #endif
 
 			di.containerPages = new Containers.Pages(document);
-			di.containerPages.Parent = bookPages;
+			di.containerPages.SetParent (bookPages);
 			di.containerPages.Dock = DockStyle.Fill;
 			di.containerPages.DockMargins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerPages);
 
 			di.containerLayers = new Containers.Layers(document);
-			di.containerLayers.Parent = bookLayers;
+			di.containerLayers.SetParent (bookLayers);
 			di.containerLayers.Dock = DockStyle.Fill;
 			di.containerLayers.DockMargins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerLayers);

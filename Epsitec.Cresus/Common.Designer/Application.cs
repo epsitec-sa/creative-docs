@@ -167,12 +167,12 @@ namespace Epsitec.Common.Designer
 			panel = this.interf_edit_controller.MainPanel;
 			
 			panel.Dock   = DockStyle.Fill;
-			panel.Parent = this.main_window.Root;
+			panel.SetParent (this.main_window.Root);
 			
 			panel = this.string_edit_controller.MainPanel;
 			
 			panel.Dock   = DockStyle.Fill;
-			panel.Parent = this.main_window.Root;
+			panel.SetParent (this.main_window.Root);
 			
 			this.main_window.ClientSize = new Drawing.Size (400, 800);
 //			this.main_window.MakeFixedSizeWindow ();

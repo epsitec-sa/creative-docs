@@ -91,7 +91,7 @@ namespace Epsitec.Common.Script.Developer
 			this.find_next_error_button.Command = "FindNextError(1)";
 			this.find_next_error_button.Shortcut = new Shortcut (KeyCode.FuncF8);
 			
-			this.panel.Widget.Parent      = page;
+			this.panel.Widget.SetParent (page);
 			this.panel.Widget.Dock        = DockStyle.Fill;
 			this.panel.Widget.DockMargins = new Drawing.Margins (4, 4, 4, 4);
 			
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Script.Developer
 		{
 			if (this.source.Methods.Length != this.method_book.Items.Count)
 			{
-				this.panel.Widget.Parent = null;
+				this.panel.Widget.SetParent (null);
 				
 				this.method_book.Items.Clear ();
 				
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Script.Developer
 		protected virtual void UpdateVisiblePage()
 		{
 			this.method_book.ActivePageIndex = this.method_index;
-			this.panel.Widget.Parent = this.method_book.ActivePage;
+			this.panel.Widget.SetParent (this.method_book.ActivePage);
 		}
 		
 		protected virtual void UpdateErrorMessage()
@@ -413,7 +413,7 @@ namespace Epsitec.Common.Script.Developer
 					//	des éventuels champs qui avaient encore le focus (en particulier, le nom de
 					//	la méthode) :
 					
-					this.panel.Widget.Parent = null;
+					this.panel.Widget.SetParent (null);
 					this.SyncFromUI ();
 					
 					this.tool_tip.HideToolTipForWidget (this.panel.SourceWidget);

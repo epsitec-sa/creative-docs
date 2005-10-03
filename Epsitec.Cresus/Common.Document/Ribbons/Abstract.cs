@@ -139,7 +139,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected void CreateButton(ref IconButton button, string icon, string tooltip, MessageEventHandler handler)
 		{
 			button = new IconButton(Misc.Icon(icon));
-			button.Parent = this;
+			button.SetParent (this);
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -150,7 +150,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton CreateIconButton(string command, string icon, string tooltip)
 		{
 			IconButton button = new IconButton(command, icon, command);
-			button.Parent = this;
+			button.SetParent (this);
 			ToolTip.Default.SetToolTip(button, tooltip);
 			return button;
 		}

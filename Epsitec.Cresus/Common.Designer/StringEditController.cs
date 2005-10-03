@@ -957,7 +957,7 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert (this.tab_book != null);
 			
 			widget.Dock   = DockStyle.Fill;
-			widget.Parent = page;
+			widget.SetParent (page);
 			
 			page.TabTitle = bundles[0].Name;
 			

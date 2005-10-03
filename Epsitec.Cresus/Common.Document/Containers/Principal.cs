@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Containers
 			this.scrollable.Panel.IsAutoFitting = true;
 			this.scrollable.IsForegroundFrame = true;
 			this.scrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 0);
-			this.scrollable.Parent = this;
+			this.scrollable.SetParent (this);
 
 			this.colorSelector = new ColorSelector();
 			this.colorSelector.ColorPalette.ColorCollection = this.document.GlobalSettings.ColorCollection;
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
 			this.colorSelector.TabIndex = 100;
 			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
-			this.colorSelector.Parent = this;
+			this.colorSelector.SetParent (this);
 			this.colorSelector.SetVisible(false);
 		}
 		
@@ -298,7 +298,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.UpdateAggregate();
 
-			this.detailButton.Parent = null;
+			this.detailButton.SetParent (null);
 
 			// Supprime tous les panneaux ou boutons.
 			this.scrollable.Panel.SuspendLayout();
@@ -332,7 +332,7 @@ namespace Epsitec.Common.Document.Containers
 					button.Text = text;
 					button.Dock = DockStyle.Top;
 					button.DockMargins = new Margins(10, 10, topMargin, 0);
-					button.Parent = this.scrollable.Panel;
+					button.SetParent (this.scrollable.Panel);
 
 					if ( topMargin == 50 )  topMargin = 10;
 				}
@@ -346,7 +346,7 @@ namespace Epsitec.Common.Document.Containers
 				if ( list.Count > 0 && this.document.Modifier.TotalSelected > 1 )
 				{
 					this.detailButton.ActiveState = this.document.Modifier.PropertiesDetail ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-					this.detailButton.Parent = this;
+					this.detailButton.SetParent (this);
 				}
 
 				int index = 1;
@@ -373,7 +373,7 @@ namespace Epsitec.Common.Document.Containers
 					panel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 					panel.Dock = DockStyle.Top;
 					panel.DockMargins = new Margins(0, 1, topMargin, -1);
-					panel.Parent = this.scrollable.Panel;
+					panel.SetParent (this.scrollable.Panel);
 
 					if ( panel.Property.Type == this.originColorType )
 					{

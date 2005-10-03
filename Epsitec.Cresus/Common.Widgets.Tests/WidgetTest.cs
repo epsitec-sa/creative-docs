@@ -6,6 +6,185 @@ namespace Epsitec.Common.Widgets
 {
 	[TestFixture] public class WidgetTest
 	{
+#if false
+		[Test] public void CheckAbstractWidget()
+		{
+			Widget.Initialise ();
+			
+			System.Console.WriteLine ("Performance test of AbstractWidget Properties");
+			System.Console.WriteLine ("--------------------------------------100'000");
+			System.Console.Out.Flush ();
+			this.PrivateCheckAbstractWidget (100000);
+			System.Console.WriteLine ("------------------------------------1'000'000");
+			System.Console.Out.Flush ();
+			this.PrivateCheckAbstractWidget (1000000);
+			System.Console.WriteLine ("-----------------------------------10'000'000");
+			System.Console.Out.Flush ();
+			this.PrivateCheckAbstractWidget (10000000);
+			System.Console.WriteLine ("-----------------------------------------done");
+			System.Console.Out.Flush ();
+		}
+		
+		private void PrivateCheckAbstractWidget(int runs)
+		{
+			AbstractWidget widget = new AbstractWidget ();
+			
+			for (int i = 0; i < 1000; i++)
+			{
+				long cc = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			}
+			
+			long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c0 = Epsitec.Common.Drawing.Agg.Library.Cycles - c2;
+			
+			System.Console.Out.WriteLine ("Zero work: " + c0.ToString ());
+			
+			widget.Anchor        = AnchorStyles.None;
+			widget.ManagedAnchor = AnchorStyles.None;
+			
+			widget.ManagedAnchor = widget.Anchor;
+			widget.Anchor = widget.ManagedAnchor;
+			
+			widget.Anchor        = AnchorStyles.All;
+			widget.ManagedAnchor = AnchorStyles.All;
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			
+			for (int i = 0; i < runs; i++)
+			{
+				widget.Anchor = AnchorStyles.Left;
+				widget.Anchor = AnchorStyles.Right;
+				widget.Anchor = AnchorStyles.Bottom;
+				widget.Anchor = AnchorStyles.Top;
+				widget.Anchor = AnchorStyles.None;
+			}
+			
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
+			
+			System.Console.WriteLine ("Setting 5 properties: {0} cycles.", c2 / runs);
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			
+			for (int i = 0; i < runs; i++)
+			{
+				AnchorStyles a1 = widget.Anchor;
+				AnchorStyles a2 = widget.Anchor;
+				AnchorStyles a3 = widget.Anchor;
+				AnchorStyles a4 = widget.Anchor;
+				AnchorStyles a5 = widget.Anchor;
+			}
+			
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
+			
+			System.Console.WriteLine ("Getting 5 properties: {0} cycles.", c2 / runs);
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			
+			for (int i = 0; i < runs; i++)
+			{
+				widget.ManagedAnchor = AnchorStyles.Left;
+				widget.ManagedAnchor = AnchorStyles.Right;
+				widget.ManagedAnchor = AnchorStyles.Bottom;
+				widget.ManagedAnchor = AnchorStyles.Top;
+				widget.ManagedAnchor = AnchorStyles.None;
+			}
+			
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
+			
+			System.Console.WriteLine ("Setting 5 managed properties: {0} cycles.", c2 / runs);
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			
+			for (int i = 0; i < runs; i++)
+			{
+				AnchorStyles a1 = widget.ManagedAnchor;
+				AnchorStyles a2 = widget.ManagedAnchor;
+				AnchorStyles a3 = widget.ManagedAnchor;
+				AnchorStyles a4 = widget.ManagedAnchor;
+				AnchorStyles a5 = widget.ManagedAnchor;
+			}
+			
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
+			
+			System.Console.WriteLine ("Getting 5 managed properties: {0} cycles.", c2 / runs);
+			
+			
+			widget.AnchorChanged += new EventHandler(this.HandleAnchorChanged);
+			widget.ManagedAnchorChanged += new Types.PropertyChangedEventHandler(this.HandleManagedAnchorChanged);
+			
+			widget.Anchor        = AnchorStyles.None;
+			widget.ManagedAnchor = AnchorStyles.None;
+			
+			widget.ManagedAnchor = widget.Anchor;
+			widget.Anchor = widget.ManagedAnchor;
+			
+			widget.Anchor        = AnchorStyles.All;
+			widget.ManagedAnchor = AnchorStyles.All;
+			
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			
+			for (int i = 0; i < runs; i++)
+			{
+				widget.Anchor = AnchorStyles.Left;
+				widget.Anchor = AnchorStyles.Right;
+				widget.Anchor = AnchorStyles.Bottom;
+				widget.Anchor = AnchorStyles.Top;
+				widget.Anchor = AnchorStyles.None;
+			}
+			
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
+			
+			System.Console.WriteLine ("Setting 5 properties, sending event: {0} cycles.", c2 / runs);
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			
+			for (int i = 0; i < runs; i++)
+			{
+				AnchorStyles a1 = widget.Anchor;
+				AnchorStyles a2 = widget.Anchor;
+				AnchorStyles a3 = widget.Anchor;
+				AnchorStyles a4 = widget.Anchor;
+				AnchorStyles a5 = widget.Anchor;
+			}
+			
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
+			
+			System.Console.WriteLine ("Getting 5 properties: {0} cycles.", c2 / runs);
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			
+			for (int i = 0; i < runs; i++)
+			{
+				widget.ManagedAnchor = AnchorStyles.Left;
+				widget.ManagedAnchor = AnchorStyles.Right;
+				widget.ManagedAnchor = AnchorStyles.Bottom;
+				widget.ManagedAnchor = AnchorStyles.Top;
+				widget.ManagedAnchor = AnchorStyles.None;
+			}
+			
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
+			
+			System.Console.WriteLine ("Setting 5 managed properties, sending event: {0} cycles.", c2 / runs);
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			
+			for (int i = 0; i < runs; i++)
+			{
+				AnchorStyles a1 = widget.ManagedAnchor;
+				AnchorStyles a2 = widget.ManagedAnchor;
+				AnchorStyles a3 = widget.ManagedAnchor;
+				AnchorStyles a4 = widget.ManagedAnchor;
+				AnchorStyles a5 = widget.ManagedAnchor;
+			}
+			
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1;
+			
+			System.Console.WriteLine ("Getting 5 managed properties: {0} cycles.", c2 / runs);
+		}
+#endif
+		
 		[Test] public void CheckTextFrame()
 		{
 			Window window = new Window ();
@@ -46,7 +225,7 @@ namespace Epsitec.Common.Widgets
 			
 			Widget pane = new Widget ();
 			
-			pane.Parent = window.Root;
+			pane.SetParent (window.Root);
 			pane.Width  = 80;
 			pane.Dock   = DockStyle.Right;
 			
@@ -54,7 +233,7 @@ namespace Epsitec.Common.Widgets
 			
 			frame.Dock        = DockStyle.Fill;
 			frame.DockMargins = new Margins (4, 4, 4, 4);
-			frame.Parent      = window.Root;
+			frame.SetParent (window.Root);
 			frame.Name        = "A";
 			
 			frame.Focus ();
@@ -64,7 +243,7 @@ namespace Epsitec.Common.Widgets
 			frame2.Height      = 150;
 			frame2.Dock        = DockStyle.Bottom;
 			frame2.DockMargins = new Margins (4, 4, 4, 4);
-			frame2.Parent      = window.Root;
+			frame2.SetParent (window.Root);
 			frame2.Name        = "B";
 			
 			window.Show ();
@@ -112,7 +291,7 @@ namespace Epsitec.Common.Widgets
 				
 				button        = new Button (title);
 				button.Dock   = DockStyle.Top;
-				button.Parent = pane;
+				button.SetParent (pane);
 				button.Name   = name;
 				button.Clicked += new MessageEventHandler(this.CheckTextFrameButtonClicked);
 				button.AutoFocus = false;
@@ -224,7 +403,7 @@ namespace Epsitec.Common.Widgets
 			
 			Assert.IsTrue (root.HasChildren == false);
 			
-			widget.Parent = root;
+			widget.SetParent (root);
 			
 			Assert.IsTrue (root.HasChildren);
 			Assert.IsTrue (root.Children.Count == 1);
@@ -243,13 +422,13 @@ namespace Epsitec.Common.Widgets
 			
 			this.check_parent_changed_sender = null;
 			this.check_parent_changed_count  = 0;
-			w2.Parent = w1;
+			w2.SetParent (w1);
 			Assert.AreEqual (w2, this.check_parent_changed_sender);
 			Assert.AreEqual (1, this.check_parent_changed_count);
 			
 			this.check_parent_changed_sender = null;
 			this.check_parent_changed_count  = 0;
-			w2.Parent = null;
+			w2.SetParent (null);
 			Assert.AreEqual (w2, this.check_parent_changed_sender);
 			Assert.AreEqual (1, this.check_parent_changed_count);
 			
@@ -345,7 +524,7 @@ namespace Epsitec.Common.Widgets
 			text.Size     = new Drawing.Size (text.PreferredSize.Width / 2, text.PreferredSize.Height * 2) * 3;
 			text.Anchor   = AnchorStyles.TopLeft;
 			text.AnchorMargins = new Drawing.Margins (10, 0, 10, 0);
-			text.Parent   = window.Root;
+			text.SetParent (window.Root);
 			text.PaintForeground += new PaintEventHandler(this.CheckTextLayoutInfoPaintForeground);
 			
 			window.Show ();
@@ -770,7 +949,7 @@ namespace Epsitec.Common.Widgets
 			
 			widget.Location = new Point (30, 20);
 			widget.Size     = new Size (50, 40);
-			widget.Parent   = root;
+			widget.SetParent (root);
 			
 			widget.SetClientZoom (3);
 			widget.SetClientAngle (90);
@@ -887,8 +1066,8 @@ namespace Epsitec.Common.Widgets
 		[Test] public void CheckFullPathName()
 		{
 			Widget w1 = new Widget (); w1.Name = "XA";
-			Widget w2 = new Widget (); w2.Name = "XB"; w2.Parent = w1;
-			Widget w3 = new Widget (); w3.Name = "XC"; w3.Parent = w2;
+			Widget w2 = new Widget (); w2.Name = "XB"; w2.SetParent (w1);
+			Widget w3 = new Widget (); w3.Name = "XC"; w3.SetParent (w2);
 			
 			Assert.AreEqual ("XA", w1.FullPathName);
 			Assert.AreEqual ("XA.XB", w2.FullPathName);
@@ -907,8 +1086,8 @@ namespace Epsitec.Common.Widgets
 		[Test] public void CheckCommandName()
 		{
 			Widget w1 = new Widget (); w1.Name = "A"; w1.Command = "a";
-			Widget w2 = new Widget (); w2.Name = "B"; w2.Command = "b ()";  w2.Parent = w1;
-			Widget w3 = new Widget (); w3.Name = "C"; w3.Command = "c (1)"; w3.Parent = w2;
+			Widget w2 = new Widget (); w2.Name = "B"; w2.Command = "b ()";  w2.SetParent (w1);
+			Widget w3 = new Widget (); w3.Name = "C"; w3.Command = "c (1)"; w3.SetParent (w2);
 			
 			Assert.AreEqual ("a",     w1.Command);
 			Assert.AreEqual ("b ()",  w2.Command);
@@ -979,9 +1158,9 @@ namespace Epsitec.Common.Widgets
 		[Test] public void CheckFindChildBasedOnName()
 		{
 			Widget root = new Widget ();
-			Widget w1 = new Widget ();	w1.Name = "a";	w1.Parent = root;
-			Widget w2 = new Widget ();					w2.Parent = root;
-			Widget w3 = new Widget ();	w3.Name = "b";	w3.Parent = w2;
+			Widget w1 = new Widget ();	w1.Name = "a";	w1.SetParent (root);
+			Widget w2 = new Widget ();					w2.SetParent (root);
+			Widget w3 = new Widget ();	w3.Name = "b";	w3.SetParent (w2);
 			
 			Assert.AreEqual (w1, root.FindChild ("a"));
 			Assert.AreEqual (w3, root.FindChild ("b"));
@@ -990,12 +1169,12 @@ namespace Epsitec.Common.Widgets
 		[Test] public void CheckFindChildBasedOnCommandName()
 		{
 			Widget root = new Widget ();
-			Widget w1 = new Widget ();	w1.Command = "a";	w1.Parent = root;
-			Widget w2 = new Widget ();						w2.Parent = root;
-			Widget w3 = new Widget ();	w3.Command = "b";	w3.Parent = w2;
-			Widget w4 = new Widget ();	w4.Command = "c";	w4.Parent = w2;
-			Widget w5 = new Widget ();	w5.Command = "d";	w5.Parent = w4;
-			Widget w6 = new Widget ();	w6.Name = "e";		w6.Parent = w1;
+			Widget w1 = new Widget ();	w1.Command = "a";	w1.SetParent (root);
+			Widget w2 = new Widget ();						w2.SetParent (root);
+			Widget w3 = new Widget ();	w3.Command = "b";	w3.SetParent (w2);
+			Widget w4 = new Widget ();	w4.Command = "c";	w4.SetParent (w2);
+			Widget w5 = new Widget ();	w5.Command = "d";	w5.SetParent (w4);
+			Widget w6 = new Widget ();	w6.Name = "e";		w6.SetParent (w1);
 			
 			Assert.AreEqual (w1, root.FindCommandWidgets ("a") [0]);
 			Assert.AreEqual (w3, root.FindCommandWidgets ("b") [0]);
@@ -1018,7 +1197,7 @@ namespace Epsitec.Common.Widgets
 			ColorSelector selector = new ColorSelector ();
 			
 			selector.Dock = DockStyle.Fill;
-			selector.Parent = window.Root;
+			selector.SetParent (window.Root);
 			
 			window.Show ();
 		}
@@ -1035,31 +1214,31 @@ namespace Epsitec.Common.Widgets
 			
 			selector1 = new ColorSelector ();
 			selector1.Bounds = new Drawing.Rectangle (100, 10, 200, 200);
-			selector1.Parent = window.Root;
+			selector1.SetParent (window.Root);
 			selector1.Changed += new EventHandler (this.HandleSelectorChangedForeground);
 			
 			selector2 = new ColorSelector ();
 			selector2.Bounds = new Drawing.Rectangle (300, 10, 200, 200);
-			selector2.Parent = window.Root;
+			selector2.SetParent (window.Root);
 			selector2.Changed += new EventHandler (this.HandleSelectorChangedBackground);
 			
 			Tag tag;
 			
 			tag = new Tag ("", "tag1");
 			tag.Bounds = new Drawing.Rectangle (10, 10, 10, 10);
-			tag.Parent = window.Root;
+			tag.SetParent (window.Root);
 			
 			tag = new Tag ("", "tag2");
 			tag.Bounds = new Drawing.Rectangle (10, 25, 15, 15);
-			tag.Parent = window.Root;
+			tag.SetParent (window.Root);
 			
 			tag = new Tag ("", "tag3");
 			tag.Bounds = new Drawing.Rectangle (10, 45, 20, 20);
-			tag.Parent = window.Root;
+			tag.SetParent (window.Root);
 			
 			tag = new Tag ("", "tag4");
 			tag.Bounds = new Drawing.Rectangle (10, 70, 25, 25);
-			tag.Parent = window.Root;
+			tag.SetParent (window.Root);
 			
 			selector1.Color = new RichColor(tag.Color);
 			selector2.Color = new RichColor(tag.BackColor);
@@ -1133,6 +1312,17 @@ namespace Epsitec.Common.Widgets
 			
 			tag = parent.FindChild ("tag4", Widget.ChildFindMode.Deep) as Tag;
 			tag.BackColor = color;
+		}
+
+		
+		private void HandleAnchorChanged(object sender)
+		{
+			//	nothing
+		}
+
+		private void HandleManagedAnchorChanged(object sender, Types.PropertyChangedEventArgs e)
+		{
+			//	nothing
 		}
 	}
 }

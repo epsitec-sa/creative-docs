@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets.Tools
 			this.zoom_window.Root.BackColor = Drawing.Color.Transparent;
 			
 			this.zoom_view.Dock   = DockStyle.Fill;
-			this.zoom_view.Parent = this.zoom_window.Root;
+			this.zoom_view.SetParent (this.zoom_window.Root);
 			this.zoom_view.SetFocused (true);
 			
 			this.DisplayRadius = 55;

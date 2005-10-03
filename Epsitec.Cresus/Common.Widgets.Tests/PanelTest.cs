@@ -13,7 +13,7 @@ namespace Epsitec.Common.Widgets
 			
 			Scrollable surface = new Scrollable ();
 			
-			surface.Parent = window.Root;
+			surface.SetParent (window.Root);
 			surface.Bounds = window.Root.Client.Bounds;
 			surface.Dock   = DockStyle.Fill;
 			
@@ -25,8 +25,8 @@ namespace Epsitec.Common.Widgets
 			Button b1 = new Button ("Button 1");
 			Button b2 = new Button ("Button 2");
 			
-			b1.Parent = surface.Panel;
-			b2.Parent = surface.Panel;
+			b1.SetParent (surface.Panel);
+			b2.SetParent (surface.Panel);
 			b1.Location = new Drawing.Point (10, 20);
 			b2.Location = new Drawing.Point (b1.Right + 10, b1.Bottom);
 			b1.Anchor   = AnchorStyles.TopLeft;

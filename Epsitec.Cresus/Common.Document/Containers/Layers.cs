@@ -104,7 +104,7 @@ namespace Epsitec.Common.Document.Containers
 			this.panelModColor.IsLayoutDirect = true;
 			this.panelModColor.Dock = DockStyle.Bottom;
 			this.panelModColor.DockMargins = new Margins(0, 0, 5, 0);
-			this.panelModColor.Parent = this;
+			this.panelModColor.SetParent (this);
 			this.panelModColor.TabIndex = 100;
 			this.panelModColor.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 

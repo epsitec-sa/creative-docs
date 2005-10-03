@@ -59,7 +59,7 @@ namespace Epsitec.Common.Dialogs
 			this.window.MakeFixedSizeWindow ();
 			this.window.MakeSecondaryWindow ();
 			
-			body.Parent          = this.window.Root;
+			body.SetParent (this.window.Root);
 			body.Bounds          = new Drawing.Rectangle (8, 16+24+16, dx, dy);
 			body.TabIndex        = 1;
 			body.TabNavigation   = Widget.TabNavigationMode.ForwardTabPassive;

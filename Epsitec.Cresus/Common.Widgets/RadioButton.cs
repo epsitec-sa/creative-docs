@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets
 		
 		public RadioButton(Widget parent, string group, int index) : this ()
 		{
-			this.Parent = parent;
+			this.SetParent (parent);
 			this.Group  = group;
 			this.Index  = index;
 		}

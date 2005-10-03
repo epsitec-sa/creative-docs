@@ -1550,7 +1550,7 @@ namespace Epsitec.Common.Widgets
 						cRect.Left += 1;
 						cRect.Top  -= 1;  // laisse la place pour la grille
 						this.array[x,y].Bounds = cRect;
-						this.array[x,y].Parent = this.container;
+						this.array[x,y].SetParent (this.container);
 						this.array[x,y].SetVisible(true);
 						this.array[x,y].SetArrayRank(this, x, y);
 					}
@@ -1586,7 +1586,7 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				cell.SetArrayRank (null, -1, -1);
-				cell.Parent = null;
+				cell.SetParent (null);
 			}
 		}
 		

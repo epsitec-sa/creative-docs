@@ -22,7 +22,7 @@ namespace Epsitec.Common.UI
 			Widgets.DataWidget data_widget = new Widgets.DataWidget ();
 			
 			data_widget.Dock   = DockStyle.Fill;
-			data_widget.Parent = window.Root;
+			data_widget.SetParent (window.Root);
 			
 			window.Show ();
 		}
@@ -48,31 +48,31 @@ namespace Epsitec.Common.UI
 			field_3.DefineCaption ("Representation");
 			
 			data_widget_1.Dock           = DockStyle.Top;
-			data_widget_1.Parent         = window.Root;
+			data_widget_1.SetParent (window.Root);
 			data_widget_1.DataSource     = field_1;
 			data_widget_1.Representation = Data.Representation.Automatic;
 			data_widget_1.DockMargins    = new Drawing.Margins (0, 0, 0, 2);
 			
 			data_widget_2.Dock           = DockStyle.Top;
-			data_widget_2.Parent         = window.Root;
+			data_widget_2.SetParent (window.Root);
 			data_widget_2.DataSource     = field_2;
 			data_widget_2.Representation = Data.Representation.Automatic;
 			data_widget_2.DockMargins    = new Drawing.Margins (0, 0, 0, 2);
 			
 			data_widget_3.Dock           = DockStyle.Fill;
-			data_widget_3.Parent         = window.Root;
+			data_widget_3.SetParent (window.Root);
 			data_widget_3.DataSource     = field_3;
 			data_widget_3.Representation = Data.Representation.RadioColumns;
 			data_widget_3.DockMargins    = new Drawing.Margins (0, 0, 0, 2);
 			
 			data_widget_4.Dock           = DockStyle.Fill;
-			data_widget_4.Parent         = window.Root;
+			data_widget_4.SetParent (window.Root);
 			data_widget_4.DataSource     = field_3;
 			data_widget_4.Representation = Data.Representation.RadioRows;
 			data_widget_4.DockMargins    = new Drawing.Margins (0, 0, 0, 2);
 			
 			data_widget_5.Dock           = DockStyle.Fill;
-			data_widget_5.Parent         = window.Root;
+			data_widget_5.SetParent (window.Root);
 			data_widget_5.DataSource     = field_3;
 			data_widget_5.Representation = Data.Representation.RadioList;
 			data_widget_5.DockMargins    = new Drawing.Margins (0, 0, 0, 0);

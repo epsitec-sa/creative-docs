@@ -22,7 +22,7 @@ namespace Epsitec.Common.Widgets
 			
 			ScrollArray table = new ScrollArray();
 			
-			table.Parent            = window.Root;
+			table.SetParent (window.Root);
 			table.Dock              = DockStyle.Fill;
 			table.ColumnCount       = 5;
 			table.RowCount          = 100;
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Widgets
 			
 			EditArray table = new EditArray();
 			
-			table.Parent            = window.Root;
+			table.SetParent (window.Root);
 			table.Dock              = DockStyle.Fill;
 			table.ColumnCount       = 5;
 			table.RowCount          = 100;
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Widgets
 			EditArray table = new EditArray();
 			TextStore store = new TextStore ();
 			
-			table.Parent            = window.Root;
+			table.SetParent (window.Root);
 			table.Dock              = DockStyle.Fill;
 			table.SelectedIndex     = 0;
 			table.EditionZoneHeight = 4;
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Widgets
 			
 			EditArray table = new EditArray();
 			
-			table.Parent            = window.Root;
+			table.SetParent (window.Root);
 			table.Dock              = DockStyle.Fill;
 			table.ColumnCount       = 5;
 			table.RowCount          = 100;
@@ -158,7 +158,7 @@ namespace Epsitec.Common.Widgets
 			
 			EditArray table = new EditArray();
 			
-			table.Parent            = window.Root;
+			table.SetParent (window.Root);
 			table.Dock              = DockStyle.Fill;
 			table.ColumnCount       = 5;
 			table.RowCount          = 100;
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Widgets
 			EditArray.Controller ctrl   = new EditArray.Controller (table, "Table");
 			
 			table.CommandDispatcher = new CommandDispatcher ("SearchTable", true);
-			table.Parent            = window.Root;
+			table.SetParent (window.Root);
 			table.Dock              = DockStyle.Fill;
 			table.ColumnCount       = 5;
 			table.RowCount          = 100;

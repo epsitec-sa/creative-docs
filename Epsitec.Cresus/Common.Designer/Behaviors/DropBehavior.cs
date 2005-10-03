@@ -269,7 +269,7 @@ namespace Epsitec.Common.Designer.Behaviors
 			Drawing.Point drop_location = this.DropTargetRelativeWidgetBounds.Location + offset;
 			Drawing.Size  drop_size     = this.widget.Size;
 			
-			this.widget.Parent = null;
+			this.widget.SetParent (null);
 			
 			this.widget.Anchor   = AnchorStyles.None;
 			this.widget.Dock     = DockStyle.None;
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Designer.Behaviors
 				/**/                                         drop_bounds.Bottom - host_bounds.Bottom);
 			
 			this.widget.Anchor = anchor;
-			this.widget.Parent = drop_target;
+			this.widget.SetParent (drop_target);
 			
 			this.StopWidgetDragging ();
 			

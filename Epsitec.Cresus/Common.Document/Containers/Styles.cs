@@ -89,7 +89,7 @@ namespace Epsitec.Common.Document.Containers
 			this.list.List = this.document.Aggregates;
 			this.list.HScroller = true;
 			this.list.VScroller = true;
-			this.list.Parent = this;
+			this.list.SetParent (this);
 			this.list.MinSize = new Size(10, 87);
 			this.list.Dock = DockStyle.Fill;
 			this.list.DockMargins = new Margins(0, 0, 0, 0);
@@ -105,7 +105,7 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.HasCloseButton = true;
 			this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
 			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
-			this.colorSelector.Parent = this;
+			this.colorSelector.SetParent (this);
 			this.colorSelector.Dock = DockStyle.Bottom;
 			this.colorSelector.DockMargins = new Margins(0, 0, 5, 0);
 			this.colorSelector.TabIndex = 100;
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Document.Containers
 			this.childrens.IsHiliteColumn = false;
 			this.childrens.IsOrderColumn = true;
 			this.childrens.IsChildrensColumn = false;
-			this.childrens.Parent = this;
+			this.childrens.SetParent (this);
 			this.childrens.Height = 87;
 			this.childrens.Dock = DockStyle.Bottom;
 			this.childrens.DockMargins = new Margins(0, 0, 0, 0);
@@ -390,7 +390,7 @@ namespace Epsitec.Common.Document.Containers
 			this.panel.IsLayoutDirect = true;
 			this.panel.Changed += new EventHandler(this.HandlePanelChanged);
 			this.panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
-			this.panel.Parent = this.panelContainer;
+			this.panel.SetParent (this.panelContainer);
 			this.panel.Dock = DockStyle.Fill;
 			this.panel.TabIndex = 1;
 			this.panel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;

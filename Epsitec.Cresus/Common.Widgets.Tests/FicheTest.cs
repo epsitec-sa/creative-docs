@@ -289,7 +289,7 @@ namespace Epsitec.Common.Widgets
 			this.menu.Items.Add(new MenuItem ("display", "Affichage"));
 			this.menu.Items.Add(new MenuItem ("debug", "Debug"));
 			this.menu.Items.Add(new MenuItem ("help", "Aide"));
-			this.menu.Parent = this.window.Root;
+			this.menu.SetParent (this.window.Root);
 
 			VMenu fileMenu = new VMenu();
 			fileMenu.Host = this.window;
@@ -406,7 +406,7 @@ namespace Epsitec.Common.Widgets
 			this.toolBar.Items.Add (new IconButton (@"file:images/cut.png"));
 			this.toolBar.Items.Add (new IconButton (@"file:images/copy.png"));
 			this.toolBar.Items.Add (new IconButton (@"file:images/paste.png"));
-			this.toolBar.Parent = this.window.Root;
+			this.toolBar.SetParent (this.window.Root);
 
 			Widget root = new Panel();
 			root.SetClientAngle(0);
@@ -414,7 +414,7 @@ namespace Epsitec.Common.Widgets
 			root.Location = new Point(0, 0);
 			root.Size = new Size(rect.Width, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
 			root.Dock = DockStyle.Fill;
-			root.Parent = this.window.Root;
+			root.SetParent (this.window.Root);
 			
 			this.pane = new PaneBook();
 			this.pane.Location = new Point(0, 0);
@@ -424,7 +424,7 @@ namespace Epsitec.Common.Widgets
 			//this.pane.PaneBehaviour = PaneBookBehaviour.FollowMe;
 			this.pane.Dock = DockStyle.Fill;
 			this.pane.PaneSizeChanged += new EventHandler(this.pane_SizeChanged);
-			this.pane.Parent = root;
+			this.pane.SetParent (root);
 
 			this.leftPane = new PanePage();
 			this.leftPane.PaneRelativeSize = 10;
@@ -447,7 +447,7 @@ namespace Epsitec.Common.Widgets
 			//this.subPane.PaneBehaviour = PaneBookBehaviour.FollowMe;
 			this.subPane.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			this.subPane.PaneSizeChanged += new EventHandler(this.pane_SizeChanged);
-			this.subPane.Parent = this.leftPane;
+			this.subPane.SetParent (this.leftPane);
 
 			this.topPane = new PanePage();
 			this.topPane.PaneToggle = true;
