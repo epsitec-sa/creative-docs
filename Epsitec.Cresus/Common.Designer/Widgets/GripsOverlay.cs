@@ -535,11 +535,11 @@ namespace Epsitec.Common.Designer.Widgets
 						
 						if (this.target_parent == this.target_z_parent)
 						{
-							this.target_widget.ZOrder = this.target_z_order;
+//@							this.target_widget.ZOrder = this.target_z_order;
 						}
 						else
 						{
-							this.overlay.ZOrder = 0;
+//@							this.overlay.ZOrder = 0;
 						}
 					}
 					else

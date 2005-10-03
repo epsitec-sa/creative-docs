@@ -23,6 +23,12 @@ namespace Epsitec.Common.Types
 			this.property_invalidated = property_invalidated_callback;
 		}
 		
+		public PropertyMetadata(object default_value, GetValueOverrideCallback get_value_override_callback)
+		{
+			this.default_value = default_value;
+			this.get_value_override = get_value_override_callback;
+		}
+		
 		
 		public object							DefaultValue
 		{
@@ -36,11 +42,11 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.get_value_override_callback;
+				return this.get_value_override;
 			}
 			set
 			{
-				this.get_value_override_callback = value;
+				this.get_value_override = value;
 			}
 		}
 		
@@ -48,11 +54,11 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return this.set_value_override_callback;
+				return this.set_value_override;
 			}
 			set
 			{
-				this.set_value_override_callback = value;
+				this.set_value_override = value;
 			}
 		}
 		
@@ -70,8 +76,8 @@ namespace Epsitec.Common.Types
 		
 		
 		private object							default_value;
-		private GetValueOverrideCallback		get_value_override_callback;
-		private SetValueOverrideCallback		set_value_override_callback;
+		private GetValueOverrideCallback		get_value_override;
+		private SetValueOverrideCallback		set_value_override;
 		private PropertyInvalidatedCallback		property_invalidated;
 	}
 }

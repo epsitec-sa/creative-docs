@@ -637,15 +637,15 @@
 	<data name="Action.SelectInvert">Invert selection</data>
 	<data name="Action.SelectName">Select by name &quot;{0}&quot;</data>
 
-	<data name="Action.Selector.Move">@@Déplacement global</data>
-	<data name="Action.Selector.Center">@@Déplacement du centre de rotation global</data>
-	<data name="Action.Selector.Rotate">@@Rotation globale</data>
-	<data name="Action.Selector.Scaler">@@Mise à l'échelle globale</data>
-	<data name="Action.Selector.Stretcher">@@Déformation globale</data>
-	<data name="Action.Selector.Info.Move">@@dx={0} dy={1}</data>
-	<data name="Action.Selector.Info.Scale">@@scale x={0}% scale y={1}%</data>
-	<data name="Action.Selector.Info.Center">@@dx={0} dy={1}</data>
-	<data name="Action.Selector.Info.Rotate">@@angle={0}</data>
+	<data name="Action.Selector.Move">Move selection</data>
+	<data name="Action.Selector.Center">Move center of rotation</data>
+	<data name="Action.Selector.Rotate">Rotate selection</data>
+	<data name="Action.Selector.Scaler">Scale selection</data>
+	<data name="Action.Selector.Stretcher">Stretch selection</data>
+	<data name="Action.Selector.Info.Move">dx={0} dy={1}</data>
+	<data name="Action.Selector.Info.Scale">scale x={0}% scale y={1}%</data>
+	<data name="Action.Selector.Info.Center">dx={0} dy={1}</data>
+	<data name="Action.Selector.Info.Rotate">angle={0}</data>
 
 	<data name="Action.OrderMain">Order</data>
 	<data name="Action.OrderUpAll">Send to front</data>
@@ -840,7 +840,7 @@
 	<data name="Action.ZoomPrev">Previous zoom</data>
 	<data name="Action.ZoomSub">Zoom out</data>
 	<data name="Action.ZoomAdd">Zoom in</data>
-	<data name="Action.ZoomMenu">@@Choix du zoom</data>
+	<data name="Action.ZoomMenu">Pick a pre-defined zoom value</data>
 	
 	<data name="Action.ViewMain">View</data>
 	<data name="Action.Grid">Magnetic grid</data>

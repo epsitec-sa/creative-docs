@@ -800,12 +800,12 @@ namespace Epsitec.Common.Designer
 				
 				//	TODO: gérer le undo.
 				
-				widget.ZOrder = z[i];
+//@				widget.ZOrder = z[i];
 				
 				this.active_editor.NotifyWidgetModified (widget);
 			}
 			
-			this.active_editor.GripsOverlay.ZOrder = 0;
+//@			this.active_editor.GripsOverlay.ZOrder = 0;
 		}
 		
 		

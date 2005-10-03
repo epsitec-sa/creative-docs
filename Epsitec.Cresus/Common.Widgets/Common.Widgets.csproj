@@ -752,6 +752,21 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Collections\IVisualCollectionHost.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Collections\LayerCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Collections\VisualCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Feels\Default.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -803,11 +818,6 @@
                 />
                 <File
                     RelPath = "Helpers\StringCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Helpers\VisualCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -878,6 +888,11 @@
                 />
                 <File
                     RelPath = "Layouts\Events.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Layouts\Layer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

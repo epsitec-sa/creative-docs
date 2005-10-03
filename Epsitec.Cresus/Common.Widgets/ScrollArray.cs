@@ -1701,7 +1701,7 @@ invalid:	row    = -1;
 				rect.Left    = rect.Right;
 				
 				slider.Layout = LayoutStyles.Manual;
-				slider.ZOrder = i;
+//@				slider.ZOrder = i;
 				slider.Bounds = bounds;
 				slider.SetVisible (this.columns[i].Elasticity == 0);
 			}
