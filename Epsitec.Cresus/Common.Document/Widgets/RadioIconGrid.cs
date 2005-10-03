@@ -64,7 +64,7 @@ namespace Epsitec.Common.Document.Widgets
 			icon.IconName = Misc.Icon(iconText);
 			icon.EnumValue = enumValue;
 			icon.EndOfLine = endOfLine;
-			icon.SetParent (this);
+			icon.SetParent(this);
 			icon.TabIndex = this.list.Count;
 			icon.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			icon.Group = this.controller.Group;

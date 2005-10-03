@@ -17,6 +17,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonSettings = this.CreateIconButton("Settings", Misc.Icon("Settings"), Res.Strings.Action.Settings);
 			this.buttonInfos = this.CreateIconButton("Infos", Misc.Icon("Infos"), Res.Strings.Action.Infos);
 			this.buttonPageStack = this.CreateIconButton("PageStack", Misc.Icon("PageStack"), Res.Strings.Action.PageStack);
+			this.buttonGlyphs = this.CreateIconButton("Glyphs", Misc.Icon("Glyphs"), Res.Strings.Action.Glyphs);
+			this.buttonKey = this.CreateIconButton("KeyApplication", Misc.Icon("Key"), Res.Strings.Action.Key);
 			this.buttonUpdate = this.CreateIconButton("UpdateApplication", Misc.Icon("Update"), Res.Strings.Action.Update);
 			this.buttonAbout = this.CreateIconButton("AboutApplication", Misc.Icon("About"), Res.Strings.Action.About);
 		}
@@ -30,12 +32,19 @@ namespace Epsitec.Common.Document.Ribbons
 			base.Dispose(disposing);
 		}
 
+		public override void SetDocument(DocumentType type, InstallType install, Settings.GlobalSettings gs, Document document)
+		{
+			base.SetDocument(type, install, gs, document);
+
+			this.buttonKey.SetVisible(this.installType != InstallType.Freeware);
+		}
+
 		// Retourne la largeur standard.
 		public override double DefaultWidth
 		{
 			get
 			{
-				return 8 + 22*3;
+				return 8 + 22*4;
 			}
 		}
 
@@ -59,10 +68,14 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonInfos.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonPageStack.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonGlyphs.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
+			rect.Offset(dx, 0);
+			this.buttonKey.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonUpdate.Bounds = rect;
 			rect.Offset(dx, 0);
@@ -73,6 +86,8 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonSettings;
 		protected IconButton				buttonInfos;
 		protected IconButton				buttonPageStack;
+		protected IconButton				buttonGlyphs;
+		protected IconButton				buttonKey;
 		protected IconButton				buttonUpdate;
 		protected IconButton				buttonAbout;
 	}

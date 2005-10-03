@@ -45,12 +45,12 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
-		public void SetDocument(DocumentType type, Settings.GlobalSettings gs, Document document)
+		public void SetDocument(DocumentType type, InstallType install, Settings.GlobalSettings gs, Document document)
 		{
 			foreach ( Abstract ribbon in this.Children )
 			{
 				if ( ribbon == null )  continue;
-				ribbon.SetDocument(type, gs, document);
+				ribbon.SetDocument(type, install, gs, document);
 			}
 		}
 
