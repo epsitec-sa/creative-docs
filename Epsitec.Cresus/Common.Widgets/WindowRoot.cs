@@ -156,6 +156,10 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		public override void SetLayout(LayoutStyles value)
+		{
+		}
+		
 		public override void Invalidate(Drawing.Rectangle rect)
 		{
 			System.Diagnostics.Debug.Assert (this.Parent == null);

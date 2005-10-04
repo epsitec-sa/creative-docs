@@ -2456,7 +2456,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void SetLayout(LayoutStyles value)
+		public virtual void SetLayout(LayoutStyles value)
 		{
 			if (this.layout != value)
 			{
@@ -4841,7 +4841,7 @@ namespace Epsitec.Common.Widgets
 			
 			try
 			{
-				bool update = false;
+				bool update = true;
 				
 //				if (this.HasChildren)
 //				{
