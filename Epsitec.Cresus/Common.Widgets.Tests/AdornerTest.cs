@@ -1035,13 +1035,13 @@ namespace Epsitec.Common.Widgets
 			tags.Height = 46;
 			tags.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
 			tags.AnchorMargins = new Margins(10, 10, 0, 46);
-			tags.SetClientZoom(0.85);
+//-			tags.SetClientZoom(0.85);
 			tags.SetParent (window.Root);
 
 			final.Height = 46;
 			final.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
 			final.AnchorMargins = new Margins(10, 10, 0, 0);
-			final.SetClientZoom(0.85);
+//-			final.SetClientZoom(0.85);
 			final.SetParent (window.Root);
 
 			window.FocusedWidget = multi;

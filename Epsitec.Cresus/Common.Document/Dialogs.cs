@@ -593,9 +593,9 @@ namespace Epsitec.Common.Document
 
 				text = new StaticText(container);
 				text.Name = sDouble.Name;
-				text.Text = sDouble.GetInfo();
+				text.Text = "<font size=\"80%\">" + sDouble.GetInfo() + "</font>";
 				text.Width = 150;
-				text.SetClientZoom(0.8);
+//				text.SetClientZoom(0.8);
 				text.Dock = DockStyle.Left;
 				text.DockMargins = new Margins(120, 0, 0, 0);
 				this.WidgetsTableAdd(text, ".Info");
@@ -788,8 +788,8 @@ namespace Epsitec.Common.Document
 				button.ButtonStyle = ButtonStyle.Icon;
 				button.Width = 17;
 				button.Name = sPoint.Name;
-				button.Text = "\u00F72";  // /2
-				button.SetClientZoom(0.8);
+				button.Text = @"<font size=""80%"">\u00F72</font>";  // /2
+//-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
@@ -801,8 +801,8 @@ namespace Epsitec.Common.Document
 				button.ButtonStyle = ButtonStyle.Icon;
 				button.Width = 17;
 				button.Name = sPoint.Name;
-				button.Text = "\u00D72";  // x2
-				button.SetClientZoom(0.8);
+				button.Text = @"<font size=""80%"">\u00D72</font>";  // x2
+//-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
@@ -821,8 +821,8 @@ namespace Epsitec.Common.Document
 				button.ButtonStyle = ButtonStyle.Icon;
 				button.Width = 17;
 				button.Name = sPoint.Name;
-				button.Text = "\u00F72";  // /2
-				button.SetClientZoom(0.8);
+				button.Text = @"<font size=""80%"">\u00F72</font>";  // /2
+//-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;
@@ -834,8 +834,8 @@ namespace Epsitec.Common.Document
 				button.ButtonStyle = ButtonStyle.Icon;
 				button.Width = 17;
 				button.Name = sPoint.Name;
-				button.Text = "\u00D72";  // x2
-				button.SetClientZoom(0.8);
+				button.Text = @"<font size=""80%"">\u00D72</font>";  // x2
+//-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				button.Dock = DockStyle.Left;

@@ -32,13 +32,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.version = new StaticText(this.window.Root);
 				this.version.Height = this.version.Height*1.2;
-				this.version.SetClientZoom(1.2);
+//				this.version.SetClientZoom(1.2);
 				this.version.Dock = DockStyle.Top;
 				this.version.DockMargins = new Margins(10, 10, 10, 0);
 
 				this.limit = new StaticText(this.window.Root);
 				this.limit.Height = this.limit.Height*1.2;
-				this.limit.SetClientZoom(1.2);
+//				this.limit.SetClientZoom(1.2);
 				this.limit.Dock = DockStyle.Top;
 				this.limit.DockMargins = new Margins(10, 10, 0, 10);
 
@@ -60,17 +60,17 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
 			}
 
-			this.version.Text = string.Format(Res.Strings.Dialog.Update.Version, About.GetVersion());
+			this.version.Text = "<font size=\"120%\">" + string.Format(Res.Strings.Dialog.Update.Version, About.GetVersion()) + "</font>";
 
 			if ( this.editor.InstallType == InstallType.Full )
 			{
 				string key = SerialAlgorithm.ReadSerial();
 				string date = SerialAlgorithm.GetExpirationDate(key).Subtract(new System.TimeSpan(1, 0, 0, 0)).ToShortDateString();
-				this.limit.Text = string.Format(Res.Strings.Dialog.Update.Limit, date);
+				this.limit.Text = "<font size=\"120%\">" + string.Format(Res.Strings.Dialog.Update.Limit, date) + "</font>";
 			}
 			else if ( this.editor.InstallType == InstallType.Expired )
 			{
-				this.limit.Text = Res.Strings.Dialog.Update.Over;
+				this.limit.Text = "<font size=\"120%\">" + Res.Strings.Dialog.Update.Over + "</font>";
 			}
 			else
 			{

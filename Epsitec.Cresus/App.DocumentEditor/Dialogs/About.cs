@@ -87,68 +87,68 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				string version = About.GetVersion();
 				StaticText sv = new StaticText(parent);
-				sv.Text = string.Format("<font size=\"140%\"><b>{0} {1}</b></font>    {2}", Res.Strings.Dialog.About.Version, version, Res.Strings.Dialog.About.Language);
+				sv.Text = string.Format("<font size=\"80%\"><font size=\"140%\"><b>{0} {1}</b></font>    {2}</font>", Res.Strings.Dialog.About.Version, version, Res.Strings.Dialog.About.Language);
 				sv.Location = new Point(10, y+5+12*1);
 				sv.Size = new Size(270, 14);
-				sv.SetClientZoom(0.8);
+//-				sv.SetClientZoom(0.8);
 
 				StaticText ep = new StaticText(parent);
-				ep.Text = Res.Strings.Dialog.About.Copyright;
+				ep.Text = @"<font size=""80%"">" + Res.Strings.Dialog.About.Copyright + "</font>";
 				ep.Location = new Point(10, y+5+12*0);
 				ep.Size = new Size(270, 14);
-				ep.SetClientZoom(0.8);
+//-				ep.SetClientZoom(0.8);
 			}
 			else
 			{
 				string version = About.GetVersion();
 				StaticText sv = new StaticText(parent);
-				sv.Text = string.Format("<font size=\"140%\"><b>{0} {1}</b></font>    {2}", Res.Strings.Dialog.About.Version, version, Res.Strings.Dialog.About.Language);
+				sv.Text = string.Format("<font size=\"80%\"><font size=\"140%\"><b>{0} {1}</b></font>    {2}</font>", Res.Strings.Dialog.About.Version, version, Res.Strings.Dialog.About.Language);
 				sv.Location = new Point(22, y+5+12*2);
 				sv.Size = new Size(270, 14);
-				sv.SetClientZoom(0.8);
+//				sv.SetClientZoom(0.8);
 
 				string sk = About.GetKey();
 				if ( sk != null )
 				{
 					StaticText key = new StaticText(parent);
-					key.Text = string.Format("{0}: {1}", Res.Strings.Dialog.About.Key, sk);
+					key.Text = string.Format(@"<font size=""80%"">{0}: {1}</font>", Res.Strings.Dialog.About.Key, sk);
 					key.Location = new Point(22, y+5+12*1);
 					key.Size = new Size(270, 14);
-					key.SetClientZoom(0.8);
+//-					key.SetClientZoom(0.8);
 				}
 
 				StaticText ep = new StaticText(parent);
-				ep.Text = Res.Strings.Dialog.About.Copyright;
+				ep.Text = @"<font size=""80%"">" + Res.Strings.Dialog.About.Copyright + "</font>";
 				ep.Location = new Point(22, y+5+12*0);
 				ep.Size = new Size(270, 14);
-				ep.SetClientZoom(0.8);
+//-				ep.SetClientZoom(0.8);
 			}
 
 			if ( type == InstallType.Demo )
 			{
 				StaticText warning = new StaticText(parent);
-				warning.Text = "<b>" + Res.Strings.Dialog.About.Demo + "</b>";
+				warning.Text = "<font size=\"250%\"><b>" + Res.Strings.Dialog.About.Demo + "</b></font>";
 				warning.Location = new Point(280, y+0);
 				warning.Size = new Size(84, 40);
-				warning.SetClientZoom(2.5);
+//-				warning.SetClientZoom(2.5);
 			}
 
 			if ( type == InstallType.Expired )
 			{
 				StaticText warning = new StaticText(parent);
-				warning.Text = "<b>" + Res.Strings.Dialog.About.Expired + "</b>";
+				warning.Text = "<font size=\"250%\"><b>" + Res.Strings.Dialog.About.Expired + "</b></font>";
 				warning.Location = new Point(280, y+0);
 				warning.Size = new Size(84, 40);
-				warning.SetClientZoom(2.5);
+//-				warning.SetClientZoom(2.5);
 			}
 
 			if ( type == InstallType.Freeware )
 			{
 				StaticText warning = new StaticText(parent);
-				warning.Text = "<b>" + Res.Strings.Dialog.About.Freeware + "</b>";
+				warning.Text = "<font size=\"180%\"><b>" + Res.Strings.Dialog.About.Freeware + "</b></font>";
 				warning.Location = new Point(280, y+0);
 				warning.Size = new Size(120, 40);
-				warning.SetClientZoom(1.8);
+//-				warning.SetClientZoom(1.8);
 			}
 
 			return image;

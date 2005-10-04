@@ -40,8 +40,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.radio1 = new RadioButton(this.window.Root);
 				this.radio1.Height = radio1.Height*1.2;
-				this.radio1.SetClientZoom(1.2);
-				this.radio1.Text = Res.Strings.Dialog.Key.RadioDemo;
+//-				this.radio1.SetClientZoom(1.2);
+				this.radio1.Text = @"<font size=""120%"">" + Res.Strings.Dialog.Key.RadioDemo + "</font>";
 				this.radio1.Dock = DockStyle.Top;
 				this.radio1.DockMargins = new Margins(10, 10, 0, 0);
 				this.radio1.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);
@@ -51,8 +51,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.radio2 = new RadioButton(this.window.Root);
 				this.radio2.Height = radio2.Height*1.2;
-				this.radio2.SetClientZoom(1.2);
-				this.radio2.Text = Res.Strings.Dialog.Key.RadioFull;
+//-				this.radio2.SetClientZoom(1.2);
+				this.radio2.Text = @"<font size=""120%"">" + Res.Strings.Dialog.Key.RadioFull + "</font>";
 				this.radio2.Dock = DockStyle.Top;
 				this.radio2.DockMargins = new Margins(10, 10, 0, 0);
 				this.radio2.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);

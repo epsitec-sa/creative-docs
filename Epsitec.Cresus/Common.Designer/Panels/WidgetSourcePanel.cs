@@ -44,8 +44,8 @@ namespace Epsitec.Common.Designer.Panels
 			System.Diagnostics.Debug.Assert (this.widget == parent);
 			
 			this.CreateDragSource (typeof (StaticText),      "Texte",		 10,  12, 33, 14+6);
-			this.CreateDragSource (typeof (StaticTextSmall), "Petit texte",  43,  14, 54, 12+6);
-			this.CreateDragSource (typeof (StaticTextLarge), "Grand texte",  97,  10, 78, 17+6);
+//			this.CreateDragSource (typeof (StaticTextSmall), "Petit texte",  43,  14, 54, 12+6);
+//			this.CreateDragSource (typeof (StaticTextLarge), "Grand texte",  97,  10, 78, 17+6);
 			this.CreateDragSource (typeof (Button),          "Bouton",		 10,  35, 86, 23+6);
 			this.CreateDragSource (typeof (CheckButton),     "Coche",		 10,  65, 66, 14+6);
 			this.CreateDragSource (typeof (RadioButton),     "Radio",		 10,  85, 66, 14+6);

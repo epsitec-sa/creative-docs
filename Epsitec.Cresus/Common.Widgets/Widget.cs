@@ -1802,55 +1802,55 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int									RootAngle
-		{
-			get
-			{
-				Widget widget = this;
-				int    angle  = 0;
-				
-				while (widget != null)
-				{
-					angle += widget.Client.Angle;
-					widget = widget.parent;
-				}
-				
-				return angle % 360;
-			}
-		}
+//		public int									RootAngle
+//		{
+//			get
+//			{
+//				Widget widget = this;
+//				int    angle  = 0;
+//				
+//				while (widget != null)
+//				{
+//					angle += widget.Client.Angle;
+//					widget = widget.parent;
+//				}
+//				
+//				return angle % 360;
+//			}
+//		}
 		
-		public double								RootZoom
-		{
-			get
-			{
-				Widget widget = this;
-				double zoom   = 1.0;
-				
-				while (widget != null)
-				{
-					zoom  *= widget.Client.Zoom;
-					widget = widget.parent;
-				}
-				
-				return zoom;
-			}
-		}
+//		public double								RootZoom
+//		{
+//			get
+//			{
+//				Widget widget = this;
+//				double zoom   = 1.0;
+//				
+//				while (widget != null)
+//				{
+//					zoom  *= widget.Client.Zoom;
+//					widget = widget.parent;
+//				}
+//				
+//				return zoom;
+//			}
+//		}
 		
-		public Direction							RootDirection
-		{
-			get
-			{
-				switch (this.RootAngle)
-				{
-					case 0:		return Direction.Up;
-					case 90:	return Direction.Left;
-					case 180:	return Direction.Down;
-					case 270:	return Direction.Right;
-				}
-				
-				return Direction.None;
-			}
-		}
+//		public Direction							RootDirection
+//		{
+//			get
+//			{
+//				switch (0/*this.RootAngle*/)
+//				{
+//					case 0:		return Direction.Up;
+//					case 90:	return Direction.Left;
+//					case 180:	return Direction.Down;
+//					case 270:	return Direction.Right;
+//				}
+//				
+//				return Direction.None;
+//			}
+//		}
 		
 		
 		public bool									IsEmpty
@@ -2313,22 +2313,22 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void SetClientAngle(int angle)
-		{
-			this.client_info.SetAngle (angle);
-			this.UpdateClientGeometry ();
-		}
+//		public void SetClientAngle(int angle)
+//		{
+//			this.client_info.SetAngle (angle);
+//			this.UpdateClientGeometry ();
+//		}
+//		
+//		public void SetClientZoom(double zoom)
+//		{
+//			this.client_info.SetZoom (zoom);
+//			this.UpdateClientGeometry ();
+//		}
 		
-		public void SetClientZoom(double zoom)
-		{
-			this.client_info.SetZoom (zoom);
-			this.UpdateClientGeometry ();
-		}
-		
-		public void SetClientOffset(double ox, double oy)
-		{
-			this.client_info.SetOffset (ox, oy);
-		}
+//		public void SetClientOffset(double ox, double oy)
+//		{
+//			this.client_info.SetOffset (ox, oy);
+//		}
 		
 		
 		public virtual Drawing.Size GetBestFitSize()
@@ -3205,7 +3205,7 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			int angle = this.RootAngle;
+			int angle = 0;//this.RootAngle;
 			
 			switch (angle)
 			{
@@ -3242,7 +3242,7 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			int angle = this.RootAngle;
+			int angle = 0;//this.RootAngle;
 			
 			switch (angle)
 			{
@@ -6505,23 +6505,23 @@ namespace Epsitec.Common.Widgets
 				this.height = height;
 			}
 			
-			internal void SetAngle(int angle)
-			{
-				angle = angle % 360;
-				this.angle = (angle < 0) ? (short) (angle + 360) : (short) (angle);
-			}
+//			internal void SetAngle(int angle)
+//			{
+//				angle = angle % 360;
+//				this.angle = (angle < 0) ? (short) (angle + 360) : (short) (angle);
+//			}
 			
-			internal void SetZoom(double zoom)
-			{
-				System.Diagnostics.Debug.Assert (zoom > 0.0f);
-				this.zoom = zoom;
-			}
+//			internal void SetZoom(double zoom)
+//			{
+//				System.Diagnostics.Debug.Assert (zoom > 0.0f);
+//				this.zoom = zoom;
+//			}
 			
-			internal void SetOffset(double ox, double oy)
-			{
-				this.ox = ox;
-				this.oy = oy;
-			}
+//			internal void SetOffset(double ox, double oy)
+//			{
+//				this.ox = ox;
+//				this.oy = oy;
+//			}
 			
 			
 			public double					Width
@@ -6544,20 +6544,20 @@ namespace Epsitec.Common.Widgets
 				get { return new Drawing.Rectangle (0, 0, this.width, this.height); }
 			}
 			
-			public int						Angle
-			{
-				get { return this.angle; }
-			}
+//			public int						Angle
+//			{
+//				get { return this.angle; }
+//			}
+//			
+//			public double					Zoom
+//			{
+//				get { return this.zoom; }
+//			}
 			
-			public double					Zoom
-			{
-				get { return this.zoom; }
-			}
-			
-			public Drawing.Point			Offset
-			{
-				get { return new Drawing.Point (this.ox, this.oy); }
-			}
+//			public Drawing.Point			Offset
+//			{
+//				get { return new Drawing.Point (this.ox, this.oy); }
+//			}
 			
 			
 			internal double					width	= 0.0;

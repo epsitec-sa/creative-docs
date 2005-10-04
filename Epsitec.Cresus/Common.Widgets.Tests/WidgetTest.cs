@@ -549,9 +549,9 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Size (200, 120);
 			window.Text       = "CheckTextLayoutInfo";
 			
-			StaticText text   = new StaticText ("Abcdefgh... Abcdefgh...");
+			StaticText text   = new StaticText ("<font size=\"300%\">Abcdefgh... Abcdefgh...</font>");
 			
-			text.SetClientZoom (3);
+//-			text.SetClientZoom (3);
 			
 			text.Size     = new Drawing.Size (text.PreferredSize.Width / 2, text.PreferredSize.Height * 2) * 3;
 			text.Anchor   = AnchorStyles.TopLeft;
@@ -597,21 +597,21 @@ namespace Epsitec.Common.Widgets
 			Assert.IsTrue (pt_widget.X == pt_test.X);
 			Assert.IsTrue (pt_widget.Y == pt_test.Y);
 			
-			widget.SetClientAngle (90);
+//			widget.SetClientAngle (90);
 			
-			Assert.IsTrue (widget.Client.Angle == 90);
-			Assert.IsTrue (widget.Client.Width == 40);
-			Assert.IsTrue (widget.Client.Height == 50);
+//			Assert.IsTrue (widget.Client.Angle == 90);
+//			Assert.IsTrue (widget.Client.Width == 40);
+//			Assert.IsTrue (widget.Client.Height == 50);
 			
-			widget.SetClientAngle (180);
-			widget.SetClientZoom (0.5f);
+//			widget.SetClientAngle (180);
+//			widget.SetClientZoom (0.5f);
 			
-			Assert.IsTrue (widget.Client.Angle == 180);
-			Assert.IsTrue (widget.Client.Width == 100);
-			Assert.IsTrue (widget.Client.Height == 80);
+//			Assert.IsTrue (widget.Client.Angle == 180);
+//			Assert.IsTrue (widget.Client.Width == 100);
+//			Assert.IsTrue (widget.Client.Height == 80);
 			
-			widget.SetClientAngle (180);
-			widget.SetClientZoom (0.5f);
+//			widget.SetClientAngle (180);
+//			widget.SetClientZoom (0.5f);
 			
 			pt_test   = new Point (widget.Left, widget.Bottom);
 			pt_client = widget.MapParentToClient (pt_test);
@@ -622,44 +622,44 @@ namespace Epsitec.Common.Widgets
 			Assert.IsTrue (Transform.Equal (pt_client.Y, widget.Client.Height));
 			
 			
-			double zoom = 2.0;
-			double ox = 1.0;
-			double oy = 2.0;
+//			double zoom = 2.0;
+//			double ox = 1.0;
+//			double oy = 2.0;
 			
-			for (int angle = 0; angle < 360; angle += 90)
-			{
-				widget.SetClientAngle (angle);
-				widget.SetClientZoom (zoom);
-			
-				pt_test   = new Point (widget.Left + ox, widget.Bottom + oy);
-				pt_client = widget.MapParentToClient (pt_test);
-				pt_widget = widget.MapClientToParent (pt_client);
-			
-				Assert.IsTrue (Transform.Equal (pt_widget, pt_test));
-				
-				switch (angle)
-				{
-					case 0:
-						Assert.IsTrue (Transform.Equal (pt_client.X, ox / zoom), "0° failed");
-						Assert.IsTrue (Transform.Equal (pt_client.Y, oy / zoom), "0° failed");
-						break;
-					
-					case 90:
-						Assert.IsTrue (Transform.Equal (pt_client.X, oy / zoom), "90° failed");
-						Assert.IsTrue (Transform.Equal (pt_client.Y, widget.Client.Height - ox / zoom), "90° failed");
-						break;
-					
-					case 180:
-						Assert.IsTrue (Transform.Equal (pt_client.X, (widget.Client.Width - ox / zoom)), "180° failed");
-						Assert.IsTrue (Transform.Equal (pt_client.Y, (widget.Client.Height - oy / zoom)), "180° failed");
-						break;
-					
-					case 270:
-						Assert.IsTrue (Transform.Equal (pt_client.X, (widget.Client.Width - oy / zoom)), "270° failed");
-						Assert.IsTrue (Transform.Equal (pt_client.Y, ox / zoom), "270° failed");
-						break;
-				}
-			}
+//			for (int angle = 0; angle < 360; angle += 90)
+//			{
+//				widget.SetClientAngle (angle);
+//				widget.SetClientZoom (zoom);
+//			
+//				pt_test   = new Point (widget.Left + ox, widget.Bottom + oy);
+//				pt_client = widget.MapParentToClient (pt_test);
+//				pt_widget = widget.MapClientToParent (pt_client);
+//			
+//				Assert.IsTrue (Transform.Equal (pt_widget, pt_test));
+//				
+//				switch (angle)
+//				{
+//					case 0:
+//						Assert.IsTrue (Transform.Equal (pt_client.X, ox / zoom), "0° failed");
+//						Assert.IsTrue (Transform.Equal (pt_client.Y, oy / zoom), "0° failed");
+//						break;
+//					
+//					case 90:
+//						Assert.IsTrue (Transform.Equal (pt_client.X, oy / zoom), "90° failed");
+//						Assert.IsTrue (Transform.Equal (pt_client.Y, widget.Client.Height - ox / zoom), "90° failed");
+//						break;
+//					
+//					case 180:
+//						Assert.IsTrue (Transform.Equal (pt_client.X, (widget.Client.Width - ox / zoom)), "180° failed");
+//						Assert.IsTrue (Transform.Equal (pt_client.Y, (widget.Client.Height - oy / zoom)), "180° failed");
+//						break;
+//					
+//					case 270:
+//						Assert.IsTrue (Transform.Equal (pt_client.X, (widget.Client.Width - oy / zoom)), "270° failed");
+//						Assert.IsTrue (Transform.Equal (pt_client.Y, ox / zoom), "270° failed");
+//						break;
+//				}
+//			}
 		}
 		
 		[Test] public void CheckTransformToClient()
@@ -677,41 +677,41 @@ namespace Epsitec.Common.Widgets
 			
 			Epsitec.Common.Drawing.Transform transform = new Epsitec.Common.Drawing.Transform ();
 			
-			double ox = 1.0;
-			double oy = 2.0;
-			
-			Point pt1 = new Point (widget.Left + ox, widget.Bottom + oy);
-			Point pt2;
-			Point pt3;
-			
-			widget.SetClientAngle (0);
-			transform = widget.GetTransformToClient ();
-			
-			pt2 = widget.MapParentToClient (pt1);
-			pt3 = transform.TransformDirect (pt1);
-			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
-			
-			widget.SetClientZoom (3);
-			widget.SetClientAngle (90);
-			transform = widget.GetTransformToClient ();
-			
-			pt2 = widget.MapParentToClient (pt1);
-			pt3 = transform.TransformDirect (pt1);
-			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
-			
-			widget.SetClientAngle (180);
-			transform = widget.GetTransformToClient ();
-			
-			pt2 = widget.MapParentToClient (pt1);
-			pt3 = transform.TransformDirect (pt1);
-			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
-			
-			widget.SetClientAngle (270);
-			transform = widget.GetTransformToClient ();
-			
-			pt2 = widget.MapParentToClient (pt1);
-			pt3 = transform.TransformDirect (pt1);
-			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+//			double ox = 1.0;
+//			double oy = 2.0;
+//			
+//			Point pt1 = new Point (widget.Left + ox, widget.Bottom + oy);
+//			Point pt2;
+//			Point pt3;
+//			
+//			widget.SetClientAngle (0);
+//			transform = widget.GetTransformToClient ();
+//			
+//			pt2 = widget.MapParentToClient (pt1);
+//			pt3 = transform.TransformDirect (pt1);
+//			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+//			
+//			widget.SetClientZoom (3);
+//			widget.SetClientAngle (90);
+//			transform = widget.GetTransformToClient ();
+//			
+//			pt2 = widget.MapParentToClient (pt1);
+//			pt3 = transform.TransformDirect (pt1);
+//			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+//			
+//			widget.SetClientAngle (180);
+//			transform = widget.GetTransformToClient ();
+//			
+//			pt2 = widget.MapParentToClient (pt1);
+//			pt3 = transform.TransformDirect (pt1);
+//			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+//			
+//			widget.SetClientAngle (270);
+//			transform = widget.GetTransformToClient ();
+//			
+//			pt2 = widget.MapParentToClient (pt1);
+//			pt3 = transform.TransformDirect (pt1);
+//			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 		}
 		
 		[Test] public void CheckTransformRectToClient()
@@ -727,77 +727,77 @@ namespace Epsitec.Common.Widgets
 			
 			root.Children.Add (widget);
 			
-			double ox = 1.0;
-			double oy = 2.0;
-			double dx = 10.0;
-			double dy = 6.0;
-			
-			Rectangle rect1 = new Rectangle (widget.Left + ox, widget.Bottom + oy, dx, dy);
-			Rectangle rect2;
-			Point pt1 = new Point (rect1.Left,  rect1.Bottom);
-			Point pt2 = new Point (rect1.Right, rect1.Top);
-			Point pt3;
-			Point pt4;
-			
-			widget.SetClientAngle (0);
-			widget.SetClientZoom (2);
-			
-			rect2 = widget.MapParentToClient (rect1);
-			pt3   = widget.MapParentToClient (pt1);
-			pt4   = widget.MapParentToClient (pt2);
-			
-			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
-			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
-			
-			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
-			
-			widget.SetClientZoom (3);
-			widget.SetClientAngle (90);
-			
-			rect2 = widget.MapParentToClient (rect1);
-			pt3   = widget.MapParentToClient (pt1);
-			pt4   = widget.MapParentToClient (pt2);
-			
-			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
-			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
-			
-			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
-			
-			widget.SetClientZoom (7);
-			widget.SetClientAngle (180);
-			
-			rect2 = widget.MapParentToClient (rect1);
-			pt3   = widget.MapParentToClient (pt1);
-			pt4   = widget.MapParentToClient (pt2);
-			
-			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
-			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
-			
-			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
-			
-			widget.SetClientZoom (1.5f);
-			widget.SetClientAngle (270);
-			
-			rect2 = widget.MapParentToClient (rect1);
-			pt3   = widget.MapParentToClient (pt1);
-			pt4   = widget.MapParentToClient (pt2);
-			
-			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
-			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
-			
-			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+//			double ox = 1.0;
+//			double oy = 2.0;
+//			double dx = 10.0;
+//			double dy = 6.0;
+//			
+//			Rectangle rect1 = new Rectangle (widget.Left + ox, widget.Bottom + oy, dx, dy);
+//			Rectangle rect2;
+//			Point pt1 = new Point (rect1.Left,  rect1.Bottom);
+//			Point pt2 = new Point (rect1.Right, rect1.Top);
+//			Point pt3;
+//			Point pt4;
+//			
+//			widget.SetClientAngle (0);
+//			widget.SetClientZoom (2);
+//			
+//			rect2 = widget.MapParentToClient (rect1);
+//			pt3   = widget.MapParentToClient (pt1);
+//			pt4   = widget.MapParentToClient (pt2);
+//			
+//			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
+//			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
+//			
+//			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+//			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+//			
+//			widget.SetClientZoom (3);
+//			widget.SetClientAngle (90);
+//			
+//			rect2 = widget.MapParentToClient (rect1);
+//			pt3   = widget.MapParentToClient (pt1);
+//			pt4   = widget.MapParentToClient (pt2);
+//			
+//			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
+//			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
+//			
+//			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+//			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+//			
+//			widget.SetClientZoom (7);
+//			widget.SetClientAngle (180);
+//			
+//			rect2 = widget.MapParentToClient (rect1);
+//			pt3   = widget.MapParentToClient (pt1);
+//			pt4   = widget.MapParentToClient (pt2);
+//			
+//			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
+//			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
+//			
+//			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+//			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+//			
+//			widget.SetClientZoom (1.5f);
+//			widget.SetClientAngle (270);
+//			
+//			rect2 = widget.MapParentToClient (rect1);
+//			pt3   = widget.MapParentToClient (pt1);
+//			pt4   = widget.MapParentToClient (pt2);
+//			
+//			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
+//			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
+//			
+//			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+//			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 		}
 		
 		[Test] public void CheckTransformRectToParent()
@@ -813,77 +813,77 @@ namespace Epsitec.Common.Widgets
 			
 			root.Children.Add (widget);
 			
-			double ox = 1.0;
-			double oy = 2.0;
-			double dx = 10.0;
-			double dy = 6.0;
-			
-			Rectangle rect1 = new Rectangle (widget.Left + ox, widget.Bottom + oy, dx, dy);
-			Rectangle rect2;
-			Point pt1 = new Point (rect1.Left,  rect1.Bottom);
-			Point pt2 = new Point (rect1.Right, rect1.Top);
-			Point pt3;
-			Point pt4;
-			
-			widget.SetClientAngle (0);
-			widget.SetClientZoom (2);
-			
-			rect2 = widget.MapClientToParent (rect1);
-			pt3   = widget.MapClientToParent (pt1);
-			pt4   = widget.MapClientToParent (pt2);
-			
-			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
-			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
-			
-			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
-			
-			widget.SetClientZoom (3);
-			widget.SetClientAngle (90);
-			
-			rect2 = widget.MapClientToParent (rect1);
-			pt3   = widget.MapClientToParent (pt1);
-			pt4   = widget.MapClientToParent (pt2);
-			
-			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
-			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
-			
-			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
-			
-			widget.SetClientZoom (7);
-			widget.SetClientAngle (180);
-			
-			rect2 = widget.MapClientToParent (rect1);
-			pt3   = widget.MapClientToParent (pt1);
-			pt4   = widget.MapClientToParent (pt2);
-			
-			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
-			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
-			
-			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
-			
-			widget.SetClientZoom (1.5f);
-			widget.SetClientAngle (270);
-			
-			rect2 = widget.MapClientToParent (rect1);
-			pt3   = widget.MapClientToParent (pt1);
-			pt4   = widget.MapClientToParent (pt2);
-			
-			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
-			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
-			
-			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+//			double ox = 1.0;
+//			double oy = 2.0;
+//			double dx = 10.0;
+//			double dy = 6.0;
+//			
+//			Rectangle rect1 = new Rectangle (widget.Left + ox, widget.Bottom + oy, dx, dy);
+//			Rectangle rect2;
+//			Point pt1 = new Point (rect1.Left,  rect1.Bottom);
+//			Point pt2 = new Point (rect1.Right, rect1.Top);
+//			Point pt3;
+//			Point pt4;
+//			
+//			widget.SetClientAngle (0);
+//			widget.SetClientZoom (2);
+//			
+//			rect2 = widget.MapClientToParent (rect1);
+//			pt3   = widget.MapClientToParent (pt1);
+//			pt4   = widget.MapClientToParent (pt2);
+//			
+//			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
+//			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
+//			
+//			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+//			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+//			
+//			widget.SetClientZoom (3);
+//			widget.SetClientAngle (90);
+//			
+//			rect2 = widget.MapClientToParent (rect1);
+//			pt3   = widget.MapClientToParent (pt1);
+//			pt4   = widget.MapClientToParent (pt2);
+//			
+//			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
+//			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
+//			
+//			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+//			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+//			
+//			widget.SetClientZoom (7);
+//			widget.SetClientAngle (180);
+//			
+//			rect2 = widget.MapClientToParent (rect1);
+//			pt3   = widget.MapClientToParent (pt1);
+//			pt4   = widget.MapClientToParent (pt2);
+//			
+//			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
+//			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
+//			
+//			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+//			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+//			
+//			widget.SetClientZoom (1.5f);
+//			widget.SetClientAngle (270);
+//			
+//			rect2 = widget.MapClientToParent (rect1);
+//			pt3   = widget.MapClientToParent (pt1);
+//			pt4   = widget.MapClientToParent (pt2);
+//			
+//			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
+//			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
+//			
+//			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+//			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+//			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 		}
 		
 		[Test] public void CheckTransformToParent()
@@ -901,44 +901,44 @@ namespace Epsitec.Common.Widgets
 			
 			Epsitec.Common.Drawing.Transform transform = new Epsitec.Common.Drawing.Transform ();
 			
-			double ox = 1.0;
-			double oy = 2.0;
-			
-			Point pt1 = new Point (ox, oy);
-			Point pt2;
-			Point pt3;
-			
-			widget.SetClientAngle (0);
-			transform = widget.GetTransformToParent ();
-			
-			pt2 = widget.MapClientToParent (pt1);
-			pt3 = transform.TransformDirect (pt1);
-			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
-			
-			transform.Reset ();
-			widget.SetClientZoom (3);
-			widget.SetClientAngle (90);
-			transform = widget.GetTransformToParent ();
-			
-			pt2 = widget.MapClientToParent (pt1);
-			pt3 = transform.TransformDirect (pt1);
-			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
-			
-			transform.Reset ();
-			widget.SetClientAngle (180);
-			transform = widget.GetTransformToParent ();
-			
-			pt2 = widget.MapClientToParent (pt1);
-			pt3 = transform.TransformDirect (pt1);
-			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
-			
-			transform.Reset ();
-			widget.SetClientAngle (270);
-			transform = widget.GetTransformToParent ();
-			
-			pt2 = widget.MapClientToParent (pt1);
-			pt3 = transform.TransformDirect (pt1);
-			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+//			double ox = 1.0;
+//			double oy = 2.0;
+//			
+//			Point pt1 = new Point (ox, oy);
+//			Point pt2;
+//			Point pt3;
+//			
+//			widget.SetClientAngle (0);
+//			transform = widget.GetTransformToParent ();
+//			
+//			pt2 = widget.MapClientToParent (pt1);
+//			pt3 = transform.TransformDirect (pt1);
+//			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+//			
+//			transform.Reset ();
+//			widget.SetClientZoom (3);
+//			widget.SetClientAngle (90);
+//			transform = widget.GetTransformToParent ();
+//			
+//			pt2 = widget.MapClientToParent (pt1);
+//			pt3 = transform.TransformDirect (pt1);
+//			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+//			
+//			transform.Reset ();
+//			widget.SetClientAngle (180);
+//			transform = widget.GetTransformToParent ();
+//			
+//			pt2 = widget.MapClientToParent (pt1);
+//			pt3 = transform.TransformDirect (pt1);
+//			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+//			
+//			transform.Reset ();
+//			widget.SetClientAngle (270);
+//			transform = widget.GetTransformToParent ();
+//			
+//			pt2 = widget.MapClientToParent (pt1);
+//			pt3 = transform.TransformDirect (pt1);
+//			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 		}
 		
 		[Test] public void CheckTransformParentClientIdentity()
@@ -957,18 +957,18 @@ namespace Epsitec.Common.Widgets
 			Epsitec.Common.Drawing.Transform identity  = new Epsitec.Common.Drawing.Transform ();
 			Epsitec.Common.Drawing.Transform transform = new Epsitec.Common.Drawing.Transform ();
 			
-			widget.SetClientZoom (3);
-			widget.SetClientAngle (90);
-			
-			transform = widget.GetTransformToClient ();
-			transform.MultiplyBy (widget.GetTransformToParent ());
-			
-			Assert.IsTrue (identity.Equals (transform));
-			
-			transform = widget.GetTransformToParent ();
-			transform.MultiplyBy (widget.GetTransformToClient ());
-			
-			Assert.IsTrue (identity.Equals (transform));
+//			widget.SetClientZoom (3);
+//			widget.SetClientAngle (90);
+//			
+//			transform = widget.GetTransformToClient ();
+//			transform.MultiplyBy (widget.GetTransformToParent ());
+//			
+//			Assert.IsTrue (identity.Equals (transform));
+//			
+//			transform = widget.GetTransformToParent ();
+//			transform.MultiplyBy (widget.GetTransformToClient ());
+//			
+//			Assert.IsTrue (identity.Equals (transform));
 		}
 		
 		[Test] public void CheckTransformHierarchy()
@@ -983,16 +983,16 @@ namespace Epsitec.Common.Widgets
 			widget.Size     = new Size (50, 40);
 			widget.SetParent (root);
 			
-			widget.SetClientZoom (3);
-			widget.SetClientAngle (90);
-			
-			Epsitec.Common.Drawing.Transform t1 = widget.GetRootToClientTransform ();
-			Epsitec.Common.Drawing.Transform t2 = widget.GetClientToRootTransform ();
-			
-			System.Console.Out.WriteLine ("root -> client : " + t1.ToString ());
-			System.Console.Out.WriteLine ("client -> root : " + t2.ToString ());
-			
-			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Multiply (t1, t2).Equals (new Epsitec.Common.Drawing.Transform ()));
+//			widget.SetClientZoom (3);
+//			widget.SetClientAngle (90);
+//			
+//			Epsitec.Common.Drawing.Transform t1 = widget.GetRootToClientTransform ();
+//			Epsitec.Common.Drawing.Transform t2 = widget.GetClientToRootTransform ();
+//			
+//			System.Console.Out.WriteLine ("root -> client : " + t1.ToString ());
+//			System.Console.Out.WriteLine ("client -> root : " + t2.ToString ());
+//			
+//			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Multiply (t1, t2).Equals (new Epsitec.Common.Drawing.Transform ()));
 		}
 		
 		[Test] public void CheckDocking()

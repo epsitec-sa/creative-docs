@@ -691,14 +691,6 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateClientGeometry();
 			
-			Direction newDir = this.RootDirection;
-			Direction oldDir = this.direction;
-			
-			if ( oldDir != newDir )
-			{
-				this.UpdateDirection(newDir);
-			}
-
 			this.UpdateOffset();
 			this.UpdateButtons();
 		}

@@ -119,49 +119,49 @@ namespace Epsitec.Common.Widgets
 		protected PaintTextStyle					paint_text_style = PaintTextStyle.StaticText;
 	}
 	
-	public class StaticTextSmall : StaticText
-	{
-		public StaticTextSmall()
-		{
-			this.Client.SetZoom (0.9);
-		}
-		
-		public StaticTextSmall(Widget embedder) : this ()
-		{
-			this.SetEmbedder (this);
-		}
-		
-		public StaticTextSmall(string text) : this ()
-		{
-			this.Text = text;
-		}
-		
-		public StaticTextSmall(Widget embedder, string text) : this (embedder)
-		{
-			this.Text = text;
-		}
-	}
-	
-	public class StaticTextLarge : StaticText
-	{
-		public StaticTextLarge()
-		{
-			this.Client.SetZoom (1.25);
-		}
-		
-		public StaticTextLarge(Widget embedder) : this ()
-		{
-			this.SetEmbedder (this);
-		}
-		
-		public StaticTextLarge(string text) : this ()
-		{
-			this.Text = text;
-		}
-		
-		public StaticTextLarge(Widget embedder, string text) : this (embedder)
-		{
-			this.Text = text;
-		}
-	}
+//	public class StaticTextSmall : StaticText
+//	{
+//		public StaticTextSmall()
+//		{
+//			this.Client.SetZoom (0.9);
+//		}
+//		
+//		public StaticTextSmall(Widget embedder) : this ()
+//		{
+//			this.SetEmbedder (this);
+//		}
+//		
+//		public StaticTextSmall(string text) : this ()
+//		{
+//			this.Text = text;
+//		}
+//		
+//		public StaticTextSmall(Widget embedder, string text) : this (embedder)
+//		{
+//			this.Text = text;
+//		}
+//	}
+//	
+//	public class StaticTextLarge : StaticText
+//	{
+//		public StaticTextLarge()
+//		{
+//			this.Client.SetZoom (1.25);
+//		}
+//		
+//		public StaticTextLarge(Widget embedder) : this ()
+//		{
+//			this.SetEmbedder (this);
+//		}
+//		
+//		public StaticTextLarge(string text) : this ()
+//		{
+//			this.Text = text;
+//		}
+//		
+//		public StaticTextLarge(Widget embedder, string text) : this (embedder)
+//		{
+//			this.Text = text;
+//		}
+//	}
 }

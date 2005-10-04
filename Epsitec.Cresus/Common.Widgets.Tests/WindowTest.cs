@@ -145,7 +145,7 @@ namespace Epsitec.Common.Widgets
 			Widget back = new Widget ();
 			back.Dock = DockStyle.Fill;
 			back.SetParent (window.Root);
-			back.SetClientZoom (zoom);
+//			back.SetClientZoom (zoom);
 			
 			CheckButton button = new CheckButton ();
 			VScroller scroller = new VScroller ();

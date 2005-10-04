@@ -409,8 +409,8 @@ namespace Epsitec.Common.Widgets
 			this.toolBar.SetParent (this.window.Root);
 
 			Widget root = new Panel();
-			root.SetClientAngle(0);
-			root.SetClientZoom(1.0);
+//			root.SetClientAngle(0);
+//			root.SetClientZoom(1.0);
 			root.Location = new Point(0, 0);
 			root.Size = new Size(rect.Width, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
 			root.Dock = DockStyle.Fill;
@@ -463,7 +463,7 @@ namespace Epsitec.Common.Widgets
 			this.subPane.Items.Add(this.bottomPane);
 
 			this.title = new StaticText();
-			this.title.SetClientZoom(3);
+//			this.title.SetClientZoom(3);
 			this.title.Text = "<b>"+db.Title+"</b>";  // en gras
 			this.topPane.Children.Add(this.title);
 

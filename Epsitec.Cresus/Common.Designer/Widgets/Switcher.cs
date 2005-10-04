@@ -180,7 +180,7 @@ namespace Epsitec.Common.Designer.Widgets
 		{
 			this.caption = new StaticText (this);
 			this.caption.Dock = DockStyle.Fill;
-			this.caption.SetClientZoom (1.2);
+//-			this.caption.SetClientZoom (1.2);
 		}
 		
 		protected void CreateButtons()

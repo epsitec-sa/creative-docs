@@ -16,8 +16,8 @@ namespace Epsitec.Common.Widgets
 			window.Text = "CheckWidgetTransform";
 			
 			TransformWidget a = new TransformWidget ();	a.Text = "A"; a.Bounds = new Rectangle (10, 10, 270, 200);
-			TransformWidget b = new TransformWidget (); b.Text = "B"; b.Bounds = new Rectangle (20, 20, 230, 160); b.SetClientAngle (90);
-			TransformWidget c = new TransformWidget (); c.Text = "C"; c.Bounds = new Rectangle (20, 20, 120,  60); c.SetClientAngle (-90);
+			TransformWidget b = new TransformWidget (); b.Text = "B"; b.Bounds = new Rectangle (20, 20, 230, 160); //b.SetClientAngle (90);
+			TransformWidget c = new TransformWidget (); c.Text = "C"; c.Bounds = new Rectangle (20, 20, 120,  60); //c.SetClientAngle (-90);
 			
 			a.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 			b.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
@@ -58,16 +58,7 @@ namespace Epsitec.Common.Widgets
 			Font   font = Font.GetFont ("Tahoma", "Regular");
 			double size = 12;
 			
-			switch (this.RootAngle)
-			{
-				case 0:
-				case 90:
-				case 180:
-				case 270:
-					break;
-			}
-			
-			graphics.AddText (5, 5, this.Text + " " + this.RootAngle.ToString () + "°" + " " + this.RootDirection.ToString (), font, size);
+			graphics.AddText (5, 5, this.Text + " 0° - direction", font, size);
 			graphics.RenderSolid (color_text);
 		}
 		
