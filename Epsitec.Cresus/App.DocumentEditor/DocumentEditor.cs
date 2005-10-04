@@ -3791,6 +3791,7 @@ namespace Epsitec.App.DocumentEditor
 #if DEBUG
 				di.containerAutos.SetDirtyContent();
 #endif
+				di.containerStyles.SetDirtyContent();
 				//?di.containerOperations.SetDirtyContent();
 
 				Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;

@@ -894,6 +894,8 @@ namespace Epsitec.Common.Widgets
 			if ( (style & CellArrayStyle.SelectMulti) == 0 || !isCtrlPressed )
 			{
 				this.DeselectAll();
+				this.selectedRow = -1;
+				this.selectedColumn = -1;
 			}
 
 			int row, column;
@@ -925,12 +927,12 @@ namespace Epsitec.Common.Widgets
 				{
 					this.SelectColumn(column, state);
 				}
+			}
 
-				this.OnSelectionChanged();
-				if ( isFinal )
-				{
-					this.OnFinalSelectionChanged();
-				}
+			this.OnSelectionChanged();
+			if ( isFinal )
+			{
+				this.OnFinalSelectionChanged();
 			}
 		}
 

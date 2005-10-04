@@ -4717,6 +4717,7 @@ namespace Epsitec.Common.Document
 				model = Objects.Abstract.CreateObject(this.document, this.tool, this.ObjectMemoryTool);
 				this.OpletQueueEnable = true;
 			}
+			if ( model == null )  return;
 
 			Properties.Aggregate agg = this.AggregateCreate(name, model);
 

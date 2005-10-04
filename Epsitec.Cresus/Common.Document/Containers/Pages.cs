@@ -450,6 +450,7 @@ namespace Epsitec.Common.Document.Containers
 		// Liste cliquée.
 		private void HandleTableSelectionChanged(object sender)
 		{
+			if ( this.table.SelectedRow == -1 )  return;
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			context.CurrentPage = this.table.SelectedRow;
 		}

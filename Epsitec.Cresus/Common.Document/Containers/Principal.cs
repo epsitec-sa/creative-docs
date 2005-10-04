@@ -620,13 +620,13 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleAggregateNew3(object sender, MessageEventArgs e)
 		{
 			string name = this.aggregateCombo.Text;
-			this.document.Modifier.AggregateNew3(10000, name, false);
+			this.document.Modifier.AggregateNew3(10000, name, true);
 		}
 
 		private void HandleAggregateNewAll(object sender, MessageEventArgs e)
 		{
 			string name = this.aggregateCombo.Text;
-			this.document.Modifier.AggregateNewAll(10000, name, false);
+			this.document.Modifier.AggregateNewAll(10000, name, true);
 		}
 
 		private void HandleAggregateFree(object sender, MessageEventArgs e)

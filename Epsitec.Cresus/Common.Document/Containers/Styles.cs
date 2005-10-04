@@ -35,6 +35,13 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Items.Add(this.buttonAggregateNew3);
 			ToolTip.Default.SetToolTip(this.buttonAggregateNew3, Res.Strings.Action.AggregateNew3);
 
+			this.buttonAggregateNewAll = new IconButton(Misc.Icon("AggregateNewAll"));
+			this.buttonAggregateNewAll.Clicked += new MessageEventHandler(this.HandleButtonAggregateNewAll);
+			this.buttonAggregateNewAll.TabIndex = index++;
+			this.buttonAggregateNewAll.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.toolBar.Items.Add(this.buttonAggregateNewAll);
+			ToolTip.Default.SetToolTip(this.buttonAggregateNewAll, Res.Strings.Action.AggregateNewAll);
+
 			this.buttonAggregateDuplicate = new IconButton(Misc.Icon("AggregateDuplicate"));
 			this.buttonAggregateDuplicate.Clicked += new MessageEventHandler(this.HandleButtonAggregateDuplicate);
 			this.buttonAggregateDuplicate.TabIndex = index++;
@@ -222,6 +229,12 @@ namespace Epsitec.Common.Document.Containers
 		{
 			if ( !this.IsVisible )  return;
 
+			if ( this.list.Rows != this.document.Aggregates.Count )
+			{
+				this.SetDirtyContent();
+				this.Update();
+			}
+
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			this.list.HiliteColor = context.HiliteSurfaceColor;
 
@@ -278,6 +291,7 @@ namespace Epsitec.Common.Document.Containers
 			int total = this.list.Rows;
 			int sel = this.document.Aggregates.Selected;
 
+			this.buttonAggregateNewAll.SetEnabled(!this.document.Modifier.IsTool || this.document.Modifier.TotalSelected > 0);
 			this.buttonAggregateUp.SetEnabled(sel != -1 && sel > 0);
 			this.buttonAggregateDuplicate.SetEnabled(sel != -1);
 			this.buttonAggregateDown.SetEnabled(sel != -1 && sel < total-1);
@@ -427,6 +441,14 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.AggregateNew3(sel, "", true);
 		}
 
+		// Crée un nouvel agrégat.
+		private void HandleButtonAggregateNewAll(object sender, MessageEventArgs e)
+		{
+			int sel = this.document.Aggregates.Selected;
+			if ( sel == -1 )  sel = 10000;
+			this.document.Modifier.AggregateNewAll(sel, "", true);
+		}
+
 		// Duplique un agrégat.
 		private void HandleButtonAggregateDuplicate(object sender, MessageEventArgs e)
 		{
@@ -470,11 +492,14 @@ namespace Epsitec.Common.Document.Containers
 			}
 
 			Properties.Aggregate agg = this.GetAggregate();
-			Properties.Type type = this.list.SelectedProperty;
-			Properties.Abstract property = agg.Property(type);
-			this.document.Modifier.OpletQueueEnable = false;
-			agg.Styles.Selected = agg.Styles.IndexOf(property);
-			this.document.Modifier.OpletQueueEnable = true;
+			if ( agg != null )
+			{
+				Properties.Type type = this.list.SelectedProperty;
+				Properties.Abstract property = agg.Property(type);
+				this.document.Modifier.OpletQueueEnable = false;
+				agg.Styles.Selected = agg.Styles.IndexOf(property);
+				this.document.Modifier.OpletQueueEnable = true;
+			}
 
 			this.UpdateToolBar();
 			this.UpdatePanel();
@@ -800,6 +825,7 @@ namespace Epsitec.Common.Document.Containers
 		protected HToolBar					toolBar;
 		protected IconButton				buttonAggregateNewEmpty;
 		protected IconButton				buttonAggregateNew3;
+		protected IconButton				buttonAggregateNewAll;
 		protected IconButton				buttonAggregateDuplicate;
 		protected IconButton				buttonAggregateUp;
 		protected IconButton				buttonAggregateDown;
@@ -822,9 +848,5 @@ namespace Epsitec.Common.Document.Containers
 
 		protected bool						isChildrensExtended = false;
 		protected bool						ignoreChanged = false;
-
-		protected bool						aggregateTypesDirty = true;
-		protected Properties.Type[]			aggregateTypes;
-		protected int						aggregateTypesTotal = 0;
 	}
 }

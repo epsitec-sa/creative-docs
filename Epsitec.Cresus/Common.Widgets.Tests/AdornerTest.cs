@@ -354,6 +354,8 @@ namespace Epsitec.Common.Widgets
 			
 			radio1.ActiveState = WidgetState.ActiveYes;
 			
+			radio1.ActiveState = WidgetState.ActiveYes;
+
 			CheckButton check = new CheckButton();
 //			check.Location = new Point(10, 70);
 			check.Width = 100;
