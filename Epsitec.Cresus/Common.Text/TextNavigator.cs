@@ -40,7 +40,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		public TextContext							TextContext
+		public TextContext						TextContext
 		{
 			get
 			{

@@ -120,7 +120,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public TextContext.DefaultMarkers			Markers
+		public TextContext.DefaultMarkers		Markers
 		{
 			get
 			{
