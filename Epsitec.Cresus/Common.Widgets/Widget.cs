@@ -535,63 +535,63 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public virtual LayoutStyles					Layout
-		{
-			get
-			{
-				return this.layout;
-			}
-			set
-			{
-				if (this.layout != value)
-				{
-					Drawing.Size size = this.Size;
-					
-					this.Invalidate ();
-					
-					LayoutStyles dock_old = this.layout & LayoutStyles.MaskDock;
-					LayoutStyles dock_new = value & LayoutStyles.MaskDock;
-					
-					if (((dock_old == LayoutStyles.DockLeft) && (dock_new == LayoutStyles.DockRight)) ||
-						((dock_old == LayoutStyles.DockRight) && (dock_new == LayoutStyles.DockLeft)) ||
-						((dock_old == LayoutStyles.DockTop) && (dock_new == LayoutStyles.DockBottom)) ||
-						((dock_old == LayoutStyles.DockBottom) && (dock_new == LayoutStyles.DockTop)) ||
-						(dock_old == LayoutStyles.Manual))
-					{
-						//	Ne change pas la géométrie, puisque le docking reste défini selon les
-						//	mêmes grandeurs (gauche <-> droite ou haut <-> bas), ou qu'il n'y avait
-						//	pas de docking actif avant.
-					}
-					else
-					{
-						//	Le style de docking change; il faut donc mieux remettre les dimensions
-						//	par défaut
-						
-						this.x2 = this.x1 + this.DefaultWidth;
-						this.y2 = this.y1 + this.DefaultHeight;
-					}
-					
-					this.layout = value;
-					
-					if ((this.parent != null) &&
-						(this.IsLayoutSuspended == false))
-					{
-						//	Si le widget a un parent, il faut donner l'occasion au parent de
-						//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
-						//	de notre nouveau mode de docking.
-						
-						this.parent.UpdateChildrenLayout ();
-						
-						if (this.Size != size)
-						{
-							this.UpdateClientGeometry ();
-							this.OnSizeChanged ();
-						}
-						this.Invalidate ();
-					}
-				}
-			}
-		}
+//		public virtual LayoutStyles					Layout
+//		{
+//			get
+//			{
+//				return this.layout;
+//			}
+//			set
+//			{
+//				if (this.layout != value)
+//				{
+//					Drawing.Size size = this.Size;
+//					
+//					this.Invalidate ();
+//					
+//					LayoutStyles dock_old = this.layout & LayoutStyles.MaskDock;
+//					LayoutStyles dock_new = value & LayoutStyles.MaskDock;
+//					
+//					if (((dock_old == LayoutStyles.DockLeft) && (dock_new == LayoutStyles.DockRight)) ||
+//						((dock_old == LayoutStyles.DockRight) && (dock_new == LayoutStyles.DockLeft)) ||
+//						((dock_old == LayoutStyles.DockTop) && (dock_new == LayoutStyles.DockBottom)) ||
+//						((dock_old == LayoutStyles.DockBottom) && (dock_new == LayoutStyles.DockTop)) ||
+//						(dock_old == LayoutStyles.Manual))
+//					{
+//						//	Ne change pas la géométrie, puisque le docking reste défini selon les
+//						//	mêmes grandeurs (gauche <-> droite ou haut <-> bas), ou qu'il n'y avait
+//						//	pas de docking actif avant.
+//					}
+//					else
+//					{
+//						//	Le style de docking change; il faut donc mieux remettre les dimensions
+//						//	par défaut
+//						
+//						this.x2 = this.x1 + this.DefaultWidth;
+//						this.y2 = this.y1 + this.DefaultHeight;
+//					}
+//					
+//					this.layout = value;
+//					
+//					if ((this.parent != null) &&
+//						(this.IsLayoutSuspended == false))
+//					{
+//						//	Si le widget a un parent, il faut donner l'occasion au parent de
+//						//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
+//						//	de notre nouveau mode de docking.
+//						
+//						this.parent.UpdateChildrenLayout ();
+//						
+//						if (this.Size != size)
+//						{
+//							this.UpdateClientGeometry ();
+//							this.OnSizeChanged ();
+//						}
+//						this.Invalidate ();
+//					}
+//				}
+//			}
+//		}
 		
 		
 		[Bundle]			public AnchorStyles		Anchor
@@ -602,7 +602,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.Layout = (LayoutStyles) value;
+				this.SetLayout ((LayoutStyles) value);
 			}
 		}
 		
@@ -639,7 +639,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.Layout = (LayoutStyles) value;
+				this.SetLayout ((LayoutStyles) value);
 			}
 		}
 		
@@ -827,7 +827,7 @@ namespace Epsitec.Common.Widgets
 					
 					this.SetBounds (value.X, value.Y, value.X + this.x2 - this.x1, value.Y + this.y2 - this.y1);
 					
-					if (this.Layout != LayoutStyles.Manual)
+					if (this.layout != LayoutStyles.Manual)
 					{
 						this.ForceLayout ();
 					}
@@ -854,7 +854,7 @@ namespace Epsitec.Common.Widgets
 					
 					this.SetBounds (this.x1, this.y1, this.x1 + value.Width, this.y1 + value.Height);
 					
-					if (this.Layout != LayoutStyles.Manual)
+					if (this.layout != LayoutStyles.Manual)
 					{
 						this.ForceLayout ();
 					}
@@ -2456,6 +2456,56 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public void SetLayout(LayoutStyles value)
+		{
+			if (this.layout != value)
+			{
+				Drawing.Size size = this.Size;
+				
+				this.Invalidate ();
+				
+				LayoutStyles dock_old = this.layout & LayoutStyles.MaskDock;
+				LayoutStyles dock_new = value & LayoutStyles.MaskDock;
+				
+				if (((dock_old == LayoutStyles.DockLeft) && (dock_new == LayoutStyles.DockRight)) ||
+					((dock_old == LayoutStyles.DockRight) && (dock_new == LayoutStyles.DockLeft)) ||
+					((dock_old == LayoutStyles.DockTop) && (dock_new == LayoutStyles.DockBottom)) ||
+					((dock_old == LayoutStyles.DockBottom) && (dock_new == LayoutStyles.DockTop)) ||
+					(dock_old == LayoutStyles.Manual))
+				{
+					//	Ne change pas la géométrie, puisque le docking reste défini selon les
+					//	mêmes grandeurs (gauche <-> droite ou haut <-> bas), ou qu'il n'y avait
+					//	pas de docking actif avant.
+				}
+				else
+				{
+					//	Le style de docking change; il faut donc mieux remettre les dimensions
+					//	par défaut
+					
+					this.x2 = this.x1 + this.DefaultWidth;
+					this.y2 = this.y1 + this.DefaultHeight;
+				}
+				
+				this.layout = value;
+				
+				if ((this.parent != null) &&
+					(this.IsLayoutSuspended == false))
+				{
+					//	Si le widget a un parent, il faut donner l'occasion au parent de
+					//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
+					//	de notre nouveau mode de docking.
+					
+					this.parent.UpdateChildrenLayout ();
+					
+					if (this.Size != size)
+					{
+						this.UpdateClientGeometry ();
+						this.OnSizeChanged ();
+					}
+					this.Invalidate ();
+				}
+			}
+		}
 		
 		public virtual void SetVisible(bool visible)
 		{

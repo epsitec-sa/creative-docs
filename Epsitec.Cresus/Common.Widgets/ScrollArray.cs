@@ -1677,7 +1677,7 @@ invalid:	row    = -1;
 				
 				rect.Right = rect.Left + this.GetColumnWidth (i);
 				
-				button.Layout = LayoutStyles.Manual;
+//@				button.Layout = LayoutStyles.Manual;
 				button.Bounds = rect;
 				button.Show ();
 				
@@ -1700,7 +1700,7 @@ invalid:	row    = -1;
 				bounds.Right = rect.Right + this.slider_dim / 2;
 				rect.Left    = rect.Right;
 				
-				slider.Layout = LayoutStyles.Manual;
+//@				slider.Layout = LayoutStyles.Manual;
 //@				slider.ZOrder = i;
 				slider.Bounds = bounds;
 				slider.SetVisible (this.columns[i].Elasticity == 0);

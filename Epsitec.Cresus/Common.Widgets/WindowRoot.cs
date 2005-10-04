@@ -37,17 +37,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override LayoutStyles			Layout
-		{
-			get
-			{
-				return LayoutStyles.Manual;
-			}
-			set
-			{
-				//	Poubellise toute modification...
-			}
-		}
+//		public override LayoutStyles			Layout
+//		{
+//			get
+//			{
+//				return LayoutStyles.Manual;
+//			}
+//			set
+//			{
+//				//	Poubellise toute modification...
+//			}
+//		}
 		
 		public override Window					Window
 		{
