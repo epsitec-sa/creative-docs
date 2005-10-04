@@ -6,11 +6,43 @@ namespace Epsitec.Common.Widgets
 {
 	[TestFixture] public class WidgetTest
 	{
+		[SetUp] private void Initialise()
+		{
+			Widget.Initialise ();
+		}
+		
+		[Test] public void CheckAllocation()
+		{
+			int runs = 100000;
+			Widget dummy = new Widget ();
+			Widget[] widgets = new Widget[runs];
+			System.Console.WriteLine ("Testing Widget allocation.");
+			
+			for (int i = 0; i < 1000; i++)
+			{
+				long cc = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			}
+			
+			long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c0 = Epsitec.Common.Drawing.Agg.Library.Cycles - c2;
+			
+			System.Console.Out.WriteLine ("Zero work: " + c0.ToString ());
+			
+			long s1 = System.GC.GetTotalMemory (true);
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			for (int i = 0; i < runs; i++)
+			{
+				widgets[i] = new Widget ();
+			}
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long s2 = System.GC.GetTotalMemory (true);
+			
+			System.Console.WriteLine ("Using {0} bytes / empty Widget instance, {1} cycles.", (s2-s1) / runs, (c2-c1) / runs);
+		}
 #if false
 		[Test] public void CheckAbstractWidget()
 		{
-			Widget.Initialise ();
-			
 			System.Console.WriteLine ("Performance test of AbstractWidget Properties");
 			System.Console.WriteLine ("--------------------------------------100'000");
 			System.Console.Out.Flush ();

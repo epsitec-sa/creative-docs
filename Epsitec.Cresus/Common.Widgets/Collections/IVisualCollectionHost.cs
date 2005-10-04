@@ -4,7 +4,9 @@
 namespace Epsitec.Common.Widgets.Collections
 {
 	/// <summary>
-	/// IVisualCollectionHost.
+	/// L'interface IVisualCollectionHost définit des méthodes de notification
+	/// appelées par la classe VisualCollection. Cette manière de faire est bien
+	/// plus efficace que des événements pour signaler des changements.
 	/// </summary>
 	public interface IVisualCollectionHost
 	{

@@ -892,12 +892,32 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Layouts\AnchorLayout.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Layouts\DockLayout.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Layouts\Events.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Layouts\ILayout.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Layouts\Layer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Layouts\LayoutEngine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

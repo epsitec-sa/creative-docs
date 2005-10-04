@@ -716,10 +716,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Layouts.LayoutInfo					LayoutInfo
-		{
-			get { return this.layout_info; }
-		}
+//		public Layouts.LayoutInfo					LayoutInfo
+//		{
+//			get { return this.layout_info; }
+//		}
 		
 		
 		public MouseCursor							MouseCursor
@@ -4793,12 +4793,12 @@ namespace Epsitec.Common.Widgets
 			{
 				bool update = false;
 				
-				if (this.HasChildren)
-				{
-					Layouts.UpdateEventArgs e = new Layouts.UpdateEventArgs (this, children, this.layout_info);
-					this.OnLayoutUpdate (e);
-					update = ! e.Cancel;
-				}
+//				if (this.HasChildren)
+//				{
+//					Layouts.UpdateEventArgs e = new Layouts.UpdateEventArgs (this, children, this.layout_info);
+//					this.OnLayoutUpdate (e);
+//					update = ! e.Cancel;
+//				}
 				
 				if (update)
 				{
@@ -5951,13 +5951,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnLayoutUpdate(Layouts.UpdateEventArgs e)
-		{
-			if (this.LayoutUpdate != null)
-			{
-				this.LayoutUpdate (this, e);
-			}
-		}
+//		protected virtual void OnLayoutUpdate(Layouts.UpdateEventArgs e)
+//		{
+//			if (this.LayoutUpdate != null)
+//			{
+//				this.LayoutUpdate (this, e);
+//			}
+//		}
 		
 		protected virtual void OnPressed(MessageEventArgs e)
 		{
@@ -6344,7 +6344,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			CultureChanged;
 		public event Support.EventHandler			LayoutChanged;
 		
-		public event Layouts.UpdateEventHandler		LayoutUpdate;
+//		public event Layouts.UpdateEventHandler		LayoutUpdate;
 		
 		public event MessageEventHandler			Pressed;
 		public event MessageEventHandler			Released;

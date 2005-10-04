@@ -3,8 +3,8 @@
 
 namespace Epsitec.Common.Types
 {
-	public delegate object GetValueOverrideCallback(Object d);
-	public delegate void   SetValueOverrideCallback(Object d, object value);
+	public delegate object GetValueOverrideCallback(Object o);
+	public delegate void   SetValueOverrideCallback(Object o, object value);
 	
-	public delegate void PropertyInvalidatedCallback(Object d, object old_value, object new_value);
+	public delegate void PropertyInvalidatedCallback(Object o, object old_value, object new_value);
 }
