@@ -24,6 +24,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				AnchorStyles anchor_x = child.Anchor & AnchorStyles.LeftAndRight;
 				AnchorStyles anchor_y = child.Anchor & AnchorStyles.TopAndBottom;
 				
+				Drawing.Rectangle client  = container.Client.Bounds;
 				Drawing.Rectangle bounds  = child.Bounds;
 				Drawing.Margins   margins = child.AnchorMargins;
 				
@@ -39,14 +40,14 @@ namespace Epsitec.Common.Widgets.Layouts
 						x2 = x1 + child.Width;
 						break;
 					case AnchorStyles.Right:						//	[x2] fixe à droite
-						x2 = bounds.Width - margins.Right;
+						x2 = client.Width - margins.Right;
 						x1 = x2 - child.Width;
 						break;
 					case AnchorStyles.None:							//	ne touche à rien...
 						break;
 					case AnchorStyles.LeftAndRight:					//	[x1] fixe à gauche, [x2] fixe à droite
 						x1 = margins.Left;
-						x2 = bounds.Width - margins.Right;
+						x2 = client.Width - margins.Right;
 						break;
 				}
 				
@@ -57,14 +58,14 @@ namespace Epsitec.Common.Widgets.Layouts
 						y2 = y1 + child.Height;
 						break;
 					case AnchorStyles.Top:							//	[y2] fixe en haut
-						y2 = bounds.Height - margins.Top;
+						y2 = client.Height - margins.Top;
 						y1 = y2 - child.Height;
 						break;
 					case AnchorStyles.None:							//	ne touche à rien...
 						break;
 					case AnchorStyles.TopAndBottom:					//	[y1] fixe en bas, [y2] fixe en haut
 						y1 = margins.Bottom;
-						y2 = bounds.Height - margins.Top;
+						y2 = client.Height - margins.Top;
 						break;
 				}
 				

@@ -44,11 +44,11 @@ namespace Epsitec.Common.Designer.Widgets
 			}
 		}
 		
-		public override Drawing.Margins			ExtraPadding
+		public override Drawing.Margins			InternalPadding
 		{
 			get
 			{
-				Drawing.Margins padding = base.ExtraPadding;
+				Drawing.Margins padding = base.InternalPadding;
 				return padding + new Drawing.Margins (2, 2, 2, 2);
 			}
 		}

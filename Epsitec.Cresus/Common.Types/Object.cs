@@ -152,11 +152,8 @@ namespace Epsitec.Common.Types
 		private void InvalidateProperty(Property property, object old_value, object new_value)
 		{
 			PropertyMetadata metadata = property.DefaultMetadata;
-				
-			if (metadata.PropertyInvalidated != null)
-			{
-				metadata.PropertyInvalidated (this, old_value, new_value);
-			}
+			
+			metadata.NotifyPropertyInvalidated (this, old_value, new_value);
 			
 			if (this.events != null)
 			{

@@ -38,7 +38,7 @@ namespace Epsitec.Common.Widgets
 				{
 					case WidgetHiliteMode.DropCandidate:
 						rect = this.widget.Client.Bounds;
-						rect.Deflate (this.widget.ExtraPadding);
+						rect.Deflate (this.widget.InternalPadding);
 						break;
 					
 					case WidgetHiliteMode.SelectCandidate:

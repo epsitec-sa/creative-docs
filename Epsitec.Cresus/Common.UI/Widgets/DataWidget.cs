@@ -517,8 +517,8 @@ namespace Epsitec.Common.UI.Widgets
 					break;
 			}
 			
-			double frame_width  = this.widget_container.ExtraPadding.Width  + this.widget_container.DockPadding.Width;
-			double frame_height = this.widget_container.ExtraPadding.Height + this.widget_container.DockPadding.Height;
+			double frame_width  = this.widget_container.InternalPadding.Width  + this.widget_container.DockPadding.Width;
+			double frame_height = this.widget_container.InternalPadding.Height + this.widget_container.DockPadding.Height;
 			
 			this.DefineBestFitSize (table_width + frame_width, table_height + frame_height);
 			
@@ -589,8 +589,8 @@ namespace Epsitec.Common.UI.Widgets
 				int row    = 0;
 				int column = 0;
 				
-				double width  = this.widget_container.Client.Bounds.Width  - this.widget_container.ExtraPadding.Width  - this.widget_container.DockPadding.Width;
-				double height = this.widget_container.Client.Bounds.Height - this.widget_container.ExtraPadding.Height - this.widget_container.DockPadding.Height;
+				double width  = this.widget_container.Client.Bounds.Width  - this.widget_container.InternalPadding.Width  - this.widget_container.DockPadding.Width;
+				double height = this.widget_container.Client.Bounds.Height - this.widget_container.InternalPadding.Height - this.widget_container.DockPadding.Height;
 				
 				double ox = 0;
 				double oy = 0;
@@ -605,8 +605,8 @@ namespace Epsitec.Common.UI.Widgets
 						{
 							widget.Dock   = DockStyle.None;
 							widget.Anchor = AnchorStyles.None;
-							widget.Bounds = new Drawing.Rectangle (this.widget_container.Client.Bounds.Left   + this.widget_container.ExtraPadding.Left   + this.widget_container.DockPadding.Left + ox,
-								/**/                               this.widget_container.Client.Bounds.Bottom + this.widget_container.ExtraPadding.Bottom + this.widget_container.DockPadding.Bottom + height - cell_size.Height - oy,
+							widget.Bounds = new Drawing.Rectangle (this.widget_container.Client.Bounds.Left   + this.widget_container.InternalPadding.Left   + this.widget_container.DockPadding.Left + ox,
+								/**/                               this.widget_container.Client.Bounds.Bottom + this.widget_container.InternalPadding.Bottom + this.widget_container.DockPadding.Bottom + height - cell_size.Height - oy,
 								/**/                               cell_size.Width, cell_size.Height);
 							
 							ox += cell_size.Width;
@@ -631,8 +631,8 @@ namespace Epsitec.Common.UI.Widgets
 						{
 							widget.Dock   = DockStyle.None;
 							widget.Anchor = AnchorStyles.None;
-							widget.Bounds = new Drawing.Rectangle (this.widget_container.Client.Bounds.Left   + this.widget_container.ExtraPadding.Left   + this.widget_container.DockPadding.Left + ox,
-								/**/                               this.widget_container.Client.Bounds.Bottom + this.widget_container.ExtraPadding.Bottom + this.widget_container.DockPadding.Bottom + height - cell_size.Height - oy,
+							widget.Bounds = new Drawing.Rectangle (this.widget_container.Client.Bounds.Left   + this.widget_container.InternalPadding.Left   + this.widget_container.DockPadding.Left + ox,
+								/**/                               this.widget_container.Client.Bounds.Bottom + this.widget_container.InternalPadding.Bottom + this.widget_container.DockPadding.Bottom + height - cell_size.Height - oy,
 								/**/                               cell_size.Width, cell_size.Height);
 							
 							oy += cell_size.Height;

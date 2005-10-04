@@ -75,6 +75,21 @@ namespace Epsitec.Common.Types
 		}
 		
 		
+		internal void NotifyPropertyInvalidated(Object sender, object old_value, object new_value)
+		{
+			this.OnPropertyInvalidated (sender, old_value, new_value);
+		}
+		
+		
+		protected virtual void OnPropertyInvalidated(Object sender, object old_value, object new_value)
+		{
+			if (this.PropertyInvalidated != null)
+			{
+				this.PropertyInvalidated (sender, old_value, new_value);
+			}
+		}
+		
+		
 		private object							default_value;
 		private GetValueOverrideCallback		get_value_override;
 		private SetValueOverrideCallback		set_value_override;

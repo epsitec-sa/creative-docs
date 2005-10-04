@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets.Helpers;
 
 namespace Epsitec.Common.Widgets
 {
@@ -51,31 +52,36 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		
-		public Drawing.Rectangle				Bounds
+		public AnchorStyles						Anchor
 		{
 			get
 			{
-				return Drawing.Rectangle.Empty;
+				return AnchorStyles.None;
 			}
 			set
 			{
 			}
 		}
 		
-		public Drawing.Rectangle				ClientBounds
+		public Drawing.Margins					AnchorMargins
 		{
 			get
 			{
-				return Drawing.Rectangle.Empty;
+				return Drawing.Margins.Zero;
+			}
+			set
+			{
 			}
 		}
 		
-		public Drawing.Rectangle				InnerBounds
+		public DockStyle						Dock
 		{
 			get
 			{
-				return Drawing.Rectangle.Empty;
+				return DockStyle.None;
+			}
+			set
+			{
 			}
 		}
 		
@@ -101,14 +107,31 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Drawing.Margins					AnchorMargins
+		
+		public Drawing.Rectangle				Bounds
+		{
+			get
+			{
+				return Drawing.Rectangle.Empty;
+			}
+			set
+			{
+			}
+		}
+		
+		public Widget.ClientInfo				Client
+		{
+			get
+			{
+				return new Widget.ClientInfo ();
+			}
+		}
+		
+		public Drawing.Margins					InternalPadding
 		{
 			get
 			{
 				return Drawing.Margins.Zero;
-			}
-			set
-			{
 			}
 		}
 		
@@ -163,28 +186,6 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.MaxSize;
-			}
-		}
-		
-		public DockStyle						Dock
-		{
-			get
-			{
-				return DockStyle.None;
-			}
-			set
-			{
-			}
-		}
-		
-		public AnchorStyles						Anchor
-		{
-			get
-			{
-				return AnchorStyles.None;
-			}
-			set
-			{
 			}
 		}
 		
@@ -252,6 +253,24 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		internal void NotifyLayoutChanged()
+		{
+		}
+		
+		internal void NotifyParentLayoutChanged()
+		{
+			Visual parent = this.Parent;
+			
+			if (parent != null)
+			{
+				parent.NotifyLayoutChanged ();
+			}
+		}
+		
+		
+		static Visual()
+		{
+		}
 		
 		private static object GetParentValue(Object o)
 		{
@@ -266,11 +285,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static readonly Property NameProperty = Property.Register ("Name", typeof (string), typeof (Visual));
-		public static readonly Property LayerProperty = Property.Register ("Layer", typeof (string), typeof (Visual));
+		public static readonly Property NameProperty			= Property.Register ("Name", typeof (string), typeof (Visual));
+		public static readonly Property ParentProperty			= Property.RegisterReadOnly ("Parent", typeof (Visual), typeof (Visual), new PropertyMetadata (null, new GetValueOverrideCallback (Visual.GetParentValue)));
+		public static readonly Property ParentLayerProperty		= Property.RegisterReadOnly ("ParentLayer", typeof (Layouts.Layer), typeof (Visual), new PropertyMetadata (null, new GetValueOverrideCallback (Visual.GetParentLayerValue)));
 		
-		public static readonly Property ParentProperty = Property.RegisterReadOnly ("Parent", typeof (Visual), typeof (Visual), new PropertyMetadata (null, new GetValueOverrideCallback (Visual.GetParentValue)));
-		public static readonly Property ParentLayerProperty = Property.RegisterReadOnly ("ParentLayer", typeof (Layouts.Layer), typeof (Visual), new PropertyMetadata (null, new GetValueOverrideCallback (Visual.GetParentLayerValue)));
+		public static readonly Property AnchorProperty			= Property.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property AnchorMarginsProperty	= Property.Register ("AnchorMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property DockProperty			= Property.Register ("Dock", typeof (DockStyle), typeof (Visual), new VisualPropertyMetadata (VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property DockPaddingProperty		= Property.Register ("DockPadding", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property DockMarginsProperty		= Property.Register ("DockMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (VisualPropertyFlags.AffectsParentLayout));
+		
+		
 		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));
 		
 		

@@ -156,7 +156,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.Margins		ExtraPadding
+		public override Drawing.Margins		InternalPadding
 		{
 			get
 			{

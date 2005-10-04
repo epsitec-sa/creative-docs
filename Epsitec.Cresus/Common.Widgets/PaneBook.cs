@@ -795,7 +795,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (oldBook == this);
 
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Deflate (this.ExtraPadding);
+			rect.Deflate (this.InternalPadding);
 			
 			item.Bounds = rect;
 			item.PaneButton.PaneButtonStyle = ( this.type == PaneBookStyle.LeftRight ) ? PaneButtonStyle.Vertical : PaneButtonStyle.Horizontal;

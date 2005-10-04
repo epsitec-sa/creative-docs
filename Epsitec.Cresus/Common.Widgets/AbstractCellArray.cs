@@ -226,7 +226,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.Margins ExtraPadding
+		public override Drawing.Margins InternalPadding
 		{
 			get
 			{
@@ -1189,7 +1189,7 @@ namespace Epsitec.Common.Widgets
 		public void ShowCell(int showRow, int showColumn)
 		{
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.ExtraPadding);
+			rect.Deflate(this.InternalPadding);
 
 			if ( (this.styleV & CellArrayStyle.Stretch) == 0 &&
 				 (this.styleH & CellArrayStyle.SelectLine) == 0 &&
@@ -1864,7 +1864,7 @@ namespace Epsitec.Common.Widgets
 
 			WidgetState state = this.PaintState;
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Deflate(this.ExtraPadding);
+			rect.Deflate(this.InternalPadding);
 			rect.Inflate(-0.5, -0.5);
 
 			graphics.LineWidth = 1;

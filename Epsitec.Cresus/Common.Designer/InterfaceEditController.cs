@@ -303,7 +303,7 @@ namespace Epsitec.Common.Designer
 			double dx = System.Math.Max (this.widget_palette.Size.Width,  this.data_palette.Size.Width);
 			double dy = System.Math.Max (this.widget_palette.Size.Height, this.data_palette.Size.Height);
 			
-			Drawing.Size book_frame_size = this.creation_book.Client.Size - this.creation_book.ExtraPadding.Size;
+			Drawing.Size book_frame_size = this.creation_book.Client.Size - this.creation_book.InternalPadding.Size;
 			
 			dx += book_frame_size.Width;
 			dy += book_frame_size.Height;

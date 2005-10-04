@@ -160,7 +160,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.Margins			ExtraPadding
+		public override Drawing.Margins			InternalPadding
 		{
 			get
 			{
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				Drawing.Rectangle rect = this.Client.Bounds;
-				rect.Deflate (this.ExtraPadding);
+				rect.Deflate (this.InternalPadding);
 				
 				if ( this.Client.Height < 18 && this.textFieldStyle != TextFieldStyle.Flat )
 				{
@@ -1092,7 +1092,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Point     pos       = this.InnerTextBounds.Location - this.scrollOffset + new Drawing.Point(0, 1);
 			Drawing.Rectangle rText     = this.InnerTextBounds;
 			Drawing.Rectangle rInside   = this.Client.Bounds;
-			rInside.Deflate (this.ExtraPadding);
+			rInside.Deflate (this.InternalPadding);
 			Drawing.Rectangle rSaveClip = graphics.SaveClippingRectangle();
 			Drawing.Rectangle rClip     = rInside;
 			Drawing.Rectangle rFill     = this.Client.Bounds;

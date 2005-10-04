@@ -12,9 +12,10 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			System.Collections.Queue fill_queue = null;
 			
-			Drawing.Rectangle client = container.ClientBounds;
+			Drawing.Rectangle client = container.Client.Bounds;
 			
 			client.Deflate (container.DockPadding);
+			client.Deflate (container.InternalPadding);
 			
 			double push_dx = 0;
 			double push_dy = 0;
@@ -301,8 +302,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				fill_max_dy = 1000000;
 			}
 			
-			double pad_width  = container.DockPadding.Width  + container.ClientBounds.Width  - container.InnerBounds.Width;
-			double pad_height = container.DockPadding.Height + container.ClientBounds.Height - container.InnerBounds.Height;
+			double pad_width  = container.DockPadding.Width  + container.InternalPadding.Width;
+			double pad_height = container.DockPadding.Height + container.InternalPadding.Height;
 			
 			double min_width  = System.Math.Max (min_dx, fill_min_dx + min_ox) + pad_width;
 			double min_height = System.Math.Max (min_dy, fill_min_dy + min_oy) + pad_height;
@@ -315,6 +316,5 @@ namespace Epsitec.Common.Widgets.Layouts
 			min_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (min_width, min_height));
 			max_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (max_width, max_height));
 		}
-		
 	}
 }

@@ -827,6 +827,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Helpers\VisualPropertyFlags.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Helpers\VisualPropertyMetadata.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Helpers\VisualTree.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

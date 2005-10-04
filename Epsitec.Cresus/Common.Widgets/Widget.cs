@@ -909,7 +909,7 @@ namespace Epsitec.Common.Widgets
 			get { return this.client_info; }
 		}
 		
-		public virtual Drawing.Margins				ExtraPadding
+		public virtual Drawing.Margins				InternalPadding
 		{
 			get { return Drawing.Margins.Zero; }
 		}
@@ -2982,7 +2982,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Rectangle GetShapeBounds()
 		{
-			return new Drawing.Rectangle (-this.client_info.ox, -this.client_info.oy, this.client_info.width, this.client_info.height);
+			return new Drawing.Rectangle (0, 0, this.client_info.width, this.client_info.height);
 		}
 		
 		public virtual Drawing.Rectangle GetClipBounds()
@@ -3057,33 +3057,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Point result = new Drawing.Point ();
 			
-			double z = this.client_info.zoom;
-			
-			switch (this.client_info.angle)
-			{
-				case 0:
-					result.X = (point.X - this.x1) / z - this.client_info.ox;
-					result.Y = (point.Y - this.y1) / z - this.client_info.oy;
-					break;
-				
-				case 90:
-					result.X = (point.Y - this.y1) / z - this.client_info.ox;
-					result.Y = (this.x2 - point.X) / z - this.client_info.oy;
-					break;
-				
-				case 180:
-					result.X = (this.x2 - point.X) / z - this.client_info.ox;
-					result.Y = (this.y2 - point.Y) / z - this.client_info.oy;
-					break;
-				
-				case 270:
-					result.X = (this.y2 - point.Y) / z - this.client_info.ox;
-					result.Y = (point.X - this.x1) / z - this.client_info.oy;
-					break;
-				
-				default:
-					throw new System.ArgumentOutOfRangeException ("Invalid angle");
-			}
+			result.X = point.X - this.x1;
+			result.Y = point.Y - this.y1;
 			
 			return result;
 		}
@@ -3092,37 +3067,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Point result = new Drawing.Point ();
 			
-			double z = this.client_info.zoom;
-			
-			point.X += this.client_info.ox;
-			point.Y += this.client_info.oy;
-			
-			
-			switch (this.client_info.angle)
-			{
-				case 0:
-					result.X = point.X * z + this.x1;
-					result.Y = point.Y * z + this.y1;
-					break;
-				
-				case 90:
-					result.X = this.x2 - z * point.Y;
-					result.Y = this.y1 + z * point.X;
-					break;
-				
-				case 180:
-					result.X = this.x2 - z * point.X;
-					result.Y = this.y2 - z * point.Y;
-					break;
-				
-				case 270:
-					result.X = this.x1 + z * point.Y;
-					result.Y = this.y2 - z * point.X;
-					break;
-				
-				default:
-					throw new System.ArgumentOutOfRangeException ("Invalid angle");
-			}
+			result.X = point.X + this.x1;
+			result.Y = point.Y + this.y1;
 			
 			return result;
 		}
@@ -3205,25 +3151,8 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			int angle = 0;//this.RootAngle;
-			
-			switch (angle)
-			{
-				case 0:
-				case 180:
-					if (flip_x) rect.FlipX ();
-					if (flip_y) rect.FlipY ();
-					break;
-				
-				case 90:
-				case 270:
-					if (flip_y) rect.FlipX ();
-					if (flip_x) rect.FlipY ();
-					break;
-				
-				default:
-					throw new System.ArgumentOutOfRangeException ("Invalid angle");
-			}
+			if (flip_x) rect.FlipX ();
+			if (flip_y) rect.FlipY ();
 			
 			return rect;
 		}
@@ -3242,25 +3171,8 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			int angle = 0;//this.RootAngle;
-			
-			switch (angle)
-			{
-				case 0:
-				case 180:
-					if (flip_x) rect.FlipX ();
-					if (flip_y) rect.FlipY ();
-					break;
-				
-				case 90:
-				case 270:
-					if (flip_y) rect.FlipX ();
-					if (flip_x) rect.FlipY ();
-					break;
-				
-				default:
-					throw new System.ArgumentOutOfRangeException ("Invalid angle");
-			}
+			if (flip_x) rect.FlipX ();
+			if (flip_y) rect.FlipY ();
 			
 			return rect;
 		}
@@ -3280,25 +3192,8 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			int angle = this.client_info.angle;
-			
-			switch (angle)
-			{
-				case 0:
-				case 180:
-					if (flip_x) rect.FlipX ();
-					if (flip_y) rect.FlipY ();
-					break;
-				
-				case 90:
-				case 270:
-					if (flip_y) rect.FlipX ();
-					if (flip_x) rect.FlipY ();
-					break;
-				
-				default:
-					throw new System.ArgumentOutOfRangeException ("Invalid angle");
-			}
+			if (flip_x) rect.FlipX ();
+			if (flip_y) rect.FlipY ();
 			
 			return rect;
 		}
@@ -3317,25 +3212,8 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			int angle = this.client_info.angle;
-			
-			switch (angle)
-			{
-				case 0:
-				case 180:
-					if (flip_x) rect.FlipX ();
-					if (flip_y) rect.FlipY ();
-					break;
-				
-				case 90:
-				case 270:
-					if (flip_y) rect.FlipX ();
-					if (flip_x) rect.FlipY ();
-					break;
-				
-				default:
-					throw new System.ArgumentOutOfRangeException ("Invalid angle");
-			}
+			if (flip_x) rect.FlipX ();
+			if (flip_y) rect.FlipY ();
 			
 			return rect;
 		}
@@ -3354,25 +3232,8 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			int angle = this.client_info.angle;
-			
-			switch (angle)
-			{
-				case 0:
-				case 180:
-					if (flip_x) rect.FlipX ();
-					if (flip_y) rect.FlipY ();
-					break;
-				
-				case 90:
-				case 270:
-					if (flip_y) rect.FlipX ();
-					if (flip_x) rect.FlipY ();
-					break;
-				
-				default:
-					throw new System.ArgumentOutOfRangeException ("Invalid angle");
-			}
+			if (flip_x) rect.FlipX ();
+			if (flip_y) rect.FlipY ();
 			
 			return rect;
 		}
@@ -3391,25 +3252,8 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			int angle = this.client_info.angle;
-			
-			switch (angle)
-			{
-				case 0:
-				case 180:
-					if (flip_x) rect.FlipX ();
-					if (flip_y) rect.FlipY ();
-					break;
-				
-				case 90:
-				case 270:
-					if (flip_y) rect.FlipX ();
-					if (flip_x) rect.FlipY ();
-					break;
-				
-				default:
-					throw new System.ArgumentOutOfRangeException ("Invalid angle");
-			}
+			if (flip_x) rect.FlipX ();
+			if (flip_y) rect.FlipY ();
 			
 			return rect;
 		}
@@ -3419,25 +3263,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Size result = new Drawing.Size ();
 			
-			double z = this.client_info.zoom;
-			
-			switch (this.client_info.angle)
-			{
-				case 0:
-				case 180:
-					result.Width  = size.Width / z;
-					result.Height = size.Height / z;
-					break;
-				
-				case 90:
-				case 270:
-					result.Width  = size.Height / z;
-					result.Height = size.Width / z;
-					break;
-				
-				default:
-					throw new System.ArgumentOutOfRangeException ("Invalid angle");
-			}
+			result.Width  = size.Width;
+			result.Height = size.Height;
 			
 			return result;
 		}
@@ -3446,131 +3273,95 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Size result = new Drawing.Size ();
 			
-			double z = this.client_info.zoom;
-			
-			switch (this.client_info.angle)
-			{
-				case 0:
-				case 180:
-					result.Width  = size.Width * z;
-					result.Height = size.Height * z;
-					break;
-				
-				case 90:
-				case 270:
-					result.Width  = size.Height * z;
-					result.Height = size.Width * z;
-					break;
-				
-				default:
-					throw new System.ArgumentOutOfRangeException ("Invalid angle");
-			}
+			result.Width  = size.Width;
+			result.Height = size.Height;
 			
 			return result;
 		}
 		
 		
-		public virtual Drawing.Transform GetRootToClientTransform()
-		{
-			Widget iter = this;
-			
-			Drawing.Transform full_transform = new Drawing.Transform ();
-			
-			while (iter != null)
-			{
-				Drawing.Transform local_transform = iter.GetTransformToClient ();
-				
-				//	Les transformations de la racine au client doivent s'appliquer en commençant par
-				//	la racine. Comme nous remontons la hiérarchie des widgets en sens inverse, il nous
-				//	suffit d'utiliser la multiplication post-fixe pour arriver au même résultat :
-				//
-				//	 T = Tn * ... * T2 * T1 * T0, P' = T * P
-				//
-				//	avec Ti la transformation pour le widget 'i', où i=0 correspond à la racine,
-				//	P le point en coordonnées racine et P' le point en coordonnées client.
-				
-				full_transform.MultiplyByPostfix (local_transform);
-				iter = iter.Parent;
-			}
-			
-			return full_transform;
-		}
+//		public virtual Drawing.Transform GetRootToClientTransform()
+//		{
+//			Widget iter = this;
+//			
+//			Drawing.Transform full_transform = new Drawing.Transform ();
+//			
+//			while (iter != null)
+//			{
+//				Drawing.Transform local_transform = iter.GetTransformToClient ();
+//				
+//				//	Les transformations de la racine au client doivent s'appliquer en commençant par
+//				//	la racine. Comme nous remontons la hiérarchie des widgets en sens inverse, il nous
+//				//	suffit d'utiliser la multiplication post-fixe pour arriver au même résultat :
+//				//
+//				//	 T = Tn * ... * T2 * T1 * T0, P' = T * P
+//				//
+//				//	avec Ti la transformation pour le widget 'i', où i=0 correspond à la racine,
+//				//	P le point en coordonnées racine et P' le point en coordonnées client.
+//				
+//				full_transform.MultiplyByPostfix (local_transform);
+//				iter = iter.Parent;
+//			}
+//			
+//			return full_transform;
+//		}
+//		
+//		public virtual Drawing.Transform GetClientToRootTransform()
+//		{
+//			Widget iter = this;
+//			
+//			Drawing.Transform full_transform = new Drawing.Transform ();
+//			
+//			while (iter != null)
+//			{
+//				Drawing.Transform local_transform = iter.GetTransformToParent ();
+//				
+//				//	Les transformations du client à la racine doivent s'appliquer en commençant par
+//				//	le client. Comme nous remontons la hiérarchie des widgets dans ce sens là, il nous
+//				//	suffit d'utiliser la multiplication normale pour arriver à ce résultat :
+//				//
+//				//	 T = T0 * T1 * T2 * ... * Tn, P' = T * P
+//				//
+//				//	avec Ti la transformation pour le widget 'i', où i=0 correspond à la racine.
+//				//	P le point en coordonnées client et P' le point en coordonnées racine.
+//				
+//				full_transform.MultiplyBy (local_transform);
+//				iter = iter.Parent;
+//			}
+//			
+//			return full_transform;
+//		}
+//		
 		
-		public virtual Drawing.Transform GetClientToRootTransform()
-		{
-			Widget iter = this;
-			
-			Drawing.Transform full_transform = new Drawing.Transform ();
-			
-			while (iter != null)
-			{
-				Drawing.Transform local_transform = iter.GetTransformToParent ();
-				
-				//	Les transformations du client à la racine doivent s'appliquer en commençant par
-				//	le client. Comme nous remontons la hiérarchie des widgets dans ce sens là, il nous
-				//	suffit d'utiliser la multiplication normale pour arriver à ce résultat :
-				//
-				//	 T = T0 * T1 * T2 * ... * Tn, P' = T * P
-				//
-				//	avec Ti la transformation pour le widget 'i', où i=0 correspond à la racine.
-				//	P le point en coordonnées client et P' le point en coordonnées racine.
-				
-				full_transform.MultiplyBy (local_transform);
-				iter = iter.Parent;
-			}
-			
-			return full_transform;
-		}
-		
-		
-		public virtual Drawing.Transform GetTransformToClient()
-		{
-			Drawing.Transform t = new Drawing.Transform ();
-			
-			double ox, oy;
-			
-			switch (this.client_info.angle)
-			{
-				case 0:		ox = this.x1; oy = this.y1; break;
-				case 90:	ox = this.x2; oy = this.y1; break;
-				case 180:	ox = this.x2; oy = this.y2; break;
-				case 270:	ox = this.x1; oy = this.y2; break;
-				default:	throw new System.ArgumentOutOfRangeException ("Invalid angle");
-			}
-			
-			t.Translate (-ox, -oy);
-			t.RotateDeg (-this.client_info.angle);
-			t.Scale (1 / this.client_info.zoom);
-			t.Translate (-this.client_info.ox, -this.client_info.oy);
-			t.Round ();
-			
-			return t;
-		}
-		
-		public virtual Drawing.Transform GetTransformToParent()
-		{
-			Drawing.Transform t = new Drawing.Transform ();
-			
-			double ox, oy;
-			
-			switch (this.client_info.angle)
-			{
-				case 0:		ox = this.x1; oy = this.y1; break;
-				case 90:	ox = this.x2; oy = this.y1; break;
-				case 180:	ox = this.x2; oy = this.y2; break;
-				case 270:	ox = this.x1; oy = this.y2; break;
-				default:	throw new System.ArgumentOutOfRangeException ("Invalid angle");
-			}
-			
-			t.Translate (this.client_info.ox, this.client_info.oy);
-			t.Scale (this.client_info.zoom);
-			t.RotateDeg (this.client_info.angle);
-			t.Translate (ox, oy);
-			t.Round ();
-			
-			return t;
-		}
-		
+//		public virtual Drawing.Transform GetTransformToClient()
+//		{
+//			Drawing.Transform t = new Drawing.Transform ();
+//			
+//			double ox, oy;
+//			
+//			ox = this.x1;
+//			oy = this.y1;
+//			t.Translate (-ox, -oy);
+//			t.Round ();
+//			
+//			return t;
+//		}
+//		
+//		public virtual Drawing.Transform GetTransformToParent()
+//		{
+//			Drawing.Transform t = new Drawing.Transform ();
+//			
+//			double ox, oy;
+//			
+//			ox = this.x1;
+//			oy = this.y1;
+//			
+//			t.Translate (ox, oy);
+//			t.Round ();
+//			
+//			return t;
+//		}
+//		
 		
 		public bool IsAncestorWidget(Widget widget)
 		{
@@ -4754,30 +4545,10 @@ namespace Epsitec.Common.Widgets
 				this.layout_info = new Layouts.LayoutInfo (this.client_info.width, this.client_info.height);
 			}
 			
-			double zoom = this.client_info.zoom;
+			double dx = (this.x2 - this.x1);
+			double dy = (this.y2 - this.y1);
 			
-			double dx = (this.x2 - this.x1) / zoom;
-			double dy = (this.y2 - this.y1) / zoom;
-			
-			switch (this.client_info.angle)
-			{
-				case 0:
-				case 180:
-					this.client_info.SetSize (dx, dy);
-					break;
-				
-				case 90:
-				case 270:
-					this.client_info.SetSize (dy, dx);
-					break;
-				
-				default:
-					double angle = this.client_info.angle * System.Math.PI / 180.0;
-					double cos = System.Math.Cos (angle);
-					double sin = System.Math.Sin (angle);
-					this.client_info.SetSize (cos*cos*dx + sin*sin*dy, sin*sin*dx + cos*cos*dy);
-					break;
-			}
+			this.client_info.SetSize (dx, dy);
 			
 			if (this.IsLayoutSuspended == false)
 			{
@@ -5085,8 +4856,8 @@ namespace Epsitec.Common.Widgets
 				fill_max_dy = 1000000;
 			}
 			
-			double pad_width  = this.DockPadding.Width  + this.ExtraPadding.Width;
-			double pad_height = this.DockPadding.Height + this.ExtraPadding.Height;
+			double pad_width  = this.DockPadding.Width  + this.InternalPadding.Width;
+			double pad_height = this.DockPadding.Height + this.InternalPadding.Height;
 			
 			double min_width  = System.Math.Max (min_dx, fill_min_dx + min_ox) + pad_width;
 			double min_height = System.Math.Max (min_dy, fill_min_dy + min_oy) + pad_height;
@@ -5115,7 +4886,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle bounds;
 			
 			client_rect.Deflate (this.DockPadding);
-			client_rect.Deflate (this.ExtraPadding);
+			client_rect.Deflate (this.InternalPadding);
 			
 			double push_dx = 0;
 			double push_dy = 0;
@@ -5280,8 +5051,6 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-//			System.Diagnostics.Debug.WriteLine ("Paint: " + this.ToString () + " " + this.Bounds.ToString () + " oy=" + this.client_info.oy);
-			
 			this.OnPreparePaint ();
 			
 			long cycles = Drawing.Agg.Library.Cycles;
@@ -5300,7 +5069,7 @@ namespace Epsitec.Common.Widgets
 				
 				Drawing.Rectangle original_clipping  = graphics.SaveClippingRectangle ();
 				Drawing.Transform original_transform = graphics.Transform;
-				Drawing.Transform graphics_transform = this.GetTransformToParent ();
+				Drawing.Transform graphics_transform = Drawing.Transform.FromTranslation (this.x1, this.y1);
 				
 				graphics.SetClippingRectangle (bounds);
 				
@@ -6505,67 +6274,43 @@ namespace Epsitec.Common.Widgets
 				this.height = height;
 			}
 			
-//			internal void SetAngle(int angle)
-//			{
-//				angle = angle % 360;
-//				this.angle = (angle < 0) ? (short) (angle + 360) : (short) (angle);
-//			}
-			
-//			internal void SetZoom(double zoom)
-//			{
-//				System.Diagnostics.Debug.Assert (zoom > 0.0f);
-//				this.zoom = zoom;
-//			}
-			
-//			internal void SetOffset(double ox, double oy)
-//			{
-//				this.ox = ox;
-//				this.oy = oy;
-//			}
 			
 			
 			public double					Width
 			{
-				get { return this.width; }
+				get
+				{
+					return this.width;
+				}
 			}
 			
 			public double					Height
 			{
-				get { return this.height; }
+				get
+				{
+					return this.height;
+				}
 			}
 			
 			public Drawing.Size				Size
 			{
-				get { return new Drawing.Size (this.width, this.height); }
+				get
+				{
+					return new Drawing.Size (this.width, this.height);
+				}
 			}
 			
 			public Drawing.Rectangle		Bounds
 			{
-				get { return new Drawing.Rectangle (0, 0, this.width, this.height); }
+				get
+				{
+					return new Drawing.Rectangle (0, 0, this.width, this.height);
+				}
 			}
-			
-//			public int						Angle
-//			{
-//				get { return this.angle; }
-//			}
-//			
-//			public double					Zoom
-//			{
-//				get { return this.zoom; }
-//			}
-			
-//			public Drawing.Point			Offset
-//			{
-//				get { return new Drawing.Point (this.ox, this.oy); }
-//			}
 			
 			
 			internal double					width	= 0.0;
 			internal double					height	= 0.0;
-			internal short					angle	= 0;
-			internal double					zoom	= 1.0;
-			internal double					ox		= 0.0;
-			internal double					oy		= 0.0;
 		}
 		#endregion
 		
