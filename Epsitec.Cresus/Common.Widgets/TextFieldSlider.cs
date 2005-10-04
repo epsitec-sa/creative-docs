@@ -58,6 +58,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public decimal						Logarithmic
+		{
+			get
+			{
+				return this.slider.Logarithmic;
+			}
+
+			set
+			{
+				this.slider.Logarithmic = value;
+			}
+		}
+
 		
 		protected override void Dispose(bool disposing)
 		{

@@ -8,6 +8,11 @@
 	<data name="Application.TitleShort">Crésus</data>
 	<data name="Application.Type">N</data>
 	
+	<data name="Ribbon.Main">Documents</data>
+	<data name="Ribbon.Objects">Objets</data>
+	<data name="Ribbon.Oper">Opérations</data>
+	<data name="Ribbon.Text">Text</data>
+
 	<data name="Menu.Main.File">Fichier</data>
 	<data name="Menu.Main.Edit">Edition</data>
 	<data name="Menu.Main.Objects">Objets</data>

@@ -620,7 +620,7 @@
 	<data name="Action.Undo">Annuler</data>
 	<data name="Action.UndoRedoList">Annuler ou refaire plusieurs actions</data>
 	<data name="Action.Redo">Refaire</data>
-	<data name="Action.Clipboard">Bloc-notes</data>
+	<data name="Action.Clipboard">Presse-papiers</data>
 	<data name="Action.Cut">Couper</data>
 	<data name="Action.Copy">Copier</data>
 	<data name="Action.Paste">Coller</data>

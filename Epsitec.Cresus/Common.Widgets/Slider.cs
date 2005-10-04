@@ -107,6 +107,35 @@ namespace Epsitec.Common.Widgets
 		
 		public event Support.EventHandler	ValueChanged;
 		#endregion
+
+		public decimal						Logarithmic
+		{
+			get
+			{
+				return this.logarithmic;
+			}
+			set
+			{
+				this.logarithmic = value;
+			}
+		}
+		
+		public decimal						LogarithmicValue
+		{
+			get
+			{
+				decimal norm = (this.Value-this.MinValue)/(this.MaxValue-this.MinValue);
+				norm = (decimal)System.Math.Pow((double)norm, (double)(1.0M/this.logarithmic));
+				return norm*(this.MaxValue-this.MinValue)+this.MinValue;
+			}
+			set
+			{
+				decimal norm = (value-this.MinValue)/(this.MaxValue-this.MinValue);
+				norm = (decimal)System.Math.Pow((double)norm, (double)this.logarithmic);
+				value = norm*(this.MaxValue-this.MinValue)+this.MinValue;
+				this.Value = value;
+			}
+		}
 		
 		#region IDragBehaviorHost Members
 		Drawing.Point						Helpers.IDragBehaviorHost.DragLocation
@@ -125,7 +154,7 @@ namespace Epsitec.Common.Widgets
 
 		void Helpers.IDragBehaviorHost.OnDragging(DragEventArgs e)
 		{
-			this.Value = this.Detect (e.ToPoint);
+			this.LogarithmicValue = this.Detect (e.ToPoint);
 		}
 
 		void Helpers.IDragBehaviorHost.OnDragEnd()
@@ -178,7 +207,7 @@ namespace Epsitec.Common.Widgets
 				graphics.RenderSolid(back);
 				
 				double range = (double) (this.Range);
-				double delta = (double) (this.Value - this.MinValue);
+				double delta = (double) (this.LogarithmicValue - this.MinValue);
 				
 				if ((delta > 0) &&
 					(range > 0))
@@ -236,6 +265,7 @@ namespace Epsitec.Common.Widgets
 		private Helpers.DragBehavior		drag_behavior;
 		private decimal						value = 0;
 		private Types.DecimalRange			range = new Types.DecimalRange (0, 100, 1);
+		private decimal						logarithmic = 1;
 		private Drawing.Color				color = Drawing.Color.Empty;
 		protected readonly double			margin = 1;
 		private bool						has_frame = true;

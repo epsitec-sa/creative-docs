@@ -598,22 +598,22 @@ namespace Epsitec.App.DocumentEditor
 			}
 #endif
 
-			this.ribbonMainButton = new Ribbons.RibbonButton("", "Documents");
+			this.ribbonMainButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Main);
 			this.ribbonMainButton.Size = this.ribbonMainButton.RequiredSize;
 			this.ribbonMainButton.Clicked += new MessageEventHandler(this.HandleRibbonMainClicked);
 			this.hToolBar.Items.Add(this.ribbonMainButton);
 
-			this.ribbonObjectButton = new Ribbons.RibbonButton("", "Objects");
+			this.ribbonObjectButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Objects);
 			this.ribbonObjectButton.Size = this.ribbonObjectButton.RequiredSize;
 			this.ribbonObjectButton.Clicked += new MessageEventHandler(this.HandleRibbonObjectClicked);
 			this.hToolBar.Items.Add(this.ribbonObjectButton);
 
-			this.ribbonOperButton = new Ribbons.RibbonButton("", "Operations");
+			this.ribbonOperButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Oper);
 			this.ribbonOperButton.Size = this.ribbonOperButton.RequiredSize;
 			this.ribbonOperButton.Clicked += new MessageEventHandler(this.HandleRibbonOperClicked);
 			this.hToolBar.Items.Add(this.ribbonOperButton);
 
-			this.ribbonTextButton = new Ribbons.RibbonButton("", "Text");
+			this.ribbonTextButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Text);
 			this.ribbonTextButton.Size = this.ribbonTextButton.RequiredSize;
 			this.ribbonTextButton.Clicked += new MessageEventHandler(this.HandleRibbonTextClicked);
 			//?this.hToolBar.Items.Add(this.ribbonTextButton);
