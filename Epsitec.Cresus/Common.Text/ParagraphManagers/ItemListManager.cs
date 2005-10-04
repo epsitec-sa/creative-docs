@@ -18,7 +18,7 @@ namespace Epsitec.Common.Text.ParagraphManagers
 		
 		public override void AttachToParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property)
 		{
-			Context context = story.TextContext;
+			TextContext context = story.TextContext;
 			
 			Parameters p = new Parameters (context, property.ManagerParameters);
 			
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Text.ParagraphManagers
 		
 		public override void DetachFromParagraph(TextStory story, ICursor cursor, Properties.ManagedParagraphProperty property)
 		{
-			Context context = story.TextContext;
+			TextContext context = story.TextContext;
 			
 			Parameters p = new Parameters (context, property.ManagerParameters);
 			
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			{
 			}
 			
-			public Parameters(Context context, params string[] parameters)
+			public Parameters(TextContext context, params string[] parameters)
 			{
 				this.Load (context, parameters);
 			}
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Text.ParagraphManagers
 			}
 			
 			
-			public void Load(Context context, string[] parameters)
+			public void Load(TextContext context, string[] parameters)
 			{
 				System.Diagnostics.Debug.Assert (parameters.Length == 3);
 				

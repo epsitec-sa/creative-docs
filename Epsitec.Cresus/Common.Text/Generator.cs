@@ -181,7 +181,7 @@ namespace Epsitec.Common.Text
 			
 			
 			private TextStory					story;
-			private Context						context;
+			private TextContext						context;
 			private Internal.TextTable			text;
 			private Generator					generator;
 			private Generator.Series			series;
@@ -355,7 +355,7 @@ namespace Epsitec.Common.Text
 					/**/				SerializerSupport.SerializeString (this.GetSetupArgument ()));
 			}
 			
-			public void DeserializeFromText(Context context, string text, int pos, int length)
+			public void DeserializeFromText(TextContext context, string text, int pos, int length)
 			{
 				string[] args = SerializerSupport.Split (text, pos, length);
 				
@@ -436,7 +436,7 @@ namespace Epsitec.Common.Text
 			buffer.Append ("}");
 		}
 		
-		public static void DeserializeFromText(Context context, string text, int pos, int length, out Sequence sequence)
+		public static void DeserializeFromText(TextContext context, string text, int pos, int length, out Sequence sequence)
 		{
 			System.Diagnostics.Debug.Assert (text[pos+0] == '{');
 			System.Diagnostics.Debug.Assert (text[pos+length-1] == '}');

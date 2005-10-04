@@ -391,7 +391,7 @@ namespace Epsitec.Common.Text.Tests
 //			System.Diagnostics.Trace.WriteLine ("Starting layout.");
 //			for (int i = 0; i < 1000000; i++)
 //			{
-//				context = new Layout.Context (story.TextContext, story_text, 0, 0, 14.0, 300, 15, 15, 30, 0);
+//				context = new Layout.TextContext (story.TextContext, story_text, 0, 0, 14.0, 300, 15, 15, 30, 0);
 //				status  = context.Fit (ref breaks, 0);
 //			}
 //			System.Diagnostics.Trace.WriteLine ("Done.");

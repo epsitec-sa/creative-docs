@@ -373,7 +373,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (story.TextContext.ContainsProperty (story, cursor, 0, g1_a));
 			Debug.Assert.IsTrue (story.TextContext.ContainsProperty (story, cursor, 3, g1_b));
 			
-			Context context = story.TextContext;
+			TextContext context = story.TextContext;
 			
 			Debug.Assert.IsTrue (0 == context.GetTextStartDistance (story, cursor, g1_a));
 			Debug.Assert.IsTrue (3 == context.GetTextEndDistance (story, cursor, g1_a));

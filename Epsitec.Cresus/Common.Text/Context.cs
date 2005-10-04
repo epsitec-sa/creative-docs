@@ -4,12 +4,12 @@
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// La classe Context décrit un contexte (pour la désérialisation) lié à
+	/// La classe TextContext décrit un contexte (pour la désérialisation) lié à
 	/// un environnement 'texte'.
 	/// </summary>
-	public class Context
+	public class TextContext
 	{
-		public Context()
+		public TextContext()
 		{
 			this.style_list     = new StyleList ();
 			this.tab_list       = new TabList ();
@@ -19,11 +19,11 @@ namespace Epsitec.Common.Text
 			this.char_marker    = new Internal.CharMarker ();
 			this.conditions     = new System.Collections.Hashtable ();
 			
-			this.char_marker.Add (Context.DefaultMarkers.TagSelected);
-			this.char_marker.Add (Context.DefaultMarkers.TagRequiresSpellChecking);
-			this.char_marker.Add (Context.DefaultMarkers.TagSpellCheckingError);
+			this.char_marker.Add (TextContext.DefaultMarkers.TagSelected);
+			this.char_marker.Add (TextContext.DefaultMarkers.TagRequiresSpellChecking);
+			this.char_marker.Add (TextContext.DefaultMarkers.TagSpellCheckingError);
 			
-			this.markers = new Context.DefaultMarkers (this.char_marker);
+			this.markers = new TextContext.DefaultMarkers (this.char_marker);
 			 
 			this.font_collection = new OpenType.FontCollection ();
 			this.font_collection.Initialize ();
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public Context.DefaultMarkers			Markers
+		public TextContext.DefaultMarkers			Markers
 		{
 			get
 			{
@@ -919,7 +919,7 @@ namespace Epsitec.Common.Text
 		#region TextFinder Class
 		private class TextFinder
 		{
-			public TextFinder(Context context, Property property)
+			public TextFinder(TextContext context, Property property)
 			{
 				this.context  = context;
 				this.property = property;
@@ -957,7 +957,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			
-			private Context						context;
+			private TextContext						context;
 			private Property					property;
 			private ulong						code;
 		}

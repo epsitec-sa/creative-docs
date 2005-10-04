@@ -157,7 +157,7 @@ namespace Epsitec.Common.Text.Properties
 			return serialized_properties;
 		}
 		
-		public static Property[] DeserializeProperties(Context context, string[] serialized_properties)
+		public static Property[] DeserializeProperties(TextContext context, string[] serialized_properties)
 		{
 			if ((serialized_properties == null) ||
 				(serialized_properties.Length == 0))
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Text.Properties
 			return properties;
 		}
 		
-		public static Property DeserializeProperty(Context context, string serialized_property)
+		public static Property DeserializeProperty(TextContext context, string serialized_property)
 		{
 			Property property;
 			Property.DeserializeFromText (context, serialized_property, 2, serialized_property.Length-2, out property);
@@ -189,7 +189,7 @@ namespace Epsitec.Common.Text.Properties
 				/**/				SerializerSupport.SerializeStringArray (this.serialized_properties));
 		}
 		
-		public override void DeserializeFromText(Context context, string text, int pos, int length)
+		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			

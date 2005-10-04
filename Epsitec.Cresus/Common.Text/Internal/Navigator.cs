@@ -525,7 +525,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 			else
 			{
-				Context  context    = story.TextContext;
+				TextContext  context    = story.TextContext;
 				string[] serialized = props_property.SerializedUniformParagraphProperties;
 				
 				properties = Properties.PropertiesProperty.DeserializeProperties (context, serialized);
@@ -967,7 +967,7 @@ namespace Epsitec.Common.Text.Internal
 				return;
 			}
 			
-			Text.Context context = story.TextContext;
+			Text.TextContext context = story.TextContext;
 			
 			TextStyle[] current_styles;
 			Property[]  current_properties;
@@ -1023,7 +1023,7 @@ namespace Epsitec.Common.Text.Internal
 				return;
 			}
 			
-			Text.Context context = story.TextContext;
+			Text.TextContext context = story.TextContext;
 			
 			TextStyle[] current_styles;
 			Property[]  current_properties;
@@ -1079,7 +1079,7 @@ namespace Epsitec.Common.Text.Internal
 				return;
 			}
 			
-			Text.Context context = story.TextContext;
+			Text.TextContext context = story.TextContext;
 			
 			TextStyle[] current_styles;
 			Property[]  current_properties;
@@ -1125,7 +1125,7 @@ namespace Epsitec.Common.Text.Internal
 				return;
 			}
 			
-			Text.Context context = story.TextContext;
+			Text.TextContext context = story.TextContext;
 			
 			TextStyle[] current_styles;
 			Property[]  current_properties;

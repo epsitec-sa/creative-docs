@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.oplet_queue = new Epsitec.Common.Support.OpletQueue ();
 			
-			this.text_context   = new Epsitec.Common.Text.Context ();
+			this.text_context   = new Epsitec.Common.Text.TextContext ();
 			this.text_story     = new Epsitec.Common.Text.TextStory (this.oplet_queue, this.text_context);
 			this.text_fitter    = new Epsitec.Common.Text.TextFitter (this.text_story);
 			this.text_navigator = new Epsitec.Common.Text.TextNavigator (this.text_story, this.text_fitter);
@@ -436,7 +436,7 @@ namespace Epsitec.Common.Widgets
 		private ulong							marker_selected;
 		
 		private Support.OpletQueue				oplet_queue;
-		private Common.Text.Context				text_context;
+		private Common.Text.TextContext				text_context;
 		private Common.Text.TextStory			text_story;
 		private Common.Text.TextFitter			text_fitter;
 		private Common.Text.TextNavigator		text_navigator;

@@ -10,6 +10,6 @@ namespace Epsitec.Common.Text
 	public interface ISerializableAsText
 	{
 		void SerializeToText(System.Text.StringBuilder buffer);
-		void DeserializeFromText(Context context, string text, int pos, int length);
+		void DeserializeFromText(TextContext context, string text, int pos, int length);
 	}
 }

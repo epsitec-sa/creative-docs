@@ -8,7 +8,7 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public sealed class ParagraphManagerList
 	{
-		public ParagraphManagerList(Text.Context context)
+		public ParagraphManagerList(Text.TextContext context)
 		{
 			this.context  = context;
 			this.managers = new System.Collections.Hashtable ();
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		private Text.Context					context;
+		private Text.TextContext					context;
 		private System.Collections.Hashtable	managers;
 	}
 }

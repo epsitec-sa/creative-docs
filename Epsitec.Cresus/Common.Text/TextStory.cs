@@ -16,24 +16,24 @@ namespace Epsitec.Common.Text
 		{
 			this.SetupTextStory ();
 			this.SetupOpletQueue (new Common.Support.OpletQueue ());
-			this.SetupContext (new Context ());
+			this.SetupContext (new TextContext ());
 		}
 		
 		public TextStory(Common.Support.OpletQueue oplet_queue)
 		{
 			this.SetupTextStory ();
 			this.SetupOpletQueue (oplet_queue);
-			this.SetupContext (new Context ());
+			this.SetupContext (new TextContext ());
 		}
 		
-		public TextStory(Context context)
+		public TextStory(TextContext context)
 		{
 			this.SetupTextStory ();
 			this.SetupOpletQueue (new Common.Support.OpletQueue ());
 			this.SetupContext (context);
 		}
 		
-		public TextStory(Common.Support.OpletQueue oplet_queue, Context context)
+		public TextStory(Common.Support.OpletQueue oplet_queue, TextContext context)
 		{
 			this.SetupTextStory ();
 			this.SetupOpletQueue (oplet_queue);
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		public Text.Context						TextContext
+		public Text.TextContext						TextContext
 		{
 			get
 			{
@@ -454,7 +454,7 @@ namespace Epsitec.Common.Text
 		public int ChangeMarkers(ICursor cursor, int length, ulong marker, bool set)
 		{
 			//	Modifie les marqueurs associés à une tranche de texte; voir aussi
-			//	Text.Context.Marker pour des marqueurs "standard".
+			//	Text.TextContext.Marker pour des marqueurs "standard".
 			//
 			//	Retourne le nombre de caractères modifiés.
 			//
@@ -1215,7 +1215,7 @@ namespace Epsitec.Common.Text
 			this.oplet_queue = oplet_queue;
 		}
 		
-		private void SetupContext(Context context)
+		private void SetupContext(TextContext context)
 		{
 			this.context = context;
 		}
@@ -1804,7 +1804,7 @@ namespace Epsitec.Common.Text
 		private ICursor							temp_cursor;
 		
 		private Common.Support.OpletQueue		oplet_queue;
-		private Context							context;
+		private TextContext							context;
 		
 		private bool							debug_disable_oplet;
 		private bool							debug_disable_merge;

@@ -8,7 +8,7 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public sealed class LayoutList
 	{
-		public LayoutList(Text.Context context)
+		public LayoutList(Text.TextContext context)
 		{
 			this.context = context;
 			this.layouts = new System.Collections.Hashtable ();
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Text
 		
 		
 		
-		private Text.Context					context;
+		private Text.TextContext					context;
 		private System.Collections.Hashtable	layouts;
 	}
 }

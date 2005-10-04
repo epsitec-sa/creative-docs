@@ -567,7 +567,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.ConvertToStyledText (words, no_styles, properties, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					Text.Context   context      = this.painter.TextStory.TextContext;
+					Text.TextContext   context      = this.painter.TextStory.TextContext;
 					Text.StyleList style_list   = context.StyleList;
 					Text.TextStyle style_normal = style_list.NewTextStyle ("Normal", Text.TextStyleClass.Paragraph, properties);
 					

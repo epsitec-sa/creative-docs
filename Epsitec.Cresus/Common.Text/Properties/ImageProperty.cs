@@ -18,7 +18,7 @@ namespace Epsitec.Common.Text.Properties
 			this.image_tag = image_tag;
 		}
 		
-		public ImageProperty(string image_tag, Context context) : this (image_tag)
+		public ImageProperty(string image_tag, TextContext context) : this (image_tag)
 		{
 			this.SetupImageRenderer (context);
 		}
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public void SetupImageRenderer(Context context)
+		public void SetupImageRenderer(TextContext context)
 		{
 			this.image_renderer = context.FindResource (this.image_tag);
 		}
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Text.Properties
 				/**/				SerializerSupport.SerializeString (this.image_tag));
 		}
 
-		public override void DeserializeFromText(Context context, string text, int pos, int length)
+		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			

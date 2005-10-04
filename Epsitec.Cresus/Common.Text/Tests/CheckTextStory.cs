@@ -41,7 +41,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (font.FontIdentity.InvariantStyleName == "Regular");
 			Debug.Assert.IsTrue (font_size == 12.0);
 			
-			System.Diagnostics.Trace.WriteLine ("Timing Context.GetFont :");
+			System.Diagnostics.Trace.WriteLine ("Timing TextContext.GetFont :");
 			for (int i = 0; i < 1000000; i++)
 			{
 				story.TextContext.GetFont (text[1], out font, out font_size);

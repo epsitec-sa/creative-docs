@@ -287,7 +287,7 @@ namespace Epsitec.Common.Text
 			QU_AmbiguousQuotation,					//	act as they are both opening and closing
 			EX_ExclamationInterrogation,			//	prohibit line break before
 				
-			//	Numeric Context
+			//	Numeric TextContext
 				
 			NU_Numeric,								//	form numeric expressions
 			IS_InfixSeparatorNumeric,				//	prevent breaks after any and before numeric

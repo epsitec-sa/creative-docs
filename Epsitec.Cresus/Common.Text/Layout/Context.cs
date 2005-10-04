@@ -4,12 +4,12 @@
 namespace Epsitec.Common.Text.Layout
 {
 	/// <summary>
-	/// La classe Context stocke le contexte de layout lié à un paragraphe
+	/// La classe TextContext stocke le contexte de layout lié à un paragraphe
 	/// entier.
 	/// </summary>
 	public class Context
 	{
-		public Context(Text.Context text_context, ulong[] text, int start, double oy_base, double line_height, double line_width, double mx_left, double mx_right, double break_fence_before, double break_fence_after)
+		public Context(Text.TextContext text_context, ulong[] text, int start, double oy_base, double line_height, double line_width, double mx_left, double mx_right, double break_fence_before, double break_fence_after)
 		{
 			this.buffer = null;
 			
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Text.Layout
 			this.left_to_right = 0;
 		}
 		
-		public Context(Text.Context context, ulong[] text, int start, FrameList frame_list)
+		public Context(Text.TextContext context, ulong[] text, int start, FrameList frame_list)
 		{
 			this.text_context = context;
 			this.text         = text;
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		public Text.Context						TextContext
+		public Text.TextContext						TextContext
 		{
 			get
 			{
@@ -1660,7 +1660,7 @@ restart:
 		#endregion
 		
 		
-		private Text.Context					text_context;
+		private Text.TextContext					text_context;
 		private ulong[]							text;
 		private int								text_start;
 		private int								text_offset;

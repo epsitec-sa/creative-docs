@@ -182,7 +182,7 @@ namespace Epsitec.Common.Text.Properties
 				/**/				SerializerSupport.SerializeEnum (this.align_mode));
 		}
 		
-		public override void DeserializeFromText(Context context, string text, int pos, int length)
+		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			

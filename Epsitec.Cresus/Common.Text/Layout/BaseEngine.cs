@@ -14,7 +14,7 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public Text.Context						TextContext
+		public Text.TextContext						TextContext
 		{
 			get
 			{
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public virtual void Initialise(Text.Context context, string name)
+		public virtual void Initialise(Text.TextContext context, string name)
 		{
 			this.context = context;
 			this.name    = name;
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Text.Layout
 			return (ulong) code;
 		}
 		
-		public static void GenerateGlyphsAndStretchClassAttributes(Text.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, out byte[] attributes)
+		public static void GenerateGlyphsAndStretchClassAttributes(Text.TextContext context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, out byte[] attributes)
 		{
 			ulong[] temp = new ulong[length];
 			
@@ -300,7 +300,7 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		private Text.Context					context;
+		private Text.TextContext					context;
 		private string							name;
 	}
 }

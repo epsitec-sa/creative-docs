@@ -58,7 +58,7 @@ namespace Epsitec.Common.Text.Properties
 			buffer.Append (SerializerSupport.SerializeString (this.engine_name));
 		}
 		
-		public override void DeserializeFromText(Context context, string text, int pos, int length)
+		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
 		{
 			this.engine_name = SerializerSupport.DeserializeString (text.Substring (pos, length));
 		}

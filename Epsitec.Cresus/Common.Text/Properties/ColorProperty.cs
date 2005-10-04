@@ -56,7 +56,7 @@ namespace Epsitec.Common.Text.Properties
 				/**/				SerializerSupport.SerializeString (Drawing.Color.ToString (this.text_color, System.Globalization.CultureInfo.InvariantCulture)));
 		}
 
-		public override void DeserializeFromText(Context context, string text, int pos, int length)
+		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			

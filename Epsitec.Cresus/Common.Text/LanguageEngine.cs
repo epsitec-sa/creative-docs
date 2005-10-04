@@ -12,7 +12,7 @@ namespace Epsitec.Common.Text
 		{
 		}
 		
-		public static void GenerateHyphens(Context context, ulong[] text, int offset, int length, Unicode.BreakInfo[] breaks)
+		public static void GenerateHyphens(TextContext context, ulong[] text, int offset, int length, Unicode.BreakInfo[] breaks)
 		{
 			int run_start  = 0;
 			int run_length = 0;
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		private static void GenerateHyphensForRun(Context context, ulong[] text, int text_offset, int length, string locale, int break_offset, Unicode.BreakInfo[] breaks)
+		private static void GenerateHyphensForRun(TextContext context, ulong[] text, int text_offset, int length, string locale, int break_offset, Unicode.BreakInfo[] breaks)
 		{
 			if (length < 1)
 			{

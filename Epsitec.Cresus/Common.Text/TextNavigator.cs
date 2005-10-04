@@ -41,7 +41,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		public Context							TextContext
+		public TextContext							TextContext
 		{
 			get
 			{
@@ -1051,7 +1051,7 @@ namespace Epsitec.Common.Text
 				direction = -1;
 			}
 			
-			Context            context    = this.TextContext;
+			TextContext            context    = this.TextContext;
 			Internal.TextTable text_table = this.story.TextTable;
 			StyleList          style_list = context.StyleList;
 			
@@ -1167,7 +1167,7 @@ namespace Epsitec.Common.Text
 			int old_pos = this.story.GetCursorPosition (cursor);
 			int old_dir = this.story.GetCursorDirection (cursor);
 			
-			Context            context    = this.TextContext;
+			TextContext            context    = this.TextContext;
 			Internal.TextTable text_table = this.story.TextTable;
 			StyleList          style_list = context.StyleList;
 			

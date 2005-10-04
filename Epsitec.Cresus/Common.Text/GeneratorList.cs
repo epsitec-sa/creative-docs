@@ -9,7 +9,7 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public sealed class GeneratorList
 	{
-		public GeneratorList(Text.Context context)
+		public GeneratorList(Text.TextContext context)
 		{
 			this.context    = context;
 			this.generators = new System.Collections.Hashtable ();
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Text
 		
 		
 		
-		private Text.Context					context;
+		private Text.TextContext					context;
 		private System.Collections.Hashtable	generators;
 	}
 }
