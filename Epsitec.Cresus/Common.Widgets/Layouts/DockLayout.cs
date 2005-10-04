@@ -170,5 +170,151 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
+		public void UpdateMinMax(Visual container, System.Collections.ICollection children, ref Drawing.Size min_size, ref Drawing.Size max_size)
+		{
+			//	Décompose les dimensions comme suit :
+			//
+			//	|											  |
+			//	|<---min_ox1--->| zone de travail |<-min_ox2->|
+			//	|											  |
+			//	|<-------------------min_dx------------------>|
+			//
+			//	min_ox = min_ox1 + min_ox2
+			//	min_dx = minimum courant
+			//
+			//	La partie centrale (DockStyle.Fill) va s'additionner au reste de manière
+			//	indépendante au moyen du fill_min_dx.
+			//
+			//	Idem par analogie pour dy et max.
+			
+			double min_ox = 0;
+			double min_oy = 0;
+			double max_ox = 0;
+			double max_oy = 0;
+			
+			double min_dx = 0;
+			double min_dy = 0;
+			double max_dx = 1000000;
+			double max_dy = 1000000;
+			
+			double fill_min_dx = 0;
+			double fill_min_dy = 0;
+			double fill_max_dx = 0;
+			double fill_max_dy = 0;
+			
+			switch (container.ContainerLayoutMode)
+			{
+				case ContainerLayoutMode.HorizontalFlow:
+					fill_max_dy = max_dy;
+					break;
+				
+				case ContainerLayoutMode.VerticalFlow:
+					fill_max_dx = max_dx;
+					break;
+			}
+			
+			foreach (Visual child in children)
+			{
+				if (child.Dock == DockStyle.None)
+				{
+					//	Saute les widgets qui ne sont pas "docked", car leur taille n'est pas prise
+					//	en compte dans le calcul des minima/maxima.
+					
+					continue;
+				}
+				
+				if (child.Visibility == false)
+				{
+					continue;
+				}
+				
+				Drawing.Size margins = child.DockMargins.Size;
+				Drawing.Size min = child.ResultingMinSize + margins;
+				Drawing.Size max = child.ResultingMaxSize + margins;
+				
+				switch (child.Dock)
+				{
+					case DockStyle.Top:
+						min_dx  = System.Math.Max (min_dx, min.Width    + min_ox);
+						min_dy  = System.Math.Max (min_dy, child.Height + min_oy);
+						min_oy += child.Height + margins.Height;
+						max_dx  = System.Math.Min (max_dx, max.Width    + max_ox);
+						//						max_dy  = System.Math.Min (max_dy, child.Height + max_oy);
+						max_oy += child.Height + margins.Height;
+						break;
+					
+					case DockStyle.Bottom:
+						min_dx  = System.Math.Max (min_dx, min.Width    + min_ox);
+						min_dy  = System.Math.Max (min_dy, child.Height + min_oy);
+						min_oy += child.Height + margins.Height;
+						max_dx  = System.Math.Min (max_dx, max.Width    + max_ox);
+						//						max_dy  = System.Math.Min (max_dy, child.Height + max_oy);
+						max_oy += child.Height + margins.Height;
+						break;
+						
+					case DockStyle.Left:
+						min_dx  = System.Math.Max (min_dx, child.Width  + min_ox);
+						min_dy  = System.Math.Max (min_dy, min.Height   + min_oy);
+						min_ox += child.Width + margins.Width;
+						//						max_dx  = System.Math.Min (max_dx, child.Width  + max_ox);
+						max_dy  = System.Math.Min (max_dy, max.Height   + max_oy);
+						max_ox += child.Width + margins.Width;
+						break;
+					
+					case DockStyle.Right:
+						min_dx  = System.Math.Max (min_dx, child.Width  + min_ox);
+						min_dy  = System.Math.Max (min_dy, min.Height   + min_oy);
+						min_ox += child.Width + margins.Width;
+						//						max_dx  = System.Math.Min (max_dx, child.Width  + max_ox);
+						max_dy  = System.Math.Min (max_dy, max.Height   + max_oy);
+						max_ox += child.Width + margins.Width;
+						break;
+					
+					case DockStyle.Fill:
+						switch (container.ContainerLayoutMode)
+						{
+							case ContainerLayoutMode.HorizontalFlow:
+								fill_min_dx += min.Width;
+								fill_min_dy  = System.Math.Max (fill_min_dy, min.Height);
+								fill_max_dx += max.Width;
+								fill_max_dy  = System.Math.Min (fill_max_dy, max.Height);
+								break;
+							
+							case ContainerLayoutMode.VerticalFlow:
+								fill_min_dx  = System.Math.Max (fill_min_dx, min.Width);
+								fill_min_dy += min.Height;
+								fill_max_dx  = System.Math.Min (fill_max_dx, max.Width);
+								fill_max_dy += max.Height;
+								break;
+						}
+						break;
+				}
+			}
+			
+			if (fill_max_dx == 0)
+			{
+				fill_max_dx = 1000000;
+			}
+			
+			if (fill_max_dy == 0)
+			{
+				fill_max_dy = 1000000;
+			}
+			
+			double pad_width  = container.DockPadding.Width  + container.ClientBounds.Width  - container.InnerBounds.Width;
+			double pad_height = container.DockPadding.Height + container.ClientBounds.Height - container.InnerBounds.Height;
+			
+			double min_width  = System.Math.Max (min_dx, fill_min_dx + min_ox) + pad_width;
+			double min_height = System.Math.Max (min_dy, fill_min_dy + min_oy) + pad_height;
+			double max_width  = System.Math.Min (max_dx, fill_max_dx + max_ox) + pad_width;
+			double max_height = System.Math.Min (max_dy, fill_max_dy + max_oy) + pad_height;
+			
+			//	Tous les calculs ont été faits en coordonnées client, il faut donc encore transformer
+			//	ces dimensions en coordonnées parents.
+			
+			min_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (min_width, min_height));
+			max_size = Helpers.VisualTree.MapVisualToParent (container, new Drawing.Size (max_width, max_height));
+		}
+		
 	}
 }

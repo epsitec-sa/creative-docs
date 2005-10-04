@@ -156,16 +156,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.Rectangle	InnerBounds
+		public override Drawing.Margins		ExtraPadding
 		{
 			get
 			{
-				double width  = this.Client.Width;
-				double height = this.Client.Height - this.TabHeight;
-				
-				Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, width, height);
-				rect.Deflate(2, 2);
-				return rect;
+				return new Drawing.Margins (2, 2, this.TabHeight + 2, 2);
 			}
 		}
 		

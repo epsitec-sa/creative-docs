@@ -320,7 +320,6 @@ namespace Epsitec.Common.Widgets
 			radio1.Location = new Point(10, 40);
 			radio1.Width = 80;
 			radio1.Text = "<font color=\"#ff0000\"><m>R</m>ouge</font>";
-			radio1.ActiveState = WidgetState.ActiveYes;
 			radio1.Group = "RGB";
 			radio1.TabIndex = 1;
 			radio1.Index = 1;
@@ -352,7 +351,9 @@ namespace Epsitec.Common.Widgets
 			radio3.Clicked += new MessageEventHandler(this.HandleRadio);
 			box.Children.Add(radio3);
 			tip.SetToolTip(radio3, "Couleur bleue");
-
+			
+			radio1.ActiveState = WidgetState.ActiveYes;
+			
 			CheckButton check = new CheckButton();
 //			check.Location = new Point(10, 70);
 			check.Width = 100;
@@ -495,7 +496,8 @@ namespace Epsitec.Common.Widgets
 			tab.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren;
 			window.Root.Children.Add(tab);
 
-			Rectangle inside = tab.InnerBounds;
+			Rectangle inside = tab.Client.Bounds;
+			inside.Deflate (tab.ExtraPadding);
 
 			// Crée l'onglet 1.
 			TabPage page1 = new TabPage();
@@ -1122,7 +1124,7 @@ namespace Epsitec.Common.Widgets
 			VScroller scrollv = new VScroller();
 			scrollv.Name = "Scroller";
 			scrollv.Location = new Point(10, 10);
-			scrollv.Size = new Size(17, tb.InnerBounds.Height-20);
+			scrollv.Size = new Size(17, tb.Client.Bounds.Height-tb.ExtraPadding.Height-20);
 			scrollv.MaxValue = 10;
 			scrollv.VisibleRangeRatio = 0.3M;
 			scrollv.Value = 1;
@@ -1207,7 +1209,8 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleAdd(object sender, MessageEventArgs e)
 		{
-			Rectangle inside = this.tabBook.InnerBounds;
+			Rectangle inside = this.tabBook.Client.Bounds;
+			inside.Deflate(this.tabBook.ExtraPadding);
 			TabPage page = new TabPage();
 			page.Bounds = inside;
 			page.TabTitle = "Nouveau";

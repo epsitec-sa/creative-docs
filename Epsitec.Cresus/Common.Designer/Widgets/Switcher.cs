@@ -44,13 +44,12 @@ namespace Epsitec.Common.Designer.Widgets
 			}
 		}
 		
-		public override Drawing.Rectangle		InnerBounds
+		public override Drawing.Margins			ExtraPadding
 		{
 			get
 			{
-				Drawing.Rectangle bounds = base.InnerBounds;
-				bounds.Deflate (2);
-				return bounds;
+				Drawing.Margins padding = base.ExtraPadding;
+				return padding + new Drawing.Margins (2, 2, 2, 2);
 			}
 		}
 		

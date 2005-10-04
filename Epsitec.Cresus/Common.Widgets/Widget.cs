@@ -909,9 +909,9 @@ namespace Epsitec.Common.Widgets
 			get { return this.client_info; }
 		}
 		
-		public virtual Drawing.Rectangle			InnerBounds
+		public virtual Drawing.Margins				ExtraPadding
 		{
-			get { return this.Client.Bounds; }
+			get { return Drawing.Margins.Zero; }
 		}
 		
 		[Bundle] public virtual Drawing.Size		MinSize
@@ -5085,8 +5085,8 @@ namespace Epsitec.Common.Widgets
 				fill_max_dy = 1000000;
 			}
 			
-			double pad_width  = this.DockPadding.Width  + this.Client.Width  - this.InnerBounds.Width;
-			double pad_height = this.DockPadding.Height + this.Client.Height - this.InnerBounds.Height;
+			double pad_width  = this.DockPadding.Width  + this.ExtraPadding.Width;
+			double pad_height = this.DockPadding.Height + this.ExtraPadding.Height;
 			
 			double min_width  = System.Math.Max (min_dx, fill_min_dx + min_ox) + pad_width;
 			double min_height = System.Math.Max (min_dy, fill_min_dy + min_oy) + pad_height;
@@ -5111,10 +5111,11 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.HasChildren);
 			
 			System.Collections.Queue fill_queue = null;
-			Drawing.Rectangle client_rect = this.InnerBounds;
+			Drawing.Rectangle client_rect = this.Client.Bounds;
 			Drawing.Rectangle bounds;
 			
 			client_rect.Deflate (this.DockPadding);
+			client_rect.Deflate (this.ExtraPadding);
 			
 			double push_dx = 0;
 			double push_dy = 0;

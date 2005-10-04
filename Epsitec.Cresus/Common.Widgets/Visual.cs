@@ -71,6 +71,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Drawing.Rectangle				InnerBounds
+		{
+			get
+			{
+				return Drawing.Rectangle.Empty;
+			}
+		}
+		
 		public Drawing.Margins					DockPadding
 		{
 			get
@@ -134,6 +142,30 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Drawing.Size						MaxSize
+		{
+			get
+			{
+				return Drawing.Size.Empty;
+			}
+		}
+		
+		public Drawing.Size						ResultingMinSize
+		{
+			get
+			{
+				return this.MinSize;
+			}
+		}
+		
+		public Drawing.Size						ResultingMaxSize
+		{
+			get
+			{
+				return this.MaxSize;
+			}
+		}
+		
 		public DockStyle						Dock
 		{
 			get
@@ -178,7 +210,6 @@ namespace Epsitec.Common.Widgets
 			{
 			}
 		}
-		
 		
 		
 		internal bool							HasLayerCollection

@@ -226,17 +226,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		// Donne le rectangle intérieur.
-		public override Drawing.Rectangle InnerBounds
+		public override Drawing.Margins ExtraPadding
 		{
 			get
 			{
-				Drawing.Rectangle rect = new Drawing.Rectangle();
-				rect.Left   = this.margins.Left+this.leftMargin;
-				rect.Right  = this.Width-this.margins.Right-this.rightMargin;
-				rect.Bottom = this.margins.Bottom+this.bottomMargin;
-				rect.Top    = this.Height-this.margins.Top-this.topMargin;
-				return rect;
+				Drawing.Margins padding = new Drawing.Margins (this.margins.Left+this.leftMargin,
+					/**/									   this.margins.Right+this.rightMargin,
+					/**/									   this.margins.Top+this.topMargin,
+					/**/									   this.margins.Bottom+this.bottomMargin);
+				
+				return padding;
 			}
 		}
 
@@ -1187,7 +1186,8 @@ namespace Epsitec.Common.Widgets
 		
 		public void ShowCell(int showRow, int showColumn)
 		{
-			Drawing.Rectangle rect = this.InnerBounds;
+			Drawing.Rectangle rect = this.Client.Bounds;
+			rect.Deflate(this.ExtraPadding);
 
 			if ( (this.styleV & CellArrayStyle.Stretch) == 0 &&
 				 (this.styleH & CellArrayStyle.SelectLine) == 0 &&
@@ -1861,7 +1861,8 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			WidgetState state = this.PaintState;
-			Drawing.Rectangle rect = this.InnerBounds;
+			Drawing.Rectangle rect = this.Client.Bounds;
+			rect.Deflate(this.ExtraPadding);
 			rect.Inflate(-0.5, -0.5);
 
 			graphics.LineWidth = 1;

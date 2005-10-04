@@ -32,13 +32,21 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
+				Drawing.Rectangle rect = Drawing.Rectangle.Empty;
+				
 				switch (this.hilite_mode)
 				{
-					case WidgetHiliteMode.DropCandidate:   return this.widget.InnerBounds;
-					case WidgetHiliteMode.SelectCandidate: return this.widget.Client.Bounds;
+					case WidgetHiliteMode.DropCandidate:
+						rect = this.widget.Client.Bounds;
+						rect.Deflate (this.widget.ExtraPadding);
+						break;
+					
+					case WidgetHiliteMode.SelectCandidate:
+						rect = this.widget.Client.Bounds;
+						break;
 				}
 				
-				return Drawing.Rectangle.Empty;
+				return rect;
 			}
 		}
 		

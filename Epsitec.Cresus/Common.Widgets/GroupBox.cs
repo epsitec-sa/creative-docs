@@ -24,17 +24,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.Rectangle			InnerBounds
+		public override Drawing.Margins				ExtraPadding
 		{
 			get
 			{
-				Drawing.Rectangle frame = this.FrameRectangle;
-				Drawing.Rectangle title = this.TitleRectangle;
-				
-				frame.Top = title.Bottom;
-				frame.Deflate (2, 2);
-				
-				return frame;
+				return new Drawing.Margins (2, 2, 2 + this.FrameRectangle.Top - this.TitleRectangle.Bottom, 2);
 			}
 		}
 		

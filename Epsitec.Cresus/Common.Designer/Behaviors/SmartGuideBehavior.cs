@@ -174,7 +174,8 @@ namespace Epsitec.Common.Designer.Behaviors
 			double xr = bounds.Right;
 			
 			Widget            parent  = this.target;
-			Drawing.Rectangle model   = parent.InnerBounds;
+			Drawing.Rectangle model   = parent.Client.Bounds;
+			model.Deflate (parent.ExtraPadding);
 			Drawing.Margins   margins = this.align.GetInnerMargins (parent);
 			
 			double mx;
@@ -273,7 +274,8 @@ namespace Epsitec.Common.Designer.Behaviors
 			double y3 = bounds.Top;
 			
 			Widget            parent  = this.target;
-			Drawing.Rectangle model   = parent.InnerBounds;
+			Drawing.Rectangle model   = parent.Client.Bounds;
+			model.Deflate (parent.ExtraPadding);
 			Drawing.Point     basel   = parent.BaseLine;
 			Drawing.Margins   margins = this.align.GetInnerMargins (parent);
 			
