@@ -204,7 +204,7 @@ namespace Epsitec.Common.Drawing
 						this.story.TextContext.DefaultStyle = style_default;
 					}
 					
-					Text.TextNavigator navigator = new Text.TextNavigator (this.story, this.fitter);
+					Text.TextNavigator navigator = new Text.TextNavigator (this.fitter);
 					
 					Common.Text.ITextFrame frame;
 					double cx, cy, ascender, descender, angle;
@@ -888,7 +888,7 @@ namespace Epsitec.Common.Drawing
 					this.painter.TextStory.ConvertToStyledText (words, style1, null, out text);
 					this.painter.TextStory.InsertText (cursor, text);
 					
-					Text.TextNavigator navigator = new Epsitec.Common.Text.TextNavigator (this.painter.TextStory, this.painter.TextFitter);
+					Text.TextNavigator navigator = new Epsitec.Common.Text.TextNavigator (this.painter.TextFitter);
 					
 					navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 1);
 					navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);	//	juste après le point final

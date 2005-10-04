@@ -13,14 +13,13 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public class TextNavigator : System.IDisposable
 	{
-		public TextNavigator(TextStory story) : this (story, null)
+		public TextNavigator(TextStory story) : this (new TextFitter (story))
 		{
-			this.fitter = new TextFitter (this.story);
 		}
 		
-		public TextNavigator(TextStory story, TextFitter fitter)
+		public TextNavigator(TextFitter fitter)
 		{
-			this.story  = story;
+			this.story  = fitter.TextStory;
 			this.fitter = fitter;
 			this.cursor = new Cursors.SimpleCursor ();
 			

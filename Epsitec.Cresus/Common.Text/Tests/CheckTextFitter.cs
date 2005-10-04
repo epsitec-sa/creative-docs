@@ -678,7 +678,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (c_line == 0);
 			Debug.Assert.IsTrue (c_char == 0);
 			
-			TextNavigator navigator = new TextNavigator (story, fitter);
+			TextNavigator navigator = new TextNavigator (fitter);
 			
 			double ascender;
 			double descender;

@@ -76,7 +76,7 @@ namespace Epsitec.Common.Support
 			
 			fitter.FrameList.Add (frame);
 			
-			Text.TextNavigator navigator = new Text.TextNavigator (story, fitter);
+			Text.TextNavigator navigator = new Text.TextNavigator (fitter);
 			
 			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 			

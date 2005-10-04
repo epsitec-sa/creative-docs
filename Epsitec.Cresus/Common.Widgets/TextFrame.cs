@@ -20,7 +20,7 @@ namespace Epsitec.Common.Widgets
 			this.text_context   = new Epsitec.Common.Text.TextContext ();
 			this.text_story     = new Epsitec.Common.Text.TextStory (this.oplet_queue, this.text_context);
 			this.text_fitter    = new Epsitec.Common.Text.TextFitter (this.text_story);
-			this.text_navigator = new Epsitec.Common.Text.TextNavigator (this.text_story, this.text_fitter);
+			this.text_navigator = new Epsitec.Common.Text.TextNavigator (this.text_fitter);
 			this.text_frame     = new Epsitec.Common.Text.SimpleTextFrame (this.DefaultWidth, this.DefaultHeight);
 			
 			this.navigator = new TextNavigator2 ();
