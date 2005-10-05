@@ -13,9 +13,10 @@ namespace Epsitec.Common.Widgets
 			
 			this.is_vertical = vertical;
 			
-			this.InternalState |= InternalState.AutoEngage;
+			this.AutoEngage = true;
+			this.AutoRepeat = true;
+			
 			this.InternalState |= InternalState.Engageable;
-			this.InternalState |= InternalState.AutoRepeat;
 
 			this.arrowUp = new GlyphButton(this);
 			this.arrowDown = new GlyphButton(this);
@@ -93,8 +94,9 @@ namespace Epsitec.Common.Widgets
 				if (this.display != value)
 				{
 					this.display = value;
+					this.UpdateEnable ();
 					this.UpdateInternalGeometry ();
-					this.Invalidate();
+					this.Invalidate ();
 				}
 			}
 		}
@@ -164,21 +166,6 @@ namespace Epsitec.Common.Widgets
 		protected GlyphButton				ArrowDown
 		{
 			get { return this.arrowDown; }
-		}
-		
-		
-		public override bool				IsEnabled
-		{
-			get
-			{
-				if ((this.range.IsEmpty) ||
-					(this.display == 1.0M))
-				{
-					return false;
-				}
-				
-				return base.IsEnabled;
-			}
 		}
 		
 		
@@ -478,8 +465,14 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleRangeChanged(object sender)
 		{
+			this.UpdateEnable ();
 			this.UpdateInternalGeometry ();
 			this.Invalidate ();
+		}
+		
+		protected virtual void UpdateEnable()
+		{
+			this.Enable = (this.range.IsEmpty || this.display == 1.0M) ? false : true;
 		}
 
 		protected virtual  void OnValueChanged()

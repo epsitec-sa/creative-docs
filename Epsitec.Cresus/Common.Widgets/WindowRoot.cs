@@ -18,7 +18,7 @@ namespace Epsitec.Common.Widgets
 			this.WindowStyles = WindowStyles.CanResize | WindowStyles.HasCloseButton;
 			
 			this.InternalState |= InternalState.PossibleContainer;
-			this.InternalState |= InternalState.AutoDoubleClick;
+			this.AutoDoubleClick = true;
 		}
 		
 		
@@ -134,10 +134,6 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate ();
 		}
 		#endregion
-		
-//		public override void SetLayout(LayoutStyles value)
-//		{
-//		}
 		
 		public override void Invalidate(Drawing.Rectangle rect)
 		{

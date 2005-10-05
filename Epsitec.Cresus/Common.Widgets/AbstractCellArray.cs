@@ -34,9 +34,9 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			this.InternalState |= InternalState.AutoFocus;
+			this.AutoFocus = true;
+			this.AutoDoubleClick = true;
 			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.AutoDoubleClick;
 			this.InternalState &= ~InternalState.PossibleContainer;
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			this.margins = adorner.GeometryArrayMargins;

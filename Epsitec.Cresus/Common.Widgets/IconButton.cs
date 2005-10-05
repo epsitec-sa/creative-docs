@@ -115,7 +115,7 @@ namespace Epsitec.Common.Widgets
 		{
 			IconButton button = new IconButton (command, icon);
 			
-			button.InternalState |= InternalState.AutoToggle;
+			button.AutoToggle = true;
 			button.Name = Support.CommandDispatcher.ExtractCommandName (command);
 			
 			return button;

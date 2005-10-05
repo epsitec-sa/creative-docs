@@ -10,12 +10,13 @@ namespace Epsitec.Common.Widgets
 	{
 		public GlyphArray()
 		{
-			this.InternalState |= InternalState.AutoFocus;
-			this.InternalState |= InternalState.AutoEngage;
+			this.AutoFocus  = true;
+			this.AutoEngage = true;
+			this.AutoDoubleClick = true;
+			
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
-			this.InternalState |= InternalState.AutoDoubleClick;
-
+			
 			this.scroller = new VScroller(this);
 			this.scroller.MinValue          = 0.0M;
 			this.scroller.MaxValue          = 1.0M;

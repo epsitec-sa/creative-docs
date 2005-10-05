@@ -44,9 +44,9 @@ namespace Epsitec.Common.Widgets
 			
 			this.columns = new ColumnDefinition[0];
 			
-			this.InternalState |= InternalState.AutoFocus;
+			this.AutoFocus = true;
+			this.AutoDoubleClick = true;
 			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.AutoDoubleClick;
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			
@@ -1677,7 +1677,6 @@ invalid:	row    = -1;
 				
 				rect.Right = rect.Left + this.GetColumnWidth (i);
 				
-//@				button.Layout = LayoutStyles.Manual;
 				button.Bounds = rect;
 				button.Show ();
 				
@@ -1700,7 +1699,6 @@ invalid:	row    = -1;
 				bounds.Right = rect.Right + this.slider_dim / 2;
 				rect.Left    = rect.Right;
 				
-//@				slider.Layout = LayoutStyles.Manual;
 //@				slider.ZOrder = i;
 				slider.Bounds = bounds;
 				slider.SetVisible (this.columns[i].Elasticity == 0);

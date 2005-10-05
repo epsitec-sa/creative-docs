@@ -45,10 +45,11 @@ namespace Epsitec.Common.Document
 
 		public Viewer(Document document)
 		{
-			this.InternalState |= InternalState.AutoFocus;
+			this.AutoFocus       = true;
+			this.AutoDoubleClick = true;
+			
 			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.AutoDoubleClick;
-
+			
 			this.BackColor = Color.FromBrightness(1);  // fond blanc
 
 			this.document = document;

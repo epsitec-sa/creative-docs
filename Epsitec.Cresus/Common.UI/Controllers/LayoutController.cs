@@ -72,8 +72,8 @@ namespace Epsitec.Common.UI.Controllers
 		
 		public override void SyncFromAdapter(SyncReason reason)
 		{
+#if false			
 			Adapters.LayoutAdapter adapter = this.Adapter as Adapters.LayoutAdapter;
-			
 			if (adapter != null)
 			{
 				if (this.layout != adapter.Value)
@@ -104,16 +104,19 @@ namespace Epsitec.Common.UI.Controllers
 					}
 				}
 			}
+#endif
 		}
 		
 		public override void SyncFromUI()
 		{
+#if false
 			Adapters.LayoutAdapter adapter = this.Adapter as Adapters.LayoutAdapter;
 			
 			if (adapter != null)
 			{
 				adapter.Value = this.layout;
 			}
+#endif
 		}
 		
 		
@@ -135,7 +138,7 @@ namespace Epsitec.Common.UI.Controllers
 				
 				if (this.show_mode == ShowMode.Manual)
 				{
-					this.layout = LayoutStyles.Manual;
+//@					this.layout = LayoutStyles.Manual;
 					this.OnUIDataChanged ();
 				}
 			}
@@ -196,17 +199,17 @@ namespace Epsitec.Common.UI.Controllers
 									if (pos.Y < pos.X)
 									{
 										hilite = new Drawing.Rectangle (0, 0, dx, dd);
-										this.candidate = LayoutStyles.DockBottom;
+//@										this.candidate = LayoutStyles.DockBottom;
 									}
 									else if ((dy - pos.Y) < pos.X)
 									{
 										hilite = new Drawing.Rectangle (0, dy-dd, dx, dd);
-										this.candidate = LayoutStyles.DockTop;
+//@										this.candidate = LayoutStyles.DockTop;
 									}
 									else
 									{
 										hilite = new Drawing.Rectangle (0, 0, dd, dy);
-										this.candidate = LayoutStyles.DockLeft;
+//@										this.candidate = LayoutStyles.DockLeft;
 									}
 								}
 								else if ((dx - pos.X) < dd)
@@ -214,33 +217,33 @@ namespace Epsitec.Common.UI.Controllers
 									if ((dy - pos.Y) < (dx - pos.X))
 									{
 										hilite = new Drawing.Rectangle (0, dy-dd, dx, dd);
-										this.candidate = LayoutStyles.DockTop;
+//@										this.candidate = LayoutStyles.DockTop;
 									}
 									else if (pos.Y < (dx - pos.X))
 									{
 										hilite = new Drawing.Rectangle (0, 0, dx, dd);
-										this.candidate = LayoutStyles.DockBottom;
+//@										this.candidate = LayoutStyles.DockBottom;
 									}
 									else
 									{
 										hilite = new Drawing.Rectangle (dx-dd, 0, dd, dy);
-										this.candidate = LayoutStyles.DockRight;
+//@										this.candidate = LayoutStyles.DockRight;
 									}
 								}
 								else if (pos.Y < dd)
 								{
 									hilite = new Drawing.Rectangle (0, 0, dx, dd);
-									this.candidate = LayoutStyles.DockBottom;
+//@									this.candidate = LayoutStyles.DockBottom;
 								}
 								else if ((dy - pos.Y) < dd)
 								{
 									hilite = new Drawing.Rectangle (0, dy-dd, dx, dd);
-									this.candidate = LayoutStyles.DockTop;
+//@									this.candidate = LayoutStyles.DockTop;
 								}
 								else
 								{
 									hilite = new Drawing.Rectangle (0, 0, dx, dy);
-									this.candidate = LayoutStyles.DockFill;
+//@									this.candidate = LayoutStyles.DockFill;
 								}
 								break;
 						}
@@ -267,28 +270,28 @@ namespace Epsitec.Common.UI.Controllers
 									/**/ (pos.Y < dy/2+5))
 								{
 									hilite = new Drawing.Rectangle (0, 0, dd, dy);
-									this.candidate = LayoutStyles.AnchorLeft;
+//@									this.candidate = LayoutStyles.AnchorLeft;
 								}
 								else if (((dx - pos.X) < dd) &&
 									/**/ (pos.Y > dy/2-5) &&
 									/**/ (pos.Y < dy/2+5))
 								{
 									hilite = new Drawing.Rectangle (dx-dd, 0, dd, dy);
-									this.candidate = LayoutStyles.AnchorRight;
+//@									this.candidate = LayoutStyles.AnchorRight;
 								}
 								else if ((pos.Y < dd) &&
 									/**/ (pos.X > dx/2-5) &&
 									/**/ (pos.X < dx/2+5))
 								{
 									hilite = new Drawing.Rectangle (0, 0, dx, dd);
-									this.candidate = LayoutStyles.AnchorBottom;
+//@									this.candidate = LayoutStyles.AnchorBottom;
 								}
 								else if (((dy - pos.Y) < dd) &&
 									/**/ (pos.X > dx/2-5) &&
 									/**/ (pos.X < dx/2+5))
 								{
 									hilite = new Drawing.Rectangle (0, dy-dd, dx, dd);
-									this.candidate = LayoutStyles.AnchorTop;
+//@									this.candidate = LayoutStyles.AnchorTop;
 								}
 								else
 								{
@@ -308,19 +311,21 @@ namespace Epsitec.Common.UI.Controllers
 					{
 						if (this.host.show_mode == ShowMode.Dock)
 						{
+#if false
 							if (this.host.layout == this.candidate)
 							{
-								this.host.layout = LayoutStyles.Manual;
+//@								this.host.layout = LayoutStyles.Manual;
 							}
 							else
 							{
 								this.host.layout = this.candidate;
 							}
+#endif
 						}
 						else if (this.host.show_mode == ShowMode.Anchor)
 						{
-							this.host.layout &= LayoutStyles.MaskAnchor;
-							this.host.layout ^= this.candidate;
+//@							this.host.layout &= LayoutStyles.MaskAnchor;
+//@							this.host.layout ^= this.candidate;
 						}
 						
 						this.host.SyncFromUI ();
@@ -380,10 +385,10 @@ namespace Epsitec.Common.UI.Controllers
 						this.AppendLink (cx, rect_1.Top,    20, picture, Direction.Up);
 						this.AppendLink (cx, rect_1.Bottom, 20, picture, Direction.Down);
 						
-						if ((this.host.layout & LayoutStyles.AnchorLeft) != 0)		this.AppendLink (rect_1.Left,  cy,  25, surface, Direction.Left);
-						if ((this.host.layout & LayoutStyles.AnchorRight) != 0)		this.AppendLink (rect_1.Right, cy,  25, surface, Direction.Right);
-						if ((this.host.layout & LayoutStyles.AnchorTop) != 0)		this.AppendLink (cx, rect_1.Top,    20, surface, Direction.Up);
-						if ((this.host.layout & LayoutStyles.AnchorBottom) != 0)	this.AppendLink (cx, rect_1.Bottom, 20, surface, Direction.Down);
+//						if ((this.host.layout & LayoutStyles.AnchorLeft) != 0)		this.AppendLink (rect_1.Left,  cy,  25, surface, Direction.Left);
+//						if ((this.host.layout & LayoutStyles.AnchorRight) != 0)		this.AppendLink (rect_1.Right, cy,  25, surface, Direction.Right);
+//						if ((this.host.layout & LayoutStyles.AnchorTop) != 0)		this.AppendLink (cx, rect_1.Top,    20, surface, Direction.Up);
+//						if ((this.host.layout & LayoutStyles.AnchorBottom) != 0)	this.AppendLink (cx, rect_1.Bottom, 20, surface, Direction.Down);
 						
 						break;
 					
@@ -393,20 +398,20 @@ namespace Epsitec.Common.UI.Controllers
 						this.AppendArrow (cx, rect_1.Top    - 1, 16, picture, Direction.Up);
 						this.AppendArrow (cx, rect_1.Bottom + 1, 16, picture, Direction.Down);
 						
-						switch (this.host.layout)
-						{
-							case LayoutStyles.DockLeft:		this.AppendArrow (rect_1.Left  + 1, cy, 16, surface, Direction.Left);	break;
-							case LayoutStyles.DockRight:	this.AppendArrow (rect_1.Right - 1, cy, 16, surface, Direction.Right);	break;
-							case LayoutStyles.DockTop:		this.AppendArrow (cx, rect_1.Top    - 1, 16, surface, Direction.Up);	break;
-							case LayoutStyles.DockBottom:	this.AppendArrow (cx, rect_1.Bottom + 1, 16, surface, Direction.Down);	break;
-							
-							case LayoutStyles.DockFill:
-								this.AppendArrow (rect_1.Left  + 1, cy, 16, surface, Direction.Left);
-								this.AppendArrow (rect_1.Right - 1, cy, 16, surface, Direction.Right);
-								this.AppendArrow (cx, rect_1.Top    - 1, 16, surface, Direction.Up);
-								this.AppendArrow (cx, rect_1.Bottom + 1, 16, surface, Direction.Down);
-								break;
-						}
+//						switch (this.host.layout)
+//						{
+//							case LayoutStyles.DockLeft:		this.AppendArrow (rect_1.Left  + 1, cy, 16, surface, Direction.Left);	break;
+//							case LayoutStyles.DockRight:	this.AppendArrow (rect_1.Right - 1, cy, 16, surface, Direction.Right);	break;
+//							case LayoutStyles.DockTop:		this.AppendArrow (cx, rect_1.Top    - 1, 16, surface, Direction.Up);	break;
+//							case LayoutStyles.DockBottom:	this.AppendArrow (cx, rect_1.Bottom + 1, 16, surface, Direction.Down);	break;
+//							
+//							case LayoutStyles.DockFill:
+//								this.AppendArrow (rect_1.Left  + 1, cy, 16, surface, Direction.Left);
+//								this.AppendArrow (rect_1.Right - 1, cy, 16, surface, Direction.Right);
+//								this.AppendArrow (cx, rect_1.Top    - 1, 16, surface, Direction.Up);
+//								this.AppendArrow (cx, rect_1.Bottom + 1, 16, surface, Direction.Down);
+//								break;
+//						}
 						
 						break;
 				}
@@ -536,7 +541,7 @@ namespace Epsitec.Common.UI.Controllers
 			
 			private Drawing.Rectangle			hilite;
 			private LayoutController			host;
-			private LayoutStyles				candidate;
+//@			private LayoutStyles				candidate;
 		}
 		
 		
@@ -546,7 +551,7 @@ namespace Epsitec.Common.UI.Controllers
 		
 		private EdgeSelectWidget				edge_select;
 		
-		private LayoutStyles					layout;
+//@		private LayoutStyles					layout;
 		private ShowMode						show_mode;
 	}
 }

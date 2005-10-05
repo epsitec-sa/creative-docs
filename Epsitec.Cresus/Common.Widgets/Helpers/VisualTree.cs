@@ -316,5 +316,20 @@ namespace Epsitec.Common.Widgets.Helpers
 			
 			return false;
 		}
+		
+		public static bool IsEnabled(Visual visual)
+		{
+			while (visual.Enable)
+			{
+				visual = visual.Parent;
+				
+				if (visual == null)
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
 	}
 }

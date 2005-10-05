@@ -34,8 +34,6 @@ namespace Epsitec.Common.Widgets
 	{
 		None				= 0,
 		
-//		ChildrenChanged		= 0x00000001,		//	certains enfants ont changé
-//		LayoutChanged		= 0x00000002,		//	le layout a changé
 		ChildrenDocked		= 0x00000004,		//	certains enfants spécifient un DockStyle
 		
 		Embedded			= 0x00000008,		//	=> widget appartient au parent (widgets composés)
@@ -44,20 +42,8 @@ namespace Epsitec.Common.Widgets
 		Selectable			= 0x00000020,
 		Engageable			= 0x00000040,		//	=> peut être enfoncé par une pression
 		Frozen				= 0x00000080,		//	=> n'accepte aucun événement
-//		Visible				= 0x00000100,
-		AcceptThreeState	= 0x00000200,
 		
-		PreferXLayout		= 0x00000400,		//	=> en cas de DockStyle.Fill multiple, place le contenu horizontalement
-		
-//		AutoRadio			= 0x00004000,		//	=> comportement 'radio'
-//		AutoMinMax			= 0x00008000,		//	=> calcule automatiquement les tailles min et max
-		AutoCapture			= 0x00010000,
-		AutoFocus			= 0x00020000,
-		AutoEngage			= 0x00040000,
-		AutoToggle			= 0x00080000,
 		AutoMnemonic		= 0x00100000,
-		AutoRepeat			= 0x00200000,
-		AutoDoubleClick		= 0x00400000,
 		AutoResolveResRef	= 0x00800000,		//	une référence à une ressource [res:...] est remplacée automatiquement
 		
 		PossibleContainer	= 0x01000000,		//	widget peut être la cible d'un drag & drop en mode édition
@@ -111,27 +97,6 @@ namespace Epsitec.Common.Widgets
 	}
 	#endregion
 	
-	#region LayoutStyles enum
-	[System.Flags] public enum LayoutStyles : byte
-	{
-		Manual			= 0,
-			
-		DockLeft		= DockStyle.Left,
-		DockRight		= DockStyle.Right,
-		DockTop			= DockStyle.Top,
-		DockBottom		= DockStyle.Bottom,
-		DockFill		= DockStyle.Fill,
-			
-		AnchorLeft		= AnchorStyles.Left,
-		AnchorRight		= AnchorStyles.Right,
-		AnchorTop		= AnchorStyles.Top,
-		AnchorBottom	= AnchorStyles.Bottom,
-			
-		MaskDock		= 0x0F,
-		MaskAnchor		= 0xF0,
-	}
-	#endregion
-	
 	
 	/// <summary>
 	/// La classe Widget implémente la classe de base dont dérivent tous les
@@ -157,12 +122,8 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.WriteLine (string.Format ("{1}+ Created {0}", this.GetType ().Name, this.widget_id));
 			}
 			
-//			this.InternalState |= InternalState.Visible;
-			this.InternalState |= InternalState.AutoCapture;
 			this.InternalState |= InternalState.AutoMnemonic;
 			this.InternalState |= InternalState.AutoResolveResRef;
-			
-			this.widget_state   |= WidgetState.Enabled;
 			
 			this.default_font_height = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
 			this.alignment           = this.DefaultAlignment;
@@ -668,23 +629,6 @@ namespace Epsitec.Common.Widgets
 			get { return (this.command != null); }
 		}
 		
-		public virtual bool							IsEnabled
-		{
-			get
-			{
-				if ((this.widget_state & WidgetState.Enabled) == 0)
-				{
-					return false;
-				}
-				if (this.Parent != null)
-				{
-					return this.Parent.IsEnabled;
-				}
-				
-				return true;
-			}
-		}
-		
 		public virtual bool							IsFrozen
 		{
 			get
@@ -914,11 +858,11 @@ namespace Epsitec.Common.Widgets
 			{
 				this.internal_state = value;
 				
-				this.AutoCapture = (this.internal_state & InternalState.AutoCapture) != 0;
-				this.AutoEngage  = (this.internal_state & InternalState.AutoEngage) != 0;
-				this.AutoFocus   = (this.internal_state & InternalState.AutoFocus) != 0;
-				this.AutoRepeat  = (this.internal_state & InternalState.AutoRepeat) != 0;
-				this.AutoToggle  = (this.internal_state & InternalState.AutoToggle) != 0;
+//				this.AutoCapture = (this.internal_state & InternalState.AutoCapture) != 0;
+//				this.AutoEngage  = (this.internal_state & InternalState.AutoEngage) != 0;
+//				this.AutoFocus   = (this.internal_state & InternalState.AutoFocus) != 0;
+//				this.AutoRepeat  = (this.internal_state & InternalState.AutoRepeat) != 0;
+//				this.AutoToggle  = (this.internal_state & InternalState.AutoToggle) != 0;
 			}
 		}
 		
@@ -1089,25 +1033,6 @@ namespace Epsitec.Common.Widgets
 		public bool									CanEngage
 		{
 			get { return ((this.internal_state & InternalState.Engageable) != 0) && this.IsEnabled && !this.IsFrozen; }
-		}
-		
-		public bool									AcceptThreeState
-		{
-			get
-			{
-				return (this.internal_state & InternalState.AcceptThreeState) != 0;
-			}
-			set
-			{
-				if (value)
-				{
-					this.internal_state |= InternalState.AcceptThreeState;
-				}
-				else
-				{
-					this.internal_state &= ~InternalState.AcceptThreeState;
-				}
-			}
 		}
 		
 		public bool									AcceptDefocus
@@ -1316,31 +1241,6 @@ namespace Epsitec.Common.Widgets
 		public bool									HasDockedChildren
 		{
 			get { return (this.internal_state & InternalState.ChildrenDocked) != 0; }
-		}
-		
-		
-		[Bundle] public int							Index
-		{
-			get
-			{
-				return this.index;
-			}
-			set
-			{
-				this.index = value;
-			}
-		}
-		
-		[Bundle] public string						Group
-		{
-			get
-			{
-				return this.group;
-			}
-			set
-			{
-				this.group = value;
-			}
 		}
 		
 		
@@ -1830,56 +1730,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-//		public virtual void SetLayout(LayoutStyles value)
-//		{
-//			if (this.layout != value)
-//			{
-//				Drawing.Size size = this.Size;
-//				
-//				this.Invalidate ();
-//				
-//				LayoutStyles dock_old = this.layout & LayoutStyles.MaskDock;
-//				LayoutStyles dock_new = value & LayoutStyles.MaskDock;
-//				
-//				if (((dock_old == LayoutStyles.DockLeft) && (dock_new == LayoutStyles.DockRight)) ||
-//					((dock_old == LayoutStyles.DockRight) && (dock_new == LayoutStyles.DockLeft)) ||
-//					((dock_old == LayoutStyles.DockTop) && (dock_new == LayoutStyles.DockBottom)) ||
-//					((dock_old == LayoutStyles.DockBottom) && (dock_new == LayoutStyles.DockTop)) ||
-//					(dock_old == LayoutStyles.Manual))
-//				{
-//					//	Ne change pas la géométrie, puisque le docking reste défini selon les
-//					//	mêmes grandeurs (gauche <-> droite ou haut <-> bas), ou qu'il n'y avait
-//					//	pas de docking actif avant.
-//				}
-//				else
-//				{
-//					//	Le style de docking change; il faut donc mieux remettre les dimensions
-//					//	par défaut
-//					
-//					this.Size = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
-//				}
-//				
-//				this.layout = value;
-//				
-//				if ((this.Parent != null) &&
-//					(this.IsLayoutSuspended == false))
-//				{
-//					//	Si le widget a un parent, il faut donner l'occasion au parent de
-//					//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
-//					//	de notre nouveau mode de docking.
-//					
-//					this.Parent.UpdateChildrenLayout ();
-//					
-//					if (this.Size != size)
-//					{
-//						this.UpdateClientGeometry ();
-//						this.OnSizeChanged ();
-//					}
-//					this.Invalidate ();
-//				}
-//			}
-//		}
-		
 		public virtual void SetVisible(bool visible)
 		{
 			if (this.Visibility == false)
@@ -1920,11 +1770,11 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void SetEnabled(bool enabled)
 		{
-			if ((this.widget_state & WidgetState.Enabled) == 0)
+			if (this.Enable == false)
 			{
 				if (enabled)
 				{
-					this.widget_state |= WidgetState.Enabled;
+					this.Enable = true;
 					this.Invalidate (InvalidateReason.EnabledChanged);
 				}
 			}
@@ -1932,7 +1782,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!enabled)
 				{
-					this.widget_state &= ~ WidgetState.Enabled;
+					this.Enable = false;
 					this.Invalidate (InvalidateReason.EnabledChanged);
 				}
 			}
@@ -4540,7 +4390,7 @@ namespace Epsitec.Common.Widgets
 							return;
 						}
 						
-						if ((this.internal_state & InternalState.AutoDoubleClick) == 0)
+						if (! this.AutoDoubleClick)
 						{
 							Message.ResetButtonDownCounter ();
 						}
@@ -5450,6 +5300,10 @@ namespace Epsitec.Common.Widgets
 				this.height = height;
 			}
 			
+			internal ClientInfo(Drawing.Size size) : this (size.Width, size.Height)
+			{
+			}
+			
 			
 			internal void SetSize(double width, double height)
 			{
@@ -5572,8 +5426,6 @@ namespace Epsitec.Common.Widgets
 		private HypertextInfo					hypertext;
 		
 		private string							command;
-		private int								index = -1;
-		private string							group;
 		private string							text;
 		private TextLayout						text_layout;
 		private ContentAlignment				alignment;

@@ -11,9 +11,10 @@ namespace Epsitec.Common.Document.Ribbons
 	{
 		public RibbonButton()
 		{
-			this.InternalState &= ~InternalState.AutoCapture;
-			this.InternalState &= ~InternalState.AutoFocus;
-			this.InternalState &= ~InternalState.AutoEngage;
+			this.AutoCapture = false;
+			this.AutoFocus   = false;
+			this.AutoEngage  = false;
+			
 			this.InternalState &= ~InternalState.Focusable;
 			this.InternalState &= ~InternalState.Engageable;
 

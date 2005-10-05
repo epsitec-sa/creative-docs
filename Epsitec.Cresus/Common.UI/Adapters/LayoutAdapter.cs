@@ -9,6 +9,7 @@ namespace Epsitec.Common.UI.Adapters
 	/// <summary>
 	/// Summary description for LayoutAdapter.
 	/// </summary>
+#if false
 	
 	[Controller (1, typeof (Controllers.CaptionOnlyController))]
 	[Controller (2, typeof (Controllers.LayoutController))]
@@ -18,7 +19,6 @@ namespace Epsitec.Common.UI.Adapters
 		public LayoutAdapter()
 		{
 		}
-		
 		
 		public LayoutStyles						Value
 		{
@@ -38,7 +38,6 @@ namespace Epsitec.Common.UI.Adapters
 			}
 		}
 		
-		
 		protected override object ConvertToObject()
 		{
 			return this.Value;
@@ -54,4 +53,5 @@ namespace Epsitec.Common.UI.Adapters
 		
 		private LayoutStyles					value;
 	}
+#endif
 }

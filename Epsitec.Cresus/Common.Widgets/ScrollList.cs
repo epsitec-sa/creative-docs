@@ -24,8 +24,8 @@ namespace Epsitec.Common.Widgets
 			
 			this.items = new Helpers.StringCollection(this);
 			this.DockPadding = new Drawing.Margins(2, 2, 2, 2);
-			this.InternalState |= InternalState.AutoFocus;
-			this.InternalState |= InternalState.AutoDoubleClick;
+			this.AutoFocus = true;
+			this.AutoDoubleClick = true;
 			this.InternalState |= InternalState.Focusable;
 
 			this.scrollListStyle = ScrollListStyle.Normal;

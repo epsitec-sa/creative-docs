@@ -8,7 +8,7 @@ namespace Epsitec.Common.Widgets
 		public TabButton()
 		{
 			this.InternalState &= ~InternalState.Engageable;
-			this.InternalState &= ~InternalState.AutoFocus;
+			this.AutoFocus = false;
 		}
 		
 		public TabButton(Widget embedder) : this()

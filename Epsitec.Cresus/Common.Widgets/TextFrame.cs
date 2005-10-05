@@ -11,9 +11,9 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFrame()
 		{
-			this.InternalState |= InternalState.AutoFocus;
+			this.AutoFocus = true;
+			this.AutoDoubleClick = true;
 			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.AutoDoubleClick;
 			
 			this.oplet_queue = new Epsitec.Common.Support.OpletQueue ();
 			
@@ -45,9 +45,9 @@ namespace Epsitec.Common.Widgets
 		
 		public TextFrame(Text.TextStory story, Text.TextFitter fitter, Text.TextNavigator navigator)
 		{
-			this.InternalState |= InternalState.AutoFocus;
+			this.AutoFocus = true;
+			this.AutoDoubleClick = true;
 			this.InternalState |= InternalState.Focusable;
-			this.InternalState |= InternalState.AutoDoubleClick;
 			
 			this.oplet_queue = story.OpletQueue;
 			

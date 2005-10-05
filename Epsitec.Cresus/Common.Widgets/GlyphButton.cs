@@ -35,7 +35,7 @@ namespace Epsitec.Common.Widgets
 		public GlyphButton()
 		{
 			this.ButtonStyle = ButtonStyle.Icon;
-			this.InternalState &= ~InternalState.AutoFocus;
+			this.AutoFocus = false;
 			this.InternalState &= ~InternalState.Focusable;
 		}
 		

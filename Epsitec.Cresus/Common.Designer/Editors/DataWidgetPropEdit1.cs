@@ -24,7 +24,7 @@ namespace Epsitec.Common.Designer.Editors
 			this.AddPropPane (this.CreatePropPane ("Location",	     new Common.UI.Adapters.Num2Adapter ()));
 			this.AddPropPane (this.CreatePropPane ("Size",		     new Common.UI.Adapters.Num2Adapter ()));
 			this.AddPropPane (this.CreatePropPane ("TabIndex",	     new Common.UI.Adapters.StringAdapter ()));
-			this.AddPropPane (this.CreatePropPane ("Layout",	     new Common.UI.Adapters.LayoutAdapter ()));
+//@			this.AddPropPane (this.CreatePropPane ("Layout",	     new Common.UI.Adapters.LayoutAdapter ()));
 			
 			this.TabPage.TabTitle = "Attributes";
 		}

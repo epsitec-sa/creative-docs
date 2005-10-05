@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 		public HeaderButton()
 		{
 			//this.internal_state &= ~InternalState.Engageable;
-			this.InternalState &= ~InternalState.AutoFocus;
+			this.AutoFocus = false;
 			this.InternalState &= ~InternalState.Focusable;
 			this.headerButtonStyle = HeaderButtonStyle.Top;
 		}

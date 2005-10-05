@@ -33,12 +33,12 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.AutoEngage = false;
+			this.AutoFocus  = true;
+			this.AutoRepeat = true;
+			this.AutoDoubleClick = true;
 			
-			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
-			this.InternalState |= InternalState.AutoDoubleClick;
-			this.InternalState |= InternalState.AutoRepeat;
 			
 //@			this.InternalState &= ~ InternalState.AutoResolveResRef;
 			

@@ -13,10 +13,10 @@ namespace Epsitec.Common.Widgets
 	{
 		public RadioButton()
 		{
-			this.InternalState |= InternalState.AutoToggle;
+			this.AutoToggle = true;
+			this.AutoRadio  = true;
 			
-			this.AutoRadio = true;
-			this.Group     = "Radio";
+			this.Group = "Radio";
 		}
 		
 		public RadioButton(Widget embedder) : this ()

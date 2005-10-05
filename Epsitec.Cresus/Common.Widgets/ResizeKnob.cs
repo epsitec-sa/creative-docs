@@ -12,7 +12,8 @@ namespace Epsitec.Common.Widgets
 		public ResizeKnob()
 		{
 			this.ButtonStyle = ButtonStyle.Icon;
-			this.InternalState |= InternalState.AutoEngage;
+			this.AutoEngage  = true;
+			
 			this.InternalState |= InternalState.Engageable;
 
 			this.MouseCursor = MouseCursor.AsSizeNWSE;

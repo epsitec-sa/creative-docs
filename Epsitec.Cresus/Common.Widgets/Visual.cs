@@ -16,6 +16,30 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public int								Index
+		{
+			get
+			{
+				return (int) this.GetValue (Visual.IndexProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.IndexProperty, value);
+			}
+		}
+		
+		public string							Group
+		{
+			get
+			{
+				return (string) this.GetValue (Visual.GroupProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.GroupProperty, value);
+			}
+		}
+		
 		public string							Name
 		{
 			get
@@ -129,14 +153,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return Drawing.Rectangle.FromCorners (this.x1, this.y1, this.x2, this.y2);
+				return (Drawing.Rectangle) this.GetValueBase (Visual.BoundsProperty);
 			}
 			set
 			{
-				if ((this.x1 != value.Left) ||
-					(this.x2 != value.Right) ||
-					(this.y1 != value.Bottom) ||
-					(this.y2 != value.Top))
+				if (this.Bounds != value)
 				{
 					Visual parent = this.Parent;
 					
@@ -171,26 +192,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return new Drawing.Size (this.preferred_width, this.preferred_height);
+				return (Drawing.Size) this.GetValue (Visual.PreferredSizeProperty);
 			}
 			set
 			{
-				if ((this.preferred_width != value.Width) ||
-					(this.preferred_height != value.Height))
-				{
-					this.SuspendLayout ();
-					
-					Drawing.Size old_size = this.PreferredSize;
-					Drawing.Size new_size = value;
-					
-					this.preferred_width  = value.Width;
-					this.preferred_height = value.Height;
-					
-					this.InvalidateProperty (Visual.PreferredSizeProperty, old_size, new_size);
-					
-					this.NotifyParentLayoutChanged ();
-					this.ResumeLayout ();
-				}
+				this.SetValue (Visual.PreferredSizeProperty, value);
 			}
 		}
 		
@@ -198,7 +204,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return new Widget.ClientInfo (this.x2 - this.x1, this.y2 - this.y1);
+				return new Widget.ClientInfo (this.Size);
 			}
 		}
 		
@@ -397,11 +403,31 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool								Enable
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.EnableProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.EnableProperty, value);
+			}
+		}
+		
 		public bool								IsVisible
 		{
 			get
 			{
 				return VisualTree.IsVisible (this);
+			}
+		}
+		
+		public bool								IsEnabled
+		{
+			get
+			{
+				return VisualTree.IsEnabled (this);
 			}
 		}
 		
@@ -478,6 +504,31 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool								AutoDoubleClick
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.AutoDoubleClickProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.AutoDoubleClickProperty, value);
+			}
+		}
+		
+		
+		public bool								AcceptThreeState
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.AcceptThreeStatePropery);
+			}
+			set
+			{
+				this.SetValue (Visual.AcceptThreeStatePropery, value);
+			}
+		}
+		
 		
 		public Drawing.Color					BackColor
 		{
@@ -541,14 +592,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		internal virtual void SetBounds(Drawing.Rectangle bounds)
+		internal virtual void SetBounds(Drawing.Rectangle value)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("Setting {0} bounds to {1}", this.GetType ().Name, bounds));
-			
-			this.x1 = bounds.Left;
-			this.x2 = bounds.Right;
-			this.y1 = bounds.Bottom;
-			this.y2 = bounds.Top;
+			System.Diagnostics.Debug.WriteLine (string.Format ("Setting {0} bounds to {1}", this.GetType ().Name, value));
+			this.SetValueBase (Visual.BoundsProperty, value);
 		}
 		
 		internal Collections.LayerCollection GetLayerCollection()
@@ -669,17 +716,6 @@ namespace Epsitec.Common.Widgets
 			that.Bounds = (Drawing.Rectangle) value;
 		}
 		
-		private static object GetPreferredSizeValue(Object o)
-		{
-			Visual that = o as Visual;
-			return that.PreferredSize;
-		}
-		
-		private static void SetPreferredSizeValue(Object o, object value)
-		{
-			Visual that = o as Visual;
-			that.PreferredSize = (Drawing.Size) value;
-		}
 		
 		
 		public event PropertyChangedEventHandler	ParentChanged
@@ -695,6 +731,9 @@ namespace Epsitec.Common.Widgets
 
 		}
 		
+		
+		public static readonly Property IndexProperty				= Property.Register ("Index", typeof (int), typeof (Visual), new PropertyMetadata (-1));
+		public static readonly Property GroupProperty				= Property.Register ("Group", typeof (string), typeof (Visual));
 		public static readonly Property NameProperty				= Property.Register ("Name", typeof (string), typeof (Visual));
 		public static readonly Property ParentProperty				= Property.RegisterReadOnly ("Parent", typeof (Visual), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue)));
 		public static readonly Property ParentLayerProperty			= Property.RegisterReadOnly ("ParentLayer", typeof (Layouts.Layer), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentLayerValue)));
@@ -706,12 +745,13 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property DockMarginsProperty			= Property.Register ("DockMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyFlags.AffectsParentLayout));
 		public static readonly Property ContainerLayoutModeProperty	= Property.Register ("ContainerLayoutMode", typeof (ContainerLayoutMode), typeof (Visual), new VisualPropertyMetadata (ContainerLayoutMode.VerticalFlow, VisualPropertyFlags.AffectsLayout));
 		
-		public static readonly Property BoundsProperty				= Property.Register ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetBoundsValue), new SetValueOverrideCallback (Visual.SetBoundsValue)));
-		public static readonly Property PreferredSizeProperty		= Property.Register ("PreferredSize", typeof (Drawing.Size), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetPreferredSizeValue), new SetValueOverrideCallback (Visual.SetPreferredSizeValue)));
+		public static readonly Property BoundsProperty				= Property.Register ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new PropertyMetadata (Drawing.Rectangle.Empty, new GetValueOverrideCallback (Visual.GetBoundsValue), new SetValueOverrideCallback (Visual.SetBoundsValue)));
+		public static readonly Property PreferredSizeProperty		= Property.Register ("PreferredSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, VisualPropertyFlags.AffectsParentLayout));
 		public static readonly Property MinSizeProperty				= Property.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, VisualPropertyFlags.AffectsParentLayout));
 		public static readonly Property MaxSizeProperty				= Property.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Infinite, VisualPropertyFlags.AffectsParentLayout));
 		
 		public static readonly Property VisibilityProperty			= Property.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property EnableProperty				= Property.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, VisualPropertyFlags.AffectsDisplay));
 		
 		public static readonly Property AutoCaptureProperty			= Property.Register ("AutoCapture", typeof (bool), typeof (Visual), new PropertyMetadata (true));
 		public static readonly Property AutoFocusProperty			= Property.Register ("AutoFocus", typeof (bool), typeof (Visual), new PropertyMetadata (false));
@@ -719,6 +759,9 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property AutoRepeatProperty			= Property.Register ("AutoRepeat", typeof (bool), typeof (Visual), new PropertyMetadata (false));
 		public static readonly Property AutoToggleProperty			= Property.Register ("AutoToggle", typeof (bool), typeof (Visual), new PropertyMetadata (false));
 		public static readonly Property AutoRadioProperty			= Property.Register ("AutoRadio", typeof (bool), typeof (Visual), new PropertyMetadata (false));
+		public static readonly Property AutoDoubleClickProperty		= Property.Register ("AutoDoubleClick", typeof (bool), typeof (Visual), new PropertyMetadata (false));
+		
+		public static readonly Property AcceptThreeStatePropery		= Property.Register ("AcceptThreeState", typeof (bool), typeof (Visual), new PropertyMetadata (false));
 		
 		public static readonly Property BackColorProperty			= Property.Register ("BackColor", typeof (Drawing.Color), typeof (Visual), new VisualPropertyMetadata (Drawing.Color.Empty, VisualPropertyFlags.AffectsDisplay));
 		
@@ -730,8 +773,6 @@ namespace Epsitec.Common.Widgets
 		protected bool							has_layout_changed;
 		protected bool							have_children_changed;
 		
-		private double							x1, y1, x2, y2;
-		private double							preferred_width, preferred_height;
 		private Collections.LayerCollection		layer_collection;
 		private Layouts.Layer					parent_layer;
 	}

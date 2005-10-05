@@ -96,11 +96,12 @@ namespace Epsitec.Common.Widgets
 	{
 		public CustomWidget()
 		{
-			this.InternalState |= InternalState.AutoFocus;
-			this.InternalState |= InternalState.AutoEngage;
+			this.AutoFocus  = true;
+			this.AutoEngage = true;
+			this.AutoToggle = true;
+			
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
-			this.InternalState |= InternalState.AutoToggle;
 		}
 		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
