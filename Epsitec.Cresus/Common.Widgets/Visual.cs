@@ -390,7 +390,62 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool								IsVisible
+		{
+			get
+			{
+				return VisualTree.IsVisible (this);
+			}
+		}
 		
+		
+		public bool								AutoCapture
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.AutoCaptureProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.AutoCaptureProperty, value);
+			}
+		}
+		
+		public bool								AutoFocus
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.AutoFocusProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.AutoFocusProperty, value);
+			}
+		}
+		
+		public bool								AutoEngage
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.AutoEngageProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.AutoEngageProperty, value);
+			}
+		}
+		
+		public bool								AutoRepeat
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.AutoRepeatProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.AutoRepeatProperty, value);
+			}
+		}
 		
 		internal bool							HasLayerCollection
 		{
@@ -517,6 +572,11 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property MaxSizeProperty				= Property.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Infinite, VisualPropertyFlags.AffectsParentLayout));
 		
 		public static readonly Property VisibilityProperty			= Property.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, VisualPropertyFlags.AffectsParentLayout));
+		
+		public static readonly Property AutoCaptureProperty			= Property.Register ("AutoCapture", typeof (bool), typeof (Visual), new PropertyMetadata (true));
+		public static readonly Property AutoFocusProperty			= Property.Register ("AutoFocus", typeof (bool), typeof (Visual), new PropertyMetadata (false));
+		public static readonly Property AutoEngageProperty			= Property.Register ("AutoEngage", typeof (bool), typeof (Visual), new PropertyMetadata (false));
+		public static readonly Property AutoRepeatProperty			= Property.Register ("AutoRepeat", typeof (bool), typeof (Visual), new PropertyMetadata (false));
 		
 		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));
 		

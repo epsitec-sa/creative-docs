@@ -31,8 +31,8 @@ namespace Epsitec.Common.Widgets
 			this.arrowRight.Engaged += new Support.EventHandler(this.HandleScrollButton);
 			this.arrowLeft.StillEngaged += new Support.EventHandler(this.HandleScrollButton);
 			this.arrowRight.StillEngaged += new Support.EventHandler(this.HandleScrollButton);
-			this.arrowLeft.AutoRepeatEngaged = true;
-			this.arrowRight.AutoRepeatEngaged = true;
+			this.arrowLeft.AutoRepeat = true;
+			this.arrowRight.AutoRepeat = true;
 
 			this.buttonMenu = new GlyphButton(this);
 			this.buttonMenu.GlyphShape = GlyphShape.Menu;

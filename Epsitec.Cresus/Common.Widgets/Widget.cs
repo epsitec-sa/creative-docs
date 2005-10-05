@@ -50,13 +50,13 @@ namespace Epsitec.Common.Widgets
 		PreferXLayout		= 0x00000400,		//	=> en cas de DockStyle.Fill multiple, place le contenu horizontalement
 		
 		AutoRadio			= 0x00004000,		//	=> comportement 'radio'
-		AutoMinMax			= 0x00008000,		//	=> calcule automatiquement les tailles min et max
+//		AutoMinMax			= 0x00008000,		//	=> calcule automatiquement les tailles min et max
 		AutoCapture			= 0x00010000,
 		AutoFocus			= 0x00020000,
 		AutoEngage			= 0x00040000,
 		AutoToggle			= 0x00080000,
 		AutoMnemonic		= 0x00100000,
-		AutoRepeatEngaged	= 0x00200000,
+		AutoRepeat			= 0x00200000,
 		AutoDoubleClick		= 0x00400000,
 		AutoResolveResRef	= 0x00800000,		//	une référence à une ressource [res:...] est remplacée automatiquement
 		
@@ -1276,29 +1276,29 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool									AutoMinMax
-		{
-			get
-			{
-				return (this.internal_state & InternalState.AutoMinMax) != 0;
-			}
-			set
-			{
-				if (this.AutoMinMax != value)
-				{
-					if (value)
-					{
-						this.internal_state |= InternalState.AutoMinMax;
-					}
-					else
-					{
-						this.internal_state &= ~ InternalState.AutoMinMax;
-					}
-					
-					this.UpdateChildrenLayout ();
-				}
-			}
-		}
+//		public bool									AutoMinMax
+//		{
+//			get
+//			{
+//				return (this.internal_state & InternalState.AutoMinMax) != 0;
+//			}
+//			set
+//			{
+//				if (this.AutoMinMax != value)
+//				{
+//					if (value)
+//					{
+//						this.internal_state |= InternalState.AutoMinMax;
+//					}
+//					else
+//					{
+//						this.internal_state &= ~ InternalState.AutoMinMax;
+//					}
+//					
+//					this.UpdateChildrenLayout ();
+//				}
+//			}
+//		}
 		
 		public bool									AutoFocus
 		{
@@ -1338,21 +1338,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool									AutoRepeatEngaged
+		public bool									AutoRepeat
 		{
 			get
 			{
-				return (this.internal_state & InternalState.AutoRepeatEngaged) != 0;
+				return (this.internal_state & InternalState.AutoRepeat) != 0;
 			}
 			set
 			{
 				if (value)
 				{
-					this.internal_state |= InternalState.AutoRepeatEngaged;
+					this.internal_state |= InternalState.AutoRepeat;
 				}
 				else
 				{
-					this.internal_state &= ~InternalState.AutoRepeatEngaged;
+					this.internal_state &= ~InternalState.AutoRepeat;
 				}
 			}
 		}

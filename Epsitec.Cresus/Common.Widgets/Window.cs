@@ -405,7 +405,7 @@ namespace Epsitec.Common.Widgets
 					{
 						new_engage.SetEngaged (true);
 						
-						if (new_engage.AutoRepeatEngaged)
+						if (new_engage.AutoRepeat)
 						{
 							this.timer.Stop ();
 							this.timer.AutoRepeat = SystemInformation.InitialKeyboardDelay;

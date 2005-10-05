@@ -15,7 +15,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.InternalState |= InternalState.AutoEngage;
 			this.InternalState |= InternalState.Engageable;
-			this.InternalState |= InternalState.AutoRepeatEngaged;
+			this.InternalState |= InternalState.AutoRepeat;
 
 			this.arrowUp = new GlyphButton(this);
 			this.arrowDown = new GlyphButton(this);
@@ -28,8 +28,8 @@ namespace Epsitec.Common.Widgets
 			this.arrowUp.StillEngaged += new Support.EventHandler(this.HandleButton);
 			this.arrowDown.StillEngaged += new Support.EventHandler(this.HandleButton);
 			this.range.Changed += new Support.EventHandler(this.HandleRangeChanged);
-			this.arrowUp.AutoRepeatEngaged = true;
-			this.arrowDown.AutoRepeatEngaged = true;
+			this.arrowUp.AutoRepeat = true;
+			this.arrowDown.AutoRepeat = true;
 		}
 		
 		protected AbstractScroller(Widget embedder, bool vertical) : this(vertical)

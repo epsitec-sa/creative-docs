@@ -38,7 +38,7 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
 			this.InternalState |= InternalState.AutoDoubleClick;
-			this.InternalState |= InternalState.AutoRepeatEngaged;
+			this.InternalState |= InternalState.AutoRepeat;
 			
 			this.InternalState &= ~ InternalState.AutoResolveResRef;
 			

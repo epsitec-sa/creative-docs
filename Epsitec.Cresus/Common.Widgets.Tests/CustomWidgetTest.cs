@@ -43,8 +43,8 @@ namespace Epsitec.Common.Widgets
 			a.StillEngaged += new EventHandler(this.HandleWidgetStillEngaged);
 			b.StillEngaged += new EventHandler(this.HandleWidgetStillEngaged);
 			
-			a.AutoRepeatEngaged = true;
-			b.AutoRepeatEngaged = false;
+			a.AutoRepeat = true;
+			b.AutoRepeat = false;
 			
 			window.Show ();
 		}

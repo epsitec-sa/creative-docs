@@ -38,7 +38,7 @@ namespace Epsitec.Common.Types
 		
 		public object GetValue(Property property)
 		{
-			PropertyMetadata metadata = property.DefaultMetadata;
+			PropertyMetadata metadata = property.GetMetadata (this);
 			
 			if (metadata.GetValueOverride != null)
 			{
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Types
 			
 			if (value == UndefinedValue.Instance)
 			{
-				PropertyMetadata metadata = property.DefaultMetadata;
+				PropertyMetadata metadata = property.GetMetadata (this);
 				
 				//	TODO: faire mieux...
 				
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Types
 		
 		public void SetValue(Property property, object value)
 		{
-			PropertyMetadata metadata = property.DefaultMetadata;
+			PropertyMetadata metadata = property.GetMetadata (this);
 			
 			if (metadata.SetValueOverride != null)
 			{
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Types
 		
 		protected void InvalidateProperty(Property property, object old_value, object new_value)
 		{
-			PropertyMetadata metadata = property.DefaultMetadata;
+			PropertyMetadata metadata = property.GetMetadata (this);
 			
 			metadata.NotifyPropertyInvalidated (this, old_value, new_value);
 			

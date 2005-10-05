@@ -69,6 +69,47 @@ namespace Epsitec.Common.Types
 		}
 
 		
+		public void OverrideMetadata(System.Type type, PropertyMetadata metadata)
+		{
+			if (this.overriden_metadata == null)
+			{
+				lock (this)
+				{
+					if (this.overriden_metadata == null)
+					{
+						this.overriden_metadata = new System.Collections.Hashtable ();
+					}
+				}
+			}
+			
+			this.overriden_metadata[type] = metadata;
+		}
+		
+		
+		public PropertyMetadata GetMetadata(Object o)
+		{
+			return this.GetMetadata (o.GetType ());
+		}
+		
+		public PropertyMetadata GetMetadata(System.Type type)
+		{
+			if (this.overriden_metadata != null)
+			{
+				while (type != null)
+				{
+					if (this.overriden_metadata.Contains (type))
+					{
+						return this.overriden_metadata[type] as PropertyMetadata;
+					}
+					
+					type = type.BaseType;
+				}
+			}
+			
+			return this.DefaultMetadata;
+		}
+		
+		
 		public static Property Register(string name, System.Type property_type, System.Type owner_type)
 		{
 			return Property.Register (name, property_type, owner_type, new PropertyMetadata ());
@@ -103,5 +144,6 @@ namespace Epsitec.Common.Types
 		private System.Type						property_type;
 		private System.Type						owner_type;
 		private PropertyMetadata				default_metadata;
+		private System.Collections.Hashtable	overriden_metadata;
 	}
 }

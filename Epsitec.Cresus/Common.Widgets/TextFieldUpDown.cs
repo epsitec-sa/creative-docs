@@ -33,8 +33,8 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown.Engaged += new Support.EventHandler(this.HandleButton);
 			this.arrowUp.StillEngaged += new Support.EventHandler(this.HandleButton);
 			this.arrowDown.StillEngaged += new Support.EventHandler(this.HandleButton);
-			this.arrowUp.AutoRepeatEngaged = true;
-			this.arrowDown.AutoRepeatEngaged = true;
+			this.arrowUp.AutoRepeat = true;
+			this.arrowDown.AutoRepeat = true;
 			
 			this.UpdateValidator();
 		}
