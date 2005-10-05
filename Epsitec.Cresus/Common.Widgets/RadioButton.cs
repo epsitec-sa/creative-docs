@@ -14,9 +14,9 @@ namespace Epsitec.Common.Widgets
 		public RadioButton()
 		{
 			this.InternalState |= InternalState.AutoToggle;
-			this.InternalState |= InternalState.AutoRadio;
 			
-			this.Group = "Radio";
+			this.AutoRadio = true;
+			this.Group     = "Radio";
 		}
 		
 		public RadioButton(Widget embedder) : this ()

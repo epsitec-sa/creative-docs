@@ -34,9 +34,16 @@ namespace Epsitec.Common.Widgets
 				value &= ~ (TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly);
 				value |= TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 				
-				base.TabNavigation = value;
+				this.SetTabNavigation (value);
 			}
 		}
-
+		
+		
+		public void SetTabNavigation(TabNavigationMode value)
+		{
+			//	Comme this.TabNavigation, mais sans aucun garde-fou.
+			
+			base.TabNavigation = value;
+		}
 	}
 }

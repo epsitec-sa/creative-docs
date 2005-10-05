@@ -41,6 +41,21 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 		
+		public Widget[]							Widgets
+		{
+			get
+			{
+				Visual[] visuals = this.ToArray ();
+				Widget[] widgets = new Widget[visuals.Length];
+				
+				for (int i = 0; i < widgets.Length; i++)
+				{
+					widgets[i] = visuals[i] as Widget;
+				}
+				
+				return widgets;
+			}
+		}
 		
 		public Visual[] ToArray()
 		{
@@ -295,6 +310,7 @@ namespace Epsitec.Common.Widgets.Collections
 			public ChildrenCollectionEnumerator(Visual visual)
 			{
 				this.visual = visual;
+				this.Reset ();
 			}
 			
 			

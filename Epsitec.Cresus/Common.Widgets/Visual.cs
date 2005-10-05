@@ -154,8 +154,14 @@ namespace Epsitec.Common.Widgets
 						
 						this.PreferredSize = value.Size;
 						this.AnchorMargins = new Drawing.Margins (value.Left, host.Width - value.Right, host.Height - value.Top, value.Bottom);
+						
+						if (this.Anchor == AnchorStyles.None)
+						{
+							this.SetBounds (value);
+						}
 					}
 					
+					this.NotifyGeometryChanged ();
 					this.ResumeLayout ();
 				}
 			}
@@ -182,6 +188,7 @@ namespace Epsitec.Common.Widgets
 					
 					this.InvalidateProperty (Visual.PreferredSizeProperty, old_size, new_size);
 					
+					this.NotifyParentLayoutChanged ();
 					this.ResumeLayout ();
 				}
 			}
@@ -472,6 +479,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		internal bool							IsLayoutSuspended
+		{
+			get
+			{
+				return this.suspend_layout_counter > 0 ? true : false;
+			}
+		}
 		
 		internal bool							HasLayerCollection
 		{
@@ -481,14 +495,43 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool								HasChildren
+		{
+			get
+			{
+				if (this.HasLayerCollection)
+				{
+					Collections.ChildrenCollection children = new Collections.ChildrenCollection (this);
+					return children.Count == 0 ? false : true;
+				}
+				
+				return false;
+			}
+		}
+		
+		
+		internal Collections.ChildrenCollection GetChildrenCollection()
+		{
+			return new Collections.ChildrenCollection (this);
+		}
+		
 		
 		internal void SetParentLayer(Layouts.Layer parent_layer)
 		{
+			Visual old_parent = this.Parent;
 			this.parent_layer = parent_layer;
+			Visual new_parent = this.Parent;
+			
+			if (old_parent != new_parent)
+			{
+				this.InvalidateProperty (Visual.ParentProperty, old_parent, new_parent);
+			}
 		}
 		
-		internal void SetBounds(Drawing.Rectangle bounds)
+		internal virtual void SetBounds(Drawing.Rectangle bounds)
 		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("Setting {0} bounds to {1}", this.GetType ().Name, bounds));
+			
 			this.x1 = bounds.Left;
 			this.x2 = bounds.Right;
 			this.y1 = bounds.Bottom;
@@ -512,12 +555,25 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		internal void NotifyGeometryChanged()
+		{
+			this.NotifyLayoutChanged ();
+			this.NotifyParentLayoutChanged ();
+		}
+		
 		internal void NotifyChildrenChanged(Layouts.Layer layer)
 		{
+			this.NotifyLayoutChanged ();
 		}
 		
 		internal void NotifyLayoutChanged()
 		{
+			this.has_layout_changed = true;
+			
+			if (this.suspend_layout_counter == 0)
+			{
+				this.ExecutePendingLayoutOperations ();
+			}
 		}
 		
 		internal void NotifyParentLayoutChanged()
@@ -528,6 +584,10 @@ namespace Epsitec.Common.Widgets
 			{
 				parent.NotifyLayoutChanged ();
 			}
+			else
+			{
+				this.NotifyLayoutChanged ();
+			}
 		}
 		
 		public void SuspendLayout()
@@ -537,7 +597,26 @@ namespace Epsitec.Common.Widgets
 		
 		public void ResumeLayout()
 		{
-			this.suspend_layout_counter--;
+			this.ResumeLayout (true);
+		}
+		
+		public void ResumeLayout(bool update)
+		{
+			if (this.suspend_layout_counter > 0)
+			{
+				this.suspend_layout_counter--;
+			}
+			if (this.suspend_layout_counter == 0)
+			{
+				if (update)
+				{
+					this.ExecutePendingLayoutOperations ();
+				}
+			}
+		}
+		
+		public virtual void ExecutePendingLayoutOperations()
+		{
 		}
 		
 		static Visual()
@@ -581,6 +660,19 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public event PropertyChangedEventHandler	ParentChanged
+		{
+			add
+			{
+				this.AddEvent (Visual.ParentProperty, value);
+			}
+			remove
+			{
+				this.RemoveEvent (Visual.ParentProperty, value);
+			}
+
+		}
+		
 		public static readonly Property NameProperty				= Property.Register ("Name", typeof (string), typeof (Visual));
 		public static readonly Property ParentProperty				= Property.RegisterReadOnly ("Parent", typeof (Visual), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue)));
 		public static readonly Property ParentLayerProperty			= Property.RegisterReadOnly ("ParentLayer", typeof (Layouts.Layer), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentLayerValue)));
@@ -607,10 +699,12 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property AutoRadioProperty			= Property.Register ("AutoRadio", typeof (bool), typeof (Visual), new PropertyMetadata (false));
 		
 		
-		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));
+//-		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));
 		
 		
 		private short							suspend_layout_counter;
+		
+		protected bool							has_layout_changed;
 		
 		private double							x1, y1, x2, y2;
 		private double							preferred_width, preferred_height;

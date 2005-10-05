@@ -11,6 +11,12 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.height = height;
 		}
 		
+		public LayoutInfo(Drawing.Size size)
+		{
+			this.width  = size.Width;
+			this.height = size.Height;
+		}
+		
 		
 		public double							OriginalWidth
 		{

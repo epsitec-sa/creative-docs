@@ -268,6 +268,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.show_count++;
 				this.root.InternalUpdateGeometry ();
+				this.root.Invalidate ();
 			}
 			
 			this.window.ShowWindow ();

@@ -254,7 +254,7 @@ namespace Epsitec.Common.Widgets
 			group.SetParent (window.Root);
 			group.TabIndex = 10;
 			group.Text = "Group 1";
-			group.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			group.SetTabNavigation (Widget.TabNavigationMode.ActivateOnTab);
 			
 			button = new Button ("A");
 			button.Bounds = new Drawing.Rectangle (10, 40, 40, 25);
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Widgets
 			group.SetParent (window.Root);
 			group.TabIndex = 11;
 			group.Text = "Group 2";
-			group.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren;
+			group.SetTabNavigation (Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren);
 			
 			button = new Button ("A");
 			button.Bounds = new Drawing.Rectangle (10, 40, 40, 25);
@@ -316,7 +316,7 @@ namespace Epsitec.Common.Widgets
 			group.SetParent (window.Root);
 			group.TabIndex = 12;
 			group.Text = "Group 3";
-			group.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			group.SetTabNavigation (Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly);
 			
 			button = new Button ("A");
 			button.Bounds = new Drawing.Rectangle (10, 40, 40, 25);

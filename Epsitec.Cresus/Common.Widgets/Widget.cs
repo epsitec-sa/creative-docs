@@ -35,7 +35,7 @@ namespace Epsitec.Common.Widgets
 		None				= 0,
 		
 		ChildrenChanged		= 0x00000001,		//	certains enfants ont changé
-		LayoutChanged		= 0x00000002,		//	le layout a changé
+//		LayoutChanged		= 0x00000002,		//	le layout a changé
 		ChildrenDocked		= 0x00000004,		//	certains enfants spécifient un DockStyle
 		
 		Embedded			= 0x00000008,		//	=> widget appartient au parent (widgets composés)
@@ -44,12 +44,12 @@ namespace Epsitec.Common.Widgets
 		Selectable			= 0x00000020,
 		Engageable			= 0x00000040,		//	=> peut être enfoncé par une pression
 		Frozen				= 0x00000080,		//	=> n'accepte aucun événement
-		Visible				= 0x00000100,
+//		Visible				= 0x00000100,
 		AcceptThreeState	= 0x00000200,
 		
 		PreferXLayout		= 0x00000400,		//	=> en cas de DockStyle.Fill multiple, place le contenu horizontalement
 		
-		AutoRadio			= 0x00004000,		//	=> comportement 'radio'
+//		AutoRadio			= 0x00004000,		//	=> comportement 'radio'
 //		AutoMinMax			= 0x00008000,		//	=> calcule automatiquement les tailles min et max
 		AutoCapture			= 0x00010000,
 		AutoFocus			= 0x00020000,
@@ -137,7 +137,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Widget implémente la classe de base dont dérivent tous les
 	/// widgets de l'interface graphique ("controls" dans l'appellation Windows).
 	/// </summary>
-	public class Widget : System.IDisposable, Support.IBundleSupport, Support.ICommandDispatcherHost, Support.Data.IPropertyProvider
+	public class Widget : Visual, System.IDisposable, Support.IBundleSupport, Support.ICommandDispatcherHost, Support.Data.IPropertyProvider
 	{
 		public Widget()
 		{
@@ -157,10 +157,10 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.WriteLine (string.Format ("{1}+ Created {0}", this.GetType ().Name, this.widget_id));
 			}
 			
-			this.internal_state |= InternalState.Visible;
-			this.internal_state |= InternalState.AutoCapture;
-			this.internal_state |= InternalState.AutoMnemonic;
-			this.internal_state |= InternalState.AutoResolveResRef;
+//			this.InternalState |= InternalState.Visible;
+			this.InternalState |= InternalState.AutoCapture;
+			this.InternalState |= InternalState.AutoMnemonic;
+			this.InternalState |= InternalState.AutoResolveResRef;
 			
 			this.widget_state   |= WidgetState.Enabled;
 			
@@ -427,15 +427,15 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.HasChildren)
 				{
-					Widget[] widgets = this.children.Widgets;
+					Widget[] widgets = this.Children.Widgets;
 					
 					for (int i = 0; i < widgets.Length; i++)
 					{
 						widgets[i].Dispose ();
-						System.Diagnostics.Debug.Assert (widgets[i].parent == null);
+						System.Diagnostics.Debug.Assert (widgets[i].Parent == null);
 					}
 					
-					System.Diagnostics.Debug.Assert (this.children.Count == 0);
+					System.Diagnostics.Debug.Assert (this.Children.Count == 0);
 				}
 				
 				this.SetParent (null);
@@ -535,193 +535,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-//		public virtual LayoutStyles					Layout
-//		{
-//			get
-//			{
-//				return this.layout;
-//			}
-//			set
-//			{
-//				if (this.layout != value)
-//				{
-//					Drawing.Size size = this.Size;
-//					
-//					this.Invalidate ();
-//					
-//					LayoutStyles dock_old = this.layout & LayoutStyles.MaskDock;
-//					LayoutStyles dock_new = value & LayoutStyles.MaskDock;
-//					
-//					if (((dock_old == LayoutStyles.DockLeft) && (dock_new == LayoutStyles.DockRight)) ||
-//						((dock_old == LayoutStyles.DockRight) && (dock_new == LayoutStyles.DockLeft)) ||
-//						((dock_old == LayoutStyles.DockTop) && (dock_new == LayoutStyles.DockBottom)) ||
-//						((dock_old == LayoutStyles.DockBottom) && (dock_new == LayoutStyles.DockTop)) ||
-//						(dock_old == LayoutStyles.Manual))
-//					{
-//						//	Ne change pas la géométrie, puisque le docking reste défini selon les
-//						//	mêmes grandeurs (gauche <-> droite ou haut <-> bas), ou qu'il n'y avait
-//						//	pas de docking actif avant.
-//					}
-//					else
-//					{
-//						//	Le style de docking change; il faut donc mieux remettre les dimensions
-//						//	par défaut
-//						
-//						this.x2 = this.x1 + this.DefaultWidth;
-//						this.y2 = this.y1 + this.DefaultHeight;
-//					}
-//					
-//					this.layout = value;
-//					
-//					if ((this.parent != null) &&
-//						(this.IsLayoutSuspended == false))
-//					{
-//						//	Si le widget a un parent, il faut donner l'occasion au parent de
-//						//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
-//						//	de notre nouveau mode de docking.
-//						
-//						this.parent.UpdateChildrenLayout ();
-//						
-//						if (this.Size != size)
-//						{
-//							this.UpdateClientGeometry ();
-//							this.OnSizeChanged ();
-//						}
-//						this.Invalidate ();
-//					}
-//				}
-//			}
-//		}
-		
-		
-		[Bundle]			public AnchorStyles		Anchor
-		{
-			get
-			{
-				return (AnchorStyles) (this.layout & LayoutStyles.MaskAnchor);
-			}
-			set
-			{
-				this.SetLayout ((LayoutStyles) value);
-			}
-		}
-		
-		[Bundle]			public Drawing.Margins	AnchorMargins
-		{
-			get
-			{
-				return this.anchor_margins;
-			}
-			set
-			{
-				if (this.anchor_margins != value)
-				{
-					this.anchor_margins = value;
-					
-					if ((this.parent != null) &&
-						(this.IsLayoutSuspended == false))
-					{
-						//	Si le widget a un parent, il faut donner l'occasion au parent de
-						//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
-						//	de nos nouvelles marges d'ancrage.
-						
-						this.parent.UpdateChildrenLayout ();
-					}
-				}
-			}
-		}
-		
-		[Bundle]			public DockStyle		Dock
-		{
-			get
-			{
-				return (DockStyle) (this.layout & LayoutStyles.MaskDock);
-			}
-			set
-			{
-				this.SetLayout ((LayoutStyles) value);
-			}
-		}
-		
-		[Bundle]			public Drawing.Margins	DockPadding
-		{
-			get
-			{
-				return this.dock_padding;
-			}
-			set
-			{
-				if (this.dock_padding != value)
-				{
-					this.dock_padding = value;
-					this.UpdateChildrenLayout ();
-				}
-			}
-		}
-		
-		[Bundle]			public Drawing.Margins	DockMargins
-		{
-			get
-			{
-				return this.dock_margins;
-			}
-			set
-			{
-				if (this.dock_margins != value)
-				{
-					this.dock_margins = value;
-					
-					if ((this.parent != null) &&
-						(this.IsLayoutSuspended == false))
-					{
-						//	Si le widget a un parent, il faut donner l'occasion au parent de
-						//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
-						//	de nos nouvelles marges de docking.
-						
-						this.parent.UpdateChildrenLayout ();
-					}
-				}
-			}
-		}
-		
-		[Bundle] public ContainerLayoutMode			ContainerLayoutMode
-		{
-			get
-			{
-				if ((this.internal_state & InternalState.PreferXLayout) != 0)
-				{
-					return ContainerLayoutMode.HorizontalFlow;
-				}
-				else
-				{
-					return ContainerLayoutMode.VerticalFlow;
-				}
-			}
-			set
-			{
-				if (this.ContainerLayoutMode != value)
-				{
-					switch (value)
-					{
-						case ContainerLayoutMode.HorizontalFlow:
-							this.internal_state |= InternalState.PreferXLayout;
-							break;
-						case ContainerLayoutMode.VerticalFlow:
-							this.internal_state &= ~ InternalState.PreferXLayout;
-							break;
-					}
-					
-					this.UpdateChildrenLayout ();
-				}
-			}
-		}
-		
-//		public Layouts.LayoutInfo					LayoutInfo
-//		{
-//			get { return this.layout_info; }
-//		}
-		
-		
 		public MouseCursor							MouseCursor
 		{
 			get
@@ -760,133 +573,6 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		public double								Top
-		{
-			get { return this.y2; }
-			set { this.Bounds = new Drawing.Rectangle (this.x1, this.y1, this.x2 - this.x1, value - this.y1); }
-		}
-		
-		public double								Left
-		{
-			get { return this.x1; }
-			set { this.Bounds = new Drawing.Rectangle (value, this.y1, this.x2 - value, this.y2 - this.y1); }
-		}
-		
-		public double								Bottom
-		{
-			get { return this.y1; }
-			set { this.Bounds = new Drawing.Rectangle (this.x1, value, this.x2 - this.x1, this.y2 - value); }
-		}
-		
-		public double								Right
-		{
-			get { return this.x2; }
-			set { this.Bounds = new Drawing.Rectangle (this.x1, this.y1, value - this.x1, this.y2 - this.y1); }
-		}
-		
-		public Drawing.Rectangle					Bounds
-		{
-			get { return new Drawing.Rectangle (this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1); }
-			set
-			{
-				if (this.Bounds != value)
-				{
-					if (this.parent != null)
-					{
-						Drawing.Rectangle bounds    = value;
-						Drawing.Rectangle container = this.parent.Client.Bounds;
-						Drawing.Margins   margins   = new Drawing.Margins (bounds.Left - container.Left, container.Right - bounds.Right,
-							/**/										   container.Top - bounds.Top, bounds.Bottom - container.Bottom);
-						
-						this.anchor_margins = margins;
-					}
-					
-					this.SetBounds (value.X, value.Y, value.X + value.Width, value.Y + value.Height);
-				}
-			}
-		}
-		
-		
-		[Bundle]			public Drawing.Point	Location
-		{
-			get { return new Drawing.Point (this.x1, this.y1); }
-			set
-			{
-				if ((this.Location != value) &&
-					(this.Dock == DockStyle.None))
-				{
-					if (this.parent != null)
-					{
-						Drawing.Rectangle bounds    = new Drawing.Rectangle (value, this.Size);
-						Drawing.Rectangle container = this.parent.Client.Bounds;
-						Drawing.Margins   margins   = new Drawing.Margins (bounds.Left - container.Left, container.Right - bounds.Right,
-							/**/										   container.Top - bounds.Top, bounds.Bottom - container.Bottom);
-						
-						this.anchor_margins = margins;
-					}
-					
-					this.SetBounds (value.X, value.Y, value.X + this.x2 - this.x1, value.Y + this.y2 - this.y1);
-					
-					if (this.layout != LayoutStyles.Manual)
-					{
-						this.ForceLayout ();
-					}
-				}
-			}
-		}
-		
-		[Bundle]			public Drawing.Size		Size
-		{
-			get { return new Drawing.Size (this.x2 - this.x1, this.y2 - this.y1); }
-			set
-			{
-				if (this.Size != value)
-				{
-					if (this.parent != null)
-					{
-						Drawing.Rectangle bounds    = new Drawing.Rectangle (this.Location, value);
-						Drawing.Rectangle container = this.parent.Client.Bounds;
-						Drawing.Margins   margins   = new Drawing.Margins (bounds.Left - container.Left, container.Right - bounds.Right,
-							/**/										   container.Top - bounds.Top, bounds.Bottom - container.Bottom);
-						
-						this.anchor_margins = margins;
-					}
-					
-					this.SetBounds (this.x1, this.y1, this.x1 + value.Width, this.y1 + value.Height);
-					
-					if (this.layout != LayoutStyles.Manual)
-					{
-						this.ForceLayout ();
-					}
-				}
-			}
-		}
-		
-		
-		public double								Width
-		{
-			get { return this.x2 - this.x1; }
-			set
-			{
-				if (this.Width != value)
-				{
-					this.SetBounds (this.x1, this.y1, this.x1 + value, this.y2);
-				}
-			}
-		}
-		
-		public double								Height
-		{
-			get { return this.y2 - this.y1; }
-			set
-			{
-				if (this.Height != value)
-				{
-					this.SetBounds (this.x1, this.y1, this.x2, this.y1 + value);
-				}
-			}
-		}
-		
 		public ContentAlignment						Alignment
 		{
 			get
@@ -900,48 +586,6 @@ namespace Epsitec.Common.Widgets
 					this.alignment = value;
 					this.UpdateTextLayout ();
 					this.Invalidate ();
-				}
-			}
-		}
-		
-		public ClientInfo							Client
-		{
-			get { return this.client_info; }
-		}
-		
-		public virtual Drawing.Margins				InternalPadding
-		{
-			get { return Drawing.Margins.Zero; }
-		}
-		
-		[Bundle] public virtual Drawing.Size		MinSize
-		{
-			get
-			{
-				return this.min_size;
-			}
-			set
-			{
-				if (this.min_size != value)
-				{
-					this.min_size = value;
-					this.OnMinSizeChanged ();
-				}
-			}
-		}
-		
-		[Bundle] public virtual Drawing.Size		MaxSize
-		{
-			get
-			{
-				return this.max_size;
-			}
-			set
-			{
-				if (this.max_size != value)
-				{
-					this.max_size = value;
-					this.OnMaxSizeChanged ();
 				}
 			}
 		}
@@ -1039,11 +683,6 @@ namespace Epsitec.Common.Widgets
 			get { return Drawing.Size.Infinite; }
 		}
 		
-		public virtual Drawing.Size					PreferredSize
-		{
-			get { return new Drawing.Size (this.DefaultWidth, this.DefaultHeight); }
-		}
-		
 		
 		public bool									IsCommand
 		{
@@ -1058,9 +697,9 @@ namespace Epsitec.Common.Widgets
 				{
 					return false;
 				}
-				if (this.parent != null)
+				if (this.Parent != null)
 				{
-					return this.parent.IsEnabled;
+					return this.Parent.IsEnabled;
 				}
 				
 				return true;
@@ -1075,54 +714,16 @@ namespace Epsitec.Common.Widgets
 				{
 					return true;
 				}
-				if (this.parent != null)
+				if (this.Parent != null)
 				{
-					return this.parent.IsFrozen;
+					return this.Parent.IsFrozen;
 				}
 				
 				return false;
 			}
 		}
 		
-		public virtual bool							IsLayoutSuspended
-		{
-			get
-			{
-				if (this.suspend_counter > 0)
-				{
-					return true;
-				}
-//				if (this.parent != null)
-//				{
-//					return this.parent.IsLayoutSuspended;
-//				}
-				
-				return false;
-			}
-		}
 		
-		public virtual bool							IsVisible
-		{
-			get
-			{
-				if ((this.Visibility == false) ||
-					(this.parent == null))
-				{
-					return false;
-				}
-				
-				return this.parent.IsVisible;
-			}
-		}
-		
-		public virtual bool							Visibility
-		{
-			get
-			{
-				return (this.internal_state & InternalState.Visible) != 0;
-			}
-		}
-
 		public bool									IsActive
 		{
 			get
@@ -1148,9 +749,9 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				if ((this.InheritFocus) &&
-					(this.parent != null))
+					(this.Parent != null))
 				{
-					return this.parent.IsFocused;
+					return this.Parent.IsFocused;
 				}
 				
 				return false;
@@ -1215,9 +816,9 @@ namespace Epsitec.Common.Widgets
 					return true;
 				}
 				
-				if (this.parent != null)
+				if (this.Parent != null)
 				{
-					return this.parent.IsEditionEnabled;
+					return this.Parent.IsEditionEnabled;
 				}
 				
 				return false;
@@ -1256,144 +857,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
-		public bool									AutoCapture
-		{
-			get
-			{
-				return (this.internal_state & InternalState.AutoCapture) != 0;
-			}
-			set
-			{
-				if (value)
-				{
-					this.internal_state |= InternalState.AutoCapture;
-				}
-				else
-				{
-					this.internal_state &= ~InternalState.AutoCapture;
-				}
-			}
-		}
-		
-//		public bool									AutoMinMax
-//		{
-//			get
-//			{
-//				return (this.internal_state & InternalState.AutoMinMax) != 0;
-//			}
-//			set
-//			{
-//				if (this.AutoMinMax != value)
-//				{
-//					if (value)
-//					{
-//						this.internal_state |= InternalState.AutoMinMax;
-//					}
-//					else
-//					{
-//						this.internal_state &= ~ InternalState.AutoMinMax;
-//					}
-//					
-//					this.UpdateChildrenLayout ();
-//				}
-//			}
-//		}
-		
-		public bool									AutoFocus
-		{
-			get
-			{
-				return (this.internal_state & InternalState.AutoFocus) != 0;
-			}
-			set
-			{
-				if (value)
-				{
-					this.internal_state |= InternalState.AutoFocus;
-				}
-				else
-				{
-					this.internal_state &= ~InternalState.AutoFocus;
-				}
-			}
-		}
-		
-		public bool									AutoEngage
-		{
-			get
-			{
-				return (this.internal_state & InternalState.AutoEngage) != 0;
-			}
-			set
-			{
-				if (value)
-				{
-					this.internal_state |= InternalState.AutoEngage;
-				}
-				else
-				{
-					this.internal_state &= ~InternalState.AutoEngage;
-				}
-			}
-		}
-		
-		public bool									AutoRepeat
-		{
-			get
-			{
-				return (this.internal_state & InternalState.AutoRepeat) != 0;
-			}
-			set
-			{
-				if (value)
-				{
-					this.internal_state |= InternalState.AutoRepeat;
-				}
-				else
-				{
-					this.internal_state &= ~InternalState.AutoRepeat;
-				}
-			}
-		}
-		
-		public bool									AutoToggle
-		{
-			get
-			{
-				return (this.internal_state & InternalState.AutoToggle) != 0;
-			}
-			set
-			{
-				if (value)
-				{
-					this.internal_state |= InternalState.AutoToggle;
-				}
-				else
-				{
-					this.internal_state &= ~InternalState.AutoToggle;
-				}
-			}
-		}
-		
-		public bool									AutoRadio
-		{
-			get
-			{
-				return (this.internal_state & InternalState.AutoRadio) != 0;
-			}
-			set
-			{
-				if (value)
-				{
-					this.internal_state |= InternalState.AutoRadio;
-				}
-				else
-				{
-					this.internal_state &= ~InternalState.AutoRadio;
-				}
-			}
-		}
 		
 		private bool								AutoMnemonic
 		{
@@ -1464,8 +927,20 @@ namespace Epsitec.Common.Widgets
 		
 		protected InternalState						InternalState
 		{
-			get { return this.internal_state; }
-			set { this.internal_state = value; }
+			get
+			{
+				return this.internal_state;
+			}
+			set
+			{
+				this.internal_state = value;
+				
+				this.AutoCapture = (this.internal_state & InternalState.AutoCapture) != 0;
+				this.AutoEngage  = (this.internal_state & InternalState.AutoEngage) != 0;
+				this.AutoFocus   = (this.internal_state & InternalState.AutoFocus) != 0;
+				this.AutoRepeat  = (this.internal_state & InternalState.AutoRepeat) != 0;
+				this.AutoToggle  = (this.internal_state & InternalState.AutoToggle) != 0;
+			}
 		}
 		
 		
@@ -1476,9 +951,9 @@ namespace Epsitec.Common.Widgets
 				WidgetState state = this.widget_state;
 				
 				if ((this.InheritFocus) &&
-					(this.parent != null))
+					(this.Parent != null))
 				{
-					if (this.parent.IsFocused)
+					if (this.Parent.IsFocused)
 					{
 						state |= WidgetState.Focused;
 					}
@@ -1549,12 +1024,12 @@ namespace Epsitec.Common.Widgets
 				//	Retourne la position dans la "pile" des widgets, en ne considérant que les
 				//	frères et soeurs. 0 => widget sur le sommet de la pile des widgets.
 				
-				if (this.parent == null)
+				if (this.Parent == null)
 				{
 					return -1;
 				}
 				
-				Widget[] siblings = this.parent.children.Widgets;
+				Widget[] siblings = this.Parent.Children.Widgets;
 				int      bottom_z = siblings.Length;
 				
 				for (int i = 0; i < bottom_z; i++)
@@ -1569,22 +1044,31 @@ namespace Epsitec.Common.Widgets
 			}
 //			set
 //			{
-//				if (this.parent == null)
+//				if (this.Parent == null)
 //				{
 //					throw new System.InvalidOperationException ("Cannot change Z-order of an orphan.");
 //				}
 //				
 //				if ((value < 0) ||
-//					(value >= this.parent.children.Count))
+//					(value >= this.Parent.Children.Count))
 //				{
 //					throw new System.ArgumentOutOfRangeException ("value", value, "Invalid Z-order specified.");
 //				}
 //				
-//				this.parent.children.ChangeZOrder (this, value);
+//				this.Parent.Children.ChangeZOrder (this, value);
 //				
 //				System.Diagnostics.Debug.Assert (this.ZOrder == value);
 //			}
 		}
+		
+		public Collections.ChildrenCollection		Children
+		{
+			get
+			{
+				return this.GetChildrenCollection ();
+			}
+		}
+		
 		
 		public bool									ContainsFocus
 		{
@@ -1660,30 +1144,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual ChildrenCollection			Children
+		public new Widget							Parent
 		{
 			get
 			{
-				if (this.children == null)
-				{
-					lock (this)
-					{
-						if (this.children == null)
-						{
-							this.CreateChildrenCollection ();
-						}
-					}
-				}
-				
-				return this.children;
-			}
-		}
-		
-		public Widget								Parent
-		{
-			get
-			{
-				return this.parent;
+				return base.Parent as Widget;
 			}
 		}
 		
@@ -1714,9 +1179,9 @@ namespace Epsitec.Common.Widgets
 					return this.dispatcher;
 				}
 				
-				if (this.parent != null)
+				if (this.Parent != null)
 				{
-					return this.parent.CommandDispatcher;
+					return this.Parent.CommandDispatcher;
 				}
 				
 				return null;
@@ -1751,9 +1216,9 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.resource_manager == null)
 				{
-					if (this.parent != null)
+					if (this.Parent != null)
 					{
-						return this.parent.ResourceManager;
+						return this.Parent.ResourceManager;
 					}
 					
 //-					System.Diagnostics.Debug.WriteLine ("Falling back to default resource manager: " + this.ToString ());
@@ -1785,9 +1250,9 @@ namespace Epsitec.Common.Widgets
 			{
 				Widget widget = this;
 				
-				while (widget.parent != null)
+				while (widget.Parent != null)
 				{
-					widget = widget.parent;
+					widget = widget.Parent;
 				}
 				
 				return widget;
@@ -1804,7 +1269,7 @@ namespace Epsitec.Common.Widgets
 //				while (widget != null)
 //				{
 //					angle += widget.Client.Angle;
-//					widget = widget.parent;
+//					widget = widget.Parent;
 //				}
 //				
 //				return angle % 360;
@@ -1821,7 +1286,7 @@ namespace Epsitec.Common.Widgets
 //				while (widget != null)
 //				{
 //					zoom  *= widget.Client.Zoom;
-//					widget = widget.parent;
+//					widget = widget.Parent;
 //				}
 //				
 //				return zoom;
@@ -1847,25 +1312,20 @@ namespace Epsitec.Common.Widgets
 		
 		public bool									IsEmpty
 		{
-			get { return (this.children == null) || (this.children.Count == 0); }
-		}
-		
-		public bool									HasChildren
-		{
-			get { return (this.children != null) && (this.children.Count > 0); }
+			get { return this.HasChildren == false; }
 		}
 		
 		public bool									HasParent
 		{
-			get { return this.parent != null; }
+			get { return this.Parent != null; }
 		}
 		
 		public bool									HasSiblings
 		{
 			get
 			{
-				if ((this.parent != null) &&
-					(this.parent.children.Count > 1))
+				if ((this.Parent != null) &&
+					(this.Parent.Children.Count > 1))
 				{
 					return true;
 				}
@@ -1905,36 +1365,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		[Bundle]			public string			Name
-		{
-			get
-			{
-				if (this.name == null)
-				{
-					return "";
-				}
-				
-				return this.name;
-			}
-			
-			set
-			{
-				if ((value == null) || (value.Length == 0))
-				{
-					if (this.name != null)
-					{
-						this.name = null;
-						this.OnNameChanged ();
-					}
-				}
-				else if (this.name != value)
-				{
-					this.name = value;
-					this.OnNameChanged ();
-				}
-			}
-		}
-
 		[Bundle]			public string			Command
 		{
 			get
@@ -2250,52 +1680,26 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public void SuspendLayout()
+		public override void ExecutePendingLayoutOperations()
 		{
-			lock (this)
+			if (this.has_layout_changed)
 			{
-				this.suspend_counter++;
+				this.has_layout_changed = false;
+				this.UpdateChildrenLayout ();
+				System.Diagnostics.Debug.Assert (this.layout_info == null);
 			}
-		}
-		
-		public void ResumeLayout()
-		{
-			this.ResumeLayout (true);
-		}
-		
-		public void ResumeLayout(bool update)
-		{
-			lock (this)
+			if ((this.internal_state & InternalState.ChildrenChanged) != 0)
 			{
-				if (this.suspend_counter > 0)
-				{
-					this.suspend_counter--;
-				}
-				
-				if (this.suspend_counter == 0)
-				{
-					if ((this.internal_state & InternalState.LayoutChanged) != 0)
-					{
-						if (update)
-						{
-							this.UpdateChildrenLayout ();
-							System.Diagnostics.Debug.Assert (this.layout_info == null);
-						}
-					}
-					if ((this.internal_state & InternalState.ChildrenChanged) != 0)
-					{
-						this.internal_state &= ~ InternalState.ChildrenChanged;
-						this.HandleChildrenChanged ();
-					}
-				}
+				this.internal_state &= ~ InternalState.ChildrenChanged;
+				this.HandleChildrenChanged ();
 			}
 		}
 		
 		public void ForceLayout()
 		{
-			if (this.parent != null)
+			if (this.Parent != null)
 			{
-				this.parent.UpdateChildrenLayout ();
+				this.Parent.UpdateChildrenLayout ();
 			}
 		}
 		
@@ -2429,14 +1833,14 @@ namespace Epsitec.Common.Widgets
 		
 		public void SetParent(Widget widget)
 		{
-			if (widget != this.parent)
+			if (widget != this.Parent)
 			{
 				Widget parent;
 				
 				if (widget == null)
 				{
-					parent = this.parent;
-					this.parent.Children.Remove (this);
+					parent = this.Parent;
+					parent.Children.Remove (this);
 				}
 				else
 				{
@@ -2444,12 +1848,7 @@ namespace Epsitec.Common.Widgets
 					parent.Children.Add (this);
 				}
 				
-				System.Diagnostics.Debug.Assert (this.parent == widget);
-				
-				if (this.Dock != DockStyle.None)
-				{
-					parent.UpdateChildrenLayout ();
-				}
+				System.Diagnostics.Debug.Assert (this.Parent == widget);
 			}
 		}
 		
@@ -2479,20 +1878,19 @@ namespace Epsitec.Common.Widgets
 					//	Le style de docking change; il faut donc mieux remettre les dimensions
 					//	par défaut
 					
-					this.x2 = this.x1 + this.DefaultWidth;
-					this.y2 = this.y1 + this.DefaultHeight;
+					this.Size = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
 				}
 				
 				this.layout = value;
 				
-				if ((this.parent != null) &&
+				if ((this.Parent != null) &&
 					(this.IsLayoutSuspended == false))
 				{
 					//	Si le widget a un parent, il faut donner l'occasion au parent de
 					//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
 					//	de notre nouveau mode de docking.
 					
-					this.parent.UpdateChildrenLayout ();
+					this.Parent.UpdateChildrenLayout ();
 					
 					if (this.Size != size)
 					{
@@ -2506,16 +1904,16 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void SetVisible(bool visible)
 		{
-			if ((this.internal_state & InternalState.Visible) == 0)
+			if (this.Visibility == false)
 			{
 				if (visible)
 				{
-					this.internal_state |= InternalState.Visible;
+					this.Visibility = true;
 					this.Invalidate ();
 					
 					if (this.Dock != DockStyle.None)
 					{
-						this.parent.UpdateChildrenLayout ();
+						this.Parent.UpdateChildrenLayout ();
 					}
 					
 					this.NotifyChangedToVisible ();
@@ -2530,11 +1928,11 @@ namespace Epsitec.Common.Widgets
 					
 					this.SetEntered (false);
 					this.Invalidate ();
-					this.internal_state &= ~ InternalState.Visible;
+					this.Visibility = false;
 					
 					if (this.Dock != DockStyle.None)
 					{
-						this.parent.UpdateChildrenLayout ();
+						this.Parent.UpdateChildrenLayout ();
 					}
 					
 					this.NotifyChangedToHidden ();
@@ -2705,9 +2103,10 @@ namespace Epsitec.Common.Widgets
 			if ((setting == Setting.IncludeChildren) &&
 				(this.HasChildren))
 			{
-				for (int i = 0; i < this.children.Count; i++)
+				Widget[] children = this.Children.Widgets;
+				for (int i = 0; i < children.Length; i++)
 				{
-					this.children[i].SetEventPropagation (events, on, setting);
+					children[i].SetEventPropagation (events, on, setting);
 				}
 			}
 		}
@@ -2828,11 +2227,11 @@ namespace Epsitec.Common.Widgets
 					Widget.entered_widgets.Add (this);
 					this.widget_state |= WidgetState.Entered;
 					
-					if ((this.parent != null) &&
-						(this.parent.IsEntered == false) &&
-						(!(this.parent is WindowRoot)))
+					if ((this.Parent != null) &&
+						(this.Parent.IsEntered == false) &&
+						(!(this.Parent is WindowRoot)))
 					{
-						this.parent.SetEntered (true);
+						this.Parent.SetEntered (true);
 					}
 					
 					message = Message.FromMouseEvent (MessageType.MouseEnter, null, null);
@@ -2952,15 +2351,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual bool HitTest(Drawing.Point point)
 		{
-			if ((point.X >= this.x1) &&
-				(point.X <  this.x2) &&
-				(point.Y >= this.y1) &&
-				(point.Y <  this.y2))
-			{
-				return true;
-			}
-			
-			return false;
+			return this.Bounds.Contains (point);
 		}
 		
 		
@@ -2979,7 +2370,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Rectangle GetShapeBounds()
 		{
-			return new Drawing.Rectangle (0, 0, this.client_info.width, this.client_info.height);
+			return this.Client.Bounds;
 		}
 		
 		public virtual Drawing.Rectangle GetClipBounds()
@@ -2994,9 +2385,9 @@ namespace Epsitec.Common.Widgets
 			
 			Drawing.Rectangle clip = this.GetClipBounds ();
 			
-			if (this.parent != null)
+			if (this.Parent != null)
 			{
-				clip = Drawing.Rectangle.Intersection (clip, this.MapParentToClient (this.parent.GetClipStackBounds ()));
+				clip = Drawing.Rectangle.Intersection (clip, this.MapParentToClient (this.Parent.GetClipStackBounds ()));
 			}
 			
 			return clip;
@@ -3014,7 +2405,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.IsVisible)
 			{
-				if (this.parent != null)
+				if (this.Parent != null)
 				{
 					if ((this.InternalState & InternalState.SyncPaint) != 0)
 					{
@@ -3024,12 +2415,12 @@ namespace Epsitec.Common.Widgets
 						{
 							if (window.IsSyncPaintDisabled)
 							{
-								this.parent.Invalidate (this.MapClientToParent (rect));
+								this.Parent.Invalidate (this.MapClientToParent (rect));
 							}
 							else
 							{
 								window.SynchronousRepaint ();
-								this.parent.Invalidate (this.MapClientToParent (rect));
+								this.Parent.Invalidate (this.MapClientToParent (rect));
 								window.PaintFilter = new WidgetPaintFilter (this);
 								window.SynchronousRepaint ();
 								window.PaintFilter = null;
@@ -3038,7 +2429,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						this.parent.Invalidate (this.MapClientToParent (rect));
+						this.Parent.Invalidate (this.MapClientToParent (rect));
 					}
 				}
 			}
@@ -3054,8 +2445,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Point result = new Drawing.Point ();
 			
-			result.X = point.X - this.x1;
-			result.Y = point.Y - this.y1;
+			result.X = point.X - this.Left;
+			result.Y = point.Y - this.Bottom;
 			
 			return result;
 		}
@@ -3064,8 +2455,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Point result = new Drawing.Point ();
 			
-			result.X = point.X + this.x1;
-			result.Y = point.Y + this.y1;
+			result.X = point.X + this.Left;
+			result.Y = point.Y + this.Bottom;
 			
 			return result;
 		}
@@ -3362,16 +2753,16 @@ namespace Epsitec.Common.Widgets
 		
 		public bool IsAncestorWidget(Widget widget)
 		{
-			if (this.parent == widget)
+			if (this.Parent == widget)
 			{
 				return true;
 			}
-			if (this.parent == null)
+			if (this.Parent == null)
 			{
 				return false;
 			}
 			
-			return this.parent.IsAncestorWidget (widget);
+			return this.Parent.IsAncestorWidget (widget);
 		}
 		
 		public bool IsDescendantWidget(Widget widget)
@@ -3537,7 +2928,8 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
-				if (widget.Name == "")
+				if ((widget.Name == null) ||
+					(widget.Name.Length == 0))
 				{
 					Widget child = widget.FindChild (name, mode);
 					
@@ -3576,7 +2968,8 @@ namespace Epsitec.Common.Widgets
 				
 				System.Diagnostics.Debug.Assert (widget != null);
 				
-				if (widget.Name == "")
+				if ((widget.Name == null) ||
+					(widget.Name.Length == 0))
 				{
 					Widget child = widget.FindChildByPath (names, offset);
 					
@@ -3598,7 +2991,8 @@ namespace Epsitec.Common.Widgets
 		{
 			string[] names = path.Split ('.');
 			
-			if (this.Name == "")
+			if ((this.Name == null) ||
+				(this.Name.Length == 0))
 			{
 				return this.FindChildByPath (names, 0);
 			}
@@ -4038,7 +3432,7 @@ namespace Epsitec.Common.Widgets
 				//	Ce widget permet aux enfants d'entrer dans la liste accessible par la
 				//	touche TAB.
 				
-				Widget[] candidates = this.Children[0].FindTabWidgets (mode);
+				Widget[] candidates = this.Children.Widgets[0].FindTabWidgets (mode);
 				
 				if (candidates.Length > 0)
 				{
@@ -4094,7 +3488,7 @@ namespace Epsitec.Common.Widgets
 								{
 									//	Entre en marche arrière dans le widget...
 									
-									Widget[] candidates = find.Children[0].FindTabWidgets (mode);
+									Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (mode);
 									
 									if (candidates.Length > 0)
 									{
@@ -4122,7 +3516,7 @@ namespace Epsitec.Common.Widgets
 								{
 									//	Entre en marche avant dans le widget...
 									
-									Widget[] candidates = find.Children[0].FindTabWidgets (mode);
+									Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (mode);
 									
 									if (candidates.Length > 0)
 									{
@@ -4150,11 +3544,11 @@ namespace Epsitec.Common.Widgets
 				{
 					if (dir == TabNavigationDir.Forwards)
 					{
-						find = this.Children.FindNext (find);
+						find = this.Children.FindNext (find) as Widget;
 					}
 					else if (dir == TabNavigationDir.Backwards)
 					{
-						find = this.Children.FindPrevious (find);
+						find = this.Children.FindPrevious (find) as Widget;
 					}
 					if ((find == null) ||
 						((find.tab_navigation_mode & mode) != 0))
@@ -4169,29 +3563,29 @@ namespace Epsitec.Common.Widgets
 				//	Toujours rien trouvé. On a demandé aux enfants et aux frères. Il ne nous
 				//	reste plus qu'à transmettre au père.
 				
-				if (this.parent != null)
+				if (this.Parent != null)
 				{
-					if (this.parent.ProcessTabChildrenExit (dir, mode, out find))
+					if (this.Parent.ProcessTabChildrenExit (dir, mode, out find))
 					{
 						return find;
 					}
 					
 					find = null;
 					
-					if ((this.parent.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0)
+					if ((this.Parent.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0)
 					{
 						bool accept;
 						
 						switch (dir)
 						{
 							case TabNavigationDir.Backwards:
-								accept = (this.parent.tab_navigation_mode & TabNavigationMode.ForwardOnly) == 0;
-								find   = this.parent.FindTabWidget (dir, mode, true, accept);
+								accept = (this.Parent.tab_navigation_mode & TabNavigationMode.ForwardOnly) == 0;
+								find   = this.Parent.FindTabWidget (dir, mode, true, accept);
 								break;
 							
 							case TabNavigationDir.Forwards:
 								accept = false;
-								find = this.parent.FindTabWidget (dir, mode, true, accept);
+								find = this.Parent.FindTabWidget (dir, mode, true, accept);
 								break;
 						}
 					}
@@ -4202,7 +3596,7 @@ namespace Epsitec.Common.Widgets
 					//	dans ce cas, il ne sert à rien de boucler. On va simplement tenter d'activer le
 					//	premier descendant trouvé :
 					
-					Widget[] candidates = this.Children[0].FindTabWidgets (mode);
+					Widget[] candidates = this.Children.Widgets[0].FindTabWidgets (mode);
 					
 					if (candidates.Length > 0)
 					{
@@ -4260,7 +3654,7 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			Widget parent = this.parent;
+			Widget parent = this.Parent;
 			
 			if (parent != null)
 			{
@@ -4505,6 +3899,13 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void SetBounds(double x1, double y1, double x2, double y2)
 		{
+			this.SetBounds (Drawing.Rectangle.FromCorners (x1, y1, x2, y2));
+		}
+		internal override void SetBounds(Drawing.Rectangle bounds)
+		{
+			base.SetBounds (bounds);
+			this.UpdateClientGeometry ();
+#if false //#fix
 			if ((x1 == this.x1) && (y1 == this.y1) && (x2 == this.x2) && (y2 == this.y2))
 			{
 				return;
@@ -4532,20 +3933,22 @@ namespace Epsitec.Common.Widgets
 				this.OnSizeChanged ();
 			}
 			
+#endif
 			this.Invalidate ();
 		}
 		
 		protected virtual void UpdateClientGeometry()
 		{
+			//#fix -- tout faux !!!
 			if (this.layout_info == null)
 			{
-				this.layout_info = new Layouts.LayoutInfo (this.client_info.width, this.client_info.height);
+				this.layout_info = new Layouts.LayoutInfo (this.Client.Size);
 			}
 			
-			double dx = (this.x2 - this.x1);
-			double dy = (this.y2 - this.y1);
+			double dx = this.Width;
+			double dy = this.Height;
 			
-			this.client_info.SetSize (dx, dy);
+//			this.client_info.SetSize (dx, dy);
 			
 			if (this.IsLayoutSuspended == false)
 			{
@@ -4572,10 +3975,14 @@ namespace Epsitec.Common.Widgets
 				//	L'utilisateur a suspendu toute opération de layout, donc on ne va rien faire maintenant
 				//	mais laisser le soin au ResumeLayout final de nous appeler à nouveau.
 				
-				this.internal_state |= InternalState.LayoutChanged;
+				System.Diagnostics.Debug.WriteLine ("UpdateChildrenLayout, postponed");
+				
+				this.has_layout_changed = true;
 				
 				return;
 			}
+			
+			System.Diagnostics.Debug.WriteLine ("UpdateChildrenLayout on " + this.GetType ().Name);
 			
 			Widget[] children = this.Children.Widgets;
 			
@@ -4588,7 +3995,7 @@ namespace Epsitec.Common.Widgets
 			//	déterminer une nouvelle taille pour le widget. Si on ne désactive pas temporairement le
 			//	layout ici, on bouclerait (peut-être sans fin) :
 			
-			this.suspend_counter++;
+			this.SuspendLayout ();
 			
 			try
 			{
@@ -4597,7 +4004,7 @@ namespace Epsitec.Common.Widgets
 			}
 			finally
 			{
-				this.suspend_counter--;
+				this.ResumeLayout (false);
 			}
 			
 			//	Ce n'est que maintenant que l'on va s'occuper de placer les enfants correctement, en
@@ -4605,7 +4012,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.UpdateDockedChildrenLayout (children);
 			
-			System.Diagnostics.Debug.Assert (this.client_info != null);
+//			System.Diagnostics.Debug.Assert (this.client_info != null);
 			
 			try
 			{
@@ -4637,44 +4044,44 @@ namespace Epsitec.Common.Widgets
 						AnchorStyles anchor_x = child.Anchor & AnchorStyles.LeftAndRight;
 						AnchorStyles anchor_y = child.Anchor & AnchorStyles.TopAndBottom;
 						
-						double x1 = child.x1;
-						double x2 = child.x2;
-						double y1 = child.y1;
-						double y2 = child.y2;
+						double x1 = child.Left;
+						double x2 = child.Right;
+						double y1 = child.Bottom;
+						double y2 = child.Top;
 						
 						switch (anchor_x)
 						{
 							case AnchorStyles.Left:							//	[x1] fixe à gauche
-								x1 = child.anchor_margins.Left;
+								x1 = child.AnchorMargins.Left;
 								x2 = x1 + child.Width;
 								break;
 							case AnchorStyles.Right:						//	[x2] fixe à droite
-								x2 = this.client_info.width - child.anchor_margins.Right;
+								x2 = this.Client.Width - child.AnchorMargins.Right;
 								x1 = x2 - child.Width;
 								break;
 							case AnchorStyles.None:							//	ne touche à rien...
 								break;
 							case AnchorStyles.LeftAndRight:					//	[x1] fixe à gauche, [x2] fixe à droite
-								x1 = child.anchor_margins.Left;
-								x2 = this.client_info.width - child.anchor_margins.Right;
+								x1 = child.AnchorMargins.Left;
+								x2 = this.Client.Width - child.AnchorMargins.Right;
 								break;
 						}
 						
 						switch (anchor_y)
 						{
 							case AnchorStyles.Bottom:						//	[y1] fixe en bas
-								y1 = child.anchor_margins.Bottom;
+								y1 = child.AnchorMargins.Bottom;
 								y2 = y1 + child.Height;
 								break;
 							case AnchorStyles.Top:							//	[y2] fixe en haut
-								y2 = this.client_info.height - child.anchor_margins.Top;
+								y2 = this.Client.Height - child.AnchorMargins.Top;
 								y1 = y2 - child.Height;
 								break;
 							case AnchorStyles.None:							//	ne touche à rien...
 								break;
 							case AnchorStyles.TopAndBottom:					//	[y1] fixe en bas, [y2] fixe en haut
-								y1 = child.anchor_margins.Bottom;
-								y2 = this.client_info.height - child.anchor_margins.Top;
+								y1 = child.AnchorMargins.Bottom;
+								y2 = this.Client.Height - child.AnchorMargins.Top;
 								break;
 						}
 						
@@ -4875,7 +4282,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			System.Diagnostics.Debug.Assert (this.client_info != null);
+//			System.Diagnostics.Debug.Assert (this.client_info != null);
 			System.Diagnostics.Debug.Assert (this.HasChildren);
 			
 			System.Collections.Queue fill_queue = null;
@@ -5066,7 +4473,7 @@ namespace Epsitec.Common.Widgets
 				
 				Drawing.Rectangle original_clipping  = graphics.SaveClippingRectangle ();
 				Drawing.Transform original_transform = graphics.Transform;
-				Drawing.Transform graphics_transform = Drawing.Transform.FromTranslation (this.x1, this.y1);
+				Drawing.Transform graphics_transform = Drawing.Transform.FromTranslation (this.Location);
 				
 				graphics.SetClippingRectangle (bounds);
 				
@@ -5492,9 +4899,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void BuildFullPathName(System.Text.StringBuilder buffer)
 		{
-			if (this.parent != null)
+			if (this.Parent != null)
 			{
-				this.parent.BuildFullPathName (buffer);
+				this.Parent.BuildFullPathName (buffer);
 			}
 			
 			string name = this.Name;
@@ -5516,11 +4923,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
-		protected virtual void CreateChildrenCollection()
-		{
-			this.children = new ChildrenCollection (this);
-		}
 		
 		protected virtual void CreateTextLayout()
 		{
@@ -5559,7 +4961,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
+
+#if false //#fix
 		protected void HandleParentChanged()
 		{
 			//	Cette méthode est appelée chaque fois qu'un widget change de parent.
@@ -5568,16 +4971,17 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.HasChildren)
 				{
-					for (int i = 0; i < this.children.Count; i++)
+					Widget[] children = this.Children.Widgets;
+					for (int i = 0; i < children.Length; i++)
 					{
-						this.children[i].OnParentChanged ();
+						children[i].OnParentChanged ();
 					}
 				}
 			}
 			
 			this.OnParentChanged ();
 			
-			if (this.parent == null)
+			if (this.Parent == null)
 			{
 				if (this.Visibility)
 				{
@@ -5593,13 +4997,14 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+#endif
 		
 		protected void HandleChildrenChanged()
 		{
 			//	Cette méthode est appelée chaque fois qu'un widget fils a été ajouté ou supprimé
 			//	de ce widget.
 			
-			System.Diagnostics.Debug.Assert (this.suspend_counter >= 0);
+			System.Diagnostics.Debug.Assert (this.IsLayoutSuspended);
 			
 			if (this.IsLayoutSuspended)
 			{
@@ -5621,9 +5026,9 @@ namespace Epsitec.Common.Widgets
 				
 				if ((this.propagate & Propagate.ChildrenChanged) != 0)
 				{
-					if (this.parent != null)
+					if (this.Parent != null)
 					{
-						this.parent.HandleChildrenChanged ();
+						this.Parent.HandleChildrenChanged ();
 					}
 				}
 				
@@ -5733,14 +5138,6 @@ namespace Epsitec.Common.Widgets
 			if (this.ChildrenChanged != null)
 			{
 				this.ChildrenChanged (this);
-			}
-		}
-		
-		protected virtual void OnParentChanged()
-		{
-			if (this.ParentChanged != null)
-			{
-				this.ParentChanged (this);
 			}
 		}
 		
@@ -5867,7 +5264,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnExited(MessageEventArgs e)
 		{
-			if (this.parent != null)
+			if (this.Parent != null)
 			{
 				Window window = this.Window;
 				
@@ -5875,7 +5272,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if (window.CapturingWidget == null)
 					{
-						window.MouseCursor = this.parent.MouseCursor;
+						window.MouseCursor = this.Parent.MouseCursor;
 					}
 				}
 			}
@@ -6156,7 +5553,6 @@ namespace Epsitec.Common.Widgets
 		public event PaintEventHandler				PaintBackground;
 		public event PaintEventHandler				PaintForeground;
 		public event Support.EventHandler			ChildrenChanged;
-		public event Support.EventHandler			ParentChanged;
 		public event Support.EventHandler			AdornerChanged;
 		public event Support.EventHandler			CultureChanged;
 		public event Support.EventHandler			LayoutChanged;
@@ -6317,314 +5713,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		#region ChildrenCollection class
-		public class ChildrenCollection : System.Collections.IList
-		{
-			public ChildrenCollection(Widget widget)
-			{
-				this.list   = new System.Collections.ArrayList ();
-				this.widget = widget;
-			}
-			
-			
-			public Widget[]					Widgets
-			{
-				get
-				{
-					if (this.array == null)
-					{
-						this.array = new Widget[this.list.Count];
-						this.list.CopyTo (this.array);
-					}
-					
-					return this.array;
-				}
-			}
-			
-			public Widget					this[int index]
-			{
-				get { return this.list[index] as Widget; }
-			}
-			
-			
-			public Widget FindNext(Widget widget)
-			{
-				Widget[] widgets = this.Widgets;
-				
-				for (int i = 0; i < widgets.Length; i++)
-				{
-					if (widgets[i] == widget)
-					{
-						return (++i < widgets.Length) ? widgets[i] : null;
-					}
-				}
-				
-				return null;
-			}
-			
-			public Widget FindPrevious(Widget widget)
-			{
-				Widget[] widgets = this.Widgets;
-				
-				for (int i = 0; i < widgets.Length; i++)
-				{
-					if (widgets[i] == widget)
-					{
-						return (--i >= 0) ? widgets[i] : null;
-					}
-				}
-				
-				return null;
-			}
-			
-			
-//			internal void ChangeZOrder(Widget widget, int z)
-//			{
-//				System.Diagnostics.Debug.Assert (widget != null);
-//				
-//				int z_old = widget.ZOrder;
-//				int z_new = z;
-//				
-//				System.Diagnostics.Debug.Assert (z_old >= 0);
-//				System.Diagnostics.Debug.Assert (z_new >= 0);
-//				
-//				if (z_old == z_new)
-//				{
-//					return;
-//				}
-//				
-//				int n = this.list.Count;
-//				
-//				System.Diagnostics.Debug.Assert (z_old < n);
-//				System.Diagnostics.Debug.Assert (z_new < n);
-//				
-//				z_old = n - z_old - 1;
-//				z_new = n - z_new - 1;
-//				
-//				System.Diagnostics.Debug.Assert (this.list[z_old] == widget);
-//				
-//				this.list.RemoveAt (z_old);
-//				this.list.Insert (z_new, widget);
-//				
-//				this.array = null;
-//				this.NotifyChanged ();
-//			}
-			
-//			internal void Replace(Widget old_widget, Widget new_widget)
-//			{
-//				if (old_widget == new_widget)
-//				{
-//					return;
-//				}
-//				
-//				int pos1 = this.list.IndexOf (old_widget);
-//				int pos2 = this.list.IndexOf (new_widget);
-//				
-//				if (pos1 < 0)
-//				{
-//					throw new System.ArgumentException ("Widget not in collection.", "old_widget");
-//				}
-//				if (pos2 < 0)
-//				{
-//					this.PreRemove (old_widget);
-//					this.PreInsert (new_widget);
-//					
-//					this.list[pos1] = new_widget;
-//					
-//					if (this.array != null)
-//					{
-//						this.array[pos1] = new_widget;
-//					}
-//					
-//					this.NotifyChanged ();
-//				}
-//				else
-//				{
-//					this.list[pos1] = new_widget;
-//					this.list[pos2] = old_widget;
-//					
-//					if (this.array != null)
-//					{
-//						this.array[pos1] = new_widget;
-//						this.array[pos2] = old_widget;
-//					}
-//					
-//					this.NotifyChanged ();
-//				}
-//			}
-			
-//			internal void InsertAt(int index, Widget widget)
-//			{
-//				if (widget == null)
-//				{
-//					throw new System.ArgumentException ("Widget is not valid.", "widget");
-//				}
-//				
-//				this.PreInsert (widget);
-//				this.array = null;
-//				this.list.Insert (index, widget);
-//				this.NotifyChanged ();
-//			}
-			
-			
-			private void PreInsert(object widget)
-			{
-				if (widget is Widget)
-				{
-					this.PreInsert (widget as Widget);
-				}
-				else
-				{
-					throw new System.ArgumentException ("Widget");
-				}
-			}
-			
-			private void PreInsert(Widget widget)
-			{
-				if (widget.parent != null)
-				{
-					Widget parent = widget.parent;
-					parent.Children.Remove (widget);
-					System.Diagnostics.Debug.Assert (widget.parent == null);
-				}
-				
-				widget.parent = this.widget;
-				widget.HandleParentChanged ();
-			}
-			
-			private void PreRemove(object widget)
-			{
-				if (widget is Widget)
-				{
-					this.PreRemove (widget as Widget);
-				}
-				else
-				{
-					throw new System.ArgumentException ("Widget");
-				}
-			}
-			
-			private void PreRemove(Widget widget)
-			{
-				System.Diagnostics.Debug.Assert (widget.parent == this.widget);
-				widget.AboutToBecomeOrphan ();
-				widget.parent = null;
-				widget.HandleParentChanged ();
-			}
-			
-			private void NotifyChanged()
-			{
-				this.widget.HandleChildrenChanged ();
-			}
-			
-			
-			#region IList Members
-			public bool							IsReadOnly
-			{
-				get	{ return false; }
-			}
-			
-			object System.Collections.IList.this[int index]
-			{
-				get	{ return this.list[index]; }
-				set	{ throw new System.NotSupportedException ("Widget"); }
-			}
-			
-			
-			void System.Collections.IList.RemoveAt(int index)
-			{
-				System.Diagnostics.Debug.Assert (this.list[index] != null);
-				this.PreRemove (this.list[index]);
-				this.list.RemoveAt (index);
-				this.array = null;
-				this.NotifyChanged ();
-			}
-			
-			void System.Collections.IList.Insert(int index, object value)
-			{
-				throw new System.NotSupportedException ("Widget");
-			}
-			
-			public void Remove(object value)
-			{
-				this.PreRemove (value);
-				this.list.Remove (value);
-				this.array = null;
-				this.NotifyChanged ();
-			}
-			
-			public bool Contains(object value)
-			{
-				return this.list.Contains (value);
-			}
-			
-			public void Clear()
-			{
-				while (this.Count > 0)
-				{
-					System.Collections.IList ilist = this as System.Collections.IList;
-					ilist.RemoveAt (this.Count - 1);
-				}
-			}
-			
-			public int IndexOf(object value)
-			{
-				return this.list.IndexOf (value);
-			}
-			
-			public int Add(object value)
-			{
-				this.PreInsert (value);
-				int result = this.list.Add (value);
-				this.array = null;
-				this.NotifyChanged ();
-				return result;
-			}
-			
-			public bool IsFixedSize
-			{
-				get	{ return false; }
-			}
-
-			#endregion
-			
-			#region ICollection Members
-			public bool IsSynchronized
-			{
-				get { return false; }
-			}
-			
-			public int Count
-			{
-				get	{ return this.list.Count; }
-			}
-
-			public void CopyTo(System.Array array, int index)
-			{
-				this.list.CopyTo (array, index);
-			}
-			
-			public object SyncRoot
-			{
-				get { return this.list.SyncRoot; }
-			}
-
-			#endregion
-			
-			#region IEnumerable Members
-			public System.Collections.IEnumerator GetEnumerator()
-			{
-				return this.list.GetEnumerator ();
-			}
-			
-			#endregion
-			
-			System.Collections.ArrayList	list;
-			Widget[]						array;
-			Widget							widget;
-		}
-		#endregion
-		
 		#region HypertextInfo class
 		protected sealed class HypertextInfo : System.ICloneable, System.IComparable
 		{
@@ -6693,11 +5781,8 @@ namespace Epsitec.Common.Widgets
 		
 		private LayoutStyles					layout;
 		private Layouts.LayoutInfo				layout_info;
-		private Drawing.Margins					anchor_margins;
-		private Drawing.Margins					dock_padding;
-		private Drawing.Margins					dock_margins;
 		
-		private ClientInfo						client_info = new ClientInfo ();
+//		private ClientInfo						client_info = new ClientInfo ();
 		
 		private InternalState					internal_state;
 		private WidgetState						widget_state;
@@ -6705,7 +5790,6 @@ namespace Epsitec.Common.Widgets
 		private Propagate						propagate;
 		
 		private Drawing.Color					back_color;
-		private double							x1, y1, x2, y2;
 		private Drawing.Size					min_size;
 		private Drawing.Size					max_size;
 		private Drawing.Size					auto_min_size	= new Drawing.Size (0, 0);
@@ -6713,16 +5797,14 @@ namespace Epsitec.Common.Widgets
 		private System.Collections.ArrayList	hypertext_list;
 		private HypertextInfo					hypertext;
 		
-		private ChildrenCollection				children;
-		private Widget							parent;
-		private string							name;
+//		private ChildrenCollection				children;
+//		private Widget							parent;
 		private string							command;
 		private int								index = -1;
 		private string							group;
 		private string							text;
 		private TextLayout						text_layout;
 		private ContentAlignment				alignment;
-		private int								suspend_counter;
 		private int								tab_index = 0;
 		private TabNavigationMode				tab_navigation_mode;
 		private Shortcut						shortcut;

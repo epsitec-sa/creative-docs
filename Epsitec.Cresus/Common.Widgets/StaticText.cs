@@ -45,6 +45,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+#if false	//#fix
 		public override Drawing.Size				PreferredSize
 		{
 			get
@@ -52,6 +53,7 @@ namespace Epsitec.Common.Widgets
 				return this.MapClientToParent (this.TextLayout.SingleLineSize);
 			}
 		}
+#endif
 		
 		public override Drawing.Point GetBaseLine()
 		{

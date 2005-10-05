@@ -6,11 +6,15 @@ namespace Epsitec.Common.Widgets
 {
 	[TestFixture] public class WidgetTest
 	{
-		[SetUp] private void Initialise()
+		[SetUp] public void Initialise()
 		{
-			Widget.Initialise ();
+			Epsitec.Common.UI.Engine.Initialise ();
+			Epsitec.Common.Document.Engine.Initialise ();
+			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
+			Epsitec.Common.Widgets.Widget.Initialise ();
 		}
-		
+
+#if false
 		[Test] public void CheckAllocation()
 		{
 			int runs = 100000;
@@ -40,6 +44,8 @@ namespace Epsitec.Common.Widgets
 			
 			System.Console.WriteLine ("Using {0} bytes / empty Widget instance, {1} cycles.", (s2-s1) / runs, (c2-c1) / runs);
 		}
+#endif
+
 #if false
 		[Test] public void CheckAbstractWidget()
 		{
@@ -450,41 +456,53 @@ namespace Epsitec.Common.Widgets
 			Widget w1 = new Widget ();
 			Widget w2 = new Widget ();
 			
-			w2.ParentChanged += new EventHandler (HandleCheckParentChangedParentChanged);
+			w2.ParentChanged += new Types.PropertyChangedEventHandler (HandleCheckParentChangedParentChanged);
 			
 			this.check_parent_changed_sender = null;
 			this.check_parent_changed_count  = 0;
 			w2.SetParent (w1);
 			Assert.AreEqual (w2, this.check_parent_changed_sender);
 			Assert.AreEqual (1, this.check_parent_changed_count);
+			Assert.AreEqual (null, this.check_parent_changed_old_value);
+			Assert.AreEqual (w1, this.check_parent_changed_new_value);
 			
 			this.check_parent_changed_sender = null;
 			this.check_parent_changed_count  = 0;
 			w2.SetParent (null);
 			Assert.AreEqual (w2, this.check_parent_changed_sender);
 			Assert.AreEqual (1, this.check_parent_changed_count);
+			Assert.AreEqual (w1, this.check_parent_changed_old_value);
+			Assert.AreEqual (null, this.check_parent_changed_new_value);
 			
 			this.check_parent_changed_sender = null;
 			this.check_parent_changed_count  = 0;
 			w1.Children.Add (w2);
 			Assert.AreEqual (w2, this.check_parent_changed_sender);
 			Assert.AreEqual (1, this.check_parent_changed_count);
+			Assert.AreEqual (null, this.check_parent_changed_old_value);
+			Assert.AreEqual (w1, this.check_parent_changed_new_value);
 			
 			this.check_parent_changed_sender = null;
 			this.check_parent_changed_count  = 0;
 			w0.Children.Add (w2);
 			Assert.AreEqual (w2, this.check_parent_changed_sender);
 			Assert.AreEqual (2, this.check_parent_changed_count);
+			Assert.AreEqual (null, this.check_parent_changed_old_value);
+			Assert.AreEqual (w0, this.check_parent_changed_new_value);
 		}
 		
 		
 		#region CheckParentChanged event handler
 		private object		check_parent_changed_sender;
+		private object		check_parent_changed_old_value;
+		private object		check_parent_changed_new_value;
 		private int			check_parent_changed_count;
 		
-		private void HandleCheckParentChangedParentChanged(object sender)
+		private void HandleCheckParentChangedParentChanged(object sender, Types.PropertyChangedEventArgs e)
 		{
 			this.check_parent_changed_sender = sender;
+			this.check_parent_changed_old_value = e.OldValue;
+			this.check_parent_changed_new_value = e.NewValue;
 			this.check_parent_changed_count++;
 		}
 		#endregion
@@ -596,70 +614,6 @@ namespace Epsitec.Common.Widgets
 			Assert.IsTrue (pt_client.Y == 15);
 			Assert.IsTrue (pt_widget.X == pt_test.X);
 			Assert.IsTrue (pt_widget.Y == pt_test.Y);
-			
-//			widget.SetClientAngle (90);
-			
-//			Assert.IsTrue (widget.Client.Angle == 90);
-//			Assert.IsTrue (widget.Client.Width == 40);
-//			Assert.IsTrue (widget.Client.Height == 50);
-			
-//			widget.SetClientAngle (180);
-//			widget.SetClientZoom (0.5f);
-			
-//			Assert.IsTrue (widget.Client.Angle == 180);
-//			Assert.IsTrue (widget.Client.Width == 100);
-//			Assert.IsTrue (widget.Client.Height == 80);
-			
-//			widget.SetClientAngle (180);
-//			widget.SetClientZoom (0.5f);
-			
-			pt_test   = new Point (widget.Left, widget.Bottom);
-			pt_client = widget.MapParentToClient (pt_test);
-			pt_widget = widget.MapClientToParent (pt_client);
-			
-			Assert.IsTrue (Transform.Equal (pt_widget, pt_test));
-			Assert.IsTrue (Transform.Equal (pt_client.X, widget.Client.Width));
-			Assert.IsTrue (Transform.Equal (pt_client.Y, widget.Client.Height));
-			
-			
-//			double zoom = 2.0;
-//			double ox = 1.0;
-//			double oy = 2.0;
-			
-//			for (int angle = 0; angle < 360; angle += 90)
-//			{
-//				widget.SetClientAngle (angle);
-//				widget.SetClientZoom (zoom);
-//			
-//				pt_test   = new Point (widget.Left + ox, widget.Bottom + oy);
-//				pt_client = widget.MapParentToClient (pt_test);
-//				pt_widget = widget.MapClientToParent (pt_client);
-//			
-//				Assert.IsTrue (Transform.Equal (pt_widget, pt_test));
-//				
-//				switch (angle)
-//				{
-//					case 0:
-//						Assert.IsTrue (Transform.Equal (pt_client.X, ox / zoom), "0° failed");
-//						Assert.IsTrue (Transform.Equal (pt_client.Y, oy / zoom), "0° failed");
-//						break;
-//					
-//					case 90:
-//						Assert.IsTrue (Transform.Equal (pt_client.X, oy / zoom), "90° failed");
-//						Assert.IsTrue (Transform.Equal (pt_client.Y, widget.Client.Height - ox / zoom), "90° failed");
-//						break;
-//					
-//					case 180:
-//						Assert.IsTrue (Transform.Equal (pt_client.X, (widget.Client.Width - ox / zoom)), "180° failed");
-//						Assert.IsTrue (Transform.Equal (pt_client.Y, (widget.Client.Height - oy / zoom)), "180° failed");
-//						break;
-//					
-//					case 270:
-//						Assert.IsTrue (Transform.Equal (pt_client.X, (widget.Client.Width - oy / zoom)), "270° failed");
-//						Assert.IsTrue (Transform.Equal (pt_client.Y, ox / zoom), "270° failed");
-//						break;
-//				}
-//			}
 		}
 		
 		[Test] public void CheckTransformToClient()
@@ -1002,7 +956,7 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckDocking";
 			window.Root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-//			window.Root.AutoMinMax = true;
+			window.Root.DockPadding = new Margins (8, 8, 5, 5);
 			
 			Button button;
 			button = new Button();

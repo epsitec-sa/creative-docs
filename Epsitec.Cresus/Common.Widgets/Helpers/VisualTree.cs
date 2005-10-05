@@ -238,8 +238,6 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			for ( ; visual != null; )
 			{
-				//	TODO: enlever le #if false
-#if false
 				if (visual is WindowRoot)
 				{
 					WindowRoot root = visual as WindowRoot;
@@ -249,7 +247,6 @@ namespace Epsitec.Common.Widgets.Helpers
 						return root.Window;
 					}
 				}
-#endif
 				
 				visual = visual.Parent;
 			}
@@ -307,14 +304,11 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			while ((visual != null) && (visual.Visibility))
 			{
-				//	TODO: enlever le #if false
-#if false
 				if (visual is WindowRoot)
 				{
-					WindowRoot root = parent as WindowRoot;
-					return root.Window.IsVisible;
+					WindowRoot root = visual as WindowRoot;
+					return true; //root.Window.IsVisible;
 				}
-#endif
 				
 				visual = visual.Parent;
 			}

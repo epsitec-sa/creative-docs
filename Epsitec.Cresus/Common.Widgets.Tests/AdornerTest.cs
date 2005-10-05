@@ -353,8 +353,6 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(radio3, "Couleur bleue");
 			
 			radio1.ActiveState = WidgetState.ActiveYes;
-			
-			radio1.ActiveState = WidgetState.ActiveYes;
 
 			CheckButton check = new CheckButton();
 //			check.Location = new Point(10, 70);

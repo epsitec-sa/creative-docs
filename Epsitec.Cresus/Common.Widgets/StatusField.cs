@@ -56,6 +56,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+#if false	//#fix
 		public override Drawing.Size PreferredSize
 		{
 			// Retourne les dimensions minimales pour représenter le texte.
@@ -64,6 +65,7 @@ namespace Epsitec.Common.Widgets
 				return this.TextLayout.SingleLineSize;
 			}
 		}
+#endif
 		
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)

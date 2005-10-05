@@ -211,6 +211,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+#if false	//#fix
 		public override Drawing.Size			MinSize
 		{
 			get
@@ -227,6 +228,7 @@ namespace Epsitec.Common.Widgets
 				base.MinSize = value;
 			}
 		}
+#endif
 
 		
 		public int								MaxChar

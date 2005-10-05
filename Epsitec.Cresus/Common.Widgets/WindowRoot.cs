@@ -29,26 +29,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override bool					IsVisible
-		{
-			get
-			{
-				return true;
-			}
-		}
-		
-//		public override LayoutStyles			Layout
-//		{
-//			get
-//			{
-//				return LayoutStyles.Manual;
-//			}
-//			set
-//			{
-//				//	Poubellise toute modification...
-//			}
-//		}
-		
 		public override Window					Window
 		{
 			get
@@ -114,7 +94,6 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
 		
 		
 		#region IBundleSupport Members

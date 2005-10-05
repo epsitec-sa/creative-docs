@@ -173,6 +173,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.buttonRGB = new IconButton(this);
 			this.buttonRGB.AutoRadio = true;
+			this.buttonRGB.AutoToggle = true;
 			this.buttonRGB.Group = this.colorSpaceController.Group;
 			this.buttonRGB.Index = 1;
 			this.buttonRGB.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceRGB.icon";
@@ -182,6 +183,7 @@ namespace Epsitec.Common.Widgets
 
 			this.buttonCMYK = new IconButton(this);
 			this.buttonCMYK.AutoRadio = true;
+			this.buttonCMYK.AutoToggle = true;
 			this.buttonCMYK.Group = this.colorSpaceController.Group;
 			this.buttonCMYK.Index = 2;
 			this.buttonCMYK.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceCMYK.icon";
@@ -191,6 +193,7 @@ namespace Epsitec.Common.Widgets
 
 			this.buttonGray = new IconButton(this);
 			this.buttonGray.AutoRadio = true;
+			this.buttonGray.AutoToggle = true;
 			this.buttonGray.Group = this.colorSpaceController.Group;
 			this.buttonGray.Index = 3;
 			this.buttonGray.IconName = "manifest:Epsitec.Common.Widgets.Images.ColorSpaceGray.icon";
@@ -541,13 +544,15 @@ namespace Epsitec.Common.Widgets
 			base.UpdateClientGeometry();
 
 			if ( this.fields == null )  return;
-
+			
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Deflate(1);
 			double hCircle = rect.Height-5-20*3;
 			hCircle = System.Math.Min(hCircle, rect.Width);
 			Drawing.Rectangle r = new Drawing.Rectangle();
 
+			System.Diagnostics.Debug.WriteLine("UpdateClientGeometry: bounds=" + rect);
+			
 			bool visibleCircle = ( rect.Height > 160 );
 			bool visibleFields = ( rect.Height > 3*20 );
 
@@ -555,22 +560,28 @@ namespace Epsitec.Common.Widgets
 			bool visibleFieldsCMYK = visibleFields;
 			bool visibleFieldsGray = visibleFields;
 
-			if ( this.Color.ColorSpace == Drawing.ColorSpace.RGB )
+			switch ( this.Color.ColorSpace )
 			{
-				visibleFieldsCMYK = false;
-				visibleFieldsGray = false;
-			}
-			
-			if ( this.Color.ColorSpace == Drawing.ColorSpace.CMYK )
-			{
-				visibleFieldsRGB  = false;
-				visibleFieldsGray = false;
-			}
-			
-			if ( this.Color.ColorSpace == Drawing.ColorSpace.Gray )
-			{
-				visibleFieldsRGB  = false;
-				visibleFieldsCMYK = false;
+				case Drawing.ColorSpace.RGB:
+					visibleFieldsCMYK = false;
+					visibleFieldsGray = false;
+					break;
+
+				case Drawing.ColorSpace.CMYK:
+					visibleFieldsRGB  = false;
+					visibleFieldsGray = false;
+					break;
+				
+				case Drawing.ColorSpace.Gray:
+					visibleFieldsRGB  = false;
+					visibleFieldsCMYK = false;
+					break;
+				
+				default:
+					visibleFieldsRGB  = false;
+					visibleFieldsCMYK = false;
+					visibleFieldsGray = false;
+					break;
 			}
 
 			r.Left   = rect.Left;
@@ -713,6 +724,9 @@ namespace Epsitec.Common.Widgets
 				r.Width = 14;
 				r.Bottom = rect.Top-14;
 				r.Top = rect.Top;
+				
+				System.Diagnostics.Debug.WriteLine ("Setting close button bounds to " + r.ToString());
+				
 				this.buttonClose.Bounds = r;
 				this.buttonClose.SetVisible(true);
 			}

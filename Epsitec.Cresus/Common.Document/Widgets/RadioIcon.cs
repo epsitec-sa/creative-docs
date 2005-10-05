@@ -11,8 +11,8 @@ namespace Epsitec.Common.Document.Widgets
 	{
 		public RadioIcon()
 		{
-			this.InternalState |= InternalState.AutoToggle;
-			this.InternalState |= InternalState.AutoRadio;
+			this.AutoToggle = true;
+			this.AutoRadio  = true;
 		}
 
 		public RadioIcon(Widget embedder) : this()
