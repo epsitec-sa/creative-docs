@@ -350,6 +350,7 @@ namespace Epsitec.Common.Document.Containers
 			WidgetState state = WidgetState.ActiveNo;
 			if ( layer.Type == Objects.LayerType.Show   )  state = WidgetState.ActiveYes;
 			if ( layer.Type == Objects.LayerType.Dimmed )  state = WidgetState.ActiveMaybe;
+			if ( select )  state = WidgetState.ActiveYes;
 			bt.ActiveState = state;
 			bt.SetEnabled(!select);
 
