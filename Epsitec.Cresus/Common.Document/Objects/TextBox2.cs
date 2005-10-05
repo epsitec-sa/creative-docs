@@ -10,7 +10,7 @@ namespace Epsitec.Common.Document.Objects
 	/// La classe TextBox2 est la classe de l'objet graphique "pavé de texte".
 	/// </summary>
 	[System.Serializable()]
-	public class TextBox2 : Objects.Abstract
+	public class TextBox2 : Objects.Abstract, Text.ITextRenderer
 	{
 		public TextBox2(Document document, Objects.Abstract model) : base(document, model)
 		{
@@ -21,17 +21,35 @@ namespace Epsitec.Common.Document.Objects
 
 		protected void Initialise()
 		{
-			this.textFrame = new TextFrame();
-			this.textNavigator = this.textFrame.TextNavigator;
-			this.textStory = this.textFrame.TextStory;
+			this.textContext = new Text.TextContext();
 
-			if ( this.document.Modifier != null )
+			if ( this.document.Modifier == null )
 			{
-				//?this.textFrame.OpletQueue = this.document.Modifier.OpletQueue;
+				this.textStory = new Text.TextStory(this.textContext);
+			}
+			else
+			{
+				this.textStory = new Text.TextStory(this.document.Modifier.OpletQueue, this.textContext);
 			}
 
-			this.cursorBox = Drawing.Rectangle.Empty;
-			this.selectBox = Drawing.Rectangle.Empty;
+			this.textFitter    = new Text.TextFitter(this.textStory);
+			this.textNavigator = new Text.TextNavigator(this.textFitter);
+			this.textFrame     = new Text.SimpleTextFrame();
+			
+			this.navigator = new TextNavigator2();
+			
+			this.navigator.TextNavigator = this.textNavigator;
+			this.navigator.TextFrame     = this.textFrame;
+			
+			this.textFitter.FrameList.Add(this.textFrame);
+			
+			this.textFitter.ClearAllMarks();
+			this.textFitter.GenerateAllMarks();
+			
+			//?this.navigator.TextChanged += new Support.EventHandler (this.HandleTextChanged);
+			//?this.navigator.CursorMoved += new Support.EventHandler (this.HandleCursorMoved);
+			
+			this.markerSelected = this.textContext.Markers.Selected;
 		}
 
 		protected override bool ExistingProperty(Properties.Type type)
@@ -307,7 +325,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			pos = this.transform.TransformInverse(pos);
-			if ( !this.textNavigator.ProcessMessage(message, pos) )  return false;
+			if ( !this.navigator.ProcessMessage(message, pos) )  return false;
 			return true;
 		}
 
@@ -385,7 +403,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public override bool EditSelectAll()
 		{
-			this.textNavigator.SelectAll();
+			this.navigator.SelectAll();
 			return true;
 		}
 		#endregion
@@ -393,7 +411,7 @@ namespace Epsitec.Common.Document.Objects
 		// Insère un glyphe dans le pavé en édition.
 		public override bool EditInsertGlyph(string text)
 		{
-			this.textNavigator.Insert(text);
+			this.navigator.Insert(text);
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			return true;
 		}
@@ -409,21 +427,21 @@ namespace Epsitec.Common.Document.Objects
 		// Met en gras pendant l'édition.
 		public override bool EditBold()
 		{
-			this.textNavigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Bold"));
+			this.navigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Bold"));
 			return true;
 		}
 
 		// Met en italique pendant l'édition.
 		public override bool EditItalic()
 		{
-			this.textNavigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Italic"));
+			this.navigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Italic"));
 			return true;
 		}
 
 		// Souligne pendant l'édition.
 		public override bool EditUnderlined()
 		{
-			this.textNavigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Underlined"));
+			this.navigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Underlined"));
 			return true;
 		}
 		#endregion
@@ -433,7 +451,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			get
 			{
-				return this.cursorBox;
+				return Drawing.Rectangle.Empty;  //?
 			}
 		}
 
@@ -442,7 +460,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			get
 			{
-				return this.selectBox;
+				return Drawing.Rectangle.Empty;  //?
 			}
 		}
 
@@ -561,10 +579,8 @@ namespace Epsitec.Common.Document.Objects
 				return false;
 			}
 
-			Size size = new Size();
-			size.Width  = Point.Distance(p1,p2);
-			size.Height = Point.Distance(p1,p3);
-			this.textFrame.Size = size;
+			this.textFrame.Width  = Point.Distance(p1,p2);
+			this.textFrame.Height = Point.Distance(p1,p3);
 
 			return true;
 		}
@@ -573,9 +589,6 @@ namespace Epsitec.Common.Document.Objects
 		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
 		{
 			if ( this.handles.Count < 4 )  return;
-
-			this.cursorBox = Drawing.Rectangle.Empty;
-			this.selectBox = Drawing.Rectangle.Empty;
 
 			Point p1 = new Point();
 			Point p2 = new Point();
@@ -591,9 +604,259 @@ namespace Epsitec.Common.Document.Objects
 			this.transform.RotateDeg(angle, p1);
 			port.MergeTransform(transform);
 
+			this.graphics = port as Graphics;
+			if ( this.graphics != null )
+			{
+				this.textFitter.RenderTextFrame(this.textFrame, this);
+			}
 
 			port.Transform = ot;
 		}
+
+		#region ITextRenderer Members
+		public bool IsFrameAreaVisible(Text.ITextFrame frame, double x, double y, double width, double height)
+		{
+			return true;
+		}
+		
+		public void RenderStartParagraph(Text.Layout.Context context)
+		{
+		}
+		
+		public void RenderStartLine(Text.Layout.Context context)
+		{
+			double ox = context.LineCurrentX;
+			double oy = context.LineBaseY;
+			double dx = context.TextWidth;
+			
+			this.graphics.LineWidth = 0.3;
+			this.graphics.AddLine(ox, oy, ox + dx, oy);
+			this.graphics.RenderSolid(Drawing.Color.FromName("Green"));
+			
+			context.DisableSimpleRendering();
+		}
+		
+		public void Render(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)
+		{
+			Text.ITextFrame frame = layout.Frame;
+			
+			System.Diagnostics.Debug.Assert(mapping != null);
+			
+			// Vérifions d'abord que le mapping du texte vers les glyphes est
+			// correct et correspond à quelque chose de valide :
+			int  offset = 0;
+			bool isInSelection = false;
+			
+			double selX = 0;
+			
+			System.Collections.ArrayList selRectList = null;
+			Drawing.Rectangle            selBbox     = Drawing.Rectangle.Empty;
+			
+			int[]    cArray;
+			ulong[]  tArray;
+			ushort[] gArray;
+			
+			double x1 = 0;
+			double x2 = 0;
+			
+			while ( mapping.GetNextMapping(out cArray, out gArray, out tArray) )
+			{
+				int numGlyphs = gArray.Length;
+				int numChars  = cArray.Length;
+				
+				System.Diagnostics.Debug.Assert((numGlyphs == 1) || (numChars == 1));
+				
+				x1 = x[offset+0];
+				x2 = x[offset+numGlyphs];
+				
+				for ( int i=0 ; i<numChars ; i++ )
+				{
+					if ( (tArray[i] & this.markerSelected) != 0 )
+					{
+						// Le caractère considéré est sélectionné.
+						if ( isInSelection == false )
+						{
+							// C'est le premier caractère d'une tranche. Il faut
+							// mémoriser son début :
+							double xx = x1 + ((x2 - x1) * i) / numChars;
+							isInSelection = true;
+							selX = xx;
+						}
+					}
+					else
+					{
+						if ( isInSelection )
+						{
+							// Nous avons quitté une tranche sélectionnée. Il faut
+							// mémoriser sa fin :
+							double xx = x1 + ((x2 - x1) * i) / numChars;
+							isInSelection = false;
+							
+							if ( xx > selX )
+							{
+								if ( selRectList == null )
+								{
+									selRectList = new System.Collections.ArrayList();
+								}
+								
+								double dx = xx - selX;
+								double dy = layout.LineY2 - layout.LineY1;
+								
+								Drawing.Rectangle rect = new Drawing.Rectangle(selX, layout.LineY1, dx, dy);
+								
+								selBbox = Drawing.Rectangle.Union(selBbox, rect);
+								
+								double px1 = rect.Left;
+								double px2 = rect.Right;
+								double py1 = rect.Bottom;
+								double py2 = rect.Top;
+								
+								this.graphics.Rasterizer.Transform.TransformDirect(ref px1, ref py1);
+								this.graphics.Rasterizer.Transform.TransformDirect(ref px2, ref py2);
+								
+								selRectList.Add(Drawing.Rectangle.FromCorners(px1, py1, px2, py2));
+							}
+						}
+					}
+				}
+				
+				offset += numGlyphs;
+			}
+			
+			if ( isInSelection )
+			{
+				// Nous avons quitté une tranche sélectionnée. Il faut
+				// mémoriser sa fin :
+				double xx = x2;
+				isInSelection = false;
+				
+				if ( xx > selX )
+				{
+					if ( selRectList == null )
+					{
+						selRectList = new System.Collections.ArrayList();
+					}
+					
+					double dx = xx - selX;
+					double dy = layout.LineY2 - layout.LineY1;
+					
+					Drawing.Rectangle rect = new Drawing.Rectangle(selX, layout.LineY1, dx, dy);
+					
+					selBbox = Drawing.Rectangle.Union(selBbox, rect);
+					
+					double px1 = rect.Left;
+					double px2 = rect.Right;
+					double py1 = rect.Bottom;
+					double py2 = rect.Top;
+					
+					this.graphics.Rasterizer.Transform.TransformDirect(ref px1, ref py1);
+					this.graphics.Rasterizer.Transform.TransformDirect(ref px2, ref py2);
+					
+					selRectList.Add(Drawing.Rectangle.FromCorners(px1, py1, px2, py2));
+				}
+			}
+			
+			if ( font.FontManagerType == OpenType.FontManagerType.System )
+			{
+				Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, color);
+			}
+			else
+			{
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+				
+				if ( drawingFont != null )
+				{
+					for ( int i=0 ; i<glyphs.Length ; i++ )
+					{
+						if ( glyphs[i] < 0xffff )
+						{
+							this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+						}
+					}
+				}
+				
+				this.graphics.RenderSolid(color);
+			}
+			
+			if ( selRectList != null )
+			{
+				this.hasSelection = true;
+				
+				Drawing.Rectangle saveClip = this.graphics.SaveClippingRectangle();
+				
+				this.graphics.SetClippingRectangles(selRectList);
+				this.graphics.AddFilledRectangle(selBbox);
+				this.graphics.RenderSolid(Drawing.Color.FromName("Highlight"));
+				
+				if ( font.FontManagerType == OpenType.FontManagerType.System )
+				{
+					Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, color);
+				}
+				else
+				{
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+					
+					if ( drawingFont != null )
+					{
+						for ( int i=0 ; i<glyphs.Length ; i++ )
+						{
+							if ( glyphs[i] < 0xffff )
+							{
+								this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+							}
+						}
+					}
+					
+					this.graphics.RenderSolid(Drawing.Color.FromName("HighlightText"));
+				}
+				
+				this.graphics.RestoreClippingRectangle(saveClip);
+			}
+		}
+		
+		public void Render(Text.Layout.Context layout, Text.IGlyphRenderer glyphRenderer, Drawing.Color color, double x, double y, bool isLastRun)
+		{
+			glyphRenderer.RenderGlyph(layout.Frame, x, y);
+		}
+		
+		public void RenderEndLine(Text.Layout.Context context)
+		{
+		}
+		
+		public void RenderEndParagraph(Text.Layout.Context context)
+		{
+			Text.Layout.UnderlineRecord[] records = context.UnderlineRecords;
+			
+			double x1 = 0;
+			double y1 = 0;
+			
+			// Dans ce test, la couleur est stockée directement comme LineStyle pour
+			// la propriété "underline".
+			string color = "Yellow";
+			
+			if ( records.Length > 0 )
+			{
+				for ( int i=0 ; i<records.Length ; i++ )
+				{
+					if ( (records[i].Type == Common.Text.Layout.UnderlineRecord.RecordType.LineEnd) ||
+						 (records[i].Underlines.Length == 0) )
+					{
+						this.graphics.LineWidth = 1.0;
+						this.graphics.AddLine(x1, y1, records[i].X, records[i].Y + records[i].Descender * 0.8);
+						this.graphics.RenderSolid(Drawing.Color.FromName(color));
+					}
+					
+					x1 = records[i].X;
+					y1 = records[i].Y + records[i].Descender * 0.8;
+					
+					if ( records[i].Underlines.Length > 0 )
+					{
+						color = records[i].Underlines[0].LineStyle;
+					}
+				}
+			}
+		}
+		#endregion
 
 
 		// Retourne le chemin géométrique de l'objet pour les constructions
@@ -625,11 +888,16 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
-		protected TextFrame					textFrame;
-		protected TextNavigator2			textNavigator;
-		protected TextStory					textStory;
-		protected Transform					transform;
-		protected Drawing.Rectangle			cursorBox;
-		protected Drawing.Rectangle			selectBox;
+		protected bool							hasSelection;
+		protected ulong							markerSelected;
+		
+		protected Text.TextContext				textContext;
+		protected Text.TextStory				textStory;
+		protected Text.TextFitter				textFitter;
+		protected Text.TextNavigator			textNavigator;
+		protected Text.SimpleTextFrame			textFrame;
+		protected TextNavigator2				navigator;
+		protected Graphics						graphics;
+		protected Transform						transform;
 	}
 }
