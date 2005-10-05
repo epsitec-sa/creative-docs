@@ -300,6 +300,7 @@ namespace Epsitec.Common.Widgets.Helpers
 				return VisualTree.IsAncestor (descendant, visual);
 			}
 		}
+		
 		public static bool IsVisible(Visual visual)
 		{
 			while ((visual != null) && (visual.Visibility))
@@ -307,7 +308,7 @@ namespace Epsitec.Common.Widgets.Helpers
 				if (visual is WindowRoot)
 				{
 					WindowRoot root = visual as WindowRoot;
-					return true; //root.Window.IsVisible;
+					return true;
 				}
 				
 				visual = visual.Parent;

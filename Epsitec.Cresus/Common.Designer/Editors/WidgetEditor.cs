@@ -406,7 +406,7 @@ namespace Epsitec.Common.Designer.Editors
 						
 						foreach (Widget sel in this.SelectedWidgets)
 						{
-							if (hot.IsAncestorWidget (sel))
+							if (Epsitec.Common.Widgets.Helpers.VisualTree.IsAncestor (hot, sel))
 							{
 								hot = sel;
 								break;
@@ -493,7 +493,7 @@ namespace Epsitec.Common.Designer.Editors
 							{
 								//	Le widget 'hot' est-il un ancêtre du widget sélectionné ?
 								
-								if (sel[i].IsAncestorWidget (hot))
+								if (Epsitec.Common.Widgets.Helpers.VisualTree.IsAncestor (sel[i], hot))
 								{
 									this.SelectedWidgets.Remove (sel[i]);
 								}

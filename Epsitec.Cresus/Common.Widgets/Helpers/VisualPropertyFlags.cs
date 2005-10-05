@@ -15,5 +15,6 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		AffectsLayout			= 0x0001,
 		AffectsParentLayout		= 0x0002,
+		AffectsDisplay			= 0x0004,
 	}
 }

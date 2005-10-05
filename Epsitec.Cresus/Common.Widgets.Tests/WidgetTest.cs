@@ -1185,6 +1185,21 @@ namespace Epsitec.Common.Widgets
 			selector.Dock = DockStyle.Fill;
 			selector.SetParent (window.Root);
 			
+			Widget[] widgets = selector.Children.Widgets;
+			
+			foreach (Widget w in widgets)
+			{
+				System.Console.WriteLine ("Widget {0} :", w.ToString ());
+				
+				foreach (Types.LocalValueEntry entry in w.LocalValueEntries)
+				{
+					System.Console.WriteLine ("  {0} --> {1}", entry.Property.Name, entry.Value);
+				}
+				
+				System.Console.WriteLine ();
+			}
+			
+			
 			window.Show ();
 		}
 		

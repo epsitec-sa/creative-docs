@@ -479,6 +479,19 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public Drawing.Color					BackColor
+		{
+			get
+			{
+				return (Drawing.Color) this.GetValue (Visual.BackColorProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.BackColorProperty, value);
+			}
+		}
+		
+		
 		internal bool							IsLayoutSuspended
 		{
 			get
@@ -590,6 +603,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		internal void NotifyDisplayChanged()
+		{
+			this.Invalidate ();
+		}
+		
+		public virtual void Invalidate()
+		{
+		}
+		
 		public void SuspendLayout()
 		{
 			this.suspend_layout_counter++;
@@ -698,6 +720,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property AutoToggleProperty			= Property.Register ("AutoToggle", typeof (bool), typeof (Visual), new PropertyMetadata (false));
 		public static readonly Property AutoRadioProperty			= Property.Register ("AutoRadio", typeof (bool), typeof (Visual), new PropertyMetadata (false));
 		
+		public static readonly Property BackColorProperty			= Property.Register ("BackColor", typeof (Drawing.Color), typeof (Visual), new VisualPropertyMetadata (Drawing.Color.Empty, VisualPropertyFlags.AffectsDisplay));
 		
 //-		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));
 		
@@ -705,6 +728,7 @@ namespace Epsitec.Common.Widgets
 		private short							suspend_layout_counter;
 		
 		protected bool							has_layout_changed;
+		protected bool							have_children_changed;
 		
 		private double							x1, y1, x2, y2;
 		private double							preferred_width, preferred_height;

@@ -59,11 +59,24 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 		
+		public bool								AffectsDisplay
+		{
+			get
+			{
+				return this.affects_display;
+			}
+			set
+			{
+				this.affects_display = value;
+			}
+		}
+		
 		
 		protected virtual void InitialiseFromFlags(VisualPropertyFlags flags)
 		{
 			this.affects_layout        = (flags & VisualPropertyFlags.AffectsLayout) != 0;
 			this.affects_parent_layout = (flags & VisualPropertyFlags.AffectsParentLayout) != 0;
+			this.affects_display       = (flags & VisualPropertyFlags.AffectsDisplay) != 0;
 		}
 		
 		protected override void OnPropertyInvalidated(Types.Object sender, object old_value, object new_value)
@@ -82,11 +95,17 @@ namespace Epsitec.Common.Widgets.Helpers
 				visual.NotifyParentLayoutChanged ();
 			}
 			
+			if (this.affects_display)
+			{
+				visual.NotifyDisplayChanged ();
+			}
+			
 			base.OnPropertyInvalidated (sender, old_value, new_value);
 		}
 		
 		
 		private bool							affects_layout;
 		private bool							affects_parent_layout;
+		private bool							affects_display;
 	}
 }

@@ -35,6 +35,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		public System.Collections.IEnumerable	LocalValueEntries
+		{
+			get
+			{
+				return new LocalValueEnumerator (this);
+			}
+		}
+		
 		
 		public object GetValue(Property property)
 		{
@@ -188,6 +196,45 @@ namespace Epsitec.Common.Types
 					type_declaration[dp.Name] = dp;
 				}
 			}
+		}
+		
+		
+		private class LocalValueEnumerator : System.Collections.IEnumerator, System.Collections.IEnumerable
+		{
+			public LocalValueEnumerator(Object o)
+			{
+				this.property_enumerator = o.properties.GetEnumerator ();
+			}
+			
+			
+			public object						Current
+			{
+				get
+				{
+					System.Collections.DictionaryEntry entry = this.property_enumerator.Entry;
+					return new LocalValueEntry (entry.Key as Property, entry.Value);
+				}
+			}
+			
+			
+			public void Reset()
+			{
+				this.property_enumerator.Reset ();
+			}
+			
+			public bool MoveNext()
+			{
+				return this.property_enumerator.MoveNext ();
+			}
+			
+			
+			public System.Collections.IEnumerator GetEnumerator()
+			{
+				return this;
+			}
+			
+			
+			System.Collections.IDictionaryEnumerator property_enumerator;
 		}
 		
 		

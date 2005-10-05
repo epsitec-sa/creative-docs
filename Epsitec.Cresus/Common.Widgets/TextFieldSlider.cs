@@ -43,20 +43,28 @@ namespace Epsitec.Common.Widgets
 				this.slider.Color = value;
 			}
 		}
-
-		public override Drawing.Color		BackColor
+		
+		static TextFieldSlider()
 		{
-			// Couleur de fond du slider.
-			get
-			{
-				return this.slider.BackColor;
-			}
-
-			set
-			{
-				this.slider.BackColor = value;
-			}
+			//	Toute modification de la propriété BackColor doit être répercutée
+			//	sur le slider. Le plus simple est d'utiliser un override callback
+			//	sur la propriété BackColor :
+			
+			Helpers.VisualPropertyMetadata metadata = new Helpers.VisualPropertyMetadata (Drawing.Color.Empty, Helpers.VisualPropertyFlags.AffectsDisplay);
+			
+			metadata.SetValueOverride = new Epsitec.Common.Types.SetValueOverrideCallback (TextFieldSlider.SetBackColorValue);
+			
+			Visual.BackColorProperty.OverrideMetadata (typeof (TextFieldSlider), metadata);
 		}
+		
+		
+		private static void SetBackColorValue(Types.Object o, object value)
+		{
+			TextFieldSlider that = o as TextFieldSlider;
+			that.slider.BackColor = (Drawing.Color) value;
+			that.SetValueBase (Visual.BackColorProperty, value);
+		}
+
 		
 		public decimal						Logarithmic
 		{

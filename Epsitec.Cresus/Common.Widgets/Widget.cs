@@ -34,7 +34,7 @@ namespace Epsitec.Common.Widgets
 	{
 		None				= 0,
 		
-		ChildrenChanged		= 0x00000001,		//	certains enfants ont changé
+//		ChildrenChanged		= 0x00000001,		//	certains enfants ont changé
 //		LayoutChanged		= 0x00000002,		//	le layout a changé
 		ChildrenDocked		= 0x00000004,		//	certains enfants spécifient un DockStyle
 		
@@ -166,13 +166,8 @@ namespace Epsitec.Common.Widgets
 			
 			this.default_font_height = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
 			this.alignment           = this.DefaultAlignment;
-			this.layout              = LayoutStyles.Manual;
-			this.back_color          = Drawing.Color.Empty;
 			
 			this.Size = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
-			
-			this.min_size = this.DefaultMinSize;
-			this.max_size = this.DefaultMaxSize;
 			
 			lock (Widget.alive_widgets)
 			{
@@ -555,22 +550,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual Drawing.Color				BackColor
-		{
-			get
-			{
-				return this.back_color;
-			}
-			set
-			{
-				if (this.back_color != value)
-				{
-					this.back_color = value;
-					this.Invalidate (InvalidateReason.ColorChanged);
-				}
-			}
-		}
-		
 		
 		
 		public ContentAlignment						Alignment
@@ -626,8 +605,8 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				double width  = System.Math.Max (this.min_size.Width, this.auto_min_size.Width);
-				double height = System.Math.Max (this.min_size.Height, this.auto_min_size.Height);
+				double width  = System.Math.Max (this.MinSize.Width, this.auto_min_size.Width);
+				double height = System.Math.Max (this.MinSize.Height, this.auto_min_size.Height);
 				
 				return new Drawing.Size (width, height);
 			}
@@ -637,8 +616,8 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				double width  = System.Math.Min (this.max_size.Width, this.auto_max_size.Width);
-				double height = System.Math.Min (this.max_size.Height, this.auto_max_size.Height);
+				double width  = System.Math.Min (this.MaxSize.Width, this.auto_max_size.Width);
+				double height = System.Math.Min (this.MaxSize.Height, this.auto_max_size.Height);
 				
 				return new Drawing.Size (width, height);
 			}
@@ -1686,11 +1665,10 @@ namespace Epsitec.Common.Widgets
 			{
 				this.has_layout_changed = false;
 				this.UpdateChildrenLayout ();
-				System.Diagnostics.Debug.Assert (this.layout_info == null);
 			}
-			if ((this.internal_state & InternalState.ChildrenChanged) != 0)
+			if (this.have_children_changed)
 			{
-				this.internal_state &= ~ InternalState.ChildrenChanged;
+				this.have_children_changed = false;
 				this.HandleChildrenChanged ();
 			}
 		}
@@ -1852,55 +1830,55 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void SetLayout(LayoutStyles value)
-		{
-			if (this.layout != value)
-			{
-				Drawing.Size size = this.Size;
-				
-				this.Invalidate ();
-				
-				LayoutStyles dock_old = this.layout & LayoutStyles.MaskDock;
-				LayoutStyles dock_new = value & LayoutStyles.MaskDock;
-				
-				if (((dock_old == LayoutStyles.DockLeft) && (dock_new == LayoutStyles.DockRight)) ||
-					((dock_old == LayoutStyles.DockRight) && (dock_new == LayoutStyles.DockLeft)) ||
-					((dock_old == LayoutStyles.DockTop) && (dock_new == LayoutStyles.DockBottom)) ||
-					((dock_old == LayoutStyles.DockBottom) && (dock_new == LayoutStyles.DockTop)) ||
-					(dock_old == LayoutStyles.Manual))
-				{
-					//	Ne change pas la géométrie, puisque le docking reste défini selon les
-					//	mêmes grandeurs (gauche <-> droite ou haut <-> bas), ou qu'il n'y avait
-					//	pas de docking actif avant.
-				}
-				else
-				{
-					//	Le style de docking change; il faut donc mieux remettre les dimensions
-					//	par défaut
-					
-					this.Size = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
-				}
-				
-				this.layout = value;
-				
-				if ((this.Parent != null) &&
-					(this.IsLayoutSuspended == false))
-				{
-					//	Si le widget a un parent, il faut donner l'occasion au parent de
-					//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
-					//	de notre nouveau mode de docking.
-					
-					this.Parent.UpdateChildrenLayout ();
-					
-					if (this.Size != size)
-					{
-						this.UpdateClientGeometry ();
-						this.OnSizeChanged ();
-					}
-					this.Invalidate ();
-				}
-			}
-		}
+//		public virtual void SetLayout(LayoutStyles value)
+//		{
+//			if (this.layout != value)
+//			{
+//				Drawing.Size size = this.Size;
+//				
+//				this.Invalidate ();
+//				
+//				LayoutStyles dock_old = this.layout & LayoutStyles.MaskDock;
+//				LayoutStyles dock_new = value & LayoutStyles.MaskDock;
+//				
+//				if (((dock_old == LayoutStyles.DockLeft) && (dock_new == LayoutStyles.DockRight)) ||
+//					((dock_old == LayoutStyles.DockRight) && (dock_new == LayoutStyles.DockLeft)) ||
+//					((dock_old == LayoutStyles.DockTop) && (dock_new == LayoutStyles.DockBottom)) ||
+//					((dock_old == LayoutStyles.DockBottom) && (dock_new == LayoutStyles.DockTop)) ||
+//					(dock_old == LayoutStyles.Manual))
+//				{
+//					//	Ne change pas la géométrie, puisque le docking reste défini selon les
+//					//	mêmes grandeurs (gauche <-> droite ou haut <-> bas), ou qu'il n'y avait
+//					//	pas de docking actif avant.
+//				}
+//				else
+//				{
+//					//	Le style de docking change; il faut donc mieux remettre les dimensions
+//					//	par défaut
+//					
+//					this.Size = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
+//				}
+//				
+//				this.layout = value;
+//				
+//				if ((this.Parent != null) &&
+//					(this.IsLayoutSuspended == false))
+//				{
+//					//	Si le widget a un parent, il faut donner l'occasion au parent de
+//					//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
+//					//	de notre nouveau mode de docking.
+//					
+//					this.Parent.UpdateChildrenLayout ();
+//					
+//					if (this.Size != size)
+//					{
+//						this.UpdateClientGeometry ();
+//						this.OnSizeChanged ();
+//					}
+//					this.Invalidate ();
+//				}
+//			}
+//		}
 		
 		public virtual void SetVisible(bool visible)
 		{
@@ -2089,28 +2067,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void SetEventPropagation(Propagate events, bool on, Setting setting)
-		{
-			if (on)
-			{
-				this.propagate |= events;
-			}
-			else
-			{
-				this.propagate &= ~events;
-			}
-			
-			if ((setting == Setting.IncludeChildren) &&
-				(this.HasChildren))
-			{
-				Widget[] children = this.Children.Widgets;
-				for (int i = 0; i < children.Length; i++)
-				{
-					children[i].SetEventPropagation (events, on, setting);
-				}
-			}
-		}
-		
 		public void SetCommandDispatcher(Support.CommandDispatcher dispatcher)
 		{
 			this.dispatcher = dispatcher;
@@ -2291,7 +2247,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Widget candidate = Widget.entered_widgets[i] as Widget;
 				
-				if (widget.IsAncestorWidget (candidate) == false)
+				if (Helpers.VisualTree.IsAncestor (widget, candidate) == false)
 				{
 					//	Ce candidat n'est pas un ancêtre (parent direct ou indirect) du widget
 					//	considéré; il faut donc changer son état Entered pour refléter le fait
@@ -2393,7 +2349,7 @@ namespace Epsitec.Common.Widgets
 			return clip;
 		}
 		
-		public virtual void Invalidate()
+		public override void Invalidate()
 		{
 			if (this.IsVisible)
 			{
@@ -2668,112 +2624,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-//		public virtual Drawing.Transform GetRootToClientTransform()
-//		{
-//			Widget iter = this;
-//			
-//			Drawing.Transform full_transform = new Drawing.Transform ();
-//			
-//			while (iter != null)
-//			{
-//				Drawing.Transform local_transform = iter.GetTransformToClient ();
-//				
-//				//	Les transformations de la racine au client doivent s'appliquer en commençant par
-//				//	la racine. Comme nous remontons la hiérarchie des widgets en sens inverse, il nous
-//				//	suffit d'utiliser la multiplication post-fixe pour arriver au même résultat :
-//				//
-//				//	 T = Tn * ... * T2 * T1 * T0, P' = T * P
-//				//
-//				//	avec Ti la transformation pour le widget 'i', où i=0 correspond à la racine,
-//				//	P le point en coordonnées racine et P' le point en coordonnées client.
-//				
-//				full_transform.MultiplyByPostfix (local_transform);
-//				iter = iter.Parent;
-//			}
-//			
-//			return full_transform;
-//		}
-//		
-//		public virtual Drawing.Transform GetClientToRootTransform()
-//		{
-//			Widget iter = this;
-//			
-//			Drawing.Transform full_transform = new Drawing.Transform ();
-//			
-//			while (iter != null)
-//			{
-//				Drawing.Transform local_transform = iter.GetTransformToParent ();
-//				
-//				//	Les transformations du client à la racine doivent s'appliquer en commençant par
-//				//	le client. Comme nous remontons la hiérarchie des widgets dans ce sens là, il nous
-//				//	suffit d'utiliser la multiplication normale pour arriver à ce résultat :
-//				//
-//				//	 T = T0 * T1 * T2 * ... * Tn, P' = T * P
-//				//
-//				//	avec Ti la transformation pour le widget 'i', où i=0 correspond à la racine.
-//				//	P le point en coordonnées client et P' le point en coordonnées racine.
-//				
-//				full_transform.MultiplyBy (local_transform);
-//				iter = iter.Parent;
-//			}
-//			
-//			return full_transform;
-//		}
-//		
-		
-//		public virtual Drawing.Transform GetTransformToClient()
-//		{
-//			Drawing.Transform t = new Drawing.Transform ();
-//			
-//			double ox, oy;
-//			
-//			ox = this.x1;
-//			oy = this.y1;
-//			t.Translate (-ox, -oy);
-//			t.Round ();
-//			
-//			return t;
-//		}
-//		
-//		public virtual Drawing.Transform GetTransformToParent()
-//		{
-//			Drawing.Transform t = new Drawing.Transform ();
-//			
-//			double ox, oy;
-//			
-//			ox = this.x1;
-//			oy = this.y1;
-//			
-//			t.Translate (ox, oy);
-//			t.Round ();
-//			
-//			return t;
-//		}
-//		
-		
-		public bool IsAncestorWidget(Widget widget)
-		{
-			if (this.Parent == widget)
-			{
-				return true;
-			}
-			if (this.Parent == null)
-			{
-				return false;
-			}
-			
-			return this.Parent.IsAncestorWidget (widget);
-		}
-		
-		public bool IsDescendantWidget(Widget widget)
-		{
-			if (widget == null)
-			{
-				return false;
-			}
-			
-			return widget.IsAncestorWidget (this);
-		}
 		
 		
 		public static void BaseLineAlign(Widget model, Widget widget)
@@ -3086,7 +2936,7 @@ namespace Epsitec.Common.Widgets
 						return this;
 					}
 					
-					if (this.IsDescendantWidget (window.FocusedWidget))
+					if (Helpers.VisualTree.IsDescendant (this, window.FocusedWidget))
 					{
 						return window.FocusedWidget;
 					}
@@ -3940,11 +3790,6 @@ namespace Epsitec.Common.Widgets
 		protected virtual void UpdateClientGeometry()
 		{
 			//#fix -- tout faux !!!
-			if (this.layout_info == null)
-			{
-				this.layout_info = new Layouts.LayoutInfo (this.Client.Size);
-			}
-			
 			double dx = this.Width;
 			double dy = this.Height;
 			
@@ -3954,7 +3799,6 @@ namespace Epsitec.Common.Widgets
 			{
 				this.UpdateChildrenLayout ();
 				this.OnClientGeometryUpdated ();
-				System.Diagnostics.Debug.Assert (this.layout_info == null);
 			}
 		}
 		
@@ -4017,13 +3861,6 @@ namespace Epsitec.Common.Widgets
 			try
 			{
 				bool update = true;
-				
-//				if (this.HasChildren)
-//				{
-//					Layouts.UpdateEventArgs e = new Layouts.UpdateEventArgs (this, children, this.layout_info);
-//					this.OnLayoutUpdate (e);
-//					update = ! e.Cancel;
-//				}
 				
 				if (update)
 				{
@@ -4093,7 +3930,6 @@ namespace Epsitec.Common.Widgets
 			}
 			finally
 			{
-				this.layout_info = null;
 			}
 		}
 		
@@ -4967,18 +4803,6 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Cette méthode est appelée chaque fois qu'un widget change de parent.
 			
-			if ((this.propagate & Propagate.ParentChanged) != 0)
-			{
-				if (this.HasChildren)
-				{
-					Widget[] children = this.Children.Widgets;
-					for (int i = 0; i < children.Length; i++)
-					{
-						children[i].OnParentChanged ();
-					}
-				}
-			}
-			
 			this.OnParentChanged ();
 			
 			if (this.Parent == null)
@@ -5012,31 +4836,9 @@ namespace Epsitec.Common.Widgets
 				//	aussi les événements liés aux changement de widgets fils), ce qui permet d'accélérer
 				//	les modifications massives de l'interface graphique :
 				
-				this.internal_state |= InternalState.ChildrenChanged;
+				this.have_children_changed = true;
 				
 				return;
-			}
-			
-			//	On veut éviter que le parent génère un nouveau layout de notre instance, car on va le
-			//	forcer nous-même en fin de méthode, alors on suspend temporairement le layout.
-			
-			try
-			{
-				this.SuspendLayout ();
-				
-				if ((this.propagate & Propagate.ChildrenChanged) != 0)
-				{
-					if (this.Parent != null)
-					{
-						this.Parent.HandleChildrenChanged ();
-					}
-				}
-				
-				this.OnChildrenChanged ();
-			}
-			finally
-			{
-				this.ResumeLayout (false);
 			}
 			
 			this.UpdateChildrenLayout ();
@@ -5131,14 +4933,6 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.PaintForegroundImplementation (e.Graphics, e.ClipRectangle);
-		}
-		
-		protected virtual void OnChildrenChanged()
-		{
-			if (this.ChildrenChanged != null)
-			{
-				this.ChildrenChanged (this);
-			}
 		}
 		
 		protected virtual void OnAdornerChanged()
@@ -5552,7 +5346,6 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			PreparePaint;
 		public event PaintEventHandler				PaintBackground;
 		public event PaintEventHandler				PaintForeground;
-		public event Support.EventHandler			ChildrenChanged;
 		public event Support.EventHandler			AdornerChanged;
 		public event Support.EventHandler			CultureChanged;
 		public event Support.EventHandler			LayoutChanged;
@@ -5603,15 +5396,6 @@ namespace Epsitec.Common.Widgets
 		{
 			None				= 0,
 			IncludeChildren		= 1
-		}
-		
-		[System.Flags] public enum Propagate : uint
-		{
-			None				= 0,
-			
-			ChildrenChanged		= 0x00000001,		//	propage au parent: ChildrenChanged
-			
-			ParentChanged		= 0x00010000,		//	propage aux enfants: ParentChanged
 		}
 		
 		[System.Flags] public enum TabNavigationMode
@@ -5779,26 +5563,14 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		
-		private LayoutStyles					layout;
-		private Layouts.LayoutInfo				layout_info;
-		
-//		private ClientInfo						client_info = new ClientInfo ();
-		
 		private InternalState					internal_state;
 		private WidgetState						widget_state;
 		
-		private Propagate						propagate;
-		
-		private Drawing.Color					back_color;
-		private Drawing.Size					min_size;
-		private Drawing.Size					max_size;
 		private Drawing.Size					auto_min_size	= new Drawing.Size (0, 0);
 		private Drawing.Size					auto_max_size	= new Drawing.Size (1000000, 1000000);
 		private System.Collections.ArrayList	hypertext_list;
 		private HypertextInfo					hypertext;
 		
-//		private ChildrenCollection				children;
-//		private Widget							parent;
 		private string							command;
 		private int								index = -1;
 		private string							group;
