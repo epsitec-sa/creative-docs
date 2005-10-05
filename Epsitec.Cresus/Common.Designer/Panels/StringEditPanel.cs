@@ -82,7 +82,7 @@ namespace Epsitec.Common.Designer.Panels
 			
 			this.local_dispatcher = new Support.CommandDispatcher ("StringEditTable", true);
 			
-			this.edit_array.AutoResolveResRef = false;
+//@			this.edit_array.AutoResolveResRef = false;
 			this.edit_array.CommandDispatcher = this.local_dispatcher;
 			this.edit_array.Anchor            = AnchorStyles.All;
 			this.edit_array.AnchorMargins     = new Drawing.Margins (4, 4, 4, 65);

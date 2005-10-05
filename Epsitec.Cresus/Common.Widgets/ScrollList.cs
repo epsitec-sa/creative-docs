@@ -430,7 +430,7 @@ namespace Epsitec.Common.Widgets
 					string text = this.items[i+this.firstLine];
 					
 					this.textLayouts[i].ResourceManager = this.ResourceManager;
-					this.textLayouts[i].Text            = this.AutoResolveResRef ? this.ResourceManager.ResolveTextRef (text) : text;
+					this.textLayouts[i].Text            = text;	//@	this.AutoResolveResRef ? this.ResourceManager.ResolveTextRef (text) : text;
 					this.textLayouts[i].DefaultFont     = this.DefaultFont;
 					this.textLayouts[i].DefaultFontSize = this.DefaultFontSize;
 					this.textLayouts[i].LayoutSize      = new Drawing.Size(this.GetTextWidth(), this.lineHeight);

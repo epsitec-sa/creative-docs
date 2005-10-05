@@ -52,7 +52,7 @@ namespace Epsitec.Common.Designer.UI
 			this.combo_text.ButtonGlyphShape  = GlyphShape.Dots;
 			this.combo_text.TabIndex          = 10;
 			this.combo_text.Name              = "Value_1";
-			this.combo_text.AutoResolveResRef = true;
+//@			this.combo_text.AutoResolveResRef = true;
 			
 			this.label_bundle.Width          = this.caption_label.Width;
 			this.label_bundle.Anchor         = this.caption_label.Anchor;

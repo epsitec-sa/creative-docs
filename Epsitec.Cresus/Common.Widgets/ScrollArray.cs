@@ -1819,7 +1819,7 @@ invalid:	row    = -1;
 						
 						string text = this[row + top, column];
 						
-						this.layouts[row, column].Text            = this.AutoResolveResRef ? this.ResourceManager.ResolveTextRef (text) : text;
+						this.layouts[row, column].Text            = text;	//@	this.AutoResolveResRef ? this.ResourceManager.ResolveTextRef (text) : text;
 						this.layouts[row, column].DefaultFont     = this.DefaultFont;
 						this.layouts[row, column].DefaultFontSize = this.DefaultFontSize;
 					}

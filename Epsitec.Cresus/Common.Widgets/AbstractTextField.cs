@@ -40,7 +40,7 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.AutoDoubleClick;
 			this.InternalState |= InternalState.AutoRepeat;
 			
-			this.InternalState &= ~ InternalState.AutoResolveResRef;
+//@			this.InternalState &= ~ InternalState.AutoResolveResRef;
 			
 			this.ResetCursor();
 			this.MouseCursor = MouseCursor.AsIBeam;

@@ -1395,7 +1395,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool									AutoMnemonic
+		private bool								AutoMnemonic
 		{
 			get
 			{
@@ -1419,7 +1419,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool									AutoResolveResRef
+		private bool								AutoResolveResRef
 		{
 			get
 			{

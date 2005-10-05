@@ -447,6 +447,32 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool								AutoToggle
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.AutoToggleProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.AutoToggleProperty, value);
+			}
+		}
+		
+		public bool								AutoRadio
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.AutoRadioProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.AutoRadioProperty, value);
+			}
+		}
+		
+		
+		
 		internal bool							HasLayerCollection
 		{
 			get
@@ -577,6 +603,9 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property AutoFocusProperty			= Property.Register ("AutoFocus", typeof (bool), typeof (Visual), new PropertyMetadata (false));
 		public static readonly Property AutoEngageProperty			= Property.Register ("AutoEngage", typeof (bool), typeof (Visual), new PropertyMetadata (false));
 		public static readonly Property AutoRepeatProperty			= Property.Register ("AutoRepeat", typeof (bool), typeof (Visual), new PropertyMetadata (false));
+		public static readonly Property AutoToggleProperty			= Property.Register ("AutoToggle", typeof (bool), typeof (Visual), new PropertyMetadata (false));
+		public static readonly Property AutoRadioProperty			= Property.Register ("AutoRadio", typeof (bool), typeof (Visual), new PropertyMetadata (false));
+		
 		
 		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));
 		
