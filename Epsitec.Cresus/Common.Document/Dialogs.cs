@@ -788,7 +788,7 @@ namespace Epsitec.Common.Document
 				button.ButtonStyle = ButtonStyle.Icon;
 				button.Width = 17;
 				button.Name = sPoint.Name;
-				button.Text = @"<font size=""80%"">\u00F72</font>";  // /2
+				button.Text = @"<font size=""80%"">" + "\u00F72</font>";  // /2
 //-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -801,7 +801,7 @@ namespace Epsitec.Common.Document
 				button.ButtonStyle = ButtonStyle.Icon;
 				button.Width = 17;
 				button.Name = sPoint.Name;
-				button.Text = @"<font size=""80%"">\u00D72</font>";  // x2
+				button.Text = @"<font size=""80%"">" + "\u00D72</font>";  // x2
 //-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -821,7 +821,7 @@ namespace Epsitec.Common.Document
 				button.ButtonStyle = ButtonStyle.Icon;
 				button.Width = 17;
 				button.Name = sPoint.Name;
-				button.Text = @"<font size=""80%"">\u00F72</font>";  // /2
+				button.Text = @"<font size=""80%"">" + "\u00F72</font>";  // /2
 //-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -834,7 +834,7 @@ namespace Epsitec.Common.Document
 				button.ButtonStyle = ButtonStyle.Icon;
 				button.Width = 17;
 				button.Name = sPoint.Name;
-				button.Text = @"<font size=""80%"">\u00D72</font>";  // x2
+				button.Text = @"<font size=""80%"">" + "\u00D72</font>";  // x2
 //-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
