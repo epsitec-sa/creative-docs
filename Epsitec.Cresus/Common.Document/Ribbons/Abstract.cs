@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Abstract est la classe de base pour tous les rubans.
+	/// La classe Abstract est la classe de base pour toutes les sections de rubans.
 	/// </summary>
 	[SuppressBundleSupport]
 	public abstract class Abstract : Common.Widgets.Widget

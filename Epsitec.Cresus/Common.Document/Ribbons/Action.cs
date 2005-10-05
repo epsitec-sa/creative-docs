@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Action permet de gérer les groupes.
+	/// La classe Action permet de gérer les commandes du menu aide.
 	/// </summary>
 	[SuppressBundleSupport]
 	public class Action : Abstract

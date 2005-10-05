@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Align permet de choisir l'ordre.
+	/// La classe Align permet de choisir les commandes d'alignement de la sélection.
 	/// </summary>
 	[SuppressBundleSupport]
 	public class Align : Abstract

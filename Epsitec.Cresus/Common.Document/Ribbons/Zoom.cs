@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Zoom permet de gérer les groupes.
+	/// La classe Zoom gère le zoom d'affichage.
 	/// </summary>
 	[SuppressBundleSupport]
 	public class Zoom : Abstract

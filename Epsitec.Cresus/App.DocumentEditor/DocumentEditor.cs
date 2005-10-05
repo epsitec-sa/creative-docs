@@ -744,6 +744,7 @@ namespace Epsitec.App.DocumentEditor
 			this.VToolBarAdd(Misc.Icon("ObjectVolume"), "ToolVolume", DocumentEditor.GetRes("Tool.Volume", this.toolVolumeState), "ObjectVolume");
 			this.VToolBarAdd(Misc.Icon("ObjectTextLine"), "ToolTextLine", DocumentEditor.GetRes("Tool.TextLine", this.toolTextLineState), "ObjectTextLine");
 			this.VToolBarAdd(Misc.Icon("ObjectTextBox"), "ToolTextBox", DocumentEditor.GetRes("Tool.TextBox", this.toolTextBoxState), "ObjectTextBox");
+			this.VToolBarAdd(Misc.Icon("ObjectTextBox"), "ToolTextBox2", DocumentEditor.GetRes("Tool.TextBox", this.toolTextBox2State), "ObjectTextBox2");
 			if ( this.useArray )
 			{
 				this.VToolBarAdd(Misc.Icon("ObjectArray"), "ToolArray", DocumentEditor.GetRes("Tool.Array", this.toolArrayState), "ObjectArray");
@@ -1443,6 +1444,13 @@ namespace Epsitec.App.DocumentEditor
 		void CommandToolTextBox(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.Tool = "ObjectTextBox";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolTextBox2")]
+		void CommandToolTextBox2(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectTextBox2";
 			this.DispatchDummyMouseMoveEvent();
 		}
 
@@ -3366,6 +3374,7 @@ namespace Epsitec.App.DocumentEditor
 			this.toolVolumeState = new CommandState("ToolVolume", this.commandDispatcher);
 			this.toolTextLineState = new CommandState("ToolTextLine", this.commandDispatcher);
 			this.toolTextBoxState = new CommandState("ToolTextBox", this.commandDispatcher, KeyCode.AlphaT);
+			this.toolTextBox2State = new CommandState("ToolTextBox2", this.commandDispatcher);
 			this.toolArrayState = new CommandState("ToolArray", this.commandDispatcher);
 			this.toolImageState = new CommandState("ToolImage", this.commandDispatcher);
 			this.toolDimensionState = new CommandState("ToolDimension", this.commandDispatcher);
@@ -3666,9 +3675,12 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-				this.zoomPageState.Enabled = !context.IsZoomPage;
-				this.zoomPageWidthState.Enabled = !context.IsZoomPageWidth;
-				this.zoomDefaultState.Enabled = !context.IsZoomDefault;
+				this.zoomPageState.Enabled = true;
+				this.zoomPageWidthState.Enabled = true;
+				this.zoomDefaultState.Enabled = true;
+				this.zoomPageState.ActiveState = context.IsZoomPage ? Widgets.WidgetState.ActiveYes : Widgets.WidgetState.ActiveNo;
+				this.zoomPageWidthState.ActiveState = context.IsZoomPageWidth ? Widgets.WidgetState.ActiveYes : Widgets.WidgetState.ActiveNo;
+				this.zoomDefaultState.ActiveState = context.IsZoomDefault ? Widgets.WidgetState.ActiveYes : Widgets.WidgetState.ActiveNo;
 			}
 			else
 			{
@@ -3686,10 +3698,14 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.IsCurrentDocument )
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-				this.zoomMinState.Enabled = ( context.Zoom > this.CurrentDocument.Modifier.ZoomMin );
-				this.zoomPageState.Enabled = !context.IsZoomPage;
-				this.zoomPageWidthState.Enabled = !context.IsZoomPageWidth;
-				this.zoomDefaultState.Enabled = !context.IsZoomDefault;
+				this.zoomMinState.Enabled = true;
+				this.zoomPageState.Enabled = true;
+				this.zoomPageWidthState.Enabled = true;
+				this.zoomDefaultState.Enabled = true;
+				this.zoomMinState.ActiveState = ( context.Zoom <= this.CurrentDocument.Modifier.ZoomMin ) ? Widgets.WidgetState.ActiveYes : Widgets.WidgetState.ActiveNo;
+				this.zoomPageState.ActiveState = context.IsZoomPage ? Widgets.WidgetState.ActiveYes : Widgets.WidgetState.ActiveNo;
+				this.zoomPageWidthState.ActiveState = context.IsZoomPageWidth ? Widgets.WidgetState.ActiveYes : Widgets.WidgetState.ActiveNo;
+				this.zoomDefaultState.ActiveState = context.IsZoomDefault ? Widgets.WidgetState.ActiveYes : Widgets.WidgetState.ActiveNo;
 				this.zoomPrevState.Enabled = ( this.CurrentDocument.Modifier.ZoomMemorizeCount > 0 );
 				this.zoomSubState.Enabled = ( context.Zoom > this.CurrentDocument.Modifier.ZoomMin );
 				this.zoomAddState.Enabled = ( context.Zoom < this.CurrentDocument.Modifier.ZoomMax );
@@ -3700,6 +3716,10 @@ namespace Epsitec.App.DocumentEditor
 				this.zoomPageState.Enabled = false;
 				this.zoomPageWidthState.Enabled = false;
 				this.zoomDefaultState.Enabled = false;
+				this.zoomMinState.ActiveState = Widgets.WidgetState.ActiveNo;
+				this.zoomPageState.ActiveState = Widgets.WidgetState.ActiveNo;
+				this.zoomPageWidthState.ActiveState = Widgets.WidgetState.ActiveNo;
+				this.zoomDefaultState.ActiveState = Widgets.WidgetState.ActiveNo;
 				this.zoomPrevState.Enabled = false;
 				this.zoomSubState.Enabled = false;
 				this.zoomAddState.Enabled = false;
@@ -3757,6 +3777,7 @@ namespace Epsitec.App.DocumentEditor
 			this.UpdateTool(this.toolVolumeState, "ObjectVolume", tool, isCreating, enabled);
 			this.UpdateTool(this.toolTextLineState, "ObjectTextLine", tool, isCreating, enabled);
 			this.UpdateTool(this.toolTextBoxState, "ObjectTextBox", tool, isCreating, enabled);
+			this.UpdateTool(this.toolTextBox2State, "ObjectTextBox2", tool, isCreating, enabled);
 			this.UpdateTool(this.toolArrayState, "ObjectArray", tool, isCreating, enabled);
 			this.UpdateTool(this.toolImageState, "ObjectImage", tool, isCreating, enabled);
 			this.UpdateTool(this.toolDimensionState, "ObjectDimension", tool, isCreating, enabled);
@@ -5131,6 +5152,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					toolVolumeState;
 		protected CommandState					toolTextLineState;
 		protected CommandState					toolTextBoxState;
+		protected CommandState					toolTextBox2State;
 		protected CommandState					toolArrayState;
 		protected CommandState					toolImageState;
 		protected CommandState					toolDimensionState;

@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Undo permet de gérer les groupes.
+	/// La classe Undo gère les commandes undo/redo.
 	/// </summary>
 	[SuppressBundleSupport]
 	public class Undo : Abstract

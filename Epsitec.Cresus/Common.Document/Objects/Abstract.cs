@@ -97,6 +97,7 @@ namespace Epsitec.Common.Document.Objects
 				case "ObjectVolume":     obj = new Volume(document, model);     break;
 				case "ObjectTextLine":   obj = new TextLine(document, model);   break;
 				case "ObjectTextBox":    obj = new TextBox(document, model);    break;
+				case "ObjectTextBox2":   obj = new TextBox2(document, model);   break;
 				case "ObjectImage":      obj = new Image(document, model);      break;
 				case "ObjectDimension":  obj = new Dimension(document, model);  break;
 			}

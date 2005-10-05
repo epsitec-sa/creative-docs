@@ -199,6 +199,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.tool == "ObjectTextLine"  )  return true;
 				if ( this.tool == "ObjectTextBox"   )  return true;
+				if ( this.tool == "ObjectTextBox2"  )  return true;
 				return false;
 			}
 		}
@@ -227,6 +228,7 @@ namespace Epsitec.Common.Document
 				case "ObjectVolume":     return Res.Strings.Tool.Volume;
 				case "ObjectTextLine":   return Res.Strings.Tool.TextLine;
 				case "ObjectTextBox":    return Res.Strings.Tool.TextBox;
+				case "ObjectTextBox2":   return Res.Strings.Tool.TextBox;
 				case "ObjectArray":      return Res.Strings.Tool.Array;
 				case "ObjectImage":      return Res.Strings.Tool.Image;
 				case "ObjectDimension":  return Res.Strings.Tool.Dimension;

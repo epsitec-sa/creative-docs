@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Debug permet de gérer les groupes.
+	/// La classe Debug donne accès aux commandes provisoires de debug.
 	/// </summary>
 	[SuppressBundleSupport]
 	public class Debug : Abstract

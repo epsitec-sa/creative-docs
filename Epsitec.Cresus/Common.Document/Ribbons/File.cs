@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe File permet de gérer les groupes.
+	/// La classe File correspond au menu fichiers.
 	/// </summary>
 	[SuppressBundleSupport]
 	public class File : Abstract

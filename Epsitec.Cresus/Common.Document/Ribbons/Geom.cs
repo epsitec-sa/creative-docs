@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Geom permet de choisir l'ordre.
+	/// La classe Geom permet de modifier la géométrie de la sélection.
 	/// </summary>
 	[SuppressBundleSupport]
 	public class Geom : Abstract

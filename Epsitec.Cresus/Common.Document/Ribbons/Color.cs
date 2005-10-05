@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Color permet de mettre à l'échelle la sélection.
+	/// La classe Color permet de modifier les couleurs de la sélection.
 	/// </summary>
 	[SuppressBundleSupport]
 	public class Color : Abstract

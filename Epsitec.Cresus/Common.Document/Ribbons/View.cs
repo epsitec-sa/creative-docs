@@ -5,7 +5,7 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe View permet de gérer les groupes.
+	/// La classe View définit les modes d'affichage.
 	/// </summary>
 	[SuppressBundleSupport]
 	public class View : Abstract
