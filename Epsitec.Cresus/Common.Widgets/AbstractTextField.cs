@@ -141,23 +141,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public override Drawing.Point			BaseLine
+		public override Drawing.Point GetBaseLine()
 		{
-			get
+			if ( this.TextLayout != null )
 			{
-				if ( this.TextLayout != null )
-				{
-					Drawing.Point pos   = this.TextLayout.GetLineOrigin(0);
-					Drawing.Point shift = this.InnerTextBounds.Location;
+				Drawing.Point pos   = this.TextLayout.GetLineOrigin(0);
+				Drawing.Point shift = this.InnerTextBounds.Location;
 
-					double yFromTop = this.TextLayout.LayoutSize.Height - pos.Y;
-					double yFromBot = this.realSize.Height - yFromTop + shift.Y + 1;
+				double yFromTop = this.TextLayout.LayoutSize.Height - pos.Y;
+				double yFromBot = this.realSize.Height - yFromTop + shift.Y + 1;
 
-					return this.MapClientToParent(new Drawing.Point(shift.X, yFromBot)) - this.Location;
-				}
-
-				return base.BaseLine;
+				return this.MapClientToParent(new Drawing.Point(shift.X, yFromBot)) - this.Location;
 			}
+
+			return base.GetBaseLine ();
 		}
 		
 		public override Drawing.Margins			InternalPadding

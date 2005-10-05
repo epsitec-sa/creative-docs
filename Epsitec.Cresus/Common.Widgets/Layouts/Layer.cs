@@ -121,8 +121,8 @@ namespace Epsitec.Common.Widgets.Layouts
 		#endregion
 		
 		public static readonly Property NameProperty = Property.Register ("Name", typeof (string), typeof (Layer));
-		public static readonly Property ChildrenProperty = Property.RegisterReadOnly ("Children", typeof (Collections.VisualCollection), typeof (Layer), new PropertyMetadata (null, new GetValueOverrideCallback (Layer.GetChildrenValue)));
-		public static readonly Property VisualProperty = Property.RegisterReadOnly ("Visual", typeof (Visual), typeof (Layer), new PropertyMetadata (null, new GetValueOverrideCallback (Layer.GetVisualValue)));
+		public static readonly Property ChildrenProperty = Property.RegisterReadOnly ("Children", typeof (Collections.VisualCollection), typeof (Layer), new PropertyMetadata (new GetValueOverrideCallback (Layer.GetChildrenValue)));
+		public static readonly Property VisualProperty = Property.RegisterReadOnly ("Visual", typeof (Visual), typeof (Layer), new PropertyMetadata (new GetValueOverrideCallback (Layer.GetVisualValue)));
 		
 		private Visual							visual;
 		private Collections.VisualCollection	children;

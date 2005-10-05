@@ -20,14 +20,18 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 		}
 		
-		public VisualPropertyMetadata(object default_value, Types.GetValueOverrideCallback get_value_override_callback) : base (default_value, get_value_override_callback)
+		public VisualPropertyMetadata(Types.GetValueOverrideCallback get_value_override_callback) : base (get_value_override_callback)
 		{
 		}
 		
 		public VisualPropertyMetadata(VisualPropertyFlags flags)
 		{
-			this.affects_layout        = (flags & VisualPropertyFlags.AffectsLayout) != 0;
-			this.affects_parent_layout = (flags & VisualPropertyFlags.AffectsParentLayout) != 0;
+			this.InitialiseFromFlags (flags);
+		}
+		
+		public VisualPropertyMetadata(object default_value, VisualPropertyFlags flags) : base (default_value)
+		{
+			this.InitialiseFromFlags (flags);
 		}
 		
 		
@@ -55,6 +59,12 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 		
+		
+		protected virtual void InitialiseFromFlags(VisualPropertyFlags flags)
+		{
+			this.affects_layout        = (flags & VisualPropertyFlags.AffectsLayout) != 0;
+			this.affects_parent_layout = (flags & VisualPropertyFlags.AffectsParentLayout) != 0;
+		}
 		
 		protected override void OnPropertyInvalidated(Types.Object sender, object old_value, object new_value)
 		{

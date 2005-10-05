@@ -242,7 +242,7 @@ namespace Epsitec.Common.Widgets.Helpers
 #if false
 				if (visual is WindowRoot)
 				{
-					WindowRoot root = (WindowRoot) visual;
+					WindowRoot root = visual as WindowRoot;
 					
 					if (root != null)
 					{
@@ -302,6 +302,24 @@ namespace Epsitec.Common.Widgets.Helpers
 			{
 				return VisualTree.IsAncestor (descendant, visual);
 			}
+		}
+		public static bool IsVisible(Visual visual)
+		{
+			while ((visual != null) && (visual.Visibility))
+			{
+				//	TODO: enlever le #if false
+#if false
+				if (visual is WindowRoot)
+				{
+					WindowRoot root = parent as WindowRoot;
+					return root.Window.IsVisible;
+				}
+#endif
+				
+				visual = visual.Parent;
+			}
+			
+			return false;
 		}
 	}
 }

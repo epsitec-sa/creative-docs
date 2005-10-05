@@ -276,7 +276,7 @@ namespace Epsitec.Common.Designer.Behaviors
 			Widget            parent  = this.target;
 			Drawing.Rectangle model   = parent.Client.Bounds;
 			model.Deflate (parent.InternalPadding);
-			Drawing.Point     basel   = parent.BaseLine;
+			Drawing.Point     basel   = parent.GetBaseLine ();
 			Drawing.Margins   margins = this.align.GetInnerMargins (parent);
 			
 			double my;
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Designer.Behaviors
 			{
 				widget  = children[i];
 				model   = widget.Bounds;
-				basel   = widget.BaseLine;
+				basel   = widget.GetBaseLine ();
 				margins = this.align.GetAlignMargins (widget, this.widget);
 				
 				if (widget == this.widget)

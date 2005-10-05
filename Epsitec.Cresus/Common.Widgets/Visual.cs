@@ -56,10 +56,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return AnchorStyles.None;
+				return (AnchorStyles) this.GetValue (Visual.AnchorProperty);
 			}
 			set
 			{
+				this.SetValue (Visual.AnchorProperty, value);
 			}
 		}
 		
@@ -67,10 +68,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return Drawing.Margins.Zero;
+				return (Drawing.Margins) this.GetValue (Visual.AnchorMarginsProperty);
 			}
 			set
 			{
+				this.SetValue (Visual.AnchorMarginsProperty, value);
 			}
 		}
 		
@@ -78,10 +80,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return DockStyle.None;
+				return (DockStyle) this.GetValue (Visual.DockProperty);
 			}
 			set
 			{
+				this.SetValue (Visual.DockProperty, value);
 			}
 		}
 		
@@ -89,10 +92,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return Drawing.Margins.Zero;
+				return (Drawing.Margins) this.GetValue (Visual.DockPaddingProperty);
 			}
 			set
 			{
+				this.SetValue (Visual.DockPaddingProperty, value);
 			}
 		}
 		
@@ -100,10 +104,23 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return Drawing.Margins.Zero;
+				return (Drawing.Margins) this.GetValue (Visual.DockMarginsProperty);
 			}
 			set
 			{
+				this.SetValue (Visual.DockMarginsProperty, value);
+			}
+		}
+		
+		public ContainerLayoutMode				ContainerLayoutMode
+		{
+			get
+			{
+				return (ContainerLayoutMode) this.GetValue (Visual.ContainerLayoutModeProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.ContainerLayoutModeProperty, value);
 			}
 		}
 		
@@ -112,10 +129,61 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return Drawing.Rectangle.Empty;
+				return Drawing.Rectangle.FromCorners (this.x1, this.y1, this.x2, this.y2);
 			}
 			set
 			{
+				if ((this.x1 != value.Left) ||
+					(this.x2 != value.Right) ||
+					(this.y1 != value.Bottom) ||
+					(this.y2 != value.Top))
+				{
+					Visual parent = this.Parent;
+					
+					this.SuspendLayout ();
+					
+					if (parent == null)
+					{
+						this.PreferredSize = value.Size;
+						
+						this.SetBounds (value);
+					}
+					else
+					{
+						Drawing.Size host = parent.Client.Size;
+						
+						this.PreferredSize = value.Size;
+						this.AnchorMargins = new Drawing.Margins (value.Left, host.Width - value.Right, host.Height - value.Top, value.Bottom);
+					}
+					
+					this.ResumeLayout ();
+				}
+			}
+		}
+		
+		public Drawing.Size						PreferredSize
+		{
+			get
+			{
+				return new Drawing.Size (this.preferred_width, this.preferred_height);
+			}
+			set
+			{
+				if ((this.preferred_width != value.Width) ||
+					(this.preferred_height != value.Height))
+				{
+					this.SuspendLayout ();
+					
+					Drawing.Size old_size = this.PreferredSize;
+					Drawing.Size new_size = value;
+					
+					this.preferred_width  = value.Width;
+					this.preferred_height = value.Height;
+					
+					this.InvalidateProperty (Visual.PreferredSizeProperty, old_size, new_size);
+					
+					this.ResumeLayout ();
+				}
 			}
 		}
 		
@@ -123,15 +191,81 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return new Widget.ClientInfo ();
+				return new Widget.ClientInfo (this.x2 - this.x1, this.y2 - this.y1);
 			}
 		}
 		
-		public Drawing.Margins					InternalPadding
+		
+		public virtual Drawing.Margins			InternalPadding
 		{
 			get
 			{
 				return Drawing.Margins.Zero;
+			}
+		}
+		
+		
+		public double							Left
+		{
+			get
+			{
+				return this.Bounds.Left;
+			}
+			set
+			{
+				Drawing.Rectangle bounds = this.Bounds;
+				
+				bounds.Left = value;
+				
+				this.Bounds = bounds;
+			}
+		}
+		
+		public double							Right
+		{
+			get
+			{
+				return this.Bounds.Right;
+			}
+			set
+			{
+				Drawing.Rectangle bounds = this.Bounds;
+				
+				bounds.Right = value;
+				
+				this.Bounds = bounds;
+			}
+		}
+		
+		public double							Top
+		{
+			get
+			{
+				return this.Bounds.Top;
+			}
+			set
+			{
+				Drawing.Rectangle bounds = this.Bounds;
+				
+				bounds.Top = value;
+				
+				this.Bounds = bounds;
+			}
+		}
+		
+		public double							Bottom
+		{
+			get
+			{
+				return this.Bounds.Bottom;
+			}
+			set
+			{
+				Drawing.Rectangle bounds = this.Bounds;
+				
+				bounds.Bottom = value;
+				
+				this.Bounds = bounds;
 			}
 		}
 		
@@ -143,6 +277,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				Drawing.Rectangle bounds = this.Bounds;
+				
+				bounds.Width = value;
+				
+				this.Bounds = bounds;
 			}
 		}
 		
@@ -154,14 +293,56 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
+				Drawing.Rectangle bounds = this.Bounds;
+				
+				bounds.Height = value;
+				
+				this.Bounds = bounds;
 			}
 		}
+		
+		public Drawing.Size						Size
+		{
+			get
+			{
+				return this.Bounds.Size;
+			}
+			set
+			{
+				Drawing.Rectangle bounds = this.Bounds;
+				
+				bounds.Size = value;
+				
+				this.Bounds = bounds;
+			}
+		}
+		
+		public Drawing.Point					Location
+		{
+			get
+			{
+				return this.Bounds.Location;
+			}
+			set
+			{
+				Drawing.Rectangle bounds = this.Bounds;
+				
+				bounds.Location = value;
+				
+				this.Bounds = bounds;
+			}
+		}
+		
 		
 		public Drawing.Size						MinSize
 		{
 			get
 			{
-				return Drawing.Size.Empty;
+				return (Drawing.Size) this.GetValue (Visual.MinSizeProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.MinSizeProperty, value);
 			}
 		}
 		
@@ -169,14 +350,20 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return Drawing.Size.Empty;
+				return (Drawing.Size) this.GetValue (Visual.MaxSizeProperty);
+			}
+			set
+			{
+				this.SetValue (Visual.MaxSizeProperty, value);
 			}
 		}
+		
 		
 		public Drawing.Size						ResultingMinSize
 		{
 			get
 			{
+				//	TODO: tenir compte de la taille des enfants
 				return this.MinSize;
 			}
 		}
@@ -185,18 +372,8 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
+				//	TODO: tenir compte de la taille des enfants
 				return this.MaxSize;
-			}
-		}
-		
-		public ContainerLayoutMode				ContainerLayoutMode
-		{
-			get
-			{
-				return ContainerLayoutMode.None;
-			}
-			set
-			{
 			}
 		}
 		
@@ -205,12 +382,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return true;
+				return (bool) this.GetValue (Visual.VisibilityProperty);
 			}
 			set
 			{
+				this.SetValue (Visual.VisibilityProperty, value);
 			}
 		}
+		
 		
 		
 		internal bool							HasLayerCollection
@@ -229,7 +408,10 @@ namespace Epsitec.Common.Widgets
 		
 		internal void SetBounds(Drawing.Rectangle bounds)
 		{
-
+			this.x1 = bounds.Left;
+			this.x2 = bounds.Right;
+			this.y1 = bounds.Bottom;
+			this.y2 = bounds.Top;
 		}
 		
 		internal Collections.LayerCollection GetLayerCollection()
@@ -267,6 +449,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public void SuspendLayout()
+		{
+			this.suspend_layout_counter++;
+		}
+		
+		public void ResumeLayout()
+		{
+			this.suspend_layout_counter--;
+		}
 		
 		static Visual()
 		{
@@ -284,21 +475,56 @@ namespace Epsitec.Common.Widgets
 			return that.ParentLayer;
 		}
 		
+		private static object GetBoundsValue(Object o)
+		{
+			Visual that = o as Visual;
+			return that.Bounds;
+		}
 		
-		public static readonly Property NameProperty			= Property.Register ("Name", typeof (string), typeof (Visual));
-		public static readonly Property ParentProperty			= Property.RegisterReadOnly ("Parent", typeof (Visual), typeof (Visual), new PropertyMetadata (null, new GetValueOverrideCallback (Visual.GetParentValue)));
-		public static readonly Property ParentLayerProperty		= Property.RegisterReadOnly ("ParentLayer", typeof (Layouts.Layer), typeof (Visual), new PropertyMetadata (null, new GetValueOverrideCallback (Visual.GetParentLayerValue)));
+		private static void SetBoundsValue(Object o, object value)
+		{
+			Visual that = o as Visual;
+			that.Bounds = (Drawing.Rectangle) value;
+		}
 		
-		public static readonly Property AnchorProperty			= Property.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (VisualPropertyFlags.AffectsParentLayout));
-		public static readonly Property AnchorMarginsProperty	= Property.Register ("AnchorMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (VisualPropertyFlags.AffectsParentLayout));
-		public static readonly Property DockProperty			= Property.Register ("Dock", typeof (DockStyle), typeof (Visual), new VisualPropertyMetadata (VisualPropertyFlags.AffectsParentLayout));
-		public static readonly Property DockPaddingProperty		= Property.Register ("DockPadding", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (VisualPropertyFlags.AffectsParentLayout));
-		public static readonly Property DockMarginsProperty		= Property.Register ("DockMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (VisualPropertyFlags.AffectsParentLayout));
+		private static object GetPreferredSizeValue(Object o)
+		{
+			Visual that = o as Visual;
+			return that.PreferredSize;
+		}
 		
+		private static void SetPreferredSizeValue(Object o, object value)
+		{
+			Visual that = o as Visual;
+			that.PreferredSize = (Drawing.Size) value;
+		}
+		
+		
+		public static readonly Property NameProperty				= Property.Register ("Name", typeof (string), typeof (Visual));
+		public static readonly Property ParentProperty				= Property.RegisterReadOnly ("Parent", typeof (Visual), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue)));
+		public static readonly Property ParentLayerProperty			= Property.RegisterReadOnly ("ParentLayer", typeof (Layouts.Layer), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentLayerValue)));
+		
+		public static readonly Property AnchorProperty				= Property.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property AnchorMarginsProperty		= Property.Register ("AnchorMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property DockProperty				= Property.Register ("Dock", typeof (DockStyle), typeof (Visual), new VisualPropertyMetadata (DockStyle.None, VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property DockPaddingProperty			= Property.Register ("DockPadding", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property DockMarginsProperty			= Property.Register ("DockMargins", typeof (Drawing.Margins), typeof (Visual), new VisualPropertyMetadata (Drawing.Margins.Zero, VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property ContainerLayoutModeProperty	= Property.Register ("ContainerLayoutMode", typeof (ContainerLayoutMode), typeof (Visual), new VisualPropertyMetadata (ContainerLayoutMode.VerticalFlow, VisualPropertyFlags.AffectsLayout));
+		
+		public static readonly Property BoundsProperty				= Property.Register ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetBoundsValue), new SetValueOverrideCallback (Visual.SetBoundsValue)));
+		public static readonly Property PreferredSizeProperty		= Property.Register ("PreferredSize", typeof (Drawing.Size), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetPreferredSizeValue), new SetValueOverrideCallback (Visual.SetPreferredSizeValue)));
+		public static readonly Property MinSizeProperty				= Property.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property MaxSizeProperty				= Property.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Infinite, VisualPropertyFlags.AffectsParentLayout));
+		
+		public static readonly Property VisibilityProperty			= Property.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, VisualPropertyFlags.AffectsParentLayout));
 		
 		public static readonly Property ChildrenProperty = Property.Register ("Children", typeof (Collections.VisualCollection), typeof (Visual));
 		
 		
+		private short							suspend_layout_counter;
+		
+		private double							x1, y1, x2, y2;
+		private double							preferred_width, preferred_height;
 		private Collections.LayerCollection		layer_collection;
 		private Layouts.Layer					parent_layer;
 	}

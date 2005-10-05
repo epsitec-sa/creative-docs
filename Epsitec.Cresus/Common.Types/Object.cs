@@ -63,7 +63,7 @@ namespace Epsitec.Common.Types
 				
 				//	TODO: faire mieux...
 				
-				value = metadata.DefaultValue;
+				value = metadata.CreateDefaultValue ();
 			}
 			
 			return value;
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		private void InvalidateProperty(Property property, object old_value, object new_value)
+		protected void InvalidateProperty(Property property, object old_value, object new_value)
 		{
 			PropertyMetadata metadata = property.DefaultMetadata;
 			

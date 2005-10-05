@@ -65,7 +65,7 @@ namespace Epsitec.Common.Designer.Behaviors
 		{
 			get
 			{
-				Drawing.Point base_line = this.widget.BaseLine;
+				Drawing.Point base_line = this.widget.GetBaseLine ();
 				
 				if (base_line.IsEmpty)
 				{
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Designer.Behaviors
 			
 			Behaviors.SmartGuideBehavior guide  = new Behaviors.SmartGuideBehavior (widget, grip, parent, filter);
 			Drawing.Rectangle            bounds = new_bounds;
-			Drawing.Point                bline  = widget.BaseLine;
+			Drawing.Point                bline  = widget.GetBaseLine ();
 			
 			guide.DefaultBounds = this.widget_default_bounds;
 			guide.DefaultTarget = this.widget_default_target;

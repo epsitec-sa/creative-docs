@@ -53,17 +53,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.Point				BaseLine
+		public override Drawing.Point GetBaseLine()
 		{
-			get
+			if (this.TextLayout != null)
 			{
-				if (this.TextLayout != null)
-				{
-					return this.MapClientToParent (this.TextLayout.GetLineOrigin (0)) - this.Location;
-				}
-				
-				return base.BaseLine;
+				return this.MapClientToParent (this.TextLayout.GetLineOrigin (0)) - this.Location;
 			}
+			
+			return base.GetBaseLine ();
 		}
 		
 		public PaintTextStyle						PaintTextStyle

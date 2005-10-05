@@ -1044,14 +1044,6 @@ namespace Epsitec.Common.Widgets
 			get { return new Drawing.Size (this.DefaultWidth, this.DefaultHeight); }
 		}
 		
-		public virtual Drawing.Point				BaseLine
-		{
-			get
-			{
-				return Drawing.Point.Empty;
-			}
-		}
-		
 		
 		public bool									IsCommand
 		{
@@ -2336,6 +2328,11 @@ namespace Epsitec.Common.Widgets
 			return new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
 		}
 		
+		public virtual Drawing.Point GetBaseLine()
+		{
+			return Drawing.Point.Empty;
+		}
+		
 		
 		public virtual void Hide()
 		{
@@ -3396,8 +3393,8 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			double model_offset  = model.BaseLine.Y;
-			double widget_offset = widget.BaseLine.Y;
+			double model_offset  = model.GetBaseLine ().Y;
+			double widget_offset = widget.GetBaseLine ().Y;
 			
 			double y_bottom = model.Bottom + model_offset - widget_offset;
 			
@@ -6267,6 +6264,12 @@ namespace Epsitec.Common.Widgets
 			{
 			}
 			
+			internal ClientInfo(double width, double height)
+			{
+				this.width = width;
+				this.height = height;
+			}
+			
 			
 			internal void SetSize(double width, double height)
 			{
@@ -6309,8 +6312,8 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			internal double					width	= 0.0;
-			internal double					height	= 0.0;
+			internal double					width;
+			internal double					height;
 		}
 		#endregion
 		
