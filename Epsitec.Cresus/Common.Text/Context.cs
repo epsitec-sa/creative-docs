@@ -24,11 +24,13 @@ namespace Epsitec.Common.Text
 			this.char_marker.Add (TextContext.DefaultMarkers.TagSpellCheckingError);
 			
 			this.markers = new TextContext.DefaultMarkers (this.char_marker);
-			 
-			this.font_collection = new OpenType.FontCollection ();
-			this.font_collection.Initialize ();
 			
-			this.font_cache = new System.Collections.Hashtable ();
+			if (TextContext.font_collection == null)
+			{
+				TextContext.font_collection = new OpenType.FontCollection ();
+				TextContext.font_collection.Initialize ();
+				TextContext.font_cache = new System.Collections.Hashtable ();
+			}
 			
 			this.CreateDefaultLayout ();
 		}
@@ -213,7 +215,7 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			OpenType.FontIdentity id = this.font_collection[name];
+			OpenType.FontIdentity id = TextContext.font_collection[name];
 			
 			if (id == null)
 			{
@@ -1018,12 +1020,12 @@ namespace Epsitec.Common.Text
 		{
 			string font_full = string.Concat (font_face, "/", font_style);
 			
-			font = this.font_cache[font_full] as OpenType.Font;
+			font = TextContext.font_cache[font_full] as OpenType.Font;
 			
 			if (font == null)
 			{
-				font = this.font_collection.CreateFont (font_face, font_style);
-				this.font_cache[font_full] = font;
+				font = TextContext.font_collection.CreateFont (font_face, font_style);
+				TextContext.font_cache[font_full] = font;
 			}
 		}
 		
@@ -1041,8 +1043,8 @@ namespace Epsitec.Common.Text
 		private bool							show_control_characters;
 		private bool							is_degraded_layout_enabled;
 		
-		private OpenType.FontCollection			font_collection;
-		private System.Collections.Hashtable	font_cache;
+		static OpenType.FontCollection			font_collection;
+		static System.Collections.Hashtable		font_cache;
 		
 		private System.Collections.Hashtable	resources;
 		
