@@ -37,6 +37,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.text_navigator != null)
 					{
+						this.text_navigator.ActiveStyleChanged -= new Support.EventHandler (this.HandleActiveStyleChanged);
 						this.text_navigator.TextChanged -= new Support.EventHandler (this.HandleTextChanged);
 						this.text_navigator.CursorMoved -= new Support.EventHandler (this.HandleCursorMoved);
 					}
@@ -47,6 +48,7 @@ namespace Epsitec.Common.Widgets
 					{
 						this.text_navigator.CursorMoved += new Support.EventHandler (this.HandleCursorMoved);
 						this.text_navigator.TextChanged += new Support.EventHandler (this.HandleTextChanged);
+						this.text_navigator.ActiveStyleChanged += new Support.EventHandler (this.HandleActiveStyleChanged);
 					}
 				}
 			}
@@ -777,6 +779,11 @@ namespace Epsitec.Common.Widgets
 			this.OnCursorMoved ();
 		}
 		
+		public void NotifyActiveStyleChanged()
+		{
+			this.OnActiveStyleChanged ();
+		}
+		
 		
 		private void HandleTextChanged(object sender)
 		{
@@ -786,6 +793,11 @@ namespace Epsitec.Common.Widgets
 		private void HandleCursorMoved(object sender)
 		{
 			this.NotifyCursorMoved ();
+		}
+		
+		private void HandleActiveStyleChanged(object sender)
+		{
+			this.NotifyActiveStyleChanged ();
 		}
 		
 		
@@ -807,9 +819,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnActiveStyleChanged()
+		{
+			if (this.ActiveStyleChanged != null)
+			{
+				this.ActiveStyleChanged (this);
+			}
+		}
+		
 		
 		public event Support.EventHandler		TextChanged;
 		public event Support.EventHandler		CursorMoved;
+		public event Support.EventHandler		ActiveStyleChanged;
 		
 		private Text.TextNavigator				text_navigator;
 		private Text.ITextFrame					text_frame;

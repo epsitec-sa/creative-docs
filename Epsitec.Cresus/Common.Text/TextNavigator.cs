@@ -1021,6 +1021,8 @@ namespace Epsitec.Common.Text
 		{
 			this.current_styles     = null;
 			this.current_properties = null;
+			
+			this.OnActiveStyleChanged ();
 		}
 		
 		public void UpdateCurrentStylesAndPropertiesIfNeeded()
@@ -1078,14 +1080,20 @@ namespace Epsitec.Common.Text
 			
 			this.RefreshAccumulatedStylesAndProperties ();
 			
-#if DEBUG
+			System.Text.StringBuilder fingerprint = new System.Text.StringBuilder ();
+			
 			properties = this.accumulated_properties;
 			
 			for (int i = 0; i < properties.Length; i++)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0} : {1} -- {2}", i, properties[i].GetType ().Name, properties[i].ToString ()));
+				fingerprint.Append (properties[i].ToString ());
 			}
-#endif
+			
+			if (this.accumulated_properties_fingerprint != fingerprint.ToString ())
+			{
+				this.accumulated_properties_fingerprint = fingerprint.ToString ();
+				this.OnActiveStyleChanged ();
+			}
 		}
 		
 		
@@ -2158,6 +2166,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		protected virtual void OnActiveStyleChanged()
+		{
+			if (this.ActiveStyleChanged != null)
+			{
+				this.ActiveStyleChanged (this);
+			}
+		}
+		
 		
 		private void HandleStoryOpletExecuted(object sender, OpletEventArgs e)
 		{
@@ -2306,6 +2322,7 @@ namespace Epsitec.Common.Text
 		public event OpletEventHandler			OpletExecuted;
 		public event EventHandler				TextChanged;
 		public event EventHandler				CursorMoved;
+		public event EventHandler				ActiveStyleChanged;
 		
 		private TextStory						story;
 		private TextFitter						fitter;
@@ -2317,5 +2334,6 @@ namespace Epsitec.Common.Text
 		private TextStyle[]						current_styles;
 		private Property[]						current_properties;
 		private Property[]						accumulated_properties;
+		private string							accumulated_properties_fingerprint;
 	}
 }
