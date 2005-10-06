@@ -736,6 +736,16 @@ namespace Epsitec.Common.Widgets
 			this.text_navigator.SetCharacterStyles (styles);
 		}
 		
+		public void SetMetaProperties(Text.Properties.ApplyMode mode, params Text.TextStyle[] meta_properties)
+		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			
+			this.text_navigator.SetMetaProperties (mode, meta_properties);
+		}
+		
 		public void SetParagraphProperties(Text.Properties.ApplyMode mode, params Text.Property[] properties)
 		{
 			if (this.text_navigator.IsSelectionActive)
