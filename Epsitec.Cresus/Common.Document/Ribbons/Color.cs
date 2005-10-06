@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return 8 + 22*2 + this.separatorWidth + 22*2 + 50;
+				return 8 + 22*2 + this.separatorWidth + 22*2 + 5 + 50;
 			}
 		}
 
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Document.Ribbons
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset(0, dy);
+			rect.Offset(0, dy+5);
 			this.buttonColorToRGB.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonColorToCMYK.Bounds = rect;
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonColorFillDark.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonColorFillLight.Bounds = rect;
-			rect.Offset(dx, dy*0.5);
+			rect.Offset(dx+5, dy*0.5);
 			rect.Width = 50;
 			this.fieldColor.Bounds = rect;
 		}

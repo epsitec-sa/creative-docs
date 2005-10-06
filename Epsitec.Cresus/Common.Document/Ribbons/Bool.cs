@@ -53,7 +53,7 @@ namespace Epsitec.Common.Document.Ribbons
 			Rectangle rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset(0, dy);
+			rect.Offset(0, dy+5);
 			this.buttonBooleanOr.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonBooleanAnd.Bounds = rect;

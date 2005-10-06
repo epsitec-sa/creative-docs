@@ -49,7 +49,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return this.LabelHeight + 8 + 22*2;
+				return this.LabelHeight + 8 + 22 + 5 + 22;
 			}
 		}
 
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Document.Ribbons
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(button, Res.Strings.Action.LastFiles);
+			ToolTip.Default.SetToolTip(button, tooltip);
 			return button;
 		}
 

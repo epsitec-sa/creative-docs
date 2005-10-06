@@ -5171,7 +5171,7 @@ namespace Epsitec.App.DocumentEditor
 		protected StatusBar						info;
 		protected ResizeKnob					resize;
 		protected TabBook						bookDocuments;
-		protected double						ribbonHeight = 66;
+		protected double						ribbonHeight = 71;
 		protected double						panelsWidth = 252;
 		protected bool							ignoreChange;
 		protected int							tabIndex;

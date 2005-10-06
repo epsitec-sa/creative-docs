@@ -81,7 +81,7 @@ namespace Epsitec.Common.Document.Ribbons
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset(0, dy);
+			rect.Offset(0, dy+5);
 			this.buttonZoomMin.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonZoomPage.Bounds = rect;
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonZoomPageWidth.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonZoomDefault.Bounds = rect;
-			rect.Offset(dx+this.separatorWidth, -dy*0.5);
+			rect.Offset(dx+this.separatorWidth, -dy*0.5-5);
 			rect.Width = 50;
 			this.fieldZoom.Bounds = rect;
 

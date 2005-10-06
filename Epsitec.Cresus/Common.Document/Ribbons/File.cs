@@ -79,7 +79,7 @@ namespace Epsitec.Common.Document.Ribbons
 			rect = this.UsefulZone;
 			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Offset(dx*1.5*3+4, dy);
+			rect.Offset(dx*1.5*3+4, dy+5);
 			this.buttonNew.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonExport.Bounds = rect;

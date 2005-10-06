@@ -359,7 +359,7 @@ namespace Epsitec.Common.Document.Objects
 		public override bool EditCut()
 		{
 			this.EditCopy();
-			this.textNavigator.Delete(0);
+			this.metaNavigator.Insert("");
 			return true;
 		}
 		
@@ -543,31 +543,49 @@ namespace Epsitec.Common.Document.Objects
 		// Calcules les 4 coins.
 		protected void Corners(ref Point p1, ref Point p2, ref Point p3, ref Point p4)
 		{
+			Point h0, h1, h2, h3;
+
+			if ( this.handles.Count < 4 )
+			{
+				Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, this.Handle(1).Position);
+				h0 = rect.BottomLeft;
+				h1 = rect.TopRight;
+				h2 = rect.TopLeft;
+				h3 = rect.BottomRight;
+			}
+			else
+			{
+				h0 = this.Handle(0).Position;
+				h1 = this.Handle(1).Position;
+				h2 = this.Handle(2).Position;
+				h3 = this.Handle(3).Position;
+			}
+
 			switch ( this.PropertyTextJustif.Orientation )
 			{
 				case Properties.JustifOrientation.RightToLeft:  // <-
-					p1 = this.Handle(1).Position;
-					p2 = this.Handle(2).Position;
-					p3 = this.Handle(3).Position;
-					p4 = this.Handle(0).Position;
+					p1 = h1;
+					p2 = h2;
+					p3 = h3;
+					p4 = h0;
 					break;
 				case Properties.JustifOrientation.BottomToTop:  // ^
-					p1 = this.Handle(3).Position;
-					p2 = this.Handle(1).Position;
-					p3 = this.Handle(0).Position;
-					p4 = this.Handle(2).Position;
+					p1 = h3;
+					p2 = h1;
+					p3 = h0;
+					p4 = h2;
 					break;
 				case Properties.JustifOrientation.TopToBottom:  // v
-					p1 = this.Handle(2).Position;
-					p2 = this.Handle(0).Position;
-					p3 = this.Handle(1).Position;
-					p4 = this.Handle(3).Position;
+					p1 = h2;
+					p2 = h0;
+					p3 = h1;
+					p4 = h3;
 					break;
 				default:							// -> (normal)
-					p1 = this.Handle(0).Position;
-					p2 = this.Handle(3).Position;
-					p3 = this.Handle(2).Position;
-					p4 = this.Handle(1).Position;
+					p1 = h0;
+					p2 = h3;
+					p3 = h2;
+					p4 = h1;
 					break;
 			}
 		}
@@ -591,8 +609,6 @@ namespace Epsitec.Common.Document.Objects
 		// Dessine le texte du pavé.
 		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
 		{
-			if ( this.handles.Count < 4 )  return;
-
 			Point p1 = new Point();
 			Point p2 = new Point();
 			Point p3 = new Point();
@@ -937,12 +953,12 @@ namespace Epsitec.Common.Document.Objects
 		private void HandleTextChanged(object sender)
 		{
 			this.UpdateTextLayout();
-			//?this.Invalidate();
+			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 		
 		private void HandleCursorMoved(object sender)
 		{
-			//?this.Invalidate();
+			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
 		

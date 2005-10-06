@@ -25,6 +25,23 @@ namespace Epsitec.Common.Document.Ribbons
 			this.fontColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontColor, Res.Strings.Panel.Font.Tooltip.Color);
 
+			this.buttonBold = new IconButton(this);
+			this.buttonBold.AutoFocus = false;
+			this.buttonBold.Text = "<b>G</b>";
+			this.buttonBold.Clicked += new MessageEventHandler(this.HandleButtonBoldClicked);
+			ToolTip.Default.SetToolTip(this.buttonBold, "Gras");
+
+			this.buttonItalic = new IconButton(this);
+			this.buttonItalic.AutoFocus = false;
+			this.buttonItalic.Text = "<i>I</i>";
+			this.buttonItalic.Clicked += new MessageEventHandler(this.HandleButtonItalicClicked);
+			ToolTip.Default.SetToolTip(this.buttonItalic, "Italique");
+
+			this.buttonUnderlined = new IconButton(this);
+			this.buttonUnderlined.AutoFocus = false;
+			this.buttonUnderlined.Text = "<u>S</u>";
+			this.buttonUnderlined.Clicked += new MessageEventHandler(this.HandleButtonUnderlinedClicked);
+			ToolTip.Default.SetToolTip(this.buttonUnderlined, "Souligné");
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -59,13 +76,14 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.fontName == null )  return;
+			if ( this.buttonBold == null )  return;
 
-			double dy = this.fontName.DefaultHeight;
+			double dx = this.buttonBold.DefaultHeight;
+			double dy = this.buttonBold.DefaultHeight;
 
 			Rectangle rect = this.UsefulZone;
 			rect.Height = dy;
-			rect.Offset(0, dy);
+			rect.Offset(0, dy+5);
 			rect.Width  = 180;
 			this.fontName.Bounds = rect;
 			rect.Offset(rect.Width+5, 0);
@@ -73,8 +91,14 @@ namespace Epsitec.Common.Document.Ribbons
 			this.fontSize.Bounds = rect;
 
 			rect = this.UsefulZone;
+			rect.Width  = dx;
 			rect.Height = dy;
-			rect.Width  = dy;
+			this.buttonBold.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonItalic.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonUnderlined.Bounds = rect;
+			rect.Offset(dx, 0);
 			this.fontColor.Bounds = rect;
 		}
 
@@ -182,9 +206,24 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
+		private void HandleButtonBoldClicked(object sender, MessageEventArgs e)
+		{
+		}
+
+		private void HandleButtonItalicClicked(object sender, MessageEventArgs e)
+		{
+		}
+
+		private void HandleButtonUnderlinedClicked(object sender, MessageEventArgs e)
+		{
+		}
+
 
 		protected TextFieldCombo			fontName;
 		protected TextFieldReal				fontSize;
 		protected ColorSample				fontColor;
+		protected IconButton				buttonBold;
+		protected IconButton				buttonItalic;
+		protected IconButton				buttonUnderlined;
 	}
 }
