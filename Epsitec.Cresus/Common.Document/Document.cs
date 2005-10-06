@@ -1153,6 +1153,18 @@ namespace Epsitec.Common.Document
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontProperty(null, "!Italic"));
 			this.textContext.StyleList.NewMetaProperty("Italic", "Italic", properties);
+
+			properties = new System.Collections.ArrayList();
+			properties.Add(new Text.Properties.FontProperty(null, "!Underlined"));
+			this.textContext.StyleList.NewMetaProperty("Underlined", "Underlined", properties);
+
+			properties = new System.Collections.ArrayList();
+			properties.Add(new Text.Properties.FontProperty(null, "!Bullet1"));
+			this.textContext.StyleList.NewMetaProperty("Bullet1", "Bullet", properties);
+
+			properties = new System.Collections.ArrayList();
+			properties.Add(new Text.Properties.FontProperty(null, "!Bullet2"));
+			this.textContext.StyleList.NewMetaProperty("Bullet2", "Bullet", properties);
 		}
 		#endregion
 

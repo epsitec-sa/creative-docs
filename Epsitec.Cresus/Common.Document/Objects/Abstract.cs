@@ -652,6 +652,18 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
+		// Met en puces 1 pendant l'édition.
+		public virtual bool EditBullet1()
+		{
+			return false;
+		}
+
+		// Met en puces 2 pendant l'édition.
+		public virtual bool EditBullet2()
+		{
+			return false;
+		}
+
 		// Indique si l'édition est en gras.
 		public virtual bool IsEditBold
 		{
@@ -666,6 +678,18 @@ namespace Epsitec.Common.Document.Objects
 
 		// Indique si l'édition est en souligné.
 		public virtual bool IsEditUnderlined
+		{
+			get { return false; }
+		}
+
+		// Indique si l'édition est en puces 1.
+		public virtual bool IsEditBullet1
+		{
+			get { return false; }
+		}
+
+		// Indique si l'édition est en puces 2.
+		public virtual bool IsEditBullet2
 		{
 			get { return false; }
 		}

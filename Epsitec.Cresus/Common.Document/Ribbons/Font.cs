@@ -43,6 +43,18 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonUnderlined.Text = "<u>S</u>";
 			this.buttonUnderlined.Clicked += new MessageEventHandler(this.HandleButtonUnderlinedClicked);
 			ToolTip.Default.SetToolTip(this.buttonUnderlined, "Souligné");
+
+			this.buttonBullet1 = new IconButton(this);
+			this.buttonBullet1.AutoFocus = false;
+			this.buttonBullet1.Text = "o";
+			this.buttonBullet1.Clicked += new MessageEventHandler(this.HandleButtonBullet1Clicked);
+			ToolTip.Default.SetToolTip(this.buttonBullet1, "Puces");
+
+			this.buttonBullet2 = new IconButton(this);
+			this.buttonBullet2.AutoFocus = false;
+			this.buttonBullet2.Text = "1.";
+			this.buttonBullet2.Clicked += new MessageEventHandler(this.HandleButtonBullet2Clicked);
+			ToolTip.Default.SetToolTip(this.buttonBullet2, "Numérotation");
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -88,20 +100,29 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonBold.SetEnabled(editObject != null);
 			this.buttonItalic.SetEnabled(editObject != null);
 			this.buttonUnderlined.SetEnabled(editObject != null);
+			this.buttonBullet1.SetEnabled(editObject != null);
+			this.buttonBullet2.SetEnabled(editObject != null);
 
 			bool bold = false;
 			bool italic = false;
 			bool underlined = false;
+			bool bullet1 = false;
+			bool bullet2 = false;
 
 			if ( editObject != null )
 			{
 				bold = editObject.IsEditBold;
 				italic = editObject.IsEditItalic;
+				underlined = editObject.IsEditUnderlined;
+				bullet1 = editObject.IsEditBullet1;
+				bullet2 = editObject.IsEditBullet2;
 			}
 
 			this.buttonBold.ActiveState = bold ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			this.buttonItalic.ActiveState = italic ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			this.buttonUnderlined.ActiveState = underlined ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.buttonBullet1.ActiveState = bullet1 ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.buttonBullet2.ActiveState = bullet2 ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 		}
 
 		
@@ -132,6 +153,10 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonItalic.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonUnderlined.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonBullet1.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonBullet2.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.fontColor.Bounds = rect;
 		}
@@ -261,6 +286,20 @@ namespace Epsitec.Common.Document.Ribbons
 			editObject.EditUnderlined();
 		}
 
+		private void HandleButtonBullet1Clicked(object sender, MessageEventArgs e)
+		{
+			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
+			if ( editObject == null )  return;
+			editObject.EditBullet1();
+		}
+
+		private void HandleButtonBullet2Clicked(object sender, MessageEventArgs e)
+		{
+			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
+			if ( editObject == null )  return;
+			editObject.EditBullet2();
+		}
+
 
 		protected TextFieldCombo			fontName;
 		protected TextFieldReal				fontSize;
@@ -268,5 +307,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
 		protected IconButton				buttonUnderlined;
+		protected IconButton				buttonBullet1;
+		protected IconButton				buttonBullet2;
 	}
 }

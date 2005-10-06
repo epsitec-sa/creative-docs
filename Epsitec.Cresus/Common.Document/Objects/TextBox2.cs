@@ -445,7 +445,48 @@ namespace Epsitec.Common.Document.Objects
 		// Souligne pendant l'édition.
 		public override bool EditUnderlined()
 		{
-			this.metaNavigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Underlined"));
+			Text.TextStyle style = this.document.TextContext.StyleList["Underlined", Text.TextStyleClass.MetaProperty];
+			if ( style == null )  return false;
+
+			Text.Properties.ApplyMode mode = Text.Properties.ApplyMode.Set;
+			if ( this.IsEditUnderlined )
+			{
+				mode = Text.Properties.ApplyMode.Clear;
+			}
+			this.metaNavigator.SetMetaProperties(mode, style);
+			this.HandleTextChanged(null);  // beurk !
+			return true;
+		}
+
+		// Met en puces 1 pendant l'édition.
+		public override bool EditBullet1()
+		{
+			Text.TextStyle style = this.document.TextContext.StyleList["Bullet1", Text.TextStyleClass.MetaProperty];
+			if ( style == null )  return false;
+
+			Text.Properties.ApplyMode mode = Text.Properties.ApplyMode.Set;
+			if ( this.IsEditBullet1 )
+			{
+				mode = Text.Properties.ApplyMode.Clear;
+			}
+			this.metaNavigator.SetMetaProperties(mode, style);
+			this.HandleTextChanged(null);  // beurk !
+			return true;
+		}
+
+		// Met en puces 2 pendant l'édition.
+		public override bool EditBullet2()
+		{
+			Text.TextStyle style = this.document.TextContext.StyleList["Bullet2", Text.TextStyleClass.MetaProperty];
+			if ( style == null )  return false;
+
+			Text.Properties.ApplyMode mode = Text.Properties.ApplyMode.Set;
+			if ( this.IsEditBullet2 )
+			{
+				mode = Text.Properties.ApplyMode.Clear;
+			}
+			this.metaNavigator.SetMetaProperties(mode, style);
+			this.HandleTextChanged(null);  // beurk !
 			return true;
 		}
 
@@ -472,6 +513,48 @@ namespace Epsitec.Common.Document.Objects
 				foreach ( Text.TextStyle style in styles )
 				{
 					if ( style.Name == "Italic" )  return true;
+				}
+				return false;
+			}
+		}
+
+		// Indique si l'édition est en souligné.
+		public override bool IsEditUnderlined
+		{
+			get
+			{
+				Text.TextStyle[] styles = this.textNavigator.TextStyles;
+				foreach ( Text.TextStyle style in styles )
+				{
+					if ( style.Name == "Underlined" )  return true;
+				}
+				return false;
+			}
+		}
+
+		// Indique si l'édition est en puces 1.
+		public override bool IsEditBullet1
+		{
+			get
+			{
+				Text.TextStyle[] styles = this.textNavigator.TextStyles;
+				foreach ( Text.TextStyle style in styles )
+				{
+					if ( style.Name == "Bullet1" )  return true;
+				}
+				return false;
+			}
+		}
+
+		// Indique si l'édition est en puces 2.
+		public override bool IsEditBullet2
+		{
+			get
+			{
+				Text.TextStyle[] styles = this.textNavigator.TextStyles;
+				foreach ( Text.TextStyle style in styles )
+				{
+					if ( style.Name == "Bullet2" )  return true;
 				}
 				return false;
 			}
