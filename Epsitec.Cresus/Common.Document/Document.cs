@@ -102,8 +102,6 @@ namespace Epsitec.Common.Document
 				this.Modifier.New();
 			}
 
-			this.DefaultTextContext();
-
 			this.ioType = IOType.BinaryCompress;
 			//this.ioType = IOType.SoapUncompress;
 		}
@@ -162,7 +160,14 @@ namespace Epsitec.Common.Document
 		// TextContext de ce document.
 		public Text.TextContext TextContext
 		{
-			get { return this.textContext; }
+			get
+			{
+				if ( this.textContext == null )
+				{
+					this.DefaultTextContext();
+				}
+				return this.textContext;
+			}
 		}
 
 
@@ -1143,7 +1148,11 @@ namespace Epsitec.Common.Document
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontProperty(null, "!Bold"));
-			this.textContext.StyleList.NewTextStyle("Bold", Text.TextStyleClass.Character, properties);
+			this.textContext.StyleList.NewMetaProperty("Bold", "Bold", properties);
+
+			properties = new System.Collections.ArrayList();
+			properties.Add(new Text.Properties.FontProperty(null, "!Italic"));
+			this.textContext.StyleList.NewMetaProperty("Italic", "Italic", properties);
 		}
 		#endregion
 

@@ -413,14 +413,32 @@ namespace Epsitec.Common.Document.Objects
 		// Met en gras pendant l'édition.
 		public override bool EditBold()
 		{
-			this.metaNavigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Bold"));
+			Text.TextStyle style = this.document.TextContext.StyleList["Bold", Text.TextStyleClass.MetaProperty];
+			if ( style == null )  return false;
+
+			Text.Properties.ApplyMode mode = Text.Properties.ApplyMode.Set;
+			if ( this.IsEditBold )
+			{
+				mode = Text.Properties.ApplyMode.Clear;
+			}
+			this.metaNavigator.SetMetaProperties(mode, style);
+			this.HandleTextChanged(null);  // beurk !
 			return true;
 		}
 
 		// Met en italique pendant l'édition.
 		public override bool EditItalic()
 		{
-			this.metaNavigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Italic"));
+			Text.TextStyle style = this.document.TextContext.StyleList["Italic", Text.TextStyleClass.MetaProperty];
+			if ( style == null )  return false;
+
+			Text.Properties.ApplyMode mode = Text.Properties.ApplyMode.Set;
+			if ( this.IsEditItalic )
+			{
+				mode = Text.Properties.ApplyMode.Clear;
+			}
+			this.metaNavigator.SetMetaProperties(mode, style);
+			this.HandleTextChanged(null);  // beurk !
 			return true;
 		}
 
@@ -429,6 +447,34 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.metaNavigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Underlined"));
 			return true;
+		}
+
+		// Indique si l'édition est en gras.
+		public override bool IsEditBold
+		{
+			get
+			{
+				Text.TextStyle[] styles = this.textNavigator.TextStyles;
+				foreach ( Text.TextStyle style in styles )
+				{
+					if ( style.Name == "Bold" )  return true;
+				}
+				return false;
+			}
+		}
+
+		// Indique si l'édition est en italique.
+		public override bool IsEditItalic
+		{
+			get
+			{
+				Text.TextStyle[] styles = this.textNavigator.TextStyles;
+				foreach ( Text.TextStyle style in styles )
+				{
+					if ( style.Name == "Italic" )  return true;
+				}
+				return false;
+			}
 		}
 		#endregion
 
@@ -936,11 +982,13 @@ namespace Epsitec.Common.Document.Objects
 		private void HandleTextChanged(object sender)
 		{
 			this.UpdateTextLayout();
+			this.document.Notifier.NotifyTextChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 		
 		private void HandleCursorMoved(object sender)
 		{
+			this.document.Notifier.NotifyTextChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 

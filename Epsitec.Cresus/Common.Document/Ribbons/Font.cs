@@ -1,6 +1,7 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Text;
 
 namespace Epsitec.Common.Document.Ribbons
 {
@@ -71,6 +72,39 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
+		// Effectue la mise à jour du contenu d'édition.
+		protected override void DoUpdateText()
+		{
+			Objects.Abstract editObject = null;
+
+			if ( this.document != null )
+			{
+				editObject = this.document.Modifier.RetEditObject();
+			}
+
+			this.fontName.SetEnabled(editObject != null);
+			this.fontSize.SetEnabled(editObject != null);
+			this.fontColor.SetEnabled(editObject != null);
+			this.buttonBold.SetEnabled(editObject != null);
+			this.buttonItalic.SetEnabled(editObject != null);
+			this.buttonUnderlined.SetEnabled(editObject != null);
+
+			bool bold = false;
+			bool italic = false;
+			bool underlined = false;
+
+			if ( editObject != null )
+			{
+				bold = editObject.IsEditBold;
+				italic = editObject.IsEditItalic;
+			}
+
+			this.buttonBold.ActiveState = bold ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.buttonItalic.ActiveState = italic ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.buttonUnderlined.ActiveState = underlined ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+		}
+
+		
 		// Met à jour la géométrie.
 		protected override void UpdateClientGeometry()
 		{
@@ -208,14 +242,23 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleButtonBoldClicked(object sender, MessageEventArgs e)
 		{
+			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
+			if ( editObject == null )  return;
+			editObject.EditBold();
 		}
 
 		private void HandleButtonItalicClicked(object sender, MessageEventArgs e)
 		{
+			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
+			if ( editObject == null )  return;
+			editObject.EditItalic();
 		}
 
 		private void HandleButtonUnderlinedClicked(object sender, MessageEventArgs e)
 		{
+			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
+			if ( editObject == null )  return;
+			editObject.EditUnderlined();
 		}
 
 

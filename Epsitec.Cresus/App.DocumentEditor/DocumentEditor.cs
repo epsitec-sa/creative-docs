@@ -3614,6 +3614,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.ToolChanged            += new SimpleEventHandler(this.HandleToolChanged);
 			this.CurrentDocument.Notifier.SaveChanged            += new SimpleEventHandler(this.HandleSaveChanged);
 			this.CurrentDocument.Notifier.SelectionChanged       += new SimpleEventHandler(this.HandleSelectionChanged);
+			this.CurrentDocument.Notifier.TextChanged            += new SimpleEventHandler(this.HandleTextChanged);
 			this.CurrentDocument.Notifier.CreateChanged          += new SimpleEventHandler(this.HandleCreateChanged);
 			this.CurrentDocument.Notifier.StyleChanged           += new SimpleEventHandler(this.HandleStyleChanged);
 			this.CurrentDocument.Notifier.PagesChanged           += new SimpleEventHandler(this.HandlePagesChanged);
@@ -4097,9 +4098,17 @@ namespace Epsitec.App.DocumentEditor
 				this.selectorAdaptText.ActiveState = WidgetState.ActiveNo;
 			}
 
+			this.ribbonText.SetDirtyText();
+
 			StatusField field = this.info.Items["StatusObject"] as StatusField;
 			field.Text = this.TextInfoObject;
 			field.Invalidate();
+		}
+
+		// Appelé par le document lorsque le texte en édition a changé.
+		private void HandleTextChanged()
+		{
+			this.ribbonText.SetDirtyText();
 		}
 
 		// Appelé lorsque la création d'un objet à débuté ou s'est terminée.

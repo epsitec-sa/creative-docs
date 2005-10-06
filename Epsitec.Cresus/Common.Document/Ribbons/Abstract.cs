@@ -63,6 +63,38 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
+		// Appelé par Widget lorsque la visibilité change.
+		protected override void OnVisibleChanged()
+		{
+			base.OnVisibleChanged();
+			this.Update();  // màj si visible et sale
+		}
+
+		// Indique qu'il faudra mettre à jour tout le contenu d'édition.
+		public void SetDirtyText()
+		{
+			this.isDirtyText = true;
+			this.Update();  // màj immédiate si l'agrégat est visible
+		}
+
+		// Met à jour le contenu, si nécessaire.
+		protected void Update()
+		{
+			if ( !this.IsVisible )  return;
+
+			if ( this.isDirtyText )
+			{
+				this.DoUpdateText();
+				this.isDirtyText = false;  // propre
+			}
+		}
+
+		// Effectue la mise à jour du contenu d'édition.
+		protected virtual void DoUpdateText()
+		{
+		}
+
+
 		// Retourne la zone rectangulaire utile pour les widgets.
 		protected Rectangle UsefulZone
 		{
@@ -209,5 +241,6 @@ namespace Epsitec.Common.Document.Ribbons
 		protected int						tabIndex = 0;
 		protected bool						ignoreChange = false;
 		protected double					separatorWidth = 8;
+		protected bool						isDirtyText;
 	}
 }

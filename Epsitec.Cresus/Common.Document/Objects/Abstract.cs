@@ -628,6 +628,12 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
+		// Colle du texte pendant l'édition.
+		public virtual bool EditPaste()
+		{
+			return false;
+		}
+
 		// Met en gras pendant l'édition.
 		public virtual bool EditBold()
 		{
@@ -646,10 +652,22 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		// Colle du texte pendant l'édition.
-		public virtual bool EditPaste()
+		// Indique si l'édition est en gras.
+		public virtual bool IsEditBold
 		{
-			return false;
+			get { return false; }
+		}
+
+		// Indique si l'édition est en italique.
+		public virtual bool IsEditItalic
+		{
+			get { return false; }
+		}
+
+		// Indique si l'édition est en souligné.
+		public virtual bool IsEditUnderlined
+		{
+			get { return false; }
 		}
 
 		// Sélectionne tout le texte pendant l'édition.

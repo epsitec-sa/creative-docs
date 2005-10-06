@@ -51,6 +51,7 @@ namespace Epsitec.Common.Document
 			this.toolChanged = true;
 			this.saveChanged = true;
 			this.selectionChanged = true;
+			this.textChanged = true;
 			this.createChanged = true;
 			this.styleChanged = true;
 			this.pagesChanged = true;
@@ -131,6 +132,14 @@ namespace Epsitec.Common.Document
 		{
 			if ( !this.enable || !this.enableSelectionChanged )  return;
 			this.selectionChanged = true;
+			this.NotifyAsync();
+		}
+
+		// Indique que le texte en édition a changé.
+		public void NotifyTextChanged()
+		{
+			if ( !this.enable )  return;
+			this.textChanged = true;
 			this.NotifyAsync();
 		}
 
@@ -411,6 +420,12 @@ namespace Epsitec.Common.Document
 				this.selectionChanged = false;
 			}
 
+			if ( this.textChanged )
+			{
+				this.OnTextChanged();
+				this.textChanged = false;
+			}
+
 			if ( this.createChanged )
 			{
 				this.OnCreateChanged();
@@ -595,6 +610,14 @@ namespace Epsitec.Common.Document
 			if ( this.SelectionChanged != null )  // qq'un écoute ?
 			{
 				this.SelectionChanged();
+			}
+		}
+
+		protected void OnTextChanged()
+		{
+			if ( this.TextChanged != null )  // qq'un écoute ?
+			{
+				this.TextChanged();
 			}
 		}
 
@@ -783,6 +806,7 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			ToolChanged;
 		public event SimpleEventHandler			SaveChanged;
 		public event SimpleEventHandler			SelectionChanged;
+		public event SimpleEventHandler			TextChanged;
 		public event SimpleEventHandler			CreateChanged;
 		public event SimpleEventHandler			StyleChanged;
 		public event SimpleEventHandler			PagesChanged;
@@ -817,6 +841,7 @@ namespace Epsitec.Common.Document
 		protected bool							toolChanged;
 		protected bool							saveChanged;
 		protected bool							selectionChanged;
+		protected bool							textChanged;
 		protected bool							createChanged;
 		protected bool							styleChanged;
 		protected bool							pagesChanged;
