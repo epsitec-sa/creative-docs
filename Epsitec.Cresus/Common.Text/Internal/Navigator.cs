@@ -832,6 +832,57 @@ namespace Epsitec.Common.Text.Internal
 			story.WriteText (cursor, offset_start, text);
 		}
 		
+		public static void SetMetaProperties(TextStory story, ICursor cursor, int length, Properties.ApplyMode mode, params TextStyle[] meta_properties)
+		{
+			if (length == 0)
+			{
+				//	Aucun caractère n'est affecté par la modification; ne fait
+				//	rien du tout.
+				
+				return;
+			}
+			
+			if (meta_properties == null) meta_properties = new TextStyle[0];
+			
+			int offset_start = 0;
+			int offset_end   = length;
+			
+			ulong[] text = new ulong[length];
+			
+			story.ReadText (cursor, offset_start, length, text);
+			
+			ulong code  = 0;
+			int   start = 0;
+			int   count = 0;
+			
+			//	Change le style par tranches (une tranche partage exactement le même
+			//	ensemble de styles et propriétés) pour être plus efficace :
+			
+			for (int i = 0; i < length; i++)
+			{
+				ulong next = Internal.CharMarker.ExtractStyleAndSettings (text[i]);
+				
+				if (code != next)
+				{
+					Navigator.SetMetaProperties (story, text, code, start, count, meta_properties, mode);
+					
+					start = i;
+					count = 1;
+					code  = next;
+				}
+				else
+				{
+					count++;
+				}
+			}
+			
+			//	Change encore le style de la dernière (ou de l'unique) tranche :
+			
+			Navigator.SetMetaProperties (story, text, code, start, count, meta_properties, mode);
+			
+			story.WriteText (cursor, offset_start, text);
+		}
+		
 		public static void SetParagraphProperties(TextStory story, ICursor cursor, Properties.ApplyMode mode, params Property[] properties)
 		{
 			int offset_start = Navigator.GetParagraphStartOffset (story, cursor);
@@ -987,8 +1038,8 @@ namespace Epsitec.Common.Text.Internal
 			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
 			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (text_properties) == false);
 			
-			//	Dans un premier temps, on ne conserve tous les styles et que les
-			//	propriétés associés directement au paragraphe. Les autres propriétés
+			//	Dans un premier temps, on conserve tous les styles et ne garde que les
+			//	propriétés associées directement au paragraphe. Les autres propriétés
 			//	vont devoir être filtrées :
 			
 			System.Collections.ArrayList all_styles = new System.Collections.ArrayList ();
@@ -1000,6 +1051,50 @@ namespace Epsitec.Common.Text.Internal
 			all_properties.AddRange (Navigator.Combine (Property.FilterOtherProperties (current_properties), text_properties, mode));
 			
 			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, all_properties);
+			
+			ulong style_bits;
+			
+			story.ConvertToStyledText (flat, out style_bits);
+			
+			for (int i = 0; i < length; i++)
+			{
+				text[offset+i] &= ~ Internal.CharMarker.StyleAndSettingsMask;
+				text[offset+i] |= style_bits;
+			}
+		}
+		
+		private static void SetMetaProperties(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] meta_properties, Properties.ApplyMode mode)
+		{
+			//	Modifie les méta propriétés du texte en utilisant celles passées en
+			//	entrée, en se basant sur le mode de combinaison spécifié.
+			
+			if ((length == 0) ||
+				(mode == Properties.ApplyMode.None))
+			{
+				return;
+			}
+			
+			Text.TextContext context = story.TextContext;
+			
+			TextStyle[] current_styles;
+			Property[]  current_properties;
+			
+			//	Récupère d'abord les styles et les propriétés courantes :
+			
+			context.GetStyles (code, out current_styles);
+			context.GetProperties (code, out current_properties);
+			
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
+			
+			System.Collections.ArrayList all_styles = new System.Collections.ArrayList ();
+			
+			all_styles.AddRange (TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph));
+			all_styles.AddRange (TextStyle.FilterStyles (current_styles, TextStyleClass.Text));
+			all_styles.AddRange (TextStyle.FilterStyles (current_styles, TextStyleClass.Character));
+			all_styles.AddRange (Navigator.Combine (TextStyle.FilterStyles (current_styles, TextStyleClass.MetaProperty), meta_properties, mode));
+			
+			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, current_properties);
 			
 			ulong style_bits;
 			
@@ -1096,7 +1191,7 @@ namespace Epsitec.Common.Text.Internal
 			//	Ne conserve que les styles associés directement au paragraphe et
 			//	au texte. En fait, on supprime les styles liés aux caractères :
 			
-			TextStyle[] filtered_styles = TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph, TextStyleClass.Text);
+			TextStyle[] filtered_styles = TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph, TextStyleClass.Text, TextStyleClass.MetaProperty);
 			TextStyle[] all_styles      = new TextStyle[filtered_styles.Length + character_styles.Length];
 			Property[]  all_properties  = current_properties;
 			
@@ -1142,7 +1237,7 @@ namespace Epsitec.Common.Text.Internal
 			//	Ne conserve que les styles associés directement au paragraphe et
 			//	aux caractères. En fait, on supprime les styles liés au texte :
 			
-			TextStyle[] filtered_styles = TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph, TextStyleClass.Character);
+			TextStyle[] filtered_styles = TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph, TextStyleClass.Character, TextStyleClass.MetaProperty);
 			TextStyle[] all_styles      = new TextStyle[filtered_styles.Length + text_styles.Length];
 			Property[]  all_properties  = current_properties;
 			
@@ -1164,6 +1259,20 @@ namespace Epsitec.Common.Text.Internal
 		
 		
 		internal static System.Collections.ICollection Combine(Property[] a, Property[] b, Properties.ApplyMode mode)
+		{
+			switch (mode)
+			{
+				case Properties.ApplyMode.Overwrite:	return Navigator.CombineOverwrite (a, b);
+				case Properties.ApplyMode.Clear:		return Navigator.CombineClear (a, b);
+				case Properties.ApplyMode.Set:			return Navigator.CombineSet (a, b);
+				case Properties.ApplyMode.Combine:		return Navigator.CombineAccumulate (a, b);
+				
+				default:
+					throw new System.InvalidOperationException (string.Format ("ApplyMode.{0} not valid here.", mode));
+			}
+		}
+		
+		internal static System.Collections.ICollection Combine(TextStyle[] a, TextStyle[] b, Properties.ApplyMode mode)
 		{
 			switch (mode)
 			{
@@ -1274,6 +1383,77 @@ namespace Epsitec.Common.Text.Internal
 			accumulator.Accumulate (b);
 			
 			return accumulator.AccumulatedProperties;
+		}
+		
+
+		private static System.Collections.ICollection CombineOverwrite(TextStyle[] a, TextStyle[] b)
+		{
+			//	Un overwrite écrase toutes les propriétés source.
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			list.AddRange (a);
+			
+			foreach (TextStyle p in b)
+			{
+				for (int i = 0; i < list.Count; )
+				{
+					TextStyle test = list[i] as TextStyle;
+					
+					if (test.MetaId == p.MetaId)
+					{
+						list.RemoveAt (i);
+					}
+					else
+					{
+						i++;
+					}
+				}
+				
+				list.Add (p);
+			}
+			
+			return list;
+		}
+		
+		private static System.Collections.ICollection CombineClear(TextStyle[] a, TextStyle[] b)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			list.AddRange (a);
+			
+			foreach (TextStyle p in b)
+			{
+				for (int i = 0; i < list.Count; )
+				{
+					TextStyle test = list[i] as TextStyle;
+					
+					if (test.MetaId == p.MetaId)
+					{
+						list.RemoveAt (i);
+					}
+					else
+					{
+						i++;
+					}
+				}
+			}
+			
+			return list;
+		}
+		
+		private static System.Collections.ICollection CombineSet(TextStyle[] a, TextStyle[] b)
+		{
+			System.Collections.ArrayList list = Navigator.CombineClear (a, b) as System.Collections.ArrayList;
+			
+			list.AddRange (b);
+			
+			return list;
+		}
+		
+		private static System.Collections.ICollection CombineAccumulate(TextStyle[] a, TextStyle[] b)
+		{
+			throw new System.InvalidOperationException ("Combine is impossible on meta-properties");
 		}
 		
 

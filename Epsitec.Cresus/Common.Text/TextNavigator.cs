@@ -567,6 +567,7 @@ namespace Epsitec.Common.Text
 				new_styles.AddRange (paragraph_styles);
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Character));
+				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty));
 				
 				this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
 				
@@ -616,6 +617,7 @@ namespace Epsitec.Common.Text
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
 				new_styles.AddRange (text_styles);
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Character));
+				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty));
 				
 				this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
 				
@@ -665,6 +667,60 @@ namespace Epsitec.Common.Text
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
 				new_styles.AddRange (character_styles);
+				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty));
+				
+				this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
+				
+				this.RefreshAccumulatedStylesAndProperties ();
+			}
+			
+			this.NotifyTextChanged ();
+		}
+		
+		public void SetMetaProperties(Properties.ApplyMode mode, params TextStyle[] styles)
+		{
+			//	Change les méta-propriétés attachées à la position courante (ou
+			//	compris dans la sélection).
+			
+			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
+			
+			if (styles == null)
+			{
+				styles = new TextStyle[0];
+			}
+			
+			TextStyle[] meta_properties = TextStyle.FilterStyles (styles, TextStyleClass.MetaProperty);
+			
+			System.Diagnostics.Debug.Assert (meta_properties.Length > 0);
+			
+			if (this.HasSelection)
+			{
+				int[]   positions = this.GetSelectionCursorPositions ();
+				Range[] ranges    = Range.CreateSortedRanges (positions);
+				
+				using (this.story.OpletQueue.BeginAction ())
+				{
+					foreach (Range range in ranges)
+					{
+						int pos    = range.Start;
+						int length = range.Length;
+						
+						this.SetMetaProperties (pos, length, meta_properties, mode);
+					}
+					
+					this.story.OpletQueue.ValidateAction ();
+				}
+			}
+			else
+			{
+				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
+				
+				System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
+				
+				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
+				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
+				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Character));
+				new_styles.AddRange (Internal.Navigator.Combine (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty), meta_properties, mode));
 				
 				this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
 				
@@ -1763,6 +1819,13 @@ namespace Epsitec.Common.Text
 			this.story.SetCursorPosition (this.temp_cursor, pos);
 			
 			Internal.Navigator.SetTextProperties (this.story, this.temp_cursor, length, mode, properties);
+		}
+		
+		private void SetMetaProperties(int pos, int length, TextStyle[] meta_properties, Properties.ApplyMode mode)
+		{
+			this.story.SetCursorPosition (this.temp_cursor, pos);
+			
+			Internal.Navigator.SetMetaProperties (this.story, this.temp_cursor, length, mode, meta_properties);
 		}
 		
 		

@@ -38,6 +38,14 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public string							MetaId
+		{
+			get
+			{
+				return this.meta_id;
+			}
+		}
+		
 		public string							Name
 		{
 			get
@@ -63,6 +71,11 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		internal void SetMetaId(string meta_id)
+		{
+			this.meta_id = meta_id;
+		}
 		
 		internal void Clear()
 		{
@@ -255,6 +268,7 @@ namespace Epsitec.Common.Text
 		
 		
 		private string							name;
+		private string							meta_id;
 		private TextStyleClass					text_style_class;
 		private TextStyle[]						parent_styles;
 		private Property[]						style_properties;

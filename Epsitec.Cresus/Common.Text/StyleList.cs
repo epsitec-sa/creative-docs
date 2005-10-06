@@ -101,6 +101,27 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public TextStyle NewMetaProperty(string name, string meta_id, params Property[] properties)
+		{
+			return this.NewMetaProperty (name, meta_id, properties, null);
+		}
+		
+		public TextStyle NewMetaProperty(string name, string meta_id, System.Collections.ICollection properties)
+		{
+			return this.NewMetaProperty (name, meta_id, properties, null);
+		}
+		
+		public TextStyle NewMetaProperty(string name, string meta_id, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		{
+			TextStyle style = new TextStyle (name, TextStyleClass.MetaProperty, properties, parent_styles);
+			
+			style.SetMetaId (meta_id);
+			this.Attach (style);
+			
+			return style;
+		}
+		
+		
 		public void RedefineTextStyle(TextStyle style, System.Collections.ICollection properties)
 		{
 			//	Change les propriétés d'un style. Le style devient un style "plat"
@@ -124,6 +145,7 @@ namespace Epsitec.Common.Text
 			style.Clear ();
 			style.Initialise (properties, parent_styles);
 		}
+		
 		
 		public void RecycleTextStyle(TextStyle style)
 		{
@@ -172,10 +194,11 @@ namespace Epsitec.Common.Text
 		{
 			switch (text_style_class)
 			{
-				case TextStyleClass.Abstract:	return string.Concat ("A.", name);
-				case TextStyleClass.Paragraph:	return string.Concat ("P.", name);
-				case TextStyleClass.Text:		return string.Concat ("T.", name);
-				case TextStyleClass.Character:	return string.Concat ("C.", name);
+				case TextStyleClass.Abstract:		return string.Concat ("A.", name);
+				case TextStyleClass.Paragraph:		return string.Concat ("P.", name);
+				case TextStyleClass.Text:			return string.Concat ("T.", name);
+				case TextStyleClass.Character:		return string.Concat ("C.", name);
+				case TextStyleClass.MetaProperty:	return string.Concat ("M.", name);
 				
 				default:
 					throw new System.ArgumentException ();
@@ -194,10 +217,11 @@ namespace Epsitec.Common.Text
 			
 			switch (prefix)
 			{
-				case 'A': text_style_class = TextStyleClass.Abstract;	break;
-				case 'P': text_style_class = TextStyleClass.Paragraph;	break;
-				case 'T': text_style_class = TextStyleClass.Text;		break;
-				case 'C': text_style_class = TextStyleClass.Character;	break;
+				case 'A': text_style_class = TextStyleClass.Abstract;		break;
+				case 'P': text_style_class = TextStyleClass.Paragraph;		break;
+				case 'T': text_style_class = TextStyleClass.Text;			break;
+				case 'C': text_style_class = TextStyleClass.Character;		break;
+				case 'M': text_style_class = TextStyleClass.MetaProperty;	break;
 				
 				default:
 					throw new System.ArgumentException ();
