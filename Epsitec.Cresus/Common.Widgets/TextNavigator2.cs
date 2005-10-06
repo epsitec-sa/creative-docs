@@ -658,6 +658,19 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public void DeleteSelection()
+		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			if (this.text_navigator.HasSelection)
+			{
+				this.text_navigator.Delete ();
+			}
+		}
+		
+		
 		public bool Undo()
 		{
 			if (this.text_navigator.IsSelectionActive)
