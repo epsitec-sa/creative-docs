@@ -11,7 +11,7 @@
 	<data name="Ribbon.Main">Documents</data>
 	<data name="Ribbon.Objects">Objets</data>
 	<data name="Ribbon.Oper">Opérations</data>
-	<data name="Ribbon.Text">Text</data>
+	<data name="Ribbon.Text">Texte</data>
 
 	<data name="Menu.Main.File">Fichier</data>
 	<data name="Menu.Main.Edit">Edition</data>

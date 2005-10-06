@@ -600,33 +600,30 @@ namespace Epsitec.App.DocumentEditor
 
 			this.ribbonMainButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Main);
 			this.ribbonMainButton.Size = this.ribbonMainButton.RequiredSize;
-			this.ribbonMainButton.Clicked += new MessageEventHandler(this.HandleRibbonMainClicked);
+			this.ribbonMainButton.Clicked += new MessageEventHandler(this.HandleRibbonClicked);
 			this.hToolBar.Items.Add(this.ribbonMainButton);
 
 			this.ribbonObjectButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Objects);
 			this.ribbonObjectButton.Size = this.ribbonObjectButton.RequiredSize;
-			this.ribbonObjectButton.Clicked += new MessageEventHandler(this.HandleRibbonObjectClicked);
+			this.ribbonObjectButton.Clicked += new MessageEventHandler(this.HandleRibbonClicked);
 			this.hToolBar.Items.Add(this.ribbonObjectButton);
 
 			this.ribbonOperButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Oper);
 			this.ribbonOperButton.Size = this.ribbonOperButton.RequiredSize;
-			this.ribbonOperButton.Clicked += new MessageEventHandler(this.HandleRibbonOperClicked);
+			this.ribbonOperButton.Clicked += new MessageEventHandler(this.HandleRibbonClicked);
 			this.hToolBar.Items.Add(this.ribbonOperButton);
 
 			this.ribbonTextButton = new Ribbons.RibbonButton("", Res.Strings.Ribbon.Text);
 			this.ribbonTextButton.Size = this.ribbonTextButton.RequiredSize;
-			this.ribbonTextButton.Clicked += new MessageEventHandler(this.HandleRibbonTextClicked);
-			//?this.hToolBar.Items.Add(this.ribbonTextButton);
-
-			this.info = new StatusBar(this);
-			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
-			this.info.AnchorMargins = new Margins(0, 22-5, 0, 0);
+			this.ribbonTextButton.Clicked += new MessageEventHandler(this.HandleRibbonClicked);
+			this.hToolBar.Items.Add(this.ribbonTextButton);
 
 			this.ribbonMain = new Ribbons.RibbonContainer(this);
+			this.ribbonMain.Name = "Main";
 			this.ribbonMain.Height = this.ribbonHeight;
 			this.ribbonMain.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonMain.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
-			this.ribbonMain.SetVisible(false);
+			this.ribbonMain.SetVisible(true);
 			this.ribbonMain.Items.Add(new Ribbons.File());
 			this.ribbonMain.Items.Add(new Ribbons.View());
 			this.ribbonMain.Items.Add(new Ribbons.Zoom());
@@ -634,9 +631,9 @@ namespace Epsitec.App.DocumentEditor
 #if DEBUG
 			this.ribbonMain.Items.Add(new Ribbons.Debug());
 #endif
-			this.ribbonMain.Height = this.ribbonHeight;
 
 			this.ribbonObject = new Ribbons.RibbonContainer(this);
+			this.ribbonObject.Name = "Object";
 			this.ribbonObject.Height = this.ribbonHeight;
 			this.ribbonObject.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonObject.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
@@ -649,9 +646,9 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonObject.Items.Add(new Ribbons.Move());
 			this.ribbonObject.Items.Add(new Ribbons.Rotate());
 			this.ribbonObject.Items.Add(new Ribbons.Scale());
-//			this.ribbonObject.Height = this.ribbonHeight;
 
 			this.ribbonOper = new Ribbons.RibbonContainer(this);
+			this.ribbonOper.Name = "Oper";
 			this.ribbonOper.Height = this.ribbonHeight;
 			this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonOper.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
@@ -662,6 +659,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonOper.Items.Add(new Ribbons.Color());
 
 			this.ribbonText = new Ribbons.RibbonContainer(this);
+			this.ribbonText.Name = "Text";
 			this.ribbonText.Height = this.ribbonHeight;
 			this.ribbonText.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonText.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
@@ -669,6 +667,12 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonText.Items.Add(new Ribbons.Font());
 			this.ribbonText.Items.Add(new Ribbons.Insert());
 			this.ribbonText.Items.Add(new Ribbons.Clipboard());
+
+			this.ribbonActive = this.ribbonMain;
+
+			this.info = new StatusBar(this);
+			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
+			this.info.AnchorMargins = new Margins(0, 22-5, 0, 0);
 
 			this.InfoAdd("", 120, "StatusDocument", "");
 #if false
@@ -763,6 +767,8 @@ namespace Epsitec.App.DocumentEditor
 			this.bookDocuments.CloseButton.Command = "Close";
 			this.bookDocuments.ActivePageChanged += new EventHandler(this.HandleBookDocumentsActivePageChanged);
 			ToolTip.Default.SetToolTip(this.bookDocuments.CloseButton, Res.Strings.Tooltip.TabBook.Close);
+
+			this.ActiveRibbon(this.ribbonMain);
 		}
 
 		protected void CreateDocumentLayout(Document document)
@@ -1173,38 +1179,79 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
-		private void HandleRibbonMainClicked(object sender, MessageEventArgs e)
+		// Le bouton pour activer/désactiver un ruban a été cliqué.
+		private void HandleRibbonClicked(object sender, MessageEventArgs e)
 		{
-			this.ActiveRibbon(this.ribbonMain.IsVisible ? null : this.ribbonMain);
+			Ribbons.RibbonButton button = sender as Ribbons.RibbonButton;
+			Ribbons.RibbonContainer ribbon = null;
+			if ( button == this.ribbonMainButton   )  ribbon = this.ribbonMain;
+			if ( button == this.ribbonObjectButton )  ribbon = this.ribbonObject;
+			if ( button == this.ribbonOperButton   )  ribbon = this.ribbonOper;
+			if ( button == this.ribbonTextButton   )  ribbon = this.ribbonText;
+			if ( ribbon == null )  return;
+
+			this.ActiveRibbon(ribbon.IsVisible ? null : ribbon);
 		}
 
-		private void HandleRibbonObjectClicked(object sender, MessageEventArgs e)
+		// Donne le ruban correspondant à un nom.
+		protected Ribbons.RibbonContainer GetRibbon(string name)
 		{
-			this.ActiveRibbon(this.ribbonObject.IsVisible ? null : this.ribbonObject);
+			if ( name == this.ribbonMain.Name   )  return this.ribbonMain;
+			if ( name == this.ribbonObject.Name )  return this.ribbonObject;
+			if ( name == this.ribbonOper.Name   )  return this.ribbonOper;
+			if ( name == this.ribbonText.Name   )  return this.ribbonText;
+			return null;
 		}
 
-		private void HandleRibbonOperClicked(object sender, MessageEventArgs e)
+		// Cherche le dernier ruban utilisé différent d'un nom donné.
+		protected Ribbons.RibbonContainer LastRibbon(string notName)
 		{
-			this.ActiveRibbon(this.ribbonOper.IsVisible ? null : this.ribbonOper);
-		}
+			if ( this.ribbonList == null )  return null;
 
-		private void HandleRibbonTextClicked(object sender, MessageEventArgs e)
-		{
-			this.ActiveRibbon(this.ribbonText.IsVisible ? null : this.ribbonText);
+			for ( int i=this.ribbonList.Count-1 ; i>=0 ; i-- )
+			{
+				string name = this.ribbonList[i] as string;
+				if ( name != notName )
+				{
+					return this.GetRibbon(name);
+				}
+			}
+			return null;
 		}
 
 		// Active un ruban.
 		protected void ActiveRibbon(Ribbons.RibbonContainer active)
 		{
-			this.ribbonMain.SetVisible(this.ribbonMain == active);
-			this.ribbonObject.SetVisible(this.ribbonObject == active);
-			this.ribbonOper.SetVisible(this.ribbonOper == active);
-			this.ribbonText.SetVisible(this.ribbonText == active);
+			this.ribbonActive = active;
 
-			this.ribbonMainButton.ActiveState = this.ribbonMain.IsVisible ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.ribbonObjectButton.ActiveState = this.ribbonObject.IsVisible ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.ribbonOperButton.ActiveState = this.ribbonOper.IsVisible ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.ribbonTextButton.ActiveState = this.ribbonText.IsVisible ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			if ( this.ribbonList == null )
+			{
+				this.ribbonList = new System.Collections.ArrayList();
+			}
+
+			if ( active == null )
+			{
+				this.ribbonList.Add("");
+			}
+			else
+			{
+				this.ribbonList.Add(active.Name);
+			}
+
+			if ( this.ribbonList.Count > 10 )
+			{
+				this.ribbonList.RemoveAt(0);
+			}
+
+			this.ribbonMain.SetVisible  (this.ribbonMain   == this.ribbonActive);
+			this.ribbonObject.SetVisible(this.ribbonObject == this.ribbonActive);
+			this.ribbonOper.SetVisible  (this.ribbonOper   == this.ribbonActive);
+			this.ribbonText.SetVisible  (this.ribbonText   == this.ribbonActive);
+
+			this.ribbonMainButton.ActiveState   = (this.ribbonMain   == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.ribbonObjectButton.ActiveState = (this.ribbonObject == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.ribbonOperButton.ActiveState   = (this.ribbonOper   == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.ribbonTextButton.ActiveState   = (this.ribbonText   == this.ribbonActive) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 
 			double h = this.RibbonHeight;
 			this.vToolBar.AnchorMargins = new Margins(0, 0, this.hToolBar.Height+h, this.info.Height);
@@ -1223,13 +1270,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			get
 			{
-				bool visible = false;
-				if ( this.ribbonMain.IsVisible )  visible = true;
-				if ( this.ribbonObject.IsVisible )  visible = true;
-				if ( this.ribbonOper.IsVisible )  visible = true;
-				if ( this.ribbonText.IsVisible )  visible = true;
-
-				return visible ? this.ribbonHeight : 0;
+				return (this.ribbonActive == null) ? 0 : this.ribbonHeight;
 			}
 		}
 
@@ -3589,6 +3630,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.DrawChanged            += new RedrawEventHandler(this.HandleDrawChanged);
 			this.CurrentDocument.Notifier.TextRulerColorClicked  += new TextRulerColorEventHandler(this.HandleTextRulerColorClicked);
 			this.CurrentDocument.Notifier.TextRulerColorChanged  += new TextRulerColorEventHandler(this.HandleTextRulerColorChanged);
+			this.CurrentDocument.Notifier.RibbonCommand          += new RibbonEventHandler(this.HandleRibbonCommand);
 		}
 
 		// Appelé par le document lorsque les informations sur le document ont changé.
@@ -4412,6 +4454,19 @@ namespace Epsitec.App.DocumentEditor
 			di.containerPrincipal.TextRulerColorChanged(ruler);
 		}
 		
+		// Appelé par le document lorsqu'il faut changer de ruban.
+		private void HandleRibbonCommand(string name)
+		{
+			Ribbons.RibbonContainer ribbon = this.GetRibbon(name);
+
+			if ( name.Length > 0 && name[0] == '!' )
+			{
+				ribbon = this.LastRibbon(name.Substring(1));
+			}
+
+			this.ActiveRibbon(ribbon);
+		}
+		
 
 		// Invalide une partie de la zone de dessin d'un visualisateur.
 		protected void InvalidateDraw(Viewer viewer, Drawing.Rectangle bbox)
@@ -5110,6 +5165,8 @@ namespace Epsitec.App.DocumentEditor
 		protected Ribbons.RibbonContainer		ribbonObject;
 		protected Ribbons.RibbonContainer		ribbonOper;
 		protected Ribbons.RibbonContainer		ribbonText;
+		protected Ribbons.RibbonContainer		ribbonActive;
+		protected System.Collections.ArrayList	ribbonList;
 		protected VToolBar						vToolBar;
 		protected StatusBar						info;
 		protected ResizeKnob					resize;

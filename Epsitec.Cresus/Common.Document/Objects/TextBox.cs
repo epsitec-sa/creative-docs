@@ -61,20 +61,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		public string Content
-		{
-			get
-			{
-				return this.textLayout.Text;
-			}
-
-			set
-			{
-				this.textLayout.Text = value;
-			}
-		}
-
-
 		// Détecte si la souris est sur l'objet pour l'éditer.
 		public override bool DetectEdit(Point pos)
 		{

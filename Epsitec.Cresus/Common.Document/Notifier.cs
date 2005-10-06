@@ -10,6 +10,7 @@ namespace Epsitec.Common.Document
 	public delegate void AggregateEventHandler(System.Collections.ArrayList aggregateList);
 	public delegate void RedrawEventHandler(Viewer viewer, Rectangle rect);
 	public delegate void TextRulerColorEventHandler(Common.Widgets.TextRuler ruler);
+	public delegate void RibbonEventHandler(string name);
 
 	/// <summary>
 	/// Summary description for Notifier.
@@ -348,6 +349,13 @@ namespace Epsitec.Common.Document
 		public void NotifyTextRulerColorChanged(Common.Widgets.TextRuler ruler)
 		{
 			this.OnTextRulerColorChanged(ruler);
+		}
+
+
+		// Indique qu'on ruban doit changer.
+		public void NotifyRibbonCommand(string name)
+		{
+			this.OnRibbonCommand(name);
 		}
 
 		
@@ -758,6 +766,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnRibbonCommand(string name)
+		{
+			if ( this.RibbonCommand != null )  // qq'un écoute ?
+			{
+				this.RibbonCommand(name);
+			}
+		}
+
 
 		public event SimpleEventHandler			DocumentChanged;
 		public event SimpleEventHandler			MouseChanged;
@@ -788,6 +804,7 @@ namespace Epsitec.Common.Document
 		public event RedrawEventHandler			DrawChanged;
 		public event TextRulerColorEventHandler	TextRulerColorClicked;
 		public event TextRulerColorEventHandler	TextRulerColorChanged;
+		public event RibbonEventHandler			RibbonCommand;
 
 		protected Document						document;
 		protected bool							enable = true;

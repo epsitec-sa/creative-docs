@@ -115,6 +115,8 @@ namespace Epsitec.Common.Document
 
 					this.tool = value;
 
+					this.ToolAdaptRibbon();
+
 					if ( this.tool == "Select" && isCreate )  // on vient de créer un objet ?
 					{
 						DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -173,6 +175,19 @@ namespace Epsitec.Common.Document
 					this.document.Notifier.NotifyToolChanged();
 					this.document.Notifier.NotifySelectionChanged();
 				}
+			}
+		}
+
+		// Adapte les rubans à l'outil sélectionné.
+		protected void ToolAdaptRibbon()
+		{
+			if ( this.tool == "Edit" )
+			{
+				this.document.Notifier.NotifyRibbonCommand("Text");
+			}
+			else
+			{
+				this.document.Notifier.NotifyRibbonCommand("!Text");
 			}
 		}
 
@@ -5279,6 +5294,7 @@ namespace Epsitec.Common.Document
 				host.Modifier.tool = this.tool;  // host.Modifier.tool <-> this.tool
 				this.tool = temp;
 
+				this.host.Modifier.ToolAdaptRibbon();
 				this.host.Notifier.NotifyToolChanged();
 			}
 

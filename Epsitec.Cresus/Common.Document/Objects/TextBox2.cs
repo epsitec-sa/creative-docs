@@ -36,18 +36,37 @@ namespace Epsitec.Common.Document.Objects
 			this.textNavigator = new Text.TextNavigator(this.textFitter);
 			this.textFrame     = new Text.SimpleTextFrame();
 			
-			this.navigator = new TextNavigator2();
-			
-			this.navigator.TextNavigator = this.textNavigator;
-			this.navigator.TextFrame     = this.textFrame;
+			this.metaNavigator = new TextNavigator2();
+			this.metaNavigator.TextNavigator = this.textNavigator;
+			this.metaNavigator.TextFrame     = this.textFrame;
 			
 			this.textFitter.FrameList.Add(this.textFrame);
 			
+			System.Collections.ArrayList properties = new System.Collections.ArrayList();
+			
+			//?Text.Properties.FontProperty fp = new Text.Properties.FontProperty("Palatino Linotype", "Italic", "liga", "dlig", "kern");
+			Text.Properties.FontProperty fp = new Text.Properties.FontProperty("Arial", "Roman");
+			
+			properties.Add(fp);
+			properties.Add(new Text.Properties.FontSizeProperty(12.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points));
+			properties.Add(new Text.Properties.MarginsProperty(60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
+			properties.Add(new Text.Properties.ColorProperty(Drawing.Color.FromName("Black")));
+			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
+			properties.Add(new Text.Properties.LeadingProperty(14.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 13.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+			
+			Text.TextStyle style = this.textStory.TextContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
+			
+			this.textStory.TextContext.DefaultStyle = style;
+			this.textStory.TextContext.IsDegradedLayoutEnabled = true;
+			
+			this.metaNavigator.Insert(Text.Unicode.Code.EndOfText);
+			this.metaNavigator.TextNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 0);
+
 			this.textFitter.ClearAllMarks();
 			this.textFitter.GenerateAllMarks();
 			
-			//?this.navigator.TextChanged += new Support.EventHandler (this.HandleTextChanged);
-			//?this.navigator.CursorMoved += new Support.EventHandler (this.HandleCursorMoved);
+			this.metaNavigator.TextChanged += new Support.EventHandler(this.HandleTextChanged);
+			this.metaNavigator.CursorMoved += new Support.EventHandler(this.HandleCursorMoved);
 			
 			this.markerSelected = this.textContext.Markers.Selected;
 		}
@@ -78,20 +97,6 @@ namespace Epsitec.Common.Document.Objects
 		public override string IconName
 		{
 			get { return Misc.Icon("ObjectTextBox"); }
-		}
-
-
-		public string Content
-		{
-			get
-			{
-				return "";  //?
-			}
-
-			set
-			{
-				//?
-			}
 		}
 
 
@@ -171,6 +176,7 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(rank).Position = pos;
 			}
 
+			this.UpdateTextLayout();
 			this.HandlePropertiesUpdate();
 			this.SetDirtyBbox();
 			this.TextInfoModifRect();
@@ -194,6 +200,7 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
+			this.UpdateTextLayout();
 			this.SetDirtyBbox();
 			this.TextInfoModifRect();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -325,7 +332,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			pos = this.transform.TransformInverse(pos);
-			if ( !this.navigator.ProcessMessage(message, pos) )  return false;
+			if ( !this.metaNavigator.ProcessMessage(message, pos) )  return false;
 			return true;
 		}
 
@@ -351,35 +358,32 @@ namespace Epsitec.Common.Document.Objects
 		#region CopyPaste
 		public override bool EditCut()
 		{
-#if false
-			string text = this.textNavigator.Selection;
-			if ( text == "" )  return false;
-			Support.Clipboard.WriteData data = new Support.Clipboard.WriteData();
-			data.WriteHtmlFragment(text);
-			data.WriteTextLayout(text);
-			Support.Clipboard.SetData(data);
-			this.textNavigator.Selection = "";
-			this.document.Notifier.NotifyArea(this.BoundingBox);
-#endif
+			this.EditCopy();
+			this.textNavigator.Delete(0);
 			return true;
 		}
 		
 		public override bool EditCopy()
 		{
-#if false
-			string text = this.textNavigator.Selection;
+			string[] texts = this.textNavigator.GetSelectedTexts();
+			if ( texts == null || texts.Length == 0 )  return false;
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			foreach ( string part in texts )
+			{
+				builder.Append(part);
+			}
+			string text = builder.ToString();
+
 			Support.Clipboard.WriteData data = new Support.Clipboard.WriteData();
-			if ( text == "" )  return false;
 			data.WriteHtmlFragment(text);
 			data.WriteTextLayout(text);
 			Support.Clipboard.SetData(data);
-#endif
 			return true;
 		}
 		
 		public override bool EditPaste()
 		{
-#if false
 			Support.Clipboard.ReadData data = Support.Clipboard.GetData();
 			string html = data.ReadTextLayout();
 			if ( html == null )
@@ -395,15 +399,14 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 			if ( html == null )  return false;
-			this.textNavigator.Selection = html;
+			this.metaNavigator.Insert(html);
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-#endif
 			return true;
 		}
 
 		public override bool EditSelectAll()
 		{
-			this.navigator.SelectAll();
+			this.metaNavigator.SelectAll();
 			return true;
 		}
 		#endregion
@@ -411,7 +414,7 @@ namespace Epsitec.Common.Document.Objects
 		// Insère un glyphe dans le pavé en édition.
 		public override bool EditInsertGlyph(string text)
 		{
-			this.navigator.Insert(text);
+			this.metaNavigator.Insert(text);
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			return true;
 		}
@@ -427,21 +430,21 @@ namespace Epsitec.Common.Document.Objects
 		// Met en gras pendant l'édition.
 		public override bool EditBold()
 		{
-			this.navigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Bold"));
+			this.metaNavigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Bold"));
 			return true;
 		}
 
 		// Met en italique pendant l'édition.
 		public override bool EditItalic()
 		{
-			this.navigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Italic"));
+			this.metaNavigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Italic"));
 			return true;
 		}
 
 		// Souligne pendant l'édition.
 		public override bool EditUnderlined()
 		{
-			this.navigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Underlined"));
+			this.metaNavigator.SetTextProperties(Common.Text.Properties.ApplyMode.Combine, new Common.Text.Properties.FontProperty(null, "!Underlined"));
 			return true;
 		}
 		#endregion
@@ -604,10 +607,43 @@ namespace Epsitec.Common.Document.Objects
 			this.transform.RotateDeg(angle, p1);
 			port.MergeTransform(transform);
 
+			bool active = true;
+			if ( this.document.Modifier != null )
+			{
+				active = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext &&
+						  this.document.Modifier.ActiveViewer.IsFocused);
+			}
+
 			this.graphics = port as Graphics;
 			if ( this.graphics != null )
 			{
+				this.hasSelection = false;
+
+				this.textStory.TextContext.ShowControlCharacters = this.edited;
 				this.textFitter.RenderTextFrame(this.textFrame, this);
+
+				if ( this.edited && !this.hasSelection )
+				{
+					Text.ITextFrame frame;
+					double cx, cy, ascender, descender;
+				
+					this.textNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
+				
+					if ( frame == this.textFrame )
+					{
+						double tan = System.Math.Tan(System.Math.PI/2.0 - angle);
+						double x1 = cx + descender * tan;
+						double x2 = cx + ascender  * tan;
+						double y1 = cy + descender;
+						double y2 = cy + ascender;
+					
+						this.graphics.LineWidth = 1.0/drawingContext.ScaleX;
+						this.graphics.AddLine(x1, y1, x2, y2);
+						this.graphics.RenderSolid(DrawingContext.ColorCursorEdit(active));
+					}
+				}
+
+				this.graphics = null;
 			}
 
 			port.Transform = ot;
@@ -625,6 +661,7 @@ namespace Epsitec.Common.Document.Objects
 		
 		public void RenderStartLine(Text.Layout.Context context)
 		{
+#if false
 			double ox = context.LineCurrentX;
 			double oy = context.LineBaseY;
 			double dx = context.TextWidth;
@@ -632,6 +669,7 @@ namespace Epsitec.Common.Document.Objects
 			this.graphics.LineWidth = 0.3;
 			this.graphics.AddLine(ox, oy, ox + dx, oy);
 			this.graphics.RenderSolid(Drawing.Color.FromName("Green"));
+#endif
 			
 			context.DisableSimpleRendering();
 		}
@@ -650,7 +688,7 @@ namespace Epsitec.Common.Document.Objects
 			double selX = 0;
 			
 			System.Collections.ArrayList selRectList = null;
-			Drawing.Rectangle            selBbox     = Drawing.Rectangle.Empty;
+			Drawing.Rectangle selBbox = Drawing.Rectangle.Empty;
 			
 			int[]    cArray;
 			ulong[]  tArray;
@@ -778,7 +816,7 @@ namespace Epsitec.Common.Document.Objects
 				this.graphics.RenderSolid(color);
 			}
 			
-			if ( selRectList != null )
+			if ( this.edited && selRectList != null )
 			{
 				this.hasSelection = true;
 				
@@ -859,6 +897,14 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
+		// Met à jour le texte suite à une modification du conteneur.
+		protected void UpdateTextLayout()
+		{
+			this.textFitter.ClearAllMarks();
+			this.textFitter.GenerateAllMarks();
+		}
+
+
 		// Retourne le chemin géométrique de l'objet pour les constructions
 		// magnétiques.
 		public override Path GetMagnetPath()
@@ -888,15 +934,26 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
+		private void HandleTextChanged(object sender)
+		{
+			this.UpdateTextLayout();
+			//?this.Invalidate();
+		}
+		
+		private void HandleCursorMoved(object sender)
+		{
+			//?this.Invalidate();
+		}
+
+		
 		protected bool							hasSelection;
 		protected ulong							markerSelected;
-		
 		protected Text.TextContext				textContext;
 		protected Text.TextStory				textStory;
 		protected Text.TextFitter				textFitter;
 		protected Text.TextNavigator			textNavigator;
 		protected Text.SimpleTextFrame			textFrame;
-		protected TextNavigator2				navigator;
+		protected TextNavigator2				metaNavigator;
 		protected Graphics						graphics;
 		protected Transform						transform;
 	}

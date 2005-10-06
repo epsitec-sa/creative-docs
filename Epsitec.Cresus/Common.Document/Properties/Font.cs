@@ -16,15 +16,15 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialise()
 		{
-			this.fontName  = "Arial";
+			this.fontName = "Arial";
 
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
-				this.fontSize  = 2.0;
+				this.fontSize = 2.0;
 			}
 			else
 			{
-				this.fontSize  = 12.0*Modifier.fontSizeScale;  // corps 12
+				this.fontSize = 12.0*Modifier.fontSizeScale;  // corps 12
 			}
 
 			this.fontColor = Drawing.RichColor.FromCMYK(0.0, 0.0, 0.0, 1.0);
