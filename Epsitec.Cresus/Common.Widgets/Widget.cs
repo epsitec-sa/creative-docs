@@ -3669,14 +3669,14 @@ namespace Epsitec.Common.Widgets
 				//	L'utilisateur a suspendu toute opération de layout, donc on ne va rien faire maintenant
 				//	mais laisser le soin au ResumeLayout final de nous appeler à nouveau.
 				
-				System.Diagnostics.Debug.WriteLine ("UpdateChildrenLayout, postponed");
+//-				System.Diagnostics.Debug.WriteLine ("UpdateChildrenLayout, postponed");
 				
 				this.has_layout_changed = true;
 				
 				return;
 			}
 			
-			System.Diagnostics.Debug.WriteLine ("UpdateChildrenLayout on " + this.GetType ().Name);
+//-			System.Diagnostics.Debug.WriteLine ("UpdateChildrenLayout on " + this.GetType ().Name);
 			
 			Widget[] children = this.Children.Widgets;
 			

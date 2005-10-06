@@ -623,7 +623,7 @@ namespace Epsitec.App.DocumentEditor
 			this.info.AnchorMargins = new Margins(0, 22-5, 0, 0);
 
 			this.ribbonMain = new Ribbons.RibbonContainer(this);
-			this.ribbonMain.Height = 22;
+			this.ribbonMain.Height = this.ribbonHeight;
 			this.ribbonMain.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonMain.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonMain.SetVisible(false);
@@ -637,7 +637,7 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonMain.Height = this.ribbonHeight;
 
 			this.ribbonObject = new Ribbons.RibbonContainer(this);
-			this.ribbonObject.Height = 22;
+			this.ribbonObject.Height = this.ribbonHeight;
 			this.ribbonObject.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonObject.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonObject.SetVisible(false);
@@ -649,10 +649,10 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonObject.Items.Add(new Ribbons.Move());
 			this.ribbonObject.Items.Add(new Ribbons.Rotate());
 			this.ribbonObject.Items.Add(new Ribbons.Scale());
-			this.ribbonObject.Height = this.ribbonHeight;
+//			this.ribbonObject.Height = this.ribbonHeight;
 
 			this.ribbonOper = new Ribbons.RibbonContainer(this);
-			this.ribbonOper.Height = 22;
+			this.ribbonOper.Height = this.ribbonHeight;
 			this.ribbonOper.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonOper.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonOper.SetVisible(false);
@@ -660,17 +660,15 @@ namespace Epsitec.App.DocumentEditor
 			this.ribbonOper.Items.Add(new Ribbons.Bool());
 			this.ribbonOper.Items.Add(new Ribbons.Geom());
 			this.ribbonOper.Items.Add(new Ribbons.Color());
-			this.ribbonOper.Height = this.ribbonHeight;
 
 			this.ribbonText = new Ribbons.RibbonContainer(this);
-			this.ribbonText.Height = 22;
+			this.ribbonText.Height = this.ribbonHeight;
 			this.ribbonText.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.ribbonText.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, 0);
 			this.ribbonText.SetVisible(false);
 			this.ribbonText.Items.Add(new Ribbons.Font());
 			this.ribbonText.Items.Add(new Ribbons.Insert());
 			this.ribbonText.Items.Add(new Ribbons.Clipboard());
-			this.ribbonText.Height = this.ribbonHeight;
 
 			this.InfoAdd("", 120, "StatusDocument", "");
 #if false

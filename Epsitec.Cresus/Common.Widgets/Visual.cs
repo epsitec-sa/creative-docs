@@ -594,7 +594,7 @@ namespace Epsitec.Common.Widgets
 		
 		internal virtual void SetBounds(Drawing.Rectangle value)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("Setting {0} bounds to {1}", this.GetType ().Name, value));
+//-			System.Diagnostics.Debug.WriteLine (string.Format ("Setting {0} bounds to {1}", this.GetType ().Name, value));
 			this.SetValueBase (Visual.BoundsProperty, value);
 		}
 		
