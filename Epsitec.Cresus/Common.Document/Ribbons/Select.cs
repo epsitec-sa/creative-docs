@@ -16,7 +16,9 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonDelete    = this.CreateIconButton("Delete",    Misc.Icon("Delete2"),    Res.Strings.Action.Delete);
 			this.buttonDuplicate = this.CreateIconButton("Duplicate", Misc.Icon("Duplicate2"), Res.Strings.Action.Duplicate);
-			this.separator = new IconSeparator(this);
+			this.separatorV = new IconSeparator(this);
+			this.separatorH = new IconSeparator(this);
+			this.separatorH.IsHorizontal = false;
 			this.buttonDeselectAll  = this.CreateIconButton("DeselectAll",  Misc.Icon("DeselectAll"),  Res.Strings.Action.DeselectAll);
 			this.buttonSelectAll    = this.CreateIconButton("SelectAll",    Misc.Icon("SelectAll"),    Res.Strings.Action.SelectAll);
 			this.buttonSelectInvert = this.CreateIconButton("SelectInvert", Misc.Icon("SelectInvert"), Res.Strings.Action.SelectInvert);
@@ -58,7 +60,13 @@ namespace Epsitec.Common.Document.Ribbons
 			Rectangle rect = this.UsefulZone;
 			rect.Left += dx*1.5*2;
 			rect.Width = this.separatorWidth;
-			this.separator.Bounds = rect;
+			this.separatorV.Bounds = rect;
+
+			rect = this.UsefulZone;
+			rect.Left += dx*1.5*2+this.separatorWidth*0.5;
+			rect.Bottom += dy;
+			rect.Height = 5;
+			this.separatorH.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Width  = dx*1.5;
@@ -94,7 +102,8 @@ namespace Epsitec.Common.Document.Ribbons
 
 		protected IconButton				buttonDelete;
 		protected IconButton				buttonDuplicate;
-		protected IconSeparator				separator;
+		protected IconSeparator				separatorV;
+		protected IconSeparator				separatorH;
 		protected IconButton				buttonDeselectAll;
 		protected IconButton				buttonSelectAll;
 		protected IconButton				buttonSelectInvert;

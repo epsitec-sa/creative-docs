@@ -1,5 +1,6 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Text;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -101,6 +102,8 @@ namespace Epsitec.Common.Document
 				this.Modifier.New();
 			}
 
+			this.DefaultTextContext();
+
 			this.ioType = IOType.BinaryCompress;
 			//this.ioType = IOType.SoapUncompress;
 		}
@@ -154,6 +157,12 @@ namespace Epsitec.Common.Document
 		public UndoableList GetObjects
 		{
 			get { return this.objects; }
+		}
+
+		// TextContext de ce document.
+		public Text.TextContext TextContext
+		{
+			get { return this.textContext; }
 		}
 
 
@@ -1112,6 +1121,32 @@ namespace Epsitec.Common.Document
 		}
 
 
+		#region TextContext
+		// Crée le TextContext et les styles par défaut.
+		protected void DefaultTextContext()
+		{
+			System.Collections.ArrayList properties;
+			Text.TextStyle style;
+
+			this.textContext = new Text.TextContext();
+
+			properties = new System.Collections.ArrayList();
+			//?properties.Add(new Text.Properties.FontProperty("Palatino Linotype", "Italic", "liga", "dlig", "kern"));
+			properties.Add(new Text.Properties.FontProperty("Arial", "Roman"));
+			properties.Add(new Text.Properties.FontSizeProperty(12.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points));
+			properties.Add(new Text.Properties.MarginsProperty(60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
+			properties.Add(new Text.Properties.ColorProperty("Black"));
+			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
+			properties.Add(new Text.Properties.LeadingProperty(14.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 13.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+			style = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
+			this.textContext.DefaultStyle = style;
+
+			properties = new System.Collections.ArrayList();
+			properties.Add(new Text.Properties.FontProperty(null, "!Bold"));
+			this.textContext.StyleList.NewTextStyle("Bold", Text.TextStyleClass.Character, properties);
+		}
+		#endregion
+
 		#region UniqueId
 		// Retourne le prochain identificateur unique pour les objets.
 		public int GetNextUniqueObjectId()
@@ -1648,5 +1683,6 @@ namespace Epsitec.Common.Document
 		protected double						surfaceRotationAngle;
 		protected int							uniqueObjectId = 0;
 		protected int							uniqueAggregateId = 0;
+		protected Text.TextContext				textContext;
 	}
 }

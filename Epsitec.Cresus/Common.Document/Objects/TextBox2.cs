@@ -21,15 +21,13 @@ namespace Epsitec.Common.Document.Objects
 
 		protected void Initialise()
 		{
-			this.textContext = new Text.TextContext();
-
 			if ( this.document.Modifier == null )
 			{
-				this.textStory = new Text.TextStory(this.textContext);
+				this.textStory = new Text.TextStory(this.document.TextContext);
 			}
 			else
 			{
-				this.textStory = new Text.TextStory(this.document.Modifier.OpletQueue, this.textContext);
+				this.textStory = new Text.TextStory(this.document.Modifier.OpletQueue, this.document.TextContext);
 			}
 
 			this.textFitter    = new Text.TextFitter(this.textStory);
@@ -42,21 +40,6 @@ namespace Epsitec.Common.Document.Objects
 			
 			this.textFitter.FrameList.Add(this.textFrame);
 			
-			System.Collections.ArrayList properties = new System.Collections.ArrayList();
-			
-			//?Text.Properties.FontProperty fp = new Text.Properties.FontProperty("Palatino Linotype", "Italic", "liga", "dlig", "kern");
-			Text.Properties.FontProperty fp = new Text.Properties.FontProperty("Arial", "Roman");
-			
-			properties.Add(fp);
-			properties.Add(new Text.Properties.FontSizeProperty(12.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points));
-			properties.Add(new Text.Properties.MarginsProperty(60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
-			properties.Add(new Text.Properties.ColorProperty("Black"));
-			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
-			properties.Add(new Text.Properties.LeadingProperty(14.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 13.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
-			
-			Text.TextStyle style = this.textStory.TextContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
-			
-			this.textStory.TextContext.DefaultStyle = style;
 			this.textStory.TextContext.IsDegradedLayoutEnabled = true;
 			
 			this.metaNavigator.Insert(Text.Unicode.Code.EndOfText);
@@ -68,7 +51,7 @@ namespace Epsitec.Common.Document.Objects
 			this.metaNavigator.TextChanged += new Support.EventHandler(this.HandleTextChanged);
 			this.metaNavigator.CursorMoved += new Support.EventHandler(this.HandleCursorMoved);
 			
-			this.markerSelected = this.textContext.Markers.Selected;
+			this.markerSelected = this.document.TextContext.Markers.Selected;
 		}
 
 		protected override bool ExistingProperty(Properties.Type type)
@@ -964,7 +947,6 @@ namespace Epsitec.Common.Document.Objects
 		
 		protected bool							hasSelection;
 		protected ulong							markerSelected;
-		protected Text.TextContext				textContext;
 		protected Text.TextStory				textStory;
 		protected Text.TextFitter				textFitter;
 		protected Text.TextNavigator			textNavigator;
