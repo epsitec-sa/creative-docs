@@ -17,6 +17,6 @@ namespace Epsitec.Common.Widgets.Helpers
 		AffectsParentLayout		= 0x0002,
 		AffectsDisplay			= 0x0004,
 		
-		InheritsValue			= 0x1000,
+		InheritsValue			= 0x1000,		//	la valeur de la propriété peut être héritée par des enfants
 	}
 }

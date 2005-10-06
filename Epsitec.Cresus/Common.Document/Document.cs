@@ -1134,6 +1134,7 @@ namespace Epsitec.Common.Document
 			Text.TextStyle style;
 
 			this.textContext = new Text.TextContext();
+			this.textContext.IsDegradedLayoutEnabled = true;
 
 			properties = new System.Collections.ArrayList();
 			//?properties.Add(new Text.Properties.FontProperty("Palatino Linotype", "Italic", "liga", "dlig", "kern"));
@@ -1155,16 +1156,33 @@ namespace Epsitec.Common.Document
 			this.textContext.StyleList.NewMetaProperty("Italic", "Italic", properties);
 
 			properties = new System.Collections.ArrayList();
-			properties.Add(new Text.Properties.FontProperty(null, "!Underlined"));
+			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", "Black"));
 			this.textContext.StyleList.NewMetaProperty("Underlined", "Underlined", properties);
-
-			properties = new System.Collections.ArrayList();
-			properties.Add(new Text.Properties.FontProperty(null, "!Bullet1"));
-			this.textContext.StyleList.NewMetaProperty("Bullet1", "Bullet", properties);
-
-			properties = new System.Collections.ArrayList();
-			properties.Add(new Text.Properties.FontProperty(null, "!Bullet2"));
-			this.textContext.StyleList.NewMetaProperty("Bullet2", "Bullet", properties);
+			
+			
+			Text.TabList   tabs       = this.textContext.TabList;
+			Text.Generator generator1 = this.textContext.GeneratorList.NewGenerator("alpha-1");
+			Text.Generator generator2 = this.textContext.GeneratorList.NewGenerator("alpha-2");
+			
+			generator1.Add (Text.Generator.CreateSequence (Text.Generator.SequenceType.Alphabetic, "", ")"));
+			generator2.Add (Text.Generator.CreateSequence (Text.Generator.SequenceType.Numeric, "", "."));
+			
+			Text.ParagraphManagers.ItemListManager.Parameters items1 = new Text.ParagraphManagers.ItemListManager.Parameters ();
+			Text.ParagraphManagers.ItemListManager.Parameters items2 = new Text.ParagraphManagers.ItemListManager.Parameters ();
+			
+			items1.Generator = generator1;
+			items1.TabItem   = tabs.NewTab ("T1-item", 10.0, Text.Properties.SizeUnits.Points, 0, null);
+			items1.TabBody   = tabs.NewTab ("T1-body", 60.0, Text.Properties.SizeUnits.Points, 0, null);
+			
+			items2.Generator = generator2;
+			items2.TabItem   = tabs.NewTab ("T2-item", 10.0, Text.Properties.SizeUnits.Points, 0, null);
+			items2.TabBody   = tabs.NewTab ("T2-body", 60.0, Text.Properties.SizeUnits.Points, 0, null);
+			
+			Text.Properties.ManagedParagraphProperty itemList1 = new Text.Properties.ManagedParagraphProperty("ItemList", items1.Save ());
+			Text.Properties.ManagedParagraphProperty itemList2 = new Text.Properties.ManagedParagraphProperty("ItemList", items2.Save ());
+			
+			this.textContext.StyleList.NewTextStyle("Bullet1", Text.TextStyleClass.Paragraph, itemList1);
+			this.textContext.StyleList.NewTextStyle("Bullet2", Text.TextStyleClass.Paragraph, itemList2);
 		}
 		#endregion
 

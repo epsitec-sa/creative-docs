@@ -683,8 +683,9 @@ restart_paragraph_layout:
 						
 						double tab_x;
 						double tab_dx;
+						bool   tab_at_line_start = (layout.TextOffset == line_start_offset+1);
 						
-						tab_status = this.MeasureTabTextWidth (layout, tab_property, line_count, false, out tab_x, out tab_dx);
+						tab_status = this.MeasureTabTextWidth (layout, tab_property, line_count, tab_at_line_start, out tab_x, out tab_dx);
 						
 						if (tab_status == TabStatus.ErrorNeedMoreText)
 						{
@@ -1164,6 +1165,15 @@ restart_paragraph_layout:
 			double x2 = tabs.GetTabPositionInPoints (tab_property);
 			double x3 = layout.LineWidth - layout.RightMargin;
 			
+			if ((x2 <= x1) &&
+				(start_of_line))
+			{
+				//	Tabulateur en début de ligne, mais à gauche de la marge de
+				//	gauche => tant pis, on le place hors des marges.
+				
+				x1 = x2;
+			}
+			
 			double x_before = x2 - x1;
 			double x_after  = x3 - x2;
 			
@@ -1179,8 +1189,8 @@ restart_paragraph_layout:
 //-			Debug.Assert.IsTrue (layout.Disposition == 0);
 //-			Debug.Assert.IsTrue (layout.Justification == 0);
 			
-			if ((x_before <= 0) ||
-				(x_after <= 0))
+			if ((x_before < 0) ||
+				(x_after < 0))
 			{
 				//	Tabulateur mal placé... Demande un saut de ligne ! Mais on
 				//	calcule encore au préalable la position qu'occupera le texte
@@ -1212,7 +1222,8 @@ restart_paragraph_layout:
 				room_after  = x_after;
 				room_before = x_after * ratio;
 				
-				if (x_before < room_before)
+				if ((x_before < room_before) &&
+					(x_before > 0))
 				{
 					room_before = x_before;
 					room_after  = x_before / ratio;
@@ -1225,7 +1236,8 @@ restart_paragraph_layout:
 				room_before = x_before;
 				room_after  = x_before * ratio;
 				
-				if (x_after < room_after)
+				if ((x_after < room_after) &&
+					(x_after > 0))
 				{
 					room_after  = x_after;
 					room_before = x_after / ratio;

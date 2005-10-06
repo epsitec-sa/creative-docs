@@ -955,8 +955,6 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			try
 			{
-//				System.Diagnostics.Trace.WriteLine ("OnSizeChanged: Created="+this.Created+", form_bounds_set="+this.form_bounds_set+", form_bounds="+this.form_bounds.ToString()+", Bounds="+this.Bounds.ToString()+", WindowBounds="+this.WindowBounds.ToString());
-				
 				if ((this.Created == false) &&
 					(this.form_bounds_set) &&
 					(this.form_bounds.Size != this.Size))

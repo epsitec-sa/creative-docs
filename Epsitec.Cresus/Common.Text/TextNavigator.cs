@@ -234,6 +234,27 @@ namespace Epsitec.Common.Text
 			
 			int p1 = this.story.GetCursorPosition (this.cursor);
 			int p2 = p1 + move;
+			int d2;
+			
+			Cursors.TempCursor temp = new Cursors.TempCursor ();
+			
+			this.story.NewCursor (temp);
+			this.story.SetCursorPosition (temp, p1);
+			
+			this.MoveCursor (temp, move, out p2, out d2);
+			
+			if (Internal.Navigator.IsParagraphStart (this.story, temp, p2 - p1))
+			{
+				//	Le curseur n'a pas le droit de se trouver en début de paragraphe
+				//	si celui-ci commence par du texte automatique, car on n'a pas le
+				//	droit d'insérer de texte avant celui-ci.
+				
+				this.SkipOverAutoText (ref p2, 1);
+			}
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Delete from {0} to {1}", p1, p2));
+			
+			this.story.RecycleCursor (temp);
 			
 			if (p1 < 0)
 			{
@@ -264,8 +285,6 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			Cursors.TempCursor temp = new Cursors.TempCursor ();
-			
 			this.story.NewCursor (temp);
 			
 			try
@@ -284,6 +303,20 @@ namespace Epsitec.Common.Text
 				{
 					this.story.SetCursorPosition (temp, p1);
 					this.DeleteText (temp, p2-p1);
+				}
+				
+				if (Internal.Navigator.IsParagraphStart (this.story, this.ActiveCursor, 0))
+				{
+					//	Le curseur n'a pas le droit de se trouver en début de paragraphe
+					//	si celui-ci commence par du texte automatique, car on n'a pas le
+					//	droit d'insérer de texte avant celui-ci.
+				
+					int pos = this.story.GetCursorPosition (this.ActiveCursor);
+					
+					if (this.SkipOverAutoText (ref pos, 1))
+					{
+						this.story.SetCursorPosition (this.ActiveCursor, pos);
+					}
 				}
 			}
 			finally
@@ -544,10 +577,16 @@ namespace Epsitec.Common.Text
 						int end   = range.End;
 						int pos   = start;
 						
-						while (pos < end)
+						while (pos < positions[range.EndIndex])
 						{
 							this.SetParagraphStyles (pos, paragraph_styles);
 							pos = this.FindNextParagraphStart (pos);
+							
+							//	Comme l'application d'un style de paragraphe avec manager peut
+							//	avoir modifié le texte (insertion de puces, par ex.), on doit
+							//	redemander les positions :
+							
+							positions = this.GetSelectionCursorPositions ();
 						}
 					}
 					
@@ -711,7 +750,7 @@ namespace Epsitec.Common.Text
 					this.story.OpletQueue.ValidateAction ();
 				}
 			}
-			else
+//			else
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 				
@@ -1079,21 +1118,6 @@ namespace Epsitec.Common.Text
 			this.current_properties  = properties;
 			
 			this.RefreshAccumulatedStylesAndProperties ();
-			
-			System.Text.StringBuilder fingerprint = new System.Text.StringBuilder ();
-			
-			properties = this.accumulated_properties;
-			
-			for (int i = 0; i < properties.Length; i++)
-			{
-				fingerprint.Append (properties[i].ToString ());
-			}
-			
-			if (this.accumulated_properties_fingerprint != fingerprint.ToString ())
-			{
-				this.accumulated_properties_fingerprint = fingerprint.ToString ();
-				this.OnActiveStyleChanged ();
-			}
 		}
 		
 		
@@ -1551,10 +1575,16 @@ namespace Epsitec.Common.Text
 		#region Range Class
 		private class Range
 		{
-			public Range(int start, int length)
+			public Range(int start, int length) : this (start, length, -1, -1)
 			{
-				this.start  = start;
-				this.length = length;
+			}
+			
+			public Range(int start, int length, int i_start, int i_end)
+			{
+				this.start   = start;
+				this.length  = length;
+				this.i_start = i_start;
+				this.i_end   = i_end;
 			}
 			
 			
@@ -1596,6 +1626,22 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			public int							StartIndex
+			{
+				get
+				{
+					return this.i_start;
+				}
+			}
+			
+			public int							EndIndex
+			{
+				get
+				{
+					return this.i_end;
+				}
+			}
+			
 			
 			public static void Merge(System.Collections.Stack ranges, Range new_range)
 			{
@@ -1609,7 +1655,8 @@ namespace Epsitec.Common.Text
 					
 					if (old_range.End == new_range.Start)
 					{
-						old_range.End = new_range.End;
+						old_range.End   = new_range.End;
+						old_range.i_end = new_range.i_end;
 					}
 					else
 					{
@@ -1644,8 +1691,17 @@ namespace Epsitec.Common.Text
 						
 						ranges.RemoveAt (i);
 						
-						old_range.Start = System.Math.Min (old_range.Start, new_range.Start);
-						old_range.End   = System.Math.Max (old_range.End, new_range.End);
+						if (old_range.Start > new_range.Start)
+						{
+							old_range.Start   = new_range.Start;
+							old_range.i_start = new_range.i_start;
+						}
+						
+						if (old_range.End < new_range.End)
+						{
+							old_range.End    = new_range.End;
+							old_range.i_end  = new_range.i_end;
+						}
 						
 						Range.Merge (ranges, old_range);
 						
@@ -1673,11 +1729,11 @@ namespace Epsitec.Common.Text
 					
 					if (p1 < p2)
 					{
-						Range.Merge (list, new Range (p1, p2-p1));
+						Range.Merge (list, new Range (p1, p2-p1, i+0, i+1));
 					}
 					else if (p1 > p2)
 					{
-						Range.Merge (list, new Range (p2, p1-p2));
+						Range.Merge (list, new Range (p2, p1-p2, i+1, i+0));
 					}
 				}
 				
@@ -1689,6 +1745,8 @@ namespace Epsitec.Common.Text
 			
 			private int							start;
 			private int							length;
+			private int							i_start;
+			private int							i_end;
 		}
 		#endregion
 		
@@ -1845,6 +1903,25 @@ namespace Epsitec.Common.Text
 			current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
 			
 			this.accumulated_properties = current_accumulator.AccumulatedProperties;
+			
+			//	Génère une "empreinte" des styles et propriétés actifs, ce qui va
+			//	permettre de déterminer si les réglages ont changé depuis la dernière
+			//	fois.
+			
+			System.Text.StringBuilder fingerprint = new System.Text.StringBuilder ();
+			
+			for (int i = 0; i < this.accumulated_properties.Length; i++)
+			{
+				fingerprint.Append (this.accumulated_properties[i].ToString ());
+			}
+			
+			if (this.accumulated_properties_fingerprint != fingerprint.ToString ())
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Fingerprint: {0}", this.accumulated_properties_fingerprint));
+				
+				this.accumulated_properties_fingerprint = fingerprint.ToString ();
+				this.OnActiveStyleChanged ();
+			}
 		}
 		
 		

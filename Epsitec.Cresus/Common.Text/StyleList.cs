@@ -82,13 +82,14 @@ namespace Epsitec.Common.Text
 			return style;
 		}
 		
+		public TextStyle NewTextStyle(string name, TextStyleClass text_style_class, params Property[] properties)
+		{
+			return this.NewTextStyle (name, text_style_class, properties, null);
+		}
+		
 		public TextStyle NewTextStyle(string name, TextStyleClass text_style_class, System.Collections.ICollection properties)
 		{
-			TextStyle style = new TextStyle (name, text_style_class, properties);
-			
-			this.Attach (style);
-			
-			return style;
+			return this.NewTextStyle (name, text_style_class, properties, null);
 		}
 		
 		public TextStyle NewTextStyle(string name, TextStyleClass text_style_class, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)

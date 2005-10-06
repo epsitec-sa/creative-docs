@@ -551,8 +551,6 @@ namespace Epsitec.Common.Widgets
 			hCircle = System.Math.Min(hCircle, rect.Width);
 			Drawing.Rectangle r = new Drawing.Rectangle();
 
-			System.Diagnostics.Debug.WriteLine("UpdateClientGeometry: bounds=" + rect);
-			
 			bool visibleCircle = ( rect.Height > 160 );
 			bool visibleFields = ( rect.Height > 3*20 );
 

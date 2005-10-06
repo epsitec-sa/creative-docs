@@ -461,32 +461,56 @@ namespace Epsitec.Common.Document.Objects
 		// Met en puces 1 pendant l'édition.
 		public override bool EditBullet1()
 		{
-			Text.TextStyle style = this.document.TextContext.StyleList["Bullet1", Text.TextStyleClass.MetaProperty];
-			if ( style == null )  return false;
-
-			Text.Properties.ApplyMode mode = Text.Properties.ApplyMode.Set;
-			if ( this.IsEditBullet1 )
-			{
-				mode = Text.Properties.ApplyMode.Clear;
-			}
-			this.metaNavigator.SetMetaProperties(mode, style);
-			this.HandleTextChanged(null);  // beurk !
-			return true;
+			return this.ApplyBulletStyle("Bullet1");
 		}
 
 		// Met en puces 2 pendant l'édition.
 		public override bool EditBullet2()
 		{
-			Text.TextStyle style = this.document.TextContext.StyleList["Bullet2", Text.TextStyleClass.MetaProperty];
+			return this.ApplyBulletStyle("Bullet2");
+		}
+		
+		private bool ApplyBulletStyle(string name)
+		{
+			Text.TextStyle style = this.document.TextContext.StyleList[name, Text.TextStyleClass.Paragraph];
 			if ( style == null )  return false;
 
-			Text.Properties.ApplyMode mode = Text.Properties.ApplyMode.Set;
-			if ( this.IsEditBullet2 )
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			Text.TextStyle[] styles = Text.TextStyle.FilterStyles (this.metaNavigator.TextNavigator.TextStyles, Text.TextStyleClass.Paragraph);
+			
+			bool found = false;
+			
+			for (int i = 0; i < styles.Length; i++)
 			{
-				mode = Text.Properties.ApplyMode.Clear;
+				if (styles[i].Name.StartsWith ("Bullet"))
+				{
+					if (styles[i].Name == style.Name)
+					{
+						found = true;
+					}
+				}
+				else
+				{
+					list.Add (styles[i]);
+				}
 			}
-			this.metaNavigator.SetMetaProperties(mode, style);
+			
+			if (!found)
+			{
+				list.Add (style);
+			}
+			
+			styles = (Text.TextStyle[])list.ToArray (typeof (Text.TextStyle));
+			
+			System.Diagnostics.Debug.WriteLine("Styles:");
+			foreach (Text.TextStyle s in styles)
+			{
+				System.Diagnostics.Debug.WriteLine(string.Format("  {0}: {1}", s.Name, s.TextStyleClass));
+			}
+			
+			this.metaNavigator.SetParagraphStyles(styles);
 			this.HandleTextChanged(null);  // beurk !
+			
 			return true;
 		}
 
