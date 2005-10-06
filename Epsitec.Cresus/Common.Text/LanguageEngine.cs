@@ -90,13 +90,28 @@ namespace Epsitec.Common.Text
 					word.Append ((char) code);
 				}
 				
-				short[] break_pos = Drawing.TextBreak.GetHyphenationPositions (word.ToString ());
+				short[] break_pos = LanguageEngine.GetHyphenationPositions (word.ToString ());
 				
 				foreach (short pos in break_pos)
 				{
 					breaks[break_offset + pos - 1] = Unicode.BreakInfo.HyphenateGoodChoice;
 				}
 			}
+		}
+		
+		private static short[] GetHyphenationPositions(string text)
+		{
+			short[] breaks = new short[25];
+			int     num    = AntiGrain.TextBreak.HyphenateWord (text, text.Length, breaks);
+			
+			short[] result = new short[num];
+			
+			for (int i = 0; i < num; i++)
+			{
+				result[i] = breaks[i];
+			}
+			
+			return result;
 		}
 	}
 }

@@ -48,6 +48,18 @@ namespace Epsitec.Common.Types
 			this.set_value_override = set_value_override_callback;
 		}
 		
+		public PropertyMetadata(object default_value, GetValueOverrideCallback get_value_override_callback)
+		{
+			this.default_value      = default_value;
+			this.get_value_override = get_value_override_callback;
+		}
+		
+		public PropertyMetadata(object default_value, SetValueOverrideCallback set_value_override_callback)
+		{
+			this.default_value      = default_value;
+			this.set_value_override = set_value_override_callback;
+		}
+		
 		
 		public object							DefaultValue
 		{

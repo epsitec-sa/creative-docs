@@ -29,7 +29,22 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.InitialiseFromFlags (flags);
 		}
 		
+		public VisualPropertyMetadata(Types.GetValueOverrideCallback get_value_override_callback, VisualPropertyFlags flags) : base (get_value_override_callback)
+		{
+			this.InitialiseFromFlags (flags);
+		}
+		
 		public VisualPropertyMetadata(object default_value, VisualPropertyFlags flags) : base (default_value)
+		{
+			this.InitialiseFromFlags (flags);
+		}
+		
+		public VisualPropertyMetadata(object default_value, Types.GetValueOverrideCallback get_value_override_callback, VisualPropertyFlags flags) : base (default_value, get_value_override_callback)
+		{
+			this.InitialiseFromFlags (flags);
+		}
+		
+		public VisualPropertyMetadata(object default_value, Types.SetValueOverrideCallback set_value_override_callback, VisualPropertyFlags flags) : base (default_value, set_value_override_callback)
 		{
 			this.InitialiseFromFlags (flags);
 		}
@@ -71,12 +86,21 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 		
+		public bool								InheritsValue
+		{
+			get
+			{
+				return this.inherits_value;
+			}
+		}
+		
 		
 		protected virtual void InitialiseFromFlags(VisualPropertyFlags flags)
 		{
 			this.affects_layout        = (flags & VisualPropertyFlags.AffectsLayout) != 0;
 			this.affects_parent_layout = (flags & VisualPropertyFlags.AffectsParentLayout) != 0;
 			this.affects_display       = (flags & VisualPropertyFlags.AffectsDisplay) != 0;
+			this.inherits_value        = (flags & VisualPropertyFlags.InheritsValue) != 0;
 		}
 		
 		protected override void OnPropertyInvalidated(Types.Object sender, object old_value, object new_value)
@@ -107,5 +131,6 @@ namespace Epsitec.Common.Widgets.Helpers
 		private bool							affects_layout;
 		private bool							affects_parent_layout;
 		private bool							affects_display;
+		private bool							inherits_value;
 	}
 }

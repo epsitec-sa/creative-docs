@@ -1,3 +1,6 @@
+//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets.Helpers
 {
 	/// <summary>
@@ -330,6 +333,40 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 			
 			return false;
+		}
+		
+		
+		public static VisualTreeSnapshot SnapshotProperties(Visual visual, Types.Property property)
+		{
+			VisualTreeSnapshot snapshot = new VisualTreeSnapshot ();
+			
+			snapshot.Record (visual, property);
+			VisualTree.SnapshotChildrenProperties (snapshot, visual, property);
+			
+			return snapshot;
+		}
+		
+		public static VisualTreeSnapshot SnapshotChildrenProperties(Visual visual, Types.Property property)
+		{
+			VisualTreeSnapshot snapshot = new VisualTreeSnapshot ();
+			
+			VisualTree.SnapshotChildrenProperties (snapshot, visual, property);
+			
+			return snapshot;
+		}
+		
+		
+		private static void SnapshotChildrenProperties(VisualTreeSnapshot snapshot, Visual visual, Types.Property property)
+		{
+			if (visual.HasChildren)
+			{
+				foreach (Visual child in visual.GetChildrenCollection ())
+				{
+					snapshot.Record (child, property);
+					
+					VisualTree.SnapshotChildrenProperties (snapshot, child, property);
+				}
+			}
 		}
 	}
 }

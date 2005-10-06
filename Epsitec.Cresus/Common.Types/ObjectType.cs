@@ -79,6 +79,38 @@ namespace Epsitec.Common.Types
 		}
 		
 		
+		public void Register(Property property)
+		{
+			System.Diagnostics.Debug.Assert (property.OwnerType == this.SystemType);
+			System.Diagnostics.Debug.Assert (this.local_properties != null);
+			
+			this.local_properties.Add (property);
+		}
+		
+		public Property[] GetProperties()
+		{
+			if (this.all_properties == null)
+			{
+				lock (this)
+				{
+					if (this.all_properties == null)
+					{
+						Property[] base_properties = this.BaseType == null ? new Property[0] : this.BaseType.GetProperties ();
+						Property[] all_properties  = new Property[base_properties.Length + this.local_properties.Count];
+						
+						base_properties.CopyTo (all_properties, 0);
+						this.local_properties.CopyTo (all_properties, base_properties.Length);
+						
+						this.all_properties   = all_properties;
+						this.local_properties = null;
+					}
+				}
+			}
+			
+			return this.all_properties;
+		}
+		
+		
 		public static ObjectType FromSystemType(System.Type type)
 		{
 			lock (ObjectType.types)
@@ -126,6 +158,8 @@ namespace Epsitec.Common.Types
 		
 		private ObjectType						base_type;
 		private System.Type						system_type;
+		private System.Collections.ArrayList	local_properties = new System.Collections.ArrayList ();
+		private Property[]						all_properties;
 		
 		static System.Collections.Hashtable		types = new System.Collections.Hashtable ();
 	}

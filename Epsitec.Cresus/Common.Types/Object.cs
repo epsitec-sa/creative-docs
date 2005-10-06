@@ -139,12 +139,20 @@ namespace Epsitec.Common.Types
 		
 		public void AddEvent(Property property, PropertyChangedEventHandler handler)
 		{
-			if (this.events == null)
-			{
-				this.events = new System.Collections.Hashtable ();
-			}
-			
+			this.InitialiseEventsHashtable ();
 			this.events[property] = (PropertyChangedEventHandler) this.events[property] + handler;
+		}
+		
+		public void AddEvent(string name, Support.EventHandler handler)
+		{
+			this.InitialiseEventsHashtable ();
+			this.events[name] = (Support.EventHandler) this.events[name] + handler;
+		}
+		
+		public void AddEvent(string name, Support.CancelEventHandler handler)
+		{
+			this.InitialiseEventsHashtable ();
+			this.events[name] = (Support.CancelEventHandler) this.events[name] + handler;
 		}
 		
 		public void RemoveEvent(Property property, PropertyChangedEventHandler handler)
@@ -156,8 +164,26 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		public void RemoveEvent(string name, Support.EventHandler handler)
+		{
+			if ((this.events != null) &&
+				(this.events.Contains (name)))
+			{
+				this.events[name] = (Support.EventHandler) this.events[name] - handler;
+			}
+		}
 		
-		protected void InvalidateProperty(Property property, object old_value, object new_value)
+		public void RemoveEvent(string name, Support.CancelEventHandler handler)
+		{
+			if ((this.events != null) &&
+				(this.events.Contains (name)))
+			{
+				this.events[name] = (Support.CancelEventHandler) this.events[name] - handler;
+			}
+		}
+		
+		
+		public void InvalidateProperty(Property property, object old_value, object new_value)
 		{
 			PropertyMetadata metadata = property.GetMetadata (this);
 			
@@ -175,26 +201,69 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		internal static void Register(Property dp)
+		protected void InitialiseEventsHashtable()
+		{
+			if (this.events == null)
+			{
+				lock (this)
+				{
+					if (this.events == null)
+					{
+						this.events = new System.Collections.Hashtable ();
+					}
+				}
+			}
+		}
+		
+		protected void RaiseEvent(string name)
+		{
+			if (this.events != null)
+			{
+				Support.EventHandler handler = (Support.EventHandler) this.events[name];
+				
+				if (handler != null)
+				{
+					handler (this);
+				}
+			}
+		}
+		
+		protected void RaiseEvent(string name, Support.CancelEventArgs e)
+		{
+			if (this.events != null)
+			{
+				Support.CancelEventHandler handler = (Support.CancelEventHandler) this.events[name];
+				
+				if (handler != null)
+				{
+					handler (this, e);
+				}
+			}
+		}
+		
+		
+		internal static void Register(Property property)
 		{
 			lock (Object.declarations)
 			{
-				System.Collections.Hashtable type_declaration = Object.declarations[dp.OwnerType] as System.Collections.Hashtable;
+				System.Collections.Hashtable type_declaration = Object.declarations[property.OwnerType] as System.Collections.Hashtable;
 				
 				if (type_declaration == null)
 				{
 					type_declaration = new System.Collections.Hashtable ();
-					type_declaration[dp.Name] = dp;
-					Object.declarations[dp.OwnerType] = type_declaration;
+					type_declaration[property.Name] = property;
+					Object.declarations[property.OwnerType] = type_declaration;
 				}
-				else if (type_declaration.Contains (dp.Name))
+				else if (type_declaration.Contains (property.Name))
 				{
-					throw new System.ArgumentException (string.Concat ("Property with name ", dp.Name, " already exists for type ", dp.OwnerType));
+					throw new System.ArgumentException (string.Concat ("Property with name ", property.Name, " already exists for type ", property.OwnerType));
 				}
 				else
 				{
-					type_declaration[dp.Name] = dp;
+					type_declaration[property.Name] = property;
 				}
+				
+				ObjectType.FromSystemType (property.OwnerType).Register (property);
 			}
 		}
 		
@@ -239,7 +308,7 @@ namespace Epsitec.Common.Types
 		
 		
 		private System.Collections.Hashtable	properties = new System.Collections.Hashtable ();
-		private System.Collections.Hashtable	events;
+		protected System.Collections.Hashtable	events;
 		private ObjectType						cached_type;
 		
 		static System.Collections.Hashtable		declarations = new System.Collections.Hashtable ();

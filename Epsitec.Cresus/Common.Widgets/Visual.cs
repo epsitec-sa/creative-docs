@@ -399,7 +399,9 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.SetValue (Visual.VisibilityProperty, value);
+				Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this, Visual.IsVisibleProperty);
+				this.SetValueBase (Visual.VisibilityProperty, value);
+				snapshot.InvalidateDifferent ();
 			}
 		}
 		
@@ -411,7 +413,9 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.SetValue (Visual.EnableProperty, value);
+				Helpers.VisualTreeSnapshot snapshot = Helpers.VisualTree.SnapshotProperties (this, Visual.IsEnabledProperty);
+				this.SetValueBase (Visual.EnableProperty, value);
+				snapshot.InvalidateDifferent ();
 			}
 		}
 		
@@ -574,6 +578,15 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public Collections.ChildrenCollection	Children
+		{
+			get
+			{
+				return this.GetChildrenCollection ();
+			}
+		}
+		
+		
 		internal Collections.ChildrenCollection GetChildrenCollection()
 		{
 			return new Collections.ChildrenCollection (this);
@@ -694,9 +707,11 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		
 		static Visual()
 		{
 		}
+		
 		
 		private static object GetParentValue(Object o)
 		{
@@ -734,6 +749,30 @@ namespace Epsitec.Common.Widgets
 			that.Size = (Drawing.Size) value;
 		}
 		
+		private static object GetIsEnabledValue(Object o)
+		{
+			Visual that = o as Visual;
+			return that.IsEnabled;
+		}
+		
+		private static object GetIsVisibleValue(Object o)
+		{
+			Visual that = o as Visual;
+			return that.IsVisible;
+		}
+		
+		private static void SetEnableValue(Object o, object value)
+		{
+			Visual that = o as Visual;
+			that.Enable = (bool) value;
+		}
+		
+		private static void SetVisibilityValue(Object o, object value)
+		{
+			Visual that = o as Visual;
+			that.Visibility = (bool) value;
+		}
+		
 		private static void NotifySizeChanged(Object o, object old_value, object new_value)
 		{
 			Visual that = o as Visual;
@@ -768,7 +807,30 @@ namespace Epsitec.Common.Widgets
 			{
 				this.RemoveEvent (Visual.ParentProperty, value);
 			}
-
+		}
+		
+		public event PropertyChangedEventHandler	IsVisibleChanged
+		{
+			add
+			{
+				this.AddEvent (Visual.IsVisibleProperty, value);
+			}
+			remove
+			{
+				this.RemoveEvent (Visual.IsVisibleProperty, value);
+			}
+		}
+		
+		public event PropertyChangedEventHandler	IsEnabledChanged
+		{
+			add
+			{
+				this.AddEvent (Visual.IsEnabledProperty, value);
+			}
+			remove
+			{
+				this.RemoveEvent (Visual.IsEnabledProperty, value);
+			}
 		}
 		
 		
@@ -791,8 +853,11 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property MinSizeProperty				= Property.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, VisualPropertyFlags.AffectsParentLayout));
 		public static readonly Property MaxSizeProperty				= Property.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Infinite, VisualPropertyFlags.AffectsParentLayout));
 		
-		public static readonly Property VisibilityProperty			= Property.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, VisualPropertyFlags.AffectsParentLayout));
-		public static readonly Property EnableProperty				= Property.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, VisualPropertyFlags.AffectsDisplay));
+		public static readonly Property VisibilityProperty			= Property.Register ("Visibility", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetVisibilityValue), VisualPropertyFlags.AffectsParentLayout));
+		public static readonly Property EnableProperty				= Property.Register ("Enable", typeof (bool), typeof (Visual), new VisualPropertyMetadata (true, new SetValueOverrideCallback (Visual.SetEnableValue), VisualPropertyFlags.AffectsDisplay));
+		
+		public static readonly Property IsVisibleProperty			= Property.RegisterReadOnly ("IsVisible", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsVisibleValue), VisualPropertyFlags.InheritsValue));
+		public static readonly Property IsEnabledProperty			= Property.RegisterReadOnly ("IsEnabled", typeof (bool), typeof (Visual), new VisualPropertyMetadata (new GetValueOverrideCallback (Visual.GetIsEnabledValue), VisualPropertyFlags.InheritsValue));
 		
 		public static readonly Property AutoCaptureProperty			= Property.Register ("AutoCapture", typeof (bool), typeof (Visual), new PropertyMetadata (true));
 		public static readonly Property AutoFocusProperty			= Property.Register ("AutoFocus", typeof (bool), typeof (Visual), new PropertyMetadata (false));

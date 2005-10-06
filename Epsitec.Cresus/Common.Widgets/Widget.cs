@@ -8,7 +8,6 @@ namespace Epsitec.Common.Widgets
 	
 	
 	public delegate bool WalkWidgetCallback(Widget widget);
-	public delegate void PaintBoundsCallback(Widget widget, ref Drawing.Rectangle bounds);
 	
 	#region WidgetState enum
 	[System.Flags] public enum WidgetState : uint
@@ -982,14 +981,6 @@ namespace Epsitec.Common.Widgets
 //				
 //				System.Diagnostics.Debug.Assert (this.ZOrder == value);
 //			}
-		}
-		
-		public Collections.ChildrenCollection		Children
-		{
-			get
-			{
-				return this.GetChildrenCollection ();
-			}
 		}
 		
 		
@@ -2161,16 +2152,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Drawing.Rectangle GetPaintBounds()
+		public virtual Drawing.Rectangle GetPaintBounds()
 		{
-			Drawing.Rectangle bounds = this.GetShapeBounds ();
-			
-			if (this.PaintBoundsCallback != null)
-			{
-				this.PaintBoundsCallback (this, ref bounds);
-			}
-			
-			return bounds;
+			return this.GetShapeBounds ();
 		}
 		
 		
@@ -4753,15 +4737,20 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnPaintBackground(PaintEventArgs e)
 		{
-			if (this.PaintBackground != null)
+			if (this.events != null)
 			{
-				e.Suppress = false;
+				PaintEventHandler handler = (PaintEventHandler) this.events["PaintBackground"];
 				
-				this.PaintBackground (this, e);
-				
-				if (e.Suppress)
+				if (handler != null)
 				{
-					return;
+					e.Suppress = false;
+					
+					handler (this, e);
+					
+					if (e.Suppress)
+					{
+						return;
+					}
 				}
 			}
 			
@@ -4770,15 +4759,20 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnPaintForeground(PaintEventArgs e)
 		{
-			if (this.PaintForeground != null)
+			if (this.events != null)
 			{
-				e.Suppress = false;
+				PaintEventHandler handler = (PaintEventHandler) this.events["PaintForeground"];
 				
-				this.PaintForeground (this, e);
-				
-				if (e.Suppress)
+				if (handler != null)
 				{
-					return;
+					e.Suppress = false;
+					
+					handler (this, e);
+					
+					if (e.Suppress)
+					{
+						return;
+					}
 				}
 			}
 			
@@ -5186,17 +5180,44 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public event PaintEventHandler				PaintBackground
+		{
+			add
+			{
+				this.InitialiseEventsHashtable ();
+				this.events["PaintBackground"] = (PaintEventHandler) this.events["PaintBackground"] + value;
+			}
+			remove
+			{
+				if (this.events != null)
+				{
+					this.events["PaintBackground"] = (PaintEventHandler) this.events["PaintBackground"] - value;
+				}
+			}
+		}
+		
+		public event PaintEventHandler				PaintForeground
+		{
+			add
+			{
+				this.InitialiseEventsHashtable ();
+				this.events["PaintBackground"] = (PaintEventHandler) this.events["PaintForeground"] + value;
+			}
+			remove
+			{
+				if (this.events != null)
+				{
+					this.events["PaintBackground"] = (PaintEventHandler) this.events["PaintForeground"] - value;
+				}
+			}
+		}
 		
 		#region Events
 		public event Support.EventHandler			ClientGeometryUpdated;
 		public event Support.EventHandler			PreparePaint;
-		public event PaintEventHandler				PaintBackground;
-		public event PaintEventHandler				PaintForeground;
 		public event Support.EventHandler			AdornerChanged;
 		public event Support.EventHandler			CultureChanged;
 		public event Support.EventHandler			LayoutChanged;
-		
-//		public event Layouts.UpdateEventHandler		LayoutUpdate;
 		
 		public event MessageEventHandler			Pressed;
 		public event MessageEventHandler			Released;
@@ -5232,8 +5253,6 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			NameChanged;
 		public event Support.EventHandler			LocationChanged;
 		public event Support.EventHandler			VisibleChanged;
-		
-		public event PaintBoundsCallback			PaintBoundsCallback;
 		#endregion
 		
 		#region Various enums

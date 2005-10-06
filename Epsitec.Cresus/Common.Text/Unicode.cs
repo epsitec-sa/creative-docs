@@ -319,10 +319,10 @@ namespace Epsitec.Common.Text
 			{
 				if (Unicode.break_analyzer == null)
 				{
-					System.Type                host_type = typeof (Common.Drawing.TextBreak);
+					System.Type                host_type = typeof (Unicode.BreakAnalyzer);
 					System.Reflection.Assembly assembly  = host_type.Assembly;
 					
-					using (System.IO.Stream stream = assembly.GetManifestResourceStream ("Epsitec.Common.Drawing.Resources.LineBreak.compressed"))
+					using (System.IO.Stream stream = assembly.GetManifestResourceStream ("Epsitec.Common.Text.Resources.LineBreak.compressed"))
 					{
 						using (System.IO.Stream data = Common.IO.Decompression.CreateStream (stream))
 						{
