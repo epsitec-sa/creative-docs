@@ -149,6 +149,38 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public Drawing.Size						Size
+		{
+			get
+			{
+				return this.Bounds.Size;
+			}
+			set
+			{
+				Drawing.Rectangle bounds = this.Bounds;
+				
+				bounds.Size = value;
+				
+				this.Bounds = bounds;
+			}
+		}
+		
+		public Drawing.Point					Location
+		{
+			get
+			{
+				return this.Bounds.Location;
+			}
+			set
+			{
+				Drawing.Rectangle bounds = this.Bounds;
+				
+				bounds.Location = value;
+				
+				this.Bounds = bounds;
+			}
+		}
+		
 		public Drawing.Rectangle				Bounds
 		{
 			get
@@ -309,38 +341,6 @@ namespace Epsitec.Common.Widgets
 				Drawing.Rectangle bounds = this.Bounds;
 				
 				bounds.Height = value;
-				
-				this.Bounds = bounds;
-			}
-		}
-		
-		public Drawing.Size						Size
-		{
-			get
-			{
-				return this.Bounds.Size;
-			}
-			set
-			{
-				Drawing.Rectangle bounds = this.Bounds;
-				
-				bounds.Size = value;
-				
-				this.Bounds = bounds;
-			}
-		}
-		
-		public Drawing.Point					Location
-		{
-			get
-			{
-				return this.Bounds.Location;
-			}
-			set
-			{
-				Drawing.Rectangle bounds = this.Bounds;
-				
-				bounds.Location = value;
 				
 				this.Bounds = bounds;
 			}
@@ -594,8 +594,14 @@ namespace Epsitec.Common.Widgets
 		
 		internal virtual void SetBounds(Drawing.Rectangle value)
 		{
-//-			System.Diagnostics.Debug.WriteLine (string.Format ("Setting {0} bounds to {1}", this.GetType ().Name, value));
+			Drawing.Rectangle old_value = this.Bounds;
 			this.SetValueBase (Visual.BoundsProperty, value);
+			Drawing.Rectangle new_value = this.Bounds;
+			
+			if (old_value.Size != new_value.Size)
+			{
+				this.InvalidateProperty (Visual.SizeProperty, old_value.Size, new_value.Size);
+			}
 		}
 		
 		internal Collections.LayerCollection GetLayerCollection()
@@ -716,7 +722,41 @@ namespace Epsitec.Common.Widgets
 			that.Bounds = (Drawing.Rectangle) value;
 		}
 		
+		private static object GetSizeValue(Object o)
+		{
+			Visual that = o as Visual;
+			return that.Size;
+		}
 		
+		private static void SetSizeValue(Object o, object value)
+		{
+			Visual that = o as Visual;
+			that.Size = (Drawing.Size) value;
+		}
+		
+		private static void NotifySizeChanged(Object o, object old_value, object new_value)
+		{
+			Visual that = o as Visual;
+			that.OnSizeChanged (new PropertyChangedEventArgs (Visual.SizeProperty, old_value, new_value));
+		}
+		
+		
+		protected virtual void OnSizeChanged(Types.PropertyChangedEventArgs e)
+		{
+		}
+		
+		
+		public event PropertyChangedEventHandler	SizeChanged
+		{
+			add
+			{
+				this.AddEvent (Visual.SizeProperty, value);
+			}
+			remove
+			{
+				this.RemoveEvent (Visual.SizeProperty, value);
+			}
+		}
 		
 		public event PropertyChangedEventHandler	ParentChanged
 		{
@@ -746,6 +786,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property ContainerLayoutModeProperty	= Property.Register ("ContainerLayoutMode", typeof (ContainerLayoutMode), typeof (Visual), new VisualPropertyMetadata (ContainerLayoutMode.VerticalFlow, VisualPropertyFlags.AffectsLayout));
 		
 		public static readonly Property BoundsProperty				= Property.Register ("Bounds", typeof (Drawing.Rectangle), typeof (Visual), new PropertyMetadata (Drawing.Rectangle.Empty, new GetValueOverrideCallback (Visual.GetBoundsValue), new SetValueOverrideCallback (Visual.SetBoundsValue)));
+		public static readonly Property SizeProperty				= Property.Register ("Size", typeof (Drawing.Size), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetSizeValue), new SetValueOverrideCallback (Visual.SetSizeValue), new PropertyInvalidatedCallback (Visual.NotifySizeChanged)));
 		public static readonly Property PreferredSizeProperty		= Property.Register ("PreferredSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, VisualPropertyFlags.AffectsParentLayout));
 		public static readonly Property MinSizeProperty				= Property.Register ("MinSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Empty, VisualPropertyFlags.AffectsParentLayout));
 		public static readonly Property MaxSizeProperty				= Property.Register ("MaxSize", typeof (Drawing.Size), typeof (Visual), new VisualPropertyMetadata (Drawing.Size.Infinite, VisualPropertyFlags.AffectsParentLayout));

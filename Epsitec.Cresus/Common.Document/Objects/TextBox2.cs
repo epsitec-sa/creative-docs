@@ -50,7 +50,7 @@ namespace Epsitec.Common.Document.Objects
 			properties.Add(fp);
 			properties.Add(new Text.Properties.FontSizeProperty(12.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points));
 			properties.Add(new Text.Properties.MarginsProperty(60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
-			properties.Add(new Text.Properties.ColorProperty(Drawing.Color.FromName("Black")));
+			properties.Add(new Text.Properties.ColorProperty("Black"));
 			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
 			properties.Add(new Text.Properties.LeadingProperty(14.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 13.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			
@@ -690,7 +690,7 @@ namespace Epsitec.Common.Document.Objects
 			context.DisableSimpleRendering();
 		}
 		
-		public void Render(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)
+		public void Render(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)
 		{
 			Text.ITextFrame frame = layout.Frame;
 			
@@ -812,7 +812,7 @@ namespace Epsitec.Common.Document.Objects
 			
 			if ( font.FontManagerType == OpenType.FontManagerType.System )
 			{
-				Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, color);
+				Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, Drawing.Color.FromName (color));
 			}
 			else
 			{
@@ -829,7 +829,7 @@ namespace Epsitec.Common.Document.Objects
 					}
 				}
 				
-				this.graphics.RenderSolid(color);
+				this.graphics.RenderSolid(Drawing.Color.FromName (color));
 			}
 			
 			if ( this.edited && selRectList != null )
@@ -844,7 +844,7 @@ namespace Epsitec.Common.Document.Objects
 				
 				if ( font.FontManagerType == OpenType.FontManagerType.System )
 				{
-					Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, color);
+					Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, Drawing.Color.FromName (color));
 				}
 				else
 				{
@@ -868,7 +868,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 		
-		public void Render(Text.Layout.Context layout, Text.IGlyphRenderer glyphRenderer, Drawing.Color color, double x, double y, bool isLastRun)
+		public void Render(Text.Layout.Context layout, Text.IGlyphRenderer glyphRenderer, string color, double x, double y, bool isLastRun)
 		{
 			glyphRenderer.RenderGlyph(layout.Frame, x, y);
 		}

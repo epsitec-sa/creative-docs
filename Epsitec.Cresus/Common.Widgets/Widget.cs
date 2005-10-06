@@ -5006,12 +5006,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnSizeChanged()
+		protected override void OnSizeChanged(Types.PropertyChangedEventArgs e)
 		{
-			if (this.SizeChanged != null)
-			{
-				this.SizeChanged (this);
-			}
 		}
 		
 		protected virtual void OnLocationChanged()
@@ -5234,7 +5230,6 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			TextDefined;
 		public event Support.EventHandler			TextChanged;
 		public event Support.EventHandler			NameChanged;
-		public event Support.EventHandler			SizeChanged;
 		public event Support.EventHandler			LocationChanged;
 		public event Support.EventHandler			VisibleChanged;
 		

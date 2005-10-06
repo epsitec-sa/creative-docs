@@ -27,8 +27,6 @@ namespace Epsitec.App.DocumentEditor
 			this.type = type;
 			this.useArray = false;
 
-			this.SizeChanged += new EventHandler(this.HandleSizeChanged);
-
 			if ( this.type == DocumentType.Pictogram )
 			{
 				this.installType = InstallType.Full;
@@ -159,11 +157,18 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		private void HandleSizeChanged(object sender)
+		private void HandleSizeChanged()
 		{
 			if ( this.resize == null || this.Window == null )  return;
 			this.resize.SetEnabled(!this.Window.IsFullScreen);
 		}
+		
+		protected override void OnSizeChanged(Epsitec.Common.Types.PropertyChangedEventArgs e)
+		{
+			base.OnSizeChanged(e);
+			this.HandleSizeChanged();
+		}
+
 
 		protected override void Dispose(bool disposing)
 		{

@@ -56,7 +56,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 		}
 		
-		public void Render(Layout.Context layout, OpenType.Font font, double size, Drawing.Color color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
+		public void Render(Layout.Context layout, OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
 		{
 			//	Enregistre la position des divers caractères qui composent le texte
 			//	avec la fonte courante. Peuple la liste des éléments à cet effet.
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		public void Render(Layout.Context layout, IGlyphRenderer glyph_renderer, Drawing.Color color, double x, double y, bool is_last_run)
+		public void Render(Layout.Context layout, IGlyphRenderer glyph_renderer, string color, double x, double y, bool is_last_run)
 		{
 			ITextFrame frame = layout.Frame;
 			

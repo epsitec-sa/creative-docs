@@ -13,7 +13,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public ColorProperty(Drawing.Color text_color)
+		public ColorProperty(string text_color)
 		{
 			this.text_color = text_color;
 		}
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public Drawing.Color					TextColor
+		public string							TextColor
 		{
 			get
 			{
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeString (Drawing.Color.ToString (this.text_color, System.Globalization.CultureInfo.InvariantCulture)));
+				/**/				SerializerSupport.SerializeString (this.text_color));
 		}
 
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 1);
 			
-			Drawing.Color text_color = Drawing.Color.Parse (SerializerSupport.DeserializeString (args[0]), System.Globalization.CultureInfo.InvariantCulture);
+			string text_color = SerializerSupport.DeserializeString (args[0]);
 			
 			this.text_color = text_color;
 		}
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Text.Properties
 			ColorProperty b = property as ColorProperty;
 			ColorProperty c = new ColorProperty ();
 			
-			c.text_color = b.text_color.IsEmpty ? a.text_color : b.text_color;
+			c.text_color = (b.text_color == null) ? a.text_color : b.text_color;
 			
 			c.DefineVersion (System.Math.Max (a.Version, b.Version));
 			
@@ -85,10 +85,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.text_color.R);
-			checksum.UpdateValue (this.text_color.G);
-			checksum.UpdateValue (this.text_color.B);
-			checksum.UpdateValue (this.text_color.A);
+			checksum.UpdateValue (this.text_color);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -103,6 +100,6 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		private Drawing.Color					text_color;
+		private string							text_color;
 	}
 }

@@ -14,10 +14,10 @@ namespace Epsitec.Common.Widgets
 			Epsitec.Common.Widgets.Widget.Initialise ();
 		}
 
-#if false
+#if true
 		[Test] public void CheckAllocation()
 		{
-			int runs = 100000;
+			int runs = 10000;
 			Widget dummy = new Widget ();
 			Widget[] widgets = new Widget[runs];
 			System.Console.WriteLine ("Testing Widget allocation.");
@@ -43,6 +43,37 @@ namespace Epsitec.Common.Widgets
 			long s2 = System.GC.GetTotalMemory (true);
 			
 			System.Console.WriteLine ("Using {0} bytes / empty Widget instance, {1} cycles.", (s2-s1) / runs, (c2-c1) / runs);
+		}
+		
+		[Test] public void CheckAllocationWithText()
+		{
+			int runs = 10000;
+			Widget dummy = new Widget ();
+			Widget[] widgets = new Widget[runs];
+			System.Console.WriteLine ("Testing Widget allocation.");
+			
+			for (int i = 0; i < 1000; i++)
+			{
+				long cc = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			}
+			
+			long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c0 = Epsitec.Common.Drawing.Agg.Library.Cycles - c2;
+			
+			System.Console.Out.WriteLine ("Zero work: " + c0.ToString ());
+			
+			long s1 = System.GC.GetTotalMemory (true);
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			for (int i = 0; i < runs; i++)
+			{
+				widgets[i] = new Widget ();
+				widgets[i].Text = "Test";
+			}
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long s2 = System.GC.GetTotalMemory (true);
+			
+			System.Console.WriteLine ("Using {0} bytes / Widget instance with text, {1} cycles.", (s2-s1) / runs, (c2-c1) / runs);
 		}
 #endif
 
@@ -243,7 +274,7 @@ namespace Epsitec.Common.Widgets
 			properties.Add (fp);
 			properties.Add (new Text.Properties.FontSizeProperty (14.0, Text.Properties.SizeUnits.Points));
 			properties.Add (new Text.Properties.MarginsProperty (60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
-			properties.Add (new Text.Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties.Add (new Text.Properties.ColorProperty ("Black"));
 			properties.Add (new Text.Properties.LanguageProperty ("fr-ch", 1.0));
 			properties.Add (new Text.Properties.LeadingProperty (16.0, Text.Properties.SizeUnits.Points, 15.0, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			

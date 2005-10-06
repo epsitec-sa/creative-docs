@@ -78,7 +78,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (24.0, Properties.SizeUnits.Points));
-			properties.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties.Add (new Properties.ColorProperty ("Black"));
 			properties.Add (new Properties.MarginsProperty (200, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
 			string[] words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite.\n".Split (' ');
@@ -242,13 +242,13 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties_1.Add (new Properties.ColorProperty ("Black"));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
-			properties_2.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties_2.Add (new Properties.ColorProperty ("Black"));
 			properties_2.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
 			story.ConvertToStyledText ("Text:\t", properties_1, out text);
@@ -318,13 +318,13 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties_1.Add (new Properties.ColorProperty ("Black"));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.5, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
-			properties_2.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties_2.Add (new Properties.ColorProperty ("Black"));
 			properties_2.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
 			story.ConvertToStyledText ("Text:\t", properties_1, out text);
@@ -402,13 +402,13 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties_1.Add (new Properties.ColorProperty ("Black"));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
-			properties_2.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties_2.Add (new Properties.ColorProperty ("Black"));
 			properties_2.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
 			story.ConvertToStyledText ("Text:\t", properties_1, out text);
@@ -477,13 +477,13 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties_1.Add (new Properties.ColorProperty ("Black"));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
-			properties_2.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties_2.Add (new Properties.ColorProperty ("Black"));
 			properties_2.Add (new Properties.MarginsProperty (60, 60, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
 			story.ConvertToStyledText ("Text:\t", properties_1, out text);
@@ -561,18 +561,18 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties_1.Add (font_regular);
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties_1.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties_1.Add (new Properties.ColorProperty ("Black"));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null));
 			
 			properties_2.Add (font_bold);
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
-			properties_2.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties_2.Add (new Properties.ColorProperty ("Black"));
 			properties_2.Add (new Properties.MarginsProperty (60, 60, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
 			properties_3.Add (font_italic);
 			properties_3.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties_3.Add (new Properties.ColorProperty (Drawing.Color.FromName ("Black")));
+			properties_3.Add (new Properties.ColorProperty ("Black"));
 			properties_3.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, Properties.ThreeState.False));
 			
 			story.ConvertToStyledText ("Text:\t", properties_1, out text);
@@ -730,7 +730,7 @@ namespace Epsitec.Common.Text.Tests
 			{
 			}
 			
-			public void Render(Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
+			public void Render(Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
 			{
 				ITextFrame frame = layout.Frame;
 				
@@ -763,7 +763,7 @@ namespace Epsitec.Common.Text.Tests
 				}
 			}
 			
-			public void Render(Layout.Context layout, IGlyphRenderer glyph_renderer, Drawing.Color color, double x, double y, bool is_last_run)
+			public void Render(Layout.Context layout, IGlyphRenderer glyph_renderer, string color, double x, double y, bool is_last_run)
 			{
 			}
 			
@@ -806,11 +806,11 @@ namespace Epsitec.Common.Text.Tests
 			{
 			}
 			
-			public void Render(Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
+			public void Render(Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
 			{
 			}
 			
-			public void Render(Layout.Context layout, IGlyphRenderer glyph_renderer, Drawing.Color color, double x, double y, bool is_last_run)
+			public void Render(Layout.Context layout, IGlyphRenderer glyph_renderer, string color, double x, double y, bool is_last_run)
 			{
 			}
 			

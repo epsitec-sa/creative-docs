@@ -104,9 +104,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected override void OnSizeChanged()
+		protected override void OnSizeChanged(Types.PropertyChangedEventArgs e)
 		{
-			base.OnSizeChanged ();
+			base.OnSizeChanged (e);
 			
 			if ((this.text_fitter != null) &&
 				(this.text_frame != null))
@@ -190,7 +190,7 @@ namespace Epsitec.Common.Widgets
 			context.DisableSimpleRendering ();
 		}
 		
-		public void Render(Epsitec.Common.Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, Drawing.Color color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
+		public void Render(Epsitec.Common.Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
 		{
 			Epsitec.Common.Text.ITextFrame frame = layout.Frame;
 			
@@ -317,7 +317,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (font.FontManagerType == OpenType.FontManagerType.System)
 			{
-				Drawing.NativeTextRenderer.Draw (this.graphics.Pixmap, font, size, glyphs, x, y, color);
+				Drawing.NativeTextRenderer.Draw (this.graphics.Pixmap, font, size, glyphs, x, y, Drawing.Color.FromName (color));
 			}
 			else
 			{
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
-				this.graphics.RenderSolid (color);
+				this.graphics.RenderSolid (Drawing.Color.FromName (color));
 			}
 			
 			if (sel_rect_list != null)
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (font.FontManagerType == OpenType.FontManagerType.System)
 				{
-					Drawing.NativeTextRenderer.Draw (this.graphics.Pixmap, font, size, glyphs, x, y, color);
+					Drawing.NativeTextRenderer.Draw (this.graphics.Pixmap, font, size, glyphs, x, y, Drawing.Color.FromName (color));
 				}
 				else
 				{
@@ -373,7 +373,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void Render(Epsitec.Common.Text.Layout.Context layout, Epsitec.Common.Text.IGlyphRenderer glyph_renderer, Drawing.Color color, double x, double y, bool is_last_run)
+		public void Render(Epsitec.Common.Text.Layout.Context layout, Epsitec.Common.Text.IGlyphRenderer glyph_renderer, string color, double x, double y, bool is_last_run)
 		{
 			glyph_renderer.RenderGlyph (layout.Frame, x, y);
 		}

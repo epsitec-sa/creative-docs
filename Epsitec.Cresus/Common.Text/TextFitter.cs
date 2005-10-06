@@ -721,7 +721,7 @@ restart_paragraph_layout:
 						}
 						else
 						{
-							throw new System.NotImplementedException ();
+							throw new System.NotImplementedException (string.Format ("TabStatus.{0}", tab_status));
 						}
 						
 						continuation = true;

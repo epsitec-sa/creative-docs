@@ -487,7 +487,7 @@ advance_next:
 
 		private void RenderRun(Layout.Context context, ITextRenderer renderer, ref double ox, double oy, ulong[] text, int offset, int length, bool is_last_run)
 		{
-			Drawing.Color color;
+			string color;
 			context.TextContext.GetColor (text[offset], out color);
 			
 			if ((length == 1) &&

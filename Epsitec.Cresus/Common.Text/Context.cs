@@ -329,7 +329,7 @@ namespace Epsitec.Common.Text
 			this.get_font_offset_last_advance_offset  = advance_offset;
 		}
 		
-		public void GetColor(ulong code, out Drawing.Color color)
+		public void GetColor(ulong code, out string color)
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
@@ -351,7 +351,7 @@ namespace Epsitec.Common.Text
 			
 			if (color_p == null)
 			{
-				color = Drawing.Color.Empty;
+				color = null;
 			}
 			else
 			{
@@ -1061,7 +1061,7 @@ namespace Epsitec.Common.Text
 		
 		private long							get_color_last_style_version;
 		private ulong							get_color_last_code;
-		private Drawing.Color					get_color_last_color;
+		private string							get_color_last_color;
 		
 		private long							get_language_last_style_version;
 		private ulong							get_language_last_code;
