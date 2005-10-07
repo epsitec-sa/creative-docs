@@ -66,6 +66,17 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		public Property[]						AccumulatedTextProperties
+		{
+			get
+			{
+				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
+				return this.accumulated_properties.Clone () as Property[];
+			}
+		}
+		
+		
 		public int								CursorPosition
 		{
 			get
