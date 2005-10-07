@@ -273,7 +273,7 @@ namespace Epsitec.Common.Widgets
 				
 				foreach (OpenType.FontIdentity id in story.TextContext.GetAvailableFontIdentities (face))
 				{
-					System.Console.WriteLine (" -- {0} {1} {2} ({3})", id.InvariantStyleName, id.FontStyle, id.FontWeight, id.FullName);
+					System.Console.WriteLine ("  '{0}', FontWeight={1}, FontStyle={2}, ({3})", id.InvariantStyleName, id.FontStyle, id.FontWeight, id.FullName);
 				}
 			}
 			

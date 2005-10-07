@@ -221,6 +221,7 @@ namespace Epsitec.Common.Text
 			
 			string[] names = new string[hash.Count];
 			hash.Keys.CopyTo (names, 0);
+			System.Array.Sort (names);
 			return names;
 		}
 		
@@ -236,7 +237,10 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			list.Sort ();
+			if (list.Count > 1)
+			{
+				list.Sort (OpenType.FontIdentity.Comparer);
+			}
 			
 			return (OpenType.FontIdentity[]) list.ToArray (typeof (OpenType.FontIdentity));
 		}
