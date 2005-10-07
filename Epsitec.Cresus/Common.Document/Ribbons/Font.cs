@@ -15,8 +15,9 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Property.Abstract.TextFont;
 
-			this.fontName = this.CreateFieldName(Res.Strings.Panel.Font.Tooltip.Name);
-			this.fontSize = this.CreateFieldSize(Res.Strings.Panel.Font.Tooltip.Size);
+			this.fontFace  = this.CreateFieldFontFace(Res.Strings.Panel.Font.Tooltip.Name);
+			this.fontStyle = this.CreateFieldFontStyle("Style de la police");
+			this.fontSize  = this.CreateFieldFontSize(Res.Strings.Panel.Font.Tooltip.Size);
 
 			this.fontColor = new ColorSample(this);
 			this.fontColor.PossibleSource = true;
@@ -46,7 +47,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonBullet1 = new IconButton(this);
 			this.buttonBullet1.AutoFocus = false;
-			this.buttonBullet1.Text = "o";
+			this.buttonBullet1.Text = "a)";
 			this.buttonBullet1.Clicked += new MessageEventHandler(this.HandleButtonBullet1Clicked);
 			ToolTip.Default.SetToolTip(this.buttonBullet1, "Puces");
 
@@ -70,8 +71,9 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			base.SetDocument(type, install, gs, document);
 
-			this.AdaptFieldName(this.fontName);
-			this.AdaptFieldSize(this.fontSize);
+			this.AdaptFieldFontFace(this.fontFace);
+			this.AdaptFieldFontStyle(this.fontStyle);
+			this.AdaptFieldFontSize(this.fontSize);
 		}
 
 		// Retourne la largeur standard.
@@ -87,15 +89,12 @@ namespace Epsitec.Common.Document.Ribbons
 		// Effectue la mise à jour du contenu d'édition.
 		protected override void DoUpdateText()
 		{
-			Objects.Abstract editObject = null;
+			this.AdaptFieldFontFace(this.fontFace);
+			this.AdaptFieldFontStyle(this.fontStyle);
+			this.AdaptFieldFontSize(this.fontSize);
 
-			if ( this.document != null )
-			{
-				editObject = this.document.Modifier.RetEditObject();
-			}
+			Objects.Abstract editObject = this.EditObject;
 
-			this.fontName.SetEnabled(editObject != null);
-			this.fontSize.SetEnabled(editObject != null);
 			this.fontColor.SetEnabled(editObject != null);
 			this.buttonBold.SetEnabled(editObject != null);
 			this.buttonItalic.SetEnabled(editObject != null);
@@ -111,11 +110,11 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( editObject != null )
 			{
-				bold = editObject.IsEditBold;
-				italic = editObject.IsEditItalic;
-				underlined = editObject.IsEditUnderlined;
-				bullet1 = editObject.IsEditBullet1;
-				bullet2 = editObject.IsEditBullet2;
+				bold = editObject.TextBold;
+				italic = editObject.TextItalic;
+				underlined = editObject.TextUnderlined;
+				bullet1 = editObject.TextBullet1;
+				bullet2 = editObject.TextBullet2;
 			}
 
 			this.buttonBold.ActiveState = bold ? WidgetState.ActiveYes : WidgetState.ActiveNo;
@@ -140,14 +139,17 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
 			rect.Width  = 180;
-			this.fontName.Bounds = rect;
+			this.fontFace.Bounds = rect;
 			rect.Offset(rect.Width+5, 0);
 			rect.Width  = 50;
 			this.fontSize.Bounds = rect;
 
 			rect = this.UsefulZone;
-			rect.Width  = dx;
 			rect.Height = dy;
+			rect.Width  = 98;
+			this.fontStyle.Bounds = rect;
+			rect.Offset(rect.Width+5, 0);
+			rect.Width  = dx;
 			this.buttonBold.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonItalic.Bounds = rect;
@@ -162,8 +164,8 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Crée un champ éditable pour la police.
-		protected TextFieldCombo CreateFieldName(string tooltip)
+		// Crée un champ éditable pour le nom de la police.
+		protected TextFieldCombo CreateFieldFontFace(string tooltip)
 		{
 			TextFieldCombo field = new TextFieldCombo(this);
 			field.IsReadOnly = true;
@@ -174,10 +176,12 @@ namespace Epsitec.Common.Document.Ribbons
 			return field;
 		}
 		
-		// Adapte un champ éditable pour la police.
-		protected void AdaptFieldName(TextFieldCombo field)
+		// Adapte un champ éditable pour le nom de la police.
+		protected void AdaptFieldFontFace(TextFieldCombo field)
 		{
-			if ( this.document == null )
+			Objects.Abstract editObject = this.EditObject;
+
+			if ( editObject == null )
 			{
 				field.SetEnabled(false);
 			}
@@ -186,32 +190,132 @@ namespace Epsitec.Common.Document.Ribbons
 				field.SetEnabled(true);
 
 				this.ignoreChange = true;
+				
+				string face, style;
+				editObject.GetTextFont(out face, out style);
+
 				if ( field.Items.Count == 0 )
 				{
-					if ( this.documentType == DocumentType.Pictogram )
+					field.Items.Add("");  // case vide = "par défaut" TODO: faire mieux
+					foreach( string f in this.document.TextContext.GetAvailableFontFaces() )
 					{
-						field.Items.Add("Tahoma");
-						field.Items.Add("Arial");
-						field.Items.Add("Courier New");
-						field.Items.Add("Times New Roman");
-					}
-					else
-					{
-						Misc.AddFontList(field, false);
+						field.Items.Add(f);
 					}
 				}
+
+				field.Text = face;
+
 				this.ignoreChange = false;
 			}
 		}
 
-		// Un champ a été changé.
+		// Crée un champ éditable pour le style de la police.
+		protected TextFieldCombo CreateFieldFontStyle(string tooltip)
+		{
+			TextFieldCombo field = new TextFieldCombo(this);
+			field.IsReadOnly = true;
+			field.TextChanged += new EventHandler(this.HandleFieldComboChanged);
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(field, tooltip);
+			return field;
+		}
+		
+		// Adapte un champ éditable pour le style de la police.
+		protected void AdaptFieldFontStyle(TextFieldCombo field)
+		{
+			Objects.Abstract editObject = this.EditObject;
+
+			if ( editObject == null )
+			{
+				field.SetEnabled(false);
+			}
+			else
+			{
+				field.SetEnabled(true);
+
+				this.ignoreChange = true;
+
+				string face, style;
+				editObject.GetTextFont(out face, out style);
+
+				field.Items.Clear();
+				foreach ( OpenType.FontIdentity id in this.document.TextContext.GetAvailableFontIdentities(face) )
+				{
+					field.Items.Add(id.InvariantStyleName);
+				}
+
+				field.Text = style;
+
+				this.ignoreChange = false;
+			}
+		}
+
+		// Un champ combo a été changé.
 		private void HandleFieldComboChanged(object sender)
 		{
+			if ( this.ignoreChange )  return;
+
+			TextFieldCombo field = sender as TextFieldCombo;
+			if ( field == null )  return;
+
+			Objects.Abstract editObject = this.EditObject;
+			if ( editObject == null )  return;
+
+			if ( field == this.fontFace )
+			{
+				string face = field.Text;
+				string style = this.SearchDefaultFontStyle(face);
+				editObject.SetTextFont(face, style);
+			}
+
+			if ( field == this.fontStyle )
+			{
+				string face, style;
+				editObject.GetTextFont(out face, out style);
+				editObject.SetTextFont(face, field.Text);
+			}
+		}
+
+		// Cherche le FontStyle par défaut pour un FontName donné.
+		protected string SearchDefaultFontStyle(string face)
+		{
+			foreach ( OpenType.FontIdentity id in this.document.TextContext.GetAvailableFontIdentities(face) )
+			{
+				if ( id.FontWeight == OpenType.FontWeight.Normal &&
+					 id.FontStyle  == OpenType.FontStyle.Normal  )
+				{
+					return id.InvariantStyleName;
+				}
+			}
+
+			foreach ( OpenType.FontIdentity id in this.document.TextContext.GetAvailableFontIdentities(face) )
+			{
+				if ( id.FontWeight == OpenType.FontWeight.Normal )
+				{
+					return id.InvariantStyleName;
+				}
+			}
+
+			foreach ( OpenType.FontIdentity id in this.document.TextContext.GetAvailableFontIdentities(face) )
+			{
+				if ( id.FontStyle == OpenType.FontStyle.Normal )
+				{
+					return id.InvariantStyleName;
+				}
+			}
+
+			foreach ( OpenType.FontIdentity id in this.document.TextContext.GetAvailableFontIdentities(face) )
+			{
+				return id.InvariantStyleName;
+			}
+
+			return "";
 		}
 
 
-		// Crée un champ éditable pour la taille.
-		protected TextFieldReal CreateFieldSize(string tooltip)
+		// Crée un champ éditable pour la taille de la police.
+		protected TextFieldReal CreateFieldFontSize(string tooltip)
 		{
 			TextFieldReal field = new TextFieldReal(this);
 			field.Width = 50;
@@ -222,10 +326,12 @@ namespace Epsitec.Common.Document.Ribbons
 			return field;
 		}
 
-		// Adapte un champ éditable pour la taille.
-		protected void AdaptFieldSize(TextFieldReal field)
+		// Adapte un champ éditable pour la taille de la police.
+		protected void AdaptFieldFontSize(TextFieldReal field)
 		{
-			if ( this.document == null )
+			Objects.Abstract editObject = this.EditObject;
+
+			if ( editObject == null )
 			{
 				field.SetEnabled(false);
 			}
@@ -235,7 +341,17 @@ namespace Epsitec.Common.Document.Ribbons
 
 				this.ignoreChange = true;
 				this.document.Modifier.AdaptTextFieldRealFontSize(field);
-				//?field.InternalValue = (decimal) this.document.Modifier.RotateAngle;
+
+				double size = editObject.TextFontSize;
+				if ( size == 0 )
+				{
+					field.Text = "";
+				}
+				else
+				{
+					field.InternalValue = (decimal) size;
+				}
+
 				this.ignoreChange = false;
 			}
 		}
@@ -243,10 +359,23 @@ namespace Epsitec.Common.Document.Ribbons
 		private void HandleFieldValueChanged(object sender)
 		{
 			if ( this.ignoreChange )  return;
+
 			TextFieldReal field = sender as TextFieldReal;
+			if ( field == null )  return;
+
+			Objects.Abstract editObject = this.EditObject;
+			if ( editObject == null )  return;
+
 			if ( field == this.fontSize )
 			{
-				//?this.document.Modifier.RotateAngle = (double) field.InternalValue;
+				if ( field.Text == "" )
+				{
+					editObject.TextFontSize = 0;
+				}
+				else
+				{
+					editObject.TextFontSize = (double) field.InternalValue;
+				}
 			}
 		}
 
@@ -267,41 +396,53 @@ namespace Epsitec.Common.Document.Ribbons
 
 		private void HandleButtonBoldClicked(object sender, MessageEventArgs e)
 		{
-			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
+			Objects.Abstract editObject = this.EditObject;
 			if ( editObject == null )  return;
-			editObject.EditBold();
+			editObject.TextBold = !editObject.TextBold;
 		}
 
 		private void HandleButtonItalicClicked(object sender, MessageEventArgs e)
 		{
-			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
+			Objects.Abstract editObject = this.EditObject;
 			if ( editObject == null )  return;
-			editObject.EditItalic();
+			editObject.TextItalic = !editObject.TextItalic;
 		}
 
 		private void HandleButtonUnderlinedClicked(object sender, MessageEventArgs e)
 		{
-			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
+			Objects.Abstract editObject = this.EditObject;
 			if ( editObject == null )  return;
-			editObject.EditUnderlined();
+			editObject.TextUnderlined = !editObject.TextUnderlined;
 		}
 
 		private void HandleButtonBullet1Clicked(object sender, MessageEventArgs e)
 		{
-			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
+			Objects.Abstract editObject = this.EditObject;
 			if ( editObject == null )  return;
-			editObject.EditBullet1();
+			editObject.TextBullet1 = !editObject.TextBullet1;
 		}
 
 		private void HandleButtonBullet2Clicked(object sender, MessageEventArgs e)
 		{
-			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
+			Objects.Abstract editObject = this.EditObject;
 			if ( editObject == null )  return;
-			editObject.EditBullet2();
+			editObject.TextBullet2 = !editObject.TextBullet2;
 		}
 
 
-		protected TextFieldCombo			fontName;
+		// Donne l'objet en cours d'édition.
+		protected Objects.Abstract EditObject
+		{
+			get
+			{
+				if ( this.document == null )  return null;
+				return this.document.Modifier.RetEditObject();
+			}
+		}
+
+
+		protected TextFieldCombo			fontFace;
+		protected TextFieldCombo			fontStyle;
 		protected TextFieldReal				fontSize;
 		protected ColorSample				fontColor;
 		protected IconButton				buttonBold;

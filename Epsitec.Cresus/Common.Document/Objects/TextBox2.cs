@@ -50,6 +50,7 @@ namespace Epsitec.Common.Document.Objects
 			
 			this.metaNavigator.TextChanged += new Support.EventHandler(this.HandleTextChanged);
 			this.metaNavigator.CursorMoved += new Support.EventHandler(this.HandleCursorMoved);
+			this.metaNavigator.ActiveStyleChanged += new Support.EventHandler(this.HandleStyleChanged);
 			
 			this.markerSelected = this.document.TextContext.Markers.Selected;
 		}
@@ -402,186 +403,199 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
-		// Donne la fonte actullement utilisée.
-		public override string EditGetFontName()
-		{
-			return "";  //?
-			//?return this.textNavigator.SelectionFontName;
-		}
 
 		#region TextFormat
-		// Met en gras pendant l'édition.
-		public override bool EditBold()
+		// Modifie la police du texte.
+		public override void SetTextFont(string face, string style)
 		{
-			Text.TextStyle style = this.document.TextContext.StyleList["Bold", Text.TextStyleClass.MetaProperty];
-			if ( style == null )  return false;
-
-			Text.Properties.ApplyMode mode = Text.Properties.ApplyMode.Set;
-			if ( this.IsEditBold )
+			if ( face == "" )
 			{
-				mode = Text.Properties.ApplyMode.Clear;
+				// TODO: supprimer la propriété
 			}
-			this.metaNavigator.SetMetaProperties(mode, style);
-			this.HandleTextChanged(null);  // beurk !
-			return true;
-		}
-
-		// Met en italique pendant l'édition.
-		public override bool EditItalic()
-		{
-			Text.TextStyle style = this.document.TextContext.StyleList["Italic", Text.TextStyleClass.MetaProperty];
-			if ( style == null )  return false;
-
-			Text.Properties.ApplyMode mode = Text.Properties.ApplyMode.Set;
-			if ( this.IsEditItalic )
+			else
 			{
-				mode = Text.Properties.ApplyMode.Clear;
+				Text.Properties.FontProperty font = new Text.Properties.FontProperty(face, style);
+				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Combine, font);
 			}
-			this.metaNavigator.SetMetaProperties(mode, style);
-			this.HandleTextChanged(null);  // beurk !
-			return true;
 		}
 
-		// Souligne pendant l'édition.
-		public override bool EditUnderlined()
+		// Donne la police du texte.
+		public override void GetTextFont(out string face, out string style)
 		{
-			Text.TextStyle style = this.document.TextContext.StyleList["Underlined", Text.TextStyleClass.MetaProperty];
-			if ( style == null )  return false;
-
-			Text.Properties.ApplyMode mode = Text.Properties.ApplyMode.Set;
-			if ( this.IsEditUnderlined )
+			Text.Property[] properties = this.textNavigator.TextProperties;
+			foreach ( Text.Property property in properties )
 			{
-				mode = Text.Properties.ApplyMode.Clear;
-			}
-			this.metaNavigator.SetMetaProperties(mode, style);
-			this.HandleTextChanged(null);  // beurk !
-			return true;
-		}
-
-		// Met en puces 1 pendant l'édition.
-		public override bool EditBullet1()
-		{
-			return this.ApplyBulletStyle("Bullet1");
-		}
-
-		// Met en puces 2 pendant l'édition.
-		public override bool EditBullet2()
-		{
-			return this.ApplyBulletStyle("Bullet2");
-		}
-		
-		private bool ApplyBulletStyle(string name)
-		{
-			Text.TextStyle style = this.document.TextContext.StyleList[name, Text.TextStyleClass.Paragraph];
-			if ( style == null )  return false;
-
-			System.Collections.ArrayList list = new System.Collections.ArrayList();
-			Text.TextStyle[] styles = Text.TextStyle.FilterStyles (this.metaNavigator.TextNavigator.TextStyles, Text.TextStyleClass.Paragraph);
-			
-			bool found = false;
-			
-			for (int i = 0; i < styles.Length; i++)
-			{
-				if (styles[i].Name.StartsWith ("Bullet"))
+				Text.Properties.FontProperty font = property as Text.Properties.FontProperty;
+				if ( font != null )
 				{
-					if (styles[i].Name == style.Name)
+					face = font.FaceName;
+					style = font.StyleName;
+					return;
+				}
+			}
+
+			face = "";
+			style = "";
+		}
+
+		// Taille de la police du texte.
+		public override double TextFontSize
+		{
+			get
+			{
+				Text.Property[] properties = this.textNavigator.TextProperties;
+				foreach ( Text.Property property in properties )
+				{
+					Text.Properties.FontSizeProperty fs = property as Text.Properties.FontSizeProperty;
+					if ( fs != null )
 					{
-						found = true;
+						return fs.SizeInPoints;
 					}
+				}
+				return 0;
+			}
+			
+			set
+			{
+				if ( value == 0 )
+				{
+					// TODO: supprimer la propriété
 				}
 				else
 				{
-					list.Add (styles[i]);
+					Text.Properties.FontSizeProperty fs = new Text.Properties.FontSizeProperty(value, Text.Properties.SizeUnits.Points);
+					this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Combine, fs);
+				}
+			}
+		}
+
+		// Style "gras" du texte.
+		public override bool TextBold
+		{
+			get
+			{
+				return this.IsExistingStyle("Bold");
+			}
+			
+			set
+			{
+				Text.TextStyle style = this.document.TextContext.StyleList["Bold", Text.TextStyleClass.MetaProperty];
+				if ( style != null )
+				{
+					Text.Properties.ApplyMode mode = value ? Text.Properties.ApplyMode.Set : Text.Properties.ApplyMode.Clear;
+					this.metaNavigator.SetMetaProperties(mode, style);
+				}
+			}
+		}
+
+		// Style "gras" du texte.
+		public override bool TextItalic
+		{
+			get
+			{
+				return this.IsExistingStyle("Italic");
+			}
+			
+			set
+			{
+				Text.TextStyle style = this.document.TextContext.StyleList["Italic", Text.TextStyleClass.MetaProperty];
+				if ( style != null )
+				{
+					Text.Properties.ApplyMode mode = value ? Text.Properties.ApplyMode.Set : Text.Properties.ApplyMode.Clear;
+					this.metaNavigator.SetMetaProperties(mode, style);
+				}
+			}
+		}
+
+		// Style "gras" du texte.
+		public override bool TextUnderlined
+		{
+			get
+			{
+				return this.IsExistingStyle("Underlined");
+			}
+			
+			set
+			{
+				Text.TextStyle style = this.document.TextContext.StyleList["Underlined", Text.TextStyleClass.MetaProperty];
+				if ( style != null )
+				{
+					Text.Properties.ApplyMode mode = value ? Text.Properties.ApplyMode.Set : Text.Properties.ApplyMode.Clear;
+					this.metaNavigator.SetMetaProperties(mode, style);
+				}
+			}
+		}
+
+		// Style "gras" du texte.
+		public override bool TextBullet1
+		{
+			get
+			{
+				return this.IsExistingStyle("Bullet1");
+			}
+			
+			set
+			{
+				this.ApplyBulletStyle("Bullet1", value);
+			}
+		}
+
+		// Style "gras" du texte.
+		public override bool TextBullet2
+		{
+			get
+			{
+				return this.IsExistingStyle("Bullet2");
+			}
+			
+			set
+			{
+				this.ApplyBulletStyle("Bullet2", value);
+			}
+		}
+
+		// Indique l'existance d'un style.
+		protected bool IsExistingStyle(string name)
+		{
+			Text.TextStyle[] styles = this.textNavigator.TextStyles;
+			foreach ( Text.TextStyle style in styles )
+			{
+				if ( style.Name == name )  return true;
+			}
+			return false;
+		}
+
+		// Modifie un style de puces.
+		protected void ApplyBulletStyle(string name, bool state)
+		{
+			Text.TextStyle style = this.document.TextContext.StyleList[name, Text.TextStyleClass.Paragraph];
+			if ( style == null )  return;
+
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			Text.TextStyle[] styles = Text.TextStyle.FilterStyles(this.metaNavigator.TextNavigator.TextStyles, Text.TextStyleClass.Paragraph);
+			
+			for ( int i=0 ; i<styles.Length ; i++ )
+			{
+				if ( !styles[i].Name.StartsWith("Bullet") )
+				{
+					list.Add(styles[i]);
 				}
 			}
 			
-			if (!found)
+			if ( state )
 			{
-				list.Add (style);
+				list.Add(style);
 			}
 			
-			styles = (Text.TextStyle[])list.ToArray (typeof (Text.TextStyle));
-			
+			styles = (Text.TextStyle[]) list.ToArray(typeof(Text.TextStyle));
+#if false
 			System.Diagnostics.Debug.WriteLine("Styles:");
-			foreach (Text.TextStyle s in styles)
+			foreach ( Text.TextStyle s in styles )
 			{
 				System.Diagnostics.Debug.WriteLine(string.Format("  {0}: {1}", s.Name, s.TextStyleClass));
 			}
-			
+#endif
 			this.metaNavigator.SetParagraphStyles(styles);
-			this.HandleTextChanged(null);  // beurk !
-			
-			return true;
-		}
-
-		// Indique si l'édition est en gras.
-		public override bool IsEditBold
-		{
-			get
-			{
-				Text.TextStyle[] styles = this.textNavigator.TextStyles;
-				foreach ( Text.TextStyle style in styles )
-				{
-					if ( style.Name == "Bold" )  return true;
-				}
-				return false;
-			}
-		}
-
-		// Indique si l'édition est en italique.
-		public override bool IsEditItalic
-		{
-			get
-			{
-				Text.TextStyle[] styles = this.textNavigator.TextStyles;
-				foreach ( Text.TextStyle style in styles )
-				{
-					if ( style.Name == "Italic" )  return true;
-				}
-				return false;
-			}
-		}
-
-		// Indique si l'édition est en souligné.
-		public override bool IsEditUnderlined
-		{
-			get
-			{
-				Text.TextStyle[] styles = this.textNavigator.TextStyles;
-				foreach ( Text.TextStyle style in styles )
-				{
-					if ( style.Name == "Underlined" )  return true;
-				}
-				return false;
-			}
-		}
-
-		// Indique si l'édition est en puces 1.
-		public override bool IsEditBullet1
-		{
-			get
-			{
-				Text.TextStyle[] styles = this.textNavigator.TextStyles;
-				foreach ( Text.TextStyle style in styles )
-				{
-					if ( style.Name == "Bullet1" )  return true;
-				}
-				return false;
-			}
-		}
-
-		// Indique si l'édition est en puces 2.
-		public override bool IsEditBullet2
-		{
-			get
-			{
-				Text.TextStyle[] styles = this.textNavigator.TextStyles;
-				foreach ( Text.TextStyle style in styles )
-				{
-					if ( style.Name == "Bullet2" )  return true;
-				}
-				return false;
-			}
 		}
 		#endregion
 
@@ -884,27 +898,7 @@ namespace Epsitec.Common.Document.Objects
 							
 							if ( xx > selX )
 							{
-								if ( selRectList == null )
-								{
-									selRectList = new System.Collections.ArrayList();
-								}
-								
-								double dx = xx - selX;
-								double dy = layout.LineY2 - layout.LineY1;
-								
-								Drawing.Rectangle rect = new Drawing.Rectangle(selX, layout.LineY1, dx, dy);
-								
-								selBbox = Drawing.Rectangle.Union(selBbox, rect);
-								
-								double px1 = rect.Left;
-								double px2 = rect.Right;
-								double py1 = rect.Bottom;
-								double py2 = rect.Top;
-								
-								this.graphics.Rasterizer.Transform.TransformDirect(ref px1, ref py1);
-								this.graphics.Rasterizer.Transform.TransformDirect(ref px2, ref py2);
-								
-								selRectList.Add(Drawing.Rectangle.FromCorners(px1, py1, px2, py2));
+								this.MarkSel(layout, ref selRectList, ref selBbox, xx, selX);
 							}
 						}
 					}
@@ -922,51 +916,11 @@ namespace Epsitec.Common.Document.Objects
 				
 				if ( xx > selX )
 				{
-					if ( selRectList == null )
-					{
-						selRectList = new System.Collections.ArrayList();
-					}
-					
-					double dx = xx - selX;
-					double dy = layout.LineY2 - layout.LineY1;
-					
-					Drawing.Rectangle rect = new Drawing.Rectangle(selX, layout.LineY1, dx, dy);
-					
-					selBbox = Drawing.Rectangle.Union(selBbox, rect);
-					
-					double px1 = rect.Left;
-					double px2 = rect.Right;
-					double py1 = rect.Bottom;
-					double py2 = rect.Top;
-					
-					this.graphics.Rasterizer.Transform.TransformDirect(ref px1, ref py1);
-					this.graphics.Rasterizer.Transform.TransformDirect(ref px2, ref py2);
-					
-					selRectList.Add(Drawing.Rectangle.FromCorners(px1, py1, px2, py2));
+					this.MarkSel(layout, ref selRectList, ref selBbox, xx, selX);
 				}
 			}
 			
-			if ( font.FontManagerType == OpenType.FontManagerType.System )
-			{
-				Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, Drawing.Color.FromName (color));
-			}
-			else
-			{
-				Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
-				
-				if ( drawingFont != null )
-				{
-					for ( int i=0 ; i<glyphs.Length ; i++ )
-					{
-						if ( glyphs[i] < 0xffff )
-						{
-							this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
-						}
-					}
-				}
-				
-				this.graphics.RenderSolid(Drawing.Color.FromName (color));
-			}
+			this.RenderText(font, size, glyphs, x, y, sx, sy, Drawing.Color.FromName(color));
 			
 			if ( this.edited && selRectList != null )
 			{
@@ -978,29 +932,60 @@ namespace Epsitec.Common.Document.Objects
 				this.graphics.AddFilledRectangle(selBbox);
 				this.graphics.RenderSolid(Drawing.Color.FromName("Highlight"));
 				
-				if ( font.FontManagerType == OpenType.FontManagerType.System )
-				{
-					Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, Drawing.Color.FromName (color));
-				}
-				else
-				{
-					Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
-					
-					if ( drawingFont != null )
-					{
-						for ( int i=0 ; i<glyphs.Length ; i++ )
-						{
-							if ( glyphs[i] < 0xffff )
-							{
-								this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
-							}
-						}
-					}
-					
-					this.graphics.RenderSolid(Drawing.Color.FromName("HighlightText"));
-				}
+				this.RenderText(font, size, glyphs, x, y, sx, sy, Drawing.Color.FromName("HighlightText"));
 				
 				this.graphics.RestoreClippingRectangle(saveClip);
+			}
+		}
+
+		// Marque la fin d'une tranche sélectionnée.
+		protected void MarkSel(Text.Layout.Context layout, ref System.Collections.ArrayList selRectList, ref Drawing.Rectangle selBbox, double x, double selX)
+		{
+			double dx = x - selX;
+			double dy = layout.LineY2 - layout.LineY1;
+			Drawing.Rectangle rect = new Drawing.Rectangle(selX, layout.LineY1, dx, dy);
+
+			selBbox = Drawing.Rectangle.Union(selBbox, rect);
+
+			double px1 = rect.Left;
+			double px2 = rect.Right;
+			double py1 = rect.Bottom;
+			double py2 = rect.Top;
+
+			this.graphics.Rasterizer.Transform.TransformDirect(ref px1, ref py1);
+			this.graphics.Rasterizer.Transform.TransformDirect(ref px2, ref py2);
+
+			if ( selRectList == null )
+			{
+				selRectList = new System.Collections.ArrayList();
+			}
+
+			selRectList.Add(Drawing.Rectangle.FromCorners(px1, py1, px2, py2));
+		}
+
+		// Effectue le rendu des caractères.
+		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, Drawing.Color color)
+		{
+			if ( font.FontManagerType == OpenType.FontManagerType.System )
+			{
+				Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, color);
+			}
+			else
+			{
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+					
+				if ( drawingFont != null )
+				{
+					for ( int i=0 ; i<glyphs.Length ; i++ )
+					{
+						if ( glyphs[i] < 0xffff )
+						{
+							this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+						}
+					}
+				}
+					
+				this.graphics.RenderSolid(color);
 			}
 		}
 		
@@ -1094,6 +1079,12 @@ namespace Epsitec.Common.Document.Objects
 		}
 		
 		private void HandleCursorMoved(object sender)
+		{
+			this.document.Notifier.NotifyTextChanged();
+			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+		}
+
+		private void HandleStyleChanged(object sender)
 		{
 			this.document.Notifier.NotifyTextChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);

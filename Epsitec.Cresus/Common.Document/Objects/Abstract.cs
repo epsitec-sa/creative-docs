@@ -652,48 +652,6 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		// Met en puces 1 pendant l'édition.
-		public virtual bool EditBullet1()
-		{
-			return false;
-		}
-
-		// Met en puces 2 pendant l'édition.
-		public virtual bool EditBullet2()
-		{
-			return false;
-		}
-
-		// Indique si l'édition est en gras.
-		public virtual bool IsEditBold
-		{
-			get { return false; }
-		}
-
-		// Indique si l'édition est en italique.
-		public virtual bool IsEditItalic
-		{
-			get { return false; }
-		}
-
-		// Indique si l'édition est en souligné.
-		public virtual bool IsEditUnderlined
-		{
-			get { return false; }
-		}
-
-		// Indique si l'édition est en puces 1.
-		public virtual bool IsEditBullet1
-		{
-			get { return false; }
-		}
-
-		// Indique si l'édition est en puces 2.
-		public virtual bool IsEditBullet2
-		{
-			get { return false; }
-		}
-
 		// Sélectionne tout le texte pendant l'édition.
 		public virtual bool EditSelectAll()
 		{
@@ -730,6 +688,76 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+
+		// Modifie la police du texte.
+		public virtual void SetTextFont(string face, string style)
+		{
+		}
+
+		// Donne la police du texte.
+		public virtual void GetTextFont(out string face, out string style)
+		{
+			face = "";
+			style = "";
+		}
+
+		// Nom de la police du texte.
+		public virtual string TextFontFace
+		{
+			get { return ""; }
+			set {}
+		}
+
+		// Nom du style de la police du texte.
+		public virtual string TextFontStyle
+		{
+			get { return ""; }
+			set {}
+		}
+
+		// Taille de la police du texte.
+		public virtual double TextFontSize
+		{
+			get { return 0; }
+			set {}
+		}
+
+		// Style "gras" du texte.
+		public virtual bool TextBold
+		{
+			get { return false; }
+			set {}
+		}
+
+		// Style "italique" du texte.
+		public virtual bool TextItalic
+		{
+			get { return false; }
+			set {}
+		}
+
+		// Style "souligné" du texte.
+		public virtual bool TextUnderlined
+		{
+			get { return false; }
+			set {}
+		}
+
+		// Style "puces 1" du texte.
+		public virtual bool TextBullet1
+		{
+			get { return false; }
+			set {}
+		}
+
+		// Style "puces 2" du texte.
+		public virtual bool TextBullet2
+		{
+			get { return false; }
+			set {}
+		}
+
+		
 		// Détecte la cellule pointée par la souris.
 		public virtual int DetectCell(Point pos)
 		{
