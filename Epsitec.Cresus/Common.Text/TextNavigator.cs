@@ -604,7 +604,7 @@ namespace Epsitec.Common.Text
 					this.story.OpletQueue.ValidateAction ();
 				}
 			}
-			else
+//			else
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 				
@@ -658,7 +658,7 @@ namespace Epsitec.Common.Text
 					this.story.OpletQueue.ValidateAction ();
 				}
 			}
-			else
+//			else
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 				
@@ -814,7 +814,7 @@ namespace Epsitec.Common.Text
 					this.story.OpletQueue.ValidateAction ();
 				}
 			}
-			else
+//			else
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 				
@@ -862,7 +862,7 @@ namespace Epsitec.Common.Text
 					this.story.OpletQueue.ValidateAction ();
 				}
 			}
-			else
+//			else
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 				
