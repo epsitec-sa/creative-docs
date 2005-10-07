@@ -414,6 +414,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Internal\Sequences\ConstantSequence.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Internal\Sequences\NumericSequence.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

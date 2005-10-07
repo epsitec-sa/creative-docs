@@ -322,6 +322,11 @@ namespace Epsitec.Common.Text
 			}
 			
 			
+			public void DefineSetupArgument(string argument)
+			{
+				this.Setup (argument);
+			}
+			
 			public void GenerateText(int rank, System.Globalization.CultureInfo culture, System.Text.StringBuilder buffer)
 			{
 				if (this.prefix != null)
@@ -401,6 +406,9 @@ namespace Epsitec.Common.Text
 				case SequenceType.Numeric:
 					return new Internal.Sequences.Numeric ();
 				
+				case SequenceType.Constant:
+					return new Internal.Sequences.Constant ();
+				
 				default:
 					throw new System.NotSupportedException (string.Format ("SequenceType {0} not supported", type));
 			}
@@ -412,6 +420,29 @@ namespace Epsitec.Common.Text
 			
 			sequence.Prefix = prefix;
 			sequence.Suffix = suffix;
+			
+			return sequence;
+		}
+		
+		public static Generator.Sequence CreateSequence(SequenceType type, string prefix, string suffix, Casing casing)
+		{
+			Generator.Sequence sequence = Generator.CreateSequence (type);
+			
+			sequence.Prefix = prefix;
+			sequence.Suffix = suffix;
+			sequence.Casing = casing;
+			
+			return sequence;
+		}
+		
+		public static Generator.Sequence CreateSequence(SequenceType type, string prefix, string suffix, Casing casing, string setup_argument)
+		{
+			Generator.Sequence sequence = Generator.CreateSequence (type);
+			
+			sequence.DefineSetupArgument (setup_argument);
+			sequence.Prefix = prefix;
+			sequence.Suffix = suffix;
+			sequence.Casing = casing;
 			
 			return sequence;
 		}
@@ -472,7 +503,8 @@ namespace Epsitec.Common.Text
 			None,
 			
 			Alphabetic,
-			Numeric
+			Numeric,
+			Constant
 		}
 		#endregion
 		

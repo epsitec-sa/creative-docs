@@ -1162,10 +1162,11 @@ namespace Epsitec.Common.Document
 			
 			Text.TabList   tabs       = this.textContext.TabList;
 			Text.Generator generator1 = this.textContext.GeneratorList.NewGenerator("alpha-1");
-			Text.Generator generator2 = this.textContext.GeneratorList.NewGenerator("alpha-2");
+			Text.Generator generator2 = this.textContext.GeneratorList.NewGenerator("num-1");
 			
-			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Alphabetic, "", ")"));
-			generator2.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric, "", "."));
+			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Alphabetic, "", ")", Text.Generator.Casing.Upper));
+			generator2.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "\u25BA"));
+//			generator2.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric, "", "."));
 			
 			Text.ParagraphManagers.ItemListManager.Parameters items1 = new Text.ParagraphManagers.ItemListManager.Parameters();
 			Text.ParagraphManagers.ItemListManager.Parameters items2 = new Text.ParagraphManagers.ItemListManager.Parameters();
