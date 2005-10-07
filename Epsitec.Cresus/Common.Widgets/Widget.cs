@@ -5201,13 +5201,13 @@ namespace Epsitec.Common.Widgets
 			add
 			{
 				this.InitialiseEventsHashtable ();
-				this.events["PaintBackground"] = (PaintEventHandler) this.events["PaintForeground"] + value;
+				this.events["PaintForeground"] = (PaintEventHandler) this.events["PaintForeground"] + value;
 			}
 			remove
 			{
 				if (this.events != null)
 				{
-					this.events["PaintBackground"] = (PaintEventHandler) this.events["PaintForeground"] - value;
+					this.events["PaintForeground"] = (PaintEventHandler) this.events["PaintForeground"] - value;
 				}
 			}
 		}

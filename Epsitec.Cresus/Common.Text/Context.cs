@@ -207,6 +207,41 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public string[] GetAvailableFontFaces()
+		{
+			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
+			
+			foreach (OpenType.FontIdentity id in TextContext.font_collection)
+			{
+				if (hash.Contains (id.InvariantFaceName) == false)
+				{
+					hash[id.InvariantFaceName] = id;
+				}
+			}
+			
+			string[] names = new string[hash.Count];
+			hash.Keys.CopyTo (names, 0);
+			return names;
+		}
+		
+		public OpenType.FontIdentity[] GetAvailableFontIdentities(string face)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (OpenType.FontIdentity id in TextContext.font_collection)
+			{
+				if (id.InvariantFaceName == face)
+				{
+					list.Add (id);
+				}
+			}
+			
+			list.Sort ();
+			
+			return (OpenType.FontIdentity[]) list.ToArray (typeof (OpenType.FontIdentity));
+		}
+		
+		
 		public void GetFont(string name, out OpenType.Font font)
 		{
 			if (this.get_font_cache_name == name)
