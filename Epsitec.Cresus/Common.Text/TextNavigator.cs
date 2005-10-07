@@ -946,6 +946,7 @@ namespace Epsitec.Common.Text
 				this.story.RecycleCursor (temp);
 			}
 			
+			this.ClearCurrentStylesAndProperties ();
 			this.NotifyCursorMoved ();
 		}
 		
@@ -1087,10 +1088,32 @@ namespace Epsitec.Common.Text
 			int dir    = this.story.GetCursorDirection (this.cursor);
 			int offset = ((pos > 0) && (dir > 0)) ? -1 : 0;
 			
+			if ((dir > -1) &&
+				(this.IsAfterAutoText (this.cursor)))
+			{
+				//	Le caractère précédent appartient à un texte automatique. Il faut
+				//	considérer que l'on vient de reculer, pas d'avancer :
+				
+				offset = 0;
+				
+				System.Diagnostics.Debug.WriteLine ("--> just after AutoText");
+			}
+			
 			if ((pos > 0) &&
 				(pos == this.TextLength))
 			{
 				offset = -1;
+			}
+			
+			if ((offset != 0) &&
+				(pos < this.TextLength) &&
+				(Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0)))
+			{
+				//	Au début d'un paragraphe, on prend toujours le style du premier caractère
+				//	du paragraphe, quelle que soit la direction (on ne veut pas hériter du
+				//	style du paragraphe précédent) :
+				
+				offset = 0;
 			}
 			
 			ulong code = this.story.ReadChar (this.cursor, offset);
@@ -1436,21 +1459,21 @@ namespace Epsitec.Common.Text
 			{
 				System.Diagnostics.Debug.Assert (start <= pos+i);
 				
-				if ((Internal.Navigator.IsParagraphSeparator (text[i])) ||
-					(Internal.Navigator.IsEndOfText (this.story, cursor, i+1)))
+				if ((Internal.Navigator.IsParagraphSeparator (text[i])) /*||
+					(Internal.Navigator.IsEndOfText (this.story, cursor, i+1))*/)
 				{
 					//	Vérifie si l'on détruit un paragraphe complet (avec un
 					//	éventuel texte automatique au début)
 					
 					count++;
 					
-					this.story.SetCursorPosition (this.temp_cursor, start);
-					
 					if (this.SkipOverAutoText (ref start, -1))
 					{
 						//	Le début de la tranche à détruire ne contenait pas le
 						//	texte automatique. Nous devons étendre la sélection pour
 						//	englober le texte automatique.
+						
+						this.story.SetCursorPosition (this.temp_cursor, start);
 						
 						System.Diagnostics.Debug.Assert (count == 1);
 						System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == start);
@@ -1498,11 +1521,11 @@ namespace Epsitec.Common.Text
 				//	la fin après la fin du paragraphe précédent (sinon on supprime
 				//	du texte automatique qu'il faudrait conserver).
 				
-				this.story.SetCursorPosition (this.temp_cursor, fence);
-				
 				if (this.SkipOverAutoText (ref fence, -1))
 				{
-					System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == start);
+					this.story.SetCursorPosition (this.temp_cursor, fence);
+					
+					System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == fence);
 					System.Diagnostics.Debug.Assert (this.IsParagraphStart (0, -1));
 				}
 			}
@@ -1534,7 +1557,7 @@ namespace Epsitec.Common.Text
 				Internal.Navigator.SetParagraphStyles (this.story, this.temp_cursor, styles);
 				Internal.Navigator.SetParagraphProperties (this.story, this.temp_cursor, Properties.ApplyMode.Overwrite, props);
 			}
-			else
+//-			else
 			{
 				//	Le curseur pourrait maintenant avoir une mise en page de paragraphe
 				//	différente de ce qu'il avait avant. Il faut mettre à jour juste la
@@ -1557,6 +1580,7 @@ namespace Epsitec.Common.Text
 				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
 				new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Text));
 				new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Character));
+				new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.MetaProperty));
 				
 				new_properties.AddRange (Property.FilterUniformParagraphProperties (this.current_properties));
 				new_properties.AddRange (Property.FilterOtherProperties (old_properties));
@@ -1912,14 +1936,16 @@ namespace Epsitec.Common.Text
 			
 			for (int i = 0; i < this.accumulated_properties.Length; i++)
 			{
+				System.Diagnostics.Debug.Assert (this.accumulated_properties[i].WellKnownType != Properties.WellKnownType.AutoText);
+				
 				fingerprint.Append (this.accumulated_properties[i].ToString ());
 			}
 			
 			if (this.accumulated_properties_fingerprint != fingerprint.ToString ())
 			{
+				this.accumulated_properties_fingerprint = fingerprint.ToString ();
 				System.Diagnostics.Debug.WriteLine (string.Format ("Fingerprint: {0}", this.accumulated_properties_fingerprint));
 				
-				this.accumulated_properties_fingerprint = fingerprint.ToString ();
 				this.OnActiveStyleChanged ();
 			}
 		}
@@ -1966,6 +1992,13 @@ namespace Epsitec.Common.Text
 				
 				new_pos -= 1;
 				new_dir  = Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, -1) ? -1 : 1;
+			}
+			else if (Internal.Navigator.IsEndOfText (this.story, this.temp_cursor, 0))
+			{
+				//	Le curseur est exactement sur la fin du texte; il faut déterminer
+				//	la direction à utiliser :
+				
+				new_dir  = Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0) ? -1 : 1;
 			}
 			
 			//	Déplace le curseur "officiel" une seule fois. Ceci permet d'éviter
@@ -2042,6 +2075,26 @@ namespace Epsitec.Common.Text
 			}
 			
 			System.Diagnostics.Debug.Assert (this.HasSelection);
+		}
+		
+		
+		protected bool IsAfterAutoText(ICursor cursor)
+		{
+			ulong code = this.story.ReadChar (cursor, -1);
+			
+			if (code == 0)
+			{
+				return false;
+			}
+			
+			Properties.AutoTextProperty  property;
+			
+			if (this.TextContext.GetAutoText (code, out property))
+			{
+				return true;
+			}
+			
+			return false;
 		}
 		
 		
