@@ -8,6 +8,31 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class Misc
 	{
+		// Conversion d'une chaîne en nombre réel.
+		static public double ConvertStringToDouble(string text, double min, double max, double defaultValue)
+		{
+			double value = defaultValue;
+				
+			if ( text != "" )
+			{
+				string  dec = Types.Converter.ExtractDecimal(ref text);
+					
+				try
+				{
+					value = double.Parse(dec, System.Globalization.CultureInfo.CurrentUICulture);
+				}
+				catch
+				{
+				}
+			}
+
+			value = System.Math.Max(value, min);
+			value = System.Math.Min(value, max);
+
+			return value;
+		}
+
+
 		// Ajoute la liste des fontes dans la liste d'un TextFieldCombo.
 		static public void AddFontList(TextFieldCombo combo, bool all)
 		{

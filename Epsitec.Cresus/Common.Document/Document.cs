@@ -1143,7 +1143,7 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.MarginsProperty(60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 			properties.Add(new Text.Properties.ColorProperty("Black"));
 			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
-			properties.Add(new Text.Properties.LeadingProperty(14.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 13.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.Percent, 5.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			style = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
 			this.textContext.DefaultStyle = style;
 
@@ -1159,17 +1159,41 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", "Black"));
 			this.textContext.StyleList.NewMetaProperty("Underlined", "Underlined", properties);
 			
+			properties = new System.Collections.ArrayList();
+			properties.Add(new Text.Properties.FontOffsetProperty(-50.0, Text.Properties.SizeUnits.Percent));
+			properties.Add(new Text.Properties.FontSizeProperty(60.0, Text.Properties.SizeUnits.Percent));
+			this.textContext.StyleList.NewMetaProperty("Indice", "IndiceExposant", properties);
+
+			properties = new System.Collections.ArrayList();
+			properties.Add(new Text.Properties.FontOffsetProperty(75.0, Text.Properties.SizeUnits.Percent));
+			properties.Add(new Text.Properties.FontSizeProperty(60.0, Text.Properties.SizeUnits.Percent));
+			this.textContext.StyleList.NewMetaProperty("Exposant", "IndiceExposant", properties);
+
+			properties = new System.Collections.ArrayList();
+			properties.Add(new Text.Properties.FontProperty(null, "!Bold"));
+			this.textContext.StyleList.NewMetaProperty("UserX", "UserX", properties);
+
+			properties = new System.Collections.ArrayList();
+			properties.Add(new Text.Properties.FontProperty(null, "!Italic"));
+			this.textContext.StyleList.NewMetaProperty("UserY", "UserY", properties);
+
+			properties = new System.Collections.ArrayList();
+			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", "Black"));
+			this.textContext.StyleList.NewMetaProperty("UserZ", "UserZ", properties);
+
 			
 			Text.TabList   tabs       = this.textContext.TabList;
-			Text.Generator generator1 = this.textContext.GeneratorList.NewGenerator("alpha-1");
+			Text.Generator generator1 = this.textContext.GeneratorList.NewGenerator("bullet-1");
 			Text.Generator generator2 = this.textContext.GeneratorList.NewGenerator("num-1");
+			Text.Generator generator3 = this.textContext.GeneratorList.NewGenerator("alpha-1");
 			
-			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Alphabetic, "", ")", Text.Generator.Casing.Upper));
-			generator2.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "\u25BA"));
-//			generator2.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric, "", "."));
+			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "\u25CF"));
+			generator2.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric, "", "."));
+			generator3.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Alphabetic, "", ")", Text.Generator.Casing.Upper));
 			
 			Text.ParagraphManagers.ItemListManager.Parameters items1 = new Text.ParagraphManagers.ItemListManager.Parameters();
 			Text.ParagraphManagers.ItemListManager.Parameters items2 = new Text.ParagraphManagers.ItemListManager.Parameters();
+			Text.ParagraphManagers.ItemListManager.Parameters items3 = new Text.ParagraphManagers.ItemListManager.Parameters();
 			
 			items1.Generator = generator1;
 			items1.TabItem   = tabs.NewTab("T1-item", 10.0, Text.Properties.SizeUnits.Points, 0, null);
@@ -1179,11 +1203,27 @@ namespace Epsitec.Common.Document
 			items2.TabItem   = tabs.NewTab("T2-item", 10.0, Text.Properties.SizeUnits.Points, 0, null);
 			items2.TabBody   = tabs.NewTab("T2-body", 60.0, Text.Properties.SizeUnits.Points, 0, null);
 			
+			items3.Generator = generator3;
+			items3.TabItem   = tabs.NewTab("T3-item", 10.0, Text.Properties.SizeUnits.Points, 0, null);
+			items3.TabBody   = tabs.NewTab("T3-body", 60.0, Text.Properties.SizeUnits.Points, 0, null);
+			
 			Text.Properties.ManagedParagraphProperty itemList1 = new Text.Properties.ManagedParagraphProperty("ItemList", items1.Save());
 			Text.Properties.ManagedParagraphProperty itemList2 = new Text.Properties.ManagedParagraphProperty("ItemList", items2.Save());
+			Text.Properties.ManagedParagraphProperty itemList3 = new Text.Properties.ManagedParagraphProperty("ItemList", items3.Save());
 			
 			this.textContext.StyleList.NewTextStyle("Bullet1", Text.TextStyleClass.Paragraph, itemList1);
 			this.textContext.StyleList.NewTextStyle("Bullet2", Text.TextStyleClass.Paragraph, itemList2);
+			this.textContext.StyleList.NewTextStyle("Bullet3", Text.TextStyleClass.Paragraph, itemList3);
+
+
+			this.textContext.StyleList.NewTextStyle("AlignLeft",   Text.TextStyleClass.Paragraph, new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 0.0, 0.0, 0.0, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
+			this.textContext.StyleList.NewTextStyle("AlignCenter", Text.TextStyleClass.Paragraph, new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 0.0, 0.0, 0.5, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
+			this.textContext.StyleList.NewTextStyle("AlignRight",  Text.TextStyleClass.Paragraph, new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 0.0, 0.0, 1.0, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
+			this.textContext.StyleList.NewTextStyle("AlignJustif", Text.TextStyleClass.Paragraph, new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 1.0, 0.0, 0.0, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
+
+			this.textContext.StyleList.NewTextStyle("LeadingNorm", Text.TextStyleClass.Paragraph, new Text.Properties.LeadingProperty(100.0, Text.Properties.SizeUnits.Percent, double.NaN, Text.Properties.SizeUnits.Points, double.NaN, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.Undefined));
+			this.textContext.StyleList.NewTextStyle("LeadingPlus", Text.TextStyleClass.Paragraph, new Text.Properties.LeadingProperty(200.0, Text.Properties.SizeUnits.Percent, double.NaN, Text.Properties.SizeUnits.Points, double.NaN, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.Undefined));
+			this.textContext.StyleList.NewTextStyle("LeadingAuto", Text.TextStyleClass.Paragraph, new Text.Properties.LeadingProperty(  0.0, Text.Properties.SizeUnits.Points,  double.NaN, Text.Properties.SizeUnits.Points, double.NaN, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.Undefined));  // TODO: comment faire le mode "auto" ?
 		}
 		#endregion
 

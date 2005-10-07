@@ -853,7 +853,41 @@
 	<data name="Action.Infos">Informations...</data>
 	<data name="Action.LabelProperties">Property names</data>
 
+	<data name="Action.Text.Font.Main">Font</data>
+	<data name="Action.Text.Font.Face">Font name</data>
+	<data name="Action.Text.Font.Style">Font style</data>
+	<data name="Action.Text.Font.Size">Font size</data>
+	<data name="Action.Text.Font.SizePlus">@@Police plus grande</data>
+	<data name="Action.Text.Font.SizeMinus">@@Police plus petite</data>
+	<data name="Action.Text.Font.Bold">Bold</data>
+	<data name="Action.Text.Font.Italic">Italic</data>
+	<data name="Action.Text.Font.Underlined">Underlined</data>
+	<data name="Action.Text.Font.Indice">@@Indice</data>
+	<data name="Action.Text.Font.Exposant">@@Exposant</data>
+	<data name="Action.Text.Font.UserX">User style X</data>
+	<data name="Action.Text.Font.UserY">User style Y</data>
+	<data name="Action.Text.Font.UserZ">User style Z</data>
+	<data name="Action.Text.Font.Color">Font color</data>
+	<data name="Action.Text.Font.Default">&lt;i&gt;Default&lt;/i&gt;</data>
+	<data name="Action.Text.Paragraph.Main">Paragraph</data>
+	<data name="Action.Text.Paragraph.BulletRound">@@Puces</data>
+	<data name="Action.Text.Paragraph.BulletNumeric">@@Numérotation 1..</data>
+	<data name="Action.Text.Paragraph.BulletAlpha">@@Numérotation A..</data>
+	<data name="Action.Text.Paragraph.AlignLeft">Left aligned</data>
+	<data name="Action.Text.Paragraph.AlignCenter">Centered</data>
+	<data name="Action.Text.Paragraph.AlignRight">Right aligned</data>
+	<data name="Action.Text.Paragraph.AlignJustif">Justified</data>
+	<data name="Action.Text.Paragraph.LeadingNorm">Interligne normal</data>
+	<data name="Action.Text.Paragraph.LeadingPlus">Interligne étendu</data>
+	<data name="Action.Text.Paragraph.LeadingAuto">Interligne automatique</data>
 	<data name="Action.Text.Insert">Insert</data>
+
+	<data name="Text.ButtonBold">&lt;b&gt;B&lt;/b&gt;</data>
+	<data name="Text.ButtonItalic">&lt;i&gt;I&lt;/i&gt;</data>
+	<data name="Text.ButtonUnderlined">&lt;u&gt;U&lt;/u&gt;</data>
+	<data name="Text.ButtonUserX">[&lt;b&gt;X&lt;/b&gt;]</data>
+	<data name="Text.ButtonUserY">[&lt;b&gt;Y&lt;/b&gt;]</data>
+	<data name="Text.ButtonUserZ">[&lt;b&gt;Z&lt;/b&gt;]</data>
 
 	<data name="Statistic.Summary">{0}Summary{1}</data>
 	<data name="Statistic.Filename">{0}File name: {1}</data>

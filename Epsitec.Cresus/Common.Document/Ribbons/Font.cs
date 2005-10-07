@@ -6,18 +6,30 @@ using Epsitec.Common.Text;
 namespace Epsitec.Common.Document.Ribbons
 {
 	/// <summary>
-	/// La classe Font permet de choisir la fonte.
+	/// La classe Font permet de choisir la fonte du texte.
 	/// </summary>
 	[SuppressBundleSupport]
 	public class Font : Abstract
 	{
 		public Font() : base()
 		{
-			this.title.Text = Res.Strings.Property.Abstract.TextFont;
+			this.title.Text = Res.Strings.Action.Text.Font.Main;
 
-			this.fontFace  = this.CreateFieldFontFace(Res.Strings.Panel.Font.Tooltip.Name);
-			this.fontStyle = this.CreateFieldFontStyle("Style de la police");
-			this.fontSize  = this.CreateFieldFontSize(Res.Strings.Panel.Font.Tooltip.Size);
+			this.fontFace  = this.CreateFieldFontFace(Res.Strings.Action.Text.Font.Face);
+			this.fontStyle = this.CreateFieldFontStyle(Res.Strings.Action.Text.Font.Style);
+			this.fontSize  = this.CreateFieldFontSize(Res.Strings.Action.Text.Font.Size);
+
+			this.buttonSizePlus  = this.CreateIconButton("A+", Res.Strings.Action.Text.Font.SizePlus,  new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonSizeMinus = this.CreateIconButton("A-", Res.Strings.Action.Text.Font.SizeMinus, new MessageEventHandler(this.HandleButtonClicked));
+
+			this.buttonBold       = this.CreateIconButton(Res.Strings.Text.ButtonBold,       Res.Strings.Action.Text.Font.Bold,       new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonItalic     = this.CreateIconButton(Res.Strings.Text.ButtonItalic,     Res.Strings.Action.Text.Font.Italic,     new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonUnderlined = this.CreateIconButton(Res.Strings.Text.ButtonUnderlined, Res.Strings.Action.Text.Font.Underlined, new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonIndice     = this.CreateIconButton("i",                               Res.Strings.Action.Text.Font.Indice,     new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonExposant   = this.CreateIconButton("e",                               Res.Strings.Action.Text.Font.Exposant,   new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonUserX      = this.CreateIconButton(Res.Strings.Text.ButtonUserX,      Res.Strings.Action.Text.Font.UserX,      new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonUserY      = this.CreateIconButton(Res.Strings.Text.ButtonUserY,      Res.Strings.Action.Text.Font.UserY,      new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonUserZ      = this.CreateIconButton(Res.Strings.Text.ButtonUserZ,      Res.Strings.Action.Text.Font.UserZ,      new MessageEventHandler(this.HandleButtonClicked));
 
 			this.fontColor = new ColorSample(this);
 			this.fontColor.PossibleSource = true;
@@ -25,37 +37,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.fontColor.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.fontColor.TabIndex = this.tabIndex++;
 			this.fontColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.fontColor, Res.Strings.Panel.Font.Tooltip.Color);
-
-			this.buttonBold = new IconButton(this);
-			this.buttonBold.AutoFocus = false;
-			this.buttonBold.Text = "<b>G</b>";
-			this.buttonBold.Clicked += new MessageEventHandler(this.HandleButtonBoldClicked);
-			ToolTip.Default.SetToolTip(this.buttonBold, "Gras");
-
-			this.buttonItalic = new IconButton(this);
-			this.buttonItalic.AutoFocus = false;
-			this.buttonItalic.Text = "<i>I</i>";
-			this.buttonItalic.Clicked += new MessageEventHandler(this.HandleButtonItalicClicked);
-			ToolTip.Default.SetToolTip(this.buttonItalic, "Italique");
-
-			this.buttonUnderlined = new IconButton(this);
-			this.buttonUnderlined.AutoFocus = false;
-			this.buttonUnderlined.Text = "<u>S</u>";
-			this.buttonUnderlined.Clicked += new MessageEventHandler(this.HandleButtonUnderlinedClicked);
-			ToolTip.Default.SetToolTip(this.buttonUnderlined, "Souligné");
-
-			this.buttonBullet1 = new IconButton(this);
-			this.buttonBullet1.AutoFocus = false;
-			this.buttonBullet1.Text = "a)";
-			this.buttonBullet1.Clicked += new MessageEventHandler(this.HandleButtonBullet1Clicked);
-			ToolTip.Default.SetToolTip(this.buttonBullet1, "Puces");
-
-			this.buttonBullet2 = new IconButton(this);
-			this.buttonBullet2.AutoFocus = false;
-			this.buttonBullet2.Text = "1.";
-			this.buttonBullet2.Clicked += new MessageEventHandler(this.HandleButtonBullet2Clicked);
-			ToolTip.Default.SetToolTip(this.buttonBullet2, "Numérotation");
+			ToolTip.Default.SetToolTip(this.fontColor, Res.Strings.Action.Text.Font.Color);
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -81,7 +63,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return 8+180+5+50;
+				return 8+180+5+50+22*2;
 			}
 		}
 
@@ -95,33 +77,32 @@ namespace Epsitec.Common.Document.Ribbons
 
 			Objects.Abstract editObject = this.EditObject;
 
+			this.buttonSizePlus.SetEnabled(editObject != null);
+			this.buttonSizeMinus.SetEnabled(editObject != null);
 			this.fontColor.SetEnabled(editObject != null);
-			this.buttonBold.SetEnabled(editObject != null);
-			this.buttonItalic.SetEnabled(editObject != null);
-			this.buttonUnderlined.SetEnabled(editObject != null);
-			this.buttonBullet1.SetEnabled(editObject != null);
-			this.buttonBullet2.SetEnabled(editObject != null);
 
-			bool bold = false;
-			bool italic = false;
-			bool underlined = false;
-			bool bullet1 = false;
-			bool bullet2 = false;
+			this.UpdateButton(this.buttonBold, editObject, "Bold");
+			this.UpdateButton(this.buttonItalic, editObject, "Italic");
+			this.UpdateButton(this.buttonUnderlined, editObject, "Underlined");
+			this.UpdateButton(this.buttonIndice, editObject, "Indice");
+			this.UpdateButton(this.buttonExposant, editObject, "Exposant");
+			this.UpdateButton(this.buttonUserX, editObject, "UserX");
+			this.UpdateButton(this.buttonUserY, editObject, "UserY");
+			this.UpdateButton(this.buttonUserZ, editObject, "UserZ");
+		}
+
+		protected void UpdateButton(IconButton button, Objects.Abstract editObject, string name)
+		{
+			button.SetEnabled(editObject != null);
+
+			bool state = false;
 
 			if ( editObject != null )
 			{
-				bold = editObject.TextBold;
-				italic = editObject.TextItalic;
-				underlined = editObject.TextUnderlined;
-				bullet1 = editObject.TextBullet1;
-				bullet2 = editObject.TextBullet2;
+				state = editObject.GetTextStyle(name);;
 			}
 
-			this.buttonBold.ActiveState = bold ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.buttonItalic.ActiveState = italic ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.buttonUnderlined.ActiveState = underlined ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.buttonBullet1.ActiveState = bullet1 ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.buttonBullet2.ActiveState = bullet2 ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			button.ActiveState = state ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 		}
 
 		
@@ -132,7 +113,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( this.buttonBold == null )  return;
 
-			double dx = this.buttonBold.DefaultHeight;
+			double dx = this.buttonBold.DefaultWidth;
 			double dy = this.buttonBold.DefaultHeight;
 
 			Rectangle rect = this.UsefulZone;
@@ -143,10 +124,15 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Offset(rect.Width+5, 0);
 			rect.Width  = 50;
 			this.fontSize.Bounds = rect;
+			rect.Offset(rect.Width, 0);
+			rect.Width  = dx;
+			this.buttonSizePlus.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonSizeMinus.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Height = dy;
-			rect.Width  = 98;
+			rect.Width  = 76;
 			this.fontStyle.Bounds = rect;
 			rect.Offset(rect.Width+5, 0);
 			rect.Width  = dx;
@@ -156,9 +142,15 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Offset(dx, 0);
 			this.buttonUnderlined.Bounds = rect;
 			rect.Offset(dx, 0);
-			this.buttonBullet1.Bounds = rect;
+			this.buttonIndice.Bounds = rect;
 			rect.Offset(dx, 0);
-			this.buttonBullet2.Bounds = rect;
+			this.buttonExposant.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonUserX.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonUserY.Bounds = rect;
+			rect.Offset(dx, 0);
+			this.buttonUserZ.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.fontColor.Bounds = rect;
 		}
@@ -192,20 +184,26 @@ namespace Epsitec.Common.Document.Ribbons
 				this.ignoreChange = true;
 				
 				string face, style;
-				editObject.GetTextFont(out face, out style);
-
-				if ( field.Items.Count == 0 )
-				{
-					field.Items.Add("");  // case vide = "par défaut" TODO: faire mieux
-					foreach( string f in this.document.TextContext.GetAvailableFontFaces() )
-					{
-						field.Items.Add(f);
-					}
-				}
-
+				editObject.GetTextFont(false, out face, out style);
+				this.UpdateFieldFontFaceList(field);
+				if ( face == "" )  face = Res.Strings.Action.Text.Font.Default;
 				field.Text = face;
 
 				this.ignoreChange = false;
+			}
+		}
+
+		// Met à jour la liste d'un champ éditable pour le nom de la police.
+		protected void UpdateFieldFontFaceList(TextFieldCombo field)
+		{
+			if ( field.Items.Count == 0 )
+			{
+				field.Items.Add(Res.Strings.Action.Text.Font.Default);  // par défaut
+
+				foreach( string face in this.document.TextContext.GetAvailableFontFaces() )
+				{
+					field.Items.Add(face);
+				}
 			}
 		}
 
@@ -237,17 +235,88 @@ namespace Epsitec.Common.Document.Ribbons
 				this.ignoreChange = true;
 
 				string face, style;
-				editObject.GetTextFont(out face, out style);
-
-				field.Items.Clear();
-				foreach ( OpenType.FontIdentity id in this.document.TextContext.GetAvailableFontIdentities(face) )
-				{
-					field.Items.Add(id.InvariantStyleName);
-				}
-
+				editObject.GetTextFont(false, out face, out style);
+				this.UpdateFieldFontStyleList(field, face);
+				if ( style == "" )  style = Res.Strings.Action.Text.Font.Default;
 				field.Text = style;
 
 				this.ignoreChange = false;
+			}
+		}
+
+		// Met à jour la liste d'un champ éditable pour le style de la police.
+		protected void UpdateFieldFontStyleList(TextFieldCombo field, string face)
+		{
+			field.Items.Clear();  // vide la liste
+
+			OpenType.FontIdentity[] list = this.document.TextContext.GetAvailableFontIdentities(face);
+			foreach ( OpenType.FontIdentity id in list )
+			{
+				field.Items.Add(id.InvariantStyleName);
+			}
+		}
+
+		// Crée un champ éditable pour la taille de la police.
+		protected TextFieldCombo CreateFieldFontSize(string tooltip)
+		{
+			TextFieldCombo field = new TextFieldCombo(this);
+			field.TextChanged += new EventHandler(this.HandleFieldComboChanged);
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(field, tooltip);
+			return field;
+		}
+
+		// Adapte un champ éditable pour la taille de la police.
+		protected void AdaptFieldFontSize(TextFieldCombo field)
+		{
+			Objects.Abstract editObject = this.EditObject;
+
+			if ( editObject == null )
+			{
+				field.SetEnabled(false);
+			}
+			else
+			{
+				field.SetEnabled(true);
+
+				this.ignoreChange = true;
+				
+				this.UpdateFieldFontSizeList(field);
+				double size = editObject.GetTextFontSize(false);
+				if ( size == 0 )
+				{
+					field.Text = Res.Strings.Action.Text.Font.Default;
+				}
+				else
+				{
+					size /= Modifier.fontSizeScale;
+					field.Text = size.ToString(System.Globalization.CultureInfo.CurrentUICulture);
+				}
+
+				this.ignoreChange = false;
+			}
+		}
+
+		// Met à jour la liste d'un champ éditable pour la taille de la police.
+		protected void UpdateFieldFontSizeList(TextFieldCombo field)
+		{
+			if ( field.Items.Count == 0 )
+			{
+				field.Items.Add(Res.Strings.Action.Text.Font.Default);  // par défaut
+				field.Items.Add("8");
+				field.Items.Add("9");
+				field.Items.Add("10");
+				field.Items.Add("11");
+				field.Items.Add("12");
+				field.Items.Add("14");
+				field.Items.Add("16");
+				field.Items.Add("18");
+				field.Items.Add("20");
+				field.Items.Add("24");
+				field.Items.Add("36");
+				field.Items.Add("48");
+				field.Items.Add("72");
 			}
 		}
 
@@ -265,22 +334,47 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( field == this.fontFace )
 			{
 				string face = field.Text;
-				string style = this.SearchDefaultFontStyle(face);
+				string style = "";
+				if ( face == Res.Strings.Action.Text.Font.Default )
+				{
+					face = "";
+				}
+				else
+				{
+					style = this.SearchDefaultFontStyle(face);
+				}
 				editObject.SetTextFont(face, style);
 			}
 
 			if ( field == this.fontStyle )
 			{
 				string face, style;
-				editObject.GetTextFont(out face, out style);
-				editObject.SetTextFont(face, field.Text);
+				editObject.GetTextFont(false, out face, out style);
+				style = "";
+				if ( field.Text != Res.Strings.Action.Text.Font.Default )
+				{
+					style = field.Text;
+				}
+				editObject.SetTextFont(face, style);
+			}
+
+			if ( field == this.fontSize )
+			{
+				double size = 0;
+				if ( field.Text != Res.Strings.Action.Text.Font.Default )
+				{
+					size = Misc.ConvertStringToDouble(field.Text, 0, 1000, 0);
+				}
+				editObject.SetTextFontSize(size*Modifier.fontSizeScale);
 			}
 		}
 
-		// Cherche le FontStyle par défaut pour un FontName donné.
+		// Cherche le FontStyle par défaut pour un FontFace donné.
 		protected string SearchDefaultFontStyle(string face)
 		{
-			foreach ( OpenType.FontIdentity id in this.document.TextContext.GetAvailableFontIdentities(face) )
+			OpenType.FontIdentity[] list = this.document.TextContext.GetAvailableFontIdentities(face);
+
+			foreach ( OpenType.FontIdentity id in list )
 			{
 				if ( id.FontWeight == OpenType.FontWeight.Normal &&
 					 id.FontStyle  == OpenType.FontStyle.Normal  )
@@ -289,7 +383,7 @@ namespace Epsitec.Common.Document.Ribbons
 				}
 			}
 
-			foreach ( OpenType.FontIdentity id in this.document.TextContext.GetAvailableFontIdentities(face) )
+			foreach ( OpenType.FontIdentity id in list )
 			{
 				if ( id.FontWeight == OpenType.FontWeight.Normal )
 				{
@@ -297,7 +391,7 @@ namespace Epsitec.Common.Document.Ribbons
 				}
 			}
 
-			foreach ( OpenType.FontIdentity id in this.document.TextContext.GetAvailableFontIdentities(face) )
+			foreach ( OpenType.FontIdentity id in list )
 			{
 				if ( id.FontStyle == OpenType.FontStyle.Normal )
 				{
@@ -305,78 +399,12 @@ namespace Epsitec.Common.Document.Ribbons
 				}
 			}
 
-			foreach ( OpenType.FontIdentity id in this.document.TextContext.GetAvailableFontIdentities(face) )
+			foreach ( OpenType.FontIdentity id in list )
 			{
 				return id.InvariantStyleName;
 			}
 
 			return "";
-		}
-
-
-		// Crée un champ éditable pour la taille de la police.
-		protected TextFieldReal CreateFieldFontSize(string tooltip)
-		{
-			TextFieldReal field = new TextFieldReal(this);
-			field.Width = 50;
-			field.TabIndex = this.tabIndex++;
-			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
-			ToolTip.Default.SetToolTip(field, tooltip);
-			return field;
-		}
-
-		// Adapte un champ éditable pour la taille de la police.
-		protected void AdaptFieldFontSize(TextFieldReal field)
-		{
-			Objects.Abstract editObject = this.EditObject;
-
-			if ( editObject == null )
-			{
-				field.SetEnabled(false);
-			}
-			else
-			{
-				field.SetEnabled(true);
-
-				this.ignoreChange = true;
-				this.document.Modifier.AdaptTextFieldRealFontSize(field);
-
-				double size = editObject.TextFontSize;
-				if ( size == 0 )
-				{
-					field.Text = "";
-				}
-				else
-				{
-					field.InternalValue = (decimal) size;
-				}
-
-				this.ignoreChange = false;
-			}
-		}
-
-		private void HandleFieldValueChanged(object sender)
-		{
-			if ( this.ignoreChange )  return;
-
-			TextFieldReal field = sender as TextFieldReal;
-			if ( field == null )  return;
-
-			Objects.Abstract editObject = this.EditObject;
-			if ( editObject == null )  return;
-
-			if ( field == this.fontSize )
-			{
-				if ( field.Text == "" )
-				{
-					editObject.TextFontSize = 0;
-				}
-				else
-				{
-					editObject.TextFontSize = (double) field.InternalValue;
-				}
-			}
 		}
 
 
@@ -394,61 +422,49 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 		}
 
-		private void HandleButtonBoldClicked(object sender, MessageEventArgs e)
+		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			Objects.Abstract editObject = this.EditObject;
 			if ( editObject == null )  return;
-			editObject.TextBold = !editObject.TextBold;
+
+			if ( sender == this.buttonBold       )  this.InvertStyle(editObject, "Bold");
+			if ( sender == this.buttonItalic     )  this.InvertStyle(editObject, "Italic");
+			if ( sender == this.buttonUnderlined )  this.InvertStyle(editObject, "Underlined");
+			if ( sender == this.buttonIndice     )  this.InvertStyle(editObject, "Indice");
+			if ( sender == this.buttonExposant   )  this.InvertStyle(editObject, "Exposant");
+			if ( sender == this.buttonUserX      )  this.InvertStyle(editObject, "UserX");
+			if ( sender == this.buttonUserY      )  this.InvertStyle(editObject, "UserY");
+			if ( sender == this.buttonUserZ      )  this.InvertStyle(editObject, "UserZ");
+			if ( sender == this.buttonSizePlus   )  this.ChangeFontSize(editObject,  1);
+			if ( sender == this.buttonSizeMinus  )  this.ChangeFontSize(editObject, -1);
 		}
 
-		private void HandleButtonItalicClicked(object sender, MessageEventArgs e)
+		protected void InvertStyle(Objects.Abstract editObject, string name)
 		{
-			Objects.Abstract editObject = this.EditObject;
-			if ( editObject == null )  return;
-			editObject.TextItalic = !editObject.TextItalic;
+			bool state = editObject.GetTextStyle(name);
+			editObject.SetTextStyle(name, !state);
 		}
 
-		private void HandleButtonUnderlinedClicked(object sender, MessageEventArgs e)
+		protected void ChangeFontSize(Objects.Abstract editObject, double add)
 		{
-			Objects.Abstract editObject = this.EditObject;
-			if ( editObject == null )  return;
-			editObject.TextUnderlined = !editObject.TextUnderlined;
-		}
-
-		private void HandleButtonBullet1Clicked(object sender, MessageEventArgs e)
-		{
-			Objects.Abstract editObject = this.EditObject;
-			if ( editObject == null )  return;
-			editObject.TextBullet1 = !editObject.TextBullet1;
-		}
-
-		private void HandleButtonBullet2Clicked(object sender, MessageEventArgs e)
-		{
-			Objects.Abstract editObject = this.EditObject;
-			if ( editObject == null )  return;
-			editObject.TextBullet2 = !editObject.TextBullet2;
-		}
-
-
-		// Donne l'objet en cours d'édition.
-		protected Objects.Abstract EditObject
-		{
-			get
-			{
-				if ( this.document == null )  return null;
-				return this.document.Modifier.RetEditObject();
-			}
+			double size = editObject.GetTextFontSize(true);
+			editObject.SetTextFontSize(size + add*Modifier.fontSizeScale);
 		}
 
 
 		protected TextFieldCombo			fontFace;
 		protected TextFieldCombo			fontStyle;
-		protected TextFieldReal				fontSize;
-		protected ColorSample				fontColor;
+		protected TextFieldCombo			fontSize;
+		protected IconButton				buttonSizePlus;
+		protected IconButton				buttonSizeMinus;
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
 		protected IconButton				buttonUnderlined;
-		protected IconButton				buttonBullet1;
-		protected IconButton				buttonBullet2;
+		protected IconButton				buttonIndice;
+		protected IconButton				buttonExposant;
+		protected IconButton				buttonUserX;
+		protected IconButton				buttonUserY;
+		protected IconButton				buttonUserZ;
+		protected ColorSample				fontColor;
 	}
 }

@@ -408,9 +408,10 @@ namespace Epsitec.Common.Document.Objects
 		// Modifie la police du texte.
 		public override void SetTextFont(string face, string style)
 		{
-			if ( face == "" )
+			if ( face == "" )  // remet la fonte par défaut ?
 			{
-				// TODO: supprimer la propriété
+				Text.Properties.FontProperty font = new Text.Properties.FontProperty();
+				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Clear, font);
 			}
 			else
 			{
@@ -420,14 +421,24 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Donne la police du texte.
-		public override void GetTextFont(out string face, out string style)
+		public override void GetTextFont(bool accumulated, out string face, out string style)
 		{
-			Text.Property[] properties = this.textNavigator.TextProperties;
+			Text.Property[] properties;
+			if ( accumulated )
+			{
+				properties = this.textNavigator.AccumulatedTextProperties;
+			}
+			else
+			{
+				properties = this.textNavigator.TextProperties;
+			}
+
 			foreach ( Text.Property property in properties )
 			{
-				Text.Properties.FontProperty font = property as Text.Properties.FontProperty;
-				if ( font != null )
+				if ( property.WellKnownType == Text.Properties.WellKnownType.Font )
 				{
+					Text.Properties.FontProperty font = property as Text.Properties.FontProperty;
+					System.Diagnostics.Debug.Assert(font != null);
 					face = font.FaceName;
 					style = font.StyleName;
 					return;
@@ -438,120 +449,66 @@ namespace Epsitec.Common.Document.Objects
 			style = "";
 		}
 
-		// Taille de la police du texte.
-		public override double TextFontSize
+		// Modifie la taille de la police du texte.
+		public override void SetTextFontSize(double size)
 		{
-			get
+			if ( size == 0 )  // remet la taille par défaut ?
 			{
-				Text.Property[] properties = this.textNavigator.TextProperties;
-				foreach ( Text.Property property in properties )
-				{
-					Text.Properties.FontSizeProperty fs = property as Text.Properties.FontSizeProperty;
-					if ( fs != null )
-					{
-						return fs.SizeInPoints;
-					}
-				}
-				return 0;
+				Text.Properties.FontSizeProperty fs = new Text.Properties.FontSizeProperty();
+				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Clear, fs);
 			}
-			
-			set
+			else
 			{
-				if ( value == 0 )
-				{
-					// TODO: supprimer la propriété
-				}
-				else
-				{
-					Text.Properties.FontSizeProperty fs = new Text.Properties.FontSizeProperty(value, Text.Properties.SizeUnits.Points);
-					this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Combine, fs);
-				}
+				Text.Properties.FontSizeProperty fs = new Text.Properties.FontSizeProperty(size, Text.Properties.SizeUnits.Points);
+				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Combine, fs);
 			}
 		}
 
-		// Style "gras" du texte.
-		public override bool TextBold
+		// Donne la taille de la police du texte.
+		public override double GetTextFontSize(bool accumulated)
 		{
-			get
+			Text.Property[] properties;
+			if ( accumulated )
 			{
-				return this.IsExistingStyle("Bold");
+				properties = this.textNavigator.AccumulatedTextProperties;
 			}
-			
-			set
+			else
 			{
-				Text.TextStyle style = this.document.TextContext.StyleList["Bold", Text.TextStyleClass.MetaProperty];
-				if ( style != null )
+				properties = this.textNavigator.TextProperties;
+			}
+
+			foreach ( Text.Property property in properties )
+			{
+				Text.Properties.FontSizeProperty fs = property as Text.Properties.FontSizeProperty;
+				if ( fs != null )
 				{
-					Text.Properties.ApplyMode mode = value ? Text.Properties.ApplyMode.Set : Text.Properties.ApplyMode.Clear;
-					this.metaNavigator.SetMetaProperties(mode, style);
+					return fs.SizeInPoints;
 				}
 			}
+			return 0;
 		}
 
-		// Style "gras" du texte.
-		public override bool TextItalic
+		// Modifie l'état d'un style de caractère.
+		public override void SetTextStyle(string name, bool state)
 		{
-			get
+			Text.TextStyle style = this.document.TextContext.StyleList[name, Text.TextStyleClass.MetaProperty];
+			if ( style != null )
 			{
-				return this.IsExistingStyle("Italic");
-			}
-			
-			set
-			{
-				Text.TextStyle style = this.document.TextContext.StyleList["Italic", Text.TextStyleClass.MetaProperty];
-				if ( style != null )
-				{
-					Text.Properties.ApplyMode mode = value ? Text.Properties.ApplyMode.Set : Text.Properties.ApplyMode.Clear;
-					this.metaNavigator.SetMetaProperties(mode, style);
-				}
+				Text.Properties.ApplyMode mode = state ? Text.Properties.ApplyMode.Set : Text.Properties.ApplyMode.Clear;
+				this.metaNavigator.SetMetaProperties(mode, style);
 			}
 		}
 
-		// Style "gras" du texte.
-		public override bool TextUnderlined
+		// Modifie l'état d'un style de paragraphe.
+		public override void SetTextStyle(string name, string exclude, bool state)
 		{
-			get
-			{
-				return this.IsExistingStyle("Underlined");
-			}
-			
-			set
-			{
-				Text.TextStyle style = this.document.TextContext.StyleList["Underlined", Text.TextStyleClass.MetaProperty];
-				if ( style != null )
-				{
-					Text.Properties.ApplyMode mode = value ? Text.Properties.ApplyMode.Set : Text.Properties.ApplyMode.Clear;
-					this.metaNavigator.SetMetaProperties(mode, style);
-				}
-			}
+			this.ApplyStyle(name, exclude, state);
 		}
 
-		// Style "gras" du texte.
-		public override bool TextBullet1
+		// Donne l'état d'un style de paragraphe.
+		public override bool GetTextStyle(string name)
 		{
-			get
-			{
-				return this.IsExistingStyle("Bullet1");
-			}
-			
-			set
-			{
-				this.ApplyBulletStyle("Bullet1", value);
-			}
-		}
-
-		// Style "gras" du texte.
-		public override bool TextBullet2
-		{
-			get
-			{
-				return this.IsExistingStyle("Bullet2");
-			}
-			
-			set
-			{
-				this.ApplyBulletStyle("Bullet2", value);
-			}
+			return this.IsExistingStyle(name);
 		}
 
 		// Indique l'existance d'un style.
@@ -565,8 +522,8 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		// Modifie un style de puces.
-		protected void ApplyBulletStyle(string name, bool state)
+		// Modifie un style.
+		protected void ApplyStyle(string name, string exclude, bool state)
 		{
 			Text.TextStyle style = this.document.TextContext.StyleList[name, Text.TextStyleClass.Paragraph];
 			if ( style == null )  return;
@@ -576,7 +533,7 @@ namespace Epsitec.Common.Document.Objects
 			
 			for ( int i=0 ; i<styles.Length ; i++ )
 			{
-				if ( !styles[i].Name.StartsWith("Bullet") )
+				if ( exclude.Length == 0 || !styles[i].Name.StartsWith(exclude) )
 				{
 					list.Add(styles[i]);
 				}
@@ -588,13 +545,6 @@ namespace Epsitec.Common.Document.Objects
 			}
 			
 			styles = (Text.TextStyle[]) list.ToArray(typeof(Text.TextStyle));
-#if false
-			System.Diagnostics.Debug.WriteLine("Styles:");
-			foreach ( Text.TextStyle s in styles )
-			{
-				System.Diagnostics.Debug.WriteLine(string.Format("  {0}: {1}", s.Name, s.TextStyleClass));
-			}
-#endif
 			this.metaNavigator.SetParagraphStyles(styles);
 		}
 		#endregion

@@ -695,66 +695,37 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Donne la police du texte.
-		public virtual void GetTextFont(out string face, out string style)
+		public virtual void GetTextFont(bool accumulated, out string face, out string style)
 		{
 			face = "";
 			style = "";
 		}
 
-		// Nom de la police du texte.
-		public virtual string TextFontFace
+		// Modifie la taille de la police du texte.
+		public virtual void SetTextFontSize(double size)
 		{
-			get { return ""; }
-			set {}
 		}
 
-		// Nom du style de la police du texte.
-		public virtual string TextFontStyle
+		// Donne la taille de la police du texte.
+		public virtual double GetTextFontSize(bool accumulated)
 		{
-			get { return ""; }
-			set {}
+			return 0;
 		}
 
-		// Taille de la police du texte.
-		public virtual double TextFontSize
+		// Modifie l'état d'un style de caractère.
+		public virtual void SetTextStyle(string name, bool state)
 		{
-			get { return 0; }
-			set {}
 		}
 
-		// Style "gras" du texte.
-		public virtual bool TextBold
+		// Modifie l'état d'un style de paragraphe.
+		public virtual void SetTextStyle(string name, string exclude, bool state)
 		{
-			get { return false; }
-			set {}
 		}
 
-		// Style "italique" du texte.
-		public virtual bool TextItalic
+		// Donne l'état d'un style de paragraphe.
+		public virtual bool GetTextStyle(string name)
 		{
-			get { return false; }
-			set {}
-		}
-
-		// Style "souligné" du texte.
-		public virtual bool TextUnderlined
-		{
-			get { return false; }
-			set {}
-		}
-
-		// Style "puces 1" du texte.
-		public virtual bool TextBullet1
-		{
-			get { return false; }
-			set {}
-		}
-
-		// Style "puces 2" du texte.
-		public virtual bool TextBullet2
-		{
-			get { return false; }
-			set {}
+			return false;
 		}
 
 		

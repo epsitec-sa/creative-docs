@@ -168,22 +168,32 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
-		// Crée un IconButton.
-		protected void CreateButton(ref IconButton button, string icon, string tooltip, MessageEventHandler handler)
-		{
-			button = new IconButton(Misc.Icon(icon));
-			button.SetParent(this);
-			button.Clicked += handler;
-			button.TabIndex = this.tabIndex++;
-			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(button, tooltip);
-		}
-
-		// 
+		// Crée un bouton.
 		protected IconButton CreateIconButton(string command, string icon, string tooltip)
 		{
 			IconButton button = new IconButton(command, icon, command);
 			button.SetParent(this);
+			button.TabIndex = this.tabIndex++;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(button, tooltip);
+			return button;
+		}
+
+		// Crée un bouton.
+		protected IconButton CreateIconButton(string icon, string tooltip, MessageEventHandler handler)
+		{
+			IconButton button = new IconButton(this);
+			if ( icon.StartsWith("manifest:") )
+			{
+				button.IconName = icon;
+			}
+			else
+			{
+				button.Text = icon;
+			}
+			button.Clicked += handler;
+			button.TabIndex = this.tabIndex++;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(button, tooltip);
 			return button;
 		}
@@ -229,6 +239,17 @@ namespace Epsitec.Common.Document.Ribbons
 				}
 				
 				vmenu.Items.Add(item);
+			}
+		}
+
+
+		// Donne l'objet en cours d'édition, s'il existe.
+		protected Objects.Abstract EditObject
+		{
+			get
+			{
+				if ( this.document == null )  return null;
+				return this.document.Modifier.RetEditObject();
 			}
 		}
 
