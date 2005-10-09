@@ -702,14 +702,15 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Modifie la taille de la police du texte.
-		public virtual void SetTextFontSize(double size)
+		public virtual void SetTextFontSize(double size, Text.Properties.SizeUnits units, bool combine)
 		{
 		}
 
 		// Donne la taille de la police du texte.
-		public virtual double GetTextFontSize(bool accumulated)
+		public virtual void GetTextFontSize(out double size, out Text.Properties.SizeUnits units, bool accumulated)
 		{
-			return 0;
+			size = 0;
+			units = Text.Properties.SizeUnits.None;
 		}
 
 		// Modifie l'état d'un style de caractère.
@@ -726,6 +727,31 @@ namespace Epsitec.Common.Document.Objects
 		public virtual bool GetTextStyle(string name)
 		{
 			return false;
+		}
+
+		// Modifie l'interligne du texte.
+		public virtual void SetTextLeading(double size, Text.Properties.SizeUnits units)
+		{
+		}
+
+		// Donne l'interligne du texte.
+		public virtual void GetTextLeading(out double size, out Text.Properties.SizeUnits units, bool accumulated)
+		{
+			size = 0;
+			units = Text.Properties.SizeUnits.None;
+		}
+
+		// Modifie les marges gauche du texte.
+		public virtual void SetTextLeftMargins(double leftFirst, double leftBody, Text.Properties.SizeUnits units)
+		{
+		}
+
+		// Donne les marges gauche du texte.
+		public virtual void GetTextLeftMargins(out double leftFirst, out double leftBody, out Text.Properties.SizeUnits units, bool accumulated)
+		{
+			leftFirst = 0;
+			leftBody = 0;
+			units = Text.Properties.SizeUnits.None;
 		}
 
 		

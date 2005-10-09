@@ -19,14 +19,14 @@ namespace Epsitec.Common.Document.Ribbons
 			this.fontStyle = this.CreateFieldFontStyle(Res.Strings.Action.Text.Font.Style);
 			this.fontSize  = this.CreateFieldFontSize(Res.Strings.Action.Text.Font.Size);
 
-			this.buttonSizePlus  = this.CreateIconButton("A+", Res.Strings.Action.Text.Font.SizePlus,  new MessageEventHandler(this.HandleButtonClicked));
-			this.buttonSizeMinus = this.CreateIconButton("A-", Res.Strings.Action.Text.Font.SizeMinus, new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonSizePlus  = this.CreateIconButton(Misc.Icon("FontSizePlus"),  Res.Strings.Action.Text.Font.SizePlus,  new MessageEventHandler(this.HandleButtonClicked), false);
+			this.buttonSizeMinus = this.CreateIconButton(Misc.Icon("FontSizeMinus"), Res.Strings.Action.Text.Font.SizeMinus, new MessageEventHandler(this.HandleButtonClicked), false);
 
 			this.buttonBold       = this.CreateIconButton(Res.Strings.Text.ButtonBold,       Res.Strings.Action.Text.Font.Bold,       new MessageEventHandler(this.HandleButtonClicked));
 			this.buttonItalic     = this.CreateIconButton(Res.Strings.Text.ButtonItalic,     Res.Strings.Action.Text.Font.Italic,     new MessageEventHandler(this.HandleButtonClicked));
 			this.buttonUnderlined = this.CreateIconButton(Res.Strings.Text.ButtonUnderlined, Res.Strings.Action.Text.Font.Underlined, new MessageEventHandler(this.HandleButtonClicked));
-			this.buttonIndice     = this.CreateIconButton("i",                               Res.Strings.Action.Text.Font.Indice,     new MessageEventHandler(this.HandleButtonClicked));
-			this.buttonExposant   = this.CreateIconButton("e",                               Res.Strings.Action.Text.Font.Exposant,   new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonIndice     = this.CreateIconButton(Misc.Icon("FontIndice"),           Res.Strings.Action.Text.Font.Indice,     new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonExposant   = this.CreateIconButton(Misc.Icon("FontExposant"),         Res.Strings.Action.Text.Font.Exposant,   new MessageEventHandler(this.HandleButtonClicked));
 			this.buttonUserX      = this.CreateIconButton(Res.Strings.Text.ButtonUserX,      Res.Strings.Action.Text.Font.UserX,      new MessageEventHandler(this.HandleButtonClicked));
 			this.buttonUserY      = this.CreateIconButton(Res.Strings.Text.ButtonUserY,      Res.Strings.Action.Text.Font.UserY,      new MessageEventHandler(this.HandleButtonClicked));
 			this.buttonUserZ      = this.CreateIconButton(Res.Strings.Text.ButtonUserZ,      Res.Strings.Action.Text.Font.UserZ,      new MessageEventHandler(this.HandleButtonClicked));
@@ -283,15 +283,21 @@ namespace Epsitec.Common.Document.Ribbons
 				this.ignoreChange = true;
 				
 				this.UpdateFieldFontSizeList(field);
-				double size = editObject.GetTextFontSize(false);
-				if ( size == 0 )
+
+				double size;
+				Text.Properties.SizeUnits units;
+				editObject.GetTextFontSize(out size, out units, false);
+				if ( units == Common.Text.Properties.SizeUnits.None )
 				{
 					field.Text = Res.Strings.Action.Text.Font.Default;
 				}
 				else
 				{
-					size /= Modifier.fontSizeScale;
-					field.Text = size.ToString(System.Globalization.CultureInfo.CurrentUICulture);
+					if ( units == Common.Text.Properties.SizeUnits.Points )
+					{
+						size /= Modifier.fontSizeScale;
+					}
+					field.Text = Misc.ConvertDoubleToString(size, units, 0);
 				}
 
 				this.ignoreChange = false;
@@ -304,6 +310,12 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( field.Items.Count == 0 )
 			{
 				field.Items.Add(Res.Strings.Action.Text.Font.Default);  // par défaut
+				field.Items.Add("\u2015\u2015\u2015\u2015");
+				field.Items.Add("50%");
+				field.Items.Add("75%");
+				field.Items.Add("150%");
+				field.Items.Add("200%");
+				field.Items.Add("\u2015\u2015\u2015\u2015");
 				field.Items.Add("8");
 				field.Items.Add("9");
 				field.Items.Add("10");
@@ -341,7 +353,7 @@ namespace Epsitec.Common.Document.Ribbons
 				}
 				else
 				{
-					style = this.SearchDefaultFontStyle(face);
+					style = this.document.SearchDefaultFontStyle(face);
 				}
 				editObject.SetTextFont(face, style);
 			}
@@ -360,51 +372,27 @@ namespace Epsitec.Common.Document.Ribbons
 
 			if ( field == this.fontSize )
 			{
+				if ( field.Text.StartsWith("\u2015") )  // sur un "séparateur" ?
+				{
+					this.ignoreChange = true;
+					field.Text = "";
+					this.ignoreChange = false;
+					return;
+				}
+
 				double size = 0;
+				Text.Properties.SizeUnits units = Common.Text.Properties.SizeUnits.None;
 				if ( field.Text != Res.Strings.Action.Text.Font.Default )
 				{
-					size = Misc.ConvertStringToDouble(field.Text, 0, 1000, 0);
+
+					Misc.ConvertStringToDouble(out size, out units, field.Text, 0, 1000, 0);
+					if ( units == Common.Text.Properties.SizeUnits.Points )
+					{
+						size *= Modifier.fontSizeScale;
+					}
 				}
-				editObject.SetTextFontSize(size*Modifier.fontSizeScale);
+				editObject.SetTextFontSize(size, units, false);
 			}
-		}
-
-		// Cherche le FontStyle par défaut pour un FontFace donné.
-		protected string SearchDefaultFontStyle(string face)
-		{
-			OpenType.FontIdentity[] list = this.document.TextContext.GetAvailableFontIdentities(face);
-
-			foreach ( OpenType.FontIdentity id in list )
-			{
-				if ( id.FontWeight == OpenType.FontWeight.Normal &&
-					 id.FontStyle  == OpenType.FontStyle.Normal  )
-				{
-					return id.InvariantStyleName;
-				}
-			}
-
-			foreach ( OpenType.FontIdentity id in list )
-			{
-				if ( id.FontWeight == OpenType.FontWeight.Normal )
-				{
-					return id.InvariantStyleName;
-				}
-			}
-
-			foreach ( OpenType.FontIdentity id in list )
-			{
-				if ( id.FontStyle == OpenType.FontStyle.Normal )
-				{
-					return id.InvariantStyleName;
-				}
-			}
-
-			foreach ( OpenType.FontIdentity id in list )
-			{
-				return id.InvariantStyleName;
-			}
-
-			return "";
 		}
 
 
@@ -435,8 +423,8 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( sender == this.buttonUserX      )  this.InvertStyle(editObject, "UserX");
 			if ( sender == this.buttonUserY      )  this.InvertStyle(editObject, "UserY");
 			if ( sender == this.buttonUserZ      )  this.InvertStyle(editObject, "UserZ");
-			if ( sender == this.buttonSizePlus   )  this.ChangeFontSize(editObject,  1);
-			if ( sender == this.buttonSizeMinus  )  this.ChangeFontSize(editObject, -1);
+			if ( sender == this.buttonSizePlus   )  this.ChangeFontSize(editObject,  1, 125);
+			if ( sender == this.buttonSizeMinus  )  this.ChangeFontSize(editObject, -1,  80);
 		}
 
 		protected void InvertStyle(Objects.Abstract editObject, string name)
@@ -445,10 +433,22 @@ namespace Epsitec.Common.Document.Ribbons
 			editObject.SetTextStyle(name, !state);
 		}
 
-		protected void ChangeFontSize(Objects.Abstract editObject, double add)
+		protected void ChangeFontSize(Objects.Abstract editObject, double add, double percents)
 		{
-			double size = editObject.GetTextFontSize(true);
-			editObject.SetTextFontSize(size + add*Modifier.fontSizeScale);
+			double size;
+			Text.Properties.SizeUnits units;
+			editObject.GetTextFontSize(out size, out units, false);
+
+			if ( units == Common.Text.Properties.SizeUnits.Percent )
+			{
+				editObject.SetTextFontSize(percents, Common.Text.Properties.SizeUnits.Percent, true);
+			}
+			else
+			{
+				editObject.GetTextFontSize(out size, out units, true);
+				size += add*Modifier.fontSizeScale;
+				editObject.SetTextFontSize(size, Common.Text.Properties.SizeUnits.Points, false);
+			}
 		}
 
 

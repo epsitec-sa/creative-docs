@@ -423,16 +423,7 @@ namespace Epsitec.Common.Document.Objects
 		// Donne la police du texte.
 		public override void GetTextFont(bool accumulated, out string face, out string style)
 		{
-			Text.Property[] properties;
-			if ( accumulated )
-			{
-				properties = this.textNavigator.AccumulatedTextProperties;
-			}
-			else
-			{
-				properties = this.textNavigator.TextProperties;
-			}
-
+			Text.Property[] properties = this.GetTextProperties(accumulated);
 			foreach ( Text.Property property in properties )
 			{
 				if ( property.WellKnownType == Text.Properties.WellKnownType.Font )
@@ -450,42 +441,40 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Modifie la taille de la police du texte.
-		public override void SetTextFontSize(double size)
+		public override void SetTextFontSize(double size, Text.Properties.SizeUnits units, bool combine)
 		{
-			if ( size == 0 )  // remet la taille par défaut ?
+			if ( units == Text.Properties.SizeUnits.None )  // remet la taille par défaut ?
 			{
 				Text.Properties.FontSizeProperty fs = new Text.Properties.FontSizeProperty();
 				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Clear, fs);
 			}
 			else
 			{
-				Text.Properties.FontSizeProperty fs = new Text.Properties.FontSizeProperty(size, Text.Properties.SizeUnits.Points);
-				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Combine, fs);
+				Text.Properties.FontSizeProperty fs = new Text.Properties.FontSizeProperty(size, units);
+				Text.Properties.ApplyMode mode = combine ? Text.Properties.ApplyMode.Combine : Text.Properties.ApplyMode.Set;
+				this.metaNavigator.SetTextProperties(mode, fs);
 			}
 		}
 
 		// Donne la taille de la police du texte.
-		public override double GetTextFontSize(bool accumulated)
+		public override void GetTextFontSize(out double size, out Text.Properties.SizeUnits units, bool accumulated)
 		{
-			Text.Property[] properties;
-			if ( accumulated )
-			{
-				properties = this.textNavigator.AccumulatedTextProperties;
-			}
-			else
-			{
-				properties = this.textNavigator.TextProperties;
-			}
-
+			Text.Property[] properties = this.GetTextProperties(accumulated);
 			foreach ( Text.Property property in properties )
 			{
-				Text.Properties.FontSizeProperty fs = property as Text.Properties.FontSizeProperty;
-				if ( fs != null )
+				if ( property.WellKnownType == Text.Properties.WellKnownType.FontSize )
 				{
-					return fs.SizeInPoints;
+					Text.Properties.FontSizeProperty fs = property as Text.Properties.FontSizeProperty;
+					System.Diagnostics.Debug.Assert(fs != null);
+
+					size = fs.Size;
+					units = fs.Units;
+					return;
 				}
 			}
-			return 0;
+			
+			size = 0;
+			units = Text.Properties.SizeUnits.None;
 		}
 
 		// Modifie l'état d'un style de caractère.
@@ -502,13 +491,100 @@ namespace Epsitec.Common.Document.Objects
 		// Modifie l'état d'un style de paragraphe.
 		public override void SetTextStyle(string name, string exclude, bool state)
 		{
-			this.ApplyStyle(name, exclude, state);
+			this.ApplyParagraphStyle(name, exclude, state);
 		}
 
 		// Donne l'état d'un style de paragraphe.
 		public override bool GetTextStyle(string name)
 		{
 			return this.IsExistingStyle(name);
+		}
+
+		// Modifie l'interligne du texte.
+		public override void SetTextLeading(double size, Text.Properties.SizeUnits units)
+		{
+			if ( units == Text.Properties.SizeUnits.None )  // remet l'interligne par défaut ?
+			{
+				Text.Properties.LeadingProperty leading = new Text.Properties.LeadingProperty();
+				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Clear, leading);
+			}
+			else
+			{
+				Text.Properties.LeadingProperty leading = new Text.Properties.LeadingProperty(size, units, Text.Properties.AlignMode.Undefined);
+				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Set, leading);
+			}
+		}
+
+		// Donne l'interligne du texte.
+		public override void GetTextLeading(out double size, out Text.Properties.SizeUnits units, bool accumulated)
+		{
+			Text.Property[] properties = this.GetTextProperties(accumulated);
+			foreach ( Text.Property property in properties )
+			{
+				if ( property.WellKnownType == Text.Properties.WellKnownType.Leading )
+				{
+					Text.Properties.LeadingProperty leading = property as Text.Properties.LeadingProperty;
+					System.Diagnostics.Debug.Assert(leading != null);
+
+					size = leading.Leading;
+					units = leading.LeadingUnits;
+					return;
+				}
+			}
+			
+			size = 0;
+			units = Text.Properties.SizeUnits.None;
+		}
+
+		// Modifie les marges gauche du texte.
+		public override void SetTextLeftMargins(double leftFirst, double leftBody, Text.Properties.SizeUnits units)
+		{
+			if ( units == Text.Properties.SizeUnits.None )  // remet l'indentation par défaut ?
+			{
+				Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty();
+				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Clear, margins);
+			}
+			else
+			{
+				Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty(leftFirst, leftBody, double.NaN, double.NaN, units, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined);
+				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Set, margins);
+			}
+		}
+
+		// Donne les msrges gauche du texte.
+		public override void GetTextLeftMargins(out double leftFirst, out double leftBody, out Text.Properties.SizeUnits units, bool accumulated)
+		{
+			Text.Property[] properties = this.GetTextProperties(accumulated);
+			foreach ( Text.Property property in properties )
+			{
+				if ( property.WellKnownType == Text.Properties.WellKnownType.Margins )
+				{
+					Text.Properties.MarginsProperty margins = property as Text.Properties.MarginsProperty;
+					System.Diagnostics.Debug.Assert(margins != null);
+
+					leftFirst = margins.LeftMarginFirstLine;
+					leftBody = margins.LeftMarginBody;
+					units = margins.Units;
+					return;
+				}
+			}
+			
+			leftFirst = 0;
+			leftBody = 0;
+			units = Text.Properties.SizeUnits.None;
+		}
+
+		// Donne la liste des propriétés.
+		protected Text.Property[] GetTextProperties(bool accumulated)
+		{
+			if ( accumulated )
+			{
+				return this.textNavigator.AccumulatedTextProperties;
+			}
+			else
+			{
+				return this.textNavigator.TextProperties;
+			}
 		}
 
 		// Indique l'existance d'un style.
@@ -522,8 +598,8 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		// Modifie un style.
-		protected void ApplyStyle(string name, string exclude, bool state)
+		// Modifie un style de paragraphe.
+		protected void ApplyParagraphStyle(string name, string exclude, bool state)
 		{
 			Text.TextStyle style = this.document.TextContext.StyleList[name, Text.TextStyleClass.Paragraph];
 			if ( style == null )  return;

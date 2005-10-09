@@ -1143,7 +1143,7 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.MarginsProperty(60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 			properties.Add(new Text.Properties.ColorProperty("Black"));
 			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
-			properties.Add(new Text.Properties.LeadingProperty(1.0, Text.Properties.SizeUnits.Percent, 5.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+			properties.Add(new Text.Properties.LeadingProperty(0.0, Text.Properties.SizeUnits.Points, 5.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
 			style = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
 			this.textContext.DefaultStyle = style;
 
@@ -1211,9 +1211,9 @@ namespace Epsitec.Common.Document
 			Text.Properties.ManagedParagraphProperty itemList2 = new Text.Properties.ManagedParagraphProperty("ItemList", items2.Save());
 			Text.Properties.ManagedParagraphProperty itemList3 = new Text.Properties.ManagedParagraphProperty("ItemList", items3.Save());
 			
-			this.textContext.StyleList.NewTextStyle("Bullet1", Text.TextStyleClass.Paragraph, itemList1);
-			this.textContext.StyleList.NewTextStyle("Bullet2", Text.TextStyleClass.Paragraph, itemList2);
-			this.textContext.StyleList.NewTextStyle("Bullet3", Text.TextStyleClass.Paragraph, itemList3);
+			this.textContext.StyleList.NewTextStyle("BulletRound",   Text.TextStyleClass.Paragraph, itemList1);
+			this.textContext.StyleList.NewTextStyle("BulletNumeric", Text.TextStyleClass.Paragraph, itemList2);
+			this.textContext.StyleList.NewTextStyle("BulletAlpha",   Text.TextStyleClass.Paragraph, itemList3);
 
 
 			this.textContext.StyleList.NewTextStyle("AlignLeft",   Text.TextStyleClass.Paragraph, new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 0.0, 0.0, 0.0, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
@@ -1221,9 +1221,48 @@ namespace Epsitec.Common.Document
 			this.textContext.StyleList.NewTextStyle("AlignRight",  Text.TextStyleClass.Paragraph, new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 0.0, 0.0, 1.0, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
 			this.textContext.StyleList.NewTextStyle("AlignJustif", Text.TextStyleClass.Paragraph, new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 1.0, 0.0, 0.0, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
 
+			// TODO: à supprimer
 			this.textContext.StyleList.NewTextStyle("LeadingNorm", Text.TextStyleClass.Paragraph, new Text.Properties.LeadingProperty(100.0, Text.Properties.SizeUnits.Percent, double.NaN, Text.Properties.SizeUnits.Points, double.NaN, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.Undefined));
 			this.textContext.StyleList.NewTextStyle("LeadingPlus", Text.TextStyleClass.Paragraph, new Text.Properties.LeadingProperty(200.0, Text.Properties.SizeUnits.Percent, double.NaN, Text.Properties.SizeUnits.Points, double.NaN, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.Undefined));
-			this.textContext.StyleList.NewTextStyle("LeadingAuto", Text.TextStyleClass.Paragraph, new Text.Properties.LeadingProperty(  0.0, Text.Properties.SizeUnits.Points,  double.NaN, Text.Properties.SizeUnits.Points, double.NaN, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.Undefined));  // TODO: comment faire le mode "auto" ?
+			this.textContext.StyleList.NewTextStyle("LeadingAuto", Text.TextStyleClass.Paragraph, new Text.Properties.LeadingProperty(  0.0, Text.Properties.SizeUnits.Points,  double.NaN, Text.Properties.SizeUnits.Points, double.NaN, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.Undefined));
+		}
+
+		// Cherche le FontStyle par défaut pour un FontFace donné.
+		public string SearchDefaultFontStyle(string face)
+		{
+			OpenType.FontIdentity[] list = this.textContext.GetAvailableFontIdentities(face);
+
+			foreach ( OpenType.FontIdentity id in list )
+			{
+				if ( id.FontWeight == OpenType.FontWeight.Normal &&
+					 id.FontStyle  == OpenType.FontStyle.Normal  )
+				{
+					return id.InvariantStyleName;
+				}
+			}
+
+			foreach ( OpenType.FontIdentity id in list )
+			{
+				if ( id.FontWeight == OpenType.FontWeight.Normal )
+				{
+					return id.InvariantStyleName;
+				}
+			}
+
+			foreach ( OpenType.FontIdentity id in list )
+			{
+				if ( id.FontStyle == OpenType.FontStyle.Normal )
+				{
+					return id.InvariantStyleName;
+				}
+			}
+
+			foreach ( OpenType.FontIdentity id in list )
+			{
+				return id.InvariantStyleName;
+			}
+
+			return "";
 		}
 		#endregion
 

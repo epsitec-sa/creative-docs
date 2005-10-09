@@ -868,11 +868,13 @@
 	<data name="Action.Text.Font.UserY">User style Y</data>
 	<data name="Action.Text.Font.UserZ">User style Z</data>
 	<data name="Action.Text.Font.Color">Font color</data>
-	<data name="Action.Text.Font.Default">&lt;i&gt;Default&lt;/i&gt;</data>
+	<data name="Action.Text.Font.Default">Default</data>
 	<data name="Action.Text.Paragraph.Main">Paragraph</data>
 	<data name="Action.Text.Paragraph.BulletRound">@@Puces</data>
 	<data name="Action.Text.Paragraph.BulletNumeric">@@Numérotation 1..</data>
 	<data name="Action.Text.Paragraph.BulletAlpha">@@Numérotation A..</data>
+	<data name="Action.Text.Paragraph.IndentPlus">@@Augmente le décalage à gauche</data>
+	<data name="Action.Text.Paragraph.IndentMinus">@@Diminue le décalage à gauche</data>
 	<data name="Action.Text.Paragraph.AlignLeft">Left aligned</data>
 	<data name="Action.Text.Paragraph.AlignCenter">Centered</data>
 	<data name="Action.Text.Paragraph.AlignRight">Right aligned</data>

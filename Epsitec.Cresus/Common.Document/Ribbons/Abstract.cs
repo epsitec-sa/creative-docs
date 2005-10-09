@@ -171,8 +171,19 @@ namespace Epsitec.Common.Document.Ribbons
 		// Crée un bouton.
 		protected IconButton CreateIconButton(string command, string icon, string tooltip)
 		{
+			return this.CreateIconButton(command, icon, tooltip, false);
+		}
+
+		protected IconButton CreateIconButton(string command, string icon, string tooltip, bool activable)
+		{
 			IconButton button = new IconButton(command, icon, command);
 			button.SetParent(this);
+
+			if ( activable )
+			{
+				button.ButtonStyle = ButtonStyle.ActivableIcon;
+			}
+
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(button, tooltip);
@@ -182,7 +193,13 @@ namespace Epsitec.Common.Document.Ribbons
 		// Crée un bouton.
 		protected IconButton CreateIconButton(string icon, string tooltip, MessageEventHandler handler)
 		{
+			return this.CreateIconButton(icon, tooltip, handler, true);
+		}
+		
+		protected IconButton CreateIconButton(string icon, string tooltip, MessageEventHandler handler, bool activable)
+		{
 			IconButton button = new IconButton(this);
+
 			if ( icon.StartsWith("manifest:") )
 			{
 				button.IconName = icon;
@@ -191,7 +208,12 @@ namespace Epsitec.Common.Document.Ribbons
 			{
 				button.Text = icon;
 			}
-			button.ButtonStyle = ButtonStyle.ActivableIcon;
+
+			if ( activable )
+			{
+				button.ButtonStyle = ButtonStyle.ActivableIcon;
+			}
+
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

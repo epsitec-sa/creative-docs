@@ -1,5 +1,6 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Text;
 
 namespace Epsitec.Common.Document
 {
@@ -8,6 +9,27 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class Misc
 	{
+		// Conversion d'une chaîne en nombre réel.
+		static public void ConvertStringToDouble(out double value, out Text.Properties.SizeUnits units, string text, double min, double max, double defaultValue)
+		{
+			if ( text == "" )
+			{
+				value = 0;
+				units = Text.Properties.SizeUnits.None;
+			}
+			else if ( text.EndsWith("%") )
+			{
+				text = text.Substring(0, text.Length-1);
+				value = Misc.ConvertStringToDouble(text, min, max, defaultValue);
+				units = Text.Properties.SizeUnits.Percent;
+			}
+			else
+			{
+				value = Misc.ConvertStringToDouble(text, min, max, defaultValue);
+				units = Text.Properties.SizeUnits.Points;
+			}
+		}
+
 		// Conversion d'une chaîne en nombre réel.
 		static public double ConvertStringToDouble(string text, double min, double max, double defaultValue)
 		{
@@ -23,13 +45,42 @@ namespace Epsitec.Common.Document
 				}
 				catch
 				{
+					return defaultValue;
 				}
 			}
 
 			value = System.Math.Max(value, min);
 			value = System.Math.Min(value, max);
-
 			return value;
+		}
+
+		// Conversion d'un nombre réel en chaîne.
+		static public string ConvertDoubleToString(double value, Text.Properties.SizeUnits units, double fracDigits)
+		{
+			if ( units == Text.Properties.SizeUnits.Percent )
+			{
+				return Misc.ConvertDoubleToString(value, fracDigits) + "%";
+			}
+
+			if ( units == Text.Properties.SizeUnits.Points )
+			{
+				return Misc.ConvertDoubleToString(value, fracDigits);
+			}
+
+			return "";
+		}
+
+		// Conversion d'un nombre réel en chaîne.
+		static public string ConvertDoubleToString(double value, double fracDigits)
+		{
+			if ( fracDigits > 0 )
+			{
+				return value.ToString(string.Format("F{0}", fracDigits));
+			}
+			else
+			{
+				return ((int)value).ToString();
+			}
 		}
 
 

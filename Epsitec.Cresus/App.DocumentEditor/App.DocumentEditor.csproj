@@ -473,6 +473,18 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\BulletAlpha.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\BulletNumeric.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\BulletRound.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\CapButt.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -662,6 +674,22 @@
                 />
                 <File
                     RelPath = "Images\FingerPlus.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontExposant.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontIndice.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontSizeMinus.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontSizePlus.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -1114,6 +1142,18 @@
                 />
                 <File
                     RelPath = "Images\PageStack.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ParagraphIndentMinus.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ParagraphIndentPlus.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ParagraphLeading.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

@@ -14,21 +14,16 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			this.title.Text = Res.Strings.Action.ZoomMain;
 
-			this.buttonZoomMin = this.CreateIconButton("ZoomMin", Misc.Icon("ZoomMin"), Res.Strings.Action.ZoomMin);
-			this.buttonZoomPage = this.CreateIconButton("ZoomPage", Misc.Icon("ZoomPage"), Res.Strings.Action.ZoomPage);
-			this.buttonZoomPageWidth = this.CreateIconButton("ZoomPageWidth", Misc.Icon("ZoomPageWidth"), Res.Strings.Action.ZoomPageWidth);
-			this.buttonZoomDefault = this.CreateIconButton("ZoomDefault", Misc.Icon("ZoomDefault"), Res.Strings.Action.ZoomDefault);
+			this.buttonZoomMin = this.CreateIconButton("ZoomMin", Misc.Icon("ZoomMin"), Res.Strings.Action.ZoomMin, true);
+			this.buttonZoomPage = this.CreateIconButton("ZoomPage", Misc.Icon("ZoomPage"), Res.Strings.Action.ZoomPage, true);
+			this.buttonZoomPageWidth = this.CreateIconButton("ZoomPageWidth", Misc.Icon("ZoomPageWidth"), Res.Strings.Action.ZoomPageWidth, true);
+			this.buttonZoomDefault = this.CreateIconButton("ZoomDefault", Misc.Icon("ZoomDefault"), Res.Strings.Action.ZoomDefault, true);
 			this.buttonZoomSel = this.CreateIconButton("ZoomSel", Misc.Icon("ZoomSel"), Res.Strings.Action.ZoomSel);
 			this.buttonZoomSelWidth = this.CreateIconButton("ZoomSelWidth", Misc.Icon("ZoomSelWidth"), Res.Strings.Action.ZoomSelWidth);
 			this.buttonZoomPrev = this.CreateIconButton("ZoomPrev", Misc.Icon("ZoomPrev"), Res.Strings.Action.ZoomPrev);
 			this.separator = new IconSeparator(this);
 			this.CreateFieldZoom(ref this.fieldZoom, "Zoom factor");
 			this.buttonOthers = this.CreateMenuButton("", Res.Strings.Action.ZoomMenu, new MessageEventHandler(this.HandleOthersClicked));
-
-			this.buttonZoomMin.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonZoomPage.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonZoomPageWidth.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonZoomDefault.ButtonStyle = ButtonStyle.ActivableIcon;
 		}
 		
 		protected override void Dispose(bool disposing)

@@ -25,9 +25,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonHideSel      = this.CreateIconButton("HideSel",      Misc.Icon("HideSel"),      Res.Strings.Action.HideSel);
 			this.buttonHideRest     = this.CreateIconButton("HideRest",     Misc.Icon("HideRest"),     Res.Strings.Action.HideRest);
 			this.buttonHideCancel   = this.CreateIconButton("HideCancel",   Misc.Icon("HideCancel"),   Res.Strings.Action.HideCancel);
-			this.buttonHideHalf     = this.CreateIconButton("HideHalf",     Misc.Icon("HideHalf"),     Res.Strings.Action.HideHalf);
-			
-			this.buttonHideHalf.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonHideHalf     = this.CreateIconButton("HideHalf",     Misc.Icon("HideHalf"),     Res.Strings.Action.HideHalf, true);
 		}
 		
 		protected override void Dispose(bool disposing)
