@@ -21,6 +21,14 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonLabels = this.CreateIconButton("Labels", Misc.Icon("Labels"), Res.Strings.Action.Labels);
 			this.buttonAggregates = this.CreateIconButton("Aggregates", Misc.Icon("Aggregates"), Res.Strings.Action.Aggregates);
 			this.buttonLabelProperties = this.CreateIconButton("LabelProperties", Misc.Icon("LabelProperties"), Res.Strings.Action.LabelProperties);
+
+			this.buttonPreview.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonGrid.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonMagnet.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonRulers.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonLabels.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonAggregates.ButtonStyle = ButtonStyle.ActivableIcon;
+			this.buttonLabelProperties.ButtonStyle = ButtonStyle.ActivableIcon;
 		}
 		
 		protected override void Dispose(bool disposing)

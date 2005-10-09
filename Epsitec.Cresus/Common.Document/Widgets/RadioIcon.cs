@@ -13,6 +13,7 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			this.AutoToggle = true;
 			this.AutoRadio  = true;
+			this.ButtonStyle = ButtonStyle.ActivableIcon;
 		}
 
 		public RadioIcon(Widget embedder) : this()

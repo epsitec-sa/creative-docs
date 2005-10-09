@@ -43,6 +43,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			b = 1-(1-this.colorCaption.B)*0.25;
 			this.colorCaptionLight = Drawing.Color.FromRGB(r,g,b);
 
+			r = 1-(1-this.colorCaption.R)*0.5;
+			g = 1-(1-this.colorCaption.G)*0.5;
+			b = 1-(1-this.colorCaption.B)*0.5;
+			this.colorCaptionMiddle = Drawing.Color.FromRGB(r,g,b);
+
 			this.colorButton = Drawing.Color.FromRGB(243.0/255.0, 243.0/255.0, 238.0/255.0);
 			this.colorFocus  = Drawing.Color.FromRGB(157.0/255.0, 188.0/255.0, 235.0/255.0);
 			this.colorHilite = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
@@ -481,6 +486,31 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.AddRectangle(rInside);
 					graphics.RenderSolid(this.colorCaption);
 				}
+				radFocus = -1;
+			}
+			else if ( style == ButtonStyle.ActivableIcon )
+			{
+				rect.Right += 1;
+				rFocus.Right += 1;
+
+				if ( (state&WidgetState.Entered)   != 0 ||  // bouton survolé ?
+					 (state&WidgetState.Engaged)   != 0 )   // bouton pressé ?
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.colorCaptionLight);
+				}
+				else if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.colorCaptionMiddle);
+				}
+
+				Drawing.Rectangle rInside;
+				rInside = rect;
+				rInside.Deflate(0.5);
+				graphics.AddRectangle(rInside);
+				graphics.RenderSolid(this.ColorBorder);
+
 				radFocus = -1;
 			}
 			else if ( style == ButtonStyle.ListItem )
@@ -1805,6 +1835,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorCaptionNF;  // NF = no focused
 		protected Drawing.Color		colorCaptionText;
 		protected Drawing.Color		colorCaptionLight;
+		protected Drawing.Color		colorCaptionMiddle;
 		protected Drawing.Color		colorInfo;
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorFocus;

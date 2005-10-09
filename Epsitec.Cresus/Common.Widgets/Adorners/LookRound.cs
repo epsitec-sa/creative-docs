@@ -42,6 +42,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			b = 1-(1-this.colorCaption.B)*0.25;
 			this.colorCaptionLight = Drawing.Color.FromRGB(r,g,b);
 
+			r = 1-(1-this.colorCaption.R)*0.5;
+			g = 1-(1-this.colorCaption.G)*0.5;
+			b = 1-(1-this.colorCaption.B)*0.5;
+			this.colorCaptionMiddle = Drawing.Color.FromRGB(r,g,b);
+
 			r = 1-(1-this.colorControlLight.R)*0.7;
 			g = 1-(1-this.colorControlLight.G)*0.7;
 			b = 1-(1-this.colorControlLight.B)*0.7;
@@ -523,6 +528,31 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.Rasterizer.AddOutline(path, 1);
 					graphics.RenderSolid(this.colorCaption);
 				}
+				rFocus.Right ++;
+				radFocus = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
+			}
+			else if ( style == ButtonStyle.ActivableIcon )
+			{
+				rect.Right += 1;
+
+				double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
+				Drawing.Path path = this.PathRoundRectangle(rect, radius);
+
+				if ( (state&WidgetState.Entered)   != 0 ||  // bouton survolé ?
+					 (state&WidgetState.Engaged)   != 0 )   // bouton pressé ?
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorCaptionLight);
+				}
+				else if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.colorCaptionMiddle);
+				}
+
+				graphics.Rasterizer.AddOutline(path, 1);
+				graphics.RenderSolid(this.ColorBorder);
+
 				rFocus.Right ++;
 				radFocus = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
 			}
@@ -1883,6 +1913,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorCaptionNF;  // NF = no focused
 		protected Drawing.Color		colorCaptionText;
 		protected Drawing.Color		colorCaptionLight;
+		protected Drawing.Color		colorCaptionMiddle;
 		protected Drawing.Color		colorInfo;
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;

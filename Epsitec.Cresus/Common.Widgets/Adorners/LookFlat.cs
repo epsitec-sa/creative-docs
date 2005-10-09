@@ -419,6 +419,26 @@ namespace Epsitec.Common.Widgets.Adorner
 				rFocus.Right ++;
 				radFocus = -1;
 			}
+			else if ( style == ButtonStyle.ActivableIcon )
+			{
+				rect.Right += 1;
+
+				if ( (state&WidgetState.Entered)   != 0 ||  // bouton survolé ?
+					 (state&WidgetState.Engaged)   != 0 ||  // bouton pressé ?
+					 (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.colorCaption);
+				}
+				else
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.colorControlLight);
+				}
+				rFocus.Inflate(1);
+				rFocus.Right ++;
+				radFocus = -1;
+			}
 			else if ( style == ButtonStyle.ListItem )
 			{
 				if ( (state&WidgetState.Selected) != 0 )

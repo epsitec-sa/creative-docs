@@ -191,6 +191,7 @@ namespace Epsitec.Common.Document.Ribbons
 			{
 				button.Text = icon;
 			}
+			button.ButtonStyle = ButtonStyle.ActivableIcon;
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

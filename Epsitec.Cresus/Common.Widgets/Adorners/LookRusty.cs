@@ -517,8 +517,14 @@ namespace Epsitec.Common.Widgets.Adorner
 					this.PaintFocusBox(graphics, rect);
 				}
 			}
-			else if ( style == ButtonStyle.ToolItem )
+			else if ( style == ButtonStyle.ToolItem      ||
+					  style == ButtonStyle.ActivableIcon )
 			{
+				if ( style == ButtonStyle.ActivableIcon )
+				{
+					rect.Right += 1;
+				}
+
 				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 				{
 					graphics.AddFilledRectangle(rect);
@@ -545,6 +551,15 @@ namespace Epsitec.Common.Widgets.Adorner
 					rect.Deflate(0.5);
 					graphics.AddRectangle(rect);
 					graphics.RenderSolid(this.colorBorder);
+				}
+				else
+				{
+					if ( style == ButtonStyle.ActivableIcon )
+					{
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.colorBorder);
+					}
 				}
 
 				if ( (state&WidgetState.Focused) != 0 )

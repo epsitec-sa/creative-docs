@@ -447,7 +447,8 @@ namespace Epsitec.Common.Widgets.Adorner
 				PaintL(graphics, rect, this.colorControlDarkDark, shadow);
 				PaintL(graphics, rInside, this.colorControlDark, shadow);
 			}
-			else if ( style == ButtonStyle.ToolItem )
+			else if ( style == ButtonStyle.ToolItem      ||
+					  style == ButtonStyle.ActivableIcon )
 			{
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?

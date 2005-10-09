@@ -558,6 +558,34 @@ namespace Epsitec.Common.Widgets.Adorner
 					this.PaintImageButton(graphics, rect, large?6:42);
 				}
 			}
+			else if ( style == ButtonStyle.ActivableIcon )
+			{
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					if ( (state&WidgetState.Focused) != 0 )
+					{
+						Drawing.Path path = this.PathRoundRectangle(rect, this.RetRadiusButton(rect));
+						graphics.Rasterizer.AddSurface(path);
+						graphics.RenderSolid(Drawing.Color.FromRGB(1.0, 0.0, 1.0));
+					}
+
+					this.PaintImageButton(graphics, rect, 34);
+
+					if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
+						 (state&WidgetState.Entered) != 0 )   // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rect, 36);
+					}
+					else if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+					{
+						this.PaintImageButton(graphics, rect, 32);
+					}
+				}
+				else
+				{
+					this.PaintImageButton(graphics, rect, 38);
+				}
+			}
 			else if ( style == ButtonStyle.ToolItem )
 			{
 				if ( (state&WidgetState.Focused) != 0 )

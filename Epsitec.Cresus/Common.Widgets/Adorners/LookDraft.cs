@@ -480,7 +480,8 @@ namespace Epsitec.Common.Widgets.Adorner
 					this.PaintFocusBox(graphics, rect);
 				}
 			}
-			else if ( style == ButtonStyle.ToolItem )
+			else if ( style == ButtonStyle.ToolItem      ||
+					  style == ButtonStyle.ActivableIcon )
 			{
 				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 				{

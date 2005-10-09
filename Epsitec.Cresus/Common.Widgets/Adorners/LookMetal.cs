@@ -517,6 +517,46 @@ namespace Epsitec.Common.Widgets.Adorner
 
 				if ( style == ButtonStyle.Icon )  rFocus.Inflate(1.0);
 			}
+			else if ( style == ButtonStyle.ActivableIcon )
+			{
+				rect.Right += 1;
+				rInside.Right += 1;
+				rFocus.Right += 1;
+
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+					{
+						this.PaintImageButton(graphics, rInside, 12);
+					}
+					else if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+					{
+						this.PaintImageButton(graphics, rInside, 9);
+					}
+					else if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+					{
+						this.PaintImageButton(graphics, rInside, 13);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rInside, 8);
+					}
+
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorBorder);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, rInside, 11);
+
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorDisabled);
+				}
+
+				rFocus.Inflate(2.0);
+			}
 			else if ( style == ButtonStyle.ToolItem )
 			{
 				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
@@ -2014,7 +2054,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		public Drawing.Margins GeometryArrayMargins { get { return new Drawing.Margins(3,3,3,3); } }
 		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
-		public Drawing.Margins GeometryToolShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
+		public Drawing.Margins GeometryToolShapeBounds { get { return new Drawing.Margins(0,1,0,0); } }
 		public Drawing.Margins GeometryButtonShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public Drawing.Margins GeometryRibbonShapeBounds { get { return new Drawing.Margins(0,0,0,3); } }
 		public Drawing.Margins GeometryTextFieldShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }

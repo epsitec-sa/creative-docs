@@ -479,6 +479,41 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.RenderSolid(this.colorBorder);
 				}
 			}
+			else if ( style == ButtonStyle.ActivableIcon )
+			{
+				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+				{
+					this.PaintImageButton(graphics, rInside, 9);
+
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorBorder);
+				}
+				else if ( (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+				{
+					this.PaintImageButton(graphics, rInside, 12);
+
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorBorder);
+				}
+				else if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+				{
+					this.PaintImageButton(graphics, rInside, 10);
+
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorBorder);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, rInside, 8);
+
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.colorBorder);
+				}
+			}
 			else if ( style == ButtonStyle.ListItem )
 			{
 				this.PaintImageButton(graphics, rect, 8);

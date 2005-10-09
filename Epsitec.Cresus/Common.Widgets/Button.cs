@@ -13,6 +13,7 @@ namespace Epsitec.Common.Widgets
 		ExListRight,					// bouton pour TextFieldExList, à droite (cf Combo)
 		Tab,							// bouton pour TabButton
 		Icon,							// bouton pour une icône
+		ActivableIcon,					// bouton pour une icône activable
 		ToolItem,						// bouton pour barre d'icône
 		ListItem,						// bouton pour liste
 		HeaderSlider,					// bouton pour modifier une largeur de colonne
