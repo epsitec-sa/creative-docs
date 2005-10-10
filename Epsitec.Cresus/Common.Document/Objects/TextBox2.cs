@@ -266,22 +266,6 @@ namespace Epsitec.Common.Document.Objects
 			get { return true; }
 		}
 
-		// Lie l'objet éditable à une règle.
-		public override bool EditRulerLink(TextRuler ruler, DrawingContext drawingContext)
-		{
-			return false;  //?
-#if false
-			ruler.ListCapability = true;
-			ruler.TabCapability = true;
-			ruler.AttachToText(this.textNavigator);
-
-			double mx = this.PropertyTextJustif.MarginH;
-			ruler.LeftMargin  = mx*drawingContext.ScaleX;
-			ruler.RightMargin = mx*drawingContext.ScaleX;
-			return true;
-#endif
-		}
-
 
 		// Reprend toutes les caractéristiques d'un objet.
 		public override void CloneObject(Objects.Abstract src)
@@ -547,8 +531,9 @@ namespace Epsitec.Common.Document.Objects
 			else
 			{
 				Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty(leftFirst, leftBody, double.NaN, double.NaN, units, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined);
-				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Set, margins);
+				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, margins);
 			}
+			this.UpdateTextRulers();
 		}
 
 		// Donne les msrges gauche du texte.
@@ -571,6 +556,43 @@ namespace Epsitec.Common.Document.Objects
 			
 			leftFirst = 0;
 			leftBody = 0;
+			units = Text.Properties.SizeUnits.None;
+		}
+
+		// Modifie la marge droite du texte.
+		public override void SetTextRightMargins(double right, Text.Properties.SizeUnits units)
+		{
+			if ( units == Text.Properties.SizeUnits.None )  // remet l'indentation par défaut ?
+			{
+				Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty();
+				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Clear, margins);
+			}
+			else
+			{
+				Text.Properties.MarginsProperty margins = new Text.Properties.MarginsProperty(double.NaN, double.NaN, right, right, units, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined);
+				this.metaNavigator.SetParagraphProperties(Text.Properties.ApplyMode.Combine, margins);
+			}
+			this.UpdateTextRulers();
+		}
+
+		// Donne la marge droite du texte.
+		public override void GetTextRightMargins(out double right, out Text.Properties.SizeUnits units, bool accumulated)
+		{
+			Text.Property[] properties = this.GetTextProperties(accumulated);
+			foreach ( Text.Property property in properties )
+			{
+				if ( property.WellKnownType == Text.Properties.WellKnownType.Margins )
+				{
+					Text.Properties.MarginsProperty margins = property as Text.Properties.MarginsProperty;
+					System.Diagnostics.Debug.Assert(margins != null);
+
+					right = margins.RightMarginBody;
+					units = margins.Units;
+					return;
+				}
+			}
+			
+			right = 0;
 			units = Text.Properties.SizeUnits.None;
 		}
 
@@ -622,6 +644,27 @@ namespace Epsitec.Common.Document.Objects
 			
 			styles = (Text.TextStyle[]) list.ToArray(typeof(Text.TextStyle));
 			this.metaNavigator.SetParagraphStyles(styles);
+		}
+
+		// Met à jour les règles pour le texte en édition.
+		protected override void UpdateTextRulers()
+		{
+			if ( this.edited )
+			{
+				Drawing.Rectangle bbox = this.bboxThin;
+				this.document.HRuler.LimitLow  = bbox.Left;
+				this.document.HRuler.LimitHigh = bbox.Right;
+				this.document.VRuler.LimitLow  = bbox.Bottom;
+				this.document.VRuler.LimitHigh = bbox.Top;
+
+				double leftFirst, leftBody, right;
+				Text.Properties.SizeUnits units;
+				this.GetTextLeftMargins(out leftFirst, out leftBody, out units, true);
+				this.GetTextRightMargins(out right, out units, true);
+				this.document.HRuler.MarginLeftFirst = bbox.Left+leftFirst;
+				this.document.HRuler.MarginLeftBody  = bbox.Left+leftBody;
+				this.document.HRuler.MarginRight     = bbox.Right-right;
+			}
 		}
 		#endregion
 
@@ -1106,6 +1149,7 @@ namespace Epsitec.Common.Document.Objects
 		
 		private void HandleCursorMoved(object sender)
 		{
+			this.UpdateTextRulers();
 			this.document.Notifier.NotifyTextChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}

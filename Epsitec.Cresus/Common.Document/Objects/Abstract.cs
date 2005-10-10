@@ -754,6 +754,18 @@ namespace Epsitec.Common.Document.Objects
 			units = Text.Properties.SizeUnits.None;
 		}
 
+		// Modifie la marge droite du texte.
+		public virtual void SetTextRightMargins(double right, Text.Properties.SizeUnits units)
+		{
+		}
+
+		// Donne la marge droite du texte.
+		public virtual void GetTextRightMargins(out double right, out Text.Properties.SizeUnits units, bool accumulated)
+		{
+			right = 0;
+			units = Text.Properties.SizeUnits.None;
+		}
+
 		
 		// Détecte la cellule pointée par la souris.
 		public virtual int DetectCell(Point pos)
@@ -1104,7 +1116,7 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 
 			this.selected = select;
-			this.edited = edit;
+			this.SetEdited(edit);
 			this.globalSelected = false;
 			this.allSelected = true;
 			this.SplitProperties();
@@ -1151,7 +1163,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 			this.selected = ( sel > 0 );
-			this.edited = false;
+			this.SetEdited(false);
 			this.globalSelected = false;
 			this.allSelected = (sel == total);
 			this.HandlePropertiesUpdate();
@@ -1159,6 +1171,35 @@ namespace Epsitec.Common.Document.Objects
 
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Notifier.NotifySelectionChanged();
+		}
+
+		// Modifie le mode d'édition. Il faut obligatoirement utiliser cet appel
+		// pour modifier this.edited !
+		protected void SetEdited(bool state)
+		{
+			if ( this.edited == state )  return;
+			this.edited = state;
+
+			this.document.HRuler.Edited = this.edited;
+			this.document.VRuler.Edited = this.edited;
+
+			if ( this.edited )
+			{
+				this.document.HRuler.EditObject = this;
+				this.document.VRuler.EditObject = this;
+			}
+			else
+			{
+				this.document.HRuler.EditObject = null;
+				this.document.VRuler.EditObject = null;
+			}
+
+			this.UpdateTextRulers();
+		}
+
+		// Met à jour les règles pour le texte en édition.
+		protected virtual void UpdateTextRulers()
+		{
 		}
 
 		// Indique que l'objet est sélectionné globalement (avec Selector).
@@ -2508,9 +2549,15 @@ namespace Epsitec.Common.Document.Objects
 
 				Misc.Swap(ref this.isHide,         ref host.isHide        );
 				Misc.Swap(ref this.selected,       ref host.selected      );
-				Misc.Swap(ref this.edited,         ref host.edited        );
 				Misc.Swap(ref this.globalSelected, ref host.globalSelected);
 				Misc.Swap(ref this.allSelected,    ref host.allSelected   );
+
+				if ( this.edited != host.edited )
+				{
+					bool ed = this.edited;
+					this.edited = host.edited;
+					host.SetEdited(ed);
+				}
 
 				if ( this.list.Count == this.host.handles.Count )
 				{

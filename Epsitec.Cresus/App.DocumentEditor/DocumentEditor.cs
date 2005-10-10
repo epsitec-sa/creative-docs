@@ -10,6 +10,7 @@ namespace Epsitec.App.DocumentEditor
 {
 	using Drawing        = Common.Drawing;
 	using Widgets        = Common.Widgets;
+	using DocWidgets     = Common.Document.Widgets;
 	using Ribbons        = Common.Document.Ribbons;
 	using Containers     = Common.Document.Containers;
 	using Objects        = Common.Document.Objects;
@@ -781,7 +782,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			DocumentInfo di = this.CurrentDocumentInfo;
 			double sw = 17;  // largeur d'un ascenseur
-			double sr = 11;  // largeur d'une règle
+			double sr = 13;  // largeur d'une règle
 			double wm = 4;  // marges autour du viewer
 			
 			di.tabPage = new TabPage();
@@ -845,18 +846,14 @@ namespace Epsitec.App.DocumentEditor
 				document.Modifier.ActiveViewer = viewer;
 				document.Modifier.AttachViewer(viewer);
 
-				di.hRuler = new HRuler(mainViewParent);
-				di.hRuler.AutoCapture = false;
-				di.hRuler.Pressed += new MessageEventHandler(this.HandleHRulerPressed);
-				di.hRuler.Released += new MessageEventHandler(this.HandleHRulerReleased);
+				di.hRuler = new DocWidgets.HRuler(mainViewParent);
+				di.hRuler.Document = document;
 				di.hRuler.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 				di.hRuler.AnchorMargins = new Margins(wm+lm, wm+sw+1, 6+wm, 0);
 				ToolTip.Default.SetToolTip(di.hRuler, Res.Strings.Tooltip.Ruler.Drag);
 
-				di.vRuler = new VRuler(mainViewParent);
-				di.vRuler.AutoCapture = false;
-				di.vRuler.Pressed += new MessageEventHandler(this.HandleVRulerPressed);
-				di.vRuler.Released += new MessageEventHandler(this.HandleHRulerReleased);
+				di.vRuler = new DocWidgets.VRuler(mainViewParent);
+				di.vRuler.Document = document;
 				di.vRuler.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
 				di.vRuler.AnchorMargins = new Margins(wm, 0, 6+wm+tm, wm+sw+1);
 				ToolTip.Default.SetToolTip(di.vRuler, Res.Strings.Tooltip.Ruler.Drag);
@@ -4569,7 +4566,7 @@ namespace Epsitec.App.DocumentEditor
 			di.vRuler.SetVisible(context.RulersShow);
 
 			double sw = 17;  // largeur d'un ascenseur
-			double sr = 11;  // largeur d'une règle
+			double sr = 13;  // largeur d'une règle
 			double wm = 4;  // marges autour du viewer
 			double lm = 0;
 			double tm = 0;
@@ -4825,12 +4822,17 @@ namespace Epsitec.App.DocumentEditor
 				this.bookDocuments.ActivePage = this.CurrentDocumentInfo.tabPage;
 				this.ignoreChange = false;
 
+				DocumentInfo di;
 				int total = this.bookDocuments.PageCount;
 				for ( int i=0 ; i<total ; i++ )
 				{
-					DocumentInfo di = this.documents[i] as DocumentInfo;
+					di = this.documents[i] as DocumentInfo;
 					di.bookPanels.SetVisible(i == this.currentDocument);
 				}
+
+				di = this.CurrentDocumentInfo;
+				this.CurrentDocument.HRuler = di.hRuler;
+				this.CurrentDocument.VRuler = di.vRuler;
 
 				this.ribbonMain.SetDocument(this.type, this.installType, this.globalSettings, this.CurrentDocument);
 				this.ribbonObject.SetDocument(this.type, this.installType, this.globalSettings, this.CurrentDocument);
@@ -5403,8 +5405,8 @@ namespace Epsitec.App.DocumentEditor
 		{
 			public Document						document;
 			public TabPage						tabPage;
-			public HRuler						hRuler;
-			public VRuler						vRuler;
+			public DocWidgets.HRuler			hRuler;
+			public DocWidgets.VRuler			vRuler;
 			public HScroller					hScroller;
 			public VScroller					vScroller;
 			public Button						quickPageMenu;

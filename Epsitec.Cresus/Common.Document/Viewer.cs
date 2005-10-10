@@ -130,6 +130,43 @@ namespace Epsitec.Common.Document
 		}
 
 
+		// Position horizontale du marqueur vertical.
+		public double MarkerVertical
+		{
+			get
+			{
+				return this.markerVertical;
+			}
+
+			set
+			{
+				if ( this.markerVertical != value )
+				{
+					this.markerVertical = value;
+					this.document.Notifier.NotifyArea();
+				}
+			}
+		}
+
+		// Position verticale du marqueur horizontal.
+		public double MarkerHorizontal
+		{
+			get
+			{
+				return this.markerHorizontal;
+			}
+
+			set
+			{
+				if ( this.markerHorizontal != value )
+				{
+					this.markerHorizontal = value;
+					this.document.Notifier.NotifyArea();
+				}
+			}
+		}
+
+
 		// Retourne le rectangle correspondant à la zone visible dans le Viewer.
 		public Rectangle RectangleDisplayed
 		{
@@ -2413,6 +2450,8 @@ namespace Epsitec.Common.Document
 		// Début de l'insertion interactive d'un guide (drag depuis une règle).
 		public void GuideInteractiveStart(bool horizontal)
 		{
+			if ( this.document.Modifier.RetEditObject() != null )  return;
+
 			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.GuideCreateAndMove);
 			this.drawingContext.GuidesShow = true;
 			this.drawingContext.GuidesMouse = true;
@@ -2692,6 +2731,9 @@ namespace Epsitec.Common.Document
 					this.DrawGuides(graphics, this.document.Settings.GuidesListGlobal, this.document.Settings.GlobalGuides);
 				}
 
+				// Dessine les marqueurs
+				this.DrawMarker(graphics);
+
 				// Dessine la cible.
 				if ( this.IsActiveViewer )
 				{
@@ -2769,6 +2811,36 @@ namespace Epsitec.Common.Document
 				{
 					graphics.RenderSolid(Color.FromARGB(0.5, 0.8,0.0,0.0));  // rouge
 				}
+			}
+		}
+
+		// Dessine toutes les marques.
+		protected void DrawMarker(Graphics graphics)
+		{
+			double ix = 0.5/this.drawingContext.ScaleX;
+			double iy = 0.5/this.drawingContext.ScaleY;
+			Rectangle rd = this.RectangleDisplayed;
+
+			if ( this.markerVertical != double.NaN )
+			{
+				double x = this.markerVertical;
+				double y = rd.Bottom;
+				graphics.Align(ref x, ref y);
+				x += ix;
+				y += iy;
+				graphics.AddLine(x, y, x, rd.Top);
+				graphics.RenderSolid(Color.FromARGB(0.5, 0.0,0.0,0.8));  // bleuté
+			}
+
+			if ( this.markerHorizontal != double.NaN )
+			{
+				double x = rd.Left;
+				double y = this.markerHorizontal;
+				graphics.Align(ref x, ref y);
+				x += ix;
+				y += iy;
+				graphics.AddLine(x, y, rd.Right, y);
+				graphics.RenderSolid(Color.FromARGB(0.5, 0.0,0.0,0.8));  // bleuté
 			}
 		}
 
@@ -3081,6 +3153,8 @@ namespace Epsitec.Common.Document
 		protected Size							lastSize = new Size(0, 0);
 		protected ZoomType						zoomType = ZoomType.None;
 		protected Objects.Handle				hotSpotHandle;
+		protected double						markerVertical = double.NaN;
+		protected double						markerHorizontal = double.NaN;
 
 		protected VMenu							contextMenu;
 		protected VMenu							contextMenuOrder;

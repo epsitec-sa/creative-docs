@@ -170,6 +170,20 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Règle horizontale.
+		public Widgets.HRuler HRuler
+		{
+			get { return this.hRuler; }
+			set { this.hRuler = value; }
+		}
+
+		// Règle verticale.
+		public Widgets.VRuler VRuler
+		{
+			get { return this.vRuler; }
+			set { this.vRuler = value; }
+		}
+
 
 		// Liste des propriétés automatiques de ce document.
 		public UndoableList PropertiesAuto
@@ -1140,7 +1154,7 @@ namespace Epsitec.Common.Document
 			//?properties.Add(new Text.Properties.FontProperty("Palatino Linotype", "Italic", "liga", "dlig", "kern"));
 			properties.Add(new Text.Properties.FontProperty("Arial", "Roman"));
 			properties.Add(new Text.Properties.FontSizeProperty(12.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points));
-			properties.Add(new Text.Properties.MarginsProperty(60, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
+			properties.Add(new Text.Properties.MarginsProperty(10, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 			properties.Add(new Text.Properties.ColorProperty("Black"));
 			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
 			properties.Add(new Text.Properties.LeadingProperty(0.0, Text.Properties.SizeUnits.Points, 5.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
@@ -1220,11 +1234,6 @@ namespace Epsitec.Common.Document
 			this.textContext.StyleList.NewTextStyle("AlignCenter", Text.TextStyleClass.Paragraph, new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 0.0, 0.0, 0.5, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
 			this.textContext.StyleList.NewTextStyle("AlignRight",  Text.TextStyleClass.Paragraph, new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 0.0, 0.0, 1.0, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
 			this.textContext.StyleList.NewTextStyle("AlignJustif", Text.TextStyleClass.Paragraph, new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 1.0, 0.0, 0.0, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
-
-			// TODO: à supprimer
-			this.textContext.StyleList.NewTextStyle("LeadingNorm", Text.TextStyleClass.Paragraph, new Text.Properties.LeadingProperty(100.0, Text.Properties.SizeUnits.Percent, double.NaN, Text.Properties.SizeUnits.Points, double.NaN, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.Undefined));
-			this.textContext.StyleList.NewTextStyle("LeadingPlus", Text.TextStyleClass.Paragraph, new Text.Properties.LeadingProperty(200.0, Text.Properties.SizeUnits.Percent, double.NaN, Text.Properties.SizeUnits.Points, double.NaN, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.Undefined));
-			this.textContext.StyleList.NewTextStyle("LeadingAuto", Text.TextStyleClass.Paragraph, new Text.Properties.LeadingProperty(  0.0, Text.Properties.SizeUnits.Points,  double.NaN, Text.Properties.SizeUnits.Points, double.NaN, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.Undefined));
 		}
 
 		// Cherche le FontStyle par défaut pour un FontFace donné.
@@ -1803,5 +1812,7 @@ namespace Epsitec.Common.Document
 		protected int							uniqueObjectId = 0;
 		protected int							uniqueAggregateId = 0;
 		protected Text.TextContext				textContext;
+		protected Widgets.HRuler				hRuler;
+		protected Widgets.VRuler				vRuler;
 	}
 }

@@ -812,12 +812,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Widgets\AbstractRuler.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\AggregateCombo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Widgets\AggregateList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\HRuler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -838,6 +848,11 @@
                 />
                 <File
                     RelPath = "Widgets\TextFieldLabel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\VRuler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

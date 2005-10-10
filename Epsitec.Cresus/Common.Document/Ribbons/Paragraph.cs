@@ -287,7 +287,7 @@ namespace Epsitec.Common.Document.Ribbons
 			leftBody  = System.Math.Max(leftBody+distance, 0);
 			units = Common.Text.Properties.SizeUnits.Points;
 
-			if ( leftBody == 0 )
+			if ( leftFirst == 0 && leftBody == 0 )
 			{
 				leftFirst = 0;
 				units = Common.Text.Properties.SizeUnits.None;

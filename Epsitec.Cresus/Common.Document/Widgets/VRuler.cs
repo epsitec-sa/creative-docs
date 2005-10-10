@@ -1,4 +1,7 @@
-namespace Epsitec.Common.Widgets
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
+
+namespace Epsitec.Common.Document.Widgets
 {
 	/// <summary>
 	/// La classe VRuler implémente la règle verticale.
@@ -15,7 +18,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double				DefaultWidth
+		public override double DefaultWidth
 		{
 			get
 			{
@@ -28,7 +31,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( !this.markerVisible )  return;
 
-			Drawing.Rectangle rect = this.Client.Bounds;
+			Rectangle rect = this.Client.Bounds;
 			double scale = (this.ending-this.starting)/rect.Height;
 			double posy = (this.marker-this.starting)/scale;
 			rect.Bottom = posy-4;
@@ -41,15 +44,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected void PaintGrad(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		protected void PaintGrad(Graphics graphics, Rectangle clipRect)
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
 
-			Drawing.Rectangle rect = this.Client.Bounds;
+			Rectangle rect = this.Client.Bounds;
 			graphics.Align(ref rect);
 
 			graphics.Color = adorner.ColorTextFieldBorder(this.IsEnabled);
-			Drawing.Font font = Drawing.Font.GetFont("Tahoma", "Regular");
+			Font font = Font.GetFont("Tahoma", "Regular");
 
 			double space = 3.0;
 			double mul = 1.0;
@@ -63,7 +66,7 @@ namespace Epsitec.Common.Widgets
 			double step = System.Math.Pow(10.0, System.Math.Ceiling(System.Math.Log(scale*space, 10.0)))*mul;
 			double grad = System.Math.Floor(this.starting/step)*step;
 
-			Drawing.Transform ot = graphics.Transform;
+			Transform ot = graphics.Transform;
 			graphics.RotateTransformDeg(90.0, 0.0, 0.0);
 			graphics.TranslateTransform(0, -rect.Width);
 
@@ -92,7 +95,7 @@ namespace Epsitec.Common.Widgets
 					string text = value.ToString();
 
 					double size = rect.Width*0.6;
-					Drawing.Rectangle bounds = font.GetTextBounds(text);
+					Rectangle bounds = font.GetTextBounds(text);
 					bounds.Scale(size);
 					bounds.Offset(posx+2, 0);
 
@@ -108,21 +111,21 @@ namespace Epsitec.Common.Widgets
 			graphics.Transform = ot;
 		}
 
-		protected void PaintMarker(Drawing.Graphics graphics)
+		protected void PaintMarker(Graphics graphics)
 		{
 			if ( !this.markerVisible )  return;
 
 			if ( this.marker < this.starting ||
 				 this.marker > this.ending   )  return;
 
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
+			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			Rectangle rect = this.Client.Bounds;
 			graphics.Align(ref rect);
 
 			double scale = (this.ending-this.starting)/rect.Height;
 			double posy = (this.marker-this.starting)/scale;
 
-			Drawing.Path path = new Drawing.Path();
+			Path path = new Path();
 			path.MoveTo(rect.Right-1, posy);
 			path.LineTo(rect.Left, posy-4);
 			path.LineTo(rect.Left, posy+4);
@@ -135,13 +138,23 @@ namespace Epsitec.Common.Widgets
 			graphics.RenderSolid(adorner.ColorTextFieldBorder(this.IsEnabled));
 		}
 
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
 			
-			Drawing.Rectangle rect = this.Client.Bounds;
+			Rectangle rect = this.Client.Bounds;
 			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(adorner.ColorWindow);  // dessine le fond
+			graphics.RenderSolid(this.ColorBackground);  // dessine le fond
+
+			if ( this.edited )
+			{
+				Rectangle zone = rect;
+				double scale = (this.ending-this.starting)/rect.Height;
+				zone.Bottom = (this.limitLow-this.starting)/scale;
+				zone.Top = (this.limitHigh-this.starting)/scale;
+				graphics.AddFilledRectangle(zone);
+				graphics.RenderSolid(this.ColorBackgroundEdited);
+			}
 
 			this.PaintGrad(graphics, clipRect);
 			this.PaintMarker(graphics);
