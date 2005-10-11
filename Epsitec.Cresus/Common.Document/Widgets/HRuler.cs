@@ -97,6 +97,7 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		// Dessine la graduation.
 		protected void PaintGrad(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
@@ -159,6 +160,7 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.RenderSolid(adorner.ColorText(this.PaintState));
 		}
 
+		// Dessine le marqueur de position de la souris.
 		protected void PaintMarker(Graphics graphics)
 		{
 			if ( !this.markerVisible )  return;
@@ -186,6 +188,7 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.RenderSolid(adorner.ColorTextFieldBorder(this.IsEnabled));
 		}
 
+		// Dessine la marge gauche pour la première ligne.
 		protected void PaintMarginLeftFirst(Graphics graphics, bool hilite)
 		{
 			if ( !this.edited )  return;
@@ -216,6 +219,7 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.RenderSolid(this.ColorBorderMargins);
 		}
 
+		// Dessine la marge gauche pour le corps du texte.
 		protected void PaintMarginLeftBody(Graphics graphics, bool hilite)
 		{
 			if ( !this.edited )  return;
@@ -247,6 +251,7 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.RenderSolid(this.ColorBorderMargins);
 		}
 
+		// Dessine la marge droite.
 		protected void PaintMarginRight(Graphics graphics, bool hilite)
 		{
 			if ( !this.edited )  return;
@@ -277,6 +282,35 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.RenderSolid(this.ColorBorderMargins);
 		}
 
+		// Dessine tous les tabulateurs.
+		protected void PaintTabs(Graphics graphics)
+		{
+			if ( !this.edited )  return;
+			if ( this.tabs == null || this.tabs.Length == 0 )  return;
+
+			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+
+			for ( int i=0 ; i<this.tabs.Length ; i++ )
+			{
+				Rectangle rect = this.Client.Bounds;
+
+				double posx = this.GetHandleHorizontalPos(4+i);
+				rect.Left  = posx-rect.Height/2;
+				rect.Right = posx+rect.Height/2;
+
+				Common.Widgets.GlyphShape glyph = Common.Widgets.GlyphShape.TabRight;
+				switch ( this.tabs[i].Type )
+				{
+					case Drawing.TextTabType.Right:    glyph = Common.Widgets.GlyphShape.TabRight;    break;
+					case Drawing.TextTabType.Left:     glyph = Common.Widgets.GlyphShape.TabLeft;     break;
+					case Drawing.TextTabType.Center:   glyph = Common.Widgets.GlyphShape.TabCenter;   break;
+					case Drawing.TextTabType.Decimal:  glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+					case Drawing.TextTabType.Indent:   glyph = Common.Widgets.GlyphShape.TabIndent;   break;
+				}
+				adorner.PaintGlyph(graphics, rect, Common.Widgets.WidgetState.Enabled, glyph, Common.Widgets.PaintTextStyle.Button);
+			}
+		}
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
@@ -303,6 +337,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.PaintMarginLeftFirst(graphics, this.HiliteRank == 0 || this.HiliteRank == 2);
 				this.PaintMarginLeftBody(graphics, this.HiliteRank == 1 || this.HiliteRank == 2);
 				this.PaintMarginRight(graphics, this.HiliteRank == 3);
+				this.PaintTabs(graphics);
 			}
 
 			rect.Deflate(0.5);
@@ -316,7 +351,9 @@ namespace Epsitec.Common.Document.Widgets
 			if ( !this.edited )  return -1;
 			if ( this.editObject == null )  return -1;
 
-			for ( int rank=3 ; rank>=0 ; rank-- )
+			int total = 4;
+			if ( this.tabs != null )  total += this.tabs.Length;
+			for ( int rank=total-1 ; rank>=0 ; rank-- )
 			{
 				double posx = this.GetHandleHorizontalPos(rank);
 				if ( pos.X < posx-5 || pos.X > posx+5 )  continue;
@@ -367,58 +404,84 @@ namespace Epsitec.Common.Document.Widgets
 			if ( rank == 1 )  return (this.marginLeftBody-this.starting)/scale;
 			if ( rank == 2 )  return (this.marginLeftBody-this.starting)/scale;
 			if ( rank == 3 )  return (this.marginRight-this.starting)/scale;
+
+			rank -= 4;  // 0..n
+			if ( rank < this.tabs.Length )
+			{
+				return (this.tabs[rank].Pos-this.starting)/scale;
+			}
+
 			return 0;
 		}
 
 		protected void SetHandleHorizontalPos(int rank, Point pos)
 		{
-			double leftFirst, leftBody, right;
-			Text.Properties.SizeUnits units;
-			this.editObject.GetTextLeftMargins(out leftFirst, out leftBody, out units, true);
-			this.editObject.GetTextRightMargins(out right, out units, true);
-			units = Common.Text.Properties.SizeUnits.Points;
-
 			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
 			double scale = (this.ending-this.starting)/this.Client.Bounds.Width;
 
-			if ( rank == 0 )  // left first ?
+			if ( rank < 4 )
 			{
-				leftFirst = this.starting + pos.X*scale;
-				leftFirst = leftFirst - bbox.Left;
-				leftFirst = this.SnapGrid(leftFirst);
-				leftFirst = System.Math.Max(leftFirst, 0);
-				this.editObject.SetTextLeftMargins(leftFirst, leftBody, units);
-			}
+				double leftFirst, leftBody, right;
+				Text.Properties.SizeUnits units;
+				this.editObject.GetTextLeftMargins(out leftFirst, out leftBody, out units, true);
+				this.editObject.GetTextRightMargins(out right, out units, true);
+				units = Common.Text.Properties.SizeUnits.Points;
 
-			if ( rank == 1 )  // left body ?
-			{
-				leftBody = this.starting + pos.X*scale;
-				leftBody = leftBody - bbox.Left;
-				leftBody = this.SnapGrid(leftBody);
-				leftBody = System.Math.Max(leftBody, 0);
-				this.editObject.SetTextLeftMargins(leftFirst, leftBody, units);
-			}
+				if ( rank == 0 )  // left first ?
+				{
+					leftFirst = this.starting + pos.X*scale;
+					leftFirst = leftFirst - bbox.Left;
+					leftFirst = this.SnapGrid(leftFirst);
+					leftFirst = System.Math.Max(leftFirst, 0);
+					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units);
+				}
 
-			if ( rank == 2 )  // first + body ?
-			{
-				double initialBody = leftBody;
-				leftBody = this.starting + pos.X*scale;
-				leftBody = leftBody - bbox.Left;
-				leftBody = this.SnapGrid(leftBody);
-				leftBody = System.Math.Max(leftBody, 0);
-				leftFirst += leftBody - initialBody;
-				leftFirst = this.SnapGrid(leftFirst);
-				leftFirst = System.Math.Max(leftFirst, 0);
-				this.editObject.SetTextLeftMargins(leftFirst, leftBody, units);
-			}
+				if ( rank == 1 )  // left body ?
+				{
+					leftBody = this.starting + pos.X*scale;
+					leftBody = leftBody - bbox.Left;
+					leftBody = this.SnapGrid(leftBody);
+					leftBody = System.Math.Max(leftBody, 0);
+					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units);
+				}
 
-			if ( rank == 3 )  // right ?
+				if ( rank == 2 )  // first + body ?
+				{
+					double initialBody = leftBody;
+					leftBody = this.starting + pos.X*scale;
+					leftBody = leftBody - bbox.Left;
+					leftBody = this.SnapGrid(leftBody);
+					leftBody = System.Math.Max(leftBody, 0);
+					leftFirst += leftBody - initialBody;
+					leftFirst = this.SnapGrid(leftFirst);
+					leftFirst = System.Math.Max(leftFirst, 0);
+					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units);
+				}
+
+				if ( rank == 3 )  // right ?
+				{
+					right = this.starting + pos.X*scale;
+					right = bbox.Right - right;
+					right = this.SnapGrid(right);
+					right = System.Math.Max(right, 0);
+					this.editObject.SetTextRightMargins(right, units);
+				}
+			}
+			else	// tabulateur ?
 			{
-				right = this.starting + pos.X*scale;
-				right = bbox.Right - right;
-				right = this.SnapGrid(right);
-				right = System.Math.Max(right, 0);
-				this.editObject.SetTextRightMargins(right, units);
+				rank -= 4;  // 0..n
+				if ( rank < this.tabs.Length )
+				{
+					double tabPos;
+					TextTabType type;
+					this.editObject.GetTextTab(rank, out tabPos, out type);
+
+					tabPos = this.starting + pos.X*scale;
+					tabPos = tabPos - bbox.Left;
+					tabPos = this.SnapGrid(tabPos);
+					tabPos = System.Math.Max(tabPos, 0);
+					this.editObject.SetTextTab(rank, tabPos, type);
+				}
 			}
 		}
 

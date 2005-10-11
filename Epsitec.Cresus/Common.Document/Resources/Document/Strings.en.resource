@@ -862,8 +862,8 @@
 	<data name="Action.Text.Font.Bold">Bold</data>
 	<data name="Action.Text.Font.Italic">Italic</data>
 	<data name="Action.Text.Font.Underlined">Underlined</data>
-	<data name="Action.Text.Font.Indice">@@Indice</data>
-	<data name="Action.Text.Font.Exposant">@@Exposant</data>
+	<data name="Action.Text.Font.Subscript">Subscript</data>
+	<data name="Action.Text.Font.Superscript">Superscript</data>
 	<data name="Action.Text.Font.UserX">User style X</data>
 	<data name="Action.Text.Font.UserY">User style Y</data>
 	<data name="Action.Text.Font.UserZ">User style Z</data>

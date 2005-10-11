@@ -596,6 +596,77 @@ namespace Epsitec.Common.Document.Objects
 			units = Text.Properties.SizeUnits.None;
 		}
 
+		// Donne le nombre de tabulateurs du texte.
+		public override int GetTextTabCount
+		{
+			get
+			{
+				return 1;
+			}
+		}
+
+		// Crée un nouveau tabulateur dans le texte.
+		public override int NewTextTab(double pos, TextTabType type)
+		{
+			return -1;
+		}
+
+		// Supprime un tabulateur du texte.
+		public override void DeleteTextTab(int rank)
+		{
+		}
+
+		// Modifie un tabulateur du texte.
+		public override void SetTextTab(int rank, double pos, TextTabType type)
+		{
+			double dispo = 0.0;
+			if ( type == TextTabType.Center )  dispo = 0.5;
+			if ( type == TextTabType.Left   )  dispo = 1.0;
+
+			Text.TabList list = this.document.TextContext.TabList;
+			Text.Properties.TabProperty tab = list.GetTabProperty("T1");
+			list.RedefineTab(tab, pos, Text.Properties.SizeUnits.Points, dispo, null);
+
+			// TODO: devrait être inutile:
+			this.UpdateTextRulers();
+			this.UpdateTextLayout();
+			this.document.Notifier.NotifyTextChanged();
+			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+		}
+
+		// Donne un tabulateur du texte.
+		public override void GetTextTab(int rank, out double pos, out TextTabType type)
+		{
+			Text.TabList list = this.document.TextContext.TabList;
+			Text.Properties.TabProperty tab = list.GetTabProperty("T1");
+			pos = list.GetTabPosition(tab);
+
+			type = TextTabType.Right;
+			double dispo = list.GetTabDisposition(tab);
+			if ( dispo == 0.5 )  type = TextTabType.Center;
+			if ( dispo == 1.0 )  type = TextTabType.Left;
+
+			Text.Property[] properties = this.GetTextProperties(true);
+			foreach ( Text.Property property in properties )
+			{
+				if ( property.WellKnownType == Text.Properties.WellKnownType.Tabs )
+				{
+					Text.Properties.TabsProperty tabs = property as Text.Properties.TabsProperty;
+					System.Diagnostics.Debug.Assert(tabs != null);
+
+					string[] tags = tabs.TabTags;
+				}
+
+				if ( property.WellKnownType == Text.Properties.WellKnownType.Tab )
+				{
+					tab = property as Text.Properties.TabProperty;
+					System.Diagnostics.Debug.Assert(tab != null);
+
+					string tag = tab.TabTag;
+				}
+			}
+		}
+
 		// Donne la liste des propriétés.
 		protected Text.Property[] GetTextProperties(bool accumulated)
 		{
@@ -664,6 +735,18 @@ namespace Epsitec.Common.Document.Objects
 				this.document.HRuler.MarginLeftFirst = bbox.Left+leftFirst;
 				this.document.HRuler.MarginLeftBody  = bbox.Left+leftBody;
 				this.document.HRuler.MarginRight     = bbox.Right-right;
+
+				int count = this.GetTextTabCount;
+				Widgets.Tab[] tabs = new Widgets.Tab[count];
+				for ( int i=0 ; i<count ; i++ )
+				{
+					double pos;
+					TextTabType type;
+					this.GetTextTab(i, out pos, out type);
+					tabs[i].Pos = bbox.Left+pos;
+					tabs[i].Type = type;
+				}
+				this.document.HRuler.Tabs = tabs;
 			}
 		}
 		#endregion
@@ -780,6 +863,7 @@ namespace Epsitec.Common.Document.Objects
 				h3 = this.Handle(3).Position;
 			}
 
+#if false
 			switch ( this.PropertyTextJustif.Orientation )
 			{
 				case Properties.JustifOrientation.RightToLeft:  // <-
@@ -807,6 +891,12 @@ namespace Epsitec.Common.Document.Objects
 					p4 = h1;
 					break;
 			}
+#else
+			p1 = h0;
+			p2 = h3;
+			p3 = h2;
+			p4 = h1;
+#endif
 		}
 
 		// Initialise.
@@ -814,10 +904,12 @@ namespace Epsitec.Common.Document.Objects
 									 DrawingContext drawingContext)
 		{
 			this.Corners(ref p1, ref p2, ref p3, ref p4);
+#if false
 			if ( !this.PropertyTextJustif.DeflateBox(ref p1, ref p2, ref p3, ref p4) )
 			{
 				return false;
 			}
+#endif
 
 			this.textFrame.Width  = Point.Distance(p1,p2);
 			this.textFrame.Height = Point.Distance(p1,p3);

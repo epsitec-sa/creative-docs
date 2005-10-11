@@ -22,14 +22,14 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonSizePlus  = this.CreateIconButton(Misc.Icon("FontSizePlus"),  Res.Strings.Action.Text.Font.SizePlus,  new MessageEventHandler(this.HandleButtonClicked), false);
 			this.buttonSizeMinus = this.CreateIconButton(Misc.Icon("FontSizeMinus"), Res.Strings.Action.Text.Font.SizeMinus, new MessageEventHandler(this.HandleButtonClicked), false);
 
-			this.buttonBold       = this.CreateIconButton(Res.Strings.Text.ButtonBold,       Res.Strings.Action.Text.Font.Bold,       new MessageEventHandler(this.HandleButtonClicked));
-			this.buttonItalic     = this.CreateIconButton(Res.Strings.Text.ButtonItalic,     Res.Strings.Action.Text.Font.Italic,     new MessageEventHandler(this.HandleButtonClicked));
-			this.buttonUnderlined = this.CreateIconButton(Res.Strings.Text.ButtonUnderlined, Res.Strings.Action.Text.Font.Underlined, new MessageEventHandler(this.HandleButtonClicked));
-			this.buttonIndice     = this.CreateIconButton(Misc.Icon("FontIndice"),           Res.Strings.Action.Text.Font.Indice,     new MessageEventHandler(this.HandleButtonClicked));
-			this.buttonExposant   = this.CreateIconButton(Misc.Icon("FontExposant"),         Res.Strings.Action.Text.Font.Exposant,   new MessageEventHandler(this.HandleButtonClicked));
-			this.buttonUserX      = this.CreateIconButton(Res.Strings.Text.ButtonUserX,      Res.Strings.Action.Text.Font.UserX,      new MessageEventHandler(this.HandleButtonClicked));
-			this.buttonUserY      = this.CreateIconButton(Res.Strings.Text.ButtonUserY,      Res.Strings.Action.Text.Font.UserY,      new MessageEventHandler(this.HandleButtonClicked));
-			this.buttonUserZ      = this.CreateIconButton(Res.Strings.Text.ButtonUserZ,      Res.Strings.Action.Text.Font.UserZ,      new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonBold        = this.CreateIconButton(Res.Strings.Text.ButtonBold,       Res.Strings.Action.Text.Font.Bold,        new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonItalic      = this.CreateIconButton(Res.Strings.Text.ButtonItalic,     Res.Strings.Action.Text.Font.Italic,      new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonUnderlined  = this.CreateIconButton(Res.Strings.Text.ButtonUnderlined, Res.Strings.Action.Text.Font.Underlined,  new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonSubscript   = this.CreateIconButton(Misc.Icon("FontSubscript"),        Res.Strings.Action.Text.Font.Subscript,   new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonSuperscript = this.CreateIconButton(Misc.Icon("FontSuperscript"),      Res.Strings.Action.Text.Font.Superscript, new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonUserX       = this.CreateIconButton(Res.Strings.Text.ButtonUserX,      Res.Strings.Action.Text.Font.UserX,       new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonUserY       = this.CreateIconButton(Res.Strings.Text.ButtonUserY,      Res.Strings.Action.Text.Font.UserY,       new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonUserZ       = this.CreateIconButton(Res.Strings.Text.ButtonUserZ,      Res.Strings.Action.Text.Font.UserZ,       new MessageEventHandler(this.HandleButtonClicked));
 
 			this.fontColor = new ColorSample(this);
 			this.fontColor.PossibleSource = true;
@@ -84,8 +84,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.UpdateButton(this.buttonBold, editObject, "Bold");
 			this.UpdateButton(this.buttonItalic, editObject, "Italic");
 			this.UpdateButton(this.buttonUnderlined, editObject, "Underlined");
-			this.UpdateButton(this.buttonIndice, editObject, "Indice");
-			this.UpdateButton(this.buttonExposant, editObject, "Exposant");
+			this.UpdateButton(this.buttonSubscript, editObject, "Subscript");
+			this.UpdateButton(this.buttonSuperscript, editObject, "Superscript");
 			this.UpdateButton(this.buttonUserX, editObject, "UserX");
 			this.UpdateButton(this.buttonUserY, editObject, "UserY");
 			this.UpdateButton(this.buttonUserZ, editObject, "UserZ");
@@ -142,9 +142,9 @@ namespace Epsitec.Common.Document.Ribbons
 			rect.Offset(dx, 0);
 			this.buttonUnderlined.Bounds = rect;
 			rect.Offset(dx, 0);
-			this.buttonIndice.Bounds = rect;
+			this.buttonSubscript.Bounds = rect;
 			rect.Offset(dx, 0);
-			this.buttonExposant.Bounds = rect;
+			this.buttonSuperscript.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonUserX.Bounds = rect;
 			rect.Offset(dx, 0);
@@ -415,16 +415,16 @@ namespace Epsitec.Common.Document.Ribbons
 			Objects.Abstract editObject = this.EditObject;
 			if ( editObject == null )  return;
 
-			if ( sender == this.buttonBold       )  this.InvertStyle(editObject, "Bold");
-			if ( sender == this.buttonItalic     )  this.InvertStyle(editObject, "Italic");
-			if ( sender == this.buttonUnderlined )  this.InvertStyle(editObject, "Underlined");
-			if ( sender == this.buttonIndice     )  this.InvertStyle(editObject, "Indice");
-			if ( sender == this.buttonExposant   )  this.InvertStyle(editObject, "Exposant");
-			if ( sender == this.buttonUserX      )  this.InvertStyle(editObject, "UserX");
-			if ( sender == this.buttonUserY      )  this.InvertStyle(editObject, "UserY");
-			if ( sender == this.buttonUserZ      )  this.InvertStyle(editObject, "UserZ");
-			if ( sender == this.buttonSizePlus   )  this.ChangeFontSize(editObject,  1, 125);
-			if ( sender == this.buttonSizeMinus  )  this.ChangeFontSize(editObject, -1,  80);
+			if ( sender == this.buttonBold        )  this.InvertStyle(editObject, "Bold");
+			if ( sender == this.buttonItalic      )  this.InvertStyle(editObject, "Italic");
+			if ( sender == this.buttonUnderlined  )  this.InvertStyle(editObject, "Underlined");
+			if ( sender == this.buttonSubscript   )  this.InvertStyle(editObject, "Subscript");
+			if ( sender == this.buttonSuperscript )  this.InvertStyle(editObject, "Superscript");
+			if ( sender == this.buttonUserX       )  this.InvertStyle(editObject, "UserX");
+			if ( sender == this.buttonUserY       )  this.InvertStyle(editObject, "UserY");
+			if ( sender == this.buttonUserZ       )  this.InvertStyle(editObject, "UserZ");
+			if ( sender == this.buttonSizePlus    )  this.ChangeFontSize(editObject,  1, 125);
+			if ( sender == this.buttonSizeMinus   )  this.ChangeFontSize(editObject, -1,  80);
 		}
 
 		protected void InvertStyle(Objects.Abstract editObject, string name)
@@ -460,8 +460,8 @@ namespace Epsitec.Common.Document.Ribbons
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
 		protected IconButton				buttonUnderlined;
-		protected IconButton				buttonIndice;
-		protected IconButton				buttonExposant;
+		protected IconButton				buttonSubscript;
+		protected IconButton				buttonSuperscript;
 		protected IconButton				buttonUserX;
 		protected IconButton				buttonUserY;
 		protected IconButton				buttonUserZ;

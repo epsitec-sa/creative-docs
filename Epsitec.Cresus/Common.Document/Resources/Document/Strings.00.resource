@@ -862,8 +862,8 @@
 	<data name="Action.Text.Font.Bold">Gras</data>
 	<data name="Action.Text.Font.Italic">Italique</data>
 	<data name="Action.Text.Font.Underlined">Souligné</data>
-	<data name="Action.Text.Font.Indice">Indice</data>
-	<data name="Action.Text.Font.Exposant">Exposant</data>
+	<data name="Action.Text.Font.Subscript">Indice</data>
+	<data name="Action.Text.Font.Superscript">Exposant</data>
 	<data name="Action.Text.Font.UserX">Style utilisateur X</data>
 	<data name="Action.Text.Font.UserY">Style utilisateur Y</data>
 	<data name="Action.Text.Font.UserZ">Style utilisateur Z</data>

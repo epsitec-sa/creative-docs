@@ -3,6 +3,12 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Widgets
 {
+	public struct Tab
+	{
+		public double			Pos;
+		public TextTabType		Type;
+	}
+
 	/// <summary>
 	/// La classe AbstractRuler implémente la classe de base des règles
 	/// HRuler et VRuler.
@@ -202,6 +208,24 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Liste des tabulateurs.
+		public Tab[] Tabs
+		{
+			get
+			{
+				return this.tabs;
+			}
+
+			set
+			{
+				if ( !AbstractRuler.TabCompare(this.tabs, value) )
+				{
+					this.tabs = value;
+					this.Invalidate();
+				}
+			}
+		}
+
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
@@ -367,6 +391,22 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		// Compare deux listes de tabulateurs.
+		protected static bool TabCompare(Tab[] list1, Tab[] list2)
+		{
+			if ( list1 == null && list2 == null )  return true;
+			if ( list1 == null && list2 != null )  return false;
+			if ( list1 != null && list2 == null )  return false;
+			if ( list1.Length  != list2.Length  )  return false;
+
+			for ( int i=0 ; i<list1.Length ; i++ )
+			{
+				if ( list1[i].Pos != list2[i].Pos )  return false;
+			}
+			return true;
+		}
+
+
 		protected static readonly double	defaultBreadth = 13;
 
 		protected Document					document = null;
@@ -380,6 +420,7 @@ namespace Epsitec.Common.Document.Widgets
 		protected Objects.Abstract			editObject = null;
 		protected double					limitLow = 0.0;
 		protected double					limitHigh = 0.0;
+		protected Tab[]						tabs = null;
 		protected Rectangle					invalidateBox;
 		protected int						hiliteRank = -1;
 		protected bool						isDragging = false;

@@ -677,19 +677,19 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\FontExposant.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\FontIndice.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "Images\FontSizeMinus.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Images\FontSizePlus.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontSubscript.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FontSuperscript.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

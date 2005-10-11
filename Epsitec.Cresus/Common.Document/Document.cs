@@ -1150,6 +1150,11 @@ namespace Epsitec.Common.Document
 			this.textContext = new Text.TextContext();
 			this.textContext.IsDegradedLayoutEnabled = true;
 
+			Text.TabList tabs = this.textContext.TabList;
+
+			Text.Properties.TabProperty t1 = tabs.NewTab("T1", 200, Text.Properties.SizeUnits.Points, 0, null);
+			Text.Properties.TabProperty t2 = tabs.NewTab("T2", 400, Text.Properties.SizeUnits.Points, 0, null);
+
 			properties = new System.Collections.ArrayList();
 			//?properties.Add(new Text.Properties.FontProperty("Palatino Linotype", "Italic", "liga", "dlig", "kern"));
 			properties.Add(new Text.Properties.FontProperty("Arial", "Roman"));
@@ -1158,6 +1163,8 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.ColorProperty("Black"));
 			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
 			properties.Add(new Text.Properties.LeadingProperty(0.0, Text.Properties.SizeUnits.Points, 5.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
+			//?properties.Add(new Text.Properties.TabsProperty(t1, t2));
+			properties.Add(t1);
 			style = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
 			this.textContext.DefaultStyle = style;
 
@@ -1176,12 +1183,12 @@ namespace Epsitec.Common.Document
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontOffsetProperty(-50.0, Text.Properties.SizeUnits.Percent));
 			properties.Add(new Text.Properties.FontSizeProperty(60.0, Text.Properties.SizeUnits.Percent));
-			this.textContext.StyleList.NewMetaProperty("Indice", "IndiceExposant", properties);
+			this.textContext.StyleList.NewMetaProperty("Subscript", "Script", properties);
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontOffsetProperty(75.0, Text.Properties.SizeUnits.Percent));
 			properties.Add(new Text.Properties.FontSizeProperty(60.0, Text.Properties.SizeUnits.Percent));
-			this.textContext.StyleList.NewMetaProperty("Exposant", "IndiceExposant", properties);
+			this.textContext.StyleList.NewMetaProperty("Superscript", "Script", properties);
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontProperty(null, "!Bold"));
@@ -1196,19 +1203,18 @@ namespace Epsitec.Common.Document
 			this.textContext.StyleList.NewMetaProperty("UserZ", "UserZ", properties);
 
 			
-			Text.TabList   tabs       = this.textContext.TabList;
 			Text.Generator generator1 = this.textContext.GeneratorList.NewGenerator("bullet-1");
 			Text.Generator generator2 = this.textContext.GeneratorList.NewGenerator("num-1");
 			Text.Generator generator3 = this.textContext.GeneratorList.NewGenerator("alpha-1");
 			
-			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant, "", "", Text.Generator.Casing.Default, "\u25CF"));
-			generator2.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric, "", "."));
+			generator1.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Constant,   "", "", Text.Generator.Casing.Default, "\u25CF"));
+			generator2.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Numeric,    "", "."));
 			generator3.Add(Text.Generator.CreateSequence(Text.Generator.SequenceType.Alphabetic, "", ")", Text.Generator.Casing.Upper));
 			
 			Text.ParagraphManagers.ItemListManager.Parameters items1 = new Text.ParagraphManagers.ItemListManager.Parameters();
 			Text.ParagraphManagers.ItemListManager.Parameters items2 = new Text.ParagraphManagers.ItemListManager.Parameters();
 			Text.ParagraphManagers.ItemListManager.Parameters items3 = new Text.ParagraphManagers.ItemListManager.Parameters();
-			
+
 			items1.Generator = generator1;
 			items1.TabItem   = tabs.NewTab("T1-item", 10.0, Text.Properties.SizeUnits.Points, 0, null);
 			items1.TabBody   = tabs.NewTab("T1-body", 60.0, Text.Properties.SizeUnits.Points, 0, null);

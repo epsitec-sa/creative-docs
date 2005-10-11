@@ -766,6 +766,38 @@ namespace Epsitec.Common.Document.Objects
 			units = Text.Properties.SizeUnits.None;
 		}
 
+		// Donne le nombre de tabulateurs du texte.
+		public virtual int GetTextTabCount
+		{
+			get
+			{
+				return 0;
+			}
+		}
+
+		// Crée un nouveau tabulateur dans le texte.
+		public virtual int NewTextTab(double pos, TextTabType type)
+		{
+			return -1;
+		}
+
+		// Supprime un tabulateur du texte.
+		public virtual void DeleteTextTab(int rank)
+		{
+		}
+
+		// Modifie un tabulateur du texte.
+		public virtual void SetTextTab(int rank, double pos, TextTabType type)
+		{
+		}
+
+		// Donne un tabulateur du texte.
+		public virtual void GetTextTab(int rank, out double pos, out TextTabType type)
+		{
+			pos = 0;
+			type = TextTabType.None;
+		}
+
 		
 		// Détecte la cellule pointée par la souris.
 		public virtual int DetectCell(Point pos)
