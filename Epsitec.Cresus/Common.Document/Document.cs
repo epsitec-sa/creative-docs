@@ -1183,12 +1183,12 @@ namespace Epsitec.Common.Document
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontOffsetProperty(-50.0, Text.Properties.SizeUnits.Percent));
 			properties.Add(new Text.Properties.FontSizeProperty(60.0, Text.Properties.SizeUnits.Percent));
-			this.textContext.StyleList.NewMetaProperty("Subscript", "Script", properties);
+			this.textContext.StyleList.NewMetaProperty("Subscript", "SuperScript", properties);
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontOffsetProperty(75.0, Text.Properties.SizeUnits.Percent));
 			properties.Add(new Text.Properties.FontSizeProperty(60.0, Text.Properties.SizeUnits.Percent));
-			this.textContext.StyleList.NewMetaProperty("Superscript", "Script", properties);
+			this.textContext.StyleList.NewMetaProperty("Superscript", "SuperScript", properties);
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontProperty(null, "!Bold"));

@@ -850,13 +850,14 @@ namespace Epsitec.App.DocumentEditor
 				di.hRuler.Document = document;
 				di.hRuler.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 				di.hRuler.AnchorMargins = new Margins(wm+lm, wm+sw+1, 6+wm, 0);
-				ToolTip.Default.SetToolTip(di.hRuler, Res.Strings.Tooltip.Ruler.Drag);
+				//?ToolTip.Default.SetToolTip(di.hRuler, Res.Strings.Tooltip.Ruler.Drag);  //*
 
 				di.vRuler = new DocWidgets.VRuler(mainViewParent);
 				di.vRuler.Document = document;
 				di.vRuler.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
 				di.vRuler.AnchorMargins = new Margins(wm, 0, 6+wm+tm, wm+sw+1);
-				ToolTip.Default.SetToolTip(di.vRuler, Res.Strings.Tooltip.Ruler.Drag);
+				//?ToolTip.Default.SetToolTip(di.vRuler, Res.Strings.Tooltip.Ruler.Drag);  //*
+				//* TODO: Un tooltip empêche l'envoi du message MouseLeave !!!
 			}
 
 			// Bande horizontale qui contient les boutons des pages et l'ascenseur.
@@ -1314,26 +1315,6 @@ namespace Epsitec.App.DocumentEditor
 			VScroller scroller = sender as VScroller;
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.DrawingContext.OriginY = (double) -scroller.Value;
-		}
-
-		private void HandleHRulerPressed(object sender, MessageEventArgs e)
-		{
-			this.CurrentDocument.Modifier.ActiveViewer.GuideInteractiveStart(true);
-		}
-
-		private void HandleHRulerReleased(object sender, MessageEventArgs e)
-		{
-			this.CurrentDocument.Modifier.ActiveViewer.GuideInteractiveEnd();
-		}
-
-		private void HandleVRulerPressed(object sender, MessageEventArgs e)
-		{
-			this.CurrentDocument.Modifier.ActiveViewer.GuideInteractiveStart(false);
-		}
-
-		private void HandleVRulerReleased(object sender, MessageEventArgs e)
-		{
-			this.CurrentDocument.Modifier.ActiveViewer.GuideInteractiveEnd();
 		}
 
 		private void HandleBookPanelsActivePageChanged(object sender)

@@ -4,6 +4,12 @@ using Epsitec.Common.Text;
 
 namespace Epsitec.Common.Document.Widgets
 {
+	public struct Tab
+	{
+		public double			Pos;
+		public TextTabType		Type;
+	}
+
 	/// <summary>
 	/// La classe HRuler implémente la règle horizontale.
 	/// </summary>
@@ -28,6 +34,7 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		// Position de la marge gauche pour la première ligne.
 		public double MarginLeftFirst
 		{
 			get
@@ -45,6 +52,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Position de la marge gauche pour le corps du texte.
 		public double MarginLeftBody
 		{
 			get
@@ -62,6 +70,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Position de la marge droite.
 		public double MarginRight
 		{
 			get
@@ -79,14 +88,32 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Liste des tabulateurs.
+		public Tab[] Tabs
+		{
+			get
+			{
+				return this.tabs;
+			}
 
+			set
+			{
+				if ( !HRuler.TabCompare(this.tabs, value) )
+				{
+					this.tabs = value;
+					this.Invalidate();
+				}
+			}
+		}
+
+
+		// Invalide la zone contenant le marqueur.
 		protected override void InvalidateBoxMarker()
 		{
 			if ( !this.markerVisible )  return;
 
 			Rectangle rect = this.Client.Bounds;
-			double scale = (this.ending-this.starting)/rect.Width;
-			double posx = (this.marker-this.starting)/scale;
+			double posx = this.DocumentToScreen(this.marker);
 			rect.Left  = posx-4;
 			rect.Right = posx+4;
 
@@ -172,8 +199,7 @@ namespace Epsitec.Common.Document.Widgets
 			Rectangle rect = this.Client.Bounds;
 			graphics.Align(ref rect);
 
-			double scale = (this.ending-this.starting)/rect.Width;
-			double posx = (this.marker-this.starting)/scale;
+			double posx = this.DocumentToScreen(this.marker);
 
 			Path path = new Path();
 			path.MoveTo(posx, 1);
@@ -289,14 +315,20 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.tabs == null || this.tabs.Length == 0 )  return;
 
 			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+			int hilite = this.HiliteHandle-HRuler.HandleFirstTab;
 
 			for ( int i=0 ; i<this.tabs.Length ; i++ )
 			{
 				Rectangle rect = this.Client.Bounds;
 
-				double posx = this.GetHandleHorizontalPos(4+i);
+				double posx = this.GetHandleHorizontalPos(HRuler.HandleFirstTab+i);
 				rect.Left  = posx-rect.Height/2;
 				rect.Right = posx+rect.Height/2;
+
+				if ( i == hilite )  // tabulateur survolé par la souris ?
+				{
+					rect.Inflate(3);  // plus grand
+				}
 
 				Common.Widgets.GlyphShape glyph = Common.Widgets.GlyphShape.TabRight;
 				switch ( this.tabs[i].Type )
@@ -311,6 +343,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Dessine toute la règle.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
@@ -322,9 +355,8 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.edited )
 			{
 				Rectangle zone = rect;
-				double scale = (this.ending-this.starting)/rect.Width;
-				zone.Left = (this.limitLow-this.starting)/scale;
-				zone.Right = (this.limitHigh-this.starting)/scale;
+				zone.Left  = this.DocumentToScreen(this.limitLow);
+				zone.Right = this.DocumentToScreen(this.limitHigh);
 				graphics.AddFilledRectangle(zone);
 				graphics.RenderSolid(this.ColorBackgroundEdited);
 			}
@@ -332,11 +364,11 @@ namespace Epsitec.Common.Document.Widgets
 			this.PaintGrad(graphics, clipRect);
 			this.PaintMarker(graphics);
 
-			if ( this.edited )
+			if ( this.edited )  // édition en cours ?
 			{
-				this.PaintMarginLeftFirst(graphics, this.HiliteRank == 0 || this.HiliteRank == 2);
-				this.PaintMarginLeftBody(graphics, this.HiliteRank == 1 || this.HiliteRank == 2);
-				this.PaintMarginRight(graphics, this.HiliteRank == 3);
+				this.PaintMarginLeftFirst(graphics, this.HiliteHandle == HRuler.HandleLeftFirst || this.HiliteHandle == HRuler.HandleFirstBody);
+				this.PaintMarginLeftBody (graphics, this.HiliteHandle == HRuler.HandleLeftBody  || this.HiliteHandle == HRuler.HandleFirstBody);
+				this.PaintMarginRight    (graphics, this.HiliteHandle == HRuler.HandleRight);
 				this.PaintTabs(graphics);
 			}
 
@@ -346,80 +378,81 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		protected override int MoveDetect(Point pos)
+		// Détecte la poignée visé par la souris.
+		protected override int DraggingDetect(Point pos)
 		{
 			if ( !this.edited )  return -1;
 			if ( this.editObject == null )  return -1;
 
-			int total = 4;
+			int total = HRuler.HandleFirstTab;
 			if ( this.tabs != null )  total += this.tabs.Length;
-			for ( int rank=total-1 ; rank>=0 ; rank-- )
+			for ( int handle=total-1 ; handle>=0 ; handle-- )
 			{
-				double posx = this.GetHandleHorizontalPos(rank);
+				double posx = this.GetHandleHorizontalPos(handle);
 				if ( pos.X < posx-5 || pos.X > posx+5 )  continue;
-				if ( rank == 0 && pos.Y < this.Client.Bounds.Top-4    )  continue;
-				if ( rank == 1 && pos.Y > this.Client.Bounds.Bottom+8 )  continue;
-				if ( rank == 2 && pos.Y > this.Client.Bounds.Bottom+4 )  continue;
-				return rank;
+				if ( handle == HRuler.HandleLeftFirst && pos.Y < this.Client.Bounds.Top-4    )  continue;
+				if ( handle == HRuler.HandleLeftBody  && pos.Y > this.Client.Bounds.Bottom+8 )  continue;
+				if ( handle == HRuler.HandleFirstBody && pos.Y > this.Client.Bounds.Bottom+4 )  continue;
+				return handle;
 			}
 			return -1;
 		}
 
-		protected override void MoveBeginning(int rank, Point pos)
+		// Début du drag d'une poignée.
+		protected override void DraggingStart(int handle, Point pos)
 		{
-			double initial = this.GetHandleHorizontalPos(rank);
-			this.moveOffset = initial - pos.X;
+			double initial = this.GetHandleHorizontalPos(handle);
+			this.draggingOffset = initial - pos.X;
 		}
 
-		protected override void MoveDragging(int rank, Point pos)
+		// Déplace une poignée.
+		protected override void DraggingMove(int handle, Point pos)
 		{
-			pos.X += this.moveOffset;
+			pos.X += this.draggingOffset;
 
-			if ( rank == 0 )  // left first ?
+			if ( handle == HRuler.HandleLeftFirst )  // left first ?
 			{
-				double posBody = this.GetHandleHorizontalPos(1);
+				double posBody = this.GetHandleHorizontalPos(HRuler.HandleLeftBody);
 				if ( System.Math.Abs(pos.X-posBody) < 3 )
 				{
-					pos.X = posBody;  // met pile sur le left body
+					pos.X = posBody;  // magnétise pile sur le left body
 				}
 			}
 
-			this.SetHandleHorizontalPos(rank, pos);
+			this.SetHandleHorizontalPos(handle, pos);
 
-			pos.X = this.GetHandleHorizontalPos(rank);
+			pos.X = this.GetHandleHorizontalPos(handle);
 			pos = this.document.Modifier.ActiveViewer.ScreenToInternal(pos);
 			this.document.Modifier.ActiveViewer.MarkerVertical = pos.X;
 		}
 
-		protected override void MoveEnding(int rank, Point pos)
+		// Fin du drag d'une poignée.
+		protected override void DraggingEnd(int handle, Point pos)
 		{
 			this.document.Modifier.ActiveViewer.MarkerVertical = double.NaN;
 		}
 
-		protected double GetHandleHorizontalPos(int rank)
+		protected double GetHandleHorizontalPos(int handle)
 		{
-			double scale = (this.ending-this.starting)/this.Client.Bounds.Width;
+			if ( handle == HRuler.HandleLeftFirst )  return this.DocumentToScreen(this.marginLeftFirst);
+			if ( handle == HRuler.HandleLeftBody  )  return this.DocumentToScreen(this.marginLeftBody);
+			if ( handle == HRuler.HandleFirstBody )  return this.DocumentToScreen(this.marginLeftBody);
+			if ( handle == HRuler.HandleRight     )  return this.DocumentToScreen(this.marginRight);
 
-			if ( rank == 0 )  return (this.marginLeftFirst-this.starting)/scale;
-			if ( rank == 1 )  return (this.marginLeftBody-this.starting)/scale;
-			if ( rank == 2 )  return (this.marginLeftBody-this.starting)/scale;
-			if ( rank == 3 )  return (this.marginRight-this.starting)/scale;
-
-			rank -= 4;  // 0..n
-			if ( rank < this.tabs.Length )
+			handle -= HRuler.HandleFirstTab;  // 0..n
+			if ( handle < this.tabs.Length )
 			{
-				return (this.tabs[rank].Pos-this.starting)/scale;
+				return this.DocumentToScreen(this.tabs[handle].Pos);
 			}
 
 			return 0;
 		}
 
-		protected void SetHandleHorizontalPos(int rank, Point pos)
+		protected void SetHandleHorizontalPos(int handle, Point pos)
 		{
 			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
-			double scale = (this.ending-this.starting)/this.Client.Bounds.Width;
 
-			if ( rank < 4 )
+			if ( handle < HRuler.HandleFirstTab )
 			{
 				double leftFirst, leftBody, right;
 				Text.Properties.SizeUnits units;
@@ -427,28 +460,28 @@ namespace Epsitec.Common.Document.Widgets
 				this.editObject.GetTextRightMargins(out right, out units, true);
 				units = Common.Text.Properties.SizeUnits.Points;
 
-				if ( rank == 0 )  // left first ?
+				if ( handle == HRuler.HandleLeftFirst )
 				{
-					leftFirst = this.starting + pos.X*scale;
+					leftFirst = this.ScreenToDocument(pos.X);
 					leftFirst = leftFirst - bbox.Left;
 					leftFirst = this.SnapGrid(leftFirst);
 					leftFirst = System.Math.Max(leftFirst, 0);
 					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units);
 				}
 
-				if ( rank == 1 )  // left body ?
+				if ( handle == HRuler.HandleLeftBody )
 				{
-					leftBody = this.starting + pos.X*scale;
+					leftBody = this.ScreenToDocument(pos.X);
 					leftBody = leftBody - bbox.Left;
 					leftBody = this.SnapGrid(leftBody);
 					leftBody = System.Math.Max(leftBody, 0);
 					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units);
 				}
 
-				if ( rank == 2 )  // first + body ?
+				if ( handle == HRuler.HandleFirstBody )
 				{
 					double initialBody = leftBody;
-					leftBody = this.starting + pos.X*scale;
+					leftBody = this.ScreenToDocument(pos.X);
 					leftBody = leftBody - bbox.Left;
 					leftBody = this.SnapGrid(leftBody);
 					leftBody = System.Math.Max(leftBody, 0);
@@ -458,9 +491,9 @@ namespace Epsitec.Common.Document.Widgets
 					this.editObject.SetTextLeftMargins(leftFirst, leftBody, units);
 				}
 
-				if ( rank == 3 )  // right ?
+				if ( handle == HRuler.HandleRight )
 				{
-					right = this.starting + pos.X*scale;
+					right = this.ScreenToDocument(pos.X);
 					right = bbox.Right - right;
 					right = this.SnapGrid(right);
 					right = System.Math.Max(right, 0);
@@ -469,22 +502,23 @@ namespace Epsitec.Common.Document.Widgets
 			}
 			else	// tabulateur ?
 			{
-				rank -= 4;  // 0..n
-				if ( rank < this.tabs.Length )
+				handle -= HRuler.HandleFirstTab;  // 0..n
+				if ( handle < this.tabs.Length )
 				{
 					double tabPos;
 					TextTabType type;
-					this.editObject.GetTextTab(rank, out tabPos, out type);
+					this.editObject.GetTextTab(handle, out tabPos, out type);
 
-					tabPos = this.starting + pos.X*scale;
+					tabPos = this.ScreenToDocument(pos.X);
 					tabPos = tabPos - bbox.Left;
 					tabPos = this.SnapGrid(tabPos);
 					tabPos = System.Math.Max(tabPos, 0);
-					this.editObject.SetTextTab(rank, tabPos, type);
+					this.editObject.SetTextTab(handle, tabPos, type);
 				}
 			}
 		}
 
+		// Conversion d'une position relative dans le texte selon la grille.
 		protected double SnapGrid(double value)
 		{
 			if ( this.document == null )  return value;
@@ -495,9 +529,50 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		// Conversion d'une position dans le document en position en pixel dans l'écran.
+		protected double DocumentToScreen(double value)
+		{
+			double scale = (this.ending-this.starting)/this.Client.Bounds.Width;
+			return (value-this.starting)/scale;
+		}
+
+		// Conversion d'une position en pixel dans l'écran en position dans le document.
+		protected double ScreenToDocument(double value)
+		{
+			double scale = (this.ending-this.starting)/this.Client.Bounds.Width;
+			return value*scale + this.starting;
+		}
+
+
+		// Compare deux listes de tabulateurs.
+		// Retourne true si les deux listes sont équivalentes (même contenu).
+		protected static bool TabCompare(Tab[] list1, Tab[] list2)
+		{
+			if ( list1 == null && list2 == null )  return true;
+			if ( list1 == null && list2 != null )  return false;
+			if ( list1 != null && list2 == null )  return false;
+			if ( list1.Length  != list2.Length  )  return false;
+
+			for ( int i=0 ; i<list1.Length ; i++ )
+			{
+				if ( list1[i].Pos  != list2[i].Pos  )  return false;
+				if ( list1[i].Type != list2[i].Type )  return false;
+			}
+			return true;
+		}
+
+
+		protected static readonly int		HandleLeftFirst = 0;
+		protected static readonly int		HandleLeftBody  = 1;
+		protected static readonly int		HandleFirstBody = 2;
+		protected static readonly int		HandleRight     = 3;
+		protected static readonly int		HandleFirstTab  = 4;
+
 		protected double					marginLeftFirst = 0.0;
 		protected double					marginLeftBody = 0.0;
 		protected double					marginRight = 0.0;
-		protected double					moveOffset = 0.0;
+		protected Tab[]						tabs = null;
+
+		protected double					draggingOffset = 0.0;
 	}
 }

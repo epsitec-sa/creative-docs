@@ -32,8 +32,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( !this.markerVisible )  return;
 
 			Rectangle rect = this.Client.Bounds;
-			double scale = (this.ending-this.starting)/rect.Height;
-			double posy = (this.marker-this.starting)/scale;
+			double posy = this.DocumentToScreen(this.marker);
 			rect.Bottom = posy-4;
 			rect.Top    = posy+4;
 
@@ -122,8 +121,7 @@ namespace Epsitec.Common.Document.Widgets
 			Rectangle rect = this.Client.Bounds;
 			graphics.Align(ref rect);
 
-			double scale = (this.ending-this.starting)/rect.Height;
-			double posy = (this.marker-this.starting)/scale;
+			double posy = this.DocumentToScreen(this.marker);
 
 			Path path = new Path();
 			path.MoveTo(rect.Right-1, posy);
@@ -149,9 +147,8 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.edited )
 			{
 				Rectangle zone = rect;
-				double scale = (this.ending-this.starting)/rect.Height;
-				zone.Bottom = (this.limitLow-this.starting)/scale;
-				zone.Top = (this.limitHigh-this.starting)/scale;
+				zone.Bottom = this.DocumentToScreen(this.limitLow);
+				zone.Top    = this.DocumentToScreen(this.limitHigh);
 				graphics.AddFilledRectangle(zone);
 				graphics.RenderSolid(this.ColorBackgroundEdited);
 			}
@@ -162,6 +159,21 @@ namespace Epsitec.Common.Document.Widgets
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);  // dessine le cadre
 			graphics.RenderSolid(adorner.ColorTextFieldBorder(this.IsEnabled));
+		}
+
+
+		// Conversion d'une position dans le document en position en pixel dans l'écran.
+		protected double DocumentToScreen(double value)
+		{
+			double scale = (this.ending-this.starting)/this.Client.Bounds.Height;
+			return (value-this.starting)/scale;
+		}
+
+		// Conversion d'une position en pixel dans l'écran en position dans le document.
+		protected double ScreenToDocument(double value)
+		{
+			double scale = (this.ending-this.starting)/this.Client.Bounds.Height;
+			return value*scale + this.starting;
 		}
 	}
 }

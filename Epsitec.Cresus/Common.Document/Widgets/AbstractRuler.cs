@@ -3,12 +3,6 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document.Widgets
 {
-	public struct Tab
-	{
-		public double			Pos;
-		public TextTabType		Type;
-	}
-
 	/// <summary>
 	/// La classe AbstractRuler implémente la classe de base des règles
 	/// HRuler et VRuler.
@@ -58,7 +52,8 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Début de la graduation.
+		// Début de la graduation, pour permettre la conversion points écran en
+		// points document et inversément.
 		public double Starting
 		{
 			get
@@ -76,7 +71,8 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Fin de la graduation.
+		// Fin de la graduation, pour permettre la conversion points écran en
+		// points document et inversément.
 		public double Ending
 		{
 			get
@@ -172,7 +168,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Limite basse.
+		// Limite basse, selon la bbox de l'obet édité.
 		public double LimitLow
 		{
 			get
@@ -190,7 +186,7 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		// Limite haute.
+		// Limite haute, selon la bbox de l'obet édité.
 		public double LimitHigh
 		{
 			get
@@ -203,24 +199,6 @@ namespace Epsitec.Common.Document.Widgets
 				if ( this.limitHigh != value )
 				{
 					this.limitHigh = value;
-					this.Invalidate();
-				}
-			}
-		}
-
-		// Liste des tabulateurs.
-		public Tab[] Tabs
-		{
-			get
-			{
-				return this.tabs;
-			}
-
-			set
-			{
-				if ( !AbstractRuler.TabCompare(this.tabs, value) )
-				{
-					this.tabs = value;
 					this.Invalidate();
 				}
 			}
@@ -241,12 +219,12 @@ namespace Epsitec.Common.Document.Widgets
 				case MessageType.MouseDown:
 					if ( this.edited )
 					{
-						int rank = this.MoveDetect(pos);
-						if ( rank != -1 )
+						int handle = this.DraggingDetect(pos);
+						if ( handle != -1 )
 						{
 							this.isDragging = true;
-							this.draggingRank = rank;
-							this.MoveBeginning(this.draggingRank, pos);
+							this.draggingHandle = handle;
+							this.DraggingStart(this.draggingHandle, pos);
 							message.Consumer = this;
 							return;
 						}
@@ -262,13 +240,13 @@ namespace Epsitec.Common.Document.Widgets
 					{
 						if ( this.isDragging )
 						{
-							this.MoveDragging(this.draggingRank, pos);
+							this.DraggingMove(this.draggingHandle, pos);
 							message.Consumer = this;
 							return;
 						}
 						else
 						{
-							this.HiliteRank = this.MoveDetect(pos);
+							this.HiliteHandle = this.DraggingDetect(pos);
 						}
 					}
 					break;
@@ -278,7 +256,7 @@ namespace Epsitec.Common.Document.Widgets
 					{
 						if ( this.isDragging )
 						{
-							this.MoveEnding(this.draggingRank, pos);
+							this.DraggingEnd(this.draggingHandle, pos);
 							this.isDragging = false;
 							message.Consumer = this;
 							return;
@@ -293,7 +271,7 @@ namespace Epsitec.Common.Document.Widgets
 				case MessageType.MouseLeave:
 					if ( this.edited )
 					{
-						this.HiliteRank = -1;
+						this.HiliteHandle = -1;
 					}
 					break;
 			}
@@ -301,41 +279,47 @@ namespace Epsitec.Common.Document.Widgets
 			base.ProcessMessage(message, pos);
 		}
 
-		protected int HiliteRank
+		// Poignée mise en évidence.
+		protected int HiliteHandle
 		{
 			get
 			{
-				return this.hiliteRank;
+				return this.hiliteHandle;
 			}
 
 			set
 			{
-				if ( this.hiliteRank != value )
+				if ( this.hiliteHandle != value )
 				{
-					this.hiliteRank = value;
+					this.hiliteHandle = value;
 					this.Invalidate();
 				}
 			}
 		}
 
-		protected virtual int MoveDetect(Point pos)
+		// Détecte la poignée visé par la souris.
+		protected virtual int DraggingDetect(Point pos)
 		{
 			return -1;
 		}
 
-		protected virtual void MoveBeginning(int rank, Point pos)
+		// Début du drag d'une poignée.
+		protected virtual void DraggingStart(int handle, Point pos)
 		{
 		}
 
-		protected virtual void MoveDragging(int rank, Point pos)
+		// Déplace une poignée.
+		protected virtual void DraggingMove(int handle, Point pos)
 		{
 		}
 
-		protected virtual void MoveEnding(int rank, Point pos)
+		// Fin du drag d'une poignée.
+		protected virtual void DraggingEnd(int handle, Point pos)
 		{
 		}
 
 
+		// Invalide la zone contenant le marqueur.
 		protected virtual void InvalidateBoxMarker()
 		{
 		}
@@ -391,22 +375,6 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		// Compare deux listes de tabulateurs.
-		protected static bool TabCompare(Tab[] list1, Tab[] list2)
-		{
-			if ( list1 == null && list2 == null )  return true;
-			if ( list1 == null && list2 != null )  return false;
-			if ( list1 != null && list2 == null )  return false;
-			if ( list1.Length  != list2.Length  )  return false;
-
-			for ( int i=0 ; i<list1.Length ; i++ )
-			{
-				if ( list1[i].Pos != list2[i].Pos )  return false;
-			}
-			return true;
-		}
-
-
 		protected static readonly double	defaultBreadth = 13;
 
 		protected Document					document = null;
@@ -420,10 +388,9 @@ namespace Epsitec.Common.Document.Widgets
 		protected Objects.Abstract			editObject = null;
 		protected double					limitLow = 0.0;
 		protected double					limitHigh = 0.0;
-		protected Tab[]						tabs = null;
 		protected Rectangle					invalidateBox;
-		protected int						hiliteRank = -1;
+		protected int						hiliteHandle = -1;
 		protected bool						isDragging = false;
-		protected int						draggingRank = -1;
+		protected int						draggingHandle = -1;
 	}
 }
