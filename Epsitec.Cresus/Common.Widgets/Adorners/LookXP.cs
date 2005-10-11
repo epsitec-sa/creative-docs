@@ -251,7 +251,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.Rasterizer.AddSurface(path);
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				Drawing.Color color = (style==PaintTextStyle.VMenu) ? this.colorBlack : this.colorWhite;
+				Drawing.Color color = this.colorBlack;
 				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRGB(0.5, 0.0, 0.0);  // rouge foncé
 				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRGB(0.0, 0.4, 0.0);  // vert foncé
 				graphics.RenderSolid(color);

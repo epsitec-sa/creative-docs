@@ -332,11 +332,12 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
 				Color color = adorner.ColorWindow;
-				if ( this.edited && color.GetBrightness() >= 0.9 )  // très clair ?
+				if ( this.edited )
 				{
-					color.R *= 0.85;  // couleur plus foncée
-					color.G *= 0.85;
-					color.B *= 0.85;
+					double factor = 0.5+0.3*color.GetBrightness();
+					color.R *= factor;  // couleur plus foncée
+					color.G *= factor;
+					color.B *= factor;
 				}
 				return color;
 			}
@@ -347,21 +348,30 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			get
 			{
-				return Color.FromBrightness(1);  // blanc
+				IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+				return adorner.ColorWindow;
 			}
 		}
 
 		// Donne la couleur pour le fond des marqueurs des marges.
 		protected Color ColorBackgroundMargins(bool hilite)
 		{
+			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
 			if ( hilite )
 			{
-				IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
 				return adorner.ColorCaption;
 			}
 			else
 			{
-				return Color.FromBrightness(0.9);  // gris très clair
+				Color color = adorner.ColorWindow;
+				if ( color.GetBrightness() >= 0.9 )  // très clair ?
+				{
+					return Color.FromBrightness(1);  // blanc
+				}
+				else
+				{
+					return Color.FromBrightness(0.9);  // gris très clair
+				}
 			}
 		}
 
