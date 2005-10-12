@@ -1152,8 +1152,8 @@ namespace Epsitec.Common.Document
 
 			Text.TabList tabs = this.textContext.TabList;
 
-			Text.Properties.TabProperty t1 = tabs.NewTab("T1", 200, Text.Properties.SizeUnits.Points, 0, null);
-			Text.Properties.TabProperty t2 = tabs.NewTab("T2", 400, Text.Properties.SizeUnits.Points, 0, null);
+			//?Text.Properties.TabProperty t1 = tabs.NewTab("T1", 100, Text.Properties.SizeUnits.Points, 0.0, null);
+			//?Text.Properties.TabProperty t2 = tabs.NewTab("T2", 400, Text.Properties.SizeUnits.Points, 0.0, null);
 
 			properties = new System.Collections.ArrayList();
 			//?properties.Add(new Text.Properties.FontProperty("Palatino Linotype", "Italic", "liga", "dlig", "kern"));
@@ -1163,8 +1163,7 @@ namespace Epsitec.Common.Document
 			properties.Add(new Text.Properties.ColorProperty("Black"));
 			properties.Add(new Text.Properties.LanguageProperty("fr-ch", 1.0));
 			properties.Add(new Text.Properties.LeadingProperty(0.0, Text.Properties.SizeUnits.Points, 5.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points, 5.0, Text.Properties.SizeUnits.Points, Text.Properties.AlignMode.None));
-			//?properties.Add(new Text.Properties.TabsProperty(t1, t2));
-			properties.Add(t1);
+			//?aproperties.Add(new Text.Properties.TabsProperty(t1, t2));
 			style = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
 			this.textContext.DefaultStyle = style;
 
@@ -1278,6 +1277,42 @@ namespace Epsitec.Common.Document
 			}
 
 			return "";
+		}
+
+		// Cherche un tag unique pour le prochain tabulateur interactif à créer.
+		public string SearchTabNextTag()
+		{
+			int max = -1;
+			Text.TabList list = this.textContext.TabList;
+			System.Collections.Hashtable table = list.Hashtable;
+			foreach ( System.Collections.DictionaryEntry dict in table )
+			{
+				string tag = (string) dict.Key;
+				int id = this.GetTabId(tag);
+				if ( max < id )  max = id;
+			}
+			return this.GetTabTag(max+1);
+		}
+
+		// Retourne l'identificateur d'un tabulateur interactif d'après son tag.
+		protected int GetTabId(string tag)
+		{
+			if ( !tag.StartsWith("Ti") )  return -1;
+
+			try
+			{
+				return int.Parse(tag.Substring(2));
+			}
+			catch
+			{
+				return -1;
+			}
+		}
+
+		// Retourne le tag d'un tabulateur interactif.
+		public string GetTabTag(int id)
+		{
+			return string.Format("Ti{0}", id);
 		}
 		#endregion
 

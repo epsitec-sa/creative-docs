@@ -81,6 +81,14 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public System.Collections.Hashtable Hashtable
+		{
+			get
+			{
+				return this.tab_hash;
+			}
+		}
+		
 		public Properties.TabProperty GetTabProperty(string tag)
 		{
 			if (this.tab_hash.Contains (tag))

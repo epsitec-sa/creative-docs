@@ -98,7 +98,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			set
 			{
-				if ( !HRuler.TabCompare(this.tabs, value) )
+				if ( this.isDragging || !HRuler.TabCompare(this.tabs, value) )
 				{
 					this.tabs = value;
 					this.Invalidate();
@@ -319,6 +319,8 @@ namespace Epsitec.Common.Document.Widgets
 
 			for ( int i=0 ; i<this.tabs.Length ; i++ )
 			{
+				if ( i == this.draggingTabToDelete )  continue;
+
 				Rectangle rect = this.Client.Bounds;
 
 				double posx = this.GetHandleHorizontalPos(HRuler.HandleFirstTab+i);
@@ -343,6 +345,34 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Dessine le "bouton" pour choisir le type de tabulateur.
+		protected void PaintTabChoice(Graphics graphics)
+		{
+			IAdorner adorner = Common.Widgets.Adorner.Factory.Active;
+
+			Rectangle rect = this.Client.Bounds;
+			rect.Width = rect.Height;
+
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(this.ColorBackgroundEdited);
+
+			rect.Deflate(0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(adorner.ColorTextFieldBorder(this.IsEnabled));
+
+			rect.Inflate(1);
+			Common.Widgets.GlyphShape glyph = Common.Widgets.GlyphShape.TabRight;
+			switch ( this.tabToCreate )
+			{
+				case Drawing.TextTabType.Right:    glyph = Common.Widgets.GlyphShape.TabRight;    break;
+				case Drawing.TextTabType.Left:     glyph = Common.Widgets.GlyphShape.TabLeft;     break;
+				case Drawing.TextTabType.Center:   glyph = Common.Widgets.GlyphShape.TabCenter;   break;
+				case Drawing.TextTabType.Decimal:  glyph = Common.Widgets.GlyphShape.TabDecimal;  break;
+				case Drawing.TextTabType.Indent:   glyph = Common.Widgets.GlyphShape.TabIndent;   break;
+			}
+			adorner.PaintGlyph(graphics, rect, Common.Widgets.WidgetState.Enabled, glyph, Common.Widgets.PaintTextStyle.Button);
+		}
+		
 		// Dessine toute la règle.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -370,6 +400,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.PaintMarginLeftBody (graphics, this.HiliteHandle == HRuler.HandleLeftBody  || this.HiliteHandle == HRuler.HandleFirstBody);
 				this.PaintMarginRight    (graphics, this.HiliteHandle == HRuler.HandleRight);
 				this.PaintTabs(graphics);
+				this.PaintTabChoice(graphics);
 			}
 
 			rect.Deflate(0.5);
@@ -399,15 +430,47 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		// Début du drag d'une poignée.
-		protected override void DraggingStart(int handle, Point pos)
+		protected override void DraggingStart(ref int handle, Point pos)
 		{
-			double initial = this.GetHandleHorizontalPos(handle);
-			this.draggingOffset = initial - pos.X;
+			if ( handle == -1 )
+			{
+				Rectangle rect = this.Client.Bounds;
+				rect.Width = rect.Height;
+				if ( rect.Contains(pos) )  // change le type de tabulateur à insérer ?
+				{
+					switch ( this.tabToCreate )
+					{
+						case Drawing.TextTabType.Right:    this.tabToCreate = Drawing.TextTabType.Center;   break;
+						case Drawing.TextTabType.Center:   this.tabToCreate = Drawing.TextTabType.Left;     break;
+						case Drawing.TextTabType.Left:     this.tabToCreate = Drawing.TextTabType.Decimal;  break;
+						case Drawing.TextTabType.Decimal:  this.tabToCreate = Drawing.TextTabType.Indent;   break;
+						case Drawing.TextTabType.Indent:   this.tabToCreate = Drawing.TextTabType.Right;    break;
+					}
+					this.Invalidate(rect);
+				}
+				else
+				{
+					Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
+					double tabPos = this.ScreenToDocument(pos.X);
+					tabPos = tabPos - bbox.Left;
+					handle = this.editObject.NewTextTab(tabPos, this.tabToCreate);
+					handle += HRuler.HandleFirstTab;
+					this.draggingOffset = 0.0;
+				}
+			}
+			else
+			{
+				double initial = this.GetHandleHorizontalPos(handle);
+				this.draggingOffset = initial - pos.X;
+			}
+			this.draggingTabToDelete = -1;
 		}
 
 		// Déplace une poignée.
 		protected override void DraggingMove(int handle, Point pos)
 		{
+			if ( handle == -1 )  return;
+
 			pos.X += this.draggingOffset;
 
 			if ( handle == HRuler.HandleLeftFirst )  // left first ?
@@ -419,17 +482,41 @@ namespace Epsitec.Common.Document.Widgets
 				}
 			}
 
+			if ( handle >= HRuler.HandleFirstTab )  // déplacement d'un tab ?
+			{
+				Rectangle rect = this.Client.Bounds;
+				if ( pos.Y < rect.Bottom || pos.Y > rect.Top )  // hors de la règle ?
+				{
+					this.draggingTabToDelete = handle-HRuler.HandleFirstTab;
+				}
+				else
+				{
+					this.draggingTabToDelete = -1;
+				}
+			}
+
 			this.SetHandleHorizontalPos(handle, pos);
 
 			pos.X = this.GetHandleHorizontalPos(handle);
 			pos = this.document.Modifier.ActiveViewer.ScreenToInternal(pos);
-			this.document.Modifier.ActiveViewer.MarkerVertical = pos.X;
+			this.document.Modifier.ActiveViewer.MarkerVertical = (this.draggingTabToDelete == -1) ? pos.X : double.NaN;
 		}
 
 		// Fin du drag d'une poignée.
 		protected override void DraggingEnd(int handle, Point pos)
 		{
+			if ( handle == -1 )  return;
+
 			this.document.Modifier.ActiveViewer.MarkerVertical = double.NaN;
+
+			if ( handle >= HRuler.HandleFirstTab )  // fin du déplacement d'un tab ?
+			{
+				Rectangle rect = this.Client.Bounds;
+				if ( pos.Y < rect.Bottom || pos.Y > rect.Top )  // hors de la règle ?
+				{
+					this.editObject.DeleteTextTab(handle-HRuler.HandleFirstTab);
+				}
+			}
 		}
 
 		protected double GetHandleHorizontalPos(int handle)
@@ -573,6 +660,8 @@ namespace Epsitec.Common.Document.Widgets
 		protected double					marginRight = 0.0;
 		protected Tab[]						tabs = null;
 
+		protected Drawing.TextTabType		tabToCreate = Drawing.TextTabType.Right;
 		protected double					draggingOffset = 0.0;
+		protected int						draggingTabToDelete = -1;
 	}
 }

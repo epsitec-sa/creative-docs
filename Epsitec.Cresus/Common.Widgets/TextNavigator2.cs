@@ -627,6 +627,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool Insert(Text.Properties.TabProperty tab_property)
+		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			if (this.text_navigator.HasSelection)
+			{
+				this.text_navigator.Delete ();
+			}
+			
+			this.text_navigator.Insert (Text.Unicode.Code.HorizontalTab, tab_property);
+			
+			return true;
+		}
+		
 		public bool Insert(Text.Properties.BreakProperty break_property)
 		{
 			if (this.text_navigator.IsSelectionActive)

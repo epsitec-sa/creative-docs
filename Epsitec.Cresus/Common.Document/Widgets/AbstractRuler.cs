@@ -219,15 +219,11 @@ namespace Epsitec.Common.Document.Widgets
 				case MessageType.MouseDown:
 					if ( this.edited )
 					{
-						int handle = this.DraggingDetect(pos);
-						if ( handle != -1 )
-						{
-							this.isDragging = true;
-							this.draggingHandle = handle;
-							this.DraggingStart(this.draggingHandle, pos);
-							message.Consumer = this;
-							return;
-						}
+						this.isDragging = true;
+						this.draggingHandle = this.DraggingDetect(pos);
+						this.DraggingStart(ref this.draggingHandle, pos);
+						message.Consumer = this;
+						return;
 					}
 					else if ( this.document != null )
 					{
@@ -304,7 +300,7 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		// Début du drag d'une poignée.
-		protected virtual void DraggingStart(int handle, Point pos)
+		protected virtual void DraggingStart(ref int handle, Point pos)
 		{
 		}
 
@@ -334,7 +330,7 @@ namespace Epsitec.Common.Document.Widgets
 				Color color = adorner.ColorWindow;
 				if ( this.edited )
 				{
-					double factor = 0.5+0.3*color.GetBrightness();
+					double factor = 0.3+0.6*color.GetBrightness();
 					color.R *= factor;  // couleur plus foncée
 					color.G *= factor;
 					color.B *= factor;
