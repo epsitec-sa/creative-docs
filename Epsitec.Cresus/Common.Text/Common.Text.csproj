@@ -259,6 +259,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "StyleMap.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "StyleVersion.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -34,6 +34,19 @@ namespace Epsitec.Common.Text
 				return Text.StyleVersion.Default;
 			}
 		}
+
+		public StyleMap							StyleMap
+		{
+			get
+			{
+				if (this.style_map == null)
+				{
+					this.style_map = new StyleMap (this);
+				}
+				
+				return this.style_map;
+			}
+		}
 		
 		
 		public TextStyle						this[string name, TextStyleClass text_style_class]
@@ -268,5 +281,6 @@ namespace Epsitec.Common.Text
 		private Internal.StyleTable				internal_styles;
 		private System.Collections.ArrayList	text_style_list;
 		private System.Collections.Hashtable	text_style_hash;
+		private StyleMap						style_map;
 	}
 }
