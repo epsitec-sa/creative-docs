@@ -965,6 +965,11 @@ namespace Epsitec.App.DocumentEditor
 			bookStyles.Name = "Styles";
 			di.bookPanels.Items.Add(bookStyles);
 
+			TabPage bookTextStyles = new TabPage();
+			bookTextStyles.TabTitle = Res.Strings.TabPage.TextStyles;
+			bookTextStyles.Name = "TextStyles";
+			di.bookPanels.Items.Add(bookTextStyles);
+
 #if DEBUG
 			TabPage bookAutos = new TabPage();
 			bookAutos.TabTitle = Res.Strings.TabPage.Autos;
@@ -1002,6 +1007,12 @@ namespace Epsitec.App.DocumentEditor
 			di.containerStyles.Dock = DockStyle.Fill;
 			di.containerStyles.DockMargins = new Margins(4, 4, 10, 4);
 			document.Modifier.AttachContainer(di.containerStyles);
+
+			di.containerTextStyles = new Containers.TextStyles(document);
+			di.containerTextStyles.SetParent(bookTextStyles);
+			di.containerTextStyles.Dock = DockStyle.Fill;
+			di.containerTextStyles.DockMargins = new Margins(4, 4, 10, 4);
+			document.Modifier.AttachContainer(di.containerTextStyles);
 
 #if DEBUG
 			di.containerAutos = new Containers.Autos(document);
@@ -4422,7 +4433,18 @@ namespace Epsitec.App.DocumentEditor
 
 			if ( viewer.DrawingContext.IsActive )
 			{
-				box.Inflate(viewer.DrawingContext.HandleRedrawSize/2);
+				DocumentInfo di = this.CurrentDocumentInfo;
+
+				double inflate;
+				if ( di.hRuler != null && di.hRuler.Edited )  // édition en cours ?
+				{
+					inflate = Objects.Abstract.EditFlowHandleSize/viewer.DrawingContext.ScaleX;
+				}
+				else
+				{
+					inflate = viewer.DrawingContext.HandleRedrawSize/2;
+				}
+				box.Inflate(inflate);
 			}
 
 			box = viewer.InternalToScreen(box);
@@ -5395,6 +5417,7 @@ namespace Epsitec.App.DocumentEditor
 			public TabBook						bookPanels;
 			public Containers.Principal			containerPrincipal;
 			public Containers.Styles			containerStyles;
+			public Containers.TextStyles		containerTextStyles;
 			public Containers.Autos				containerAutos;
 			public Containers.Pages				containerPages;
 			public Containers.Layers			containerLayers;
@@ -5412,6 +5435,7 @@ namespace Epsitec.App.DocumentEditor
 				if ( this.bookPanels != null )  this.bookPanels.Dispose();
 				if ( this.containerPrincipal != null )  this.containerPrincipal.Dispose();
 				if ( this.containerStyles != null )  this.containerStyles.Dispose();
+				if ( this.containerTextStyles != null )  this.containerTextStyles.Dispose();
 				if ( this.containerAutos != null )  this.containerAutos.Dispose();
 				if ( this.containerPages != null )  this.containerPages.Dispose();
 				if ( this.containerLayers != null )  this.containerLayers.Dispose();

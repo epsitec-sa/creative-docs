@@ -21,38 +21,62 @@ namespace Epsitec.Common.Document.Objects
 
 		protected void Initialise()
 		{
-			if ( this.document.Modifier == null )
-			{
-				this.textStory = new Text.TextStory(this.document.TextContext);
-			}
-			else
-			{
-				this.textStory = new Text.TextStory(this.document.Modifier.OpletQueue, this.document.TextContext);
-			}
-
-			this.textFitter    = new Text.TextFitter(this.textStory);
-			this.textNavigator = new Text.TextNavigator(this.textFitter);
-			this.textFrame     = new Text.SimpleTextFrame();
+			this.textFrame = new Text.SimpleTextFrame();
 			
 			this.metaNavigator = new TextNavigator2();
-			this.metaNavigator.TextNavigator = this.textNavigator;
-			this.metaNavigator.TextFrame     = this.textFrame;
-			
-			this.textFitter.FrameList.Add(this.textFrame);
-			
-			this.textStory.TextContext.IsDegradedLayoutEnabled = true;
-			
+			this.metaNavigator.TextFrame = this.textFrame;
+
+			this.NewTextFlow();
+			this.textFlow.TextStory.TextContext.IsDegradedLayoutEnabled = true;
+
 			this.metaNavigator.Insert(Text.Unicode.Code.EndOfText);
 			this.metaNavigator.TextNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 0);
 
-			this.textFitter.ClearAllMarks();
-			this.textFitter.GenerateAllMarks();
-			
 			this.metaNavigator.TextChanged += new Support.EventHandler(this.HandleTextChanged);
 			this.metaNavigator.CursorMoved += new Support.EventHandler(this.HandleCursorMoved);
 			this.metaNavigator.ActiveStyleChanged += new Support.EventHandler(this.HandleStyleChanged);
-			
+
 			this.markerSelected = this.document.TextContext.Markers.Selected;
+		}
+
+		// Crée un nouveau TextFlow pour l'objet.
+		public void NewTextFlow()
+		{
+			TextFlow flow = new TextFlow(this.document);
+			this.document.TextFlows.Add(flow);
+			this.TextFlow = flow;
+			flow.Add(this, null, true);
+		}
+
+		// TextFlow associé à l'objet.
+		public TextFlow TextFlow
+		{
+			get
+			{
+				return this.textFlow;
+			}
+
+			set
+			{
+				if ( this.textFlow != value )
+				{
+					this.InsertOpletTextFlow();
+					this.textFlow = value;
+					this.metaNavigator.TextNavigator = this.textFlow.TextNavigator;
+
+					this.UpdateTextLayout();
+					this.NotifyAreaFlow();
+				}
+			}
+		}
+
+		// Donne le TextFrame associé à l'objet.
+		public Text.ITextFrame TextFrame
+		{
+			get
+			{
+				return this.textFrame;
+			}
 		}
 
 		protected override bool ExistingProperty(Properties.Type type)
@@ -73,6 +97,16 @@ namespace Epsitec.Common.Document.Objects
 
 		public override void Dispose()
 		{
+			if ( this.textFlow != null )
+			{
+				this.textFlow.Remove(this);  // objet seul dans son propre flux
+
+				if ( this.textFlow.Count == 1 )  // est-on le dernier et seul utilisateur ?
+				{
+					this.document.TextFlows.Remove(this.textFlow);
+				}
+			}
+
 			base.Dispose();
 		}
 
@@ -85,9 +119,16 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Détecte si la souris est sur l'objet pour l'éditer.
-		public override bool DetectEdit(Point pos)
+		public override DetectEditType DetectEdit(Point pos)
 		{
-			return this.Detect(pos);
+			if ( this.edited )
+			{
+				DetectEditType handle = this.DetectFlowHandle(pos);
+				if ( handle != DetectEditType.Out )  return handle;
+			}
+
+			if ( this.Detect(pos) )  return DetectEditType.Body;
+			return DetectEditType.Out;
 		}
 
 
@@ -127,7 +168,7 @@ namespace Epsitec.Common.Document.Objects
 				return;
 			}
 
-			this.document.Notifier.NotifyArea(this.BoundingBox);
+			this.NotifyAreaFlow();
 			drawingContext.SnapPos(ref pos);
 
 			if ( Geometry.IsRectangular(this.Handle(0).Position, this.Handle(1).Position, this.Handle(2).Position, this.Handle(3).Position) )
@@ -160,11 +201,20 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(rank).Position = pos;
 			}
 
-			this.UpdateTextLayout();
+			this.UpdateGeometry();
 			this.HandlePropertiesUpdate();
 			this.SetDirtyBbox();
 			this.TextInfoModifRect();
-			this.document.Notifier.NotifyArea(this.BoundingBox);
+			this.NotifyAreaFlow();
+		}
+
+		// Déplace globalement l'objet.
+		public override void MoveGlobalProcess(Selector selector)
+		{
+			base.MoveGlobalProcess(selector);
+			this.UpdateGeometry();
+			this.HandlePropertiesUpdate();
+			this.NotifyAreaFlow();
 		}
 
 		// Début de la création d'un objet.
@@ -184,7 +234,7 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
-			this.UpdateTextLayout();
+			this.UpdateGeometry();
 			this.SetDirtyBbox();
 			this.TextInfoModifRect();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -272,13 +322,20 @@ namespace Epsitec.Common.Document.Objects
 		{
 			base.CloneObject(src);
 
-#if false
-			TextBox2 obj = src as TextBox2;
-			this.textLayout.Text = obj.textLayout.Text;
-			obj.textLayout.Style.TabCopyTo(this.textLayout.Style);
-			obj.textNavigator.Context.CopyTo(this.textNavigator.Context);
-			this.textLayout.Simplify(this.textNavigator.Context);
-#endif
+			TextBox2 srcText = src as TextBox2;
+			System.Diagnostics.Debug.Assert(srcText != null);
+
+			if ( srcText.textFlow.Count == 1 ||  // objet solitaire ?
+				 srcText.document != this.document )
+			{
+				this.textFlow.MergeWith(srcText.textFlow);  // copie le texte
+			}
+			else	// objet d'une chaîne ?
+			{
+				srcText.textFlow.Add(this, srcText, true);  // met dans la chaîne
+			}
+
+			this.UpdateGeometry();
 		}
 
 
@@ -337,7 +394,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			Text.ITextFrame frame;
 			double cx, cy, ascender, descender, angle;
-			this.textNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
+			this.textFlow.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
 
 			double bestDistance = 1000000;
 			Text.Properties.TabProperty bestTab = null;
@@ -364,6 +421,40 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
+		// Détecte la "poignée" du flux de l'objet.
+		protected DetectEditType DetectFlowHandle(Point pos)
+		{
+			DrawingContext drawingContext = this.document.Modifier.ActiveViewer.DrawingContext;
+
+			Point prevP1 = new Point();
+			Point prevP2 = new Point();
+			Point prevP3 = new Point();
+			Point prevP4 = new Point();
+			this.CornersFlowPrev(ref prevP1, ref prevP2, ref prevP3, ref prevP4, drawingContext);
+
+			InsideSurface surf = new InsideSurface(pos, 4);
+			surf.AddLine(prevP1, prevP2);
+			surf.AddLine(prevP2, prevP4);
+			surf.AddLine(prevP4, prevP3);
+			surf.AddLine(prevP3, prevP1);
+			if ( surf.IsInside() )  return DetectEditType.HandleFlowPrev;
+
+			Point nextP1 = new Point();
+			Point nextP2 = new Point();
+			Point nextP3 = new Point();
+			Point nextP4 = new Point();
+			this.CornersFlowNext(ref nextP1, ref nextP2, ref nextP3, ref nextP4, drawingContext);
+
+			surf = new InsideSurface(pos, 4);
+			surf.AddLine(nextP1, nextP2);
+			surf.AddLine(nextP2, nextP4);
+			surf.AddLine(nextP4, nextP3);
+			surf.AddLine(nextP3, nextP1);
+			if ( surf.IsInside() )  return DetectEditType.HandleFlowNext;
+
+			return DetectEditType.Out;
+		}
+
 		#region CopyPaste
 		public override bool EditCut()
 		{
@@ -374,7 +465,7 @@ namespace Epsitec.Common.Document.Objects
 		
 		public override bool EditCopy()
 		{
-			string[] texts = this.textNavigator.GetSelectedTexts();
+			string[] texts = this.textFlow.TextNavigator.GetSelectedTexts();
 			if ( texts == null || texts.Length == 0 )  return false;
 
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
@@ -394,22 +485,22 @@ namespace Epsitec.Common.Document.Objects
 		public override bool EditPaste()
 		{
 			Support.Clipboard.ReadData data = Support.Clipboard.GetData();
-			string html = data.ReadTextLayout();
-			if ( html == null )
+			string text = data.ReadTextLayout();
+			if ( text == null )
 			{
-				html = data.ReadHtmlFragment();
-				if ( html != null )
+				text = data.ReadHtmlFragment();
+				if ( text != null )
 				{
-					html = Support.Clipboard.ConvertHtmlToSimpleXml(html);
+					text = Support.Clipboard.ConvertHtmlToSimpleXml(text);
 				}
 				else
 				{
-					html = TextLayout.ConvertToTaggedText(data.ReadText());
+					text = data.ReadText();
 				}
 			}
-			if ( html == null )  return false;
-			this.metaNavigator.Insert(html);
-			this.document.Notifier.NotifyArea(this.BoundingBox);
+			if ( text == null )  return false;
+			this.metaNavigator.Insert(text);
+			this.NotifyAreaFlow();
 			return true;
 		}
 
@@ -424,7 +515,7 @@ namespace Epsitec.Common.Document.Objects
 		public override bool EditInsertGlyph(string text)
 		{
 			this.metaNavigator.Insert(text);
-			this.document.Notifier.NotifyArea(this.BoundingBox);
+			this.NotifyAreaFlow();
 			return true;
 		}
 
@@ -760,18 +851,18 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( accumulated )
 			{
-				return this.textNavigator.AccumulatedTextProperties;
+				return this.textFlow.TextNavigator.AccumulatedTextProperties;
 			}
 			else
 			{
-				return this.textNavigator.TextProperties;
+				return this.textFlow.TextNavigator.TextProperties;
 			}
 		}
 
 		// Indique l'existance d'un style.
 		protected bool IsExistingStyle(string name)
 		{
-			Text.TextStyle[] styles = this.textNavigator.TextStyles;
+			Text.TextStyle[] styles = this.textFlow.TextNavigator.TextStyles;
 			foreach ( Text.TextStyle style in styles )
 			{
 				if ( style.Name == name )  return true;
@@ -870,7 +961,12 @@ namespace Epsitec.Common.Document.Objects
 		{
 			Path path = this.PathBuild();
 
-			Shape[] shapes = new Shape[4];
+			bool flowHandles = this.edited && drawingContext != null;
+
+			int totalShapes = 4;
+			if ( flowHandles )  totalShapes ++;
+
+			Shape[] shapes = new Shape[totalShapes];
 			int i = 0;
 			
 			// Forme de la surface.
@@ -889,6 +985,16 @@ namespace Epsitec.Common.Document.Objects
 			shapes[i] = new Shape();
 			shapes[i].SetTextObject(this);
 			i ++;
+
+			if ( flowHandles )
+			{
+				shapes[i] = new Shape();
+				shapes[i].Path = this.PathFlowHandles(port, drawingContext);
+				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].Aspect = Aspect.Support;
+				shapes[i].IsVisible = true;
+				i ++;
+			}
 
 			// Rectangle complet pour bbox et détection.
 			shapes[i] = new Shape();
@@ -928,6 +1034,115 @@ namespace Epsitec.Common.Document.Objects
 			path.LineTo(p4);
 			path.Close();
 			return path;
+		}
+
+		// Crée le chemin des "poignées" du flux de l'objet.
+		protected Path PathFlowHandles(IPaintPort port, DrawingContext drawingContext)
+		{
+			Point prevP1 = new Point();
+			Point prevP2 = new Point();
+			Point prevP3 = new Point();
+			Point prevP4 = new Point();
+			this.CornersFlowPrev(ref prevP1, ref prevP2, ref prevP3, ref prevP4, drawingContext);
+
+			Point nextP1 = new Point();
+			Point nextP2 = new Point();
+			Point nextP3 = new Point();
+			Point nextP4 = new Point();
+			this.CornersFlowNext(ref nextP1, ref nextP2, ref nextP3, ref nextP4, drawingContext);
+
+			int count = this.textFlow.Count;
+			int rank = this.textFlow.Rank(this);
+
+			Path path = new Path();
+			this.PathFlowIcon(path, prevP1, prevP2, prevP3, prevP4, port, drawingContext, rank == 0);
+			this.PathFlowIcon(path, nextP1, nextP2, nextP3, nextP4, port, drawingContext, rank == count-1);
+			return path;
+		}
+
+		// Crée le chemin d'une "poignée" du flux de l'objet.
+		protected void PathFlowIcon(Path path, Point p1, Point p2, Point p3, Point p4, IPaintPort port, DrawingContext drawingContext, bool plus)
+		{
+			this.Align(ref p1, port);
+			this.Align(ref p2, port);
+			this.Align(ref p3, port);
+			this.Align(ref p4, port);
+
+			double adjust = 0.5/drawingContext.ScaleX;
+			p1.X += adjust;  p1.Y += adjust;
+			p2.X -= adjust;  p2.Y += adjust;
+			p3.X += adjust;  p3.Y -= adjust;
+			p4.X -= adjust;  p4.Y -= adjust;
+
+			path.MoveTo(p1);
+			path.LineTo(p2);
+			path.LineTo(p4);
+			path.LineTo(p3);
+			path.Close();
+
+			if ( plus )
+			{
+				path.MoveTo(this.PointFlowIcon(p1, p2, p3, p4, 0.25, 0.50));
+				path.LineTo(this.PointFlowIcon(p1, p2, p3, p4, 0.75, 0.50));
+				path.MoveTo(this.PointFlowIcon(p1, p2, p3, p4, 0.50, 0.25));
+				path.LineTo(this.PointFlowIcon(p1, p2, p3, p4, 0.50, 0.75));
+			}
+			else
+			{
+				path.MoveTo(this.PointFlowIcon(p1, p2, p3, p4, 0.25, 0.65));
+				path.LineTo(this.PointFlowIcon(p1, p2, p3, p4, 0.50, 0.35));
+				path.LineTo(this.PointFlowIcon(p1, p2, p3, p4, 0.75, 0.65));
+			}
+		}
+
+		protected Point PointFlowIcon(Point p1, Point p2, Point p3, Point p4, double dx, double dy)
+		{
+			Point x1 = Point.Scale(p1, p2, dx);
+			Point x2 = Point.Scale(p3, p4, dx);
+			return Point.Scale(x1, x2, dy);
+		}
+
+		// Calcules les 4 coins de la poignée "pavé précédent".
+		protected void CornersFlowPrev(ref Point p1, ref Point p2, ref Point p3, ref Point p4, DrawingContext drawingContext)
+		{
+			Point c1 = new Point();
+			Point c2 = new Point();
+			Point c3 = new Point();
+			Point c4 = new Point();
+			this.Corners(ref c1, ref c2, ref c3, ref c4);
+
+			double d = Abstract.EditFlowHandleSize/drawingContext.ScaleX;
+			p1 = c3;
+			p2 = Point.Move(c3, c4,  d);
+			p3 = Point.Move(c3, c1, -d);
+			p4 = p3 + (p2-p1);
+		}
+
+		// Calcules les 4 coins de la poignée "pavé suivant".
+		protected void CornersFlowNext(ref Point p1, ref Point p2, ref Point p3, ref Point p4, DrawingContext drawingContext)
+		{
+			Point c1 = new Point();
+			Point c2 = new Point();
+			Point c3 = new Point();
+			Point c4 = new Point();
+			this.Corners(ref c1, ref c2, ref c3, ref c4);
+
+			double d = Abstract.EditFlowHandleSize/drawingContext.ScaleX;
+			p4 = c2;
+			p3 = Point.Move(c2, c1,  d);
+			p2 = Point.Move(c2, c4, -d);
+			p1 = p2 + (p3-p4);
+		}
+
+		protected void Align(ref Point p, IPaintPort port)
+		{
+			double x = p.X;
+			double y = p.Y;
+			
+			port.Align(ref x, ref y);
+			
+			p.X = x;
+			p.Y = y;
 		}
 
 		// Calcules les 4 coins.
@@ -987,22 +1202,17 @@ namespace Epsitec.Common.Document.Objects
 #endif
 		}
 
-		// Initialise.
-		protected bool InitTextFrame(ref Point p1, ref Point p2, ref Point p3, ref Point p4,
-									 DrawingContext drawingContext)
+		// Met à jour le TextFrame en fonction des dimensions du pavé.
+		protected void UpdateTextFrame()
 		{
+			Point p1 = new Point();
+			Point p2 = new Point();
+			Point p3 = new Point();
+			Point p4 = new Point();
 			this.Corners(ref p1, ref p2, ref p3, ref p4);
-#if false
-			if ( !this.PropertyTextJustif.DeflateBox(ref p1, ref p2, ref p3, ref p4) )
-			{
-				return false;
-			}
-#endif
 
-			this.textFrame.Width  = Point.Distance(p1,p2);
-			this.textFrame.Height = Point.Distance(p1,p3);
-
-			return true;
+			this.textFrame.Width  = Point.Distance(p1, p2);
+			this.textFrame.Height = Point.Distance(p1, p3);
 		}
 
 		// Dessine le texte du pavé.
@@ -1012,7 +1222,7 @@ namespace Epsitec.Common.Document.Objects
 			Point p2 = new Point();
 			Point p3 = new Point();
 			Point p4 = new Point();
-			if ( !this.InitTextFrame(ref p1, ref p2, ref p3, ref p4, drawingContext) )  return;
+			this.Corners(ref p1, ref p2, ref p3, ref p4);
 
 			Transform ot = port.Transform;
 
@@ -1034,15 +1244,14 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.hasSelection = false;
 
-				this.textStory.TextContext.ShowControlCharacters = this.edited;
-				this.textFitter.RenderTextFrame(this.textFrame, this);
+				this.textFlow.TextStory.TextContext.ShowControlCharacters = this.edited;
+				this.textFlow.TextFitter.RenderTextFrame(this.textFrame, this);
 
 				if ( this.edited && !this.hasSelection )
 				{
 					Text.ITextFrame frame;
 					double cx, cy, ascender, descender;
-				
-					this.textNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
+					this.textFlow.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
 				
 					if ( frame == this.textFrame )
 					{
@@ -1283,14 +1492,6 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
-		// Met à jour le texte suite à une modification du conteneur.
-		protected void UpdateTextLayout()
-		{
-			this.textFitter.ClearAllMarks();
-			this.textFitter.GenerateAllMarks();
-		}
-
-
 		// Retourne le chemin géométrique de l'objet pour les constructions
 		// magnétiques.
 		public override Path GetMagnetPath()
@@ -1322,38 +1523,136 @@ namespace Epsitec.Common.Document.Objects
 
 		private void HandleTextChanged(object sender)
 		{
+			if ( !this.edited )  return;
 			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
-			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+			this.NotifyAreaFlow();
 		}
 		
 		private void HandleCursorMoved(object sender)
 		{
+			if ( !this.edited )  return;
 			this.UpdateTextRulers();
 			this.document.Notifier.NotifyTextChanged();
-			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+			this.NotifyAreaFlow();
+			this.ChangeObjectEdited();
 		}
 
 		private void HandleStyleChanged(object sender)
 		{
+			if ( !this.edited )  return;
 			this.document.Notifier.NotifyTextChanged();
-			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+			this.NotifyAreaFlow();
 		}
 
 		private void HandleTabChanged(object sender)
 		{
+			if ( !this.edited )  return;
 			this.UpdateTextRulers();
 			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
-			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
+			this.NotifyAreaFlow();
 		}
+
+		// Met à jour après un changement de géométrie de l'objet.
+		public void UpdateGeometry()
+		{
+			this.UpdateTextFrame();
+			this.UpdateTextLayout();
+		}
+
+		// Met à jour le texte suite à une modification du conteneur.
+		public void UpdateTextLayout()
+		{
+			this.textFlow.TextFitter.ClearAllMarks();
+			this.textFlow.TextFitter.GenerateAllMarks();
+		}
+
+		// Notifie "à repeindre" toute la chaîne des pavés.
+		public void NotifyAreaFlow()
+		{
+			UndoableList chain = this.textFlow.Chain;
+			foreach ( Objects.Abstract obj in chain )
+			{
+				this.document.Notifier.NotifyArea(obj.BoundingBox);
+			}
+		}
+
+		// Change éventuellement le pavé édité en fonction de la position du curseur.
+		protected void ChangeObjectEdited()
+		{
+			Text.ITextFrame frame;
+			double cx, cy, ascender, descender, angle;
+			this.textFlow.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
+
+			if ( frame != this.textFrame )
+			{
+				foreach ( TextBox2 obj in this.textFlow.Chain )
+				{
+					if ( frame == obj.textFrame )
+					{
+						this.document.Modifier.EditObject(obj);
+						return;
+					}
+				}
+			}
+		}
+
+		
+		#region OpletTextFlow
+		// Ajoute un oplet pour mémoriser le flux.
+		protected void InsertOpletTextFlow()
+		{
+			if ( this.textFlow == null )  return;  // création de l'objet ?
+			if ( !this.document.Modifier.OpletQueueEnable )  return;
+			OpletTextFlow oplet = new OpletTextFlow(this);
+			this.document.Modifier.OpletQueue.Insert(oplet);
+		}
+
+		// Mémorise le flux de l'objet.
+		protected class OpletTextFlow : AbstractOplet
+		{
+			public OpletTextFlow(Objects.TextBox2 host)
+			{
+				System.Diagnostics.Debug.Assert(host.textFlow != null);
+				this.host = host;
+				this.textFlow = host.textFlow;
+			}
+
+			protected void Swap()
+			{
+				System.Diagnostics.Debug.Assert(host.textFlow != null);
+				System.Diagnostics.Debug.Assert(this.textFlow != null);
+
+				TextFlow temp = host.textFlow;
+				host.textFlow = this.textFlow;
+				this.textFlow = temp;
+
+				host.metaNavigator.TextNavigator = host.textFlow.TextNavigator;
+				host.UpdateTextLayout();
+			}
+
+			public override IOplet Undo()
+			{
+				this.Swap();
+				return this;
+			}
+
+			public override IOplet Redo()
+			{
+				this.Swap();
+				return this;
+			}
+
+			protected Objects.TextBox2				host;
+			protected TextFlow						textFlow;
+		}
+		#endregion
 
 		
 		protected bool							hasSelection;
 		protected ulong							markerSelected;
-		protected Text.TextStory				textStory;
-		protected Text.TextFitter				textFitter;
-		protected Text.TextNavigator			textNavigator;
+		protected TextFlow						textFlow;
 		protected Text.SimpleTextFrame			textFrame;
 		protected TextNavigator2				metaNavigator;
 		protected Graphics						graphics;

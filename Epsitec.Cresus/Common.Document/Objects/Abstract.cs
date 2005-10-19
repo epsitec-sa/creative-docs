@@ -5,6 +5,14 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
+	public enum DetectEditType
+	{
+		Out,
+		Body,
+		HandleFlowPrev,
+		HandleFlowNext,
+	}
+
 	/// <summary>
 	/// La classe Objects.Abstract est la classe de base des objets graphiques.
 	/// </summary>
@@ -222,8 +230,8 @@ namespace Epsitec.Common.Document.Objects
 
 				Handle handle = this.handles[this.hotSpotRank] as Handle;
 				if ( handle.Type != HandleType.Bezier    &&
-					 handle.Type != HandleType.Secondary &&
-					 handle.Type != HandleType.Hide      )  break;
+					handle.Type != HandleType.Secondary &&
+					handle.Type != HandleType.Hide      )  break;
 			}
 		}
 		#endregion
@@ -807,8 +815,8 @@ namespace Epsitec.Common.Document.Objects
 
 		// Début du déplacement d'une cellule.
 		public virtual void MoveCellStarting(int rank, Point pos,
-											 bool isShift, bool isCtrl, int downCount,
-											 DrawingContext drawingContext)
+			bool isShift, bool isCtrl, int downCount,
+			DrawingContext drawingContext)
 		{
 		}
 
@@ -1002,8 +1010,8 @@ namespace Epsitec.Common.Document.Objects
 				}
 				
 				if ( shape.Aspect != Aspect.Normal       &&
-					 shape.Aspect != Aspect.Additional   &&
-					 shape.Aspect != Aspect.InvisibleBox )
+					shape.Aspect != Aspect.Additional   &&
+					shape.Aspect != Aspect.InvisibleBox )
 				{
 					continue;
 				}
@@ -1210,7 +1218,12 @@ namespace Epsitec.Common.Document.Objects
 		protected void SetEdited(bool state)
 		{
 			if ( this.edited == state )  return;
+
 			this.edited = state;
+
+			// Pour ne pas cacher une règle qu'on viendrait d'associer à un objet éditable
+			// précédemment (dans la même procédure Viewer.Select par exemple).
+			if ( !this.edited && this.document.HRuler.EditObject != this )  return;
 
 			this.document.HRuler.Edited = this.edited;
 			this.document.VRuler.Edited = this.edited;
@@ -1227,6 +1240,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.UpdateTextRulers();
+
+			// Redessine tout, à cause de "poignées" du flux qui peuvent apparaître
+			// ou disparaître.
+			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 		}
 
 		// Met à jour les règles pour le texte en édition.
@@ -1578,7 +1595,7 @@ namespace Epsitec.Common.Document.Objects
 
 		// Ajoute toutes les propriétés de l'objet dans une liste.
 		public void PropertiesList(System.Collections.ArrayList list,
-								   bool propertiesDetail)
+			bool propertiesDetail)
 		{
 			foreach ( Properties.Abstract property in this.properties )
 			{
@@ -1627,7 +1644,7 @@ namespace Epsitec.Common.Document.Objects
 
 		// Ajoute toutes les propriétés de l'objet dans une liste.
 		public void PropertiesList(System.Collections.ArrayList list,
-								   Objects.Abstract filter)
+			Objects.Abstract filter)
 		{
 			foreach ( Properties.Abstract property in this.properties )
 			{
@@ -2047,7 +2064,7 @@ namespace Epsitec.Common.Document.Objects
 				foreach ( Handle handle in this.handles )
 				{
 					if ( handle.Type != HandleType.Primary  &&
-						 handle.Type != HandleType.Starting )
+						handle.Type != HandleType.Starting )
 					{
 						continue;
 					}
@@ -2067,9 +2084,9 @@ namespace Epsitec.Common.Document.Objects
 
 		
 		// Détecte si la souris est sur l'objet pour l'éditer.
-		public virtual bool DetectEdit(Point pos)
+		public virtual DetectEditType DetectEdit(Point pos)
 		{
-			return false;
+			return DetectEditType.Out;
 		}
 
 
@@ -2196,6 +2213,7 @@ namespace Epsitec.Common.Document.Objects
 			this.totalPropertyHandle = src.totalPropertyHandle;
 			this.mark                = src.mark;
 			this.direction           = src.direction;
+			this.isDirtyPageNumber   = true;
 
 			this.surfaceAnchor.SetDirty();
 			this.SplitProperties();
@@ -2544,6 +2562,39 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		#region PageNumber
+		// Donne le numéro de la page à laquelle appartient l'objet.
+		// Le numéro de page est toujours ici l'index 0..n de la page dans le document,
+		// en comptant les pages maîtres comme les autres.
+		public int PageNumber
+		{
+			get
+			{
+				if ( this.isDirtyPageNumber )
+				{
+					this.document.Modifier.UpdatePageNumbers();
+					//?if ( this.isDirtyPageNumber )  return -1;
+					System.Diagnostics.Debug.Assert(this.isDirtyPageNumber == false);
+				}
+
+				return this.pageNumber;
+			}
+
+			set
+			{
+				this.pageNumber = value;
+				this.isDirtyPageNumber = false;
+			}
+		}
+
+		// Indique que le numéro de page n'est probablement plus valable.
+		public void SetDirtyPageNumber()
+		{
+			this.isDirtyPageNumber = true;
+		}
+		#endregion
+
+
 		#region OpletSelection
 		// Ajoute un oplet pour mémoriser les informations de sélection de l'objet.
 		protected void InsertOpletSelection()
@@ -2671,6 +2722,12 @@ namespace Epsitec.Common.Document.Objects
 				this.list = temp;
 
 				Misc.Swap(ref this.direction, ref host.direction);
+
+				if ( this.host is TextBox2 )
+				{
+					TextBox2 text = this.host as TextBox2;
+					text.UpdateGeometry();
+				}
 
 				this.host.SetDirtyBbox();
 				this.host.document.Notifier.NotifyArea(this.host.BoundingBox);
@@ -2854,6 +2911,13 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
+		// Taille des "poignées" pour choisir le flux du texte.
+		public static double EditFlowHandleSize
+		{
+			get { return 11.0; }
+		}
+
+
 		protected Document						document;
 		protected int							uniqueId;
 		protected bool							isHilite = false;
@@ -2880,5 +2944,8 @@ namespace Epsitec.Common.Document.Objects
 		protected double						initialDirection = 0.0;
 		protected SurfaceAnchor					surfaceAnchor;
 		protected UndoableList					aggregates = null;
+
+		protected bool							isDirtyPageNumber = true;
+		protected int							pageNumber = -1;
 	}
 }

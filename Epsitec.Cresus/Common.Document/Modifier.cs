@@ -94,6 +94,8 @@ namespace Epsitec.Common.Document
 
 			set
 			{
+				this.ActiveViewer.EditFlowReset();
+
 				if ( this.tool != value )
 				{
 					if ( this.ActiveViewer.IsCreating )
@@ -716,7 +718,7 @@ namespace Epsitec.Common.Document
 				context.ZoomPageAndCenter();
 			}
 
-			this.UpdatePageShortNames();
+			this.UpdatePageAfterChanging();
 			this.document.Settings.Reset();
 			this.zoomHistory.Clear();
 			this.document.HotSpot = new Point(0, 0);
@@ -755,7 +757,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Met à jour tous les compteurs.
-		protected void UpdateCounters()
+		public void UpdateCounters()
 		{
 			if ( !this.dirtyCounters )  return;
 
@@ -1153,6 +1155,8 @@ namespace Epsitec.Common.Document
 		// Désélectionne tous les objets.
 		public void DeselectAll()
 		{
+			if ( this.ActiveViewer.EditFlowTerminate() )  return;
+
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.DeselectAll) )
 			{
 				this.ActiveViewer.CreateEnding(false);
@@ -1183,6 +1187,7 @@ namespace Epsitec.Common.Document
 				this.opletCreate = false;
 				this.Tool = "Select";
 
+				this.UpdateCounters();
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract layer = context.RootObject();
 				foreach ( Objects.Abstract obj in this.document.Flat(layer) )
@@ -1211,6 +1216,7 @@ namespace Epsitec.Common.Document
 				this.opletCreate = false;
 				this.Tool = "Select";
 
+				this.UpdateCounters();
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract layer = context.RootObject();
 				foreach ( Objects.Abstract obj in this.document.Flat(layer) )
@@ -1274,6 +1280,7 @@ namespace Epsitec.Common.Document
 				this.opletCreate = false;
 				this.Tool = "Select";
 
+				this.UpdateCounters();
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract layer = context.RootObject();
 				foreach ( Objects.Abstract obj in this.document.Flat(layer) )
@@ -1336,6 +1343,7 @@ namespace Epsitec.Common.Document
 			{
 				using ( this.OpletQueueBeginAction(Res.Strings.Action.Delete) )
 				{
+					this.UpdateCounters();
 					bool bDo = false;
 					do
 					{
@@ -1624,7 +1632,7 @@ namespace Epsitec.Common.Document
 
 		// Duplique d'un document dans un autre.
 		protected void Duplicate(Document srcDoc, Document dstDoc,
-			Point move, bool onlySelected)
+								 Point move, bool onlySelected)
 		{
 			DrawingContext srcContext = srcDoc.Modifier.ActiveViewer.DrawingContext;
 			UndoableList srcList = srcContext.RootObject().Objects;
@@ -1637,9 +1645,11 @@ namespace Epsitec.Common.Document
 
 		// Copie tous les objets d'une liste source dans une liste destination.
 		protected static void Duplicate(Document srcDoc, Document dstDoc,
-			UndoableList srcList, UndoableList dstList,
-			bool deselect, Point move, bool onlySelected)
+										UndoableList srcList, UndoableList dstList,
+										bool deselect, Point move, bool onlySelected)
 		{
+			srcDoc.Modifier.UpdateCounters();
+			dstDoc.Modifier.UpdateCounters();
 			int total = srcList.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
@@ -1709,6 +1719,41 @@ namespace Epsitec.Common.Document
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject == null )  return;
 			editObject.EditUnderlined();
+		}
+
+		// Modifie le flux.
+		public void TextFlowChange(Objects.TextBox2 obj, Objects.TextBox2 parent, bool after)
+		{
+			using ( this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Text.FlowChanged) )
+			{
+				if ( parent == null )
+				{
+					obj.TextFlow.Remove(obj);
+				}
+				else
+				{
+					parent.TextFlow.Add(obj, parent, after);
+					this.EditObject(obj);
+				}
+
+				this.document.Modifier.OpletQueueValidateAction();
+			}
+		}
+
+		// Edite n'importe quel objet, en changeant de page si nécessaire.
+		public void EditObject(Objects.Abstract edit)
+		{
+			this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Edit);
+
+			int page = edit.PageNumber;
+			if ( this.ActiveViewer.DrawingContext.CurrentPage != page )
+			{
+				this.ActiveViewer.DrawingContext.CurrentPage = page;
+			}
+			
+			this.document.Modifier.ActiveViewer.Select(edit, true, false);
+			
+			this.document.Modifier.OpletQueueValidateAction();
 		}
 		#endregion
 
@@ -2610,6 +2655,7 @@ namespace Epsitec.Common.Document
 
 			// Supprime les objets sélectionnés de la liste principale, sans
 			// supprimer les propriétés.
+			this.UpdateCounters();
 			bool bDo = false;
 			do
 			{
@@ -2644,6 +2690,7 @@ namespace Epsitec.Common.Document
 
 		protected void Ungroup()
 		{
+			this.UpdateCounters();
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 			int total = layer.Objects.Count;
@@ -2817,6 +2864,7 @@ namespace Epsitec.Common.Document
 		public void CombineSelection()
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
+			this.UpdateCounters();
 			this.OpletQueueBeginAction(Res.Strings.Action.Combine);
 			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -2876,6 +2924,7 @@ namespace Epsitec.Common.Document
 		public void UncombineSelection()
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
+			this.UpdateCounters();
 			this.OpletQueueBeginAction(Res.Strings.Action.Uncombine);
 			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -2945,6 +2994,7 @@ namespace Epsitec.Common.Document
 		public void ToBezierSelection()
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
+			this.UpdateCounters();
 			this.OpletQueueBeginAction(Res.Strings.Action.ToBezier);
 			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -3003,6 +3053,7 @@ namespace Epsitec.Common.Document
 			double precision = this.ToLinePrecision*0.19+0.01;  // 0.01 .. 0.2
 
 			if ( this.ActiveViewer.IsCreating )  return;
+			this.UpdateCounters();
 			this.OpletQueueBeginAction(Res.Strings.Action.ToPoly);
 			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -3066,6 +3117,7 @@ namespace Epsitec.Common.Document
 		public void ToSimplestSelection()
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
+			this.UpdateCounters();
 			this.OpletQueueBeginAction(Res.Strings.Action.ToSimplest);
 			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -3124,6 +3176,7 @@ namespace Epsitec.Common.Document
 		public void FragmentSelection()
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
+			this.UpdateCounters();
 			this.OpletQueueBeginAction(Res.Strings.Action.Fragment);
 			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -3293,6 +3346,7 @@ namespace Epsitec.Common.Document
 			double precision = this.ToLinePrecision*0.19+0.01;  // 0.01 .. 0.2
 
 			if ( this.ActiveViewer.IsCreating )  return;
+			this.UpdateCounters();
 			this.OpletQueueBeginAction(Res.Strings.Action.BooleanMain);
 			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -3382,6 +3436,7 @@ namespace Epsitec.Common.Document
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.HideSel) )
 			{
+				this.UpdateCounters();
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract layer = context.RootObject();
 				foreach ( Objects.Abstract obj in this.document.Flat(layer) )
@@ -3512,9 +3567,9 @@ namespace Epsitec.Common.Document
 				Objects.Layer layer = new Objects.Layer(this.document, null);
 				page.Objects.Add(layer);
 
-				this.UpdatePageShortNames();
 				this.TerminateChangingPage(rank);
 
+				this.UpdatePageAfterChanging();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
 				this.document.Notifier.NotifyPagesChanged();
@@ -3555,9 +3610,9 @@ namespace Epsitec.Common.Document
 				UndoableList dst = page.Objects;
 				Modifier.Duplicate(this.document, this.document, src, dst, false, new Point(0,0), false);
 
-				this.UpdatePageShortNames();
 				this.TerminateChangingPage(rank+1);
 
+				this.UpdatePageAfterChanging();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
 				this.document.Notifier.NotifyPagesChanged();
@@ -3590,7 +3645,7 @@ namespace Epsitec.Common.Document
 				rank = System.Math.Min(rank, list.Count-1);
 				this.TerminateChangingPage(rank);
 
-				this.UpdatePageShortNames();
+				this.UpdatePageAfterChanging();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
 				this.document.Notifier.NotifyPagesChanged();
@@ -3622,7 +3677,7 @@ namespace Epsitec.Common.Document
 
 				this.TerminateChangingPage(rank2);
 
-				this.UpdatePageShortNames();
+				this.UpdatePageAfterChanging();
 				this.document.Notifier.NotifyArea();
 				this.document.Notifier.NotifyPagesChanged();
 				this.OpletQueueValidateAction();
@@ -3715,6 +3770,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Met à jour tout ce qu'il faut après un changement de page (création d'une
+		// nouvelle page, suppression d'une page, etc.).
+		public void UpdatePageAfterChanging()
+		{
+			this.UpdatePageShortNames();
+			this.UpdatePageNumbers();
+		}
+
 		// Met à jour tous les noms courts des pages ("n" ou "Mn").
 		public void UpdatePageShortNames()
 		{
@@ -3737,6 +3800,20 @@ namespace Epsitec.Common.Document
 					page.Rank = masterNumber;
 					masterNumber ++;
 					page.ShortName = string.Format(Res.Strings.Page.ShortName.Model, masterNumber.ToString());
+				}
+			}
+		}
+
+		// Met à jour les numéros de page de tous les objets du document.
+		public void UpdatePageNumbers()
+		{
+			int total = this.document.GetObjects.Count;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Objects.Page page = this.document.GetObjects[i] as Objects.Page;
+				foreach ( Objects.Abstract obj in this.document.Deep(page) )
+				{
+					obj.PageNumber = i;
 				}
 			}
 		}

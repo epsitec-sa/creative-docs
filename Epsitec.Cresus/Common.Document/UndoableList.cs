@@ -15,6 +15,8 @@ namespace Epsitec.Common.Document
 		AggregatesInsideObject,		// liste des agrégats d'un objet
 		AggregatesChildrens,		// liste des agrégats fils
 		Guides,						// liste des repères
+		TextFlows,					// flux de textes
+		ObjectsChain,				// chaîne d'objets pour un flux de textes
 	}
 
 	/// <summary>
@@ -40,6 +42,12 @@ namespace Epsitec.Common.Document
 		protected UndoableListType Type
 		{
 			get { return this.type; }
+		}
+
+		public void Dispose()
+		{
+			this.arrayList.Clear();
+			this.arrayList = null;
 		}
 
 		// Vide toute la liste.
@@ -123,6 +131,7 @@ namespace Epsitec.Common.Document
 		public void Remove(object value)
 		{
 			int index = this.arrayList.IndexOf(value);
+			System.Diagnostics.Debug.Assert(index != -1);
 			this.RemoveAt(index);
 		}
 

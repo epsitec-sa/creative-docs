@@ -327,6 +327,7 @@ namespace Epsitec.Common.Document.Widgets
 				rect.Left  = posx-rect.Height/2;
 				rect.Right = posx+rect.Height/2;
 
+				rect.Inflate(2);
 				if ( i == hilite )  // tabulateur survolé par la souris ?
 				{
 					rect.Inflate(3);  // plus grand
@@ -360,7 +361,7 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(adorner.ColorTextFieldBorder(this.IsEnabled));
 
-			rect.Inflate(1);
+			rect.Inflate(2);
 			Common.Widgets.GlyphShape glyph = Common.Widgets.GlyphShape.TabRight;
 			switch ( this.tabToCreate )
 			{

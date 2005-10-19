@@ -883,6 +883,7 @@
 	<data name="Action.Text.Paragraph.LeadingPlus">Interligne étendu</data>
 	<data name="Action.Text.Paragraph.LeadingAuto">Interligne automatique</data>
 	<data name="Action.Text.Insert">Insertion</data>
+	<data name="Action.Text.FlowChanged">Modification du chaînage</data>
 
 	<data name="Text.ButtonBold">&lt;b&gt;G&lt;/b&gt;</data>
 	<data name="Text.ButtonItalic">&lt;i&gt;I&lt;/i&gt;</data>

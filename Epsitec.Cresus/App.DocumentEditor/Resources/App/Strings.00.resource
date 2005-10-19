@@ -33,6 +33,7 @@
 
 	<data name="TabPage.Principal">Attributs</data>
 	<data name="TabPage.Styles">Styles</data>
+	<data name="TabPage.TextStyles">Textes</data>
 	<data name="TabPage.Autos">Auto</data>
 	<data name="TabPage.Pages">Pages</data>
 	<data name="TabPage.Layers">Calques</data>

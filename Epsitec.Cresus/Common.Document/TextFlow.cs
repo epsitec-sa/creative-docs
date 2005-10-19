@@ -1,0 +1,174 @@
+using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Text;
+
+namespace Epsitec.Common.Document
+{
+	/// <summary>
+	/// Flux de texte.
+	/// </summary>
+	public class TextFlow
+	{
+		// Crée un nouveau flux pour un seul pavé.
+		public TextFlow(Document document)
+		{
+			this.document = document;
+
+			if ( this.document.Modifier == null )
+			{
+				this.textStory = new Text.TextStory(this.document.TextContext);
+			}
+			else
+			{
+				this.textStory = new Text.TextStory(this.document.Modifier.OpletQueue, this.document.TextContext);
+			}
+
+			this.textFitter    = new Text.TextFitter(this.textStory);
+			this.textNavigator = new Text.TextNavigator(this.textFitter);
+
+			this.objectsChain = new UndoableList(this.document, UndoableListType.ObjectsChain);
+		}
+
+
+		public Text.TextStory TextStory
+		{
+			get { return this.textStory; }
+		}
+
+		public Text.TextFitter TextFitter
+		{
+			get { return this.textFitter; }
+		}
+
+		public Text.TextNavigator TextNavigator
+		{
+			get { return this.textNavigator; }
+		}
+
+
+		// Ajoute un pavé de texte dans la chaîne de l'objet parent.
+		// Si le pavé obj fait déjà partie d'une autre chaîne, toute sa chaîne est ajoutée
+		// dans la chaîne de l'objet parent.
+		public void Add(Objects.TextBox2 obj, Objects.TextBox2 parent, bool after)
+		{
+			if ( parent == null )
+			{
+				this.objectsChain.Add(obj);
+				this.TextFitter.FrameList.Add(obj.TextFrame);
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert(parent.TextFlow == this);
+
+				// Si l'objet à ajouter dans la chaîne y est déjà, mais ailleurs,
+				// il faut d'abord l'enlever.
+				if ( this.objectsChain.Contains(obj) )
+				{
+					obj.TextFlow.Remove(obj);
+				}
+
+				int index = this.objectsChain.IndexOf(parent);
+				System.Diagnostics.Debug.Assert(index != -1);
+
+				// Met dans la liste srcChain tous les objets faisant partie de la chaîne
+				// de l'objet à ajouter (il peut faire partie d'une autre chaîne).
+				TextFlow srcFlow = obj.TextFlow;
+				System.Collections.ArrayList srcChain = new System.Collections.ArrayList();
+				foreach ( Objects.TextBox2 listObj in srcFlow.Chain )
+				{
+					srcChain.Add(listObj);
+				}
+
+				foreach ( Objects.TextBox2 listObj in srcChain )
+				{
+					listObj.TextFlow.Remove(listObj);
+				}
+
+				// Ajoute toute la chaîne initiale à la chaîne de l'objet parent.
+				if ( after )  index ++;
+				foreach ( Objects.TextBox2 listObj in srcChain )
+				{
+					this.objectsChain.Insert(index, listObj);
+					this.TextFitter.FrameList.InsertAt(index, listObj.TextFrame);
+
+					listObj.TextFlow = this;
+
+					index ++;
+				}
+
+				this.MergeWith(srcFlow);  // chaîne parent <- texte source
+				this.document.TextFlows.Remove(srcFlow);
+			}
+		}
+
+		// Fusionne le texte d'un flux source à la fin du flux courant.
+		public void MergeWith(TextFlow src)
+		{
+			src.textNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 1);
+			src.textNavigator.StartSelection();
+			src.textNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1);
+			src.textNavigator.EndSelection();
+			string[] texts = src.textNavigator.GetSelectedTexts();
+
+			this.textNavigator.MoveTo(Text.TextNavigator.Target.TextEnd, 1);
+			this.textNavigator.Insert(texts[0]);
+		}
+
+		// Supprime un pavé de texte de la chaîne. Le pavé sera alors solitaire.
+		// Le texte lui-même reste dans la chaîne initiale.
+		public void Remove(Objects.TextBox2 obj)
+		{
+			if ( this.objectsChain.Count == 1 )  return;
+
+			this.objectsChain.Remove(obj);
+			this.TextFitter.FrameList.Remove(obj.TextFrame);
+
+			obj.UpdateTextLayout();
+			obj.NotifyAreaFlow();
+
+			obj.NewTextFlow();
+		}
+
+		// Met à jour les numéros de page de toute la chaîne.
+		public void UpdatePageNumbers()
+		{
+			for ( int i=0 ; i<this.Count ; i++ )
+			{
+				Objects.TextBox2 obj = this.objectsChain[i] as Objects.TextBox2;
+				Text.ITextFrame frame = obj.TextFrame;
+				frame.PageNumber = obj.PageNumber;
+			}
+		}
+
+		// Nombre de pavés de texte dans la chaîne.
+		public int Count
+		{
+			get
+			{
+				return this.objectsChain.Count;
+			}
+		}
+
+		// Rang d'un pavé de texte dans la chaîne.
+		public int Rank(Objects.Abstract obj)
+		{
+			return this.objectsChain.IndexOf(obj);
+		}
+
+		// Donne la chaîne des pavés de texte.
+		public UndoableList Chain
+		{
+			get
+			{
+				return this.objectsChain;
+			}
+		}
+
+
+		protected Document						document;
+		protected Text.TextStory				textStory;
+		protected Text.TextFitter				textFitter;
+		protected Text.TextNavigator			textNavigator;
+		protected UndoableList					objectsChain;
+	}
+}

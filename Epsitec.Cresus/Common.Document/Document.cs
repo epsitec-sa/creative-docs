@@ -73,6 +73,7 @@ namespace Epsitec.Common.Document
 			this.propertiesAuto = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
 			this.propertiesSel = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
 			this.aggregates = new UndoableList(this, UndoableListType.AggregatesInsideDocument);
+			this.textFlows = new UndoableList(this, UndoableListType.TextFlows);
 			this.exportDirectory = "";
 			this.exportFilename = "";
 			this.exportFilter = 0;
@@ -201,6 +202,12 @@ namespace Epsitec.Common.Document
 		public UndoableList Aggregates
 		{
 			get { return this.aggregates; }
+		}
+
+		// Liste des flux de textes de ce document.
+		public UndoableList TextFlows
+		{
+			get { return this.textFlows; }
 		}
 
 
@@ -524,6 +531,7 @@ namespace Epsitec.Common.Document
 			this.objects = doc.objects;
 			this.propertiesAuto = doc.propertiesAuto;
 			this.aggregates = doc.aggregates;
+			//?this.textFlows = doc.textFlows;
 			this.uniqueObjectId = doc.uniqueObjectId;
 			this.uniqueAggregateId = doc.uniqueAggregateId;
 			
@@ -648,7 +656,7 @@ namespace Epsitec.Common.Document
 
 			if ( this.Modifier != null )
 			{
-				this.Modifier.UpdatePageShortNames();
+				this.Modifier.UpdatePageAfterChanging();
 				this.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 				this.Modifier.OpletQueueEnable = true;
 				this.Modifier.OpletQueuePurge();
@@ -1835,6 +1843,7 @@ namespace Epsitec.Common.Document
 		protected UndoableList					propertiesAuto;
 		protected UndoableList					propertiesSel;
 		protected UndoableList					aggregates;
+		protected UndoableList					textFlows;
 		protected Settings.Settings				settings;
 		protected Modifier						modifier;
 		protected Notifier						notifier;

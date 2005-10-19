@@ -32,6 +32,9 @@ namespace Epsitec.Common.Document
 			ZoomShiftCtrl,
 			Picker,
 			PickerEmpty,
+			TextFlow,
+			TextFlowAdd,
+			TextFlowRemove,
 			Fine,
 		}
 
@@ -816,6 +819,7 @@ namespace Epsitec.Common.Document
 
 							if ( this.drawingContext.IsShift )
 							{
+								this.document.Modifier.UpdateCounters();
 								obj.Deselect();
 								this.document.Modifier.TotalSelected --;
 								this.document.Modifier.FlushMoveAfterDuplicate();
@@ -1109,15 +1113,50 @@ namespace Epsitec.Common.Document
 
 
 		#region EditMouse
+		public bool EditFlowTerminate()
+		{
+			if ( this.editFlowPress  == Objects.DetectEditType.Out &&
+				 this.editFlowSelect == Objects.DetectEditType.Out )
+			{
+				return false;
+			}
+
+			this.EditFlowReset();
+			this.ChangeMouseCursor(MouseCursorType.IBeam);
+			this.UseMouseCursor();
+			return true;
+		}
+
+		public void EditFlowReset()
+		{
+			this.editFlowPress  = Objects.DetectEditType.Out;
+			this.editFlowSelect = Objects.DetectEditType.Out;
+		}
+
 		protected void EditMouseDown(Message message, Point mouse, int downCount)
 		{
-			Objects.Abstract obj = this.DetectEdit(mouse);
+			if ( this.editFlowSelect != Objects.DetectEditType.Out )  return;
 
+			Objects.DetectEditType handle;
+			Objects.Abstract obj = this.DetectEdit(mouse, false, out handle);
+
+			this.editFlowPress  = Objects.DetectEditType.Out;
+			this.editFlowSelect = Objects.DetectEditType.Out;
 			if ( obj != this.document.Modifier.RetEditObject() )
 			{
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Edit);
 				this.Select(obj, true, false);
 				this.document.Modifier.OpletQueueValidateAction();
+			}
+			else
+			{
+				if ( handle == Objects.DetectEditType.HandleFlowPrev ||
+					 handle == Objects.DetectEditType.HandleFlowNext )
+				{
+					this.editFlowPress = handle;
+					this.editFlowSrc = obj;
+					return;
+				}
 			}
 
 			this.EditProcessMessage(message, mouse);
@@ -1127,21 +1166,93 @@ namespace Epsitec.Common.Document
 		{
 			this.ChangeMouseCursor(MouseCursorType.IBeam);
 
+			if ( this.editFlowPress != Objects.DetectEditType.Out )
+			{
+				this.ChangeMouseCursor(MouseCursorType.Arrow);
+				return;
+			}
+
+			if ( this.editFlowSelect != Objects.DetectEditType.Out )
+			{
+				Objects.DetectEditType handle;
+				Objects.Abstract obj = this.DetectEdit(mouse, true, out handle);
+				this.Hilite(obj);
+
+				if ( obj == null )
+				{
+					this.ChangeMouseCursor(MouseCursorType.TextFlow);
+				}
+				else
+				{
+					Objects.Abstract edit = this.document.Modifier.RetEditObject();
+					if ( obj == edit )
+					{
+						this.ChangeMouseCursor(MouseCursorType.TextFlowRemove);
+					}
+					else
+					{
+						this.ChangeMouseCursor(MouseCursorType.TextFlowAdd);
+					}
+				}
+				return;
+			}
+
 			if ( this.mouseDragging )  // bouton souris pressé ?
 			{
 				this.EditProcessMessage(message, mouse);
 			}
 			else	// bouton souris relâché ?
 			{
-				Objects.Abstract obj = this.DetectEdit(mouse);
+				Objects.DetectEditType handle;
+				Objects.Abstract obj = this.DetectEdit(mouse, false, out handle);
 				this.Hilite(obj);
 
-				this.ChangeMouseCursor(MouseCursorType.IBeam);
+				if ( handle == Objects.DetectEditType.HandleFlowPrev ||
+					 handle == Objects.DetectEditType.HandleFlowNext )
+				{
+					this.ChangeMouseCursor(MouseCursorType.TextFlow);
+				}
+				else
+				{
+					this.ChangeMouseCursor(MouseCursorType.IBeam);
+				}
 			}
 		}
 
 		protected void EditMouseUp(Message message, Point mouse, bool isRight)
 		{
+			if ( this.editFlowPress != Objects.DetectEditType.Out )
+			{
+				this.editFlowSelect = this.editFlowPress;
+				this.editFlowPress = Objects.DetectEditType.Out;
+				return;
+			}
+
+			if ( this.editFlowSelect != Objects.DetectEditType.Out )
+			{
+				this.Hilite(null);
+
+				Objects.DetectEditType handle;
+				Objects.TextBox2 obj = this.DetectEdit(mouse, true, out handle) as Objects.TextBox2;
+				if ( obj != null )
+				{
+					bool after = (this.editFlowSelect == Objects.DetectEditType.HandleFlowNext);
+					Objects.TextBox2 edit = this.editFlowSrc as Objects.TextBox2;
+					System.Diagnostics.Debug.Assert(edit != null);
+
+					if ( obj == edit )
+					{
+						this.document.Modifier.TextFlowChange(obj, null, after);
+					}
+					else
+					{
+						this.document.Modifier.TextFlowChange(obj, edit, after);
+					}
+				}
+				this.editFlowSelect = Objects.DetectEditType.Out;
+				return;
+			}
+
 			this.EditProcessMessage(message, mouse);
 		}
 
@@ -1322,7 +1433,7 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
-		
+
 		#region HotSpotMouse
 		protected void HotSpotMouseDown(Point mouse)
 		{
@@ -1348,7 +1459,7 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
-		
+
 		// Détecte l'objet pointé par la souris.
 		protected Objects.Abstract Detect(Point mouse, bool selectFirst)
 		{
@@ -1389,22 +1500,29 @@ namespace Epsitec.Common.Document
 		}
 
 		// Détecte l'objet éditable pointé par la souris.
-		protected Objects.Abstract DetectEdit(Point mouse)
+		protected Objects.Abstract DetectEdit(Point mouse, bool onlyTextBox2, out Objects.DetectEditType handle)
 		{
 			Objects.Abstract layer = this.drawingContext.RootObject();
 
 			foreach ( Objects.Abstract obj in this.document.FlatReverse(layer) )
 			{
+				if ( onlyTextBox2 && !(obj is Objects.TextBox2) )  continue;
 				if ( !obj.IsSelected )  continue;
-				if ( obj.DetectEdit(mouse) )  return obj;
+
+				handle = obj.DetectEdit(mouse);
+				if ( handle != Objects.DetectEditType.Out )  return obj;
 			}
 
 			foreach ( Objects.Abstract obj in this.document.FlatReverse(layer) )
 			{
+				if ( onlyTextBox2 && !(obj is Objects.TextBox2) )  continue;
 				if ( obj.IsSelected )  continue;
-				if ( obj.DetectEdit(mouse) )  return obj;
+
+				handle = obj.DetectEdit(mouse);
+				if ( handle != Objects.DetectEditType.Out )  return obj;
 			}
 
+			handle = Objects.DetectEditType.Out;
 			return null;
 		}
 
@@ -1663,6 +1781,7 @@ namespace Epsitec.Common.Document
 		// Sélectionne un objet et désélectionne tous les autres.
 		public void Select(Objects.Abstract item, bool edit, bool add)
 		{
+			this.document.Modifier.UpdateCounters();
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 			{
@@ -1693,6 +1812,7 @@ namespace Epsitec.Common.Document
 		// partial = true  -> une seule poignée doit être dans le rectangle
 		protected void Select(Rectangle rect, bool add, bool partial)
 		{
+			this.document.Modifier.UpdateCounters();
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 			{
@@ -2348,6 +2468,18 @@ namespace Epsitec.Common.Document
 
 				case MouseCursorType.PickerEmpty:
 					this.MouseCursorImage(ref this.mouseCursorPickerEmpty, Misc.Icon("PickerEmpty"));
+					break;
+
+				case MouseCursorType.TextFlow:
+					this.MouseCursorImage(ref this.mouseCursorTextFlow, Misc.Icon("TextFlow"));
+					break;
+
+				case MouseCursorType.TextFlowAdd:
+					this.MouseCursorImage(ref this.mouseCursorTextFlowAdd, Misc.Icon("TextFlowAdd"));
+					break;
+
+				case MouseCursorType.TextFlowRemove:
+					this.MouseCursorImage(ref this.mouseCursorTextFlowRemove, Misc.Icon("TextFlowRemove"));
 					break;
 
 				case MouseCursorType.Fine:
@@ -3155,6 +3287,9 @@ namespace Epsitec.Common.Document
 		protected Objects.Handle				hotSpotHandle;
 		protected double						markerVertical = double.NaN;
 		protected double						markerHorizontal = double.NaN;
+		protected Objects.DetectEditType		editFlowPress = Objects.DetectEditType.Out;
+		protected Objects.DetectEditType		editFlowSelect = Objects.DetectEditType.Out;
+		protected Objects.Abstract				editFlowSrc = null;
 
 		protected VMenu							contextMenu;
 		protected VMenu							contextMenuOrder;
@@ -3182,6 +3317,9 @@ namespace Epsitec.Common.Document
 		protected Image							mouseCursorHand = null;
 		protected Image							mouseCursorPicker = null;
 		protected Image							mouseCursorPickerEmpty = null;
+		protected Image							mouseCursorTextFlow = null;
+		protected Image							mouseCursorTextFlowAdd = null;
+		protected Image							mouseCursorTextFlowRemove = null;
 		protected Image							mouseCursorFine = null;
 	}
 }

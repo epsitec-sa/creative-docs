@@ -239,6 +239,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TextFlow.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "UndoableList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -295,6 +300,11 @@
                 />
                 <File
                     RelPath = "Containers\Styles.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Containers\TextStyles.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -848,6 +858,11 @@
                 />
                 <File
                     RelPath = "Widgets\TextFieldLabel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\TextStylesList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -62,9 +62,10 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Détecte si la souris est sur l'objet pour l'éditer.
-		public override bool DetectEdit(Point pos)
+		public override DetectEditType DetectEdit(Point pos)
 		{
-			return this.Detect(pos);
+			if ( this.Detect(pos) )  return DetectEditType.Body;
+			return DetectEditType.Out;
 		}
 
 

@@ -113,18 +113,19 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Détecte si la souris est sur l'objet pour l'éditer.
-		public override bool DetectEdit(Point pos)
+		public override DetectEditType DetectEdit(Point pos)
 		{
-			if ( this.isHide )  return false;
+			if ( this.isHide )  return DetectEditType.Out;
 
 			Drawing.Rectangle bbox = this.BoundingBox;
-			if ( !bbox.Contains(pos) )  return false;
+			if ( !bbox.Contains(pos) )  return DetectEditType.Out;
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Shape[] shapes = this.ShapesBuild(null, context, false);
-			if ( context.Drawer.DetectOutline(pos, context, shapes) != -1 )  return true;
+			if ( context.Drawer.DetectOutline(pos, context, shapes) != -1 )  return DetectEditType.Body;
 
-			return this.DetectTextCurve(pos);
+			if ( this.DetectTextCurve(pos) )  return DetectEditType.Body;
+			return DetectEditType.Out;
 		}
 
 
