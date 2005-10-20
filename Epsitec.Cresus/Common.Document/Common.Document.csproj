@@ -822,6 +822,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TextPanels\Abstract.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TextPanels\Font.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\AbstractRuler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

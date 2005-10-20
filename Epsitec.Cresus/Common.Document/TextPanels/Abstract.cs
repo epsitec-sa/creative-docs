@@ -1,11 +1,12 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Text;
 
-namespace Epsitec.Common.Document.Panels
+namespace Epsitec.Common.Document.TextPanels
 {
 	/// <summary>
-	/// La classe Abstract est la classe de base pour tous les panels.
+	/// La classe Abstract est la classe de base pour tous les panneaux des textes.
 	/// </summary>
 	[SuppressBundleSupport]
 	public abstract class Abstract : Common.Widgets.Widget
@@ -14,15 +15,8 @@ namespace Epsitec.Common.Document.Panels
 		{
 			this.document = document;
 
-			this.Entered += new MessageEventHandler(this.HandleMouseEntered);
-			this.Exited += new MessageEventHandler(this.HandleMouseExited);
-
 			this.label = new StaticText(this);
 			this.fixIcon = new StaticText(this);
-
-			this.hiliteButton = new GlyphButton(this);
-			this.hiliteButton.ButtonStyle = ButtonStyle.None;
-			this.hiliteButton.GlyphShape = GlyphShape.ArrowRight;
 
 			this.extendedButton = new GlyphButton(this);
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
@@ -32,7 +26,6 @@ namespace Epsitec.Common.Document.Panels
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Panel.Abstract.Extend);
 
-			this.colorBlack = Drawing.Color.FromName("WindowFrame");
 			this.UpdateButtons();
 		}
 		
@@ -40,8 +33,6 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.Entered -= new MessageEventHandler(this.HandleMouseEntered);
-				this.Exited -= new MessageEventHandler(this.HandleMouseExited);
 				this.extendedButton.Clicked -= new MessageEventHandler(this.ExtendedButtonClicked);
 			}
 			
@@ -63,7 +54,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return (this.IsLabelProperties || this is ModColor) ? 14 : 0;
+				return this.IsLabelProperties ? 14 : 0;
 			}
 		}
 
@@ -118,91 +109,9 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
-		// Indique si le panneau édite directement un style.
-		public bool IsStyleDirect
-		{
-			get { return this.isStyleDirect; }
-			set { this.isStyleDirect = value; }
-		}
-
-		// Indique si le panneau édite directement une propriété de calque.
-		public bool IsLayoutDirect
-		{
-			get { return this.isLayoutDirect; }
-			set { this.isLayoutDirect = value; }
-		}
-
-		// Indique si la souris montre un objet.
-		public bool IsObjectHilite
-		{
-			get
-			{
-				return this.isObjectHilite;
-			}
-
-			set
-			{
-				if ( this.isObjectHilite != value )
-				{
-					this.isObjectHilite = value;
-					this.UpdateButtons();
-				}
-			}
-		}
-
-		// Etat survolé du panneau.
-		public bool IsHilite
-		{
-			get
-			{
-				return this.isHilite;
-			}
-
-			set
-			{
-				if ( this.isHilite != value )
-				{
-					this.isHilite = value;
-					this.UpdateButtons();
-					this.Invalidate();
-				}
-			}
-		}
-
-
-		// La souris est entrée dans le panneau.
-		private void HandleMouseEntered(object sender, MessageEventArgs e)
-		{
-			if ( !this.document.Modifier.PropertiesDetailMany )  return;
-			if ( this.property == null )  return;
-
-			int total = this.property.Owners.Count;
-			for ( int i=0 ; i<total ; i++ )
-			{
-				Objects.Abstract obj = this.property.Owners[i] as Objects.Abstract;
-				if ( obj == null )  continue;
-				obj.IsHilite = true;
-			}
-		}
-
-		// La souris est sortie du panneau.
-		private void HandleMouseExited(object sender, MessageEventArgs e)
-		{
-			if ( !this.document.Modifier.PropertiesDetailMany )  return;
-			if ( this.property == null )  return;
-
-			int total = this.property.Owners.Count;
-			for ( int i=0 ; i<total ; i++ )
-			{
-				Objects.Abstract obj = this.property.Owners[i] as Objects.Abstract;
-				if ( obj == null )  continue;
-				obj.IsHilite = false;
-			}
-		}
-
 
 		// Choix de la propriété éditée par le panneau.
-		public Properties.Abstract Property
+		public Text.Property Property
 		{
 			get
 			{
@@ -212,13 +121,12 @@ namespace Epsitec.Common.Document.Panels
 			set
 			{
 				this.property = value;
-				this.backgroundIntensity = Properties.Abstract.BackgroundIntensity(this.property.Type);
 				this.PropertyToWidgets();
 
-				this.label.Text = Properties.Abstract.Text(this.property.Type);
+				this.label.Text = Abstract.GetText(this.property.WellKnownType);
 
-				this.fixIcon.Text = Misc.Image(Properties.Abstract.IconText(this.property.Type));
-				ToolTip.Default.SetToolTip(this.fixIcon, Properties.Abstract.Text(this.property.Type));
+				this.fixIcon.Text = Misc.Image(Abstract.IconText(this.property.WellKnownType));
+				ToolTip.Default.SetToolTip(this.fixIcon, Abstract.GetText(this.property.WellKnownType));
 			}
 		}
 
@@ -274,15 +182,14 @@ namespace Epsitec.Common.Document.Panels
 			rect.Top -= 1;
 			rect.Bottom = rect.Top-this.LabelHeight;
 			this.label.Bounds = rect;
-			this.label.SetVisible(this.IsLabelProperties || this is ModColor);
+			this.label.SetVisible(this.IsLabelProperties);
 
 			rect = this.Client.Bounds;
 			rect.Left += 1;
 			rect.Width = this.extendedZoneWidth;
-			rect.Top -= (this.IsLabelProperties || this is ModColor) ? 2 : 8;
+			rect.Top -= this.IsLabelProperties ? 2 : 8;
 			rect.Bottom = rect.Top-13;
 			this.fixIcon.Bounds = rect;
-			this.hiliteButton.Bounds = rect;
 
 			rect.Left = this.Client.Bounds.Right-this.extendedZoneWidth+1;
 			rect.Width = this.extendedZoneWidth-3;
@@ -294,18 +201,7 @@ namespace Epsitec.Common.Document.Panels
 		// Met à jour les boutons.
 		protected void UpdateButtons()
 		{
-			if ( this.isObjectHilite )
-			{
-				this.fixIcon.SetVisible(false);
-				this.hiliteButton.SetVisible(this.isHilite);
-			}
-			else
-			{
-				this.fixIcon.SetVisible(true);
-				this.hiliteButton.SetVisible(false);
-			}
-
-			this.extendedButton.SetVisible(this.isNormalAndExtended && !this.isStyleDirect && !this.isLayoutDirect);
+			this.extendedButton.SetVisible(this.isNormalAndExtended);
 			this.extendedButton.GlyphShape = this.isExtendedSize ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 		}
 
@@ -343,15 +239,6 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( this.ignoreChanged )  return;
 
-			if ( this.property != null )
-			{
-				int id = Properties.Aggregate.UniqueId(this.document.Aggregates, this.property);
-				string name = string.Format(Res.Strings.Action.PropertyChange, Properties.Abstract.Text(this.property.Type));
-				this.document.Modifier.OpletQueueBeginAction(name, "ChangeProperty", id);
-				this.WidgetsToProperty();
-				this.document.Modifier.OpletQueueValidateAction();
-			}
-
 			if ( this.Changed != null )  // qq'un écoute ?
 			{
 				this.Changed(this);
@@ -360,7 +247,7 @@ namespace Epsitec.Common.Document.Panels
 
 		public event EventHandler Changed;
 
-
+		
 		// Génère un événement pour dire que la couleur d'origine a changé.
 		protected virtual void OnOriginColorChanged()
 		{
@@ -377,8 +264,6 @@ namespace Epsitec.Common.Document.Panels
 		private void ExtendedButtonClicked(object sender, MessageEventArgs e)
 		{
 			this.IsExtendedSize = !this.isExtendedSize;
-			this.property.IsExtendedSize = this.isExtendedSize;
-			this.document.Modifier.IsPropertiesExtended(this.property.Type, this.isExtendedSize);
 		}
 
 
@@ -398,7 +283,7 @@ namespace Epsitec.Common.Document.Panels
 #endif
 			graphics.RenderSolid(color);
 
-			if ( this.property != null && this.property.IsMulti )
+			if ( this.property != null )
 			{
 				Rectangle part = rect;
 				part.Width = this.extendedZoneWidth;
@@ -411,7 +296,7 @@ namespace Epsitec.Common.Document.Panels
 				graphics.RenderSolid(DrawingContext.ColorMultiBack);
 			}
 
-			if ( (this.property != null && this.property.IsStyle) || this.isStyleDirect )
+			if ( this.property != null )
 			{
 				Rectangle part = rect;
 				part.Width = this.extendedZoneWidth;
@@ -422,14 +307,6 @@ namespace Epsitec.Common.Document.Panels
 				part.Right = rect.Right;
 				graphics.AddFilledRectangle(part);
 				graphics.RenderSolid(DrawingContext.ColorStyleBack);
-			}
-
-			if ( this.isHilite )
-			{
-				Rectangle part = rect;
-				part.Width = this.extendedZoneWidth;
-				graphics.AddFilledRectangle(part);
-				graphics.RenderSolid(context.HiliteSurfaceColor);
 			}
 
 			rect.Deflate(0.5, 0.5);
@@ -452,6 +329,28 @@ namespace Epsitec.Common.Document.Panels
 			}
 		}
 
+		// Nom de la propriété.
+		protected static string GetText(Text.Properties.WellKnownType type)
+		{
+			switch ( type )
+			{
+				case Common.Text.Properties.WellKnownType.Font:     return Res.Strings.Property.Abstract.TextFont;
+				case Common.Text.Properties.WellKnownType.Margins:  return Res.Strings.Property.Abstract.TextJustif;
+			}
+			return "";
+		}
+
+		// Nom de l'icône de la propriété.
+		protected static string IconText(Text.Properties.WellKnownType type)
+		{
+			switch ( type )
+			{
+				case Common.Text.Properties.WellKnownType.Font:     return "PropertyTextFont";
+				case Common.Text.Properties.WellKnownType.Margins:  return "PropertyTextJustif";
+			}
+			return "";
+		}
+
 
 		// ATTENTION: Ceci n'est pas propre, mais je ne sais pas comment faire mieux.
 		// Le constructeur de Common.Widget appelle DefaultHeight, qui doit
@@ -462,20 +361,14 @@ namespace Epsitec.Common.Document.Panels
 		public static Document				StaticDocument;
 
 		protected Document					document;
-		protected Drawing.Color				colorBlack;
 		protected double					backgroundIntensity = 1.0;
-		protected Properties.Abstract		property;
+		protected Text.Property				property;
 		protected bool						isExtendedSize = false;
 		protected bool						isNormalAndExtended = false;
 		protected double					extendedZoneWidth = 16;
 		protected StaticText				label;
 		protected StaticText				fixIcon;
-		protected GlyphButton				hiliteButton;
 		protected GlyphButton				extendedButton;
-		protected bool						isStyleDirect = false;
-		protected bool						isLayoutDirect = false;
-		protected bool						isHilite = false;
-		protected bool						isObjectHilite = false;
 		protected bool						ignoreChanged = false;
 	}
 }
