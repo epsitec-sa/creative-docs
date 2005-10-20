@@ -2701,7 +2701,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("DeselectAll")]
 		void CommandDeselectAll(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.DeselectAll();
+			this.CurrentDocument.Modifier.DeselectAllCmd();
 		}
 
 		[Command ("SelectAll")]

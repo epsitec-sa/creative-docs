@@ -84,6 +84,9 @@ namespace Epsitec.Common.Document
 					listObj.TextFlow.Remove(listObj);
 				}
 
+				this.MergeWith(srcFlow);  // chaîne parent <- texte source
+				this.document.TextFlows.Remove(srcFlow);
+
 				// Ajoute toute la chaîne initiale à la chaîne de l'objet parent.
 				if ( after )  index ++;
 				foreach ( Objects.TextBox2 listObj in srcChain )
@@ -95,9 +98,6 @@ namespace Epsitec.Common.Document
 
 					index ++;
 				}
-
-				this.MergeWith(srcFlow);  // chaîne parent <- texte source
-				this.document.TextFlows.Remove(srcFlow);
 			}
 		}
 
@@ -127,17 +127,6 @@ namespace Epsitec.Common.Document
 			obj.NotifyAreaFlow();
 
 			obj.NewTextFlow();
-		}
-
-		// Met à jour les numéros de page de toute la chaîne.
-		public void UpdatePageNumbers()
-		{
-			for ( int i=0 ; i<this.Count ; i++ )
-			{
-				Objects.TextBox2 obj = this.objectsChain[i] as Objects.TextBox2;
-				Text.ITextFrame frame = obj.TextFrame;
-				frame.PageNumber = obj.PageNumber;
-			}
 		}
 
 		// Nombre de pavés de texte dans la chaîne.

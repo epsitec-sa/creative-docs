@@ -2523,23 +2523,10 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			Point move = new Point(0,0);
-
-			if ( cursor.Right > view.Right )
-			{
-				move.X = cursor.Right-view.Right;
-			}
-			if ( cursor.Left < view.Left )
-			{
-				move.X = cursor.Left-view.Left;
-			}
-			if ( cursor.Top > view.Top )
-			{
-				move.Y = cursor.Top-view.Top;
-			}
-			if ( cursor.Bottom < view.Bottom )
-			{
-				move.Y = cursor.Bottom-view.Bottom;
-			}
+			if ( cursor.Right  > view.Right  )  move.X = cursor.Right  - view.Right;
+			if ( cursor.Left   < view.Left   )  move.X = cursor.Left   - view.Left;
+			if ( cursor.Top    > view.Top    )  move.Y = cursor.Top    - view.Top;
+			if ( cursor.Bottom < view.Bottom )  move.Y = cursor.Bottom - view.Bottom;
 
 			this.document.Modifier.ActiveViewer.AutoScroll(move);
 		}
@@ -2584,7 +2571,12 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.pageNumber = value;
 				this.isDirtyPageNumber = false;
+				this.UpdatePageNumber();
 			}
+		}
+
+		protected virtual void UpdatePageNumber()
+		{
 		}
 
 		// Indique que le numéro de page n'est probablement plus valable.

@@ -37,6 +37,9 @@ namespace Epsitec.Common.Document.Objects
 			this.metaNavigator.ActiveStyleChanged += new Support.EventHandler(this.HandleStyleChanged);
 
 			this.markerSelected = this.document.TextContext.Markers.Selected;
+
+			this.cursorBox = Drawing.Rectangle.Empty;
+			this.selectBox = Drawing.Rectangle.Empty;
 		}
 
 		// Crée un nouveau TextFlow pour l'objet.
@@ -520,6 +523,12 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		protected override void UpdatePageNumber()
+		{
+			this.textFrame.PageNumber = this.pageNumber;
+		}
+
+
 		#region TextFormat
 		// Modifie la police du texte.
 		public override void SetTextFont(string face, string style)
@@ -935,7 +944,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			get
 			{
-				return Drawing.Rectangle.Empty;  //?
+				return this.cursorBox;
 			}
 		}
 
@@ -944,7 +953,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			get
 			{
-				return Drawing.Rectangle.Empty;  //?
+				return this.selectBox;
 			}
 		}
 
@@ -964,7 +973,7 @@ namespace Epsitec.Common.Document.Objects
 			bool flowHandles = this.edited && drawingContext != null;
 
 			int totalShapes = 4;
-			if ( flowHandles )  totalShapes ++;
+			if ( flowHandles )  totalShapes += 2;
 
 			Shape[] shapes = new Shape[totalShapes];
 			int i = 0;
@@ -989,8 +998,15 @@ namespace Epsitec.Common.Document.Objects
 			if ( flowHandles )
 			{
 				shapes[i] = new Shape();
-				shapes[i].Path = this.PathFlowHandles(port, drawingContext);
+				shapes[i].Path = this.PathFlowHandlesStroke(port, drawingContext);
 				shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
+				shapes[i].Aspect = Aspect.Support;
+				shapes[i].IsVisible = true;
+				i ++;
+
+				shapes[i] = new Shape();
+				shapes[i].Path = this.PathFlowHandlesSurface(port, drawingContext);
+				shapes[i].SetPropertySurface(port, this.PropertyLineColor);
 				shapes[i].Aspect = Aspect.Support;
 				shapes[i].IsVisible = true;
 				i ++;
@@ -1037,7 +1053,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Crée le chemin des "poignées" du flux de l'objet.
-		protected Path PathFlowHandles(IPaintPort port, DrawingContext drawingContext)
+		protected Path PathFlowHandlesStroke(IPaintPort port, DrawingContext drawingContext)
 		{
 			Point prevP1 = new Point();
 			Point prevP2 = new Point();
@@ -1057,6 +1073,39 @@ namespace Epsitec.Common.Document.Objects
 			Path path = new Path();
 			this.PathFlowIcon(path, prevP1, prevP2, prevP3, prevP4, port, drawingContext, rank == 0);
 			this.PathFlowIcon(path, nextP1, nextP2, nextP3, nextP4, port, drawingContext, rank == count-1);
+			return path;
+		}
+
+		// Crée le chemin des "poignées" du flux de l'objet.
+		protected Path PathFlowHandlesSurface(IPaintPort port, DrawingContext drawingContext)
+		{
+			Point prevP1 = new Point();
+			Point prevP2 = new Point();
+			Point prevP3 = new Point();
+			Point prevP4 = new Point();
+			this.CornersFlowPrev(ref prevP1, ref prevP2, ref prevP3, ref prevP4, drawingContext);
+
+			Point nextP1 = new Point();
+			Point nextP2 = new Point();
+			Point nextP3 = new Point();
+			Point nextP4 = new Point();
+			this.CornersFlowNext(ref nextP1, ref nextP2, ref nextP3, ref nextP4, drawingContext);
+
+			int count = this.textFlow.Count;
+			int rank = this.textFlow.Rank(this);
+
+			Path path = new Path();
+
+			if ( rank > 0 )
+			{
+				this.PathNumber(path, prevP1, prevP2, prevP3, prevP4, rank-1, false);
+			}
+
+			if ( rank < count-1 )
+			{
+				this.PathNumber(path, nextP1, nextP2, nextP3, nextP4, rank+1, true);
+			}
+
 			return path;
 		}
 
@@ -1080,14 +1129,14 @@ namespace Epsitec.Common.Document.Objects
 			path.LineTo(p3);
 			path.Close();
 
-			if ( plus )
+			if ( plus )  // icône "+" ?
 			{
 				path.MoveTo(this.PointFlowIcon(p1, p2, p3, p4, 0.25, 0.50));
 				path.LineTo(this.PointFlowIcon(p1, p2, p3, p4, 0.75, 0.50));
 				path.MoveTo(this.PointFlowIcon(p1, p2, p3, p4, 0.50, 0.25));
 				path.LineTo(this.PointFlowIcon(p1, p2, p3, p4, 0.50, 0.75));
 			}
-			else
+			else	// icône "v" ?
 			{
 				path.MoveTo(this.PointFlowIcon(p1, p2, p3, p4, 0.25, 0.65));
 				path.LineTo(this.PointFlowIcon(p1, p2, p3, p4, 0.50, 0.35));
@@ -1100,6 +1149,50 @@ namespace Epsitec.Common.Document.Objects
 			Point x1 = Point.Scale(p1, p2, dx);
 			Point x2 = Point.Scale(p3, p4, dx);
 			return Point.Scale(x1, x2, dy);
+		}
+
+		protected void PathNumber(Path path, Point p1, Point p2, Point p3, Point p4, int number, bool rightToLeft)
+		{
+			number ++;  // 1..n
+			string text = number.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+			Font font = Font.DefaultFont;
+			double fontSize = Point.Distance(p1, p3)*0.8;
+
+			double textWidth = 0.0;
+			for ( int i=0 ; i<text.Length ; i++ )
+			{
+				textWidth += font.GetCharAdvance(text[i])*fontSize;
+			}
+
+			double advance = 0;
+			double offset = 0;
+			double angle = Point.ComputeAngleDeg(p1, p2);
+			Point center = p1;
+
+			if ( rightToLeft )
+			{
+				advance -= textWidth + fontSize*0.3;
+				offset = fontSize*0.1;
+			}
+			else
+			{
+				advance += Point.Distance(p1, p2) + fontSize*0.3;
+				offset = fontSize*0.4;
+			}
+
+			for ( int i=0 ; i<text.Length ; i++ )
+			{
+				Transform transform = new Transform();
+				transform.Scale(fontSize);
+				transform.RotateDeg(angle);
+				transform.Translate(center+Transform.RotatePointDeg(angle, new Point(advance, offset)));
+
+				int glyph = font.GetGlyphIndex(text[i]);
+				path.Append(font, glyph, transform);
+
+				advance += font.GetCharAdvance(text[i])*fontSize;
+			}
 		}
 
 		// Calcules les 4 coins de la poignée "pavé précédent".
@@ -1218,6 +1311,9 @@ namespace Epsitec.Common.Document.Objects
 		// Dessine le texte du pavé.
 		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
 		{
+			this.cursorBox = Drawing.Rectangle.Empty;
+			this.selectBox = Drawing.Rectangle.Empty;
+
 			Point p1 = new Point();
 			Point p2 = new Point();
 			Point p3 = new Point();
@@ -1256,14 +1352,20 @@ namespace Epsitec.Common.Document.Objects
 					if ( frame == this.textFrame )
 					{
 						double tan = System.Math.Tan(System.Math.PI/2.0 - angle);
-						double x1 = cx + descender * tan;
-						double x2 = cx + ascender  * tan;
-						double y1 = cy + descender;
-						double y2 = cy + ascender;
+						Point c1 = new Point(cx+tan*descender, cy+descender);
+						Point c2 = new Point(cx+tan*ascender,  cy+ascender);
 					
 						this.graphics.LineWidth = 1.0/drawingContext.ScaleX;
-						this.graphics.AddLine(x1, y1, x2, y2);
+						this.graphics.AddLine(c1, c2);
 						this.graphics.RenderSolid(DrawingContext.ColorCursorEdit(active));
+
+						c1 = this.transform.TransformDirect(c1);
+						c2 = this.transform.TransformDirect(c2);
+						this.ComputeAutoScroll(c1, c2);
+						this.cursorBox.MergeWith(c1);
+						this.cursorBox.MergeWith(c2);
+						this.selectBox.MergeWith(c1);
+						this.selectBox.MergeWith(c2);
 					}
 				}
 
@@ -1389,6 +1491,7 @@ namespace Epsitec.Common.Document.Objects
 				this.graphics.SetClippingRectangles(selRectList);
 				this.graphics.AddFilledRectangle(selBbox);
 				this.graphics.RenderSolid(Drawing.Color.FromName("Highlight"));
+				this.selectBox.MergeWith(selBbox);
 				
 				this.RenderText(font, size, glyphs, x, y, sx, sy, Drawing.Color.FromName("HighlightText"));
 				
@@ -1527,6 +1630,7 @@ namespace Epsitec.Common.Document.Objects
 			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
 			this.NotifyAreaFlow();
+			this.ChangeObjectEdited();
 		}
 		
 		private void HandleCursorMoved(object sender)
@@ -1543,6 +1647,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( !this.edited )  return;
 			this.document.Notifier.NotifyTextChanged();
 			this.NotifyAreaFlow();
+			this.ChangeObjectEdited();
 		}
 
 		private void HandleTabChanged(object sender)
@@ -1552,6 +1657,7 @@ namespace Epsitec.Common.Document.Objects
 			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
 			this.NotifyAreaFlow();
+			this.ChangeObjectEdited();
 		}
 
 		// Met à jour après un changement de géométrie de l'objet.
@@ -1592,6 +1698,7 @@ namespace Epsitec.Common.Document.Objects
 					if ( frame == obj.textFrame )
 					{
 						this.document.Modifier.EditObject(obj);
+						this.autoScrollOneShot = true;
 						return;
 					}
 				}
@@ -1657,5 +1764,7 @@ namespace Epsitec.Common.Document.Objects
 		protected TextNavigator2				metaNavigator;
 		protected Graphics						graphics;
 		protected Transform						transform;
+		protected Drawing.Rectangle				cursorBox;
+		protected Drawing.Rectangle				selectBox;
 	}
 }

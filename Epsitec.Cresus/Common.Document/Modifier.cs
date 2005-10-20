@@ -1153,9 +1153,16 @@ namespace Epsitec.Common.Document
 		}
 
 		// Désélectionne tous les objets.
-		public void DeselectAll()
+		public void DeselectAllCmd()
 		{
 			if ( this.ActiveViewer.EditFlowTerminate() )  return;
+
+			this.DeselectAll();
+		}
+
+		// Désélectionne tous les objets.
+		public void DeselectAll()
+		{
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.DeselectAll) )
 			{
