@@ -77,7 +77,7 @@ namespace Epsitec.Common.Document.Widgets
 			string text = "";
 			if ( this.property != null )
 			{
-				text = property.SampleText;
+				text = this.property.SampleText;
 			}
 
 			if ( text != "" )

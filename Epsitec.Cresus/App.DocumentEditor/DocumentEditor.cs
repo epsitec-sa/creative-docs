@@ -3607,6 +3607,7 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Notifier.TextChanged            += new SimpleEventHandler(this.HandleTextChanged);
 			this.CurrentDocument.Notifier.CreateChanged          += new SimpleEventHandler(this.HandleCreateChanged);
 			this.CurrentDocument.Notifier.StyleChanged           += new SimpleEventHandler(this.HandleStyleChanged);
+			this.CurrentDocument.Notifier.TextStyleChanged       += new SimpleEventHandler(this.HandleTextStyleChanged);
 			this.CurrentDocument.Notifier.PagesChanged           += new SimpleEventHandler(this.HandlePagesChanged);
 			this.CurrentDocument.Notifier.LayersChanged          += new SimpleEventHandler(this.HandleLayersChanged);
 			this.CurrentDocument.Notifier.PageChanged            += new ObjectEventHandler(this.HandlePageChanged);
@@ -4119,6 +4120,14 @@ namespace Epsitec.App.DocumentEditor
 			if ( !this.IsCurrentDocument )  return;
 			DocumentInfo di = this.CurrentDocumentInfo;
 			di.containerStyles.SetDirtyContent();
+		}
+
+		// Appelé par le document lorsqu'un style de texte a changé.
+		private void HandleTextStyleChanged()
+		{
+			if ( !this.IsCurrentDocument )  return;
+			DocumentInfo di = this.CurrentDocumentInfo;
+			di.containerTextStyles.SetDirtyContent();
 		}
 
 		// Appelé par le document lorsque les pages ont changé.
@@ -4867,6 +4876,7 @@ namespace Epsitec.App.DocumentEditor
 				this.HandleSelectionChanged();
 				this.HandleCreateChanged();
 				this.HandleStyleChanged();
+				this.HandleTextStyleChanged();
 				this.HandlePagesChanged();
 				this.HandleLayersChanged();
 				this.HandleUndoRedoChanged();

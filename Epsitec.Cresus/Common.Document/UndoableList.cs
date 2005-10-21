@@ -17,6 +17,7 @@ namespace Epsitec.Common.Document
 		Guides,						// liste des repères
 		TextFlows,					// flux de textes
 		ObjectsChain,				// chaîne d'objets pour un flux de textes
+		TextStylesInsideDocument,	// styles de texte du document
 	}
 
 	/// <summary>

@@ -1322,6 +1322,23 @@ namespace Epsitec.Common.Document
 		{
 			return string.Format("Ti{0}", id);
 		}
+
+		// Liste des styles de texte de ce document.
+		public UndoableList TextStyles
+		{
+			get
+			{
+				this.modifier.OpletQueueEnable = false;
+				UndoableList list = new UndoableList(this, UndoableListType.TextStylesInsideDocument);
+
+				// TODO: comment obtenir la liste de tous les styles ?
+				Text.TextStyle defaultStyle = this.TextContext.StyleList["Default", Text.TextStyleClass.Paragraph];
+				list.Add(defaultStyle);
+
+				this.modifier.OpletQueueEnable = true;
+				return list;
+			}
+		}
 		#endregion
 
 		#region UniqueId

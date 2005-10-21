@@ -15,17 +15,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			this.fontName = new TextFieldCombo(this);
 			this.fontName.IsReadOnly = true;
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.fontName.Items.Add("Tahoma");
-				this.fontName.Items.Add("Arial");
-				this.fontName.Items.Add("Courier New");
-				this.fontName.Items.Add("Times New Roman");
-			}
-			else
-			{
-				Misc.AddFontList(this.fontName, false);
-			}
+			this.ComboFontFaceList(this.fontName);
 			//?this.fontName.SelectedIndexChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontName.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontName.TabIndex = 1;
@@ -107,14 +97,38 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			base.PropertyToWidgets();
 
-			Text.Properties.FontProperty p = this.property as Text.Properties.FontProperty;
-			if ( p == null )  return;
+			Text.Properties.FontProperty     font      = this.textStyle[Common.Text.Properties.WellKnownType.Font]     as Text.Properties.FontProperty;
+			Text.Properties.FontSizeProperty fontSize  = this.textStyle[Common.Text.Properties.WellKnownType.FontSize] as Text.Properties.FontSizeProperty;
+			Text.Properties.ColorProperty    fontColor = this.textStyle[Common.Text.Properties.WellKnownType.Color]    as Text.Properties.ColorProperty;
 
 			this.ignoreChanged = true;
 
-			this.ComboSelectedName(this.fontName, p.FaceName);
-			//?this.fontSize.TextFieldReal.InternalValue = (decimal) p.FontSize;
-			//?this.fontColor.Color = p.FontColor;
+			if ( font == null )
+			{
+				this.ComboSelectedName(this.fontName, Res.Strings.Action.Text.Font.Default);
+			}
+			else
+			{
+				this.ComboSelectedName(this.fontName, font.FaceName);
+			}
+
+			if ( fontSize == null )
+			{
+				this.fontSize.Text = Res.Strings.Action.Text.Font.Default;
+			}
+			else
+			{
+				this.fontSize.TextFieldReal.InternalValue = (decimal) fontSize.Size;
+			}
+
+			if ( fontColor == null )
+			{
+				this.fontColor.Color = RichColor.Empty;
+			}
+			else
+			{
+				this.fontColor.Color = RichColor.FromName(fontColor.TextColor);
+			}
 
 			this.ignoreChanged = false;
 		}
@@ -122,15 +136,36 @@ namespace Epsitec.Common.Document.TextPanels
 		// Widgets -> propriété.
 		protected override void WidgetsToProperty()
 		{
-			Text.Properties.FontProperty p = this.property as Text.Properties.FontProperty;
-			if ( p == null )  return;
+			string fontFace = this.ComboSelectedName(this.fontName);
+			if ( fontFace == "" || fontFace == Res.Strings.Action.Text.Font.Default )
+			{
+			}
+			else
+			{
+				string fontStyle = this.document.SearchDefaultFontStyle(fontFace);
+				Text.Properties.FontProperty font = new Text.Properties.FontProperty(fontFace, fontStyle);
+			}
 
-			string name = this.ComboSelectedName(this.fontName);
-			//?if ( name == null )  p.FaceName = "";
-			//?else                 p.FaceName = name;
+			if ( this.fontSize.Text == "" || this.fontSize.Text == Res.Strings.Action.Text.Font.Default )
+			{
+			}
+			else
+			{
+				double size = (double) this.fontSize.TextFieldReal.InternalValue;
+				Text.Properties.FontSizeProperty fontSize = new Text.Properties.FontSizeProperty(size, Common.Text.Properties.SizeUnits.Points);
+			}
 
-			//?p.FontSize = (double) this.fontSize.TextFieldReal.InternalValue;
-			//?p.FontColor = this.fontColor.Color;
+			if ( this.fontColor.IsEmpty )
+			{
+			}
+			else
+			{
+				Color basicColor = this.fontColor.Color.Basic;
+				string textColor = Color.ToHexa(basicColor);
+				Text.Properties.ColorProperty fontColor = new Text.Properties.ColorProperty(textColor);
+			}
+
+			// TODO: modifier le style...
 		}
 
 
@@ -154,6 +189,20 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( combo.SelectedIndex == -1 )  return "";
 			return combo.Items[combo.SelectedIndex] as string;
+		}
+
+		// Met à jour la liste d'un champ éditable pour le nom de la police.
+		protected void ComboFontFaceList(TextFieldCombo combo)
+		{
+			if ( combo.Items.Count == 0 )
+			{
+				combo.Items.Add(Res.Strings.Action.Text.Font.Default);  // par défaut
+
+				foreach( string face in this.document.TextContext.GetAvailableFontFaces() )
+				{
+					combo.Items.Add(face);
+				}
+			}
 		}
 
 
@@ -295,6 +344,13 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 
 			this.OnChanged();
+		}
+
+
+		// Donne le type.
+		protected override Text.Properties.WellKnownType Type
+		{
+			get { return Common.Text.Properties.WellKnownType.Font; }
 		}
 
 

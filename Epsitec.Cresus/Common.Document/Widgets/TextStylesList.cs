@@ -47,7 +47,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				if ( value == null )
 				{
-					this.list = new UndoableList(this.document, UndoableListType.AggregatesChildrens);
+					this.list = new UndoableList(this.document, UndoableListType.TextStylesInsideDocument);
 				}
 				else
 				{
@@ -209,13 +209,13 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 		// Retourne le type de la propriété sélectionnée.
-		public Properties.Type SelectedProperty
+		public Text.Properties.WellKnownType SelectedProperty
 		{
 			get
 			{
 				int row, column;
 				this.GetSelectedRowColumn(out row, out column);
-				if ( row == -1 || column == -1 )  return Properties.Type.None;
+				if ( row == -1 || column == -1 )  return Common.Text.Properties.WellKnownType.Other;
 
 				return this.types[column-this.FixColumns];
 			}
@@ -282,8 +282,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.UpdateIndex();
 			int rank = this.RowToRank(row);
 			if ( rank == -1 )  return false;  // ligne "aucun" ?
-			Properties.Aggregate agg = this.list[rank] as Properties.Aggregate;
-			return (agg.Property(this.types[column-fix], this.isDeep) != null);
+			return true;
 		}
 
 		// Met à jour le contenu de la table.
@@ -330,8 +329,8 @@ namespace Epsitec.Common.Document.Widgets
 
 			for ( i=0 ; i<this.types.Length ; i++ )
 			{
-				this.SetHeaderTextH(fix+i, Misc.Image(Properties.Abstract.IconText(this.types[i])));
-				ToolTip.Default.SetToolTip(this.FindButtonH(fix+i), Properties.Abstract.Text(this.types[i]));
+				this.SetHeaderTextH(fix+i, Misc.Image(TextPanels.Abstract.IconText(this.types[i])));
+				ToolTip.Default.SetToolTip(this.FindButtonH(fix+i), TextPanels.Abstract.LabelText(this.types[i]));
 			}
 
 			for ( i=0 ; i<rows ; i++ )
@@ -395,7 +394,7 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				if ( this[fix+i, row].IsEmpty )
 				{
-					Sample sm = new Sample();
+					TextStyleSample sm = new TextStyleSample();
 					sm.Document = this.document;
 					sm.Dock = DockStyle.Fill;
 					this[fix+i, row].Insert(sm);
@@ -409,17 +408,17 @@ namespace Epsitec.Common.Document.Widgets
 			System.Diagnostics.Debug.Assert(this.document != null);
 			System.Diagnostics.Debug.Assert(this.list != null);
 			int rank = this.RowToRank(row);
-			Properties.Aggregate agg = null;
+			Common.Text.TextStyle style = null;
 			if ( rank != -1 )
 			{
-				agg = this.list[rank] as Properties.Aggregate;
+				style = this.list[rank] as Common.Text.TextStyle;
 			}
 			bool selected = (rank == this.list.Selected && this.isInitialSelection);
 			int nc = this.NameColumn;
 			int fix = this.FixColumns;
 			GlyphButton gb;
 			StaticText st;
-			Sample sm;
+			TextStyleSample sm;
 
 			if ( this.isHiliteColumn )
 			{
@@ -436,20 +435,12 @@ namespace Epsitec.Common.Document.Widgets
 			}
 
 			st = this[nc, row].Children[0] as StaticText;
-			st.Text = (agg==null) ? Res.Strings.Aggregates.NoneLine : agg.AggregateName;
+			st.Text = (style==null) ? Res.Strings.Aggregates.NoneLine : style.Name;
 			this.SelectCell(nc, row, selected);
 
 			if ( this.isChildrensColumn )
 			{
 				string text = "";
-				if ( agg != null )
-				{
-					int count = agg.Childrens.Count;
-					if ( count != 0 )
-					{
-						text = count.ToString();
-					}
-				}
 				st = this[fix-1, row].Children[0] as StaticText;
 				st.Text = text;
 				this.SelectCell(fix-1, row, selected);
@@ -458,24 +449,19 @@ namespace Epsitec.Common.Document.Widgets
 			this.UpdateIndex();
 			for ( int i=0 ; i<this.types.Length ; i++ )  // colonnes des attributs
 			{
-				sm = this[fix+i, row].Children[0] as Sample;
+				sm = this[fix+i, row].Children[0] as TextStyleSample;
 				bool selectedColumn = false;
-				if ( agg == null )
+				if ( style == null )
 				{
-					sm.Property = null;
+					sm.Type = Common.Text.Properties.WellKnownType.Other;
+					sm.TextStyle = null;
 				}
 				else
 				{
-					if ( this.isDeep )
-					{
-						sm.Property = agg.Property(this.types[i], true);
-					}
-					else
-					{
-						sm.Property = agg.Property(this.types[i], false);
-						sm.Dots = (agg.Property(this.types[i], true) != null);
-					}
+					sm.Type = this.types[i];
+					sm.TextStyle = style;
 
+#if false
 					if ( selected )
 					{
 						int index = agg.Styles.IndexOf(sm.Property);
@@ -484,6 +470,7 @@ namespace Epsitec.Common.Document.Widgets
 							selectedColumn = true;
 						}
 					}
+#endif
 				}
 				this.SelectCell(fix+i, row, selectedColumn);
 				sm.Invalidate();
@@ -511,27 +498,12 @@ namespace Epsitec.Common.Document.Widgets
 			if ( !this.typesDirty )  return;
 			this.typesDirty = false;
 
-			Properties.Type[] table = new Properties.Type[100];
-			int total = 0;
-			foreach ( Properties.Aggregate agg in this.list )
-			{
-				foreach ( Properties.Abstract property in agg.Styles )
-				{
-					int order = Properties.Abstract.SortOrder(property.Type);
-					if ( table[order] == 0 )
-					{
-						table[order] = property.Type;
-						total ++;
-					}
-				}
-			}
-
-			this.types = new Properties.Type[total];
-			int j = 0;
-			for ( int i=0 ; i<100 ; i++ )
-			{
-				if ( table[i] != 0 )  this.types[j++] = table[i];
-			}
+			this.types = new Text.Properties.WellKnownType[4];
+			int i = 0;
+			this.types[i++] = Common.Text.Properties.WellKnownType.Font;
+			this.types[i++] = Common.Text.Properties.WellKnownType.Margins;
+			this.types[i++] = Common.Text.Properties.WellKnownType.Leading;
+			this.types[i++] = Common.Text.Properties.WellKnownType.Language;
 		}
 
 
@@ -576,16 +548,16 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
-		protected Document						document;
-		protected UndoableList					list;
-		protected int							excludeRank = -1;
-		protected bool							isDeep = false;
-		protected bool							isNoneLine = false;
-		protected bool							isHiliteColumn = true;
-		protected bool							isOrderColumn = false;
-		protected bool							isChildrensColumn = true;
-		protected bool							isInitialSelection = true;
-		protected bool							typesDirty = true;
-		protected Properties.Type[]				types;
+		protected Document							document;
+		protected UndoableList						list;
+		protected int								excludeRank = -1;
+		protected bool								isDeep = false;
+		protected bool								isNoneLine = false;
+		protected bool								isHiliteColumn = true;
+		protected bool								isOrderColumn = false;
+		protected bool								isChildrensColumn = true;
+		protected bool								isInitialSelection = true;
+		protected bool								typesDirty = true;
+		protected Text.Properties.WellKnownType[]	types;
 	}
 }

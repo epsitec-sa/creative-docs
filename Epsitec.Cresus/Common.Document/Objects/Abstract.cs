@@ -2575,6 +2575,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Met à jour d'autres éléments de l'objet dépendants du numéro de page.
 		protected virtual void UpdatePageNumber()
 		{
 		}

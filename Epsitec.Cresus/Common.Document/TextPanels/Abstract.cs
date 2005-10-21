@@ -28,6 +28,19 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.UpdateButtons();
 		}
+
+		// Crée un nouveau panneau.
+		public static Abstract NewPanel(Text.Properties.WellKnownType type, Document document)
+		{
+			Abstract.StaticDocument = document;
+
+			switch ( type )
+			{
+				case Common.Text.Properties.WellKnownType.Font:  return new Font(document);
+			}
+
+			return null;
+		}
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -110,23 +123,23 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		// Choix de la propriété éditée par le panneau.
-		public Text.Property Property
+		// Choix du style édité par le panneau.
+		public Text.TextStyle TextStyle
 		{
 			get
 			{
-				return this.property;
+				return this.textStyle;
 			}
 
 			set
 			{
-				this.property = value;
+				this.textStyle = value;
 				this.PropertyToWidgets();
 
-				this.label.Text = Abstract.GetText(this.property.WellKnownType);
+				this.label.Text = Abstract.LabelText(this.Type);
 
-				this.fixIcon.Text = Misc.Image(Abstract.IconText(this.property.WellKnownType));
-				ToolTip.Default.SetToolTip(this.fixIcon, Abstract.GetText(this.property.WellKnownType));
+				this.fixIcon.Text = Misc.Image(Abstract.IconText(this.Type));
+				ToolTip.Default.SetToolTip(this.fixIcon, Abstract.LabelText(this.Type));
 			}
 		}
 
@@ -283,32 +296,6 @@ namespace Epsitec.Common.Document.TextPanels
 #endif
 			graphics.RenderSolid(color);
 
-			if ( this.property != null )
-			{
-				Rectangle part = rect;
-				part.Width = this.extendedZoneWidth;
-				graphics.AddFilledRectangle(part);
-				graphics.RenderSolid(DrawingContext.ColorMulti);
-
-				part.Left = rect.Left+this.extendedZoneWidth;
-				part.Right = rect.Right;
-				graphics.AddFilledRectangle(part);
-				graphics.RenderSolid(DrawingContext.ColorMultiBack);
-			}
-
-			if ( this.property != null )
-			{
-				Rectangle part = rect;
-				part.Width = this.extendedZoneWidth;
-				graphics.AddFilledRectangle(part);
-				graphics.RenderSolid(DrawingContext.ColorStyle);
-
-				part.Left = rect.Left+this.extendedZoneWidth;
-				part.Right = rect.Right;
-				graphics.AddFilledRectangle(part);
-				graphics.RenderSolid(DrawingContext.ColorStyleBack);
-			}
-
 			rect.Deflate(0.5, 0.5);
 			graphics.AddLine(rect.Left, rect.Bottom-0.5, rect.Left, rect.Top-0.5);
 			graphics.AddLine(rect.Left+this.extendedZoneWidth, rect.Bottom-0.5, rect.Left+this.extendedZoneWidth, rect.Top-0.5);
@@ -329,24 +316,35 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		// Nom de la propriété.
-		protected static string GetText(Text.Properties.WellKnownType type)
+
+		// Donne le type.
+		protected virtual Text.Properties.WellKnownType Type
+		{
+			get { return Common.Text.Properties.WellKnownType.Other; }
+		}
+
+		// Nom d'une propriété de style de texte.
+		public static string LabelText(Text.Properties.WellKnownType type)
 		{
 			switch ( type )
 			{
-				case Common.Text.Properties.WellKnownType.Font:     return Res.Strings.Property.Abstract.TextFont;
-				case Common.Text.Properties.WellKnownType.Margins:  return Res.Strings.Property.Abstract.TextJustif;
+				case Common.Text.Properties.WellKnownType.Font:      return Res.Strings.Property.Abstract.TextFont;
+				case Common.Text.Properties.WellKnownType.Margins:   return Res.Strings.Property.Abstract.TextJustif;
+				case Common.Text.Properties.WellKnownType.Leading:   return Res.Strings.Property.Abstract.TextLine;
+				case Common.Text.Properties.WellKnownType.Language:  return Res.Strings.Property.Abstract.Name;
 			}
 			return "";
 		}
 
-		// Nom de l'icône de la propriété.
-		protected static string IconText(Text.Properties.WellKnownType type)
+		// Nom d'une icône de style de texte.
+		public static string IconText(Text.Properties.WellKnownType type)
 		{
 			switch ( type )
 			{
-				case Common.Text.Properties.WellKnownType.Font:     return "PropertyTextFont";
-				case Common.Text.Properties.WellKnownType.Margins:  return "PropertyTextJustif";
+				case Common.Text.Properties.WellKnownType.Font:      return "PropertyTextFont";
+				case Common.Text.Properties.WellKnownType.Margins:   return "PropertyTextJustif";
+				case Common.Text.Properties.WellKnownType.Leading:   return "PropertyTextLine";
+				case Common.Text.Properties.WellKnownType.Language:  return "PropertyName";
 			}
 			return "";
 		}
@@ -362,7 +360,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 		protected Document					document;
 		protected double					backgroundIntensity = 1.0;
-		protected Text.Property				property;
+		protected Text.TextStyle			textStyle;
 		protected bool						isExtendedSize = false;
 		protected bool						isNormalAndExtended = false;
 		protected double					extendedZoneWidth = 16;

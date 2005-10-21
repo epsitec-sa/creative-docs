@@ -102,6 +102,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Fusionne le texte d'un flux source à la fin du flux courant.
+		// TODO: gérer les tabulateurs, les styles, etc.
 		public void MergeWith(TextFlow src)
 		{
 			src.textNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 1);

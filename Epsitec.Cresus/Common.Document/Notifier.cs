@@ -54,6 +54,7 @@ namespace Epsitec.Common.Document
 			this.textChanged = true;
 			this.createChanged = true;
 			this.styleChanged = true;
+			this.textStyleChanged = true;
 			this.pagesChanged = true;
 			this.layersChanged = true;
 			this.undoRedoChanged = true;
@@ -156,6 +157,14 @@ namespace Epsitec.Common.Document
 		{
 			if ( !this.enable )  return;
 			this.styleChanged = true;
+			this.NotifyAsync();
+		}
+
+		// Indique que les styles des textes ont changé.
+		public void NotifyTextStyleChanged()
+		{
+			if ( !this.enable )  return;
+			this.textStyleChanged = true;
 			this.NotifyAsync();
 		}
 
@@ -438,6 +447,12 @@ namespace Epsitec.Common.Document
 				this.styleChanged = false;
 			}
 
+			if ( this.textStyleChanged )
+			{
+				this.OnTextStyleChanged();
+				this.textStyleChanged = false;
+			}
+
 			if ( this.pagesChanged )
 			{
 				this.OnPagesChanged();
@@ -637,6 +652,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnTextStyleChanged()
+		{
+			if ( this.TextStyleChanged != null )  // qq'un écoute ?
+			{
+				this.TextStyleChanged();
+			}
+		}
+
 		protected void OnPagesChanged()
 		{
 			if ( this.PagesChanged != null )  // qq'un écoute ?
@@ -809,6 +832,7 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			TextChanged;
 		public event SimpleEventHandler			CreateChanged;
 		public event SimpleEventHandler			StyleChanged;
+		public event SimpleEventHandler			TextStyleChanged;
 		public event SimpleEventHandler			PagesChanged;
 		public event SimpleEventHandler			LayersChanged;
 		public event ObjectEventHandler			PageChanged;
@@ -844,6 +868,7 @@ namespace Epsitec.Common.Document
 		protected bool							textChanged;
 		protected bool							createChanged;
 		protected bool							styleChanged;
+		protected bool							textStyleChanged;
 		protected bool							pagesChanged;
 		protected bool							layersChanged;
 		protected Objects.Abstract				pageObject;
