@@ -737,6 +737,7 @@ namespace Epsitec.Common.Drawing
 				Font.font_array = array_compact;
 				
 				System.Diagnostics.Debug.Assert (Font.font_array.Length == m);
+				System.Diagnostics.Debug.WriteLine ("SetupFonts done");
 			}
 			
 			if (Font.face_array == null)

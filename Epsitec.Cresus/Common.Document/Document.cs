@@ -1292,10 +1292,9 @@ namespace Epsitec.Common.Document
 		{
 			int max = -1;
 			Text.TabList list = this.textContext.TabList;
-			System.Collections.Hashtable table = list.Hashtable;
-			foreach ( System.Collections.DictionaryEntry dict in table )
+			string[] tags = list.GetTabTags();
+			foreach ( string tag in tags )
 			{
-				string tag = (string) dict.Key;
 				int id = this.GetTabId(tag);
 				if ( max < id )  max = id;
 			}

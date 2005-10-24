@@ -81,13 +81,14 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public System.Collections.Hashtable Hashtable
+		public string[] GetTabTags()
 		{
-			get
-			{
-				return this.tab_hash;
-			}
+			string[] tags = new string[this.tab_hash.Count];
+			this.tab_hash.Keys.CopyTo (tags, 0);
+			System.Array.Sort (tags);
+			return tags;
 		}
+		
 		
 		public Properties.TabProperty GetTabProperty(string tag)
 		{
