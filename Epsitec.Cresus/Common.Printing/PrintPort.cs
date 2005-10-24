@@ -429,6 +429,36 @@ namespace Epsitec.Common.Printing
 		}
 		
 		
+		public void PaintGlyphs(Drawing.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+		{
+			int n = glyphs.Length;
+			
+			if (n == 0)
+			{
+				return;
+			}
+			
+			this.UpdateBrush ();
+			
+			//	Comme GDI+ ne sait pas accéder à une fonte par ses glyphes, on triche ici
+			//	en peignant la surface des caractères, en attendant d'avoir le temps de
+			//	faire appel à ExtTextOut avec ETO_GLYPH_INDEX.
+			
+			Drawing.Path path = new Drawing.Path ();
+			Drawing.Transform ft = font.SyntheticTransform;
+			
+			ft.Scale (size);
+			
+			for (int i = 0; i < n; i++)
+			{
+				path.Append (font, glyphs[i], ft.XX * sx[i], ft.XY * sx[i], ft.YX * sy[i], ft.YY * sy[i], ft.TX * sx[i] + x[i], ft.TY * sy[i] + y[i]);
+			}
+			
+			this.PaintSurface (path);
+			path.Dispose ();
+		}
+		
+		
 		public double PaintText(double x, double y, string text, Drawing.Font font, double size)
 		{
 			return this.PaintText (x, y, text, font, size, true);

@@ -369,6 +369,34 @@ namespace Epsitec.Common.Document.PDF
 		}
 		
 		
+		public void PaintGlyphs(Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+		{
+			int n = glyphs.Length;
+			
+			if ( n == 0 )  return;
+			
+			//	TODO: générer ce qu'il faut pour mettre les glyphes dans le fichier PDF. Mais
+			//	attention, il faudrait aussi générer l'information textuelle équivalente pour
+			//	permettre à Acrobat Reader d'utiliser les fonctions de recherche, par exemple.
+			
+			Drawing.Path path = new Drawing.Path();
+			Drawing.Transform ft = font.SyntheticTransform;
+			
+			ft.Scale(size);
+			
+			for ( int i=0; i<n; i++ )
+			{
+				path.Append(font, glyphs[i], ft.XX * sx[i], ft.XY * sx[i], ft.YX * sy[i], ft.YY * sy[i], ft.TX * sx[i] + x[i], ft.TY * sy[i] + y[i]);
+			}
+			
+			this.SetTransform(this.transform);
+			this.SetFillColor(this.color);
+			this.DoFill(path);
+			this.PutEOL();
+			
+			path.Dispose ();
+		}
+		
 		public double PaintText(double x, double y, string text, Font font, double size)
 		{
 			if ( this.fontList == null )  // textes en courbes ?

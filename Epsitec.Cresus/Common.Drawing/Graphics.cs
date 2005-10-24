@@ -293,6 +293,15 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public void PaintGlyphs(Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+		{
+			for (int i = 0; i < glyphs.Length; i++)
+			{
+				this.Rasterizer.AddGlyph (font, glyphs[i], x[i], y[i], size, sx[i], sy[i]);
+			}
+		}
+		
+		
 		public void   PaintText(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment align)
 		{
 			double text_width  = font.GetTextAdvance (text) * size;

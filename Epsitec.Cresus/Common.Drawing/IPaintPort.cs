@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -46,6 +46,8 @@ namespace Epsitec.Common.Drawing
 		
 		void PaintOutline(Path path);
 		void PaintSurface(Path path);
+		
+		void PaintGlyphs(Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy);
 		
 		double PaintText(double x, double y, string text, Font font, double size);
 		double PaintText(double x, double y, string text, Font font, double size, Font.ClassInfo[] infos);
