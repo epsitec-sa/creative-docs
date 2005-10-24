@@ -79,7 +79,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				return ((int)value).ToString();
+				return ((int)value).ToString(System.Globalization.CultureInfo.InvariantCulture);
 			}
 		}
 

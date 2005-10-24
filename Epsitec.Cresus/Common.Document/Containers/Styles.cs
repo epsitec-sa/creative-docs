@@ -780,7 +780,7 @@ namespace Epsitec.Common.Document.Containers
 				if ( currentAgg.Childrens.Contains(agg) )  continue;
 
 				string line = agg.AggregateName;
-				MenuItem item = new MenuItem("ChildrensNew", "", line, "", i.ToString());
+				MenuItem item = new MenuItem("ChildrensNew", "", line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				item.Pressed += new MessageEventHandler(this.HandleMenuChildrensPressed);
 				menu.Items.Add(item);
 				used ++;
@@ -802,7 +802,7 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleMenuChildrensPressed(object sender, MessageEventArgs e)
 		{
 			MenuItem item = sender as MenuItem;
-			int i = System.Int32.Parse(item.Name);
+			int i = System.Int32.Parse(item.Name, System.Globalization.CultureInfo.InvariantCulture);
 			Properties.Aggregate newAgg = this.document.Aggregates[i] as Properties.Aggregate;
 			Properties.Aggregate agg = this.GetAggregate();
 			this.document.Modifier.AggregateChildrensNew(agg, newAgg);

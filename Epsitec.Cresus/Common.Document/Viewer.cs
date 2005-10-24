@@ -33,6 +33,7 @@ namespace Epsitec.Common.Document
 			Picker,
 			PickerEmpty,
 			TextFlow,
+			TextFlowCreate,
 			TextFlowAdd,
 			TextFlowRemove,
 			Fine,
@@ -651,6 +652,12 @@ namespace Epsitec.Common.Document
 
 					selectAfterCreation = obj.SelectAfterCreation();
 					editAfterCreation = obj.EditAfterCreation();
+
+					if ( this.editFlowAfterCreate != null && obj is Objects.TextBox2 )
+					{
+						this.document.Modifier.TextFlowChange(obj as Objects.TextBox2, this.editFlowAfterCreate, true);
+						this.editFlowAfterCreate = null;
+					}
 				}
 				else
 				{
@@ -1131,17 +1138,29 @@ namespace Epsitec.Common.Document
 		{
 			this.editFlowPress  = Objects.DetectEditType.Out;
 			this.editFlowSelect = Objects.DetectEditType.Out;
+			this.editFlowAfterCreate = null;
 		}
 
 		protected void EditMouseDown(Message message, Point mouse, int downCount)
 		{
-			if ( this.editFlowSelect != Objects.DetectEditType.Out )  return;
-
 			Objects.DetectEditType handle;
+
+			if ( this.editFlowSelect != Objects.DetectEditType.Out )
+			{
+				Objects.TextBox2 edit = this.DetectEdit(mouse, true, out handle) as Objects.TextBox2;
+				if ( edit == null )
+				{
+					edit = this.document.Modifier.RetEditObject() as Objects.TextBox2;
+					this.document.Modifier.Tool = "ObjectTextBox2";
+					this.editFlowAfterCreate = edit;
+					this.CreateMouseDown(mouse);
+				}
+				return;
+			}
+
+			this.EditFlowReset();
 			Objects.Abstract obj = this.DetectEdit(mouse, false, out handle);
 
-			this.editFlowPress  = Objects.DetectEditType.Out;
-			this.editFlowSelect = Objects.DetectEditType.Out;
 			if ( obj != this.document.Modifier.RetEditObject() )
 			{
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.Edit);
@@ -1180,7 +1199,7 @@ namespace Epsitec.Common.Document
 
 				if ( obj == null )
 				{
-					this.ChangeMouseCursor(MouseCursorType.TextFlow);
+					this.ChangeMouseCursor(MouseCursorType.TextFlowCreate);
 				}
 				else
 				{
@@ -2474,6 +2493,10 @@ namespace Epsitec.Common.Document
 					this.MouseCursorImage(ref this.mouseCursorTextFlow, Misc.Icon("TextFlow"));
 					break;
 
+				case MouseCursorType.TextFlowCreate:
+					this.MouseCursorImage(ref this.mouseCursorTextFlowCreate, Misc.Icon("TextFlowCreate"));
+					break;
+
 				case MouseCursorType.TextFlowAdd:
 					this.MouseCursorImage(ref this.mouseCursorTextFlowAdd, Misc.Icon("TextFlowAdd"));
 					break;
@@ -3290,6 +3313,7 @@ namespace Epsitec.Common.Document
 		protected Objects.DetectEditType		editFlowPress = Objects.DetectEditType.Out;
 		protected Objects.DetectEditType		editFlowSelect = Objects.DetectEditType.Out;
 		protected Objects.Abstract				editFlowSrc = null;
+		protected Objects.TextBox2				editFlowAfterCreate = null;
 
 		protected VMenu							contextMenu;
 		protected VMenu							contextMenuOrder;
@@ -3318,6 +3342,7 @@ namespace Epsitec.Common.Document
 		protected Image							mouseCursorPicker = null;
 		protected Image							mouseCursorPickerEmpty = null;
 		protected Image							mouseCursorTextFlow = null;
+		protected Image							mouseCursorTextFlowCreate = null;
 		protected Image							mouseCursorTextFlowAdd = null;
 		protected Image							mouseCursorTextFlowRemove = null;
 		protected Image							mouseCursorFine = null;

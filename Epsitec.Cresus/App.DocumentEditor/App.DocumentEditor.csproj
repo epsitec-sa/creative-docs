@@ -1521,6 +1521,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\TextFlowCreate.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\TextFlowRemove.icon"
                     BuildAction = "EmbeddedResource"
                 />
