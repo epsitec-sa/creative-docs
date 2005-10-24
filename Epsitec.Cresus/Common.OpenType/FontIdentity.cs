@@ -180,6 +180,20 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public bool								IsSymbolFont
+		{
+			get
+			{
+				Table_cmap cmap = this.GetTable_cmap ();
+				return cmap.FindFormatSubTable (3, 0, 4) != null;
+			}
+		}
+		
+		
+		public Table_cmap GetTable_cmap()
+		{
+			return new Table_cmap (this.FontData["cmap"]);
+		}
 		
 		internal void DefineTableName(Table_name open_type_name_table)
 		{
@@ -219,6 +233,21 @@ namespace Epsitec.Common.OpenType
 			}
 			
 			return this.font_sizes[size] as SizeInfo;
+		}
+		
+		public string GetGlyphName(int glyph)
+		{
+			TableEntry entry = this.FontData["post"];
+			Table_post post  = entry == null ? null : new Table_post (entry);
+			
+			if (post != null)
+			{
+				return post.GetGlyphName (glyph);
+			}
+			else
+			{
+				return null;
+			}
 		}
 		
 		

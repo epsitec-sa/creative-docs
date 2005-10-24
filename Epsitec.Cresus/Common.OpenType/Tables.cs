@@ -460,6 +460,399 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
+	public class Table_post : Tables
+	{
+		public Table_post(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		public Table_post(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		{
+		}
+		
+		
+		public int		Version
+		{
+			get
+			{
+				return this.ReadInt32 (0);
+			}
+		}
+		
+		public int		UnderlinePosition
+		{
+			get
+			{
+				return this.ReadInt16 (4+4+0);
+			}
+		}
+		
+		public int		UnderlineThickness
+		{
+			get
+			{
+				return this.ReadInt16 (4+4+2);
+			}
+		}
+		
+		public bool		IsFixedPitch
+		{
+			get
+			{
+				return this.ReadInt32 (4+4+4) != 0;
+			}
+		}
+		
+		public int		NumberOfGlyphs
+		{
+			get
+			{
+				if (this.Version == 0x00020000)
+				{
+					return this.ReadInt16 (32);
+				}
+				else
+				{
+					return 0;
+				}
+			}
+		}
+		
+		
+		public int GetGlyphNameIndex(int glyph)
+		{
+			if (this.Version == 0x00020000)
+			{
+				if ((glyph < 0) ||
+					(glyph >= this.NumberOfGlyphs))
+				{
+					return -1;
+				}
+				else
+				{
+					return this.ReadInt16 (32+2+2*glyph);
+				}
+			}
+			else
+			{
+				return glyph;
+			}
+		}
+		
+		public string GetGlyphName(int glyph)
+		{
+			if (this.Version == 0x00010000)
+			{
+				return Table_post.GetMacGlyphName (glyph);
+			}
+			else if (this.Version != 0x00020000)
+			{
+				return null;
+			}
+			
+			int index = this.GetGlyphNameIndex (glyph);
+			
+			if (index < 1)
+			{
+				return ".notdef";
+			}
+			
+			if (index > 257)
+			{
+				index -= 258;
+				
+				int offset = 32+2+2*this.NumberOfGlyphs;
+				
+				while (index > 0)
+				{
+					offset += this.ReadInt8 (offset) + 1;
+					index--;
+				}
+				
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				int len = this.ReadInt8 (offset++);
+				
+				for (int i = 0; i < len; i++)
+				{
+					buffer.Append ((char) this.ReadInt8 (offset+i));
+				}
+				
+				return buffer.ToString ();
+			}
+			
+			return Table_post.GetMacGlyphName (index);
+		}
+		
+		
+		static private string GetMacGlyphName(int index)
+		{
+			//	http://developer.apple.com/fonts/TTRefMan/RM06/Chap6post.html
+			
+			switch (index)
+			{
+				case 1: return ".null";
+				case 2: return "nonmarkingreturn";
+				case 3: return "space";
+				case 4: return "exclam";
+				case 5: return "quotedbl";
+				case 6: return "numbersign";
+				case 7: return "dollar";
+				case 8: return "percent";
+				case 9: return "ampersand";
+				case 10: return "quotesingle";
+				case 11: return "parenleft";
+				case 12: return "parenright";
+				case 13: return "asterisk";
+				case 14: return "plus";
+				case 15: return "comma";
+				case 16: return "hyphen";
+				case 17: return "period";
+				case 18: return "slash";
+				case 19: return "zero";
+				case 20: return "one";
+				case 21: return "two";
+				case 22: return "three";
+				case 23: return "four";
+				case 24: return "five";
+				case 25: return "six";
+				case 26: return "seven";
+				case 27: return "eight";
+				case 28: return "nine";
+				case 29: return "colon";
+				case 30: return "semicolon";
+				case 31: return "less";
+				case 32: return "equal";
+				case 33: return "greater";
+				case 34: return "question";
+				case 35: return "at";
+				case 36: return "A";
+				case 37: return "B";
+				case 38: return "C";
+				case 39: return "D";
+				case 40: return "E";
+				case 41: return "F";
+				case 42: return "G";
+				case 43: return "H";
+				case 44: return "I";
+				case 45: return "J";
+				case 46: return "K";
+				case 47: return "L";
+				case 48: return "M";
+				case 49: return "N";
+				case 50: return "O";
+				case 51: return "P";
+				case 52: return "Q";
+				case 53: return "R";
+				case 54: return "S";
+				case 55: return "T";
+				case 56: return "U";
+				case 57: return "V";
+				case 58: return "W";
+				case 59: return "X";
+				case 60: return "Y";
+				case 61: return "Z";
+				case 62: return "bracketleft";
+				case 63: return "backslash";
+				case 64: return "bracketright";
+				case 65: return "asciicircum";
+				case 66: return "underscore";
+				case 67: return "grave";
+				case 68: return "a";
+				case 69: return "b";
+				case 70: return "c";
+				case 71: return "d";
+				case 72: return "e";
+				case 73: return "f";
+				case 74: return "g";
+				case 75: return "h";
+				case 76: return "i";
+				case 77: return "j";
+				case 78: return "k";
+				case 79: return "l";
+				case 80: return "m";
+				case 81: return "n";
+				case 82: return "o";
+				case 83: return "p";
+				case 84: return "q";
+				case 85: return "r";
+				case 86: return "s";
+				case 87: return "t";
+				case 88: return "u";
+				case 89: return "v";
+				case 90: return "w";
+				case 91: return "x";
+				case 92: return "y";
+				case 93: return "z";
+				case 94: return "braceleft";
+				case 95: return "bar";
+				case 96: return "braceright";
+				case 97: return "asciitilde";
+				case 98: return "Adieresis";
+				case 99: return "Aring";
+				case 100: return "Ccedilla";
+				case 101: return "Eacute";
+				case 102: return "Ntilde";
+				case 103: return "Odieresis";
+				case 104: return "Udieresis";
+				case 105: return "aacute";
+				case 106: return "agrave";
+				case 107: return "acircumflex";
+				case 108: return "adieresis";
+				case 109: return "atilde";
+				case 110: return "aring";
+				case 111: return "ccedilla";
+				case 112: return "eacute";
+				case 113: return "egrave";
+				case 114: return "ecircumflex";
+				case 115: return "edieresis";
+				case 116: return "iacute";
+				case 117: return "igrave";
+				case 118: return "icircumflex";
+				case 119: return "idieresis";
+				case 120: return "ntilde";
+				case 121: return "oacute";
+				case 122: return "ograve";
+				case 123: return "ocircumflex";
+				case 124: return "odieresis";
+				case 125: return "otilde";
+				case 126: return "uacute";
+				case 127: return "ugrave";
+				case 128: return "ucircumflex";
+				case 129: return "udieresis";
+				case 130: return "dagger";
+				case 131: return "degree";
+				case 132: return "cent";
+				case 133: return "sterling";
+				case 134: return "section";
+				case 135: return "bullet";
+				case 136: return "paragraph";
+				case 137: return "germandbls";
+				case 138: return "registered";
+				case 139: return "copyright";
+				case 140: return "trademark";
+				case 141: return "acute";
+				case 142: return "dieresis";
+				case 143: return "notequal";
+				case 144: return "AE";
+				case 145: return "Oslash";
+				case 146: return "infinity";
+				case 147: return "plusminus";
+				case 148: return "lessequal";
+				case 149: return "greaterequal";
+				case 150: return "yen";
+				case 151: return "mu";
+				case 152: return "partialdiff";
+				case 153: return "summation";
+				case 154: return "product";
+				case 155: return "pi";
+				case 156: return "integral";
+				case 157: return "ordfeminine";
+				case 158: return "ordmasculine";
+				case 159: return "Omega";
+				case 160: return "ae";
+				case 161: return "oslash";
+				case 162: return "questiondown";
+				case 163: return "exclamdown";
+				case 164: return "logicalnot";
+				case 165: return "radical";
+				case 166: return "florin";
+				case 167: return "approxequal";
+				case 168: return "Delta";
+				case 169: return "guillemotleft";
+				case 170: return "guillemotright";
+				case 171: return "ellipsis";
+				case 172: return "nonbreakingspace";
+				case 173: return "Agrave";
+				case 174: return "Atilde";
+				case 175: return "Otilde";
+				case 176: return "OE";
+				case 177: return "oe";
+				case 178: return "endash";
+				case 179: return "emdash";
+				case 180: return "quotedblleft";
+				case 181: return "quotedblright";
+				case 182: return "quoteleft";
+				case 183: return "quoteright";
+				case 184: return "divide";
+				case 185: return "lozenge";
+				case 186: return "ydieresis";
+				case 187: return "Ydieresis";
+				case 188: return "fraction";
+				case 189: return "currency";
+				case 190: return "guilsinglleft";
+				case 191: return "guilsinglright";
+				case 192: return "fi";
+				case 193: return "fl";
+				case 194: return "daggerdbl";
+				case 195: return "periodcentered";
+				case 196: return "quotesinglbase";
+				case 197: return "quotedblbase";
+				case 198: return "perthousand";
+				case 199: return "Acircumflex";
+				case 200: return "Ecircumflex";
+				case 201: return "Aacute";
+				case 202: return "Edieresis";
+				case 203: return "Egrave";
+				case 204: return "Iacute";
+				case 205: return "Icircumflex";
+				case 206: return "Idieresis";
+				case 207: return "Igrave";
+				case 208: return "Oacute";
+				case 209: return "Ocircumflex";
+				case 210: return "apple";
+				case 211: return "Ograve";
+				case 212: return "Uacute";
+				case 213: return "Ucircumflex";
+				case 214: return "Ugrave";
+				case 215: return "dotlessi";
+				case 216: return "circumflex";
+				case 217: return "tilde";
+				case 218: return "macron";
+				case 219: return "breve";
+				case 220: return "dotaccent";
+				case 221: return "ring";
+				case 222: return "cedilla";
+				case 223: return "hungarumlaut";
+				case 224: return "ogonek";
+				case 225: return "caron";
+				case 226: return "Lslash";
+				case 227: return "lslash";
+				case 228: return "Scaron";
+				case 229: return "scaron";
+				case 230: return "Zcaron";
+				case 231: return "zcaron";
+				case 232: return "brokenbar";
+				case 233: return "Eth";
+				case 234: return "eth";
+				case 235: return "Yacute";
+				case 236: return "yacute";
+				case 237: return "Thorn";
+				case 238: return "thorn";
+				case 239: return "minus";
+				case 240: return "multiply";
+				case 241: return "onesuperior";
+				case 242: return "twosuperior";
+				case 243: return "threesuperior";
+				case 244: return "onehalf";
+				case 245: return "onequarter";
+				case 246: return "threequarters";
+				case 247: return "franc";
+				case 248: return "Gbreve";
+				case 249: return "gbreve";
+				case 250: return "Idotaccent";
+				case 251: return "Scedilla";
+				case 252: return "scedilla";
+				case 253: return "Cacute";
+				case 254: return "cacute";
+				case 255: return "Ccaron";
+				case 256: return "ccaron";
+				case 257: return "dcroat";
+				default: return ".notdef";
+			}
+		}
+	}
+	
 	public class Table_loca_Short : Tables
 	{
 		public Table_loca_Short(byte[] data, int offset) : base (data, offset)
