@@ -29,8 +29,10 @@ namespace Epsitec.Common.Document.Objects
 			this.NewTextFlow();
 			this.textFlow.TextStory.TextContext.IsDegradedLayoutEnabled = true;
 
+			this.textFlow.TextStory.DebugDisableOpletQueue = true;
 			this.metaNavigator.Insert(Text.Unicode.Code.EndOfText);
 			this.metaNavigator.TextNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 0);
+			this.textFlow.TextStory.DebugDisableOpletQueue = false;
 
 			this.metaNavigator.TextChanged += new Support.EventHandler(this.HandleTextChanged);
 			this.metaNavigator.CursorMoved += new Support.EventHandler(this.HandleCursorMoved);
