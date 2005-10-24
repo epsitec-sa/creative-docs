@@ -1308,7 +1308,7 @@ namespace Epsitec.Common.Document
 
 			try
 			{
-				return int.Parse(tag.Substring(2));
+				return int.Parse(tag.Substring(2), System.Globalization.CultureInfo.InvariantCulture);
 			}
 			catch
 			{
@@ -1319,7 +1319,7 @@ namespace Epsitec.Common.Document
 		// Retourne le tag d'un tabulateur interactif.
 		public string GetTabTag(int id)
 		{
-			return string.Format("Ti{0}", id);
+			return string.Format(System.Globalization.CultureInfo.InvariantCulture, "Ti{0}", id);
 		}
 
 		// Liste des styles de texte de ce document.

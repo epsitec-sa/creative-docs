@@ -199,11 +199,7 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( field.Items.Count == 0 )
 			{
 				field.Items.Add(Res.Strings.Action.Text.Font.Default);  // par défaut
-
-				foreach( string face in this.document.TextContext.GetAvailableFontFaces() )
-				{
-					field.Items.Add(face);
-				}
+				Misc.AddFontList(this.document, field);
 			}
 		}
 

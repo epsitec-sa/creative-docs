@@ -1508,6 +1508,7 @@ namespace Epsitec.Common.Document.Objects
 			double dx = x - selX;
 			double dy = layout.LineY2 - layout.LineY1;
 			Drawing.Rectangle rect = new Drawing.Rectangle(selX, layout.LineY1, dx, dy);
+			graphics.Align(ref rect);
 
 			selBbox = Drawing.Rectangle.Union(selBbox, rect);
 

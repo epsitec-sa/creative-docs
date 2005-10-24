@@ -116,7 +116,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.font.IsReadOnly = true;
 				this.font.TabIndex = tabIndex++;
 				this.font.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				Misc.AddFontList(this.font, !this.limitedVersion);
+				Misc.AddFontList(this.editor.CurrentDocument, this.font);
 				this.font.Text = this.fontName;
 				if ( this.font.SelectedIndex < 0 )
 				{
