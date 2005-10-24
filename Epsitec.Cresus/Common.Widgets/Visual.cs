@@ -779,8 +779,18 @@ namespace Epsitec.Common.Widgets
 			that.OnSizeChanged (new PropertyChangedEventArgs (Visual.SizeProperty, old_value, new_value));
 		}
 		
+		private static void NotifyParentChanged(Object o, object old_value, object new_value)
+		{
+			Visual that = o as Visual;
+			that.OnParentChanged (new PropertyChangedEventArgs (Visual.ParentProperty, old_value, new_value));
+		}
+		
 		
 		protected virtual void OnSizeChanged(Types.PropertyChangedEventArgs e)
+		{
+		}
+		
+		protected virtual void OnParentChanged(Types.PropertyChangedEventArgs e)
 		{
 		}
 		
@@ -837,7 +847,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly Property IndexProperty				= Property.Register ("Index", typeof (int), typeof (Visual), new PropertyMetadata (-1));
 		public static readonly Property GroupProperty				= Property.Register ("Group", typeof (string), typeof (Visual));
 		public static readonly Property NameProperty				= Property.Register ("Name", typeof (string), typeof (Visual));
-		public static readonly Property ParentProperty				= Property.RegisterReadOnly ("Parent", typeof (Visual), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue)));
+		public static readonly Property ParentProperty				= Property.RegisterReadOnly ("Parent", typeof (Visual), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentValue), new PropertyInvalidatedCallback (Visual.NotifyParentChanged)));
 		public static readonly Property ParentLayerProperty			= Property.RegisterReadOnly ("ParentLayer", typeof (Layouts.Layer), typeof (Visual), new PropertyMetadata (new GetValueOverrideCallback (Visual.GetParentLayerValue)));
 		
 		public static readonly Property AnchorProperty				= Property.Register ("Anchor", typeof (AnchorStyles), typeof (Visual), new VisualPropertyMetadata (AnchorStyles.None, VisualPropertyFlags.AffectsParentLayout));

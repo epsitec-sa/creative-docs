@@ -4632,6 +4632,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
+		protected override void OnParentChanged(Epsitec.Common.Types.PropertyChangedEventArgs e)
+		{
+			base.OnParentChanged (e);
+			
+			if (e.NewValue == null)
+			{
+				this.AboutToBecomeOrphan ();
+			}
+		}
+
 #if false //#fix
 		protected void HandleParentChanged()
 		{
