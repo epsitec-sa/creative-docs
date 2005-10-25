@@ -207,7 +207,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public string[] GetAvailableFontFaces()
+		public static string[] GetAvailableFontFaces()
 		{
 			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
 			
@@ -225,7 +225,7 @@ namespace Epsitec.Common.Text
 			return names;
 		}
 		
-		public OpenType.FontIdentity[] GetAvailableFontIdentities(string face)
+		public static OpenType.FontIdentity[] GetAvailableFontIdentities(string face)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			

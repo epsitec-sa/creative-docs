@@ -267,11 +267,11 @@ namespace Epsitec.Common.Widgets
 			Text.TextStory   story     = frame.TextStory;
 			Text.TextStyle[] no_styles = new Text.TextStyle[0];
 			
-			foreach (string face in story.TextContext.GetAvailableFontFaces ())
+			foreach (string face in Common.Text.TextContext.GetAvailableFontFaces ())
 			{
 				System.Console.WriteLine ("Font face: {0}", face);
 				
-				foreach (OpenType.FontIdentity id in story.TextContext.GetAvailableFontIdentities (face))
+				foreach (OpenType.FontIdentity id in Common.Text.TextContext.GetAvailableFontIdentities (face))
 				{
 					System.Console.WriteLine ("  '{0}', FontWeight={1}, FontStyle={2}, ({3})", id.InvariantStyleName, id.FontStyle, id.FontWeight, id.FullName);
 				}
