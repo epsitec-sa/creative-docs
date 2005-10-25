@@ -652,6 +652,21 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override string GetTooltipEditedText(Point pos)
 		{
+			if ( this.isDragging )
+			{
+				Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
+				double x = this.ScreenToDocument(pos.X) - bbox.Left;
+				x = this.SnapGrid(x);
+				return this.document.Modifier.RealToString(x);
+			}
+
+			Rectangle rect = this.Client.Bounds;
+			rect.Width = rect.Height;
+			if ( rect.Contains(pos) )  // change le type de tabulateur à insérer ?
+			{
+				return Res.Strings.Action.Text.Ruler.TabChoice;
+			}
+			
 			int handle = this.DraggingDetect(pos);
 
 			if ( handle == HRuler.HandleLeftFirst )  return Res.Strings.Action.Text.Ruler.HandleLeftFirst;
@@ -659,7 +674,20 @@ namespace Epsitec.Common.Document.Widgets
 			if ( handle == HRuler.HandleFirstBody )  return Res.Strings.Action.Text.Ruler.HandleFirstBody;
 			if ( handle == HRuler.HandleRight     )  return Res.Strings.Action.Text.Ruler.HandleRight;
 
-			return null;
+			handle -= HRuler.HandleFirstTab;
+			if ( handle >= 0 && handle < this.tabs.Length )
+			{
+				switch ( this.tabs[handle].Type )
+				{
+					case Drawing.TextTabType.Right:    return Res.Strings.Action.Text.Ruler.TabRight;
+					case Drawing.TextTabType.Left:     return Res.Strings.Action.Text.Ruler.TabLeft;
+					case Drawing.TextTabType.Center:   return Res.Strings.Action.Text.Ruler.TabCenter;
+					case Drawing.TextTabType.Decimal:  return Res.Strings.Action.Text.Ruler.TabDecimal;
+					case Drawing.TextTabType.Indent:   return Res.Strings.Action.Text.Ruler.TabIndent;
+				}
+			}
+
+			return Res.Strings.Action.Text.Ruler.TabCreate;
 		}
 
 		
