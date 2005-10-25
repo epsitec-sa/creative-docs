@@ -2,6 +2,8 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Document;
+using Epsitec.Common.Text;
+using Epsitec.Common.OpenType;
 
 namespace Epsitec.App.DocumentEditor.Dialogs
 {
@@ -15,7 +17,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 	{
 		public Glyphs(DocumentEditor editor) : base(editor)
 		{
-			this.fontName = "Arial";
+			this.fontFace = "Arial";
+			this.fontStyle = Misc.DefaultFontStyle(this.fontFace);
 
 			this.listSelectedIndex = new int[this.maxFamiliy];
 			for ( int i=0 ; i<this.maxFamiliy ; i++ )
@@ -104,34 +107,50 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				// Onglet Array.
 				tabIndex = 0;
 
-				StaticText fontLabel = new StaticText(bookArray);
-				fontLabel.Text = Res.Strings.Dialog.Glyphs.Font;
-				fontLabel.Width = 50;
-				fontLabel.Anchor = AnchorStyles.TopLeft;
-				fontLabel.AnchorMargins = new Margins(6, 0, 6+3, 0);
+				StaticText fontFaceLabel = new StaticText(bookArray);
+				fontFaceLabel.Text = Res.Strings.Dialog.Glyphs.FontFace;
+				fontFaceLabel.Width = 50;
+				fontFaceLabel.Anchor = AnchorStyles.TopLeft;
+				fontFaceLabel.AnchorMargins = new Margins(6, 0, 6+3, 0);
 
-				this.font = new TextFieldCombo(bookArray);
-				this.font.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
-				this.font.AnchorMargins = new Margins(6+50, 6+20+3, 6, 0);
-				this.font.IsReadOnly = true;
-				this.font.TabIndex = tabIndex++;
-				this.font.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				Misc.AddFontList(this.font, true);
-				this.font.Text = this.fontName;
-				if ( this.font.SelectedIndex < 0 )
+				this.fieldFontFace = new TextFieldCombo(bookArray);
+				this.fieldFontFace.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
+				this.fieldFontFace.AnchorMargins = new Margins(6+50, 6+20+3, 6, 0);
+				this.fieldFontFace.IsReadOnly = true;
+				this.fieldFontFace.TabIndex = tabIndex++;
+				this.fieldFontFace.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				Misc.AddFontList(this.fieldFontFace, true);
+				this.fieldFontFace.Text = this.fontFace;
+				if ( this.fieldFontFace.SelectedIndex < 0 )
 				{
-					this.font.Text = "Arial";
+					this.fieldFontFace.Text = "Arial";
 				}
-				if ( this.font.SelectedIndex < 0 )
+				if ( this.fieldFontFace.SelectedIndex < 0 )
 				{
-					this.font.SelectedIndex = 0;
+					this.fieldFontFace.SelectedIndex = 0;
 				}
-				this.font.SelectedIndexChanged += new EventHandler(this.HandleFontChanged);
+				this.fieldFontFace.SelectedIndexChanged += new EventHandler(this.HandleFontFaceChanged);
+
+				StaticText fontStyleLabel = new StaticText(bookArray);
+				fontStyleLabel.Text = Res.Strings.Dialog.Glyphs.FontStyle;
+				fontStyleLabel.Width = 50;
+				fontStyleLabel.Anchor = AnchorStyles.TopLeft;
+				fontStyleLabel.AnchorMargins = new Margins(6, 0, 6+20+4+3, 0);
+
+				this.fieldFontStyle = new TextFieldCombo(bookArray);
+				this.fieldFontStyle.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
+				this.fieldFontStyle.AnchorMargins = new Margins(6+50, 6+20+3, 6+20+4, 0);
+				this.fieldFontStyle.IsReadOnly = true;
+				this.fieldFontStyle.TabIndex = tabIndex++;
+				this.fieldFontStyle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.UpdateFontStyle();
+				this.fieldFontStyle.Text = this.fontStyle;
+				this.fieldFontStyle.SelectedIndexChanged += new EventHandler(this.HandleFontStyleChanged);
 
 				this.currentFont = new GlyphButton(bookArray);
 				this.currentFont.GlyphShape = GlyphShape.ArrowLeft;
 				this.currentFont.Width = 20;
-				this.currentFont.Height = 20;
+				this.currentFont.Height = 20+5+20;
 				this.currentFont.Anchor = AnchorStyles.TopRight;
 				this.currentFont.AnchorMargins = new Margins(0, 6, 6, 0);
 				this.currentFont.TabIndex = tabIndex++;
@@ -141,10 +160,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.array = new GlyphArray(bookArray);
 				this.array.Dock = DockStyle.Fill;
-				this.array.DockMargins = new Margins(6, 6, 6+20+4, 6+20+4);
+				this.array.DockMargins = new Margins(6, 6, 6+20+4+20+4, 6+20+4);
 				this.array.TabIndex = tabIndex++;
 				this.array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-				this.array.FontName = this.fontName;
+				this.array.SetFont(this.fontFace, this.fontStyle);
 				this.array.SelectedIndex = -1;
 				this.array.DoubleClicked += new MessageEventHandler(this.HandleDoubleClicked);
 				this.array.ChangeSelected += new EventHandler(this.HandleArraySelected);
@@ -425,13 +444,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				char c = (char) code;
 
 				string currentFont = this.editor.CurrentDocument.Modifier.EditGetFontName();
-				if ( this.fontName == currentFont )
+				if ( this.fontFace == currentFont )
 				{
 					insert = c.ToString();
 				}
 				else
 				{
-					insert = string.Format("<font face=\"{0}\">{1}</font>", this.fontName, c.ToString());
+					insert = string.Format("<font face=\"{0}\">{1}</font>", this.fontFace, c.ToString());
 				}
 			}
 
@@ -440,8 +459,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		// Met à jour le TextFieldCombo des styles de police.
+		protected void UpdateFontStyle()
+		{
+			this.fieldFontStyle.Items.Clear();  // vide la liste
+
+			Common.OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(this.fontFace);
+			foreach ( Common.OpenType.FontIdentity id in list )
+			{
+				this.fieldFontStyle.Items.Add(id.InvariantStyleName);
+			}
+		}
+
 		// Change la police.
-		protected void SetFontName(string fontName)
+		protected void SetFontFace(string fontFace)
 		{
 			if ( this.array.SelectedIndex != -1 )
 			{
@@ -452,18 +483,44 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 			}
 
-			this.fontName = fontName;
-			this.font.Text = fontName;
-			this.array.FontName = fontName;
+			this.fontFace = fontFace;
+			this.fieldFontFace.Text = this.fontFace;
+
+			this.UpdateFontStyle();
+			this.fontStyle = Misc.DefaultFontStyle(this.fontFace);
+			this.fieldFontStyle.Text = this.fontStyle;
+
+			this.array.SetFont(this.fontFace, this.fontStyle);
+
+			this.array.SelectedIndex = this.array.UnicodeToIndex(this.arrayProofCode);
+			this.array.ShowSelectedCell();
+		}
+
+		// Change le style de la police.
+		protected void SetFontStyle(string fontStyle)
+		{
+			if ( this.array.SelectedIndex != -1 )
+			{
+				int code = this.array.IndexToUnicode(this.array.SelectedIndex);
+				if ( code != 0 )
+				{
+					this.arrayProofCode = code;
+				}
+			}
+
+			this.fontStyle = fontStyle;
+			this.fieldFontStyle.Text = this.fontStyle;
+
+			this.array.SetFont(this.fontFace, this.fontStyle);
 
 			this.array.SelectedIndex = this.array.UnicodeToIndex(this.arrayProofCode);
 			this.array.ShowSelectedCell();
 		}
 
 		// Police changée.
-		private void HandleFontChanged(object sender)
+		private void HandleFontFaceChanged(object sender)
 		{
-			this.SetFontName(this.font.Text);
+			this.SetFontFace(this.fieldFontFace.Text);
 		}
 
 		// Bouton "<-" cliqué.
@@ -471,9 +528,15 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			if ( !this.editor.IsCurrentDocument )  return;
 
-			string fontName = this.editor.CurrentDocument.Modifier.EditGetFontName();
-			if ( fontName == "" )  return;
-			this.SetFontName(fontName);
+			string fontFace = this.editor.CurrentDocument.Modifier.EditGetFontName();
+			if ( fontFace == "" )  return;
+			this.SetFontFace(fontFace);
+		}
+
+		// Style de la police changé.
+		private void HandleFontStyleChanged(object sender)
+		{
+			this.SetFontStyle(this.fieldFontStyle.Text);
 		}
 
 		// Famille changée.
@@ -548,7 +611,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 
 		protected bool				limitedVersion = true;
-		protected string			fontName;
+		protected string			fontFace;
+		protected string			fontStyle;
 		protected readonly int		maxFamiliy = 10;
 		protected int[]				listSelectedIndex;
 		protected int				arrayProofCode = -1;
@@ -559,7 +623,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected TextFieldCombo	family;
 		protected ScrollList		list;
 
-		protected TextFieldCombo	font;
+		protected TextFieldCombo	fieldFontFace;
+		protected TextFieldCombo	fieldFontStyle;
 		protected GlyphButton		currentFont;
 		protected GlyphArray		array;
 		protected TextField			status;

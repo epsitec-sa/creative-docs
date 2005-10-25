@@ -1249,44 +1249,6 @@ namespace Epsitec.Common.Document
 			this.textContext.StyleList.NewTextStyle("AlignJustif", Text.TextStyleClass.Paragraph, new Text.Properties.MarginsProperty(double.NaN, double.NaN, double.NaN, double.NaN, Text.Properties.SizeUnits.None, 1.0, 0.0, 0.0, double.NaN, double.NaN, Text.Properties.ThreeState.Undefined));
 		}
 
-		// Cherche le FontStyle par défaut pour un FontFace donné.
-		public string SearchDefaultFontStyle(string face)
-		{
-			OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(face);
-
-			foreach ( OpenType.FontIdentity id in list )
-			{
-				if ( id.FontWeight == OpenType.FontWeight.Normal &&
-					 id.FontStyle  == OpenType.FontStyle.Normal  )
-				{
-					return id.InvariantStyleName;
-				}
-			}
-
-			foreach ( OpenType.FontIdentity id in list )
-			{
-				if ( id.FontWeight == OpenType.FontWeight.Normal )
-				{
-					return id.InvariantStyleName;
-				}
-			}
-
-			foreach ( OpenType.FontIdentity id in list )
-			{
-				if ( id.FontStyle == OpenType.FontStyle.Normal )
-				{
-					return id.InvariantStyleName;
-				}
-			}
-
-			foreach ( OpenType.FontIdentity id in list )
-			{
-				return id.InvariantStyleName;
-			}
-
-			return "";
-		}
-
 		// Cherche un tag unique pour le prochain tabulateur interactif à créer.
 		public string SearchTabNextTag()
 		{

@@ -106,6 +106,44 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Cherche le FontStyle par défaut pour un FontFace donné.
+		static public string DefaultFontStyle(string face)
+		{
+			OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(face);
+
+			foreach ( OpenType.FontIdentity id in list )
+			{
+				if ( id.FontWeight == OpenType.FontWeight.Normal &&
+					 id.FontStyle  == OpenType.FontStyle.Normal  )
+				{
+					return id.InvariantStyleName;
+				}
+			}
+
+			foreach ( OpenType.FontIdentity id in list )
+			{
+				if ( id.FontWeight == OpenType.FontWeight.Normal )
+				{
+					return id.InvariantStyleName;
+				}
+			}
+
+			foreach ( OpenType.FontIdentity id in list )
+			{
+				if ( id.FontStyle == OpenType.FontStyle.Normal )
+				{
+					return id.InvariantStyleName;
+				}
+			}
+
+			foreach ( OpenType.FontIdentity id in list )
+			{
+				return id.InvariantStyleName;
+			}
+
+			return "";
+		}
+
 		// Donne une fonte d'après son nom.
 		static public Font GetFont(string fontName)
 		{

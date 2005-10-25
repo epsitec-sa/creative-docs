@@ -16,6 +16,14 @@ namespace Epsitec.Common.Document.PDF
 			this.italic  = oneChar.Italic;
 		}
 
+		public CharacterList(ushort glyph, Drawing.Font font)
+		{
+			this.unicode = (int) glyph;
+			this.font    = font;
+			this.bold    = false;
+			this.italic  = false;
+		}
+
 		public void Dispose()
 		{
 			this.font = null;

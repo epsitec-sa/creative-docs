@@ -116,7 +116,8 @@
 	<data name="Dialog.Glyphs.Tooltip.ArrayMinus">Aperçu plus petit</data>
 	<data name="Dialog.Glyphs.Tooltip.ArrayPlus">Aperçu plus grand</data>
 	<data name="Dialog.Glyphs.Tooltip.CurrentFont">Récupérer la police en cours</data>
-	<data name="Dialog.Glyphs.Font">Police</data>
+	<data name="Dialog.Glyphs.FontFace">Police</data>
+	<data name="Dialog.Glyphs.FontStyle">Variante</data>
 	<data name="Dialog.Glyphs.Family.List">Famille</data>
 	<data name="Dialog.Glyphs.Family.Typo">Typographie</data>
 	<data name="Dialog.Glyphs.Family.Space">Espaces</data>

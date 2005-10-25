@@ -142,7 +142,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 			else
 			{
-				string fontStyle = this.document.SearchDefaultFontStyle(fontFace);
+				string fontStyle = Misc.DefaultFontStyle(fontFace);
 				Text.Properties.FontProperty font = new Text.Properties.FontProperty(fontFace, fontStyle);
 			}
 

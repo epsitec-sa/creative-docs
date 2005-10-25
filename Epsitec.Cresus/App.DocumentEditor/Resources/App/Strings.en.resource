@@ -115,7 +115,8 @@
 	<data name="Dialog.Glyphs.Tooltip.ArrayMinus">Smaller preview</data>
 	<data name="Dialog.Glyphs.Tooltip.ArrayPlus">Larger preview</data>
 	<data name="Dialog.Glyphs.Tooltip.CurrentFont">Synchronize with active font</data>
-	<data name="Dialog.Glyphs.Font">Font</data>
+	<data name="Dialog.Glyphs.FontFace">Font</data>
+	<data name="Dialog.Glyphs.FontStyle">Variant</data>
 	<data name="Dialog.Glyphs.Family.List">List</data>
 	<data name="Dialog.Glyphs.Family.Typo">Typographic characters</data>
 	<data name="Dialog.Glyphs.Family.Space">Spaces</data>

@@ -294,6 +294,10 @@ namespace Epsitec.Common.Document.Objects
 		// Ajoute tous les caractères utilisés par l'objet dans une table.
 		public override void FillOneCharList(IPaintPort port, DrawingContext drawingContext, System.Collections.Hashtable table)
 		{
+			this.charactersTable = table;
+			this.DrawText(port, drawingContext);
+			this.charactersTable = null;
+
 #if false
 			Point p1 = new Point();
 			Point p2 = new Point();
@@ -1345,7 +1349,7 @@ namespace Epsitec.Common.Document.Objects
 			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.edited;
 			this.textFlow.TextFitter.RenderTextFrame(this.textFrame, this);
 
-			if ( this.edited && !this.hasSelection && this.graphics != null )
+			if ( this.edited && !this.hasSelection && this.graphics != null && this.charactersTable == null )
 			{
 				Text.ITextFrame frame;
 				double cx, cy, ascender, descender;
@@ -1484,7 +1488,7 @@ namespace Epsitec.Common.Document.Objects
 			
 			this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.FromName(color));
 			
-			if ( this.edited && selRectList != null && this.graphics != null )
+			if ( this.edited && selRectList != null && this.graphics != null && this.charactersTable == null )
 			{
 				this.hasSelection = true;
 				
@@ -1504,7 +1508,7 @@ namespace Epsitec.Common.Document.Objects
 		// Marque la fin d'une tranche sélectionnée.
 		protected void MarkSel(Text.Layout.Context layout, ref System.Collections.ArrayList selRectList, ref Drawing.Rectangle selBbox, double x, double selX)
 		{
-			if ( this.graphics == null )  return;
+			if ( this.graphics == null || this.charactersTable != null )  return;
 
 			double dx = x - selX;
 			double dy = layout.LineY2 - layout.LineY1;
@@ -1532,43 +1536,63 @@ namespace Epsitec.Common.Document.Objects
 		// Effectue le rendu des caractères.
 		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, RichColor color)
 		{
-			if ( this.graphics != null )  // affichage sur écran ?
+			if ( this.charactersTable == null )
 			{
-				if ( font.FontManagerType == OpenType.FontManagerType.System )
+				if ( this.graphics != null )  // affichage sur écran ?
 				{
-					Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, color.Basic);
-				}
-				else
-				{
-					Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
-					
-					if ( drawingFont != null )
+					if ( font.FontManagerType == OpenType.FontManagerType.System )
 					{
-						for ( int i=0 ; i<glyphs.Length ; i++ )
+						Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, color.Basic);
+					}
+					else
+					{
+						Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+						if ( drawingFont != null )
 						{
-							if ( glyphs[i] < 0xffff )
+							for ( int i=0 ; i<glyphs.Length ; i++ )
 							{
-								this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+								if ( glyphs[i] < 0xffff )
+								{
+									this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+								}
+							}
+						}
+					
+						this.graphics.RenderSolid(color.Basic);
+					}
+				}
+				else if ( this.port is Printing.PrintPort )  // impression ?
+				{
+					Printing.PrintPort printPort = port as Printing.PrintPort;
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+					printPort.RichColor = color;
+					printPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
+				}
+				else if ( this.port is PDF.Port )  // exportation PDF ?
+				{
+					PDF.Port pdfPort = port as PDF.Port;
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+					pdfPort.RichColor = color;
+					pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
+				}
+			}
+			else
+			{
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+				if ( drawingFont != null )
+				{
+					for ( int i=0 ; i<glyphs.Length ; i++ )
+					{
+						if ( glyphs[i] < 0xffff )
+						{
+							PDF.CharacterList cl = new PDF.CharacterList(glyphs[i], drawingFont);
+							if ( !this.charactersTable.ContainsKey(cl) )
+							{
+								this.charactersTable.Add(cl, null);
 							}
 						}
 					}
-					
-					this.graphics.RenderSolid(color.Basic);
 				}
-			}
-			else if ( this.port is Printing.PrintPort )  // impression ?
-			{
-				Printing.PrintPort printPort = port as Printing.PrintPort;
-				Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
-				printPort.RichColor = color;
-				printPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
-			}
-			else if ( this.port is PDF.Port )  // exportation PDF ?
-			{
-				PDF.Port pdfPort = port as PDF.Port;
-				Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
-				pdfPort.RichColor = color;
-				pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
 			}
 		}
 		
@@ -1583,8 +1607,9 @@ namespace Epsitec.Common.Document.Objects
 		
 		public void RenderEndParagraph(Text.Layout.Context context)
 		{
+			if ( this.charactersTable != null )  return;
+
 			Text.Layout.UnderlineRecord[] records = context.UnderlineRecords;
-			
 			double x1 = 0;
 			double y1 = 0;
 			
@@ -1791,5 +1816,6 @@ namespace Epsitec.Common.Document.Objects
 		protected Transform						transform;
 		protected Drawing.Rectangle				cursorBox;
 		protected Drawing.Rectangle				selectBox;
+		protected System.Collections.Hashtable	charactersTable = null;
 	}
 }

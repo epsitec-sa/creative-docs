@@ -1,3 +1,7 @@
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Text;
+using Epsitec.Common.OpenType;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -66,22 +70,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Choix de la fonte.
-		public string FontName
+		public void SetFont(string fontFace, string fontStyle)
 		{
-			get
+			if ( this.fontFace != fontFace || this.fontStyle != fontStyle )
 			{
-				return this.fontName;
-			}
-
-			set
-			{
-				if ( this.fontName != value )
-				{
-					this.fontName = value;
-					this.UpdateUnicodes();
-					this.scroller.Value = 0.0M;
-					this.Invalidate();
-				}
+				this.fontFace = fontFace;
+				this.fontStyle = fontStyle;
+				this.UpdateUnicodes();
+				this.scroller.Value = 0.0M;
+				this.Invalidate();
 			}
 		}
 
@@ -127,7 +124,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.unicodes = null;
 
-			Drawing.Font font = GlyphArray.GetFont(this.fontName);
+			Drawing.Font font = GlyphArray.GetFont(this.fontFace, this.fontStyle);
 			if ( font == null )  return;
 
 			int total = 0;
@@ -149,7 +146,7 @@ namespace Epsitec.Common.Widgets
 					if ( i >= 0x1100 && i <= 0x11FF )  continue;  // jamos ?
 					if ( i >= 0x3000 && i <= 0x30FF )  continue;  // katakana ?
 					if ( i >= 0x3100 && i <= 0x31FF )  continue;  // bopomofo ?
-					if ( i >= 0xE000 && i <= 0xF0FF )  continue;  // réservé ?
+					//?if ( i >= 0xE000 && i <= 0xF0FF )  continue;  // réservé ?
 
 					int glyph = font.GetGlyphIndex(i);
 					if ( glyph != 0 )
@@ -180,7 +177,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.scroller != null )
 			{
-				this.scroller.Bounds = new Drawing.Rectangle(this.Client.Width-this.scroller.Width, 0, this.scroller.Width, this.Client.Height);
+				this.scroller.Bounds = new Rectangle(this.Client.Width-this.scroller.Width, 0, this.scroller.Width, this.Client.Height);
 			}
 		}
 		
@@ -194,7 +191,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		// Gestion des événements.
-		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		protected override void ProcessMessage(Message message, Point pos)
 		{
 			if ( !this.IsEnabled )  return;
 
@@ -307,9 +304,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Détection du glyphe visé.
-		protected int Detect(Drawing.Point pos)
+		protected int Detect(Point pos)
 		{
-			Drawing.Rectangle area = this.DrawingArea();
+			Rectangle area = this.DrawingArea();
 			if ( !area.Contains(pos) )  return -1;
 
 			int dx = this.TotalCellVisibleX();
@@ -326,12 +323,12 @@ namespace Epsitec.Common.Widgets
 
 
 		// Peinture du widget.
-		protected override void PaintForegroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner    adorner = Widgets.Adorner.Factory.Active;
 			WidgetState state   = this.PaintState;
 			
-			Drawing.Rectangle area = this.DrawingArea();
+			Rectangle area = this.DrawingArea();
 			int dx = this.TotalCellVisibleX();
 			int dy = this.TotalCellVisibleY();
 			double cellWidth  = this.CellWidth();
@@ -340,7 +337,7 @@ namespace Epsitec.Common.Widgets
 			// Dessine les glyphes.
 			if ( this.unicodes != null )
 			{
-				Drawing.Font font = GlyphArray.GetFont(this.fontName);
+				Drawing.Font font = GlyphArray.GetFont(this.fontFace, this.fontStyle);
 				double fontSize = this.cellSize*0.6;
 				int first = this.First();
 
@@ -348,7 +345,7 @@ namespace Epsitec.Common.Widgets
 				{
 					for ( int x=0 ; x<dx ; x++ )
 					{
-						Drawing.Rectangle rect = new Drawing.Rectangle();
+						Rectangle rect = new Rectangle();
 
 						rect.Left = area.Left + cellWidth*x;
 						rect.Width = cellWidth;
@@ -377,7 +374,7 @@ namespace Epsitec.Common.Widgets
 						}
 						else
 						{
-							Drawing.Rectangle inside = rect;
+							Rectangle inside = rect;
 							inside.Deflate(0.5);
 							graphics.AddLine(inside.BottomLeft, inside.TopRight);
 							graphics.AddLine(inside.TopLeft, inside.BottomRight);
@@ -439,21 +436,21 @@ namespace Epsitec.Common.Widgets
 		// Largeur d'une cellule.
 		protected double CellWidth()
 		{
-			Drawing.Rectangle rect = this.DrawingArea();
+			Rectangle rect = this.DrawingArea();
 			return rect.Width/this.TotalCellVisibleX();
 		}
 
 		// Hauteur d'une cellule.
 		protected double CellHeight()
 		{
-			Drawing.Rectangle rect = this.DrawingArea();
+			Rectangle rect = this.DrawingArea();
 			return rect.Height/this.TotalCellVisibleY();
 		}
 
 		// Nombre de cellules visibles horizontalement.
 		protected int TotalCellVisibleX()
 		{
-			Drawing.Rectangle rect = this.DrawingArea();
+			Rectangle rect = this.DrawingArea();
 			int total = (int) (rect.Width/this.cellSize);
 			if ( total == 0 )  total++;
 			return total;
@@ -462,29 +459,29 @@ namespace Epsitec.Common.Widgets
 		// Nombre de cellules visibles verticalement.
 		protected int TotalCellVisibleY()
 		{
-			Drawing.Rectangle rect = this.DrawingArea();
+			Rectangle rect = this.DrawingArea();
 			int total = (int) (rect.Height/this.cellSize);
 			if ( total == 0 )  total++;
 			return total;
 		}
 
 		// Rectangle où dessiner les cellules.
-		protected Drawing.Rectangle DrawingArea()
+		protected Rectangle DrawingArea()
 		{
-			Drawing.Rectangle rect = this.Client.Bounds;
+			Rectangle rect = this.Client.Bounds;
 			rect.Right -= this.scroller.Width+1.0;
 			return rect;
 		}
 
 
 		// Donne une fonte d'après son nom.
-		protected static Drawing.Font GetFont(string fontName)
+		protected static Drawing.Font GetFont(string fontFace, string fontStyle)
 		{
-			Drawing.Font font = Drawing.Font.GetFont(fontName, "Regular");
+			Drawing.Font font = Drawing.Font.GetFont(fontFace, fontStyle);
 
 			if ( font == null )
 			{
-				font = Drawing.Font.GetFontFallback(fontName);
+				font = Drawing.Font.GetFontFallback(fontFace);
 			}
 			
 			return font;
@@ -504,7 +501,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected double						cellSize = 25;
 		protected VScroller						scroller;
-		protected string						fontName;
+		protected string						fontFace;
+		protected string						fontStyle;
 		protected int							selectedIndex = -1;
 		protected int[]							unicodes;
 		protected bool							mouseDown = false;

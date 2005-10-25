@@ -349,7 +349,7 @@ namespace Epsitec.Common.Document.Ribbons
 				}
 				else
 				{
-					style = this.document.SearchDefaultFontStyle(face);
+					style = Misc.DefaultFontStyle(face);
 				}
 				editObject.SetTextFont(face, style);
 			}
