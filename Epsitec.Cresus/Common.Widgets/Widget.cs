@@ -2191,7 +2191,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void Invalidate(Drawing.Rectangle rect)
+		public override void Invalidate(Drawing.Rectangle rect)
 		{
 			if (this.IsVisible)
 			{

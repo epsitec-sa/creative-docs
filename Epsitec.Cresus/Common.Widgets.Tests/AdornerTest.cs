@@ -252,13 +252,29 @@ namespace Epsitec.Common.Widgets
 //			c.Location = new Point(95+150, 30);
 			c.Width = 75;
 			c.Text = "Ai<m>d</m>e";
-			c.SetEnabled(false);
+//			c.SetEnabled(false);
 			c.Anchor = AnchorStyles.BottomLeft;
 			c.AnchorMargins = new Margins(245, 0, 0, 30);
 			c.TabIndex = 22;
 			c.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(c);
-			tip.SetToolTip(c, "Au secours !");
+			
+			Widget      tip_widget = new ToolTip.Contents ();
+			CheckButton tip_check1 = new CheckButton (tip_widget);
+			CheckButton tip_check2 = new CheckButton (tip_widget);
+			
+			tip_check1.Text        = "premier secours";
+			tip_check1.Dock        = DockStyle.Top;
+			tip_check1.DockMargins = new Drawing.Margins (4, 4, 4, 0);
+			
+			tip_check2.Text        = "aide détaillée";
+			tip_check2.Dock        = DockStyle.Top;
+			tip_check2.DockMargins = new Drawing.Margins (4, 4, 1, 0);
+			
+			tip_widget.BackColor   = Drawing.Color.FromRGB (1.0, 0.5, 0.5);
+			tip_widget.Size        = new Drawing.Size (120, 4+tip_check1.Height+1+tip_check2.Height+4);
+			
+			tip.SetToolTip(c, tip_widget);
 
 			StaticText st = new StaticText();
 //			st.Location = new Point(10, 265);

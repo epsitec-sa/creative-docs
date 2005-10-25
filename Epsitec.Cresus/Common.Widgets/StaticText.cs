@@ -94,13 +94,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			
-			if (this.TextLayout == null)
-			{
-				return;
-			}
-			
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetState       state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point();
@@ -111,7 +104,13 @@ namespace Epsitec.Common.Widgets
 				graphics.RenderSolid (this.BackColor);
 			}
 			
-			adorner.PaintGeneralTextLayout (graphics, clipRect, pos, this.TextLayout, state, this.paint_text_style, this.BackColor);
+			if (this.TextLayout != null)
+			{
+				IAdorner adorner = Widgets.Adorner.Factory.Active;
+				adorner.PaintGeneralTextLayout (graphics, clipRect, pos, this.TextLayout, state, this.paint_text_style, this.BackColor);
+			}
+			
+			base.PaintBackgroundImplementation (graphics, clipRect);
 		}
 
 

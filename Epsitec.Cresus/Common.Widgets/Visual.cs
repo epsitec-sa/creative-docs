@@ -596,8 +596,20 @@ namespace Epsitec.Common.Widgets
 		internal void SetParentLayer(Layouts.Layer parent_layer)
 		{
 			Visual old_parent = this.Parent;
+			
+			if (old_parent != null)
+			{
+				old_parent.Invalidate (this.Bounds);
+			}
+			
 			this.parent_layer = parent_layer;
+			
 			Visual new_parent = this.Parent;
+			
+			if (new_parent != null)
+			{
+				new_parent.Invalidate (this.Bounds);
+			}
 			
 			if (old_parent != new_parent)
 			{
@@ -675,6 +687,10 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		public virtual void Invalidate()
+		{
+		}
+		
+		public virtual void Invalidate(Drawing.Rectangle rect)
 		{
 		}
 		

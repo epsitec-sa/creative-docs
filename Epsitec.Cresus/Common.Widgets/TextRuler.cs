@@ -704,12 +704,12 @@ namespace Epsitec.Common.Widgets
 		{
 			this.manualToolTip.SetToolTip(this, this.TextManualToolTip(pos));
 			this.manualToolTip.ShowToolTipForWidget(this);
-			this.manualToolTip.ManualUpdate(this.MapClientToScreen(pos), this.TextManualToolTip(pos));
+			this.manualToolTip.UpdateManualToolTip(this.MapClientToScreen(pos), this.TextManualToolTip(pos));
 		}
 
 		protected void UpdateManualToolTip(Drawing.Point pos)
 		{
-			this.manualToolTip.ManualUpdate(this.MapClientToScreen(pos), this.TextManualToolTip(pos));
+			this.manualToolTip.UpdateManualToolTip(this.MapClientToScreen(pos), this.TextManualToolTip(pos));
 		}
 
 		protected void HideManualToolTip(Drawing.Point pos)

@@ -1,46 +1,31 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
-	using SuppressBundleSupportAttribute = Support.SuppressBundleSupportAttribute;
-	using EventHandler                   = Support.EventHandler;
-	
 	public enum ToolTipBehaviour
 	{
-		Normal,							// presque comme Window
-		FollowMe,						// suit la souris
-		Manual,							// position définie manuellement
+		Normal,							//	presque comme Windows
+		FollowMouse,					//	suit la souris
+		Manual,							//	position définie manuellement
 	}
 
 	/// <summary>
 	/// La classe ToolTip implémente les "info bulles".
 	/// </summary>
-	[SuppressBundleSupport]
-	public class ToolTip : Widget, Support.Data.IComponent
+	public class ToolTip : Support.Data.IComponent
 	{
 		public ToolTip()
 		{
-			if (Support.ObjectBundler.IsBooting)
-			{
-				//	N'initialise rien, car cela prend passablement de temps... et de toute
-				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
-				//	utiliser IBundleSupport.
-				
-				return;
-			}
-			
-			this.colorBack  = Drawing.Color.FromName("Info");
-			this.colorFrame = Drawing.Color.FromName("Black");
-
 			this.window = new Window();
-			this.window.MakeFramelessWindow();
-			this.window.MakeFloatingWindow();
+			this.window.MakeFramelessWindow ();
+			this.window.MakeFloatingWindow ();
 			this.window.Name = "ToolTip";
-			this.window.DisableMouseActivation();
+			this.window.DisableMouseActivation ();
 			this.window.WindowBounds = new Drawing.Rectangle (0, 0, 8, 8);
 			
-			this.SetEmbedder(this.window.Root);
-			
 			this.timer = new Timer();
-			this.timer.TimeElapsed += new EventHandler(this.HandleTimerTimeElapsed);
+			this.timer.TimeElapsed += new Support.EventHandler (this.HandleTimerTimeElapsed);
 		}
 
 		
@@ -50,7 +35,6 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.behaviour;
 			}
-
 			set
 			{
 				this.behaviour = value;
@@ -61,22 +45,36 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.initialPos;
+				return this.initial_pos;
 			}
 			set
 			{
-				this.initialPos = value;
+				this.initial_pos = value;
 			}
 		}
 		
 		
+		public static ToolTip					Default
+		{
+			get
+			{
+				if ( ToolTip.default_tool_tip == null )
+				{
+					ToolTip.default_tool_tip = new ToolTip();
+				}
+				
+				return ToolTip.default_tool_tip;
+			}
+		}
+
+
 		public void ShowToolTipForWidget(Widget widget)
 		{
 			if (this.hash.Contains (widget))
 			{
 				this.timer.Stop ();
 				this.HideToolTip ();
-				this.widget = widget;
+				this.AttachToWidget (widget);
 				this.ShowToolTip ();
 			}
 		}
@@ -91,149 +89,232 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void ManualUpdate(Drawing.Point mouse, string text)
+		public void UpdateManualToolTip(Drawing.Point mouse, string caption)
 		{
-			this.Text = text;
-
-			Drawing.Size size = this.TextLayout.SingleLineSize;
-			size.Width  += this.margin.X*2;
-			size.Height += this.margin.Y*2;
-		
-			mouse += this.offset;
-			mouse.Y -= size.Height;
-		
-			this.window.ClientSize = size;
-			this.window.WindowBounds = new Drawing.Rectangle(mouse, size);
-
-			this.Location = new Drawing.Point(0, 0);
-			this.Size = size;
-			this.Invalidate();
+			if (this.behaviour == ToolTipBehaviour.Manual)
+			{
+				this.ShowToolTip (mouse, caption);
+			}
 		}
-		protected override void Dispose(bool disposing)
+		
+		public void UpdateManualToolTip(Drawing.Point mouse, Widget caption)
 		{
-			if ( disposing )
+			if (this.behaviour == ToolTipBehaviour.Manual)
+			{
+				this.ShowToolTip (mouse, caption);
+			}
+		}
+		
+		
+		public void SetToolTip(Widget widget, string caption)
+		{
+			this.DefineToolTip (widget, caption);
+		}
+		
+		public void SetToolTip(Widget widget, Widget caption)
+		{
+			this.DefineToolTip (widget, caption);
+		}
+		
+		
+		private void DefineToolTip(Widget widget, object caption)
+		{
+			if (this.hash == null)
+			{
+				return;
+			}
+			
+			System.Diagnostics.Debug.Assert (widget != null);
+			
+			if ((this.hash.Contains (widget)) &&
+				(caption == null))
+			{
+				if (this.widget == widget)
+				{
+					this.DetachFromWidget (this.widget);
+				}
+				
+				this.hash.Remove (widget);
+				
+				widget.Entered  -= new MessageEventHandler (this.HandleWidgetEntered);
+				widget.Exited   -= new MessageEventHandler (this.HandleWidgetExited);
+				widget.Disposed -= new Support.EventHandler (this.HandleWidgetDisposed);
+			}
+			
+			if (caption == null)
+			{
+				return;
+			}
+			
+			if (this.hash.Contains (widget) == false)
+			{
+				widget.Entered   += new MessageEventHandler (this.HandleWidgetEntered);
+				widget.Exited    += new MessageEventHandler (this.HandleWidgetExited);
+				widget.Disposed  += new Support.EventHandler (this.HandleWidgetDisposed);
+			}
+			
+			if (this != ToolTip.default_tool_tip)
+			{
+				if (this.owner == null)
+				{
+					this.owner = widget.Window;
+					
+					if (this.owner != null)
+					{
+						//	C'est la première fois que le widget auquel nous nous attachons
+						//	possède une fenêtre valide. On va donc s'enregistrer auprès de
+						//	la fenêtre en tant que IComponent; ça permet de garantir que
+						//	lorsque la fenêtre est détruite, le ToolTip l'est aussi...
+						
+						this.owner.Components.Add (this);
+					}
+				}
+			}
+			
+			this.hash[widget] = caption;
+			
+			if ((this.widget == widget) &&
+				(this.is_displayed))
+			{
+				this.caption = caption;
+				this.ShowToolTip (this.birth_pos, this.caption);
+			}
+		}
+		
+		
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
 			{
 				Widget[] widgets = new Widget[this.hash.Count];
 				this.hash.Keys.CopyTo (widgets, 0);
 				
 				foreach (Widget widget in widgets)
 				{
-					this.SetToolTip(widget, null);
+					this.DefineToolTip (widget, null);
 				}
 				
-				System.Diagnostics.Debug.Assert(this.hash.Count == 0);
+				System.Diagnostics.Debug.Assert (this.hash.Count == 0);
+				
+				if (this.widget != null)
+				{
+					this.DetachFromWidget (this.widget);
+				}
 				
 				this.hash   = null;
 				this.widget = null;
 				this.owner  = null;
-				this.SetParent (null);
 				
-				if ( this.window != null )
+				if (this.window != null)
 				{
 					this.window.Dispose ();
 					this.window = null;
 				}
 				
-				if ( this.timer != null )
+				if (this.timer != null)
 				{
-					this.timer.TimeElapsed -= new EventHandler(this.HandleTimerTimeElapsed);
+					this.timer.TimeElapsed -= new Support.EventHandler (this.HandleTimerTimeElapsed);
 					this.timer.Dispose();
 					this.timer = null;
 				}
+				
+				if (this.Disposed != null)
+				{
+					this.Disposed (this);
+					this.Disposed = null;
+				}
 			}
-			
-			// Ne pas oublier, une fois que le dispose est terminé, de signaler encore
-			// que nous n'existons plus (c'est requis par IComponent). C'est fait par
-			// Widget !
-			
-			base.Dispose(disposing);
 		}
-
 		
-		// Utilisé par un widget pour spécifier son texte.
-		public void SetToolTip(Widget widget, string text)
+		
+		private void AttachToWidget(Widget widget)
 		{
-			if ( this.hash == null )
-			{
-				return;
-			}
+			System.Diagnostics.Debug.Assert (this.widget == null);
+			System.Diagnostics.Debug.Assert (widget != null);
 			
-			System.Diagnostics.Debug.Assert(widget != null);
+			this.widget  = widget;
+			this.caption = this.hash[this.widget];
 			
-			if ( this.hash.Contains(widget) )
-			{
-				if ( text == null )
-				{
-					this.hash.Remove(widget);
-					widget.Entered   -= new MessageEventHandler(this.HandleWidgetEntered);
-					widget.Exited    -= new MessageEventHandler(this.HandleWidgetExited);
-					widget.Disposed  -= new EventHandler(this.HandleWidgetDisposed);
-					return;
-				}
-			}
-			else
-			{
-				if ( text == null )
-				{
-					return;
-				}
-				
-				widget.Entered   += new MessageEventHandler(this.HandleWidgetEntered);
-				widget.Exited    += new MessageEventHandler(this.HandleWidgetExited);
-				widget.Disposed  += new EventHandler(this.HandleWidgetDisposed);
-			}
-			
-			if ( this.owner == null )
-			{
-				this.owner = widget.Window;
-				
-				if ( this.owner != null )
-				{
-					// C'est la première fois que le widget auquel nous nous attachons
-					// possède une fenêtre valide. On va donc s'enregistrer auprès de
-					// la fenêtre en tant que IComponent; ça permet de garantir que
-					// lorsque la fenêtre est détruite, le ToolTip l'est aussi...
-					
-					this.owner.Components.Add(this);
-				}
-			}
-			
-			this.hash[widget] = text;
+			this.widget.PreProcessing += new MessageEventHandler (this.HandleWidgetPreProcessing);
 		}
-
-		// La souris entre dans un widget.
+		
+		private void DetachFromWidget(Widget widget)
+		{
+			System.Diagnostics.Debug.Assert (this.widget == widget);
+			System.Diagnostics.Debug.Assert (this.widget != null);
+			
+			this.widget.PreProcessing -= new MessageEventHandler (this.HandleWidgetPreProcessing);
+			
+			this.widget  = null;
+			this.caption = null;
+		}
+		
+		
+		private void RestartTimer(double delay)
+		{
+			this.timer.Suspend ();
+			this.timer.Delay = delay;
+			this.timer.Start();
+		}
+		
+		
 		private void HandleWidgetEntered(object sender, MessageEventArgs e)
 		{
-			this.widget = sender as Widget;
+			this.AttachToWidget (sender as Widget);
 			
-			if ( this.filterRegisterCount++ == 0 )
+			if (this.behaviour != ToolTipBehaviour.Manual)
 			{
-				Window.MessageFilter += new Widgets.MessageHandler(this.MessageFilter);
-			}
-			if ( this.behaviour != ToolTipBehaviour.Manual )
-			{
-				this.timer.Suspend();
-				this.timer.Delay = SystemInformation.ToolTipShowDelay;
-				this.timer.Start();
+				this.RestartTimer (SystemInformation.ToolTipShowDelay);
 			}
 		}
 
-		// La souris sort d'un widget.
 		private void HandleWidgetExited(object sender, MessageEventArgs e)
 		{
-			if ( --this.filterRegisterCount == 0 )
-			{
-				Window.MessageFilter -= new Widgets.MessageHandler(this.MessageFilter);
-			}
 			if ( this.behaviour != ToolTipBehaviour.Manual )
 			{
 				this.timer.Stop();
 				this.HideToolTip();
-				this.widget = null;
+				this.DetachFromWidget (this.widget);
 			}
 		}
 		
-		// Un widget est supprimé -- on doit donc le retirer de notre liste interne.
+		private void HandleWidgetPreProcessing(object sender, MessageEventArgs e)
+		{
+			if ((this.is_displayed) &&
+				(e.Message.Type == MessageType.MouseMove))
+			{
+				Drawing.Point mouse = Helpers.VisualTree.MapVisualToScreen (this.widget, e.Point);
+				
+				switch (this.behaviour)
+				{
+					case ToolTipBehaviour.Normal:
+						if (Drawing.Point.Distance (mouse, this.birth_pos) > ToolTip.hide_distance)
+						{
+							this.timer.Stop ();
+							this.HideToolTip ();
+							this.RestartTimer (SystemInformation.ToolTipShowDelay);
+						}
+						break;
+
+					case ToolTipBehaviour.FollowMouse:
+						mouse   += ToolTip.offset;
+						mouse.Y -= this.window.Root.Height;
+						this.window.WindowLocation = mouse;
+						break;
+						
+					case ToolTipBehaviour.Manual:
+						break;
+				}
+			}
+		}
+		
 		private void HandleWidgetDisposed(object sender)
 		{
 			Widget widget = sender as Widget;
@@ -241,175 +322,161 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert(this.widget != widget);
 			System.Diagnostics.Debug.Assert(this.hash.Contains(widget));
 			
-			this.SetToolTip(widget, null);
+			this.DefineToolTip (widget, null);
 		}
 		
-		private void MessageFilter(object sender, Message message)
-		{
-			if ( !this.isVisible )  return;  // pas encore visible ?
-
-			switch ( message.Type )
-			{
-				case MessageType.MouseMove:
-					Drawing.Point mouse = Message.State.LastWindow.MapWindowToScreen(Message.State.LastPosition);
-
-					switch ( this.behaviour )
-					{
-						case ToolTipBehaviour.Normal:
-							double dist = System.Math.Sqrt(System.Math.Pow(mouse.X-this.birthPos.X, 2) + System.Math.Pow(mouse.Y-this.birthPos.Y, 2));
-							if ( dist > this.deadDist )
-							{
-								this.timer.Stop();
-								this.HideToolTip();
-
-								this.timer.Delay = SystemInformation.ToolTipShowDelay;
-								this.timer.Start();
-							}
-							break;
-
-						case ToolTipBehaviour.FollowMe:
-							mouse += this.offset;
-							mouse.Y -= this.Size.Height;
-							this.window.WindowLocation = mouse;
-							break;
-						
-						case ToolTipBehaviour.Manual:
-							break;
-					}
-
-					break;
-			}
-		}
-
-		// Le timer arrive à zéro.
 		private void HandleTimerTimeElapsed(object sender)
 		{
-			if ( !this.isVisible )  // pas encore visible ?
+			if (this.is_displayed)
 			{
-				this.ShowToolTip();
-				this.timer.Suspend();
-				this.timer.Delay = SystemInformation.ToolTipAutoCloseDelay;
-				this.timer.Start();
-			}
-			else	// déjà visible ?
-			{
-				this.HideToolTip();
-			}
-		}
-
-		// Montre le tooltip en fonction du widget visé.
-		protected void ShowToolTip()
-		{
-			if ( this.widget == null )  return;
-
-			this.Text = (string)this.hash[this.widget];
-			Drawing.Size size = this.TextLayout.SingleLineSize;
-			size.Width  += this.margin.X*2;
-			size.Height += this.margin.Y*2;
-			
-			Drawing.Point mouse;
-			
-			if ( this.behaviour == ToolTipBehaviour.Manual )
-			{
-				mouse = this.initialPos;
+				this.HideToolTip ();
+				System.Diagnostics.Debug.Assert (this.is_displayed == false);
 			}
 			else
 			{
-				mouse = Message.State.LastWindow.MapWindowToScreen(Message.State.LastPosition);
+				this.ShowToolTip ();
+				this.RestartTimer (SystemInformation.ToolTipAutoCloseDelay);
 			}
-			
-			this.birthPos = mouse;
-			
-			if ( this.behaviour != ToolTipBehaviour.Manual )
+		}
+		
+		
+		private void ShowToolTip()
+		{
+			if (this.widget != null)
 			{
-				mouse += this.offset;
+				this.birth_pos = (this.behaviour == ToolTipBehaviour.Manual)
+					/**/	   ? this.initial_pos
+					/**/	   : Message.State.LastWindow.MapWindowToScreen (Message.State.LastPosition);
+				
+				this.ShowToolTip (this.birth_pos, this.caption);
+			}
+		}
+		
+		private void ShowToolTip(Drawing.Point mouse, object caption)
+		{
+			Widget tip = null;
+			
+			if (caption is string)
+			{
+				tip = new Contents ();
+				
+				tip.Text                 = caption as string;
+				tip.TextLayout.Alignment = Drawing.ContentAlignment.MiddleLeft;
+				
+				Drawing.Size size = tip.TextLayout.SingleLineSize;
+				
+				double dx = size.Width + ToolTip.margin.X * 2;
+				double dy = size.Height + ToolTip.margin.Y * 2;
+				
+				tip.Bounds = new Drawing.Rectangle (0, 0, dx, dy);
+			}
+			else if (caption is Widget)
+			{
+				tip = caption as Widget;
+			}
+			else
+			{
+				throw new System.InvalidOperationException ("Caption neither a string nor a widget");
 			}
 			
-			mouse.Y -= size.Height;
+			if (this.behaviour != ToolTipBehaviour.Manual)
+			{
+				mouse += ToolTip.offset;
+			}
 			
-			// Modifie la position du tooltip pour qu'il ne dépasse pas de l'écran.
-			ScreenInfo si = ScreenInfo.Find(mouse);
-			Drawing.Rectangle wa = si.WorkingArea;
-			if ( mouse.Y < wa.Bottom )  // dépasse en bas ?
+			mouse.Y -= tip.Height;
+			
+			//	Modifie la position du tool-tip pour qu'il ne dépasse pas de l'écran.
+			
+			Drawing.Rectangle wa = ScreenInfo.Find (mouse).WorkingArea;
+			
+			if (mouse.Y < wa.Bottom)
 			{
 				mouse.Y = wa.Bottom;
 			}
-			if ( mouse.X > wa.Right-size.Width )  // dépasse à droite ?
+			if (mouse.X + tip.Width > wa.Right)  // dépasse à droite ?
 			{
-				mouse.X = wa.Right-size.Width;
+				mouse.X = wa.Right - tip.Width;
 			}
 			
-			this.window.ClientSize = size;
-			this.window.WindowBounds = new Drawing.Rectangle(mouse, size);
-			this.window.Owner = this.widget.Window;
-
-			this.Location = new Drawing.Point(0, 0);
-			this.Size = size;
-			this.TextLayout.Alignment = Drawing.ContentAlignment.MiddleLeft;
-			this.Invalidate();
-
-			this.window.Show();
-			this.isVisible = true;
-		}
-
-		// Cache le tooltip.
-		protected void HideToolTip()
-		{
-			this.window.Hide();
-			this.isVisible = false;
-		}
-
-		// Dessine le tooltip.
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
-		{
-			if ( this.TextLayout == null )  return;
+			this.window.WindowBounds = new Drawing.Rectangle (mouse, tip.Size);
+			this.window.Owner        = this.widget.Window;
 			
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-
-			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetState       state = this.PaintState;
-			Drawing.Point     pos   = new Drawing.Point();
-
-			pos.X += this.margin.X;  // à cause du Drawing.ContentAlignment.MiddleLeft
-			adorner.PaintTooltipBackground(graphics, rect);
-			adorner.PaintTooltipTextLayout(graphics, pos, this.TextLayout);
-		}
-
-
-		public static ToolTip					Default
-		{
-			get
+			if (tip.Parent != this.window.Root)
 			{
-				if ( Support.ObjectBundler.IsBooting )
-				{
-					return null;
-				}
-				
-				if ( ToolTip.defaultToolTip == null )
-				{
-					ToolTip.defaultToolTip = new ToolTip();
-				}
-				
-				return ToolTip.defaultToolTip;
+				this.window.Root.Children.Clear ();
+				this.window.Root.Children.Add (tip);
+			}
+			
+//			this.Invalidate ();
+			
+			if (this.is_displayed == false)
+			{
+				this.window.Show ();
+				this.is_displayed = true;
 			}
 		}
 
+		private void HideToolTip()
+		{
+			if (this.is_displayed)
+			{
+				this.window.Hide ();
+				this.is_displayed = false;
+			}
+		}
 
+		
+		#region Contents Class
+		public class Contents : Widget
+		{
+			public Contents()
+			{
+			}
+			
+			
+			protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+			{
+				IAdorner adorner = Widgets.Adorner.Factory.Active;
+				
+				Drawing.Rectangle rect  = this.Client.Bounds;
+				WidgetState       state = this.PaintState;
+				Drawing.Point     pos   = new Drawing.Point();
+				
+				pos.X += ToolTip.margin.X;  // à cause du Drawing.ContentAlignment.MiddleLeft
+				
+				adorner.PaintTooltipBackground (graphics, rect);
+				
+				if (this.TextLayout != null)
+				{
+					adorner.PaintTooltipTextLayout (graphics, pos, this.TextLayout);
+				}
+				
+				base.PaintBackgroundImplementation (graphics, clipRect);
+			}
+		}
+		#endregion
+		
+		public event Support.EventHandler		Disposed;
+		
 		protected ToolTipBehaviour				behaviour = ToolTipBehaviour.Normal;
+		
 		protected Window						owner;
 		protected Window						window;
-		protected bool							isVisible = false;
+		protected bool							is_displayed;
 		protected Timer							timer;
-		protected Widget						widget;
-		protected Drawing.Point					birthPos;
-		protected Drawing.Point					initialPos;
-		protected double						deadDist = 12;
-		protected Drawing.Point					margin = new Drawing.Point(3, 2);
-		protected Drawing.Point					offset = new Drawing.Point(8, -16);
-		protected Drawing.Color					colorBack;
-		protected Drawing.Color					colorFrame;
-		protected System.Collections.Hashtable	hash = new System.Collections.Hashtable();
-		protected int							filterRegisterCount;
-		protected static ToolTip				defaultToolTip;
+		
+		private Widget							widget;
+		private object							caption;
+		
+		private Drawing.Point					birth_pos;
+		private Drawing.Point					initial_pos;
+		private System.Collections.Hashtable	hash = new System.Collections.Hashtable();
+		
+		private static readonly double			hide_distance = 12;
+		private static readonly Drawing.Point	margin = new Drawing.Point(3, 2);
+		private static readonly Drawing.Point	offset = new Drawing.Point(8, -16);
+		
+		private static ToolTip					default_tool_tip;
 	}
 }
