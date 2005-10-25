@@ -308,6 +308,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		protected int[] UnicodeSpace =
 		{
+			0x00A0, 0x202F,  // NoBreakSpace, NarrowNoBreakSpace
 			0x2001, 0x2000,  // cadratin
 			0x2004, 0x2005, 0x2006,  // 1/3, 1/4, 1/6 cadratin
 			0x2007,  // espace numérique
@@ -610,7 +611,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		protected bool				limitedVersion = true;
+		protected bool				limitedVersion = false;
 		protected string			fontFace;
 		protected string			fontStyle;
 		protected readonly int		maxFamiliy = 10;

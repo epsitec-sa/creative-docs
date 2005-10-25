@@ -884,6 +884,17 @@
 	<data name="Action.Text.Paragraph.LeadingAuto">Interligne automatique</data>
 	<data name="Action.Text.Insert">Insert</data>
 	<data name="Action.Text.FlowChanged">@@Modification du chaînage</data>
+	<data name="Action.Text.Ruler.Drag">Drag to create a guide</data>
+	<data name="Action.Text.Ruler.HandleLeftFirst">@@Marge gauche de première ligne</data>
+	<data name="Action.Text.Ruler.HandleLeftBody">@@Marge gauche de corps de texte</data>
+	<data name="Action.Text.Ruler.HandleFirstBody">@@Marge gauche</data>
+	<data name="Action.Text.Ruler.HandleRight">@@Marge droite</data>
+	<data name="Action.Text.Ruler.TabChoice">@@Choix du tabulateur</data>
+	<data name="Action.Text.Ruler.TabRight">@@Tabulateur normal</data>
+	<data name="Action.Text.Ruler.TabLeft">@@Tabulateur gauche</data>
+	<data name="Action.Text.Ruler.TabCenter">@@Tabulateur centré</data>
+	<data name="Action.Text.Ruler.TabDecimal">@@Tabulateur décimal</data>
+	<data name="Action.Text.Ruler.TabIndent">@@Indentateur</data>
 
 	<data name="Text.ButtonBold">&lt;b&gt;B&lt;/b&gt;</data>
 	<data name="Text.ButtonItalic">&lt;i&gt;I&lt;/i&gt;</data>

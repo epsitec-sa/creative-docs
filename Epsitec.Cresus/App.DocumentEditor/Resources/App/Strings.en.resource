@@ -29,7 +29,6 @@
 	<data name="LastFiles.None">&lt;i&gt;None&lt;/i&gt;</data>
 
 	<data name="Tooltip.TabBook.Close">Close document</data>
-	<data name="Tooltip.Ruler.Drag">Drag to create a guide</data>
 
 	<data name="TabPage.Principal">Properties</data>
 	<data name="TabPage.Styles">Styles</data>

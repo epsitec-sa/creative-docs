@@ -8,7 +8,7 @@ namespace Epsitec.Common.Document.Widgets
 	/// HRuler et VRuler.
 	/// </summary>
 	[Support.SuppressBundleSupport]
-	public abstract class AbstractRuler : Widget
+	public abstract class AbstractRuler : Widget, Common.Widgets.Helpers.IToolTipHost
 	{
 		protected AbstractRuler(bool vertical)
 		{
@@ -379,6 +379,26 @@ namespace Epsitec.Common.Document.Widgets
 				return Color.FromBrightness(0);  // noir
 			}
 		}
+
+
+		#region Helpers.IToolTipHost
+		public object GetToolTipCaption(Point pos)
+		{
+			if ( this.edited )
+			{
+				return this.GetTooltipEditedText(pos);
+			}
+			else
+			{
+				return Res.Strings.Action.Text.Ruler.Drag;
+			}
+		}
+
+		protected virtual string GetTooltipEditedText(Point pos)
+		{
+			return null;
+		}
+		#endregion
 
 
 		protected static readonly double	defaultBreadth = 13;

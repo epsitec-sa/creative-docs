@@ -850,13 +850,13 @@ namespace Epsitec.App.DocumentEditor
 				di.hRuler.Document = document;
 				di.hRuler.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 				di.hRuler.AnchorMargins = new Margins(wm+lm, wm+sw+1, 6+wm, 0);
-				//?ToolTip.Default.SetToolTip(di.hRuler, Res.Strings.Tooltip.Ruler.Drag);  //*
+				ToolTip.Default.SetToolTip(di.hRuler, "");  //*
 
 				di.vRuler = new DocWidgets.VRuler(mainViewParent);
 				di.vRuler.Document = document;
 				di.vRuler.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
 				di.vRuler.AnchorMargins = new Margins(wm, 0, 6+wm+tm, wm+sw+1);
-				//?ToolTip.Default.SetToolTip(di.vRuler, Res.Strings.Tooltip.Ruler.Drag);  //*
+				ToolTip.Default.SetToolTip(di.vRuler, "");  //*
 				//* TODO: Un tooltip empêche l'envoi du message MouseLeave !!!
 			}
 

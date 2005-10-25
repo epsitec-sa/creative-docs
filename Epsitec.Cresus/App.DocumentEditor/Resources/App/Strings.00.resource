@@ -29,7 +29,6 @@
 	<data name="LastFiles.None">&lt;i&gt;Aucun&lt;/i&gt;</data>
 
 	<data name="Tooltip.TabBook.Close">Fermer le document</data>
-	<data name="Tooltip.Ruler.Drag">Tirer avec la souris pour créer un repère</data>
 
 	<data name="TabPage.Principal">Attributs</data>
 	<data name="TabPage.Styles">Styles</data>

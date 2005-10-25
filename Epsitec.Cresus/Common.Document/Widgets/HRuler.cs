@@ -650,6 +650,19 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		protected override string GetTooltipEditedText(Point pos)
+		{
+			int handle = this.DraggingDetect(pos);
+
+			if ( handle == HRuler.HandleLeftFirst )  return Res.Strings.Action.Text.Ruler.HandleLeftFirst;
+			if ( handle == HRuler.HandleLeftBody  )  return Res.Strings.Action.Text.Ruler.HandleLeftBody;
+			if ( handle == HRuler.HandleFirstBody )  return Res.Strings.Action.Text.Ruler.HandleFirstBody;
+			if ( handle == HRuler.HandleRight     )  return Res.Strings.Action.Text.Ruler.HandleRight;
+
+			return null;
+		}
+
+		
 		protected static readonly int		HandleLeftFirst = 0;
 		protected static readonly int		HandleLeftBody  = 1;
 		protected static readonly int		HandleFirstBody = 2;
