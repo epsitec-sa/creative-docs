@@ -316,12 +316,18 @@ namespace Epsitec.Common.Widgets
 
 			StaticText link = new StaticText();
 //			link.Location = new Point(360, 36);
-			link.Width = 200;
+			link.Width = 120;
 			link.Text = @"Visitez notre <a href=""http://www.epsitec.ch"">site web</a> !";
 			link.Anchor = AnchorStyles.BottomRight;
-			link.AnchorMargins = new Margins(0, 600 - 360 - 200, 0, 36);
+			link.AnchorMargins = new Margins(0, 600 - 360 - 120, 0, 36);
 			link.HypertextClicked += new MessageEventHandler(link_HypertextClicked);
 			window.Root.Children.Add(link);
+			
+			SpecialWidget spec = new SpecialWidget();
+			spec.Location = new Point(540, 30);
+			spec.Width    = 40;
+			window.Root.Children.Add(spec);
+			tip.SetToolTip(spec, "*");
 
 			GroupBox box = new GroupBox();
 //			box.Location = new Point(10, 100);
@@ -997,7 +1003,30 @@ namespace Epsitec.Common.Widgets
 			this.bigText.OpletQueue.RedoAction();
 		}
 
-
+		
+		private class SpecialWidget : Widget, Helpers.IToolTipHost
+		{
+			public SpecialWidget()
+			{
+			}
+			
+			
+			#region IToolTipHost Members
+			public object GetToolTipCaption(Point pos)
+			{
+				if (pos.X < 10)  return "Gauche";
+				if (pos.X > this.Width-10)  return "Droite";
+				return null;
+			}
+			#endregion
+			
+			protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
+			{
+				graphics.AddRectangle (0, 0, this.Width, this.Height);
+				graphics.RenderSolid (Drawing.Color.FromName ("Black"));
+			}
+		}
+		
 		private Window CreateTextRuler()
 		{
 			Document.Engine.Initialise ();

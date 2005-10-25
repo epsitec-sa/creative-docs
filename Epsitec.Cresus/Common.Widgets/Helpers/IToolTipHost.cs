@@ -9,6 +9,6 @@ namespace Epsitec.Common.Widgets.Helpers
 	/// </summary>
 	public interface IToolTipHost
 	{
-		string GetToolTipCaption(Drawing.Point pos);
+		object GetToolTipCaption(Drawing.Point pos);
 	}
 }

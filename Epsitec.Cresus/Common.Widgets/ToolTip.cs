@@ -17,14 +17,14 @@ namespace Epsitec.Common.Widgets
 	{
 		public ToolTip()
 		{
-			this.window = new Window();
+			this.window = new Window ();
 			this.window.MakeFramelessWindow ();
 			this.window.MakeFloatingWindow ();
 			this.window.Name = "ToolTip";
 			this.window.DisableMouseActivation ();
 			this.window.WindowBounds = new Drawing.Rectangle (0, 0, 8, 8);
 			
-			this.timer = new Timer();
+			this.timer = new Timer ();
 			this.timer.TimeElapsed += new Support.EventHandler (this.HandleTimerTimeElapsed);
 		}
 
@@ -58,11 +58,6 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ( ToolTip.default_tool_tip == null )
-				{
-					ToolTip.default_tool_tip = new ToolTip();
-				}
-				
 				return ToolTip.default_tool_tip;
 			}
 		}
@@ -241,6 +236,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.widget  = widget;
 			this.caption = this.hash[this.widget];
+			this.host_provided_caption = null;
 			
 			this.widget.PreProcessing += new MessageEventHandler (this.HandleWidgetPreProcessing);
 		}
@@ -265,9 +261,54 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		private bool ProcessToolTipHost(Helpers.IToolTipHost host, Drawing.Point pos)
+		{
+			if (host != null)
+			{
+				object caption = host.GetToolTipCaption (pos);
+				
+				if (caption == this.host_provided_caption)
+				{
+					return true;
+				}
+				
+				if (this.host_provided_caption == null)
+				{
+					this.RestartTimer (SystemInformation.ToolTipShowDelay);
+				}
+				else if (caption == null)
+				{
+					this.timer.Stop ();
+					this.HideToolTip ();
+				}
+				
+				this.host_provided_caption = caption;
+				this.caption = caption;
+				
+				if ((caption != null) &&
+					(this.is_displayed))
+				{
+					Drawing.Point mouse = Helpers.VisualTree.MapVisualToScreen (this.widget, pos);
+					this.ShowToolTip (mouse, caption);
+				}
+				
+				return true;
+			}
+			
+			return false;
+		}
+		
+		
 		private void HandleWidgetEntered(object sender, MessageEventArgs e)
 		{
 			this.AttachToWidget (sender as Widget);
+			
+			System.Diagnostics.Debug.Assert (this.widget != null);
+			
+			if (this.ProcessToolTipHost (this.widget as Helpers.IToolTipHost, e.Point))
+			{
+				return;
+			}
 			
 			if (this.behaviour != ToolTipBehaviour.Manual)
 			{
@@ -287,6 +328,12 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleWidgetPreProcessing(object sender, MessageEventArgs e)
 		{
+			if ((e.Message.Type == MessageType.MouseMove) &&
+				(this.ProcessToolTipHost (this.widget as Helpers.IToolTipHost, e.Point)))
+			{
+				return;
+			}
+
 			if ((this.is_displayed) &&
 				(e.Message.Type == MessageType.MouseMove))
 			{
@@ -408,8 +455,6 @@ namespace Epsitec.Common.Widgets
 				this.window.Root.Children.Add (tip);
 			}
 			
-//			this.Invalidate ();
-			
 			if (this.is_displayed == false)
 			{
 				this.window.Show ();
@@ -468,6 +513,7 @@ namespace Epsitec.Common.Widgets
 		
 		private Widget							widget;
 		private object							caption;
+		private object							host_provided_caption;
 		
 		private Drawing.Point					birth_pos;
 		private Drawing.Point					initial_pos;
@@ -477,6 +523,6 @@ namespace Epsitec.Common.Widgets
 		private static readonly Drawing.Point	margin = new Drawing.Point(3, 2);
 		private static readonly Drawing.Point	offset = new Drawing.Point(8, -16);
 		
-		private static ToolTip					default_tool_tip;
+		private static ToolTip					default_tool_tip = new ToolTip ();
 	}
 }
