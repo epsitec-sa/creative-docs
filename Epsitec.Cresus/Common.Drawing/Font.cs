@@ -839,6 +839,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		
 		public static Font GetFont(int rank)
 		{
 			Font.SetupFonts ();
@@ -950,6 +951,16 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			return font;
+		}
+		
+		public static Font GetFont(OpenType.Font font)
+		{
+			return Font.GetFont (font.FontIdentity);
+		}
+		
+		public static Font GetFont(OpenType.FontIdentity id)
+		{
+			return Font.GetFont (id.InvariantFaceName, id.InvariantStyleName);
 		}
 		
 		public static Font.FaceInfo GetFaceInfo(string face)

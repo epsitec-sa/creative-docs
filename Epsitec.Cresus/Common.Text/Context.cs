@@ -246,6 +246,28 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public static OpenType.Font GetFont(OpenType.FontIdentity id)
+		{
+			OpenType.Font font = null;
+			
+			if (id != null)
+			{
+				TextContext.CreateOrGetFontFromCache (id.InvariantFaceName, id.InvariantStyleName, out font);
+			}
+			
+			return font;
+		}
+		
+		public static OpenType.Font GetFont(string invariant_face_name, string invariant_style_name)
+		{
+			OpenType.Font font;
+			
+			TextContext.CreateOrGetFontFromCache (invariant_face_name, invariant_style_name, out font);
+			
+			return font;
+		}
+		
+		
 		public void GetFont(string name, out OpenType.Font font)
 		{
 			if (this.get_font_cache_name == name)
@@ -262,7 +284,7 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				this.CreateOrGetFontFromCache (id.InvariantFaceName, id.InvariantStyleName, out font);
+				TextContext.CreateOrGetFontFromCache (id.InvariantFaceName, id.InvariantStyleName, out font);
 			}
 			
 			this.get_font_cache_name = name;
@@ -271,7 +293,7 @@ namespace Epsitec.Common.Text
 		
 		public void GetFont(Properties.FontProperty property, out OpenType.Font font)
 		{
-			this.CreateOrGetFontFromCache (property.FaceName, property.StyleName, out font);
+			TextContext.CreateOrGetFontFromCache (property.FaceName, property.StyleName, out font);
 		}
 		
 		public void GetFont(ulong code, out OpenType.Font font, out double font_size)
@@ -295,7 +317,7 @@ namespace Epsitec.Common.Text
 			
 			font_size = font_size_p.SizeInPoints;
 			
-			this.CreateOrGetFontFromCache (font_p.FaceName, font_p.StyleName, out font);
+			TextContext.CreateOrGetFontFromCache (font_p.FaceName, font_p.StyleName, out font);
 			
 			if (font_p.Features == null)
 			{
@@ -1055,16 +1077,19 @@ namespace Epsitec.Common.Text
 			this.layout_list.NewEngine ("*", typeof (Layout.LineEngine));
 		}
 		
-		private void CreateOrGetFontFromCache(string font_face, string font_style, out OpenType.Font font)
+		private static void CreateOrGetFontFromCache(string font_face, string font_style, out OpenType.Font font)
 		{
 			string font_full = string.Concat (font_face, "/", font_style);
 			
-			font = TextContext.font_cache[font_full] as OpenType.Font;
-			
-			if (font == null)
+			lock (TextContext.font_cache)
 			{
-				font = TextContext.font_collection.CreateFont (font_face, font_style);
-				TextContext.font_cache[font_full] = font;
+				font = TextContext.font_cache[font_full] as OpenType.Font;
+				
+				if (font == null)
+				{
+					font = TextContext.font_collection.CreateFont (font_face, font_style);
+					TextContext.font_cache[font_full] = font;
+				}
 			}
 		}
 		

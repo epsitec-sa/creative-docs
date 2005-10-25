@@ -40,7 +40,7 @@ namespace Epsitec.Common.OpenType
 			Assert.AreEqual ("scissors", wing1_id.GetGlyphName (5));
 			Assert.AreEqual ("windowslogo", wing1_id.GetGlyphName (225));
 			
-//			Common.OpenType.Tests.CheckTables.RunTests ();
+			Common.OpenType.Tests.CheckTables.RunTests ();
 		}
 	}
 }
