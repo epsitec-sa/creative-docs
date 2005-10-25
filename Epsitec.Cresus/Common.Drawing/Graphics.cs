@@ -297,7 +297,7 @@ namespace Epsitec.Common.Drawing
 		{
 			for (int i = 0; i < glyphs.Length; i++)
 			{
-				this.Rasterizer.AddGlyph (font, glyphs[i], x[i], y[i], size, sx[i], sy[i]);
+				this.Rasterizer.AddGlyph (font, glyphs[i], x[i], y[i], size, sx == null ? 1 : sx[i], sy == null ? 1 : sy[i]);
 			}
 		}
 		
