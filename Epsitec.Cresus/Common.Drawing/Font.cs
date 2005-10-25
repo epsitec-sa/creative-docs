@@ -139,7 +139,10 @@ namespace Epsitec.Common.Drawing
 		
 		public string					UniqueName
 		{
-			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.Unique); }
+			get
+			{
+				return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.Unique);
+			}
 		}
 		
 		public string					FullName
@@ -222,6 +225,28 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public OpenType.Font			OpenTypeFont
+		{
+			get
+			{
+				if (this.open_type_font_ok == false)
+				{
+					if (Font.open_type_font_collection == null)
+					{
+						Font.open_type_font_collection = new OpenType.FontCollection ();
+						Font.open_type_font_collection.Initialize ();
+					}
+					
+					OpenType.FontIdentity id = Font.open_type_font_collection.FindFontByUniqueFontIdentifier (this.UniqueName);
+					
+					this.open_type_font_ok = true;
+					this.open_type_font = id == null ? null : new OpenType.Font (id);
+				}
+				
+				return this.open_type_font;
+			}
+		}
+		
 		
 		public Font.FaceInfo GetFaceInfo()
 		{
@@ -234,6 +259,8 @@ namespace Epsitec.Common.Drawing
 		{
 			try
 			{
+//				OpenType.Font font = this.OpenTypeFont;
+//				return font == null ? 0 : (int) font.GetGlyphIndex (unicode);
 				return AntiGrain.Font.Face.GetGlyphIndex (this.handle, unicode);
 			}
 			catch (System.NullReferenceException ex)
@@ -1213,6 +1240,8 @@ namespace Epsitec.Common.Drawing
 		System.Drawing.Font						os_font;
 		System.Collections.Hashtable			os_font_cache;
 		FaceInfo								face_info;
+		OpenType.Font							open_type_font;
+		bool									open_type_font_ok;
 		
 		static Font[]							font_array = null;
 		static FaceInfo[]						face_array = null;
@@ -1220,6 +1249,7 @@ namespace Epsitec.Common.Drawing
 		static System.Collections.Hashtable		face_hash  = null;
 		static Font								default_font;
 		static bool								initialised = false;
+		static OpenType.FontCollection			open_type_font_collection;
 		
 		enum NameId
 		{

@@ -128,6 +128,14 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
+		public string							UniqueFontId
+		{
+			get
+			{
+				return this.ot_name.GetUniqueFontIdentifier ();
+			}
+		}
+		
 		
 		internal FontData						FontData
 		{

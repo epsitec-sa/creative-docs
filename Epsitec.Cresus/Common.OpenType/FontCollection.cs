@@ -12,6 +12,7 @@ namespace Epsitec.Common.OpenType
 		public FontCollection()
 		{
 			this.full_hash = new System.Collections.Hashtable ();
+			this.fuid_hash = new System.Collections.Hashtable ();
 			this.full_list = new System.Collections.ArrayList ();
 		}
 		
@@ -53,6 +54,7 @@ namespace Epsitec.Common.OpenType
 					object     record = Platform.Neutral.GetFontSystemDescription (family, style);
 					
 					string full_name = null;
+					string fuid_name = null;
 					
 					if (data_name == null)
 					{
@@ -77,12 +79,14 @@ namespace Epsitec.Common.OpenType
 								
 								name_t    = new Table_name (data, name_t_offset);
 								full_name = name_t.GetFullFontName ();
+								fuid_name = name_t.GetUniqueFontIdentifier ();
 								
 								fid_n.DefineTableName (name_t);
 								
 								if (this.full_hash.ContainsKey (full_name) == false)
 								{
 									this.full_hash[full_name] = fid_n;
+									this.fuid_hash[fuid_name] = fid_n;
 								}
 							}
 						}
@@ -93,12 +97,16 @@ namespace Epsitec.Common.OpenType
 						
 						name_t    = new Table_name (data_name, 0);
 						full_name = name_t.GetFullFontName ();
+						fuid_name = name_t.GetUniqueFontIdentifier ();
 						
 						if ((record != null) &&
 							(full_name != null) &&
 							(this.full_hash.ContainsKey (full_name) == false))
 						{
-							this.full_hash[full_name] = new FontIdentity (name_t, record);
+							FontIdentity fid = new FontIdentity (name_t, record);
+							
+							this.full_hash[full_name] = fid;
+							this.fuid_hash[fuid_name] = fid;
 						}
 					}
 				}
@@ -118,6 +126,12 @@ namespace Epsitec.Common.OpenType
 		public string[] GetFontFamilies()
 		{
 			return (string[]) this.families.Clone ();
+		}
+		
+		
+		public FontIdentity FindFontByUniqueFontIdentifier(string fuid)
+		{
+			return this.fuid_hash[fuid] as FontIdentity;
 		}
 		
 		
@@ -231,6 +245,7 @@ namespace Epsitec.Common.OpenType
 		private static bool						load_ttc;
 		
 		private System.Collections.Hashtable	full_hash;
+		private System.Collections.Hashtable	fuid_hash;
 		private System.Collections.ArrayList	full_list;
 		private string[]						families;
 	}

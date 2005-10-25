@@ -1100,6 +1100,10 @@ namespace Epsitec.Common.OpenType
 			{
 				sub = this.FindFormatSubTable (3, 1, 4);
 			}
+			if (sub == null)
+			{
+				sub = this.FindFormatSubTable (3, 0, 4);
+			}
 			
 			return sub;
 		}
