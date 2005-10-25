@@ -124,15 +124,25 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				decimal norm = (this.Value-this.MinValue)/(this.MaxValue-this.MinValue);
-				norm = (decimal)System.Math.Pow((double)norm, (double)(1.0M/this.logarithmic));
-				return norm*(this.MaxValue-this.MinValue)+this.MinValue;
+				if ( this.MaxValue == this.MinValue )
+				{
+					return this.Value;
+				}
+				else
+				{
+					decimal norm = (this.Value-this.MinValue)/(this.MaxValue-this.MinValue);
+					norm = (decimal)System.Math.Pow((double)norm, (double)(1.0M/this.logarithmic));
+					return norm*(this.MaxValue-this.MinValue)+this.MinValue;
+				}
 			}
 			set
 			{
-				decimal norm = (value-this.MinValue)/(this.MaxValue-this.MinValue);
-				norm = (decimal)System.Math.Pow((double)norm, (double)this.logarithmic);
-				value = norm*(this.MaxValue-this.MinValue)+this.MinValue;
+				if ( this.MaxValue != this.MinValue )
+				{
+					decimal norm = (value-this.MinValue)/(this.MaxValue-this.MinValue);
+					norm = (decimal)System.Math.Pow((double)norm, (double)this.logarithmic);
+					value = norm*(this.MaxValue-this.MinValue)+this.MinValue;
+				}
 				this.Value = value;
 			}
 		}

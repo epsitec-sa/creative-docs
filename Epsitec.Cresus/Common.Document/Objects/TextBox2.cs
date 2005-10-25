@@ -1338,42 +1338,41 @@ namespace Epsitec.Common.Document.Objects
 						  this.document.Modifier.ActiveViewer.IsFocused);
 			}
 
+			this.port = port;
 			this.graphics = port as Graphics;
-			if ( this.graphics != null )
+			this.hasSelection = false;
+
+			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.edited;
+			this.textFlow.TextFitter.RenderTextFrame(this.textFrame, this);
+
+			if ( this.edited && !this.hasSelection && this.graphics != null )
 			{
-				this.hasSelection = false;
-
-				this.textFlow.TextStory.TextContext.ShowControlCharacters = this.edited;
-				this.textFlow.TextFitter.RenderTextFrame(this.textFrame, this);
-
-				if ( this.edited && !this.hasSelection )
+				Text.ITextFrame frame;
+				double cx, cy, ascender, descender;
+				this.textFlow.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
+			
+				if ( frame == this.textFrame )
 				{
-					Text.ITextFrame frame;
-					double cx, cy, ascender, descender;
-					this.textFlow.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
+					double tan = System.Math.Tan(System.Math.PI/2.0 - angle);
+					Point c1 = new Point(cx+tan*descender, cy+descender);
+					Point c2 = new Point(cx+tan*ascender,  cy+ascender);
 				
-					if ( frame == this.textFrame )
-					{
-						double tan = System.Math.Tan(System.Math.PI/2.0 - angle);
-						Point c1 = new Point(cx+tan*descender, cy+descender);
-						Point c2 = new Point(cx+tan*ascender,  cy+ascender);
-					
-						this.graphics.LineWidth = 1.0/drawingContext.ScaleX;
-						this.graphics.AddLine(c1, c2);
-						this.graphics.RenderSolid(DrawingContext.ColorCursorEdit(active));
+					this.graphics.LineWidth = 1.0/drawingContext.ScaleX;
+					this.graphics.AddLine(c1, c2);
+					this.graphics.RenderSolid(DrawingContext.ColorCursorEdit(active));
 
-						c1 = this.transform.TransformDirect(c1);
-						c2 = this.transform.TransformDirect(c2);
-						this.ComputeAutoScroll(c1, c2);
-						this.cursorBox.MergeWith(c1);
-						this.cursorBox.MergeWith(c2);
-						this.selectBox.MergeWith(c1);
-						this.selectBox.MergeWith(c2);
-					}
+					c1 = this.transform.TransformDirect(c1);
+					c2 = this.transform.TransformDirect(c2);
+					this.ComputeAutoScroll(c1, c2);
+					this.cursorBox.MergeWith(c1);
+					this.cursorBox.MergeWith(c2);
+					this.selectBox.MergeWith(c1);
+					this.selectBox.MergeWith(c2);
 				}
-
-				this.graphics = null;
 			}
+
+			this.port = null;
+			this.graphics = null;
 
 			port.Transform = ot;
 		}
@@ -1483,9 +1482,9 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 			
-			this.RenderText(font, size, glyphs, x, y, sx, sy, Drawing.Color.FromName(color));
+			this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.FromName(color));
 			
-			if ( this.edited && selRectList != null )
+			if ( this.edited && selRectList != null && this.graphics != null )
 			{
 				this.hasSelection = true;
 				
@@ -1496,7 +1495,7 @@ namespace Epsitec.Common.Document.Objects
 				this.graphics.RenderSolid(Drawing.Color.FromName("Highlight"));
 				this.selectBox.MergeWith(selBbox);
 				
-				this.RenderText(font, size, glyphs, x, y, sx, sy, Drawing.Color.FromName("HighlightText"));
+				this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.FromName("HighlightText"));
 				
 				this.graphics.RestoreClippingRectangle(saveClip);
 			}
@@ -1505,6 +1504,8 @@ namespace Epsitec.Common.Document.Objects
 		// Marque la fin d'une tranche sélectionnée.
 		protected void MarkSel(Text.Layout.Context layout, ref System.Collections.ArrayList selRectList, ref Drawing.Rectangle selBbox, double x, double selX)
 		{
+			if ( this.graphics == null )  return;
+
 			double dx = x - selX;
 			double dy = layout.LineY2 - layout.LineY1;
 			Drawing.Rectangle rect = new Drawing.Rectangle(selX, layout.LineY1, dx, dy);
@@ -1529,28 +1530,51 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Effectue le rendu des caractères.
-		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, Drawing.Color color)
+		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, RichColor color)
 		{
-			if ( font.FontManagerType == OpenType.FontManagerType.System )
+			if ( this.graphics != null )  // affichage sur écran ?
 			{
-				Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, color);
-			}
-			else
-			{
-				Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
-					
-				if ( drawingFont != null )
+				if ( font.FontManagerType == OpenType.FontManagerType.System )
 				{
-					for ( int i=0 ; i<glyphs.Length ; i++ )
+					Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, color.Basic);
+				}
+				else
+				{
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+					
+					if ( drawingFont != null )
 					{
-						if ( glyphs[i] < 0xffff )
+						for ( int i=0 ; i<glyphs.Length ; i++ )
 						{
-							this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+							if ( glyphs[i] < 0xffff )
+							{
+								this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+							}
 						}
 					}
-				}
 					
-				this.graphics.RenderSolid(color);
+					this.graphics.RenderSolid(color.Basic);
+				}
+			}
+			else if ( this.port is Printing.PrintPort )  // impression ?
+			{
+				if ( sy != null )  // TODO: étrange que sy soit parfois null !
+				{
+					Printing.PrintPort printPort = port as Printing.PrintPort;
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+					printPort.RichColor = color;
+					printPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
+				}
+			}
+			else if ( this.port is PDF.Port )  // exportation PDF ?
+			{
+				if ( sy != null )  // TODO: étrange que sy soit parfois null !
+				{
+					PDF.Port pdfPort = port as PDF.Port;
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+					pdfPort.RichColor = color;
+					pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
+				}
 			}
 		}
 		
@@ -1581,9 +1605,11 @@ namespace Epsitec.Common.Document.Objects
 					if ( (records[i].Type == Common.Text.Layout.UnderlineRecord.RecordType.LineEnd) ||
 						 (records[i].Underlines.Length == 0) )
 					{
-						this.graphics.LineWidth = 1.0;
-						this.graphics.AddLine(x1, y1, records[i].X, records[i].Y + records[i].Descender * 0.8);
-						this.graphics.RenderSolid(Drawing.Color.FromName(color));
+						Path path = Path.FromLine(x1, y1, records[i].X, records[i].Y + records[i].Descender * 0.8);
+
+						this.port.LineWidth = 1.0;
+						this.port.RichColor = RichColor.FromName(color);
+						this.port.PaintOutline(path);
 					}
 					
 					x1 = records[i].X;
@@ -1766,6 +1792,7 @@ namespace Epsitec.Common.Document.Objects
 		protected TextFlow						textFlow;
 		protected Text.SimpleTextFrame			textFrame;
 		protected TextNavigator2				metaNavigator;
+		protected IPaintPort					port;
 		protected Graphics						graphics;
 		protected Transform						transform;
 		protected Drawing.Rectangle				cursorBox;
