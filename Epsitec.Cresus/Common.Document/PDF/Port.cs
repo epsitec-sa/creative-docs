@@ -372,7 +372,6 @@ namespace Epsitec.Common.Document.PDF
 		public void PaintGlyphs(Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 		{
 			int n = glyphs.Length;
-			
 			if ( n == 0 )  return;
 			
 			//	TODO: générer ce qu'il faut pour mettre les glyphes dans le fichier PDF. Mais
@@ -384,7 +383,7 @@ namespace Epsitec.Common.Document.PDF
 			
 			ft.Scale(size);
 			
-			for ( int i=0; i<n; i++ )
+			for ( int i=0 ; i<n ; i++ )
 			{
 				double scale_x = sx == null ? 1 : sx[i];
 				double scale_y = sy == null ? 1 : sy[i];
@@ -396,7 +395,7 @@ namespace Epsitec.Common.Document.PDF
 			this.DoFill(path);
 			this.PutEOL();
 			
-			path.Dispose ();
+			path.Dispose();
 		}
 		
 		public double PaintText(double x, double y, string text, Font font, double size)

@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Panels
 			}
 			else
 			{
-				Misc.AddFontList(this.document, this.fontName);
+				Misc.AddFontList(this.fontName, false);
 			}
 			//?this.fontName.SelectedIndexChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontName.TextChanged += new EventHandler(this.HandleFieldChanged);

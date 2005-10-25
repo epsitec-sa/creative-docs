@@ -197,7 +197,7 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( combo.Items.Count == 0 )
 			{
 				combo.Items.Add(Res.Strings.Action.Text.Font.Default);  // par défaut
-				Misc.AddFontList(this.document, combo);
+				Misc.AddFontList(combo, false);
 			}
 		}
 

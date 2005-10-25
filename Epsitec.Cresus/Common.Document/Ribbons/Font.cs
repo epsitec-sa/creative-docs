@@ -199,7 +199,7 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( field.Items.Count == 0 )
 			{
 				field.Items.Add(Res.Strings.Action.Text.Font.Default);  // par défaut
-				Misc.AddFontList(this.document, field);
+				Misc.AddFontList(field, false);
 			}
 		}
 
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			field.Items.Clear();  // vide la liste
 
-			OpenType.FontIdentity[] list = this.document.TextContext.GetAvailableFontIdentities(face);
+			OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(face);
 			foreach ( OpenType.FontIdentity id in list )
 			{
 				field.Items.Add(id.InvariantStyleName);

@@ -1252,7 +1252,7 @@ namespace Epsitec.Common.Document
 		// Cherche le FontStyle par défaut pour un FontFace donné.
 		public string SearchDefaultFontStyle(string face)
 		{
-			OpenType.FontIdentity[] list = this.textContext.GetAvailableFontIdentities(face);
+			OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(face);
 
 			foreach ( OpenType.FontIdentity id in list )
 			{

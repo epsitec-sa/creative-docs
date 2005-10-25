@@ -85,13 +85,24 @@ namespace Epsitec.Common.Document
 
 
 		// Ajoute la liste des fontes dans la liste d'un TextFieldCombo.
-		static public void AddFontList(Document document, TextFieldCombo combo)
+		static public void AddFontList(TextFieldCombo combo, bool enableSymbols)
 		{
-			if ( document == null )  return;
-
-			foreach( string face in document.TextContext.GetAvailableFontFaces() )
+			foreach( string face in TextContext.GetAvailableFontFaces() )
 			{
-				combo.Items.Add(face);
+				bool add = true;
+				if ( !enableSymbols )
+				{
+					OpenType.FontIdentity[] ids = TextContext.GetAvailableFontIdentities(face);
+					foreach ( OpenType.FontIdentity id in ids )
+					{
+						if ( id.IsSymbolFont )  add = false;
+					}
+				}
+
+				if ( add )
+				{
+					combo.Items.Add(face);
+				}
 			}
 		}
 

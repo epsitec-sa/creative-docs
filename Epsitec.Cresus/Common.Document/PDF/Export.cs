@@ -505,7 +505,7 @@ namespace Epsitec.Common.Document.PDF
 							}
 						}
 
-						obj.FillOneCharList(this.characterList);
+						obj.FillOneCharList(port, drawingContext, this.characterList);
 					}
 
 					port.PopColorModifier();

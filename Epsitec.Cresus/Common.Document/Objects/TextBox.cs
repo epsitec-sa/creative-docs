@@ -213,7 +213,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Ajoute tous les caractères utilisés par l'objet dans une table.
-		public override void FillOneCharList(System.Collections.Hashtable table)
+		public override void FillOneCharList(IPaintPort port, DrawingContext drawingContext, System.Collections.Hashtable table)
 		{
 			Point p1 = new Point();
 			Point p2 = new Point();

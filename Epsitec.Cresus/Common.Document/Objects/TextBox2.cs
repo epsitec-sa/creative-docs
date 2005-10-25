@@ -292,7 +292,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Ajoute tous les caractères utilisés par l'objet dans une table.
-		public override void FillOneCharList(System.Collections.Hashtable table)
+		public override void FillOneCharList(IPaintPort port, DrawingContext drawingContext, System.Collections.Hashtable table)
 		{
 #if false
 			Point p1 = new Point();
@@ -1558,23 +1558,17 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else if ( this.port is Printing.PrintPort )  // impression ?
 			{
-				if ( sy != null )  // TODO: étrange que sy soit parfois null !
-				{
-					Printing.PrintPort printPort = port as Printing.PrintPort;
-					Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
-					printPort.RichColor = color;
-					printPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
-				}
+				Printing.PrintPort printPort = port as Printing.PrintPort;
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+				printPort.RichColor = color;
+				printPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
 			}
 			else if ( this.port is PDF.Port )  // exportation PDF ?
 			{
-				if ( sy != null )  // TODO: étrange que sy soit parfois null !
-				{
-					PDF.Port pdfPort = port as PDF.Port;
-					Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
-					pdfPort.RichColor = color;
-					pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
-				}
+				PDF.Port pdfPort = port as PDF.Port;
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+				pdfPort.RichColor = color;
+				pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
 			}
 		}
 		

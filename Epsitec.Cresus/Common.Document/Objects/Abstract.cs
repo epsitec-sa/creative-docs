@@ -2170,7 +2170,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Ajoute tous les caractères utilisés par l'objet dans une table.
-		public virtual void FillOneCharList(System.Collections.Hashtable table)
+		public virtual void FillOneCharList(IPaintPort port, DrawingContext drawingContext, System.Collections.Hashtable table)
 		{
 		}
 
