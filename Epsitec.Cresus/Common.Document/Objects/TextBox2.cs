@@ -523,11 +523,22 @@ namespace Epsitec.Common.Document.Objects
 		// Insère un glyphe dans le pavé en édition.
 		public override bool EditInsertGlyph(string text, string fontFace, string fontStyle)
 		{
-			if ( fontFace != "" )
+			if ( fontFace == "" )
 			{
-				this.SetTextFont(fontFace, fontStyle, null);
+				this.metaNavigator.Insert(text);
 			}
-			this.metaNavigator.Insert(text);
+			else
+			{
+				for ( int i=0 ; i<text.Length ; i++ )
+				{
+					OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
+					Text.Unicode.Code code = (Text.Unicode.Code) text[i];
+					int glyph = font.GetGlyphIndex(text[i]);
+					Text.Properties.OpenTypeProperty otp = new Text.Properties.OpenTypeProperty(fontFace, fontStyle, glyph);
+					this.metaNavigator.Insert(code, otp);
+				}
+			}
+
 			this.NotifyAreaFlow();
 			return true;
 		}
@@ -575,7 +586,7 @@ namespace Epsitec.Common.Document.Objects
 					Text.Properties.FontProperty font = property as Text.Properties.FontProperty;
 					System.Diagnostics.Debug.Assert(font != null);
 					face = font.FaceName;
-					style = font.StyleName;
+					style = Misc.SimplifyFontStyle(font.StyleName);
 					features = font.Features;
 					return;
 				}

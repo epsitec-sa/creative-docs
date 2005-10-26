@@ -144,6 +144,14 @@ namespace Epsitec.Common.Document
 			return "";
 		}
 
+		// Simplifie un style ("Regular !Bold" devient "Bold" par exemple).
+		static public string SimplifyFontStyle(string style)
+		{
+			string simple = OpenType.FontCollection.GetStyleHash(style);
+			if ( simple != "" )  return simple;
+			return style;
+		}
+
 		// Donne une fonte d'après son nom.
 		static public Font GetFont(string fontName)
 		{

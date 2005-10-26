@@ -613,6 +613,22 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public bool Insert(Text.Unicode.Code code, Text.Properties.OpenTypeProperty ot_property)
+		{
+			if (code > Text.Unicode.Code.Invalid)
+			{
+				//	TODO: gérer la génération d'un surrogate pair
+				
+				return false;
+			}
+			else
+			{
+				this.text_navigator.Insert (code, ot_property);
+			
+				return true;
+			}
+		}
+		
 		public bool Insert(Text.Unicode.Code code)
 		{
 			if (code > Text.Unicode.Code.Invalid)

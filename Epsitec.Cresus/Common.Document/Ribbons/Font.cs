@@ -494,9 +494,9 @@ namespace Epsitec.Common.Document.Ribbons
 
 			for ( int i=0 ; i<cmds.Length ; i++ )
 			{
-				bool active  =  Misc.IsInsideList(features,  cmds[i]);
-				bool invalid = !Misc.IsInsideList(supported, cmds[i]);
-				this.BuildFeaturesMenu(menu, texts[i], cmds[i], active, invalid, message);
+				bool active = Misc.IsInsideList(features,  cmds[i]);
+				bool valid  = Misc.IsInsideList(supported, cmds[i]);
+				this.BuildFeaturesMenu(menu, texts[i], cmds[i], active, valid, message);
 			}
 
 			menu.AdjustSize();
@@ -504,11 +504,11 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 		// Crée une case du menu des variantes OpenType (features).
-		protected void BuildFeaturesMenu(VMenu menu, string text, string name, bool active, bool invalid, MessageEventHandler message)
+		protected void BuildFeaturesMenu(VMenu menu, string text, string name, bool active, bool valid, MessageEventHandler message)
 		{
 			string icon = Misc.Icon(active ? "ActiveYes" : "ActiveNo");
 
-			if ( invalid )  text = Misc.Italic(text);
+			if ( !valid )  text = Misc.Italic(text);
 
 			MenuItem item = new MenuItem("", icon, text, "", name);
 			item.Pressed += message;
