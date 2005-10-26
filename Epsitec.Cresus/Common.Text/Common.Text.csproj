@@ -129,11 +129,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Context.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "CursorAttachment.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -270,6 +265,11 @@
                 />
                 <File
                     RelPath = "TabList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TextContext.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
