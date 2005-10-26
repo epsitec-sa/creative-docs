@@ -935,7 +935,7 @@ namespace Epsitec.Common.OpenType
 				count += (int) this.ot_GSUB.LookupListTable.GetLookupTable (lookup).SubTableCount;
 			}
 			
-			this.substitution_lookups = new BaseSubstitution[count];
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
 			foreach (int lookup in lookup_indexes)
 			{
@@ -945,9 +945,17 @@ namespace Epsitec.Common.OpenType
 				
 				for (int i = 0; i < n; i++)
 				{
-					this.substitution_lookups[index++] = lookup_table.GetSubstitution (i);
+					BaseSubstitution subst = lookup_table.GetSubstitution (i);
+					
+					if (subst != null)
+					{
+						list.Add (subst);
+					}
 				}
 			}
+			
+			this.substitution_lookups = new BaseSubstitution[list.Count];
+			list.CopyTo (this.substitution_lookups);
 		}
 		
 		
@@ -961,9 +969,9 @@ namespace Epsitec.Common.OpenType
 			int        max_size = count + 16;
 			ushort[][] temp     = new ushort[2][];
 			
-			try_again:
+		try_again:
 			
-				temp[0] = new ushort[max_size];
+			temp[0] = new ushort[max_size];
 			temp[1] = new ushort[max_size];
 			
 			try

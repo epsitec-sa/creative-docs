@@ -328,6 +328,11 @@ namespace Epsitec.Common.OpenType.Tests
 			ligature_list.AddRange (liga_features);
 			ligature_list.AddRange (rlig_features);
 			ligature_list.AddRange (dlig_features);
+			ligature_list.AddRange (gsub_t.GetFeatureIndexes ("alts"));
+			ligature_list.AddRange (gsub_t.GetFeatureIndexes ("hlig"));
+			ligature_list.AddRange (gsub_t.GetFeatureIndexes ("hist"));
+			ligature_list.AddRange (gsub_t.GetFeatureIndexes ("smcp"));
+			ligature_list.AddRange (gsub_t.GetFeatureIndexes ("frac"));
 			
 			for (int i = 0; i < ligature_list.Count; i++)
 			{
@@ -341,7 +346,7 @@ namespace Epsitec.Common.OpenType.Tests
 					
 					System.Diagnostics.Debug.WriteLine (string.Format ("Lookup: type={0}, flags={1}, sub.count={2}", lookup.LookupType, lookup.LookupFlags.ToString ("X4"), lookup.SubTableCount));
 					
-					if (lookup.LookupType == 1)
+					if (lookup.LookupType == LookupType.Single)
 					{
 						for (int s = 0; s < lookup.SubTableCount; s++)
 						{
@@ -350,7 +355,7 @@ namespace Epsitec.Common.OpenType.Tests
 							
 							int[] covered = CheckTables.GetCoverageIndexes (single_subst.Coverage);
 							
-							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2}", single_subst.SubstFormat, single_subst.Coverage.CoverageFormat, covered.Length));
+							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2} -- Single", single_subst.SubstFormat, single_subst.Coverage.CoverageFormat, covered.Length));
 							
 							for (int c = 0; c < covered.Length; c++)
 							{
@@ -358,7 +363,7 @@ namespace Epsitec.Common.OpenType.Tests
 							}
 						}
 					}
-					else if (lookup.LookupType == 4)
+					else if (lookup.LookupType == LookupType.Ligature)
 					{
 						for (int s = 0; s < lookup.SubTableCount; s++)
 						{
@@ -367,7 +372,7 @@ namespace Epsitec.Common.OpenType.Tests
 							
 							int[] covered = CheckTables.GetCoverageIndexes (liga_subst.Coverage);
 							
-							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2}", liga_subst.SubstFormat, liga_subst.Coverage.CoverageFormat, covered.Length));
+							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2} -- Ligature", liga_subst.SubstFormat, liga_subst.Coverage.CoverageFormat, covered.Length));
 							System.Diagnostics.Debug.WriteLine (string.Format ("            # of ligature sets: {0}", liga_subst.LigatureSetCount));
 							
 							Debug.Assert.IsTrue (liga_subst.LigatureSetCount == covered.Length);
@@ -418,7 +423,7 @@ namespace Epsitec.Common.OpenType.Tests
 							System.Diagnostics.Trace.WriteLine ("Done.");
 						}
 					}
-					else if (lookup.LookupType == 6)
+					else if (lookup.LookupType == LookupType.ChainingContext)
 					{
 						for (int s = 0; s < lookup.SubTableCount; s++)
 						{
@@ -427,7 +432,34 @@ namespace Epsitec.Common.OpenType.Tests
 							
 							int[] covered = CheckTables.GetCoverageIndexes (cctx_subst.Coverage);
 							
-							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2}", cctx_subst.SubstFormat, cctx_subst.Coverage.CoverageFormat, covered.Length));
+							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2} -- ChainingContext", cctx_subst.SubstFormat, cctx_subst.Coverage.CoverageFormat, covered.Length));
+						}
+					}
+					else if (lookup.LookupType == LookupType.Alternate)
+					{
+						for (int s = 0; s < lookup.SubTableCount; s++)
+						{
+							SubstSubTable base_subst = lookup.GetSubTable (s);
+							AlternateSubstitution alt_subst = new AlternateSubstitution (base_subst);
+							
+							int[] covered = CheckTables.GetCoverageIndexes (alt_subst.Coverage);
+							
+							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2} -- Alternate", alt_subst.SubstFormat, alt_subst.Coverage.CoverageFormat, covered.Length));
+							
+							for (int c = 0; c < covered.Length; c++)
+							{
+								System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+								buffer.AppendFormat ("    Alternates for {0:0000} :", covered[c]);
+								
+								ushort[] alts = alt_subst.GetAlternates ((ushort) covered[c]);
+								
+								foreach (ushort alt in alts)
+								{
+									buffer.AppendFormat (" {0:0000}", alt);
+								}
+								
+								System.Diagnostics.Debug.WriteLine (buffer.ToString ());
+							}
 						}
 					}
 				}
@@ -445,10 +477,10 @@ namespace Epsitec.Common.OpenType.Tests
 			font_1.Initialize (new FontData (Platform.Neutral.LoadFontData (font_name_1, "Normal"), -1));
 			font_2.Initialize (new FontData (Platform.Neutral.LoadFontData (font_name_2, "Normal"), -1));
 			
-			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_1.GetSupportedScripts ()));
-			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_2.GetSupportedScripts ()));
-			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_1.GetSupportedFeatures ()));
-			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_2.GetSupportedFeatures ()));
+			System.Diagnostics.Debug.WriteLine ("Palatino Linotype scripts:  " + string.Join ("; ", font_1.GetSupportedScripts ()));
+			System.Diagnostics.Debug.WriteLine ("Times New Roman scripts:    " + string.Join ("; ", font_2.GetSupportedScripts ()));
+			System.Diagnostics.Debug.WriteLine ("Palatino Linotype features: " + string.Join ("; ", font_1.GetSupportedFeatures ()));
+			System.Diagnostics.Debug.WriteLine ("Times New Roman features:   " + string.Join ("; ", font_2.GetSupportedFeatures ()));
 			
 			font_1.SelectFeatures ("dlig", "liga");
 			
@@ -457,8 +489,8 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			font_1.SelectFeatures ("dlig", "liga");
 			
-			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_1.GetSupportedFeatures ()));
-			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_2.GetSupportedFeatures ()));
+			System.Diagnostics.Debug.WriteLine ("Palatino Linotype / 'latn'+'ROM ' features: " + string.Join ("; ", font_1.GetSupportedFeatures ()));
+			System.Diagnostics.Debug.WriteLine ("Times New Roman / 'arab' features:          " + string.Join ("; ", font_2.GetSupportedFeatures ()));
 			
 			font_2.SelectScript ("latn");
 			font_2.SelectFeatures ("liga");
