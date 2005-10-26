@@ -52,6 +52,8 @@ namespace Epsitec.Common.OpenType
 			System.Console.WriteLine ("Available fonts & features");
 			System.Console.WriteLine ("--------------------------");
 			
+			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
+			
 			foreach (FontIdentity id in collection)
 			{
 				Font font = new Font (id);
@@ -61,6 +63,7 @@ namespace Epsitec.Common.OpenType
 				
 				foreach (string feature in features)
 				{
+					hash[feature] = null;
 					LookupTable[] tables = font.GetLookupTables (feature);
 					
 					System.Console.Write ("{0} [{1}] =>", font.FontIdentity.FullName, feature);
@@ -74,6 +77,16 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 			
+			System.Console.WriteLine ();
+			System.Console.WriteLine ("List of all features, sorted");
+			System.Console.WriteLine ("----------------------------");
+			
+			string[] full = new string[hash.Count];
+			hash.Keys.CopyTo (full, 0);
+			System.Array.Sort (full);
+			
+			System.Console.WriteLine (string.Join ("\n", full));
+
 			System.Console.WriteLine ();
 			System.Console.Out.Flush ();
 		}
