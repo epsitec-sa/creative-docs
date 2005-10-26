@@ -964,6 +964,32 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public LookupTable[] GetLookupTables(params string[] features)
+		{
+			System.Collections.ArrayList list = new	 System.Collections.ArrayList ();
+			
+			foreach (string feature in features)
+			{
+				int[] indexes = this.ot_GSUB.GetFeatureIndexes (feature);
+				foreach (int index in indexes)
+				{
+					FeatureTable f_table = this.ot_GSUB.FeatureListTable.GetFeatureTable (index);
+					int          count   = f_table.LookupCount;
+					
+					for (int i = 0; i < count; i++)
+					{
+						list.Add (this.ot_GSUB.LookupListTable.GetLookupTable (f_table.GetLookupIndex (i)));
+					}
+				}
+			}
+			
+			LookupTable[] tables = new LookupTable[list.Count];
+			list.CopyTo (tables, 0);
+			
+			return tables;
+		}
+		
+		
 		public bool GetAlternates(ushort glyph, out ushort[] alternates)
 		{
 			//	Trouve les variantes équivalentes d'un glyph donné. Il y a par

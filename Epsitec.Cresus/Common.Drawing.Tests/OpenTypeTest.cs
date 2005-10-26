@@ -42,6 +42,76 @@ namespace Epsitec.Common.OpenType
 			
 			Common.OpenType.Tests.CheckTables.RunTests ();
 		}
+		
+		[Test] public void ListAllFeatures()
+		{
+			FontCollection collection = new FontCollection ();
+			
+			collection.Initialize ();
+			
+			System.Console.WriteLine ("Available fonts & features");
+			System.Console.WriteLine ("--------------------------");
+			
+			foreach (FontIdentity id in collection)
+			{
+				Font font = new Font (id);
+				string[] features = font.GetSupportedFeatures ();
+				
+				System.Array.Sort (features);
+				
+				foreach (string feature in features)
+				{
+					LookupTable[] tables = font.GetLookupTables (feature);
+					
+					System.Console.Write ("{0} [{1}] =>", font.FontIdentity.FullName, feature);
+					
+					foreach (LookupTable table in tables)
+					{
+						System.Console.Write (" {0}", table.LookupType);
+					}
+					
+					System.Console.WriteLine ();
+				}
+			}
+			
+			System.Console.WriteLine ();
+			System.Console.Out.Flush ();
+		}
+		
+		[Test] public void ListAlternateFeatures()
+		{
+			FontCollection collection = new FontCollection ();
+			
+			collection.Initialize ();
+			
+			System.Console.WriteLine ("Font with alternate features");
+			System.Console.WriteLine ("----------------------------");
+			
+			foreach (FontIdentity id in collection)
+			{
+				Font font = new Font (id);
+				string[] features = font.GetSupportedFeatures ();
+				
+				System.Array.Sort (features);
+				
+				foreach (string feature in features)
+				{
+					LookupTable[] tables = font.GetLookupTables (feature);
+					
+					foreach (LookupTable table in tables)
+					{
+						if (table.LookupType == LookupType.Alternate)
+						{
+							System.Console.WriteLine ("{0} [{1}] has {2} alternate(s)", font.FontIdentity.FullName, feature, tables.Length);
+							break;
+						}
+					}
+				}
+			}
+			
+			System.Console.WriteLine ();
+			System.Console.Out.Flush ();
+		}
 	}
 }
 

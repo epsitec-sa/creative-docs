@@ -336,9 +336,9 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			for (int i = 0; i < ligature_list.Count; i++)
 			{
-				int         feature_i    = (int)ligature_list[i];
+				int          feature_i    = (int)ligature_list[i];
 				FeatureTable feature      = gsub_t.FeatureListTable.GetFeatureTable (feature_i);
-				int         lookup_count = feature.LookupCount;
+				int          lookup_count = feature.LookupCount;
 				
 				for (int feature_lookup_i = 0; feature_lookup_i < lookup_count; feature_lookup_i++)
 				{
