@@ -1146,6 +1146,38 @@ namespace Epsitec.Common.Text
 			{
 				this.TextContext.GetStyles (code, out styles);
 				this.TextContext.GetProperties (code, out properties);
+				
+				int n = 0;
+				
+				for (int i = 0; i < properties.Length; i++)
+				{
+					if (properties[i].PropertyAffinity != Properties.PropertyAffinity.Symbol)
+					{
+						n++;
+					}
+				}
+				
+				if (n != properties.Length)
+				{
+					Property[] old_properties = properties;
+					Property[] new_properties = new Property[n];
+					
+					int j = 0;
+					
+					for (int i = 0; i < old_properties.Length; i++)
+					{
+						if (old_properties[i].PropertyAffinity != Properties.PropertyAffinity.Symbol)
+						{
+							new_properties[j] = old_properties[i];
+							j++;
+						}
+					}
+					
+					properties = new_properties;
+					
+					System.Diagnostics.Debug.Assert (new_properties.Length == n);
+					System.Diagnostics.Debug.Assert (new_properties.Length < old_properties.Length);
+				}
 			}
 			
 			this.current_styles      = styles;
