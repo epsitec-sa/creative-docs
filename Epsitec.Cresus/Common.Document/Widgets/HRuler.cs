@@ -650,12 +650,14 @@ namespace Epsitec.Common.Document.Widgets
 		}
 
 
+		// Donne le texte du tooltip d'édition en fonction de la position.
 		protected override string GetTooltipEditedText(Point pos)
 		{
-			if ( this.isDragging )
+			Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
+			double x = this.ScreenToDocument(pos.X) - bbox.Left;
+
+			if ( this.isDragging )  // déplacement en cours ?
 			{
-				Drawing.Rectangle bbox = this.editObject.BoundingBoxThin;
-				double x = this.ScreenToDocument(pos.X) - bbox.Left;
 				x = this.SnapGrid(x);
 				return this.document.Modifier.RealToString(x);
 			}
@@ -687,7 +689,12 @@ namespace Epsitec.Common.Document.Widgets
 				}
 			}
 
-			return Res.Strings.Action.Text.Ruler.TabCreate;
+			if ( x >= 0.0 && x <= bbox.Width )
+			{
+				return Res.Strings.Action.Text.Ruler.TabCreate;
+			}
+
+			return null;  // pas de tooltip
 		}
 
 		

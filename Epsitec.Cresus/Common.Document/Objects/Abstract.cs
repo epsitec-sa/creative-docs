@@ -667,7 +667,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Insère un glyphe dans le pavé en édition.
-		public virtual bool EditInsertGlyph(string text)
+		public virtual bool EditInsertGlyph(string text, string fontFace, string fontStyle)
 		{
 			return false;
 		}

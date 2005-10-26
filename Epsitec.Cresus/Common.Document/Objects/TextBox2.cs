@@ -521,8 +521,12 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 		// Insère un glyphe dans le pavé en édition.
-		public override bool EditInsertGlyph(string text)
+		public override bool EditInsertGlyph(string text, string fontFace, string fontStyle)
 		{
+			if ( fontFace != "" )
+			{
+				this.SetTextFont(fontFace, fontStyle);
+			}
 			this.metaNavigator.Insert(text);
 			this.NotifyAreaFlow();
 			return true;
@@ -1546,7 +1550,7 @@ namespace Epsitec.Common.Document.Objects
 					}
 					else
 					{
-						Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+						Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 						if ( drawingFont != null )
 						{
 							for ( int i=0 ; i<glyphs.Length ; i++ )
@@ -1564,21 +1568,21 @@ namespace Epsitec.Common.Document.Objects
 				else if ( this.port is Printing.PrintPort )  // impression ?
 				{
 					Printing.PrintPort printPort = port as Printing.PrintPort;
-					Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 					printPort.RichColor = color;
 					printPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
 				}
 				else if ( this.port is PDF.Port )  // exportation PDF ?
 				{
 					PDF.Port pdfPort = port as PDF.Port;
-					Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 					pdfPort.RichColor = color;
 					pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
 				}
 			}
 			else
 			{
-				Drawing.Font drawingFont = Drawing.Font.GetFont(font.FontIdentity.InvariantFaceName, font.FontIdentity.InvariantStyleName);
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 				if ( drawingFont != null )
 				{
 					for ( int i=0 ; i<glyphs.Length ; i++ )

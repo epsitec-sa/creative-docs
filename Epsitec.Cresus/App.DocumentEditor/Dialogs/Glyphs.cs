@@ -425,7 +425,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			if ( !this.editor.IsCurrentDocument )  return;
 
-			string insert = "";
+			string insert    = "";
+			string fontFace  = "";
+			string fontStyle = "";
 
 			if ( this.book.ActivePage.Name == "List" )
 			{
@@ -443,20 +445,23 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				int code = this.array.IndexToUnicode(array.SelectedIndex);
 				char c = (char) code;
+				insert = c.ToString();
 
-				string currentFont = this.editor.CurrentDocument.Modifier.EditGetFontName();
-				if ( this.fontFace == currentFont )
+				this.editor.CurrentDocument.Modifier.EditGetFont(out fontFace, out fontStyle);
+				if ( fontFace != this.fontFace || fontStyle != this.fontStyle )
 				{
-					insert = c.ToString();
+					fontFace  = this.fontFace;
+					fontStyle = this.fontStyle;
 				}
 				else
 				{
-					insert = string.Format("<font face=\"{0}\">{1}</font>", this.fontFace, c.ToString());
+					fontFace  = "";
+					fontStyle = "";
 				}
 			}
 
 			if ( insert == "" )  return;
-			this.editor.CurrentDocument.Modifier.EditInsertGlyph(insert);
+			this.editor.CurrentDocument.Modifier.EditInsertGlyph(insert, fontFace, fontStyle);
 		}
 
 
@@ -529,9 +534,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			if ( !this.editor.IsCurrentDocument )  return;
 
-			string fontFace = this.editor.CurrentDocument.Modifier.EditGetFontName();
+			string fontFace, fontStyle;
+			this.editor.CurrentDocument.Modifier.EditGetFont(out fontFace, out fontStyle);
 			if ( fontFace == "" )  return;
 			this.SetFontFace(fontFace);
+			this.SetFontStyle(fontStyle);
 		}
 
 		// Style de la police changé.

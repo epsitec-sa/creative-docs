@@ -382,9 +382,10 @@ namespace Epsitec.Common.Document.Widgets
 
 
 		#region Helpers.IToolTipHost
+		// Donne l'objet (string ou widget) pour le tooltip en fonction de la position.
 		public object GetToolTipCaption(Point pos)
 		{
-			if ( this.edited )
+			if ( this.edited )  // édition en cours ?
 			{
 				return this.GetTooltipEditedText(pos);
 			}
@@ -394,9 +395,10 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
+		// Donne le texte du tooltip d'édition en fonction de la position.
 		protected virtual string GetTooltipEditedText(Point pos)
 		{
-			return null;
+			return null;  // pas de tooltip
 		}
 		#endregion
 
