@@ -23,6 +23,7 @@ namespace Epsitec.Common.Widgets
 			this.window.Name = "ToolTip";
 			this.window.DisableMouseActivation ();
 			this.window.WindowBounds = new Drawing.Rectangle (0, 0, 8, 8);
+			this.window.Root.SetSyncPaint (true);
 			
 			this.timer = new Timer ();
 			this.timer.TimeElapsed += new Support.EventHandler (this.HandleTimerTimeElapsed);
@@ -260,6 +261,23 @@ namespace Epsitec.Common.Widgets
 			this.timer.Start();
 		}
 		
+		private void DelayShow()
+		{
+			System.TimeSpan delta = System.DateTime.Now.Subtract (this.last_change_time);
+			
+			long   delta_ticks   = delta.Ticks;
+			double delta_seconds = (delta_ticks / System.TimeSpan.TicksPerMillisecond) / 1000.0;
+			
+			if (delta_seconds < SystemInformation.ToolTipShowDelay)
+			{
+				this.RestartTimer (SystemInformation.ToolTipShowDelay / 10.0);
+			}
+			else
+			{
+				this.RestartTimer (SystemInformation.ToolTipShowDelay);
+			}
+		}
+		
 		
 		private bool ProcessToolTipHost(Helpers.IToolTipHost host, Drawing.Point pos)
 		{
@@ -274,7 +292,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.host_provided_caption == null)
 				{
-					this.RestartTimer (SystemInformation.ToolTipShowDelay);
+					this.DelayShow ();
 				}
 				else if (caption == null)
 				{
@@ -290,6 +308,7 @@ namespace Epsitec.Common.Widgets
 				{
 					Drawing.Point mouse = Helpers.VisualTree.MapVisualToScreen (this.widget, pos);
 					this.ShowToolTip (mouse, caption);
+					this.RestartTimer (SystemInformation.ToolTipAutoCloseDelay);
 				}
 				
 				return true;
@@ -312,7 +331,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.behaviour != ToolTipBehaviour.Manual)
 			{
-				this.RestartTimer (SystemInformation.ToolTipShowDelay);
+				this.DelayShow ();
 			}
 		}
 
@@ -460,6 +479,8 @@ namespace Epsitec.Common.Widgets
 				this.window.Show ();
 				this.is_displayed = true;
 			}
+			
+			this.last_change_time = System.DateTime.Now;
 		}
 
 		private void HideToolTip()
@@ -468,6 +489,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.window.Hide ();
 				this.is_displayed = false;
+				this.last_change_time = System.DateTime.Now;
 			}
 		}
 
@@ -510,6 +532,7 @@ namespace Epsitec.Common.Widgets
 		protected Window						window;
 		protected bool							is_displayed;
 		protected Timer							timer;
+		protected System.DateTime				last_change_time;
 		
 		private Widget							widget;
 		private object							caption;
@@ -519,7 +542,7 @@ namespace Epsitec.Common.Widgets
 		private Drawing.Point					initial_pos;
 		private System.Collections.Hashtable	hash = new System.Collections.Hashtable();
 		
-		private static readonly double			hide_distance = 12;
+		private static readonly double			hide_distance = 24;
 		private static readonly Drawing.Point	margin = new Drawing.Point(3, 2);
 		private static readonly Drawing.Point	offset = new Drawing.Point(8, -16);
 		
