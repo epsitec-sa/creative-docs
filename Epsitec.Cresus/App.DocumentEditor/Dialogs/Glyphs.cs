@@ -569,7 +569,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( this.array.SelectedIndex != -1 )
 			{
 				int code = this.array.IndexToUnicode(this.array.SelectedIndex);
-				text = string.Format("{0}: {1}", code.ToString("X4"), Misc.GetUnicodeName(code));
+				text = string.Format("{0}: {1}", code.ToString("X4"), Misc.GetUnicodeName(code, this.fontFace, this.fontStyle));
 			}
 			this.status.Text = text;
 		}
