@@ -65,10 +65,18 @@ namespace Epsitec.Common.Text.Layout
 			{
 				return 1;
 			}
+			if (Unicode.Bits.GetSpecialCodeFlag (text[start]))
+			{
+				return 1;
+			}
 			
 			for (int i = 1; i < length; i++)
 			{
 				if (Unicode.Bits.GetCode (text[start+i]) == (int) Unicode.Code.ObjectReplacement)
+				{
+					return i;
+				}
+				if (Unicode.Bits.GetSpecialCodeFlag (text[start+i]))
 				{
 					return i;
 				}
@@ -108,6 +116,22 @@ namespace Epsitec.Common.Text.Layout
 			break_penalty = 0;
 			
 			return length;
+		}
+		
+		
+		public static bool ContainsSpecialGlyphs(ulong[] text, int offset, int length)
+		{
+			for (int i = 0; i < length; i++)
+			{
+				ulong bits = text[offset+i];
+				
+				if (Unicode.Bits.GetSpecialCodeFlag (bits))
+				{
+					return true;
+				}
+			}
+			
+			return false;
 		}
 		
 		

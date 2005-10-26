@@ -396,8 +396,13 @@ advance_next:
 				ushort[] glyphs;
 				byte[]   attr;
 				
+				bool special_glyphs = BaseEngine.ContainsSpecialGlyphs (text, offset, frag_length);
+				
+				System.Diagnostics.Debug.Assert ((special_glyphs == false) || (frag_length == 1));
+				
 				if ((frag_length < run_length) &&
-					(scratch.BreakMode == BreakMode.Hyphenate))
+					(scratch.BreakMode == BreakMode.Hyphenate) &&
+					(special_glyphs == false))
 				{
 					//	Produit la césure manuellement (il faudrait faire mieux pour gérer
 					//	correctement des langues comme le suédois ou l'ancien allemand
@@ -407,18 +412,16 @@ advance_next:
 					
 					if (BaseEngine.GenerateGlyphsAndStretchClassAttributes (context.TextContext, scratch.Font, temp, 0, frag_length + 1, out glyphs, out attr))
 					{
-						//	TODO: ...
+						throw new System.InvalidOperationException ();
 					}
-					else
-					{
-						can_break = true;
-						add_break = true;
-						profile   = new StretchProfile (scratch.StretchProfile);
-						
-						profile.Add (scratch.Font, scratch.FontSize, glyphs, attr, scratch.FontAdvance);
-						
-						scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize) + glyphs.Length * scratch.FontAdvance;
-					}
+					
+					can_break  = true;
+					add_break  = true;
+					profile    = new StretchProfile (scratch.StretchProfile);
+					
+					profile.Add (scratch.Font, scratch.FontSize, glyphs, attr, scratch.FontAdvance);
+					
+					scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize) + glyphs.Length * scratch.FontAdvance;
 				}
 				else
 				{
@@ -426,38 +429,36 @@ advance_next:
 					
 					if (BaseEngine.GenerateGlyphsAndStretchClassAttributes (context.TextContext, scratch.Font, text, offset, frag_length, out glyphs, out attr))
 					{
-						//	TODO: ...
+						throw new System.InvalidOperationException ();
 					}
-					else
+					
+					scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize) + glyphs.Length * scratch.FontAdvance;
+					
+					if ((scratch.Advance+scratch.TextWidth > scratch.FenceMinX) &&
+						(scratch.BreakMode == BreakMode.Default))
 					{
-						scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize) + glyphs.Length * scratch.FontAdvance;
+						//	Le fragment de mot déborde dans la zone nécessitant une
+						//	découpe :
 						
-						if ((scratch.Advance+scratch.TextWidth > scratch.FenceMinX) &&
-							(scratch.BreakMode == BreakMode.Default))
+						scratch.BreakMode = BreakMode.Hyphenate;
+						
+						if (context.EnableHyphenation)
 						{
-							//	Le fragment de mot déborde dans la zone nécessitant une
-							//	découpe :
+							//	Reprend au début du fragment de mot pour traiter les
+							//	points de césure :
 							
-							scratch.BreakMode = BreakMode.Hyphenate;
-							
-							if (context.EnableHyphenation)
-							{
-								//	Reprend au début du fragment de mot pour traiter les
-								//	points de césure :
-								
-								frag_length = 0;
-								continue;
-							}
+							frag_length = 0;
+							continue;
 						}
-						
-						//	Détermine si une coupure de ligne est possible (comme c'est
-						//	le cas à la frontière de mots) :
-						
-						can_break = (run_length == text_length) || (scratch.BreakMode == BreakMode.Break);
-						add_break = (scratch.BreakMode != BreakMode.Default) && (scratch.WordBreakInfo == Unicode.BreakInfo.Optional);
-						
-						profile.Add (scratch.Font, scratch.FontSize, glyphs, attr, scratch.FontAdvance);
 					}
+					
+					//	Détermine si une coupure de ligne est possible (comme c'est
+					//	le cas à la frontière de mots) :
+					
+					can_break = (run_length == text_length) || (scratch.BreakMode == BreakMode.Break);
+					add_break = (scratch.BreakMode != BreakMode.Default) && (scratch.WordBreakInfo == Unicode.BreakInfo.Optional);
+					
+					profile.Add (scratch.Font, scratch.FontSize, glyphs, attr, scratch.FontAdvance);
 				}
 				
 				if (scratch.Advance+scratch.TextWidth-profile.WidthEndSpace > scratch.FenceMaxX)
@@ -566,11 +567,13 @@ advance_next:
 			
 			Unicode.BreakAnalyzer.GetStretchClass (text, offset, length, attributes);
 			
-//			int    space_count = context.TextStretchProfile.CountEndSpace;
-//			double space_width = context.TextStretchProfile.WidthEndSpace;
+			bool special_glyphs = BaseEngine.ContainsSpecialGlyphs (text, offset, length);
+			
+			System.Diagnostics.Debug.Assert ((special_glyphs == false) || (length == 1));
 			
 			if ((is_last_run) &&
-				(context.EnableHyphenation))
+				(context.EnableHyphenation) &&
+				(special_glyphs == false))
 			{
 				//	Produit la césure manuellement (il faudrait faire mieux pour gérer
 				//	correctement des langues comme le suédois ou l'ancien allemand
@@ -583,51 +586,47 @@ advance_next:
 				
 				if (BaseEngine.GenerateGlyphs (context, font, temp, 0, length+1, out glyphs, ref attributes))
 				{
-					//	TODO: ...
+					throw new System.InvalidOperationException ();
 				}
-				else
+				
+				if (context.IsSimpleRenderingDisabled)
 				{
-					if (context.IsSimpleRenderingDisabled)
+					int     num = length+1;
+					short[] map = new short[num+1];
+					
+					for (int i = 0; i < num-1; i++)
 					{
-						int     num = length+1;
-						short[] map = new short[num+1];
-						
-						for (int i = 0; i < num-1; i++)
-						{
-							map[i] = (short) i;
-						}
-						
-						map[num-1] = map[num-2];				//	considère que le tiret ne compte pas
-						map[num-0] = (short) (map[num-2] + 1);
-						
-						BaseEngine.GenerateGlyphs (context, font, temp, 0, length+1, out glyphs, ref map);
-						
-						mapping = new TextToGlyphMapping (text, offset, length, glyphs, map);
+						map[i] = (short) i;
 					}
+					
+					map[num-1] = map[num-2];				//	considère que le tiret ne compte pas
+					map[num-0] = (short) (map[num-2] + 1);
+					
+					BaseEngine.GenerateGlyphs (context, font, temp, 0, length+1, out glyphs, ref map);
+					
+					mapping = new TextToGlyphMapping (text, offset, length, glyphs, map);
 				}
 			}
 			else
 			{
 				if (BaseEngine.GenerateGlyphs (context, font, text, offset, length, out glyphs, ref attributes))
 				{
-					//	TODO: ...
+					throw new System.InvalidOperationException ();
 				}
-				else
+				
+				if (context.IsSimpleRenderingDisabled)
 				{
-					if (context.IsSimpleRenderingDisabled)
+					int     num = length;
+					short[] map = new short[num+1];
+					
+					for (int i = 0; i < map.Length; i++)
 					{
-						int     num = length;
-						short[] map = new short[num+1];
-						
-						for (int i = 0; i < map.Length; i++)
-						{
-							map[i] = (short) i;
-						}
-						
-						BaseEngine.GenerateGlyphs (context, font, text, offset, length, out glyphs, ref map);
-						
-						mapping = new TextToGlyphMapping (text, offset, length, glyphs, map);
+						map[i] = (short) i;
 					}
+					
+					BaseEngine.GenerateGlyphs (context, font, text, offset, length, out glyphs, ref map);
+					
+					mapping = new TextToGlyphMapping (text, offset, length, glyphs, map);
 				}
 			}
 			

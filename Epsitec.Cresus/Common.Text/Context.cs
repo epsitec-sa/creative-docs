@@ -314,6 +314,28 @@ namespace Epsitec.Common.Text
 		
 		public void GetFont(ulong code, out OpenType.Font font, out double font_size)
 		{
+			this.GetFontSimple (code, out font, out font_size);
+			
+			if (Unicode.Bits.GetSpecialCodeFlag (code))
+			{
+				//	Ce n'est pas un caractère normal, mais un caractère qui doit
+				//	être remplacé par un glyph à la volée. Modifie aussi la fonte
+				//	si besoin.
+				
+				ushort        s_glyph;
+				OpenType.Font s_font;
+				
+				this.GetGlyphAndFontForSpecialCode (code, out s_glyph, out s_font);
+				
+				if (s_font != null)
+				{
+					font = s_font;
+				}
+			}
+		}
+		
+		private void GetFontSimple(ulong code, out OpenType.Font font, out double font_size)
+		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
 			long current_style_version = this.style_list.Version;
 			
