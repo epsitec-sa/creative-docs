@@ -179,7 +179,7 @@ namespace Epsitec.Common.OpenType
 		}
 		#endregion
 		
-		internal static string GetStyleHash(string style)
+		public static string GetStyleHash(string style)
 		{
 			//	Le "hash" d'un style de fonte correspond à une forme simplifiée
 			//	et triée des éléments constituant un nom de style. On évite des
