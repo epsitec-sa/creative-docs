@@ -562,6 +562,7 @@ namespace Epsitec.Common.OpenType
 			}
 			
 			this.substitution_lookups = null;
+			this.alternate_lookups    = null;
 		}
 		
 		public void SelectFeatures(params string[] features)
@@ -788,6 +789,51 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public bool GetAlternates(ushort glyph, out ushort[] alternates)
+		{
+			//	Trouve les variantes équivalentes d'un glyph donné. Il y a par
+			//	exemple plusieurs variantes possibles pour un "&" dans une fonte
+			//	et c'est ainsi que l'on peut avoir la liste des autres glyphes.
+			
+			System.Diagnostics.Debug.Assert (this.ot_GSUB != null);
+			
+			if (this.alternate_lookups == null)
+			{
+				alternates = null;
+				return false;
+			}
+			
+			System.Collections.ArrayList list = null;
+			
+			foreach (AlternateSubstitution alt in this.alternate_lookups)
+			{
+				ushort[] subset = alt.GetAlternates (glyph);
+				
+				if (subset != null)
+				{
+					if (list != null)
+					{
+						list = new System.Collections.ArrayList ();
+					}
+					
+					list.AddRange (subset);
+				}
+			}
+			
+			if (list == null)
+			{
+				alternates = null;
+				return false;
+			}
+			else
+			{
+				alternates = new ushort[list.Count];
+				list.CopyTo (alternates, 0);
+				return true;
+			}
+		}
+		
+		
 		public System.IntPtr GetFontHandle(double size)
 		{
 			if (this.use_system_glyph_size)
@@ -926,14 +972,6 @@ namespace Epsitec.Common.OpenType
 			}
 			
 			lookup_indexes.Sort ();
-			
-			int count = 0;
-			int index = 0;
-			
-			foreach (int lookup in lookup_indexes)
-			{
-				count += (int) this.ot_GSUB.LookupListTable.GetLookupTable (lookup).SubTableCount;
-			}
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
@@ -1481,6 +1519,7 @@ namespace Epsitec.Common.OpenType
 		private TaggedFeatureTable				script_required_feature;
 		private TaggedFeatureTable[]			script_optional_features;
 		private BaseSubstitution[]				substitution_lookups;
+		private BaseSubstitution[]				alternate_lookups;
 		
 		private System.Collections.Stack		saved_features_stack;
 	}
