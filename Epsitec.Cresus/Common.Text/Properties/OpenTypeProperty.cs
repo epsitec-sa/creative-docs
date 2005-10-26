@@ -92,6 +92,11 @@ namespace Epsitec.Common.Text.Properties
 			return this.glyph_index;
 		}
 		
+		public override OpenType.Font GetFontForSpecialCode(TextContext context, ulong code)
+		{
+			return TextContext.GetFont (this.font_face, this.font_style);
+		}
+
 		
 		public override Property EmptyClone()
 		{
