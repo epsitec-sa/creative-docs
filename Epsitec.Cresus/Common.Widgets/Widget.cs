@@ -4903,7 +4903,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (e != null)
 				{
-					e.Message.Consumer = this;
+//-					e.Message.Consumer = this;
 				}
 				
 				this.Entered (this, e);
@@ -4929,7 +4929,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (e != null)
 				{
-					e.Message.Consumer = this;
+//-					e.Message.Consumer = this;
 				}
 				
 				this.Exited (this, e);
