@@ -139,7 +139,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public int GetGlyphForSpecialCode(ulong code)
+		public bool GetGlyphAndFontForSpecialCode(ulong code, out ushort special_glyph, out OpenType.Font special_font)
 		{
 			System.Diagnostics.Debug.Assert (Unicode.Bits.GetSpecialCodeFlag (code));
 			
@@ -149,20 +149,36 @@ namespace Epsitec.Common.Text
 			Styles.LocalSettings local_settings = style.GetLocalSettings (stripped_code);
 			Styles.ExtraSettings extra_settings = style.GetExtraSettings (stripped_code);
 			
-			int glyph = -1;
+			int           glyph = -1;
+			OpenType.Font font  = null;
 			
 			if (local_settings != null)
 			{
 				glyph = local_settings.GetGlyphForSpecialCode (code);
+				font  = local_settings.GetFontForSpecialCode (this, code);
 			}
 			
 			if ((glyph == -1) &&
 				(extra_settings != null))
 			{
 				glyph = extra_settings.GetGlyphForSpecialCode (code);
+				font  = extra_settings.GetFontForSpecialCode (this, code);
 			}
 			
-			return glyph;
+			if (glyph == -1)
+			{
+				special_glyph = 0xffff;
+				special_font  = null;
+				
+				return false;
+			}
+			else
+			{
+				special_glyph = (ushort) glyph;
+				special_font  = font;
+				
+				return true;
+			}
 		}
 		
 		public void DefineResource(string name, IGlyphRenderer renderer)

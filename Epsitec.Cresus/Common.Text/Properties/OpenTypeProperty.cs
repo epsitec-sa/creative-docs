@@ -13,9 +13,10 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public OpenTypeProperty(string font_name, int glyph_index)
+		public OpenTypeProperty(string font_face, string font_style, int glyph_index)
 		{
-			this.font_name   = font_name;
+			this.font_face   = font_face;
+			this.font_style  = font_style;
 			this.glyph_index = glyph_index;
 		}
 		
@@ -61,11 +62,19 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public string							FontName
+		public string							FontFace
 		{
 			get
 			{
-				return this.font_name;
+				return this.font_face;
+			}
+		}
+		
+		public string							FontStyle
+		{
+			get
+			{
+				return this.font_style;
 			}
 		}
 		
@@ -92,7 +101,8 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeString (this.font_name),
+				/**/				SerializerSupport.SerializeString (this.font_face),
+				/**/				SerializerSupport.SerializeString (this.font_style),
 				/**/				SerializerSupport.SerializeInt (this.glyph_index));
 		}
 
@@ -100,12 +110,14 @@ namespace Epsitec.Common.Text.Properties
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 2);
+			Debug.Assert.IsTrue (args.Length == 3);
 			
-			string font_name   = SerializerSupport.DeserializeString (args[0]);
-			int    glyph_index = SerializerSupport.DeserializeInt (args[1]);
+			string font_face   = SerializerSupport.DeserializeString (args[0]);
+			string font_style  = SerializerSupport.DeserializeString (args[1]);
+			int    glyph_index = SerializerSupport.DeserializeInt (args[2]);
 			
-			this.font_name   = font_name;
+			this.font_face   = font_face;
+			this.font_style  = font_style;
 			this.glyph_index = glyph_index;
 		}
 		
@@ -117,7 +129,8 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.font_name);
+			checksum.UpdateValue (this.font_face);
+			checksum.UpdateValue (this.font_style);
 			checksum.UpdateValue (this.glyph_index);
 		}
 		
@@ -129,13 +142,15 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(OpenTypeProperty a, OpenTypeProperty b)
 		{
-			return a.font_name == b.font_name
+			return a.font_face == b.font_face
+				&& a.font_style == b.font_style
 				&& a.glyph_index == b.glyph_index;
 		}
 		
 		
 		
-		private string							font_name;
+		private string							font_face;
+		private string							font_style;
 		private int								glyph_index;
 	}
 }

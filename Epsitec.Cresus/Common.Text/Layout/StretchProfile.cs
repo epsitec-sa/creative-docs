@@ -235,7 +235,10 @@ namespace Epsitec.Common.Text.Layout
 				attributes[i] = (byte) Unicode.BreakAnalyzer.GetStretchClass (Unicode.Bits.GetCode (text[i]));
 			}
 			
-			BaseEngine.GenerateGlyphs (context, font, text, offset, length, out glyphs, ref attributes);
+			if (BaseEngine.GenerateGlyphs (context, font, text, offset, length, out glyphs, ref attributes))
+			{
+				throw new System.InvalidOperationException (string.Format ("Special glyph required, not in font '{0}'", font.FontIdentity.FullName));
+			}
 			
 			int      count = glyphs.Length;
 			double[] x_pos = new double[count];

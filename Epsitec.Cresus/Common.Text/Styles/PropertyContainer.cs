@@ -219,6 +219,22 @@ namespace Epsitec.Common.Text.Styles
 			return -1;
 		}
 		
+		public OpenType.Font GetFontForSpecialCode(TextContext context, ulong code)
+		{
+			if (this.properties != null)
+			{
+				for (int i = 0; i < this.properties.Length; i++)
+				{
+					if (this.properties[i].RequiresSpecialCodeProcessing)
+					{
+						return properties[i].GetFontForSpecialCode (context, code);
+					}
+				}
+			}
+			
+			return null;
+		}
+		
 		
 		public bool Contains(Property property)
 		{

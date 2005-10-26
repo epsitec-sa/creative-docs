@@ -111,20 +111,10 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public static ushort[] GenerateGlyphs (Layout.Context context, OpenType.Font font, ulong[] text, int offset, int length)
-		{
-			ushort[] glyphs;
-			byte[]   attributes = null;
-			
-			BaseEngine.GenerateGlyphs (context, font, text, offset, length, out glyphs, ref attributes);
-			
-			return glyphs;
-		}
-		
-		
-		public static void GenerateGlyphs(Layout.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, ref byte[] attributes)
+		public static bool GenerateGlyphs(Layout.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, ref byte[] attributes)
 		{
 			ulong[] temp = new ulong[length];
+			bool special = false;
 			
 			System.Buffer.BlockCopy (text, offset * 8, temp, 0, length * 8);
 			
@@ -137,7 +127,18 @@ namespace Epsitec.Common.Text.Layout
 				
 				if (Unicode.Bits.GetSpecialCodeFlag (bits))
 				{
-					temp[i] = (ulong) (context.TextContext.GetGlyphForSpecialCode (bits) | (int) Unicode.Bits.SpecialCodeFlag);
+					ushort        s_glyph;
+					OpenType.Font s_font;
+					
+					context.TextContext.GetGlyphAndFontForSpecialCode (bits, out s_glyph, out s_font);
+					
+					temp[i] = (ulong) ((int) s_glyph | (int) Unicode.Bits.SpecialCodeFlag);
+					
+					if ((special == false) &&
+						(s_font.FontIdentity.FullName != font.FontIdentity.FullName))
+					{
+						special = true;
+					}
 				}
 				else if (analyzer.IsZeroWidth (code))
 				{
@@ -168,11 +169,14 @@ namespace Epsitec.Common.Text.Layout
 			}
 			
 			font.GenerateGlyphs (temp, 0, length, out glyphs, ref attributes);
+			
+			return special;
 		}
 		
-		public static void GenerateGlyphs(Layout.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, ref short[] attributes)
+		public static bool GenerateGlyphs(Layout.Context context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, ref short[] attributes)
 		{
 			ulong[] temp = new ulong[length];
+			bool special = false;
 			
 			System.Buffer.BlockCopy (text, offset * 8, temp, 0, length * 8);
 			
@@ -185,7 +189,18 @@ namespace Epsitec.Common.Text.Layout
 				
 				if (Unicode.Bits.GetSpecialCodeFlag (bits))
 				{
-					temp[i] = (ulong) (context.TextContext.GetGlyphForSpecialCode (bits) | (int) Unicode.Bits.SpecialCodeFlag);
+					ushort        s_glyph;
+					OpenType.Font s_font;
+					
+					context.TextContext.GetGlyphAndFontForSpecialCode (bits, out s_glyph, out s_font);
+					
+					temp[i] = (ulong) ((int) s_glyph | (int) Unicode.Bits.SpecialCodeFlag);
+					
+					if ((special == false) &&
+						(s_font.FontIdentity.FullName != font.FontIdentity.FullName))
+					{
+						special = true;
+					}
 				}
 				else if (analyzer.IsZeroWidth (code))
 				{
@@ -216,6 +231,8 @@ namespace Epsitec.Common.Text.Layout
 			}
 			
 			font.GenerateGlyphs (temp, 0, length, out glyphs, ref attributes);
+			
+			return special;
 		}
 		
 		public static ulong MapToVisibleControlCharacter(int code)
@@ -242,9 +259,10 @@ namespace Epsitec.Common.Text.Layout
 			return (ulong) code;
 		}
 		
-		public static void GenerateGlyphsAndStretchClassAttributes(Text.TextContext context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, out byte[] attributes)
+		public static bool GenerateGlyphsAndStretchClassAttributes(Text.TextContext context, OpenType.Font font, ulong[] text, int offset, int length, out ushort[] glyphs, out byte[] attributes)
 		{
 			ulong[] temp = new ulong[length];
+			bool special = false;
 			
 			System.Buffer.BlockCopy (text, offset * 8, temp, 0, length * 8);
 			
@@ -261,7 +279,18 @@ namespace Epsitec.Common.Text.Layout
 				
 				if (Unicode.Bits.GetSpecialCodeFlag (bits))
 				{
-					temp[i] = (ulong) (context.GetGlyphForSpecialCode (bits) | (int) Unicode.Bits.SpecialCodeFlag);
+					ushort        s_glyph;
+					OpenType.Font s_font;
+					
+					context.GetGlyphAndFontForSpecialCode (bits, out s_glyph, out s_font);
+					
+					temp[i] = (ulong) ((int) s_glyph | (int) Unicode.Bits.SpecialCodeFlag);
+					
+					if ((special == false) &&
+						(s_font.FontIdentity.FullName != font.FontIdentity.FullName))
+					{
+						special = true;
+					}
 				}
 				else if (analyzer.IsControl (code) || analyzer.IsZeroWidth (code))
 				{
@@ -280,6 +309,8 @@ namespace Epsitec.Common.Text.Layout
 			}
 			
 			font.GenerateGlyphs (temp, 0, length, out glyphs, ref attributes);
+			
+			return special;
 		}
 		
 		

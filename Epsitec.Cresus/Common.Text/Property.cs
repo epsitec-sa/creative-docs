@@ -86,6 +86,12 @@ namespace Epsitec.Common.Text
 			return -1;
 		}
 		
+		public virtual OpenType.Font GetFontForSpecialCode(TextContext context, ulong code)
+		{
+			return null;
+		}
+		
+		
 		public abstract Property GetCombination(Property property);
 		public abstract Property EmptyClone();
 		
