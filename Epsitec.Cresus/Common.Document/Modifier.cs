@@ -1122,11 +1122,13 @@ namespace Epsitec.Common.Document
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject == null )
 			{
-				fontFace = "";
+				fontFace  = "";
 				fontStyle = "";
+				return;
 			}
 
-			editObject.GetTextFont(true, out fontFace, out fontStyle);
+			string[] features;
+			editObject.GetTextFont(true, out fontFace, out fontStyle, out features);
 		}
 
 		// Retourne le seul objet en édition.
@@ -1894,7 +1896,7 @@ namespace Epsitec.Common.Document
 
 		// Crée une case du menu des actions à refaire/annuler.
 		protected void CreateUndoRedoMenu(System.Collections.ArrayList list, MessageEventHandler message,
-			int active, int rank, string action, int todo)
+										  int active, int rank, string action, int todo)
 		{
 			string icon = "";
 			if ( active == 1 )  icon = Misc.Icon("ActiveNo");

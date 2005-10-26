@@ -17,6 +17,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.fontFace  = this.CreateFieldFontFace(Res.Strings.Action.Text.Font.Face);
 			this.fontStyle = this.CreateFieldFontStyle(Res.Strings.Action.Text.Font.Style);
+			this.fontFeatures = this.CreateIconButton(Misc.Icon("FontFeatures"), Res.Strings.Action.Text.Font.Features, new MessageEventHandler(this.HandleFeaturesClicked));
 			this.fontSize  = this.CreateFieldFontSize(Res.Strings.Action.Text.Font.Size);
 
 			this.buttonSizePlus  = this.CreateIconButton(Misc.Icon("FontSizePlus"),  Res.Strings.Action.Text.Font.SizePlus,  new MessageEventHandler(this.HandleButtonClicked), false);
@@ -63,7 +64,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			get
 			{
-				return 8+180+5+50+22*2;
+				return 8+180+5+50+22*2+20;
 			}
 		}
 
@@ -119,23 +120,26 @@ namespace Epsitec.Common.Document.Ribbons
 			Rectangle rect = this.UsefulZone;
 			rect.Height = dy;
 			rect.Offset(0, dy+5);
-			rect.Width  = 180;
+			rect.Width = 180;
 			this.fontFace.Bounds = rect;
 			rect.Offset(rect.Width+5, 0);
-			rect.Width  = 50;
+			rect.Width = 50;
 			this.fontSize.Bounds = rect;
 			rect.Offset(rect.Width, 0);
-			rect.Width  = dx;
+			rect.Width = dx;
 			this.buttonSizePlus.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonSizeMinus.Bounds = rect;
 
 			rect = this.UsefulZone;
 			rect.Height = dy;
-			rect.Width  = 76;
+			rect.Width = 76;
 			this.fontStyle.Bounds = rect;
-			rect.Offset(rect.Width+5, 0);
-			rect.Width  = dx;
+			rect.Offset(rect.Width, 0);
+			rect.Width = dx;
+			this.fontFeatures.Bounds = rect;
+			rect.Offset(dx+5, 0);
+			rect.Width = dx;
 			this.buttonBold.Bounds = rect;
 			rect.Offset(dx, 0);
 			this.buttonItalic.Bounds = rect;
@@ -184,7 +188,8 @@ namespace Epsitec.Common.Document.Ribbons
 				this.ignoreChange = true;
 				
 				string face, style;
-				editObject.GetTextFont(false, out face, out style);
+				string[] features;
+				editObject.GetTextFont(false, out face, out style, out features);
 				this.UpdateFieldFontFaceList(field);
 				if ( face == "" )  face = Res.Strings.Action.Text.Font.Default;
 				field.Text = face;
@@ -231,7 +236,8 @@ namespace Epsitec.Common.Document.Ribbons
 				this.ignoreChange = true;
 
 				string face, style;
-				editObject.GetTextFont(false, out face, out style);
+				string[] features;
+				editObject.GetTextFont(false, out face, out style, out features);
 				this.UpdateFieldFontStyleList(field, face);
 				if ( style == "" )  style = Res.Strings.Action.Text.Font.Default;
 				field.Text = style;
@@ -351,19 +357,20 @@ namespace Epsitec.Common.Document.Ribbons
 				{
 					style = Misc.DefaultFontStyle(face);
 				}
-				editObject.SetTextFont(face, style);
+				editObject.SetTextFont(face, style, null);
 			}
 
 			if ( field == this.fontStyle )
 			{
 				string face, style;
-				editObject.GetTextFont(false, out face, out style);
+				string[] features;
+				editObject.GetTextFont(false, out face, out style, out features);
 				style = "";
 				if ( field.Text != Res.Strings.Action.Text.Font.Default )
 				{
 					style = field.Text;
 				}
-				editObject.SetTextFont(face, style);
+				editObject.SetTextFont(face, style, features);
 			}
 
 			if ( field == this.fontSize )
@@ -448,8 +455,113 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 
+		#region FeaturesMenu
+		// Appelé lors du clic sur le bouton "OpenType" pour ouvrir le menu.
+		private void HandleFeaturesClicked(object sender, MessageEventArgs e)
+		{
+			IconButton button = sender as IconButton;
+			if ( button == null )  return;
+
+			Objects.Abstract editObject = this.EditObject;
+			if ( editObject == null )  return;
+			string face, style;
+			string[] features;
+			editObject.GetTextFont(true, out face, out style, out features);
+
+			Point pos = button.MapClientToScreen(new Point(0, 1));
+			VMenu menu = this.BuildFeaturesMenu(face, style, features);
+			if ( menu == null )  return;
+			menu.Host = this;
+			menu.ShowAsContextMenu(this.Window, pos);
+		}
+
+		// Construit le menu des variantes OpenType (features).
+		protected VMenu BuildFeaturesMenu(string face, string style, string[] features)
+		{
+			int total = this.globalSettings.LastFilenameCount;
+			if ( total == 0 )  return null;
+
+			OpenType.Font font = TextContext.GetFont(face, style);
+			if ( font == null )  return null;
+			string[] supported = font.GetSupportedFeatures();
+
+			string[] cmds = Misc.GetFontFeaturesCommand();
+			string[] texts = Misc.GetFontFeaturesText();
+			System.Diagnostics.Debug.Assert(cmds.Length == texts.Length);
+
+			VMenu menu = new VMenu();
+			MessageEventHandler message = new MessageEventHandler(this.HandleFeaturesMenu);
+
+			for ( int i=0 ; i<cmds.Length ; i++ )
+			{
+				bool active  =  Misc.IsInsideList(features,  cmds[i]);
+				bool invalid = !Misc.IsInsideList(supported, cmds[i]);
+				this.BuildFeaturesMenu(menu, texts[i], cmds[i], active, invalid, message);
+			}
+
+			menu.AdjustSize();
+			return menu;
+		}
+
+		// Crée une case du menu des variantes OpenType (features).
+		protected void BuildFeaturesMenu(VMenu menu, string text, string name, bool active, bool invalid, MessageEventHandler message)
+		{
+			string icon = Misc.Icon(active ? "ActiveYes" : "ActiveNo");
+
+			if ( invalid )  text = Misc.Italic(text);
+
+			MenuItem item = new MenuItem("", icon, text, "", name);
+			item.Pressed += message;
+
+			menu.Items.Add(item);
+		}
+
+		// Appelé lors du choix dans le menu.
+		private void HandleFeaturesMenu(object sender, MessageEventArgs e)
+		{
+			MenuItem item = sender as MenuItem;
+			if ( item == null )  return;
+
+			Objects.Abstract editObject = this.EditObject;
+			if ( editObject == null )  return;
+
+			string cmd = item.Name;
+
+			string face, style;
+			string[] features;
+			editObject.GetTextFont(false, out face, out style, out features);
+
+			string[] newFeatures;
+			if ( Misc.IsInsideList(features, cmd) )
+			{
+				newFeatures = new string[features.Length-1];
+				int j=0;
+				for ( int i=0 ; i<features.Length ; i++ )
+				{
+					if ( features[i] != cmd )
+					{
+						newFeatures[j++] = features[i];
+					}
+				}
+			}
+			else
+			{
+				newFeatures = new string[features.Length+1];
+				for ( int i=0 ; i<features.Length ; i++ )
+				{
+					newFeatures[i] = features[i];
+				}
+				newFeatures[features.Length] = cmd;
+			}
+
+			editObject.SetTextFont(face, style, newFeatures);
+		}
+		#endregion
+
+
 		protected TextFieldCombo			fontFace;
 		protected TextFieldCombo			fontStyle;
+		protected IconButton				fontFeatures;
 		protected TextFieldCombo			fontSize;
 		protected IconButton				buttonSizePlus;
 		protected IconButton				buttonSizeMinus;

@@ -698,15 +698,16 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Modifie la police du texte.
-		public virtual void SetTextFont(string face, string style)
+		public virtual void SetTextFont(string face, string style, string[] features)
 		{
 		}
 
 		// Donne la police du texte.
-		public virtual void GetTextFont(bool accumulated, out string face, out string style)
+		public virtual void GetTextFont(bool accumulated, out string face, out string style, out string[] features)
 		{
 			face = "";
 			style = "";
+			features = null;
 		}
 
 		// Modifie la taille de la police du texte.
@@ -1220,6 +1221,8 @@ namespace Epsitec.Common.Document.Objects
 			if ( this.edited == state )  return;
 
 			this.edited = state;
+
+			if ( this.document.HRuler == null )  return;
 
 			// Pour ne pas cacher une règle qu'on viendrait d'associer à un objet éditable
 			// précédemment (dans la même procédure Viewer.Select par exemple).

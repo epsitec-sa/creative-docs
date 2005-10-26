@@ -856,6 +856,7 @@
 	<data name="Action.Text.Font.Main">Caractère</data>
 	<data name="Action.Text.Font.Face">Nom de la police</data>
 	<data name="Action.Text.Font.Style">Style de la police</data>
+	<data name="Action.Text.Font.Features">Variantes OpenType</data>
 	<data name="Action.Text.Font.Size">Taille de la police</data>
 	<data name="Action.Text.Font.SizePlus">Police plus grande</data>
 	<data name="Action.Text.Font.SizeMinus">Police plus petite</data>

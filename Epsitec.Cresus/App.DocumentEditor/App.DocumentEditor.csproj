@@ -687,6 +687,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\FontFeatures.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\FontSizeMinus.icon"
                     BuildAction = "EmbeddedResource"
                 />

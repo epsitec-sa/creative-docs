@@ -1165,7 +1165,7 @@ namespace Epsitec.Common.Document
 
 			properties = new System.Collections.ArrayList();
 			//?properties.Add(new Text.Properties.FontProperty("Palatino Linotype", "Italic", "liga", "dlig", "kern"));
-			properties.Add(new Text.Properties.FontProperty("Arial", "Roman"));
+			properties.Add(new Text.Properties.FontProperty("Arial", Misc.DefaultFontStyle("Arial")));
 			properties.Add(new Text.Properties.FontSizeProperty(12.0*Modifier.fontSizeScale, Text.Properties.SizeUnits.Points));
 			properties.Add(new Text.Properties.MarginsProperty(10, 10, 10, 10, Text.Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Text.Properties.ThreeState.True));
 			properties.Add(new Text.Properties.ColorProperty("Black"));

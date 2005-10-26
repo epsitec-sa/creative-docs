@@ -197,6 +197,51 @@ namespace Epsitec.Common.Document
 		}
 
 
+		// Donne la liste des commandes OpenType des features.
+		static public string[] GetFontFeaturesCommand()
+		{
+			string[] list = new string[8];
+			int i=0;
+			list[i++] = "liga";
+			list[i++] = "dlig";
+			list[i++] = "frac";
+			list[i++] = "ordn";
+			list[i++] = "sups";
+			list[i++] = "sinf";
+			list[i++] = "numr";
+			list[i++] = "dnom";
+			return list;
+		}
+
+		// Donne la liste des textes OpenType des features.
+		static public string[] GetFontFeaturesText()
+		{
+			string[] list = new string[8];
+			int i=0;
+			list[i++] = "Ligatures standards";
+			list[i++] = "Ligatures conditionnelles";
+			list[i++] = "Fractions";
+			list[i++] = "Ordinal";
+			list[i++] = "Exposant/Supérieur";
+			list[i++] = "Indice/Inférieur";
+			list[i++] = "Numérateur";
+			list[i++] = "Dénominateur";
+			return list;
+		}
+
+		// Retourne true si text est dans list.
+		static public bool IsInsideList(string[] list, string text)
+		{
+			if ( list == null )  return false;
+
+			for ( int i=0 ; i<list.Length ; i++ )
+			{
+				if ( list[i] == text )  return true;
+			}
+			return false;
+		}
+
+
 		// Retourne le texte en gras.
 		static public string Bold(string text)
 		{

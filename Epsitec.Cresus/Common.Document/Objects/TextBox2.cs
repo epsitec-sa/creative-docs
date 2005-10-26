@@ -525,7 +525,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( fontFace != "" )
 			{
-				this.SetTextFont(fontFace, fontStyle);
+				this.SetTextFont(fontFace, fontStyle, null);
 			}
 			this.metaNavigator.Insert(text);
 			this.NotifyAreaFlow();
@@ -542,7 +542,7 @@ namespace Epsitec.Common.Document.Objects
 
 		#region TextFormat
 		// Modifie la police du texte.
-		public override void SetTextFont(string face, string style)
+		public override void SetTextFont(string face, string style, string[] features)
 		{
 			if ( face == "" )  // remet la fonte par défaut ?
 			{
@@ -551,13 +551,21 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else
 			{
-				Text.Properties.FontProperty font = new Text.Properties.FontProperty(face, style);
+				Text.Properties.FontProperty font;
+				if ( features == null )
+				{
+					font = new Text.Properties.FontProperty(face, style);
+				}
+				else
+				{
+					font = new Text.Properties.FontProperty(face, style, features);
+				}
 				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Combine, font);
 			}
 		}
 
 		// Donne la police du texte.
-		public override void GetTextFont(bool accumulated, out string face, out string style)
+		public override void GetTextFont(bool accumulated, out string face, out string style, out string[] features)
 		{
 			Text.Property[] properties = this.GetTextProperties(accumulated);
 			foreach ( Text.Property property in properties )
@@ -568,12 +576,14 @@ namespace Epsitec.Common.Document.Objects
 					System.Diagnostics.Debug.Assert(font != null);
 					face = font.FaceName;
 					style = font.StyleName;
+					features = font.Features;
 					return;
 				}
 			}
 
 			face = "";
 			style = "";
+			features = null;
 		}
 
 		// Modifie la taille de la police du texte.

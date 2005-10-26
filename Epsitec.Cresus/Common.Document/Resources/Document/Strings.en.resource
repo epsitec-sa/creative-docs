@@ -856,6 +856,7 @@
 	<data name="Action.Text.Font.Main">Font</data>
 	<data name="Action.Text.Font.Face">Font name</data>
 	<data name="Action.Text.Font.Style">Font style</data>
+	<data name="Action.Text.Font.Features">OpenType features</data>
 	<data name="Action.Text.Font.Size">Font size</data>
 	<data name="Action.Text.Font.SizePlus">@@Police plus grande</data>
 	<data name="Action.Text.Font.SizeMinus">@@Police plus petite</data>
