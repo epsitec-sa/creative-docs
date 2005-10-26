@@ -177,17 +177,17 @@ namespace Epsitec.Common.Text
 			
 			//	Spaces:
 			
-			EnQuad					= 0x2000,
-			EmQuad					= 0x2001,
-			EnSpace					= 0x2002,
-			EmSpace					= 0x2003,
+			EnQuad					= 0x2000,		//	1/2 em
+			EmQuad					= 0x2001,		//	1/1 em
+			EnSpace					= 0x2002,		//	1/2 em
+			EmSpace					= 0x2003,		//	1/1 em
 			ThreePerEmSpace			= 0x2004,		//	1/3 em
 			FourPerEmSpace			= 0x2005,		//	1/4 em
 			SixPerEmSpace			= 0x2006,		//	1/6 em
-			FigureSpace				= 0x2007,		//	non-breaking, same width as a digit
-			PunctuationSpace		= 0x2008,
+			FigureSpace				= 0x2007,		//	non-breaking, same width as a '0'
+			PunctuationSpace		= 0x2008,		//	same width as a '.'
 			ThinSpace				= 0x2009,		//	1/5 em
-			HairSpace				= 0x200A,
+			HairSpace				= 0x200A,		//	1/16 em
 			ZeroWidthSpace			= 0x200B,		//	may expand in justification
 			ZeroWidthNonJoiner		= 0x200C,
 			ZeroWidthJoiner			= 0x200D,
@@ -625,6 +625,7 @@ namespace Epsitec.Common.Text
 				
 				return true;
 			}
+			
 			
 			public static StretchClass GetStretchClass(int code)
 			{
@@ -1072,6 +1073,53 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			
+			public static double GetSpaceWidth(ulong code, double space_width, double en_width, double em_width, double figure_width, double period_width)
+			{
+				return BreakAnalyzer.GetSpaceWidth ((Unicode.Code) code, space_width, en_width, em_width, figure_width, period_width);
+			}
+			
+			public static double GetSpaceWidth(int code, double space_width, double en_width, double em_width, double figure_width, double period_width)
+			{
+				return BreakAnalyzer.GetSpaceWidth ((Unicode.Code) code, space_width, en_width, em_width, figure_width, period_width);
+			}
+			
+			public static double GetSpaceWidth(Unicode.Code code, double space_width, double en_width, double em_width, double figure_width, double period_width)
+			{
+				switch (code)
+				{
+					//	http://www.microsoft.com/typography/developers/fdsspec/spaces.htm
+					
+					case Unicode.Code.Space:				return space_width;
+					case Unicode.Code.NoBreakSpace:			return space_width;
+					case Unicode.Code.NarrowNoBreakSpace:	return space_width / 2;
+					
+					case Unicode.Code.EnQuad:				return en_width;
+					case Unicode.Code.EmQuad:				return em_width;
+					
+					case Unicode.Code.EnSpace:				return en_width;
+					case Unicode.Code.EmSpace:				return em_width;
+					
+					case Unicode.Code.ThreePerEmSpace:		return em_width / 3;
+					case Unicode.Code.FourPerEmSpace:		return em_width / 4;
+					case Unicode.Code.SixPerEmSpace:		return em_width / 6;
+					
+					case Unicode.Code.ThinSpace:			return space_width / 5;
+					case Unicode.Code.HairSpace:			return space_width / 16;
+					
+					case Unicode.Code.MediumMathSpace:		return em_width * 4 / 18;
+					
+					case Unicode.Code.ZeroWidthSpace:		return 0;
+					case Unicode.Code.ZeroWidthNonJoiner:	return 0;
+					case Unicode.Code.ZeroWidthJoiner:		return 0;
+					case Unicode.Code.WordJoiner:			return 0;
+					
+					case Unicode.Code.FigureSpace:			return figure_width;
+					case Unicode.Code.PunctuationSpace:		return period_width;
+				}
+				
+				return -1;
+			}
 			
 			private static Unicode.BreakClass ParseBreakClass(string token)
 			{

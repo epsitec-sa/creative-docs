@@ -37,6 +37,65 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public double							SpaceWidth
+		{
+			get
+			{
+				ushort glyph = this.GetGlyphIndex (' ');
+				return glyph == 0xffff ? 0.25 : this.GetGlyphWidth (glyph, 1.0);
+			}
+		}
+		
+		public double							FigureWidth
+		{
+			get
+			{
+				ushort glyph = this.GetGlyphIndex ('0');
+				return glyph == 0xffff ? 0.5 : this.GetGlyphWidth (glyph, 1.0);
+			}
+		}
+		
+		public double							PeriodWidth
+		{
+			get
+			{
+				ushort glyph = this.GetGlyphIndex ('.');
+				return glyph == 0xffff ? 0.5 : this.GetGlyphWidth (glyph, 1.0);
+			}
+		}
+		
+		public double							EmWidth
+		{
+			get
+			{
+				ushort glyph = this.GetGlyphIndex (0x2014);
+				return glyph == 0xffff ? 1.0 : this.GetGlyphWidth (glyph, 1.0);
+			}
+		}
+		
+		public double							EnWidth
+		{
+			get
+			{
+				ushort glyph = this.GetGlyphIndex (0x2013);
+				return glyph == 0xffff ? 0.5 : this.GetGlyphWidth (glyph, 1.0);
+			}
+		}
+		
+		
+		public ushort							SpaceGlyph
+		{
+			get
+			{
+				if (this.space_glyph == 0)
+				{
+					this.space_glyph = this.ot_index_mapping.GetGlyphIndex (' ');
+				}
+				
+				return this.space_glyph;
+			}
+		}
+		
 		internal void Initialize(FontIdentity identity)
 		{
 			this.identity = identity;
@@ -230,6 +289,72 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public double GetSpaceGlyphWidth(ushort glyph)
+		{
+			if (glyph >= 0xff00)
+			{
+				switch (glyph)
+				{
+					case 0xff00: return this.EmWidth;
+					case 0xff01: return this.EmWidth / 2;
+					case 0xff02: return this.EmWidth / 3;
+					case 0xff03: return this.EmWidth / 4;
+					case 0xff04: return this.EmWidth * 4 / 18;
+					case 0xff05: return this.EmWidth / 5;
+					case 0xff06: return this.EmWidth / 6;
+					case 0xff07: return this.EmWidth / 16;
+					case 0xff08: return 0;
+					case 0xff09: return this.PeriodWidth;
+					case 0xff0a: return this.FigureWidth;
+					case 0xff0b: return this.SpaceWidth / 2;
+				}
+			}
+			
+			return 0;
+		}
+		
+		public double GetGlyphWidth(ushort glyph, double size)
+		{
+			if (this.use_system_glyph_size)
+			{
+				if (glyph >= 0xff00)
+				{
+					return (int) (this.GetSpaceGlyphWidth (glyph) * size + 0.5);
+				}
+				else
+				{
+					FontIdentity.SizeInfo info = this.identity.GetSizeInfo ((int)(size + 0.5));
+					return info.GetGlyphWidth (glyph);
+				}
+			}
+			else
+			{
+				int num_glyph     = this.ot_maxp.NumGlyphs;
+				int num_h_metrics = this.ot_hhea.NumHMetrics;
+				
+				double advance = 0;
+				double per_em  = this.ot_head.UnitsPerEm;
+				
+				if (glyph < num_glyph)
+				{
+					if (glyph < num_h_metrics)
+					{
+						advance = this.ot_hmtx.GetAdvanceWidth (glyph);
+					}
+					else
+					{
+						advance = this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
+					}
+				}
+				else if (glyph >= 0xff00)
+				{
+					advance += this.GetSpaceGlyphWidth (glyph) * per_em;
+				}
+				
+				return advance * size / per_em;
+			}
+		}
+		
 		public double GetTotalWidth(ushort[] glyphs, double size)
 		{
 			if (this.use_system_glyph_size)
@@ -240,7 +365,14 @@ namespace Epsitec.Common.OpenType
 				
 				for (int i = 0; i < glyphs.Length; i++)
 				{
-					width += info.GetGlyphWidth (glyphs[i]);
+					if (glyphs[i] >= 0xff00)
+					{
+						width += (int) (this.GetSpaceGlyphWidth (glyphs[i]) * size + 0.5);
+					}
+					else
+					{
+						width += info.GetGlyphWidth (glyphs[i]);
+					}
 				}
 				
 				return width;
@@ -249,9 +381,9 @@ namespace Epsitec.Common.OpenType
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
 			
-			double scale      = size / this.ot_head.UnitsPerEm;
 			int    advance    = 0;
 			ushort prev_glyph = 0xffff;
+			double per_em     = this.ot_head.UnitsPerEm;
 			
 			for (int i = 0; i < glyphs.Length; i++)
 			{
@@ -274,9 +406,13 @@ namespace Epsitec.Common.OpenType
 						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
 					}
 				}
+				else if (glyph >= 0xff00)
+				{
+					advance += (int) (this.GetSpaceGlyphWidth (glyph) * per_em);
+				}
 			}
 			
-			return advance * scale;
+			return advance * size / per_em;
 		}
 		
 		public double GetPositions(ushort[] glyphs, double size, double ox, double[] x_pos)
@@ -290,7 +426,15 @@ namespace Epsitec.Common.OpenType
 				for (int i = 0; i < glyphs.Length; i++)
 				{
 					x_pos[i] = ox + width;
-					width   += info.GetGlyphWidth (glyphs[i]);
+					
+					if (glyphs[i] >= 0xff00)
+					{
+						width += (int) (this.GetSpaceGlyphWidth (glyphs[i]) * size + 0.5);
+					}
+					else
+					{
+						width += info.GetGlyphWidth (glyphs[i]);
+					}
 				}
 				
 				return width;
@@ -299,9 +443,9 @@ namespace Epsitec.Common.OpenType
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
 			
-			double scale      = size / this.ot_head.UnitsPerEm;
 			int    advance    = 0;
 			ushort prev_glyph = 0xffff;
+			double per_em     = this.ot_head.UnitsPerEm;
 			
 			for (int i = 0; i < glyphs.Length; i++)
 			{
@@ -313,7 +457,7 @@ namespace Epsitec.Common.OpenType
 					advance  += delta;
 				}
 				
-				x_pos[i] = ox + advance * scale;
+				x_pos[i] = ox + advance * size / per_em;
 				
 				if (glyph < num_glyph)
 				{
@@ -326,9 +470,13 @@ namespace Epsitec.Common.OpenType
 						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
 					}
 				}
+				else if (glyph >= 0xff00)
+				{
+					advance += (int) (this.GetSpaceGlyphWidth (glyph) * per_em);
+				}
 			}
 			
-			return advance * scale;
+			return advance * size / per_em;
 		}
 		
 		public double GetPositions(ushort[] glyphs, double size, double ox, double[] x_pos, double[] x_scale, double[] x_adjust, double[] x_glue)
@@ -345,13 +493,24 @@ namespace Epsitec.Common.OpenType
 					
 					double adjust = (x_adjust == null) ? 0 : x_adjust[i];
 					
-					if (x_glue == null)
+					int glyph_width;
+					
+					if (glyphs[i] >= 0xff00)
 					{
-						width += (int)((info.GetGlyphWidth (glyphs[i]) + adjust) * x_scale[i] + 0.5);
+						glyph_width = (int) (this.GetSpaceGlyphWidth (glyphs[i]) * size + 0.5);
 					}
 					else
 					{
-						width += (int)((info.GetGlyphWidth (glyphs[i]) + adjust) * x_scale[i] + x_glue[i] + 0.5);
+						glyph_width = info.GetGlyphWidth (glyphs[i]);
+					}
+					
+					if (x_glue == null)
+					{
+						width += (int)((glyph_width + adjust) * x_scale[i] + 0.5);
+					}
+					else
+					{
+						width += (int)((glyph_width + adjust) * x_scale[i] + x_glue[i] + 0.5);
 					}
 				}
 				
@@ -361,7 +520,7 @@ namespace Epsitec.Common.OpenType
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
 			
-			double scale      = size / this.ot_head.UnitsPerEm;
+			double per_em     = this.ot_head.UnitsPerEm;
 			double advance    = 0;
 			ushort prev_glyph = 0xffff;
 			
@@ -372,7 +531,7 @@ namespace Epsitec.Common.OpenType
 				
 				if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
 				{
-					advance += delta * x_scale[i] * scale;
+					advance += delta * x_scale[i] * size / per_em;
 				}
 				
 				x_pos[i] = ox + advance;
@@ -381,12 +540,16 @@ namespace Epsitec.Common.OpenType
 				{
 					if (glyph < num_h_metrics)
 					{
-						advance += this.ot_hmtx.GetAdvanceWidth (glyph) * x_scale[i] * scale;
+						advance += this.ot_hmtx.GetAdvanceWidth (glyph) * x_scale[i] * size / per_em;
 					}
 					else
 					{
-						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1) * x_scale[i] * scale;
+						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1) * x_scale[i] * size / per_em;
 					}
+				}
+				else if (glyph >= 0xff00)
+				{
+					advance += this.GetSpaceGlyphWidth (glyph) * x_scale[i] * size;
 				}
 				
 				if (x_adjust != null)
@@ -415,7 +578,15 @@ namespace Epsitec.Common.OpenType
 				{
 					x_pos[i] = ox + width;
 					y_pos[i] = oy;
-					width   += info.GetGlyphWidth (glyphs[i]);
+					
+					if (glyphs[i] >= 0xff00)
+					{
+						width += (int) (this.GetSpaceGlyphWidth (glyphs[i]) * size + 0.5);
+					}
+					else
+					{
+						width += info.GetGlyphWidth (glyphs[i]);
+					}
 				}
 				
 				return width;
@@ -424,7 +595,7 @@ namespace Epsitec.Common.OpenType
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
 			
-			double scale      = size / this.ot_head.UnitsPerEm;
+			double per_em     = this.ot_head.UnitsPerEm;
 			int    advance    = 0;
 			ushort prev_glyph = 0xffff;
 			
@@ -438,7 +609,7 @@ namespace Epsitec.Common.OpenType
 					advance  += delta;
 				}
 				
-				x_pos[i] = ox + advance * scale;
+				x_pos[i] = ox + advance * size / per_em;
 				y_pos[i] = oy;
 				
 				if (glyph < num_glyph)
@@ -451,10 +622,14 @@ namespace Epsitec.Common.OpenType
 					{
 						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
 					}
+				} 
+				else if (glyph >= 0xff00)
+				{
+					advance += (int) (this.GetSpaceGlyphWidth (glyph) * per_em);
 				}
 			}
 			
-			return advance * scale;
+			return advance * size / per_em;
 		}
 		
 		
@@ -891,6 +1066,11 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public ushort GetGlyphIndex(char code)
+		{
+			return this.GetGlyphIndex ((int) code);
+		}
+		
 		public ushort GetGlyphIndex(int code)
 		{
 			if ((code == 0) ||
@@ -905,11 +1085,34 @@ namespace Epsitec.Common.OpenType
 			{
 				switch (code)
 				{
+					case 0x2000: glyph = 0xff01; break;			//	1/2 em
+					case 0x2001: glyph = 0xff00; break;			//	1 em
+					case 0x2002: glyph = 0xff01; break;			//	1/2 em
+					case 0x2003: glyph = 0xff00; break;			//	1 em
+					case 0x2004: glyph = 0xff02; break;			//	1/3 em
+					case 0x2005: glyph = 0xff03; break;			//	1/4 em
+					case 0x2006: glyph = 0xff06; break;			//	1/6 em
+					case 0x2007: glyph = 0xff0a; break;			//	'0' (digit)
+					case 0x2008: glyph = 0xff09; break;			//	'.' (narrow punctuation)
+					case 0x2009: glyph = 0xff05; break;			//	1/5 em
+					case 0x200A: glyph = 0xff07; break;			//	1/16 em
+					case 0x200B: glyph = 0xff08; break;			//	zero width
+					case 0x200C: glyph = 0xff08; break;			//	zero width
+					case 0x200D: glyph = 0xff08; break;			//	zero width
+					
+					case 0x202F: glyph = 0xff0b; break;			//	narrow space
+					case 0x205F: glyph = 0xff04; break;			//	4/18 em
+					case 0x2060: glyph = 0xff08; break;			//	zero width
+					
+					case 0x00A0:
+						glyph = this.SpaceGlyph;
+						break;
+					
 					case 0x2010:		//	Hyphen
 					case 0x2011:		//	Non Breaking Hyphen
 					case 0x00AD:		//	Soft Hyphen
 					case 0x1806:		//	Mongolian Todo Hyphen
-						glyph = this.ot_index_mapping.GetGlyphIndex ('-');
+						glyph = this.ot_index_mapping.GetGlyphIndex ((int) this.GetHyphen ());
 						break;
 				}
 			}
@@ -1522,5 +1725,6 @@ namespace Epsitec.Common.OpenType
 		private BaseSubstitution[]				alternate_lookups;
 		
 		private System.Collections.Stack		saved_features_stack;
+		private ushort							space_glyph;
 	}
 }

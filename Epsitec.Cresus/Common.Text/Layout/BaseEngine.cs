@@ -338,6 +338,18 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public static double GetSpaceWidth(OpenType.Font font, int code)
+		{
+			double space_width  = font.SpaceWidth;
+			double en_width     = font.EnWidth;
+			double em_width     = font.EmWidth;
+			double figure_width = font.FigureWidth;
+			double period_width = font.PeriodWidth;
+			
+			return Unicode.BreakAnalyzer.GetSpaceWidth (code, space_width, en_width, em_width, figure_width, period_width);
+		}
+		
+		
 		#region IDisposable Members
 		public void Dispose()
 		{
