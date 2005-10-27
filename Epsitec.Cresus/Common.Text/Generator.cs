@@ -181,7 +181,7 @@ namespace Epsitec.Common.Text
 			
 			
 			private TextStory					story;
-			private TextContext						context;
+			private TextContext					context;
 			private Internal.TextTable			text;
 			private Generator					generator;
 			private Generator.Series			series;

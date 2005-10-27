@@ -1175,13 +1175,16 @@ namespace Epsitec.Common.Document
 			style = this.textContext.StyleList.NewTextStyle("Default", Text.TextStyleClass.Paragraph, properties);
 			this.textContext.DefaultStyle = style;
 
-			properties = new System.Collections.ArrayList();
-			properties.Add(new Text.Properties.FontProperty(null, "!Bold"));
-			this.textContext.StyleList.NewMetaProperty("Bold", "Bold", properties);
-
-			properties = new System.Collections.ArrayList();
-			properties.Add(new Text.Properties.FontProperty(null, "!Italic"));
-			this.textContext.StyleList.NewMetaProperty("Italic", "Italic", properties);
+//			properties = new System.Collections.ArrayList();
+//			properties.Add(new Text.Properties.FontProperty(null, "!Bold"));
+//			this.textContext.StyleList.NewMetaProperty("Bold", "Bold", properties);
+//
+//			properties = new System.Collections.ArrayList();
+//			properties.Add(new Text.Properties.FontProperty(null, "!Italic"));
+//			this.textContext.StyleList.NewMetaProperty("Italic", "Italic", properties);
+			
+			this.textContext.StyleList.NewMetaProperty("Bold", "Bold", new Text.Properties.FontBoldProperty ());
+			this.textContext.StyleList.NewMetaProperty("Italic", "Italic", new Text.Properties.FontItalicProperty ());
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", "Black"));

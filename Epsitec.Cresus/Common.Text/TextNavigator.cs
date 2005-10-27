@@ -1019,27 +1019,39 @@ namespace Epsitec.Common.Text
 				Properties.FontProperty       font = null;
 				Properties.FontSizeProperty   font_size = null;
 				Properties.FontOffsetProperty font_offset = null;
+				Properties.FontBoldProperty   font_bold = null;
+				Properties.FontItalicProperty font_italic = null;
 				
 				for (int i = 0; i < properties.Length; i++)
 				{
-					if (properties[i] is Properties.FontProperty)
+					switch (properties[i].WellKnownType)
 					{
-						font = properties[i] as Properties.FontProperty;
-					}
-					else if (properties[i] is Properties.FontSizeProperty)
-					{
-						font_size = properties[i] as Properties.FontSizeProperty;
-					}
-					else if (properties[i] is Properties.FontOffsetProperty)
-					{
-						font_offset = properties[i] as Properties.FontOffsetProperty;
+						case Properties.WellKnownType.Font:
+							font = properties[i] as Properties.FontProperty;
+							break;
+						
+						case Properties.WellKnownType.FontSize:
+							font_size = properties[i] as Properties.FontSizeProperty;
+							break;
+						
+						case Properties.WellKnownType.FontOffset:
+							font_offset = properties[i] as Properties.FontOffsetProperty;
+							break;
+						
+						case Properties.WellKnownType.FontBold:
+							font_bold = properties[i] as Properties.FontBoldProperty;
+							break;
+						
+						case Properties.WellKnownType.FontItalic:
+							font_italic = properties[i] as Properties.FontItalicProperty;
+							break;
 					}
 				}
 				
 				OpenType.Font ot_font;
 				double        pt_size = font_size.SizeInPoints;
 				
-				this.story.TextContext.GetFont (font, out ot_font);
+				this.story.TextContext.GetFont (font, font_bold, font_italic, out ot_font);
 				
 				ascender  = ot_font.GetAscender (pt_size);
 				descender = ot_font.GetDescender (pt_size);

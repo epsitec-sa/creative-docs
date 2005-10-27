@@ -137,6 +137,53 @@ namespace Epsitec.Common.OpenType
 		
 		public Font CreateFont(string face, string style)
 		{
+			Font font = this.InternalCreateFont (face, style);
+			
+			if (font == null)
+			{
+				font = this.InternalCreateFont (face, string.Concat (style, " -Bold"));
+			}
+			
+			if (font == null)
+			{
+				font = this.InternalCreateFont (face, string.Concat (style, " -Italic"));
+			}
+			
+			if (font == null)
+			{
+				font = this.InternalCreateFont (face, string.Concat (style, " -Bold -Italic"));
+			}
+			
+			if (font == null)
+			{
+				//	Zut. On n'a toujours rien trouvé de tel... Il faut absolument
+				//	trouver quelque chose :
+				
+				foreach (FontIdentity identity in this.full_list)
+				{
+					if (identity.InvariantFaceName == face)
+					{
+						return this.CreateFont (identity);
+					}
+				}
+				
+				//	Mince, cette fonte n'existe vraiment pas !
+				
+				font = this.InternalCreateFont ("Arial", style);
+			}
+			
+			if (font == null)
+			{
+				font = this.InternalCreateFont ("Arial", "Regular");
+			}
+			
+			System.Diagnostics.Debug.Assert (font != null);
+			
+			return font;
+		}
+		
+		internal Font InternalCreateFont(string face, string style)
+		{
 			//	Pour trouver la fonte correspondante, on se base sur le "hash"
 			//	du nom de style, ce qui permet d'être plus souple dans le cas
 			//	des fontes à variantes.

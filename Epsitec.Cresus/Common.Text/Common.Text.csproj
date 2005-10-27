@@ -519,6 +519,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\FontBoldProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\FontItalicProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\FontKernProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

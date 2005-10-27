@@ -307,9 +307,21 @@ namespace Epsitec.Common.Text
 			this.get_font_cache_font = font;
 		}
 		
-		public void GetFont(Properties.FontProperty property, out OpenType.Font font)
+		public void GetFont(Properties.FontProperty property, Properties.FontBoldProperty bold_property, Properties.FontItalicProperty italic_property, out OpenType.Font font)
 		{
-			TextContext.CreateOrGetFontFromCache (property.FaceName, property.StyleName, out font);
+			string font_face  = property.FaceName;
+			string font_style = property.StyleName;
+			
+			if (bold_property != null)
+			{
+				font_style = Properties.FontProperty.CombineStyles (font_style, "!Bold");
+			}
+			if (italic_property != null)
+			{
+				font_style = Properties.FontProperty.CombineStyles (font_style, "!Italic");
+			}
+			
+			TextContext.CreateOrGetFontFromCache (font_face, font_style, out font);
 		}
 		
 		public void GetFont(ulong code, out OpenType.Font font, out double font_size)
@@ -350,12 +362,14 @@ namespace Epsitec.Common.Text
 			
 			Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
 			
-			Properties.FontProperty     font_p      = style[Properties.WellKnownType.Font] as Properties.FontProperty;
-			Properties.FontSizeProperty font_size_p = style[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
+			Properties.FontProperty       font_p      = style[Properties.WellKnownType.Font] as Properties.FontProperty;
+			Properties.FontBoldProperty   font_b_p    = style[Properties.WellKnownType.FontBold] as Properties.FontBoldProperty;
+			Properties.FontItalicProperty font_i_p    = style[Properties.WellKnownType.FontItalic] as Properties.FontItalicProperty;
+			Properties.FontSizeProperty   font_size_p = style[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
 			
 			font_size = font_size_p.SizeInPoints;
 			
-			TextContext.CreateOrGetFontFromCache (font_p.FaceName, font_p.StyleName, out font);
+			this.GetFont (font_p, font_b_p, font_i_p, out font);
 			
 			if (font_p.Features == null)
 			{
