@@ -205,36 +205,23 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Donne la liste des commandes OpenType des features.
-		static public string[] GetFontFeaturesCommand()
+		// Donne la liste des "features" communs à toutes les fontes.
+		static public string[] DefaultFeatures()
 		{
-			string[] list = new string[8];
+			string[] list = new string[2];
 			int i=0;
 			list[i++] = "liga";
 			list[i++] = "dlig";
-			list[i++] = "frac";
-			list[i++] = "ordn";
-			list[i++] = "sups";
-			list[i++] = "sinf";
-			list[i++] = "numr";
-			list[i++] = "dnom";
 			return list;
 		}
 
-		// Donne la liste des textes OpenType des features.
-		static public string[] GetFontFeaturesText()
+		// Donne le texte descriptif pour une "feature" OpenType.
+		static public string GetFeatureText(string feature)
 		{
-			string[] list = new string[8];
-			int i=0;
-			list[i++] = "Ligatures standards";
-			list[i++] = "Ligatures conditionnelles";
-			list[i++] = "Fractions";
-			list[i++] = "Ordinal";
-			list[i++] = "Exposant/Supérieur";
-			list[i++] = "Indice/Inférieur";
-			list[i++] = "Numérateur";
-			list[i++] = "Dénominateur";
-			return list;
+			string text = Res.Strings.GetString("Text", string.Format("Features_{0}", feature));
+			if ( text != null )  return text;
+
+			return string.Format(Res.Strings.Text.FeaturesUnknow, feature.ToUpper());
 		}
 
 		// Retourne true si text est dans list.

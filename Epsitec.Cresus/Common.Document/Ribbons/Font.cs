@@ -485,18 +485,25 @@ namespace Epsitec.Common.Document.Ribbons
 			if ( font == null )  return null;
 			string[] supported = font.GetSupportedFeatures();
 
-			string[] cmds = Misc.GetFontFeaturesCommand();
-			string[] texts = Misc.GetFontFeaturesText();
-			System.Diagnostics.Debug.Assert(cmds.Length == texts.Length);
-
 			VMenu menu = new VMenu();
 			MessageEventHandler message = new MessageEventHandler(this.HandleFeaturesMenu);
 
-			for ( int i=0 ; i<cmds.Length ; i++ )
+			string[] defs = Misc.DefaultFeatures();
+			for ( int i=0 ; i<defs.Length ; i++ )
 			{
-				bool active = Misc.IsInsideList(features,  cmds[i]);
-				bool valid  = Misc.IsInsideList(supported, cmds[i]);
-				this.BuildFeaturesMenu(menu, texts[i], cmds[i], active, valid, message);
+				string text = Misc.GetFeatureText(defs[i]);
+				bool active = Misc.IsInsideList(features,  defs[i]);
+				bool valid  = Misc.IsInsideList(supported, defs[i]);
+				this.BuildFeaturesMenu(menu, font, text, defs[i], active, valid, message);
+			}
+
+			for ( int i=0 ; i<supported.Length ; i++ )
+			{
+				if ( Misc.IsInsideList(defs, supported[i]) )  continue;
+				string text = Misc.GetFeatureText(supported[i]);
+				bool active = Misc.IsInsideList(features, supported[i]);
+				bool valid  = true;
+				this.BuildFeaturesMenu(menu, font, text, supported[i], active, valid, message);
 			}
 
 			menu.AdjustSize();
@@ -504,13 +511,19 @@ namespace Epsitec.Common.Document.Ribbons
 		}
 
 		// Crée une case du menu des variantes OpenType (features).
-		protected void BuildFeaturesMenu(VMenu menu, string text, string name, bool active, bool valid, MessageEventHandler message)
+		protected void BuildFeaturesMenu(VMenu menu, OpenType.Font font, string text, string feature, bool active, bool valid, MessageEventHandler message)
 		{
+			OpenType.LookupTable[] tables = font.GetLookupTables(feature);
+			foreach ( OpenType.LookupTable table in tables )
+			{
+				if ( table.LookupType == OpenType.LookupType.Alternate )  return;
+			}
+
 			string icon = Misc.Icon(active ? "ActiveYes" : "ActiveNo");
 
 			if ( !valid )  text = Misc.Italic(text);
 
-			MenuItem item = new MenuItem("", icon, text, "", name);
+			MenuItem item = new MenuItem("", icon, text, "", feature);
 			item.Pressed += message;
 
 			menu.Items.Add(item);

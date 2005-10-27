@@ -451,7 +451,6 @@ namespace Epsitec.Common.Printing
 			
 			for (int i = 0; i < n; i++)
 			{
-				if ( glyphs[i] == 65535 )  continue;  // TODO: bof !!!
 				double scale_x = sx == null ? 1 : sx[i];
 				double scale_y = sy == null ? 1 : sy[i];
 				path.Append (font, glyphs[i], ft.XX * scale_x, ft.XY * scale_x, ft.YX * scale_y, ft.YY * scale_y, ft.TX * scale_x + x[i], ft.TY * scale_y + y[i]);
