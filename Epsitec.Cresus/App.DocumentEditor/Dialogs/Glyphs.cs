@@ -51,6 +51,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.book = new TabBook(this.window.Root);
 				this.book.Arrows = TabBookArrows.Right;
 				this.book.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+				this.book.ActivePageChanged += new EventHandler(this.HandleBookActivePageChanged);
 				this.book.AnchorMargins = new Margins(6, 6, 6, 34);
 
 				TabPage bookList = new TabPage();
@@ -62,6 +63,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				bookArray.Name = "Array";
 				bookArray.TabTitle = Res.Strings.Dialog.Glyphs.TabPage.Array;
 				this.book.Items.Add(bookArray);
+
+				TabPage bookAlternates = new TabPage();
+				bookAlternates.Name = "Alternates";
+				bookAlternates.TabTitle = Res.Strings.Dialog.Glyphs.TabPage.Alternates;
+				this.book.Items.Add(bookAlternates);
 
 				this.book.ActivePage = bookList;
 
@@ -81,10 +87,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.family.TabIndex = tabIndex++;
 				this.family.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Typo);
-				if ( !this.limitedVersion )
-				{
-					this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Space);
-				}
+				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Space);
 				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Business);
 				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Math);
 				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.GreekLower);
@@ -195,6 +198,45 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.plus.Clicked += new MessageEventHandler(this.HandlePlusClicked);
 				ToolTip.Default.SetToolTip(this.plus, Res.Strings.Dialog.Glyphs.Tooltip.ArrayPlus);
 
+				// Onglet Alternates.
+				tabIndex = 0;
+
+				this.alternatesArray = new GlyphArray(bookAlternates);
+				this.alternatesArray.Dock = DockStyle.Fill;
+				this.alternatesArray.DockMargins = new Margins(6, 6, 6, 6+20+4);
+				this.alternatesArray.TabIndex = tabIndex++;
+				this.alternatesArray.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.alternatesArray.SelectedIndex = -1;
+				this.alternatesArray.DoubleClicked += new MessageEventHandler(this.HandleDoubleClicked);
+				this.alternatesArray.ChangeSelected += new EventHandler(this.HandleArraySelected);
+
+				this.alternatesStatus = new TextField(bookAlternates);
+				this.alternatesStatus.Anchor = AnchorStyles.Bottom|AnchorStyles.LeftAndRight;
+				this.alternatesStatus.AnchorMargins = new Margins(6, 4+20+20+6, 0, 6);
+				this.alternatesStatus.IsReadOnly = true;
+
+				this.alternatesMinus = new Button(bookAlternates);
+				this.alternatesMinus.Text = "\u2212";  // caractère "moins"
+				this.alternatesMinus.Width = 20;
+				this.alternatesMinus.Height = 20;
+				this.alternatesMinus.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
+				this.alternatesMinus.AnchorMargins = new Margins(6, 20+6, 0, 6);
+				this.alternatesMinus.TabIndex = tabIndex++;
+				this.alternatesMinus.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.alternatesMinus.Clicked += new MessageEventHandler(this.HandleMinusClicked);
+				ToolTip.Default.SetToolTip(this.alternatesMinus, Res.Strings.Dialog.Glyphs.Tooltip.ArrayMinus);
+
+				this.alternatesPlus = new Button(bookAlternates);
+				this.alternatesPlus.Text = "+";
+				this.alternatesPlus.Width = 20;
+				this.alternatesPlus.Height = 20;
+				this.alternatesPlus.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
+				this.alternatesPlus.AnchorMargins = new Margins(6, 6, 0, 6);
+				this.alternatesPlus.TabIndex = tabIndex++;
+				this.alternatesPlus.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				this.alternatesPlus.Clicked += new MessageEventHandler(this.HandlePlusClicked);
+				ToolTip.Default.SetToolTip(this.alternatesPlus, Res.Strings.Dialog.Glyphs.Tooltip.ArrayPlus);
+
 				// Boutons de fermeture.
 				Button buttonOk = new Button(this.window.Root);
 				buttonOk.Width = 75;
@@ -236,6 +278,68 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.editor.CurrentDocument.Dialogs.BuildGlyphs(this.window);
 		}
 
+		// Indique que l'onglet "caractères alternatifs" n'est plus à jour.
+		public void SetAlternatesDirty()
+		{
+			this.alternatesDirty = true;
+			this.UpdateAlternates();
+		}
+
+		// Met à jour l'onglet "caractères alternatifs".
+		protected void UpdateAlternates()
+		{
+			if ( this.window == null )  return;
+			if ( this.book.ActivePage.Name != "Alternates" )  return;
+			if ( !this.alternatesDirty )  return;
+
+			Common.OpenType.Font font = null;
+			ushort[] alternates = null;
+			Document document = this.editor.CurrentDocument;
+			if ( document != null )
+			{
+				Common.Document.Objects.TextBox2 edit = document.Modifier.RetEditObject() as Common.Document.Objects.TextBox2;
+				if ( edit != null )
+				{
+					int glyph;
+					if ( edit.GetSelectedGlyph(out glyph, out font) )
+					{
+						font.PushActiveFeatures();
+
+						System.Collections.ArrayList list = new System.Collections.ArrayList();
+						string[] supported = font.GetSupportedFeatures();
+						foreach ( string feature in supported )
+						{
+							Common.OpenType.LookupTable[] tables = font.GetLookupTables(feature);
+							foreach ( Common.OpenType.LookupTable table in tables )
+							{
+								if ( table.LookupType == Common.OpenType.LookupType.Alternate )
+								{
+									list.Add(feature);
+									break;
+								}
+							}
+						}
+						string[] fix = new string[list.Count];
+						for ( int i=0 ; i<list.Count ; i++ )
+						{
+							fix[i] = list[i] as string;
+						}
+						font.SelectFeatures(fix);
+
+						if ( !font.GetAlternates((ushort)glyph, out alternates) )
+						{
+							alternates = null;
+						}
+
+						font.PopActiveFeatures();
+					}
+				}
+			}
+			this.alternatesArray.SetFont(font, alternates);
+
+			this.alternatesDirty = false;
+		}
+
 
 		// Met à jour la liste des glyphs selon la famille choisie.
 		protected void UpdateList()
@@ -266,25 +370,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		// Donne la liste des caractères Unicode d'une famille.
 		protected int[] UnicodeList(int family)
 		{
-			if ( this.limitedVersion )
-			{
-				if ( family == 0 )  return UnicodeTypo;
-				if ( family == 1 )  return UnicodeBusiness;
-				if ( family == 2 )  return UnicodeMath;
-				if ( family == 3 )  return UnicodeGreekLower;
-				if ( family == 4 )  return UnicodeGreekUpper;
-				if ( family == 5 )  return UnicodeForm;
-			}
-			else
-			{
-				if ( family == 0 )  return UnicodeTypo;
-				if ( family == 1 )  return UnicodeSpace;
-				if ( family == 2 )  return UnicodeBusiness;
-				if ( family == 3 )  return UnicodeMath;
-				if ( family == 4 )  return UnicodeGreekLower;
-				if ( family == 5 )  return UnicodeGreekUpper;
-				if ( family == 6 )  return UnicodeForm;
-			}
+			if ( family == 0 )  return UnicodeTypo;
+			if ( family == 1 )  return UnicodeSpace;
+			if ( family == 2 )  return UnicodeBusiness;
+			if ( family == 3 )  return UnicodeMath;
+			if ( family == 4 )  return UnicodeGreekLower;
+			if ( family == 5 )  return UnicodeGreekUpper;
+			if ( family == 6 )  return UnicodeForm;
 			return null;
 		}
 
@@ -414,10 +506,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		// Met à jour les boutons -/+.
 		protected void UpdateMinusPlus()
 		{
-			double size = this.array.CellSize;
+			double size = this.Array.CellSize;
 
-			this.minus.SetEnabled(size > 20.0);
-			this.plus.SetEnabled(size < 48.0);
+			this.Minus.SetEnabled(size > 20.0);
+			this.Plus.SetEnabled(size < 48.0);
 		}
 
 		// Insère le glyphe sélectionné dans le texte en édition.
@@ -444,6 +536,27 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				if ( this.array.SelectedIndex == -1 )  return;
 
 				int code = this.array.IndexToUnicode(array.SelectedIndex);
+				char c = (char) code;
+				insert = c.ToString();
+
+				this.editor.CurrentDocument.Modifier.EditGetFont(out fontFace, out fontStyle);
+				if ( fontFace != this.fontFace || fontStyle != this.fontStyle )
+				{
+					fontFace  = this.fontFace;
+					fontStyle = this.fontStyle;
+				}
+				else
+				{
+					fontFace  = "";
+					fontStyle = "";
+				}
+			}
+
+			if ( this.book.ActivePage.Name == "Alternates" )
+			{
+				if ( this.alternatesArray.SelectedIndex == -1 )  return;
+
+				int code = this.alternatesArray.IndexToUnicode(array.SelectedIndex);
 				char c = (char) code;
 				insert = c.ToString();
 
@@ -523,6 +636,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.array.ShowSelectedCell();
 		}
 
+		// L'onglet actif a changé.
+		private void HandleBookActivePageChanged(object sender)
+		{
+			this.UpdateAlternates();
+		}
+
 		// Police changée.
 		private void HandleFontFaceChanged(object sender)
 		{
@@ -566,12 +685,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleArraySelected(object sender)
 		{
 			string text = "";
-			if ( this.array.SelectedIndex != -1 )
+			if ( this.Array.SelectedIndex != -1 )
 			{
-				int code = this.array.IndexToUnicode(this.array.SelectedIndex);
+				int code = this.Array.IndexToUnicode(this.Array.SelectedIndex);
 				text = string.Format("{0}: {1}", code.ToString("X4"), Misc.GetUnicodeName(code, this.fontFace, this.fontStyle));
 			}
-			this.status.Text = text;
+			this.Status.Text = text;
 		}
 
 		// Le glyphe est double-cliqué.
@@ -582,18 +701,18 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleMinusClicked(object sender, MessageEventArgs e)
 		{
-			double size = this.array.CellSize;
+			double size = this.Array.CellSize;
 			size = System.Math.Max(20.0, size/1.25);
-			this.array.CellSize = size;
+			this.Array.CellSize = size;
 
 			this.UpdateMinusPlus();
 		}
 
 		private void HandlePlusClicked(object sender, MessageEventArgs e)
 		{
-			double size = this.array.CellSize;
+			double size = this.Array.CellSize;
 			size = System.Math.Min(48.828125, size*1.25);
-			this.array.CellSize = size;
+			this.Array.CellSize = size;
 
 			this.UpdateMinusPlus();
 		}
@@ -618,7 +737,51 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
-		protected bool				limitedVersion = false;
+		// Donne le tableau en fonction de l'onglet actif.
+		protected GlyphArray Array
+		{
+			get
+			{
+				if ( this.book.ActivePage.Name == "Array"      )  return this.array;
+				if ( this.book.ActivePage.Name == "Alternates" )  return this.alternatesArray;
+				return null;
+			}
+		}
+
+		// Donne le statuts en fonction de l'onglet actif.
+		protected TextField Status
+		{
+			get
+			{
+				if ( this.book.ActivePage.Name == "Array"      )  return this.status;
+				if ( this.book.ActivePage.Name == "Alternates" )  return this.alternatesStatus;
+				return null;
+			}
+		}
+
+		// Donne le bouton "-" en fonction de l'onglet actif.
+		protected Button Minus
+		{
+			get
+			{
+				if ( this.book.ActivePage.Name == "Array"      )  return this.minus;
+				if ( this.book.ActivePage.Name == "Alternates" )  return this.alternatesMinus;
+				return null;
+			}
+		}
+
+		// Donne le bouton "+" en fonction de l'onglet actif.
+		protected Button Plus
+		{
+			get
+			{
+				if ( this.book.ActivePage.Name == "Array"      )  return this.plus;
+				if ( this.book.ActivePage.Name == "Alternates" )  return this.alternatesPlus;
+				return null;
+			}
+		}
+
+
 		protected string			fontFace;
 		protected string			fontStyle;
 		protected readonly int		maxFamiliy = 10;
@@ -638,5 +801,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		protected TextField			status;
 		protected Button			minus;
 		protected Button			plus;
+
+		protected GlyphArray		alternatesArray;
+		protected TextField			alternatesStatus;
+		protected Button			alternatesMinus;
+		protected Button			alternatesPlus;
+		protected bool				alternatesDirty = true;
 	}
 }

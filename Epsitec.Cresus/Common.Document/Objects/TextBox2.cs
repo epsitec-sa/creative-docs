@@ -873,6 +873,24 @@ namespace Epsitec.Common.Document.Objects
 
 		}
 
+		// Retourne le glyphe du caractère sélectionné.
+		public override bool GetSelectedGlyph(out int glyph, out OpenType.Font font)
+		{
+			glyph = 0;
+			font = null;
+			string[] texts = this.textFlow.TextNavigator.GetSelectedTexts();
+			if ( texts == null || texts.Length != 1 || texts[0].Length != 1 )  return false;
+			string text = texts[0];
+
+			string face, style;
+			string[] features;
+			this.GetTextFont(true, out face, out style, out features);
+			font = TextContext.GetFont(face, style);
+
+			glyph = font.GetGlyphIndex(text[0]);
+			return true;
+		}
+
 		// Donne la propriété contenant la liste des tabulateurs du paragraphe.
 		protected Text.Properties.TabsProperty GetTextTabs()
 		{

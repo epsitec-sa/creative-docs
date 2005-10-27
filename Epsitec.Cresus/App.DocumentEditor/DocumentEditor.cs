@@ -4099,6 +4099,7 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleTextChanged()
 		{
 			this.ribbonText.SetDirtyText();
+			this.dlgGlyphs.SetAlternatesDirty();
 		}
 
 		// Appelé lorsque la création d'un objet à débuté ou s'est terminée.

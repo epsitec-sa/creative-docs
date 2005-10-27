@@ -807,6 +807,14 @@ namespace Epsitec.Common.Document.Objects
 			type = TextTabType.None;
 		}
 
+		// Retourne le glyphe du caractère sélectionné.
+		public virtual bool GetSelectedGlyph(out int glyph, out OpenType.Font font)
+		{
+			glyph = 0;
+			font = null;
+			return false;
+		}
+
 		
 		// Détecte la cellule pointée par la souris.
 		public virtual int DetectCell(Point pos)

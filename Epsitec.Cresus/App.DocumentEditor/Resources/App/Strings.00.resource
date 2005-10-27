@@ -110,6 +110,7 @@
 	<data name="Dialog.Glyphs.Title">Caractères spéciaux</data>
 	<data name="Dialog.Glyphs.TabPage.List">Listes partielles</data>
 	<data name="Dialog.Glyphs.TabPage.Array">Tableaux complets</data>
+	<data name="Dialog.Glyphs.TabPage.Alternates">Alternatives</data>
 	<data name="Dialog.Glyphs.Button.Insert">Insérer</data>
 	<data name="Dialog.Glyphs.Tooltip.Insert">Insérer dans le texte</data>
 	<data name="Dialog.Glyphs.Tooltip.ArrayMinus">Aperçu plus petit</data>

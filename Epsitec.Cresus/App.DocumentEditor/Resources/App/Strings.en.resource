@@ -109,6 +109,7 @@
 	<data name="Dialog.Glyphs.Title">Symbols</data>
 	<data name="Dialog.Glyphs.TabPage.List">Quick lists</data>
 	<data name="Dialog.Glyphs.TabPage.Array">All available characters</data>
+	<data name="Dialog.Glyphs.TabPage.Alternates">Alternatess</data>
 	<data name="Dialog.Glyphs.Button.Insert">Insert</data>
 	<data name="Dialog.Glyphs.Tooltip.Insert">Insert symbol/character in text</data>
 	<data name="Dialog.Glyphs.Tooltip.ArrayMinus">Smaller preview</data>

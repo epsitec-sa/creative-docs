@@ -82,6 +82,28 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		// Choix d'une liste de glyphes (caractères alternatifs).
+		public void SetFont(OpenType.Font font, ushort[] alternates)
+		{
+			if ( font == null || alternates == null || alternates.Length == 0 )
+			{
+				this.fontFace = "";
+				this.fontStyle = "";
+				this.unicodes = new int[0];  // alloue le tableau
+			}
+			else
+			{
+				this.fontFace  = font.FontIdentity.InvariantFaceName;
+				this.fontStyle = font.FontIdentity.InvariantStyleName;
+
+				this.unicodes = new int[alternates.Length];  // alloue le tableau
+				for ( int i=0 ; i<alternates.Length ; i++ )
+				{
+					this.unicodes[i] = alternates[i];
+				}
+			}
+		}
+
 		// Choix de l'index du glyphe sélectionné.
 		public int SelectedIndex
 		{
