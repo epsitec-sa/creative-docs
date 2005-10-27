@@ -1016,38 +1016,6 @@ namespace Epsitec.Common.Text
 					frame.MapToView (ref cx, ref cy);
 				}
 				
-				Properties.FontProperty       font = null;
-				Properties.FontSizeProperty   font_size = null;
-				Properties.FontOffsetProperty font_offset = null;
-				Properties.FontBoldProperty   font_bold = null;
-				Properties.FontItalicProperty font_italic = null;
-				
-				for (int i = 0; i < properties.Length; i++)
-				{
-					switch (properties[i].WellKnownType)
-					{
-						case Properties.WellKnownType.Font:
-							font = properties[i] as Properties.FontProperty;
-							break;
-						
-						case Properties.WellKnownType.FontSize:
-							font_size = properties[i] as Properties.FontSizeProperty;
-							break;
-						
-						case Properties.WellKnownType.FontOffset:
-							font_offset = properties[i] as Properties.FontOffsetProperty;
-							break;
-						
-						case Properties.WellKnownType.FontBold:
-							font_bold = properties[i] as Properties.FontBoldProperty;
-							break;
-						
-						case Properties.WellKnownType.FontItalic:
-							font_italic = properties[i] as Properties.FontItalicProperty;
-							break;
-					}
-				}
-				
 				OpenType.Font ot_font;
 				double        pt_size;
 				double        pt_offset;

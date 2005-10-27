@@ -88,11 +88,7 @@ namespace Epsitec.Common.Text
 		
 		public TextStyle NewTextStyle(string name, TextStyleClass text_style_class)
 		{
-			TextStyle style = new TextStyle (name, text_style_class);
-			
-			this.Attach (style);
-			
-			return style;
+			return this.NewTextStyle (name, text_style_class, new Property[0], null);
 		}
 		
 		public TextStyle NewTextStyle(string name, TextStyleClass text_style_class, params Property[] properties)
@@ -107,6 +103,11 @@ namespace Epsitec.Common.Text
 		
 		public TextStyle NewTextStyle(string name, TextStyleClass text_style_class, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
 		{
+			if (name == null)
+			{
+				name = this.GenerateUniqueName ();
+			}
+			
 			TextStyle style = new TextStyle (name, text_style_class, properties, parent_styles);
 			
 			this.Attach (style);
@@ -127,6 +128,11 @@ namespace Epsitec.Common.Text
 		
 		public TextStyle NewMetaProperty(string name, string meta_id, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
 		{
+			if (name == null)
+			{
+				name = this.GenerateUniqueName ();
+			}
+			
 			TextStyle style = new TextStyle (name, TextStyleClass.MetaProperty, properties, parent_styles);
 			
 			style.SetMetaId (meta_id);
@@ -179,6 +185,34 @@ namespace Epsitec.Common.Text
 			{
 				return null;
 			}
+		}
+		
+		
+		public TextStyle[] FindEqualTextStyles(TextStyle style)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			int signature = style.GetContentsSignature ();
+			
+			foreach (TextStyle candidate in this.text_style_list)
+			{
+				if (candidate != style)
+				{
+					if (candidate.GetContentsSignature () == signature)
+					{
+						//	Candidat intéressant; la signature correspond déjà. Il faut
+						//	procéder à une comparaison détaillée pour vérifier s'il est
+						//	bien complètement identique au style recherché :
+						
+						if (candidate.CompareEqualContents (style))
+						{
+							list.Add (candidate);
+						}
+					}
+				}
+			}
+			
+			return (TextStyle[]) list.ToArray (typeof (TextStyle));
 		}
 		
 		
@@ -277,10 +311,19 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		private string GenerateUniqueName()
+		{
+			lock (this)
+			{
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "#ID#{0}", this.unique_id++);
+			}
+		}
+		
 		
 		private Internal.StyleTable				internal_styles;
 		private System.Collections.ArrayList	text_style_list;
 		private System.Collections.Hashtable	text_style_hash;
 		private StyleMap						style_map;
+		private long							unique_id;
 	}
 }

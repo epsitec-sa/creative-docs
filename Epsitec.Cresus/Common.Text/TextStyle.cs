@@ -198,6 +198,7 @@ namespace Epsitec.Common.Text
 		public static bool CompareEqualContents(TextStyle a, TextStyle b)
 		{
 			if ((a.text_style_class == b.text_style_class) &&
+				(a.meta_id == b.meta_id) &&
 				(Styles.PropertyContainer.CompareEqualContents (a, b)))
 			{
 				//	Ignore le nom dans la comparaison du contenu. C'est voulu !
