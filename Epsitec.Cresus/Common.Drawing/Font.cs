@@ -1164,7 +1164,12 @@ namespace Epsitec.Common.Drawing
 			{
 				get
 				{
-					return this.fonts[0].GetGlyphIndex ('e') > 0;
+					//	TODO: cacher cette information dans un fichier externe
+					//	pour éviter de devoir lire la fonte pour déterminer si
+					//	elle est intéressante, ou non.
+					
+					return true;
+//-					return this.fonts[0].GetGlyphIndex ('e') > 0;
 				}
 			}
 			

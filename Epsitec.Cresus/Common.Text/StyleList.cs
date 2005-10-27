@@ -151,6 +151,9 @@ namespace Epsitec.Common.Text
 		
 		public TextStyle CreateOrGetMetaProperty(string meta_id, params Property[] properties)
 		{
+			//	Crée ou réutilise une méta propriété déjà existante s'il en existe
+			//	une qui soit 100% équivalente à celle demandée.
+			
 			TextStyle   temp = this.NewMetaProperty (null, meta_id, properties);
 			TextStyle[] find = this.FindEqualTextStyles (temp);
 			
