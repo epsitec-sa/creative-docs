@@ -725,11 +725,18 @@ namespace Epsitec.Common.Text
 			if ((text_styles != null) &&
 				(text_styles.Count > 0))
 			{
+				//	Trie les styles selon leur priorité, avant de les convertir en
+				//	propriétés :
+				
+				TextStyle[] styles = new TextStyle[text_styles.Count];
+				text_styles.CopyTo (styles, 0);
+				System.Array.Sort (styles, TextStyle.Comparer);
+				
 				//	Les diverses propriétés des styles passés en entrée sont
 				//	d'abord extraites et ajoutées dans la liste complète des
 				//	propriétés :
 				
-				foreach (TextStyle style in text_styles)
+				foreach (TextStyle style in styles)
 				{
 					//	Passe en revue toutes les propriétés définies par le style
 					//	en cours d'analyse et ajoute celles-ci séquentiellement dans
@@ -756,7 +763,7 @@ namespace Epsitec.Common.Text
 				//	Crée une propriété StylesProperty qui résume les styles dont
 				//	les propriétés viennent d'être mises à plat ci-dessus :
 				
-				list.Add (new Properties.StylesProperty (text_styles));
+				list.Add (new Properties.StylesProperty (styles));
 			}
 			
 			if ((properties != null) &&

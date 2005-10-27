@@ -118,15 +118,20 @@ namespace Epsitec.Common.Text
 		
 		public TextStyle NewMetaProperty(string name, string meta_id, params Property[] properties)
 		{
-			return this.NewMetaProperty (name, meta_id, properties, null);
+			return this.NewMetaProperty (name, meta_id, 0, properties, null);
 		}
 		
-		public TextStyle NewMetaProperty(string name, string meta_id, System.Collections.ICollection properties)
+		public TextStyle NewMetaProperty(string name, string meta_id, int priority, params Property[] properties)
 		{
-			return this.NewMetaProperty (name, meta_id, properties, null);
+			return this.NewMetaProperty (name, meta_id, priority, properties, null);
 		}
 		
-		public TextStyle NewMetaProperty(string name, string meta_id, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		public TextStyle NewMetaProperty(string name, string meta_id, int priority, System.Collections.ICollection properties)
+		{
+			return this.NewMetaProperty (name, meta_id, priority, properties, null);
+		}
+		
+		public TextStyle NewMetaProperty(string name, string meta_id, int priority, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
 		{
 			if (name == null)
 			{
@@ -135,10 +140,34 @@ namespace Epsitec.Common.Text
 			
 			TextStyle style = new TextStyle (name, TextStyleClass.MetaProperty, properties, parent_styles);
 			
-			style.SetMetaId (meta_id);
+			style.DefineMetaId (meta_id);
+			style.DefinePriority (priority);
+			
 			this.Attach (style);
 			
 			return style;
+		}
+		
+		
+		public TextStyle CreateOrGetMetaProperty(string meta_id, params Property[] properties)
+		{
+			TextStyle   temp = this.NewMetaProperty (null, meta_id, properties);
+			TextStyle[] find = this.FindEqualTextStyles (temp);
+			
+			if (find.Length > 0)
+			{
+				System.Diagnostics.Debug.WriteLine ("Reusing meta property : " + find[0].ToString ());
+				
+				this.RecycleTextStyle (temp);
+				
+				return find[0];
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine ("Created meta property : " + temp.ToString ());
+				
+				return temp;
+			}
 		}
 		
 		
@@ -310,6 +339,7 @@ namespace Epsitec.Common.Text
 				throw new System.ArgumentException (string.Format ("TextStyle named {0} ({1}) does not exist", name, text_style_class), "style");
 			}
 		}
+		
 		
 		private string GenerateUniqueName()
 		{

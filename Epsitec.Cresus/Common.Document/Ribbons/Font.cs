@@ -544,6 +544,8 @@ namespace Epsitec.Common.Document.Ribbons
 			string[] features;
 			editObject.GetTextFont(false, out face, out style, out features);
 
+			if ( features == null )  features = new string[0];
+			
 			string[] newFeatures;
 			if ( Misc.IsInsideList(features, cmd) )
 			{

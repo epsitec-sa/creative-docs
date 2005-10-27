@@ -557,8 +557,10 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( face == "" )  // remet la fonte par défaut ?
 			{
-				Text.Properties.FontProperty font = new Text.Properties.FontProperty();
-				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Clear, font);
+//				Text.Properties.FontProperty font = new Text.Properties.FontProperty();
+//				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Clear, font);
+				Text.TextStyle meta_font = this.document.TextContext.StyleList.CreateOrGetMetaProperty("TextFont", new Text.Property[0]);
+				this.metaNavigator.SetMetaProperties(Text.Properties.ApplyMode.Clear, meta_font);
 			}
 			else
 			{
@@ -571,13 +573,16 @@ namespace Epsitec.Common.Document.Objects
 				{
 					font = new Text.Properties.FontProperty(face, style, features);
 				}
-				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Combine, font);
+				Text.TextStyle meta_font = this.document.TextContext.StyleList.CreateOrGetMetaProperty("TextFont", font);
+				this.metaNavigator.SetMetaProperties(Text.Properties.ApplyMode.Set, meta_font);
+//				this.metaNavigator.SetTextProperties(Text.Properties.ApplyMode.Combine, font);
 			}
 		}
 
 		// Donne la police du texte.
 		public override void GetTextFont(bool accumulated, out string face, out string style, out string[] features)
 		{
+#if false
 			Text.Property[] properties = this.GetTextProperties(accumulated);
 			foreach ( Text.Property property in properties )
 			{
@@ -591,6 +596,22 @@ namespace Epsitec.Common.Document.Objects
 					return;
 				}
 			}
+#else
+			Text.TextStyle[] styles = this.textFlow.TextNavigator.TextStyles;
+			foreach ( Text.TextStyle s in styles )
+			{
+				if ( s.TextStyleClass == Text.TextStyleClass.MetaProperty &&
+					 s.MetaId == "TextFont" )
+				{
+					Text.Properties.FontProperty font = s[Text.Properties.WellKnownType.Font] as Text.Properties.FontProperty;
+					System.Diagnostics.Debug.Assert(font != null);
+					face = font.FaceName;
+					style = Misc.SimplifyFontStyle(font.StyleName);
+					features = font.Features;
+					return;
+				}
+			}
+#endif
 
 			face = "";
 			style = "";

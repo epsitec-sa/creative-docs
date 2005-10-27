@@ -72,10 +72,16 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		internal void SetMetaId(string meta_id)
+		internal void DefineMetaId(string meta_id)
 		{
 			this.meta_id = meta_id;
 		}
+		
+		internal void DefinePriority(int priority)
+		{
+			this.priority = priority;
+		}
+		
 		
 		internal void Clear()
 		{
@@ -189,6 +195,22 @@ namespace Epsitec.Common.Text
 					return 1;
 				}
 				
+				if (px.priority < py.priority)
+				{
+					return -1;
+				}
+				if (px.priority > py.priority)
+				{
+					return 1;
+				}
+				
+				int result = string.Compare (px.MetaId, py.MetaId);
+				
+				if (result != 0)
+				{
+					return result;
+				}
+				
 				return string.Compare (px.Name, py.Name);
 			}
 			#endregion
@@ -199,6 +221,7 @@ namespace Epsitec.Common.Text
 		{
 			if ((a.text_style_class == b.text_style_class) &&
 				(a.meta_id == b.meta_id) &&
+				(a.priority == b.priority) &&
 				(Styles.PropertyContainer.CompareEqualContents (a, b)))
 			{
 				//	Ignore le nom dans la comparaison du contenu. C'est voulu !
@@ -269,6 +292,7 @@ namespace Epsitec.Common.Text
 		
 		
 		private string							name;
+		private int								priority;
 		private string							meta_id;
 		private TextStyleClass					text_style_class;
 		private TextStyle[]						parent_styles;

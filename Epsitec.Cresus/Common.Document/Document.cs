@@ -1177,40 +1177,40 @@ namespace Epsitec.Common.Document
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontProperty(null, "!Bold"));
-			this.textContext.StyleList.NewMetaProperty("Bold", "X-Bold", properties);
+			this.textContext.StyleList.NewMetaProperty("Bold", "X-Bold", 1, properties);
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontProperty(null, "!Italic"));
-			this.textContext.StyleList.NewMetaProperty("Italic", "X-Italic", properties);
+			this.textContext.StyleList.NewMetaProperty("Italic", "X-Italic", 1, properties);
 			
 //			this.textContext.StyleList.NewMetaProperty("Bold", "Bold", new Text.Properties.FontBoldProperty ());
 //			this.textContext.StyleList.NewMetaProperty("Italic", "Italic", new Text.Properties.FontItalicProperty ());
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", "Black"));
-			this.textContext.StyleList.NewMetaProperty("Underlined", "Underlined", properties);
+			this.textContext.StyleList.NewMetaProperty("Underlined", "Underlined", 0, properties);
 			
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontOffsetProperty(-50.0, Text.Properties.SizeUnits.Percent));
 			properties.Add(new Text.Properties.FontSizeProperty(60.0, Text.Properties.SizeUnits.Percent));
-			this.textContext.StyleList.NewMetaProperty("Subscript", "SuperScript", properties);
+			this.textContext.StyleList.NewMetaProperty("Subscript", "SuperScript", 0, properties);
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontOffsetProperty(75.0, Text.Properties.SizeUnits.Percent));
 			properties.Add(new Text.Properties.FontSizeProperty(60.0, Text.Properties.SizeUnits.Percent));
-			this.textContext.StyleList.NewMetaProperty("Superscript", "SuperScript", properties);
+			this.textContext.StyleList.NewMetaProperty("Superscript", "SuperScript", 0, properties);
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontProperty(null, "!Bold"));
-			this.textContext.StyleList.NewMetaProperty("UserX", "UserX", properties);
+			this.textContext.StyleList.NewMetaProperty("UserX", "UserX", 0, properties);
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.FontProperty(null, "!Italic"));
-			this.textContext.StyleList.NewMetaProperty("UserY", "UserY", properties);
+			this.textContext.StyleList.NewMetaProperty("UserY", "UserY", 0, properties);
 
 			properties = new System.Collections.ArrayList();
 			properties.Add(new Text.Properties.UnderlineProperty(-5, Text.Properties.SizeUnits.Points, 1.0, Text.Properties.SizeUnits.Points, "underline", "Black"));
-			this.textContext.StyleList.NewMetaProperty("UserZ", "UserZ", properties);
+			this.textContext.StyleList.NewMetaProperty("UserZ", "UserZ", 0, properties);
 
 			
 			Text.Generator generator1 = this.textContext.GeneratorList.NewGenerator("bullet-1");

@@ -1088,6 +1088,7 @@ namespace Epsitec.Common.Text.Internal
 			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
 			
 			System.Collections.ArrayList all_styles = new System.Collections.ArrayList ();
+			System.Collections.ICollection combined = Navigator.Combine (TextStyle.FilterStyles (current_styles, TextStyleClass.MetaProperty), meta_properties, mode);
 			
 			all_styles.AddRange (TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph));
 			all_styles.AddRange (TextStyle.FilterStyles (current_styles, TextStyleClass.Text));
