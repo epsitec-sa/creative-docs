@@ -165,6 +165,18 @@ namespace Epsitec.Common.Document
 			return font;
 		}
 
+		// Retourne le nom d'un glyphe d'une fonte.
+		static public string GetGlyphName(int glyph, string fontFace, string fontStyle)
+		{
+			Common.OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
+			if ( font != null && font.FontIdentity.IsSymbolFont )
+			{
+				return font.FontIdentity.GetGlyphName(glyph);
+			}
+
+			return "";
+		}
+
 		// Retourne le nom d'un caractère Unicode ou du glyph d'une fonte de symboles.
 		static public string GetUnicodeName(int code, string fontFace, string fontStyle)
 		{

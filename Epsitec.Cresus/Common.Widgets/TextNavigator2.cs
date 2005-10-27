@@ -623,6 +623,15 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
+				if (this.text_navigator.IsSelectionActive)
+				{
+					this.text_navigator.EndSelection ();
+				}
+				if (this.text_navigator.HasSelection)
+				{
+					this.text_navigator.Delete ();
+				}
+			
 				this.text_navigator.Insert (code, ot_property);
 			
 				return true;

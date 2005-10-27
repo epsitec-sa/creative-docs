@@ -363,7 +363,7 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 		// Insère un glyphe dans le pavé en édition.
-		public override bool EditInsertGlyph(string text, string fontFace, string fontStyle)
+		public override bool EditInsertText(string text, string fontFace, string fontStyle)
 		{
 			this.textNavigator.Selection = text;
 			this.document.Notifier.NotifyArea(this.BoundingBox);

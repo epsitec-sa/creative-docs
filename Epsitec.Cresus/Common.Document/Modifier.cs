@@ -1107,13 +1107,22 @@ namespace Epsitec.Common.Document
 			return null;
 		}
 
-		// Insère un glyphe dans le pavé en édition.
-		public bool EditInsertGlyph(string text, string fontFace, string fontStyle)
+		// Insère un texte dans le pavé en édition.
+		public bool EditInsertText(string text, string fontFace, string fontStyle)
 		{
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject == null )  return false;
 
-			return editObject.EditInsertGlyph(text, fontFace, fontStyle);
+			return editObject.EditInsertText(text, fontFace, fontStyle);
+		}
+
+		// Insère un glyphe dans le pavé en édition.
+		public bool EditInsertGlyph(int code, int glyph, string fontFace, string fontStyle)
+		{
+			Objects.Abstract editObject = this.RetEditObject();
+			if ( editObject == null )  return false;
+
+			return editObject.EditInsertGlyph(code, glyph, fontFace, fontStyle);
 		}
 
 		// Donne la fonte actullement utilisée.

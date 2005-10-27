@@ -49,7 +49,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				// Crée les onglets.
 				this.book = new TabBook(this.window.Root);
-				this.book.Arrows = TabBookArrows.Right;
+				this.book.Arrows = TabBookArrows.Stretch;
 				this.book.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 				this.book.ActivePageChanged += new EventHandler(this.HandleBookActivePageChanged);
 				this.book.AnchorMargins = new Margins(6, 6, 6, 34);
@@ -207,6 +207,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				this.alternatesArray.TabIndex = tabIndex++;
 				this.alternatesArray.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.alternatesArray.SelectedIndex = -1;
+				this.alternatesArray.CellSize = 48.828125;  // taille max
 				this.alternatesArray.DoubleClicked += new MessageEventHandler(this.HandleDoubleClicked);
 				this.alternatesArray.ChangeSelected += new EventHandler(this.HandleArraySelected);
 
@@ -293,6 +294,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			if ( !this.alternatesDirty )  return;
 
 			Common.OpenType.Font font = null;
+			int code = 0;
+			int glyph = 0;
 			ushort[] alternates = null;
 			Document document = this.editor.CurrentDocument;
 			if ( document != null )
@@ -300,8 +303,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				Common.Document.Objects.TextBox2 edit = document.Modifier.RetEditObject() as Common.Document.Objects.TextBox2;
 				if ( edit != null )
 				{
-					int glyph;
-					if ( edit.GetSelectedGlyph(out glyph, out font) )
+					if ( edit.EditGetSelectedGlyph(out code, out glyph, out font) )
 					{
 						font.PushActiveFeatures();
 
@@ -319,11 +321,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 								}
 							}
 						}
-						string[] fix = new string[list.Count];
-						for ( int i=0 ; i<list.Count ; i++ )
-						{
-							fix[i] = list[i] as string;
-						}
+						string[] fix = (string[]) list.ToArray(typeof(string));
 						font.SelectFeatures(fix);
 
 						if ( !font.GetAlternates((ushort)glyph, out alternates) )
@@ -335,7 +333,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					}
 				}
 			}
-			this.alternatesArray.SetFont(font, alternates);
+			this.alternatesArray.SetGlyphAlternates(font, code, glyph, alternates);
 
 			this.alternatesDirty = false;
 		}
@@ -506,8 +504,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		// Met à jour les boutons -/+.
 		protected void UpdateMinusPlus()
 		{
-			double size = this.Array.CellSize;
+			if ( this.book.ActivePage.Name == "List" )  return;
 
+			double size = this.Array.CellSize;
 			this.Minus.SetEnabled(size > 20.0);
 			this.Plus.SetEnabled(size < 48.0);
 		}
@@ -517,10 +516,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			if ( !this.editor.IsCurrentDocument )  return;
 
-			string insert    = "";
-			string fontFace  = "";
-			string fontStyle = "";
-
 			if ( this.book.ActivePage.Name == "List" )
 			{
 				int family = this.family.SelectedIndex;
@@ -528,7 +523,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				int[] codes = this.UnicodeList(family);
 				int sel = this.listSelectedIndex[family];
 				char c = (char) codes[sel];
-				insert = c.ToString();
+				string insert = c.ToString();
+				this.editor.CurrentDocument.Modifier.EditInsertText(insert, "", "");
 			}
 
 			if ( this.book.ActivePage.Name == "Array" )
@@ -537,8 +533,9 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				int code = this.array.IndexToUnicode(array.SelectedIndex);
 				char c = (char) code;
-				insert = c.ToString();
+				string insert = c.ToString();
 
+				string fontFace, fontStyle;
 				this.editor.CurrentDocument.Modifier.EditGetFont(out fontFace, out fontStyle);
 				if ( fontFace != this.fontFace || fontStyle != this.fontStyle )
 				{
@@ -550,31 +547,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 					fontFace  = "";
 					fontStyle = "";
 				}
+				this.editor.CurrentDocument.Modifier.EditInsertText(insert, fontFace, fontStyle);
 			}
 
 			if ( this.book.ActivePage.Name == "Alternates" )
 			{
 				if ( this.alternatesArray.SelectedIndex == -1 )  return;
 
-				int code = this.alternatesArray.IndexToUnicode(array.SelectedIndex);
-				char c = (char) code;
-				insert = c.ToString();
+				int code         = this.alternatesArray.Code;
+				int glyph        = this.alternatesArray.Glyph;
+				string fontFace  = this.alternatesArray.FontFace;
+				string fontStyle = this.alternatesArray.FontStyle;
 
-				this.editor.CurrentDocument.Modifier.EditGetFont(out fontFace, out fontStyle);
-				if ( fontFace != this.fontFace || fontStyle != this.fontStyle )
-				{
-					fontFace  = this.fontFace;
-					fontStyle = this.fontStyle;
-				}
-				else
-				{
-					fontFace  = "";
-					fontStyle = "";
-				}
+				this.editor.CurrentDocument.Modifier.EditInsertGlyph(code, glyph, fontFace, fontStyle);
 			}
-
-			if ( insert == "" )  return;
-			this.editor.CurrentDocument.Modifier.EditInsertGlyph(insert, fontFace, fontStyle);
 		}
 
 
@@ -640,6 +626,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		private void HandleBookActivePageChanged(object sender)
 		{
 			this.UpdateAlternates();
+			this.UpdateMinusPlus();
 		}
 
 		// Police changée.
@@ -687,8 +674,20 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			string text = "";
 			if ( this.Array.SelectedIndex != -1 )
 			{
-				int code = this.Array.IndexToUnicode(this.Array.SelectedIndex);
-				text = string.Format("{0}: {1}", code.ToString("X4"), Misc.GetUnicodeName(code, this.fontFace, this.fontStyle));
+				if ( this.book.ActivePage.Name == "Array" )
+				{
+					int code = this.array.IndexToUnicode(this.Array.SelectedIndex);
+					text = string.Format("{0}: {1}", code.ToString("X4"), Misc.GetUnicodeName(code, this.fontFace, this.fontStyle));
+				}
+
+				if ( this.book.ActivePage.Name == "Alternates" )
+				{
+					int code         = this.alternatesArray.Code;
+					int glyph        = this.alternatesArray.Glyph;
+					string fontFace  = this.alternatesArray.FontFace;
+					string fontStyle = this.alternatesArray.FontStyle;
+					text = string.Format("{0}: {1}", code.ToString("X4"), Misc.GetGlyphName(glyph, fontFace, fontStyle));
+				}
 			}
 			this.Status.Text = text;
 		}

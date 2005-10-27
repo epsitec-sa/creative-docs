@@ -666,9 +666,24 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
-		// Insère un glyphe dans le pavé en édition.
-		public virtual bool EditInsertGlyph(string text, string fontFace, string fontStyle)
+		// Insère un texte dans le pavé en édition.
+		public virtual bool EditInsertText(string text, string fontFace, string fontStyle)
 		{
+			return false;
+		}
+
+		// Insère un glyphe dans le pavé en édition.
+		public virtual bool EditInsertGlyph(int code, int glyph, string fontFace, string fontStyle)
+		{
+			return false;
+		}
+
+		// Retourne le glyphe du caractère sélectionné.
+		public virtual bool EditGetSelectedGlyph(out int code, out int glyph, out OpenType.Font font)
+		{
+			code = 0;
+			glyph = 0;
+			font = null;
 			return false;
 		}
 
@@ -805,14 +820,6 @@ namespace Epsitec.Common.Document.Objects
 		{
 			pos = 0;
 			type = TextTabType.None;
-		}
-
-		// Retourne le glyphe du caractère sélectionné.
-		public virtual bool GetSelectedGlyph(out int glyph, out OpenType.Font font)
-		{
-			glyph = 0;
-			font = null;
-			return false;
 		}
 
 		

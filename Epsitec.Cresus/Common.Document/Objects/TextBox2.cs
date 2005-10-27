@@ -520,8 +520,8 @@ namespace Epsitec.Common.Document.Objects
 		}
 		#endregion
 
-		// Insère un glyphe dans le pavé en édition.
-		public override bool EditInsertGlyph(string text, string fontFace, string fontStyle)
+		// Insère un texte dans le pavé en édition.
+		public override bool EditInsertText(string text, string fontFace, string fontStyle)
 		{
 			if ( fontFace == "" )
 			{
@@ -540,6 +540,45 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.NotifyAreaFlow();
+			return true;
+		}
+
+		// Insère un glyphe dans le pavé en édition.
+		public override bool EditInsertGlyph(int code, int glyph, string fontFace, string fontStyle)
+		{
+			if ( fontFace == "" )
+			{
+				string text = code.ToString();
+				this.metaNavigator.Insert(text);
+			}
+			else
+			{
+				OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
+				Text.Properties.OpenTypeProperty otp = new Text.Properties.OpenTypeProperty(fontFace, fontStyle, glyph);
+				this.metaNavigator.Insert((Text.Unicode.Code)code, otp);
+			}
+
+			this.NotifyAreaFlow();
+			return true;
+		}
+
+		// Retourne le glyphe du caractère sélectionné.
+		public override bool EditGetSelectedGlyph(out int code, out int glyph, out OpenType.Font font)
+		{
+			code = 0;
+			glyph = 0;
+			font = null;
+			string[] texts = this.textFlow.TextNavigator.GetSelectedTexts();
+			if ( texts == null || texts.Length != 1 || texts[0].Length != 1 )  return false;
+			string text = texts[0];
+
+			string face, style;
+			string[] features;
+			this.GetTextFont(true, out face, out style, out features);
+			font = TextContext.GetFont(face, style);
+
+			code = (int) text[0];
+			glyph = font.GetGlyphIndex(code);
 			return true;
 		}
 
@@ -892,24 +931,6 @@ namespace Epsitec.Common.Document.Objects
 			if ( dispo == 0.5 )  type = TextTabType.Center;
 			if ( dispo == 1.0 )  type = TextTabType.Left;
 
-		}
-
-		// Retourne le glyphe du caractère sélectionné.
-		public override bool GetSelectedGlyph(out int glyph, out OpenType.Font font)
-		{
-			glyph = 0;
-			font = null;
-			string[] texts = this.textFlow.TextNavigator.GetSelectedTexts();
-			if ( texts == null || texts.Length != 1 || texts[0].Length != 1 )  return false;
-			string text = texts[0];
-
-			string face, style;
-			string[] features;
-			this.GetTextFont(true, out face, out style, out features);
-			font = TextContext.GetFont(face, style);
-
-			glyph = font.GetGlyphIndex(text[0]);
-			return true;
 		}
 
 		// Donne la propriété contenant la liste des tabulateurs du paragraphe.

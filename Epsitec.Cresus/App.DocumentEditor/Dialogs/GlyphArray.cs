@@ -83,26 +83,80 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Choix d'une liste de glyphes (caractères alternatifs).
-		public void SetFont(OpenType.Font font, ushort[] alternates)
+		public void SetGlyphAlternates(OpenType.Font font, int code, int glyph, ushort[] alternates)
 		{
+			this.code = code;
+			this.glyphsMode = true;
+
 			if ( font == null || alternates == null || alternates.Length == 0 )
 			{
 				this.fontFace = "";
 				this.fontStyle = "";
-				this.unicodes = new int[0];  // alloue le tableau
+				this.glyphs = new int[0];  // alloue le tableau
 			}
 			else
 			{
 				this.fontFace  = font.FontIdentity.InvariantFaceName;
 				this.fontStyle = font.FontIdentity.InvariantStyleName;
 
-				this.unicodes = new int[alternates.Length];  // alloue le tableau
+				System.Collections.ArrayList list = new System.Collections.ArrayList();
 				for ( int i=0 ; i<alternates.Length ; i++ )
 				{
-					this.unicodes[i] = alternates[i];
+					int a = (int) alternates[i];
+					if ( !list.Contains(a) )
+					{
+						list.Add(a);
+					}
+				}
+				this.glyphs = new int[list.Count];
+				for ( int i=0 ; i<list.Count ; i++ )
+				{
+					this.glyphs[i] = (int) list[i];
 				}
 			}
+
+			this.scroller.Value = 0.0M;
+			this.Invalidate();
 		}
+
+		// Nom de la fonte.
+		public string FontFace
+		{
+			get
+			{
+				return this.fontFace;
+			}
+		}
+
+		// Nom du style de la fonte.
+		public string FontStyle
+		{
+			get
+			{
+				return this.fontStyle;
+			}
+		}
+
+		// Code unicode du glyph.
+		public int Code
+		{
+			get
+			{
+				return this.code;
+			}
+		}
+
+		// Glyph à insérer.
+		public int Glyph
+		{
+			get
+			{
+				System.Diagnostics.Debug.Assert(this.glyphsMode);
+				if ( this.selectedIndex == -1 )  return 0;
+				return this.glyphs[this.selectedIndex];
+			}
+		}
+
 
 		// Choix de l'index du glyphe sélectionné.
 		public int SelectedIndex
@@ -126,6 +180,7 @@ namespace Epsitec.Common.Widgets
 		// Retourne le caractère Unicode correspondant à un index.
 		public int IndexToUnicode(int index)
 		{
+			System.Diagnostics.Debug.Assert(!this.glyphsMode);
 			if ( index < 0 || index >= this.unicodes.Length )  return 0;
 			return this.unicodes[index];
 		}
@@ -133,6 +188,7 @@ namespace Epsitec.Common.Widgets
 		// Retourne l'index correspondant à un caractère Unicode.
 		public int UnicodeToIndex(int code)
 		{
+			System.Diagnostics.Debug.Assert(!this.glyphsMode);
 			for ( int i=0 ; i<this.unicodes.Length ; i++ )
 			{
 				if ( code == this.unicodes[i] )  return i;
@@ -202,6 +258,7 @@ namespace Epsitec.Common.Widgets
 					this.unicodes = new int[total];  // alloue le tableau
 				}
 			}
+			this.glyphsMode = false;
 		}
 
 
@@ -302,7 +359,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			sel = System.Math.Max(sel, 0);
-			sel = System.Math.Min(sel, this.unicodes.Length-1);
+			sel = System.Math.Min(sel, this.TotalCell-1);
 			this.SelectedIndex = sel;
 			this.ShowSelectedCell();
 
@@ -352,7 +409,7 @@ namespace Epsitec.Common.Widgets
 			y = dy-y-1;
 
 			int cell = this.First() + dx*y + x;
-			if ( cell >= this.unicodes.Length )  return -1;
+			if ( cell >= this.TotalCell )  return -1;
 			return cell;
 		}
 
@@ -370,7 +427,7 @@ namespace Epsitec.Common.Widgets
 			double cellHeight = this.CellHeight();
 
 			// Dessine les glyphes.
-			if ( this.unicodes != null )
+			if ( this.unicodes != null || this.glyphs != null )
 			{
 				Drawing.Font font = GlyphArray.GetFont(this.fontFace, this.fontStyle);
 				double fontSize = this.cellSize*0.6;
@@ -389,7 +446,7 @@ namespace Epsitec.Common.Widgets
 						rect.Height = cellHeight;
 
 						WidgetState cellState = WidgetState.Enabled;
-						if ( first == this.selectedIndex && first < this.unicodes.Length )
+						if ( first == this.selectedIndex && first < this.TotalCell )
 						{
 							TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1];
 							areas[0] = new TextLayout.SelectedArea();
@@ -399,15 +456,23 @@ namespace Epsitec.Common.Widgets
 							cellState |= WidgetState.Selected;
 						}
 
-						if ( font != null && first < this.unicodes.Length )
+						if ( font != null && first < this.TotalCell )
 						{
-							char c = (char) this.unicodes[first++];
-							int glyph = font.GetGlyphIndex(c);
-							glyph = c;	////// HACK TEMPORAIRE
-							double width = font.GetGlyphAdvance(glyph)*fontSize;
-							graphics.Rasterizer.AddGlyph(font, glyph, rect.Center.X-width/2.0, rect.Bottom+rect.Height*0.35, fontSize);
-//-							graphics.AddText(rect.Center.X-width/2.0, rect.Bottom+rect.Height*0.35, c.ToString(), font, fontSize);
-							graphics.RenderSolid(adorner.ColorText(cellState));
+							if ( this.glyphsMode )
+							{
+								int glyph = (int) this.glyphs[first++];
+								double width = font.GetGlyphAdvance(glyph)*fontSize;
+								graphics.Rasterizer.AddGlyph(font, glyph, rect.Center.X-width/2.0, rect.Bottom+rect.Height*0.35, fontSize);
+								graphics.RenderSolid(adorner.ColorText(cellState));
+							}
+							else
+							{
+								char c = (char) this.unicodes[first++];
+								int glyph = font.GetGlyphIndex(c);
+								double width = font.GetGlyphAdvance(glyph)*fontSize;
+								graphics.AddText(rect.Center.X-width/2.0, rect.Bottom+rect.Height*0.35, c.ToString(), font, fontSize);
+								graphics.RenderSolid(adorner.ColorText(cellState));
+							}
 						}
 						else
 						{
@@ -445,12 +510,12 @@ namespace Epsitec.Common.Widgets
 		// premier glyphe visible.
 		protected int First()
 		{
-			if ( this.unicodes == null )  return 0;
+			if ( this.unicodes == null && this.glyphs == null )  return 0;
 
 			int dx = this.TotalCellVisibleX();
 			int dy = this.TotalCellVisibleY();
 
-			int total = (this.unicodes.Length+dx-1)/dx*dx;
+			int total = (this.TotalCell+dx-1)/dx*dx;
 			int max = total-dx*dy;
 
 			if ( max <= 0 )
@@ -511,6 +576,17 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		// Retourne le nombre total de cases.
+		protected int TotalCell
+		{
+			get
+			{
+				if ( this.glyphsMode )  return this.glyphs.Length;
+				else                    return this.unicodes.Length;
+			}
+		}
+
+
 		// Donne une fonte d'après son nom.
 		protected static Drawing.Font GetFont(string fontFace, string fontStyle)
 		{
@@ -542,6 +618,9 @@ namespace Epsitec.Common.Widgets
 		protected string						fontStyle;
 		protected int							selectedIndex = -1;
 		protected int[]							unicodes;
+		protected int[]							glyphs;
+		protected bool							glyphsMode = false;
+		protected int							code;
 		protected bool							mouseDown = false;
 	}
 }
