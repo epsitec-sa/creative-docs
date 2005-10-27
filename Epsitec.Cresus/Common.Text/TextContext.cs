@@ -306,28 +306,18 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		public void GetFont(Properties.FontProperty font_property, Properties.FontBoldProperty bold_property, Properties.FontItalicProperty italic_property, out OpenType.Font font)
+		public void GetFont(Properties.FontProperty font_property, out OpenType.Font font)
 		{
 			string font_face  = font_property.FaceName;
 			string font_style = font_property.StyleName;
-			
-			if (bold_property != null)
-			{
-				font_style = Properties.FontProperty.CombineStyles (font_style, "!Bold");
-			}
-			if (italic_property != null)
-			{
-				font_style = Properties.FontProperty.CombineStyles (font_style, "!Italic");
-			}
 			
 			TextContext.CreateOrGetFontFromCache (font_face, font_style, out font);
 		}
 		
 		public void GetFont(Property[] properties, out OpenType.Font font)
 		{
-			Properties.FontProperty       font_property = null;
-			Properties.FontBoldProperty   font_bold_property = null;
-			Properties.FontItalicProperty font_italic_property = null;
+			Properties.FontProperty        font_property = null;
+			Properties.FontXScriptProperty font_xscript_property = null;
 			
 			for (int i = 0; i < properties.Length; i++)
 			{
@@ -339,18 +329,14 @@ namespace Epsitec.Common.Text
 							font_property = properties[i] as Properties.FontProperty;
 							break;
 						
-						case Properties.WellKnownType.FontBold:
-							font_bold_property = properties[i] as Properties.FontBoldProperty;
-							break;
-						
-						case Properties.WellKnownType.FontItalic:
-							font_italic_property = properties[i] as Properties.FontItalicProperty;
+						case Properties.WellKnownType.FontXScript:
+							font_xscript_property = properties[i] as Properties.FontXScriptProperty;
 							break;
 					}
 				}
 			}
 			
-			this.GetFont (font_property, font_bold_property, font_italic_property, out font);
+			this.GetFont (font_property, out font);
 		}
 		
 		
@@ -379,21 +365,11 @@ namespace Epsitec.Common.Text
 			this.GetFontSize (font_size_property, out font_size);
 		}
 		
-		public void GetFontBaselineOffset(double font_pt_size, Properties.FontOffsetProperty font_offset_property, out double offset)
-		{
-			if (font_offset_property == null)
-			{
-				offset = 0;
-			}
-			else
-			{
-				offset = font_offset_property.GetOffsetInPoints (font_pt_size);
-			}
-		}
 		
 		public void GetFontBaselineOffset(double font_pt_size, Property[] properties, out double offset)
 		{
-			Properties.FontOffsetProperty font_offset_property = null;
+			Properties.FontOffsetProperty  font_offset_property  = null;
+			Properties.FontXScriptProperty font_xscript_property = null;
 			
 			for (int i = 0; i < properties.Length; i++)
 			{
@@ -404,11 +380,20 @@ namespace Epsitec.Common.Text
 						case Properties.WellKnownType.FontOffset:
 							font_offset_property = properties[i] as Properties.FontOffsetProperty;
 							break;
+						
+						case Properties.WellKnownType.FontXScript:
+							font_xscript_property = properties[i] as Properties.FontXScriptProperty;
+							break;
 					}
 				}
 			}
 			
-			this.GetFontBaselineOffset (font_pt_size, font_offset_property, out offset);
+			offset = (font_offset_property == null) ? 0 : font_offset_property.GetOffsetInPoints (font_pt_size);
+			
+			if (font_xscript_property != null)
+			{
+				offset += font_xscript_property.Offset * font_pt_size;
+			}
 		}
 		
 		
@@ -427,13 +412,12 @@ namespace Epsitec.Common.Text
 			}
 			
 			Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
+
+			Properties.FontProperty        font_p         = style[Properties.WellKnownType.Font] as Properties.FontProperty;
+			Properties.FontSizeProperty    font_size_p    = style[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
+			Properties.FontXScriptProperty font_xscript_p = style[Properties.WellKnownType.FontXScript] as Properties.FontXScriptProperty;
 			
-			Properties.FontProperty       font_p      = style[Properties.WellKnownType.Font] as Properties.FontProperty;
-			Properties.FontBoldProperty   font_b_p    = style[Properties.WellKnownType.FontBold] as Properties.FontBoldProperty;
-			Properties.FontItalicProperty font_i_p    = style[Properties.WellKnownType.FontItalic] as Properties.FontItalicProperty;
-			Properties.FontSizeProperty   font_size_p = style[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
-			
-			this.GetFont (font_p, font_b_p, font_i_p, out font);
+			this.GetFont (font_p, out font);
 			this.GetFontSize (font_size_p, out font_size);
 			
 			if (font_p.Features == null)
@@ -443,6 +427,11 @@ namespace Epsitec.Common.Text
 			else
 			{
 				font.SelectFeatures (font_p.Features);
+			}
+			
+			if (font_xscript_p != null)
+			{
+				font_size *= font_xscript_p.Scale;
 			}
 			
 			this.get_font_last_style_version = current_style_version;
@@ -486,6 +475,8 @@ namespace Epsitec.Common.Text
 			advance_offset  = 0;
 			baseline_offset = 0;
 			
+			Properties.FontXScriptProperty font_xscript_p = style[Properties.WellKnownType.FontXScript] as Properties.FontXScriptProperty;
+			
 			if (local_settings != null)
 			{
 				Properties.FontOffsetProperty font_offset_p = local_settings[Properties.WellKnownType.FontOffset] as Properties.FontOffsetProperty;
@@ -502,6 +493,11 @@ namespace Epsitec.Common.Text
 					double em_size = this.get_font_last_font_size;
 					advance_offset = font_kern_p.GetOffsetInPoints (em_size);
 				}
+			}
+			
+			if (font_xscript_p != null)
+			{
+				baseline_offset += font_xscript_p.Offset;
 			}
 			
 			this.get_font_offset_last_style_version   = current_style_version;

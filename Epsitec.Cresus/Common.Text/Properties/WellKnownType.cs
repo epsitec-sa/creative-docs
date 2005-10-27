@@ -14,8 +14,7 @@ namespace Epsitec.Common.Text.Properties
 		FontSize			= 2,		//	style
 		FontKern			= 3,		//	local
 		FontOffset			= 4,		//	local
-		FontBold			= 5,		//	style
-		FontItalic			= 6,		//	style
+		FontXScript			= 5,		//	style
 		
 		Conditional			= 10,		//	style
 		Keep				= 11,		//	style
