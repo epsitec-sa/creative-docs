@@ -1049,18 +1049,21 @@ namespace Epsitec.Common.Text
 				}
 				
 				OpenType.Font ot_font;
-				double        pt_size = font_size.SizeInPoints;
+				double        pt_size;
+				double        pt_offset;
 				
-				this.story.TextContext.GetFont (font, font_bold, font_italic, out ot_font);
+				this.story.TextContext.GetFont (properties, out ot_font);
+				this.story.TextContext.GetFontSize (properties, out pt_size);
+				this.story.TextContext.GetFontBaselineOffset (pt_size, properties, out pt_offset);
 				
 				ascender  = ot_font.GetAscender (pt_size);
 				descender = ot_font.GetDescender (pt_size);
 				angle     = ot_font.GetCaretAngle ();
 				
-				if (font_offset != null)
+				if (pt_offset != 0)
 				{
 					frame.MapFromView (ref cx, ref cy);
-					cy += font_offset.GetOffsetInPoints (pt_size);
+					cy += pt_offset;
 					frame.MapToView (ref cx, ref cy);
 				}
 				

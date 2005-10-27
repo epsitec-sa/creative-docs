@@ -2916,13 +2916,20 @@ namespace Epsitec.Common.OpenType
 		
 		private ushort FindSubstitutionFmt1(int glyph)
 		{
-			return (ushort) (this.ReadInt16 (4) + glyph);
+			int cov = this.Coverage.FindIndex (glyph);
+			
+			if (cov >= 0)
+			{
+				return (ushort) (this.ReadInt16 (4) + glyph);
+			}
+			
+			return (ushort) (0xffff);
 		}
 		
 		private ushort FindSubstitutionFmt2(int glyph)
 		{
 			int max = this.ReadInt16 (4);
-			int  cov = this.Coverage.FindIndex (glyph);
+			int cov = this.Coverage.FindIndex (glyph);
 			
 			if ((cov >= 0) &&
 				(cov < max))

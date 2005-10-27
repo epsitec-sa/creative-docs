@@ -284,49 +284,9 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void GetFont(string name, out OpenType.Font font)
+		public void GetFontAndSize(ulong code, out OpenType.Font font, out double font_size)
 		{
-			if (this.get_font_cache_name == name)
-			{
-				font = this.get_font_cache_font;
-				return;
-			}
-			
-			OpenType.FontIdentity id = TextContext.font_collection[name];
-			
-			if (id == null)
-			{
-				font = null;
-			}
-			else
-			{
-				TextContext.CreateOrGetFontFromCache (id.InvariantFaceName, id.InvariantStyleName, out font);
-			}
-			
-			this.get_font_cache_name = name;
-			this.get_font_cache_font = font;
-		}
-		
-		public void GetFont(Properties.FontProperty property, Properties.FontBoldProperty bold_property, Properties.FontItalicProperty italic_property, out OpenType.Font font)
-		{
-			string font_face  = property.FaceName;
-			string font_style = property.StyleName;
-			
-			if (bold_property != null)
-			{
-				font_style = Properties.FontProperty.CombineStyles (font_style, "!Bold");
-			}
-			if (italic_property != null)
-			{
-				font_style = Properties.FontProperty.CombineStyles (font_style, "!Italic");
-			}
-			
-			TextContext.CreateOrGetFontFromCache (font_face, font_style, out font);
-		}
-		
-		public void GetFont(ulong code, out OpenType.Font font, out double font_size)
-		{
-			this.GetFontSimple (code, out font, out font_size);
+			this.InternalGetFontAndSize (code, out font, out font_size);
 			
 			if (Unicode.Bits.GetSpecialCodeFlag (code))
 			{
@@ -346,7 +306,113 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		private void GetFontSimple(ulong code, out OpenType.Font font, out double font_size)
+		public void GetFont(Properties.FontProperty font_property, Properties.FontBoldProperty bold_property, Properties.FontItalicProperty italic_property, out OpenType.Font font)
+		{
+			string font_face  = font_property.FaceName;
+			string font_style = font_property.StyleName;
+			
+			if (bold_property != null)
+			{
+				font_style = Properties.FontProperty.CombineStyles (font_style, "!Bold");
+			}
+			if (italic_property != null)
+			{
+				font_style = Properties.FontProperty.CombineStyles (font_style, "!Italic");
+			}
+			
+			TextContext.CreateOrGetFontFromCache (font_face, font_style, out font);
+		}
+		
+		public void GetFont(Property[] properties, out OpenType.Font font)
+		{
+			Properties.FontProperty       font_property = null;
+			Properties.FontBoldProperty   font_bold_property = null;
+			Properties.FontItalicProperty font_italic_property = null;
+			
+			for (int i = 0; i < properties.Length; i++)
+			{
+				if (properties[i] != null)
+				{
+					switch (properties[i].WellKnownType)
+					{
+						case Properties.WellKnownType.Font:
+							font_property = properties[i] as Properties.FontProperty;
+							break;
+						
+						case Properties.WellKnownType.FontBold:
+							font_bold_property = properties[i] as Properties.FontBoldProperty;
+							break;
+						
+						case Properties.WellKnownType.FontItalic:
+							font_italic_property = properties[i] as Properties.FontItalicProperty;
+							break;
+					}
+				}
+			}
+			
+			this.GetFont (font_property, font_bold_property, font_italic_property, out font);
+		}
+		
+		
+		public void GetFontSize(Properties.FontSizeProperty font_size_property, out double font_size)
+		{
+			font_size = font_size_property.SizeInPoints;
+		}
+		
+		public void GetFontSize(Property[] properties, out double font_size)
+		{
+			Properties.FontSizeProperty font_size_property = null;
+			
+			for (int i = 0; i < properties.Length; i++)
+			{
+				if (properties[i] != null)
+				{
+					switch (properties[i].WellKnownType)
+					{
+						case Properties.WellKnownType.FontSize:
+							font_size_property = properties[i] as Properties.FontSizeProperty;
+							break;
+					}
+				}
+			}
+			
+			this.GetFontSize (font_size_property, out font_size);
+		}
+		
+		public void GetFontBaselineOffset(double font_pt_size, Properties.FontOffsetProperty font_offset_property, out double offset)
+		{
+			if (font_offset_property == null)
+			{
+				offset = 0;
+			}
+			else
+			{
+				offset = font_offset_property.GetOffsetInPoints (font_pt_size);
+			}
+		}
+		
+		public void GetFontBaselineOffset(double font_pt_size, Property[] properties, out double offset)
+		{
+			Properties.FontOffsetProperty font_offset_property = null;
+			
+			for (int i = 0; i < properties.Length; i++)
+			{
+				if (properties[i] != null)
+				{
+					switch (properties[i].WellKnownType)
+					{
+						case Properties.WellKnownType.FontOffset:
+							font_offset_property = properties[i] as Properties.FontOffsetProperty;
+							break;
+					}
+				}
+			}
+			
+			this.GetFontBaselineOffset (font_pt_size, font_offset_property, out offset);
+		}
+		
+		
+		private void InternalGetFontAndSize(ulong code, out OpenType.Font font, out double font_size)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
 			long current_style_version = this.style_list.Version;
@@ -367,9 +433,8 @@ namespace Epsitec.Common.Text
 			Properties.FontItalicProperty font_i_p    = style[Properties.WellKnownType.FontItalic] as Properties.FontItalicProperty;
 			Properties.FontSizeProperty   font_size_p = style[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
 			
-			font_size = font_size_p.SizeInPoints;
-			
 			this.GetFont (font_p, font_b_p, font_i_p, out font);
+			this.GetFontSize (font_size_p, out font_size);
 			
 			if (font_p.Features == null)
 			{
@@ -385,6 +450,7 @@ namespace Epsitec.Common.Text
 			this.get_font_last_font          = font;
 			this.get_font_last_font_size     = font_size;
 		}
+		
 		
 		public void GetFontOffsets(ulong code, out double baseline_offset, out double advance_offset)
 		{
@@ -411,7 +477,7 @@ namespace Epsitec.Common.Text
 				OpenType.Font font;
 				double        font_size;
 				
-				this.GetFont (code, out font, out font_size);
+				this.GetFontAndSize (code, out font, out font_size);
 			}
 			
 			Styles.SimpleStyle   style          = this.style_list.GetStyleFromIndex (current_style_index);
@@ -443,6 +509,7 @@ namespace Epsitec.Common.Text
 			this.get_font_offset_last_baseline_offset = baseline_offset;
 			this.get_font_offset_last_advance_offset  = advance_offset;
 		}
+		
 		
 		public void GetColor(ulong code, out string color)
 		{
@@ -1168,9 +1235,6 @@ namespace Epsitec.Common.Text
 		private int								get_font_last_style_index;
 		private OpenType.Font					get_font_last_font;
 		private double							get_font_last_font_size;
-		
-		private string							get_font_cache_name;
-		private OpenType.Font					get_font_cache_font;
 		
 		private long							get_font_offset_last_style_version;
 		private ulong							get_font_offset_last_code;

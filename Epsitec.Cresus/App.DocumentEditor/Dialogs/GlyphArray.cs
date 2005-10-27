@@ -192,7 +192,7 @@ namespace Epsitec.Common.Widgets
 						}
 						if ( pass == 1 )  // 2ème passe ?
 						{
-							this.unicodes[ii++] = i;  // rempli le tableau
+							this.unicodes[ii++] = i;  // remplit le tableau
 						}
 					}
 				}
@@ -403,8 +403,10 @@ namespace Epsitec.Common.Widgets
 						{
 							char c = (char) this.unicodes[first++];
 							int glyph = font.GetGlyphIndex(c);
+							glyph = c;	////// HACK TEMPORAIRE
 							double width = font.GetGlyphAdvance(glyph)*fontSize;
-							graphics.AddText(rect.Center.X-width/2.0, rect.Bottom+rect.Height*0.35, c.ToString(), font, fontSize);
+							graphics.Rasterizer.AddGlyph(font, glyph, rect.Center.X-width/2.0, rect.Bottom+rect.Height*0.35, fontSize);
+//-							graphics.AddText(rect.Center.X-width/2.0, rect.Bottom+rect.Height*0.35, c.ToString(), font, fontSize);
 							graphics.RenderSolid(adorner.ColorText(cellState));
 						}
 						else

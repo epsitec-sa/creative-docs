@@ -312,7 +312,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 							Common.OpenType.LookupTable[] tables = font.GetLookupTables(feature);
 							foreach ( Common.OpenType.LookupTable table in tables )
 							{
-								if ( table.LookupType == Common.OpenType.LookupType.Alternate )
+								if ( table.LookupType == Common.OpenType.LookupType.Alternate || table.LookupType == Common.OpenType.LookupType.Single )
 								{
 									list.Add(feature);
 									break;

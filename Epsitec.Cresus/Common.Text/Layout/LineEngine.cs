@@ -95,7 +95,7 @@ namespace Epsitec.Common.Text.Layout
 						Layout.BaseEngine         engine;
 						Properties.LayoutProperty layout;
 						
-						context.TextContext.GetFont (code, out scratch.Font, out scratch.FontSize);
+						context.TextContext.GetFontAndSize (code, out scratch.Font, out scratch.FontSize);
 						context.TextContext.GetFontOffsets (code, out scratch.FontBaseline, out scratch.FontAdvance);
 						context.TextContext.GetLayoutEngine (code, out engine, out layout);
 						
@@ -534,7 +534,7 @@ advance_next:
 			double        font_baseline;
 			double        font_advance;
 			
-			context.TextContext.GetFont (text[offset], out font, out font_size);
+			context.TextContext.GetFontAndSize (text[offset], out font, out font_size);
 			context.TextContext.GetFontOffsets (text[offset], out font_baseline, out font_advance);
 			
 			//	Si l'appelant a désactivé le décalage vertical de la ligne de base
@@ -704,7 +704,7 @@ advance_next:
 			OpenType.Font font;
 			double        font_size;
 			
-			context.TextContext.GetFont (text[offset], out font, out font_size);
+			context.TextContext.GetFontAndSize (text[offset], out font, out font_size);
 			
 			double glue = context.TextStretchGlue;
 			

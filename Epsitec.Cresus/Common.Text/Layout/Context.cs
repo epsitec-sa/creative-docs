@@ -1371,7 +1371,7 @@ restart:
 			
 			Properties.LeadingProperty leading_property;
 			
-			this.text_context.GetFont (code, out font, out font_size);
+			this.text_context.GetFontAndSize (code, out font, out font_size);
 			this.text_context.GetLeading (code, out leading_property);
 			
 			if (font != null)

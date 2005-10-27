@@ -35,16 +35,16 @@ namespace Epsitec.Common.Text.Tests
 			OpenType.Font font;
 			double font_size;
 			
-			story.TextContext.GetFont (text[0], out font, out font_size);
+			story.TextContext.GetFontAndSize (text[0], out font, out font_size);
 			
 			Debug.Assert.IsTrue (font.FontIdentity.InvariantFaceName == "Arial");
 			Debug.Assert.IsTrue (font.FontIdentity.InvariantStyleName == "Regular");
 			Debug.Assert.IsTrue (font_size == 12.0);
 			
-			System.Diagnostics.Trace.WriteLine ("Timing TextContext.GetFont :");
+			System.Diagnostics.Trace.WriteLine ("Timing TextContext.GetFontAndSize :");
 			for (int i = 0; i < 1000000; i++)
 			{
-				story.TextContext.GetFont (text[1], out font, out font_size);
+				story.TextContext.GetFontAndSize (text[1], out font, out font_size);
 			}
 			System.Diagnostics.Trace.WriteLine ("Done");
 			

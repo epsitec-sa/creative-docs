@@ -998,26 +998,66 @@ namespace Epsitec.Common.OpenType
 			
 			System.Diagnostics.Debug.Assert (this.ot_GSUB != null);
 			
+			System.Collections.ArrayList list;
+			
 			if (this.alternate_lookups == null)
 			{
-				alternates = null;
-				return false;
+				list = new System.Collections.ArrayList ();
+				
+				foreach (string feature in this.active_features.Split ('/'))
+				{
+					LookupTable[] tables = this.GetLookupTables (feature);
+					
+					foreach (LookupTable table in tables)
+					{
+						if (table.LookupType == Common.OpenType.LookupType.Alternate)
+						{
+							for (int i = 0; i < table.SubTableCount; i++)
+							{
+								list.Add (new AlternateSubstitution (table.GetSubTable (i)));
+							}
+						}
+						
+						if (table.LookupType == Common.OpenType.LookupType.Single)
+						{
+							for (int i = 0; i < table.SubTableCount; i++)
+							{
+								list.Add (new SingleSubstitution (table.GetSubTable (i)));
+							}
+						}
+					}
+				}
+				
+				this.alternate_lookups = (BaseSubstitution[]) list.ToArray (typeof (BaseSubstitution));
 			}
 			
-			System.Collections.ArrayList list = null;
+			list = null;
 			
-			foreach (AlternateSubstitution alt in this.alternate_lookups)
+			foreach (BaseSubstitution subst in this.alternate_lookups)
 			{
-				ushort[] subset = alt.GetAlternates (glyph);
-				
-				if (subset != null)
+				if (subst.Coverage.FindIndex (glyph) >= 0)
 				{
-					if (list != null)
+					if (list == null)
 					{
 						list = new System.Collections.ArrayList ();
 					}
 					
-					list.AddRange (subset);
+					AlternateSubstitution alternate = subst as AlternateSubstitution;
+					SingleSubstitution    single    = subst as SingleSubstitution;
+					
+					if (alternate != null)
+					{
+						ushort[] subset = alternate.GetAlternates (glyph);
+						
+						System.Diagnostics.Debug.Assert (subset != null);
+						System.Diagnostics.Debug.Assert (subset.Length > 0);
+						
+						list.AddRange (subset);
+					}
+					if (single != null)
+					{
+						list.Add (single.FindSubstitution (glyph));
+					}
 				}
 			}
 			
