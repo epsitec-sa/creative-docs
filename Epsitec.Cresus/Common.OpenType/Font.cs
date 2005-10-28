@@ -1068,11 +1068,24 @@ namespace Epsitec.Common.OpenType
 						System.Diagnostics.Debug.Assert (subset != null);
 						System.Diagnostics.Debug.Assert (subset.Length > 0);
 						
-						list.AddRange (subset);
+						for (int i = 0; i < subset.Length; i++)
+						{
+							ushort replace = subset[i];
+							
+							if (list.Contains (replace) == false)
+							{
+								list.Add (replace);
+							}
+						}
 					}
 					if (single != null)
 					{
-						list.Add (single.FindSubstitution (glyph));
+						ushort replace = single.FindSubstitution (glyph);
+						
+						if (list.Contains (replace) == false)
+						{
+							list.Add (replace);
+						}
 					}
 				}
 			}

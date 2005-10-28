@@ -547,7 +547,16 @@ namespace Epsitec.Common.Text
 			
 			if (font_xscript_p != null)
 			{
-				baseline_offset += font_xscript_p.Offset * this.get_font_last_font_size;
+				if ((font_xscript_p.Feature != null) &&
+					(this.get_font_last_font.SupportsFeature (font_xscript_p.Feature)))
+				{
+					//	Ne modifie pas l'offset, puisque la fonte supporte le "feature"
+					//	superscript/subscript.
+				}
+				else
+				{
+					baseline_offset += font_xscript_p.Offset * this.get_font_last_font_size;
+				}
 			}
 			
 			this.get_font_offset_last_style_version   = current_style_version;
