@@ -34,8 +34,9 @@ namespace Epsitec.Common.Text.Tests
 			
 			OpenType.Font font;
 			double font_size;
+			double font_scale;
 			
-			story.TextContext.GetFontAndSize (text[0], out font, out font_size);
+			story.TextContext.GetFontAndSize (text[0], out font, out font_size, out font_scale);
 			
 			Debug.Assert.IsTrue (font.FontIdentity.InvariantFaceName == "Arial");
 			Debug.Assert.IsTrue (font.FontIdentity.InvariantStyleName == "Regular");
@@ -44,7 +45,7 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Trace.WriteLine ("Timing TextContext.GetFontAndSize :");
 			for (int i = 0; i < 1000000; i++)
 			{
-				story.TextContext.GetFontAndSize (text[1], out font, out font_size);
+				story.TextContext.GetFontAndSize (text[1], out font, out font_size, out font_scale);
 			}
 			System.Diagnostics.Trace.WriteLine ("Done");
 			

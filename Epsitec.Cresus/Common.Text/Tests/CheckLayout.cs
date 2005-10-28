@@ -376,8 +376,9 @@ namespace Epsitec.Common.Text.Tests
 			
 			OpenType.Font font;
 			double        font_size;
+			double        font_scale;
 			
-			story.TextContext.GetFontAndSize (story_text[0], out font, out font_size);
+			story.TextContext.GetFontAndSize (story_text[0], out font, out font_size, out font_scale);
 			
 			Layout.StretchProfile profile = new Layout.StretchProfile ();
 			profile.Add (null, font, font_size, story_text, 0, 26);

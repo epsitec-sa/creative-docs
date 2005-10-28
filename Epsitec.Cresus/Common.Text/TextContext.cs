@@ -284,9 +284,9 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void GetFontAndSize(ulong code, out OpenType.Font font, out double font_size)
+		public void GetFontAndSize(ulong code, out OpenType.Font font, out double font_size, out double scale)
 		{
-			this.InternalGetFontAndSize (code, out font, out font_size);
+			this.InternalGetFontAndSize (code, out font, out font_size, out scale);
 			
 			if (Unicode.Bits.GetSpecialCodeFlag (code))
 			{
@@ -397,7 +397,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		private void InternalGetFontAndSize(ulong code, out OpenType.Font font, out double font_size)
+		private void InternalGetFontAndSize(ulong code, out OpenType.Font font, out double font_size, out double scale)
 		{
 			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
 			long current_style_version = this.style_list.Version;
@@ -407,6 +407,7 @@ namespace Epsitec.Common.Text
 			{
 				font      = this.get_font_last_font;
 				font_size = this.get_font_last_font_size;
+				scale     = this.get_font_last_scale;
 				
 				return;
 			}
@@ -429,14 +430,19 @@ namespace Epsitec.Common.Text
 				font.SelectFeatures (font_p.Features);
 			}
 			
-			if (font_xscript_p != null)
+			if (font_xscript_p == null)
 			{
-				font_size *= font_xscript_p.Scale;
+				scale = 1.0;
+			}
+			else
+			{
+				scale = font_xscript_p.Scale;
 			}
 			
 			this.get_font_last_style_version = current_style_version;
 			this.get_font_last_style_index   = current_style_index;
 			this.get_font_last_font          = font;
+			this.get_font_last_scale         = scale;
 			this.get_font_last_font_size     = font_size;
 		}
 		
@@ -465,8 +471,9 @@ namespace Epsitec.Common.Text
 				
 				OpenType.Font font;
 				double        font_size;
+				double        font_scale;
 				
-				this.GetFontAndSize (code, out font, out font_size);
+				this.GetFontAndSize (code, out font, out font_size, out font_scale);
 			}
 			
 			Styles.SimpleStyle   style          = this.style_list.GetStyleFromIndex (current_style_index);
@@ -497,7 +504,7 @@ namespace Epsitec.Common.Text
 			
 			if (font_xscript_p != null)
 			{
-				baseline_offset += font_xscript_p.Offset;
+				baseline_offset += font_xscript_p.Offset * this.get_font_last_font_size;
 			}
 			
 			this.get_font_offset_last_style_version   = current_style_version;
@@ -539,6 +546,16 @@ namespace Epsitec.Common.Text
 			this.get_color_last_style_version = current_style_version;
 			this.get_color_last_code          = code;
 			this.get_color_last_color         = color;
+		}
+		
+		public void GetOpenType(ulong code, out Properties.OpenTypeProperty property)
+		{
+			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			Styles.SimpleStyle   style          = this.style_list[code];
+			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
+			
+			property = local_settings[Properties.WellKnownType.OpenType] as Properties.OpenTypeProperty;
 		}
 		
 		public void GetLanguage(ulong code, out Properties.LanguageProperty property)
@@ -1231,6 +1248,7 @@ namespace Epsitec.Common.Text
 		private int								get_font_last_style_index;
 		private OpenType.Font					get_font_last_font;
 		private double							get_font_last_font_size;
+		private double							get_font_last_scale;
 		
 		private long							get_font_offset_last_style_version;
 		private ulong							get_font_offset_last_code;

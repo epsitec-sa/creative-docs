@@ -1368,11 +1368,14 @@ restart:
 			
 			OpenType.Font font;
 			double        font_size;
+			double        font_scale;
 			
 			Properties.LeadingProperty leading_property;
 			
-			this.text_context.GetFontAndSize (code, out font, out font_size);
+			this.text_context.GetFontAndSize (code, out font, out font_size, out font_scale);
 			this.text_context.GetLeading (code, out leading_property);
+			
+			font_size *= font_scale;
 			
 			if (font != null)
 			{

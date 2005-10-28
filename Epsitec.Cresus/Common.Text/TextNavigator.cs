@@ -109,6 +109,21 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public int								SelectionCount
+		{
+			get
+			{
+				if (this.selection_cursors == null)
+				{
+					return 0;
+				}
+				else
+				{
+					return this.selection_cursors.Count / 2;
+				}
+			}
+		}
+		
 		
 		public Common.Support.OpletQueue		OpletQueue
 		{
@@ -515,6 +530,35 @@ namespace Epsitec.Common.Text
 			this.NotifyCursorMoved ();
 		}
 		
+		
+		public ulong[] GetRawSelection(int index)
+		{
+			if ((index >= this.SelectionCount) ||
+				(index < 0))
+			{
+				throw new System.ArgumentOutOfRangeException ("index", index, "Index out of range");
+			}
+			
+			int[] positions = this.GetSelectionCursorPositions ();
+			
+			int p1 = positions[index*2+0];
+			int p2 = positions[index*2+1];
+			
+			ICursor c1 = this.selection_cursors[index*2+0] as ICursor;
+			ICursor c2 = this.selection_cursors[index*2+1] as ICursor;
+			
+			if (p1 > p2)
+			{
+				int     pp = p1; p1 = p2; p2 = pp;
+				ICursor cc = c1; c1 = c2; c2 = cc;
+			}
+			
+			ulong[] buffer = new ulong[p2-p1];
+			
+			this.story.ReadText (c1, p2-p1, buffer);
+			
+			return buffer;
+		}
 		
 		public string[] GetSelectedTexts()
 		{

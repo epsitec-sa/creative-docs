@@ -94,10 +94,13 @@ namespace Epsitec.Common.Text.Layout
 						
 						Layout.BaseEngine         engine;
 						Properties.LayoutProperty layout;
+						double font_scale;
 						
-						context.TextContext.GetFontAndSize (code, out scratch.Font, out scratch.FontSize);
+						context.TextContext.GetFontAndSize (code, out scratch.Font, out scratch.FontSize, out font_scale);
 						context.TextContext.GetFontOffsets (code, out scratch.FontBaseline, out scratch.FontAdvance);
 						context.TextContext.GetLayoutEngine (code, out engine, out layout);
+						
+						scratch.FontSize *= font_scale;
 						
 						if ((engine != this) ||
 							(layout != context.LayoutProperty))
@@ -533,9 +536,12 @@ advance_next:
 			double        font_size;
 			double        font_baseline;
 			double        font_advance;
+			double        font_scale;
 			
-			context.TextContext.GetFontAndSize (text[offset], out font, out font_size);
+			context.TextContext.GetFontAndSize (text[offset], out font, out font_size, out font_scale);
 			context.TextContext.GetFontOffsets (text[offset], out font_baseline, out font_advance);
+			
+			font_size *= font_scale;
 			
 			//	Si l'appelant a désactivé le décalage vertical de la ligne de base
 			//	(par ex. pour déterminer la position du curseur), on en tient compte
@@ -703,8 +709,11 @@ advance_next:
 		{
 			OpenType.Font font;
 			double        font_size;
+			double        font_scale;
 			
-			context.TextContext.GetFontAndSize (text[offset], out font, out font_size);
+			context.TextContext.GetFontAndSize (text[offset], out font, out font_size, out font_scale);
+			
+			font_size *= font_scale;
 			
 			double glue = context.TextStretchGlue;
 			
