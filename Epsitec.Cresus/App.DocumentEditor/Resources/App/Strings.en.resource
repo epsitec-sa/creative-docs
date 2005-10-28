@@ -109,7 +109,7 @@
 	<data name="Dialog.Glyphs.Title">Symbols</data>
 	<data name="Dialog.Glyphs.TabPage.List">Quick lists</data>
 	<data name="Dialog.Glyphs.TabPage.Array">All available characters</data>
-	<data name="Dialog.Glyphs.TabPage.Alternates">Alternatess</data>
+	<data name="Dialog.Glyphs.TabPage.Alternates">Alternates</data>
 	<data name="Dialog.Glyphs.Button.Insert">Insert</data>
 	<data name="Dialog.Glyphs.Tooltip.Insert">Insert symbol/character in text</data>
 	<data name="Dialog.Glyphs.Tooltip.ArrayMinus">Smaller preview</data>
@@ -125,7 +125,7 @@
 	<data name="Dialog.Glyphs.Family.GreekLower">Greek Small Letters</data>
 	<data name="Dialog.Glyphs.Family.GreekUpper">Greek Capital Letters</data>
 	<data name="Dialog.Glyphs.Family.Symbol">Symbols</data>
-	<data name="Dialog.Glyphs.Alternates.Help">@@Alternatives au caractère sélectionné dans le texte:</data>
+	<data name="Dialog.Glyphs.Alternates.Help">Alternate glyph versions for the selected character:</data>
 	
 	<data name="Dialog.Infos.Title">Informations</data>
 
