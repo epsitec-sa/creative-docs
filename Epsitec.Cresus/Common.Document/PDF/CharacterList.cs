@@ -14,6 +14,7 @@ namespace Epsitec.Common.Document.PDF
 			this.font    = oneChar.Font;
 			this.bold    = oneChar.Bold;
 			this.italic  = oneChar.Italic;
+			this.isGlyph = false;
 		}
 
 		public CharacterList(ushort glyph, Drawing.Font font)
@@ -22,6 +23,7 @@ namespace Epsitec.Common.Document.PDF
 			this.font    = font;
 			this.bold    = false;
 			this.italic  = false;
+			this.isGlyph = true;
 		}
 
 		public void Dispose()
@@ -49,6 +51,11 @@ namespace Epsitec.Common.Document.PDF
 			get { return this.italic; }
 		}
 
+		public bool IsGlyph
+		{
+			get { return this.isGlyph; }
+		}
+
 
 		public override bool Equals(object obj)
 		{
@@ -70,5 +77,6 @@ namespace Epsitec.Common.Document.PDF
 		protected Drawing.Font				font;
 		protected bool						bold;
 		protected bool						italic;
+		protected bool						isGlyph;
 	}
 }

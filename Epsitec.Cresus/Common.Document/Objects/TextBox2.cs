@@ -568,17 +568,32 @@ namespace Epsitec.Common.Document.Objects
 			code = 0;
 			glyph = 0;
 			font = null;
-			string[] texts = this.textFlow.TextNavigator.GetSelectedTexts();
-			if ( texts == null || texts.Length != 1 || texts[0].Length != 1 )  return false;
-			string text = texts[0];
+
+			int n = this.textFlow.TextNavigator.SelectionCount;
+			if ( n != 1 )  return false;
+
+			ulong[] sel = this.textFlow.TextNavigator.GetRawSelection(0);
+			if ( sel.Length != 1 )  return false;
+
+			code = Unicode.Bits.GetCode(sel[0]);
+
+			Text.Properties.OpenTypeProperty otp;
+			this.document.TextContext.GetOpenType(sel[0], out otp);
 
 			string face, style;
 			string[] features;
 			this.GetTextFont(true, out face, out style, out features);
 			font = TextContext.GetFont(face, style);
 
-			code = (int) text[0];
-			glyph = font.GetGlyphIndex(code);
+			if ( otp == null )
+			{
+				glyph = font.GetGlyphIndex(code);
+			}
+			else
+			{
+				glyph = otp.GlyphIndex;
+			}
+
 			return true;
 		}
 

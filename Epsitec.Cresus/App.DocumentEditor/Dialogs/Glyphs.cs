@@ -201,9 +201,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				// Onglet Alternates.
 				tabIndex = 0;
 
+				label = new StaticText(bookAlternates);
+				label.Text = Res.Strings.Dialog.Glyphs.Alternates.Help;
+				label.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
+				label.AnchorMargins = new Margins(6, 6, 6, 0);
+
 				this.alternatesArray = new GlyphArray(bookAlternates);
 				this.alternatesArray.Dock = DockStyle.Fill;
-				this.alternatesArray.DockMargins = new Margins(6, 6, 6, 6+20+4);
+				this.alternatesArray.DockMargins = new Margins(6, 6, 6+20, 6+20+4);
 				this.alternatesArray.TabIndex = tabIndex++;
 				this.alternatesArray.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.alternatesArray.SelectedIndex = -1;
@@ -324,7 +329,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 						string[] fix = (string[]) list.ToArray(typeof(string));
 						font.SelectFeatures(fix);
 
-						if ( !font.GetAlternates((ushort)glyph, out alternates) )
+						ushort normalGlyph = font.GetGlyphIndex(code);
+						if ( !font.GetAlternates(normalGlyph, out alternates) )
 						{
 							alternates = null;
 						}
@@ -555,7 +561,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				if ( this.alternatesArray.SelectedIndex == -1 )  return;
 
 				int code         = this.alternatesArray.Code;
-				int glyph        = this.alternatesArray.Glyph;
+				int glyph        = this.alternatesArray.SelectedGlyph;
 				string fontFace  = this.alternatesArray.FontFace;
 				string fontStyle = this.alternatesArray.FontStyle;
 
@@ -683,10 +689,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				if ( this.book.ActivePage.Name == "Alternates" )
 				{
 					int code         = this.alternatesArray.Code;
-					int glyph        = this.alternatesArray.Glyph;
+					int glyph        = this.alternatesArray.SelectedGlyph;
 					string fontFace  = this.alternatesArray.FontFace;
 					string fontStyle = this.alternatesArray.FontStyle;
-					text = string.Format("{0}: {1}", code.ToString("X4"), Misc.GetGlyphName(glyph, fontFace, fontStyle));
+					text = string.Format("{0} [{1}]: {2}", code.ToString("X4"), glyph.ToString("X4"), Misc.GetUnicodeName(code, fontFace, fontStyle));
 				}
 			}
 			this.Status.Text = text;

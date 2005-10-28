@@ -88,7 +88,7 @@ namespace Epsitec.Common.Widgets
 			this.code = code;
 			this.glyphsMode = true;
 
-			if ( font == null || alternates == null || alternates.Length == 0 )
+			if ( font == null )
 			{
 				this.fontFace = "";
 				this.fontStyle = "";
@@ -100,19 +100,30 @@ namespace Epsitec.Common.Widgets
 				this.fontStyle = font.FontIdentity.InvariantStyleName;
 
 				System.Collections.ArrayList list = new System.Collections.ArrayList();
-				for ( int i=0 ; i<alternates.Length ; i++ )
+
+				int normal = font.GetGlyphIndex(code);
+				list.Add(normal);
+				int sel = 0;
+
+				if ( alternates != null )
 				{
-					int a = (int) alternates[i];
-					if ( !list.Contains(a) )
+					for ( int i=0 ; i<alternates.Length ; i++ )
 					{
-						list.Add(a);
+						int a = (int) alternates[i];
+						if ( !list.Contains(a) )
+						{
+							list.Add(a);
+							if ( a == glyph )
+							{
+								sel = list.Count-1;
+							}
+						}
 					}
 				}
-				this.glyphs = new int[list.Count];
-				for ( int i=0 ; i<list.Count ; i++ )
-				{
-					this.glyphs[i] = (int) list[i];
-				}
+
+				this.glyphs = (int[]) list.ToArray(typeof(int));
+
+				this.SelectedIndex = sel;
 			}
 
 			this.scroller.Value = 0.0M;
@@ -146,8 +157,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Glyph à insérer.
-		public int Glyph
+		// Glyph sélectionné à insérer.
+		public int SelectedGlyph
 		{
 			get
 			{

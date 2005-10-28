@@ -125,6 +125,7 @@
 	<data name="Dialog.Glyphs.Family.GreekLower">Greek Small Letters</data>
 	<data name="Dialog.Glyphs.Family.GreekUpper">Greek Capital Letters</data>
 	<data name="Dialog.Glyphs.Family.Symbol">Symbols</data>
+	<data name="Dialog.Glyphs.Alternates.Help">@@Alternatives au caractère sélectionné dans le texte:</data>
 	
 	<data name="Dialog.Infos.Title">Informations</data>
 
