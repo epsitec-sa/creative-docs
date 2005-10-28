@@ -333,7 +333,35 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public static Property[] FilterUniformParagraphProperties(System.Collections.ICollection properties)
+		public static Property[] Filter(System.Collections.ICollection properties, Properties.PropertyFilter filter)
+		{
+			switch (filter)
+			{
+				case Properties.PropertyFilter.UniformOnly:
+					return Property.FilterUniformParagraph (properties);
+				
+				case Properties.PropertyFilter.NonUniformOnly:
+					return Property.FilterNonUniformParagraph (properties);
+					
+				case Properties.PropertyFilter.All:
+					if (properties is System.Array)
+					{
+						return (Property[]) properties;
+					}
+					else
+					{
+						Property[] copy = new Property[properties.Count];
+						properties.CopyTo (copy, 0);
+						return copy;
+					}
+				
+				default:
+					throw new System.InvalidOperationException (string.Format ("Filter {0} not supported", filter));
+			}
+		}
+		
+		
+		private static Property[] FilterUniformParagraph(System.Collections.ICollection properties)
 		{
 			int count = 0;
 			
@@ -362,7 +390,7 @@ namespace Epsitec.Common.Text
 			return filtered;
 		}
 		
-		public static Property[] FilterOtherProperties(System.Collections.ICollection properties)
+		private static Property[] FilterNonUniformParagraph(System.Collections.ICollection properties)
 		{
 			int count = 0;
 			

@@ -833,7 +833,7 @@ namespace Epsitec.Common.Text
 				properties = new Property[0];
 			}
 			
-			Property[] paragraph_properties = Property.FilterUniformParagraphProperties (properties);
+			Property[] paragraph_properties = Property.Filter (properties, Properties.PropertyFilter.UniformOnly);
 			
 			if (this.HasSelection)
 			{
@@ -866,8 +866,8 @@ namespace Epsitec.Common.Text
 				
 				System.Collections.ArrayList new_properties = new System.Collections.ArrayList ();
 				
-				new_properties.AddRange (Internal.Navigator.Combine (Property.FilterUniformParagraphProperties (this.current_properties), paragraph_properties, mode));
-				new_properties.AddRange (Property.FilterOtherProperties (this.current_properties));
+				new_properties.AddRange (Internal.Navigator.Combine (Property.Filter (this.current_properties, Properties.PropertyFilter.UniformOnly), paragraph_properties, mode));
+				new_properties.AddRange (Property.Filter (this.current_properties, Properties.PropertyFilter.NonUniformOnly));
 				
 				this.current_properties = new_properties.ToArray (typeof (Property)) as Property[];
 				
@@ -886,7 +886,7 @@ namespace Epsitec.Common.Text
 				properties = new Property[0];
 			}
 			
-			Property[] text_properties = Property.FilterOtherProperties (properties);
+			Property[] text_properties = Property.Filter (properties, Properties.PropertyFilter.NonUniformOnly);
 			
 			if (this.HasSelection)
 			{
@@ -912,8 +912,8 @@ namespace Epsitec.Common.Text
 				
 				System.Collections.ArrayList new_properties = new System.Collections.ArrayList ();
 				
-				new_properties.AddRange (Property.FilterUniformParagraphProperties (this.current_properties));
-				new_properties.AddRange (Internal.Navigator.Combine (Property.FilterOtherProperties (this.current_properties), text_properties, mode));
+				new_properties.AddRange (Property.Filter (this.current_properties, Properties.PropertyFilter.UniformOnly));
+				new_properties.AddRange (Internal.Navigator.Combine (Property.Filter (this.current_properties, Properties.PropertyFilter.NonUniformOnly), text_properties, mode));
 				
 				this.current_properties = new_properties.ToArray (typeof (Property)) as Property[];
 				
@@ -1653,8 +1653,8 @@ namespace Epsitec.Common.Text
 				new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Character));
 				new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.MetaProperty));
 				
-				new_properties.AddRange (Property.FilterUniformParagraphProperties (this.current_properties));
-				new_properties.AddRange (Property.FilterOtherProperties (old_properties));
+				new_properties.AddRange (Property.Filter (this.current_properties, Properties.PropertyFilter.UniformOnly));
+				new_properties.AddRange (Property.Filter (old_properties, Properties.PropertyFilter.NonUniformOnly));
 				
 				//	Regénère les styles et propriétés d'origine du curseur, pour ce qui
 				//	concerne le texte, mais conserve les réglages du paragraphe en cours.

@@ -72,8 +72,7 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		
-		public int								CountStyles
+		public int								StyleCount
 		{
 			get
 			{
@@ -81,40 +80,11 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		public int								CountParagraphStyles
-		{
-			get
-			{
-				int count = 0;
-				
-				for (int i = 0; i < this.styles.Length; i++)
-				{
-					if (this.styles[i].TextStyleClass == TextStyleClass.Paragraph)
-					{
-						count++;
-					}
-				}
-				
-				return count;
-			}
-		}
 		
-		public int								CountOtherStyles
+		
+		public int CountMatchingStyles(TextStyleClass style_class)
 		{
-			get
-			{
-				int count = 0;
-				
-				for (int i = 0; i < this.styles.Length; i++)
-				{
-					if (this.styles[i].TextStyleClass != TextStyleClass.Paragraph)
-					{
-						count++;
-					}
-				}
-				
-				return count;
-			}
+			return StylesProperty.CountMatchingStyles (this.styles, style_class);
 		}
 		
 		
@@ -196,6 +166,22 @@ namespace Epsitec.Common.Text.Properties
 			{
 				checksum.UpdateValue (style.GetContentsSignature ());
 			}
+		}
+		
+		
+		public static int CountMatchingStyles(TextStyle[] styles, TextStyleClass style_class)
+		{
+			int count = 0;
+			
+			for (int i = 0; i < styles.Length; i++)
+			{
+				if (styles[i].TextStyleClass == style_class)
+				{
+					count++;
+				}
+			}
+			
+			return count;
 		}
 		
 		

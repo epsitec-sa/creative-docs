@@ -614,6 +614,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\PropertyFilter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\PropertyType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

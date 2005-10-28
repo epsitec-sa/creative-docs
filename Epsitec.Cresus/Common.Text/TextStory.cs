@@ -601,7 +601,7 @@ namespace Epsitec.Common.Text
 					switch (property.WellKnownType)
 					{
 						case Properties.WellKnownType.Styles:
-						case Properties.WellKnownType.Properties:
+//-						case Properties.WellKnownType.Properties:
 							buffer.Append (n == 0 ? "\n    " : ", ");
 							Property.SerializeToText (buffer, property);
 							n++;

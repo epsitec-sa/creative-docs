@@ -414,7 +414,8 @@ namespace Epsitec.Common.Text.Internal
 			System.Diagnostics.Debug.Assert (offset == 0);
 			System.Diagnostics.Debug.Assert (Navigator.IsParagraphStart (story, cursor, 0));
 			
-			ParagraphManagerList list = story.TextContext.ParagraphManagerList;
+			Text.TextContext     context = story.TextContext;
+			ParagraphManagerList list    = context.ParagraphManagerList;
 			
 			for (int i = 0; i < n_old; i++)
 			{
@@ -469,33 +470,21 @@ namespace Epsitec.Common.Text.Internal
 				return false;
 			}
 			
-			Styles.SimpleStyle        simple_style    = story.StyleList[code];
-			Properties.StylesProperty styles_property = simple_style[Properties.WellKnownType.Styles] as Properties.StylesProperty;
-			TextStyle[]               all_styles      = styles_property.Styles;
+			Text.TextContext context = story.TextContext;
 			
-			int count = 0;
-			int index = 0;
+			TextStyle[] all_styles;
 			
-			foreach (TextStyle style in all_styles)
-			{
-				if (style.TextStyleClass == TextStyleClass.Paragraph)
-				{
-					count++;
-				}
-			}
+			context.GetStyles (code, out all_styles);
+			
+			int count = Properties.StylesProperty.CountMatchingStyles (all_styles, TextStyleClass.Paragraph);
 			
 			styles = new TextStyle[count];
 			
-			foreach (TextStyle style in all_styles)
+			for (int i = 0, j = 0; j < count; i++)
 			{
-				if (style.TextStyleClass == TextStyleClass.Paragraph)
+				if (all_styles[i].TextStyleClass == TextStyleClass.Paragraph)
 				{
-					styles[index++] = style;
-					
-					if (index == count)
-					{
-						break;
-					}
+					styles[j++] = all_styles[i];
 				}
 			}
 			
@@ -516,19 +505,29 @@ namespace Epsitec.Common.Text.Internal
 				return false;
 			}
 			
-			Styles.SimpleStyle            simple_style   = story.StyleList[code];
-			Properties.PropertiesProperty props_property = simple_style[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
+			Text.TextContext context = story.TextContext;
 			
-			if (props_property == null)
+			Property[] all_properties;
+			int        count = 0;
+			
+			context.GetProperties (code, out all_properties);
+			
+			for (int i = 0; i < all_properties.Length; i++)
 			{
-				properties = new Property[0];
+				if (all_properties[i].RequiresUniformParagraph)
+				{
+					count++;
+				}
 			}
-			else
+			
+			properties = new Property[count];
+			
+			for (int i = 0, j = 0; j < count; i++)
 			{
-				TextContext  context    = story.TextContext;
-				string[] serialized = props_property.SerializedUniformParagraphProperties;
-				
-				properties = Properties.PropertiesProperty.DeserializeProperties (context, serialized);
+				if (all_properties[i].RequiresUniformParagraph)
+				{
+					properties[j++] = all_properties[i];
+				}
 			}
 			
 			return true;
@@ -959,41 +958,35 @@ namespace Epsitec.Common.Text.Internal
 				return;
 			}
 			
-			Styles.SimpleStyle            simple = story.StyleList[code];
-			Properties.StylesProperty     s_prop = simple[Properties.WellKnownType.Styles] as Properties.StylesProperty;
-			Properties.PropertiesProperty p_prop = simple[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
+			Text.TextContext context = story.TextContext;
 			
-			//	Récupère uniquement les propriétés qui ne s'appliquent pas au paragraphe
-			//	dans son ensemble :
+			Property[]  properties;
+			TextStyle[] old_styles;
 			
-			string[]   serialized_other_properties = (p_prop == null) ? null : p_prop.SerializedOtherProperties;
-			Property[] other_properties = Properties.PropertiesProperty.DeserializeProperties (story.TextContext, serialized_other_properties);
+			context.GetProperties (code, out properties);
+			context.GetStyles (code, out old_styles);
 			
 			//	Crée la table des styles à utiliser en retirant les anciens styles
 			//	de paragraphe et en insérant les nouveaux à la place :
 			
-			TextStyle[] old_styles = s_prop.Styles;
-			TextStyle[] new_styles = new TextStyle[paragraph_styles.Length + s_prop.CountOtherStyles];
+			int n_para_styles  = Properties.StylesProperty.CountMatchingStyles (old_styles, TextStyleClass.Paragraph);
+			int n_other_styles = old_styles.Length - n_para_styles;
+			
+			TextStyle[] new_styles = new TextStyle[paragraph_styles.Length + n_other_styles];
 			
 			System.Array.Copy (paragraph_styles, 0, new_styles, 0, paragraph_styles.Length);
 			
-			int index = paragraph_styles.Length;
-			
-			for (int i = 0; i < old_styles.Length; i++)
+			for (int i = 0, j = paragraph_styles.Length; i < old_styles.Length; i++)
 			{
 				if (old_styles[i].TextStyleClass != TextStyleClass.Paragraph)
 				{
-					new_styles[index++] = old_styles[i];
+					new_styles[j++] = old_styles[i];
 				}
 			}
 			
-			System.Diagnostics.Debug.Assert (index == new_styles.Length);
-			
 			//	Crée la table des propriétés à utiliser :
 			
-			Property[] new_properties = other_properties;
-			
-			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (new_styles, new_properties);
+			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (new_styles, Property.Filter (properties, Properties.PropertyFilter.NonUniformOnly));
 			
 			ulong style_bits;
 			
@@ -1047,8 +1040,8 @@ namespace Epsitec.Common.Text.Internal
 			
 			all_styles.AddRange (current_styles);
 			
-			all_properties.AddRange (Property.FilterUniformParagraphProperties (current_properties));
-			all_properties.AddRange (Navigator.Combine (Property.FilterOtherProperties (current_properties), text_properties, mode));
+			all_properties.AddRange (Property.Filter (current_properties, Properties.PropertyFilter.UniformOnly));
+			all_properties.AddRange (Navigator.Combine (Property.Filter (current_properties, Properties.PropertyFilter.NonUniformOnly), text_properties, mode));
 			
 			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, all_properties);
 			
@@ -1148,8 +1141,8 @@ namespace Epsitec.Common.Text.Internal
 			
 			all_styles.AddRange (current_styles);
 			
-			all_properties.AddRange (Navigator.Combine (Property.FilterUniformParagraphProperties (current_properties), paragraph_properties, mode));
-			all_properties.AddRange (Property.FilterOtherProperties (current_properties));
+			all_properties.AddRange (Navigator.Combine (Property.Filter (current_properties, Properties.PropertyFilter.UniformOnly), paragraph_properties, mode));
+			all_properties.AddRange (Property.Filter (current_properties, Properties.PropertyFilter.NonUniformOnly));
 			
 			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, all_properties);
 			
