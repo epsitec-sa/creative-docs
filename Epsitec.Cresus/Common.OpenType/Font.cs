@@ -964,6 +964,22 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public bool SupportsFeature(string feature)
+		{
+			string[] features = this.GetSupportedFeatures ();
+			
+			for (int i = 0; i < features.Length; i++)
+			{
+				if (features[i] == feature)
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		
 		public LookupTable[] GetLookupTables(params string[] features)
 		{
 			System.Collections.ArrayList list = new	 System.Collections.ArrayList ();
@@ -1779,7 +1795,7 @@ namespace Epsitec.Common.OpenType
 		
 		private string							active_script;
 		private string							active_language;
-		private string							active_features;
+		private string							active_features = "";
 		
 		private bool							map_default_ligatures;
 		private bool							use_kerning;
