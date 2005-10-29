@@ -371,31 +371,76 @@ namespace Epsitec.Common.Document.PDF
 		
 		public void PaintGlyphs(Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 		{
-			int n = glyphs.Length;
-			if ( n == 0 )  return;
-			
-			//	TODO: générer ce qu'il faut pour mettre les glyphes dans le fichier PDF. Mais
-			//	attention, il faudrait aussi générer l'information textuelle équivalente pour
-			//	permettre à Acrobat Reader d'utiliser les fonctions de recherche, par exemple.
-			
-			Drawing.Path path = new Drawing.Path();
-			Drawing.Transform ft = font.SyntheticTransform;
-			
-			ft.Scale(size);
-			
-			for ( int i=0 ; i<n ; i++ )
+			if ( this.fontList == null )  // textes en courbes ?
 			{
-				double scaleX = sx == null ? 1.0 : sx[i];
-				double scaleY = sy == null ? 1.0 : sy[i];
-				path.Append(font, glyphs[i], ft.XX*scaleX, ft.XY*scaleX, ft.YX*scaleY, ft.YY*scaleY, ft.TX*scaleX+x[i], ft.TY*scaleY+y[i]);
+				int n = glyphs.Length;
+				if ( n == 0 )  return;
+			
+				Drawing.Path path = new Drawing.Path();
+				Drawing.Transform ft = font.SyntheticTransform;
+				ft.Scale(size);
+			
+				for ( int i=0 ; i<n ; i++ )
+				{
+					double scaleX = sx == null ? 1.0 : sx[i];
+					double scaleY = sy == null ? 1.0 : sy[i];
+					path.Append(font, glyphs[i], ft.XX*scaleX, ft.XY*scaleX, ft.YX*scaleY, ft.YY*scaleY, ft.TX*scaleX+x[i], ft.TY*scaleY+y[i]);
+				}
+			
+				this.SetTransform(this.transform);
+				this.SetFillColor(this.color);
+				this.DoFill(path);
+				this.PutEOL();
+			
+				path.Dispose();
 			}
-			
-			this.SetTransform(this.transform);
-			this.SetFillColor(this.color);
-			this.DoFill(path);
-			this.PutEOL();
-			
-			path.Dispose();
+			else	// textes en fontes ?
+			{
+				FontList fl = FontList.Search(this.fontList, font);
+				System.Diagnostics.Debug.Assert(fl != null);
+
+				int n = glyphs.Length;
+				if ( n == 0 )  return;
+
+				this.SetTransform(this.transform);
+				this.SetFillColor(this.color);
+
+				this.PutCommand("BT ");  // voir [*] page 375
+
+				int lastFontPage = -1;
+				double lastX = 0.0;
+				double lastY = 0.0;
+				for ( int i=0 ; i<n ; i++ )
+				{
+					int glyph = (int) glyphs[i];
+					if ( glyph >= 0xffff )  continue;
+
+					int code = fl.GetGlyphIndex((ushort)glyph);
+					int fontPage = code/Export.charPerFont;
+
+					double posx = x[i];
+					double posy = y[i];
+					
+					if ( fontPage != lastFontPage )
+					{
+						this.PutCommand(Export.ShortNameFont(fl.Id, fontPage));
+						this.PutValue(size);
+						this.PutCommand("Tf ");
+						lastFontPage = fontPage;
+					}
+
+					this.PutPoint(new Point(posx-lastX, posy-lastY));
+					this.PutCommand("Td <");  // voir [*] page 376
+					this.PutCommand((code%Export.charPerFont).ToString("X2"));
+					this.PutCommand("> Tj ");  // voir [*] page 377
+
+					lastX = posx;
+					lastY = posy;
+				}
+
+				this.PutCommand("ET ");
+				this.PutEOL();
+			}
 		}
 		
 		public double PaintText(double x, double y, string text, Font font, double size)
@@ -440,7 +485,6 @@ namespace Epsitec.Common.Document.PDF
 			}
 			else	// textes en fontes ?
 			{
-				System.Diagnostics.Debug.Assert(this.fontList != null);
 				FontList fl = FontList.Search(this.fontList, font);
 				System.Diagnostics.Debug.Assert(fl != null);
 

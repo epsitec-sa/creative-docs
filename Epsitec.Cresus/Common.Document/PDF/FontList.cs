@@ -1,4 +1,5 @@
 using Epsitec.Common.Drawing;
+using Epsitec.Common.OpenType;
 
 namespace Epsitec.Common.Document.PDF
 {
@@ -7,15 +8,17 @@ namespace Epsitec.Common.Document.PDF
 	/// </summary>
 	public class FontList
 	{
-		public FontList(Drawing.Font font, int id)
+		public FontList(OpenType.Font font, int id)
 		{
-			this.font = font;
-			this.id   = id;
+			this.openTypeFont = font;
+			this.drawingFont = Drawing.Font.GetFont(font);
+			this.id = id;
 		}
 
 		public void Dispose()
 		{
-			this.font = null;
+			this.openTypeFont = null;
+			this.drawingFont = null;
 		}
 
 		public void AddCharacter(CharacterList cl)
@@ -50,7 +53,17 @@ namespace Epsitec.Common.Document.PDF
 				Rectangle bbox = Rectangle.Empty;
 				foreach ( CharacterList cl in this.characters )
 				{
-					bbox.MergeWith(this.font.GetCharBounds(cl.Unicode));
+					if ( cl.Unicodes == null )
+					{
+						bbox.MergeWith(this.drawingFont.GetCharBounds(cl.Unicode));
+					}
+					else
+					{
+						for ( int i=0 ; i<cl.Unicodes.Length ; i++ )
+						{
+							bbox.MergeWith(this.drawingFont.GetCharBounds(cl.Unicodes[i]));
+						}
+					}
 				}
 				return bbox;
 			}
@@ -67,10 +80,26 @@ namespace Epsitec.Common.Document.PDF
 			return -1;
 		}
 
-
-		public Drawing.Font Font
+		// Retourne l'index d'un caractère dans la fonte.
+		public int GetGlyphIndex(ushort glyph)
 		{
-			get { return this.font; }
+			for ( int i=0 ; i<this.characters.Count ; i++ )
+			{
+				CharacterList cl = this.characters[i] as CharacterList;
+				if ( cl.Glyph == glyph )  return i;
+			}
+			return -1;
+		}
+
+
+		public Drawing.Font DrawingFont
+		{
+			get { return this.drawingFont; }
+		}
+
+		public OpenType.Font OpenTypeFont
+		{
+			get { return this.openTypeFont; }
 		}
 
 		public int Id
@@ -83,12 +112,12 @@ namespace Epsitec.Common.Document.PDF
 		{
 			FontList o = obj as FontList;
 
-			return ( this.font == o.font );
+			return ( this.openTypeFont == o.openTypeFont );
 		}
 
 		public override int GetHashCode() 
 		{
-			return this.font.GetHashCode();
+			return this.openTypeFont.GetHashCode();
 		}
 
 
@@ -99,7 +128,7 @@ namespace Epsitec.Common.Document.PDF
 			foreach ( System.Collections.DictionaryEntry dict in characters )
 			{
 				CharacterList cl = dict.Key as CharacterList;
-				FontList nfl = new FontList(cl.Font, id);
+				FontList nfl = new FontList(cl.OpenTypeFont, id);
 				FontList cfl = fonts[nfl] as FontList;
 
 				if ( cfl == null )
@@ -131,18 +160,19 @@ namespace Epsitec.Common.Document.PDF
 #endif
 		}
 
-		public static FontList Search(System.Collections.Hashtable fonts, Font drawingFont)
+		public static FontList Search(System.Collections.Hashtable fonts, Drawing.Font drawingFont)
 		{
 			foreach ( System.Collections.DictionaryEntry dict in fonts )
 			{
 				FontList fl = dict.Key as FontList;
-				if ( fl.font == drawingFont )  return fl;
+				if ( fl.drawingFont == drawingFont )  return fl;
 			}
 			return null;
 		}
 
 
-		protected Drawing.Font					font;
+		protected OpenType.Font					openTypeFont;
+		protected Drawing.Font					drawingFont;
 		protected int							id;
 		protected System.Collections.ArrayList	characters;
 	}

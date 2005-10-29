@@ -297,26 +297,6 @@ namespace Epsitec.Common.Document.Objects
 			this.charactersTable = table;
 			this.DrawText(port, drawingContext);
 			this.charactersTable = null;
-
-#if false
-			Point p1 = new Point();
-			Point p2 = new Point();
-			Point p3 = new Point();
-			Point p4 = new Point();
-			if ( !this.InitTextLayout(ref p1, ref p2, ref p3, ref p4, null) )  return;
-			TextLayout.OneCharStructure[] fix = this.textLayout.ComputeStructure();
-
-			foreach ( TextLayout.OneCharStructure oneChar in fix )
-			{
-				if ( oneChar == null )  continue;
-
-				PDF.CharacterList cl = new PDF.CharacterList(oneChar);
-				if ( !table.ContainsKey(cl) )
-				{
-					table.Add(cl, null);
-				}
-			}
-#endif
 		}
 
 		// Indique si un objet est éditable.
@@ -1508,107 +1488,137 @@ namespace Epsitec.Common.Document.Objects
 		
 		public void Render(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)
 		{
-			Text.ITextFrame frame = layout.Frame;
-			
-			System.Diagnostics.Debug.Assert(mapping != null);
-			
-			// Vérifions d'abord que le mapping du texte vers les glyphes est
-			// correct et correspond à quelque chose de valide :
-			int  offset = 0;
-			bool isInSelection = false;
-			
-			double selX = 0;
-			
-			System.Collections.ArrayList selRectList = null;
-			Drawing.Rectangle selBbox = Drawing.Rectangle.Empty;
-			
-			int[]    cArray;
-			ulong[]  tArray;
-			ushort[] gArray;
-			
-			double x1 = 0;
-			double x2 = 0;
-			
-			while ( mapping.GetNextMapping(out cArray, out gArray, out tArray) )
+			if ( this.charactersTable == null )
 			{
-				int numGlyphs = gArray.Length;
-				int numChars  = cArray.Length;
-				
-				System.Diagnostics.Debug.Assert((numGlyphs == 1) || (numChars == 1));
-				
-				x1 = x[offset+0];
-				x2 = x[offset+numGlyphs];
-				
-				for ( int i=0 ; i<numChars ; i++ )
+				Text.ITextFrame frame = layout.Frame;
+			
+				System.Diagnostics.Debug.Assert(mapping != null);
+			
+				// Vérifions d'abord que le mapping du texte vers les glyphes est
+				// correct et correspond à quelque chose de valide :
+				int  offset = 0;
+				bool isInSelection = false;
+			
+				double selX = 0;
+			
+				System.Collections.ArrayList selRectList = null;
+				Drawing.Rectangle selBbox = Drawing.Rectangle.Empty;
+			
+				double x1 = 0;
+				double x2 = 0;
+			
+				int[]    cArray;
+				ushort[] gArray;
+				ulong[]  tArray;
+				while ( mapping.GetNextMapping(out cArray, out gArray, out tArray) )
 				{
-					if ( (tArray[i] & this.markerSelected) != 0 )
+					int numGlyphs = gArray.Length;
+					int numChars  = cArray.Length;
+					System.Diagnostics.Debug.Assert(numGlyphs == 1 || numChars == 1);
+				
+					x1 = x[offset+0];
+					x2 = x[offset+numGlyphs];
+				
+					for ( int i=0 ; i<numChars ; i++ )
 					{
-						// Le caractère considéré est sélectionné.
-						if ( isInSelection == false )
+						if ( (tArray[i] & this.markerSelected) != 0 )
 						{
-							// C'est le premier caractère d'une tranche. Il faut
-							// mémoriser son début :
-							double xx = x1 + ((x2 - x1) * i) / numChars;
-							isInSelection = true;
-							selX = xx;
-						}
-					}
-					else
-					{
-						if ( isInSelection )
-						{
-							// Nous avons quitté une tranche sélectionnée. Il faut
-							// mémoriser sa fin :
-							double xx = x1 + ((x2 - x1) * i) / numChars;
-							isInSelection = false;
-							
-							if ( xx > selX )
+							// Le caractère considéré est sélectionné.
+							if ( isInSelection == false )
 							{
-								this.MarkSel(layout, ref selRectList, ref selBbox, xx, selX);
+								// C'est le premier caractère d'une tranche. Il faut
+								// mémoriser son début :
+								double xx = x1 + ((x2 - x1) * i) / numChars;
+								isInSelection = true;
+								selX = xx;
+							}
+						}
+						else
+						{
+							if ( isInSelection )
+							{
+								// Nous avons quitté une tranche sélectionnée. Il faut
+								// mémoriser sa fin :
+								double xx = x1 + ((x2 - x1) * i) / numChars;
+								isInSelection = false;
+							
+								if ( xx > selX )
+								{
+									this.MarkSel(layout, ref selRectList, ref selBbox, xx, selX);
+								}
 							}
 						}
 					}
+				
+					offset += numGlyphs;
 				}
-				
-				offset += numGlyphs;
-			}
 			
-			if ( isInSelection )
-			{
-				// Nous avons quitté une tranche sélectionnée. Il faut
-				// mémoriser sa fin :
-				double xx = x2;
-				isInSelection = false;
-				
-				if ( xx > selX )
+				if ( isInSelection )
 				{
-					this.MarkSel(layout, ref selRectList, ref selBbox, xx, selX);
+					// Nous avons quitté une tranche sélectionnée. Il faut
+					// mémoriser sa fin :
+					double xx = x2;
+					isInSelection = false;
+				
+					if ( xx > selX )
+					{
+						this.MarkSel(layout, ref selRectList, ref selBbox, xx, selX);
+					}
+				}
+			
+				this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.FromName(color));
+			
+				if ( this.edited && selRectList != null && this.graphics != null )
+				{
+					this.hasSelection = true;
+				
+					Drawing.Rectangle saveClip = this.graphics.SaveClippingRectangle();
+				
+					this.graphics.SetClippingRectangles(selRectList);
+					this.graphics.AddFilledRectangle(selBbox);
+					this.graphics.RenderSolid(Drawing.Color.FromName("Highlight"));
+					this.selectBox.MergeWith(selBbox);
+				
+					this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.FromName("HighlightText"));
+				
+					this.graphics.RestoreClippingRectangle(saveClip);
 				}
 			}
-			
-			this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.FromName(color));
-			
-			if ( this.edited && selRectList != null && this.graphics != null && this.charactersTable == null )
+			else
 			{
-				this.hasSelection = true;
-				
-				Drawing.Rectangle saveClip = this.graphics.SaveClippingRectangle();
-				
-				this.graphics.SetClippingRectangles(selRectList);
-				this.graphics.AddFilledRectangle(selBbox);
-				this.graphics.RenderSolid(Drawing.Color.FromName("Highlight"));
-				this.selectBox.MergeWith(selBbox);
-				
-				this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.FromName("HighlightText"));
-				
-				this.graphics.RestoreClippingRectangle(saveClip);
+				int[]    cArray;
+				ushort[] gArray;
+				ulong[]  tArray;
+				while ( mapping.GetNextMapping(out cArray, out gArray, out tArray) )
+				{
+					int numChars  = cArray.Length;
+					int numGlyphs = gArray.Length;
+					System.Diagnostics.Debug.Assert(numGlyphs == 1);
+
+					if ( gArray[0] >= 0xffff )  continue;
+
+					PDF.CharacterList cl;
+					if ( numChars == 1 )
+					{
+						cl = new PDF.CharacterList(gArray[0], cArray[0], font);
+					}
+					else
+					{
+						cl = new PDF.CharacterList(gArray[0], cArray, font);
+					}
+
+					if ( !this.charactersTable.ContainsKey(cl) )
+					{
+						this.charactersTable.Add(cl, null);
+					}
+				}
 			}
 		}
 
 		// Marque la fin d'une tranche sélectionnée.
 		protected void MarkSel(Text.Layout.Context layout, ref System.Collections.ArrayList selRectList, ref Drawing.Rectangle selBbox, double x, double selX)
 		{
-			if ( this.graphics == null || this.charactersTable != null )  return;
+			if ( this.graphics == null )  return;
 
 			double dx = x - selX;
 			double dy = layout.LineY2 - layout.LineY1;
@@ -1636,63 +1646,42 @@ namespace Epsitec.Common.Document.Objects
 		// Effectue le rendu des caractères.
 		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, RichColor color)
 		{
-			if ( this.charactersTable == null )
+			if ( this.graphics != null )  // affichage sur écran ?
 			{
-				if ( this.graphics != null )  // affichage sur écran ?
+				if ( font.FontManagerType == OpenType.FontManagerType.System )
 				{
-					if ( font.FontManagerType == OpenType.FontManagerType.System )
+					Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, color.Basic);
+				}
+				else
+				{
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+					if ( drawingFont != null )
 					{
-						Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, color.Basic);
-					}
-					else
-					{
-						Drawing.Font drawingFont = Drawing.Font.GetFont(font);
-						if ( drawingFont != null )
+						for ( int i=0 ; i<glyphs.Length ; i++ )
 						{
-							for ( int i=0 ; i<glyphs.Length ; i++ )
+							if ( glyphs[i] < 0xffff )
 							{
-								if ( glyphs[i] < 0xffff )
-								{
-									this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
-								}
+								this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
 							}
 						}
-					
-						this.graphics.RenderSolid(color.Basic);
 					}
-				}
-				else if ( this.port is Printing.PrintPort )  // impression ?
-				{
-					Printing.PrintPort printPort = port as Printing.PrintPort;
-					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
-					printPort.RichColor = color;
-					printPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
-				}
-				else if ( this.port is PDF.Port )  // exportation PDF ?
-				{
-					PDF.Port pdfPort = port as PDF.Port;
-					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
-					pdfPort.RichColor = color;
-					pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
+				
+					this.graphics.RenderSolid(color.Basic);
 				}
 			}
-			else
+			else if ( this.port is Printing.PrintPort )  // impression ?
 			{
+				Printing.PrintPort printPort = port as Printing.PrintPort;
 				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
-				if ( drawingFont != null )
-				{
-					for ( int i=0 ; i<glyphs.Length ; i++ )
-					{
-						if ( glyphs[i] < 0xffff )
-						{
-							PDF.CharacterList cl = new PDF.CharacterList(glyphs[i], drawingFont);
-							if ( !this.charactersTable.ContainsKey(cl) )
-							{
-								this.charactersTable.Add(cl, null);
-							}
-						}
-					}
-				}
+				printPort.RichColor = color;
+				printPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
+			}
+			else if ( this.port is PDF.Port )  // exportation PDF ?
+			{
+				PDF.Port pdfPort = port as PDF.Port;
+				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+				pdfPort.RichColor = color;
+				pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
 			}
 		}
 		

@@ -1629,7 +1629,7 @@ namespace Epsitec.Common.Document.PDF
 			for ( int i=0 ; i<count ; i++ )
 			{
 				CharacterList cl = font.GetCharacter(firstChar+i);
-				builder.Append(Export.ShortNameCharacter(font.Id, fontPage, cl.Unicode));
+				builder.Append(Export.ShortNameCharacter(font.Id, fontPage, cl.Code));
 			}
 
 			builder.Append("] >> endobj");
@@ -1646,8 +1646,8 @@ namespace Epsitec.Common.Document.PDF
 			for ( int i=0 ; i<count ; i++ )
 			{
 				CharacterList cl = font.GetCharacter(firstChar+i);
-				writer.WriteString(Export.ShortNameCharacter(font.Id, fontPage, cl.Unicode));
-				writer.WriteObjectRef(Export.NameCharacter(font.Id, fontPage, cl.Unicode));
+				writer.WriteString(Export.ShortNameCharacter(font.Id, fontPage, cl.Code));
+				writer.WriteObjectRef(Export.NameCharacter(font.Id, fontPage, cl.Code));
 			}
 
 			writer.WriteLine(">> endobj");
@@ -1665,7 +1665,7 @@ namespace Epsitec.Common.Document.PDF
 			for ( int i=0 ; i<count ; i++ )
 			{
 				CharacterList cl = font.GetCharacter(firstChar+i);
-				double advance = font.Font.GetCharAdvance(cl.Unicode);
+				double advance = cl.Width;
 				builder.Append(Port.StringValue(advance, 4));
 				builder.Append(" ");
 			}
@@ -1680,7 +1680,7 @@ namespace Epsitec.Common.Document.PDF
 		{
 			writer.WriteObjectDef(Export.NameFont(font.Id, fontPage, TypeFont.ToUnicode));
 
-			string fontName = font.Font.FaceName;
+			string fontName = font.DrawingFont.FaceName;
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			builder.Append("/CIDInit /ProcSet findresource begin ");
 			builder.Append("12 dict begin begincmap ");
@@ -1694,7 +1694,18 @@ namespace Epsitec.Common.Document.PDF
 			{
 				CharacterList cl = font.GetCharacter(firstChar+i);
 				string hex1 = i.ToString("X2");
-				string hex2 = (cl.Unicode).ToString("X4");
+				string hex2 = "";
+				if ( cl.Unicodes == null )
+				{
+					hex2 = (cl.Unicode).ToString("X4");
+				}
+				else
+				{
+					for ( int u=0 ; u<cl.Unicodes.Length ; u++ )
+					{
+						hex2 += (cl.Unicodes[u]).ToString("X4");
+					}
+				}
 				builder.Append(string.Format("<{0}> <{0}> <{1}> ", hex1, hex2));
 			}
 			builder.Append("endbfrange ");
@@ -1714,20 +1725,29 @@ namespace Epsitec.Common.Document.PDF
 			for ( int i=0 ; i<count ; i++ )
 			{
 				CharacterList cl = font.GetCharacter(firstChar+i);
-				this.CreateFontCharacter(writer, font, fontPage, cl.Unicode);
+				this.CreateFontCharacter(writer, font, fontPage, cl);
 			}
 		}
 		
 		// Crée l'objet d'un caractère d'une fonte.
-		protected void CreateFontCharacter(Writer writer, FontList font, int fontPage, int unicode)
+		protected void CreateFontCharacter(Writer writer, FontList font, int fontPage, CharacterList cl)
 		{
-			writer.WriteObjectDef(Export.NameCharacter(font.Id, fontPage, unicode));
-
-			Font drawingFont = font.Font;
+			Font drawingFont = font.DrawingFont;
 			Drawing.Transform ft = drawingFont.SyntheticTransform;
-			int glyph = drawingFont.GetGlyphIndex(unicode);
+			int glyph;
+			if ( cl.IsGlyph )
+			{
+				glyph = cl.Glyph;
+				writer.WriteObjectDef(Export.NameCharacter(font.Id, fontPage, glyph));
+			}
+			else
+			{
+				glyph = drawingFont.GetGlyphIndex(cl.Unicode);
+				writer.WriteObjectDef(Export.NameCharacter(font.Id, fontPage, cl.Unicode));
+			}
 			Path path = new Path();
 			path.Append(drawingFont, glyph, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
+
 
 			Port port = new Port();
 			port.ColorForce = ColorForce.Nothing;  // pas de commande de couleur !
