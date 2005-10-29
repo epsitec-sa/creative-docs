@@ -299,7 +299,7 @@ namespace Epsitec.Common.Document.Ribbons
 		protected void InvertStyle(Objects.Abstract editObject, string name, string exclude)
 		{
 			bool state = editObject.GetTextStyle(name);
-			editObject.SetTextStyle(name, exclude, !state);
+			editObject.SetTextStyle(name, /*exclude,*/ !state);
 		}
 
 
