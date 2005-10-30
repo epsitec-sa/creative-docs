@@ -371,11 +371,12 @@ namespace Epsitec.Common.Document.PDF
 		
 		public void PaintGlyphs(Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 		{
+			int n = glyphs.Length;
+			if ( n == 0 )  return;
+			if ( n == 1 && glyphs[0] >= 0xffff )  return;
+			
 			if ( this.fontList == null )  // textes en courbes ?
 			{
-				int n = glyphs.Length;
-				if ( n == 0 )  return;
-			
 				Drawing.Path path = new Drawing.Path();
 				Drawing.Transform ft = font.SyntheticTransform;
 				ft.Scale(size);
@@ -398,9 +399,6 @@ namespace Epsitec.Common.Document.PDF
 			{
 				FontList fl = FontList.Search(this.fontList, font);
 				System.Diagnostics.Debug.Assert(fl != null);
-
-				int n = glyphs.Length;
-				if ( n == 0 )  return;
 
 				this.SetTransform(this.transform);
 				this.SetFillColor(this.color);

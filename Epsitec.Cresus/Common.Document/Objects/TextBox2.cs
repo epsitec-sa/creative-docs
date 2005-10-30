@@ -1512,9 +1512,9 @@ namespace Epsitec.Common.Document.Objects
 				ulong[]  tArray;
 				while ( mapping.GetNextMapping(out cArray, out gArray, out tArray) )
 				{
-					int numGlyphs = gArray.Length;
 					int numChars  = cArray.Length;
-					System.Diagnostics.Debug.Assert(numGlyphs == 1 || numChars == 1);
+					int numGlyphs = gArray.Length;
+					System.Diagnostics.Debug.Assert(numChars == 1 || numGlyphs == 1);
 				
 					x1 = x[offset+0];
 					x2 = x[offset+numGlyphs];
@@ -1593,23 +1593,33 @@ namespace Epsitec.Common.Document.Objects
 				{
 					int numChars  = cArray.Length;
 					int numGlyphs = gArray.Length;
-					System.Diagnostics.Debug.Assert(numGlyphs == 1);
+					System.Diagnostics.Debug.Assert(numChars == 1 || numGlyphs == 1);
 
-					if ( gArray[0] >= 0xffff )  continue;
+					for ( int i=0 ; i<numGlyphs ; i++ )
+					{
+						if ( gArray[i] >= 0xffff )  continue;
 
-					PDF.CharacterList cl;
-					if ( numChars == 1 )
-					{
-						cl = new PDF.CharacterList(gArray[0], cArray[0], font);
-					}
-					else
-					{
-						cl = new PDF.CharacterList(gArray[0], cArray, font);
-					}
+						PDF.CharacterList cl;
+						if ( numChars == 1 )
+						{
+							if ( i == 1 )  // TODO: césure gérée de façon catastrophique !
+							{
+								cl = new PDF.CharacterList(gArray[i], (int)'-', font);
+							}
+							else
+							{
+								cl = new PDF.CharacterList(gArray[i], cArray[0], font);
+							}
+						}
+						else
+						{
+							cl = new PDF.CharacterList(gArray[i], cArray, font);
+						}
 
-					if ( !this.charactersTable.ContainsKey(cl) )
-					{
-						this.charactersTable.Add(cl, null);
+						if ( !this.charactersTable.ContainsKey(cl) )
+						{
+							this.charactersTable.Add(cl, null);
+						}
 					}
 				}
 			}
