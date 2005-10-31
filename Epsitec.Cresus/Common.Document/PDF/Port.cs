@@ -408,6 +408,8 @@ namespace Epsitec.Common.Document.PDF
 				int lastFontPage = -1;
 				double lastX = 0.0;
 				double lastY = 0.0;
+				double lastSizeX = 1.0;
+				double lastSizeY = 1.0;
 				for ( int i=0 ; i<n ; i++ )
 				{
 					int glyph = (int) glyphs[i];
@@ -418,6 +420,9 @@ namespace Epsitec.Common.Document.PDF
 
 					double posx = x[i];
 					double posy = y[i];
+
+					double sizeX = (sx == null) ? 1.0 : sx[i];
+					double sizeY = (sy == null) ? 1.0 : sy[i];
 					
 					if ( fontPage != lastFontPage )
 					{
@@ -427,8 +432,23 @@ namespace Epsitec.Common.Document.PDF
 						lastFontPage = fontPage;
 					}
 
-					this.PutPoint(new Point(posx-lastX, posy-lastY));
-					this.PutCommand("Td <");  // voir [*] page 376
+					if ( sizeX != lastSizeX || sizeY != lastSizeY )
+					{
+						this.PutValue(sizeX, -1);
+						this.PutCommand("0 0 ");
+						this.PutValue(sizeY, -1);
+						this.PutPoint(new Point(posx, posy));
+						this.PutCommand("Tm ");  // voir [*] page 376
+						lastSizeX = sizeX;
+						lastSizeY = sizeY;
+					}
+					else
+					{
+						this.PutPoint(new Point(posx-lastX, posy-lastY));
+						this.PutCommand("Td ");  // voir [*] page 376
+					}
+
+					this.PutCommand("<");
 					this.PutCommand((code%Export.charPerFont).ToString("X2"));
 					this.PutCommand("> Tj ");  // voir [*] page 377
 

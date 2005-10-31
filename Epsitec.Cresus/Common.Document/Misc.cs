@@ -87,6 +87,7 @@ namespace Epsitec.Common.Document
 		// Ajoute la liste des fontes dans la liste d'un TextFieldCombo.
 		static public void AddFontList(TextFieldCombo combo, bool enableSymbols)
 		{
+#if false
 			foreach( string face in TextContext.GetAvailableFontFaces() )
 			{
 				bool add = true;
@@ -104,6 +105,34 @@ namespace Epsitec.Common.Document
 					combo.Items.Add(face);
 				}
 			}
+#else
+			if ( Misc.fontList == null )
+			{
+				Misc.fontList = new System.Collections.ArrayList();
+
+				foreach( string face in TextContext.GetAvailableFontFaces() )
+				{
+					bool symbol = false;
+					OpenType.FontIdentity[] ids = TextContext.GetAvailableFontIdentities(face);
+					foreach ( OpenType.FontIdentity id in ids )
+					{
+						if ( id.IsSymbolFont )
+						{
+							symbol = true;
+							break;
+						}
+					}
+
+					Misc.fontList.Add((symbol ? "S" : "N") + face);
+				}
+			}
+
+			foreach ( string s in Misc.fontList )
+			{
+				if ( !enableSymbols && s[0] == 'S' )  continue;
+				combo.Items.Add(s.Substring(1));
+			}
+#endif
 		}
 
 		// Cherche le FontStyle par défaut pour un FontFace donné.
@@ -391,5 +420,8 @@ namespace Epsitec.Common.Document
 			a = b;
 			b = t;
 		}
+
+
+		protected static System.Collections.ArrayList		fontList;
 	}
 }
