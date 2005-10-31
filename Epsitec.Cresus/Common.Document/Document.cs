@@ -1157,6 +1157,7 @@ namespace Epsitec.Common.Document
 
 			this.textContext = new Text.TextContext();
 			this.textContext.IsDegradedLayoutEnabled = true;
+			this.textContext.IsPropertiesPropertyEnabled = false;
 
 			Text.TabList tabs = this.textContext.TabList;
 

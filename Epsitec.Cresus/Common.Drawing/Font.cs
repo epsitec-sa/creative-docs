@@ -286,6 +286,15 @@ namespace Epsitec.Common.Drawing
 			return AntiGrain.Font.Face.GetTextAdvance (this.handle, text, 0);
 		}
 		
+		public Rectangle GetGlyphBounds(int glyph, double size)
+		{
+			Drawing.Rectangle rect = this.GetGlyphBounds (glyph);
+			
+			rect.Scale (size);
+			
+			return rect;
+		}
+		
 		public Rectangle GetGlyphBounds(int glyph)
 		{
 			if (this.synthetic_mode == SyntheticFontMode.Oblique)

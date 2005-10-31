@@ -2684,8 +2684,19 @@ namespace Epsitec.Common.OpenType
 				case LookupType.Single:				return new SingleSubstitution (this.data, offset);
 				case LookupType.Alternate:			return new AlternateSubstitution (this.data, offset);
 				case LookupType.Ligature:			return new LigatureSubstitution (this.data, offset);
-				case LookupType.Context:			return null;	//	TODO: ...
 				case LookupType.ChainingContext:	return new ChainingContextSubstitution (this.data, offset);
+				
+				case LookupType.Context:
+					
+					//	TODO: ...
+					
+					return null;
+				
+				case LookupType.ExtensionSubstitution:
+					
+					//	TODO: ...
+					
+					return null;
 				
 				default:
 					throw new System.NotSupportedException (string.Format ("LookupType {0} not supported.", this.LookupType));

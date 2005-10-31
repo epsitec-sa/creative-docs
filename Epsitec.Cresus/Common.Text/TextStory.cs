@@ -725,45 +725,16 @@ namespace Epsitec.Common.Text
 			if ((text_styles != null) &&
 				(text_styles.Count > 0))
 			{
-				//	Trie les styles selon leur priorité, avant de les convertir en
-				//	propriétés :
+				TextStyle[] flat_styles;
+				Property[]  flat_properties;
 				
-				TextStyle[] styles = new TextStyle[text_styles.Count];
-				text_styles.CopyTo (styles, 0);
-				System.Array.Sort (styles, TextStyle.Comparer);
-				
-				//	Les diverses propriétés des styles passés en entrée sont
-				//	d'abord extraites et ajoutées dans la liste complète des
-				//	propriétés :
-				
-				foreach (TextStyle style in styles)
-				{
-					//	Passe en revue toutes les propriétés définies par le style
-					//	en cours d'analyse et ajoute celles-ci séquentiellement dans
-					//	la liste des propriétés :
-					
-					int n = style.CountProperties;
-					
-					for (int i = 0; i < n; i++)
-					{
-						Property property = style[i];
-						
-						if (property.WellKnownType != Properties.WellKnownType.Styles)
-						{
-							list.Add (property);
-						}
-						else
-						{
-							//	TODO: gérer les styles cascadés en faisant une descente récursive
-							//	dans les propriétés correspondantes.
-						}
-					}
-				}
+				this.TextContext.GetFlatProperties (text_styles, out flat_styles, out flat_properties);
 				
 				//	Crée une propriété StylesProperty qui résume les styles dont
 				//	les propriétés viennent d'être mises à plat ci-dessus :
 				
-				list.Add (new Properties.StylesProperty (styles));
+				list.AddRange (flat_properties);
+				list.Add (new Properties.StylesProperty (flat_styles));
 			}
 			
 			if ((properties != null) &&
@@ -778,7 +749,10 @@ namespace Epsitec.Common.Text
 				//	additionnelles. Sans PropertiesProperty, il serait impossible de
 				//	reconstituer les propriétés "manuelles" dans certains cas.
 				
-				list.Add (new Properties.PropertiesProperty (properties));
+				if (this.TextContext.IsPropertiesPropertyEnabled)
+				{
+					list.Add (new Properties.PropertiesProperty (properties));
+				}
 			}
 			
 			return list;

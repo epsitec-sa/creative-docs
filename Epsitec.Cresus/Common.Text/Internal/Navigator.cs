@@ -1451,66 +1451,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 
-#if false
-		private static void SetTextStyles(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] character_styles, Property[] character_properties)
-		{
-			//	Remplace les styles et les propriétés du texte par ceux passés
-			//	en entrée. Cet appel est destructif par rapport aux anciens
-			//	styles/propriétés.
-			
-			if (length == 0)
-			{
-				return;
-			}
-			
-			Text.Context context = story.TextContext;
-			
-			TextStyle[] current_styles;
-			Property[]  current_properties;
-			
-			//	Récupère d'abord les styles et les propriétés associées au texte
-			//	actuel :
-			
-			context.GetStyles (code, out current_styles);
-			context.GetProperties (code, out current_properties);
-			
-			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (character_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (character_properties) == false);
-			
-			//	Ne conserve que les styles et les propriétés associés directement
-			//	au paragraphe :
-			
-			TextStyle[] filtered_styles     = TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph);
-			Property[]  filtered_properties = Property.FilterUniformParagraphProperties (current_properties);
-			
-			TextStyle[] all_styles     = new TextStyle[filtered_styles.Length + character_styles.Length];
-			Property[]  all_properties = new Property[filtered_properties.Length + character_properties.Length];
-			
-			System.Array.Copy (filtered_properties, 0, all_properties, 0, filtered_properties.Length);
-			System.Array.Copy (character_properties, 0, all_properties, filtered_properties.Length, character_properties.Length);
-			
-			System.Array.Copy (filtered_styles, 0, all_styles, 0, filtered_styles.Length);
-			System.Array.Copy (character_styles, 0, all_styles, filtered_styles.Length, character_styles.Length);
-			
-			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, all_properties);
-			
-			ulong style_bits;
-			
-			story.ConvertToStyledText (flat, out style_bits);
-			
-			for (int i = 0; i < length; i++)
-			{
-				text[offset+i] &= ~ Internal.CharMarker.StyleAndSettingsMask;
-				text[offset+i] |= style_bits;
-			}
-		}
-#endif
-		
-		
-		
-		
+		#region PropertyFinder Class
 		private class PropertyFinder
 		{
 			public PropertyFinder(StyleList styles, Property property, ulong code)
@@ -1546,5 +1487,6 @@ namespace Epsitec.Common.Text.Internal
 			private Property					property;
 			private ulong						code;
 		}
+		#endregion
 	}
 }

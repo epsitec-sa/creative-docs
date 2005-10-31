@@ -121,6 +121,18 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public bool								IsPropertiesPropertyEnabled
+		{
+			get
+			{
+				return this.is_properties_property_enabled;
+			}
+			set
+			{
+				this.is_properties_property_enabled = value;
+			}
+		}
+		
 		
 		public TextContext.DefaultMarkers		Markers
 		{
@@ -751,43 +763,202 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
 		public void GetProperties(ulong code, out Property[] properties)
 		{
-			int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
-			long current_style_version = this.style_list.Version;
-			
-			if ((this.get_properties_last_style_version != current_style_version) ||
-				(this.get_properties_last_style_index   != current_style_index))
+			if (this.IsPropertiesPropertyEnabled)
 			{
-				Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
+				int  current_style_index   = Internal.CharMarker.GetStyleIndex (code);
+				long current_style_version = this.style_list.Version;
 				
-				Properties.PropertiesProperty props = style == null ? null : style[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
-				
-				if (props == null)
+				if ((this.get_properties_last_style_version != current_style_version) ||
+					(this.get_properties_last_style_index   != current_style_index))
 				{
-					this.get_properties_last_properties = new Property[0];
-				}
-				else
-				{
-					string[] serialized = props.SerializedProperties;
+					Styles.SimpleStyle style = this.style_list.GetStyleFromIndex (current_style_index);
 					
-					if (serialized.Length > 0)
-					{
-						this.get_properties_last_properties = Properties.PropertiesProperty.DeserializeProperties (this, serialized);
-					}
-					else
+					Properties.PropertiesProperty props = style == null ? null : style[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
+					
+					if (props == null)
 					{
 						this.get_properties_last_properties = new Property[0];
 					}
+					else
+					{
+						string[] serialized = props.SerializedProperties;
+						
+						if (serialized.Length > 0)
+						{
+							this.get_properties_last_properties = Properties.PropertiesProperty.DeserializeProperties (this, serialized);
+						}
+						else
+						{
+							this.get_properties_last_properties = new Property[0];
+						}
+					}
+					
+					this.get_properties_last_style_version = current_style_version;
+					this.get_properties_last_style_index   = current_style_index;
 				}
 				
-				this.get_properties_last_style_version = current_style_version;
-				this.get_properties_last_style_index   = current_style_index;
+				properties = new Property[this.get_properties_last_properties.Length];
+				this.get_properties_last_properties.CopyTo (properties, 0);
+			}
+			else
+			{
+				this.GetOriginalProperties (code, out properties);
+			}
+
+#if false
+			Property[] pp = properties;
+			Property[] op;
+			this.GetOriginalProperties (code, out op);
+			
+			if (pp.Length != op.Length)
+			{
+				System.Diagnostics.Debug.WriteLine ("GetProperties: Length Mismatch");
+			}
+			else
+			{
+				for (int i = 0; i < pp.Length; i++)
+				{
+					if (pp[i].WellKnownType != op[i].WellKnownType)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("GetProperties: WellKnownType mismatch {0}/{1}", pp[i].WellKnownType, op[i].WellKnownType));
+					}
+					else if (! Property.CompareEqualContents (pp[i], op[i]))
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("GetProperties: Contents mismatch {0}/{1}", pp[i].WellKnownType, op[i].WellKnownType));
+					}
+				}
+			}
+#endif
+		}
+		
+		
+		internal void GetAllProperties(ulong code, out Property[] properties)
+		{
+			//	Retourne les propriétés associées à un code de caractère donné.
+			//	Les propriétés sont brutes, telles que vues par le système de
+			//	layout, par exemple.
+			
+			Internal.StyleTable styles = this.StyleList.InternalStyleTable;
+			
+			Styles.SimpleStyle   style = styles.GetStyle (code);
+			Styles.LocalSettings local = styles.GetLocalSettings (code);
+			Styles.ExtraSettings extra = styles.GetExtraSettings (code);
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			if (style != null)
+			{
+				list.AddRange (style.GetProperties ());
+			}
+			if (local != null)
+			{
+				list.AddRange (local.GetProperties ());
+			}
+			if (extra != null)
+			{
+				list.AddRange (extra.GetProperties ());
 			}
 			
-			properties = new Property[this.get_properties_last_properties.Length];
-			this.get_properties_last_properties.CopyTo (properties, 0);
+			properties = (Property[]) list.ToArray (typeof (Property));
 		}
+		
+		internal void GetFlatProperties(System.Collections.ICollection text_styles, out TextStyle[] styles, out Property[] properties)
+		{
+			//	Retourne les propriétés définies par une collection de styles.
+			//	Retourne aussi les styles sous la forme d'un tableau trié.
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			//	Trie les styles selon leur priorité, avant de les convertir en
+			//	propriétés :
+			
+			styles = new TextStyle[text_styles.Count];
+			text_styles.CopyTo (styles, 0);
+			System.Array.Sort (styles, TextStyle.Comparer);
+			
+			//	Les diverses propriétés des styles passés en entrée sont
+			//	extraites et ajoutées dans la liste complète des propriétés :
+			
+			foreach (TextStyle style in styles)
+			{
+				//	Passe en revue toutes les propriétés définies par le style
+				//	en cours d'analyse et ajoute celles-ci séquentiellement dans
+				//	la liste des propriétés :
+				
+				list.AddRange (style.GetProperties ());
+			}
+			
+			properties = (Property[]) list.ToArray (typeof (Property));
+		}
+		
+		internal void GetOriginalProperties(ulong code, out Property[] properties)
+		{
+			Property[]  all_properties;
+			TextStyle[] all_styles;
+			Property[]  style_properties;
+			
+			this.GetAllProperties (code, out all_properties);
+			this.GetStyles (code, out all_styles);
+			this.GetFlatProperties (all_styles, out all_styles, out style_properties);
+			this.AccumulateProperties (style_properties, out style_properties);
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (Property pp in all_properties)
+			{
+				if ((pp.WellKnownType == Properties.WellKnownType.Properties) ||
+					(pp.WellKnownType == Properties.WellKnownType.Styles))
+				{
+					continue;
+				}
+				
+				bool skip = false;
+				
+				for (int i = 0; i < style_properties.Length; i++)
+				{
+					Property sp = style_properties[i];
+					
+					if (sp != null)
+					{
+						if (sp.WellKnownType == pp.WellKnownType)
+						{
+							if (sp.GetContentsSignature () == pp.GetContentsSignature ())
+							{
+								if (Property.CompareEqualContents (pp, sp))
+								{
+									style_properties[i] = null;
+									skip = true;
+									break;
+								}
+							}
+						}
+					}
+				}
+				
+				if (! skip)
+				{
+					list.Add (pp);
+				}
+			}
+			
+			properties = (Property[]) list.ToArray (typeof (Property));
+		}
+		
+		internal void AccumulateProperties(System.Collections.ICollection text_properties, out Property[] properties)
+		{
+			Styles.PropertyContainer.Accumulator accumulator = new Styles.PropertyContainer.Accumulator ();
+			
+			foreach (Property property in text_properties)
+			{
+				accumulator.Accumulate (property);
+			}
+			
+			properties = accumulator.AccumulatedProperties;
+		}
+		
 		
 		public void GetStyles(ulong code, out TextStyle[] styles)
 		{
@@ -808,6 +979,7 @@ namespace Epsitec.Common.Text
 			styles = new TextStyle[this.get_styles_last_styles.Length];
 			this.get_styles_last_styles.CopyTo (styles, 0);
 		}
+		
 		
 		public void GetLeading(ulong code, out Properties.LeadingProperty property)
 		{
@@ -1297,6 +1469,7 @@ namespace Epsitec.Common.Text
 		
 		private bool							show_control_characters;
 		private bool							is_degraded_layout_enabled;
+		private bool							is_properties_property_enabled = true;
 		
 		static OpenType.FontCollection			font_collection;
 		static System.Collections.Hashtable		font_cache;
