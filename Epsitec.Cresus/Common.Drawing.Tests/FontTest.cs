@@ -699,9 +699,31 @@ namespace Epsitec.Common.Drawing
 		[Test] public void CheckFillPixelCache()
 		{
 			Graphics gra   = new Epsitec.Common.Drawing.Graphics ();
+			int      loops = 1;
 			double   size  = 10.6;
 			string   text  = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
 			Font     font  = Font.GetFont ("Tahoma", "Regular");
+			
+#if false
+			foreach (Font.FaceInfo face in Font.Faces)
+			{
+				if (face.Name.StartsWith ("Bi"))
+				{
+					font = face.GetFonts ()[0];
+					System.Console.WriteLine ("Using font : {0}/{1}/{2}", font.FaceName, font.StyleName, font.OpticalName);
+					System.Console.WriteLine ("'A' bounds: {0}", font.GetCharBounds ('A').ToString ());
+					System.Console.WriteLine ("'B' bounds: {0}", font.GetCharBounds ('B').ToString ());
+					System.Console.WriteLine ("'I' bounds: {0}", font.GetCharBounds ('I').ToString ());
+					System.Console.WriteLine ("'i' bounds: {0}", font.GetCharBounds ('i').ToString ());
+					System.Console.WriteLine ("'O' bounds: {0}", font.GetCharBounds ('O').ToString ());
+					System.Console.WriteLine ("'o' bounds: {0}", font.GetCharBounds ('o').ToString ());
+					System.Console.WriteLine ("'p' bounds: {0}", font.GetCharBounds ('p').ToString ());
+					System.Console.WriteLine ("'q' bounds: {0}", font.GetCharBounds ('q').ToString ());
+					break;
+				}
+			}
+#endif
+
 			Color    black = Color.FromBrightness (0);
 			
 			long cc = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
@@ -735,7 +757,7 @@ namespace Epsitec.Common.Drawing
 			
 			tot = 0;
 			
-			for (int i = 0; i < 100; i++)
+			for (int i = 0; i < loops; i++)
 			{
 				c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 				font.PaintPixelCache (gra.Pixmap, text, size, 10, 200, black);
@@ -744,13 +766,13 @@ namespace Epsitec.Common.Drawing
 				tot += c2;
 			}
 			
-			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " cycles -> " + (tot * 10 / cpu_speed / text.Length) + "ns / char in Cached AGG");
+			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / loops).ToString () + " cycles -> " + (tot * 10 / cpu_speed / text.Length) + "ns / char in Cached AGG");
 			
 			gra.SolidRenderer.Color = black;
 			
 			tot = 0;
 			
-			for (int i = 0; i < 100; i++)
+			for (int i = 0; i < loops; i++)
 			{
 				c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 				gra.PaintText (10, 180, text, font, size);
@@ -759,7 +781,7 @@ namespace Epsitec.Common.Drawing
 				tot += c2;
 			}
 			
-			System.Console.Out.WriteLine ("Mean Painting : " + (tot / 100).ToString () + " cycles -> " + (tot * 10 / cpu_speed / text.Length) + "ns / char in Cached AGG");
+			System.Console.Out.WriteLine ("Mean Painting : " + (tot / loops).ToString () + " cycles -> " + (tot * 10 / cpu_speed / text.Length) + "ns / char in Cached AGG");
 			
 			
 			

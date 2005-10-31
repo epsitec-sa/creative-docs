@@ -330,7 +330,7 @@ namespace Epsitec.Common.OpenType.Platform
 					//	TrueType (on ne sait pas que faire des fontes PostScript).
 					
 					if (((NewTextMetricEx.Flags.TrueType & flags) != 0) ||
-						((NewTextMetricEx.Flags.PostScript & flags) == 0))
+						((NewTextMetricEx.Flags.PostScript & flags) != 0))
 					{
 						if (this.names.Contains (name) == false)
 						{
