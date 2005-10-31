@@ -21,6 +21,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonRotateFreeCCW = this.CreateIconButton("RotateFreeCCW", Misc.Icon("OperRot"),  Res.Strings.Action.RotateFreeCCW);
 			this.buttonRotateFreeCW  = this.CreateIconButton("RotateFreeCW",  Misc.Icon("OperRoti"), Res.Strings.Action.RotateFreeCW);
 			this.fieldRotate = this.CreateFieldRot(Res.Strings.Action.RotateValue);
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

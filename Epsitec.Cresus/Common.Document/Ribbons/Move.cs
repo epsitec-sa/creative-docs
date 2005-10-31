@@ -20,6 +20,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonMoveV  = this.CreateIconButton("MoveUpFree",    Misc.Icon("OperMoveV"),  Res.Strings.Action.MoveUp);
 			this.CreateFieldMove(ref this.fieldMoveH, Res.Strings.Action.MoveValueX);
 			this.CreateFieldMove(ref this.fieldMoveV, Res.Strings.Action.MoveValueY);
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

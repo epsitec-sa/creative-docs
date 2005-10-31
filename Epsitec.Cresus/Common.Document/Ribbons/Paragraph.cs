@@ -28,6 +28,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonAlignJustif = this.CreateIconButton(Misc.Icon("JustifHJustif"), Res.Strings.Action.Text.Paragraph.AlignJustif, new MessageEventHandler(this.HandleButtonClicked));
 			
 			this.fieldLeading = this.CreateFieldLeading("Interligne");
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

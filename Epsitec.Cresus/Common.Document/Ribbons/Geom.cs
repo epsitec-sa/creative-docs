@@ -19,6 +19,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonToBezier  = this.CreateIconButton("ToBezier",  Misc.Icon("ToBezier"),  Res.Strings.Action.ToBezier);
 			this.buttonToPoly    = this.CreateIconButton("ToPoly",    Misc.Icon("ToPoly"),    Res.Strings.Action.ToPoly);
 			this.buttonFragment  = this.CreateIconButton("Fragment",  Misc.Icon("Fragment"),  Res.Strings.Action.Fragment);
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

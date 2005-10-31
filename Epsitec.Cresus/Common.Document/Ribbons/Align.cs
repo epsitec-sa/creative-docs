@@ -40,6 +40,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.separator3 = new IconSeparator(this);
 
 			this.buttonAlignGrid    = this.CreateIconButton("AlignGrid",    Misc.Icon("AlignGrid"),    Res.Strings.Action.AlignGrid);
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

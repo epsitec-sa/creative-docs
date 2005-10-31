@@ -22,6 +22,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonScaleDivFree = this.CreateIconButton("ScaleDivFree", Misc.Icon("OperScaleDivFree"), Res.Strings.Action.ScaleDivFree);
 			this.buttonScaleMulFree = this.CreateIconButton("ScaleMulFree", Misc.Icon("OperScaleMulFree"),  Res.Strings.Action.ScaleMulFree);
 			this.CreateFieldScale(ref this.fieldScale, Res.Strings.Action.ScaleValue);
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

@@ -15,6 +15,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.title.Text = "Debug";
 
 			this.buttonOthers = this.CreateMenuButton("", "Debug menu...", new MessageEventHandler(this.HandleOthersClicked));
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

@@ -623,6 +623,18 @@ namespace Epsitec.Common.Widgets
 			this.SetValueBase (Visual.BoundsProperty, value);
 			Drawing.Rectangle new_value = this.Bounds;
 			
+			if (old_value != new_value)
+			{
+				this.UpdateClientGeometry ();
+				
+				Visual parent = this.Parent;
+				
+				if (parent != null)
+				{
+					parent.Invalidate (old_value);
+					parent.Invalidate (new_value);
+				}
+			}
 			if (old_value.Size != new_value.Size)
 			{
 				this.InvalidateProperty (Visual.SizeProperty, old_value.Size, new_value.Size);
@@ -659,6 +671,11 @@ namespace Epsitec.Common.Widgets
 		
 		internal void NotifyLayoutChanged()
 		{
+			if (this.currently_updating_layout > 0)
+			{
+				return;
+			}
+			
 			this.has_layout_changed = true;
 			
 			if (this.suspend_layout_counter == 0)
@@ -685,6 +702,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.Invalidate ();
 		}
+		
 		
 		public virtual void Invalidate()
 		{
@@ -810,6 +828,9 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		protected virtual void UpdateClientGeometry()
+		{
+		}
 		
 		public event PropertyChangedEventHandler	SizeChanged
 		{
@@ -904,6 +925,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected bool							has_layout_changed;
 		protected bool							have_children_changed;
+		protected byte							currently_updating_layout;
 		
 		private Collections.LayerCollection		layer_collection;
 		private Layouts.Layer					parent_layer;

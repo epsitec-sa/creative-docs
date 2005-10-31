@@ -39,6 +39,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.fontColor.TabIndex = this.tabIndex++;
 			this.fontColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontColor, Res.Strings.Action.Text.Font.Color);
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

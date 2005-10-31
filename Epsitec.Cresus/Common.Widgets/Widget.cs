@@ -3585,10 +3585,19 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetBounds (Drawing.Rectangle.FromCorners (x1, y1, x2, y2));
 		}
+#if false
 		internal override void SetBounds(Drawing.Rectangle bounds)
 		{
+			Drawing.Rectangle old_bounds = this.Bounds;
+			Drawing.Rectangle new_bounds = bounds;
+			
 			base.SetBounds (bounds);
-			this.UpdateClientGeometry ();
+			
+			if (old_bounds != new_bounds)
+			{
+				this.UpdateClientGeometry ();
+				this.Invalidate ();
+			}
 #if false //#fix
 			if ((x1 == this.x1) && (y1 == this.y1) && (x2 == this.x2) && (y2 == this.y2))
 			{
@@ -3616,19 +3625,12 @@ namespace Epsitec.Common.Widgets
 			{
 				this.OnSizeChanged ();
 			}
-			
 #endif
-			this.Invalidate ();
 		}
+#endif
 		
-		protected virtual void UpdateClientGeometry()
+		protected override void UpdateClientGeometry()
 		{
-			//#fix -- tout faux !!!
-			double dx = this.Width;
-			double dy = this.Height;
-			
-//			this.client_info.SetSize (dx, dy);
-			
 			if (this.IsLayoutSuspended == false)
 			{
 				this.UpdateChildrenLayout ();
@@ -3662,38 +3664,38 @@ namespace Epsitec.Common.Widgets
 			
 //-			System.Diagnostics.Debug.WriteLine ("UpdateChildrenLayout on " + this.GetType ().Name);
 			
-			Widget[] children = this.Children.Widgets;
-			
-			if (this.TextLayout != null)
-			{
-				this.UpdateTextLayout ();
-			}
-			
-			//	La méthode UpdateMinMaxBasedOnDockedChildren peut être utilisée (par Panel, par ex.) pour
-			//	déterminer une nouvelle taille pour le widget. Si on ne désactive pas temporairement le
-			//	layout ici, on bouclerait (peut-être sans fin) :
-			
-			this.SuspendLayout ();
-			
 			try
 			{
-				this.UpdateHasDockedChildren (children);
-				this.UpdateMinMaxBasedOnDockedChildren (children);
-			}
-			finally
-			{
-				this.ResumeLayout (false);
-			}
-			
-			//	Ce n'est que maintenant que l'on va s'occuper de placer les enfants correctement, en
-			//	tenant compte de leur docking et ancrage :
-			
-			this.UpdateDockedChildrenLayout (children);
-			
-//			System.Diagnostics.Debug.Assert (this.client_info != null);
-			
-			try
-			{
+				this.currently_updating_layout++;
+				Widget[] children = this.Children.Widgets;
+				
+				if (this.TextLayout != null)
+				{
+					this.UpdateTextLayout ();
+				}
+				
+				//	La méthode UpdateMinMaxBasedOnDockedChildren peut être utilisée (par Panel, par ex.) pour
+				//	déterminer une nouvelle taille pour le widget. Si on ne désactive pas temporairement le
+				//	layout ici, on bouclerait (peut-être sans fin) :
+				
+				this.SuspendLayout ();
+				
+				try
+				{
+					this.UpdateHasDockedChildren (children);
+					this.UpdateMinMaxBasedOnDockedChildren (children);
+					
+					//	Ce n'est que maintenant que l'on va s'occuper de placer les enfants correctement, en
+					//	tenant compte de leur docking et ancrage :
+					
+					this.UpdateDockedChildrenLayout (children);
+					
+				}
+				finally
+				{
+					this.ResumeLayout (false);
+				}
+				
 				bool update = true;
 				
 				if (update)
@@ -3764,6 +3766,7 @@ namespace Epsitec.Common.Widgets
 			}
 			finally
 			{
+				this.currently_updating_layout--;
 			}
 		}
 		

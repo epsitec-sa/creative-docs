@@ -509,24 +509,25 @@ namespace Epsitec.Common.Widgets
 		protected void UpdateTabButtons()
 		{
 			// Met à jour tous les boutons des onglets.
-			if ( this.items == null )  return;
-
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Bottom = rect.Top-this.TabHeight;
-			rect.Left -= this.scrollOffset;
-
+			
 			this.scrollTotalWidth = 0;
+			
+			if ( this.items == null )  return;
+			if ( this.items.Count == 0)  return;
+			
 			foreach ( TabPage page in this.items )
 			{
 				Drawing.Size size = page.TabSize;
 				double len = System.Math.Floor(size.Width+size.Height);
 				this.scrollTotalWidth += len;
-
-				rect.Right = rect.Left+len;
-				page.TabBounds = rect;
-				rect.Left = rect.Right;
 			}
-
+			
+			System.Diagnostics.Debug.Assert(this.scrollTotalWidth > 0);
+			
+			Drawing.Rectangle rect = this.Client.Bounds;
+			rect.Bottom = rect.Top-this.TabHeight;
+			rect.Left -= this.scrollOffset;
+			
 			if ( this.Arrows == TabBookArrows.Stretch )
 			{
 				double width = this.Client.Bounds.Width-3;
@@ -537,6 +538,18 @@ namespace Epsitec.Common.Widgets
 					double len = size.Width+size.Height;
 					len *= width/this.scrollTotalWidth;
 					len = System.Math.Floor(len);
+
+					rect.Right = rect.Left+len;
+					page.TabBounds = rect;
+					rect.Left = rect.Right;
+				}
+			}
+			else
+			{
+				foreach ( TabPage page in this.items )
+				{
+					Drawing.Size size = page.TabSize;
+					double len = System.Math.Floor(size.Width+size.Height);
 
 					rect.Right = rect.Left+len;
 					page.TabBounds = rect;

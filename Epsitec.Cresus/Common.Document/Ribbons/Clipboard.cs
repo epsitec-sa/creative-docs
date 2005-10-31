@@ -17,6 +17,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonCut   = this.CreateIconButton("Cut",   Misc.Icon("Cut"),    Res.Strings.Action.Cut);
 			this.buttonCopy  = this.CreateIconButton("Copy",  Misc.Icon("Copy"),   Res.Strings.Action.Copy);
 			this.buttonPaste = this.CreateIconButton("Paste", Misc.Icon("Paste2"), Res.Strings.Action.Paste);
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

@@ -15,6 +15,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.title.Text = Res.Strings.Action.Text.Insert;
 
 			this.buttonGlyphs = this.CreateIconButton("Glyphs", Misc.Icon("Glyphs"), Res.Strings.Action.Glyphs);
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

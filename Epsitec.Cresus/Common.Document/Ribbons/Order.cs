@@ -18,6 +18,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonDownOne = this.CreateIconButton("OrderDownOne", Misc.Icon("OrderDownOne"), Res.Strings.Action.OrderDownOne);
 			this.buttonUpOne   = this.CreateIconButton("OrderUpOne",   Misc.Icon("OrderUpOne"),   Res.Strings.Action.OrderUpOne);
 			this.buttonUpAll   = this.CreateIconButton("OrderUpAll",   Misc.Icon("OrderUpAll"),   Res.Strings.Action.OrderUpAll);
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

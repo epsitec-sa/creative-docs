@@ -23,6 +23,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonColorFillDark    = this.CreateIconButton("ColorFillDark",    Misc.Icon("OperColorFillDark"),    Res.Strings.Action.ColorFillDark);
 			this.buttonColorFillLight   = this.CreateIconButton("ColorFillLight",   Misc.Icon("OperColorFillLight"),   Res.Strings.Action.ColorFillLight);
 			this.CreateFieldColor(ref this.fieldColor, Res.Strings.Action.ColorValue);
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

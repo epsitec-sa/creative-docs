@@ -20,6 +20,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonUngroup = this.CreateIconButton("Ungroup", Misc.Icon("Ungroup"), Res.Strings.Action.Ungroup);
 			this.buttonInside  = this.CreateIconButton("Inside",  Misc.Icon("Inside"),  Res.Strings.Action.Inside);
 			this.buttonOutside = this.CreateIconButton("Outside", Misc.Icon("Outside"), Res.Strings.Action.Outside);
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

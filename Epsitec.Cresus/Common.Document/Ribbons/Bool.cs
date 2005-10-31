@@ -19,6 +19,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonBooleanXor = this.CreateIconButton("BooleanXor", Misc.Icon("BooleanXor"), Res.Strings.Action.BooleanXor);
 			this.buttonBooleanFrontMinus = this.CreateIconButton("BooleanFrontMinus", Misc.Icon("BooleanFrontMinus"), Res.Strings.Action.BooleanFrontMinus);
 			this.buttonBooleanBackMinus = this.CreateIconButton("BooleanBackMinus", Misc.Icon("BooleanBackMinus"), Res.Strings.Action.BooleanBackMinus);
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)

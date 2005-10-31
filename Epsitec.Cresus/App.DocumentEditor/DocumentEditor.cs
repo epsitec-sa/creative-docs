@@ -1257,6 +1257,7 @@ namespace Epsitec.App.DocumentEditor
 				this.ribbonList.RemoveAt(0);
 			}
 
+			this.SuspendLayout();
 			this.ribbonMain.SetVisible  (this.ribbonMain   == this.ribbonActive);
 			this.ribbonObject.SetVisible(this.ribbonObject == this.ribbonActive);
 			this.ribbonOper.SetVisible  (this.ribbonOper   == this.ribbonActive);
@@ -1277,6 +1278,7 @@ namespace Epsitec.App.DocumentEditor
 				DocumentInfo di = this.documents[i] as DocumentInfo;
 				di.bookPanels.AnchorMargins = new Margins(1, 1, this.hToolBar.Height+h+1, this.info.Height+1);
 			}
+			this.ResumeLayout();
 		}
 
 		// Retourne la hauteur utilisée par les rubans.

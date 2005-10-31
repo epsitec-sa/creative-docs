@@ -20,6 +20,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonKey = this.CreateIconButton("KeyApplication", Misc.Icon("Key"), Res.Strings.Action.Key);
 			this.buttonUpdate = this.CreateIconButton("UpdateApplication", Misc.Icon("Update"), Res.Strings.Action.Update);
 			this.buttonAbout = this.CreateIconButton("AboutApplication", Misc.Icon("About"), Res.Strings.Action.About);
+			
+			this.UpdateClientGeometry();
 		}
 		
 		protected override void Dispose(bool disposing)
