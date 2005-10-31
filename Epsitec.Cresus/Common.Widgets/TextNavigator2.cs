@@ -576,6 +576,18 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public void SelectInsertedCharacter()
+		{
+			if (this.text_navigator.IsSelectionActive)
+			{
+				this.text_navigator.EndSelection ();
+			}
+			
+			this.text_navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);
+			this.text_navigator.StartSelection ();
+			this.text_navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);
+		}
+		
 		public void SelectWord()
 		{
 			if (this.text_navigator.IsSelectionActive)

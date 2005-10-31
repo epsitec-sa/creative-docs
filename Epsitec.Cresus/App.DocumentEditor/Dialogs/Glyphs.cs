@@ -517,8 +517,8 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.Plus.SetEnabled(size < 48.0);
 		}
 
-		// Insère le glyphe sélectionné dans le texte en édition.
-		protected void EditInsertGlyph()
+		// Insère le glyphe selon l'onglet actif dans le texte en édition.
+		protected void EditInsert()
 		{
 			if ( !this.editor.IsCurrentDocument )  return;
 
@@ -701,7 +701,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		// Le glyphe est double-cliqué.
 		private void HandleDoubleClicked(object sender, MessageEventArgs e)
 		{
-			this.EditInsertGlyph();
+			this.EditInsert();
 		}
 
 		private void HandleMinusClicked(object sender, MessageEventArgs e)
@@ -738,7 +738,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 		private void HandleButtonInsertClicked(object sender, MessageEventArgs e)
 		{
-			this.EditInsertGlyph();
+			this.EditInsert();
 		}
 
 

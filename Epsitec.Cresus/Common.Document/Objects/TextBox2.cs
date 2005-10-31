@@ -536,6 +536,7 @@ namespace Epsitec.Common.Document.Objects
 				OpenType.Font font = TextContext.GetFont(fontFace, fontStyle);
 				Text.Properties.OpenTypeProperty otp = new Text.Properties.OpenTypeProperty(fontFace, fontStyle, glyph);
 				this.metaNavigator.Insert((Text.Unicode.Code)code, otp);
+				this.metaNavigator.SelectInsertedCharacter();
 			}
 
 			this.NotifyAreaFlow();
