@@ -255,22 +255,31 @@ namespace Epsitec.Common.Text
 		
 		public static OpenType.FontIdentity[] GetAvailableFontIdentities(string face)
 		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
-			foreach (OpenType.FontIdentity id in TextContext.font_collection)
+			if (TextContext.font_ids.Contains (face))
 			{
-				if (id.InvariantFaceName == face)
+				System.Collections.ArrayList list = TextContext.font_ids[face] as System.Collections.ArrayList;
+				return (OpenType.FontIdentity[]) list.ToArray (typeof (OpenType.FontIdentity));
+			}
+			else
+			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				
+				foreach (OpenType.FontIdentity id in TextContext.font_collection)
 				{
-					list.Add (id);
+					if (id.InvariantFaceName == face)
+					{
+						list.Add (id);
+					}
 				}
+				
+				if (list.Count > 1)
+				{
+					list.Sort (OpenType.FontIdentity.Comparer);
+				}
+				
+				TextContext.font_ids[face] = list;
+				return (OpenType.FontIdentity[]) list.ToArray (typeof (OpenType.FontIdentity));
 			}
-			
-			if (list.Count > 1)
-			{
-				list.Sort (OpenType.FontIdentity.Comparer);
-			}
-			
-			return (OpenType.FontIdentity[]) list.ToArray (typeof (OpenType.FontIdentity));
 		}
 		
 		
@@ -1544,5 +1553,7 @@ namespace Epsitec.Common.Text
 		private long							get_margins_last_style_version;
 		private ulong							get_margins_last_code;
 		private Properties.MarginsProperty		get_margins_last_property;
+		
+		static System.Collections.Hashtable		font_ids = new System.Collections.Hashtable ();
 	}
 }

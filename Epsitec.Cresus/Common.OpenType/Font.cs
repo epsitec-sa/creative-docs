@@ -124,7 +124,9 @@ namespace Epsitec.Common.OpenType
 			}
 			
 			this.ot_index_mapping = this.ot_cmap.FindFormatSubTable ();
-			this.glyph_cache = new ushort[Font.GlyphCacheSize];
+			
+			this.glyph_cache   = new ushort[Font.GlyphCacheSize];
+			this.advance_cache = new ushort[Font.AdvanceCacheSize];
 		}
 		
 		
@@ -340,7 +342,7 @@ namespace Epsitec.Common.OpenType
 				{
 					if (glyph < num_h_metrics)
 					{
-						advance = this.ot_hmtx.GetAdvanceWidth (glyph);
+						advance = this.GetAdvance (glyph);
 					}
 					else
 					{
@@ -391,16 +393,19 @@ namespace Epsitec.Common.OpenType
 				ushort glyph = glyphs[i];
 				int    delta;
 				
-				if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+				if (this.use_kerning)
 				{
-					advance += delta;
+					if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+					{
+						advance += delta;
+					}
 				}
 				
 				if (glyph < num_glyph)
 				{
 					if (glyph < num_h_metrics)
 					{
-						advance += this.ot_hmtx.GetAdvanceWidth (glyph);
+						advance += this.GetAdvance (glyph);
 					}
 					else
 					{
@@ -453,9 +458,12 @@ namespace Epsitec.Common.OpenType
 				ushort glyph = glyphs[i];
 				int    delta;
 				
-				if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+				if (this.use_kerning)
 				{
-					advance  += delta;
+					if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+					{
+						advance  += delta;
+					}
 				}
 				
 				x_pos[i] = ox + advance * size / per_em;
@@ -464,7 +472,7 @@ namespace Epsitec.Common.OpenType
 				{
 					if (glyph < num_h_metrics)
 					{
-						advance += this.ot_hmtx.GetAdvanceWidth (glyph);
+						advance += this.GetAdvance (glyph);
 					}
 					else
 					{
@@ -530,9 +538,12 @@ namespace Epsitec.Common.OpenType
 				ushort glyph = glyphs[i];
 				int    delta;
 				
-				if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+				if (this.use_kerning)
 				{
-					advance += delta * x_scale[i] * size / per_em;
+					if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+					{
+						advance += delta * x_scale[i] * size / per_em;
+					}
 				}
 				
 				x_pos[i] = ox + advance;
@@ -541,7 +552,7 @@ namespace Epsitec.Common.OpenType
 				{
 					if (glyph < num_h_metrics)
 					{
-						advance += this.ot_hmtx.GetAdvanceWidth (glyph) * x_scale[i] * size / per_em;
+						advance += this.GetAdvance (glyph) * x_scale[i] * size / per_em;
 					}
 					else
 					{
@@ -605,9 +616,12 @@ namespace Epsitec.Common.OpenType
 				ushort glyph = glyphs[i];
 				int    delta;
 				
-				if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+				if (this.use_kerning)
 				{
-					advance  += delta;
+					if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+					{
+						advance  += delta;
+					}
 				}
 				
 				x_pos[i] = ox + advance * size / per_em;
@@ -617,7 +631,7 @@ namespace Epsitec.Common.OpenType
 				{
 					if (glyph < num_h_metrics)
 					{
-						advance += this.ot_hmtx.GetAdvanceWidth (glyph);
+						advance += this.GetAdvance (glyph);
 					}
 					else
 					{
@@ -1173,12 +1187,6 @@ namespace Epsitec.Common.OpenType
 		
 		public ushort GetGlyphIndex(int code)
 		{
-			if ((code == 0) ||
-				(this.ot_index_mapping == null))
-			{
-				return 0xffff;
-			}
-			
 			ushort glyph;
 			
 			if (code < Font.GlyphCacheSize)
@@ -1189,6 +1197,12 @@ namespace Epsitec.Common.OpenType
 				{
 					return glyph;
 				}
+			}
+			
+			if ((code == 0) ||
+				(this.ot_index_mapping == null))
+			{
+				return 0xffff;
 			}
 			
 			glyph = this.ot_index_mapping.GetGlyphIndex (code);
@@ -1611,9 +1625,12 @@ namespace Epsitec.Common.OpenType
 				ushort glyph = glyphs[i];
 				int    delta;
 				
-				if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+				if (this.use_kerning)
 				{
-					advance += delta;
+					if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+					{
+						advance += delta;
+					}
 				}
 				
 				if ((distance <= pos) &&
@@ -1641,7 +1658,7 @@ namespace Epsitec.Common.OpenType
 				{
 					if (glyph < num_h_metrics)
 					{
-						advance += this.ot_hmtx.GetAdvanceWidth (glyph);
+						advance += this.GetAdvance (glyph);
 					}
 					else
 					{
@@ -1782,7 +1799,7 @@ namespace Epsitec.Common.OpenType
 			{
 				if (glyph < num_h_metrics)
 				{
-					advance = this.ot_hmtx.GetAdvanceWidth (glyph);
+					advance = this.GetAdvance (glyph);
 				}
 				else
 				{
@@ -1794,6 +1811,31 @@ namespace Epsitec.Common.OpenType
 			y = 0.0;
 		}
 		
+		private int GetAdvance(int glyph)
+		{
+			int advance;
+			
+			if (glyph < Font.AdvanceCacheSize)
+			{
+				advance = this.advance_cache[glyph];
+				
+				if (advance != 0)
+				{
+					return advance;
+				}
+			}
+			
+			advance = this.ot_hmtx.GetAdvanceWidth (glyph);
+			
+			if (glyph < Font.AdvanceCacheSize)
+			{
+				System.Diagnostics.Debug.Assert (advance >= 0);
+				
+				this.advance_cache[glyph] = (ushort) advance;
+			}
+			
+			return advance;
+		}
 		
 		private static int[] GetCoverageIndexes(Coverage coverage)
 		{
@@ -1845,7 +1887,9 @@ namespace Epsitec.Common.OpenType
 		private System.Collections.Stack		saved_features_stack;
 		private ushort							space_glyph;
 		private ushort[]						glyph_cache;
+		private ushort[]						advance_cache;
 		
 		private const int						GlyphCacheSize = 256;
+		private const int						AdvanceCacheSize = 256;
 	}
 }
