@@ -8,8 +8,7 @@ namespace Epsitec.Common.Text.Wrappers
 	/// </summary>
 	public enum JustificationMode
 	{
-		Default,						//	réglage par défaut
-		Other,							//	réglage autre (non reconnu)
+		Unknown,						//	réglage inconnu
 		
 		AlignLeft,						//	aligné sur la marge gauche
 		AlignRight,						//	aligné sur la marge droite

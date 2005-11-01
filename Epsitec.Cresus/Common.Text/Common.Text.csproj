@@ -788,7 +788,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Wrappers\AbstractState.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Wrappers\AbstractWrapper.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Wrappers\AccessMode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -799,6 +809,11 @@
                 />
                 <File
                     RelPath = "Wrappers\ParagraphLayoutWrapper.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Wrappers\StateProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
