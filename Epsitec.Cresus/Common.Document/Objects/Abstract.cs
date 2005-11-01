@@ -1026,39 +1026,18 @@ namespace Epsitec.Common.Document.Objects
 				}
 				
 				if ( shape.Aspect != Aspect.Normal       &&
-					shape.Aspect != Aspect.Additional   &&
-					shape.Aspect != Aspect.InvisibleBox )
+					 shape.Aspect != Aspect.Additional   &&
+					 shape.Aspect != Aspect.InvisibleBox )
 				{
 					continue;
 				}
 
-#if false
-				Drawing.Rectangle bbox = Geometry.ComputeBoundingBox(shape.Path);
-				this.bboxThin.MergeWith(bbox);
-
-				double width = 0.0;
-
-				if ( shape.Type == Type.Stroke )
-				{
-					width += Properties.Gradient.InflateBoundingBoxWidth(shape);
-					width += Properties.Line.InflateBoundingBoxWidth(shape);
-					width *= Properties.Line.InflateBoundingBoxFactor(shape);
-				}
-
-				if ( shape.Type == Type.Surface )
-				{
-					width += Properties.Gradient.InflateBoundingBoxWidth(shape);
-				}
-
-				bbox.Inflate(width);
-				this.bboxGeom.MergeWith(bbox);
-#else
 				Drawing.Rectangle bbox = Geometry.ComputeBoundingBox(shape.Path);
 				this.bboxThin.MergeWith(bbox);
 
 				bbox = Geometry.ComputeBoundingBox(shape);
 				this.bboxGeom.MergeWith(bbox);
-#endif
+				this.bboxGeom.MergeWith(this.RealBoundingBox());
 			}
 
 			this.bboxFull = this.bboxGeom;
@@ -2190,6 +2169,12 @@ namespace Epsitec.Common.Document.Objects
 		// Ajoute tous les caractères utilisés par l'objet dans une table.
 		public virtual void FillOneCharList(IPaintPort port, DrawingContext drawingContext, System.Collections.Hashtable table)
 		{
+		}
+
+		// Retourne la bounding réelle, en fonction des caractères contenus.
+		public virtual Drawing.Rectangle RealBoundingBox()
+		{
+			return Drawing.Rectangle.Empty;
 		}
 
 

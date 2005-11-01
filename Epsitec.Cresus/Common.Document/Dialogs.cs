@@ -429,7 +429,7 @@ namespace Epsitec.Common.Document
 		{
 #if false
 			StaticText text = new StaticText(parent);
-			text.Text = string.Format("<b>{0}</b>", labelText);
+			text.Text = Misc.Bold(labelText);
 			text.Dock = DockStyle.Top;
 			text.DockMargins = new Margins(10, 10, 8, 2);
 
@@ -446,7 +446,7 @@ namespace Epsitec.Common.Document
 			sep.DockMargins = new Margins(0, 0, 6, 3);
 
 			StaticText text = new StaticText(parent);
-			text.Text = string.Format("<b>{0}</b>", labelText);
+			text.Text = Misc.Bold(labelText);
 			text.Dock = DockStyle.Top;
 			text.DockMargins = new Margins(10, 10, 2, 8);
 #endif

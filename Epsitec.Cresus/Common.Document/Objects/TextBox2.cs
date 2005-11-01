@@ -12,6 +12,13 @@ namespace Epsitec.Common.Document.Objects
 	[System.Serializable()]
 	public class TextBox2 : Objects.Abstract, Text.ITextRenderer
 	{
+		protected enum InternalOperation
+		{
+			Painting,
+			CharactersTable,
+			RealBoundingBox,
+		}
+
 		public TextBox2(Document document, Objects.Abstract model) : base(document, model)
 		{
 			if ( this.document == null )  return;  // objet factice ?
@@ -295,8 +302,17 @@ namespace Epsitec.Common.Document.Objects
 		public override void FillOneCharList(IPaintPort port, DrawingContext drawingContext, System.Collections.Hashtable table)
 		{
 			this.charactersTable = table;
-			this.DrawText(port, drawingContext);
+			this.DrawText(port, drawingContext, InternalOperation.CharactersTable);
 			this.charactersTable = null;
+		}
+
+		// Retourne la bounding réelle, en fonction des caractères contenus.
+		public override Drawing.Rectangle RealBoundingBox()
+		{
+			this.mergingBoundingBox = Drawing.Rectangle.Empty;
+			this.DrawText(null, null, InternalOperation.RealBoundingBox);
+
+			return this.mergingBoundingBox;
 		}
 
 		// Indique si un objet est éditable.
@@ -1399,6 +1415,14 @@ namespace Epsitec.Common.Document.Objects
 		// Dessine le texte du pavé.
 		public override void DrawText(IPaintPort port, DrawingContext drawingContext)
 		{
+			this.DrawText(port, drawingContext, InternalOperation.Painting);
+		}
+
+		// Effectue une opération quelconquer sur le texte du pavé.
+		protected void DrawText(IPaintPort port, DrawingContext drawingContext, InternalOperation op)
+		{
+			this.internalOperation = op;
+
 			this.cursorBox = Drawing.Rectangle.Empty;
 			this.selectBox = Drawing.Rectangle.Empty;
 
@@ -1408,19 +1432,19 @@ namespace Epsitec.Common.Document.Objects
 			Point p4 = new Point();
 			this.Corners(ref p1, ref p2, ref p3, ref p4);
 
-			Transform ot = port.Transform;
+			Transform ot = null;
+			if ( port != null )
+			{
+				ot = port.Transform;
+			}
 
 			double angle = Point.ComputeAngleDeg(p1, p2);
 			this.transform = new Transform();
 			this.transform.Translate(p1);
 			this.transform.RotateDeg(angle, p1);
-			port.MergeTransform(transform);
-
-			bool active = true;
-			if ( this.document.Modifier != null )
+			if ( port != null )
 			{
-				active = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext &&
-						  this.document.Modifier.ActiveViewer.IsFocused);
+				port.MergeTransform(transform);
 			}
 
 			this.port = port;
@@ -1430,7 +1454,7 @@ namespace Epsitec.Common.Document.Objects
 			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.edited;
 			this.textFlow.TextFitter.RenderTextFrame(this.textFrame, this);
 
-			if ( this.edited && !this.hasSelection && this.graphics != null && this.charactersTable == null )
+			if ( this.edited && !this.hasSelection && this.graphics != null && this.internalOperation == InternalOperation.Painting )
 			{
 				Text.ITextFrame frame;
 				double cx, cy, ascender, descender;
@@ -1438,6 +1462,13 @@ namespace Epsitec.Common.Document.Objects
 			
 				if ( frame == this.textFrame )
 				{
+					bool active = true;
+					if ( this.document.Modifier != null )
+					{
+						active = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext &&
+								  this.document.Modifier.ActiveViewer.IsFocused);
+					}
+
 					double tan = System.Math.Tan(System.Math.PI/2.0 - angle);
 					Point c1 = new Point(cx+tan*descender, cy+descender);
 					Point c2 = new Point(cx+tan*ascender,  cy+ascender);
@@ -1459,7 +1490,10 @@ namespace Epsitec.Common.Document.Objects
 			this.port = null;
 			this.graphics = null;
 
-			port.Transform = ot;
+			if ( port != null )
+			{
+				port.Transform = ot;
+			}
 		}
 
 		#region ITextRenderer Members
@@ -1489,25 +1523,23 @@ namespace Epsitec.Common.Document.Objects
 		
 		public void Render(Text.Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)
 		{
-			if ( this.charactersTable == null )
+			if ( this.internalOperation == InternalOperation.Painting )
 			{
-				Text.ITextFrame frame = layout.Frame;
-			
 				System.Diagnostics.Debug.Assert(mapping != null);
-			
+				Text.ITextFrame frame = layout.Frame;
+
 				// Vérifions d'abord que le mapping du texte vers les glyphes est
 				// correct et correspond à quelque chose de valide :
 				int  offset = 0;
 				bool isInSelection = false;
-			
 				double selX = 0;
-			
+
 				System.Collections.ArrayList selRectList = null;
 				Drawing.Rectangle selBbox = Drawing.Rectangle.Empty;
-			
+
 				double x1 = 0;
 				double x2 = 0;
-			
+
 				int[]    cArray;
 				ushort[] gArray;
 				ulong[]  tArray;
@@ -1516,10 +1548,10 @@ namespace Epsitec.Common.Document.Objects
 					int numChars  = cArray.Length;
 					int numGlyphs = gArray.Length;
 					System.Diagnostics.Debug.Assert(numChars == 1 || numGlyphs == 1);
-				
+
 					x1 = x[offset+0];
 					x2 = x[offset+numGlyphs];
-				
+
 					for ( int i=0 ; i<numChars ; i++ )
 					{
 						if ( (tArray[i] & this.markerSelected) != 0 )
@@ -1542,7 +1574,7 @@ namespace Epsitec.Common.Document.Objects
 								// mémoriser sa fin :
 								double xx = x1 + ((x2 - x1) * i) / numChars;
 								isInSelection = false;
-							
+
 								if ( xx > selX )
 								{
 									this.MarkSel(layout, ref selRectList, ref selBbox, xx, selX);
@@ -1550,42 +1582,43 @@ namespace Epsitec.Common.Document.Objects
 							}
 						}
 					}
-				
+
 					offset += numGlyphs;
 				}
-			
+
 				if ( isInSelection )
 				{
 					// Nous avons quitté une tranche sélectionnée. Il faut
 					// mémoriser sa fin :
 					double xx = x2;
 					isInSelection = false;
-				
+
 					if ( xx > selX )
 					{
 						this.MarkSel(layout, ref selRectList, ref selBbox, xx, selX);
 					}
 				}
-			
+
 				this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.FromName(color));
-			
+
 				if ( this.edited && selRectList != null && this.graphics != null )
 				{
 					this.hasSelection = true;
-				
+
 					Drawing.Rectangle saveClip = this.graphics.SaveClippingRectangle();
 				
 					this.graphics.SetClippingRectangles(selRectList);
 					this.graphics.AddFilledRectangle(selBbox);
 					this.graphics.RenderSolid(Drawing.Color.FromName("Highlight"));
 					this.selectBox.MergeWith(selBbox);
-				
+
 					this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.FromName("HighlightText"));
-				
+
 					this.graphics.RestoreClippingRectangle(saveClip);
 				}
 			}
-			else
+			
+			if ( this.internalOperation == InternalOperation.CharactersTable )
 			{
 				int[]    cArray;
 				ushort[] gArray;
@@ -1624,6 +1657,11 @@ namespace Epsitec.Common.Document.Objects
 					}
 				}
 			}
+
+			if ( this.internalOperation == InternalOperation.RealBoundingBox )
+			{
+				this.RenderText(font, size, glyphs, x, y, sx, sy, RichColor.Empty);
+			}
 		}
 
 		// Marque la fin d'une tranche sélectionnée.
@@ -1657,42 +1695,70 @@ namespace Epsitec.Common.Document.Objects
 		// Effectue le rendu des caractères.
 		protected void RenderText(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, RichColor color)
 		{
-			if ( this.graphics != null )  // affichage sur écran ?
+			if ( this.internalOperation == InternalOperation.Painting )
 			{
-				if ( font.FontManagerType == OpenType.FontManagerType.System )
+				if ( this.graphics != null )  // affichage sur écran ?
 				{
-					Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, color.Basic);
-				}
-				else
-				{
-					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
-					if ( drawingFont != null )
+					if ( font.FontManagerType == OpenType.FontManagerType.System )
 					{
-						for ( int i=0 ; i<glyphs.Length ; i++ )
+						Drawing.NativeTextRenderer.Draw(this.graphics.Pixmap, font, size, glyphs, x, y, color.Basic);
+					}
+					else
+					{
+						Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+						if ( drawingFont != null )
 						{
-							if ( glyphs[i] < 0xffff )
+							for ( int i=0 ; i<glyphs.Length ; i++ )
 							{
-								this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+								if ( glyphs[i] < 0xffff )
+								{
+									this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+								}
 							}
 						}
-					}
 				
-					this.graphics.RenderSolid(color.Basic);
+						this.graphics.RenderSolid(color.Basic);
+					}
+				}
+				else if ( this.port is Printing.PrintPort )  // impression ?
+				{
+					Printing.PrintPort printPort = port as Printing.PrintPort;
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+					printPort.RichColor = color;
+					printPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
+				}
+				else if ( this.port is PDF.Port )  // exportation PDF ?
+				{
+					PDF.Port pdfPort = port as PDF.Port;
+					Drawing.Font drawingFont = Drawing.Font.GetFont(font);
+					pdfPort.RichColor = color;
+					pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
 				}
 			}
-			else if ( this.port is Printing.PrintPort )  // impression ?
+
+			if ( this.internalOperation == InternalOperation.RealBoundingBox )
 			{
-				Printing.PrintPort printPort = port as Printing.PrintPort;
 				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
-				printPort.RichColor = color;
-				printPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
-			}
-			else if ( this.port is PDF.Port )  // exportation PDF ?
-			{
-				PDF.Port pdfPort = port as PDF.Port;
-				Drawing.Font drawingFont = Drawing.Font.GetFont(font);
-				pdfPort.RichColor = color;
-				pdfPort.PaintGlyphs(drawingFont, size, glyphs, x, y, sx, sy);
+				if ( drawingFont != null )
+				{
+					for ( int i=0 ; i<glyphs.Length ; i++ )
+					{
+						if ( glyphs[i] < 0xffff )
+						{
+							Drawing.Rectangle bounds = drawingFont.GetGlyphBounds(glyphs[i], size);
+
+							if ( sx != null )  bounds.Scale(sx[i], 1.0);
+							if ( sy != null )  bounds.Scale(1.0, sy[i]);
+
+							bounds.Offset(x[i], y[i]);
+
+							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.BottomLeft));
+							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.BottomRight));
+							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.TopLeft));
+							this.mergingBoundingBox.MergeWith(this.transform.TransformDirect(bounds.TopRight));
+						}
+					}
+				}
 			}
 		}
 		
@@ -1707,7 +1773,7 @@ namespace Epsitec.Common.Document.Objects
 		
 		public void RenderEndParagraph(Text.Layout.Context context)
 		{
-			if ( this.charactersTable != null )  return;
+			if ( this.internalOperation != InternalOperation.Painting )  return;
 
 			Text.Layout.UnderlineRecord[] records = context.UnderlineRecords;
 			double x1 = 0;
@@ -1821,6 +1887,13 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.textFlow.TextFitter.ClearAllMarks();
 			this.textFlow.TextFitter.GenerateAllMarks();
+
+			// Indique qu'il faudra recalculer les bbox à toute la chaîne des pavés.
+			UndoableList chain = this.textFlow.Chain;
+			foreach ( Objects.Abstract obj in chain )
+			{
+				obj.SetDirtyBbox();
+			}
 		}
 
 		// Notifie "à repeindre" toute la chaîne des pavés.
@@ -1916,6 +1989,8 @@ namespace Epsitec.Common.Document.Objects
 		protected Transform						transform;
 		protected Drawing.Rectangle				cursorBox;
 		protected Drawing.Rectangle				selectBox;
+		protected InternalOperation				internalOperation = InternalOperation.Painting;
 		protected System.Collections.Hashtable	charactersTable = null;
+		protected Drawing.Rectangle				mergingBoundingBox;
 	}
 }
