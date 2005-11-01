@@ -215,6 +215,32 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public void AddGlyphs(Font font, double scale, ushort[] glyphs, double[] x, double[] y, double[] sx)
+		{
+			if (font.IsSynthetic)
+			{
+				if (sx == null)
+				{
+					for (int i = 0; i < glyphs.Length; i++)
+					{
+						this.AddGlyph (font, glyphs[i], x[i], y[i], scale);
+					}
+				}
+				else
+				{
+					for (int i = 0; i < glyphs.Length; i++)
+					{
+						this.AddGlyph (font, glyphs[i], x[i], y[i], scale, sx[i], 1.0);
+					}
+				}
+			}
+			else
+			{
+				this.CreateOnTheFly ();
+				AntiGrain.Rasterizer.AddGlyphs (this.agg_ras, font.Handle, scale, glyphs, x, y, sx);
+			}
+		}
+		
 		public double AddText(Font font, string text, double x, double y, double scale)
 		{
 			this.CreateOnTheFly ();

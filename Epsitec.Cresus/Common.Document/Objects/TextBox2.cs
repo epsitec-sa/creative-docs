@@ -1708,6 +1708,9 @@ namespace Epsitec.Common.Document.Objects
 						Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 						if ( drawingFont != null )
 						{
+#if true
+							this.graphics.Rasterizer.AddGlyphs(drawingFont, size, glyphs, x, y, sx);
+#else
 							for ( int i=0 ; i<glyphs.Length ; i++ )
 							{
 								if ( glyphs[i] < 0xffff )
@@ -1715,6 +1718,7 @@ namespace Epsitec.Common.Document.Objects
 									this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
 								}
 							}
+#endif
 						}
 				
 						this.graphics.RenderSolid(color.Basic);
