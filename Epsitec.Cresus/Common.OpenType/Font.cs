@@ -124,6 +124,7 @@ namespace Epsitec.Common.OpenType
 			}
 			
 			this.ot_index_mapping = this.ot_cmap.FindFormatSubTable ();
+			this.glyph_cache = new ushort[Font.GlyphCacheSize];
 		}
 		
 		
@@ -1178,7 +1179,19 @@ namespace Epsitec.Common.OpenType
 				return 0xffff;
 			}
 			
-			ushort glyph = this.ot_index_mapping.GetGlyphIndex (code);
+			ushort glyph;
+			
+			if (code < Font.GlyphCacheSize)
+			{
+				glyph = this.glyph_cache[code];
+				
+				if (glyph != 0)
+				{
+					return glyph;
+				}
+			}
+			
+			glyph = this.ot_index_mapping.GetGlyphIndex (code);
 			
 			if (glyph == 0x0000)
 			{
@@ -1214,6 +1227,11 @@ namespace Epsitec.Common.OpenType
 						glyph = this.ot_index_mapping.GetGlyphIndex ((int) this.GetHyphen ());
 						break;
 				}
+			}
+			
+			if (code < Font.GlyphCacheSize)
+			{
+				this.glyph_cache[code] = glyph;
 			}
 			
 			return glyph;
@@ -1826,5 +1844,8 @@ namespace Epsitec.Common.OpenType
 		
 		private System.Collections.Stack		saved_features_stack;
 		private ushort							space_glyph;
+		private ushort[]						glyph_cache;
+		
+		private const int						GlyphCacheSize = 256;
 	}
 }
