@@ -1017,8 +1017,7 @@ namespace Epsitec.Common.OpenType
 			
 			System.Collections.ArrayList list;
 			
-			if ((this.ot_GSUB != null) &&
-				(this.alternate_lookups == null))
+			if (this.alternate_lookups == null)
 			{
 				list = new System.Collections.ArrayList ();
 				
@@ -1051,7 +1050,7 @@ namespace Epsitec.Common.OpenType
 			
 			list = null;
 			
-			if (this.alternate_lookups == null)
+			if (this.alternate_lookups != null)
 			{
 				foreach (BaseSubstitution subst in this.alternate_lookups)
 				{
