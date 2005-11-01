@@ -531,7 +531,7 @@ namespace Epsitec.Common.Document
 			this.objects = doc.objects;
 			this.propertiesAuto = doc.propertiesAuto;
 			this.aggregates = doc.aggregates;
-			//?this.textFlows = doc.textFlows;
+			this.textFlows = doc.textFlows;
 			this.uniqueObjectId = doc.uniqueObjectId;
 			this.uniqueAggregateId = doc.uniqueAggregateId;
 			
@@ -647,6 +647,11 @@ namespace Epsitec.Common.Document
 			{
 				obj.ReadFinalize();
 				obj.ReadCheckWarnings(fonts, this.readWarnings);
+			}
+
+			foreach ( TextFlow flow in this.textFlows )
+			{
+				flow.ReadFinalize();
 			}
 
 			if ( this.settings != null )
@@ -901,6 +906,7 @@ namespace Epsitec.Common.Document
 			info.AddValue("Objects", this.objects);
 			info.AddValue("Properties", this.propertiesAuto);
 			info.AddValue("Aggregates", this.aggregates);
+			info.AddValue("TextFlows", this.textFlows);
 		}
 
 		// Constructeur qui désérialise le document.
@@ -965,6 +971,15 @@ namespace Epsitec.Common.Document
 			{
 				this.aggregates = new UndoableList(Document.ReadDocument, UndoableListType.AggregatesInsideDocument);
 				this.uniqueAggregateId = 0;
+			}
+
+			if ( this.IsRevisionGreaterOrEqual(1,2,3) )
+			{
+				this.textFlows = (UndoableList) info.GetValue("TextFlows", typeof(UndoableList));
+			}
+			else
+			{
+				this.textFlows = new UndoableList(this, UndoableListType.TextFlows);
 			}
 		}
 

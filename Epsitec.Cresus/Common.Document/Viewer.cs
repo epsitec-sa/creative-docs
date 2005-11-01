@@ -1150,7 +1150,7 @@ namespace Epsitec.Common.Document
 				Objects.TextBox2 edit = this.DetectEdit(mouse, true, out handle) as Objects.TextBox2;
 				if ( edit == null )
 				{
-					edit = this.document.Modifier.RetEditObject() as Objects.TextBox2;
+					edit = this.editFlowSrc as Objects.TextBox2;
 					this.document.Modifier.Tool = "ObjectTextBox2";
 					this.editFlowAfterCreate = edit;
 					this.CreateMouseDown(mouse);

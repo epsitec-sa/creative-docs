@@ -1823,12 +1823,15 @@ namespace Epsitec.Common.Document.Objects
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			base.GetObjectData(info, context);
+			info.AddValue("TextFlow", this.textFlow);
 		}
 
 		// Constructeur qui désérialise l'objet.
 		protected TextBox2(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 			this.Initialise();
+			this.TextFlow = (TextFlow) info.GetValue("TextFlow", typeof(TextFlow));
+			this.UpdateTextFrame();
 		}
 
 		// Vérifie si tous les fichiers existent.
@@ -1893,7 +1896,7 @@ namespace Epsitec.Common.Document.Objects
 			UndoableList chain = this.textFlow.Chain;
 			foreach ( Objects.Abstract obj in chain )
 			{
-				obj.SetDirtyBbox();
+				//-?obj.SetDirtyBbox();
 			}
 		}
 
@@ -1903,6 +1906,7 @@ namespace Epsitec.Common.Document.Objects
 			UndoableList chain = this.textFlow.Chain;
 			foreach ( Objects.Abstract obj in chain )
 			{
+				if ( obj == null )  continue;
 				this.document.Notifier.NotifyArea(obj.BoundingBox);
 			}
 		}

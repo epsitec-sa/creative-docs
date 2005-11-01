@@ -1037,7 +1037,7 @@ namespace Epsitec.Common.Document.Objects
 
 				bbox = Geometry.ComputeBoundingBox(shape);
 				this.bboxGeom.MergeWith(bbox);
-				this.bboxGeom.MergeWith(this.RealBoundingBox());
+				//-?this.bboxGeom.MergeWith(this.RealBoundingBox());
 			}
 
 			this.bboxFull = this.bboxGeom;

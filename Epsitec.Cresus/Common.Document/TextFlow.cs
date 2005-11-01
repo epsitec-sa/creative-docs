@@ -1,19 +1,27 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Text;
+using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document
 {
 	/// <summary>
 	/// Flux de texte.
 	/// </summary>
-	public class TextFlow
+	[System.Serializable()]
+	public class TextFlow : ISerializable
 	{
 		// Crée un nouveau flux pour un seul pavé.
 		public TextFlow(Document document)
 		{
 			this.document = document;
 
+			this.Initialise();
+			this.objectsChain = new UndoableList(this.document, UndoableListType.ObjectsChain);
+		}
+
+		protected void Initialise()
+		{
 			if ( this.document.Modifier == null )
 			{
 				this.textStory = new Text.TextStory(this.document.TextContext);
@@ -25,8 +33,6 @@ namespace Epsitec.Common.Document
 
 			this.textFitter    = new Text.TextFitter(this.textStory);
 			this.textNavigator = new Text.TextNavigator(this.textFitter);
-
-			this.objectsChain = new UndoableList(this.document, UndoableListType.ObjectsChain);
 		}
 
 
@@ -155,6 +161,35 @@ namespace Epsitec.Common.Document
 		}
 
 
+		#region Serialization
+		// Sérialise l'objet.
+		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			info.AddValue("ObjectsChain", this.objectsChain);
+		}
+
+		// Constructeur qui désérialise l'objet.
+		protected TextFlow(SerializationInfo info, StreamingContext context)
+		{
+			this.document = Document.ReadDocument;
+
+			this.Initialise();
+			this.objectsChain = (UndoableList) info.GetValue("ObjectsChain", typeof(UndoableList));
+		}
+
+		// Adapte l'objet après une désérialisation.
+		public void ReadFinalize()
+		{
+			System.Diagnostics.Debug.Assert(this.TextFitter.FrameList.Count == 0);
+			foreach ( Objects.TextBox2 obj in this.objectsChain )
+			{
+				System.Diagnostics.Debug.Assert(obj.TextFrame != null);
+				this.TextFitter.FrameList.Add(obj.TextFrame);
+			}
+		}
+		#endregion
+
+		
 		protected Document						document;
 		protected Text.TextStory				textStory;
 		protected Text.TextFitter				textFitter;
