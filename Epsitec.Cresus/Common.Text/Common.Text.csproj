@@ -803,6 +803,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Wrappers\FontWrapper.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Wrappers\JustificationMode.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

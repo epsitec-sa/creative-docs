@@ -54,9 +54,9 @@ namespace Epsitec.Common.Text.Wrappers
 		}
 		
 		
-		protected void DefineMeta(string meta, params Property[] properties)
+		protected void DefineMetaProperty(string meta, int priority, params Property[] properties)
 		{
-			TextStyle style = this.style_list.CreateOrGetMetaProperty (meta, properties);
+			TextStyle style = this.style_list.CreateOrGetMetaProperty (meta, priority, properties);
 			
 			if (this.navigator != null)
 			{
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 		}
 		
-		protected void ClearMeta(string meta)
+		protected void ClearMetaProperty(string meta)
 		{
 			TextStyle style = this.style_list.CreateOrGetMetaProperty (meta, new Property[0]);
 			
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Text.Wrappers
 			return null;
 		}
 		
-		protected Property ReadMeta(string meta, Properties.WellKnownType type)
+		protected Property ReadMetaProperty(string meta, Properties.WellKnownType type)
 		{
 			TextStyle[] styles = null;
 			
@@ -144,11 +144,6 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			
 			return null;
-		}
-		
-		protected Property[] ReadMetaMultiple(string meta, Properties.WellKnownType type)
-		{
-			return new Property[0];
 		}
 		
 		

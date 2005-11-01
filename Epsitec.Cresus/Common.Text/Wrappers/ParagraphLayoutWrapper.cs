@@ -116,11 +116,11 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			if (defines > 0)
 			{
-				this.DefineMeta ("Margins", new Properties.MarginsProperty (left_m_first, left_m_body, right_m_first, right_m_body, units, justif_body, justif_last, disposition, double.NaN, double.NaN, hyphenate));
+				this.DefineMetaProperty (ParagraphLayoutWrapper.Margins, 0, new Properties.MarginsProperty (left_m_first, left_m_body, right_m_first, right_m_body, units, justif_body, justif_last, disposition, double.NaN, double.NaN, hyphenate));
 			}
 			else
 			{
-				this.ClearMeta ("Margins");
+				this.ClearMetaProperty (ParagraphLayoutWrapper.Margins);
 			}
 		}
 
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			else
 			{
-				margins = this.ReadMeta ("Margins", Properties.WellKnownType.Margins) as Properties.MarginsProperty;
+				margins = this.ReadMetaProperty (ParagraphLayoutWrapper.Margins, Properties.WellKnownType.Margins) as Properties.MarginsProperty;
 			}
 			
 			State state = active ? this.Active : this.Defined;
@@ -257,6 +257,7 @@ namespace Epsitec.Common.Text.Wrappers
 			
 			state.NotifyIfDirty ();
 		}
+		
 		
 		
 		public class State : AbstractState
@@ -444,14 +445,7 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			
 			
-			public State Clone()
-			{
-				State clone = new State (this.Wrapper, this.AccessMode);
-				clone.CopyFrom (this);
-				return clone;
-			}
-			
-			
+			#region State Properties
 			public static readonly StateProperty	JustificationModeProperty = new StateProperty (typeof (State), "JustificationMode", JustificationMode.Unknown);
 			public static readonly StateProperty	HyphenationProperty = new StateProperty (typeof (State), "Hyphenation", false);
 			public static readonly StateProperty	LeftMarginFirstProperty = new StateProperty (typeof (State), "LeftMarginFirst", double.NaN);
@@ -459,9 +453,13 @@ namespace Epsitec.Common.Text.Wrappers
 			public static readonly StateProperty	RightMarginFirstProperty = new StateProperty (typeof (State), "RightMarginFirst", double.NaN);
 			public static readonly StateProperty	RightMarginBodyProperty = new StateProperty (typeof (State), "RightMarginBody", double.NaN);
 			public static readonly StateProperty	UnitsProperty = new StateProperty (typeof (State), "Units", Properties.SizeUnits.None);
+			#endregion
 		}
+		
 		
 		private State								active_state;
 		private State								defined_state;
+		
+		private const string						Margins = "Margins";
 	}
 }

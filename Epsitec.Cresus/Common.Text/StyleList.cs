@@ -173,6 +173,30 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public TextStyle CreateOrGetMetaProperty(string meta_id, int priority, params Property[] properties)
+		{
+			//	Crée ou réutilise une méta propriété déjà existante s'il en existe
+			//	une qui soit 100% équivalente à celle demandée.
+			
+			TextStyle   temp = this.NewMetaProperty (null, meta_id, priority, properties);
+			TextStyle[] find = this.FindEqualTextStyles (temp);
+			
+			if (find.Length > 0)
+			{
+				System.Diagnostics.Debug.WriteLine ("Reusing meta property : " + find[0].ToString ());
+				
+				this.RecycleTextStyle (temp);
+				
+				return find[0];
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine ("Created meta property : " + temp.ToString ());
+				
+				return temp;
+			}
+		}
+		
 		
 		public void RedefineTextStyle(TextStyle style, System.Collections.ICollection properties)
 		{
