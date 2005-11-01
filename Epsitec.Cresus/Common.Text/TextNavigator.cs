@@ -1129,7 +1129,7 @@ namespace Epsitec.Common.Text
 			this.current_styles     = null;
 			this.current_properties = null;
 			
-			this.OnActiveStyleChanged ();
+//-			this.OnActiveStyleChanged ();
 		}
 		
 		public void UpdateCurrentStylesAndPropertiesIfNeeded()
