@@ -1860,6 +1860,7 @@ namespace Epsitec.Common.Document.Objects
 		private void HandleStyleChanged(object sender)
 		{
 			if ( !this.edited )  return;
+			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
 			this.NotifyAreaFlow();
 			this.ChangeObjectEdited();

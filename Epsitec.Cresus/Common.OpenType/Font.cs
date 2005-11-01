@@ -984,17 +984,20 @@ namespace Epsitec.Common.OpenType
 		{
 			System.Collections.ArrayList list = new	 System.Collections.ArrayList ();
 			
-			foreach (string feature in features)
+			if (this.ot_GSUB != null)
 			{
-				int[] indexes = this.ot_GSUB.GetFeatureIndexes (feature);
-				foreach (int index in indexes)
+				foreach (string feature in features)
 				{
-					FeatureTable f_table = this.ot_GSUB.FeatureListTable.GetFeatureTable (index);
-					int          count   = f_table.LookupCount;
-					
-					for (int i = 0; i < count; i++)
+					int[] indexes = this.ot_GSUB.GetFeatureIndexes (feature);
+					foreach (int index in indexes)
 					{
-						list.Add (this.ot_GSUB.LookupListTable.GetLookupTable (f_table.GetLookupIndex (i)));
+						FeatureTable f_table = this.ot_GSUB.FeatureListTable.GetFeatureTable (index);
+						int          count   = f_table.LookupCount;
+						
+						for (int i = 0; i < count; i++)
+						{
+							list.Add (this.ot_GSUB.LookupListTable.GetLookupTable (f_table.GetLookupIndex (i)));
+						}
 					}
 				}
 			}
@@ -1012,11 +1015,10 @@ namespace Epsitec.Common.OpenType
 			//	exemple plusieurs variantes possibles pour un "&" dans une fonte
 			//	et c'est ainsi que l'on peut avoir la liste des autres glyphes.
 			
-			System.Diagnostics.Debug.Assert (this.ot_GSUB != null);
-			
 			System.Collections.ArrayList list;
 			
-			if (this.alternate_lookups == null)
+			if ((this.ot_GSUB != null) &&
+				(this.alternate_lookups == null))
 			{
 				list = new System.Collections.ArrayList ();
 				
@@ -1049,42 +1051,45 @@ namespace Epsitec.Common.OpenType
 			
 			list = null;
 			
-			foreach (BaseSubstitution subst in this.alternate_lookups)
+			if (this.alternate_lookups == null)
 			{
-				if (subst.Coverage.FindIndex (glyph) >= 0)
+				foreach (BaseSubstitution subst in this.alternate_lookups)
 				{
-					if (list == null)
+					if (subst.Coverage.FindIndex (glyph) >= 0)
 					{
-						list = new System.Collections.ArrayList ();
-					}
-					
-					AlternateSubstitution alternate = subst as AlternateSubstitution;
-					SingleSubstitution    single    = subst as SingleSubstitution;
-					
-					if (alternate != null)
-					{
-						ushort[] subset = alternate.GetAlternates (glyph);
-						
-						System.Diagnostics.Debug.Assert (subset != null);
-						System.Diagnostics.Debug.Assert (subset.Length > 0);
-						
-						for (int i = 0; i < subset.Length; i++)
+						if (list == null)
 						{
-							ushort replace = subset[i];
+							list = new System.Collections.ArrayList ();
+						}
+						
+						AlternateSubstitution alternate = subst as AlternateSubstitution;
+						SingleSubstitution    single    = subst as SingleSubstitution;
+						
+						if (alternate != null)
+						{
+							ushort[] subset = alternate.GetAlternates (glyph);
+							
+							System.Diagnostics.Debug.Assert (subset != null);
+							System.Diagnostics.Debug.Assert (subset.Length > 0);
+							
+							for (int i = 0; i < subset.Length; i++)
+							{
+								ushort replace = subset[i];
+								
+								if (list.Contains (replace) == false)
+								{
+									list.Add (replace);
+								}
+							}
+						}
+						if (single != null)
+						{
+							ushort replace = single.FindSubstitution (glyph);
 							
 							if (list.Contains (replace) == false)
 							{
 								list.Add (replace);
 							}
-						}
-					}
-					if (single != null)
-					{
-						ushort replace = single.FindSubstitution (glyph);
-						
-						if (list.Contains (replace) == false)
-						{
-							list.Add (replace);
 						}
 					}
 				}
@@ -1250,8 +1255,6 @@ namespace Epsitec.Common.OpenType
 		
 		private void GenerateSubstitutionLookups(System.Collections.ICollection feature_tables)
 		{
-			System.Diagnostics.Debug.Assert (this.ot_GSUB != null);
-			
 			System.Collections.ArrayList lookup_indexes = new System.Collections.ArrayList ();
 			
 			foreach (FeatureTable feature_table in feature_tables)
@@ -1273,19 +1276,22 @@ namespace Epsitec.Common.OpenType
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			foreach (int lookup in lookup_indexes)
+			if (this.ot_GSUB != null)
 			{
-				LookupTable lookup_table = this.ot_GSUB.LookupListTable.GetLookupTable (lookup);
-				
-				int n = lookup_table.SubTableCount;
-				
-				for (int i = 0; i < n; i++)
+				foreach (int lookup in lookup_indexes)
 				{
-					BaseSubstitution subst = lookup_table.GetSubstitution (i);
+					LookupTable lookup_table = this.ot_GSUB.LookupListTable.GetLookupTable (lookup);
 					
-					if (subst != null)
+					int n = lookup_table.SubTableCount;
+					
+					for (int i = 0; i < n; i++)
 					{
-						list.Add (subst);
+						BaseSubstitution subst = lookup_table.GetSubstitution (i);
+						
+						if (subst != null)
+						{
+							list.Add (subst);
+						}
 					}
 				}
 			}
