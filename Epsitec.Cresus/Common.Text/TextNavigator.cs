@@ -648,26 +648,21 @@ namespace Epsitec.Common.Text
 					this.story.OpletQueue.ValidateAction ();
 				}
 			}
-//			else
-			{
-				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
-				
-				int pos = this.story.GetCursorPosition (this.cursor);
-				
-				this.SetParagraphStyles (pos, paragraph_styles);
-				
-				System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
-				
-				new_styles.AddRange (paragraph_styles);
-				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
-				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Character));
-				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty));
-				
-				this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
-				
-				this.RefreshAccumulatedStylesAndProperties ();
-			}
 			
+			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
+			
+			this.SetParagraphStyles (this.story.GetCursorPosition (this.cursor), paragraph_styles);
+			
+			System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
+			
+			new_styles.AddRange (paragraph_styles);
+			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
+			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Character));
+			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty));
+			
+			this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
+			
+			this.RefreshAccumulatedStylesAndProperties ();
 			this.NotifyTextChanged ();
 		}
 		
@@ -777,15 +772,24 @@ namespace Epsitec.Common.Text
 			//	compris dans la sélection).
 			
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive == false);
-			
-			if (styles == null)
-			{
-				styles = new TextStyle[0];
-			}
+			System.Diagnostics.Debug.Assert (styles != null);
+			System.Diagnostics.Debug.Assert (styles.Length > 0);
 			
 			TextStyle[] meta_properties = TextStyle.FilterStyles (styles, TextStyleClass.MetaProperty);
 			
+			System.Diagnostics.Debug.Assert (meta_properties.Length == styles.Length);
 			System.Diagnostics.Debug.Assert (meta_properties.Length > 0);
+			
+			bool is_uniform = false;
+			
+			foreach (TextStyle style in meta_properties)
+			{
+				if (style.RequiresUniformParagraph)
+				{
+					is_uniform = true;
+					break;
+				}
+			}
 			
 			if (this.HasSelection)
 			{
@@ -796,31 +800,55 @@ namespace Epsitec.Common.Text
 				{
 					foreach (Range range in ranges)
 					{
-						int pos    = range.Start;
-						int length = range.Length;
+						int start = range.Start;
 						
-						this.SetMetaProperties (pos, length, meta_properties, mode);
+						if (is_uniform)
+						{
+							int pos = start;
+							int end = range.End;
+							
+							while (pos < positions[range.EndIndex])
+							{
+								this.SetParagraphMetaProperties (pos, meta_properties, mode);
+								pos = this.FindNextParagraphStart (pos);
+								
+								//	Comme l'application d'un style de paragraphe avec manager peut
+								//	avoir modifié le texte (insertion de puces, par ex.), on doit
+								//	redemander les positions :
+								
+								positions = this.GetSelectionCursorPositions ();
+							}
+						}
+						else
+						{
+							this.SetMetaProperties (start, range.Length, meta_properties, mode);
+						}
 					}
 					
 					this.story.OpletQueue.ValidateAction ();
 				}
 			}
-//			else
+			
+			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
+			
+			if (is_uniform)
 			{
-				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
-				
-				System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
-				
-				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
-				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
-				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Character));
-				new_styles.AddRange (Internal.Navigator.Combine (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty), meta_properties, mode));
-				
-				this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
-				
-				this.RefreshAccumulatedStylesAndProperties ();
+				int pos = this.story.GetCursorPosition (this.cursor);
+			
+				this.SetParagraphMetaProperties (pos, meta_properties, mode);
 			}
 			
+			
+			System.Collections.ArrayList new_styles = new System.Collections.ArrayList ();
+			
+			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
+			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
+			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Character));
+			new_styles.AddRange (Internal.Navigator.Combine (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty), meta_properties, mode));
+			
+			this.current_styles = new_styles.ToArray (typeof (TextStyle)) as TextStyle[];
+			
+			this.RefreshAccumulatedStylesAndProperties ();
 			this.NotifyTextChanged ();
 		}
 		
@@ -1985,6 +2013,19 @@ namespace Epsitec.Common.Text
 		private void SetMetaProperties(int pos, int length, TextStyle[] meta_properties, Properties.ApplyMode mode)
 		{
 			this.story.SetCursorPosition (this.temp_cursor, pos);
+			
+			Internal.Navigator.SetMetaProperties (this.story, this.temp_cursor, length, mode, meta_properties);
+		}
+		
+		private void SetParagraphMetaProperties(int pos, TextStyle[] meta_properties, Properties.ApplyMode mode)
+		{
+			this.story.SetCursorPosition (this.temp_cursor, pos);
+			
+			int start = Internal.Navigator.GetParagraphStartOffset (this.story, this.temp_cursor);
+			
+			this.story.SetCursorPosition (this.temp_cursor, pos + start);
+			
+			int length = Internal.Navigator.GetParagraphEndLength (this.story, this.temp_cursor);
 			
 			Internal.Navigator.SetMetaProperties (this.story, this.temp_cursor, length, mode, meta_properties);
 		}

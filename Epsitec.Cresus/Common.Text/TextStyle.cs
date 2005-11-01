@@ -62,6 +62,24 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public bool								RequiresUniformParagraph
+		{
+			get
+			{
+				Property[] properties = this.GetProperties ();
+				
+				for (int i = 0; i < properties.Length; i++)
+				{
+					if (properties[i].RequiresUniformParagraph)
+					{
+						return true;
+					}
+				}
+				
+				return false;
+			}
+		}
+		
 		
 		public static System.Collections.IComparer	Comparer
 		{

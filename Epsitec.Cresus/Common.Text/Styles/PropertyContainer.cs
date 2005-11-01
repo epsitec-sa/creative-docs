@@ -157,7 +157,7 @@ namespace Epsitec.Common.Text.Styles
 			this.Invalidate ();
 		}
 		
-		internal Property[] GetProperties()
+		internal virtual Property[] GetProperties()
 		{
 			if (this.properties == null)
 			{
