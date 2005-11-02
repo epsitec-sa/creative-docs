@@ -857,7 +857,7 @@ namespace Epsitec.Common.Document.Objects
 
 			string tag = this.document.SearchTabNextTag();
 			Text.TabList list = this.document.TextContext.TabList;
-			list.NewTab(tag, pos, Text.Properties.SizeUnits.Points, dispo, null, Text.TabPositionMode.Absolute);
+			list.NewTab(tag, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute);
 
 			int count = 0;
 			if ( existingTabs != null )  count = existingTabs.TabTags.Length;

@@ -622,6 +622,8 @@ namespace Epsitec.Common.Text
 			
 restart_paragraph_layout:
 			
+			layout.DefineTabIndentation (false, 0);
+			
 			int line_count        = 0;
 			int line_start_offset = paragraph_start_offset;
 			
@@ -685,6 +687,7 @@ restart_paragraph_layout:
 						
 						layout.DefineLineSkipBefore (this.line_skip_before);
 						layout.DefineKeepWithPreviousParagraph (this.keep_with_prev);
+						layout.DefineTabIndentation (false, 0);
 						
 						break;
 					
@@ -762,8 +765,9 @@ restart_paragraph_layout:
 						double tab_x;
 						double tab_dx;
 						bool   tab_at_line_start = (layout.TextOffset == line_start_offset+1);
+						bool   tab_indents;
 						
-						tab_status = this.MeasureTabTextWidth (layout, tab_property, line_count, tab_at_line_start, out tab_x, out tab_dx);
+						tab_status = this.MeasureTabTextWidth (layout, tab_property, line_count, tab_at_line_start, out tab_x, out tab_dx, out tab_indents);
 						
 						if (tab_status == TabStatus.ErrorNeedMoreText)
 						{
@@ -777,7 +781,7 @@ restart_paragraph_layout:
 							//	à la ligne.
 							
 							tab_new_line = true;
-							tab_status   = this.MeasureTabTextWidth (layout, tab_property, line_count, true, out tab_x, out tab_dx);
+							tab_status   = this.MeasureTabTextWidth (layout, tab_property, line_count, true, out tab_x, out tab_dx, out tab_indents);
 							
 							if (tab_status == TabStatus.ErrorNeedMoreRoom)
 							{
@@ -790,6 +794,7 @@ restart_paragraph_layout:
 							else
 							{
 								layout.MoveTo (tab_x, layout.TextOffset);
+								layout.DefineTabIndentation (tab_indents, tab_x);
 							}
 						}
 						else if (tab_status == TabStatus.Ok)
@@ -797,6 +802,7 @@ restart_paragraph_layout:
 							//	Le tabulateur occupe la même ligne que le texte qui précède.
 							
 							layout.MoveTo (tab_x, layout.TextOffset);
+							layout.DefineTabIndentation (tab_indents, tab_x);
 						}
 						else
 						{
@@ -1232,7 +1238,7 @@ restart_paragraph_layout:
 		}
 		
 		
-		private TabStatus MeasureTabTextWidth(Layout.Context layout, Properties.TabProperty tab_property, int line_count, bool start_of_line, out double tab_x, out double width)
+		private TabStatus MeasureTabTextWidth(Layout.Context layout, Properties.TabProperty tab_property, int line_count, bool start_of_line, out double tab_x, out double width, out bool tab_indents)
 		{
 			tab_x = 0;
 			width = 0;
@@ -1244,6 +1250,41 @@ restart_paragraph_layout:
 			double x1 = start_of_line ? layout.LeftMargin : layout.LineCurrentX;
 			double x2 = tabs.GetTabPositionInPoints (tab_property);
 			double x3 = layout.LineWidth - layout.RightMargin;
+			
+			switch (tabs.GetTabPositionMode (tab_property))
+			{
+				case TabPositionMode.Absolute:
+				case TabPositionMode.AbsoluteIndent:
+					break;
+				
+				case TabPositionMode.LeftRelative:
+				case TabPositionMode.LeftRelativeIndent:
+					
+					//	Tabulateur relatif à la marge de gauche; on ajuste la
+					//	position :
+					
+					x2 = layout.LeftBodyMargin + x2;
+					break;
+				
+				default:
+					throw new System.NotSupportedException (string.Format ("Tab position mode {0} not supported", tabs.GetTabPositionMode (tab_property)));
+			}
+			
+			switch (tabs.GetTabPositionMode (tab_property))
+			{
+				case TabPositionMode.Absolute:
+				case TabPositionMode.LeftRelative:
+					tab_indents = false;
+					break;
+				
+				case TabPositionMode.AbsoluteIndent:
+				case TabPositionMode.LeftRelativeIndent:
+					tab_indents = true;
+					break;
+				
+				default:
+					throw new System.NotSupportedException (string.Format ("Tab position mode {0} not supported", tabs.GetTabPositionMode (tab_property)));
+			}
 			
 			if ((x2 <= x1) &&
 				(start_of_line))

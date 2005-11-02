@@ -27,6 +27,7 @@ namespace Epsitec.Common.Text.Layout
 			
 			this.ox       = mx_left;
 			this.mx_left  = mx_left;
+			this.mx_left_body = mx_left;
 			this.mx_right = mx_right;
 			
 			this.break_fence_before = break_fence_before;
@@ -252,7 +253,15 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.mx_left;
+				return this.use_tab_indentation ? this.tab_indentation_x : this.mx_left;
+			}
+		}
+		
+		public double							LeftBodyMargin
+		{
+			get
+			{
+				return this.mx_left_body;
 			}
 		}
 		
@@ -379,7 +388,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.line_width - this.mx_left - this.mx_right;
+				return this.line_width - this.LeftMargin - this.RightMargin;
 			}
 		}
 		
@@ -509,7 +518,7 @@ namespace Epsitec.Common.Text.Layout
 				this.SelectVerticalAlignment (paragraph_line_count);
 				this.SelectKeep (this.text_offset);
 				
-				this.ox = this.mx_left;
+				this.ox = this.LeftMargin;
 			}
 			
 			this.ox_line_start = this.ox;
@@ -663,7 +672,7 @@ restart:
 					this.frame_y_line = oy;
 					
 					while ((! this.frame.ConstrainLineBox (oy, line_ascender, line_descender, line_height, this.line_leading, this.line_sync_to_grid, out ox, out oy, out dx, out next_frame_y))
-						|| (dx < this.mx_left + this.mx_right)
+						|| (dx < this.LeftMargin + this.RightMargin)
 						|| (pass > 1))
 					{
 						if (continuation)
@@ -686,7 +695,7 @@ restart:
 						goto restart;
 					}
 					
-					this.ox          = ox + this.mx_left;
+					this.ox          = ox + this.LeftMargin;
 					this.oy_base     = oy;
 					this.oy_max      = oy + line_ascender;
 					this.oy_min      = oy + line_descender;
@@ -954,7 +963,7 @@ restart:
 			this.ox      = line_base_x;
 			this.oy_base = line_base_y;
 			
-			this.line_width = line_width + this.mx_left + this.mx_right;
+			this.line_width = line_width + this.LeftMargin + this.RightMargin;
 			
 			Debug.Assert.IsNotNull (this.layout_engine);
 			Debug.Assert.IsNotNull (this.text_context);
@@ -1089,6 +1098,12 @@ restart:
 		{
 			this.ox = x;
 			this.text_offset = offset;
+		}
+		
+		public void DefineTabIndentation(bool tab_indents, double x)
+		{
+			this.use_tab_indentation = tab_indents;
+			this.tab_indentation_x   = x;
 		}
 		
 		public void SwitchLayoutEngine(Layout.BaseEngine engine, Properties.LayoutProperty property)
@@ -1233,7 +1248,7 @@ restart:
 		
 		public void DefineAvailableWidth(double width)
 		{
-			this.line_width = width + this.mx_left + this.mx_right;
+			this.line_width = width + this.LeftMargin + this.RightMargin;
 		}
 		
 		public void SelectMargins(int paragraph_line_index)
@@ -1274,6 +1289,7 @@ restart:
 			{
 				this.mx_left  = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
 				this.mx_right = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
+				this.mx_left_body = Properties.UnitsTools.ConvertToPoints (margins.LeftMarginBody, margins.Units);
 				
 				this.justification = is_last_line ? margins.JustificationLastLine : margins.JustificationBody;
 				this.disposition   = margins.Disposition;
@@ -1663,7 +1679,7 @@ restart:
 		#endregion
 		
 		
-		private Text.TextContext					text_context;
+		private TextContext						text_context;
 		private ulong[]							text;
 		private int								text_start;
 		private int								text_offset;
@@ -1710,7 +1726,11 @@ restart:
 		private int								fence_line_count = -1;		//	# ligne du paragraphe où forcer un saut de frame
 		
 		private double							mx_left;
+		private double							mx_left_body;
 		private double							mx_right;
+		
+		private bool							use_tab_indentation;
+		private double							tab_indentation_x;
 		
 		private double							break_fence_before;
 		private double							break_fence_after;
