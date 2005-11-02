@@ -1037,7 +1037,7 @@ namespace Epsitec.Common.Document.Objects
 
 				bbox = Geometry.ComputeBoundingBox(shape);
 				this.bboxGeom.MergeWith(bbox);
-				//-?this.bboxGeom.MergeWith(this.RealBoundingBox());
+				this.bboxGeom.MergeWith(this.RealBoundingBox());
 			}
 
 			this.bboxFull = this.bboxGeom;
@@ -2216,7 +2216,8 @@ namespace Epsitec.Common.Document.Objects
 			this.totalPropertyHandle = src.totalPropertyHandle;
 			this.mark                = src.mark;
 			this.direction           = src.direction;
-			this.isDirtyPageNumber   = true;
+			this.isDirtyPageNumber   = src.isDirtyPageNumber;
+			this.pageNumber          = src.pageNumber;
 
 			this.surfaceAnchor.SetDirty();
 			this.SplitProperties();

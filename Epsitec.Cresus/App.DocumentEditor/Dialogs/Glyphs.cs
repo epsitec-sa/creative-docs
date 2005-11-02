@@ -340,6 +340,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				}
 			}
 			this.alternatesArray.SetGlyphAlternates(font, code, glyph, alternates);
+			this.HandleArraySelected(null);
 
 			this.alternatesDirty = false;
 		}

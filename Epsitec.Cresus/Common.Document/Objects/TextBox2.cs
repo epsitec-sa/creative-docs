@@ -47,6 +47,8 @@ namespace Epsitec.Common.Document.Objects
 
 			this.markerSelected = this.document.TextContext.Markers.Selected;
 
+			this.lastCursorBox = Drawing.Rectangle.Empty;
+			this.lastSelectBox = Drawing.Rectangle.Empty;
 			this.cursorBox = Drawing.Rectangle.Empty;
 			this.selectBox = Drawing.Rectangle.Empty;
 		}
@@ -77,7 +79,7 @@ namespace Epsitec.Common.Document.Objects
 					this.metaNavigator.TextNavigator = this.textFlow.TextNavigator;
 
 					this.UpdateTextLayout();
-					this.NotifyAreaFlow();
+					this.NotifyAreaFlow(false);
 				}
 			}
 		}
@@ -180,7 +182,7 @@ namespace Epsitec.Common.Document.Objects
 				return;
 			}
 
-			this.NotifyAreaFlow();
+			this.NotifyAreaFlow(false);
 			drawingContext.SnapPos(ref pos);
 
 			if ( Geometry.IsRectangular(this.Handle(0).Position, this.Handle(1).Position, this.Handle(2).Position, this.Handle(3).Position) )
@@ -217,7 +219,7 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesUpdate();
 			this.SetDirtyBbox();
 			this.TextInfoModifRect();
-			this.NotifyAreaFlow();
+			this.NotifyAreaFlow(false);
 		}
 
 		// Déplace globalement l'objet.
@@ -226,7 +228,7 @@ namespace Epsitec.Common.Document.Objects
 			base.MoveGlobalProcess(selector);
 			this.UpdateGeometry();
 			this.HandlePropertiesUpdate();
-			this.NotifyAreaFlow();
+			this.NotifyAreaFlow(false);
 		}
 
 		// Début de la création d'un objet.
@@ -505,7 +507,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			if ( text == null )  return false;
 			this.metaNavigator.Insert(text);
-			this.NotifyAreaFlow();
+			this.NotifyAreaFlow(false);
 			return true;
 		}
 
@@ -535,7 +537,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
-			this.NotifyAreaFlow();
+			this.NotifyAreaFlow(false);
 			return true;
 		}
 
@@ -555,7 +557,7 @@ namespace Epsitec.Common.Document.Objects
 				this.metaNavigator.SelectInsertedCharacter();
 			}
 
-			this.NotifyAreaFlow();
+			this.NotifyAreaFlow(false);
 			return true;
 		}
 
@@ -1418,11 +1420,13 @@ namespace Epsitec.Common.Document.Objects
 			this.DrawText(port, drawingContext, InternalOperation.Painting);
 		}
 
-		// Effectue une opération quelconquer sur le texte du pavé.
+		// Effectue une opération quelconque sur le texte du pavé.
 		protected void DrawText(IPaintPort port, DrawingContext drawingContext, InternalOperation op)
 		{
 			this.internalOperation = op;
 
+			this.lastCursorBox = this.cursorBox;
+			this.lastSelectBox = this.selectBox;
 			this.cursorBox = Drawing.Rectangle.Empty;
 			this.selectBox = Drawing.Rectangle.Empty;
 
@@ -1449,6 +1453,7 @@ namespace Epsitec.Common.Document.Objects
 
 			this.port = port;
 			this.graphics = port as Graphics;
+			this.drawingContext = drawingContext;
 			this.hasSelection = false;
 
 			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.edited;
@@ -1489,6 +1494,7 @@ namespace Epsitec.Common.Document.Objects
 
 			this.port = null;
 			this.graphics = null;
+			this.drawingContext = null;
 
 			if ( port != null )
 			{
@@ -1705,20 +1711,72 @@ namespace Epsitec.Common.Document.Objects
 					}
 					else
 					{
+						Drawing.Rectangle clip = this.drawingContext.Viewer.RedrawArea;
 						Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 						if ( drawingFont != null )
 						{
-#if true
-							this.graphics.Rasterizer.AddGlyphs(drawingFont, size, glyphs, x, y, sx);
-#else
-							for ( int i=0 ; i<glyphs.Length ; i++ )
+							if ( sy == null )
+							//?if ( false )
 							{
-								if ( glyphs[i] < 0xffff )
+								double minX, maxX, minY, maxY;
+								font.GetMaxBox(glyphs, size, x, y, sx, sy, out minX, out maxX, out minY, out maxY);
+								Drawing.Rectangle rect = new Drawing.Rectangle(minX, minY, maxX-minX, maxY-minY);
+
+								Point p1 = rect.BottomLeft;
+								Point p2 = rect.BottomRight;
+								Point p3 = rect.TopLeft;
+								Point p4 = rect.TopRight;
+
+								//?Path path = new Path();
+								//?path.MoveTo(p1);
+								//?path.LineTo(p2);
+								//?path.LineTo(p4);
+								//?path.LineTo(p3);
+								//?path.Close();
+								//?this.graphics.LineWidth = 1.0/this.drawingContext.ScaleX;
+								//?this.graphics.Color = Color.FromRGB(1,0,0);
+								//?this.graphics.PaintOutline(path);
+								//?this.graphics.Color = Color.FromRGB(0,0,0);
+
+								//?if ( clip.Contains(p1) || clip.Contains(p2) || clip.Contains(p3) || clip.Contains(p4) )
+								if ( true )
 								{
-									this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+									this.graphics.Rasterizer.AddGlyphs(drawingFont, size, glyphs, x, y, sx);
 								}
 							}
-#endif
+							else
+							{
+								for ( int i=0 ; i<glyphs.Length ; i++ )
+								{
+									if ( glyphs[i] < 0xffff )
+									{
+										Drawing.Rectangle rect = drawingFont.GetGlyphBounds(glyphs[i], size);
+										rect.Offset(x[i], y[i]);
+
+										Point p1 = rect.BottomLeft;
+										Point p2 = rect.BottomRight;
+										Point p3 = rect.TopLeft;
+										Point p4 = rect.TopRight;
+
+										//?Path path = new Path();
+										//?path.MoveTo(p1);
+										//?path.LineTo(p2);
+										//?path.LineTo(p4);
+										//?path.LineTo(p3);
+										//?path.Close();
+										//?this.graphics.LineWidth = 1.0/this.drawingContext.ScaleX;
+										//?this.graphics.Color = Color.FromRGB(1,0,0);
+										//?this.graphics.PaintOutline(path);
+										//?this.graphics.Color = Color.FromRGB(0,0,0);
+
+										//?if ( clip.Contains(p1) || clip.Contains(p2) || clip.Contains(p3) || clip.Contains(p4) )
+										if ( true )
+										{
+											this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
+										}
+									}
+								}
+							}
 						}
 				
 						this.graphics.RenderSolid(color.Basic);
@@ -1834,7 +1892,10 @@ namespace Epsitec.Common.Document.Objects
 		protected TextBox2(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 			this.Initialise();
-			this.TextFlow = (TextFlow) info.GetValue("TextFlow", typeof(TextFlow));
+
+			this.textFlow = (TextFlow) info.GetValue("TextFlow", typeof(TextFlow));
+			this.metaNavigator.TextNavigator = this.textFlow.TextNavigator;
+
 			this.UpdateTextFrame();
 		}
 
@@ -1851,7 +1912,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( !this.edited )  return;
 			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
-			this.NotifyAreaFlow();
+			this.NotifyAreaFlow(false);
 			this.ChangeObjectEdited();
 		}
 		
@@ -1860,7 +1921,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( !this.edited )  return;
 			this.UpdateTextRulers();
 			this.document.Notifier.NotifyTextChanged();
-			this.NotifyAreaFlow();
+			this.NotifyAreaFlow(true);
 			this.ChangeObjectEdited();
 		}
 
@@ -1869,7 +1930,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( !this.edited )  return;
 			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
-			this.NotifyAreaFlow();
+			this.NotifyAreaFlow(false);
 			this.ChangeObjectEdited();
 		}
 
@@ -1879,7 +1940,7 @@ namespace Epsitec.Common.Document.Objects
 			this.UpdateTextRulers();
 			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
-			this.NotifyAreaFlow();
+			this.NotifyAreaFlow(false);
 			this.ChangeObjectEdited();
 		}
 
@@ -1900,18 +1961,35 @@ namespace Epsitec.Common.Document.Objects
 			UndoableList chain = this.textFlow.Chain;
 			foreach ( Objects.Abstract obj in chain )
 			{
-				//-?obj.SetDirtyBbox();
+				if ( obj == null )  continue;
+				obj.SetDirtyBbox();
 			}
 		}
 
 		// Notifie "à repeindre" toute la chaîne des pavés.
-		public void NotifyAreaFlow()
+		public void NotifyAreaFlow(bool cursorMoved)
 		{
+			System.Collections.ArrayList viewers = this.document.Modifier.AttachViewers;
 			UndoableList chain = this.textFlow.Chain;
-			foreach ( Objects.Abstract obj in chain )
+
+			foreach ( Viewer viewer in viewers )
 			{
-				if ( obj == null )  continue;
-				this.document.Notifier.NotifyArea(obj.BoundingBox);
+				int currentPage = viewer.DrawingContext.CurrentPage;
+				foreach ( Objects.Abstract obj in chain )
+				{
+					if ( obj == null )  continue;
+					if ( obj.PageNumber != currentPage )  continue;
+
+					Drawing.Rectangle clip = obj.BoundingBox;
+
+					if ( cursorMoved && !this.lastSelectBox.IsEmpty && !this.selectBox.IsEmpty )
+					{
+						clip = this.lastSelectBox;
+						clip.MergeWith(this.selectBox);
+					}
+
+					this.document.Notifier.NotifyArea(viewer, clip);
+				}
 			}
 		}
 
@@ -1995,7 +2073,10 @@ namespace Epsitec.Common.Document.Objects
 		protected TextNavigator2				metaNavigator;
 		protected IPaintPort					port;
 		protected Graphics						graphics;
+		protected DrawingContext				drawingContext;
 		protected Transform						transform;
+		protected Drawing.Rectangle				lastCursorBox;
+		protected Drawing.Rectangle				lastSelectBox;
 		protected Drawing.Rectangle				cursorBox;
 		protected Drawing.Rectangle				selectBox;
 		protected InternalOperation				internalOperation = InternalOperation.Painting;

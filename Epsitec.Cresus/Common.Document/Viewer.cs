@@ -1280,6 +1280,7 @@ namespace Epsitec.Common.Document
 			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
 			if ( editObject == null )  return false;
 
+#if false
 			Rectangle ibbox = editObject.BoundingBox;
 			if ( editObject.EditProcessMessage(message, pos) )
 			{
@@ -1288,6 +1289,9 @@ namespace Epsitec.Common.Document
 				return true;
 			}
 			return false;
+#else
+			return editObject.EditProcessMessage(message, pos);
+#endif
 		}
 		#endregion
 

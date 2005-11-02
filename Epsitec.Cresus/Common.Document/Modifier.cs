@@ -1113,7 +1113,10 @@ namespace Epsitec.Common.Document
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject == null )  return false;
 
-			return editObject.EditInsertText(text, fontFace, fontStyle);
+			this.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Insert);
+			bool ok = editObject.EditInsertText(text, fontFace, fontStyle);
+			this.OpletQueueValidateAction();
+			return ok;
 		}
 
 		// Insère un glyphe dans le pavé en édition.
@@ -1122,7 +1125,10 @@ namespace Epsitec.Common.Document
 			Objects.Abstract editObject = this.RetEditObject();
 			if ( editObject == null )  return false;
 
-			return editObject.EditInsertGlyph(code, glyph, fontFace, fontStyle);
+			this.OpletQueueBeginAction(Res.Strings.Action.Text.Glyphs.Alternate);
+			bool ok = editObject.EditInsertGlyph(code, glyph, fontFace, fontStyle);
+			this.OpletQueueValidateAction();
+			return ok;
 		}
 
 		// Donne la fonte actullement utilisée.
@@ -1787,7 +1793,9 @@ namespace Epsitec.Common.Document
 			this.opletLastId = 0;
 			this.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 			this.document.Notifier.NotifySelectionChanged();
+			this.document.Notifier.NotifyTextChanged();
 			this.document.Notifier.NotifyStyleChanged();
+			this.document.Notifier.NotifyTextStyleChanged();
 			this.document.Notifier.NotifyUndoRedoChanged();
 			this.document.Notifier.NotifyArea();
 		}
@@ -1808,7 +1816,9 @@ namespace Epsitec.Common.Document
 			this.opletLastId = 0;
 			this.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 			this.document.Notifier.NotifySelectionChanged();
+			this.document.Notifier.NotifyTextChanged();
 			this.document.Notifier.NotifyStyleChanged();
+			this.document.Notifier.NotifyTextStyleChanged();
 			this.document.Notifier.NotifyUndoRedoChanged();
 			this.document.Notifier.NotifyArea();
 		}

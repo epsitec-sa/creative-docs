@@ -4091,6 +4091,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 			this.ribbonText.SetDirtyText();
+			this.dlgGlyphs.SetAlternatesDirty();
 
 			StatusField field = this.info.Items["StatusObject"] as StatusField;
 			field.Text = this.TextInfoObject;

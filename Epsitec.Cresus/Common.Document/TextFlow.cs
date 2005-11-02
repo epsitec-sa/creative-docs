@@ -131,7 +131,7 @@ namespace Epsitec.Common.Document
 			this.TextFitter.FrameList.Remove(obj.TextFrame);
 
 			obj.UpdateTextLayout();
-			obj.NotifyAreaFlow();
+			obj.NotifyAreaFlow(false);
 
 			obj.NewTextFlow();
 		}
@@ -174,6 +174,14 @@ namespace Epsitec.Common.Document
 			this.document = Document.ReadDocument;
 
 			this.Initialise();
+
+			if ( true )  // TODO: à supprimer dès qu'on sait sérialiser le contenu du texte !
+			{
+				string eot = new string((char)Text.Unicode.Code.EndOfText, 1);
+				this.textNavigator.Insert(eot);
+				this.textNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 0);
+			}
+
 			this.objectsChain = (UndoableList) info.GetValue("ObjectsChain", typeof(UndoableList));
 		}
 
@@ -184,8 +192,11 @@ namespace Epsitec.Common.Document
 			foreach ( Objects.TextBox2 obj in this.objectsChain )
 			{
 				System.Diagnostics.Debug.Assert(obj.TextFrame != null);
-				this.TextFitter.FrameList.Add(obj.TextFrame);
+				this.textFitter.FrameList.Add(obj.TextFrame);
 			}
+
+			this.textFitter.ClearAllMarks();
+			this.textFitter.GenerateAllMarks();
 		}
 		#endregion
 

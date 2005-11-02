@@ -897,6 +897,8 @@
 	<data name="Action.Text.Ruler.TabDecimal">Decimal Tap Stop</data>
 	<data name="Action.Text.Ruler.TabIndent">Indentation Tab Stop</data>
 	<data name="Action.Text.Ruler.TabCreate">Click to create a Tab Stop</data>
+	<data name="Action.Text.Glyphs.Insert">Insert special character</data>
+	<data name="Action.Text.Glyphs.Alternate">Alternate character</data>
 
 	<data name="Text.ButtonBold">&lt;b&gt;B&lt;/b&gt;</data>
 	<data name="Text.ButtonItalic">&lt;i&gt;I&lt;/i&gt;</data>

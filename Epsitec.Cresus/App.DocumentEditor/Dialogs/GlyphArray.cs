@@ -93,6 +93,7 @@ namespace Epsitec.Common.Widgets
 				this.fontFace = "";
 				this.fontStyle = "";
 				this.glyphs = new int[0];  // alloue le tableau
+				this.SelectedIndex = -1;
 			}
 			else
 			{
