@@ -635,15 +635,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				if (this.text_navigator.IsSelectionActive)
-				{
-					this.text_navigator.EndSelection ();
-				}
-				if (this.text_navigator.HasSelection)
-				{
-					this.text_navigator.Delete ();
-				}
-			
+				this.DeleteSelection ();
 				this.text_navigator.Insert (code, ot_property);
 			
 				return true;
@@ -660,6 +652,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
+				this.DeleteSelection ();
 				this.text_navigator.Insert (code);
 				
 				return true;
@@ -668,15 +661,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool Insert(Text.Properties.TabProperty tab_property)
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
-			if (this.text_navigator.HasSelection)
-			{
-				this.text_navigator.Delete ();
-			}
-			
+			this.DeleteSelection ();
 			this.text_navigator.Insert (Text.Unicode.Code.HorizontalTab, tab_property);
 			
 			return true;
@@ -684,15 +669,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool Insert(Text.Properties.BreakProperty break_property)
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
-			if (this.text_navigator.HasSelection)
-			{
-				this.text_navigator.Delete ();
-			}
-			
+			this.DeleteSelection ();
 			this.text_navigator.Insert (Text.Unicode.Code.PageSeparator, break_property);
 			
 			return true;
@@ -700,15 +677,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool Insert(string text)
 		{
-			if (this.text_navigator.IsSelectionActive)
-			{
-				this.text_navigator.EndSelection ();
-			}
-			if (this.text_navigator.HasSelection)
-			{
-				this.text_navigator.Delete ();
-			}
-			
+			this.DeleteSelection ();
 			this.text_navigator.Insert (text);
 			
 			return true;
