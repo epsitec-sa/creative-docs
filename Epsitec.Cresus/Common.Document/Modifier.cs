@@ -3661,6 +3661,7 @@ namespace Epsitec.Common.Document
 				UndoableList pages = this.document.GetObjects;
 				Objects.Page page = pages[rank] as Objects.Page;
 				this.UpdatePageDelete(page);
+				this.DeleteGroup(page);
 				page.Dispose();
 				list.RemoveAt(rank);
 
@@ -4170,6 +4171,7 @@ namespace Epsitec.Common.Document
 
 				UndoableList layers = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
 				Objects.Layer layer = layers[rank] as Objects.Layer;
+				this.DeleteGroup(layer);
 				layer.Dispose();
 				list.RemoveAt(rank);
 
