@@ -1174,6 +1174,47 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public void GetMaxBox(double size, out double x_min, out double x_max, out double y_min, out double y_max)
+		{
+			double scale = size / this.ot_head.UnitsPerEm;
+			
+			x_min = this.ot_head.XMin * scale;
+			x_max = this.ot_head.XMax * scale;
+			y_min = this.ot_head.YMin * scale;
+			y_max = this.ot_head.YMax * scale;
+		}
+		
+		public void GetMaxBox(ushort[] glyphs, double size, double[] x, double[] y, double[] sx, double[] sy, out double x_min, out double x_max, out double y_min, out double y_max)
+		{
+			System.Diagnostics.Debug.Assert (glyphs.Length > 0);
+			
+			double scale = size / this.ot_head.UnitsPerEm;
+			
+			double ot_xmin = this.ot_head.XMin * scale;
+			double ot_xmax = this.ot_head.XMax * scale;
+			double ot_ymin = this.ot_head.YMin * scale;
+			double ot_ymax = this.ot_head.YMax * scale;
+			
+			x_min = x[0] + ot_xmin * (sx == null ? 1 : sx[0]);
+			x_max = x[0] + ot_xmax * (sx == null ? 1 : sx[0]);
+			y_min = y[0] + ot_ymin * (sy == null ? 1 : sy[0]);
+			y_max = y[0] + ot_ymax * scale * (sy == null ? 1 : sy[0]);
+			
+			for (int i = 1; i < glyphs.Length; i++)
+			{
+				double xx_min = x[i] + ot_xmin * (sx == null ? 1 : sx[0]);
+				double xx_max = x[i] + ot_xmax * (sx == null ? 1 : sx[0]);
+				double yy_min = y[i] + ot_ymin * (sy == null ? 1 : sy[0]);
+				double yy_max = y[i] + ot_ymax * scale * (sy == null ? 1 : sy[0]);
+				
+				if (xx_min < x_min) x_min = xx_min;
+				if (xx_max > x_max) x_max = xx_max;
+				if (yy_min < y_min) y_min = yy_min;
+				if (yy_max > y_max) y_max = yy_max;
+			}
+		}
+		
+		
 		public ulong GetHyphen()
 		{
 			return '-';
