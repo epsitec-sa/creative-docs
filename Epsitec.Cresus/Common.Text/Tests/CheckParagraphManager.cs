@@ -41,8 +41,8 @@ namespace Epsitec.Common.Text.Tests
 			TabList tabs = story.TextContext.TabList;
 			
 			items.Generator = generator;
-			items.TabItem   = tabs.NewTab ("T.item", 10.0, Properties.SizeUnits.Points, 0.0, null);
-			items.TabBody   = tabs.NewTab ("T.body", 40.0, Properties.SizeUnits.Points, 0.0, null);
+			items.TabItem   = tabs.NewTab ("T.item", 10.0, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute);
+			items.TabBody   = tabs.NewTab ("T.body", 40.0, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute);
 			
 			properties.Clear ();
 			properties.Add (new Properties.FontProperty ("Verdana", "Regular"));

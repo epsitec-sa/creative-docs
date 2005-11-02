@@ -42,20 +42,25 @@ namespace Epsitec.Common.Text
 		
 		public Properties.TabProperty NewTab(string tag, double position, Properties.SizeUnits units, double disposition)
 		{
-			return this.NewTab (tag, position, units, disposition, null);
+			return this.NewTab (tag, position, units, disposition, null, TabPositionMode.Absolute);
 		}
 		
-		public Properties.TabProperty NewTab(string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark)
+		public Properties.TabProperty NewTab(string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode)
 		{
+			if (tag == null)
+			{
+				tag = this.GenerateUniqueName ();
+			}
+			
 			Properties.TabProperty tab = new Properties.TabProperty (tag);
 			
-			this.Attach (tab, new TabRecord (position, units, disposition, docking_mark));
+			this.Attach (tab, new TabRecord (position, units, disposition, docking_mark, position_mode));
 			
 			return tab;
 		}
 		
 		
-		public void RedefineTab(Properties.TabProperty tab, double position, Properties.SizeUnits units, double disposition, string docking_mark)
+		public void RedefineTab(Properties.TabProperty tab, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode)
 		{
 			System.Diagnostics.Debug.Assert (tab != null);
 			System.Diagnostics.Debug.Assert (tab.TabTag != null);
@@ -71,7 +76,7 @@ namespace Epsitec.Common.Text
 			
 			lock (record)
 			{
-				record.Initialise (position, units, disposition, docking_mark);
+				record.Initialise (position, units, disposition, docking_mark, position_mode);
 			}
 		}
 		
@@ -128,6 +133,11 @@ namespace Epsitec.Common.Text
 			return this.GetTabRecord (tab).DockingMark;
 		}
 		
+		public TabPositionMode GetTabPositionMode(Properties.TabProperty tab)
+		{
+			return this.GetTabRecord (tab).PositionMode;
+		}
+		
 		public long GetTabVersion(Properties.TabProperty tab)
 		{
 			TabRecord record = this.GetTabRecord (tab);
@@ -147,9 +157,9 @@ namespace Epsitec.Common.Text
 		#region TabRecord Class
 		private class TabRecord
 		{
-			public TabRecord(double position, Properties.SizeUnits units, double disposition, string docking_mark)
+			public TabRecord(double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode)
 			{
-				this.Initialise (position, units, disposition, docking_mark);
+				this.Initialise (position, units, disposition, docking_mark, position_mode);
 			}
 			
 			
@@ -193,6 +203,14 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
+			public TabPositionMode				PositionMode
+			{
+				get
+				{
+					return this.position_mode;
+				}
+			}
+			
 			public long							Version
 			{
 				get
@@ -206,12 +224,13 @@ namespace Epsitec.Common.Text
 			}
 			
 			
-			public void Initialise(double position, Properties.SizeUnits units, double disposition, string docking_mark)
+			public void Initialise(double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode)
 			{
-				this.position     = position;
-				this.units        = units;
-				this.disposition  = disposition;
-				this.docking_mark = docking_mark;
+				this.position      = position;
+				this.units         = units;
+				this.disposition   = disposition;
+				this.docking_mark  = docking_mark;
+				this.position_mode = position_mode;
 				
 				this.version = 0;
 			}
@@ -221,9 +240,19 @@ namespace Epsitec.Common.Text
 			private Properties.SizeUnits		units;
 			private double						disposition;				//	0.0 = aligné à gauche, 0.5 = centré, 1.0 = aligné à droite
 			private string						docking_mark;				//	"." = aligne sur le point décimal
+			private TabPositionMode				position_mode;
 			private long						version;
 		}
 		#endregion
+		
+		private string GenerateUniqueName()
+		{
+			lock (this)
+			{
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "#ID#{0}", this.unique_id++);
+			}
+		}
+		
 		
 		private TabRecord GetTabRecord(Properties.TabProperty tab)
 		{
@@ -258,5 +287,6 @@ namespace Epsitec.Common.Text
 		
 		
 		private System.Collections.Hashtable	tab_hash;
+		private long							unique_id;
 	}
 }

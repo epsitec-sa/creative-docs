@@ -244,7 +244,7 @@ namespace Epsitec.Common.Text.Tests
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.ColorProperty ("Black"));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null));
+			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
@@ -320,7 +320,7 @@ namespace Epsitec.Common.Text.Tests
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.ColorProperty ("Black"));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.5, null));
+			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.5, null, TabPositionMode.Absolute));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
@@ -404,7 +404,7 @@ namespace Epsitec.Common.Text.Tests
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.ColorProperty ("Black"));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null));
+			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
@@ -479,7 +479,7 @@ namespace Epsitec.Common.Text.Tests
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.ColorProperty ("Black"));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null));
+			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
 			
 			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
@@ -563,7 +563,7 @@ namespace Epsitec.Common.Text.Tests
 			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties_1.Add (new Properties.ColorProperty ("Black"));
 			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null));
+			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
 			
 			properties_2.Add (font_bold);
 			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));

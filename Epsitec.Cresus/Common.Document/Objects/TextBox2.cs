@@ -857,7 +857,7 @@ namespace Epsitec.Common.Document.Objects
 
 			string tag = this.document.SearchTabNextTag();
 			Text.TabList list = this.document.TextContext.TabList;
-			list.NewTab(tag, pos, Text.Properties.SizeUnits.Points, dispo, null);
+			list.NewTab(tag, pos, Text.Properties.SizeUnits.Points, dispo, null, Text.TabPositionMode.Absolute);
 
 			int count = 0;
 			if ( existingTabs != null )  count = existingTabs.TabTags.Length;
@@ -917,7 +917,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( type == TextTabType.Center )  dispo = 0.5;
 			if ( type == TextTabType.Left   )  dispo = 1.0;
 
-			list.RedefineTab(tab, pos, Text.Properties.SizeUnits.Points, dispo, null);
+			list.RedefineTab(tab, pos, Text.Properties.SizeUnits.Points, dispo, null, TabPositionMode.Absolute);
 			this.HandleTabChanged(null);  // TODO: devrait être inutile
 		}
 

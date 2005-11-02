@@ -1235,16 +1235,16 @@ namespace Epsitec.Common.Document
 			Text.ParagraphManagers.ItemListManager.Parameters items3 = new Text.ParagraphManagers.ItemListManager.Parameters();
 
 			items1.Generator = generator1;
-			items1.TabItem   = tabs.NewTab("T1-item", 10.0, Text.Properties.SizeUnits.Points, 0, null);
-			items1.TabBody   = tabs.NewTab("T1-body", 60.0, Text.Properties.SizeUnits.Points, 0, null);
+			items1.TabItem   = tabs.NewTab("T1-item", 10.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
+			items1.TabBody   = tabs.NewTab("T1-body", 60.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
 			
 			items2.Generator = generator2;
-			items2.TabItem   = tabs.NewTab("T2-item", 10.0, Text.Properties.SizeUnits.Points, 0, null);
-			items2.TabBody   = tabs.NewTab("T2-body", 60.0, Text.Properties.SizeUnits.Points, 0, null);
+			items2.TabItem   = tabs.NewTab("T2-item", 10.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
+			items2.TabBody   = tabs.NewTab("T2-body", 60.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
 			
 			items3.Generator = generator3;
-			items3.TabItem   = tabs.NewTab("T3-item", 10.0, Text.Properties.SizeUnits.Points, 0, null);
-			items3.TabBody   = tabs.NewTab("T3-body", 60.0, Text.Properties.SizeUnits.Points, 0, null);
+			items3.TabItem   = tabs.NewTab("T3-item", 10.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
+			items3.TabBody   = tabs.NewTab("T3-body", 60.0, Text.Properties.SizeUnits.Points, 0, null, TabPositionMode.Absolute);
 			
 			Text.Properties.ManagedParagraphProperty itemList1 = new Text.Properties.ManagedParagraphProperty("ItemList", items1.Save());
 			Text.Properties.ManagedParagraphProperty itemList2 = new Text.Properties.ManagedParagraphProperty("ItemList", items2.Save());
