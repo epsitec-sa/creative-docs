@@ -660,7 +660,9 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				return this.Insert (new string ((char) code, 1));
+				this.text_navigator.Insert (code);
+				
+				return true;
 			}
 		}
 		

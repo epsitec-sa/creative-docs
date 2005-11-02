@@ -1275,11 +1275,13 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
+		#region ICursorOplet Interface
 		internal interface ICursorOplet
 		{
 			ICursor			Cursor		{ get; }
 			CursorInfo[]	CursorInfos	{ get; }
 		}
+		#endregion
 		
 		#region Abstract BaseCursorOplet Class
 		internal abstract class BaseCursorOplet : BaseOplet, ICursorOplet
@@ -1813,7 +1815,7 @@ namespace Epsitec.Common.Text
 		private ICursor							temp_cursor;
 		
 		private Common.Support.OpletQueue		oplet_queue;
-		private TextContext							context;
+		private TextContext						context;
 		
 		private bool							debug_disable_oplet;
 		private bool							debug_disable_merge;

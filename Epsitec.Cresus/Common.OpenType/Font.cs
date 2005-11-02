@@ -946,10 +946,11 @@ namespace Epsitec.Common.OpenType
 		
 		public string[] GetSupportedFeatures()
 		{
+			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
+			
 			if (this.script_optional_features == null)
 			{
 				FeatureListTable feature_list = this.ot_GSUB == null ? null : this.ot_GSUB.FeatureListTable;
-				System.Collections.Hashtable hash = new System.Collections.Hashtable ();
 				
 				int n = feature_list == null ? 0 : feature_list.FeatureCount;
 				
@@ -957,25 +958,32 @@ namespace Epsitec.Common.OpenType
 				{
 					hash[feature_list.GetFeatureTag (i)] = null;
 				}
-				
-				string[] feature_names = new string[hash.Count];
-				hash.Keys.CopyTo (feature_names, 0);
-				
-				return feature_names;
 			}
 			else
 			{
 				int n = this.script_optional_features.Length;
 				
-				string[] feature_names = new string[n];
-				
 				for (int i = 0; i < n; i++)
 				{
-					feature_names[i] = this.script_optional_features[i].Tag;
+					hash[this.script_optional_features[i].Tag] = null;
 				}
-				
-				return feature_names;
 			}
+			
+			//	Ajoute des features "synthétiques" comme le crénage et les ligatures
+			//	que nous savons émuler au besoin :
+			
+			if (ot_kern_fmt_0 != null)
+			{
+				hash["kern"] = null;
+			}
+			
+			hash["liga"] = null;
+			
+			string[] feature_names = new string[hash.Count];
+			hash.Keys.CopyTo (feature_names, 0);
+			System.Array.Sort (feature_names);
+			
+			return feature_names;
 		}
 		
 		

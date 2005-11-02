@@ -158,6 +158,12 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
+		public void Insert(Unicode.Code code)
+		{
+			this.InsertText (new string ((char) code, 1));
+			this.NotifyTextChanged ();
+		}
+		
 		public void Insert(Unicode.Code code, Property property)
 		{
 			//	Insère un caractère spécial qui doit être lié à la propriété de

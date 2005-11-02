@@ -33,6 +33,12 @@ namespace Epsitec.Common.Document
 
 			this.textFitter    = new Text.TextFitter(this.textStory);
 			this.textNavigator = new Text.TextNavigator(this.textFitter);
+			
+			this.textStory.TextContext.IsDegradedLayoutEnabled = true;
+			this.textStory.DebugDisableOpletQueue = true;
+			this.textNavigator.Insert(Text.Unicode.Code.EndOfText);
+			this.textNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 0);
+			this.textStory.DebugDisableOpletQueue = false;
 		}
 
 
@@ -174,13 +180,6 @@ namespace Epsitec.Common.Document
 			this.document = Document.ReadDocument;
 
 			this.Initialise();
-
-			if ( true )  // TODO: à supprimer dès qu'on sait sérialiser le contenu du texte !
-			{
-				string eot = new string((char)Text.Unicode.Code.EndOfText, 1);
-				this.textNavigator.Insert(eot);
-				this.textNavigator.MoveTo(Text.TextNavigator.Target.TextStart, 0);
-			}
 
 			this.objectsChain = (UndoableList) info.GetValue("ObjectsChain", typeof(UndoableList));
 		}

@@ -109,8 +109,11 @@ namespace Epsitec.Common.Text
 			this.line_fence       = -1;
 			this.keep_with_prev   = false;
 			
-			TextProcessor processor = new TextProcessor (this.story);
-			processor.Process (new TextProcessor.Executor (this.ExecuteGenerate));
+			if (this.frame_list.Count > 0)
+			{
+				TextProcessor processor = new TextProcessor (this.story);
+				processor.Process (new TextProcessor.Executor (this.ExecuteGenerate));
+			}
 			
 			this.story.ClearTextChangeMarkPositions ();
 			this.frame_list.ClearCursorMap ();
@@ -171,9 +174,12 @@ namespace Epsitec.Common.Text
 				
 				try
 				{
-					processor = new TextProcessor (this.story);
-					processor.DefineStartFence (start);
-					processor.Process (new TextProcessor.Executor (this.ExecuteGenerate));
+					if (this.frame_list.Count > 0)
+					{
+						processor = new TextProcessor (this.story);
+						processor.DefineStartFence (start);
+						processor.Process (new TextProcessor.Executor (this.ExecuteGenerate));
+					}
 				}
 				catch (System.InvalidOperationException)
 				{
