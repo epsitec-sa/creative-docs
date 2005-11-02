@@ -47,8 +47,6 @@ namespace Epsitec.Common.Document.Objects
 
 			this.markerSelected = this.document.TextContext.Markers.Selected;
 
-			this.lastCursorBox = Drawing.Rectangle.Empty;
-			this.lastSelectBox = Drawing.Rectangle.Empty;
 			this.cursorBox = Drawing.Rectangle.Empty;
 			this.selectBox = Drawing.Rectangle.Empty;
 		}
@@ -79,7 +77,7 @@ namespace Epsitec.Common.Document.Objects
 					this.metaNavigator.TextNavigator = this.textFlow.TextNavigator;
 
 					this.UpdateTextLayout();
-					this.NotifyAreaFlow(false);
+					this.NotifyAreaFlow();
 				}
 			}
 		}
@@ -182,7 +180,7 @@ namespace Epsitec.Common.Document.Objects
 				return;
 			}
 
-			this.NotifyAreaFlow(false);
+			this.NotifyAreaFlow();
 			drawingContext.SnapPos(ref pos);
 
 			if ( Geometry.IsRectangular(this.Handle(0).Position, this.Handle(1).Position, this.Handle(2).Position, this.Handle(3).Position) )
@@ -219,7 +217,7 @@ namespace Epsitec.Common.Document.Objects
 			this.HandlePropertiesUpdate();
 			this.SetDirtyBbox();
 			this.TextInfoModifRect();
-			this.NotifyAreaFlow(false);
+			this.NotifyAreaFlow();
 		}
 
 		// Déplace globalement l'objet.
@@ -228,7 +226,7 @@ namespace Epsitec.Common.Document.Objects
 			base.MoveGlobalProcess(selector);
 			this.UpdateGeometry();
 			this.HandlePropertiesUpdate();
-			this.NotifyAreaFlow(false);
+			this.NotifyAreaFlow();
 		}
 
 		// Début de la création d'un objet.
@@ -507,7 +505,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			if ( text == null )  return false;
 			this.metaNavigator.Insert(text);
-			this.NotifyAreaFlow(false);
+			this.NotifyAreaFlow();
 			return true;
 		}
 
@@ -537,7 +535,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
-			this.NotifyAreaFlow(false);
+			this.NotifyAreaFlow();
 			return true;
 		}
 
@@ -557,7 +555,7 @@ namespace Epsitec.Common.Document.Objects
 				this.metaNavigator.SelectInsertedCharacter();
 			}
 
-			this.NotifyAreaFlow(false);
+			this.NotifyAreaFlow();
 			return true;
 		}
 
@@ -1425,8 +1423,6 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.internalOperation = op;
 
-			this.lastCursorBox = this.cursorBox;
-			this.lastSelectBox = this.selectBox;
 			this.cursorBox = Drawing.Rectangle.Empty;
 			this.selectBox = Drawing.Rectangle.Empty;
 
@@ -1455,6 +1451,19 @@ namespace Epsitec.Common.Document.Objects
 			this.graphics = port as Graphics;
 			this.drawingContext = drawingContext;
 			this.hasSelection = false;
+
+			this.redrawArea = Drawing.Rectangle.Empty;
+			if ( this.drawingContext != null )
+			{
+				Point pbl = this.transform.TransformInverse(this.drawingContext.Viewer.RedrawArea.BottomLeft);
+				Point pbr = this.transform.TransformInverse(this.drawingContext.Viewer.RedrawArea.BottomRight);
+				Point ptl = this.transform.TransformInverse(this.drawingContext.Viewer.RedrawArea.TopLeft);
+				Point ptr = this.transform.TransformInverse(this.drawingContext.Viewer.RedrawArea.TopRight);
+				this.redrawArea.MergeWith(pbl);
+				this.redrawArea.MergeWith(pbr);
+				this.redrawArea.MergeWith(ptl);
+				this.redrawArea.MergeWith(ptr);
+			}
 
 			this.textFlow.TextStory.TextContext.ShowControlCharacters = this.edited;
 			this.textFlow.TextFitter.RenderTextFrame(this.textFrame, this);
@@ -1711,38 +1720,12 @@ namespace Epsitec.Common.Document.Objects
 					}
 					else
 					{
-						Drawing.Rectangle clip = this.drawingContext.Viewer.RedrawArea;
 						Drawing.Font drawingFont = Drawing.Font.GetFont(font);
 						if ( drawingFont != null )
 						{
 							if ( sy == null )
-							//?if ( false )
 							{
-								double minX, maxX, minY, maxY;
-								font.GetMaxBox(glyphs, size, x, y, sx, sy, out minX, out maxX, out minY, out maxY);
-								Drawing.Rectangle rect = new Drawing.Rectangle(minX, minY, maxX-minX, maxY-minY);
-
-								Point p1 = rect.BottomLeft;
-								Point p2 = rect.BottomRight;
-								Point p3 = rect.TopLeft;
-								Point p4 = rect.TopRight;
-
-								//?Path path = new Path();
-								//?path.MoveTo(p1);
-								//?path.LineTo(p2);
-								//?path.LineTo(p4);
-								//?path.LineTo(p3);
-								//?path.Close();
-								//?this.graphics.LineWidth = 1.0/this.drawingContext.ScaleX;
-								//?this.graphics.Color = Color.FromRGB(1,0,0);
-								//?this.graphics.PaintOutline(path);
-								//?this.graphics.Color = Color.FromRGB(0,0,0);
-
-								//?if ( clip.Contains(p1) || clip.Contains(p2) || clip.Contains(p3) || clip.Contains(p4) )
-								if ( true )
-								{
-									this.graphics.Rasterizer.AddGlyphs(drawingFont, size, glyphs, x, y, sx);
-								}
+								this.graphics.Rasterizer.AddGlyphs(drawingFont, size, glyphs, x, y, sx);
 							}
 							else
 							{
@@ -1750,30 +1733,7 @@ namespace Epsitec.Common.Document.Objects
 								{
 									if ( glyphs[i] < 0xffff )
 									{
-										Drawing.Rectangle rect = drawingFont.GetGlyphBounds(glyphs[i], size);
-										rect.Offset(x[i], y[i]);
-
-										Point p1 = rect.BottomLeft;
-										Point p2 = rect.BottomRight;
-										Point p3 = rect.TopLeft;
-										Point p4 = rect.TopRight;
-
-										//?Path path = new Path();
-										//?path.MoveTo(p1);
-										//?path.LineTo(p2);
-										//?path.LineTo(p4);
-										//?path.LineTo(p3);
-										//?path.Close();
-										//?this.graphics.LineWidth = 1.0/this.drawingContext.ScaleX;
-										//?this.graphics.Color = Color.FromRGB(1,0,0);
-										//?this.graphics.PaintOutline(path);
-										//?this.graphics.Color = Color.FromRGB(0,0,0);
-
-										//?if ( clip.Contains(p1) || clip.Contains(p2) || clip.Contains(p3) || clip.Contains(p4) )
-										if ( true )
-										{
-											this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
-										}
+										this.graphics.Rasterizer.AddGlyph(drawingFont, glyphs[i], x[i], y[i], size, sx == null ? 1.0 : sx[i], sy == null ? 1.0 : sy[i]);
 									}
 								}
 							}
@@ -1912,7 +1872,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( !this.edited )  return;
 			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
-			this.NotifyAreaFlow(false);
+			this.NotifyAreaFlow();
 			this.ChangeObjectEdited();
 		}
 		
@@ -1921,7 +1881,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( !this.edited )  return;
 			this.UpdateTextRulers();
 			this.document.Notifier.NotifyTextChanged();
-			this.NotifyAreaFlow(true);
+			this.NotifyAreaFlow();
 			this.ChangeObjectEdited();
 		}
 
@@ -1930,7 +1890,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( !this.edited )  return;
 			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
-			this.NotifyAreaFlow(false);
+			this.NotifyAreaFlow();
 			this.ChangeObjectEdited();
 		}
 
@@ -1940,7 +1900,7 @@ namespace Epsitec.Common.Document.Objects
 			this.UpdateTextRulers();
 			this.UpdateTextLayout();
 			this.document.Notifier.NotifyTextChanged();
-			this.NotifyAreaFlow(false);
+			this.NotifyAreaFlow();
 			this.ChangeObjectEdited();
 		}
 
@@ -1967,7 +1927,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Notifie "à repeindre" toute la chaîne des pavés.
-		public void NotifyAreaFlow(bool cursorMoved)
+		public void NotifyAreaFlow()
 		{
 			System.Collections.ArrayList viewers = this.document.Modifier.AttachViewers;
 			UndoableList chain = this.textFlow.Chain;
@@ -1980,15 +1940,7 @@ namespace Epsitec.Common.Document.Objects
 					if ( obj == null )  continue;
 					if ( obj.PageNumber != currentPage )  continue;
 
-					Drawing.Rectangle clip = obj.BoundingBox;
-
-					if ( cursorMoved && !this.lastSelectBox.IsEmpty && !this.selectBox.IsEmpty )
-					{
-						clip = this.lastSelectBox;
-						clip.MergeWith(this.selectBox);
-					}
-
-					this.document.Notifier.NotifyArea(viewer, clip);
+					this.document.Notifier.NotifyArea(viewer, obj.BoundingBox);
 				}
 			}
 		}
@@ -2075,8 +2027,7 @@ namespace Epsitec.Common.Document.Objects
 		protected Graphics						graphics;
 		protected DrawingContext				drawingContext;
 		protected Transform						transform;
-		protected Drawing.Rectangle				lastCursorBox;
-		protected Drawing.Rectangle				lastSelectBox;
+		protected Drawing.Rectangle				redrawArea;
 		protected Drawing.Rectangle				cursorBox;
 		protected Drawing.Rectangle				selectBox;
 		protected InternalOperation				internalOperation = InternalOperation.Painting;

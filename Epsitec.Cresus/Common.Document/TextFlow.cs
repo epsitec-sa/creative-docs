@@ -131,7 +131,7 @@ namespace Epsitec.Common.Document
 			this.TextFitter.FrameList.Remove(obj.TextFrame);
 
 			obj.UpdateTextLayout();
-			obj.NotifyAreaFlow(false);
+			obj.NotifyAreaFlow();
 
 			obj.NewTextFlow();
 		}
