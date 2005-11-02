@@ -112,8 +112,80 @@ namespace Epsitec.Common.Text
 			TextProcessor processor = new TextProcessor (this.story);
 			processor.Process (new TextProcessor.Executor (this.ExecuteGenerate));
 			
+			this.story.ClearTextChangeMarkPositions ();
 			this.frame_list.ClearCursorMap ();
 			this.Invalidate ();
+		}
+		
+		public void GenerateMarks()
+		{
+			int start = this.story.TextChangeMarkStart;
+			int end   = this.story.TextChangeMarkEnd;
+			
+			if ((start == 0) &&
+				(end == this.story.TextLength))
+			{
+				this.ClearAllMarks ();
+				this.GenerateAllMarks ();
+			}
+			else if (start > end)
+			{
+				//	Il n'y a rien à faire, car le texte n'a pas changé de manière
+				//	significative depuis la dernière fois.
+			}
+			else
+			{
+				Internal.TextTable text   = this.story.TextTable;
+				CursorInfo.Filter  filter = Cursors.FitterCursor.GetFitterFilter (this);
+				CursorInfo[]       infos  = text.FindCursorsBefore (start, filter);
+				
+				if (infos.Length == 0)
+				{
+					this.ClearAllMarks ();
+					this.GenerateAllMarks ();
+					
+					return;
+				}
+				
+				Cursors.FitterCursor           fitter_cursor = text.GetCursorInstance (infos[0].CursorId) as Cursors.FitterCursor;
+				Cursors.FitterCursor.Element[] elements      = fitter_cursor.Elements;
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("Optimized GenerateMarks: {0}/{1}, Cursor[0].pos={2} (n={3})",
+					/**/										   start, end,
+					/**/										   this.story.GetCursorPosition (fitter_cursor),
+					/**/										   infos.Length));
+				
+				int n = elements.Length - 1;
+				
+				this.line_fence       = -1;
+				this.line_skip_before = fitter_cursor.SpaceAfterParagraph;
+				this.keep_with_prev   = fitter_cursor.KeepWithNextParagraph;
+				this.frame_index      = elements[n].FrameIndex;
+				this.frame_y          = fitter_cursor.ParagraphNextY;
+				
+				System.Diagnostics.Debug.Assert (this.story.TextLength > 0);
+				
+				TextProcessor processor = new TextProcessor (this.story);
+				processor.DefineStartFence (start);
+				processor.Process (new TextProcessor.Executor (this.ExecuteClear));
+				
+				try
+				{
+					processor = new TextProcessor (this.story);
+					processor.DefineStartFence (start);
+					processor.Process (new TextProcessor.Executor (this.ExecuteGenerate));
+				}
+				catch (System.InvalidOperationException)
+				{
+					this.ClearAllMarks ();
+					this.GenerateAllMarks ();
+					
+					return;
+				}
+				
+				this.frame_list.ClearCursorMap ();
+				this.Invalidate ();
+			}
 		}
 		
 		
@@ -872,6 +944,8 @@ restart_paragraph_layout:
 						
 						mark.AddRange (list);
 						mark.DefineParagraphY (paragraph_start_frame_y);
+						mark.DefineParagraphNextY (layout.FrameY);
+						mark.DefineKeepWithNextParagraph (layout.KeepWithNextParagraph);
 						mark.DefineSpaceAfterParagraph (layout.LineSpaceAfter);
 						list.Clear ();
 						

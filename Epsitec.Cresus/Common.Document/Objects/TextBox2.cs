@@ -1893,8 +1893,8 @@ namespace Epsitec.Common.Document.Objects
 		// Met à jour le texte suite à une modification du conteneur.
 		public void UpdateTextLayout()
 		{
-			this.textFlow.TextFitter.ClearAllMarks();
-			this.textFlow.TextFitter.GenerateAllMarks();
+//-			this.textFlow.TextFitter.ClearAllMarks();
+			this.textFlow.TextFitter.GenerateMarks();
 
 			// Indique qu'il faudra recalculer les bbox à toute la chaîne des pavés.
 			UndoableList chain = this.textFlow.Chain;

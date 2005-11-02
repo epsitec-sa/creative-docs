@@ -88,6 +88,12 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public void ChangeVersion()
+		{
+			this.version++;
+		}
+		
+		
 		public int MoveCursor(Internal.CursorId id, int distance)
 		{
 			Internal.Cursor record = this.cursors.ReadCursor (id);

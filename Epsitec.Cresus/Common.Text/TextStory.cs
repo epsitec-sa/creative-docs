@@ -99,7 +99,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.text_change_mark_start;
+				return System.Math.Min (this.text_change_mark_start, this.TextLength);
 			}
 		}
 		
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.text_change_mark_start;
+				return System.Math.Min (this.text_change_mark_end, this.TextLength);
 			}
 		}
 		
@@ -464,7 +464,19 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void ResetTextChangeMarkPosition()
+		public void NotifyTextStyleChanged()
+		{
+			//	Indique que les réglages internes du texte entier ont changé sans notre
+			//	connaissance. On doit considérer le texte complet comme "sale".
+			
+			this.text_change_mark_start = 0;
+			this.text_change_mark_end   = this.TextLength;
+			
+			this.text.ChangeVersion ();
+		}
+		
+		
+		public void ClearTextChangeMarkPositions()
 		{
 			this.text_change_mark_start = this.TextLength;
 			this.text_change_mark_end   = 0;
@@ -955,15 +967,31 @@ namespace Epsitec.Common.Text
 				this.text.WriteText (this.temp_cursor.CursorId, area_end - area_start, text);
 				
 				//	Agrandit la plage dans laquelle il y a eu des modifications signalées
-				//	par des marques telles que RequiresSpellChecking :
+				//	par des marques telles que RequiresSpellChecking. On s'arrange pour
+				//	toujours couvrir des paragraphes complets :
 				
-				if (word_start < this.text_change_mark_start)
+				int para_start;
+				int para_end;
+				
+				Internal.Navigator.GetParagraphPositions (this, word_start, out para_start, out para_end);
+				
+				if (word_end > para_end)
 				{
-					this.text_change_mark_start = position;
+					int para_start_2;
+					int para_end_2;
+					
+					Internal.Navigator.GetParagraphPositions (this, word_end, out para_start_2, out para_end_2);
+					
+					para_end = para_end_2;
 				}
-				if (word_end > this.text_change_mark_end)
+				
+				if (para_start < this.text_change_mark_start)
 				{
-					this.text_change_mark_end = word_end;
+					this.text_change_mark_start = para_start;
+				}
+				if (para_end > this.text_change_mark_end)
+				{
+					this.text_change_mark_end = para_end;
 				}
 			}
 		}

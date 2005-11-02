@@ -15,6 +15,17 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void DefineStartFence(int pos)
+		{
+			this.start_pos = pos;
+		}
+		
+		public void DefineEndFence(int pos)
+		{
+			this.end_pos = pos;
+		}
+		
+		
 		public void Process(Executor method)
 		{
 			this.Process (method, 100*1000, 10*1000);
@@ -30,11 +41,12 @@ namespace Epsitec.Common.Text
 			//	Exécute une méthode pour tout le texte, en procédant par tranches
 			//	(exécution itérative).
 			
-			int pos = 0;
+			int pos = this.start_pos;
 			
 			Cursors.TempCursor cursor = new Cursors.TempCursor ();
 			
 			this.story.NewCursor (cursor);
+			this.story.SetCursorPosition (cursor, pos);
 			
 			try
 			{
@@ -49,6 +61,11 @@ namespace Epsitec.Common.Text
 					Status status;
 					
 					if (length <= 0)
+					{
+						break;
+					}
+					if ((this.start_pos <= this.end_pos) &&
+						(pos >= this.end_pos))
 					{
 						break;
 					}
@@ -128,5 +145,8 @@ namespace Epsitec.Common.Text
 		}
 		
 		private TextStory						story;
+		
+		private int								start_pos	= 0;
+		private int								end_pos		= -1;
 	}
 }

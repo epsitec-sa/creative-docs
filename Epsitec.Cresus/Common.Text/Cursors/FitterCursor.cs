@@ -53,11 +53,27 @@ namespace Epsitec.Common.Text.Cursors
 			}
 		}
 		
+		public double							ParagraphNextY
+		{
+			get
+			{
+				return this.paragraph_next_y;
+			}
+		}
+		
 		public double							SpaceAfterParagraph
 		{
 			get
 			{
 				return this.space_after_paragraph;
+			}
+		}
+		
+		public bool								KeepWithNextParagraph
+		{
+			get
+			{
+				return this.keep_with_next_paragraph;
 			}
 		}
 		
@@ -130,9 +146,19 @@ namespace Epsitec.Common.Text.Cursors
 			this.paragraph_y = y;
 		}
 		
+		public void DefineParagraphNextY(double y)
+		{
+			this.paragraph_next_y = y;
+		}
+		
 		public void DefineSpaceAfterParagraph(double y)
 		{
 			this.space_after_paragraph = y;
+		}
+		
+		public void DefineKeepWithNextParagraph(bool keep)
+		{
+			this.keep_with_next_paragraph = keep;
 		}
 		
 		
@@ -465,7 +491,9 @@ namespace Epsitec.Common.Text.Cursors
 		
 		private Element[]						elements;
 		private double							paragraph_y;
+		private double							paragraph_next_y;
 		private double							space_after_paragraph;
+		private bool							keep_with_next_paragraph;
 		private TextFitter						fitter;
 	}
 }

@@ -242,6 +242,22 @@ namespace Epsitec.Common.Text.Internal
 			return false;
 		}
 		
+
+		public static void GetParagraphPositions(TextStory story, int pos, out int start, out int end)
+		{
+			ICursor temp = new Cursors.TempCursor ();
+			
+			story.NewCursor (temp);
+			story.SetCursorPosition (temp, pos);
+			
+			start = pos + Navigator.GetParagraphStartOffset (story, temp);
+			
+			story.SetCursorPosition (temp, start);
+			
+			end   = start + Navigator.GetParagraphEndLength (story, temp);
+			
+			story.RecycleCursor (temp);
+		}
 		
 		public static int GetParagraphStartOffset(TextStory story, ICursor cursor)
 		{
